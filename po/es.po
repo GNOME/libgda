@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: libgda.HEAD.es\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-03-27 03:48+0100\n"
-"PO-Revision-Date: 2007-06-04 15:47+0200\n"
+"PO-Revision-Date: 2007-06-17 16:22+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Spanish <traductores@es.gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -63,13 +63,13 @@ msgstr "Error de configuración de la fuente de datos: no se especificó el prov
 msgid ""
 "Could not find operation's associated provider, did you use "
 "gda_client_prepare_create_database() ?"
-msgstr ""
+msgstr "No se ha podido encontrar el proveedor asociado a la operación, ¿usó gda_client_prepare_create_database()?"
 
 #: ../libgda/gda-client.c:1021
 msgid ""
 "Could not find operation's associated provider, did you use "
 "gda_client_prepare_drop_database() ?"
-msgstr ""
+msgstr "No se ha podido encontrar el proveedor asociado a la operación, ¿usó gda_client_prepare_drop_database()?"
 
 #: ../libgda/gda-config.c:1479
 #, c-format
@@ -165,29 +165,29 @@ msgstr "Sin proveedor especificado"
 
 #: ../libgda/gda-connection.c:1635
 msgid "Connection transaction status tracking: no transaction exists for ROLLBACK"
-msgstr ""
+msgstr "Siguiendo el estado de la transacción de la conexión: no existe ninguna transacción para CANCELAR"
 
 #: ../libgda/gda-connection.c:1669
 msgid "Connection transaction status tracking: no transaction exists for COMMIT"
-msgstr ""
+msgstr "Siguiendo el estado de la transacción de la conexión: no existe ninguna transacción para EFECTUAR"
 
 #: ../libgda/gda-connection.c:1715
 msgid ""
 "Connection transaction status tracking: no transaction exists for ADD "
 "SAVEPOINT"
-msgstr ""
+msgstr "Siguiendo el estado de la transacción de la conexión: no existe ninguna transacción para AÑADIR PUNTO DE SALVAGUARDA"
 
 #: ../libgda/gda-connection.c:1740
 msgid ""
 "Connection transaction status tracking: no transaction exists for ROLLBACK "
 "SAVEPOINT"
-msgstr ""
+msgstr "Siguiendo el estado de la transacción de la conexión: no existe ninguna transacción para PUNTO DE SALVAGUARDA DE CANCELACIÓN"
 
 #: ../libgda/gda-connection.c:1765
 msgid ""
 "Connection transaction status tracking: no transaction exists for REMOVE "
 "SAVEPOINT"
-msgstr ""
+msgstr "Siguiendo el estado de la transacción de la conexión: no existe ninguna transacción para ELIMINAR PUNTO DE SALVAGUARDA"
 
 #: ../libgda/gda-data-access-wrapper.c:484
 #, c-format
@@ -347,14 +347,14 @@ msgstr "La fila en la línea %d no tiene suficientes valores (los cuales se igno
 msgid ""
 "Type of parameter '%s' is '%s' when it should be '%s', GdaDataModelQuery "
 "object will now work correctly"
-msgstr ""
+msgstr "El tipo de parámetro «%s» es «%s» cuando debería ser «%s», GdaDataModelQuery no funcionará correctamente"
 
 #: ../libgda/gda-data-model-query.c:497
 #, c-format
 msgid ""
 "Could not find a parameter named '%s' among the SELECT query's parameters, "
 "the specified modification query will not be executable"
-msgstr ""
+msgstr "No se ha podido encontrar el parámetro llamado «%s» entre los parámetros de la consulta SELECT, la consulta modificada especificada no será ejecutable"
 
 #: ../libgda/gda-data-model-query.c:672
 msgid "Query is not a SELECT query"
@@ -621,11 +621,11 @@ msgstr "El esquema para lista de tablas es erróneo"
 
 #: ../libgda/gda-dict-database.c:1077
 msgid "Can't get list of tables"
-msgstr "No se pudo obtener la lista de tablas"
+msgstr "No se ha podido obtener la lista de tablas"
 
 #: ../libgda/gda-dict-database.c:1090
 msgid "Can't get list of views"
-msgstr "No se pudo obtener la lista de vistas"
+msgstr "No se ha podido obtener la lista de vistas"
 
 #: ../libgda/gda-dict-field.c:902
 msgid "XML Tag is not <gda_dict_field>"
@@ -1134,7 +1134,9 @@ msgstr "Se requiere un valor predeterminado"
 #: ../libgda/gda-query-field-value.c:1443
 #, c-format
 msgid "Could not find GdaParameter in context for value field '%s'"
-msgstr "No se ha podido encontrar el GdaParameter en el contexto para el valor del campo «%s»"
+msgstr ""
+"No se ha podido encontrar el GdaParameter en el contexto para el valor del "
+"campo «%s»"
 
 #: ../libgda/gda-query-field-value.c:1461
 #, c-format
@@ -1288,14 +1290,18 @@ msgstr "Tipo de dato desconocido «%s», se usará G_TYPE_STRING"
 msgid ""
 "Data type must be specified when no default value is provided, using "
 "G_TYPE_STRING"
-msgstr "El tipo de datos se debe especificar cuando no se proporciona ningún valor predeterminado, se usará G_TYPE_STRING"
+msgstr ""
+"El tipo de datos se debe especificar cuando no se proporciona ningún valor "
+"predeterminado, se usará G_TYPE_STRING"
 
 #: ../libgda/gda-query-parsing.c:1643
 #, c-format
 msgid ""
 "Could not convert data from %s to %s for DBMS type %s, forget about the DBMS "
 "type"
-msgstr "No se pudo convertir los datos de %s a %s para DBMS tipo %s, olvídese sobre el tipo DBMS"
+msgstr ""
+"No se ha podido convertir los datos de %s a %s para DBMS tipo %s, olvídese sobre "
+"el tipo DBMS"
 
 #: ../libgda/gda-query-parsing.c:1667 ../libgda/gda-query-parsing.c:1669
 #, c-format
@@ -1417,13 +1423,10 @@ msgid "Unknown error"
 msgstr "Error desconocido"
 
 #: ../libgda/gda-query.c:3526
-#, fuzzy
 msgid ""
 "While adding to a GdaQuery: Blobs are not supported by the connection's "
 "provider and may be rendered incorrectly"
-msgstr ""
-"Al añadir a un GdaQuery: el tipo de campo «%s» no está soportado por el "
-"proveedor de la conexión y puede ser renderizado incorrectamente"
+msgstr "Al añadir a un GdaQuery: el proveedor de la conexión no soporta BLOBS y pueden ser renderizados incorrectamente"
 
 #: ../libgda/gda-query.c:3532
 #, c-format
@@ -1916,7 +1919,7 @@ msgstr ""
 #: ../libgda/gda-server-provider-extra.c:486
 #: ../libgda/gda-server-provider-extra.c:546
 msgid "Can't handle Primary Key fields which are BLOBs"
-msgstr ""
+msgstr "No se pueden manejar campos de clave primaria que son BLOBs"
 
 #: ../libgda/gda-server-provider.c:491
 #, c-format
@@ -2327,13 +2330,11 @@ msgstr "Archivo de configuración FreeTDS"
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:14
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:5
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:8
-#, fuzzy
 msgid "Host on which the database server is running"
 msgstr "Equipo donde se ejecuta el servidor de bases de datos"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:13
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:9
-#, fuzzy
 msgid "IP address of the host on which the database server is running"
 msgstr "Dirección IP del equipo que tiene el servidor de bases de datos"
 
@@ -2370,7 +2371,6 @@ msgid "TDS protocol minor version"
 msgstr "Versión menor del protocolo TDS"
 
 #: ../providers/freetds/gda-freetds-provider.c:198
-#, fuzzy
 msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'USER=;USER=;PASSWORD='."
@@ -2549,7 +2549,6 @@ msgid "Authentication Method"
 msgstr "Método de autenticación"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:2
-#, fuzzy
 msgid "Authentication method to use when connecting"
 msgstr "Método de autenticación usado para conectar"
 
@@ -2575,7 +2574,6 @@ msgid "LDAP bind domain to use for authentication"
 msgstr "Dominio de vinculación del LDAP para usar en la autenticación"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:9
-#, fuzzy
 msgid "Port to use when connecting to the LDAP server"
 msgstr "Puerto a usar para conectar al servidor LDAP"
 
@@ -2653,9 +2651,8 @@ msgid "Replication ID"
 msgstr "ID de réplica"
 
 #: ../providers/mdb/gda-mdb-provider.c:700
-#, fuzzy
 msgid "Numeric"
-msgstr "Número"
+msgstr "Numérico"
 
 #. end unsafe
 #: ../providers/mdb/gda-mdb-provider.c:768
@@ -2686,9 +2683,8 @@ msgstr "Nombre de archivo"
 
 #: ../providers/mdb/mdb_specs_dsn.xml.in.h:2
 #: ../providers/xbase/xbase_specs_dsn.xml.in.h:4
-#, fuzzy
 msgid "Full path to the file containing the database"
-msgstr "Una ruta completa del archivo que contiene la base de datos"
+msgstr "Ruta completa del archivo que contiene la base de datos"
 
 #: ../providers/msql/gda-msql-libmain.c:40
 msgid "Provider for Hughes Technologies mSQL databases"
@@ -2716,32 +2712,29 @@ msgstr ""
 
 #: ../providers/mysql/gda-mysql-ddl.c:257
 #: ../providers/postgres/gda-postgres-ddl.c:265
-#, fuzzy
 msgid "No field specified in foreign key constraint"
-msgstr "Join ambiguo: posibles múltiples restricciones de clave externa"
+msgstr "No existe el campo especificado en la restricción de la clave externa"
 
 #: ../providers/mysql/gda-mysql-ddl.c:274
 #: ../providers/postgres/gda-postgres-ddl.c:282
 msgid "Empty field specified in foreign key constraint"
-msgstr ""
+msgstr "El campo especificado en la restricción de la clave externa está vacío"
 
 #: ../providers/mysql/gda-mysql-ddl.c:284
 #: ../providers/postgres/gda-postgres-ddl.c:292
-#, fuzzy
 msgid "No referenced table specified in foreign key constraint"
-msgstr "Join ambiguo: posibles múltiples restricciones de clave externa"
+msgstr "No hay ninguna tabla referenciada en la restricción de la clave externa"
 
 #: ../providers/mysql/gda-mysql-ddl.c:302
 #: ../providers/postgres/gda-postgres-ddl.c:310
 msgid "Empty referenced field specified in foreign key constraint"
-msgstr ""
+msgstr "El campo referenciado especificado en la restricción de la clave está vacío"
 
 #: ../providers/mysql/gda-mysql-ddl.c:323
 #: ../providers/postgres/gda-postgres-ddl.c:357
 #: ../providers/sqlite/gda-sqlite-ddl.c:198
-#, fuzzy
 msgid "Table to create must have at least one row"
-msgstr "La condición debe tener al menos un argumento."
+msgstr "La tabla a crear debe tener al menos una fila"
 
 #: ../providers/mysql/gda-mysql-provider.c:255
 msgid "You cannot provide a UNIX SOCKET if you also provide either a HOST or a PORT."
@@ -2750,7 +2743,7 @@ msgstr "No puede proveer un UNIX_SOCKET si también provee un HOST o un PUERTO."
 #: ../providers/mysql/gda-mysql-provider.c:340
 #: ../providers/postgres/gda-postgres-provider.c:529
 msgid "The connection string must contain a DB_NAME value"
-msgstr ""
+msgstr "La cadena de la conexión debe contener un valor DB_NAME"
 
 #: ../providers/mysql/gda-mysql-provider.c:344
 #: ../providers/postgres/gda-postgres-provider.c:533
@@ -2868,26 +2861,26 @@ msgstr "Proveedor para bases de datos MySQL"
 
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:1
 msgid "Add the column after the specified column"
-msgstr ""
+msgstr "Añadir la columna después de la columna especificada"
 
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:2
 msgid "Add the column as the first column of the table"
-msgstr ""
+msgstr "Añadir la columna como la primera columna de la tabla"
 
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:3
 msgid "After column"
-msgstr ""
+msgstr "Después de la columna"
 
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:4
 msgid "As first column"
-msgstr ""
+msgstr "Como primera columna"
 
 #. list of fields
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:5
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:8
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:2
 msgid "Auto increment"
-msgstr ""
+msgstr "Autoincrementar"
 
 #. list of fields
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:6
@@ -2914,9 +2907,8 @@ msgstr "Comprobar restricción"
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:3
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:3
-#, fuzzy
 msgid "Column's description"
-msgstr "Descripción de la tabla"
+msgstr "Descripción de la columna"
 
 #. list of fields
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:9
@@ -3013,7 +3005,6 @@ msgstr "Pseudoconjunto de códigos binario"
 #. other table options
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:8
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:18
-#, fuzzy
 msgid "Character set"
 msgstr "Conjunto de caracteres"
 
@@ -3027,20 +3018,18 @@ msgstr "Codificación del conjunto de caracteres a usar en la nueva base de dato
 #. other table options
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:12
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:27
-#, fuzzy
 msgid "Collation"
-msgstr "Ubicación"
+msgstr "Cotejamiento"
 
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:14
-#, fuzzy
 msgid "Collation method to use in the new database"
-msgstr "Codificación del conjunto de caracteres a usar en la nueva base de datos"
+msgstr "El método de cotejamiento a usar en la nueva tabla"
 
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:16
 msgid "Create database only if it does not yet exist"
-msgstr ""
+msgstr "Crear la base de datos sólo si no existe"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:17
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:36
@@ -3074,9 +3063,8 @@ msgstr "DOS europeo del este"
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:10
 #: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:4
-#, fuzzy
 msgid "Database's description"
-msgstr "Descripción de la tabla"
+msgstr "Descripción de la base de datos"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:29
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:53
@@ -3091,9 +3079,8 @@ msgstr "EUC-KR Coreano"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:31
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:12
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:4
-#, fuzzy
 msgid "Full path of the UNIX socket to use when connecting locally"
-msgstr "Ruta completa del socket UNIX para usar para conectar localmente"
+msgstr "Ruta completa del socket UNIX para usar al conectar localmente"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:32
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:72
@@ -3178,7 +3165,7 @@ msgstr "Mac Europa del oeste"
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:14
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:29
 msgid "Only if it does not yet exist"
-msgstr ""
+msgstr "Sólo si no existe"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:52
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:19
@@ -3198,9 +3185,8 @@ msgstr "SJIS para Windows japonés"
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:20
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:39
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:36
-#, fuzzy
 msgid "Server access parameters"
-msgstr "Parámetros detallados de la fuente de datos"
+msgstr "Parámetros de acceso al servidor"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:55
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:136
@@ -3246,7 +3232,6 @@ msgstr "UTF-8 Unicode"
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:24
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:10
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:12
-#, fuzzy
 msgid "Whether or not to use SSL to establish the connection"
 msgstr "Indica si se debe usar o no SSL para establecer la conexión"
 
@@ -3284,7 +3269,7 @@ msgstr "Nombre del índice"
 
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:3
 msgid "Index type (depending on table storage engine)"
-msgstr ""
+msgstr "Tipo de índice (dependiendo del motor de almacenamiento de la tabla)"
 
 #. Index fields
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:5
@@ -3303,7 +3288,7 @@ msgstr "Campo o expresión indexado(s)"
 #. Index fields
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:9
 msgid "Length"
-msgstr ""
+msgstr "Longitud"
 
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:10
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:8
@@ -3320,9 +3305,8 @@ msgstr "En tabla"
 #. Index fields
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:14
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:16
-#, fuzzy
 msgid "Sort type"
-msgstr "Tipo de dato"
+msgstr "Tipo de ordenación"
 
 #. Index fields
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:16
@@ -3335,14 +3319,13 @@ msgid "An approximation of the average row length for your table"
 msgstr ""
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:6
-#, fuzzy
 msgid "Archive"
-msgstr "Activo"
+msgstr "Archivar"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:10
 msgid "Auto increment value"
-msgstr ""
+msgstr "Valor autoincremental"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:12
@@ -3351,7 +3334,7 @@ msgstr ""
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:13
 msgid "Berkeley DB"
-msgstr ""
+msgstr "BBDD Berkeley"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:16
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:1
@@ -3360,9 +3343,8 @@ msgstr "Cascada"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:24
-#, fuzzy
 msgid "Checksum"
-msgstr "Comprobar"
+msgstr "Suma de comprobación"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:25
 msgid "Clustered, fault-tolerant, memory-based"
@@ -3370,16 +3352,15 @@ msgstr ""
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:28
 msgid "Comma Separated Value (CSV)"
-msgstr ""
+msgstr "Valor separado por coma (CSV)"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:31
 msgid "Compact"
-msgstr ""
+msgstr "Compactar"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:32
-#, fuzzy
 msgid "Compressed"
-msgstr "Copiado"
+msgstr "Comprimido"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:34
@@ -3395,9 +3376,8 @@ msgstr ""
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:42
-#, fuzzy
 msgid "Data directory"
-msgstr "Directorio"
+msgstr "Directorio de datos"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:50
@@ -3410,16 +3390,16 @@ msgstr ""
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:52
 msgid "Dynamic"
-msgstr ""
+msgstr "Dinámico"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:56
 msgid "Engine"
-msgstr ""
+msgstr "Motor"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:57
 msgid "Example"
-msgstr ""
+msgstr "Ejemplo"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:59
@@ -3427,9 +3407,8 @@ msgid "FIRST, LAST or NO: only with MERGE engine"
 msgstr ""
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:60
-#, fuzzy
 msgid "Federated"
-msgstr "Generó @ %s"
+msgstr ""
 
 #. foreign key spec
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:62
@@ -3444,9 +3423,8 @@ msgid "Fields in the foreign key"
 msgstr "Campos en la clave externa"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:69
-#, fuzzy
 msgid "Fixed"
-msgstr "Campo"
+msgstr "Fijo"
 
 #. foreign key spec
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:71
@@ -3463,7 +3441,7 @@ msgstr "Restricciones globales"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:78
 msgid "ISAM"
-msgstr ""
+msgstr "ISAM"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:85
 msgid "In Memory (MEMORY/HEAP)"
@@ -3471,19 +3449,17 @@ msgstr ""
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:87
-#, fuzzy
 msgid "Index directory"
-msgstr "Descripción del índice"
+msgstr "Directorio del índice"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:88
 msgid "InnoDB"
-msgstr ""
+msgstr "InnoDB"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:90
-#, fuzzy
 msgid "Insert method"
-msgstr "Insertar"
+msgstr "Método de inserción"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:95
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:32
@@ -3491,9 +3467,8 @@ msgid "Match full"
 msgstr "Coincidencia total"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:96
-#, fuzzy
 msgid "Match partial"
-msgstr "Coincidencia simple"
+msgstr "Coincidencia parcial"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:97
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:33
@@ -3519,7 +3494,7 @@ msgstr ""
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:104
 msgid "Merge"
-msgstr ""
+msgstr "Combinar"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:106
@@ -3698,23 +3673,20 @@ msgstr "Qué hacer con las referencias"
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:1
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:1
-#, fuzzy
 msgid "New name"
-msgstr "Sin nombre"
+msgstr "Nuevo nombre"
 
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:2
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:2
-#, fuzzy
 msgid "New table name"
-msgstr "Nombre de la tabla"
+msgstr "Nuevo nombre de la tabla"
 
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:4
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:4
-#, fuzzy
 msgid "Table to rename"
-msgstr "Nombre de la tabla"
+msgstr "Tabla a renombrar"
 
 #: ../providers/odbc/gda-odbc-provider.c:205
 msgid "Unable to SQLAllocEnv()..."
@@ -3761,24 +3733,20 @@ msgstr "Manejador de Oracle inválido"
 
 #: ../providers/oracle/gda-oracle-blob-op.c:172
 #: ../providers/oracle/gda-oracle-blob-op.c:208
-#, fuzzy
 msgid "Could not get the length of LOB object"
-msgstr "No se ha podido obtener el nombre de la columna de Oracle"
+msgstr "No se ha podido obtener la longitud del objeto LOB"
 
 #: ../providers/oracle/gda-oracle-blob-op.c:220
-#, fuzzy
 msgid "Could not read from LOB object"
-msgstr "No se ha podido analizar el documento XML"
+msgstr "No se ha podido leer del objeto LOB"
 
 #: ../providers/oracle/gda-oracle-blob-op.c:257
-#, fuzzy
 msgid "Could not write to LOB object"
-msgstr "No se ha podido analizar el documento XML"
+msgstr "No se ha podido escribir en el objeto LOB"
 
 #: ../providers/oracle/gda-oracle-blob-op.c:290
-#, fuzzy
 msgid "Could not truncate LOB object"
-msgstr "No se ha podido analizar el documento XML"
+msgstr "No se ha podido truncar el objeto LOB"
 
 #: ../providers/oracle/gda-oracle-provider.c:254
 msgid "No TNS name supplied"
@@ -3865,14 +3833,12 @@ msgid "Could not execute the Oracle statement"
 msgstr "No se ha podido ejecutar la sentencia de Oracle"
 
 #: ../providers/oracle/gda-oracle-provider.c:689
-#, fuzzy
 msgid "Could not get the number of affected rows"
-msgstr "No se ha podido obtener la cantidad de columnas en el conjunto de resultado"
+msgstr "No se ha podido obtener la cantidad de columnas afectadas"
 
 #: ../providers/oracle/gda-oracle-provider.c:705
 #: ../providers/oracle/gda-oracle-provider.c:1185
 #: ../providers/oracle/gda-oracle-provider.c:1247
-#, fuzzy
 msgid "Could not get the attached transaction from the service context"
 msgstr "No se ha podido asignar la transacción al contexto del servicio"
 
@@ -3912,9 +3878,8 @@ msgstr "No se ha podido hacer «commit» en la transacción de Oracle"
 
 #: ../providers/oracle/gda-oracle-provider.c:1209
 #: ../providers/oracle/gda-oracle-provider.c:1271
-#, fuzzy
 msgid "Could not de-attach the transaction to the service context"
-msgstr "No se ha podido asignar la transacción al contexto del servicio"
+msgstr "No se ha podido desasignar la transacción al contexto del servicio"
 
 #: ../providers/oracle/gda-oracle-provider.c:1260
 msgid "Could not rollback the Oracle transaction"
@@ -3951,9 +3916,8 @@ msgstr "No se ha podido obtener el tipo de datos del parámetro"
 
 #: ../providers/oracle/gda-oracle-recordset.c:131
 #: ../providers/oracle/utils.c:530
-#, fuzzy
 msgid "Could not allocate Lob locator"
-msgstr "No se ha podido asignar la estructura de comando."
+msgstr "No se ha podido asignar el localizador Lob."
 
 #: ../providers/oracle/gda-oracle-recordset.c:157
 msgid "Could not define by position"
@@ -4003,28 +3967,24 @@ msgid ""
 msgstr ""
 
 #: ../providers/oracle/oracle_specs_drop_table.xml.in.h:1
-#, fuzzy
 msgid "Automatically drop objects that depend on the table (CASCADE CONSTRAINTS)"
-msgstr "Borrar automáticamente los objetos que dependan de la tabla (CASCADE)"
+msgstr "Borrar automáticamente los objetos que dependan de la tabla (CASCADE CONSTRAINTS)"
 
 #: ../providers/oracle/oracle_specs_drop_table.xml.in.h:3
-#, fuzzy
 msgid "Release the space associated with the table. (PURGE)"
-msgstr "El nombre del espacio de tablas que será asociado con la base de datos nueva"
+msgstr "Liberar el espacio asociado con la tabla. (PURGE)"
 
 #: ../providers/oracle/oracle_specs_dsn.xml.in.h:1
-#, fuzzy
 msgid "Name of the TNS configuration to use when connecting"
-msgstr "Método de autenticación usado para conectar"
+msgstr "Nombre de la configuración TNS para usar al conectar"
 
 #: ../providers/oracle/oracle_specs_dsn.xml.in.h:2
 msgid "TNS Name"
 msgstr "Nombre TNS"
 
 #: ../providers/oracle/utils.c:537
-#, fuzzy
 msgid "Could not copy Lob locator"
-msgstr "No se ha podido analizar el documento XML"
+msgstr "No se ha podido copiar el localizador Lob"
 
 #: ../providers/postgres/gda-postgres-blob-op.c:109
 #: ../providers/postgres/gda-postgres-handler-bin.c:196
@@ -4050,9 +4010,8 @@ msgid "PostgresqlBin"
 msgstr ""
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:124
-#, fuzzy
 msgid "PostgreSQL binary representation"
-msgstr "Representación binaria"
+msgstr "Representación binaria de PostgreSQL"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:219
 msgid "Insufficient memory to convert binary buffer to string"
@@ -4067,9 +4026,9 @@ msgid "Could not create a SELECT query to fetch existing BLOB values"
 msgstr ""
 
 #: ../providers/postgres/gda-postgres-provider.c:1124
-#, fuzzy, c-format
+#, c-format
 msgid "Missing parameter for '%s'"
-msgstr "Faltan parámetros"
+msgstr "Falta algún parámetro para «%s»"
 
 #: ../providers/postgres/gda-postgres-provider.c:1142
 #, c-format
@@ -4334,7 +4293,6 @@ msgid "Deferrable initially immediate"
 msgstr "Diferido inicialmente inmediato"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:30
-#, fuzzy
 msgid "Inheritance"
 msgstr "Herencia"
 
@@ -4367,19 +4325,16 @@ msgid "With OIDs"
 msgstr "Con OIDs"
 
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:1
-#, fuzzy
 msgid "Automatically drop objects that depend on the column (CASCADE)"
 msgstr "Borrar automáticamente los objetos que dependan de la tabla (CASCADE)"
 
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:5
-#, fuzzy
 msgid "Refuse to drop the column if any objects depend on it (RESTRICT)"
-msgstr "Rehusar a borrar la tabla si cualquier objeto depende de ella (RESTRICT)"
+msgstr "Rehusar borrar la tabla si cualquier objeto depende de ella (RESTRICT)"
 
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:8
-#, fuzzy
 msgid "What to do with references on the column to delete"
-msgstr "Qué hacer con las referencias"
+msgstr "Qué hacer con las referencias en la columna a eliminar"
 
 #. DSN parameters
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:40
@@ -4400,7 +4355,7 @@ msgstr "Manejador binario SQlite"
 
 #: ../providers/sqlite/gda-sqlite-handler-bin.c:120
 msgid "SqliteBin"
-msgstr ""
+msgstr "SqliteBin"
 
 #: ../providers/sqlite/gda-sqlite-handler-bin.c:121
 msgid "SQlite binary representation"
@@ -4420,7 +4375,7 @@ msgstr ""
 
 #: ../providers/sqlite/gda-sqlite-provider.c:302
 msgid "The DB_DIR part of the connection string must point to a valid directory"
-msgstr ""
+msgstr "La parte DB_DIR de la cadena de conexión debe apuntar a un directorio válido"
 
 #: ../providers/sqlite/gda-sqlite-provider.c:333
 msgid "Could not set empty_result_callbacks SQLite option"
@@ -4453,7 +4408,7 @@ msgstr "No se puede ejecutar PRAGMA table_info()"
 #: ../providers/sqlite/gda-sqlite-provider.c:1314
 #, c-format
 msgid "Can't find table %s"
-msgstr "No se pudo encontrar la tabla %s"
+msgstr "No se ha podido encontrar la tabla %s"
 
 #: ../providers/sqlite/gda-sqlite-provider.c:1483
 msgid "Can't execute PRAGMA proc_list"
@@ -4490,7 +4445,7 @@ msgstr "Directorio donde estará el archivo con la base de datos"
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:8
 msgid "Collation name (BINARY|NOCASE)"
-msgstr ""
+msgstr "Nombre del cotejamiento (BINARY|NOCASE)"
 
 #. Index fields
 #. list of fields
@@ -5017,7 +4972,7 @@ msgstr "DSN '%s' no está declarado"
 #: ../tools/gda-author-dict-file.c:155 ../tools/gda-diagnose.c:1357
 #, c-format
 msgid "Can't open connection to DSN %s: %s\n"
-msgstr "No se pudo abrir la conexión a DSN %s:%s\n"
+msgstr "No se ha podido abrir la conexión a DSN %s:%s\n"
 
 #: ../testing/gda-test-blob.c:91 ../testing/gda-test-connection.c:81
 #: ../testing/gda-test-server-operation.c:92
