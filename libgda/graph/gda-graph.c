@@ -672,7 +672,7 @@ gda_graph_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
                         return FALSE;
                 }
                 gda_object_set_id (GDA_OBJECT (graph), prop);
-		gda_graphs_declare_serial (reg, atol (prop+3));
+		gda_graphs_declare_serial (reg, atol (prop+2));
 		id = TRUE;
                 g_free (prop);
         }

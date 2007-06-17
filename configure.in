@@ -949,7 +949,11 @@ AM_CONDITIONAL(HAVE_SQLITE, test x"$have_sqlite" = "xyes")
 dnl **************************
 dnl Check for readline/history
 dnl **************************
-AC_CHECK_LIB(readline,readline, READLINE_LIB='-lreadline -lcurses', , -lcurses)
+if test x"$platform_win32" = "xyes"; then
+	AC_CHECK_LIB(readline, readline, READLINE_LIB='-lreadline', [])
+else
+	AC_CHECK_LIB(readline, readline, READLINE_LIB='-lreadline -lcurses', [], -lcurses)
+fi
 AM_CONDITIONAL(READLINE_LIB, test ! "x$READLINE_LIB" = "x")
 AC_SUBST(READLINE_LIB)
 
