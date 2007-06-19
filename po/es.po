@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: libgda.HEAD.es\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-03-27 03:48+0100\n"
-"PO-Revision-Date: 2007-06-17 16:22+0200\n"
+"PO-Revision-Date: 2007-06-19 11:49+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Spanish <traductores@es.gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -63,13 +63,17 @@ msgstr "Error de configuración de la fuente de datos: no se especificó el prov
 msgid ""
 "Could not find operation's associated provider, did you use "
 "gda_client_prepare_create_database() ?"
-msgstr "No se ha podido encontrar el proveedor asociado a la operación, ¿usó gda_client_prepare_create_database()?"
+msgstr ""
+"No se ha podido encontrar el proveedor asociado a la operación, ¿usó "
+"gda_client_prepare_create_database()?"
 
 #: ../libgda/gda-client.c:1021
 msgid ""
 "Could not find operation's associated provider, did you use "
 "gda_client_prepare_drop_database() ?"
-msgstr "No se ha podido encontrar el proveedor asociado a la operación, ¿usó gda_client_prepare_drop_database()?"
+msgstr ""
+"No se ha podido encontrar el proveedor asociado a la operación, ¿usó "
+"gda_client_prepare_drop_database()?"
 
 #: ../libgda/gda-config.c:1479
 #, c-format
@@ -165,29 +169,39 @@ msgstr "Sin proveedor especificado"
 
 #: ../libgda/gda-connection.c:1635
 msgid "Connection transaction status tracking: no transaction exists for ROLLBACK"
-msgstr "Siguiendo el estado de la transacción de la conexión: no existe ninguna transacción para CANCELAR"
+msgstr ""
+"Siguiendo el estado de la transacción de la conexión: no existe ninguna "
+"transacción para CANCELAR"
 
 #: ../libgda/gda-connection.c:1669
 msgid "Connection transaction status tracking: no transaction exists for COMMIT"
-msgstr "Siguiendo el estado de la transacción de la conexión: no existe ninguna transacción para EFECTUAR"
+msgstr ""
+"Siguiendo el estado de la transacción de la conexión: no existe ninguna "
+"transacción para EFECTUAR"
 
 #: ../libgda/gda-connection.c:1715
 msgid ""
 "Connection transaction status tracking: no transaction exists for ADD "
 "SAVEPOINT"
-msgstr "Siguiendo el estado de la transacción de la conexión: no existe ninguna transacción para AÑADIR PUNTO DE SALVAGUARDA"
+msgstr ""
+"Siguiendo el estado de la transacción de la conexión: no existe ninguna "
+"transacción para AÑADIR PUNTO DE SALVAGUARDA"
 
 #: ../libgda/gda-connection.c:1740
 msgid ""
 "Connection transaction status tracking: no transaction exists for ROLLBACK "
 "SAVEPOINT"
-msgstr "Siguiendo el estado de la transacción de la conexión: no existe ninguna transacción para PUNTO DE SALVAGUARDA DE CANCELACIÓN"
+msgstr ""
+"Siguiendo el estado de la transacción de la conexión: no existe ninguna "
+"transacción para PUNTO DE SALVAGUARDA DE CANCELACIÓN"
 
 #: ../libgda/gda-connection.c:1765
 msgid ""
 "Connection transaction status tracking: no transaction exists for REMOVE "
 "SAVEPOINT"
-msgstr "Siguiendo el estado de la transacción de la conexión: no existe ninguna transacción para ELIMINAR PUNTO DE SALVAGUARDA"
+msgstr ""
+"Siguiendo el estado de la transacción de la conexión: no existe ninguna "
+"transacción para ELIMINAR PUNTO DE SALVAGUARDA"
 
 #: ../libgda/gda-data-access-wrapper.c:484
 #, c-format
@@ -347,14 +361,18 @@ msgstr "La fila en la línea %d no tiene suficientes valores (los cuales se igno
 msgid ""
 "Type of parameter '%s' is '%s' when it should be '%s', GdaDataModelQuery "
 "object will now work correctly"
-msgstr "El tipo de parámetro «%s» es «%s» cuando debería ser «%s», GdaDataModelQuery no funcionará correctamente"
+msgstr ""
+"El tipo de parámetro «%s» es «%s» cuando debería ser «%s», GdaDataModelQuery "
+"no funcionará correctamente"
 
 #: ../libgda/gda-data-model-query.c:497
 #, c-format
 msgid ""
 "Could not find a parameter named '%s' among the SELECT query's parameters, "
 "the specified modification query will not be executable"
-msgstr "No se ha podido encontrar el parámetro llamado «%s» entre los parámetros de la consulta SELECT, la consulta modificada especificada no será ejecutable"
+msgstr ""
+"No se ha podido encontrar el parámetro llamado «%s» entre los parámetros de "
+"la consulta SELECT, la consulta modificada especificada no será ejecutable"
 
 #: ../libgda/gda-data-model-query.c:672
 msgid "Query is not a SELECT query"
@@ -367,7 +385,7 @@ msgstr "Tipo de consulta errónea"
 #: ../libgda/gda-data-model-query.c:834
 #, c-format
 msgid "Can't determine the GType for field '%s', please fill a bug report"
-msgstr ""
+msgstr "No se puede determinar el GType para el campo «%s», por favor envíe un informe de error"
 
 #: ../libgda/gda-data-model-query.c:1183 ../libgda/gda-data-model-query.c:1231
 msgid "No UPDATE query specified, can't update row"
@@ -387,12 +405,12 @@ msgstr "No se ha especificado una consulta SELECT"
 
 #: ../libgda/gda-data-model-query.c:1562
 msgid "SELECT query references objects not described in dictionary"
-msgstr ""
+msgstr "La consulta SELECT referencia objetos no descritos en el diccionario"
 
 #: ../libgda/gda-data-model-query.c:1633
 #, c-format
 msgid "Could not identify target table '%s' to modify in SELECT query"
-msgstr ""
+msgstr "No se ha podido identificar la tabla objetivo «%s» para modificar en la consulta SELECT"
 
 #: ../libgda/gda-data-model-query.c:1643
 msgid "specified target to modify in SELECT query does not represent a table"
@@ -1300,8 +1318,8 @@ msgid ""
 "Could not convert data from %s to %s for DBMS type %s, forget about the DBMS "
 "type"
 msgstr ""
-"No se ha podido convertir los datos de %s a %s para DBMS tipo %s, olvídese sobre "
-"el tipo DBMS"
+"No se ha podido convertir los datos de %s a %s para DBMS tipo %s, olvídese "
+"sobre el tipo DBMS"
 
 #: ../libgda/gda-query-parsing.c:1667 ../libgda/gda-query-parsing.c:1669
 #, c-format
@@ -1426,7 +1444,9 @@ msgstr "Error desconocido"
 msgid ""
 "While adding to a GdaQuery: Blobs are not supported by the connection's "
 "provider and may be rendered incorrectly"
-msgstr "Al añadir a un GdaQuery: el proveedor de la conexión no soporta BLOBS y pueden ser renderizados incorrectamente"
+msgstr ""
+"Al añadir a un GdaQuery: el proveedor de la conexión no soporta BLOBS y "
+"pueden ser renderizados incorrectamente"
 
 #: ../libgda/gda-query.c:3532
 #, c-format
@@ -1924,12 +1944,12 @@ msgstr "No se pueden manejar campos de clave primaria que son BLOBs"
 #: ../libgda/gda-server-provider.c:491
 #, c-format
 msgid "Provider %s created a GdaServerOperation without node for '%s'"
-msgstr ""
+msgstr "El proveedor %s creó un GdaServerOperation csin un nodo para «%s»"
 
 #: ../libgda/gda-server-provider.c:495
 #, c-format
 msgid "Provider %s created a GdaServerOperation with wrong node type for '%s'"
-msgstr ""
+msgstr "El proveedor %s creó un GdaServerOperation con un tipo de nodo erróneo para «%s»"
 
 #: ../libgda/gda-server-provider.c:1159
 msgid ""
@@ -2750,7 +2770,7 @@ msgstr "La cadena de la conexión debe contener un valor DB_NAME"
 msgid ""
 "The connection string format has changed: replace DATABASE with DB_NAME and "
 "the same contents"
-msgstr ""
+msgstr "El formato de la cadena de conexión ha cambiado, reemplace DATABASE con DB_NAME y el mismo contenido"
 
 #: ../providers/mysql/gda-mysql-provider.c:414
 #: ../providers/mysql/gda-mysql-provider.c:1605
@@ -3316,7 +3336,7 @@ msgstr ""
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:5
 msgid "An approximation of the average row length for your table"
-msgstr ""
+msgstr "Una aproximación a la media de la longitud de fila para su tabla"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:6
 msgid "Archive"
@@ -3330,7 +3350,7 @@ msgstr "Valor autoincremental"
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:12
 msgid "Average row length"
-msgstr ""
+msgstr "Media de la longitud de fila"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:13
 msgid "Berkeley DB"
@@ -3367,12 +3387,12 @@ msgstr "Comprimido"
 msgid ""
 "Counter for auto incremented fields is incremented by this value + 1 "
 "(DEFAULT: 0)"
-msgstr ""
+msgstr "El contador para los campos autoincrementales se incrementa con este valor +1 (PREDETERMINADO: 0)"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:35
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:15
 msgid "Create table only if it does not yet exist"
-msgstr ""
+msgstr "Crear la tabla sólo si no existe aún"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:42
@@ -3386,7 +3406,7 @@ msgstr ""
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:51
 msgid "Don't pack keys"
-msgstr ""
+msgstr "No agrupar claves"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:52
 msgid "Dynamic"
@@ -3404,7 +3424,7 @@ msgstr "Ejemplo"
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:59
 msgid "FIRST, LAST or NO: only with MERGE engine"
-msgstr ""
+msgstr "PRIMERO, ÚLTIMO o NO: sólo con el motor COMBINAR (MERGE)"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:60
 msgid "Federated"
@@ -3445,7 +3465,7 @@ msgstr "ISAM"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:85
 msgid "In Memory (MEMORY/HEAP)"
-msgstr ""
+msgstr "En memoria (MEMORY/HEAP)"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:87
@@ -3490,7 +3510,7 @@ msgstr "Método de coincidencia si hay más de un campo involucrado"
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:103
 msgid "Max rows"
-msgstr ""
+msgstr "Máximas filas"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:104
 msgid "Merge"
@@ -3499,7 +3519,7 @@ msgstr "Combinar"
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:106
 msgid "Min rows"
-msgstr ""
+msgstr "Mínimas filas"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:107
 msgid "MyISAM (default)"
@@ -3524,12 +3544,12 @@ msgstr "Acción al actualizar"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:117
 msgid "Only pack long CHAR/VARCHAR columns"
-msgstr ""
+msgstr "Agrupar sólo las columnas CHAR/VARCHAR largas"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:119
 msgid "Pack keys"
-msgstr ""
+msgstr "Agrupar claves"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:121
@@ -3538,7 +3558,7 @@ msgstr "Contraseña"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:124
 msgid "Redundant"
-msgstr ""
+msgstr "Redundante"
 
 #. foreign key spec
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:126
@@ -3560,7 +3580,7 @@ msgstr "Restringir"
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:131
 msgid "Row format"
-msgstr ""
+msgstr "Formato de fila"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:135
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:58
@@ -3587,7 +3607,7 @@ msgstr "Descripción de la tabla"
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:145
 msgid "Table's engine (or type)"
-msgstr ""
+msgstr "Motor de la tabla (o tipo)"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:148
@@ -3609,17 +3629,17 @@ msgstr "Unión"
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:162
 msgid "tbl_name[,tbl_name]...: only with MERGE engine"
-msgstr ""
+msgstr "tbl_name[,tbl_name]...: sólo con el motor COMBINAR (MERGE)"
 
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:11
 msgid "Drop database only if it exists"
-msgstr ""
+msgstr "Eliminar la tabla sólo si existe"
 
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:17
 msgid "Only if existing"
-msgstr ""
+msgstr "Sólo si existe"
 
 #: ../providers/mysql/mysql_specs_drop_index.xml.in.h:2
 #: ../providers/oracle/oracle_specs_drop_index.xml.in.h:3
@@ -3641,7 +3661,7 @@ msgstr "Borrar la tabla sólo si existe"
 
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:3
 msgid "Drop table only if it is temporary"
-msgstr ""
+msgstr "Eliminar la tabla si es temporal"
 
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:2
@@ -3964,11 +3984,13 @@ msgstr "Proveedor para bases datos Oracle"
 msgid ""
 "Drop the domain index even if the indextype routine invocation returns an "
 "error or the index is marked 'in progress'. (FORCE)"
-msgstr ""
+msgstr "Eliminar el índice del dominio incluso si la invocación a la rutina indextype devuelve un error o el índice se marca «en progreso». (FORZAR)"
 
 #: ../providers/oracle/oracle_specs_drop_table.xml.in.h:1
 msgid "Automatically drop objects that depend on the table (CASCADE CONSTRAINTS)"
-msgstr "Borrar automáticamente los objetos que dependan de la tabla (CASCADE CONSTRAINTS)"
+msgstr ""
+"Borrar automáticamente los objetos que dependan de la tabla (CASCADE "
+"CONSTRAINTS)"
 
 #: ../providers/oracle/oracle_specs_drop_table.xml.in.h:3
 msgid "Release the space associated with the table. (PURGE)"
@@ -4007,7 +4029,7 @@ msgstr "Manejador binario Postgresql"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:123
 msgid "PostgresqlBin"
-msgstr ""
+msgstr "PostgresqlBin"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:124
 msgid "PostgreSQL binary representation"
@@ -4015,15 +4037,15 @@ msgstr "Representación binaria de PostgreSQL"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:219
 msgid "Insufficient memory to convert binary buffer to string"
-msgstr ""
+msgstr "Memoria insuficiente para convertir el búfer binario a una cadena"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:282
 msgid "Insufficient memory to convert string to binary buffer"
-msgstr ""
+msgstr "Memoria insuficiente para convertir la cadena a un búfer binario"
 
 #: ../providers/postgres/gda-postgres-provider.c:1102
 msgid "Could not create a SELECT query to fetch existing BLOB values"
-msgstr ""
+msgstr "No se pudo crear la consulta SELECT para obtener los valores BLOB existentes"
 
 #: ../providers/postgres/gda-postgres-provider.c:1124
 #, c-format
@@ -4033,7 +4055,7 @@ msgstr "Falta algún parámetro para «%s»"
 #: ../providers/postgres/gda-postgres-provider.c:1142
 #, c-format
 msgid "Could not render SQL for SELECT query to fetch existing BLOB values: %s"
-msgstr ""
+msgstr "No se pudo renderizar el SQL para la consulta SELECT para obtener los valores BLOB existentes: %s"
 
 #: ../providers/postgres/gda-postgres-provider.c:1520
 msgid "Transactions are not supported in read uncommitted isolation level"
@@ -4066,11 +4088,11 @@ msgstr "Proveedor para bases de datos PostgreSQL"
 
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:7
 msgid "Don't add the column to descendants of the table"
-msgstr ""
+msgstr "No añadir la columna a los descendientes de la tabla"
 
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:9
 msgid "Ignore descendants"
-msgstr ""
+msgstr "Ignorar descendientes"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:1
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:1
@@ -4088,7 +4110,7 @@ msgstr "Chino EUC"
 msgid ""
 "Database server port (for servers running on unix domain sockets, enter the "
 "socket's file name extension (usually 5432), or leave this field empty)"
-msgstr ""
+msgstr "El puerto del equipo servidor de la base de datos (para los servidores ejecutándose bajo sockets de dominio UNIX, introduzca la extensión del nombre del socket (generalmente 5432), o deje este campo vacío)"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:12
 msgid "Encoding"
@@ -4102,7 +4124,7 @@ msgid ""
 "Host on which the database server is running (for servers running on unix "
 "domain sockets, enter the socket's path (usually /tmp), or leave this field "
 "empty)"
-msgstr ""
+msgstr "El equipo en el que se está ejecutando la base de datos (para los servidores ejecutándose bajo sockets de dominio UNIX, introduzca la ruta del socket (generalmente /tmp), o deje este campo vacío)"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:16
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:14
@@ -4363,7 +4385,7 @@ msgstr "Representación binaria SQlite"
 
 #: ../providers/sqlite/gda-sqlite-provider.c:261
 msgid "The connection string must contain DB_DIR and DB_NAME values"
-msgstr ""
+msgstr "La cadena de conexión debe contener los valores DB_DIR y DB_NAME"
 
 #: ../providers/sqlite/gda-sqlite-provider.c:288
 #: ../providers/sqlite/gda-sqlite-provider.c:294
