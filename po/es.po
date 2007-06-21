@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: libgda.HEAD.es\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-03-27 03:48+0100\n"
-"PO-Revision-Date: 2007-06-19 11:49+0200\n"
+"PO-Revision-Date: 2007-06-21 12:18+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Spanish <traductores@es.gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -385,7 +385,9 @@ msgstr "Tipo de consulta errónea"
 #: ../libgda/gda-data-model-query.c:834
 #, c-format
 msgid "Can't determine the GType for field '%s', please fill a bug report"
-msgstr "No se puede determinar el GType para el campo «%s», por favor envíe un informe de error"
+msgstr ""
+"No se puede determinar el GType para el campo «%s», por favor envíe un "
+"informe de error"
 
 #: ../libgda/gda-data-model-query.c:1183 ../libgda/gda-data-model-query.c:1231
 msgid "No UPDATE query specified, can't update row"
@@ -410,33 +412,35 @@ msgstr "La consulta SELECT referencia objetos no descritos en el diccionario"
 #: ../libgda/gda-data-model-query.c:1633
 #, c-format
 msgid "Could not identify target table '%s' to modify in SELECT query"
-msgstr "No se ha podido identificar la tabla objetivo «%s» para modificar en la consulta SELECT"
+msgstr ""
+"No se ha podido identificar la tabla objetivo «%s» para modificar en la "
+"consulta SELECT"
 
 #: ../libgda/gda-data-model-query.c:1643
 msgid "specified target to modify in SELECT query does not represent a table"
-msgstr ""
+msgstr "el objetivo especificado a modificar en la consulta SELECT no representa una tabla"
 
 #: ../libgda/gda-data-model-query.c:1661
 msgid "Could not identify any target table to modify in SELECT query"
-msgstr ""
+msgstr "No se pudo identificar ninguna tabla objetivo a modificar en la consulta SELECT"
 
 #: ../libgda/gda-data-model-query.c:1670
 msgid "Ambiguous target table to modify in SELECT query"
-msgstr ""
+msgstr "Tabla a modificar ambigua en la consulta SELECT"
 
 #: ../libgda/gda-data-model-query.c:1725
 #, c-format
 msgid "Primary key field '%s.%s' not found in SELECT query"
-msgstr ""
+msgstr "No se encontró el campo clave primario «%s.%s» en la consulta SELECT"
 
 #: ../libgda/gda-data-model-query.c:1757
 msgid "Target table to modify does not have any defined primary key"
-msgstr ""
+msgstr "La tabla objetivo a modificar no tiene definida ninguna clave primaria"
 
 #: ../libgda/gda-data-model-query.c:1794
 #, c-format
 msgid "Field '%s.%s' appears more than once in SELECT query"
-msgstr ""
+msgstr "El campo «%s.%s» aparece más de una vez en la consulta SELECT"
 
 #: ../libgda/gda-data-model-row.c:488
 msgid "Too many values in list"
@@ -537,7 +541,7 @@ msgstr "GdaDataProxy no puede manipular modelos de acceso a dato no aleatorios"
 
 #: ../libgda/gda-data-proxy.c:1514
 msgid "Modifications cancelled"
-msgstr ""
+msgstr "Modificaciones canceladas"
 
 #: ../libgda/gda-data-proxy.c:2301
 #, c-format
@@ -758,12 +762,12 @@ msgstr "Usuario para la conexión a usar"
 #: ../libgda/gda-dict.c:868
 #, c-format
 msgid "Could not load XML data for %s (no registered load function)"
-msgstr ""
+msgstr "No se pudieron cargar los datos XML para %s (no existe la función de caga registrada)"
 
 #: ../libgda/gda-dict.c:1017
 #, c-format
 msgid "Could not save XML data for %s (no registered save function)"
-msgstr ""
+msgstr "No se pudieron guardar los datos XML para %s (no existe la función de guardado registrada)"
 
 #: ../libgda/gda-dict.c:1038 ../testing/html.c:131 ../tools/html.c:131
 #, c-format
@@ -790,19 +794,19 @@ msgstr "Error al crear el directorio %s"
 #: ../libgda/gda-dict.c:1643
 #, c-format
 msgid "Cannot register object type %s a second time"
-msgstr ""
+msgstr "No se puede registrar el tipo de objeto %s una segunda vez"
 
 #: ../libgda/gda-dict.c:1647
 #, c-format
 msgid "Cannot register object type %s: no XML group tag specified"
-msgstr ""
+msgstr "No se puede registrar el tipo de objeto %s: no hay un grupo de etiqueta XML especificado"
 
 #: ../libgda/gda-dict.c:1714
 #, c-format
 msgid ""
 "Trying to declare an object when object class %s is not registered in the "
 "dictionary"
-msgstr ""
+msgstr "Intentando declarar un objeto cuando la clase del objeto %s no está registrada en el diccionario"
 
 #: ../libgda/gda-dict.c:1807
 #, c-format
@@ -836,27 +840,27 @@ msgstr ""
 msgid ""
 "Trying to get a list of objects when object class %s is not registered in "
 "the dictionary"
-msgstr ""
+msgstr "Intentando obtener una lista de objetos cuando la clase objeto %s no está registrada en el diccionario"
 
 #: ../libgda/gda-dict.c:2005
 #, c-format
 msgid ""
 "Trying to get an object by name when object class %s is not registered in "
 "the dictionary"
-msgstr ""
+msgstr "Intentando obtener un objeto por su nombre cuando la clase objeto %s no está registrada en el diccionario"
 
 #: ../libgda/gda-dict.c:2049
 #, c-format
 msgid ""
 "Trying to get an object by its XML Id when object class %s is not registered "
 "in the dictionary"
-msgstr ""
+msgstr "Intentando obtener un objeto desde su ID XML cuando la clase objeto %s no está registrada en el diccionario"
 
 #: ../libgda/gda-dict.c:2057
 msgid ""
 "Trying to get an object from its XML Id when object class does not implement "
 "GdaXmlStorage"
-msgstr ""
+msgstr "Intentando obtener un objeto desde su ID XML cuando la clase objeto no implementa GdaXmlStorage"
 
 #: ../libgda/gda-init.c:51
 msgid "Attempt to re-initialize GDA library. ignored."
@@ -1030,7 +1034,7 @@ msgstr "La etiqueta XML no es <gda_query_fagg>"
 #: ../libgda/gda-query-field-field.c:949 ../libgda/gda-query-field-func.c:825
 #: ../libgda/gda-query-field-value.c:1146
 msgid "XML ID for a query field should be QUxxx:QFyyy where xxx and yyy are numbers"
-msgstr ""
+msgstr "El ID XML para un campo de consulta debería ser QUxxx:QFyyy donde xxx e yyy son números"
 
 #: ../libgda/gda-query-field-agg.c:839
 #, c-format
@@ -1124,16 +1128,16 @@ msgstr "No se puede interpretar «%s» como un valor"
 #: ../libgda/gda-query-field-value.c:1271
 #, c-format
 msgid "Query's param sources has no data model at position %d"
-msgstr ""
+msgstr "Los parámetros del origen de la consulta no tiene un modelo de datos en la posición %d"
 
 #: ../libgda/gda-query-field-value.c:1278
 msgid "'restrict' attribute has a wrong format"
-msgstr ""
+msgstr "el atributo «restrict» tiene un formato erróneo"
 
 #: ../libgda/gda-query-field-value.c:1289
 #, c-format
 msgid "Feature not yet implemented, see %s(), line %d"
-msgstr ""
+msgstr "Característica no implementada, vea %s(), línea %d"
 
 #: ../libgda/gda-query-field-value.c:1315
 msgid "Missing required g_type for <gda_query_fval>"
@@ -1403,7 +1407,7 @@ msgstr "Error al analizar la consulta (%s)"
 
 #: ../libgda/gda-query.c:1443
 msgid "No valid type specified for parameter, using gchararray"
-msgstr ""
+msgstr "El tipo especificado para el parámetro no es válido, usando gchararray"
 
 #: ../libgda/gda-query.c:1935
 msgid "The query represented by a target must be a sub-query of the current query"
@@ -1467,7 +1471,7 @@ msgstr "El ID XML para una consulta debería ser QUxxx donde xxx es un número"
 
 #: ../libgda/gda-query.c:4258
 msgid "First query of <gda_model_query> must be a SELECT query"
-msgstr ""
+msgstr "La primera consulta de <gda_model_query> debe ser una consulta SELECT"
 
 #: ../libgda/gda-query.c:4350
 msgid "Missing both attributes 'entity_ref' and 'table_name' from <gda_query_target>"
@@ -1591,25 +1595,25 @@ msgstr ""
 #: ../libgda/gda-server-operation.c:603
 #, c-format
 msgid "GdaServerOperation: file '%s' does not conform to DTD"
-msgstr ""
+msgstr "GdaServerOperation: el archivo «%s» no se ajusta a DTD"
 
 #: ../libgda/gda-server-operation.c:616
 #, c-format
 msgid "GdaServerOperation: could not load file '%s'"
-msgstr ""
+msgstr "GdaServerOperation: no se pudo cargar el archivo «%s»"
 
 #: ../libgda/gda-server-operation.c:772
 #, c-format
 msgid "GdaServerOperation: error loading GdaParameterList spec %s: '%s'"
-msgstr ""
+msgstr "GdaServerOperation: error al cargar la especificación GdaParameterList %s: «%s»"
 
 #: ../libgda/gda-server-operation.c:857
 msgid "unnamed"
-msgstr "anónima"
+msgstr "sin nombre"
 
 #: ../libgda/gda-server-operation.c:1095
 msgid "Non handled GdaServerOperationType, please report error"
-msgstr ""
+msgstr "No existe el manejador GdaServerOperationType, por favor informe del error"
 
 #: ../libgda/gda-server-operation.c:1265
 #, c-format
@@ -1949,19 +1953,25 @@ msgstr "El proveedor %s creó un GdaServerOperation csin un nodo para «%s»"
 #: ../libgda/gda-server-provider.c:495
 #, c-format
 msgid "Provider %s created a GdaServerOperation with wrong node type for '%s'"
-msgstr "El proveedor %s creó un GdaServerOperation con un tipo de nodo erróneo para «%s»"
+msgstr ""
+"El proveedor %s creó un GdaServerOperation con un tipo de nodo erróneo para "
+"«%s»"
 
 #: ../libgda/gda-server-provider.c:1159
 msgid ""
 "GdaServerProvider object implements the escape_string() virtual method but "
 "does not implement the unescape_string() one, please report this bug."
 msgstr ""
+"El objeto GdaServerProvider implementa el método virtual escape_string() pero no implementa unescape_string(), por favor envíe un "
+"informe de error."
 
 #: ../libgda/gda-server-provider.c:1186
 msgid ""
 "GdaServerProvider object implements the unescape_string() virtual method but "
 "does not implement the escape_string() one, please report this bug."
 msgstr ""
+"El objeto GdaServerProvider implementa el método virtual unescape_string() pero no implementa escape_string(), por favor envíe un "
+"informe de error."
 
 #: ../libgda/gda-util.c:244
 #, c-format
@@ -2728,7 +2738,7 @@ msgid ""
 "Host on which the database server is running (leave empty for a local "
 "connection using a UNIX domain socket, or use 'localhost' for a TCP/IP "
 "connection on the local machine) "
-msgstr ""
+msgstr "Equipo en el que se está ejecutando la base de datos (déjelo vacío para una conexión local usando sockets de dominio UNIX, o use «localhost» para una conexión TCP/IP en la máquina local) "
 
 #: ../providers/mysql/gda-mysql-ddl.c:257
 #: ../providers/postgres/gda-postgres-ddl.c:265
@@ -2770,7 +2780,9 @@ msgstr "La cadena de la conexión debe contener un valor DB_NAME"
 msgid ""
 "The connection string format has changed: replace DATABASE with DB_NAME and "
 "the same contents"
-msgstr "El formato de la cadena de conexión ha cambiado, reemplace DATABASE con DB_NAME y el mismo contenido"
+msgstr ""
+"El formato de la cadena de conexión ha cambiado, reemplace DATABASE con "
+"DB_NAME y el mismo contenido"
 
 #: ../providers/mysql/gda-mysql-provider.c:414
 #: ../providers/mysql/gda-mysql-provider.c:1605
@@ -3331,7 +3343,7 @@ msgstr "Tipo de ordenación"
 #. Index fields
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:16
 msgid "The number of characters the index is on for columns of type CHAR or VARCHAR"
-msgstr ""
+msgstr "El número de caracteres en las que el índice está activado para las columnas de tipo CHAR o VARCHAR"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:5
@@ -3387,7 +3399,9 @@ msgstr "Comprimido"
 msgid ""
 "Counter for auto incremented fields is incremented by this value + 1 "
 "(DEFAULT: 0)"
-msgstr "El contador para los campos autoincrementales se incrementa con este valor +1 (PREDETERMINADO: 0)"
+msgstr ""
+"El contador para los campos autoincrementales se incrementa con este valor "
+"+1 (PREDETERMINADO: 0)"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:35
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:15
@@ -3402,7 +3416,7 @@ msgstr "Directorio de datos"
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:50
 msgid "Delay key write"
-msgstr ""
+msgstr "Retrasar la escritura de las claves"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:51
 msgid "Don't pack keys"
@@ -3984,7 +3998,9 @@ msgstr "Proveedor para bases datos Oracle"
 msgid ""
 "Drop the domain index even if the indextype routine invocation returns an "
 "error or the index is marked 'in progress'. (FORCE)"
-msgstr "Eliminar el índice del dominio incluso si la invocación a la rutina indextype devuelve un error o el índice se marca «en progreso». (FORZAR)"
+msgstr ""
+"Eliminar el índice del dominio incluso si la invocación a la rutina "
+"indextype devuelve un error o el índice se marca «en progreso». (FORZAR)"
 
 #: ../providers/oracle/oracle_specs_drop_table.xml.in.h:1
 msgid "Automatically drop objects that depend on the table (CASCADE CONSTRAINTS)"
@@ -4055,7 +4071,9 @@ msgstr "Falta algún parámetro para «%s»"
 #: ../providers/postgres/gda-postgres-provider.c:1142
 #, c-format
 msgid "Could not render SQL for SELECT query to fetch existing BLOB values: %s"
-msgstr "No se pudo renderizar el SQL para la consulta SELECT para obtener los valores BLOB existentes: %s"
+msgstr ""
+"No se pudo renderizar el SQL para la consulta SELECT para obtener los "
+"valores BLOB existentes: %s"
 
 #: ../providers/postgres/gda-postgres-provider.c:1520
 msgid "Transactions are not supported in read uncommitted isolation level"
@@ -4110,7 +4128,10 @@ msgstr "Chino EUC"
 msgid ""
 "Database server port (for servers running on unix domain sockets, enter the "
 "socket's file name extension (usually 5432), or leave this field empty)"
-msgstr "El puerto del equipo servidor de la base de datos (para los servidores ejecutándose bajo sockets de dominio UNIX, introduzca la extensión del nombre del socket (generalmente 5432), o deje este campo vacío)"
+msgstr ""
+"El puerto del equipo servidor de la base de datos (para los servidores "
+"ejecutándose bajo sockets de dominio UNIX, introduzca la extensión del "
+"nombre del socket (generalmente 5432), o deje este campo vacío)"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:12
 msgid "Encoding"
@@ -4124,7 +4145,10 @@ msgid ""
 "Host on which the database server is running (for servers running on unix "
 "domain sockets, enter the socket's path (usually /tmp), or leave this field "
 "empty)"
-msgstr "El equipo en el que se está ejecutando la base de datos (para los servidores ejecutándose bajo sockets de dominio UNIX, introduzca la ruta del socket (generalmente /tmp), o deje este campo vacío)"
+msgstr ""
+"El equipo en el que se está ejecutando la base de datos (para los servidores "
+"ejecutándose bajo sockets de dominio UNIX, introduzca la ruta del socket "
+"(generalmente /tmp), o deje este campo vacío)"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:16
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:14
@@ -4393,7 +4417,7 @@ msgid ""
 "The connection string format has changed: replace URI with DB_DIR (the path "
 "to the database file) and DB_NAME (the database file without the '.db' at "
 "the end)."
-msgstr ""
+msgstr "El formato de la cadena de conexión ha cambiado, reemplace URI por DB_DIR (la ruta al archivo de la base de datos) y DB_NAME (el archivo de la base de datos sin el «.db» al final)."
 
 #: ../providers/sqlite/gda-sqlite-provider.c:302
 msgid "The DB_DIR part of the connection string must point to a valid directory"
