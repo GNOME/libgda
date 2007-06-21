@@ -55,7 +55,7 @@ struct _GdaReportItemPrivate {
 };
 
 
-GType gda_report_item_get_type (void);
+GType gda_report_item_get_type (void) G_GNUC_CONST;
 
 
 GdaReportItem *gda_report_item_new (GdaReportValid *valid,

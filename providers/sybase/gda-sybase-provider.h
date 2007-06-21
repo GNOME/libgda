@@ -85,7 +85,7 @@ typedef struct _GdaSybaseConnectionData {
 	CS_INT         res_type; // resulttype of query in progress
 } GdaSybaseConnectionData;
 
-GType              gda_sybase_provider_get_type (void);
+GType              gda_sybase_provider_get_type (void) G_GNUC_CONST;
 GdaServerProvider *gda_sybase_provider_new (void);
 
 GdaSybaseConnectionData *gda_sybase_connection_data_new(void);

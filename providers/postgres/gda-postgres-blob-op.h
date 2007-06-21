@@ -47,7 +47,7 @@ struct _GdaPostgresBlobOpClass {
 	GdaBlobOpClass            parent_class;
 };
 
-GType         gda_postgres_blob_op_get_type     (void);
+GType         gda_postgres_blob_op_get_type     (void) G_GNUC_CONST;
 GdaBlobOp    *gda_postgres_blob_op_new          (GdaConnection *cnc);
 GdaBlobOp    *gda_postgres_blob_op_new_with_id  (GdaConnection *cnc, const gchar *sql_id);
 gboolean      gda_postgres_blob_op_declare_blob (GdaPostgresBlobOp *pgop);

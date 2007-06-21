@@ -52,7 +52,7 @@ struct _GdaFirebirdProviderClass {
 	GdaServerProviderClass parent_class;
 };
 
-GType              gda_firebird_provider_get_type (void);
+GType              gda_firebird_provider_get_type (void) G_GNUC_CONST;
 GdaServerProvider *gda_firebird_provider_new (void);
 
 void               gda_firebird_connection_make_error (GdaConnection *cnc, 

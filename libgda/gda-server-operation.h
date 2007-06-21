@@ -98,7 +98,7 @@ struct _GdaServerOperationClass {
 
 };
 
-GType                      gda_server_operation_get_type                (void);
+GType                      gda_server_operation_get_type                (void) G_GNUC_CONST;
 GdaServerOperation        *gda_server_operation_new                     (GdaServerOperationType op_type, const gchar *xml_file);
 GdaServerOperationType     gda_server_operation_get_op_type             (GdaServerOperation *op);
 const gchar               *gda_server_operation_op_type_to_string       (GdaServerOperationType type);

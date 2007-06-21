@@ -86,7 +86,7 @@ struct _GdaDictConstraintClass
 	GdaObjectClass                    parent_class;
 };
 
-GType                  gda_dict_constraint_get_type            (void);
+GType                  gda_dict_constraint_get_type            (void) G_GNUC_CONST;
 GdaDictConstraint     *gda_dict_constraint_new                 (GdaDictTable *table, GdaDictConstraintType type);
 GdaDictConstraint     *gda_dict_constraint_new_with_db         (GdaDictDatabase *db);
 GdaDictConstraintType  gda_dict_constraint_get_constraint_type (GdaDictConstraint *cstr);

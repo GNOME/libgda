@@ -50,7 +50,7 @@ struct _GdaBlobOpClass {
 	gboolean (* write_all)  (GdaBlobOp *op, GdaBlob *blob);
 };
 
-GType    gda_blob_op_get_type  (void);
+GType    gda_blob_op_get_type  (void) G_GNUC_CONST;
 
 glong    gda_blob_op_get_length (GdaBlobOp *op);
 glong    gda_blob_op_read       (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size);

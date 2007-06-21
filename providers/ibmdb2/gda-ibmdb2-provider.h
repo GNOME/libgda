@@ -65,7 +65,7 @@ struct _GdaIBMDB2ConnectionData {
 
 G_BEGIN_DECLS
 
-GType              gda_ibmdb2_provider_get_type (void);
+GType              gda_ibmdb2_provider_get_type (void) G_GNUC_CONST;
 GdaServerProvider *gda_ibmdb2_provider_new (void);
 
 G_END_DECLS

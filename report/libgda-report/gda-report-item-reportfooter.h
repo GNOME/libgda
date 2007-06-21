@@ -48,7 +48,7 @@ struct _GdaReportItemReportFooterClass {
 };
 
 
-GType gda_report_item_reportfooter_get_type (void);
+GType gda_report_item_reportfooter_get_type (void) G_GNUC_CONST;
 
 GdaReportItem *gda_report_item_reportfooter_new (GdaReportValid *valid);
 

@@ -83,7 +83,7 @@ struct _GdaFreeTDSConnectionData {
 	gint           result_type;
 };
 
-GType              gda_freetds_provider_get_type (void);
+GType              gda_freetds_provider_get_type (void) G_GNUC_CONST;
 GdaServerProvider *gda_freetds_provider_new (void);
 
 G_END_DECLS

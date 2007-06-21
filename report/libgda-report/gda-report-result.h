@@ -48,7 +48,7 @@ struct _GdaReportResultClass {
 	GObjectClass parent_class;
 };
 
-GType gda_report_result_get_type (void);
+GType gda_report_result_get_type (void) G_GNUC_CONST;
 
 GdaReportResult *gda_report_result_new_to_memory (GdaReportDocument *document);
 

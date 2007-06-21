@@ -56,7 +56,7 @@ struct _GdaDictAggregateClass
 	GdaObjectClass                    parent_class;
 };
 
-GType             gda_dict_aggregate_get_type           (void);
+GType             gda_dict_aggregate_get_type           (void) G_GNUC_CONST;
 GObject          *gda_dict_aggregate_new                (GdaDict *dict);
 void              gda_dict_aggregate_set_dbms_id        (GdaDictAggregate *agg, const gchar *id);
 gchar            *gda_dict_aggregate_get_dbms_id        (GdaDictAggregate *agg);

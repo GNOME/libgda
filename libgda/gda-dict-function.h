@@ -56,7 +56,7 @@ struct _GdaDictFunctionClass
 	GdaObjectClass                    parent_class;
 };
 
-GType             gda_dict_function_get_type                (void);
+GType             gda_dict_function_get_type                (void) G_GNUC_CONST;
 GObject          *gda_dict_function_new                     (GdaDict *dict);
 void              gda_dict_function_set_dbms_id             (GdaDictFunction *func, const gchar *id);
 gchar            *gda_dict_function_get_dbms_id             (GdaDictFunction *func);

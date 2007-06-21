@@ -51,7 +51,7 @@ struct _GdaSqliteRecordsetClass {
 	GdaDataModelHashClass      parent_class;
 };
 
-GType         gda_sqlite_recordset_get_type       (void);
+GType         gda_sqlite_recordset_get_type       (void) G_GNUC_CONST;
 GdaDataModel *gda_sqlite_recordset_new            (GdaConnection *cnc, SQLITEresult *sres);
 GdaDataModel *gda_sqlite_recordset_new_with_types (GdaConnection *cnc, SQLITEresult *sres, gint nbcols, ...);
 

@@ -115,7 +115,7 @@ struct _GdaDataModelClass {
 	gpointer                sig_reserved4;
 };
 
-GType               gda_data_model_get_type               (void);
+GType               gda_data_model_get_type               (void) G_GNUC_CONST;
 
 gboolean            gda_data_model_is_updatable           (GdaDataModel *model);
 GdaDataModelAccessFlags gda_data_model_get_access_flags       (GdaDataModel *model);

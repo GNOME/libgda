@@ -60,7 +60,7 @@ struct _GdaGraphItemClass
 	void        (*moved) (GdaGraphItem *item);
 };
 
-GType            gda_graph_item_get_type            (void);
+GType            gda_graph_item_get_type            (void) G_GNUC_CONST;
 
 GObject         *gda_graph_item_new                 (GdaDict *dict, GdaObject *ref_obj);
 GdaObject       *gda_graph_item_get_ref_object      (GdaGraphItem *item);

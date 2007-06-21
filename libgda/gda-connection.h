@@ -119,7 +119,7 @@ typedef enum {
 } GdaConnectionSchema;
 
 
-GType                gda_connection_get_type            (void);
+GType                gda_connection_get_type            (void) G_GNUC_CONST;
 GdaConnection       *gda_connection_new                 (GdaClient *client,
 							 GdaServerProvider *provider,
 							 const gchar *dsn,

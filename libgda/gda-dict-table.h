@@ -59,7 +59,7 @@ struct _GdaDictTableClass
 	GdaObjectClass             parent_class;
 };
 
-GType              gda_dict_table_get_type          (void);
+GType              gda_dict_table_get_type          (void) G_GNUC_CONST;
 GObject           *gda_dict_table_new               (GdaDict *dict);
 
 GdaDictDatabase   *gda_dict_table_get_database      (GdaDictTable *table);

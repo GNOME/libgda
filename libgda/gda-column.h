@@ -52,7 +52,7 @@ struct _GdaColumnClass {
 	void (* g_type_changed) (GdaColumn *column, GType old_type, GType new_type);
 };
 
-GType           gda_column_get_type           (void);
+GType           gda_column_get_type           (void) G_GNUC_CONST;
 GdaColumn      *gda_column_new                (void);
 GdaColumn      *gda_column_copy               (GdaColumn *column);
 

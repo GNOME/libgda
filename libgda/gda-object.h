@@ -64,7 +64,7 @@ struct _GdaObjectClass
 	gboolean      name_as_initial_id; /* TRUE if the name of the object must be copied as the ID if ID is NULL */
 };
 
-GType        gda_object_get_type        (void);
+GType        gda_object_get_type        (void) G_GNUC_CONST;
 GdaDict     *gda_object_get_dict        (GdaObject *gdaobj);
 
 void         gda_object_set_id          (GdaObject *gdaobj, const gchar *strid);

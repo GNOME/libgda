@@ -50,7 +50,7 @@ struct _GdaReportDocumentClass {
 	GObjectClass parent_class;
 };
 
-GType gda_report_document_get_type (void);
+GType gda_report_document_get_type (void) G_GNUC_CONST;
 
 GdaReportDocument *gda_report_document_new (GdaReportValid *valid);
 

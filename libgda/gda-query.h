@@ -96,7 +96,7 @@ struct _GdaQueryClass
 	void   (*sub_query_updated)    (GdaQuery *query, GdaQuery *sub_query);
 };
 
-GType              gda_query_get_type               (void);
+GType              gda_query_get_type               (void) G_GNUC_CONST;
 GdaQuery          *gda_query_new                    (GdaDict *dict);
 GdaQuery          *gda_query_new_copy               (GdaQuery *orig, GHashTable *replacements);
 GdaQuery          *gda_query_new_from_sql           (GdaDict *dict, const gchar *sql, GError **error);
@@ -120,7 +120,7 @@ GdaObject         *gda_query_execute                (GdaQuery *query, GdaParamet
 
 /* if SQL queries */
 void               gda_query_set_sql_text           (GdaQuery *query, const gchar *sql, GError **error);
-const gchar       *gda_query_get_sql_text           (GdaQuery *query);
+gchar             *gda_query_get_sql_text           (GdaQuery *query);
 
 /* for other types of queries */
 GSList            *gda_query_get_sub_queries        (GdaQuery *query);

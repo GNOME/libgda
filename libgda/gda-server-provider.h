@@ -199,7 +199,7 @@ struct _GdaServerProviderClass {
 	gpointer                   reserved5;
 };
 
-GType                  gda_server_provider_get_type (void);
+GType                  gda_server_provider_get_type (void) G_GNUC_CONST;
 
 /* provider information */
 const gchar           *gda_server_provider_get_version        (GdaServerProvider *provider);

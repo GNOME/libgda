@@ -34,7 +34,7 @@ typedef struct _GdaQuarkList GdaQuarkList;
 
 #define GDA_TYPE_QUARK_LIST (gda_quark_list_get_type())
 
-GType         gda_quark_list_get_type        (void);
+GType         gda_quark_list_get_type        (void) G_GNUC_CONST;
 GdaQuarkList *gda_quark_list_new             (void);
 GdaQuarkList *gda_quark_list_new_from_string (const gchar *string);
 GdaQuarkList *gda_quark_list_copy            (GdaQuarkList *qlist);

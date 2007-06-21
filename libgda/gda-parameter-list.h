@@ -130,7 +130,7 @@ struct _GdaParameterListClass
 	void                  (*public_data_changed)  (GdaParameterList *paramlist);
 };
 
-GType                   gda_parameter_list_get_type                 (void);
+GType                   gda_parameter_list_get_type                 (void) G_GNUC_CONST;
 GdaParameterList       *gda_parameter_list_new                      (GSList *params);
 GdaParameterList       *gda_parameter_list_new_inline               (GdaDict *dict, ...);
 

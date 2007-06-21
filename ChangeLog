@@ -1,7 +1,123 @@
+2007-06-21  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-query.[ch]: applied corrections for bug #449725 (from Piotr Pokora)
+	* providers/sqlite/sqlite-src/*: use SQLite 3.4.0
+	* libgda/gda-connection.c: 
+	* libgda/gda-server-provider.c: add a call to gda_connection_clear_events_list() in
+	gda_server_provider_execute_query() and	gda_server_provider_execute_command(), and
+	removed it from gda_connection_execute_command() (which calls gda_server_provider_execute_command)
+	* libgda/gda-init.c:
+	* libgda/gda-threader.c: if the LIBGDA_NO_THREADS environment variable is set, then
+	don't initialize threads system (don't call g_thread_init())
+	* libgda/gda-dict-table.h:
+	* libgda/gda-data-access-wrapper.h:
+	* libgda/gda-parameter.h:
+	* libgda/gda-quark-list.h:
+	* libgda/gda-query-field-all.h:
+	* libgda/gda-query-object.h:
+	* libgda/gda-query-field-field.h:
+	* libgda/gda-query.h:
+	* libgda/gda-connection.h:
+	* libgda/gda-query-field.h:
+	* libgda/gda-data-proxy.h:
+	* libgda/gda-object-ref.h:
+	* libgda/gda-query-join.h:
+	* libgda/gda-dict-constraint.h:
+	* libgda/gda-object.h:
+	* libgda/gda-command.h:
+	* libgda/gda-blob-op.h:
+	* libgda/gda-connection-event.h:
+	* libgda/gda-data-model-index.h:
+	* libgda/gda-server-provider.h:
+	* libgda/graph/gda-graph-item.h:
+	* libgda/graph/gda-graph-query.h:
+	* libgda/graph/gda-graph.h:
+	* libgda/gda-transaction-status.h:
+	* libgda/gda-query-field-value.h:
+	* libgda/gda-data-model-filter-sql.h:
+	* libgda/gda-dict.h:
+	* libgda/gda-data-model-query.h:
+	* libgda/gda-config.h:
+	* libgda/handlers/gda-handler-numerical.h:
+	* libgda/handlers/gda-handler-bin.h:
+	* libgda/handlers/gda-handler-string.h:
+	* libgda/handlers/gda-handler-time.h:
+	* libgda/handlers/gda-handler-boolean.h:
+	* libgda/handlers/gda-handler-type.h:
+	* libgda/gda-row.h:
+	* libgda/gda-query-field-agg.h:
+	* libgda/gda-graphviz.h:
+	* libgda/gda-server-operation.h:
+	* libgda/gda-data-model-array.h:
+	* libgda/gda-dict-database.h:
+	* libgda/gda-data-model-import.h:
+	* libgda/gda-threader.h:
+	* libgda/gda-dict-aggregate.h:
+	* libgda/gda-dict-field.h:
+	* libgda/gda-data-model-iter.h:
+	* libgda/gda-data-model-hash.h:
+	* libgda/gda-client.h:
+	* libgda/gda-data-model.h:
+	* libgda/gda-dict-function.h:
+	* libgda/gda-query-field-func.h:
+	* libgda/gda-data-handler.h:
+	* libgda/gda-column.h:
+	* libgda/gda-query-target.h:
+	* libgda/gda-dict-type.h:
+	* libgda/gda-column-index.h:
+	* libgda/gda-query-condition.h:
+	* libgda/gda-parameter-list.h:
+	* providers/freetds/gda-freetds-provider.h:
+	* providers/freetds/gda-freetds-recordset.h:
+	* providers/sybase/gda-sybase-recordset.h:
+	* providers/sybase/gda-sybase-provider.h:
+	* providers/bdb/gda-bdb-recordset.h:
+	* providers/bdb/gda-bdb-provider.h:
+	* providers/ibmdb2/gda-ibmdb2-recordset.h:
+	* providers/ibmdb2/gda-ibmdb2-provider.h:
+	* providers/msql/gda-msql-provider.h:
+	* providers/msql/gda-msql-recordset.h:
+	* providers/firebird/gda-firebird-recordset.h:
+	* providers/firebird/gda-firebird-provider.h:
+	* providers/ldap/gda-ldap-recordset.h:
+	* providers/ldap/gda-ldap-provider.h:
+	* providers/xbase/gda-xbase-provider.h:
+	* providers/postgres/gda-postgres-cursor-recordset.h:
+	* providers/postgres/gda-postgres-blob-op.h:
+	* providers/postgres/gda-postgres-recordset.h:
+	* providers/postgres/gda-postgres-handler-bin.h:
+	* providers/postgres/gda-postgres-provider.h:
+	* providers/oracle/gda-oracle-blob-op.h:
+	* providers/oracle/gda-oracle-recordset.h:
+	* providers/oracle/gda-oracle-provider.h:
+	* providers/sqlite/gda-sqlite-provider.h:
+	* providers/sqlite/gda-sqlite-recordset.h:
+	* providers/sqlite/gda-sqlite-handler-bin.h:
+	* providers/odbc/gda-odbc-recordset.h:
+	* providers/odbc/gda-odbc-provider.h:
+	* providers/mysql/gda-mysql-provider.h:
+	* providers/mysql/gda-mysql-recordset.h:
+	* providers/mdb/gda-mdb-provider.h:
+	* report/libgda-report/gda-report-item.h:
+	* report/libgda-report/gda-report-item-sqlquery.h:
+	* report/libgda-report/gda-report-valid.h:
+	* report/libgda-report/gda-report-item-label.h:
+	* report/libgda-report/gda-report-result.h:
+	* report/libgda-report/gda-report-item-pageheader.h:
+	* report/libgda-report/gda-report-item-reportfooter.h:
+	* report/libgda-report/gda-report-item-pagefooter.h:
+	* report/libgda-report/gda-report-item-detail.h:
+	* report/libgda-report/gda-report-document.h:
+	* report/libgda-report/gda-report-item-report.h:
+	* report/libgda-report/gda-report-item-repfield.h:
+	* report/libgda-report/gda-report-item-reportheader.h: added G_GNUC_CONST to all
+	of the _get_type(void) functions
+	* tests/providers/*: corrected test data
+
 2007-06-17  Vivien Malerba <malerba@gnome-db.org>
 
-        * libgda/graph/gda-graph.c: correctly interpret the ID of a
-        graph when loaded from XML
+	* libgda/graph/gda-graph.c: correctly interpret the ID of a
+	graph when loaded from XML
 	* configure.in: don't try to use the curses library on Windows
 
 2007-06-12  Vivien Malerba <malerba@gnome-db.org>

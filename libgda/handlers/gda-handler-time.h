@@ -52,7 +52,7 @@ struct _GdaHandlerTimeClass
 };
 
 
-GType           gda_handler_time_get_type      (void);
+GType           gda_handler_time_get_type      (void) G_GNUC_CONST;
 GdaDataHandler *gda_handler_time_new           (void);
 GdaDataHandler *gda_handler_time_new_no_locale (void);
 void            gda_handler_time_set_sql_spec  (GdaHandlerTime *dh, GDateDMY first, GDateDMY sec,

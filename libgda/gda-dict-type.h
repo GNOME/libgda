@@ -56,7 +56,7 @@ struct _GdaDictTypeClass
 	GdaObjectClass                    parent_class;
 };
 
-GType               gda_dict_type_get_type      (void);
+GType               gda_dict_type_get_type      (void) G_GNUC_CONST;
 GdaDictType        *gda_dict_type_new           (GdaDict *dict);
 
 void                gda_dict_type_set_sqlname   (GdaDictType *dt, const gchar *sqlname);

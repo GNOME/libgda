@@ -58,7 +58,7 @@ struct _GdaQueryFieldFuncClass
 	GdaQueryFieldClass          parent_class;
 };
 
-GType                  gda_query_field_func_get_type          (void);
+GType                  gda_query_field_func_get_type          (void) G_GNUC_CONST;
 GdaQueryField         *gda_query_field_func_new               (GdaQuery *query, const gchar *func_name);
 
 GdaDictFunction       *gda_query_field_func_get_ref_func      (GdaQueryFieldFunc *func);

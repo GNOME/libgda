@@ -57,7 +57,7 @@ struct _GdaCommand {
 
 #define GDA_TYPE_COMMAND (gda_command_get_type ())
 
-GType             gda_command_get_type (void);
+GType             gda_command_get_type (void) G_GNUC_CONST;
 GdaCommand       *gda_command_new (const gchar *text, GdaCommandType type,
 				   GdaCommandOptions options);
 void              gda_command_free (GdaCommand *cmd);

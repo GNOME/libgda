@@ -54,7 +54,7 @@ struct _GdaQueryObjectClass
 	void                  (*set_int_id)  (GdaQueryObject *object, guint id);
 };
 
-GType        gda_query_object_get_type        (void);
+GType        gda_query_object_get_type        (void) G_GNUC_CONST;
 void         gda_query_object_set_int_id      (GdaQueryObject *qobj, guint id);
 guint        gda_query_object_get_int_id      (GdaQueryObject *qobj);
 

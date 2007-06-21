@@ -47,7 +47,7 @@ struct _GdaDataModelImportClass {
 	GdaObjectClass             parent_class;
 };
 
-GType         gda_data_model_import_get_type     (void);
+GType         gda_data_model_import_get_type     (void) G_GNUC_CONST;
 GdaDataModel *gda_data_model_import_new_file     (const gchar *filename, gboolean random_access,
 						  GdaParameterList *options);
 GdaDataModel *gda_data_model_import_new_mem      (const gchar *data, gboolean random_access, 

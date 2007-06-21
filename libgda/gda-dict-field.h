@@ -61,7 +61,7 @@ typedef enum {
 	FIELD_AUTO_INCREMENT = 1 << 0
 } GdaDictFieldAttribute;
 
-GType           gda_dict_field_get_type          (void);
+GType           gda_dict_field_get_type          (void) G_GNUC_CONST;
 GObject        *gda_dict_field_new               (GdaDict *dict, GdaDictType *type);
 
 void            gda_dict_field_set_length        (GdaDictField *field, gint length);

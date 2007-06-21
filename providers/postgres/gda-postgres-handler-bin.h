@@ -51,7 +51,7 @@ struct _GdaPostgresHandlerBinClass
 };
 
 
-GType           gda_postgres_handler_bin_get_type      (void);
+GType           gda_postgres_handler_bin_get_type      (void) G_GNUC_CONST;
 GdaDataHandler *gda_postgres_handler_bin_new           (GdaConnection *cnc);
 
 G_END_DECLS

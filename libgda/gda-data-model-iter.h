@@ -60,7 +60,7 @@ struct _GdaDataModelIterClass
 	void                    (* end_of_data)      (GdaDataModelIter *iter);
 };
 
-GType             gda_data_model_iter_get_type             (void);
+GType             gda_data_model_iter_get_type             (void) G_GNUC_CONST;
 GdaDataModelIter *gda_data_model_iter_new                  (GdaDataModel *model);
 
 gboolean          gda_data_model_iter_set_at_row           (GdaDataModelIter *iter, gint row);

@@ -64,7 +64,7 @@ struct _GdaFreeTDSRecordsetPrivate {
 	GPtrArray                *rows;
 };
 
-GType          gda_freetds_recordset_get_type (void);
+GType          gda_freetds_recordset_get_type (void) G_GNUC_CONST;
 GdaDataModel  *gda_freetds_recordset_new (GdaConnection *cnc,
                                           gboolean fetchall);
 

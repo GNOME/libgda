@@ -50,7 +50,7 @@ struct _GdaOdbcRecordsetClass {
 	GdaDataModelHashClass parent_class;
 };
 
-GType          gda_odbc_recordset_get_type (void);
+GType          gda_odbc_recordset_get_type (void) G_GNUC_CONST;
 GdaDataModel *gda_odbc_recordset_new (GdaConnection *cnc, SQLHANDLE stmt );
 
 G_END_DECLS

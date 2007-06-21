@@ -60,7 +60,7 @@ struct _GdaDataModelQueryClass {
 	GdaObjectClass             parent_class;
 };
 
-GType             gda_data_model_query_get_type                     (void);
+GType             gda_data_model_query_get_type                     (void) G_GNUC_CONST;
 GdaDataModel     *gda_data_model_query_new                          (GdaQuery *query);
 
 GdaParameterList *gda_data_model_query_get_parameter_list           (GdaDataModelQuery *model);

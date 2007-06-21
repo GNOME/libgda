@@ -642,6 +642,7 @@ gda_server_provider_execute_command (GdaServerProvider *provider,
 	}
 #endif
 
+	gda_connection_clear_events_list (cnc);
 	return CLASS (provider)->execute_command (provider, cnc, cmd, params);
 }
 
@@ -697,6 +698,7 @@ gda_server_provider_execute_query (GdaServerProvider *provider,
 	}
 #endif
 	
+	gda_connection_clear_events_list (cnc);
 	return CLASS (provider)->execute_query (provider, cnc, query, params);
 }
 

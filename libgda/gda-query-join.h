@@ -74,7 +74,7 @@ struct _GdaQueryJoinClass
 	void   (*condition_changed)    (GdaQueryJoin *join);
 };
 
-GType              gda_query_join_get_type                  (void);
+GType              gda_query_join_get_type                  (void) G_GNUC_CONST;
 GdaQueryJoin      *gda_query_join_new_with_targets          (GdaQuery *query, GdaQueryTarget *target_1, GdaQueryTarget *target_2);
 GdaQueryJoin      *gda_query_join_new_with_xml_ids          (GdaQuery *query, const gchar *target_1_xml_id, const gchar *target_2_xml_id);
 GdaQueryJoin      *gda_query_join_new_copy                  (GdaQueryJoin *orig, GHashTable *replacements);

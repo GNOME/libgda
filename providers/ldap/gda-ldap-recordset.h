@@ -52,7 +52,7 @@ struct _GdaLdapRecordsetClass {
 	GdaDataModelRowClass parent_class;
 };
 
-GType             gda_ldap_recordset_get_type (void);
+GType             gda_ldap_recordset_get_type (void) G_GNUC_CONST;
 GdaLdapRecordset *gda_ldap_recordset_new (GdaConnection *cnc, LDAPMessage *ldap_res);
 
 G_END_DECLS

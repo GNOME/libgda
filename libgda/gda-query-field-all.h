@@ -57,7 +57,7 @@ struct _GdaQueryFieldAllClass
 	GdaQueryFieldClass         parent_class;
 };
 
-GType           gda_query_field_all_get_type             (void);
+GType           gda_query_field_all_get_type             (void) G_GNUC_CONST;
 GdaQueryField  *gda_query_field_all_new                  (GdaQuery *query, const gchar *target);
 
 GdaQueryTarget *gda_query_field_all_get_target           (GdaQueryFieldAll *field);

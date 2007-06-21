@@ -49,7 +49,7 @@ struct _GdaDataModelHashClass {
 	GdaDataModelRowClass parent_class;
 };
 
-GType         gda_data_model_hash_get_type      (void);
+GType         gda_data_model_hash_get_type      (void) G_GNUC_CONST;
 GdaDataModel *gda_data_model_hash_new           (gint cols);
 
 void	      gda_data_model_hash_clear         (GdaDataModelHash *model);

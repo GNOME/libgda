@@ -49,7 +49,7 @@ struct _GdaMysqlRecordsetClass {
 	GdaDataModelArrayClass parent_class;
 };
 
-GType              gda_mysql_recordset_get_type (void);
+GType              gda_mysql_recordset_get_type (void) G_GNUC_CONST;
 GdaMysqlRecordset *gda_mysql_recordset_new      (GdaConnection *cnc, MYSQL_RES *mysql_res, MYSQL *mysql);
 
 G_END_DECLS

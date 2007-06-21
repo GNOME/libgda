@@ -52,7 +52,7 @@ struct _GdaHandlerNumericalClass
 };
 
 
-GType           gda_handler_numerical_get_type      (void);
+GType           gda_handler_numerical_get_type      (void) G_GNUC_CONST;
 GdaDataHandler *gda_handler_numerical_new           (void);
 
 G_END_DECLS

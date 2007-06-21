@@ -48,7 +48,7 @@ struct _GdaBdbRecordsetClass {
 
 G_BEGIN_DECLS
 
-GType         gda_bdb_recordset_get_type (void);
+GType         gda_bdb_recordset_get_type (void) G_GNUC_CONST;
 GdaDataModel *gda_bdb_recordset_new (GdaConnection *cnc, DB *dbp);
 
 G_END_DECLS

@@ -86,7 +86,7 @@ struct _GdaQueryConditionClass
 	GdaQueryObjectClass        parent_class;
 };
 
-GType                 gda_query_condition_get_type                (void);
+GType                 gda_query_condition_get_type                (void) G_GNUC_CONST;
 GdaQueryCondition    *gda_query_condition_new                     (GdaQuery *query, GdaQueryConditionType type);
 GdaQueryCondition    *gda_query_condition_new_copy                (GdaQueryCondition *orig, GHashTable *replacements);
 GdaQueryCondition    *gda_query_condition_new_from_sql            (GdaQuery *query, const gchar *sql_cond, 

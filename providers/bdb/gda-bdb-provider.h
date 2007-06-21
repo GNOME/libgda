@@ -52,7 +52,7 @@ typedef struct {
 
 G_BEGIN_DECLS
 
-GType              gda_bdb_provider_get_type (void);
+GType              gda_bdb_provider_get_type (void) G_GNUC_CONST;
 GdaServerProvider *gda_bdb_provider_new (void);
 
 G_END_DECLS

@@ -51,7 +51,7 @@ struct _GdaSqliteHandlerBinClass
 };
 
 
-GType           gda_sqlite_handler_bin_get_type      (void);
+GType           gda_sqlite_handler_bin_get_type      (void) G_GNUC_CONST;
 GdaDataHandler *gda_sqlite_handler_bin_new           (void);
 
 G_END_DECLS

@@ -55,7 +55,7 @@ struct _GdaGraphQueryClass
 	GdaGraphClass   parent_class;
 };
 
-GType            gda_graph_query_get_type            (void);
+GType            gda_graph_query_get_type            (void) G_GNUC_CONST;
 
 GObject         *gda_graph_query_new                 (GdaQuery *query);
 void             gda_graph_query_sync_targets        (GdaGraphQuery *graph);

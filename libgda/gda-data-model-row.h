@@ -63,7 +63,7 @@ struct _GdaDataModelRowClass {
 	gboolean            (* remove_row)      (GdaDataModelRow *model, GdaRow *row, GError **error);
 };
 
-GType        gda_data_model_row_get_type       (void);
+GType        gda_data_model_row_get_type       (void) G_GNUC_CONST;
 GdaRow      *gda_data_model_row_get_row        (GdaDataModelRow *model, gint row, GError **error);
 
 G_END_DECLS

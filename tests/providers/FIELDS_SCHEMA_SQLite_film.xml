@@ -28,7 +28,7 @@
       <gda_value>VARCHAR(255)</gda_value>
       <gda_value>0</gda_value>
       <gda_value>0</gda_value>
-      <gda_value>FALSE</gda_value>
+      <gda_value>TRUE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value isnull="t"/>
@@ -40,7 +40,7 @@
       <gda_value>TEXT</gda_value>
       <gda_value>0</gda_value>
       <gda_value>0</gda_value>
-      <gda_value>TRUE</gda_value>
+      <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value isnull="t"/>
@@ -52,7 +52,7 @@
       <gda_value>year</gda_value>
       <gda_value>0</gda_value>
       <gda_value>0</gda_value>
-      <gda_value>TRUE</gda_value>
+      <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value isnull="t"/>
@@ -64,7 +64,7 @@
       <gda_value>SMALLINT</gda_value>
       <gda_value>0</gda_value>
       <gda_value>0</gda_value>
-      <gda_value>FALSE</gda_value>
+      <gda_value>TRUE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>language.language_id</gda_value>
@@ -76,7 +76,7 @@
       <gda_value>SMALLINT</gda_value>
       <gda_value>0</gda_value>
       <gda_value>0</gda_value>
-      <gda_value>TRUE</gda_value>
+      <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>language.language_id</gda_value>
@@ -88,7 +88,7 @@
       <gda_value>SMALLINT</gda_value>
       <gda_value>0</gda_value>
       <gda_value>0</gda_value>
-      <gda_value>FALSE</gda_value>
+      <gda_value>TRUE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value isnull="t"/>
@@ -100,7 +100,7 @@
       <gda_value>NUMERIC(4,2)</gda_value>
       <gda_value>0</gda_value>
       <gda_value>0</gda_value>
-      <gda_value>FALSE</gda_value>
+      <gda_value>TRUE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value isnull="t"/>
@@ -112,7 +112,7 @@
       <gda_value>SMALLINT</gda_value>
       <gda_value>0</gda_value>
       <gda_value>0</gda_value>
-      <gda_value>TRUE</gda_value>
+      <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value isnull="t"/>
@@ -124,7 +124,7 @@
       <gda_value>NUMERIC(5,2)</gda_value>
       <gda_value>0</gda_value>
       <gda_value>0</gda_value>
-      <gda_value>FALSE</gda_value>
+      <gda_value>TRUE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value isnull="t"/>
@@ -136,7 +136,7 @@
       <gda_value>VARCHAR</gda_value>
       <gda_value>0</gda_value>
       <gda_value>0</gda_value>
-      <gda_value>TRUE</gda_value>
+      <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value isnull="t"/>
@@ -148,7 +148,7 @@
       <gda_value>TEXT[]</gda_value>
       <gda_value>0</gda_value>
       <gda_value>0</gda_value>
-      <gda_value>TRUE</gda_value>
+      <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value isnull="t"/>
@@ -160,7 +160,7 @@
       <gda_value>TIMESTAMP</gda_value>
       <gda_value>0</gda_value>
       <gda_value>0</gda_value>
-      <gda_value>FALSE</gda_value>
+      <gda_value>TRUE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value isnull="t"/>

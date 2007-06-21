@@ -48,7 +48,7 @@ struct _GdaMysqlProviderClass {
 	GdaServerProviderClass parent_class;
 };
 
-GType              gda_mysql_provider_get_type (void);
+GType              gda_mysql_provider_get_type (void) G_GNUC_CONST;
 GdaServerProvider *gda_mysql_provider_new (void);
 gchar *gda_mysql_provider_value_to_sql_string (GdaServerProvider *provider,
 						  GdaConnection *cnc,

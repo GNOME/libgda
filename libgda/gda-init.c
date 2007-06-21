@@ -63,12 +63,15 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 
 	/* Threading support if possible */
+	if (!getenv ("LIBGDA_NO_THREADS")) {
 #ifdef G_THREADS_ENABLED
 #ifndef G_THREADS_IMPL_NONE
-	if (! g_thread_supported ())
-		g_thread_init (NULL);
+		if (! g_thread_supported ())
+			g_thread_init (NULL);
 #endif
 #endif
+	}
+
 	g_type_init ();
 	g_set_prgname (app_id);
 

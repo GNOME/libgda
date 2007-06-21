@@ -58,7 +58,7 @@ typedef struct {
 
 G_BEGIN_DECLS
 
-GType                gda_oracle_provider_get_type (void);
+GType                gda_oracle_provider_get_type (void) G_GNUC_CONST;
 GdaServerProvider   *gda_oracle_provider_new (void);
 
 

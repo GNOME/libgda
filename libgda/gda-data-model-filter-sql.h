@@ -47,7 +47,7 @@ struct _GdaDataModelFilterSQLClass {
 	GdaDataModelArrayClass        parent_class;
 };
 
-GType         gda_data_model_filter_sql_get_type   (void);
+GType         gda_data_model_filter_sql_get_type   (void) G_GNUC_CONST;
 GdaDataModel *gda_data_model_filter_sql_new        (void);
 void          gda_data_model_filter_sql_add_source (GdaDataModelFilterSQL *sel, const gchar *name, GdaDataModel *source);
 void          gda_data_model_filter_sql_set_sql    (GdaDataModelFilterSQL *sel, const gchar *sql);

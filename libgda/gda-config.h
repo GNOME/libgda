@@ -87,7 +87,7 @@ struct _GdaProviderInfo {
 
 #define GDA_TYPE_PROVIDER_INFO (gda_provider_info_get_type ())
 
-GType            gda_provider_info_get_type      (void);
+GType            gda_provider_info_get_type      (void) G_GNUC_CONST;
 GdaProviderInfo* gda_provider_info_copy          (GdaProviderInfo *src);
 void             gda_provider_info_free          (GdaProviderInfo *provider_info);
 
@@ -117,7 +117,7 @@ struct _GdaDataSourceInfo {
 
 #define GDA_TYPE_DATA_SOURCE_INFO (gda_data_source_info_get_type ())
 
-GType              gda_data_source_info_get_type    (void);
+GType              gda_data_source_info_get_type    (void) G_GNUC_CONST;
 GdaDataSourceInfo *gda_data_source_info_new         ();
 GdaDataSourceInfo *gda_data_source_info_copy        (GdaDataSourceInfo *src);
 gboolean           gda_data_source_info_equal       (GdaDataSourceInfo *info1, GdaDataSourceInfo *info2);

@@ -75,7 +75,7 @@ typedef enum
   GDA_CLIENT_GENERAL_ERROR
 } GdaClientError;
 
-GType          gda_client_get_type                           (void);
+GType          gda_client_get_type                           (void) G_GNUC_CONST;
 GdaClient     *gda_client_new                                (void);
 
 GdaConnection *gda_client_open_connection                    (GdaClient *client,

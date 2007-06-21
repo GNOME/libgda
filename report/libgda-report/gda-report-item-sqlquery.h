@@ -48,7 +48,7 @@ struct _GdaReportItemSqlQueryClass {
 };
 
 
-GType gda_report_item_sqlquery_get_type (void);
+GType gda_report_item_sqlquery_get_type (void) G_GNUC_CONST;
 
 GdaReportItem *gda_report_item_sqlquery_new (GdaReportValid *valid,
 					     const gchar *id,

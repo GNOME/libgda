@@ -53,7 +53,7 @@ struct _GdaColumnIndexClass {
 	GObjectClass parent_class;
 };
 
-GType           gda_column_index_get_type (void);
+GType           gda_column_index_get_type (void) G_GNUC_CONST;
 GdaColumnIndex *gda_column_index_new (void);
 GdaColumnIndex *gda_column_index_copy (GdaColumnIndex *dmcia);
 gboolean        gda_column_index_equal (const GdaColumnIndex *lhs, const GdaColumnIndex *rhs);

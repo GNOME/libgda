@@ -1544,7 +1544,7 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
  *
  * Returns: the new string
  */
-const gchar *
+gchar *
 gda_query_get_sql_text (GdaQuery *query)
 {
 	g_return_val_if_fail (query && GDA_IS_QUERY (query), NULL);
@@ -3245,6 +3245,7 @@ gda_query_get_field_by_sql_naming_fields (GdaQuery *query, const gchar *sql_name
 				}
 			}
 			g_strfreev (split);
+			g_free (ref_name);
 		}
 
 		if (GDA_IS_QUERY_FIELD_ALL (list->data)) {

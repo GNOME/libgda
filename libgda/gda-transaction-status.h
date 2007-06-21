@@ -80,7 +80,7 @@ struct _GdaTransactionStatusClass {
 	gpointer                 reserved[10];
 };
 
-GType                 gda_transaction_status_get_type (void);
+GType                 gda_transaction_status_get_type (void) G_GNUC_CONST;
 GdaTransactionStatus *gda_transaction_status_new      (const gchar *name);
 
 

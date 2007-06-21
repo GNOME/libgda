@@ -48,7 +48,7 @@ struct _GdaReportValidClass {
 };
 
 
-GType gda_report_valid_get_type (void);
+GType gda_report_valid_get_type (void) G_GNUC_CONST;
 
 GdaReportValid *gda_report_valid_load (void);
 

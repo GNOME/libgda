@@ -81,7 +81,7 @@ struct _GdaDictDatabaseClass
 	gpointer reserved2;
 };
 
-GType              gda_dict_database_get_type                  (void);
+GType              gda_dict_database_get_type                  (void) G_GNUC_CONST;
 GObject           *gda_dict_database_new                       (GdaDict *dict);
 
 GdaDict            *gda_dict_database_get_dict                  (GdaDictDatabase *db);

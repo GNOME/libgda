@@ -52,7 +52,7 @@ struct _GdaHandlerBinClass
 };
 
 
-GType           gda_handler_bin_get_type      (void);
+GType           gda_handler_bin_get_type      (void) G_GNUC_CONST;
 GdaDataHandler *gda_handler_bin_new           (void);
 
 G_END_DECLS

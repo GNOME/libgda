@@ -64,7 +64,7 @@ struct _GdaObjectRefClass
 	void   (*ref_lost)            (GdaObjectRef *obj);
 };
 
-GType           gda_object_ref_get_type           (void);
+GType           gda_object_ref_get_type           (void) G_GNUC_CONST;
 GObject        *gda_object_ref_new                (GdaDict *dict);
 GObject        *gda_object_ref_new_no_ref_count   (GdaDict *dict);
 GObject        *gda_object_ref_new_copy           (GdaObjectRef *orig);

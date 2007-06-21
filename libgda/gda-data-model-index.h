@@ -41,7 +41,7 @@ struct _GdaDataModelIndex {
 
 #define GDA_TYPE_DATA_MODEL_INDEX (gda_data_model_index_get_type ())
 
-GType               gda_data_model_index_get_type (void);
+GType               gda_data_model_index_get_type (void) G_GNUC_CONST;
 GdaDataModelIndex  *gda_data_model_index_new (void);
 GdaDataModelIndex  *gda_data_model_index_copy (GdaDataModelIndex *dmi);
 void                gda_data_model_index_free (GdaDataModelIndex *dmi);

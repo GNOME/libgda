@@ -59,7 +59,7 @@ struct _GdaParameterClass
 	void                     (*reserved_3)               (GdaParameter *param);
 };
 
-GType                  gda_parameter_get_type                (void);
+GType                  gda_parameter_get_type                (void) G_GNUC_CONST;
 GdaParameter          *gda_parameter_new                     (GType type);
 GdaParameter          *gda_parameter_new_copy                (GdaParameter *orig);
 GType                  gda_parameter_get_g_type              (GdaParameter *param);

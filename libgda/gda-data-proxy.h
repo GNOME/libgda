@@ -66,7 +66,7 @@ struct _GdaDataProxyClass
 	void                 (* post_changes_applied) (GdaDataProxy *proxy, gint row, gint proxied_row);
 };
 
-GType             gda_data_proxy_get_type                 (void);
+GType             gda_data_proxy_get_type                 (void) G_GNUC_CONST;
 GObject          *gda_data_proxy_new                      (GdaDataModel *model);
 
 GdaDataModel     *gda_data_proxy_get_proxied_model        (GdaDataProxy *proxy);

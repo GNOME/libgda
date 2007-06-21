@@ -48,7 +48,7 @@ struct _GdaOracleBlobOpClass {
 	GdaBlobOpClass          parent_class;
 };
 
-GType         gda_oracle_blob_op_get_type     (void);
+GType         gda_oracle_blob_op_get_type     (void) G_GNUC_CONST;
 GdaBlobOp    *gda_oracle_blob_op_new          (GdaConnection *cnc, OCILobLocator *lobloc);
 
 G_END_DECLS

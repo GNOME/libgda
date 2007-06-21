@@ -59,7 +59,7 @@ struct _GdaQueryTargetClass
 	GdaQueryObjectClass     parent_class;
 };
 
-GType           gda_query_target_get_type               (void);
+GType           gda_query_target_get_type               (void) G_GNUC_CONST;
 
 GdaQueryTarget *gda_query_target_new                    (GdaQuery *query, const gchar *table);
 GdaQueryTarget *gda_query_target_new_copy               (GdaQueryTarget *orig);

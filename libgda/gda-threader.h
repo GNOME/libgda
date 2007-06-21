@@ -53,7 +53,7 @@ struct _GdaThreaderClass
 	void        (*cancelled)      (GdaThreader *thread, guint job_id, gpointer arg_data);
 };
 
-GType        gda_threader_get_type        (void);
+GType        gda_threader_get_type        (void) G_GNUC_CONST;
 GObject     *gda_threader_new             (void);
 
 guint        gda_threader_start_thread    (GdaThreader *thread, GThreadFunc func, gpointer func_arg, 

@@ -44,7 +44,7 @@ struct _GdaMdbProviderClass {
 	GdaServerProviderClass parent_class;
 };
 
-GType              gda_mdb_provider_get_type (void);
+GType              gda_mdb_provider_get_type (void) G_GNUC_CONST;
 GdaServerProvider *gda_mdb_provider_new (void);
 GdaDataModel      *gda_mdb_provider_execute_sql (GdaMdbProvider *mdbprv, GdaConnection *cnc, const gchar *sql);
 

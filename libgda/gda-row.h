@@ -55,7 +55,7 @@ struct _GdaRowClass {
 	void     (* value_changed)   (GdaRow *row, gint num, const GValue *old_value, const GValue *new_value);
 };
 
-GType         gda_row_get_type           (void);
+GType         gda_row_get_type           (void) G_GNUC_CONST;
 
 GdaRow       *gda_row_new            (GdaDataModel *model, gint count);
 GdaRow       *gda_row_new_from_list  (GdaDataModel *model, const GList *values);

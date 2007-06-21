@@ -60,7 +60,7 @@ struct _GdaGraphvizClass
 	GdaObjectClass              parent_class;
 };
 
-GType           gda_graphviz_get_type         (void);
+GType           gda_graphviz_get_type         (void) G_GNUC_CONST;
 GObject        *gda_graphviz_new              (GdaDict *dict);
 
 void            gda_graphviz_add_to_graph     (GdaGraphviz *graph, GObject *obj);

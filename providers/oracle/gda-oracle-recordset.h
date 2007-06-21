@@ -67,7 +67,7 @@ struct _GdaOracleValue {
 };
 
 
-GType               gda_oracle_recordset_get_type (void);
+GType               gda_oracle_recordset_get_type (void) G_GNUC_CONST;
 GdaOracleRecordset *gda_oracle_recordset_new (GdaConnection *cnc, GdaOracleConnectionData *cdata, 
 					      OCIStmt *stmthp, GArray *col_size_array);
 

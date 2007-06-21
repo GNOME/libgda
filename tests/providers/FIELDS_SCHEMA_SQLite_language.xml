@@ -28,7 +28,7 @@
       <gda_value>CHAR(20)</gda_value>
       <gda_value>0</gda_value>
       <gda_value>0</gda_value>
-      <gda_value>FALSE</gda_value>
+      <gda_value>TRUE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value isnull="t"/>
@@ -40,7 +40,7 @@
       <gda_value>TIMESTAMP</gda_value>
       <gda_value>0</gda_value>
       <gda_value>0</gda_value>
-      <gda_value>FALSE</gda_value>
+      <gda_value>TRUE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value isnull="t"/>

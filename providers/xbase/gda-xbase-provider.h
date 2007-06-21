@@ -43,7 +43,7 @@ struct _GdaXbaseProviderClass {
 	GdaServerProviderClass parent_class;
 };
 
-GType              gda_xbase_provider_get_type (void);
+GType              gda_xbase_provider_get_type (void) G_GNUC_CONST;
 GdaServerProvider *gda_xbase_provider_new (void);
 
 void               gda_xbase_provider_make_error (GdaConnection *cnc);

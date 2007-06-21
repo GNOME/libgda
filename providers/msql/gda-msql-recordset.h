@@ -60,7 +60,7 @@ struct _GdaMsqlRecordsetClass {
 	GdaDataModelRowClass parent_class;
 };
 
-GType             gda_msql_recordset_get_type(void);
+GType             gda_msql_recordset_get_type(void) G_GNUC_CONST;
 GdaMsqlRecordset *gda_msql_recordset_new(GdaConnection *cnc,m_result *res,
                                          int sock,int n_rows);
 

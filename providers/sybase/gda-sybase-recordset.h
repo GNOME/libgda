@@ -75,7 +75,7 @@ struct _GdaSybaseRecordsetPrivate {
 	GPtrArray               *rows;
 };
 
-GType               gda_sybase_recordset_get_type (void);
+GType               gda_sybase_recordset_get_type (void) G_GNUC_CONST;
 
 GdaSybaseRecordset *gda_sybase_process_row_result (GdaConnection           *cnc,
 						   GdaSybaseConnectionData *scnc,

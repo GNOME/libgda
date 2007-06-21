@@ -1142,9 +1142,6 @@ gda_connection_execute_command (GdaConnection *cnc, GdaCommand *cmd,
 	g_return_val_if_fail (cmd != NULL, NULL);
 	g_return_val_if_fail (cnc->priv->provider_obj, NULL);
 
-	/* clean any previous connection events */
-	gda_connection_clear_events_list (cnc);
-
 	/* execute the command on the provider */
 	retval = gda_server_provider_execute_command (cnc->priv->provider_obj,
 						      cnc, cmd, params);

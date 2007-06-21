@@ -90,7 +90,7 @@ struct _GdaDictClass
 	gpointer  reserved2;
 };
 
-GType             gda_dict_get_type                        (void);
+GType             gda_dict_get_type                        (void) G_GNUC_CONST;
 GdaDict          *gda_dict_new                             (void);
 void              gda_dict_extend_with_functions           (GdaDict *dict);
 

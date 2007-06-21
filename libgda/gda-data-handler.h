@@ -55,7 +55,7 @@ struct _GdaDataHandlerIface
 
 
 
-GType        gda_data_handler_get_type               (void);
+GType        gda_data_handler_get_type               (void) G_GNUC_CONST;
 
 /* Simple data manipulation */
 gchar         *gda_data_handler_get_sql_from_value     (GdaDataHandler *dh, const GValue *value);

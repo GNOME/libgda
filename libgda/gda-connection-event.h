@@ -74,7 +74,7 @@ typedef enum
        GDA_CONNECTION_EVENT_CODE_UNKNOWN
 } GdaConnectionEventCode;
 
-GType                   gda_connection_event_get_type (void);
+GType                   gda_connection_event_get_type (void) G_GNUC_CONST;
 GdaConnectionEvent     *gda_connection_event_new (GdaConnectionEventType type);
 void                    gda_connection_event_free (GdaConnectionEvent * event);
 GList                  *gda_connection_event_list_copy (const GList * events);

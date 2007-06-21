@@ -73,7 +73,7 @@ struct _GdaQueryFieldClass
 	gboolean          (*is_list)        (GdaQueryField *qfield);
 };
 
-GType             gda_query_field_get_type        (void);
+GType             gda_query_field_get_type        (void) G_GNUC_CONST;
 GdaQueryField    *gda_query_field_new_from_xml    (GdaQuery *query, xmlNodePtr node, GError **error);
 GdaQueryField    *gda_query_field_new_copy        (GdaQueryField *orig);
 GdaQueryField    *gda_query_field_new_from_sql    (GdaQuery *query, const gchar *sqlfield, GError **error);
