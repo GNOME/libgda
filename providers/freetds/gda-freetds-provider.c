@@ -1,5 +1,5 @@
 /* GDA FreeTDS Provider
- * Copyright (C) 2002 - 2006 The GNOME Foundation
+ * Copyright (C) 2002 - 2007 The GNOME Foundation
  *
  * AUTHORS:
  *         Holger Thon <holger.thon@gnome-db.org>
@@ -1163,12 +1163,8 @@ static int gda_freetds_provider_tds_handle_message (void *aStruct,
 			gda_connection_event_set_code (error, msg_info->msg_number);
 #endif
 			gda_connection_event_set_source (error, "gda-freetds");
-			if (msg_info->sql_state != NULL) {
-				gda_connection_event_set_sqlstate (error,
-				                        msg_info->sql_state);
-			} else {
-				gda_connection_event_set_sqlstate (error, _("Not available"));
-			}
+			if (msg_info->sql_state != NULL) 
+				gda_connection_event_set_sqlstate (error, msg_info->sql_state);
 
 			gda_connection_add_event (cnc, error);
 		} else {

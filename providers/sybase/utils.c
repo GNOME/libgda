@@ -204,7 +204,6 @@ sybase_add_cmsg_errors_to_list(GdaConnection *cnc)
 		gda_connection_event_set_description (error, _("Failed when attempting to retrieve the amount of client messages"));
 		gda_connection_event_set_code (error, -1);
 		gda_connection_event_set_source (error, "gda-sybase");
-		gda_connection_event_set_sqlstate (error, _("Not available"));					
 		gda_connection_add_event (cnc, error);
 		return TRUE;
 	} 
@@ -221,7 +220,6 @@ sybase_add_cmsg_errors_to_list(GdaConnection *cnc)
 			gda_connection_event_set_description (error, _("An error occurred when attempting to retrieve a client message"));
 			gda_connection_event_set_code (error, -1);
 			gda_connection_event_set_source (error, "gda-sybase");
-			gda_connection_event_set_sqlstate (error, _("Not available"));					
 			gda_connection_add_event (cnc, error);
 			return TRUE;
 		} 
@@ -237,7 +235,6 @@ sybase_add_cmsg_errors_to_list(GdaConnection *cnc)
 				gda_connection_event_set_description (error,tempspace);
 				gda_connection_event_set_code (error, -1);
 				gda_connection_event_set_source (error, "gda-sybase");
-				gda_connection_event_set_sqlstate (error, _("Not available"));					
 				gda_connection_add_event (cnc, error);
 				returner = TRUE;
 			}
@@ -253,7 +250,6 @@ sybase_add_cmsg_errors_to_list(GdaConnection *cnc)
 				gda_connection_event_set_description (error,tempspace);
 				gda_connection_event_set_code (error, -1);
 				gda_connection_event_set_source (error, "gda-sybase");
-				gda_connection_event_set_sqlstate (error, _("Not available"));					
 				gda_connection_add_event (cnc, error);
 				returner = TRUE;
 			} 
@@ -273,7 +269,6 @@ sybase_add_cmsg_errors_to_list(GdaConnection *cnc)
 			gda_connection_event_set_description (error, _("call to cs_diag failed when attempting to clear the client messages"));
 			gda_connection_event_set_code (error, -1);
 			gda_connection_event_set_source (error, "gda-sybase");
-			gda_connection_event_set_sqlstate (error, _("Not available"));					
 			gda_connection_add_event (cnc, error);
 			return TRUE;
 		} 
@@ -314,7 +309,6 @@ gboolean sybase_add_server_errors_to_list(GdaConnection *cnc)
 		gda_connection_event_set_description (error, _("Failed when attempting to retrieve the amount of server messages"));
 		gda_connection_event_set_code (error, -1);
 		gda_connection_event_set_source (error, "gda-sybase");
-		gda_connection_event_set_sqlstate (error, _("Not available"));					
 		gda_connection_add_event (cnc, error);
 		return TRUE;			
 	} 
@@ -331,7 +325,6 @@ gboolean sybase_add_server_errors_to_list(GdaConnection *cnc)
 			gda_connection_event_set_description (error, _("An error occurred when attempting to retrieve a server message"));
 			gda_connection_event_set_code (error, -1);
 			gda_connection_event_set_source (error, "gda-sybase");
-			gda_connection_event_set_sqlstate (error, _("Not available"));					
 			gda_connection_add_event (cnc, error);
 			return TRUE;					
 		} 
@@ -383,7 +376,6 @@ gboolean sybase_add_server_errors_to_list(GdaConnection *cnc)
 				gda_connection_event_set_description (error, error_msg);
 				gda_connection_event_set_code (error, -1);
 				gda_connection_event_set_source (error, "gda-sybase");
-				gda_connection_event_set_sqlstate (error, _("Not available"));					
 				gda_connection_add_event (cnc, error);
 			}
 			else
@@ -409,7 +401,6 @@ gboolean sybase_add_server_errors_to_list(GdaConnection *cnc)
 			gda_connection_event_set_description (error, _("call to ct_diag failed when attempting to clear the server messages"));
 			gda_connection_event_set_code (error, -1);
 			gda_connection_event_set_source (error, "gda-sybase");
-			gda_connection_event_set_sqlstate (error, _("Not available"));					
 			gda_connection_add_event (cnc, error);
 			return TRUE;
 		} 
@@ -443,7 +434,6 @@ gboolean sybase_add_client_errors_to_list(GdaConnection *cnc)
 		gda_connection_event_set_description (error, _("Failed when attempting to retrieve the amount of client messages"));
 		gda_connection_event_set_code (error, -1);
 		gda_connection_event_set_source (error, "gda-sybase");
-		gda_connection_event_set_sqlstate (error, _("Not available"));					
 		gda_connection_add_event (cnc, error);
 		return TRUE;			
 	} 
@@ -460,7 +450,6 @@ gboolean sybase_add_client_errors_to_list(GdaConnection *cnc)
 			gda_connection_event_set_description (error, _("An error occurred when attempting to retrieve a client message"));
 			gda_connection_event_set_code (error, -1);
 			gda_connection_event_set_source (error, "gda-sybase");
-			gda_connection_event_set_sqlstate (error, _("Not available"));					
 			gda_connection_add_event (cnc, error);
 			return TRUE;					
 		} 
@@ -483,7 +472,6 @@ gboolean sybase_add_client_errors_to_list(GdaConnection *cnc)
 			gda_connection_event_set_description (error, tempspace);
 			gda_connection_event_set_code (error, -1);
 			gda_connection_event_set_source (error, "gda-sybase");
-			gda_connection_event_set_sqlstate (error, _("Not available"));					
 			gda_connection_add_event (cnc, error);					
 		} 
 	} 
@@ -499,7 +487,6 @@ gboolean sybase_add_client_errors_to_list(GdaConnection *cnc)
 		gda_connection_event_set_description (error, _("call to ct_diag failed when attempting to clear the client messages"));
 		gda_connection_event_set_code (error, -1);
 		gda_connection_event_set_source (error, "gda-sybase");
-		gda_connection_event_set_sqlstate (error, _("Not available"));					
 		gda_connection_add_event (cnc, error);
 		return TRUE;
 	} 
@@ -537,7 +524,6 @@ gda_sybase_make_error (GdaSybaseConnectionData *scnc, gchar *fmt, ...)
 
 		gda_connection_event_set_code (error, -1);
 		gda_connection_event_set_source (error, "gda-sybase");
-		gda_connection_event_set_sqlstate (error, _("Not available"));
 	}
 
 	return error;

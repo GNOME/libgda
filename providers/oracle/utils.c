@@ -1,5 +1,5 @@
 /* GDA Oracle provider
- * Copyright (C) 2002 - 2006 The GNOME Foundation.
+ * Copyright (C) 2002 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  * 	Tim Coleman <tim@timcoleman.com>
@@ -74,7 +74,6 @@ gda_oracle_make_error (dvoid *hndlp, ub4 type, const gchar *file, gint line)
 	source = g_strdup_printf ("gda-oracle:%s:%d", file, line);
 	gda_connection_event_set_source (error, source);
 	g_free(source);
-	gda_connection_event_set_sqlstate (error, _("Not available"));
 	
 	return error;
 }

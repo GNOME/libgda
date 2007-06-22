@@ -41,7 +41,6 @@ gda_freetds_make_error (TDSSOCKET *tds, const gchar *message)
 		}
 		gda_connection_event_set_code (error, -1);
 	        gda_connection_event_set_source (error, "gda-freetds");
-	        gda_connection_event_set_sqlstate (error, _("Not available"));
 	}
 		
 	return error;

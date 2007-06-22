@@ -33,7 +33,6 @@ gda_bdb_make_error (int ret)
 	gda_connection_event_set_description (error, db_strerror (ret));
 	gda_connection_event_set_code (error, -1);
 	gda_connection_event_set_source (error, "gda-bdb");
-	gda_connection_event_set_sqlstate (error, _("Not available"));
 	
 	return error;
 }

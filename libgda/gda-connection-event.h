@@ -1,5 +1,5 @@
 /* GDA server library
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+ * Copyright (C) 1998 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -73,6 +73,9 @@ typedef enum
        GDA_CONNECTION_EVENT_CODE_SYNTAX_ERROR,
        GDA_CONNECTION_EVENT_CODE_UNKNOWN
 } GdaConnectionEventCode;
+
+#define GDA_SQLSTATE_NO_ERROR "00000"
+#define GDA_SQLSTATE_GENERAL_ERROR "HY000"
 
 GType                   gda_connection_event_get_type (void) G_GNUC_CONST;
 GdaConnectionEvent     *gda_connection_event_new (GdaConnectionEventType type);

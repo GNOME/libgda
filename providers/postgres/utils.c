@@ -57,7 +57,6 @@ gda_postgres_make_error (GdaConnection *cnc, PGconn *pconn, PGresult *pg_res)
 {
 	GdaConnectionEvent *error;
 	GdaConnectionEventCode gda_code;
-	gchar *sqlstate;
 	GdaTransactionStatus *trans;
 
 	error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
@@ -65,23 +64,23 @@ gda_postgres_make_error (GdaConnection *cnc, PGconn *pconn, PGresult *pg_res)
 		gchar *message;
 		
 		if (pg_res != NULL) {
+			gchar *sqlstate;
+
 			message = PQresultErrorMessage (pg_res);
 			sqlstate = PQresultErrorField (pg_res, PG_DIAG_SQLSTATE);
+			gda_connection_event_set_sqlstate (error, sqlstate);
 			gda_code = gda_postgres_sqlsate_to_gda_code (sqlstate);
 		}
 		else {
 			message = PQerrorMessage (pconn);
-			sqlstate = _("Not available");
 			gda_code = GDA_CONNECTION_EVENT_CODE_UNKNOWN;
 		}
 
 		gda_connection_event_set_description (error, message);
-		gda_connection_event_set_sqlstate (error, sqlstate);
 		gda_connection_event_set_gda_code (error, gda_code);
 	} 
 	else {
 		gda_connection_event_set_description (error, _("NO DESCRIPTION"));
-		gda_connection_event_set_sqlstate (error, _("Not available"));
 		gda_connection_event_set_gda_code (error, gda_code);
 	}
 

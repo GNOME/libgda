@@ -1,3 +1,22 @@
+2007-06-22  Vivien Malerba <malerba@gnome-db.org>
+
+	* providers/mysql/gda-mysql-provider.c: applied patch by Piotr Pokora 
+	for bug #450043
+	* providers/ldap/utils.c:
+	* providers/sybase/utils.c:
+	* providers/sybase/gda-sybase-provider.c:
+	* providers/sybase/gda-sybase-recordset.c:
+	* providers/bdb/utils.c:
+	* providers/freetds/utils.c:
+	* providers/freetds/gda-freetds-provider.c:
+	* providers/oracle/utils.c:
+	* providers/mysql/utils.c:
+	* providers/postgres/utils.c:
+	* providers/msql/gda-msql-utils.c:
+	* libgda/gda-connection-event.c:
+	* libgda/gda-connection-event.h: make sure the sqlstate of any 
+	connection event is available, even is it is as a generic code
+
 2007-06-21  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-query.[ch]: applied corrections for bug #449725 (from Piotr Pokora)

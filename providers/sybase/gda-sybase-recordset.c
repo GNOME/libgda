@@ -497,7 +497,6 @@ gda_sybase_process_msg_result (GdaConnection *cnc,
 						      _("An error occurred when attempting to retrieve a server message count for resultset"));
 		gda_connection_event_set_code (error, -1);
 		gda_connection_event_set_source (error, "gda-sybase");
-		gda_connection_event_set_sqlstate (error, _("Not available"));					
 		gda_connection_add_event (cnc, error);		
 		return NULL;
 	}
@@ -520,7 +519,6 @@ gda_sybase_process_msg_result (GdaConnection *cnc,
 						      _("An error occurred when attempting to retrieve a server message for recordset"));
 		gda_connection_event_set_code (error, -1);
 		gda_connection_event_set_source (error, "gda-sybase");
-		gda_connection_event_set_sqlstate (error, _("Not available"));					
 		gda_connection_add_event (cnc, error);
 		return NULL;					
 	} 	
@@ -578,7 +576,6 @@ gda_sybase_process_msg_result (GdaConnection *cnc,
 						      _("call to ct_diag failed when attempting to clear the server messages"));
 		gda_connection_event_set_code (error, -1);
 		gda_connection_event_set_source (error, "gda-sybase");
-		gda_connection_event_set_sqlstate (error, _("Not available"));					
 		gda_connection_add_event (cnc, error);
 		return NULL;
 	} 	

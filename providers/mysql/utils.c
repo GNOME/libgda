@@ -1,5 +1,5 @@
 /* GDA MySQL provider
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+ * Copyright (C) 1998 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -34,6 +34,7 @@ gda_mysql_make_error (MYSQL *handle)
 	if (handle != NULL) {
 		gda_connection_event_set_description (error, mysql_error (handle));
 		gda_connection_event_set_code (error, mysql_errno (handle));
+		gda_connection_event_set_sqlstate (error, mysql_sqlstate (handle));
 	}
 	else {
 		gda_connection_event_set_description (error, "NO DESCRIPTION");
@@ -41,7 +42,6 @@ gda_mysql_make_error (MYSQL *handle)
 	}
 
 	gda_connection_event_set_source (error, "gda-mysql");
-	gda_connection_event_set_sqlstate (error, "Not available");
 
 	return error;
 }

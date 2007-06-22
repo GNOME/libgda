@@ -34,7 +34,6 @@ GdaConnectionEvent *gda_msql_make_error(int sock) {
 		gda_connection_event_set_code(error,-1);
 	}
 	gda_connection_event_set_source(error,"gda-mSQL");
-	gda_connection_event_set_sqlstate(error,"Not available");
 	return error;
 }
 

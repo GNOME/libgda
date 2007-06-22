@@ -41,7 +41,6 @@ gda_ldap_make_error (LDAP *handle)
 	}
 */
 	gda_connection_event_set_source (error, "gda-ldap");
-	gda_connection_event_set_sqlstate (error, "Not available");
 
 	return error;
 }

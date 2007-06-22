@@ -524,6 +524,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 						str = g_strdup_printf ("%s %d", tmp, changes);
 					gda_connection_event_set_description (event, str);
 					g_free (str);
+					g_free (tmp);
 					gda_connection_add_event (cnc, event);
 				}
 			}

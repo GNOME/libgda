@@ -1,5 +1,5 @@
 /* GDA server library
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -154,6 +154,11 @@ static void gda_connection_event_set_property (GObject *object, guint prop_id, c
 	{
 	case PROP_TYPE:
 		event->priv->type = g_value_get_int (value);
+		if (!event->priv->sqlstate && (event->priv->type == GDA_CONNECTION_EVENT_ERROR)) 
+			gda_connection_event_set_sqlstate (event, GDA_SQLSTATE_GENERAL_ERROR);
+		else if ((event->priv->type == GDA_CONNECTION_EVENT_NOTICE) &&
+			 event->priv->sqlstate)
+			gda_connection_event_set_sqlstate (event, NULL);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -235,6 +240,7 @@ gda_connection_event_list_free (GList * events)
  * @type: the severity of the event
  *
  * Sets @event's severity (from a simple notice to a fatal event)
+ * This function should not be called directly.
  */
 void
 gda_connection_event_set_event_type (GdaConnectionEvent *event, GdaConnectionEventType type)
@@ -242,8 +248,7 @@ gda_connection_event_set_event_type (GdaConnectionEvent *event, GdaConnectionEve
 	g_return_if_fail (GDA_IS_CONNECTION_EVENT (event));
 	g_return_if_fail (event->priv);
 
-	event->priv->type = type;
-	g_object_notify (G_OBJECT (event), "type");
+	g_object_set (G_OBJECT (event), "type", (int) type, NULL);
 }
 
 /**
@@ -281,7 +286,7 @@ gda_connection_event_get_description (GdaConnectionEvent *event)
  * @event: a #GdaConnectionEvent.
  * @description: a description.
  *
- * Sets @event's @description.
+ * Sets @event's @description. This function should not be called directly.
  */
 void
 gda_connection_event_set_description (GdaConnectionEvent *event, const gchar *description)
@@ -314,6 +319,8 @@ gda_connection_event_get_code (GdaConnectionEvent * event)
  * Sets @event's code: the code is specific to the provider being used.
  * If you want to have a common understanding of the event codes, use
  * gda_connection_event_get_gda_code() instead.
+ *
+ * This function should not be called directly
  */
 void
 gda_connection_event_set_code (GdaConnectionEvent *event, glong code)
@@ -344,7 +351,9 @@ gda_connection_event_get_gda_code (GdaConnectionEvent *event)
  *
  * Sets @event's gda code: that code is standardized by the libgda
  * library. If you want to specify the corresponding provider specific code,
- * use gda_connection_event_get_code() instead.
+ * use gda_connection_event_get_code() or gda_connection_event_get_sqlstate() instead.
+ *
+ * This function should not be called directly
  */ 
 void
 gda_connection_event_set_gda_code (GdaConnectionEvent *event, GdaConnectionEventCode code)
@@ -372,7 +381,7 @@ gda_connection_event_get_source (GdaConnectionEvent *event)
  * @event: a #GdaConnectionEvent.
  * @source: a source.
  *
- * Sets @event's @source.
+ * Sets @event's @source; this function should not be called directly
  */
 void
 gda_connection_event_set_source (GdaConnectionEvent *event, const gchar *source)
@@ -387,20 +396,27 @@ gda_connection_event_set_source (GdaConnectionEvent *event, const gchar *source)
 /**
  * gda_connection_event_get_sqlstate
  * @event: a #GdaConnectionEvent.
- * 
+ *
+ * Get the SQLSTATE value of @event. Even though the SQLSTATE values are specified by ANSI SQL and ODBC,
+ * consult each DBMS for the possible values. However, the "00000" (success) value means that there is no error,
+ * and the "HY000" (general error) value means an error but no better error code available.
+ *
  * Returns: @event's SQL state.
  */
 const gchar *
 gda_connection_event_get_sqlstate (GdaConnectionEvent *event)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION_EVENT (event), NULL);
-	return event->priv->sqlstate;
+
+	return event->priv->sqlstate ? event->priv->sqlstate : GDA_SQLSTATE_NO_ERROR;
 }
 
 /**
  * gda_connection_event_set_sqlstate
  * @event: a #GdaConnectionEvent.
  * @sqlstate: SQL state.
+ *
+ * Changes the SQLSTATE code of @event, this function should not be called directly
  *
  * Sets @event's SQL state.
  */
@@ -411,6 +427,13 @@ gda_connection_event_set_sqlstate (GdaConnectionEvent *event, const gchar *sqlst
 
 	if (event->priv->sqlstate)
 		g_free (event->priv->sqlstate);
-	event->priv->sqlstate = g_strdup (sqlstate);
+
+	if (sqlstate) 
+		event->priv->sqlstate = g_strdup (sqlstate);
+	else {
+		event->priv->sqlstate = NULL;
+		if (event->priv->type == GDA_CONNECTION_EVENT_ERROR)
+			event->priv->sqlstate = g_strdup (GDA_SQLSTATE_GENERAL_ERROR);
+	}
 }
 
