@@ -345,6 +345,18 @@ gda_postgres_value_to_sql_string (GValue *value)
 	return ret;
 }
 
+PGresult *
+gda_postgres_PQexec_wrap (GdaConnection *cnc, PGconn *conn, const char *query)
+{
+	GdaConnectionEvent *event;
+
+	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+	gda_connection_event_set_description (event, query);
+	gda_connection_add_event (cnc, event);
+
+	return PQexec (conn, query);
+}
+
 gboolean
 gda_postgres_check_transaction_started (GdaConnection *cnc)
 {

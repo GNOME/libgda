@@ -91,7 +91,7 @@ gda_connection_event_class_init (GdaConnectionEventClass *klass)
 	                                                 "Type",
 	                                                 "Connection event type",
 	                                                 0,
-	                                                 2,
+	                                                 GDA_CONNECTION_EVENT_COMMAND,
 	                                                 GDA_CONNECTION_EVENT_ERROR,
 	                                                 G_PARAM_READWRITE));
 }
@@ -156,7 +156,8 @@ static void gda_connection_event_set_property (GObject *object, guint prop_id, c
 		event->priv->type = g_value_get_int (value);
 		if (!event->priv->sqlstate && (event->priv->type == GDA_CONNECTION_EVENT_ERROR)) 
 			gda_connection_event_set_sqlstate (event, GDA_SQLSTATE_GENERAL_ERROR);
-		else if ((event->priv->type == GDA_CONNECTION_EVENT_NOTICE) &&
+		else if (((event->priv->type == GDA_CONNECTION_EVENT_NOTICE) || 
+			  (event->priv->type == GDA_CONNECTION_EVENT_COMMAND)) &&
 			 event->priv->sqlstate)
 			gda_connection_event_set_sqlstate (event, NULL);
 		break;
@@ -271,6 +272,9 @@ gda_connection_event_get_event_type (GdaConnectionEvent *event)
 /**
  * gda_connection_event_get_description
  * @event: a #GdaConnectionEvent.
+ *
+ * Get the description of the event. Note that is @event's type is GDA_CONNECTION_EVENT_COMMAND,
+ * the the dsecription is the SQL of the command.
  *
  * Returns: @event's description.
  */

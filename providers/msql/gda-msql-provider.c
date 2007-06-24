@@ -266,6 +266,11 @@ process_sql_commands (GList *rl,GdaConnection *cnc,
 			gint rc;
 			m_result *res;
 			GdaMsqlRecordset *rs;
+			GdaConnectionEvent *event;
+
+			event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+			gda_connection_event_set_description (event, arr[n]);
+			gda_connection_add_event (cnc, event);
 
 			rc=msqlQuery(*sock,arr[n]);
 			if (rc<0) {
@@ -350,7 +355,7 @@ gda_msql_provider_execute_command(GdaServerProvider *p,
 	if (!cmd) return NULL;  
 	switch (gda_command_get_command_type(cmd)) {
 	case GDA_COMMAND_TYPE_SQL:
-		rl=process_sql_commands(rl,cnc,gda_command_get_text(cmd));
+		rl = process_sql_commands(rl,cnc,gda_command_get_text(cmd));
 		break;
 	case GDA_COMMAND_TYPE_TABLE:
 		str = g_strdup_printf("SELECT * FROM %s",gda_command_get_text(cmd));

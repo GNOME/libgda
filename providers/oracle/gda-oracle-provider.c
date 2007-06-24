@@ -651,6 +651,11 @@ process_oci_statement (OCIStmt *stmthp, const gchar *sql, GdaConnection *cnc, GA
 		error = gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
 						 _("Could not set the Oracle statement pre-fetch row count"));
 		if (!error) {
+			GdaConnectionEvent *event;
+			event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+			gda_connection_event_set_description (event, sql);
+			gda_connection_add_event (cnc, event);
+
 			result = OCIStmtExecute (priv_data->hservice,
 						 stmthp,
 						 priv_data->herr,

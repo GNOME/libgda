@@ -301,12 +301,17 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql, GdaC
 	SQLRETURN rc;
 	SQLCHAR *sql_as_ansi;
 	int i;
+	GdaConnectionEvent *event;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
         if (!priv_data)
                 return NULL;
+
+	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+	gda_connection_event_set_description (event, sql);
+	gda_connection_add_event (cnc, event);
 
 	sql_as_ansi = (SQLCHAR *) g_locale_from_utf8 (sql, -1, NULL, NULL, NULL);
 	rc = SQLExecDirect (priv_data->hstmt, sql_as_ansi, SQL_NTS);

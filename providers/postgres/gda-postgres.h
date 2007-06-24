@@ -59,6 +59,8 @@ const gchar *gda_data_type_to_string (GType type);
 gchar *gda_postgres_value_to_sql_string (GValue *value);
 gboolean gda_postgres_check_transaction_started (GdaConnection *cnc);
 
+PGresult *gda_postgres_PQexec_wrap (GdaConnection *cnc, PGconn *conn, const char *query);
+
 /*
  * For recordset implementations
  */

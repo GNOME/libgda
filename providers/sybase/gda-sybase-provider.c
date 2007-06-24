@@ -625,7 +625,7 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
                                          const gchar   *sql)
 {
 	GdaSybaseConnectionData *scnc;
-	GdaConnectionEvent                *error;
+	GdaConnectionEvent      *error;
 	gchar                   **arr;
 	GdaSybaseRecordset      *srecset = NULL;	
 	CS_RETCODE              ret;
@@ -648,6 +648,7 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 	if (arr) {
 		gint n = 0;
 		while (arr[n]) {
+			GdaConnectionEvent *event;
 			GdaDataModel *recset;
 
 			scnc->ret = ct_cmd_alloc (scnc->connection, &scnc->cmd);
@@ -657,6 +658,10 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 				sybase_check_messages(cnc);
 				return NULL;
 			}
+
+			event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+			gda_connection_event_set_description (event, arr[n]);
+			gda_connection_add_event (cnc, event);
 
 			// execute _single_ sql query (one stmt)
 			scnc->ret = ct_command (scnc->cmd, 
@@ -838,7 +843,7 @@ static gboolean
 gda_sybase_execute_cmd (GdaConnection *cnc, const gchar *sql)
 {
 	GdaSybaseConnectionData *scnc;
-	GdaConnectionEvent *error;
+	GdaConnectionEvent *error, *event;
 	gboolean ret = TRUE;
 	CS_INT res_type;
 
@@ -863,6 +868,10 @@ gda_sybase_execute_cmd (GdaConnection *cnc, const gchar *sql)
 		sybase_check_messages(cnc);
 		return FALSE;
 	}
+
+	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+	gda_connection_event_set_description (event, sql);
+	gda_connection_add_event (cnc, event);	
 
 	scnc->ret = ct_command (scnc->cmd, CS_LANG_CMD, (CS_CHAR *) sql, 
 				CS_NULLTERM, CS_UNUSED);

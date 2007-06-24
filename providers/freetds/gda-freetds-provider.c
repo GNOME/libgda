@@ -488,11 +488,11 @@ gda_freetds_provider_change_database (GdaServerProvider *provider,
 	return ret;
 }
 
-static GList
-*gda_freetds_provider_execute_command (GdaServerProvider *provider,
-                                       GdaConnection *cnc,
-                                       GdaCommand *cmd,
-                                       GdaParameterList *params)
+static GList *
+gda_freetds_provider_execute_command (GdaServerProvider *provider,
+				      GdaConnection *cnc,
+				      GdaCommand *cmd,
+				      GdaParameterList *params)
 {
 	GList *reclist = NULL;
 	gchar *query = NULL;
@@ -819,7 +819,7 @@ static gboolean
 gda_freetds_execute_cmd (GdaConnection *cnc, const gchar *sql)
 {
 	GdaFreeTDSConnectionData *tds_cnc;
-	GdaConnectionEvent *error;
+	GdaConnectionEvent *error, *event;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (sql != NULL, FALSE);
@@ -827,6 +827,10 @@ gda_freetds_execute_cmd (GdaConnection *cnc, const gchar *sql)
 
 	g_return_val_if_fail (tds_cnc != NULL, FALSE);
 	g_return_val_if_fail (tds_cnc->tds != NULL, FALSE);
+	
+	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+	gda_connection_event_set_description (event, sql);
+	gda_connection_add_event (cnc, event);
 
 	tds_cnc->rc = tds_submit_query (tds_cnc->tds, (char *) sql);
 	if (tds_cnc->rc != TDS_SUCCEED) {
@@ -871,13 +875,17 @@ static GdaDataModel *
 gda_freetds_execute_query (GdaConnection *cnc, const gchar* sql)
 {
 	GdaFreeTDSConnectionData *tds_cnc;
-	GdaConnectionEvent *error;
+	GdaConnectionEvent *error, *event;
 	GdaDataModel *recset;
 	
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	tds_cnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_FREETDS_HANDLE);
 	g_return_val_if_fail (tds_cnc != NULL, NULL);
 	g_return_val_if_fail (tds_cnc->tds != NULL, NULL);
+
+	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+	gda_connection_event_set_description (event, sql);
+	gda_connection_add_event (cnc, event);
 
 	tds_cnc->rc = tds_submit_query(tds_cnc->tds, (gchar *) sql);
 
@@ -998,10 +1006,11 @@ gda_freetds_get_fields (GdaConnection *cnc, GdaParameterList *params)
 
 	return recset;
 }
-
-static GList* gda_freetds_provider_process_sql_commands(GList         *reclist,
-                                                        GdaConnection *cnc,
-                                                        const gchar   *sql)
+	       
+static GList *
+gda_freetds_provider_process_sql_commands(GList         *reclist,
+					  GdaConnection *cnc,
+					  const gchar   *sql)
 {
 	GdaFreeTDSConnectionData *tds_cnc;
 	GdaConnectionEvent *error;
@@ -1017,7 +1026,13 @@ static GList* gda_freetds_provider_process_sql_commands(GList         *reclist,
 	if (arr) {
 		gint n = 0;
 		while (arr[n]) {
+			GdaConnectionEvent *event;
 			GdaDataModel *recset;
+			
+			event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+			gda_connection_event_set_description (event, arr[n]);
+			gda_connection_add_event (cnc, event);
+
 			tds_cnc->rc = tds_submit_query(tds_cnc->tds, arr[n]);
 
 			if (tds_cnc->rc != TDS_SUCCEED) {

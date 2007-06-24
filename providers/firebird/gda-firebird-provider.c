@@ -1081,7 +1081,7 @@ gda_firebird_provider_run_sql (GList *reclist,
 	arr = gda_delimiter_split_sql (sql);
 	if (arr) {
 		while (arr[n]) {
-			recset = gda_firebird_recordset_new (cnc, ftr, sql);
+			recset = gda_firebird_recordset_new (cnc, ftr, arr [n]);
   			if (GDA_IS_FIREBIRD_RECORDSET (recset)) {
 				g_object_set (G_OBJECT (recset), "command_text", arr[n],
 					      "command_type", GDA_COMMAND_TYPE_SQL, NULL);

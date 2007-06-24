@@ -111,3 +111,15 @@ gda_mysql_type_to_gda (enum enum_field_types mysql_type, gboolean is_unsigned)
 
 	return G_TYPE_INVALID;
 }
+
+int
+gda_mysql_real_query_wrap (GdaConnection *cnc, MYSQL *mysql, const char *stmt_str, unsigned long length)
+{
+	GdaConnectionEvent *event;
+
+	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+	gda_connection_event_set_description (event, stmt_str);
+	gda_connection_add_event (cnc, event);
+
+	return mysql_real_query (mysql, stmt_str, length);
+}

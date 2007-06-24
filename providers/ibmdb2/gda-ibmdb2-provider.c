@@ -424,6 +424,7 @@ gda_ibmdb2_provider_single_command (GdaIBMDB2ConnectionData *conn_data,
 				    const gchar *command)
 {
 	SQLHANDLE hstmt = SQL_NULL_HANDLE;
+	GdaConnectionEvent *event;
 	
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
         g_return_val_if_fail (conn_data != NULL, FALSE);
@@ -435,6 +436,10 @@ gda_ibmdb2_provider_single_command (GdaIBMDB2ConnectionData *conn_data,
                 gda_ibmdb2_emit_error (cnc, conn_data->henv, conn_data->hdbc, hstmt);
                 return FALSE;
 	}
+
+	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+	gda_connection_event_set_description (event, command);
+	gda_connection_add_event (cnc, event);
 
 	conn_data->rc = SQLExecDirect(hstmt, (SQLCHAR*)command, SQL_NTS);	
 
@@ -519,7 +524,12 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql,
 					return NULL;
 				}
 			}
-					
+			
+			GdaConnectionEvent *event;
+			event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+			gda_connection_event_set_description (event, arr[n]);
+			gda_connection_add_event (cnc, event);
+		
 			conn_data->rc = SQLExecDirect(conn_data->hstmt,(SQLCHAR*)arr[n], SQL_NTS);
 			if (conn_data->rc != SQL_SUCCESS) {
 				gda_ibmdb2_emit_error (cnc, conn_data->henv, 

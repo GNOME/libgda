@@ -254,7 +254,7 @@ gda_postgres_recordset_append_row (GdaDataModelRow *model, GdaRow *row, GError *
 	sql = g_string_append (sql, ")");
 
 	/* execute the SQL query */
-	pg_res = PQexec (pg_conn, sql->str);
+	pg_res = gda_postgres_PQexec_wrap (priv_data->cnc, pg_conn, sql->str);
 
 	g_string_free (sql, TRUE);
         g_string_free (sql_value, TRUE);
@@ -353,7 +353,7 @@ gda_postgres_recordset_remove_row (GdaDataModelRow *model, GdaRow *row, GError *
 					 query_where);
 
 		/* remove the row */
-		pg_rm_res = PQexec (pg_conn, query);
+		pg_rm_res = gda_postgres_PQexec_wrap (priv_data->cnc, pg_conn, query);
 		g_free (query);
 
 		if (pg_rm_res != NULL) {
@@ -488,7 +488,7 @@ gda_postgres_recordset_update_row (GdaDataModelRow *model, GdaRow *row, GError *
 					 query_where);
 	
 		/* update the row */
-		pg_upd_res = PQexec (pg_conn, query);
+		pg_upd_res = gda_postgres_PQexec_wrap (priv_data->cnc, pg_conn, query);
 		g_free (query);
 	
 		if (pg_upd_res != NULL) {

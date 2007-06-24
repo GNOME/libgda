@@ -497,7 +497,7 @@ gda_mysql_recordset_append_row (GdaDataModelRow *model, GdaRow *row, GError **er
 	sql = g_string_append (sql, ")");
 
 	/* execute append command */
-	rc = mysql_real_query (mysql, sql->str, strlen (sql->str));
+	rc = gda_mysql_real_query_wrap (priv_data->cnc, mysql, sql->str, strlen (sql->str));
 	if (rc != 0) {
 		gda_connection_add_event (
 			priv_data->cnc, gda_mysql_make_error (mysql));
@@ -649,7 +649,7 @@ gda_mysql_recordset_remove_row (GdaDataModelRow *model, GdaRow *row, GError **er
 				 query_where);
 
 	/* execute append command */
-	rc = mysql_real_query (mysql, query, strlen (query));
+	rc = gda_mysql_real_query_wrap (priv_data->cnc, mysql, query, strlen (query));
 	if (rc != 0) {
 		gda_connection_add_event (
 			priv_data->cnc, gda_mysql_make_error (mysql));
@@ -825,7 +825,7 @@ gda_mysql_recordset_update_row (GdaDataModelRow *model, GdaRow *row, GError **er
 				 query_where);
 	
 	/* execute update command */
-	rc = mysql_real_query (mysql, query, strlen (query));
+	rc = gda_mysql_real_query_wrap (priv_data->cnc, mysql, query, strlen (query));
 	if (rc != 0) {
 		GdaConnectionEvent *event = gda_mysql_make_error (mysql);
 		gda_connection_add_event (priv_data->cnc, event);

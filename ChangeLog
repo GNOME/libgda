@@ -1,3 +1,40 @@
+2007-06-24  Vivien Malerba <malerba@gnome-db.org>
+
+        * doc/C/tmpl/gda-connection-event.sgml:
+        * providers/sybase/gda-sybase-provider.c:
+        * providers/firebird/gda-firebird-provider.c:
+        * providers/firebird/gda-firebird-recordset.c:
+        * providers/firebird/gda-firebird-recordset.h:
+        * providers/freetds/gda-freetds-provider.c:
+        * providers/ibmdb2/gda-ibmdb2-provider.c:
+        * providers/sqlite/sqlite-src/Makefile.am:
+        * providers/sqlite/gda-sqlite-provider.c:
+        * providers/mdb/gda-mdb-provider.c:
+        * providers/oracle/gda-oracle-provider.c:
+        * providers/mysql/utils.c:
+        * providers/mysql/gda-mysql.h:
+        * providers/mysql/gda-mysql-recordset.c:
+        * providers/mysql/gda-mysql-provider.c:
+        * providers/postgres/utils.c:
+        * providers/postgres/gda-postgres.h:
+        * providers/postgres/gda-postgres-provider.c:
+        * providers/postgres/gda-postgres-recordset.c:
+        * providers/postgres/gda-postgres-provider.h:
+        * providers/odbc/gda-odbc-provider.c:
+        * providers/msql/gda-msql-provider.c:
+        * providers/msql/gda-msql-recordset.c:
+        * libgda/gda-connection-event.c:
+        * libgda/gda-connection-event.h:
+        * libgda/gda-connection.c: Added a new COMMAND type of connection event which
+	corresponds to a command (some SQL) being executed on the connection.
+        * configure.in: test for SQLite installation on the system, and if found,
+	check if compiled with the SQLITE_ENABLE_COLUMN_METADATA flag (if not, then
+	use the embedded SQLite sources)
+        * providers/sqlite/gda-sqlite-provider.c: don't use internal structures (the
+	list of functions is not available anymore, this will have to be fixed)
+        * providers/sqlite/sqlite-src/Makefile.am: build SQLite with the
+	SQLITE_ENABLE_COLUMN_METADATA flag
+	
 2007-06-22  Vivien Malerba <malerba@gnome-db.org>
 
 	* providers/mysql/gda-mysql-provider.c: applied patch by Piotr Pokora 

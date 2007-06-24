@@ -35,9 +35,6 @@
 #include "gda-sqlite-provider.h"
 #include "gda-sqlite-recordset.h"
 #include "gda-sqlite-ddl.h"
-#ifndef HAVE_SQLITE
-#include "sqliteInt.h"
-#endif
 #include <libgda/handlers/gda-handler-numerical.h>
 #include "gda-sqlite-handler-bin.h"
 #include <libgda/handlers/gda-handler-boolean.h>
@@ -479,7 +476,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 			gint status;
 			const char *left;
 			gchar *copy;
-			GdaConnectionEvent *error = NULL;
+			GdaConnectionEvent *error = NULL, *event;
 
 			copy = g_strdup (arr[n]);
 			sres = g_new0 (SQLITEresult, 1);
@@ -491,6 +488,10 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 			if (options & GDA_COMMAND_OPTION_IGNORE_ERRORS ||
 			    status == SQLITE_OK) {
 				gchar *tststr;
+
+				event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+				gda_connection_event_set_description (event, arr[n]);
+				gda_connection_add_event (cnc, event);
 
 				g_strchug (arr[n]);
 				tststr = arr[n];
@@ -1021,7 +1022,7 @@ gda_sqlite_provider_single_command (const GdaSqliteProvider *provider,
 	gboolean result;
 	gint status;
 	gchar *errmsg = NULL;
-	GdaConnectionEvent *error = NULL;
+	GdaConnectionEvent *error = NULL, *event;
 
 	scnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE);
 
@@ -1030,6 +1031,10 @@ gda_sqlite_provider_single_command (const GdaSqliteProvider *provider,
 		return FALSE;
 	}
 	
+	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+	gda_connection_event_set_description (event, command);
+	gda_connection_add_event (cnc, event);
+
 	status = sqlite3_exec (scnc->connection, command, NULL, NULL, &errmsg);
 	if (status == SQLITE_OK)
 		result = TRUE;
@@ -1255,15 +1260,10 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 	tblname = g_value_get_string ((GValue *) gda_parameter_get_value (par));
 	g_return_val_if_fail (tblname != NULL, NULL);
 
-	/* does the table exist? */
-	/* FIXME */
+	/* FIXME: does the table exist? */	
 
 	/* use the SQLite PRAGMA for table information command */
-#ifdef HAVE_SQLITE
-	sql = g_strdup_printf ("PRAGMA table_info_long('%s');", tblname);
-#else
 	sql = g_strdup_printf ("PRAGMA table_info('%s');", tblname);
-#endif
 	reclist = process_sql_commands (NULL, cnc, sql, 0);
 	g_free (sql);
 	if (reclist) 
@@ -1369,24 +1369,16 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 
 		/* extra attributes */
 		nvalue = NULL;
-#ifdef HAVE_SQLITE
-		value = gda_row_get_value (row, 6);
-		if (value && gda_value_isa ((GValue *) value, G_TYPE_INT) && g_value_get_int ((GValue *) value))
-			g_value_set_string (nvalue = gda_value_new (G_TYPE_STRING), "AUTO_INCREMENT");
-#else
 		if (SQLITE_VERSION_NUMBER >= 3000000) {
-			Table *table;
-				
-			table = sqlite3FindTable (scnc->connection, tblname, NULL); /* FIXME: database name as 3rd arg */
-			if (!table) {
-				gda_connection_add_event_string (cnc, _("Can't find table %s"), tblname);
-				return GDA_DATA_MODEL (recset);
+			int status;
+			int autoinc;
+			status = sqlite3_table_column_metadata (scnc->connection, NULL, tblname, field_name,
+								NULL, NULL, NULL, NULL, &autoinc);
+			if (status == SQLITE_OK) {
+				if (autoinc)
+					g_value_set_string (nvalue = gda_value_new (G_TYPE_STRING), "AUTO_INCREMENT");
 			}
-				
-			if ((table->iPKey == i) && table->autoInc)
-				g_value_set_string (nvalue = gda_value_new (G_TYPE_STRING), "AUTO_INCREMENT");
 		}
-#endif
 
 		if (!nvalue)
 			nvalue = gda_value_new_null ();
@@ -1537,7 +1529,6 @@ get_procs (GdaConnection *cnc, GdaParameterList *params, gboolean aggs)
 		g_assert (gda_server_provider_init_schema_model (GDA_DATA_MODEL (recset), GDA_CONNECTION_SCHEMA_PROCEDURES));
 	}
 
-#ifdef HAVE_SQLITE
 	GdaDataModel *pragmamodel = NULL;
 	GList *reclist;
 	int i, nrows;
@@ -1547,174 +1538,89 @@ get_procs (GdaConnection *cnc, GdaParameterList *params, gboolean aggs)
 	if (reclist) 
 		pragmamodel = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
-	if (!pragmamodel) {
-		gda_connection_add_event_string (cnc, _("Can't execute PRAGMA proc_list"));
-		return NULL;
-	}
-	
-	nrows = gda_data_model_get_n_rows (pragmamodel);
-	for (i = 0; i < nrows; i++) {
-		GdaRow *row;
-		GList *rowlist = NULL;
-		GValue *value, *pvalue;
-		gint nbargs;
-
-		row = gda_data_model_row_get_row (GDA_DATA_MODEL_ROW (pragmamodel), i, NULL);
-		g_assert (row);
-		pvalue = gda_row_get_value (row, 1);
-		if ((pvalue && (g_value_get_int (pvalue) != 0) && aggs) ||
-		    ((g_value_get_int (pvalue) == 0) && !aggs)) {
-			gchar *str;
-
-			/* Proc name */
-			pvalue = gda_row_get_value (row, 0);
-			g_value_set_string (value = gda_value_new (G_TYPE_STRING), g_value_get_string (pvalue));
-			rowlist = g_list_append (rowlist, value);
-
-			/* Proc_Id */
-			if (! aggs)
-				str = g_strdup_printf ("p%d", i);
-			else
-				str = g_strdup_printf ("a%d", i);
-			g_value_take_string (value = gda_value_new (G_TYPE_STRING), str);
-			rowlist = g_list_append (rowlist, value);
-
-			/* Owner */
-			g_value_set_string (value = gda_value_new (G_TYPE_STRING), "system");
-			rowlist = g_list_append (rowlist, value);
-
-			/* Comments */ 
-			rowlist = g_list_append (rowlist, gda_value_new_null());
-
-			/* Out type */ 
-			g_value_set_string (value = gda_value_new (G_TYPE_STRING), "text");
-			rowlist = g_list_append (rowlist, value);
-
-			if (! aggs) {
-				/* Number of args */
-				pvalue = gda_row_get_value (row, 2);
-				nbargs = g_value_get_int (pvalue);
-				g_value_set_int (value = gda_value_new (G_TYPE_INT), nbargs);
+	if (pragmamodel) {
+		nrows = gda_data_model_get_n_rows (pragmamodel);
+		for (i = 0; i < nrows; i++) {
+			GdaRow *row;
+			GList *rowlist = NULL;
+			GValue *value, *pvalue;
+			gint nbargs;
+			
+			row = gda_data_model_row_get_row (GDA_DATA_MODEL_ROW (pragmamodel), i, NULL);
+			g_assert (row);
+			pvalue = gda_row_get_value (row, 1);
+			if ((pvalue && (g_value_get_int (pvalue) != 0) && aggs) ||
+			    ((g_value_get_int (pvalue) == 0) && !aggs)) {
+				gchar *str;
+				
+				/* Proc name */
+				pvalue = gda_row_get_value (row, 0);
+				g_value_set_string (value = gda_value_new (G_TYPE_STRING), g_value_get_string (pvalue));
 				rowlist = g_list_append (rowlist, value);
-			}
-
-			/* In types */
-			if (! aggs) {
-				if (nbargs > 0) {
-					GString *string;
-					gint j;
-					
-					string = g_string_new ("");
-					for (j = 0; j < nbargs; j++) {
-						if (j > 0)
-							g_string_append_c (string, ',');
-						g_string_append_c (string, '-');
+				
+				/* Proc_Id */
+				if (! aggs)
+					str = g_strdup_printf ("p%d", i);
+				else
+					str = g_strdup_printf ("a%d", i);
+				g_value_take_string (value = gda_value_new (G_TYPE_STRING), str);
+				rowlist = g_list_append (rowlist, value);
+				
+				/* Owner */
+				g_value_set_string (value = gda_value_new (G_TYPE_STRING), "system");
+				rowlist = g_list_append (rowlist, value);
+				
+				/* Comments */ 
+				rowlist = g_list_append (rowlist, gda_value_new_null());
+				
+				/* Out type */ 
+				g_value_set_string (value = gda_value_new (G_TYPE_STRING), "text");
+				rowlist = g_list_append (rowlist, value);
+				
+				if (! aggs) {
+					/* Number of args */
+					pvalue = gda_row_get_value (row, 2);
+					nbargs = g_value_get_int (pvalue);
+					g_value_set_int (value = gda_value_new (G_TYPE_INT), nbargs);
+					rowlist = g_list_append (rowlist, value);
+				}
+				
+				/* In types */
+				if (! aggs) {
+					if (nbargs > 0) {
+						GString *string;
+						gint j;
+						
+						string = g_string_new ("");
+						for (j = 0; j < nbargs; j++) {
+							if (j > 0)
+								g_string_append_c (string, ',');
+							g_string_append_c (string, '-');
+						}
+						g_value_take_string (value = gda_value_new (G_TYPE_STRING), string->str);
+						g_string_free (string, FALSE);
 					}
-					g_value_take_string (value = gda_value_new (G_TYPE_STRING), string->str);
-					g_string_free (string, FALSE);
+					else
+						g_value_set_string (value = gda_value_new (G_TYPE_STRING), "");
 				}
 				else
 					g_value_set_string (value = gda_value_new (G_TYPE_STRING), "");
+				rowlist = g_list_append (rowlist, value);
+				
+				/* Definition */
+				rowlist = g_list_append (rowlist, gda_value_new_null());
+				
+				list = g_list_append (list, rowlist);
 			}
-			else
-				g_value_set_string (value = gda_value_new (G_TYPE_STRING), "");
-			rowlist = g_list_append (rowlist, value);
-
-			/* Definition */
-			rowlist = g_list_append (rowlist, gda_value_new_null());
-			
-			list = g_list_append (list, rowlist);
 		}
+		g_object_unref (pragmamodel);
+	}
+	else {
+		/* return empty list */		
 	}
 
-	g_object_unref (pragmamodel);
 	g_list_foreach (list, (GFunc) add_g_list_row, recset);
 	g_list_free (list);
-#else
-	if (SQLITE_VERSION_NUMBER >= 3000000) {
-		Hash *func_hash;
-		HashElem *func_elem;
-		FuncDef *func;
-		gint i = 0;
-		gchar *str;
-		gint nbargs;
-		GList *list = NULL;
-		gboolean is_agg;
-		
-		func_hash = &(scnc->connection->aFunc);
-		for (func_elem = sqliteHashFirst (func_hash); func_elem ; func_elem = sqliteHashNext (func_elem)) {
-			GList *rowlist = NULL;
-			GValue *value;
-
-			func = sqliteHashData (func_elem);
-			is_agg = func->xFinalize ? TRUE : FALSE;
-			if ((is_agg && !aggs) ||
-			    (!is_agg && aggs))
-				continue;
-
-			/* Proc name */
-			g_value_set_string (value = gda_value_new (G_TYPE_STRING), func->zName);
-			rowlist = g_list_append (rowlist, value);
-
-			/* Proc_Id */
-			if (! is_agg)
-				str = g_strdup_printf ("p%d", i);
-			else
-				str = g_strdup_printf ("a%d", i);
-			g_value_take_string (value = gda_value_new (G_TYPE_STRING), str);
-			rowlist = g_list_append (rowlist, value);
-
-			/* Owner */
-			g_value_set_string (value = gda_value_new (G_TYPE_STRING), "system");
-			rowlist = g_list_append (rowlist, value);
-
-			/* Comments */ 
-			rowlist = g_list_append (rowlist, gda_value_new_null());
-			
-			/* Out type */ 
-			g_value_set_string (value = gda_value_new (G_TYPE_STRING), "text");
-			rowlist = g_list_append (rowlist, value);
-
-			if (! is_agg) {
-				/* Number of args */
-				nbargs = func->nArg;
-				g_value_set_int (value = gda_value_new (G_TYPE_INT), nbargs);
-				rowlist = g_list_append (rowlist, value);
-			}
-			
-			/* In types */
-			if (! is_agg) {
-				if (nbargs > 0) {
-					GString *string;
-					gint j;
-					
-					string = g_string_new ("");
-					for (j = 0; j < nbargs; j++) {
-						if (j > 0)
-							g_string_append_c (string, ',');
-						g_string_append_c (string, '-');
-					}
-					g_value_take_string (value = gda_value_new (G_TYPE_STRING), string->str);
-					g_string_free (string, FALSE);
-				}
-				else
-					g_value_set_string (value = gda_value_new (G_TYPE_STRING), "");
-			}
-			else
-				g_value_set_string (value = gda_value_new (G_TYPE_STRING), "");
-			rowlist = g_list_append (rowlist, value);
-
-			/* Definition */
-			rowlist = g_list_append (rowlist, gda_value_new_null());
-			
-			list = g_list_append (list, rowlist);
-			i++;
-		}
-
-		g_list_foreach (list, (GFunc) add_g_list_row, recset);
-		g_list_free (list);
-	}
-#endif
 
 	return GDA_DATA_MODEL (recset);
 }

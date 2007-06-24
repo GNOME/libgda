@@ -467,7 +467,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 			}
 
 			/* execute the command on the server */
-			rc = mysql_real_query (mysql, arr[n], strlen (arr[n]));
+			rc = gda_mysql_real_query_wrap (cnc, mysql, arr[n], strlen (arr[n]));
 			if (rc != 0) {
 				error = gda_mysql_make_error (mysql);
 				gda_connection_add_event (cnc, error);
@@ -757,6 +757,11 @@ gda_mysql_provider_perform_operation (GdaServerProvider *provider, GdaConnection
 			sql = gda_server_provider_render_operation (provider, cnc, op, error);
 			if (!sql)
 				return FALSE;
+
+			GdaConnectionEvent *event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+			gda_connection_event_set_description (event, sql);
+			gda_connection_add_event (cnc, event);
+
 			res = mysql_query (mysql, sql);
 			g_free (sql);
 			
@@ -885,16 +890,16 @@ gda_mysql_provider_begin_transaction (GdaServerProvider *provider,
 	/* set isolation level */
 	switch (level) {
 	case GDA_TRANSACTION_ISOLATION_READ_COMMITTED :
-		rc = mysql_real_query (mysql, "SET TRANSACTION ISOLATION LEVEL READ COMMITTED", 46);
+		rc = gda_mysql_real_query_wrap (cnc, mysql, "SET TRANSACTION ISOLATION LEVEL READ COMMITTED", 46);
 		break;
 	case GDA_TRANSACTION_ISOLATION_READ_UNCOMMITTED :
-		rc = mysql_real_query (mysql, "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED", 48);
+		rc = gda_mysql_real_query_wrap (cnc, mysql, "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED", 48);
 		break;
 	case GDA_TRANSACTION_ISOLATION_REPEATABLE_READ :
-		rc = mysql_real_query (mysql, "SET TRANSACTION ISOLATION LEVEL REPEATABLE READ", 47);
+		rc = gda_mysql_real_query_wrap (cnc, mysql, "SET TRANSACTION ISOLATION LEVEL REPEATABLE READ", 47);
 		break;
 	case GDA_TRANSACTION_ISOLATION_SERIALIZABLE :
-		rc = mysql_real_query (mysql, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE", 44);
+		rc = gda_mysql_real_query_wrap (cnc, mysql, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE", 44);
 		break;
 	default :
 		rc = 0;
@@ -906,7 +911,7 @@ gda_mysql_provider_begin_transaction (GdaServerProvider *provider,
 	}
 	else {
 		/* start the transaction */
-		rc = mysql_real_query (mysql, "BEGIN", 5);
+		rc = gda_mysql_real_query_wrap (cnc, mysql, "BEGIN", 5);
 		if (rc != 0) {
 			event = gda_mysql_make_error (mysql);
 			gda_connection_add_event (cnc, event);
@@ -942,7 +947,7 @@ gda_mysql_provider_commit_transaction (GdaServerProvider *provider,
 		return FALSE;
 	}
 
-	rc = mysql_real_query (mysql, "COMMIT", 6);
+	rc = gda_mysql_real_query_wrap (cnc, mysql, "COMMIT", 6);
 	if (rc != 0) {
 		event = gda_mysql_make_error (mysql);
 		gda_connection_add_event (cnc, event);
@@ -977,7 +982,7 @@ gda_mysql_provider_rollback_transaction (GdaServerProvider *provider,
 		return FALSE;
 	}
 
-	rc = mysql_real_query (mysql, "ROLLBACK", 8);
+	rc = gda_mysql_real_query_wrap (cnc, mysql, "ROLLBACK", 8);
 	if (rc != 0) {
 		event = gda_mysql_make_error (mysql);
 		gda_connection_add_event (cnc, event);
@@ -1660,7 +1665,7 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 					   table_name, table_name);
 	}
 
-	rc = mysql_real_query (mysql, cmd_str, strlen (cmd_str));
+	rc = gda_mysql_real_query_wrap (cnc, mysql, cmd_str, strlen (cmd_str));
 	g_free (cmd_str);
 	if (rc != 0) {
 		gda_connection_add_event (cnc, gda_mysql_make_error (mysql));
@@ -1945,7 +1950,7 @@ get_mysql_constraints (GdaConnection *cnc, GdaParameterList *params)
 	 * Obtaining list of columns 
 	 */
 	cmd_str = g_strdup_printf ("SHOW COLUMNS FROM %s", table_name);
-	rc = mysql_real_query (mysql, cmd_str, strlen (cmd_str));
+	rc = gda_mysql_real_query_wrap (cnc, mysql, cmd_str, strlen (cmd_str));
 	g_free (cmd_str);
 	if (rc != 0) {
 		gda_connection_add_event (cnc, gda_mysql_make_error (mysql));
@@ -2068,7 +2073,7 @@ get_mysql_constraints (GdaConnection *cnc, GdaParameterList *params)
 					   "CONSTRAINT_NAME != 'PRIMARY' AND REFERENCED_TABLE_NAME IS NOT NULL "
 					   "ORDER BY CONSTRAINT_NAME, ORDINAL_POSITION", 
 					   table_name);
-		rc = mysql_real_query (mysql, cmd_str, strlen (cmd_str));
+		rc = gda_mysql_real_query_wrap (cnc, mysql, cmd_str, strlen (cmd_str));
 		g_free (cmd_str);
 		if (rc != 0) {
 			gda_connection_add_event (cnc, gda_mysql_make_error (mysql));
@@ -2164,7 +2169,7 @@ get_mysql_constraints (GdaConnection *cnc, GdaParameterList *params)
 		MYSQL_ROW mysql_row;
 		cmd_str = g_strdup_printf ("SHOW CREATE TABLE %s",
 					   table_name);
-		rc = mysql_real_query (mysql, cmd_str, strlen (cmd_str));
+		rc = gda_mysql_real_query_wrap (cnc, mysql, cmd_str, strlen (cmd_str));
 		g_free (cmd_str);
 		if (rc != 0) {
 			gda_connection_add_event (cnc, gda_mysql_make_error (mysql));

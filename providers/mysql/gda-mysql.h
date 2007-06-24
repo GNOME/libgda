@@ -57,7 +57,8 @@ G_BEGIN_DECLS
 
 GdaConnectionEvent     *gda_mysql_make_error    (MYSQL *handle);
 GType                   gda_mysql_type_to_gda   (enum enum_field_types mysql_type, gboolean is_unsigned);
-
+int                     gda_mysql_real_query_wrap (GdaConnection *cnc, MYSQL *mysql, 
+						   const char *stmt_str, unsigned long length);
 G_END_DECLS
 
 #endif

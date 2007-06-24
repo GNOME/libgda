@@ -921,25 +921,24 @@ fi
 AM_CONDITIONAL(LDAP, test x$ldapdir != x)
 
 dnl test for system-installed SQLite
-dnl note: while SQLite does not have extra PRAGMA directives,
-dnl embedded SQLite version will continue to be used
+dnl If no SQLite is found or if the SQLite found does not have the sqlite3_table_column_metadata()
+dnl function call, then use the embedded version
 SQLITE_MODULES="sqlite3 >= 3.3"
 PKG_CHECK_MODULES(SQLITE, $SQLITE_MODULES, have_sqlite=yes, have_sqlite=no)
 if test x"$have_sqlite" = "xyes"
 then
-        realvers=`sqlite3 -version` 
-        microvers=`sqlite3 -version | cut -d '.' -f 3`
-        AC_MSG_CHECKING(for sqlite version)
-        if test $microvers -lt 100
+	AC_CHECK_LIB(sqlite3, sqlite3_table_column_metadata,[sqlite3_api=1], [sqlite3_api=0], $SQLITE_CFLAGS $SQLITE_LIBS)
+
+        if test $sqlite3_api = 0
         then
-                AC_MSG_RESULT(Version $realvers of SQLite does not implement required pragmas, using embedded SQLite)
+                AC_MSG_RESULT([SQLite was not compiled with the SQLITE_ENABLE_COLUMN_METADATA, using embedded SQLite])
                 have_sqlite=no
         else
-                AC_MSG_RESULT(Version $realvers)
+                AC_MSG_RESULT(Using this version of SQLite)
+		have_sqlite=yes
                 SQLITE_CFLAGS="$SQLITE_CFLAGS -DHAVE_SQLITE"
                 AC_SUBST(SQLITE_CFLAGS)
                 AC_SUBST(SQLITE_LIBS)
-                SQLITE_VERS=$realvers
                 AC_SUBST(SQLITE_VERS)
         fi
 fi

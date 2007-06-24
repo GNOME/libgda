@@ -1,5 +1,6 @@
 noinst_LTLIBRARIES = \
 	libsqlite.la
+AM_CPPFLAGS = -DSQLITE_ENABLE_COLUMN_METADATA
 
 # Download the Windows prepared SQLite (series 3.x) sources in a ZIP, and
 # extract the zip in this directory (thanks to http://aaronbock.net/articles/sqlite!)

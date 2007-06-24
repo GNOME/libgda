@@ -965,10 +965,14 @@ gda_connection_add_event (GdaConnection *cnc, GdaConnectionEvent *event)
 	case GDA_CONNECTION_EVENT_ERROR:
 		str = "ERROR";
 		break;
+	case GDA_CONNECTION_EVENT_COMMAND:
+		str = "COMMAND: ";
+                break;
 	default:
 		break;
 	}
-	g_print ("EVENT> %s: %s (on cnx %p)\n", str, gda_connection_event_get_description (event), cnc);
+	g_print ("EVENT> %s: %s (on cnx %p, %s)\n", str, gda_connection_event_get_description (event), cnc,
+		gda_connection_event_get_sqlstate (event));
 #endif
 	if (gda_connection_event_get_event_type (event) == GDA_CONNECTION_EVENT_ERROR)
 		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[ERROR], 0, event);

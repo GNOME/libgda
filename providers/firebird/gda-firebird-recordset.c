@@ -892,11 +892,16 @@ gda_firebird_recordset_new (GdaConnection *cnc,
 	/* Create Firebird Recordset object */
 	recset = g_object_new (GDA_TYPE_FIREBIRD_RECORDSET, NULL);
 	
-	/* Save conection */
+	/* Save connection */
 	recset->priv->cnc = cnc;
 	
 	/* Prepare statement */
 	if (fb_sql_prepare (fcnc, recset, ftr, sql)) {
+		GdaConnectionEvent *event;
+
+		event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+		gda_connection_event_set_description (event, sql);
+		gda_connection_add_event (cnc, event);
 
 		/* ... and then execute it */
 		if (!fb_sql_execute (fcnc, recset, ftr, sql)) {

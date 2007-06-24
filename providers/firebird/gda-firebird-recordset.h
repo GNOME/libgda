@@ -21,8 +21,8 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#if !defined(__gda_firebird_recordset_h__)
-#  define __gda_firebird_recordset_h__
+#ifndef __GDA_FIREBIRD_RECORDSET_H__
+#define __GDA_FIREBIRD_RECORDSET_H__
 
 #include <libgda/gda-data-model-hash.h>
 #include <libgda/gda-connection.h>
@@ -58,7 +58,7 @@ typedef struct {
 } GdaFirebirdConnection;
 
 
-GType			gda_firebird_recordset_get_type (void) G_GNUC_CONST;
+GType			 gda_firebird_recordset_get_type (void) G_GNUC_CONST;
 GdaFirebirdRecordset 	*gda_firebird_recordset_new (GdaConnection *cnc,
 				 		     isc_tr_handle *ftr,
 						     const gchar *sql);

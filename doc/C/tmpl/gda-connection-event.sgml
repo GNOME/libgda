@@ -44,6 +44,7 @@ gda_connection_get_events() function.
 @GDA_CONNECTION_EVENT_NOTICE: 
 @GDA_CONNECTION_EVENT_WARNING: 
 @GDA_CONNECTION_EVENT_ERROR: 
+@GDA_CONNECTION_EVENT_COMMAND: 
 
 <!-- ##### ENUM GdaConnectionEventCode ##### -->
 <para>

@@ -240,10 +240,16 @@ gda_msql_recordset_append_values(GdaDataModelRow *model,const GList *values, GEr
 		g_free(val_str);
 	}
 	sql=g_string_append(sql,")");
-	rc=msqlQuery(rs->sock,sql->str);
+
+	GdaConnectionEvent *event;
+	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+	gda_connection_event_set_description (event, sql);
+	gda_connection_add_event (rs->cnc, event);
+
+	rc = msqlQuery (rs->sock,sql->str);
 	g_string_free(sql,TRUE);
 	if (rc<0) {
-		gda_connection_add_event(rs->cnc,gda_msql_make_error(rc));
+		gda_connection_add_event (rs->cnc,gda_msql_make_error(rc));
 		return NULL;
 	}
 	row=gda_row_new_from_list((GdaDataModel*) model,values);

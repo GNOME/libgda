@@ -58,6 +58,7 @@ typedef struct {
 } GdaPostgresTypeOid;
 
 typedef struct {
+	GdaConnection      *cnc;
 	PGconn             *pconn;
 	gint                ntypes;
 	GdaPostgresTypeOid *type_data;

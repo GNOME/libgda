@@ -803,6 +803,7 @@ gda_mdb_provider_execute_sql (GdaMdbProvider *mdbprv, GdaConnection *cnc, const 
 	GdaMdbConnection *mdb_cnc;
 	GdaDataModel *model;
 	GType *coltypes;
+	GdaConnectionEvent *event;
 
 	g_return_val_if_fail (GDA_IS_MDB_PROVIDER (mdbprv), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
@@ -817,6 +818,11 @@ gda_mdb_provider_execute_sql (GdaMdbProvider *mdbprv, GdaConnection *cnc, const 
 	/* parse the SQL command */
 	mdb_SQL->mdb = mdb_cnc->mdb;
 	g_input_ptr = (char *) sql;
+
+	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+	gda_connection_event_set_description (event, sql);
+	gda_connection_add_event (cnc, event);
+
 	/* begin unsafe */
 	_mdb_sql (mdb_SQL);
 	if (yyparse ()) {

@@ -347,12 +347,12 @@ get_connection_type_list (GdaPostgresConnectionData *priv_td)
 					 "WHERE typowner=usesysid AND typrelid = 0 AND typname !~ '^_' "
 					 "AND  typname not in (%s) "
 					 "ORDER BY typname", avoid_types);
-		pg_res = PQexec (priv_td->pconn, query);
+		pg_res = gda_postgres_PQexec_wrap (priv_td->cnc, priv_td->pconn, query);
 		g_free (query);
 
 		/* query to fetch non returned data types */
 		query = g_strdup_printf ("SELECT pg_type.oid FROM pg_type WHERE typname in (%s)", avoid_types);
-		pg_res_avoid = PQexec (priv_td->pconn, query);
+		pg_res_avoid = gda_postgres_PQexec_wrap (priv_td->cnc, priv_td->pconn, query);
 		g_free (query);
 	}
 	else {
@@ -372,17 +372,17 @@ get_connection_type_list (GdaPostgresConnectionData *priv_td)
 			  "(SELECT c.relkind = 'c' FROM pg_catalog.pg_class c WHERE c.oid = t.typrelid)) "
 			  "AND t.typname not in (%s) "
 			  "ORDER BY typname", avoid_types);
-		pg_res = PQexec (priv_td->pconn, query);
+		pg_res = gda_postgres_PQexec_wrap (priv_td->cnc, priv_td->pconn, query);
 		g_free (query);
 
 		/* query to fetch non returned data types */
 		query = g_strdup_printf ("SELECT t.oid FROM pg_catalog.pg_type t WHERE t.typname in (%s)",
 					 avoid_types);
-		pg_res_avoid = PQexec (priv_td->pconn, query);
+		pg_res_avoid = gda_postgres_PQexec_wrap (priv_td->cnc, priv_td->pconn, query);
 		g_free (query);
 
 		/* query to fetch the oid of the 'any' data type */
-		pg_res_anyoid = PQexec (priv_td->pconn, 
+		pg_res_anyoid = gda_postgres_PQexec_wrap (priv_td->cnc, priv_td->pconn, 
 					"SELECT t.oid FROM pg_catalog.pg_type t WHERE t.typname = 'any'");
 	}
 
@@ -588,19 +588,19 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	/*
 	 * Sets the DATE format for all the current session to YYYY-MM-DD
 	 */
-	pg_res = PQexec (pconn, "SET DATESTYLE TO 'ISO'");
+	pg_res = gda_postgres_PQexec_wrap (cnc, pconn, "SET DATESTYLE TO 'ISO'");
 	PQclear (pg_res);
 
 	/*
 	 * Unicode is the default character set now
 	 */
-	pg_res = PQexec (pconn, "SET CLIENT_ENCODING TO 'UNICODE'");
+	pg_res = gda_postgres_PQexec_wrap (cnc, pconn, "SET CLIENT_ENCODING TO 'UNICODE'");
 	PQclear (pg_res);
 
 	/*
 	 * Get the vesrion as a float
 	 */
-	pg_res = PQexec (pconn, "SELECT version ()");
+	pg_res = gda_postgres_PQexec_wrap (cnc, pconn, "SELECT version ()");
 	version = g_strdup (PQgetvalue(pg_res, 0, 0));
 	version_float = get_pg_version_float (PQgetvalue(pg_res, 0, 0));
 	PQclear (pg_res);
@@ -621,7 +621,7 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 		
 		if (path_valid) {
 			gchar *query = g_strdup_printf ("SET search_path TO %s", pg_searchpath);
-			pg_res = PQexec (pconn, query);
+			pg_res = gda_postgres_PQexec_wrap (cnc, pconn, query);
 			g_free (query);
 
 			if (!pg_res || (PQresultStatus (pg_res) != PGRES_COMMAND_OK)) {
@@ -641,6 +641,7 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	 * Associated data
 	 */
 	priv_data = g_new0 (GdaPostgresConnectionData, 1);
+	priv_data->cnc = cnc;
 	priv_data->pconn = pconn;
 	priv_data->version = version;
 	priv_data->version_float = version_float;
@@ -821,11 +822,11 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 				cursor_name = g_strdup_printf ("gda_%d_%d_%d", stm.tv_sec, stm.tv_usec, index++);
 				str = g_strdup_printf ("DECLARE %s SCROLL CURSOR WITH HOLD FOR %s", 
 						       cursor_name, arr[n]);
-				pg_res = PQexec (pconn, str);
+				pg_res = gda_postgres_PQexec_wrap (cnc, pconn, str);
 				g_free (str);
 			}
 			else 
-				pg_res = PQexec (pconn, arr[n]);
+				pg_res = gda_postgres_PQexec_wrap (cnc, pconn, arr[n]);
 			obj = compute_retval_from_pg_res (cnc, pconn, arr[n], pg_res, cursor_name);
 			g_free (cursor_name);
 			reclist = g_list_append (reclist, obj);
@@ -1056,7 +1057,7 @@ gda_postgres_provider_perform_operation (GdaServerProvider *provider, GdaConnect
 			sql = gda_server_provider_render_operation (provider, cnc, op, error);
 			if (!sql)
 				return FALSE;
-			pg_res = PQexec (pconn, sql);
+			pg_res = gda_postgres_PQexec_wrap (cnc, pconn, sql);
 			g_free (sql);
 			if (!pg_res || PQresultStatus (pg_res) != PGRES_COMMAND_OK) {
 				g_set_error (error, 0, 0, PQresultErrorMessage (pg_res));
@@ -1235,7 +1236,7 @@ fetch_existing_blobs (GdaConnection *cnc, PGconn *pconn, GdaQuery *query, GdaPar
 				g_free (msg);
 				return NULL;
 			}
-			pg_update_blobs = PQexec (pconn, sql);
+			pg_update_blobs = gda_postgres_PQexec_wrap (cnc, pconn, sql);
 			g_free (sql);
 			if (!pg_update_blobs || (PQresultStatus (pg_update_blobs) != PGRES_TUPLES_OK)) {
 				gda_postgres_make_error (cnc, pconn, pg_update_blobs);
@@ -1497,6 +1498,11 @@ gda_postgres_provider_execute_query (GdaServerProvider *provider,
 		return NULL;
 	}
 
+	GdaConnectionEvent *event;
+	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+	gda_connection_event_set_description (event, pseudo_sql);
+	gda_connection_add_event (cnc, event);
+
 	pg_res = PQexecPrepared (pconn, prep_stm_name, nb_params, (const char * const *) param_values, 
 				 param_lengths, param_formats, 0);
 	g_free (prep_stm_name);
@@ -1736,7 +1742,7 @@ gda_postgres_provider_single_command (const GdaPostgresProvider *provider,
 
 	pconn = priv_data->pconn;
 	result = FALSE;
-	pg_res = PQexec (pconn, command);
+	pg_res = gda_postgres_PQexec_wrap (cnc, pconn, command);
 	if (pg_res != NULL){		
 		result = PQresultStatus (pg_res) == PGRES_COMMAND_OK;
 		if (result == FALSE) 
@@ -1863,7 +1869,7 @@ gda_postgres_fill_procs_data (GdaDataModelArray *recset,
 			 "ORDER BY proname, pronargs",
 			 priv_data->avoid_types_oids, priv_data->any_type_oid);
 
-	pg_res = PQexec(priv_data->pconn, query);
+	pg_res = gda_postgres_PQexec_wrap (priv_data->cnc, priv_data->pconn, query);
 	g_free (query);
 	if (pg_res == NULL)
 		return NULL;
@@ -2375,7 +2381,7 @@ gda_postgres_get_idx_data (GdaPostgresConnectionData *priv_data, const gchar *tb
 					 "AND i.indexrelid = c2.oid "
 					 "AND pg_catalog.pg_table_is_visible(c.oid) AND i.indkey [0] <> 0", tblname);
 
-	pg_idx = PQexec (priv_data->pconn, query);
+	pg_idx = gda_postgres_PQexec_wrap (priv_data->cnc, priv_data->pconn, query);
 	g_free (query);
 	if (pg_idx == NULL)
 		return NULL;
@@ -2512,7 +2518,7 @@ gda_postgres_get_ref_data (GdaPostgresConnectionData *priv_data, const gchar *tb
 					 "AND pg_catalog.pg_table_is_visible (c.oid) "
 					 "AND pg_catalog.pg_table_is_visible (fc.oid)", tblname);
 
-	pg_ref = PQexec(priv_data->pconn, query);
+	pg_ref = gda_postgres_PQexec_wrap (priv_data->cnc, priv_data->pconn, query);
 	g_free (query);
 	if (pg_ref == NULL)
 		return NULL;
@@ -2558,7 +2564,7 @@ gda_postgres_get_ref_data (GdaPostgresConnectionData *priv_data, const gchar *tb
 							 "WHERE c.relname = '%s' AND pg_catalog.pg_table_is_visible (c.oid) "
 							 "AND a.attnum = %d AND NOT a.attisdropped", 
 							 PQgetvalue (pg_ref, i, 2), atoi (itemp->data));
-				pg_res = PQexec(priv_data->pconn, query);
+				pg_res = gda_postgres_PQexec_wrap (priv_data->cnc, priv_data->pconn, query);
 				/*g_print ("Query: %s\n", query);*/
 				g_free (query);
 				if (pg_res == NULL)
@@ -2650,7 +2656,7 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaDataModelArray *recset,
 			"WHERE c.relname = '%s' AND pg_catalog.pg_table_is_visible (c.oid) AND a.attnum > 0 "
 			"AND NOT a.attisdropped ORDER BY 7", tblname);
 
-	pg_res = PQexec(priv_data->pconn, query);
+	pg_res = gda_postgres_PQexec_wrap (priv_data->cnc, priv_data->pconn, query);
 	g_free (query);
 	if (pg_res == NULL)
 		return NULL;
