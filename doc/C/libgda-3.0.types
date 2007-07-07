@@ -16,6 +16,7 @@ gda_handler_numerical_get_type
 gda_handler_bin_get_type
 gda_handler_type_get_type
 gda_data_model_array_get_type
+gda_data_model_bdb_get_type
 gda_data_model_filter_sql_get_type
 gda_data_model_row_get_type
 gda_data_model_get_type

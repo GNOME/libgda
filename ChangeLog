@@ -1,3 +1,38 @@
+2007-07-07  Vivien Malerba <malerba@gnome-db.org>
+
+	* providers/bdb/gda-bdb-recordset.c: make string transalatable
+	* providers/sqlite/gda-sqlite-recordset.c: use sqlite3_table_column_metadata() to
+	obtain column information to better set GdaColumns' attributes
+	* configure.in:
+	* providers/sqlite/gda-sqlite-provider.c:
+	* providers/sqlite/Makefile.am:
+	* providers/sqlite/vproviders/*: created the base for 'virtual providers' 
+	implementations which use SQLite's virtual tables to enable access to data
+	using SQL for data which does not support SQL (such as CSV data), implemented
+	a virtual provider making GdaDataModel objects appear as tables.
+	* libgda/binreloc: fixed directory properties
+	* libgda/gda-data-model-bdb.[ch]: implements a GdaDataModel to access a BDB 
+	database
+	* libgda/gda-data-model.[ch]: added gda_data_model_[gs]et_column_name() methods,
+	and don't warn on unsupported methods when this can be a "normal" implementation
+	* libgda/Makefile.am:
+	* libgda/libgda.h:
+	* libgda/libgda.h.in: libgda.h is generated when running the configure script,
+	to enable compilation of the GdaDataModelBdb only if BDB is found
+	* libgda/gda-data-proxy.c: minor misc. corrections (iter creation, test for
+	data model access flags)
+	* libgda/gda-data-model-iter.c: correction: connect the correct object
+	* libgda/gda-connection-private.h:
+	* libgda/gda-connection.c: added a gda_connection_force_status() method, and misc.
+	minor corrections
+	* libgda/gda-data-access-wrapper.c: correctly implemented the get_attributes_at()
+	method
+	* libgda/gda-client.c: allow a connection not not refer to a GdaClient object (don't
+	show warnings in this case)
+	* libgda/gda-data-model-import.c: don't keep an internal iterator; corrected the
+	get_attributes_at() method
+	* doc/C: documentation updates
+
 2007-06-24  Vivien Malerba <malerba@gnome-db.org>
 
         * doc/C/tmpl/gda-connection-event.sgml:

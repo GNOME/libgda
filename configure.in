@@ -4,7 +4,7 @@ m4_define(micro, 1)
 
 AC_INIT(GNU Data Access, major.minor.micro, gnome-db-list@gnome.org, libgda)
 AC_PREREQ(2.59)
-AC_CONFIG_SRCDIR(libgda/libgda.h)
+AC_CONFIG_SRCDIR(libgda/libgda.h.in)
 AM_INIT_AUTOMAKE(1.8 -Wall no-define dist-bzip2)
 
 AC_SUBST(GDA_VERSION, major.minor.micro)
@@ -206,6 +206,10 @@ then
 fi
 
 AM_CONDITIONAL(BDB, test x$bdbdir != x)
+if test x$bdbdir != x; then
+	LIBGDA_BDB_INC="#include <libgda/gda-data-model-bdb.h>"
+fi
+AC_SUBST(LIBGDA_BDB_INC)
 
 dnl Test for ODBC
 try_odbc=true
@@ -1067,6 +1071,7 @@ libgda-3.0.pc
 po/Makefile.in
 libsql/Makefile
 libgda/Makefile
+libgda/libgda.h
 libgda/binreloc/Makefile
 libgda/handlers/Makefile
 libgda/sql-delimiter/Makefile
@@ -1097,6 +1102,8 @@ providers/postgres/Makefile
 providers/postgres/libgda-postgres-3.0.pc
 providers/sqlite/Makefile
 providers/sqlite/sqlite-src/Makefile
+providers/sqlite/vproviders/Makefile
+providers/sqlite/vproviders/libgda-vproviders-3.0.pc
 providers/sqlite/libgda-sqlite-3.0.pc
 providers/sybase/Makefile
 providers/sybase/libgda-sybase-3.0.pc

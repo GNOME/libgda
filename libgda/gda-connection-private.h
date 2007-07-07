@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2006 The GNOME Foundation.
+ * Copyright (C) 2006 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -40,6 +40,8 @@ void gda_connection_internal_change_transaction_state (GdaConnection *cnc,
 
 /* helper function, fuzzy analysis of "standard" SQL for transactions */
 void gda_connection_internal_treat_sql (GdaConnection *cnc, const gchar *sql, GdaConnectionEvent *error);
+
+void gda_connection_force_status (GdaConnection *cnc, gboolean opened);
 
 G_END_DECLS
 

@@ -1,0 +1,633 @@
+/* 
+ * GDA common library
+ * Copyright (C) 2007 The GNOME Foundation.
+ *
+ * AUTHORS:
+ *      Vivien Malerba <malerba@gnome-db.org>
+ *
+ * This Library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This Library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this Library; see the file COPYING.LIB.  If not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#include <glib/gi18n-lib.h>
+#include <string.h>
+#include "gda-vprovider-data-model.h"
+#include "gda-vconnection-data-model.h"
+#include <sqlite3.h>
+#include <libgda/gda-connection-private.h>
+#include <libgda/gda-data-model-iter.h>
+#include <libgda/gda-data-proxy.h>
+#include "../gda-sqlite.h"
+
+
+#define PARENT_TYPE GDA_TYPE_VIRTUAL_PROVIDER
+#define CLASS(obj) (GDA_VPROVIDER_DATA_MODEL_CLASS (G_OBJECT_GET_CLASS (obj)))
+
+struct _GdaVproviderDataModelPrivate {
+	
+};
+
+/* properties */
+enum
+{
+        PROP_0,
+};
+
+static void gda_vprovider_data_model_class_init (GdaVproviderDataModelClass *klass);
+static void gda_vprovider_data_model_init       (GdaVproviderDataModel *prov, GdaVproviderDataModelClass *klass);
+static void gda_vprovider_data_model_finalize   (GObject *object);
+static void gda_vprovider_data_model_set_property (GObject *object,
+					       guint param_id,
+					       const GValue *value,
+					       GParamSpec *pspec);
+static void gda_vprovider_data_model_get_property (GObject *object,
+					       guint param_id,
+					       GValue *value,
+					       GParamSpec *pspec);
+static GObjectClass  *parent_class = NULL;
+
+/*
+ * GdaVproviderDataModel class implementation
+ */
+static void
+gda_vprovider_data_model_class_init (GdaVproviderDataModelClass *klass)
+{
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+
+	parent_class = g_type_class_peek_parent (klass);
+
+	object_class->finalize = gda_vprovider_data_model_finalize;
+
+	/* Properties */
+        object_class->set_property = gda_vprovider_data_model_set_property;
+        object_class->get_property = gda_vprovider_data_model_get_property;
+}
+
+static void
+gda_vprovider_data_model_init (GdaVproviderDataModel *prov, GdaVproviderDataModelClass *klass)
+{
+	prov->priv = g_new (GdaVproviderDataModelPrivate, 1);
+}
+
+static void
+gda_vprovider_data_model_finalize (GObject *object)
+{
+	GdaVproviderDataModel *prov = (GdaVproviderDataModel *) object;
+
+	g_return_if_fail (GDA_IS_VPROVIDER_DATA_MODEL (prov));
+
+	/* free memory */
+	g_free (prov->priv);
+	prov->priv = NULL;
+
+	/* chain to parent class */
+	parent_class->finalize (object);
+}
+
+GType
+gda_vprovider_data_model_get_type (void)
+{
+	static GType type = 0;
+
+	if (!type) {
+		if (type == 0) {
+			static GTypeInfo info = {
+				sizeof (GdaVproviderDataModelClass),
+				(GBaseInitFunc) NULL,
+				(GBaseFinalizeFunc) NULL,
+				(GClassInitFunc) gda_vprovider_data_model_class_init,
+				NULL, NULL,
+				sizeof (GdaVproviderDataModel),
+				0,
+				(GInstanceInitFunc) gda_vprovider_data_model_init
+			};
+			
+			type = g_type_register_static (PARENT_TYPE, "GdaVproviderDataModel", &info, 0);
+		}
+	}
+
+	return type;
+}
+
+static void
+gda_vprovider_data_model_set_property (GObject *object,
+				       guint param_id,
+				       const GValue *value,
+				       GParamSpec *pspec)
+{
+        GdaVproviderDataModel *prov;
+
+        prov = GDA_VPROVIDER_DATA_MODEL (object);
+        if (prov->priv) {
+                switch (param_id) {
+		default:
+			break;
+                }
+        }
+}
+
+static void
+gda_vprovider_data_model_get_property (GObject *object,
+				       guint param_id,
+				       GValue *value,
+				       GParamSpec *pspec)
+{
+        GdaVproviderDataModel *prov;
+
+        prov = GDA_VPROVIDER_DATA_MODEL (object);
+        if (prov->priv) {
+		switch (param_id) {
+		default:
+			break;
+		}
+        }
+}
+
+
+/**
+ * gda_vprovider_data_model_new
+ *
+ * Creates a new GdaVirtualProvider object which allows one to 
+ * add and remove GdaDataModel objects as tables within a connection
+ *
+ * Returns: a new #GdaVirtualProvider object.
+ */
+GdaVirtualProvider *
+gda_vprovider_data_model_new (void)
+{
+	GdaVirtualProvider *provider;
+
+        provider = g_object_new (gda_vprovider_data_model_get_type (), NULL);
+        return provider;
+}
+
+/* module creation */
+static int virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlite3_vtab **ppVtab, char **pzErr);
+static int virtualConnect (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlite3_vtab **ppVtab, char **pzErr);
+static int virtualDisconnect (sqlite3_vtab *pVtab);
+static int virtualDestroy (sqlite3_vtab *pVtab);
+static int virtualOpen (sqlite3_vtab *pVTab, sqlite3_vtab_cursor **ppCursor);
+static int virtualClose (sqlite3_vtab_cursor *cur);
+static int virtualEof (sqlite3_vtab_cursor *cur);
+static int virtualNext (sqlite3_vtab_cursor *cur);
+static int virtualColumn (sqlite3_vtab_cursor *cur, sqlite3_context *ctx, int i);
+static int virtualRowid (sqlite3_vtab_cursor *cur, sqlite_int64 *pRowid);
+static int virtualFilter (sqlite3_vtab_cursor *pVtabCursor, int idxNum, const char *idxStr, int argc, sqlite3_value **argv);
+static int virtualBestIndex (sqlite3_vtab *tab, sqlite3_index_info *pIdxInfo);
+static int virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int64 *pRowid);
+static int virtualBegin (sqlite3_vtab *tab);
+static int virtualSync (sqlite3_vtab *tab);
+static int virtualCommit (sqlite3_vtab *tab);
+static int virtualRollback (sqlite3_vtab *tab);
+static int virtualFindFunction (sqlite3_vtab *vtab, int nArg, const char *zFuncName, 
+				void (**pxFunc)(sqlite3_context*,int,sqlite3_value**), void **ppArg);
+
+static sqlite3_module Module = {
+	0,                         /* iVersion */
+	virtualCreate,
+	virtualConnect,
+	virtualBestIndex,
+	virtualDisconnect, 
+	virtualDestroy,
+	virtualOpen,                  /* xOpen - open a cursor */
+	virtualClose,                 /* xClose - close a cursor */
+	virtualFilter,                /* xFilter - configure scan constraints */
+	virtualNext,                  /* xNext - advance a cursor */
+	virtualEof,                   /* xEof */
+	virtualColumn,                /* xColumn - read data */
+	virtualRowid,                 /* xRowid - read data */
+	virtualUpdate,                /* xUpdate - write data */
+	virtualBegin,                 /* xBegin - begin transaction */
+	virtualSync,                  /* xSync - sync transaction */
+	virtualCommit,                /* xCommit - commit transaction */
+	virtualRollback,              /* xRollback - rollback transaction */
+	NULL,                         /* xFindFunction - function overloading */
+};
+
+/**
+ * gda_vprovider_data_model_open_connection
+ *
+ * Creates a new GdaConnection object
+ *
+ * Returns: a new #GdaVconnectionDataModel object which is itself a #GdaConnection
+ */
+GdaConnection *
+gda_vprovider_data_model_open_connection (GdaVproviderDataModel *prov)
+{
+	GdaConnection *cnc;
+	GdaQuarkList *params;
+	g_return_val_if_fail (GDA_IS_VPROVIDER_DATA_MODEL (prov), NULL);
+
+	cnc = g_object_new (GDA_TYPE_VCONNECTION_DATA_MODEL, "provider-obj", prov, NULL);
+	params = gda_quark_list_new_from_string ("_IS_VIRTUAL=TRUE");
+	if (gda_server_provider_open_connection (GDA_SERVER_PROVIDER (prov), cnc, params,
+						 NULL, NULL)) 
+		gda_connection_force_status (cnc, TRUE);
+	gda_quark_list_free (params);
+
+	SQLITEcnc *scnc;
+	scnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE);
+	if (!scnc) {
+		gda_connection_add_event_string (cnc, _("Invalid SQLite handle"));
+		g_object_unref (cnc);
+		return FALSE;
+	}
+
+	sqlite3_create_module (scnc->connection, G_OBJECT_TYPE_NAME (prov), &Module, cnc);
+
+	return cnc;
+}
+
+/* module implementation */
+#define TRACE() g_print ("== %s()\n", __FUNCTION__)
+#undef TRACE
+#define TRACE()
+
+typedef struct {
+	sqlite3_vtab             base;
+	GdaVconnectionDataModel *cnc;
+	GdaDataProxy            *proxy;
+} VirtualTable;
+
+typedef struct {
+	sqlite3_vtab_cursor      base;
+	GdaDataModelIter        *iter;
+} VirtualCursor;
+
+static int
+virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlite3_vtab **ppVtab, char **pzErr)
+{
+	GdaVconnectionDataModel *cnc = GDA_VCONNECTION_DATA_MODEL (pAux);
+	GdaDataModel *model = cnc->adding;
+	GdaDataProxy *proxy;
+	VirtualTable *vtable;
+	GString *sql;
+	gint i, ncols;
+
+	TRACE ();
+
+	if (GDA_IS_DATA_PROXY (model)) {
+		ncols = gda_data_proxy_get_proxied_model_n_cols (GDA_DATA_PROXY (model));
+		proxy = (GdaDataProxy *) gda_data_proxy_new (model);
+		g_object_ref (G_OBJECT (proxy));
+	}
+	else {
+		proxy = (GdaDataProxy *) gda_data_proxy_new (model);
+		ncols = gda_data_proxy_get_proxied_model_n_cols (proxy);
+	}
+
+	/* proxy settings */
+	gda_data_proxy_set_sample_size (proxy, 0);
+	g_object_set (G_OBJECT (proxy), "defer-sync", FALSE, NULL);
+
+	if (ncols <= 0) {
+		*pzErr = sqlite3_mprintf (_("Data model must have at least one column"));
+		g_object_unref (proxy);
+		return SQLITE_ERROR;
+	}
+
+	sql = g_string_new ("CREATE TABLE ");
+	g_string_append (sql, argv[2]);
+	g_string_append (sql, " (");
+	for (i = 0; i < ncols; i++) {
+		GdaColumn *column;
+		const gchar *name, *type;
+
+		if (i != 0)
+			g_string_append (sql, ", ");
+		column = gda_data_model_describe_column ((GdaDataModel*) proxy, i);
+		if (!column) {
+			*pzErr = sqlite3_mprintf (_("Can't get data model description for column %d"), i);
+			g_string_free (sql, TRUE);
+			return SQLITE_ERROR;
+		}
+		name = gda_column_get_name (column);
+		type = gda_column_get_dbms_type (column);
+		if (!type) 
+			type = g_type_name (gda_column_get_g_type (column));
+		if (!name) {
+			*pzErr = sqlite3_mprintf (_("Can't get data model's column name for column %d"), i);
+			g_string_free (sql, TRUE);
+			return SQLITE_ERROR;
+		}
+		if (!type) {
+			*pzErr = sqlite3_mprintf (_("Can't get data model's column type or type for column %d"), i);
+			g_string_free (sql, TRUE);
+			return SQLITE_ERROR;
+		}
+		g_string_append (sql, name);
+		g_string_append_c (sql, ' ');
+		g_string_append (sql, type);
+		if (! gda_column_get_allow_null (column)) 
+			g_string_append (sql, " NOT NULL");
+	}
+	g_string_append_c (sql, ')');
+
+	vtable = g_new0 (VirtualTable, 1);
+	vtable->cnc = cnc;
+	vtable->proxy = proxy;
+	*ppVtab = &(vtable->base);
+
+	if (sqlite3_declare_vtab (db, sql->str) != SQLITE_OK) {
+		*pzErr = sqlite3_mprintf (_("Can't declare virtual table (%s)"), sql->str);
+		g_string_free (sql, TRUE);
+		g_free (vtable);
+		*ppVtab = NULL;
+		return SQLITE_ERROR;
+	}
+
+	g_print ("VIRTUAL TABLE: %s\n", sql->str);
+	g_string_free (sql, TRUE);
+
+	return SQLITE_OK;
+}
+
+static int
+virtualConnect (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlite3_vtab **ppVtab, char **pzErr)
+{
+	TRACE ();
+
+	return virtualCreate (db, pAux, argc, argv, ppVtab, pzErr);
+}
+
+static int
+virtualDisconnect (sqlite3_vtab *pVtab)
+{
+	VirtualTable *vtab = (VirtualTable *) pVtab;
+
+	TRACE ();
+
+	g_object_unref (vtab->proxy);
+	g_free (vtab);
+	return SQLITE_OK;
+}
+
+static int
+virtualDestroy (sqlite3_vtab *pVtab)
+{
+	TRACE ();
+
+	return virtualDisconnect (pVtab);
+}
+
+static int
+virtualOpen (sqlite3_vtab *pVTab, sqlite3_vtab_cursor **ppCursor)
+{
+	VirtualCursor *cursor;
+	VirtualTable *table = (VirtualTable*) pVTab;
+
+	TRACE ();
+
+	cursor = g_new0 (VirtualCursor, 1);
+	cursor->iter = gda_data_model_iter_new (GDA_DATA_MODEL (table->proxy));
+	*ppCursor = &(cursor->base);
+	return SQLITE_OK;
+}
+
+static int
+virtualClose (sqlite3_vtab_cursor *cur)
+{
+	VirtualCursor *cursor = (VirtualCursor*) cur;
+
+	TRACE ();
+
+	g_object_unref (cursor->iter);
+	g_free (cur);
+	return SQLITE_OK;
+}
+
+static int
+virtualEof (sqlite3_vtab_cursor *cur)
+{
+	VirtualCursor *cursor = (VirtualCursor*) cur;
+
+	TRACE ();
+
+	if (gda_data_model_iter_is_valid (cursor->iter))
+		return FALSE;
+	else
+		return TRUE;
+}
+
+static int
+virtualNext (sqlite3_vtab_cursor *cur)
+{
+	VirtualCursor *cursor = (VirtualCursor*) cur;
+	VirtualTable *table = (VirtualTable*) cur->pVtab;
+
+	TRACE ();
+
+	gda_data_model_iter_move_next (cursor->iter);
+	while (gda_data_model_iter_is_valid (cursor->iter) &&
+	       gda_data_proxy_row_is_deleted (table->proxy, gda_data_model_iter_get_row (cursor->iter)))
+		gda_data_model_iter_move_next (cursor->iter);
+	return SQLITE_OK;
+}
+
+static int
+virtualColumn (sqlite3_vtab_cursor *cur, sqlite3_context *ctx, int i)
+{
+	VirtualCursor *cursor = (VirtualCursor*) cur;
+
+	TRACE ();
+
+	GdaParameter *param;
+	
+	param = gda_data_model_iter_get_param_for_column (cursor->iter, i);
+	if (!param) {
+		sqlite3_result_error (ctx, _("Column not found"), -1);
+		return SQLITE_EMPTY;
+	}
+	else {
+		const GValue *value;
+		value = gda_parameter_get_value (param);
+
+		if (!value || gda_value_is_null (value))
+			sqlite3_result_null (ctx);
+		else  if (G_VALUE_TYPE (value) == G_TYPE_INT) 
+			sqlite3_result_int (ctx, g_value_get_int (value));
+		else if (G_VALUE_TYPE (value) == G_TYPE_INT64) 
+			sqlite3_result_int64 (ctx, g_value_get_int64 (value));
+		else if (G_VALUE_TYPE (value) == G_TYPE_DOUBLE) 
+			sqlite3_result_double (ctx, g_value_get_double (value));
+		else if (G_VALUE_TYPE (value) == GDA_TYPE_BLOB) {
+			const GdaBlob *blob;
+			blob = gda_value_get_blob (value);
+			sqlite3_result_blob (ctx, blob->data.data, blob->data.binary_length, SQLITE_TRANSIENT);
+		}
+		else if (G_VALUE_TYPE (value) == GDA_TYPE_BINARY) {
+			const GdaBinary *bin;
+			bin = gda_value_get_binary (value);
+			sqlite3_result_blob (ctx, bin->data, bin->binary_length, SQLITE_TRANSIENT);
+		}
+		else {
+			gchar *str = gda_value_stringify (value);
+			sqlite3_result_text (ctx, str, -1, SQLITE_TRANSIENT);
+			g_free (str);
+		}
+		return SQLITE_OK;
+	}
+}
+
+static int
+virtualRowid (sqlite3_vtab_cursor *cur, sqlite_int64 *pRowid)
+{
+	VirtualCursor *cursor = (VirtualCursor*) cur;
+
+	TRACE ();
+
+	*pRowid = gda_data_model_iter_get_row (cursor->iter);
+	return SQLITE_OK;
+}
+
+static int
+virtualFilter (sqlite3_vtab_cursor *pVtabCursor, int idxNum, const char *idxStr, int argc, sqlite3_value **argv)
+{
+	VirtualCursor *cursor = (VirtualCursor*) pVtabCursor;
+
+	TRACE ();
+
+	switch (idxNum) {
+	case 0: /* no filtering at all */
+		gda_data_model_iter_move_next (cursor->iter);
+		break; 
+	default:
+		TO_IMPLEMENT;
+		break;
+	}
+	return SQLITE_OK;
+}
+
+static int
+virtualBestIndex (sqlite3_vtab *tab, sqlite3_index_info *pIdxInfo)
+{
+	TRACE ();
+
+	pIdxInfo->idxNum = 0;
+	return SQLITE_OK;
+}
+
+/*
+ *    apData[0]  apData[1]  apData[2..]
+ *
+ *    INTEGER                              DELETE            
+ *
+ *    INTEGER    NULL       (nCol args)    UPDATE (do not set rowid)
+ *    INTEGER    INTEGER    (nCol args)    UPDATE (with SET rowid = <arg1>)
+ *
+ *    NULL       NULL       (nCol args)    INSERT INTO (automatic rowid value)
+ *    NULL       INTEGER    (nCol args)    INSERT (incl. rowid value)
+ */
+static int
+virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int64 *pRowid)
+{
+	VirtualTable *table = (VirtualTable *) tab;
+
+	TRACE ();
+
+	if ((nData>1) && (sqlite3_value_type (apData[0])==SQLITE_INTEGER)) {
+		/* UPDATE */
+		gint i;
+		for (i = 2; i < nData; i++) {
+			GValue *value;
+			GType type;
+			gint rowid = sqlite3_value_int (apData [0]);
+			gboolean res;
+			GError *error = NULL;
+
+			/*g_print ("%d => %s\n", i, sqlite3_value_text (apData [i]));*/
+			type = gda_column_get_g_type (gda_data_model_describe_column ((GdaDataModel*) table->proxy, i - 2));
+			value = gda_value_new_from_string (sqlite3_value_text (apData [i]), type);
+			res = gda_data_model_set_value_at ((GdaDataModel*) table->proxy, i - 2, rowid, value, &error);
+			gda_value_free (value);
+			if (!res) {
+				g_print ("Error: %s\n", error && error->message ? error->message : "???");
+				return SQLITE_READONLY;
+			}
+		}
+		return SQLITE_OK;
+	}
+	else if ((nData==1) && (sqlite3_value_type (apData[0])==SQLITE_INTEGER)) {
+		/* DELETE */
+		gint rowid = sqlite3_value_int (apData [0]);
+		return gda_data_model_remove_row (table->proxy, rowid, NULL) ? SQLITE_OK : SQLITE_READONLY;
+	}
+	else if ((nData>2) && (sqlite3_value_type (apData[0])==SQLITE_NULL)) {
+		/* INSERT */
+		gint newrow, i;
+		GList *values = NULL;
+		
+		newrow = gda_data_model_append_row (GDA_DATA_MODEL (table->proxy), NULL);
+		if (newrow < 0)
+			return SQLITE_READONLY;
+
+		for (i = 2; i < nData; i++) {
+			GType type;
+			GValue *value;
+			type = gda_column_get_g_type (gda_data_model_describe_column ((GdaDataModel*) table->proxy, i - 2));
+			value = gda_value_new_from_string (sqlite3_value_text (apData [i]), type);
+			values = g_list_append (values, value);
+		}
+		gda_data_model_set_values (GDA_DATA_MODEL (table->proxy), newrow, values, NULL);
+		g_list_foreach (values, (GFunc) gda_value_free, NULL);
+		g_list_free (values);
+
+		*pRowid = newrow;
+	}
+	else {
+		/* error */
+		/* this case should never happen... */
+		g_warning ("Invalid parameters provided by SQLite...");
+		return SQLITE_ERROR;
+	}
+
+	return SQLITE_OK;
+}
+
+static int
+virtualBegin (sqlite3_vtab *tab)
+{
+	TRACE ();
+
+	return SQLITE_OK;
+}
+
+static int
+virtualSync (sqlite3_vtab *tab)
+{
+	TRACE ();
+
+	return SQLITE_OK;
+}
+
+static int
+virtualCommit (sqlite3_vtab *tab)
+{
+	VirtualTable *table = (VirtualTable *) tab;
+	
+	TRACE ();
+
+	return gda_data_proxy_apply_all_changes (table->proxy, NULL) ? SQLITE_OK : SQLITE_READONLY;
+}
+
+static int
+virtualRollback (sqlite3_vtab *tab)
+{
+	VirtualTable *table = (VirtualTable *) tab;
+	
+	TRACE ();
+
+	return gda_data_proxy_cancel_all_changes (table->proxy) ? SQLITE_OK : SQLITE_ERROR;
+}

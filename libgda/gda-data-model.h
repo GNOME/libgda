@@ -125,6 +125,8 @@ gint                gda_data_model_get_n_columns          (GdaDataModel *model);
 
 GdaColumn          *gda_data_model_describe_column        (GdaDataModel *model, gint col);
 gint                gda_data_model_get_column_index_by_name(GdaDataModel *model, const gchar *name);
+const gchar        *gda_data_model_get_column_name       (GdaDataModel *model, gint col);
+void                gda_data_model_set_column_name       (GdaDataModel *model, gint col, const gchar *name);
 const gchar        *gda_data_model_get_column_title       (GdaDataModel *model, gint col);
 void                gda_data_model_set_column_title       (GdaDataModel *model, gint col, const gchar *title);
 

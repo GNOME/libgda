@@ -203,6 +203,26 @@ As a side note there are also data models which wrap other data models such as:
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_data_model_get_column_name ##### -->
+<para>
+
+</para>
+
+@model: 
+@col: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_set_column_name ##### -->
+<para>
+
+</para>
+
+@model: 
+@col: 
+@name: 
+
+
 <!-- ##### FUNCTION gda_data_model_get_column_title ##### -->
 <para>
 

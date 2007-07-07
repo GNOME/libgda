@@ -459,9 +459,9 @@ gda_data_model_iter_set_property (GObject *object,
 					gda_parameter_set_exists_default_value (param, TRUE);
 				gda_parameter_list_add_param ((GdaParameterList *) iter, param);
 				g_object_set_data (G_OBJECT (param), "model_col", GINT_TO_POINTER (col + 1));
-				g_object_unref (param);
-				gda_object_connect_destroy (ptr,
+				gda_object_connect_destroy (param,
 							    G_CALLBACK (destroyed_param_cb), iter);
+				g_object_unref (param);
 			}
 		}
 		case PROP_FORCED_MODEL: {

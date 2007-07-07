@@ -295,6 +295,24 @@ gda_data_model_array_get_type
 </SECTION>
 
 <SECTION>
+<FILE>gda-data-model-bdb</FILE>
+<TITLE>GdaDataModelBdb</TITLE>
+GdaDataModelBdb
+GdaDataModelBdbClass
+GdaDataModelBdbPrivate
+gda_data_model_bdb_new
+gda_data_model_bdb_get_errors
+gda_data_model_bdb_clean_errors
+<SUBSECTION Standard>
+GDA_DATA_MODEL_BDB
+GDA_DATA_MODEL_BDB_CLASS
+GDA_IS_DATA_MODEL_BDB
+GDA_IS_DATA_MODEL_BDB_CLASS
+GDA_TYPE_DATA_MODEL_BDB
+gda_data_model_bdb_get_type
+</SECTION>
+
+<SECTION>
 <FILE>gda-data-model-query</FILE>
 <TITLE>GdaDataModelQuery</TITLE>
 GdaDataModelQuery
@@ -429,6 +447,8 @@ gda_data_model_get_n_rows
 gda_data_model_get_n_columns
 gda_data_model_describe_column
 gda_data_model_get_column_index_by_name
+gda_data_model_get_column_name
+gda_data_model_set_column_name
 gda_data_model_get_column_title
 gda_data_model_set_column_title
 gda_data_model_get_attributes_at

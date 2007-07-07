@@ -668,8 +668,10 @@ gda_client_notify_event (GdaClient *client,
 			 GdaClientEvent event,
 			 GdaParameterList *params)
 {
-	g_return_if_fail (GDA_IS_CLIENT (client));
+	if (!client)
+		return;
 
+	g_return_if_fail (GDA_IS_CLIENT (client));
 	g_signal_emit (G_OBJECT (client), gda_client_signals[EVENT_NOTIFICATION], 0,
 		       cnc, event, params);
 }
@@ -688,6 +690,9 @@ gda_client_notify_error_event (GdaClient *client, GdaConnection *cnc, GdaConnect
 	GdaParameterList *params;
 	GdaParameter *param;
 	GValue *value;
+
+	if (!client)
+		return;
 
 	g_return_if_fail (GDA_IS_CLIENT (client));
 	g_return_if_fail (error != NULL);
@@ -717,6 +722,9 @@ gda_client_notify_error_event (GdaClient *client, GdaConnection *cnc, GdaConnect
 void
 gda_client_notify_connection_opened_event (GdaClient *client, GdaConnection *cnc)
 {
+	if (!client)
+		return;
+
 	g_return_if_fail (GDA_IS_CLIENT (client));
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 
@@ -734,6 +742,9 @@ gda_client_notify_connection_opened_event (GdaClient *client, GdaConnection *cnc
 void
 gda_client_notify_connection_closed_event (GdaClient *client, GdaConnection *cnc)
 {
+	if (!client)
+		return;
+
 	g_return_if_fail (GDA_IS_CLIENT (client));
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 

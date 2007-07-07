@@ -1,9 +1,10 @@
 /* GDA SQLite provider
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
  *	Carlos Perelló Marín <carlos@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -21,8 +22,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_sqlite_provider_h__)
-#  define __gda_sqlite_provider_h__
+#ifndef __GDA_SQLITE_PROVIDER_H__
+#define __GDA_SQLITE_PROVIDER_H__
 
 #include <libgda/gda-server-provider.h>
 
@@ -31,8 +32,6 @@
 #define GDA_SQLITE_PROVIDER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_SQLITE_PROVIDER, GdaSqliteProviderClass))
 #define GDA_IS_SQLITE_PROVIDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_SQLITE_PROVIDER))
 #define GDA_IS_SQLITE_PROVIDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_SQLITE_PROVIDER))
-
-#define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 
 typedef struct _GdaSqliteProvider      GdaSqliteProvider;
 typedef struct _GdaSqliteProviderClass GdaSqliteProviderClass;

@@ -44,6 +44,7 @@
 #include <libgda/gda-connection-private.h>
 #include <libgda/binreloc/gda-binreloc.h>
 
+#define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 #define FILE_EXTENSION ".db"
 
 static void gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass);
@@ -245,6 +246,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 {
 	gchar *filename = NULL;
 	const gchar *dirname = NULL, *dbname = NULL;
+	const gchar *is_virtual = NULL;
 	gint errmsg;
 	SQLITEcnc *scnc;
 	GdaSqliteProvider *sqlite_prv = (GdaSqliteProvider *) provider;
@@ -256,76 +258,80 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 	/* get all parameters received */
 	dirname = gda_quark_list_find (params, "DB_DIR");
 	dbname = gda_quark_list_find (params, "DB_NAME");
+	is_virtual = gda_quark_list_find (params, "_IS_VIRTUAL");
 
-	if (!dirname || !dbname) {
-                const gchar *str;
-
-                str = gda_quark_list_find (params, "URI");
-                if (!str) {
-                        gda_connection_add_event_string (cnc,
-                                                         _("The connection string must contain DB_DIR and DB_NAME values"));
-                        return FALSE;
-                }
-                else {
-                        gint len = strlen (str);
-			gint elen = strlen (FILE_EXTENSION);
-
-			if (g_str_has_suffix (str, FILE_EXTENSION)) {
-                                gchar *ptr;
-
-                                dup = strdup (str);
-                                dup [len-elen] = 0;
-                                for (ptr = dup + (len - elen - 1); (ptr >= dup) && (*ptr != G_DIR_SEPARATOR); ptr--);
-                                dbname = ptr;
-                                if (*ptr == G_DIR_SEPARATOR)
-                                        dbname ++;
-
-                                if ((*ptr == G_DIR_SEPARATOR) && (ptr > dup)) {
-                                        dirname = dup;
-                                        while ((ptr >= dup) && (*ptr != G_DIR_SEPARATOR))
-                                                ptr--;
-                                        *ptr = 0;
-                                }
-                        }
-                        if (!dbname || !dirname) {
-                                gda_connection_add_event_string (cnc,
-                                                                 _("The connection string format has changed: replace URI with "
-                                                                   "DB_DIR (the path to the database file) and DB_NAME "
-                                                                   "(the database file without the '%s' at the end)."), FILE_EXTENSION);
-				g_free (dup);
-                                return FALSE;
-                        }
-                        else
-                                g_warning (_("The connection string format has changed: replace URI with "
-                                             "DB_DIR (the path to the database file) and DB_NAME "
-                                             "(the database file without the '%s' at the end)."), FILE_EXTENSION);
-                }
-        }	
-
-	if (!g_file_test (dirname, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR)) {
-		gda_connection_add_event_string (cnc,
-						 _("The DB_DIR part of the connection string must point "
-						   "to a valid directory"));
-		g_free (dup);
-		return FALSE;
-	}
-
-	/* try first without the file extension */
-	filename = g_build_filename (dirname, dbname, NULL);
-	if (!g_file_test (filename, G_FILE_TEST_EXISTS)) {
-		gchar *tmp;
-		g_free (filename);
-		tmp = g_strdup_printf ("%s%s", dbname, FILE_EXTENSION);
-		filename = g_build_filename (dirname, tmp, NULL);
-		g_free (tmp);
+	if (! is_virtual) {
+		if (!dirname || !dbname) {
+			const gchar *str;
+			
+			str = gda_quark_list_find (params, "URI");
+			if (!str) {
+				gda_connection_add_event_string (cnc,
+								 _("The connection string must contain DB_DIR and DB_NAME values"));
+				return FALSE;
+			}
+			else {
+				gint len = strlen (str);
+				gint elen = strlen (FILE_EXTENSION);
+				
+				if (g_str_has_suffix (str, FILE_EXTENSION)) {
+					gchar *ptr;
+					
+					dup = strdup (str);
+					dup [len-elen] = 0;
+					for (ptr = dup + (len - elen - 1); (ptr >= dup) && (*ptr != G_DIR_SEPARATOR); ptr--);
+					dbname = ptr;
+					if (*ptr == G_DIR_SEPARATOR)
+						dbname ++;
+					
+					if ((*ptr == G_DIR_SEPARATOR) && (ptr > dup)) {
+						dirname = dup;
+						while ((ptr >= dup) && (*ptr != G_DIR_SEPARATOR))
+							ptr--;
+						*ptr = 0;
+					}
+				}
+				if (!dbname || !dirname) {
+					gda_connection_add_event_string (cnc,
+									 _("The connection string format has changed: replace URI with "
+									   "DB_DIR (the path to the database file) and DB_NAME "
+									   "(the database file without the '%s' at the end)."), FILE_EXTENSION);
+					g_free (dup);
+					return FALSE;
+				}
+				else
+					g_warning (_("The connection string format has changed: replace URI with "
+						     "DB_DIR (the path to the database file) and DB_NAME "
+						     "(the database file without the '%s' at the end)."), FILE_EXTENSION);
+			}
+		}	
 		
+		if (!g_file_test (dirname, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR)) {
+			gda_connection_add_event_string (cnc,
+							 _("The DB_DIR part of the connection string must point "
+							   "to a valid directory"));
+			g_free (dup);
+			return FALSE;
+		}
+
+		/* try first without the file extension */
+		filename = g_build_filename (dirname, dbname, NULL);
+		if (!g_file_test (filename, G_FILE_TEST_EXISTS)) {
+			gchar *tmp;
+			g_free (filename);
+			tmp = g_strdup_printf ("%s%s", dbname, FILE_EXTENSION);
+			filename = g_build_filename (dirname, tmp, NULL);
+			g_free (tmp);
+			
+		}
+		g_free (dup);
 	}
-	g_free (dup);
 
 	scnc = g_new0 (SQLITEcnc, 1);
 
 	errmsg = sqlite3_open (filename, &scnc->connection);
-	scnc->file = g_strdup (filename);
+	if (filename)
+		scnc->file = g_strdup (filename);
 
 	if (errmsg != SQLITE_OK) {
 		printf("error %s", sqlite3_errmsg (scnc->connection));

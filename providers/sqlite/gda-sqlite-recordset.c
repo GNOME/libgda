@@ -243,26 +243,38 @@ gda_sqlite_recordset_fill (GdaSqliteRecordset *model, GdaConnection *cnc, SQLITE
 	model->priv->nrows = sres->nrows;
 
 	/* show types */
-	if (0) {
+#ifdef GDA_DEBUG_NO
 		for (i = 0; i < sres->ncols; i++) 
 			g_print ("Type for col %d: (GDA:%s)\n",
 				 i, gda_g_type_to_string (sres->types [i]));
 		
 		gda_data_model_dump (GDA_DATA_MODEL (model), stdout);
-	}
+#endif
 
 	/* filling GdaDataModel columns data */
 	for (i = 0; i < sres->ncols; i++) {
 		GdaColumn *column;
+		const char *tablename, *colname;
+		int notnull, autoinc, pkey;
+
+		tablename = sqlite3_column_table_name (sres->stmt, i);
+		colname = sqlite3_column_origin_name (sres->stmt, i);
+		if (!tablename || !colname || 
+		    (sqlite3_table_column_metadata (scnc->connection, NULL, tablename, colname, NULL, NULL,
+						    &notnull, &pkey, &autoinc) != SQLITE_OK)) {
+			notnull = FALSE;
+			autoinc = FALSE;
+			pkey = FALSE;
+		}
 
 		column = gda_data_model_describe_column (GDA_DATA_MODEL (model), i);
 		gda_column_set_name (column, sqlite3_column_name (sres->stmt, i));
 		gda_column_set_scale (column, 0);
 		gda_column_set_defined_size (column, sres->cols_size [i]);
-		gda_column_set_primary_key (column, FALSE);
-		gda_column_set_unique_key (column, FALSE);
-		gda_column_set_allow_null (column, TRUE);
-		gda_column_set_auto_increment (column, FALSE);
+		gda_column_set_primary_key (column, pkey);
+		gda_column_set_unique_key (column, pkey);
+		gda_column_set_allow_null (column, !notnull);
+		gda_column_set_auto_increment (column, autoinc);
 	}
 
 	/* set to read only mode */

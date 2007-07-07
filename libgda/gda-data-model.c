@@ -355,7 +355,7 @@ gda_data_model_get_n_columns (GdaDataModel *model)
 	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_n_columns)
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_get_n_columns) (model);
 	else {
-		g_warning ("%s() method not supported\n", __FUNCTION__);
+		/* method not supported */
 		return -1;
 	}
 }
@@ -383,7 +383,7 @@ gda_data_model_describe_column (GdaDataModel *model, gint col)
 	if (GDA_DATA_MODEL_GET_CLASS (model)->i_describe_column)
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_describe_column) (model, col);
 	else {
-		g_warning ("%s() method not supported\n", __FUNCTION__);
+		/* method not supported */
 		return NULL;
 	}
 }
@@ -418,6 +418,57 @@ gda_data_model_get_column_index_by_name (GdaDataModel *model, const gchar *name)
 	return ret;
 }
 
+/**
+ * gda_data_model_get_column_name
+ * @model: a #GdaDataModel object.
+ * @col: column number.
+ *
+ * Since: 3.2
+ *
+ * Returns: the name for the given column in a data model object.
+ */
+const gchar *
+gda_data_model_get_column_name (GdaDataModel *model, gint col)
+{
+	GdaColumn *column;
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
+
+	column = gda_data_model_describe_column (model, col);
+	if (column)
+		return gda_column_get_name (column);
+	else {
+		g_warning ("%s(): can't get GdaColumn object for column %d\n", __FUNCTION__, col);
+		return NULL;
+	}
+}
+
+/**
+ * gda_data_model_set_column_name
+ * @model: a #GdaDataModel object.
+ * @col: column number
+ * @name: name for the given column.
+ *
+ * Sets the @name of the given @col in @model, and if its title is not set, also sets the
+ * title to @name.
+ *
+ * Since: 3.2
+ */
+void
+gda_data_model_set_column_name (GdaDataModel *model, gint col, const gchar *name)
+{
+	GdaColumn *column;
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+
+	column = gda_data_model_describe_column (model, col);
+	if (column) {
+		gda_column_set_name (column, name);
+		if (!gda_column_get_title (column))
+			gda_column_set_title (column, name);
+	}
+	else 
+		g_warning ("%s(): can't get GdaColumn object for column %d\n", __FUNCTION__, col);
+}
+
 
 /**
  * gda_data_model_get_column_title
@@ -436,7 +487,7 @@ gda_data_model_get_column_title (GdaDataModel *model, gint col)
 	if (column)
 		return gda_column_get_title (column);
 	else {
-		g_warning ("%s() method not supported\n", __FUNCTION__);
+		g_warning ("%s(): can't get GdaColumn object for column %d\n", __FUNCTION__, col);
 		return NULL;
 	}
 }
@@ -459,7 +510,7 @@ gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *tit
 	if (column)
 		gda_column_set_title (column, title);
 	else 
-		g_warning ("%s() method not supported\n", __FUNCTION__);
+		g_warning ("%s(): can't get GdaColumn object for column %d\n", __FUNCTION__, col);
 }
 
 /**
@@ -488,7 +539,7 @@ gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row)
 	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_value_at)
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_get_value_at) (model, col, row);
 	else {
-		g_warning ("%s() method not supported\n", __FUNCTION__);
+		/* method not supported */
 		return NULL;
 	}
 }
@@ -564,7 +615,7 @@ gda_data_model_set_value_at (GdaDataModel *model, gint col, gint row, const GVal
 	if (GDA_DATA_MODEL_GET_CLASS (model)->i_set_value_at)
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_set_value_at) (model, col, row, value, error);
 	else {
-		g_warning ("%s() method not supported\n", __FUNCTION__);
+		/* method not supported */
 		return FALSE;
 	}
 }
@@ -589,7 +640,7 @@ gda_data_model_set_values (GdaDataModel *model, gint row, GList *values, GError 
 	if (GDA_DATA_MODEL_GET_CLASS (model)->i_set_values)
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_set_values) (model, row, values, error);
 	else {
-		g_warning ("%s() method not supported\n", __FUNCTION__);
+		/* method not supported */
 		return FALSE;
 	}
 }
@@ -867,7 +918,7 @@ gda_data_model_append_values (GdaDataModel *model, const GList *values, GError *
 	if (GDA_DATA_MODEL_GET_CLASS (model)->i_append_values) 
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_append_values) (model, values, error);
 	else {
-		g_warning ("%s() method not supported\n", __FUNCTION__);
+		/* method not supported */
 		return -1;
 	}
 }
@@ -886,10 +937,16 @@ gda_data_model_append_row (GdaDataModel *model, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 
+	if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_INSERT)) {
+		g_set_error (error, 0, 0,
+			     _("Model does not allow row insertion"));
+		return FALSE;
+	}
+
 	if (GDA_DATA_MODEL_GET_CLASS (model)->i_append_row) 
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_append_row) (model, error);
 	else {
-		g_warning ("%s() method not supported\n", __FUNCTION__);
+		/* method not supported */
 		return -1;
 	}
 }
@@ -910,10 +967,16 @@ gda_data_model_remove_row (GdaDataModel *model, gint row, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 
+	if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_DELETE)) {
+		g_set_error (error, 0, 0,
+			     _("Model does not allow row deletion"));
+		return FALSE;
+	}
+
 	if (GDA_DATA_MODEL_GET_CLASS (model)->i_remove_row)
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_remove_row) (model, row, error);
 	else {
-		g_warning ("%s() method not supported\n", __FUNCTION__);
+		/* method not supported */
 		return FALSE;
 	}
 }
@@ -1858,11 +1921,11 @@ gda_data_model_dump (GdaDataModel *model, FILE *to_stream)
 	str = gda_data_model_dump_as_string (model);
 	g_fprintf (to_stream, "%s", str);
 	g_free (str);
-#ifdef GDA_DEBUG_model_attributes
-	str= real_gda_data_model_dump_as_string (model, TRUE);
-	g_fprintf (to_stream, "%s", str);
-	g_free (str);
-#endif
+	if (getenv ("GDA_DATA_MODEL_DUMP_ATTRIBUTES")) {
+		str= real_gda_data_model_dump_as_string (model, TRUE);
+		g_fprintf (to_stream, "%s", str);
+		g_free (str);
+	}
 }
 
 /**

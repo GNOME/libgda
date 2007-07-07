@@ -33,6 +33,7 @@
 <!ENTITY gda-diagnose "<command>gda-diagnose-3.0</command>">
 <!ENTITY gda-inspect-dict-file "<command>gda-inspect-dict-file-3.0</command>">
 <!ENTITY gda-list-config "<command>gda-list-config-3.0</command>">
+<!ENTITY gda-sql "<command>gda-sql-3.0</command>">
 <!ENTITY gda-test-connection "<command>gda-test-connection-3.0</command>">
 <!ENTITY fullexample SYSTEM "examples/full_example.c">
 <!ENTITY install SYSTEM "installation.xml">
@@ -45,6 +46,7 @@
 <!ENTITY libgda-GdaConnection SYSTEM "xml/gda-connection.xml">
 <!ENTITY libgda-GdaThreader SYSTEM "xml/gda-threader.xml">
 <!ENTITY libgda-GdaDataModelArray SYSTEM "xml/gda-data-model-array.xml">
+<!ENTITY libgda-GdaDataModelBdb SYSTEM "xml/gda-data-model-bdb.xml">
 <!ENTITY libgda-GdaDataModelQuery SYSTEM "xml/gda-data-model-query.xml">
 <!ENTITY libgda-GdaDataModelHash SYSTEM "xml/gda-data-model-hash.xml">
 <!ENTITY libgda-GdaDataModelRow SYSTEM "xml/gda-data-model-row.xml">
@@ -493,6 +495,7 @@
       &libgda-GdaDataModelImport;
       &libgda-GdaDataAccessWrapper;
       &libgda-GdaDataModelArray;
+      &libgda-GdaDataModelBdb;
       &libgda-GdaDataModelHash;
       &libgda-GdaDataModelQuery;
       &libgda-GdaDataModelFilterSQL;
@@ -639,6 +642,14 @@
 	&LIBGDA; offers several command line tools to help disgnose and resolve problems. All the
 	provided tools can be run with the "--help" command line argument to give an online help
 	and description.
+      </para>
+    </chapter>
+
+    <chapter id="libgda-sql">
+      <title>&gda-sql;</title>
+      <para>
+	The &gda-sql; tool is an interactive command line tool to run SQL commands and work
+	with dictionaries.
       </para>
     </chapter>
 

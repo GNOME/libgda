@@ -1,0 +1,85 @@
+<!-- ##### SECTION Title ##### -->
+GdaDataModelBdb
+
+<!-- ##### SECTION Short_Description ##### -->
+GdaDataModel to access Berkeley DB database contents
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+The #GdaDataModelBdb object allows to access the contents of a Berkeley DB database as a
+#GdaDataModel object.
+</para>
+<para>
+By default the resulting GdaDataModel contains only two columns (named "key" and "data") of type
+GDA_TYPE_BINARY, but this object can be subclassed to convert the key or data part of a BDB record
+into several columns.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaDataModelBdb ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdaDataModelBdb:db-name ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDataModelBdb:filename ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT GdaDataModelBdbClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+@create_key_columns: 
+@create_data_columns: 
+@get_key_part: 
+@get_data_part: 
+
+<!-- ##### STRUCT GdaDataModelBdbPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_data_model_bdb_new ##### -->
+<para>
+
+</para>
+
+@filename: 
+@db_name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_bdb_get_errors ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_bdb_clean_errors ##### -->
+<para>
+
+</para>
+
+@model: 
+
+

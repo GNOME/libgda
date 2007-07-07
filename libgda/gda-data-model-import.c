@@ -112,10 +112,9 @@ struct _GdaDataModelImportPrivate {
 	gboolean             random_access;
 	GSList              *columns;
 	GdaDataModel        *random_access_model; /* data is imported into this model if random access is required */
-	GSList              *errors; /* list of error strings */
+	GSList              *errors; /* list of errors as GError structures */
 	GdaParameterList    *options;
 
-	GdaDataModelIter    *iter; /* iterator to be returned when a new iter is asked */
 	gint                 iter_row;
 };
 
@@ -153,7 +152,7 @@ static GdaColumn           *gda_data_model_import_describe_column (GdaDataModel 
 static GdaDataModelAccessFlags gda_data_model_import_get_access_flags(GdaDataModel *model);
 static const GValue      *gda_data_model_import_get_value_at    (GdaDataModel *model, gint col, gint row);
 static GdaValueAttribute    gda_data_model_import_get_attributes_at (GdaDataModel *model, gint col, gint row);
-static GdaDataModelIter    *gda_data_model_impor_create_iter      (GdaDataModel *model);
+static GdaDataModelIter    *gda_data_model_import_create_iter      (GdaDataModel *model);
 static gboolean             gda_data_model_import_iter_next       (GdaDataModel *model, GdaDataModelIter *iter); 
 static gboolean             gda_data_model_import_iter_prev       (GdaDataModel *model, GdaDataModelIter *iter);
 
@@ -256,7 +255,7 @@ gda_data_model_import_data_model_init (GdaDataModelClass *iface)
 	iface->i_get_value_at = gda_data_model_import_get_value_at;
 	iface->i_get_attributes_at = gda_data_model_import_get_attributes_at;
 
-	iface->i_create_iter = gda_data_model_impor_create_iter;
+	iface->i_create_iter = gda_data_model_import_create_iter;
 	iface->i_iter_at_row = NULL;
 	iface->i_iter_next = gda_data_model_import_iter_next;
 	iface->i_iter_prev = gda_data_model_import_iter_prev;
@@ -293,7 +292,6 @@ gda_data_model_import_init (GdaDataModelImport *model, GdaDataModelImportClass *
 	model->priv->data_start = NULL;
 	model->priv->data_length = 0;
 
-	model->priv->iter = NULL;
 	model->priv->iter_row = -1;
 }
 
@@ -369,11 +367,6 @@ gda_data_model_import_dispose (GObject *object)
 		if (model->priv->random_access_model) {
 			g_object_unref (model->priv->random_access_model);
 			model->priv->random_access_model = NULL;
-		}
-
-		if (model->priv->iter) {
-			g_object_unref (model->priv->iter);
-			model->priv->iter = NULL;
 		}
 	}
 
@@ -1967,33 +1960,44 @@ gda_data_model_import_get_attributes_at (GdaDataModel *model, gint col, gint row
 {
 	GdaValueAttribute flags = 0;
 	GdaDataModelImport *imodel;
+	GdaColumn *column;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_IMPORT (model), 0);
 	imodel = (GdaDataModelImport *) model;
 	g_return_val_if_fail (imodel->priv, 0);
 	
 	flags = GDA_VALUE_ATTR_NO_MODIF;
+	column = gda_data_model_describe_column (model, col);
+	if (gda_column_get_allow_null (column))
+		flags |= GDA_VALUE_ATTR_CAN_BE_NULL;
 	
 	return flags;
 }
 
 static GdaDataModelIter *
-gda_data_model_impor_create_iter (GdaDataModel *model)
+gda_data_model_import_create_iter (GdaDataModel *model)
 {
 	GdaDataModelImport *imodel;
+	GdaDataModelIter *iter;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_IMPORT (model), NULL);
 	imodel = (GdaDataModelImport *) model;
 	g_return_val_if_fail (imodel->priv, NULL);
 	
-	if (! imodel->priv->iter) {
-		imodel->priv->iter = (GdaDataModelIter *) g_object_new (GDA_TYPE_DATA_MODEL_ITER, 
-									"dict", gda_object_get_dict (GDA_OBJECT (model)), 
-									"data_model", model, NULL);
-		g_object_ref (imodel->priv->iter);
+	if (imodel->priv->random_access_model) {
+		iter = gda_data_model_create_iter (imodel->priv->random_access_model);
+		/* REM: don't do:
+		 * g_object_set (G_OBJECT (iter), "forced-model", model, NULL);
+		 * because otherwise data fetch will come back on @model, which is not what is wanted.
+		 * However the problem is that getting the "model" property from the returned iterator will
+		 * give a pointer to imodel->priv->random_access_model and not @model...
+		 */
 	}
-
-	return imodel->priv->iter;
+	else
+		iter = (GdaDataModelIter *) g_object_new (GDA_TYPE_DATA_MODEL_ITER, 
+							  "dict", gda_object_get_dict (GDA_OBJECT (model)), 
+							  "data_model", model, NULL);
+	return iter;
 }
 
 static void 

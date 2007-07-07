@@ -579,9 +579,10 @@ gda_data_access_wrapper_get_attributes_at (GdaDataModel *model, gint col, gint r
 	g_return_val_if_fail (GDA_IS_DATA_ACCESS_WRAPPER (model), 0);
 	imodel = (GdaDataAccessWrapper *) model;
 	g_return_val_if_fail (imodel->priv, 0);
-	
-	flags = GDA_VALUE_ATTR_NO_MODIF;
-	TO_IMPLEMENT;
+
+	if (!imodel->priv->rows)
+		flags = gda_data_model_get_attributes_at (imodel->priv->model, col, row);
+	flags |= GDA_VALUE_ATTR_NO_MODIF;
 	
 	return flags;
 }

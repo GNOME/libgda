@@ -46,7 +46,7 @@
 struct _GdaConnectionPrivate {
 	GdaClient            *client;
 	GdaServerProvider    *provider_obj;
-	GdaConnectionOptions options; /* ORed flags */
+	GdaConnectionOptions  options; /* ORed flags */
 	gchar                *dsn;
 	gchar                *cnc_string;
 	gchar                *provider;
@@ -549,6 +549,16 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 	g_free (real_username);
 	g_free (real_password);
 
+	if (cnc->priv->is_open) {
+#ifdef GDA_DEBUG_signal
+        g_print (">> 'CONN_OPENED' from %s\n", __FUNCTION__);
+#endif
+        g_signal_emit (G_OBJECT (cnc), gda_connection_signals[CONN_OPENED], 0);
+#ifdef GDA_DEBUG_signal
+        g_print ("<< 'CONN_OPENED' from %s\n", __FUNCTION__);
+#endif
+	}
+
 	return cnc->priv->is_open;
 }
 
@@ -966,7 +976,7 @@ gda_connection_add_event (GdaConnection *cnc, GdaConnectionEvent *event)
 		str = "ERROR";
 		break;
 	case GDA_CONNECTION_EVENT_COMMAND:
-		str = "COMMAND: ";
+		str = "COMMAND";
                 break;
 	default:
 		break;
@@ -1254,7 +1264,7 @@ gda_connection_execute_select_command (GdaConnection *cnc, GdaCommand *cmd,
 		else if (nb >= 0)
 			str = g_strdup_printf (_("(%d row)"), nb);
 		else
-			str = g_strdup_printf (_("(unknown number of rows)"), nb);
+			str = g_strdup_printf (_("(unknown number of rows)"));
 			
 		gda_connection_event_set_description (event, str);
 		g_free (str);
@@ -1861,4 +1871,46 @@ gda_connection_internal_change_transaction_state (GdaConnection *cnc,
 #ifdef GDA_DEBUG_signal
 	g_print ("<< 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
 #endif
+}
+
+void
+gda_connection_force_status (GdaConnection *cnc, gboolean opened)
+{
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+
+	if (opened && !cnc->priv->is_open) {
+		cnc->priv->is_open = TRUE;
+#ifdef GDA_DEBUG_signal
+		g_print (">> 'CONN_OPENED' from %s\n", __FUNCTION__);
+#endif
+		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[CONN_OPENED], 0);
+#ifdef GDA_DEBUG_signal
+		g_print ("<< 'CONN_OPENED' from %s\n", __FUNCTION__);
+#endif
+		if (cnc->priv->client)
+			gda_client_notify_connection_opened_event (cnc->priv->client, cnc);
+		return;
+	}
+
+	if (!opened && cnc->priv->is_open) {
+		cnc->priv->is_open = FALSE;
+
+#ifdef GDA_DEBUG_signal
+		g_print (">> 'CONN_TO_CLOSE' from %s\n", __FUNCTION__);
+#endif
+		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[CONN_TO_CLOSE], 0);
+#ifdef GDA_DEBUG_signal
+		g_print ("<< 'CONN_TO_CLOSE' from %s\n", __FUNCTION__);
+#endif
+#ifdef GDA_DEBUG_signal
+		g_print (">> 'CONN_CLOSED' from %s\n", __FUNCTION__);
+#endif
+		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[CONN_CLOSED], 0);
+#ifdef GDA_DEBUG_signal
+		g_print ("<< 'CONN_CLOSED' from %s\n", __FUNCTION__);
+#endif
+
+		if (cnc->priv->client)
+			gda_client_notify_connection_closed_event (cnc->priv->client, cnc);
+	}
 }

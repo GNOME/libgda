@@ -8,6 +8,7 @@ sqlitelibs= $(top_builddir)/providers/sqlite/sqlite-src/libsqlite.la
 sqliteinc= -I$(top_srcdir)/providers/sqlite/sqlite-src \
 	-I$(top_builddir)/providers/sqlite/sqlite-src
 endif
+SUBDIRS+= . vproviders
 
 providerdir=$(libdir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/providers
 provider_LTLIBRARIES = libgda-sqlite.la

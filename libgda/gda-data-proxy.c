@@ -1120,6 +1120,9 @@ gda_data_proxy_delete (GdaDataProxy *proxy, gint proxy_row)
 	g_return_if_fail (proxy->priv);
 	g_return_if_fail (proxy_row >= 0);
 
+	if (! (gda_data_model_get_access_flags ((GdaDataModel*) proxy) & GDA_DATA_MODEL_ACCESS_DELETE))
+		return;
+
 	model_row = proxy_row_to_model_row (proxy, proxy_row);
 	rm = find_row_modify_for_proxy_row (proxy, proxy_row);
 	if (rm) {
@@ -1346,6 +1349,9 @@ gda_data_proxy_append (GdaDataProxy *proxy)
 	
 	g_return_val_if_fail (GDA_IS_DATA_PROXY (proxy), -1);
 	g_return_val_if_fail (proxy->priv, -1);
+
+	if (! (gda_data_model_get_access_flags ((GdaDataModel *) proxy) & GDA_DATA_MODEL_ACCESS_INSERT)) 
+		return -1;
 
 	/* RowModif structure */
 	rm = row_modifs_new (proxy, -1);
@@ -2345,9 +2351,7 @@ gda_data_proxy_create_iter (GdaDataModel *model)
 	proxy = GDA_DATA_PROXY (model);
 	g_return_val_if_fail (proxy->priv, FALSE);
 
-	iter = (GdaDataModelIter *) g_object_new (GDA_TYPE_DATA_MODEL_ITER, 
-						  "dict", gda_object_get_dict (GDA_OBJECT (proxy->priv->model)), 
-						  "data_model", proxy->priv->model, NULL);
+	iter = gda_data_model_create_iter (proxy->priv->model);
 	g_object_set (G_OBJECT (iter), "forced_model", proxy, NULL);
 
 	iter2 = gda_data_model_create_iter (proxy->priv->model);
@@ -2365,8 +2369,10 @@ gda_data_proxy_create_iter (GdaDataModel *model)
 				g_free (plugin);
 			}
 		}
-		if (plist1 || plist2)
-			g_warning ("Proxy iterator does not have the same length as proxied model's iterator");
+		if (plist1 || plist2) 
+			g_warning ("Proxy iterator does not have the same length as proxied model's iterator: %d/%d",
+				   g_slist_length (GDA_PARAMETER_LIST (iter)->parameters),
+				   g_slist_length (GDA_PARAMETER_LIST (iter2)->parameters));
 		g_object_unref (iter2);
 	}
 
@@ -2401,8 +2407,11 @@ gda_data_proxy_set_value_at (GdaDataModel *model, gint col, gint proxy_row, cons
 	g_return_val_if_fail (proxy_row >= 0, FALSE);
 
 	att = gda_data_proxy_get_value_attributes (proxy, proxy_row, col);
-	if (att & GDA_VALUE_ATTR_NO_MODIF)
+	if (att & GDA_VALUE_ATTR_NO_MODIF) {
+		g_set_error (error, GDA_DATA_PROXY_ERROR, 0,
+			     _("Value is read-only"));
 		return FALSE;
+	}
 
 	row = proxy_row;
 	if ((row == 0) && proxy->priv->add_null_entry) {

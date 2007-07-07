@@ -2,11 +2,17 @@ lib_LTLIBRARIES = libgda-3.0.la
 
 SUBDIRS = sql-delimiter sql-transaction graph handlers binreloc
 
+if BDB 
+GDA_BDB_H=gda-data-model-bdb.h
+GDA_BDB_S=gda-data-model-bdb.c
+endif
+
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
-	$(FAM_CFLAGS)
+	$(FAM_CFLAGS) \
+	$(BDB_CFLAGS)
 
 gda_marshal_built_files = gda-marshal.h gda-marshal.c
 
@@ -29,6 +35,7 @@ gda_headers = \
 	gda-data-model-array.h \
 	gda-data-model-row.h \
 	gda-data-model.h \
+	$(GDA_BDB_H) \
 	gda-data-model-extra.h \
 	gda-data-model-filter-sql.h \
 	gda-data-model-hash.h \
@@ -106,6 +113,7 @@ libgda_sources =  \
 	gda-connection-event.c \
 	gda-data-handler.c \
 	gda-data-model-array.c \
+	$(GDA_BDB_S) \
 	gda-data-model-row.c \
 	gda-data-model.c \
 	gda-data-model-filter-sql.c \
@@ -213,7 +221,8 @@ libgda_3_0_la_LIBADD = sql-transaction/libgda_sql_transaction-3.0.la \
 	handlers/libgda_handlers-3.0.la \
 	binreloc/libgda_binreloc-3.0.la \
 	$(top_builddir)/libsql/libgdasql-3.0.la \
-	$(LIBGDA_LIBS) $(FAM_LIBS)
+	$(LIBGDA_LIBS) $(FAM_LIBS) \
+	$(BDB_LIBS)
 
 gdaincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda
 gdainclude_HEADERS=$(libgda_built_headers) $(gda_headers)

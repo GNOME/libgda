@@ -171,9 +171,7 @@ gda_bdb_recordset_get_value_at (GdaDataModelRow *model, gint col_num, gint row_n
 	if (row == NULL)
 		return NULL;
 	if (col_num < 0 || col_num >= gda_row_get_length (row)) {
-		gda_connection_add_event_string (recset->priv->cnc,
-						 _("Column number out "
-						   "of range"));
+		gda_connection_add_event_string (recset->priv->cnc,_("Column number out of range"));
 		return NULL;
 	}
 	return gda_row_get_value (row, col_num);
