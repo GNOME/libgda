@@ -1,3 +1,8 @@
+2007-07-09  Vivien Malerba <malerba@gnome-db.org>
+
+	* providers/sqlite/vproviders/Makefile.am: applied patch to fix
+	bug #454896 (from Marc-Andre Lureau)
+
 2007-07-07  Vivien Malerba <malerba@gnome-db.org>
 
 	* providers/bdb/gda-bdb-recordset.c: make string transalatable

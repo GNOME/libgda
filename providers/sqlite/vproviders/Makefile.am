@@ -37,6 +37,7 @@ libgda_vproviders_la_LIBADD = \
 	$(LIBGDA_LIBS)
 
 vproviders_test_SOURCES = vproviders-test.c
+vproviders_test_DEPENDENCIES = libgda-vproviders.la
 vproviders_test_LDADD = \
 	$(top_builddir)/providers/sqlite/vproviders/libgda-vproviders.la
 	$(LIBGDA_LIBS)
