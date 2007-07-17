@@ -1,0 +1,30 @@
+Libgda Virtual library example
+==============================
+
+Description:
+------------
+
+This example illustrates the libgda-virtual component,
+part of libgda as of versions >= 3.2.
+
+In this example, a GdaVirtualConnection object is created to be able to use SQL
+on the contents of GdaDataModel objects. For this purpose, a GdaVproviderDataModel
+object is created, which itself creates a GdaVconnectionDataModel connection.
+
+Then the city.csv and country.csv CSV files are loaded into GdaDataModel objects,
+and added to that virtual connection. Another GdaDataModelArray object is created
+which will be populated by a SQL statement, and also added to the connection.
+
+If these steps are complete, then an "INSERT INTO ... SELECT ..." statement is run,
+and the resulting data model is itself exported to a CSV file named 'results.csv'
+
+Compiling and running:
+----------------------
+
+To compile (make sure Libgda is installed prior to this):
+> make
+
+and to run:
+> ./virtual-test
+> cat results.csv
+

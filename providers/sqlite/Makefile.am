@@ -8,7 +8,7 @@ sqlitelibs= $(top_builddir)/providers/sqlite/sqlite-src/libsqlite.la
 sqliteinc= -I$(top_srcdir)/providers/sqlite/sqlite-src \
 	-I$(top_builddir)/providers/sqlite/sqlite-src
 endif
-SUBDIRS+= . vproviders
+SUBDIRS+= . virtual
 
 providerdir=$(libdir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/providers
 provider_LTLIBRARIES = libgda-sqlite.la
@@ -20,13 +20,15 @@ AM_CPPFLAGS = \
 	$(SQLITE_CFLAGS) \
 	$(sqliteinc) 
 
+
+virtualheaders = gda-sqlite-provider.h
 libgda_sqlite_la_SOURCES = \
+	$(virtualheaders) \
 	gda-sqlite-ddl.c \
 	gda-sqlite-ddl.h \
 	gda-sqlite-handler-bin.c \
 	gda-sqlite-handler-bin.h \
 	gda-sqlite-provider.c \
-	gda-sqlite-provider.h \
 	gda-sqlite-recordset.c \
 	gda-sqlite-recordset.h \
 	gda-sqlite.h \
@@ -50,6 +52,9 @@ xml_in_files = sqlite_specs_create_db.xml.in \
 	sqlite_specs_drop_index.xml.in \
 	sqlite_specs_rename_table.xml.in \
 	sqlite_specs_add_column.xml.in
+
+gdaincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/virtual
+gdainclude_HEADERS=$(virtualheaders)
 
 @INTLTOOL_XML_RULE@
 

@@ -39,6 +39,7 @@
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
 #endif
+#include "csv.h"
 
 #define PARENT_TYPE G_TYPE_OBJECT
 #define CLASS(model) (GDA_DATA_MODEL_CLASS (G_OBJECT_GET_CLASS (model)))
@@ -1071,7 +1072,7 @@ gda_data_model_send_hint (GdaDataModel *model, GdaDataModelHint hint, const GVal
 }
 
 static gchar *export_to_text_separated (GdaDataModel *model, const gint *cols, gint nb_cols, 
-					const gint *rows, gint nb_rows, gchar sep);
+					const gint *rows, gint nb_rows, gchar sep, gchar quote, gboolean field_quotes);
 
 
 /**
@@ -1084,14 +1085,9 @@ static gchar *export_to_text_separated (GdaDataModel *model, const gint *cols, g
  * @nb_rows: the number of rows in @rows
  * @options: list of options for the export
  *
- * Exports data contained in @model to a string; the format is specified using the @format argument.
- *
- * Specifically, the parameters in the @options list can be:
- * <itemizedlist>
- *   <listitem><para>"SEPARATOR": a string value of which the first character is used as a separator in case of CSV export
- *             </para></listitem>
- *   <listitem><para>"NAME": a string value used to name the exported data if the export format is XML</para></listitem>
- * </itemizedlist>
+ * Exports data contained in @model to a string; the format is specified using the @format argument, see the
+ * gda_data_model_export_to_file() documentation for more information about the @options argument (except for the
+ * "OVERWRITE" option).
  *
  * Returns: a new string.
  */
@@ -1143,6 +1139,9 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 
 	case GDA_DATA_MODEL_IO_TEXT_SEPARATED: {
 		gchar sep = ',';
+		gchar quote = '"';
+		gboolean field_quote = TRUE;
+
 		if (options) {
 			GdaParameter *param;
 
@@ -1160,10 +1159,33 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 				else
 					g_warning (_("The 'SEPARATOR' parameter must hold a string value, ignored."));
 			}
+			param = gda_parameter_list_find_param (options, "QUOTE");
+			if (param) {
+				const GValue *value;
+				value = gda_parameter_get_value (param);
+				if (value && gda_value_isa ((GValue *) value, G_TYPE_STRING)) {
+					const gchar *str;
+
+					str = g_value_get_string ((GValue *) value);
+					if (str && *str)
+						quote = *str;
+				}
+				else 
+					g_warning (_("The 'QUOTE' parameter must hold a string value, ignored."));
+			}
+			param = gda_parameter_list_find_param (options, "FIELD_QUOTE");
+			if (param) {
+				const GValue *value;
+				value = gda_parameter_get_value (param);
+				if (value && gda_value_isa ((GValue *) value, G_TYPE_BOOLEAN)) 
+					field_quote = g_value_get_boolean ((GValue *) value);
+				else 
+					g_warning (_("The 'FIELD_QUOTE' parameter must hold a boolean value, ignored."));
+			}
 		}
 
 		if (cols)
-			return export_to_text_separated (model, cols, nb_cols, rows, nb_rows, sep);
+			return export_to_text_separated (model, cols, nb_cols, rows, nb_rows, sep, quote, field_quote);
 		else {
 			gchar *retval;
 			gint *rcols, rnb_cols, i;
@@ -1174,7 +1196,7 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 			rcols = g_new (gint, rnb_cols);
 			for (i = 0; i < rnb_cols; i++)
 				rcols[i] = i;
-			retval = export_to_text_separated (model, rcols, rnb_cols, rows, nb_rows, sep);
+			retval = export_to_text_separated (model, rcols, rnb_cols, rows, nb_rows, sep, quote, field_quote);
 			g_free (rcols);
 			
 			return retval;
@@ -1205,6 +1227,10 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
  * <itemizedlist>
  *   <listitem><para>"SEPARATOR": a string value of which the first character is used as a separator in case of CSV export
  *             </para></listitem>
+ *   <listitem><para>"QUOTE": a string value of which the first character is used as a quote character in case of CSV export
+ *             </para></listitem>
+ *   <listitem><para>"FIELD_QUOTE": a boolean value which can be set to FALSE if no quote around the individual fields 
+ *             is requeted, in case of CSV export</para></listitem>
  *   <listitem><para>"NAME": a string value used to name the exported data if the export format is XML</para></listitem>
  *   <listitem><para>"OVERWRITE": a boolean value which tells if the file must be over-written if it already exists.
  *             </para></listitem>
@@ -1261,7 +1287,8 @@ gda_data_model_export_to_file (GdaDataModel *model, GdaDataModelIOFormat format,
 }
 
 static gchar *
-export_to_text_separated (GdaDataModel *model, const gint *cols, gint nb_cols, const gint *rows, gint nb_rows, gchar sep)
+export_to_text_separated (GdaDataModel *model, const gint *cols, gint nb_cols, const gint *rows, gint nb_rows, 
+			  gchar sep, gchar quote, gboolean field_quotes)
 {
 	GString *str;
 	gchar *retval;
@@ -1286,14 +1313,26 @@ export_to_text_separated (GdaDataModel *model, const gint *cols, gint nb_cols, c
 			value = (GValue *) gda_data_model_get_value_at (model, cols[c], rows ? rows[r] : r);
 			if (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN)
 				txt = g_strdup (g_value_get_boolean (value) ? "TRUE" : "FALSE");
-			else
-				txt = gda_value_stringify (value);
+			else {
+				gchar *tmp;
+				gsize len, size;
+				
+				tmp = gda_value_stringify (value);
+				len = strlen (tmp);
+				size = 2 * len + 3;
+				txt = g_new (gchar, size);
+
+				len = csv_write2 (txt, size, tmp, len, quote);
+				txt [len] = 0;
+				if (!field_quotes) {
+					txt [len - 1] = 0;
+					memmove (txt, txt+1, len);
+				}
+			}
 			if (c > 0)
 				str = g_string_append_c (str, sep);
-			str = g_string_append_c (str, '"');
-			str = g_string_append (str, txt);
-			str = g_string_append_c (str, '"');
 
+			str = g_string_append (str, txt);
 			g_free (txt);
 		}
 	}

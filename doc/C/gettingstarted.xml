@@ -861,7 +861,7 @@ main (int argc, char **argv)
   <sect1 id="main_example">
   <title>Full example</title>
   <programlisting>
-    &fullexample;
+&fullexample;
   </programlisting>
   </sect1>
 </chapter>

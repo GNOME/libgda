@@ -348,7 +348,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 		return SQLITE_ERROR;
 	}
 
-	g_print ("VIRTUAL TABLE: %s\n", sql->str);
+	/*g_print ("VIRTUAL TABLE: %s\n", sql->str);*/
 	g_string_free (sql, TRUE);
 
 	return SQLITE_OK;
@@ -578,6 +578,8 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 			GValue *value;
 			type = gda_column_get_g_type (gda_data_model_describe_column ((GdaDataModel*) table->proxy, i - 2));
 			value = gda_value_new_from_string (sqlite3_value_text (apData [i]), type);
+			/*g_print ("TXT #%s# => value %p (type=%s)\n", sqlite3_value_text (apData [i]), value,
+			  g_type_name (type));*/
 			values = g_list_append (values, value);
 		}
 		gda_data_model_set_values (GDA_DATA_MODEL (table->proxy), newrow, values, NULL);

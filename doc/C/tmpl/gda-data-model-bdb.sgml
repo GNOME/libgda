@@ -12,7 +12,8 @@ The #GdaDataModelBdb object allows to access the contents of a Berkeley DB datab
 <para>
 By default the resulting GdaDataModel contains only two columns (named "key" and "data") of type
 GDA_TYPE_BINARY, but this object can be subclassed to convert the key or data part of a BDB record
-into several columns.
+into several columns (implement the create_key_columns(), create_data_columns(), get_key_part(), and get_data_part() 
+virtual methods).
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

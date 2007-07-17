@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2006 The GNOME Foundation.
+ * Copyright (C) 2006 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -51,18 +51,21 @@
 #include <libgda/gda-data-model-private.h> /* For gda_data_model_add_data_from_xml_node() */
 
 #include <libxml/xmlreader.h>
-
-typedef enum {
-	CSV_AT_START,
-	CSV_IN_DATA,
-	CSV_AT_END
-} CsvPosition;
+#include "csv.h"
 
 typedef enum {
 	FORMAT_XML_DATA,
 	FORMAT_CSV,
 	FORMAT_XML_NODE
 } InternalFormat;
+
+typedef struct {
+	gint                nb_cols;
+	GdaDataModelImport *model;
+
+	gint                field_next_col;
+	GSList             *fields; /* list of GValue */
+} CsvParserData;
 
 struct _GdaDataModelImportPrivate {
 	/* data access specific variables */
@@ -86,17 +89,19 @@ struct _GdaDataModelImportPrivate {
 	InternalFormat       format;
 	union {
 		struct {
+			struct csv_parser *parser;
 			gchar            *encoding;
-			gchar            *delimiter;
-			gchar             escape_char;
+			gchar             delimiter;
+			gchar             quote;
+
+			gboolean          ignore_first_line;
+			GArray           *rows_read;
 
 			gchar            *start_pos;
-			gchar            *end_pos; /* character at this position MUST NOT be read */
-			gchar            *line_start;
-			gchar            *line_end;
+			gboolean          initializing;
+			guint             text_line; /* line number of the current last line */
 
-			guint             text_line;
-			CsvPosition       pos;     
+			CsvParserData    *pdata;
 		} csv;
 		struct {
 			xmlTextReaderPtr  reader;
@@ -128,6 +133,9 @@ enum
 	PROP_XML_NODE,
 	PROP_OPTIONS,
 };
+
+#define CSV_TITLE_BUFFER_SIZE 255
+#define CSV_DATA_BUFFER_SIZE 2048
 
 static void gda_data_model_import_class_init (GdaDataModelImportClass *klass);
 static void gda_data_model_import_init       (GdaDataModelImport *model,
@@ -296,6 +304,30 @@ gda_data_model_import_init (GdaDataModelImport *model, GdaDataModelImportClass *
 }
 
 static void
+csv_free_stored_rows (GdaDataModelImport *model)
+{
+	gint i;
+	g_assert (model->priv->format == FORMAT_CSV);
+	for (i = 0; i < model->priv->extract.csv.rows_read->len; i++) {
+		GSList *list = g_array_index (model->priv->extract.csv.rows_read,
+					      GSList *, i);
+		g_slist_foreach (list, (GFunc) gda_value_free, NULL);
+		g_slist_free (list);
+	}
+
+	if (model->priv->extract.csv.pdata) {
+		if (model->priv->extract.csv.pdata->fields) {
+			g_slist_foreach (model->priv->extract.csv.pdata->fields, (GFunc) gda_value_free, NULL);
+			g_slist_free (model->priv->extract.csv.pdata->fields);
+		}
+		g_free (model->priv->extract.csv.pdata);
+	}
+
+	g_array_free (model->priv->extract.csv.rows_read, FALSE);
+	model->priv->extract.csv.rows_read = NULL;
+}
+
+static void
 gda_data_model_import_dispose (GObject *object)
 {
 	GdaDataModelImport *model = (GdaDataModelImport *) object;
@@ -347,13 +379,15 @@ gda_data_model_import_dispose (GObject *object)
 			}
 			break;
 		case FORMAT_CSV:
+			if (model->priv->extract.csv.parser) {
+				csv_fini (model->priv->extract.csv.parser, NULL, NULL, NULL);
+				model->priv->extract.csv.parser = NULL;
+			}
+			if (model->priv->extract.csv.rows_read) 
+				csv_free_stored_rows (model);
 			if (model->priv->extract.csv.encoding) {
 				g_free (model->priv->extract.csv.encoding);
 				model->priv->extract.csv.encoding = NULL;
-			}
-			if (model->priv->extract.csv.delimiter) {
-				g_free (model->priv->extract.csv.delimiter);
-				model->priv->extract.csv.delimiter = NULL;
 			}
 			break;
 		case FORMAT_XML_NODE:
@@ -576,7 +610,7 @@ gda_data_model_import_set_property (GObject *object,
 			break;
 			
 	case FORMAT_CSV:
-		model->priv->extract.csv.escape_char = '"';
+		model->priv->extract.csv.quote = '"';
 		if (model->priv->options) {
 			const gchar *option;
 			option = find_option_as_string (model, "ENCODING");
@@ -584,11 +618,11 @@ gda_data_model_import_set_property (GObject *object,
 				model->priv->extract.csv.encoding = g_strdup (option);
 			option = find_option_as_string (model, "SEPARATOR");
 			if (option)
-				model->priv->extract.csv.delimiter = g_strdup (option);
-			model->priv->extract.csv.escape_char = '"';
-			option = find_option_as_string (model, "ESCAPE_CHAR");
+				model->priv->extract.csv.delimiter = *option;
+			model->priv->extract.csv.quote = '"';
+			option = find_option_as_string (model, "QUOTE");
 			if (option)
-				model->priv->extract.csv.escape_char = *option;
+				model->priv->extract.csv.quote = *option;
 		}
 		init_csv_import (model);
 		break;
@@ -656,8 +690,8 @@ gda_data_model_import_get_property (GObject *object,
  *   <listitem><para>For the CSV format:
  *      <itemizedlist>
  *         <listitem><para>ENCODING (string): specifies the encoding of the data in the file</para></listitem>
- *         <listitem><para>SEPARATOR (string): specifies the CSV separator</para></listitem>
- *         <listitem><para>ESCAPE_CHAR (string): specifies the character used to "escape"</para></listitem>
+ *         <listitem><para>SEPARATOR (string): specifies the CSV separator (comma as default)</para></listitem>
+ *         <listitem><para>QUOTE (string): specifies the character used to as quote park (double quote as default)</para></listitem>
  *         <listitem><para>TITLE_AS_FIRST_LINE (boolean): consider that the first line of the file contains columns' titles</para></listitem>
  *         <listitem><para>DBMS_TYPE_&lt;column number&gt; (string): specifies the type of value expected in column &lt;column number&gt;</para></listitem>
  *      </itemizedlist>
@@ -827,151 +861,170 @@ gda_data_model_import_dump (GdaDataModelImport *model, guint offset)
  *
  */
 
-static gchar **csv_split_line (GdaDataModelImport *model);
-static void    csv_find_EOL (GdaDataModelImport *model);
-static gint    cvs_count_nb_columns (GdaDataModelImport *model);
-static void    csv_compute_row_values (GdaDataModelImport *model);
-static void    csv_fetch_next_row (GdaDataModelImport *model);
-static void    csv_fetch_prev_row (GdaDataModelImport *model);
+static gboolean csv_init_csv_parser (GdaDataModelImport *model);
+static gboolean csv_fetch_some_lines (GdaDataModelImport *model);
 
 static void
 init_csv_import (GdaDataModelImport *model)
 {
 	gboolean title_first_line = FALSE;
 	gint nbcols;
-	
+
 	if (model->priv->options) 
 		title_first_line = find_option_as_boolean (model, "TITLE_AS_FIRST_LINE", FALSE);
 
 	g_assert (model->priv->format == FORMAT_CSV);
 
 	if (!model->priv->extract.csv.delimiter) 
-		model->priv->extract.csv.delimiter = g_strdup (",");
+		model->priv->extract.csv.delimiter = ',';
 
-	model->priv->extract.csv.text_line = 1; /* start line numbering at 1 */
-	model->priv->extract.csv.pos = CSV_AT_START;
-
-	/* columns count */
-	nbcols = 0;
-	
+	model->priv->extract.csv.ignore_first_line = FALSE;
 	model->priv->extract.csv.start_pos = model->priv->data_start;
-	model->priv->extract.csv.end_pos = model->priv->data_start + model->priv->data_length;
-	
-	model->priv->extract.csv.line_start = model->priv->extract.csv.start_pos;
-	csv_find_EOL (model);
-	nbcols = cvs_count_nb_columns (model);
+	model->priv->extract.csv.text_line = 1; /* start line numbering at 1 */
+	model->priv->extract.csv.rows_read = g_array_new (FALSE, TRUE, sizeof (GSList *));
+
+	/* parser init */
+	if (!csv_init_csv_parser (model))
+		return;
+
+	/* set parser parameters */
+	csv_set_delim (model->priv->extract.csv.parser, model->priv->extract.csv.delimiter);
+	csv_set_quote (model->priv->extract.csv.parser, model->priv->extract.csv.quote);
+
+	/* fill in at least a row to determine the number of columns */
+	model->priv->extract.csv.initializing = TRUE;
+	csv_fetch_some_lines (model);
+	model->priv->extract.csv.initializing = FALSE;
 
 	/* computing columns */
-	if (nbcols > 0) {
-		gchar **arr = NULL, **arrvalue = NULL;
-		gint col;
-		GdaDict *dict;
+	if (model->priv->extract.csv.rows_read->len == 0) 
+		return;
 
-		dict = gda_object_get_dict (GDA_OBJECT (model));
-
+	GSList *row;
+	gint col;
+	GdaDict *dict;
+	const GValue *cvalue;
+	
+	row = g_array_index (model->priv->extract.csv.rows_read, GSList *, 0);
+	g_assert (row);
+	nbcols = g_slist_length (row);
+	dict = gda_object_get_dict (GDA_OBJECT (model));
+	
+	for (col = 0; col < nbcols; col++) {
+		GdaColumn *column;
+		gchar *str = NULL;
+		
+		column = gda_column_new ();
+		model->priv->columns = g_slist_append (model->priv->columns, 
+						       column);
 		if (title_first_line) {
-			model->priv->extract.csv.line_start = model->priv->extract.csv.start_pos;
-			csv_find_EOL (model);
-			
-			arr = csv_split_line (model);
-			arrvalue = arr;
+			cvalue = g_slist_nth_data (row, col);
+			if (cvalue && !gda_value_is_null (cvalue)) 
+				str = gda_value_stringify (cvalue);
 		}
-
-		for (col = 0; col < nbcols; col++) {
-			GdaColumn *column;
-
-			column = gda_column_new ();
-			model->priv->columns = g_slist_append (model->priv->columns , column);
-
-			if (arrvalue) {
-				gda_column_set_name (column, *arrvalue);
-				gda_column_set_title (column, *arrvalue);
-				gda_column_set_caption (column, *arrvalue);
-				arrvalue ++;
-			}
-
-			gda_column_set_g_type (column, G_TYPE_STRING);
-			if (model->priv->options) {
-				gchar *pname;
-				GdaParameter *param;
-				const gchar *dbms_t;
-
-				pname = g_strdup_printf ("GDA_TYPE_%d", col);
-				param = gda_parameter_list_find_param (model->priv->options, pname);
-				if (param) {
-					const GValue *value;
-					
-					value = gda_parameter_get_value (param);
-					if (value && !gda_value_is_null ((GValue *) value)) {
-						if (!gda_value_isa ((GValue *) value, G_TYPE_ULONG))
-							g_warning (_("The '%s' parameter must hold a "
-								     "gda type value, ignored."), pname);
-						else {
-							GType gtype;
-							
-							gtype = g_value_get_ulong ((GValue *) value);
-							gda_column_set_g_type (column, gtype);
-						}
-					}
-				}
-				g_free (pname);
-
-				pname = g_strdup_printf ("DBMS_TYPE_%d", col);
-				dbms_t = find_option_as_string (model, pname);
-				if (dbms_t) {
-					GdaDictType *dtype;
-
-					gda_column_set_dbms_type (column, dbms_t);
-					dtype = gda_dict_get_dict_type_by_name (dict, dbms_t);
-					if (dtype) {
+		if (!str) 
+			str = g_strdup_printf ("column_%d", col);
+		gda_column_set_name (column, str);
+		gda_column_set_title (column, str);
+		gda_column_set_caption (column, str);
+		g_free (str);			
+		
+		gda_column_set_g_type (column, G_TYPE_STRING);
+		if (model->priv->options) {
+			gchar *pname;
+			GdaParameter *param;
+			const gchar *dbms_t;
+			
+			pname = g_strdup_printf ("GDA_TYPE_%d", col);
+			param = gda_parameter_list_find_param (model->priv->options, pname);
+			if (param) {
+				const GValue *value;
+				
+				value = gda_parameter_get_value (param);
+				if (value && !gda_value_is_null ((GValue *) value)) {
+					if (!gda_value_isa ((GValue *) value, G_TYPE_ULONG))
+						g_warning (_("The '%s' parameter must hold a "
+							     "gda type value, ignored."), pname);
+					else {
 						GType gtype;
 						
-						gtype = gda_dict_type_get_g_type (dtype);
+						gtype = g_value_get_ulong ((GValue *) value);
 						gda_column_set_g_type (column, gtype);
 					}
 				}
-				g_free (pname);
 			}
+			g_free (pname);
+			
+			pname = g_strdup_printf ("DBMS_TYPE_%d", col);
+			dbms_t = find_option_as_string (model, pname);
+			if (dbms_t) {
+				GdaDictType *dtype;
+				
+				gda_column_set_dbms_type (column, dbms_t);
+				dtype = gda_dict_get_dict_type_by_name (dict, dbms_t);
+				if (dtype) {
+					GType gtype;
+					
+					gtype = gda_dict_type_get_g_type (dtype);
+					gda_column_set_g_type (column, gtype);
+				}
+			}
+			g_free (pname);
 		}
-
-		if (title_first_line) {
-			g_strfreev (arr);
-
-			model->priv->extract.csv.start_pos = model->priv->extract.csv.line_end + 1;
-			model->priv->extract.csv.line_start = model->priv->extract.csv.start_pos;
-			model->priv->extract.csv.text_line ++;
-		}
-
-		model->priv->extract.csv.line_end = model->priv->extract.csv.line_start - 1;
 	}
+
+	/* reset */
+	/*g_print ("CSV parser RESET...................................................\n");*/
+	csv_free_stored_rows (model);
+	csv_fini (model->priv->extract.csv.parser, NULL, NULL, NULL);
+	csv_init_csv_parser (model);
+	
+	model->priv->extract.csv.start_pos = model->priv->data_start;
+	model->priv->extract.csv.text_line = 1; /* start line numbering at 1 */
+	model->priv->extract.csv.rows_read = g_array_new (FALSE, TRUE, sizeof (GSList *));
+	if (title_first_line) 
+		model->priv->extract.csv.ignore_first_line = TRUE;
+	csv_fetch_some_lines (model);
 }
 
-/* splits the string between model->priv->extract.csv.line_start and model->priv->extract.csv.line_end
- * into chuncks. use g_strfreev() to free it.
- */
-static gchar **
-csv_split_line (GdaDataModelImport *model)
+static gboolean
+csv_init_csv_parser (GdaDataModelImport *model)
 {
-	gchar *line = NULL;
-	gchar **arr = NULL;
-	gchar *ptr, *ch_start;
-	gchar esc = model->priv->extract.csv.escape_char; /* 0 if not set */
-	gchar *delim = model->priv->extract.csv.delimiter;
-	GSList *chuncks = NULL;
-	gint nb_chuncks = 0;
-	gboolean in;
+	if (csv_init (&(model->priv->extract.csv.parser), 0) != 0) {
+		model->priv->extract.csv.parser = NULL;
+		return FALSE;
+	}
 
-	g_assert (delim);
-	if (model->priv->extract.csv.line_end == model->priv->extract.csv.line_start)
-		return NULL;
+	model->priv->extract.csv.pdata = g_new0 (CsvParserData, 1);
+	model->priv->extract.csv.pdata->nb_cols = gda_data_model_get_n_columns ((GdaDataModel*) model);
+	model->priv->extract.csv.pdata->model = model;
+	model->priv->extract.csv.pdata->field_next_col = 0;
+	model->priv->extract.csv.pdata->fields = NULL;
 
+	csv_set_delim (model->priv->extract.csv.parser, model->priv->extract.csv.delimiter);
+	csv_set_quote (model->priv->extract.csv.parser, model->priv->extract.csv.quote);
+	return TRUE;
+}
+
+static void 
+csv_parser_field_read_cb (char *s, size_t len, void *data) 
+{
+	CsvParserData *pdata = (CsvParserData* ) data;
+	GdaDataModelImport *model = pdata->model;
+	GValue *value = NULL;
+	GdaColumn *column;
+	GType type = G_TYPE_INVALID;
+	gchar *copy;
+
+	if (pdata->model->priv->extract.csv.ignore_first_line) 
+		return;
+
+	/* convert to correct encoding */
 	if (model->priv->extract.csv.encoding) {
 		GError *error = NULL;
-		line = g_convert (model->priv->extract.csv.line_start,
-				  model->priv->extract.csv.line_end - model->priv->extract.csv.line_start,
-				  "UTF-8", model->priv->extract.csv.encoding,
+		copy = g_convert (s, len, "UTF-8", model->priv->extract.csv.encoding,
 				  NULL, NULL, &error);
-		if (!line) {
+		if (!copy) {
 			gchar *str;
 			str = g_strdup_printf (_("Character conversion at line %d, error: %s"), 
 					       model->priv->extract.csv.text_line,
@@ -983,255 +1036,107 @@ csv_split_line (GdaDataModelImport *model)
 		}
 	}
 	else 
-		line = g_locale_to_utf8 (model->priv->extract.csv.line_start,
-					 model->priv->extract.csv.line_end - model->priv->extract.csv.line_start,
-					 NULL, NULL, NULL);
-	
-	if (!line)
-		line = g_strndup (model->priv->extract.csv.line_start, 
-				  model->priv->extract.csv.line_end - model->priv->extract.csv.line_start);
-	
-	/* g_print ("\n\n(delim=%c/esc=%d) line = #%s#\n", *delim, esc, line); */
+		copy = g_locale_to_utf8 (s, len, NULL, NULL, NULL);
+	if (!copy)
+		copy = g_strndup (s, len);
+	/*g_print ("FIELD: #%s# ", copy);*/
 
-	ptr = line;
-	ch_start = ptr;
-	in = FALSE;
-	while (*ptr) {
-		if (!in) {
-			if (*ptr == esc) {
-				ptr ++;
-				in = TRUE;
-				ch_start = ptr;
-			}
-			else {
-				if (*ptr == *delim) {
-					in = FALSE;
-					if (ptr > ch_start)
-						chuncks = g_slist_prepend (chuncks,
-									   g_strndup (ch_start, ptr - ch_start));
-					else
-						chuncks = g_slist_prepend (chuncks, g_strdup (""));
-					nb_chuncks ++;
+	/* compute column's type */
+	if (! model->priv->extract.csv.initializing) {
+		if (pdata->field_next_col >= pdata->nb_cols)
+			/* ignore extra fields */
+			return;
+		column = gda_data_model_describe_column ((GdaDataModel *) model, 
+							 pdata->field_next_col);
+		pdata->field_next_col++;
 
-					ptr++;
-					ch_start = ptr;
-				}
-				else
-					ptr++;
-			}
+		if (!column) {
+			g_free (copy);
+			return;
 		}
-		else {
-			if (*ptr == esc) {
-				if (*(ptr+1) == esc)
-					ptr += 2;
-				else {
-					ptr++;
-					in = FALSE;
-					if (ptr -1 > ch_start)
-						chuncks = g_slist_prepend (chuncks,
-									   g_strndup (ch_start, ptr - 1 - ch_start));
-					else
-						chuncks = g_slist_prepend (chuncks, g_strdup (""));
-					nb_chuncks ++;
-					/* ignore everything up to the next separator */
-					while (*ptr && (*ptr != *delim))
-						ptr++;
-					if (*ptr)
-						ptr++;
-					ch_start = ptr;
-				}
-			}
-			else
-				ptr++;
-		}
+		type = gda_column_get_g_type (column);
 	}
-	if (ch_start < ptr) {
-		chuncks = g_slist_prepend (chuncks,
-					   g_strndup (ch_start, ptr - ch_start));
-		nb_chuncks ++;
-	}
+	else
+		type = G_TYPE_STRING;
 
-	if (*(ptr-1) == *delim) {
-		chuncks = g_slist_prepend (chuncks, g_strdup (""));
-		nb_chuncks ++;
-	}
-	
-	/* g_print ("nb_chuncks: %d\n", nb_chuncks); */
-	if (chuncks) {
-		GSList *list = chuncks;
-		gint index = nb_chuncks - 1;
-		arr = g_new0 (gchar *, nb_chuncks+1);
-
-		while (list) {
-			gchar *ch = (gchar *) list->data;
-			gint len = strlen (ch);
-			
-			ptr = ch;
-			while (*ptr) {
-				/* convert double escape char to a single one */
-				if ((*ptr == esc) && (*(ptr+1) == esc))
-					g_memmove (ptr, ptr+1, len);
-
-				len--;
-				ptr++;
-			}
-
-			arr [index] = ch;
-			/* g_print ("Chunck%02d=#%s#\n", index, ch); */
-
-			list = g_slist_next (list);
-			index --;
-		}
-
-		g_slist_free (chuncks);
-	}
-
-	g_free (line);
-
-	return arr;
-}
-
-/* may modify model->priv->extract.csv.line_start AND model->priv->extract.csv.line_end */
-static void
-csv_find_EOL (GdaDataModelImport *model)
-{
-	gchar *ptr;
-	
-	ptr = model->priv->extract.csv.line_start;
-	if (ptr >= model->priv->extract.csv.end_pos)
-		ptr = model->priv->extract.csv.end_pos;
-
-	while ((ptr < model->priv->extract.csv.end_pos) && (*ptr == '\n')) {
-		ptr++;
-		model->priv->extract.csv.text_line ++;
-	}
-	model->priv->extract.csv.line_start = ptr;
-
-	if (ptr < model->priv->extract.csv.end_pos)
-		ptr++;
-	while ((ptr < model->priv->extract.csv.end_pos) && (*ptr != '\n'))
-		ptr++;
-	model->priv->extract.csv.line_end = ptr;
-}
-
-static gint
-cvs_count_nb_columns (GdaDataModelImport *model)
-{
-	gint nb_columns = -1;
-
-	if (model->priv->extract.csv.line_start != model->priv->extract.csv.line_end) {
-		gchar **value;
-		gchar **arr;
-		nb_columns = 0;
-		
-		arr = csv_split_line (model);
-		
-		value = arr;
-		while (*value) {
-			nb_columns ++;
-			value ++;
-		}
-		
-		g_strfreev (arr);
-	}
-
-	return nb_columns;
-}
-
-/* the model->priv->extract.csv.line_start and model->priv->extract.csv.line_end pointers
- * MUST be set to represent a whole line */
-static void
-csv_compute_row_values (GdaDataModelImport *model)
-{
-	gchar **arr = NULL, **arrvalue = NULL;
-	GSList *columns = model->priv->columns;
-	GSList *values = NULL;
-
-	if (model->priv->cursor_values) {
-		g_slist_foreach (model->priv->cursor_values, (GFunc) gda_value_free, NULL);
-		g_slist_free (model->priv->cursor_values);
-		model->priv->cursor_values = NULL;
-	}
-
-	if (model->priv->extract.csv.line_start == model->priv->extract.csv.line_end)
-		return;
-
-	arr = csv_split_line (model);
-
-	arrvalue = arr;
-	while (*arrvalue && columns) {
-		GType gtype;
-		GValue *value;
-
-		gtype = gda_column_get_g_type ((GdaColumn *) columns->data);
-		value = gda_value_new_from_string (*arrvalue, gtype);
+	/* create a GValue */
+	if (type != GDA_TYPE_BINARY) {
+		value = gda_value_new_from_string (copy, type);
 		if (!value) {
 			gchar *str;
-
-			str = g_strdup_printf (_("Could not convert '%s' to a value of type %s"), 
-					       *arrvalue, gda_g_type_to_string (gtype));
+			str = g_strdup_printf (_("Could not convert string '%s' to a '%s' value"), copy, g_type_name (type));
 			add_error (model, str);
 			g_free (str);
-			value = gda_value_new_null ();
 		}
-		values = g_slist_prepend (values, value);
-		
-		arrvalue ++;
-		columns = g_slist_next (columns);
 	}
+	else 
+		value = gda_value_new_binary ((guchar*) s, len);
+	g_free (copy);
+	pdata->fields = g_slist_prepend (pdata->fields, value);
+	pdata->nb_cols ++;
+	/*g_print ("=> %p (cols so far: %d)\n", value, g_slist_length (pdata->fields));*/
+}
 
-	if (*arrvalue) {
-		/* there are more value than columns, error */
-		gchar *str;
+static void 
+csv_parser_row_read_cb (char c, void *data) 
+{
+	CsvParserData *pdata = (CsvParserData* ) data;
+	GSList *row;
+	gint size;
+
+	if (pdata->model->priv->extract.csv.ignore_first_line) 
+		pdata->model->priv->extract.csv.ignore_first_line = FALSE;
+	else {
+		row = g_slist_reverse (pdata->fields);
+		pdata->fields = NULL;
+		pdata->field_next_col = 0;
 		
-		str = g_strdup_printf (_("Row has more values than detected at line %d"),
-				       model->priv->extract.csv.text_line);
+		size = g_slist_length (row);
+		g_assert (size <= pdata->nb_cols);
+		/*g_print ("===========ROW %d (%d cols)===========\n", pdata->model->priv->extract.csv.text_line, size);*/
+		
+		g_array_append_val (pdata->model->priv->extract.csv.rows_read, row);
+		pdata->model->priv->extract.csv.text_line ++;
+	}
+}
+
+static gboolean
+csv_fetch_some_lines (GdaDataModelImport *model) 
+{
+	size_t size;
+
+	if (!model->priv->extract.csv.initializing)
+		size = MIN (CSV_TITLE_BUFFER_SIZE,
+			    model->priv->data_start + model->priv->data_length - 
+			    model->priv->extract.csv.start_pos);
+	else
+		size = MIN (CSV_DATA_BUFFER_SIZE,
+			    model->priv->data_start + model->priv->data_length - 
+			    model->priv->extract.csv.start_pos);
+		    
+	if (csv_parse (model->priv->extract.csv.parser, 
+		       model->priv->extract.csv.start_pos, size, 
+		       csv_parser_field_read_cb, 
+		       csv_parser_row_read_cb, model->priv->extract.csv.pdata) != size) {
+		gchar *str = g_strdup_printf (_("Error while parsing CSV file: %s"), 
+					      csv_strerror (csv_error (model->priv->extract.csv.parser)));
 		add_error (model, str);
 		g_free (str);
-	}
-	
-	g_strfreev (arr);
-	model->priv->cursor_values = g_slist_reverse (values);
-}
-
-static void
-csv_fetch_next_row (GdaDataModelImport *model)
-{
-	model->priv->extract.csv.line_start = model->priv->extract.csv.line_end + 1;
-	csv_find_EOL (model);
-	model->priv->extract.csv.text_line ++;
-	
-	csv_compute_row_values (model);
-}
-
-static void
-csv_fetch_prev_row (GdaDataModelImport *model)
-{
-	gchar *ptr;
-
-	ptr = model->priv->extract.csv.line_start - 1;
-	if (ptr < model->priv->extract.csv.start_pos) {
-		if (model->priv->cursor_values) {
-			g_slist_foreach (model->priv->cursor_values, (GFunc) gda_value_free, NULL);
-			g_slist_free (model->priv->cursor_values);
-			model->priv->cursor_values = NULL;
-		}
-		model->priv->extract.csv.line_end = model->priv->extract.csv.line_start - 1;
+		model->priv->extract.csv.start_pos = model->priv->data_start + model->priv->data_length;
+		return FALSE;
 	}
 	else {
-		while ((ptr >= model->priv->extract.csv.start_pos) && (*ptr == '\n')) {
-			model->priv->extract.csv.text_line --;
-			ptr --;
-		}
-		while ((ptr >= model->priv->extract.csv.start_pos) && (*ptr != '\n'))
-			ptr --;
-		model->priv->extract.csv.line_start = ptr;
-		csv_find_EOL (model);
-		model->priv->extract.csv.text_line --;
+		model->priv->extract.csv.start_pos += size;
 
-		csv_compute_row_values (model);
+		/* try to finish the line if it has not been read entirely */
+		if ((model->priv->extract.csv.rows_read->len == 0) &&
+		    (model->priv->extract.csv.start_pos != model->priv->data_start + model->priv->data_length))
+			return csv_fetch_some_lines (model);
+		else
+			return TRUE;
 	}
 }
+
 
 /*
  *
@@ -1931,7 +1836,7 @@ gda_data_model_import_get_access_flags (GdaDataModel *model)
 	g_return_val_if_fail (imodel->priv, 0);
 	
 	if (imodel->priv->format == FORMAT_CSV)
-		flags |= GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD;
+		/*flags |= GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD*/;
 
 	if (imodel->priv->random_access && imodel->priv->random_access_model)
 		flags |= GDA_DATA_MODEL_ACCESS_RANDOM;
@@ -2043,6 +1948,7 @@ static gboolean
 gda_data_model_import_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 {
 	GdaDataModelImport *imodel;
+	GSList *next_values = NULL;
 	
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_IMPORT (model), FALSE);
 	imodel = (GdaDataModelImport *) model;
@@ -2056,18 +1962,34 @@ gda_data_model_import_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 	switch (imodel->priv->format) {
 	case FORMAT_XML_DATA:
 		xml_fetch_next_row (imodel);
+		next_values = imodel->priv->cursor_values;
 		break;
 
 	case FORMAT_CSV:
-		if (gda_data_model_iter_is_valid (iter) || (imodel->priv->extract.csv.pos == CSV_AT_START))
-			csv_fetch_next_row (imodel);
+		if (gda_data_model_iter_is_valid (iter) &&
+		    (imodel->priv->extract.csv.rows_read->len > 0)) {
+			/* get rid of row pointer by iter */
+			GSList *list = g_array_index (imodel->priv->extract.csv.rows_read,
+						      GSList *, 0);
+			g_assert (list);
+			g_slist_foreach (list, (GFunc) gda_value_free, NULL);
+			g_slist_free (list);
+			g_array_remove_index (imodel->priv->extract.csv.rows_read, 0);
+		}
+
+		/* fetch some more rows if necessary */
+		if (imodel->priv->extract.csv.rows_read->len == 0) 
+			csv_fetch_some_lines (imodel);
+		if (imodel->priv->extract.csv.rows_read->len != 0) 
+			next_values = g_array_index (imodel->priv->extract.csv.rows_read,
+						     GSList *, 0);
 		break;
 	default:
 		g_assert_not_reached ();
 	}
 
 	/* set values in iter */
-	if (imodel->priv->cursor_values) {
+	if (next_values) {
 		GSList *plist;
 		GSList *vlist;
 		gboolean update_model;
@@ -2075,7 +1997,7 @@ gda_data_model_import_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 		g_object_get (G_OBJECT (iter), "update_model", &update_model, NULL);
 		g_object_set (G_OBJECT (iter), "update_model", FALSE, NULL);
 		plist = ((GdaParameterList *) iter)->parameters;
-		vlist = imodel->priv->cursor_values;
+		vlist = next_values;
 		while (plist && vlist) {
 			gda_parameter_set_value (GDA_PARAMETER (plist->data), 
 						 (GValue *) vlist->data);
@@ -2100,15 +2022,12 @@ gda_data_model_import_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 
 		g_object_set (G_OBJECT (iter), "current-row", imodel->priv->iter_row, 
 			      "update_model", update_model, NULL);
-		if (imodel->priv->format == FORMAT_CSV)
-			imodel->priv->extract.csv.pos = CSV_IN_DATA;
+
 		return TRUE;
 	}
 	else {
 		g_signal_emit_by_name (iter, "end_of_data");
 		g_object_set (G_OBJECT (iter), "current-row", -1, NULL);
-		if (imodel->priv->format == FORMAT_CSV)
-			imodel->priv->extract.csv.pos = CSV_AT_END;
 		return FALSE;
 	}
 }
@@ -2132,9 +2051,6 @@ gda_data_model_import_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 	/* fetch the previous row if necessary */
 	switch (imodel->priv->format) {
 	case FORMAT_CSV:
-		if (gda_data_model_iter_is_valid (iter) || (imodel->priv->extract.csv.pos == CSV_AT_END))
-			csv_fetch_prev_row (imodel);
-		break;
 	default:
 		g_assert_not_reached ();
 	}
@@ -2173,12 +2089,10 @@ gda_data_model_import_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 		g_assert (imodel->priv->iter_row >= 0);
 		g_object_set (G_OBJECT (iter), "current-row", imodel->priv->iter_row, 
 			      "update_model", update_model, NULL);
-		imodel->priv->extract.csv.pos = CSV_IN_DATA;
 		return TRUE;
 	}
 	else {
 		g_object_set (G_OBJECT (iter), "current-row", -1, NULL);
-		imodel->priv->extract.csv.pos = CSV_AT_START;
 		return FALSE;
 	}
 }

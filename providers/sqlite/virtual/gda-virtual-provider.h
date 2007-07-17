@@ -25,7 +25,7 @@
 
 /* NOTICE: SQLite must be compiled without the SQLITE_OMIT_VIRTUALTABLE flag */
 
-#include "../gda-sqlite-provider.h"
+#include <gda-sqlite-provider.h>
 
 #define GDA_TYPE_VIRTUAL_PROVIDER            (gda_virtual_provider_get_type())
 #define GDA_VIRTUAL_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_VIRTUAL_PROVIDER, GdaVirtualProvider))

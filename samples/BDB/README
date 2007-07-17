@@ -1,0 +1,57 @@
+Libgda BDB interfacing example
+==============================
+
+Description:
+------------
+
+This example illustrates the GdaDataModelBdb data model object,
+part of libgda as of versions >= 3.2.
+
+The GdaDataModelBdb object operates on a single Berkeley DB file and
+allows reading and writing on that file. A Berkeley DB database (stored in
+a single file) basically stores (key,data) pairs; however the BDB library itself
+has no knowledge of the composition of the key and data parts which can be as
+complex as programmers can make them.
+
+In this example, the key and data (value) parts of the BDB database are described in the
+common.h file:
+typedef struct {
+	char  color[COLORSIZE];
+	int   type;
+} Key;
+
+typedef struct {
+	float  size;
+	char   name[NAMESIZE];
+} Value;
+
+
+fill.c:
+-------
+This program creates a small 'access.db' DBD database file and populates
+its contents with a few entries. It does not use Libgda at all but only the
+BDB library.
+
+access-raw.c:
+-------------
+This program creates a GdaDataModelBdb object which is by default composed of two
+binary columns, and accesses the contents of the key and data binary fields by casting
+the binary data to the Key and Value structures mentionned above.
+
+access-custom.c:
+----------------
+This program subclasses the GdaDataModelBdb object to access the data using 4 columns
+(color, type, size and name). The subclassed data model is implemented in
+the custom-bdb-model.c and custom-bdb-model.h files.
+
+Compiling and running:
+----------------------
+
+To compile (make sure Libgda is installed prior to this):
+> make
+
+and to run:
+> ./fill
+> ./access-raw
+> ./access-custom
+

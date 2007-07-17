@@ -102,6 +102,8 @@ gda_headers = \
 	libgda.h 
 
 libgda_sources =  \
+	csv.h \
+	libcsv.c \
 	$(gda_headers) \
 	gda-blob-op.c \
 	gda-client.c \
