@@ -440,8 +440,8 @@ gda_client_open_connection (GdaClient *client,
 			prv = find_or_load_provider (client, dsn_info->provider);
 	
 		if (prv) {
-			cnc = gda_connection_new (client, prv->provider, dsn, username, password, 
-						  options);
+			cnc = gda_server_provider_create_connection (client, prv->provider, dsn, username, password,
+                                                  options);
 			if (!gda_connection_open (cnc, error)) {
 				g_object_unref (cnc);
 				cnc = NULL;
@@ -535,13 +535,8 @@ gda_client_open_connection_from_string (GdaClient *client,
 			prv = find_or_load_provider (client, provider_id);
 	
 		if (prv) {
-			cnc = g_object_new (GDA_TYPE_CONNECTION, 
-					    "client", client, 
-					    "provider_obj", prv->provider, 
-					    "cnc_string", cnc_string, 
-					    "username", username, 
-					    "password", password, 
-					    "options", options, NULL);
+			cnc = gda_server_provider_create_connection_from_string (client, prv->provider,
+										 cnc_string, username, password, options);
 			if (!gda_connection_open (cnc, error)) {
 				g_object_unref (cnc);
 				cnc = NULL;

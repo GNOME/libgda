@@ -53,6 +53,12 @@ struct _GdaDataModelBdbClass {
 						       gpointer data, gint length, gint part);
 	GValue                *(*get_data_part)       (GdaDataModelBdb *model,
 						       gpointer data, gint length, gint part);
+	gboolean               (*update_key_part)     (GdaDataModelBdb *model,
+						       gpointer data, gint length, gint part, 
+						       const GValue *value, GError **error);
+	gboolean               (*update_data_part)    (GdaDataModelBdb *model,
+						       gpointer data, gint length, gint part, 
+						       const GValue *value, GError **error);
 };
 
 GType         gda_data_model_bdb_get_type     (void) G_GNUC_CONST;

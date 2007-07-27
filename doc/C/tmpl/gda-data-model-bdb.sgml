@@ -50,6 +50,8 @@ virtual methods).
 @create_data_columns: 
 @get_key_part: 
 @get_data_part: 
+@update_key_part: 
+@update_data_part: 
 
 <!-- ##### STRUCT GdaDataModelBdbPrivate ##### -->
 <para>

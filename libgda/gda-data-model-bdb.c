@@ -35,11 +35,13 @@ struct _GdaDataModelBdbPrivate {
 
 	DB     *dbp;
 	DBC    *dbpc; /* cursor */
+	int     cursor_pos; /* <0 if @dbpc is invalid */
 
 	GSList *errors; /* list of errors as GError structures*/
 
 	GSList *columns;
 	gint    n_columns; /* length of @columns */
+	gint    n_rows;
 
 	gint    n_key_columns; /* > 0 if custom number of columns */
 	gint    n_data_columns;/* > 0 if custom number of columns */
@@ -78,6 +80,12 @@ static GdaDataModelAccessFlags gda_data_model_bdb_get_access_flags(GdaDataModel 
 static const GValue      *gda_data_model_bdb_get_value_at    (GdaDataModel *model, gint col, gint row);
 static GdaValueAttribute    gda_data_model_bdb_get_attributes_at (GdaDataModel *model, gint col, gint row);
 
+static gboolean             gda_data_model_bdb_set_value_at (GdaDataModel *model, gint col, gint row, const GValue *value, GError **error);
+static gboolean             gda_data_model_bdb_set_values (GdaDataModel *model, gint row, GList *values, GError **error);
+static gint                 gda_data_model_bdb_append_values (GdaDataModel *model, const GList *values, GError **error);
+static gint                 gda_data_model_bdb_append_row (GdaDataModel *model, GError **error); 
+static gboolean             gda_data_model_bdb_remove_row (GdaDataModel *model, gint row, GError **error);
+
 #ifdef GDA_DEBUG
 static void gda_data_model_bdb_dump (GdaDataModelBdb *model, guint offset);
 #endif
@@ -105,11 +113,11 @@ gda_data_model_bdb_data_model_init (GdaDataModelClass *iface)
         iface->i_iter_next = NULL;
         iface->i_iter_prev = NULL;
 
-        iface->i_set_value_at = NULL;
-        iface->i_set_values = NULL;
-        iface->i_append_values = NULL;
-        iface->i_append_row = NULL;
-        iface->i_remove_row = NULL;
+        iface->i_set_value_at = gda_data_model_bdb_set_value_at;
+        iface->i_set_values = gda_data_model_bdb_set_values;
+        iface->i_append_values = gda_data_model_bdb_append_values;
+        iface->i_append_row = gda_data_model_bdb_append_row;
+        iface->i_remove_row = gda_data_model_bdb_remove_row;
         iface->i_find_row = NULL;
 
         iface->i_set_notify = NULL;
@@ -128,7 +136,9 @@ gda_data_model_bdb_init (GdaDataModelBdb *model,
 	model->priv->db_name = NULL;
 	model->priv->columns = NULL;
 	model->priv->n_columns = 0;
+	model->priv->n_rows = 0;
 	model->priv->cursor_values = NULL;
+	model->priv->cursor_pos = -1;
 }
 
 static void
@@ -207,6 +217,7 @@ add_error (GdaDataModelBdb *model, const gchar *err)
 	GError *error = NULL;
 
         g_set_error (&error, 0, 0, err);
+	g_print ("ADD_ERROR (%s)\n", err);
         model->priv->errors = g_slist_append (model->priv->errors, error);
 }
 
@@ -244,10 +255,36 @@ gda_data_model_bdb_get_type (void)
 }
 
 static void
+update_number_of_rows (GdaDataModelBdb *model)
+{
+	int ret;
+	DB_BTREE_STAT *statp;
+
+	ret = model->priv->dbp->stat (model->priv->dbp,
+#if BDB_VERSION > 40300
+			 NULL,
+#endif
+			 &statp,
+
+#if BDB_VERSION < 40000
+			 NULL,
+#endif
+			 0);
+	if (ret) {
+		add_error (model, db_strerror (ret));
+		model->priv->n_rows = 0;
+	}
+	else {
+		model->priv->n_rows = (int) statp->bt_ndata;
+		free (statp);
+	}
+}
+
+static void
 gda_data_model_bdb_set_property (GObject *object,
-                                    guint param_id,
-                                    const GValue *value,
-                                    GParamSpec *pspec)
+				 guint param_id,
+				 const GValue *value,
+				 GParamSpec *pspec)
 {
         GdaDataModelBdb *model;
         const gchar *string;
@@ -315,8 +352,8 @@ gda_data_model_bdb_set_property (GObject *object,
 		}
 		model->priv->dbpc = dbpc;
 
+		/* create columns */
 		model->priv->columns = NULL;
-
 		model->priv->n_key_columns = 0;
 		if (CLASS (model)->create_key_columns) {
 			model->priv->columns = CLASS (model)->create_key_columns (model);
@@ -349,6 +386,9 @@ gda_data_model_bdb_set_property (GObject *object,
 			gda_column_set_g_type (column, GDA_TYPE_BINARY);
 		}
 		model->priv->n_columns = g_slist_length (model->priv->columns);
+
+		/* number of rows */
+		update_number_of_rows (model);
 	}
 
  out:
@@ -422,39 +462,15 @@ gda_data_model_bdb_new (const gchar *filename, const gchar *db_name)
 	return model;
 }
 
-
-
 static gint
 gda_data_model_bdb_get_n_rows (GdaDataModel *model)
 {
 	GdaDataModelBdb *imodel = (GdaDataModelBdb *) model;
-	int ret;
-	DB_BTREE_STAT *statp;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_BDB (imodel), 0);
 	g_return_val_if_fail (imodel->priv != NULL, 0);
-	if (!imodel->priv->dbp)
-		return 0;
-	
-	ret = imodel->priv->dbp->stat (imodel->priv->dbp,
-#if BDB_VERSION > 40300
-			 NULL,
-#endif
-			 &statp,
 
-#if BDB_VERSION < 40000
-			 NULL,
-#endif
-			 0);
-	if (ret) {
-		add_error (imodel, db_strerror (ret));
-		return 0;
-	}
-	else {
-		ret = (int) statp->bt_ndata;
-		free (statp);
-		return ret;
-	}
+	return imodel->priv->n_rows;
 }
 
 static gint
@@ -486,7 +502,7 @@ gda_data_model_bdb_describe_column (GdaDataModel *model, gint col)
 }
 
 static GdaDataModelAccessFlags
-gda_data_model_bdb_get_access_flags(GdaDataModel *model)
+gda_data_model_bdb_get_access_flags (GdaDataModel *model)
 {
 	GdaDataModelBdb *imodel;
         GdaDataModelAccessFlags flags;
@@ -503,15 +519,73 @@ gda_data_model_bdb_get_access_flags(GdaDataModel *model)
         return flags;
 }
 
+static gboolean
+move_cursor_at (GdaDataModelBdb *model, gint row) 
+{
+	/*
+	 * REM: there is no general rwo numbering in BDB, so the current code to set a cursor at a
+	 * row is to iterate back and forth which is time and memory I/O consuming. Solutions to
+	 * solve this problem would be:
+	 * - for a general solution, create another database where the key is the row number, and
+	 *   the data is either the current key if no duplicates are allowed, or the current key
+	 *   and the current data otherwise; the problem is that this index may require large amounts
+	 *   of disk space
+	 * - implement the solution only for databases which support logical record numbers (to investigate
+	 *   further)
+	 */
+	DBC *dbpc;
+	DBT key, data;
+	int ret, i;
+
+	dbpc = model->priv->dbpc;
+	if (model->priv->cursor_pos < 0) {
+		memset (&key, 0, sizeof key);
+		memset (&data, 0, sizeof data);
+		ret = dbpc->c_get (dbpc, &key, &data, DB_FIRST);
+		if (ret) {
+			add_error (model, db_strerror (ret));
+			return FALSE;
+		}
+		model->priv->cursor_pos = 0;
+	}
+
+	row = model->priv->n_rows - 1 - row;
+	if (row > model->priv->cursor_pos) {
+		for (i = model->priv->cursor_pos; i < row; i++) {
+			memset (&key, 0, sizeof key);
+			memset (&data, 0, sizeof data);
+			ret = dbpc->c_get (dbpc, &key, &data, DB_NEXT);
+			if (ret) {
+				add_error (model, db_strerror (ret));
+				return FALSE;
+			}
+			model->priv->cursor_pos ++;
+		}
+        }
+	else if (row < model->priv->cursor_pos) {
+		for (i = model->priv->cursor_pos; i > row; i--) {
+			memset (&key, 0, sizeof key);
+			memset (&data, 0, sizeof data);
+			ret = dbpc->c_get (dbpc, &key, &data, DB_PREV);
+			if (ret) {
+				add_error (model, db_strerror (ret));
+				return FALSE;
+			}
+			model->priv->cursor_pos --;
+		}
+	}
+
+	return TRUE;
+}
+
 static const GValue *
 gda_data_model_bdb_get_value_at (GdaDataModel *model, gint col, gint row)
 {
 	GdaDataModelBdb *imodel;
 	DBT key, data;
-	DBC *dbpc;
 	GdaBinary bin;
 	GValue *value;
-	int ret, i;
+	int ret;
 
         g_return_val_if_fail (GDA_IS_DATA_MODEL_BDB (model), NULL);
         imodel = GDA_DATA_MODEL_BDB (model);
@@ -522,23 +596,16 @@ gda_data_model_bdb_get_value_at (GdaDataModel *model, gint col, gint row)
 		return NULL;
 	}
 
-	dbpc = imodel->priv->dbpc;
+	if (! move_cursor_at (imodel, row))
+		return NULL;
+
 	memset (&key, 0, sizeof key);
         memset (&data, 0, sizeof data);
-        ret = dbpc->c_get (dbpc, &key, &data, DB_FIRST);
-        if (ret) {
+	ret = imodel->priv->dbpc->c_get (imodel->priv->dbpc, &key, &data, DB_CURRENT);
+	if (ret) {
 		add_error (imodel, db_strerror (ret));
-                return NULL;
-        }
-	for (i = 0; i < row; i++) {
-                memset (&key, 0, sizeof key);
-                memset (&data, 0, sizeof data);
-                ret = dbpc->c_get (dbpc, &key, &data, DB_NEXT);
-                if (ret) {
-			add_error (imodel, db_strerror (ret));
-                        return NULL;
-                }
-        }
+		return NULL;
+	}
 
 	if (imodel->priv->cursor_values)
 		free_current_cursor_values (imodel);
@@ -608,14 +675,272 @@ static GdaValueAttribute
 gda_data_model_bdb_get_attributes_at (GdaDataModel *model, gint col, gint row)
 {
 	GdaDataModelBdb *imodel;
+	GdaValueAttribute flags;
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_BDB (model), 0);
         imodel = GDA_DATA_MODEL_BDB (model);
         g_return_val_if_fail (imodel->priv, 0);
 
-	if ((col < 0) || (col > 1)) {
+	if ((col < 0) || (col > imodel->priv->n_columns)) {
 		add_error (imodel, _("Column number out of range"));
 		return 0;
 	}
 
-	return GDA_VALUE_ATTR_CAN_BE_NULL;
+	if (((imodel->priv->n_key_columns > 0) && (col >= imodel->priv->n_key_columns)) ||
+	    ((imodel->priv->n_key_columns <= 0) && (col >= 1)))
+		flags = GDA_VALUE_ATTR_CAN_BE_NULL;
+	else 
+		flags = GDA_VALUE_ATTR_CAN_BE_NULL | GDA_VALUE_ATTR_NO_MODIF;
+
+	return flags;
+}
+
+static gboolean
+gda_data_model_bdb_set_value_at (GdaDataModel *model, gint col, gint row, const GValue *value, GError **error)
+{
+	GList *values = NULL;
+	gint i;
+	gboolean retval;
+	GdaDataModelBdb *imodel;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_BDB (model), FALSE);
+	imodel = GDA_DATA_MODEL_BDB (model);
+        g_return_val_if_fail (imodel->priv, FALSE);
+
+	if ((col < 0) || (col > imodel->priv->n_columns)) {
+		add_error (imodel, _("Column number out of range"));
+		return FALSE;
+	}
+
+	/* start padding with default values */
+	for (i = 0; i < col; i++)
+		values = g_list_append (values, NULL);
+
+	values = g_list_append (values, (gpointer) value);
+
+	/* add extra padding */
+	for (i++; i < imodel->priv->n_columns; i++)
+		values = g_list_append (values, NULL);
+
+	retval = gda_data_model_bdb_set_values (model, row, values, error);
+	g_list_free (values);
+
+	return retval;
+}
+
+static gboolean
+alter_key_value (GdaDataModelBdb *model, DBT *key, GList **values, gboolean *has_modifications, GError **error)
+{
+	if (has_modifications)
+		*has_modifications = FALSE;
+
+	if (model->priv->n_key_columns > 0) {
+		gint i;
+		for (i = 0; i < model->priv->n_key_columns; i++) {
+			if ((*values)->data) {
+				if (CLASS (model)->update_key_part) {
+					if (! CLASS (model)->update_key_part (model, key->data, key->size, i, 
+									      (const GValue *) (*values)->data, error))
+						return FALSE;
+					if (has_modifications)
+						*has_modifications = TRUE;
+				}
+				else {
+					g_set_error (error, 0, 0, _("Custom BDB model implementation is not complete: "
+								    "the 'update_key_part' method is missing"));
+					return FALSE;
+				}
+			}
+			(*values) = (*values)->next;
+		}
+	}
+	else {
+		if ((*values)->data) {
+			GValue *v = (GValue *) (*values)->data;
+			if (gda_value_is_null (v)) {
+				memset (&key, 0, sizeof key);
+				key->size = sizeof (int);
+			}
+			else if (gda_value_isa (v, GDA_TYPE_BINARY)) {
+				GdaBinary *bin;
+				bin = (GdaBinary *) gda_value_get_binary ((GValue *) (*values)->data);
+				
+				memset (&key, 0, sizeof key);
+				key->size = bin->binary_length;
+				key->data = bin->data;
+				if (has_modifications)
+					*has_modifications = TRUE;
+			}
+			else {
+				g_set_error (error, 0, 0,
+					     _("Expected GdaBinary value, got %s"), g_type_name (G_VALUE_TYPE (v)));
+				return FALSE;
+			}
+		}
+		(*values) = (*values)->next;
+	}
+
+	return TRUE;
+}
+
+static gboolean
+gda_data_model_bdb_set_values (GdaDataModel *model, gint row, GList *values, GError **error)
+{
+	GdaDataModelBdb *imodel;
+	DBT key, data;
+	int ret;
+	GList *ptr;
+	gboolean key_modified = FALSE;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_BDB (model), FALSE);
+        imodel = (GdaDataModelBdb *) model;
+        g_return_val_if_fail (imodel->priv, FALSE);
+	if (!values)
+		return TRUE;
+
+	/* set sursor at the correct position */
+	if (! move_cursor_at (imodel, row))
+		return FALSE;
+
+	/* fetch current values */
+	memset (&key, 0, sizeof key);
+        memset (&data, 0, sizeof data);
+	ret = imodel->priv->dbpc->c_get (imodel->priv->dbpc, &key, &data, DB_CURRENT);
+	if (ret) {
+		add_error (imodel, db_strerror (ret));
+		return FALSE;
+	}
+
+	/* update key value */
+	if (!alter_key_value (imodel, &key, &ptr, &key_modified, error))
+		return FALSE;
+
+	if (key_modified) {
+		g_set_error (error, 0, 0,
+			     _("Key modification is not supported"));
+		return FALSE;
+	}
+
+	/* update data value */
+	if (imodel->priv->n_data_columns > 0) {
+		gint i;
+		for (i = 0; i < imodel->priv->n_data_columns; i++) {
+			if (ptr->data) {
+				if (CLASS (model)->update_data_part) {
+					if (! CLASS (model)->update_data_part (imodel, data.data, data.size, i, 
+									      (const GValue *) ptr->data, error))
+						return FALSE;
+				}
+				else {
+					g_set_error (error, 0, 0, _("Custom BDB model implementation is not complete: "
+								    "the 'update_data_part' method is missing"));
+					return FALSE;
+				}
+			}
+			ptr = ptr->next;
+		}
+	}
+	else {
+		if (ptr->data) {
+			GValue *v = (GValue *) ptr->data;
+			if (gda_value_is_null (v)) {
+				memset (&data, 0, sizeof data);
+				data.size = sizeof (int);
+			}
+			else if (gda_value_isa (v, GDA_TYPE_BINARY)) {
+				GdaBinary *bin;
+				bin = (GdaBinary *) gda_value_get_binary ((GValue *) ptr->data);
+				
+				memset (&data, 0, sizeof data);
+				data.size = bin->binary_length;
+				data.data = bin->data;
+			}
+			else {
+				g_set_error (error, 0, 0,
+					     _("Expected GdaBinary value, got %s"), g_type_name (G_VALUE_TYPE (v)));
+				return FALSE;
+			}
+		}
+		ptr = ptr->next;
+	}
+
+	/* write back */
+	if (!key_modified) {
+		ret = imodel->priv->dbpc->c_put (imodel->priv->dbpc, &key, &data, DB_CURRENT);
+		if (ret) {
+			add_error (imodel, db_strerror (ret));
+			return FALSE;
+		}
+	}
+	else {
+		TO_IMPLEMENT;
+	}
+
+	return TRUE;
+}
+
+static gint
+gda_data_model_bdb_append_values (GdaDataModel *model, const GList *values, GError **error)
+{
+	gint row;
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_BDB (model), -1);
+
+	return -1;
+}
+
+static gint
+gda_data_model_bdb_append_row (GdaDataModel *model, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_BDB (model), -1);
+
+	GdaDataModelBdb *imodel;
+	DBT key, data;
+	int ret;
+	int def = 0;
+
+        imodel = GDA_DATA_MODEL_BDB (model);
+        g_return_val_if_fail (imodel->priv, -1);
+	
+	memset (&key, 0, sizeof (key));
+	key.size = sizeof (int);
+	key.data = &def;
+	memset (&data, 0, sizeof (data));
+	data.size = sizeof (int);
+	data.data = &def;
+
+	ret = imodel->priv->dbp->put (imodel->priv->dbp, NULL, &key, &data, 0);
+	if (ret) {
+		add_error (imodel, db_strerror (ret));
+		g_print ("ERR1\n");
+		return -1;
+	}
+
+	imodel->priv->cursor_pos = -1;
+	imodel->priv->n_rows ++;
+
+	return imodel->priv->n_rows - 1;
+}
+
+static gboolean
+gda_data_model_bdb_remove_row (GdaDataModel *model, gint row, GError **error)
+{
+	GdaDataModelBdb *imodel;
+	int ret;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_BDB (model), FALSE);
+        imodel = (GdaDataModelBdb *) model;
+        g_return_val_if_fail (imodel->priv, FALSE);
+
+	if (! move_cursor_at (imodel, row))
+		return FALSE;
+
+	ret = imodel->priv->dbpc->c_del (imodel->priv->dbpc, 0);
+	if (ret) {
+		add_error (imodel, db_strerror (ret));
+		return FALSE;
+	}
+
+	imodel->priv->cursor_pos = -1;
+	imodel->priv->n_rows --;
+
+	return TRUE;
 }

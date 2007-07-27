@@ -26,6 +26,7 @@ main (int argc, char **argv)
 	number_failed = prov_test_common_setup ();
 
 	if (cnc) {
+		number_failed += prov_test_check_table_schema (cnc, "data");
 		number_failed += prov_test_common_clean ();
 	}
 

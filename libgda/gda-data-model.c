@@ -580,7 +580,7 @@ gda_data_model_get_value_at_col_name (GdaDataModel *model,
  * @col: a valid column number
  * @row: a valid row number, or -1
  *
- * Get the attributes of the value stored at (row, col) in @proxy, which
+ * Get the attributes of the value stored at (row, col) in @model, which
  * is an ORed value of #GdaValueAttribute flags. As a special case, if
  * @row is -1, then the attributes returned correspond to a "would be" value
  * if a row was added to @model.

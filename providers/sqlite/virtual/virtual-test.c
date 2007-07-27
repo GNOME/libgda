@@ -16,7 +16,9 @@ main (int argc, char **argv)
 	gda_init ("SQlite virtual providers test", PACKAGE_VERSION, argc, argv);
 
 	provider = gda_vprovider_data_model_new ();
-	cnc = GDA_CONNECTION (gda_vprovider_data_model_open_connection (provider));
+	cnc = gda_server_provider_create_connection (NULL, GDA_SERVER_PROVIDER (provider), NULL, NULL, NULL, 0);
+	g_assert (GDA_IS_VCONNECTION_DATA_MODEL (cnc));
+	gda_connection_open (cnc, NULL);
 
 	g_print ("Connection status for %s: %s\n", G_OBJECT_TYPE_NAME (cnc), 
 		 gda_connection_is_opened (cnc) ? "Opened" : "Closed");
@@ -43,7 +45,7 @@ main (int argc, char **argv)
 	}
 	else
 		g_print ("Data model cannot go backwards => don't yet print its contents\n");
-	proxy = gda_data_proxy_new (xml_model);
+	proxy = (GdaDataModel *) gda_data_proxy_new (xml_model);
 	g_object_set (G_OBJECT (proxy), "defer-sync", FALSE, NULL);
 	
 	/* load CVS data */
@@ -137,6 +139,15 @@ main (int argc, char **argv)
 		goto theend;
 	if (! test_sql_select (cnc, "SELECT * from rwtable"))
 		goto theend;	
+
+	/* remove a table */
+	if (!gda_vconnection_data_model_remove (GDA_VCONNECTION_DATA_MODEL (cnc), proxy, &error)) {
+		g_print ("Remove Proxy model error: %s\n", error && error->message ? error->message : "no detail");
+		g_error_free (error);
+		error = NULL;
+		goto theend;
+	}
+	test_sql_select (cnc, "SELECT * from mytable");
 
  theend:
 	if (proxy)

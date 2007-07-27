@@ -194,6 +194,98 @@ gda_server_provider_get_info (GdaServerProvider *provider, GdaConnection *cnc)
 }
 
 /**
+ * gda_server_provider_create_connection
+ * @client: a #GdaClient object to which the returned connection will be attached
+ * @provider: a #GdaServerProvider object.
+ * @dsn: a DSN string.
+ * @params:
+ * @username: user name for logging in.
+ * @password: password for authentication.
+ * @options: options for the connection (see #GdaConnectionOptions).
+ *
+ * Requests that the @provider creates a new #GdaConnection connection object.
+ * See gda_client_open_connection() for more information
+ *
+ * Returns: a newly-allocated #GdaConnection object, or NULL
+ * if it fails.
+ */
+GdaConnection *
+gda_server_provider_create_connection (GdaClient *client, GdaServerProvider *provider, 
+				       const gchar *dsn,
+				       const gchar *username,
+				       const gchar *password,
+				       GdaConnectionOptions options)
+{
+	GdaConnection *cnc;
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+
+	if (CLASS (provider)->create_connection) {
+		cnc = CLASS (provider)->create_connection (provider);
+		if (cnc) {
+			g_object_set (G_OBJECT (cnc), "client", client, "provider_obj", provider, NULL);
+			if (dsn && *dsn)
+				g_object_set (G_OBJECT (cnc), "dsn", dsn, NULL);
+			g_object_set (G_OBJECT (cnc), 
+				      "username", username,
+				      "password", password,
+				      "options", options, NULL);
+		}
+	}
+	else 
+		cnc = gda_connection_new (client, provider, dsn, username, password, options);
+
+	return cnc;
+}
+
+/**
+ * gda_server_provider_create_connection_from_string
+ * @client: a #GdaClient object to which the returned connection will be attached
+ * @provider: a #GdaServerProvider object.
+ * @cnc_string: a connection string.
+ * @params:
+ * @username: user name for logging in.
+ * @password: password for authentication.
+ * @options: options for the connection (see #GdaConnectionOptions).
+ *
+ * Requests that the @provider creates a new #GdaConnection connection object.
+ * See gda_client_open_connection() for more information
+ *
+ * Returns: a newly-allocated #GdaConnection object, or NULL
+ * if it fails.
+ */
+GdaConnection *
+gda_server_provider_create_connection_from_string (GdaClient *client, GdaServerProvider *provider, 
+						   const gchar *cnc_string,
+						   const gchar *username,
+						   const gchar *password,
+						   GdaConnectionOptions options)
+{
+	GdaConnection *cnc;
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+
+	if (CLASS (provider)->create_connection) {
+		cnc = CLASS (provider)->create_connection (provider);
+		if (cnc) {
+			g_object_set (G_OBJECT (cnc), "client", client, "provider_obj", provider, NULL);
+			if (cnc_string && *cnc_string)
+				g_object_set (G_OBJECT (cnc), "cnc_string", cnc_string, NULL);
+			g_object_set (G_OBJECT (cnc), 
+				      "username", username,
+				      "password", password,
+				      "options", options, NULL);
+		}
+	}
+	else 
+		cnc = (GdaConnection *) g_object_new (GDA_TYPE_CONNECTION, "client", client, "provider_obj", provider,
+						      "cnc-string", cnc_string,
+						      "username", username,
+						      "password", password,
+						      "options", options, NULL);
+
+	return cnc;
+}
+
+/**
  * gda_server_provider_open_connection
  * @provider: a #GdaServerProvider object.
  * @cnc: a #GdaConnection object.
@@ -204,8 +296,7 @@ gda_server_provider_get_info (GdaServerProvider *provider, GdaConnection *cnc)
  * Tries to open a new connection on the given #GdaServerProvider
  * object.
  *
- * Returns: a newly-allocated #GdaServerConnection object, or NULL
- * if it fails.
+ * Returns: TRUE if no error occurred
  */
 gboolean
 gda_server_provider_open_connection (GdaServerProvider *provider,

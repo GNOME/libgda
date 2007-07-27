@@ -3,6 +3,7 @@ provider_LTLIBRARIES = libgda-bdb.la
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
+	-I$(top_srcdir)/providers/sqlite \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
 	$(BDB_CFLAGS)
@@ -10,23 +11,21 @@ AM_CPPFLAGS = \
 libgda_bdb_la_SOURCES = \
 	gda-bdb-provider.c \
 	gda-bdb-provider.h \
-	gda-bdb-recordset.c \
-	gda-bdb-recordset.h \
 	gda-bdb.h \
-	utils.c \
 	libmain.c
 libgda_bdb_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_bdb_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-3.0.la \
-	$(LIBGDA_LIBS) \
-	$(BDB_LIBS)
+	$(top_builddir)/providers/sqlite/virtual/libgda-virtual-3.0.la \
+	$(LIBGDA_LIBS) 
 
-#bin_PROGRAMS = gda-bdb-test
-#gda_bdb_test_SOURCES = gda-bdb-test.c
-#gda_bdb_test_LDADD = \
-#	$(LIBGDA_LIBS) \
-#	$(top_builddir)/libgda/libgda-3.0.la \
-#	$(BDB_LIBS)
+bin_PROGRAMS = gda-bdb-test
+noinst_PROGRAMS = gda-bdb-test
+
+gda_bdb_test_SOURCES = gda-bdb-test.c
+gda_bdb_test_LDADD = \
+	$(LIBGDA_LIBS) \
+	$(top_builddir)/libgda/libgda-3.0.la 
 
 xmldir   = $(datadir)/libgda-3.0
 xml_in_files = bdb_specs_dsn.xml.in

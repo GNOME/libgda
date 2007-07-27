@@ -50,6 +50,28 @@ main (int argc, char *argv [])
 		exit (1);
 	}
 	else {
+		{
+			/* EXTRA tests */
+			gda_data_model_dump (model, stdout);
+			if (!gda_data_model_remove_row (model, i, &error)) {
+				g_print ("Could not remove row: %s\n", 
+					 error && error->message ? error->message : "no detail");
+				exit (1);
+			}
+			gda_data_model_dump (model, stdout);
+
+			gchar *str = "AAA";
+			GValue *value = gda_value_new_binary (str, 4);
+			if (!gda_data_model_set_value_at (model, 1, 2, value, &error)) {
+				g_print ("Could not set value: %s\n", 
+					 error && error->message ? error->message : "no detail");
+				exit (1);
+			}
+			gda_data_model_dump (model, stdout);
+
+			exit (0);
+		}
+
 		GValue *value;
 		GdaBinary bin;
 		Key m_key;

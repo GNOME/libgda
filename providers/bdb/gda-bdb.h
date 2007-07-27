@@ -31,7 +31,6 @@
 #include <db.h>
 
 #include "gda-bdb-provider.h"
-#include "gda-bdb-recordset.h"
 
 #define GDA_BDB_PROVIDER_ID          "GDA Berkeley DB provider"
 

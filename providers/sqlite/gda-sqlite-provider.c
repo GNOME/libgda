@@ -158,6 +158,7 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 	provider_class->string_to_value = NULL;
 	provider_class->get_def_dbms_type = gda_sqlite_provider_get_default_dbms_type;
 
+	provider_class->create_connection = NULL;
 	provider_class->open_connection = gda_sqlite_provider_open_connection;
 	provider_class->close_connection = gda_sqlite_provider_close_connection;
 	provider_class->get_database = gda_sqlite_provider_get_database;

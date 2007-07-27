@@ -1126,6 +1126,7 @@ gda_ibmdb2_provider_class_init (GdaIBMDB2ProviderClass *klass)
 	provider_class->string_to_value = NULL;
 	provider_class->get_def_dbms_type = NULL;
 
+	provider_class->create_connection = NULL;
 	provider_class->open_connection = gda_ibmdb2_provider_open_connection;
 	provider_class->close_connection = gda_ibmdb2_provider_close_connection;
 	provider_class->get_database = gda_ibmdb2_provider_get_database;

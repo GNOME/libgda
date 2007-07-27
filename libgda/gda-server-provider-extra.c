@@ -1125,18 +1125,26 @@ gda_server_provider_load_file_contents (const gchar *inst_dir, const gchar *data
 
 	file = g_build_filename (inst_dir, filename, NULL);
 
-	if (!g_file_get_contents (file, &contents, NULL, NULL)) {
-		/* look in @data_dir */
-		g_free (file);
-		file = g_build_filename (inst_dir, "..", filename, NULL);
-		if (!g_file_get_contents (file, &contents, NULL, NULL) && data_dir) {
-			/* look in the parent dir, to handle the case where the lib is in a .libs dir */
-			g_free (file);
-			file = g_build_filename (data_dir, filename, NULL);
-			g_file_get_contents (file, &contents, NULL, NULL);
-		}
-	}
-	g_free (file);
+	if (g_file_get_contents (file, &contents, NULL, NULL))
+		goto theend;
 
+	g_free (file);
+	file = g_build_filename (inst_dir, "..", filename, NULL);
+	if (g_file_get_contents (file, &contents, NULL, NULL))
+		goto theend;
+
+	g_free (file);
+	file = g_build_filename (data_dir, filename, NULL);
+	if (g_file_get_contents (file, &contents, NULL, NULL))
+		goto theend;
+	
+	g_free (file);
+	file = g_build_filename (inst_dir, "..", "..", "..", "share", "libgda-3.0", filename, NULL);
+	if (g_file_get_contents (file, &contents, NULL, NULL))
+		goto theend;
+	contents = NULL;
+
+ theend:
+	g_free (file);
 	return contents;
 }

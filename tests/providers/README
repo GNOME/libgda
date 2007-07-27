@@ -42,6 +42,7 @@ Here are some examples of the environment variables for the various providers:
 MYSQL_DBCREATE_PARAMS "HOST=localhost"
 POSTGRESQL_DBCREATE_PARAMS "HOST=localhost;PORT=5432"
 SQLITE_DBCREATE_PARAMS "DB_DIR=/home/me/libgda/tests/providers"
+BERKELEY_DB_CNC_PARAMS "FILE=gda_check_bdb.db"
 
 The MDB provider does not allow database creation, so use the gda_check_db.mdb file in this directory
 MS_ACCESS_CNC_PARAMS "DB_DIR=/home/me/libgda/tests/providers;DB_NAME=gda_check_db"

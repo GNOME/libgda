@@ -58,6 +58,16 @@ static void gda_vprovider_data_model_get_property (GObject *object,
 					       GParamSpec *pspec);
 static GObjectClass  *parent_class = NULL;
 
+static GdaConnection *gda_vprovider_data_model_create_connection (GdaServerProvider *provider);
+static gboolean       gda_vprovider_data_model_open_connection (GdaServerProvider *provider,
+								GdaConnection *cnc,
+								GdaQuarkList *params,
+								const gchar *username,
+								const gchar *password);
+static gboolean       gda_vprovider_data_model_close_connection (GdaServerProvider *provider,
+								 GdaConnection *cnc);
+
+
 /*
  * GdaVproviderDataModel class implementation
  */
@@ -65,10 +75,14 @@ static void
 gda_vprovider_data_model_class_init (GdaVproviderDataModelClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	GdaServerProviderClass *server_class = GDA_SERVER_PROVIDER_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_vprovider_data_model_finalize;
+	server_class->create_connection = gda_vprovider_data_model_create_connection;
+	server_class->open_connection = gda_vprovider_data_model_open_connection;
+	server_class->close_connection = gda_vprovider_data_model_close_connection;
 
 	/* Properties */
         object_class->set_property = gda_vprovider_data_model_set_property;
@@ -191,8 +205,6 @@ static int virtualBegin (sqlite3_vtab *tab);
 static int virtualSync (sqlite3_vtab *tab);
 static int virtualCommit (sqlite3_vtab *tab);
 static int virtualRollback (sqlite3_vtab *tab);
-static int virtualFindFunction (sqlite3_vtab *vtab, int nArg, const char *zFuncName, 
-				void (**pxFunc)(sqlite3_context*,int,sqlite3_value**), void **ppArg);
 
 static sqlite3_module Module = {
 	0,                         /* iVersion */
@@ -216,39 +228,79 @@ static sqlite3_module Module = {
 	NULL,                         /* xFindFunction - function overloading */
 };
 
-/**
- * gda_vprovider_data_model_open_connection
- *
- * Creates a new GdaConnection object
- *
- * Returns: a new #GdaVconnectionDataModel object which is itself a #GdaConnection
- */
-GdaConnection *
-gda_vprovider_data_model_open_connection (GdaVproviderDataModel *prov)
+static GdaConnection *
+gda_vprovider_data_model_create_connection (GdaServerProvider *provider)
 {
 	GdaConnection *cnc;
-	GdaQuarkList *params;
-	g_return_val_if_fail (GDA_IS_VPROVIDER_DATA_MODEL (prov), NULL);
+	g_return_val_if_fail (GDA_IS_VPROVIDER_DATA_MODEL (provider), NULL);
 
-	cnc = g_object_new (GDA_TYPE_VCONNECTION_DATA_MODEL, "provider-obj", prov, NULL);
-	params = gda_quark_list_new_from_string ("_IS_VIRTUAL=TRUE");
-	if (gda_server_provider_open_connection (GDA_SERVER_PROVIDER (prov), cnc, params,
-						 NULL, NULL)) 
-		gda_connection_force_status (cnc, TRUE);
-	gda_quark_list_free (params);
+	cnc = g_object_new (GDA_TYPE_VCONNECTION_DATA_MODEL, "provider-obj", provider, NULL);
+
+	return cnc;
+}
+
+static gboolean
+gda_vprovider_data_model_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
+					  GdaQuarkList *params,
+					  const gchar *username,
+					  const gchar *password)
+{
+	GdaQuarkList *m_params;
+
+	g_return_val_if_fail (GDA_IS_VPROVIDER_DATA_MODEL (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_VCONNECTION_DATA_MODEL (cnc), FALSE);
+
+	if (params) {
+		m_params = gda_quark_list_copy (params);
+		gda_quark_list_add_from_string (m_params, "_IS_VIRTUAL=TRUE", TRUE);
+	}
+	else
+		params = gda_quark_list_new_from_string ("_IS_VIRTUAL=TRUE");
+
+	if (! GDA_SERVER_PROVIDER_CLASS (parent_class)->open_connection (GDA_SERVER_PROVIDER (provider), cnc, m_params,
+									 NULL, NULL)) {
+		gda_quark_list_free (m_params);
+		return FALSE;
+	}
+	gda_quark_list_free (m_params);
 
 	SQLITEcnc *scnc;
 	scnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE);
 	if (!scnc) {
 		gda_connection_add_event_string (cnc, _("Invalid SQLite handle"));
-		g_object_unref (cnc);
+		gda_connection_close_no_warning (cnc);
+
 		return FALSE;
 	}
 
-	sqlite3_create_module (scnc->connection, G_OBJECT_TYPE_NAME (prov), &Module, cnc);
+	sqlite3_create_module (scnc->connection, G_OBJECT_TYPE_NAME (provider), &Module, cnc);
 
-	return cnc;
+	return TRUE;
 }
+
+static void
+cnc_close_foreach_func (GdaDataModel *model, const gchar *table_name, GdaVconnectionDataModel *cnc)
+{
+	/*g_print ("---- FOREACH: Removing virtual table '%s'\n", table_name);*/
+	if (! gda_vconnection_data_model_remove (cnc, model, NULL))
+		g_warning ("Internal GdaVproviderDataModel error");
+}
+
+static gboolean
+gda_vprovider_data_model_close_connection (GdaServerProvider *provider, GdaConnection *cnc)
+{
+	g_return_val_if_fail (GDA_IS_VPROVIDER_DATA_MODEL (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_VCONNECTION_DATA_MODEL (cnc), FALSE);
+
+	gda_vconnection_data_model_foreach (GDA_VCONNECTION_DATA_MODEL (cnc),
+					    (GdaVConnectionDataModelFunc) cnc_close_foreach_func, cnc);
+
+	if (! GDA_SERVER_PROVIDER_CLASS (parent_class)->close_connection (GDA_SERVER_PROVIDER (provider), cnc))
+		return FALSE;
+	else
+		return TRUE;
+}
+
 
 /* module implementation */
 #define TRACE() g_print ("== %s()\n", __FUNCTION__)
@@ -562,7 +614,7 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 	else if ((nData==1) && (sqlite3_value_type (apData[0])==SQLITE_INTEGER)) {
 		/* DELETE */
 		gint rowid = sqlite3_value_int (apData [0]);
-		return gda_data_model_remove_row (table->proxy, rowid, NULL) ? SQLITE_OK : SQLITE_READONLY;
+		return gda_data_model_remove_row (GDA_DATA_MODEL (table->proxy), rowid, NULL) ? SQLITE_OK : SQLITE_READONLY;
 	}
 	else if ((nData>2) && (sqlite3_value_type (apData[0])==SQLITE_NULL)) {
 		/* INSERT */

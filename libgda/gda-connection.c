@@ -312,12 +312,12 @@ gda_connection_set_property (GObject *object,
         if (cnc->priv) {
                 switch (param_id) {
                 case PROP_CLIENT:
-                        if(cnc->priv->client)
-                          g_object_unref(cnc->priv->client);
+                        if (cnc->priv->client)
+				g_object_unref(cnc->priv->client);
 
 			cnc->priv->client = g_value_get_object (value);
-                        g_object_ref(cnc->priv->client);
-
+			if (cnc->priv->client)
+				g_object_ref (cnc->priv->client);
 			break;
                 case PROP_DSN:
 			gda_connection_set_dsn (cnc, g_value_get_string (value));
@@ -330,7 +330,7 @@ gda_connection_set_property (GObject *object,
                         break;
                 case PROP_PROVIDER_OBJ:
                         if (cnc->priv->provider_obj)
-                          g_object_unref(cnc->priv->provider_obj);
+				g_object_unref(cnc->priv->provider_obj);
 
 			cnc->priv->provider_obj = g_value_get_object (value);
 			g_object_ref (G_OBJECT (cnc->priv->provider_obj));

@@ -196,7 +196,9 @@ struct _GdaServerProviderClass {
 	gpointer                   reserved2; /* ping_or_reconnect() ? */
 	gpointer                   reserved3; /* execute () ? */
 	gpointer                   reserved4;
-	gpointer                   reserved5;
+	/* extended from 3.0 */
+
+	GdaConnection          *(* create_connection)  (GdaServerProvider *provider);
 };
 
 GType                  gda_server_provider_get_type (void) G_GNUC_CONST;
@@ -239,6 +241,16 @@ gchar                 *gda_server_provider_unescape_string       (GdaServerProvi
 								  GdaConnection *cnc, const gchar *str);
 
 /* connections management */
+GdaConnection         *gda_server_provider_create_connection (GdaClient *client, GdaServerProvider *provider, 
+							      const gchar *dsn,
+							      const gchar *username,
+							      const gchar *password,
+							      GdaConnectionOptions options);
+GdaConnection         *gda_server_provider_create_connection_from_string (GdaClient *client, GdaServerProvider *provider, 
+									  const gchar *cnc_string,
+									  const gchar *username,
+									  const gchar *password,
+									  GdaConnectionOptions options);
 gboolean               gda_server_provider_open_connection  (GdaServerProvider *provider,
 							     GdaConnection *cnc,
 							     GdaQuarkList *params,

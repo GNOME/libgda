@@ -23,7 +23,7 @@
 #ifndef __GDA_VPROVIDER_DATA_MODEL_H__
 #define __GDA_VPROVIDER_DATA_MODEL_H__
 
-#include <gda-virtual-provider.h>
+#include <virtual/gda-virtual-provider.h>
 
 #define GDA_TYPE_VPROVIDER_DATA_MODEL            (gda_vprovider_data_model_get_type())
 #define GDA_VPROVIDER_DATA_MODEL(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_VPROVIDER_DATA_MODEL, GdaVproviderDataModel))
@@ -48,7 +48,6 @@ struct _GdaVproviderDataModelClass {
 
 GType               gda_vprovider_data_model_get_type (void) G_GNUC_CONST;
 GdaVirtualProvider *gda_vprovider_data_model_new      (void);
-GdaConnection      *gda_vprovider_data_model_open_connection (GdaVproviderDataModel *prov);
 
 G_END_DECLS
 

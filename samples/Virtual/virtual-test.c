@@ -16,8 +16,8 @@ main (int argc, char **argv)
 	gda_init ("SQlite virtual test", "1.0", argc, argv);
 
 	provider = gda_vprovider_data_model_new ();
-	cnc = GDA_CONNECTION (gda_vprovider_data_model_open_connection (GDA_VPROVIDER_DATA_MODEL (provider)));
-	g_assert (gda_connection_is_opened (cnc));
+	cnc = gda_server_provider_create_connection (NULL, GDA_SERVER_PROVIDER (provider), NULL, NULL, NULL, 0);
+	g_assert (gda_connection_open (cnc, NULL));
 
 	/* create RW data model to store results */
 	rw_model = gda_data_model_array_new_with_g_types (2, G_TYPE_STRING, G_TYPE_INT);

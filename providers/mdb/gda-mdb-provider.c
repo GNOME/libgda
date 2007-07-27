@@ -118,6 +118,7 @@ gda_mdb_provider_class_init (GdaMdbProviderClass *klass)
 	provider_class->string_to_value = NULL;
 	provider_class->get_def_dbms_type = NULL;
 
+	provider_class->create_connection = NULL;
 	provider_class->open_connection = gda_mdb_provider_open_connection;
 	provider_class->close_connection = gda_mdb_provider_close_connection;
 	provider_class->get_database = gda_mdb_provider_get_database;

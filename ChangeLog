@@ -1,3 +1,29 @@
+2007-07-27  Vivien Malerba <malerba@gnome-db.org>
+
+	* tests/providers/check_bdb.c:
+	* tests/providers/FIELDS_SCHEMA_Berkeley-DB_data.xml:
+	* tests/providers/gda_check_bdb.db:
+	* tests/providers/README: improved BDB test
+	* libgda/gda-server-provider.[ch]:
+	* providers/*/gda-*-provider.c: added a create_connection() virtual method
+	* samples/Virtual/virtual-test.c: 
+	* tests/data-models/check_virtual.c: follow API changes
+	* libgda/gda-client.c:
+	* libgda/gda-server-provider-extra.c: bug fixed
+	* providers/bdb/Makefile.am: 
+	* providers/bdb/gda-bdb-provider.[ch]: reworked the BDB provider to use
+	virtual connections and the GdaDataModelBdb data model object.
+	* providers/bdb/utils.c:
+	* providers/bdb/gda-bdb-recordset.[ch]: removed unused files
+
+	* providers/sqlite/virtual/virtual-test.c: follow API changes
+	* providers/sqlite/virtual/Makefile.am: 
+	* providers/sqlite/virtual/gda-vprovider-data-model.[ch]: 
+	* providers/sqlite/virtual/gda-vconnection-data-model.[ch]: misc improvements
+	* samples/BDB/access-raw.c:
+	* libgda/gda-data-model-bdb.[ch]: implemented write operation
+	* libgda/gda-data-model.c: doc. correction
+	
 2007-07-17  Vivien Malerba <malerba@gnome-db.org>
 
 	* tests/data-models/check_virtual.c:

@@ -197,6 +197,7 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	provider_class->escape_string = gda_postgres_provider_escape_string;
 	provider_class->unescape_string = gda_postgres_provider_unescape_string;
 
+	provider_class->create_connection = NULL;
 	provider_class->open_connection = gda_postgres_provider_open_connection;
 	provider_class->close_connection = gda_postgres_provider_close_connection;
 	provider_class->get_database = gda_postgres_provider_get_database;

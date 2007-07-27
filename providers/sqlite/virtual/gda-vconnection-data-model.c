@@ -29,8 +29,13 @@
 
 #define PARENT_TYPE GDA_TYPE_VIRTUAL_CONNECTION
 
+typedef struct {
+	GdaDataModel *model;
+	gchar        *table_name;
+} TableModel;
+
 struct _GdaVconnectionDataModelPrivate {
-	GSList *data_models;
+	GSList *table_models; /* list of TableModel structures */
 };
 
 /* properties */
@@ -40,7 +45,7 @@ enum
 };
 
 static void gda_vconnection_data_model_class_init (GdaVconnectionDataModelClass *klass);
-static void gda_vconnection_data_model_init       (GdaVconnectionDataModel *prov, GdaVconnectionDataModelClass *klass);
+static void gda_vconnection_data_model_init       (GdaVconnectionDataModel *cnc, GdaVconnectionDataModelClass *klass);
 static void gda_vconnection_data_model_dispose   (GObject *object);
 static void gda_vconnection_data_model_set_property (GObject *object,
 					       guint param_id,
@@ -51,6 +56,9 @@ static void gda_vconnection_data_model_get_property (GObject *object,
 					       GValue *value,
 					       GParamSpec *pspec);
 static GObjectClass  *parent_class = NULL;
+
+static TableModel *get_table_model_by_name (GdaVconnectionDataModel *cnc, const gchar *table_name);
+static TableModel *get_table_model_by_model (GdaVconnectionDataModel *cnc, GdaDataModel *model);
 
 /*
  * GdaVconnectionDataModel class implementation
@@ -70,28 +78,28 @@ gda_vconnection_data_model_class_init (GdaVconnectionDataModelClass *klass)
 }
 
 static void
-gda_vconnection_data_model_init (GdaVconnectionDataModel *prov, GdaVconnectionDataModelClass *klass)
+gda_vconnection_data_model_init (GdaVconnectionDataModel *cnc, GdaVconnectionDataModelClass *klass)
 {
-	prov->priv = g_new (GdaVconnectionDataModelPrivate, 1);
-	prov->priv->data_models = NULL;
+	cnc->priv = g_new (GdaVconnectionDataModelPrivate, 1);
+	cnc->priv->table_models = NULL;
+
+	g_object_set (G_OBJECT (cnc), "cnc_string", "_IS_VIRTUAL=TRUE", NULL);
 }
 
 static void
 gda_vconnection_data_model_dispose (GObject *object)
 {
-	GdaVconnectionDataModel *prov = (GdaVconnectionDataModel *) object;
+	GdaVconnectionDataModel *cnc = (GdaVconnectionDataModel *) object;
 
-	g_return_if_fail (GDA_IS_VCONNECTION_DATA_MODEL (prov));
+	g_return_if_fail (GDA_IS_VCONNECTION_DATA_MODEL (cnc));
 
 	/* free memory */
-	if (prov->priv) {
-		GSList *list;
-		for (list = prov->priv->data_models; list; list = list->next) 
-			g_object_unref (list->data);
-		g_slist_free (prov->priv->data_models);
+	if (cnc->priv) {
+		gda_connection_close_no_warning ((GdaConnection *) cnc);
+		g_assert (!cnc->priv->table_models);
 
-		g_free (prov->priv);
-		prov->priv = NULL;
+		g_free (cnc->priv);
+		cnc->priv = NULL;
 	}
 
 	/* chain to parent class */
@@ -177,26 +185,30 @@ gda_vconnection_data_model_add (GdaVconnectionDataModel *cnc,
 
 	scnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE);
 	if (!scnc) {
-		gda_connection_add_event_string (cnc, _("Invalid SQLite handle"));
+		gda_connection_add_event_string ((GdaConnection *) cnc, _("Invalid SQLite handle"));
 		return FALSE;
 	}
 
-	prov = gda_connection_get_provider_obj (GDA_CONNECTION (cnc));
+	prov = (GdaVirtualProvider *) gda_connection_get_provider_obj (GDA_CONNECTION (cnc));
 	cnc->adding = model;
 	str = g_strdup_printf ("CREATE VIRTUAL TABLE %s USING %s ()", table_name, G_OBJECT_TYPE_NAME (prov));
 	rc = sqlite3_exec (scnc->connection, str, NULL, 0, &zErrMsg);
 	cnc->adding = NULL;
 	g_free (str);
 	if (rc != SQLITE_OK) {
-		g_set_error (error, 0, 0,
-			     g_strdup (zErrMsg));
+		g_set_error (error, 0, 0, g_strdup (zErrMsg));
 		sqlite3_free (zErrMsg);
 		retval = FALSE;
 	}
 	else {
 		/* all ok => keep a reference on @model */
-		cnc->priv->data_models = g_slist_prepend (cnc->priv->data_models, model);
+		TableModel *tm;
+
+		tm = g_new (TableModel, 1);
+		tm->model = model;
 		g_object_ref (model);
+		tm->table_name = g_strdup (table_name);
+		cnc->priv->table_models = g_slist_append (cnc->priv->table_models, tm);
 	}
 
 	return retval;
@@ -208,6 +220,112 @@ gda_vconnection_data_model_add (GdaVconnectionDataModel *cnc,
 gboolean
 gda_vconnection_data_model_remove (GdaVconnectionDataModel *cnc, GdaDataModel *model, GError **error)
 {
-	TO_IMPLEMENT;
-	return FALSE;
+	TableModel *tm;
+
+	GdaVirtualProvider *prov;
+	gchar *str;
+	int rc;
+	char *zErrMsg = NULL;
+	gboolean retval = TRUE;
+	SQLITEcnc *scnc;
+
+	g_return_val_if_fail (GDA_IS_VCONNECTION_DATA_MODEL (cnc), FALSE);
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+
+	scnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE);
+	if (!scnc) {
+		gda_connection_add_event_string ((GdaConnection *) cnc, _("Invalid SQLite handle"));
+		return FALSE;
+	}
+
+	tm = get_table_model_by_model (cnc, model);
+	if (!tm) {
+		g_set_error (error, 0, 0,
+			     _("Data model to remove does not represent a table"));
+		return FALSE;
+	}
+
+	prov = (GdaVirtualProvider *) gda_connection_get_provider_obj (GDA_CONNECTION (cnc));
+	str = g_strdup_printf ("DROP TABLE %s", tm->table_name);
+	rc = sqlite3_exec (scnc->connection, str, NULL, 0, &zErrMsg);
+	g_free (str);
+	if (rc != SQLITE_OK) {
+		g_set_error (error, 0, 0, g_strdup (zErrMsg));
+		sqlite3_free (zErrMsg);
+		return FALSE;
+	}
+	else {
+		/* clean the cnc->priv->table_models list */
+		cnc->priv->table_models = g_slist_remove (cnc->priv->table_models, tm);
+		g_object_unref (tm->model);
+		g_free (tm->table_name);
+		g_free (tm);
+		return TRUE;
+	}
+
+	return retval;
+}
+
+static TableModel *
+get_table_model_by_name (GdaVconnectionDataModel *cnc, const gchar *table_name)
+{
+	GSList *list;
+	for (list = cnc->priv->table_models; list; list = list->next) {
+		if (!strcmp (((TableModel*) list->data)->table_name, table_name))
+			return (TableModel*) list->data;
+	}
+	return NULL;
+}
+
+static TableModel *
+get_table_model_by_model (GdaVconnectionDataModel *cnc, GdaDataModel *model)
+{
+	GSList *list;
+	for (list = cnc->priv->table_models; list; list = list->next) {
+		if (((TableModel*) list->data)->model == model)
+			return (TableModel*) list->data;
+	}
+	return NULL;
+}
+
+/**
+ * gda_vconnection_data_model_get_model
+ */
+GdaDataModel *
+gda_vconnection_data_model_get_model (GdaVconnectionDataModel *cnc, const gchar *table_name)
+{
+	TableModel *tm;
+	g_return_val_if_fail (GDA_IS_VCONNECTION_DATA_MODEL (cnc), NULL);
+	g_return_val_if_fail (cnc->priv, NULL);
+	if (!table_name || !(*table_name))
+		return NULL;
+
+	tm = get_table_model_by_name (cnc, table_name);
+	if (tm)
+		return tm->model;
+	else
+		return NULL;
+}
+
+/**
+ * gda_vconnection_data_model_foreach
+ */
+void
+gda_vconnection_data_model_foreach (GdaVconnectionDataModel *cnc, 
+				    GdaVConnectionDataModelFunc func, gpointer data)
+{
+	GSList *list, *next;
+	g_return_if_fail (GDA_IS_VCONNECTION_DATA_MODEL (cnc));
+	g_return_if_fail (cnc->priv);
+
+	if (!func)
+		return;
+
+	list = cnc->priv->table_models;
+	while (list) {
+		TableModel *tm = (TableModel*) list->data;
+		next = list->next;
+		func (tm->model, tm->table_name, data);
+		list = next;
+	}
 }

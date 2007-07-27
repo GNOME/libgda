@@ -37,6 +37,8 @@ typedef struct _GdaVconnectionDataModel      GdaVconnectionDataModel;
 typedef struct _GdaVconnectionDataModelClass GdaVconnectionDataModelClass;
 typedef struct _GdaVconnectionDataModelPrivate GdaVconnectionDataModelPrivate;
 
+typedef void (*GdaVConnectionDataModelFunc) (GdaDataModel *model, const gchar *table_name, gpointer data);
+
 struct _GdaVconnectionDataModel {
 	GdaVirtualConnection            connection;
 	GdaVconnectionDataModelPrivate *priv;
@@ -52,6 +54,9 @@ GType               gda_vconnection_data_model_get_type (void) G_GNUC_CONST;
 gboolean            gda_vconnection_data_model_add       (GdaVconnectionDataModel *cnc, 
 							  GdaDataModel *model, const gchar *table_name, GError **error);
 gboolean            gda_vconnection_data_model_remove    (GdaVconnectionDataModel *cnc, GdaDataModel *model, GError **error);
+GdaDataModel       *gda_vconnection_data_model_get_model (GdaVconnectionDataModel *cnc, const gchar *table_name);
+void                gda_vconnection_data_model_foreach   (GdaVconnectionDataModel *cnc, 
+							  GdaVConnectionDataModelFunc func, gpointer data);
 
 G_END_DECLS
 
