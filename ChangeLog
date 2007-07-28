@@ -1,3 +1,13 @@
+2007-07-28  Murray Cumming  <murrayc@murrayc.com>
+
+	* configure.in: Add AC_SUBST(INTLTOOL_XML_RULE) which 
+	seems to fix the svn build by generating the provider 
+	.xml files from the .xml.in files.
+	* providers/sqlite/virtual/Makefile.am: Correct the library 
+	name to fix the build.
+	* testing/gda-test-blob.c: Replace a define with a const 
+	gchar* to avoid a warning about a redefined macro.
+
 2007-07-27  Vivien Malerba <malerba@gnome-db.org>
 
 	* tests/providers/check_bdb.c:

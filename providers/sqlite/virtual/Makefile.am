@@ -42,7 +42,7 @@ libgda_virtual_3_0_la_LIBADD = \
 	$(LIBGDA_LIBS)
 
 virtual_test_SOURCES = virtual-test.c
-virtual_test_DEPENDENCIES = libgda-virtual.la
+virtual_test_DEPENDENCIES = libgda-virtual-3.0.la
 virtual_test_LDADD = \
 	$(top_builddir)/libgda/libgda-3.0.la \
 	$(top_builddir)/providers/sqlite/virtual/libgda-virtual-3.0.la

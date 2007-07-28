@@ -249,7 +249,7 @@ update_blob (GdaDict *dict, gint id, const gchar *data, glong binary_length, GEr
 	GValue *value;
 	gchar *str;
 	gboolean retval;
-	#define SQL_UPDATE "UPDATE blobs set name = ##/*name:'name' type:gchararray*/, data = ##/*name:'theblob' type:'GdaBlob'*/ WHERE id= ##/*name:'id' type:gint*/"
+	const gchar* SQL_UPDATE = "UPDATE blobs set name = ##/*name:'name' type:gchararray*/, data = ##/*name:'theblob' type:'GdaBlob'*/ WHERE id= ##/*name:'id' type:gint*/";
 
 	show_header ("Update a blob");
 	query = gda_query_new_from_sql (dict, SQL_UPDATE, NULL);
@@ -292,7 +292,7 @@ update_multiple_blobs (GdaDict *dict, const gchar *data, glong binary_length, GE
 	GValue *value;
 	gchar *str;
 	gboolean retval;
-	#define SQL_UPDATE "UPDATE blobs set name = ##/*name:'name' type:gchararray*/, data = ##/*name:'theblob' type:'GdaBlob'*/"
+	const gchar* SQL_UPDATE = "UPDATE blobs set name = ##/*name:'name' type:gchararray*/, data = ##/*name:'theblob' type:'GdaBlob'*/";
 
 	show_header ("Update several blobs at once");
 	query = gda_query_new_from_sql (dict, SQL_UPDATE, NULL);
