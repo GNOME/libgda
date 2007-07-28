@@ -109,12 +109,10 @@ gda_entity_field_get_dict_type (GdaEntityField *iface)
 void
 gda_entity_field_set_dict_type (GdaEntityField *iface, GdaDictType *type)
 {
-	g_return_val_if_fail (iface && GDA_IS_ENTITY_FIELD (iface), NULL);
+	g_return_if_fail (iface && GDA_IS_ENTITY_FIELD (iface));
 
 	if (GDA_ENTITY_FIELD_GET_IFACE (iface)->set_dict_type)
-		return (GDA_ENTITY_FIELD_GET_IFACE (iface)->set_dict_type) (iface, type);
-	
-	return NULL;
+		(GDA_ENTITY_FIELD_GET_IFACE (iface)->set_dict_type) (iface, type);
 }
 
 /**

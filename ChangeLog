@@ -1,3 +1,9 @@
+2007-07-28  Murray Cumming <murrayc@murrayc.com>
+
+	* libgda/gda-entity-field.c: 
+	gda_entity_field_set_dict_typ(): Do not return values 
+	from this void function, to avoid compiler warnings. 
+
 2007-07-28  Murray Cumming  <murrayc@murrayc.com>
 
 	* configure.in: Add AC_SUBST(INTLTOOL_XML_RULE) which 
