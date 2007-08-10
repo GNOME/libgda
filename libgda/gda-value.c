@@ -1806,9 +1806,13 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 	else if (type == GDA_TYPE_BLOB) {
 		const GdaBlob *blob1 = gda_value_get_blob (value1);
 		const GdaBlob *blob2 = gda_value_get_blob (value2);
-		if (blob1 && blob2 && (((GdaBinary *)blob1)->binary_length == ((GdaBinary *)blob2)->binary_length))
-			return memcmp (((GdaBinary *)blob1)->data, ((GdaBinary *)blob2)->data, 
-				       ((GdaBinary *)blob1)->binary_length) ;
+		if (blob1 && blob2 && (((GdaBinary *)blob1)->binary_length == ((GdaBinary *)blob2)->binary_length)) {
+			if (blob1->op == blob2->op)
+				return memcmp (((GdaBinary *)blob1)->data, ((GdaBinary *)blob2)->data, 
+					       ((GdaBinary *)blob1)->binary_length);
+			else
+				return -1;
+		}
 		else
 			return -1;
 	}

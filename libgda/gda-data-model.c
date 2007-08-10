@@ -2149,10 +2149,16 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 					attrs = gda_data_model_get_attributes_at (model, i, j);
 					str = g_strdup_printf ("%u", attrs);
 				}
-				cols_str [i] = g_strsplit (str, "\n", -1);
-				g_free (str);
-				cols_height [i] = g_strv_length (cols_str [i]);
-				kmax = MAX (kmax, cols_height [i]);
+				if (str) {
+					cols_str [i] = g_strsplit (str, "\n", -1);
+					g_free (str);
+					cols_height [i] = g_strv_length (cols_str [i]);
+					kmax = MAX (kmax, cols_height [i]);
+				}
+				else {
+					cols_str [i] = NULL;
+					cols_height [i] = 0;
+				}
 			}
 
 			for (k = 0; k < kmax; k++) {

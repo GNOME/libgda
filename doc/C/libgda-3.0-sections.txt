@@ -313,6 +313,24 @@ gda_data_model_bdb_get_type
 </SECTION>
 
 <SECTION>
+<FILE>gda-data-model-dir</FILE>
+<TITLE>GdaDataModelDir</TITLE>
+GdaDataModelDir
+GdaDataModelDirClass
+GdaDataModelDirPrivate
+gda_data_model_dir_new
+gda_data_model_dir_get_errors
+gda_data_model_dir_clean_errors
+<SUBSECTION Standard>
+GDA_DATA_MODEL_DIR
+GDA_DATA_MODEL_DIR_CLASS
+GDA_IS_DATA_MODEL_DIR
+GDA_IS_DATA_MODEL_DIR_CLASS
+GDA_TYPE_DATA_MODEL_DIR
+gda_data_model_dir_get_type
+</SECTION>
+
+<SECTION>
 <FILE>gda-data-model-query</FILE>
 <TITLE>GdaDataModelQuery</TITLE>
 GdaDataModelQuery
@@ -739,6 +757,64 @@ GDA_SERVER_PROVIDER
 GDA_SERVER_PROVIDER_CLASS
 GDA_TYPE_SERVER_PROVIDER
 gda_server_provider_get_type
+</SECTION>
+
+<SECTION>
+<FILE>gda-virtual-provider</FILE>
+<TITLE>GdaVirtualProvider</TITLE>
+GdaVirtualProvider
+<SUBSECTION Standard>
+GDA_IS_VIRTUAL_PROVIDER
+GDA_IS_VIRTUAL_PROVIDER_CLASS
+GDA_VIRTUAL_PROVIDER
+GDA_VIRTUAL_PROVIDER_CLASS
+GDA_TYPE_VIRTUAL_PROVIDER
+gda_virtual_provider_get_type
+</SECTION>
+
+<SECTION>
+<FILE>gda-vprovider-data-model</FILE>
+<TITLE>GdaVproviderDataModel</TITLE>
+GdaVproviderDataModel
+gda_vprovider_data_model_new
+<SUBSECTION Standard>
+GDA_IS_VPROVIDER_DATA_MODEL
+GDA_IS_VPROVIDER_DATA_MODEL_CLASS
+GDA_VPROVIDER_DATA_MODEL
+GDA_VPROVIDER_DATA_MODEL_CLASS
+GDA_TYPE_VPROVIDER_DATA_MODEL
+gda_vprovider_data_model_get_type
+</SECTION>
+
+<SECTION>
+<FILE>gda-virtual-connection</FILE>
+<TITLE>GdaVirtualConnection</TITLE>
+GdaVirtualConnection
+<SUBSECTION Standard>
+GDA_IS_VIRTUAL_CONNECTION
+GDA_IS_VIRTUAL_CONNECTION_CLASS
+GDA_VIRTUAL_CONNECTION
+GDA_VIRTUAL_CONNECTION_CLASS
+GDA_TYPE_VIRTUAL_CONNECTION
+gda_virtual_connection_get_type
+</SECTION>
+
+<SECTION>
+<FILE>gda-vconnection-data-model</FILE>
+<TITLE>GdaVconnectionDataModel</TITLE>
+GdaVconnectionDataModel
+GdaVConnectionDataModelFunc
+gda_vconnection_data_model_add
+gda_vconnection_data_model_remove
+gda_vconnection_data_model_get_model
+gda_vconnection_data_model_foreach
+<SUBSECTION Standard>
+GDA_IS_VCONNECTION_DATA_MODEL
+GDA_IS_VCONNECTION_DATA_MODEL_CLASS
+GDA_VCONNECTION_DATA_MODEL
+GDA_VCONNECTION_DATA_MODEL_CLASS
+GDA_TYPE_VCONNECTION_DATA_MODEL
+gda_vconnection_data_model_get_type
 </SECTION>
 
 <SECTION>

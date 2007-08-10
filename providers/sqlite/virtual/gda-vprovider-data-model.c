@@ -29,6 +29,7 @@
 #include <libgda/gda-connection-private.h>
 #include <libgda/gda-data-model-iter.h>
 #include <libgda/gda-data-proxy.h>
+#include <libgda/gda-blob-op.h>
 #include "../gda-sqlite.h"
 
 
@@ -379,6 +380,19 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 			g_string_free (sql, TRUE);
 			return SQLITE_ERROR;
 		}
+		else if (!strcmp (type, "GdaBlob"))
+			type = "blob";
+		else if (!strcmp (type, "gchararray"))
+			type = "text";
+		else if (!strncmp (type, "gint", 4))
+			type = "integer";
+		else if (!strcmp (type, "gdouble"))
+			type = "real";
+		else if (!strcmp (type, "gfloat"))
+			type = "real";
+		else
+			type = "text";
+
 		g_string_append (sql, name);
 		g_string_append_c (sql, ' ');
 		g_string_append (sql, type);
@@ -496,7 +510,7 @@ virtualColumn (sqlite3_vtab_cursor *cur, sqlite3_context *ctx, int i)
 	TRACE ();
 
 	GdaParameter *param;
-	
+
 	param = gda_data_model_iter_get_param_for_column (cursor->iter, i);
 	if (!param) {
 		sqlite3_result_error (ctx, _("Column not found"), -1);
@@ -517,6 +531,8 @@ virtualColumn (sqlite3_vtab_cursor *cur, sqlite3_context *ctx, int i)
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_BLOB) {
 			const GdaBlob *blob;
 			blob = gda_value_get_blob (value);
+			if (blob->op)
+				gda_blob_op_read_all (blob->op, blob);
 			sqlite3_result_blob (ctx, blob->data.data, blob->data.binary_length, SQLITE_TRANSIENT);
 		}
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_BINARY) {

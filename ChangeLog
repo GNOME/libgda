@@ -1,3 +1,24 @@
+2007-08-10  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in: check for the presence of Gnome VFS and Libgcrypt (but does not require them)
+	* libgda/gda-value.c: corrected GdaBlob conpare func
+	* libgda/gda-data-model.c: corrected dump() function
+	* libgda/gda-blob-op.c: corrected read_all() and write_all() methods
+	* providers/sqlite/virtual/gda-vprovider-data-model.c: correctly set data type for columns
+	of virtual table, and force GdaBlob read
+	* providers/sqlite/virtual/gda-vconnection-data-model.c: documented functions
+	* libgda/libgda.h.in:
+	* libgda/Makefile.am:
+	* libgda/gda-data-model-dir.[ch]: a new GdaDataModel object which lists files
+	in a directory along with their size, mime type (if Gnome VFS is found) and
+	MD5 hash (if libgcrypt is found)
+	* libgda/dir-blob-op.[ch]: internal GdaBlobOp object to handle file contents in a
+	GdaDataModelDir object
+	* samples/DirDataModel: new example to show how the GdaDataModelDir object can be used
+	to find file duplicates
+	* doc/C: documentation for the GdaDataModelDir data model object, virtual providers
+	and connection and various misc. doc improvements
+
 2007-07-28  Murray Cumming <murrayc@murrayc.com>
 
 	* libgda/gda-entity-field.c: 

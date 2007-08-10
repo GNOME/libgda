@@ -1,0 +1,25 @@
+<!-- ##### SECTION Title ##### -->
+GdaVirtualProvider
+
+<!-- ##### SECTION Short_Description ##### -->
+Base class for all virtual providers
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+This is a base virtual class for all virtual providers implementations
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaVirtualProvider ##### -->
+<para>
+
+</para>
+
+

@@ -1,0 +1,30 @@
+<sect2 id="VirtualIntro">
+  <title>Introduction to virtual connections</title>
+  <para>
+    &LIBGDA; implements so called virtual connections which are used like normal 
+    <link linkend="GdaConnection">GdaConnection</link> objects (open, close, execute SQL commands, etc)
+    but which in fact don't access any real DBMS.
+  </para>
+  <para>
+    Virtual connections allow one to use SQL to work on data when it is normally not available, such as sorting data
+    physically stored in CSV or XML files.
+  </para>
+  <para>
+    A virtual connection is not created in the same way as for a normal connection:
+    <itemizedlist>
+      <listitem><para>No <link linkend="GdaClient">GdaClient</link> object is involved</para></listitem>
+      <listitem><para>A specific <link linkend="GdaServerProvider">GdaServerProvider</link> object is required</para></listitem>
+      <listitem><para>No data source (DSN) or connection string can be used</para></listitem>
+    </itemizedlist>
+    Here is an example of code on how to create a virtual connection using the <link linkend="GdaVproviderDataModel">GdaVproviderDataModel</link> virtual provider:
+    <programlisting>
+GdaConnection *cnc;
+GdaVirtualProvider *provider;
+
+provider = gda_vprovider_data_model_new ();
+cnc = gda_server_provider_create_connection (NULL, GDA_SERVER_PROVIDER (provider), NULL, NULL, NULL, 0);
+gda_connection_open (cnc, NULL);
+    </programlisting>
+  </para>
+  &libgda-virtual-notice;
+</sect2>

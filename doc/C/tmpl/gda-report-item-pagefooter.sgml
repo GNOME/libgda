@@ -17,3 +17,544 @@ GdaReportItemPageFooter
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### FUNCTION gda_report_item_pagefooter_new ##### -->
+<para>
+
+</para>
+
+@valid: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_new_from_dom ##### -->
+<para>
+
+</para>
+
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_to_dom ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_add_element ##### -->
+<para>
+
+</para>
+
+@pagefooter: 
+@element: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_get_label_by_id ##### -->
+<para>
+
+</para>
+
+@pagefooter: 
+@id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_get_repfield_by_id ##### -->
+<para>
+
+</para>
+
+@pagefooter: 
+@id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_remove ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_set_active ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_get_active ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_set_visible ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_get_visible ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_set_height ##### -->
+<para>
+
+</para>
+
+@item: 
+@number: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_get_height ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_set_positionfreq ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_get_positionfreq ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_set_pagefreq ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_get_pagefreq ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_set_bgcolor ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_get_bgcolor ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_set_fgcolor ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_get_fgcolor ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_set_bordercolor ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_get_bordercolor ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_set_borderwidth ##### -->
+<para>
+
+</para>
+
+@item: 
+@number: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_get_borderwidth ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_set_borderstyle ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_get_borderstyle ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_set_fontfamily ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_get_fontfamily ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_set_fontsize ##### -->
+<para>
+
+</para>
+
+@item: 
+@number: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_get_fontsize ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_set_fontweight ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_get_fontweight ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_set_fontitalic ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_get_fontitalic ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_set_halignment ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_get_halignment ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_set_valignment ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_get_valignment ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_set_wordwrap ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_get_wordwrap ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_set_negvaluecolor ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_get_negvaluecolor ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_set_dateformat ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_get_dateformat ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_set_precision ##### -->
+<para>
+
+</para>
+
+@item: 
+@number: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_get_precision ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_set_currency ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_get_currency ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_set_commaseparator ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_get_commaseparator ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_set_linewidth ##### -->
+<para>
+
+</para>
+
+@item: 
+@number: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_get_linewidth ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_set_linecolor ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_get_linecolor ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_set_linestyle ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_pagefooter_get_linestyle ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+

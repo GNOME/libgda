@@ -12,7 +12,9 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
 	$(FAM_CFLAGS) \
-	$(BDB_CFLAGS)
+	$(BDB_CFLAGS) \
+	$(GNOMEVFS_CFLAGS) \
+	$(LIBGCRYPT_CFLAGS)
 
 gda_marshal_built_files = gda-marshal.h gda-marshal.c
 
@@ -36,6 +38,7 @@ gda_headers = \
 	gda-data-model-row.h \
 	gda-data-model.h \
 	$(GDA_BDB_H) \
+	gda-data-model-dir.h \
 	gda-data-model-extra.h \
 	gda-data-model-filter-sql.h \
 	gda-data-model-hash.h \
@@ -104,6 +107,8 @@ gda_headers = \
 libgda_sources =  \
 	csv.h \
 	libcsv.c \
+	dir-blob-op.h \
+	dir-blob-op.c \
 	$(gda_headers) \
 	gda-blob-op.c \
 	gda-client.c \
@@ -118,6 +123,7 @@ libgda_sources =  \
 	$(GDA_BDB_S) \
 	gda-data-model-row.c \
 	gda-data-model.c \
+	gda-data-model-dir.c \
 	gda-data-model-filter-sql.c \
 	gda-data-model-hash.c \
 	gda-data-model-import.c \
@@ -224,7 +230,7 @@ libgda_3_0_la_LIBADD = sql-transaction/libgda_sql_transaction-3.0.la \
 	binreloc/libgda_binreloc-3.0.la \
 	$(top_builddir)/libsql/libgdasql-3.0.la \
 	$(LIBGDA_LIBS) $(FAM_LIBS) \
-	$(BDB_LIBS)
+	$(BDB_LIBS) $(GNOMEVFS_LIBS) $(LIBGCRYPT_LIBS)
 
 gdaincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda
 gdainclude_HEADERS=$(libgda_built_headers) $(gda_headers)

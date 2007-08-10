@@ -2,11 +2,12 @@
 GdaServerProvider
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Base class for all the DBMS providers
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+The #GdaServerProvider class is a virtual class which all the DBMS providers
+must inherit, and implement its virtual mathods.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

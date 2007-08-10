@@ -47,6 +47,7 @@
 <!ENTITY libgda-GdaThreader SYSTEM "xml/gda-threader.xml">
 <!ENTITY libgda-GdaDataModelArray SYSTEM "xml/gda-data-model-array.xml">
 <!ENTITY libgda-GdaDataModelBdb SYSTEM "xml/gda-data-model-bdb.xml">
+<!ENTITY libgda-GdaDataModelDir SYSTEM "xml/gda-data-model-dir.xml">
 <!ENTITY libgda-GdaDataModelQuery SYSTEM "xml/gda-data-model-query.xml">
 <!ENTITY libgda-GdaDataModelHash SYSTEM "xml/gda-data-model-hash.xml">
 <!ENTITY libgda-GdaDataModelRow SYSTEM "xml/gda-data-model-row.xml">
@@ -66,8 +67,14 @@
 <!ENTITY libgda-GdaRow SYSTEM "xml/gda-row.xml">
 <!ENTITY libgda-GdaDataModelFilterSQL SYSTEM "xml/gda-data-model-filter-sql.xml">
 <!ENTITY libgda-GdaServerProvider SYSTEM "xml/gda-server-provider.xml">
+<!ENTITY libgda-GdaVirtualProvider SYSTEM "xml/gda-virtual-provider.xml">
+<!ENTITY libgda-GdaVproviderDataModel SYSTEM "xml/gda-vprovider-data-model.xml">
+<!ENTITY libgda-GdaVirtualConnection SYSTEM "xml/gda-virtual-connection.xml">
+<!ENTITY libgda-GdaVconnectionDataModel SYSTEM "xml/gda-vconnection-data-model.xml">
 <!ENTITY libgda-GdaServerOperation SYSTEM "xml/gda-server-operation.xml">
 <!ENTITY libgda-serverop-intro SYSTEM "server-operation.xml">
+<!ENTITY libgda-virtual SYSTEM "virtual.xml">
+<!ENTITY libgda-virtual-notice SYSTEM "virtual-notice.xml">
 <!ENTITY libgda-transaction-status SYSTEM "xml/gda-transaction-status.xml">
 <!ENTITY libgda-util SYSTEM "xml/gda-util.xml">
 <!ENTITY libgda-GValue SYSTEM "xml/gda-value.xml">
@@ -338,6 +345,9 @@
           <listitem>
             <para>Support for detailed parameters in SQL queries, see the <link linkend="SQL_queries">SQL queries section</link></para>
           </listitem>
+	  <listitem>
+            <para>Support for virtual connections, see the <link linkend="virtual_connection">Virtual connections chapter</link></para>
+          </listitem>
 	</itemizedlist>
       </para>
       <para>
@@ -442,6 +452,15 @@
       &libgda-convenient;
     </chapter>
 
+    <chapter id="virtual_connection">
+      <title>Virtual connections</title>
+      &libgda-virtual;
+      &libgda-GdaVirtualProvider;
+      &libgda-GdaVproviderDataModel;
+      &libgda-GdaVirtualConnection;
+      &libgda-GdaVconnectionDataModel;
+    </chapter>
+
     <chapter id="data_models">
       <title>Data handling</title>
       <para>
@@ -496,6 +515,7 @@
       &libgda-GdaDataAccessWrapper;
       &libgda-GdaDataModelArray;
       &libgda-GdaDataModelBdb;
+      &libgda-GdaDataModelDir;
       &libgda-GdaDataModelHash;
       &libgda-GdaDataModelQuery;
       &libgda-GdaDataModelFilterSQL;

@@ -15,7 +15,7 @@ SCAN_OPTIONS=
 SCANGOBJ_OPTIONS=
 
 # The directory containing the source code. Relative to $(srcdir)
-DOC_SOURCE_DIR=../../libgda
+DOC_SOURCE_DIR=../..
 
 # Used for dependencies.
 HFILE_GLOB=
@@ -28,9 +28,12 @@ IGNORE_HFILES= config.h acconfig.h gda-intl.h gda-marshal.h
 # if $(DOC_MODULE).types is non-empty.
 GTKDOC_CFLAGS = -I$(top_srcdir) \
         -I$(top_builddir) \
+	-I$(top_builddir)/providers/sqlite \
         $(LIBGDA_CFLAGS) \
 	-DGETTEXT_PACKAGE=\""$(GETTEXT_PACKAGE)"\"
-GTKDOC_LIBS =  $(top_builddir)/libgda/libgda-3.0.la $(LIBGDA_LIBS)
+GTKDOC_LIBS =  $(top_builddir)/libgda/libgda-3.0.la \
+	$(top_builddir)/providers/sqlite/virtual/libgda-virtual-3.0.la \
+	$(LIBGDA_LIBS)
 
 # Extra options to supply to gtkdoc-mkdb
 MKDB_OPTIONS=--sgml-mode --output-format=xml --ignore-files="lexer.c"
@@ -48,6 +51,6 @@ include $(top_srcdir)/gtk-doc.make
 
 # Other files to distribute
 EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration.xml query.xml query-fields.xml \
-	server-operation.xml gettingstarted.xml \
+	server-operation.xml gettingstarted.xml virtual.xml virtual-notice.xml\
 	query01.svg query02.svg query03.svg query04.svg query05.svg query06.svg DataModels.svg
 

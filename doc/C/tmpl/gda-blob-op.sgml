@@ -2,12 +2,31 @@
 Blobs
 
 <!-- ##### SECTION Short_Description ##### -->
-Blobs handling
+Binary data and BLOBs handling
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
 This object is a base class for individual database providers which support BLOB types. It supports
-operations to read and write data in a BLOB.
+operations to read and write data in a BLOB value (of type GDA_BLOB_TYPE).
+</para>
+
+<para>
+Libgda offers two methods to manipulate binary values as two containers: <link linkend="GdaBinary">GdaBinary</link> 
+and <link linkend="GdaBlob">GdaBlob</link>:
+<itemizedlist>
+  <listitem><para>When reading from a data model returned by &LIBGDA; binary data will often be in a GdaBlob object, and the
+      associated <link linkend="GdaBlobOp">GdaBlobOp</link> object can be used to manipulate the binary object (in a 
+      database for example)</para></listitem>
+  <listitem><para>When the binary value is created by the user, then there is no point in using a GdaBlob as
+      there can not be any <link linkend="GdaBlobOp">GdaBlobOp</link> object, so the GdaBinary container is 
+      enough.</para></listitem>
+</itemizedlist>
+</para>
+
+<para>
+Note that a <link linkend="GdaBlob">GdaBlob</link> value will often not contain any data (or only some part of the actual BLOB)
+and that it's up to the user to use the associated <link linkend="GdaBlobOp">GdaBlobOp</link> object to "load" the data into
+the container (into the actual process heap).
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

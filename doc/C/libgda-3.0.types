@@ -1,4 +1,5 @@
 #include <libgda/libgda.h>
+#include <virtual/libgda-virtual.h>
 gda_blob_op_get_type
 gda_client_get_type
 gda_column_get_type
@@ -17,6 +18,7 @@ gda_handler_bin_get_type
 gda_handler_type_get_type
 gda_data_model_array_get_type
 gda_data_model_bdb_get_type
+gda_data_model_dir_get_type
 gda_data_model_filter_sql_get_type
 gda_data_model_row_get_type
 gda_data_model_get_type
@@ -70,3 +72,7 @@ gda_xml_storage_get_type
 gda_graph_get_type
 gda_graph_query_get_type
 gda_graph_item_get_type
+gda_virtual_provider_get_type
+gda_vprovider_data_model_get_type
+gda_virtual_connection_get_type
+gda_vconnection_data_model_get_type

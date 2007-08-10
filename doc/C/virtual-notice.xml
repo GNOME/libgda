@@ -1,0 +1,15 @@
+<para>Note that virtual connections have some inherent limitations
+  <footnote>
+    <para>
+      As virtual connections are implemented using 
+      <ulink url="http://www.sqlite.org/cvstrac/wiki?p=VirtualTables">SQLite's virtual table</ulink> features, 
+      the SQL dialect which can be used
+      is the SQLite one (see the <ulink url="http://sqlite.org/lang.html">SQL as Understood By SQLite</ulink> page), and
+      there are a few limitations inherent to this implementation (see link for more information).
+    </para>
+    <para>
+      Also note that it is possible to create temporary tables in virtual connections using "CREATE TEMP TABLE..." statements,
+      but the contents of such tables will be lost once the connection is closed.
+    </para>
+  </footnote>due to the implementation.
+</para>

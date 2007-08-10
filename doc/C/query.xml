@@ -262,7 +262,7 @@
       </para>
     </sect4>
   </sect3>
-  <sect3 ID="SQL_queries">
+  <sect3 id="SQL_queries">
     <title>SQL queries</title>
     <para>
       Since it is sometimes easier to define a query using an SQL statement, a <link linkend="GdaQuery">GdaQuery</link>

@@ -1,0 +1,35 @@
+<!-- ##### SECTION Title ##### -->
+GdaVproviderDataModel
+
+<!-- ##### SECTION Short_Description ##### -->
+Virtual provider for connections based on a list of GdaDataModel
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+This provider is used to create virtual connections in which each #GdaDataModel data models can be
+added as tables in the connection. Using gda_server_provider_create_connection() will generate a
+#GdaVconnectionDataModel connection object.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaVproviderDataModel ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_vprovider_data_model_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+

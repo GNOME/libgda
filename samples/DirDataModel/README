@@ -1,0 +1,49 @@
+Libgda GdaDataModelDir example
+==============================
+
+Description:
+------------
+
+WARNING: this is a demonstration program and should _not_ be used on production systems as
+some yet unknown bug may remove all your files. You'll have been warned.
+
+This example illustrates the usage of the GdaDataModelDir data model
+to find files duplicates in a directory. 
+
+First a GdaDataModelDir is created, and inserted in a virtual connection connection as the "files" table. This
+table will the contain the following columns:
+dir_name (G_TYPE_STRING): contains the dirname part of each file
+file_name (G_TYPE_STRING): contains the file name part of each file
+size (G_TYPE_UINT): contains the size in bytes of each file
+mime_type (G_TYPE_STRING): contains the mime type of each file (if GnomeVFS has been found, and NULL otherwise)
+md5sum (G_TYPE_STRING): contains the MD5 hash of each file (if LibGCrypt has been found, and NULL otherwise)
+data (GDA_TYPE_BLOB): contains the contents of each file.
+
+Then an SQL statement is run to create the "filtered_filed" temporary table holding only the part of the 
+"files" table which may be duplicates (based on the MD5 hash).
+
+Then depending on the command line arguments, some other SQL code is executed to create other temporary 
+tables, to actually use the contents of each file to make comparisons (there can be collisions on MD5 hashes).
+
+Note that to actually delete some duplicate files, a DELETE statement on the "files" table (the one mapped to
+the GdaDataModelDir data model) is enough.
+
+
+Compiling and running:
+----------------------
+
+To compile (make sure Libgda is installed prior to this):
+> make
+
+For help:
+> ./find-duplicates --help 
+
+To list all files duplicates in DIR (DIR may be omitted, in which case the current working directory is used):
+> ./find-duplicates [DIR]
+
+To list only the duplicates of FILE:
+> ./find-duplicates -f FILE [DIR]
+
+
+To list and delete the duplicates of FILE:
+> ./find-duplicates -f FILE -d [DIR]

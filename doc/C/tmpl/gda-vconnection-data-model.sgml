@@ -1,0 +1,80 @@
+<!-- ##### SECTION Title ##### -->
+GdaVconnectionDataModel
+
+<!-- ##### SECTION Short_Description ##### -->
+Virtual connection based on a list of GdaDataModel
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+the #GdaVconnectionDataModel is a virtual connection in which #GdaDataModel data models can bas added
+or removed, each representing a table in the connection.
+</para>
+&libgda-virtual-notice;
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+The #GdaVproviderDataModel provider to use to create such connection objects.
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaVconnectionDataModel ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### USER_FUNCTION GdaVConnectionDataModelFunc ##### -->
+<para>
+
+</para>
+
+@model: 
+@table_name: 
+@data: 
+
+
+<!-- ##### FUNCTION gda_vconnection_data_model_add ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@model: 
+@table_name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_vconnection_data_model_remove ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@model: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_vconnection_data_model_get_model ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@table_name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_vconnection_data_model_foreach ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@func: 
+@data: 
+
+

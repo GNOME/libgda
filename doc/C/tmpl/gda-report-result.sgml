@@ -17,3 +17,36 @@ GdaReportResult
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### MACRO GDA_REPORT_RESULT ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### STRUCT GdaReportResultPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_report_result_new_to_memory ##### -->
+<para>
+
+</para>
+
+@document: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_result_new_to_uri ##### -->
+<para>
+
+</para>
+
+@uri: 
+@document: 
+@Returns: 
+
+

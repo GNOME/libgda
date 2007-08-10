@@ -147,10 +147,7 @@ gda_blob_op_read_all (GdaBlobOp *op, GdaBlob *blob)
 	g_return_val_if_fail (blob, FALSE);
 
 	len = gda_blob_op_get_length (blob->op);
-	if (len != ((GdaBinary *)blob)->binary_length)
-		return (gda_blob_op_read (blob->op, blob, 0, len) < 0) ? FALSE : TRUE;
-	else
-		return TRUE;
+	return (gda_blob_op_read (blob->op, blob, 0, len) < 0) ? FALSE : TRUE;
 }
 
 /**
@@ -193,5 +190,5 @@ gda_blob_op_write_all (GdaBlobOp *op, GdaBlob *blob)
 	if (CLASS (op)->write_all != NULL)
 		return CLASS (op)->write_all (op, blob);
 	else
-		return FALSE;
+		return gda_blob_op_write (op, blob, 0);
 }

@@ -167,6 +167,16 @@ gda_vconnection_data_model_get_property (GObject *object,
 
 /**
  * gda_vconnection_data_model_add
+ * @cnc: a #GdaVconnectionDataModel connection
+ * @model: a #GdaDataModel
+ * @table_name: the name of the table
+ * @error: a place to store errors, or %NULL
+ *
+ * Make @model appear as a table named @table_name in the @cnc connection (as if a
+ * "CREATE TABLE..." statement was executed, except that the data contained within @model
+ * is actually used when @table_name's contents is read or written).
+ *
+ * Returns: TRUE if no error occurred
  */
 gboolean
 gda_vconnection_data_model_add (GdaVconnectionDataModel *cnc, 
@@ -216,6 +226,14 @@ gda_vconnection_data_model_add (GdaVconnectionDataModel *cnc,
 
 /**
  * gda_vconnection_data_model_remove
+ * @cnc: a #GdaVconnectionDataModel connection
+ * @model: a #GdaDataModel
+ * @error: a place to store errors, or %NULL
+ *
+ * Remove the table representing @model in the @cnc connection (as if a "DROP TABLE..."
+ * statement was executed, except that no data gets destroyed as @model remains the same).
+ *
+ * Returns: TRUE if no error occurred
  */
 gboolean
 gda_vconnection_data_model_remove (GdaVconnectionDataModel *cnc, GdaDataModel *model, GError **error)
@@ -290,6 +308,12 @@ get_table_model_by_model (GdaVconnectionDataModel *cnc, GdaDataModel *model)
 
 /**
  * gda_vconnection_data_model_get_model
+ * @cnc: a #GdaVconnectionDataModel connection
+ * @table_name: a table name within @cnc
+ *
+ * Find the #GdaDataModel object representing the @table_name table in @cnc
+ *
+ * Returns: the #GdaDataModel, or %NULL if not table named @table_name exists
  */
 GdaDataModel *
 gda_vconnection_data_model_get_model (GdaVconnectionDataModel *cnc, const gchar *table_name)
@@ -309,6 +333,11 @@ gda_vconnection_data_model_get_model (GdaVconnectionDataModel *cnc, const gchar 
 
 /**
  * gda_vconnection_data_model_foreach
+ * @cnc: a #GdaVconnectionDataModel connection
+ * @func: a #GdaVConnectionDataModelFunc function pointer
+ * @data: data to pass to @cunc calls
+ *
+ * Call @func for each #GdaDataModel represented as a table in @cnc.
  */
 void
 gda_vconnection_data_model_foreach (GdaVconnectionDataModel *cnc, 
