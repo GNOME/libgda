@@ -1,3 +1,8 @@
+2007-08-13  Claude Paroz <claude@2xlibre.net>
+
+	* ne.po:
+	* ms.po: Removed executable property.
+
 2007-07-02  Clytie Siddall <clytie@riverland.net.au>
 
 	* vi.po: Updated Vietnamese translation.
