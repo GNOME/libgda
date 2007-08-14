@@ -169,7 +169,7 @@ gda_bdb_provider_open_connection (GdaServerProvider *provider,
 
 	/* create GdaDataModelBdb object */
 	model = gda_data_model_bdb_new (bdb_file, bdb_db);
-	if (!gda_vconnection_data_model_add (GDA_VCONNECTION_DATA_MODEL (cnc), model, bdb_db ? bdb_db : "data", &error)) {
+	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (cnc), model, bdb_db ? bdb_db : "data", &error)) {
 		gda_connection_add_event_string (cnc, 
 						 _("Could not add BDB data model to connection: %s"),
 						 error && error->message ? error->message : _("no detail"));

@@ -990,7 +990,7 @@ gda_connection_add_event (GdaConnection *cnc, GdaConnectionEvent *event)
 
 /**
  * gda_connection_add_event_string
- * @cnc: a #GdaServerConnection object.
+ * @cnc: a #GdaConnection object.
  * @str: a format string (see the printf(3) documentation).
  * @...: the arguments to insert in the error message.
  *

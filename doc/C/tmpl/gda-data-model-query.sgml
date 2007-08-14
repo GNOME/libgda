@@ -50,6 +50,13 @@ one provided th the #GdaDict object to which the query relates.
 
 </para>
 
+<!-- ##### ENUM GdaDataModelQueryOptions ##### -->
+<para>
+
+</para>
+
+@GDA_DATA_MODEL_QUERY_OPTION_USE_ALL_FIELDS_IF_NO_PK: 
+
 <!-- ##### STRUCT GdaDataModelQueryClass ##### -->
 <para>
 

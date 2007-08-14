@@ -74,5 +74,7 @@ gda_graph_query_get_type
 gda_graph_item_get_type
 gda_virtual_provider_get_type
 gda_vprovider_data_model_get_type
+gda_vprovider_hub_get_type
 gda_virtual_connection_get_type
 gda_vconnection_data_model_get_type
+gda_vconnection_hub_get_type

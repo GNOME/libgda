@@ -6,7 +6,7 @@ else
 SUBDIRS= sqlite-src
 sqlitelibs= $(top_builddir)/providers/sqlite/sqlite-src/libsqlite.la
 sqliteinc= -I$(top_srcdir)/providers/sqlite/sqlite-src \
-	-I$(top_builddir)/providers/sqlite/sqlite-src
+	-I$(top_builddir)/providers/sqlite/sqlite-src -DSQLITE_API= -DSQLITE_PRIVATE=
 endif
 SUBDIRS+= . virtual
 

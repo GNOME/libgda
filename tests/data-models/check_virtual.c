@@ -32,11 +32,11 @@ main (int argc, char **argv)
 	g_object_unref (plist);
 
 	/* Add data models to connection */
-	if (!gda_vconnection_data_model_add (GDA_VCONNECTION_DATA_MODEL (cnc), rw_model, "results", &error)) 
+	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (cnc), rw_model, "results", &error)) 
 		g_error ("Add RW model error: %s\n", error && error->message ? error->message : "no detail");
-	if (!gda_vconnection_data_model_add (GDA_VCONNECTION_DATA_MODEL (cnc), city_model, "city", &error)) 
+	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (cnc), city_model, "city", &error)) 
 		g_error ("Add city model error: %s\n", error && error->message ? error->message : "no detail");
-	if (!gda_vconnection_data_model_add (GDA_VCONNECTION_DATA_MODEL (cnc), country_model, "country", &error)) 
+	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (cnc), country_model, "country", &error)) 
 		g_error ("Add country model error: %s\n", error && error->message ? error->message : "no detail");
 
 	/* compute list of countries where population >= 1M */

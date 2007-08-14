@@ -21,7 +21,9 @@ AM_CPPFLAGS = \
 
 virtual_headers = \
 	gda-vconnection-data-model.h \
+	gda-vconnection-hub.h \
 	gda-vprovider-data-model.h \
+	gda-vprovider-hub.h \
 	gda-virtual-connection.h \
 	gda-virtual-provider.h \
 	libgda-virtual.h
@@ -29,7 +31,10 @@ virtual_headers = \
 libgda_virtual_3_0_la_SOURCES = \
 	$(virtual_headers) \
 	gda-vconnection-data-model.c \
+	gda-vconnection-data-model-private.h \
+	gda-vconnection-hub.c \
 	gda-vprovider-data-model.c \
+	gda-vprovider-hub.c \
 	gda-virtual-connection.c \
 	gda-virtual-provider.c \
 	libmain.c

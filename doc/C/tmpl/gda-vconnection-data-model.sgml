@@ -35,7 +35,47 @@ The #GdaVproviderDataModel provider to use to create such connection objects.
 @data: 
 
 
+<!-- ##### STRUCT GdaVconnectionDataModelSpec ##### -->
+<para>
+
+</para>
+
+@data_model: 
+@create_columns_func: 
+@create_model_func: 
+
+<!-- ##### USER_FUNCTION GdaVconnectionDataModelCreateColumnsFunc ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION GdaVconnectionDataModelCreateModelFunc ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_vconnection_data_model_add ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@spec: 
+@spec_free_func: 
+@table_name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_vconnection_data_model_add_model ##### -->
 <para>
 
 </para>
@@ -53,8 +93,18 @@ The #GdaVproviderDataModel provider to use to create such connection objects.
 </para>
 
 @cnc: 
-@model: 
+@table_name: 
 @error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_vconnection_data_model_get_table_name ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@model: 
 @Returns: 
 
 

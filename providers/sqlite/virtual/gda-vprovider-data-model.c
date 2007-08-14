@@ -25,6 +25,7 @@
 #include <string.h>
 #include "gda-vprovider-data-model.h"
 #include "gda-vconnection-data-model.h"
+#include "gda-vconnection-data-model-private.h"
 #include <sqlite3.h>
 #include <libgda/gda-connection-private.h>
 #include <libgda/gda-data-model-iter.h>
@@ -32,9 +33,6 @@
 #include <libgda/gda-blob-op.h>
 #include "../gda-sqlite.h"
 
-
-#define PARENT_TYPE GDA_TYPE_VIRTUAL_PROVIDER
-#define CLASS(obj) (GDA_VPROVIDER_DATA_MODEL_CLASS (G_OBJECT_GET_CLASS (obj)))
 
 struct _GdaVproviderDataModelPrivate {
 	
@@ -129,7 +127,7 @@ gda_vprovider_data_model_get_type (void)
 				(GInstanceInitFunc) gda_vprovider_data_model_init
 			};
 			
-			type = g_type_register_static (PARENT_TYPE, "GdaVproviderDataModel", &info, 0);
+			type = g_type_register_static (GDA_TYPE_VIRTUAL_PROVIDER, "GdaVproviderDataModel", &info, 0);
 		}
 	}
 
@@ -283,7 +281,7 @@ static void
 cnc_close_foreach_func (GdaDataModel *model, const gchar *table_name, GdaVconnectionDataModel *cnc)
 {
 	/*g_print ("---- FOREACH: Removing virtual table '%s'\n", table_name);*/
-	if (! gda_vconnection_data_model_remove (cnc, model, NULL))
+	if (! gda_vconnection_data_model_remove (cnc, table_name, NULL))
 		g_warning ("Internal GdaVproviderDataModel error");
 }
 
@@ -296,10 +294,7 @@ gda_vprovider_data_model_close_connection (GdaServerProvider *provider, GdaConne
 	gda_vconnection_data_model_foreach (GDA_VCONNECTION_DATA_MODEL (cnc),
 					    (GdaVConnectionDataModelFunc) cnc_close_foreach_func, cnc);
 
-	if (! GDA_SERVER_PROVIDER_CLASS (parent_class)->close_connection (GDA_SERVER_PROVIDER (provider), cnc))
-		return FALSE;
-	else
-		return TRUE;
+	return GDA_SERVER_PROVIDER_CLASS (parent_class)->close_connection (GDA_SERVER_PROVIDER (provider), cnc);
 }
 
 
@@ -309,9 +304,10 @@ gda_vprovider_data_model_close_connection (GdaServerProvider *provider, GdaConne
 #define TRACE()
 
 typedef struct {
-	sqlite3_vtab             base;
-	GdaVconnectionDataModel *cnc;
-	GdaDataProxy            *proxy;
+	sqlite3_vtab                 base;
+	GdaVconnectionDataModel     *cnc;
+	GdaDataProxy                *proxy;
+	GdaVConnectionTableData     *td;
 } VirtualTable;
 
 typedef struct {
@@ -323,34 +319,56 @@ static int
 virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlite3_vtab **ppVtab, char **pzErr)
 {
 	GdaVconnectionDataModel *cnc = GDA_VCONNECTION_DATA_MODEL (pAux);
-	GdaDataModel *model = cnc->adding;
-	GdaDataProxy *proxy;
-	VirtualTable *vtable;
+	GdaDataProxy *proxy = NULL;
 	GString *sql;
 	gint i, ncols;
+	gchar *spec_name;
+	GList *columns = NULL;
+	GdaVConnectionTableData *td;
 
 	TRACE ();
 
-	if (GDA_IS_DATA_PROXY (model)) {
-		ncols = gda_data_proxy_get_proxied_model_n_cols (GDA_DATA_PROXY (model));
-		proxy = (GdaDataProxy *) gda_data_proxy_new (model);
-		g_object_ref (G_OBJECT (proxy));
-	}
-	else {
-		proxy = (GdaDataProxy *) gda_data_proxy_new (model);
+	/* find Spec */
+	g_assert (argc == 4);
+	spec_name = g_strdup (argv[3]);
+	i = strlen (spec_name);
+	if (spec_name [i-1] == '\'')
+		spec_name [i-1] = 0;
+	if (*spec_name == '\'')
+		memmove (spec_name, spec_name+1, i);
+
+	td = gda_vconnection_get_table_data_by_unique_name (cnc, spec_name);
+	g_free (spec_name);
+	g_assert (td);
+
+	/* preparations */
+	if (td->spec->data_model) {
+		if (GDA_IS_DATA_PROXY (td->spec->data_model)) {
+			proxy = (GdaDataProxy *) (td->spec->data_model);
+			g_object_ref (G_OBJECT (proxy));
+		}
+		else 
+			proxy = (GdaDataProxy *) gda_data_proxy_new (td->spec->data_model);
 		ncols = gda_data_proxy_get_proxied_model_n_cols (proxy);
+
+		/* proxy settings */
+		gda_data_proxy_set_sample_size (proxy, 0);
+		g_object_set (G_OBJECT (proxy), "defer-sync", FALSE, NULL);
+		
+		if (ncols <= 0) {
+			*pzErr = sqlite3_mprintf (_("Data model must have at least one column"));
+			g_object_unref (proxy);
+			return SQLITE_ERROR;
+		}
+		td->real_model = td->spec->data_model;
+		g_object_ref (td->real_model);
+	}
+	else  {
+		columns = td->spec->create_columns_func (td->spec);
+		ncols = g_list_length (columns);
 	}
 
-	/* proxy settings */
-	gda_data_proxy_set_sample_size (proxy, 0);
-	g_object_set (G_OBJECT (proxy), "defer-sync", FALSE, NULL);
-
-	if (ncols <= 0) {
-		*pzErr = sqlite3_mprintf (_("Data model must have at least one column"));
-		g_object_unref (proxy);
-		return SQLITE_ERROR;
-	}
-
+	/* create the CREATE TABLE statement */
 	sql = g_string_new ("CREATE TABLE ");
 	g_string_append (sql, argv[2]);
 	g_string_append (sql, " (");
@@ -360,7 +378,10 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 
 		if (i != 0)
 			g_string_append (sql, ", ");
-		column = gda_data_model_describe_column ((GdaDataModel*) proxy, i);
+		if (columns)
+			column = g_list_nth_data (columns, i);
+		else
+			column = gda_data_model_describe_column ((GdaDataModel*) proxy, i);
 		if (!column) {
 			*pzErr = sqlite3_mprintf (_("Can't get data model description for column %d"), i);
 			g_string_free (sql, TRUE);
@@ -400,10 +421,17 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 			g_string_append (sql, " NOT NULL");
 	}
 	g_string_append_c (sql, ')');
+	if (columns) {
+		g_list_foreach (columns, (GFunc) g_object_unref, NULL);
+		g_list_free (columns);
+	}
 
+	/* VirtualTable structure */
+	VirtualTable *vtable;
 	vtable = g_new0 (VirtualTable, 1);
 	vtable->cnc = cnc;
 	vtable->proxy = proxy;
+	vtable->td = td;
 	*ppVtab = &(vtable->base);
 
 	if (sqlite3_declare_vtab (db, sql->str) != SQLITE_OK) {
@@ -431,12 +459,13 @@ virtualConnect (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqli
 static int
 virtualDisconnect (sqlite3_vtab *pVtab)
 {
-	VirtualTable *vtab = (VirtualTable *) pVtab;
+	VirtualTable *vtable = (VirtualTable *) pVtab;
 
 	TRACE ();
 
-	g_object_unref (vtab->proxy);
-	g_free (vtab);
+	if (vtable->proxy)
+		g_object_unref (vtable->proxy);
+	g_free (vtable);
 	return SQLITE_OK;
 }
 
@@ -452,12 +481,32 @@ static int
 virtualOpen (sqlite3_vtab *pVTab, sqlite3_vtab_cursor **ppCursor)
 {
 	VirtualCursor *cursor;
-	VirtualTable *table = (VirtualTable*) pVTab;
+	VirtualTable *vtable = (VirtualTable*) pVTab;
 
 	TRACE ();
 
+	if (vtable->td->spec->create_model_func) {
+		if (vtable->td->real_model)
+			g_object_unref (vtable->td->real_model);
+		if (vtable->proxy)
+			g_object_unref (vtable->proxy);
+
+		vtable->td->real_model = vtable->td->spec->create_model_func (vtable->td->spec);
+		
+		if (GDA_IS_DATA_PROXY (vtable->td->real_model)) {
+			vtable->proxy = (GdaDataProxy *) (vtable->td->real_model);
+			g_object_ref (G_OBJECT (vtable->proxy));
+		}
+		else 
+			vtable->proxy = (GdaDataProxy *) gda_data_proxy_new (vtable->td->real_model);
+
+		/* proxy settings */
+		gda_data_proxy_set_sample_size (vtable->proxy, 0);
+		g_object_set (G_OBJECT (vtable->proxy), "defer-sync", FALSE, NULL);
+	}
+
 	cursor = g_new0 (VirtualCursor, 1);
-	cursor->iter = gda_data_model_iter_new (GDA_DATA_MODEL (table->proxy));
+	cursor->iter = gda_data_model_iter_new (GDA_DATA_MODEL (vtable->proxy));
 	*ppCursor = &(cursor->base);
 	return SQLITE_OK;
 }
@@ -470,6 +519,7 @@ virtualClose (sqlite3_vtab_cursor *cur)
 	TRACE ();
 
 	g_object_unref (cursor->iter);
+	/* FIXME: destroy table->spec->model and table->proxy */
 	g_free (cur);
 	return SQLITE_OK;
 }
@@ -491,13 +541,13 @@ static int
 virtualNext (sqlite3_vtab_cursor *cur)
 {
 	VirtualCursor *cursor = (VirtualCursor*) cur;
-	VirtualTable *table = (VirtualTable*) cur->pVtab;
+	VirtualTable *vtable = (VirtualTable*) cur->pVtab;
 
 	TRACE ();
 
 	gda_data_model_iter_move_next (cursor->iter);
 	while (gda_data_model_iter_is_valid (cursor->iter) &&
-	       gda_data_proxy_row_is_deleted (table->proxy, gda_data_model_iter_get_row (cursor->iter)))
+	       gda_data_proxy_row_is_deleted (vtable->proxy, gda_data_model_iter_get_row (cursor->iter)))
 		gda_data_model_iter_move_next (cursor->iter);
 	return SQLITE_OK;
 }
@@ -529,8 +579,8 @@ virtualColumn (sqlite3_vtab_cursor *cur, sqlite3_context *ctx, int i)
 		else if (G_VALUE_TYPE (value) == G_TYPE_DOUBLE) 
 			sqlite3_result_double (ctx, g_value_get_double (value));
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_BLOB) {
-			const GdaBlob *blob;
-			blob = gda_value_get_blob (value);
+			GdaBlob *blob;
+			blob = (GdaBlob *) gda_value_get_blob (value);
 			if (blob->op)
 				gda_blob_op_read_all (blob->op, blob);
 			sqlite3_result_blob (ctx, blob->data.data, blob->data.binary_length, SQLITE_TRANSIENT);
@@ -601,7 +651,7 @@ virtualBestIndex (sqlite3_vtab *tab, sqlite3_index_info *pIdxInfo)
 static int
 virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int64 *pRowid)
 {
-	VirtualTable *table = (VirtualTable *) tab;
+	VirtualTable *vtable = (VirtualTable *) tab;
 
 	TRACE ();
 
@@ -616,9 +666,9 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 			GError *error = NULL;
 
 			/*g_print ("%d => %s\n", i, sqlite3_value_text (apData [i]));*/
-			type = gda_column_get_g_type (gda_data_model_describe_column ((GdaDataModel*) table->proxy, i - 2));
+			type = gda_column_get_g_type (gda_data_model_describe_column ((GdaDataModel*) vtable->proxy, i - 2));
 			value = gda_value_new_from_string (sqlite3_value_text (apData [i]), type);
-			res = gda_data_model_set_value_at ((GdaDataModel*) table->proxy, i - 2, rowid, value, &error);
+			res = gda_data_model_set_value_at ((GdaDataModel*) vtable->proxy, i - 2, rowid, value, &error);
 			gda_value_free (value);
 			if (!res) {
 				g_print ("Error: %s\n", error && error->message ? error->message : "???");
@@ -630,27 +680,27 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 	else if ((nData==1) && (sqlite3_value_type (apData[0])==SQLITE_INTEGER)) {
 		/* DELETE */
 		gint rowid = sqlite3_value_int (apData [0]);
-		return gda_data_model_remove_row (GDA_DATA_MODEL (table->proxy), rowid, NULL) ? SQLITE_OK : SQLITE_READONLY;
+		return gda_data_model_remove_row (GDA_DATA_MODEL (vtable->proxy), rowid, NULL) ? SQLITE_OK : SQLITE_READONLY;
 	}
 	else if ((nData>2) && (sqlite3_value_type (apData[0])==SQLITE_NULL)) {
 		/* INSERT */
 		gint newrow, i;
 		GList *values = NULL;
 		
-		newrow = gda_data_model_append_row (GDA_DATA_MODEL (table->proxy), NULL);
+		newrow = gda_data_model_append_row (GDA_DATA_MODEL (vtable->proxy), NULL);
 		if (newrow < 0)
 			return SQLITE_READONLY;
 
 		for (i = 2; i < nData; i++) {
 			GType type;
 			GValue *value;
-			type = gda_column_get_g_type (gda_data_model_describe_column ((GdaDataModel*) table->proxy, i - 2));
+			type = gda_column_get_g_type (gda_data_model_describe_column ((GdaDataModel*) vtable->proxy, i - 2));
 			value = gda_value_new_from_string (sqlite3_value_text (apData [i]), type);
 			/*g_print ("TXT #%s# => value %p (type=%s)\n", sqlite3_value_text (apData [i]), value,
 			  g_type_name (type));*/
 			values = g_list_append (values, value);
 		}
-		gda_data_model_set_values (GDA_DATA_MODEL (table->proxy), newrow, values, NULL);
+		gda_data_model_set_values (GDA_DATA_MODEL (vtable->proxy), newrow, values, NULL);
 		g_list_foreach (values, (GFunc) gda_value_free, NULL);
 		g_list_free (values);
 
@@ -685,19 +735,22 @@ virtualSync (sqlite3_vtab *tab)
 static int
 virtualCommit (sqlite3_vtab *tab)
 {
-	VirtualTable *table = (VirtualTable *) tab;
+	VirtualTable *vtable = (VirtualTable *) tab;
 	
 	TRACE ();
 
-	return gda_data_proxy_apply_all_changes (table->proxy, NULL) ? SQLITE_OK : SQLITE_READONLY;
+	if (vtable->proxy)
+		return gda_data_proxy_apply_all_changes (vtable->proxy, NULL) ? SQLITE_OK : SQLITE_READONLY;
+	else
+		return TRUE;
 }
 
 static int
 virtualRollback (sqlite3_vtab *tab)
 {
-	VirtualTable *table = (VirtualTable *) tab;
+	VirtualTable *vtable = (VirtualTable *) tab;
 	
 	TRACE ();
 
-	return gda_data_proxy_cancel_all_changes (table->proxy) ? SQLITE_OK : SQLITE_ERROR;
+	return gda_data_proxy_cancel_all_changes (vtable->proxy) ? SQLITE_OK : SQLITE_ERROR;
 }

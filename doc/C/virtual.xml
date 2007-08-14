@@ -26,5 +26,13 @@ cnc = gda_server_provider_create_connection (NULL, GDA_SERVER_PROVIDER (provider
 gda_connection_open (cnc, NULL);
     </programlisting>
   </para>
+  <para>
+    Some examples of virtual connections usage can be found in the source distribtion of Libgda in:
+    <itemizedlist>
+      <listitem><para><filename class="directory">samples/Virtual</filename></para></listitem>
+      <listitem><para><filename class="directory">samples/DirDataModel</filename></para></listitem>
+      <listitem><para><filename class="directory">samples/F-Spot</filename></para></listitem>
+    </itemizedlist>
+  </para>
   &libgda-virtual-notice;
 </sect2>

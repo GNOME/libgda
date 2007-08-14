@@ -25,7 +25,10 @@
 
 #include <virtual/gda-virtual-provider.h>
 #include <virtual/gda-vprovider-data-model.h>
+#include <virtual/gda-vprovider-hub.h>
+
 #include <virtual/gda-virtual-connection.h>
 #include <virtual/gda-vconnection-data-model.h>
+#include <virtual/gda-vconnection-hub.h>
 
 #endif

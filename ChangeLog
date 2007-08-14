@@ -1,3 +1,18 @@
+2007-08-14  Vivien Malerba <malerba@gnome-db.org>
+
+	* providers/sqlite/sqlite-src: moved to version 3.4.2
+	* providers/sqlite/virtual/gda-vprovider-hub.[ch]:
+	* providers/sqlite/virtual/gda-vconnection-hub.[ch]: new type of virtual connection
+	in which all the tables of another connection are added (using a namespace to avoid
+	table names collisions)
+	* gda-vconnection-data-model.[ch]:
+	* gda-vprovider-data-model.c: reworked the way virtual tables acre created to be able
+	to have virtual tables without a real data model when they are created
+	* gda-vconnection-data-model-private.h: new file
+	* samples/F-Spot: new example which is supposed to "repair" a broken F-Spot database
+	which also illustrates how to use the GdaVconnectionHub virtual connection
+	* doc/C: documentation updates
+
 2007-08-10  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in: check for the presence of Gnome VFS and Libgcrypt (but does not require them)

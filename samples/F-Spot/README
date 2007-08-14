@@ -1,0 +1,41 @@
+Libgda F-Spot example
+=====================
+
+Description:
+------------
+
+WARNING: this is a demonstration program and should _not_ be used on production systems as
+some yet unknown bug may corrupt your F-Spot database. You'll have been warned.
+
+This example helps "repairing" an F-Spot database corrupted because you may have moved some
+of your pictures into another directory while the F-Spot database still references the picture
+file in the original directory.
+
+This example also illustrates how to use the GdaVconnectionHub virtual connection, as the following
+environment is set up:
+* a connection (CNC) is opened on the F-Spot database
+* a GdaDataModelDir data model is created listing the files in the specified directory (on the
+  command line) or in the current directory
+* a virtual connection is created with the CNC's tables in the "spot" namespace, in which the tables are:
+  * spot.photos: virtual table representing the CNC.photos table
+  * files: virtual table representing the contents of the GdaDataModelDir data model
+  * some other tables from the CNC connection under the "spot" namespace
+
+The program then uses SQL to determine missing files from the spot.photos table, and to propose
+corrections. The F-Spot database is not modified unless the -w option is given. 
+
+Compiling and running:
+----------------------
+
+To compile (make sure Libgda is installed prior to this):
+> make
+
+For help:
+> ./repair-path --help 
+
+Use the -f option to specify the F-Spot database file ($HOME/.gnome2/f-spot/photos.db by default)
+Use the -w option to actually write corrections to the database file
+Speficy an optional directory as the topmost directory where your files may be
+
+> ./repair-path /path/to/files
+> ./repair-path -f ./photos.db -w /path/to/files

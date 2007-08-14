@@ -334,6 +334,7 @@ gda_data_model_dir_get_type
 <FILE>gda-data-model-query</FILE>
 <TITLE>GdaDataModelQuery</TITLE>
 GdaDataModelQuery
+GdaDataModelQueryOptions
 GdaDataModelQueryClass
 GdaDataModelQueryPrivate
 gda_data_model_query_new
@@ -787,6 +788,20 @@ gda_vprovider_data_model_get_type
 </SECTION>
 
 <SECTION>
+<FILE>gda-vprovider-hub</FILE>
+<TITLE>GdaVproviderHub</TITLE>
+GdaVproviderHub
+gda_vprovider_hub_new
+<SUBSECTION Standard>
+GDA_IS_VPROVIDER_HUB
+GDA_IS_VPROVIDER_HUB_CLASS
+GDA_VPROVIDER_HUB
+GDA_VPROVIDER_HUB_CLASS
+GDA_TYPE_VPROVIDER_HUB
+gda_vprovider_hub_get_type
+</SECTION>
+
+<SECTION>
 <FILE>gda-virtual-connection</FILE>
 <TITLE>GdaVirtualConnection</TITLE>
 GdaVirtualConnection
@@ -804,8 +819,13 @@ gda_virtual_connection_get_type
 <TITLE>GdaVconnectionDataModel</TITLE>
 GdaVconnectionDataModel
 GdaVConnectionDataModelFunc
+GdaVconnectionDataModelSpec
+GdaVconnectionDataModelCreateColumnsFunc
+GdaVconnectionDataModelCreateModelFunc
 gda_vconnection_data_model_add
+gda_vconnection_data_model_add_model
 gda_vconnection_data_model_remove
+gda_vconnection_data_model_get_table_name
 gda_vconnection_data_model_get_model
 gda_vconnection_data_model_foreach
 <SUBSECTION Standard>
@@ -815,6 +835,24 @@ GDA_VCONNECTION_DATA_MODEL
 GDA_VCONNECTION_DATA_MODEL_CLASS
 GDA_TYPE_VCONNECTION_DATA_MODEL
 gda_vconnection_data_model_get_type
+</SECTION>
+
+<SECTION>
+<FILE>gda-vconnection-hub</FILE>
+<TITLE>GdaVconnectionHub</TITLE>
+GdaVconnectionHub
+GdaVConnectionHubFunc
+gda_vconnection_hub_add
+gda_vconnection_hub_remove
+gda_vconnection_hub_get_connection
+gda_vconnection_hub_foreach
+<SUBSECTION Standard>
+GDA_IS_VCONNECTION_HUB
+GDA_IS_VCONNECTION_HUB_CLASS
+GDA_VCONNECTION_HUB
+GDA_VCONNECTION_HUB_CLASS
+GDA_TYPE_VCONNECTION_HUB
+gda_vconnection_hub_get_type
 </SECTION>
 
 <SECTION>

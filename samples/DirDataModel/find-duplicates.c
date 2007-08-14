@@ -102,7 +102,7 @@ main (int argc, char *argv [])
 
 	model = gda_data_model_dir_new (dirname);
 	g_print ("Finding duplicates among %d files\n", gda_data_model_get_n_rows (model));
-	if (!gda_vconnection_data_model_add (GDA_VCONNECTION_DATA_MODEL (cnc), model, "files", &error))
+	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (cnc), model, "files", &error))
                 g_error ("Add GdaDataModelDir model error: %s\n", error && error->message ? error->message : "no detail");
 	g_object_unref (model);
 

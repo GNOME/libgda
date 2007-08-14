@@ -69,8 +69,10 @@
 <!ENTITY libgda-GdaServerProvider SYSTEM "xml/gda-server-provider.xml">
 <!ENTITY libgda-GdaVirtualProvider SYSTEM "xml/gda-virtual-provider.xml">
 <!ENTITY libgda-GdaVproviderDataModel SYSTEM "xml/gda-vprovider-data-model.xml">
+<!ENTITY libgda-GdaVproviderHub SYSTEM "xml/gda-vprovider-hub.xml">
 <!ENTITY libgda-GdaVirtualConnection SYSTEM "xml/gda-virtual-connection.xml">
 <!ENTITY libgda-GdaVconnectionDataModel SYSTEM "xml/gda-vconnection-data-model.xml">
+<!ENTITY libgda-GdaVconnectionHub SYSTEM "xml/gda-vconnection-hub.xml">
 <!ENTITY libgda-GdaServerOperation SYSTEM "xml/gda-server-operation.xml">
 <!ENTITY libgda-serverop-intro SYSTEM "server-operation.xml">
 <!ENTITY libgda-virtual SYSTEM "virtual.xml">
@@ -457,8 +459,10 @@
       &libgda-virtual;
       &libgda-GdaVirtualProvider;
       &libgda-GdaVproviderDataModel;
+      &libgda-GdaVproviderHub;
       &libgda-GdaVirtualConnection;
       &libgda-GdaVconnectionDataModel;
+      &libgda-GdaVconnectionHub;
     </chapter>
 
     <chapter id="data_models">

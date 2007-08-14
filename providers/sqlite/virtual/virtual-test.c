@@ -67,26 +67,26 @@ main (int argc, char **argv)
 		g_print ("Data model cannot go backwards => don't yet print its contents\n");
 	*/
 
-	if (!gda_vconnection_data_model_add (GDA_VCONNECTION_DATA_MODEL (cnc), rw_model, "rwtable", &error)) {
+	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (cnc), rw_model, "rwtable", &error)) {
 		g_print ("Add RW model error: %s\n", error && error->message ? error->message : "no detail");
 		g_error_free (error);
 		error = NULL;
 		goto theend;
 	}
-	if (!gda_vconnection_data_model_add (GDA_VCONNECTION_DATA_MODEL (cnc), proxy, "mytable", &error)) {
+	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (cnc), proxy, "mytable", &error)) {
 		g_print ("Add Proxy model error: %s\n", error && error->message ? error->message : "no detail");
 		g_error_free (error);
 		error = NULL;
 		goto theend;
 	}
-	if (!gda_vconnection_data_model_add (GDA_VCONNECTION_DATA_MODEL (cnc), xml_model, "copytable", &error)) {
+	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (cnc), xml_model, "copytable", &error)) {
 		g_print ("Add XML model error: %s\n", error && error->message ? error->message : "no detail");
 		g_error_free (error);
 		error = NULL;
 		goto theend;
 	}
 	/*
-	if (!gda_vconnection_data_model_add (GDA_VCONNECTION_DATA_MODEL (cnc), csv_model, "csv", &error)) {
+	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (cnc), csv_model, "csv", &error)) {
 		g_print ("Add model error: %s\n", error && error->message ? error->message : "no detail");
 		g_error_free (error);
 		error = NULL;
@@ -141,7 +141,7 @@ main (int argc, char **argv)
 		goto theend;	
 
 	/* remove a table */
-	if (!gda_vconnection_data_model_remove (GDA_VCONNECTION_DATA_MODEL (cnc), proxy, &error)) {
+	if (!gda_vconnection_data_model_remove (GDA_VCONNECTION_DATA_MODEL (cnc), gda_vconnection_data_model_get_table_name (GDA_VCONNECTION_DATA_MODEL (cnc), proxy), &error)) {
 		g_print ("Remove Proxy model error: %s\n", error && error->message ? error->message : "no detail");
 		g_error_free (error);
 		error = NULL;

@@ -36,25 +36,41 @@ G_BEGIN_DECLS
 typedef struct _GdaVconnectionDataModel      GdaVconnectionDataModel;
 typedef struct _GdaVconnectionDataModelClass GdaVconnectionDataModelClass;
 typedef struct _GdaVconnectionDataModelPrivate GdaVconnectionDataModelPrivate;
+typedef struct _GdaVconnectionDataModelSpec  GdaVconnectionDataModelSpec;
+
+typedef GList        *(*GdaVconnectionDataModelCreateColumnsFunc) (GdaVconnectionDataModelSpec *);
+typedef GdaDataModel *(*GdaVconnectionDataModelCreateModelFunc)   (GdaVconnectionDataModelSpec *);
+
+struct _GdaVconnectionDataModelSpec {
+	GdaDataModel                             *data_model;
+	GdaVconnectionDataModelCreateColumnsFunc  create_columns_func;
+	GdaVconnectionDataModelCreateModelFunc    create_model_func;
+};
+#define GDA_VCONNECTION_DATA_MODEL_SPEC(x) ((GdaVconnectionDataModelSpec*)(x))
 
 typedef void (*GdaVConnectionDataModelFunc) (GdaDataModel *model, const gchar *table_name, gpointer data);
 
 struct _GdaVconnectionDataModel {
 	GdaVirtualConnection            connection;
 	GdaVconnectionDataModelPrivate *priv;
-	GdaDataModel                   *adding;
 };
 
 struct _GdaVconnectionDataModelClass {
 	GdaVirtualConnectionClass       parent_class;
 };
 
-GType               gda_vconnection_data_model_get_type (void) G_GNUC_CONST;
+GType               gda_vconnection_data_model_get_type  (void) G_GNUC_CONST;
 
-gboolean            gda_vconnection_data_model_add       (GdaVconnectionDataModel *cnc, 
+gboolean            gda_vconnection_data_model_add       (GdaVconnectionDataModel *cnc, GdaVconnectionDataModelSpec *spec, 
+							  GDestroyNotify spec_free_func,
+							  const gchar *table_name, GError **error);
+gboolean            gda_vconnection_data_model_add_model (GdaVconnectionDataModel *cnc, 
 							  GdaDataModel *model, const gchar *table_name, GError **error);
-gboolean            gda_vconnection_data_model_remove    (GdaVconnectionDataModel *cnc, GdaDataModel *model, GError **error);
+gboolean            gda_vconnection_data_model_remove    (GdaVconnectionDataModel *cnc, const gchar *table_name, GError **error);
+
+const gchar        *gda_vconnection_data_model_get_table_name (GdaVconnectionDataModel *cnc, GdaDataModel *model);
 GdaDataModel       *gda_vconnection_data_model_get_model (GdaVconnectionDataModel *cnc, const gchar *table_name);
+
 void                gda_vconnection_data_model_foreach   (GdaVconnectionDataModel *cnc, 
 							  GdaVConnectionDataModelFunc func, gpointer data);
 
