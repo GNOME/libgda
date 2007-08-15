@@ -5,6 +5,7 @@ else
 sqlitelibs= $(top_builddir)/providers/sqlite/sqlite-src/libsqlite.la
 sqliteinc= -I$(top_srcdir)/providers/sqlite/sqlite-src \
 	-I$(top_builddir)/providers/sqlite/sqlite-src \
+	-I$(top_srcdir)/providers/sqlite \
 	-I$(top_builddir)/providers/sqlite
 endif
 

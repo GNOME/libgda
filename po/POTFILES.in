@@ -59,9 +59,7 @@ libsql/parser.c
 libsql/sql_parser.c
 providers/bdb/bdb_specs_dsn.xml.in
 providers/bdb/gda-bdb-provider.c
-providers/bdb/gda-bdb-recordset.c
 providers/bdb/libmain.c
-providers/bdb/utils.c
 providers/firebird/firebird_specs_dsn.xml.in
 providers/firebird/gda-firebird-provider.c
 providers/firebird/gda-firebird-recordset.c
@@ -144,6 +142,13 @@ providers/sqlite/sqlite_specs_drop_index.xml.in
 providers/sqlite/sqlite_specs_drop_table.xml.in
 providers/sqlite/sqlite_specs_dsn.xml.in
 providers/sqlite/sqlite_specs_rename_table.xml.in
+providers/sqlite/virtual/gda-vconnection-data-model.c
+providers/sqlite/virtual/gda-vconnection-hub.c
+providers/sqlite/virtual/gda-virtual-connection.c
+providers/sqlite/virtual/gda-virtual-provider.c
+providers/sqlite/virtual/gda-vprovider-data-model.c
+providers/sqlite/virtual/gda-vprovider-hub.c
+providers/sqlite/virtual/libmain.c
 providers/sybase/gda-sybase-provider.c
 providers/sybase/gda-sybase-recordset.c
 providers/sybase/gda-sybase-types.c

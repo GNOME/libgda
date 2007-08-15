@@ -12,3 +12,5 @@ noinst_LTLIBRARIES = libgda_binreloc-3.0.la
 libgda_binreloc_3_0_la_SOURCES = \
 	gda-binreloc.c \
 	gda-binreloc.h 
+
+EXTRA_DIST = binreloc.c binreloc.h

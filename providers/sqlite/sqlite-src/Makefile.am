@@ -15,3 +15,5 @@ AM_CPPFLAGS = -DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_PRIVATE=
 libsqlite_la_SOURCES = \
 	sqlite3.c \
 	sqlite3.h 
+
+EXTRA_DIST = sqliteInt.h

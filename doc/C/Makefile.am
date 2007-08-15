@@ -28,6 +28,7 @@ IGNORE_HFILES= config.h acconfig.h gda-intl.h gda-marshal.h
 # if $(DOC_MODULE).types is non-empty.
 GTKDOC_CFLAGS = -I$(top_srcdir) \
         -I$(top_builddir) \
+	-I$(top_srcdir)/providers/sqlite \
 	-I$(top_builddir)/providers/sqlite \
         $(LIBGDA_CFLAGS) \
 	-DGETTEXT_PACKAGE=\""$(GETTEXT_PACKAGE)"\"

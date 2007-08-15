@@ -1,3 +1,11 @@
+2007-08-15  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/binreloc/Makefile.am:
+	* po/POTFILES.in:
+	* providers/sqlite/sqlite-src/Makefile.am:
+	* providers/sqlite/virtual/Makefile.am:
+	* doc/C/Makefile.am: corrections to make "make distcheck" work
+
 2007-08-14  Vivien Malerba <malerba@gnome-db.org>
 
 	* providers/sqlite/sqlite-src: moved to version 3.4.2
