@@ -1,4 +1,3 @@
-/*AA*/
 #include <libgda/libgda.h>
 #include <virtual/libgda-virtual.h>
 
@@ -112,8 +111,9 @@ main (int argc, char *argv [])
 
 	/* Create the missing files table */
 #define SQL_SELECT_MISSING_FILES "SELECT * \
-FROM photos WHERE directory_path || '/' || name NOT IN (SELECT dir_name || '/' || file_name FROM files)"
+FROM photos WHERE NOT gda_file_exists (directory_path || '/' || name);"
 	run_sql_non_select (hub, "CREATE TEMP TABLE missing_files AS " SQL_SELECT_MISSING_FILES); 
+	run_and_show_sql_select (hub, "SELECT * FROM missing_files", "Missing files");
 
 	/* Create the unique files table */
 #define SQL_CREATE_UNIQUE_FILES_TABLE "CREATE TEMP TABLE unique_files AS \

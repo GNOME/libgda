@@ -57,6 +57,7 @@ struct _GdaConnectionPrivate {
 	GList                *recset_list;
 
 	GdaTransactionStatus *trans_status;
+	GHashTable           *prepared_stmts;
 };
 
 static void gda_connection_class_init (GdaConnectionClass *klass);
@@ -222,6 +223,8 @@ gda_connection_dispose (GObject *object)
 
 	/* free memory */
 	gda_connection_close_no_warning (cnc);
+
+	gda_connection_destroy_prepared_statement_hash (cnc);
 
 	if (cnc->priv->provider_obj) {
 		g_object_unref (G_OBJECT (cnc->priv->provider_obj));
@@ -1913,4 +1916,84 @@ gda_connection_force_status (GdaConnection *cnc, gboolean opened)
 		if (cnc->priv->client)
 			gda_client_notify_connection_closed_event (cnc->priv->client, cnc);
 	}
+}
+
+/*
+ * Prepared statements handling
+ */
+
+static void prepared_stms_query_destroyed_cb (GdaQuery *query, GdaConnection *cnc);
+static void
+prepared_stms_foreach_func (GdaQuery *query, gpointer prepared_stmt, GdaConnection *cnc)
+{
+	g_signal_handlers_disconnect_by_func (query, G_CALLBACK (prepared_stms_query_destroyed_cb), cnc);
+}
+
+void 
+gda_connection_destroy_prepared_statement_hash (GdaConnection *cnc)
+{
+	if (!cnc->priv->prepared_stmts)
+		return;
+
+	g_hash_table_foreach (cnc->priv->prepared_stmts, (GHFunc) prepared_stms_foreach_func, cnc);
+	g_hash_table_destroy (cnc->priv->prepared_stmts);
+	cnc->priv->prepared_stmts = NULL;
+}
+
+void
+gda_connection_init_prepared_statement_hash (GdaConnection *cnc, GDestroyNotify stmt_destroy_func)
+{
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+	g_return_if_fail (cnc->priv);
+
+	if (!cnc->priv->prepared_stmts)
+		cnc->priv->prepared_stmts = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, stmt_destroy_func);
+}
+
+static void 
+prepared_stms_query_destroyed_cb (GdaQuery *query, GdaConnection *cnc)
+{
+	g_signal_handlers_disconnect_by_func (query, G_CALLBACK (prepared_stms_query_destroyed_cb), cnc);
+	g_hash_table_remove (cnc->priv->prepared_stmts, query);
+}
+
+void 
+gda_connection_add_prepared_statement (GdaConnection *cnc, GdaQuery *query, gpointer prepared_stmt)
+{
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+	g_return_if_fail (cnc->priv);
+
+	if (!cnc->priv->prepared_stmts) {
+		g_warning (_("Prepared statements hash not initialized, "
+			     "call gda_connection_init_prepared_statement_hash() first"));
+		return;
+	}
+	g_hash_table_remove (cnc->priv->prepared_stmts, query);
+	g_hash_table_insert (cnc->priv->prepared_stmts, query, prepared_stmt);
+	
+	/* destroy the prepared statement if query is destroyed, or changes */
+	gda_object_connect_destroy (GDA_OBJECT (query), G_CALLBACK (prepared_stms_query_destroyed_cb), cnc);
+	g_signal_connect (G_OBJECT (query), "changed", G_CALLBACK (prepared_stms_query_destroyed_cb), cnc);
+
+}
+
+gpointer
+gda_connection_get_prepared_statement (GdaConnection *cnc, GdaQuery *query)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (cnc->priv, NULL);
+
+	if (!cnc->priv->prepared_stmts) {
+		g_warning (_("Prepared statements hash not initialized, "
+			     "call gda_connection_init_prepared_statement_hash() first"));
+		return NULL;
+	}
+	return g_hash_table_lookup (cnc->priv->prepared_stmts, query);
+}
+
+void
+gda_connection_del_prepared_statement (GdaConnection *cnc, GdaQuery *query)
+{
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+	prepared_stms_query_destroyed_cb (query, cnc);
 }

@@ -1402,10 +1402,14 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 	dict = gda_object_get_dict (GDA_OBJECT (field));
 
 	/* specific rendering of parameters, where actual value is not used */
-	if (field->priv->is_parameter && (options & (GDA_RENDERER_PARAMS_AS_COLON | GDA_RENDERER_PARAMS_AS_DOLLAR))) {
+	if (field->priv->is_parameter && (options & (GDA_RENDERER_PARAMS_AS_COLON | GDA_RENDERER_PARAMS_AS_DOLLAR |
+						     GDA_RENDERER_PARAMS_AS_QMARK))) {
 		GdaParameter *param_source;
 
-		g_return_val_if_fail (out_params_used, NULL);
+		if (!out_params_used) {
+			g_warning (_("The out_params_used argument is required with this selected rendering option"));
+			return NULL;
+		}
 
 		param_source = gda_query_field_value_render_find_param (field, context);
 		if (param_source) {
@@ -1429,10 +1433,15 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 				str = g_strdup_printf (":%s", name);
 				g_free (name);
 			}
-			else {
+			else if (options & GDA_RENDERER_PARAMS_AS_DOLLAR) {
 				gint i;
 				i = g_slist_index (*out_params_used, param_source) + 1;	
 				str = g_strdup_printf ("$%d", i);
+			}
+			else {
+				gint i;
+				i = g_slist_index (*out_params_used, param_source) + 1;	
+				str = g_strdup_printf ("?%d", i);
 			}
 			return str;
 		}

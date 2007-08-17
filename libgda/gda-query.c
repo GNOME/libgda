@@ -2808,7 +2808,9 @@ gda_query_execute (GdaQuery *query, GdaParameterList *params, gboolean iter_mode
 		if (error) {
 			errors_after = gda_connection_get_events (cnc);
 			for (list = g_list_last ((GList *) errors_after); list && !(*error); list = list->prev) {
-				if (!g_list_find (errors_before, list->data)) 
+				if ((gda_connection_event_get_event_type (GDA_CONNECTION_EVENT (list->data)) == 
+				     GDA_CONNECTION_EVENT_ERROR) &&
+				    !g_list_find (errors_before, list->data)) 
 					g_set_error (error, GDA_QUERY_ERROR, GDA_QUERY_EXEC_ERROR,
 						     gda_connection_event_get_description (GDA_CONNECTION_EVENT (list->data)));
 			}

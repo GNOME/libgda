@@ -43,6 +43,13 @@ void gda_connection_internal_treat_sql (GdaConnection *cnc, const gchar *sql, Gd
 
 void gda_connection_force_status (GdaConnection *cnc, gboolean opened);
 
+/* prepared statements support */
+void     gda_connection_init_prepared_statement_hash (GdaConnection *cnc, GDestroyNotify stmt_destroy_func);
+void     gda_connection_destroy_prepared_statement_hash (GdaConnection *cnc);
+void     gda_connection_add_prepared_statement (GdaConnection *cnc, GdaQuery *query, gpointer prepared_stmt); 
+void     gda_connection_del_prepared_statement (GdaConnection *cnc, GdaQuery *query); 
+gpointer gda_connection_get_prepared_statement (GdaConnection *cnc, GdaQuery *query);
+
 G_END_DECLS
 
 #endif

@@ -1424,7 +1424,8 @@ gda_parameter_dump (GdaParameter *parameter, guint offset)
  * @param: a #GdaParameter object
  *
  * Get a new string containing a "clean" version of @param's name: chars which
- * are not among [0-9A-Za-z] are replaced with '_'.
+ * are not among [0-9A-Za-z] are replaced with '_', except for the '+' char which is
+ * replaced by 'P' and the '-' char replaced by 'M'.
  *
  * Returns: a new string
  */
@@ -1433,18 +1434,23 @@ gda_parameter_get_alphanum_name (GdaParameter *param)
 {
 	g_return_val_if_fail (GDA_IS_PARAMETER (param), NULL);
 
-	const gchar* ptr = gda_object_get_name (GDA_OBJECT (param));
+	gchar* ptr = (gchar *) gda_object_get_name (GDA_OBJECT (param));
 	gchar* ret = NULL;
 	if (ptr)
 		ret = g_strdup (ptr);
 	else
 		ret = NULL;
 
-	for (ptr = ret; ptr && *ptr; ptr++)
-		if (! (((*ptr >= '0') || (*ptr <= '9')) ||
-		       ((*ptr >= 'A') || (*ptr <= 'Z')) ||
-		       ((*ptr >= 'a') || (*ptr <= 'z')))) 
-			*ret = '_';
+	for (ptr = ret; ptr && *ptr; ptr++) {
+		if (*ptr == '+')
+			*ptr = 'P';
+		else if (*ptr == '-')
+			*ptr = 'M';
+		else if (! (((*ptr >= '0') && (*ptr <= '9')) ||
+			    ((*ptr >= 'A') && (*ptr <= 'Z')) ||
+			    ((*ptr >= 'a') && (*ptr <= 'z')))) 
+			*ptr = '_';
+	}
 	return ret;	
 }
 

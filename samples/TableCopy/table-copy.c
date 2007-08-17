@@ -1,20 +1,9 @@
-/*
- * Illustrates how to copy data from one table to another
- *
- * This example requires the 'SalesTest' data source to be defined (this DSN is automatically
- * defined when the first Libgda application is run, and uses a small sample SQLite database). 
- *
- * It copies some of the contents of the 'products' table into a temporary 'products_copied' table 
- *
- * Compile with: cc -Wall -g -o table_copy table_copy.c `pkg-config --cflags --libs libgda-3.0`
- */
-
 #include <libgda/libgda.h>
 
+#include "common.h"
 GdaDataModel *get_products_contents (GdaConnection *cnc);
-gboolean      setup_products_copied_table (GdaConnection *cnc);
-gboolean      copy_products_1 (GdaConnection *cnc);
-gboolean      copy_products_2 (GdaConnection *cnc);
+gboolean      copy_products_1 (GdaConnection *source, GdaConnection *dest);
+gboolean      copy_products_2 (GdaConnection *source, GdaConnection *dest);
 
 int
 main (int argc, char *argv[])
@@ -22,91 +11,26 @@ main (int argc, char *argv[])
         gda_init ("LibgdaCopyTable", "1.0", argc, argv);
 
         GdaClient *client;
-        GdaConnection *cnc;
-        gchar *dsn = "SalesTest";
-        GError *error = NULL;
+        GdaConnection *s_cnc, *d_cnc;
 
         /* Create a GdaClient object which is the central object which manages all connections */
         client = gda_client_new ();
 
-        /* Open the connection to the database, using the DSN, 
-         * username and password given by the GnomeDbLoginDialog 
-         */
-        cnc = gda_client_open_connection (client, dsn, NULL, NULL,
-                                          GDA_CONNECTION_OPTIONS_DONT_SHARE,
-                                          &error);
-        if (!cnc) {
-                g_print ("Could not open connection to DSN '%s': %s\n",
-                         dsn,
-                         error && error->message ? error->message : "No detail");
-                exit (1);
-        }
-	gda_dict_set_connection (default_dict, cnc);
-
-	/* create a 'products_copied' table, or reset it if one already exists */
-	if (!setup_products_copied_table (cnc)) {
-		gda_connection_close (cnc);
-		return 1;
-	}
+	/* open connections */
+	s_cnc = open_source_connection (client);
+	d_cnc = open_destination_connection (client);
 
 	/* copy some contents of the 'products' table into the 'products_copied', method 1 */
-	if (! copy_products_1 (cnc)) {
-		gda_connection_close (cnc);
-		return 1;
-	}
-
-	/* create a 'products_copied' table, or reset it if one already exists */
-	if (!setup_products_copied_table (cnc)) {
-		gda_connection_close (cnc);
-		return 1;
-	}
+	if (! copy_products_1 (s_cnc, d_cnc)) 
+		exit (1);
 
 	/* copy some contents of the 'products' table into the 'products_copied', method 2 */
-	if (! copy_products_2 (cnc)) {
-		gda_connection_close (cnc);
-		return 1;
-	}
+	if (! copy_products_2 (s_cnc, d_cnc)) 
+		exit (1);
 
-        gda_connection_close (cnc);
+        gda_connection_close (s_cnc);
+        gda_connection_close (d_cnc);
         return 0;
-}
-
-/*
- * Create the 'products_copied' table (and remove any already existing instance)
- */
-gboolean
-setup_products_copied_table (GdaConnection *cnc)
-{
-	GdaCommand *command;
-        gchar *sql;
-	GError *error = NULL;
-
-        /* DROP table if it exists */
-	sql = "DROP table IF EXISTS products_copied;";
-	command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
-	if (gda_connection_execute_non_select_command (cnc, command, NULL, &error) == -1) {
-		g_print ("Could not drop table 'products_copied': %s\n",
-                         error && error->message ? error->message : "No detail");
-		g_error_free (error);
-		gda_command_free (command);
-		return FALSE;
-	}
-	gda_command_free (command);
-
-	/* CREATE table */
-        sql = "CREATE table products_copied (ref string not null primary key, "
-		"name string not null, price real, wh_stored integer REFERENCES warehouses(id))";
-        command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
-	if (gda_connection_execute_non_select_command (cnc, command, NULL, &error) == -1) {
-		g_print ("Could not create table 'products_copied': %s\n",
-                         error && error->message ? error->message : "No detail");
-		g_error_free (error);
-		gda_command_free (command);
-		return FALSE;
-	}
-	gda_command_free (command);
-
-	return TRUE;
 }
 
 /* 
@@ -123,12 +47,9 @@ get_products_contents (GdaConnection *cnc)
 	command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 	data_model = gda_connection_execute_select_command (cnc, command, NULL, &error);
 	gda_command_free (command);
-        if (!data_model) {
-                g_print ("Could not get the contents of the 'products' table: %s\n",
+        if (!data_model) 
+                g_error ("Could not get the contents of the 'products' table: %s\n",
                          error && error->message ? error->message : "No detail");
-		g_error_free (error);
-        }
-
 	return data_model;
 }
 
@@ -143,7 +64,7 @@ get_products_contents (GdaConnection *cnc)
  * The price of the products is increased by 5% in the process.
  */
 gboolean
-copy_products_1 (GdaConnection *cnc)
+copy_products_1 (GdaConnection *s_cnc, GdaConnection *d_cnc)
 {
         gchar *sql;
 	GError *error = NULL;
@@ -153,13 +74,13 @@ copy_products_1 (GdaConnection *cnc)
 	GdaQuery *query = NULL;
 	gboolean retval = TRUE;
 
-	source = get_products_contents (cnc);
-	if (!source) {
-		retval = FALSE;
-		goto end;
-	}
+	source = get_products_contents (s_cnc);
 
-	sql = "INSERT INTO products_copied (ref, name, price, wh_stored) VALUES ("
+	/* instruct that queries referencing the default dictionary will be executed using the d_cnc connection */
+	gda_dict_set_connection (default_dict, d_cnc);
+
+	/* query creation */
+	sql = "INSERT INTO products_copied1 (ref, name, price, wh_stored) VALUES ("
 		"## /* name:ref type:gchararray */, "
 		"## /* name:name type:gchararray */, "
 		"## /* name:price type:gdouble */, "
@@ -173,7 +94,7 @@ copy_products_1 (GdaConnection *cnc)
 		goto end;
 	}
 
-
+	/* actual execution */
 	params = gda_query_get_parameter_list (query);
 	nrows = gda_data_model_get_n_rows (source);
 	for (row = 0; row < nrows; row++) {
@@ -210,8 +131,6 @@ copy_products_1 (GdaConnection *cnc)
 		g_object_unref (query);
 	if (params)
 		g_object_unref (params);
-	if (source)
-		g_object_unref (source);
 	return retval;
 }
 
@@ -225,7 +144,7 @@ copy_products_1 (GdaConnection *cnc)
  * The price of the products is unchanged in the process.
  */
 gboolean
-copy_products_2 (GdaConnection *cnc)
+copy_products_2 (GdaConnection *s_cnc, GdaConnection *d_cnc)
 {
         gchar *sql;
 	GError *error = NULL;
@@ -233,15 +152,17 @@ copy_products_2 (GdaConnection *cnc)
 	GdaQuery *query = NULL;
 	gboolean retval = TRUE;
 
-	source = get_products_contents (cnc);
-	if (!source)
-		goto end;
+	source = get_products_contents (s_cnc);
 
-	query = gda_query_new_from_sql (NULL, "SELECT ref, name, price, wh_stored FROM products_copied", &error);
+	/* instruct that queries referencing the default dictionary will be executed using the d_cnc connection */
+	gda_dict_set_connection (default_dict, d_cnc);
+
+	/* create GdaDataModelQuery and set it up */
+	query = gda_query_new_from_sql (NULL, "SELECT ref, name, price, wh_stored FROM products_copied2", &error);
 	dest = gda_data_model_query_new (query);
 	g_object_unref (query);
 
-	sql = "INSERT INTO products_copied (ref, name, price, wh_stored) VALUES ("
+	sql = "INSERT INTO products_copied2 (ref, name, price, wh_stored) VALUES ("
 		"## /* name:+0 type:gchararray */, "
 		"## /* name:+1 type:gchararray */, "
 		"## /* name:+2 type:gdouble */, "
@@ -268,4 +189,3 @@ copy_products_2 (GdaConnection *cnc)
 		g_object_unref (dest);
 	return retval;
 }
-

@@ -136,17 +136,24 @@ gda_sqlite_update_types_hash (SQLITEcnc *scnc)
 }
 
 void
+gda_sqlite_result_take_sql (SQLITEresult *sres, gchar *sql)
+{
+	gchar *ptr;
+	g_strchug (sql);
+	sres->sql = sql;
+}
+
+void
 gda_sqlite_free_result (SQLITEresult *sres)
 {
 	if (!sres)
 		return;
 
+	g_free (sres->sql);
 	if (sres->stmt)
 		sqlite3_finalize (sres->stmt);
 	if (sres->types)
 		g_free (sres->types);
-	if (sres->sqlite_types)
-		g_free (sres->sqlite_types);
 	if (sres->cols_size)
 		g_free (sres->cols_size);
 	g_free (sres);	

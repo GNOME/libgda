@@ -596,6 +596,7 @@ gda_parameter_get_value
 gda_parameter_get_value_str
 gda_parameter_set_value
 gda_parameter_set_value_str
+gda_parameter_get_alphanum_name
 gda_parameter_declare_invalid
 gda_parameter_is_valid
 gda_parameter_get_default_value

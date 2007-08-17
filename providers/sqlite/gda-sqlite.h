@@ -41,10 +41,11 @@
 
 typedef struct {
 	sqlite3_stmt *stmt;
+	gchar        *sql; /* SQL corresponding to @stmt */
+
 	gint          ncols;
 	gint          nrows;
-	GType *types; /* array of ncols types */
-	int          *sqlite_types; /* array of ncols types */
+	GType        *types; /* array of ncols types */
 	int          *cols_size; /* array of ncols types */
 } SQLITEresult;
 
@@ -57,6 +58,7 @@ typedef struct {
 
 void gda_sqlite_update_types_hash (SQLITEcnc *scnc);
 
+void gda_sqlite_result_take_sql (SQLITEresult *sres, gchar *sql);
 void gda_sqlite_free_result (SQLITEresult *sres);
 void gda_sqlite_free_cnc    (SQLITEcnc *scnc);
 

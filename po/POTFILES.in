@@ -3,6 +3,8 @@ libgda/gda-config.c
 libgda/gda-connection.c
 libgda/gda-data-access-wrapper.c
 libgda/gda-data-model-array.c
+libgda/gda-data-model-bdb.c
+libgda/gda-data-model-dir.c
 libgda/gda-data-model-filter-sql.c
 libgda/gda-data-model-hash.c
 libgda/gda-data-model-import.c
@@ -50,12 +52,9 @@ libgda/handlers/gda-handler-string.c
 libgda/handlers/gda-handler-time.c
 libgda/handlers/gda-handler-type.c
 libgda/sql-delimiter/gda-sql-delimiter.c
-libgda/sql-delimiter/lexer.c
-libgda/sql-delimiter/parser.c
-libgda/sql-transaction/parser.c
+libgda/sql-delimiter/lexer.l
 libgda/sql-transaction/gda-sql-transaction-parser.c
-libsql/lexer.c
-libsql/parser.c
+libsql/lexer.l
 libsql/sql_parser.c
 providers/bdb/bdb_specs_dsn.xml.in
 providers/bdb/gda-bdb-provider.c

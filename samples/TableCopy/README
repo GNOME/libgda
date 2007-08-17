@@ -1,0 +1,44 @@
+Libgda table copy examples
+==========================
+
+Description:
+------------
+
+The examples in this directory illustrate how to copy data from one table to
+another (limited to 10 rows) in another database. 
+
+The examples copy the table "products"'s contents of the 'SalesTest' (this data source needs to be defined, 
+which is automatically done when the first Libgda application is run, and uses a small SQLite database), to
+another database created for that purpose, in a table called "products_copied<x>" where <x> varies from 1 to 3. 
+
+So all the examples start with the same steps:
+
+* open a source connection to the 'SalesTest' data source
+* open a destination connection to a local SQLite database (SQLite is chosen to make the examples exectable
+  without the need of a database server, but the same code could be applied with any kind of database
+  supported by Libgda).
+
+The "table-copy.c" file shows 2 ways to do it, both start by getting a data model
+containing all the data to copy, and:
+* in the 1st method, an INSERT query is created with place holders for the values to
+  insert, and this query is executed for each row in the source data model (binding the
+  parameters each time) - the price of the products is increased by 5% in the process
+* in the 2nd method, a GdaDataModelQuery is created and gda_data_model_import_from_model()
+  is called to actually do the data copy
+
+The "table-copy-easier.c" file shows an easier way using virtual connections: the two opened connections are
+added to a virtual connection using the "source" and "destination" namespaces; then 
+an "INSERT INTO destination.products_copied3 SELECT ref, name, price, wh_stored FROM source.products" is executed.
+
+Compiling and running:
+----------------------
+
+To compile (make sure Libgda is installed prior to this):
+> make
+
+and to run:
+> ./table-copy
+> ./table-copy-easier
+
+After executing either of these programs, there should be a "copy.db" file containing
+the copied data.

@@ -1,3 +1,27 @@
+2007-08-17  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-query.c: corrected a bug where the error was set even if the query
+	was sucessfully exectuted in gda_query_execute()
+	* libgda/gda-connection-private.h:
+	* libgda/gda-connection.c: added support for providers to declare prepared statements
+	attached to GdaQuery objects
+	* providers/sqlite/gda-sqlite-provider.c: implemented the execute_query() virtual method
+	which uses prepared statements for better performances
+	* libgda/gda-parameter.c: corrected gda_parameter_get_alphanum_name()
+	* libgda/gda-renderer.h: added a new GDA_RENDERER_PARAMS_AS_QMARK option
+	* libgda/gda-query-field-value.c: implement the GDA_RENDERER_PARAMS_AS_QMARK option
+	* providers/sqlite/gda-sqlite-provider.c:
+	* providers/sqlite/sqlite_specs_dsn.xml.in: the gda_file_exists() function
+	is now available from within SQL statements
+	* providers/sqlite/virtual/gda-vprovider-data-model.c: make sure the extra SQL functions
+	are loaded
+	* Makefile.am: include all the files in the samples/ directory as EXTRA_DIST
+	* samples/F-Spot/repair-path.c: really check for file existence when building the list
+	of missing files
+	* samples/TableCopy: reworked the table copy example to copy data from
+	two different databases
+	* po/POTFILES.in: corrections for bug #467273
+
 2007-08-15  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/binreloc/Makefile.am:
@@ -13,10 +37,10 @@
 	* providers/sqlite/virtual/gda-vconnection-hub.[ch]: new type of virtual connection
 	in which all the tables of another connection are added (using a namespace to avoid
 	table names collisions)
-	* gda-vconnection-data-model.[ch]:
-	* gda-vprovider-data-model.c: reworked the way virtual tables acre created to be able
-	to have virtual tables without a real data model when they are created
-	* gda-vconnection-data-model-private.h: new file
+	* providers/sqlite/virtual/gda-vconnection-data-model.[ch]:
+	* providers/sqlite/virtual/gda-vprovider-data-model.c: reworked the way virtual tables 
+	are created to be able to have virtual tables without a real data model when they are created
+	* providers/sqlite/virtual/gda-vconnection-data-model-private.h: new file
 	* samples/F-Spot: new example which is supposed to "repair" a broken F-Spot database
 	which also illustrates how to use the GdaVconnectionHub virtual connection
 	* doc/C: documentation updates

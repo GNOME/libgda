@@ -253,6 +253,7 @@ gda_vconnection_data_model_add (GdaVconnectionDataModel *cnc, GdaVconnectionData
 		g_print ("Virtual connection: added table %s (model = %p)\n", td->table_name, td->spec->data_model);
 	*/
 
+
 	return retval;
 }
 

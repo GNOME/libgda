@@ -39,8 +39,9 @@ typedef enum {
 	GDA_RENDERER_PARAMS_AS_DETAILED     = 1 << 1,
 	GDA_RENDERER_ERROR_IF_DEFAULT       = 1 << 2,
 	GDA_RENDERER_FIELDS_NO_TARGET_ALIAS = 1 << 3,
-	GDA_RENDERER_PARAMS_AS_COLON        = 1 << 4,/* params as :param_name */
-	GDA_RENDERER_PARAMS_AS_DOLLAR       = 1 << 5 /* params as $1, $2, etc (starts at $1) */
+	GDA_RENDERER_PARAMS_AS_COLON        = 1 << 4,/* params as :param_name, replacing any char not in [0-9A-Za-z] by '_' */
+	GDA_RENDERER_PARAMS_AS_DOLLAR       = 1 << 5,/* params as $1, $2, etc (starts at $1) */
+	GDA_RENDERER_PARAMS_AS_QMARK        = 1 << 6 /* params as ?1, ?2, etc (starts at ?1) */
 } GdaRendererOptions;
 
 /* struct for the interface */
