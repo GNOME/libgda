@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: libgda 1.9.103\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-07-23 16:28+0200\n"
-"PO-Revision-Date: 2007-05-16 22:53+0200\n"
+"PO-Revision-Date: 2007-08-20 15:32+0200\n"
 "Last-Translator: Yannig MARCHEGAY (Kokoyaya) <yannig@marchegay.org>\n"
 "Language-Team: Occitan (post 1500) <ubuntu-l10n-oci@lists.ubuntu.com>\n"
 "MIME-Version: 1.0\n"
@@ -2902,7 +2902,7 @@ msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:1
 msgid "ASCII"
-msgstr ""
+msgstr "ASCII"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:5
 msgid "Chinese EUC"
@@ -3029,7 +3029,7 @@ msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:47
 msgid "Unicode (UTF-8)"
-msgstr ""
+msgstr "Unicode (UTF-8)"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:48
 msgid "Whether to require SSL or not when connecting"
@@ -3665,7 +3665,7 @@ msgstr ""
 
 #: ../providers/sybase/utils.c:343
 msgid "Server:"
-msgstr ""
+msgstr "Servidor\\:"
 
 #: ../providers/sybase/utils.c:347
 msgid "Stored Procedure:"
