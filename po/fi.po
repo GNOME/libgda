@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-19 17:20+0300\n"
+"POT-Creation-Date: 2007-08-22 08:07+0300\n"
 "PO-Revision-Date: 2006-10-08 17:42+0300\n"
 "Last-Translator: Ilkka Tuohela <hile@iki.fi>\n"
 "Language-Team: Finnish <gnome-fi-laatu@lists.sourceforge.net>\n"
@@ -163,12 +163,12 @@ msgstr "Tarjoajaa ei ole määritetty"
 #: ../libgda/gda-connection.c:1266
 #, c-format
 msgid "(%d rows)"
-msgstr ""
+msgstr "(%d riviä)"
 
 #: ../libgda/gda-connection.c:1268
 #, c-format
 msgid "(%d row)"
-msgstr ""
+msgstr "(%d rivi)"
 
 #: ../libgda/gda-connection.c:1270
 #, c-format
@@ -1086,8 +1086,8 @@ msgid ""
 "Could not parse '%s': XML dictionaries validation will not be performed "
 "(some weird errors may occur)"
 msgstr ""
-"\"%s\" ei voitu tulkita: XML-sanakirjan validointia ei "
-"suoriteta, joten saattaa syntyä hassuja virheitä"
+"\"%s\" ei voitu tulkita: XML-sanakirjan validointia ei suoriteta, joten "
+"saattaa syntyä hassuja virheitä"
 
 #: ../libgda/gda-init.c:129 ../libgda/gda-init.c:140
 #, c-format
@@ -1095,8 +1095,8 @@ msgid ""
 "Could not parse '%s': XML data import validation will not be performed (some "
 "weird errors may occur)"
 msgstr ""
-"\"%s\" ei voitu tulkita: tuotavan XML-tiedon validointia "
-"ei suoriteta, joten saattaa syntyä hassuja virheitä"
+"\"%s\" ei voitu tulkita: tuotavan XML-tiedon validointia ei suoriteta, joten "
+"saattaa syntyä hassuja virheitä"
 
 #: ../libgda/gda-init.c:151
 #, c-format
@@ -1104,8 +1104,8 @@ msgid ""
 "Could not parse '%s': Validation for XML files for server operations will "
 "not be performed (some weird errors may occur)"
 msgstr ""
-"\"%s\" ei voitu tulkita: Palvelintoimenpiteiden XML-tiedostojen "
-"validointia ei suoriteta, joten saattaa syntyä hassuja virheitä"
+"\"%s\" ei voitu tulkita: Palvelintoimenpiteiden XML-tiedostojen validointia "
+"ei suoriteta, joten saattaa syntyä hassuja virheitä"
 
 #: ../libgda/gda-object.c:306
 msgid "LibGda must be initialized before any usage."
@@ -1405,9 +1405,9 @@ msgid "Default value requested"
 msgstr "Oletusarvoa pyydettiin"
 
 #: ../libgda/gda-query-field-value.c:1452
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find GdaParameter in context for value field '%s'"
-msgstr "Parametria \"%s\" ei voi asettaa arvoon \"%s\""
+msgstr "GDAParameter-arvoa ei löytynyt kontekstin arvokentästä \"%s\""
 
 #: ../libgda/gda-query-field-value.c:1470
 #, c-format
@@ -1575,16 +1575,18 @@ msgid "Ambiguous field '*'"
 msgstr "Epäselvä kenttä \"*\""
 
 #: ../libgda/gda-query-parsing.c:1544 ../libgda/gda-query-parsing.c:1547
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown data type '%s', using G_TYPE_STRING"
-msgstr "Tuntematon tietotyyppi \"%s\""
+msgstr "Tuntematon tietotyyppi \"%s\" käytettäessä G_TYPE_STRING-tyyppiä"
 
 #: ../libgda/gda-query-parsing.c:1562 ../libgda/gda-query-parsing.c:1564
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Data type must be specified when no default value is provided, using "
 "G_TYPE_STRING"
-msgstr "Tietotyyppi täytyy olla määritelty, jos oletusarvoa ei ole annettu"
+msgstr ""
+"Tietotyyppi täytyy olla määritelty, jos oletusarvoa ei ole annettu "
+"käytettäessä G_TYPE_STRING-tyyppiä"
 
 #: ../libgda/gda-query-parsing.c:1643
 #, c-format
@@ -1729,13 +1731,12 @@ msgid "Unknown error"
 msgstr "Tuntematon virhe"
 
 #: ../libgda/gda-query.c:3530
-#, fuzzy
 msgid ""
 "While adding to a GdaQuery: Blobs are not supported by the connection's "
 "provider and may be rendered incorrectly"
 msgstr ""
-"Lisättäessä GdaQueryyn: yhteyden tarjoaja ei tue kentän tyyppiä \"%s\" ja se "
-"voidaan esittää väärin"
+"Lisättäessä GdaQueryyn: yhteyden tarjoaja ei tue blobeja ja ne voidaan "
+"esittää väärin"
 
 #: ../libgda/gda-query.c:3536
 #, c-format
@@ -1785,6 +1786,7 @@ msgid "More than two sub-queries for an EXCEPT query"
 msgstr "Useampia kuin kaksi alikyselyä EXCEPT-kyselyssä"
 
 #: ../libgda/gda-query.c:4687
+#, c-format
 msgid "Empty query"
 msgstr "Tyhjä kysely"
 
@@ -2256,7 +2258,7 @@ msgstr "Skeeman tietomallissa on väärä gda-tyyppi: \"%s\" \"%s\" sijasta"
 #: ../libgda/gda-server-provider-extra.c:546
 #, c-format
 msgid "Can't handle Primary Key fields which are BLOBs"
-msgstr ""
+msgstr "BLOB-muotoisia pääavaimia ei voida käsitellä"
 
 #: ../libgda/gda-server-provider.c:567
 #, c-format
@@ -2708,13 +2710,12 @@ msgid "TDS protocol minor version"
 msgstr "TDS-yhteyskäytännön aliversio"
 
 #: ../providers/freetds/gda-freetds-provider.c:198
-#, fuzzy
 msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'USER=;USER=;PASSWORD='."
 msgstr ""
-"Yhteys katkaistu. Täytyy antaa ainakin isäntänimi, käyttäjätunnus ja "
-"salasana käyttäen DSN \"QUERY=;USER=;PASSWORD=\"."
+"Yhteys katkaistu. Ainakin isäntänimi, käyttäjätunnus ja salasana täytyy "
+"nataa käytettäessä DSN \"QUERY=;USER=;PASSWORD=\"."
 
 #: ../providers/freetds/gda-freetds-provider.c:211
 msgid "Error creating message container."
@@ -2885,9 +2886,8 @@ msgid "Authentication Method"
 msgstr "Todennustapa"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:2
-#, fuzzy
 msgid "Authentication method to use when connecting"
-msgstr "Yhteydellä käytettävä todennustapa"
+msgstr "Yhteyttä avattaessa käytettävä todennustapa"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:3
 msgid "Bind Domain"
@@ -2911,9 +2911,8 @@ msgid "LDAP bind domain to use for authentication"
 msgstr "LDAP-sidealue, jota todennuksessa käytetään"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:9
-#, fuzzy
 msgid "Port to use when connecting to the LDAP server"
-msgstr "Portti, johon LDAP-palvelimelle yhdistetään"
+msgstr "LDAP-palvelimelle yhdistettäessä käytettävä portti"
 
 #: ../providers/ldap/libmain.c:53
 msgid "Provider for LDAP directory"
@@ -2926,15 +2925,15 @@ msgstr "Yhteysmerkkijonon täytyy sisältää arvot DB_DIR ja DB_NAME"
 
 #: ../providers/mdb/gda-mdb-provider.c:263
 #: ../providers/mdb/gda-mdb-provider.c:270
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The connection string format has changed: replace FILENAME with DB_DIR (the "
 "path to the database file) and DB_NAME (the database file without the '%s' "
 "at the end)."
 msgstr ""
-"Yhteysmerkkijonon muoto on muuttunut: korvaa URI merkkijonolla DB_DIR (polku "
-"tietokantatiedostoon) ja merkkijonolla DB_NAME (tietokantatiedosto ilman .db-"
-"päätettä)"
+"Yhteysmerkkijonon muoto on muuttunut: korvaa FILENAME merkkijonolla DB_DIR "
+"(polku tietokantatiedostoon) ja merkkijonolla DB_NAME (tietokantatiedosto "
+"ilman päätettä %s)"
 
 #: ../providers/mdb/gda-mdb-provider.c:278
 #: ../providers/sqlite/gda-sqlite-provider.c:333
@@ -3046,9 +3045,8 @@ msgid "Directory where the database file is stored"
 msgstr "Kansio, johon tietokantatiedosto on tallennettu"
 
 #: ../providers/mdb/mdb_specs_dsn.xml.in.h:4
-#, fuzzy
 msgid "The name of a database to use (filename without the .mdb)"
-msgstr "Luotavan tietokannan nimi"
+msgstr "Käytettävän tietokannan nimi (tiedostonimi ilman .mdb-päätettä)"
 
 #: ../providers/msql/libmain.c:50
 msgid "Provider for Hughes Technologies mSQL databases"
@@ -3469,9 +3467,8 @@ msgstr "eUC-KR korealainen"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:31
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:12
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:4
-#, fuzzy
 msgid "Full path of the UNIX socket to use when connecting locally"
-msgstr "Täydellinen polku UNIX-pistokkeeseen, johon yhdistetään paikallisesti"
+msgstr "Koko polku UNIX-pistokkeeseen, johon yhdistetään paikallisesti"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:32
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:72
@@ -3555,9 +3552,8 @@ msgstr "Mac länsieurooppalainen"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:116
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:14
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:29
-#, fuzzy
 msgid "Only if it does not yet exist"
-msgstr "Luo taulu vain, jos se ei ole vielä olemassa"
+msgstr "Vain jos se ei ole vielä olemassa"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:52
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:19
@@ -3624,9 +3620,8 @@ msgstr "UTF-8 Unicode"
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:24
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:10
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:12
-#, fuzzy
 msgid "Whether or not to use SSL to establish the connection"
-msgstr "Käytetäänkö SSL:ää yhteyden muodostamiseen"
+msgstr "Käytetäänkö SSL-salausta yhteyden muodostamisessa"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:64
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:157
@@ -4014,7 +4009,6 @@ msgstr "Poista tietokanta vain jos se on olemassa"
 
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:17
-#, fuzzy
 msgid "Only if existing"
 msgstr "Vain jos on olemassa"
 
@@ -4130,24 +4124,20 @@ msgstr "Virheellinen Oracle-kahva"
 
 #: ../providers/oracle/gda-oracle-blob-op.c:172
 #: ../providers/oracle/gda-oracle-blob-op.c:208
-#, fuzzy
 msgid "Could not get the length of LOB object"
-msgstr "Oracle-kentän nimeä ei saa"
+msgstr "LOB-olion pituutta ei voitu selvittää"
 
 #: ../providers/oracle/gda-oracle-blob-op.c:220
-#, fuzzy
 msgid "Could not read from LOB object"
-msgstr "XML-solmusta ei voi lisätä tietoa"
+msgstr "LOB-oliosta ei voitu lukea"
 
 #: ../providers/oracle/gda-oracle-blob-op.c:257
-#, fuzzy
 msgid "Could not write to LOB object"
-msgstr "XML-dokumenttia ei voi jäsentää"
+msgstr "LOB-olioon ei voitu kirjoittaa"
 
 #: ../providers/oracle/gda-oracle-blob-op.c:290
-#, fuzzy
 msgid "Could not truncate LOB object"
-msgstr "XML-dokumenttia ei voi jäsentää"
+msgstr "LOB-oliota ei voitu lyhentää"
 
 #: ../providers/oracle/gda-oracle-provider.c:256
 msgid "No TNS name supplied"
@@ -4228,16 +4218,14 @@ msgid "Could not execute the Oracle statement"
 msgstr "Oracle-lausuntoa ei voi suorittaa"
 
 #: ../providers/oracle/gda-oracle-provider.c:696
-#, fuzzy
 msgid "Could not get the number of affected rows"
-msgstr "Tulosjoukosta ei saa sarakkeiden määrää"
+msgstr "Muuttuneiden rivien lukumäärää ei voitu selvittää"
 
 #: ../providers/oracle/gda-oracle-provider.c:712
 #: ../providers/oracle/gda-oracle-provider.c:1200
 #: ../providers/oracle/gda-oracle-provider.c:1262
-#, fuzzy
 msgid "Could not get the attached transaction from the service context"
-msgstr "Transaktiota ei voi liittää palvelukontekstiin"
+msgstr "Liitettyä transaktiota ei saatu palvelukontekstista"
 
 #: ../providers/oracle/gda-oracle-provider.c:740
 msgid "Could not get the number of columns in the result set"
@@ -4273,9 +4261,8 @@ msgstr "Oracle-transaktiota ei voi toteuttaa"
 
 #: ../providers/oracle/gda-oracle-provider.c:1224
 #: ../providers/oracle/gda-oracle-provider.c:1286
-#, fuzzy
 msgid "Could not de-attach the transaction to the service context"
-msgstr "Transaktiota ei voi liittää palvelukontekstiin"
+msgstr "Transaktiota ei voi irrottaa palvelukontekstista"
 
 #: ../providers/oracle/gda-oracle-provider.c:1275
 msgid "Could not rollback the Oracle transaction"
@@ -4312,9 +4299,8 @@ msgstr "Parametrin tietotyyppiä ei saa"
 
 #: ../providers/oracle/gda-oracle-recordset.c:131
 #: ../providers/oracle/utils.c:529
-#, fuzzy
 msgid "Could not allocate Lob locator"
-msgstr "Komentorakennetta ei voi varata."
+msgstr "LOB-lokaattoria ei voitu varata"
 
 #: ../providers/oracle/gda-oracle-recordset.c:157
 msgid "Could not define by position"
@@ -4374,18 +4360,16 @@ msgid "Release the space associated with the table. (PURGE)"
 msgstr "Vapauta tauluun liittyvä tila (PURGE)"
 
 #: ../providers/oracle/oracle_specs_dsn.xml.in.h:1
-#, fuzzy
 msgid "Name of the TNS configuration to use when connecting"
-msgstr "TNS-asetusten nimi, joita yhdistämisessä käytetään"
+msgstr "Yhdistettäessä käytettävän TNS-määrittelyn nimi"
 
 #: ../providers/oracle/oracle_specs_dsn.xml.in.h:2
 msgid "TNS Name"
 msgstr "TNS-nimi"
 
 #: ../providers/oracle/utils.c:536
-#, fuzzy
 msgid "Could not copy Lob locator"
-msgstr "XML-dokumenttia ei voi jäsentää"
+msgstr "LOB-lokaattoria ei voitu kopioida"
 
 #: ../providers/postgres/gda-postgres-blob-op.c:109
 #: ../providers/postgres/gda-postgres-handler-bin.c:195
@@ -4411,18 +4395,16 @@ msgid "Number of rows chuncks read since the object creation"
 msgstr ""
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:116
-#, fuzzy
 msgid "Postgresql binary handler"
-msgstr "Binäärikäsittelijä"
+msgstr "Postgresql-binäärikäsittelijä"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:122
 msgid "PostgresqlBin"
 msgstr ""
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:123
-#, fuzzy
 msgid "PostgreSQL binary representation"
-msgstr "SQliten binääriesitys"
+msgstr "PosgreSQL-binääriesitys"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:218
 msgid "Insufficient memory to convert binary buffer to string"
@@ -4447,9 +4429,9 @@ msgid "Could not create a SELECT query to fetch existing BLOB values"
 msgstr ""
 
 #: ../providers/postgres/gda-postgres-provider.c:1213
-#, fuzzy, c-format
+#, c-format
 msgid "Missing parameter for '%s'"
-msgstr "Parametreja puuttuu"
+msgstr "Parametreja puuttuu kohteelta \"%s\""
 
 #: ../providers/postgres/gda-postgres-provider.c:1231
 #, c-format
@@ -4717,9 +4699,8 @@ msgid "Deferrable initially immediate"
 msgstr "Lykkäytyvä aluksi välitön"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:30
-#, fuzzy
 msgid "Inheritance"
-msgstr "Periytyvyys"
+msgstr "Periytyminen"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:31
 msgid "Keep coupled"
@@ -4776,9 +4757,8 @@ msgid "Search path among database's schemas"
 msgstr "Hakupolku tietokannan skeemoissa"
 
 #: ../providers/sqlite/gda-sqlite-handler-bin.c:114
-#, fuzzy
 msgid "SQlite binary handler"
-msgstr "Binäärikäsittelijä"
+msgstr "SQlite-binäärikäsittelijä"
 
 #: ../providers/sqlite/gda-sqlite-handler-bin.c:119
 msgid "SqliteBin"
@@ -4829,19 +4809,18 @@ msgid "Only one database per connection is allowed"
 msgstr "Vain yksi tietokanta yhteyttä kohti sallitaan"
 
 #: ../providers/sqlite/gda-sqlite-provider.c:1035
-#, fuzzy
 msgid "Missing parameter(s) to execute query"
-msgstr "Parametreja puuttuu"
+msgstr "Suoritettavasta kyselystä puuttuu parametreja"
 
 #: ../providers/sqlite/gda-sqlite-provider.c:1051
-#, fuzzy, c-format
+#, c-format
 msgid "Missing parameter '%s' to execute query"
-msgstr "Puuttuva parametri 'URI'"
+msgstr "Suoritettavasta kyselystä puuttuu parametri \"%s\""
 
 #: ../providers/sqlite/gda-sqlite-provider.c:1095
-#, fuzzy, c-format
+#, c-format
 msgid "Non handled data type '%s'"
-msgstr "Tuntematon tietotyyppi \"%s\""
+msgstr "Ei käsitelty tietotyyppi \"%s\""
 
 #: ../providers/sqlite/gda-sqlite-provider.c:1489
 #: ../providers/sqlite/gda-sqlite-provider.c:1894
@@ -4908,49 +4887,45 @@ msgid "Enable usage of some extra functions in SQL"
 msgstr ""
 
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:5
-#, fuzzy
 msgid "Extra functions"
-msgstr "Yhteyden lisävalinnat"
+msgstr "Lisäfunktiot"
 
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:6
-#, fuzzy
 msgid "The name of a database to use (without the .db)"
-msgstr "Luotavan tietokannan nimi"
+msgstr "Käytettävän tietokannan nimi (ilman .db-päätettä)"
 
 #: ../providers/sqlite/virtual/gda-vconnection-data-model.c:296
-#, fuzzy, c-format
 msgid "Table to remove not found"
-msgstr "Taulua %s ei löydy"
+msgstr "Poistettavaa taulua ei löydy"
 
 #: ../providers/sqlite/virtual/gda-vconnection-hub.c:202
-#, fuzzy, c-format
+#, c-format
 msgid "Namespace must be specified"
-msgstr "Tietokantaa ei määritetty"
+msgstr "Nimiavaruus täytyy määritelllä"
 
 #: ../providers/sqlite/virtual/gda-vconnection-hub.c:253
-#, fuzzy, c-format
+#, c-format
 msgid "Connection was not represented in hub"
-msgstr "Yhteys ei ole avattu"
+msgstr "Yhteys ei ollut tarjolla hubissa"
 
 #: ../providers/sqlite/virtual/gda-vconnection-hub.c:471
-#, fuzzy, c-format
+#, c-format
 msgid "Could not add virtual table %s: %s"
-msgstr "Tiedostoa \"%s\" ei voi tallentaa"
+msgstr "Virtuaalitaulua %s ei voi lisätä: %s"
 
 #: ../providers/sqlite/virtual/gda-vprovider-data-model.c:363
-#, fuzzy
 msgid "Data model must have at least one column"
-msgstr "Ehdolla täytyy olla ainakin yksi argumentti"
+msgstr "Tietomallissa täytyy olla ainakin yksi sarake"
 
 #: ../providers/sqlite/virtual/gda-vprovider-data-model.c:390
-#, fuzzy, c-format
+#,  c-format
 msgid "Can't get data model description for column %d"
-msgstr "Sarakkeelle ei saa kuvausta"
+msgstr "Tietomallin kuvausta sarakkeelle %d ei löydy"
 
 #: ../providers/sqlite/virtual/gda-vprovider-data-model.c:399
-#, fuzzy, c-format
+#, c-format
 msgid "Can't get data model's column name for column %d"
-msgstr "Tiedonpidintä ei voi varata sarakkeelle %d"
+msgstr "Tietomallin sarakkeen nimeä sarakkeelle %d ei löydy"
 
 #: ../providers/sqlite/virtual/gda-vprovider-data-model.c:404
 #, c-format
@@ -5122,7 +5097,7 @@ msgstr "Sarakkeelle %2$d ei voi ajaa funktiota %1$s"
 #: ../providers/sybase/gda-sybase-recordset.c:380
 #, c-format
 msgid "Could not allocate data placeholder for column %d"
-msgstr "Tiedonpidintä ei voi varata sarakkeelle %d"
+msgstr ""
 
 #: ../providers/sybase/gda-sybase-recordset.c:409
 #, c-format
@@ -5517,15 +5492,15 @@ msgstr "SQL testattu"
 
 #: ../testing/gda-test-model-query.c:285
 msgid "UPDATE query"
-msgstr ""
+msgstr "UPDATE-kysely"
 
 #: ../testing/gda-test-model-query.c:286
 msgid "INSERT query"
-msgstr ""
+msgstr "INSERT-kysely"
 
 #: ../testing/gda-test-model-query.c:287
 msgid "DELETE query"
-msgstr ""
+msgstr "DELETE-kysely"
 
 #: ../testing/gda-test-models.c:89 ../testing/gda-test-sql.c:87
 msgid "List of SQL parsing tests"
@@ -5617,34 +5592,32 @@ msgid "No"
 msgstr "Ei"
 
 #: ../tools/command-exec.c:100
-#, fuzzy
 msgid "Invalid unnamed command"
-msgstr "Virheellinen sisäinen kahva"
+msgstr "Tuntematon nimeämätön komento"
 
 #: ../tools/command-exec.c:189
 #, c-format
 msgid "Unknown internal command"
-msgstr ""
+msgstr "Tuntematon sisäinen komento"
 
 #: ../tools/command-exec.c:195
 #, c-format
 msgid "Internal command not correctly defined"
-msgstr ""
+msgstr "Sisäistä komentoa ei ole määritelty oikein"
 
 #: ../tools/command-exec.c:201
-#, fuzzy, c-format
+#, c-format
 msgid "Incomplete internal command"
-msgstr "Virheellinen sisäinen kahva"
+msgstr "Vajaa sisäinen komento"
 
 #: ../tools/command-exec.c:292
-#, fuzzy
 msgid "History is not supported"
-msgstr "Ei tuettu"
+msgstr "Historia ei ole tuettu"
 
 #: ../tools/command-exec.c:440
 #, c-format
 msgid "%s\n"
-msgstr ""
+msgstr "%s\n"
 
 #: ../tools/command-exec.c:448 ../tools/gda-sql.c:1823
 #, fuzzy, c-format
@@ -5930,7 +5903,7 @@ msgstr "Mitään ei annettu"
 
 #: ../tools/gda-sql.c:135
 msgid "Gda SQL console"
-msgstr ""
+msgstr "Gda:n SQL-konsoli"
 
 #: ../tools/gda-sql.c:188
 #, fuzzy, c-format
@@ -5952,7 +5925,7 @@ msgstr ""
 #: ../tools/gda-sql.c:208
 #, c-format
 msgid "Welcome to the GDA SQL console, version "
-msgstr ""
+msgstr "Tervetuloa GDA SQL-konsoliin, versio "
 
 #: ../tools/gda-sql.c:210
 #, c-format
@@ -5965,17 +5938,17 @@ msgid ""
 msgstr ""
 
 #: ../tools/gda-sql.c:218
-#, fuzzy, c-format
+#, c-format
 msgid "Can't open connection: %s"
-msgstr "Yhteyttä ei voi avata."
+msgstr "Yhteyttä ei voi avata: %s"
 
 #: ../tools/gda-sql.c:490
-#, fuzzy, c-format
+#, c-format
 msgid "No connection specified"
-msgstr "DSN-määrittelyä tai yhteysmerkkijonoa ei ole määritetty"
+msgstr "Yhteyttä ei ole määritelty"
 
 #: ../tools/gda-sql.c:495
-#, fuzzy, c-format
+#, c-format
 msgid "Connection closed"
 msgstr "Yhteys on suljettu"
 
@@ -6019,21 +5992,19 @@ msgstr "Listaa ei voida synkronoida MySQL-tulosjoukon kanssa"
 #: ../tools/gda-sql.c:735
 #, c-format
 msgid " Done.\n"
-msgstr ""
+msgstr "Valmis.\n"
 
 #: ../tools/gda-sql.c:837
 msgid "DSN"
-msgstr ""
+msgstr "DSN"
 
 #: ../tools/gda-sql.c:911
-#, fuzzy
 msgid "DSN parameters"
-msgstr "Parametreja puuttuu"
+msgstr "DSN-parametrit"
 
 #: ../tools/gda-sql.c:912
-#, fuzzy
 msgid "File"
-msgstr "Kenttä"
+msgstr "Tiedosto"
 
 #: ../tools/gda-sql.c:1030 ../tools/gda-sql.c:1081 ../tools/gda-sql.c:1091
 #: ../tools/gda-sql.c:1101 ../tools/gda-sql.c:1151 ../tools/gda-sql.c:1161
