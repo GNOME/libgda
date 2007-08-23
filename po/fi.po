@@ -55,6 +55,8 @@ msgid ""
 "Could not find operation's associated provider, did you use "
 "gda_client_prepare_create_database() ?"
 msgstr ""
+"Operaatioon liittyvää tarjoajaa ei löytynyt. Käytitkö komentoa "
+"gda_client_prepare_create_database() ?"
 
 #: ../libgda/gda-client.c:1027
 #, c-format
@@ -62,6 +64,8 @@ msgid ""
 "Could not find operation's associated provider, did you use "
 "gda_client_prepare_drop_database() ?"
 msgstr ""
+"Operaatioon liittyvää tarjoajaa ei löytynyt. Käytitkö komentoa "
+"gda_client_prepare_create_database() ?"
 
 #: ../libgda/gda-config.c:1496
 #, c-format
@@ -179,35 +183,42 @@ msgstr "(tuntematon rivimäärä)"
 msgid ""
 "Connection transaction status tracking: no transaction exists for ROLLBACK"
 msgstr ""
+"Yhteyden transaktioiden jäljitys: transaktiota ei ole komennolle ROLLBACK"
 
 #: ../libgda/gda-connection.c:1714
 msgid ""
 "Connection transaction status tracking: no transaction exists for COMMIT"
 msgstr ""
+"Yhteyden transaktioiden jäljitys: transaktiota ei ole komennolle COMMIT"
 
 #: ../libgda/gda-connection.c:1760
 msgid ""
 "Connection transaction status tracking: no transaction exists for ADD "
 "SAVEPOINT"
 msgstr ""
+"Yhteyden transaktioiden jäljitys: transaktiota ei ole komennolle ADD SAVEPOINT"
 
 #: ../libgda/gda-connection.c:1785
 msgid ""
 "Connection transaction status tracking: no transaction exists for ROLLBACK "
 "SAVEPOINT"
 msgstr ""
+"Yhteyden transaktioiden jäljitys: transaktiota ei ole komennolle ROLLBACK SAVEPOINT"
 
 #: ../libgda/gda-connection.c:1810
 msgid ""
 "Connection transaction status tracking: no transaction exists for REMOVE "
 "SAVEPOINT"
 msgstr ""
+"Yhteyden transaktioiden jäljitys: transaktiota ei ole komennolle REMOVE SAVEPOINT"
 
 #: ../libgda/gda-connection.c:1967 ../libgda/gda-connection.c:1987
 msgid ""
 "Prepared statements hash not initialized, call "
 "gda_connection_init_prepared_statement_hash() first"
 msgstr ""
+"Valmisteltujen lausekkeiden hajautustaulua ei ole alustettu, kutsu komentoa "
+"gda_connection_init_prepared_statement_hash() ensin"
 
 #: ../libgda/gda-data-access-wrapper.c:491
 #, c-format
@@ -256,12 +267,16 @@ msgid ""
 "Custom BDB model implementation is not complete: the 'get_key_part' method "
 "is missing"
 msgstr ""
+"Oma BDB-mallin toteutus ei ole valmis, sillä menetelmä \"get_key_part\" "
+"puuttuu vielä"
 
 #: ../libgda/gda-data-model-bdb.c:655
 msgid ""
 "Custom BDB model implementation is not complete: the 'get_data_part' method "
 "is missing"
 msgstr ""
+"Oma BDB-mallin toteutus ei ole valmis, sillä menetelmä \"get_data_part\" "
+"puuttuu vielä"
 
 #: ../libgda/gda-data-model-bdb.c:748
 #, c-format
@@ -269,6 +284,8 @@ msgid ""
 "Custom BDB model implementation is not complete: the 'update_key_part' "
 "method is missing"
 msgstr ""
+"Oma BDB-mallin toteutus ei ole valmis, sillä menetelmä \"update_key_part\" "
+"puuttuu vielä"
 
 #: ../libgda/gda-data-model-bdb.c:775 ../libgda/gda-data-model-bdb.c:859
 #, c-format
@@ -286,6 +303,8 @@ msgid ""
 "Custom BDB model implementation is not complete: the 'update_data_part' "
 "method is missing"
 msgstr ""
+"Oma BDB-mallin toteutus ei ole valmis, sillä menetelmä \"update_data_part\" "
+"puuttuu vielä"
 
 #: ../libgda/gda-data-model-dir.c:381 ../libgda/gda-data-model-import.c:1727
 #: ../libgda/gda-server-operation.c:778
@@ -310,7 +329,7 @@ msgstr "Saraketta ei voi muuttaa"
 #: ../libgda/gda-data-model-dir.c:1171 ../libgda/gda-data-model-dir.c:1173
 #, c-format
 msgid "New path must be a subpath of the base directory"
-msgstr ""
+msgstr "Uuden polun täytyy olla peruspolun alipolku"
 
 #: ../libgda/gda-data-model-dir.c:1006 ../libgda/gda-data-model-dir.c:1050
 #, c-format
@@ -483,6 +502,8 @@ msgid ""
 "Type of parameter '%s' is '%s' when it should be '%s', GdaDataModelQuery "
 "object will now work correctly"
 msgstr ""
+"Parametrin \"%s\" tyyppi on \"%s\", kun sen pitäisi olla \"%s\". "
+"GdaDataModelQuery-olio ei toimi oikein"
 
 #: ../libgda/gda-data-model-query.c:494
 #, c-format
@@ -490,6 +511,8 @@ msgid ""
 "Could not find a parameter named '%s' among the SELECT query's parameters, "
 "the specified modification query will not be executable"
 msgstr ""
+"Parametria \"%s\" ei löytynyt SELECT-kyselyn parametreista. Annettua "
+"muokkauskyselyä ei suoriteta"
 
 #: ../libgda/gda-data-model-query.c:669
 #, c-format
@@ -529,42 +552,42 @@ msgstr "SELECT-kyselyä ei annettu"
 #: ../libgda/gda-data-model-query.c:1559
 #, c-format
 msgid "SELECT query references objects not described in dictionary"
-msgstr ""
+msgstr "SELECT-kysely viittaa kohteisiin, joita ei ole määritelty hakemistossa"
 
 #: ../libgda/gda-data-model-query.c:1630
 #, c-format
 msgid "Could not identify target table '%s' to modify in SELECT query"
-msgstr ""
+msgstr "SELECT-kyselyllä muokattavaa kohdetaulua \"%s\" ei löytynyt"
 
 #: ../libgda/gda-data-model-query.c:1640
 #, c-format
 msgid "specified target to modify in SELECT query does not represent a table"
-msgstr ""
+msgstr "SELECT-kyselyllä muokattava kohde ei ole taulu"
 
 #: ../libgda/gda-data-model-query.c:1658
 #, c-format
 msgid "Could not identify any target table to modify in SELECT query"
-msgstr ""
+msgstr "SELECT-kyselyllä muokattavaa kohdetaulua ei löytynyt"
 
 #: ../libgda/gda-data-model-query.c:1667
 #, c-format
 msgid "Ambiguous target table to modify in SELECT query"
-msgstr ""
+msgstr "SELECT-kyselyssä muokattavan taulun nimi on epäselvä"
 
 #: ../libgda/gda-data-model-query.c:1722
 #, c-format
 msgid "Primary key field '%s.%s' not found in SELECT query"
-msgstr ""
+msgstr "Pääavainkenttää \"%s.%s\n ei löydy SELECT-kyselystä"
 
 #: ../libgda/gda-data-model-query.c:1754
 #, c-format
 msgid "Target table to modify does not have any defined primary key"
-msgstr ""
+msgstr "Muokattavassa kohdetaulussa ei ole määritelty pääavainta"
 
 #: ../libgda/gda-data-model-query.c:1791
 #, c-format
 msgid "Field '%s.%s' appears more than once in SELECT query"
-msgstr ""
+msgstr "Kenttä \"%s.%s\" esiintyy useammin kuin kerran SELECT-kyselyssä"
 
 #: ../libgda/gda-data-model-row.c:488
 #, c-format
@@ -688,7 +711,7 @@ msgstr ""
 #: ../libgda/gda-data-proxy.c:1538
 #, c-format
 msgid "Modifications cancelled"
-msgstr ""
+msgstr "Muokkaus peruttu"
 
 #: ../libgda/gda-data-proxy.c:2331
 #, c-format
@@ -698,7 +721,7 @@ msgstr "Tuntematon GdaDataProxy-sarake: %d"
 #: ../libgda/gda-data-proxy.c:2412
 #, c-format
 msgid "Value is read-only"
-msgstr ""
+msgstr "Arvo on vain luettavissa"
 
 #: ../libgda/gda-data-proxy.c:2513
 #, c-format
@@ -1397,6 +1420,7 @@ msgstr "Arvokentällä \"%s\" ei ole arvoa!"
 msgid ""
 "The out_params_used argument is required with this selected rendering option"
 msgstr ""
+"Argumentti out_params_used vaaditaan käytettäessä tätä esitystapaa"
 
 #: ../libgda/gda-query-field-value.c:1423
 #: ../libgda/gda-query-field-value.c:1494
@@ -1689,7 +1713,7 @@ msgstr "Virhe tulkittaessa kyselyä (%s)"
 #: ../libgda/gda-query.c:1443
 #, c-format
 msgid "No valid type specified for parameter, using gchararray"
-msgstr ""
+msgstr "Parametrille ei annettu kelvollista tyyppi, käytetään tyyppiä gchararray"
 
 #: ../libgda/gda-query.c:1935
 #, c-format
@@ -1888,7 +1912,7 @@ msgstr "Nimeämätön kysely"
 #: ../libgda/gda-query.c:5993
 #, c-format
 msgid "Could expand '%s.*' into a list of fields"
-msgstr ""
+msgstr "Voitiin laajentaa \"%s.*\" luetteloksi kentistä"
 
 #: ../libgda/gda-server-operation.c:567
 #, c-format
@@ -2276,12 +2300,16 @@ msgid ""
 "GdaServerProvider object implements the escape_string() virtual method but "
 "does not implement the unescape_string() one, please report this bug."
 msgstr ""
+"GdaServerProvider-olio toteuttaa virtuaalimetodin escape_string(), mutta "
+"ei toteuta virtuaalimetodia unescape_string(). Tee vikaraportti, ole hyvä." 
 
 #: ../libgda/gda-server-provider.c:1271
 msgid ""
 "GdaServerProvider object implements the unescape_string() virtual method but "
 "does not implement the escape_string() one, please report this bug."
 msgstr ""
+"GdaServerProvider-olio toteuttaa virtuaalimenetelmän unescape_string(), mutta "
+"ei toteuta virtuaalimenetelmää escape_string(). Tee vikaraportti, ole hyvä." 
 
 #: ../libgda/gda-util.c:246
 #, c-format
@@ -2714,7 +2742,7 @@ msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'USER=;USER=;PASSWORD='."
 msgstr ""
-"Yhteys katkaistu. Ainakin isäntänimi, käyttäjätunnus ja salasana täytyy "
+"Yhteys katkaistu. Ainakin verkkonimi, käyttäjätunnus ja salasana täytyy "
 "nataa käytettäessä DSN \"QUERY=;USER=;PASSWORD=\"."
 
 #: ../providers/freetds/gda-freetds-provider.c:211
@@ -2896,11 +2924,11 @@ msgstr "Sidottava alue"
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:4
 #: ../providers/msql/msql_specs_dsn.xml.in.h:2
 msgid "Host Name"
-msgstr "Isäntänimi"
+msgstr "Verkkonimi"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:5
 msgid "Host name of the LDAP server"
-msgstr "Isäntänimi LDAP-palvelimelle"
+msgstr "LDAP-palvelimen verkkonimi"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:6
 msgid "LDAP Flags"
@@ -3071,6 +3099,9 @@ msgid ""
 "connection using a UNIX domain socket, or use 'localhost' for a TCP/IP "
 "connection on the local machine) "
 msgstr ""
+"Tietokantapalvelimen verkkonimi. UNIX-pistoketta käyttäville palvelimille "
+"jätä tyhjäksi. Paikallisella palvelimella olevalle kannalle anna arvo "
+"\"localhost\" tcp-yhteydelle"
 
 #: ../providers/mysql/gda-mysql-ddl.c:257
 #: ../providers/postgres/gda-postgres-ddl.c:265
@@ -4388,11 +4419,11 @@ msgstr "Virheellinen PostgreSQL-kahva"
 
 #: ../providers/postgres/gda-postgres-cursor-recordset.c:149
 msgid "Number of rows fetched at a time"
-msgstr ""
+msgstr "Kerralla noudettavien rivien lukumäärä"
 
 #: ../providers/postgres/gda-postgres-cursor-recordset.c:154
 msgid "Number of rows chuncks read since the object creation"
-msgstr ""
+msgstr "Luettujen rivilohkojen lukumäärä olion luonnin jälkeen"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:116
 msgid "Postgresql binary handler"
@@ -4400,7 +4431,7 @@ msgstr "Postgresql-binäärikäsittelijä"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:122
 msgid "PostgresqlBin"
-msgstr ""
+msgstr "PostgresqlBin"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:123
 msgid "PostgreSQL binary representation"
@@ -4408,25 +4439,25 @@ msgstr "PosgreSQL-binääriesitys"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:218
 msgid "Insufficient memory to convert binary buffer to string"
-msgstr ""
+msgstr "Muisti ei riitä binääripuskurin muuntamiseksi merkkijonoksi"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:281
 msgid "Insufficient memory to convert string to binary buffer"
-msgstr ""
+msgstr "Muisti ei riitä merkkijonon muuttamiseksi binääripuskuriksi"
 
 #: ../providers/postgres/gda-postgres-provider.c:1133
 #, c-format
 msgid "Parameter ITER_MODEL_ONLY should be a boolean, not a '%s'"
-msgstr ""
+msgstr "Parametrin ITER_MODEL_ONLY tulee olla totuusarvo, ei \"%s\""
 
 #: ../providers/postgres/gda-postgres-provider.c:1144
 #, c-format
 msgid "Parameter ITER_CHUNCK_SIZE should be a gint, not a '%s'"
-msgstr ""
+msgstr "Parametrin ITER_CHUNCK_SIZE tulee olla gint, ei \"%s\""
 
 #: ../providers/postgres/gda-postgres-provider.c:1191
 msgid "Could not create a SELECT query to fetch existing BLOB values"
-msgstr ""
+msgstr "SELECT-kyselyä olemassaolevien BLOB-arvojen noutoon ei voitu muodostaa"
 
 #: ../providers/postgres/gda-postgres-provider.c:1213
 #, c-format
@@ -4436,7 +4467,8 @@ msgstr "Parametreja puuttuu kohteelta \"%s\""
 #: ../providers/postgres/gda-postgres-provider.c:1231
 #, c-format
 msgid "Could not render SQL for SELECT query to fetch existing BLOB values: %s"
-msgstr ""
+msgstr "Ei voitu muodostaa SQL SELECT-kyselyä olemassaolevien BLOB-arvojen "
+"noutamiseksi: %s"
 
 #: ../providers/postgres/gda-postgres-provider.c:1621
 msgid "Transactions are not supported in read uncommitted isolation level"
@@ -4484,14 +4516,12 @@ msgstr "Kiinalainen EUC"
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:10
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:9
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:3
-#, fuzzy
 msgid ""
 "Database server port (for servers running on unix domain sockets, enter the "
 "socket's file name extension (usually 5432), or leave this field empty)"
 msgstr ""
-"Tietokantapalvelimen portti. Palvelimille, joita käytetään UNIX-pistokkeen "
-"kautta, syötä pistokkeen tiedostopääte (yleensä 5432), tai jätä kenttä "
-"tyhjäksi."
+"Tietokantapalvelimen portti. UNIX-pistoketta käyttäville palvelimille "
+"anna pistokkeen tiedostopääte (yleensä 5432), tai jätä kenttä tyhjäksi."
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:12
 msgid "Encoding"
@@ -4501,15 +4531,13 @@ msgstr "Merkistökoodaus"
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:15
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:13
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:5
-#, fuzzy
 msgid ""
 "Host on which the database server is running (for servers running on unix "
 "domain sockets, enter the socket's path (usually /tmp), or leave this field "
 "empty)"
 msgstr ""
-"Tietokantapalvelimen isäntänimi. Palvelimille, joita käytetään UNIX-"
-"pistokkeen kautta, syötä pistokkeen polku (yleensä /tmp), tai jätä kenttä "
-"tyhjäksi."
+"Tietokantapalvelimen verkkonimi. UNIX-pistoketta käyttäville palvelimille "
+"anna pistokkeen polku (yleensä /tmp), tai jätä kenttä tyhjäksi."
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:16
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:14
@@ -4770,15 +4798,15 @@ msgstr "SQliten binääriesitys"
 
 #: ../providers/sqlite/gda-sqlite-provider.c:318
 #: ../providers/sqlite/gda-sqlite-provider.c:325
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The connection string format has changed: replace URI with DB_DIR (the path "
 "to the database file) and DB_NAME (the database file without the '%s' at the "
 "end)."
 msgstr ""
 "Yhteysmerkkijonon muoto on muuttunut: korvaa URI merkkijonolla DB_DIR (polku "
-"tietokantatiedostoon) ja merkkijonolla DB_NAME (tietokantatiedosto ilman .db-"
-"päätettä)"
+"tietokantatiedostoon) ja merkkijonolla DB_NAME (tietokantatiedosto ilman %s-"
+"päätettä)."
 
 #: ../providers/sqlite/gda-sqlite-provider.c:377
 msgid "Could not set empty_result_callbacks SQLite option"
@@ -4832,9 +4860,8 @@ msgid "Can't execute PRAGMA foreign_key_list()"
 msgstr "PRAGMA:a foreign_key_list() ei voida suorittaa"
 
 #: ../providers/sqlite/gda-sqlite-provider.c:2232
-#, fuzzy
 msgid "Function requires one argument"
-msgstr "Ehdolla täytyy olla ainakin yksi argumentti"
+msgstr "Funktio vaatii yhden argumentin"
 
 #: ../providers/sqlite/libmain.c:52
 msgid "Provider for SQLite databases"
@@ -4884,7 +4911,7 @@ msgstr "Poista indeksi vain, jos se on jo olemassa"
 
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:4
 msgid "Enable usage of some extra functions in SQL"
-msgstr ""
+msgstr "Ota käyttöön joitain SQL-lisäfunktioita"
 
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:5
 msgid "Extra functions"
@@ -4930,22 +4957,20 @@ msgstr "Tietomallin sarakkeen nimeä sarakkeelle %d ei löydy"
 #: ../providers/sqlite/virtual/gda-vprovider-data-model.c:404
 #, c-format
 msgid "Can't get data model's column type or type for column %d"
-msgstr ""
+msgstr "Tietomallin saraketyyppin tai sarakkeen %d tyyppiä ei voitu selvittää"
 
 #: ../providers/sqlite/virtual/gda-vprovider-data-model.c:442
-#, fuzzy, c-format
+#, c-format
 msgid "Can't declare virtual table (%s)"
-msgstr "Taulua %s ei löydy"
+msgstr "Virtuaalista taulua ei voi määritellä (%s)"
 
 #: ../providers/sqlite/virtual/gda-vprovider-data-model.c:577
-#, fuzzy
 msgid "Column not found"
-msgstr "Sarake yli rajojen"
+msgstr "Saraketta ei löydy"
 
 #: ../providers/sqlite/virtual/libmain.c:51
-#, fuzzy
 msgid "Virtual providers base"
-msgstr "Asennetut tarjoajat"
+msgstr "Virtuaalisten tarjoajien kannat"
 
 #: ../providers/sybase/gda-sybase-provider.c:307
 msgid "Out of memory. Allocating connection structure failed."
@@ -5163,7 +5188,6 @@ msgid "Locale"
 msgstr "Maa-asetusto"
 
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:11
-#, fuzzy
 msgid "Locale to use during the connection"
 msgstr "Yhteydessä käytettävät maa-asetukset"
 
@@ -5338,7 +5362,6 @@ msgid "File Name"
 msgstr "Tiedostonimi"
 
 #: ../providers/xbase/xbase_specs_dsn.xml.in.h:4
-#, fuzzy
 msgid "Full path to the file containing the database"
 msgstr "Tietokannan sisältävän tiedoston koko polku"
 
@@ -5441,9 +5464,8 @@ msgid "Connection successfully opened!\n"
 msgstr "Yhteyden avaus onnistui!\n"
 
 #: ../testing/gda-test-model-query.c:87
-#, fuzzy
 msgid "List of tests"
-msgstr "Lista SQL-tulkinnan testeistä"
+msgstr "Luettelo testeistä"
 
 #: ../testing/gda-test-model-query.c:97 ../testing/gda-test-models.c:101
 #: ../testing/gda-test-sql.c:97 ../tools/gda-diagnose.c:117
@@ -5620,14 +5642,13 @@ msgid "%s\n"
 msgstr "%s\n"
 
 #: ../tools/command-exec.c:448 ../tools/gda-sql.c:1823
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find query named '%s'"
-msgstr "Parametrin lähdettä \"%s\" ei löydy"
+msgstr "Kyselyä \"%s\" ei löydy"
 
 #: ../tools/command-exec.c:467
-#, fuzzy
 msgid "Parameters"
-msgstr "Parametrin nimi"
+msgstr "Parametrit"
 
 #: ../tools/gda-author-dict-file.c:203
 #, c-format
@@ -5906,9 +5927,8 @@ msgid "Gda SQL console"
 msgstr "Gda:n SQL-konsoli"
 
 #: ../tools/gda-sql.c:188
-#, fuzzy, c-format
 msgid "DSN and connection string are exclusive\n"
-msgstr "DSN-määrittelyä tai yhteysmerkkijonoa ei ole määritetty"
+msgstr "DSN-määrittely ja yhteysmerkkijono olevat poissulkevia\n"
 
 #: ../tools/gda-sql.c:195
 #, c-format
@@ -5916,11 +5936,12 @@ msgid ""
 "You must specify a connection to open either as a DSN or a connection "
 "string\n"
 msgstr ""
+"Avattava yhteys täytyy antaa joko DSN-määrittelynä tai yhteysmerkkijonona\n"
 
 #: ../tools/gda-sql.c:201
 #, c-format
 msgid "You must specify a provider when using a connection string\n"
-msgstr ""
+msgstr "Käytettäessä yhteysmerkkijonoa tarjoaja täytyy määrittää\n"
 
 #: ../tools/gda-sql.c:208
 #, c-format
@@ -5936,6 +5957,10 @@ msgid ""
 "      or any query terminated by a semicolon\n"
 "\n"
 msgstr ""
+"Syötä: \\copyright nähdäksesi käytön ja levityksen ehdot\n"
+"       \\? nähdäksesi ohjeen sisäisistä komennoista\n"
+"       \\q tai CTRL-D sulkeaksesi\n"
+"       tai mikä tahansa puolipisteeseen päättyvä kysely\n"
 
 #: ../tools/gda-sql.c:218
 #, c-format
@@ -5955,39 +5980,39 @@ msgstr "Yhteys on suljettu"
 #: ../tools/gda-sql.c:535
 #, c-format
 msgid "No internal parameter named '%s' required by query"
-msgstr ""
+msgstr "Kysely ei vaadi sisäistä parametriä \"%s\""
 
 #: ../tools/gda-sql.c:609
-#, fuzzy, c-format
+#,  c-format
 msgid "Can't open file '%s' for writing: %s\n"
-msgstr "Määriteltyä yhteyttä ei voi avata: %s\n"
+msgstr "Tiedostoa \"%s ei voi avata kirjoitettavaksi: %s\n"
 
 #: ../tools/gda-sql.c:622
-#, fuzzy, c-format
+#, c-format
 msgid "Can't open pipe '%s': %s\n"
-msgstr "Tiedostoa \"%s\" ei voi ladata"
+msgstr "Putkea \"%s ei voi avata: %s\n"
 
 #: ../tools/gda-sql.c:654
-#, fuzzy, c-format
+#, c-format
 msgid "Can't open file '%s' for reading: %s\n"
-msgstr "Määriteltyä yhteyttä ei voi avata: %s\n"
+msgstr "Tiedostoa \"%s ei voi avata luettavaksi: %s\n"
 
 #: ../tools/gda-sql.c:719
-#, fuzzy, c-format
+#, c-format
 msgid "Could not compute output XML file name: %s\n"
-msgstr "Tiedostoa %s ei voi avata"
+msgstr "XML-tulostiedoston nimeä ei voitu laskea: %s\n"
 
 #: ../tools/gda-sql.c:726
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Synchronizing internal dictionary with database, this may take some time..."
 msgstr ""
-"Haetaan metatietoja tietokantapalvelimelta. Tämä voi kestää hetken...\n"
+"Synkronoidaan sisäistä hakemistoa tietokannan kanssa, tämä kestää hetken..."
 
 #: ../tools/gda-sql.c:731
-#, fuzzy, c-format
+#, c-format
 msgid "Could synchronize dictionary with DBMS: %s\n"
-msgstr "Listaa ei voida synkronoida MySQL-tulosjoukon kanssa"
+msgstr "Sisäistä hakemistoa ei voitu synkronoida tietokanaan: %s\n"
 
 #: ../tools/gda-sql.c:735
 #, c-format
@@ -6010,50 +6035,47 @@ msgstr "Tiedosto"
 #: ../tools/gda-sql.c:1101 ../tools/gda-sql.c:1151 ../tools/gda-sql.c:1161
 #: ../tools/gda-sql.c:1171 ../tools/gda-sql.c:1282
 msgid "General"
-msgstr ""
+msgstr "Yleisasetukset"
 
 #: ../tools/gda-sql.c:1032
 msgid "Show commands history, or save it to file"
-msgstr ""
+msgstr "Näytä komentohistoria tai tallenna se tiedostoon"
 
 #: ../tools/gda-sql.c:1040 ../tools/gda-sql.c:1050
-#, fuzzy
 msgid "Dictionary"
 msgstr "Hakemisto"
 
 #: ../tools/gda-sql.c:1042
 msgid "Synchronize dictionary with database structure"
-msgstr ""
+msgstr "Synkronoi hakemisto tietokantarakenteen kanssa"
 
 #: ../tools/gda-sql.c:1052
-#, fuzzy
 msgid "Save dictionary"
-msgstr "Tietohakemisto"
+msgstr "Tallenna hakemisto"
 
 #: ../tools/gda-sql.c:1060 ../tools/gda-sql.c:1070
-#, fuzzy
 msgid "Information"
-msgstr "## tietoja:\n"
+msgstr "Tietoja"
 
 #: ../tools/gda-sql.c:1062
 msgid "List all tables and views (or named table or view)"
-msgstr ""
+msgstr "Näytä kaikki taulut ja näkymät (tai nimetyt taulut tai näkymät)"
 
 #: ../tools/gda-sql.c:1072
 msgid "List all queries (or named query) in dictionary"
-msgstr ""
+msgstr "Näytä kaikki kyselyt (tai nimetyt kyselyt) hakemistossa"
 
 #: ../tools/gda-sql.c:1082
 msgid "c DSN [USER [PASSWORD]]"
-msgstr ""
+msgstr "c_DSN [KÄYTTÄJÄ [SALASANA]]"
 
 #: ../tools/gda-sql.c:1083
 msgid "Connect to another defined data source (DSN, see \\dsn_list)"
-msgstr ""
+msgstr "Yhdistä toiseen määriteltyyn DSN-tietolähteeseen (katso \\dsn_list)"
 
 #: ../tools/gda-sql.c:1093
 msgid "List configured data sources (DSN)"
-msgstr ""
+msgstr "Näytä määritellyt tietolähteet (DSN)"
 
 #: ../tools/gda-sql.c:1103
 msgid "List installed database providers"
@@ -6062,15 +6084,15 @@ msgstr "Näytä asennetut asennetut tarjoajat"
 #: ../tools/gda-sql.c:1111 ../tools/gda-sql.c:1121 ../tools/gda-sql.c:1131
 #: ../tools/gda-sql.c:1141
 msgid "Input/Output"
-msgstr ""
+msgstr "Syöte/tuloste"
 
 #: ../tools/gda-sql.c:1112
 msgid "i FILE"
-msgstr ""
+msgstr "i TIEDOSTO"
 
 #: ../tools/gda-sql.c:1113
 msgid "Execute commands from file"
-msgstr ""
+msgstr "Suorita komennot tiedostosta"
 
 #: ../tools/gda-sql.c:1122
 msgid "o [FILE]"
@@ -6078,7 +6100,7 @@ msgstr "o [TIEDOSTO]"
 
 #: ../tools/gda-sql.c:1123
 msgid "Send output to a file or |pipe"
-msgstr ""
+msgstr "Tallenna tuloste tiedostoon tai |putkeen"
 
 #: ../tools/gda-sql.c:1132
 msgid "echo [TEXT]"
@@ -6086,7 +6108,7 @@ msgstr "echo [TEKSTI]"
 
 #: ../tools/gda-sql.c:1133
 msgid "Send output to stdout"
-msgstr ""
+msgstr "Lähetä tuloste oletustulosteeseen"
 
 #: ../tools/gda-sql.c:1142
 msgid "qecho [TEXT]"
@@ -6094,11 +6116,11 @@ msgstr "qecho [TEKSTI]"
 
 #: ../tools/gda-sql.c:1143
 msgid "Send output to output stream"
-msgstr ""
+msgstr "Lähetä tuloste ulostulovirtaan"
 
 #: ../tools/gda-sql.c:1152
 msgid "q"
-msgstr ""
+msgstr "q"
 
 #: ../tools/gda-sql.c:1153
 msgid "Quit"
@@ -6106,11 +6128,11 @@ msgstr "Lopeta"
 
 #: ../tools/gda-sql.c:1162
 msgid "cd [DIR]"
-msgstr ""
+msgstr "cd [KANSIO]"
 
 #: ../tools/gda-sql.c:1163
 msgid "Change the current working directory"
-msgstr ""
+msgstr "Vaihda nykyistä työkansiota"
 
 #: ../tools/gda-sql.c:1172
 msgid "copyright"
@@ -6118,7 +6140,7 @@ msgstr "tekijänoikeudet"
 
 #: ../tools/gda-sql.c:1173
 msgid "Show usage and distribution terms"
-msgstr ""
+msgstr "Näytä käytön ja levityksen ehdot"
 
 #: ../tools/gda-sql.c:1181 ../tools/gda-sql.c:1191 ../tools/gda-sql.c:1201
 #: ../tools/gda-sql.c:1211 ../tools/gda-sql.c:1221 ../tools/gda-sql.c:1231
@@ -6128,76 +6150,75 @@ msgstr "Kyselypuskuri"
 
 #: ../tools/gda-sql.c:1183
 msgid "Edit the query buffer (or file) with external editor"
-msgstr ""
+msgstr "Muokkaa kyselypuskuria tai tiedostoa ulkoisella muokkaimella"
 
 #: ../tools/gda-sql.c:1193
 msgid "Reset the query buffer (clear buffer of with contents of file)"
-msgstr ""
+msgstr "Nollaa kyselypuskuri (tyhjennä puskuri tiedoston sisältöstä)"
 
 #: ../tools/gda-sql.c:1203
 msgid "Show the contents of the query buffer"
-msgstr ""
+msgstr "Näytä kyselypuskurin sisältö"
 
 #: ../tools/gda-sql.c:1213
 msgid "Execute contents of query buffer"
-msgstr ""
+msgstr "Suorita kyselypuskurin sisältö"
 
 #: ../tools/gda-sql.c:1222
 msgid "w FILE"
-msgstr ""
+msgstr "w_FILE"
 
 #: ../tools/gda-sql.c:1223
 msgid "Write query buffer to file"
-msgstr ""
+msgstr "Kirjoita kyselypuskuri tiedostoon"
 
 #: ../tools/gda-sql.c:1232
 msgid "w_dict [QUERY_NAME]"
-msgstr ""
+msgstr "w_dict [KYSELYN_NIMI]"
 
 #: ../tools/gda-sql.c:1233
 msgid "Save query buffer to dictionary"
-msgstr ""
+msgstr "Tallenna kyselypuskuri hakemistoon"
 
 #: ../tools/gda-sql.c:1242
 msgid "r_dict QUERY_NAME"
-msgstr ""
+msgstr "r_dict KYSELYN_NIMI"
 
 #: ../tools/gda-sql.c:1243
 msgid "Set named query from dictionary into query buffer"
-msgstr ""
+msgstr "Aseta nimetty kysely hakemistosta kyselypuskuriin"
 
 #: ../tools/gda-sql.c:1252
 msgid "set [NAME [VALUE|_null_]]"
-msgstr ""
+msgstr "set [Nimi [ARVO[_null_]]"
 
 #: ../tools/gda-sql.c:1253
 msgid "Set or show internal parameter, or list all if no parameters"
-msgstr ""
+msgstr "Aseta tai näytä sisäinen parametri, tai näytä kaikki jos ei parametreja"
 
 #: ../tools/gda-sql.c:1262
 msgid "unset NAME"
-msgstr ""
+msgstr "unset NIMI"
 
 #: ../tools/gda-sql.c:1263
-#, fuzzy
 msgid "Unset (delete) internal parameter"
-msgstr "Oracle-parametriä ei saa"
+msgstr "Peru (poista) sisäinen parametri"
 
 #: ../tools/gda-sql.c:1271
 msgid "Formatting"
-msgstr ""
+msgstr "Muotoilu"
 
 #: ../tools/gda-sql.c:1272
 msgid "H [HTML|XML]"
-msgstr ""
+msgstr "H (HTML tai XML)"
 
 #: ../tools/gda-sql.c:1273
 msgid "Set output format"
-msgstr ""
+msgstr "Aseta ulostulomuoto"
 
 #: ../tools/gda-sql.c:1284
 msgid "List all available commands"
-msgstr ""
+msgstr "Näytä kaikki saatavilla olevat komennot"
 
 #: ../tools/gda-sql.c:1501
 #, c-format
@@ -6230,14 +6251,14 @@ msgid "Could not start /bin/sh"
 msgstr "Komentoa /bin/sh ei voitu suorittaa"
 
 #: ../tools/gda-sql.c:1711
-#, fuzzy, c-format
+#, c-format
 msgid "Missing FILE to write to"
-msgstr "INSERT-lausekkeen kohdekokonaisuudet puuttuvat"
+msgstr "Kirjoitettava TIEDOSTO puuttuu"
 
 #: ../tools/gda-sql.c:1763
 #, c-format
 msgid "saved_query_%d"
-msgstr ""
+msgstr "tallennettu_kysely_%d"
 
 #: ../tools/gda-sql.c:1794
 #, c-format
@@ -6477,10 +6498,10 @@ msgstr "Historiatiedostoa \"%s\" ei voi tallentaa: %s"
 #~ msgstr "Käytettävän tietokannan nimi"
 
 #~ msgid "Host"
-#~ msgstr "Isäntä"
+#~ msgstr "Verkkonimi"
 
 #~ msgid "Host Address"
-#~ msgstr "Isäntäosoite"
+#~ msgstr "Verkko-osoite"
 
 #~ msgid "IP address of the host to connect to"
 #~ msgstr "IP-osoite, johon yhdistetään"
