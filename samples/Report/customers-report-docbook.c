@@ -20,6 +20,7 @@ main (int argc, char **argv)
 	doc = gda_report_docbook_document_new (NULL);
 	g_object_get (G_OBJECT (doc), "engine", &eng, NULL);
 	gda_report_document_set_template (doc, "customers-report-spec.xml");
+	g_object_set (G_OBJECT (doc), "fo-stylesheet", "/usr/share/xml/docbook/stylesheet/nwalsh/fo/docbook.xsl", NULL);
 	
 	/* GdaConnection */
 	client = gda_client_new ();

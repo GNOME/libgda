@@ -364,7 +364,7 @@ gda_report_docbook_document_run_as_pdf (GdaReportDocument *doc, const gchar *fil
 
 	argv = g_new (gchar *, 8);
 	argv[0] = g_strdup (fdoc->priv->fop_path);
-	argv[1] = g_strdup ("--xml");
+	argv[1] = g_strdup ("-xml");
 	argv[2] = NULL;
 	argv[3] = g_strdup ("-xsl");
 	argv[4] = g_strdup (fdoc->priv->fo_stylesheet);
@@ -372,8 +372,12 @@ gda_report_docbook_document_run_as_pdf (GdaReportDocument *doc, const gchar *fil
 	argv[6] = g_strdup (filename);
 	argv[7] = NULL;
 
+	gint i;
+	for (i= 0; i< 7; i++)
+		g_print ("==%d %s\n", i, argv[i]);
+
 	retval = gda_report_document_run_converter_argv (doc, NULL, argv, 2, 
-							 "xsltproc", error);
+							 "fop", error);
 	g_strfreev (argv);
 	return retval;
 }
