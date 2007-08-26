@@ -955,3 +955,89 @@ gda_utility_find_or_create_data_type (GdaDict *dict, GdaServerProvider *prov, Gd
 
 	return dtype;
 }
+
+#define GDA_PARAM_ENCODE_TOKEN "__gda"
+/**
+ * gda_text_to_alphanum
+ * @text:
+ *
+ * The "encoding" consists in replacing non
+ * alphanumeric character with the string "__gdaXX" where XX is the hex. representation
+ * of the non alphanumeric char.
+ *
+ * Returns: a new string
+ */
+gchar *
+gda_text_to_alphanum (const gchar *text)
+{
+	GString *string;
+	const gchar* ptr = text;
+	gchar *ret;
+
+	/*g_print ("%s (%s) ", __FUNCTION__, text);*/
+	string = g_string_new ("");
+	for (ptr = text; ptr && *ptr; ptr++) {
+		if (! (((*ptr >= '0') && (*ptr <= '9')) ||
+		       ((*ptr >= 'A') && (*ptr <= 'Z')) ||
+		       ((*ptr >= 'a') && (*ptr <= 'z')))) {
+			g_string_append (string, GDA_PARAM_ENCODE_TOKEN);
+			g_string_append_printf (string, "%0x", *ptr);
+		}
+		else
+			g_string_append_c (string, *ptr);
+	}
+	ret = string->str;
+	g_string_free (string, FALSE);
+	/*g_print ("=>#%s#\n", ret);*/
+	return ret;
+}
+
+/**
+ * gda_alphanum_to_text
+ * @text:
+ *
+ * Does the opposite of gda_text_to_alphanum(), in the same string 
+ *
+ * Returns: @text if conversion succedded or %NULL if an error occurred
+ */
+gchar *
+gda_alphanum_to_text (gchar *text)
+{
+	gchar* ptr = text;
+	gint length = strlen (text);
+	static gint toklength = 0;
+
+	if (toklength == 0)
+		toklength = strlen (GDA_PARAM_ENCODE_TOKEN);
+	/*g_print ("%s (%s) ", __FUNCTION__, text);*/
+	for (ptr = text; ptr && *ptr; ) {
+		if ((length >= toklength + 2) && !strncmp (ptr, GDA_PARAM_ENCODE_TOKEN, toklength)) {
+			gchar *ptr2 = ptr + toklength;
+			char c = *ptr2;
+			gchar val;
+			if ((c >= 'a') && (c <= 'f'))
+				val = (c - 'a' + 10) * 16;
+			else if ((c >= '0') && (c <= '9'))
+				val = (c - '0') * 16;
+			else
+				return NULL;
+			c = *(ptr2+1);
+			if ((c >= 'a') && (c <= 'f'))
+				val += c - 'a' + 10;
+			else if ((c >= '0') && (c <= '9'))
+				val += c - '0';
+			else
+				return NULL;
+			*ptr = val;
+			ptr++;
+			length -= toklength + 1;
+			memmove (ptr, ptr + toklength + 1, length);
+		}
+		else {
+			ptr ++;
+			length --;
+		}
+	}
+	/*g_print ("=>#%s#\n", text);*/
+	return text;
+}

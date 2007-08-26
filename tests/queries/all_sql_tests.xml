@@ -17,4 +17,8 @@
     <unit file="bug_param_sql.xml"/>
   </suite>
 
+  <suite name="Parameters tests: simple notation" dict="dict_pg.xml">
+    <unit file="params_sql_simple.xml"/>
+  </suite>
+
 </suites>

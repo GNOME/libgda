@@ -1,5 +1,33 @@
+2007-08-26  Vivien Malerba <malerba@gnome-db.org>
+
+	* report/: complete re-implementation of the reports, breaking API and ABI from the 3.0
+	release (it did not work anyway)
+	* libgda-report/*: new reports implementation
+	* libgda-3.0.pc.in: 
+	* libgda-report-3.0.pc.in: the report library is now sapareted from the main libgda library
+	* report/engine/*: new GdaReportEngine which operates on XML files
+	* report/RML/*: new report document object which wraps operating on RML XML dialect
+	* samples/README:
+	* samples/Report/*: new examples of how to use the report features
+	* doc/C: documentation updates for the report features
+	* libgda/gda-query-condition.c: when rendering as SQL, don't use the "IS" or "IS NOT"
+	when a parameter's value is NULL if rendering using the ":param_name", "?nnn" or 
+	"$nnn" notations
+	* libgda/sql-delimiter/*:
+	* libsql/*: parameters for which only the name and optionnally the type are provided
+	and no default value is specified can now have the ##<param_name>[::<param_type>] syntax
+	* tests/queries/all_sql_tests.xml:
+	* tests/queries/params_sql_simple.xml: new test for the new simplified parameter
+	specification
+	* libgda/gda-query-parsing.c: when a parameter has no specified type, silently default
+	to G_TYPE_STRING
+
 2007-08-17  Vivien Malerba <malerba@gnome-db.org>
 
+	* tests/queries/basic_sql.xml:
+	* libgda/gda-query.c: calling gda_query_set_sql_text() with several SQL statements
+	will now take into account only the first statement, a new error code
+	is then set (GDA_QUERY_MULTIPLE_STATEMENTS_ERROR)
 	* libgda/gda-query.c: corrected a bug where the error was set even if the query
 	was sucessfully exectuted in gda_query_execute()
 	* libgda/gda-connection-private.h:

@@ -1,0 +1,39 @@
+Libgda Report engine example
+============================
+
+Description:
+------------
+
+The examples in this directory illustrate the GDA report engine, in the libgda-report component,
+part of libgda as of versions >= 3.2.
+
+In these examples the 'SalesTest' (this data source needs to be defined,
+which is automatically done when the first Libgda application is run, and uses a small SQLite database)
+is used as the source of data to generate a report.
+
+The first example (customers-report.c) takes the "customers-report-spec.xml" XML file which
+is a DocBook template (with some <gda_report_...> tags, creates a GdaReportEngine object to "execute" it 
+and creates the "customers-report.xml" file (which returns a valid DocBook document).
+
+The second example (customers-report-rml.c) creates a GdaReportRmlDocument object which offers
+a higher level than the GdaReportEngine to work on RML files. It loads the "customers-report-rml.rml"
+RML file, and generates a PDF file from it.
+
+Compiling and running:
+----------------------
+
+To compile (make sure Libgda is installed prior to this):
+> make
+
+and to run:
+> ./customers-report
+
+result is in the customers-report.xml file, which can be converted to HTML (in a customers-report.html file) as:
+> make html
+(make sure you set the correct path to the stylesheet in the Makefile)
+> firefox customers-report.html
+
+
+or, for the second example:
+> ./customers-report-rml
+> evince customers-report-rml.pdf

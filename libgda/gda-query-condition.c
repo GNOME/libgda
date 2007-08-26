@@ -1625,14 +1625,18 @@ gda_query_condition_render_as_sql (GdaRenderer *iface, GdaParameterList *context
 		break;
 	case GDA_QUERY_CONDITION_LEAF_EQUAL:
 		link = "=";
-		if (GDA_IS_QUERY_FIELD_VALUE (ops[GDA_QUERY_CONDITION_OP_RIGHT]) &&
+		if (!(options & (GDA_RENDERER_PARAMS_AS_COLON | GDA_RENDERER_PARAMS_AS_DOLLAR |
+				 GDA_RENDERER_PARAMS_AS_QMARK)) &&
+		    GDA_IS_QUERY_FIELD_VALUE (ops[GDA_QUERY_CONDITION_OP_RIGHT]) &&
 		    context && 
 		    gda_query_field_value_is_value_null (GDA_QUERY_FIELD_VALUE (ops[GDA_QUERY_CONDITION_OP_RIGHT]), context))
-				link = " IS ";
+			link = " IS ";
 		break;
 	case GDA_QUERY_CONDITION_LEAF_DIFF:
 		link = "!=";
-		if (GDA_IS_QUERY_FIELD_VALUE (ops[GDA_QUERY_CONDITION_OP_RIGHT]) &&
+		if (!(options & (GDA_RENDERER_PARAMS_AS_COLON | GDA_RENDERER_PARAMS_AS_DOLLAR |
+				 GDA_RENDERER_PARAMS_AS_QMARK)) &&
+		    GDA_IS_QUERY_FIELD_VALUE (ops[GDA_QUERY_CONDITION_OP_RIGHT]) &&
 		    context && 
 		    gda_query_field_value_is_value_null (GDA_QUERY_FIELD_VALUE (ops[GDA_QUERY_CONDITION_OP_RIGHT]), context))
 			link = " IS NOT ";

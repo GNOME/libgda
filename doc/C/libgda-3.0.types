@@ -1,5 +1,10 @@
 #include <libgda/libgda.h>
+#include <libgda/gda-blob-op.h>
 #include <virtual/libgda-virtual.h>
+#include <engine/gda-report-engine.h>
+#include <gda-report-document.h>
+#include <RML/gda-report-rml-document.h>
+#include <DocBook/gda-report-docbook-document.h>
 gda_blob_op_get_type
 gda_client_get_type
 gda_column_get_type
@@ -78,3 +83,8 @@ gda_vprovider_hub_get_type
 gda_virtual_connection_get_type
 gda_vconnection_data_model_get_type
 gda_vconnection_hub_get_type
+gda_report_engine_get_type
+gda_report_document_get_type
+gda_report_rml_document_get_type
+gda_report_docbook_document_get_type
+

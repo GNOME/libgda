@@ -11,5 +11,6 @@ Currently the contents are:
 * in F-Spot/: and example of F-Spot database repair tool (using virtual connections)
 * in TableCopy/: examples of how to copy table data
 * in Virtual/: virtual connection usage example
+* in Report/: reports examples
 
 Good luck and happy hacking!

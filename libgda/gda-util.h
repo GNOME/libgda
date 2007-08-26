@@ -76,6 +76,11 @@ void     gda_utility_parameter_load_attributes (GdaParameter *param, xmlNodePtr 
 GdaDictType *gda_utility_find_or_create_data_type (GdaDict *dict, GdaServerProvider *prov, GdaConnection *cnc, 
 					       const gchar *dbms_type, const gchar *g_type, gboolean *created);
 
+/* translate any text to an alphanumerical text */
+gchar *gda_text_to_alphanum (const gchar *text);
+gchar *gda_alphanum_to_text (gchar *text);
+
+
 G_END_DECLS
 
 #endif

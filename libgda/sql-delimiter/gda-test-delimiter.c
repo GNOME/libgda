@@ -4,6 +4,16 @@
 static void test_string (const gchar *str);
 int 
 main (int argc, char **argv) {
+        test_string ("CREATE sequence \"ACTOR_SEQ\";\n"
+"       begin;\n"
+"\nCREATE trigger \"BI_ACTOR\"\n"
+"  before insert on \"ACTOR\"\n"
+"  for each row\n"
+"begin\n"
+"    select \"ACTOR_SEQ\".nextval into :NEW.ACTOR_ID from dual;\n"
+"       end;\n"
+"ROLLBACK;");
+	return 0;
 	test_string ("CREATE OR REPLACE PROCEDURE cs_create_job(v_job_id IN INTEGER) IS\n"
 "    a_running_job_count INTEGER;\n"
 "    PRAGMA AUTONOMOUS_TRANSACTION;\n"

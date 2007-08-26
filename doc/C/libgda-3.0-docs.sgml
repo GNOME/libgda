@@ -80,20 +80,6 @@
 <!ENTITY libgda-transaction-status SYSTEM "xml/gda-transaction-status.xml">
 <!ENTITY libgda-util SYSTEM "xml/gda-util.xml">
 <!ENTITY libgda-GValue SYSTEM "xml/gda-value.xml">
-<!ENTITY libgda-report-types SYSTEM "xml/gda-report-types.xml">
-<!ENTITY libgda-report-document SYSTEM "xml/gda-report-document.xml">
-<!ENTITY libgda-report-item SYSTEM "xml/gda-report-item.xml">
-<!ENTITY libgda-report-item-detail SYSTEM "xml/gda-report-item-detail.xml">
-<!ENTITY libgda-report-item-label SYSTEM "xml/gda-report-item-label.xml">
-<!ENTITY libgda-report-item-pagefooter SYSTEM "xml/gda-report-item-pagefooter.xml">
-<!ENTITY libgda-report-item-pageheader SYSTEM "xml/gda-report-item-pageheader.xml">
-<!ENTITY libgda-report-item-repfield SYSTEM "xml/gda-report-item-repfield.xml">
-<!ENTITY libgda-report-item-report SYSTEM "xml/gda-report-item-report.xml">
-<!ENTITY libgda-report-item-reportfooter SYSTEM "xml/gda-report-item-reportfooter.xml">
-<!ENTITY libgda-report-item-reportheader SYSTEM "xml/gda-report-item-reportheader.xml">
-<!ENTITY libgda-report-item-sqlquery SYSTEM "xml/gda-report-item-sqlquery.xml">
-<!ENTITY libgda-report-result SYSTEM "xml/gda-report-result.xml">
-<!ENTITY libgda-report-valid SYSTEM "xml/gda-report-valid.xml">
 <!ENTITY libgda-GdaDict SYSTEM "xml/gda-dict.xml">
 <!ENTITY libgda-GdaDictExtend SYSTEM "xml/gda-dict-extend.xml">
 <!ENTITY libgda-GdaConnection SYSTEM "xml/gda-connection.xml">
@@ -138,6 +124,10 @@
 <!ENTITY libgda-GdaBlobOp SYSTEM "xml/gda-blob-op.xml">
 <!ENTITY libgda-GdaGraphQuery SYSTEM "xml/gda-graph-query.xml">
 <!ENTITY libgda-GdaGraphItem SYSTEM "xml/gda-graph-item.xml">
+<!ENTITY libgda-GdaReportEngine SYSTEM "xml/gda-report-engine.xml">
+<!ENTITY libgda-GdaReportDocument SYSTEM "xml/gda-report-document.xml">
+<!ENTITY libgda-GdaReportDocbookDocument SYSTEM "xml/gda-report-docbook-document.xml">
+<!ENTITY libgda-GdaReportRmlDocument SYSTEM "xml/gda-report-rml-document.xml">
 <!ENTITY libgda-Enums SYSTEM "xml/gda-enums.xml">
 <!ENTITY libgda-convenient SYSTEM "xml/gda-convenient.xml">
 <!ENTITY fdl-appendix SYSTEM "fdl-appendix.sgml">
@@ -1161,34 +1151,37 @@
   </part>
 
   <part id="part_libgda-reports">
-    <title>&GDA; Report Engine</title>
+    <title>&GDA; Reports</title>
     <chapter id="libgda-reports-introduction">
       <title>Introduction</title>
       <para>
-	FIXME: place here an introduction about reports
+	&LIBGDA;'s report feature has been reworked and is only offers it report engine object, a low level general
+ 	usage engine to generate reports in the XML format.
+      </para>
+      <para>
+	Working on any XML file allows the report engine to work with all the existing post-processors which will actually
+	generate the final file(s) in HTML, PDF or other; for example:
+	<itemizedlist>
+	  <listitem><para>SVG can be processed by a web browser or further edited using inkscape for example</para></listitem>
+	  <listitem><para>DocBook can then be converted to HTML of PDF 
+	      (see <ulink url="http://wiki.docbook.org/topic/DocBookXsltPublishingModelDiagram">this docbook Wiki page</ulink>)
+	  </para></listitem>
+	  <listitem><para>RML files (Report Markup Language), see <ulink url="http://www.reportlab.org/">ReportLab</ulink> or
+	      <ulink url="http://en.openreport.org/index.py/static/page/trml2pdf">OpenReport</ulink>) can be converted to HTML or PDF)
+	  </para></listitem>
+	  <listitem><para>some other XML dialects can also be used such as 
+	      <ulink url="http://sourceforge.net/projects/rlib/">RLib</ulink>, 
+	      <ulink url="http://www.treshna.com/papyrus/">Papyrus</ulink>, and other.
+	  </para></listitem>
+	</itemizedlist>
       </para>
     </chapter>
-
-    <chapter id="libgda-reports">
+    <chapter>
       <title>API reference</title>
-      <para>
-	&LIBGDA; includes a built-in reporting engine which allows applications to easily
-	create, manage and run custom reports.
-      </para>
-      &libgda-report-types;
-      &libgda-report-document;
-      &libgda-report-item;
-      &libgda-report-item-detail;
-      &libgda-report-item-label;
-      &libgda-report-item-pagefooter;
-      &libgda-report-item-pageheader;
-      &libgda-report-item-repfield;
-      &libgda-report-item-report;
-      &libgda-report-item-reportfooter;
-      &libgda-report-item-reportheader;
-      &libgda-report-item-sqlquery;
-      &libgda-report-result;
-      &libgda-report-valid;
+      &libgda-GdaReportEngine;
+      &libgda-GdaReportDocument;
+      &libgda-GdaReportDocbookDocument;
+      &libgda-GdaReportRmlDocument;
     </chapter>
   </part>
 

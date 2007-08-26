@@ -1,0 +1,41 @@
+<!-- ##### SECTION Title ##### -->
+GdaReportRmlDocument
+
+<!-- ##### SECTION Short_Description ##### -->
+Report document based on the RML dialect
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+The #GdaReportRmlDocument makes it easy to create reports based on a RML
+template file. 
+</para>
+<para>
+RML (Report Markup Language) is an XML dialect which allows one to describe in a very precise way
+layouts which can then be converted to PDF. For more information, see the
+<ulink url="http://www.reportlab.org/">ReportLab</ulink> or
+<ulink url="http://en.openreport.org/index.py/static/page/trml2pdf">OpenReport</ulink> web pages.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaReportRmlDocument ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_report_rml_document_new ##### -->
+<para>
+
+</para>
+
+@engine: 
+@Returns: 
+
+

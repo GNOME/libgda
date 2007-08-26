@@ -82,13 +82,13 @@ GdaDelimiterParamSpec     *ps;
 
 %token L_LSBRACKET L_RSBRACKET
 %token L_PNAME L_PTYPE L_PISPARAM L_PDESCR L_PNULLOK
-%token L_UNSPECVAL
+%token L_UNSPECVAL L_SIMPLE_PARAM
 
 %token L_SC 
 
 %type <v> expr statement
-%type <str> L_WORD L_CHAR L_STRING L_TEXTUAL L_SC chunck
-%type <list> param_spec param_spec_list expr_list statements
+%type <str> L_WORD L_CHAR L_STRING L_TEXTUAL L_SC chunck L_SIMPLE_PARAM
+%type <list> param_spec param_spec_list expr_list statements simple_param_spec
 %type <ps> param_spec_item
 
 %%
@@ -112,6 +112,7 @@ expr: L_TEXTUAL                   {$$ = gda_delimiter_expr_build (g_strdup_print
         | L_STRING                {$$ = gda_delimiter_expr_build ($1, NULL);}
         | L_WORD                  {$$ = gda_delimiter_expr_build ($1, NULL);}
         | L_UNSPECVAL param_spec  {$$ = gda_delimiter_expr_build (NULL, $2);}
+	| simple_param_spec	  {$$ = gda_delimiter_expr_build (NULL, $1);}
 	| L_WORD param_spec	  {$$ = gda_delimiter_expr_build ($1, $2);}
 	| L_STRING param_spec     {$$ = gda_delimiter_expr_build ($1, $2);}
 	| L_TEXTUAL param_spec	  {$$ = gda_delimiter_expr_build (g_strdup_printf ("\"%s\"", $1), $2); g_free ($1);}
@@ -124,6 +125,9 @@ chunck: L_CHAR			  {$$ = $1;}
 	;
 
 param_spec: L_LSBRACKET param_spec_list L_RSBRACKET {$$ = $2;}
+	;
+
+simple_param_spec: L_SIMPLE_PARAM               {$$ = gda_delimiter_param_spec_build_simple ($1);}
 	;
 
 param_spec_list: param_spec_item 			{$$ = g_list_append (NULL, $1);}

@@ -1554,16 +1554,8 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 		list = g_list_next (list);
 	}
 
-	if (!real_type && (gdatype == G_TYPE_INVALID) && unspecvalue) {
-		if (error && !*error)
-			g_set_error (error,
-				     GDA_QUERY_ERROR,
-				     GDA_QUERY_SQL_ANALYSE_ERROR,
-				     _("Data type must be specified when no default value is provided, using G_TYPE_STRING"));
-		else
-			g_warning (_("Data type must be specified when no default value is provided, using G_TYPE_STRING"));
+	if (!real_type && (gdatype == G_TYPE_INVALID) && unspecvalue) 
 		gdatype = G_TYPE_STRING;
-	}
 
 	if (!real_type && (gdatype == G_TYPE_INVALID)) {
 		if (prov) {

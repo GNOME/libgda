@@ -1117,6 +1117,7 @@ AC_OUTPUT([
 Makefile
 libgda.spec
 libgda-3.0.pc
+libgda-report-3.0.pc
 po/Makefile.in
 libsql/Makefile
 libgda/Makefile
@@ -1158,10 +1159,12 @@ providers/sybase/Makefile
 providers/sybase/libgda-sybase-3.0.pc
 providers/xbase/Makefile
 providers/xbase/libgda-xbase-3.0.pc
-report/Makefile
-report/gda-report.dtd
-report/libgda-report/Makefile
-report/testing/Makefile
+libgda-report/Makefile
+libgda-report/engine/Makefile
+libgda-report/DocBook/Makefile
+libgda-report/RML/Makefile
+libgda-report/RML/trml2html/Makefile
+libgda-report/RML/trml2pdf/Makefile
 tools/Makefile
 testing/Makefile
 tests/Makefile

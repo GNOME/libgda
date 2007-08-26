@@ -55,11 +55,13 @@ void
 gda_delimitererror (char *string)
 {
 	if (gda_sql_error) {
-		if (!strcmp (string, "parse error"))
-			g_set_error (gda_sql_error, 0, 0, _("Parse error near `%s'"), gda_delimitertext);
-		else if (!strcmp (string, "syntax error"))
-			g_set_error (gda_sql_error, 0, 0, _("Syntax error near `%s'"), gda_delimitertext);
-		else g_set_error (gda_sql_error, 0, 0, string);
+		if (!*gda_sql_error) {
+			if (!strcmp (string, "parse error"))
+				g_set_error (gda_sql_error, 0, 0, _("Parse error near `%s'"), gda_delimitertext);
+			else if (!strcmp (string, "syntax error"))
+				g_set_error (gda_sql_error, 0, 0, _("Syntax error near `%s'"), gda_delimitertext);
+			else g_set_error (gda_sql_error, 0, 0, string);
+		}
 	}
 	else
 		fprintf (stderr, "SQL Parser error: %s near `%s'\n", string, gda_delimitertext);

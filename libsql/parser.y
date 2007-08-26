@@ -96,10 +96,11 @@ sql_order_field *of;
 %token L_LSBRACKET L_RSBRACKET
 %token L_PNAME L_PTYPE L_PISPARAM L_PDESCR L_PNULLOK
 %token L_UNSPECVAL
+%token L_SIMPLE_PARAM
 
 %type <v> select_statement insert_statement update_statement delete_statement
-%type <str> L_IDENT L_STRING L_TEXTUAL L_NUM
-%type <list> fields_list targets_list field_name dotted_name opt_orderby opt_groupby opt_fields_list set_list param_spec param_spec_list order_fields_list
+%type <str> L_IDENT L_STRING L_TEXTUAL L_NUM L_SIMPLE_PARAM
+%type <list> fields_list targets_list field_name dotted_name opt_orderby opt_groupby opt_fields_list set_list param_spec param_spec_list order_fields_list simple_param_spec
 %type <f> field
 %type <fi> field_raw
 %type <t> simple_table table target simple_target
@@ -249,6 +250,7 @@ field:    field_raw                             {$$ = sql_field_build ($1);}
         | field_raw param_spec L_AS L_IDENT     {$$ = sql_field_set_as (sql_field_set_param_spec (sql_field_build ($1), $2), $4);}
 	| L_NUM					{$$ = sql_field_build (sql_field_item_build (g_list_append (NULL, memsql_strdup ($1)))); memsql_free ($1);}
 	| L_NUM param_spec			{$$ = sql_field_set_param_spec (sql_field_build (sql_field_item_build (g_list_append (NULL, memsql_strdup ($1)))), $2); memsql_free ($1);}
+	| simple_param_spec			{$$ = sql_field_set_param_spec (sql_field_build (sql_field_item_build (g_list_append (NULL, memsql_strdup ("")))), $1);}
 	;
 
 where_list: where_item				{$$ = sql_where_build_single ($1);}
@@ -283,6 +285,9 @@ where_item: field condition_operator field 		{$$ = sql_build_condition ($1, $3, 
 	| field L_NOT condition_operator field  	{$$ = sql_condition_negate (sql_build_condition ($1, $4, $3));}
 	| field L_NOT L_BETWEEN field L_AND field 	{$$ = sql_condition_negate (sql_build_condition_between ($1, $4, $6));}
 	| field L_IS L_NOT field			{$$ = sql_condition_negate (sql_build_condition ($1, $4, SQL_is));}
+	;
+
+simple_param_spec: L_SIMPLE_PARAM               {$$ = param_spec_build_simple ($1);}
 	;
 
 param_spec: L_LSBRACKET param_spec_list L_RSBRACKET {$$ = $2;}

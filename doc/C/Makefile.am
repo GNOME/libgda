@@ -30,9 +30,11 @@ GTKDOC_CFLAGS = -I$(top_srcdir) \
         -I$(top_builddir) \
 	-I$(top_srcdir)/providers/sqlite \
 	-I$(top_builddir)/providers/sqlite \
+	-I$(top_srcdir)/libgda-report \
         $(LIBGDA_CFLAGS) \
 	-DGETTEXT_PACKAGE=\""$(GETTEXT_PACKAGE)"\"
 GTKDOC_LIBS =  $(top_builddir)/libgda/libgda-3.0.la \
+	$(top_builddir)/libgda-report/libgda-report-3.0.la \
 	$(top_builddir)/providers/sqlite/virtual/libgda-virtual-3.0.la \
 	$(LIBGDA_LIBS)
 

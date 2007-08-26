@@ -33,8 +33,9 @@ human readable text
 @GDA_RENDERER_PARAMS_AS_DETAILED: 
 @GDA_RENDERER_ERROR_IF_DEFAULT: 
 @GDA_RENDERER_FIELDS_NO_TARGET_ALIAS: 
-@GDA_RENDERER_PARAMS_AS_COLON: 
-@GDA_RENDERER_PARAMS_AS_DOLLAR: 
+@GDA_RENDERER_PARAMS_AS_COLON: parameters will be rendered using the :param_name notation (the parameter is "encoded" using gda_parameter_get_alphanum_name(), use gda_alphanum_to_text() to get the unencoded version
+@GDA_RENDERER_PARAMS_AS_DOLLAR: parameters will be rendered using the ?NNN notation where NNN is the prrameter index
+@GDA_RENDERER_PARAMS_AS_QMARK: parameters will be rendered using the ?NNN notation where NNN is the prrameter index
 
 <!-- ##### FUNCTION gda_renderer_render_as_sql ##### -->
 <para>

@@ -113,6 +113,8 @@ static GString *gstring;
                         yyterminate();
                         }
 
+##[a-zA-Z\+\-][a-zA-Z0-9_\+\-/@#%]*		{sqllval.str = memsql_strdup (sqltext + 2); return L_SIMPLE_PARAM;}
+##[a-zA-Z\+\-][a-zA-Z0-9_\+\-/@#%]*::[a-zA-Z0-9_]+ {sqllval.str = memsql_strdup (sqltext + 2); return L_SIMPLE_PARAM;}
 "##"            	{return L_UNSPECVAL;}
 "/*"			{BEGIN(PSPEC); return L_LSBRACKET;}
 <PSPEC>"*/"             {BEGIN(INITIAL); return L_RSBRACKET;}

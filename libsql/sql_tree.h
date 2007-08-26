@@ -64,5 +64,6 @@ sql_order_field *sql_order_field_build (GList * name, sql_ordertype order_type);
 
 /* param spec */
 param_spec *param_spec_build (param_spec_type type, char *content);
+GList *param_spec_build_simple (char *content);
 
 #endif /* SQL_TREE_H */

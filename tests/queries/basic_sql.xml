@@ -1,5 +1,18 @@
 <?xml version="1.0"?>
 <unit>
+  <test name="param_0">
+    <sql expected="D">SELECT (## /* type:int4 */ IS NOT NULL)</sql>
+    <render_as>SELECT ( ## /* type:"int4" */ IS NOT NULL)</render_as>
+    <params>
+      <param type="int4"/>
+    </params>
+  </test>
+
+  <test name="param_0_b">
+    <sql expected="D">SELECT ('PR' IS NOT NULL)</sql>
+    <render_as>SELECT ('PR' IS NOT NULL)</render_as>
+  </test>
+
   <test name="param_type_1">
     <sql expected="D">SELECT ## /* type:int4 */ i=10</sql>
     <render_as>SELECT ## /* type:"int4" */ i=10</render_as>
@@ -174,7 +187,7 @@
   <test name="string11">
     <sql expected="D" n_stmts="2">update kmj, sdfjk, ##/*name:"tit;i"*/ '+ ##/*name:"tot;o"*/,' ; COMMIT sdlkfj</sql>
     <render_as when_gda="FALSE">update kmj, sdfjk, ## /* name:"tit;i" */ '+ ##/*name:"tot;o"*/,' ; COMMIT sdlkfj</render_as>
-    <render_as when_gda="TRUE">update kmj, sdfjk, ## /* type:"gchararray" name:"tit;i" */ '+ ##/*name:"tot;o"*/,' ; COMMIT sdlkfj</render_as>
+    <render_as when_gda="TRUE">update kmj, sdfjk, ## /* type:"gchararray" name:"tit;i" */ '+ ##/*name:"tot;o"*/,' </render_as>
     <params>
       <param name="tit;i"/>
     </params>

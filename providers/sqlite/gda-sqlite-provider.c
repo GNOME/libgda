@@ -30,6 +30,7 @@
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-data-model-private.h>
 #include <libgda/gda-parameter-list.h>
+#include <libgda/gda-util.h>
 #include <libgda/gda-server-provider-extra.h>
 #include "gda-sqlite.h"
 #include "gda-sqlite-provider.h"
@@ -1038,13 +1039,11 @@ gda_sqlite_provider_execute_query (GdaServerProvider *provider,
 				GdaParameter *param;
 				param = gda_parameter_list_find_param (params, pname + 1);
 				if (!param) {
-					gchar *tmp = g_strdup (pname + 1);
-					if (*tmp == 'P')
-						*tmp = '+';
-					else if (*tmp == 'M')
-						*tmp = '-';
-					param = gda_parameter_list_find_param (params, tmp);
-					g_free (tmp);
+					gchar *tmp = gda_alphanum_to_text (g_strdup (pname + 1));
+					if (tmp) {
+						param = gda_parameter_list_find_param (params, tmp);
+						g_free (tmp);
+					}
 				}
 				if (!param) {
 					gchar *str;
@@ -2233,7 +2232,7 @@ scalar_gda_file_exists_func (sqlite3_context *context, int argc, sqlite3_value *
 		return;
 	}
 
-	path =  sqlite3_value_text (argv [0]);
+	path = (gchar *) sqlite3_value_text (argv [0]);
 	if (g_file_test (path, G_FILE_TEST_EXISTS))
 		sqlite3_result_int (context, 1);
 	else

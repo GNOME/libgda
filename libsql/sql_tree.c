@@ -158,6 +158,30 @@ sql_field_set_param_spec (sql_field * field, GList * param_spec)
 	return field;
 }
 
+GList *
+param_spec_build_simple (char *content)
+{
+	char *ptr;
+	char *pname = content, *ptype = NULL;
+	GList *retval;
+
+	/* delimit param name and param type */
+	for (ptr = content; *ptr; ptr++) {
+		if ((*ptr == ':') && (*(ptr+1) == ':')) {
+			*ptr = 0;
+			ptype = ptr+2;
+			break;
+		}
+	}
+
+	retval = g_list_append (NULL, param_spec_build (PARAM_name, memsql_strdup (pname)));
+	if (ptype)
+		retval = g_list_append (retval, param_spec_build (PARAM_type, memsql_strdup (ptype)));
+
+	memsql_free (content);
+	return retval;
+}
+
 param_spec *
 param_spec_build (param_spec_type type, char *content)
 {

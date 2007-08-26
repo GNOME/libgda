@@ -25,6 +25,39 @@
 #include "gda-sql-delimiter.h"
 #include "gda-delimiter-tree.h"
 
+GList *
+gda_delimiter_param_spec_build_simple (gchar *content)
+{
+	gchar *ptr;
+	gchar *pname = NULL, *ptype = NULL;
+	GList *retval;
+	
+	/* search the "##" start string */
+	for (ptr = content; *ptr; ptr++) {
+		if ((*ptr == '#') && (*(ptr+1) == '#'))
+			pname = ptr+2;
+	}
+
+	g_assert (pname);
+	/* delimit param name and param type */
+	for (ptr = pname; *ptr; ptr++) {
+		if ((*ptr == ':') && (*(ptr+1) == ':')) {
+			*ptr = 0;
+			ptype = ptr+2;
+			break;
+		}
+	}
+	
+	retval = g_list_append (NULL, gda_delimiter_param_spec_build (GDA_DELIMITER_PARAM_NAME, g_strdup (pname)));
+	if (ptype)
+		retval = g_list_append (retval, gda_delimiter_param_spec_build (GDA_DELIMITER_PARAM_TYPE, g_strdup (ptype)));
+	else
+		retval = g_list_append (retval, gda_delimiter_param_spec_build (GDA_DELIMITER_PARAM_TYPE, g_strdup ("gchararray")));
+
+	g_free (content);
+	return retval;
+}
+
 GdaDelimiterStatement *
 gda_delimiter_statement_build (GdaDelimiterStatementType type, GList *expr_list)
 {

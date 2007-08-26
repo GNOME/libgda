@@ -1363,7 +1363,7 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 
 	/* try to parse the SQL */
 	result = sql_parse_with_error (sql, error ? error : &local_error);
-	if (!error && local_error) {
+	if (local_error) {
 		g_error_free (local_error);
 		local_error = NULL;
 	}
@@ -1411,7 +1411,14 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 			GList *params;
 			GdaDict *dict = gda_object_get_dict (GDA_OBJECT (query));
 
-			stm = gda_delimiter_concat_list (stm_list);
+			if ((stm_list->next) && error) {
+				/* uset error first */
+				g_error_free (*error); 
+				*error = NULL;
+				g_set_error (error, GDA_QUERY_ERROR, GDA_QUERY_MULTIPLE_STATEMENTS_ERROR,
+					     _("Multiple statements in SQL, only the first one kept"));
+			}
+			stm = gda_delimiter_parse_copy_statement ((GdaDelimiterStatement *) stm_list->data, NULL);
 			gda_delimiter_free_list (stm_list);
 
 			/*

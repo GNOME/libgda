@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<!DOCTYPE document SYSTEM "rml_1_0.dtd">
+<document filename="example_2.pdf" compression="1">
+  <template>
+    <pageTemplate id="main">
+      <frame id="first" x1="72" y1="72" width="451" height="698"/>
+    </pageTemplate>
+  </template>
+  <stylesheet>
+    <blockTableStyle id="products">
+      <blockFont name="Helvetica-BoldOblique" start="0,0" stop="-1,0"/>
+      <blockBackground colorName="grey" start="0,0" stop="-1,0"/>
+      <blockTextColor colorName="white" start="0,0" stop="-1,0"/>
+      <blockValign value="TOP"/>
+      <blockAlignment value="RIGHT" start="1,0" stop="-1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="grey" start="0,-1" stop="-1,-1"/>
+    </blockTableStyle>
+
+    <paraStyle name="style.Title" fontName="Courier-Bold" fontSize="36" leading="44"/>
+  </stylesheet>
+
+  <!-- 
+       Start a new section, with the "customers" SELECT query, which is supposed to be defined using 
+       gda_report_engine_declare_object() 
+       
+       Any <gda_report_iter> node will repeat its contents as many times as there are rows in the
+       data model returned by the "customers" SELECT query.
+    -->
+  <gda_report_section query_name="customers">
+    
+    <story>
+      <title>Customers report example</title>
+      <h1>Abstract</h1>
+      <para>
+	This report extratcs some supposedly interresting data from the customers as recorded in the
+	SalesTest data source. It aims at illustrating all the features of the GDA Report's engine which
+	operates on XML data, in which some specific &lt;gda_report_...&gt; tags are interpreted when the
+	engine is run to generate the final report.</para>
+      <para>The generated XML can then be converted into another format depending on the XML "dialect" of the
+	specifications (DocBook, ...).</para>
+      <!-- Use the "abstract" parameter which is supposed to be defined using gda_report_engine_declare_object() -->
+      <para><gda_report_param_value param_name="abstract"/></para>
+
+      <h1>List of customers</h1>
+      <para>Here is the list of customers, as per the database. The query executed to create the list of customers
+	was created in the source code and declared to the GdaReportEngine object, so only its name is used in the report.</para>
+      <para>The first two columns are data extracted as-is from the SELECT query, and the 3rd column's contents is some
+	data computed using a "IF THEN ELSE" kind of statement.</para>
+      <spacer length="1cm" width="1mm"/>
+      <blockTable colWidths="1cm,6cm,5cm" style="products">
+	<tr>
+          <td>Id</td>
+          <td>Name</td>
+          <td>Country</td>
+	</tr>
+	<gda_report_iter>
+          <tr>
+            <td><gda_report_param_value param_name="customers/@id"/></td>
+            <td><gda_report_param_value param_name="customers/@name"/></td>
+            <td><gda_report_if expr="##customers/@country IS NOT NULL"><gda_report_if_true>Country: <gda_report_param_value param_name="customers/@country"/></gda_report_if_true><gda_report_if_false>-Unknown-</gda_report_if_false></gda_report_if></td>
+          </tr>
+	</gda_report_iter>
+      </blockTable>
+    
+      <h1>Detailed customers' information</h1>
+      <para>This section gives detailed information for each customer, it shows how to create nested report components:
+	For each row of the data model containing the list of customers, some other SELECT queries are executed while
+	referencing the ID of the customer. The SQL queries used here are directly defined into the spec. file.</para>
+
+      <gda_report_iter>
+	<h2>Details for <gda_report_param_value param_name="customers/@name"/></h2>
+	<para>Here are the details for customer &quot;<gda_report_param_value param_name="customers/@name"/>&quot;
+          such as the salesperson assigned to it, and the orders the customer has passed.</para>
+	<!-- SalesRep -->
+	<para bulletText="s"  bulletFontName = "ZapfDingbats">
+          <gda_report_section>
+            <!-- The query is defined within the spec -->
+            <gda_report_query query_name="salesrep_for_customer" cnc_name="main_cnc">SELECT s.* FROM salesrep s
+              INNER JOIN customers c ON (s.id=c.default_served_by)
+              WHERE c.id=##customers/@id::gint
+            </gda_report_query>
+	    
+            <gda_report_if expr="##salesrep_for_customer/%nrows::gint == 0">
+              <gda_report_if_true>No salesRep!</gda_report_if_true>
+              <gda_report_if_false>
+                <gda_report_iter>Sales person: <gda_report_param_value param_name="salesrep_for_customer/@name"/></gda_report_iter>
+              </gda_report_if_false>
+            </gda_report_if>
+	  </gda_report_section>
+	</para>
+
+	
+	<gda_report_section>
+          <gda_report_query query_name="orders_for_customer" cnc_name="main_cnc">SELECT o.*,
+            (SELECT count (*) FROM order_contents oc WHERE oc.order_id = o.id) AS nb FROM ORDERS o
+            WHERE customer = ##customers/@id::gint</gda_report_query>
+          <gda_report_if expr="##orders_for_customer/%nrows::gint == 0">
+            <gda_report_if_true><para bulletText="s"  bulletFontName = "ZapfDingbats">No order yet!</para></gda_report_if_true>
+            <gda_report_if_false><para bulletText="s"  bulletFontName = "ZapfDingbats">Orders so far (<gda_report_param_value param_name="orders_for_customer/%nrows"/>):</para>
+	      <blockTable colWidths="4cm,4cm,4cm" style="products">
+                <tr>
+                  <td>Order date</td>
+                  <td>Number of items in order</td>
+                  <td>Delivery date</td>
+                </tr>
+                <gda_report_iter>
+                  <tr>
+		    <td><gda_report_param_value param_name="orders_for_customer/@creation_date"/></td>
+		    <td><gda_report_param_value param_name="orders_for_customer/@nb"/></td>
+		    <td><gda_report_param_value param_name="orders_for_customer/@delivery_date"/></td>
+                  </tr>
+                </gda_report_iter>
+              </blockTable>
+            </gda_report_if_false>
+          </gda_report_if>
+        </gda_report_section>
+
+      </gda_report_iter>
+    </story>
+  </gda_report_section>
+</document>

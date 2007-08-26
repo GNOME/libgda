@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article>
+  <articleinfo>
+    <title>Customers report example</title>
+    
+    <author>
+      <firstname>John</firstname>
+      <surname>DOE</surname>
+      <affiliation>
+        <address><email>foo@example.com</email></address>
+      </affiliation>
+    </author>
+    
+    <copyright>
+      <year>2007</year>
+      <holder>The GNOME Foundation</holder>
+    </copyright>
+    
+    <abstract>
+      <para>This report extratcs some supposedly interresting data from the customers as recorded in the 
+	SalesTest data source. It aims at illustrating all the features of the GDA Report's engine which
+	operates on XML data, in which some specific &lt;gda_report_...&gt; tags are interpreted when the
+      engine is run to generate the final report.</para>
+      <para>The generated XML can then be converted into another format depending on the XML "dialect" of the
+	specifications (DocBook, ...).</para>
+      <!-- Use the "abstract" parameter which is supposed to be defined using gda_report_engine_declare_object() -->
+      <para><gda_report_param_value param_name="abstract"/></para>
+    </abstract>
+  </articleinfo>
+
+  <!-- 
+       Start a new section, with the "customers" SELECT query, which is supposed to be defined using 
+       gda_report_engine_declare_object() 
+
+       Any <gda_report_iter> node will repeat its contents as many times as there are rows in the
+       data model returned by the "customers" SELECT query.
+    -->
+  <gda_report_section query_name="customers"> 
+
+    <sect1>
+      <title>List of customers (<gda_report_param_value param_name="customers/%nrows"/>)</title>
+      
+      <para>Here is the list of customers, as per the database. The query executed to create the list of customers
+	was created in the source code and declared to the GdaReportEngine object, so only its name is used in the report.</para>
+      <para>The first two columns are data extracted as-is from the SELECT query, and the 3rd column's contents is some
+	data computed using a "IF THEN ELSE" kind of statement.</para>
+      <table frame="all"><title>List of customers</title>
+	<tgroup cols="3" align="left" colsep="1" rowsep="1">
+	  <colspec colname="Id"/>
+	  <colspec colname="Name"/>
+	  <colspec colname="Expression"/>
+	  <thead>
+	    <row>
+	      <entry>Id</entry>
+	      <entry>Name</entry>
+	      <entry>Country</entry>
+	    </row>
+	  </thead>
+	  <tbody>
+	    <gda_report_iter>
+	      <row>
+		<entry><gda_report_param_value param_name="customers/@id"/></entry>
+		<entry><gda_report_param_value param_name="customers/@name"/></entry>
+		<entry>
+		  <!-- Test on the value of an expression, which needs to be a valid SQLite expression -->
+		  <gda_report_if expr="##customers/@country IS NOT NULL">
+		    <gda_report_if_true>
+		      Country: <gda_report_param_value param_name="customers/@country"/>
+		    </gda_report_if_true>
+		    <gda_report_if_false>
+		      -Unknown-
+		    </gda_report_if_false>
+		  </gda_report_if>
+		</entry>
+	      </row>
+	    </gda_report_iter>
+	  </tbody>
+	</tgroup>
+      </table>
+    </sect1>
+
+    <sect1>
+      <title>Detailed <gda_report_param_value param_name="customers/%nrows"/> customers' information</title>
+      
+      <para>This section gives detailed information for each customer, it shows how to create nested report components:
+	For each row of the data model containing the list of customers, some other SELECT queries are executed while
+	referencing the ID of the customer. The SQL queries used here are directly defined into the spec. file.</para>
+      <gda_report_iter>
+	<sect2>
+	  <title>Details for <gda_report_param_value param_name="customers/@name"/></title>
+	  <para>Here are the details for customer &quot;<gda_report_param_value param_name="customers/@name"/>&quot;
+	    such as the salesperson assigned to it, and the orders the customer has passed.</para>
+	  <itemizedlist>
+	    
+	    <!-- SalesRep -->
+	    <listitem>
+	      <gda_report_section>
+		<!-- The query is defined within the spec -->
+		<gda_report_query query_name="salesrep_for_customer" cnc_name="main_cnc">SELECT s.* FROM salesrep s 
+		  INNER JOIN customers c ON (s.id=c.default_served_by) 
+		  WHERE c.id=##customers/@id::gint
+		</gda_report_query>
+		
+		<gda_report_if expr="##salesrep_for_customer/%nrows::gint == 0">
+		  <gda_report_if_true>
+		    <para>No salesRep!</para>
+		  </gda_report_if_true>
+		  <gda_report_if_false>
+		    <gda_report_iter>
+		      <para>Sales person: <gda_report_param_value param_name="salesrep_for_customer/@name"/></para>
+		    </gda_report_iter>
+		  </gda_report_if_false>
+		</gda_report_if>
+	      </gda_report_section>
+	    </listitem>
+	    
+	    <!-- Number of orders -->
+	    <listitem>
+	      <gda_report_section>
+		<gda_report_query query_name="orders_for_customer" cnc_name="main_cnc">SELECT o.*, 
+		  (SELECT count (*) FROM order_contents oc WHERE oc.order_id = o.id) AS nb FROM ORDERS o
+		  WHERE customer = ##customers/@id::gint</gda_report_query>
+		<gda_report_if expr="##orders_for_customer/%nrows::gint == 0">
+		  <gda_report_if_true>
+		    <para>No order yet!</para>
+		  </gda_report_if_true>
+		  <gda_report_if_false>
+		    <para>Orders so far (<gda_report_param_value param_name="orders_for_customer/%nrows"/>)
+			<informaltable frame="all">
+			  <tgroup cols="3" align="left" colsep="1" rowsep="1">
+			    <colspec colname="Order date"/>
+			    <colspec colname="Nb items"/>
+			    <colspec colname="Delivery date"/>
+			    <thead>
+			      <row>
+				<entry>Order date</entry>
+				<entry>Number of items in order</entry>
+				<entry>Delivery date</entry>
+			      </row>
+			    </thead>
+			    <tbody>
+			      <gda_report_iter>
+				<row>
+				  <entry><gda_report_param_value param_name="orders_for_customer/@creation_date"/></entry>
+				  <entry><gda_report_param_value param_name="orders_for_customer/@nb"/></entry>
+				  <entry><gda_report_param_value param_name="orders_for_customer/@delivery_date"/></entry>
+				</row>
+			      </gda_report_iter>
+			    </tbody>
+			  </tgroup>
+			</informaltable>
+		    </para>
+		  </gda_report_if_false>
+		</gda_report_if>
+	      </gda_report_section>
+	    </listitem>
+	  </itemizedlist>
+	</sect2>
+      </gda_report_iter>
+      
+    </sect1>
+  </gda_report_section>
+</article>

@@ -4,9 +4,7 @@ sqliteinc= $(SQLITE_CFLAGS)
 else
 sqlitelibs= $(top_builddir)/providers/sqlite/sqlite-src/libsqlite.la
 sqliteinc= -I$(top_srcdir)/providers/sqlite/sqlite-src \
-	-I$(top_builddir)/providers/sqlite/sqlite-src \
-	-I$(top_srcdir)/providers/sqlite \
-	-I$(top_builddir)/providers/sqlite
+	-I$(top_builddir)/providers/sqlite/sqlite-src 
 endif
 
 lib_LTLIBRARIES = libgda-virtual-3.0.la
@@ -18,6 +16,8 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
 	$(SQLITE_CFLAGS) \
+	-I$(top_srcdir)/providers/sqlite \
+        -I$(top_builddir)/providers/sqlite \
 	$(sqliteinc) 
 
 virtual_headers = \

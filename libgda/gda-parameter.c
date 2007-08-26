@@ -1164,7 +1164,7 @@ gda_parameter_bind_to_param (GdaParameter *param, GdaParameter *bind_to)
 
 	/* get a copy of the current values of @param and @bind_to */
 	if (bind_to) {
-		g_return_if_fail (bind_to && GDA_IS_PARAMETER (bind_to));
+		g_return_if_fail (GDA_IS_PARAMETER (bind_to));
 		g_return_if_fail (bind_to->priv);
 		g_return_if_fail (param->priv->g_type == bind_to->priv->g_type);
 		cvalue = gda_parameter_get_value (bind_to);
@@ -1423,9 +1423,11 @@ gda_parameter_dump (GdaParameter *parameter, guint offset)
  * gda_parameter_get_alphanum_name
  * @param: a #GdaParameter object
  *
- * Get a new string containing a "clean" version of @param's name: chars which
- * are not among [0-9A-Za-z] are replaced with '_', except for the '+' char which is
- * replaced by 'P' and the '-' char replaced by 'M'.
+ * Get an "encoded" version of @param's name. The "encoding" consists in replacing non
+ * alphanumeric character with the string "__gdaXX" where XX is the hex. representation
+ * of the non alphanumeric char.
+ *
+ * This method is just a wrapper around the gda_text_to_alphanum() function.
  *
  * Returns: a new string
  */
@@ -1433,25 +1435,7 @@ gchar *
 gda_parameter_get_alphanum_name (GdaParameter *param)
 {
 	g_return_val_if_fail (GDA_IS_PARAMETER (param), NULL);
-
-	gchar* ptr = (gchar *) gda_object_get_name (GDA_OBJECT (param));
-	gchar* ret = NULL;
-	if (ptr)
-		ret = g_strdup (ptr);
-	else
-		ret = NULL;
-
-	for (ptr = ret; ptr && *ptr; ptr++) {
-		if (*ptr == '+')
-			*ptr = 'P';
-		else if (*ptr == '-')
-			*ptr = 'M';
-		else if (! (((*ptr >= '0') && (*ptr <= '9')) ||
-			    ((*ptr >= 'A') && (*ptr <= 'Z')) ||
-			    ((*ptr >= 'a') && (*ptr <= 'z')))) 
-			*ptr = '_';
-	}
-	return ret;	
+	return gda_text_to_alphanum ((gchar *) gda_object_get_name (GDA_OBJECT (param)));	
 }
 
 /* 

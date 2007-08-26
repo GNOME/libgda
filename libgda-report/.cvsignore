@@ -1,0 +1,9 @@
+Makefile
+Makefile.in
+*.o
+*.lo
+.deps
+.libs
+gda-report.dtd
+gda-report-engine
+GNOME_Database_Report.server
