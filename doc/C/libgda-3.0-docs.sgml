@@ -285,15 +285,12 @@
 	libraries apart from  <systemitem class="resource">libxml2</systemitem> and 
 	<systemitem class="resource">Glib</systemitem>, which makes it a very
 	lightweight system also ideal for applications to be run on 
-	hardware-limited systems. It was once part of the &GNOMEDB; project, and
-	is still used as the basis for it, but it's been separated from it to
-	remove all GNOME dependencies and thus allow non-GNOME applications to
-	be developed based on it.
+	hardware-limited systems.
       </para>
     </chapter>
 
     <chapter id="features">
-      <title>&LIBGDA; features</title>
+      <title>Features</title>
       <para>
 	This section presents the main features of the 3.0 version of Libgda.
       </para>
@@ -389,7 +386,7 @@
     </chapter>
     
     <chapter id="architecture">
-      <title>&LIBGDA; architecture</title>
+      <title>Architecture</title>
       <para>
 	&LIBGDA; is composed of three independent layers. The lower level is
 	covered by the &GDA; providers, which are plug-ins whose task is
@@ -739,8 +736,49 @@
     </chapter>
   </part>
 
+  <part id="part_libgda-reports">
+    <title>Reports</title>
+    <chapter id="libgda-reports-introduction">
+      <title>Introduction</title>
+      <para>
+	&LIBGDA;'s report feature has been reworked and is only offers it <link linkend="GdaReportEngine">report engine object</link>, 
+	a low level general usage engine to generate reports in the XML format.
+      </para>
+      <para>
+	Working on any XML file allows the report engine to work with all the existing post-processors which will actually
+	generate the final file(s) in HTML, PDF or other; for example:
+	<itemizedlist>
+	  <listitem><para>SVG can be processed by a web browser or further edited using inkscape for example</para></listitem>
+	  <listitem><para>DocBook can then be converted to HTML of PDF 
+	      (see <ulink url="http://wiki.docbook.org/topic/DocBookXsltPublishingModelDiagram">this docbook Wiki page</ulink>)
+	  </para></listitem>
+	  <listitem><para>RML files (Report Markup Language), see <ulink url="http://www.reportlab.org/">ReportLab</ulink> or
+	      <ulink url="http://en.openreport.org/index.py/static/page/trml2pdf">OpenReport</ulink>) can be converted to HTML or PDF)
+	  </para></listitem>
+	  <listitem><para>some other XML dialects can also be used such as 
+	      <ulink url="http://sourceforge.net/projects/rlib/">RLib</ulink>, 
+	      <ulink url="http://www.treshna.com/papyrus/">Papyrus</ulink>, and other.
+	  </para></listitem>
+	</itemizedlist>
+      </para>
+      <para>
+	To make it easier to use RML or Docbook XML dialects, &LIBGDA; has the 
+	<link linkend="GdaReportDocbookDocument">GdaReportDocbookDocument</link> and 
+	<link linkend="GdaReportRmlDocument">GdaReportRmlDocument</link> which both offer high level of
+	features when dealing with those XML dialects.
+      </para>
+    </chapter>
+    <chapter>
+      <title>API reference</title>
+      &libgda-GdaReportEngine;
+      &libgda-GdaReportDocument;
+      &libgda-GdaReportDocbookDocument;
+      &libgda-GdaReportRmlDocument;
+    </chapter>
+  </part>
+
   <part id="part_providers">
-    <title>Databases access providers</title>
+    <title>Databases providers for developers</title>
     <chapter id="libgda-provider-introduction">
       <title>Introduction</title>
       <para>
@@ -1148,41 +1186,6 @@
       </itemizedlist>
     </chapter>
     &libgda-GdaServerProvider;
-  </part>
-
-  <part id="part_libgda-reports">
-    <title>&GDA; Reports</title>
-    <chapter id="libgda-reports-introduction">
-      <title>Introduction</title>
-      <para>
-	&LIBGDA;'s report feature has been reworked and is only offers it report engine object, a low level general
- 	usage engine to generate reports in the XML format.
-      </para>
-      <para>
-	Working on any XML file allows the report engine to work with all the existing post-processors which will actually
-	generate the final file(s) in HTML, PDF or other; for example:
-	<itemizedlist>
-	  <listitem><para>SVG can be processed by a web browser or further edited using inkscape for example</para></listitem>
-	  <listitem><para>DocBook can then be converted to HTML of PDF 
-	      (see <ulink url="http://wiki.docbook.org/topic/DocBookXsltPublishingModelDiagram">this docbook Wiki page</ulink>)
-	  </para></listitem>
-	  <listitem><para>RML files (Report Markup Language), see <ulink url="http://www.reportlab.org/">ReportLab</ulink> or
-	      <ulink url="http://en.openreport.org/index.py/static/page/trml2pdf">OpenReport</ulink>) can be converted to HTML or PDF)
-	  </para></listitem>
-	  <listitem><para>some other XML dialects can also be used such as 
-	      <ulink url="http://sourceforge.net/projects/rlib/">RLib</ulink>, 
-	      <ulink url="http://www.treshna.com/papyrus/">Papyrus</ulink>, and other.
-	  </para></listitem>
-	</itemizedlist>
-      </para>
-    </chapter>
-    <chapter>
-      <title>API reference</title>
-      &libgda-GdaReportEngine;
-      &libgda-GdaReportDocument;
-      &libgda-GdaReportDocbookDocument;
-      &libgda-GdaReportRmlDocument;
-    </chapter>
   </part>
 
   &fdl-appendix;

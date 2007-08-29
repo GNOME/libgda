@@ -338,7 +338,7 @@ gda_data_proxy_get_type (void)
 {
 	static GType type = 0;
 
-	if (!type) {
+	if (G_UNLIKELY (type == 0)) {
 		static const GTypeInfo info = {
 			sizeof (GdaDataProxyClass),
 			(GBaseInitFunc) NULL,
@@ -1640,28 +1640,32 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, GError **error)
 				/* Don't yet emit a "delete" signal for that row, but increment 
 				 * proxy->priv->deferred_nb_rows
 				 */
+				gint index = find_proxy_row_for_row_modif (proxy, rm);
+
 				proxy->priv->all_modifs = g_slist_remove (proxy->priv->all_modifs, rm);
 				proxy->priv->new_rows = g_slist_remove (proxy->priv->new_rows, rm);
 				row_modifs_free (rm);
 
 				proxy->priv->deferred_nb_rows ++;
 				freedone = TRUE;
+				/* signal row actually changed */
+				g_signal_emit (G_OBJECT (proxy),
+					       gda_data_proxy_signals[POST_CHANGES_APPLIED],
+					       0, index, -1);
 			}
 		}
 	}
 
-	if (!err) {
+	if (!err && !freedone) {
 		/* signal row actually changed */
 		g_signal_emit (G_OBJECT (proxy),
 			       gda_data_proxy_signals[POST_CHANGES_APPLIED],
 			       0, find_proxy_row_for_row_modif (proxy, rm), rm->model_row);
-	
-		if (!freedone) {
-			/* get rid of the commited change, where rm->model_row >= 0 */
-			proxy->priv->all_modifs = g_slist_remove (proxy->priv->all_modifs, rm);
-			g_hash_table_remove (proxy->priv->modify_rows, GINT_TO_POINTER (rm->model_row));
-			row_modifs_free (rm);
-		}
+		
+		/* get rid of the commited change, where rm->model_row >= 0 */
+		proxy->priv->all_modifs = g_slist_remove (proxy->priv->all_modifs, rm);
+		g_hash_table_remove (proxy->priv->modify_rows, GINT_TO_POINTER (rm->model_row));
+		row_modifs_free (rm);
 	}
 
 	proxy->priv->ignore_proxied_changes = ignore_proxied_changes;

@@ -200,28 +200,26 @@ gda_data_model_row_get_type (void)
 {
 	static GType type = 0;
 
-	if (!type) {
-		if (type == 0) {
-			static GTypeInfo info = {
-				sizeof (GdaDataModelRowClass),
-				(GBaseInitFunc) NULL,
-				(GBaseFinalizeFunc) NULL,
-				(GClassInitFunc) gda_data_model_row_class_init,
-				NULL, NULL,
-				sizeof (GdaDataModelRow),
-				0,
-				(GInstanceInitFunc) gda_data_model_row_init
-			};
-			
-			static const GInterfaceInfo data_model_info = {
-				(GInterfaceInitFunc) gda_data_model_row_data_model_init,
-				NULL,
-				NULL
-			};
-
-			type = g_type_register_static (PARENT_TYPE, "GdaDataModelRow", &info, G_TYPE_FLAG_ABSTRACT);
-			g_type_add_interface_static (type, GDA_TYPE_DATA_MODEL, &data_model_info);
-		}
+	if (G_UNLIKELY (type == 0)) {
+		static GTypeInfo info = {
+			sizeof (GdaDataModelRowClass),
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gda_data_model_row_class_init,
+			NULL, NULL,
+			sizeof (GdaDataModelRow),
+			0,
+			(GInstanceInitFunc) gda_data_model_row_init
+		};
+		
+		static const GInterfaceInfo data_model_info = {
+			(GInterfaceInitFunc) gda_data_model_row_data_model_init,
+			NULL,
+			NULL
+		};
+		
+		type = g_type_register_static (PARENT_TYPE, "GdaDataModelRow", &info, G_TYPE_FLAG_ABSTRACT);
+		g_type_add_interface_static (type, GDA_TYPE_DATA_MODEL, &data_model_info);
 	}
 
 	return type;

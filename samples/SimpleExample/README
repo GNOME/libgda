@@ -1,0 +1,18 @@
+Libgda simple example
+=====================
+
+Description:
+------------
+
+The example in this directory illustrate how to create a complete program using Libgda.
+It simply creates a example_db.db SQLite database file in which a table is added with some data
+and the contents of that table is dumped on stdout.
+
+Compiling and running:
+----------------------
+
+To compile (make sure Libgda is installed prior to this):
+> make
+
+and to run:
+> ./example

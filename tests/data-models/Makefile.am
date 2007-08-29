@@ -2,7 +2,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
-	-DCHECK_XML_FILES=\""$(top_srcdir)"\"
+	-DCHECK_FILES=\""$(top_srcdir)"\"
 
 check_PROGRAMS = check_model_import check_virtual
 TESTS = check_model_import check_virtual

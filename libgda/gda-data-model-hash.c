@@ -390,7 +390,7 @@ gda_data_model_hash_get_type (void)
 {
 	static GType type = 0;
 
-	if (!type) {
+	if (G_UNLIKELY (type == 0)) {
 		static const GTypeInfo info = {
 			sizeof (GdaDataModelHashClass),
 			(GBaseInitFunc) NULL,
@@ -406,6 +406,7 @@ gda_data_model_hash_get_type (void)
 					       "GdaDataModelHash",
 					       &info, 0);
 	}
+
 	return type;
 }
 

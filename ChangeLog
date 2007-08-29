@@ -1,3 +1,15 @@
+2007-08-29  Vivien Malerba <malerba@gnome-db.org>
+
+	* all object's get_type() function: use G_UNLIKELY to allow the compiler
+	to perform some optimizations
+	* libgda/gda-data-proxy.c: minor free() bug fixed
+	* po/POTFILES.in: updated the list of translatable files
+	* doc/C: major doc. update regarding introduction and getting started parts
+	* tests/queries/*: corrections to make the checks work when compiling in
+	a different dir.
+	* Makefile.am:
+	* samples/SimpleExample/*: new example to help start with Libgda
+
 2007-08-26  Vivien Malerba <malerba@gnome-db.org>
 
 	* report/: complete re-implementation of the reports, breaking API and ABI from the 3.0

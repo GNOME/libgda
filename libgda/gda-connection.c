@@ -285,9 +285,9 @@ GQuark gda_connection_error_quark (void)
 GType
 gda_connection_get_type (void)
 {
-   static GType type = 0;
+	static GType type = 0;
 
-	if (type == 0) {
+	if (G_UNLIKELY (type == 0)) {
 		static GTypeInfo info = {
 			sizeof (GdaConnectionClass),
 			(GBaseInitFunc) NULL,
@@ -298,8 +298,9 @@ gda_connection_get_type (void)
 			0,
 			(GInstanceInitFunc) gda_connection_init
 		};
-	type = g_type_register_static (PARENT_TYPE, "GdaConnection", &info, 0);
+		type = g_type_register_static (PARENT_TYPE, "GdaConnection", &info, 0);
 	}
+
 	return type;
 }
 

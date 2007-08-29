@@ -57,7 +57,7 @@ gda_connection_event_get_type (void)
 {
 	static GType type = 0;
 
-	if (!type) {
+	if (G_UNLIKELY (type == 0)) {
 		static const GTypeInfo info = {
 			sizeof (GdaConnectionEventClass),
 			(GBaseInitFunc) NULL,
@@ -71,6 +71,7 @@ gda_connection_event_get_type (void)
 		};
 		type = g_type_register_static (G_TYPE_OBJECT, "GdaConnectionEvent", &info, 0);
 	}
+
 	return type;
 }
 

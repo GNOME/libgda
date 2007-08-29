@@ -26,6 +26,10 @@
 #include <libgda/graph/gda-dict-reg-graphs.h>
 #include <libgda/binreloc/gda-binreloc.h>
 
+static GStaticRecMutex gda_mutex = G_STATIC_REC_MUTEX_INIT;
+#define GDA_LOCK() g_static_rec_mutex_lock(&gda_mutex)
+#define GDA_UNLOCK() g_static_rec_mutex_unlock(&gda_mutex)
+
 static GMainLoop *main_loop = NULL;
 
 /* global variables */
@@ -204,8 +208,11 @@ idle_cb (gpointer user_data)
 void
 gda_main_run (GdaInitFunc init_func, gpointer user_data)
 {
-	if (main_loop)
+	GDA_LOCK ();
+	if (main_loop) {
+		GDA_UNLOCK ();
 		return;
+	}
 
 	if (init_func) {
 		InitCbData *cb_data;
@@ -219,6 +226,7 @@ gda_main_run (GdaInitFunc init_func, gpointer user_data)
 
 	main_loop = g_main_loop_new (g_main_context_default (), FALSE);
 	g_main_loop_run (main_loop);
+	GDA_UNLOCK ();
 }
 
 /**
@@ -229,10 +237,12 @@ gda_main_run (GdaInitFunc init_func, gpointer user_data)
 void
 gda_main_quit (void)
 {
+	GDA_LOCK ();
 	g_main_loop_quit (main_loop);
 	g_main_loop_unref (main_loop);
 
 	main_loop = NULL;
+	GDA_UNLOCK ();
 }
 
 /*

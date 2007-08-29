@@ -6,6 +6,7 @@ developer using libgda quick samples in order she
 could use as soon as possible the technology.
 
 Currently the contents are:
+* in SimpleExample/: a very simple example to start with
 * in BDB/: using the GdaDataModelBdb data model and how to subclass it
 * in DirDataModel/: using the GdaDataModelDir object
 * in F-Spot/: and example of F-Spot database repair tool (using virtual connections)

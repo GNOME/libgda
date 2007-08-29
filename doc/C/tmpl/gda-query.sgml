@@ -6,12 +6,16 @@ Represents any kind of DML query
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-Any query (which can be of any type, see the #GdaQueryType enum) can be represented by a #GdaQuery object. Also a query may require some parameters
-to be provided before in can be executed; each parameter is then represented by a #GdaParameter object, and parameters required for a query
-are organised within a #GdaParameterList object.
+  A #GdaQuery object represents any query (of any type, see the #GdaQueryType enum), and can contain some variables
+  to be set before the query can be executed (also refered to as <emphasis>place holders</emphasis> or
+  <emphasis>query parameters</emphasis>). As there is no standard about how to represent variables in 
+  SQL statements (there are several notations depending on the database SQL dialect:":&lt;name&gt;", "$&lt;nnn&gt;", 
+  "!&lt;nnn&gt;", etc), &LIBGDA; implements its own different and more exhaustive way of defining variables,
+  which is described in <link linkend="SQL_queries">this section</link>.
 </para>
 <para>
-It implements the #GdaEntity, #GdaXmlStorage, #GdaReferer and #GdaRenderer interfaces.
+  When executed, and depending on the database provider, a query will be converted to a prepared statement
+  which saves some execution time as SQL parsing needs to be done only on the first execution.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

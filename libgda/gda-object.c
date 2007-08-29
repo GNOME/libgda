@@ -89,7 +89,7 @@ gda_object_get_type (void)
 {
 	static GType type = 0;
 
-	if (!type) {
+	if (G_UNLIKELY (type == 0)) {
 		static const GTypeInfo info = {
 			sizeof (GdaObjectClass),
 			(GBaseInitFunc) NULL,
@@ -104,6 +104,7 @@ gda_object_get_type (void)
 		
 		type = g_type_register_static (G_TYPE_OBJECT, "GdaObject", &info, 0);
 	}
+
 	return type;
 }
 

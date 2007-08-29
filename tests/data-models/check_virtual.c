@@ -12,6 +12,7 @@ main (int argc, char **argv)
 	GdaConnection *cnc;
 	GdaVirtualProvider *provider;
 	GdaDataModel *rw_model;
+	gchar *file;
 	
 	gda_init ("SQlite virtual test", "1.0", argc, argv);
 
@@ -27,8 +28,12 @@ main (int argc, char **argv)
 	/* load CSV data models */
 	GdaDataModel *country_model, *city_model;
 	GdaParameterList *plist = gda_parameter_list_new_inline (NULL, "TITLE_AS_FIRST_LINE", G_TYPE_BOOLEAN, TRUE, NULL);
-	city_model = gda_data_model_import_new_file ("city.csv", TRUE, plist);
-	country_model = gda_data_model_import_new_file ("country.csv", TRUE, plist);
+	file = g_build_filename (CHECK_FILES, "tests", "data-models", "city.csv", NULL);
+	city_model = gda_data_model_import_new_file (file, TRUE, plist);
+	g_free (file);
+	file = g_build_filename (CHECK_FILES, "tests", "data-models", "country.csv", NULL);
+	country_model = gda_data_model_import_new_file (file, TRUE, plist);
+	g_free (file);
 	g_object_unref (plist);
 
 	/* Add data models to connection */
@@ -47,8 +52,10 @@ main (int argc, char **argv)
 	gchar *export, *expected;
 	export = gda_data_model_export_to_string (rw_model, GDA_DATA_MODEL_IO_TEXT_SEPARATED,
 						  NULL, 0, NULL, 0, NULL);
-	if (!g_file_get_contents ("check_virtual.csv", &expected, NULL, NULL))
+	file = g_build_filename (CHECK_FILES, "tests", "data-models", "check_virtual.csv", NULL);
+	if (!g_file_get_contents (file, &expected, NULL, NULL))
 		return EXIT_FAILURE;
+	g_free (file);
 	if (strcmp (export, expected))
 		return EXIT_FAILURE;
 

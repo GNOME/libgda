@@ -29,7 +29,7 @@ gda_entity_field_get_type (void)
 {
 	static GType type = 0;
 
-	if (!type) {
+	if (G_UNLIKELY (type == 0)) {
 		static const GTypeInfo info = {
 			sizeof (GdaEntityFieldIface),
 			(GBaseInitFunc) gda_entity_field_iface_init,

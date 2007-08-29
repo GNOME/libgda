@@ -13,6 +13,9 @@ SUBDIRS = \
 	doc
 
 example_files = \
+	samples/SimpleExample/Makefile \
+	samples/SimpleExample/example.c \
+	samples/SimpleExample/README \
 	samples/TableCopy/Makefile \
 	samples/TableCopy/table-copy.c \
 	samples/TableCopy/table-copy-easier.c \
@@ -34,6 +37,13 @@ example_files = \
 	samples/F-Spot/VirtualConnectionSetup.dia \
 	samples/F-Spot/repair-path.c \
 	samples/README \
+	samples/Report/customers-report.c \
+	samples/Report/customers-report-docbook.c \
+	samples/Report/customers-report-rml.c \
+	samples/Report/customers-report-rml.rml \
+	samples/Report/customers-report-spec.xml \
+	samples/Report/Makefile
+	samples/Report/README
 	samples/Virtual/Makefile \
 	samples/Virtual/README \
 	samples/Virtual/city.csv \

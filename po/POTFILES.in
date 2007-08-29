@@ -54,6 +54,10 @@ libgda/handlers/gda-handler-type.c
 libgda/sql-delimiter/gda-sql-delimiter.c
 libgda/sql-delimiter/lexer.l
 libgda/sql-transaction/gda-sql-transaction-parser.c
+libgda-report/DocBook/gda-report-docbook-document.c
+libgda-report/RML/gda-report-rml-document.c
+libgda-report/engine/gda-report-engine.c
+libgda-report/gda-report-document.c
 libsql/lexer.l
 libsql/sql_parser.c
 providers/bdb/bdb_specs_dsn.xml.in
@@ -157,15 +161,6 @@ providers/sybase/utils.c
 providers/xbase/gda-xbase-provider.c
 providers/xbase/libmain.c
 providers/xbase/xbase_specs_dsn.xml.in
-report/libgda-report/gda-report-document.c
-report/libgda-report/gda-report-item-detail.c
-report/libgda-report/gda-report-item-pagefooter.c
-report/libgda-report/gda-report-item-pageheader.c
-report/libgda-report/gda-report-item-report.c
-report/libgda-report/gda-report-item-reportfooter.c
-report/libgda-report/gda-report-item-reportheader.c
-report/libgda-report/gda-report-item.c
-report/libgda-report/gda-report-valid.c
 testing/gda-test-blob.c
 testing/gda-test-connection.c
 testing/gda-test-model-query.c

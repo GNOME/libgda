@@ -1,0 +1,66 @@
+<!-- ##### SECTION Title ##### -->
+GdaReportDocument
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaReportDocument ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdaReportDocument:engine ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaReportDocument:template ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gda_report_document_set_template ##### -->
+<para>
+
+</para>
+
+@doc: 
+@file: 
+
+
+<!-- ##### FUNCTION gda_report_document_run_as_html ##### -->
+<para>
+
+</para>
+
+@doc: 
+@filename: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_document_run_as_pdf ##### -->
+<para>
+
+</para>
+
+@doc: 
+@filename: 
+@error: 
+@Returns: 
+
+

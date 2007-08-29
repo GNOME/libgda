@@ -114,7 +114,7 @@ gda_vprovider_data_model_get_type (void)
 {
 	static GType type = 0;
 
-	if (!type) {
+	if (G_UNLIKELY (type == 0)) {
 		if (type == 0) {
 			static GTypeInfo info = {
 				sizeof (GdaVproviderDataModelClass),
@@ -351,8 +351,17 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 			proxy = (GdaDataProxy *) (td->spec->data_model);
 			g_object_ref (G_OBJECT (proxy));
 		}
-		else 
-			proxy = (GdaDataProxy *) gda_data_proxy_new (td->spec->data_model);
+		else {
+			if (gda_data_model_get_access_flags (td->spec->data_model) & GDA_DATA_MODEL_ACCESS_RANDOM)
+				proxy = (GdaDataProxy *) gda_data_proxy_new (td->spec->data_model);
+			else {
+				/* no random access => use a wrapper */
+				GdaDataModel *wrapper;
+				wrapper = gda_data_access_wrapper_new (td->spec->data_model);
+				proxy = (GdaDataProxy *) gda_data_proxy_new (wrapper);
+				g_object_unref (wrapper);
+			}
+		}
 		ncols = gda_data_proxy_get_proxied_model_n_cols (proxy);
 
 		/* proxy settings */

@@ -135,7 +135,7 @@ gda_parameter_get_type (void)
 {
 	static GType type = 0;
 
-	if (!type) {
+	if (G_UNLIKELY (type == 0)) {
 		static const GTypeInfo info = {
 			sizeof (GdaParameterClass),
 			(GBaseInitFunc) NULL,
@@ -157,6 +157,7 @@ gda_parameter_get_type (void)
 		type = g_type_register_static (GDA_TYPE_OBJECT, "GdaParameter", &info, 0);
 		g_type_add_interface_static (type, GDA_TYPE_REFERER, &referer_info);
 	}
+
 	return type;
 }
 

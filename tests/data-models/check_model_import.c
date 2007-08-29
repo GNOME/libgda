@@ -45,7 +45,7 @@ test1_suite (void)
 	/* Core test case */
 	TCase *tc_core = tcase_create ("Load and compare");
 
-	dirname = g_build_filename (CHECK_XML_FILES, "tests", "providers", NULL);
+	dirname = g_build_filename (CHECK_FILES, "tests", "providers", NULL);
 	if (!(dir = g_dir_open (dirname, 0, &err))) {
 #ifdef CHECK_EXTRA_INFO
 		g_warning ("Could not open directory '%s': %s", dirname,
@@ -101,7 +101,7 @@ main (int argc, char **argv)
 
 	gda_init ("check-model-import", PACKAGE_VERSION, argc, argv);
 
-	dirname = g_build_filename (CHECK_XML_FILES, "tests", "providers", NULL);
+	dirname = g_build_filename (CHECK_FILES, "tests", "providers", NULL);
 	if (!(dir = g_dir_open (dirname, 0, &err))) {
 #ifdef CHECK_EXTRA_INFO
 		g_warning ("Could not open directory '%s': %s", dirname,
@@ -141,7 +141,7 @@ do_test_load_file (const gchar *filename)
 	gboolean retval = TRUE;
 	gchar *export, *contents;
 
-	file = g_build_filename (CHECK_XML_FILES, "tests", "providers", filename, NULL);
+	file = g_build_filename (CHECK_FILES, "tests", "providers", filename, NULL);
 	import = gda_data_model_import_new_file (file, TRUE, NULL);
 
 	if ((errors = gda_data_model_import_get_errors (GDA_DATA_MODEL_IMPORT (import)))) {

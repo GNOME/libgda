@@ -1,6 +1,6 @@
 /* gda-threader.c
  *
- * Copyright (C) 2005 Vivien Malerba
+ * Copyright (C) 2005 - 2007 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -69,7 +69,7 @@ gda_threader_get_type (void)
 {
 	static GType type = 0;
 
-	if (!type) {
+	if (G_UNLIKELY (type == 0)) {
 		static const GTypeInfo info = {
 			sizeof (GdaThreaderClass),
 			(GBaseInitFunc) NULL,
@@ -84,6 +84,7 @@ gda_threader_get_type (void)
 		
 		type = g_type_register_static (G_TYPE_OBJECT, "GdaThreader", &info, 0);
 	}
+
 	return type;
 }
 

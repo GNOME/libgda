@@ -167,7 +167,7 @@ gda_mdb_provider_get_type (void)
 {
 	static GType type = 0;
 
-	if (!type) {
+	if (G_UNLIKELY (type == 0)) {
 		static GTypeInfo info = {
 			sizeof (GdaMdbProviderClass),
 			(GBaseInitFunc) NULL,

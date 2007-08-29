@@ -27,7 +27,7 @@ gda_data_handler_get_type (void)
 {
 	static GType type = 0;
 
-	if (!type) {
+	if (G_UNLIKELY (type == 0)) {
 		static const GTypeInfo info = {
 			sizeof (GdaDataHandlerIface),
 			(GBaseInitFunc) gda_data_handler_iface_init,

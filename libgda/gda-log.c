@@ -31,6 +31,9 @@
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-log.h>
 
+static GStaticRecMutex gda_mutex = G_STATIC_REC_MUTEX_INIT;
+#define GDA_LOG_LOCK() g_static_rec_mutex_lock(&gda_mutex)
+#define GDA_LOG_UNLOCK() g_static_rec_mutex_unlock(&gda_mutex)
 static gboolean log_enabled = TRUE;
 static gboolean log_opened = FALSE;
 
@@ -46,6 +49,7 @@ static gboolean log_opened = FALSE;
 void
 gda_log_enable (void)
 {
+	GDA_LOG_LOCK ();
 	log_enabled = TRUE;
 	if (!log_opened) {
 #ifndef G_OS_WIN32	
@@ -53,6 +57,7 @@ gda_log_enable (void)
 #endif		
 		log_opened = TRUE;
 	}
+	GDA_LOG_UNLOCK ();
 }
 
 /**
@@ -63,6 +68,7 @@ gda_log_enable (void)
 void
 gda_log_disable (void)
 {
+	GDA_LOG_LOCK ();
 	log_enabled = FALSE;
 	if (log_opened) {
 #ifndef G_OS_WIN32		
@@ -70,6 +76,7 @@ gda_log_disable (void)
 #endif
 		log_opened = FALSE;
 	}
+	GDA_LOG_UNLOCK ();
 }
 
 /**
@@ -101,6 +108,7 @@ gda_log_message (const gchar *format, ...)
 	if (!log_enabled)
 		return;
 
+	GDA_LOG_LOCK ();
 	if (!log_opened)
 		gda_log_enable ();
 
@@ -114,6 +122,7 @@ gda_log_message (const gchar *format, ...)
 	syslog (LOG_USER | LOG_INFO, "%s", msg);
 #endif
 	g_free (msg);
+	GDA_LOG_UNLOCK ();
 }
 
 /**
@@ -134,6 +143,7 @@ gda_log_error (const gchar * format, ...)
 	if (!log_enabled)
 		return;
 
+	GDA_LOG_LOCK ();
 	if (!log_opened)
 		gda_log_enable ();
 
@@ -147,4 +157,5 @@ gda_log_error (const gchar * format, ...)
 	syslog (LOG_USER | LOG_ERR, "%s", msg);
 #endif
  	g_free (msg);
+	GDA_LOG_UNLOCK ();
 }

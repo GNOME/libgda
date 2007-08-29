@@ -13,21 +13,9 @@ Issuing commands to the provider
   database using the #GdaConnection functions.
 </para>
 <para>
-  One interesting thing about #GdaCommand's is that they can be reused over
-  and over. That is, applications don't need to create a command every time
-  they want to run something on the connected database. Moreover, the ability
-  to create command strings with placeholders allows the use of parameters to
-  specify the values for those placeholders. Thus, an application can create a
-  command of the form:
-  <programlisting>
-    INSERT INTO employees VALUES (%id, %name, %address, %salary)
-  </programlisting>
-  and reuse the same command over and over, just using different values for the
-  placeholders.
-</para>
-<para>
-  The value for the placeholders is specified when sending the #GdaCommand to a
-  database connection, which is done via the #gda_connection_execute function.
+  #GdaCommand commands can only be plain SQL without any variable in it, they are however
+  very easy to use. For prepared statements and/or usage of variables in SQL statements, 
+  use a #GdaQuery object.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

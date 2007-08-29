@@ -119,7 +119,7 @@ gda_server_provider_get_type (void)
 {
 	static GType type = 0;
 
-	if (!type) {
+	if (G_UNLIKELY (type == 0)) {
 		static const GTypeInfo info = {
 			sizeof (GdaServerProviderClass),
 			(GBaseInitFunc) NULL,
@@ -133,6 +133,7 @@ gda_server_provider_get_type (void)
 		};
 		type = g_type_register_static (PARENT_TYPE, "GdaServerProvider", &info, G_TYPE_FLAG_ABSTRACT);
 	}
+
 	return type;
 }
 

@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+ * Copyright (C) 1998 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -254,8 +254,8 @@ GType
 gda_row_get_type (void)
 {
 	static GType type = 0;
-	
-	if (!type) {
+
+	if (G_UNLIKELY (type == 0)) {
 		static const GTypeInfo info = {
 			sizeof (GdaRowClass),
 			(GBaseInitFunc) NULL,
@@ -269,7 +269,7 @@ gda_row_get_type (void)
 		};
 		type = g_type_register_static (PARENT_TYPE, "GdaRow", &info, 0);
 	}
-	
+
 	return type;
 }
 

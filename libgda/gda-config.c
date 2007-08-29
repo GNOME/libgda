@@ -74,6 +74,10 @@ typedef struct {
 	GList *user;   /* list of GdaConfigSection */
 } GdaConfigClient;
 
+static GStaticRecMutex gda_mutex = G_STATIC_REC_MUTEX_INIT;
+#define GDA_CONFIG_LOCK() g_static_rec_mutex_lock(&gda_mutex)
+#define GDA_CONFIG_UNLOCK() g_static_rec_mutex_unlock(&gda_mutex)
+
 static GdaConfigClient *config_client = NULL;
 static gboolean         can_modify_global_conf; /* TRUE if the current user can modify the system wide config file */
 static gboolean         lock_write_notify = FALSE;
@@ -108,6 +112,7 @@ static void           fam_unlock_notify ();
 static void
 dump_config_client ()
 {
+	GDA_CONFIG_LOCK ();
 	if (config_client) {
 		GList *list;
 
@@ -122,6 +127,7 @@ dump_config_client ()
 			list = list->next;
 		}
 	}
+	GDA_CONFIG_UNLOCK ();
 }
 #endif
 
@@ -273,6 +279,7 @@ get_config_client ()
 	 *	  wait until the operation finishes
 	 */
 	if (! config_client) {
+		GDA_CONFIG_LOCK ();
 		guint len = 0;
 		gchar *full_file = NULL;
 		gchar *user_config = NULL;
@@ -295,6 +302,7 @@ get_config_client ()
 				config_client->user = gda_config_parse_config_file (init_contents, length);
 				g_free (init_contents);
 			}
+			GDA_CONFIG_UNLOCK ();
 			return config_client;
 		}
 
@@ -385,6 +393,7 @@ get_config_client ()
 		if (! has_user_config) {
 			/* this can occur on win98, and maybe other win32 platforms */
 			g_free (fname);
+			GDA_CONFIG_UNLOCK ();
 			return config_client;
 		}
 
@@ -470,6 +479,7 @@ get_config_client ()
 #ifdef GDA_DEBUG_NO
 		dump_config_client ();
 #endif
+		GDA_CONFIG_UNLOCK ();
 	}
 
 	return config_client;
@@ -483,6 +493,7 @@ fam_callback (GIOChannel *source, GIOCondition condition, gpointer data)
 {
         gboolean res = TRUE;
 
+	GDA_CONFIG_LOCK ();
 	while (fam_connection && FAMPending (fam_connection)) {
                 FAMEvent ev;
 		gboolean is_global;
@@ -493,6 +504,7 @@ fam_callback (GIOChannel *source, GIOCondition condition, gpointer data)
                         g_source_remove (fam_watch_id);
                         fam_watch_id = 0;
                         fam_connection = NULL;
+			GDA_CONFIG_UNLOCK ();
                         return FALSE;
                 }
 
@@ -520,11 +532,13 @@ fam_callback (GIOChannel *source, GIOCondition condition, gpointer data)
 #ifdef GDA_DEBUG_NO
 			g_print ("Reloading config files (%s config has changed)\n", is_global ? "global" : "user");
 #endif
+			GDA_CONFIG_LOCK ();
 			gda_config_client_reset ();
 			g_free (config_client);
 			config_client = NULL;
 			/* config_client will be re-created next time a gda_config* call is made */
 			do_notify (NULL);
+			GDA_CONFIG_UNLOCK ();
 			break;
 		case FAMAcknowledge:
 		case FAMStartExecuting:
@@ -537,6 +551,7 @@ fam_callback (GIOChannel *source, GIOCondition condition, gpointer data)
                 }
 	}
 	
+	GDA_CONFIG_UNLOCK ();
         return res;
 }
 
@@ -624,8 +639,10 @@ gda_config_add_section (const gchar *section_path)
 	section->path = g_strdup (section_path);
 	section->entries = NULL;
 
+	GDA_CONFIG_LOCK ();
 	cfg_client = get_config_client ();
 	cfg_client->user = g_list_append (cfg_client->user, section);
+	GDA_CONFIG_UNLOCK ();
 
 	return section;
 }
@@ -640,6 +657,7 @@ gda_config_add_entry (const gchar *section_path,
 	GdaConfigSection *section;
 	GdaConfigClient *cfg_client;
 
+	GDA_CONFIG_LOCK ();
 	cfg_client = get_config_client ();
 	entry = g_new0 (GdaConfigEntry, 1);
 	entry->name = g_strdup (name);
@@ -651,6 +669,7 @@ gda_config_add_entry (const gchar *section_path,
 		section = gda_config_add_section (section_path);
 
 	section->entries = g_list_append (section->entries, entry);
+	GDA_CONFIG_UNLOCK ();
 }
 
 static void
@@ -681,6 +700,7 @@ gda_config_client_reset ()
 	if (config_client == NULL)
 		return;
 
+	GDA_CONFIG_LOCK ();
 	if (config_client->global) {
 		for (list = config_client->global; list; list = g_list_next (list)) 
 			free_section ((GdaConfigSection *)(list->data));
@@ -694,6 +714,7 @@ gda_config_client_reset ()
 		g_list_free (config_client->user);
 		config_client->user = NULL;
 	}
+	GDA_CONFIG_UNLOCK ();
 }
 
 static void
@@ -730,12 +751,17 @@ write_config_file ()
 	GdaConfigEntry *entry;
 	gchar *user_config;
 
-	if (lock_write_notify)
+	GDA_CONFIG_LOCK ();
+	if (lock_write_notify) {
+		GDA_CONFIG_UNLOCK ();
 		return;
+	}
 
-	if (dsn_list_only_in_mem)
+	if (dsn_list_only_in_mem) {
 		/* nothing to do */
+		GDA_CONFIG_UNLOCK ();
 		return;
+	}
 
 	/* user specific data sources */
 	cfg_client = get_config_client ();
@@ -806,6 +832,8 @@ write_config_file ()
 #endif
 		xmlFreeDoc (doc);
 	}
+
+	GDA_CONFIG_UNLOCK ();
 }
 
 /*
@@ -826,16 +854,20 @@ gda_config_get_string (const gchar *path)
 {
 	GdaConfigClient *cfg_client;
 	GdaConfigEntry *entry;
+	gchar *retval;
 
 	g_return_val_if_fail (path != NULL, NULL);
 
+	GDA_CONFIG_LOCK ();
 	cfg_client = get_config_client ();
 
 	entry = gda_config_search_entry (cfg_client->user, path, "string");
 	if (!entry)
 		entry = gda_config_search_entry (cfg_client->global, path, "string");
 
-        return (entry && entry->value) ? g_strdup (entry->value) : NULL;
+	retval = (entry && entry->value) ? g_strdup (entry->value) : NULL;
+	GDA_CONFIG_UNLOCK ();
+        return retval;
 }
 
 /**
@@ -851,17 +883,20 @@ gda_config_get_int (const gchar *path)
 {
 	GdaConfigClient *cfg_client;
 	GdaConfigEntry *entry;
+	gint retval;
 
 	g_return_val_if_fail (path != NULL, 0);
 
+	GDA_CONFIG_LOCK ();
 	cfg_client = get_config_client ();
 
 	entry = gda_config_search_entry (cfg_client->user, path, "long");
 	if (entry == NULL)
 		entry = gda_config_search_entry (cfg_client->global, path, "long");
+        retval = (entry != NULL && entry->value != NULL) ? atoi (entry->value) : 0;
+	GDA_CONFIG_UNLOCK ();
 
-        return (entry != NULL && entry->value != NULL) ? 
-			atoi (entry->value) : 0;
+	return retval;
 }
 
 /**
@@ -877,17 +912,21 @@ gda_config_get_float (const gchar *path)
 {
 	GdaConfigClient *cfg_client;
 	GdaConfigEntry *entry;
+	gdouble retval;
 
 	g_return_val_if_fail (path != NULL, 0.0);
 
+	GDA_CONFIG_LOCK ();
 	cfg_client = get_config_client ();
 
 	entry = gda_config_search_entry (cfg_client->user, path, "float");
 	if (entry == NULL)
 		entry = gda_config_search_entry (cfg_client->global, path, "float");
 
-        return (entry != NULL && entry->value != NULL) ? 
-			g_strtod (entry->value, NULL) : 0.0;
+        retval = (entry != NULL && entry->value != NULL) ? g_strtod (entry->value, NULL) : 0.0;
+	GDA_CONFIG_UNLOCK ();
+
+	return retval;
 }
 
 /**
@@ -903,17 +942,21 @@ gda_config_get_boolean (const gchar *path)
 {
 	GdaConfigClient *cfg_client;
 	GdaConfigEntry *entry;
+	gboolean retval;
 
 	g_return_val_if_fail (path != NULL, FALSE);
 
+	GDA_CONFIG_LOCK ();
 	cfg_client = get_config_client ();
 
 	entry = gda_config_search_entry (cfg_client->user, path, "bool");
 	if (entry == NULL)
 		entry = gda_config_search_entry (cfg_client->global, path, "bool");
 
-        return (entry != NULL && entry->value != NULL) ? 
-			!strcmp (entry->value, "true") : FALSE;
+        retval = (entry != NULL && entry->value != NULL) ? !strcmp (entry->value, "true") : FALSE;
+	GDA_CONFIG_UNLOCK ();
+
+	return retval;
 }
 
 /**
@@ -937,17 +980,21 @@ gda_config_set_string (const gchar *path, const gchar *new_value)
 	g_return_val_if_fail (path != NULL, FALSE);
 	g_return_val_if_fail (new_value != NULL, FALSE);
 
+	GDA_CONFIG_LOCK ();
 	cfg_client = get_config_client ();
 	entry = gda_config_search_entry (cfg_client->user, path, "string");
 	if (!entry) {
 		entry = gda_config_search_entry (cfg_client->global, path, "string");
-		if (entry && !can_modify_global_conf)
+		if (entry && !can_modify_global_conf) {
+			GDA_CONFIG_UNLOCK ();
 			return FALSE;
+		}
 	}
 	if (entry == NULL){
 		ptr_last_dash = strrchr (path, '/');
 		if (ptr_last_dash == NULL){
-			g_warning ("%s does not containt any '/'!?", path);
+			g_warning ("%s does not containt any '/'!?", path); 
+			GDA_CONFIG_UNLOCK ();
 			return FALSE;
 		}
 		last_dash = ptr_last_dash - path;
@@ -966,6 +1013,7 @@ gda_config_set_string (const gchar *path, const gchar *new_value)
 
 	write_config_file ();
 	do_notify (path);
+	GDA_CONFIG_UNLOCK ();
 
 	return TRUE;
 }
@@ -991,17 +1039,21 @@ gda_config_set_int (const gchar *path, gint new_value)
 
 	g_return_val_if_fail (path !=NULL, FALSE);
 
+	GDA_CONFIG_LOCK ();
 	cfg_client = get_config_client ();
 	entry = gda_config_search_entry (cfg_client->user, path, "long");
 	if (!entry) {
 		entry = gda_config_search_entry (cfg_client->global, path, "long");
-		if (entry && !can_modify_global_conf)
+		if (entry && !can_modify_global_conf) {
+			GDA_CONFIG_UNLOCK ();
 			return FALSE;
+		}
 	}
 	if (entry == NULL){
 		ptr_last_dash = strrchr (path, '/');
 		if (ptr_last_dash == NULL){
 			g_warning ("%s does not containt any '/'!?", path);
+			GDA_CONFIG_UNLOCK ();
 			return FALSE;
 		}
 		last_dash = ptr_last_dash - path;
@@ -1021,6 +1073,7 @@ gda_config_set_int (const gchar *path, gint new_value)
 
 	write_config_file ();
 	do_notify (path);
+	GDA_CONFIG_UNLOCK ();
 
 	return TRUE;
 }
@@ -1046,17 +1099,21 @@ gda_config_set_float (const gchar * path, gdouble new_value)
 
 	g_return_val_if_fail (path !=NULL, FALSE);
 
+	GDA_CONFIG_LOCK ();
 	cfg_client = get_config_client ();
 	entry = gda_config_search_entry (cfg_client->user, path, "float");
 	if (!entry) {
 		entry = gda_config_search_entry (cfg_client->global, path, "float");
-		if (entry && !can_modify_global_conf)
+		if (entry && !can_modify_global_conf) {
+			GDA_CONFIG_UNLOCK ();
 			return FALSE;
+		}
 	}
 	if (entry == NULL){
 		ptr_last_dash = strrchr (path, '/');
 		if (ptr_last_dash == NULL){
 			g_warning ("%s does not containt any '/'!?", path);
+			GDA_CONFIG_UNLOCK ();
 			return FALSE;
 		}
 		last_dash = ptr_last_dash - path;
@@ -1076,6 +1133,7 @@ gda_config_set_float (const gchar * path, gdouble new_value)
 
 	write_config_file ();
 	do_notify (path);
+	GDA_CONFIG_UNLOCK ();
 
 	return TRUE;
 }
@@ -1102,17 +1160,21 @@ gda_config_set_boolean (const gchar *path, gboolean new_value)
 	g_return_val_if_fail (path !=NULL, FALSE);
 
 	new_value = new_value != 0 ? TRUE : FALSE;
+	GDA_CONFIG_LOCK ();
 	cfg_client = get_config_client ();
 	entry = gda_config_search_entry (cfg_client->user, path, "bool");
 	if (!entry) {
 		entry = gda_config_search_entry (cfg_client->global, path, "bool");
-		if (entry && !can_modify_global_conf)
+		if (entry && !can_modify_global_conf) {
+			GDA_CONFIG_UNLOCK ();
 			return FALSE;
+		}
 	}
 	if (entry == NULL){
 		ptr_last_dash = strrchr (path, '/');
 		if (ptr_last_dash == NULL){
 			g_warning ("%s does not containt any '/'!?", path);
+			GDA_CONFIG_UNLOCK ();
 			return FALSE;
 		}
 		last_dash = ptr_last_dash - path;
@@ -1131,6 +1193,7 @@ gda_config_set_boolean (const gchar *path, gboolean new_value)
 
 	write_config_file ();
 	do_notify (path);
+	GDA_CONFIG_UNLOCK ();
 
 	return TRUE;
 }
@@ -1149,12 +1212,14 @@ gda_config_remove_section (const gchar *path)
 
 	g_return_if_fail (path != NULL);
 
+	GDA_CONFIG_LOCK ();
 	cfg_client = get_config_client ();
 	section = gda_config_search_section (cfg_client->user, path);
 	if (!section)
 		section = gda_config_search_section (cfg_client->global, path);
 	if (section == NULL) {
 		g_warning ("Section %s not found!", path);
+		GDA_CONFIG_UNLOCK ();
 		return;
 	}
 
@@ -1163,6 +1228,7 @@ gda_config_remove_section (const gchar *path)
 	free_section (section);
 	write_config_file ();
 	do_notify (path);
+	GDA_CONFIG_UNLOCK ();
 }
 
 /**
@@ -1193,12 +1259,14 @@ gda_config_remove_key (const gchar *path)
 	section_path = g_strdup (path);
 	section_path [last_dash] = '\0';
 	entry = NULL;
+	GDA_CONFIG_UNLOCK ();
 	cfg_client = get_config_client ();
 	section = gda_config_search_section (cfg_client->user, section_path);
 	if (!section)
 		section = gda_config_search_section (cfg_client->global, section_path);
 	if (section == NULL) {
 		g_free (section_path);
+		GDA_CONFIG_UNLOCK ();
 		return;
 	}
 
@@ -1212,8 +1280,10 @@ gda_config_remove_key (const gchar *path)
 
 	g_free (section_path);
 
-	if (entry == NULL)
+	if (entry == NULL) {
+		GDA_CONFIG_UNLOCK ();
 		return;
+	}
 
 	section->entries = g_list_remove (section->entries, entry);
 	free_entry (entry, NULL);
@@ -1224,6 +1294,7 @@ gda_config_remove_key (const gchar *path)
 
 	write_config_file ();
 	do_notify (path);
+	GDA_CONFIG_UNLOCK ();
 }
 
 /**
@@ -1240,15 +1311,19 @@ gda_config_has_section (const gchar *path)
 {
 	GdaConfigSection *section;
 	GdaConfigClient *cfg_client;
+	gboolean retval;
 
 	g_return_val_if_fail (path != NULL, FALSE);
 
+	GDA_CONFIG_LOCK ();
 	cfg_client = get_config_client ();
 	section = gda_config_search_section (cfg_client->user, path);
 	if (section == NULL)
 		section = gda_config_search_section (cfg_client->global, path);
 
-	return (section != NULL) ? TRUE : FALSE;
+	retval = (section != NULL) ? TRUE : FALSE;
+	GDA_CONFIG_UNLOCK ();
+	return retval;
 }
 
 /**
@@ -1264,9 +1339,11 @@ gda_config_has_key (const gchar *path)
 {
 	GdaConfigEntry *entry;
 	GdaConfigClient *cfg_client;
+	gboolean retval;
 
 	g_return_val_if_fail (path != NULL, FALSE);
 
+	GDA_CONFIG_LOCK ();
 	cfg_client = get_config_client ();
 	entry = gda_config_search_entry (cfg_client->user, path, NULL);
 	if (entry == NULL)
@@ -1274,7 +1351,9 @@ gda_config_has_key (const gchar *path)
 						 path,
 						 NULL);
 
-	return (entry != NULL) ? TRUE : FALSE;
+	retval = (entry != NULL) ? TRUE : FALSE;
+	GDA_CONFIG_UNLOCK ();
+	return retval;
 }
 
 /**
@@ -1291,20 +1370,22 @@ gda_config_get_type (const gchar *path)
 {
 	GdaConfigEntry *entry;
 	GdaConfigClient *cfg_client;
+	gchar *retval = NULL;
 
 	g_return_val_if_fail (path != NULL, FALSE);
 
+	GDA_CONFIG_LOCK ();
 	cfg_client = get_config_client ();
 	entry = gda_config_search_entry (cfg_client->user, path, NULL);
 	if (entry == NULL)
 		entry = gda_config_search_entry (cfg_client->global, 
 						 path,
 						 NULL);
-
-	if (entry == NULL)
-		return NULL;
-
-	return g_strdup (entry->type);
+	
+	if (entry)
+		retval = g_strdup (entry->type);
+	GDA_CONFIG_UNLOCK ();
+	return retval;
 }
 
 static GList *
@@ -1319,6 +1400,7 @@ gda_config_list_sections_raw (const gchar *path)
         g_return_val_if_fail (path != NULL, NULL);
 
 	len = strlen (path);
+	GDA_CONFIG_LOCK ();
 	cfg_client = get_config_client ();
 	for (list = cfg_client->user; list; list = list->next){
 		section = (GdaConfigSection*) list->data;
@@ -1339,7 +1421,7 @@ gda_config_list_sections_raw (const gchar *path)
 				ret = g_list_append (ret, section);
 		}
 	}
-
+	GDA_CONFIG_UNLOCK ();
         return ret;
 }
 
@@ -1395,6 +1477,7 @@ gda_config_list_keys (const gchar * path)
         g_return_val_if_fail (path != NULL, NULL);
 
 	len = strlen (path);
+	GDA_CONFIG_LOCK ();
 	cfg_client = get_config_client ();
 	if (cfg_client->user){
 		for (ls = cfg_client->user; ls; ls = ls->next){
@@ -1425,6 +1508,7 @@ gda_config_list_keys (const gchar * path)
 		}
 	}
 
+	GDA_CONFIG_UNLOCK ();
         return ret;
 }
 
@@ -2033,8 +2117,12 @@ gda_config_get_data_source_model (void)
 gboolean
 gda_config_can_modify_global_config (void)
 {
+	gboolean retval;
+	GDA_CONFIG_LOCK ();
 	get_config_client ();
-	return can_modify_global_conf;
+	retval = can_modify_global_conf;
+	GDA_CONFIG_UNLOCK ();
+	return retval;
 }
 
 /**
@@ -2069,8 +2157,11 @@ gda_config_save_data_source (const gchar *name,
 	g_return_val_if_fail (name != NULL, FALSE);
 	g_return_val_if_fail (provider != NULL, FALSE);
 
-	if (is_global && !can_modify_global_conf)
+	GDA_CONFIG_LOCK ();
+	if (is_global && !can_modify_global_conf) {
+		GDA_CONFIG_UNLOCK ();
 		return FALSE;
+	}
 
 	/* delay write and nofity */
 	lock_write_notify = TRUE;
@@ -2136,7 +2227,8 @@ gda_config_save_data_source (const gchar *name,
 	/* actual write and nofity */
 	lock_write_notify = FALSE;
 	write_config_file ();
-	do_notify (NULL);	
+	do_notify (NULL);
+	GDA_CONFIG_UNLOCK ();
 
 	return TRUE;
 }

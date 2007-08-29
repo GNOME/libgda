@@ -233,7 +233,7 @@ gda_client_get_type (void)
 {
 	static GType type = 0;
 
-	if (!type) {
+	if (G_UNLIKELY (type == 0)) {
 		static const GTypeInfo info = {
 			sizeof (GdaClientClass),
 			(GBaseInitFunc) NULL,
@@ -247,6 +247,7 @@ gda_client_get_type (void)
 		};
 		type = g_type_register_static (G_TYPE_OBJECT, "GdaClient", &info, 0);
 	}
+
 	return type;
 }
 
@@ -482,9 +483,11 @@ gda_client_open_connection (GdaClient *client,
  * a data source in the configuration. The format of @cnc_string is
  * similar to PostgreSQL and MySQL connection strings. It is a semicolumn-separated
  * series of key=value pairs. Do not add extra whitespace after the semicolumn
- * separator. The possible keys depend on the provider, but
- * these keys should work with all providers:
- * USER, PASSWORD, HOST, DATABASE, PORT
+ * separator. The possible keys depend on the provider, the "gda-sql-3.0 -L" command
+ * can be used to list the actual keys for each installed database provider.
+ *
+ * For example the connection string to open an SQLite connection to a database
+ * file named "my_data.db" in the current directory would be "DB_DIR=.;DB_NAME=my_data".
  *
  * The username and password used to actually open the connection are the first
  * non-NULL string being chosen by order from
@@ -493,7 +496,6 @@ gda_client_open_connection (GdaClient *client,
  *  <listitem>the USERNAME= and PASSWORD= parts of the @cnc_string</listitem>
  * </itemizedlist>
  *
-
  *
  * Returns: the opened connection if successful, %NULL if there is
  * an error.

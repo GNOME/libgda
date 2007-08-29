@@ -59,6 +59,10 @@
 #define XML_ID_TEST 
 #endif
 
+static GStaticRecMutex gda_mutex = G_STATIC_REC_MUTEX_INIT;
+#define GDA_DICT_LOCK() g_static_rec_mutex_lock(&gda_mutex)
+#define GDA_DICT_UNLOCK() g_static_rec_mutex_unlock(&gda_mutex)
+
 extern xmlDtdPtr gda_dict_dtd;
 
 /* 
@@ -132,7 +136,7 @@ gda_dict_get_type (void)
 {
 	static GType type = 0;
 
-	if (!type) {
+	if (G_UNLIKELY (type == 0)) {
 		static const GTypeInfo info = {
 			sizeof (GdaDictClass),
 			(GBaseInitFunc) NULL,
@@ -714,7 +718,7 @@ gda_dict_load_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 	}
 
 	doc = xmlParseFile (xmlfile);
-
+	GDA_DICT_LOCK ();
 	if (doc) {
 		/* doc validation */
 		xmlValidCtxtPtr validc;
@@ -756,6 +760,7 @@ gda_dict_load_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 					     "File '%s' does not conform to DTD", xmlfile);
 
 			xmlDoValidityCheckingDefaultValue = xmlcheck;
+			GDA_DICT_UNLOCK ();
 			return FALSE;
 		}
 #endif
@@ -767,6 +772,7 @@ gda_dict_load_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 			     GDA_DICT_ERROR,
 			     GDA_DICT_FILE_LOAD_ERROR,
 			     "Can't load file '%s'", xmlfile);
+		GDA_DICT_UNLOCK ();
 		return FALSE;
 	}
 
@@ -777,6 +783,7 @@ gda_dict_load_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 			     GDA_DICT_ERROR,
 			     GDA_DICT_FILE_LOAD_ERROR,
 			     "XML file '%s' does not have any <gda_dict> node", xmlfile);
+		GDA_DICT_UNLOCK ();
 		return FALSE;
 	}
 	subnode = node->children;
@@ -787,6 +794,7 @@ gda_dict_load_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 			     GDA_DICT_FILE_LOAD_ERROR,
 			     "XML file '%s': <gda_dict> does not have any children",
 			     xmlfile);
+		GDA_DICT_UNLOCK ();
 		return FALSE;
 	}
 
@@ -852,8 +860,10 @@ gda_dict_load_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 
 		/* GdaDictDatabase object */
 		if (!done && !strcmp ((gchar*)subnode->name, "gda_dict_database")) {
-			if (!gda_xml_storage_load_from_xml (GDA_XML_STORAGE (dict->priv->database), subnode, error))
+			if (!gda_xml_storage_load_from_xml (GDA_XML_STORAGE (dict->priv->database), subnode, error)) {
+				GDA_DICT_UNLOCK ();
 				return FALSE;
+			}
 			done = TRUE;
 		}
 
@@ -872,8 +882,10 @@ gda_dict_load_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 					g_warning (_("Could not load XML data for %s (no registered load function)"), 
 						   subnode->name);
 				else
-					if (!(reg->load_xml_tree) (dict, subnode, error))
+					if (!(reg->load_xml_tree) (dict, subnode, error)) {
+						GDA_DICT_UNLOCK ();
 						return FALSE;
+					}
 			}
 		}
 
@@ -883,6 +895,7 @@ gda_dict_load_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 	if (gda_dict_dtd)
 		doc->intSubset = old_dtd;
 	xmlFreeDoc (doc);
+	GDA_DICT_UNLOCK ();
 
 	return TRUE;
 }
@@ -1573,6 +1586,8 @@ gtype_equal (gconstpointer a, gconstpointer b)
 GdaDataHandler* 
 gda_dict_get_default_handler (GdaDict *dict, GType for_type)
 {
+	GdaDataHandler *dh;
+	GDA_DICT_LOCK ();
 	if (!default_dict_handlers) {
 		default_dict_handlers = g_hash_table_new_full (gtype_hash, gtype_equal, 
 							       NULL, (GDestroyNotify) g_object_unref);
@@ -1597,8 +1612,9 @@ gda_dict_get_default_handler (GdaDict *dict, GType for_type)
 		g_hash_table_insert (default_dict_handlers, (gpointer) G_TYPE_ULONG, gda_handler_type_new ());
 		g_hash_table_insert (default_dict_handlers, (gpointer) G_TYPE_UINT, gda_handler_numerical_new ());		
 	}
-
-	return g_hash_table_lookup (default_dict_handlers, (gpointer) for_type);
+	dh = g_hash_table_lookup (default_dict_handlers, (gpointer) for_type);
+	GDA_DICT_UNLOCK ();
+	return dh;
 }
 
 

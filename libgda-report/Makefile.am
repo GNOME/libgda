@@ -14,6 +14,7 @@ report_headers = \
 
 libgda_report_3_0_la_SOURCES = \
 	$(report_headers) \
+	gda-report-document-private.h \
 	gda-report-document.c
 
 libgda_report_3_0_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) $(NO_UNDEFINED)
