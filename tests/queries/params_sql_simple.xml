@@ -81,4 +81,19 @@
     </params>
   </test>
 
+  <test name="p7">
+    <sql expected="A">UPDATE order_contents SET product_ref = ##customers/@col, quantity = ##customers/#3, discount = ##customers/%nrows WHERE order_id = ##oid AND product_ref = ##-0 AND quantity = ##-2 AND discount = ##-3::gchararray::NULL</sql>
+    <render_as>UPDATE order_contents SET product_ref = ## /* name:"customers/@col" type:"gchararray" */, quantity = ## /* name:"customers/#3" type:"gchararray" */, discount = ## /* name:"customers/%nrows" type:"gchararray" */ WHERE order_id = ## /* name:"oid" type:"gchararray" */ AND product_ref = ## /* name:"-0" type:"gchararray" */ AND quantity = ## /* name:"-2" type:"gchararray" */ AND discount = ## /* name:"-3" type:"gchararray" nullok:"TRUE" */</render_as>
+    <render_as>UPDATE order_contents SET product_ref=## /* type:"gchararray" name:"customers/@col" */, quantity=## /* type:"gchararray" name:"customers/#3" */, discount=## /* type:"gchararray" name:"customers/%nrows" */ WHERE order_id=## /* type:"gchararray" name:"oid" */ AND product_ref=## /* type:"gchararray" name:"-0" */ AND quantity=## /* type:"gchararray" name:"-2" */ AND discount=## /* type:"gchararray" name:"-3" nullok:TRUE */</render_as>
+    <params>
+      <param name="customers/@col" type="gchararray"/>
+      <param name="customers/#3" type="gchararray"/>
+      <param name="customers/%nrows" type="gchararray"/>
+      <param name="oid" type="gchararray"/>
+      <param name="-0" type="gchararray"/>
+      <param name="-2" type="gchararray"/>
+      <param name="-3" type="gchararray" nullok="1"/>
+    </params>
+  </test>
+
 </unit>

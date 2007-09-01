@@ -852,9 +852,6 @@ fi
 
 AM_CONDITIONAL(XBASE, test x$xbasedir != x)
 
-dnl SQLite provider is included in the sources now,
-dnl so it's always built.
-
 dnl Test for MDB Tools (for MS Access files)
 try_mdb=true
 AC_ARG_WITH(mdb,
@@ -976,27 +973,39 @@ AM_CONDITIONAL(LDAP, test x$ldapdir != x)
 dnl test for system-installed SQLite
 dnl If no SQLite is found or if the SQLite found does not have the sqlite3_table_column_metadata()
 dnl function call, then use the embedded version
-SQLITE_MODULES="sqlite3 >= 3.3"
-PKG_CHECK_MODULES(SQLITE, $SQLITE_MODULES, have_sqlite=yes, have_sqlite=no)
-if test x"$have_sqlite" = "xyes"
+dnl also, on Win32, always use the embedded version
+if test x"$platform_win32" = "xyes"
 then
-	AC_CHECK_LIB(sqlite3, sqlite3_table_column_metadata,[sqlite3_api=1], [sqlite3_api=0], $SQLITE_CFLAGS $SQLITE_LIBS)
-
-        if test $sqlite3_api = 0
-        then
-                AC_MSG_RESULT([SQLite was not compiled with the SQLITE_ENABLE_COLUMN_METADATA, using embedded SQLite])
-                have_sqlite=no
-        else
-                AC_MSG_RESULT(Using this version of SQLite)
-		have_sqlite=yes
-                SQLITE_CFLAGS="$SQLITE_CFLAGS -DHAVE_SQLITE"
-                AC_SUBST(SQLITE_CFLAGS)
-                AC_SUBST(SQLITE_LIBS)
-                AC_SUBST(SQLITE_VERS)
-        fi
+        AM_CONDITIONAL(HAVE_SQLITE, 0)
+else
+	SQLITE_MODULES="sqlite3 >= 3.3"
+	PKG_CHECK_MODULES(SQLITE, $SQLITE_MODULES, have_sqlite=yes, have_sqlite=no)
+	if test x"$have_sqlite" = "xyes"
+	then
+		AC_CHECK_LIB(sqlite3, sqlite3_table_column_metadata,[sqlite3_api=1], [sqlite3_api=0], $SQLITE_CFLAGS $SQLITE_LIBS)
+	
+        	if test $sqlite3_api = 0
+        	then
+                	AC_MSG_RESULT([Installed SQLite was not compiled with the SQLITE_ENABLE_COLUMN_METADATA, using embedded SQLite])
+                	have_sqlite=no
+        	else
+			AC_CHECK_LIB(sqlite3, sqlite3CreateFunc,[sqlite3_api=1], [sqlite3_api=0], $SQLITE_CFLAGS $SQLITE_LIBS)
+			if test $sqlite3_api = 0
+			then
+				AC_MSG_RESULT([Could not find the sqlite3CreateFunc symbol in installed SQLite library, using embedded SQLite])
+                		have_sqlite=no
+			else
+                		AC_MSG_RESULT(Using this version of SQLite)
+				have_sqlite=yes
+                		SQLITE_CFLAGS="$SQLITE_CFLAGS -DHAVE_SQLITE"
+                		AC_SUBST(SQLITE_CFLAGS)
+                		AC_SUBST(SQLITE_LIBS)
+                		AC_SUBST(SQLITE_VERS)
+			fi
+        	fi
+	fi
+	AM_CONDITIONAL(HAVE_SQLITE, test x"$have_sqlite" = "xyes")
 fi
-AM_CONDITIONAL(HAVE_SQLITE, test x"$have_sqlite" = "xyes")
-
 
 dnl **************************
 dnl Check for readline/history

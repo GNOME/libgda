@@ -1,0 +1,15 @@
+When embedded SQLITE is used:
+* HAVE_SQLITE is *not* defined
+* patch it to add the PRAGMA command
+* linked as static
+
+When system SQLITE is used:
+* HAVE_SQLITE is defined
+* obviously not patched for PRAGMA
+* linked as dynamic => override the sqlite3CreateFunc function
+* For WIN32 (or MacOSX) we would need to use another mechanism (see lattice.umiacs.umd.edu/files/functions_tr.pdf) => impose embedded static lib
+
+Possible solutions in the future:
+1 - make SQLite implement the required PRAGMA (patch proposed)
+2 - don't use the required PRAGMA at all, and manage to intercept the sqlite3CreateFunc call
+    when statically linked (=> modify the source code of SQLite) 

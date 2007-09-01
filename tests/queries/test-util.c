@@ -280,7 +280,7 @@ load_test_from_xml_node (xmlNodePtr node)
 						xmlFree (prop);
 					}
 					prop = xmlGetProp (params, "nullok");
-					param->nullok = TRUE;
+					param->nullok = FALSE;
 					if (prop) {
 						param->nullok = (*prop == '1') ? TRUE : FALSE;
 						xmlFree (prop);

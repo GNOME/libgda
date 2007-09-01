@@ -321,10 +321,11 @@
     </para>
     <para>Currently, type inference is not reliably supported, so the use of the "type:" tag is strongly encouraged.</para>
     <para>
-      In order to simplyfiy queries writing in some instances where the description of a parameter is not provided,
+      In order to simplify queries writing in some instances where the description of a parameter is not provided,
       a simpler notation is also available in the general form as:
-      <programlisting><![CDATA[##<param_name>[::<param_type>]]]></programlisting>
-      where the &lt;param_type&gt; part can be omitted and will thus default to string ("gchararray"), for example:
+      <programlisting><![CDATA[##<param_name>[::<param_type>[::NULL]]]]></programlisting>
+      where the &lt;param_type&gt; part can be omitted and will thus default to string ("gchararray"), and the last 
+      &quot;NULL&quot; part, if present informs that the parameter can have a NULL value. Examples:
       &quot;##name&quot;, &quot;##name::gfloat&quot;, &quot;##+2::gint&quot;, &quot;##customers/@id&quot;, &quot;##customers/#2&quot;.
     </para>
   </sect3>

@@ -45,9 +45,18 @@
 #include <libgda/gda-connection-private.h>
 #include <libgda/binreloc/gda-binreloc.h>
 #include <libgda/gda-renderer.h>
+#include <stdio.h>
+#ifndef G_OS_WIN32
+#define __USE_GNU
+#include <dlfcn.h>
+#endif
 
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 #define FILE_EXTENSION ".db"
+#ifdef HAVE_SQLITE
+static SQLITEcnc *opening_scnc = NULL;
+static GHashTable *db_connections_hash = NULL;
+#endif
 
 static void gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass);
 static void gda_sqlite_provider_init       (GdaSqliteProvider *provider,
@@ -130,7 +139,7 @@ static GdaDataHandler *gda_sqlite_provider_get_data_handler (GdaServerProvider *
 static const gchar* gda_sqlite_provider_get_default_dbms_type (GdaServerProvider *provider,
 							       GdaConnection *cnc,
 							       GType type);
-
+static void gda_sqlite_free_cnc    (SQLITEcnc *scnc);
 static GList *process_sql_commands (GList *reclist, GdaConnection *cnc,
 				    const gchar *sql, GdaCommandOptions options);
 
@@ -257,6 +266,177 @@ gda_sqlite_provider_get_version (GdaServerProvider *provider)
 	return PACKAGE_VERSION;
 }
 
+static void
+add_g_list_row (gpointer data, GdaDataModelArray *recset)
+{
+	GList *rowlist = data;
+	GError *error = NULL;
+	if (gda_data_model_append_values (GDA_DATA_MODEL (recset), rowlist, &error) < 0) {
+		g_warning ("Data model append error: %s\n", error && error->message ? error->message : "no detail");
+		g_error_free (error);
+	}
+	g_list_foreach (rowlist, (GFunc) gda_value_free, NULL);
+	g_list_free (rowlist);
+}
+
+#ifndef G_OS_WIN32
+#ifdef HAVE_SQLITE
+int sqlite3CreateFunc (sqlite3 *db, const char *name, int nArg, int eTextRep, void *data,
+		       void (*xFunc)(sqlite3_context*,int,sqlite3_value **),
+		       void (*xStep)(sqlite3_context*,int,sqlite3_value **), void (*xFinal)(sqlite3_context*))
+{
+	SQLITEcnc *scnc = NULL;
+	gboolean is_func = FALSE;
+	gboolean is_agg = FALSE;
+	GdaDataModelArray *recset = NULL;
+
+	static int (*func) (sqlite3 *, const char *, int, int, void *,
+			    void (*)(sqlite3_context*,int,sqlite3_value **),
+			    void (*)(sqlite3_context*,int,sqlite3_value **), void (*)(sqlite3_context*)) = NULL;
+
+	if(!func)
+		func = (int (*) (sqlite3 *, const char *, int, int, void *,
+				 void (*)(sqlite3_context*,int,sqlite3_value **),
+				 void (*)(sqlite3_context*,int,sqlite3_value **), 
+				 void (*)(sqlite3_context*))) dlsym (RTLD_NEXT, "sqlite3CreateFunc");
+
+	/* try to find which SQLITEcnc this concerns */
+	if (db_connections_hash) 
+		scnc = g_hash_table_lookup (db_connections_hash, db);
+	if (!scnc)
+		scnc = opening_scnc;
+	if (!scnc)
+		return func (db, name, nArg, eTextRep, data, xFunc, xStep, xFinal);
+
+	if (xFunc) {
+		/* It's a function */
+		recset = (GdaDataModelArray *) scnc->functions_model;
+		if (!recset) {
+			recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new 
+						       (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_PROCEDURES)));
+			g_assert (gda_server_provider_init_schema_model (GDA_DATA_MODEL (recset), 
+									 GDA_CONNECTION_SCHEMA_PROCEDURES));
+			scnc->functions_model = (GdaDataModel *) recset;
+		}
+		is_func = TRUE;
+	}
+	else if (xStep && xFinal) {
+		/* It's an aggregate */
+		recset = (GdaDataModelArray *) scnc->aggregates_model;
+		if (!recset) {
+			recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new 
+						       (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_AGGREGATES)));
+			g_assert (gda_server_provider_init_schema_model (GDA_DATA_MODEL (recset), 
+									 GDA_CONNECTION_SCHEMA_AGGREGATES));
+			scnc->aggregates_model = (GdaDataModel *) recset;
+		}
+		is_agg = TRUE;
+	}
+	else if (!xFunc && !xStep && !xFinal) {
+		/* remove function or aggregate definition */
+		GSList *values;
+		GValue *value;
+		gint cols_index [] = {0};
+		gint row;
+
+		g_value_set_string (value = gda_value_new (G_TYPE_STRING), name);
+		values = g_slist_prepend (NULL, value);
+		
+		if (scnc->functions_model) {
+			row = gda_data_model_get_row_from_values (scnc->functions_model, values, cols_index);
+			if (row >= 0) {
+				g_object_set (G_OBJECT (scnc->functions_model), "read-only", FALSE, NULL);
+				g_assert (gda_data_model_remove_row (scnc->functions_model, row, NULL));
+				g_object_set (G_OBJECT (scnc->functions_model), "read-only", TRUE, NULL);
+			}
+		}
+		if (scnc->aggregates_model) {
+			row = gda_data_model_get_row_from_values (scnc->aggregates_model, values, cols_index);
+			if (row >= 0) {
+				g_object_set (G_OBJECT (scnc->aggregates_model), "read-only", FALSE, NULL);
+				g_assert (gda_data_model_remove_row (scnc->aggregates_model, row, NULL));
+				g_object_set (G_OBJECT (scnc->aggregates_model), "read-only", TRUE, NULL);
+			}
+		}
+
+		gda_value_free (value);
+		g_slist_free (values);
+	}
+
+	if (is_func || is_agg) {
+		gchar *str;
+		GValue *value;
+		GList *rowlist = NULL;
+		
+		/* 'unlock' the data model */
+		g_object_set (G_OBJECT (recset), "read-only", FALSE, NULL);
+
+		/* Proc name */
+		g_value_set_string (value = gda_value_new (G_TYPE_STRING), name);
+		rowlist = g_list_append (rowlist, value);
+				
+		/* Proc_Id */
+		if (! is_agg)
+			str = g_strdup_printf ("p%d", gda_data_model_get_n_rows ((GdaDataModel*) recset));
+		else
+			str = g_strdup_printf ("a%d", gda_data_model_get_n_rows ((GdaDataModel*) recset));
+		g_value_take_string (value = gda_value_new (G_TYPE_STRING), str);
+		rowlist = g_list_append (rowlist, value);
+				
+		/* Owner */
+		g_value_set_string (value = gda_value_new (G_TYPE_STRING), "system");
+		rowlist = g_list_append (rowlist, value);
+		
+		/* Comments */ 
+		rowlist = g_list_append (rowlist, gda_value_new_null());
+		
+		/* Out type */ 
+		g_value_set_string (value = gda_value_new (G_TYPE_STRING), "text");
+		rowlist = g_list_append (rowlist, value);
+				
+		if (! is_agg) {
+			/* Number of args */
+			g_value_set_int (value = gda_value_new (G_TYPE_INT), nArg);
+			rowlist = g_list_append (rowlist, value);
+		}
+				
+		/* In types */
+		if (! is_agg) {
+			if (nArg > 0) {
+				GString *string;
+				gint j;
+				
+				string = g_string_new ("");
+				for (j = 0; j < nArg; j++) {
+					if (j > 0)
+						g_string_append_c (string, ',');
+					g_string_append_c (string, '-');
+				}
+				g_value_take_string (value = gda_value_new (G_TYPE_STRING), string->str);
+				g_string_free (string, FALSE);
+			}
+			else
+				g_value_set_string (value = gda_value_new (G_TYPE_STRING), "");
+		}
+		else
+			g_value_set_string (value = gda_value_new (G_TYPE_STRING), "");
+		rowlist = g_list_append (rowlist, value);
+
+		/* Definition */
+		rowlist = g_list_append (rowlist, gda_value_new_null());
+
+		add_g_list_row ((gpointer) rowlist, recset);
+
+		/* 'lock' the data model */
+		g_object_set (G_OBJECT (recset), "read-only", TRUE, NULL);
+
+	}
+
+	return func (db, name, nArg, eTextRep, data, xFunc, xStep, xFinal);
+}
+#endif
+#endif
+
 /* open_connection handler for the GdaSqliteProvider class */
 static gboolean
 gda_sqlite_provider_open_connection (GdaServerProvider *provider,
@@ -351,7 +531,9 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 	}
 
 	scnc = g_new0 (SQLITEcnc, 1);
-
+#ifdef HAVE_SQLITE
+	opening_scnc = scnc;
+#endif
 	errmsg = sqlite3_open (filename, &scnc->connection);
 	if (filename)
 		scnc->file = g_strdup (filename);
@@ -359,16 +541,17 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 	if (errmsg != SQLITE_OK) {
 		printf("error %s", sqlite3_errmsg (scnc->connection));
 		gda_connection_add_event_string (cnc, sqlite3_errmsg (scnc->connection));
-		sqlite3_close (scnc->connection);
-		g_free (scnc->file);
-		g_free (scnc);
+		gda_sqlite_free_cnc (scnc);
 			
+#ifdef HAVE_SQLITE
+		opening_scnc = NULL;
+#endif
 		return FALSE;
 	}
+	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE, scnc);
 
 	/* use extended result codes */
 	sqlite3_extended_result_codes (scnc->connection, 1);
-	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE, scnc);
 	
 	/* allow a busy timeout of 500 ms */
 	sqlite3_busy_timeout (scnc->connection, 500);
@@ -398,10 +581,11 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 			g_print ("error: %s", errmsg);
 			gda_connection_add_event_string (cnc, errmsg);
 			sqlite3_free (errmsg);
-			sqlite3_close (scnc->connection);
-			g_free (scnc->file);
-			g_free (scnc);
-
+			gda_sqlite_free_cnc (scnc);
+			g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE, NULL);
+#ifdef HAVE_SQLITE
+			opening_scnc = NULL;
+#endif
 			return FALSE;
 		}
 	}
@@ -411,12 +595,26 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 
 		for (i = 0; i < sizeof (scalars) / sizeof (ScalarFunction); i++) {
 			ScalarFunction *func = (ScalarFunction *) &(scalars [i]);
-			if (sqlite3_create_function (scnc->connection, 
-						     func->name, func->nargs, SQLITE_UTF8, func->user_data, 
-						     func->xFunc, NULL, NULL) != SQLITE_OK)
+			gint res = sqlite3_create_function (scnc->connection, 
+							    func->name, func->nargs, SQLITE_UTF8, func->user_data, 
+							    func->xFunc, NULL, NULL);
+			if (res != SQLITE_OK) {
+				gda_sqlite_free_cnc (scnc);
+				g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE, NULL);
+#ifdef HAVE_SQLITE
+				opening_scnc = NULL;
+#endif
 				return FALSE;
+			}
 		}
 	}
+
+#ifdef HAVE_SQLITE
+	/* add the (scnc->connection, scnc) to db_connections_hash */
+	if (!db_connections_hash)
+		db_connections_hash = g_hash_table_new (g_direct_hash, g_direct_equal);
+	g_hash_table_insert (db_connections_hash, scnc->connection, scnc);
+#endif
 
 	return TRUE;
 }
@@ -832,8 +1030,7 @@ gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 			g_set_error (error, 0, 0, sqlite3_errmsg (scnc->connection)); 
 			retval = FALSE;
 		}
-		sqlite3_close (scnc->connection); 	 
-		g_free (scnc);
+		gda_sqlite_free_cnc (scnc);
 
 		return retval;
         }
@@ -1281,8 +1478,8 @@ gda_sqlite_provider_supports (GdaServerProvider *provider,
 	case GDA_CONNECTION_FEATURE_INDEXES :
 	case GDA_CONNECTION_FEATURE_TRIGGERS :
 	case GDA_CONNECTION_FEATURE_VIEWS :
-		return TRUE;
 	case GDA_CONNECTION_FEATURE_PROCEDURES :
+		return TRUE;
 	default: ;
 	}
 
@@ -1332,16 +1529,6 @@ add_type_row (GdaDataModelArray *recset, const gchar *name,
 
 	g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 	g_list_free (value_list);
-}
-
-static void
-add_g_list_row (gpointer data, GdaDataModelArray *recset)
-{
-	GList *rowlist = data;
-
-	gda_data_model_append_values (GDA_DATA_MODEL (recset), rowlist, NULL);
-	g_list_foreach (rowlist, (GFunc) gda_value_free, NULL);
-	g_list_free (rowlist);
 }
 
 /*
@@ -1734,11 +1921,19 @@ get_procs (GdaConnection *cnc, GdaParameterList *params, gboolean aggs)
 	}
 
 	if (aggs) {
+		if (scnc->aggregates_model) {
+			g_object_ref (scnc->aggregates_model);
+			return scnc->aggregates_model;
+		}
 		recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new 
 					       (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_AGGREGATES)));
 		g_assert (gda_server_provider_init_schema_model (GDA_DATA_MODEL (recset), GDA_CONNECTION_SCHEMA_AGGREGATES));
 	}
 	else {
+		if (scnc->functions_model) {
+			g_object_ref (scnc->functions_model);
+			return scnc->functions_model;
+		}
 		recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new 
 					       (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_PROCEDURES)));
 		g_assert (gda_server_provider_init_schema_model (GDA_DATA_MODEL (recset), GDA_CONNECTION_SCHEMA_PROCEDURES));
@@ -2237,4 +2432,28 @@ scalar_gda_file_exists_func (sqlite3_context *context, int argc, sqlite3_value *
 		sqlite3_result_int (context, 1);
 	else
 		sqlite3_result_int (context, 0);
+}
+
+static void
+gda_sqlite_free_cnc (SQLITEcnc *scnc)
+{
+	if (!scnc)
+		return;
+
+#ifdef HAVE_SQLITE
+	/* remove the (scnc->connection, scnc) to db_connections_hash */
+	if (db_connections_hash && scnc->connection)
+		g_hash_table_remove (db_connections_hash, scnc->connection);
+#endif
+
+	if (scnc->connection)
+		sqlite3_close (scnc->connection);
+	g_free (scnc->file);
+	if (scnc->types)
+		g_hash_table_destroy (scnc->types);
+	if (scnc->aggregates_model) 
+		g_object_unref (scnc->aggregates_model);
+	if (scnc->functions_model) 
+		g_object_unref (scnc->functions_model);
+	g_free (scnc);
 }

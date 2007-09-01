@@ -29,7 +29,7 @@ GList *
 gda_delimiter_param_spec_build_simple (gchar *content)
 {
 	gchar *ptr;
-	gchar *pname = NULL, *ptype = NULL;
+	gchar *pname = NULL, *ptype = NULL, *pnnul = NULL;
 	GList *retval;
 	
 	/* search the "##" start string */
@@ -43,8 +43,13 @@ gda_delimiter_param_spec_build_simple (gchar *content)
 	for (ptr = pname; *ptr; ptr++) {
 		if ((*ptr == ':') && (*(ptr+1) == ':')) {
 			*ptr = 0;
-			ptype = ptr+2;
-			break;
+			if (!ptype) 
+				ptype = ptr+2;
+			else {
+				pnnul = ptr+2;
+				break;
+			}
+			ptr ++;
 		}
 	}
 	
@@ -53,6 +58,8 @@ gda_delimiter_param_spec_build_simple (gchar *content)
 		retval = g_list_append (retval, gda_delimiter_param_spec_build (GDA_DELIMITER_PARAM_TYPE, g_strdup (ptype)));
 	else
 		retval = g_list_append (retval, gda_delimiter_param_spec_build (GDA_DELIMITER_PARAM_TYPE, g_strdup ("gchararray")));
+	if (pnnul)
+		retval = g_list_append (retval, gda_delimiter_param_spec_build (GDA_DELIMITER_PARAM_NULLOK, g_strdup ("TRUE")));
 
 	g_free (content);
 	return retval;

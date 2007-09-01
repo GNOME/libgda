@@ -162,21 +162,28 @@ GList *
 param_spec_build_simple (char *content)
 {
 	char *ptr;
-	char *pname = content, *ptype = NULL;
+	char *pname = content, *ptype = NULL, *pnnul = NULL;
 	GList *retval;
 
 	/* delimit param name and param type */
 	for (ptr = content; *ptr; ptr++) {
 		if ((*ptr == ':') && (*(ptr+1) == ':')) {
 			*ptr = 0;
-			ptype = ptr+2;
-			break;
+			if (!ptype) 
+				ptype = ptr+2;
+			else {
+				pnnul = ptr+2;
+				break;
+			}
+			ptr ++;
 		}
 	}
 
 	retval = g_list_append (NULL, param_spec_build (PARAM_name, memsql_strdup (pname)));
 	if (ptype)
 		retval = g_list_append (retval, param_spec_build (PARAM_type, memsql_strdup (ptype)));
+	if (pnnul)
+		retval = g_list_append (retval, param_spec_build (PARAM_nullok, memsql_strdup ("TRUE")));
 
 	memsql_free (content);
 	return retval;

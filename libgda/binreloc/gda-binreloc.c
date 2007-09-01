@@ -115,6 +115,17 @@ gda_gbr_get_file_path (GdaPrefixDir where, ...)
 		tmp = g_build_filename (prefix, prefix_dir_name, file_part, NULL);
 	else
 		tmp = g_build_filename (prefix, file_part, NULL);
+
+	if (!g_file_test (tmp, G_FILE_TEST_EXISTS) &&
+	    g_str_has_suffix (prefix, "libgda")) {
+		/* test if we are in the sources */
+		g_free (tmp);
+		if (prefix_dir_name)
+			tmp = g_build_filename (LIBGDAPREFIX, prefix_dir_name, file_part, NULL);
+		else
+			tmp = g_build_filename (LIBGDAPREFIX, file_part, NULL);
+	}
+
 	g_free (prefix);
 	g_free (file_part);
 #ifdef GDA_DEBUG_NO

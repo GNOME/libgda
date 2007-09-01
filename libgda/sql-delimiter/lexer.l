@@ -53,6 +53,7 @@ gda_delimiter_lex_reset ()
 
 [ ]*##[a-zA-Z\+\-][a-zA-Z0-9_\+\-/@#%]*               {gda_delimiterlval.str = g_strdup (gda_delimitertext); return L_SIMPLE_PARAM;}
 [ ]*##[a-zA-Z\+\-][a-zA-Z0-9_\+\-/@#%]*::[a-zA-Z0-9_]+ {gda_delimiterlval.str = g_strdup (gda_delimitertext); return L_SIMPLE_PARAM;}
+[ ]*##[a-zA-Z\+\-][a-zA-Z0-9_\+\-/@#%]*::[a-zA-Z0-9_]+::NULL {gda_delimiterlval.str = g_strdup (gda_delimitertext); return L_SIMPLE_PARAM;}
 [ ]*##           	{return L_UNSPECVAL;}
 [ ]*\/\*            	{BEGIN(PSPEC); return L_LSBRACKET;}
 "declare"		{if (!is_start && (gda_delimiter_bloc_level == 0)) ignore_next = TRUE; REJECT;}

@@ -314,7 +314,8 @@ gda_sqlite_recordset_new_with_types (GdaConnection *cnc, SQLITEresult *sres, gin
 	/* computing column types and titles */
 	sres->types = g_new0 (GType, sres->ncols);
 	sres->cols_size = g_new0 (int, sres->ncols);
-	gda_sqlite_update_types_hash (scnc);
+	if (!scnc->types)
+		gda_sqlite_update_types_hash (scnc);
 
 	/* Gda type */
 	va_start (ap, nbcols);
@@ -357,7 +358,8 @@ gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
 	/* computing column types and titles */
 	sres->types = g_new0 (GType, sres->ncols); /* all types are initialized to GDA_TYPE_NULL */
 	sres->cols_size = g_new0 (int, sres->ncols);
-	gda_sqlite_update_types_hash (scnc);
+	if (!scnc->types)
+		gda_sqlite_update_types_hash (scnc);
 
 	gda_sqlite_recordset_fill (model, cnc, sres);
 

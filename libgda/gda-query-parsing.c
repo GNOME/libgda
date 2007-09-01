@@ -1690,6 +1690,7 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 	 * Using the param spec to set attributes
 	 */
 	isparam = g_list_length (param_specs) > 0 ? TRUE : FALSE;
+	gda_query_field_value_set_not_null (GDA_QUERY_FIELD_VALUE (qfield), TRUE);
 	list = param_specs;
 	while (list) {
 		param_spec *pspec = (param_spec*) list->data;

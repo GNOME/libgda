@@ -50,9 +50,11 @@ typedef struct {
 } SQLITEresult;
 
 typedef struct {
-	sqlite3    *connection;
-	gchar      *file;
-	GHashTable *types; /* key = type name, value = GType */
+	sqlite3      *connection;
+	gchar        *file;
+	GHashTable   *types; /* key = type name, value = GType */
+	GdaDataModel *functions_model;
+	GdaDataModel *aggregates_model;
 } SQLITEcnc;
 
 
@@ -60,6 +62,5 @@ void gda_sqlite_update_types_hash (SQLITEcnc *scnc);
 
 void gda_sqlite_result_take_sql (SQLITEresult *sres, gchar *sql);
 void gda_sqlite_free_result (SQLITEresult *sres);
-void gda_sqlite_free_cnc    (SQLITEcnc *scnc);
 
 #endif

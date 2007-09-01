@@ -222,13 +222,13 @@ test_sql_statement (SqlTest *test, gint test_index)
 				}
 				/* compare param's NULLOK */
 				attr = get_param_attr_from_pspec_list ((GList *)(params->data), GDA_DELIMITER_PARAM_NULLOK);
-				abool = !attr || (attr && ((*attr == 't') || (*attr == 'T'))) ? TRUE : FALSE;
+				abool = (attr && ((*attr == 't') || (*attr == 'T'))) ? TRUE : FALSE;
 				if (param->nullok && !abool) {
-					str = g_strdup_printf ("Parameter '%s' should have NULLOK %s", pname, tname);
+					str = g_strdup_printf ("Parameter '%s' expected to have NULLOK %s", pname, tname);
 					fail (str);
 				}
 				else if (!param->nullok && abool) {
-					str = g_strdup_printf ("Parameter '%s' should not have NULLOK %s", pname, tname);
+					str = g_strdup_printf ("Parameter '%s' not expected to have NULLOK %s", pname, tname);
 					fail (str);
 				}
 				/* compare param's ISPARAM */

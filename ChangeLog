@@ -1,3 +1,27 @@
+2007-09-01  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/sql-delimiter/gda-delimiter-tree.c:
+	* libgda/sql-delimiter/lexer.l:
+	* libsql/sql_tree.c:
+	* libsql/lexer.l: extended the parameter representation to ##<param_name>[::<param_type>[::NULL]],
+	the additionnal "::NULL" at the end meaning that the parameter can be NULL.
+	* tests/queries/*: fixed a bug in the tests
+	* libgda-reports/RML/trml2html/Makefile.am:
+	* libgda-reports/RML/trml2pdf/Makefile.am: corrections to the install and uninstall
+	targets
+	* providers/sqlite/gda-sqlite-provider.c: correctly return GDA_CONNECTION_FEATURE_PROCEDURES
+	as a supported feature
+	* configure.in: if there is an installed SQLite, also test that the sqlite3CreateFunc symbol
+	is present, and force the embedded SQLile on Windows
+	* providers/sqlite/sqlite-src/: don't need to extract the sqliteInt.h anymore, patch
+	the sqlite3.c to add new PRAGMAS (from the PragmasPatch file), and don't undefine the
+	SQLITE_PRIVATE flag
+	* providers/sqlite/gda-sqlite-provider.c: when using a system installed SQLite library,
+	catch the functions and aggregates creation to report them correctly when requested
+	* providers/sqlite/utils.c: don't use the 'table_types_list' pragma (that pragma
+	does not exist in SQLite, it was added by a patch to the embedded SQLite)
+	* MAINTAINER: updated
+
 2007-08-29  Vivien Malerba <malerba@gnome-db.org>
 
 	* all object's get_type() function: use G_UNLIKELY to allow the compiler

@@ -218,12 +218,12 @@ test_sql_statement (SqlTest *test, gint test_index)
 			}
 			/* compare param's NULLOK */
 			abool = gda_parameter_get_not_null (query_param);
-			if (param->nullok && !abool) {
-				str = g_strdup_printf ("Parameter '%s' should have NULLOK %s", pname, tname);
+			if (param->nullok && abool) {
+				str = g_strdup_printf ("Parameter '%s' expected to have NULLOK %s", pname, tname);
 				fail (str);
 			}
-			else if (!param->nullok && abool) {
-				str = g_strdup_printf ("Parameter '%s' should not have NULLOK %s", pname, tname);
+			else if (!param->nullok && !abool) {
+				str = g_strdup_printf ("Parameter '%s' not expected to have NULLOK %s", pname, tname);
 				fail (str);
 			}
 

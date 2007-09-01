@@ -884,7 +884,8 @@ create_columns (GdaDataModelQuery *model)
 			}
 		}
 		else {
-			/* Can't compute the list of columns because the SELECT query is not active and the model does not contain any data;
+			/* Can't compute the list of columns because the SELECT query is not active 
+			 * and the model does not contain any data;
 			 * next time we emit a "reset" signal */
 			model->priv->emit_reset = TRUE;
 		}

@@ -1,0 +1,40 @@
+--- sqlite3.c.orig	2007-08-31 11:17:03.000000000 +0200
++++ sqlite3.c	2007-08-31 11:18:40.000000000 +0200
+@@ -52438,6 +52438,37 @@
+ 
+ #ifndef SQLITE_OMIT_SCHEMA_PRAGMAS
+   /*
++  **   PRAGMA proc_list
++  **
++  ** Return a single row for each procedure, the returned data set are:
++  **
++  ** name:         Procedure name
++  ** is_aggregate: True is procedure is an aggregate
++  ** nargs:        Number of arguments of the procedure, or -1 if unlimited
++  */
++  if( sqlite3StrICmp(zLeft, "proc_list")==0 ){
++    Hash *func_hash;
++    HashElem *func_elem;
++
++    if( sqlite3ReadSchema(pParse) ) goto pragma_out;
++    func_hash = &(db->aFunc);
++
++    sqlite3VdbeSetNumCols(v, 3);
++    sqlite3VdbeSetColName(v, 0, COLNAME_NAME, "name", P3_STATIC);
++    sqlite3VdbeSetColName(v, 1, COLNAME_NAME, "is_aggregate", P3_STATIC);
++    sqlite3VdbeSetColName(v, 2, COLNAME_NAME, "nargs", P3_STATIC);
++
++    for (func_elem = sqliteHashFirst (func_hash); func_elem ; func_elem = sqliteHashNext (func_elem)) {
++      FuncDef *func;
++      func = sqliteHashData (func_elem);
++      sqlite3VdbeOp3(v, OP_String8, 0, 0, func->zName, 0);
++      sqlite3VdbeAddOp(v, OP_Integer, func->xFinalize ? 1 : 0, 0);
++      sqlite3VdbeAddOp(v, OP_Integer, func->nArg, 0);
++      sqlite3VdbeAddOp(v, OP_Callback, 3, 0);
++    }
++  }else
++
++ /*
+   **   PRAGMA table_info(<table>)
+   **
+   ** Return a single row for each column of the named table. The columns of

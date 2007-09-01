@@ -1464,7 +1464,8 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 				g_object_unref (field);
 				
 				gda_query_field_value_set_is_parameter (GDA_QUERY_FIELD_VALUE (field), TRUE);
-				
+				gda_query_field_value_set_not_null (GDA_QUERY_FIELD_VALUE (field), TRUE);
+
 				pspecs = (GList *) (params->data);
 				while (pspecs) {
 					GdaDelimiterParamSpec *ps = GDA_DELIMITER_PARAM_SPEC (pspecs->data);
