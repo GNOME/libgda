@@ -1,3 +1,28 @@
+libgda 3.1.1, 2007-09-02
+
+ - Require inltool 0.35.5 when building from svn (Murray Cumming)
+ - SQLite now version 3.4.2 (Vivien Malerba)
+ - Added support for cursor-only access for data models returned by the PostgreSQL provider (Vivien Malerba)
+ - WIN32 port functionnal (needs testing, Vivien Malerba)
+ - Installation is relocatable (Vivien Malerba)
+ - New virtual connection feature, which allows to run SQL commands on data models (Vivien Malerba)
+ - Reworked the BDB provider to use virtual connections (Vivien Malerba)
+ - Embedd the libcsv library (http://sourceforge.net/projects/libcsv/) for CSV parsing
+ - Reworked the documentation
+ - Many small corrections and improvements
+ - New code examples (BDB usage, virtual connections)
+ - New command line tool (similar to psql)
+ - Reworked reports engine (breaks API -- the previous implemention did not work)
+ - Bug fixes: #432798, #432798, #433687, #316698, #449725, #450043, #454896, #467273 (Armin Burgmeier, 
+   Marc-Andre Lureau, Piotr Pokora, Vivien Malerba)
+ - Translations:
+	- ar (Djihed Afifi)
+	- zh_HK (Chao-Hsiung Liao)
+	- zh_TW (Chao-Hsiung Liao)
+	- es (Jorge Gonzalez)
+	- vi (Clytie Siddall)
+	- fi (Ilkka Tuohela)
+
 libgda 3.0.0, 2007-04-20
 
  - misc. bug fixes (Armin Burgmeier, Vivien Malerba)
