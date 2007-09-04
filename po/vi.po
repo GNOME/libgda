@@ -4,201 +4,250 @@
 # Clytie Siddall <clytie@riverland.net.au>, 2005-2007.
 # 
 msgid ""
-""
-msgstr "Project-Id-Version: libgda Gnome HEAD\n"
+msgstr ""
+"Project-Id-Version: libgda Gnome HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-03-27 03:48+0100\n"
-"PO-Revision-Date: 2007-07-02 22:46+0930\n"
+"POT-Creation-Date: 2007-08-30 03:30+0100\n"
+"PO-Revision-Date: 2007-09-04 22:33+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: LocFactoryEditor 1.6.4a6\n"
+"X-Generator: LocFactoryEditor 1.7b1\n"
 
-#: ../libgda/gda-client.c:293
+#: ../libgda/gda-client.c:283
 #, c-format
 msgid "Could not find provider %s in the current setup"
 msgstr "Không tìm thấy bộ cung cấp %s trong thiết lập hiện tại."
 
-#: ../libgda/gda-client.c:321
+#: ../libgda/gda-client.c:320
 #, c-format
 msgid "Provider %s does not implement entry function"
 msgstr "Bộ cung cấp « %s » chưa thực hiện hàm vào."
 
-#: ../libgda/gda-client.c:330
+#: ../libgda/gda-client.c:329
 msgid "Could not create GdaServerProvider object from plugin"
-msgstr "Không thể tạo đối tượng GdaServerProvider từ bộ cầm phít."
+msgstr "Không thể tạo đối tượng GdaServerProvider từ phần bổ sung."
 
-#: ../libgda/gda-client.c:419
-#: ../libgda/gda-client.c:421
-#: ../libgda/gda-client.c:611
-#: ../libgda/gda-connection.c:456
-#: ../libgda/gda-connection.c:458
+#: ../libgda/gda-client.c:416
+#: ../libgda/gda-client.c:418
+#: ../libgda/gda-client.c:610
+#: ../libgda/gda-connection.c:460
+#: ../libgda/gda-connection.c:462
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Không tìm thấy nguồn dữ liệu %s trong cấu hình."
 
 #: ../libgda/gda-client.c:453
-#: ../libgda/gda-client.c:550
+#: ../libgda/gda-client.c:549
 #, c-format
 msgid "Datasource configuration error: could not find provider '%s'"
 msgstr "Lỗi cấu hình nguồn dữ liệu : không tìm thấy bộ cung cấp « %s »."
 
 #: ../libgda/gda-client.c:457
 #: ../libgda/gda-client.c:459
-#: ../libgda/gda-client.c:554
-#: ../libgda/gda-client.c:556
+#: ../libgda/gda-client.c:553
+#: ../libgda/gda-client.c:555
 msgid "Datasource configuration error: no provider specified"
 msgstr "Lỗi cấu hình nguồn dữ liệu : chưa ghi rõ bộ cung cấp."
 
-#: ../libgda/gda-client.c:991
+#: ../libgda/gda-client.c:999
 msgid ""
 "Could not find operation's associated provider, did you use "
 "gda_client_prepare_create_database() ?"
-msgstr "Không tìm thấy nhà cung cấp tương ứng với thao tác: bạn có sử dụng hàm gda_client_prepare_create_database() không?"
+msgstr ""
+"Không tìm thấy nhà cung cấp tương ứng với thao tác: bạn có sử dụng hàm "
+"gda_client_prepare_create_database() không?"
 
-#: ../libgda/gda-client.c:1021
+#: ../libgda/gda-client.c:1029
 msgid ""
 "Could not find operation's associated provider, did you use "
 "gda_client_prepare_drop_database() ?"
-msgstr "Không tìm thấy nhà cung cấp tương ứng với thao tác: bạn có sử dụng hàm gda_client_prepare_drop_database() không?"
+msgstr ""
+"Không tìm thấy nhà cung cấp tương ứng với thao tác: bạn có sử dụng hàm "
+"gda_client_prepare_drop_database() không?"
 
-#: ../libgda/gda-config.c:1479
+#: ../libgda/gda-config.c:1580
 #, c-format
 msgid "Error: %s"
 msgstr "Lỗi: %s"
 
-#: ../libgda/gda-config.c:1619
+#: ../libgda/gda-config.c:1756
 #: ../libgda/gda-server-provider-extra.c:93
 #: ../libgda/gda-server-provider-extra.c:137
 msgid "Id"
 msgstr "Id"
 
-#: ../libgda/gda-config.c:1620
+#: ../libgda/gda-config.c:1757
 #: ../tools/gda-diagnose.c:304
 msgid "Location"
 msgstr "Địa điểm"
 
-#: ../libgda/gda-config.c:1621
-#: ../libgda/gda-config.c:1924
+#: ../libgda/gda-config.c:1758
+#: ../libgda/gda-config.c:2061
 #: ../libgda/gda-server-provider-extra.c:156
 #: ../libgda/gda-server-provider-extra.c:179
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:913
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:942
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:970
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1051
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:923
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:952
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:980
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1061
+#: ../tools/command-exec.c:354
+#: ../tools/command-exec.c:466
 #: ../tools/gda-diagnose.c:305
 #: ../tools/gda-diagnose.c:314
+#: ../tools/gda-sql.c:839
+#: ../tools/gda-sql.c:910
 msgid "Description"
 msgstr "Mô tả"
 
-#: ../libgda/gda-config.c:1921
+#: ../libgda/gda-config.c:2058
 #: ../libgda/gda-server-provider-extra.c:184
-#: ../providers/firebird/gda-firebird-provider.c:733
-#: ../providers/ldap/gda-ldap-provider.c:336
-#: ../providers/mdb/gda-mdb-provider.c:453
+#: ../providers/firebird/gda-firebird-provider.c:734
+#: ../providers/ldap/gda-ldap-provider.c:337
+#: ../providers/mdb/gda-mdb-provider.c:510
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:11
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:108
-#: ../providers/odbc/gda-odbc-provider.c:792
-#: ../providers/odbc/gda-odbc-provider.c:845
+#: ../providers/odbc/gda-odbc-provider.c:798
+#: ../providers/odbc/gda-odbc-provider.c:851
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:9
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:38
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:12
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:26
+#: ../tools/command-exec.c:351
+#: ../tools/command-exec.c:464
+#: ../tools/gda-sql.c:1889
 msgid "Name"
 msgstr "Tên"
 
-#: ../libgda/gda-config.c:1922
+#: ../libgda/gda-config.c:2059
+#: ../tools/gda-sql.c:838
+#: ../tools/gda-sql.c:909
 msgid "Provider"
 msgstr "Bộ cung cấp"
 
-#: ../libgda/gda-config.c:1923
+#: ../libgda/gda-config.c:2060
+#: ../tools/gda-sql.c:840
 msgid "Connection string"
 msgstr "Chuỗi kết nối"
 
-#: ../libgda/gda-config.c:1925
+#: ../libgda/gda-config.c:2062
+#: ../tools/gda-sql.c:841
 msgid "Username"
 msgstr "Tên người dùng"
 
-#: ../libgda/gda-config.c:1926
+#: ../libgda/gda-config.c:2063
 msgid "Global"
 msgstr "Toàn cục"
 
-#: ../libgda/gda-connection.c:167
+#: ../libgda/gda-connection.c:168
 msgid "GdaClient to use"
 msgstr "Ứng dụng khách GdaClient cần dùng"
 
-#: ../libgda/gda-connection.c:171
+#: ../libgda/gda-connection.c:172
 msgid "DSN to use"
 msgstr "DSN cần dùng"
 
-#: ../libgda/gda-connection.c:174
+#: ../libgda/gda-connection.c:175
 msgid "Connection string to use"
 msgstr "Chuỗi kết nối cần dùng"
 
-#: ../libgda/gda-connection.c:177
+#: ../libgda/gda-connection.c:178
 msgid "Provider to use"
 msgstr "Bộ cung cấp cần dùng"
 
-#: ../libgda/gda-connection.c:182
+#: ../libgda/gda-connection.c:183
 msgid "Username to use"
 msgstr "Tên người dùng cần dùng"
 
-#: ../libgda/gda-connection.c:186
+#: ../libgda/gda-connection.c:187
 msgid "Password to use"
 msgstr "Mật khẩu cần dùng"
 
-#: ../libgda/gda-connection.c:190
+#: ../libgda/gda-connection.c:191
 msgid "Options (connection sharing)"
 msgstr "Tùy chọn (chia sẻ kết nối)"
 
-#: ../libgda/gda-connection.c:467
-#: ../libgda/gda-connection.c:469
+#: ../libgda/gda-connection.c:471
+#: ../libgda/gda-connection.c:473
 msgid "No DSN or connection string specified"
 msgstr "Chưa xác định DSN hay chuỗi kết nối"
 
-#: ../libgda/gda-connection.c:476
-#: ../libgda/gda-connection.c:478
+#: ../libgda/gda-connection.c:480
+#: ../libgda/gda-connection.c:482
 msgid "No provider specified"
 msgstr "Chưa xác định bộ cung cấp"
 
-#: ../libgda/gda-connection.c:1635
+#: ../libgda/gda-connection.c:1267
+#, c-format
+msgid "(%d rows)"
+msgstr "(%d hàng)"
+
+#: ../libgda/gda-connection.c:1269
+#, c-format
+msgid "(%d row)"
+msgstr "(%d hàng)"
+
+#: ../libgda/gda-connection.c:1271
+msgid "(unknown number of rows)"
+msgstr "(không rõ số hàng)"
+
+#: ../libgda/gda-connection.c:1681
 msgid ""
 "Connection transaction status tracking: no transaction exists for ROLLBACK"
-msgstr "Theo dõi trạng thái giao tác kết nối: không có giao tác cho ROLLBACK (cuộn ngược)"
-
-#: ../libgda/gda-connection.c:1669
-msgid ""
-"Connection transaction status tracking: no transaction exists for COMMIT"
-msgstr "Theo dõi trạng thái giao tác kết nối: không có giao tác cho COMMIT (gài vào)"
+msgstr ""
+"Theo dõi trạng thái giao tác kết nối: không có giao tác cho ROLLBACK (cuộn "
+"ngược)"
 
 #: ../libgda/gda-connection.c:1715
 msgid ""
+"Connection transaction status tracking: no transaction exists for COMMIT"
+msgstr ""
+"Theo dõi trạng thái giao tác kết nối: không có giao tác cho COMMIT (gài vào)"
+
+#: ../libgda/gda-connection.c:1761
+msgid ""
 "Connection transaction status tracking: no transaction exists for ADD "
 "SAVEPOINT"
-msgstr "Theo dõi trạng thái giao tác kết nối: không có giao tác cho ADD SAVEPOINT (thêm điểm lưu)"
+msgstr ""
+"Theo dõi trạng thái giao tác kết nối: không có giao tác cho ADD SAVEPOINT "
+"(thêm điểm lưu)"
 
-#: ../libgda/gda-connection.c:1740
+#: ../libgda/gda-connection.c:1786
 msgid ""
 "Connection transaction status tracking: no transaction exists for ROLLBACK "
 "SAVEPOINT"
-msgstr "Theo dõi trạng thái giao tác kết nối: không có giao tác cho ROLLBACK SAVEPOINT (cuộn ngược điểm lưu)"
+msgstr ""
+"Theo dõi trạng thái giao tác kết nối: không có giao tác cho ROLLBACK "
+"SAVEPOINT (cuộn ngược điểm lưu)"
 
-#: ../libgda/gda-connection.c:1765
+#: ../libgda/gda-connection.c:1811
 msgid ""
 "Connection transaction status tracking: no transaction exists for REMOVE "
 "SAVEPOINT"
-msgstr "Theo dõi trạng thái giao tác kết nối: không có giao tác cho REMOVE SAVEPOINT (gỡ bỏ điểm lưu)"
+msgstr ""
+"Theo dõi trạng thái giao tác kết nối: không có giao tác cho REMOVE SAVEPOINT "
+"(gỡ bỏ điểm lưu)"
 
-#: ../libgda/gda-data-access-wrapper.c:484
+#: ../libgda/gda-connection.c:1968
+#: ../libgda/gda-connection.c:1988
+msgid ""
+"Prepared statements hash not initialized, call "
+"gda_connection_init_prepared_statement_hash() first"
+msgstr "Chưa khởi tạo băm của câu lệnh đã chuẩn bị, trước tiên hãy gọi"
+"gda_connection_init_prepared_statement_hash()"
+
+#: ../libgda/gda-data-access-wrapper.c:491
 #, c-format
 msgid "Column %d out of range 0 - %d"
 msgstr "Cột %d ở ngoại phạm vi 0 - %d"
 
 #: ../libgda/gda-data-model-array.c:83
 #: ../libgda/gda-data-model-array.c:104
+#: ../libgda/gda-data-model-dir.c:770
+#: ../libgda/gda-data-model-dir.c:929
+#: ../libgda/gda-data-model-dir.c:1272
 #, c-format
 msgid "Row %d out of range 0 - %d"
 msgstr "Hàng %d vượt ngoài phạm vi 0 - %d."
@@ -225,6 +274,127 @@ msgstr "Số giá trị không đúng trong danh sách giá trị."
 msgid "Row not found in data model"
 msgstr "Không tìm thấy hàng trong mô hình dữ liệu."
 
+#: ../libgda/gda-data-model-bdb.c:595
+#: ../libgda/gda-data-model-bdb.c:684
+#: ../libgda/gda-data-model-bdb.c:710
+#: ../libgda/gda-data-model-dir.c:764
+#: ../libgda/gda-data-model-dir.c:850
+#: ../libgda/gda-data-model-dir.c:889
+#: ../libgda/gda-data-model-dir.c:891
+#: ../providers/mysql/gda-mysql-recordset.c:373
+#: ../providers/postgres/gda-postgres-recordset.c:550
+msgid "Column number out of range"
+msgstr "Số thứ tự cột vượt ngoài phạm vi."
+
+#: ../libgda/gda-data-model-bdb.c:626
+msgid ""
+"Custom BDB model implementation is not complete: the 'get_key_part' method "
+"is missing"
+msgstr "Sự thực hiện mô hình BDB riêng chưa hoàn thành: phương pháp « get_key_part » (lấy phần khoá) con thiếu"
+
+#: ../libgda/gda-data-model-bdb.c:655
+msgid ""
+"Custom BDB model implementation is not complete: the 'get_data_part' method "
+"is missing"
+msgstr "Sự thực hiện mô hình BDB riêng chưa hoàn thành: phương pháp « get_data_part » (lấy phần dữ liệu) con thiếu"
+
+#: ../libgda/gda-data-model-bdb.c:748
+msgid ""
+"Custom BDB model implementation is not complete: the 'update_key_part' "
+"method is missing"
+msgstr "Sự thực hiện mô hình BDB riêng chưa hoàn thành: phương pháp « update_key_part » (cập nhật phần khoá) con thiếu"
+
+#: ../libgda/gda-data-model-bdb.c:775
+#: ../libgda/gda-data-model-bdb.c:859
+#, c-format
+msgid "Expected GdaBinary value, got %s"
+msgstr "Mong đợi giá trị nhị phân GdaBinary, còn nhận %s"
+
+#: ../libgda/gda-data-model-bdb.c:819
+msgid "Key modification is not supported"
+msgstr "Không hỗ trợ khả năng sửa đổi khoá"
+
+#: ../libgda/gda-data-model-bdb.c:834
+msgid ""
+"Custom BDB model implementation is not complete: the 'update_data_part' "
+"method is missing"
+msgstr "Sự thực hiện mô hình BDB riêng chưa hoàn thành: phương pháp « update_data_part » (cập nhật phần dữ liệu) con thiếu"
+
+#: ../libgda/gda-data-model-dir.c:381
+#: ../libgda/gda-data-model-import.c:1727
+#: ../libgda/gda-server-operation.c:778
+#: ../providers/oracle/gda-oracle-provider.c:1070
+#: ../providers/oracle/gda-oracle-provider.c:2001
+#: ../providers/postgres/gda-postgres-provider.c:1234
+#: ../providers/postgres/gda-postgres-provider.c:1264
+#: ../providers/postgres/gda-postgres-provider.c:1407
+#: ../providers/sqlite/gda-sqlite-provider.c:986
+#: ../providers/sqlite/virtual/gda-vconnection-hub.c:472
+#: ../tools/gda-sql.c:218
+#: ../tools/gda-sql.c:271
+#: ../tools/gda-sql.c:720
+#: ../tools/gda-sql.c:732
+msgid "No detail"
+msgstr "Không có chi tiết"
+
+#: ../libgda/gda-data-model-dir.c:949
+#: ../libgda/gda-data-model-dir.c:951
+msgid "Column cannot be modified"
+msgstr "Không thể sửa đổi cột"
+
+#: ../libgda/gda-data-model-dir.c:964
+#: ../libgda/gda-data-model-dir.c:966
+#: ../libgda/gda-data-model-dir.c:1171
+#: ../libgda/gda-data-model-dir.c:1173
+msgid "New path must be a subpath of the base directory"
+msgstr "Đường dẫn mới phải là đường dẫn con của thư mục cơ bản"
+
+#: ../libgda/gda-data-model-dir.c:1006
+#: ../libgda/gda-data-model-dir.c:1050
+#, c-format
+msgid "Could not rename file '%s' to '%s'"
+msgstr "Không thể thay đổi tên tập tin « %s » thành « %s »"
+
+#: ../libgda/gda-data-model-dir.c:1030
+#, c-format
+msgid "Could not create directory '%s'"
+msgstr "Không thể tạo thư mục « %s »"
+
+#: ../libgda/gda-data-model-dir.c:1099
+#, c-format
+msgid "Could not overwrite contents of file '%s'"
+msgstr "Không thể ghi đè lên nội dung của tập tin « %s »"
+
+#: ../libgda/gda-data-model-dir.c:1117
+#: ../libgda/gda-data-model-dir.c:1118
+msgid "Wrong type of data"
+msgstr "Sai kiểu dữ liệu"
+
+#: ../libgda/gda-data-model-dir.c:1159
+#: ../libgda/gda-data-model-dir.c:1161
+msgid "Column cannot be set"
+msgstr "Không thể đặt cột"
+
+#: ../libgda/gda-data-model-dir.c:1231
+#, c-format
+msgid "Cannot set contents of filename '%s'"
+msgstr "Không thể đặt nội dung của tập tin tên « %s »"
+
+#: ../libgda/gda-data-model-dir.c:1242
+#, c-format
+msgid "Cannot create directory '%s'"
+msgstr "Không thể tạo thư mục « %s »"
+
+#: ../libgda/gda-data-model-dir.c:1250
+#: ../libgda/gda-data-model-dir.c:1252
+msgid "Cannot add row: filename missing"
+msgstr "Không thể thêm hàng: thiếu tên tập tin"
+
+#: ../libgda/gda-data-model-dir.c:1289
+#, c-format
+msgid "Cannot remove file '%s'"
+msgstr "Không thể gỡ bỏ tập tin « %s »"
+
 #: ../libgda/gda-data-model-filter-sql.c:360
 #, c-format
 msgid "Could not parse SQL string '%s'"
@@ -240,117 +410,118 @@ msgstr "Lệnh SQL không phải là SELECT [chọn] (là « %s »"
 msgid "Row %d not found in data model"
 msgstr "Không tìm thấy hàng %d trong mô hình dữ liệu."
 
-#: ../libgda/gda-data-model-import.c:425
+#: ../libgda/gda-data-model-import.c:452
 #, c-format
 msgid "The '%s' parameter must hold a string value, ignored."
 msgstr "Tham số « %s » phải chứa giá trị chuỗi: bị bỏ qua."
 
-#: ../libgda/gda-data-model-import.c:446
+#: ../libgda/gda-data-model-import.c:473
 #, c-format
 msgid "The '%s' parameter must hold a boolean value, ignored."
 msgstr "Tham số « %s » phải chứa giá trị bun: bị bỏ qua."
 
-#: ../libgda/gda-data-model-import.c:556
+#: ../libgda/gda-data-model-import.c:583
 msgid "\"options\" property is not a GdaParameterList object"
-msgstr "Tài sản « options » (tùy chọn) không phải là một đối tượng kiểu "
+msgstr ""
+"Tài sản « options » (tùy chọn) không phải là một đối tượng kiểu "
 "GdaParameterList (danh sách tham số gda)"
 
-#: ../libgda/gda-data-model-import.c:898
+#: ../libgda/gda-data-model-import.c:946
 #, c-format
 msgid "The '%s' parameter must hold a gda type value, ignored."
 msgstr "Tham số « %s » phải chứa giá trị kiểu gda: bị bỏ qua."
 
-#: ../libgda/gda-data-model-import.c:967
+#: ../libgda/gda-data-model-import.c:1029
 #, c-format
 msgid "Character conversion at line %d, error: %s"
 msgstr "Chuyển đổi dữ liệu tại dòng %d, lỗi: %s"
 
-#: ../libgda/gda-data-model-import.c:970
+#: ../libgda/gda-data-model-import.c:1032
+#: ../providers/bdb/gda-bdb-provider.c:175
 msgid "no detail"
 msgstr "không có chi tiết"
 
-#: ../libgda/gda-data-model-import.c:1162
-#: ../libgda/gda-data-model-import.c:1575
+#: ../libgda/gda-data-model-import.c:1067
 #, c-format
-msgid "Could not convert '%s' to a value of type %s"
-msgstr "Không thể chuyển đổi « %s » thành giá trị kiểu %s"
+msgid "Could not convert string '%s' to a '%s' value"
+msgstr "Không thể chuyển đổi chuỗi « %s » thành giá trị kiểu « %s »"
 
-#: ../libgda/gda-data-model-import.c:1178
+#: ../libgda/gda-data-model-import.c:1121
 #, c-format
-msgid "Row has more values than detected at line %d"
-msgstr "Hàng có số giá trị lớn hơn số được phát hiện tại dòng %d"
+msgid "Error while parsing CSV file: %s"
+msgstr "Gặp lỗi khi phân tách tập tin CSV: %s"
 
-#: ../libgda/gda-data-model-import.c:1301
+#: ../libgda/gda-data-model-import.c:1215
 #. error
 msgid "Failed to read node in XML file"
 msgstr "Lỗi đọc nút trong tập tin XML"
 
-#: ../libgda/gda-data-model-import.c:1320
+#: ../libgda/gda-data-model-import.c:1234
 #, c-format
 msgid "Expected <gda_array> node in XML file, got <%s>"
 msgstr "Ngờ nút <gda_array> (mảng gda) trong tập tin XML, còn nhận <%s>"
 
-#: ../libgda/gda-data-model-import.c:1369
-#: ../libgda/gda-data-model-import.c:1660
+#: ../libgda/gda-data-model-import.c:1287
+#: ../libgda/gda-data-model-import.c:1619
 msgid "No \"gdatype\" attribute specified in <gda_array_field>"
-msgstr "Không có thuộc tính « gdatype » (kiểu gda) được xác định trong "
+msgstr ""
+"Không có thuộc tính « gdatype » (kiểu gda) được xác định trong "
 "<gda_array_field> (trường mảng gda)"
 
-#: ../libgda/gda-data-model-import.c:1416
+#: ../libgda/gda-data-model-import.c:1334
 msgid "Expected <gda_array_field> in <gda_array>"
 msgstr "Ngờ <gda_array_field> (trường mảng gda) trong <gda_array> (mảng gda)"
 
-#: ../libgda/gda-data-model-import.c:1457
+#: ../libgda/gda-data-model-import.c:1375
 #, c-format
 msgid "Expected <gda_array_data> in <gda_array>, got <%s>"
-msgstr "Ngờ <gda_array_data> (dữ liệu mảng gda) trong <gda_array> (mảng gda), còn "
+msgstr ""
+"Ngờ <gda_array_data> (dữ liệu mảng gda) trong <gda_array> (mảng gda), còn "
 "nhận <%s>"
 
-#: ../libgda/gda-data-model-import.c:1459
+#: ../libgda/gda-data-model-import.c:1377
 msgid "Expected <gda_array_data> in <gda_array>"
 msgstr "Ngờ <gda_array_data> (dữ liệu mảng gda) trong <gda_array> (mảng gda)"
 
-#: ../libgda/gda-data-model-import.c:1471
+#: ../libgda/gda-data-model-import.c:1389
 msgid "Can't read the contents of the <gda_array_data> node"
 msgstr "Không thể đọc nội dung của nút <gda_array_data> (dữ liệu mảng gda)"
 
-#: ../libgda/gda-data-model-import.c:1526
+#: ../libgda/gda-data-model-import.c:1444
 #, c-format
 msgid "Expected <gda_array_row> in <gda_array_data>, got <%s>"
-msgstr "Ngờ <gda_array_row> (hàng mảng gda) trong <gda_array_data> (dữ liệu mảng "
+msgstr ""
+"Ngờ <gda_array_row> (hàng mảng gda) trong <gda_array_data> (dữ liệu mảng "
 "gda), còn nhận <%s>"
 
-#: ../libgda/gda-data-model-import.c:1550
+#: ../libgda/gda-data-model-import.c:1468
 msgid "Row has too many values (which are ignored)"
 msgstr "Hàng có quá nhiều giá trị (mà bị bỏ qua)"
 
-#: ../libgda/gda-data-model-import.c:1629
+#: ../libgda/gda-data-model-import.c:1515
+#, c-format
+msgid "Could not convert '%s' to a value of type %s"
+msgstr "Không thể chuyển đổi « %s » thành giá trị kiểu %s"
+
+#: ../libgda/gda-data-model-import.c:1588
 #, c-format
 msgid "Expected <gda_array> node but got <%s>"
 msgstr "Ngờ nút <gda_array> (mảng gda), còn nhận <%s>"
 
-#: ../libgda/gda-data-model-import.c:1707
+#: ../libgda/gda-data-model-import.c:1666
 msgid "No <gda_array_field> specified in <gda_array>"
-msgstr "Không có <gda_array_field> (trường mảng gda) được xác định trong <gda_array> "
+msgstr ""
+"Không có <gda_array_field> (trường mảng gda) được xác định trong <gda_array> "
 "(mảng gda)"
 
-#: ../libgda/gda-data-model-import.c:1765
-#: ../libgda/gda-server-operation.c:773
-#: ../providers/oracle/gda-oracle-provider.c:1055
-#: ../providers/oracle/gda-oracle-provider.c:1986
-#: ../providers/postgres/gda-postgres-provider.c:1145
-#: ../providers/postgres/gda-postgres-provider.c:1175
-#: ../providers/postgres/gda-postgres-provider.c:1318
-msgid "No detail"
-msgstr "Không có chi tiết"
-
-#: ../libgda/gda-data-model-import.c:1942
+#: ../libgda/gda-data-model-import.c:1915
 #, c-format
 msgid "Row at line %d does not have enough values, completed with NULL values"
-msgstr "Hàng tại dòng %d không có đủ giá trị, đã kết thúc với giá trị NULL (vô giá "
+msgstr ""
+"Hàng tại dòng %d không có đủ giá trị, đã kết thúc với giá trị NULL (vô giá "
 "trị)"
 
-#: ../libgda/gda-data-model-import.c:1962
+#: ../libgda/gda-data-model-import.c:1935
 #, c-format
 msgid "Row at line %d does not have enough values (which are thus ignored)"
 msgstr "Hàng tại dòng %d không có đủ giá trị (mà do đó bị bỏ qua)"
@@ -360,190 +531,228 @@ msgstr "Hàng tại dòng %d không có đủ giá trị (mà do đó bị bỏ 
 msgid ""
 "Type of parameter '%s' is '%s' when it should be '%s', GdaDataModelQuery "
 "object will now work correctly"
-msgstr "Kiểu tham số « %s » là « %s » còn nó nên là « %s ». Đối tượng GdaDataModelQuery (truy vấn mô hình dữ liệu gda) giờ sẽ hoạt động được."
+msgstr ""
+"Kiểu tham số « %s » là « %s » còn nó nên là « %s ». Đối tượng "
+"GdaDataModelQuery (truy vấn mô hình dữ liệu gda) giờ sẽ hoạt động được."
 
-#: ../libgda/gda-data-model-query.c:497
+#: ../libgda/gda-data-model-query.c:494
 #, c-format
 msgid ""
 "Could not find a parameter named '%s' among the SELECT query's parameters, "
 "the specified modification query will not be executable"
-msgstr "Không tìm thấy tham số tên « %s » trong các tham số của truy vấn SELECT (chọn) nên truy vấn sửa đổi đã xác định sẽ không có khả năng thực hiện"
+msgstr ""
+"Không tìm thấy tham số tên « %s » trong các tham số của truy vấn SELECT "
+"(chọn) nên truy vấn sửa đổi đã xác định sẽ không có khả năng thực hiện"
 
-#: ../libgda/gda-data-model-query.c:672
+#: ../libgda/gda-data-model-query.c:669
 msgid "Query is not a SELECT query"
 msgstr "Truy vấn không phải là truy vấn kiểu SELECT (chọn)."
 
-#: ../libgda/gda-data-model-query.c:745
+#: ../libgda/gda-data-model-query.c:742
 msgid "Wrong type of query"
 msgstr "Kiểu truy vấn không đúng"
 
-#: ../libgda/gda-data-model-query.c:834
+#: ../libgda/gda-data-model-query.c:831
 #, c-format
 msgid "Can't determine the GType for field '%s', please fill a bug report"
-msgstr "Không thể quyết định kiểu GType cho trường « %s »: xin hãy thông báo lỗi"
+msgstr ""
+"Không thể quyết định kiểu GType cho trường « %s »: xin hãy thông báo lỗi"
 
-#: ../libgda/gda-data-model-query.c:1183
-#: ../libgda/gda-data-model-query.c:1231
+#: ../libgda/gda-data-model-query.c:1180
+#: ../libgda/gda-data-model-query.c:1228
 msgid "No UPDATE query specified, can't update row"
 msgstr "Chưa ghi rõ truy vấn CẬP NHẬT nên không thể cập nhật hàng."
 
-#: ../libgda/gda-data-model-query.c:1282
-#: ../libgda/gda-data-model-query.c:1330
+#: ../libgda/gda-data-model-query.c:1279
+#: ../libgda/gda-data-model-query.c:1327
 msgid "No INSERT query specified, can't insert row"
 msgstr "Chưa ghi rõ truy vấn CHÈN nên không thể chèn hàng."
 
-#: ../libgda/gda-data-model-query.c:1372
+#: ../libgda/gda-data-model-query.c:1369
 msgid "No DELETE query specified, can't delete row"
 msgstr "Chưa ghi rõ truy vấn XOÁ BỎ nên không thể xoá bỏ hàng."
 
-#: ../libgda/gda-data-model-query.c:1555
+#: ../libgda/gda-data-model-query.c:1552
 msgid "No SELECT query specified"
 msgstr "Chưa ghi rõ truy vấn SELECT (chọn)"
 
-#: ../libgda/gda-data-model-query.c:1562
+#: ../libgda/gda-data-model-query.c:1559
 msgid "SELECT query references objects not described in dictionary"
-msgstr "Truy vấn SELECT (chọn) tham chiếu các đối tượng chưa được diễn tả trong từ điển"
+msgstr ""
+"Truy vấn SELECT (chọn) tham chiếu các đối tượng chưa được diễn tả trong từ "
+"điển"
 
-#: ../libgda/gda-data-model-query.c:1633
+#: ../libgda/gda-data-model-query.c:1630
 #, c-format
 msgid "Could not identify target table '%s' to modify in SELECT query"
-msgstr "Không thể nhận diện bảng đích « %s » cần sửa đổi trong truy vấn SELECT (chọn)"
+msgstr ""
+"Không thể nhận diện bảng đích « %s » cần sửa đổi trong truy vấn SELECT (chọn)"
 
-#: ../libgda/gda-data-model-query.c:1643
+#: ../libgda/gda-data-model-query.c:1640
 msgid "specified target to modify in SELECT query does not represent a table"
-msgstr "đích đã xác định để sửa đổi trong truy vấn SELECT (chọn) không đại diện một bảng"
+msgstr ""
+"đích đã xác định để sửa đổi trong truy vấn SELECT (chọn) không đại diện một "
+"bảng"
 
-#: ../libgda/gda-data-model-query.c:1661
+#: ../libgda/gda-data-model-query.c:1658
 msgid "Could not identify any target table to modify in SELECT query"
-msgstr "Không thể nhận diện bảng đích nào cần sửa đổi trong truy vấn SELECT (chọn)"
+msgstr ""
+"Không thể nhận diện bảng đích nào cần sửa đổi trong truy vấn SELECT (chọn)"
 
-#: ../libgda/gda-data-model-query.c:1670
+#: ../libgda/gda-data-model-query.c:1667
 msgid "Ambiguous target table to modify in SELECT query"
 msgstr "Bảng đích mơ hồ cần sửa đổi trong truy vấn SELECT (chọn)"
 
-#: ../libgda/gda-data-model-query.c:1725
+#: ../libgda/gda-data-model-query.c:1722
 #, c-format
 msgid "Primary key field '%s.%s' not found in SELECT query"
-msgstr "Trường khoá chính « %s.%s » không tìm thấy trong truy vấn SELECT (chọn)"
+msgstr ""
+"Trường khoá chính « %s.%s » không tìm thấy trong truy vấn SELECT (chọn)"
 
-#: ../libgda/gda-data-model-query.c:1757
+#: ../libgda/gda-data-model-query.c:1754
 msgid "Target table to modify does not have any defined primary key"
 msgstr "Bảng đích cần sửa đổi chưa có khoá chính nào được xác định"
 
-#: ../libgda/gda-data-model-query.c:1794
+#: ../libgda/gda-data-model-query.c:1791
 #, c-format
 msgid "Field '%s.%s' appears more than once in SELECT query"
 msgstr "Trường « %s. %s » xuất hiện nhiều lần trong truy vấn SELECT (chọn)"
 
-#: ../libgda/gda-data-model-row.c:488
+#: ../libgda/gda-data-model-row.c:486
 msgid "Too many values in list"
 msgstr "Có quá nhiều giá trị trong danh sách."
 
-#: ../libgda/gda-data-model.c:1062
+#: ../libgda/gda-data-model.c:943
+msgid "Model does not allow row insertion"
+msgstr "Mô hình không cho phép chèn hàng"
+
+#: ../libgda/gda-data-model.c:973
+msgid "Model does not allow row deletion"
+msgstr "Mô hình không cho phép xoá hàng"
+
+#: ../libgda/gda-data-model.c:1121
 msgid "The 'NAME' parameter must hold a string value, ignored."
 msgstr "Tham số « NAME » (tên) phải chứa giá trị chuỗi nên bị bỏ qua."
 
-#: ../libgda/gda-data-model.c:1098
+#: ../libgda/gda-data-model.c:1160
 msgid "The 'SEPARATOR' parameter must hold a string value, ignored."
-msgstr "Tham số « SEPARATOR » (bộ phân cách) phải chứa giá trị chuỗi nên bị bỏ qua."
+msgstr ""
+"Tham số « SEPARATOR » (bộ phân cách) phải chứa giá trị chuỗi nên bị bỏ qua."
 
-#: ../libgda/gda-data-model.c:1177
+#: ../libgda/gda-data-model.c:1174
+msgid "The 'QUOTE' parameter must hold a string value, ignored."
+msgstr "Tham số « QUOTE » (trích dẫn) phải chứa giá trị chuỗi nên bị bỏ qua."
+
+#: ../libgda/gda-data-model.c:1183
+msgid "The 'FIELD_QUOTE' parameter must hold a boolean value, ignored."
+msgstr "Tham số « FIELD_QUOTE » (trích dẫn trường) phải chứa giá trị bun: bị bỏ qua."
+
+#: ../libgda/gda-data-model.c:1266
 msgid "The 'OVERWRITE' parameter must hold a boolean value, ignored."
-msgstr "Tham số « OVERWRITE » (ghi đè) phải chứa giá trị bun nên bị bỏ qua."
+msgstr "Tham số « OVERWRITE » (ghi đè) phải chứa giá trị lôgic nên bị bỏ qua."
 
-#: ../libgda/gda-data-model.c:1185
+#: ../libgda/gda-data-model.c:1274
 #, c-format
 msgid "File '%s' already exists"
 msgstr "Tập tin « %s » đã có."
 
-#: ../libgda/gda-data-model.c:1191
+#: ../libgda/gda-data-model.c:1280
 #, c-format
 msgid "Could not save file %s"
 msgstr "Không thể lưu tập tin %s"
 
-#: ../libgda/gda-data-model.c:1296
+#: ../libgda/gda-data-model.c:1398
 msgid "Exported Data"
 msgstr "Dữ liệu đã xuất"
 
-#: ../libgda/gda-data-model.c:1427
+#: ../libgda/gda-data-model.c:1529
 #, c-format
 msgid "Expected tag <gda_value> or <gda_array_value>, got <%s>, ignoring"
-msgstr "Ngờ thẻ <gda_value> (giá trị gda) hay <gda_array_value> (giá trị mảng gda), "
+msgstr ""
+"Ngờ thẻ <gda_value> (giá trị gda) hay <gda_array_value> (giá trị mảng gda), "
 "còn nhận <%s> nên bỏ qua"
 
-#: ../libgda/gda-data-model.c:1458
+#: ../libgda/gda-data-model.c:1560
 #: ../testing/gda-test-models.c:537
 msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
-msgstr "Không thể gọi kiểu dữ liệu cột (kiểu là UNKNOWN [không rõ] hay chưa ghi rõ)."
+msgstr ""
+"Không thể gọi kiểu dữ liệu cột (kiểu là UNKNOWN [không rõ] hay chưa ghi rõ)."
 
-#: ../libgda/gda-data-model.c:1475
+#: ../libgda/gda-data-model.c:1577
 #: ../testing/gda-test-models.c:555
 #, c-format
 msgid "Cannot interpret string as a valid %s value"
 msgstr "Không thể giải dịch chuỗi là giá trị %s hợp lệ."
 
-#: ../libgda/gda-data-model.c:1539
+#: ../libgda/gda-data-model.c:1641
 #, c-format
 msgid "Expected tag <gda_array_data>, got <%s>"
 msgstr "Ngờ thẻ <gda_array_data> (dữ liệu mảng gda), còn nhận <%s>."
 
-#: ../libgda/gda-data-model.c:1598
+#: ../libgda/gda-data-model.c:1700
 msgid "Could not get an iterator for source data model"
 msgstr "Không thể lấy bộ lặp lại cho mô hình dữ liệu nguồn"
 
-#: ../libgda/gda-data-model.c:1614
+#: ../libgda/gda-data-model.c:1716
 #, c-format
 msgid "Inexistent column in source data model: %d"
 msgstr "Cột không tồn tại trong mô hình dữ liệu nguồn: %d"
 
-#: ../libgda/gda-data-model.c:1628
+#: ../libgda/gda-data-model.c:1730
 #, c-format
 msgid ""
 "Destination column %d can't be NULL but has no correspondence in the source "
 "data model"
-msgstr "Cột đích %d không thể là NULL (vô giá trị) nhưng không có điều tương ứng trong mô "
-"hình dữ liệu nguồn"
+msgstr ""
+"Cột đích %d không thể là NULL (vô giá trị) nhưng không có điều tương ứng "
+"trong mô hình dữ liệu nguồn"
 
-#: ../libgda/gda-data-model.c:1638
+#: ../libgda/gda-data-model.c:1740
 #, c-format
 msgid ""
 "Destination column %d has a gda type (%s) incompatible with source column %d "
 "type (%s)"
-msgstr "Cột đích %d có kiểu GDA (%s) không tương thích với kiểu cột nguồn %d (%s)"
+msgstr ""
+"Cột đích %d có kiểu GDA (%s) không tương thích với kiểu cột nguồn %d (%s)"
 
-#: ../libgda/gda-data-model.c:1712
+#: ../libgda/gda-data-model.c:1814
 #, c-format
 msgid "Can't transform '%s' from GDA type %s to GDA type %s"
 msgstr "Không thể chuyển dạng « %s » từ kiểu GDA %s sang kiểu GDA %s."
 
-#: ../libgda/gda-data-model.c:2035
+#: ../libgda/gda-data-model.c:2233
 msgid "Model does not support random access, not showing data\n"
-msgstr "Mô hình không hỗ trợ khả năng truy cập ngẫu nhiên nên không hiển thị dữ "
+msgstr ""
+"Mô hình không hỗ trợ khả năng truy cập ngẫu nhiên nên không hiển thị dữ "
 "liệu\n"
 
-#: ../libgda/gda-data-proxy.c:448
+#: ../libgda/gda-data-proxy.c:450
 msgid "Data model"
 msgstr "Mô hình dữ liệu"
 
-#: ../libgda/gda-data-proxy.c:646
+#: ../libgda/gda-data-proxy.c:652
 msgid "GdaDataProxy cant' handle non random access data models"
 msgstr "GdaDataProxy không thể xử lý mô hình dữ liệu truy cập ngẫu nhiên"
 
-#: ../libgda/gda-data-proxy.c:1514
+#: ../libgda/gda-data-proxy.c:1538
 msgid "Modifications cancelled"
 msgstr "Sửa đổi bị thôi"
 
-#: ../libgda/gda-data-proxy.c:2301
+#: ../libgda/gda-data-proxy.c:2335
 #, c-format
 msgid "Unknown GdaDataProxy column: %d"
-msgstr "Không biết cột GdaDataProxy (ủy nhiệm dữ liệu Gda): %d"
+msgstr "Không rõ cột GdaDataProxy (ủy nhiệm dữ liệu Gda): %d"
 
-#: ../libgda/gda-data-proxy.c:2480
+#: ../libgda/gda-data-proxy.c:2416
+msgid "Value is read-only"
+msgstr "Giá trị là chỉ-đọc"
+
+#: ../libgda/gda-data-proxy.c:2517
 #, c-format
 msgid "Trying to change read-only column: %d"
 msgstr "Đang cố thay đổi cột chỉ đọc: %d"
 
-#: ../libgda/gda-data-proxy.c:2517
+#: ../libgda/gda-data-proxy.c:2554
 #, c-format
 msgid "Value type mismatch %s instead of %s"
 msgstr "Kiểu giá trị không khớp với nhau: %s thay vào %s"
@@ -569,7 +778,8 @@ msgstr "Có nhiều kiểu đối số cho tập hợp « %s »."
 
 #: ../libgda/gda-dict-aggregate.c:477
 msgid "Missing required attributes for <gda_dict_aggregate>"
-msgstr "Thiếu một số thuộc tính cần thiết cho <gda_dict_aggregate> (tập hợp dict "
+msgstr ""
+"Thiếu một số thuộc tính cần thiết cho <gda_dict_aggregate> (tập hợp dict "
 "gda)."
 
 #: ../libgda/gda-dict-constraint.c:1201
@@ -582,7 +792,8 @@ msgstr "Thẻ XML không phải là <gda_dict_constraint> (ràng buộc từ đi
 
 #: ../libgda/gda-dict-constraint.c:1427
 msgid "Missing required attributes for <gda_dict_constraint>"
-msgstr "Thiếu một số thuộc tính cần thiết cho <gda_dict_constraint> (ràng buộc từ "
+msgstr ""
+"Thiếu một số thuộc tính cần thiết cho <gda_dict_constraint> (ràng buộc từ "
 "điển gda)."
 
 #: ../libgda/gda-dict-constraint.c:1432
@@ -605,16 +816,18 @@ msgstr "Thẻ XML không phải là <gda_dict_database> (cơ sở dữ liệu t�
 
 #: ../libgda/gda-dict-database.c:608
 msgid "XML Tag below <GDA_DICT_TABLES> is not <GDA_DICT_TABLE>"
-msgstr "Thẻ XML bên dưới <GDA_DICT_TABLES> (các bảng từ điển gda) không phải là "
+msgstr ""
+"Thẻ XML bên dưới <GDA_DICT_TABLES> (các bảng từ điển gda) không phải là "
 "<GDA_DICT_TABLE> (bảng từ điển gda)."
 
 #: ../libgda/gda-dict-database.c:640
 msgid "XML Tag below <GDA_DICT_CONSTRAINTS> is not <GDA_DICT_CONSTRAINT>"
-msgstr "Thể XML bên dưới <GDA_DICT_CONSTRAINTS> (các ràng buộc từ điển gda) không "
+msgstr ""
+"Thể XML bên dưới <GDA_DICT_CONSTRAINTS> (các ràng buộc từ điển gda) không "
 "phải là <GDA_DICT_CONSTRAINT> (ràng buộc từ điển gda)."
 
 #: ../libgda/gda-dict-database.c:859
-#: ../libgda/gda-dict.c:1231
+#: ../libgda/gda-dict.c:1248
 msgid "Update already started!"
 msgstr "• Việc cập nhật đã được khởi chạy. •"
 
@@ -631,7 +844,7 @@ msgid "Connection is not opened!"
 msgstr "• Chuỗi mở kết nối. •"
 
 #: ../libgda/gda-dict-database.c:905
-#: ../libgda/gda-dict.c:1311
+#: ../libgda/gda-dict.c:1328
 msgid "Update stopped!"
 msgstr "• Việc cập nhật đã ngưng lại. •"
 
@@ -660,7 +873,7 @@ msgstr "Kiểu dữ liệu tự chọn, được khai báo cho trường %s.%s."
 #: ../libgda/gda-dict-field.c:987
 #, c-format
 msgid "Unknown GDA data type '%s'"
-msgstr "Không biết kiểu dữ liệu GDA « %s »"
+msgstr "Không rõ kiểu dữ liệu GDA « %s »"
 
 #: ../libgda/gda-dict-field.c:1001
 #, c-format
@@ -682,7 +895,8 @@ msgstr "Có nhiều kiểu trả gởi cho chức năng « %s »."
 
 #: ../libgda/gda-dict-function.c:478
 msgid "Missing required attributes for <gda_dict_function>"
-msgstr "Thiếu một số thuộc tính cần thiết cho <gda_dict_function> (chức năng từ điển "
+msgstr ""
+"Thiếu một số thuộc tính cần thiết cho <gda_dict_function> (chức năng từ điển "
 "gda)."
 
 #: ../libgda/gda-dict-reg-aggregates.c:47
@@ -746,243 +960,255 @@ msgstr "Thẻ XML không phải là <gda_dict_type> (kiểu từ điển gda)."
 #: ../libgda/gda-dict-type.c:364
 #, c-format
 msgid "Unknown GType '%s'"
-msgstr "Không biết kiểu GType « %s »"
+msgstr "Không rõ kiểu GType « %s »"
 
 #: ../libgda/gda-dict-type.c:396
 msgid "Missing required attributes for <gda_dict_type>"
 msgstr "Thiếu thuộc tính cần thiết cho <gda_dict_type> (kiểu từ điển gda)."
 
-#: ../libgda/gda-dict.c:238
+#: ../libgda/gda-dict.c:242
 msgid "DSN of the connection to use"
 msgstr "DSN của cách kết nối cần dùng."
 
-#: ../libgda/gda-dict.c:241
+#: ../libgda/gda-dict.c:245
 msgid "Username for the connection to use"
 msgstr "Tên người dùng cho cách kết nối cần dùng."
 
-#: ../libgda/gda-dict.c:868
+#: ../libgda/gda-dict.c:882
 #, c-format
 msgid "Could not load XML data for %s (no registered load function)"
 msgstr "Không thể tải dữ liệu XML cho %s (không có hàm tải đã đăng ký)"
 
-#: ../libgda/gda-dict.c:1017
+#: ../libgda/gda-dict.c:1034
 #, c-format
 msgid "Could not save XML data for %s (no registered save function)"
 msgstr "Không thể lưu dữ liệu XML cho %s (không có hàm tải đã đăng ký)"
 
-#: ../libgda/gda-dict.c:1038
+#: ../libgda/gda-dict.c:1055
 #: ../testing/html.c:131
 #: ../tools/html.c:131
 #, c-format
 msgid "Error writing XML file %s"
 msgstr "Gặp lỗi khi ghi tập tin XML %s."
 
-#: ../libgda/gda-dict.c:1049
+#: ../libgda/gda-dict.c:1066
 msgid "Can't allocate memory for XML structure."
 msgstr "Không thể cấp phát bộ nhớ cho cấu trúc XML."
 
-#: ../libgda/gda-dict.c:1217
+#: ../libgda/gda-dict.c:1234
 msgid "No connection associated to the dictionary"
 msgstr "Không có cách kết nối tương ứng với từ điển."
 
-#: ../libgda/gda-dict.c:1224
+#: ../libgda/gda-dict.c:1241
+#: ../providers/sqlite/virtual/gda-vconnection-hub.c:211
 msgid "Connection is closed"
 msgstr "Kết nối bị ngắt."
 
-#: ../libgda/gda-dict.c:1391
+#: ../libgda/gda-dict.c:1408
 #, c-format
 msgid "Error creating directory %s"
 msgstr "Gặp lỗi khi tạo  từ điển %s."
 
-#: ../libgda/gda-dict.c:1643
+#: ../libgda/gda-dict.c:1663
 #, c-format
 msgid "Cannot register object type %s a second time"
 msgstr "Không thể đăng ký kiểu đối tượng %s lần thứ hai"
 
-#: ../libgda/gda-dict.c:1647
+#: ../libgda/gda-dict.c:1667
 #, c-format
 msgid "Cannot register object type %s: no XML group tag specified"
 msgstr "Không thể đăng ký kiểu đối tượng %s: chưa xác định thẻ nhóm XML"
 
-#: ../libgda/gda-dict.c:1714
+#: ../libgda/gda-dict.c:1734
 #, c-format
 msgid ""
 "Trying to declare an object when object class %s is not registered in the "
 "dictionary"
-msgstr "Thử tuyên bố đối tượng khi hạng đối tượng %s chưa được đăng ký trong từ điển"
+msgstr ""
+"Thử tuyên bố đối tượng khi hạng đối tượng %s chưa được đăng ký trong từ điển"
 
-#: ../libgda/gda-dict.c:1807
+#: ../libgda/gda-dict.c:1827
 #, c-format
 msgid ""
 "Trying to make an object assumed when object class %s is not registered in "
 "the dictionary"
-msgstr "Thử làm cho đối tượng được giả sử khi hạng đối tượng %s chưa được đăng ký "
+msgstr ""
+"Thử làm cho đối tượng được giả sử khi hạng đối tượng %s chưa được đăng ký "
 "trong từ điển"
 
-#: ../libgda/gda-dict.c:1822
+#: ../libgda/gda-dict.c:1842
 msgid ""
 "Trying to assume an object when object class is not registered in the "
 "dictionary"
-msgstr "Thử giả sử đối tượng khi hạng đối tượng %s chưa được đăng ký trong từ điển"
+msgstr ""
+"Thử giả sử đối tượng khi hạng đối tượng %s chưa được đăng ký trong từ điển"
 
-#: ../libgda/gda-dict.c:1887
+#: ../libgda/gda-dict.c:1907
 #, c-format
 msgid ""
 "Trying to make an object unassumed when object class %s is not registered in "
 "the dictionary"
-msgstr "Thử làm cho đối tượng không được giả sử khi hạng đối tượng %s chưa được đăng "
+msgstr ""
+"Thử làm cho đối tượng không được giả sử khi hạng đối tượng %s chưa được đăng "
 "ký trong từ điển"
 
-#: ../libgda/gda-dict.c:1942
+#: ../libgda/gda-dict.c:1962
 #, c-format
 msgid ""
 "Trying to make if an object is assumed when object class %s is not "
 "registered in the dictionary"
-msgstr "Thử làm nếu một đối tượng được giả sử khi hạng đối tượng %s chưa được đăng "
+msgstr ""
+"Thử làm nếu một đối tượng được giả sử khi hạng đối tượng %s chưa được đăng "
 "ký trong từ điển"
 
-#: ../libgda/gda-dict.c:1971
+#: ../libgda/gda-dict.c:1991
 #, c-format
 msgid ""
 "Trying to get a list of objects when object class %s is not registered in "
 "the dictionary"
-msgstr "Thử lấy danh sách các đối tượng khi hạng đối tượng %s chưa được đăng ký "
+msgstr ""
+"Thử lấy danh sách các đối tượng khi hạng đối tượng %s chưa được đăng ký "
 "trong từ điển"
 
-#: ../libgda/gda-dict.c:2005
+#: ../libgda/gda-dict.c:2025
 #, c-format
 msgid ""
 "Trying to get an object by name when object class %s is not registered in "
 "the dictionary"
-msgstr "Thử lấy đối tượng theo tên khi hạng đối tượng %s chưa được đăng ký trong từ "
+msgstr ""
+"Thử lấy đối tượng theo tên khi hạng đối tượng %s chưa được đăng ký trong từ "
 "điển"
 
-#: ../libgda/gda-dict.c:2049
+#: ../libgda/gda-dict.c:2070
 #, c-format
 msgid ""
 "Trying to get an object by its XML Id when object class %s is not registered "
 "in the dictionary"
-msgstr "Thử lấy đối tượng theo ID XML khi hạng đối tượng %s chưa được đăng ký trong "
+msgstr ""
+"Thử lấy đối tượng theo ID XML khi hạng đối tượng %s chưa được đăng ký trong "
 "từ điển"
 
-#: ../libgda/gda-dict.c:2057
+#: ../libgda/gda-dict.c:2078
 msgid ""
 "Trying to get an object from its XML Id when object class does not implement "
 "GdaXmlStorage"
-msgstr "Thử lấy đối tượng từ ID XML khi hạng đối tượng %s chưa được đăng ký trong từ "
+msgstr ""
+"Thử lấy đối tượng từ ID XML khi hạng đối tượng %s chưa được đăng ký trong từ "
 "điển"
 
-#: ../libgda/gda-init.c:51
+#: ../libgda/gda-init.c:60
 msgid "Attempt to re-initialize GDA library. ignored."
 msgstr "Việc thử khởi động lại thư viện GDA bị bỏ qua."
 
-#: ../libgda/gda-init.c:69
+#: ../libgda/gda-init.c:83
 msgid "libgda needs GModule. Finishing..."
 msgstr "libgda cần GModule nên đang kết thúc..."
 
-#: ../libgda/gda-init.c:103
-#: ../libgda/gda-init.c:110
-#: ../libgda/gda-init.c:117
-#: ../libgda/gda-init.c:125
-msgid "Could not parse "
-msgstr "Không thể phân tách "
-
-#: ../libgda/gda-init.c:103
+#: ../libgda/gda-init.c:122
+#, c-format
 msgid ""
-": XML dictionaries validation will not be performed (some weird errors may "
-"occur)"
-msgstr ": XML sự hợp lệ hoá từ điển sẽ không được thực hiện (một số lỗi lạ có thể "
-"xảy ra)"
+"Could not parse '%s': XML dictionaries validation will not be performed "
+"(some weird errors may occur)"
+msgstr ""
+"Không thể phân tách « %s »: sẽ không hợp lệ hoá các từ điển XML (thì có thể gặp một số lỗi lạ)"
 
-#: ../libgda/gda-init.c:110
-#: ../libgda/gda-init.c:117
+#: ../libgda/gda-init.c:133
+#: ../libgda/gda-init.c:144
+#, c-format
 msgid ""
-": XML data import validation will not be performed (some weird errors may "
-"occur)"
-msgstr ": XML sự hợp lệ hoá nhập dữ liệu sẽ không được thực hiện (một số lỗi lạ có "
-"thể xảy ra)"
-
-#: ../libgda/gda-init.c:125
-msgid ""
-": Validation for XML files for server operations will not be performed (some "
+"Could not parse '%s': XML data import validation will not be performed (some "
 "weird errors may occur)"
-msgstr ": việc hợp lệ hoá tập tin XML cho thao tác máy phục vụ sẽ không được thực "
-"hiện (một số lỗi lạ có thể xảy ra)"
+msgstr ""
+"Không thể phân tách « %s »: sẽ không hợp lệ hoá tiến trình nhập khẩu dữ liệu XML (thì có thể gặp một số lỗi lạ)"
 
-#: ../libgda/gda-object.c:306
+#: ../libgda/gda-init.c:155
+#, c-format
+msgid ""
+"Could not parse '%s': Validation for XML files for server operations will "
+"not be performed (some weird errors may occur)"
+msgstr ""
+"Không thể phân tách « %s »: sẽ không hợp lệ hoá các tập tin XML cho thao tác trình phục vụ (thì có thể gặp một số lỗi lạ)"
+
+#: ../libgda/gda-object.c:307
 msgid "LibGda must be initialized before any usage."
 msgstr "Phải khởi động LibGda trước khi dùng nó bằng cách nào."
 
-#: ../libgda/gda-parameter-list.c:498
+#: ../libgda/gda-parameter-list.c:505
 #, c-format
 msgid "Spec's root node != 'data-set-spec': '%s'"
 msgstr "Nút gốc của Spec « != 'data-set-spec »: « %s »"
 
-#: ../libgda/gda-parameter-list.c:554
+#: ../libgda/gda-parameter-list.c:561
 #, c-format
 msgid "Missing node <parameters>: '%s'"
 msgstr "Thiếu nút <parameters> (các tham số): « %s »"
 
-#: ../libgda/gda-parameter-list.c:645
-#: ../libgda/gda-server-operation.c:856
+#: ../libgda/gda-parameter-list.c:652
+#: ../libgda/gda-server-operation.c:861
 #, c-format
 msgid "Can't find a data type for parameter '%s'"
 msgstr "Không tìm thấy kiểu dữ liệu cho tham số « %s »."
 
-#: ../libgda/gda-parameter-list.c:1254
+#: ../libgda/gda-parameter-list.c:1261
 #, c-format
 msgid "Could not add parameter of type %s with value '%s'"
 msgstr "Không thể thêm thâm số kiểu %s có giá trị « %s »"
 
-#: ../libgda/gda-parameter-list.c:1342
+#: ../libgda/gda-parameter-list.c:1349
 #, c-format
 msgid "Missing GdaParameterListNode for param %p"
 msgstr "Thiếu GdaParameterListNode (nút danh sách tham số gda) cho tham số %p."
 
-#: ../libgda/gda-parameter-list.c:1355
+#: ../libgda/gda-parameter-list.c:1362
 msgid "GdaParameterListNode has a NULL param attribute"
-msgstr "GdaParameterListNode (nút danh sách tham số gda) có thuộc tính tham số RỖNG."
+msgstr ""
+"GdaParameterListNode (nút danh sách tham số gda) có thuộc tính tham số RỖNG."
 
-#: ../libgda/gda-parameter-list.c:1366
+#: ../libgda/gda-parameter-list.c:1373
 msgid "Missing GdaParameterListSource"
 msgstr "Thiếu GdaParameterListSource (nguồn danh sách tham số gda)."
 
-#: ../libgda/gda-parameter-list.c:1371
+#: ../libgda/gda-parameter-list.c:1378
 msgid ""
 "GdaParameterListSource does not list a GdaParameterListNode as it should"
-msgstr "GdaParameterListSource (nguồn danh sách tham số gda) không liệt kê một "
+msgstr ""
+"GdaParameterListSource (nguồn danh sách tham số gda) không liệt kê một "
 "GdaParameterListNode (nút danh sách tham số gda) như nên."
 
-#: ../libgda/gda-parameter-list.c:1378
+#: ../libgda/gda-parameter-list.c:1385
 #, c-format
 msgid "GdaDataModel %p does not have a column %d"
 msgstr "GdaDataModel (mô hình dữ liệu gda) %p không có cột %d."
 
-#: ../libgda/gda-parameter-list.c:1384
+#: ../libgda/gda-parameter-list.c:1391
 #, c-format
 msgid ""
 "GdaParameter is restricted by a column of the wrong type: %s (%s expected)"
-msgstr "GdaParameter (tham số gda) bị hạn chế bởi một cột kiểu không đúng: %s (còn "
+msgstr ""
+"GdaParameter (tham số gda) bị hạn chế bởi một cột kiểu không đúng: %s (còn "
 "ngờ %s)."
 
-#: ../libgda/gda-parameter-list.c:1403
+#: ../libgda/gda-parameter-list.c:1410
 msgid "GdaParameterListSource has a NULL data model"
-msgstr "GdaParameterListSource (nguồn danh sách tham số gda) có một mô hình dữ liệu "
+msgstr ""
+"GdaParameterListSource (nguồn danh sách tham số gda) có một mô hình dữ liệu "
 "RỖNG."
 
-#: ../libgda/gda-parameter-list.c:1411
+#: ../libgda/gda-parameter-list.c:1418
 msgid ""
 "GdaParameterListSource references a GdaParameterListNode not found in the "
 "nodes list"
-msgstr "Nguồn danh sách tham số GDA (GdaParameterListSource) tham chiếu một nút danh "
+msgstr ""
+"Nguồn danh sách tham số GDA (GdaParameterListSource) tham chiếu một nút danh "
 "sách tham số GDA (GdaParameterListNode) không được tìm trong danh sách các "
 "nút."
 
-#: ../libgda/gda-parameter-list.c:1417
+#: ../libgda/gda-parameter-list.c:1424
 msgid ""
 "GdaParameterListSource references a GdaParameterListNode which does not use "
 "the same data model"
-msgstr "Nguồn danh sách tham số GDA (GdaParameterListSource) tham chiếu một nút danh "
+msgstr ""
+"Nguồn danh sách tham số GDA (GdaParameterListSource) tham chiếu một nút danh "
 "sách tham số GDA (GdaParameterListNode) mà không dùng cùng một mô hình dữ "
 "liệu."
 
@@ -1011,12 +1237,14 @@ msgstr "Thẻ XML không phải là <gda_query_cond> (điều kiện truy vấn 
 
 #: ../libgda/gda-query-condition.c:1452
 msgid "Wrong 'id' attribute in <gda_query_cond>"
-msgstr "Gặp thuộc tính « ld » không đúng trong <gda_query_cond> (điều kiện truy vấn "
+msgstr ""
+"Gặp thuộc tính « ld » không đúng trong <gda_query_cond> (điều kiện truy vấn "
 "gda)."
 
 #: ../libgda/gda-query-condition.c:1467
 msgid "Wrong 'type' attribute in <gda_query_cond>"
-msgstr "Gặp thuộc tính « type » (kiểu) không đúng trong <gda_query_cond> (điều kiện "
+msgstr ""
+"Gặp thuộc tính « type » (kiểu) không đúng trong <gda_query_cond> (điều kiện "
 "truy vấn gda)."
 
 #: ../libgda/gda-query-condition.c:1517
@@ -1054,7 +1282,8 @@ msgstr "Thẻ XML không phải là <gda_query_fagg> (tập hợp f truy vấn g
 #: ../libgda/gda-query-field-value.c:1146
 msgid ""
 "XML ID for a query field should be QUxxx:QFyyy where xxx and yyy are numbers"
-msgstr "ID XML cho một trường truy vấn nên là « QUxxx:QFyyy » mà xxx và yyy là số"
+msgstr ""
+"ID XML cho một trường truy vấn nên là « QUxxx:QFyyy » mà xxx và yyy là số"
 
 #: ../libgda/gda-query-field-agg.c:839
 #, c-format
@@ -1063,7 +1292,8 @@ msgstr "Có nhiều đối số cho tập hợp %s"
 
 #: ../libgda/gda-query-field-agg.c:852
 msgid "Missing required attributes for <gda_query_fagg>"
-msgstr "Thiếu một số thuộc tính cần thiết cho <gda_query_fagg> (tập hợp f truy "
+msgstr ""
+"Thiếu một số thuộc tính cần thiết cho <gda_query_fagg> (tập hợp f truy "
 "vấngda)."
 
 #: ../libgda/gda-query-field-agg.c:905
@@ -1092,7 +1322,8 @@ msgstr "Thẻ XML không phải là <gda_query_fall> (truy vấn hết f gda)"
 
 #: ../libgda/gda-query-field-all.c:681
 msgid "Missing required attributes for <gda_query_fall>"
-msgstr "Thiếu một số thuộc tính cần thiết cho <gda_query_fall> (truy vấn hết f gda)"
+msgstr ""
+"Thiếu một số thuộc tính cần thiết cho <gda_query_fall> (truy vấn hết f gda)"
 
 #: ../libgda/gda-query-field-all.c:711
 #, c-format
@@ -1109,7 +1340,8 @@ msgstr "Thẻ XML không phải là <gda_query_ffield> (trường f truy vấn g
 
 #: ../libgda/gda-query-field-field.c:1032
 msgid "Missing required attributes for <gda_query_ffield>"
-msgstr "Thiếu một số thuộc tính cần thiết cho <gda_query_ffield> (trường f truy vấn "
+msgstr ""
+"Thiếu một số thuộc tính cần thiết cho <gda_query_ffield> (trường f truy vấn "
 "gda)"
 
 #: ../libgda/gda-query-field-func.c:812
@@ -1123,12 +1355,13 @@ msgstr "Số đối số không đúng cho chức năng %s."
 
 #: ../libgda/gda-query-field-func.c:918
 msgid "Missing required attributes for <gda_query_ffunc>"
-msgstr "Thiếu một số thuộc tính cần thiết cho <gda_query_ffunc> (chức năng f truy "
+msgstr ""
+"Thiếu một số thuộc tính cần thiết cho <gda_query_ffunc> (chức năng f truy "
 "vấn gda)"
 
 #: ../libgda/gda-query-field-func.c:954
 msgid "Don't know how to render function"
-msgstr "Không biết cách vẽ chức năng"
+msgstr "Không rõ cách vẽ chức năng"
 
 #: ../libgda/gda-query-field-func.c:1053
 msgid "Non-activated function"
@@ -1138,7 +1371,8 @@ msgstr "Hàm chưa được hoạt hóa"
 msgid ""
 "GdaDataModelQuery data model restricting GdaQueryFieldValue is not saved in "
 "the dictionary"
-msgstr "Mẫu dữ liệu GdaDataModelQuery (truy vấn mẫu dữ liệu GDA) hạn chế "
+msgstr ""
+"Mẫu dữ liệu GdaDataModelQuery (truy vấn mẫu dữ liệu GDA) hạn chế "
 "GdaQueryFieldValue (giá trị trường truy vấn GDA) chưa được lưu vào từ điển"
 
 #: ../libgda/gda-query-field-value.c:1133
@@ -1166,7 +1400,8 @@ msgstr "Tính năng chưa được thực hiện, xem %s(), dòng %d"
 
 #: ../libgda/gda-query-field-value.c:1315
 msgid "Missing required g_type for <gda_query_fval>"
-msgstr "Thiếu « g_type » (kiểu g) cần thiết cho <gda_query_fval> (giá trị f truy vấn "
+msgstr ""
+"Thiếu « g_type » (kiểu g) cần thiết cho <gda_query_fval> (giá trị f truy vấn "
 "gda)"
 
 #: ../libgda/gda-query-field-value.c:1325
@@ -1174,33 +1409,41 @@ msgstr "Thiếu « g_type » (kiểu g) cần thiết cho <gda_query_fval> (giá
 msgid "Value field '%s' does not have a value!"
 msgstr "• Trường giá trị « %s » không có giá trị. •"
 
-#: ../libgda/gda-query-field-value.c:1419
-#: ../libgda/gda-query-field-value.c:1485
+#: ../libgda/gda-query-field-value.c:1410
+msgid ""
+"The out_params_used argument is required with this selected rendering option"
+msgstr "Tùy chọn vẽ đã chọn cũng cần thiết đối số « out_params_used » (các tham số ra được dùng)"
+
+#: ../libgda/gda-query-field-value.c:1423
+#: ../libgda/gda-query-field-value.c:1494
 msgid "Default value requested"
 msgstr "Yêu cầu giá trị mặc định"
 
-#: ../libgda/gda-query-field-value.c:1443
+#: ../libgda/gda-query-field-value.c:1452
 #, c-format
 msgid "Could not find GdaParameter in context for value field '%s'"
-msgstr "Không tìm thấy tham số GdaParameter trong ngữ cảnh cho trường giá trị « %s »"
+msgstr ""
+"Không tìm thấy tham số GdaParameter trong ngữ cảnh cho trường giá trị « %s »"
 
-#: ../libgda/gda-query-field-value.c:1461
+#: ../libgda/gda-query-field-value.c:1470
 #, c-format
 msgid "Invalid parameter '%s' (value: %s)"
 msgstr "Tham số không hợp lệ « %s » (giá trị: %s)"
 
-#: ../libgda/gda-query-field-value.c:1523
+#: ../libgda/gda-query-field-value.c:1532
 msgid "No specified value"
 msgstr "Chưa ghi rõ giá trị"
 
 #: ../libgda/gda-query-field.c:164
 msgid "Missing 'target' attribute in <gda_query_fall>"
-msgstr "Thiếu thuộc tính « target » (đích) trong <gda_query_fall> (truy vấn hết f "
+msgstr ""
+"Thiếu thuộc tính « target » (đích) trong <gda_query_fall> (truy vấn hết f "
 "gda)"
 
 #: ../libgda/gda-query-field.c:208
 msgid "Missing Implementation in loading <gda_query_f*>"
-msgstr "Thiếu Implementation (cách thực hiện) khi tải <gda_query_f*> (truy vấn f* "
+msgstr ""
+"Thiếu Implementation (cách thực hiện) khi tải <gda_query_f*> (truy vấn f* "
 "gda)"
 
 #: ../libgda/gda-query-field.c:274
@@ -1238,7 +1481,8 @@ msgstr "Mệnh đề « ORDER BY » (sắp xếp theo) không hợp lệ"
 #: ../libgda/gda-query-parsing.c:389
 #, c-format
 msgid "Invalid ORDER BY clause: can't find field number %d"
-msgstr "Mệnh đề « ORDER BY » (sắp xếp theo) không hợp lệ: không tìm thấy trường số %d"
+msgstr ""
+"Mệnh đề « ORDER BY » (sắp xếp theo) không hợp lệ: không tìm thấy trường số %d"
 
 #: ../libgda/gda-query-parsing.c:439
 msgid "Missing UPDATE target entity"
@@ -1246,7 +1490,8 @@ msgstr "Thiếu thực thể đích kiểu « UPDATE » (cập nhật)"
 
 #: ../libgda/gda-query-parsing.c:474
 msgid "UPDATE target field is not an entity's field"
-msgstr "Trường đích « UPDATE » (cập nhật) không phải là trường của thực thể nào."
+msgstr ""
+"Trường đích « UPDATE » (cập nhật) không phải là trường của thực thể nào."
 
 #: ../libgda/gda-query-parsing.c:486
 msgid "Missing target fields to update"
@@ -1337,28 +1582,22 @@ msgstr "Trường mơ hồ « * »."
 msgid "Unknown data type '%s', using G_TYPE_STRING"
 msgstr "Kiểu dữ liệu lạ « %s » nên dùng G_TYPE_STRING (chuỗi kiểu G)"
 
-#: ../libgda/gda-query-parsing.c:1562
-#: ../libgda/gda-query-parsing.c:1564
-msgid ""
-"Data type must be specified when no default value is provided, using "
-"G_TYPE_STRING"
-msgstr "Kiểu dữ liệu phải được xác định khi chưa cung cấp giá trị mặc định nên dùng G_TYPE_STRING (chuỗi kiểu G)"
-
-#: ../libgda/gda-query-parsing.c:1643
+#: ../libgda/gda-query-parsing.c:1635
 #, c-format
 msgid ""
 "Could not convert data from %s to %s for DBMS type %s, forget about the DBMS "
 "type"
-msgstr "Không thể chuyển đổi dữ liệu từ %s sang %s cho kiểu DBMS %s, quên kiểu DBMS "
+msgstr ""
+"Không thể chuyển đổi dữ liệu từ %s sang %s cho kiểu DBMS %s, quên kiểu DBMS "
 "đó"
 
-#: ../libgda/gda-query-parsing.c:1667
-#: ../libgda/gda-query-parsing.c:1669
+#: ../libgda/gda-query-parsing.c:1659
+#: ../libgda/gda-query-parsing.c:1661
 #, c-format
 msgid "Value '%s' can't be converted to a known type"
 msgstr "Không thể chuyển đổi giá trị « %s » sang kiểu đã biết"
 
-#: ../libgda/gda-query-parsing.c:1833
+#: ../libgda/gda-query-parsing.c:1825
 msgid "Can't set aggregate or function's arguments"
 msgstr "Không thể lập các đối số của chức năng hay tập hợp"
 
@@ -1390,7 +1629,7 @@ msgstr "Gặp lỗi khi tải dữ liệu từ nút <gda_query_target> (đích t
 
 #: ../libgda/gda-query-target.c:937
 msgid "Don't know how to render target"
-msgstr "Không biết cách vẽ đích"
+msgstr "Không rõ cách vẽ đích"
 
 #: ../libgda/gda-query.c:961
 msgid "Can't modify the structure of a non-parsed SQL query"
@@ -1433,32 +1672,36 @@ msgstr "Văn bản SQL"
 msgid "Error during query parsing (%s)"
 msgstr "Gặp lỗi trong khi phân tách truy vấn (%s)."
 
-#: ../libgda/gda-query.c:1443
+#: ../libgda/gda-query.c:1419
+msgid "Multiple statements in SQL, only the first one kept"
+msgstr "Gặp nhiều câu lệnh SQL nên chỉ giữ lại câu lệnh đầu tiên"
+
+#: ../libgda/gda-query.c:1450
 msgid "No valid type specified for parameter, using gchararray"
 msgstr "Chưa xác định kiểu hợp lệ cho tham số nên dùng gchararray"
 
-#: ../libgda/gda-query.c:1935
+#: ../libgda/gda-query.c:1942
 msgid ""
 "The query represented by a target must be a sub-query of the current query"
 msgstr "Truy vấn do đích tiểu biểu phải là truy vấn phụ của truy vấn hiện có."
 
-#: ../libgda/gda-query.c:1950
+#: ../libgda/gda-query.c:1957
 msgid "Queries which update data can only have one target"
 msgstr "Truy vấn mà cập nhật dữ liệu có thể có chỉ một đích thôi."
 
-#: ../libgda/gda-query.c:1960
+#: ../libgda/gda-query.c:1967
 msgid "Aggregation queries may only have sub-queries, not targets."
 msgstr "Truy vấn tập hợp có thể có chỉ truy vấn phụ, không phải đích."
 
-#: ../libgda/gda-query.c:2785
+#: ../libgda/gda-query.c:2792
 msgid "No connection associated to query's dictionary"
 msgstr "Không có sự kết nối tương ứng với từ điển của truy vấn."
 
-#: ../libgda/gda-query.c:2790
+#: ../libgda/gda-query.c:2797
 msgid "Connection associated to query's dictionary is closed"
 msgstr "Sự kết nối tương ứng với từ điển của truy vấn đã được đóng."
 
-#: ../libgda/gda-query.c:2992
+#: ../libgda/gda-query.c:3001
 #: ../testing/gda-test-model-query.c:143
 #: ../testing/gda-test-model-query.c:170
 #: ../testing/gda-test-models.c:152
@@ -1481,210 +1724,225 @@ msgstr "Sự kết nối tương ứng với từ điển của truy vấn đã 
 msgid "Unknown error"
 msgstr "Lỗi không rõ"
 
-#: ../libgda/gda-query.c:3526
+#: ../libgda/gda-query.c:3537
 msgid ""
 "While adding to a GdaQuery: Blobs are not supported by the connection's "
 "provider and may be rendered incorrectly"
-msgstr "Trong khi thêm vào truy vấn GdaQuery: đốm không được hỗ trợ bởi nhà cung cấp kết nối và có lẽ không được vẽ đúng"
+msgstr ""
+"Trong khi thêm vào truy vấn GdaQuery: đốm không được hỗ trợ bởi nhà cung cấp "
+"kết nối và có lẽ không được vẽ đúng"
 
-#: ../libgda/gda-query.c:3532
+#: ../libgda/gda-query.c:3543
 #, c-format
 msgid ""
 "While adding to a GdaQuery: field type '%s' is not supported by the "
 "connection's provider and may be rendered incorrectly"
-msgstr "Trong khi thêm vào truy vấn GdaQuery: kiểu trường « %s » không được hỗ trợ "
+msgstr ""
+"Trong khi thêm vào truy vấn GdaQuery: kiểu trường « %s » không được hỗ trợ "
 "bởi bộ cung cấp kết nối và có lẽ không được vẽ cho đúng"
 
-#: ../libgda/gda-query.c:4187
+#: ../libgda/gda-query.c:4198
 msgid "XML Tag is not <gda_query>"
 msgstr "Thẻ XML không phải là <gda_query> (truy vấn gda)."
 
-#: ../libgda/gda-query.c:4203
+#: ../libgda/gda-query.c:4214
 msgid "XML ID for a query should be QUxxx where xxx is a number"
 msgstr "ID XML cho một truy vấn nên là QUxxx mà xxx là số."
 
-#: ../libgda/gda-query.c:4258
+#: ../libgda/gda-query.c:4269
 msgid "First query of <gda_model_query> must be a SELECT query"
-msgstr "Truy vấn đầu tiên của <gda_model_query> (truy vấn mẫu GDA) phải là một truy "
+msgstr ""
+"Truy vấn đầu tiên của <gda_model_query> (truy vấn mẫu GDA) phải là một truy "
 "vấn SELECT (chọn)"
 
-#: ../libgda/gda-query.c:4350
+#: ../libgda/gda-query.c:4361
 msgid ""
 "Missing both attributes 'entity_ref' and 'table_name' from <gda_query_target>"
-msgstr "Thiếu thuộc tính cả « entity_ref » (tham chiếu thực thể) lẫn « table_name "
+msgstr ""
+"Thiếu thuộc tính cả « entity_ref » (tham chiếu thực thể) lẫn « table_name "
 "» (tên bảng) đều trong « gda_query_target » (đích truy vấn gda)."
 
-#: ../libgda/gda-query.c:4374
+#: ../libgda/gda-query.c:4385
 #, c-format
 msgid "Can't find field '%s'"
 msgstr "Không tìm thấy trường « %s »."
 
-#: ../libgda/gda-query.c:4493
+#: ../libgda/gda-query.c:4504
 msgid "Problem loading <gda_query>"
 msgstr "Gặp vấn đề khi tải <gda_query> (truy vấn gda)."
 
-#: ../libgda/gda-query.c:4666
+#: ../libgda/gda-query.c:4677
 msgid "More than two sub-queries for an EXCEPT query"
 msgstr "Có hơn hai truy vấn phụ cho một truy vấn EXCEPT (trừ)."
 
-#: ../libgda/gda-query.c:4683
+#: ../libgda/gda-query.c:4694
 msgid "Empty query"
 msgstr "Truy vấn rỗng"
 
-#: ../libgda/gda-query.c:4738
+#: ../libgda/gda-query.c:4749
 #, c-format
 msgid "Invalid parameter '%s'"
 msgstr "Tham số không hợp lệ « %s »."
 
-#: ../libgda/gda-query.c:4744
+#: ../libgda/gda-query.c:4755
 msgid "Missing parameters"
 msgstr "Thiếu tham số"
 
-#: ../libgda/gda-query.c:4818
+#: ../libgda/gda-query.c:4829
 #, c-format
 msgid "Query %s is not a selection query"
 msgstr "Truy vấn %s không phải là một truy vấn lựa chọn."
 
-#: ../libgda/gda-query.c:4850
+#: ../libgda/gda-query.c:4861
 msgid "No target defined to apply modifications"
 msgstr "Chưa định nghĩa đích nào cần áp dụng các sự sửa đổi."
 
-#: ../libgda/gda-query.c:4858
+#: ../libgda/gda-query.c:4869
 msgid "More than one target defined to apply modifications"
 msgstr "Nhiều đích được định nghĩa để áp dụng các sự sửa đổi."
 
-#: ../libgda/gda-query.c:4869
+#: ../libgda/gda-query.c:4880
 #, c-format
 msgid "Entity %s is not writable"
 msgstr "Thực thể %s không có khả năng ghi."
 
-#: ../libgda/gda-query.c:4888
+#: ../libgda/gda-query.c:4899
 msgid "Modification query field has incompatible type"
 msgstr "Trường truy vấn sửa đổi có kiểu không tương thích."
 
-#: ../libgda/gda-query.c:4907
+#: ../libgda/gda-query.c:4918
 msgid "An insertion query can only have one sub-query"
 msgstr "Truy vấn chèn có thể có chỉ một truy vấn phụ thôi."
 
-#: ../libgda/gda-query.c:4915
+#: ../libgda/gda-query.c:4926
 msgid "Insertion query fields incompatible with sub-query's fields"
-msgstr "Các trường của truy vấn chèn không tương thích với các trường của truy vấn "
+msgstr ""
+"Các trường của truy vấn chèn không tương thích với các trường của truy vấn "
 "phụ."
 
-#: ../libgda/gda-query.c:4933
+#: ../libgda/gda-query.c:4944
 msgid "Insertion query field has incompatible value assignment"
 msgstr "Trường của truy vấn chèn có sự gán giá trị không tương thích."
 
-#: ../libgda/gda-query.c:4948
+#: ../libgda/gda-query.c:4959
 msgid "Insertion query can't have any conditions"
 msgstr "Truy vấn chèn không thể có điều kiện nào."
 
-#: ../libgda/gda-query.c:4963
+#: ../libgda/gda-query.c:4974
 msgid "Deletion query can't have any visible field"
 msgstr "Truy vấn xóa bỏ không thể có trường hiển thị nào."
 
-#: ../libgda/gda-query.c:4983
+#: ../libgda/gda-query.c:4994
 msgid "Update query field has incompatible value assignment"
 msgstr "Trường của truy vấn cập nhật có sự gán giá trị không tương thích."
 
-#: ../libgda/gda-query.c:5012
+#: ../libgda/gda-query.c:5023
 msgid "An aggregate type (UNION, etc) of query can't have any targets"
 msgstr "Truy vấn kiểu tập hợp (UNION [hợp] v.v.) không thể có đích nào."
 
-#: ../libgda/gda-query.c:5020
+#: ../libgda/gda-query.c:5031
 msgid "An aggregate type (UNION, etc) of query can't have any conditions"
 msgstr "Truy vấn kiểu tập hợp (UNION [hợp] v.v.) không thể có điều kiện nào."
 
-#: ../libgda/gda-query.c:5532
+#: ../libgda/gda-query.c:5543
 msgid "Can't correctly print the list of columns to use."
 msgstr "Không thể in ra đúng danh sách các cột cần dùng."
 
-#: ../libgda/gda-query.c:5682
+#: ../libgda/gda-query.c:5693
 msgid "Missing values"
 msgstr "Thiếu giá trị"
 
-#: ../libgda/gda-query.c:5936
+#: ../libgda/gda-query.c:5947
 #, c-format
 msgid "Query '%s'"
 msgstr "Truy vấn « %s »."
 
-#: ../libgda/gda-query.c:5938
+#: ../libgda/gda-query.c:5949
 msgid "Unnamed Query"
 msgstr "Truy vấn không tên."
+
+#: ../libgda/gda-query.c:6000
+#, c-format
+msgid "Could expand '%s.*' into a list of fields"
+msgstr "Có thể mở rộng « %s.* » ra danh sách các trường"
 
 #: ../libgda/gda-server-operation.c:567
 #, c-format
 msgid "GdaServerOperation: could not find file '%s'"
 msgstr "GdaServerOperation: không tìm thấy tập tin « %s »"
 
-#: ../libgda/gda-server-operation.c:597
+#: ../libgda/gda-server-operation.c:600
 #, c-format
 msgid ""
 "GdaServerOperation: file '%s' does not conform to DTD:\n"
 "%s"
-msgstr "GdaServerOperation: tập tin « %s » không tùy theo DTD:\n"
+msgstr ""
+"GdaServerOperation: tập tin « %s » không tùy theo DTD:\n"
 "%s"
 
-#: ../libgda/gda-server-operation.c:603
+#: ../libgda/gda-server-operation.c:606
 #, c-format
 msgid "GdaServerOperation: file '%s' does not conform to DTD"
 msgstr "GdaServerOperation: tập tin « %s » không tùy theo DTD"
 
-#: ../libgda/gda-server-operation.c:616
+#: ../libgda/gda-server-operation.c:621
 #, c-format
 msgid "GdaServerOperation: could not load file '%s'"
 msgstr "GdaServerOperation: không thể tải tập tin « %s »"
 
-#: ../libgda/gda-server-operation.c:772
+#: ../libgda/gda-server-operation.c:777
 #, c-format
 msgid "GdaServerOperation: error loading GdaParameterList spec %s: '%s'"
-msgstr "GdaServerOperation: gặp lỗi khi tải đặc tả GdaParameterList (danh sách tham "
+msgstr ""
+"GdaServerOperation: gặp lỗi khi tải đặc tả GdaParameterList (danh sách tham "
 "số gda) %s: « %s »"
 
-#: ../libgda/gda-server-operation.c:857
+#: ../libgda/gda-server-operation.c:862
 msgid "unnamed"
 msgstr "không tên"
 
-#: ../libgda/gda-server-operation.c:1095
+#: ../libgda/gda-server-operation.c:1100
 msgid "Non handled GdaServerOperationType, please report error"
-msgstr "GdaServerOperationType (kiểu thao tác máy phục vụ gda) chưa được quản lý, "
+msgstr ""
+"GdaServerOperationType (kiểu thao tác máy phục vụ gda) chưa được quản lý, "
 "xin hãy thông báo lỗi này"
 
-#: ../libgda/gda-server-operation.c:1265
+#: ../libgda/gda-server-operation.c:1270
 #, c-format
 msgid "Expected tag <serv_op_data>, got <%s>"
 msgstr "Ngờ thẻ <serv_op_data> (dữ liệu thao tác máy phục vụ), còn nhận <%s>"
 
-#: ../libgda/gda-server-operation.c:1279
+#: ../libgda/gda-server-operation.c:1284
 #, c-format
 msgid "Expected tag <op_data>, got <%s>"
 msgstr "Ngờ thẻ <op_data> (dữ liệu thao tác), còn nhận <%s>"
 
-#: ../libgda/gda-server-operation.c:1310
-#: ../libgda/gda-server-operation.c:1921
+#: ../libgda/gda-server-operation.c:1315
+#: ../libgda/gda-server-operation.c:1926
 msgid ""
 "Parameterlist values can only be set for individual parameters within it"
-msgstr "Giá trị của danh sách tham số có thể được đặt chỉ cho mỗi tham số riêng nằm "
+msgstr ""
+"Giá trị của danh sách tham số có thể được đặt chỉ cho mỗi tham số riêng nằm "
 "trong nó"
 
-#: ../libgda/gda-server-operation.c:1323
-#: ../libgda/gda-server-operation.c:1342
-#: ../libgda/gda-server-operation.c:1930
-#: ../libgda/gda-server-operation.c:1982
+#: ../libgda/gda-server-operation.c:1328
+#: ../libgda/gda-server-operation.c:1347
+#: ../libgda/gda-server-operation.c:1935
+#: ../libgda/gda-server-operation.c:1987
 #, c-format
 msgid "Could not set parameter '%s' to value '%s'"
 msgstr "Không thể đặt thâm số « %s » thành giá trị « %s »"
 
-#: ../libgda/gda-server-operation.c:1364
+#: ../libgda/gda-server-operation.c:1369
 msgid "Missing attribute named 'path'"
 msgstr "Thiếu thuộc tính tên « path » (đường dẫn)"
 
-#: ../libgda/gda-server-operation.c:2041
+#: ../libgda/gda-server-operation.c:2046
 #, c-format
 msgid "Missing required value for '%s'"
 msgstr "Thiếu giá trị cần thiết cho « %s »"
 
-#: ../libgda/gda-server-operation.c:2052
+#: ../libgda/gda-server-operation.c:2057
 #, c-format
 msgid "Missing required value for list of parameters '%s'"
 msgstr "Thiếu giá trị cần thiết cho danh sách tham số « %s »"
@@ -1699,18 +1957,19 @@ msgstr "Tập hợp"
 #: ../libgda/gda-server-provider-extra.c:155
 #: ../libgda/gda-server-provider-extra.c:166
 #: ../libgda/gda-server-provider-extra.c:178
-#: ../providers/firebird/gda-firebird-provider.c:247
-#: ../providers/firebird/gda-firebird-provider.c:735
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:792
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:882
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:911
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:941
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:969
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:997
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1050
-#: ../providers/ldap/gda-ldap-provider.c:337
+#: ../providers/firebird/gda-firebird-provider.c:248
+#: ../providers/firebird/gda-firebird-provider.c:736
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:802
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:892
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:921
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:951
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:979
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1007
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1060
+#: ../providers/ldap/gda-ldap-provider.c:338
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:36
-#: ../providers/sybase/gda-sybase-provider.c:1102
+#: ../providers/sybase/gda-sybase-provider.c:1111
+#: ../tools/command-exec.c:353
 msgid "Owner"
 msgstr "Sở hữu"
 
@@ -1718,11 +1977,11 @@ msgstr "Sở hữu"
 #: ../libgda/gda-server-provider-extra.c:139
 #: ../libgda/gda-server-provider-extra.c:149
 #: ../libgda/gda-server-provider-extra.c:167
-#: ../providers/firebird/gda-firebird-provider.c:248
-#: ../providers/firebird/gda-firebird-provider.c:736
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:998
-#: ../providers/ldap/gda-ldap-provider.c:338
-#: ../providers/sybase/gda-sybase-provider.c:1104
+#: ../providers/firebird/gda-firebird-provider.c:249
+#: ../providers/firebird/gda-firebird-provider.c:737
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1008
+#: ../providers/ldap/gda-ldap-provider.c:339
+#: ../providers/sybase/gda-sybase-provider.c:1113
 msgid "Comments"
 msgstr "Ghi chú"
 
@@ -1744,12 +2003,12 @@ msgid "Definition"
 msgstr "Định nghĩa"
 
 #: ../libgda/gda-server-provider-extra.c:102
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:827
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:837
 msgid "Database"
 msgstr "Cơ sở dữ liệu"
 
 #: ../libgda/gda-server-provider-extra.c:106
-#: ../providers/firebird/gda-firebird-provider.c:613
+#: ../providers/firebird/gda-firebird-provider.c:614
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:13
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:64
 #: ../providers/mysql/mysql_specs_drop_column.xml.in.h:2
@@ -1763,7 +2022,7 @@ msgid "Field name"
 msgstr "Tên trường"
 
 #: ../libgda/gda-server-provider-extra.c:107
-#: ../providers/firebird/gda-firebird-provider.c:614
+#: ../providers/firebird/gda-firebird-provider.c:615
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:10
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:44
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:4
@@ -1775,7 +2034,7 @@ msgid "Data type"
 msgstr "Kiểu dữ liệu"
 
 #: ../libgda/gda-server-provider-extra.c:108
-#: ../providers/firebird/gda-firebird-provider.c:615
+#: ../providers/firebird/gda-firebird-provider.c:616
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:17
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:138
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:13
@@ -1787,7 +2046,7 @@ msgid "Size"
 msgstr "Cỡ"
 
 #: ../libgda/gda-server-provider-extra.c:109
-#: ../providers/firebird/gda-firebird-provider.c:616
+#: ../providers/firebird/gda-firebird-provider.c:617
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:16
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:134
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:12
@@ -1799,22 +2058,22 @@ msgid "Scale"
 msgstr "Tỷ lệ"
 
 #: ../libgda/gda-server-provider-extra.c:110
-#: ../providers/firebird/gda-firebird-provider.c:617
+#: ../providers/firebird/gda-firebird-provider.c:618
 msgid "Not null?"
 msgstr "Không rỗng?"
 
 #: ../libgda/gda-server-provider-extra.c:111
-#: ../providers/firebird/gda-firebird-provider.c:618
+#: ../providers/firebird/gda-firebird-provider.c:619
 msgid "Primary key?"
 msgstr "Khóa chính?"
 
 #: ../libgda/gda-server-provider-extra.c:112
-#: ../providers/firebird/gda-firebird-provider.c:619
+#: ../providers/firebird/gda-firebird-provider.c:620
 msgid "Unique index?"
 msgstr "Chỉ mục duy nhất?"
 
 #: ../libgda/gda-server-provider-extra.c:113
-#: ../providers/firebird/gda-firebird-provider.c:620
+#: ../providers/firebird/gda-firebird-provider.c:621
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:5
 #: ../providers/oracle/oracle_specs_drop_index.xml.in.h:4
 #: ../providers/oracle/oracle_specs_drop_table.xml.in.h:2
@@ -1825,7 +2084,7 @@ msgid "References"
 msgstr "Tham chiếu"
 
 #: ../libgda/gda-server-provider-extra.c:114
-#: ../providers/firebird/gda-firebird-provider.c:621
+#: ../providers/firebird/gda-firebird-provider.c:622
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:12
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:48
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:6
@@ -1840,7 +2099,7 @@ msgid "Extra attributes"
 msgstr "Thuộc tính thêm"
 
 #: ../libgda/gda-server-provider-extra.c:119
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:881
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:891
 #: ../providers/mysql/mysql_specs_drop_index.xml.in.h:1
 #: ../providers/oracle/oracle_specs_drop_index.xml.in.h:2
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:2
@@ -1849,7 +2108,7 @@ msgid "Index"
 msgstr "Chỉ mục"
 
 #: ../libgda/gda-server-provider-extra.c:123
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:912
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:922
 msgid "Language"
 msgstr "Ngôn ngữ"
 
@@ -1859,9 +2118,9 @@ msgstr "Miền tên"
 
 #: ../libgda/gda-server-provider-extra.c:131
 #: ../libgda/gda-server-provider-extra.c:154
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:883
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:940
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1049
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:893
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:950
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1059
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:18
 #: ../providers/mysql/mysql_specs_drop_column.xml.in.h:3
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:7
@@ -1874,6 +2133,7 @@ msgstr "Miền tên"
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:11
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:3
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:3
+#: ../tools/command-exec.c:370
 msgid "Table"
 msgstr "Bảng"
 
@@ -1883,12 +2143,12 @@ msgid "Sequence"
 msgstr "Dãy"
 
 #: ../libgda/gda-server-provider-extra.c:136
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:910
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:920
 msgid "Procedure"
 msgstr "Thủ tục"
 
 #: ../libgda/gda-server-provider-extra.c:140
-#: ../providers/firebird/gda-firebird-provider.c:737
+#: ../providers/firebird/gda-firebird-provider.c:738
 msgid "Return type"
 msgstr "Kiểu trả gởi"
 
@@ -1897,7 +2157,7 @@ msgid "Nb args"
 msgstr "Đối số nb"
 
 #: ../libgda/gda-server-provider-extra.c:142
-#: ../providers/firebird/gda-firebird-provider.c:738
+#: ../providers/firebird/gda-firebird-provider.c:739
 msgid "Args types"
 msgstr "Kiểu đối số"
 
@@ -1907,21 +2167,23 @@ msgstr "Thủ tục lẫy"
 
 #: ../libgda/gda-server-provider-extra.c:165
 #: ../libgda/gda-server-provider-extra.c:185
-#: ../providers/firebird/gda-firebird-provider.c:246
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:996
-#: ../providers/ldap/gda-ldap-provider.c:439
+#: ../providers/firebird/gda-firebird-provider.c:247
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1006
+#: ../providers/ldap/gda-ldap-provider.c:440
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:17
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:17
-#: ../providers/sybase/gda-sybase-provider.c:1100
+#: ../providers/sybase/gda-sybase-provider.c:1109
+#: ../tools/command-exec.c:352
+#: ../tools/command-exec.c:465
 #: ../tools/gda-diagnose.c:315
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
 msgid "Type"
 msgstr "Kiểu"
 
 #: ../libgda/gda-server-provider-extra.c:168
-#: ../providers/firebird/gda-firebird-provider.c:249
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:999
-#: ../providers/sybase/gda-sybase-provider.c:1106
+#: ../providers/firebird/gda-firebird-provider.c:250
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1009
+#: ../providers/sybase/gda-sybase-provider.c:1115
 msgid "GDA type"
 msgstr "Kiểu GDA"
 
@@ -1934,6 +2196,7 @@ msgid "User"
 msgstr "Người dùng"
 
 #: ../libgda/gda-server-provider-extra.c:177
+#: ../tools/command-exec.c:369
 msgid "View"
 msgstr "Xem"
 
@@ -1978,58 +2241,74 @@ msgstr "Mô hình cho giản đồ có kiểu gda không đúng: « %s » thay v
 msgid "Can't handle Primary Key fields which are BLOBs"
 msgstr "Không thể xử lý trường Khoá Chính cũng là đốm (BLOB)"
 
-#: ../libgda/gda-server-provider.c:491
+#: ../libgda/gda-server-provider.c:568
 #, c-format
 msgid "Provider %s created a GdaServerOperation without node for '%s'"
-msgstr "Nhà cung cấp %s đã tạo một GdaServerOperation (thao tác máy phục vụ gda) "
+msgstr ""
+"Nhà cung cấp %s đã tạo một GdaServerOperation (thao tác máy phục vụ gda) "
 "không có nút cho « %s »"
 
-#: ../libgda/gda-server-provider.c:495
+#: ../libgda/gda-server-provider.c:572
 #, c-format
 msgid "Provider %s created a GdaServerOperation with wrong node type for '%s'"
-msgstr "Nhà cung cấp %s đã tạo một GdaServerOperation (thao tác máy phục vụ gda) có "
+msgstr ""
+"Nhà cung cấp %s đã tạo một GdaServerOperation (thao tác máy phục vụ gda) có "
 "kiểu nút sai cho « %s »"
 
-#: ../libgda/gda-server-provider.c:1159
+#: ../libgda/gda-server-provider.c:1245
 msgid ""
 "GdaServerProvider object implements the escape_string() virtual method but "
 "does not implement the unescape_string() one, please report this bug."
-msgstr "Đối tượng cung cấp máy phục vụ GdaServerProvider thực hiện phương pháp ảo escape_string() (thoát chuỗi) nhưng không thực hiện điều unescape_string() (hủy thoát chuỗi): hãy thông báo lỗi này."
+msgstr ""
+"Đối tượng cung cấp máy phục vụ GdaServerProvider thực hiện phương pháp ảo "
+"escape_string() (thoát chuỗi) nhưng không thực hiện điều unescape_string() "
+"(hủy thoát chuỗi): hãy thông báo lỗi này."
 
-#: ../libgda/gda-server-provider.c:1186
+#: ../libgda/gda-server-provider.c:1272
 msgid ""
 "GdaServerProvider object implements the unescape_string() virtual method but "
 "does not implement the escape_string() one, please report this bug."
-msgstr "Đối tượng cung cấp máy phục vụ GdaServerProvider thực hiện phương pháp ảo unescape_string() (hủy thoát chuỗi) nhưng không thực hiện điều escape_string() (thoát chuỗi): hãy thông báo lỗi này."
+msgstr ""
+"Đối tượng cung cấp máy phục vụ GdaServerProvider thực hiện phương pháp ảo "
+"unescape_string() (hủy thoát chuỗi) nhưng không thực hiện điều escape_string"
+"() (thoát chuỗi): hãy thông báo lỗi này."
 
-#: ../libgda/gda-util.c:244
+#: ../libgda/gda-util.c:246
 #, c-format
 msgid "Error while reading %s: %s"
 msgstr "Gặp lỗi khi đọc %s: %s"
 
-#: ../libgda/gda-util.c:270
+#: ../libgda/gda-util.c:272
 #, c-format
 msgid "Could not create file %s"
 msgstr "Không thể tạo tập tin %s"
 
-#: ../libgda/gda-util.c:811
+#: ../libgda/gda-util.c:824
 #, c-format
 msgid "Field number %d not found in source named '%s'"
 msgstr "Không tìm thấy trường số %d trong nguồn tên « %s »"
 
 #: ../libgda/graph/gda-dict-reg-graphs.c:100
 msgid "gda_graph of type 'Q' must have an 'object' attribute"
-msgstr "« gda_graph » (đồ thị GDA) kiểu « Q » phải có một thuộc tính « object » (đối "
+msgstr ""
+"« gda_graph » (đồ thị GDA) kiểu « Q » phải có một thuộc tính « object » (đối "
 "tượng)"
 
 #: ../libgda/graph/gda-dict-reg-graphs.c:112
 msgid "gda_graph of type 'Q' must have valid 'object' attribute"
-msgstr "« gda_graph » (đồ thị GDA) kiểu « Q » phải có một thuộc tính « object » (đối "
+msgstr ""
+"« gda_graph » (đồ thị GDA) kiểu « Q » phải có một thuộc tính « object » (đối "
 "tượng) hợp lệ"
 
-#: ../libgda/graph/gda-graph-item.c:473
+#: ../libgda/graph/gda-graph-item.c:494
 msgid "XML Tag is not <gda_graph_item>"
 msgstr "Thẻ XML không phải là <gda_graph_item> (mục đồ thị gda)"
+
+#: ../libgda/graph/gda-graph-query.c:121
+msgid ""
+"The dictionary use by this GdaQuery does not support graphs, this support is "
+"now added"
+msgstr "Từ điển được truy cấn GdaQuery này không hỗ trợ đồ thị, giờ này đã thêm hỗ trợ này"
 
 #: ../libgda/graph/gda-graph.c:661
 msgid "XML Tag is not <gda_graph>"
@@ -2041,7 +2320,8 @@ msgstr "Gặp thuộc tính « ld » không đúng trong <gda_graph> (đồ th�
 
 #: ../libgda/graph/gda-graph.c:708
 msgid "Wrong 'type' attribute in <gda_graph>"
-msgstr "Gặp thuộc tính « type » (kiểu) không đúng trong <gda_graph> (đồ thị gda)"
+msgstr ""
+"Gặp thuộc tính « type » (kiểu) không đúng trong <gda_graph> (đồ thị gda)"
 
 #: ../libgda/graph/gda-graph.c:750
 msgid "Missing ID attribute in <gda_graph>"
@@ -2061,15 +2341,15 @@ msgstr "Đại diện nhị phân"
 
 #: ../libgda/handlers/gda-handler-boolean.c:116
 msgid "Boolean values handler"
-msgstr "Bộ quản lý giá trị bun"
+msgstr "Bộ quản lý giá trị lôgic"
 
 #: ../libgda/handlers/gda-handler-boolean.c:121
 msgid "InternalBoolean"
-msgstr "InternalBoolean"
+msgstr "LôgicNộiBộ"
 
 #: ../libgda/handlers/gda-handler-boolean.c:122
 msgid "Boolean representation"
-msgstr "Đại diện bun."
+msgstr "Đại diện lôgic."
 
 #: ../libgda/handlers/gda-handler-numerical.c:130
 msgid "InternalNumerical"
@@ -2115,25 +2395,150 @@ msgstr "KiểuCụcBộ"
 msgid "Gda type representation"
 msgstr "Đại diện kiểu gda."
 
-#: ../libgda/sql-delimiter/gda-sql-delimiter.c:58
+#: ../libgda/sql-delimiter/gda-sql-delimiter.c:60
 #: ../libgda/sql-transaction/gda-sql-transaction-parser.c:53
-#: ../libsql/sql_parser.c:59
+#: ../libsql/sql_parser.c:60
 #, c-format
 msgid "Parse error near `%s'"
 msgstr "Lỗi phân tách gần « %s »."
 
-#: ../libgda/sql-delimiter/gda-sql-delimiter.c:60
+#: ../libgda/sql-delimiter/gda-sql-delimiter.c:62
 #: ../libgda/sql-transaction/gda-sql-transaction-parser.c:56
-#: ../libsql/sql_parser.c:61
+#: ../libsql/sql_parser.c:62
 #, c-format
 msgid "Syntax error near `%s'"
 msgstr "Lỗi cú pháp gần « %s »."
 
-#: ../libgda/sql-delimiter/gda-sql-delimiter.c:151
+#: ../libgda/sql-delimiter/gda-sql-delimiter.c:155
 #: ../libgda/sql-transaction/gda-sql-transaction-parser.c:85
-#: ../libsql/sql_parser.c:386
+#: ../libsql/sql_parser.c:387
 msgid "Empty query to parse"
 msgstr "Truy vấn rỗng cần phân tách."
+
+#: ../libgda/sql-delimiter/lexer.l:125
+#: ../libsql/lexer.l:111
+msgid "unterminated string"
+msgstr "chuỗi chưa chấm dứt"
+
+#: ../libgda/sql-delimiter/lexer.l:144
+#: ../libsql/lexer.l:144
+msgid "unterminated textual expression"
+msgstr "biểu thức kiểu văn bản chưa chấm dứt"
+
+#: ../libgda-report/DocBook/gda-report-docbook-document.c:280
+msgid "Could not find the 'xsltproc' program"
+msgstr "Không tìm thấy chương trình « xsltproc »"
+
+#: ../libgda-report/DocBook/gda-report-docbook-document.c:294
+msgid "Could not find the DocBook XSL stylesheet for HTML"
+msgstr "Không tìm thấy bảng kiểu dáng DocBook XSL cho mã HTML"
+
+#: ../libgda-report/DocBook/gda-report-docbook-document.c:346
+msgid "Could not find the 'fop' program"
+msgstr "Không tìm thấy chương trình « fop »"
+
+#: ../libgda-report/DocBook/gda-report-docbook-document.c:360
+msgid "Could not find the DocBook XSL stylesheet for Formatting Objects"
+msgstr "Không tìm thấy bảng kiểu dáng DocBook XSL cho các Đối tượng Định dạng"
+
+#: ../libgda-report/RML/gda-report-rml-document.c:204
+msgid "Could not find the 'trml2html.py' program"
+msgstr "Không tìm thấy chương trình « trml2html.py »"
+
+#: ../libgda-report/RML/gda-report-rml-document.c:231
+msgid "Could not find the 'trml2pdf.py' program"
+msgstr "Không tìm thấy chương trình « trml2pdf.py »"
+
+#: ../libgda-report/engine/gda-report-engine.c:307
+#, c-format
+msgid "Object type '%s' cannot be declared in this context"
+msgstr "Không thể tuyên bố kiểu đối tượng « %s » trong ngữ cảnh này"
+
+#: ../libgda-report/engine/gda-report-engine.c:315
+#, c-format
+msgid "An object with the '%s' name has already been declared"
+msgstr "Một đối tượng tên « %s » đã được tuyên bố"
+
+#: ../libgda-report/engine/gda-report-engine.c:352
+#, c-format
+msgid "Object type '%s' cannot be requested in this context"
+msgstr "Không thể yêu cầu kiểu đối tượng « %s » trong ngữ cảnh này"
+
+#: ../libgda-report/engine/gda-report-engine.c:581
+#, c-format
+msgid "Unknown query '%s'"
+msgstr "Không rõ truy vấn « %s »"
+
+#: ../libgda-report/engine/gda-report-engine.c:587
+msgid "Query must be a SELECT query"
+msgstr "Truy vấn phải là truy vấn kiểu SELECT (chọn)"
+
+#: ../libgda-report/engine/gda-report-engine.c:649
+msgid "Query is not specified (not named and not defined)"
+msgstr "Truy vấn chưa được ghi rõ (không có tên, không được xác định)"
+
+#: ../libgda-report/engine/gda-report-engine.c:799
+#, c-format
+msgid "1 Unknown parameter '%s'"
+msgstr "1 Tham số không rõ « %s »"
+
+#: ../libgda-report/engine/gda-report-engine.c:816
+msgid "Parameter name not specified"
+msgstr "Chưa ghi rõ tên tham số"
+
+#: ../libgda-report/engine/gda-report-engine.c:866
+msgid "No expression speficied"
+msgstr "Chưa ghi rõ biểu thức"
+
+#: ../libgda-report/engine/gda-report-engine.c:889
+#, c-format
+msgid "Cannot cast value from type '%s' to type '%s'"
+msgstr "Không thể cast (tạm thời thay đổi kiểu của) giá trị từ kiểu « %s » sang kiểu « %s »"
+
+#: ../libgda-report/engine/gda-report-engine.c:939
+#, c-format
+msgid "0 Unknown parameter '%s'"
+msgstr "0 Tham số không rõ « %s »"
+
+#: ../libgda-report/engine/gda-report-engine.c:963
+#, c-format
+msgid "Cannot cast parameter from type '%s' to type '%s'"
+msgstr "Không thể cast (tạm thời thay đổi kiểu của) tham số từ kiểu « %s » sang kiểu « %s »"
+
+#: ../libgda-report/engine/gda-report-engine.c:1027
+#, c-format
+msgid "Expression '%s' should return exactly one value"
+msgstr "Biểu thức « %s » nên trả lại chính xác một giá trị"
+
+#: ../libgda-report/engine/gda-report-engine.c:1064
+msgid "Binary data"
+msgstr "Dữ liệu nhị phân"
+
+#: ../libgda-report/gda-report-document.c:254
+msgid "Document not specified"
+msgstr "Chưa ghi rõ tài liệu"
+
+#: ../libgda-report/gda-report-document.c:281
+msgid "Cannot create temporary file"
+msgstr "Không thể tạo tập tin tạm thời"
+
+#: ../libgda-report/gda-report-document.c:308
+#, c-format
+msgid "Execution of the %s program failed: %s"
+msgstr "Lỗi thực hiện chương trình %s: %s"
+
+#: ../libgda-report/gda-report-document.c:346
+msgid "This report document does not handle HTML output"
+msgstr "Tài liệu thông báo này không xử lý kết xuất HTML"
+
+#: ../libgda-report/gda-report-document.c:371
+msgid "This report document does not handle PDF output"
+msgstr "Tài liệu thông báo này không xử lý kết xuất PDF"
+
+#: ../libsql/lexer.l:151
+#, c-format
+msgid "Unknown char '%s'"
+msgstr "Không rõ ký tự « %s »"
 
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:1
 msgid "Berkeley DB database file to be used"
@@ -2147,6 +2552,7 @@ msgstr "Tập tin cơ sở dữ liệu"
 #: ../providers/firebird/firebird_specs_dsn.xml.in.h:3
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:1
 #: ../providers/ibmdb2/ibmdb2_specs_dsn.xml.in.h:1
+#: ../providers/mdb/mdb_specs_dsn.xml.in.h:1
 #: ../providers/msql/msql_specs_dsn.xml.in.h:1
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:23
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:4
@@ -2166,66 +2572,26 @@ msgstr "Tên cơ sở dữ liệu"
 msgid "Name of the database in the database file to be used"
 msgstr "Tên của cơ sở dữ liệu trong tập tin cơ sở dữ liệu cần dùng"
 
-#: ../providers/bdb/gda-bdb-provider.c:159
+#: ../providers/bdb/gda-bdb-provider.c:162
 msgid "The FILE parameter is not defined in the connection string."
 msgstr "Chưa định nghĩa tham số FILE (tập tin) trong chuỗi kết nối."
 
-#: ../providers/bdb/gda-bdb-provider.c:190
+#: ../providers/bdb/gda-bdb-provider.c:174
+#, c-format
+msgid "Could not add BDB data model to connection: %s"
+msgstr "Không thể thêm mô hình dữ liệu BDB vào kết nối: %s"
+
+#: ../providers/bdb/gda-bdb-provider.c:187
 msgid "-"
 msgstr "-"
 
-#: ../providers/bdb/gda-bdb-provider.c:250
-#: ../providers/bdb/gda-bdb-provider.c:271
-#: ../providers/bdb/gda-bdb-provider.c:297
+#: ../providers/bdb/gda-bdb-provider.c:227
 msgid "Invalid BDB handle"
 msgstr "Bộ quản lý BDB không hợp lệ."
 
-#: ../providers/bdb/gda-bdb-recordset.c:113
-#: ../providers/mysql/gda-mysql-recordset.c:314
-#, c-format
-msgid "Row number out of range 0 - %d"
-msgstr "Số thứ tự hàng vượt ngoài phạm vi - %d."
-
-#: ../providers/bdb/gda-bdb-recordset.c:175
-#: ../providers/mysql/gda-mysql-recordset.c:373
-#: ../providers/postgres/gda-postgres-recordset.c:568
-msgid "Column number out of range"
-msgstr "Số thứ tự cột vượt ngoài phạm vi."
-
-#: ../providers/bdb/gda-bdb-recordset.c:255
-msgid "Database is empty"
-msgstr "Cơ sở dữ liệu rỗng."
-
-#: ../providers/bdb/libmain.c:41
+#: ../providers/bdb/libmain.c:51
 msgid "Provider for Berkeley databases"
 msgstr "Bộ cung cấp cơ sở dữ liệu Berkeley."
-
-#: ../providers/bdb/utils.c:36
-#: ../providers/freetds/gda-freetds-provider.c:1170
-#: ../providers/freetds/utils.c:44
-#: ../providers/oracle/utils.c:77
-#: ../providers/postgres/utils.c:74
-#: ../providers/postgres/utils.c:84
-#: ../providers/sybase/gda-sybase-provider.c:767
-#: ../providers/sybase/gda-sybase-recordset.c:500
-#: ../providers/sybase/gda-sybase-recordset.c:523
-#: ../providers/sybase/gda-sybase-recordset.c:581
-#: ../providers/sybase/utils.c:207
-#: ../providers/sybase/utils.c:224
-#: ../providers/sybase/utils.c:240
-#: ../providers/sybase/utils.c:256
-#: ../providers/sybase/utils.c:276
-#: ../providers/sybase/utils.c:317
-#: ../providers/sybase/utils.c:334
-#: ../providers/sybase/utils.c:386
-#: ../providers/sybase/utils.c:412
-#: ../providers/sybase/utils.c:446
-#: ../providers/sybase/utils.c:463
-#: ../providers/sybase/utils.c:486
-#: ../providers/sybase/utils.c:502
-#: ../providers/sybase/utils.c:540
-msgid "Not available"
-msgstr "Chưa sẵn sàng"
 
 #: ../providers/firebird/firebird_specs_dsn.xml.in.h:1
 msgid "Character Set"
@@ -2263,52 +2629,53 @@ msgstr "Phương ngôn SQL cần dùng khi kết nối"
 msgid "The name of a database to connect to"
 msgstr "Tên của cơ sở dữ liệu đến đó cần kết nối"
 
-#: ../providers/firebird/gda-firebird-provider.c:630
-#: ../providers/firebird/gda-firebird-provider.c:637
-#: ../providers/msql/gda-msql-provider.c:541
+#: ../providers/firebird/gda-firebird-provider.c:631
+#: ../providers/firebird/gda-firebird-provider.c:638
 #: ../providers/msql/gda-msql-provider.c:547
-#: ../providers/mysql/gda-mysql-provider.c:1614
-#: ../providers/mysql/gda-mysql-provider.c:1622
-#: ../providers/mysql/gda-mysql-provider.c:1908
-#: ../providers/mysql/gda-mysql-provider.c:1916
+#: ../providers/msql/gda-msql-provider.c:553
+#: ../providers/mysql/gda-mysql-provider.c:1636
+#: ../providers/mysql/gda-mysql-provider.c:1644
+#: ../providers/mysql/gda-mysql-provider.c:1934
+#: ../providers/mysql/gda-mysql-provider.c:1942
 msgid "Table name is needed but none specified in parameter list"
 msgstr "Cần tên bảng nhưng chưa được xác định trong danh sách tham số."
 
-#: ../providers/firebird/gda-firebird-provider.c:708
-#: ../providers/firebird/gda-firebird-provider.c:711
+#: ../providers/firebird/gda-firebird-provider.c:709
+#: ../providers/firebird/gda-firebird-provider.c:712
 #. 5th the return type
 #. 6th the argument type
 msgid "UNKNOWN"
 msgstr "KHÔNG_RÕ"
 
-#: ../providers/firebird/gda-firebird-provider.c:734
+#: ../providers/firebird/gda-firebird-provider.c:735
 msgid "ID"
 msgstr "ID"
 
-#: ../providers/firebird/gda-firebird-provider.c:739
+#: ../providers/firebird/gda-firebird-provider.c:740
+#: ../tools/command-exec.c:469
 msgid "SQL"
 msgstr "SQL"
 
-#: ../providers/firebird/gda-firebird-provider.c:823
-#: ../providers/firebird/gda-firebird-provider.c:940
-#: ../providers/firebird/gda-firebird-provider.c:967
-#: ../providers/firebird/gda-firebird-provider.c:986
-#: ../providers/firebird/gda-firebird-provider.c:1022
-#: ../providers/firebird/gda-firebird-provider.c:1115
-#: ../providers/firebird/gda-firebird-provider.c:1202
-#: ../providers/firebird/gda-firebird-provider.c:1236
-#: ../providers/firebird/gda-firebird-provider.c:1274
+#: ../providers/firebird/gda-firebird-provider.c:824
+#: ../providers/firebird/gda-firebird-provider.c:941
+#: ../providers/firebird/gda-firebird-provider.c:968
+#: ../providers/firebird/gda-firebird-provider.c:987
+#: ../providers/firebird/gda-firebird-provider.c:1023
+#: ../providers/firebird/gda-firebird-provider.c:1116
+#: ../providers/firebird/gda-firebird-provider.c:1203
+#: ../providers/firebird/gda-firebird-provider.c:1237
+#: ../providers/firebird/gda-firebird-provider.c:1275
 #: ../providers/firebird/gda-firebird-recordset.c:668
 #: ../providers/firebird/gda-firebird-recordset.c:888
 msgid "Invalid Firebird handle"
 msgstr "Bộ quản lý Firebird không hợp lệ."
 
-#: ../providers/firebird/gda-firebird-provider.c:861
+#: ../providers/firebird/gda-firebird-provider.c:862
 msgid "No database specified"
 msgstr "Chưa xác định cơ sở dữ liệu."
 
-#: ../providers/firebird/gda-firebird-provider.c:1242
-#: ../providers/firebird/gda-firebird-provider.c:1280
+#: ../providers/firebird/gda-firebird-provider.c:1243
+#: ../providers/firebird/gda-firebird-provider.c:1281
 msgid "Invalid transaction handle"
 msgstr "Bộ quản lý giao dịch không hợp lệ."
 
@@ -2327,9 +2694,9 @@ msgstr "Chưa hỗ trợ kiểu dữ liệu ARRAY (mảng) của Firebird.\n"
 
 #: ../providers/firebird/gda-firebird-recordset.c:570
 msgid "Unknown Firebird's field value!\n"
-msgstr "• Không biết giá trị trường Firebird. •\n"
+msgstr "• Không rõ giá trị trường Firebird. •\n"
 
-#: ../providers/firebird/libmain.c:41
+#: ../providers/firebird/libmain.c:51
 msgid "Provider for Firebird databases"
 msgstr "Bộ cung cấp cơ sở dữ liệu Firebird."
 
@@ -2442,7 +2809,9 @@ msgstr "Phiên bản phụ của giao thức TDS"
 msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'USER=;USER=;PASSWORD='."
-msgstr "Kết nối bị hủy bỏ. Bạn cần phải cung cấp ít nhất tên máy, tên người dùng (user) và mật khẩu (password) bằng « DSN 'USER=;USER=;PASSWORD= »."
+msgstr ""
+"Kết nối bị hủy bỏ. Bạn cần phải cung cấp ít nhất tên máy, tên người dùng "
+"(user) và mật khẩu (password) bằng « DSN 'USER=;USER=;PASSWORD= »."
 
 #: ../providers/freetds/gda-freetds-provider.c:211
 msgid "Error creating message container."
@@ -2475,27 +2844,28 @@ msgstr "Việc thiết lập kết nối bị lỗi."
 msgid "Failed getting connection info."
 msgstr "Việc lấy thông tin kết nối bị lỗi."
 
-#: ../providers/freetds/gda-freetds-provider.c:833
-#: ../providers/freetds/gda-freetds-provider.c:834
+#: ../providers/freetds/gda-freetds-provider.c:837
+#: ../providers/freetds/gda-freetds-provider.c:838
 msgid "Query did not succeed in execute_cmd()."
 msgstr "Truy vấn không thành công trong « execute_cmd() »."
 
-#: ../providers/freetds/gda-freetds-provider.c:851
-#: ../providers/freetds/gda-freetds-provider.c:853
+#: ../providers/freetds/gda-freetds-provider.c:855
+#: ../providers/freetds/gda-freetds-provider.c:857
 msgid "Unexpected result tokens in execute_cmd()."
 msgstr "Gặp nhiều hiệu bài kết quả bất ngờ trong « execute_cmd() »."
 
-#: ../providers/freetds/gda-freetds-provider.c:861
-#: ../providers/freetds/gda-freetds-provider.c:862
+#: ../providers/freetds/gda-freetds-provider.c:865
+#: ../providers/freetds/gda-freetds-provider.c:866
 msgid "Unexpected return in execute_cmd()."
 msgstr "Mã trả gởi bất ngờ trong « execute_cmd() »."
 
-#: ../providers/freetds/gda-freetds-provider.c:1141
+#: ../providers/freetds/gda-freetds-provider.c:1157
 #, c-format
 msgid ""
 "Msg %d, Level %d, State %d, Server %s, Line %d\n"
 "%s\n"
-msgstr "Tin %d, Cấp %d, Ttrạng %d, Máy chủ %s, Dòng %d\n"
+msgstr ""
+"Tin %d, Cấp %d, Ttrạng %d, Máy chủ %s, Dòng %d\n"
 "%s\n"
 
 #: ../providers/freetds/gda-freetds-recordset.c:381
@@ -2504,7 +2874,8 @@ msgstr "Gặp lỗi khi xử lý hàng kết quả.\n"
 
 #: ../providers/freetds/gda-freetds-recordset.c:392
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
-msgstr "Mã trả về « freetds » bất ngờ trong « tds_process_row_tokens() » (các hiệu "
+msgstr ""
+"Mã trả về « freetds » bất ngờ trong « tds_process_row_tokens() » (các hiệu "
 "bài hàng xử lý tds).\n"
 
 #: ../providers/freetds/gda-freetds-recordset.c:402
@@ -2513,17 +2884,18 @@ msgstr "Gặp lỗi khi xử lý kết quả.\n"
 
 #: ../providers/freetds/gda-freetds-recordset.c:409
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
-msgstr "Mã trả về « freetds » không mong đợi trong « tds_process_row_tokens » (các "
+msgstr ""
+"Mã trả về « freetds » không mong đợi trong « tds_process_row_tokens » (các "
 "hiệu bài hàng xử lý tds)\n"
 
-#: ../providers/freetds/libmain.c:40
+#: ../providers/freetds/libmain.c:50
 msgid "Provider for TDS-based databases (using FreeTDS)"
 msgstr "Bộ cung cấp cơ sở dữ liệu dựa trên TDS (dùng FreeTDS)"
 
 #: ../providers/freetds/utils.c:40
 #: ../providers/oracle/utils.c:71
 #: ../providers/postgres/utils.c:83
-#: ../providers/sybase/utils.c:535
+#: ../providers/sybase/utils.c:522
 msgid "NO DESCRIPTION"
 msgstr "KHÔNG MÔ TẢ"
 
@@ -2535,33 +2907,34 @@ msgstr "Không thể cấp phát bộ quản lý môi trường.\n"
 #. GetInfo is needed for obtaining database name
 #. is needed for tables schema
 msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
-msgstr "Không hỗ trợ SQLGetInfo. Vì thể Bộ cung cấp IBM DB2 sẽ không hoạt động.\n"
+msgstr ""
+"Không hỗ trợ SQLGetInfo. Vì thể Bộ cung cấp IBM DB2 sẽ không hoạt động.\n"
 
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:494
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:630
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:738
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:813
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:499
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:640
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:748
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:823
 msgid "Invalid IBM DB2 handle"
 msgstr "Bộ quản lý DB2 IBM không hợp lệ."
 
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:791
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:801
 #: ../tools/gda-diagnose.c:375
 #: ../tools/gda-diagnose.c:456
 msgid "Function"
 msgstr "Hàm"
 
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:943
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:971
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1052
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:953
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:981
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1062
 msgid "SQL Definition"
 msgstr "Định nghĩa SQL"
 
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:968
-#: ../providers/oracle/gda-oracle-provider.c:2042
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:978
+#: ../providers/oracle/gda-oracle-provider.c:2057
 msgid "Triggers"
 msgstr "Thủ tục lẫy"
 
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1024
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1034
 msgid "Users"
 msgstr "Người dùng"
 
@@ -2573,12 +2946,12 @@ msgstr "[Không hỗ trợ BLOB]"
 msgid "[Unsupported data]"
 msgstr "[Dữ liệu không được hỗ trợ]"
 
-#: ../providers/ibmdb2/libmain.c:40
+#: ../providers/ibmdb2/libmain.c:50
 msgid "Provider for IBMDB2 databases"
 msgstr "Bộ cung cấp cho cơ sở dữ liệu IBMDB2"
 
-#: ../providers/ldap/gda-ldap-provider.c:266
-#: ../providers/ldap/gda-ldap-provider.c:522
+#: ../providers/ldap/gda-ldap-provider.c:267
+#: ../providers/ldap/gda-ldap-provider.c:523
 #: ../providers/ldap/gda-ldap-recordset.c:59
 #: ../providers/ldap/gda-ldap-recordset.c:177
 msgid "Invalid LDAP handle"
@@ -2587,8 +2960,8 @@ msgstr "Bộ quản lý LDAP không hợp lệ."
 #: ../providers/ldap/gda-ldap-recordset.c:70
 #: ../providers/mysql/gda-mysql-recordset.c:245
 #: ../providers/mysql/gda-mysql-recordset.c:367
-#: ../providers/postgres/gda-postgres-recordset.c:197
-#: ../providers/postgres/gda-postgres-recordset.c:562
+#: ../providers/postgres/gda-postgres-recordset.c:179
+#: ../providers/postgres/gda-postgres-recordset.c:544
 msgid "Row number out of range"
 msgstr "Số hàng vượt ngoài phạm vi."
 
@@ -2596,7 +2969,7 @@ msgstr "Số hàng vượt ngoài phạm vi."
 #: ../providers/msql/gda-msql-recordset.c:206
 #: ../providers/mysql/gda-mysql-recordset.c:431
 #: ../providers/oracle/gda-oracle-recordset.c:494
-#: ../providers/postgres/gda-postgres-recordset.c:240
+#: ../providers/postgres/gda-postgres-recordset.c:222
 msgid "Attempt to insert a row with an invalid number of columns"
 msgstr "Cố gắng chèn một hàng có số cột không hợp lệ."
 
@@ -2645,89 +3018,109 @@ msgstr "Miền đóng kết (bind domain) LDAP cần dùng để xác thực"
 msgid "Port to use when connecting to the LDAP server"
 msgstr "Cổng cần dùng khi kết nối tới máy phục vụ LDAP"
 
-#: ../providers/ldap/libmain.c:43
+#: ../providers/ldap/libmain.c:53
 msgid "Provider for LDAP directory"
 msgstr "Bộ cung cấp thư mục LDAP"
 
-#: ../providers/mdb/gda-mdb-provider.c:227
-msgid "A database FILENAME must be specified in the connection_string"
-msgstr "Phải xác định cơ sở dữ liệu TÊN TẬP TIN trong « connection_string » (chuỗi "
-"kết nối)"
+#: ../providers/mdb/gda-mdb-provider.c:237
+#: ../providers/sqlite/gda-sqlite-provider.c:293
+msgid "The connection string must contain DB_DIR and DB_NAME values"
+msgstr ""
+"Chuỗi kết nối phải chứa những giá trị DB_DIR (đường dẫn đến tập tin co sở dữ "
+"liệu) và DB_NAME (tập tin co sở dữ liệu trừ .db)"
 
-#: ../providers/mdb/gda-mdb-provider.c:240
-#: ../providers/xbase/gda-xbase-provider.c:226
+#: ../providers/mdb/gda-mdb-provider.c:263
+#: ../providers/mdb/gda-mdb-provider.c:270
+#, c-format
+msgid ""
+"The connection string format has changed: replace FILENAME with DB_DIR (the "
+"path to the database file) and DB_NAME (the database file without the '%s' "
+"at the end)."
+msgstr ""
+"Định dạng chuỗi kết nối đã thay đổi: hãy thay thế FILENAME (tập tin) bằng DB_DIR (đường dẫn đến tập tin co sở dữ liệu) và DB_NAME (tập tin co sở dữ liệu không có phần mở rộng « %s » tại kết thúc)."
+
+#: ../providers/mdb/gda-mdb-provider.c:278
+#: ../providers/sqlite/gda-sqlite-provider.c:334
+msgid ""
+"The DB_DIR part of the connection string must point to a valid directory"
+msgstr ""
+"Phần DB_DIR (đường dẫn đến tập tin co sở dữ liệu) của chuỗi kết nối phải chỉ "
+"tới một thư mục hợp lệ"
+
+#: ../providers/mdb/gda-mdb-provider.c:297
+#: ../providers/xbase/gda-xbase-provider.c:227
 #, c-format
 msgid "Could not open file %s"
 msgstr "Không thể mở tập tin « %s »"
 
-#: ../providers/mdb/gda-mdb-provider.c:264
-#: ../providers/mdb/gda-mdb-provider.c:294
-#: ../providers/mdb/gda-mdb-provider.c:316
-#: ../providers/mdb/gda-mdb-provider.c:350
-#: ../providers/mdb/gda-mdb-provider.c:720
-#: ../providers/mdb/gda-mdb-provider.c:757
+#: ../providers/mdb/gda-mdb-provider.c:321
+#: ../providers/mdb/gda-mdb-provider.c:351
+#: ../providers/mdb/gda-mdb-provider.c:373
+#: ../providers/mdb/gda-mdb-provider.c:407
+#: ../providers/mdb/gda-mdb-provider.c:777
+#: ../providers/mdb/gda-mdb-provider.c:815
 msgid "Invalid MDB handle"
 msgstr "Bộ quản lý MDB không hợp lệ"
 
-#: ../providers/mdb/gda-mdb-provider.c:688
+#: ../providers/mdb/gda-mdb-provider.c:745
 msgid "Boolean type"
-msgstr "Kiểu bun"
+msgstr "Kiểu lôgic"
 
-#: ../providers/mdb/gda-mdb-provider.c:689
+#: ../providers/mdb/gda-mdb-provider.c:746
 msgid "1-byte integers"
 msgstr "Số nguyên 1-byte"
 
-#: ../providers/mdb/gda-mdb-provider.c:690
+#: ../providers/mdb/gda-mdb-provider.c:747
 msgid "32-bit integers"
 msgstr "Số nguyên 32-bit"
 
-#: ../providers/mdb/gda-mdb-provider.c:691
+#: ../providers/mdb/gda-mdb-provider.c:748
 msgid "64-bit integers"
 msgstr "Số nguyên 64-bit"
 
-#: ../providers/mdb/gda-mdb-provider.c:692
+#: ../providers/mdb/gda-mdb-provider.c:749
 msgid "Money amounts"
-msgstr "Số lượng tiền"
+msgstr "Số tiền"
 
-#: ../providers/mdb/gda-mdb-provider.c:693
+#: ../providers/mdb/gda-mdb-provider.c:750
 msgid "Single precision values"
 msgstr "Giá trị chính xác đơn"
 
-#: ../providers/mdb/gda-mdb-provider.c:694
+#: ../providers/mdb/gda-mdb-provider.c:751
 msgid "Double precision values"
 msgstr "Giá trị chính xác đôi"
 
-#: ../providers/mdb/gda-mdb-provider.c:695
+#: ../providers/mdb/gda-mdb-provider.c:752
 msgid "Date/time value"
 msgstr "Giá trị ngày/giờ"
 
-#: ../providers/mdb/gda-mdb-provider.c:696
+#: ../providers/mdb/gda-mdb-provider.c:753
 msgid "Character strings"
 msgstr "Chuỗi ký tự"
 
-#: ../providers/mdb/gda-mdb-provider.c:697
+#: ../providers/mdb/gda-mdb-provider.c:754
 msgid "OLE object"
 msgstr "Đối tượng OLE"
 
-#: ../providers/mdb/gda-mdb-provider.c:698
+#: ../providers/mdb/gda-mdb-provider.c:755
 msgid "Variable length character strings"
 msgstr "Chuỗi ký tự có độ dài thay đổi"
 
-#: ../providers/mdb/gda-mdb-provider.c:699
+#: ../providers/mdb/gda-mdb-provider.c:756
 msgid "Replication ID"
 msgstr "ID thứ bản"
 
-#: ../providers/mdb/gda-mdb-provider.c:700
+#: ../providers/mdb/gda-mdb-provider.c:757
 msgid "Numeric"
 msgstr "Dạng số"
 
-#: ../providers/mdb/gda-mdb-provider.c:768
+#: ../providers/mdb/gda-mdb-provider.c:831
 #, c-format
 #. end unsafe
 msgid "Could not parse '%s' command"
 msgstr "Không thể phân tách lệnh « %s »."
 
-#: ../providers/mdb/gda-mdb-provider.c:775
+#: ../providers/mdb/gda-mdb-provider.c:838
 #, c-format
 #. parsing went fine, but there is no result
 #. (e.g. because of an invalid column name)
@@ -2739,30 +3132,38 @@ msgstr "Không nhận kết quả của lệnh « %s »."
 msgid "Table %s not found"
 msgstr "Không tìm thấy bảng « %s »."
 
-#: ../providers/mdb/libmain.c:42
+#: ../providers/mdb/libmain.c:51
 msgid "Provider for Microsoft Access files"
 msgstr "Bộ cung cấp tập tin MS Access"
 
-#: ../providers/mdb/mdb_specs_dsn.xml.in.h:1
-#: ../providers/xbase/xbase_specs_dsn.xml.in.h:3
-msgid "File Name"
-msgstr "Tên tập tin"
-
 #: ../providers/mdb/mdb_specs_dsn.xml.in.h:2
-#: ../providers/xbase/xbase_specs_dsn.xml.in.h:4
-msgid "Full path to the file containing the database"
-msgstr "Đường dẫn đầy đủ đến tập tin chứa cơ sở dữ liệu"
+#: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:6
+#: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:6
+#: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:2
+#: ../providers/xbase/xbase_specs_dsn.xml.in.h:1
+#. DSN parameters
+msgid "Directory"
+msgstr "Thư mục"
 
-#: ../providers/msql/gda-msql-libmain.c:40
+#: ../providers/mdb/mdb_specs_dsn.xml.in.h:3
+#: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:3
+msgid "Directory where the database file is stored"
+msgstr "Thư mục chứa tập tin co sở dữ liệu"
+
+#: ../providers/mdb/mdb_specs_dsn.xml.in.h:4
+msgid "The name of a database to use (filename without the .mdb)"
+msgstr "Tên của cơ sở dữ liệu cần dùng (tên tập tin không có phần mở rộng « mdb »)"
+
+#: ../providers/msql/libmain.c:50
 msgid "Provider for Hughes Technologies mSQL databases"
 msgstr "Bộ cung cấp cơ sở dữ liệu mSQL của Hughes Technologies."
 
-#: ../providers/msql/gda-msql-provider.c:257
-#: ../providers/msql/gda-msql-provider.c:301
-#: ../providers/msql/gda-msql-provider.c:322
-#: ../providers/msql/gda-msql-provider.c:535
+#: ../providers/msql/gda-msql-provider.c:258
+#: ../providers/msql/gda-msql-provider.c:307
+#: ../providers/msql/gda-msql-provider.c:328
+#: ../providers/msql/gda-msql-provider.c:541
 #: ../providers/msql/gda-msql-recordset.c:51
-#: ../providers/msql/gda-msql-recordset.c:348
+#: ../providers/msql/gda-msql-recordset.c:354
 msgid "Invalid mSQL handle"
 msgstr "Bộ quản lý mSQL không hợp lệ."
 
@@ -2775,7 +3176,10 @@ msgid ""
 "Host on which the database server is running (leave empty for a local "
 "connection using a UNIX domain socket, or use 'localhost' for a TCP/IP "
 "connection on the local machine) "
-msgstr "Máy trên đó chạy trình điều khiển cơ sở dữ liệu (bỏ rỗng cho kết nối cục bộ bằng cổng miền UNIX), hoặc dùng « localhost » (máy cục bộ) cho kết nối TCP/IP trên máy cục bộ)."
+msgstr ""
+"Máy trên đó chạy trình điều khiển cơ sở dữ liệu (bỏ rỗng cho kết nối cục bộ "
+"bằng cổng miền UNIX), hoặc dùng « localhost » (máy cục bộ) cho kết nối TCP/"
+"IP trên máy cục bộ)."
 
 #: ../providers/mysql/gda-mysql-ddl.c:257
 #: ../providers/postgres/gda-postgres-ddl.c:265
@@ -2803,29 +3207,32 @@ msgstr "Có trường đã tham chiếu rỗng được xác định trong ràng
 msgid "Table to create must have at least one row"
 msgstr "Bảng cần tạo phải có ít nhất một hàng"
 
-#: ../providers/mysql/gda-mysql-provider.c:255
+#: ../providers/mysql/gda-mysql-provider.c:257
 msgid ""
 "You cannot provide a UNIX SOCKET if you also provide either a HOST or a PORT."
-msgstr "Bạn không thể cung cấp một « UNIX_SOCKET » (ổ cắm Unix) nếu cũng đã cung cấp "
+msgstr ""
+"Bạn không thể cung cấp một « UNIX_SOCKET » (ổ cắm Unix) nếu cũng đã cung cấp "
 "hoặc là « HOST » (máy) hoặc là « PORT » (cổng)."
 
-#: ../providers/mysql/gda-mysql-provider.c:340
-#: ../providers/postgres/gda-postgres-provider.c:529
+#: ../providers/mysql/gda-mysql-provider.c:342
+#: ../providers/postgres/gda-postgres-provider.c:532
 msgid "The connection string must contain a DB_NAME value"
-msgstr "Chuỗi kết nối phải chứa một giá trị tên co sở dữ liệu DB_NAME (tập tin co sở "
+msgstr ""
+"Chuỗi kết nối phải chứa một giá trị tên co sở dữ liệu DB_NAME (tập tin co sở "
 "dữ liệu trừ .db)"
 
-#: ../providers/mysql/gda-mysql-provider.c:344
-#: ../providers/postgres/gda-postgres-provider.c:533
+#: ../providers/mysql/gda-mysql-provider.c:346
+#: ../providers/postgres/gda-postgres-provider.c:536
 msgid ""
 "The connection string format has changed: replace DATABASE with DB_NAME and "
 "the same contents"
-msgstr "Dạng thức chuỗi kết nối đã thay đổi: hãy thay thế DATABASE (co sở dữ liệu) "
+msgstr ""
+"Định dạng chuỗi kết nối đã thay đổi: hãy thay thế DATABASE (co sở dữ liệu) "
 "bằng DB_NAME (tập tin co sở dữ liệu trừ .db) và cùng nội dung"
 
-#: ../providers/mysql/gda-mysql-provider.c:414
-#: ../providers/mysql/gda-mysql-provider.c:1605
-#: ../providers/mysql/gda-mysql-provider.c:1899
+#: ../providers/mysql/gda-mysql-provider.c:416
+#: ../providers/mysql/gda-mysql-provider.c:1627
+#: ../providers/mysql/gda-mysql-provider.c:1925
 #: ../providers/mysql/gda-mysql-recordset.c:234
 #: ../providers/mysql/gda-mysql-recordset.c:307
 #: ../providers/mysql/gda-mysql-recordset.c:361
@@ -2836,39 +3243,44 @@ msgstr "Dạng thức chuỗi kết nối đã thay đổi: hãy thay thế DATA
 msgid "Invalid MySQL handle"
 msgstr "Bộ quản lý MySQL không hợp lệ."
 
-#: ../providers/mysql/gda-mysql-provider.c:430
-#: ../providers/mysql/gda-mysql-provider.c:553
-#: ../providers/mysql/gda-mysql-provider.c:576
-#: ../providers/mysql/gda-mysql-provider.c:836
-#: ../providers/mysql/gda-mysql-provider.c:860
-#: ../providers/mysql/gda-mysql-provider.c:920
-#: ../providers/mysql/gda-mysql-provider.c:955
-#: ../providers/mysql/gda-mysql-provider.c:2242
+#: ../providers/mysql/gda-mysql-provider.c:432
+#: ../providers/mysql/gda-mysql-provider.c:556
+#: ../providers/mysql/gda-mysql-provider.c:579
+#: ../providers/mysql/gda-mysql-provider.c:858
+#: ../providers/mysql/gda-mysql-provider.c:882
+#: ../providers/mysql/gda-mysql-provider.c:942
+#: ../providers/mysql/gda-mysql-provider.c:977
+#: ../providers/mysql/gda-mysql-provider.c:2268
 msgid "Invalid MYSQL handle"
 msgstr "Bộ quản lý MYSQL không hợp lệ."
 
-#: ../providers/mysql/gda-mysql-provider.c:628
-#: ../providers/mysql/gda-mysql-provider.c:653
-#: ../providers/oracle/gda-oracle-provider.c:879
-#: ../providers/oracle/gda-oracle-provider.c:904
-#: ../providers/postgres/gda-postgres-provider.c:869
-#: ../providers/postgres/gda-postgres-provider.c:894
-#: ../providers/sqlite/gda-sqlite-provider.c:654
-#: ../providers/sqlite/gda-sqlite-provider.c:679
+#: ../providers/mysql/gda-mysql-provider.c:635
+#: ../providers/mysql/gda-mysql-provider.c:664
+#: ../providers/oracle/gda-oracle-provider.c:890
+#: ../providers/oracle/gda-oracle-provider.c:919
+#: ../providers/postgres/gda-postgres-provider.c:908
+#: ../providers/postgres/gda-postgres-provider.c:937
+#: ../providers/sqlite/gda-sqlite-provider.c:732
+#: ../providers/sqlite/gda-sqlite-provider.c:761
 #, c-format
 msgid "Missing spec. file '%s'"
 msgstr "Thiếu tập tin đặc tả « %s »"
 
-#: ../providers/mysql/gda-mysql-provider.c:865
-#: ../providers/mysql/gda-mysql-provider.c:925
-#: ../providers/mysql/gda-mysql-provider.c:960
-#: ../providers/oracle/gda-oracle-provider.c:1093
-#: ../providers/oracle/gda-oracle-provider.c:1189
-#: ../providers/oracle/gda-oracle-provider.c:1251
-#: ../providers/postgres/gda-postgres-provider.c:1511
-#: ../providers/sqlite/gda-sqlite-provider.c:885
+#: ../providers/mysql/gda-mysql-provider.c:887
+#: ../providers/mysql/gda-mysql-provider.c:947
+#: ../providers/mysql/gda-mysql-provider.c:982
+#: ../providers/oracle/gda-oracle-provider.c:1108
+#: ../providers/oracle/gda-oracle-provider.c:1204
+#: ../providers/oracle/gda-oracle-provider.c:1266
+#: ../providers/postgres/gda-postgres-provider.c:1612
+#: ../providers/sqlite/gda-sqlite-provider.c:1169
 msgid "Transactions are not supported in read-only mode"
 msgstr "Không hỗ trợ giao dịch trong chế độ chỉ đọc."
+
+#: ../providers/mysql/gda-mysql-recordset.c:314
+#, c-format
+msgid "Row number out of range 0 - %d"
+msgstr "Số thứ tự hàng vượt ngoài phạm vi - %d."
 
 #: ../providers/mysql/gda-mysql-recordset.c:424
 #: ../providers/mysql/gda-mysql-recordset.c:561
@@ -2892,14 +3304,14 @@ msgstr "Không thể phụ thêm hàng vào mô hình dữ liệu."
 #: ../providers/mysql/gda-mysql-recordset.c:554
 #: ../providers/mysql/gda-mysql-recordset.c:712
 #: ../providers/mysql/gda-mysql-recordset.c:714
-#: ../providers/postgres/gda-postgres-recordset.c:326
-#: ../providers/postgres/gda-postgres-recordset.c:424
+#: ../providers/postgres/gda-postgres-recordset.c:308
+#: ../providers/postgres/gda-postgres-recordset.c:406
 msgid "Given row doesn't belong to the model."
 msgstr "Hàng đã đưa không thuộc về mô hình đó."
 
 #: ../providers/mysql/gda-mysql-recordset.c:638
 #: ../providers/mysql/gda-mysql-recordset.c:640
-#: ../providers/postgres/gda-postgres-recordset.c:365
+#: ../providers/postgres/gda-postgres-recordset.c:347
 msgid "Model doesn't have at least one unique key."
 msgstr "Mô hình không có khóa duy nhất nào (cần ít nhất một điều)."
 
@@ -2910,23 +3322,24 @@ msgstr "Không thể gỡ bỏ hàng ra mô hình dữ liệu."
 
 #: ../providers/mysql/gda-mysql-recordset.c:721
 #: ../providers/mysql/gda-mysql-recordset.c:723
-#: ../providers/postgres/gda-postgres-recordset.c:233
-#: ../providers/postgres/gda-postgres-recordset.c:333
-#: ../providers/postgres/gda-postgres-recordset.c:431
+#: ../providers/postgres/gda-postgres-recordset.c:215
+#: ../providers/postgres/gda-postgres-recordset.c:315
+#: ../providers/postgres/gda-postgres-recordset.c:413
 msgid "Table name could not be guessed."
 msgstr "Không thể đoán tên bảng."
 
 #: ../providers/mysql/gda-mysql-recordset.c:796
 #: ../providers/mysql/gda-mysql-recordset.c:798
 msgid "Model does not have at least one non-modified unique key."
-msgstr "Mô hình không có khóa duy nhất không được sửa đổi nào (cần ít nhất một điều)."
+msgstr ""
+"Mô hình không có khóa duy nhất không được sửa đổi nào (cần ít nhất một điều)."
 
 #: ../providers/mysql/gda-mysql-recordset.c:807
 #: ../providers/mysql/gda-mysql-recordset.c:809
 msgid "Model does not have any non-unique values to update."
 msgstr "Mô hình không có giá trị không duy nhất cần cập nhật."
 
-#: ../providers/mysql/libmain.c:42
+#: ../providers/mysql/libmain.c:52
 msgid "Provider for MySQL databases"
 msgstr "Bộ cung cấp cơ sở dữ liệu MySQL."
 
@@ -2959,6 +3372,8 @@ msgstr "Tăng dần tự động"
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:3
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:4
+#. list of fields
+#. ************* End of main.c ***********************************************
 #. list of fields
 msgid "Check"
 msgstr "Kiểm tra"
@@ -3441,7 +3856,8 @@ msgstr "Đã nén"
 msgid ""
 "Counter for auto incremented fields is incremented by this value + 1 "
 "(DEFAULT: 0)"
-msgstr "Bộ đếm cho trường đã tăng dần tự động được tăng dần theo giá trị này +1 (MẶC "
+msgstr ""
+"Bộ đếm cho trường đã tăng dần tự động được tăng dần theo giá trị này +1 (MẶC "
 "ĐỊNH: 0)"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:35
@@ -3636,7 +4052,7 @@ msgstr "Hạn chế"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:131
 #. other table options
 msgid "Row format"
-msgstr "Dạng thức hang"
+msgstr "Định dạng hang"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:135
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:58
@@ -3729,7 +4145,8 @@ msgstr "Nếu tồn tại"
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:5
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:3
 msgid "Refuse to drop the table if any objects depend on it (RESTRICT)"
-msgstr "Từ chối thả bảng nếu có đối tượng nào phụ thuộc vào nó (RESTRICT [hạn chế])"
+msgstr ""
+"Từ chối thả bảng nếu có đối tượng nào phụ thuộc vào nó (RESTRICT [hạn chế])"
 
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:8
 #: ../providers/oracle/oracle_specs_drop_table.xml.in.h:5
@@ -3764,20 +4181,20 @@ msgstr "Tên bảng mới"
 msgid "Table to rename"
 msgstr "Bảng có tên cần thay đổi"
 
-#: ../providers/odbc/gda-odbc-provider.c:205
+#: ../providers/odbc/gda-odbc-provider.c:206
 msgid "Unable to SQLAllocEnv()..."
 msgstr "Không thể « SQLAllocEnv() » (cấp phát môi trường SQL)..."
 
-#: ../providers/odbc/gda-odbc-provider.c:476
-#: ../providers/odbc/gda-odbc-provider.c:496
-#: ../providers/odbc/gda-odbc-provider.c:526
-#: ../providers/odbc/gda-odbc-provider.c:557
-#: ../providers/odbc/gda-odbc-provider.c:588
-#: ../providers/odbc/gda-odbc-provider.c:618
+#: ../providers/odbc/gda-odbc-provider.c:482
+#: ../providers/odbc/gda-odbc-provider.c:502
+#: ../providers/odbc/gda-odbc-provider.c:532
+#: ../providers/odbc/gda-odbc-provider.c:563
+#: ../providers/odbc/gda-odbc-provider.c:594
+#: ../providers/odbc/gda-odbc-provider.c:624
 msgid "Invalid Odbc handle"
 msgstr "Bộ quản lý OBDC không hợp lệ."
 
-#: ../providers/odbc/libmain.c:43
+#: ../providers/odbc/libmain.c:53
 msgid "Provider for ODBC data sources"
 msgstr "Bộ cung cấp nguồn dữ liệu ODBC"
 
@@ -3790,20 +4207,20 @@ msgid "ODBC connection string"
 msgstr "Chuỗi kết nối ODBC"
 
 #: ../providers/oracle/gda-oracle-blob-op.c:108
-#: ../providers/oracle/gda-oracle-provider.c:526
-#: ../providers/oracle/gda-oracle-provider.c:557
-#: ../providers/oracle/gda-oracle-provider.c:636
-#: ../providers/oracle/gda-oracle-provider.c:833
-#: ../providers/oracle/gda-oracle-provider.c:1004
-#: ../providers/oracle/gda-oracle-provider.c:1045
-#: ../providers/oracle/gda-oracle-provider.c:1088
-#: ../providers/oracle/gda-oracle-provider.c:1174
-#: ../providers/oracle/gda-oracle-provider.c:1236
-#: ../providers/oracle/gda-oracle-provider.c:1386
+#: ../providers/oracle/gda-oracle-provider.c:528
+#: ../providers/oracle/gda-oracle-provider.c:559
+#: ../providers/oracle/gda-oracle-provider.c:638
+#: ../providers/oracle/gda-oracle-provider.c:840
+#: ../providers/oracle/gda-oracle-provider.c:1019
+#: ../providers/oracle/gda-oracle-provider.c:1060
+#: ../providers/oracle/gda-oracle-provider.c:1103
+#: ../providers/oracle/gda-oracle-provider.c:1189
+#: ../providers/oracle/gda-oracle-provider.c:1251
+#: ../providers/oracle/gda-oracle-provider.c:1401
 #: ../providers/oracle/gda-oracle-recordset.c:196
 #: ../providers/oracle/gda-oracle-recordset.c:413
 #: ../providers/oracle/gda-oracle-recordset.c:622
-#: ../providers/oracle/utils.c:522
+#: ../providers/oracle/utils.c:521
 msgid "Invalid Oracle handle"
 msgstr "Bộ quản lý Oracle không hợp lệ."
 
@@ -3824,149 +4241,149 @@ msgstr "Không thể ghi vào đối tượng LOB"
 msgid "Could not truncate LOB object"
 msgstr "Không thể cắt ngắn đối tượng LOB"
 
-#: ../providers/oracle/gda-oracle-provider.c:254
+#: ../providers/oracle/gda-oracle-provider.c:256
 msgid "No TNS name supplied"
 msgstr "Chưa cung cấp tên TNS."
 
-#: ../providers/oracle/gda-oracle-provider.c:269
+#: ../providers/oracle/gda-oracle-provider.c:271
 msgid "Could not initialize Oracle"
 msgstr "Không thể sở khởi Oracle."
 
-#: ../providers/oracle/gda-oracle-provider.c:280
+#: ../providers/oracle/gda-oracle-provider.c:282
 msgid "Could not initialize the Oracle environment"
 msgstr "Không thể sở khởi môi trường Oracle."
 
-#: ../providers/oracle/gda-oracle-provider.c:291
+#: ../providers/oracle/gda-oracle-provider.c:293
 msgid "Could not allocate the Oracle service handle"
 msgstr "Không thể cấp phát bộ quản lý dịch vụ Oracle."
 
-#: ../providers/oracle/gda-oracle-provider.c:301
+#: ../providers/oracle/gda-oracle-provider.c:303
 msgid "Could not allocate the Oracle error handle"
 msgstr "Không thể cấp phát bộ quản lý lỗi Oracle."
 
-#: ../providers/oracle/gda-oracle-provider.c:313
+#: ../providers/oracle/gda-oracle-provider.c:315
 msgid "Could not allocate the Oracle server handle"
 msgstr "Không thể cấp phát bộ quản lý trình phục vụ Oracle."
 
-#: ../providers/oracle/gda-oracle-provider.c:326
+#: ../providers/oracle/gda-oracle-provider.c:328
 msgid "Could not allocate the Oracle session handle"
 msgstr "Không thể cấp phát bộ quản lý phiên chạy Oracle."
 
-#: ../providers/oracle/gda-oracle-provider.c:355
+#: ../providers/oracle/gda-oracle-provider.c:357
 msgid "Could not attach to the Oracle server"
 msgstr "Không thể gắn với trình phục vụ Oracle."
 
-#: ../providers/oracle/gda-oracle-provider.c:371
+#: ../providers/oracle/gda-oracle-provider.c:373
 msgid "Could not set the Oracle server attribute in the service context"
 msgstr "Không thể đặt thuộc tính trình phục vụ Oracle trong ngữ cảnh dịch vụ."
 
-#: ../providers/oracle/gda-oracle-provider.c:387
+#: ../providers/oracle/gda-oracle-provider.c:389
 msgid "Could not set the Oracle username attribute"
 msgstr "Không thể đặt thuộc tính tên người dùng Oracle."
 
-#: ../providers/oracle/gda-oracle-provider.c:403
+#: ../providers/oracle/gda-oracle-provider.c:405
 msgid "Could not set the Oracle password attribute"
 msgstr "Không thể đặt thuộc tính mật khẩu Oracle."
 
-#: ../providers/oracle/gda-oracle-provider.c:418
+#: ../providers/oracle/gda-oracle-provider.c:420
 msgid "Could not begin the Oracle session"
 msgstr "Không thể bắt đầu phiên chạy Oracle."
 
-#: ../providers/oracle/gda-oracle-provider.c:436
+#: ../providers/oracle/gda-oracle-provider.c:438
 msgid "Could not set the Oracle session attribute in the service context"
 msgstr "Không thể đặt thuộc tính phiên chạy Oracle trong ngữ cảnh dịch vụ."
 
-#: ../providers/oracle/gda-oracle-provider.c:568
+#: ../providers/oracle/gda-oracle-provider.c:570
 msgid "Could not allocate the Oracle statement handle"
 msgstr "Không thể cấp phát bộ quản lý câu Oracle."
 
-#: ../providers/oracle/gda-oracle-provider.c:579
+#: ../providers/oracle/gda-oracle-provider.c:581
 msgid "Could not prepare the Oracle statement"
 msgstr "Không thể chuẩn bị câu Oracle."
 
-#: ../providers/oracle/gda-oracle-provider.c:611
+#: ../providers/oracle/gda-oracle-provider.c:613
 msgid "Could not bind the Oracle statement parameter"
 msgstr "Không thể đóng kết tham số câu Oracle."
 
-#: ../providers/oracle/gda-oracle-provider.c:644
-#: ../providers/oracle/gda-oracle-provider.c:681
+#: ../providers/oracle/gda-oracle-provider.c:646
+#: ../providers/oracle/gda-oracle-provider.c:688
 msgid "Could not get the Oracle statement type"
 msgstr "Không thể lấy kiểu câu Oracle."
 
-#: ../providers/oracle/gda-oracle-provider.c:651
+#: ../providers/oracle/gda-oracle-provider.c:653
 msgid "Could not set the Oracle statement pre-fetch row count"
 msgstr "Không thể đặt số đếm hàng trước lấy câu Oracle."
 
-#: ../providers/oracle/gda-oracle-provider.c:664
-#: ../providers/oracle/gda-oracle-provider.c:712
+#: ../providers/oracle/gda-oracle-provider.c:671
+#: ../providers/oracle/gda-oracle-provider.c:719
 msgid "Could not execute the Oracle statement"
 msgstr "Không thể thực hiện câu Oracle."
 
-#: ../providers/oracle/gda-oracle-provider.c:689
+#: ../providers/oracle/gda-oracle-provider.c:696
 msgid "Could not get the number of affected rows"
 msgstr "Không thể lấy số hàng bị tác động"
 
-#: ../providers/oracle/gda-oracle-provider.c:705
-#: ../providers/oracle/gda-oracle-provider.c:1185
-#: ../providers/oracle/gda-oracle-provider.c:1247
+#: ../providers/oracle/gda-oracle-provider.c:712
+#: ../providers/oracle/gda-oracle-provider.c:1200
+#: ../providers/oracle/gda-oracle-provider.c:1262
 msgid "Could not get the attached transaction from the service context"
 msgstr "Không thể lấy giao tác định kèm từ ngữ cảnh dịch vụ"
 
-#: ../providers/oracle/gda-oracle-provider.c:733
+#: ../providers/oracle/gda-oracle-provider.c:740
 msgid "Could not get the number of columns in the result set"
 msgstr "Không thể lấy số cột trong tập kết quả."
 
-#: ../providers/oracle/gda-oracle-provider.c:750
+#: ../providers/oracle/gda-oracle-provider.c:757
 msgid "Could not get the parameter descripter in the result set"
 msgstr "Không thể lấy bộ mô tả tham số trong tập kết quả."
 
-#: ../providers/oracle/gda-oracle-provider.c:762
+#: ../providers/oracle/gda-oracle-provider.c:769
 msgid "Could not get the column name in the result set"
 msgstr "Không thể lấy tên cột trong tập kết quả."
 
-#: ../providers/oracle/gda-oracle-provider.c:1104
+#: ../providers/oracle/gda-oracle-provider.c:1119
 msgid "Could not allocate the Oracle transaction handle"
 msgstr "Không thể cấp phát bộ quản lý giao dịch Oracle."
 
-#: ../providers/oracle/gda-oracle-provider.c:1116
+#: ../providers/oracle/gda-oracle-provider.c:1131
 msgid "Could not set the Oracle transaction name"
 msgstr "Không thể đặt tên giao dịch Oracle."
 
-#: ../providers/oracle/gda-oracle-provider.c:1130
+#: ../providers/oracle/gda-oracle-provider.c:1145
 msgid "Could not attach the transaction to the service context"
 msgstr "Không thể gắn giao dịch trong ngữ cảnh dịch vụ."
 
-#: ../providers/oracle/gda-oracle-provider.c:1141
+#: ../providers/oracle/gda-oracle-provider.c:1156
 msgid "Could not start the Oracle transaction"
 msgstr "Không thể khởi chạy giao dịch Oracle."
 
-#: ../providers/oracle/gda-oracle-provider.c:1198
+#: ../providers/oracle/gda-oracle-provider.c:1213
 msgid "Could not commit the Oracle transaction"
 msgstr "Không thể gài vào giao dịch Oracle."
 
-#: ../providers/oracle/gda-oracle-provider.c:1209
-#: ../providers/oracle/gda-oracle-provider.c:1271
+#: ../providers/oracle/gda-oracle-provider.c:1224
+#: ../providers/oracle/gda-oracle-provider.c:1286
 msgid "Could not de-attach the transaction to the service context"
 msgstr "Không thể hủy gắn giao tác ra ngữ cảnh dịch vụ."
 
-#: ../providers/oracle/gda-oracle-provider.c:1260
+#: ../providers/oracle/gda-oracle-provider.c:1275
 msgid "Could not rollback the Oracle transaction"
 msgstr "Không thể hoàn nguyên giao dịch Oracle."
 
-#: ../providers/oracle/gda-oracle-provider.c:1985
+#: ../providers/oracle/gda-oracle-provider.c:2000
 #, c-format
 msgid "Can't convert model for fields schema: %s"
 msgstr "Không thể chuyển đổi mô hình cho giản đồ trường: %s"
 
-#: ../providers/oracle/gda-oracle-provider.c:2030
+#: ../providers/oracle/gda-oracle-provider.c:2045
 msgid "Indexes"
 msgstr "Chỉ mục"
 
-#: ../providers/oracle/gda-oracle-provider.c:2033
+#: ../providers/oracle/gda-oracle-provider.c:2048
 msgid "Procedures"
 msgstr "Thủ tục"
 
-#: ../providers/oracle/gda-oracle-provider.c:2036
+#: ../providers/oracle/gda-oracle-provider.c:2051
 msgid "Sequences"
 msgstr "Dãy"
 
@@ -3983,7 +4400,7 @@ msgid "Could not get the parameter data type"
 msgstr "Không thể lấy kiểu dự liệu tham số."
 
 #: ../providers/oracle/gda-oracle-recordset.c:131
-#: ../providers/oracle/utils.c:530
+#: ../providers/oracle/utils.c:529
 msgid "Could not allocate Lob locator"
 msgstr "Không thể cấp phát bộ định vị Lob"
 
@@ -3992,7 +4409,6 @@ msgid "Could not define by position"
 msgstr "Không thể định nghĩa theo vị trí."
 
 #: ../providers/oracle/gda-oracle-recordset.c:202
-#: ../providers/postgres/gda-postgres-recordset.c:689
 msgid "Column out of range"
 msgstr "Cột vượt ngoài phạm vi."
 
@@ -4024,7 +4440,7 @@ msgstr "Không thể lấy kích cỡ đã định nghĩa Oracle."
 msgid "Could not fetch a row"
 msgstr "Không thể lấy hàng."
 
-#: ../providers/oracle/libmain.c:40
+#: ../providers/oracle/libmain.c:50
 msgid "Provider for Oracle databases"
 msgstr "Bộ cung cấp cơ sở dữ liệu Oracle."
 
@@ -4032,13 +4448,15 @@ msgstr "Bộ cung cấp cơ sở dữ liệu Oracle."
 msgid ""
 "Drop the domain index even if the indextype routine invocation returns an "
 "error or the index is marked 'in progress'. (FORCE)"
-msgstr "Bỏ chỉ mục miền thậm chí nếu cuộc gọi hàm kiểu chỉ mục (indextype) trả về "
+msgstr ""
+"Bỏ chỉ mục miền thậm chí nếu cuộc gọi hàm kiểu chỉ mục (indextype) trả về "
 "lỗi, hoặc chỉ mục có nhãn « đang tiến triển ». (FORCE) [buộc]"
 
 #: ../providers/oracle/oracle_specs_drop_table.xml.in.h:1
 msgid ""
 "Automatically drop objects that depend on the table (CASCADE CONSTRAINTS)"
-msgstr "Bỏ tự động các đối tượng phụ thuộc vào bảng (CASCADE CONSTRAINTS) [tầng xếp "
+msgstr ""
+"Bỏ tự động các đối tượng phụ thuộc vào bảng (CASCADE CONSTRAINTS) [tầng xếp "
 "các ràng buộc])"
 
 #: ../providers/oracle/oracle_specs_drop_table.xml.in.h:3
@@ -4053,81 +4471,102 @@ msgstr "Tên của cấu hình TNS cần dùng khi kết nối"
 msgid "TNS Name"
 msgstr "Tên TNS"
 
-#: ../providers/oracle/utils.c:537
+#: ../providers/oracle/utils.c:536
 msgid "Could not copy Lob locator"
 msgstr "Không thể sao chép bộ định vị Lob"
 
 #: ../providers/postgres/gda-postgres-blob-op.c:109
-#: ../providers/postgres/gda-postgres-handler-bin.c:196
-#: ../providers/postgres/gda-postgres-provider.c:706
-#: ../providers/postgres/gda-postgres-provider.c:781
-#: ../providers/postgres/gda-postgres-provider.c:823
-#: ../providers/postgres/gda-postgres-provider.c:1277
-#: ../providers/postgres/gda-postgres-provider.c:1473
-#: ../providers/postgres/gda-postgres-provider.c:1639
-#: ../providers/postgres/gda-postgres-provider.c:3171
-#: ../providers/postgres/gda-postgres-recordset.c:188
-#: ../providers/postgres/gda-postgres-recordset.c:553
-#: ../providers/postgres/gda-postgres-recordset.c:683
+#: ../providers/postgres/gda-postgres-handler-bin.c:195
+#: ../providers/postgres/gda-postgres-provider.c:710
+#: ../providers/postgres/gda-postgres-provider.c:801
+#: ../providers/postgres/gda-postgres-provider.c:858
+#: ../providers/postgres/gda-postgres-provider.c:1116
+#: ../providers/postgres/gda-postgres-provider.c:1366
+#: ../providers/postgres/gda-postgres-provider.c:1566
+#: ../providers/postgres/gda-postgres-provider.c:1740
+#: ../providers/postgres/gda-postgres-provider.c:3266
+#: ../providers/postgres/gda-postgres-recordset.c:170
+#: ../providers/postgres/gda-postgres-recordset.c:535
 msgid "Invalid PostgreSQL handle"
 msgstr "Bộ quản lý PostgreSQL không hợp lệ."
 
-#: ../providers/postgres/gda-postgres-handler-bin.c:117
+#: ../providers/postgres/gda-postgres-cursor-recordset.c:149
+msgid "Number of rows fetched at a time"
+msgstr "Số hàng được lấy mỗi lần"
+
+#: ../providers/postgres/gda-postgres-cursor-recordset.c:154
+msgid "Number of rows chuncks read since the object creation"
+msgstr "Số đoạn hàng được đọc kể từ tạo đối tượng"
+
+#: ../providers/postgres/gda-postgres-handler-bin.c:116
 msgid "Postgresql binary handler"
 msgstr "Bộ quản lý nhị phân PostgreSQL"
 
-#: ../providers/postgres/gda-postgres-handler-bin.c:123
+#: ../providers/postgres/gda-postgres-handler-bin.c:122
 msgid "PostgresqlBin"
 msgstr "PostgresqlBin"
 
-#: ../providers/postgres/gda-postgres-handler-bin.c:124
+#: ../providers/postgres/gda-postgres-handler-bin.c:123
 msgid "PostgreSQL binary representation"
 msgstr "Đại diện nhị phân PostgreSQL"
 
-#: ../providers/postgres/gda-postgres-handler-bin.c:219
+#: ../providers/postgres/gda-postgres-handler-bin.c:218
 msgid "Insufficient memory to convert binary buffer to string"
 msgstr "Không đủ bộ nhớ để chuyển đổi bộ đệm nhị phân sang chuỗi"
 
-#: ../providers/postgres/gda-postgres-handler-bin.c:282
+#: ../providers/postgres/gda-postgres-handler-bin.c:281
 msgid "Insufficient memory to convert string to binary buffer"
 msgstr "Không đủ bộ nhớ để chuyển đổi chuỗi sang bộ đệm nhị phân"
 
-#: ../providers/postgres/gda-postgres-provider.c:1102
-msgid "Could not create a SELECT query to fetch existing BLOB values"
-msgstr "Không thể tạo một truy vấn SELECT (chọn) để lấy các giá trị BLOB tồn tại"
+#: ../providers/postgres/gda-postgres-provider.c:1133
+#, c-format
+msgid "Parameter ITER_MODEL_ONLY should be a boolean, not a '%s'"
+msgstr "Tham số ITER_MODEL_ONLY nên có kiểu lôgic, không phải « %s »"
 
-#: ../providers/postgres/gda-postgres-provider.c:1124
+#: ../providers/postgres/gda-postgres-provider.c:1144
+#, c-format
+msgid "Parameter ITER_CHUNCK_SIZE should be a gint, not a '%s'"
+msgstr "Tham số ITER_CHUNCK_SIZE nên có kiểu gint, không phải « %s »"
+
+#: ../providers/postgres/gda-postgres-provider.c:1191
+msgid "Could not create a SELECT query to fetch existing BLOB values"
+msgstr ""
+"Không thể tạo một truy vấn SELECT (chọn) để lấy các giá trị BLOB tồn tại"
+
+#: ../providers/postgres/gda-postgres-provider.c:1213
 #, c-format
 msgid "Missing parameter for '%s'"
 msgstr "Thiếu tham số cho « %s »"
 
-#: ../providers/postgres/gda-postgres-provider.c:1142
+#: ../providers/postgres/gda-postgres-provider.c:1231
 #, c-format
 msgid "Could not render SQL for SELECT query to fetch existing BLOB values: %s"
-msgstr "Không thể vẽ mã SQL cho truy vấn SELECT (chọn) để lấy các giá trị BLOB tồn tại: %s"
+msgstr ""
+"Không thể vẽ mã SQL cho truy vấn SELECT (chọn) để lấy các giá trị BLOB tồn "
+"tại: %s"
 
-#: ../providers/postgres/gda-postgres-provider.c:1520
+#: ../providers/postgres/gda-postgres-provider.c:1621
 msgid "Transactions are not supported in read uncommitted isolation level"
 msgstr "Không hỗ trợ giao dịch trong cấp cô lập chưa gài vào đã đọc."
 
-#: ../providers/postgres/gda-postgres-provider.c:1523
+#: ../providers/postgres/gda-postgres-provider.c:1624
 msgid "Transactions are not supported in repeatable read isolation level"
 msgstr "Không hỗ trợ giao dịch trong cấp cô lập đã đọc có thể lập lại."
 
-#: ../providers/postgres/gda-postgres-recordset.c:490
+#: ../providers/postgres/gda-postgres-recordset.c:472
 msgid "Model doesn't have at least one non-modified unique key."
 msgstr "Mô hình không có khóa duy nhất nào (cần ít nhất một điều)."
 
-#: ../providers/postgres/gda-postgres-recordset.c:494
+#: ../providers/postgres/gda-postgres-recordset.c:476
 msgid "Model doesn't have any non-unique values to update."
 msgstr "Mô hình không có giá trị không duy nhất cần cập nhật."
 
-#: ../providers/postgres/gda-postgres-recordset.c:803
+#: ../providers/postgres/gda-postgres-recordset.c:628
 #, c-format
 msgid "Tuples:\"%s\""
 msgstr "Bộ đa phần: « %s »"
 
-#: ../providers/postgres/libmain.c:42
+#: ../providers/postgres/libmain.c:52
 msgid "Provider for PostgreSQL databases"
 msgstr "Bộ cung cấp cơ sở dữ liệu PostgreSQL"
 
@@ -4155,7 +4594,8 @@ msgstr "EUC Hoà"
 msgid ""
 "Database server port (for servers running on unix domain sockets, enter the "
 "socket's file name extension (usually 5432), or leave this field empty)"
-msgstr "Cổng máy phục vụ cơ sở dữ liệu (đối với máy phục vụ chạy trên ổ cắm miền "
+msgstr ""
+"Cổng máy phục vụ cơ sở dữ liệu (đối với máy phục vụ chạy trên ổ cắm miền "
 "UNIX, hãy nhập vào phần mở rộng tên tập tin của ổ cắm [thường là 5342], hoặc "
 "bỏ rỗng trường này)"
 
@@ -4171,9 +4611,10 @@ msgid ""
 "Host on which the database server is running (for servers running on unix "
 "domain sockets, enter the socket's path (usually /tmp), or leave this field "
 "empty)"
-msgstr "Máy trên đó chạy trình phục vụ cơ sở dữ liệu (đối với máy phục vụ chạy trên ổ cắm "
-"miền UNIX, hãy nhập vào đường dẫn của ổ cắm [thường là « /tmp »], hoặc bỏ rỗng "
-"trường này)"
+msgstr ""
+"Máy trên đó chạy trình phục vụ cơ sở dữ liệu (đối với máy phục vụ chạy trên "
+"ổ cắm miền UNIX, hãy nhập vào đường dẫn của ổ cắm [thường là « /tmp »], hoặc "
+"bỏ rỗng trường này)"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:16
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:14
@@ -4400,7 +4841,8 @@ msgstr "Bỏ tự động các đối tượng phụ thuộc vào cột đó (CA
 
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:5
 msgid "Refuse to drop the column if any objects depend on it (RESTRICT)"
-msgstr "Từ chối bỏ cột nếu có đối tượng nào phụ thuộc vào nó (RESTRICT [hạn chế])"
+msgstr ""
+"Từ chối bỏ cột nếu có đối tượng nào phụ thuộc vào nó (RESTRICT [hạn chế])"
 
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:8
 msgid "What to do with references on the column to delete"
@@ -4419,96 +4861,93 @@ msgstr "Đường dẫn tìm kiếm"
 msgid "Search path among database's schemas"
 msgstr "Đường dẫn tìm kiếm qua các giản đồ của cơ sở dữ liệu"
 
-#: ../providers/sqlite/gda-sqlite-handler-bin.c:115
+#: ../providers/sqlite/gda-sqlite-handler-bin.c:114
 msgid "SQlite binary handler"
 msgstr "Bộ quản lý nhị phân SQlite"
 
-#: ../providers/sqlite/gda-sqlite-handler-bin.c:120
+#: ../providers/sqlite/gda-sqlite-handler-bin.c:119
 msgid "SqliteBin"
 msgstr "SqliteBin"
 
-#: ../providers/sqlite/gda-sqlite-handler-bin.c:121
+#: ../providers/sqlite/gda-sqlite-handler-bin.c:120
 msgid "SQlite binary representation"
 msgstr "Đại diện nhị phân SQLite"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:261
-msgid "The connection string must contain DB_DIR and DB_NAME values"
-msgstr "Chuỗi kết nối phải chứa những giá trị DB_DIR (đường dẫn đến tập tin co sở dữ "
-"liệu) và DB_NAME (tập tin co sở dữ liệu trừ .db)"
-
-#: ../providers/sqlite/gda-sqlite-provider.c:288
-#: ../providers/sqlite/gda-sqlite-provider.c:294
+#: ../providers/sqlite/gda-sqlite-provider.c:319
+#: ../providers/sqlite/gda-sqlite-provider.c:326
+#, c-format
 msgid ""
 "The connection string format has changed: replace URI with DB_DIR (the path "
-"to the database file) and DB_NAME (the database file without the '.db' at "
-"the end)."
-msgstr "Dạng thức chuỗi kết nối đã thay đổi: hãy thay thế URI (địa chỉ tài nguyên) "
-"bằng DB_DIR (đường dẫn đến tập tin co sở dữ liệu) và DB_NAME (tập tin co sở "
-"dữ liệu không có phần mở rộng « .db » tại kết thúc)."
+"to the database file) and DB_NAME (the database file without the '%s' at the "
+"end)."
+msgstr ""
+"Định dạng chuỗi kết nối đã thay đổi: hãy thay thế URI (địa chỉ tài nguyên) bằng DB_DIR (đường dẫn đến tập tin co sở dữ liệu) và DB_NAME (tập tin co sở dữ liệu không có phần mở rộng « %s » tại kết thúc)."
 
-#: ../providers/sqlite/gda-sqlite-provider.c:302
-msgid ""
-"The DB_DIR part of the connection string must point to a valid directory"
-msgstr "Phần DB_DIR (đường dẫn đến tập tin co sở dữ liệu) của chuỗi kết nối phải chỉ "
-"tới một thư mục hợp lệ"
-
-#: ../providers/sqlite/gda-sqlite-provider.c:333
+#: ../providers/sqlite/gda-sqlite-provider.c:378
 msgid "Could not set empty_result_callbacks SQLite option"
-msgstr "Không thể lập tùy chọn SQLite « empty_result_callbacks » (cuộc gọi ngược kết "
+msgstr ""
+"Không thể lập tùy chọn SQLite « empty_result_callbacks » (cuộc gọi ngược kết "
 "quả rỗng)"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:381
-#: ../providers/sqlite/gda-sqlite-provider.c:594
-#: ../providers/sqlite/gda-sqlite-provider.c:961
-#: ../providers/sqlite/gda-sqlite-provider.c:1364
+#: ../providers/sqlite/gda-sqlite-provider.c:438
+#: ../providers/sqlite/gda-sqlite-provider.c:668
+#: ../providers/sqlite/gda-sqlite-provider.c:1138
+#: ../providers/sqlite/gda-sqlite-provider.c:1245
+#: ../providers/sqlite/gda-sqlite-provider.c:1639
+#: ../providers/sqlite/virtual/gda-vconnection-data-model.c:226
+#: ../providers/sqlite/virtual/gda-vconnection-data-model.c:289
+#: ../providers/sqlite/virtual/gda-vprovider-data-model.c:269
 msgid "Invalid SQLite handle"
 msgstr "Bộ quản lý SQLite không hợp lệ"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:436
-#: ../providers/sqlite/gda-sqlite-provider.c:1179
-#: ../providers/sqlite/gda-sqlite-provider.c:1421
-#: ../providers/sqlite/gda-sqlite-provider.c:1457
-#: ../providers/sqlite/gda-sqlite-provider.c:1674
+#: ../providers/sqlite/gda-sqlite-provider.c:581
+#: ../providers/sqlite/gda-sqlite-provider.c:965
+#: ../providers/sqlite/gda-sqlite-provider.c:1467
+#: ../providers/sqlite/gda-sqlite-provider.c:1696
+#: ../providers/sqlite/gda-sqlite-provider.c:1732
+#: ../providers/sqlite/gda-sqlite-provider.c:1863
 msgid "Invalid SQLITE handle"
 msgstr "Bộ quản lý SQLITE không hợp lệ"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:612
+#: ../providers/sqlite/gda-sqlite-provider.c:686
 msgid "Only one database per connection is allowed"
 msgstr "Chỉ cho phép một cơ sở dữ liệu cho mỗi cách kết nối."
 
-#: ../providers/sqlite/gda-sqlite-provider.c:1205
-#: ../providers/sqlite/gda-sqlite-provider.c:1704
+#: ../providers/sqlite/gda-sqlite-provider.c:1036
+msgid "Missing parameter(s) to execute query"
+msgstr "Thiếu tham số để thực hiện truy vấn"
+
+#: ../providers/sqlite/gda-sqlite-provider.c:1050
+#, c-format
+msgid "Missing parameter '%s' to execute query"
+msgstr "Thiếu tham số « %s » để thực hiện truy vấn"
+
+#: ../providers/sqlite/gda-sqlite-provider.c:1094
+#, c-format
+msgid "Non handled data type '%s'"
+msgstr "Kiểu dữ liệu « %s » không được xử lý"
+
+#: ../providers/sqlite/gda-sqlite-provider.c:1488
+#: ../providers/sqlite/gda-sqlite-provider.c:1893
 msgid "Can't execute PRAGMA table_info()"
 msgstr "Không thể thực hiện « table_info() » (thông tin bảng) kiểu PRAGMA"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:1314
-#, c-format
-msgid "Can't find table %s"
-msgstr "Không tìm thấy bảng %s"
-
-#: ../providers/sqlite/gda-sqlite-provider.c:1483
-msgid "Can't execute PRAGMA proc_list"
-msgstr "Không thể thực hiện « proc_list » kiểu PRAGMA"
-
-#: ../providers/sqlite/gda-sqlite-provider.c:1775
+#: ../providers/sqlite/gda-sqlite-provider.c:1964
 msgid "Can't execute PRAGMA foreign_key_list()"
-msgstr "Không thể thực hiện « foreign_key_list() » (danh sách khoá lạ) kiểu PRAGMA"
+msgstr ""
+"Không thể thực hiện « foreign_key_list() » (danh sách khoá lạ) kiểu PRAGMA"
 
-#: ../providers/sqlite/libmain.c:42
+#: ../providers/sqlite/gda-sqlite-provider.c:2231
+msgid "Function requires one argument"
+msgstr "Hàm cần thiết một đối số"
+
+#: ../providers/sqlite/libmain.c:52
 msgid "Provider for SQLite databases"
 msgstr "Bộ cung cấp cơ sở dữ liệu SQLite"
 
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:6
 msgid "Default value, mandatory if column is NOT NULL"
 msgstr "Giá trị mặc định, bắt buộc phải có nếu cột có giá trị"
-
-#: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:6
-#: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:6
-#: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:2
-#: ../providers/xbase/xbase_specs_dsn.xml.in.h:1
-#. DSN parameters
-msgid "Directory"
-msgstr "Thư mục"
 
 #: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:8
 #: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:8
@@ -4521,7 +4960,8 @@ msgstr "Thư mục sẽ chứa tập tin co sở dữ liệu"
 #. Index fields
 #. list of fields
 msgid "Collation name (BINARY|NOCASE)"
-msgstr "Tên đối chiếu :\n"
+msgstr ""
+"Tên đối chiếu :\n"
 " BINARY\t\tnhị phân\n"
 " NOCASE\t\tkhông phân biết chữ hoa/thường"
 
@@ -4544,7 +4984,8 @@ msgstr "Xung đột"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:14
 #. list of fields
 msgid "Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE"
-msgstr "Phương pháp giải quyết xung đột:\n"
+msgstr ""
+"Phương pháp giải quyết xung đột:\n"
 " ROLLBACK\tcuộn ngược\n"
 " ABORT\t\thủy bỏ\n"
 " FAIL\t\tthất bại\n"
@@ -4555,123 +4996,178 @@ msgstr "Phương pháp giải quyết xung đột:\n"
 msgid "Drop index only if it exists"
 msgstr "Thả chỉ mục chỉ nếu nó tồn tại"
 
-#: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:3
-msgid "Directory where the database file is stored"
-msgstr "Thư mục chứa tập tin co sở dữ liệu"
-
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:4
-msgid "The name of a database to use"
-msgstr "Tên của cơ sở dữ liệu cần dùng"
+msgid "Enable usage of some extra functions in SQL"
+msgstr "Hiệu lực khả năng sử dụng một số hàm thêm bằng SQL"
 
-#: ../providers/sybase/gda-sybase-provider.c:306
+#: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:5
+msgid "Extra functions"
+msgstr "Hàm thêm"
+
+#: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:6
+msgid "The name of a database to use (without the .db)"
+msgstr "Tên của cơ sở dữ liệu cần dùng (không có phần mở rộng « .db »"
+
+#: ../providers/sqlite/virtual/gda-vconnection-data-model.c:296
+msgid "Table to remove not found"
+msgstr "Không tìm thấy bảng cần gỡ bỏ"
+
+#: ../providers/sqlite/virtual/gda-vconnection-hub.c:202
+msgid "Namespace must be specified"
+msgstr "Phải ghi rõ miền tên"
+
+#: ../providers/sqlite/virtual/gda-vconnection-hub.c:253
+msgid "Connection was not represented in hub"
+msgstr "Kết nối không được đại diện trong cái nối"
+
+#: ../providers/sqlite/virtual/gda-vconnection-hub.c:471
+#, c-format
+msgid "Could not add virtual table %s: %s"
+msgstr "Không thể thêm bảng ảo %s: %s"
+
+#: ../providers/sqlite/virtual/gda-vprovider-data-model.c:372
+msgid "Data model must have at least one column"
+msgstr "Mô hình dữ liệu phải có ít nhất một cột"
+
+#: ../providers/sqlite/virtual/gda-vprovider-data-model.c:399
+#, c-format
+msgid "Can't get data model description for column %d"
+msgstr "Không thể lấy mô tả mô hình dữ liệu đối với cột %d"
+
+#: ../providers/sqlite/virtual/gda-vprovider-data-model.c:408
+#, c-format
+msgid "Can't get data model's column name for column %d"
+msgstr "Không thể lấy tên cột của mô hình dữ liệu đối với cột %d"
+
+#: ../providers/sqlite/virtual/gda-vprovider-data-model.c:413
+#, c-format
+msgid "Can't get data model's column type or type for column %d"
+msgstr "Không thể lấy kiểu cột của mô hình dữ liệu, hay kiểu, đối với cột %d"
+
+#: ../providers/sqlite/virtual/gda-vprovider-data-model.c:451
+#, c-format
+msgid "Can't declare virtual table (%s)"
+msgstr "Không thể tuyên bố bảng ảo (%s)"
+
+#: ../providers/sqlite/virtual/gda-vprovider-data-model.c:586
+msgid "Column not found"
+msgstr "Không tìm thấy cột"
+
+#: ../providers/sqlite/virtual/libmain.c:51
+msgid "Virtual providers base"
+msgstr "Cơ bản bộ cung cấp ảo"
+
+#: ../providers/sybase/gda-sybase-provider.c:307
 msgid "Out of memory. Allocating connection structure failed."
 msgstr "Hết bộ nhớ. Cấu trúc cấp phát kết nối bị lỗi."
 
-#: ../providers/sybase/gda-sybase-provider.c:351
+#: ../providers/sybase/gda-sybase-provider.c:352
 #, c-format
 msgid "Locale set to '%s'."
 msgstr "Miền địa phương được lập thành « %s »."
 
-#: ../providers/sybase/gda-sybase-provider.c:641
+#: ../providers/sybase/gda-sybase-provider.c:642
 msgid ""
 "Cmd structure already in use. Command will not be executed because of "
 "blocked connection."
-msgstr "Cấu trúc Cmd (lệnh) đang dùng. Không thể thực hiện lệnh vì kết nối bị chặn."
+msgstr ""
+"Cấu trúc Cmd (lệnh) đang dùng. Không thể thực hiện lệnh vì kết nối bị chặn."
 
-#: ../providers/sybase/gda-sybase-provider.c:655
+#: ../providers/sybase/gda-sybase-provider.c:657
 #, c-format
 msgid "Failed allocating a command structure in %s()"
 msgstr "Việc cấp phát cấu trúc lệnh trong « %s() » bị lỗi."
 
-#: ../providers/sybase/gda-sybase-provider.c:669
+#: ../providers/sybase/gda-sybase-provider.c:675
 msgid "Could not prepare command structure."
 msgstr "Không thể chuẩn bị cấu trúc lệnh."
 
-#: ../providers/sybase/gda-sybase-provider.c:679
+#: ../providers/sybase/gda-sybase-provider.c:685
 msgid "Sending sql-command failed."
 msgstr "Việc gởi « sql-command » (lệnh SQL) bị lỗi."
 
-#: ../providers/sybase/gda-sybase-provider.c:706
-#: ../providers/sybase/gda-sybase-provider.c:726
-#: ../providers/sybase/gda-sybase-provider.c:793
-#: ../providers/sybase/gda-sybase-provider.c:815
+#: ../providers/sybase/gda-sybase-provider.c:712
+#: ../providers/sybase/gda-sybase-provider.c:732
+#: ../providers/sybase/gda-sybase-provider.c:798
+#: ../providers/sybase/gda-sybase-provider.c:820
 msgid "GDA_IS_SYBASE_RECORDSET != TRUE"
 msgstr "GDA_IS_SYBASE_RECORDSET != TRUE (GDA là tập mục ghi Sybase: đúng)"
 
-#: ../providers/sybase/gda-sybase-provider.c:712
+#: ../providers/sybase/gda-sybase-provider.c:718
 #. when you execute a stored procedure through openclient, this
 #. part of the result set loop is where you fetch the return status
 #. of the executed stored procedure.  You fetch it like a CS_ROW_RESULT
 msgid "CS_STATUS_RESULT!"
 msgstr "CS_STATUS_RESULT! (kết quả trạng thái CS)"
 
-#: ../providers/sybase/gda-sybase-provider.c:736
+#: ../providers/sybase/gda-sybase-provider.c:742
 msgid "Hit unsupported result type"
 msgstr "Đánh kiểu kết quả không được hỗ trợ"
 
-#: ../providers/sybase/gda-sybase-provider.c:764
+#: ../providers/sybase/gda-sybase-provider.c:770
 msgid ""
 "An error occurred when attempting to test if there is a server message for "
 "resultset"
-msgstr "Gặp lỗi khi cố thử ra nếu có thông điệp trình phục vụ cho tập kết quả hay "
+msgstr ""
+"Gặp lỗi khi cố thử ra nếu có thông điệp trình phục vụ cho tập kết quả hay "
 "không"
 
-#: ../providers/sybase/gda-sybase-provider.c:796
+#: ../providers/sybase/gda-sybase-provider.c:801
 #, c-format
 msgid "%s returned %s"
 msgstr "%s đã trả gởi %s."
 
-#: ../providers/sybase/gda-sybase-provider.c:824
+#: ../providers/sybase/gda-sybase-provider.c:829
 msgid "Failed dropping command structure."
 msgstr "Việc xóa bỏ cấu trúc lệnh bị lỗi."
 
-#: ../providers/sybase/gda-sybase-provider.c:854
+#: ../providers/sybase/gda-sybase-provider.c:859
 #, c-format
 msgid "Command structure already in use. %s failed."
 msgstr "Cấu trúc lệnh đang được dùng. « %s » bị lỗi."
 
-#: ../providers/sybase/gda-sybase-provider.c:862
+#: ../providers/sybase/gda-sybase-provider.c:867
 msgid "Could not allocate command structure."
 msgstr "Không thể cấp phát cấu trúc lệnh."
 
-#: ../providers/sybase/gda-sybase-provider.c:871
+#: ../providers/sybase/gda-sybase-provider.c:880
 #, c-format
 msgid "Could not prepare command structure with %s."
 msgstr "Không thể chuẩn bị cấu trúc lệnh với %s."
 
-#: ../providers/sybase/gda-sybase-provider.c:881
+#: ../providers/sybase/gda-sybase-provider.c:890
 msgid "Sending command failed."
 msgstr "Việc gởi lệnh bị lỗi."
 
-#: ../providers/sybase/gda-sybase-provider.c:906
-#: ../providers/sybase/gda-sybase-provider.c:923
-#: ../providers/sybase/gda-sybase-provider.c:934
+#: ../providers/sybase/gda-sybase-provider.c:915
+#: ../providers/sybase/gda-sybase-provider.c:932
+#: ../providers/sybase/gda-sybase-provider.c:943
 #, c-format
 msgid "%s: %s failed"
 msgstr "%s: « %s » bị lỗi."
 
-#: ../providers/sybase/gda-sybase-provider.c:978
+#: ../providers/sybase/gda-sybase-provider.c:987
 msgid "could not allocate cmd structure to find current database."
 msgstr "không thể cấp phát cấu trúc lệnh để tìm cơ sở dữ liệu hiện tại."
 
-#: ../providers/sybase/gda-sybase-provider.c:989
+#: ../providers/sybase/gda-sybase-provider.c:998
 msgid "could not execute command to get current database."
 msgstr "không thể thực hiện lệnh để lấy cơ sở dữ liệu hiện tại."
 
-#: ../providers/sybase/gda-sybase-provider.c:997
+#: ../providers/sybase/gda-sybase-provider.c:1006
 msgid "could not send command to get current database."
 msgstr "không thể gửi lệnh để lấy cơ sở dữ liệu hiện tại."
 
-#: ../providers/sybase/gda-sybase-provider.c:1020
+#: ../providers/sybase/gda-sybase-provider.c:1029
 msgid "could not bind variable to get current database."
 msgstr "không thể đóng kết biến để lấy cơ sở dữ liệu hiện tại."
 
-#: ../providers/sybase/gda-sybase-provider.c:1033
-#: ../providers/sybase/gda-sybase-provider.c:1048
+#: ../providers/sybase/gda-sybase-provider.c:1042
+#: ../providers/sybase/gda-sybase-provider.c:1057
 msgid "could not fetch data to find current database."
 msgstr "không thể lấy dữ liệu để tìm cơ sở dữ liệu hiện tại."
 
-#: ../providers/sybase/gda-sybase-provider.c:1062
+#: ../providers/sybase/gda-sybase-provider.c:1071
 msgid "could not drop cmd structure to find current database."
 msgstr "không thể xóa bỏ cấu trúc lệnh để tìm cơ sở dữ liệu hiện tại."
 
@@ -4694,12 +5190,12 @@ msgid "%s returned <= 0 columns."
 msgstr "%s đã trả gởi ≤ 0 cột."
 
 #: ../providers/sybase/gda-sybase-recordset.c:348
-#: ../providers/sybase/gda-sybase-recordset.c:538
+#: ../providers/sybase/gda-sybase-recordset.c:536
 msgid "Could not allocate structure for column metainformation."
 msgstr "Không thể cấp phát cấu trúc cho siêu thông tin cột."
 
 #: ../providers/sybase/gda-sybase-recordset.c:352
-#: ../providers/sybase/gda-sybase-recordset.c:542
+#: ../providers/sybase/gda-sybase-recordset.c:540
 #, c-format
 msgid "Could not call %s while processing row resultset."
 msgstr "Không thể gọi %s khi xử lý kết quả hàng."
@@ -4736,19 +5232,20 @@ msgid ""
 "resultset"
 msgstr "Gặp lỗi khi cố lấy số đếm thông điệp trình phục vụ cho bộ kết quả"
 
-#: ../providers/sybase/gda-sybase-recordset.c:506
+#: ../providers/sybase/gda-sybase-recordset.c:505
 msgid "attempting to make recordset and msg count != 1 !"
 msgstr "đang cố tạo bộ kết quả và số đếm thông điệp «  != 1 ! »."
 
-#: ../providers/sybase/gda-sybase-recordset.c:520
+#: ../providers/sybase/gda-sybase-recordset.c:519
 msgid ""
 "An error occurred when attempting to retrieve a server message for recordset"
 msgstr "Gặp lỗi khi cố lấy thông điệp trình phục vụ cho bộ kết quả."
 
-#: ../providers/sybase/gda-sybase-recordset.c:578
-#: ../providers/sybase/utils.c:409
+#: ../providers/sybase/gda-sybase-recordset.c:576
+#: ../providers/sybase/utils.c:401
 msgid "call to ct_diag failed when attempting to clear the server messages"
-msgstr "cuộc gọi cho « ct_diag » thất bại khi cố xóa các thông điệp trình phục vụ"
+msgstr ""
+"cuộc gọi cho « ct_diag » thất bại khi cố xóa các thông điệp trình phục vụ"
 
 #: ../providers/sybase/gda-sybase-types.c:154
 #: ../providers/sybase/gda-sybase-types.c:157
@@ -4765,7 +5262,7 @@ msgstr "cslib không thể chuyển đổi kiểu %d"
 msgid "data conversion failed for type %d"
 msgstr "việc chuyển đổi dữ liệu cho kiểu %d bị lỗi"
 
-#: ../providers/sybase/libmain.c:41
+#: ../providers/sybase/libmain.c:51
 msgid "GDA provider for sybase databases (using OpenClient)"
 msgstr "Bộ cung cấp GDA cho cơ sở dữ liệu Sybase (dùng OpenClient)"
 
@@ -4791,7 +5288,8 @@ msgid ""
 "CS-Library error:\n"
 "\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n"
 "\t%s"
-msgstr "Lỗi CS-Library (thư viện CS):\n"
+msgstr ""
+"Lỗi CS-Library (thư viện CS):\n"
 "\tq.trọng(%ld) cấp(%ld) gốc (%ld) số(%ld)\n"
 "\t%s"
 
@@ -4810,7 +5308,8 @@ msgid ""
 "CT-Client error:\n"
 "\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n"
 "\t%s"
-msgstr "Lỗi CT-Client (ứng dụng khách CT):\n"
+msgstr ""
+"Lỗi CT-Client (ứng dụng khách CT):\n"
 "\tq.trọng(%ld) cấp(%ld) gốc (%ld) số(%ld)\n"
 "\t%s"
 
@@ -4823,7 +5322,8 @@ msgstr "Gọi: gọi ngược trình phục vụ"
 msgid ""
 "CT-Server message:\n"
 "\tnumber(%ld) severity(%ld) state(%ld) line(%ld)"
-msgstr "Thông điệp CT-Server (trình phục vụ CT):\n"
+msgstr ""
+"Thông điệp CT-Server (trình phục vụ CT):\n"
 "\tsố(%ld) q.trọng(%ld) t.trạng(%ld) dòng(%ld)"
 
 #: ../providers/sybase/utils.c:100
@@ -4841,103 +5341,106 @@ msgid "ct_diag() failed determining # of client messages."
 msgstr "« ct_diag() » bị lỗi khi quyết định # thông điệp ứng dụng khách."
 
 #: ../providers/sybase/utils.c:204
-#: ../providers/sybase/utils.c:443
+#: ../providers/sybase/utils.c:434
 msgid "Failed when attempting to retrieve the amount of client messages"
 msgstr "Bị lỗi khi cố lấy số thông điệp ứng dụng khách"
 
-#: ../providers/sybase/utils.c:221
-#: ../providers/sybase/utils.c:460
+#: ../providers/sybase/utils.c:220
+#: ../providers/sybase/utils.c:450
 msgid "An error occurred when attempting to retrieve a client message"
 msgstr "Gặp lỗi khi cố lấy một thông điệp ứng dụng khách"
 
-#: ../providers/sybase/utils.c:231
+#: ../providers/sybase/utils.c:229
 msgid "OS_Error:("
 msgstr "Lỗi HDH:("
 
-#: ../providers/sybase/utils.c:233
+#: ../providers/sybase/utils.c:231
 msgid ") Message: "
 msgstr ") Thông điệp: "
 
-#: ../providers/sybase/utils.c:245
+#: ../providers/sybase/utils.c:242
 #, c-format
 msgid ""
 "Sybase OpenClient Msg: severity(%ld), number(%ld), origin(%ld), layer(%ld): %"
 "s"
-msgstr "Thông điệp OpenClient Sybase: q.trọng(%ld), số(%ld), gốc(%ld), cấp(%ld): %s"
+msgstr ""
+"Thông điệp OpenClient Sybase: q.trọng(%ld), số(%ld), gốc(%ld), cấp(%ld): %s"
 
-#: ../providers/sybase/utils.c:273
+#: ../providers/sybase/utils.c:269
 msgid "call to cs_diag failed when attempting to clear the client messages"
 msgstr "cuộc gọi « cs_diag » bị lỗi khi cố xóa các thông điệp ứng dụng khách"
 
-#: ../providers/sybase/utils.c:314
+#: ../providers/sybase/utils.c:309
 msgid "Failed when attempting to retrieve the amount of server messages"
 msgstr "Bị lỗi khi cố lấy số thông điệp trình phục vụ"
 
-#: ../providers/sybase/utils.c:331
+#: ../providers/sybase/utils.c:325
 msgid "An error occurred when attempting to retrieve a server message"
 msgstr "Gặp lỗi khi cố lấy một thông điệp trình phục vụ"
 
-#: ../providers/sybase/utils.c:343
+#: ../providers/sybase/utils.c:336
 msgid "Server:"
 msgstr "Trình phục vụ :"
 
-#: ../providers/sybase/utils.c:347
+#: ../providers/sybase/utils.c:340
 msgid "Stored Procedure:"
 msgstr "Thủ tục đã lưu :"
 
-#: ../providers/sybase/utils.c:351
+#: ../providers/sybase/utils.c:344
 msgid "Number"
 msgstr "Số"
 
-#: ../providers/sybase/utils.c:354
-#: ../providers/sybase/utils.c:471
+#: ../providers/sybase/utils.c:347
+#: ../providers/sybase/utils.c:460
 msgid "Severity"
 msgstr "Độ quan trọng"
 
-#: ../providers/sybase/utils.c:357
+#: ../providers/sybase/utils.c:350
 msgid "State"
 msgstr "Tính trạng"
 
-#: ../providers/sybase/utils.c:360
+#: ../providers/sybase/utils.c:353
 msgid "Line"
 msgstr "Dòng"
 
-#: ../providers/sybase/utils.c:473
+#: ../providers/sybase/utils.c:462
 msgid "Layer"
 msgstr "Cấp"
 
-#: ../providers/sybase/utils.c:475
+#: ../providers/sybase/utils.c:464
 msgid "Origin"
 msgstr "Gốc"
 
-#: ../providers/sybase/utils.c:477
+#: ../providers/sybase/utils.c:466
 msgid "Message Number"
 msgstr "Số thứ tự thông điệp"
 
-#: ../providers/sybase/utils.c:499
+#: ../providers/sybase/utils.c:487
 msgid "call to ct_diag failed when attempting to clear the client messages"
 msgstr "cuộc gọi « ct_diag » bị lỗi khi cố xóa các thông điệp ứng dụng khách"
 
-#: ../providers/sybase/utils.c:520
+#: ../providers/sybase/utils.c:507
 msgid "Operation not possible, connection busy."
 msgstr "Thao tác không thể vì kết nối đang bận."
 
-#: ../providers/xbase/gda-xbase-provider.c:188
+#: ../providers/xbase/gda-xbase-provider.c:189
 msgid "Either FILENAME or DIRECTORY can be specified, but not both or neither"
-msgstr "Có thể ghi rõ hoặc FILENAME (tên tập tin) hoặc DIRECTORY (thư mục), nhưng mà "
+msgstr ""
+"Có thể ghi rõ hoặc FILENAME (tên tập tin) hoặc DIRECTORY (thư mục), nhưng mà "
 "không thể ghi rõ cả hai điều, hay không có điều nào"
 
-#: ../providers/xbase/gda-xbase-provider.c:235
+#: ../providers/xbase/gda-xbase-provider.c:236
 msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
-msgstr "Phải xác định hoặc FILENAME (tên tập tin) hoặc DIRECTORY (thư mục), trong "
+msgstr ""
+"Phải xác định hoặc FILENAME (tên tập tin) hoặc DIRECTORY (thư mục), trong "
 "chuỗi kết nối"
 
-#: ../providers/xbase/gda-xbase-provider.c:264
-#: ../providers/xbase/gda-xbase-provider.c:341
+#: ../providers/xbase/gda-xbase-provider.c:265
+#: ../providers/xbase/gda-xbase-provider.c:342
 msgid "Invalid Xbase handle"
 msgstr "Bộ quản lý Xbase không hợp lệ."
 
-#: ../providers/xbase/libmain.c:40
+#: ../providers/xbase/libmain.c:50
 msgid "Provider for xBase (dBase, FoxPro, etc) files"
 msgstr "Bộ cung cấp tập tin Xbase (dBase, FoxPro v.v.)"
 
@@ -4945,82 +5448,19 @@ msgstr "Bộ cung cấp tập tin Xbase (dBase, FoxPro v.v.)"
 msgid "Directory containing the xBase files"
 msgstr "Thư mục chứa các tập tin xBase"
 
-#: ../report/libgda-report/gda-report-document.c:179
-msgid "Could not parse XML document"
-msgstr "Không thể phân tách tài liệu XML."
+#: ../providers/xbase/xbase_specs_dsn.xml.in.h:3
+msgid "File Name"
+msgstr "Tên tập tin"
 
-#: ../report/libgda-report/gda-report-document.c:189
-msgid "XML document is not valid"
-msgstr "Tài liệu XML không hợp lệ."
-
-#: ../report/libgda-report/gda-report-document.c:221
-#, c-format
-msgid "Could not get file from %s"
-msgstr "Không thể lấy tập tin từ %s."
-
-#: ../report/libgda-report/gda-report-item-detail.c:160
-#: ../report/libgda-report/gda-report-item-pagefooter.c:171
-#: ../report/libgda-report/gda-report-item-pageheader.c:160
-#: ../report/libgda-report/gda-report-item-report.c:155
-#: ../report/libgda-report/gda-report-item-reportfooter.c:172
-#: ../report/libgda-report/gda-report-item-reportheader.c:171
-#, c-format
-msgid "An element with ID %s already exists in the report"
-msgstr "Trong báo cáo đã có một yếu tố ID %s."
-
-#: ../report/libgda-report/gda-report-item-detail.c:185
-#: ../report/libgda-report/gda-report-item-pagefooter.c:196
-#: ../report/libgda-report/gda-report-item-pageheader.c:185
-#: ../report/libgda-report/gda-report-item-report.c:711
-#: ../report/libgda-report/gda-report-item-reportfooter.c:197
-#: ../report/libgda-report/gda-report-item-reportheader.c:196
-#, c-format
-msgid "Item with ID %s is not a label"
-msgstr "Mục ID %s không phải là nhãn."
-
-#: ../report/libgda-report/gda-report-item-detail.c:214
-#: ../report/libgda-report/gda-report-item-pagefooter.c:224
-#: ../report/libgda-report/gda-report-item-pageheader.c:214
-#: ../report/libgda-report/gda-report-item-report.c:739
-#: ../report/libgda-report/gda-report-item-reportfooter.c:225
-#: ../report/libgda-report/gda-report-item-reportheader.c:224
-#, c-format
-msgid "Item with ID %s is not a repfield"
-msgstr "Mục ID %s không phải là repfield"
-
-#: ../report/libgda-report/gda-report-item.c:276
-msgid "Error setting parent -> child relation"
-msgstr "Gặp lỗi khi đặt quan hệ mẹ → con."
-
-#: ../report/libgda-report/gda-report-item.c:375
-#, c-format
-msgid "Error setting value %s to attribute %s of item %s"
-msgstr "Gặp lỗi khi đặt giá trị %s thành thuộc tính %s của mục %s."
-
-#: ../report/libgda-report/gda-report-valid.c:130
-#, c-format
-msgid "could not get DTD from %s"
-msgstr "Không thể lấy DTD từ %s."
-
-#: ../report/libgda-report/gda-report-valid.c:231
-#, c-format
-msgid "Error validating element %s"
-msgstr "Gặp lỗi khi hợp lệ hóa yếu tố %s."
-
-#: ../report/libgda-report/gda-report-valid.c:269
-#, c-format
-msgid "No declaration for attribute %s of element %s\n"
-msgstr "Không có lời khai báo cho thuộc tính %s của yếu tố %s.\n"
-
-#: ../report/libgda-report/gda-report-valid.c:283
-#, c-format
-msgid "Value \"%s\" for attribute %s of %s is not among the enumerated set\n"
-msgstr "Giá trị « %s » cho thuộc tính %s của %s không có trong tập hợp đã tính.\n"
+#: ../providers/xbase/xbase_specs_dsn.xml.in.h:4
+msgid "Full path to the file containing the database"
+msgstr "Đường dẫn đầy đủ đến tập tin chứa cơ sở dữ liệu"
 
 #: ../testing/gda-test-blob.c:71
 #: ../testing/gda-test-connection.c:62
 #: ../testing/gda-test-server-operation.c:73
 #: ../tools/gda-author-dict-file.c:148
+#: ../tools/gda-sql.c:683
 #, c-format
 msgid "DSN '%s' is not declared"
 msgstr "Chưa tuyên bố DSN « %s »"
@@ -5078,7 +5518,8 @@ msgstr "Không thể ghi từ điển vào tập tin %s: %s\n"
 msgid ""
 "Error loading dictionary file '%s':\n"
 "%s\n"
-msgstr "Gặp lỗi khi tải tập tin từ điển « %s »:\n"
+msgstr ""
+"Gặp lỗi khi tải tập tin từ điển « %s »:\n"
 "%s\n"
 
 #: ../testing/gda-test-model-query.c:156
@@ -5100,7 +5541,8 @@ msgstr "Chưa ghi rõ"
 msgid ""
 "Can't run command '%s':\n"
 "%s\n"
-msgstr "Không thể chạy lệnh « %s »:\n"
+msgstr ""
+"Không thể chạy lệnh « %s »:\n"
 "%s\n"
 
 #: ../testing/gda-test-model-query.c:282
@@ -5223,9 +5665,45 @@ msgstr "Có"
 msgid "No"
 msgstr "Chưa"
 
+#: ../tools/command-exec.c:100
+msgid "Invalid unnamed command"
+msgstr "Lệnh không tên không hợp lệ"
+
+#: ../tools/command-exec.c:189
+msgid "Unknown internal command"
+msgstr "Không rõ lệnh nội bộ"
+
+#: ../tools/command-exec.c:195
+msgid "Internal command not correctly defined"
+msgstr "Sai xác định lệnh nội bộ"
+
+#: ../tools/command-exec.c:201
+msgid "Incomplete internal command"
+msgstr "Lệnh nội bộ chưa hoàn thành"
+
+#: ../tools/command-exec.c:292
+msgid "History is not supported"
+msgstr "Không hỗ trợ lược sử"
+
+#: ../tools/command-exec.c:440
+#, c-format
+msgid "%s\n"
+msgstr "%s\n"
+
+#: ../tools/command-exec.c:448
+#: ../tools/gda-sql.c:1823
+#, c-format
+msgid "Could not find query named '%s'"
+msgstr "Không tìm thấy truy vấn tên « %s »"
+
+#: ../tools/command-exec.c:467
+msgid "Parameters"
+msgstr "Tham số"
+
 #: ../tools/gda-author-dict-file.c:203
 msgid "Fetching meta-data from the DBMS server. This may take some time...\n"
-msgstr "Đang lấy siêu dữ liệu từ trình phục vụ DBMX. Có thể kéo dài một lát...\n"
+msgstr ""
+"Đang lấy siêu dữ liệu từ trình phục vụ DBMX. Có thể kéo dài một lát...\n"
 
 #: ../tools/gda-author-dict-file.c:251
 #, c-format
@@ -5238,7 +5716,8 @@ msgstr "Nguồn dữ liệu"
 
 #: ../tools/gda-diagnose.c:175
 msgid "List of data sources from the config files (user and system wide)"
-msgstr "Danh sách nguồn dữ liệu từ các tập tin cấu hình (của người dùng và cho toàn "
+msgstr ""
+"Danh sách nguồn dữ liệu từ các tập tin cấu hình (của người dùng và cho toàn "
 "hệ thống)."
 
 #: ../tools/gda-diagnose.c:236
@@ -5280,7 +5759,7 @@ msgstr "Tham số chi tiết của nguồn dữ liệu : chưa cung cấp"
 
 #: ../tools/gda-diagnose.c:372
 msgid "Plugin's entry functions"
-msgstr "Các hàm ban đầu của bộ cầm phít"
+msgstr "Các hàm ban đầu của phần bổ sung"
 
 #: ../tools/gda-diagnose.c:376
 #: ../tools/gda-diagnose.c:457
@@ -5358,7 +5837,8 @@ msgstr "Bộ cung cấp này không hỗ trợ bộ quản lý dữ liệu."
 msgid ""
 "Data handler marked as error cannot handle the data type they are returned "
 "for."
-msgstr "Bộ quản lý lỗi có nhãn lỗi không thể quản lý kiểu dữ liệu cho mà các lỗi "
+msgstr ""
+"Bộ quản lý lỗi có nhãn lỗi không thể quản lý kiểu dữ liệu cho mà các lỗi "
 "được trả gởi."
 
 #: ../tools/gda-diagnose.c:775
@@ -5367,7 +5847,8 @@ msgstr "Thử ra bộ quản lý dữ liệu"
 
 #: ../tools/gda-diagnose.c:776
 msgid "get_sql_from_value() and get_str_from_value()"
-msgstr "« get_sql_from_value() » (lấy SQL từ giá trị) và « get_str_from_value() "
+msgstr ""
+"« get_sql_from_value() » (lấy SQL từ giá trị) và « get_str_from_value() "
 "» (lấy chuỗi từ giá trị)"
 
 #: ../tools/gda-diagnose.c:784
@@ -5416,7 +5897,8 @@ msgstr "• Tập tin « %s » là thư mục. •\n"
 msgid ""
 "Error saving dictionary to file '%s':\n"
 "%s\n"
-msgstr "Gặp lỗi khi lưu từ điển vào tập tin « %s »:\n"
+msgstr ""
+"Gặp lỗi khi lưu từ điển vào tập tin « %s »:\n"
 "%s\n"
 
 #: ../tools/gda-inspect-dict-file.c:141
@@ -5456,7 +5938,8 @@ msgstr "Truy_vấn_%02d"
 msgid ""
 "Could not write graph to '%s' (%s)\n"
 "\n"
-msgstr "Không thể ghi đồ thị vào « %s » (%s)\n"
+msgstr ""
+"Không thể ghi đồ thị vào « %s » (%s)\n"
 "\n"
 
 #: ../tools/gda-inspect-dict-file.c:193
@@ -5487,55 +5970,375 @@ msgstr "Tham số của nguồn dữ liệu (Tên / Kiểu / Mô tả):\n"
 msgid "None provided"
 msgstr "Chưa cung cấp"
 
-#~ msgid ""
-#~ "Can't compute the list of columns because the SELECT query is not active "
-#~ "(you can use a dictionary to correct this) and the model does not contain "
-#~ "any data"
-#~ msgstr "Không thể tính danh sách các cột vì truy vấn SELECT (chọn) không hoạt "
-#~ "động (bạn có khả năng sử dụng từ điển để sửa chữa vấn đề này) và mẫu "
-#~ "không chứa dữ liệu nào"
+#: ../tools/gda-sql.c:135
+msgid "Gda SQL console"
+msgstr "Bàn giao tiếp SQL Gda"
 
-#~ msgid "Could not auto-commit row change: %s"
-#~ msgstr "Không thể gài vào tự động thay đổi trong hàng: %s"
+#: ../tools/gda-sql.c:188
+msgid "DSN and connection string are exclusive\n"
+msgstr "DSN và chuỗi kết nối loại từ lẫn nhau\n"
 
-#~ msgid "Query without any SQL code"
-#~ msgstr "Truy vấn không có mã SQL nào."
+#: ../tools/gda-sql.c:195
+msgid ""
+"You must specify a connection to open either as a DSN or a connection "
+"string\n"
+msgstr "Bạn cần phải ghi rõ một kết nối cần mở, theo định dạng DSN hay chuỗi kết nối\n"
 
-#~ msgid "Unable to start transaction"
-#~ msgstr "Không thể khởi động giao dịch."
+#: ../tools/gda-sql.c:201
+msgid "You must specify a provider when using a connection string\n"
+msgstr "Bạn cần phải ghi rõ nhà cung cấp khi sử dụng chuỗi kết nối\n"
 
-#~ msgid "Blob already open"
-#~ msgstr "Blob đã mở."
+#: ../tools/gda-sql.c:208
+msgid "Welcome to the GDA SQL console, version "
+msgstr "Chào mừng bạn sử dụng bàn giao tiếp SQL của GDA, phiên bản "
 
-#~ msgid "Error getting blob segment."
-#~ msgstr "Gặp lỗi khi lấy phần đoạn blob."
+#: ../tools/gda-sql.c:210
+msgid ""
+"Type: \\copyright to show usage and distribution terms\n"
+"      \\? for help with internal commands\n"
+"      \\q (or CTRL-D) to quit\n"
+"      or any query terminated by a semicolon\n"
+"\n"
+msgstr "Gỏ lệnh:\n"
+" • \\copyright		để hiện điều kiện sử dụng và phát hành lại\n"
+" • \\?			để xem trợ giúp về các lệnh nội bộ\n"
+" • \\q (hay CTRL-D)	để thoát\n"
+" • hay bất cứ truy vấn nào kết thúc bằng dấu chấm phẩy\n"
+"\n"
 
-#~ msgid "Can't read a closed Blob"
-#~ msgstr "Không thể đọc một Blob được đóng."
+#: ../tools/gda-sql.c:218
+#, c-format
+msgid "Can't open connection: %s"
+msgstr "Không thể mở kết nối: %s"
 
-#~ msgid "Unable to close blob."
-#~ msgstr "Không thể đóng blob."
+#: ../tools/gda-sql.c:490
+msgid "No connection specified"
+msgstr "Chưa ghi rõ kết nối"
 
-#~ msgid "Blob is closed"
-#~ msgstr "Blob đã được đóng."
+#: ../tools/gda-sql.c:495
+msgid "Connection closed"
+msgstr "Kết nối bị đóng"
 
-#~ msgid "Transactions not supported in MDB provider"
-#~ msgstr "Giao dịch không được hỗ trợ trong bộ cung cấp MDB."
+#: ../tools/gda-sql.c:535
+#, c-format
+msgid "No internal parameter named '%s' required by query"
+msgstr "Truy vấn không cần thiết tham số nội bộ tên « %s »"
 
-#~ msgid "mSQL doesn't support transactions."
-#~ msgstr "mSQL không hỗ trợ giao dịch."
+#: ../tools/gda-sql.c:609
+#, c-format
+msgid "Can't open file '%s' for writing: %s\n"
+msgstr "Không thể mở tập tin « %s » để ghi: %s\n"
 
-#~ msgid "Field Name"
-#~ msgstr "Tên trường"
+#: ../tools/gda-sql.c:622
+#, c-format
+msgid "Can't open pipe '%s': %s\n"
+msgstr "Không thể mở ống dẫn « %s »: %s\n"
 
-#~ msgid "Not null"
-#~ msgstr "Không rỗng."
+#: ../tools/gda-sql.c:654
+#, c-format
+msgid "Can't open file '%s' for reading: %s\n"
+msgstr "Không thể mở tập tin « %s » để đọc: %s\n"
 
-#~ msgid "Only if not exists"
-#~ msgstr "Chỉ nếu nó chưa tồn tại"
+#: ../tools/gda-sql.c:719
+#, c-format
+msgid "Could not compute output XML file name: %s\n"
+msgstr "Không thể tính tên tập tin XML xuất ra: %s\n"
 
-#~ msgid "Could not prepare the transaction to commit"
-#~ msgstr "Không thể chuẩn bị giao dịch cần gài vào."
+#: ../tools/gda-sql.c:726
+msgid ""
+"Synchronizing internal dictionary with database, this may take some time..."
+msgstr ""
+"Đang đồng bộ hoá từ điển nội bộ với cơ sở dữ liệu. Có thể kéo dài một lát..."
 
-#~ msgid "Views"
-#~ msgstr "Khung xem"
+#: ../tools/gda-sql.c:731
+#, c-format
+msgid "Could synchronize dictionary with DBMS: %s\n"
+msgstr "Có thể đồng bộ hoá từ điển với DBMS: %s\n"
+
+#: ../tools/gda-sql.c:735
+msgid " Done.\n"
+msgstr " Hoàn tất.\n"
+
+#: ../tools/gda-sql.c:837
+msgid "DSN"
+msgstr "DSN"
+
+#: ../tools/gda-sql.c:911
+msgid "DSN parameters"
+msgstr "Tham số DSN"
+
+#: ../tools/gda-sql.c:912
+msgid "File"
+msgstr "Tập tin"
+
+#: ../tools/gda-sql.c:1030
+#: ../tools/gda-sql.c:1081
+#: ../tools/gda-sql.c:1091
+#: ../tools/gda-sql.c:1101
+#: ../tools/gda-sql.c:1151
+#: ../tools/gda-sql.c:1161
+#: ../tools/gda-sql.c:1171
+#: ../tools/gda-sql.c:1282
+msgid "General"
+msgstr "Chung"
+
+#: ../tools/gda-sql.c:1032
+msgid "Show commands history, or save it to file"
+msgstr "Hiển thị lược sử lệnh, hoặc lưu nó vào tập tin"
+
+#: ../tools/gda-sql.c:1040
+#: ../tools/gda-sql.c:1050
+msgid "Dictionary"
+msgstr "Từ điển"
+
+#: ../tools/gda-sql.c:1042
+msgid "Synchronize dictionary with database structure"
+msgstr "Đồng bộ hoá từ điển với cấu trúc cơ sở dữ liệu"
+
+#: ../tools/gda-sql.c:1052
+msgid "Save dictionary"
+msgstr "Lưu từ điển"
+
+#: ../tools/gda-sql.c:1060
+#: ../tools/gda-sql.c:1070
+msgid "Information"
+msgstr "Thông tin"
+
+#: ../tools/gda-sql.c:1062
+msgid "List all tables and views (or named table or view)"
+msgstr "Liệt kê mọi bảng và ô xem (hay bảng/ô xem có tên đã cho)"
+
+#: ../tools/gda-sql.c:1072
+msgid "List all queries (or named query) in dictionary"
+msgstr "Liệt kê mọi truy vấn (hay truy vấn có tên đã cho) trong từ điển"
+
+#: ../tools/gda-sql.c:1082
+msgid "c DSN [USER [PASSWORD]]"
+msgstr "c DSN [NGƯỜI_DÙNG [MẬT_KHẨU]]"
+
+#: ../tools/gda-sql.c:1083
+msgid "Connect to another defined data source (DSN, see \\dsn_list)"
+msgstr "Kết nối đến nguồn dữ liệu đã xác định khác (DSN, xem « \\dsn_list »)"
+
+#: ../tools/gda-sql.c:1093
+msgid "List configured data sources (DSN)"
+msgstr "Liệt kê mọi nguồn dữ liệu đã cấu hình (DSN)"
+
+#: ../tools/gda-sql.c:1103
+msgid "List installed database providers"
+msgstr "Liệt kê mọi bộ cung cấp cơ sở dữ liệu đã cài đặt"
+
+#: ../tools/gda-sql.c:1111
+#: ../tools/gda-sql.c:1121
+#: ../tools/gda-sql.c:1131
+#: ../tools/gda-sql.c:1141
+msgid "Input/Output"
+msgstr "Vào/Ra"
+
+#: ../tools/gda-sql.c:1112
+msgid "i FILE"
+msgstr "i TẬP_TIN"
+
+#: ../tools/gda-sql.c:1113
+msgid "Execute commands from file"
+msgstr "Thực hiện các lệnh từ tập tin"
+
+#: ../tools/gda-sql.c:1122
+msgid "o [FILE]"
+msgstr "o [TẬP_TIN]"
+
+#: ../tools/gda-sql.c:1123
+msgid "Send output to a file or |pipe"
+msgstr "Xuất vào tập tin hay |ống dẫn"
+
+#: ../tools/gda-sql.c:1132
+msgid "echo [TEXT]"
+msgstr "echo [VĂN_BẢN]"
+
+#: ../tools/gda-sql.c:1133
+msgid "Send output to stdout"
+msgstr "Xuất ra stdout"
+
+#: ../tools/gda-sql.c:1142
+msgid "qecho [TEXT]"
+msgstr "qecho [VĂN_BẢN]"
+
+#: ../tools/gda-sql.c:1143
+msgid "Send output to output stream"
+msgstr "Xuất ra luồng xuất"
+
+#: ../tools/gda-sql.c:1152
+msgid "q"
+msgstr "q"
+
+#: ../tools/gda-sql.c:1153
+msgid "Quit"
+msgstr "Thoát"
+
+#: ../tools/gda-sql.c:1162
+msgid "cd [DIR]"
+msgstr "cd [THƯ_MỤC]"
+
+#: ../tools/gda-sql.c:1163
+msgid "Change the current working directory"
+msgstr "Thay đổi thư mục làm việc hiện thời"
+
+# Literal: don't translate/Nghĩa chữ : đừng dịch
+#: ../tools/gda-sql.c:1172
+msgid "copyright"
+msgstr "copyright"
+
+#: ../tools/gda-sql.c:1173
+msgid "Show usage and distribution terms"
+msgstr "Hiển thị các điều kiện sử dụng và phát hành lại"
+
+#: ../tools/gda-sql.c:1181
+#: ../tools/gda-sql.c:1191
+#: ../tools/gda-sql.c:1201
+#: ../tools/gda-sql.c:1211
+#: ../tools/gda-sql.c:1221
+#: ../tools/gda-sql.c:1231
+#: ../tools/gda-sql.c:1241
+#: ../tools/gda-sql.c:1251
+#: ../tools/gda-sql.c:1261
+msgid "Query buffer"
+msgstr "Bộ đệm truy vấn"
+
+#: ../tools/gda-sql.c:1183
+msgid "Edit the query buffer (or file) with external editor"
+msgstr "Chỉnh sửa vùng đệm (hay tập tin) truy vấn bằng trình biên soạn bên ngoài"
+
+#: ../tools/gda-sql.c:1193
+msgid "Reset the query buffer (clear buffer of with contents of file)"
+msgstr "Đặt lại vùng đệm truy vấn (xoá nội dung tập tin ra vùng đệm)"
+
+#: ../tools/gda-sql.c:1203
+msgid "Show the contents of the query buffer"
+msgstr "Hiển thị nội dung của vùng đệm truy vấn"
+
+#: ../tools/gda-sql.c:1213
+msgid "Execute contents of query buffer"
+msgstr "Thực hiện nội dung của vùng đệm truy vấn"
+
+#: ../tools/gda-sql.c:1222
+msgid "w FILE"
+msgstr "w TẬP_TIN"
+
+#: ../tools/gda-sql.c:1223
+msgid "Write query buffer to file"
+msgstr "Ghi vùng đệm truy vấn vào tập tin"
+
+#: ../tools/gda-sql.c:1232
+msgid "w_dict [QUERY_NAME]"
+msgstr "w_dict [TÊN_TRUY_VẤN]"
+
+#: ../tools/gda-sql.c:1233
+msgid "Save query buffer to dictionary"
+msgstr "Lưu vùng đệm truy vấn vào từ điển"
+
+#: ../tools/gda-sql.c:1242
+msgid "r_dict QUERY_NAME"
+msgstr "r_dict TÊN_TRUY_VẤN"
+
+#: ../tools/gda-sql.c:1243
+msgid "Set named query from dictionary into query buffer"
+msgstr "Đặt truy vấn có tên đã cho từ từ điển sang vùng đệm truy vấn"
+
+#: ../tools/gda-sql.c:1252
+msgid "set [NAME [VALUE|_null_]]"
+msgstr "set [TÊN [GIÁ_TRỊ|_null_]]"
+
+#: ../tools/gda-sql.c:1253
+msgid "Set or show internal parameter, or list all if no parameters"
+msgstr "Đặt hay hiện tham số nội bộ : không có tham số thì liệt kê tất cả"
+
+#: ../tools/gda-sql.c:1262
+msgid "unset NAME"
+msgstr "unset TÊN"
+
+#: ../tools/gda-sql.c:1263
+msgid "Unset (delete) internal parameter"
+msgstr "Hủy đặt (xoá) tham số nội bộ"
+
+#: ../tools/gda-sql.c:1271
+msgid "Formatting"
+msgstr "Định dạng"
+
+#: ../tools/gda-sql.c:1272
+msgid "H [HTML|XML]"
+msgstr "H [HTML|XML]"
+
+#: ../tools/gda-sql.c:1273
+msgid "Set output format"
+msgstr "Đặt định dạng xuất"
+
+#: ../tools/gda-sql.c:1284
+msgid "List all available commands"
+msgstr "Liệt kê tất cả các lệnh sẵn sàng"
+
+#: ../tools/gda-sql.c:1501
+#, c-format
+msgid "Could not get home directory: %s"
+msgstr "Không thể lấy thư mục chính: %s"
+
+#: ../tools/gda-sql.c:1527
+#, c-format
+msgid "Working directory is now: %s"
+msgstr "Thư mục làm việc giờ này là: %s"
+
+#: ../tools/gda-sql.c:1531
+#, c-format
+msgid "Could not change working directory to '%s': %s"
+msgstr ""
+"Không thể chuyển đổi thư mục làm việc sang « %s »: %s"
+
+#: ../tools/gda-sql.c:1563
+#, c-format
+msgid "Could not write to temporary file '%s': %s"
+msgstr ""
+"Không thể ghi vào tập tin tạm thời « %s »s: %s"
+
+#: ../tools/gda-sql.c:1599
+#, c-format
+msgid "could not start editor '%s'"
+msgstr "không thể khởi chạy trình biên soạn « %s »"
+
+#: ../tools/gda-sql.c:1604
+msgid "Could not start /bin/sh"
+msgstr "Không thể khởi chạy /bin/sh"
+
+#: ../tools/gda-sql.c:1711
+msgid "Missing FILE to write to"
+msgstr "Thiếu TẬP_TIN vào đó cần ghi"
+
+#: ../tools/gda-sql.c:1763
+#, c-format
+msgid "saved_query_%d"
+msgstr "truy_van_luu_%d"
+
+#: ../tools/gda-sql.c:1794
+msgid "Query buffer is empty"
+msgstr "Vùng đệm truy vấn là rỗng"
+
+#: ../tools/gda-sql.c:1827
+msgid "Missing query name"
+msgstr "Thiếu tên truy vấn"
+
+#: ../tools/gda-sql.c:1880
+#: ../tools/gda-sql.c:1938
+#, c-format
+msgid "No parameter named '%s' defined"
+msgstr "Chưa xác định tham số tên « %s »"
+
+#: ../tools/gda-sql.c:1890
+msgid "Value"
+msgstr "Giá trị"
+
+#: ../tools/gda-sql.c:1942
+msgid "Missing parameter's name"
+msgstr "Thiếu tên của tham số"
+
+#: ../tools/tools-input.c:206
+#, c-format
+msgid "Could not save history file to '%s': %s"
+msgstr "Không thể lưu tập tin lược sử vào « %s »: %s"
