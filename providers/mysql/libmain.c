@@ -69,6 +69,6 @@ plugin_create_provider (void)
 	GdaServerProvider *prov;
 
 	prov = gda_mysql_provider_new ();
-	g_object_set_data (prov, "GDA_PROVIDER_DIR", module_path);
+	g_object_set_data ((GObject* ) prov, "GDA_PROVIDER_DIR", module_path);
 	return prov;
 }

@@ -100,7 +100,7 @@ static gboolean
 gda_virtual_provider_close_connection (GdaServerProvider *prov, GdaConnection *cnc)
 {
 	g_return_val_if_fail (GDA_IS_VIRTUAL_PROVIDER (prov), FALSE);
-	GDA_SERVER_PROVIDER_CLASS (parent_class)->close_connection (prov, cnc);
+	return GDA_SERVER_PROVIDER_CLASS (parent_class)->close_connection (prov, cnc);
 }
 
 

@@ -1,6 +1,6 @@
 lib_LTLIBRARIES = libgda-3.0.la
 
-SUBDIRS = sql-delimiter sql-transaction graph handlers binreloc
+SUBDIRS = sqlite sql-delimiter sql-transaction graph handlers binreloc
 
 if BDB 
 GDA_BDB_H=gda-data-model-bdb.h
@@ -10,6 +10,7 @@ endif
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
+	-I$(top_srcdir)/libgda/sqlite \
 	$(LIBGDA_CFLAGS) \
 	$(FAM_CFLAGS) \
 	$(BDB_CFLAGS) \
@@ -228,6 +229,7 @@ libgda_3_0_la_LIBADD = sql-transaction/libgda_sql_transaction-3.0.la \
 	graph/libgda_graph-3.0.la \
 	handlers/libgda_handlers-3.0.la \
 	binreloc/libgda_binreloc-3.0.la \
+	sqlite/libgda-sqlite.la \
 	$(top_builddir)/libsql/libgdasql-3.0.la \
 	$(LIBGDA_LIBS) $(FAM_LIBS) \
 	$(BDB_LIBS) $(GNOMEVFS_LIBS) $(LIBGCRYPT_LIBS)

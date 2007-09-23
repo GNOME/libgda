@@ -941,7 +941,7 @@ gda_data_model_append_row (GdaDataModel *model, GError **error)
 	if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_INSERT)) {
 		g_set_error (error, 0, 0,
 			     _("Model does not allow row insertion"));
-		return FALSE;
+		return -1;
 	}
 
 	if (GDA_DATA_MODEL_GET_CLASS (model)->i_append_row) 
@@ -1670,11 +1670,12 @@ gda_data_model_add_data_from_xml_node (GdaDataModel *model, xmlNodePtr node, GEr
  * Returns: TRUE if no error occurred.
  */
 gboolean
-gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from, gboolean overwrite, GHashTable *cols_trans, GError **error)
+gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from, 
+				  gboolean overwrite, GHashTable *cols_trans, GError **error)
 {
 	GdaDataModelIter *from_iter;
 	gboolean retval = TRUE;
-	gint to_nb_cols, to_nb_rows, to_row = -1;;
+	gint to_nb_cols, to_nb_rows=-1, to_row = -1;
 	gint from_nb_cols;
 	GSList *copy_params = NULL;
 	gint i;
@@ -1832,7 +1833,7 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from, gboolean
 
 		if (retval) {
 			if (to_row >= to_nb_rows)
-				/* we have finished modifying the existng rows */
+				/* we have finished modifying the existing rows */
 				to_row = -1;
 
 			if (to_row >= 0) {
@@ -1940,7 +1941,7 @@ gda_data_model_import_from_file (GdaDataModel *model,
 	return retval;
 }
 
-static gchar *real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attributes);
+static gchar *real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attributes, gboolean dump_rows);
 
 /**
  * gda_data_model_dump
@@ -1948,20 +1949,33 @@ static gchar *real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean 
  * @to_stream: where to dump the data model
  *
  * Dumps a textual representation of the @model to the @to_stream stream
+ *
+ * The following environment variables can affect the resulting output:
+ * <itemizedlist>
+ *   <listitem><para>GDA_DATA_MODEL_DUMP_ROW_NUMBERS: if set, the first coulumn of the output will contain row numbers</para></listitem>
+ *   <listitem><para>GDA_DATA_MODEL_DUMP_ATTRIBUTES: if set, also dump the data model's columns' types and value's attributes</para></listitem>
+ * </itemizedlist>
  */
 void
 gda_data_model_dump (GdaDataModel *model, FILE *to_stream)
 {
 	gchar *str;
+	gboolean dump_attrs = FALSE;
+	gboolean dump_rows = FALSE;
 
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 	g_return_if_fail (to_stream);
 
-	str = gda_data_model_dump_as_string (model);
+	if (getenv ("GDA_DATA_MODEL_DUMP_ATTRIBUTES")) 
+		dump_attrs = TRUE;
+	if (getenv ("GDA_DATA_MODEL_DUMP_ROW_NUMBERS"))
+		dump_rows = TRUE;
+
+	str = real_gda_data_model_dump_as_string (model, FALSE, dump_rows);
 	g_fprintf (to_stream, "%s", str);
 	g_free (str);
-	if (getenv ("GDA_DATA_MODEL_DUMP_ATTRIBUTES")) {
-		str= real_gda_data_model_dump_as_string (model, TRUE);
+	if (dump_attrs) {
+		str = real_gda_data_model_dump_as_string (model, TRUE, dump_rows);
 		g_fprintf (to_stream, "%s", str);
 		g_free (str);
 	}
@@ -1973,14 +1987,22 @@ gda_data_model_dump (GdaDataModel *model, FILE *to_stream)
  *
  * Dumps a textual representation of the @model into a new string
  *
+ * The following environment variables can affect the resulting output:
+ * <itemizedlist>
+ *   <listitem><para>GDA_DATA_MODEL_DUMP_ROW_NUMBERS: if set, the first coulumn of the output will contain row numbers</para></listitem>
+ * </itemizedlist>
  * Returns: a new string.
  */
 gchar *
 gda_data_model_dump_as_string (GdaDataModel *model)
 {
+	gboolean dump_rows = FALSE;
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
-	return real_gda_data_model_dump_as_string (model, FALSE);
+	if (getenv ("GDA_DATA_MODEL_DUMP_ROW_NUMBERS"))
+		dump_rows = TRUE;
+
+	return real_gda_data_model_dump_as_string (model, FALSE, dump_rows);
 }
 
 static void
@@ -2006,7 +2028,7 @@ string_get_dimensions (const gchar *string, gint *width, gint *rows)
 }
 
 static gchar *
-real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attributes)
+real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attributes, gboolean dump_rows)
 {
 #define MULTI_LINE_NO_SEPARATOR
 
@@ -2025,6 +2047,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 	const GValue *value;
 
 	gint offset = 0;
+	gint col_offset = dump_rows ? 1 : 0;
 
 	string = g_string_new ("");
 
@@ -2035,9 +2058,16 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 	/* compute the columns widths: using column titles... */
 	n_cols = gda_data_model_get_n_columns (model);
 	n_rows = gda_data_model_get_n_rows (model);
-	cols_size = g_new0 (gint, n_cols);
-	cols_is_num = g_new0 (gboolean, n_cols);
+	cols_size = g_new0 (gint, n_cols + col_offset);
+	cols_is_num = g_new0 (gboolean, n_cols + col_offset);
 	
+	if (dump_rows) {
+		str = g_strdup_printf ("%d", n_rows);
+		cols_size [0] = MAX (strlen (str), strlen ("#row"));
+		cols_is_num [0] = TRUE;
+		g_free (str);
+	}
+
 	for (i = 0; i < n_cols; i++) {
 		GdaColumn *gdacol;
 		GType coltype;
@@ -2051,9 +2081,9 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 
 		str = (gchar *) gda_data_model_get_column_title (model, i);
 		if (str)
-			cols_size [i] = g_utf8_strlen (str, -1);
+			cols_size [i + col_offset] = g_utf8_strlen (str, -1);
 		else
-			cols_size [i] = 6; /* for "<none>" */
+			cols_size [i + col_offset] = 6; /* for "<none>" */
 
 		if (! dump_attributes) {
 			gdacol = gda_data_model_describe_column (model, i);
@@ -2069,12 +2099,12 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 			    (coltype == G_TYPE_CHAR) ||
 			    (coltype == G_TYPE_UCHAR) ||
 			    (coltype == G_TYPE_UINT))
-				cols_is_num [i] = TRUE;
+				cols_is_num [i + col_offset] = TRUE;
 			else
-				cols_is_num [i] = FALSE;
+				cols_is_num [i + col_offset] = FALSE;
 		}
 		else
-			cols_is_num [i] = TRUE;
+			cols_is_num [i + col_offset] = TRUE;
 	}
 
 	/* ... and using column data */
@@ -2086,7 +2116,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 				if (str) {
 					gint w;
 					string_get_dimensions (str, &w, NULL);
-					cols_size [i] = MAX (cols_size [i], w);
+					cols_size [i + col_offset] = MAX (cols_size [i + col_offset], w);
 					g_free (str);
 				}
 			}
@@ -2096,26 +2126,29 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 				attrs = gda_data_model_get_attributes_at (model, i, j);
 				str = g_strdup_printf ("%u", attrs);
 				string_get_dimensions (str, &w, NULL);
-				cols_size [i] = MAX (cols_size [i], w);
+				cols_size [i + col_offset] = MAX (cols_size [i + col_offset], w);
 				g_free (str);
 			}
 		}
 	}
 	
 	/* actual dumping of the contents: column titles...*/
+	if (dump_rows) 
+		g_string_append_printf (string, "%*s", cols_size [0], "#row");
+
 	for (i = 0; i < n_cols; i++) {
 		gint j, max;
 		str = (gchar *) gda_data_model_get_column_title (model, i);
-		if (i != 0)
+		if (dump_rows || (i != 0))
 			g_string_append_printf (string, "%s", sep_col);
 
 		if (str) {
 			g_string_append_printf (string, "%s", str);
-			max = cols_size [i] - g_utf8_strlen (str, -1);
+			max = cols_size [i + col_offset] - g_utf8_strlen (str, -1);
 		}
 		else {
 			g_string_append (string, "<none>");
-			max = cols_size [i] - 6;
+			max = cols_size [i + col_offset] - 6;
 		}
 		for (j = 0; j < max; j++)
 			g_string_append_c (string, ' ');
@@ -2123,7 +2156,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 	g_string_append_c (string, '\n');
 		
 	/* ... separation line ... */
-	for (i = 0; i < n_cols; i++) {
+	for (i = 0; i < n_cols + col_offset; i++) {
 		if (i != 0)
 			g_string_append_printf (string, "%s", sep_row);
 		for (j = 0; j < cols_size [i]; j++)
@@ -2135,9 +2168,16 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 	if (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM) {
 		for (j = 0; j < n_rows; j++) {
 			/* determine height for each column in that row */
-			gint *cols_height = g_new (gint, n_cols);
-			gchar ***cols_str = g_new (gchar **, n_cols);
+			gint *cols_height = g_new (gint, n_cols + col_offset);
+			gchar ***cols_str = g_new (gchar **, n_cols + col_offset);
 			gint k, kmax = 0;
+
+			if (dump_rows) {
+				str = g_strdup_printf ("%d", j);
+				cols_str [0] = g_strsplit (str, "\n", -1);
+				cols_height [0] = 1;
+				kmax = 1;
+			}
 
 			for (i = 0; i < n_cols; i++) {
 				if (!dump_attributes) {
@@ -2150,19 +2190,19 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 					str = g_strdup_printf ("%u", attrs);
 				}
 				if (str) {
-					cols_str [i] = g_strsplit (str, "\n", -1);
+					cols_str [i + col_offset] = g_strsplit (str, "\n", -1);
 					g_free (str);
-					cols_height [i] = g_strv_length (cols_str [i]);
-					kmax = MAX (kmax, cols_height [i]);
+					cols_height [i + col_offset] = g_strv_length (cols_str [i + col_offset]);
+					kmax = MAX (kmax, cols_height [i + col_offset]);
 				}
 				else {
-					cols_str [i] = NULL;
-					cols_height [i] = 0;
+					cols_str [i + col_offset] = NULL;
+					cols_height [i + col_offset] = 0;
 				}
 			}
 
 			for (k = 0; k < kmax; k++) {
-				for (i = 0; i < n_cols; i++) {
+				for (i = 0; i < n_cols + col_offset; i++) {
 					gboolean align_center = FALSE;
 					if (i != 0) {
 #ifdef MULTI_LINE_NO_SEPARATOR

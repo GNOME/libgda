@@ -1135,6 +1135,9 @@ libgda/binreloc/Makefile
 libgda/handlers/Makefile
 libgda/sql-delimiter/Makefile
 libgda/sql-transaction/Makefile
+libgda/sqlite/Makefile
+libgda/sqlite/sqlite-src/Makefile
+libgda/sqlite/virtual/Makefile
 libgda/graph/Makefile
 providers/Makefile
 providers/bdb/Makefile
@@ -1160,9 +1163,6 @@ providers/oracle/libgda-oracle-3.0.pc
 providers/postgres/Makefile
 providers/postgres/libgda-postgres-3.0.pc
 providers/sqlite/Makefile
-providers/sqlite/sqlite-src/Makefile
-providers/sqlite/virtual/Makefile
-providers/sqlite/virtual/libgda-virtual-3.0.pc
 providers/sqlite/libgda-sqlite-3.0.pc
 providers/sybase/Makefile
 providers/sybase/libgda-sybase-3.0.pc

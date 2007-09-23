@@ -1189,7 +1189,7 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 		GdaDictType *dict_type;
 		dict_type = gda_dict_get_dict_type_by_xml_id (dict, prop);
 		if (dict_type) {
-			gda_query_field_value_set_dict_type (field, dict_type);
+			gda_query_field_value_set_dict_type ((GdaEntityField *) field, dict_type);
 			dh = gda_dict_get_default_handler (dict, gda_dict_type_get_g_type (field->priv->dict_type));
 		}
 		xmlFree (prop);

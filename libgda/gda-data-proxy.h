@@ -41,7 +41,10 @@ extern GQuark gda_data_proxy_error_quark (void);
 
 typedef enum {
 	GDA_DATA_PROXY_COMMIT_ERROR,
-	GDA_DATA_PROXY_COMMIT_CANCELLED
+	GDA_DATA_PROXY_COMMIT_CANCELLED,
+	GDA_DATA_PROXY_READ_ONLY_VALUE,
+	GDA_DATA_PROXY_READ_ONLY_ROW,
+	GDA_DATA_PROXY_FILTER_ERROR
 } GdaDataProxyError;
 
 /* struct for the object's data */
@@ -102,6 +105,9 @@ gint              gda_data_proxy_get_sample_size          (GdaDataProxy *proxy);
 void              gda_data_proxy_set_sample_start         (GdaDataProxy *proxy, gint sample_start);
 gint              gda_data_proxy_get_sample_start         (GdaDataProxy *proxy);
 gint              gda_data_proxy_get_sample_end           (GdaDataProxy *proxy);
+
+gboolean          gda_data_proxy_set_filter_expr          (GdaDataProxy *proxy, const gchar *filter_expr, GError **error);
+const gchar      *gda_data_proxy_get_filter_expr          (GdaDataProxy *proxy);
 
 G_END_DECLS
 

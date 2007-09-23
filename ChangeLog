@@ -1,3 +1,27 @@
+2007-09-23  Vivien Malerba <malerba@gnome-db.org>
+
+	* providers/sqlite/virtual/gda-vprovider-data-model.c: each virtual table
+	now has a new hidden integer column named "__gda_row_nb" which gives the row number
+	of the data model represented by the table.
+	* providers/sqlite/gda-sqlite-provider.c: corrected a bug in split_sql()
+	* libgda/gda-data-model-bdb.c: correctly initialize variable in gda_data_model_bdb_set_values()
+	* libgda/gda-data-proxy.c: columns containing non modified data have their name prefixed with an
+	underscore
+	* libgda/gda-data-proxy.[ch]: added gda_data_proxy_[gs]et_filter_expr() to enable
+	filtering among the contents of a proxy
+	* libgda/gda-data-proxy.c: reworked the inner working for delayed sync. mechanism
+	* moved the GdaSqliteProvider and related objects from providers/sqlite to
+	libgda/sqlite because libgda _requires_ the virtual connections feature now 
+	and (left in providers/sqlite the XML files and enough to make a shared library
+	for the SQLite provider).
+	* libgda/gda-query.c: updated gda_query_set_sql_text()'s documentation
+	* libgda/gda-data-model.c: improved the gda_data_model_dump_as_string() and
+	gda_data_model_dump() methods to be able to dump row numbers as well
+	* libgda-report/gda-report-document.c: removed unused function declaration
+	* libgda/gda-query.c: doc. improvement
+	* libgda/gda-threader.c: added missing include
+	* various other very minor adjustments
+
 2007-09-02  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in: set to version 3.1.2

@@ -278,8 +278,8 @@ gda_data_access_wrapper_set_property (GObject *object,
 										   NULL, (GDestroyNotify) g_object_unref);
 				}
   
-                                if(model->priv->model)
-                                  g_object_unref(model->priv->model);
+                                if (model->priv->model)
+					g_object_unref (model->priv->model);
 
 				model->priv->model = mod;
 				g_object_ref (mod);

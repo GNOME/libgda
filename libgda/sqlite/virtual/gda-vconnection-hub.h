@@ -23,7 +23,7 @@
 #ifndef __GDA_VCONNECTION_HUB_H__
 #define __GDA_VCONNECTION_HUB_H__
 
-#include "gda-vconnection-data-model.h"
+#include <virtual/gda-vconnection-data-model.h>
 
 #define GDA_TYPE_VCONNECTION_HUB            (gda_vconnection_hub_get_type())
 #define GDA_VCONNECTION_HUB(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_VCONNECTION_HUB, GdaVconnectionHub))

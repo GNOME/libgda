@@ -21,6 +21,7 @@
 #include <string.h>
 #include "gda-threader.h"
 #include "gda-marshal.h"
+#include <stdlib.h>
 
 /* 
  * Main static functions 

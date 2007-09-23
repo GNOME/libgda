@@ -1338,6 +1338,10 @@ gda_query_is_modify_query (GdaQuery *query)
 * To be parsed successfully, the expected SQL must respect the SQL standard; some extensions have been
 * added to be able to define variables within the SQL statement. See the introduction to the #GdaQuery
 * for more information.
+*
+* if @sql contains in fact several SQL statements (separated by ';'), then
+* only the first statement will be taken into account, and @error's code will be
+* set to GDA_QUERY_MULTIPLE_STATEMENTS_ERROR.
 */
 void
 gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)

@@ -1,0 +1,4 @@
+Makefile
+Makefile.in
+GNOME_Database_Provider_SQLite.server
+gda-sqlite-srv-2

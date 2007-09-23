@@ -664,8 +664,14 @@ sql_split (const gchar *sql)
 	}
 
 	if (*remainder) {
-		n++;
-		string_list = g_slist_prepend (string_list, g_strdup (remainder));
+		const gchar *ptr;
+		for (ptr = remainder; *ptr; ptr++) {
+			if ((*ptr != ' ') && (*ptr != '\n') && (*ptr != '\t') && (*ptr != '\r')) {
+				n++;
+				string_list = g_slist_prepend (string_list, g_strdup (remainder));
+				break;
+			}
+		}
 	}
 
 	str_array = g_new (gchar*, n + 1);
@@ -2446,8 +2452,10 @@ gda_sqlite_free_cnc (SQLITEcnc *scnc)
 		g_hash_table_remove (db_connections_hash, scnc->connection);
 #endif
 
-	if (scnc->connection)
+	if (scnc->connection) {
 		sqlite3_close (scnc->connection);
+		g_print ("==== Closed connection for DB %p\n", scnc->connection); 
+	}
 	g_free (scnc->file);
 	if (scnc->types)
 		g_hash_table_destroy (scnc->types);

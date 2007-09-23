@@ -531,6 +531,8 @@ gda_data_proxy_get_sample_start
 gda_data_proxy_get_sample_end
 gda_data_proxy_apply_all_changes
 gda_data_proxy_cancel_all_changes
+gda_data_proxy_set_filter_expr
+gda_data_proxy_get_filter_expr
 <SUBSECTION Standard>
 GDA_DATA_PROXY
 GDA_DATA_PROXY_CLASS

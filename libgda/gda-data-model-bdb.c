@@ -788,7 +788,7 @@ gda_data_model_bdb_set_values (GdaDataModel *model, gint row, GList *values, GEr
 	GdaDataModelBdb *imodel;
 	DBT key, data;
 	int ret;
-	GList *ptr;
+	GList *ptr = values;
 	gboolean key_modified = FALSE;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_BDB (model), FALSE);
@@ -881,7 +881,6 @@ gda_data_model_bdb_set_values (GdaDataModel *model, gint row, GList *values, GEr
 static gint
 gda_data_model_bdb_append_values (GdaDataModel *model, const GList *values, GError **error)
 {
-	gint row;
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_BDB (model), -1);
 
 	return -1;

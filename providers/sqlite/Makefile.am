@@ -1,38 +1,16 @@
-if HAVE_SQLITE
-SUBDIRS=
-sqlitelibs= $(SQLITE_LIBS)
-sqliteinc= $(SQLITE_CFLAGS)
-else
-SUBDIRS= sqlite-src
-sqlitelibs= $(top_builddir)/providers/sqlite/sqlite-src/libsqlite.la
-sqliteinc= -I$(top_srcdir)/providers/sqlite/sqlite-src \
-	-I$(top_builddir)/providers/sqlite/sqlite-src -DSQLITE_API= -DSQLITE_PRIVATE=
-endif
-SUBDIRS+= . virtual
-
 providerdir=$(libdir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/providers
 provider_LTLIBRARIES = libgda-sqlite.la
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
+	-I$(top_srcdir)/libgda/sqlite \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
 	$(SQLITE_CFLAGS) \
 	$(sqliteinc) 
 
 
-virtualheaders = gda-sqlite-provider.h
 libgda_sqlite_la_SOURCES = \
-	$(virtualheaders) \
-	gda-sqlite-ddl.c \
-	gda-sqlite-ddl.h \
-	gda-sqlite-handler-bin.c \
-	gda-sqlite-handler-bin.h \
-	gda-sqlite-provider.c \
-	gda-sqlite-recordset.c \
-	gda-sqlite-recordset.h \
-	gda-sqlite.h \
-	utils.c \
 	libmain.c
 
 libgda_sqlite_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)

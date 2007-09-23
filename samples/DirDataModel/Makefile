@@ -1,5 +1,5 @@
-CFLAGS = -Wall -g `pkg-config --cflags libgda-virtual-3.0`
-LDFLAGS = `pkg-config --libs libgda-virtual-3.0`
+CFLAGS = -Wall -g `pkg-config --cflags libgda-3.0`
+LDFLAGS = `pkg-config --libs libgda-3.0`
 
 all: find-duplicates
 

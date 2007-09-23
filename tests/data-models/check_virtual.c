@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+static GdaDataModel *run_sql_select (GdaConnection *cnc, const gchar *sql);
 static gboolean run_sql_non_select (GdaConnection *cnc, const gchar *sql);
 
 int 
@@ -44,6 +45,16 @@ main (int argc, char **argv)
 	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (cnc), country_model, "country", &error)) 
 		g_error ("Add country model error: %s\n", error && error->message ? error->message : "no detail");
 
+	/* test */
+	GdaDataModel *model;
+	model = run_sql_select (cnc, "SELECT * FROM city");
+	gda_data_model_dump (model, stdout);
+	g_object_unref (model);
+	model = run_sql_select (cnc, "SELECT __gda_row_nb, * FROM city");
+	gda_data_model_dump (model, stdout);
+	g_object_unref (model);
+	
+
 	/* compute list of countries where population >= 1M */
 	if (! run_sql_non_select (cnc, "INSERT INTO results SELECT co.name, sum (ci.population) as pop FROM country co INNER JOIN city ci ON (co.code=ci.countrycode) GROUP BY co.name HAVING sum (ci.population) > 10000000;"))
 		g_error ("Could not run computation query");
@@ -67,6 +78,22 @@ main (int argc, char **argv)
 	g_object_unref (provider);
 
 	return EXIT_SUCCESS;
+}
+
+static GdaDataModel *
+run_sql_select (GdaConnection *cnc, const gchar *sql)
+{
+        GdaCommand *command;
+        GError *error = NULL;
+        GdaDataModel *res;
+
+        command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, 0);
+        res = gda_connection_execute_select_command (cnc, command, NULL, &error);
+        gda_command_free (command);
+        if (!res)
+                g_error ("Could not execute query: %s\n",
+                         error && error->message ? error->message : "no detail");
+        return res;
 }
 
 

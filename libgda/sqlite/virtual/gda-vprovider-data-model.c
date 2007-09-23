@@ -30,6 +30,7 @@
 #include <libgda/gda-connection-private.h>
 #include <libgda/gda-data-model-iter.h>
 #include <libgda/gda-data-proxy.h>
+#include <libgda/gda-data-access-wrapper.h>
 #include <libgda/gda-blob-op.h>
 #include "../gda-sqlite.h"
 
@@ -275,6 +276,7 @@ gda_vprovider_data_model_open_connection (GdaServerProvider *provider, GdaConnec
 	/* Module to declare wirtual tables */
 	if (sqlite3_create_module (scnc->connection, G_OBJECT_TYPE_NAME (provider), &Module, cnc) != SQLITE_OK)
 		return FALSE;
+	g_print ("==== Declared module for DB %p\n", scnc->connection); 
 
 	return TRUE;
 }
@@ -315,6 +317,7 @@ typedef struct {
 typedef struct {
 	sqlite3_vtab_cursor      base;
 	GdaDataModelIter        *iter;
+	gint                     ncols;
 } VirtualCursor;
 
 static void virtual_table_manage_real_data_model (VirtualTable *vtable);
@@ -353,7 +356,10 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 		}
 		else {
 			if (gda_data_model_get_access_flags (td->spec->data_model) & GDA_DATA_MODEL_ACCESS_RANDOM)
-				proxy = (GdaDataProxy *) gda_data_proxy_new (td->spec->data_model);
+				proxy = g_object_new (GDA_TYPE_DATA_PROXY, 
+						      "dict", gda_object_get_dict (GDA_OBJECT (td->spec->data_model)), 
+						      "model", td->spec->data_model, 
+						      "sample_size", 0, NULL);
 			else {
 				/* no random access => use a wrapper */
 				GdaDataModel *wrapper;
@@ -433,6 +439,12 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 		if (! gda_column_get_allow_null (column)) 
 			g_string_append (sql, " NOT NULL");
 	}
+
+	/* add a hidden column which contains the row number of the data model */
+	if (ncols != 0)
+		g_string_append (sql, ", ");
+	g_string_append (sql, "__gda_row_nb hidden integer");
+
 	g_string_append_c (sql, ')');
 	if (columns) {
 		g_list_foreach (columns, (GFunc) g_object_unref, NULL);
@@ -527,6 +539,7 @@ virtualOpen (sqlite3_vtab *pVTab, sqlite3_vtab_cursor **ppCursor)
 
 	cursor = g_new0 (VirtualCursor, 1);
 	cursor->iter = gda_data_model_iter_new (GDA_DATA_MODEL (vtable->proxy));
+	cursor->ncols = gda_data_model_get_n_columns (GDA_DATA_MODEL (vtable->td->real_model));
 	*ppCursor = &(cursor->base);
 	return SQLITE_OK;
 }
@@ -580,6 +593,12 @@ virtualColumn (sqlite3_vtab_cursor *cur, sqlite3_context *ctx, int i)
 	TRACE ();
 
 	GdaParameter *param;
+	
+	if (i == cursor->ncols) {
+		/* private hidden column, which returns the row number */
+		sqlite3_result_int (ctx, gda_data_model_iter_get_row (cursor->iter));
+		return SQLITE_OK;
+	}
 
 	param = gda_data_model_iter_get_param_for_column (cursor->iter, i);
 	if (!param) {
@@ -715,7 +734,10 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 			GType type;
 			GValue *value;
 			type = gda_column_get_g_type (gda_data_model_describe_column ((GdaDataModel*) vtable->proxy, i - 2));
-			value = gda_value_new_from_string (sqlite3_value_text (apData [i]), type);
+			if (sqlite3_value_text (apData [i]))
+				value = gda_value_new_from_string (sqlite3_value_text (apData [i]), type);
+			else
+				value = gda_value_new_null ();
 			/*g_print ("TXT #%s# => value %p (type=%s)\n", sqlite3_value_text (apData [i]), value,
 			  g_type_name (type));*/
 			values = g_list_append (values, value);

@@ -213,8 +213,6 @@ typedef struct _SpawnedData {
 	GString *stderr_buf;
 } SpawnedData;
 
-static gboolean check_converter_child (SpawnedData *data);
-
 gboolean 
 gda_report_document_run_converter_path (GdaReportDocument *doc, const gchar *filename, 
 					const gchar *full_converter_path, const gchar *converter_name, 

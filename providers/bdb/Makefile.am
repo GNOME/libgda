@@ -3,7 +3,7 @@ provider_LTLIBRARIES = libgda-bdb.la
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
-	-I$(top_srcdir)/providers/sqlite \
+	-I$(top_srcdir)/libgda/sqlite \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
 	$(BDB_CFLAGS)
@@ -16,7 +16,6 @@ libgda_bdb_la_SOURCES = \
 libgda_bdb_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_bdb_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-3.0.la \
-	$(top_builddir)/providers/sqlite/virtual/libgda-virtual-3.0.la \
 	$(LIBGDA_LIBS) 
 
 bin_PROGRAMS = gda-bdb-test

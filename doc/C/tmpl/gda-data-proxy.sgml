@@ -50,6 +50,13 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
 </para>
 
 
+<!-- ##### SIGNAL GdaDataProxy::filter-changed ##### -->
+<para>
+
+</para>
+
+@gdadataproxy: the object which received the signal.
+
 <!-- ##### SIGNAL GdaDataProxy::post-changes-applied ##### -->
 <para>
 
@@ -106,6 +113,11 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
 </para>
 
 <!-- ##### ARG GdaDataProxy:prepend-null-entry ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDataProxy:sample-size ##### -->
 <para>
 
 </para>
@@ -371,6 +383,26 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
 
 
 <!-- ##### FUNCTION gda_data_proxy_cancel_all_changes ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_set_filter_expr ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@filter_expr: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_get_filter_expr ##### -->
 <para>
 
 </para>

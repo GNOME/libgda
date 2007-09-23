@@ -299,7 +299,7 @@ gda_dict_database_class_init (GdaDictDatabaseClass * class)
 	object_class->dispose = gda_dict_database_dispose;
 	object_class->finalize = gda_dict_database_finalize;
 
-        #if 0 /* This object does not have any properties.
+#if 0 /* This object does not have any properties.*/
 	/* Properties */
 	object_class->set_property = gda_dict_database_set_property;
 	object_class->get_property = gda_dict_database_get_property;

@@ -1872,7 +1872,6 @@ mysql_get_constraints_form_create_table_line (GdaDataModelArray *recset, gchar *
 	g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 	g_list_free (value_list);
 
-fname_out:
 	g_string_free (fname, TRUE);
 tname_out:
 	g_free (tname);

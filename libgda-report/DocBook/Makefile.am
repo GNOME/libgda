@@ -14,7 +14,6 @@ libgda_report_docbook_3_0_la_SOURCES =	\
 	$(gda_report_headers)	\
 	gda-report-docbook-document.c	
 
-libgda_report_docbook_3_0_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) -no-undefined
 libgda_report_docbook_3_0_la_LIBADD = $(LIBGDA_LIBS) \
 	$(top_builddir)/libgda/libgda-3.0.la
 
