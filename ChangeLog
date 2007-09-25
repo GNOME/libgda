@@ -1,3 +1,37 @@
+2007-09-25  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-data-proxy.c: (proxy_row_to_absolute_row),
+	(absolute_row_to_proxy_row), (gda_data_proxy_init), (clean_proxy),
+	(gda_data_proxy_set_property), (proxied_model_data_changed_cb),
+	(gda_data_proxy_delete), (gda_data_proxy_undelete),
+	(gda_data_proxy_find_row_from_values), (gda_data_proxy_append),
+	(gda_data_proxy_cancel_row_changes), (commit_row_modif),
+	(gda_data_proxy_set_sample_size),
+	(gda_data_proxy_set_sample_start), (display_chunk_new),
+	(display_chunk_free), (display_chunks_dump), (ensure_chunk_sync),
+	(chunk_sync_idle), (compute_display_chunk),
+	(adjust_displayed_chunk), (gda_data_proxy_apply_all_changes),
+	(gda_data_proxy_cancel_all_changes),
+	(gda_data_proxy_set_filter_expr), (gda_data_proxy_get_n_rows),
+	(gda_data_proxy_set_value_at), (gda_data_proxy_append_values):
+	* libgda/sql-delimiter/gda-sql-delimiter.c:
+	* providers/postgres/gda-postgres-cursor-recordset.c:
+	(gda_postgres_cursor_recordset_class_init),
+	(gda_postgres_cursor_recordset_init),
+	(gda_postgres_cursor_recordset_set_property),
+	(gda_postgres_cursor_recordset_get_property),
+	(gda_postgres_cursor_recordset_new), (fetch_next), (fetch_prev):
+	* providers/postgres/gda-postgres-cursor-recordset.h:
+	* providers/postgres/gda-postgres-provider.c:
+	(compute_retval_from_pg_res),
+	(gda_postgres_provider_execute_command):
+	* providers/postgres/gda-postgres-provider.h:
+	* tests/data-models/check_data_proxy.c: (do_test_prop_change),
+	(do_test_common_read), (do_test_common_write): Rename chunck to chunk.
+	
+	* libgda/gda-data-proxy.c: Add an empty implementation of display_chunks_dump()
+	to avoid a linker error when GDA_DEBUG is not defined.
+
 2007-09-23  Vivien Malerba <malerba@gnome-db.org>
 
 	* providers/sqlite/virtual/gda-vprovider-data-model.c: each virtual table

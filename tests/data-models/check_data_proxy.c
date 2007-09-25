@@ -442,14 +442,14 @@ do_test_prop_change (void)
 	/*
 	 * Set prepend-null-entry to TRUE
 	 */
-	declare_expected_signals ("I0", "Set prepend-null-entry to TRUE (no chunck)");
+	declare_expected_signals ("I0", "Set prepend-null-entry to TRUE (no chunk)");
 	g_object_set (G_OBJECT (proxy), "prepend-null-entry", TRUE, NULL);
 	clean_expected_signals (proxy);
 
 	/*
 	 * Set prepend-null-entry to FALSE
 	 */
-	declare_expected_signals ("R0", "Set prepend-null-entry to FALSE (no chunck)");
+	declare_expected_signals ("R0", "Set prepend-null-entry to FALSE (no chunk)");
 	g_object_set (G_OBJECT (proxy), "prepend-null-entry", FALSE, NULL);
 	clean_expected_signals (proxy);
 
@@ -463,14 +463,14 @@ do_test_prop_change (void)
 	/*
 	 * Set prepend-null-entry to TRUE
 	 */
-	declare_expected_signals ("I0", "Set prepend-null-entry to TRUE (with chunck)");
+	declare_expected_signals ("I0", "Set prepend-null-entry to TRUE (with chunk)");
 	g_object_set (G_OBJECT (proxy), "prepend-null-entry", TRUE, NULL);
 	clean_expected_signals (proxy);
 
 	/*
 	 * Set prepend-null-entry to FALSE
 	 */
-	declare_expected_signals ("R0", "Set prepend-null-entry to FALSE (with chunck)");
+	declare_expected_signals ("R0", "Set prepend-null-entry to FALSE (with chunk)");
 	g_object_set (G_OBJECT (proxy), "prepend-null-entry", FALSE, NULL);
 	clean_expected_signals (proxy);
 
@@ -558,9 +558,9 @@ do_test_common_read (GdaDataModel *proxy)
 	clean_expected_signals (proxy);
 
 	/*
-	 * change sample size to 0 => no chuncking
+	 * change sample size to 0 => no chunking
 	 */
-	declare_expected_signals ("13U0/11I13", "change sample size to 0 => no chuncking");
+	declare_expected_signals ("13U0/11I13", "change sample size to 0 => no chunking");
 	gda_data_proxy_set_sample_size (GDA_DATA_PROXY (proxy), 0);
 	clean_expected_signals (proxy);
 
@@ -586,9 +586,9 @@ do_test_common_read (GdaDataModel *proxy)
 	clean_expected_signals (proxy);
 
 	/*
-	 * last change sample size to 0 (no chuncking and no filter)
+	 * last change sample size to 0 (no chunking and no filter)
 	 */
-	declare_expected_signals ("7U0/151I7", "last change sample size to 0 (no chuncking and no filter)");
+	declare_expected_signals ("7U0/151I7", "last change sample size to 0 (no chunking and no filter)");
 	gda_data_proxy_set_sample_size (GDA_DATA_PROXY (proxy), 0);
 	clean_expected_signals (proxy);
 
@@ -623,9 +623,9 @@ do_test_common_write (GdaDataModel *proxy)
 			  G_CALLBACK (proxy_row_cb), "R");
 
 	/*
-	 * change sample size to 0 (no chuncking and no filter)
+	 * change sample size to 0 (no chunking and no filter)
 	 */
-	declare_expected_signals ("148I10", "change sample size to 0 (no chuncking and no filter)");
+	declare_expected_signals ("148I10", "change sample size to 0 (no chunking and no filter)");
 	gda_data_proxy_set_sample_size (GDA_DATA_PROXY (proxy), 0);
 	clean_expected_signals (proxy);
 

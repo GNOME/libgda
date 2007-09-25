@@ -48,7 +48,7 @@ struct _GdaPostgresCursorRecordsetClass {
 };
 
 GType         gda_postgres_cursor_recordset_get_type     (void) G_GNUC_CONST;
-GdaDataModel *gda_postgres_cursor_recordset_new          (GdaConnection *cnc, const gchar *cursor_name, gint chunck_size);
+GdaDataModel *gda_postgres_cursor_recordset_new          (GdaConnection *cnc, const gchar *cursor_name, gint chunk_size);
 PGresult     *gda_postgres_recordset_cutsur_get_pgresult (GdaPostgresCursorRecordset *recset);
 
 

@@ -35,8 +35,8 @@ struct _GdaPostgresCursorRecordsetPrivate {
         GdaConnection    *cnc;
 	PGconn           *pconn;
 	gchar            *cursor_name;
-	gint              chunck_size;
-	gint              chuncks_read;
+	gint              chunk_size;
+	gint              chunks_read;
 
 	GSList           *columns;
         GType            *column_types;
@@ -146,12 +146,12 @@ gda_postgres_cursor_recordset_class_init (GdaPostgresCursorRecordsetClass *klass
 	object_class->set_property = gda_postgres_cursor_recordset_set_property;
         object_class->get_property = gda_postgres_cursor_recordset_get_property;
 	g_object_class_install_property (object_class, PROP_CHUNCK_SIZE,
-					 g_param_spec_int ("chunck_size", _("Number of rows fetched at a time"), NULL,
+					 g_param_spec_int ("chunk_size", _("Number of rows fetched at a time"), NULL,
 							   1, G_MAXINT - 1, 2, 
 							   G_PARAM_CONSTRUCT | G_PARAM_READABLE | G_PARAM_WRITABLE));
 	g_object_class_install_property (object_class, PROP_CHUNCKS_READ,
-					 g_param_spec_int ("chuncks_read", 
-							   _("Number of rows chuncks read since the object creation"), NULL,
+					 g_param_spec_int ("chunks_read", 
+							   _("Number of rows chunks read since the object creation"), NULL,
 							   0, G_MAXINT - 1, 0, 
 							   G_PARAM_READABLE));
 	g_object_class_install_property (object_class, PROP_COMMAND_TEXT,
@@ -203,8 +203,8 @@ gda_postgres_cursor_recordset_init (GdaPostgresCursorRecordset *model, GdaPostgr
 {
 	g_return_if_fail (GDA_IS_POSTGRES_CURSOR_RECORDSET (model));
 	model->priv = g_new0 (GdaPostgresCursorRecordsetPrivate, 1);
-	model->priv->chunck_size = 10;
-	model->priv->chuncks_read = 0;
+	model->priv->chunk_size = 10;
+	model->priv->chunks_read = 0;
 
 	model->priv->nrows = -1; /* total number of rows unknown */
 	model->priv->pg_res = NULL;
@@ -282,7 +282,7 @@ gda_postgres_cursor_recordset_set_property (GObject *object,
 	if (model->priv) {
 		switch (param_id) {
 		case PROP_CHUNCK_SIZE:
-			model->priv->chunck_size = g_value_get_int (value);
+			model->priv->chunk_size = g_value_get_int (value);
 			break;
 		case PROP_COMMAND_TEXT:
                         if (model->priv->command_text) {
@@ -311,10 +311,10 @@ gda_postgres_cursor_recordset_get_property (GObject *object,
 	if (model->priv) {
 		switch (param_id) {
 		case PROP_CHUNCK_SIZE:
-			g_value_set_int (value, model->priv->chunck_size);
+			g_value_set_int (value, model->priv->chunk_size);
 			break;
 		case PROP_CHUNCKS_READ:
-			g_value_set_int (value, model->priv->chuncks_read);
+			g_value_set_int (value, model->priv->chunks_read);
 			break;
 		case PROP_COMMAND_TEXT:
                         g_value_set_string (value, model->priv->command_text);
@@ -347,7 +347,7 @@ dump_pg_res (PGresult *res)
  * gda_postgres_cursor_recordset_new
  */
 GdaDataModel *
-gda_postgres_cursor_recordset_new (GdaConnection *cnc, const gchar *cursor_name, gint chunck_size)
+gda_postgres_cursor_recordset_new (GdaConnection *cnc, const gchar *cursor_name, gint chunk_size)
 {
 	GdaPostgresCursorRecordset *model;
 	GdaPostgresConnectionData *cnc_priv_data;
@@ -359,7 +359,7 @@ gda_postgres_cursor_recordset_new (GdaConnection *cnc, const gchar *cursor_name,
 	cnc_priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 
 	model = g_object_new (GDA_TYPE_POSTGRES_CURSOR_RECORDSET, 
-			      "chunck_size", (chunck_size > 0) ? chunck_size : 1, NULL);
+			      "chunk_size", (chunk_size > 0) ? chunk_size : 1, NULL);
 	model->priv->cnc = cnc;
 	model->priv->pconn = cnc_priv_data->pconn;
 	model->priv->pg_res = NULL;
@@ -501,14 +501,14 @@ fetch_next (GdaPostgresCursorRecordset *model)
 	int status;
 
 	str = g_strdup_printf ("FETCH FORWARD %d FROM %s;",
-			       model->priv->chunck_size, model->priv->cursor_name);
+			       model->priv->chunk_size, model->priv->cursor_name);
 #ifdef GDA_PG_DEBUG
 	g_print ("QUERY: %s\n", str);
 #endif
         model->priv->pg_res = PQexec (model->priv->pconn, str);
         g_free (str);
         status = PQresultStatus (model->priv->pg_res);
-	model->priv->chuncks_read ++;
+	model->priv->chunks_read ++;
         if (status != PGRES_TUPLES_OK) {
                 PQclear (model->priv->pg_res);
                 model->priv->pg_res = NULL;
@@ -531,7 +531,7 @@ fetch_next (GdaPostgresCursorRecordset *model)
 				model->priv->pg_res_inf = model->priv->pg_pos + 1;
 
 			/* model->priv->nrows and model->priv->pg_pos */
-			if (nbtuples < model->priv->chunck_size) {
+			if (nbtuples < model->priv->chunk_size) {
 				if (model->priv->pg_pos == G_MININT) 
 					model->priv->nrows = nbtuples;
 				else
@@ -583,19 +583,19 @@ fetch_prev (GdaPostgresCursorRecordset *model)
 	gint noffset;
 	
 	if (model->priv->pg_pos == G_MAXINT)
-		noffset = model->priv->chunck_size + 1;
+		noffset = model->priv->chunk_size + 1;
 	else
-		noffset = model->priv->pg_res_size + model->priv->chunck_size;
+		noffset = model->priv->pg_res_size + model->priv->chunk_size;
 	str = g_strdup_printf ("MOVE BACKWARD %d FROM %s; FETCH FORWARD %d FROM %s;",
 			       noffset, model->priv->cursor_name,
-			       model->priv->chunck_size, model->priv->cursor_name);
+			       model->priv->chunk_size, model->priv->cursor_name);
 #ifdef GDA_PG_DEBUG
 	g_print ("QUERY: %s\n", str);
 #endif
         model->priv->pg_res = PQexec (model->priv->pconn, str);
         g_free (str);
         status = PQresultStatus (model->priv->pg_res);
-	model->priv->chuncks_read ++;
+	model->priv->chunks_read ++;
         if (status != PGRES_TUPLES_OK) {
                 PQclear (model->priv->pg_res);
                 model->priv->pg_res = NULL;
@@ -616,10 +616,10 @@ fetch_prev (GdaPostgresCursorRecordset *model)
 				model->priv->pg_res_inf = model->priv->nrows - nbtuples;
 			else
 				model->priv->pg_res_inf = 
-					MAX (model->priv->pg_res_inf - (noffset - model->priv->chunck_size), 0);
+					MAX (model->priv->pg_res_inf - (noffset - model->priv->chunk_size), 0);
 
 			/* model->priv->pg_pos */
-			if (nbtuples < model->priv->chunck_size) {
+			if (nbtuples < model->priv->chunk_size) {
 				model->priv->pg_pos = G_MAXINT;
 			}
 			else {

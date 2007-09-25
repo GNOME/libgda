@@ -134,9 +134,9 @@ gda_delimiter_destroy (GdaDelimiterStatement *statement)
  * @error: a place where to store an error, or %NULL
  * 
  * Generates a list of #GdaDelimiterStatement which is an in memory a structure of the 
- * @sqlquery in an easy to use way. It basically makes chuncks of string and
+ * @sqlquery in an easy to use way. It basically makes chunks of string and
  * identifies required parameters. There is one #GdaDelimiterStatement for every
- * chunck of string separated by a semicolon.
+ * chunk of string separated by a semicolon.
  * 
  * Returns: A list of generated GdaDelimiterStatement or %NULL on error.
  */
@@ -205,7 +205,7 @@ gda_delimiter_parse_with_error (const char *sqlquery, GError ** error)
  * @sqlquery: A SQL query string. ie SELECT * FROM FOO
  *
  * Generate #GdaDelimiterStatement which is an in memory a structure of the 
- * @sqlquery in an easy to use way. It basically makes chuncks of string and
+ * @sqlquery in an easy to use way. It basically makes chunks of string and
  * identifies required parameters.
  *
  * Returns: A generated GdaDelimiterStatement or %NULL on error.

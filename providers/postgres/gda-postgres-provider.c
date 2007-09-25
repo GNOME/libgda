@@ -759,7 +759,7 @@ compute_retval_from_pg_res (GdaConnection *cnc, PGconn *pconn, const gchar *sql,
 
 				if (cursor_name) {
 					recset = gda_postgres_cursor_recordset_new (cnc, cursor_name, 
-										    priv_data->chunck_size);
+										    priv_data->chunk_size);
 					PQclear (pg_res);
 				}
 				else
@@ -1104,7 +1104,7 @@ gda_postgres_provider_execute_command (GdaServerProvider *provider,
 	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
 	GdaCommandOptions options;
 	gboolean prev_use_cursor;
-	gint prev_chunck_size;
+	gint prev_chunk_size;
 	GdaPostgresConnectionData *priv_data;
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), NULL);
@@ -1119,7 +1119,7 @@ gda_postgres_provider_execute_command (GdaServerProvider *provider,
 
 	/* save previous settings */
 	prev_use_cursor = priv_data->use_cursor;
-	prev_chunck_size = priv_data->chunck_size;
+	prev_chunk_size = priv_data->chunk_size;
 
 	if (params) {
 		GdaParameter *param;
@@ -1144,7 +1144,7 @@ gda_postgres_provider_execute_command (GdaServerProvider *provider,
 						g_warning (_("Parameter ITER_CHUNCK_SIZE should be a gint, not a '%s'"),
 							   g_type_name (G_VALUE_TYPE (value)));
 					else
-						priv_data->chunck_size = g_value_get_int (value);
+						priv_data->chunk_size = g_value_get_int (value);
 				}
 			}
 		}
@@ -1167,7 +1167,7 @@ gda_postgres_provider_execute_command (GdaServerProvider *provider,
 
 	/* restore previous settings */
 	priv_data->use_cursor = prev_use_cursor;
-	priv_data->chunck_size = prev_chunck_size;
+	priv_data->chunk_size = prev_chunk_size;
 
 	return reclist;
 }

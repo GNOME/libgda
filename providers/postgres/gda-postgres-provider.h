@@ -78,7 +78,7 @@ typedef struct {
 
 	/* Cursor usage */
 	gboolean            use_cursor;
-	gint                chunck_size;
+	gint                chunk_size;
 } GdaPostgresConnectionData;
 
 /* NOTE ABOUT THE POSTGRES VERSIONS:
