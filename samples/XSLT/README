@@ -1,0 +1,19 @@
+Libgda table copy examples
+==========================
+
+Description:
+------------
+
+The examples in this directory illustrate how use the Libgda's XSLT extension to libxslt.
+FIXME.
+
+Compiling and running:
+----------------------
+
+To compile (make sure Libgda is installed prior to this):
+> make
+
+and to run:
+> ./transform -i data.xml -x test.xsl -o out.xml
+
+Check the out.xml file

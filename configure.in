@@ -181,10 +181,23 @@ AM_CONDITIONAL(HAVE_GNOMEVFS, test x"$have_gnomevfs" = "xyes")
 if test x"$have_gnomevfs" = "xyes"
 then
         GNOMEVFS_CFLAGS="$GNOMEVFS_CFLAGS -DHAVE_GNOMEVFS"
-        GNOMEDB_REQUIRES="$LIBGNOMEDB_REQUIRES $GNOMEVFS_MODULES"
 fi
 AC_SUBST(GNOMEVFS_CFLAGS)
 AC_SUBST(GNOMEVFS_LIBS)
+
+dnl ******************************
+dnl Checks for libxslt
+dnl ******************************
+
+LIBXSLT_MODULES="libxslt"
+PKG_CHECK_MODULES(LIBXSLT, $LIBXSLT_MODULES, have_xslt=yes, have_xslt=no)
+AM_CONDITIONAL(HAVE_LIBXSLT, test x"$have_xslt" = "xyes")
+if test x"$have_xslt" = "xyes"
+then
+        LIBXSLT_CFLAGS="$LIBXSLT_CFLAGS -DHAVE_LIBXSLT"
+fi
+AC_SUBST(LIBXSLT_CFLAGS)
+AC_SUBST(LIBXSLT_LIBS)
 
 dnl ******************************
 dnl gtk-doc
@@ -1127,6 +1140,7 @@ Makefile
 libgda.spec
 libgda-3.0.pc
 libgda-report-3.0.pc
+libgda-xslt-3.0.pc
 po/Makefile.in
 libsql/Makefile
 libgda/Makefile
@@ -1174,6 +1188,7 @@ libgda-report/DocBook/Makefile
 libgda-report/RML/Makefile
 libgda-report/RML/trml2html/Makefile
 libgda-report/RML/trml2pdf/Makefile
+libgda-xslt/Makefile
 tools/Makefile
 testing/Makefile
 tests/Makefile
@@ -1192,6 +1207,7 @@ dnl Print configuration summary
 echo ""
 echo " Configuration summary"
 echo "   Installation prefix = $prefix"
+echo "   Building Libxslt extension: `if test x$have_xslt != xno; then echo yes; else echo no; fi`"
 echo "   Compiled providers:"
 echo "      Berkeley DB = `if test x$bdbdir != x; then echo yes; else echo no; fi`"
 echo "      FireBird = `if test x$firebirddir != x; then echo yes; else echo no; fi`"

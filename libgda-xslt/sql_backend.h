@@ -1,0 +1,76 @@
+/* GDA common library
+ * Copyright (C) 2007 The GNOME Foundation.
+ *
+ * AUTHORS:
+ *      Pawe³ Cesar Sanjuan Szklarz <paweld2@gmail.com>
+ *
+ * This Library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This Library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this Library; see the file COPYING.LIB.  If not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#ifndef _SQL_EXSLT_BACKEND_H
+#define _SQL_EXSLT_BACKEND_H
+
+#include <glib.h>
+#include <libgda/libgda.h>
+#include <libxslt/transform.h>
+#include <libxslt/xsltutils.h>
+#include <libxslt/extensions.h>
+
+G_BEGIN_DECLS
+
+#define GDA_XSLT_FUNC_GETVALUE       "getvalue"
+#define GDA_XSLT_FUNC_GETNODESET     "getnodeset"
+#define GDA_XSLT_FUNC_CHECKIF        "checkif"
+#define GDA_XSLT_ELEM_SECTION        "section"
+#define GDA_XSLT_ELEM_INTERNAL_QUERY      "query"
+#define GDA_XSLT_ELEM_INTERNAL_TEMPLATE   "template"
+
+struct _GdaXsltIntCont
+{
+	int         init;
+	GHashTable *result_sets;
+};
+
+typedef struct _GdaXsltIntCont GdaXsltIntCont;
+
+void *gda_xslt_extension_init (xsltTransformContextPtr ctxt,
+			       const xmlChar * URI);
+void gda_xslt_extension_shutdown (xsltTransformContextPtr ctxt,
+				  const xmlChar * URI, void *data);
+
+/* elements backend */
+int gda_xslt_bk_section (GdaXsltExCont * exec, GdaXsltIntCont * pdata,
+			 xsltTransformContextPtr ctxt, xmlNodePtr node,
+			 xmlNodePtr inst, xsltStylePreCompPtr comp);
+
+/* functions backend */
+xmlXPathObjectPtr gda_xslt_bk_fun_getvalue (xmlChar * set, xmlChar * name,
+					    GdaXsltExCont * exec,
+					    GdaXsltIntCont * pdata);
+xmlXPathObjectPtr gda_xslt_bk_fun_getnodeset (xmlChar * set,
+					      GdaXsltExCont * exec,
+					      GdaXsltIntCont * pdata);
+xmlXPathObjectPtr gda_xslt_bk_fun_checkif (xmlChar * setname,
+					   xmlChar * sql_condition,
+					   GdaXsltExCont * exec,
+					   GdaXsltIntCont * pdata);
+
+/* utilities */
+void gda_xslt_free_hashvalue (gpointer data);
+
+G_END_DECLS
+
+#endif 

@@ -1,11 +1,16 @@
 DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc
 
+if HAVE_LIBXSLT
+XSLT_DIR=libgda-xslt
+endif
+
 SUBDIRS = \
 	po \
 	libsql \
 	libgda \
 	providers \
 	libgda-report \
+	$(XSLT_DIR) \
 	tools \
 	tests \
 	testing \
@@ -63,7 +68,7 @@ EXTRA_DIST = \
 	$(example_files)
 
 pkgconfigdir=$(libdir)/pkgconfig
-pkgconfig_DATA = libgda-3.0.pc libgda-report-3.0.pc
+pkgconfig_DATA = libgda-3.0.pc libgda-report-3.0.pc libgda-xslt-3.0.pc
 
 all-local: libgda.spec
 
