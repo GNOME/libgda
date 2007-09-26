@@ -185,6 +185,24 @@ gda_data_access_wrapper_init (GdaDataAccessWrapper *model, GdaDataAccessWrapperC
 }
 
 static void
+model_row_inserted_cb (GdaDataModel *mod, gint row, GdaDataAccessWrapper *model)
+{
+	gda_data_model_row_inserted (model, row);
+}
+
+static void
+model_row_updated_cb (GdaDataModel *mod, gint row, GdaDataAccessWrapper *model)
+{
+	gda_data_model_row_updated (model, row);
+}
+
+static void
+model_row_removed_cb (GdaDataModel *mod, gint row, GdaDataAccessWrapper *model)
+{
+	gda_data_model_row_removed (model, row);
+}
+
+static void
 data_model_destroyed_cb (GdaDataModel *mod, GdaDataAccessWrapper *model)
 {
 	g_assert (model->priv->model == mod);
@@ -193,6 +211,14 @@ data_model_destroyed_cb (GdaDataModel *mod, GdaDataAccessWrapper *model)
 	if (model->priv->rows) {
 		g_hash_table_destroy (model->priv->rows);
 		model->priv->rows = NULL;
+	}
+	else {
+		g_signal_handlers_disconnect_by_func (G_OBJECT (mod),
+						      G_CALLBACK (model_row_inserted_cb), model);
+		g_signal_handlers_disconnect_by_func (G_OBJECT (mod),
+						      G_CALLBACK (model_row_updated_cb), model);
+		g_signal_handlers_disconnect_by_func (G_OBJECT (mod),
+						      G_CALLBACK (model_row_removed_cb), model);
 	}
 	model->priv->model = NULL;
 
@@ -249,12 +275,11 @@ gda_data_access_wrapper_finalize (GObject *object)
 	parent_class->finalize (object);
 }
 
-
 static void
 gda_data_access_wrapper_set_property (GObject *object,
-					guint param_id,
-					const GValue *value,
-					GParamSpec *pspec)
+				      guint param_id,
+				      const GValue *value,
+				      GParamSpec *pspec)
 {
 	GdaDataAccessWrapper *model;
 
@@ -276,6 +301,14 @@ gda_data_access_wrapper_set_property (GObject *object,
 					model->priv->iter_row = -1; /* because model->priv->iter is invalid */
 					model->priv->rows = g_hash_table_new_full (g_direct_hash, g_direct_equal,
 										   NULL, (GDestroyNotify) g_object_unref);
+				}
+				else {
+					g_signal_connect (G_OBJECT (mod), "row_inserted",
+							  G_CALLBACK (model_row_inserted_cb), model);
+					g_signal_connect (G_OBJECT (mod), "row_updated",
+							  G_CALLBACK (model_row_updated_cb), model);
+					g_signal_connect (G_OBJECT (mod), "row_removed",
+							  G_CALLBACK (model_row_removed_cb), model);
 				}
   
                                 if (model->priv->model)

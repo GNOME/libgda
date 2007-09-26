@@ -518,6 +518,6 @@ gda_data_model_hash_clear (GdaDataModelHash *model)
         for (i = 0; i < model->priv->number_of_hash_table_rows; i++)
                 g_array_append_val (model->priv->row_map, i);
 
-	/* FIXME: signal changes */
+	gda_data_model_reset (GDA_DATA_MODEL (model));
 }
 

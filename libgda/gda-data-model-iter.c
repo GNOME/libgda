@@ -285,28 +285,26 @@ param_changed_cb (GdaParameterList *paramlist, GdaParameter *param)
 	gint col;
 
 	iter = GDA_DATA_MODEL_ITER (paramlist);
-	if (iter->priv->keep_param_changes ||
-	    (iter->priv->row < 0))
-		return;
-
-	g_signal_handler_block (iter->priv->data_model, iter->priv->model_changes_signals [0]);
-	g_signal_handler_block (iter->priv->data_model, iter->priv->model_changes_signals [1]);
-
-	/* propagate the value update to the data model */
-	col = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (param), "model_col")) - 1;
-	g_return_if_fail (col >= 0);
-
-	if (! gda_data_model_set_value_at (GDA_DATA_MODEL (iter->priv->data_model), 
-					   col, iter->priv->row, gda_parameter_get_value (param), NULL)) {
-		/* writing to the model failed, revert back the change to parameter */
-		iter->priv->keep_param_changes = TRUE;
-		gda_parameter_set_value (param, gda_data_model_get_value_at (GDA_DATA_MODEL (iter->priv->data_model), 
-									     col, iter->priv->row)); 
-		iter->priv->keep_param_changes = FALSE;
+	if (!iter->priv->keep_param_changes && (iter->priv->row >= 0)) {
+		g_signal_handler_block (iter->priv->data_model, iter->priv->model_changes_signals [0]);
+		g_signal_handler_block (iter->priv->data_model, iter->priv->model_changes_signals [1]);
+		
+		/* propagate the value update to the data model */
+		col = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (param), "model_col")) - 1;
+		g_return_if_fail (col >= 0);
+		
+		if (! gda_data_model_set_value_at (GDA_DATA_MODEL (iter->priv->data_model), 
+						   col, iter->priv->row, gda_parameter_get_value (param), NULL)) {
+			/* writing to the model failed, revert back the change to parameter */
+			iter->priv->keep_param_changes = TRUE;
+			gda_parameter_set_value (param, gda_data_model_get_value_at (GDA_DATA_MODEL (iter->priv->data_model), 
+										     col, iter->priv->row)); 
+			iter->priv->keep_param_changes = FALSE;
+		}
+		
+		g_signal_handler_unblock (iter->priv->data_model, iter->priv->model_changes_signals [0]);
+		g_signal_handler_unblock (iter->priv->data_model, iter->priv->model_changes_signals [1]);
 	}
-	
-	g_signal_handler_unblock (iter->priv->data_model, iter->priv->model_changes_signals [0]);
-	g_signal_handler_unblock (iter->priv->data_model, iter->priv->model_changes_signals [1]);
 
 	/* for the parent class */
 	if (((GdaParameterListClass *) parent_class)->param_changed)
@@ -326,28 +324,26 @@ param_attr_changed_cb (GdaParameterList *paramlist, GdaParameter *param)
 	gboolean toset;
 
 	iter = GDA_DATA_MODEL_ITER (paramlist);
-	if (iter->priv->keep_param_changes ||
-	    (iter->priv->row < 0))
-		return;
-
 	if (!GDA_IS_DATA_PROXY (iter->priv->data_model))
 		return;
 
-	g_signal_handler_block (iter->priv->data_model, iter->priv->model_changes_signals [0]);
-	g_signal_handler_block (iter->priv->data_model, iter->priv->model_changes_signals [1]);
-
-	/* propagate the value update to the data model */
-	col = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (param), "model_col")) - 1;
-	g_return_if_fail (col >= 0);
-
-	g_object_get (G_OBJECT (param), "use-default-value", &toset, NULL);
-	if (toset && gda_parameter_get_exists_default_value (param))
-		gda_data_proxy_alter_value_attributes (GDA_DATA_PROXY (iter->priv->data_model), 
-						       iter->priv->row, col, 
-						       GDA_VALUE_ATTR_CAN_BE_DEFAULT | GDA_VALUE_ATTR_IS_DEFAULT);
-	
-	g_signal_handler_unblock (iter->priv->data_model, iter->priv->model_changes_signals [0]);
-	g_signal_handler_unblock (iter->priv->data_model, iter->priv->model_changes_signals [1]);
+	if (!iter->priv->keep_param_changes && (iter->priv->row >= 0)) {
+		g_signal_handler_block (iter->priv->data_model, iter->priv->model_changes_signals [0]);
+		g_signal_handler_block (iter->priv->data_model, iter->priv->model_changes_signals [1]);
+		
+		/* propagate the value update to the data model */
+		col = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (param), "model_col")) - 1;
+		g_return_if_fail (col >= 0);
+		
+		g_object_get (G_OBJECT (param), "use-default-value", &toset, NULL);
+		if (toset && gda_parameter_get_exists_default_value (param))
+			gda_data_proxy_alter_value_attributes (GDA_DATA_PROXY (iter->priv->data_model), 
+							       iter->priv->row, col, 
+							       GDA_VALUE_ATTR_CAN_BE_DEFAULT | GDA_VALUE_ATTR_IS_DEFAULT);
+		
+		g_signal_handler_unblock (iter->priv->data_model, iter->priv->model_changes_signals [0]);
+		g_signal_handler_unblock (iter->priv->data_model, iter->priv->model_changes_signals [1]);
+	}
 
 	/* for the parent class */
 	if (((GdaParameterListClass *) parent_class)->param_attr_changed)
@@ -714,6 +710,55 @@ gda_data_model_iter_get_param_for_column (GdaDataModelIter *iter, gint col)
 
 	return g_slist_nth_data (((GdaParameterList *) iter)->parameters, col);
 }
+
+/**
+ * gda_data_model_iter_get_value_at
+ * @iter: a #GdaDataModelIter object
+ * @col: the requested column
+ *
+ * Get the value stored at the column @col in @iter
+ *
+ * Returns: the #GValue, or %NULL
+ */
+const GValue *
+gda_data_model_iter_get_value_at (GdaDataModelIter *iter, gint col)
+{
+	GdaParameter *param;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), NULL);
+	g_return_val_if_fail (iter->priv, NULL);
+
+	param = (GdaParameter *) g_slist_nth_data (((GdaParameterList *) iter)->parameters, col);
+	if (param)
+		return gda_parameter_get_value (param);
+	else
+		return NULL;
+}
+
+/**
+ * gda_data_model_iter_get_value_for_field
+ * @iter: a #GdaDataModelIter object
+ * @field_name: the requested column name
+ *
+ * Get the value stored at the column @field_name in @iter
+ *
+ * Returns: the #GValue, or %NULL
+ */
+const GValue *
+gda_data_model_iter_get_value_for_field (GdaDataModelIter *iter, const gchar *field_name)
+{
+	GdaParameter *param;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), NULL);
+	g_return_val_if_fail (iter->priv, NULL);
+
+	param = gda_parameter_list_find_param ((GdaParameterList *) iter, field_name);
+	if (param)
+		return gda_parameter_get_value (param);
+	else
+		return NULL;
+}
+
 
 #ifdef GDA_DEBUG
 static void

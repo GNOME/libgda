@@ -140,11 +140,13 @@ test_1_suite (void)
 
 	/* Core test case */
         TCase *tc_core = tcase_create ("Test read only");
+	tcase_set_timeout (tc_core, 10);
 	tcase_add_test (tc_core, test1);
 	tcase_add_test (tc_core, test2);
 	suite_add_tcase (s, tc_core);
 
 	tc_core = tcase_create ("Test read write");
+	tcase_set_timeout (tc_core, 10);
 	tcase_add_test (tc_core, test3);
 	suite_add_tcase (s, tc_core);
 	
@@ -158,15 +160,18 @@ test_2_suite (void)
 
 	/* Core test case */
         TCase *tc_core = tcase_create ("Test read only");
+	tcase_set_timeout (tc_core, 10);
 	tcase_add_test (tc_core, test4);
 	tcase_add_test (tc_core, test5);
 	suite_add_tcase (s, tc_core);
 
 	tc_core = tcase_create ("Test read write");
+	tcase_set_timeout (tc_core, 10);
 	tcase_add_test (tc_core, test6);
 	suite_add_tcase (s, tc_core);
 
 	tc_core = tcase_create ("Test prop change");
+	tcase_set_timeout (tc_core, 10);
 	tcase_add_test (tc_core, test7);
 	suite_add_tcase (s, tc_core);
 	

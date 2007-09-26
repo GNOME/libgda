@@ -108,6 +108,7 @@ gint              gda_data_proxy_get_sample_end           (GdaDataProxy *proxy);
 
 gboolean          gda_data_proxy_set_filter_expr          (GdaDataProxy *proxy, const gchar *filter_expr, GError **error);
 const gchar      *gda_data_proxy_get_filter_expr          (GdaDataProxy *proxy);
+gint              gda_data_proxy_get_filtered_n_rows      (GdaDataProxy *proxy);
 
 G_END_DECLS
 

@@ -1,3 +1,17 @@
+2007-09-26  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-data-proxy.c: keep the virtual connection used for filtering opened
+	* libgda/gda-data-proxy.c: make sure the get_value_at() and get_n_rows() are correct
+	event when called from a callback of signals emited while in chunck_sync_idle()
+	* libgda/gda-data-proxy.c: added gda_data_proxy_get_filtered_n_rows()
+	* libgda/gda-data-model-iter.[ch]: added gda_data_model_iter_get_value_at() and
+	gda_data_model_iter_get_value_for_field	()
+	* libgda/gda-data-model.c:
+	* doc/C: doc update
+	* libgda/gda-data-model-hash.c: signal change in gda_data_model_hash_clear()
+	* libgda/gda-data-access-wrapper.c: correctly signal changes when the wrapped
+	data model changes
+
 2007-09-25  Murray Cumming  <murrayc@murrayc.com>
 
 	* libgda/gda-data-proxy.c: (proxy_row_to_absolute_row),

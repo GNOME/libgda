@@ -2,11 +2,17 @@
 GdaDataModelArray
 
 <!-- ##### SECTION Short_Description ##### -->
-An implementation of #GdaDataModel based on an array
+An implementation of #GdaDataModel based on a #GArray.
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+  The #GdaDataModelArray object is a data model which internally uses a #GArray to index all its rows (represented
+  as #GdaRow objects). In this data model, all the data is stored in memory, which can be a memory limitation if the number
+  of rows is huge.
+</para>
+<para>
+  This type of data model is easy to use to store some temporary data, and has a random access mode (any value can be accessed
+  at any time without the need for an iterator).
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

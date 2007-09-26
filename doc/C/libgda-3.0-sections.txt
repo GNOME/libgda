@@ -459,6 +459,7 @@ gda_data_model_changed
 gda_data_model_row_inserted
 gda_data_model_row_updated
 gda_data_model_row_removed
+gda_data_model_reset
 gda_data_model_freeze
 gda_data_model_thaw
 gda_data_model_get_access_flags
@@ -533,6 +534,7 @@ gda_data_proxy_apply_all_changes
 gda_data_proxy_cancel_all_changes
 gda_data_proxy_set_filter_expr
 gda_data_proxy_get_filter_expr
+gda_data_proxy_get_filtered_n_rows
 <SUBSECTION Standard>
 GDA_DATA_PROXY
 GDA_DATA_PROXY_CLASS
@@ -547,6 +549,8 @@ gda_data_proxy_get_type
 <TITLE>GdaDataModelIter</TITLE>
 GdaDataModelIter
 gda_data_model_iter_new
+gda_data_model_iter_get_value_at
+gda_data_model_iter_get_value_for_field
 gda_data_model_iter_is_valid
 gda_data_model_iter_set_at_row
 gda_data_model_iter_move_next

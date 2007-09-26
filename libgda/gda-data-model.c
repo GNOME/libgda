@@ -336,7 +336,7 @@ gda_data_model_get_n_rows (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), -1);
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_n_rows)
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_n_rows) 
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_get_n_rows) (model);
 	else 
 		return -1;
@@ -523,7 +523,9 @@ gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *tit
  * Retrieves the data stored in the given position (identified by
  * the @col and @row parameters) on a data model.
  *
- * This is the main function for accessing data in a model.
+ * This is the main function for accessing data in a model which allow random access to its data.
+ * To access data in a data model using a cursor, use a #GdaDataModelIter object, obtained using
+ * gda_data_model_create_iter().
  *
  * Note that the returned #GValue must not be modified directly (unexpected behaviours may
  * occur if you do so). If you want to

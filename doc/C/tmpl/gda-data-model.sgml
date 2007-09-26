@@ -140,6 +140,14 @@ As a side note there are also data models which wrap other data models such as:
 @row: 
 
 
+<!-- ##### FUNCTION gda_data_model_reset ##### -->
+<para>
+
+</para>
+
+@model: 
+
+
 <!-- ##### FUNCTION gda_data_model_freeze ##### -->
 <para>
 

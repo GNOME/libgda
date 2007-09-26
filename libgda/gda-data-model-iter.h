@@ -63,12 +63,15 @@ struct _GdaDataModelIterClass
 GType             gda_data_model_iter_get_type             (void) G_GNUC_CONST;
 GdaDataModelIter *gda_data_model_iter_new                  (GdaDataModel *model);
 
+const GValue     *gda_data_model_iter_get_value_at         (GdaDataModelIter *iter, gint col);
+const GValue     *gda_data_model_iter_get_value_for_field  (GdaDataModelIter *iter, const gchar *field_name);
+
 gboolean          gda_data_model_iter_set_at_row           (GdaDataModelIter *iter, gint row);
 gboolean          gda_data_model_iter_move_next            (GdaDataModelIter *iter);
 gboolean          gda_data_model_iter_move_prev            (GdaDataModelIter *iter);
 gint              gda_data_model_iter_get_row              (GdaDataModelIter *iter);
 
-gboolean          gda_data_model_iter_can_be_moved       (GdaDataModelIter *iter);
+gboolean          gda_data_model_iter_can_be_moved         (GdaDataModelIter *iter);
 void              gda_data_model_iter_invalidate_contents  (GdaDataModelIter *iter);
 gboolean          gda_data_model_iter_is_valid             (GdaDataModelIter *iter);
 
