@@ -463,14 +463,16 @@ gda_postgres_cursor_recordset_create_iter (GdaDataModel *model)
 	imodel = (GdaPostgresCursorRecordset *) model;
 	g_return_val_if_fail (imodel->priv, NULL);
 	
+	/* Create the iter if necessary, or just return the existing iter: */
 	if (! imodel->priv->iter) {
 		imodel->priv->iter = (GdaDataModelIter *) g_object_new (GDA_TYPE_DATA_MODEL_ITER, 
 									"dict", gda_object_get_dict (GDA_OBJECT (model)), 
 									"data_model", model, NULL);
-		g_object_ref (imodel->priv->iter);
+
 		imodel->priv->iter_row = -1;
 	}
 
+	g_object_ref (imodel->priv->iter);
 	return imodel->priv->iter;
 }
 
