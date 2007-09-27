@@ -68,9 +68,6 @@ xmlXPathObjectPtr gda_xslt_bk_fun_checkif (xmlChar * setname,
 					   GdaXsltExCont * exec,
 					   GdaXsltIntCont * pdata);
 
-/* utilities */
-void gda_xslt_free_hashvalue (gpointer data);
-
 G_END_DECLS
 
 #endif 

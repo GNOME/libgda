@@ -3,7 +3,7 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: libgda-3.0
+Name: libgda-xslt-3.0
 Description: GDA (GNOME Data Access) XSLT extension
 Requires: libgda-3.0 libxslt
 Version: @VERSION@

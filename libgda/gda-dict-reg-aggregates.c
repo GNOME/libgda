@@ -380,7 +380,8 @@ gda_aggregates_get_by_name_arg (GdaDict *dict, const gchar *aggname, GdaDictType
 	GdaDictRegisterStruct *reg;
 
 	reg = gda_dict_get_object_type_registration (dict, GDA_TYPE_DICT_AGGREGATE);
-	g_assert (reg);
+	if (!reg)
+		return NULL;
 	return gda_aggregates_get_by_name_arg_in_list (dict, reg->assumed_objects, aggname, argtype);
 }
 

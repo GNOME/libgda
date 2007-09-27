@@ -89,9 +89,7 @@ gda_xslt_create_context_simple (GdaConnection * cnc, GError ** error)
 	local->error = NULL;
 	local->gda_dict = gda_dict;
 	local->query_hash =
-		g_hash_table_new_full (g_str_hash, g_str_equal,
-				       gda_xslt_free_hashvalue,
-				       gda_xslt_free_hashvalue);
+		g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
 	return local;
 }
 

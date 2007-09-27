@@ -1,3 +1,18 @@
+2007-09-27  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda-report-3.0.pc.in:
+	* libgda-xslt-3.0.pc.in: corrected the name of the package
+	* samples/XSLT: make the example working (Pawel Cesar Sanjuan Szklarz)
+	* libgda-xslt/*: bug fixes
+	* libgda/gda-dict-reg-functions.c:
+	* libgda/gda-dict-reg-aggregates.c: don't crash if dictionary does not support
+	functions of aggregates when trying to find one (fixes bug #414148)
+	* providers/postgres/gda-postgres-cursor-recordset.c: implemented the
+	i_iter_at_row() virtual method using "FETCH ABSOLUTE" (Murray Cumming)
+	* libgda/gda-command.c:  improved gda_command_set_options() to have at least
+	GDA_COMMAND_OPTION_STOP_ON_ERRORS xor GDA_COMMAND_OPTION_IGNORE_ERRORS as the
+	two are strict opposites
+
 2007-09-27  Murray Cumming  <murrayc@murrayc.com>
 
 	* providers/postgres/gda-postgres-cursor-recordset.c:
@@ -9,9 +24,10 @@
 	* configure.in: detect libxslt presence
 	* Makefile.am:
 	* libgda-xslt-3.0.pc.in:
-	* libgda-xslt/*: implementation of an XSL extension which uses Libgda
+	* libgda-xslt/*: implementation of an XSL extension which uses Libgda (Pawel 
+	Cesar Sanjuan Szklarz)
 	* samples/XSLT/*: new example to show how to use the new XSL extension (not
-	yet working)
+	yet working) (Pawel Cesar Sanjuan Szklarz)
 
 2007-09-26  Vivien Malerba <malerba@gnome-db.org>
 

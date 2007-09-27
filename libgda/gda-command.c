@@ -61,10 +61,8 @@ gda_command_new (const gchar *text, GdaCommandType type, GdaCommandOptions optio
 	gda_command_set_text (cmd, text);
 	gda_command_set_command_type (cmd, type);
 
-	cmd->options = GDA_COMMAND_OPTION_BAD_OPTION;
+	cmd->options = GDA_COMMAND_OPTION_IGNORE_ERRORS;
 	gda_command_set_options (cmd, options);
-	if (cmd->options == GDA_COMMAND_OPTION_BAD_OPTION)
-		cmd->options = GDA_COMMAND_DEFAULT_OPTION;
 
 	return cmd;
 }
@@ -189,21 +187,15 @@ gda_command_get_options (GdaCommand *cmd)
  * @cmd: a #GdaCommand
  * @options: the command options.
  *
- * Sets the command options of @cmd. If there conflicting options, it will just
- * leave the value as before.
+ * Sets the command options of @cmd. 
  */
 void
 gda_command_set_options (GdaCommand *cmd, GdaCommandOptions options)
 {
-	GdaCommandOptions err_mask;
-
 	g_return_if_fail (cmd != NULL);
 
-	err_mask = GDA_COMMAND_OPTION_IGNORE_ERRORS |
-		   GDA_COMMAND_OPTION_STOP_ON_ERRORS;
-
-	if ((options & err_mask) == err_mask)
-		return;	/* Conflicting options! */
-
-	cmd->options = options;
+	if (options & GDA_COMMAND_OPTION_STOP_ON_ERRORS)
+		cmd->options = GDA_COMMAND_OPTION_STOP_ON_ERRORS;
+	else
+		cmd->options = GDA_COMMAND_OPTION_IGNORE_ERRORS;
 }

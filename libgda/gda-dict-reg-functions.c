@@ -409,7 +409,8 @@ gda_functions_get_by_name_arg (GdaDict *dict, const gchar *funcname, const GSLis
 	GdaDictRegisterStruct *reg;
 
 	reg = gda_dict_get_object_type_registration (dict, GDA_TYPE_DICT_FUNCTION);
-	g_assert (reg);
+	if (!reg)
+		return NULL;
 	return gda_functions_get_by_name_arg_in_list (dict, reg->assumed_objects, funcname, argtypes);
 }
 

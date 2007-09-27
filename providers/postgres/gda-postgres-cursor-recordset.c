@@ -35,8 +35,8 @@ struct _GdaPostgresCursorRecordsetPrivate {
         GdaConnection    *cnc;
 	PGconn           *pconn;
 	gchar            *cursor_name;
-	gint              chunk_size;
-	gint              chunks_read;
+	gint              chunk_size; /* Number of rows to fetch at a time when iterating forward or backwards. */
+	gint              chunks_read; /* Effectively equal to the number of times that we have iterated forwards or backwards. */
 
 	GSList           *columns;
         GType            *column_types;
@@ -44,10 +44,10 @@ struct _GdaPostgresCursorRecordsetPrivate {
 	gint              nrows; /* -1 untill the total number of rows is known */
 	
 	/* Pg cursor's information */
-	PGresult         *pg_res;
+	PGresult         *pg_res; /* The result for the current chunk of rows. */
 	gint              pg_pos; /* from G_MININT to G_MAXINT */
-	gint              pg_res_size;
-	gint              pg_res_inf; /* don't use if (@pg_res_size <= 0) */
+	gint              pg_res_size; /* The number of rows in the current chunk - usually equal to chunk_size when iterating forward or backward. */
+	gint              pg_res_inf; /* The row number of the first row in the current chunk. Don't use if (@pg_res_size <= 0). */
 
 	/* Internal iterator's information */
 	gint              iter_row; /* G_MININT if at start, G_MAXINT if at end */
@@ -97,6 +97,7 @@ static GdaValueAttribute    gda_postgres_cursor_recordset_get_attributes_at (Gda
 static GdaDataModelIter    *gda_postgres_cursor_recordset_create_iter      (GdaDataModel *model);
 static gboolean             gda_postgres_cursor_recordset_iter_next       (GdaDataModel *model, GdaDataModelIter *iter);
 static gboolean             gda_postgres_cursor_recordset_iter_prev       (GdaDataModel *model, GdaDataModelIter *iter);
+static gboolean             gda_postgres_cursor_recordset_iter_at_row       (GdaDataModel *model, GdaDataModelIter *iter, gint row);
 
 static GObjectClass *parent_class = NULL;
 
@@ -182,7 +183,7 @@ gda_postgres_cursor_recordset_data_model_init (GdaDataModelClass *iface)
 	iface->i_get_attributes_at = gda_postgres_cursor_recordset_get_attributes_at;
 
 	iface->i_create_iter = gda_postgres_cursor_recordset_create_iter;
-	iface->i_iter_at_row = NULL;
+	iface->i_iter_at_row = gda_postgres_cursor_recordset_iter_at_row;
 	iface->i_iter_next = gda_postgres_cursor_recordset_iter_next;
 	iface->i_iter_prev = gda_postgres_cursor_recordset_iter_prev;
 
@@ -334,6 +335,8 @@ dump_pg_res (PGresult *res)
 {
 	int nFields = PQnfields(res);
 	int i, j;
+
+        //PQntuples() returns the number of rows in the result:
 	for (i = 0; i < PQntuples(res); i++) {
 		printf (".......");
 		for (j = 0; j < nFields; j++)
@@ -397,8 +400,11 @@ gda_postgres_cursor_recordset_get_n_rows (GdaDataModel *model)
 	imodel = GDA_POSTGRES_CURSOR_RECORDSET (model);
 	g_return_val_if_fail (imodel->priv, 0);
 
-	/* number of rows is not known */
-	return -1;
+	if (imodel->priv->nrows >= 0)
+		return imodel->priv->nrows;
+	else
+		/* number of rows is not known */
+		return -1;
 }
 
 static gint
@@ -522,7 +528,8 @@ fetch_next (GdaPostgresCursorRecordset *model)
 		dump_pg_res (model->priv->pg_res);
 #endif
 
-                gint nbtuples = PQntuples (model->priv->pg_res);
+                //PQntuples() returns the number of rows in the result:
+                const gint nbtuples = PQntuples (model->priv->pg_res);
 		model->priv->pg_res_size = nbtuples;
 
                 if (nbtuples > 0) {
@@ -609,7 +616,8 @@ fetch_prev (GdaPostgresCursorRecordset *model)
 		dump_pg_res (model->priv->pg_res);
 #endif
 
-                gint nbtuples = PQntuples (model->priv->pg_res);
+                //PQntuples() returns the number of rows in the result:
+                const gint nbtuples = PQntuples (model->priv->pg_res);
 		model->priv->pg_res_size = nbtuples;
 
                 if (nbtuples > 0) {
@@ -639,6 +647,65 @@ fetch_prev (GdaPostgresCursorRecordset *model)
 
 #ifdef GDA_PG_DEBUG
 	g_print ("<-- SIZE = %d (inf = %d) nrows = %d, pg_pos = %d\n", model->priv->pg_res_size, model->priv->pg_res_inf,
+		 model->priv->nrows, model->priv->pg_pos);
+#endif
+
+	return retval;
+}
+
+static gboolean
+fetch_row_number (GdaPostgresCursorRecordset *model, int row_index)
+{
+	if (model->priv->pg_res) {
+		PQclear (model->priv->pg_res);
+		model->priv->pg_res = NULL;
+	}
+
+	gchar *str;
+	gboolean retval = TRUE;
+	int status;
+
+        /* Postgres's FETCH ABSOLUTE seems to use a 1-based index: */
+	str = g_strdup_printf ("FETCH ABSOLUTE %d FROM %s;",
+			       row_index + 1, model->priv->cursor_name);
+#ifdef GDA_PG_DEBUG
+	g_print ("QUERY: %s\n", str);
+#endif
+        model->priv->pg_res = PQexec (model->priv->pconn, str);
+        g_free (str);
+        status = PQresultStatus (model->priv->pg_res);
+	model->priv->chunks_read ++; /* Not really correct, because we are only fetching 1 row, not a whole chunk of rows. */
+        if (status != PGRES_TUPLES_OK) {
+                PQclear (model->priv->pg_res);
+                model->priv->pg_res = NULL;
+		model->priv->pg_res_size = 0;
+                retval = FALSE;
+        }
+	else {
+#ifdef GDA_PG_DEBUG
+		dump_pg_res (model->priv->pg_res);
+#endif
+
+                //PQntuples() returns the number of rows in the result:
+                const gint nbtuples = PQntuples (model->priv->pg_res);
+		model->priv->pg_res_size = nbtuples;
+
+                if (nbtuples > 0) {
+                        /* Remember the row number for the start of this chunk:
+                         * (actually a chunk of just 1 record in this case.) */ 
+			model->priv->pg_res_inf = row_index;
+		
+			/* don't change model->priv->nrows because we can't know if we have reached the end */
+			model->priv->pg_pos = row_index;
+		}
+		else {
+			model->priv->pg_pos = G_MAXINT;
+			retval = FALSE;
+		}
+	}
+
+#ifdef GDA_PG_DEBUG
+	g_print ("--> SIZE = %d (inf = %d) nrows = %d, pg_pos = %d\n", model->priv->pg_res_size, model->priv->pg_res_inf,
 		 model->priv->nrows, model->priv->pg_pos);
 #endif
 
@@ -715,6 +782,33 @@ gda_postgres_cursor_recordset_iter_prev (GdaDataModel *model, GdaDataModelIter *
 	imodel->priv->iter_row = G_MININT;
 	return FALSE;
 }
+
+static gboolean
+gda_postgres_cursor_recordset_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint row)
+{
+	GdaPostgresCursorRecordset *imodel;
+
+	g_return_val_if_fail (GDA_IS_POSTGRES_CURSOR_RECORDSET (model), FALSE);
+	imodel = (GdaPostgresCursorRecordset *) model;
+	g_return_val_if_fail (imodel->priv, FALSE);
+
+	g_return_val_if_fail (iter, FALSE);
+	g_return_val_if_fail (imodel->priv->iter == iter, FALSE);
+	
+	if (row_is_in_current_pg_res (imodel, row) ||
+	    fetch_row_number (imodel, row)) {
+		imodel->priv->iter_row = row;
+		update_iter (imodel);
+		return TRUE;
+	}
+	else 
+		goto prev_error;
+ prev_error:
+	g_object_set (G_OBJECT (iter), "current-row", -1, NULL);
+	imodel->priv->iter_row = G_MININT;
+	return FALSE;
+}
+
 
 static void
 update_iter (GdaPostgresCursorRecordset *imodel)

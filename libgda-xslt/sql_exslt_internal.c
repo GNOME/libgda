@@ -43,12 +43,6 @@ static void gda_xslt_section_element (xsltTransformContextPtr tctxt,
 				      xmlNodePtr node, xmlNodePtr inst,
 				      xsltStylePreCompPtr comp);
 
-void
-gda_xslt_free_hashvalue (gpointer data)
-{
-	g_free (data);
-}
-
 void *
 gda_xslt_extension_init (xsltTransformContextPtr ctxt, const xmlChar * URI)
 {
@@ -76,8 +70,8 @@ gda_xslt_extension_init (xsltTransformContextPtr ctxt, const xmlChar * URI)
 #endif
 	data->result_sets =
 		g_hash_table_new_full (g_str_hash, g_str_equal,
-				       gda_xslt_free_hashvalue,
-				       gda_xslt_free_hashvalue);
+				       g_free,
+				       NULL);
 
 	res = xsltRegisterExtFunction (ctxt,
 				       (const xmlChar *)
