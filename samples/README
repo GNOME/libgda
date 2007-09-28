@@ -13,5 +13,6 @@ Currently the contents are:
 * in TableCopy/: examples of how to copy table data
 * in Virtual/: virtual connection usage example
 * in Report/: reports examples
+* in XSLT/: example using Libgda's extension to libxslt
 
 Good luck and happy hacking!

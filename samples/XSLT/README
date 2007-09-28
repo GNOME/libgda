@@ -5,7 +5,6 @@ Description:
 ------------
 
 The examples in this directory illustrate how use the Libgda's XSLT extension to libxslt.
-FIXME.
 
 Compiling and running:
 ----------------------
