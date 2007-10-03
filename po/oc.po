@@ -1435,7 +1435,7 @@ msgstr ""
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:1004
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:4
 msgid "Table"
-msgstr "Taula"
+msgstr "Tablèu"
 
 #: ../libgda/gda-server-provider-extra.c:123
 #: ../libgda/gda-server-provider-extra.c:138
@@ -1489,7 +1489,7 @@ msgstr ""
 
 #: ../libgda/gda-server-provider-extra.c:164
 msgid "User"
-msgstr "Usuari"
+msgstr "Utilizaire"
 
 #: ../libgda/gda-server-provider-extra.c:168
 msgid "View"
