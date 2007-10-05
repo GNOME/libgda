@@ -21,7 +21,7 @@
 	  operation. For example to create a table, the required information will be the table name and the description of its
 	  columns, and the optional information might be the schema in which to create the table for a PostgreSQL provider.</para>
 	<para>
-	  Additionnally some options can be passed when using that function in the form of named parameters, see <link linkend="gda-server-op-information">this section</link> for more information.
+	  Additionnally some options can be passed when using that function in the form of named parameters, see <link linkend="gda-server-op-information-std">this section</link> for more information.
 	</para>
       </listitem>
       <listitem>
@@ -84,7 +84,14 @@
     </para>
   </sect3>
 
-  <sect3 id="gda-server-op-information">
+  <sect3 id="gda-server-op-information-specif">
+    <title>Provider specific information</title>
+    <para>
+      To list the possible/required parameters for each provider, use the 
+      <link linkend="libgda-list-server-op">gda-list-server-op</link> tool.
+    </para>
+  </sect3>
+  <sect3 id="gda-server-op-information-std">
     <title>Standard named information</title>
     <para>
       For most of the possible operations, the required information from one provider to the other does not vary, only the

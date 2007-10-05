@@ -254,7 +254,7 @@ gda_sqlite_recordset_fill (GdaSqliteRecordset *model, GdaConnection *cnc, SQLITE
 	/* filling GdaDataModel columns data */
 	for (i = 0; i < sres->ncols; i++) {
 		GdaColumn *column;
-		const char *tablename, *colname;
+		const char *tablename, *colname, *ctype;
 		int notnull, autoinc, pkey;
 
 		tablename = sqlite3_column_table_name (sres->stmt, i);
@@ -269,12 +269,35 @@ gda_sqlite_recordset_fill (GdaSqliteRecordset *model, GdaConnection *cnc, SQLITE
 
 		column = gda_data_model_describe_column (GDA_DATA_MODEL (model), i);
 		gda_column_set_name (column, sqlite3_column_name (sres->stmt, i));
-		gda_column_set_scale (column, 0);
-		gda_column_set_defined_size (column, sres->cols_size [i]);
+		gda_column_set_scale (column, -1);
+		gda_column_set_defined_size (column, -1 /*sres->cols_size [i]*/);
 		gda_column_set_primary_key (column, pkey);
 		gda_column_set_unique_key (column, pkey);
 		gda_column_set_allow_null (column, !notnull);
 		gda_column_set_auto_increment (column, autoinc);
+
+		ctype = sqlite3_column_decltype (sres->stmt, i);
+		if (ctype) {
+			gchar *start, *end;
+			for (start = (gchar *) ctype; *start && (*start != '('); start++);
+			if (*start == '(') {
+				for (end = start+1; *end && (*end != ')'); end++);
+				if (*end == ')') {
+					gchar *copy = g_strdup (start);
+					copy[end - start] = 0;
+					for (start = copy; *start && (*start != ','); start++);
+					if (*start != 0) {
+						*start = 0;
+						gda_column_set_defined_size (column, atoi (copy));
+						gda_column_set_scale (column, atoi (start+1));
+					}
+					else
+						gda_column_set_defined_size (column, atoi (copy));
+					
+					g_free (copy);
+				}
+			}
+		}
 	}
 
 	/* set to read only mode */

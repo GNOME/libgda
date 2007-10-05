@@ -917,6 +917,9 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root)
  * gda_server_operation_new
  * @xml_file: a file which has the specifications for the GdaServerOperation object to create
  *
+ * IMPORTANT NOTE: Using this funtion is not the recommended way of creating a #GdaServerOperation object, the
+ * correct way is to use gda_server_provider_create_operation(); this method is reserved for internal implementation.
+ *
  * Creates a new #GdaServerOperation object from the @xml_file specifications
  *
  * The @xml_file must respect the DTD described in the "libgda-server-operation.dtd" file: its top
@@ -1125,6 +1128,8 @@ gda_server_operation_save_data_to_xml (GdaServerOperation *op, GError **error)
 	g_return_val_if_fail (op->priv, NULL);
 
 	topnode = xmlNewNode (NULL, BAD_CAST "serv_op_data");
+	xmlSetProp (topnode, BAD_CAST "type", 
+		    BAD_CAST gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (op)));
 
 	list = op->priv->topnodes;
 	while (list) {
@@ -1334,7 +1339,13 @@ gda_server_operation_load_data_from_xml (GdaServerOperation *op, xmlNodePtr node
 					break;
 				case GDA_SERVER_OPERATION_NODE_DATA_MODEL:
 					gda_data_model_array_clear (GDA_DATA_MODEL_ARRAY (opnode->d.model));
-					if (! gda_data_model_add_data_from_xml_node (opnode->d.model, cur->children, error))
+					if (!cur->children) {
+						g_set_error (error, 0, 0,
+							     _("Missing required settings"));
+						allok = FALSE;
+					}
+					else if (! gda_data_model_add_data_from_xml_node (opnode->d.model, 
+											  cur->children, error))
 						allok = FALSE;
 					break;
 				case GDA_SERVER_OPERATION_NODE_PARAM: {
@@ -1839,10 +1850,14 @@ gda_server_operation_get_value_at (GdaServerOperation *op, const gchar *path_for
  * @path_format: a complete path to a node (starting with "/")
  * @...: arguments to use with @path_format to make a complete path
  *
- * Set the value for the node at the path formed using @path_format and ... the rules are the same as
- * for g_strdup_printf())
+ * Set the value for the node at the path formed using @path_format and @... the rules are the same as
+ * for g_strdup_printf()). 
  *
- * Here are the corner cases:
+ * Note that trying to set a value for a path which is not used by the current
+ * provider (such as "/TABLE_OPTIONS_P/TABLE_ENGINE" for a PostgreSQL connection), will <emphasis>not</emphasis> generate
+ * any error; this allows one to set all the possible parameters and use the same code for several providers.
+ *
+ * Here are the possible formats of @path_format:
  * <itemizedlist>
  *  <listitem><para>If the path corresponds to a #GdaParameter, then the parameter is set to @value</para></listitem>
  *  <listitem><para>If the path corresponds to a sequence item like for example "/SEQUENCE_NAME/5/NAME" for
@@ -1854,7 +1869,7 @@ gda_server_operation_get_value_at (GdaServerOperation *op, const gchar *path_for
  *           the value to the corresponding in the 6th item of the sequence</para></listitem>
  *     </itemizedlist>
  *  </para></listitem>
- *  <listitem><para>If the path corresponds to a #GdaDataModel, like for example "/ARRAY/@COLUMN/5" for the value at the
+ *  <listitem><para>If the path corresponds to a #GdaDataModel, like for example "/ARRAY/@@COLUMN/5" for the value at the
  *     6th row of the "COLUMN" column of the "ARRAY" data model, then:
  *     <itemizedlist>
  *        <listitem><para>if the data model already contains 6 or more rows, then the value is just set</para></listitem>

@@ -11,7 +11,10 @@ organized hirarchically. A value can be read from its path (similar to a Unix fi
 gda_server_operation_get_value_at() method.
 </para>
 <para>
-See the <link linkend="DDLIntro">global introduction about DDL</link> about how to use this object.
+<emphasis>Important note:</emphasis> #GdaServerOperation objects are usually not created 
+manually using gda_server_operation_new(), but
+through the #GdaServerProvider object using gda_server_provider_create_operation().
+See the <link linkend="DDLIntro">global introduction about DDL</link> for more information.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

@@ -54,14 +54,18 @@ As a side note there are also data models which wrap other data models such as:
 
 <!-- ##### SIGNAL GdaDataModel::reset ##### -->
 <para>
-
+This signal is emitted when either the columns of the data model have changed (the number or columns and/or
+tier types), or when the data model has changed in a way where it has not been possible to follow the changes
+using the "row-inserted", "row-updated" or "row-removed" signals.
 </para>
 
 @gdadatamodel: the object which received the signal.
 
 <!-- ##### SIGNAL GdaDataModel::row-inserted ##### -->
 <para>
-
+This signal is emitted when a row has been inserted in the data model (the new
+row is readily accessible at the provided row). All the row numbers of the row after the inserted row
+have been increased by one.
 </para>
 
 @gdadatamodel: the object which received the signal.
@@ -69,7 +73,9 @@ As a side note there are also data models which wrap other data models such as:
 
 <!-- ##### SIGNAL GdaDataModel::row-removed ##### -->
 <para>
-
+This signal is emitted when a row has been removed from the data model (the new
+row is no longer accessible at the provided row). All the row numbers of the row after the removed row
+have been decreased by one.
 </para>
 
 @gdadatamodel: the object which received the signal.
@@ -77,7 +83,8 @@ As a side note there are also data models which wrap other data models such as:
 
 <!-- ##### SIGNAL GdaDataModel::row-updated ##### -->
 <para>
-
+This signal is emitted when a row has been updated from the data model (the updated
+values are accessible at the provided row).
 </para>
 
 @gdadatamodel: the object which received the signal.

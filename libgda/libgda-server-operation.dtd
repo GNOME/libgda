@@ -8,6 +8,9 @@
 %paramlist-dtd;
 
 <!ELEMENT serv_op ((parameters|gda_array|sequence|parameter)*, sources?)>
+<!ATTLIST serv_op
+	  type CDATA #IMPLIED
+	  descr CDATA #IMPLIED>
 
 <!ELEMENT sequence ((parameters|parameter|gda_array|sequence)*)>
 <!ATTLIST sequence

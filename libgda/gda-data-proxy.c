@@ -152,9 +152,9 @@ typedef struct {
 			  * rows to display, or the number of rows is unknown
 			  * (then it's not filled until row existance can be testes
 			  */
-} DisplayChunck;
-static DisplayChunck *display_chunk_new (gint reserved_size);
-static void           display_chunk_free (DisplayChunck *chunk);
+} DisplayChunk;
+static DisplayChunk *display_chunk_new (gint reserved_size);
+static void          display_chunk_free (DisplayChunk *chunk);
 
 /*
  * NOTE about the row numbers:
@@ -197,8 +197,8 @@ struct _GdaDataProxyPrivate
 	GSList            *new_rows;   /* list of RowModif, no data allocated in this list */
 	GHashTable        *modify_rows;  /* key = model_row number, value = RowModif, NOT for new rows */
 
-	gboolean           ignore_proxied_changes;
-	gboolean           proxy_has_changed;
+	gboolean           defer_proxied_model_insert;
+	gint               catched_inserted_row;
 
 	gboolean           add_null_entry; /* artificially add a NULL entry at the beginning of the tree model */
 
@@ -210,8 +210,8 @@ struct _GdaDataProxyPrivate
 	gint               sample_last_row;
 	gint               sample_size;
 	guint              chunk_sync_idle_id;
-	DisplayChunck     *chunk; /* number of proxy_rows depends directly on chunk->mapping->len */
-	DisplayChunck     *chunk_to; /* NULL if nothing to do */
+	DisplayChunk      *chunk; /* number of proxy_rows depends directly on chunk->mapping->len */
+	DisplayChunk      *chunk_to; /* NULL if nothing to do */
 	gint               chunk_sep;
 	gint               chunk_proxy_nb_rows;
 	
@@ -314,7 +314,7 @@ proxy_row_to_absolute_row (GdaDataProxy *proxy, gint proxy_row)
 	else {
 		if (proxy->priv->chunk_to && 
 		    proxy->priv->chunk_to->mapping &&
-		    (proxy_row <= proxy->priv->chunk_sep) && 
+		    (proxy_row < proxy->priv->chunk_sep) && 
 		    (proxy_row < proxy->priv->chunk_to->mapping->len))
 			return g_array_index (proxy->priv->chunk_to->mapping, gint, proxy_row);
 		else
@@ -341,8 +341,6 @@ proxy_row_to_row_modif (GdaDataProxy *proxy, gint proxy_row)
  * May return -1 if:
  *  - @abs_row is not a proxy row 
  *  - @abs_row is out of bounds (only checked if @proxy's number of rows is known)
- *
- * WARNING: MUST NOT BE CALLED WHEN THERE IS SOME SYNCING IN PROGESS
  */
 static gint
 absolute_row_to_proxy_row (GdaDataProxy *proxy, gint abs_row)
@@ -372,15 +370,27 @@ absolute_row_to_proxy_row (GdaDataProxy *proxy, gint abs_row)
 			proxy_row ++;
 	}
 	else {
-		g_assert (!proxy->priv->chunk_to);
-
-		gint proxy_n_rows;
-		proxy_row = abs_row;
-		if (proxy->priv->add_null_entry)
-			proxy_row ++;
-		proxy_n_rows = gda_data_proxy_get_n_rows ((GdaDataModel*) proxy);
-		if ((proxy_row >= proxy_n_rows) && (proxy_n_rows >= 0))
-			proxy_row = -1;
+		if (proxy->priv->chunk_to && proxy->priv->chunk_to->mapping) {
+			/* search in the proxy->priv->chunk_sep first rows of proxy->priv->chunk_to */
+			gint i;
+			for (i = 0; i < MIN (proxy->priv->chunk->mapping->len, proxy->priv->chunk_sep); i++) {
+				if (g_array_index (proxy->priv->chunk_to->mapping, gint, i) == abs_row) {
+					proxy_row = i;
+					break;
+				}
+			}
+			if ((proxy_row >= 0) && proxy->priv->add_null_entry)
+				proxy_row ++;
+		}
+		if (proxy_row < 0) {
+			gint proxy_n_rows;
+			proxy_row = abs_row;
+			if (proxy->priv->add_null_entry)
+				proxy_row ++;
+			proxy_n_rows = gda_data_proxy_get_n_rows ((GdaDataModel*) proxy);
+			if ((proxy_row >= proxy_n_rows) && (proxy_n_rows >= 0))
+				proxy_row = -1;
+		}
 	}
 
 	return proxy_row;
@@ -636,8 +646,6 @@ gda_data_proxy_init (GdaDataProxy *proxy)
 	proxy->priv = g_new0 (GdaDataProxyPrivate, 1);
 	proxy->priv->modify_rows = g_hash_table_new (NULL, NULL);
 	proxy->priv->notify_changes = TRUE;
-	proxy->priv->ignore_proxied_changes = FALSE;
-	proxy->priv->proxy_has_changed = FALSE;
 
 	proxy->priv->add_null_entry = FALSE;
 	proxy->priv->defer_sync = TRUE;
@@ -648,15 +656,20 @@ gda_data_proxy_init (GdaDataProxy *proxy)
 	proxy->priv->chunk_to = NULL;
 	proxy->priv->chunk_sync_idle_id = 0;
 	proxy->priv->columns = NULL;
+
+	proxy->priv->defer_proxied_model_insert = FALSE;
+	proxy->priv->catched_inserted_row = -1;
 }
 
-static DisplayChunck *compute_display_chunk (GdaDataProxy *proxy);
+static DisplayChunk *compute_display_chunk (GdaDataProxy *proxy);
 static void adjust_displayed_chunk (GdaDataProxy *proxy);
 static gboolean chunk_sync_idle (GdaDataProxy *proxy);
 static void ensure_chunk_sync (GdaDataProxy *proxy);
 
 
-static void proxied_model_data_changed_cb (GdaDataModel *model, GdaDataProxy *proxy);
+static void proxied_model_row_inserted_cb (GdaDataModel *model, gint row, GdaDataProxy *proxy);
+static void proxied_model_row_updated_cb (GdaDataModel *model, gint row, GdaDataProxy *proxy);
+static void proxied_model_row_removed_cb (GdaDataModel *model, gint row, GdaDataProxy *proxy);
 static void proxied_model_reset_cb (GdaDataModel *model, GdaDataProxy *proxy);
 
 
@@ -736,7 +749,11 @@ clean_proxy (GdaDataProxy *proxy)
 	
 	if (proxy->priv->model) {
 		g_signal_handlers_disconnect_by_func (G_OBJECT (proxy->priv->model),
-						      G_CALLBACK (proxied_model_data_changed_cb), proxy);
+						      G_CALLBACK (proxied_model_row_inserted_cb), proxy);
+		g_signal_handlers_disconnect_by_func (G_OBJECT (proxy->priv->model),
+						      G_CALLBACK (proxied_model_row_updated_cb), proxy);
+		g_signal_handlers_disconnect_by_func (G_OBJECT (proxy->priv->model),
+						      G_CALLBACK (proxied_model_row_removed_cb), proxy);
 		g_signal_handlers_disconnect_by_func (G_OBJECT (proxy->priv->model),
 						      G_CALLBACK (proxied_model_reset_cb), proxy);
 
@@ -836,8 +853,12 @@ gda_data_proxy_set_property (GObject *object,
 				g_value_set_flags (proxy->priv->columns_attrs[col], flags);
 			}
 			
-			g_signal_connect (G_OBJECT (model), "changed",
-					  G_CALLBACK (proxied_model_data_changed_cb), proxy);
+			g_signal_connect (G_OBJECT (model), "row_inserted",
+					  G_CALLBACK (proxied_model_row_inserted_cb), proxy);
+			g_signal_connect (G_OBJECT (model), "row_updated",
+					  G_CALLBACK (proxied_model_row_updated_cb), proxy);
+			g_signal_connect (G_OBJECT (model), "row_removed",
+					  G_CALLBACK (proxied_model_row_removed_cb), proxy);
 			g_signal_connect (G_OBJECT (model), "reset",
 					  G_CALLBACK (proxied_model_reset_cb), proxy);
 			
@@ -906,72 +927,121 @@ gda_data_proxy_get_property (GObject *object,
 	}
 }
 
-/*
- * Callback called when the contents of the proxied data model has changed.
- * All the changes made in the proxy are discarded.
- *
- * REM: 
- * We should try to re-map all the modifications to the new data, and the modifications which can't be
- * re-mapped could be discarded, but this means we would need a way to identify columns (the equivalent
- * of a primary key for the proxied data model).
- */
 static void
-proxied_model_data_changed_cb (GdaDataModel *model, GdaDataProxy *proxy)
+proxied_model_row_inserted_cb (GdaDataModel *model, gint row, GdaDataProxy *proxy)
 {
-	gint nb_cols;
+	gint abs_row;
+	gint signal_row_offset = proxy->priv->add_null_entry ? 1 : 0;
+	abs_row = row; /* can't call model_row_to_absolute_row because @row is not *officially* part of the computations */
 
-	if (proxy->priv->ignore_proxied_changes) {
-		proxy->priv->proxy_has_changed = TRUE;
-		return;
-	}
-	proxy->priv->proxy_has_changed = FALSE;
-
-	/* stop idle adding of rows */
-	if (proxy->priv->chunk_sync_idle_id) {
-		g_idle_remove_by_data (proxy);
-		proxy->priv->chunk_sync_idle_id = 0;
-	}
-
-	proxy->priv->force_direct_mapping = FALSE;
+	/* internal cleanups: update chunk and chunk_to arrays */
 	if (proxy->priv->chunk) {
-		display_chunk_free (proxy->priv->chunk);
-		proxy->priv->chunk = NULL;
-	}
+		gint i, *v;
 
-	if (proxy->priv->chunk_to) {
-		display_chunk_free (proxy->priv->chunk_to);
-		proxy->priv->chunk_to = NULL;
-	}
-
-	/* Free memory for the modifications */
-	while (proxy->priv->all_modifs) {
-		gint model_row = ROW_MODIF (proxy->priv->all_modifs->data)->model_row;
-		row_modifs_free (ROW_MODIF (proxy->priv->all_modifs->data));
-		if (model_row >= 0)
-			g_hash_table_remove (proxy->priv->modify_rows, GINT_TO_POINTER (model_row));
-		proxy->priv->all_modifs = g_slist_delete_link (proxy->priv->all_modifs, proxy->priv->all_modifs);
-	}
-	if (proxy->priv->new_rows) {/* new rows removing (no memory de-allocation here, though) */
-		g_slist_free (proxy->priv->new_rows);
-		proxy->priv->new_rows = NULL;
-	}
-
-	nb_cols = gda_data_model_get_n_columns (model);
-	if (proxy->priv->model_nb_cols != nb_cols) {
-		/* take into account the new dimensions of the proxied data model => perform a re-init of the object */
-		proxied_model_reset_cb (model, proxy);
-	}
-	else {
-		proxy->priv->model_nb_rows = gda_data_model_get_n_rows (model);
-
-		/* initial chunk settings, no need to emit any signal as it's an initial state */
-		proxy->priv->chunk = compute_display_chunk (proxy);
-		if (!proxy->priv->chunk->mapping) {
-			display_chunk_free (proxy->priv->chunk);
-			proxy->priv->chunk = NULL;
+		for (i = 0; i < proxy->priv->chunk->mapping->len; i++) {
+			v = &g_array_index (proxy->priv->chunk->mapping, gint, i);
+			if (*v >= abs_row) 
+				*v += 1;
 		}
-		gda_data_model_reset (GDA_DATA_MODEL (proxy));
 	}
+	if (proxy->priv->chunk_to && proxy->priv->chunk->mapping) {
+		gint i, *v;
+
+		for (i = 0; i < proxy->priv->chunk_to->mapping->len; i++) {
+			v = &g_array_index (proxy->priv->chunk_to->mapping, gint, i);
+			if (*v >= abs_row) 
+				*v -= 1;
+		}
+	}
+
+	/* Note: if there is a chunk, then the new row will *not* be part of that chunk and so
+	 * no signal will be emitted for its insertion */
+	proxy->priv->model_nb_rows ++;
+	if (proxy->priv->defer_proxied_model_insert)
+		proxy->priv->catched_inserted_row = row;
+	else if (!proxy->priv->chunk && !proxy->priv->chunk_to)
+		gda_data_model_row_inserted ((GdaDataModel *) proxy, row + signal_row_offset);
+}
+
+static void 
+proxied_model_row_updated_cb (GdaDataModel *model, gint row, GdaDataProxy *proxy)
+{
+	gint proxy_row;
+	RowModif *rm;
+
+	/* destroy any RowModif associated ro @row */
+	rm = g_hash_table_lookup (proxy->priv->modify_rows, GINT_TO_POINTER (row));
+	if (rm) {
+		/* FIXME: compare with the new value of the updated row and remove RowModif only if there
+		 * are no more differences. For now we only get rid of that RowModif.
+		 */
+		g_hash_table_remove (proxy->priv->modify_rows, GINT_TO_POINTER (row));
+		proxy->priv->all_modifs = g_slist_remove (proxy->priv->all_modifs, rm);
+		row_modifs_free (rm);
+	}
+
+	/* if @row is a "visible" row, then emit the updated signal on it */
+	proxy_row = absolute_row_to_proxy_row (proxy, model_row_to_absolute_row (proxy, row));
+	if (proxy_row >= 0)
+		gda_data_model_row_updated ((GdaDataModel *) proxy, proxy_row);
+}
+
+static void
+proxied_model_row_removed_cb (GdaDataModel *model, gint row, GdaDataProxy *proxy)
+{
+	gint proxy_row, abs_row;
+	RowModif *rm;
+	gint signal_row_offset = proxy->priv->add_null_entry ? 1 : 0;
+	abs_row = model_row_to_absolute_row (proxy, row);
+	proxy_row = absolute_row_to_proxy_row (proxy, abs_row);
+
+	/* internal cleanups: update chunk and chunk_to arrays */
+	if (proxy->priv->chunk) {
+		gint i, *v, remove_index = -1;
+
+		for (i = 0; i < proxy->priv->chunk->mapping->len; i++) {
+			v = &g_array_index (proxy->priv->chunk->mapping, gint, i);
+			if (*v > abs_row) 
+				*v -= 1;
+			else if (*v == abs_row) {
+				g_assert (remove_index == -1);
+				remove_index = i;
+			}
+		}
+		if (remove_index >= 0)
+			g_array_remove_index (proxy->priv->chunk->mapping, remove_index);
+		if ((proxy_row >= 0) && (proxy->priv->chunk_sep >= (proxy_row - signal_row_offset)))
+			proxy->priv->chunk_sep--;
+	}
+	if (proxy->priv->chunk_to && proxy->priv->chunk->mapping) {
+		gint i, *v, remove_index = -1;
+
+		for (i = 0; i < proxy->priv->chunk_to->mapping->len; i++) {
+			v = &g_array_index (proxy->priv->chunk_to->mapping, gint, i);
+			if (*v > abs_row) 
+				*v -= 1;
+			else if (*v == abs_row) {
+				g_assert (remove_index == -1);
+				remove_index = i;
+			}
+		}
+		if (remove_index >= 0)
+			g_array_remove_index (proxy->priv->chunk_to->mapping, remove_index);
+	}
+	proxy->priv->chunk_proxy_nb_rows--;
+	proxy->priv->model_nb_rows --;
+
+	/* destroy any RowModif associated ro @row */
+	rm = g_hash_table_lookup (proxy->priv->modify_rows, GINT_TO_POINTER (row));
+	if (rm) {
+		g_hash_table_remove (proxy->priv->modify_rows, GINT_TO_POINTER (row));
+		proxy->priv->all_modifs = g_slist_remove (proxy->priv->all_modifs, rm);
+		row_modifs_free (rm);
+	}
+
+	/* actual signal emission if row is 'visible' */
+	if (proxy_row >= 0)
+		gda_data_model_row_removed ((GdaDataModel *) proxy, proxy_row);
 }
 
 /* 
@@ -1740,7 +1810,7 @@ gda_data_proxy_cancel_row_changes (GdaDataProxy *proxy, gint proxy_row, gint col
 		g_warning ("GdaDataProxy column %d is not a modifiable data column", col);
 }
 
-static gboolean commit_row_modif (GdaDataProxy *proxy, RowModif *rm, GError **error);
+static gboolean commit_row_modif (GdaDataProxy *proxy, RowModif *rm, gboolean adjust_display, GError **error);
 
 /**
  * gda_data_proxy_apply_row_changes
@@ -1764,7 +1834,7 @@ gda_data_proxy_apply_row_changes (GdaDataProxy *proxy, gint proxy_row, GError **
 	gda_object_dump (proxy, 5);
 #endif
 
-	return commit_row_modif (proxy, proxy_row_to_row_modif (proxy, proxy_row), error);
+	return commit_row_modif (proxy, proxy_row_to_row_modif (proxy, proxy_row), TRUE, error);
 }
 
 /*
@@ -1773,12 +1843,11 @@ gda_data_proxy_apply_row_changes (GdaDataProxy *proxy, gint proxy_row, GError **
  * Returns: TRUE if no error occurred
  */
 static gboolean
-commit_row_modif (GdaDataProxy *proxy, RowModif *rm, GError **error)
+commit_row_modif (GdaDataProxy *proxy, RowModif *rm, gboolean adjust_display, GError **error)
 {
 	gboolean err = FALSE;
-	gboolean ignore_proxied_changes;
 	gboolean mod_ok;
-	gint abs_row, proxy_row;
+	gint proxy_row;
 
 	if (!rm)
 		return TRUE;
@@ -1788,19 +1857,14 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, GError **error)
 
 	/*
 	 * Steps in this procedure:
-	 * -1- disable handling of proxied model modifications
-	 * -2- apply desired modification (which may trigger a "change" signal from
-	 *     the proxied model, that's why we need to specifically ignore it)
-	 * -3.1- if no error then destroy the RowModif which has just been applied
-	 *       and refresh displayed chunks if RowModif was a delete
-	 * -4- re-enable handling of proxied model modifications
+	 * -1- send the "pre-changes-applied" signal, and abort if return value is FALSE
+	 * -2- apply desired modification (which _should_ trigger "row_{inserted,removed,updated}" signals from
+	 *     the proxied model)
+	 * -3- if no error then destroy the RowModif which has just been applied
+	 *     and refresh displayed chunks if @adjust_display is set to TRUE
+	 * -4- send the "post-changes-applied" signal
 	 */
-
-	ignore_proxied_changes = proxy->priv->ignore_proxied_changes;
-	proxy->priv->ignore_proxied_changes = TRUE;
-
-	abs_row = model_row_to_absolute_row (proxy, rm->model_row);
-	proxy_row = absolute_row_to_proxy_row (proxy, abs_row);
+	proxy_row = row_modif_to_proxy_row (proxy, rm);
 
 	/* validate the changes to this row */
         g_signal_emit (G_OBJECT (proxy),
@@ -1874,6 +1938,7 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, GError **error)
 			gint i;
 			GValue *newvalue;
 			GValue **free_val;
+			gint new_row;
 			
 			g_assert (rm->modify_values);
 			free_val = g_new0 (GValue *, proxy->priv->model_nb_cols);
@@ -1901,33 +1966,64 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, GError **error)
 				values = g_list_append (values, newvalue);
 			}
 			
-			err = gda_data_model_append_values (proxy->priv->model, 
-							    values, error) >= 0 ? FALSE : TRUE;
+			proxy->priv->defer_proxied_model_insert = TRUE;
+			proxy->priv->catched_inserted_row = -1;
+			new_row = gda_data_model_append_values (proxy->priv->model, values, error);
+			err = new_row >= 0 ? FALSE : TRUE;
+
 			g_list_free (values);
 			for (i = 0; i < proxy->priv->model_nb_cols; i++)
 				if (free_val [i])
 					gda_value_free (free_val [i]);
 			g_free (free_val);
+			if (!err) {
+				proxy->priv->new_rows = g_slist_remove (proxy->priv->new_rows, rm);
+				proxy->priv->all_modifs = g_slist_remove (proxy->priv->all_modifs, rm);
+				g_hash_table_remove (proxy->priv->modify_rows, GINT_TO_POINTER (rm->model_row));
+				row_modifs_free (rm);
+				rm = NULL;
+				
+				if (proxy_row >= 0)
+					gda_data_model_row_updated ((GdaDataModel*) proxy, proxy_row);
+
+				/* signal row actually changed */
+				g_signal_emit (G_OBJECT (proxy),
+					       gda_data_proxy_signals[POST_CHANGES_APPLIED],
+					       0, proxy_row, -1);
+			}
+			else if (proxy->priv->catched_inserted_row >= 0) 
+				g_warning (_("Proxied data model reports the modifications as accepted, yet did not emit the "
+					     "corresponding \"row-inserted\", \"row-updated\" or \"row-removed\" signal. This "
+					     "is a bug of the %s's implementation (please report a bug)."),
+					   G_OBJECT_TYPE_NAME (proxy->priv->model));
+
+			proxy->priv->catched_inserted_row = -1;
+			proxy->priv->defer_proxied_model_insert = FALSE;
 		}
 	}
 
-	if (!err) {
+	if (!err && rm) {
 		/* signal row actually changed */
 		g_signal_emit (G_OBJECT (proxy),
 			       gda_data_proxy_signals[POST_CHANGES_APPLIED],
 			       0, proxy_row, rm->model_row);
 		
-		/* get rid of the commited change */
-		proxy->priv->new_rows = g_slist_remove (proxy->priv->new_rows, rm);
-		proxy->priv->all_modifs = g_slist_remove (proxy->priv->all_modifs, rm);
-		g_hash_table_remove (proxy->priv->modify_rows, GINT_TO_POINTER (rm->model_row));
-		row_modifs_free (rm);
+		/* get rid of the commited change; if the changes have been applied correctly, @rm should
+		 * have been removed from the proxy->priv->all_modifs list because the proxied model
+		 * should habe emitted the "row_{inserted,removed,updated}" signals */
+		if (rm && g_slist_find (proxy->priv->all_modifs, rm)) {
+			g_warning (_("Proxied data model reports the modifications as accepted, yet did not emit the "
+				     "corresponding \"row-inserted\", \"row-updated\" or \"row-removed\" signal. This "
+				     "is a bug of the %s's implementation (please report a bug)."),
+				   G_OBJECT_TYPE_NAME (proxy->priv->model));
+			proxy->priv->new_rows = g_slist_remove (proxy->priv->new_rows, rm);
+			proxy->priv->all_modifs = g_slist_remove (proxy->priv->all_modifs, rm);
+			g_hash_table_remove (proxy->priv->modify_rows, GINT_TO_POINTER (rm->model_row));
+			row_modifs_free (rm);
+		}
 	}
 
-	proxy->priv->ignore_proxied_changes = ignore_proxied_changes;
-	if (proxy->priv->proxy_has_changed) 
-		proxied_model_data_changed_cb (proxy->priv->model, proxy);
-	else
+	if (adjust_display)
 		adjust_displayed_chunk (proxy);
 
 	return !err;
@@ -2130,19 +2226,19 @@ gda_data_proxy_get_sample_end (GdaDataProxy *proxy)
 	return proxy->priv->sample_last_row;	
 }
 
-static DisplayChunck *
+static DisplayChunk *
 display_chunk_new (gint reserved_size)
 {
-	DisplayChunck *chunk;
+	DisplayChunk *chunk;
 
-	chunk = g_new0 (DisplayChunck, 1);
+	chunk = g_new0 (DisplayChunk, 1);
 	chunk->mapping = g_array_sized_new (FALSE, TRUE, sizeof (gint), reserved_size);
 
 	return chunk;
 }
 
 static void
-display_chunk_free (DisplayChunck *chunk)
+display_chunk_free (DisplayChunk *chunk)
 {
 	if (chunk->mapping)
 		g_array_free (chunk->mapping, TRUE);
@@ -2158,7 +2254,7 @@ display_chunks_dump (GdaDataProxy *proxy)
 #ifdef DUMP
 	gint i, total1 = 0, total2 = 0;
 
-	g_print ("================== CHUNCK=%p, TO=%p (mapping=%p), SEP=%d\n", proxy->priv->chunk, proxy->priv->chunk_to,
+	g_print ("================== CHUNK=%p, TO=%p (mapping=%p), SEP=%d\n", proxy->priv->chunk, proxy->priv->chunk_to,
 		 proxy->priv->chunk_to ? proxy->priv->chunk_to->mapping : NULL,
 		 proxy->priv->chunk_sep);
 	if (!proxy->priv->chunk && !proxy->priv->chunk_to)
@@ -2169,7 +2265,7 @@ display_chunks_dump (GdaDataProxy *proxy)
 	if (proxy->priv->chunk_to && proxy->priv->chunk_to->mapping)
 		total2 = proxy->priv->chunk_to->mapping->len;
 
-	g_print ("CHUNCK   CHUNCK_TO\n");
+	g_print ("CHUNK   CHUNK_TO\n");
 	for (i = 0; i < MAX (total1, total2); i++) {
 		if (i < total1)
 			g_print ("%03d", g_array_index (proxy->priv->chunk->mapping, gint, i));
@@ -2376,10 +2472,10 @@ chunk_sync_idle (GdaDataProxy *proxy)
 	return !finished;
 }
 
-static DisplayChunck *
+static DisplayChunk *
 compute_display_chunk (GdaDataProxy *proxy)
 {
-	DisplayChunck *ret_chunk = NULL;
+	DisplayChunk *ret_chunk = NULL;
 
 	if (proxy->priv->filtered_rows) {
 		/* REM: when there is a filter applied, the new rows are mixed with the
@@ -2440,7 +2536,7 @@ compute_display_chunk (GdaDataProxy *proxy)
 			}
 			else {
 				/* no chunk_to->mapping needed */
-				ret_chunk = g_new0 (DisplayChunck, 1);
+				ret_chunk = g_new0 (DisplayChunk, 1);
 
 				proxy->priv->sample_first_row = 0;
 				proxy->priv->sample_last_row = proxy->priv->model_nb_rows - 1;
@@ -2449,7 +2545,7 @@ compute_display_chunk (GdaDataProxy *proxy)
 		}
 		else {
 			/* no chunk_to->mapping needed */
-			ret_chunk = g_new0 (DisplayChunck, 1);
+			ret_chunk = g_new0 (DisplayChunk, 1);
 
 			if (proxy->priv->model_nb_rows == 0 ) {
 				/* known number of rows */
@@ -2508,7 +2604,7 @@ adjust_displayed_chunk (GdaDataProxy *proxy)
 		proxy->priv->chunk_sync_idle_id = 0;
 	}
 
-	/* compute new DisplayChunck */
+	/* compute new DisplayChunk */
 	if (proxy->priv->chunk_to) {
 		display_chunk_free (proxy->priv->chunk_to);
 		proxy->priv->chunk_to = NULL;
@@ -2588,14 +2684,11 @@ gda_data_proxy_apply_all_changes (GdaDataProxy *proxy, GError **error)
 
 	gda_data_model_send_hint (proxy->priv->model, GDA_DATA_MODEL_HINT_START_BATCH_UPDATE, NULL);
 
-	proxy->priv->ignore_proxied_changes = TRUE;
 	while (proxy->priv->all_modifs && allok)
-		allok = commit_row_modif (proxy, ROW_MODIF (proxy->priv->all_modifs->data), error);
-	proxy->priv->ignore_proxied_changes = FALSE;
+		allok = commit_row_modif (proxy, ROW_MODIF (proxy->priv->all_modifs->data), FALSE, error);
 
 	gda_data_model_send_hint (proxy->priv->model, GDA_DATA_MODEL_HINT_END_BATCH_UPDATE, NULL);
-	if (proxy->priv->proxy_has_changed) 
-		adjust_displayed_chunk (proxy);
+	adjust_displayed_chunk (proxy);
 
 	return allok;
 }
@@ -2739,7 +2832,8 @@ gda_data_proxy_set_filter_expr (GdaDataProxy *proxy, const gchar *filter_expr, G
 	}
 
 	/* generate SQL with a special case if expression starts with "ORDER BY" */
-	gchar *tmp, *ptr;
+	gchar *tmp;
+	const gchar *ptr;
 	gint i;
 	tmp = g_strdup (filter_expr);
 	for (i = 0, ptr = filter_expr; *ptr && (i < 7); ptr++) {

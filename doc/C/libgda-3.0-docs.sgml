@@ -32,6 +32,7 @@
 <!ENTITY gda-author-dict-file "<command>gda-author-dict-file-3.0</command>">
 <!ENTITY gda-diagnose "<command>gda-diagnose-3.0</command>">
 <!ENTITY gda-inspect-dict-file "<command>gda-inspect-dict-file-3.0</command>">
+<!ENTITY gda-list-server-op "<command>gda-list-server-op-3.0</command>">
 <!ENTITY gda-list-config "<command>gda-list-config-3.0</command>">
 <!ENTITY gda-sql "<command>gda-sql-3.0</command>">
 <!ENTITY gda-test-connection "<command>gda-test-connection-3.0</command>">
@@ -660,15 +661,97 @@
       <title>&gda-sql;</title>
       <para>
 	The &gda-sql; tool is an interactive command line tool to run SQL commands and work
-	with dictionaries.
+	with dictionaries. This tool has got several options, use the <option>--help</option> option
+	to list them all.
       </para>
+      <para>
+	For example to list the installed providers, do:
+	<programlisting>
+[prompt]> gda-sql-3.0 -L
+Provider    | Description                       | DSN parameters     | File                                                      
+------------+-----------------------------------+--------------------+-----------------------------------------------
+SQLite      | Provider for SQLite databases     | DB_NAME,           | /usr/lib/libgda-3.0/providers/libgda-sqlite.so  
+                                                  DB_DIR,                                                            
+                                                  LOAD_GDA_FUNCTIONS                                                       
+Berkeley-DB | Provider for Berkeley databases   | FILE,              | /usr/lib/libgda-3.0/providers/libgda-bdb.so 
+                                                  DATABASE                                                                
+[...]
+	</programlisting>
+	To list the configured data sources (DSN):
+	<programlisting>
+[prompt]> gda-sql-3.0 -l
+DSN      | Provider   | Description  | Connection string      | Username
+---------+------------+--------------+------------------------+---------
+Sales    | PostgreSQL | Sales        | DB_NAME=sales          |
+[...]
+	</programlisting>
+	To run an interractive session, just specify a DSN (using the <option>-s DSN</option> option) or
+	a connection string (using the <option>-c "connection string"</option> and <option>-p provider</option> options):
+      </para>
+      <programlisting><![CDATA[
+[prompt]> gda-sql-3.0 -p SQLite -c "DB_DIR=.;DB_NAME=sales_test"
+Welcome to the GDA SQL console, version 3.1.2
+
+Type: \copyright to show usage and distribution terms
+      \? for help with internal commands
+      \q (or CTRL-D) to quit
+      or any query terminated by a semicolon
+
+gda> select * from customers;
+id | name            | default_served_by | country | city
+---+-----------------+-------------------+---------+-----
+ 2 | Ed Lamton       |                 4 | SP      | MDR 
+ 3 | Lew Bonito      |                 1 | FR      | TLS 
+ 4 | Mark Lawrencep  |              NULL | SP      | MDR 
+ 9 | Greg Popoff     |                 2 | SP      | MDR 
+10 | Vladimir Zirkov |                 4 | NULL    | NULL
+gda> \set the_id 9
+gda> select * from customers where id= ##the_id;
+id | name        | default_served_by | country | city
+---+-------------+-------------------+---------+-----
+ 9 | Greg Popoff |                 2 | SP      | MDR 
+gda> ]]>
+      </programlisting>
     </chapter>
 
     <chapter id="libgda-tools-list-config">
       <title>&gda-list-config;</title>
       <para>
 	The &gda-list-config; tool simply lists all the declared data sources, and all the installed
-	providers, giving some other usefull information as well for each.
+	providers, giving some other usefull information as well for each. This tool has no option.
+      </para>
+      <para>
+	An example output will be:
+	<programlisting>
+[prompt]> gda-list-config-3.0
+=== Installed providers ===
+Provider: SQLite
+Description: Provider for SQLite databases
+Location: /usr/lib/libgda-3.0/providers/libgda-sqlite.so
+Data source's parameters (Name / Type / Description):
+  DB_NAME / gchararray / Database name
+  DB_DIR / gchararray / Directory
+  LOAD_GDA_FUNCTIONS / gboolean / Extra functions
+
+Provider: Berkeley-DB
+Description: Provider for Berkeley databases
+Location: /usr/lib/libgda-3.0/providers/libgda-bdb.so
+Data source's parameters (Name / Type / Description):
+  FILE / gchararray / Database file
+  DATABASE / gchararray / Database name
+
+[...]
+
+=== Declared data sources ===
+Data source: Sales
+  Key 'DSN' = 'DB_NAME=sales'
+  Key 'Description' = 'Sales'
+  Key 'Password' = ''
+  Key 'Provider' = 'PostgreSQL'
+  Key 'Username' = ''
+
+[...]
+	</programlisting>
       </para>
     </chapter>
 
@@ -677,27 +760,6 @@
       <para>
 	This tool is a 'ping' like tool to test connectivity to databases. Connections can either
 	be declared as DSN, or described in the command line.
-      </para>
-    </chapter>
-
-    <chapter id="libgda-tools-diagnose">
-      <title>&gda-diagnose;</title>
-      <para>
-	The &gda-diagnose; tool is a quite exhaustive and verbose testing program which output 
-	several HTML files
-	in a specified directory (DIAGNOSE_OUTPUT by default). It can either test a single data source
-	or all the data sources if none is specified. Running this tool can be time consuming...
-      </para>
-      <para>
-	The tool tests:
-	<itemizedlist>
-	  <listitem>
-            <para>Data sources (or one if one is provided): </para>
-	  </listitem>
-	  <listitem>
-            <para>All the installed providers when connection is provided</para>
-	  </listitem>
-	</itemizedlist>
       </para>
     </chapter>
 
@@ -715,7 +777,7 @@
             <para>synchronizes the contents of the dictionary with a data source</para>
 	  </listitem>
 	</itemizedlist>
-
+	Use the <option>--help</option> option to list all the possible options.
       </para>
     </chapter>
 
@@ -732,6 +794,88 @@
             <para>lists all the pre-defined queries and creates .dot files for each of them</para>
 	  </listitem>
 	</itemizedlist>
+	Use the <option>--help</option> option to list all the possible options.
+      </para>
+    </chapter>
+
+    <chapter id="libgda-list-server-op">
+      <title>&gda-list-server-op;</title>
+      <para>
+	The &gda-list-server-op; tool lists available DDL operations for one or all of the installed
+	providers. For each type of operation (and each provider), the named parameters are also displayed.
+	See the <link linkend="DDLIntro">General words about DDL queries</link> for more information
+	about possible operations and usage. This tool has got several options, use the <option>--help</option> option
+	to list them all.
+      </para>
+      <para>
+	For example listing all the possible operations (for all the providers) is:
+	<programlisting>
+[prompt]> gda-list-server-op-3.0 -l
+Using XML descriptions in /usr/share/libgda-3.0
+Existing operation types:
+CREATE_DB
+DROP_DB
+CREATE_TABLE
+DROP_TABLE
+RENAME_TABLE
+ADD_COLUMN
+DROP_COLUMN
+CREATE_INDEX
+DROP_INDEX
+	</programlisting>
+	Listing all the operations supported by the SQLite provider (notice that the SQLite provider does not support the
+	DROP_COLUMN operation as SQLite does not support it):
+	<programlisting>
+[prompt]> gda-list-server-op-3.0 -l -p SQLite
+Using XML descriptions in /usr/share/libgda-3.0
+For provider SQLite
+Existing operation types for provider 'SQLite':
+CREATE_DB
+DROP_DB
+CREATE_TABLE
+DROP_TABLE
+RENAME_TABLE
+ADD_COLUMN
+CREATE_INDEX
+DROP_INDEX
+	</programlisting>
+	Listing all the possible parameters for the MySQL provider and for the DROP_COLUMN operation:
+	<programlisting><![CDATA[
+[prompt]> gda-list-server-op-3.0 -o DROP_COLUMN -p MySQL
+Using XML descriptions in /usr/share/libgda-3.0
+For provider MySQL
+Description for type: DROP_COLUMN
+<?xml version="1.0"?>
+<server_op>
+  <path id="/COLUMN_DESC_P" node_type="PARAMLIST" name="Column's description"/>
+  <path id="/COLUMN_DESC_P/TABLE_NAME" node_type="PARAMETER" gdatype="gchararray" name="Table" descr="Table's name"/>
+  <path id="/COLUMN_DESC_P/COLUMN_NAME" node_type="PARAMETER" gdatype="gchararray" name="Field name"/>
+</server_op>]]>
+	</programlisting>
+	Listing all the possible parameters for the all the installed providers and for the DROP_COLUMN operation:
+	<programlisting><![CDATA[
+[prompt]> gda-list-server-op-3.0 -o DROP_COLUMN 
+Using XML descriptions in /usr/share/libgda-3.0
+Description for type: DROP_COLUMN
+<?xml version="1.0"?>
+<server_op>
+  <path id="/COLUMN_DESC_P" node_type="PARAMLIST">
+    <prov prov_name="mysql" name="Column's description"/>
+    <prov prov_name="postgres" name="Column's description"/>
+  </path>
+  <path id="/COLUMN_DESC_P/TABLE_NAME" node_type="PARAMETER" gdatype="gchararray">
+    <prov prov_name="mysql" name="Table" descr="Table's name"/>
+    <prov prov_name="postgres" name="Table" descr="Table's name"/>
+  </path>
+  <path id="/COLUMN_DESC_P/COLUMN_NAME" node_type="PARAMETER" gdatype="gchararray">
+    <prov prov_name="mysql" name="Field name"/>
+    <prov prov_name="postgres" name="Field name"/>
+  </path>
+  <path id="/COLUMN_DESC_P/REFERENCED_ACTION" node_type="PARAMETER" gdatype="gchararray">
+    <prov prov_name="postgres" name="References" descr="What to do with references on the column to delete"/>
+  </path>
+</server_op>]]>
+	</programlisting>
       </para>
     </chapter>
   </part>

@@ -55,9 +55,9 @@ gchar *outfile = NULL;
 
 
 static GOptionEntry entries[] = {
-        { "cnc", 'c', 0, G_OPTION_ARG_STRING, &direct, "Direct connection string", NULL},
-        { "provider", 'p', 0, G_OPTION_ARG_STRING, &prov, "Provider name", NULL},
-        { "dsn", 's', 0, G_OPTION_ARG_STRING, &dsn, "Data source", NULL},
+        { "cnc", 'c', 0, G_OPTION_ARG_STRING, &direct, "Direct connection string", "connection string"},
+        { "provider", 'p', 0, G_OPTION_ARG_STRING, &prov, "Provider name", "provider"},
+        { "dsn", 's', 0, G_OPTION_ARG_STRING, &dsn, "Data source", "DSN"},
         { "user", 'U', 0, G_OPTION_ARG_STRING, &user, "Username", "username" },
         { "password", 'P', 0, G_OPTION_ARG_STRING, &pass, "Password", "password" },
 
@@ -919,7 +919,7 @@ list_all_providers (MainData *data)
 
 		row = gda_data_model_append_row (model, NULL);
 
-		value = gda_value_new_from_string( info->id, G_TYPE_STRING);
+		value = gda_value_new_from_string (info->id, G_TYPE_STRING);
 		gda_data_model_set_value_at (model, 0, row, value, NULL);
 		gda_value_free (value);
 
@@ -936,7 +936,7 @@ list_all_providers (MainData *data)
 				
 				g_object_get (G_OBJECT (params->data), "string_id", &tmp, NULL);
 				if (params != info->gda_params->parameters)
-					g_string_append (string, ", ");
+					g_string_append (string, ",\n");
 				g_string_append (string, tmp);
 				g_free (tmp);
 			}

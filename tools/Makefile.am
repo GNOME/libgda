@@ -17,7 +17,8 @@ bin_PROGRAMS = \
 	gda-list-config-3.0 \
 	gda-inspect-dict-file-3.0 \
 	gda-author-dict-file-3.0 \
-	gda-sql-3.0
+	gda-sql-3.0 \
+	gda-list-server-op-3.0
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
@@ -74,5 +75,13 @@ gda_sql_3_0_LDADD = \
         $(LIBGDA_LIBS) \
 	$(READLINE_LIB) \
         $(HISTORY_LIB)
+
+gda_list_server_op_3_0_SOURCES = \
+        gda-list-server-op.c
+
+gda_list_server_op_3_0_LDADD = \
+        $(top_builddir)/libgda/libgda-3.0.la \
+        $(LIBGDA_LIBS)
+
 
 EXTRA_DIST = $(CONFIG_MAN_PAGES)

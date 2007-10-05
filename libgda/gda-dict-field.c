@@ -212,7 +212,7 @@ gda_dict_field_init (GdaDictField * gda_dict_field)
 	gda_dict_field->priv->table = NULL;
 	gda_dict_field->priv->dict_type = NULL;
 	gda_dict_field->priv->length = -1;
-	gda_dict_field->priv->scale = 0;
+	gda_dict_field->priv->scale = -1;
 	gda_dict_field->priv->extra_attrs = 0;
 	gda_dict_field->priv->plugin = NULL;
 }
@@ -422,8 +422,8 @@ gda_dict_field_set_scale (GdaDictField *field, gint scale)
 	g_return_if_fail (field && GDA_IS_DICT_FIELD (field));
 	g_return_if_fail (field->priv);
 	if (scale <= 0) {
-		changed = field->priv->scale != 0;
-		field->priv->scale = 0;
+		changed = (field->priv->scale >= 0);
+		field->priv->scale = -1;
 	}
 	else {
 		changed = field->priv->scale != scale;
@@ -849,12 +849,16 @@ gda_dict_field_save_to_xml (GdaXmlStorage *iface, GError **error)
 	str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (field->priv->dict_type));
 	xmlSetProp(node, (xmlChar*)"type", (xmlChar*)str);
 	g_free (str);
-	str = g_strdup_printf ("%d", field->priv->length);
-	xmlSetProp(node, (xmlChar*)"length", (xmlChar*)str);
-	g_free (str);
-	str = g_strdup_printf ("%d", field->priv->scale);
-	xmlSetProp(node, (xmlChar*)"scale", (xmlChar*)str);
-	g_free (str);
+	if (field->priv->length > 0) {
+		str = g_strdup_printf ("%d", field->priv->length);
+		xmlSetProp(node, (xmlChar*)"length", (xmlChar*)str);
+		g_free (str);
+	}
+	if (field->priv->scale >= 0) {
+		str = g_strdup_printf ("%d", field->priv->scale);
+		xmlSetProp(node, (xmlChar*)"scale", (xmlChar*)str);
+		g_free (str);
+	}
 
 	if (field->priv->default_val) {
 		GdaDataHandler *dh;

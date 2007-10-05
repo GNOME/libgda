@@ -448,7 +448,7 @@ show_data_model (GdaDataModel *dm)
   <sect1 id="main_example">
     <title>Full example</title>
     <para>
-      Ths following example is a complete program which creates a <filename>example_db.db</filename>
+      The following example is a complete program which creates a <filename>example_db.db</filename>
       SQLite database in the current
       directory, creates a "products" table,add a few rows to it, and then displays its contents. The example uses
       an SQLite database as it does not require any server setup and can thus be run as-is. 
@@ -468,7 +468,85 @@ cc -o example example.c `pkg-config --cflags --libs libgda-3.0`
     </para>
   </sect1>
 
-<sect1 id="other_examples">
+  <sect1 id="ddl_example">
+    <title>DDL example</title>
+    <para>
+      Ths following example illustrates (in a very simple way) how to use the 
+      <link linkend="GdaServerOperation">GdaServerOperation</link> object to perform a CREATE TABLE query.
+      For more information about how &LIBGDA; handles DDL queries, see <link linkend="DDLIntro">the DDL introduction</link>.
+      The following code simply executes the equivalent of "CREATE TABLE products (id int PRIMARY KEY, product_name string NOT NULL);" 
+      in a generic way, where the "id" field is the primary key and should be auto incremented (the SQL is generally 
+      specific to each DBMS for that last part).
+    </para>
+    <para>
+      For SQLite, the actual executed SQL statement is:
+      <programlisting>
+	CREATE TABLE products (id integer PRIMARY KEY AUTOINCREMENT, product_name varchar(50) NOT NULL);
+      </programlisting>
+      whereas for MySQL, the code would be:
+      <programlisting>
+	CREATE TABLE products (id integer AUTO_INCREMENT PRIMARY KEY, product_name varchar(50) NOT NULL) ENGINE=InnoDB;
+      </programlisting>
+    </para>
+    <para>
+      The code is:
+      <programlisting><![CDATA[
+void
+create_table (GdaConnection *cnc)
+{
+	GError *error = NULL;
+	GdaServerProvider *provider;
+	GdaServerOperation *op;
+	gint i;
+
+	/* create a new GdaServerOperation object */
+	provider = gda_connection_get_provider_obj (cnc);
+	op = gda_server_provider_create_operation (provider, cnc, GDA_SERVER_OPERATION_CREATE_TABLE, NULL, &error);
+	if (!op) {
+		g_print ("CREATE TABLE operation is not supported by the provider: %s\n",
+			 error && error->message ? error->message : "No detail");
+		exit (1);
+	}
+
+	/* Set parameter's values */
+	/* table name */
+	if (!gda_server_operation_set_value_at (op, "products", &error, "/TABLE_DEF_P/TABLE_NAME")) goto on_set_error;
+        if (!gda_server_operation_set_value_at (op, "InnoDB", &error, "/TABLE_OPTIONS_P/TABLE_ENGINE")) goto on_set_error;
+
+	/* "id' field */
+	i = 0;
+	if (!gda_server_operation_set_value_at (op, "id", &error, "/FIELDS_A/@COLUMN_NAME/%d", i)) goto on_set_error;
+	if (!gda_server_operation_set_value_at (op, "integer", &error, "/FIELDS_A/@COLUMN_TYPE/%d", i)) goto on_set_error;
+	if (!gda_server_operation_set_value_at (op, "TRUE", &error, "/FIELDS_A/@COLUMN_AUTOINC/%d", i)) goto on_set_error;
+	if (!gda_server_operation_set_value_at (op, "TRUE", &error, "/FIELDS_A/@COLUMN_PKEY/%d", i)) goto on_set_error;
+	
+	/* 'product_name' field */
+	i++;
+	if (!gda_server_operation_set_value_at (op, "product_name", &error, "/FIELDS_A/@COLUMN_NAME/%d", i)) goto on_set_error;
+	if (!gda_server_operation_set_value_at (op, "varchar", &error, "/FIELDS_A/@COLUMN_TYPE/%d", i)) goto on_set_error;
+	if (!gda_server_operation_set_value_at (op, "50", &error, "/FIELDS_A/@COLUMN_SIZE/%d", i)) goto on_set_error;
+	if (!gda_server_operation_set_value_at (op, "TRUE", &error, "/FIELDS_A/@COLUMN_NNUL/%d", i)) goto on_set_error;
+
+
+	/* Actually execute the operation */
+	if (! gda_server_provider_perform_operation (provider, cnc, op, &error)) {
+		g_print ("Error executing the operation: %s\n",
+			 error && error->message ? error->message : "No detail");
+		exit (1);
+	}
+	g_object_unref (op);
+	return;
+
+ on_set_error:
+	g_print ("Error setting value in GdaSererOperation: %s\n",
+		 error && error->message ? error->message : "No detail");
+	exit (1);
+}]]>
+      </programlisting>
+    </para>
+  </sect1>
+
+  <sect1 id="other_examples">
     <title>Other examples</title>
     <para>
       There are other sources of examples in &LIBGDA;'s source code:

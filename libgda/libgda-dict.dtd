@@ -92,8 +92,8 @@
 	  owner NMTOKEN #IMPLIED
 	  descr CDATA #IMPLIED
           type IDREF #REQUIRED
-          length NMTOKEN #REQUIRED
-	  scale NMTOKEN #REQUIRED
+          length NMTOKEN #IMPLIED
+	  scale NMTOKEN #IMPLIED
           default CDATA #IMPLIED
 	  default_g_type NMTOKEN #IMPLIED
 	  extra_attr NMTOKENS #IMPLIED

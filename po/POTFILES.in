@@ -173,6 +173,7 @@ tools/gda-author-dict-file.c
 tools/gda-diagnose.c
 tools/gda-inspect-dict-file.c
 tools/gda-list-config.c
+tools/gda-list-server-op.c
 tools/gda-sql.c
 tools/html.c
 tools/tools-input.c

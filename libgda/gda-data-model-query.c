@@ -592,7 +592,7 @@ param_changed_cb (GdaParameterList *paramlist, GdaParameter *param, GdaDataModel
 			g_object_unref (model->priv->data);
 			model->priv->data = NULL;
 		}
-		gda_data_model_signal_emit_changed ((GdaDataModel *) model);
+		gda_data_model_reset ((GdaDataModel *) model);
 	}
 }
 
@@ -683,7 +683,7 @@ gda_data_model_query_refresh (GdaDataModelQuery *model, GError **error)
 		return FALSE;
 	}
 
-	gda_data_model_signal_emit_changed ((GdaDataModel *) model);
+	gda_data_model_reset ((GdaDataModel *) model);
 	return model->priv->data ? TRUE : FALSE;
 }
 
@@ -1665,7 +1665,7 @@ auto_compute_assert_modify_target (GdaDataModelQuery *model, const gchar *target
 		if (table_targets->next) {
 			g_set_error (error, GDA_DATA_MODEL_QUERY_ERROR,
 				     GDA_DATA_MODEL_QUERY_COMPUTE_MODIF_QUERIES_ERROR,
-				     _("Ambiguous target table to modify in SELECT query"));
+				     _("More than one target table can be modified in SELECT query, specify which one"));
 			g_slist_free (table_targets);
 			g_slist_free (targets);
 			return FALSE;
@@ -1746,6 +1746,10 @@ auto_compute_make_cond_query_fields (GdaDataModelQuery *model, GdaQueryTarget *m
 			/* use ALL the present fields to make a WHERE condition */
 			cond_query_fields = gda_query_get_fields_by_target (model->priv->queries[SEL_QUERY],
 									    modify_target, TRUE);
+			if (error_is_set && error) {
+				g_error_free (*error);
+				*error = NULL;
+			}
 		}
 		else {
 			if (!error_is_set) {
