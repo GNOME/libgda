@@ -1,3 +1,8 @@
+2007-10-14  Claude Paroz  <claude@2xlibre.net>
+
+	* POTFILES.in: Correction of POTFILES.in so as l10n.gnome.org can
+	again generate stats.
+
 2007-09-26  Jorge Gonzalez  <jorgegonz@svn.gnome.org>
 
         * es.po: Updated Spanish translation
