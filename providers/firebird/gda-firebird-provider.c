@@ -24,7 +24,9 @@
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-data-model-private.h>
+#include <libgda/gda-server-provider-extra.h>
 #include <libgda/gda-command.h>
+#include <libgda/gda-parameter-list.h>
 #include <glib/gprintf.h>
 #include <string.h>
 #include "gda-firebird-provider.h"
@@ -69,6 +71,10 @@ static gboolean 	gda_firebird_provider_rollback_transaction (GdaServerProvider *
 static gboolean 	gda_firebird_provider_supports (GdaServerProvider *provider,
 							GdaConnection *cnc,
 							GdaConnectionFeature feature);
+
+static GdaServerProviderInfo *gda_firebird_provider_get_info (GdaServerProvider *provider,
+							      GdaConnection *cnc);
+
 static GdaDataModel	*gda_firebird_provider_get_schema (GdaServerProvider *provider,
 							   GdaConnection *cnc,
 							   GdaConnectionSchema schema,
@@ -91,7 +97,7 @@ gda_firebird_provider_class_init (GdaFirebirdProviderClass *klass)
 	object_class->finalize = gda_firebird_provider_finalize;
 	provider_class->get_version = gda_firebird_provider_get_version;
 	provider_class->get_server_version = gda_firebird_provider_get_server_version;
-	provider_class->get_info = NULL;
+	provider_class->get_info = gda_firebird_provider_get_info;
 	provider_class->supports_feature = gda_firebird_provider_supports;
 	provider_class->get_schema = gda_firebird_provider_get_schema;
 
@@ -242,12 +248,9 @@ fb_get_types (GdaConnection *cnc,
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	
-	/* Create the recordset */
-	recset = (GdaDataModelArray *) gda_data_model_array_new (4);
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Type"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 1, _("Owner"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Comments"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, _("GDA type"));
+	/* create the recordset */
+	recset = (GdaDataModelArray *) gda_data_model_array_new (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_TYPES));
+	gda_server_provider_init_schema_model (GDA_DATA_MODEL (recset), GDA_CONNECTION_SCHEMA_TYPES);
 	
 	/* Fill the recordset with each of the values from the array defined above */
 	for (i = 0; i < (sizeof (types) / sizeof (types[0])); i++) {
@@ -296,8 +299,7 @@ fb_get_tables (GdaConnection *cnc,
 	GList *value_list;
 	GdaDataModel *recset = NULL;
 	GdaCommand *command;
-	GValue *value;
-	GdaRow *row;
+	const GValue *value;
 	GdaParameter *par = NULL;
 	gchar *sql, *sql_cond;
 	gint i;
@@ -310,7 +312,7 @@ fb_get_tables (GdaConnection *cnc,
 		
 		/* Find parameters */
 		if (params)
-			par = gda_parameter_list_find (params, "systables");
+			par = gda_parameter_list_find_param (params, "systables");
 
 		/* Initialize parameter values */
 		if (par)
@@ -344,12 +346,11 @@ fb_get_tables (GdaConnection *cnc,
 				GValue *tmpval;
 
 				/* Get name of table */
-				row = (GdaRow *) gda_data_model_get_row (recmodel, i);
-				value = gda_row_get_value (row, 0);
+				value = gda_data_model_get_value_at (recmodel, 0, i);
 				value_list = g_list_append (value_list, gda_value_copy (value));
 
 				/* Get owner of table */
-				value = gda_row_get_value (row, 1);
+				value = gda_data_model_get_value_at (recmodel, 1, i);
 				value_list = g_list_append (value_list, gda_value_copy (value));
 				
 				/* FIXME: Set correct values */
@@ -520,7 +521,6 @@ fb_set_field_metadata (GdaRow *row)
 	gchar *the_value, *tmp_value;
 	gshort scale, short_value;
 	GValue *tmpval;
-	GType type;
 
 	g_return_val_if_fail (row != NULL, NULL);
 
@@ -625,7 +625,7 @@ fb_get_fields_metadata (GdaConnection *cnc,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (params != NULL, NULL);
 	
-	par = gda_parameter_list_find (params, "name");
+	par = gda_parameter_list_find_param (params, "name");
 	if (!par) {
 		gda_connection_add_event_string (cnc,
 				_("Table name is needed but none specified in parameter list"));
@@ -805,7 +805,20 @@ fb_sqlerror_get_description (GdaFirebirdConnection *fcnc,
 		isc_sql_interprete (sql_code, buffer, sizeof (buffer));
 		tmp_msg = g_strconcat  (tmp_msg, "\n", (gchar *) buffer, NULL);
 	}
-									
+
+	/*
+		ISC_STATUS status;
+
+		status = isc_dsql_execute_immediate (fcnc->status, &(fcnc->handle), ftr, strlen (sql), 
+						     (gchar *) sql, atoi (recset->priv->sql_dialect), NULL);
+		if (status != 0) {
+			g_print ("=====\n");
+			isc_print_status(fcnc->status);
+		}
+		return (status != 0);
+	}
+	*/
+						
 	return tmp_msg;
 }
 
@@ -826,9 +839,9 @@ gda_firebird_connection_make_error (GdaConnection *cnc,
 	}
 	
 	error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+	description = fb_sqlerror_get_description (fcnc, statement_type);
 	gda_connection_event_set_code (error, isc_sqlcode (fcnc->status));
 	gda_connection_event_set_source (error, "[GDA Firebird]");
-	description = fb_sqlerror_get_description (fcnc, statement_type);
 	gda_connection_event_set_description (error, description);
 	gda_connection_add_event (cnc, error);	
 	g_free (description);
@@ -911,7 +924,9 @@ gda_firebird_provider_open_connection (GdaServerProvider *provider,
 
 	if (isc_attach_database (fcnc->status, strlen (fb_db), fb_db, &(fcnc->handle), fcnc->dpb_length,
 				 fcnc->dpb_buffer)) {
+		g_object_set_data (G_OBJECT (cnc), CONNECTION_DATA, fcnc);
 		gda_firebird_connection_make_error (cnc, 0);
+		g_object_set_data (G_OBJECT (cnc), CONNECTION_DATA, NULL);
 		g_free (fcnc);
 		
 		return FALSE;
@@ -1070,25 +1085,29 @@ gda_firebird_provider_run_sql (GList *reclist,
 			       isc_tr_handle *ftr,
 			       const gchar *sql)
 {
-	GdaFirebirdRecordset *recset;
+	GObject *res = NULL;
 	gchar **arr;
 	gint n = 0;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	recset = NULL;
-
 	/* parse SQL string, which can contain several commands, separated by ';' */
 	arr = gda_delimiter_split_sql (sql);
 	if (arr) {
 		while (arr[n]) {
-			recset = gda_firebird_recordset_new (cnc, ftr, arr [n]);
+			GdaDataModel *recset;
+			recset = gda_firebird_recordset_new (cnc, ftr, arr [n], &res);
   			if (GDA_IS_FIREBIRD_RECORDSET (recset)) {
+				g_assert (!res);
 				g_object_set (G_OBJECT (recset), "command_text", arr[n],
 					      "command_type", GDA_COMMAND_TYPE_SQL, NULL);
 				reclist = g_list_append (reclist, recset);
 			}
-			
+			else if (res) 
+				reclist = g_list_append (reclist, res);
+			else
+				reclist = g_list_append (reclist, NULL);
+
 			n++;
 		}
 		
@@ -1319,6 +1338,22 @@ gda_firebird_provider_supports (GdaServerProvider *provider,
 	}
 
 	return FALSE;
+}
+
+static GdaServerProviderInfo *
+gda_firebird_provider_get_info (GdaServerProvider *provider, GdaConnection *cnc)
+{
+	static GdaServerProviderInfo info = {
+		"Firebird",
+		TRUE, 
+		TRUE,
+		TRUE,
+		TRUE,
+		TRUE,
+		FALSE
+	};
+	
+	return &info;
 }
 
 /* get_schema handler for the GdaFirebirdProvider class */

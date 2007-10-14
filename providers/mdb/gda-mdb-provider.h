@@ -1,8 +1,9 @@
 /* GDA MDB provider
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *      vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -20,10 +21,10 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_mdb_provider_h__)
-#  define __gda_mdb_provider_h__
+#ifndef __GDA_MDB_PROVIDER_H__
+#define __GDA_MDB_PROVIDER_H__
 
-#include <libgda/gda-server-provider.h>
+#include <virtual/gda-vprovider-data-model.h>
 
 G_BEGIN_DECLS
 
@@ -37,16 +38,16 @@ typedef struct _GdaMdbProvider      GdaMdbProvider;
 typedef struct _GdaMdbProviderClass GdaMdbProviderClass;
 
 struct _GdaMdbProvider {
-	GdaServerProvider provider;
+	GdaVproviderDataModel provider;
 };
 
 struct _GdaMdbProviderClass {
-	GdaServerProviderClass parent_class;
+	GdaVproviderDataModelClass parent_class;
 };
 
 GType              gda_mdb_provider_get_type (void) G_GNUC_CONST;
-GdaServerProvider *gda_mdb_provider_new (void);
-GdaDataModel      *gda_mdb_provider_execute_sql (GdaMdbProvider *mdbprv, GdaConnection *cnc, const gchar *sql);
+GdaServerProvider *gda_mdb_provider_new      (void);
+
 
 G_END_DECLS
 

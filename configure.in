@@ -83,6 +83,7 @@ PKG_CHECK_MODULES(LIBGDA, [
 	gmodule-2.0	>= req_ver_glib
 	libxml-2.0
 ])
+TST_CFLAGS="$LIBGDA_CFLAGS"
 LIBGDA_CFLAGS="$LIBGDA_CFLAGS -DLIBGDA_ABI_NAME=$LIBGDA_ABI_NAME"
 AC_SUBST(LIBGDA_CFLAGS)
 AC_SUBST(LIBGDA_LIBS)
@@ -212,7 +213,7 @@ dnl ******************************
 dnl Test for lib64 architectures
 dnl FIXME: should really check target
 case $host_cpu in
-x86_64* | sparc64*) lib="lib64";;
+x86_64* | sparc64* | s390x* | ppc64* | powerpc64* ) lib="lib64";;
 *) lib="lib";;
 esac
 
@@ -820,7 +821,17 @@ then
 	else
 		AC_DEFINE(HAVE_FIREBIRD, 1, [Have FireBird])
 		FIREBIRD_CFLAGS="-I${firebirddir}/include"
-		FIREBIRD_LIBS="-L${firebirddir}/lib -lgds -ldl -lcrypt"
+		if test -f $firebirddir/lib/libfbembed.so
+		then
+			FIREBIRD_LIBS="-L${firebirddir}/lib -lfbembed"
+		else
+			if test -f $firebirddir/lib/libfbclient.so
+			then
+				FIREBIRD_LIBS="-L${firebirddir}/lib -lfbclient"
+			else
+				FIREBIRD_LIBS="-L${firebirddir}/lib -lgds -ldl -lcrypt"
+			fi
+		fi
 	fi
 fi
 
@@ -885,7 +896,7 @@ then
 	mdbdir=""
 	for d in $dir /usr /usr/local /opt/gnome
 	do
-		if test -f $d/include/mdbtools.h -a -f $d/$lib/libmdbsql$libext -o -f $d/include/mdbtools.h -a -f $d/$lib/libmdbsql.a
+		if test -f $d/include/mdbtools.h -a -f $d/$lib/libmdb$libext -o -f $d/include/mdbtools.h -a -f $d/$lib/libmdb.a
 		then
 			AC_MSG_RESULT(found MDB Tools in $d)
 			mdbdir=$d
@@ -897,11 +908,11 @@ then
 		AC_MSG_WARN(MDB backend not used)
 	else
 		MDB_CFLAGS=-I${mdbdir}/include
-		MDB_LIBS="-L${mdbdir}/lib -lmdb -lmdbsql"
+		MDB_LIBS="-L${mdbdir}/lib -lmdb"
 		AC_DEFINE(HAVE_MDB, 1, [Have MDB])
 
 		save_CFLAGS="$CFLAGS"
-		CFLAGS="$CFLAGS $LIBGDA_CFLAGS"
+		CFLAGS="$CFLAGS $MDB_CFLAGS $TST_CFLAGS"
 
 		AC_MSG_CHECKING([whether mdb_open takes one or two arguments])
 
@@ -919,23 +930,23 @@ int main() {
 			AC_DEFINE(MDB_WITH_WRITE_SUPPORT, 1, [define if mdb_open accepts MDB_WRITABLE])
 		fi
 
-		AC_MSG_CHECKING([whether mdb_sql_bind_column takes three or four arguments])
+		AC_MSG_CHECKING([whether mdb_bind_column takes three or four arguments])
 
 		AC_COMPILE_IFELSE([[
-#include <mdbsql.h>
+#include <mdbtools.h>
 int main() {
-	extern MdbSQL *mdb_SQL;
+	MdbHandle *mdb;
 	int c;
 	char *bound_data[256];
 	int len;
-	mdb_sql_bind_column(mdb_SQL, c, bound_data[c], &len);
+	mdb_bind_column(mdb, c, bound_data[c], &len);
 	return 0;
 }
-]], mdb_sql_bind_column_args=four, mdb_sql_bind_column_args=three)
+]], mdb_bind_column_args=four, mdb_bind_column_args=three)
 
-		AC_MSG_RESULT($mdb_sql_bind_column_args)
-		if test "$mdb_sql_bind_column_args" = "four"; then
-			AC_DEFINE(MDB_SQL_BIND_COLUMN_FOUR_ARGS, 1, [define if mdb_sql_bind_column accepts four args])
+		AC_MSG_RESULT($mdb_bind_column_args)
+		if test "$mdb_bind_column_args" = "four"; then
+			AC_DEFINE(MDB_BIND_COLUMN_FOUR_ARGS, 1, [define if mdb_bind_column accepts four args])
 		fi
 
 		CFLAGS="$save_CFLAGS"

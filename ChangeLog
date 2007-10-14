@@ -1,3 +1,27 @@
+2007-10-14  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-data-proxy.c: remove warning about GdaDataModelQuery being
+	badly implemented
+	* providers/ldap/gda-ldap-provider.[ch]: first modifications in a long time
+	to make the LDAP provider work (thanks to Exell Enrique Franklin Jiménez)
+	* libgda/sqlite/sqlite-src: up to SQLite version 3.5.1
+	* configure.in: correctly detect the real MDBTools API, don't link
+	anymore with libmdbsql.so
+	* providers/mdb/*: reworked the MDB (MSAccess) provider to be a virtual
+	provider (now all the SQLite SQL can be used), the libmdbsql.so library
+	is not used anymore
+	* configure.in: correctly detect the firebird shared libraries to link with
+	* providers/firebird/*: improvements
+	* libgda/sqlite/virtual/gda-vprovider-data-model.c: data types issue fixed
+	* libgda-3.0.pc.in: Depend on gthread-2.0 because gda uses g_thread_init() 
+	which requires to link against gthread-2.0, fixed bug #484112 (Armin Burgmeier)
+	* providers/odbc/gda-odbc-provider.c:
+	* configure.in:
+	* libgda/gda-dict.c:
+	* libgda/gda-query-field-agg.c:
+	* libgda/gda-value.c:
+	* providers/postgres/utils.c: fixes for bug #486017 (Stanislav Brabec)
+
 2007-10-13  Yannig Marchegay <yannig@marchegay.org>
 
 	* configure.in: +Occitan.

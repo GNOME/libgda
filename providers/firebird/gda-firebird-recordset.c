@@ -25,6 +25,7 @@
 #include "gda-firebird-recordset.h"
 #include "gda-firebird-provider.h"
 #include <libgda/gda-quark-list.h>
+#include <libgda/gda-parameter-list.h>
 #include <glib/gi18n-lib.h>
 #include <glib/gprintf.h>
 #include <string.h>
@@ -59,16 +60,16 @@ static void 			gda_firebird_recordset_finalize (GObject *object);
 static gint			gda_firebird_recordset_get_n_rows (GdaDataModelRow *model);
 static gint			gda_firebird_recordset_get_n_columns (GdaDataModelRow *model);
 static void       	        gda_firebird_recordset_describe_column (GdaDataModel *model, gint col);
-static const GdaRow 	       *gda_firebird_recordset_get_row (GdaDataModelRow *model,
+static GdaRow 	               *gda_firebird_recordset_get_row (GdaDataModelRow *model,
 								gint row, GError **error);
 static const GValue 	       *gda_firebird_recordset_get_value_at (GdaDataModelRow *model,
 								     gint col,
 								     gint row);
 static gboolean			gda_firebird_recordset_is_updatable (GdaDataModelRow *model);
-static const GdaRow 	       *gda_firebird_recordset_append_values (GdaDataModelRow *model,
-								      const GList *values);
+static GdaRow 	               *gda_firebird_recordset_append_values (GdaDataModelRow *model,
+								      const GList *values, GError **error);
 static gboolean			gda_firebird_recordset_remove_row (GdaDataModelRow *model,
-								   const GdaRow *row);
+								   GdaRow *row, GError **error);
 
 static GObjectClass *parent_class = NULL;
 
@@ -176,7 +177,7 @@ fb_sql_result_columns_malloc (XSQLDA *sql_result)
 			case SQL_VARYING:
 			case SQL_VARYING+1:
 				sql_result->sqlvar[i].sqldata = (gchar *) g_malloc0 (sizeof (gchar) * 
-											sql_result->sqlvar[i].sqllen);
+										     (sql_result->sqlvar[i].sqllen + 1));
 				break;
 			case SQL_SHORT:
 			case SQL_SHORT+1:
@@ -204,6 +205,7 @@ fb_sql_result_columns_malloc (XSQLDA *sql_result)
 
 		/* Allocate space to hold 'allow NULL mark' */
 		sql_result->sqlvar[i].sqlind = (gshort *) g_malloc (sizeof (gshort));
+		*(sql_result->sqlvar[i].sqlind) = 0; /* default assume non-NULL */
 	}                        
 }
 
@@ -278,6 +280,32 @@ fb_sql_get_statement_type (GdaFirebirdConnection *fcnc,
 	return 0;
 }
 
+/*
+ * fb_sql_get_statement_impacted_rows
+ */
+static gint
+fb_sql_get_statement_impacted_rows (GdaFirebirdConnection *fcnc,
+				    GdaFirebirdRecordset *recset, char type)
+{
+	static char count_info[] = { isc_info_sql_records };
+	char count_buffer [64];
+	long row_count = 0;
+	
+	if (isc_dsql_sql_info (fcnc->status, &(recset->priv->sql_handle),
+			       sizeof(count_info), count_info,
+			       sizeof(count_buffer), count_buffer))
+		return -1; /* error */
+
+	unsigned i = 3, result_size = isc_vax_integer (&count_buffer[1],2);
+	
+	while (count_buffer[i] != isc_info_end && (i < result_size)) {
+		short len = (short) isc_vax_integer (&count_buffer[i+1], 2);
+		if (count_buffer[i] == type)
+			row_count += isc_vax_integer (&count_buffer[i+3], len);
+		i += len + 3;
+	}
+	return row_count;
+}
 
 /*
  *  fb_sql_prepare
@@ -349,6 +377,7 @@ fb_sql_prepare (GdaFirebirdConnection *fcnc,
 
 	/* Free SQL result */
 	fb_sql_result_free (recset->priv->sql_result);
+	recset->priv->sql_result = NULL;
 
 	return FALSE;
 }
@@ -371,6 +400,7 @@ fb_sql_unprepare (GdaFirebirdConnection *fcnc,
 
 		/* Free SQL result */
 		fb_sql_result_free (recset->priv->sql_result);
+		recset->priv->sql_result = NULL;
 
 		/* Free cursors */
 		if (recset->priv->sql_handle)
@@ -378,8 +408,6 @@ fb_sql_unprepare (GdaFirebirdConnection *fcnc,
 		
 		return TRUE;
 	}
-	else
-		gda_connection_add_event_string (recset->priv->cnc, _("Statement already prepared."));
 	
 	return FALSE;
 }
@@ -405,7 +433,7 @@ fb_sql_execute (GdaFirebirdConnection *fcnc,
 	if (fb_sql_get_statement_type (fcnc, recset) == isc_info_sql_stmt_select)
 		return (! isc_dsql_execute (fcnc->status, ftr, &(recset->priv->sql_handle), 
 					    recset->priv->sql_result->version, recset->priv->sql_result));
-	else
+	else 
 		return (! isc_dsql_execute_immediate (fcnc->status, &(fcnc->handle), ftr, strlen (sql), 
 						      (gchar *) sql, atoi (recset->priv->sql_dialect), NULL));
 }
@@ -478,6 +506,7 @@ fb_gda_value_fill (GValue *gda_value,
 			a_times.timezone = 0; /* FIXME: timezone */
 			a_times.fraction = 0; /* FIXME: fraction */			
 
+			g_value_init (gda_value, GDA_TYPE_TIMESTAMP);
 			gda_value_set_timestamp (gda_value, (const GdaTimestamp *) &a_times);
 			g_free (a_date_time);
 			break;
@@ -490,6 +519,7 @@ fb_gda_value_fill (GValue *gda_value,
 			a_time.second = a_date_time->tm_sec;
 			a_time.timezone = 0; /* FIXME: timezone */
 
+			g_value_init (gda_value, GDA_TYPE_TIME);
 			gda_value_set_time (gda_value, (const GdaTime *) &a_time);
 			g_free (a_date_time);
 			break;
@@ -502,12 +532,14 @@ fb_gda_value_fill (GValue *gda_value,
 			a_date.year = a_date_time->tm_year;
 			a_date.month = a_date_time->tm_mon;
 			a_date.day = a_date_time->tm_mday;
-		
+
+			g_value_init (gda_value, G_TYPE_DATE);
 			g_value_set_boxed (gda_value, (const GDate *) &a_date);
 			g_free (a_date_time);			
 			break;
 		case SQL_TEXT:
 		case SQL_TEXT+1:
+			g_value_init (gda_value, G_TYPE_STRING);
 			g_value_set_string (gda_value, (const gchar *) field_data);
 			break;
 		case SQL_VARYING:
@@ -519,6 +551,7 @@ fb_gda_value_fill (GValue *gda_value,
 #endif
 			var_text->vary_string[var_text->vary_length] = '\0';
 
+			g_value_init (gda_value, G_TYPE_STRING);
 			g_value_set_string (gda_value, (const gchar *) var_text->vary_string);
 			break;
 		case SQL_SHORT:
@@ -539,6 +572,7 @@ fb_gda_value_fill (GValue *gda_value,
 				break;
 			}
 			else {	/* Normal long type number */
+				g_value_init (gda_value, G_TYPE_INT);
 				g_value_set_int (gda_value, *((gint *) field_data));
 				break;
 			}
@@ -560,10 +594,12 @@ fb_gda_value_fill (GValue *gda_value,
 			break;
 		case SQL_FLOAT:
 		case SQL_FLOAT+1:
+			g_value_init (gda_value, G_TYPE_FLOAT);
 			g_value_set_float (gda_value, *((gfloat *) field_data));
 			break;
 		case SQL_DOUBLE:
 		case SQL_DOUBLE+1:
+			g_value_init (gda_value, G_TYPE_DOUBLE);
 			g_value_set_double (gda_value, *((gdouble *) field_data));
 			break;
 		default:
@@ -613,7 +649,7 @@ fb_sql_fetch_row (GdaFirebirdConnection *fcnc,
 				field_type = (((gshort) recset->priv->sql_result->sqlvar[col_n].sqltype) & ~1);
 
 				/* Set row's field value */
-				fb_gda_value_fill ((GValue *) gda_row_get_value (row, col_n),	recset,
+				fb_gda_value_fill ((GValue *) gda_row_get_value (row, col_n), recset,
 						   (const gint) field_type, col_n, 0);
 			}
 
@@ -654,7 +690,7 @@ gda_firebird_recordset_get_n_columns (GdaDataModelRow *model)
 	return (recset->priv->ncolumns);
 }
 
-static const GdaRow *
+static GdaRow *
 gda_firebird_recordset_get_row (GdaDataModelRow *model, gint row, GError **error)
 {
 	GdaRow *fields = NULL;
@@ -675,7 +711,7 @@ gda_firebird_recordset_get_row (GdaDataModelRow *model, gint row, GError **error
 		
 	/* If row was already fetched */
 	if (row < recset->priv->fetched_rows)
-		return (const GdaRow *) g_ptr_array_index (recset->priv->rows, row);
+		return (GdaRow *) g_ptr_array_index (recset->priv->rows, row);
 
 	/* Fetch if statement is a SELECT */
 	if (fb_sql_get_statement_type (fcnc, recset) == isc_info_sql_stmt_select) {
@@ -688,13 +724,13 @@ gda_firebird_recordset_get_row (GdaDataModelRow *model, gint row, GError **error
 
 		/* If row was fetched */
 		if (row == recset->priv->fetched_rows)
-			return (const GdaRow *) g_ptr_array_index (recset->priv->rows, row);
+			return (GdaRow *) g_ptr_array_index (recset->priv->rows, row);
 
 		/* Enable notificarions again */
 		gda_data_model_thaw (GDA_DATA_MODEL (recset));
 	}
 	
-	return (const GdaRow *) fields;		
+	return (GdaRow *) fields;		
 }
 
 static const GValue *
@@ -723,16 +759,14 @@ gda_firebird_recordset_is_updatable (GdaDataModelRow *model)
 	return FALSE;
 }
                                                                                                                             
-static const GdaRow *
-gda_firebird_recordset_append_values (GdaDataModelRow *model,
-				   const GList *values)
+static GdaRow *
+gda_firebird_recordset_append_values (GdaDataModelRow *model, const GList *values, GError **error)
 {
 	return NULL;
 }
 
 static gboolean
-gda_firebird_recordset_remove_row (GdaDataModelRow *model,
-				   const GdaRow *row)
+gda_firebird_recordset_remove_row (GdaDataModelRow *model, GdaRow *row, GError **error)
 {
 	return FALSE;
 }
@@ -771,6 +805,8 @@ gda_firebird_recordset_finalize (GObject *object)
 
 	/* Free Firebirds sql allocated space */
 	fb_sql_result_free (recset->priv->sql_result);
+	recset->priv->sql_result = NULL;
+
 	fb_sql_unprepare (fcnc, recset);
 
 	/* Free all rows */
@@ -874,7 +910,7 @@ gda_firebird_recordset_describe_column (GdaDataModel *model, gint col)
 GdaFirebirdRecordset *
 gda_firebird_recordset_new (GdaConnection *cnc, 
 			    isc_tr_handle *ftr,
-			    const gchar *sql)
+			    const gchar *sql, GObject **non_select_obj)
 {
 	GdaFirebirdRecordset *recset;
 	GdaFirebirdConnection *fcnc;
@@ -888,6 +924,8 @@ gda_firebird_recordset_new (GdaConnection *cnc,
 		gda_connection_add_event_string (cnc, _("Invalid Firebird handle"));
 		return NULL;
 	}
+	if (non_select_obj)
+		*non_select_obj = NULL;
 
 	/* Create Firebird Recordset object */
 	recset = g_object_new (GDA_TYPE_FIREBIRD_RECORDSET, NULL);
@@ -898,28 +936,93 @@ gda_firebird_recordset_new (GdaConnection *cnc,
 	/* Prepare statement */
 	if (fb_sql_prepare (fcnc, recset, ftr, sql)) {
 		GdaConnectionEvent *event;
+		gint stmt_type;
 
 		event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
 		gda_connection_event_set_description (event, sql);
 		gda_connection_add_event (cnc, event);
 
+		stmt_type = fb_sql_get_statement_type (fcnc, recset);
+
 		/* ... and then execute it */
 		if (!fb_sql_execute (fcnc, recset, ftr, sql)) {
-			gda_firebird_connection_make_error (cnc, fb_sql_get_statement_type (fcnc, recset));
+			gda_firebird_connection_make_error (cnc, stmt_type);
 
 			/* Free Firebirds sql allocated space */
 			fb_sql_result_free (recset->priv->sql_result);
+			recset->priv->sql_result = NULL;
+
 			fb_sql_unprepare (fcnc, recset);
 
 			/* Release recordset */
-			g_free (recset);
+			g_object_unref (recset);
 			
 			return NULL;
 		}
 
 		/* If statement is not a select release recordset */
-		if (fb_sql_get_statement_type (fcnc, recset) != isc_info_sql_stmt_select) {
-			g_free (recset);
+		if ((stmt_type != isc_info_sql_stmt_select) && 
+		    (stmt_type != isc_info_sql_stmt_select_for_upd)) {
+			GdaConnectionEvent *event;
+			const gchar *cstr;
+			char count_type = 0;
+				
+			switch (stmt_type) {
+			case isc_info_sql_stmt_insert:
+				count_type = isc_info_req_insert_count;
+				cstr = "INSERT";
+				break;
+			case isc_info_sql_stmt_update:
+				count_type = isc_info_req_update_count;
+				cstr = "UPDATE";
+				break;
+			case isc_info_sql_stmt_delete:
+				count_type = isc_info_req_delete_count;
+				cstr = "DELETE";
+				break;
+			case isc_info_sql_stmt_ddl:
+				cstr = "DDL";
+				break;
+			case isc_info_sql_stmt_get_segment:
+				cstr = "GET_SEGMENT";
+				break;
+			case isc_info_sql_stmt_put_segment:
+				cstr = "PUT_SEGMENT";
+				break;
+			case isc_info_sql_stmt_exec_procedure:
+				cstr = "EXECUTE";
+				break;
+			case isc_info_sql_stmt_start_trans:
+				cstr = "BEGIN";
+				break;
+			case isc_info_sql_stmt_commit:
+				cstr = "COMMIT";
+				break;
+			case isc_info_sql_stmt_rollback:
+				cstr = "ROLLBACK";
+				break;
+			case isc_info_sql_stmt_set_generator:
+				cstr = "SET_GENERATOR";
+				break;
+			case isc_info_sql_stmt_savepoint:
+				cstr = "SAVEPOINT";
+				break;
+			default:
+				cstr = "UNKNOWN";
+				break;
+			}
+			event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
+			gda_connection_event_set_description (event, cstr);
+			gda_connection_add_event (cnc, event);
+			
+
+			if (non_select_obj && (count_type != 0)) {
+				gint nb = fb_sql_get_statement_impacted_rows (fcnc, recset, count_type);
+				if (nb >= 0)
+					*non_select_obj = (GObject *) gda_parameter_list_new_inline (NULL, "IMPACTED_ROWS", 
+												     G_TYPE_INT, nb, NULL);
+			}
+			g_object_unref (recset);
 			return NULL;
 		}
 
@@ -928,14 +1031,15 @@ gda_firebird_recordset_new (GdaConnection *cnc,
 			recset->priv->nrows++;
 
 		/* Set column attributes */
-		for (field_n = 0; field_n < recset->priv->ncolumns; field_n++)
+		for (field_n = 0; field_n < recset->priv->ncolumns; field_n++) {
 			gda_firebird_recordset_describe_column (GDA_DATA_MODEL (recset), field_n);
 			gda_data_model_set_column_title (GDA_DATA_MODEL(recset), field_n, 
 							 recset->priv->sql_result->sqlvar[field_n].sqlname);
-
+		}
 	}
-	else {	/* Release recordset if statement couldn't be prepared */
-		g_free (recset);
+	else {	
+		/* Release recordset if statement couldn't be prepared, don't add any error as it has already been done */
+		g_object_unref (recset);
 		recset = NULL;
 	}
 

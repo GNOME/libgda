@@ -276,7 +276,7 @@ gda_vprovider_data_model_open_connection (GdaServerProvider *provider, GdaConnec
 	/* Module to declare wirtual tables */
 	if (sqlite3_create_module (scnc->connection, G_OBJECT_TYPE_NAME (provider), &Module, cnc) != SQLITE_OK)
 		return FALSE;
-	g_print ("==== Declared module for DB %p\n", scnc->connection); 
+	/*g_print ("==== Declared module for DB %p\n", scnc->connection);*/
 
 	return TRUE;
 }
@@ -420,7 +420,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 			g_string_free (sql, TRUE);
 			return SQLITE_ERROR;
 		}
-		else if (!strcmp (type, "GdaBlob"))
+		else if (!strcmp (type, "GdaBlob") || !strcmp (type, "GdaBinary"))
 			type = "blob";
 		else if (!strcmp (type, "gchararray"))
 			type = "text";
@@ -430,8 +430,22 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 			type = "real";
 		else if (!strcmp (type, "gfloat"))
 			type = "real";
-		else
-			type = "text";
+		else {
+			/* use the declared GType */
+			type = g_type_name (gda_column_get_g_type (column));
+			if (!strcmp (type, "GdaBlob") || !strcmp (type, "GdaBinary"))
+				type = "blob";
+			else if (!strcmp (type, "gchararray"))
+				type = "text";
+			else if (!strncmp (type, "gint", 4))
+				type = "integer";
+			else if (!strcmp (type, "gdouble"))
+				type = "real";
+			else if (!strcmp (type, "gfloat"))
+				type = "real";
+			else
+				type = "text";
+		}
 
 		g_string_append (sql, name);
 		g_string_append_c (sql, ' ');
@@ -467,7 +481,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 		return SQLITE_ERROR;
 	}
 
-	/*g_print ("VIRTUAL TABLE: %s\n", sql->str);*/
+	g_print ("VIRTUAL TABLE: %s\n", sql->str);
 	g_string_free (sql, TRUE);
 
 	return SQLITE_OK;
@@ -512,7 +526,7 @@ virtual_table_manage_real_data_model (VirtualTable *vtable)
 			g_object_unref (vtable->proxy);
 
 		vtable->td->real_model = vtable->td->spec->create_model_func (vtable->td->spec);
-		/*g_print ("Createad real model %p for table %s\n", vtable->td->real_model, vtable->td->table_name);*/
+		/*g_print ("Created real model %p for table %s\n", vtable->td->real_model, vtable->td->table_name);*/
 		
 		if (GDA_IS_DATA_PROXY (vtable->td->real_model)) {
 			vtable->proxy = (GdaDataProxy *) (vtable->td->real_model);

@@ -1,8 +1,9 @@
 /* GDA MDB provider
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -20,8 +21,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_mdb_h__)
-#  define __gda_mdb_h__
+#ifndef __GDA_MDB_H__
+#define __GDA_MDB_H__
 
 #include <glib/gmacros.h>
 #include <libgda/gda-connection.h>
@@ -29,20 +30,17 @@
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-value.h>
 #include <mdbtools.h>
-#include <mdbsql.h>
 #include "gda-mdb-provider.h"
-
-#define GDA_MYSQL_PROVIDER_ID          "GDA MDB provider"
 
 G_BEGIN_DECLS
 
 typedef struct {
-	GdaConnection *cnc;
-	MdbHandle *mdb;
-	gchar *server_version;
+	GdaConnection  *cnc;
+	MdbHandle      *mdb;
+	gchar          *server_version;
 } GdaMdbConnection;
 
-GType gda_mdb_type_to_gda (int col_type);
+#define PARENT_TYPE GDA_TYPE_VPROVIDER_DATA_MODEL
 
 G_END_DECLS
 

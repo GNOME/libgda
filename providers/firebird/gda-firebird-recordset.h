@@ -61,7 +61,8 @@ typedef struct {
 GType			 gda_firebird_recordset_get_type (void) G_GNUC_CONST;
 GdaFirebirdRecordset 	*gda_firebird_recordset_new (GdaConnection *cnc,
 				 		     isc_tr_handle *ftr,
-						     const gchar *sql);
+						     const gchar *sql,
+						     GObject **non_select_obj);
 
 G_END_DECLS
 

@@ -6,6 +6,7 @@
  *	Rodrigo Moya <rodrigo@gnome-db.org>
  *      Vivien Malerba <malerba@gnome-db.org>
  *      German Poo-Caaman~o <gpoo@ubiobio.cl>
+ *      Exell Enrique Franklin Jiménex <arawaco@ieee.org> 
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -24,6 +25,7 @@
  */
 
 #include <libgda/gda-data-model-array.h>
+#include <libgda/gda-server-provider-extra.h>
 #include <glib/gi18n-lib.h>
 #include <stdlib.h>
 #include <string.h>
@@ -37,30 +39,34 @@
 
 static void gda_ldap_provider_class_init (GdaLdapProviderClass *klass);
 static void gda_ldap_provider_init       (GdaLdapProvider *provider,
-					   GdaLdapProviderClass *klass);
+					  GdaLdapProviderClass *klass);
 static void gda_ldap_provider_finalize   (GObject *object);
 
 static gboolean gda_ldap_provider_open_connection (GdaServerProvider *provider,
-						    GdaConnection *cnc,
-						    GdaQuarkList *params,
-						    const gchar *username,
-						    const gchar *password);
+						   GdaConnection *cnc,
+						   GdaQuarkList *params,
+						   const gchar *username,
+						   const gchar *password);
 static gboolean gda_ldap_provider_close_connection (GdaServerProvider *provider,
-						     GdaConnection *cnc);
+						    GdaConnection *cnc);
 static const gchar *gda_ldap_provider_get_database (GdaServerProvider *provider,
-						     GdaConnection *cnc);
+						    GdaConnection *cnc);
 static gboolean gda_ldap_provider_supports (GdaServerProvider *provider,
-					     GdaConnection *cnc,
-					     GdaConnectionFeature feature);
+					    GdaConnection *cnc,
+					    GdaConnectionFeature feature);
 static GdaDataModel *gda_ldap_provider_get_schema (GdaServerProvider *provider,
-			       GdaConnection *cnc,
-			       GdaConnectionSchema schema,
-			       GdaParameterList *params);
+						   GdaConnection *cnc,
+						   GdaConnectionSchema schema,
+						   GdaParameterList *params);
 static const gchar *gda_ldap_provider_get_version (GdaServerProvider *provider);
 static const gchar *gda_ldap_provider_get_server_version (GdaServerProvider *provider,
-							      GdaConnection *cnc);
+							  GdaConnection *cnc);
 								  
 static GObjectClass *parent_class = NULL;
+
+
+/*private  :-D*/
+char*  get_root_dse_param(LDAP*,char*);
 
 /*
  * GdaLdapProvider class implementation
@@ -154,15 +160,16 @@ gda_ldap_provider_new (void)
 
 	provider = g_object_new (gda_ldap_provider_get_type (), NULL);
 	return GDA_SERVER_PROVIDER (provider);
+
 }
 
 /* open_connection handler for the GdaLdapProvider class */
 static gboolean
 gda_ldap_provider_open_connection (GdaServerProvider *provider,
-				    GdaConnection *cnc,
-				    GdaQuarkList *params,
-				    const gchar *username,
-				    const gchar *password)
+				   GdaConnection *cnc,
+				   GdaQuarkList *params,
+				   const gchar *username,
+				   const gchar *password)
 {
 	const gchar *t_host = NULL;
 	const gchar *t_binddn = NULL;
@@ -184,40 +191,46 @@ gda_ldap_provider_open_connection (GdaServerProvider *provider,
 	t_binddn = gda_quark_list_find (params, "BINDDN");
 	t_password = gda_quark_list_find (params, "PASSWORD");
 	t_authmethod = gda_quark_list_find (params, "AUTHMETHOD");
-
+        /*describes best the ldap*/
+        myprv->t_binddn=username; 
 	if (!t_host)
 		t_host = "localhost";
 	if (!t_port)
 		t_port = "389";
 	if (!username)
-		t_binddn = username;
+		{	
+			t_binddn = username;
+			myprv->t_binddn=t_binddn; 
+		}	
 	if (!password)
 		t_password = password;
 
 	ldap = ldap_init (t_host, atoi (t_port));
-	if (ldap == NULL) {
-		 /* FIXME: try to use the struct ldap_error or 
-			ldap_perror or ldap_err2string */
-		/* error = gda_ldap_make_error (ldap);
-		gda_connection_add_event (cnc, error);*/
-		
-		ldap_perror (ldap, "gda-ldap-provider: ldap_init");
-		
-		return FALSE;
-	}
 	
-	if (ldap_bind_s (ldap, t_binddn, t_password, 
-			t_authmethod ? atoi (t_authmethod) : LDAP_AUTH_SIMPLE)
-				!= LDAP_SUCCESS) {
-		
-		gchar *error;
-			
-		error = g_strdup_printf ("ldapbind: %s:%s\n", t_host, t_port);
-		ldap_perror (ldap, error);
+	if (ldap == NULL) {
+		/*
+		 * LDAP_OPT_RESULT_CODE it does not compile
+		 * LDAP_OPT_RESULT_CODE return error, i change it to 0x31
+		 * but we have to use LDAP_OPT_RESULT_CODE
+		 */
+		ldap_get_option(ldap,0x31,&myprv->rc );
+		fprintf( stderr, "%s: %s", "gda-ldap-provider: ldap_init",ldap_err2string(myprv->rc));
 		return FALSE;
 	}
 
-	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_LDAP_HANDLE, ldap);
+	/*    Synchronously authenticates 
+	      the client to the LDAP server using a DN and a password.
+	      t_binddn =Distinguished name (DN) of the user who wants to authenticate
+	      anonymous this could be NULL
+	*/  
+	myprv->rc=ldap_simple_bind_s(ldap,t_binddn,t_password);
+	if(myprv->rc != LDAP_SUCCESS ) 
+		{
+			fprintf(stderr,"ldap_simple_bind_s: %s\n",ldap_err2string(myprv->rc));
+			return FALSE;
+		}
+ 
+	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_LDAP_HANDLE,ldap);
 	return TRUE;
 }
 
@@ -237,56 +250,66 @@ gda_ldap_provider_close_connection (GdaServerProvider *provider, GdaConnection *
 
 	ldap_unbind (ldap);
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_LDAP_HANDLE, NULL);
-
 	return TRUE;
 }
 /*
-static GList *
-process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
-{
-	LDAP *ldap;
-	gchar **arr;
+  static GList *
+  process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
+  {
+  LDAP *ldap;
+  gchar **arr;
 
-	return reclist;
-}
+  return reclist;
+  }
 
 */
 /* get_database handler for the GdaLdapProvider class */
 static const gchar *
 gda_ldap_provider_get_database (GdaServerProvider *provider,
-				 GdaConnection *cnc)
+				GdaConnection *cnc)
 {
-	LDAP *ldap;
+  	char    *name=NULL;
+	LDAP    *ldap=NULL;
 	GdaLdapProvider *myprv = (GdaLdapProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_LDAP_PROVIDER (myprv), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	ldap = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_LDAP_HANDLE);
-	if (!ldap) {
+        ldap = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_LDAP_HANDLE);
+	
+	if (ldap) {
 		gda_connection_add_event_string (cnc, _("Invalid LDAP handle"));
 		return NULL;
 	}
 
-	return (const gchar *) "test" /*ldap->lberoptions*/;
+	/*namingContexts
+	 *The naming contexts supported by this server (for example, dc=gnomedb,dc=libgda). 
+	 * only ldap v3
+	 * return the namingcontext, or NULL
+	 */
+        name=get_root_dse_param(ldap,"namingContexts");
+        if(name)
+		return name;
+        /*name == NULL, return default*/
+      	return 	myprv->t_binddn;  
 }
 
 
 /* supports handler for the GdaLdapProvider class */
 static gboolean
 gda_ldap_provider_supports (GdaServerProvider *provider,
-			     GdaConnection *cnc,
-			     GdaConnectionFeature feature)
+			    GdaConnection *cnc,
+			    GdaConnectionFeature feature)
 {
 	GdaLdapProvider *myprv = (GdaLdapProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_LDAP_PROVIDER (myprv), FALSE);
 
-	switch (feature) {
-	case GDA_CONNECTION_FEATURE_SQL :
-		return TRUE;
-	default : ;
-	}
+	//	switch (feature) {
+	//	case GDA_CONNECTION_FEATURE_SQL :
+	//		return TRUE;
+	//	default : ;
+	//	}
 
 	return FALSE;
 }
@@ -312,162 +335,252 @@ add_string_row (GdaDataModelArray *recset, const gchar *str)
 static GdaDataModel *
 get_ldap_tables (GdaConnection *cnc, GdaParameterList *params)
 {
-	GdaDataModelArray *recset;
+	GdaDataModel *recset;
 	LDAP *ldap;
-	gchar subschema[60];
-	BerElement *ptr;
-	gchar *subschemasubentry[] = { "subschemaSubentry",
-		NULL
-	};
-	gchar *schema_attrs[] = { "objectClasses", NULL	};
-
-	gint result, retcode;
-	LDAPMessage *res, *e;
-	gchar *attr, **vals = NULL;
-	LDAPObjectClass *oc;
+	BerElement *ptr=NULL;
+        LDAPControl c;
+     	LDAPObjectClass *oc;
+     	LDAPMessage *res=NULL, *e;
 	const gchar *errp;
+	char *a;
+	char  *info,*dn;
+  	char    **vals=NULL;
+	GList* list;
+	int rc,i,j;
+        char *subschema = NULL;
+        const char *subschemasubentry[] = { "subschemaSubentry",
+					    NULL };
+        const char *schema_attrs[] = {"objectClasses",
+				      NULL };
+	list=NULL;	
 	
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-
 	ldap = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_LDAP_HANDLE);
 	if (!ldap)
 		return FALSE;
+	recset = gda_data_model_array_new (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_TABLES));
+        gda_server_provider_init_schema_model (recset, GDA_CONNECTION_SCHEMA_TABLES);
 
-	recset = (GdaDataModelArray *) gda_data_model_array_new (4);
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Name"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 1, _("Owner"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Comments"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, "SQL");
+	rc = ldap_search_ext_s(ldap,
+			       "",					/* search base */
+			       LDAP_SCOPE_BASE,			/* scope */
+			       "(objectClass=*)",			/* filter */
+			       (char**) subschemasubentry,		 /* attrs */
+			       0,					/* attrsonly */
+			       NULL,					/* serverctrls */
+			       NULL,					/* clientctrls */
+			       LDAP_NO_LIMIT,				/* timeout */
+			       LDAP_NO_LIMIT,				/* sizelimit */
+			       &res);
 
-	result =
-	    ldap_search_s (ldap, "", LDAP_SCOPE_BASE, "(objectclass=*)",
-			   subschemasubentry, 0, &res);
-
-	if (result != LDAP_SUCCESS) {
-		g_print ("%s\n", ldap_err2string (result));
+	if(rc == LDAP_NOT_SUPPORTED) {
+		rc = ldap_search_s(ldap,"",LDAP_SCOPE_BASE,"(objectClass=*)",
+				   (char **)subschemasubentry,0,&res);
 	}
-	g_return_val_if_fail (result == LDAP_SUCCESS, NULL);
-
-	if (res == NULL) {
-		g_print ("%s\n", "no schema information found");
+	if (rc != LDAP_SUCCESS) {
+		fprintf(stderr,"ldap_search_ext_s: %s\n", ldap_err2string(rc));
 	}
-	g_return_val_if_fail (res != NULL, NULL);
+	if (!res)  // this is: res==null
+                ldap_unbind(ldap);
+	g_return_val_if_fail (rc == LDAP_SUCCESS, NULL);
 
-	if ((e = ldap_first_entry (ldap, res))) {
-		if ((attr = ldap_first_attribute (ldap, res, &ptr))) {
-			if ((vals = ldap_get_values (ldap, res, attr))) {
-				if (strlen (vals[0]) < 59) {
-					strcpy (subschema, vals[0]);
-					ldap_value_free (vals);
-				}
+	if( (e = ldap_first_entry(ldap, res)) ) {
+		if( (a = ldap_first_attribute(ldap, res, &ptr)) ) {
+			if( (vals = ldap_get_values(ldap, res, a)) ) {
+				subschema =malloc(sizeof(char)*(1+strlen(vals[0])));
+				strcpy(subschema,vals[0]);		 
+				ldap_value_free(vals);
 			}
+			ldap_memfree(a);
 		}
+	        if(ptr)
+			ber_free(ptr, 0);
 	}
-	ldap_msgfree (res);
-
-	if (subschema[0] == 0) {
-		g_print ("%s\n", "no schema information found");
+	ldap_msgfree(res);
+	if(subschema == NULL) {
+		printf("No schema information found on server");
+		return(NULL);
 	}
-	g_return_val_if_fail (subschema[0] != 0, NULL);
-
-	/* g_print ("Schema search on %s\n", subschema);*/
-
-	result = ldap_search_s (ldap, subschema, LDAP_SCOPE_BASE,
-				"(objectclass=*)", schema_attrs, 0, &res);
-
-	if (result != LDAP_SUCCESS) {
-		g_print ("%s\n", ldap_err2string (result));
+	rc = ldap_search_ext_s(ldap,
+			       subschema,		   	        /* search base */
+			       LDAP_SCOPE_BASE,			/* scope */
+			       "(objectClass=*)",			/* filter */
+			       (char**)schema_attrs,		 /* attrs */
+			       0,					/* attrsonly */
+			       NULL,					/* serverctrls */
+			       NULL,					/* clientctrls */
+			       LDAP_NO_LIMIT,				/* timeout */
+			       LDAP_NO_LIMIT,				/* sizelimit */
+			       &res);
+	if(rc == LDAP_NOT_SUPPORTED) {
+	        rc = ldap_search_s(ldap, subschema, LDAP_SCOPE_BASE,
+			           "(objectClass=*)", (char**) schema_attrs, 0,
+			           &res);
 	}
-	g_return_val_if_fail (result == LDAP_SUCCESS, NULL);
+	free(subschema);
 
-	if (res == NULL) {
-		g_print ("%s\n", "no schema information found");
+	if (rc != LDAP_SUCCESS) {
+		fprintf(stderr,"ldap_search_ext_s subschema: %s\n", ldap_err2string(rc));
 	}
-	g_return_val_if_fail (res != NULL, NULL);
+	if (!res)  // this is: res==null
+                ldap_unbind(ldap);
+	g_return_val_if_fail (rc == LDAP_SUCCESS, NULL);
+           
 
-	for (e = ldap_first_entry (ldap, res); e;
-	     e = ldap_next_entry (ldap, e)) {
-		for (attr = ldap_first_attribute (ldap, res, &ptr); attr;
-		     attr = ldap_next_attribute (ldap, res, ptr)) {
-			int i, j;
-
-			vals = ldap_get_values (ldap, res, attr);
-			for (i = 0; vals[i] != NULL; i++) {
-				oc = ldap_str2objectclass(vals[i], &retcode, &errp, 0x03);
-				if (oc) {
-					for (j = 0; oc->oc_names[j] != NULL; j++) {
-						GList *value_list = NULL;
-						GValue *tmpval;
-
-						/* fill the recordset */
-						g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), oc->oc_names[j]);
-						value_list = g_list_append (value_list, tmpval);
-
-						g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "");
-						value_list = g_list_append (value_list, tmpval);
-
-						g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "");
-						value_list = g_list_append (value_list, tmpval);
-
-						g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "");
-						value_list = g_list_append (value_list, tmpval);
-
-						gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list, NULL);
-						/*printf ("%s\n", oc->oc_names[j]);*/
-
-						g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
-						g_list_free (value_list);
-					}
-				}
-			}
-		}
-		ldap_value_free (vals);
-	}
-
-	return GDA_DATA_MODEL (recset);
+	for(e = ldap_first_entry(ldap,res); e; e = ldap_next_entry(ldap,e)) {
+	        for(a= ldap_first_attribute(ldap,res,&ptr); a;
+		    a=ldap_next_attribute(ldap,res,ptr)) {
+			vals = ldap_get_values(ldap,res,a);
+			if(vals) {
+				for(i = 0; vals[i]!=NULL; i++) {
+					char *owner,*comments,*name,*sql;
+					GValue *val;
+					sql=name=owner=comments=NULL;	  	
+					if(!strcmp(a, "objectClasses")) {
+						oc=ldap_str2objectclass(vals[i],&rc, &errp, 0x03);	
+						if(oc) {
+							/*only retrieves the first name */
+							/*if it does not name*/
+							if(!oc->oc_names[0]) {/*do not have name */
+								name=malloc(sizeof(char));
+								name[0]='\0';
+							} 
+							else {
+								name=malloc(sizeof(char)*(1+strlen(oc->oc_names[0])));
+								strcpy(name,oc->oc_names[0]);
+							}
+							/*retrieve the atriibutes and find the owner*/
+							/*find the owner attribute, if exist ;)*/
+							if(oc->oc_at_oids_must)
+								for (j=0; oc->oc_at_oids_must[j]!=NULL; j++) {
+									if(!strcmp(oc->oc_at_oids_must[j],"owner")) {
+										owner="yes";
+										break;
+									} 
+								}
+							if(!owner && oc->oc_at_oids_may)
+								for(j=0;oc->oc_at_oids_may[j]!=NULL;j++){
+									if(!strcmp(oc->oc_at_oids_may[j],"owner")) {
+										owner="yes";
+										break;
+									} 
+								}
+							if(!owner) { 
+								owner=malloc(sizeof(char));
+								owner[0]='\0'; 
+							}
+							/*retrieve the description*/
+							if(!oc->oc_desc) {
+								comments=malloc(sizeof(char));
+								comments[0]='\0';
+							}
+							else {
+								comments=malloc(sizeof(char)*(1+strlen(oc->oc_desc)));
+								strcpy(comments,oc->oc_desc);
+							}
+							sql=malloc(sizeof(char));
+							sql[0]='\0';
+							/*the first column is added to glist*/
+							val=gda_value_new (G_TYPE_STRING);
+							gda_value_set_from_string(val,name,G_TYPE_STRING);			  
+							list = g_list_append(list,val);
+							//printf("name %s\n",name);
+							/*the second column is added to glist*/
+							val=gda_value_new (G_TYPE_STRING);
+							gda_value_set_from_string(val,owner,G_TYPE_STRING);			  
+							list = g_list_append(list,val);
+							//printf("owner %s\n",owner);
+							/*the third column is added to glist*/
+							val=gda_value_new (G_TYPE_STRING);
+							gda_value_set_from_string(val,comments,G_TYPE_STRING);			  
+							list = g_list_append(list,val);
+							//printf("comments %s\n",comments);
+							/*the fourth column is added to glist*/
+							val=gda_value_new (G_TYPE_STRING);
+							gda_value_set_from_string(val,sql,G_TYPE_STRING);			  
+							list = g_list_append(list,val);
+							//printf("sql %s\n",sql);
+							/*append a row*/
+							gda_data_model_append_values (recset,list,NULL);
+							g_list_foreach (list,(GFunc)gda_value_free, NULL);
+							g_list_free(list);
+							list=NULL;
+						}//if(oc)
+					}//if(strcmp("ob...
+				}//for(...,vals..
+				ldap_value_free(vals);  
+			}//if vals
+			if(a)
+				ldap_memfree (a);
+		} //for(....,&ptr
+		if(ptr)
+	                ber_free(ptr, 0);
+	} //for( first...
+	/* free the search results */
+	ldap_msgfree( res );
+	/*voila :-D*/
+	return recset;
 }
 
 static GdaDataModel *
 get_ldap_types (GdaConnection *cnc, GdaParameterList *params)
 {
 	GdaDataModelArray *recset;
+        gint i;
+        struct {
+                const gchar *name;
+                const gchar *owner;
+                const gchar *comments;
+                GType type; 
+                const gchar *synonyms;
+        } types[] = { 
+                { "bool", "", "Boolean", G_TYPE_BOOLEAN, NULL },
+                { "blob", "", "Binary blob", GDA_TYPE_BINARY, NULL },
+                { "integer", "", "Integer", G_TYPE_INT64, NULL  },
+		{ "varchar", "", "Variable Length Char", G_TYPE_STRING, "string"},
+        };
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	/* create the recordset */
-	recset = (GdaDataModelArray *) gda_data_model_array_new (1);
-	/* gda_server_recordset_model_set_field_defined_size (recset, 0, 32); */
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Type"));
-	/* gda_server_recordset_model_set_field_scale (recset, 0, 0); */
-	/* gda_server_recordset_model_set_field_gdatype (recset, 0, GDA_TYPE_STRING); */
+        recset = (GdaDataModelArray *) gda_data_model_array_new (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_TYPES));
+        gda_server_provider_init_schema_model (GDA_DATA_MODEL (recset), GDA_CONNECTION_SCHEMA_TYPES);
 
-	/* fill the recordset */
-	add_string_row (recset, "blob");
-	add_string_row (recset, "date");
-	add_string_row (recset, "datetime");
-	add_string_row (recset, "decimal");
-	add_string_row (recset, "double");
-	add_string_row (recset, "enum");
-	add_string_row (recset, "float");
-	add_string_row (recset, "int24");
-	add_string_row (recset, "long");
-	add_string_row (recset, "longlong");
-	add_string_row (recset, "set");
-	add_string_row (recset, "short");
-	add_string_row (recset, "string");
-	add_string_row (recset, "time");
-	add_string_row (recset, "timestamp");
-	add_string_row (recset, "tiny");
-	add_string_row (recset, "year");
+        /* fill the recordset */
+        for (i = 0; i < sizeof (types) / sizeof (types[0]); i++) {
+                GList *value_list = NULL;
+                GValue *tmpval;
 
-	return GDA_DATA_MODEL (recset);
+                g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), types[i].name);
+                value_list = g_list_append (value_list, tmpval);
+
+                g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), types[i].owner);
+                value_list = g_list_append (value_list, tmpval);
+
+                g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), types[i].comments);
+                value_list = g_list_append (value_list, tmpval);
+
+                g_value_set_ulong (tmpval = gda_value_new (G_TYPE_ULONG), types[i].type);
+                value_list = g_list_append (value_list, tmpval);
+
+                g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), types[i].synonyms);
+                value_list = g_list_append (value_list, tmpval);
+
+                gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list, NULL);
+
+                g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+                g_list_free (value_list);
+        }
+
+        return GDA_DATA_MODEL (recset);
 }
+
 /* get_schema handler for the GdaLdapProvider class */
 static GdaDataModel *
 gda_ldap_provider_get_schema (GdaServerProvider *provider,
-			       GdaConnection *cnc,
-			       GdaConnectionSchema schema,
-			       GdaParameterList *params)
+			      GdaConnection *cnc,
+			      GdaConnectionSchema schema,
+			      GdaParameterList *params)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 	if (cnc)
@@ -476,12 +589,12 @@ gda_ldap_provider_get_schema (GdaServerProvider *provider,
 		return NULL;
 
 	switch (schema) {
-/*	case GDA_CONNECTION_SCHEMA_AGGREGATES :
-		return get_ldap_aggregates (cnc, params);
-	case GDA_CONNECTION_SCHEMA_DATABASES :
-		return get_ldap_databases (cnc, params);
-	case GDA_CONNECTION_SCHEMA_FIELDS :
-		return get_table_fields (cnc, params);*/
+		/*	case GDA_CONNECTION_SCHEMA_AGGREGATES :
+			return get_ldap_aggregates (cnc, params);
+			case GDA_CONNECTION_SCHEMA_DATABASES :
+			return get_ldap_databases (cnc, params);
+			case GDA_CONNECTION_SCHEMA_FIELDS :
+			return get_table_fields (cnc, params);*/
 	case GDA_CONNECTION_SCHEMA_TABLES :
 		return get_ldap_tables (cnc, params);
 	case GDA_CONNECTION_SCHEMA_TYPES :
@@ -532,16 +645,118 @@ gda_ldap_provider_get_server_version (GdaServerProvider *provider, GdaConnection
 		result = ldap_get_option (ldap, LDAP_OPT_API_INFO, &ldapinfo);
 		if (result == LDAP_OPT_SUCCESS) {
 			version = g_strdup_printf ("%s %d",
-				ldapinfo.ldapai_vendor_name,
-				ldapinfo.ldapai_vendor_version);
+						   ldapinfo.ldapai_vendor_name,
+						   ldapinfo.ldapai_vendor_version);
 		} else {
 			version = g_strdup_printf ("error %d", result);
 		}
 		g_object_set_data_full (G_OBJECT (cnc), 
-			OBJECT_DATA_LDAP_VERSION, 
-			(gpointer) version, 
-			g_free);
+					OBJECT_DATA_LDAP_VERSION, 
+					(gpointer) version, 
+					g_free);
 	}
 
 	return (const gchar *) version;
+}
+
+
+
+
+/*root DSE
+ * this function return any info about
+ * the server.
+ * root DSE is specified as part of the LDAPv3
+ * LDAPv2 does not use it.
+ * return a info if find it, else return a NULL
+ * ONLY  RETURN ONE CHAR,"atrr1,atrr2,atrr3,....atrrn"
+ * 
+ */
+char*  get_root_dse_param(LDAP *ldap, char* param)
+{
+	BerElement *ptr=NULL;
+	int rc,i,len=0;
+	LDAPControl c;
+	LDAPMessage *res=NULL, *e;
+	const gchar *errp;
+	char *a;
+	char  *info;
+	char    **vals=NULL;
+	char* info_dse=NULL;
+	char *srvrattrs[]=
+		{
+			param,
+			NULL
+		};	
+	if (!ldap)
+		return NULL;
+	/*before  search anything 
+	 * is going to take some info  from ldapv3
+	 * some root DSE data
+	 */ 
+	/*
+	 * Set automatic referral processing off. 
+	 */
+	if (ldap_set_option(ldap,LDAP_OPT_REFERRALS,LDAP_OPT_OFF ) != 0 ) {
+                rc = ldap_get_lderrno( ldap, NULL, NULL );
+                fprintf( stderr, "ldap_set_option: %s\n", ldap_err2string(rc));
+                return NULL;
+	} 
+	rc =ldap_search_ext_s(ldap, "", LDAP_SCOPE_BASE, "(objectclass=*)",srvrattrs,
+                              0, NULL, NULL, NULL, 0, &res); 
+	/* Check the search results. */
+	switch(rc) {
+		/* If successful, the root DSE was found ;) */
+	case LDAP_SUCCESS:
+		break;
+		/* If the root DSE was not found, the server does not comply
+		   with the LDAPv3 protocol. */
+	case LDAP_PARTIAL_RESULTS:
+	case LDAP_NO_SUCH_OBJECT:
+	case LDAP_OPERATIONS_ERROR:
+	case LDAP_PROTOCOL_ERROR:{
+		printf( "LDAP server returned result code %d (%s).\n"
+			"This server does not support the LDAPv3 protocol.\n",
+			rc,ldap_err2string(rc));
+		return NULL;
+	}break;	
+		/* If any other value is returned, an error must have occurred. */
+	default:
+		fprintf( stderr, "ldap_search_ext_s: %s\n", ldap_err2string( rc ) );
+		return NULL;
+	} 
+
+	/* Since only one entry should have matched, get that entry. */
+	e = ldap_first_entry(ldap,res);
+	if ( e == NULL ) {
+		fprintf( stderr, "ldap_search_ext_s: Unable to get root DSE. unable get %s\n",param);
+		ldap_memfree(res);
+		res=NULL;
+		return NULL;
+	}	
+	/* Iterate through one attribute in the entry. */
+	if(res)
+		{
+			a = ldap_first_attribute( ldap, e, &ptr );
+			if ((vals = ldap_get_values( ldap, e, a)) != NULL ) {
+				for ( i = 0; vals[i] != NULL; i++ ) {
+					info_dse=realloc(info_dse,(sizeof(char)*(2+len+strlen(vals[i]))));
+					if(i==0)
+						info_dse[0]='\0';	
+					strcat(info_dse,vals[i]);			
+					strcat(info_dse,",");				 
+					len=strlen(info_dse);	
+				}
+				info_dse[len-1]='\0';	
+				/* Free memory allocated by ldap_get_values(). */
+				ldap_value_free( vals );
+			}
+			/* Free memory allocated by ldap_first_attribute(). */
+			ldap_memfree( a );
+			/* Free memory allocated by ldap_first_attribute(). */
+			if ( ptr != NULL ) {
+				ber_free( ptr, 0 );
+			}
+			ldap_msgfree(res);
+		}
+	return info_dse;
 }

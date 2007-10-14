@@ -3,6 +3,7 @@ provider_LTLIBRARIES = libgda-mdb.la
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
+	-I$(top_srcdir)/libgda/sqlite \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
 	$(MDB_CFLAGS) \
@@ -11,11 +12,9 @@ AM_CPPFLAGS = \
 libgda_mdb_la_SOURCES = \
 	gda-mdb-provider.c \
 	gda-mdb-provider.h \
-	gda-mdb-table.c \
-	gda-mdb-table.h \
 	gda-mdb.h \
-	libmain.c \
-	util.c
+	libmain.c 
+
 libgda_mdb_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_mdb_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-3.0.la \

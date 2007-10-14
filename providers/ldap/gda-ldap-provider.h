@@ -6,6 +6,8 @@
  *      Rodrigo Moya <rodrigo@gnome-db.org>
  *      Vivien Malerba <malerba@gnome-db.org>
  *      German Poo-Caaman~o <gpoo@ubiobio.cl>
+ *      
+ *      Exell Enrique Franklin Jiménez <arawaco@ieee.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -23,8 +25,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_ldap_provider_h__)
-#  define __gda_ldap_provider_h__
+#ifndef __GDA_LDAP_PROVIDER_H__
+#define __GDA_LDAP_PROVIDER_H__
 
 #include <libgda/gda-server-provider.h>
 
@@ -41,6 +43,8 @@ typedef struct _GdaLdapProviderClass GdaLdapProviderClass;
 
 struct _GdaLdapProvider {
 	GdaServerProvider provider;
+	int rc;   /*return code*/
+	gchar *t_binddn; 
 };
 
 struct _GdaLdapProviderClass {
@@ -49,6 +53,7 @@ struct _GdaLdapProviderClass {
 
 GType              gda_ldap_provider_get_type (void) G_GNUC_CONST;
 GdaServerProvider *gda_ldap_provider_new (void);
+
 
 G_END_DECLS
 

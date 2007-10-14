@@ -56,7 +56,7 @@ GdaConnectionEvent *
 gda_postgres_make_error (GdaConnection *cnc, PGconn *pconn, PGresult *pg_res)
 {
 	GdaConnectionEvent *error;
-	GdaConnectionEventCode gda_code;
+	GdaConnectionEventCode gda_code = GDA_CONNECTION_EVENT_CODE_UNKNOWN;
 	GdaTransactionStatus *trans;
 
 	error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);

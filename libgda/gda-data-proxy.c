@@ -24,6 +24,7 @@
 #include "gda-data-model.h"
 #include "gda-data-model-extra.h"
 #include "gda-data-model-iter.h"
+#include "gda-data-model-query.h"
 #include "gda-parameter.h"
 #include "gda-parameter-list.h"
 #include "gda-marshal.h"
@@ -1991,11 +1992,17 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, gboolean adjust_display, GE
 					       gda_data_proxy_signals[POST_CHANGES_APPLIED],
 					       0, proxy_row, -1);
 			}
-			else if (proxy->priv->catched_inserted_row >= 0) 
+			else if ((proxy->priv->catched_inserted_row < 0) &&
+				 !GDA_IS_DATA_MODEL_QUERY (proxy->priv->model)) {
+				/* REM: the GdaDataModelQuery object does not emit any "row_inserted", "row_updated"
+				 * or "row_dremoved" signals but that is Ok as an exception: all the other data
+				 * model should be implemented correctly
+				 */
 				g_warning (_("Proxied data model reports the modifications as accepted, yet did not emit the "
 					     "corresponding \"row-inserted\", \"row-updated\" or \"row-removed\" signal. This "
 					     "is a bug of the %s's implementation (please report a bug)."),
 					   G_OBJECT_TYPE_NAME (proxy->priv->model));
+			}
 
 			proxy->priv->catched_inserted_row = -1;
 			proxy->priv->defer_proxied_model_insert = FALSE;
@@ -2012,10 +2019,16 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, gboolean adjust_display, GE
 		 * have been removed from the proxy->priv->all_modifs list because the proxied model
 		 * should habe emitted the "row_{inserted,removed,updated}" signals */
 		if (rm && g_slist_find (proxy->priv->all_modifs, rm)) {
-			g_warning (_("Proxied data model reports the modifications as accepted, yet did not emit the "
-				     "corresponding \"row-inserted\", \"row-updated\" or \"row-removed\" signal. This "
-				     "is a bug of the %s's implementation (please report a bug)."),
-				   G_OBJECT_TYPE_NAME (proxy->priv->model));
+			if (!GDA_IS_DATA_MODEL_QUERY (proxy->priv->model)) {
+				/* REM: the GdaDataModelQuery object does not emit any "row_inserted", "row_updated"
+				 * or "row_dremoved" signals but that is Ok as an exception: all the other data
+				 * model should be implemented correctly
+				 */
+				g_warning (_("Proxied data model reports the modifications as accepted, yet did not emit the "
+					     "corresponding \"row-inserted\", \"row-updated\" or \"row-removed\" signal. This "
+					     "is a bug of the %s's implementation (please report a bug)."),
+					   G_OBJECT_TYPE_NAME (proxy->priv->model));
+			}
 			proxy->priv->new_rows = g_slist_remove (proxy->priv->new_rows, rm);
 			proxy->priv->all_modifs = g_slist_remove (proxy->priv->all_modifs, rm);
 			g_hash_table_remove (proxy->priv->modify_rows, GINT_TO_POINTER (rm->model_row));

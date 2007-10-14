@@ -25,7 +25,6 @@
 #include <libgda/gda-server-provider-extra.h>
 
 static gchar *module_path = NULL;
-MdbSQL *mdb_SQL = NULL;
 
 const gchar       *plugin_get_name (void);
 const gchar       *plugin_get_description (void);
@@ -42,7 +41,7 @@ plugin_init (const gchar *real_path)
 const gchar *
 plugin_get_name (void)
 {
-	return "MS Access";
+	return "MSAccess";
 }
 
 const gchar *
@@ -63,28 +62,20 @@ plugin_create_provider (void)
 	GdaServerProvider *prov;
 
         prov = gda_mdb_provider_new ();
-        g_object_set_data (prov, "GDA_PROVIDER_DIR", module_path);
+        g_object_set_data (G_OBJECT (prov), "GDA_PROVIDER_DIR", module_path);
         return prov;
 }
 
 /*
  * GModule functions
  */
-
 const gchar *
 g_module_check_init (void)
 {
-	if (!mdb_SQL)
-		mdb_SQL = mdb_sql_init ();
-
 	return NULL;
 }
 
 void
 g_module_unload (void)
 {
-	if (mdb_SQL) {
-		mdb_sql_exit (mdb_SQL);
-		mdb_SQL = NULL;
-	}
 }

@@ -536,7 +536,7 @@ list_to_string (const GValue *src, GValue *dest)
 	gchar *str;
 	const GdaValueList *list;
 	GList *l;
-	GString *gstr;
+	GString *gstr = NULL;
 	
 	g_return_if_fail (G_VALUE_HOLDS_STRING (dest) &&
 			  GDA_VALUE_HOLDS_LIST (src));
@@ -544,20 +544,16 @@ list_to_string (const GValue *src, GValue *dest)
 	list = gda_value_get_list ((GValue *) src);
 	
 	for (l = (GList *) list; l != NULL; l = l->next) {
-		gchar *s;
-
-		s = gda_value_stringify ((GValue *) l->data);
-		if (!str) {
-			gstr = g_string_new ("{ \"");
-			gstr = g_string_append (gstr, s);
-			gstr = g_string_append (gstr, "\"");
+		str = gda_value_stringify ((GValue *) l->data);
+		if (!gstr) {
+			gstr = g_string_new ("{ ");
+			gstr = g_string_append (gstr, str);
 		}
 		else {
-			gstr = g_string_append (gstr, ", \"");
-			gstr = g_string_append (gstr, s);
-			gstr = g_string_append (gstr, "\"");
+			gstr = g_string_append (gstr, ", ");
+			gstr = g_string_append (gstr, str);
 		}
-		g_free (s);
+		g_free (str);
 	}
 
 	if (gstr) {

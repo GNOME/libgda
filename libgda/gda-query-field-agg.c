@@ -948,10 +948,9 @@ gda_query_field_agg_render_as_str (GdaRenderer *iface, GdaParameterList *context
 	agg = GDA_QUERY_FIELD_AGG (iface);
 
 	base = gda_object_ref_get_ref_object (agg->priv->agg_ref);
-
+	
 	if (base) {
 		GString *string;
-		GSList *list;
 
 		string = g_string_new (gda_object_get_name (base));
 		g_string_append (string, " (");
@@ -971,8 +970,6 @@ gda_query_field_agg_render_as_str (GdaRenderer *iface, GdaParameterList *context
 				tmpstr = gda_object_ref_get_ref_name (agg->priv->arg, NULL, NULL);
 				g_string_append (string, tmpstr);
 			}
-
-			list = g_slist_next (list);
 		}
 		g_string_append (string, ")");
 

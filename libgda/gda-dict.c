@@ -585,7 +585,6 @@ xml_id_update_tree (xmlDocPtr doc)
 	GHashTable *keys;
 	xmlNodePtr node;
 
-	g_assert (node);
 	keys = g_hash_table_new_full (g_str_hash, g_str_equal, xmlFree, g_free);
 
 	node = xmlDocGetRootElement (doc);
