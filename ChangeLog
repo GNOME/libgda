@@ -1,3 +1,7 @@
+2007-10-15  Kjartan Maraas  <kmaraas@gnome.org>
+
+	* configure.in: Remove "no" from ALL_LINGUAS.
+
 2007-10-14  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-data-proxy.c: remove warning about GdaDataModelQuery being
