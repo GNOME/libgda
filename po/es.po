@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda.HEAD.es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-09-20 19:05+0100\n"
-"PO-Revision-Date: 2007-09-26 13:55+0200\n"
+"POT-Creation-Date: 2007-09-23 03:28+0100\n"
+"PO-Revision-Date: 2007-10-15 19:09+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Spanish <traductores@es.gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -355,7 +355,7 @@ msgstr "No se puede crear el directorio «%s»"
 
 #: ../libgda/gda-data-model-dir.c:1250 ../libgda/gda-data-model-dir.c:1252
 msgid "Cannot add row: filename missing"
-msgstr ""
+msgstr "No se puede añadir una fila: falta el nombre de archivo"
 
 #: ../libgda/gda-data-model-dir.c:1289
 #, c-format
@@ -697,7 +697,7 @@ msgstr "Columna GdaDataProxy desconocida: %d"
 
 #: ../libgda/gda-data-proxy.c:2416
 msgid "Value is read-only"
-msgstr ""
+msgstr "El valor es de sólo lectura"
 
 #: ../libgda/gda-data-proxy.c:2517
 #, c-format
@@ -1053,8 +1053,8 @@ msgid ""
 "Could not parse '%s': XML data import validation will not be performed (some "
 "weird errors may occur)"
 msgstr ""
-"No se pudo analizar «%s»: la validación de la importación de datos XML no se realizará (podrían "
-"ocurrir errores extraños)"
+"No se pudo analizar «%s»: la validación de la importación de datos XML no se "
+"realizará (podrían ocurrir errores extraños)"
 
 #: ../libgda/gda-init.c:155
 #, c-format
@@ -1062,8 +1062,8 @@ msgid ""
 "Could not parse '%s': Validation for XML files for server operations will "
 "not be performed (some weird errors may occur)"
 msgstr ""
-"No se pudo analizar «%s»: La validación para los archivos XML de operaciones del servidor no será "
-"efectuada (podrían ocurrir algunos errores raros)"
+"No se pudo analizar «%s»: La validación para los archivos XML de operaciones "
+"del servidor no será efectuada (podrían ocurrir algunos errores raros)"
 
 #: ../libgda/gda-object.c:307
 msgid "LibGda must be initialized before any usage."
@@ -2303,7 +2303,7 @@ msgstr "No se pudo encontrar el programa «xsltproc»"
 
 #: ../libgda-report/DocBook/gda-report-docbook-document.c:294
 msgid "Could not find the DocBook XSL stylesheet for HTML"
-msgstr ""
+msgstr "No se pudo encontrar la hoja de estilos DocBook XSL para HTML"
 
 #: ../libgda-report/DocBook/gda-report-docbook-document.c:346
 msgid "Could not find the 'fop' program"
@@ -2311,7 +2311,7 @@ msgstr "No se pudo encontrar el programa «fop»"
 
 #: ../libgda-report/DocBook/gda-report-docbook-document.c:360
 msgid "Could not find the DocBook XSL stylesheet for Formatting Objects"
-msgstr ""
+msgstr "No se pudo encontrar la hoja de estilos DocBook XSL para formatear objetos"
 
 #: ../libgda-report/RML/gda-report-rml-document.c:204
 msgid "Could not find the 'trml2html.py' program"
@@ -2319,22 +2319,22 @@ msgstr "No se pudo encontrar el programa «trml2html.py»"
 
 #: ../libgda-report/RML/gda-report-rml-document.c:231
 msgid "Could not find the 'trml2pdf.py' program"
-msgstr ""
+msgstr "No se pudo encontrar el programa «trml2pdf.py»"
 
 #: ../libgda-report/engine/gda-report-engine.c:307
 #, c-format
 msgid "Object type '%s' cannot be declared in this context"
-msgstr ""
+msgstr "No se puede declarar el tipo de objeto «%s» en este contexto"
 
 #: ../libgda-report/engine/gda-report-engine.c:315
 #, c-format
 msgid "An object with the '%s' name has already been declared"
-msgstr ""
+msgstr "Ya se ha declarado un objeto con el nombre «%s»"
 
 #: ../libgda-report/engine/gda-report-engine.c:352
 #, c-format
 msgid "Object type '%s' cannot be requested in this context"
-msgstr ""
+msgstr "No se puede requerir el tipo de objeto «%s» en este contexto"
 
 #: ../libgda-report/engine/gda-report-engine.c:581
 #, c-format
@@ -2903,9 +2903,9 @@ msgid ""
 "path to the database file) and DB_NAME (the database file without the '%s' "
 "at the end)."
 msgstr ""
-"El formato de la cadena de conexión ha cambiado: reemplace FILENAME por DB_DIR (la "
-"ruta al archivo de la base de datos) y DB_NAME (el archivo de la base de datos sin el «%s» "
-"al final)."
+"El formato de la cadena de conexión ha cambiado: reemplace FILENAME por "
+"DB_DIR (la ruta al archivo de la base de datos) y DB_NAME (el archivo de la "
+"base de datos sin el «%s» al final)."
 
 #: ../providers/mdb/gda-mdb-provider.c:278
 #: ../providers/sqlite/gda-sqlite-provider.c:514
@@ -4389,7 +4389,7 @@ msgstr "El parámetro ITER_MODEL_ONLY debería ser booleano, no un «%s»"
 #: ../providers/postgres/gda-postgres-provider.c:1144
 #, c-format
 msgid "Parameter ITER_CHUNCK_SIZE should be a gint, not a '%s'"
-msgstr ""
+msgstr "El parámetro ITER_CHUNCK_SIZE debe ser gint, no «%s»"
 
 #: ../providers/postgres/gda-postgres-provider.c:1191
 msgid "Could not create a SELECT query to fetch existing BLOB values"
@@ -4747,9 +4747,9 @@ msgid ""
 "to the database file) and DB_NAME (the database file without the '%s' at the "
 "end)."
 msgstr ""
-"El formato de la cadena de conexión ha cambiado: reemplace URI por DB_DIR (la ruta "
-"al archivo de la base de datos) y DB_NAME (el archivo de la base de datos sin el «%s» "
-"al final)."
+"El formato de la cadena de conexión ha cambiado: reemplace URI por DB_DIR "
+"(la ruta al archivo de la base de datos) y DB_NAME (el archivo de la base de "
+"datos sin el «%s» al final)."
 
 #: ../providers/sqlite/gda-sqlite-provider.c:561
 msgid "Could not set empty_result_callbacks SQLite option"
@@ -4893,12 +4893,16 @@ msgstr "No se puede obtener la descripción del modelo de datos para la columna 
 #: ../providers/sqlite/virtual/gda-vprovider-data-model.c:408
 #, c-format
 msgid "Can't get data model's column name for column %d"
-msgstr "No se puede obtener el nombre de la columna del modelo de datos para la columna %d"
+msgstr ""
+"No se puede obtener el nombre de la columna del modelo de datos para la "
+"columna %d"
 
 #: ../providers/sqlite/virtual/gda-vprovider-data-model.c:413
 #, c-format
 msgid "Can't get data model's column type or type for column %d"
-msgstr "No se puede obtener el tipo de la columna del modelo de datos para la columna %d"
+msgstr ""
+"No se puede obtener el tipo de la columna del modelo de datos para la "
+"columna %d"
 
 #: ../providers/sqlite/virtual/gda-vprovider-data-model.c:451
 #, c-format
@@ -5810,11 +5814,13 @@ msgstr "Las cadenas DSN y de conexión son exclusivas\n"
 msgid ""
 "You must specify a connection to open either as a DSN or a connection "
 "string\n"
-msgstr "Debe especificar una conexión para abrir o como DSN o como una cadena de conexión\n"
+msgstr ""
+"Debe especificar una conexión para abrir o como DSN o como una cadena de "
+"conexión\n"
 
 #: ../tools/gda-sql.c:201
 msgid "You must specify a provider when using a connection string\n"
-msgstr ""
+msgstr "Debe especificar un proveedor cuando use una cadena de conexión\n"
 
 #: ../tools/gda-sql.c:208
 msgid "Welcome to the GDA SQL console, version "
@@ -5869,7 +5875,9 @@ msgstr "No se pudo computar la salida del nombre de archivo XML: %s\n"
 
 #: ../tools/gda-sql.c:726
 msgid "Synchronizing internal dictionary with database, this may take some time..."
-msgstr "Sincronizando el diccionario interno con la base de datos, esto puede llevar un tiempo..."
+msgstr ""
+"Sincronizando el diccionario interno con la base de datos, esto puede llevar "
+"un tiempo..."
 
 #: ../tools/gda-sql.c:731
 #, c-format
@@ -5928,7 +5936,7 @@ msgstr ""
 
 #: ../tools/gda-sql.c:1082
 msgid "c DSN [USER [PASSWORD]]"
-msgstr ""
+msgstr "c DSN [USUARIO [CONTRASEÑA]]"
 
 #: ../tools/gda-sql.c:1083
 msgid "Connect to another defined data source (DSN, see \\dsn_list)"
@@ -5949,7 +5957,7 @@ msgstr "Entrada/Salida"
 
 #: ../tools/gda-sql.c:1112
 msgid "i FILE"
-msgstr ""
+msgstr "i ARCHIVO"
 
 #: ../tools/gda-sql.c:1113
 msgid "Execute commands from file"
@@ -5957,7 +5965,7 @@ msgstr "Ejecutar los comandos del archivo"
 
 #: ../tools/gda-sql.c:1122
 msgid "o [FILE]"
-msgstr ""
+msgstr "o [ARCHIVO]"
 
 #: ../tools/gda-sql.c:1123
 msgid "Send output to a file or |pipe"
@@ -5965,7 +5973,7 @@ msgstr "Enviar la salida a un archivo o |tubería"
 
 #: ../tools/gda-sql.c:1132
 msgid "echo [TEXT]"
-msgstr ""
+msgstr "echo [TEXTO]"
 
 #: ../tools/gda-sql.c:1133
 msgid "Send output to stdout"
@@ -5973,7 +5981,7 @@ msgstr "Enviar la salida a stdout"
 
 #: ../tools/gda-sql.c:1142
 msgid "qecho [TEXT]"
-msgstr ""
+msgstr "qecho [TEXTO]"
 
 #: ../tools/gda-sql.c:1143
 msgid "Send output to output stream"
@@ -6001,7 +6009,7 @@ msgstr "copyright"
 
 #: ../tools/gda-sql.c:1173
 msgid "Show usage and distribution terms"
-msgstr ""
+msgstr "Mostrar el uso y distribución de los términos"
 
 #: ../tools/gda-sql.c:1181 ../tools/gda-sql.c:1191 ../tools/gda-sql.c:1201
 #: ../tools/gda-sql.c:1211 ../tools/gda-sql.c:1221 ../tools/gda-sql.c:1231
@@ -6011,7 +6019,7 @@ msgstr "Búfer de consulta"
 
 #: ../tools/gda-sql.c:1183
 msgid "Edit the query buffer (or file) with external editor"
-msgstr ""
+msgstr "Editar el búfer de la consulta (o archivo) con un editor externo"
 
 #: ../tools/gda-sql.c:1193
 msgid "Reset the query buffer (clear buffer of with contents of file)"
@@ -6019,7 +6027,7 @@ msgstr ""
 
 #: ../tools/gda-sql.c:1203
 msgid "Show the contents of the query buffer"
-msgstr ""
+msgstr "Mostrar el contenido del búfer de la consulta"
 
 #: ../tools/gda-sql.c:1213
 msgid "Execute contents of query buffer"
@@ -6027,7 +6035,7 @@ msgstr "Ejecutar el contenido del búfer de consulta"
 
 #: ../tools/gda-sql.c:1222
 msgid "w FILE"
-msgstr ""
+msgstr "w ARCHIVO"
 
 #: ../tools/gda-sql.c:1223
 msgid "Write query buffer to file"
@@ -6035,7 +6043,7 @@ msgstr "Escribir el búfer de consulta en un archivo"
 
 #: ../tools/gda-sql.c:1232
 msgid "w_dict [QUERY_NAME]"
-msgstr ""
+msgstr "w_dict [NOMBRE_DE_LA_CONSULTA]"
 
 #: ../tools/gda-sql.c:1233
 msgid "Save query buffer to dictionary"
@@ -6043,7 +6051,7 @@ msgstr "Guardar el búfer de consulta al diccionario"
 
 #: ../tools/gda-sql.c:1242
 msgid "r_dict QUERY_NAME"
-msgstr ""
+msgstr "r_dict NOMBRE_DE_LA_CONSULTA"
 
 #: ../tools/gda-sql.c:1243
 msgid "Set named query from dictionary into query buffer"
@@ -6051,19 +6059,19 @@ msgstr ""
 
 #: ../tools/gda-sql.c:1252
 msgid "set [NAME [VALUE|_null_]]"
-msgstr ""
+msgstr "establecer [NOMBRE [VALOR|_null_]]"
 
 #: ../tools/gda-sql.c:1253
 msgid "Set or show internal parameter, or list all if no parameters"
-msgstr ""
+msgstr "Establecer o mostrar el parámetro interno, o una listar todos si no hay parámetros"
 
 #: ../tools/gda-sql.c:1262
 msgid "unset NAME"
-msgstr ""
+msgstr "borrar NOMBRE"
 
 #: ../tools/gda-sql.c:1263
 msgid "Unset (delete) internal parameter"
-msgstr ""
+msgstr "Borrar el parámetro interno"
 
 #: ../tools/gda-sql.c:1271
 msgid "Formatting"
