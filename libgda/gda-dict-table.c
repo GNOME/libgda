@@ -852,9 +852,13 @@ gda_dict_table_update_dbms_data (GdaDictTable *table, GError **error)
 		if (has_extra_attributes) {
 			value = gda_data_model_get_value_at (rs, 9, now);
 			
-			if (! gda_value_is_null ((GValue *) value))
+			if (! gda_value_is_null ((GValue *) value)) {
 				gda_dict_field_set_attributes (field, 
 					 gda_utility_table_field_attrs_parse (g_value_get_string ((GValue *) value)));
+				g_object_set_data_full (G_OBJECT (field), "raw_extra_attributes", 
+							g_strdup (g_value_get_string ((GValue *) value)),
+							g_free);
+			}
 		}
 		
 		now++;

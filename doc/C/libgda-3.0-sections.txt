@@ -1290,7 +1290,6 @@ gda_handler_boolean_get_type
 <FILE>gda-handler-bin</FILE>
 <TITLE>GdaHandlerBin</TITLE>
 GdaHandlerBin
-GdaHandlerBin
 GdaHandlerBinClass
 GdaHandlerBinPriv
 gda_handler_bin_new

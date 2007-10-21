@@ -183,8 +183,19 @@ gda_handler_bin_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 			retval = g_strdup_printf ("'%s'", str2);
 			g_free (str2);
 		}
-		else
-			retval = g_strdup ("**BLOB**");	
+		else {
+			GdaBlob *blob;
+			blob = gda_value_get_blob ((GValue *) value);
+			if (blob->op)
+				gda_blob_op_read_all (blob->op, blob);
+
+			gchar *str, *str2;
+			str = gda_binary_to_string ((GdaBinary *) blob, 0);
+			str2 = gda_default_escape_string (str);
+			g_free (str);
+			retval = g_strdup_printf ("'%s'", str2);
+			g_free (str2);
+		}
 	}
 	else
 		retval = g_strdup (NULL);
@@ -205,8 +216,13 @@ gda_handler_bin_get_str_from_value (GdaDataHandler *iface, const GValue *value)
 	if (value) {
 		if (gda_value_isa ((GValue *) value, GDA_TYPE_BINARY)) 
 			retval = gda_binary_to_string (gda_value_get_binary ((GValue *) value), 0);
-		else
-			retval = g_strdup ("**BLOB**");	
+		else {
+			GdaBlob *blob;
+			blob = gda_value_get_blob ((GValue *) value);
+			if (blob->op)
+				gda_blob_op_read_all (blob->op, blob);
+			retval = gda_binary_to_string ((GdaBinary *) blob, 0);
+		}
 	}
 	else
 		retval = g_strdup (NULL);

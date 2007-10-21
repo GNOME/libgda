@@ -1943,7 +1943,8 @@ gda_data_model_import_from_file (GdaDataModel *model,
 	return retval;
 }
 
-static gchar *real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attributes, gboolean dump_rows);
+static gchar *real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attributes, 
+						  gboolean dump_rows, gboolean dump_title, gboolean null_as_empty);
 
 /**
  * gda_data_model_dump
@@ -1956,6 +1957,8 @@ static gchar *real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean 
  * <itemizedlist>
  *   <listitem><para>GDA_DATA_MODEL_DUMP_ROW_NUMBERS: if set, the first coulumn of the output will contain row numbers</para></listitem>
  *   <listitem><para>GDA_DATA_MODEL_DUMP_ATTRIBUTES: if set, also dump the data model's columns' types and value's attributes</para></listitem>
+*   <listitem><para>GDA_DATA_MODEL_DUMP_TITLE: if set, also dump the data model's title</para></listitem>
+*   <listitem><para>GDA_DATA_MODEL_DUMP_NULL_AS_EMPTY: if set, replace the 'NULL' string with an empty string for NULL values </para></listitem>
  * </itemizedlist>
  */
 void
@@ -1964,6 +1967,8 @@ gda_data_model_dump (GdaDataModel *model, FILE *to_stream)
 	gchar *str;
 	gboolean dump_attrs = FALSE;
 	gboolean dump_rows = FALSE;
+	gboolean dump_title = FALSE;
+	gboolean null_as_empty = FALSE;
 
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 	g_return_if_fail (to_stream);
@@ -1972,12 +1977,16 @@ gda_data_model_dump (GdaDataModel *model, FILE *to_stream)
 		dump_attrs = TRUE;
 	if (getenv ("GDA_DATA_MODEL_DUMP_ROW_NUMBERS"))
 		dump_rows = TRUE;
+	if (getenv ("GDA_DATA_MODEL_DUMP_TITLE")) 
+		dump_title = TRUE;
+	if (getenv ("GDA_DATA_MODEL_NULL_AS_EMPTY")) 
+		null_as_empty = TRUE;
 
-	str = real_gda_data_model_dump_as_string (model, FALSE, dump_rows);
+	str = real_gda_data_model_dump_as_string (model, FALSE, dump_rows, dump_title, null_as_empty);
 	g_fprintf (to_stream, "%s", str);
 	g_free (str);
 	if (dump_attrs) {
-		str = real_gda_data_model_dump_as_string (model, TRUE, dump_rows);
+		str = real_gda_data_model_dump_as_string (model, TRUE, dump_rows, dump_title, null_as_empty);
 		g_fprintf (to_stream, "%s", str);
 		g_free (str);
 	}
@@ -1992,6 +2001,8 @@ gda_data_model_dump (GdaDataModel *model, FILE *to_stream)
  * The following environment variables can affect the resulting output:
  * <itemizedlist>
  *   <listitem><para>GDA_DATA_MODEL_DUMP_ROW_NUMBERS: if set, the first coulumn of the output will contain row numbers</para></listitem>
+*   <listitem><para>GDA_DATA_MODEL_DUMP_TITLE: if set, also dump the data model's title</para></listitem>
+*   <listitem><para>GDA_DATA_MODEL_DUMP_NULL_AS_EMPTY: if set, replace the 'NULL' string with an empty string for NULL values </para></listitem>
  * </itemizedlist>
  * Returns: a new string.
  */
@@ -1999,12 +2010,19 @@ gchar *
 gda_data_model_dump_as_string (GdaDataModel *model)
 {
 	gboolean dump_rows = FALSE;
+	gboolean dump_title = FALSE;
+	gboolean null_as_empty = FALSE;
+
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
 	if (getenv ("GDA_DATA_MODEL_DUMP_ROW_NUMBERS"))
 		dump_rows = TRUE;
+	if (getenv ("GDA_DATA_MODEL_DUMP_TITLE")) 
+		dump_title = TRUE;
+	if (getenv ("GDA_DATA_MODEL_NULL_AS_EMPTY")) 
+		null_as_empty = TRUE;
 
-	return real_gda_data_model_dump_as_string (model, FALSE, dump_rows);
+	return real_gda_data_model_dump_as_string (model, FALSE, dump_rows, dump_title, null_as_empty);
 }
 
 static void
@@ -2030,7 +2048,8 @@ string_get_dimensions (const gchar *string, gint *width, gint *rows)
 }
 
 static gchar *
-real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attributes, gboolean dump_rows)
+real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attributes, 
+				    gboolean dump_rows, gboolean dump_title, gboolean null_as_empty)
 {
 #define MULTI_LINE_NO_SEPARATOR
 
@@ -2114,7 +2133,13 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 		for (i = 0; i < n_cols; i++) {
 			if (! dump_attributes) {
 				value = gda_data_model_get_value_at (model, i, j);
-				str = value ? gda_value_stringify ((GValue*)value) : g_strdup ("_null_");
+				str = NULL;
+				if (null_as_empty) {
+					if (!value || gda_value_is_null (value))
+						str = g_strdup ("");
+				}
+				if (!str)
+					str = value ? gda_value_stringify ((GValue*)value) : g_strdup ("_null_");
 				if (str) {
 					gint w;
 					string_get_dimensions (str, &w, NULL);
@@ -2134,7 +2159,27 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 		}
 	}
 	
-	/* actual dumping of the contents: column titles...*/
+	/* actual dumping of the contents: title */
+	if (dump_title) {
+		const gchar *title;
+		title = gda_object_get_name (GDA_OBJECT (model));
+		if (title) {
+			gint total_width = n_cols -1, i;
+
+			for (i = 0; i < n_cols; i++)
+				total_width += cols_size [i];
+			if (total_width > strlen (title))
+				i = (total_width - strlen (title))/2.;
+			else
+				i = 0;
+			for (; i > 0; i--)
+				g_string_append_c (string, ' ');
+			g_string_append (string, title);
+			g_string_append_c (string, '\n');
+		}
+	}
+
+	/* ...column titles...*/
 	if (dump_rows) 
 		g_string_append_printf (string, "%*s", cols_size [0], "#row");
 
@@ -2184,7 +2229,13 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 			for (i = 0; i < n_cols; i++) {
 				if (!dump_attributes) {
 					value = gda_data_model_get_value_at (model, i, j);
-					str = value ? gda_value_stringify ((GValue *)value) : g_strdup ("_null_");
+					str = NULL;
+					if (null_as_empty) {
+						if (!value || gda_value_is_null (value))
+							str = g_strdup ("");
+					}
+					if (!str)
+						str = value ? gda_value_stringify ((GValue *)value) : g_strdup ("_null_");
 				}
 				else {
 					GdaValueAttribute attrs;
@@ -2270,6 +2321,12 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 				g_strfreev (cols_str [i]);
 			g_free (cols_str);
 		}
+		if (n_rows > 1)
+			g_string_append_printf (string, _("(%d rows)\n"), n_rows);
+		else if (n_rows == 1)
+			g_string_append_printf (string, _("(1 row)\n"));
+		else
+			g_string_append_printf (string, _("(no row)\n"));
 	}
 	else 
 		g_string_append (string, _("Model does not support random access, not showing data\n"));

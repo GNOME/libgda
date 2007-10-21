@@ -112,6 +112,7 @@ static void     compute_prompt (MainData *data, GString *string, gboolean in_com
 static gboolean set_output_file (MainData *data, const gchar *file, GError **error);
 static gboolean set_input_file (MainData *data, const gchar *file, GError **error);
 static void     output_data_model (MainData *data, GdaDataModel *model);
+static void     output_string (MainData *data, const gchar *str);
 static gboolean open_connection (MainData *data, const gchar *dsn,
 				 const gchar *provider,  const gchar *direct, 
 				 const gchar *user, const gchar *pass, GError **error);
@@ -122,6 +123,7 @@ static GdaDataModel *list_all_providers (MainData *data);
 static GdaInternalCommandsList  *build_internal_commands_list (MainData *data);
 static gboolean                  command_is_complete (const gchar *command);
 static GdaInternalCommandResult *command_execute (MainData *data, gchar *command, GError **error);
+static void                      display_result (MainData *data, GdaInternalCommandResult *res);
 
 int
 main (int argc, char *argv[])
@@ -132,9 +134,10 @@ main (int argc, char *argv[])
 	int exit_status = EXIT_SUCCESS;
 	prompt = g_string_new ("");
 
-	context = g_option_context_new (_("Gda SQL console"));        g_option_context_add_main_entries (context, entries, GETTEXT_PACKAGE);
+	context = g_option_context_new (_("Gda SQL console"));        
+	g_option_context_add_main_entries (context, entries, GETTEXT_PACKAGE);
         if (!g_option_context_parse (context, &argc, &argv, &error)) {
-                g_warning ("Can't parse arguments: %s", error->message);
+                g_print ("Can't parse arguments: %s\n", error->message);
 		exit_status = EXIT_FAILURE;
 		goto cleanup;
         }
@@ -144,11 +147,32 @@ main (int argc, char *argv[])
 	data->parameters = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
 	main_data = data;
 
+	/* test for all-in-one connection string */
+	if (!prov && !direct) {
+		gchar *dup = NULL;
+		if (argc >= 2)
+			dup = g_strdup (argv [1]);
+		else if (getenv ("GDA_SQL_CNC"))
+			dup = g_strdup (getenv ("GDA_SQL_CNC"));
+					
+		if (dup) {
+			gchar *ptr;
+			for (ptr = dup; *ptr; ptr++) {
+				if ((*ptr == ':') && (*(ptr+1) == '/') && (*(ptr+2) == '/')) {
+					prov = dup;
+					*ptr = 0;
+					direct = ptr+3;
+				}
+			}
+		}
+	}
+	
+
 	/* output file */
 	if (outfile) {
 		if (! set_output_file (data, outfile, &error)) {
-			g_warning ("Can't set output file as '%s': %s", outfile,
-				   error->message);
+			g_print ("Can't set output file as '%s': %s\n", outfile,
+				 error->message);
 			exit_status = EXIT_FAILURE;
 			goto cleanup;
 		}
@@ -171,8 +195,8 @@ main (int argc, char *argv[])
 	/* commands file */
 	if (commandsfile) {
 		if (! set_input_file (data, commandsfile, &error)) {
-			g_warning ("Can't read file '%s': %s", commandsfile,
-				   error->message);
+			g_print ("Can't read file '%s': %s\n", commandsfile,
+				 error->message);
 			exit_status = EXIT_FAILURE;
 			goto cleanup;
 		}
@@ -215,7 +239,7 @@ main (int argc, char *argv[])
 
 	/* open connection */
 	if (!open_connection (data, dsn, prov, direct, user, pass, &error)) {
-		g_warning (_("Can't open connection: %s"), error && error->message ? error->message : _("No detail"));
+		g_print (_("Can't open connection: %s\n"), error && error->message ? error->message : _("No detail"));
 		exit_status = EXIT_FAILURE;
                 goto cleanup;
 	}
@@ -275,91 +299,10 @@ main (int argc, char *argv[])
 					}
 				}
 				else {
-					switch (res->type) {
-					case GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL:
-						output_data_model (data, res->u.model);
-						break;
-					case GDA_INTERNAL_COMMAND_RESULT_PLIST: {
-						GSList *list;
-						GString *string;
-						xmlNodePtr node;
-						xmlBufferPtr buffer;
-						switch (data->output_format) {
-						case OUTPUT_FORMAT_DEFAULT:
-							string = g_string_new ("");
-							for (list = res->u.plist->parameters; list; list = list->next) {
-								gchar *str;
-								const GValue *value;
-								value = gda_parameter_get_value (GDA_PARAMETER (list->data));
-								str = gda_value_stringify ((GValue *) value);
-								g_string_append_printf (string, "%s => %s\n",
-											gda_object_get_name (GDA_OBJECT (list->data)), str);
-								g_free (str);
-							}
-							g_fprintf (to_stream, "%s", string->str);
-							g_string_free (string, TRUE);
-							break;
-						case OUTPUT_FORMAT_XML:
-							buffer = xmlBufferCreate ();
-							node = xmlNewNode (NULL, BAD_CAST "parameters");
-							for (list = res->u.plist->parameters; list; list = list->next) {
-								const GValue *value;
-								xmlNodePtr pnode, vnode;
-								
-								pnode = xmlNewNode (NULL, BAD_CAST "parameter");
-								xmlAddChild (node, pnode);
-								xmlSetProp (pnode, BAD_CAST "name", 
-									    gda_object_get_name (GDA_OBJECT (list->data)));
-								value = gda_parameter_get_value (GDA_PARAMETER (list->data));
-								vnode = gda_value_to_xml (value);
-								xmlAddChild (pnode, vnode);
-							}
-							xmlNodeDump (buffer, NULL, node, 0, 1);
-							xmlBufferDump (to_stream, buffer);
-							xmlBufferFree (buffer);
-							g_fprintf (to_stream, "\n");
-							break;
-						case OUTPUT_FORMAT_HTML:
-						default:
-							TO_IMPLEMENT;
-							break;
-						}
-						break;
-					}
-					case GDA_INTERNAL_COMMAND_RESULT_TXT: {
-						xmlNodePtr node;
-						xmlBufferPtr buffer;
-						switch (data->output_format) {
-						case OUTPUT_FORMAT_DEFAULT:
-							g_fprintf (to_stream, "%s", res->u.txt->str);
-							break;
-						case OUTPUT_FORMAT_XML:
-							buffer = xmlBufferCreate ();
-							node = xmlNewNode (NULL, BAD_CAST "txt");
-							xmlNodeSetContent (node, res->u.txt->str);
-							xmlNodeDump (buffer, NULL, node, 0, 1);
-							xmlBufferDump (to_stream, buffer);
-							xmlBufferFree (buffer);
-							break;
-						case OUTPUT_FORMAT_HTML:
-						default:
-							TO_IMPLEMENT;
-							break;
-						}
-						break;
-					}
-					case GDA_INTERNAL_COMMAND_RESULT_TXT_STDOUT: 
-						g_print ("%s", res->u.txt->str);
-						break;
-					case GDA_INTERNAL_COMMAND_RESULT_EMPTY:
-						break;
-					case GDA_INTERNAL_COMMAND_RESULT_EXIT:
-						goto cleanup;
-					default:
-						TO_IMPLEMENT;
-						break;
-					}
+					display_result (data, res);
 					gda_internal_command_exec_result_free (res);
+					if (res->type == GDA_INTERNAL_COMMAND_RESULT_EXIT)
+						goto cleanup;
 				}
 				g_string_free (data->partial_command, TRUE);
 				data->partial_command = NULL;
@@ -383,6 +326,101 @@ main (int argc, char *argv[])
 	g_free (data);
 
 	return EXIT_SUCCESS;
+}
+
+static void
+display_result (MainData *data, GdaInternalCommandResult *res)
+{
+	switch (res->type) {
+	case GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL:
+		output_data_model (data, res->u.model);
+		break;
+	case GDA_INTERNAL_COMMAND_RESULT_PLIST: {
+		GSList *list;
+		GString *string;
+		xmlNodePtr node;
+		xmlBufferPtr buffer;
+		switch (data->output_format) {
+		case OUTPUT_FORMAT_DEFAULT:
+			string = g_string_new ("");
+			for (list = res->u.plist->parameters; list; list = list->next) {
+				gchar *str;
+				const GValue *value;
+				value = gda_parameter_get_value (GDA_PARAMETER (list->data));
+				str = gda_value_stringify ((GValue *) value);
+				g_string_append_printf (string, "%s => %s\n",
+							gda_object_get_name (GDA_OBJECT (list->data)), str);
+				g_free (str);
+			}
+			output_string (data, string->str);
+			g_string_free (string, TRUE);
+			break;
+		case OUTPUT_FORMAT_XML: {
+			buffer = xmlBufferCreate ();
+			node = xmlNewNode (NULL, BAD_CAST "parameters");
+			for (list = res->u.plist->parameters; list; list = list->next) {
+				const GValue *value;
+				xmlNodePtr pnode, vnode;
+								
+				pnode = xmlNewNode (NULL, BAD_CAST "parameter");
+				xmlAddChild (node, pnode);
+				xmlSetProp (pnode, BAD_CAST "name", 
+					    gda_object_get_name (GDA_OBJECT (list->data)));
+				value = gda_parameter_get_value (GDA_PARAMETER (list->data));
+				vnode = gda_value_to_xml (value);
+				xmlAddChild (pnode, vnode);
+			}
+			xmlNodeDump (buffer, NULL, node, 0, 1);
+			output_string (data, (gchar *) xmlBufferContent (buffer));
+			xmlBufferFree (buffer);
+			break;
+		}
+		case OUTPUT_FORMAT_HTML:
+		default:
+			TO_IMPLEMENT;
+			break;
+		}
+		break;
+	}
+	case GDA_INTERNAL_COMMAND_RESULT_TXT: {
+		xmlNodePtr node;
+		xmlBufferPtr buffer;
+		switch (data->output_format) {
+		case OUTPUT_FORMAT_DEFAULT:
+			output_string (data, res->u.txt->str);
+			break;
+		case OUTPUT_FORMAT_XML:
+			buffer = xmlBufferCreate ();
+			node = xmlNewNode (NULL, BAD_CAST "txt");
+			xmlNodeSetContent (node, res->u.txt->str);
+			xmlNodeDump (buffer, NULL, node, 0, 1);
+			output_string (data, (gchar *) xmlBufferContent (buffer));
+			xmlBufferFree (buffer);
+			break;
+		case OUTPUT_FORMAT_HTML:
+		default:
+			TO_IMPLEMENT;
+			break;
+		}
+		break;
+	}
+	case GDA_INTERNAL_COMMAND_RESULT_TXT_STDOUT: 
+		g_print ("%s", res->u.txt->str);
+		break;
+	case GDA_INTERNAL_COMMAND_RESULT_EMPTY:
+		break;
+	case GDA_INTERNAL_COMMAND_RESULT_MULTIPLE: {
+		GSList *list;
+		for (list = res->u.multiple_results; list; list = list->next)
+			display_result (data, (GdaInternalCommandResult *) list->data);
+		break;
+	}
+	case GDA_INTERNAL_COMMAND_RESULT_EXIT:
+	default:
+		TO_IMPLEMENT;
+		break;
+	}
+
 }
 
 /*
@@ -752,10 +790,47 @@ static void
 output_data_model (MainData *data, GdaDataModel *model)
 {
 	gchar *str;
-	FILE *to_stream;
-	gint rows, cols, model_rows;
+	static gboolean env_set = FALSE;
 
-	model_rows = gda_data_model_get_n_rows (model);
+	if (!env_set) {
+		setenv ("GDA_DATA_MODEL_DUMP_TITLE", "Yes", TRUE);
+		setenv ("GDA_DATA_MODEL_NULL_AS_EMPTY", "Yes", TRUE);
+		env_set = TRUE;
+	}
+
+	switch (data->output_format) {
+	case OUTPUT_FORMAT_DEFAULT:
+		str = gda_data_model_dump_as_string (model);
+		break;
+	case OUTPUT_FORMAT_XML:
+		str = gda_data_model_export_to_string (model, GDA_DATA_MODEL_IO_DATA_ARRAY_XML,
+						       NULL, 0,
+						       NULL, 0, NULL);
+		break;
+	case OUTPUT_FORMAT_HTML:
+	default:
+		str = g_strdup ("");
+		TO_IMPLEMENT;
+		break;
+	}
+	output_string (data, str);
+	g_free (str);
+}
+
+static void
+output_string (MainData *data, const gchar *str)
+{
+	FILE *to_stream;
+	gint rows, cols;
+	gboolean append_nl = FALSE;
+	gint length;
+	
+	if (!str)
+		return;
+
+	length = strlen (str);
+	if (str[length] != '\n')
+		append_nl = TRUE;
 
 	if (data && data->output_stream)
 		to_stream = data->output_stream;
@@ -775,46 +850,20 @@ output_data_model (MainData *data, GdaDataModel *model)
 #ifndef G_OS_WIN32
 		signal (SIGPIPE, SIG_IGN);
 #endif
-		switch (data->output_format) {
-		case OUTPUT_FORMAT_DEFAULT:
-			str = gda_data_model_dump_as_string (model);
-			break;
-		case OUTPUT_FORMAT_XML:
-			str = gda_data_model_export_to_string (model, GDA_DATA_MODEL_IO_DATA_ARRAY_XML,
-							       NULL, 0,
-							       NULL, 0, NULL);
-			break;
-		case OUTPUT_FORMAT_HTML:
-		default:
-			str = g_strdup ("");
-			TO_IMPLEMENT;
-			break;
-		}
-		g_fprintf (pipe, "%s", str);
-		g_free (str);
+		if (append_nl)
+			g_fprintf (pipe, "%s\n", str);
+		else
+			g_fprintf (pipe, "%s", str);
 		pclose (pipe);
 #ifndef G_OS_WIN32
 		signal(SIGPIPE, SIG_DFL);
 #endif
 	}
 	else {
-		switch (data->output_format) {
-		case OUTPUT_FORMAT_DEFAULT:
-			str = gda_data_model_dump_as_string (model);
-			break;
-		case OUTPUT_FORMAT_XML:
-			str = gda_data_model_export_to_string (model, GDA_DATA_MODEL_IO_DATA_ARRAY_XML,
-							       NULL, 0,
-							       NULL, 0, NULL);
-			break;
-		case OUTPUT_FORMAT_HTML:
-		default:
-			str = g_strdup ("");
-			TO_IMPLEMENT;
-			break;
-		}
-		g_fprintf (to_stream, "%s", str);
-		g_free (str);
+		if (append_nl)
+			g_fprintf (to_stream, "%s\n", str);
+		else
+			g_fprintf (to_stream, "%s", str);
 	}
 }
 
@@ -839,6 +888,7 @@ list_all_sections (MainData *data)
 	gda_data_model_set_column_title (model, 2, _("Description"));
 	gda_data_model_set_column_title (model, 3, _("Connection string"));
 	gda_data_model_set_column_title (model, 4, _("Username"));
+	gda_object_set_name (GDA_OBJECT (model), _("List of declared DSN"));
 
         sections = gda_config_list_sections ("/apps/libgda/Datasources");
         for (l = sections; l; l = l->next) {
@@ -910,6 +960,7 @@ list_all_providers (MainData *data)
 	gda_data_model_set_column_title (model, 1, _("Description"));
 	gda_data_model_set_column_title (model, 2, _("DSN parameters"));
 	gda_data_model_set_column_title (model, 3, _("File"));
+	gda_object_set_name (GDA_OBJECT (model), _("List of installed providers"));
 
         for (providers = gda_config_get_provider_list (); providers; providers = providers->next) {
                 GdaProviderInfo *info = (GdaProviderInfo *) providers->data;
@@ -1062,6 +1113,16 @@ build_internal_commands_list (MainData *data)
 	c->description = _("List all tables and views (or named table or view)");
 	c->args = NULL;
 	c->command_func = gda_internal_command_list_tables_views;
+	c->user_data = NULL;
+	c->arguments_delimiter_func = NULL;
+	commands->commands = g_slist_prepend (commands->commands, c);
+
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("Information");
+	c->name = "d [NAME]";
+	c->description = _("Describe table or view");
+	c->args = NULL;
+	c->command_func = gda_internal_command_detail;
 	c->user_data = NULL;
 	c->arguments_delimiter_func = NULL;
 	commands->commands = g_slist_prepend (commands->commands, c);
@@ -1888,6 +1949,7 @@ extra_command_set (GdaConnection *cnc, GdaDict *dict,
 							       G_TYPE_STRING);
 		gda_data_model_set_column_title (model, 0, _("Name"));
 		gda_data_model_set_column_title (model, 1, _("Value"));
+		gda_object_set_name (GDA_OBJECT (model), _("List of defined parameters"));
 		g_hash_table_foreach (data->parameters, (GHFunc) foreach_param_set, model);
 		res = g_new0 (GdaInternalCommandResult, 1);
 		res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;

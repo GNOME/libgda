@@ -32,7 +32,16 @@
 #include "gda-firebird-provider.h"
 #include "gda-firebird-recordset.h"
 
+#include <libgda/handlers/gda-handler-numerical.h>
+#include <libgda/handlers/gda-handler-boolean.h>
+#include <libgda/handlers/gda-handler-time.h>
+#include <libgda/handlers/gda-handler-string.h>
+#include <libgda/handlers/gda-handler-type.h>
+#include <libgda/handlers/gda-handler-bin.h>
+
 #include <libgda/sql-delimiter/gda-sql-delimiter.h>
+#include <libgda/gda-connection-private.h>
+#include <libgda/gda-blob-op.h>
 
 static void 		gda_firebird_provider_class_init (GdaFirebirdProviderClass *klass);
 static void 		gda_firebird_provider_init (GdaFirebirdProvider *provider,
@@ -80,8 +89,24 @@ static GdaDataModel	*gda_firebird_provider_get_schema (GdaServerProvider *provid
 							   GdaConnectionSchema schema,
 							   GdaParameterList *params);
 
+static GdaDataHandler *gda_firebird_provider_get_data_handler (GdaServerProvider *provider,
+							       GdaConnection *cnc,
+							       GType g_type,
+							       const gchar *dbms_type);
+static const gchar* gda_firebird_provider_get_default_dbms_type (GdaServerProvider *provider,
+								 GdaConnection *cnc,
+								 GType type);
+
+static gboolean          begin_transaction_if_not_current (GdaServerProvider *provider,
+							   GdaConnection *cnc,
+							   const gchar *name, GdaTransactionIsolation level,
+							   GError **error, gboolean *has_error);
+
 
 static GObjectClass *parent_class = NULL;
+
+static const gchar *read_string_in_blob (const GValue *value);
+
 
 /*
  * GdaFirebirdProvider class implementation
@@ -101,9 +126,9 @@ gda_firebird_provider_class_init (GdaFirebirdProviderClass *klass)
 	provider_class->supports_feature = gda_firebird_provider_supports;
 	provider_class->get_schema = gda_firebird_provider_get_schema;
 
-	provider_class->get_data_handler = NULL;
+	provider_class->get_data_handler = gda_firebird_provider_get_data_handler;
 	provider_class->string_to_value = NULL;
-	provider_class->get_def_dbms_type = NULL;
+	provider_class->get_def_dbms_type = gda_firebird_provider_get_default_dbms_type;
 
 	provider_class->create_connection = NULL;
 	provider_class->open_connection = gda_firebird_provider_open_connection;
@@ -231,19 +256,22 @@ fb_get_types (GdaConnection *cnc,
 		const gchar *owner;
 		const gchar *comments;
 		GType type;
+		const gchar *syns;
 	} types[] = {
-		{ "blob", "", "Binary large object (blob)", GDA_TYPE_BINARY },
-		{ "char", "", "Fixed length string", G_TYPE_STRING },
-		{ "varchar", "", "Variable length string", G_TYPE_STRING },
-		{ "date", "", "Date", G_TYPE_DATE },
-		{ "time", "", "Time", GDA_TYPE_TIME },
-		{ "timestamp", "", "Time stamp", GDA_TYPE_TIMESTAMP },
-		{ "smallint", "", "Signed short integer", GDA_TYPE_SHORT },
-		{ "integer", "", "Signed long integer (longword)", G_TYPE_INT },
-		{ "decimal", "", "Decimal number", GDA_TYPE_NUMERIC },
-		{ "numeric", "", "Decimal number", GDA_TYPE_NUMERIC },
-		{ "float", "", "Single precision number", G_TYPE_FLOAT },
-		{ "double precision", "", "Double precision number", G_TYPE_DOUBLE }
+		{ "blob", "", "Binary large object (blob)", GDA_TYPE_BLOB, NULL },
+		{ "char", "", "Fixed length string", G_TYPE_STRING, "character" },
+		{ "varchar", "", "Variable length string", G_TYPE_STRING, "character varying,varying,char varying" },
+		{ "text", "", "Text", G_TYPE_STRING, NULL },
+		{ "date", "", "Date", G_TYPE_DATE, NULL },
+		{ "time", "", "Time", GDA_TYPE_TIME, NULL },
+		{ "timestamp", "", "Time stamp", GDA_TYPE_TIMESTAMP, NULL },
+		{ "smallint", "", "Signed short integer", GDA_TYPE_SHORT, "short" },
+		{ "integer", "", "Signed long integer", G_TYPE_INT, "long" },
+		{ "int64", "", "Signed integer (8 bytes)", G_TYPE_INT64, NULL },
+		{ "decimal", "", "Decimal number", GDA_TYPE_NUMERIC, NULL },
+		{ "numeric", "", "Decimal number", GDA_TYPE_NUMERIC, NULL },
+		{ "float", "", "Single precision number", G_TYPE_FLOAT, NULL },
+		{ "double", "", "Double precision number", G_TYPE_DOUBLE, "double precision" }
 	};
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
@@ -267,6 +295,9 @@ fb_get_types (GdaConnection *cnc,
 		value_list = g_list_append (value_list, tmpval);
 
 		g_value_set_ulong (tmpval = gda_value_new (G_TYPE_ULONG), types[i].type);
+		value_list = g_list_append (value_list, tmpval);
+
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), types[i].syns);
 		value_list = g_list_append (value_list, tmpval);
 
 		/* Add values to row */
@@ -304,10 +335,15 @@ fb_get_tables (GdaConnection *cnc,
 	gchar *sql, *sql_cond;
 	gint i;
 	gboolean systables = FALSE;
+	gboolean trans_started, trans_error;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	if (gda_connection_begin_transaction (cnc, "temp_transaction", GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL)) {
+	/* Begin transaction if it was not already started  */
+	trans_started = begin_transaction_if_not_current (gda_connection_get_provider_obj (cnc), cnc, "temp_transaction", 
+							  GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL, &trans_error);
+
+	if (!trans_error) {
 		GdaDataModel *recmodel;
 		
 		/* Find parameters */
@@ -333,31 +369,40 @@ fb_get_tables (GdaConnection *cnc,
 		}
 	
 		/* Generate complete statement */
-		sql = g_strconcat ("SELECT RDB$RELATION_NAME,RDB$OWNER_NAME FROM RDB$RELATIONS ", sql_cond, NULL);
+		sql = g_strconcat ("SELECT RDB$RELATION_NAME, RDB$OWNER_NAME, RDB$VIEW_SOURCE "
+				   "FROM RDB$RELATIONS ", 
+				   sql_cond, NULL);
 		
 		/* Execute statement */
 		command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 		recmodel = gda_connection_execute_select_command (cnc, command, NULL, NULL);
 		if (recmodel) {
-			recset = gda_data_model_array_new (4);
+			recset = (GdaDataModel *) gda_data_model_array_new 
+				(gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_TABLES));
 			gda_server_provider_init_schema_model (recset, GDA_CONNECTION_SCHEMA_TABLES);
 			for (i = 0; i < gda_data_model_get_n_rows (recmodel); i++) {
-				value_list = NULL;
 				GValue *tmpval;
 
 				/* Get name of table */
 				value = gda_data_model_get_value_at (recmodel, 0, i);
-				value_list = g_list_append (value_list, gda_value_copy (value));
+				value_list = g_list_append (NULL, gda_value_copy (value));
 
 				/* Get owner of table */
 				value = gda_data_model_get_value_at (recmodel, 1, i);
 				value_list = g_list_append (value_list, gda_value_copy (value));
 				
-				/* FIXME: Set correct values */
+				/* Comments FIXME */
 				g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "");
 				value_list = g_list_append (value_list, tmpval);
 
-				g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "");
+				/* description */
+				value = gda_data_model_get_value_at (recmodel, 2, i);
+				const gchar *cstr;
+				cstr = read_string_in_blob (value);
+				if (cstr)
+					g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), cstr);
+				else
+					g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "");
 				value_list = g_list_append (value_list, tmpval);
 
 				gda_data_model_append_values (recset, value_list, NULL);
@@ -369,7 +414,8 @@ fb_get_tables (GdaConnection *cnc,
 		}
 
 		g_free (sql);
-		gda_connection_rollback_transaction (cnc, "temp_transaction", NULL);
+		if (trans_started)
+			gda_connection_rollback_transaction (cnc, "temp_transaction", NULL);
 		gda_command_free (command);
 	}
 	
@@ -417,7 +463,7 @@ fb_type_name_to_g_type (const gchar *name)
 
 
 /*
- *  fb_set_index_field_metad
+ *  fb_set_index_field_metadata
  *
  *  Sets primary key and unique key properties for fields
  *  in @recset.
@@ -432,11 +478,15 @@ fb_set_index_field_metadata (GdaConnection *cnc,
 	gchar *sql, *field_name, *recset_field_name;
 	gint i,j;
 	GValue *value, *recset_value;
+	gboolean trans_started, trans_error;
 	
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (GDA_IS_DATA_MODEL (recset));
 
-	if (gda_connection_begin_transaction (cnc, "tmp_transaction_mdata", GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL)) {
+	trans_started = begin_transaction_if_not_current (gda_connection_get_provider_obj (cnc), cnc, "tmp_transaction_mdata", 
+							  GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL, &trans_error);
+
+	if (!trans_error) {
 		GdaDataModel *recmodel;
 		sql = g_strdup_printf (
 				"SELECT A.RDB$FIELD_NAME, I.RDB$UNIQUE_FLAG, B.RDB$CONSTRAINT_TYPE "
@@ -499,14 +549,67 @@ fb_set_index_field_metadata (GdaConnection *cnc,
 		}
 		
 		g_free (sql);
-		gda_connection_rollback_transaction (cnc, "tmp_transaction_mdata", NULL);
+		if (trans_started)
+			gda_connection_rollback_transaction (cnc, "tmp_transaction_mdata", NULL);
 		gda_command_free (command);
 	}
 }
 
+static const gchar *
+read_string_in_blob (const GValue *value)
+{
+	gchar *str = NULL;
+	
+	if (!gda_value_is_null (value)) {
+		GdaBlob *blob;
+		blob = (GdaBlob*) gda_value_get_blob (value);
+		if (!blob)
+			g_warning ("Blob created by Firebird provider without a GdaBlob!");
+		else if (! blob->op)
+			g_warning ("Blob created by Firebird provider without a GdaBlobOp!");
+		else {
+			if (gda_blob_op_read_all (blob->op, blob)) 
+				str = (gchar *) ((GdaBinary *)blob)->data;
+			else
+				g_warning ("Can't read BLOB contents");
+		}
+	}
+	return str;
+}
+
+static GdaDataModel *
+fb_get_field_dimensions (GdaConnection *cnc, const gchar *field_name)
+{
+	gboolean trans_started, trans_error;
+	GdaDataModel *model = NULL;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (field_name, NULL);
+	
+	/* Begin transaction if it was not already started  */
+	trans_started = begin_transaction_if_not_current (gda_connection_get_provider_obj (cnc), cnc, "temp_transaction", 
+							  GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL, &trans_error);
+
+	if (!trans_error) {
+		gchar *sql;
+		GdaCommand *command;
+		sql = g_strdup_printf (
+				"SELECT RDB$DIMENSION, RDB$LOWER_BOUND, RDB$UPPER_BOUND "
+				"FROM RDB$FIELD_DIMENSIONS WHERE RDB$FIELD_NAME='%s' ORDER BY RDB$DIMENSION",
+				field_name);
+		command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+		model = gda_connection_execute_select_command (cnc, command, NULL, NULL);
+		g_free (sql);
+		if (trans_started)
+			gda_connection_rollback_transaction (cnc, "temp_transaction", NULL);
+		gda_command_free (command);						
+	}
+
+	return model;
+}
 
 /*
- *  fb_set_field_metad
+ *  fb_set_field_metadata
  *
  *  Fill a list with metadata values from @row.
  *  This function is called from #fb_get_fields_metadata.
@@ -514,44 +617,62 @@ fb_set_index_field_metadata (GdaConnection *cnc,
  *  Returns: A GList of GValues
  */
 static GList *
-fb_set_field_metadata (GdaRow *row)
+fb_set_field_metadata (GdaConnection *cnc, GdaDataModel *model, gint row)
 {
 	GList *value_list = NULL;
-	GValue *value;
-	gchar *the_value, *tmp_value;
+	const GValue *value;
+	GType field_gtype;
 	gshort scale, short_value;
 	GValue *tmpval;
-
-	g_return_val_if_fail (row != NULL, NULL);
+	const gchar *str;
 
 	/* Set field name  */
-	value = gda_row_get_value (row, 0);
+	value = gda_data_model_get_value_at (model, 0, row);
 	value_list = g_list_append (value_list,	gda_value_copy (value));
 		
 	/* Set data type */
-	value = gda_row_get_value (row, 1);
-	tmp_value = (gchar *) g_value_get_string (value);
-	tmp_value = g_strchomp (tmp_value);
-	the_value = g_ascii_strdown (tmp_value, -1);
-	g_free (tmp_value);
-	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), the_value);
+	value = gda_data_model_get_value_at (model, 7, row);
+	tmpval = NULL;
+	if (!gda_value_is_null (value)) {
+		const GValue *value_type;
+
+		value_type = gda_data_model_get_value_at (model, 6, row);
+		if ((g_value_get_int (value_type) != 261) && (g_value_get_int (value_type) != 14)) { 
+			/* Not for BLOB or Char types */
+			if (g_value_get_int (value) == 1) {
+				g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "numeric");
+				field_gtype = GDA_TYPE_NUMERIC;
+			}
+			else if (g_value_get_int (value) == 2) {
+				g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "decimal");
+				field_gtype = GDA_TYPE_NUMERIC;
+			}
+		}
+	}
+	if (!tmpval) {
+		gchar *the_value;
+		value = gda_data_model_get_value_at (model, 1, row);
+		the_value = g_ascii_strdown (g_value_get_string (value), -1);
+		g_value_take_string (tmpval = gda_value_new (G_TYPE_STRING), g_strchomp (the_value));
+		field_gtype = fb_type_name_to_g_type (the_value);
+	}
 	value_list = g_list_append (value_list, tmpval);
 
 	/* Set size */
 	short_value = 0;
-	if (fb_type_name_to_g_type (the_value) == G_TYPE_STRING) {
-		value = gda_row_get_value (row, 2);
+	if (field_gtype == G_TYPE_STRING) {
+		value = gda_data_model_get_value_at (model, 2, row);
 		short_value = gda_value_get_short (value);
 	}
-	else if (fb_type_name_to_g_type (the_value) == GDA_TYPE_NUMERIC) {
-		value = gda_row_get_value (row, 3);
+	else if (field_gtype == GDA_TYPE_NUMERIC) {
+		value = gda_data_model_get_value_at (model, 3, row);
 		short_value = gda_value_get_short (value);
 	}
 	g_value_set_int (tmpval = gda_value_new (G_TYPE_INT), short_value);
 	value_list = g_list_append (value_list, tmpval);
 
 	/* Set scale (number of decimals) */
-	value = gda_row_get_value (row, 4);
+	value = gda_data_model_get_value_at (model, 4, row);
 	if (!gda_value_is_null (value))
 		scale = gda_value_get_short (value);
 	else
@@ -560,7 +681,7 @@ fb_set_field_metadata (GdaRow *row)
 	value_list = g_list_append (value_list, tmpval);
 
 	/* Set not null indicator */
-	value = gda_row_get_value (row, 5);
+	value = gda_data_model_get_value_at (model, 5, row);
 	if (!gda_value_is_null (value))
 		g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), (gda_value_get_short (value) == 1));
 	else
@@ -579,16 +700,77 @@ fb_set_field_metadata (GdaRow *row)
 	tmpval = gda_value_new_null ();
 	value_list = g_list_append (value_list, tmpval);
 
-	/* FIXME: Default value */
-	tmpval = gda_value_new_null ();
+	/* Default value */
+	tmpval = NULL;
+	value = gda_data_model_get_value_at (model, 8, row);
+	str = read_string_in_blob (value);
+	if (str) {
+		if (!strncmp (str, "DEFAULT ", 8))
+			g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), str + 8);
+		else
+			g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), str);
+	}
+	if (!tmpval) {
+		value = gda_data_model_get_value_at (model, 9, row);
+		str = read_string_in_blob (value);
+		if (str) {
+			if (!strncmp (str, "DEFAULT ", 8))
+				g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), str + 8);
+			else
+				g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), str);
+		}
+	}
+	if (!tmpval) 
+		tmpval = gda_value_new_null ();
+	value_list = g_list_append (value_list, tmpval);
+
+	/* extra attributes FIXME: association GENERATOR <-> field name done through triggers :( */
+	tmpval = NULL;
+	value = gda_data_model_get_value_at (model, 10, row);
+	if (!gda_value_is_null (value) && (g_value_get_int (value) > 0)) {
+		/* here is an array */
+		GString *string = NULL;
+
+		tmpval = (GValue*) gda_data_model_get_value_at (model, 11, row);
+		if (gda_value_is_null (tmpval))
+			g_warning ("Firebird provider unexpected NULL RDB$FIELD_NAME");
+		else {
+			GdaDataModel *dims;
+			gint i, nrows;
+
+			string = g_string_new ("");
+			dims = fb_get_field_dimensions (cnc, g_value_get_string (tmpval));
+			nrows = gda_data_model_get_n_rows (dims);
+			for (i = 0; i < nrows; i++) {
+				if (i > 0)
+					g_string_append_c (string, ',');
+				value = gda_data_model_get_value_at (dims, 1, i);
+				if (!gda_value_is_null (value) && (g_value_get_long (value) > 1))
+					g_string_append_printf (string, "%ld:", g_value_get_long (value));
+				value = gda_data_model_get_value_at (dims, 2, i);
+				if (!gda_value_is_null (value))
+					g_string_append_printf (string, "%ld", g_value_get_long (value));
+			}
+			g_object_unref (dims);
+		}
+		if (string) {
+			tmpval = gda_value_new (G_TYPE_STRING);
+			gchar *str = g_strdup_printf ("ARRAY [%s]", string->str);
+			g_value_take_string (tmpval, str);
+			g_string_free (string, TRUE);
+		}
+		else
+			tmpval = NULL;
+	}
+	if (!tmpval)
+		tmpval = gda_value_new_null ();
 	value_list = g_list_append (value_list, tmpval);
 
 	return value_list;
 }
 
-
 /*
- *  fb_get_fields_metad
+ *  fb_get_fields_metadata
  *
  *  @params must contain a parameter named "name" with
  *  name of table to describe. ... :-)
@@ -599,28 +781,14 @@ static GdaDataModel *
 fb_get_fields_metadata (GdaConnection *cnc,
 			GdaParameterList *params)
 {
-	GList *value_list, *reclist;
-	GdaRow *row;
+	GList *value_list;
 	GdaDataModelArray *recset = NULL;
 	GdaParameter *par;
 	GdaCommand *command;
 	gint i;
 	gchar *sql;
 	const gchar *table_name;
-	struct {
-	  	const gchar *name;
-		GType type;
-	} fields_desc[] = {
-		{ N_("Field name")      , G_TYPE_STRING  },
-		{ N_("Data type")       , G_TYPE_STRING  },
-		{ N_("Size")            , G_TYPE_INT },
-		{ N_("Scale")           , G_TYPE_INT },
-		{ N_("Not null?")       , G_TYPE_BOOLEAN },
-		{ N_("Primary key?")    , G_TYPE_BOOLEAN },
-		{ N_("Unique index?")   , G_TYPE_BOOLEAN },
-		{ N_("References")      , G_TYPE_STRING  },
-		{ N_("Default value")   , G_TYPE_STRING  }
-	};
+	gboolean trans_started, trans_error;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (params != NULL, NULL);
@@ -639,11 +807,17 @@ fb_get_fields_metadata (GdaConnection *cnc,
 		return NULL;
 	}
 	
-	if (gda_connection_begin_transaction (cnc, "temp_transaction", GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL)) {
+	/* Begin transaction if it was not already started  */
+	trans_started = begin_transaction_if_not_current (gda_connection_get_provider_obj (cnc), cnc, "temp_transaction", 
+							  GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL, &trans_error);
+
+	if (!trans_error) {
 		GdaDataModel *recmodel;
 		sql = g_strdup_printf (
 				"SELECT A.RDB$FIELD_NAME, C.RDB$TYPE_NAME, B.RDB$FIELD_LENGTH, "
-				"B.RDB$FIELD_PRECISION, B.RDB$FIELD_SCALE, A.RDB$NULL_FLAG "
+				"B.RDB$FIELD_PRECISION, B.RDB$FIELD_SCALE, A.RDB$NULL_FLAG, "
+				"B.RDB$FIELD_TYPE, B.RDB$FIELD_SUB_TYPE, A.RDB$DEFAULT_SOURCE, B.RDB$DEFAULT_SOURCE, "
+				"B.RDB$DIMENSIONS, B.RDB$FIELD_NAME "
 				"FROM RDB$RELATION_FIELDS A, RDB$FIELDS B, RDB$TYPES C "
 				"WHERE (A.RDB$RELATION_NAME = '%s') AND (A.RDB$FIELD_SOURCE = B.RDB$FIELD_NAME)"
 				" AND (C.RDB$FIELD_NAME = 'RDB$FIELD_TYPE') AND (C.RDB$TYPE = B.RDB$FIELD_TYPE)"
@@ -653,19 +827,19 @@ fb_get_fields_metadata (GdaConnection *cnc,
 		recmodel = gda_connection_execute_select_command (cnc, command, NULL, NULL);
 		if (recmodel) {
 			/* Create and fill recordset to be returned */
-			recset = (GdaDataModelArray *) gda_data_model_array_new (9);
-			for (i = 0; i < (sizeof (fields_desc) / sizeof (fields_desc[0])); i++)
-				gda_data_model_set_column_title (GDA_DATA_MODEL (recset), i,
-								 _(fields_desc[i].name));
+			recset = (GdaDataModelArray *) gda_data_model_array_new 
+				(gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_FIELDS));
+			gda_server_provider_init_schema_model (GDA_DATA_MODEL (recset), GDA_CONNECTION_SCHEMA_FIELDS);
 			
-			for (i = 0; i < gda_data_model_get_n_rows (GDA_DATA_MODEL (reclist->data)); i++) {
-				value_list = NULL;
-				row = (GdaRow *) gda_data_model_get_row (GDA_DATA_MODEL (reclist->data), i);
+			gint nrows;
+			nrows = gda_data_model_get_n_rows (recmodel);
+			for (i = 0; i < nrows; i++) {
+				/* Set field metdata for row, and append to recordset */
+				value_list = fb_set_field_metadata (cnc, recmodel, i);
+				GError *er = NULL;
+				if (gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list, &er) < 0)
+					g_print ("==ERR: %s\n", er->message);
 				
-				/* Set field metdata for row, then append to recordset */
-				value_list = fb_set_field_metadata (row);
-				gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list, NULL);
-
 				/* Free temp list of values */
 				g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 				g_list_free (value_list);
@@ -676,7 +850,8 @@ fb_get_fields_metadata (GdaConnection *cnc,
 		}
 
 		g_free (sql);
-		gda_connection_rollback_transaction (cnc, "temp_transaction", NULL);
+		if (trans_started)
+			gda_connection_rollback_transaction (cnc, "temp_transaction", NULL);
 		gda_command_free (command);						
 	}
 
@@ -700,7 +875,7 @@ fb_add_aggregate_row (GdaDataModelArray *recset,
 	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), str);
 	list = g_list_append (list, tmpval);
 	/* 3rd the owner */
-	tmpval = gda_value_new_null ();
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "SYSDBA");
 	list = g_list_append (list, tmpval);
 	/* 4th the comments */
 	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), comments);
@@ -730,14 +905,8 @@ fb_get_aggregates (GdaConnection *cnc,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	/* Create recordset */
-	recset = (GdaDataModelArray *) gda_data_model_array_new (7);
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Name"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 1, _("ID"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Owner"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, _("Comments"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 4, _("Return type"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 5, _("Args types"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 6, _("SQL"));
+	recset = (GdaDataModelArray *) gda_data_model_array_new (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_AGGREGATES));
+	gda_server_provider_init_schema_model (GDA_DATA_MODEL (recset), GDA_CONNECTION_SCHEMA_AGGREGATES);
 
 	/* Fill recordset */
 	/*FIXME: Add user defined fuctions (Stored in systables) and set parameters */
@@ -787,42 +956,47 @@ static gchar *
 fb_sqlerror_get_description (GdaFirebirdConnection *fcnc,
 			     const gint statement_type)
 {
-	gchar *tmp_msg;
-	char buffer[512];
+	gchar *tmp_msg = NULL;
+	gchar *tmp_sql_msg = NULL;
+	char buffer[512], *pmsg;
 	short sql_code;
 	long * ptr_status_vector = fcnc->status;
 
-	/* Get error message */
-	isc_interprete (buffer, &ptr_status_vector);
-	tmp_msg = g_strdup ((gchar *) buffer);
+	pmsg = buffer;
+	if ((sql_code = isc_sqlcode (ptr_status_vector)) != 0) {
+		isc_sql_interprete ((short) sql_code, pmsg, sizeof (buffer));
+		if (strncmp (buffer, "Invalid token", 13))
+			tmp_sql_msg = g_strdup (pmsg);
+        }
 
-	/* Look for more messages */
-	while (isc_interprete (buffer, &ptr_status_vector))
-		tmp_msg = g_strconcat (tmp_msg, "\n", (gchar *) buffer, NULL);
-
-	if (statement_type != 0) {
-		sql_code = isc_sqlcode (fcnc->status);
-		isc_sql_interprete (sql_code, buffer, sizeof (buffer));
-		tmp_msg = g_strconcat  (tmp_msg, "\n", (gchar *) buffer, NULL);
-	}
-
-	/*
-		ISC_STATUS status;
-
-		status = isc_dsql_execute_immediate (fcnc->status, &(fcnc->handle), ftr, strlen (sql), 
-						     (gchar *) sql, atoi (recset->priv->sql_dialect), NULL);
-		if (status != 0) {
-			g_print ("=====\n");
-			isc_print_status(fcnc->status);
+	while (fb_interpret (buffer, sizeof (buffer), (const ISC_STATUS**) &ptr_status_vector)) {
+		if (strncmp (buffer, "Dynamic SQL Error", 17) &&
+		    strncmp (buffer, "SQL error code =", 16)) {
+			gchar *tmp = tmp_msg;
+			if (tmp) {
+				tmp_msg = g_strconcat (tmp, ": ", pmsg, NULL);
+				g_free (tmp);
+			}
+			else
+				tmp_msg = g_strdup (pmsg);
 		}
-		return (status != 0);
 	}
-	*/
+	
+	if (tmp_sql_msg) {
+		gchar *tmp = tmp_msg;
+		if (tmp) {
+			tmp_msg = g_strconcat (tmp, ": ", tmp_sql_msg, NULL);
+			g_free (tmp);
+			g_free (tmp_sql_msg);
+		}
+		else
+			tmp_msg = tmp_sql_msg;
+	}
 						
 	return tmp_msg;
 }
 
-void
+GdaConnectionEvent *
 gda_firebird_connection_make_error (GdaConnection *cnc,
 				    const gint statement_type)
 {
@@ -830,21 +1004,21 @@ gda_firebird_connection_make_error (GdaConnection *cnc,
 	GdaFirebirdConnection *fcnc;
 	gchar *description;
 
-	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	fcnc = g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
-	if (!fcnc) {
-		gda_connection_add_event_string (cnc, _("Invalid Firebird handle"));
-		return;
-	}
+	if (!fcnc) 
+		return gda_connection_add_event_string (cnc, _("Invalid Firebird handle"));
 	
 	error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
-	description = fb_sqlerror_get_description (fcnc, statement_type);
 	gda_connection_event_set_code (error, isc_sqlcode (fcnc->status));
+	description = fb_sqlerror_get_description (fcnc, statement_type);
 	gda_connection_event_set_source (error, "[GDA Firebird]");
 	gda_connection_event_set_description (error, description);
 	gda_connection_add_event (cnc, error);	
 	g_free (description);
+
+	return error;
 }
 																								
 /* get_version handler for the GdaFirebirdProvider class */
@@ -1096,7 +1270,9 @@ gda_firebird_provider_run_sql (GList *reclist,
 	if (arr) {
 		while (arr[n]) {
 			GdaDataModel *recset;
-			recset = gda_firebird_recordset_new (cnc, ftr, arr [n], &res);
+			GdaConnectionEvent *event = NULL;
+
+			recset = (GdaDataModel *) gda_firebird_recordset_new (cnc, ftr, arr [n], &res, &event);
   			if (GDA_IS_FIREBIRD_RECORDSET (recset)) {
 				g_assert (!res);
 				g_object_set (G_OBJECT (recset), "command_text", arr[n],
@@ -1108,6 +1284,7 @@ gda_firebird_provider_run_sql (GList *reclist,
 			else
 				reclist = g_list_append (reclist, NULL);
 
+			gda_connection_internal_treat_sql (cnc, sql, event);
 			n++;
 		}
 		
@@ -1155,31 +1332,23 @@ gda_firebird_provider_drop_database_cnc (GdaServerProvider *provider,
 /* execute_command handler for the GdaFirebirdProvider class */
 static GList *
 gda_firebird_provider_execute_command (GdaServerProvider *provider,
-					GdaConnection *cnc,
-					GdaCommand *cmd,
-					GdaParameterList *params)
+				       GdaConnection *cnc,
+				       GdaCommand *cmd,
+				       GdaParameterList *params)
 {
 	isc_tr_handle *ftr;
 	GList *reclist = NULL;
-	gboolean commit_tr;
 
 	g_return_val_if_fail (GDA_IS_FIREBIRD_PROVIDER (provider), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cmd != NULL, NULL);
 	
-	commit_tr = FALSE;
-	
-	/* Get transaction handle */
+	/* Begin transaction if it was not already started 
+	 * REM: don't close the transaction because otherwise blobs won't be readable anymore */
+	begin_transaction_if_not_current (provider, cnc, 
+					  "local_tr", 
+					  GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL, NULL);
 	ftr = g_object_get_data (G_OBJECT (cnc), TRANSACTION_DATA);
-	
-	/* Begin transaction if it was not already started  */
-	if (!ftr) {
-		/* Start transaction */
-		commit_tr = gda_firebird_provider_begin_transaction (provider, cnc, "local_tr", GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL);
-	
-		/* Get transaction handle */
-		ftr = g_object_get_data (G_OBJECT (cnc), TRANSACTION_DATA);
-	}
 	
 	/* Parse command */
 	switch (gda_command_get_command_type (cmd)) {
@@ -1189,13 +1358,38 @@ gda_firebird_provider_execute_command (GdaServerProvider *provider,
 		default:
 			break;
 	}
-
-	/* Commit transaction if it was not started directly by programmer */
-	if (commit_tr) 
-		gda_firebird_provider_commit_transaction (provider, cnc, "local_tr", NULL);
 	
 	return reclist;
 }
+
+/*
+ * Starts a new transaction is one is not yet running
+ * @has_error: set to TRUE if there was an error while starting a transaction
+ * Returns: TRUE if a new transaction was just started
+ */
+static gboolean
+begin_transaction_if_not_current (GdaServerProvider *provider,
+				  GdaConnection *cnc,
+				  const gchar *name, GdaTransactionIsolation level,
+				  GError **error, gboolean *has_error)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	if (g_object_get_data (G_OBJECT (cnc), TRANSACTION_DATA)) {
+		/* aalready in a transaction */
+		if (has_error)
+			*has_error = FALSE;
+		return FALSE;
+	}
+	else {
+		gboolean newtrans;
+		newtrans = gda_firebird_provider_begin_transaction (provider, cnc, name, level, error);
+		if (has_error)
+			*has_error = !newtrans;
+		return newtrans;
+	}
+}
+
 
 /* begin_transaction handler for the GdaFirebirdProvider class */
 static gboolean
@@ -1234,6 +1428,7 @@ gda_firebird_provider_begin_transaction (GdaServerProvider *provider,
 	}
 	
 	g_object_set_data (G_OBJECT (cnc), TRANSACTION_DATA, ftr);
+	gda_connection_internal_transaction_started (cnc, NULL, name, level);
 
 	return TRUE;
 }
@@ -1267,8 +1462,10 @@ gda_firebird_provider_commit_transaction (GdaServerProvider *provider,
 		gda_firebird_connection_make_error (cnc, 0);
 		result = FALSE;
 	}
-	else
+	else {
+		gda_connection_internal_transaction_committed (cnc, name);
 		result = TRUE;
+	}
 
 	g_free (ftr);
 	g_object_set_data (G_OBJECT (cnc), TRANSACTION_DATA, NULL);
@@ -1305,8 +1502,10 @@ gda_firebird_provider_rollback_transaction (GdaServerProvider *provider,
 		gda_firebird_connection_make_error (cnc, 0);
 		result = FALSE;
 	}
-	else
+	else {
+		gda_connection_internal_transaction_rolledback (cnc, name);
 		result = TRUE;
+	}
 
 	g_free (ftr);
 	g_object_set_data (G_OBJECT (cnc), TRANSACTION_DATA, NULL);
@@ -1327,12 +1526,12 @@ gda_firebird_provider_supports (GdaServerProvider *provider,
 		case GDA_CONNECTION_FEATURE_SQL:
 		case GDA_CONNECTION_FEATURE_TRANSACTIONS:
 		case GDA_CONNECTION_FEATURE_AGGREGATES:
-			return TRUE;
+		case GDA_CONNECTION_FEATURE_BLOBS:
 		case GDA_CONNECTION_FEATURE_TRIGGERS:
 		case GDA_CONNECTION_FEATURE_INDEXES:
 		case GDA_CONNECTION_FEATURE_PROCEDURES:
 		case GDA_CONNECTION_FEATURE_USERS:
-		case GDA_CONNECTION_FEATURE_BLOBS:
+			return TRUE;
 		default:
 			break;
 	}
@@ -1390,4 +1589,123 @@ gda_firebird_provider_get_schema (GdaServerProvider *provider,
 	}
 
 	return NULL;
+}
+
+static GdaDataHandler *
+gda_firebird_provider_get_data_handler (GdaServerProvider *provider,
+					GdaConnection *cnc,
+					GType type,
+					const gchar *dbms_type)
+{
+	GdaDataHandler *dh = NULL;
+	
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+
+        if ((type == G_TYPE_INT64) ||
+	    (type == G_TYPE_UINT64) ||
+	    (type == G_TYPE_DOUBLE) ||
+	    (type == G_TYPE_INT) ||
+	    (type == GDA_TYPE_NUMERIC) ||
+	    (type == G_TYPE_FLOAT) ||
+	    (type == GDA_TYPE_SHORT) ||
+	    (type == GDA_TYPE_USHORT) ||
+	    (type == G_TYPE_CHAR) ||
+	    (type == G_TYPE_UCHAR) ||
+	    (type == G_TYPE_ULONG) ||
+	    (type == G_TYPE_UINT)) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
+		if (!dh) {
+			dh = gda_handler_numerical_new ();
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_INT64, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_DOUBLE, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_INT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_NUMERIC, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_FLOAT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_SHORT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_USHORT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_CHAR, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_UCHAR, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_UINT, NULL);
+			g_object_unref (dh);
+		}
+	}
+	else if ((type == G_TYPE_DATE) ||
+		 (type == GDA_TYPE_TIME) ||
+		 (type == GDA_TYPE_TIMESTAMP)) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
+		if (!dh) {
+			dh = gda_handler_time_new ();
+			gda_handler_time_set_sql_spec   ((GdaHandlerTime *) dh, G_DATE_YEAR,
+							 G_DATE_MONTH, G_DATE_DAY, '-', FALSE);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_DATE, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIME, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIMESTAMP, NULL);
+			g_object_unref (dh);
+		}
+	}
+	else if (type == G_TYPE_STRING) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
+		if (!dh) {
+			dh = gda_handler_string_new_with_provider (provider, cnc);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_STRING, NULL);
+			g_object_unref (dh);
+		}
+	}
+	else if (type == GDA_TYPE_BLOB) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
+		if (!dh) {
+			dh = gda_handler_bin_new ();
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_BLOB, NULL);
+			g_object_unref (dh);
+		}
+	}
+
+	return dh;
+}
+	
+static const gchar* 
+gda_firebird_provider_get_default_dbms_type (GdaServerProvider *provider,
+					     GdaConnection *cnc,
+					     GType type)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+
+	if (type == G_TYPE_INT64)
+		return "int64";
+	if (type == G_TYPE_UINT64)
+		return "FIXME";
+	if (type == GDA_TYPE_BLOB)
+		return "blob";
+	if (type == G_TYPE_BOOLEAN)
+		return "smallint";
+	if (type == G_TYPE_DATE)
+		return "date";
+	if (type == G_TYPE_DOUBLE)
+		return "double";
+	if (type == G_TYPE_INT)
+		return "integer";
+	if (type == GDA_TYPE_NUMERIC)
+		return "numeric";
+	if (type == G_TYPE_FLOAT)
+		return "float";
+	if (type == GDA_TYPE_SHORT)
+		return "smallint";
+	if (type == GDA_TYPE_USHORT)
+		return "integer";
+	if (type == G_TYPE_STRING)
+		return "varchar";
+	if (type == GDA_TYPE_TIME)
+		return "time";
+	if (type == GDA_TYPE_TIMESTAMP)
+		return "timestamp";
+	if (type == G_TYPE_CHAR)
+		return "smallint";
+	if (type == G_TYPE_UCHAR)
+		return "smallint";
+	if (type == G_TYPE_ULONG)
+		return "int64";
+        if (type == G_TYPE_UINT)
+		return "int64";
+
+	return "text";
 }

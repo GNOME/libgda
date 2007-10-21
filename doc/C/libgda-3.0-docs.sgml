@@ -430,6 +430,54 @@
       <para>Configuration examples are given in <link linkend="installation-configuring">this introduction section</link></para>
       &libgda-init;
       &libgda-config;
+      <sect1 id="libgda_env_variables">
+	<title>Configuring &LIBGDA; with environment variables</title>
+	<para>Some functional aspects of &LIBGDA; can be configured using environment variables which are
+	  listed here:
+	  <itemizedlist>
+	    <listitem>
+              <para>GDA_CONNECTION_EVENTS_SHOW: if set, then lists the type of events which must be displayed on STDOUT
+		(event types are NOTICE, COMMAND, WARNING, ERROR, the variable can contain a list of types separated by
+		colons, commas or spaces)</para>
+	    </listitem>
+	    <listitem>
+              <para>GDA_CONNECTION_COMMANDS_SHOW: if set, then all the commands issued to a server will be
+		displayed on STDOUT</para>
+	    </listitem>
+	    <listitem>
+              <para>GDA_DSN_LIST_IN_MEMORY: if set, then the list of defined data sources (DSN) will remain in 
+	      memory (will not be written to disk) and will be lost when the application terminates.</para>
+	    </listitem>
+	    <listitem>
+              <para>GDA_PROVIDERS_ROOT_DIR: if set, must point to the directory where the providers files are (providers
+	      files are shared libraries)</para>
+	    </listitem>
+	    <listitem>
+              <para>LIBGDA_NO_THREADS: if set, then multi threading will be disabled (note that &LIBGDA; is not thread safe,
+	      but usually internally uses threads when possible to perform actions in a non blocking way)</para>
+	    </listitem>
+	    <listitem>
+              <para>GDA_DATA_MODEL_DUMP_TITLE: if set, then <link linkend="gda-data-model-dump">gda_data_model_dump()</link>
+	      will also output the name of the data model as its first line</para>
+	    </listitem>
+	    <listitem>
+              <para>GDA_DATA_MODEL_DUMP_ROW_NUMBERS: if set, then 
+		<link linkend="gda-data-model-dump">gda_data_model_dump()</link> will prepend a column containing row
+		numbers</para>
+	    </listitem>
+	    <listitem>
+              <para>GDA_DATA_MODEL_NULL_AS_EMPTY: if set, then 
+		<link linkend="gda-data-model-dump">gda_data_model_dump()</link> will show an empty ("") string
+		for NULL values, instead of the "NULL" string</para>
+	    </listitem>
+	    <listitem>
+              <para>GDA_DATA_MODEL_DUMP_ATTRIBUTES: if set, then 
+		<link linkend="gda-data-model-dump">gda_data_model_dump()</link> will also include a description of
+	      the data model's attributes</para>
+	    </listitem>
+	  </itemizedlist>
+	</para>
+      </sect1>
     </chapter>
 
     <chapter id="connection">
@@ -653,7 +701,9 @@
       <para>
 	&LIBGDA; offers several command line tools to help disgnose and resolve problems. All the
 	provided tools can be run with the "--help" command line argument to give an online help
-	and description.
+	and description. Also, some environment variables can be set to control the output for some of
+	the tools, see <link linkend="libgda_env_variables">&LIBGDA;'s environment variables</link> section
+	for more details.
       </para>
     </chapter>
 
@@ -668,7 +718,7 @@
 	For example to list the installed providers, do:
 	<programlisting>
 [prompt]> gda-sql-3.0 -L
-Provider    | Description                       | DSN parameters     | File                                                      
+Provider    | Description                       | DSN parameters     | File                                          
 ------------+-----------------------------------+--------------------+-----------------------------------------------
 SQLite      | Provider for SQLite databases     | DB_NAME,           | /usr/lib/libgda-3.0/providers/libgda-sqlite.so  
                                                   DB_DIR,                                                            
@@ -686,7 +736,11 @@ Sales    | PostgreSQL | Sales        | DB_NAME=sales          |
 [...]
 	</programlisting>
 	To run an interractive session, just specify a DSN (using the <option>-s DSN</option> option) or
-	a connection string (using the <option>-c "connection string"</option> and <option>-p provider</option> options):
+	a connection string (using the <option>-c "connection string"</option> and <option>-p provider</option> options). 
+	Alternatively, it is also possible to use the &quot;&lt;provider&gt;://&lt;connection string&gt;&quot; 
+	format (such as for example "Firebird://DATABASE=/path/to/dbfile.fdb")for an all-in-one connection 
+	specification (pass this string without any option specifier), or set
+	the GDA_SQL_CNC environment variable to contain that string, and run the command without any argument.
       </para>
       <programlisting><![CDATA[
 [prompt]> gda-sql-3.0 -p SQLite -c "DB_DIR=.;DB_NAME=sales_test"

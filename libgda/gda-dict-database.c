@@ -1070,11 +1070,11 @@ database_tables_update_list (GdaDictDatabase *db, const gchar *table_name, GErro
 
 	/* tables */
 	rs = gda_connection_get_schema (cnc, GDA_CONNECTION_SCHEMA_TABLES, options, NULL);
-	if (options)
-		g_object_unref (options);
 	if (!rs) {
 		g_set_error (error, GDA_DICT_DATABASE_ERROR, GDA_DICT_DATABASE_TABLES_ERROR,
 			     _("Can't get list of tables"));
+		if (options) 
+			g_object_unref (options);
 		return FALSE;
 	}
 	updated_tables = database_tables_n_views_update_treat_schema_result (db, rs, FALSE, error);
@@ -1083,8 +1083,11 @@ database_tables_update_list (GdaDictDatabase *db, const gchar *table_name, GErro
 
 	/* views */
 	rs = gda_connection_get_schema (cnc, GDA_CONNECTION_SCHEMA_VIEWS, options, NULL);
-	if (options)
+	if (options) {
 		g_object_unref (options);
+		options = NULL;
+	}
+
 	if (!rs) {
 		g_set_error (error, GDA_DICT_DATABASE_ERROR, GDA_DICT_DATABASE_TABLES_ERROR,
 			     _("Can't get list of views"));

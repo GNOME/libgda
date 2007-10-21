@@ -52,6 +52,14 @@ gda_internal_command_exec_result_free (GdaInternalCommandResult *res)
 		if (res->u.txt)
 			g_string_free (res->u.txt, TRUE);
 		break;
+	case GDA_INTERNAL_COMMAND_RESULT_MULTIPLE: {
+		GSList *list;
+
+		for (list = res->u.multiple_results; list; list = list->next)
+			gda_internal_command_exec_result_free ((GdaInternalCommandResult *) list->data);
+		g_slist_free (res->u.multiple_results);
+		break;
+	}
 	default:
 		break;
 	}
@@ -352,13 +360,15 @@ gda_internal_command_list_tables_views (GdaConnection *cnc, GdaDict *dict, const
 	gda_data_model_set_column_title (model, 1, _("Type"));
 	gda_data_model_set_column_title (model, 2, _("Owner"));
 	gda_data_model_set_column_title (model, 3, _("Description"));
+	gda_object_set_name (GDA_OBJECT (model), _("List of tables and views"));
+
 	tables = gda_dict_database_get_tables (db);
 	for (list = tables; list; list = list->next) {
 		const gchar *cstr;
 		GdaDictTable *table = GDA_DICT_TABLE (list->data);
 		
 		cstr = gda_object_get_name (GDA_OBJECT (table));
-		if (tname && strcmp (tname, cstr))
+		if (tname && g_ascii_strcasecmp (tname, cstr))
 			continue;
 
 		row = gda_data_model_append_row (model, NULL);
@@ -366,8 +376,8 @@ gda_internal_command_list_tables_views (GdaConnection *cnc, GdaDict *dict, const
 		gda_data_model_set_value_at (model, 0, row, value, NULL);
 		gda_value_free (value);
 		
-		value = gda_value_new_from_string (gda_dict_table_is_view (table) ? _("View") : 
-						   _("Table"), G_TYPE_STRING);
+		value = gda_value_new_from_string (gda_dict_table_is_view (table) ? _("view") : 
+						   _("table"), G_TYPE_STRING);
 		gda_data_model_set_value_at (model, 1, row, value, NULL);
 		gda_value_free (value);
 		
@@ -467,6 +477,7 @@ gda_internal_command_list_queries (GdaConnection *cnc, GdaDict *dict,
 		gda_data_model_set_column_title (model, 3, _("Parameters"));
 		if (with_sql_def)
 			gda_data_model_set_column_title (model, 4, _("SQL"));
+		gda_object_set_name (GDA_OBJECT (model), _("List of queries"));
 		queries = gda_dict_get_queries (dict);
 		for (list = queries; list; list = list->next) {
 			GdaQuery *query = GDA_QUERY (list->data);
@@ -526,4 +537,280 @@ gda_internal_command_list_queries (GdaConnection *cnc, GdaDict *dict,
 	}
 
 	return res;
+}
+
+GdaInternalCommandResult *
+gda_internal_command_detail (GdaConnection *cnc, GdaDict *dict, 
+			     const gchar **args,
+			     GError **error, gpointer data)
+{
+	if (!args[0]) {
+		TO_IMPLEMENT;
+		return NULL;
+	}
+
+	if (! gda_dict_update_dbms_meta_data (dict, GDA_TYPE_DICT_TABLE, args[0], error))
+		return NULL;
+	GdaDictTable *table;
+	GdaDictDatabase *db = gda_dict_get_database (dict);
+	g_assert (db);
+	table = gda_dict_database_get_table_by_name (db, args[0]);
+	if (table) {
+		GdaInternalCommandResult *global_res, *res;
+
+		global_res = g_new0 (GdaInternalCommandResult, 1);
+		global_res->type = GDA_INTERNAL_COMMAND_RESULT_MULTIPLE;
+		global_res->u.multiple_results = NULL;
+
+		/*
+		 * First part: description of the table
+		 */
+		GdaDataModel *model;
+		GSList *fields, *list;		
+		gchar *str;
+		model = gda_data_model_array_new_with_g_types (4,
+							       G_TYPE_STRING,
+							       G_TYPE_STRING,
+							       G_TYPE_STRING,
+							       G_TYPE_STRING);
+		gda_data_model_set_column_title (model, 0, _("Column"));
+		gda_data_model_set_column_title (model, 1, _("Type"));
+		gda_data_model_set_column_title (model, 2, _("Modifiers"));
+		gda_data_model_set_column_title (model, 3, _("Description"));
+		str = g_strdup_printf (_("Description of table '%s'"), args[0]);
+		gda_object_set_name (GDA_OBJECT (model), str);
+		g_free (str);
+
+		fields = gda_entity_get_fields (GDA_ENTITY (table));
+		for (list = fields; list; list = list->next) {
+			gint row;
+			const gchar *cstr;
+			GString *string;
+			GValue *value;
+			row = gda_data_model_append_row (model, NULL);
+			
+			/* column */
+			cstr = gda_object_get_name (GDA_OBJECT (list->data));
+			value = gda_value_new_from_string (cstr ? cstr : "", G_TYPE_STRING);
+			gda_data_model_set_value_at (model, 0, row, value, NULL);
+			gda_value_free (value);
+
+			/* type */
+			GdaDictType *type;
+			GType gtype;
+			type = gda_entity_field_get_dict_type (GDA_ENTITY_FIELD (list->data));
+			gtype = gda_entity_field_get_g_type (GDA_ENTITY_FIELD (list->data));
+			if (type) {
+				gint len = gda_dict_field_get_length (GDA_DICT_FIELD (list->data));
+				if (len >= 0) {
+				    if (gtype == G_TYPE_STRING)
+					    str = g_strdup_printf ("%s (%d)", gda_dict_type_get_sqlname (type), len);
+				    else if (gtype == GDA_TYPE_NUMERIC) 
+					    str = g_strdup_printf ("%s (%d,%d)", 
+								   gda_dict_type_get_sqlname (type), len,
+								   gda_dict_field_get_scale (GDA_DICT_FIELD (list->data)));
+				    else
+					    str = g_strdup (gda_dict_type_get_sqlname (type)); 
+				} else
+					str = g_strdup (gda_dict_type_get_sqlname (type));
+			}
+			else
+				str = g_strdup_printf ("(%s)", g_type_name (gtype));
+			value = gda_value_new_from_string (str, G_TYPE_STRING);
+			/*g_print ("%s => %s (%s)\n", gda_object_get_name (GDA_OBJECT (list->data)),
+			  str, g_type_name (gtype));*/
+			g_free (str);
+			gda_data_model_set_value_at (model, 1, row, value, NULL);
+			gda_value_free (value);
+
+			/* modifiers */
+			gboolean start = TRUE;
+			string = g_string_new ("");
+#ifdef BE_CORRECT
+			gint attrs = gda_dict_field_get_attributes (GDA_DICT_FIELD (list->data));
+			if (attrs & FIELD_AUTO_INCREMENT) {
+				g_string_append (string, "AUTO INCREMENT");
+				start = FALSE;
+			}
+#else
+			if (g_object_get_data (G_OBJECT (list->data), "raw_extra_attributes")) {
+				g_string_append (string, 
+						 (gchar *) g_object_get_data (G_OBJECT (list->data), "raw_extra_attributes"));
+				start = FALSE;
+			}
+#endif
+			if (! gda_dict_field_is_null_allowed (GDA_DICT_FIELD (list->data))) {
+				if (!start) 
+					g_string_append (string, ", ");
+				else
+					start = FALSE;
+				g_string_append (string, "NOT NULL");
+			}
+			const GValue *def_val;
+			def_val = gda_dict_field_get_default_value (GDA_DICT_FIELD (list->data));
+			if (def_val && !gda_value_is_null (def_val)) {
+				if (!start) 
+					g_string_append (string, ", ");
+				else
+					start = FALSE;
+				str = gda_value_stringify (def_val);
+				g_string_append_printf (string, "DEFAULT %s", str);
+				g_free (str);
+			}
+			value = gda_value_new_from_string (string->str, G_TYPE_STRING);
+			gda_data_model_set_value_at (model, 2, row, value, NULL);
+			gda_value_free (value);
+			g_string_free (string, TRUE);
+				
+			/* description */
+			cstr = gda_object_get_description (GDA_OBJECT (list->data));
+			value = gda_value_new_from_string (cstr ? cstr : "", G_TYPE_STRING);
+			gda_data_model_set_value_at (model, 3, row, value, NULL);
+			gda_value_free (value);
+		}
+		g_slist_free (fields);
+
+		res = g_new0 (GdaInternalCommandResult, 1);
+		res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+		res->u.model = model;
+		global_res->u.multiple_results = g_slist_append (global_res->u.multiple_results, res);
+
+		/*
+		 * Second part: description of the constraints
+		 */
+		{
+			GString *string = NULL;
+			GSList *constraints, *list;
+
+			constraints = gda_dict_table_get_constraints (table);
+			for (list = constraints; list; list = list->next) {
+				GdaDictConstraint *ct = GDA_DICT_CONSTRAINT (list->data);
+				GSList *fields_list, *fl;
+
+				if (gda_dict_constraint_get_constraint_type (ct) == CONSTRAINT_NOT_NULL)
+					continue;
+
+				if (!string)
+					string = g_string_new ("");
+				else
+					g_string_append_c (string, '\n');
+				g_string_append (string, _("Constraint"));
+				if (gda_object_get_name (GDA_OBJECT (ct)))
+					g_string_append_printf (string, " %s:\n", gda_object_get_name (GDA_OBJECT (ct)));
+				else
+					g_string_append (string, ":\n");
+				switch (gda_dict_constraint_get_constraint_type (ct)) {
+				case CONSTRAINT_PRIMARY_KEY:
+					g_string_append (string, " PRIMARY KEY (");
+					fields_list = gda_dict_constraint_pkey_get_fields (ct);
+					for (fl = fields_list; fl; fl = fl->next) {
+						if (fl != fields_list)
+							g_string_append (string, ", ");
+						g_string_append (string, gda_object_get_name (GDA_OBJECT (fl->data)));
+					}
+					g_string_append_c (string, ')');
+					g_slist_free (fields_list);
+					break;
+				case CONSTRAINT_FOREIGN_KEY: {
+					GdaDictTable *ref_table;
+					ref_table = gda_dict_constraint_fkey_get_ref_table (ct);
+					g_string_append (string, " FOREIGN KEY (");
+					fields_list = gda_dict_constraint_fkey_get_fields (ct);
+					for (fl = fields_list; fl; fl = fl->next) {
+						GdaDictConstraintFkeyPair *pair = (GdaDictConstraintFkeyPair*) fl->data;
+						if (fl != fields_list)
+							g_string_append (string, ", ");
+						g_string_append (string, gda_object_get_name (GDA_OBJECT (pair->fkey)));
+					}
+					g_string_append_c (string, ')');
+
+					g_string_append (string, " REFERENCES ");
+					g_string_append_printf (string, "%s (", 
+								gda_object_get_name (GDA_OBJECT (ref_table)));
+					for (fl = fields_list; fl; fl = fl->next) {
+						GdaDictConstraintFkeyPair *pair = (GdaDictConstraintFkeyPair*) fl->data;
+						if (fl != fields_list)
+							g_string_append (string, ", ");
+						g_string_append (string, gda_object_get_name (GDA_OBJECT (pair->ref_pkey)));
+					}
+					g_string_append_c (string, ')');
+					g_slist_free (fields_list);
+					/* FIXME: need the actions */
+					break;
+				}
+				case CONSTRAINT_UNIQUE:
+					g_string_append (string, " UNIQUE (");
+					fields_list = gda_dict_constraint_unique_get_fields (ct);
+					for (fl = fields_list; fl; fl = fl->next) {
+						if (fl != fields_list)
+							g_string_append (string, ", ");
+						g_string_append (string, gda_object_get_name (GDA_OBJECT (fl->data)));
+					}
+					g_string_append_c (string, ')');
+					g_slist_free (fields_list);
+					break;
+				case CONSTRAINT_NOT_NULL: 
+					/* Dont' display anything here */
+					break;
+				case CONSTRAINT_CHECK_EXPR:
+					break;
+				case CONSTRAINT_CHECK_IN_LIST:
+					break;
+				case CONSTRAINT_CHECK_SETOF_LIST:
+					break;
+				default:
+					break;
+				}
+			}
+			g_slist_free (constraints);
+
+			if (!string && ! gda_dict_table_is_view (table))
+				string = g_string_new (_("No constraint for this table."));
+			if (string) {
+				res = g_new0 (GdaInternalCommandResult, 1);
+				res->type = GDA_INTERNAL_COMMAND_RESULT_TXT;
+				res->u.txt = string;
+				global_res->u.multiple_results = g_slist_append (global_res->u.multiple_results, res);
+			}
+		}
+
+		/*
+		 * 3rd part: SQL definition
+		 */
+		{
+			GString *string = NULL;
+			if (gda_dict_table_is_view (table)) {
+				GdaDataModel *schema;
+				GdaParameterList *plist;
+				plist = gda_parameter_list_new_inline (dict, "name", G_TYPE_STRING, 
+								       gda_object_get_name (GDA_OBJECT (table)), NULL);
+				schema = gda_connection_get_schema (cnc, GDA_CONNECTION_SCHEMA_VIEWS, plist, NULL);
+				g_object_unref (plist);
+				if (schema) {
+					const GValue *cvalue;
+					cvalue = gda_data_model_get_value_at (schema, 3, 0);
+					if (cvalue && !gda_value_is_null (cvalue) && 
+					    g_value_get_string (cvalue) && *g_value_get_string (cvalue)) {
+						string = g_string_new (_("View definition:"));
+						g_string_append (string, "\n ");
+						g_string_append (string, g_value_get_string (cvalue));
+					}
+					g_object_unref (schema);
+				}
+			}
+			if (string) {
+				res = g_new0 (GdaInternalCommandResult, 1);
+				res->type = GDA_INTERNAL_COMMAND_RESULT_TXT;
+				res->u.txt = string;
+				global_res->u.multiple_results = g_slist_append (global_res->u.multiple_results, res);
+			}
+		}
+		
+
+		return global_res;
+	}
+
+	g_set_error (error, 0, 0,
+		     _("No object named '%s' found"), args[0]);
+	return NULL;
 }

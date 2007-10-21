@@ -1,9 +1,10 @@
 /* GDA FireBird Provider
- * Copyright (C) 1998-2002 The GNOME Foundation
+ * Copyright (C) 1998 - 2007 The GNOME Foundation
  *
  * AUTHORS:
  *         Albi Jeronimo <jeronimoalbi@yahoo.com.ar>
  *         Rodrigo Moya <rodrigo@gnome-db.org>
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -20,8 +21,8 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#if !defined(__gda_firebird_provider_h__)
-#  define __gda_firebird_provider_h__
+#ifndef __GDA_FIREBIRD_PROVIDER_H__
+#define __GDA_FIREBIRD_PROVIDER_H__
 
 #include <libgda/gda-server-provider.h>
 #include <ibase.h>
@@ -55,8 +56,8 @@ struct _GdaFirebirdProviderClass {
 GType              gda_firebird_provider_get_type (void) G_GNUC_CONST;
 GdaServerProvider *gda_firebird_provider_new (void);
 
-void               gda_firebird_connection_make_error (GdaConnection *cnc, 
-						       const gint statement_type);
+GdaConnectionEvent *gda_firebird_connection_make_error (GdaConnection *cnc, 
+							const gint statement_type);
 
 G_END_DECLS
 

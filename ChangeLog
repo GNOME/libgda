@@ -1,3 +1,24 @@
+2007-10-21  Vivien Malerba <malerba@gnome-db.org>
+
+	* doc/C: added a list of the environment variables useable in Libgda
+	* tools/command-exec.[ch]:
+	* tools/gda-sql.c: added a new "\d <NAME>" command to describe a table or
+	view
+	* providers/firebird/*: improvements to the schema reporting (better data type
+	report), added support for reading BLOBs' contents and arrays
+	* libgda/gda-connection.c: use the GDA_CONNECTION_EVENTS_SHOW environment variable
+	to determine which events get displayed on stdout
+	* libgda/gda-server-provider.c: use the GDA_CONNECTION_COMMANDS_SHOW environment variable
+	to determibe if commands sent to the server need to be displayed on stdout
+	* libgda/gda-value.c: implement gda_value_stringify() for values of type GDA_TYPE_LIST
+	* libgda/gda-data-model.c: added more options to specify the ouptut of
+	gda_data_model_dump()
+	* libgda/gda-client.c: removed warning
+	* libgda/gda-dict-table.c: set a "raw_extra_attributes" 'property' with the actual
+	extra attributes as returned when synced with the actual database schema definition
+	* libgda/gda-dict-database.c: avoid memory leak
+	* libgda/handlers/gda-handler-bin.c: correctly treat GdaBlob values
+
 2007-10-15  Kjartan Maraas  <kmaraas@gnome.org>
 
 	* configure.in: Remove "no" from ALL_LINGUAS.

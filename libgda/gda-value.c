@@ -1745,6 +1745,26 @@ gda_value_stringify (const GValue *value)
 				else
 					return g_strdup ("0000-00-00");
 			}
+			else if (type == GDA_TYPE_LIST) {
+				GdaValueList *list;
+				GList *ptr;
+				GString *string;
+				gchar *tmp;
+
+				string = g_string_new ("[");
+				list = gda_value_get_list (value);
+				for (ptr = list; ptr; ptr = ptr->next) {
+					tmp = gda_value_stringify ((GValue *) ptr->data);
+					if (ptr != list)
+						g_string_append_c (string, ',');
+					g_string_append (string, tmp);
+					g_free (tmp);
+				}
+				g_string_append_c (string, ']');
+				tmp = string->str;
+				g_string_free (string, FALSE);
+				return tmp;
+			}
 			else
 				return g_strdup ("");
 		}

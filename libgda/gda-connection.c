@@ -961,33 +961,59 @@ gda_connection_get_password (GdaConnection *cnc)
 void
 gda_connection_add_event (GdaConnection *cnc, GdaConnectionEvent *event)
 {
+	static gint debug = -1;
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (cnc->priv);
 	g_return_if_fail (GDA_IS_CONNECTION_EVENT (event));
 
+	if (debug == -1) {
+		const gchar *str;
+		debug = 0;
+		str = getenv ("GDA_CONNECTION_EVENTS_SHOW");
+		if (str) {
+			gchar **array;
+			gint i;
+			array = g_strsplit_set (str, " ,/;:", 0);
+			for (i = 0; i < g_strv_length (array); i++) {
+				if (!g_ascii_strcasecmp (array[i], "notice"))
+					debug += 1;
+				else if (!g_ascii_strcasecmp (array[i], "warning"))
+					debug += 2;
+				else if (!g_ascii_strcasecmp (array[i], "error"))
+					debug += 4;
+				else if (!g_ascii_strcasecmp (array[i], "command"))
+					debug += 8;
+			}
+			g_strfreev (array);
+		}
+	}
+
 	cnc->priv->events_list = g_list_append (cnc->priv->events_list, event);
 
-#ifdef GDA_DEBUG
-	gchar *str = "???";
-	switch (gda_connection_event_get_event_type (event)) {
-	case GDA_CONNECTION_EVENT_NOTICE:
-		str = "NOTICE";
-		break;
-	case GDA_CONNECTION_EVENT_WARNING:
-		str = "WARNING";
-		break;
-	case GDA_CONNECTION_EVENT_ERROR:
-		str = "ERROR";
-		break;
-	case GDA_CONNECTION_EVENT_COMMAND:
-		str = "COMMAND";
-                break;
-	default:
-		break;
+	if (debug > 0) {
+		const gchar *str = NULL;
+		switch (gda_connection_event_get_event_type (event)) {
+		case GDA_CONNECTION_EVENT_NOTICE:
+			if (debug & 1) str = "NOTICE";
+			break;
+		case GDA_CONNECTION_EVENT_WARNING:
+			if (debug & 2) str = "WARNING";
+			break;
+		case GDA_CONNECTION_EVENT_ERROR:
+			if (debug & 4) str = "ERROR";
+			break;
+		case GDA_CONNECTION_EVENT_COMMAND:
+			if (debug & 8) str = "COMMAND";
+			break;
+		default:
+			break;
+		}
+		if (str)
+			g_print ("EVENT> %s: %s (on cnx %p, %s)\n", str, 
+				 gda_connection_event_get_description (event), cnc,
+				 gda_connection_event_get_sqlstate (event));
 	}
-	g_print ("EVENT> %s: %s (on cnx %p, %s)\n", str, gda_connection_event_get_description (event), cnc,
-		gda_connection_event_get_sqlstate (event));
-#endif
+
 	if (gda_connection_event_get_event_type (event) == GDA_CONNECTION_EVENT_ERROR)
 		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[ERROR], 0, event);
 }

@@ -81,13 +81,12 @@ emit_client_error (GdaClient *client, GdaConnection *cnc, const gchar *format, .
 	vsprintf (sz, format, args);
 	va_end (args);
 
-	g_print ("Error: %s\n", sz);
-
 	/* create the error list */
 	error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 	gda_connection_event_set_description (error, sz);
 	gda_connection_event_set_source (error, "[GDA client]");
-	gda_connection_add_event (cnc, error);
+	if (cnc)
+		gda_connection_add_event (cnc, error);
 }
 
 static void

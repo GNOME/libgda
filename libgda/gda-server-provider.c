@@ -721,18 +721,27 @@ gda_server_provider_execute_command (GdaServerProvider *provider,
 				     GdaCommand *cmd,
 				     GdaParameterList *params)
 {
+	static gboolean env_read = FALSE;
+	static gboolean debug = FALSE;
+
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (CLASS (provider)->execute_command != NULL, NULL);
 
-#ifdef GDA_DEBUG
-	{
-		GdaServerProviderInfo *info;
+	if (!env_read) {
+		const gchar *str;
+		env_read = TRUE;
+		str = getenv ("GDA_CONNECTION_COMMANDS_SHOW");
+		if (str)
+			debug = TRUE;
+	}
+	if (debug) {
+		static GdaServerProviderInfo *info = NULL;
 
-		info = gda_server_provider_get_info (provider, cnc);
+		if (!info)
+			info = gda_server_provider_get_info (provider, cnc);
 		g_print ("COMMAND> %s (Provider %s on cnx %p)\n", cmd->text, info->provider_name, cnc);
 	}
-#endif
 
 	gda_connection_clear_events_list (cnc);
 	return CLASS (provider)->execute_command (provider, cnc, cmd, params);
@@ -774,21 +783,31 @@ gda_server_provider_execute_query (GdaServerProvider *provider,
 				   GdaQuery *query,
 				   GdaParameterList *params)
 {
+	static gboolean env_read = FALSE;
+	static gboolean debug = FALSE;
+
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (CLASS (provider)->execute_query != NULL, NULL);
 
-#ifdef GDA_DEBUG
-	{
-		GdaServerProviderInfo *info;
+	if (!env_read) {
+		const gchar *str;
+		env_read = TRUE;
+		str = getenv ("GDA_CONNECTION_COMMANDS_SHOW");
+		if (str)
+			debug = TRUE;
+	}
+
+	if (debug) {
+		static GdaServerProviderInfo *info = NULL;
 		gchar *sql;
 
-		info = gda_server_provider_get_info (provider, cnc);
+		if (!info)
+			info = gda_server_provider_get_info (provider, cnc);
 		sql = gda_renderer_render_as_sql (GDA_RENDERER (query), params, NULL, 0, NULL);
 		g_print ("QUERY> %s (Provider %s on cnx %p)\n", sql, info->provider_name, cnc);
 		g_free (sql);
 	}
-#endif
 	
 	gda_connection_clear_events_list (cnc);
 	return CLASS (provider)->execute_query (provider, cnc, query, params);

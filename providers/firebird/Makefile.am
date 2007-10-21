@@ -8,6 +8,8 @@ AM_CPPFLAGS = \
 	$(FIREBIRD_CFLAGS)
 
 libgda_firebird_la_SOURCES = \
+	gda-firebird-blob-op.c \
+	gda-firebird-blob-op.h \
 	gda-firebird-provider.c \
 	gda-firebird-provider.h \
 	gda-firebird-recordset.c \
