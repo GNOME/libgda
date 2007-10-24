@@ -20,8 +20,8 @@
 
   <test name="Q3">
     <sql expected="A">SELECT * FROM workspace WHERE name = ## /* name:'+0' type:gchararray */ AND analize_time = ##/* name:'+1' type:'DATE' */</sql>
-    <render_as when_gda="TRUE" when_dict="TRUE">SELECT t1.* FROM workspace AS t1 WHERE t1.name=## /* type:"gchararray" name:"+0" */ AND t1.analize_time=## /* type:"DATE" name:"+1" */ </render_as>
-    <render_as when_gda="TRUE" when_dict="FALSE">SELECT t1.* FROM workspace AS t1 WHERE name=## /* type:"gchararray" name:"+0" */ AND analize_time=## /* type:"DATE" name:"+1" */ </render_as>
+    <render_as when_gda="TRUE" when_dict="TRUE">SELECT t1.* FROM workspace AS t1 WHERE t1.name=## /* type:"gchararray" name:"+0" */ AND t1.analize_time=## /* type:"DATE" name:"+1" */</render_as>
+    <render_as when_gda="TRUE" when_dict="FALSE">SELECT t1.* FROM workspace AS t1 WHERE name=## /* type:"gchararray" name:"+0" */ AND analize_time=## /* type:"DATE" name:"+1" */</render_as>
     <render_as when_gda="FALSE">SELECT * FROM workspace WHERE name = ## /* name:"+0" type:"gchararray" */ AND analize_time = ## /* name:"+1" type:"DATE" */</render_as>
     <params>
       <param name="+0" type="gchararray"/>
@@ -31,8 +31,8 @@
 
   <test name="Q4">
     <sql expected="A">SELECT * FROM workspace WHERE name = ## /* name:'+0' type:gchararray */</sql>
-    <render_as when_gda="TRUE" when_dict="TRUE">SELECT t1.* FROM workspace AS t1 WHERE t1.name=## /* type:"gchararray" name:"+0" */ </render_as>
-    <render_as when_gda="TRUE" when_dict="FALSE">SELECT t1.* FROM workspace AS t1 WHERE name=## /* type:"gchararray" name:"+0" */ </render_as>
+    <render_as when_gda="TRUE" when_dict="TRUE">SELECT t1.* FROM workspace AS t1 WHERE t1.name=## /* type:"gchararray" name:"+0" */</render_as>
+    <render_as when_gda="TRUE" when_dict="FALSE">SELECT t1.* FROM workspace AS t1 WHERE name=## /* type:"gchararray" name:"+0" */</render_as>
     <render_as when_gda="FALSE">SELECT * FROM workspace WHERE name = ## /* name:"+0" type:"gchararray" */</render_as>
     <params>
       <param name="+0" type="gchararray"/>

@@ -18,10 +18,10 @@ libgdasql_3_0_la_SOURCES = \
 	parser.c \
 	parser.h \
 	lexer.c \
+	mem.h \
+	mem.c \
 	sql_parser.c \
 	sql_parser.h \
-	mem.c \
-	mem.h \
 	sql_display.c \
 	sql_tree.c \
 	sql_tree.h

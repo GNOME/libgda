@@ -485,6 +485,8 @@ gda_query_init (GdaQuery * gda_query)
 
 	gda_query->priv->all_conds = NULL;
 	gda_query->priv->auto_clean = TRUE;
+
+	gda_query->priv->has_limit = FALSE;
 }
 
 /**
@@ -530,7 +532,7 @@ gda_query_new_copy (GdaQuery *orig, GHashTable *replacements)
 	gint order_pos;
 	GdaDictRegisterStruct *reg;
 
-	g_return_val_if_fail (orig && GDA_IS_QUERY (orig), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (orig), NULL);
 
 	dict = gda_object_get_dict (GDA_OBJECT (orig));
 	obj = g_object_new (GDA_TYPE_QUERY, "dict", dict, NULL);
@@ -791,6 +793,7 @@ gda_query_clean (GdaQuery *gda_query)
 	gda_query->priv->serial_target = 1;
 	gda_query->priv->serial_field = 1;
 	gda_query->priv->serial_cond = 1;
+	gda_query->priv->has_limit = FALSE;
 
 	/* clean priv->all_conds */
 	if (gda_query->priv->all_conds) {
@@ -887,9 +890,9 @@ gda_query_get_property (GObject *object,
 void
 gda_query_declare_condition (GdaQuery *query, GdaQueryCondition *cond)
 {
-	g_return_if_fail (query && GDA_IS_QUERY (query));
+	g_return_if_fail (GDA_IS_QUERY (query));
 	g_return_if_fail (query->priv);
-	g_return_if_fail (cond && GDA_IS_QUERY_CONDITION (cond));
+	g_return_if_fail (GDA_IS_QUERY_CONDITION (cond));
 	
 	/* we don't take any reference on condition */
 	if (g_slist_find (query->priv->all_conds, cond))
@@ -916,9 +919,9 @@ gda_query_declare_condition (GdaQuery *query, GdaQueryCondition *cond)
 void
 gda_query_undeclare_condition (GdaQuery *query, GdaQueryCondition *cond)
 {
-	g_return_if_fail (query && GDA_IS_QUERY (query));
+	g_return_if_fail (GDA_IS_QUERY (query));
 	g_return_if_fail (query->priv);
-	g_return_if_fail (cond && GDA_IS_QUERY_CONDITION (cond));
+	g_return_if_fail (GDA_IS_QUERY_CONDITION (cond));
 
 	cond_weak_ref_notify (query, cond);
 	g_object_weak_unref (G_OBJECT (cond), (GWeakNotify) cond_weak_ref_notify, query);
@@ -1124,7 +1127,7 @@ id_field_changed_cb (GdaQueryField *field, GdaQuery *query)
 void
 gda_query_set_query_type (GdaQuery *query, GdaQueryType type)
 {
-	g_return_if_fail (query && GDA_IS_QUERY (query));
+	g_return_if_fail (GDA_IS_QUERY (query));
 	g_return_if_fail (query->priv);
 
 	if (query->priv->query_type != type) {
@@ -1154,7 +1157,7 @@ gda_query_set_query_type (GdaQuery *query, GdaQueryType type)
 GdaQueryType
 gda_query_get_query_type (GdaQuery *query)
 {
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), GDA_QUERY_TYPE_SELECT);
+	g_return_val_if_fail (GDA_IS_QUERY (query), GDA_QUERY_TYPE_SELECT);
 	g_return_val_if_fail (query->priv, GDA_QUERY_TYPE_SELECT);
 	
 	return query->priv->query_type;
@@ -1171,7 +1174,7 @@ gda_query_get_query_type (GdaQuery *query)
 const gchar *
 gda_query_get_query_type_string  (GdaQuery *query)
 {
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);
 	g_return_val_if_fail (query->priv, NULL);
 
 	switch (query->priv->query_type) {
@@ -1209,7 +1212,7 @@ gda_query_get_query_type_string  (GdaQuery *query)
 gboolean
 gda_query_is_select_query (GdaQuery *query)
 {
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), FALSE);
+	g_return_val_if_fail (GDA_IS_QUERY (query), FALSE);
 	g_return_val_if_fail (query->priv, FALSE);
 
 	if ((query->priv->query_type == GDA_QUERY_TYPE_SELECT) ||
@@ -1237,7 +1240,7 @@ gda_query_is_select_query (GdaQuery *query)
 gboolean
 gda_query_is_insert_query (GdaQuery *query)
 {
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), FALSE);
+	g_return_val_if_fail (GDA_IS_QUERY (query), FALSE);
 	g_return_val_if_fail (query->priv, FALSE);
 
 	if ((query->priv->query_type == GDA_QUERY_TYPE_INSERT))
@@ -1262,7 +1265,7 @@ gda_query_is_insert_query (GdaQuery *query)
 gboolean
 gda_query_is_update_query (GdaQuery *query)
 {
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), FALSE);
+	g_return_val_if_fail (GDA_IS_QUERY (query), FALSE);
 	g_return_val_if_fail (query->priv, FALSE);
 
 	if ((query->priv->query_type == GDA_QUERY_TYPE_UPDATE))
@@ -1287,7 +1290,7 @@ gda_query_is_update_query (GdaQuery *query)
 gboolean
 gda_query_is_delete_query (GdaQuery *query)
 {
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), FALSE);
+	g_return_val_if_fail (GDA_IS_QUERY (query), FALSE);
 	g_return_val_if_fail (query->priv, FALSE);
 
 	if ((query->priv->query_type == GDA_QUERY_TYPE_DELETE))
@@ -1313,7 +1316,7 @@ gda_query_is_delete_query (GdaQuery *query)
 gboolean
 gda_query_is_modify_query (GdaQuery *query)
 {
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), FALSE);
+	g_return_val_if_fail (GDA_IS_QUERY (query), FALSE);
 	g_return_val_if_fail (query->priv, FALSE);
 
 	if (gda_query_is_delete_query (query) ||
@@ -1350,7 +1353,7 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 	gboolean err = FALSE;
 	GError *local_error = NULL; /* we don't care about the error, but we don't want any output to stderr */
 
-	g_return_if_fail (query && GDA_IS_QUERY (query));
+	g_return_if_fail (GDA_IS_QUERY (query));
 	g_return_if_fail (query->priv);
 
 	if (query->priv->sql) {
@@ -1559,7 +1562,7 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 gchar *
 gda_query_get_sql_text (GdaQuery *query)
 {
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);
 	g_return_val_if_fail (query->priv, NULL);
 
 	return gda_query_render_as_sql (GDA_RENDERER (query), NULL, NULL, GDA_RENDERER_PARAMS_AS_DETAILED, NULL);
@@ -1580,7 +1583,7 @@ gda_query_get_sql_text (GdaQuery *query)
 GdaQuery *
 gda_query_get_parent_query (GdaQuery *query)
 {
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);
 	g_return_val_if_fail (query->priv, NULL);
 
 	return query->priv->parent_query;
@@ -1606,7 +1609,7 @@ gda_query_get_field_by_ref_field (GdaQuery *query, GdaQueryTarget *target, GdaEn
 	GdaQueryField *field = NULL;
 	GSList *list;
 	
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);
 	g_return_val_if_fail (query->priv, NULL);
 	if (target)
 		g_return_val_if_fail (GDA_IS_QUERY_TARGET (target), NULL);
@@ -1642,7 +1645,7 @@ gda_query_get_first_field_for_target (GdaQuery *query, GdaQueryTarget *target)
 	GdaQueryField *retval = NULL;
 	GSList *list;
 
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);
 	g_return_val_if_fail (query->priv, NULL);
 	g_return_val_if_fail (!target || g_slist_find (query->priv->targets, target), NULL);
 
@@ -1670,7 +1673,7 @@ gda_query_get_first_field_for_target (GdaQuery *query, GdaQueryTarget *target)
 GSList *
 gda_query_get_sub_queries (GdaQuery *query)
 {
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);
 	g_return_val_if_fail (query->priv, NULL);
 
 	if (query->priv->sub_queries)
@@ -1746,7 +1749,7 @@ gda_query_del_param_source (GdaQuery *query, GdaDataModel *param_source)
 const GSList *
 gda_query_get_param_sources (GdaQuery *query)
 {
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);
         g_return_val_if_fail (query->priv, NULL);
 
 	return query->priv->param_sources;
@@ -1764,9 +1767,9 @@ gda_query_get_param_sources (GdaQuery *query)
 void
 gda_query_add_sub_query (GdaQuery *query, GdaQuery *sub_query)
 {
-	g_return_if_fail (query && GDA_IS_QUERY (query));
+	g_return_if_fail (GDA_IS_QUERY (query));
         g_return_if_fail (query->priv);
-	g_return_if_fail (sub_query && GDA_IS_QUERY (sub_query));
+	g_return_if_fail (GDA_IS_QUERY (sub_query));
 	g_return_if_fail (sub_query->priv);
         g_return_if_fail (!g_slist_find (query->priv->sub_queries, sub_query));
 
@@ -1837,9 +1840,9 @@ changed_sub_query_cb (GdaQuery *sub_query, GdaQuery *query)
 void
 gda_query_del_sub_query (GdaQuery *query, GdaQuery *sub_query)
 {
-	g_return_if_fail (query && GDA_IS_QUERY (query));
+	g_return_if_fail (GDA_IS_QUERY (query));
         g_return_if_fail (query->priv);
-	g_return_if_fail (sub_query && GDA_IS_QUERY (sub_query));
+	g_return_if_fail (GDA_IS_QUERY (sub_query));
 	g_return_if_fail (g_slist_find (query->priv->sub_queries, sub_query));
 
 	destroyed_sub_query_cb (sub_query, query);
@@ -1849,7 +1852,7 @@ static void
 change_parent_query (GdaQuery *query, GdaQuery *parent_query)
 {
 	GdaDict *dict;
-	g_return_if_fail (query && GDA_IS_QUERY (query));
+	g_return_if_fail (GDA_IS_QUERY (query));
 	g_return_if_fail (query->priv);
 
 	dict = gda_object_get_dict (GDA_OBJECT (query));
@@ -1893,7 +1896,7 @@ destroyed_parent_query (GdaQuery *parent_query, GdaQuery *query)
 GSList *
 gda_query_get_targets (GdaQuery *query)
 {
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);
 	g_return_val_if_fail (query->priv, NULL);
 
 	if (query->priv->targets)
@@ -1929,16 +1932,16 @@ gda_query_add_target (GdaQuery *query, GdaQueryTarget *target, GError **error)
 	GdaEntity *ent;
 	const gchar *str;
 
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), FALSE);
+	g_return_val_if_fail (GDA_IS_QUERY (query), FALSE);
         g_return_val_if_fail (query->priv, FALSE);
 	g_return_val_if_fail (query_sql_forget (query, error), FALSE);
-        g_return_val_if_fail (target && GDA_IS_QUERY_TARGET (target), FALSE);
+        g_return_val_if_fail (GDA_IS_QUERY_TARGET (target), FALSE);
         g_return_val_if_fail (!g_slist_find (query->priv->targets, target), FALSE);
 	g_return_val_if_fail (gda_query_target_get_query (target) == query, FALSE);
 
 	/* if target represents another GdaQuery, then make sure that other query is a sub query of @query */
 	ent = gda_query_target_get_represented_entity (target);
-	if (ent && GDA_IS_QUERY (ent)) {
+	if (GDA_IS_QUERY (ent)) {
 		if ((gda_query_get_parent_query (GDA_QUERY (ent)) != query) ||
 		    !g_slist_find (query->priv->sub_queries, ent)) {
 			g_set_error (error,
@@ -2075,10 +2078,10 @@ gda_query_assign_targets_aliases (GdaQuery *query)
 void
 gda_query_del_target (GdaQuery *query, GdaQueryTarget *target)
 {
-	g_return_if_fail (query && GDA_IS_QUERY (query));
+	g_return_if_fail (GDA_IS_QUERY (query));
         g_return_if_fail (query->priv);
 	g_return_if_fail (query_sql_forget (query, NULL));
-	g_return_if_fail (target && GDA_IS_QUERY_TARGET (target));
+	g_return_if_fail (GDA_IS_QUERY_TARGET (target));
 	g_return_if_fail (g_slist_find (query->priv->targets, target));
 
 	destroyed_target_cb (target, query);
@@ -2102,7 +2105,7 @@ gda_query_get_target_by_xml_id (GdaQuery *query, const gchar *xml_id)
 	GSList *list;
 	gchar *str;
 
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);
 	g_return_val_if_fail (query->priv, NULL);
 
 	list = query->priv->targets;
@@ -2134,7 +2137,7 @@ gda_query_get_target_by_alias (GdaQuery *query, const gchar *alias_or_name)
 	GSList *list;
 	const gchar *str;
 
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);
 	g_return_val_if_fail (query->priv, NULL);
 	g_return_val_if_fail (alias_or_name && *alias_or_name, NULL);
 
@@ -2178,9 +2181,9 @@ gda_query_get_target_pkfields (GdaQuery *query, GdaQueryTarget *target)
 	GdaEntity *entity;
 	GSList *pk_fields = NULL;
 
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);
 	g_return_val_if_fail (query->priv, NULL);
-	g_return_val_if_fail (target && GDA_IS_QUERY_TARGET (target), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY_TARGET (target), NULL);
 	g_return_val_if_fail (g_slist_find (query->priv->targets, target), NULL);
 
 	entity = gda_query_target_get_represented_entity (target);
@@ -2231,7 +2234,7 @@ gda_query_get_target_pkfields (GdaQuery *query, GdaQueryTarget *target)
 GSList *
 gda_query_get_joins (GdaQuery *query)
 {
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);
 	g_return_val_if_fail (query->priv, NULL);
 
 	if (query->priv->joins_flat)
@@ -2257,11 +2260,11 @@ gda_query_get_join_by_targets (GdaQuery *query, GdaQueryTarget *target1, GdaQuer
 	GSList *joins;
 	GdaQueryTarget *lt1, *lt2;
 	
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);
 	g_return_val_if_fail (query->priv, NULL);
-	g_return_val_if_fail (target1 && GDA_IS_QUERY_TARGET (target1), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY_TARGET (target1), NULL);
 	g_return_val_if_fail (gda_query_target_get_query (target1) == query, NULL);
-	g_return_val_if_fail (target2 && GDA_IS_QUERY_TARGET (target2), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY_TARGET (target2), NULL);
 	g_return_val_if_fail (gda_query_target_get_query (target2) == query, NULL);
 
 	joins = query->priv->joins_flat;
@@ -2306,10 +2309,10 @@ gda_query_add_join (GdaQuery *query, GdaQueryJoin *join)
 	GdaQueryTarget *t1, *t2, *lt1, *lt2;
 	gboolean already_exists = FALSE;
 
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), FALSE);
+	g_return_val_if_fail (GDA_IS_QUERY (query), FALSE);
         g_return_val_if_fail (query->priv, FALSE);
 	g_return_val_if_fail (query_sql_forget (query, NULL), FALSE);
-        g_return_val_if_fail (join && GDA_IS_QUERY_JOIN (join), FALSE);
+        g_return_val_if_fail (GDA_IS_QUERY_JOIN (join), FALSE);
         g_return_val_if_fail (!g_slist_find (query->priv->joins_flat, join), FALSE);
 	g_return_val_if_fail (gda_query_join_get_query (join) == query, FALSE);
 	g_return_val_if_fail (gda_referer_is_active (GDA_REFERER (join)), FALSE);
@@ -2401,10 +2404,10 @@ changed_join_cb (GdaQueryJoin *join, GdaQuery *query)
 void
 gda_query_del_join (GdaQuery *query, GdaQueryJoin *join)
 {
-	g_return_if_fail (query && GDA_IS_QUERY (query));
+	g_return_if_fail (GDA_IS_QUERY (query));
         g_return_if_fail (query->priv);
 	g_return_if_fail (query_sql_forget (query, NULL));
-	g_return_if_fail (join && GDA_IS_QUERY_JOIN (join));
+	g_return_if_fail (GDA_IS_QUERY_JOIN (join));
 	g_return_if_fail (g_slist_find (query->priv->joins_flat, join));
 
 	destroyed_join_cb (join, query);
@@ -2602,7 +2605,7 @@ joins_pack_del_join (GdaQuery *query, GdaQueryJoin *join)
 GdaQueryCondition *
 gda_query_get_condition (GdaQuery *query)
 {
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);
 	g_return_val_if_fail (query->priv, NULL);
 	
 	return query->priv->cond;
@@ -2621,7 +2624,7 @@ gda_query_get_condition (GdaQuery *query)
 void
 gda_query_set_condition (GdaQuery *query, GdaQueryCondition *cond)
 {
-	g_return_if_fail (query && GDA_IS_QUERY (query));
+	g_return_if_fail (GDA_IS_QUERY (query));
 	g_return_if_fail (query->priv);
 	g_return_if_fail (query_sql_forget (query, NULL));
 	if (cond)
@@ -2886,7 +2889,7 @@ gda_query_add_field_from_sql (GdaQuery *query, const gchar *field, GError **erro
 {
 	GdaQueryField *qfield = NULL;
 
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);
 	g_return_val_if_fail (query->priv, NULL);
 
 	qfield = gda_query_field_new_from_sql (query, field, error);
@@ -2908,7 +2911,7 @@ gda_query_dump (GdaQuery *query, guint offset)
 	GSList *list;
 	GError *error = NULL;
 	
-	g_return_if_fail (query && GDA_IS_QUERY (query));
+	g_return_if_fail (GDA_IS_QUERY (query));
 
         /* string for the offset */
         str = g_new0 (gchar, offset+1);
@@ -3041,9 +3044,9 @@ gda_query_set_int_id (GdaQueryObject *query, guint id)
 void
 gda_query_set_order_by_field (GdaQuery *query, GdaQueryField *field, gint order, gboolean ascendant)
 {
-	g_return_if_fail (query && GDA_IS_QUERY (query));
+	g_return_if_fail (GDA_IS_QUERY (query));
 	g_return_if_fail (query->priv);
-	g_return_if_fail (field && GDA_IS_QUERY_FIELD (field));
+	g_return_if_fail (GDA_IS_QUERY_FIELD (field));
 	g_return_if_fail (g_slist_find (query->priv->fields, field));
 
 	if (! (GDA_IS_QUERY_FIELD_VALUE (field) && 
@@ -3082,14 +3085,64 @@ gda_query_set_order_by_field (GdaQuery *query, GdaQueryField *field, gint order,
 gint
 gda_query_get_order_by_field (GdaQuery *query, GdaQueryField *field, gboolean *ascendant)
 {
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), -1);
+	g_return_val_if_fail (GDA_IS_QUERY (query), -1);
 	g_return_val_if_fail (query->priv, -1);
-	g_return_val_if_fail (field && GDA_IS_QUERY_FIELD (field), -1);
+	g_return_val_if_fail (GDA_IS_QUERY_FIELD (field), -1);
 	g_return_val_if_fail (g_slist_find (query->priv->fields, field), -1);
 
 	if (ascendant)
 		*ascendant = g_object_get_data (G_OBJECT (field), "order_by_asc") ? TRUE : FALSE;
 	return g_slist_index (query->priv->fields_order_by, field);
+}
+
+/**
+ * gda_query_set_results_limit
+ * @query: a #GdaQuery object
+ * @has_limit: if FALSE, then no limit is set (@limit and @offset are ignored)
+ * @limit: the maximum number of rows returned
+ * @offset: the row offset to start getting rows
+ *
+ * For a SELECT query, sets the limits for the number of rows returned when the query is executed
+ */
+void
+gda_query_set_results_limit (GdaQuery *query, gboolean has_limit, guint limit, guint offset)
+{
+	g_return_if_fail (GDA_IS_QUERY (query));
+	g_return_if_fail (query->priv);
+
+	if (gda_query_is_select_query (query)) {
+		query->priv->has_limit = has_limit;
+		if (has_limit) {
+			query->priv->limit = limit;
+			query->priv->offset = offset;
+		}
+	}
+}
+
+/**
+ * gda_query_get_results_limit
+ * @query: a #GdaQuery object
+ * @limit: a place to store the maximum number of rows returned, or %NULL
+ * @offset: a place to store the row offset to start getting rows, or %NULL
+ *
+ * For a SELECT query, get the limits for the number of rows returned when the query is executed
+ *
+ * Returns: FALSE if no limit is set in @query (in which case @limit and @offset are unchanged)
+ */
+gboolean
+gda_query_get_results_limit (GdaQuery *query, guint *limit, guint *offset)
+{
+	g_return_val_if_fail (GDA_IS_QUERY (query), FALSE);
+	g_return_val_if_fail (query->priv, FALSE);
+
+	if (gda_query_is_select_query (query)) {
+		if (query->priv->has_limit) {
+			if (limit) *limit = query->priv->limit;
+			if (offset) *offset = query->priv->offset;
+			return TRUE;
+		}
+	}
+	return FALSE;
 }
 
 
@@ -3115,7 +3168,7 @@ gda_query_get_all_fields (GdaQuery *query)
 {
 	GSList *list, *fields = NULL;
 
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);
 	g_return_val_if_fail (GDA_QUERY (query)->priv, NULL);
 	
 	list = query->priv->fields;
@@ -3139,7 +3192,7 @@ gda_query_get_all_fields (GdaQuery *query)
 GdaQueryField *
 gda_query_get_field_by_sql_naming (GdaQuery *query, const gchar *sql_name) {
 	
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);
 	g_return_val_if_fail (query->priv, NULL);
 	
 	return gda_query_get_field_by_sql_naming_fields (query, sql_name, query->priv->fields);
@@ -3159,7 +3212,7 @@ gda_query_get_field_by_param_name (GdaQuery *query, const gchar *param_name)
 	GdaQueryField *qf;
 	GSList *allfields;
 
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);
 	g_return_val_if_fail (query->priv, NULL);
 	g_return_val_if_fail (param_name, NULL);
 
@@ -3323,7 +3376,7 @@ gda_query_has_field (GdaEntity *iface, GdaEntityField *field)
 {
 	g_return_val_if_fail (GDA_IS_QUERY (iface), FALSE);
 	g_return_val_if_fail (GDA_QUERY (iface)->priv, FALSE);
-	g_return_val_if_fail (field && GDA_IS_QUERY_FIELD (field), FALSE);
+	g_return_val_if_fail (GDA_IS_QUERY_FIELD (field), FALSE);
 
 	if (gda_query_field_is_visible (GDA_QUERY_FIELD (field)) &&
 	    g_slist_find (GDA_QUERY (iface)->priv->fields, field))
@@ -3443,7 +3496,7 @@ gda_query_get_field_index (GdaEntity *iface, GdaEntityField *field)
 
 	g_return_val_if_fail (GDA_IS_QUERY (iface), -1);
 	g_return_val_if_fail (GDA_QUERY (iface)->priv, -1);
-	g_return_val_if_fail (field && GDA_IS_QUERY_FIELD (field), -1);
+	g_return_val_if_fail (GDA_IS_QUERY_FIELD (field), -1);
 	query = GDA_QUERY (iface);
 
 	if (!g_slist_find (query->priv->fields, field))
@@ -3481,9 +3534,9 @@ gda_query_get_fields_by_target (GdaQuery *query, GdaQueryTarget *target, gboolea
 	GSList *retval = NULL;
 	GSList *tmplist, *ptr;
 
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);
 	g_return_val_if_fail (query->priv, NULL);
-	g_return_val_if_fail (target && GDA_IS_QUERY_TARGET (target), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY_TARGET (target), NULL);
 	g_return_val_if_fail (g_slist_find (query->priv->targets, target), NULL);
 
 	if (visible_fields_only)
@@ -3522,7 +3575,7 @@ gda_query_add_field_before (GdaEntity *iface, GdaEntityField *field, GdaEntityFi
 	g_return_if_fail (GDA_QUERY (iface)->priv);
 	query = GDA_QUERY (iface);
 
-	g_return_if_fail (field && GDA_IS_QUERY_FIELD (field));
+	g_return_if_fail (GDA_IS_QUERY_FIELD (field));
         g_return_if_fail (!g_slist_find (query->priv->fields, field));
 	g_return_if_fail (gda_entity_field_get_entity (field) == GDA_ENTITY (query));
 
@@ -3556,7 +3609,7 @@ gda_query_add_field_before (GdaEntity *iface, GdaEntityField *field, GdaEntityFi
 		g_return_if_fail (query_sql_forget (query, NULL));
 
 	if (field_before) {
-		g_return_if_fail (field_before && GDA_IS_QUERY_FIELD (field_before));
+		g_return_if_fail (GDA_IS_QUERY_FIELD (field_before));
 		g_return_if_fail (g_slist_find (query->priv->fields, field_before));
 		g_return_if_fail (gda_entity_field_get_entity (field_before) == GDA_ENTITY (query));
 		pos = g_slist_index (query->priv->fields, field_before);
@@ -3641,11 +3694,11 @@ gda_query_swap_fields (GdaEntity *iface, GdaEntityField *field1, GdaEntityField 
 	query = GDA_QUERY (iface);
 	g_return_if_fail (query_sql_forget (query, NULL));
 
-	g_return_if_fail (field1 && GDA_IS_QUERY_FIELD (field1));
+	g_return_if_fail (GDA_IS_QUERY_FIELD (field1));
 	ptr1 = g_slist_find (query->priv->fields, field1);
 	g_return_if_fail (ptr1);
 
-	g_return_if_fail (field2 && GDA_IS_QUERY_FIELD (field2));
+	g_return_if_fail (GDA_IS_QUERY_FIELD (field2));
 	ptr2 = g_slist_find (query->priv->fields, field2);
 	g_return_if_fail (ptr2);
 
@@ -3671,7 +3724,7 @@ gda_query_remove_field (GdaEntity *iface, GdaEntityField *field)
 	g_return_if_fail (GDA_IS_QUERY (iface));
 	g_return_if_fail (GDA_QUERY (iface)->priv);
 	query = GDA_QUERY (iface);
-	g_return_if_fail (field && GDA_IS_QUERY_FIELD (field));
+	g_return_if_fail (GDA_IS_QUERY_FIELD (field));
 	g_return_if_fail (g_slist_find (query->priv->fields, field));
 
 	gda_object_destroy (GDA_OBJECT (field));
@@ -3703,7 +3756,7 @@ gda_query_is_writable (GdaEntity *iface)
 GSList *
 gda_query_get_main_conditions (GdaQuery *query)
 {
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);
 	g_return_val_if_fail (query->priv, NULL);
 
 	if (query->priv->cond)
@@ -3726,9 +3779,9 @@ gda_query_get_main_conditions (GdaQuery *query)
 void
 gda_query_append_condition (GdaQuery *query, GdaQueryCondition *cond, gboolean append_as_and)
 {
-	g_return_if_fail (query && GDA_IS_QUERY (query));
+	g_return_if_fail (GDA_IS_QUERY (query));
 	g_return_if_fail (query->priv);
-	g_return_if_fail (cond && GDA_IS_QUERY_CONDITION (cond));
+	g_return_if_fail (GDA_IS_QUERY_CONDITION (cond));
 
 	if (!query->priv->cond)
 		gda_query_set_condition (query, cond);
@@ -5294,7 +5347,6 @@ render_sql_select (GdaQuery *query, GdaParameterList *context, GSList **out_para
 						  out_params_used, options, error);
 		if (str) {
 			g_string_append (sql, str);
-			g_string_append (sql, " ");
 			g_free (str);
 		}
 		else
@@ -5311,7 +5363,7 @@ render_sql_select (GdaQuery *query, GdaParameterList *context, GSList **out_para
 					if (pprint)
 						g_string_append (sql, "\nORDER BY ");
 					else
-						g_string_append (sql, "ORDER BY ");
+						g_string_append (sql, " ORDER BY ");
 				}
 				else
 					g_string_append (sql, ", ");
@@ -5329,7 +5381,7 @@ render_sql_select (GdaQuery *query, GdaParameterList *context, GSList **out_para
 					if (pprint)
 						g_string_append (sql, "\nORDER BY ");
 					else
-						g_string_append (sql, "ORDER BY ");
+						g_string_append (sql, " ORDER BY ");
 				} 
 				else
 					g_string_append (sql, ", ");	
@@ -5341,6 +5393,15 @@ render_sql_select (GdaQuery *query, GdaParameterList *context, GSList **out_para
 			
 			
 		list = g_slist_next (list);
+	}
+
+	if (!err && query->priv->has_limit) {
+		if (pprint)
+			g_string_append_printf (sql, "\nLIMIT %d", query->priv->limit);
+		else
+			g_string_append_printf (sql, " LIMIT %d", query->priv->limit);
+		if (query->priv->offset > 0)
+			g_string_append_printf (sql, " OFFSET %d", query->priv->offset);
 	}
 
 	if (!err) 
@@ -5983,7 +6044,7 @@ gda_query_expand_all_field (GdaQuery *query, GdaQueryTarget *target)
 {
 	GSList *list, *retlist = NULL;
 	
-	g_return_val_if_fail (query && GDA_IS_QUERY (query), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);
 	g_return_val_if_fail (query->priv, NULL);
 	g_return_val_if_fail (!target || (GDA_IS_QUERY_TARGET (target) && (gda_query_target_get_query (target) == query)), NULL);
 
@@ -6045,7 +6106,7 @@ gda_query_order_fields_using_join_conds (GdaQuery *query)
 	GSList *list;
 	gboolean reordered = FALSE;
 
-	g_return_if_fail (query && GDA_IS_QUERY (query));
+	g_return_if_fail (GDA_IS_QUERY (query));
 	g_return_if_fail (query->priv);
 
 	list = query->priv->joins_flat;

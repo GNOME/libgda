@@ -152,6 +152,9 @@ void               gda_query_append_condition       (GdaQuery *query, GdaQueryCo
 void               gda_query_set_order_by_field     (GdaQuery *query, GdaQueryField *field, gint order, gboolean ascendant);
 gint               gda_query_get_order_by_field     (GdaQuery *query, GdaQueryField *field, gboolean *ascendant);
 
+void               gda_query_set_results_limit      (GdaQuery *query, gboolean has_limit, guint limit, guint offset);
+gboolean           gda_query_get_results_limit      (GdaQuery *query, guint *limit, guint *offset);
+
 /* utility functions */
 GdaQueryField     *gda_query_add_field_from_sql     (GdaQuery *query, const gchar *field, GError **error);
 

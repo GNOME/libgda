@@ -2217,7 +2217,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 			/* determine height for each column in that row */
 			gint *cols_height = g_new (gint, n_cols + col_offset);
 			gchar ***cols_str = g_new (gchar **, n_cols + col_offset);
-			gint k, kmax = 0;
+			gint k, kmax = 1;
 
 			if (dump_rows) {
 				str = g_strdup_printf ("%d", j);

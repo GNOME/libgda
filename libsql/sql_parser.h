@@ -9,6 +9,7 @@ typedef struct sql_select_statement sql_select_statement;
 typedef struct sql_insert_statement sql_insert_statement;
 typedef struct sql_update_statement sql_update_statement;
 typedef struct sql_delete_statement sql_delete_statement;
+typedef struct sql_limit sql_limit;
 
 typedef struct sql_table sql_table;
 typedef struct sql_where sql_where;
@@ -39,6 +40,12 @@ struct sql_statement
 	void *statement;
 	};
 
+struct sql_limit
+	{
+		guint limit;
+		guint offset;
+	};
+
 struct sql_select_statement
 	{
 	int distinct;
@@ -47,6 +54,7 @@ struct sql_select_statement
 	sql_where *where;
 	GList *order;					  /* list of sql_order_field */
 	GList *group;
+	sql_limit *limit;
 	};
 
 struct sql_insert_statement

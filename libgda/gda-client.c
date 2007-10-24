@@ -470,7 +470,7 @@ gda_client_open_connection (GdaClient *client,
 /**
  * gda_client_open_connection_from_string
  * @client: a #GdaClient object.
- * @provider_id: provider ID to connect to.
+ * @provider_id: provider ID to connect to, or %NULL
  * @cnc_string: connection string.
  * @username: user name.
  * @password: password for @username.
@@ -495,6 +495,10 @@ gda_client_open_connection (GdaClient *client,
  *  <listitem>the USERNAME= and PASSWORD= parts of the @cnc_string</listitem>
  * </itemizedlist>
  *
+ * Additionnally, it is possible to have the connection string
+ * respect the "<provider_name>://<real cnc string>" format, in which case the provider name
+ * and the real connection string will be extracted from that string (note that if @provider_id
+ * is not %NULL then it will still be used as the provider ID).
  *
  * Returns: the opened connection if successful, %NULL if there is
  * an error.
@@ -511,10 +515,28 @@ gda_client_open_connection_from_string (GdaClient *client,
 	LoadedProvider *prv;
 	GdaConnection *cnc = NULL;
 	GList *l;
+	gchar *ptr, *dup;
 
 	g_return_val_if_fail (GDA_IS_CLIENT (client), NULL);
-	g_return_val_if_fail (provider_id != NULL, NULL);
+	g_return_val_if_fail (cnc_string, NULL);
+
+	/* try to see if connection string has the "<provider>://<real cnc string>" format */
+	dup = g_strdup (cnc_string);
+	for (ptr = dup; *ptr; ptr++) {
+		if ((*ptr == ':') && (*(ptr+1) == '/') && (*(ptr+2) == '/')) {
+			if (!provider_id)
+				provider_id = dup;
+			*ptr = 0;
+			cnc_string = ptr + 3;
+		}
+	}
 	
+	if (!provider_id) {
+		g_set_error (error, GDA_CLIENT_ERROR, 0, _("No provider specified"));
+		g_free (dup);
+		return NULL;
+	}
+
 	if (! (options & GDA_CONNECTION_OPTIONS_DONT_SHARE)) {
 		for (l = client->priv->connections; l != NULL; l = l->next) {
 			const gchar *tmp_prov, *tmp_cnc_string;
@@ -523,9 +545,11 @@ gda_client_open_connection_from_string (GdaClient *client,
 			tmp_prov = gda_connection_get_provider (cnc);
 			tmp_cnc_string = gda_connection_get_cnc_string (cnc);
 	
-			if (strcmp(provider_id, tmp_prov) == 0
-			    && (cnc_string != NULL && strcmp (cnc_string, tmp_cnc_string) == 0))
+			if (strcmp (provider_id, tmp_prov) == 0
+			    && (! strcmp (cnc_string, tmp_cnc_string))) {
+				g_free (dup);
 				return cnc;
+			}
 		}
 	}
 
@@ -553,6 +577,8 @@ gda_client_open_connection_from_string (GdaClient *client,
 		g_set_error (error, GDA_CLIENT_ERROR, 0, 
 			     _("Datasource configuration error: no provider specified"));
 	}
+
+	g_free (dup);
 
 	return cnc;
 }

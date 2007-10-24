@@ -10,7 +10,7 @@ sql_statement_build (sql_statement_type type, void *statement)
 {
 	sql_statement *retval;
 
-	retval = memsql_alloc (sizeof *retval);
+	retval = g_malloc (sizeof *retval);
 
 	retval->type = type;
 	retval->statement = statement;
@@ -19,13 +19,36 @@ sql_statement_build (sql_statement_type type, void *statement)
 	return retval;
 }
 
+sql_limit *
+sql_limit_build (guint limit, guint offset)
+{
+	sql_limit *slimit = g_new (sql_limit, 1);
+	slimit->limit = limit;
+	slimit->offset = offset;
+	return slimit;
+}
+
+/* lo = "<offset>,<limit>" 
+ */
+sql_limit *
+sql_limit_build_comma_sep (char *lo)
+{
+	gchar *ptr;
+
+	for (ptr = lo; *ptr && *ptr != ','; ptr++);
+	g_assert (*ptr == ',');
+	*ptr = 0;
+	
+	return sql_limit_build ((guint) atol (ptr+1), (guint) atol (lo));
+}
+
 sql_select_statement *
 sql_select_statement_build (int distinct, GList * fields, GList * from,
-			    sql_where * where, GList * order, GList * group)
+			    sql_where * where, GList * order, GList * group, sql_limit *limit)
 {
 	sql_select_statement *retval;
 
-	retval = memsql_alloc (sizeof *retval);
+	retval = g_malloc (sizeof *retval);
 
 	retval->distinct = distinct;
 	retval->fields = fields;
@@ -33,6 +56,7 @@ sql_select_statement_build (int distinct, GList * fields, GList * from,
 	retval->where = where;
 	retval->order = order;
 	retval->group = group;
+	retval->limit = limit;
 
 	return retval;
 }
@@ -42,7 +66,7 @@ sql_insert_statement_build (sql_table * table, GList * fields, GList * values)
 {
 	sql_insert_statement *retval;
 
-	retval = memsql_alloc (sizeof *retval);
+	retval = g_malloc (sizeof *retval);
 
 	retval->table = table;
 	retval->values = values;
@@ -56,7 +80,7 @@ sql_update_statement_build (sql_table * table, GList * set, sql_where * where)
 {
 	sql_update_statement *retval;
 
-	retval = memsql_alloc (sizeof *retval);
+	retval = g_malloc (sizeof *retval);
 
 	retval->table = table;
 	retval->set = set;
@@ -70,7 +94,7 @@ sql_delete_statement_build (sql_table * table, sql_where * where)
 {
 	sql_delete_statement *retval;
 
-	retval = memsql_alloc (sizeof *retval);
+	retval = g_malloc (sizeof *retval);
 	retval->table = table;
 	retval->where = where;
 
@@ -82,7 +106,7 @@ sql_field_build_function (char * funcname, GList * funcarglist)
 {
 	sql_field_item *item;
 
-	item = memsql_alloc (sizeof *item);
+	item = g_malloc (sizeof *item);
 	item->type = SQL_function;
 	item->d.function.funcname = funcname;
 	item->d.function.funcarglist = funcarglist;
@@ -97,7 +121,7 @@ sql_field_item_build (GList * name)
 {
 	sql_field_item *item;
 
-	item = memsql_alloc (sizeof *item);
+	item = g_malloc (sizeof *item);
 	item->type = SQL_name;
 	item->d.name = name;
 
@@ -110,7 +134,7 @@ sql_field_item_build_equation (sql_field_item * left, sql_field_item * right,
 {
 	sql_field_item *item;
 
-	item = memsql_alloc (sizeof *item);
+	item = g_malloc (sizeof *item);
 	item->type = SQL_equation;
 	item->d.equation.left = left;
 	item->d.equation.right = right;
@@ -124,7 +148,7 @@ sql_field_item_build_select (sql_select_statement * select)
 {
 	sql_field_item *item;
 
-	item = memsql_alloc (sizeof *item);
+	item = g_malloc (sizeof *item);
 	item->type = SQL_inlineselect;
 	item->d.select = select;
 
@@ -136,7 +160,7 @@ sql_field_build (sql_field_item * item)
 {
 	sql_field *retval;
 
-	retval = memsql_alloc (sizeof *retval);
+	retval = g_malloc (sizeof *retval);
 	retval->as = NULL;
 	retval->item = item;
 	retval->param_spec = NULL;
@@ -179,13 +203,13 @@ param_spec_build_simple (char *content)
 		}
 	}
 
-	retval = g_list_append (NULL, param_spec_build (PARAM_name, memsql_strdup (pname)));
+	retval = g_list_append (NULL, param_spec_build (PARAM_name, g_strdup (pname)));
 	if (ptype)
-		retval = g_list_append (retval, param_spec_build (PARAM_type, memsql_strdup (ptype)));
+		retval = g_list_append (retval, param_spec_build (PARAM_type, g_strdup (ptype)));
 	if (pnnul)
-		retval = g_list_append (retval, param_spec_build (PARAM_nullok, memsql_strdup ("TRUE")));
+		retval = g_list_append (retval, param_spec_build (PARAM_nullok, g_strdup ("TRUE")));
 
-	memsql_free (content);
+	g_free (content);
 	return retval;
 }
 
@@ -194,7 +218,7 @@ param_spec_build (param_spec_type type, char *content)
 {
 	param_spec *retval;
 
-	retval = memsql_alloc (sizeof *retval);
+	retval = g_malloc (sizeof *retval);
 	retval->type = type;
 	retval->content = content;
 
@@ -206,11 +230,11 @@ sql_table_build (const char *tablename)
 {
 	sql_table *retval;
 
-	retval = memsql_alloc (sizeof *retval);
+	retval = g_malloc (sizeof *retval);
 
 	retval->type = SQL_simple;
 
-	retval->d.simple = memsql_strdup (tablename);
+	retval->d.simple = g_strdup (tablename);
 
 	retval->as = NULL;
 	retval->join_type = SQL_cross_join;
@@ -224,7 +248,7 @@ sql_table_build_function (char * funcname, GList * funcarglist)
 {
 	sql_table *item;
 
-	item = memsql_alloc (sizeof *item);
+	item = g_malloc (sizeof *item);
 	item->type = SQL_tablefunction;
 	item->d.function.funcname = funcname;
 	item->d.function.funcarglist = funcarglist;
@@ -249,7 +273,7 @@ sql_table_build_select (sql_select_statement * select)
 {
 	sql_table *retval;
 
-	retval = memsql_alloc (sizeof *retval);
+	retval = g_malloc (sizeof *retval);
 	retval->type = SQL_nestedselect;
 	retval->d.select = select;
 	retval->as = NULL;
@@ -271,7 +295,7 @@ sql_where_build_single (sql_condition * cond)
 {
 	sql_where *retval;
 
-	retval = memsql_alloc (sizeof *retval);
+	retval = g_malloc (sizeof *retval);
 	retval->type = SQL_single;
 	retval->d.single = cond;
 
@@ -283,7 +307,7 @@ sql_where_build_negated (sql_where * where)
 {
 	sql_where *retval;
 
-	retval = memsql_alloc (sizeof *retval);
+	retval = g_malloc (sizeof *retval);
 	retval->type = SQL_negated;
 	retval->d.negated = where;
 
@@ -296,7 +320,7 @@ sql_where_build_pair (sql_where * left, sql_where * right,
 {
 	sql_where *retval;
 
-	retval = memsql_alloc (sizeof *retval);
+	retval = g_malloc (sizeof *retval);
 	retval->type = SQL_pair;
 	retval->d.pair.left = left;
 	retval->d.pair.right = right;
@@ -311,7 +335,7 @@ sql_build_condition (sql_field * left, sql_field * right,
 {
 	sql_condition *retval;
 
-	retval = memsql_alloc (sizeof *retval);
+	retval = g_malloc (sizeof *retval);
 
 	retval->op = op;
 	retval->negated = FALSE;
@@ -327,7 +351,7 @@ sql_build_condition_between (sql_field * field, sql_field * lower,
 {
 	sql_condition *retval;
 
-	retval = memsql_alloc (sizeof *retval);
+	retval = g_malloc (sizeof *retval);
 
 	retval->op = SQL_between;
 	retval->negated = FALSE;
@@ -352,7 +376,7 @@ sql_order_field_build (GList * name, sql_ordertype order_type)
 {
 	sql_order_field *retval;
 
-	retval = memsql_alloc (sizeof *retval);
+	retval = g_malloc (sizeof *retval);
 
 	retval->name = name;
 	retval->order_type = order_type;

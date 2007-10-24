@@ -49,7 +49,6 @@ struct _GdaConnectionPrivate {
 	GdaConnectionOptions  options; /* ORed flags */
 	gchar                *dsn;
 	gchar                *cnc_string;
-	gchar                *provider;
 	gchar                *username;
 	gchar                *password;
 	gboolean              is_open;
@@ -329,7 +328,7 @@ gda_connection_set_property (GObject *object,
                 case PROP_CNC_STRING:
 			g_free (cnc->priv->cnc_string);
 			cnc->priv->cnc_string = NULL;
-			if (g_value_get_string (value))
+			if (g_value_get_string (value)) 
 				cnc->priv->cnc_string = g_strdup (g_value_get_string (value));
                         break;
                 case PROP_PROVIDER_OBJ:
@@ -473,6 +472,7 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 				     _("No DSN or connection string specified"));
 			return FALSE;
 		}
+		/* try to see if connection string has the <provider>://<rest of the string> format */
 	}
 
 	/* provider test */

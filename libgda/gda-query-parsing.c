@@ -395,6 +395,11 @@ parsed_create_select_query (GdaQuery *query, sql_select_statement *select, GErro
 		}
 	}
 
+	/* limits */
+	gda_query_set_results_limit (query, select->limit ? TRUE : FALSE,
+				     select->limit ? select->limit->limit : 0,
+				     select->limit ? select->limit->offset : 0);
+
 	parse_data_destroy (pdata);
 
 #ifdef GDA_DEBUG_NO

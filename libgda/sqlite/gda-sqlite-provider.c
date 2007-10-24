@@ -578,7 +578,6 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 		if (status == SQLITE_OK) 
 			sqlite3_free_table (data);
 		else {
-			g_print ("error: %s", errmsg);
 			gda_connection_add_event_string (cnc, errmsg);
 			sqlite3_free (errmsg);
 			gda_sqlite_free_cnc (scnc);
@@ -2452,10 +2451,8 @@ gda_sqlite_free_cnc (SQLITEcnc *scnc)
 		g_hash_table_remove (db_connections_hash, scnc->connection);
 #endif
 
-	if (scnc->connection) {
+	if (scnc->connection) 
 		sqlite3_close (scnc->connection);
-		g_print ("==== Closed connection for DB %p\n", scnc->connection); 
-	}
 	g_free (scnc->file);
 	if (scnc->types)
 		g_hash_table_destroy (scnc->types);

@@ -742,6 +742,11 @@ Sales    | PostgreSQL | Sales        | DB_NAME=sales          |
 	specification (pass this string without any option specifier), or set
 	the GDA_SQL_CNC environment variable to contain that string, and run the command without any argument.
       </para>
+      <para>
+	Several connections can be opened at once (with only one "active" at any given time), use the <option>\c</option>
+	and <option>\close</option> to manage (open, change, close) the connections; the prompt contains
+	the name of the current connection used. 
+      </para>
       <programlisting><![CDATA[
 [prompt]> gda-sql-3.0 -p SQLite -c "DB_DIR=.;DB_NAME=sales_test"
 Welcome to the GDA SQL console, version 3.1.2
@@ -751,7 +756,7 @@ Type: \copyright to show usage and distribution terms
       \q (or CTRL-D) to quit
       or any query terminated by a semicolon
 
-gda> select * from customers;
+c0> select * from customers;
 id | name            | default_served_by | country | city
 ---+-----------------+-------------------+---------+-----
  2 | Ed Lamton       |                 4 | SP      | MDR 
@@ -759,12 +764,12 @@ id | name            | default_served_by | country | city
  4 | Mark Lawrencep  |              NULL | SP      | MDR 
  9 | Greg Popoff     |                 2 | SP      | MDR 
 10 | Vladimir Zirkov |                 4 | NULL    | NULL
-gda> \set the_id 9
-gda> select * from customers where id= ##the_id;
+c0> \set the_id 9
+c0> select * from customers where id= ##the_id;
 id | name        | default_served_by | country | city
 ---+-------------+-------------------+---------+-----
  9 | Greg Popoff |                 2 | SP      | MDR 
-gda> ]]>
+c0> ]]>
       </programlisting>
     </chapter>
 

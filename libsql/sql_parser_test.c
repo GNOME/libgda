@@ -50,9 +50,6 @@ main (int argc, char *argv[])
 			printf ("rebuilt: %s\n", rebuilt);
 			free (rebuilt);
 
-			sql_display (result);
-			printf ("\n");
-
 			tables = sql_statement_get_tables (result);
 			printf ("Tables: ");
 			display (tables);
@@ -74,8 +71,6 @@ main (int argc, char *argv[])
 			break;
 		}
 	}
-	/* Line will generate warning if memory debugging is disabled */
-	memsql_display (); 
 
 	return error;
 }

@@ -246,4 +246,19 @@
   <test name="string18">
     <sql expected="D" n_stmts="2">SELECTR id FROM table WHERE id is null; SELECTR id FROM table WHERE id is not null</sql>
   </test>
+
+  <test name="limit1">
+    <sql expected="S">SELECT id FROM table WHERE id > 100 LIMIT 10</sql>
+    <render_as>SELECT id FROM table AS t1 WHERE id > 100 LIMIT 10</render_as>
+  </test>
+
+  <test name="limit2">
+    <sql expected="S">SELECT id FROM table WHERE id > 100 LIMIT 10 OFFSET 15</sql>
+    <render_as>SELECT id FROM table AS t1 WHERE id > 100 LIMIT 10 OFFSET 15</render_as>
+  </test>
+
+  <test name="limit3">
+    <sql expected="S">SELECT id FROM table WHERE id > 100 LIMIT 15,10</sql>
+    <render_as>SELECT id FROM table AS t1 WHERE id > 100 LIMIT 10 OFFSET 15</render_as>
+  </test>
 </unit>

@@ -58,6 +58,10 @@ struct _GdaQueryPrivate
 
 	GSList              *all_conds;
 	gboolean             auto_clean;
+
+	gboolean             has_limit; /* LIMIT for SELECT queries */
+	guint                limit;
+	guint                offset;
 };
 
 G_END_DECLS

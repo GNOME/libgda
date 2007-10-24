@@ -52,7 +52,7 @@ input_from_console (const gchar *prompt)
 #ifdef HAVE_READLINE_READLINE_H
 	char *read;
 
-	if (isatty (fileno (stdout))) {
+	if (isatty (fileno (stdin))) {
 		read = readline (prompt);
 		if (read) {
 			gchar *str = g_strdup (read);

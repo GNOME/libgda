@@ -261,6 +261,9 @@ sql_display_select (int indent, sql_select_statement * statement)
 		output ("group by:");
 	for (cur = statement->group; cur != NULL; cur = cur->next)
 		sql_display_field (indent + 1, cur->data);
+	
+	if (statement->limit)
+		output ("limit %d offset %d", statement->limit->limit, statement->limit->offset);
 
 	return 0;
 }

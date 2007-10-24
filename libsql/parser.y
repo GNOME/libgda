@@ -85,7 +85,7 @@ sql_order_field *of;
 %token L_SELECT L_FROM L_WHERE L_AS L_ON L_ORDER L_BY L_ORDER_ASC L_ORDER_DSC
 %token L_DISTINCT L_BETWEEN L_IN L_GROUP L_INSERT L_INTO L_VALUES L_UPDATE L_SET
 %token L_DOT L_COMMA L_NULL L_LBRACKET L_RBRACKET
-%token L_IDENT L_NUM
+%token L_IDENT L_NUM L_INTEGER
 %token L_EQ L_IS L_LIKE L_GT L_LT L_GEQ L_LEQ L_DIFF L_REGEXP L_REGEXP_CI L_NOTREGEXP L_NOTREGEXP_CI L_SIMILAR
 %token L_NOT L_AND L_OR
 %token L_MINUS L_PLUS L_TIMES L_DIV
@@ -97,9 +97,10 @@ sql_order_field *of;
 %token L_PNAME L_PTYPE L_PISPARAM L_PDESCR L_PNULLOK
 %token L_UNSPECVAL
 %token L_SIMPLE_PARAM
+%token L_LIMIT L_OFFSET L_LIMIT_OFFSET
 
-%type <v> select_statement insert_statement update_statement delete_statement
-%type <str> L_IDENT L_STRING L_TEXTUAL L_NUM L_SIMPLE_PARAM
+%type <v> select_statement insert_statement update_statement delete_statement opt_limit
+%type <str> L_IDENT L_STRING L_TEXTUAL L_NUM L_SIMPLE_PARAM L_INTEGER L_LIMIT_OFFSET
 %type <list> fields_list targets_list field_name dotted_name opt_orderby opt_groupby opt_fields_list set_list param_spec param_spec_list order_fields_list simple_param_spec
 %type <f> field
 %type <fi> field_raw
@@ -122,10 +123,10 @@ statement: select_statement	{sql_result = sql_statement_build (SQL_select, $1);}
 	| delete_statement	{sql_result = sql_statement_build (SQL_delete, $1);}
 	;
 	
-select_statement: L_SELECT opt_distinct fields_list L_FROM targets_list opt_where opt_orderby opt_groupby
-                        {$$ = sql_select_statement_build ($2, $3, $5, $6, $7, $8);}
-	| L_SELECT opt_distinct fields_list opt_where opt_orderby opt_groupby
-                        {$$ = sql_select_statement_build ($2, $3, NULL, $4, $5, $6);}
+select_statement: L_SELECT opt_distinct fields_list L_FROM targets_list opt_where opt_orderby opt_groupby opt_limit
+                        {$$ = sql_select_statement_build ($2, $3, $5, $6, $7, $8, $9);}
+	| L_SELECT opt_distinct fields_list opt_where opt_orderby opt_groupby opt_limit
+                        {$$ = sql_select_statement_build ($2, $3, NULL, $4, $5, $6, $7);}
         ;
 
 insert_statement: L_INSERT L_INTO simple_target opt_fields_list L_VALUES L_LBRACKET fields_list L_RBRACKET
@@ -167,12 +168,18 @@ order_fields_list: order_field			{$$ = g_list_append (NULL, $1);}
 order_field: field_name			{$$ = sql_order_field_build ($1, SQL_asc);}
 	| field_name L_ORDER_ASC	{$$ = sql_order_field_build ($1, SQL_asc);}
 	| field_name L_ORDER_DSC        {$$ = sql_order_field_build ($1, SQL_desc);} 
-	| L_NUM 			{$$ = sql_order_field_build (g_list_append (NULL, $1), SQL_asc);}
-	| L_NUM L_ORDER_ASC		{$$ = sql_order_field_build (g_list_append (NULL, $1), SQL_asc);}
-	| L_NUM L_ORDER_DSC		{$$ = sql_order_field_build (g_list_append (NULL, $1), SQL_desc);}
+	| L_INTEGER 			{$$ = sql_order_field_build (g_list_append (NULL, $1), SQL_asc);}
+	| L_INTEGER L_ORDER_ASC		{$$ = sql_order_field_build (g_list_append (NULL, $1), SQL_asc);}
+	| L_INTEGER L_ORDER_DSC		{$$ = sql_order_field_build (g_list_append (NULL, $1), SQL_desc);}
 	;
 
 opt_groupby: L_GROUP L_BY fields_list 	{$$ = $3;}
+	|				{$$ = NULL;}
+	;
+
+opt_limit: L_LIMIT L_INTEGER		{$$ = sql_limit_build (atoi ($2), 0); g_free ($2);}
+	| L_LIMIT L_INTEGER L_OFFSET L_INTEGER {$$ = sql_limit_build (atoi ($2), atoi($4)); g_free ($2); g_free ($4);}
+	| L_LIMIT L_LIMIT_OFFSET        {$$ = sql_limit_build_comma_sep ($2); g_free ($2);}
 	|				{$$ = NULL;}
 	;
 
@@ -196,7 +203,7 @@ targets_list: target					{$$ = g_list_append (NULL, $1);}
 	| targets_list join_type target L_ON where_list {$$ = g_list_append ($1, sql_table_set_join ($3, $2, $5));}
 	;
 
-simple_table: L_IDENT                       {$$ = sql_table_build ($1); memsql_free ($1);}
+simple_table: L_IDENT                       {$$ = sql_table_build ($1); g_free ($1);}
         ;
 
 table:  simple_table                    {$$ = $1;}
@@ -215,17 +222,17 @@ simple_target: simple_table                    {$$ = $1;}
         | simple_table L_IDENT                 {$$ = sql_table_set_as ($1, $2);}
 	;
 
-dotted_name: L_IDENT                    {$$ = g_list_append (NULL, memsql_strdup ($1)); memsql_free ($1);}
-        | L_IDENT L_DOT dotted_name     {$$ = g_list_prepend ($3, memsql_strdup ($1)); memsql_free ($1);}
-	| L_IDENT L_DOT L_TIMES		{$$ = g_list_append (NULL, memsql_strdup ($1)); memsql_free ($1);
-					 $$ = g_list_append ($$, memsql_strdup ("*"));}
+dotted_name: L_IDENT                    {$$ = g_list_append (NULL, g_strdup ($1)); g_free ($1);}
+        | L_IDENT L_DOT dotted_name     {$$ = g_list_prepend ($3, g_strdup ($1)); g_free ($1);}
+	| L_IDENT L_DOT L_TIMES		{$$ = g_list_append (NULL, g_strdup ($1)); g_free ($1);
+					 $$ = g_list_append ($$, g_strdup ("*"));}
         ;
 
 field_name: dotted_name                 {$$ = $1;}
-        | L_TIMES                       {$$ = g_list_append (NULL, memsql_strdup ("*"));}
-        | L_NULL                        {$$ = g_list_append (NULL, memsql_strdup ("null"));}
+        | L_TIMES                       {$$ = g_list_append (NULL, g_strdup ("*"));}
+        | L_NULL                        {$$ = g_list_append (NULL, g_strdup ("null"));}
         | L_STRING                      {$$ = g_list_append (NULL, $1);}
-	| L_UNSPECVAL                   {$$ = g_list_append (NULL, memsql_strdup (""));}
+	| L_UNSPECVAL                   {$$ = g_list_append (NULL, g_strdup (""));}
         ;
 
 
@@ -248,9 +255,11 @@ field:    field_raw                             {$$ = sql_field_build ($1);}
         | field_raw L_AS L_TEXTUAL              {$$ = sql_field_set_as (sql_field_build ($1), $3);}
         | field_raw param_spec                  {$$ = sql_field_set_param_spec (sql_field_build ($1), $2);}
         | field_raw param_spec L_AS L_IDENT     {$$ = sql_field_set_as (sql_field_set_param_spec (sql_field_build ($1), $2), $4);}
-	| L_NUM					{$$ = sql_field_build (sql_field_item_build (g_list_append (NULL, memsql_strdup ($1)))); memsql_free ($1);}
-	| L_NUM param_spec			{$$ = sql_field_set_param_spec (sql_field_build (sql_field_item_build (g_list_append (NULL, memsql_strdup ($1)))), $2); memsql_free ($1);}
-	| simple_param_spec			{$$ = sql_field_set_param_spec (sql_field_build (sql_field_item_build (g_list_append (NULL, memsql_strdup ("")))), $1);}
+	| L_INTEGER 				{$$ = sql_field_build (sql_field_item_build (g_list_append (NULL, g_strdup ($1)))); g_free ($1);}
+	| L_NUM					{$$ = sql_field_build (sql_field_item_build (g_list_append (NULL, g_strdup ($1)))); g_free ($1);}
+	| L_INTEGER param_spec                  {$$ = sql_field_set_param_spec (sql_field_build (sql_field_item_build (g_list_append (NULL, g_strdup ($1)))), $2); g_free ($1);}
+	| L_NUM param_spec			{$$ = sql_field_set_param_spec (sql_field_build (sql_field_item_build (g_list_append (NULL, g_strdup ($1)))), $2); g_free ($1);}
+	| simple_param_spec			{$$ = sql_field_set_param_spec (sql_field_build (sql_field_item_build (g_list_append (NULL, g_strdup ("")))), $1);}
 	;
 
 where_list: where_item				{$$ = sql_where_build_single ($1);}

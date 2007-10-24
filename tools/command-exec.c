@@ -309,6 +309,11 @@ gda_internal_command_dict_sync (GdaConnection *cnc, GdaDict *dict, const gchar *
 {
 	GdaInternalCommandResult *res;
 
+	if (!cnc || !dict) {
+		g_set_error (error, 0, 0, _("No current connection"));
+		return NULL;
+	}
+
 	res = g_new0 (GdaInternalCommandResult, 1);
 	res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
 
@@ -324,6 +329,11 @@ GdaInternalCommandResult *
 gda_internal_command_dict_save (GdaConnection *cnc, GdaDict *dict, const gchar **args, GError **error, gpointer data)
 {
 	GdaInternalCommandResult *res;
+
+	if (!cnc || !dict) {
+		g_set_error (error, 0, 0, _("No current connection"));
+		return NULL;
+	}
 
 	res = g_new0 (GdaInternalCommandResult, 1);
 	res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
@@ -347,6 +357,11 @@ gda_internal_command_list_tables_views (GdaConnection *cnc, GdaDict *dict, const
 	GValue *value;
 	gint row;
 	const gchar *tname = NULL;
+
+	if (!cnc || !dict) {
+		g_set_error (error, 0, 0, _("No current connection"));
+		return NULL;
+	}
 
 	if (args[0] && *args[0]) 
 		tname = args[0];
@@ -418,6 +433,11 @@ gda_internal_command_list_queries (GdaConnection *cnc, GdaDict *dict,
 	gint row;
 	const gchar *qname = NULL;
 	gboolean with_sql_def = FALSE;
+
+	if (!cnc || !dict) {
+		g_set_error (error, 0, 0, _("No current connection"));
+		return NULL;
+	}
 
 	if (args[0] && *args[0]) {
 		if (!strcmp (args[0], "+"))
@@ -544,6 +564,11 @@ gda_internal_command_detail (GdaConnection *cnc, GdaDict *dict,
 			     const gchar **args,
 			     GError **error, gpointer data)
 {
+	if (!cnc || !dict) {
+		g_set_error (error, 0, 0, _("No current connection"));
+		return NULL;
+	}
+
 	if (!args[0]) {
 		TO_IMPLEMENT;
 		return NULL;

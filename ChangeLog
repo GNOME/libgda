@@ -1,3 +1,29 @@
+2007-10-24  Vivien Malerba <malerba@gnome-db.org>
+
+	* libsql/* recognize the LIMIT and OFFSET keywords as in "SELECT ... LIMIT 3",
+	or "SELECT ... LIMIT 3 OFFSET 4" or, for the MySQL syntax "SELECT ... LIMIT 4,3",
+	for bug #488965
+	* libsql/*: removed the unused memsql_*() functions in favor of the g_*() similar
+	functions (it in fact changes nothing since the MEM_TEST macro was never defined
+	and the g_*() functions were always used, but it cleans the code)
+	* libgda/gda-query.[ch]: added gda_query_[gs]et_results_limit(), and SQL rendering
+	minor improvement
+	* libgda/gda-query-parsing.c: take into account the parsed LIMIT/OFFSET
+	* testing/queries/basic_sql.xml: new tests with the LIMIT/OFFSET syntax
+	* po/POTFILES.in: removed obsolete files
+	* libgda/sqlite/*.xml.in: remove those files as they should not be here (they
+	already are in providers/sqlite)
+	* libgda/gda-client.c: in gda_client_open_connection_from_string(), the connection
+	string can be in the "<provider_name>://<real cnc string>" format (such as
+	"PostgreSQL://DB_NAME=sales" for example)
+	* libgda/sqlite/virtual/gda-vprovider-data-model.c: make gda_server_provider_get_info()
+	return "Virtual" as provider name instead of "SQLite"
+	* tools/Makefile.am:
+	* tools/gda-sql.c: the SQL console can now manage several connections at once (and
+	switch between them), and it i spossible to create virtual connections which bind
+	together several opened connections to execute some cross connections SQL; HTML
+	output mode is now implemented
+
 2007-10-21  Vivien Malerba <malerba@gnome-db.org>
 
 	* doc/C: added a list of the environment variables useable in Libgda

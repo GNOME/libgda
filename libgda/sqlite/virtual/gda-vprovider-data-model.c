@@ -66,7 +66,8 @@ static gboolean       gda_vprovider_data_model_open_connection (GdaServerProvide
 								const gchar *password);
 static gboolean       gda_vprovider_data_model_close_connection (GdaServerProvider *provider,
 								 GdaConnection *cnc);
-
+static GdaServerProviderInfo *gda_vprovider_data_model_get_info (GdaServerProvider *provider,
+								 GdaConnection *cnc);
 
 /*
  * GdaVproviderDataModel class implementation
@@ -83,6 +84,8 @@ gda_vprovider_data_model_class_init (GdaVproviderDataModelClass *klass)
 	server_class->create_connection = gda_vprovider_data_model_create_connection;
 	server_class->open_connection = gda_vprovider_data_model_open_connection;
 	server_class->close_connection = gda_vprovider_data_model_close_connection;
+
+	server_class->get_info = gda_vprovider_data_model_get_info;
 
 	/* Properties */
         object_class->set_property = gda_vprovider_data_model_set_property;
@@ -301,6 +304,22 @@ gda_vprovider_data_model_close_connection (GdaServerProvider *provider, GdaConne
 	return GDA_SERVER_PROVIDER_CLASS (parent_class)->close_connection (GDA_SERVER_PROVIDER (provider), cnc);
 }
 
+static GdaServerProviderInfo *
+gda_vprovider_data_model_get_info (GdaServerProvider *provider, GdaConnection *cnc)
+{
+	static GdaServerProviderInfo info;
+        static gboolean init_done = FALSE;
+
+        if (!init_done) {
+                GdaServerProviderInfo *vinfo;
+                vinfo = GDA_SERVER_PROVIDER_CLASS (parent_class)->get_info (provider, cnc);
+                info = *vinfo;
+                info.provider_name = "Virtual";
+                init_done = TRUE;
+        }
+
+        return &info;
+}
 
 /* module implementation */
 #define TRACE() g_print ("== %s()\n", __FUNCTION__)
@@ -481,7 +500,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 		return SQLITE_ERROR;
 	}
 
-	g_print ("VIRTUAL TABLE: %s\n", sql->str);
+	/*g_print ("VIRTUAL TABLE: %s\n", sql->str);*/
 	g_string_free (sql, TRUE);
 
 	return SQLITE_OK;

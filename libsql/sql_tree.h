@@ -10,7 +10,8 @@ sql_select_statement *sql_select_statement_build (int distinct,
 						  GList * from,
 						  sql_where * where,
 						  GList * order,
-						  GList * group);
+						  GList * group,
+						  sql_limit *limit);
 sql_insert_statement *sql_insert_statement_build (sql_table * table,
 						  GList * fields,
 						  GList * values);
@@ -19,6 +20,9 @@ sql_update_statement *sql_update_statement_build (sql_table * table,
 						  sql_where * where);
 sql_delete_statement *sql_delete_statement_build (sql_table * table,
 						  sql_where * where);
+
+sql_limit            *sql_limit_build (guint limit, guint offset);
+sql_limit            *sql_limit_build_comma_sep (char *lo);
 
 /* field item */
 sql_field_item *sql_field_item_build (GList * name);

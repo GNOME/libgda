@@ -28,6 +28,7 @@ static GString *gstring;
 %x PSPEC
 %x PSTRING      
 %x PTEXTUAL
+%x LIMIT
 
 %%
 "select"	{return L_SELECT;}
@@ -87,21 +88,28 @@ static GString *gstring;
 "+"		{return L_PLUS;}
 "/"		{return L_DIV;}
 
-[0-9\.]+	{sqllval.str = memsql_strdup (sqltext); return L_NUM;}
-[a-zA-Z0-9_]+	{sqllval.str = memsql_strdup (sqltext); return L_IDENT;}
+"limit"         {BEGIN(LIMIT); return L_LIMIT;}
+"offset"        {return L_OFFSET;}
+<LIMIT>[0-9]+          {BEGIN(INITIAL); sqllval.str = g_strdup  (sqltext); return L_INTEGER;}
+<LIMIT>[0-9]+,[0-9]+   {BEGIN(INITIAL); sqllval.str = g_strdup  (sqltext); return L_LIMIT_OFFSET;}
+<LIMIT>.		{;}
+
+[0-9]+		{sqllval.str = g_strdup  (sqltext); return L_INTEGER;}
+[0-9\.]+	{sqllval.str = g_strdup  (sqltext); return L_NUM;}
+[a-zA-Z0-9_]+	{sqllval.str = g_strdup  (sqltext); return L_IDENT;}
 [ \t\n\r]	{;}
 \'		{gstring = g_string_new (""); BEGIN(STRING);}
 <STRING,PSTRING>\\\\  { g_string_append (gstring, "\\\\"); }
 <STRING,PSTRING>\\' {g_string_append (gstring, "\\'");}
 <STRING>\'	{BEGIN(INITIAL);
-		 sqllval.str = memsql_strappend_free (memsql_strdup ("'"), 
-				memsql_strappend_free (memsql_strdup (gstring->str), memsql_strdup ("'")));
+		 sqllval.str = memsql_strappend_free (g_strdup  ("'"), 
+				memsql_strappend_free (g_strdup  (gstring->str), g_strdup  ("'")));
 		 g_string_free (gstring, TRUE);
 		 return L_STRING;
 		}
 <PSTRING>\'     {BEGIN(PSPEC);
-                 sqllval.str = memsql_strappend_free (memsql_strdup ("'"), 
-                                memsql_strappend_free (memsql_strdup (gstring->str), memsql_strdup ("'")));
+                 sqllval.str = memsql_strappend_free (g_strdup  ("'"), 
+                                memsql_strappend_free (g_strdup  (gstring->str), g_strdup  ("'")));
 		 g_string_free (gstring, TRUE);
                  return L_STRING;
                 }
@@ -113,9 +121,9 @@ static GString *gstring;
                         yyterminate();
                         }
 
-##[a-zA-Z\+\-][a-zA-Z0-9_\+\-/@#%]*		{sqllval.str = memsql_strdup (sqltext + 2); return L_SIMPLE_PARAM;}
-##[a-zA-Z\+\-][a-zA-Z0-9_\+\-/@#%]*::[a-zA-Z0-9_]+ {sqllval.str = memsql_strdup (sqltext + 2); return L_SIMPLE_PARAM;}
-##[a-zA-Z\+\-][a-zA-Z0-9_\+\-/@#%]*::[a-zA-Z0-9_]+::NULL {sqllval.str = memsql_strdup (sqltext + 2); return L_SIMPLE_PARAM;}
+##[a-zA-Z\+\-][a-zA-Z0-9_\+\-/@#%]*		{sqllval.str = g_strdup  (sqltext + 2); return L_SIMPLE_PARAM;}
+##[a-zA-Z\+\-][a-zA-Z0-9_\+\-/@#%]*::[a-zA-Z0-9_]+ {sqllval.str = g_strdup  (sqltext + 2); return L_SIMPLE_PARAM;}
+##[a-zA-Z\+\-][a-zA-Z0-9_\+\-/@#%]*::[a-zA-Z0-9_]+::NULL {sqllval.str = g_strdup  (sqltext + 2); return L_SIMPLE_PARAM;}
 "##"            	{return L_UNSPECVAL;}
 "/*"			{BEGIN(PSPEC); return L_LSBRACKET;}
 <PSPEC>"*/"             {BEGIN(INITIAL); return L_RSBRACKET;}
@@ -124,19 +132,19 @@ static GString *gstring;
 <PSPEC>"type:"		{return L_PTYPE;}
 <PSPEC>"isparam:"	{return L_PISPARAM;}
 <PSPEC>"nullok:"        {return L_PNULLOK;}
-<PSPEC>[a-zA-Z0-9_\-\+]+ {sqllval.str = memsql_strdup (sqltext); return L_IDENT;}
+<PSPEC>[a-zA-Z0-9_\-\+]+ {sqllval.str = g_strdup  (sqltext); return L_IDENT;}
 <PSPEC>[ \t\n\r]        {;}
 <PSPEC>\'               {gstring = g_string_new (""); BEGIN(PSTRING);}
 <PSPEC>\"               {gstring = g_string_new (""); BEGIN(PTEXTUAL);}
 
 \"		{gstring = g_string_new (""); BEGIN(TEXTUAL);}
 <TEXTUAL>\"     {BEGIN(INITIAL);
-                 sqllval.str = memsql_strdup (gstring->str);
+                 sqllval.str = g_strdup  (gstring->str);
 		 g_string_free (gstring, TRUE);
                  return L_TEXTUAL;
                 }
 <PTEXTUAL>\"    {BEGIN(PSPEC);
-                 sqllval.str = memsql_strdup (gstring->str);
+                 sqllval.str = g_strdup  (gstring->str);
 		 g_string_free (gstring, TRUE);
                  return L_TEXTUAL;
                 }

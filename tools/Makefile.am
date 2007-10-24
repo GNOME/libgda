@@ -23,6 +23,7 @@ bin_PROGRAMS = \
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
+	-I$(top_srcdir)/libgda/sqlite \
 	-I. \
 	$(LIBGDA_CFLAGS)
 
