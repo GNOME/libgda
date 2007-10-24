@@ -1,3 +1,28 @@
+libgda 3.1.2, 2007-10-24
+
+ - Filtering based on an SQL expression is now possible in the GdaDataProxy data model (Vivien Malerba)
+ - New XSL extension which uses Libgda (Pawel Cesar Sanjuan Szklarz)
+ - Documentation improvements and examples
+ - Tools: improvements to the SQL console and new tool to list the possible server operations
+   for each provider (Vivien Malerba)
+ - Bug fixed: #486017, #484112 (Stanislav Brabec, Armin Burgmeier)
+ - Firebird database provider now almost fully working (BLOBs are not yet writable, no prepared statement used)
+   (Vivien Malerba)
+ - MS Access database provider reworked to support all the SQLite's SQL (don't depend on libmdbsql.so anymore for
+   SQL processing) (Vivien Malerba)
+ - LDAP provider has seen a first draft rework (Exell Enrique Franklin Jiménez)
+ - Use of environment variables to specify debug ourput of commands and connection events (Vivien Malerba)
+ - "LIMIT" and "OFFSET" keywords recognized, for bug #488860 (Vivien Malerba)
+ - Enhanced the SQL console tool (allow multiple connections and virtual connections) (Vivien Malerba)
+ - Many small corrections and improvements (Murray Cumming, Vivien Malerba)
+ - Translations:
+	- New Occitan (Yannig Marchegay)
+	- removed no (Kjartan Maraas)
+	- sv (Daniel Nylander)
+	- vi (Clytie Siddall)
+	- it (Marco Ciampa)
+	- es (Jorge Gonzalez)
+
 libgda 3.1.1, 2007-09-02
 
  - Require inltool 0.35.5 when building from svn (Murray Cumming)
