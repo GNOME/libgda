@@ -572,6 +572,28 @@ Represents any kind of DML query
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_query_set_results_limit ##### -->
+<para>
+
+</para>
+
+@query: 
+@has_limit: 
+@limit: 
+@offset: 
+
+
+<!-- ##### FUNCTION gda_query_get_results_limit ##### -->
+<para>
+
+</para>
+
+@query: 
+@limit: 
+@offset: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_query_get_all_fields ##### -->
 <para>
 

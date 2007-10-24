@@ -496,7 +496,7 @@ gda_client_open_connection (GdaClient *client,
  * </itemizedlist>
  *
  * Additionnally, it is possible to have the connection string
- * respect the "<provider_name>://<real cnc string>" format, in which case the provider name
+ * respect the "&lt;provider_name&gt;://&lt;real cnc string&gt;" format, in which case the provider name
  * and the real connection string will be extracted from that string (note that if @provider_id
  * is not %NULL then it will still be used as the provider ID).
  *
