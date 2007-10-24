@@ -74,6 +74,7 @@ providers/bdb/bdb_specs_dsn.xml.in
 providers/bdb/gda-bdb-provider.c
 providers/bdb/libmain.c
 providers/firebird/firebird_specs_dsn.xml.in
+providers/firebird/gda-firebird-blob-op.c
 providers/firebird/gda-firebird-provider.c
 providers/firebird/gda-firebird-recordset.c
 providers/firebird/libmain.c

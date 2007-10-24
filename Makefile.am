@@ -21,11 +21,12 @@ example_files = \
 	samples/SimpleExample/Makefile \
 	samples/SimpleExample/example.c \
 	samples/SimpleExample/README \
+	samples/TableCopy/common.h \
+	samples/TableCopy/common.c \
 	samples/TableCopy/Makefile \
 	samples/TableCopy/table-copy.c \
 	samples/TableCopy/table-copy-easier.c \
 	samples/TableCopy/README \
-	samples/README \
 	samples/BDB/Makefile \
 	samples/BDB/README \
 	samples/BDB/access-custom.c \
@@ -37,6 +38,9 @@ example_files = \
 	samples/DirDataModel/Makefile \
 	samples/DirDataModel/README \
 	samples/DirDataModel/find-duplicates.c \
+	samples/DDL/Makefile \
+	samples/DDL/README \
+	samples/DDL/ddl.c \
 	samples/F-Spot/Makefile \
 	samples/F-Spot/README \
 	samples/F-Spot/VirtualConnectionSetup.dia \
@@ -54,9 +58,12 @@ example_files = \
 	samples/Virtual/city.csv \
 	samples/Virtual/country.csv \
 	samples/Virtual/virtual-test.c \
-	samples/sample-firebird.c \
-	samples/sample-postgresql.c \
-	samples/table_copy.c 
+	samples/XSLT/Makefile \
+	samples/XSLT/README \
+	samples/XSLT/data.xml \
+	samples/XSLT/data2.xml \
+	samples/XSLT/test.xsl \
+	samples/XSLT/transform.c
 
 EXTRA_DIST = \
 	COPYING \
