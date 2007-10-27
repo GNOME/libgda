@@ -376,7 +376,8 @@ dict_table_create_model_func (GdaVconnectionDataModelSpec *spec)
 	g_free (tmp);
 	model = gda_data_model_query_new (query);
 	g_object_unref (query);
-	gda_data_model_query_compute_modification_queries (GDA_DATA_MODEL_QUERY (model), table_name, 0, NULL);
+	gda_data_model_query_compute_modification_queries (GDA_DATA_MODEL_QUERY (model), table_name, 
+							   GDA_DATA_MODEL_QUERY_OPTION_USE_ALL_FIELDS_IF_NO_PK, NULL);
 
 	return model;
 }
