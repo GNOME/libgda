@@ -1,10 +1,8 @@
-/* GDA common library
- * Copyright (C) 1998 - 2007 The GNOME Foundation.
+/* GDA library
+ * Copyright (C) 2007 The GNOME Foundation.
  *
  * AUTHORS:
- *	Rodrigo Moya <rodrigo@gnome-db.org>
- *	Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
- *      Vivien Malerba <maletba@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -22,20 +20,17 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
-#include <glib.h>
 #include <gmodule.h>
 #include <libgda/gda-config.h>
-#include <libgda/gda-data-model-array.h>
-#include <libgda/gda-parameter-list.h>
 #include <glib/gi18n-lib.h>
-#include <libgda/gda-log.h>
+#include "gda-marshal.h"
+#include <string.h>
 #include <libgda/binreloc/gda-binreloc.h>
-#include <libxml/xmlmemory.h>
-#include <libxml/parser.h>
-#include <sys/stat.h>
+#include <libgda/gda-data-model-array.h>
+#include <libgda/gda-data-model-dsn-list.h>
+#include <libgda/gda-parameter-list.h>
+#include <libgda/gda-log.h>
 #ifdef HAVE_FAM
 #include <fam.h>
 #include <glib/giochannel.h>
@@ -43,54 +38,69 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #endif
-#ifdef G_OS_WIN32
+#ifdef G_OS_WIN32 
 #include <io.h>
 #endif
 
-#define GDA_CONFIG_SECTION_DATASOURCES "/apps/libgda/Datasources"
-#ifdef G_OS_WIN32
-#define LIBGDA_USER_CONFIG_DIR G_DIR_SEPARATOR_S ".libgda"
-#else
-#define LIBGDA_USER_CONFIG_DIR G_DIR_SEPARATOR_S ".libgda"
-#endif
-#define LIBGDA_USER_CONFIG_FILE LIBGDA_USER_CONFIG_DIR G_DIR_SEPARATOR_S "config"
-
-/* FIXME: many functions are not thread safe! */
-
 typedef struct {
-	gchar *name;
-	gchar *type;
-	gchar *value;
-} GdaConfigEntry;
+	GdaProviderInfo    pinfo;
+	GModule           *handle;
+	GdaServerProvider *instance;
+} InternalProvider;
 
-typedef struct {
-	gchar    *path;
-	GList    *entries; /* list of GdaConfigEntry */
-	gboolean  is_global;
-} GdaConfigSection;
+struct _GdaConfigPrivate {
+	gchar *user_file;
+	gchar *system_file;
+	gboolean system_config_allowed;
+	GSList *dsn_list; /* list of GdaDataSourceInfo structures */
+	GSList *prov_list; /* list of InternalProvider structures */
+};
 
-typedef struct {
-	GList *global; /* list of GdaConfigSection */
-	GList *user;   /* list of GdaConfigSection */
-} GdaConfigClient;
+static void gda_config_class_init (GdaConfigClass *klass);
+static GObject *gda_config_constructor (GType type,
+					guint n_construct_properties,
+					GObjectConstructParam *construct_properties);
+static void gda_config_init       (GdaConfig *conf, GdaConfigClass *klass);
+static void gda_config_dispose    (GObject *object);
+static void gda_config_set_property (GObject *object,
+				     guint param_id,
+				     const GValue *value,
+				     GParamSpec *pspec);
+static void gda_config_get_property (GObject *object,
+				     guint param_id,
+				     GValue *value,
+				     GParamSpec *pspec);
+static GdaConfig *unique_instance = NULL;
 
-static GStaticRecMutex gda_mutex = G_STATIC_REC_MUTEX_INIT;
-#define GDA_CONFIG_LOCK() g_static_rec_mutex_lock(&gda_mutex)
-#define GDA_CONFIG_UNLOCK() g_static_rec_mutex_unlock(&gda_mutex)
+static void data_source_info_free (GdaDataSourceInfo *info);
+static void internal_provider_free (InternalProvider *ip);
+static void load_config_file (const gchar *file, gboolean is_system);
+static void save_config_file (const gchar *file, gboolean is_system);
+static void load_all_providers (void);
 
-static GdaConfigClient *config_client = NULL;
-static gboolean         can_modify_global_conf; /* TRUE if the current user can modify the system wide config file */
-static gboolean         lock_write_notify = FALSE;
-static void             do_notify (const gchar *path);
+enum {
+	DSN_ADDED,
+	DSN_TO_BE_REMOVED,
+	DSN_REMOVED,
+	DSN_CHANGED,
+	LAST_SIGNAL
+};
 
-/* if @dsn_list_only_in_mem is TRUE, then the DSN list is not written to any file, but
- * is just stored in memory, in @dsn_list_contents */
-static gboolean  dsn_list_only_in_mem = FALSE;
+static gint gda_config_signals[LAST_SIGNAL] = { 0, 0, 0, 0 };
 
+/* properties */
+enum {
+	PROP_0,
+	PROP_USER_FILE,
+	PROP_SYSTEM_FILE
+};
+
+static GObjectClass *parent_class = NULL;
+
+#ifdef HAVE_FAM
 /*
  * FAM delcarations and static variables
  */
-#ifdef HAVE_FAM
 static FAMConnection *fam_connection = NULL;
 static gint           fam_watch_id = 0;
 static gboolean       lock_fam = FALSE;
@@ -105,239 +115,303 @@ static void           fam_lock_notify ();
 static void           fam_unlock_notify ();
 #endif
 
+static GStaticRecMutex gda_mutex = G_STATIC_REC_MUTEX_INIT;
+#define GDA_CONFIG_LOCK() g_static_rec_mutex_lock(&gda_mutex)
+#define GDA_CONFIG_UNLOCK() g_static_rec_mutex_unlock(&gda_mutex)
+
 /*
- * Private functions
+ * GdaConfig class implementation
+ * @klass:
  */
-#ifdef GDA_DEBUG_NO
 static void
-dump_config_client ()
+gda_config_class_init (GdaConfigClass *klass)
 {
-	GDA_CONFIG_LOCK ();
-	if (config_client) {
-		GList *list;
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-		list = config_client->global;
-		while (list) {
-			g_print ("GLOBAL section: %p %s\n", list->data, ((GdaConfigSection*)(list->data))->path);
-			list = list->next;
-		}
-		list = config_client->user;
-		while (list) {
-			g_print ("USER   section: %p %s\n", list->data, ((GdaConfigSection*)(list->data))->path);
-			list = list->next;
-		}
-	}
-	GDA_CONFIG_UNLOCK ();
-}
-#endif
+	parent_class = g_type_class_peek_parent (klass);
 
-static GList *
-gda_config_read_entries (xmlNodePtr cur)
-{
-	GList *list;
-	GdaConfigEntry *entry;
+	gda_config_signals[DSN_ADDED] =
+                g_signal_new ("dsn_added",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_FIRST,
+                              G_STRUCT_OFFSET (GdaConfigClass, dsn_added),
+                              NULL, NULL,
+                              gda_marshal_VOID__VOID,
+                              G_TYPE_NONE, 1, G_TYPE_POINTER);
+	gda_config_signals[DSN_TO_BE_REMOVED] =
+                g_signal_new ("dsn_to_be_removed",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_FIRST,
+                              G_STRUCT_OFFSET (GdaConfigClass, dsn_to_be_removed),
+                              NULL, NULL,
+                              gda_marshal_VOID__VOID,
+                              G_TYPE_NONE, 1, G_TYPE_POINTER);
+	gda_config_signals[DSN_TO_BE_REMOVED] =
+                g_signal_new ("dsn_removed",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_FIRST,
+                              G_STRUCT_OFFSET (GdaConfigClass, dsn_removed),
+                              NULL, NULL,
+                              gda_marshal_VOID__VOID,
+                              G_TYPE_NONE, 1, G_TYPE_POINTER);
+	gda_config_signals[DSN_CHANGED] =
+                g_signal_new ("dsn_changed",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_FIRST,
+                              G_STRUCT_OFFSET (GdaConfigClass, dsn_changed),
+                              NULL, NULL,
+                              gda_marshal_VOID__VOID,
+                              G_TYPE_NONE, 1, G_TYPE_POINTER);
 
-	g_return_val_if_fail (cur != NULL, NULL);
+	/* Properties */
+        object_class->set_property = gda_config_set_property;
+        object_class->get_property = gda_config_get_property;
 
-	list = NULL;
-	cur = cur->xmlChildrenNode;
-	while (cur != NULL){
-		if (!strcmp((gchar*)cur->name, "entry")){
-			entry = g_new0 (GdaConfigEntry, 1);
-			entry->name = (gchar*)xmlGetProp(cur, (xmlChar*)"name");
-			if (entry->name == NULL){
-				g_warning ("NULL 'name' in an entry");
-				entry->name = g_strdup ("");
-			}
-
-			entry->type = (gchar*)xmlGetProp(cur, (xmlChar*)"type");
-			if (entry->type == NULL){
-				g_warning ("NULL 'type' in an entry");
-				entry->type = g_strdup ("");
-			}
-
-			entry->value = (gchar*)xmlGetProp(cur, (xmlChar*)"value");
-			if (entry->value == NULL){
-				g_warning ("NULL 'value' in an entry");
-				entry->value = g_strdup ("");
-			}
-
-			list = g_list_append (list, entry);
-		} else {
-			g_warning ("'entry' expected, got '%s'. Ignoring...", (gchar*)cur->name);
-		}
-		cur = cur->next;
-	}
+	g_object_class_install_property (object_class, PROP_USER_FILE,
+                                         g_param_spec_string ("user_file", _("File to use for per-user DSN list"), 
+							      NULL, NULL,
+							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+	g_object_class_install_property (object_class, PROP_USER_FILE,
+                                         g_param_spec_string ("system_file", _("File to use for system-wide DSN list"), 
+							      NULL, NULL,
+							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	
-	return list;
+	object_class->constructor = gda_config_constructor;
+	object_class->dispose = gda_config_dispose;
 }
 
-static GList *
-gda_config_parse_config_file (gchar *buffer, gint len)
+static void
+gda_config_init (GdaConfig *conf, GdaConfigClass *klass)
+{
+	g_return_if_fail (GDA_IS_CONFIG (conf));
+
+	conf->priv = g_new0 (GdaConfigPrivate, 1);
+	conf->priv->user_file = NULL;
+	conf->priv->system_file = NULL;
+	conf->priv->system_config_allowed = FALSE;
+	conf->priv->prov_list = NULL;
+	conf->priv->dsn_list = NULL;
+}
+
+static void
+load_config_file (const gchar *file, gboolean is_system)
 {
 	xmlDocPtr doc;
-	xmlNodePtr cur;
-	GList *list = NULL;
-	GdaConfigSection *section;
-	gint sp_len;
-	const gchar *section_path = GDA_CONFIG_SECTION_DATASOURCES;
-	xmlFreeFunc old_free;
-	xmlMallocFunc old_malloc;
-	xmlReallocFunc old_realloc;
-	xmlStrdupFunc old_strdup;
+	xmlNodePtr root;
 
-	if (!buffer || (len == 0))
-		return NULL;
-
-	sp_len = strlen (section_path);
-
-	xmlMemGet (&old_free,
-		   &old_malloc,
-		   &old_realloc,
-		   &old_strdup);
-
-	xmlMemSetup (g_free,
-		     (xmlMallocFunc) g_malloc,
-		     (xmlReallocFunc) g_realloc,
-		     g_strdup);
-
-	xmlDoValidityCheckingDefaultValue = FALSE;
-	xmlKeepBlanksDefault(0);
-
-	doc = xmlParseMemory (buffer, len);
-	if (doc == NULL){
-		g_warning ("File empty or not well-formed.");
-		xmlMemSetup (old_free,
-			     old_malloc,
-			     old_realloc,
-			     old_strdup);
-		return NULL;
+	doc = xmlParseFile (file);
+	if (!doc) {
+		g_warning (_("Could not load config file '%s'"), file);
+		return;
 	}
-
-	cur = xmlDocGetRootElement (doc);
-	if (cur == NULL){
-		g_warning ("Cannot get root element!");
-		xmlFreeDoc (doc);
-		xmlMemSetup (old_free,
-			     old_malloc,
-			     old_realloc,
-			     old_strdup);
-		return NULL;
-	}
-
-	if (strcmp ((gchar*)cur->name, "libgda-config") != 0){
-		g_warning ("root node != 'libgda-config' -> '%s'", (gchar*)cur->name);
-		xmlFreeDoc (doc);
-		xmlMemSetup (old_free,
-			     old_malloc,
-			     old_realloc,
-			     old_strdup);
-		return NULL;
-	}
-
-	for (cur = cur->xmlChildrenNode; cur != NULL; cur = cur->next) {
-		if (xmlNodeIsText (cur)) 
-			continue;
-
-		if (strcmp ((gchar*)cur->name, "section")) {
-			if (strcmp ((gchar*)cur->name, "comment"))
-				g_warning ("'section' expected, got '%s'. Ignoring...", (gchar*)cur->name);
-			continue;
-		}
-
-		section = g_new0 (GdaConfigSection, 1);
-		section->path = (gchar*)xmlGetProp (cur, (xmlChar*)"path");
-		if (section->path != NULL &&
-		    !strncmp (section->path, section_path, sp_len)){
-			section->entries = gda_config_read_entries (cur);
-			if (section->entries == NULL) {
-				g_free (section->path);
-				g_free (section);
+	root = xmlDocGetRootElement (doc);
+	if (root) {
+		xmlNodePtr node;
+		for (node = root->children; node; node = node->next) { /* iter over the <section> tags */
+			if (strcmp (node->name, "section"))
 				continue;
-			}
+
+			xmlChar *prop;
+			gchar *ptr;
+			GdaDataSourceInfo *info;
+			gboolean is_new = FALSE;
+			xmlNodePtr entry;
 			
-			list = g_list_append (list, section);
-		} else {
-			g_warning ("Ignoring section '%s'.", section->path);
-			g_free (section->path);
-			g_free (section);
-		}
-	}
-
-	xmlFreeDoc (doc);
-	xmlMemSetup (old_free,
-		     old_malloc,
-		     old_realloc,
-		     old_strdup);
-	return list;
-}
-
-static GdaConfigClient *
-get_config_client ()
-{
-	/* FIXME: if we're updating or writing config_client,
-	 *	  wait until the operation finishes
-	 */
-	if (! config_client) {
-		GDA_CONFIG_LOCK ();
-		guint len = 0;
-		gchar *full_file = NULL;
-		gchar *user_config = NULL;
-		gboolean has_user_config = FALSE;
-		gchar *memonly;
-		gchar *fname;
-				
-		config_client = g_new0 (GdaConfigClient, 1);
-		xmlKeepBlanksDefault(0);
-
-		/* check if DSN list should only be stored in memory */
-		memonly = getenv ("GDA_DSN_LIST_IN_MEMORY");
-		if (memonly) {
-			gsize length;
-			gchar *init_contents;
-			dsn_list_only_in_mem = TRUE;
-
-			g_print ("** DSN list will remain in memory and will be lost at the end of the session **\n");
-			if (*memonly && g_file_get_contents (memonly, &init_contents, &length, NULL)) {
-				config_client->user = gda_config_parse_config_file (init_contents, length);
-				g_free (init_contents);
+			prop = xmlGetProp (node, "path");
+			if (!prop)
+				continue;
+			for (ptr = ((gchar *) prop) + strlen (prop) - 1; ptr >= (gchar *) prop; ptr--) {
+				if (*ptr == '/') {
+					ptr++;
+					break;
+				}
 			}
-			GDA_CONFIG_UNLOCK ();
-			return config_client;
-		}
-
-		/* global config file name */
-		fname = gda_gbr_get_file_path (GDA_ETC_DIR, LIBGDA_ABI_NAME, "config", NULL);
-
-		has_user_config = g_get_home_dir () ? TRUE : FALSE;
-		if (has_user_config)
-			user_config = g_strdup_printf ("%s%s", g_get_home_dir (), LIBGDA_USER_CONFIG_FILE); /* VMA */
-
-		{
-			/* compute system wide rights */
-			FILE *file;
-			file = fopen (fname, "a");
-			if (file) {
-				can_modify_global_conf = TRUE;
-#ifdef GDA_DEBUG_NO
-				g_print ("Can write system wide config file\n");
-#endif
-				fclose (file);
+			info = gda_config_get_dsn (ptr);
+			if (!info) {
+				info = g_new0 (GdaDataSourceInfo, 1);
+				info->name = g_strdup (ptr);
+				is_new = TRUE;
 			}
 			else {
-				can_modify_global_conf = FALSE;
-#ifdef GDA_DEBUG_NO
-				g_print ("Cannot write system wide config file\n");
-#endif			
+				g_free (info->provider); info->provider = NULL;
+				g_free (info->cnc_string); info->cnc_string = NULL;
+				g_free (info->description); info->description = NULL;
+				g_free (info->username); info->username = NULL;
+				g_free (info->password); info->password = NULL;
+			}
+			info->is_global = is_system;
+			xmlFree (prop);
+			
+			for (entry = node->children; entry; entry = entry->next) { /* iter over the <entry> tags */
+				xmlChar *value;
+				if (strcmp (entry->name, "entry"))
+					continue;
+				prop = xmlGetProp (entry, "name");
+				if (!prop)
+					continue;
+				value = xmlGetProp (entry, "value");
+				if (!value) {
+					xmlFree (prop);
+					continue;
+				}
+				if (!strcmp (prop, "DSN"))
+					info->cnc_string = g_strdup (value);
+				else if (!strcmp (prop, "Provider"))
+					info->provider = g_strdup (value);
+				else if (!strcmp (prop, "Description"))
+					info->description = g_strdup (value);
+				else if (!strcmp (prop, "Username"))
+					info->username = g_strdup (value);
+				else if (!strcmp (prop, "Password"))
+					info->password = g_strdup (value);
+				xmlFree (prop);
+				xmlFree (value);
+			}
+			/* signals */
+			if (is_new) {
+				unique_instance->priv->dsn_list = g_slist_append (unique_instance->priv->dsn_list, info);
+				g_signal_emit (unique_instance, gda_config_signals[DSN_ADDED], 0, info);
+			}
+			else
+				g_signal_emit (unique_instance, gda_config_signals[DSN_CHANGED], 0, info);
+		}
+	}
+	xmlFreeDoc (doc);
+}
+
+static void
+save_config_file (const gchar *file, gboolean is_system)
+{
+	xmlDocPtr doc;
+	xmlNodePtr root;
+	GSList *list;
+
+	if (!unique_instance)
+		gda_config_get ();
+	
+	if ((!is_system && !unique_instance->priv->user_file) ||
+	    (is_system && !unique_instance->priv->system_file)) {
+		return;
+	}
+
+	doc = xmlNewDoc (BAD_CAST "1.0");
+	root = xmlNewDocNode (doc, NULL, BAD_CAST "libgda-config", NULL);
+        xmlDocSetRootElement (doc, root);
+	for (list = unique_instance->priv->dsn_list; list; list = list->next) {
+		GdaDataSourceInfo *info = (GdaDataSourceInfo*) list->data;
+		if (info->is_global != is_system)
+			continue;
+
+		xmlNodePtr section, entry;
+		gchar *prop;
+		section = xmlNewChild (root, NULL, "section", NULL);
+		prop = g_strdup_printf ("/apps/libgda/Datasources/%s", info->name);
+		xmlSetProp (section, "path", BAD_CAST prop);
+		g_free (prop);
+
+		/* DSN */
+		entry = xmlNewChild (section, NULL, "entry", NULL);
+		xmlSetProp (section, "name", BAD_CAST "DSN");
+		xmlSetProp (section, "type", BAD_CAST "string");
+		xmlSetProp (section, "value", BAD_CAST info->cnc_string);
+
+		/* description */
+		entry = xmlNewChild (section, NULL, "entry", NULL);
+		xmlSetProp (section, "name", BAD_CAST "Description");
+		xmlSetProp (section, "type", BAD_CAST "string");
+		xmlSetProp (section, "value", BAD_CAST info->description);
+
+		/* provider */
+		entry = xmlNewChild (section, NULL, "entry", NULL);
+		xmlSetProp (section, "name", BAD_CAST "Provider");
+		xmlSetProp (section, "type", BAD_CAST "string");
+		xmlSetProp (section, "value", BAD_CAST info->provider);
+
+		/* username */
+		entry = xmlNewChild (section, NULL, "entry", NULL);
+		xmlSetProp (section, "name", BAD_CAST "Username");
+		xmlSetProp (section, "type", BAD_CAST "string");
+		xmlSetProp (section, "value", BAD_CAST info->username);
+
+		/* password */
+		entry = xmlNewChild (section, NULL, "entry", NULL);
+		xmlSetProp (section, "name", BAD_CAST "Password");
+		xmlSetProp (section, "type", BAD_CAST "string");
+		xmlSetProp (section, "value", BAD_CAST info->password);
+	}
+
+#ifdef HAVE_FAM
+        fam_lock_notify ();
+#endif
+	if (!is_system && unique_instance->priv->user_file) {
+		if (xmlSaveFormatFile (unique_instance->priv->user_file, doc, TRUE) == -1)
+                        g_warning ("Error saving config data to '%s'", unique_instance->priv->user_file);
+	}
+	else if (is_system && unique_instance->priv->system_file) {
+		if (xmlSaveFormatFile (unique_instance->priv->system_file, doc, TRUE) == -1)
+                        g_warning ("Error saving config data to '%s'", unique_instance->priv->system_file);
+	}
+#ifdef HAVE_FAM
+        fam_unlock_notify ();
+#endif
+	xmlFreeDoc (doc);
+}
+
+static GObject *
+gda_config_constructor (GType type,
+			guint n_construct_properties,
+			GObjectConstructParam *construct_properties)
+{
+	GObject *object;
+  
+	if (!unique_instance) {
+		gint i;
+		gboolean user_file_set = FALSE, system_file_set = FALSE;
+
+		object = G_OBJECT_CLASS (parent_class)->constructor (type,
+								     n_construct_properties,
+								     construct_properties);
+		for (i = 0; i< n_construct_properties; i++) {
+			GObjectConstructParam *prop = &(construct_properties[i]);
+			if (!strcmp (g_param_spec_get_name (prop->pspec), "user_file")) {
+				user_file_set = TRUE;
+				g_print ("GdaConfig user dir set\n");
+			}
+			else if (!strcmp (g_param_spec_get_name (prop->pspec), "system_file")) {
+				system_file_set = TRUE;
+				g_print ("GdaConfig system dir set\n");
 			}
 		}
 
+		unique_instance = GDA_CONFIG (object);
+		g_object_ref (object); /* keep one reference for the library */
+
+		/* define user and system dirs. if not already defined */
+		if (!user_file_set) {
+			if (g_get_home_dir ()) 
+				unique_instance->priv->user_file = g_build_filename (g_get_home_dir (),
+										    ".libgda", "config", NULL);
+		}
+		if (!system_file_set) 
+			unique_instance->priv->system_file = gda_gbr_get_file_path (GDA_ETC_DIR, 
+										   LIBGDA_ABI_NAME, "config", NULL);
+		unique_instance->priv->system_config_allowed = FALSE;
+		if (unique_instance->priv->system_file) {
+			FILE *file;
+                        file = fopen (unique_instance->priv->system_file, "a");
+                        if (file) {
+                                unique_instance->priv->system_config_allowed = TRUE;
+                                fclose (file);
+                        }
+		}
+
+		/* Setup file monitoring */
 #ifdef HAVE_FAM
 		if (!fam_connection) {
 			/* FAM init */
 			GIOChannel *ioc;
 			int res;
-	
+			
 #ifdef GDA_DEBUG_NO
 			g_print ("Using FAM to monitor configuration files changes.\n");
 #endif
@@ -353,1187 +427,617 @@ get_config_client ()
 							       G_IO_IN | G_IO_HUP | G_IO_ERR,
 							       fam_callback, NULL);
 				
-				fam_conf_global = g_new0 (FAMRequest, 1);
-				res = FAMMonitorFile (fam_connection, fname, fam_conf_global, 
-						      GINT_TO_POINTER (TRUE));
-#ifdef GDA_DEBUG_NO
-				g_print ("Monitoring changes on file %s: %s\n", fname, res ? "ERROR" : "Ok");
-#endif
-				
-				if (has_user_config) {
-					fam_conf_user = g_new0 (FAMRequest, 1);
-					res = FAMMonitorFile (fam_connection, user_config, fam_conf_user, 
-							      GINT_TO_POINTER (FALSE));
+				if (unique_instance->priv->system_file) {
+					fam_conf_global = g_new0 (FAMRequest, 1);
+					res = FAMMonitorFile (fam_connection, unique_instance->priv->system_file, 
+							      fam_conf_global,
+							      GINT_TO_POINTER (TRUE));
 #ifdef GDA_DEBUG_NO
 					g_print ("Monitoring changes on file %s: %s\n", 
-						 user_config, res ? "ERROR" : "Ok");
+						 unique_instance->priv->system_file, 
+						 res ? "ERROR" : "Ok");
 #endif
 				}
-			}
-			
-		}
-#endif
-
-		/*
-		 * load system wide config
-		 */
-		if (g_file_get_contents (fname, &full_file, &len, NULL)){
-			GList *list;
-			config_client->global = gda_config_parse_config_file (full_file, len);
-			g_free (full_file);
-			
-			/* mark GdaConfigSection as global */
-			list = config_client->global;
-			while (list) {
-				((GdaConfigSection *)(list->data))->is_global = TRUE;
-				list = g_list_next (list);
-			}
-		}
-
-		if (! has_user_config) {
-			/* this can occur on win98, and maybe other win32 platforms */
-			g_free (fname);
-			GDA_CONFIG_UNLOCK ();
-			return config_client;
-		}
-
-		/*
-		 * load user specific config
-		 */
-		if (g_file_get_contents (user_config, &full_file, &len, NULL)) {
-			if (len != 0) 
-				config_client->user = gda_config_parse_config_file (full_file, len);
-			g_free (full_file);
-		} 
-		else {
-			if (!g_file_test (user_config, G_FILE_TEST_EXISTS)){
-				gchar *dirpath;
-				FILE *fp;
-
-				dirpath = g_strdup_printf ("%s%s", g_get_home_dir (), LIBGDA_USER_CONFIG_DIR);
-				if (!g_file_test (dirpath, G_FILE_TEST_IS_DIR)){
-#ifdef G_OS_WIN32
-					if (mkdir (dirpath))
-#else
-					if (mkdir (dirpath, 0700))
-#endif
-						g_warning ("Error creating directory %s", dirpath);
-				}
-
-				fp = fopen (user_config, "wt");
-				if (fp == NULL)
-					g_warning ("Unable to create the configuration file.");
-				else {
-					gchar *str;
-#define DB_FILE "sales_test.db"
-#define DEFAULT_CONFIG \
-"<?xml version=\"1.0\"?>\n" \
-"<libgda-config>\n" \
-"    <section path=\"/apps/libgda/Datasources/SalesTest\">\n" \
-"        <entry name=\"DSN\" type=\"string\" value=\"DB_DIR=%s;DB_NAME=sales_test\"/>\n" \
-"        <entry name=\"Description\" type=\"string\" value=\"Test database for a sales department\"/>\n" \
-"        <entry name=\"Password\" type=\"string\" value=\"\"/>\n" \
-"        <entry name=\"Provider\" type=\"string\" value=\"SQLite\"/>\n" \
-"        <entry name=\"Username\" type=\"string\" value=\"\"/>\n" \
-"    </section>\n" \
-"</libgda-config>\n"
-					str = gda_gbr_get_file_path (GDA_ETC_DIR, LIBGDA_ABI_NAME, DB_FILE, NULL);
-					if (g_file_get_contents (str, &full_file, &len, NULL)) {
-						gboolean allok = TRUE;
-						FILE *db;
-						gchar *dbfile;
-						
-						/* copy the Sales test database */
-						dbfile = g_build_filename (g_get_home_dir (), 
-									   LIBGDA_USER_CONFIG_DIR, DB_FILE, NULL);
-						db = fopen (dbfile, "wt");
-						if (db) {
-							allok = fwrite (full_file, sizeof (gchar), len, db) == len ? TRUE : FALSE;
-							fclose (db);
-						}
-						else
-							allok = FALSE;
-						g_free (dbfile);
-						g_free (full_file);
-						
-						if (allok) {
-							/* write down a default data source entry */
-							full_file = g_strdup_printf (DEFAULT_CONFIG, dirpath);
-							len = strlen (full_file);
-							fwrite (full_file, sizeof (gchar), len, fp);
-							fclose (fp);
-							config_client->user = gda_config_parse_config_file (full_file, len);
-							g_free (full_file);
-						}
-					}
-					g_free (str);
-				}
-
-				g_free (dirpath);
-			} 
-			else
-				g_warning ("Config file is not readable.");
-		}
-		g_free (user_config);
-		g_free (fname);
-#ifdef GDA_DEBUG_NO
-		dump_config_client ();
-#endif
-		GDA_CONFIG_UNLOCK ();
-	}
-
-	return config_client;
-}
-
-static void gda_config_client_reset ();
-
-#ifdef HAVE_FAM
-static gboolean
-fam_callback (GIOChannel *source, GIOCondition condition, gpointer data)
-{
-        gboolean res = TRUE;
-
-	GDA_CONFIG_LOCK ();
-	while (fam_connection && FAMPending (fam_connection)) {
-                FAMEvent ev;
-		gboolean is_global;
-		
-		if (FAMNextEvent (fam_connection, &ev) != 1) {
-                        FAMClose (fam_connection);
-                        g_free (fam_connection);
-                        g_source_remove (fam_watch_id);
-                        fam_watch_id = 0;
-                        fam_connection = NULL;
-			GDA_CONFIG_UNLOCK ();
-                        return FALSE;
-                }
-
-		if (lock_fam)
-			continue;
-
-		is_global = GPOINTER_TO_INT (ev.userdata);
-		switch (ev.code) {
-		case FAMChanged: {
-			struct stat stat;
-			if (lstat (ev.filename, &stat))
-				break;
-			if ((stat.st_mtime != last_mtime) ||
-			    (stat.st_ctime != last_ctime) ||
-			    (stat.st_size != last_size)) {
-				last_mtime = stat.st_mtime;
-				last_ctime = stat.st_ctime;
-				last_size = stat.st_size;
-			}
-			else
-				break;
-		}
-		case FAMDeleted:
-		case FAMCreated:
-#ifdef GDA_DEBUG_NO
-			g_print ("Reloading config files (%s config has changed)\n", is_global ? "global" : "user");
-#endif
-			GDA_CONFIG_LOCK ();
-			gda_config_client_reset ();
-			g_free (config_client);
-			config_client = NULL;
-			/* config_client will be re-created next time a gda_config* call is made */
-			do_notify (NULL);
-			GDA_CONFIG_UNLOCK ();
-			break;
-		case FAMAcknowledge:
-		case FAMStartExecuting:
-		case FAMStopExecuting:
-		case FAMExists:
-		case FAMEndExist:
-		case FAMMoved:
-			/* Not supported */
-			break;
-                }
-	}
-	
-	GDA_CONFIG_UNLOCK ();
-        return res;
-}
-
-static void
-fam_lock_notify ()
-{
-	lock_fam = TRUE;
-}
-
-static void
-fam_unlock_notify ()
-{
-	lock_fam = FALSE;
-}
-
-#endif
-
-static GdaConfigSection *
-gda_config_search_section (GList *sections, const gchar *path)
-{
-	GList *ls;
-	GdaConfigSection *section;
-
-	section = NULL;
-	for (ls = sections; ls; ls = ls->next){
-		section = ls->data;
-		if (!strcmp (section->path, path))
-			break;
-
-		section = NULL;
-	}
-
-	return section;
-}
-
-static GdaConfigEntry *
-gda_config_search_entry (GList *sections, const gchar *path, const gchar *type)
-{
-	gint last_dash;
-	gchar *ptr_last_dash;
-	gchar *section_path;
-	GList *le;
-	GdaConfigSection *section;
-	GdaConfigEntry *entry;
-
-	if (sections == NULL)
-		return NULL;
-	
-	ptr_last_dash = strrchr (path, '/');
-	if (ptr_last_dash == NULL)
-		return NULL;
-
-	last_dash = ptr_last_dash - path;
-	section_path = g_strdup (path);
-	section_path [last_dash] = '\0';
-	entry = NULL;
-	section = gda_config_search_section (sections, section_path);
-	if (section){
-		for (le = section->entries; le; le = le->next){
-			entry = le->data;
-			if (type != NULL &&
-			    !strcmp (entry->type, type) && 
-			    !strcmp (entry->name, ptr_last_dash + 1))
-				break;
-			else {
-				if (!strcmp (entry->name, ptr_last_dash + 1))
-					break;
-			}
-
-			entry = NULL;
-		}
-	}
-
-	g_free (section_path);
-	return entry;
-}
-
-static GdaConfigSection *
-gda_config_add_section (const gchar *section_path)
-{
-	GdaConfigClient *cfg_client;
-	GdaConfigSection *section;
-
-	section = g_new0 (GdaConfigSection, 1);
-	section->path = g_strdup (section_path);
-	section->entries = NULL;
-
-	GDA_CONFIG_LOCK ();
-	cfg_client = get_config_client ();
-	cfg_client->user = g_list_append (cfg_client->user, section);
-	GDA_CONFIG_UNLOCK ();
-
-	return section;
-}
-
-static void
-gda_config_add_entry (const gchar *section_path, 
-		      const gchar *name,
-		      const gchar *type,
-		      const gchar *value)
-{
-	GdaConfigEntry *entry;
-	GdaConfigSection *section;
-	GdaConfigClient *cfg_client;
-
-	GDA_CONFIG_LOCK ();
-	cfg_client = get_config_client ();
-	entry = g_new0 (GdaConfigEntry, 1);
-	entry->name = g_strdup (name);
-	entry->type = g_strdup (type);
-	entry->value = g_strdup (value);
-	
-	section = gda_config_search_section (cfg_client->user, section_path);
-	if (section == NULL)
-		section = gda_config_add_section (section_path);
-
-	section->entries = g_list_append (section->entries, entry);
-	GDA_CONFIG_UNLOCK ();
-}
-
-static void
-free_entry (gpointer data, gpointer user_data)
-{
-	GdaConfigEntry *entry = data;
-
-	g_free (entry->name);
-	g_free (entry->type);
-	g_free (entry->value);
-	g_free (entry);
-}
-
-static void
-free_section (GdaConfigSection *section)
-{
-	g_list_foreach (section->entries, free_entry, NULL);
-	g_list_free (section->entries);
-	g_free (section->path);
-	g_free (section);
-}
-
-static void
-gda_config_client_reset ()
-{
-	GList *list;
-
-	if (config_client == NULL)
-		return;
-
-	GDA_CONFIG_LOCK ();
-	if (config_client->global) {
-		for (list = config_client->global; list; list = g_list_next (list)) 
-			free_section ((GdaConfigSection *)(list->data));
-		g_list_free (config_client->global);
-		config_client->global = NULL;
-	}
-
-	if (config_client->user) {
-		for (list = config_client->user; list; list = g_list_next (list)) 
-			free_section ((GdaConfigSection *)(list->data));
-		g_list_free (config_client->user);
-		config_client->user = NULL;
-	}
-	GDA_CONFIG_UNLOCK ();
-}
-
-static void
-add_xml_entry (xmlNodePtr parent, GdaConfigEntry *entry)
-{
-	xmlNodePtr new_node;
-
-	new_node = xmlNewTextChild (parent, NULL, (xmlChar*)"entry", NULL);
-	xmlSetProp (new_node, (xmlChar*)"name", (xmlChar*)entry->name);
-	xmlSetProp (new_node, (xmlChar*)"type", (xmlChar*)entry->type);
-	xmlSetProp (new_node, (xmlChar*)"value", (xmlChar*)entry->value);
-}
-
-static xmlNodePtr
-add_xml_section (xmlNodePtr parent, GdaConfigSection *section)
-{
-	xmlNodePtr new_node;
-
-	new_node = xmlNewTextChild (parent, NULL, (xmlChar*)"section", NULL);
-	xmlSetProp (new_node, (xmlChar*)"path", (xmlChar*)(section->path ? section->path : ""));
-	return new_node;
-}
-
-static void
-write_config_file ()
-{
-	GdaConfigClient *cfg_client;
-	xmlDocPtr doc;
-	xmlNodePtr root;
-	xmlNodePtr xml_section;
-	GList *ls; /* List of sections */
-	GList *le; /* List of entries */
-	GdaConfigSection *section;
-	GdaConfigEntry *entry;
-	gchar *user_config;
-
-	GDA_CONFIG_LOCK ();
-	if (lock_write_notify) {
-		GDA_CONFIG_UNLOCK ();
-		return;
-	}
-
-	if (dsn_list_only_in_mem) {
-		/* nothing to do */
-		GDA_CONFIG_UNLOCK ();
-		return;
-	}
-
-	/* user specific data sources */
-	cfg_client = get_config_client ();
-	doc = xmlNewDoc ((xmlChar*)"1.0");
-	g_return_if_fail (doc != NULL);
-	root = xmlNewDocNode (doc, NULL, (xmlChar*)"libgda-config", NULL);
-	xmlDocSetRootElement (doc, root);
-	for (ls = cfg_client->user; ls; ls = ls->next){
-		section = ls->data;
-		if (section == NULL)
-			continue;
-
-		xml_section = add_xml_section (root, section);
-		for (le = section->entries; le; le = le->next){
-			entry = le->data;
-			if (entry == NULL)
-				continue;
-
-			add_xml_entry (xml_section, le->data);
-		}
-	}
-
-	user_config = g_strdup_printf ("%s%s", g_get_home_dir (), LIBGDA_USER_CONFIG_FILE);
-#ifdef HAVE_FAM
-	fam_lock_notify ();
-#endif
-	if (xmlSaveFormatFile (user_config, doc, TRUE) == -1)
-		g_warning ("Error saving config data to '%s'", user_config);
-#ifdef HAVE_FAM
-	fam_unlock_notify ();
-#endif
-	g_free (user_config);
-	xmlFreeDoc (doc);
-
-	/* system wide data sources */
-	if (can_modify_global_conf) {
-		doc = xmlNewDoc ((xmlChar*)"1.0");
-		g_return_if_fail (doc != NULL);
-		root = xmlNewDocNode (doc, NULL, (xmlChar*)"libgda-config", NULL);
-		xmlDocSetRootElement (doc, root);
-		for (ls = cfg_client->global; ls; ls = ls->next){
-			section = ls->data;
-			if (section == NULL)
-				continue;
-			
-			xml_section = add_xml_section (root, section);
-			for (le = section->entries; le; le = le->next){
-				entry = le->data;
-				if (entry == NULL)
-					continue;
 				
-				add_xml_entry (xml_section, le->data);
+				if (unique_instance->priv->user_file) {
+					fam_conf_user = g_new0 (FAMRequest, 1);
+					res = FAMMonitorFile (fam_connection, unique_instance->priv->user_file, 
+							      fam_conf_user,
+							      GINT_TO_POINTER (FALSE));
+#ifdef GDA_DEBUG_NO
+					g_print ("Monitoring changes on file %s: %s\n",
+						 unique_instance->priv->user_file, 
+						 res ? "ERROR" : "Ok");
+#endif
+				}
 			}
+			
 		}
-		
-#ifdef HAVE_FAM
-		fam_lock_notify ();
 #endif
-		/* global config file name */
-		gchar *fname;
-		fname = gda_gbr_get_file_path (GDA_ETC_DIR, LIBGDA_ABI_NAME, "config", NULL);
-
-		if (xmlSaveFormatFile (fname, doc, TRUE) == -1)
-			g_warning ("Error saving config data to '%s'", user_config);
-		g_free (fname);
-#ifdef HAVE_FAM
-		fam_unlock_notify ();
-#endif
-		xmlFreeDoc (doc);
+		/* load existing DSN definitions */
+		if (unique_instance->priv->system_file)
+			load_config_file (unique_instance->priv->system_file, TRUE);
+		if (unique_instance->priv->user_file)
+			load_config_file (unique_instance->priv->user_file, FALSE);
 	}
+	else
+		object = g_object_ref (G_OBJECT (unique_instance));
 
-	GDA_CONFIG_UNLOCK ();
+	return object;
 }
 
-/*
- * Public functions
- */
-
-/**
- * gda_config_get_string
- * @path: path to the configuration entry.
- *
- * Gets the value of the specified configuration entry as a string. You
- * are then responsible to free the returned string.
- *
- * Returns: the value stored at the given entry.
- */
-gchar *
-gda_config_get_string (const gchar *path)
+static void
+gda_config_dispose (GObject *object)
 {
-	GdaConfigClient *cfg_client;
-	GdaConfigEntry *entry;
-	gchar *retval;
+	GdaConfig *conf = (GdaConfig *) object;
 
-	g_return_val_if_fail (path != NULL, NULL);
+	g_return_if_fail (GDA_IS_CONFIG (conf));
 
-	GDA_CONFIG_LOCK ();
-	cfg_client = get_config_client ();
+	if (conf->priv) {
+		g_free (conf->priv->user_file);
+		g_free (conf->priv->system_file);
 
-	entry = gda_config_search_entry (cfg_client->user, path, "string");
-	if (!entry)
-		entry = gda_config_search_entry (cfg_client->global, path, "string");
-
-	retval = (entry && entry->value) ? g_strdup (entry->value) : NULL;
-	GDA_CONFIG_UNLOCK ();
-        return retval;
-}
-
-/**
- * gda_config_get_int
- * @path: path to the configuration entry.
- *
- * Gets the value of the specified configuration entry as an integer.
- *
- * Returns: the value stored at the given entry.
- */
-gint
-gda_config_get_int (const gchar *path)
-{
-	GdaConfigClient *cfg_client;
-	GdaConfigEntry *entry;
-	gint retval;
-
-	g_return_val_if_fail (path != NULL, 0);
-
-	GDA_CONFIG_LOCK ();
-	cfg_client = get_config_client ();
-
-	entry = gda_config_search_entry (cfg_client->user, path, "long");
-	if (entry == NULL)
-		entry = gda_config_search_entry (cfg_client->global, path, "long");
-        retval = (entry != NULL && entry->value != NULL) ? atoi (entry->value) : 0;
-	GDA_CONFIG_UNLOCK ();
-
-	return retval;
-}
-
-/**
- * gda_config_get_float
- * @path: path to the configuration entry.
- *
- * Gets the value of the specified configuration entry as a float.
- *
- * Returns: the value stored at the given entry.
- */
-gdouble
-gda_config_get_float (const gchar *path)
-{
-	GdaConfigClient *cfg_client;
-	GdaConfigEntry *entry;
-	gdouble retval;
-
-	g_return_val_if_fail (path != NULL, 0.0);
-
-	GDA_CONFIG_LOCK ();
-	cfg_client = get_config_client ();
-
-	entry = gda_config_search_entry (cfg_client->user, path, "float");
-	if (entry == NULL)
-		entry = gda_config_search_entry (cfg_client->global, path, "float");
-
-        retval = (entry != NULL && entry->value != NULL) ? g_strtod (entry->value, NULL) : 0.0;
-	GDA_CONFIG_UNLOCK ();
-
-	return retval;
-}
-
-/**
- * gda_config_get_boolean
- * @path: path to the configuration entry.
- *
- * Gets the value of the specified configuration entry as a boolean.
- *
- * Returns: the value stored at the given entry.
- */
-gboolean
-gda_config_get_boolean (const gchar *path)
-{
-	GdaConfigClient *cfg_client;
-	GdaConfigEntry *entry;
-	gboolean retval;
-
-	g_return_val_if_fail (path != NULL, FALSE);
-
-	GDA_CONFIG_LOCK ();
-	cfg_client = get_config_client ();
-
-	entry = gda_config_search_entry (cfg_client->user, path, "bool");
-	if (entry == NULL)
-		entry = gda_config_search_entry (cfg_client->global, path, "bool");
-
-        retval = (entry != NULL && entry->value != NULL) ? !strcmp (entry->value, "true") : FALSE;
-	GDA_CONFIG_UNLOCK ();
-
-	return retval;
-}
-
-/**
- * gda_config_set_string
- * @path: path to the configuration entry.
- * @new_value: new value.
- *
- * Sets the given configuration entry to contain a string.
- *
- * Returns: TRUE if no error occurred
- */
-gboolean
-gda_config_set_string (const gchar *path, const gchar *new_value)
-{
-	GdaConfigEntry *entry;
-	gchar *ptr_last_dash;
-	gchar *section_path;
-	gint last_dash;
-	GdaConfigClient *cfg_client;
-
-	g_return_val_if_fail (path != NULL, FALSE);
-	g_return_val_if_fail (new_value != NULL, FALSE);
-
-	GDA_CONFIG_LOCK ();
-	cfg_client = get_config_client ();
-	entry = gda_config_search_entry (cfg_client->user, path, "string");
-	if (!entry) {
-		entry = gda_config_search_entry (cfg_client->global, path, "string");
-		if (entry && !can_modify_global_conf) {
-			GDA_CONFIG_UNLOCK ();
-			return FALSE;
+		if (conf->priv->dsn_list) {
+			g_slist_foreach (conf->priv->dsn_list, (GFunc) data_source_info_free, NULL);
+			g_slist_free (conf->priv->dsn_list);
 		}
-	}
-	if (entry == NULL){
-		ptr_last_dash = strrchr (path, '/');
-		if (ptr_last_dash == NULL){
-			g_warning ("%s does not containt any '/'!?", path); 
-			GDA_CONFIG_UNLOCK ();
-			return FALSE;
+		if (conf->priv->prov_list) {
+			g_slist_foreach (conf->priv->prov_list, (GFunc) internal_provider_free, NULL);
+			g_slist_free (conf->priv->prov_list);
 		}
-		last_dash = ptr_last_dash - path;
-		section_path = g_strdup (path);
-		section_path [last_dash] = '\0';
-		gda_config_add_entry (section_path, ptr_last_dash + 1, 
-						    "string", new_value);
-		g_free (section_path);
-	} 
-	else {
-		g_free (entry->value);
-		g_free (entry->type);
-		entry->value = g_strdup (new_value);
-		entry->type = g_strdup ("string");
+		g_free (conf->priv);
+		conf->priv = NULL;
 	}
 
-	write_config_file ();
-	do_notify (path);
-	GDA_CONFIG_UNLOCK ();
-
-	return TRUE;
+	/* chain to parent class */
+	parent_class->dispose (object);
 }
 
-/**
- * gda_config_set_int
- * @path: path to the configuration entry.
- * @new_value: new value.
- *
- * Sets the given configuration entry to contain an integer.
- *
- * Returns: TRUE if no error occurred
- */
-gboolean
-gda_config_set_int (const gchar *path, gint new_value)
+
+/* module error */
+GQuark gda_config_error_quark (void)
 {
-	GdaConfigEntry *entry;
-	gchar *ptr_last_dash;
-	gchar *section_path;
-	gint last_dash;
-	gchar *newstr;
-	GdaConfigClient *cfg_client;
-
-	g_return_val_if_fail (path !=NULL, FALSE);
-
-	GDA_CONFIG_LOCK ();
-	cfg_client = get_config_client ();
-	entry = gda_config_search_entry (cfg_client->user, path, "long");
-	if (!entry) {
-		entry = gda_config_search_entry (cfg_client->global, path, "long");
-		if (entry && !can_modify_global_conf) {
-			GDA_CONFIG_UNLOCK ();
-			return FALSE;
-		}
-	}
-	if (entry == NULL){
-		ptr_last_dash = strrchr (path, '/');
-		if (ptr_last_dash == NULL){
-			g_warning ("%s does not containt any '/'!?", path);
-			GDA_CONFIG_UNLOCK ();
-			return FALSE;
-		}
-		last_dash = ptr_last_dash - path;
-		section_path = g_strdup (path);
-		section_path [last_dash] = '\0';
-		newstr = g_strdup_printf ("%d", new_value);
-		gda_config_add_entry (section_path, ptr_last_dash + 1, 
-				      "long", newstr);
-		g_free (newstr);
-		g_free (section_path);
-	} else {
-		g_free (entry->value);
-		g_free (entry->type);
-		entry->value = g_strdup_printf ("%d", new_value);
-		entry->type = g_strdup ("long");
-	}
-
-	write_config_file ();
-	do_notify (path);
-	GDA_CONFIG_UNLOCK ();
-
-	return TRUE;
-}
-
-/**
- * gda_config_set_float
- * @path: path to the configuration entry.
- * @new_value: new value.
- *
- * Sets the given configuration entry to contain a float.
- *
- * Returns: TRUE if no error occurred
- */
-gboolean
-gda_config_set_float (const gchar * path, gdouble new_value)
-{
-	GdaConfigEntry *entry;
-	gchar *ptr_last_dash;
-	gchar *section_path;
-	gint last_dash;
-	gchar *newstr;
-	GdaConfigClient *cfg_client;
-
-	g_return_val_if_fail (path !=NULL, FALSE);
-
-	GDA_CONFIG_LOCK ();
-	cfg_client = get_config_client ();
-	entry = gda_config_search_entry (cfg_client->user, path, "float");
-	if (!entry) {
-		entry = gda_config_search_entry (cfg_client->global, path, "float");
-		if (entry && !can_modify_global_conf) {
-			GDA_CONFIG_UNLOCK ();
-			return FALSE;
-		}
-	}
-	if (entry == NULL){
-		ptr_last_dash = strrchr (path, '/');
-		if (ptr_last_dash == NULL){
-			g_warning ("%s does not containt any '/'!?", path);
-			GDA_CONFIG_UNLOCK ();
-			return FALSE;
-		}
-		last_dash = ptr_last_dash - path;
-		section_path = g_strdup (path);
-		section_path [last_dash] = '\0';
-		newstr = g_strdup_printf ("%f", new_value);
-		gda_config_add_entry (section_path, ptr_last_dash + 1, 
-						    "float", newstr);
-		g_free (newstr);
-		g_free (section_path);
-	} else {
-		g_free (entry->value);
-		g_free (entry->type);
-		entry->value = g_strdup_printf ("%f", new_value);
-		entry->type = g_strdup ("float");
-	}
-
-	write_config_file ();
-	do_notify (path);
-	GDA_CONFIG_UNLOCK ();
-
-	return TRUE;
-}
-
-/**
- * gda_config_set_boolean
- * @path: path to the configuration entry.
- * @new_value: new value.
- *
- * Sets the given configuration entry to contain a boolean.
- *
- * Returns: TRUE if no error occurred
- */
-gboolean
-gda_config_set_boolean (const gchar *path, gboolean new_value)
-{
-	GdaConfigEntry *entry;
-	gchar *ptr_last_dash;
-	gchar *section_path;
-	gint last_dash;
-	gchar *newstr;
-	GdaConfigClient *cfg_client;
-
-	g_return_val_if_fail (path !=NULL, FALSE);
-
-	new_value = new_value != 0 ? TRUE : FALSE;
-	GDA_CONFIG_LOCK ();
-	cfg_client = get_config_client ();
-	entry = gda_config_search_entry (cfg_client->user, path, "bool");
-	if (!entry) {
-		entry = gda_config_search_entry (cfg_client->global, path, "bool");
-		if (entry && !can_modify_global_conf) {
-			GDA_CONFIG_UNLOCK ();
-			return FALSE;
-		}
-	}
-	if (entry == NULL){
-		ptr_last_dash = strrchr (path, '/');
-		if (ptr_last_dash == NULL){
-			g_warning ("%s does not containt any '/'!?", path);
-			GDA_CONFIG_UNLOCK ();
-			return FALSE;
-		}
-		last_dash = ptr_last_dash - path;
-		section_path = g_strdup (path);
-		section_path [last_dash] = '\0';
-		newstr = new_value == TRUE ? "true" : "false";
-		gda_config_add_entry (section_path, ptr_last_dash + 1, 
-						    "bool", newstr);
-		g_free (section_path);
-	} else {
-		g_free (entry->value);
-		g_free (entry->type);
-		entry->value = g_strdup_printf ("%d", new_value);
-		entry->type = g_strdup ("bool");
-	}
-
-	write_config_file ();
-	do_notify (path);
-	GDA_CONFIG_UNLOCK ();
-
-	return TRUE;
-}
-
-/**
- * gda_config_remove_section
- * @path: path to the configuration section.
- *
- * Removes the given section from the configuration database.
- */
-void
-gda_config_remove_section (const gchar *path)
-{
-	GdaConfigSection *section;
-	GdaConfigClient *cfg_client;
-
-	g_return_if_fail (path != NULL);
-
-	GDA_CONFIG_LOCK ();
-	cfg_client = get_config_client ();
-	section = gda_config_search_section (cfg_client->user, path);
-	if (!section)
-		section = gda_config_search_section (cfg_client->global, path);
-	if (section == NULL) {
-		g_warning ("Section %s not found!", path);
-		GDA_CONFIG_UNLOCK ();
-		return;
-	}
-
-	cfg_client->user = g_list_remove (cfg_client->user, section);
-	cfg_client->global = g_list_remove (cfg_client->global, section);
-	free_section (section);
-	write_config_file ();
-	do_notify (path);
-	GDA_CONFIG_UNLOCK ();
-}
-
-/**
- * gda_config_remove_key
- * @path: path to the configuration entry.
- *
- * Removes the given entry from the configuration database.
- * If the section is empty, also remove the section.
- */
-void
-gda_config_remove_key (const gchar *path)
-{
-	gint last_dash;
-	gchar *ptr_last_dash;
-	gchar *section_path;
-	GList *le;
-	GdaConfigSection *section;
-	GdaConfigEntry *entry;
-	GdaConfigClient *cfg_client;
-
-	g_return_if_fail (path != NULL);
-
-	ptr_last_dash = strrchr (path, '/');
-	if (ptr_last_dash == NULL)
-		return;
-
-	last_dash = ptr_last_dash - path;
-	section_path = g_strdup (path);
-	section_path [last_dash] = '\0';
-	entry = NULL;
-	GDA_CONFIG_UNLOCK ();
-	cfg_client = get_config_client ();
-	section = gda_config_search_section (cfg_client->user, section_path);
-	if (!section)
-		section = gda_config_search_section (cfg_client->global, section_path);
-	if (section == NULL) {
-		g_free (section_path);
-		GDA_CONFIG_UNLOCK ();
-		return;
-	}
-
-	for (le = section->entries; le; le = le->next){
-		entry = le->data;
-		if (!strcmp (entry->name, ptr_last_dash + 1))
-			break;
-
-		entry = NULL;
-	}
-
-	g_free (section_path);
-
-	if (entry == NULL) {
-		GDA_CONFIG_UNLOCK ();
-		return;
-	}
-
-	section->entries = g_list_remove (section->entries, entry);
-	free_entry (entry, NULL);
-	if (section->entries == NULL) {
-		cfg_client->user = g_list_remove (cfg_client->user, section);
-		free_section (section);
-	}
-
-	write_config_file ();
-	do_notify (path);
-	GDA_CONFIG_UNLOCK ();
-}
-
-/**
- * gda_config_has_section
- * @path: path to the configuration section.
- *
- * Checks whether the given section exists in the configuration
- * system.
- *
- * Returns: %TRUE if the section exists, %FALSE otherwise.
- */
-gboolean
-gda_config_has_section (const gchar *path)
-{
-	GdaConfigSection *section;
-	GdaConfigClient *cfg_client;
-	gboolean retval;
-
-	g_return_val_if_fail (path != NULL, FALSE);
-
-	GDA_CONFIG_LOCK ();
-	cfg_client = get_config_client ();
-	section = gda_config_search_section (cfg_client->user, path);
-	if (section == NULL)
-		section = gda_config_search_section (cfg_client->global, path);
-
-	retval = (section != NULL) ? TRUE : FALSE;
-	GDA_CONFIG_UNLOCK ();
-	return retval;
-}
-
-/**
- * gda_config_has_key
- * @path: path to the configuration key.
- *
- * Checks whether the given key exists in the configuration system.
- *
- * Returns: %TRUE if the entry exists, %FALSE otherwise.
- */
-gboolean
-gda_config_has_key (const gchar *path)
-{
-	GdaConfigEntry *entry;
-	GdaConfigClient *cfg_client;
-	gboolean retval;
-
-	g_return_val_if_fail (path != NULL, FALSE);
-
-	GDA_CONFIG_LOCK ();
-	cfg_client = get_config_client ();
-	entry = gda_config_search_entry (cfg_client->user, path, NULL);
-	if (entry == NULL)
-		entry = gda_config_search_entry (cfg_client->global,
-						 path,
-						 NULL);
-
-	retval = (entry != NULL) ? TRUE : FALSE;
-	GDA_CONFIG_UNLOCK ();
-	return retval;
+        static GQuark quark;
+        if (!quark)
+                quark = g_quark_from_static_string ("gda_config_error");
+        return quark;
 }
 
 /**
  * gda_config_get_type
- * @path: path to the configuration key.
- *
- * Gets a string representing the type of the value of the given key.
- * The caller is responsible of freeing the returned value.
- *
- * Returns: %NULL if not found. Otherwise: "string", "float", "long", "bool".
+ * 
+ * Registers the #GdaConfig class on the GLib type system.
+ * 
+ * Returns: the GType identifying the class.
  */
-gchar *
-gda_config_get_type (const gchar *path)
+GType
+gda_config_get_type (void)
 {
-	GdaConfigEntry *entry;
-	GdaConfigClient *cfg_client;
-	gchar *retval = NULL;
+	static GType type = 0;
 
-	g_return_val_if_fail (path != NULL, FALSE);
+	if (G_UNLIKELY (type == 0)) {
+		static GTypeInfo info = {
+			sizeof (GdaConfigClass),
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gda_config_class_init,
+			NULL, NULL,
+			sizeof (GdaConfig),
+			0,
+			(GInstanceInitFunc) gda_config_init
+		};
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaConfig", &info, 0);
+	}
 
-	GDA_CONFIG_LOCK ();
-	cfg_client = get_config_client ();
-	entry = gda_config_search_entry (cfg_client->user, path, NULL);
-	if (entry == NULL)
-		entry = gda_config_search_entry (cfg_client->global, 
-						 path,
-						 NULL);
-	
-	if (entry)
-		retval = g_strdup (entry->type);
-	GDA_CONFIG_UNLOCK ();
-	return retval;
+	return type;
 }
 
-static GList *
-gda_config_list_sections_raw (const gchar *path)
+static void
+gda_config_set_property (GObject *object,
+			 guint param_id,
+			 const GValue *value,
+			 GParamSpec *pspec)
 {
-	GdaConfigClient *cfg_client;
-	GList *list;
-        GList *ret = NULL;
-	GdaConfigSection *section;
-	gint len;
+	GdaConfig *conf;
 
-        g_return_val_if_fail (path != NULL, NULL);
-
-	len = strlen (path);
-	GDA_CONFIG_LOCK ();
-	cfg_client = get_config_client ();
-	for (list = cfg_client->user; list; list = list->next){
-		section = (GdaConfigSection*) list->data;
-		if (section && 
-		    (len < strlen (section->path)) && 
-		    !strncmp (path, section->path, len) && 
-		    ((section->path[len] == 0) || (section->path[len] == '/')))
-			ret = g_list_append (ret, section);
+        conf = GDA_CONFIG (object);
+        if (conf->priv) {
+                switch (param_id) {
+		case PROP_USER_FILE:
+			g_free (conf->priv->user_file);
+			conf->priv->user_file = NULL;
+			if (g_value_get_string (value))
+				conf->priv->user_file = g_strdup (g_value_get_string (value));
+			break;
+                case PROP_SYSTEM_FILE:
+			g_free (conf->priv->system_file);
+			conf->priv->system_file = NULL;
+			if (g_value_get_string (value))
+				conf->priv->system_file = g_strdup (g_value_get_string (value));
+                        break;
+		}	
 	}
-		
-	for (list = cfg_client->global; list; list = list->next){
-		section = (GdaConfigSection*) list->data;
-		if (section && 
-		    (len < strlen (section->path)) && 
-		    !strncmp (path, section->path, len) &&
-		    ((section->path[len] == 0) || (section->path[len] == '/'))){
-			if (!g_list_find_custom (ret, section->path + len + 1, (GCompareFunc) strcmp))
-				ret = g_list_append (ret, section);
+}
+
+static void
+gda_config_get_property (GObject *object,
+			 guint param_id,
+			 GValue *value,
+			 GParamSpec *pspec)
+{
+	GdaConfig *conf;
+	
+	conf = GDA_CONFIG (object);
+	if (conf->priv) {
+		switch (param_id) {
+		case PROP_USER_FILE:
+			g_value_set_string (value, conf->priv->user_file);
+			break;
+		case PROP_SYSTEM_FILE:
+			g_value_set_string (value, conf->priv->system_file);
+			break;
 		}
-	}
-	GDA_CONFIG_UNLOCK ();
-        return ret;
+	}	
 }
 
 /**
- * gda_config_list_sections
- * @path: path for root dir.
+ * gda_config_get
+ * 
+ * Get a pointer to the global GdaConfig object
  *
- * Returns a GList containing the names of all the sections available
- * under the given root directory.
- *
- * To free the returned value, you can use #gda_config_free_list.
- *
- * Returns: a list containing all the section names.
+ * Returns: a non %NULL pointer to a #GdaConfig
  */
-GList *
-gda_config_list_sections (const gchar *path)
+GdaConfig*
+gda_config_get (void)
 {
-	gint len;
-	GList *ret = NULL, *list, *tmp;
+	GDA_CONFIG_LOCK ();
+	g_object_new (GDA_TYPE_CONFIG, NULL);
+	g_assert (unique_instance);
+	GDA_CONFIG_UNLOCK ();
+	return unique_instance;
+}
 
-	len = strlen (path);
-	list = gda_config_list_sections_raw (path);
-	tmp = list;
-	while (tmp) {
-		ret = g_list_append (ret, g_strdup (((GdaConfigSection*) (tmp->data))->path + len + 1));
-		tmp = g_list_next (tmp);
+/**
+ * gda_config_get_dsn
+ * @dsn_name: the name of the DSN to look for
+ *
+ * Get information about the DSN named @dsn_name
+ *
+ * Returns: a a pointer to read-only #GdaDataSourceInfo structure, or %NULL if not found
+ */
+GdaDataSourceInfo *
+gda_config_get_dsn (const gchar *dsn_name)
+{
+	GSList *list;
+
+	g_return_val_if_fail (dsn_name, NULL);
+
+	GDA_CONFIG_LOCK ();
+	if (!unique_instance)
+		gda_config_get ();
+
+	for (list = unique_instance->priv->dsn_list; list; list = list->next)
+		if (!strcmp (((GdaDataSourceInfo*) list->data)->name, dsn_name)) {
+			GDA_CONFIG_UNLOCK ();
+			return (GdaDataSourceInfo*) list->data;
+		}
+	GDA_CONFIG_UNLOCK ();
+	return NULL;
+}
+
+/**
+ * gda_config_add_dsn
+ * @info: a pointer to a filled GdaDataSourceInfo structure
+ * @error: a place to store errors, or %NULL
+ *
+ * Add or update a DSN from the definition in @info
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_config_add_dsn (const GdaDataSourceInfo *info, GError **error)
+{
+	GdaDataSourceInfo *einfo;
+	gboolean save_user = FALSE;
+	gboolean save_system = FALSE;
+
+	g_return_val_if_fail (info, FALSE);
+	g_return_val_if_fail (info->name, FALSE);
+
+	GDA_CONFIG_LOCK ();
+	if (!unique_instance)
+		gda_config_get ();
+
+	if (info->is_global && !unique_instance->priv->system_config_allowed) {
+		g_set_error (error, GDA_CONFIG_ERROR, GDA_CONFIG_PERMISSION_ERROR,
+			     _("Can't manage system-wide configuration"));
+		GDA_CONFIG_UNLOCK ();
+		return FALSE;
 	}
-	g_list_free (list);
+
+	if (info->is_global)
+		save_system = TRUE;
+	else
+		save_user = TRUE;
+	einfo = gda_config_get_dsn (info->name);
+	if (einfo) {
+		g_free (einfo->provider); einfo->provider = NULL;
+		g_free (einfo->cnc_string); einfo->cnc_string = NULL;
+		g_free (einfo->description); einfo->description = NULL;
+		g_free (einfo->username); einfo->username = NULL;
+		g_free (einfo->password); einfo->password = NULL;
+		if (info->provider)
+			einfo->provider = g_strdup (info->provider);
+		if (info->cnc_string)
+			einfo->cnc_string = g_strdup (info->cnc_string);
+		if (info->description)
+			einfo->description = g_strdup (info->description);
+		if (info->username)
+			einfo->username = g_strdup (info->username);
+		if (info->password)
+			einfo->password = g_strdup (info->password);
+		
+		if (info->is_global != einfo->is_global) {
+			save_system = TRUE;
+			save_user = TRUE;
+		}
+		g_signal_emit (unique_instance, gda_config_signals[DSN_CHANGED], 0, einfo);
+	}
+	else {
+		einfo = g_new0 (GdaDataSourceInfo, 1);
+		einfo->name = g_strdup (info->name);
+		if (info->provider)
+			einfo->provider = g_strdup (info->provider);
+		if (info->cnc_string)
+			einfo->cnc_string = g_strdup (info->cnc_string);
+		if (info->description)
+			einfo->description = g_strdup (info->description);
+		if (info->username)
+			einfo->username = g_strdup (info->username);
+		if (info->password)
+			einfo->password = g_strdup (info->password);
+
+		unique_instance->priv->dsn_list = g_slist_append (unique_instance->priv->dsn_list, einfo);
+		g_signal_emit (unique_instance, gda_config_signals[DSN_ADDED], 0, einfo);
+	}
+	
+	if (save_system)
+		save_config_file (unique_instance->priv->system_file, TRUE);
+	if (save_user)
+		save_config_file (unique_instance->priv->user_file, FALSE);
+
+	GDA_CONFIG_UNLOCK ();
+	return TRUE;
+}
+
+/**
+ * gda_config_remove_dsn
+ * @info: a pointer to a filled GdaDataSourceInfo structure
+ * @error: a place to store errors, or %NULL
+ *
+ * Add or update a DSN from the definition in @info
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_config_remove_dsn (const gchar *dsn_name, GError **error)
+{
+	GdaDataSourceInfo *info;
+	g_return_val_if_fail (dsn_name, FALSE);
+
+	GDA_CONFIG_LOCK ();
+	if (!unique_instance)
+		gda_config_get ();
+
+	info = gda_config_get_dsn (dsn_name);
+	if (!info) {
+		g_set_error (error, GDA_CONFIG_ERROR, GDA_CONFIG_DSN_NOT_FOUND_ERROR,
+			     _("Unknown DSN '%s'"), dsn_name);
+		GDA_CONFIG_UNLOCK ();
+		return FALSE;
+	}
+	if (info->is_global && !unique_instance->priv->system_config_allowed) {
+		g_set_error (error, GDA_CONFIG_ERROR, GDA_CONFIG_PERMISSION_ERROR,
+			     _("Can't manage system-wide configuration"));
+		GDA_CONFIG_UNLOCK ();
+		return FALSE;
+	}
+	g_signal_emit (unique_instance, gda_config_signals[DSN_TO_BE_REMOVED], 0, info);
+	unique_instance->priv->dsn_list = g_slist_remove (unique_instance->priv->dsn_list, info);
+	g_signal_emit (unique_instance, gda_config_signals[DSN_REMOVED], 0, info);
+	data_source_info_free (info);
+	
+	GDA_CONFIG_UNLOCK ();
+	return TRUE;
+}
+
+/**
+ * gda_config_list_dsn
+ * 
+ * Get a #GdaDataModel representing all the configured DSN, and keeping itself up to date with
+ * the changes in the declared DSN.
+ *
+ * The returned data model is composed of the following columns:
+ * <itemizedlist>
+ *  <listitem><para>DSN name</para></listitem>
+ *  <listitem><para>Provider name</para></listitem>
+ *  <listitem><para>Description</para></listitem>
+ *  <listitem><para>Connection string</para></listitem>
+ *  <listitem><para>Username</para></listitem>
+ * </itemizedlist>
+ *
+ * Returns: a new #GdaDataModel
+ */
+GdaDataModel *
+gda_config_list_dsn (void)
+{
+	GdaDataModel *model;
+	GDA_CONFIG_LOCK ();
+	if (!unique_instance)
+		gda_config_get ();
+	
+	model = GDA_DATA_MODEL (g_object_new (GDA_TYPE_DATA_MODEL_DSN_LIST, NULL));
+	GDA_CONFIG_UNLOCK ();
+	return model;
+}
+
+/**
+ * gda_config_get_nb_dsn
+ *
+ * Get the number of defined DSN
+ *
+ * Return: the number of defined DSN
+ */
+gint
+gda_config_get_nb_dsn (void)
+{
+	gint ret;
+	GDA_CONFIG_LOCK ();
+	if (!unique_instance)
+		gda_config_get ();
+
+	ret = g_slist_length (unique_instance->priv->dsn_list);
+	GDA_CONFIG_UNLOCK ();
 	return ret;
 }
 
 /**
- * gda_config_list_keys
- * @path: path for root dir.
- *
- * Returns a list of all keys that exist under the given path.
- *
- * To free the returned value, you can use #gda_config_free_list.
- *
- * Returns: a list containing all the key names.
+ * gda_config_get_dsn_index
+ * @dsn_name:
+ * 
+ * Get the index (starting at 0) of the DSN named @dsn_name
+ * 
+ * Returns: the index or -1 if not found
  */
-GList *
-gda_config_list_keys (const gchar * path)
+gint
+gda_config_get_dsn_index (const gchar *dsn_name)
 {
-	GList *ls;
-	GList *le;
-        GList *ret = NULL;
-	GdaConfigSection *section;
-	GdaConfigEntry *entry;
-	GdaConfigClient *cfg_client;
-	gint len;
+	GdaDataSourceInfo *info;
+	gint ret = -1;
 
-        g_return_val_if_fail (path != NULL, NULL);
-
-	len = strlen (path);
+	g_return_val_if_fail (dsn_name, -1);
 	GDA_CONFIG_LOCK ();
-	cfg_client = get_config_client ();
-	if (cfg_client->user){
-		for (ls = cfg_client->user; ls; ls = ls->next){
-			section = ls->data;
-			if (!strcmp (path, section->path))
-				for (le = section->entries; le; le = le->next){
-					entry = le->data;
-					if (entry && entry->name)
-						ret = g_list_append (ret,
-						      g_strdup (entry->name));
-				}
-		}
-	}
-		
-	if (cfg_client->global){
-		for (ls = cfg_client->global; ls; ls = ls->next){
-			section = ls->data;
-			if (!strcmp (path, section->path))
-				for (le = section->entries; le; le = le->next){
-					entry = le->data;
-					if (entry && entry->name)
-						if (!g_list_find_custom (ret, 
-							 entry->name,
-							 (GCompareFunc) strcmp))
-							ret = g_list_append (ret,
-							      g_strdup (entry->name));
-				}
-		}
-	}
+	if (!unique_instance)
+		gda_config_get ();
+
+	info = gda_config_get_dsn (dsn_name);
+	if (info)
+		ret = g_slist_index (unique_instance->priv->dsn_list, info);
 
 	GDA_CONFIG_UNLOCK ();
-        return ret;
+	return ret;
 }
 
 /**
- * gda_config_free_list
- * @list: list to be freed.
+ * gda_config_get_dsn_at_index
+ * @index:
  *
- * Frees all memory used by the given GList, which must be the return value
- * from either #gda_config_list_sections and #gda_config_list_keys.
+ * Get a pointer to a read-only #GdaDataSourceInfo at the @index position
+ *
+ * Returns: the pointer or %NULL if no DSN exists at position @index
  */
-void
-gda_config_free_list (GList *list)
+GdaDataSourceInfo *
+gda_config_get_dsn_at_index (gint index)
 {
-	g_list_foreach (list, (GFunc) g_free, NULL);
-	g_list_free (list);
+	GdaDataSourceInfo *ret;
+	GDA_CONFIG_LOCK ();
+	if (!unique_instance)
+		gda_config_get ();
+	ret = g_slist_nth_data (unique_instance->priv->dsn_list, index);
+	GDA_CONFIG_UNLOCK ();
+	return ret;
 }
 
-static GList *
+/**
+ * gda_config_get_provider_info
+ * @provider_name:
+ *
+ * Get some information about the a database provider (adaptator) named 
+ * @provider_name
+ *
+ * Returns: a pointer to read-only #GdaProviderInfo structure, or %NULL if not found
+ */
+GdaProviderInfo *
+gda_config_get_provider_info (const gchar *provider_name)
+{
+	GSList *list;
+	g_return_val_if_fail (provider_name, NULL);
+	GDA_CONFIG_LOCK ();
+	if (!unique_instance)
+		gda_config_get ();
+
+	if (!unique_instance->priv->prov_list) 
+		load_all_providers ();
+
+	for (list = unique_instance->priv->prov_list; list; list = list->next)
+		if (!strcmp (((GdaProviderInfo*) list->data)->id, provider_name)) {
+			GDA_CONFIG_UNLOCK ();
+			return (GdaProviderInfo*) list->data;
+		}
+	GDA_CONFIG_UNLOCK ();
+	return NULL;
+}
+
+/**
+ * gda_config_get_provider_object
+ * @provider_name:
+ * @error: a place to store errors, or %NULL
+ *
+ * Get a pointer to the session-wide #GdaServerProvider for the
+ * provider named @provider_name
+ *
+ * Returns: a pointer to the #GdaServerProvider, or %NULL if an error occurred
+ */
+GdaServerProvider *
+gda_config_get_provider_object (const gchar *provider_name, GError **error)
+{
+	InternalProvider *ip;
+	GdaServerProvider  *(*plugin_create_provider) (void);
+
+	g_return_val_if_fail (provider_name, NULL);
+	GDA_CONFIG_LOCK ();
+	ip = (InternalProvider *) gda_config_get_provider_info (provider_name);
+	if (!ip) {
+		g_set_error (error, GDA_CONFIG_ERROR, GDA_CONFIG_PROVIDER_NOT_FOUND_ERROR,
+			     _("No provider '%s' installed"), provider_name);
+		GDA_CONFIG_UNLOCK ();
+		return NULL;
+	}
+	if (ip->instance) {
+		GDA_CONFIG_UNLOCK ();
+		return ip->instance;
+	}
+	
+	/* need to actually create the provider object */
+	g_assert (ip->handle);
+	g_module_symbol (ip->handle, "plugin_create_provider", (gpointer) &plugin_create_provider);
+	if (!plugin_create_provider) {
+		g_set_error (error, GDA_CONFIG_ERROR, GDA_CONFIG_PROVIDER_CREATION_ERROR,
+			     _("Can't instanciate provider '%s'"), provider_name);
+		GDA_CONFIG_UNLOCK ();
+		return NULL;
+	}
+	ip->instance = plugin_create_provider ();
+	if (!ip->instance) {
+		g_set_error (error, GDA_CONFIG_ERROR, GDA_CONFIG_PROVIDER_CREATION_ERROR,
+			     _("Can't instanciate provider '%s'"), provider_name);
+		GDA_CONFIG_UNLOCK ();
+		return NULL;
+	}
+
+	GDA_CONFIG_UNLOCK ();
+	return ip->instance;
+}
+ 
+/**
+ * gda_config_list_providers
+ * 
+ * Get a #GdaDataModel representing all the installed database providers.
+ *
+ * The returned data model is composed of the following columns:
+ * <itemizedlist>
+ *  <listitem><para>Provider name</para></listitem>
+ *  <listitem><para>Description</para></listitem>
+ *  <listitem><para>DSN parameters</para></listitem>
+ *  <listitem><para>File</para></listitem>
+ * </itemizedlist>
+ *
+ * Returns: a new #GdaDataModel
+ */
+GdaDataModel *
+gda_config_list_providers (void)
+{
+	GSList *list;
+	GdaDataModel *model;
+	
+	GDA_CONFIG_LOCK ();
+	if (!unique_instance)
+		gda_config_get ();
+
+	if (!unique_instance->priv->prov_list) 
+		load_all_providers ();
+
+	model = gda_data_model_array_new_with_g_types (4,
+						       G_TYPE_STRING,
+						       G_TYPE_STRING,
+						       G_TYPE_STRING,
+						       G_TYPE_STRING);
+	gda_data_model_set_column_title (model, 0, _("Provider"));
+	gda_data_model_set_column_title (model, 1, _("Description"));
+	gda_data_model_set_column_title (model, 2, _("DSN parameters"));
+	gda_data_model_set_column_title (model, 3, _("File"));
+	gda_object_set_name (GDA_OBJECT (model), _("List of installed providers"));
+
+	for (list = unique_instance->priv->prov_list; list; list = list->next) {
+		GdaProviderInfo *info = (GdaProviderInfo *) list->data;
+		GValue *value;
+		gint row;
+
+		row = gda_data_model_append_row (model, NULL);
+
+		value = gda_value_new_from_string (info->id, G_TYPE_STRING);
+		gda_data_model_set_value_at (model, 0, row, value, NULL);
+		gda_value_free (value);
+
+		value = gda_value_new_from_string (info->description, G_TYPE_STRING);
+		gda_data_model_set_value_at (model, 1, row, value, NULL);
+		gda_value_free (value);
+
+		if (info->gda_params) {
+			GSList *params;
+			GString *string = g_string_new ("");
+			for (params = info->gda_params->parameters;
+			     params; params = params->next) {
+				gchar *tmp;
+
+				g_object_get (G_OBJECT (params->data), "string_id", &tmp, NULL);
+				if (params != info->gda_params->parameters)
+					g_string_append (string, ",\n");
+				g_string_append (string, tmp);
+				g_free (tmp);
+			}
+			value = gda_value_new_from_string (string->str, G_TYPE_STRING);
+			g_string_free (string, TRUE);
+			gda_data_model_set_value_at (model, 2, row, value, NULL);
+			gda_value_free (value);
+		}
+
+		value = gda_value_new_from_string (info->location, G_TYPE_STRING);
+		gda_data_model_set_value_at (model, 3, row, value, NULL);
+		gda_value_free (value);
+	}
+	g_object_set (G_OBJECT (model), "read-only", TRUE, NULL);
+
+	GDA_CONFIG_UNLOCK ();
+	return model;
+}
+ 
+static void load_providers_from_dir (const gchar *dirname, gboolean recurs);
+static void
+load_all_providers (void)
+{
+	const gchar *dirname;
+	g_assert (unique_instance);
+
+	dirname = getenv ("GDA_PROVIDERS_ROOT_DIR");
+	if (dirname)
+		load_providers_from_dir (dirname, TRUE);
+	else {
+		gchar *str;
+		str = gda_gbr_get_file_path (GDA_LIB_DIR, LIBGDA_ABI_NAME, "providers", NULL);
+		load_providers_from_dir (str, FALSE);
+		g_free (str);
+	}
+
+}
+
+static void 
 load_providers_from_dir (const gchar *dirname, gboolean recurs)
 {
 	GDir *dir;
 	GError *err = NULL;
 	const gchar *name;
-	GList *list = NULL;
-	
+
 	/* read the plugin directory */
 #ifdef GDA_DEBUG_NO
 	g_print ("Loading providers in %s\n", dirname);
@@ -1542,10 +1046,11 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 	if (err) {
 		gda_log_error (err->message);
 		g_error_free (err);
-		return NULL;
+		return;
 	}
-	
+
 	while ((name = g_dir_read_name (dir))) {
+		InternalProvider *ip;
 		GdaProviderInfo *info;
 		GModule *handle;
 		gchar *path;
@@ -1554,16 +1059,12 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 		const gchar * (* plugin_get_name) (void);
 		const gchar * (* plugin_get_description) (void);
 		gchar * (* plugin_get_dsn_spec) (void);
-			
+
 		if (recurs) {
 			gchar *cname;
 			cname = g_build_filename (dirname, name, NULL);
-			if (g_file_test (cname, G_FILE_TEST_IS_DIR)) {
-				GList *nlist;
-				nlist = load_providers_from_dir (cname, TRUE);
-				if (nlist)
-					list = g_list_concat (list, nlist);
-			}
+			if (g_file_test (cname, G_FILE_TEST_IS_DIR)) 
+				load_providers_from_dir (cname, TRUE);
 			g_free (cname);
 		}
 
@@ -1572,7 +1073,7 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 			continue;
 		if (strcmp (ext + 1, G_MODULE_SUFFIX))
 			continue;
-			
+
 		path = g_build_path (G_DIR_SEPARATOR_S, dirname,
 				     name, NULL);
 		handle = g_module_open (path, G_MODULE_BIND_LAZY);
@@ -1581,37 +1082,38 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 			g_free (path);
 			continue;
 		}
-			
+
 		if (g_module_symbol (handle, "plugin_init",
 				     (gpointer *) &plugin_init))
 			plugin_init (dirname);
-
 		g_module_symbol (handle, "plugin_get_name",
 				 (gpointer *) &plugin_get_name);
 		g_module_symbol (handle, "plugin_get_description",
 				 (gpointer *) &plugin_get_description);
 		g_module_symbol (handle, "plugin_get_dsn_spec",
 				 (gpointer *) &plugin_get_dsn_spec);
-			
-		info = g_new0 (GdaProviderInfo, 1);
+
+		ip = g_new0 (InternalProvider, 1);
+		ip->handle = handle;
+		info = (GdaProviderInfo*) ip;
 		info->location = path;
-			
+
 		if (plugin_get_name != NULL)
 			info->id = g_strdup (plugin_get_name ());
 		else
 			info->id = g_strdup (name);
-			
+
 		if (plugin_get_description != NULL)
 			info->description = g_strdup (plugin_get_description ());
 		else
 			info->description = NULL;
-			
+
 		info->dsn_spec = NULL;
 		info->gda_params = NULL;
 
 		if (plugin_get_dsn_spec) {
 			GError *error = NULL;
-				
+
 			info->dsn_spec = plugin_get_dsn_spec ();
 			if (info->dsn_spec) {
 				info->gda_params = gda_parameter_list_new_from_spec_string (NULL, info->dsn_spec, &error);
@@ -1626,775 +1128,139 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 			else {
 				/* there may be traces of the provider installed but some parts are missing,
 				   forget about that provider... */
-				gda_provider_info_free (info);
-				info = NULL;
+				internal_provider_free (ip);
+				ip = NULL;
 			}
 		}
-		else 
+		else
 			g_warning ("Provider '%s' does not provide a DSN spec", info->id);
-			
-		if (info) {
-			list = g_list_append (list, info);
+
+		if (ip) {
+			unique_instance->priv->prov_list = g_slist_prepend (unique_instance->priv->prov_list, ip);
 #ifdef GDA_DEBUG_NO
 			g_print ("Loaded '%s' provider\n", info->id);
 #endif
 		}
-			
-		g_module_close (handle);
 	}
-		
+
 	/* free memory */
 	g_dir_close (dir);
-
-	return list;
 }
 
-/**
- * gda_config_get_provider_list
- *
- * Returns a list of all providers currently installed in
- * the system. Each of the nodes in the returned GList
- * is a #GdaProviderInfo.
- *
- * Returns: a GList of #GdaProviderInfo structures, don't free or modify it!
- */
-GList *
-gda_config_get_provider_list (void)
+static void 
+data_source_info_free (GdaDataSourceInfo *info)
 {
-	static GList *prov_list = NULL;
-
-	if (!prov_list) {
-		const gchar *from_dir;
-
-		from_dir = getenv ("GDA_PROVIDERS_ROOT_DIR");
-		if (from_dir)
-			prov_list = load_providers_from_dir (from_dir, TRUE);
-		else {
-			gchar *str;
-			str = gda_gbr_get_file_path (GDA_LIB_DIR, LIBGDA_ABI_NAME, "providers", NULL);
-			prov_list = load_providers_from_dir (str, FALSE);
-			g_free (str);
-		}
-	}
-
-	return prov_list;
-}
-
-/**
- * gda_config_free_provider_list
- * @list: the list to be freed.
- *
- * Frees a list of #GdaProviderInfo structures.
- */
-void
-gda_config_free_provider_list (GList *list)
-{
-	GList *l;
-
-	for (l = g_list_first (list); l; l = l->next) {
-		GdaProviderInfo *provider_info = (GdaProviderInfo *) l->data;
-
-		if (provider_info != NULL)
-			gda_provider_info_free (provider_info);
-	}
-
-	g_list_free (list);
-}
-
-/**
- * gda_config_get_provider_by_name
- * @name: name of the provider to search for.
- *
- * Gets a #GdaProviderInfo structure from the provider list given its name,
- * don't modify or free it.
- *
- * Returns: a #GdaProviderInfo structure, if found, or %NULL if not found.
- */
-GdaProviderInfo *
-gda_config_get_provider_by_name (const gchar *name)
-{
-	GList *prov_list;
-	GList *l;
-	const gchar *tmpname;
-
-	if (name)
-		tmpname = name;
-	else
-		tmpname= "SQLite";
-
-	prov_list = gda_config_get_provider_list ();
-
-	for (l = prov_list; l; l = l->next) {
-		GdaProviderInfo *provider_info = (GdaProviderInfo *) l->data;
-
-		if (provider_info && !strcmp (provider_info->id, tmpname))
-			return provider_info;
-	}
-
-	return NULL;
-}
-
-/**
- * gda_config_get_provider_model
- *
- * Fills and returns a new #GdaDataModel object using information from all 
- * providers which are currently installed in the system.
- *
- * Rows are separated in 3 columns: 
- * 'Id', 'Location' and 'Description'. 
- *
- * Returns: a new #GdaDataModel object. 
- */
-GdaDataModel *
-gda_config_get_provider_model (void)
-{
-	GList *prov_list;
-	GList *l;
-	GdaDataModel *model;
-
-	model = gda_data_model_array_new (3);
-	gda_data_model_set_column_title (model, 0, _("Id"));
-	gda_data_model_set_column_title (model, 1, _("Location"));
-	gda_data_model_set_column_title (model, 2, _("Description"));
-
-	/* convert the returned GList into a GdaDataModelArray */
-	prov_list = gda_config_get_provider_list ();
-	for (l = prov_list; l != NULL; l = l->next) {
-		GList *value_list = NULL;
-		GdaProviderInfo *prov_info = (GdaProviderInfo *) l->data;
-		GValue *value;
-
-		g_assert (prov_info != NULL);
-
-		value = g_value_init (g_new0 (GValue, 1), G_TYPE_STRING);
-		g_value_set_string (value, prov_info->id);
-		value_list = g_list_append (value_list, value);
-
-		value = g_value_init (g_new0 (GValue, 1), G_TYPE_STRING);
-		g_value_set_string (value, prov_info->location);
-		value_list = g_list_append (value_list, value);
-
-		value = g_value_init (g_new0 (GValue, 1), G_TYPE_STRING);
-		g_value_set_string (value, prov_info->description);
-		value_list = g_list_append (value_list, value);
-
-		gda_data_model_append_values (GDA_DATA_MODEL (model), value_list, NULL);
-		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
-		g_list_free (value_list);
-	}
-	
-	return model;
-}
-
-/**
- * gda_provider_info_copy
- * @src: provider information to get a copy from.
- *
- * Creates a new #GdaProviderInfo structure from an existing one.
-
- * Returns: a newly allocated #GdaProviderInfo with contains a copy of 
- * information in @src.
- */
-GdaProviderInfo*
-gda_provider_info_copy (GdaProviderInfo *src)
-{
-	GdaProviderInfo *info;
-
-	g_return_val_if_fail (src != NULL, NULL);
-
-	info = g_new0 (GdaProviderInfo, 1);
-	info->id = g_strdup (src->id);
-	info->location = g_strdup (src->location);
-	info->description = g_strdup (src->description);
-	if (src->gda_params) {
-		info->gda_params = src->gda_params;
-		g_object_ref (info->gda_params);
-	}
-
-	return info;
-}
-
-/**
- * gda_provider_info_free
- * @provider_info: provider information to free.
- *
- * Deallocates all memory associated to the given #GdaProviderInfo.
- */
-void
-gda_provider_info_free (GdaProviderInfo *provider_info)
-{
-	g_return_if_fail (provider_info != NULL);
-
-	g_free (provider_info->id);
-	g_free (provider_info->location);
-	g_free (provider_info->description);
-	if (provider_info->gda_params)
-		g_object_unref (provider_info->gda_params);
-	if (provider_info->dsn_spec)
-		g_free (provider_info->dsn_spec);
-
-	g_free (provider_info);
-}
-
-/**
- * gda_config_get_data_source_list
- *
- * Returns a list of all data sources currently configured in the system.
- * Each of the nodes in the returned GList is a #GdaDataSourceInfo.
- * To free the returned list, call the #gda_config_free_data_source_list
- * function.
- *
- * Returns: a GList of #GdaDataSourceInfo structures.
- */
-GList *
-gda_config_get_data_source_list (void)
-{
-	GList *list = NULL;
-	GList *sections;
-	GList *l;
-	gint len;
-
-        len = strlen (GDA_CONFIG_SECTION_DATASOURCES);
-	sections = gda_config_list_sections_raw (GDA_CONFIG_SECTION_DATASOURCES);
-	for (l = sections; l != NULL; l = l->next) {
-		gchar *tmp, *sect_name;
-		GdaDataSourceInfo *info;
-
-		sect_name = ((GdaConfigSection*) (l->data))->path + len + 1;
-		info = g_new0 (GdaDataSourceInfo, 1);
-		info->name = g_strdup ((const gchar *) sect_name);
-
-		/* get the provider */
-		tmp = g_strdup_printf ("%s/%s/Provider", GDA_CONFIG_SECTION_DATASOURCES, (char *) sect_name);
-		info->provider = gda_config_get_string (tmp);
-		g_free (tmp);
-
-		/* get the connection string */
-		tmp = g_strdup_printf ("%s/%s/DSN", GDA_CONFIG_SECTION_DATASOURCES, (char *) sect_name);
-		info->cnc_string = gda_config_get_string (tmp);
-		g_free (tmp);
-
-		/* get the description */
-		tmp = g_strdup_printf ("%s/%s/Description", GDA_CONFIG_SECTION_DATASOURCES, (char *) sect_name);
-		info->description = gda_config_get_string (tmp);
-		g_free (tmp);
-
-		/* get the user name */
-		tmp = g_strdup_printf ("%s/%s/Username", GDA_CONFIG_SECTION_DATASOURCES, (char *) sect_name);
-		info->username = gda_config_get_string (tmp);
-		g_free (tmp);
-
-		/* get the password */
-		tmp = g_strdup_printf ("%s/%s/Password", GDA_CONFIG_SECTION_DATASOURCES, (char *) sect_name);
-		info->password = gda_config_get_string (tmp);
-		g_free (tmp);
-
-		/* system wide data source ? */
-		info->is_global = ((GdaConfigSection*) (l->data))->is_global;
-				
-		list = g_list_append (list, info);
-	}
-
-	g_list_free (sections);
-
-	return list;
-}
-
-/**
- * gda_config_find_data_source
- * @name: name of the data source to search for.
- *
- * Gets a #GdaDataSourceInfo structure from the data source list given its 
- * name. After usage, the returned structure's memory must be freed using
- * gda_data_source_info_free().
- *
- * Returns: a new #GdaDataSourceInfo structure, if found, or %NULL if not found.
- */
-GdaDataSourceInfo *
-gda_config_find_data_source (const gchar *name)
-{
-	GList *dsnlist;
-	GList *l;
-	GdaDataSourceInfo *info = NULL;
-
-	g_return_val_if_fail (name != NULL, NULL);
-
-	dsnlist = gda_config_get_data_source_list ();
-	for (l = dsnlist; l != NULL; l = l->next) {
-		GdaDataSourceInfo *tmp_info = (GdaDataSourceInfo *) l->data;
-
-		if (tmp_info && !g_ascii_strcasecmp (tmp_info->name, name)) {
-			info = gda_data_source_info_copy (tmp_info);
-			break;
-		}
-	}
-
-	gda_config_free_data_source_list (dsnlist);
-
-	return info;
-}
-
-/**
- * gda_data_source_info_copy
- * @src: data source information to get a copy from.
- *
- * Creates a new #GdaDataSourceInfo structure from an existing one.
-
- * Returns: a newly allocated #GdaDataSourceInfo with contains a copy of 
- * information in @src.
- */
-GdaDataSourceInfo *
-gda_data_source_info_copy (GdaDataSourceInfo *src)
-{
-	GdaDataSourceInfo *info;
-
-	g_return_val_if_fail (src != NULL, NULL);
-
-	info = g_new0 (GdaDataSourceInfo, 1);
-	info->name = g_strdup (src->name);
-	info->provider = g_strdup (src->provider);
-	info->cnc_string = g_strdup (src->cnc_string);
-	info->description = g_strdup (src->description);
-	info->username = g_strdup (src->username);
-	info->password = g_strdup (src->password);
-	info->is_global = src->is_global;
-
-	return info;
-}
-
-#define str_is_equal(x,y) (((x) && (y) && !strcmp ((x),(y))) || (!(x) && (!y)))
-
-/**
- * gda_data_source_info_equal
- * @info1: a data source information
- * @info2: a data source information
- * 
- * Tells if @info1 and @info2 are equal
- *
- * Returns: TRUE if @info1 and @info2 are equal
- */
-gboolean
-gda_data_source_info_equal (GdaDataSourceInfo *info1, GdaDataSourceInfo *info2)
-{
-	if (!info1 && !info2)
-		return TRUE;
-	if (!info1 || !info2)
-		return FALSE;
-
-	if (! str_is_equal (info1->name, info2->name))
-		return FALSE;
-	if (! str_is_equal (info1->provider, info2->provider))
-		return FALSE;
-	if (! str_is_equal (info1->cnc_string, info2->cnc_string))
-		return FALSE;
-	if (! str_is_equal (info1->description, info2->description))
-		return FALSE;
-	if (! str_is_equal (info1->username, info2->username))
-		return FALSE;
-	if (! str_is_equal (info1->password, info2->password))
-		return FALSE;
-	return info1->is_global == info2->is_global;
-}
-
-/**
- * gda_data_source_info_free
- * @info: data source information to free.
- *
- * Deallocates all memory associated to the given #GdaDataSourceInfo.
- */
-void
-gda_data_source_info_free (GdaDataSourceInfo *info)
-{
-	g_return_if_fail (info != NULL);
-
-	g_free (info->name);
-	g_free (info->provider);
-	g_free (info->cnc_string);
+	g_free (info->provider); 
+	g_free (info->cnc_string); 
 	g_free (info->description);
 	g_free (info->username);
 	g_free (info->password);
-
 	g_free (info);
 }
 
-/**
- * gda_config_free_data_source_list
- * @list: the list to be freed.
- *
- * Frees a list of #GdaDataSourceInfo structures.
- */
-void
-gda_config_free_data_source_list (GList *list)
-{
-	GList *l;
-
-	while ((l = g_list_first (list))) {
-		GdaDataSourceInfo *info = (GdaDataSourceInfo *) l->data;
-
-		list = g_list_remove (list, info);
-		gda_data_source_info_free (info);
-	}
-}
-
-/**
- * gda_config_get_data_source_model
- *
- * Fills and returns a new #GdaDataModel object using information from all 
- * data sources which are currently configured in the system.
- *
- * Rows are separated in 6 columns: 
- * 'Name', 'Provider', 'Connection string', 'Description', 'Username' and 'Global'.
- *
- * Returns: a new #GdaDataModel object. 
- */
-GdaDataModel *
-gda_config_get_data_source_model (void)
-{
-	GList *dsn_list;
-	GList *l;
-	GdaDataModel *model;
-
-	model = gda_data_model_array_new (6);
-	gda_data_model_set_column_title (model, 0, _("Name"));
-	gda_data_model_set_column_title (model, 1, _("Provider"));
-	gda_data_model_set_column_title (model, 2, _("Connection string"));
-	gda_data_model_set_column_title (model, 3, _("Description"));
-	gda_data_model_set_column_title (model, 4, _("Username"));
-	gda_data_model_set_column_title (model, 5, _("Global"));
-	
-	/* convert the returned GList into a GdaDataModelArray */
-	dsn_list = gda_config_get_data_source_list ();
-	for (l = dsn_list; l != NULL; l = l->next) {
-		GList *value_list = NULL;
-		GdaDataSourceInfo *dsn_info = (GdaDataSourceInfo *) l->data;
-		GValue *value;
-
-		g_assert (dsn_info != NULL);
-
-		value = g_value_init (g_new0 (GValue, 1), G_TYPE_STRING);
-		g_value_set_string (value, dsn_info->name);
-		value_list = g_list_append (value_list, value);
-
-		value = g_value_init (g_new0 (GValue, 1), G_TYPE_STRING);
-		g_value_set_string (value, dsn_info->provider);
-		value_list = g_list_append (value_list, value);
-
-		value = g_value_init (g_new0 (GValue, 1), G_TYPE_STRING);
-		g_value_set_string (value, dsn_info->cnc_string);
-		value_list = g_list_append (value_list, value);
-
-		value = g_value_init (g_new0 (GValue, 1), G_TYPE_STRING);
-		g_value_set_string (value, dsn_info->description);
-		value_list = g_list_append (value_list, value);
-
-		value = g_value_init (g_new0 (GValue, 1), G_TYPE_STRING);
-		g_value_set_string (value, dsn_info->username);
-		value_list = g_list_append (value_list, value);
-
-		value = g_value_init (g_new0 (GValue, 1), G_TYPE_BOOLEAN);
-		g_value_set_boolean (value, dsn_info->is_global);
-		value_list = g_list_append (value_list, value);
-		
-		gda_data_model_append_values (GDA_DATA_MODEL (model), value_list, NULL);
-		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
-		g_list_free (value_list);
-	}
-	
-	/* free memory */
-	gda_config_free_data_source_list (dsn_list);
-	
-	return model;
-}
-
-/**
- * gda_config_can_modify_global_config
- *
- * Tells if the calling program can modify the global configured
- * data sources.
- * 
- * Returns: TRUE if modifications are possible
- */
-gboolean
-gda_config_can_modify_global_config (void)
-{
-	gboolean retval;
-	GDA_CONFIG_LOCK ();
-	get_config_client ();
-	retval = can_modify_global_conf;
-	GDA_CONFIG_UNLOCK ();
-	return retval;
-}
-
-/**
- * gda_config_save_data_source
- * @name: name for the data source to be saved.
- * @provider: provider ID for the new data source.
- * @cnc_string: connection string for the new data source.
- * @description: description for the new data source.
- * @username: user name for the new data source.
- * @password: password to use when authenticating @username.
- * @is_global: TRUE if the data source is system-wide
- *
- * Adds a new data source (or update an existing one) to the GDA
- * configuration, based on the parameters given.
- *
- * Returns: TRUE if no error occurred
- */
-gboolean
-gda_config_save_data_source (const gchar *name,
-			     const gchar *provider,
-			     const gchar *cnc_string,
-			     const gchar *description,
-			     const gchar *username,
-			     const gchar *password,
-			     gboolean is_global)
-{
-	GString *str;
-	gint trunc_len;
-	GdaConfigSection *section;
-	GdaConfigClient *cfg_client;
-
-	g_return_val_if_fail (name != NULL, FALSE);
-	g_return_val_if_fail (provider != NULL, FALSE);
-
-	GDA_CONFIG_LOCK ();
-	if (is_global && !can_modify_global_conf) {
-		GDA_CONFIG_UNLOCK ();
-		return FALSE;
-	}
-
-	/* delay write and nofity */
-	lock_write_notify = TRUE;
-
-	str = g_string_new ("");
-	g_string_printf (str, "%s/%s/", GDA_CONFIG_SECTION_DATASOURCES, name);
-	trunc_len = strlen (str->str);
-	
-	/* set the provider */
-	g_string_append (str, "Provider");
-	gda_config_set_string (str->str, provider);
-	g_string_truncate (str, trunc_len);
-
-	/* set the connection string */
-	if (cnc_string) {
-		g_string_append (str, "DSN");
-		gda_config_set_string (str->str, cnc_string);
-		g_string_truncate (str, trunc_len);
-	}
-
-	/* set the description */
-	if (description) {
-		g_string_append (str, "Description");
-		gda_config_set_string (str->str, description);
-		g_string_truncate (str, trunc_len);
-	}
-
-	/* set the username */
-	if (username) {
-		g_string_append (str, "Username");
-		gda_config_set_string (str->str, username);
-		g_string_truncate (str, trunc_len);
-	}
-
-	/* set the password */
-	if (password) {
-		g_string_append (str, "Password");
-		gda_config_set_string (str->str, password);
-		g_string_truncate (str, trunc_len);
-	}
-
-	/* set the GdaSection in the right list (user of global) */
-	cfg_client = get_config_client ();
-	g_string_truncate (str, trunc_len - 1); /* we don't want the last '/' */
-	section = gda_config_search_section (cfg_client->user, str->str);
-	if (!section)
-		section = gda_config_search_section (cfg_client->global, str->str);
-	g_assert (section);
-	section->is_global = is_global;
-
-	if (section->is_global && (!g_list_find (cfg_client->global, section))) {
-		cfg_client->global = g_list_append (cfg_client->global, section);
-		cfg_client->user = g_list_remove (cfg_client->user, section);
-	}
-
-	if (!section->is_global && (!g_list_find (cfg_client->user, section))) {
-		cfg_client->user = g_list_append (cfg_client->user, section);
-		cfg_client->global = g_list_remove (cfg_client->global, section);
-	}
-
-	g_string_free (str, TRUE);
-
-	/* actual write and nofity */
-	lock_write_notify = FALSE;
-	write_config_file ();
-	do_notify (NULL);
-	GDA_CONFIG_UNLOCK ();
-
-	return TRUE;
-}
-
-/**
- * gda_config_save_data_source_info
- * @dsn_info: a #GdaDataSourceInfo structure.
- *
- * Saves a data source in the libgda configuration given a
- * #GdaDataSourceInfo structure containing all the information
- * about the data source.
- *
- * Returns: TRUE if no error occurred
- */
-gboolean
-gda_config_save_data_source_info (GdaDataSourceInfo *dsn_info)
-{
-	g_return_val_if_fail (dsn_info != NULL, FALSE);
-
-	return gda_config_save_data_source (dsn_info->name,
-					    dsn_info->provider,
-					    dsn_info->cnc_string,
-					    dsn_info->description,
-					    dsn_info->username,
-					    dsn_info->password,
-					    dsn_info->is_global);
-}
-
-/**
- * gda_config_remove_data_source
- * @name: name for the data source to be removed.
- *
- * Removes the given data source from the GDA configuration.
- */
-void
-gda_config_remove_data_source (const gchar *name)
-{
-	gchar *dir;
-
-	g_return_if_fail (name != NULL);
-
-	dir = g_strdup_printf ("%s/%s", GDA_CONFIG_SECTION_DATASOURCES, name);
-	gda_config_remove_section (dir);
-	g_free (dir);
-}
-
-typedef struct {
-	guint id;
-	GdaConfigListenerFunc func;
-	gpointer user_data;
-	gchar *path;
-} config_listener_data_t;
-
-static GList *listeners;
-static guint next_id = 1;
-
 static void
-config_listener_func (gpointer data, gpointer user_data)
+internal_provider_free (InternalProvider *ip)
 {
-	GList *l;
-	config_listener_data_t *listener = data;
-	gchar *path = user_data;
-	gint len = -1;
+	GdaProviderInfo *info = (GdaProviderInfo*) ip;
+	if (ip->instance)
+		g_object_unref (ip->instance);
+	if (ip->handle) 
+		g_module_close (ip->handle);
+	
+	g_free (info->id);
+	g_free (info->location);
+	g_free (info->description);
+	g_free (info->gda_params);
+	g_free (info->dsn_spec);
+	g_free (ip);
+}
 
-	g_return_if_fail (listener != NULL);
+/*
+ * File monitoring actions
+ */
+#ifdef HAVE_FAM
+static gboolean
+fam_callback (GIOChannel *source, GIOCondition condition, gpointer data)
+{
+        gboolean res = TRUE;
 
-	if (path)
-		len = strlen (path);
-	for (l = listeners; l; l = l->next){
-		listener = l->data;
-		if (!path ||
-		    (path && !strncmp (listener->path, path, len))) {
-			listener->func (path, listener->user_data);
-		}
-	}
+        GDA_CONFIG_LOCK ();
+        while (fam_connection && FAMPending (fam_connection)) {
+                FAMEvent ev;
+                gboolean is_global;
+
+                if (FAMNextEvent (fam_connection, &ev) != 1) {
+                        FAMClose (fam_connection);
+                        g_free (fam_connection);
+                        g_source_remove (fam_watch_id);
+                        fam_watch_id = 0;
+                        fam_connection = NULL;
+                        GDA_CONFIG_UNLOCK ();
+                        return FALSE;
+                }
+
+                if (lock_fam)
+                        continue;
+
+                is_global = GPOINTER_TO_INT (ev.userdata);
+                switch (ev.code) {
+                case FAMChanged: {
+                        struct stat stat;
+                        if (lstat (ev.filename, &stat))
+                                break;
+                        if ((stat.st_mtime != last_mtime) ||
+                            (stat.st_ctime != last_ctime) ||
+                            (stat.st_size != last_size)) {
+                                last_mtime = stat.st_mtime;
+                                last_ctime = stat.st_ctime;
+                                last_size = stat.st_size;
+                        }
+                        else
+                                break;
+                }
+                case FAMDeleted:
+                case FAMCreated:
+#ifdef GDA_DEBUG_NO
+                        g_print ("Reloading config files (%s config has changed)\n", is_global ? "global" : "user");
+#endif
+			while (unique_instance->priv->dsn_list) {
+				GdaDataSourceInfo *info = (GdaDataSourceInfo *) unique_instance->priv->dsn_list;
+				g_signal_emit (unique_instance, gda_config_signals[DSN_TO_BE_REMOVED], 0, info);
+				unique_instance->priv->dsn_list = g_slist_remove (unique_instance->priv->dsn_list, info);
+				g_signal_emit (unique_instance, gda_config_signals[DSN_REMOVED], 0, info);
+				data_source_info_free (info);
+			}
+			
+			if (unique_instance->priv->system_file)
+				load_config_file (unique_instance->priv->system_file, TRUE);
+			if (unique_instance->priv->user_file)
+				load_config_file (unique_instance->priv->user_file, FALSE);
+                        break;
+                case FAMAcknowledge:
+                case FAMStartExecuting:
+                case FAMStopExecuting:
+                case FAMExists:
+                case FAMEndExist:
+                case FAMMoved:
+                        /* Not supported */
+                        break;
+                }
+        }
+
+        GDA_CONFIG_UNLOCK ();
+        return res;
 }
 
 static void
-do_notify (const gchar *path)
+fam_lock_notify ()
 {
-	if (lock_write_notify)
-		return;
-
-	g_list_foreach (listeners, config_listener_func, (gpointer) path);
+        lock_fam = TRUE;
 }
 
-/**
- * gda_config_add_listener
- * @path: configuration path to listen to.
- * @func: callback function.
- * @user_data: data to be passed to the callback function.
- *
- * Installs a configuration listener, which is a callback function
- * which will be called every time a change occurs on a given
- * configuration entry.
- *
- * Returns: the ID of the listener, which you will need for
- * calling #gda_config_remove_listener. If an error occurs,
- * 0 is returned.
- */
-guint
-gda_config_add_listener (const gchar *path, 
-			 GdaConfigListenerFunc func, 
-			 gpointer user_data)
+static void
+fam_unlock_notify ()
 {
-	config_listener_data_t *listener;
-
-	g_return_val_if_fail (path != NULL, 0);
-	g_return_val_if_fail (func != NULL, 0);
-
-	listener = g_new0 (config_listener_data_t, 1);
-	listener->id = next_id++;
-	listener->func = func;
-	listener->user_data = user_data;
-	listener->path = g_strdup (path);
-	listeners = g_list_append (listeners, listener);
-
-	return listener->id;
+        lock_fam = FALSE;
 }
 
-/**
- * gda_config_remove_listener
- * @id: the ID of the listener to remove.
- *
- * Removes a configuration listener previously installed with
- * #gda_config_add_listener, given its ID.
- */
-void
-gda_config_remove_listener (guint id)
-{
-	GList *l;
-	config_listener_data_t *listener;
-
-	for (l = listeners; l; l = l->next){
-		listener = l->data;
-		if (listener->id == id){
-			listeners = g_list_remove (listeners, listener);
-			g_free (listener->path);
-			g_free (listener);
-			break;
-		}
-	}
-}
-
-GType
-gda_provider_info_get_type (void)
-{
-	static GType our_type = 0;
-
-	if (our_type == 0)
-		our_type = g_boxed_type_register_static ("GdaProviderInfo",
-							 (GBoxedCopyFunc) gda_provider_info_copy,
-							 (GBoxedFreeFunc) gda_provider_info_free);
-
-	return our_type;
-}
-
-GType
-gda_data_source_info_get_type (void)
-{
-	static GType our_type = 0;
-
-	if (our_type == 0)
-		our_type = g_boxed_type_register_static ("GdaDataSourceInfo",
-							 (GBoxedCopyFunc) gda_data_source_info_copy,
-							 (GBoxedFreeFunc) gda_data_source_info_free);
-
-	return our_type;
-}
+#endif

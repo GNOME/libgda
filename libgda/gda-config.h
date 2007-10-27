@@ -1,8 +1,8 @@
-/* GDA common library
- * Copyright (C) 1998 - 2007 The GNOME Foundation.
+/* GDA library
+ * Copyright (C) 2007 The GNOME Foundation.
  *
  * AUTHORS:
- *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -23,121 +23,80 @@
 #ifndef __GDA_CONFIG_H__
 #define __GDA_CONFIG_H__
 
-#include <glib/gmacros.h>
+#include "gda-decl.h"
 #include <libgda/gda-data-model.h>
-#include <libgda/gda-parameter.h>
 
 G_BEGIN_DECLS
 
-/*
- * Basic configuration access
- */
+#define GDA_TYPE_CONFIG            (gda_config_get_type())
+#define GDA_CONFIG(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_CONFIG, GdaConfig))
+#define GDA_CONFIG_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_CONFIG, GdaConfigClass))
+#define GDA_IS_CONFIG(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_CONFIG))
+#define GDA_IS_CONFIG_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONFIG))
 
-gchar   *gda_config_get_string     (const gchar *path);
-gint     gda_config_get_int        (const gchar *path);
-gdouble  gda_config_get_float      (const gchar *path);
-gboolean gda_config_get_boolean    (const gchar *path);
-gboolean gda_config_set_string     (const gchar *path, const gchar *new_value);
-gboolean gda_config_set_int        (const gchar *path, gint new_value);
-gboolean gda_config_set_float      (const gchar *path, gdouble new_value);
-gboolean gda_config_set_boolean    (const gchar *path, gboolean new_value);
-
-void     gda_config_remove_section (const gchar *path);
-void     gda_config_remove_key     (const gchar *path);
-gboolean gda_config_has_section    (const gchar *path);
-gboolean gda_config_has_key        (const gchar *path);
-GList   *gda_config_list_sections  (const gchar *path);
-GList   *gda_config_list_keys      (const gchar *path);
-gchar   *gda_config_get_type       (const gchar *path);
-
-void     gda_config_free_list      (GList *list);
-
-typedef void (* GdaConfigListenerFunc) (const gchar *path, gpointer user_data);
-
-guint    gda_config_add_listener   (const gchar *path, GdaConfigListenerFunc func,
-				    gpointer user_data);
-void     gda_config_remove_listener (guint id);
-
-
-
-
-/*
- * Providers configuration
- */
-
+typedef struct _GdaConfigPrivate GdaConfigPrivate;
+typedef struct _GdaDataSourceInfo GdaDataSourceInfo;
 typedef struct _GdaProviderInfo GdaProviderInfo;
 
-/*
- * REM about the @gda_params and @dsn_spec fields:
- *
- * The @gda_params holds all the parameters required to create a DSN, and is historically the
- * way to create a DSN. However the @dsn_spec field has been introduced to produce a more
- * detailled spec on what is required to create a DSN.
- *
- * When both fields are present, they are guaranted to list the _same_ parameters, using
- * different representations.
- */
-struct _GdaProviderInfo {
-	gchar            *id;
-	gchar            *location;
-	gchar            *description;
-	GdaParameterList *gda_params; /* Contains a list of GdaParameter to create a DSN */
-	gchar            *dsn_spec; /* XML string with all the parameters required to create a DSN */
-};
+/* error reporting */
+extern GQuark gda_config_error_quark (void);
+#define GDA_CONFIG_ERROR gda_config_error_quark ()
 
-#define GDA_TYPE_PROVIDER_INFO (gda_provider_info_get_type ())
+typedef enum {
+        GDA_CONFIG_DSN_NOT_FOUND_ERROR,
+	GDA_CONFIG_PERMISSION_ERROR,
+	GDA_CONFIG_PROVIDER_NOT_FOUND_ERROR,
+	GDA_CONFIG_PROVIDER_CREATION_ERROR
+} GdaConfigError;
 
-GType            gda_provider_info_get_type      (void) G_GNUC_CONST;
-GdaProviderInfo* gda_provider_info_copy          (GdaProviderInfo *src);
-void             gda_provider_info_free          (GdaProviderInfo *provider_info);
-
-GList           *gda_config_get_provider_list    (void);
-void             gda_config_free_provider_list   (GList *list);
-GdaProviderInfo *gda_config_get_provider_by_name (const gchar *name);
-GdaDataModel    *gda_config_get_provider_model   (void);
-
-
-
-
-/*
- * Data sources configuration
- */
-
-typedef struct _GdaDataSourceInfo GdaDataSourceInfo;
- 
 struct _GdaDataSourceInfo {
-	gchar    *name;
-	gchar    *provider;
-	gchar    *cnc_string;
-	gchar    *description;
-	gchar    *username;
-	gchar    *password;
-	gboolean  is_global;
+        gchar    *name;
+        gchar    *provider;
+        gchar    *cnc_string;
+        gchar    *description;
+        gchar    *username;
+        gchar    *password;
+        gboolean  is_global;
 };
 
-#define GDA_TYPE_DATA_SOURCE_INFO (gda_data_source_info_get_type ())
+struct _GdaProviderInfo {
+        gchar             *id;
+        gchar             *location;
+        gchar             *description;
+        GdaParameterList  *gda_params; /* Contains a list of GdaParameter to create a DSN */
+        gchar             *dsn_spec; /* XML string with all the parameters required to create a DSN */
+};
 
-GType              gda_data_source_info_get_type    (void) G_GNUC_CONST;
-GdaDataSourceInfo *gda_data_source_info_copy        (GdaDataSourceInfo *src);
-gboolean           gda_data_source_info_equal       (GdaDataSourceInfo *info1, GdaDataSourceInfo *info2);
-GdaDataSourceInfo *gda_config_find_data_source      (const gchar *name);
+struct _GdaConfig {
+	GObject           object;
+	GdaConfigPrivate *priv;
+};
 
-void               gda_data_source_info_free        (GdaDataSourceInfo *info);
+struct _GdaConfigClass {
+	GObjectClass      object_class;
 
-GList             *gda_config_get_data_source_list  (void);
-void               gda_config_free_data_source_list (GList *list);
+	/* signals */
+	void   (*dsn_added)                 (GdaConfig *conf, GdaDataSourceInfo *new_dsn);
+	void   (*dsn_to_be_removed)         (GdaConfig *conf, GdaDataSourceInfo *old_dsn);
+	void   (*dsn_removed)               (GdaConfig *conf, GdaDataSourceInfo *old_dsn);
+	void   (*dsn_changed)               (GdaConfig *conf, GdaDataSourceInfo *dsn);
+};
 
-GdaDataModel      *gda_config_get_data_source_model (void);
-gboolean           gda_config_can_modify_global_config (void);
-gboolean           gda_config_save_data_source      (const gchar *name,
-						     const gchar *provider,
-						     const gchar *cnc_string,
-						     const gchar *description,
-						     const gchar *username,
-						     const gchar *password,
-						     gboolean is_global);
-gboolean           gda_config_save_data_source_info (GdaDataSourceInfo *dsn_info);
-void               gda_config_remove_data_source    (const gchar *name);
+GType              gda_config_get_type            (void) G_GNUC_CONST;
+GdaConfig*         gda_config_get                 (void);
+
+GdaDataSourceInfo *gda_config_get_dsn             (const gchar *dsn_name);
+gboolean           gda_config_add_dsn             (const GdaDataSourceInfo *info, GError **error);
+gboolean           gda_config_remove_dsn          (const gchar *dsn_name, GError **error);
+GdaDataModel      *gda_config_list_dsn            (void);
+
+gint               gda_config_get_nb_dsn          (void);
+gint               gda_config_get_dsn_index       (const gchar *dsn_name);
+GdaDataSourceInfo *gda_config_get_dsn_at_index    (gint index);
+
+GdaProviderInfo   *gda_config_get_provider_info   (const gchar *provider_name);
+GdaServerProvider *gda_config_get_provider_object (const gchar *provider_name, GError **error);
+GdaDataModel      *gda_config_list_providers      (void);
 
 G_END_DECLS
 

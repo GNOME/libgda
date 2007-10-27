@@ -23,6 +23,10 @@
 
 #include <glib.h>
 
+
+typedef struct _GdaConfig GdaConfig;
+typedef struct _GdaConfigClass GdaConfigClass;
+
 typedef struct _GdaObject GdaObject;
 typedef struct _GdaObjectClass GdaObjectClass;
 typedef struct _GdaObjectPrivate GdaObjectPrivate;

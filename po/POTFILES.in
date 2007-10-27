@@ -5,6 +5,7 @@ libgda/gda-data-access-wrapper.c
 libgda/gda-data-model-array.c
 libgda/gda-data-model-bdb.c
 libgda/gda-data-model-dir.c
+libgda/gda-data-model-dsn-list.c
 libgda/gda-data-model-filter-sql.c
 libgda/gda-data-model-hash.c
 libgda/gda-data-model-import.c

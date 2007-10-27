@@ -125,6 +125,8 @@ libgda_sources =  \
 	gda-data-model-row.c \
 	gda-data-model.c \
 	gda-data-model-dir.c \
+	gda-data-model-dsn-list.c \
+	gda-data-model-dsn-list.h \
 	gda-data-model-filter-sql.c \
 	gda-data-model-hash.c \
 	gda-data-model-import.c \

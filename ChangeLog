@@ -1,5 +1,35 @@
 2007-10-27  Vivien Malerba <malerba@gnome-db.org>
 
+	* tools/html.c:
+	* tools/gda-list-config.c:
+	* tools/gda-config-tool.c:
+	* tools/html.h:
+	* tools/gda-config-3.0.5:
+	* tools/gda-diagnose.c:
+	* tools/gda-list-server-op.c:
+	* tools/gda-config-tool-3.0.1:
+	* tools/Makefile.am:
+	* tools/gda-sql.c:
+	* tools/gda-author-dict-file.c:
+	* doc/C/libgda-3.0-sections.txt:
+	* doc/C/libgda-3.0.types:
+	* doc/C/tmpl/gda-config.sgml:
+	* testing/gda-test-blob.c:
+	* testing/gda-test-connection.c:
+	* testing/gda-test-server-operation.c:
+	* po/POTFILES.in:
+	* libgda/gda-connection.c:
+	* libgda/Makefile.am:
+	* libgda/gda-config.c:
+	* libgda/gda-config.h:
+	* libgda/gda-data-model-dsn-list.c:
+	* libgda/gda-data-model-dsn-list.h:
+	* libgda/gda-decl.h:
+	* libgda/gda-client.c: re-implemented the Gda config part: 1000 lines less, more features,
+	more maintanable code, and easier to use API (in a GdaConfig singleton object)
+
+2007-10-27  Vivien Malerba <malerba@gnome-db.org>
+
 	* libgda/sqlite/virtual/gda-vconnection-hub.c: when creating modification queries, use
 	all the fields to make a WHERE condition if no PK field(s) are found.
 

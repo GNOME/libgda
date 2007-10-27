@@ -66,7 +66,7 @@ main (int argc, char **argv)
 	client = gda_client_new ();
 	if (dsn) {
 		GdaDataSourceInfo *info = NULL;
-		info = gda_config_find_data_source (dsn);
+		info = gda_config_get_dsn (dsn);
 		if (!info)
 			g_error (_("DSN '%s' is not declared"), dsn);
 		else {
@@ -80,7 +80,6 @@ main (int argc, char **argv)
 				exit (1);
 			}
 			prov = info->provider;
-			gda_data_source_info_free (info);
 		}
 	}
 	else {

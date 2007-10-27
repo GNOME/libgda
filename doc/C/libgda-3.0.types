@@ -5,13 +5,12 @@
 #include <gda-report-document.h>
 #include <RML/gda-report-rml-document.h>
 #include <DocBook/gda-report-docbook-document.h>
+gda_config_get_type
 gda_blob_op_get_type
 gda_client_get_type
 gda_column_get_type
 gda_column_index_get_type
 gda_command_get_type
-gda_provider_info_get_type
-gda_data_source_info_get_type
 gda_connection_get_type
 gda_connection_event_get_type
 gda_data_handler_get_type

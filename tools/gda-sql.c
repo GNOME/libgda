@@ -126,7 +126,7 @@ static void     output_string (MainData *data, const gchar *str);
 static ConnectionSetting *open_connection (MainData *data, const gchar *cnc_name, const gchar *dsn,
 					   const gchar *provider, const gchar *direct, 
 					   const gchar *user, const gchar *pass, GError **error);
-static GdaDataModel *list_all_sections (MainData *data);
+static GdaDataModel *list_all_dsn (MainData *data);
 static GdaDataModel *list_all_providers (MainData *data);
 
 /* commands manipulation */
@@ -184,7 +184,7 @@ main (int argc, char *argv[])
 		goto cleanup;
 	}
 	if (list_configs) {
-		GdaDataModel *model = list_all_sections (data);
+		GdaDataModel *model = list_all_dsn (data);
 		output_data_model (data, model);
 		g_object_unref (model);
 		goto cleanup;
@@ -798,19 +798,17 @@ open_connection (MainData *data, const gchar *cnc_name, const gchar *dsn, const 
 
 	if (dsn) {
                 GdaDataSourceInfo *info = NULL;
-                info = gda_config_find_data_source (dsn);
+                info = gda_config_get_dsn (dsn);
                 if (!info) {
 			if (!direct)
 				g_set_error (error, 0, 0,
 					     _("DSN '%s' is not declared"), dsn);
 		}
-                else {
+                else 
                         newcnc = gda_client_open_connection (data->client, info->name,
 							     user ? user : info->username,
 							     pass ? pass : ((info->password) ? info->password : ""),
 							     0, error);
-                        gda_data_source_info_free (info);
-                }
         }
         if (!newcnc && direct) 
 		newcnc = gda_client_open_connection_from_string (data->client, provider, direct,
@@ -1010,75 +1008,9 @@ output_string (MainData *data, const gchar *str)
  * Lists all the sections in the config files (local to the user and global) in the index page
  */
 static GdaDataModel *
-list_all_sections (MainData *data)
+list_all_dsn (MainData *data)
 {
-        GList *sections;
-        GList *l;
-	GdaDataModel *model;
-
-	model = gda_data_model_array_new_with_g_types (5,
-						       G_TYPE_STRING,
-						       G_TYPE_STRING,
-						       G_TYPE_STRING,
-						       G_TYPE_STRING,
-						       G_TYPE_STRING);
-	gda_data_model_set_column_title (model, 0, _("DSN"));
-	gda_data_model_set_column_title (model, 1, _("Provider"));
-	gda_data_model_set_column_title (model, 2, _("Description"));
-	gda_data_model_set_column_title (model, 3, _("Connection string"));
-	gda_data_model_set_column_title (model, 4, _("Username"));
-	gda_object_set_name (GDA_OBJECT (model), _("List of declared DSN"));
-
-        sections = gda_config_list_sections ("/apps/libgda/Datasources");
-        for (l = sections; l; l = l->next) {
-                gchar *section = (gchar *) l->data;
-		GValue *value;
-		gint row;
-
-		row = gda_data_model_append_row (model, NULL);
-		value = gda_value_new_from_string (section, G_TYPE_STRING);
-		gda_data_model_set_value_at (model, 0, row, value, NULL);
-		gda_value_free (value);
-
-		GList *keys;
-		gchar *root;
-		
-		/* list keys in dsn */ 
-		root = g_strdup_printf ("/apps/libgda/Datasources/%s", section);
-		keys = gda_config_list_keys (root);
-		if (keys) {
-			GList *l;
-			gint col;
-
-			for (l = keys; l ; l = l->next) {
-				gchar *str, *tmp;
-				gchar *key = (gchar *) l->data;
-				
-				tmp = g_strdup_printf ("%s/%s", root, key);
-				str = gda_config_get_string (tmp);
-				value =  gda_value_new_from_string (str, G_TYPE_STRING);
-				g_free (tmp);
-				
-				col = -1;
-				if (!strcmp (key, "DSN"))
-					col = 3;
-				else if (!strcmp (key, "Description"))
-					col = 2;
-				else if (!strcmp (key, "Username"))
-					col = 4;
-				else if (!strcmp (key, "Provider"))
-					col = 1;
-				if (col >= 0)
-					gda_data_model_set_value_at (model, col, row, value, NULL);
-				gda_value_free (value);
-			}
-			gda_config_free_list (keys);
-		}
-		g_free (root);
-        }
-        gda_config_free_list (sections);
-
-	return model;
+	return gda_config_list_dsn ();
 }
 
 /*
@@ -1087,61 +1019,7 @@ list_all_sections (MainData *data)
 static GdaDataModel *
 list_all_providers (MainData *data)
 {
-        GList *providers;
-	GdaDataModel *model;
-
-	model = gda_data_model_array_new_with_g_types (4,
-						       G_TYPE_STRING,
-						       G_TYPE_STRING,
-						       G_TYPE_STRING,
-						       G_TYPE_STRING);
-	gda_data_model_set_column_title (model, 0, _("Provider"));
-	gda_data_model_set_column_title (model, 1, _("Description"));
-	gda_data_model_set_column_title (model, 2, _("DSN parameters"));
-	gda_data_model_set_column_title (model, 3, _("File"));
-	gda_object_set_name (GDA_OBJECT (model), _("List of installed providers"));
-
-        for (providers = gda_config_get_provider_list (); providers; providers = providers->next) {
-                GdaProviderInfo *info = (GdaProviderInfo *) providers->data;
-
-		GValue *value;
-		gint row;
-
-		row = gda_data_model_append_row (model, NULL);
-
-		value = gda_value_new_from_string (info->id, G_TYPE_STRING);
-		gda_data_model_set_value_at (model, 0, row, value, NULL);
-		gda_value_free (value);
-
-		value = gda_value_new_from_string (info->description, G_TYPE_STRING);
-		gda_data_model_set_value_at (model, 1, row, value, NULL);
-		gda_value_free (value);
-
-		if (info->gda_params) {
-			GSList *params;
-			GString *string = g_string_new ("");
-			for (params = info->gda_params->parameters; 
-			     params; params = params->next) {
-				gchar *tmp;
-				
-				g_object_get (G_OBJECT (params->data), "string_id", &tmp, NULL);
-				if (params != info->gda_params->parameters)
-					g_string_append (string, ",\n");
-				g_string_append (string, tmp);
-				g_free (tmp);
-			}
-			value = gda_value_new_from_string (string->str, G_TYPE_STRING);
-			g_string_free (string, TRUE);
-			gda_data_model_set_value_at (model, 2, row, value, NULL);
-			gda_value_free (value);
-		}
-
-		value = gda_value_new_from_string (info->location, G_TYPE_STRING);
-		gda_data_model_set_value_at (model, 3, row, value, NULL);
-		gda_value_free (value);
-        }
-
-	return model;
+	return gda_config_list_providers ();
 }
 
 static gchar **args_as_string_func (const gchar *str);
@@ -1637,7 +1515,7 @@ GdaInternalCommandResult *extra_command_list_dsn (GdaConnection *cnc, GdaDict *d
 	
 	res = g_new0 (GdaInternalCommandResult, 1);
 	res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
-	res->u.model = list_all_sections (data);
+	res->u.model = list_all_dsn (data);
 	return res;
 }
 

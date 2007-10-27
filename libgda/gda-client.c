@@ -35,19 +35,7 @@
 #include "gda-value.h"
 #include "gda-enum-types.h"
 
-typedef struct {
-	GModule              *handle;
-	GdaServerProvider    *provider;
-
-	/* entry points to the plugin */
-	const gchar        *(*plugin_get_name) (void);
-	const gchar        *(*plugin_get_description) (void);
-	GdaServerProvider  *(*plugin_create_provider) (void);
-	gchar              *(*get_dsn_spec) (void);
-} LoadedProvider;
-
 struct _GdaClientPrivate {
-	GHashTable           *providers;
 	GList                *connections;
 };
 
@@ -66,44 +54,6 @@ static gint gda_client_signals[LAST_SIGNAL] = { 0 };
 static GObjectClass *parent_class = NULL;
 
 /*
- * Private functions
- */
-
-static void
-emit_client_error (GdaClient *client, GdaConnection *cnc, const gchar *format, ...)
-{
-	va_list args;
-	gchar sz[2048];
-	GdaConnectionEvent *error;
-
-	/* build the message string */
-	va_start (args, format);
-	vsprintf (sz, format, args);
-	va_end (args);
-
-	/* create the error list */
-	error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
-	gda_connection_event_set_description (error, sz);
-	gda_connection_event_set_source (error, "[GDA client]");
-	if (cnc)
-		gda_connection_add_event (cnc, error);
-}
-
-static void
-free_hash_provider (gpointer key, gpointer value, gpointer user_data)
-{
-	gchar *iid = (gchar *) key;
-	LoadedProvider *prv = (LoadedProvider *) value;
-
-	g_free (iid);
-	if (prv) {
-		g_object_unref (G_OBJECT (prv->provider));
-		g_module_close (prv->handle);
-		g_free (prv);
-	}
-}
-
-/*
  * Callbacks
  */
 
@@ -114,43 +64,6 @@ cnc_error_cb (GdaConnection *cnc, GdaConnectionEvent *error, GdaClient *client)
 
 	/* notify error */
 	gda_client_notify_error_event (client, cnc, error);
-}
-
-typedef struct {
-	GdaClient *client;
-	GdaServerProvider *provider;
-	gboolean already_removed;
-} prv_weak_cb_data;
-
-static gboolean
-remove_provider_in_hash (gpointer key, gpointer value, gpointer user_data)
-{
-	LoadedProvider *prv = value;
-	prv_weak_cb_data *cb_data = user_data;
-
-	if (prv->provider == cb_data->provider && !cb_data->already_removed) {
-		g_free (key);
-		g_module_close (prv->handle);
-		g_free (prv);
-		cb_data->already_removed = TRUE;
-	}
-	return TRUE;
-}
-
-static void
-provider_weak_cb (gpointer user_data, GObject *object)
-{
-	prv_weak_cb_data cb_data;
-	GdaServerProvider *provider = (GdaServerProvider *) object;
-	GdaClient *client = (GdaClient *) user_data;
-
-	g_return_if_fail (GDA_IS_SERVER_PROVIDER (provider));
-	g_return_if_fail (GDA_IS_CLIENT (client));
-
-	cb_data.client = client;
-	cb_data.provider = provider;
-	cb_data.already_removed = FALSE;
-	g_hash_table_foreach_remove (client->priv->providers, (GHRFunc) remove_provider_in_hash, &cb_data);
 }
 
 /*
@@ -182,16 +95,7 @@ gda_client_init (GdaClient *client, GdaClientClass *klass)
 	g_return_if_fail (GDA_IS_CLIENT (client));
 
 	client->priv = g_new0 (GdaClientPrivate, 1);
-	client->priv->providers = g_hash_table_new (g_str_hash, g_str_equal);
 	client->priv->connections = NULL;
-}
-
-static void
-remove_weak_ref (gpointer key, gpointer value, gpointer user_data)
-{
-	LoadedProvider *prv = (LoadedProvider *) value;
-
-	g_object_weak_unref (G_OBJECT (prv->provider), (GWeakNotify) provider_weak_cb, G_OBJECT (user_data));
 }
 
 static void
@@ -205,11 +109,6 @@ gda_client_finalize (GObject *object)
 	/* free memory */
 	for (list = client->priv->connections; list; list = list->next)
 		g_object_unref (GDA_CONNECTION (list->data));
-
-	g_hash_table_foreach (client->priv->providers, (GHFunc) remove_weak_ref, client);
-	g_hash_table_foreach (client->priv->providers, (GHFunc) free_hash_provider, NULL);
-	g_hash_table_destroy (client->priv->providers);
-	client->priv->providers = NULL;
 
 	g_free (client->priv);
 	client->priv = NULL;
@@ -267,76 +166,6 @@ gda_client_new (void)
 
 	client = g_object_new (GDA_TYPE_CLIENT, NULL);
 	return client;
-}
-
-static LoadedProvider *
-find_or_load_provider (GdaClient *client, const gchar *provider)
-{
-	LoadedProvider *prv = NULL;
-	GdaProviderInfo *prv_info;
-	void (*plugin_init) (const gchar *);
-
-	prv_info = gda_config_get_provider_by_name (provider);
-	if (!prv_info) {
-		emit_client_error (client, NULL,
-				   _("Could not find provider %s in the current setup"),
-				   provider);
-		return NULL;
-	}
-	
-	/* load the new provider */
-	prv = g_new0 (LoadedProvider, 1);
-	prv->handle = g_module_open (prv_info->location, G_MODULE_BIND_LAZY);
-
-	if (!prv->handle) {
-		emit_client_error (client, NULL, g_module_error ());
-		g_free (prv);
-		return NULL;
-	}
-	
-	g_module_make_resident (prv->handle);
-	
-	/* initialize plugin if supported */
-	if (g_module_symbol (prv->handle, "plugin_init", (gpointer) &plugin_init)) {
-		gchar *dirname;
-
-		dirname = g_path_get_dirname (prv_info->location);
-		plugin_init (dirname);
-		g_free (dirname);
-	}
-
-	g_module_symbol (prv->handle, "plugin_get_name",
-			 (gpointer) &prv->plugin_get_name);
-	g_module_symbol (prv->handle, "plugin_get_description",
-			 (gpointer) &prv->plugin_get_description);
-	g_module_symbol (prv->handle, "plugin_create_provider",
-			 (gpointer) &prv->plugin_create_provider);
-	g_module_symbol (prv->handle, "plugin_get_dsn_spec",
-			 (gpointer) &prv->get_dsn_spec);
-	
-	if (!prv->plugin_create_provider) {
-		emit_client_error (client, NULL,
-				   _("Provider %s does not implement entry function"),
-				   provider);
-		g_free (prv);
-		return NULL;
-	}
-	
-	prv->provider = prv->plugin_create_provider ();
-	if (!prv->provider) {
-		emit_client_error (client, NULL,
-				   _("Could not create GdaServerProvider object from plugin"));
-		g_free (prv);
-		return NULL;
-	}
-	
-	g_object_ref (G_OBJECT (prv->provider));
-	g_object_weak_ref (G_OBJECT (prv->provider), (GWeakNotify) provider_weak_cb, client);
-	g_hash_table_insert (client->priv->providers,
-			     g_strdup (provider),
-			     prv);
-
-	return prv;
 }
 
 /**
@@ -404,13 +233,12 @@ gda_client_open_connection (GdaClient *client,
 			    GError **error)
 {
 	GdaConnection *cnc = NULL;
-	LoadedProvider *prv;
 	GdaDataSourceInfo *dsn_info;
 
 	g_return_val_if_fail (GDA_IS_CLIENT (client), NULL);
 
 	/* get the data source info */
-	dsn_info = gda_config_find_data_source (dsn);
+	dsn_info = gda_config_get_dsn (dsn);
 	if (!dsn_info) {
 		gda_log_error (_("Data source %s not found in configuration"), dsn);
 		g_set_error (error, GDA_CLIENT_ERROR, 0, 
@@ -427,7 +255,6 @@ gda_client_open_connection (GdaClient *client,
 				cnc = NULL;
 			else
 				g_object_ref (G_OBJECT (cnc));
-			gda_data_source_info_free (dsn_info);
 
 			return cnc;
 		}
@@ -435,22 +262,17 @@ gda_client_open_connection (GdaClient *client,
 
 	/* try to find provider in our hash table */
 	if (dsn_info->provider != NULL) {
-		prv = g_hash_table_lookup (client->priv->providers, dsn_info->provider);
-		if (!prv)
-			prv = find_or_load_provider (client, dsn_info->provider);
-	
-		if (prv) {
-			cnc = gda_server_provider_create_connection (client, prv->provider, dsn, username, password,
-                                                  options);
+		GdaServerProvider *prov;
+
+		prov = gda_config_get_provider_object (dsn_info->provider, error);
+		if (prov) {
+			cnc = gda_server_provider_create_connection (client, prov, dsn, username, password,
+								     options);
 			if (!gda_connection_open (cnc, error)) {
 				g_object_unref (cnc);
 				cnc = NULL;
 			}
 		}
-		else 
-			g_set_error (error, GDA_CLIENT_ERROR, 0, 
-				     _("Datasource configuration error: could not find provider '%s'"),
-				     dsn_info->provider);
 	}
 	else {
 		g_warning (_("Datasource configuration error: no provider specified"));
@@ -459,8 +281,6 @@ gda_client_open_connection (GdaClient *client,
 	}
 
 	/* free memory */
-	gda_data_source_info_free (dsn_info);
-
 	if (cnc) 
 		gda_client_declare_connection (client, cnc);
 
@@ -512,7 +332,6 @@ gda_client_open_connection_from_string (GdaClient *client,
 					GdaConnectionOptions options,
 					GError **error)
 {
-	LoadedProvider *prv;
 	GdaConnection *cnc = NULL;
 	GList *l;
 	gchar *ptr, *dup;
@@ -555,22 +374,17 @@ gda_client_open_connection_from_string (GdaClient *client,
 
 	/* try to find provider in our hash table */
 	if (provider_id) {
-		prv = g_hash_table_lookup (client->priv->providers, provider_id);
-		if (!prv)
-			prv = find_or_load_provider (client, provider_id);
-	
-		if (prv) {
-			cnc = gda_server_provider_create_connection_from_string (client, prv->provider,
+		GdaServerProvider *prov;
+
+		prov = gda_config_get_provider_object (provider_id, error);
+		if (prov) {
+			cnc = gda_server_provider_create_connection_from_string (client, prov,
 										 cnc_string, username, password, options);
 			if (!gda_connection_open (cnc, error)) {
 				g_object_unref (cnc);
 				cnc = NULL;
 			}
 		}
-		else 
-			g_set_error (error, GDA_CLIENT_ERROR, 0, 
-				     _("Datasource configuration error: could not find provider '%s'"),
-				     provider_id);
 	}
 	else {
 		g_warning (_("Datasource configuration error: no provider specified"));
@@ -630,7 +444,7 @@ gda_client_find_connection (GdaClient *client,
 	g_return_val_if_fail (GDA_IS_CLIENT (client), NULL);
 
 	/* get the data source info */
-	dsn_info = gda_config_find_data_source (dsn);
+	dsn_info = gda_config_get_dsn (dsn);
 	if (!dsn_info) {
 		gda_log_error (_("Data source %s not found in configuration"), dsn);
 		return NULL;
@@ -647,12 +461,9 @@ gda_client_find_connection (GdaClient *client,
 		if (!strcmp (tmp_dsn ? tmp_dsn : "", dsn_info->name ? dsn_info->name : "")
 		    && !strcmp (tmp_usr ? tmp_usr : "", username ? username : "")
 		    && !strcmp (tmp_pwd ? tmp_pwd : "", password ? password : "")) {
-			gda_data_source_info_free (dsn_info);
 			return cnc;
 		}
 	}
-
-	gda_data_source_info_free (dsn_info);
 
 	return NULL;
 }
@@ -893,16 +704,15 @@ gda_client_rollback_transaction (GdaClient *client, const gchar *name, GError **
 gchar *
 gda_client_get_dsn_specs (GdaClient *client, const gchar *provider)
 {
-	LoadedProvider *prv;
-	
+	GdaProviderInfo *pinfo;
 	g_return_val_if_fail (client && GDA_IS_CLIENT (client), NULL);
 	
 	if (!provider || !*provider)
 		return NULL;
 
-	prv = find_or_load_provider (client, provider);
-	if (prv && prv->get_dsn_spec) 
-		return (prv->get_dsn_spec)();
+	pinfo = gda_config_get_provider_info (provider);
+	if (pinfo) 
+		return pinfo->dsn_spec;
 	else
 		return NULL;
 }
@@ -926,22 +736,22 @@ gda_client_get_dsn_specs (GdaClient *client, const gchar *provider)
 GdaServerOperation *
 gda_client_prepare_create_database (GdaClient *client, const gchar *db_name, const gchar *provider)
 {
-	LoadedProvider *prv;
+	GdaServerProvider *prov;
 
 	g_return_val_if_fail (client && GDA_IS_CLIENT (client), NULL);
 
 	if (!provider || !*provider)
 		return NULL;
 
-	prv = find_or_load_provider (client, provider);
-	if (prv && prv->provider) {
+	prov = gda_config_get_provider_object (provider, NULL);
+	if (prov) {
 		GdaServerOperation *op;
-		op = gda_server_provider_create_operation (prv->provider, NULL, 
+		op = gda_server_provider_create_operation (prov, NULL, 
 							   GDA_SERVER_OPERATION_CREATE_DB, 
 							   NULL, NULL);
 		if (op) {
 			g_object_set_data_full (G_OBJECT (op), "_gda_provider_name", 
-						prv->provider, g_object_unref);
+						prov, g_object_unref);
 			if (db_name)
 				gda_server_operation_set_value_at (op, db_name, 
 								   NULL, "/DB_DEF_P/DB_NAME");
@@ -971,22 +781,22 @@ gda_client_prepare_create_database (GdaClient *client, const gchar *db_name, con
 GdaServerOperation *
 gda_client_prepare_drop_database (GdaClient *client, const gchar *db_name, const gchar *provider)
 {
-	LoadedProvider *prv;
+	GdaServerProvider *prov;
 
 	g_return_val_if_fail (client && GDA_IS_CLIENT (client), NULL);
 
 	if (!provider || !*provider)
 		return NULL;
 
-	prv = find_or_load_provider (client, provider);
-	if (prv && prv->provider) {
+	prov = gda_config_get_provider_object (provider, NULL);
+	if (prov) {
 		GdaServerOperation *op;
-		op = gda_server_provider_create_operation (prv->provider, NULL,
+		op = gda_server_provider_create_operation (prov, NULL,
 							   GDA_SERVER_OPERATION_DROP_DB, 
 							   NULL, NULL);
 		if (op) {
 			g_object_set_data_full (G_OBJECT (op), "_gda_provider_name", 
-						prv->provider, g_object_unref);
+						prov, g_object_unref);
 			if (db_name)
 				gda_server_operation_set_value_at (op, db_name, 
 								   NULL, "/DB_DESC_P/DB_NAME");

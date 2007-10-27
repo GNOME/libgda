@@ -68,7 +68,7 @@ main (int argc, char **argv)
 		client = gda_client_new ();
 		if (dsn) {
 			GdaDataSourceInfo *info = NULL;
-			info = gda_config_find_data_source (dsn);
+			info = gda_config_get_dsn (dsn);
 			if (!info)
 				g_error (_("DSN '%s' is not declared"), dsn);
 			else {
@@ -81,7 +81,6 @@ main (int argc, char **argv)
 						   error && error->message ? error->message : "???");
 					exit (1);
 				}
-				gda_data_source_info_free (info);
 			}
 		}
 		else {
@@ -97,25 +96,9 @@ main (int argc, char **argv)
 	}
 
 	/* create the GdaServerProvider object */
-	{
-		GdaProviderInfo *info;
-		GModule *handle;
-		GdaServerProvider  *(*plugin_create_provider) (void);
-
-		info = gda_config_get_provider_by_name (prov);
-		if (!info)
-			g_error ("Can't find provider '%s'", prov);
-		handle = g_module_open (info->location, G_MODULE_BIND_LAZY);;
-		if (!handle)
-			g_error ("Can't load provider '%s''s module: %s", prov, g_module_error ());
-		g_module_symbol (handle, "plugin_create_provider",
-				 (gpointer) &plugin_create_provider);
-		if (!plugin_create_provider)
-			g_error ("Provider '%s' does not implement entry function", prov);
-		provider = plugin_create_provider ();
-		if (!provider)
-			g_error ("Could not create GdaServerProvider object from plugin ('%s' provider)", prov);
-	}
+	provider = gda_config_get_provider_object (prov, NULL);
+	if (!provider)
+		g_error ("Could not create GdaServerProvider object from plugin ('%s' provider)", prov);
 
 	if (cnc)
 		if (provider != gda_connection_get_provider_obj (cnc))

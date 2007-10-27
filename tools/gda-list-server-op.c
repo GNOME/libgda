@@ -41,43 +41,10 @@ main (int argc, char **argv) {
 		g_print ("For provider %s\n", prov);
 
 	if (prov) {
-		GdaProviderInfo *prov_info;
-		prov_info = gda_config_get_provider_by_name (prov);
-		if (!prov_info) {
-			g_print (_("Could not find provider '%s', check it is installed and the spelling is correct.\n"),
-				 prov);
-			return 1;
-		}
-
-		GModule *handle;
-		void (*plugin_init) (const gchar *);
-		GdaServerProvider *(*plugin_create_provider) (void);
-		handle = g_module_open (prov_info->location, G_MODULE_BIND_LAZY);
-		if (!handle) {
-			g_print (_("Could not load provider at '%s'.\n"), prov_info->location);
-			return 1;
-		}
-		/* initialize plugin if supported */
-		if (g_module_symbol (handle, "plugin_init", (gpointer) &plugin_init)) {
-			gchar *dirname;
-			
-			dirname = g_path_get_dirname (prov_info->location);
-			plugin_init (dirname);
-			g_free (dirname);
-		}
-		
-		/* create provider object */
-		if (g_module_symbol (handle, "plugin_create_provider", (gpointer) &plugin_create_provider)) {
-			prov_obj = plugin_create_provider ();
-			if (!prov_obj) {
-				g_print (_("Could not create provider object from '%s'\n"), 
-					 prov_info->location);
-				return 1;
-			}
-		}
-		else {
-			g_print (_("Could not create provider object from '%s' (missing plugin_create_provider symbol)\n"), 
-				 prov_info->location);
+		prov_obj = gda_config_get_provider_object (prov, &error);
+		if (!prov_obj) {
+			g_print (_("Could not create provider object: %s\n"), 
+				 error && error->message ? error->message : _("No detail"));
 			return 1;
 		}
 	}

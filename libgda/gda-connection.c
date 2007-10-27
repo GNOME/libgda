@@ -454,7 +454,7 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 	/* connection string */
 	if (cnc->priv->dsn) {
 		/* get the data source info */
-		dsn_info = gda_config_find_data_source (cnc->priv->dsn);
+		dsn_info = gda_config_get_dsn (cnc->priv->dsn);
 		if (!dsn_info) {
 			gda_log_error (_("Data source %s not found in configuration"), cnc->priv->dsn);
 			g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_NONEXIST_DSN_ERROR,
@@ -547,8 +547,6 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 	}
 
 	/* free memory */
-	if (dsn_info)
-		gda_data_source_info_free (dsn_info);
 	gda_quark_list_free (params);
 	g_free (real_username);
 	g_free (real_password);
@@ -774,7 +772,7 @@ gda_connection_set_dsn (GdaConnection *cnc, const gchar *datasource)
         if (cnc->priv->is_open)
                 return FALSE;
 
-        dsn = gda_config_find_data_source (datasource);
+        dsn = gda_config_get_dsn (datasource);
         if (!dsn)
                 return FALSE;
 
