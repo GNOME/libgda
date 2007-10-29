@@ -1,4 +1,4 @@
-2007-10-29  Murray Cumming,,,  <murrayc@murrayc.com>
+2007-10-29  Murray Cumming  <murrayc@murrayc.com>
 
 	* providers/postgres/gda-postgres-provider.c:
 	(gda_postgres_provider_open_connection),
