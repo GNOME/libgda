@@ -551,24 +551,37 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 
 	pq_requiressl = gda_quark_list_find (params, "USE_SSL");
 
+	/* TODO: Escape single quotes and backslashes in the user name and password: */
 	conn_string = g_strconcat ("",
-				   pq_host ? "host=" : "",
+				   /* host: */
+				   pq_host ? "host='" : "",
 				   pq_host ? pq_host : "",
+				   pq_host ? "'" : "",
+				   /* hostaddr: */
 				   pq_hostaddr ? " hostaddr=" : "",
 				   pq_hostaddr ? pq_hostaddr : "",
-				   pq_db ? " dbname=" : "",
+				   /* db: */
+				   pq_db ? " dbname='" : "",
 				   pq_db ? pq_db : "",
+				   pq_db ? "'" : "",
+				   /* port: */
 				   pq_port ? " port=" : "",
 				   pq_port ? pq_port : "",
+				   /* options: */
 				   pq_options ? " options='" : "",
 				   pq_options ? pq_options : "",
 				   pq_options ? "'" : "",
+				   /* tty: */
 				   pq_tty ? " tty=" : "",
 				   pq_tty ? pq_tty : "",
-				   (pq_user && *pq_user) ? " user=" : "",
+				   /* user: */
+				   (pq_user && *pq_user) ? " user='" : "",
 				   (pq_user && *pq_user)? pq_user : "",
-				   (pq_pwd && *pq_pwd) ? " password=" : "",
+				   (pq_user && *pq_user)? "'" : "",
+				   /* password: */
+				   (pq_pwd && *pq_pwd) ? " password='" : "",
 				   (pq_pwd && *pq_pwd) ? pq_pwd : "",
+				   (pq_pwd && *pq_pwd) ? "'" : "",
 				   pq_requiressl ? " requiressl=" : "",
 				   pq_requiressl ? pq_requiressl : "",
 				   NULL);
@@ -994,16 +1007,16 @@ gda_postgres_provider_perform_operation (GdaServerProvider *provider, GdaConnect
 
 		string = g_string_new ("");
                 if (pq_host && *pq_host)
-                        g_string_append_printf (string, "host=%s", pq_host);
+                        g_string_append_printf (string, "host='%s'", pq_host);
                 if (pq_port > 0)
                         g_string_append_printf (string, " port=%d", pq_port);
-                g_string_append_printf (string, " dbname=%s", pq_db ? pq_db : "template1");
+                g_string_append_printf (string, " dbname='%s'", pq_db ? pq_db : "template1");
                 if (pq_options && *pq_options)
-                        g_string_append_printf (string, " options=%s", pq_options);
+                        g_string_append_printf (string, " options='%s'", pq_options);
                 if (pq_user && *pq_user)
-                        g_string_append_printf (string, " user=%s", pq_user);
+                        g_string_append_printf (string, " user='%s'", pq_user);
                 if (pq_pwd && *pq_pwd)
-                        g_string_append_printf (string, " password=%s", pq_pwd);
+                        g_string_append_printf (string, " password='%s'", pq_pwd);
                 if (pq_ssl)
                         g_string_append (string, " requiressl=1");
 
