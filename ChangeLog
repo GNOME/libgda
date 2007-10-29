@@ -1,3 +1,7 @@
+2007-10-29  Kjartan Maraas  <kmaraas@gnome.org>
+
+	* configure.in: Remove no from ALL_LINGUAS.
+
 2007-10-29  Murray Cumming  <murrayc@murrayc.com>
 
 	* providers/postgres/gda-postgres-provider.c:
