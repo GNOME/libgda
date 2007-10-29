@@ -1746,8 +1746,8 @@ gda_value_stringify (const GValue *value)
 					return g_strdup ("0000-00-00");
 			}
 			else if (type == GDA_TYPE_LIST) {
-				GdaValueList *list;
-				GList *ptr;
+				const GdaValueList *list;
+				const GList *ptr;
 				GString *string;
 				gchar *tmp;
 
