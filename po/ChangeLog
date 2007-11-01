@@ -1,3 +1,8 @@
+2007-11-01  Kjartan Maraas  <kmaraas@gnome.org>
+
+	* POTFILES.in: Adjust this.
+	* nb.po: Update Norwegian bokmål translation.
+
 2007-10-29  Kjartan Maraas  <kmaraas@gnome.org>
 
 	* no.po: Remove obsolete translation.
