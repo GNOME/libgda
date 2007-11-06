@@ -3,7 +3,7 @@
 AUTOMAKE_OPTIONS = 1.6
 
 # The name of the module.
-DOC_MODULE=libgda-3.0
+DOC_MODULE=libgda-4.0
 
 # The top-level SGML file.
 DOC_MAIN_SGML_FILE=$(DOC_MODULE)-docs.sgml
@@ -33,8 +33,8 @@ GTKDOC_CFLAGS = -I$(top_srcdir) \
 	-I$(top_srcdir)/libgda-report \
         $(LIBGDA_CFLAGS) \
 	-DGETTEXT_PACKAGE=\""$(GETTEXT_PACKAGE)"\"
-GTKDOC_LIBS =  $(top_builddir)/libgda/libgda-3.0.la \
-	$(top_builddir)/libgda-report/libgda-report-3.0.la \
+GTKDOC_LIBS =  $(top_builddir)/libgda/libgda-4.0.la \
+	$(top_builddir)/libgda-report/libgda-report-4.0.la \
 	$(LIBGDA_LIBS)
 
 # Extra options to supply to gtkdoc-mkdb

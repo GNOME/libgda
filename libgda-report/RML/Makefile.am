@@ -1,4 +1,4 @@
-noinst_LTLIBRARIES = libgda-report-rml-3.0.la
+noinst_LTLIBRARIES = libgda-report-rml-4.0.la
 
 SUBDIRS = trml2html trml2pdf
 
@@ -12,12 +12,12 @@ AM_CPPFLAGS = \
 gda_report_headers = \
 	gda-report-rml-document.h
 
-libgda_report_rml_3_0_la_SOURCES =	\
+libgda_report_rml_4_0_la_SOURCES =	\
 	$(gda_report_headers)	\
 	gda-report-rml-document.c	
 
-libgda_report_rml_3_0_la_LIBADD = $(LIBGDA_LIBS) \
-	$(top_builddir)/libgda/libgda-3.0.la
+libgda_report_rml_4_0_la_LIBADD = $(LIBGDA_LIBS) \
+	$(top_builddir)/libgda/libgda-4.0.la
 
 gdareportincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda-report
 gdareportinclude_HEADERS=$(gda_report_headers)

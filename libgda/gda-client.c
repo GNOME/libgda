@@ -280,7 +280,6 @@ gda_client_open_connection (GdaClient *client,
 			     _("Datasource configuration error: no provider specified"));
 	}
 
-	/* free memory */
 	if (cnc) 
 		gda_client_declare_connection (client, cnc);
 
@@ -712,7 +711,7 @@ gda_client_get_dsn_specs (GdaClient *client, const gchar *provider)
 
 	pinfo = gda_config_get_provider_info (provider);
 	if (pinfo) 
-		return pinfo->dsn_spec;
+		return g_strdup (pinfo->dsn_spec);
 	else
 		return NULL;
 }

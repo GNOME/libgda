@@ -3,7 +3,7 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: libgda-ibmdb2-3.0
+Name: libgda-ibmdb2-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@
 Description: GDA (GNOME Data Access) IBMDB2 provider
-Requires: libgda-3.0
+Requires: libgda-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@
 Version: @VERSION@

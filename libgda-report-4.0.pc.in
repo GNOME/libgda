@@ -3,9 +3,9 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: libgda-report-3.0
+Name: libgda-report-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@
 Description: GDA (GNOME Data Access) Reports
-Requires: libgda-3.0
+Requires: libgda-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@
 Version: @VERSION@
-Libs: -L${libdir} -lgda-report-3.0
+Libs: -L${libdir} -lgda-report-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@
 Cflags: -I${includedir}/libgda-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@/libgda-report @GDA_DEBUG_FLAGS@

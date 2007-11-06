@@ -3,9 +3,9 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: libgda-xslt-3.0
+Name: libgda-xslt-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@
 Description: GDA (GNOME Data Access) XSLT extension
-Requires: libgda-3.0 libxslt
+Requires: libgda-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@ libxslt
 Version: @VERSION@
-Libs: -L${libdir} -lgda-xslt-3.0
+Libs: -L${libdir} -lgda-xslt-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@
 Cflags: -I${includedir}/libgda-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@/libgda-xslt @GDA_DEBUG_FLAGS@

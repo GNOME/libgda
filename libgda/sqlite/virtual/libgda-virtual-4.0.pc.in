@@ -3,9 +3,9 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: libgda-virtual-3.0
+Name: libgda-virtual-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@
 Description: GDA (GNOME Data Access) Virtual providers
-Requires: libgda-3.0
+Requires: libgda-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@
 Version: @VERSION@
-Libs: -lgda-virtual-3.0
+Libs: -lgda-virtual-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@
 Cflags: -I${includedir}/libgda-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@/virtual

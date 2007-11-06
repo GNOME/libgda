@@ -1,4 +1,4 @@
-lib_LTLIBRARIES = libgda-3.0.la
+lib_LTLIBRARIES = libgda-4.0.la
 
 SUBDIRS = sqlite sql-delimiter sql-transaction graph handlers binreloc
 
@@ -219,20 +219,20 @@ libgda_built_headers = gda-marshal.h gda-enum-types.h
 libgda_built_cfiles = gda-enum-types.c
 
 # Don't build the library until we have built the headers that it needs:
-$(OBJECTS) $(libgda_3_0_la_OBJECTS): gda-marshal.c $(libgda_built_headers) $(libgda_built_cfiles)
+$(OBJECTS) $(libgda_4_0_la_OBJECTS): gda-marshal.c $(libgda_built_headers) $(libgda_built_cfiles)
 
-libgda_3_0_la_SOURCES = \
+libgda_4_0_la_SOURCES = \
 	$(libgda_built_cfiles) \
 	$(libgda_sources)
 
-libgda_3_0_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) $(NO_UNDEFINED)
-libgda_3_0_la_LIBADD = sql-transaction/libgda_sql_transaction-3.0.la \
-	sql-delimiter/libgda_sql_delimiter-3.0.la \
-	graph/libgda_graph-3.0.la \
-	handlers/libgda_handlers-3.0.la \
-	binreloc/libgda_binreloc-3.0.la \
+libgda_4_0_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) $(NO_UNDEFINED)
+libgda_4_0_la_LIBADD = sql-transaction/libgda_sql_transaction-4.0.la \
+	sql-delimiter/libgda_sql_delimiter-4.0.la \
+	graph/libgda_graph-4.0.la \
+	handlers/libgda_handlers-4.0.la \
+	binreloc/libgda_binreloc-4.0.la \
 	sqlite/libgda-sqlite.la \
-	$(top_builddir)/libsql/libgdasql-3.0.la \
+	$(top_builddir)/libsql/libgdasql-4.0.la \
 	$(LIBGDA_LIBS) $(FAM_LIBS) \
 	$(BDB_LIBS) $(GNOMEVFS_LIBS) $(LIBGCRYPT_LIBS)
 

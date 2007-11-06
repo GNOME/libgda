@@ -134,12 +134,13 @@ GdaProviderInfo
 GdaDataSourceInfo
 gda_config_get
 gda_config_get_dsn
-gda_config_add_dsn
+gda_config_define_dsn
 gda_config_remove_dsn
 gda_config_list_dsn
 gda_config_get_nb_dsn
 gda_config_get_dsn_index
 gda_config_get_dsn_at_index
+gda_config_can_modify_system_config
 gda_config_get_provider_info
 gda_config_get_provider_object
 gda_config_list_providers

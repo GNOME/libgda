@@ -56,7 +56,7 @@ struct _GdaDataSourceInfo {
         gchar    *description;
         gchar    *username;
         gchar    *password;
-        gboolean  is_global;
+        gboolean  is_system;
 };
 
 struct _GdaProviderInfo {
@@ -86,9 +86,10 @@ GType              gda_config_get_type            (void) G_GNUC_CONST;
 GdaConfig*         gda_config_get                 (void);
 
 GdaDataSourceInfo *gda_config_get_dsn             (const gchar *dsn_name);
-gboolean           gda_config_add_dsn             (const GdaDataSourceInfo *info, GError **error);
+gboolean           gda_config_define_dsn          (const GdaDataSourceInfo *info, GError **error);
 gboolean           gda_config_remove_dsn          (const gchar *dsn_name, GError **error);
 GdaDataModel      *gda_config_list_dsn            (void);
+gboolean           gda_config_can_modify_system_config (void);
 
 gint               gda_config_get_nb_dsn          (void);
 gint               gda_config_get_dsn_index       (const gchar *dsn_name);

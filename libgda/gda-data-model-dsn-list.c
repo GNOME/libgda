@@ -1,9 +1,7 @@
 /* GDA SQLite provider
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+ * Copyright (C) 2007 The GNOME Foundation.
  *
  * AUTHORS:
- *	   Rodrigo Moya <rodrigo@gnome-db.org>
- *         Carlos Perelló Marín <carlos@gnome-db.org>
  *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
@@ -101,34 +99,41 @@ gda_data_model_dsn_list_init (GdaDataModelDsnList *model,
 	model->priv->row_to_remove = -1;
 	
 	col = gda_column_new ();
-	gda_column_set_name (col, "DSN");
-	gda_column_set_title (col, "DSN");
+	gda_column_set_name (col, _("DSN"));
+	gda_column_set_title (col, _("DSN"));
 	gda_column_set_g_type (col, G_TYPE_STRING);
 	model->priv->columns = g_slist_append (NULL, col);
 
 	col = gda_column_new ();
-	gda_column_set_name (col, "Provider");
-	gda_column_set_title (col, "Provider");
+	gda_column_set_name (col, _("Provider"));
+	gda_column_set_title (col, _("Provider"));
 	gda_column_set_g_type (col, G_TYPE_STRING);
 	model->priv->columns = g_slist_append (model->priv->columns, col);
 
 	col = gda_column_new ();
-	gda_column_set_name (col, "Description");
-	gda_column_set_title (col, "Description");
+	gda_column_set_name (col, _("Description"));
+	gda_column_set_title (col, _("Description"));
 	gda_column_set_g_type (col, G_TYPE_STRING);
 	model->priv->columns = g_slist_append (model->priv->columns, col);
 
 	col = gda_column_new ();
-	gda_column_set_name (col, "Connection string");
-	gda_column_set_title (col, "Connection string");
+	gda_column_set_name (col, _("Connection string"));
+	gda_column_set_title (col, _("Connection string"));
 	gda_column_set_g_type (col, G_TYPE_STRING);
 	model->priv->columns = g_slist_append (model->priv->columns, col);
 
 	col = gda_column_new ();
-	gda_column_set_name (col, "Username");
-	gda_column_set_title (col, "Username");
+	gda_column_set_name (col, _("Username"));
+	gda_column_set_title (col, _("Username"));
 	gda_column_set_g_type (col, G_TYPE_STRING);
 	model->priv->columns = g_slist_append (model->priv->columns, col);
+
+	col = gda_column_new ();
+	gda_column_set_name (col, _("Global"));
+	gda_column_set_title (col, _("Global"));
+	gda_column_set_g_type (col, G_TYPE_BOOLEAN);
+	model->priv->columns = g_slist_append (model->priv->columns, col);
+
 	gda_object_set_name (GDA_OBJECT (model), _("List of defined data sources"));
 
 	config = gda_config_get ();
@@ -286,7 +291,10 @@ gda_data_model_dsn_list_get_value_at (GdaDataModel *model, gint col, gint row)
 	    (col >= 0) && (row >=0) && (row < gda_data_model_dsn_list_get_n_rows (model))) {
 		GdaDataSourceInfo *info = gda_config_get_dsn_at_index (row);
 		g_assert (info);
-		val = gda_value_new (G_TYPE_STRING);
+		if (col != 5)
+			val = gda_value_new (G_TYPE_STRING);
+		else
+			val = gda_value_new (G_TYPE_BOOLEAN);
 		switch (col) {
 		case 0:
 			g_value_set_string (val, info->name);
@@ -302,6 +310,9 @@ gda_data_model_dsn_list_get_value_at (GdaDataModel *model, gint col, gint row)
 			break;
 		case 4:
 			g_value_set_string (val, info->username);
+			break;
+		case 5:
+			g_value_set_boolean (val, info->is_system);
 			break;
 		default:
 			g_assert_not_reached ();

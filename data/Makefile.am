@@ -1,5 +1,5 @@
 # Default global configuration file
-configdir   = $(sysconfdir)/libgda-3.0
+configdir   = $(sysconfdir)/libgda-4.0
 config_DATA = config sales_test.db
 
 EXTRA_DIST = \

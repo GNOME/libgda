@@ -72,6 +72,7 @@ static void gda_config_get_property (GObject *object,
 				     GParamSpec *pspec);
 static GdaConfig *unique_instance = NULL;
 
+static gint data_source_info_compare (GdaDataSourceInfo *infoa, GdaDataSourceInfo *infob);
 static void data_source_info_free (GdaDataSourceInfo *info);
 static void internal_provider_free (InternalProvider *ip);
 static void load_config_file (const gchar *file, gboolean is_system);
@@ -136,7 +137,7 @@ gda_config_class_init (GdaConfigClass *klass)
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaConfigClass, dsn_added),
                               NULL, NULL,
-                              gda_marshal_VOID__VOID,
+                              gda_marshal_VOID__POINTER,
                               G_TYPE_NONE, 1, G_TYPE_POINTER);
 	gda_config_signals[DSN_TO_BE_REMOVED] =
                 g_signal_new ("dsn_to_be_removed",
@@ -144,15 +145,15 @@ gda_config_class_init (GdaConfigClass *klass)
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaConfigClass, dsn_to_be_removed),
                               NULL, NULL,
-                              gda_marshal_VOID__VOID,
+                              gda_marshal_VOID__POINTER,
                               G_TYPE_NONE, 1, G_TYPE_POINTER);
-	gda_config_signals[DSN_TO_BE_REMOVED] =
+	gda_config_signals[DSN_REMOVED] =
                 g_signal_new ("dsn_removed",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaConfigClass, dsn_removed),
                               NULL, NULL,
-                              gda_marshal_VOID__VOID,
+                              gda_marshal_VOID__POINTER,
                               G_TYPE_NONE, 1, G_TYPE_POINTER);
 	gda_config_signals[DSN_CHANGED] =
                 g_signal_new ("dsn_changed",
@@ -160,7 +161,7 @@ gda_config_class_init (GdaConfigClass *klass)
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaConfigClass, dsn_changed),
                               NULL, NULL,
-                              gda_marshal_VOID__VOID,
+                              gda_marshal_VOID__POINTER,
                               G_TYPE_NONE, 1, G_TYPE_POINTER);
 
 	/* Properties */
@@ -239,7 +240,7 @@ load_config_file (const gchar *file, gboolean is_system)
 				g_free (info->username); info->username = NULL;
 				g_free (info->password); info->password = NULL;
 			}
-			info->is_global = is_system;
+			info->is_system = is_system;
 			xmlFree (prop);
 			
 			for (entry = node->children; entry; entry = entry->next) { /* iter over the <entry> tags */
@@ -269,7 +270,8 @@ load_config_file (const gchar *file, gboolean is_system)
 			}
 			/* signals */
 			if (is_new) {
-				unique_instance->priv->dsn_list = g_slist_append (unique_instance->priv->dsn_list, info);
+				unique_instance->priv->dsn_list = g_slist_insert_sorted (unique_instance->priv->dsn_list, info,
+											 (GCompareFunc) data_source_info_compare);
 				g_signal_emit (unique_instance, gda_config_signals[DSN_ADDED], 0, info);
 			}
 			else
@@ -299,7 +301,7 @@ save_config_file (const gchar *file, gboolean is_system)
         xmlDocSetRootElement (doc, root);
 	for (list = unique_instance->priv->dsn_list; list; list = list->next) {
 		GdaDataSourceInfo *info = (GdaDataSourceInfo*) list->data;
-		if (info->is_global != is_system)
+		if (info->is_system != is_system)
 			continue;
 
 		xmlNodePtr section, entry;
@@ -309,35 +311,35 @@ save_config_file (const gchar *file, gboolean is_system)
 		xmlSetProp (section, "path", BAD_CAST prop);
 		g_free (prop);
 
+		/* provider */
+		entry = xmlNewChild (section, NULL, "entry", NULL);
+		xmlSetProp (entry, "name", BAD_CAST "Provider");
+		xmlSetProp (entry, "type", BAD_CAST "string");
+		xmlSetProp (entry, "value", BAD_CAST (info->provider));
+
 		/* DSN */
 		entry = xmlNewChild (section, NULL, "entry", NULL);
-		xmlSetProp (section, "name", BAD_CAST "DSN");
-		xmlSetProp (section, "type", BAD_CAST "string");
-		xmlSetProp (section, "value", BAD_CAST info->cnc_string);
+		xmlSetProp (entry, "name", BAD_CAST "DSN");
+		xmlSetProp (entry, "type", BAD_CAST "string");
+		xmlSetProp (entry, "value", BAD_CAST (info->cnc_string));
 
 		/* description */
 		entry = xmlNewChild (section, NULL, "entry", NULL);
-		xmlSetProp (section, "name", BAD_CAST "Description");
-		xmlSetProp (section, "type", BAD_CAST "string");
-		xmlSetProp (section, "value", BAD_CAST info->description);
-
-		/* provider */
-		entry = xmlNewChild (section, NULL, "entry", NULL);
-		xmlSetProp (section, "name", BAD_CAST "Provider");
-		xmlSetProp (section, "type", BAD_CAST "string");
-		xmlSetProp (section, "value", BAD_CAST info->provider);
+		xmlSetProp (entry, "name", BAD_CAST "Description");
+		xmlSetProp (entry, "type", BAD_CAST "string");
+		xmlSetProp (entry, "value", BAD_CAST (info->description));
 
 		/* username */
 		entry = xmlNewChild (section, NULL, "entry", NULL);
-		xmlSetProp (section, "name", BAD_CAST "Username");
-		xmlSetProp (section, "type", BAD_CAST "string");
-		xmlSetProp (section, "value", BAD_CAST info->username);
+		xmlSetProp (entry, "name", BAD_CAST "Username");
+		xmlSetProp (entry, "type", BAD_CAST "string");
+		xmlSetProp (entry, "value", BAD_CAST (info->username));
 
 		/* password */
 		entry = xmlNewChild (section, NULL, "entry", NULL);
-		xmlSetProp (section, "name", BAD_CAST "Password");
-		xmlSetProp (section, "type", BAD_CAST "string");
-		xmlSetProp (section, "value", BAD_CAST info->password);
+		xmlSetProp (entry, "name", BAD_CAST "Password");
+		xmlSetProp (entry, "type", BAD_CAST "string");
+		xmlSetProp (entry, "value", BAD_CAST (info->password));
 	}
 
 #ifdef HAVE_FAM
@@ -351,6 +353,7 @@ save_config_file (const gchar *file, gboolean is_system)
 		if (xmlSaveFormatFile (unique_instance->priv->system_file, doc, TRUE) == -1)
                         g_warning ("Error saving config data to '%s'", unique_instance->priv->system_file);
 	}
+	fflush (NULL);
 #ifdef HAVE_FAM
         fam_unlock_notify ();
 #endif
@@ -626,7 +629,7 @@ gda_config_get_dsn (const gchar *dsn_name)
 }
 
 /**
- * gda_config_add_dsn
+ * gda_config_define_dsn
  * @info: a pointer to a filled GdaDataSourceInfo structure
  * @error: a place to store errors, or %NULL
  *
@@ -635,7 +638,7 @@ gda_config_get_dsn (const gchar *dsn_name)
  * Returns: TRUE if no error occurred
  */
 gboolean
-gda_config_add_dsn (const GdaDataSourceInfo *info, GError **error)
+gda_config_define_dsn (const GdaDataSourceInfo *info, GError **error)
 {
 	GdaDataSourceInfo *einfo;
 	gboolean save_user = FALSE;
@@ -648,14 +651,14 @@ gda_config_add_dsn (const GdaDataSourceInfo *info, GError **error)
 	if (!unique_instance)
 		gda_config_get ();
 
-	if (info->is_global && !unique_instance->priv->system_config_allowed) {
+	if (info->is_system && !unique_instance->priv->system_config_allowed) {
 		g_set_error (error, GDA_CONFIG_ERROR, GDA_CONFIG_PERMISSION_ERROR,
 			     _("Can't manage system-wide configuration"));
 		GDA_CONFIG_UNLOCK ();
 		return FALSE;
 	}
 
-	if (info->is_global)
+	if (info->is_system)
 		save_system = TRUE;
 	else
 		save_user = TRUE;
@@ -677,9 +680,10 @@ gda_config_add_dsn (const GdaDataSourceInfo *info, GError **error)
 		if (info->password)
 			einfo->password = g_strdup (info->password);
 		
-		if (info->is_global != einfo->is_global) {
+		if (info->is_system != einfo->is_system) {
 			save_system = TRUE;
 			save_user = TRUE;
+			einfo->is_system = info->is_system;
 		}
 		g_signal_emit (unique_instance, gda_config_signals[DSN_CHANGED], 0, einfo);
 	}
@@ -696,8 +700,10 @@ gda_config_add_dsn (const GdaDataSourceInfo *info, GError **error)
 			einfo->username = g_strdup (info->username);
 		if (info->password)
 			einfo->password = g_strdup (info->password);
+		einfo->is_system = info->is_system;
 
-		unique_instance->priv->dsn_list = g_slist_append (unique_instance->priv->dsn_list, einfo);
+		unique_instance->priv->dsn_list = g_slist_insert_sorted (unique_instance->priv->dsn_list, einfo,
+									 (GCompareFunc) data_source_info_compare);
 		g_signal_emit (unique_instance, gda_config_signals[DSN_ADDED], 0, einfo);
 	}
 	
@@ -723,6 +729,9 @@ gboolean
 gda_config_remove_dsn (const gchar *dsn_name, GError **error)
 {
 	GdaDataSourceInfo *info;
+	gboolean save_user = FALSE;
+	gboolean save_system = FALSE;
+
 	g_return_val_if_fail (dsn_name, FALSE);
 
 	GDA_CONFIG_LOCK ();
@@ -736,17 +745,28 @@ gda_config_remove_dsn (const gchar *dsn_name, GError **error)
 		GDA_CONFIG_UNLOCK ();
 		return FALSE;
 	}
-	if (info->is_global && !unique_instance->priv->system_config_allowed) {
+	if (info->is_system && !unique_instance->priv->system_config_allowed) {
 		g_set_error (error, GDA_CONFIG_ERROR, GDA_CONFIG_PERMISSION_ERROR,
 			     _("Can't manage system-wide configuration"));
 		GDA_CONFIG_UNLOCK ();
 		return FALSE;
 	}
+
+	if (info->is_system)
+		save_system = TRUE;
+	else
+		save_user = TRUE;
+
 	g_signal_emit (unique_instance, gda_config_signals[DSN_TO_BE_REMOVED], 0, info);
 	unique_instance->priv->dsn_list = g_slist_remove (unique_instance->priv->dsn_list, info);
 	g_signal_emit (unique_instance, gda_config_signals[DSN_REMOVED], 0, info);
 	data_source_info_free (info);
 	
+	if (save_system)
+		save_config_file (unique_instance->priv->system_file, TRUE);
+	if (save_user)
+		save_config_file (unique_instance->priv->user_file, FALSE);
+
 	GDA_CONFIG_UNLOCK ();
 	return TRUE;
 }
@@ -846,6 +866,26 @@ gda_config_get_dsn_at_index (gint index)
 	ret = g_slist_nth_data (unique_instance->priv->dsn_list, index);
 	GDA_CONFIG_UNLOCK ();
 	return ret;
+}
+
+/**
+ * gda_config_can_modify_system_config
+ *
+ * Tells if the global (system) configuration can be modified (considering
+ * system permissions and settings)
+ *
+ * Returns: TRUE if system-wide configuration can be modified
+ */
+gboolean
+gda_config_can_modify_system_config (void)
+{
+	gboolean retval;
+	GDA_CONFIG_LOCK ();
+	if (!unique_instance)
+		gda_config_get ();
+	retval = unique_instance->priv->system_config_allowed;
+	GDA_CONFIG_UNLOCK ();
+	return retval;
 }
 
 /**
@@ -1147,6 +1187,22 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 	g_dir_close (dir);
 }
 
+/* sorting function */
+static gint
+data_source_info_compare (GdaDataSourceInfo *infoa, GdaDataSourceInfo *infob)
+{
+	if (!infoa && !infob)
+		return 0;
+	if (infoa) {
+		if (!infob)
+			return 1;
+		else
+			return strcmp (infoa->name, infob->name);
+	}
+	else
+		return -1;
+}
+
 static void 
 data_source_info_free (GdaDataSourceInfo *info)
 {
@@ -1184,10 +1240,13 @@ fam_callback (GIOChannel *source, GIOCondition condition, gpointer data)
 {
         gboolean res = TRUE;
 
+	if (!unique_instance)
+		return TRUE;
+
         GDA_CONFIG_LOCK ();
         while (fam_connection && FAMPending (fam_connection)) {
                 FAMEvent ev;
-                gboolean is_global;
+                gboolean is_system;
 
                 if (FAMNextEvent (fam_connection, &ev) != 1) {
                         FAMClose (fam_connection);
@@ -1202,7 +1261,7 @@ fam_callback (GIOChannel *source, GIOCondition condition, gpointer data)
                 if (lock_fam)
                         continue;
 
-                is_global = GPOINTER_TO_INT (ev.userdata);
+                is_system = GPOINTER_TO_INT (ev.userdata);
                 switch (ev.code) {
                 case FAMChanged: {
                         struct stat stat;
@@ -1221,10 +1280,15 @@ fam_callback (GIOChannel *source, GIOCondition condition, gpointer data)
                 case FAMDeleted:
                 case FAMCreated:
 #ifdef GDA_DEBUG_NO
-                        g_print ("Reloading config files (%s config has changed)\n", is_global ? "global" : "user");
+                        g_print ("Reloading config files (%s config has changed)\n", is_system ? "global" : "user");
+			GSList *list;
+			for (list = unique_instance->priv->dsn_list; list; list = list->next) {
+				GdaDataSourceInfo *info = (GdaDataSourceInfo *) list->data;
+				g_print ("[info %p]: %s/%s\n", info, info->provider, info->name);
+			}
 #endif
 			while (unique_instance->priv->dsn_list) {
-				GdaDataSourceInfo *info = (GdaDataSourceInfo *) unique_instance->priv->dsn_list;
+				GdaDataSourceInfo *info = (GdaDataSourceInfo *) unique_instance->priv->dsn_list->data;
 				g_signal_emit (unique_instance, gda_config_signals[DSN_TO_BE_REMOVED], 0, info);
 				unique_instance->priv->dsn_list = g_slist_remove (unique_instance->priv->dsn_list, info);
 				g_signal_emit (unique_instance, gda_config_signals[DSN_REMOVED], 0, info);

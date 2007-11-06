@@ -1,6 +1,6 @@
 m4_define(major, 3)
-m4_define(minor, 1)
-m4_define(micro, 3)
+m4_define(minor, 99)
+m4_define(micro, 1)
 
 AC_INIT(GNU Data Access, major.minor.micro, gnome-db-list@gnome.org, libgda)
 AC_PREREQ(2.59)
@@ -12,10 +12,11 @@ AC_SUBST(GDA_VERSION, major.minor.micro)
 # ABI version:
 # Careful. Changing these will break ABI, because it is used for the library name and header install path:
 # This allows us to do a 3.2 version that is ABI-compatible with 3.0, but with API additions.
-AC_SUBST(GDA_ABI_MAJOR_VERSION, 3)
+AC_SUBST(GDA_ABI_MAJOR_VERSION, 4)
 AC_SUBST(GDA_ABI_MINOR_VERSION, 0)
 #AC_SUBST(GDA_MICRO_VERSION, micro)
 LIBGDA_ABI_VERSION=$GDA_ABI_MAJOR_VERSION.$GDA_ABI_MINOR_VERSION
+AC_SUBST(GDA_ABI_VERSION, $LIBGDA_ABI_VERSION)
 LIBGDA_ABI_NAME="\\\"libgda-$LIBGDA_ABI_VERSION\\\""
 
 m4_undefine([major])
@@ -31,7 +32,7 @@ m4_define([req_ver_glib],	[2.8.0])
 # - If binary compatibility has been broken (e.g. removed or changed interfaces), set GDA_CURRENT += 1, GDA_REVISION and GDA_AGE to 0
 # - If interfaces is the same as the previous version, set GDA_REVISION += 1
 #
-GDA_CURRENT=3
+GDA_CURRENT=4
 GDA_REVISION=0
 GDA_AGE=0
 
@@ -42,7 +43,7 @@ AC_SUBST(GDA_AGE)
 AC_PROG_INTLTOOL([0.35.5])
 AC_SUBST(INTLTOOL_XML_RULE)
 
-AC_DEFINE_UNQUOTED(BONOBO_EXPLICIT_TRANSLATION_DOMAIN, "libgda-3.0")
+AC_DEFINE_UNQUOTED(BONOBO_EXPLICIT_TRANSLATION_DOMAIN, "libgda-$LIBGDA_ABI_VERSION")
 
 dnl ******************************
 dnl Checks for programs
@@ -66,7 +67,7 @@ AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 dnl ******************************
 dnl Translations
 dnl ******************************
-GETTEXT_PACKAGE=libgda-3.0
+GETTEXT_PACKAGE=libgda-$LIBGDA_ABI_VERSION
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE")
 ALL_LINGUAS="ar az ca cs da de dz el en_CA en_GB es eu fa fi fr ga gl hr hu it ja ko lt ml ms nb ne nl oc pl pt pt_BR ru rw sk sl sq sr sr@Latn sv tr uk vi zh_CN zh_HK zh_TW"
@@ -1064,7 +1065,7 @@ AC_SUBST(LIB_SUFFIX)
 dnl
 dnl where to install DTD files
 dnl
-LIBGDA_DTDDIR=${datadir}/libgda-3.0/dtd
+LIBGDA_DTDDIR=${datadir}/libgda-$LIBGDA_ABI_VERSION/dtd
 AC_SUBST(LIBGDA_DTDDIR)
 
 
@@ -1149,9 +1150,9 @@ AC_SUBST(REBUILD)
 AC_OUTPUT([
 Makefile
 libgda.spec
-libgda-3.0.pc
-libgda-report-3.0.pc
-libgda-xslt-3.0.pc
+libgda-4.0.pc
+libgda-report-4.0.pc
+libgda-xslt-4.0.pc
 po/Makefile.in
 libsql/Makefile
 libgda/Makefile
@@ -1166,33 +1167,33 @@ libgda/sqlite/virtual/Makefile
 libgda/graph/Makefile
 providers/Makefile
 providers/bdb/Makefile
-providers/bdb/libgda-bdb-3.0.pc
+providers/bdb/libgda-bdb-4.0.pc
 providers/freetds/Makefile
-providers/freetds/libgda-freetds-3.0.pc
+providers/freetds/libgda-freetds-4.0.pc
 providers/firebird/Makefile
-providers/firebird/libgda-firebird-3.0.pc
+providers/firebird/libgda-firebird-4.0.pc
 providers/ibmdb2/Makefile
-providers/ibmdb2/libgda-ibmdb2-3.0.pc
+providers/ibmdb2/libgda-ibmdb2-4.0.pc
 providers/ldap/Makefile
-providers/ldap/libgda-ldap-3.0.pc
+providers/ldap/libgda-ldap-4.0.pc
 providers/mdb/Makefile
-providers/mdb/libgda-mdb-3.0.pc
+providers/mdb/libgda-mdb-4.0.pc
 providers/mysql/Makefile
-providers/mysql/libgda-mysql-3.0.pc
+providers/mysql/libgda-mysql-4.0.pc
 providers/msql/Makefile
-providers/msql/libgda-msql-3.0.pc
+providers/msql/libgda-msql-4.0.pc
 providers/odbc/Makefile
-providers/odbc/libgda-odbc-3.0.pc
+providers/odbc/libgda-odbc-4.0.pc
 providers/oracle/Makefile
-providers/oracle/libgda-oracle-3.0.pc
+providers/oracle/libgda-oracle-4.0.pc
 providers/postgres/Makefile
-providers/postgres/libgda-postgres-3.0.pc
+providers/postgres/libgda-postgres-4.0.pc
 providers/sqlite/Makefile
-providers/sqlite/libgda-sqlite-3.0.pc
+providers/sqlite/libgda-sqlite-4.0.pc
 providers/sybase/Makefile
-providers/sybase/libgda-sybase-3.0.pc
+providers/sybase/libgda-sybase-4.0.pc
 providers/xbase/Makefile
-providers/xbase/libgda-xbase-3.0.pc
+providers/xbase/libgda-xbase-4.0.pc
 libgda-report/Makefile
 libgda-report/engine/Makefile
 libgda-report/DocBook/Makefile

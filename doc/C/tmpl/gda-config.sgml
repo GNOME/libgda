@@ -41,7 +41,7 @@ Access/Management of libgda configuration
 @description: 
 @username: 
 @password: 
-@is_global: 
+@is_system: 
 
 <!-- ##### FUNCTION gda_config_get ##### -->
 <para>
@@ -60,7 +60,7 @@ Access/Management of libgda configuration
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_config_add_dsn ##### -->
+<!-- ##### FUNCTION gda_config_define_dsn ##### -->
 <para>
 
 </para>
@@ -111,6 +111,14 @@ Access/Management of libgda configuration
 </para>
 
 @index: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_can_modify_system_config ##### -->
+<para>
+
+</para>
+
 @Returns: 
 
 

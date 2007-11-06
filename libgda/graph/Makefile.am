@@ -1,4 +1,4 @@
-noinst_LTLIBRARIES = libgda_graph-3.0.la
+noinst_LTLIBRARIES = libgda_graph-4.0.la
 
 AM_CPPFLAGS = \
         -I$(top_srcdir) -I$(srcdir)/.. \
@@ -14,7 +14,7 @@ libgda_graph_headers = \
 libgda_graphincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda/graph
 libgda_graphinclude_HEADERS=$(libgda_graph_headers)
 
-libgda_graph_3_0_la_SOURCES = \
+libgda_graph_4_0_la_SOURCES = \
 	$(libgda_graph_headers) \
 	gda-graph.c \
         gda-graph-item.c \
