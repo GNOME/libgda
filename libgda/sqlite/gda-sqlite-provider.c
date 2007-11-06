@@ -1461,7 +1461,8 @@ gda_sqlite_provider_single_command (const GdaSqliteProvider *provider,
 		gda_connection_add_event (cnc, error);
 		result = FALSE;
 	}
-	free (errmsg);
+	if (errmsg)
+		sqlite3_free (errmsg);
 	gda_connection_internal_treat_sql (cnc, command, error);
 
 	return result;

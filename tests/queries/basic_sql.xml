@@ -115,24 +115,6 @@
     </params>
   </test>
 
-  <test name="param2">
-    <sql expected="D">SELECT 1234 /*type:"int4"*/ i=10</sql>
-    <render_as when_gda="FALSE">SELECT 1234 /* type:"int4" */ i=10</render_as>
-    <render_as when_gda="TRUE">SELECT '1234' /* type:"int4" */ i=10</render_as>
-    <params>
-      <param type="int4" default="1234" default_type="gint"/>
-    </params>
-  </test>
-
-  <test name="param2_1">
-    <sql expected="D">SELECT 1234 /* type:"int4" */, i=10</sql>
-    <render_as when_dict="TRUE">SELECT 1234 /* type:"int4" */, i=10</render_as>
-    <render_as when_dict="FALSE">SELECT '1234' /* type:"int4" */, i=10</render_as>
-    <params>
-      <param type="int4" default="1234" default_type="gint"/>
-    </params>
-  </test>
-
   <test name="param2_2">
     <sql expected="D">SELECT 1234 /* type:"gint" */, i=10</sql>
     <params>

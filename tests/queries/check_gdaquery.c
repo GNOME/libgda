@@ -147,35 +147,33 @@ test_sql_statement (SqlTest *test, gint test_index)
 			str = g_strdup_printf ("Query should not be parsed %s", tname);
 			fail (str);
 		}
-		/* test rendering */
-		check_rendering (test, query, tname);
-		return;
-	}
-
-#ifdef CHECK_SHOW_ALL_ERRORS
-	if (is_non_parsed && error)
-		g_print ("PARSE ERROR %s=>%s\n", tname, error->message ? error->message: "No detail");
-#endif
-
-	if (is_non_parsed) {
-		if (test->sql_parsed) {
-			str = g_strdup_printf ("Cannot parse SQL %s", tname);
-#ifdef CHECK_EXTRA_INFO
-			g_print ("PARSE ERROR %s=>%s\n", tname, error->message ? error->message: "No detail");
-#endif
-			fail (str);
-		}
 	}
 	else {
-		if (current_ts->dict) {
-			gboolean active = gda_referer_is_active (GDA_REFERER (query));
-			if (!active && test->sql_active) {
-				str = g_strdup_printf ("Query should be active %s", tname);
+#ifdef CHECK_SHOW_ALL_ERRORS
+		if (is_non_parsed && error)
+			g_print ("PARSE ERROR %s=>%s\n", tname, error->message ? error->message: "No detail");
+#endif
+		
+		if (is_non_parsed) {
+			if (test->sql_parsed) {
+				str = g_strdup_printf ("Cannot parse SQL %s", tname);
+#ifdef CHECK_EXTRA_INFO
+				g_print ("PARSE ERROR %s=>%s\n", tname, error->message ? error->message: "No detail");
+#endif
 				fail (str);
 			}
-			else if (active && !test->sql_active) {
-				str = g_strdup_printf ("Query should not be active %s", tname);
-				fail (str);
+		}
+		else {
+			if (current_ts->dict) {
+				gboolean active = gda_referer_is_active (GDA_REFERER (query));
+				if (!active && test->sql_active) {
+					str = g_strdup_printf ("Query should be active %s", tname);
+					fail (str);
+				}
+				else if (active && !test->sql_active) {
+					str = g_strdup_printf ("Query should not be active %s", tname);
+					fail (str);
+				}
 			}
 		}
 	}
@@ -185,7 +183,7 @@ test_sql_statement (SqlTest *test, gint test_index)
 	plist = gda_query_get_parameter_list (query);
 
 	/* test parsed parameters */
-	for (params = plist ? plist->parameters : NULL; params; params = params->next) {
+	for (params = (plist ? plist->parameters : NULL); params; params = params->next) {
 		const gchar *attr, *pname;
 		SqlParam *param;
 		gboolean abool;
