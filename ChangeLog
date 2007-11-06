@@ -1,3 +1,4 @@
+<<<<<<< .courant
 2007-11-06 Vivien Malerba <malerba@gnome-db.org>
 
 	* changed any 3.0 reference to 4.0 to allow for parallel installation
@@ -5,6 +6,31 @@
 	* configure.in: set version at 3.99.1 and ABI version to 4.0.0
 	* lots of small corrections for the new GdaConfig API
 
+=======
+2007-11-06  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/sqlite/gda-sqlite-provider.c: correction for bug #493360
+	* libgda.spec.in: corrections from Petr "Qaxi" Klíma
+	* tests/queries/check_gdaquery.c: make sure the test is completely executed
+	* tests/queries/basic_sql.xml: new test
+	* tests/queries/bug_param_sql.xml: removed useless test
+	* configure.in: set GDA_AGE to 1
+
+2007-10-29  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-value.c: (gda_value_stringify):
+	Add const to avoid compiler warnings.
+
+2007-10-29  Murray Cumming  <murrayc@murrayc.com>
+
+	* providers/postgres/gda-postgres-provider.c:
+	(gda_postgres_provider_open_connection),
+	(gda_postgres_provider_perform_operation):
+	Put single quotes around the user and password, as 
+	mentioned in the PQconnectdb() documentation, so that 
+	passwords can contain spaces. Bug #491171.
+
+>>>>>>> .fusion-droit.r3016
 2007-10-27  Vivien Malerba <malerba@gnome-db.org>
 
 	* tools/html.c:

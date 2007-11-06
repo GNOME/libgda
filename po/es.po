@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda.HEAD.es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-25 19:03+0100\n"
-"PO-Revision-Date: 2007-10-25 20:16+0200\n"
+"POT-Creation-Date: 2007-10-25 19:17+0100\n"
+"PO-Revision-Date: 2007-11-03 14:19+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Spanish <traductores@es.gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -2223,6 +2223,8 @@ msgid ""
 "The dictionary use by this GdaQuery does not support graphs, this support is "
 "now added"
 msgstr ""
+"El diccionario que usa esta GdaQuery no soporta gráficos, este soporte ahora "
+"se ha añadido"
 
 #: ../libgda/graph/gda-graph.c:661
 msgid "XML Tag is not <gda_graph>"
@@ -2571,7 +2573,7 @@ msgstr "No se ha especificado una expresión"
 #: ../libgda-report/engine/gda-report-engine.c:889
 #, c-format
 msgid "Cannot cast value from type '%s' to type '%s'"
-msgstr ""
+msgstr "No se puede ejecutar un «cast» sobre el valor del tipo «%s» al tipo «%s»"
 
 #: ../libgda-report/engine/gda-report-engine.c:939
 #, c-format
@@ -2581,7 +2583,7 @@ msgstr "0 Parámetro desconocido «%s»"
 #: ../libgda-report/engine/gda-report-engine.c:963
 #, c-format
 msgid "Cannot cast parameter from type '%s' to type '%s'"
-msgstr ""
+msgstr "No se puede ejecutar un «cast» sobre el parámetro del tipo «%s» al tipo «%s»"
 
 #: ../libgda-report/engine/gda-report-engine.c:1027
 #, c-format
@@ -2714,7 +2716,7 @@ msgstr "Manejador FirebirdQL no válido"
 #: ../providers/firebird/gda-firebird-blob-op.c:170
 #: ../providers/firebird/gda-firebird-blob-op.c:368
 msgid "Transaction changed, BLOB can't be accessed"
-msgstr ""
+msgstr "Cambió la transacción, no se puede acceder a BLOB"
 
 #: ../providers/firebird/gda-firebird-provider.c:799
 #: ../providers/firebird/gda-firebird-provider.c:806
@@ -4864,7 +4866,7 @@ msgstr "Conflicto"
 #. list of fields
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:14
 msgid "Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE"
-msgstr ""
+msgstr "Método de resolución de conflictos (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)"
 
 #: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:1
 msgid "Drop index only if it exists"
@@ -5925,7 +5927,7 @@ msgstr "Se cerró la conexión"
 #: ../tools/gda-sql.c:607
 #, c-format
 msgid "No internal parameter named '%s' required by query"
-msgstr ""
+msgstr "No existe el parámetro interno llamado «%s» requerido por la consulta"
 
 #: ../tools/gda-sql.c:695
 #, c-format
@@ -6044,11 +6046,11 @@ msgstr "Cerrar una conexión"
 
 #: ../tools/gda-sql.c:1310
 msgid "bind CNC_NAME CNC_NAME1 CNC_NAME2 [CNC_NAME ...]"
-msgstr ""
+msgstr "vincular CNC_NOMBRE CNC_NOMBRE1 CNC_NOMBRE2 [CNC_NOMBRE ...]"
 
 #: ../tools/gda-sql.c:1311
 msgid "Bind several connections together into the CNC_NAME virtual connection"
-msgstr ""
+msgstr "Vincular varias conexiones juntas entro de la conexión virtual CNC_NOMBRE"
 
 #: ../tools/gda-sql.c:1321
 msgid "List configured data sources (DSN)"
@@ -6237,7 +6239,7 @@ msgstr "Faltan nombres de conexión requeridos"
 #. add existing connections to virtual connection
 #: ../tools/gda-sql.c:1893
 msgid "Bound connections are as:"
-msgstr ""
+msgstr "Los rangos de las conexiones son:"
 
 #: ../tools/gda-sql.c:1977
 #, c-format
