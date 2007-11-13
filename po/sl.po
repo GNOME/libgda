@@ -1,20 +1,28 @@
-# Slovenian translation file for libgda.
-# Copyright (C) 2000 Free Software Foundation, Inc.
-# Andraz Tori <andraz.tori1@guest.arnes.si> 2000
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
+# This file is distributed under the same license as the package.
+#
+# Andraz Tori <andraz.tori1@guest.arnes.si>, 2000.
+# Matej Urbančič <mateju@svn.gnome.org>, 2006 - 2007.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-02-07 12:45+0100\n"
-"PO-Revision-Date: 2000-11-13 19:36+0100\n"
-"Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
-"Language-Team: Slovenian <sl@li.org>\n"
+"PO-Revision-Date: 2007-11-13 14:57+0100\n"
+"Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
+"Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n%100==4 ? 3 : 0);\n"
+"X-Poedit-Language: Slovenian\n"
+"X-Poedit-Country: SLOVENIA\n"
+"X-Poedit-SourceCharset: utf-8\n"
 
-#: libgda/gda-client.c:312 libgda/gda-client.c:539 libgda/gda-connection.c:219
+#: libgda/gda-client.c:312
+#: libgda/gda-client.c:539
+#: libgda/gda-connection.c:219
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Vir podatkov %s ni bil v nastavitvah ni bil najden"
@@ -32,7 +40,7 @@ msgstr "Poganjam nuditelja %s brez implementiranih funkcij"
 #: libgda/gda-client.c:381
 #, fuzzy
 msgid "Could not create GdaServerProvider object from plugin"
-msgstr "Nisem mogel rezervirati GdaServerCommand"
+msgstr "Ni mogoče rezervirati GdaServerCommand"
 
 #: libgda/gda-client.c:465
 msgid "Temporary data source created by libgda. Don't remove it"
@@ -41,21 +49,24 @@ msgstr ""
 #: libgda/gda-config.c:1093
 #, fuzzy, c-format
 msgid "Error: %s"
-msgstr "Napaka"
+msgstr "Napaka: %s"
 
-#: libgda/gda-config.c:1206 providers/odbc/gda-odbc-provider.c:1137
+#: libgda/gda-config.c:1206
+#: providers/odbc/gda-odbc-provider.c:1137
 #: providers/oracle/gda-oracle-provider.c:1153
 #: providers/postgres/gda-postgres-provider.c:1290
 #: providers/postgres/gda-postgres-provider.c:1757
+#, fuzzy
 msgid "Id"
-msgstr ""
+msgstr "ID"
 
 #: libgda/gda-config.c:1207
 #, fuzzy
 msgid "Location"
-msgstr "\tlokacija = %s\n"
+msgstr "Položaj"
 
-#: libgda/gda-config.c:1208 libgda/gda-config.c:1533
+#: libgda/gda-config.c:1208
+#: libgda/gda-config.c:1533
 #: providers/firebird/gda-firebird-provider.c:322
 #: providers/ibmdb2/gda-ibmdb2-provider.c:863
 #: providers/ibmdb2/gda-ibmdb2-provider.c:892
@@ -67,9 +78,12 @@ msgstr "\tlokacija = %s\n"
 msgid "Description"
 msgstr "Opis"
 
-#: libgda/gda-config.c:1530 providers/firebird/gda-firebird-provider.c:730
-#: providers/ldap/gda-ldap-provider.c:327 providers/mdb/gda-mdb-provider.c:457
-#: providers/mdb/gda-mdb-provider.c:594 providers/mdb/gda-mdb-provider.c:654
+#: libgda/gda-config.c:1530
+#: providers/firebird/gda-firebird-provider.c:730
+#: providers/ldap/gda-ldap-provider.c:327
+#: providers/mdb/gda-mdb-provider.c:457
+#: providers/mdb/gda-mdb-provider.c:594
+#: providers/mdb/gda-mdb-provider.c:654
 #: providers/msql/gda-msql-provider.c:471
 #: providers/mysql/gda-mysql-provider.c:1107
 #: providers/mysql/gda-mysql-provider.c:1295
@@ -79,7 +93,8 @@ msgstr "Opis"
 #: providers/oracle/gda-oracle-provider.c:1910
 #: providers/oracle/gda-oracle-provider.c:1955
 #: providers/oracle/gda-oracle-provider.c:1972
-#: providers/xml/gda-xml-provider.c:584 providers/xml/gda-xml-provider.c:603
+#: providers/xml/gda-xml-provider.c:584
+#: providers/xml/gda-xml-provider.c:603
 msgid "Name"
 msgstr "Ime"
 
@@ -98,12 +113,12 @@ msgstr "Uporabniško ime"
 #: libgda/gda-config.c:1535
 #, fuzzy
 msgid "Password"
-msgstr "geslo"
+msgstr "Geslo"
 
 #: libgda/gda-data-model.c:822
 #, fuzzy, c-format
 msgid "Data model %p is not updatable"
-msgstr "%p ni veljavna tabela"
+msgstr "Podatkov %p ni mogoče posodobiti"
 
 #: libgda/gda-init.c:47
 msgid "Attempt to initialize an already initialized client"
@@ -116,7 +131,7 @@ msgstr ""
 #: libgda/gda-select.c:395
 #, fuzzy, c-format
 msgid "Could not parse SQL string '%s'"
-msgstr "Nisem mogel razlčleniti datoteke %s"
+msgstr "Ni mogoče razlčleniti datoteke %s"
 
 #: libgda/gda-select.c:399
 #, c-format
@@ -131,7 +146,7 @@ msgstr "Polje z imenom %s že obstaja"
 #: libgda/gda-util.c:173
 #, fuzzy, c-format
 msgid "Could not parse SQL command '%s'"
-msgstr "Nisem mogel razlčleniti datoteke %s"
+msgstr "Ni mogoče razlčleniti datoteke %s"
 
 #: libgda/gda-util.c:206
 #, c-format
@@ -141,7 +156,7 @@ msgstr ""
 #: libgda/gda-util.c:232
 #, fuzzy, c-format
 msgid "Could not create file %s"
-msgstr "Nisem mogel razlčleniti datoteke %s"
+msgstr "Ni mogoče razlčleniti datoteke %s"
 
 #: libgda/gda-value.c:2074
 msgid "TRUE"
@@ -163,12 +178,12 @@ msgstr ""
 #: libgda/gda-xml-database.c:279
 #, c-format
 msgid "Could not load file at %s"
-msgstr "Nisem mogel naložiti datoteke %s"
+msgstr "Ni mogoče naložiti datoteke %s"
 
 #: libgda/gda-xml-database.c:288
 #, c-format
 msgid "Could not parse file at %s"
-msgstr "Nisem mogel razlčleniti datoteke %s"
+msgstr "Ni mogoče razlčleniti datoteke %s"
 
 #: libgda/gda-xml-database.c:298
 #, c-format
@@ -178,18 +193,19 @@ msgstr "Neveljavna datoteka zbirke podatkov XML '%s'"
 #: libgda/gda-xml-database.c:541
 #, fuzzy, c-format
 msgid "Could not create a XML node from table %s"
-msgstr "Nisem mogel ustvariti komponente vrste %s"
+msgstr "Ni mogoče ustvariti komponente vrste %s"
 
 #: libgda/gda-xml-database.c:559
 #, fuzzy
 msgid "Could not dump XML file to memory"
-msgstr "Nisem mogel naložiti datoteke %s"
+msgstr "Ni mogoče naložiti datoteke %s"
 
-#: libgda/gda-xml-database.c:650 libgda/gda-xml-database.c:687
+#: libgda/gda-xml-database.c:650
+#: libgda/gda-xml-database.c:687
 #: libgda/gda-xml-database.c:731
 #, c-format
 msgid "Table %s already exists"
-msgstr "Tabela %s že obstaja"
+msgstr "Razpredelnica %s že obstaja"
 
 #: libgda/gda-xml-database.c:724
 msgid "Invalid node"
@@ -197,8 +213,8 @@ msgstr "Neveljaven list"
 
 #: libgda/gda-xml-database.c:766
 #, c-format
-msgid "Duplicated <data> node for table %s"
-msgstr "Podvojen list <data> za tabelo %s"
+msgid "Duplicated &lt;data&gt; node for table %s"
+msgstr "Podvojen list &lt;data&gt; za razpredelnico %s"
 
 #: libgda/gda-xml-database.c:773
 msgid "Invalid XML node"
@@ -207,7 +223,7 @@ msgstr "Neveljaven list XML"
 #: libgda/gda-xml-database.c:782
 #, fuzzy
 msgid "Could not add the data from the XML node"
-msgstr "nisem mogel rezervirati držalca podatkov"
+msgstr "Ni mogoče rezervirati držalca podatkov"
 
 #: libsql/sql_parser.c:60
 #, c-format
@@ -244,7 +260,7 @@ msgstr "Neveljaven obravnavalnik Sqlite"
 #: providers/firebird/gda-firebird-blob.c:134
 #, fuzzy
 msgid "Unable to start transaction"
-msgstr "Nisem mogel inicializirati tovarne komponent Oracle"
+msgstr "Ni mogoče inicializirati tovarne komponent Oracle"
 
 #: providers/firebird/gda-firebird-blob.c:145
 msgid "Blob already open"
@@ -276,7 +292,8 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:1579
 #: providers/sqlite/gda-sqlite-provider.c:787
 #: providers/sybase/gda-sybase-provider.c:1096
-#: providers/xml/gda-xml-provider.c:654 providers/xml/gda-xml-provider.c:679
+#: providers/xml/gda-xml-provider.c:654
+#: providers/xml/gda-xml-provider.c:679
 msgid "Type"
 msgstr "Vrsta"
 
@@ -290,8 +307,10 @@ msgstr "Vrsta"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:919
 #: providers/ibmdb2/gda-ibmdb2-provider.c:947
 #: providers/ibmdb2/gda-ibmdb2-provider.c:1000
-#: providers/ldap/gda-ldap-provider.c:328 providers/mdb/gda-mdb-provider.c:548
-#: providers/mdb/gda-mdb-provider.c:595 providers/mdb/gda-mdb-provider.c:655
+#: providers/ldap/gda-ldap-provider.c:328
+#: providers/mdb/gda-mdb-provider.c:548
+#: providers/mdb/gda-mdb-provider.c:595
+#: providers/mdb/gda-mdb-provider.c:655
 #: providers/msql/gda-msql-provider.c:472
 #: providers/msql/gda-msql-provider.c:512
 #: providers/mysql/gda-mysql-provider.c:1109
@@ -318,14 +337,17 @@ msgstr "Vrsta"
 #: providers/sqlite/gda-sqlite-provider.c:788
 #: providers/sybase/gda-sybase-provider.c:1098
 #: providers/xml/gda-xml-provider.c:655
+#, fuzzy
 msgid "Owner"
-msgstr ""
+msgstr "Lastnik"
 
 #: providers/firebird/gda-firebird-provider.c:233
 #: providers/firebird/gda-firebird-provider.c:733
 #: providers/ibmdb2/gda-ibmdb2-provider.c:948
-#: providers/ldap/gda-ldap-provider.c:329 providers/mdb/gda-mdb-provider.c:549
-#: providers/mdb/gda-mdb-provider.c:596 providers/mdb/gda-mdb-provider.c:656
+#: providers/ldap/gda-ldap-provider.c:329
+#: providers/mdb/gda-mdb-provider.c:549
+#: providers/mdb/gda-mdb-provider.c:596
+#: providers/mdb/gda-mdb-provider.c:656
 #: providers/msql/gda-msql-provider.c:473
 #: providers/msql/gda-msql-provider.c:513
 #: providers/mysql/gda-mysql-provider.c:1110
@@ -348,8 +370,9 @@ msgstr ""
 #: providers/sqlite/gda-sqlite-provider.c:789
 #: providers/sybase/gda-sybase-provider.c:1100
 #: providers/xml/gda-xml-provider.c:656
+#, fuzzy
 msgid "Comments"
-msgstr ""
+msgstr "_Opombe"
 
 #: providers/firebird/gda-firebird-provider.c:234
 #: providers/ibmdb2/gda-ibmdb2-provider.c:949
@@ -374,7 +397,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:2450
 #, fuzzy
 msgid "Table"
-msgstr "Neresnično"
+msgstr "Razpredelnica"
 
 #: providers/firebird/gda-firebird-provider.c:323
 #: providers/mdb/gda-mdb-provider.c:553
@@ -402,32 +425,37 @@ msgstr "Opis"
 #: providers/xml/gda-xml-provider.c:489
 #, fuzzy
 msgid "Field name"
-msgstr "ime datoteke"
+msgstr "Ime polja"
 
 #: providers/firebird/gda-firebird-provider.c:616
-#: providers/mdb/gda-mdb-provider.c:491 providers/msql/gda-msql-provider.c:564
+#: providers/mdb/gda-mdb-provider.c:491
+#: providers/msql/gda-msql-provider.c:564
 #: providers/mysql/gda-mysql-provider.c:1486
 #: providers/odbc/gda-odbc-provider.c:950
 #: providers/oracle/gda-oracle-provider.c:1249
 #: providers/postgres/gda-postgres-provider.c:1809
 #: providers/sqlite/gda-sqlite-provider.c:659
 #: providers/xml/gda-xml-provider.c:490
+#, fuzzy
 msgid "Data type"
-msgstr ""
+msgstr "Podatkovni tip"
 
 #: providers/firebird/gda-firebird-provider.c:617
-#: providers/mdb/gda-mdb-provider.c:492 providers/msql/gda-msql-provider.c:565
+#: providers/mdb/gda-mdb-provider.c:492
+#: providers/msql/gda-msql-provider.c:565
 #: providers/mysql/gda-mysql-provider.c:1487
 #: providers/odbc/gda-odbc-provider.c:951
 #: providers/oracle/gda-oracle-provider.c:1250
 #: providers/postgres/gda-postgres-provider.c:1810
 #: providers/sqlite/gda-sqlite-provider.c:660
 #: providers/xml/gda-xml-provider.c:491
+#, fuzzy
 msgid "Size"
-msgstr ""
+msgstr "Velikost"
 
 #: providers/firebird/gda-firebird-provider.c:618
-#: providers/mdb/gda-mdb-provider.c:493 providers/msql/gda-msql-provider.c:566
+#: providers/mdb/gda-mdb-provider.c:493
+#: providers/msql/gda-msql-provider.c:566
 #: providers/mysql/gda-mysql-provider.c:1488
 #: providers/odbc/gda-odbc-provider.c:952
 #: providers/oracle/gda-oracle-provider.c:1251
@@ -436,7 +464,7 @@ msgstr ""
 #: providers/xml/gda-xml-provider.c:492
 #, fuzzy
 msgid "Scale"
-msgstr "Neresnično"
+msgstr "Merilo"
 
 #: providers/firebird/gda-firebird-provider.c:619
 #: providers/mdb/gda-mdb-provider.c:494
@@ -450,18 +478,21 @@ msgid "Not null?"
 msgstr ""
 
 #: providers/firebird/gda-firebird-provider.c:620
-#: providers/mdb/gda-mdb-provider.c:495 providers/msql/gda-msql-provider.c:568
+#: providers/mdb/gda-mdb-provider.c:495
+#: providers/msql/gda-msql-provider.c:568
 #: providers/mysql/gda-mysql-provider.c:1490
 #: providers/odbc/gda-odbc-provider.c:954
 #: providers/oracle/gda-oracle-provider.c:1253
 #: providers/postgres/gda-postgres-provider.c:1813
 #: providers/sqlite/gda-sqlite-provider.c:663
 #: providers/xml/gda-xml-provider.c:494
+#, fuzzy
 msgid "Primary key?"
-msgstr ""
+msgstr "Primarni ključ"
 
 #: providers/firebird/gda-firebird-provider.c:621
-#: providers/mdb/gda-mdb-provider.c:496 providers/msql/gda-msql-provider.c:569
+#: providers/mdb/gda-mdb-provider.c:496
+#: providers/msql/gda-msql-provider.c:569
 #: providers/mysql/gda-mysql-provider.c:1491
 #: providers/odbc/gda-odbc-provider.c:955
 #: providers/oracle/gda-oracle-provider.c:1254
@@ -472,25 +503,29 @@ msgid "Unique index?"
 msgstr ""
 
 #: providers/firebird/gda-firebird-provider.c:622
-#: providers/mdb/gda-mdb-provider.c:497 providers/msql/gda-msql-provider.c:570
+#: providers/mdb/gda-mdb-provider.c:497
+#: providers/msql/gda-msql-provider.c:570
 #: providers/mysql/gda-mysql-provider.c:1492
 #: providers/odbc/gda-odbc-provider.c:956
 #: providers/oracle/gda-oracle-provider.c:1255
 #: providers/postgres/gda-postgres-provider.c:1815
 #: providers/sqlite/gda-sqlite-provider.c:665
 #: providers/xml/gda-xml-provider.c:496
+#, fuzzy
 msgid "References"
-msgstr ""
+msgstr "Navezave:"
 
 #: providers/firebird/gda-firebird-provider.c:623
-#: providers/mdb/gda-mdb-provider.c:498 providers/msql/gda-msql-provider.c:571
+#: providers/mdb/gda-mdb-provider.c:498
+#: providers/msql/gda-msql-provider.c:571
 #: providers/mysql/gda-mysql-provider.c:1493
 #: providers/odbc/gda-odbc-provider.c:957
 #: providers/oracle/gda-oracle-provider.c:1256
 #: providers/postgres/gda-postgres-provider.c:1816
 #: providers/sqlite/gda-sqlite-provider.c:666
+#, fuzzy
 msgid "Default value"
-msgstr ""
+msgstr "Privzeta vrednost: %s\n"
 
 #: providers/firebird/gda-firebird-provider.c:632
 #: providers/firebird/gda-firebird-provider.c:639
@@ -505,14 +540,16 @@ msgstr ""
 #. 6th the argument type
 #: providers/firebird/gda-firebird-provider.c:708
 #: providers/firebird/gda-firebird-provider.c:710
+#, fuzzy
 msgid "UNKNOWN"
-msgstr ""
+msgstr "<b>neznano</b>"
 
 #: providers/firebird/gda-firebird-provider.c:731
 #: providers/mdb/gda-mdb-provider.c:547
 #: providers/mysql/gda-mysql-provider.c:1108
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: providers/firebird/gda-firebird-provider.c:734
 #: providers/mdb/gda-mdb-provider.c:550
@@ -535,8 +572,9 @@ msgstr "Agregati"
 #: providers/mysql/gda-mysql-provider.c:1113
 #: providers/oracle/gda-oracle-provider.c:1913
 #: providers/oracle/gda-oracle-provider.c:1975
+#, fuzzy
 msgid "SQL"
-msgstr ""
+msgstr "SQL"
 
 #: providers/firebird/gda-firebird-provider.c:858
 msgid "No database specified"
@@ -570,15 +608,19 @@ msgstr ""
 msgid "Provider for Firebird databases"
 msgstr ""
 
-#: providers/firebird/libmain.c:49 providers/freetds/libmain.c:48
-#: providers/ibmdb2/libmain.c:48 providers/msql/gda-msql-libmain.c:56
-#: providers/mysql/libmain.c:50 providers/postgres/libmain.c:51
+#: providers/firebird/libmain.c:49
+#: providers/freetds/libmain.c:48
+#: providers/ibmdb2/libmain.c:48
+#: providers/msql/gda-msql-libmain.c:56
+#: providers/mysql/libmain.c:50
+#: providers/postgres/libmain.c:51
 #: providers/sybase/libmain.c:49
 #, fuzzy
 msgid "Database Name"
 msgstr "ime zbirke podatkov"
 
-#: providers/firebird/libmain.c:50 providers/freetds/libmain.c:49
+#: providers/firebird/libmain.c:50
+#: providers/freetds/libmain.c:49
 #, fuzzy
 msgid "Name of the database to be used"
 msgstr "Navesti morate imenik, kjer naj bo shranjena zbirka podatkov"
@@ -601,17 +643,16 @@ msgid "SQL dialect to use on the connection"
 msgstr ""
 
 #: providers/firebird/libmain.c:61
+#, fuzzy
 msgid "Page Size"
-msgstr ""
+msgstr "Velikost strani:"
 
 #: providers/firebird/libmain.c:62
 msgid "Page size to use on the database"
 msgstr ""
 
 #: providers/freetds/gda-freetds-provider.c:197
-msgid ""
-"Connection aborted. You must provide at least a host, username and password "
-"using DSN 'QUERY=;USER=;PASSWORD='."
+msgid "Connection aborted. You must provide at least a host, username and password using DSN 'QUERY=;USER=;PASSWORD='."
 msgstr ""
 
 #: providers/freetds/gda-freetds-provider.c:210
@@ -671,19 +712,29 @@ msgid ""
 "%s\n"
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:1079 providers/freetds/utils.c:44
-#: providers/oracle/utils.c:74 providers/postgres/utils.c:53
+#: providers/freetds/gda-freetds-provider.c:1079
+#: providers/freetds/utils.c:44
+#: providers/oracle/utils.c:74
+#: providers/postgres/utils.c:53
 #: providers/sybase/gda-sybase-provider.c:765
 #: providers/sybase/gda-sybase-recordset.c:513
 #: providers/sybase/gda-sybase-recordset.c:535
-#: providers/sybase/gda-sybase-recordset.c:594 providers/sybase/utils.c:205
-#: providers/sybase/utils.c:223 providers/sybase/utils.c:239
-#: providers/sybase/utils.c:255 providers/sybase/utils.c:275
-#: providers/sybase/utils.c:316 providers/sybase/utils.c:333
-#: providers/sybase/utils.c:385 providers/sybase/utils.c:411
-#: providers/sybase/utils.c:445 providers/sybase/utils.c:462
-#: providers/sybase/utils.c:485 providers/sybase/utils.c:501
-#: providers/sybase/utils.c:539 providers/bdb/utils.c:36
+#: providers/sybase/gda-sybase-recordset.c:594
+#: providers/sybase/utils.c:205
+#: providers/sybase/utils.c:223
+#: providers/sybase/utils.c:239
+#: providers/sybase/utils.c:255
+#: providers/sybase/utils.c:275
+#: providers/sybase/utils.c:316
+#: providers/sybase/utils.c:333
+#: providers/sybase/utils.c:385
+#: providers/sybase/utils.c:411
+#: providers/sybase/utils.c:445
+#: providers/sybase/utils.c:462
+#: providers/sybase/utils.c:485
+#: providers/sybase/utils.c:501
+#: providers/sybase/utils.c:539
+#: providers/bdb/utils.c:36
 msgid "Not available"
 msgstr "Ni na voljo"
 
@@ -708,19 +759,22 @@ msgid "Provider for TDS-based databases (using FreeTDS)"
 msgstr ""
 
 #: providers/freetds/libmain.c:52
+#, fuzzy
 msgid "Host"
-msgstr ""
+msgstr "Gostitelj"
 
 #: providers/freetds/libmain.c:53
 msgid "Host name of the machine where the database is located"
 msgstr ""
 
-#: providers/freetds/libmain.c:56 providers/postgres/libmain.c:63
+#: providers/freetds/libmain.c:56
+#: providers/postgres/libmain.c:63
 #: providers/sybase/libmain.c:61
 msgid "Host Address"
 msgstr ""
 
-#: providers/freetds/libmain.c:57 providers/postgres/libmain.c:64
+#: providers/freetds/libmain.c:57
+#: providers/postgres/libmain.c:64
 #: providers/sybase/libmain.c:62
 msgid "IP address of the host to connect to"
 msgstr ""
@@ -734,21 +788,26 @@ msgstr "Niz povezave"
 msgid "Extra options to use on the connection"
 msgstr ""
 
-#: providers/freetds/libmain.c:64 providers/ldap/libmain.c:64
-#: providers/mysql/libmain.c:58 providers/postgres/libmain.c:71
+#: providers/freetds/libmain.c:64
+#: providers/ldap/libmain.c:64
+#: providers/mysql/libmain.c:58
+#: providers/postgres/libmain.c:71
 #: providers/sybase/libmain.c:69
+#, fuzzy
 msgid "Port"
-msgstr ""
+msgstr "Vrata"
 
 #: providers/freetds/libmain.c:65
 msgid "Port to use to connect to the database's host"
 msgstr ""
 
-#: providers/freetds/libmain.c:71 providers/sybase/libmain.c:76
+#: providers/freetds/libmain.c:71
+#: providers/sybase/libmain.c:76
 msgid "Enable Sybase"
 msgstr ""
 
-#: providers/freetds/libmain.c:72 providers/sybase/libmain.c:77
+#: providers/freetds/libmain.c:72
+#: providers/sybase/libmain.c:77
 msgid "Enable Sybase operative mode"
 msgstr ""
 
@@ -792,15 +851,17 @@ msgstr ""
 msgid "File fpr TDS protocol dumps configuration"
 msgstr ""
 
-#: providers/freetds/utils.c:40 providers/oracle/utils.c:67
-#: providers/postgres/utils.c:48 providers/sybase/utils.c:534
+#: providers/freetds/utils.c:40
+#: providers/oracle/utils.c:67
+#: providers/postgres/utils.c:48
+#: providers/sybase/utils.c:534
 msgid "NO DESCRIPTION"
 msgstr "NI OPISA"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:152
 #, fuzzy
 msgid "Could not allocate environment handle.\n"
-msgstr "Nisem mogel rezervirati obravnavalnika stavkov"
+msgstr "Ni mogoče rezervirati obravnavalnika stavkov"
 
 #. GetInfo is needed for obtaining database name
 #. is needed for tables schema
@@ -817,18 +878,19 @@ msgid "Invalid IBM DB2 handle"
 msgstr "Neveljavnen obravnavalnik MySQL"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:741
+#, fuzzy
 msgid "Function"
-msgstr ""
+msgstr "Funkcija"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:777
 #, fuzzy
 msgid "Database"
-msgstr "ime zbirke podatkov"
+msgstr "Zbirka podatkov"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:831
 #, fuzzy
 msgid "Index"
-msgstr "Kazala"
+msgstr "Kazalo"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:860
 #: providers/mdb/gda-mdb-provider.c:546
@@ -839,8 +901,9 @@ msgid "Procedure"
 msgstr "Shranjene procedure"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:862
+#, fuzzy
 msgid "Language"
-msgstr ""
+msgstr "Jezik"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:893
 #: providers/ibmdb2/gda-ibmdb2-provider.c:921
@@ -851,17 +914,19 @@ msgstr ""
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:918
 #: providers/oracle/gda-oracle-provider.c:2189
-#: providers/postgres/gda-postgres-provider.c:1797 testing/client.c:143
+#: providers/postgres/gda-postgres-provider.c:1797
+#: testing/client.c:143
 msgid "Triggers"
 msgstr "Sprožilci"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:974
 #: providers/oracle/gda-oracle-provider.c:1825
-#: providers/postgres/gda-postgres-provider.c:2354 testing/client.c:141
+#: providers/postgres/gda-postgres-provider.c:2354
+#: testing/client.c:141
 #, fuzzy
 msgid "Users"
-msgstr "Uporabniško ime"
+msgstr "Uporabniki"
 
 #: providers/ibmdb2/gda-ibmdb2-types.c:154
 #, fuzzy
@@ -876,12 +941,15 @@ msgstr ""
 msgid "Provider for IBMDB2 databases"
 msgstr ""
 
-#: providers/ibmdb2/libmain.c:49 providers/msql/gda-msql-libmain.c:57
-#: providers/postgres/libmain.c:52 providers/sybase/libmain.c:50
+#: providers/ibmdb2/libmain.c:49
+#: providers/msql/gda-msql-libmain.c:57
+#: providers/postgres/libmain.c:52
+#: providers/sybase/libmain.c:50
 msgid "Name of the database to use"
 msgstr ""
 
-#: providers/ibmdb2/libmain.c:52 providers/postgres/libmain.c:67
+#: providers/ibmdb2/libmain.c:52
+#: providers/postgres/libmain.c:67
 #: providers/sybase/libmain.c:65
 msgid "Extra Options"
 msgstr ""
@@ -933,7 +1001,7 @@ msgstr "Nisem uspel ustvariti komponente povezave"
 #: providers/oracle/gda-oracle-recordset.c:504
 #, fuzzy
 msgid "Could not retrieve column's value"
-msgstr "Nisem mogel počistiti strežnikovih sporočil"
+msgstr "Ni mogoče počistiti strežnikovih sporočil"
 
 #: providers/ldap/libmain.c:47
 msgid "Provider for LDAP directory"
@@ -947,12 +1015,15 @@ msgstr ""
 msgid "LDAP flags"
 msgstr ""
 
-#: providers/ldap/libmain.c:60 providers/msql/gda-msql-libmain.c:60
-#: providers/mysql/libmain.c:54 providers/postgres/libmain.c:59
-#: providers/sybase/libmain.c:53 providers/sybase/libmain.c:57
+#: providers/ldap/libmain.c:60
+#: providers/msql/gda-msql-libmain.c:60
+#: providers/mysql/libmain.c:54
+#: providers/postgres/libmain.c:59
+#: providers/sybase/libmain.c:53
+#: providers/sybase/libmain.c:57
 #, fuzzy
 msgid "Host Name"
-msgstr "Ime"
+msgstr "Ime gostitelja"
 
 #: providers/ldap/libmain.c:61
 msgid "Host name of the LDAP server"
@@ -987,16 +1058,20 @@ msgstr "Niz povezave mora navesti polno pot za odprtje zbirke podatkov."
 #: providers/xbase/gda-xbase-provider.c:223
 #, fuzzy, c-format
 msgid "Could not open file %s"
-msgstr "Nisem mogel razlčleniti datoteke %s"
+msgstr "Ni mogoče odpreti datoteke %s.\n"
 
-#: providers/mdb/gda-mdb-provider.c:238 providers/mdb/gda-mdb-provider.c:268
-#: providers/mdb/gda-mdb-provider.c:290 providers/mdb/gda-mdb-provider.c:342
-#: providers/mdb/gda-mdb-provider.c:690 providers/mdb/gda-mdb-provider.c:726
+#: providers/mdb/gda-mdb-provider.c:238
+#: providers/mdb/gda-mdb-provider.c:268
+#: providers/mdb/gda-mdb-provider.c:290
+#: providers/mdb/gda-mdb-provider.c:342
+#: providers/mdb/gda-mdb-provider.c:690
+#: providers/mdb/gda-mdb-provider.c:726
 #, fuzzy
 msgid "Invalid MDB handle"
 msgstr "Neveljavnen obravnavalnik MySQL"
 
-#: providers/mdb/gda-mdb-provider.c:404 providers/mdb/gda-mdb-provider.c:414
+#: providers/mdb/gda-mdb-provider.c:404
+#: providers/mdb/gda-mdb-provider.c:414
 #: providers/mdb/gda-mdb-provider.c:424
 msgid "Transactions not supported in MDB provider"
 msgstr ""
@@ -1062,16 +1137,17 @@ msgstr ""
 #: providers/mdb/gda-mdb-provider.c:737
 #, fuzzy, c-format
 msgid "Could not parse '%s' command"
-msgstr "Nisem mogel razčleniti dokumenta XML"
+msgstr "Ni mogoče razčleniti dokumenta XML"
 
 #. parsing went fine, but there is no result
 #. (e.g. because of an invalid column name)
 #: providers/mdb/gda-mdb-provider.c:744
 #, fuzzy, c-format
 msgid "Got no result for '%s' command"
-msgstr "Nisem mogel razčleniti dokumenta XML"
+msgstr "Ni mogoče razčleniti dokumenta XML"
 
-#: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:519
+#: providers/mdb/gda-mdb-table.c:48
+#: providers/xml/gda-xml-provider.c:519
 #, fuzzy, c-format
 msgid "Table %s not found"
 msgstr "Predmet z idjem %s ni bil najden"
@@ -1080,13 +1156,15 @@ msgstr "Predmet z idjem %s ni bil najden"
 msgid "Provider for Microsoft Access files"
 msgstr ""
 
-#: providers/mdb/libmain.c:45 providers/sqlite/libmain.c:50
-#: providers/xbase/libmain.c:48 providers/xml/libmain.c:48
-#, fuzzy
+#: providers/mdb/libmain.c:45
+#: providers/sqlite/libmain.c:50
+#: providers/xbase/libmain.c:48
+#: providers/xml/libmain.c:48
 msgid "File Name"
-msgstr "ime datoteke"
+msgstr "Ime datoteke"
 
-#: providers/mdb/libmain.c:46 providers/xbase/libmain.c:49
+#: providers/mdb/libmain.c:46
+#: providers/xbase/libmain.c:49
 #, fuzzy
 msgid "Full path of the file containing the database"
 msgstr "Niz povezave mora navesti polno pot za odprtje zbirke podatkov."
@@ -1095,8 +1173,10 @@ msgstr "Niz povezave mora navesti polno pot za odprtje zbirke podatkov."
 msgid "Provider for Hughes Technologies mSQL databases"
 msgstr ""
 
-#: providers/msql/gda-msql-libmain.c:61 providers/mysql/libmain.c:55
-#: providers/postgres/libmain.c:60 providers/sybase/libmain.c:54
+#: providers/msql/gda-msql-libmain.c:61
+#: providers/mysql/libmain.c:55
+#: providers/postgres/libmain.c:60
+#: providers/sybase/libmain.c:54
 #: providers/sybase/libmain.c:58
 msgid "Name of the host to connect to"
 msgstr ""
@@ -1127,12 +1207,11 @@ msgstr ""
 
 #: providers/msql/gda-msql-provider.c:511
 msgid "Title"
-msgstr ""
+msgstr "Naslov"
 
 #: providers/msql/gda-msql-provider.c:563
-#, fuzzy
 msgid "Field Name"
-msgstr "ime datoteke"
+msgstr "Ime polja"
 
 #: providers/msql/gda-msql-provider.c:567
 msgid "Not null"
@@ -1144,11 +1223,8 @@ msgid "Row number out of bounds"
 msgstr "Številka vrstice je izven meja"
 
 #: providers/mysql/gda-mysql-provider.c:268
-msgid ""
-"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr ""
-"Ne morete navesti možnosti UNIX_SOCKET, če zraven navedete tudi HOST ali "
-"PORT."
+msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr "Ni mogoče navesti možnosti UNIX_SOCKET, če je zraven naveden tudi HOST ali PORT."
 
 #: providers/mysql/gda-mysql-provider.c:344
 #: providers/mysql/gda-mysql-provider.c:1501
@@ -1260,16 +1336,18 @@ msgid "Port number to use for connecting"
 msgstr "Ni dovolj pomnilnika za tds_Connection"
 
 #: providers/mysql/libmain.c:62
+#, fuzzy
 msgid "UNIX Socket"
-msgstr ""
+msgstr "UNIX Socket"
 
 #: providers/mysql/libmain.c:63
 msgid "Full path of the UNIX socket to use for connecting locally"
 msgstr ""
 
 #: providers/mysql/libmain.c:66
+#, fuzzy
 msgid "Use Secure Connection"
-msgstr ""
+msgstr "_Uporabi varno povezavo:"
 
 #: providers/mysql/libmain.c:67
 msgid "Whether to use or not SSL for establishing the connection"
@@ -1295,7 +1373,8 @@ msgid "Nb args"
 msgstr ""
 
 #: providers/odbc/gda-odbc-provider.c:1402
-#: providers/oracle/gda-oracle-provider.c:2193 testing/client.c:138
+#: providers/oracle/gda-oracle-provider.c:2193
+#: testing/client.c:138
 msgid "Views"
 msgstr "Pogledi"
 
@@ -1304,7 +1383,7 @@ msgstr "Pogledi"
 #: providers/postgres/gda-postgres-provider.c:2395
 #: providers/postgres/gda-postgres-provider.c:2451
 msgid "Sequence"
-msgstr ""
+msgstr "Zaporedje"
 
 #: providers/odbc/libmain.c:41
 msgid "Provider for ODBC data sources"
@@ -1327,62 +1406,62 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:212
 #, fuzzy
 msgid "Could not initialize Oracle"
-msgstr "Nisem mogel inicializirati okolja Oracle"
+msgstr "Ni mogoče inicializirati okolja Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:223
 #, fuzzy
 msgid "Could not initialize the Oracle environment"
-msgstr "Nisem mogel inicializirati okolja Oracle"
+msgstr "Ni mogoče inicializirati okolja Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:234
 #, fuzzy
 msgid "Could not allocate the Oracle service handle"
-msgstr "Nisem mogel inicializirati obravnavalnika strežnika Oracle"
+msgstr "Ni mogoče inicializirati obravnavalnika strežnika Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:244
 #, fuzzy
 msgid "Could not allocate the Oracle error handle"
-msgstr "Nisem mogel inicializirati obravnavalnika napak Oracle"
+msgstr "Ni mogoče inicializirati obravnavalnika napak Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:256
 #, fuzzy
 msgid "Could not allocate the Oracle server handle"
-msgstr "Nisem mogel inicializirati obravnavalnika strežnika Oracle"
+msgstr "Ni mogoče inicializirati obravnavalnika strežnika Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:269
 #, fuzzy
 msgid "Could not allocate the Oracle session handle"
-msgstr "Nisem mogel rezervirati obravnavalnika stavkov"
+msgstr "Ni mogoče rezervirati obravnavalnika stavkov"
 
 #: providers/oracle/gda-oracle-provider.c:299
 #, fuzzy
 msgid "Could not attach to the Oracle server"
-msgstr "Nisem mogel inicializirati obravnavalnika strežnika Oracle"
+msgstr "Ni mogoče inicializirati obravnavalnika strežnika Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:315
 #, fuzzy
 msgid "Could not set the Oracle server attribute in the service context"
-msgstr "Nisem mogel inicializirati konteksta storitev Oracle"
+msgstr "Ni mogoče inicializirati konteksta storitev Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:331
 #, fuzzy
 msgid "Could not set the Oracle username attribute"
-msgstr "Nisem mogel inicializirati obravnavalnika strežnika Oracle"
+msgstr "Ni mogoče inicializirati obravnavalnika strežnika Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:347
 #, fuzzy
 msgid "Could not set the Oracle password attribute"
-msgstr "Nisem mogel inicializirati tovarne komponent Oracle"
+msgstr "Ni mogoče inicializirati tovarne komponent Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:362
 #, fuzzy
 msgid "Could not begin the Oracle session"
-msgstr "Nisem mogel inicializirati okolja Oracle"
+msgstr "Ni mogoče inicializirati okolja Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:380
 #, fuzzy
 msgid "Could not set the Oracle session attribute in the service context"
-msgstr "Nisem mogel inicializirati konteksta storitev Oracle"
+msgstr "Ni mogoče inicializirati konteksta storitev Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:466
 #: providers/oracle/gda-oracle-provider.c:498
@@ -1405,22 +1484,22 @@ msgstr "Neveljaven obravnavalnik Sqlite"
 #: providers/oracle/gda-oracle-provider.c:509
 #, fuzzy
 msgid "Could not allocate the Oracle statement handle"
-msgstr "Nisem mogel rezervirati obravnavalnika stavkov"
+msgstr "Ni mogoče rezervirati obravnavalnika stavkov"
 
 #: providers/oracle/gda-oracle-provider.c:520
 #, fuzzy
 msgid "Could not prepare the Oracle statement"
-msgstr "Nisem mogel inicializirati okolja Oracle"
+msgstr "Ni mogoče inicializirati okolja Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:552
 #, fuzzy
 msgid "Could not bind the Oracle statement parameter"
-msgstr "Nisem mogel inicializirati tovarne komponent Oracle"
+msgstr "Ni mogoče inicializirati tovarne komponent Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:598
 #, fuzzy
 msgid "Could not get the Oracle statement type"
-msgstr "Nisem mogel inicializirati tovarne komponent Oracle"
+msgstr "Ni mogoče inicializirati tovarne komponent Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:610
 msgid "Could not set the Oracle statement pre-fetch row count"
@@ -1429,12 +1508,12 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:627
 #, fuzzy
 msgid "Could not execute the Oracle statement"
-msgstr "Nisem mogel inicializirati okolja Oracle"
+msgstr "Ni mogoče inicializirati okolja Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:640
 #, fuzzy
 msgid "Could not get the number of columns in the result set"
-msgstr "Nisem mogel dobiti števila odjemalčevih sporočil"
+msgstr "Ni mogoče dobiti števila odjemalčevih sporočil"
 
 #: providers/oracle/gda-oracle-provider.c:657
 msgid "Could not get the parameter descripter in the result set"
@@ -1443,7 +1522,7 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:669
 #, fuzzy
 msgid "Could not get the column name in the result set"
-msgstr "Nisem mogel dobiti števila odjemalčevih sporočil"
+msgstr "Ni mogoče dobiti števila odjemalčevih sporočil"
 
 #: providers/oracle/gda-oracle-provider.c:815
 #: providers/oracle/gda-oracle-provider.c:896
@@ -1451,22 +1530,22 @@ msgstr "Nisem mogel dobiti števila odjemalčevih sporočil"
 #: providers/oracle/gda-oracle-provider.c:1012
 #, fuzzy
 msgid "Could not attach the transaction to the service context"
-msgstr "Nisem mogel inicializirati konteksta storitev Oracle"
+msgstr "Ni mogoče inicializirati konteksta storitev Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:870
 #, fuzzy
 msgid "Could not allocate the Oracle transaction handle"
-msgstr "Nisem mogel rezervirati obravnavalnika stavkov"
+msgstr "Ni mogoče rezervirati obravnavalnika stavkov"
 
 #: providers/oracle/gda-oracle-provider.c:882
 #, fuzzy
 msgid "Could not set the Oracle transaction name"
-msgstr "Nisem mogel inicializirati okolja Oracle"
+msgstr "Ni mogoče inicializirati okolja Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:907
 #, fuzzy
 msgid "Could not start the Oracle transaction"
-msgstr "Nisem mogel inicializirati tovarne komponent Oracle"
+msgstr "Ni mogoče inicializirati tovarne komponent Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:960
 #, fuzzy
@@ -1476,12 +1555,12 @@ msgstr "Nisem uspel ustvariti komponente povezave"
 #: providers/oracle/gda-oracle-provider.c:968
 #, fuzzy
 msgid "Could not commit the Oracle transaction"
-msgstr "Nisem mogel inicializirati tovarne komponent Oracle"
+msgstr "Ni mogoče inicializirati tovarne komponent Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1019
 #, fuzzy
 msgid "Could not rollback the Oracle transaction"
-msgstr "Nisem mogel rezervirati strukture locale"
+msgstr "Ni mogoče rezervirati strukture locale"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1152
@@ -1505,24 +1584,24 @@ msgstr "Vrsta"
 #: providers/oracle/gda-oracle-provider.c:1441
 #, fuzzy
 msgid "Could not allocate the Oracle describe handle"
-msgstr "Nisem mogel rezervirati obravnavalnika stavkov"
+msgstr "Ni mogoče rezervirati obravnavalnika stavkov"
 
 #: providers/oracle/gda-oracle-provider.c:1451
 #, fuzzy
 msgid "Could not set describe handle attribute"
-msgstr "Nisem mogel spustiti strukture locale"
+msgstr "Ni mogoče spustiti strukture locale"
 
 #: providers/oracle/gda-oracle-provider.c:1478
 #: providers/oracle/gda-oracle-provider.c:1583
 #, fuzzy
 msgid "Could not describe the Oracle table"
-msgstr "Nisem mogel inicializirati obravnavalnika strežnika Oracle"
+msgstr "Ni mogoče inicializirati obravnavalnika strežnika Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1493
 #: providers/oracle/gda-oracle-provider.c:1596
 #, fuzzy
 msgid "Could not get the Oracle parameter handle"
-msgstr "Nisem mogel inicializirati obravnavalnika strežnika Oracle"
+msgstr "Ni mogoče inicializirati obravnavalnika strežnika Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1508
 #, fuzzy
@@ -1532,12 +1611,12 @@ msgstr "Nisem uspel aktivirati predmeta %s"
 #: providers/oracle/gda-oracle-provider.c:1523
 #, fuzzy
 msgid "Could not get synonym referred-to schema"
-msgstr "Nisem mogel dobiti recordset-a v schema_cols"
+msgstr "Ni mogoče dobiti recordset-a v schema_cols"
 
 #: providers/oracle/gda-oracle-provider.c:1536
 #, fuzzy
 msgid "Could not get synonym referred-to name"
-msgstr "Nisem mogel dobiti števila strežnikovih sporočil"
+msgstr "Ni mogoče dobiti števila strežnikovih sporočil"
 
 #: providers/oracle/gda-oracle-provider.c:1549
 msgid "Could not get synonym referred-to dblink"
@@ -1546,37 +1625,37 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:1611
 #, fuzzy
 msgid "Could not get the number of columns in the table"
-msgstr "Nisem mogel dobiti števila odjemalčevih sporočil"
+msgstr "Ni mogoče dobiti števila odjemalčevih sporočil"
 
 #: providers/oracle/gda-oracle-provider.c:1625
 #, fuzzy
 msgid "Could not get the column list"
-msgstr "Nisem mogel dobiti datoteke od %s"
+msgstr "Ni mogoče dobiti datoteke od %s"
 
 #: providers/oracle/gda-oracle-provider.c:1656
 #, fuzzy
 msgid "Could not get the Oracle column handle"
-msgstr "Nisem mogel inicializirati obravnavalnika napak Oracle"
+msgstr "Ni mogoče inicializirati obravnavalnika napak Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1671
 #, fuzzy
 msgid "Could not get the Oracle field name"
-msgstr "Nisem mogel inicializirati okolja Oracle"
+msgstr "Ni mogoče inicializirati okolja Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1693
 #, fuzzy
 msgid "Could not get the Oracle field data type"
-msgstr "Nisem mogel inicializirati tovarne komponent Oracle"
+msgstr "Ni mogoče inicializirati tovarne komponent Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1713
 #, fuzzy
 msgid "Could not get the Oracle field defined size"
-msgstr "Nisem mogel dobiti datoteke od %s"
+msgstr "Ni mogoče dobiti datoteke od %s"
 
 #: providers/oracle/gda-oracle-provider.c:1732
 #, fuzzy
 msgid "Could not get the Oracle field scale"
-msgstr "Nisem mogel dobiti števila odjemalčevih sporočil"
+msgstr "Ni mogoče dobiti števila odjemalčevih sporočil"
 
 #: providers/oracle/gda-oracle-provider.c:1751
 msgid "Could not get the Oracle field nullable attribute"
@@ -1584,7 +1663,8 @@ msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:2177
-#: providers/postgres/gda-postgres-provider.c:1679 testing/client.c:139
+#: providers/postgres/gda-postgres-provider.c:1679
+#: testing/client.c:139
 msgid "Indexes"
 msgstr "Kazala"
 
@@ -1593,29 +1673,30 @@ msgstr "Kazala"
 msgid "Procedures"
 msgstr "Shranjene procedure"
 
-#: providers/oracle/gda-oracle-provider.c:2183 testing/client.c:142
+#: providers/oracle/gda-oracle-provider.c:2183
+#: testing/client.c:142
 msgid "Sequences"
 msgstr ""
 
 #: providers/oracle/gda-oracle-recordset.c:74
 #, fuzzy
 msgid "Could not get the Oracle parameter"
-msgstr "Nisem mogel inicializirati okolja Oracle"
+msgstr "Ni mogoče inicializirati okolja Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:84
 #, fuzzy
 msgid "Could not get the parameter defined size"
-msgstr "Nisem mogel dobiti recordset-a v schema_cols"
+msgstr "Ni mogoče dobiti recordset-a v schema_cols"
 
 #: providers/oracle/gda-oracle-recordset.c:97
 #, fuzzy
 msgid "Could not get the parameter data type"
-msgstr "Nisem mogel ustvariti komponente vrste %s"
+msgstr "Ni mogoče ustvariti komponente vrste %s"
 
 #: providers/oracle/gda-oracle-recordset.c:130
 #, fuzzy
 msgid "Could not define by position"
-msgstr "Nisem mogel naložiti datoteke %s"
+msgstr "Ni mogoče naložiti datoteke %s"
 
 #: providers/oracle/gda-oracle-recordset.c:175
 #: providers/postgres/gda-postgres-recordset.c:700
@@ -1626,37 +1707,37 @@ msgstr "Številka vrstice je izven meja"
 #: providers/oracle/gda-oracle-recordset.c:187
 #, fuzzy
 msgid "Could not get the Oracle parameter information"
-msgstr "Nisem mogel inicializirati tovarne komponent Oracle"
+msgstr "Ni mogoče inicializirati tovarne komponent Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:197
 #, fuzzy
 msgid "Could not get the Oracle column name"
-msgstr "Nisem mogel inicializirati tovarne komponent Oracle"
+msgstr "Ni mogoče inicializirati tovarne komponent Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:212
 #, fuzzy
 msgid "Could not get the Oracle column data type"
-msgstr "Nisem mogel inicializirati tovarne komponent Oracle"
+msgstr "Ni mogoče inicializirati tovarne komponent Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:224
 #, fuzzy
 msgid "Could not get the Oracle column scale"
-msgstr "Nisem mogel inicializirati tovarne komponent Oracle"
+msgstr "Ni mogoče inicializirati tovarne komponent Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:236
 #, fuzzy
 msgid "Could not get the Oracle column nullable attribute"
-msgstr "Nisem mogel inicializirati tovarne komponent Oracle"
+msgstr "Ni mogoče inicializirati tovarne komponent Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:248
 #, fuzzy
 msgid "Could not get the Oracle defined size"
-msgstr "Nisem mogel dobiti datoteke od %s"
+msgstr "Ni mogoče dobiti datoteke od %s"
 
 #: providers/oracle/gda-oracle-recordset.c:357
 #, fuzzy
 msgid "Could not fetch a row"
-msgstr "Nisem mogel dobiti datoteke od %s"
+msgstr "Ni mogoče dobiti datoteke od %s"
 
 #: providers/oracle/libmain.c:34
 msgid "Provider for Oracle databases"
@@ -1695,10 +1776,11 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:1639
 #, fuzzy
 msgid "View"
-msgstr "Pogledi"
+msgstr "Pogled"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:2319 testing/client.c:134
+#: providers/postgres/gda-postgres-provider.c:2319
+#: testing/client.c:134
 #, fuzzy
 msgid "Databases"
 msgstr "ime zbirke podatkov"
@@ -1732,7 +1814,8 @@ msgstr ""
 msgid "Extra PostgreSQL options to use for the connection"
 msgstr ""
 
-#: providers/postgres/libmain.c:72 providers/sybase/libmain.c:70
+#: providers/postgres/libmain.c:72
+#: providers/sybase/libmain.c:70
 #, fuzzy
 msgid "Port number to use for the connection"
 msgstr "Ni dovolj pomnilnika za tds_Connection"
@@ -1745,13 +1828,14 @@ msgstr ""
 msgid "Whether to require SSL or not when connecting"
 msgstr ""
 
-#: providers/postgres/libmain.c:79 providers/postgres/libmain.c:80
+#: providers/postgres/libmain.c:79
+#: providers/postgres/libmain.c:80
+#, fuzzy
 msgid "TTY"
-msgstr ""
+msgstr "TTY"
 
 #: providers/sqlite/gda-sqlite-provider.c:199
-msgid ""
-"A full path must be specified on the connection string to open a database."
+msgid "A full path must be specified on the connection string to open a database."
 msgstr "Niz povezave mora navesti polno pot za odprtje zbirke podatkov."
 
 #: providers/sqlite/gda-sqlite-provider.c:223
@@ -1805,9 +1889,7 @@ msgid "Locale set to '%s'."
 msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:642
-msgid ""
-"Cmd structure already in use. Command will not be executed because of "
-"blocked connection."
+msgid "Cmd structure already in use. Command will not be executed because of blocked connection."
 msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:656
@@ -1818,7 +1900,7 @@ msgstr "Polnjenje ukazne strukture ni uspelo\n"
 #: providers/sybase/gda-sybase-provider.c:670
 #, fuzzy
 msgid "Could not prepare command structure."
-msgstr "Nisem mogel rezervirati ukazne strukture"
+msgstr "Ni mogoče rezervirati ukazne strukture"
 
 #: providers/sybase/gda-sybase-provider.c:680
 #, fuzzy
@@ -1845,9 +1927,7 @@ msgid "Hit unsupported result type"
 msgstr "Neveljaven ali nepodprt tip omejitve: %d"
 
 #: providers/sybase/gda-sybase-provider.c:762
-msgid ""
-"an error occured when calling ct_diag attempting to test if there is a "
-"server message for resultset"
+msgid "an error occured when calling ct_diag attempting to test if there is a server message for resultset"
 msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:793
@@ -1868,12 +1948,12 @@ msgstr "Sproščanje ukazne strukture ni uspelo"
 #: providers/sybase/gda-sybase-provider.c:858
 #, fuzzy
 msgid "Could not allocate command structure."
-msgstr "Nisem mogel rezervirati ukazne strukture"
+msgstr "Ni mogoče rezervirati ukazne strukture"
 
 #: providers/sybase/gda-sybase-provider.c:867
 #, fuzzy, c-format
 msgid "Could not prepare command structure with %s."
-msgstr "Nisem mogel rezervirati ukazne strukture"
+msgstr "Ni mogoče rezervirati ukazne strukture"
 
 #: providers/sybase/gda-sybase-provider.c:877
 #, fuzzy
@@ -1885,17 +1965,17 @@ msgstr "%s: pošiljanje ukaza ni uspelo"
 #: providers/sybase/gda-sybase-provider.c:930
 #, fuzzy, c-format
 msgid "%s: %s failed"
-msgstr "%s: \"use\" ukaz ni uspel"
+msgstr "Spodletelo"
 
 #: providers/sybase/gda-sybase-provider.c:974
 #, fuzzy
 msgid "could not allocate cmd structure to find current database."
-msgstr "Nisem mogel rezervirat ukazne strukture"
+msgstr "Ni mogoče rezervirat ukazne strukture"
 
 #: providers/sybase/gda-sybase-provider.c:985
 #, fuzzy
 msgid "could not execute command to get current database."
-msgstr "Nisem mogel rezervirati ukazne strukture"
+msgstr "Ni mogoče rezervirati ukazne strukture"
 
 #: providers/sybase/gda-sybase-provider.c:993
 msgid "could not send command to get current database."
@@ -1917,7 +1997,7 @@ msgstr ""
 #: providers/sybase/gda-sybase-recordset.c:316
 #, fuzzy
 msgid "Could not allocate datamodel. No results will be returned."
-msgstr "Nisem mogel rezervirat ukazne strukture"
+msgstr "Ni mogoče rezervirat ukazne strukture"
 
 #: providers/sybase/gda-sybase-recordset.c:319
 #, fuzzy
@@ -1931,14 +2011,14 @@ msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:340
 #, fuzzy, c-format
-msgid "%s returned <= 0 columns."
+msgid "%s returned &lt;= 0 columns."
 msgstr "Preštel %d stolpcev"
 
 #: providers/sybase/gda-sybase-recordset.c:360
 #: providers/sybase/gda-sybase-recordset.c:550
 #, fuzzy
 msgid "Could not allocate structure for column metainformation."
-msgstr "%s: Nisem mogel rezervirati pomnilnika za ukazni niz"
+msgstr "Ni mogoče rezervirati pomnilnika za ukazni niz"
 
 #: providers/sybase/gda-sybase-recordset.c:364
 #: providers/sybase/gda-sybase-recordset.c:554
@@ -1950,12 +2030,12 @@ msgstr ""
 #: providers/sybase/gda-sybase-recordset.c:404
 #, fuzzy, c-format
 msgid "Could not run %s on column %d"
-msgstr "Nisem mogel razčleniti dokumenta XML"
+msgstr "Ni mogoče razčleniti dokumenta XML"
 
 #: providers/sybase/gda-sybase-recordset.c:392
 #, fuzzy, c-format
 msgid "Could not allocate data placeholder for column %d"
-msgstr "nisem mogel rezervirati držalca podatkov"
+msgstr "Ni mogoče rezervirati držalca podatkov"
 
 #: providers/sybase/gda-sybase-recordset.c:423
 #, c-format
@@ -1973,9 +2053,7 @@ msgid "%s terminated with unexpected return code."
 msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:510
-msgid ""
-"an error occured when calling ct_diag attempting to retrieve a server "
-"message count for resultset"
+msgid "an error occured when calling ct_diag attempting to retrieve a server message count for resultset"
 msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:519
@@ -1983,12 +2061,11 @@ msgid "attempting to make recordset and msg count != 1 !"
 msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:532
-msgid ""
-"an error occured when calling ct_diag attempting to retrieve a server "
-"message for recordset"
+msgid "an error occured when calling ct_diag attempting to retrieve a server message for recordset"
 msgstr ""
 
-#: providers/sybase/gda-sybase-recordset.c:591 providers/sybase/utils.c:408
+#: providers/sybase/gda-sybase-recordset.c:591
+#: providers/sybase/utils.c:408
 msgid "call to ct_diag failed when attempting to clear the server messages"
 msgstr ""
 
@@ -2018,7 +2095,7 @@ msgstr ""
 #: providers/sybase/libmain.c:80
 #, fuzzy
 msgid "Locale"
-msgstr "Neresnično"
+msgstr "Jezikovna oznaka"
 
 #: providers/sybase/libmain.c:81
 msgid "Locale to use in the connection"
@@ -2077,15 +2154,14 @@ msgstr "\tuporabniško ime = %s\n"
 #: providers/sybase/utils.c:147
 #, fuzzy
 msgid "ct_diag() failed determining # of client messages."
-msgstr "Nisem mogel dobiti števila odjemalčevih sporočil"
+msgstr "Ni mogoče dobiti števila odjemalčevih sporočil"
 
 #: providers/sybase/utils.c:202
 msgid "call to cs_diag failed when attempting to the amount of client messages"
 msgstr ""
 
 #: providers/sybase/utils.c:220
-msgid ""
-"an error occured when calling cs_diag attempting to retrieve a client message"
+msgid "an error occured when calling cs_diag attempting to retrieve a client message"
 msgstr ""
 
 #: providers/sybase/utils.c:230
@@ -2096,13 +2172,11 @@ msgstr "Napaka"
 #: providers/sybase/utils.c:232
 #, fuzzy
 msgid ") Message: "
-msgstr "Sporočilo strežnika:"
+msgstr "_Sporočilo..."
 
 #: providers/sybase/utils.c:244
 #, c-format
-msgid ""
-"Sybase OpenClient Msg: severity(%ld), number(%ld), origin(%ld), layer(%ld): %"
-"s"
+msgid "Sybase OpenClient Msg: severity(%ld), number(%ld), origin(%ld), layer(%ld): %s"
 msgstr ""
 
 #: providers/sybase/utils.c:272
@@ -2114,14 +2188,13 @@ msgid "call to ct_diag failed when attempting to the amount of server messages"
 msgstr ""
 
 #: providers/sybase/utils.c:330
-msgid ""
-"an error occured when calling ct_diag attempting to retrieve a server message"
+msgid "an error occured when calling ct_diag attempting to retrieve a server message"
 msgstr ""
 
 #: providers/sybase/utils.c:342
 #, fuzzy
 msgid "Server:"
-msgstr "Sporočilo strežnika:"
+msgstr "Strežnik:"
 
 #: providers/sybase/utils.c:346
 #, fuzzy
@@ -2131,40 +2204,44 @@ msgstr "Shranjene procedure"
 #: providers/sybase/utils.c:350
 #, fuzzy
 msgid "Number"
-msgstr "Ime"
+msgstr "Številka"
 
-#: providers/sybase/utils.c:353 providers/sybase/utils.c:470
+#: providers/sybase/utils.c:353
+#: providers/sybase/utils.c:470
 msgid "Severity"
 msgstr ""
 
 #: providers/sybase/utils.c:356
+#, fuzzy
 msgid "State"
-msgstr ""
+msgstr "Stanje"
 
 #: providers/sybase/utils.c:359
+#, fuzzy
 msgid "Line"
-msgstr ""
+msgstr "Črta"
 
 #: providers/sybase/utils.c:442
 msgid "call to ct_diag failed when attempting to the amount of client messages"
 msgstr ""
 
 #: providers/sybase/utils.c:459
-msgid ""
-"an error occured when calling ct_diag attempting to retrieve a client message"
+msgid "an error occured when calling ct_diag attempting to retrieve a client message"
 msgstr ""
 
 #: providers/sybase/utils.c:472
+#, fuzzy
 msgid "Layer"
-msgstr ""
+msgstr "Plast"
 
 #: providers/sybase/utils.c:474
 msgid "Origin"
 msgstr ""
 
 #: providers/sybase/utils.c:476
+#, fuzzy
 msgid "Message Number"
-msgstr ""
+msgstr "Številka sporočila"
 
 #: providers/sybase/utils.c:498
 msgid "call to ct_diag failed when attempting to clear the client messages"
@@ -2194,8 +2271,9 @@ msgid "Provider for Xbase (dBase, FoxPro, etc) files"
 msgstr ""
 
 #: providers/xbase/libmain.c:52
+#, fuzzy
 msgid "Directory"
-msgstr ""
+msgstr "Mapa"
 
 #: providers/xbase/libmain.c:53
 msgid "Directory containing the xBase files"
@@ -2203,17 +2281,17 @@ msgstr ""
 
 #: providers/xml/gda-xml-provider.c:191
 #, fuzzy
-msgid ""
-"A full path must be specified on the connection string to open a database on "
-"the XML provider."
+msgid "A full path must be specified on the connection string to open a database on the XML provider."
 msgstr "Niz povezave mora navesti polno pot za odprtje zbirke podatkov."
 
-#: providers/xml/gda-xml-provider.c:222 providers/xml/gda-xml-provider.c:244
+#: providers/xml/gda-xml-provider.c:222
+#: providers/xml/gda-xml-provider.c:244
 #, fuzzy
 msgid "Invalid XML handle"
 msgstr "Neveljaven obravnavalnik MYSQL"
 
-#: providers/xml/gda-xml-provider.c:263 providers/xml/gda-xml-provider.c:278
+#: providers/xml/gda-xml-provider.c:263
+#: providers/xml/gda-xml-provider.c:278
 #: providers/xml/gda-xml-provider.c:329
 #, fuzzy
 msgid "Invalid internal handle"
@@ -2222,12 +2300,13 @@ msgstr "Neveljaven obravnavalnik Sqlite"
 #: providers/xml/gda-xml-provider.c:368
 #, fuzzy
 msgid "Not Implemented"
-msgstr "%s ni pimplementiran"
+msgstr "Ni del programa"
 
-#: providers/xml/gda-xml-provider.c:506 providers/xml/gda-xml-provider.c:512
+#: providers/xml/gda-xml-provider.c:506
+#: providers/xml/gda-xml-provider.c:512
 #, fuzzy
 msgid "Invalid argument"
-msgstr "Neveljaven list"
+msgstr "Neveljaven argument"
 
 #: providers/xml/gda-xml-provider.c:538
 #, fuzzy
@@ -2244,38 +2323,43 @@ msgid "Big unsigned integer"
 msgstr ""
 
 #: providers/xml/gda-xml-provider.c:662
+#, fuzzy
 msgid "Binary"
-msgstr ""
+msgstr "_Binarno"
 
 #: providers/xml/gda-xml-provider.c:663
+#, fuzzy
 msgid "Boolean"
-msgstr ""
+msgstr "Boolean"
 
 #: providers/xml/gda-xml-provider.c:664
 #, fuzzy
 msgid "Date"
-msgstr "ime zbirke podatkov"
+msgstr "Datum"
 
 #: providers/xml/gda-xml-provider.c:665
 msgid "Double precision"
 msgstr ""
 
 #: providers/xml/gda-xml-provider.c:666
+#, fuzzy
 msgid "Integer"
-msgstr ""
+msgstr "Celo število"
 
 #: providers/xml/gda-xml-provider.c:667
+#, fuzzy
 msgid "List"
-msgstr ""
+msgstr "Seznam"
 
 #: providers/xml/gda-xml-provider.c:668
+#, fuzzy
 msgid "Money"
-msgstr ""
+msgstr "Denar"
 
 #: providers/xml/gda-xml-provider.c:669
 #, fuzzy
 msgid "Numeric"
-msgstr "Ime"
+msgstr "Številka 7"
 
 #: providers/xml/gda-xml-provider.c:670
 msgid "Point"
@@ -2294,16 +2378,19 @@ msgid "Small unsigned integer"
 msgstr ""
 
 #: providers/xml/gda-xml-provider.c:674
+#, fuzzy
 msgid "String"
-msgstr ""
+msgstr "Niz"
 
 #: providers/xml/gda-xml-provider.c:675
+#, fuzzy
 msgid "Time"
-msgstr ""
+msgstr "Čas"
 
 #: providers/xml/gda-xml-provider.c:676
+#, fuzzy
 msgid "Timestamp"
-msgstr ""
+msgstr "Časovni žig:"
 
 #: providers/xml/gda-xml-provider.c:677
 msgid "Tiny integer"
@@ -2314,12 +2401,14 @@ msgid "Tiny unsigned integer"
 msgstr ""
 
 #: providers/xml/gda-xml-provider.c:680
+#, fuzzy
 msgid "Unsigned integer"
-msgstr ""
+msgstr "Nepodpisano celo število"
 
 #: providers/xml/libmain.c:33
+#, fuzzy
 msgid "XML"
-msgstr ""
+msgstr "XML"
 
 #: providers/xml/libmain.c:39
 msgid "XML provider, based on the libgda XML database format"
@@ -2332,7 +2421,7 @@ msgstr "Niz povezave mora navesti polno pot za odprtje zbirke podatkov."
 
 #: report/libgda-report/gda-report-document.c:179
 msgid "Could not parse XML document"
-msgstr "Nisem mogel razčleniti dokumenta XML"
+msgstr "Ni mogoče razčleniti dokumenta XML"
 
 #: report/libgda-report/gda-report-document.c:189
 msgid "XML document is not valid"
@@ -2341,7 +2430,7 @@ msgstr ""
 #: report/libgda-report/gda-report-document.c:221
 #, c-format
 msgid "Could not get file from %s"
-msgstr "Nisem mogel dobiti datoteke od %s"
+msgstr "Ni mogoče dobiti datoteke od %s"
 
 #: report/libgda-report/gda-report-item-detail.c:160
 #: report/libgda-report/gda-report-item-pagefooter.c:171
@@ -2374,7 +2463,7 @@ msgid "Item with ID %s is not a repfield"
 msgstr "Predmet z idjem %s ni bil najden"
 
 #: report/libgda-report/gda-report-item.c:276
-msgid "Error setting parent -> child relation"
+msgid "Error setting parent -&gt; child relation"
 msgstr ""
 
 #: report/libgda-report/gda-report-item.c:375
@@ -2385,7 +2474,7 @@ msgstr ""
 #: report/libgda-report/gda-report-valid.c:130
 #, fuzzy, c-format
 msgid "could not get DTD from %s"
-msgstr "Nisem mogel dobiti datoteke od %s"
+msgstr "Ni mogoče dobiti datoteke od %s"
 
 #: report/libgda-report/gda-report-valid.c:231
 #, c-format
@@ -2409,7 +2498,7 @@ msgstr "\t\tBREZ\n"
 #: testing/client.c:87
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
-msgstr "** NAPAKA: nisem mogel odpreti povezave z %s\n"
+msgstr "** NAPAKA: ni mogoče odpreti povezave z %s\n"
 
 #. show provider features
 #: testing/client.c:92
@@ -2421,17 +2510,33 @@ msgstr "\tZmožnosti nuditelja...\n"
 msgid "\t\tAggregates: %s\n"
 msgstr "Agregati"
 
-#: testing/client.c:95 testing/client.c:98 testing/client.c:101
-#: testing/client.c:104 testing/client.c:107 testing/client.c:110
-#: testing/client.c:113 testing/client.c:116 testing/client.c:119
-#: testing/client.c:122 testing/client.c:125 testing/client.c:128
+#: testing/client.c:95
+#: testing/client.c:98
+#: testing/client.c:101
+#: testing/client.c:104
+#: testing/client.c:107
+#: testing/client.c:110
+#: testing/client.c:113
+#: testing/client.c:116
+#: testing/client.c:119
+#: testing/client.c:122
+#: testing/client.c:125
+#: testing/client.c:128
 msgid "Supported"
 msgstr "Podprto"
 
-#: testing/client.c:95 testing/client.c:98 testing/client.c:101
-#: testing/client.c:104 testing/client.c:107 testing/client.c:110
-#: testing/client.c:113 testing/client.c:116 testing/client.c:119
-#: testing/client.c:122 testing/client.c:125 testing/client.c:128
+#: testing/client.c:95
+#: testing/client.c:98
+#: testing/client.c:101
+#: testing/client.c:104
+#: testing/client.c:107
+#: testing/client.c:110
+#: testing/client.c:113
+#: testing/client.c:116
+#: testing/client.c:119
+#: testing/client.c:122
+#: testing/client.c:125
+#: testing/client.c:128
 msgid "Not supported"
 msgstr "Nepodprto"
 
@@ -2509,7 +2614,7 @@ msgstr "Shranjene procedure"
 
 #: testing/client.c:136
 msgid "Connection Tables"
-msgstr "Povezane tabele"
+msgstr "Povezane razpredelnice"
 
 #: testing/client.c:137
 msgid "Available types"
@@ -2520,14 +2625,18 @@ msgid "Aggregates"
 msgstr "Agregati"
 
 #: testing/client.c:144
+#, fuzzy
 msgid "Languages"
-msgstr ""
+msgstr "Jeziki"
 
-#: testing/client.c:149 testing/client.c:157
+#: testing/client.c:149
+#: testing/client.c:157
 msgid "\tStarting transaction..."
 msgstr "\tZačenjam transakcijo..."
 
-#: testing/client.c:151 testing/client.c:155 testing/client.c:159
+#: testing/client.c:151
+#: testing/client.c:155
+#: testing/client.c:159
 #: testing/client.c:163
 msgid "Error"
 msgstr "Napaka"
@@ -2582,10 +2691,12 @@ msgid "The FILE parameter is not defined in the connection string."
 msgstr "Niz povezave mora navesti polno pot za odprtje zbirke podatkov."
 
 #: providers/bdb/gda-bdb-provider.c:185
+#, fuzzy
 msgid "-"
-msgstr ""
+msgstr "-"
 
-#: providers/bdb/gda-bdb-provider.c:242 providers/bdb/gda-bdb-provider.c:263
+#: providers/bdb/gda-bdb-provider.c:242
+#: providers/bdb/gda-bdb-provider.c:263
 #: providers/bdb/gda-bdb-provider.c:286
 #, fuzzy
 msgid "Invalid BDB handle"
@@ -2619,615 +2730,422 @@ msgid "Name of the database in the database file to be used"
 msgstr ""
 
 #~ msgid "Could not initiate Sybase component factory"
-#~ msgstr "Ne morem inicializirati tovarne komponent Sybase"
-
+#~ msgstr "Ni mogoče zagnati tovarne komponent Sybase"
 #~ msgid "Could not query CORBA components"
-#~ msgstr "Ne morem poizvedeti po komponentah CORBA"
-
+#~ msgstr "Ni mogoče poizvedeti po komponentah CORBA"
 #~ msgid "Could not query CORBA providers"
-#~ msgstr "Ne morem poizvedeti po nuditeljih CORBA"
-
+#~ msgstr "Ni mogoče poizvedeti po nuditeljih CORBA"
 #~ msgid "%s: An Error occured in the CORBA system."
 #~ msgstr "%s: V sistemu CORBA se je zgodila napaka."
-
 #~ msgid "Unknown CORBA exception for connection"
 #~ msgstr "Neznana izjema CORBA za povezavo"
-
 #~ msgid "Could not initialize Bonobo"
-#~ msgstr "Nisem mogel inicializirati Bonoba"
-
+#~ msgstr "Ni mogoče inicializirati Bonoba"
 #~ msgid "Don't know how to create components with IID %s"
 #~ msgstr "Ne znam ustvariti komponent z IID %s"
-
 #~ msgid "Could not duplicate client object. Client won't get notifications"
 #~ msgstr ""
-#~ "Nisem mogel podvojiti predmeta odjemalca. Odjemalec ne bo dobival obvestil"
-
+#~ "Ni mogoče podvojiti predmeta odjemalca. Odjemalec ne bo dobival obvestil"
 #~ msgid "Could not notify client about action %d"
-#~ msgstr "Nisem mogel obvestiti odjemalca o dejanju %d"
-
+#~ msgstr "Ni mogoče obvestiti odjemalca o dejanju %d"
 #~ msgid "No implementation for the fetch() method found"
 #~ msgstr "Implementacija metode fetch() ni bila najdena"
-
 #~ msgid "Default component factory"
 #~ msgstr "Privzeta tovrana komponent"
-
 #~ msgid "GDA Default Datasource Access"
 #~ msgstr "Privzet dostop GDA do virov podatkov"
-
 #~ msgid "Could not initiate Default component factory"
-#~ msgstr "Nisem mogel inicializirati privzete tovarne komponent"
-
+#~ msgstr "Ni mogoče inicializirati privzete tovarne komponent"
 #~ msgid "GDA Datasource Access for MySQL"
 #~ msgstr "Dostop GDA za vira podatkov MySQL"
-
 #~ msgid "MySQL component factory"
 #~ msgstr "Tovarna komponent MySQL"
-
 #~ msgid "Could not initiate MySQL component factory"
-#~ msgstr "Nisem mogel inicializirati tovarne komponent MySQL"
-
+#~ msgstr "Ni mogoče inicializirati tovarne komponent MySQL"
 #~ msgid "GDA Datasource Access for ODBC"
 #~ msgstr "Dostop GDA za vir podatkov ODBC"
-
 #~ msgid "ODBC component factory"
 #~ msgstr "Tovarna komponent ODBC"
-
 #~ msgid "Could not initiate ODBC component factory"
-#~ msgstr "Nisem mogel inicializirati tovarne komponent ODBC"
-
+#~ msgstr "Ni mogoče inicializirati tovarne komponent ODBC"
 #~ msgid "GDA Datasource Access for Oracle"
 #~ msgstr "Dostop GDA za vir podatkov Oracle"
-
 #~ msgid "Oracle component factory"
 #~ msgstr "Tovarna komponent Oracle"
-
 #~ msgid "Could not initialize OCI library"
-#~ msgstr "Nisem mogel inicializirati knjižnice OCI"
-
+#~ msgstr "Ni mogoče inicializirati knjižnice OCI"
 #~ msgid "GDA Datasource Access for Postgres"
 #~ msgstr "Dostop GDA za vira podatkov Postgres"
-
 #~ msgid "Postgres component factory"
 #~ msgstr "Tovarna komponent Postgres"
-
 #~ msgid "Could not initiate PostgreSQL component factory"
-#~ msgstr "Nisem mogel inicializirati tovarne komponent PostzgreSQL"
-
+#~ msgstr "Ni mogoče inicializirati tovarne komponent PostzgreSQL"
 #~ msgid "GDA SQLite Datasource Access"
 #~ msgstr "Dostop GDA za vir podatkov SQLite"
-
 #~ msgid "SQLite component factory"
 #~ msgstr "Tovarna komponent SQLite"
-
 #~ msgid "Could not initiate Sqlite component factory"
-#~ msgstr "Nisem mogel inicializirati tovarne komponent Sqlite"
-
+#~ msgstr "Ni mogoče inicializirati tovarne komponent Sqlite"
 #~ msgid "GDA Datasource Access for Sybase"
 #~ msgstr "Dostop GDA za vir podatkov Sybase"
-
 #~ msgid "Sybase component factory"
 #~ msgstr "Tovarna komponent Sybase"
-
 #~ msgid "CORBA exception: %s"
 #~ msgstr "Izjema v sistemu CORBA: %s"
-
 #~ msgid "Could not create global GDA client"
-#~ msgstr "Nisem mogel ustvariti globalnega odjemalca GDA"
-
+#~ msgstr "Ni mogoče ustvariti globalnega odjemalca GDA"
 #~ msgid "GDA Report engine"
 #~ msgstr "Orodje za poročila GDA"
-
 #~ msgid "GDA Report engine factory"
 #~ msgstr "Tovarna orodij za poročila GDA"
-
 #~ msgid "Could not parse XML report"
-#~ msgstr "Nisem mogel razčleniti poročila XML"
-
+#~ msgstr "Ni mogoče razčleniti poročila XML"
 #~ msgid "Could not activate report engine"
 #~ msgstr "Nisem uspel aktivirati ustvarjalca poročil"
-
 #~ msgid "Could not create BonoboStreamMem object"
-#~ msgstr "Nisem mogel ustvariti predmeta BonoboStreamMem"
-
+#~ msgstr "Ni mogoče ustvariti predmeta BonoboStreamMem"
 #~ msgid "Could not initiate Report component factory"
 #~ msgstr "Nisem uspel ustvariti tovarne komponent poročil"
-
 #~ msgid "\ttype = %s\n"
 #~ msgstr "\tvrsta = %s\n"
-
 #~ msgid "\trepo_ids ="
 #~ msgstr "\trepo_ids ="
-
 #~ msgid "\thostname = %s\n"
 #~ msgstr "\time gostitelja = %s\n"
-
 #~ msgid "\tdomain = %s\n"
 #~ msgstr "\tdomena = %s\n"
 
 #, fuzzy
 #~ msgid "Bad formed document at %s"
 #~ msgstr "slabo oblikovan dokument"
-
 #~ msgid "[GDA Client Library]"
 #~ msgstr "[Knjižnjica odjemalca GDA]"
-
-#~ msgid "<NULL>"
-#~ msgstr "<NULA>"
-
-#~ msgid "<Unknown GDA Type(NULL)>"
-#~ msgstr "<Neznan GDA Tip(NULA)>"
-
+#~ msgid "&lt;NULL&gt;"
+#~ msgstr "&lt;NULA&gt;"
+#~ msgid "&lt;Unknown GDA Type(NULL)&gt;"
+#~ msgstr "&lt;Neznan GDA Tip(NULA)&gt;"
 #~ msgid "True"
 #~ msgstr "Resnično"
-
 #~ msgid "%s: The server didn't respond."
 #~ msgstr "%s: Strežnik se ni odzval."
-
 #~ msgid "[CORBA User Exception]"
 #~ msgstr "[Uporabniška izjema CORBA]"
-
 #~ msgid "Saving log...x"
 #~ msgstr "Shranjujem dnevnik...x"
-
 #~ msgid "ERROR: "
 #~ msgstr "NAPAKA: "
-
 #~ msgid "MESSAGE: "
 #~ msgstr "SPOROČILO: "
-
 #~ msgid "thread is already running"
 #~ msgstr "nit že teče"
-
 #~ msgid "This connection is being closed, so all listeners are released"
 #~ msgstr "Povezava se zapira, zato so vsi slušatelji spuščeni"
-
 #~ msgid "Could not get pointer to server implementation"
-#~ msgstr "Ne morem dobiti kazalca do implementacije strežnika"
-
+#~ msgstr "Ni mogoče dobiti kazalca do implementacije strežnika"
 #~ msgid "Received signal %d, shutting down"
 #~ msgstr "Prejel signal %d, ustavljam se"
-
 #~ msgid "Received signal %d. Ignoring"
 #~ msgstr "Prejel signal %d. Ignoriram"
-
 #~ msgid "Attempt to initialize an already initialized provider"
 #~ msgstr "Poskus inicializacije že inicializiranega nuditelja"
-
 #~ msgid "Unknown schema type"
 #~ msgstr "Neznana vrsta sheme"
-
 #~ msgid "error '%s' at %s"
 #~ msgstr "napaka '%s' pri %s"
-
 #~ msgid "Could not register LDAP provider implementation"
-#~ msgstr "Nisem mogel registrirati implementacije nuditelja LDAP"
-
+#~ msgstr "Ni mogoče registrirati implementacije nuditelja LDAP"
 #~ msgid "GDA Datasource Access for Interbase"
 #~ msgstr "Dostop GDA do vira podatkov za Interbase"
-
 #~ msgid "InterBase provider connection factory"
 #~ msgstr "Tovarna povezav nuditelja Interbase"
-
 #~ msgid "Error code %ld"
 #~ msgstr "Šifra napake %ld"
-
 #~ msgid "Could not register INTERBASE provider implementation"
-#~ msgstr "Nisem mogel registrirati implementacije nuditelja INTERBASE"
-
+#~ msgstr "Ni mogoče registrirati implementacije nuditelja INTERBASE"
 #~ msgid "GDA Datasource Access for Mail"
 #~ msgstr "Dostop GDA do vira podatkov za Pošto"
-
 #~ msgid "Mail provider connection factory"
 #~ msgstr "Tovarna povezav nuditelja pošte"
-
 #~ msgid "Unhandled SCHEMA_QTYPE %d"
 #~ msgstr "Neobravnavan SCHEMA_QTYPE %d"
-
 #~ msgid "Could not register Mail provider implementation"
-#~ msgstr "Nisem mogel registrirati implementacije nuditelja pošte"
-
+#~ msgstr "Ni mogoče registrirati implementacije nuditelja pošte"
 #~ msgid "GDA Datasource Access for MDB (MS Access) files"
 #~ msgstr "Dostop GDA do vira podatkov za datoteke MDB (MS Access)"
-
 #~ msgid "MDB provider connection factory"
 #~ msgstr "Tovarna povezav nuditelja MDB"
-
 #~ msgid "executing command '%s'"
 #~ msgstr "izvajam ukaz %s'"
-
 #~ msgid "info '%s'"
 #~ msgstr "podatki '%s'"
-
 #~ msgid ""
 #~ "%s:%d: You cannot provide a UNIX_SOCKET if you also provide either a HOST "
 #~ "or a PORT. Please remove the UNIX_SOCKET, or remove both the HOST and "
 #~ "PORT options"
 #~ msgstr ""
-#~ "%s:%d: Ne morete navesti UNIX_SOCKET če zraven navedete tudi HOST ali "
-#~ "PORT. Prosim odstranite UNIX_SOCKET, ali odstranite oba HOST in PORT"
-
+#~ "%s:%d: Ni mogoče navesti UNIX_SOCKET če je zraven naveden tudi HOST ali "
+#~ "PORT. Odstranite UNIX_SOCKET, ali pa odstranite oba HOST in PORT"
 #~ msgid "%s:%d: You must  provide the filename with the MS Access database"
 #~ msgstr "%s:%d: Navesti morate ime datoteke z zbirko podatkov MS Access"
-
 #~ msgid "Opening connection with filename=%s, user=%s, password=%s"
 #~ msgstr "Vzpostavljam povezavo z ime datoteke=%s, uporabnik=%s, geslo=%s"
-
 #~ msgid "mysql_recset is NULL"
 #~ msgstr "mysql_recset je NULA"
-
 #~ msgid "No table name given for SCHEMA_COLS"
-#~ msgstr "Ni podanega imena tabele za SCHEMA_COLS"
-
+#~ msgstr "Ni podanega imena razpredelnice za SCHEMA_COLS"
 #~ msgid ""
 #~ "Opening connection with user=%s, password=%s, host=%s, port=%s, "
 #~ "unix_socket=%s"
 #~ msgstr ""
 #~ "Vzpostavljam povezavo z uporabnik=%s, geslo=%s, gostitelj=%s, host=%s, "
 #~ "unix_vrata=%s"
-
 #~ msgid "Unknown"
 #~ msgstr "Neznano"
-
 #~ msgid "No MYSQL_Connection for GdaServerConnection"
 #~ msgstr "Ni MYSQL_Connection za GdaServerConnection"
-
 #~ msgid "gda_odbc_connection_open_schema: Unhandled SCHEMA_QTYPE %d\n"
 #~ msgstr "gda_odbc_connection_open_schema: Obravnavan SCHEMA_QTYPE %d\n"
-
 #~ msgid "no text"
 #~ msgstr "ni besedila"
-
 #~ msgid "Could not register ODBC provider implementation"
-#~ msgstr "Nisem mogel registrirati implementacije nuditelja ODBC"
-
+#~ msgstr "Ni mogoče registrirati implementacije nuditelja ODBC"
 #~ msgid "command object being created without associated connection"
 #~ msgstr "ukazni predmet ustvarjen brez ustrezne povezave"
-
 #~ msgid "Executing command '%s'"
 #~ msgstr "Izvajam ukaz '%s'"
-
 #~ msgid "error in OCIHandleAlloc() HTYPE_SVCCTX"
 #~ msgstr "napaka v OCIHandleAclloc() HTYPE_SVCCTX"
-
 #~ msgid "error in OCIHandleAlloc() HTYPE_SERVER"
 #~ msgstr "napaka v OCIHandleAclloc() HTYPE_SERVER"
-
 #~ msgid "error in OCIHandleAlloc() HTYPE_ERROR"
 #~ msgstr "napaka v OCIHandleAclloc() HTYPE_ERROR"
-
 #~ msgid "Unknown ORACLE type %ld"
 #~ msgstr "Neznan ORACLE-ov tip %ld"
-
 #~ msgid "Unknown ORACLE data type in fill_field_values"
 #~ msgstr "Neznan ORACLE-ov podatkovni tip v fill_field_values"
-
 #~ msgid "recordset object being created without associated connection"
 #~ msgstr "kartotehni predmet ustvarjen brez ustrezne povezave"
-
 #~ msgid "Could not register ORACLE provider implementation"
-#~ msgstr "Nisem mogel registrirati implementacije nuditelja ORACLE"
-
+#~ msgstr "Ni mogoče registrirati implementacije nuditelja ORACLE"
 #~ msgid "postgres_recset is NULL"
 #~ msgstr "postgres_recset je NULA"
-
 #~ msgid "Connection seems to be dead"
-#~ msgstr "Povezava izgleda mrtva"
-
+#~ msgstr "Povezava je videti mrtva"
 #~ msgid "sending cmd failed"
 #~ msgstr "po9iljanje ukaza ni uspelo"
-
 #~ msgid "Getting recordset userdata failed"
 #~ msgstr "Dobivanje recordset uporabniških podatkov ni uspelo"
-
 #~ msgid "Command execution finished, all results processed"
 #~ msgstr "Izvajanje ukaza je bilo konhano, vsi rezultati so obdelani"
-
 #~ msgid "Command failed"
 #~ msgstr "Ukaz ni uspel"
-
 #~ msgid "Execution of resultless command succeeded"
 #~ msgstr "Izvedba ukaza brez rezultatov je uspela"
-
 #~ msgid "No further results, command completly succeeded."
 #~ msgstr "Ni nadalnjih rezultatov, ukaz uspešno zaključen."
-
 #~ msgid "An error occured during command execution."
 #~ msgstr "Ob izvajanju ukaza se je zgudila napaka."
-
 #~ msgid "Cmd execution returned unknown result, may be an error"
 #~ msgstr "Izvedba ukaza je vrnila neznan rezultat, to je lahko napaka"
-
 #~ msgid "No data returned, freeing recordset structure"
 #~ msgstr "Ni vrnjenih podatkov, sproščam recordset strukturo"
-
 #~ msgid "Not enough memory for sybase_Connection"
 #~ msgstr "Ni dovolj pomnilnika za sybase_Connection"
-
 #~ msgid "schema_cols: table_name '%s'"
 #~ msgstr "schema_cols: table_name '%s'"
-
 #~ msgid "Could not allocate enough memory for query"
-#~ msgstr "Nisem mogel rezervirati poizvedbene strukture"
-
+#~ msgstr "Ni mogoče rezervirati poizvedbene strukture"
 #~ msgid "schema_procs: invalid constraint type %d"
 #~ msgstr "schema_procs: neveljaven tip omejitve %d"
-
 #~ msgid "schema_tables: invalid constraint type %d"
 #~ msgstr "schema_tables: neveljaven tip omejitve %d"
-
 #~ msgid "connection status: %x"
 #~ msgstr "stanje povezave: %x"
-
 #~ msgid "return code: %x"
 #~ msgstr "vrnjena vrednost: %x"
-
 #~ msgid "Reconnected to '%s'"
 #~ msgstr "Znova povezan z '%s'"
-
 #~ msgid "Connected to %s"
 #~ msgstr "Povezan z %s"
-
 #~ msgid "%s: Could not allocate cmd structure"
-#~ msgstr "%s: Nisem mogel rezervirati ukazne strukture"
-
+#~ msgstr "%s: Ni mogoče rezervirati ukazne strukture"
 #~ msgid "%s: selecting database failed"
 #~ msgstr "%s: izbiranje zbirke podatkov ni uspelo"
-
 #~ msgid "Could not configure locale to be '%s'"
-#~ msgstr "Nisem mogel nastaviti locale, da bi bil '%s'"
-
+#~ msgstr "Ni mogoče nastaviti locale, da bi bil '%s'"
 #~ msgid "gda_sybase_error_make(%p,%p,%p,%p)"
 #~ msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
-
 #~ msgid "No error flag ist set, though %s is called. This may be a bug."
 #~ msgstr ""
 #~ "Nobena zastavica napake ni postavljena kljub klicu %s. To je lahko hrošč."
-
 #~ msgid "cs_diag() initialized"
 #~ msgstr "cs_diag() inicializiran"
-
 #~ msgid "Could not initialize ct_diag()"
-#~ msgstr "Nisem mogel inicializirati ct_diag()"
-
+#~ msgstr "Ni mogoče inicializirati ct_diag()"
 #~ msgid "%s could not find server implementation"
-#~ msgstr "%s nisem našel implementacije stre>nika"
-
+#~ msgstr "%s nisem našel implementacije stre&gt;nika"
 #~ msgid "%s could not get cnc userdata"
 #~ msgstr "%s ne more dobit cnc podatkov uporabnika"
-
 #~ msgid "Could not get # of messages"
 #~ msgstr "Nisem uspel dobiti števila sporočil"
-
 #~ msgid "%d ctlib messages to fetch"
 #~ msgstr "%d sporočil ctlib za prenos"
-
 #~ msgid "%d ctlib message to fetch"
 #~ msgstr "%d sporočil ctlib za prenos"
-
 #~ msgid "error is nullpointer in gda_sybase_messages_handle"
 #~ msgstr "napaka je nični kazalec v gda_sybase_messages_handle"
-
 #~ msgid "Fetching %d client messages"
 #~ msgstr "Dobivam %d odjemalčevih sporočil"
-
 #~ msgid "Fetching %d client message"
 #~ msgstr "Dobivam %d odjemalčevo sporočilo"
-
 #~ msgid "Could not clear client messages"
-#~ msgstr "Nisem mogel počistiti odjemalčevih sporočil"
-
+#~ msgstr "Ni mogoče počistiti odjemalčevih sporočil"
 #~ msgid "Fetching %d server messages"
 #~ msgstr "Dobivam %d strežnikovih sporočil"
-
 #~ msgid "Fetching %d server message"
 #~ msgstr "Dobivam %d strežnikovo sporočilo"
-
 #~ msgid "Could not get server msg # %d"
-#~ msgstr "Nisem mogel dobiti strežnikovega sporočila številka %d"
-
+#~ msgstr "Ni mogoče dobiti strežnikovega sporočila številka %d"
 #~ msgid "Could not get # of cslib messages"
-#~ msgstr "Nisem mogel dobiti števila sporočil cslib"
-
+#~ msgstr "Ni mogoče dobiti števila sporočil cslib"
 #~ msgid "Fetching %d cslib messages"
 #~ msgstr "Dobivam %d sporočil cslib"
-
 #~ msgid "Fetching %d cslib message"
 #~ msgstr "Dobivam %d sporočilo cslib"
-
 #~ msgid "Could not get cslib msg # %d"
-#~ msgstr "Nisem mogel dobiti sporočila cslib številka %d"
-
+#~ msgstr "Ni mogoče dobiti sporočila cslib številka %d"
 #~ msgid "Could not clear cslib messages"
-#~ msgstr "Nisem mogel počistiti sporočil cslib"
-
+#~ msgstr "Ni mogoče počistiti sporočil cslib"
 #~ msgid "Client message:"
 #~ msgstr "Sporočilo odjemalca:"
-
 #~ msgid "CS-Library error:"
 #~ msgstr "Napaka knjižnice CS:"
-
 #~ msgid "fetch error at row %d"
 #~ msgstr "napaka pri prenosu v vrstici %d"
-
 #~ msgid "CS_END_DATA on row %d; canceling"
 #~ msgstr "CS_END_DATA na vrstici %d; razveljavljam"
-
 #~ msgid "%s: Error (%d)"
 #~ msgstr "%s: Napaka (%d)"
-
 #~ msgid "Failed fetching # of columns"
 #~ msgstr "Nisem uspel prenesti števila stolpcev"
-
 #~ msgid "%s could not allocate datafmt info"
-#~ msgstr "%s nisem mogel rezervirati datafmt podatkov"
-
+#~ msgstr "%s Ni mogoče rezervirati datafmt podatkov"
 #~ msgid "%s could not allocate data fields"
-#~ msgstr "%s nisem mogel rezervirati podatkovnih polj"
-
+#~ msgstr "%s Ni mogoče rezervirati podatkovnih polj"
 #~ msgid "ct_describe on col # %d"
 #~ msgstr "ct_describe v stolpcu št. %d"
-
 #~ msgid "ct_describe on col # %d failed"
 #~ msgstr "cd_describe v stolpcu %d ni uspel"
-
 #~ msgid "ct_describe(%d): '%s', %d (%s)"
 #~ msgstr "ct_describe(%d): '%s', %d (%s)"
-
 #~ msgid "could not ct_bind data holder to column"
-#~ msgstr "ne morem povezati ct_bind držalca podtakov s stolpcom"
-
+#~ msgstr "Ni mogoče povezati ct_bind držalca podtakov s stolpcom"
 #~ msgid "illegal type detected, aborting"
 #~ msgstr "zaznan neveljaven tip, prekinjam"
-
 #~ msgid "could not allocate field"
-#~ msgstr "nisem mogel rezervirati polja"
-
+#~ msgstr "Ni mogoče rezervirati polja"
 #~ msgid "Could not register gda-sybase provider implementation"
-#~ msgstr "Nisem mogel registrirati implementacije nuditelja gda-sybase"
-
+#~ msgstr "Ni mogoče registrirati implementacije nuditelja gda-sybase"
 #~ msgid "GDA Datasource Access for primebase"
 #~ msgstr "Dostop GDA do vira podatkov za primebase"
-
 #~ msgid "Could not connect to '%s@%s:%s' with connparm '%s'"
 #~ msgstr "Nisem se mogel povezati z '%s@%s:%s' s parametri povezave: '%s'"
-
 #~ msgid "%2ld: Connected to '%s@%s:%s' with connparm: '%s'"
 #~ msgstr "%2ld: Povezan z '%s@%s:%s' s parametri povezave: '%s'"
-
 #~ msgid "Could not get PBIConnectionInfo(), disconnecting"
-#~ msgstr "Nisem mogel dobiti PBIConnectionInfo(), odklapljam se"
-
+#~ msgstr "Ni mogoče dobiti PBIConnectionInfo(), odklapljam se"
 #~ msgid "%2ld: ConInfo: '%s@%s', Cl v%x, Srv '%s' v%x, Brand '%s'"
 #~ msgstr ""
 #~ "%2ld: Podatki povezave: %s@%s, odjemalec v%x, strežnik '%s' v%x, znamka '%"
 #~ "s'"
-
 #~ msgid "Not enough memory for primebase_Error structure."
 #~ msgstr "Ni dovolj pomnilnika za strukturo primebase_Error."
-
 #~ msgid "%2ld: ERROR: %ld (%ld) : %s.\n"
 #~ msgstr "%2ld: NAPAKA: %ld (%ld) : %s.\n"
-
 #~ msgid "Could not register PRIMEBASE provider implementation"
-#~ msgstr "Nisem mogel registrirati implementacije nuditelja PRIMEBASE"
-
+#~ msgstr "Ni mogoče registrirati implementacije nuditelja PRIMEBASE"
 #~ msgid "GDA Datasource Access for Sybase/MS SQL"
 #~ msgstr "Dostop GDA do vira podatkov za Sybase/MS SQL"
-
 #~ msgid "TDS provider connection factory"
 #~ msgstr "Tovarna povezav nuditelja TDS"
-
 #~ msgid "Reconnected to %s"
 #~ msgstr "Znova povezan z %s"
-
 #~ msgid "gda_tds_error_make(%p,%p,%p,%p)"
 #~ msgstr "gda_tds_error_make(%p,%p,%p,%p)"
-
 #~ msgid "Could not register gda-tds provider implementation"
-#~ msgstr "Nisem mogel registrirati implementacije nuditelja gda-tds"
-
+#~ msgstr "Ni mogoče registrirati implementacije nuditelja gda-tds"
 #~ msgid "%s: misconfigured DSN entry"
 #~ msgstr "%s: napačno nastavljen DSN vpis"
-
 #~ msgid "%s: data source '%s' not found\n"
 #~ msgstr "%s: vir podatkov '%s' ni bil najden\n"
-
-#~ msgid "Could not register <PROVIDER-NAME> provider implementation"
-#~ msgstr "Nisem mogel registrirati implementacije nuditelja <PROVIDER-NAME>"
-
+#~ msgid "Could not register &lt;PROVIDER-NAME&gt; provider implementation"
+#~ msgstr "Ni mogoče registrirati implementacije nuditelja &lt;PROVIDER-NAME&gt;"
 #~ msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
 #~ msgstr "impl_GDA_Connection_open: odpiram povezavo z DSN: %s"
-
 #~ msgid "%s: an error ocurred while fetching data"
 #~ msgstr "%s: med pobiranjem podatkov se je zgodila napaka"
-
 #~ msgid ""
 #~ "OAF doesn't know about our IID; indicates broken installation. Exiting..."
 #~ msgstr ""
 #~ "OAF ne ve za naš IID; to kaže na pokvarjeno namestitev. Zaključujem..."
-
 #~ msgid ""
 #~ "Another instance of this provider is already registered with OAF. "
 #~ "Exiting..."
 #~ msgstr ""
 #~ "Ena inštanca tega nuditelja je že registrirana pri OAF. Zaključujem..."
-
 #~ msgid "Unknown error registering this provider with OAF. Exiting"
 #~ msgstr "Neznana napaka ob registraciji tega nuditelja pri OAF. Zaključujem"
-
 #~ msgid "Registered with ID = %s"
 #~ msgstr "Registriran z ID = %s"
-
 #~ msgid "CORBA system exception %s"
 #~ msgstr "Izjema v sistemu CORBA: %s"
-
 #~ msgid "CORBA exception unloading report engine: %s"
 #~ msgstr "Izjema CORBA med sproščanjem ustvarjalca poročil: %s"
-
 #~ msgid "Received signal %d, shutting down."
 #~ msgstr "Prejel signal %d, ustavljam se."
-
 #~ msgid "Received signal %d, shutting down cleanly"
 #~ msgstr "Prejel signal %d, ustavljam se po pravilih"
-
 #~ msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
 #~ msgstr ""
 #~ "Nisem uspel inicializirati OAFa: prosim pošljite poročilo o hrošču "
 #~ "vzdrževalcem OAFa"
-
 #~ msgid ""
 #~ "Another instance of the report engine is already registered with OAF. "
 #~ "Exiting..."
 #~ msgstr ""
 #~ "Ena inštanca ustvarjalca poročil je že registrirana pri OAFu."
 #~ "Zaključujem..."
-
 #~ msgid "Unknown error registering report engine with OAF. Exiting"
 #~ msgstr ""
 #~ "Neznana napaka ob registiranju ustvarjalca poročil pri OAFu. Zaključujem"
-
 #~ msgid "Registered report engine with ID = %s"
 #~ msgstr "Ustvarjalec poročil registiran z ID = %s"
-
 #~ msgid "%s: length = %d"
 #~ msgstr "%s: dolžina = %d"
-
 #~ msgid "%s: sending field description for '%s'"
 #~ msgstr "%s: pošiljam opis polja za '%s'"
-
 #~ msgid "schema_tables: table name = '%s'"
-#~ msgstr "schema_tables: ime tabele = '%s'"
-
+#~ msgstr "schema_tables: ime razpredelnice = '%s'"
 #~ msgid "schema_tables: table_schema = '%s'"
 #~ msgstr "scema_tables: tabele_schema = '%s'"
-
 #~ msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
 #~ msgstr "schema_procedures: proc_catalog = '%s' NEUPORABLJENO!\n"
-
 #~ msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
 #~ msgstr "schema_procedures: proc_catalog = '%s' NEUPORABLJEN!"
-
 #~ msgid "DATABASE"
 #~ msgstr "ZBIRKA PODATKOV"
-
 #~ msgid "USER-NAME"
 #~ msgstr "UPORABNIŠKO IME"
-
 #~ msgid "PASSWORD"
 #~ msgstr "GESLO"
-
 #~ msgid "FILE-NAME"
 #~ msgstr "IME-DATOTEKE"
-
 #~ msgid "An error occured."
 #~ msgstr "Pojavila se je napaka."
-
 #~ msgid "No according field found"
 #~ msgstr "Ustrezno polje ni bilo najdeno"
-
 #~ msgid "%s: not implemented"
 #~ msgstr "%s: ni implementiran"
-
 #~ msgid "Fetchong %d cslib message"
 #~ msgstr "Dobivam %d cslib sporočilo"
+
