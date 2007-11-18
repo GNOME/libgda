@@ -48,7 +48,7 @@ typedef enum {
 	GDA_CLIENT_EVENT_CONNECTION_CLOSED,     /* params: */
 	GDA_CLIENT_EVENT_TRANSACTION_STARTED,   /* params: "transaction" */
 	GDA_CLIENT_EVENT_TRANSACTION_COMMITTED, /* params: "transaction" */
-	GDA_CLIENT_EVENT_TRANSACTION_CANCELLED, /* params: "transaction" */
+	GDA_CLIENT_EVENT_TRANSACTION_CANCELLED  /* params: "transaction" */
 } GdaClientEvent;
 
 struct _GdaClient {

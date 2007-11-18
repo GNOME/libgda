@@ -44,7 +44,7 @@ typedef struct _GdaTransactionStatusEvent   GdaTransactionStatusEvent;
 typedef enum {
 	GDA_TRANSACTION_STATUS_EVENT_SAVEPOINT,
 	GDA_TRANSACTION_STATUS_EVENT_SQL,
-	GDA_TRANSACTION_STATUS_EVENT_SUB_TRANSACTION,
+	GDA_TRANSACTION_STATUS_EVENT_SUB_TRANSACTION
 } GdaTransactionStatusEventType;
 
 typedef enum {

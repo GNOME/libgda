@@ -39,7 +39,7 @@ extern GQuark gda_data_model_iter_error_quark (void);
 
 typedef enum
 {
-	GDA_DATA_MODEL_ITER_WHAT_ERROR,
+	GDA_DATA_MODEL_ITER_WHAT_ERROR
 } GdaDataModelIterError;
 
 
