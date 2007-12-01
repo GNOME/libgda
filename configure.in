@@ -271,8 +271,10 @@ fi
 AM_CONDITIONAL(BDB, test x$bdbdir != x)
 if test x$bdbdir != x; then
 	LIBGDA_BDB_INC="#include <libgda/gda-data-model-bdb.h>"
+	LIBGDA_BDB_TYPE="gda_data_model_bdb_get_type"
 fi
 AC_SUBST(LIBGDA_BDB_INC)
+AC_SUBST(LIBGDA_BDB_TYPE)
 
 dnl Test for ODBC
 try_odbc=true
@@ -1210,6 +1212,7 @@ tests/data-models/Makefile
 tests/providers/Makefile
 doc/Makefile
 doc/C/Makefile
+doc/C/libgda-3.0.types
 data/Makefile
 stamp.h
 ])

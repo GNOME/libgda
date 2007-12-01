@@ -1,5 +1,12 @@
 2007-12-01  Vivien Malerba <malerba@gnome-db.org>
 
+	* doc/C/libgda-3.0.types.in:
+	* doc/C/libgda-3.0.types:
+	* configure.in: allow documentation when the --without-bdb flag is 
+	used, bug #498836
+
+2007-12-01  Vivien Malerba <malerba@gnome-db.org>
+
 	* libgda-report/engine/gda-report-engine.c:
 	* tools/gda-diagnose.c:
 	* tools/gda-sql.c:
