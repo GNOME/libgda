@@ -176,7 +176,7 @@ dnl ******************************
 dnl Checks for Gnome VFS
 dnl ******************************
 
-GNOMEVFS_MODULES="gnome-vfs-2.0"
+GNOMEVFS_MODULES="gnome-vfs-2.0 >= 2.20"
 PKG_CHECK_MODULES(GNOMEVFS, $GNOMEVFS_MODULES, have_gnomevfs=yes, have_gnomevfs=no)
 AM_CONDITIONAL(HAVE_GNOMEVFS, test x"$have_gnomevfs" = "xyes")
 if test x"$have_gnomevfs" = "xyes"
