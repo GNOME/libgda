@@ -64,6 +64,7 @@ libgda/sqlite/virtual/gda-virtual-connection.c
 libgda/sqlite/virtual/gda-virtual-provider.c
 libgda/sqlite/virtual/gda-vprovider-data-model.c
 libgda/sqlite/virtual/gda-vprovider-hub.c
+libgda/sqlite/virtual/libmain.c
 libgda-report/DocBook/gda-report-docbook-document.c
 libgda-report/RML/gda-report-rml-document.c
 libgda-report/engine/gda-report-engine.c

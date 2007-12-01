@@ -1,3 +1,8 @@
+2007-12-01  Vivien Malerba <malerba@gnome-db.org>
+
+	* POTFILES.in: added libgda/sqlite/virtual/libmain.c, bug #500752
+	* sk.po: converted to UTF-8, bug #500754
+
 2007-11-21  Jorge Gonzalez  <jorgegonz@svn.gnome.org>
 
         * es.po: Updated Spanish translation

@@ -5,7 +5,7 @@
 # libgda Slovak translation.
 # Copyright (C) 2000,2001,2002,2003 Free Software Foundation, Inc.
 # Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>, 2000,2001,2002.
-# Stanislav ViπÚovsk˝ <visnovsky@nenya.ms.mff.cuni.cz>, 2002.
+# Stanislav Vi≈°≈àovsk√Ω <visnovsky@nenya.ms.mff.cuni.cz>, 2002.
 # Stanislav Visnovsky <visnovsky@kde.org>, 2003.
 #
 msgid ""
@@ -17,32 +17,32 @@ msgstr ""
 "Last-Translator: Stanislav Visnovsky <visnovsky@kde.org>\n"
 "Language-Team: Slovak <sk-i18n@linux.sk>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-2\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.2\n"
 
 #: libgda/gda-client.c:312 libgda/gda-client.c:539 libgda/gda-connection.c:219
 #, c-format
 msgid "Data source %s not found in configuration"
-msgstr "Zdroj d·t %s nebol n·jden˝ v konfigur·cii"
+msgstr "Zdroj d√°t %s nebol n√°jden√Ω v konfigur√°cii"
 
 #: libgda/gda-client.c:341
 #, c-format
 msgid "Could not find provider %s in the current setup"
-msgstr "V aktu·lnom nastavenÌ sa nepodarilo n·jsª poskytovateµa %s."
+msgstr "V aktu√°lnom nastaven√≠ sa nepodarilo n√°js≈• poskytovateƒæa %s."
 
 #: libgda/gda-client.c:371
 #, c-format
 msgid "Provider %s does not implement entry function"
-msgstr "Poskytovateµ %s neimplementuje vstupn˝ bod"
+msgstr "Poskytovateƒæ %s neimplementuje vstupn√Ω bod"
 
 #: libgda/gda-client.c:381
 msgid "Could not create GdaServerProvider object from plugin"
-msgstr "Nie je moænÈ vytvoriª objekt GdaServerProvider z modulu"
+msgstr "Nie je mo≈æn√© vytvori≈• objekt GdaServerProvider z modulu"
 
 #: libgda/gda-client.c:465
 msgid "Temporary data source created by libgda. Don't remove it"
-msgstr "DoËasn˝ zdroj d·t vytvoren˝ pomocou libgda. NeodstraÚujte ho."
+msgstr "Doƒçasn√Ω zdroj d√°t vytvoren√Ω pomocou libgda. Neodstra≈àujte ho."
 
 #: libgda/gda-config.c:1093
 #, c-format
@@ -91,15 +91,15 @@ msgstr "Meno"
 
 #: libgda/gda-config.c:1531
 msgid "Provider"
-msgstr "Poskytovateµ"
+msgstr "Poskytovateƒæ"
 
 #: libgda/gda-config.c:1532
 msgid "Connection string"
-msgstr "Reªazec spojenia"
+msgstr "Re≈•azec spojenia"
 
 #: libgda/gda-config.c:1534
 msgid "Username"
-msgstr "Meno pouæÌvateµa"
+msgstr "Meno pou≈æ√≠vateƒæa"
 
 #: libgda/gda-config.c:1535
 msgid "Password"
@@ -108,45 +108,45 @@ msgstr "Heslo"
 #: libgda/gda-data-model.c:822
 #, fuzzy, c-format
 msgid "Data model %p is not updatable"
-msgstr "Nidek d·t %p nie je moænÈ upraviª"
+msgstr "Nidek d√°t %p nie je mo≈æn√© upravi≈•"
 
 #: libgda/gda-init.c:47
 msgid "Attempt to initialize an already initialized client"
-msgstr "Pokus o inicializ·ciu uæ inicializovanÈho klienta"
+msgstr "Pokus o inicializ√°ciu u≈æ inicializovan√©ho klienta"
 
 #: libgda/gda-init.c:58
 msgid "libgda needs GModule. Finishing..."
-msgstr "libgda vyæaduje GModule. KonËÌm..."
+msgstr "libgda vy≈æaduje GModule. Konƒç√≠m..."
 
 #: libgda/gda-select.c:395
 #, c-format
 msgid "Could not parse SQL string '%s'"
-msgstr "Nie je moænÈ spracovaª reªazec SQL '%s'"
+msgstr "Nie je mo≈æn√© spracova≈• re≈•azec SQL '%s'"
 
 #: libgda/gda-select.c:399
 #, c-format
 msgid "SQL command is not a SELECT (is '%s'"
-msgstr "PrÌkaz SQL nie je SELECT (je '%s'"
+msgstr "Pr√≠kaz SQL nie je SELECT (je '%s'"
 
 #: libgda/gda-table.c:286
 #, c-format
 msgid "There is already a field called %s"
-msgstr "Uæ je definovanÈ pole nazvanÈ %s"
+msgstr "U≈æ je definovan√© pole nazvan√© %s"
 
 #: libgda/gda-util.c:173
 #, c-format
 msgid "Could not parse SQL command '%s'"
-msgstr "Nie je moænÈ spracovaª prÌkaz SQL '%s'"
+msgstr "Nie je mo≈æn√© spracova≈• pr√≠kaz SQL '%s'"
 
 #: libgda/gda-util.c:206
 #, c-format
 msgid "Error while reading %s: %s"
-msgstr "Chyba poËas ËÌtania %s: %s"
+msgstr "Chyba poƒças ƒç√≠tania %s: %s"
 
 #: libgda/gda-util.c:232
 #, c-format
 msgid "Could not create file %s"
-msgstr "Nie je moænÈ vytvoriª s˙bor %s"
+msgstr "Nie je mo≈æn√© vytvori≈• s√∫bor %s"
 
 #: libgda/gda-value.c:2074
 msgid "TRUE"
@@ -168,49 +168,49 @@ msgstr "NULL GObject"
 #: libgda/gda-xml-database.c:279
 #, c-format
 msgid "Could not load file at %s"
-msgstr "Nie je moænÈ naËÌtaª s˙bor %s"
+msgstr "Nie je mo≈æn√© naƒç√≠ta≈• s√∫bor %s"
 
 #: libgda/gda-xml-database.c:288
 #, c-format
 msgid "Could not parse file at %s"
-msgstr "Nie je moænÈ spracovaª s˙bor %s"
+msgstr "Nie je mo≈æn√© spracova≈• s√∫bor %s"
 
 #: libgda/gda-xml-database.c:298
 #, c-format
 msgid "Invalid XML database file '%s'"
-msgstr "Neplatn˝ XML s˙bor datab·zy '%s'"
+msgstr "Neplatn√Ω XML s√∫bor datab√°zy '%s'"
 
 #: libgda/gda-xml-database.c:541
 #, c-format
 msgid "Could not create a XML node from table %s"
-msgstr "Nie je moænÈ vytvoriª uzol XML z tabuµky %s"
+msgstr "Nie je mo≈æn√© vytvori≈• uzol XML z tabuƒæky %s"
 
 #: libgda/gda-xml-database.c:559
 msgid "Could not dump XML file to memory"
-msgstr "Nie je moænÈ naËÌtaª do pam‰ti s˙bor XML"
+msgstr "Nie je mo≈æn√© naƒç√≠ta≈• do pam√§ti s√∫bor XML"
 
 #: libgda/gda-xml-database.c:650 libgda/gda-xml-database.c:687
 #: libgda/gda-xml-database.c:731
 #, c-format
 msgid "Table %s already exists"
-msgstr "Tabuµka %s uæ existuje"
+msgstr "Tabuƒæka %s u≈æ existuje"
 
 #: libgda/gda-xml-database.c:724
 msgid "Invalid node"
-msgstr "Neplatn˝ uzol"
+msgstr "Neplatn√Ω uzol"
 
 #: libgda/gda-xml-database.c:766
 #, c-format
 msgid "Duplicated <data> node for table %s"
-msgstr "Duplikovan˝ uzol <data> pre tabuµku %s"
+msgstr "Duplikovan√Ω uzol <data> pre tabuƒæku %s"
 
 #: libgda/gda-xml-database.c:773
 msgid "Invalid XML node"
-msgstr "Neplatn˝ XML uzol"
+msgstr "Neplatn√Ω XML uzol"
 
 #: libgda/gda-xml-database.c:782
 msgid "Could not add the data from the XML node"
-msgstr "Nie je moænÈ pridaª d·ta z uzlu XML"
+msgstr "Nie je mo≈æn√© prida≈• d√°ta z uzlu XML"
 
 #: libsql/sql_parser.c:60
 #, c-format
@@ -241,12 +241,12 @@ msgstr ""
 #: providers/firebird/gda-firebird-recordset.c:695
 #: providers/firebird/gda-firebird-recordset.c:897
 msgid "Invalid Firebird handle"
-msgstr "Neplatn˝ handle Firebird"
+msgstr "Neplatn√Ω handle Firebird"
 
 #: providers/firebird/gda-firebird-blob.c:134
 #, fuzzy
 msgid "Unable to start transaction"
-msgstr "Nie je moænÈ spustiª transakciu Oracle"
+msgstr "Nie je mo≈æn√© spusti≈• transakciu Oracle"
 
 #: providers/firebird/gda-firebird-blob.c:145
 msgid "Blob already open"
@@ -255,7 +255,7 @@ msgstr ""
 #: providers/firebird/gda-firebird-blob.c:199
 #, fuzzy
 msgid "Error getting blob segment."
-msgstr "Chyba pri overovanÌ prvku %s"
+msgstr "Chyba pri overovan√≠ prvku %s"
 
 #: providers/firebird/gda-firebird-blob.c:203
 msgid "Can't read a closed Blob"
@@ -322,7 +322,7 @@ msgstr "Typ"
 #: providers/sybase/gda-sybase-provider.c:1098
 #: providers/xml/gda-xml-provider.c:655
 msgid "Owner"
-msgstr "VlastnÌk"
+msgstr "Vlastn√≠k"
 
 #: providers/firebird/gda-firebird-provider.c:233
 #: providers/firebird/gda-firebird-provider.c:733
@@ -352,7 +352,7 @@ msgstr "VlastnÌk"
 #: providers/sybase/gda-sybase-provider.c:1100
 #: providers/xml/gda-xml-provider.c:656
 msgid "Comments"
-msgstr "Koment·re"
+msgstr "Koment√°re"
 
 #: providers/firebird/gda-firebird-provider.c:234
 #: providers/ibmdb2/gda-ibmdb2-provider.c:949
@@ -376,7 +376,7 @@ msgstr "Typ GDA"
 #: providers/postgres/gda-postgres-provider.c:1560
 #: providers/postgres/gda-postgres-provider.c:2450
 msgid "Table"
-msgstr "Tabuµka"
+msgstr "Tabuƒæka"
 
 #: providers/firebird/gda-firebird-provider.c:323
 #: providers/mdb/gda-mdb-provider.c:553
@@ -391,7 +391,7 @@ msgstr "Tabuµka"
 #: providers/postgres/gda-postgres-provider.c:1762
 #: providers/postgres/gda-postgres-provider.c:2398
 msgid "Definition"
-msgstr "DefinÌcia"
+msgstr "Defin√≠cia"
 
 #: providers/firebird/gda-firebird-provider.c:615
 #: providers/mdb/gda-mdb-provider.c:490
@@ -402,7 +402,7 @@ msgstr "DefinÌcia"
 #: providers/sqlite/gda-sqlite-provider.c:658
 #: providers/xml/gda-xml-provider.c:489
 msgid "Field name"
-msgstr "Meno poµa"
+msgstr "Meno poƒæa"
 
 #: providers/firebird/gda-firebird-provider.c:616
 #: providers/mdb/gda-mdb-provider.c:491 providers/msql/gda-msql-provider.c:564
@@ -413,7 +413,7 @@ msgstr "Meno poµa"
 #: providers/sqlite/gda-sqlite-provider.c:659
 #: providers/xml/gda-xml-provider.c:490
 msgid "Data type"
-msgstr "Typ d·t"
+msgstr "Typ d√°t"
 
 #: providers/firebird/gda-firebird-provider.c:617
 #: providers/mdb/gda-mdb-provider.c:492 providers/msql/gda-msql-provider.c:565
@@ -424,7 +424,7 @@ msgstr "Typ d·t"
 #: providers/sqlite/gda-sqlite-provider.c:660
 #: providers/xml/gda-xml-provider.c:491
 msgid "Size"
-msgstr "Veµkosª"
+msgstr "Veƒækos≈•"
 
 #: providers/firebird/gda-firebird-provider.c:618
 #: providers/mdb/gda-mdb-provider.c:493 providers/msql/gda-msql-provider.c:566
@@ -435,7 +435,7 @@ msgstr "Veµkosª"
 #: providers/sqlite/gda-sqlite-provider.c:661
 #: providers/xml/gda-xml-provider.c:492
 msgid "Scale"
-msgstr "©k·la"
+msgstr "≈†k√°la"
 
 #: providers/firebird/gda-firebird-provider.c:619
 #: providers/mdb/gda-mdb-provider.c:494
@@ -457,7 +457,7 @@ msgstr "Nie null?"
 #: providers/sqlite/gda-sqlite-provider.c:663
 #: providers/xml/gda-xml-provider.c:494
 msgid "Primary key?"
-msgstr "Prim·rny kµ˙Ë?"
+msgstr "Prim√°rny kƒæ√∫ƒç?"
 
 #: providers/firebird/gda-firebird-provider.c:621
 #: providers/mdb/gda-mdb-provider.c:496 providers/msql/gda-msql-provider.c:569
@@ -468,7 +468,7 @@ msgstr "Prim·rny kµ˙Ë?"
 #: providers/sqlite/gda-sqlite-provider.c:664
 #: providers/xml/gda-xml-provider.c:495
 msgid "Unique index?"
-msgstr "Unik·tny index?"
+msgstr "Unik√°tny index?"
 
 #: providers/firebird/gda-firebird-provider.c:622
 #: providers/mdb/gda-mdb-provider.c:497 providers/msql/gda-msql-provider.c:570
@@ -489,7 +489,7 @@ msgstr "Referencie"
 #: providers/postgres/gda-postgres-provider.c:1816
 #: providers/sqlite/gda-sqlite-provider.c:666
 msgid "Default value"
-msgstr "©tandardn· hodnota"
+msgstr "≈†tandardn√° hodnota"
 
 #: providers/firebird/gda-firebird-provider.c:632
 #: providers/firebird/gda-firebird-provider.c:639
@@ -498,7 +498,7 @@ msgstr "©tandardn· hodnota"
 #: providers/mysql/gda-mysql-provider.c:1510
 #: providers/mysql/gda-mysql-provider.c:1518
 msgid "Table name is needed but none specified in parameter list"
-msgstr "V zozname parametrov nie je zadanÈ meno tabuµky"
+msgstr "V zozname parametrov nie je zadan√© meno tabuƒæky"
 
 #. 5th the return type
 #. 6th the argument type
@@ -519,7 +519,7 @@ msgstr "ID"
 #: providers/odbc/gda-odbc-provider.c:1140
 #: providers/postgres/gda-postgres-provider.c:1293
 msgid "Return type"
-msgstr "Typ n·vratovej hodnoty"
+msgstr "Typ n√°vratovej hodnoty"
 
 #: providers/firebird/gda-firebird-provider.c:735
 #: providers/mdb/gda-mdb-provider.c:552
@@ -538,12 +538,12 @@ msgstr "SQL"
 
 #: providers/firebird/gda-firebird-provider.c:858
 msgid "No database specified"
-msgstr "Nezadan· datab·za"
+msgstr "Nezadan√° datab√°za"
 
 #: providers/firebird/gda-firebird-provider.c:1247
 #: providers/firebird/gda-firebird-provider.c:1285
 msgid "Invalid transaction handle"
-msgstr "Neplatn˝ handle transakcie"
+msgstr "Neplatn√Ω handle transakcie"
 
 #: providers/firebird/gda-firebird-recordset.c:346
 #: providers/firebird/gda-firebird-recordset.c:387
@@ -565,7 +565,7 @@ msgstr ""
 #: providers/firebird/libmain.c:40
 #, fuzzy
 msgid "Provider for Firebird databases"
-msgstr "Poskytovateµ pre datab·ze FireBird"
+msgstr "Poskytovateƒæ pre datab√°ze FireBird"
 
 #: providers/firebird/libmain.c:49 providers/freetds/libmain.c:48
 #: providers/ibmdb2/libmain.c:48 providers/msql/gda-msql-libmain.c:56
@@ -573,7 +573,7 @@ msgstr "Poskytovateµ pre datab·ze FireBird"
 #: providers/sybase/libmain.c:49
 #, fuzzy
 msgid "Database Name"
-msgstr "Datab·za"
+msgstr "Datab√°za"
 
 #: providers/firebird/libmain.c:50 providers/freetds/libmain.c:49
 msgid "Name of the database to be used"
@@ -582,13 +582,13 @@ msgstr ""
 #: providers/firebird/libmain.c:53
 #, fuzzy
 msgid "Character Set"
-msgstr "Reªazec znakov"
+msgstr "Re≈•azec znakov"
 
 #: providers/firebird/libmain.c:54
 #, fuzzy
 msgid "Character set to be used on the connection"
 msgstr ""
-"Pre otvorenie datab·ze FILENAME musÌte zadaª cel˙ cestu v reªazci spojenia."
+"Pre otvorenie datab√°ze FILENAME mus√≠te zada≈• cel√∫ cestu v re≈•azci spojenia."
 
 #: providers/firebird/libmain.c:57
 msgid "SQL Dialect"
@@ -601,7 +601,7 @@ msgstr ""
 #: providers/firebird/libmain.c:61
 #, fuzzy
 msgid "Page Size"
-msgstr "Veµkosª"
+msgstr "Veƒækos≈•"
 
 #: providers/firebird/libmain.c:62
 msgid "Page size to use on the database"
@@ -612,16 +612,16 @@ msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'QUERY=;USER=;PASSWORD='."
 msgstr ""
-"Spojenie ukonËenÈ. MusÌte zadaª aspoÚ hostiteµa, pouæÌvateµa a heslo pomocou "
+"Spojenie ukonƒçen√©. Mus√≠te zada≈• aspo≈à hostiteƒæa, pou≈æ√≠vateƒæa a heslo pomocou "
 "DSN 'QUERY=;USER=;PASSWORD='."
 
 #: providers/freetds/gda-freetds-provider.c:210
 msgid "Error creating message container."
-msgstr "Chyba pri vytv·ranÌ schr·nky pre spr·vu."
+msgstr "Chyba pri vytv√°ran√≠ schr√°nky pre spr√°vu."
 
 #: providers/freetds/gda-freetds-provider.c:217
 msgid "Error creating error container."
-msgstr "Chyba pri vytv·ranÌ schr·nky na chybu."
+msgstr "Chyba pri vytv√°ran√≠ schr√°nky na chybu."
 
 #: providers/freetds/gda-freetds-provider.c:258
 #: providers/freetds/gda-freetds-provider.c:260
@@ -644,22 +644,22 @@ msgstr "Vytvorenie spojenia zlyhalo."
 #: providers/freetds/gda-freetds-provider.c:308
 #: providers/freetds/gda-freetds-provider.c:309
 msgid "Failed getting connection info."
-msgstr "Nepodarilo sa zÌskaª inform·cie o spojenÌ."
+msgstr "Nepodarilo sa z√≠ska≈• inform√°cie o spojen√≠."
 
 #: providers/freetds/gda-freetds-provider.c:798
 #: providers/freetds/gda-freetds-provider.c:799
 msgid "Query did not succeed in execute_cmd()."
-msgstr "Dotaz nebol ˙speπne vyhodnoten˝ v execure_cmd()."
+msgstr "Dotaz nebol √∫spe≈°ne vyhodnoten√Ω v execure_cmd()."
 
 #: providers/freetds/gda-freetds-provider.c:812
 #: providers/freetds/gda-freetds-provider.c:814
 msgid "Unexpected result tokens in execute_cmd()."
-msgstr "NeoËak·vanÈ tokeny v˝sledku v execute_cmd()."
+msgstr "Neoƒçak√°van√© tokeny v√Ωsledku v execute_cmd()."
 
 #: providers/freetds/gda-freetds-provider.c:822
 #: providers/freetds/gda-freetds-provider.c:823
 msgid "Unexpected return in execute_cmd()."
-msgstr "NeoËak·van˝ n·vrat v execute_cmd()."
+msgstr "Neoƒçak√°van√Ω n√°vrat v execute_cmd()."
 
 #: providers/freetds/gda-freetds-provider.c:1060
 #, c-format
@@ -667,7 +667,7 @@ msgid ""
 "Msg %d, Level %d, State %d, Server %s, Line %d\n"
 "%s\n"
 msgstr ""
-"Spr·va %d, ˙roveÚ %d, stav %d, server %s, riadok %d\n"
+"Spr√°va %d, √∫rove≈à %d, stav %d, server %s, riadok %d\n"
 "%s\n"
 
 #: providers/freetds/gda-freetds-provider.c:1079 providers/freetds/utils.c:44
@@ -684,27 +684,27 @@ msgstr ""
 #: providers/sybase/utils.c:485 providers/sybase/utils.c:501
 #: providers/sybase/utils.c:539 providers/bdb/utils.c:36
 msgid "Not available"
-msgstr "Nie je k dispozÌcii"
+msgstr "Nie je k dispoz√≠cii"
 
 #: providers/freetds/gda-freetds-recordset.c:377
 msgid "Error processing result rows.\n"
-msgstr "Chyba pri spracovanÌ riadkov v˝sledku.\n"
+msgstr "Chyba pri spracovan√≠ riadkov v√Ωsledku.\n"
 
 #: providers/freetds/gda-freetds-recordset.c:384
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
-msgstr "NeoËak·van˝ n·vratov˝ kÛd freetds v tds_process_row_tokens().\n"
+msgstr "Neoƒçak√°van√Ω n√°vratov√Ω k√≥d freetds v tds_process_row_tokens().\n"
 
 #: providers/freetds/gda-freetds-recordset.c:394
 msgid "Error processing results.\n"
-msgstr "Chyba pri spracovanÌ v˝sledku.\n"
+msgstr "Chyba pri spracovan√≠ v√Ωsledku.\n"
 
 #: providers/freetds/gda-freetds-recordset.c:401
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
-msgstr "NeoËak·van˝ n·vratov˝ kÛd freetds v tds_process_result_tokens\n"
+msgstr "Neoƒçak√°van√Ω n√°vratov√Ω k√≥d freetds v tds_process_result_tokens\n"
 
 #: providers/freetds/libmain.c:39
 msgid "Provider for TDS-based databases (using FreeTDS)"
-msgstr "Poskytovateµ pre datab·ze zaloæenÈ na TDS (pomocou FreeTDS)"
+msgstr "Poskytovateƒæ pre datab√°ze zalo≈æen√© na TDS (pomocou FreeTDS)"
 
 #: providers/freetds/libmain.c:52
 msgid "Host"
@@ -727,7 +727,7 @@ msgstr ""
 #: providers/freetds/libmain.c:60
 #, fuzzy
 msgid "Connection Options"
-msgstr "Reªazec spojenia"
+msgstr "Re≈•azec spojenia"
 
 #: providers/freetds/libmain.c:61
 msgid "Extra options to use on the connection"
@@ -794,26 +794,26 @@ msgstr ""
 #: providers/freetds/utils.c:40 providers/oracle/utils.c:67
 #: providers/postgres/utils.c:48 providers/sybase/utils.c:534
 msgid "NO DESCRIPTION"
-msgstr "ÆIADNY POPIS"
+msgstr "≈ΩIADNY POPIS"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:152
 msgid "Could not allocate environment handle.\n"
-msgstr "Nie je moænÈ alokovaª handle pre prostredie.\n"
+msgstr "Nie je mo≈æn√© alokova≈• handle pre prostredie.\n"
 
 #. GetInfo is needed for obtaining database name
 #. is needed for tables schema
 #: providers/ibmdb2/gda-ibmdb2-provider.c:211
 msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
 msgstr ""
-"SQLGetInfo nie je podporovanÈ. Preto nebude poskytovateµ pre IBM DB2 nebude "
-"fungovaª.\n"
+"SQLGetInfo nie je podporovan√©. Preto nebude poskytovateƒæ pre IBM DB2 nebude "
+"fungova≈•.\n"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:450
 #: providers/ibmdb2/gda-ibmdb2-provider.c:580
 #: providers/ibmdb2/gda-ibmdb2-provider.c:688
 #: providers/ibmdb2/gda-ibmdb2-provider.c:763
 msgid "Invalid IBM DB2 handle"
-msgstr "Neplatn˝ handle IBM DB2"
+msgstr "Neplatn√Ω handle IBM DB2"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:741
 msgid "Function"
@@ -821,7 +821,7 @@ msgstr "Funkcia"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:777
 msgid "Database"
-msgstr "Datab·za"
+msgstr "Datab√°za"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:831
 msgid "Index"
@@ -832,7 +832,7 @@ msgstr "Index"
 #: providers/odbc/gda-odbc-provider.c:1136
 #: providers/postgres/gda-postgres-provider.c:1289
 msgid "Procedure"
-msgstr "Proced˙ra"
+msgstr "Proced√∫ra"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:862
 msgid "Language"
@@ -842,7 +842,7 @@ msgstr "Jazyk"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:921
 #: providers/ibmdb2/gda-ibmdb2-provider.c:1002
 msgid "SQL Definition"
-msgstr "DefinÌcia SQL"
+msgstr "Defin√≠cia SQL"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:918
@@ -856,12 +856,12 @@ msgstr "Triggery"
 #: providers/oracle/gda-oracle-provider.c:1825
 #: providers/postgres/gda-postgres-provider.c:2354 testing/client.c:141
 msgid "Users"
-msgstr "PouæÌvatelia"
+msgstr "Pou≈æ√≠vatelia"
 
 #: providers/ibmdb2/gda-ibmdb2-types.c:154
 #, fuzzy
 msgid "[BLOB unsupported]"
-msgstr "NepodporovanÈ"
+msgstr "Nepodporovan√©"
 
 #: providers/ibmdb2/gda-ibmdb2-types.c:157
 msgid "[Unsupported data]"
@@ -869,7 +869,7 @@ msgstr ""
 
 #: providers/ibmdb2/libmain.c:39
 msgid "Provider for IBMDB2 databases"
-msgstr "Poskytovateµ pre datab·ze IBM DB2"
+msgstr "Poskytovateƒæ pre datab√°ze IBM DB2"
 
 #: providers/ibmdb2/libmain.c:49 providers/msql/gda-msql-libmain.c:57
 #: providers/postgres/libmain.c:52 providers/sybase/libmain.c:50
@@ -893,7 +893,7 @@ msgstr ""
 #: providers/ldap/gda-ldap-recordset.c:58
 #: providers/ldap/gda-ldap-recordset.c:176
 msgid "Invalid LDAP handle"
-msgstr "Neplatn˝ handle LDAP"
+msgstr "Neplatn√Ω handle LDAP"
 
 #: providers/ldap/gda-ldap-recordset.c:69
 #: providers/mysql/gda-mysql-recordset.c:216
@@ -905,7 +905,7 @@ msgstr "Neplatn˝ handle LDAP"
 #: providers/sqlite/gda-sqlite-recordset.c:205
 #: providers/bdb/gda-bdb-recordset.c:111
 msgid "Row number out of range"
-msgstr "Neplatn˝ poËet riadkov"
+msgstr "Neplatn√Ω poƒçet riadkov"
 
 #: providers/ldap/gda-ldap-recordset.c:283
 #: providers/msql/gda-msql-recordset.c:230
@@ -913,23 +913,23 @@ msgstr "Neplatn˝ poËet riadkov"
 #: providers/oracle/gda-oracle-recordset.c:471
 #: providers/postgres/gda-postgres-recordset.c:243
 msgid "Attempt to insert a row with an invalid number of columns"
-msgstr "Pokus o vloæenie riadku s neplatn˝m poËtom stÂpcov"
+msgstr "Pokus o vlo≈æenie riadku s neplatn√Ωm poƒçtom stƒ∫pcov"
 
 #: providers/ldap/gda-ldap-recordset.c:298
 #: providers/msql/gda-msql-recordset.c:242
 #: providers/oracle/gda-oracle-recordset.c:486
 msgid "Could not retrieve column's information"
-msgstr "Nie je moænÈ zÌskaª inform·cie o stÂpci"
+msgstr "Nie je mo≈æn√© z√≠ska≈• inform√°cie o stƒ∫pci"
 
 #: providers/ldap/gda-ldap-recordset.c:316
 #: providers/msql/gda-msql-recordset.c:256
 #: providers/oracle/gda-oracle-recordset.c:504
 msgid "Could not retrieve column's value"
-msgstr "Nie je moænÈ zÌskaª hodnotu stÂpca"
+msgstr "Nie je mo≈æn√© z√≠ska≈• hodnotu stƒ∫pca"
 
 #: providers/ldap/libmain.c:47
 msgid "Provider for LDAP directory"
-msgstr "Poskytovateµ pre adres·r LDAP"
+msgstr "Poskytovateƒæ pre adres√°r LDAP"
 
 #: providers/ldap/libmain.c:56
 msgid "LDAP Flags"
@@ -973,28 +973,28 @@ msgstr ""
 #: providers/mdb/gda-mdb-provider.c:205
 msgid "A database FILENAME must be specified in the connection_string"
 msgstr ""
-"Pre otvorenie datab·ze FILENAME musÌte zadaª cel˙ cestu v reªazci spojenia."
+"Pre otvorenie datab√°ze FILENAME mus√≠te zada≈• cel√∫ cestu v re≈•azci spojenia."
 
 #: providers/mdb/gda-mdb-provider.c:214
 #: providers/xbase/gda-xbase-provider.c:223
 #, c-format
 msgid "Could not open file %s"
-msgstr "Nie je moænÈ otvoriª s˙bor %s"
+msgstr "Nie je mo≈æn√© otvori≈• s√∫bor %s"
 
 #: providers/mdb/gda-mdb-provider.c:238 providers/mdb/gda-mdb-provider.c:268
 #: providers/mdb/gda-mdb-provider.c:290 providers/mdb/gda-mdb-provider.c:342
 #: providers/mdb/gda-mdb-provider.c:690 providers/mdb/gda-mdb-provider.c:726
 msgid "Invalid MDB handle"
-msgstr "Neplatn˝ handle MDB"
+msgstr "Neplatn√Ω handle MDB"
 
 #: providers/mdb/gda-mdb-provider.c:404 providers/mdb/gda-mdb-provider.c:414
 #: providers/mdb/gda-mdb-provider.c:424
 msgid "Transactions not supported in MDB provider"
-msgstr "Poskytovateµ MDB nepodporuje transakcie"
+msgstr "Poskytovateƒæ MDB nepodporuje transakcie"
 
 #: providers/mdb/gda-mdb-provider.c:551
 msgid "# of args"
-msgstr "PoËet argumentov"
+msgstr "Poƒçet argumentov"
 
 #: providers/mdb/gda-mdb-provider.c:657
 msgid "GDA Type"
@@ -1006,31 +1006,31 @@ msgstr "Typ Boolean"
 
 #: providers/mdb/gda-mdb-provider.c:660
 msgid "1-byte integers"
-msgstr "JednobajtovÈ celÈ ËÌslo"
+msgstr "Jednobajtov√© cel√© ƒç√≠slo"
 
 #: providers/mdb/gda-mdb-provider.c:661
 msgid "Double precision values"
-msgstr "Re·lna hodnota s dvojn·sobnou presnosªou"
+msgstr "Re√°lna hodnota s dvojn√°sobnou presnos≈•ou"
 
 #: providers/mdb/gda-mdb-provider.c:662
 msgid "Single precision values"
-msgstr "Re·lna hodnota s jednoduchou presnosªou"
+msgstr "Re√°lna hodnota s jednoduchou presnos≈•ou"
 
 #: providers/mdb/gda-mdb-provider.c:663
 msgid "32-bit integers"
-msgstr "32-bitovÈ celÈ ËÌslo"
+msgstr "32-bitov√© cel√© ƒç√≠slo"
 
 #: providers/mdb/gda-mdb-provider.c:664
 msgid "64-bit integers"
-msgstr "64-bitovÈ celÈ ËÌslo"
+msgstr "64-bitov√© cel√© ƒç√≠slo"
 
 #: providers/mdb/gda-mdb-provider.c:665
 msgid "Variable length character strings"
-msgstr "Reªazec s premenlivou dÂækou"
+msgstr "Re≈•azec s premenlivou dƒ∫≈ækou"
 
 #: providers/mdb/gda-mdb-provider.c:666
 msgid "Money amounts"
-msgstr "PeÚaæn· suma"
+msgstr "Pe≈àa≈æn√° suma"
 
 #: providers/mdb/gda-mdb-provider.c:667
 msgid "OLE object"
@@ -1042,48 +1042,48 @@ msgstr "FIXME"
 
 #: providers/mdb/gda-mdb-provider.c:669
 msgid "Date/time value"
-msgstr "D·tum/Ëas"
+msgstr "D√°tum/ƒças"
 
 #: providers/mdb/gda-mdb-provider.c:670
 msgid "Character strings"
-msgstr "Reªazec znakov"
+msgstr "Re≈•azec znakov"
 
 #. end unsafe
 #: providers/mdb/gda-mdb-provider.c:737
 #, c-format
 msgid "Could not parse '%s' command"
-msgstr "Nie je moænÈ spracovaª prÌkaz '%s'"
+msgstr "Nie je mo≈æn√© spracova≈• pr√≠kaz '%s'"
 
 #. parsing went fine, but there is no result
 #. (e.g. because of an invalid column name)
 #: providers/mdb/gda-mdb-provider.c:744
 #, fuzzy, c-format
 msgid "Got no result for '%s' command"
-msgstr "Nie je moænÈ spracovaª prÌkaz '%s'"
+msgstr "Nie je mo≈æn√© spracova≈• pr√≠kaz '%s'"
 
 #: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:519
 #, c-format
 msgid "Table %s not found"
-msgstr "Tabuµa %s nen·jden·"
+msgstr "Tabuƒæa %s nen√°jden√°"
 
 #: providers/mdb/libmain.c:36
 msgid "Provider for Microsoft Access files"
-msgstr "Poskytovateµ pre s˙bory Microsoft Access"
+msgstr "Poskytovateƒæ pre s√∫bory Microsoft Access"
 
 #: providers/mdb/libmain.c:45 providers/sqlite/libmain.c:50
 #: providers/xbase/libmain.c:48 providers/xml/libmain.c:48
 #, fuzzy
 msgid "File Name"
-msgstr "Meno poµa"
+msgstr "Meno poƒæa"
 
 #: providers/mdb/libmain.c:46 providers/xbase/libmain.c:49
 #, fuzzy
 msgid "Full path of the file containing the database"
-msgstr "Pre otvorenie datab·ze musÌte zadaª cel˙ cestu v reªazci spojenia."
+msgstr "Pre otvorenie datab√°ze mus√≠te zada≈• cel√∫ cestu v re≈•azci spojenia."
 
 #: providers/msql/gda-msql-libmain.c:45
 msgid "Provider for Hughes Technologies mSQL databases"
-msgstr "Poskytovateµ pre datab·ze Hughes Technologies mSQL"
+msgstr "Poskytovateƒæ pre datab√°ze Hughes Technologies mSQL"
 
 #: providers/msql/gda-msql-libmain.c:61 providers/mysql/libmain.c:55
 #: providers/postgres/libmain.c:60 providers/sybase/libmain.c:54
@@ -1098,15 +1098,15 @@ msgstr ""
 #: providers/msql/gda-msql-recordset.c:51
 #: providers/msql/gda-msql-recordset.c:141
 msgid "Invalid mSQL handle"
-msgstr "Neplatn˝ handle mSQL"
+msgstr "Neplatn√Ω handle mSQL"
 
 #: providers/msql/gda-msql-provider.c:333
 msgid "mSQL allows database creation only through the msqladmin tool."
-msgstr "mSQL umoæÚuje vytv·ranie datab·ze iba pomocou n·stroja msqladmin."
+msgstr "mSQL umo≈æ≈àuje vytv√°ranie datab√°ze iba pomocou n√°stroja msqladmin."
 
 #: providers/msql/gda-msql-provider.c:347
 msgid "mSQL allows database drops only through the msqladmin tool."
-msgstr "mSQL umoæÚuje odstr·nenie datab·ze iba pomocou n·stroja msqladmin."
+msgstr "mSQL umo≈æ≈àuje odstr√°nenie datab√°ze iba pomocou n√°stroja msqladmin."
 
 #: providers/msql/gda-msql-provider.c:394
 #: providers/msql/gda-msql-provider.c:408
@@ -1120,7 +1120,7 @@ msgstr "Titulok"
 
 #: providers/msql/gda-msql-provider.c:563
 msgid "Field Name"
-msgstr "Meno poµa"
+msgstr "Meno poƒæa"
 
 #: providers/msql/gda-msql-provider.c:567
 msgid "Not null"
@@ -1128,13 +1128,13 @@ msgstr "Nie null"
 
 #: providers/msql/gda-msql-recordset.c:58
 msgid "Row number out of bounds"
-msgstr "PoËet riadkov mimo rozsah"
+msgstr "Poƒçet riadkov mimo rozsah"
 
 #: providers/mysql/gda-mysql-provider.c:268
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
-"NemÙæete poskytovaª UNIX_SOCKET ak tieæ poskytujete HOSTITE• alebo a PORT."
+"Nem√¥≈æete poskytova≈• UNIX_SOCKET ak tie≈æ poskytujete HOSTITEƒΩ alebo a PORT."
 
 #: providers/mysql/gda-mysql-provider.c:344
 #: providers/mysql/gda-mysql-provider.c:1501
@@ -1146,7 +1146,7 @@ msgstr ""
 #: providers/mysql/gda-mysql-recordset.c:550
 #: providers/mysql/gda-mysql-recordset.c:696
 msgid "Invalid MySQL handle"
-msgstr "Neplatn˝ handle MySQL"
+msgstr "Neplatn√Ω handle MySQL"
 
 #: providers/mysql/gda-mysql-provider.c:360
 #: providers/mysql/gda-mysql-provider.c:430
@@ -1163,7 +1163,7 @@ msgstr "Neplatn˝ handle MySQL"
 #: providers/mysql/gda-mysql-provider.c:1031
 #: providers/mysql/gda-mysql-provider.c:1628
 msgid "Invalid MYSQL handle"
-msgstr "Neplatn˝ handle MYSQL"
+msgstr "Neplatn√Ω handle MYSQL"
 
 #: providers/mysql/gda-mysql-provider.c:946
 #: providers/mysql/gda-mysql-provider.c:1003
@@ -1174,7 +1174,7 @@ msgstr "Neplatn˝ handle MYSQL"
 #: providers/postgres/gda-postgres-provider.c:1161
 #: providers/sqlite/gda-sqlite-provider.c:508
 msgid "Transactions are not supported in read-only mode"
-msgstr "Transakcie s˙ podporovanÈ iba v reæime pre ËÌtanie"
+msgstr "Transakcie s√∫ podporovan√© iba v re≈æime pre ƒç√≠tanie"
 
 #: providers/mysql/gda-mysql-recordset.c:386
 #: providers/postgres/gda-postgres-recordset.c:583
@@ -1182,7 +1182,7 @@ msgstr "Transakcie s˙ podporovanÈ iba v reæime pre ËÌtanie"
 #: providers/sqlite/gda-sqlite-recordset.c:243
 #: providers/bdb/gda-bdb-recordset.c:166
 msgid "Column number out of range"
-msgstr "Neplatn˝ poËet stÂpcov"
+msgstr "Neplatn√Ω poƒçet stƒ∫pcov"
 
 #: providers/mysql/gda-mysql-recordset.c:437
 #: providers/mysql/gda-mysql-recordset.c:567
@@ -1233,7 +1233,7 @@ msgstr ""
 
 #: providers/mysql/libmain.c:41
 msgid "Provider for MySQL databases"
-msgstr "Poskytovateµ pre datab·ze MySQL"
+msgstr "Poskytovateƒæ pre datab√°ze MySQL"
 
 #: providers/mysql/libmain.c:51
 msgid "Name of the database to connect to"
@@ -1261,7 +1261,7 @@ msgstr ""
 
 #: providers/odbc/gda-odbc-provider.c:183
 msgid "Unable to SQLAllocEnv()..."
-msgstr "Nepodarilo sa zavolaª SQLAllocEnv()..."
+msgstr "Nepodarilo sa zavola≈• SQLAllocEnv()..."
 
 #: providers/odbc/gda-odbc-provider.c:451
 #: providers/odbc/gda-odbc-provider.c:471
@@ -1270,17 +1270,17 @@ msgstr "Nepodarilo sa zavolaª SQLAllocEnv()..."
 #: providers/odbc/gda-odbc-provider.c:562
 #: providers/odbc/gda-odbc-provider.c:592
 msgid "Invalid Odbc handle"
-msgstr "Neplatn˝ handle ODBC"
+msgstr "Neplatn√Ω handle ODBC"
 
 #: providers/odbc/gda-odbc-provider.c:1141
 #: providers/postgres/gda-postgres-provider.c:1294
 msgid "Nb args"
-msgstr "PoËet argumentov"
+msgstr "Poƒçet argumentov"
 
 #: providers/odbc/gda-odbc-provider.c:1402
 #: providers/oracle/gda-oracle-provider.c:2193 testing/client.c:138
 msgid "Views"
-msgstr "Pohµady"
+msgstr "Pohƒæady"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/odbc/gda-odbc-provider.c:1454
@@ -1291,69 +1291,69 @@ msgstr "Sekvencia"
 
 #: providers/odbc/libmain.c:41
 msgid "Provider for ODBC data sources"
-msgstr "Poskytovateµ pre datovÈ zdroje ODBC"
+msgstr "Poskytovateƒæ pre datov√© zdroje ODBC"
 
 #: providers/odbc/libmain.c:50
 #, fuzzy
 msgid "Connection String"
-msgstr "Reªazec spojenia"
+msgstr "Re≈•azec spojenia"
 
 #: providers/odbc/libmain.c:51
 #, fuzzy
 msgid "ODBC connection string"
-msgstr "Reªazec spojenia"
+msgstr "Re≈•azec spojenia"
 
 #: providers/oracle/gda-oracle-provider.c:196
 msgid "No TNS name supplied"
-msgstr "NezadanÈ meno TNS"
+msgstr "Nezadan√© meno TNS"
 
 #: providers/oracle/gda-oracle-provider.c:212
 msgid "Could not initialize Oracle"
-msgstr "Nie je moænÈ inicializovaª Oracle"
+msgstr "Nie je mo≈æn√© inicializova≈• Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:223
 msgid "Could not initialize the Oracle environment"
-msgstr "Nie je moænÈ inicializovaª prostredie Oracle"
+msgstr "Nie je mo≈æn√© inicializova≈• prostredie Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:234
 msgid "Could not allocate the Oracle service handle"
-msgstr "Nie je moænÈ alokovaª handle sluæby Oracle"
+msgstr "Nie je mo≈æn√© alokova≈• handle slu≈æby Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:244
 msgid "Could not allocate the Oracle error handle"
-msgstr "Nie je moænÈ alokovaª handle ch˝b Oracle"
+msgstr "Nie je mo≈æn√© alokova≈• handle ch√Ωb Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:256
 msgid "Could not allocate the Oracle server handle"
-msgstr "Nie je moænÈ alokovaª handle pre server Oracle"
+msgstr "Nie je mo≈æn√© alokova≈• handle pre server Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:269
 msgid "Could not allocate the Oracle session handle"
-msgstr "Nie je moænÈ alokovaª handle sedenia Oracle"
+msgstr "Nie je mo≈æn√© alokova≈• handle sedenia Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:299
 msgid "Could not attach to the Oracle server"
-msgstr "Nie je moænÈ pripojenie k serveru Oracle"
+msgstr "Nie je mo≈æn√© pripojenie k serveru Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:315
 msgid "Could not set the Oracle server attribute in the service context"
-msgstr "Nie je moænÈ nastaviª atrib˙t serveru Oracle v kontexte sluæby"
+msgstr "Nie je mo≈æn√© nastavi≈• atrib√∫t serveru Oracle v kontexte slu≈æby"
 
 #: providers/oracle/gda-oracle-provider.c:331
 msgid "Could not set the Oracle username attribute"
-msgstr "Nie je moænÈ nastaviª atrib˙t pouæÌvateµa pre Oracle"
+msgstr "Nie je mo≈æn√© nastavi≈• atrib√∫t pou≈æ√≠vateƒæa pre Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:347
 msgid "Could not set the Oracle password attribute"
-msgstr "Nie je moænÈ nastaviª atrib˙t hesla pre Oracle"
+msgstr "Nie je mo≈æn√© nastavi≈• atrib√∫t hesla pre Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:362
 msgid "Could not begin the Oracle session"
-msgstr "Nie je moænÈ zaËaª sedenie Oracle"
+msgstr "Nie je mo≈æn√© zaƒça≈• sedenie Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:380
 msgid "Could not set the Oracle session attribute in the service context"
-msgstr "Nie je moænÈ nastaviª atrib˙t sedenia v kontexte sluæby Oracle"
+msgstr "Nie je mo≈æn√© nastavi≈• atrib√∫t sedenia v kontexte slu≈æby Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:466
 #: providers/oracle/gda-oracle-provider.c:498
@@ -1370,80 +1370,80 @@ msgstr "Nie je moænÈ nastaviª atrib˙t sedenia v kontexte sluæby Oracle"
 #: providers/oracle/gda-oracle-recordset.c:392
 #: providers/oracle/gda-oracle-recordset.c:593
 msgid "Invalid Oracle handle"
-msgstr "Neplatn˝ handle Oracle"
+msgstr "Neplatn√Ω handle Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:509
 msgid "Could not allocate the Oracle statement handle"
-msgstr "Nie je moænÈ alokovaª handle prÌkazu Oracle"
+msgstr "Nie je mo≈æn√© alokova≈• handle pr√≠kazu Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:520
 msgid "Could not prepare the Oracle statement"
-msgstr "Nie je moænÈ pripraviª prÌkaz Oracle"
+msgstr "Nie je mo≈æn√© pripravi≈• pr√≠kaz Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:552
 msgid "Could not bind the Oracle statement parameter"
-msgstr "Nie je moænÈ pripojiiª parameter prÌkazu Oracle"
+msgstr "Nie je mo≈æn√© pripojii≈• parameter pr√≠kazu Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:598
 msgid "Could not get the Oracle statement type"
-msgstr "Nie je moænÈ zÌskaª typ prÌkazu Oracle"
+msgstr "Nie je mo≈æn√© z√≠ska≈• typ pr√≠kazu Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:610
 msgid "Could not set the Oracle statement pre-fetch row count"
-msgstr "Nie je moænÈ nastaviª poËet riadkov pre predv˝ber k prÌkazom Oracle"
+msgstr "Nie je mo≈æn√© nastavi≈• poƒçet riadkov pre predv√Ωber k pr√≠kazom Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:627
 msgid "Could not execute the Oracle statement"
-msgstr "Nie je moænÈ spustiª prÌkaz Oracle"
+msgstr "Nie je mo≈æn√© spusti≈• pr√≠kaz Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:640
 msgid "Could not get the number of columns in the result set"
-msgstr "Nie je moænÈ zÌskaª poËet stÂpcov v mnoæine v˝sledkov"
+msgstr "Nie je mo≈æn√© z√≠ska≈• poƒçet stƒ∫pcov v mno≈æine v√Ωsledkov"
 
 #: providers/oracle/gda-oracle-provider.c:657
 msgid "Could not get the parameter descripter in the result set"
-msgstr "Nie je moænÈ zÌskaª popis parametrov v mnoæine v˝sledkov"
+msgstr "Nie je mo≈æn√© z√≠ska≈• popis parametrov v mno≈æine v√Ωsledkov"
 
 #: providers/oracle/gda-oracle-provider.c:669
 msgid "Could not get the column name in the result set"
-msgstr "Nie je moænÈ zÌskaª meno stÂpca v mnoæine v˝sledkov"
+msgstr "Nie je mo≈æn√© z√≠ska≈• meno stƒ∫pca v mno≈æine v√Ωsledkov"
 
 #: providers/oracle/gda-oracle-provider.c:815
 #: providers/oracle/gda-oracle-provider.c:896
 #: providers/oracle/gda-oracle-provider.c:951
 #: providers/oracle/gda-oracle-provider.c:1012
 msgid "Could not attach the transaction to the service context"
-msgstr "Nie je pripojiª transakciu ku kontextu sluæby"
+msgstr "Nie je pripoji≈• transakciu ku kontextu slu≈æby"
 
 #: providers/oracle/gda-oracle-provider.c:870
 msgid "Could not allocate the Oracle transaction handle"
-msgstr "Nie je moænÈ alokovaª handle transakcie Oracle"
+msgstr "Nie je mo≈æn√© alokova≈• handle transakcie Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:882
 msgid "Could not set the Oracle transaction name"
-msgstr "Nie je moænÈ nastaviª meno transakcie Oracle"
+msgstr "Nie je mo≈æn√© nastavi≈• meno transakcie Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:907
 msgid "Could not start the Oracle transaction"
-msgstr "Nie je moænÈ spustiª transakciu Oracle"
+msgstr "Nie je mo≈æn√© spusti≈• transakciu Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:960
 msgid "Could not prepare the transaction to commit"
-msgstr "Nie je moænÈ pripraviª transakciu na commit"
+msgstr "Nie je mo≈æn√© pripravi≈• transakciu na commit"
 
 #: providers/oracle/gda-oracle-provider.c:968
 msgid "Could not commit the Oracle transaction"
-msgstr "Nie je moænÈ potvrdiª transakciu Oracle"
+msgstr "Nie je mo≈æn√© potvrdi≈• transakciu Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1019
 msgid "Could not rollback the Oracle transaction"
-msgstr "Nie je moænÈ odvolaª transakciu Oracle"
+msgstr "Nie je mo≈æn√© odvola≈• transakciu Oracle"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1152
 #: providers/postgres/gda-postgres-provider.c:1756
 msgid "Aggregate"
-msgstr "Agreg·t"
+msgstr "Agreg√°t"
 
 #: providers/oracle/gda-oracle-provider.c:1156
 #: providers/postgres/gda-postgres-provider.c:1760
@@ -1457,69 +1457,69 @@ msgstr "InType"
 
 #: providers/oracle/gda-oracle-provider.c:1441
 msgid "Could not allocate the Oracle describe handle"
-msgstr "Nie je moænÈ alokovaª handle pre popis Oracle"
+msgstr "Nie je mo≈æn√© alokova≈• handle pre popis Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1451
 msgid "Could not set describe handle attribute"
-msgstr "Nie je moænÈ nastaviª atrib˙t handle"
+msgstr "Nie je mo≈æn√© nastavi≈• atrib√∫t handle"
 
 #: providers/oracle/gda-oracle-provider.c:1478
 #: providers/oracle/gda-oracle-provider.c:1583
 msgid "Could not describe the Oracle table"
-msgstr "Nie je moænÈ popÌsaª tabuµku Oracle"
+msgstr "Nie je mo≈æn√© pop√≠sa≈• tabuƒæku Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1493
 #: providers/oracle/gda-oracle-provider.c:1596
 msgid "Could not get the Oracle parameter handle"
-msgstr "Nie je moænÈ zÌskaª handle parametra Oracle"
+msgstr "Nie je mo≈æn√© z√≠ska≈• handle parametra Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1508
 msgid "Could not get described object type"
-msgstr "Nie je moænÈ zÌskaª popis typu objektu"
+msgstr "Nie je mo≈æn√© z√≠ska≈• popis typu objektu"
 
 #: providers/oracle/gda-oracle-provider.c:1523
 msgid "Could not get synonym referred-to schema"
-msgstr "Nie je moænÈ zÌskaª synonymum pre schÈmu referred-to"
+msgstr "Nie je mo≈æn√© z√≠ska≈• synonymum pre sch√©mu referred-to"
 
 #: providers/oracle/gda-oracle-provider.c:1536
 msgid "Could not get synonym referred-to name"
-msgstr "Nie je moænÈ zÌskaª synonymum pre meno referred-to"
+msgstr "Nie je mo≈æn√© z√≠ska≈• synonymum pre meno referred-to"
 
 #: providers/oracle/gda-oracle-provider.c:1549
 msgid "Could not get synonym referred-to dblink"
-msgstr "Nepodarilo sa zÌskaª synonymum dblink pre referred-to"
+msgstr "Nepodarilo sa z√≠ska≈• synonymum dblink pre referred-to"
 
 #: providers/oracle/gda-oracle-provider.c:1611
 msgid "Could not get the number of columns in the table"
-msgstr "Nie je moænÈ zÌskaª poËet stÂpcov v tabuµke"
+msgstr "Nie je mo≈æn√© z√≠ska≈• poƒçet stƒ∫pcov v tabuƒæke"
 
 #: providers/oracle/gda-oracle-provider.c:1625
 msgid "Could not get the column list"
-msgstr "Nie je moænÈ zÌskaª zoznam stÂpcov"
+msgstr "Nie je mo≈æn√© z√≠ska≈• zoznam stƒ∫pcov"
 
 #: providers/oracle/gda-oracle-provider.c:1656
 msgid "Could not get the Oracle column handle"
-msgstr "Nie je moænÈ zÌskaª handle stÂpca Oracle"
+msgstr "Nie je mo≈æn√© z√≠ska≈• handle stƒ∫pca Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1671
 msgid "Could not get the Oracle field name"
-msgstr "Nie je moænÈ zÌskaª meno poµa Oracle"
+msgstr "Nie je mo≈æn√© z√≠ska≈• meno poƒæa Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1693
 msgid "Could not get the Oracle field data type"
-msgstr "Nie je moænÈ zÌskaª typ d·t poµa Oracle"
+msgstr "Nie je mo≈æn√© z√≠ska≈• typ d√°t poƒæa Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1713
 msgid "Could not get the Oracle field defined size"
-msgstr "Nie je moænÈ zÌskaª veµkosª definovan˙ poµom Oracle"
+msgstr "Nie je mo≈æn√© z√≠ska≈• veƒækos≈• definovan√∫ poƒæom Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1732
 msgid "Could not get the Oracle field scale"
-msgstr "Nie je moænÈ zÌskaª rozsah poµa Oracle"
+msgstr "Nie je mo≈æn√© z√≠ska≈• rozsah poƒæa Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1751
 msgid "Could not get the Oracle field nullable attribute"
-msgstr "Nie je moænÈ zÌskaª atrib˙t nulovateµnÈho poµa Oracle"
+msgstr "Nie je mo≈æn√© z√≠ska≈• atrib√∫t nulovateƒæn√©ho poƒæa Oracle"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:2177
@@ -1529,7 +1529,7 @@ msgstr "Indexy"
 
 #: providers/oracle/gda-oracle-provider.c:2180
 msgid "Procedures"
-msgstr "Proced˙ry"
+msgstr "Proced√∫ry"
 
 #: providers/oracle/gda-oracle-provider.c:2183 testing/client.c:142
 msgid "Sequences"
@@ -1537,56 +1537,56 @@ msgstr "Sekvencie"
 
 #: providers/oracle/gda-oracle-recordset.c:74
 msgid "Could not get the Oracle parameter"
-msgstr "Nie je moænÈ zÌskaª parameter Oracle"
+msgstr "Nie je mo≈æn√© z√≠ska≈• parameter Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:84
 msgid "Could not get the parameter defined size"
-msgstr "Nie je moænÈ zÌskaª veµkosª definovan˙ parametrom"
+msgstr "Nie je mo≈æn√© z√≠ska≈• veƒækos≈• definovan√∫ parametrom"
 
 #: providers/oracle/gda-oracle-recordset.c:97
 msgid "Could not get the parameter data type"
-msgstr "Nie je moænÈ zÌskaª typ d·t parametra"
+msgstr "Nie je mo≈æn√© z√≠ska≈• typ d√°t parametra"
 
 #: providers/oracle/gda-oracle-recordset.c:130
 msgid "Could not define by position"
-msgstr "Nie je moænÈ definovaª pomocou pozÌcie"
+msgstr "Nie je mo≈æn√© definova≈• pomocou poz√≠cie"
 
 #: providers/oracle/gda-oracle-recordset.c:175
 #: providers/postgres/gda-postgres-recordset.c:700
 msgid "Column out of range"
-msgstr "Neplatn˝ stÂpec"
+msgstr "Neplatn√Ω stƒ∫pec"
 
 #: providers/oracle/gda-oracle-recordset.c:187
 msgid "Could not get the Oracle parameter information"
-msgstr "Nie je moænÈ zÌskaª inform·cie o parametri Oracle"
+msgstr "Nie je mo≈æn√© z√≠ska≈• inform√°cie o parametri Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:197
 msgid "Could not get the Oracle column name"
-msgstr "Nie je moænÈ zÌskaª meno stÂpca Oracle"
+msgstr "Nie je mo≈æn√© z√≠ska≈• meno stƒ∫pca Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:212
 msgid "Could not get the Oracle column data type"
-msgstr "Nie je moænÈ zÌskaª typ d·t stÂpca Oracle"
+msgstr "Nie je mo≈æn√© z√≠ska≈• typ d√°t stƒ∫pca Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:224
 msgid "Could not get the Oracle column scale"
-msgstr "Nie je moænÈ zÌskaª rozsah stÂpca Oracle"
+msgstr "Nie je mo≈æn√© z√≠ska≈• rozsah stƒ∫pca Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:236
 msgid "Could not get the Oracle column nullable attribute"
-msgstr "Nie je moænÈ zÌskaª atrib˙t vynulovateµn˝ stÂpec Oracle"
+msgstr "Nie je mo≈æn√© z√≠ska≈• atrib√∫t vynulovateƒæn√Ω stƒ∫pec Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:248
 msgid "Could not get the Oracle defined size"
-msgstr "Nie je moænÈ zÌskaª veµkosª definovan˙ v Oracle"
+msgstr "Nie je mo≈æn√© z√≠ska≈• veƒækos≈• definovan√∫ v Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:357
 msgid "Could not fetch a row"
-msgstr "Nie je moænÈ zÌskaª riadok"
+msgstr "Nie je mo≈æn√© z√≠ska≈• riadok"
 
 #: providers/oracle/libmain.c:34
 msgid "Provider for Oracle databases"
-msgstr "Poskytovateµ pre datab·ze Oracle"
+msgstr "Poskytovateƒæ pre datab√°ze Oracle"
 
 #: providers/oracle/libmain.c:43
 #, fuzzy
@@ -1607,27 +1607,27 @@ msgstr ""
 #: providers/postgres/gda-postgres-recordset.c:694
 #: providers/postgres/utils.c:178
 msgid "Invalid PostgreSQL handle"
-msgstr "Neplatn˝ handle PostgreSQL"
+msgstr "Neplatn√Ω handle PostgreSQL"
 
 #: providers/postgres/gda-postgres-provider.c:1170
 #, fuzzy
 msgid "Transactions are not supported in read uncommitted isolation level"
-msgstr "Transakcie s˙ podporovanÈ iba v reæime pre ËÌtanie"
+msgstr "Transakcie s√∫ podporovan√© iba v re≈æime pre ƒç√≠tanie"
 
 #: providers/postgres/gda-postgres-provider.c:1173
 #, fuzzy
 msgid "Transactions are not supported in repeatable read isolation level"
-msgstr "Transakcie s˙ podporovanÈ iba v reæime pre ËÌtanie"
+msgstr "Transakcie s√∫ podporovan√© iba v re≈æime pre ƒç√≠tanie"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1639
 msgid "View"
-msgstr "Pohµad"
+msgstr "Pohƒæad"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:2319 testing/client.c:134
 msgid "Databases"
-msgstr "Datab·ze"
+msgstr "Datab√°ze"
 
 #: providers/postgres/gda-postgres-recordset.c:501
 msgid "Model doesn't have at least one non-modified unique key."
@@ -1644,7 +1644,7 @@ msgstr "N-tice: \"%s\""
 
 #: providers/postgres/libmain.c:42
 msgid "Provider for PostgreSQL databases"
-msgstr "Poskytovateµ pre datab·ze PostgreSQL"
+msgstr "Poskytovateƒæ pre datab√°ze PostgreSQL"
 
 #: providers/postgres/libmain.c:55
 msgid "Search Path"
@@ -1677,11 +1677,11 @@ msgstr ""
 #: providers/sqlite/gda-sqlite-provider.c:199
 msgid ""
 "A full path must be specified on the connection string to open a database."
-msgstr "Pre otvorenie datab·ze musÌte zadaª cel˙ cestu v reªazci spojenia."
+msgstr "Pre otvorenie datab√°ze mus√≠te zada≈• cel√∫ cestu v re≈•azci spojenia."
 
 #: providers/sqlite/gda-sqlite-provider.c:223
 msgid "Could not set empty_result_callbacks SQLite option"
-msgstr "Nie je moænÈ nastaviª voµbu SQLite empty_result_callbacks"
+msgstr "Nie je mo≈æn√© nastavi≈• voƒæbu SQLite empty_result_callbacks"
 
 #: providers/sqlite/gda-sqlite-provider.c:242
 #: providers/sqlite/gda-sqlite-provider.c:379
@@ -1691,63 +1691,63 @@ msgstr "Nie je moænÈ nastaviª voµbu SQLite empty_result_callbacks"
 #: providers/sqlite/gda-sqlite-recordset.c:196
 #: providers/sqlite/gda-sqlite-recordset.c:237
 msgid "Invalid SQLite handle"
-msgstr "Neplatn˝ handle SQLite"
+msgstr "Neplatn√Ω handle SQLite"
 
 #: providers/sqlite/gda-sqlite-provider.c:300
 msgid "Invalid SQLITE handle"
-msgstr "Neplatn˝ handle SQLite"
+msgstr "Neplatn√Ω handle SQLite"
 
 #: providers/sqlite/gda-sqlite-provider.c:397
 #: providers/sqlite/gda-sqlite-provider.c:412
 msgid "Only one database per connection is allowed"
-msgstr "Pre jedno spojenie je oovolen· iba jedna datab·za"
+msgstr "Pre jedno spojenie je oovolen√° iba jedna datab√°za"
 
 #: providers/sqlite/gda-sqlite-provider.c:426
 msgid "To remove a SQLite database you should remove the database file by hand"
-msgstr "Pre odstr·nenie datab·ze SQLite musÌte s˙bor datab·zy odstr·niª ruËne"
+msgstr "Pre odstr√°nenie datab√°ze SQLite mus√≠te s√∫bor datab√°zy odstr√°ni≈• ruƒçne"
 
 #: providers/sqlite/gda-sqlite-provider.c:700
 msgid "Could not retrieve information for field"
-msgstr "Nie je moænÈ zÌskaª inform·cie o poli"
+msgstr "Nie je mo≈æn√© z√≠ska≈• inform√°cie o poli"
 
 #: providers/sqlite/libmain.c:41
 msgid "Provider for SQLite databases"
-msgstr "Poskytovateµ pre datab·ze SQLite"
+msgstr "Poskytovateƒæ pre datab√°ze SQLite"
 
 #: providers/sqlite/libmain.c:51
 #, fuzzy
 msgid "Full path of the file containing the SQLite database"
-msgstr "Pre otvorenie datab·ze musÌte zadaª cel˙ cestu v reªazci spojenia."
+msgstr "Pre otvorenie datab√°ze mus√≠te zada≈• cel√∫ cestu v re≈•azci spojenia."
 
 #: providers/sybase/gda-sybase-provider.c:291
 msgid "Out of memory. Allocating connection structure failed."
-msgstr "Nedostatok pam‰ti. Zlyhala alok·cia πtrukt˙ry spojenia."
+msgstr "Nedostatok pam√§ti. Zlyhala alok√°cia ≈°trukt√∫ry spojenia."
 
 #: providers/sybase/gda-sybase-provider.c:336
 #, c-format
 msgid "Locale set to '%s'."
-msgstr "Lok·lne nastavenie je '%s'."
+msgstr "Lok√°lne nastavenie je '%s'."
 
 #: providers/sybase/gda-sybase-provider.c:642
 msgid ""
 "Cmd structure already in use. Command will not be executed because of "
 "blocked connection."
 msgstr ""
-"©trukt˙ra cmd sa uæ pouæÌva. PrÌkaz nie je moænÈ vykonaª, pretoæe je "
-"spojenie blokovanÈ."
+"≈†trukt√∫ra cmd sa u≈æ pou≈æ√≠va. Pr√≠kaz nie je mo≈æn√© vykona≈•, preto≈æe je "
+"spojenie blokovan√©."
 
 #: providers/sybase/gda-sybase-provider.c:656
 #, c-format
 msgid "Failed allocating a command structure in %s()"
-msgstr "Nepodarilo sa alokovaª πtrukt˙ru prÌkazu v %s()"
+msgstr "Nepodarilo sa alokova≈• ≈°trukt√∫ru pr√≠kazu v %s()"
 
 #: providers/sybase/gda-sybase-provider.c:670
 msgid "Could not prepare command structure."
-msgstr "Nie je moænÈ pripraviª πtrukt˙ru prÌkazu."
+msgstr "Nie je mo≈æn√© pripravi≈• ≈°trukt√∫ru pr√≠kazu."
 
 #: providers/sybase/gda-sybase-provider.c:680
 msgid "Sending sql-command failed."
-msgstr "Poslanie prÌkazu SQL zlyhalo."
+msgstr "Poslanie pr√≠kazu SQL zlyhalo."
 
 #: providers/sybase/gda-sybase-provider.c:706
 #: providers/sybase/gda-sybase-provider.c:724
@@ -1765,42 +1765,42 @@ msgstr "CS_STATUS_RESULT!"
 
 #: providers/sybase/gda-sybase-provider.c:734
 msgid "Hit unsupported result type"
-msgstr "N·jden˝ nepodporovan˝ typ v˝sledku"
+msgstr "N√°jden√Ω nepodporovan√Ω typ v√Ωsledku"
 
 #: providers/sybase/gda-sybase-provider.c:762
 msgid ""
 "an error occured when calling ct_diag attempting to test if there is a "
 "server message for resultset"
 msgstr ""
-"volanie ct_diag zlyhalo pri testovanÌ, Ëi existuje spr·va serveru pre "
+"volanie ct_diag zlyhalo pri testovan√≠, ƒçi existuje spr√°va serveru pre "
 "recordset"
 
 #: providers/sybase/gda-sybase-provider.c:793
 #, c-format
 msgid "%s returned %s"
-msgstr "%s vr·tila %s"
+msgstr "%s vr√°tila %s"
 
 #: providers/sybase/gda-sybase-provider.c:820
 msgid "Failed dropping command structure."
-msgstr "Nepodarilo sa zahodenie πtrukt˙ry prÌkazu."
+msgstr "Nepodarilo sa zahodenie ≈°trukt√∫ry pr√≠kazu."
 
 #: providers/sybase/gda-sybase-provider.c:850
 #, c-format
 msgid "Command structure already in use. %s failed."
-msgstr "©trukt˙ra prÌkazu sa uæ pouæÌva. %s zlyhalo."
+msgstr "≈†trukt√∫ra pr√≠kazu sa u≈æ pou≈æ√≠va. %s zlyhalo."
 
 #: providers/sybase/gda-sybase-provider.c:858
 msgid "Could not allocate command structure."
-msgstr "Nie je moænÈ alokovaª πtrukt˙ru prÌkazov."
+msgstr "Nie je mo≈æn√© alokova≈• ≈°trukt√∫ru pr√≠kazov."
 
 #: providers/sybase/gda-sybase-provider.c:867
 #, c-format
 msgid "Could not prepare command structure with %s."
-msgstr "Nie je moænÈ pripraviª πtrukt˙ru prÌkazu pomocou %s."
+msgstr "Nie je mo≈æn√© pripravi≈• ≈°trukt√∫ru pr√≠kazu pomocou %s."
 
 #: providers/sybase/gda-sybase-provider.c:877
 msgid "Sending command failed."
-msgstr "Poslanie prÌkazu zlyhalo."
+msgstr "Poslanie pr√≠kazu zlyhalo."
 
 #: providers/sybase/gda-sybase-provider.c:902
 #: providers/sybase/gda-sybase-provider.c:919
@@ -1812,34 +1812,34 @@ msgstr "%s: %s zlyhalo"
 #: providers/sybase/gda-sybase-provider.c:974
 msgid "could not allocate cmd structure to find current database."
 msgstr ""
-"nie je moænÈ alokovaª πtrukt˙ru pre prÌkaz pre n·jdenie aktu·lnej datab·ze."
+"nie je mo≈æn√© alokova≈• ≈°trukt√∫ru pre pr√≠kaz pre n√°jdenie aktu√°lnej datab√°ze."
 
 #: providers/sybase/gda-sybase-provider.c:985
 msgid "could not execute command to get current database."
-msgstr "nie je moænÈ vykonaª prÌkaz pre zÌskanie aktu·lnej datab·ze."
+msgstr "nie je mo≈æn√© vykona≈• pr√≠kaz pre z√≠skanie aktu√°lnej datab√°ze."
 
 #: providers/sybase/gda-sybase-provider.c:993
 msgid "could not send command to get current database."
-msgstr "nie je moænÈ poslaª prÌkaz pre zÌskanie aktu·lnej datab·ze."
+msgstr "nie je mo≈æn√© posla≈• pr√≠kaz pre z√≠skanie aktu√°lnej datab√°ze."
 
 #: providers/sybase/gda-sybase-provider.c:1016
 msgid "could not bind variable to get current database."
-msgstr "nie je moænÈ pripojiª premenn˙ pre zÌskanie aktu·lnej datab·ze."
+msgstr "nie je mo≈æn√© pripoji≈• premenn√∫ pre z√≠skanie aktu√°lnej datab√°ze."
 
 #: providers/sybase/gda-sybase-provider.c:1029
 #: providers/sybase/gda-sybase-provider.c:1044
 msgid "could not fetch data to find current database."
-msgstr "nie je moænÈ zÌskaª d·ta pre n·jdenie aktu·lnej datab·ze."
+msgstr "nie je mo≈æn√© z√≠ska≈• d√°ta pre n√°jdenie aktu√°lnej datab√°ze."
 
 #: providers/sybase/gda-sybase-provider.c:1058
 msgid "could not drop cmd structure to find current database."
 msgstr ""
-"nie je moænÈ odstr·niª πtrukt˙ru prÌkazu pomocou pre n·jdenie aktu·lnej "
-"datab·ze."
+"nie je mo≈æn√© odstr√°ni≈• ≈°trukt√∫ru pr√≠kazu pomocou pre n√°jdenie aktu√°lnej "
+"datab√°ze."
 
 #: providers/sybase/gda-sybase-recordset.c:316
 msgid "Could not allocate datamodel. No results will be returned."
-msgstr "Nie je moænÈ alokovaª datamodel. Nebud˙ vr·tenÈ æiadne v˝sledky."
+msgstr "Nie je mo≈æn√© alokova≈• datamodel. Nebud√∫ vr√°ten√© ≈æiadne v√Ωsledky."
 
 #: providers/sybase/gda-sybase-recordset.c:319
 msgid "ct_cancel() failed."
@@ -1848,39 +1848,39 @@ msgstr "ct_cancel() zlyhala."
 #: providers/sybase/gda-sybase-recordset.c:332
 #, c-format
 msgid "%s failed while processing a row result."
-msgstr "%s zlyhala poËas spracovania riadku v˝sledku."
+msgstr "%s zlyhala poƒças spracovania riadku v√Ωsledku."
 
 #: providers/sybase/gda-sybase-recordset.c:340
 #, c-format
 msgid "%s returned <= 0 columns."
-msgstr "%s vr·til menej neæ 0 stÂpcov."
+msgstr "%s vr√°til menej ne≈æ 0 stƒ∫pcov."
 
 #: providers/sybase/gda-sybase-recordset.c:360
 #: providers/sybase/gda-sybase-recordset.c:550
 msgid "Could not allocate structure for column metainformation."
-msgstr "Nie je moænÈ alokovaª πtrukt˙ru pre meta-inform·cie stÂpca."
+msgstr "Nie je mo≈æn√© alokova≈• ≈°trukt√∫ru pre meta-inform√°cie stƒ∫pca."
 
 #: providers/sybase/gda-sybase-recordset.c:364
 #: providers/sybase/gda-sybase-recordset.c:554
 #, c-format
 msgid "Could not call %s while processing row resultset."
-msgstr "Nie je moænÈ zavolaª %s poËas spracovania riadku v˝sledku."
+msgstr "Nie je mo≈æn√© zavola≈• %s poƒças spracovania riadku v√Ωsledku."
 
 #: providers/sybase/gda-sybase-recordset.c:383
 #: providers/sybase/gda-sybase-recordset.c:404
 #, c-format
 msgid "Could not run %s on column %d"
-msgstr "Nie je moænÈ spustiª %s na stÂpci %d"
+msgstr "Nie je mo≈æn√© spusti≈• %s na stƒ∫pci %d"
 
 #: providers/sybase/gda-sybase-recordset.c:392
 #, c-format
 msgid "Could not allocate data placeholder for column %d"
-msgstr "Nie je moænÈ alokovaª miesto pre d·ta pre stÂpec %d"
+msgstr "Nie je mo≈æn√© alokova≈• miesto pre d√°ta pre stƒ∫pec %d"
 
 #: providers/sybase/gda-sybase-recordset.c:423
 #, c-format
 msgid "Could not run %s to cancel processing row resultset."
-msgstr "Nie je moænÈ spustiª %s pre zruπenie spracovania v˝sledkov."
+msgstr "Nie je mo≈æn√© spusti≈• %s pre zru≈°enie spracovania v√Ωsledkov."
 
 #: providers/sybase/gda-sybase-recordset.c:439
 #, c-format
@@ -1890,46 +1890,46 @@ msgstr "%s zlyhala na riadku %d"
 #: providers/sybase/gda-sybase-recordset.c:466
 #, c-format
 msgid "%s terminated with unexpected return code."
-msgstr "%s skonËil· s neoËak·vanym n·vratov˝m kÛdom."
+msgstr "%s skonƒçil√° s neoƒçak√°vanym n√°vratov√Ωm k√≥dom."
 
 #: providers/sybase/gda-sybase-recordset.c:510
 msgid ""
 "an error occured when calling ct_diag attempting to retrieve a server "
 "message count for resultset"
-msgstr "volanie ct_diag zlyhalo pri zÌskanÌ poËtu spr·v serveru pre recordset"
+msgstr "volanie ct_diag zlyhalo pri z√≠skan√≠ poƒçtu spr√°v serveru pre recordset"
 
 #: providers/sybase/gda-sybase-recordset.c:519
 msgid "attempting to make recordset and msg count != 1 !"
-msgstr "pokus o vytvorenie recordset a poËet spr·v != 1 !"
+msgstr "pokus o vytvorenie recordset a poƒçet spr√°v != 1 !"
 
 #: providers/sybase/gda-sybase-recordset.c:532
 msgid ""
 "an error occured when calling ct_diag attempting to retrieve a server "
 "message for recordset"
-msgstr "volanie ct_diag zlyhalo pri zÌskanÌ spr·vy serveru pre recordset"
+msgstr "volanie ct_diag zlyhalo pri z√≠skan√≠ spr√°vy serveru pre recordset"
 
 #: providers/sybase/gda-sybase-recordset.c:591 providers/sybase/utils.c:408
 msgid "call to ct_diag failed when attempting to clear the server messages"
-msgstr "volanie ct_diag zlyhalo pri ËistenÌ spr·v serveru"
+msgstr "volanie ct_diag zlyhalo pri ƒçisten√≠ spr√°v serveru"
 
 #: providers/sybase/gda-sybase-types.c:94
 #: providers/sybase/gda-sybase-types.c:97
 msgid "Attempt setting a nonnullable field to null."
-msgstr "Pokus o nastavenie pr·zdnej hodnoty poµa, ktorÈ nesmie byª pr·zdne."
+msgstr "Pokus o nastavenie pr√°zdnej hodnoty poƒæa, ktor√© nesmie by≈• pr√°zdne."
 
 #: providers/sybase/gda-sybase-types.c:208
 #, c-format
 msgid "cslib cannot convert type %d"
-msgstr "cslib nedok·æe previesª typ %d"
+msgstr "cslib nedok√°≈æe previes≈• typ %d"
 
 #: providers/sybase/gda-sybase-types.c:223
 #, c-format
 msgid "data conversion failed for type %d"
-msgstr "prevod d·t zlyhal pre typ %d"
+msgstr "prevod d√°t zlyhal pre typ %d"
 
 #: providers/sybase/libmain.c:40
 msgid "GDA provider for sybase databases (using OpenClient)"
-msgstr "Poskytovateµ GDA pre datab·ze sybase (pomocou OpenClient)"
+msgstr "Poskytovateƒæ GDA pre datab√°ze sybase (pomocou OpenClient)"
 
 #: providers/sybase/libmain.c:66
 msgid "Extra Sybase options to use for the connection"
@@ -1938,7 +1938,7 @@ msgstr ""
 #: providers/sybase/libmain.c:80
 #, fuzzy
 msgid "Locale"
-msgstr "©k·la"
+msgstr "≈†k√°la"
 
 #: providers/sybase/libmain.c:81
 msgid "Locale to use in the connection"
@@ -1956,7 +1956,7 @@ msgid ""
 "\t%s"
 msgstr ""
 "Chyba CS-Library:\n"
-"\tz·vaænosª(%ld) vrstva(%ld) pÙvod (%ld) ËÌslo(%ld)\n"
+"\tz√°va≈ænos≈•(%ld) vrstva(%ld) p√¥vod (%ld) ƒç√≠slo(%ld)\n"
 "\t%s"
 
 #: providers/sybase/utils.c:60
@@ -1976,7 +1976,7 @@ msgid ""
 "\t%s"
 msgstr ""
 "Chyba CT-Client:\n"
-"\tz·vaænosª(%ld) vrstva(%ld) pÙvod (%ld) ËÌslo(%ld)\n"
+"\tz√°va≈ænos≈•(%ld) vrstva(%ld) p√¥vod (%ld) ƒç√≠slo(%ld)\n"
 "\t%s"
 
 #: providers/sybase/utils.c:90
@@ -1989,8 +1989,8 @@ msgid ""
 "CT-Server message:\n"
 "\tnumber(%ld) severity(%ld) state(%ld) line(%ld)"
 msgstr ""
-"Spr·va CT-Server:\n"
-"\tËÌslo(%ld) z·vaænosª(%ld) stav (%ld) riadok (%ld)"
+"Spr√°va CT-Server:\n"
+"\tƒç√≠slo(%ld) z√°va≈ænos≈•(%ld) stav (%ld) riadok (%ld)"
 
 #: providers/sybase/utils.c:100
 #, c-format
@@ -2000,20 +2000,20 @@ msgstr "\tMeno serveru: %s\n"
 #: providers/sybase/utils.c:103
 #, c-format
 msgid "\tProcedure name: %s\n"
-msgstr "\t\tMeno proced˙ry: %s\n"
+msgstr "\t\tMeno proced√∫ry: %s\n"
 
 #: providers/sybase/utils.c:147
 msgid "ct_diag() failed determining # of client messages."
-msgstr "ct_diag() zlyhal pri urËovanÌ poËtu spr·v klienta."
+msgstr "ct_diag() zlyhal pri urƒçovan√≠ poƒçtu spr√°v klienta."
 
 #: providers/sybase/utils.c:202
 msgid "call to cs_diag failed when attempting to the amount of client messages"
-msgstr "volanie cs_diag zlyhalo pri zisªovanÌ poËtu spr·v klienta"
+msgstr "volanie cs_diag zlyhalo pri zis≈•ovan√≠ poƒçtu spr√°v klienta"
 
 #: providers/sybase/utils.c:220
 msgid ""
 "an error occured when calling cs_diag attempting to retrieve a client message"
-msgstr "volanie cs_diag zlyhalo pri zÌskanÌ spr·vy klienta"
+msgstr "volanie cs_diag zlyhalo pri z√≠skan√≠ spr√°vy klienta"
 
 #: providers/sybase/utils.c:230
 msgid "OS_Error:("
@@ -2021,7 +2021,7 @@ msgstr "Chyba OS:("
 
 #: providers/sybase/utils.c:232
 msgid ") Message: "
-msgstr ") Spr·va: "
+msgstr ") Spr√°va: "
 
 #: providers/sybase/utils.c:244
 #, fuzzy, c-format
@@ -2030,21 +2030,21 @@ msgid ""
 "s"
 msgstr ""
 "Chyba CT-Client:\n"
-"\tz·vaænosª(%ld) vrstva(%ld) pÙvod (%ld) ËÌslo(%ld)\n"
+"\tz√°va≈ænos≈•(%ld) vrstva(%ld) p√¥vod (%ld) ƒç√≠slo(%ld)\n"
 "\t%s"
 
 #: providers/sybase/utils.c:272
 msgid "call to cs_diag failed when attempting to clear the client messages"
-msgstr "volanie cs_diag zlyhalo pri ËistenÌ spr·v klienta"
+msgstr "volanie cs_diag zlyhalo pri ƒçisten√≠ spr√°v klienta"
 
 #: providers/sybase/utils.c:313
 msgid "call to ct_diag failed when attempting to the amount of server messages"
-msgstr "volanie ct_diag() zlyhalo pri urËovanÌ poËtu spr·v serveru"
+msgstr "volanie ct_diag() zlyhalo pri urƒçovan√≠ poƒçtu spr√°v serveru"
 
 #: providers/sybase/utils.c:330
 msgid ""
 "an error occured when calling ct_diag attempting to retrieve a server message"
-msgstr "nastala chyba pri volanÌ ct_diag pri pokuse o zÌskanie spr·vy serveru"
+msgstr "nastala chyba pri volan√≠ ct_diag pri pokuse o z√≠skanie spr√°vy serveru"
 
 #: providers/sybase/utils.c:342
 msgid "Server:"
@@ -2052,15 +2052,15 @@ msgstr "Server:"
 
 #: providers/sybase/utils.c:346
 msgid "Stored Procedure:"
-msgstr "Uloæen· proced˙ra:"
+msgstr "Ulo≈æen√° proced√∫ra:"
 
 #: providers/sybase/utils.c:350
 msgid "Number"
-msgstr "PoËet"
+msgstr "Poƒçet"
 
 #: providers/sybase/utils.c:353 providers/sybase/utils.c:470
 msgid "Severity"
-msgstr "DÙleæitosª"
+msgstr "D√¥le≈æitos≈•"
 
 #: providers/sybase/utils.c:356
 msgid "State"
@@ -2072,12 +2072,12 @@ msgstr "Riadok"
 
 #: providers/sybase/utils.c:442
 msgid "call to ct_diag failed when attempting to the amount of client messages"
-msgstr "volanie ct_diag() zlyhalo pri urËovanÌ poËtu spr·v klienta"
+msgstr "volanie ct_diag() zlyhalo pri urƒçovan√≠ poƒçtu spr√°v klienta"
 
 #: providers/sybase/utils.c:459
 msgid ""
 "an error occured when calling ct_diag attempting to retrieve a client message"
-msgstr "nastala chyba pri volanÌ ct_diag pri pokuse o zÌskanie spr·vy klienta"
+msgstr "nastala chyba pri volan√≠ ct_diag pri pokuse o z√≠skanie spr√°vy klienta"
 
 #: providers/sybase/utils.c:472
 msgid "Layer"
@@ -2085,36 +2085,36 @@ msgstr "Vrstva"
 
 #: providers/sybase/utils.c:474
 msgid "Origin"
-msgstr "PÙvod"
+msgstr "P√¥vod"
 
 #: providers/sybase/utils.c:476
 msgid "Message Number"
-msgstr "PoËet spr·v"
+msgstr "Poƒçet spr√°v"
 
 #: providers/sybase/utils.c:498
 msgid "call to ct_diag failed when attempting to clear the client messages"
-msgstr "volanie ct_diag() zlyhal pri ËistenÌ spr·v klienta."
+msgstr "volanie ct_diag() zlyhal pri ƒçisten√≠ spr√°v klienta."
 
 #: providers/sybase/utils.c:519
 msgid "Operation not possible, connection busy."
-msgstr "Oper·cia nie je moæn·, spojenie zanepr·zdnenÈ."
+msgstr "Oper√°cia nie je mo≈æn√°, spojenie zanepr√°zdnen√©."
 
 #: providers/xbase/gda-xbase-provider.c:185
 msgid "Either FILENAME or DIRECTORY can be specified, but not both or neither"
-msgstr "Je moænÈ zadaª MENOS⁄BORU alebo PRIE»INOK, ale nie oba alebo æiadny"
+msgstr "Je mo≈æn√© zada≈• MENOS√öBORU alebo PRIEƒåINOK, ale nie oba alebo ≈æiadny"
 
 #: providers/xbase/gda-xbase-provider.c:232
 msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
-msgstr "MusÌte zadaª MENOS⁄BORU alebo PRIE»INOK v reªazci spojenia"
+msgstr "Mus√≠te zada≈• MENOS√öBORU alebo PRIEƒåINOK v re≈•azci spojenia"
 
 #: providers/xbase/gda-xbase-provider.c:261
 #: providers/xbase/gda-xbase-provider.c:379
 msgid "Invalid Xbase handle"
-msgstr "Neplatn˝ handle Xbase"
+msgstr "Neplatn√Ω handle Xbase"
 
 #: providers/xbase/libmain.c:39
 msgid "Provider for Xbase (dBase, FoxPro, etc) files"
-msgstr "Poskytovateµ pre s˙bory Xbase (dBase, FoxPro, atÔ)"
+msgstr "Poskytovateƒæ pre s√∫bory Xbase (dBase, FoxPro, atƒè)"
 
 #: providers/xbase/libmain.c:52
 msgid "Directory"
@@ -2129,35 +2129,35 @@ msgid ""
 "A full path must be specified on the connection string to open a database on "
 "the XML provider."
 msgstr ""
-"Pre otvorenie datab·ze musÌte zadaª cel˙ cestu v reªazci spojenia pre "
-"poskytovateµa XML."
+"Pre otvorenie datab√°ze mus√≠te zada≈• cel√∫ cestu v re≈•azci spojenia pre "
+"poskytovateƒæa XML."
 
 #: providers/xml/gda-xml-provider.c:222 providers/xml/gda-xml-provider.c:244
 msgid "Invalid XML handle"
-msgstr "Neplatn˝ handle XML"
+msgstr "Neplatn√Ω handle XML"
 
 #: providers/xml/gda-xml-provider.c:263 providers/xml/gda-xml-provider.c:278
 #: providers/xml/gda-xml-provider.c:329
 msgid "Invalid internal handle"
-msgstr "Neplatn˝ intern˝ handle"
+msgstr "Neplatn√Ω intern√Ω handle"
 
 #: providers/xml/gda-xml-provider.c:368
 msgid "Not Implemented"
-msgstr "NeimplementovanÈ"
+msgstr "Neimplementovan√©"
 
 #: providers/xml/gda-xml-provider.c:506 providers/xml/gda-xml-provider.c:512
 msgid "Invalid argument"
-msgstr "Neplatn˝ argument"
+msgstr "Neplatn√Ω argument"
 
 #: providers/xml/gda-xml-provider.c:538
 msgid "Could not get description for column"
-msgstr "Nepodarilo sa zÌskaª popis stÂpca"
+msgstr "Nepodarilo sa z√≠ska≈• popis stƒ∫pca"
 
 #. fill the recordset
 #: providers/xml/gda-xml-provider.c:660
 #, fuzzy
 msgid "Big integer"
-msgstr "64-bitovÈ celÈ ËÌslo"
+msgstr "64-bitov√© cel√© ƒç√≠slo"
 
 #: providers/xml/gda-xml-provider.c:661
 msgid "Big unsigned integer"
@@ -2180,7 +2180,7 @@ msgstr "Stav"
 #: providers/xml/gda-xml-provider.c:665
 #, fuzzy
 msgid "Double precision"
-msgstr "Re·lna hodnota s dvojn·sobnou presnosªou"
+msgstr "Re√°lna hodnota s dvojn√°sobnou presnos≈•ou"
 
 #: providers/xml/gda-xml-provider.c:666
 msgid "Integer"
@@ -2197,7 +2197,7 @@ msgstr ""
 #: providers/xml/gda-xml-provider.c:669
 #, fuzzy
 msgid "Numeric"
-msgstr "PoËet"
+msgstr "Poƒçet"
 
 #: providers/xml/gda-xml-provider.c:670
 msgid "Point"
@@ -2206,7 +2206,7 @@ msgstr ""
 #: providers/xml/gda-xml-provider.c:671
 #, fuzzy
 msgid "Single precision"
-msgstr "Re·lna hodnota s jednoduchou presnosªou"
+msgstr "Re√°lna hodnota s jednoduchou presnos≈•ou"
 
 #: providers/xml/gda-xml-provider.c:672
 msgid "Small integer"
@@ -2232,7 +2232,7 @@ msgstr ""
 #: providers/xml/gda-xml-provider.c:677
 #, fuzzy
 msgid "Tiny integer"
-msgstr "64-bitovÈ celÈ ËÌslo"
+msgstr "64-bitov√© cel√© ƒç√≠slo"
 
 #: providers/xml/gda-xml-provider.c:678
 msgid "Tiny unsigned integer"
@@ -2248,25 +2248,25 @@ msgstr "XML"
 
 #: providers/xml/libmain.c:39
 msgid "XML provider, based on the libgda XML database format"
-msgstr "Poskytovateµ XML zaloæen˝ na datab·zovom XML form·te libgda"
+msgstr "Poskytovateƒæ XML zalo≈æen√Ω na datab√°zovom XML form√°te libgda"
 
 #: providers/xml/libmain.c:49
 #, fuzzy
 msgid "Full path of the file containing the XML database"
-msgstr "Pre otvorenie datab·ze musÌte zadaª cel˙ cestu v reªazci spojenia."
+msgstr "Pre otvorenie datab√°ze mus√≠te zada≈• cel√∫ cestu v re≈•azci spojenia."
 
 #: report/libgda-report/gda-report-document.c:179
 msgid "Could not parse XML document"
-msgstr "Nie je moænÈ spracovaª XML dokument"
+msgstr "Nie je mo≈æn√© spracova≈• XML dokument"
 
 #: report/libgda-report/gda-report-document.c:189
 msgid "XML document is not valid"
-msgstr "Dokument XML nie je platn˝"
+msgstr "Dokument XML nie je platn√Ω"
 
 #: report/libgda-report/gda-report-document.c:221
 #, c-format
 msgid "Could not get file from %s"
-msgstr "Nie je moænÈ zÌskaª s˙bor z %s"
+msgstr "Nie je mo≈æn√© z√≠ska≈• s√∫bor z %s"
 
 #: report/libgda-report/gda-report-item-detail.c:160
 #: report/libgda-report/gda-report-item-pagefooter.c:171
@@ -2276,7 +2276,7 @@ msgstr "Nie je moænÈ zÌskaª s˙bor z %s"
 #: report/libgda-report/gda-report-item-reportheader.c:171
 #, c-format
 msgid "An element with ID %s already exists in the report"
-msgstr "Element s ID %s uæ v reporte existuje"
+msgstr "Element s ID %s u≈æ v reporte existuje"
 
 #: report/libgda-report/gda-report-item-detail.c:185
 #: report/libgda-report/gda-report-item-pagefooter.c:196
@@ -2286,7 +2286,7 @@ msgstr "Element s ID %s uæ v reporte existuje"
 #: report/libgda-report/gda-report-item-reportheader.c:196
 #, c-format
 msgid "Item with ID %s is not a label"
-msgstr "Poloæka s ID %s nie je popisok"
+msgstr "Polo≈æka s ID %s nie je popisok"
 
 #: report/libgda-report/gda-report-item-detail.c:214
 #: report/libgda-report/gda-report-item-pagefooter.c:224
@@ -2296,69 +2296,69 @@ msgstr "Poloæka s ID %s nie je popisok"
 #: report/libgda-report/gda-report-item-reportheader.c:224
 #, c-format
 msgid "Item with ID %s is not a repfield"
-msgstr "Poloæka s ID %s nie je repfield"
+msgstr "Polo≈æka s ID %s nie je repfield"
 
 #: report/libgda-report/gda-report-item.c:276
 msgid "Error setting parent -> child relation"
-msgstr "Chyba pri nastavenÌ vzµahu rodiª->potomok"
+msgstr "Chyba pri nastaven√≠ vzƒæahu rodi≈•->potomok"
 
 #: report/libgda-report/gda-report-item.c:375
 #, c-format
 msgid "Error setting value %s to attribute %s of item %s"
-msgstr "Chyba pri nastavenÌ hodnoty %s na atrib˙t %s poloæky %s"
+msgstr "Chyba pri nastaven√≠ hodnoty %s na atrib√∫t %s polo≈æky %s"
 
 #: report/libgda-report/gda-report-valid.c:130
 #, c-format
 msgid "could not get DTD from %s"
-msgstr "Nie je moænÈ zÌskaª DTD z %s"
+msgstr "Nie je mo≈æn√© z√≠ska≈• DTD z %s"
 
 #: report/libgda-report/gda-report-valid.c:231
 #, c-format
 msgid "Error validating element %s"
-msgstr "Chyba pri overovanÌ prvku %s"
+msgstr "Chyba pri overovan√≠ prvku %s"
 
 #: report/libgda-report/gda-report-valid.c:269
 #, c-format
 msgid "No declaration for attribute %s of element %s\n"
-msgstr "Pre atrib˙t %s prvku %s nie je deklar·cia.\n"
+msgstr "Pre atrib√∫t %s prvku %s nie je deklar√°cia.\n"
 
 #: report/libgda-report/gda-report-valid.c:283
 #, c-format
 msgid "Value \"%s\" for attribute %s of %s is not among the enumerated set\n"
-msgstr "Hodnota \"%s\" pre atrib˙t %s z %s nie je vo vymenovanej mnoæine.\n"
+msgstr "Hodnota \"%s\" pre atrib√∫t %s z %s nie je vo vymenovanej mno≈æine.\n"
 
 #: testing/client.c:42
 msgid "\t\tNONE\n"
-msgstr "\t\tÆIADNE\n"
+msgstr "\t\t≈ΩIADNE\n"
 
 #: testing/client.c:87
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
-msgstr "** CHYBA: nepodarilo sa otvoriª spojenie s %s\n"
+msgstr "** CHYBA: nepodarilo sa otvori≈• spojenie s %s\n"
 
 #. show provider features
 #: testing/client.c:92
 msgid "\tProvider capabilities...\n"
-msgstr "\tSchopnosti poskytovateµa...\n"
+msgstr "\tSchopnosti poskytovateƒæa...\n"
 
 #: testing/client.c:93
 #, c-format
 msgid "\t\tAggregates: %s\n"
-msgstr "\t\tAgreg·ty: %s\n"
+msgstr "\t\tAgreg√°ty: %s\n"
 
 #: testing/client.c:95 testing/client.c:98 testing/client.c:101
 #: testing/client.c:104 testing/client.c:107 testing/client.c:110
 #: testing/client.c:113 testing/client.c:116 testing/client.c:119
 #: testing/client.c:122 testing/client.c:125 testing/client.c:128
 msgid "Supported"
-msgstr "PodporovanÈ"
+msgstr "Podporovan√©"
 
 #: testing/client.c:95 testing/client.c:98 testing/client.c:101
 #: testing/client.c:104 testing/client.c:107 testing/client.c:110
 #: testing/client.c:113 testing/client.c:116 testing/client.c:119
 #: testing/client.c:122 testing/client.c:125 testing/client.c:128
 msgid "Not supported"
-msgstr "NepodporovanÈ"
+msgstr "Nepodporovan√©"
 
 #: testing/client.c:96
 #, c-format
@@ -2373,7 +2373,7 @@ msgstr "\t\tPriestory mien: %s\n"
 #: testing/client.c:102
 #, c-format
 msgid "\t\tProcedures: %s\n"
-msgstr "\t\tProced˙ry: %s\n"
+msgstr "\t\tProced√∫ry: %s\n"
 
 #: testing/client.c:105
 #, c-format
@@ -2398,17 +2398,17 @@ msgstr "\t\tTriggery: %s\n"
 #: testing/client.c:117
 #, c-format
 msgid "\t\tUsers: %s\n"
-msgstr "\t\tPouæÌvatelia: %s\n"
+msgstr "\t\tPou≈æ√≠vatelia: %s\n"
 
 #: testing/client.c:120
 #, c-format
 msgid "\t\tViews: %s\n"
-msgstr "\t\tPohµady: %s\n"
+msgstr "\t\tPohƒæady: %s\n"
 
 #: testing/client.c:123
 #, c-format
 msgid "\t\tXML queries: %s\n"
-msgstr "\t\tOt·zky XML: %s\n"
+msgstr "\t\tOt√°zky XML: %s\n"
 
 #: testing/client.c:126
 #, c-format
@@ -2424,7 +2424,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"\tVerzia ozn·men· poskytovateµom: %s\n"
+"\tVerzia ozn√°men√° poskytovateƒæom: %s\n"
 "\n"
 
 #: testing/client.c:133
@@ -2433,19 +2433,19 @@ msgstr "Priestory mien"
 
 #: testing/client.c:135
 msgid "Stored procedures"
-msgstr "UloæenÈ proced˙ry"
+msgstr "Ulo≈æen√© proced√∫ry"
 
 #: testing/client.c:136
 msgid "Connection Tables"
-msgstr "Tabuµky spojenia"
+msgstr "Tabuƒæky spojenia"
 
 #: testing/client.c:137
 msgid "Available types"
-msgstr "DostupnÈ typy"
+msgstr "Dostupn√© typy"
 
 #: testing/client.c:140
 msgid "Aggregates"
-msgstr "Agreg·ty"
+msgstr "Agreg√°ty"
 
 #: testing/client.c:144
 msgid "Languages"
@@ -2453,7 +2453,7 @@ msgstr "Jazyky"
 
 #: testing/client.c:149 testing/client.c:157
 msgid "\tStarting transaction..."
-msgstr "\tZaËÌtam transakciu..."
+msgstr "\tZaƒç√≠tam transakciu..."
 
 #: testing/client.c:151 testing/client.c:155 testing/client.c:159
 #: testing/client.c:163
@@ -2462,33 +2462,33 @@ msgstr "Chyba"
 
 #: testing/client.c:153
 msgid "\tFinishing transaction..."
-msgstr "\tDokonËujem transakciu..."
+msgstr "\tDokonƒçujem transakciu..."
 
 #: testing/client.c:161
 msgid "\tRolling back transaction..."
-msgstr "\tOdvol·vam transakciu..."
+msgstr "\tOdvol√°vam transakciu..."
 
 #: testing/client.c:192
 msgid "Testing GDA client API"
-msgstr "Testujem klientskÈ API pre GDA"
+msgstr "Testujem klientsk√© API pre GDA"
 
 #: testing/client.c:201
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
-msgstr "** ERROR: gda_config_get_data_source_list vr·tila poloæku NULL\n"
+msgstr "** ERROR: gda_config_get_data_source_list vr√°tila polo≈æku NULL\n"
 
 #: testing/client.c:205
 #, c-format
 msgid " Data source = %s, User = %s\n"
-msgstr " Zdroj d·t = %s, pouæÌvateµ = %s\n"
+msgstr " Zdroj d√°t = %s, pou≈æ√≠vateƒæ = %s\n"
 
 #: testing/config.c:84
 msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
-msgstr "** ERROR: gda_config_get_provider_list vr·tila poloæku NULL\n"
+msgstr "** ERROR: gda_config_get_provider_list vr√°tila polo≈æku NULL\n"
 
 #: testing/config.c:88
 #, c-format
 msgid " Provider = %s\n"
-msgstr " Poskytovateµ = %s\n"
+msgstr " Poskytovateƒæ = %s\n"
 
 #: testing/config.c:89
 #, c-format
@@ -2508,7 +2508,7 @@ msgstr "\tgda_params ="
 #, fuzzy
 msgid "The FILE parameter is not defined in the connection string."
 msgstr ""
-"Pre otvorenie datab·ze FILENAME musÌte zadaª cel˙ cestu v reªazci spojenia."
+"Pre otvorenie datab√°ze FILENAME mus√≠te zada≈• cel√∫ cestu v re≈•azci spojenia."
 
 #: providers/bdb/gda-bdb-provider.c:185
 msgid "-"
@@ -2518,22 +2518,22 @@ msgstr ""
 #: providers/bdb/gda-bdb-provider.c:286
 #, fuzzy
 msgid "Invalid BDB handle"
-msgstr "Neplatn˝ handle MDB"
+msgstr "Neplatn√Ω handle MDB"
 
 #: providers/bdb/gda-bdb-recordset.c:242
 #, fuzzy
 msgid "Database is empty"
-msgstr "Datab·ze"
+msgstr "Datab√°ze"
 
 #: providers/bdb/libmain.c:39
 #, fuzzy
 msgid "Provider for Berkeley databases"
-msgstr "Poskytovateµ pre datab·ze Oracle"
+msgstr "Poskytovateƒæ pre datab√°ze Oracle"
 
 #: providers/bdb/libmain.c:48
 #, fuzzy
 msgid "Database File"
-msgstr "Datab·za"
+msgstr "Datab√°za"
 
 #: providers/bdb/libmain.c:49
 msgid "Berkeley DB database file to be used"
@@ -2542,25 +2542,25 @@ msgstr ""
 #: providers/bdb/libmain.c:52
 #, fuzzy
 msgid "Database name"
-msgstr "Datab·za"
+msgstr "Datab√°za"
 
 #: providers/bdb/libmain.c:53
 #, fuzzy
 msgid "Name of the database in the database file to be used"
-msgstr "Pre odstr·nenie datab·ze SQLite musÌte s˙bor datab·zy odstr·niª ruËne"
+msgstr "Pre odstr√°nenie datab√°ze SQLite mus√≠te s√∫bor datab√°zy odstr√°ni≈• ruƒçne"
 
 #~ msgid "Could not initiate Sybase component factory"
 #~ msgstr ""
-#~ "Nie je moænÈ inicializovaª vytv·racie rozhranie pre komponent Sybase"
+#~ "Nie je mo≈æn√© inicializova≈• vytv√°racie rozhranie pre komponent Sybase"
 
 #~ msgid "Sybase OpenClient Msg: severity("
-#~ msgstr "Sybase OpenClient Msg: dÙleæitosª("
+#~ msgstr "Sybase OpenClient Msg: d√¥le≈æitos≈•("
 
 #~ msgid "), number("
-#~ msgstr "), poËet("
+#~ msgstr "), poƒçet("
 
 #~ msgid "), origin("
-#~ msgstr "), pÙvod("
+#~ msgstr "), p√¥vod("
 
 #~ msgid "), layer("
 #~ msgstr "), vrstva("
