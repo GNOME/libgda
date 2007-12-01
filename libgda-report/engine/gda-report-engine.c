@@ -796,7 +796,7 @@ command_gda_report_param_value (GdaReportEngine *engine, xmlNodePtr node, GSList
 		param = run_context_find_param (engine, context, prop);
 		if (!param) {
 			g_set_error (error, 0, 0,
-				     _("1 Unknown parameter '%s'"), prop);
+				     _("Unknown parameter '%s'"), prop);
 			return FALSE;
 		}
 		else {
@@ -936,7 +936,7 @@ assign_parameters_values (GdaReportEngine *engine, RunContext *context, GdaParam
 							       BAD_CAST gda_object_get_name (GDA_OBJECT (list->data)));
 			if (!source_param) {
 				g_set_error (error, 0, 0,
-					     _("0 Unknown parameter '%s'"), 
+					     _("Unknown parameter '%s'"), 
 					     gda_object_get_name (GDA_OBJECT (list->data)));
 				return FALSE;
 			}

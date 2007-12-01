@@ -107,7 +107,7 @@ gda_data_model_array_get_value_at (GdaDataModelRow *model, gint col, gint row)
 	}
 
 	if (col >= GDA_DATA_MODEL_ARRAY (model)->priv->number_of_columns) {
-		g_warning (_("Column out %d of range 0 - %d"), col, 
+		g_warning (_("Column %d out of range 0 - %d"), col, 
 			   GDA_DATA_MODEL_ARRAY (model)->priv->number_of_columns - 1);
 		return NULL;
 	}

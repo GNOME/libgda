@@ -781,14 +781,14 @@ test_provider (TestConfig *config, HtmlFile *file, GdaServerProvider *provider, 
 		td = xmlNewChild (tr, NULL, "th", "Translated as SQL");
 		td = xmlNewChild (tr, NULL, "th", "Translated as a string");
 
-		xmlNewChild (hnode, NULL, "h3", _("get_value_from_sql()"));
+		xmlNewChild (hnode, NULL, "h3", "get_value_from_sql()");
 		htable2 = xmlNewChild (hnode, NULL, "table", NULL);
 		tr = xmlNewChild (htable2, NULL, "tr", NULL);
 		td = xmlNewChild (tr, NULL, "th", "Gda type");
 		td = xmlNewChild (tr, NULL, "th", "String");
 		td = xmlNewChild (tr, NULL, "th", "Value converted by data handler to SQL");
 
-		xmlNewChild (hnode, NULL, "h3", _("get_value_from_str()"));
+		xmlNewChild (hnode, NULL, "h3", "get_value_from_str()");
 		htable3 = xmlNewChild (hnode, NULL, "table", NULL);
 		tr = xmlNewChild (htable3, NULL, "tr", NULL);
 		td = xmlNewChild (tr, NULL, "th", "Gda type");

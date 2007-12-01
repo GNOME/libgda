@@ -6063,7 +6063,7 @@ gda_query_expand_all_field (GdaQuery *query, GdaQueryTarget *target)
 				if (repr_entity)
 					entfields = gda_entity_get_fields (repr_entity);
 				else 
-					g_warning (_("Could expand '%s.*' into a list of fields"), 
+					g_warning (_("Couldn't expand '%s.*' into a list of fields"), 
 						   gda_query_target_get_represented_table_name (t));
 				list2 = entfields;
 				while (list2) {
