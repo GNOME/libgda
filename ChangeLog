@@ -1,3 +1,14 @@
+2007-12-01  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in: fixed ALL_LINGUAS variable to add Macedonian language,
+	bug #500756
+
+2007-12-01  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in: fixed ALL_LINGUAS variable to add Punjabi language,
+	bug #500755
+
+
 2007-11-18  Murray Cumming  <murrayc@murrayc.com>
 
 	* libgda/gda-client.h:
