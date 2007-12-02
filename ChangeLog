@@ -1,3 +1,8 @@
+2007-12-02  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-query.c: quick and dirty fix to be able to handle
+	queries having the GROUP BY clause
+
 2007-12-01  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in: check for GnomeVFS >= 2.20, for bug #498213

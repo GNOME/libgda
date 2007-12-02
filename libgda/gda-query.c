@@ -1380,7 +1380,10 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 #endif
 		switch (result->type) {
 		case SQL_select: 
-			err = !parsed_create_select_query (query, (sql_select_statement *) result->statement, error);
+			if (((sql_select_statement *) result->statement)->group) /* we don't handle GROUP BY => reject the parsed version */
+				err = TRUE;
+			else
+				err = !parsed_create_select_query (query, (sql_select_statement *) result->statement, error);
 			break;
 		case SQL_insert:
 			err = !parsed_create_insert_query (query, (sql_insert_statement *) result->statement, error);
