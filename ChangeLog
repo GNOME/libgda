@@ -1,3 +1,12 @@
+2007-12-03  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-data-model-import.c: fixed a wrong property name and
+	fixed CVS parsing when the string to parse does not end with a newline.
+	* libgda/gda-data-model-hash.c: applied patch from Sumit Kumar Jain to
+	fix a row append problem
+	* providers/postgres/gda-postgres-recordset.c: modification to correctly
+	handle the libgda/gda-data-model-hash.c correction
+
 2007-12-02  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-query.c: quick and dirty fix to be able to handle

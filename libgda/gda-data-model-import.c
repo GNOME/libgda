@@ -739,7 +739,7 @@ gda_data_model_import_new_mem (const gchar *data, gboolean random_access, GdaPar
 			      "dict", ASSERT_DICT (NULL),
 			      "random_access", random_access,
 			      "options", options,
-			      "data", data, NULL);
+			      "data_string", data, NULL);
 
 	return GDA_DATA_MODEL (model);
 }
@@ -1129,9 +1129,18 @@ csv_fetch_some_lines (GdaDataModelImport *model)
 		model->priv->extract.csv.start_pos += size;
 
 		/* try to finish the line if it has not been read entirely */
-		if ((model->priv->extract.csv.rows_read->len == 0) &&
-		    (model->priv->extract.csv.start_pos != model->priv->data_start + model->priv->data_length))
-			return csv_fetch_some_lines (model);
+		if (model->priv->extract.csv.rows_read->len == 0) {
+			if ((model->priv->extract.csv.start_pos != 
+			     model->priv->data_start + model->priv->data_length))
+				return csv_fetch_some_lines (model);
+			else {
+				/* end of data */
+				csv_fini (model->priv->extract.csv.parser, 
+					  csv_parser_field_read_cb, 
+					  csv_parser_row_read_cb, model->priv->extract.csv.pdata);
+				return TRUE;
+			}
+		}
 		else
 			return TRUE;
 	}

@@ -569,7 +569,7 @@ gda_postgres_recordset_get_n_rows (GdaDataModelRow *model)
 	parent_row_num = GDA_DATA_MODEL_ROW_CLASS (parent_class)->get_n_rows (model);
 
 	/* if not initialized return number of PQ Tuples */
-	if (parent_row_num < 0)
+	if (parent_row_num == 0)
 		return recset->priv->nrows;
 	else
 		return parent_row_num;
