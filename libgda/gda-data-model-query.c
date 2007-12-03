@@ -383,7 +383,7 @@ check_param_type (GdaParameter *param, GType type)
 {
 	if ((type != 0) && (type !=  gda_parameter_get_g_type (param))) {
 		g_warning (_("Type of parameter '%s' is '%s' when it should be '%s', "
-			     "GdaDataModelQuery object will now work correctly"),
+			     "GdaDataModelQuery object will not work correctly"),
 			   gda_object_get_name (GDA_OBJECT (param)), 
 			   g_type_name (gda_parameter_get_g_type (param)),
 			   g_type_name (type));

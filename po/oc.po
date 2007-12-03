@@ -1,21 +1,24 @@
+# translation of oc.po to Occitan
 # Occitan translation of libgda.
-# Copyright (C) 2000-2006 Free Software Foundation, Inc.
+# Copyright (C) 2000-2006, 2007 Free Software Foundation, Inc.
 # This file is distributed under the same license as the libgda package.
 #
 # Yannig MARCHEGAY (yannig@marchegay.org) - 2006-2007
 #
+# Yannig Marchegay (Kokoyaya) <yannig@marchegay.org>, 2007.
 msgid ""
 msgstr ""
-"Project-Id-Version: libgda 1.9.103\n"
+"Project-Id-Version: oc\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-07-23 16:28+0200\n"
-"PO-Revision-Date: 2007-08-20 15:32+0200\n"
-"Last-Translator: Yannig MARCHEGAY (Kokoyaya) <yannig@marchegay.org>\n"
-"Language-Team: Occitan (post 1500) <ubuntu-l10n-oci@lists.ubuntu.com>\n"
+"PO-Revision-Date: 2007-11-20 14:32+0100\n"
+"Last-Translator: Yannig Marchegay (Kokoyaya) <yannig@marchegay.org>\n"
+"Language-Team: Occitan <ubuntu-l10n-oci@lists.ubuntu.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);"
+"X-Generator: KBabel 1.11.4\n"
 
 #: ../libgda/gda-client.c:293 ../libgda/gda-client.c:1067
 #: ../libgda/gda-client.c:1127
@@ -698,8 +701,7 @@ msgid "Missing GdaParameterListSource"
 msgstr ""
 
 #: ../libgda/gda-parameter-list.c:1168
-msgid ""
-"GdaParameterListSource does not list a GdaParameterListNode as it should"
+msgid "GdaParameterListSource does not list a GdaParameterListNode as it should"
 msgstr ""
 
 #: ../libgda/gda-parameter-list.c:1175
@@ -709,8 +711,7 @@ msgstr ""
 
 #: ../libgda/gda-parameter-list.c:1181
 #, c-format
-msgid ""
-"GdaParameter is restricted by a column of the wrong type: %s (%s expected)"
+msgid "GdaParameter is restricted by a column of the wrong type: %s (%s expected)"
 msgstr ""
 
 #: ../libgda/gda-parameter-list.c:1200
@@ -771,8 +772,7 @@ msgid "Error during query parsing (%s)"
 msgstr ""
 
 #: ../libgda/gda-query.c:1879
-msgid ""
-"The query represented by a target must be a sub-query of the current query"
+msgid "The query represented by a target must be a sub-query of the current query"
 msgstr ""
 
 #: ../libgda/gda-query.c:1894
@@ -819,8 +819,7 @@ msgid "XML ID for a query should be QUxxx where xxx is a number"
 msgstr ""
 
 #: ../libgda/gda-query.c:4166
-msgid ""
-"Missing both attributes 'entity_ref' and 'table_name' from <gda_query_target>"
+msgid "Missing both attributes 'entity_ref' and 'table_name' from <gda_query_target>"
 msgstr ""
 
 #: ../libgda/gda-query.c:4190
@@ -981,8 +980,7 @@ msgstr ""
 #: ../libgda/gda-query-field-agg.c:754 ../libgda/gda-query-field-all.c:631
 #: ../libgda/gda-query-field-field.c:916 ../libgda/gda-query-field-func.c:817
 #: ../libgda/gda-query-field-value.c:1086
-msgid ""
-"XML ID for a query field should be QUxxx:QFyyy where xxx and yyy are numbers"
+msgid "XML ID for a query field should be QUxxx:QFyyy where xxx and yyy are numbers"
 msgstr ""
 
 #: ../libgda/gda-query-field-agg.c:831
@@ -1260,8 +1258,7 @@ msgid "XML Tag is not <gda_query_target>"
 msgstr ""
 
 #: ../libgda/gda-query-target.c:807
-msgid ""
-"XML ID for a query target should be QUxxx:Tyyy where xxx and yyy are numbers"
+msgid "XML ID for a query target should be QUxxx:Tyyy where xxx and yyy are numbers"
 msgstr ""
 
 #: ../libgda/gda-query-target.c:857
@@ -2272,8 +2269,7 @@ msgid "Row number out of bounds"
 msgstr ""
 
 #: ../providers/mysql/gda-mysql-provider.c:276
-msgid ""
-"You cannot provide a UNIX SOCKET if you also provide either a HOST or a PORT."
+msgid "You cannot provide a UNIX SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
 
 #: ../providers/mysql/gda-mysql-provider.c:413
@@ -3019,8 +3015,7 @@ msgid "The name of the database user who will own the new database"
 msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:45
-msgid ""
-"The name of the tablespace that will be associated with the new database"
+msgid "The name of the tablespace that will be associated with the new database"
 msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:46
@@ -3070,7 +3065,7 @@ msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:7
 msgid "Method"
-msgstr ""
+msgstr "Metòde"
 
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:9
 msgid "On table"
@@ -3292,8 +3287,7 @@ msgid "Search path among database's schemas"
 msgstr ""
 
 #: ../providers/sqlite/gda-sqlite-provider.c:243
-msgid ""
-"A full path must be specified on the connection string to open a database."
+msgid "A full path must be specified on the connection string to open a database."
 msgstr ""
 
 #: ../providers/sqlite/gda-sqlite-provider.c:267
@@ -3534,8 +3528,7 @@ msgid "attempting to make recordset and msg count != 1 !"
 msgstr ""
 
 #: ../providers/sybase/gda-sybase-recordset.c:520
-msgid ""
-"An error occurred when attempting to retrieve a server message for recordset"
+msgid "An error occurred when attempting to retrieve a server message for recordset"
 msgstr ""
 
 #: ../providers/sybase/gda-sybase-recordset.c:578
@@ -3693,7 +3686,7 @@ msgstr ""
 
 #: ../providers/sybase/utils.c:475
 msgid "Origin"
-msgstr "Origina"
+msgstr "Original"
 
 #: ../providers/sybase/utils.c:477
 msgid "Message Number"

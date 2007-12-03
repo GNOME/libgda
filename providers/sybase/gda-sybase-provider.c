@@ -709,13 +709,13 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 						reclist = g_list_append (reclist, recset);
 					}
 					else
-						sybase_debug_msg (_("GDA_IS_SYBASE_RECORDSET != TRUE"));
+						sybase_debug_msg ("GDA_IS_SYBASE_RECORDSET != TRUE");
 					break;
 				case CS_STATUS_RESULT:
 					// when you execute a stored procedure through openclient, this 
 					// part of the result set loop is where you fetch the return status
 					// of the executed stored procedure.  You fetch it like a CS_ROW_RESULT
-					sybase_debug_msg (_("CS_STATUS_RESULT!"));
+					sybase_debug_msg ("CS_STATUS_RESULT!");
 
 					srecset = gda_sybase_process_row_result (cnc, 
 										 scnc,
@@ -729,7 +729,7 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 						reclist = g_list_append (reclist, recset);
 					}
 					else
-						sybase_debug_msg (_("GDA_IS_SYBASE_RECORDSET != TRUE"));
+						sybase_debug_msg ("GDA_IS_SYBASE_RECORDSET != TRUE");
 				case CS_COMPUTE_RESULT:
 					// FIXME - figure this out
 					break;
@@ -795,7 +795,7 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 						reclist = g_list_append (reclist, recset);
 					}
 					else
-						sybase_debug_msg (_("GDA_IS_SYBASE_RECORDSET != TRUE"));
+						sybase_debug_msg ("GDA_IS_SYBASE_RECORDSET != TRUE");
 					break;
 				case CS_CMD_FAIL:
 					sybase_debug_msg (_("%s returned %s"),
@@ -817,7 +817,7 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 						reclist = g_list_append (reclist, recset);
 					}
 					else
-						sybase_debug_msg (_("GDA_IS_SYBASE_RECORDSET != TRUE"));
+						sybase_debug_msg ("GDA_IS_SYBASE_RECORDSET != TRUE");
 					break;
 				default:
 					break;

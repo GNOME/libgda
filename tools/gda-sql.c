@@ -848,7 +848,7 @@ open_connection (MainData *data, const gchar *cnc_name, const gchar *dsn, const 
 						fflush (stdout);
 					}
 					if (!gda_dict_update_dbms_meta_data (cs->dict, 0, NULL, &lerror))
-						g_fprintf (stderr, _("Could synchronize dictionary with DBMS: %s\n"),
+						g_fprintf (stderr, _("Couldn't synchronize dictionary with DBMS: %s\n"),
 							   lerror && lerror->message ? lerror->message: _("No detail"));
 					else
 						if (!data->output_stream) 
@@ -1104,7 +1104,7 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("General");
-	c->name = "s [FILE]";
+	c->name = g_strdup_printf (_("%s [FILE]"), "s");
 	c->description = _("Show commands history, or save it to file");
 	c->args = NULL;
 	c->command_func = gda_internal_command_history;
@@ -1134,7 +1134,7 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Information");
-	c->name = "dt [TABLE]";
+	c->name = g_strdup_printf (_("%s [TABLE]"), "dt");
 	c->description = _("List all tables and views (or named table or view)");
 	c->args = NULL;
 	c->command_func = gda_internal_command_list_tables_views;
@@ -1144,7 +1144,7 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Information");
-	c->name = "d [NAME]";
+	c->name = g_strdup_printf (_("%s [NAME]"), "d");
 	c->description = _("Describe table or view");
 	c->args = NULL;
 	c->command_func = gda_internal_command_detail;
@@ -1154,7 +1154,7 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Information");
-	c->name = "dq [QUERY] [+]";
+	c->name = g_strdup_printf (_("%s [QUERY] [+]"), "dq");
 	c->description = _("List all queries (or named query) in dictionary");
 	c->args = NULL;
 	c->command_func = gda_internal_command_list_queries;
@@ -1165,7 +1165,7 @@ build_internal_commands_list (MainData *data)
 	/* specific commands */
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("General");
-	c->name = _("c [CNC_NAME [DSN [USER [PASSWORD]]]]");
+	c->name = g_strdup_printf (_("%s [CNC_NAME [DSN [USER [PASSWORD]]]]"), "c");
 	c->description = _("Connect to another defined data source (DSN, see \\dsn_list)");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc)extra_command_manage_cnc;
@@ -1175,7 +1175,7 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("General");
-	c->name = _("close [CNC_NAME]");
+	c->name = g_strdup_printf (_("%s [CNC_NAME]"), "close");
 	c->description = _("Close a connection");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc)extra_command_close_cnc;
@@ -1185,7 +1185,7 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("General");
-	c->name = _("bind CNC_NAME CNC_NAME1 CNC_NAME2 [CNC_NAME ...]");
+	c->name = g_strdup_printf (_("%s CNC_NAME CNC_NAME1 CNC_NAME2 [CNC_NAME ...]"), "bind");
 	c->description = _("Bind several connections together into the CNC_NAME virtual connection");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc)extra_command_bind_cnc;
@@ -1215,7 +1215,7 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Input/Output");
-	c->name = _("i FILE");
+	c->name = g_strdup_printf (_("%s FILE"), "i");
 	c->description = _("Execute commands from file");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_set_input;
@@ -1225,7 +1225,7 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Input/Output");
-	c->name = _("o [FILE]");
+	c->name = g_strdup_printf (_("%s [FILE]"), "o");
 	c->description = _("Send output to a file or |pipe");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_set_output;
@@ -1235,7 +1235,7 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Input/Output");
-	c->name = _("echo [TEXT]");
+	c->name = g_strdup_printf (_("%s [TEXT]"), "echo");
 	c->description = _("Send output to stdout");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_echo;
@@ -1245,7 +1245,7 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Input/Output");
-	c->name = _("qecho [TEXT]");
+	c->name = g_strdup_printf (_("%s [TEXT]"), "qecho");
 	c->description = _("Send output to output stream");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_qecho;
@@ -1255,7 +1255,7 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("General");
-	c->name = _("q");
+	c->name = "q";
 	c->description = _("Quit");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_quit;
@@ -1265,7 +1265,7 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("General");
-	c->name = _("cd [DIR]");
+	c->name = g_strdup_printf (_("%s [DIR]"), "cd");
 	c->description = _("Change the current working directory");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_cd;
@@ -1275,7 +1275,7 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("General");
-	c->name = _("copyright");
+	c->name = "copyright";
 	c->description = _("Show usage and distribution terms");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_copyright;
@@ -1285,7 +1285,7 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer");
-	c->name = "e [FILE]";
+	c->name = g_strdup_printf (_("%s [FILE]"), "e");
 	c->description = _("Edit the query buffer (or file) with external editor");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_edit_buffer;
@@ -1295,8 +1295,8 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer");
-	c->name = "r [FILE]";
-	c->description = _("Reset the query buffer (clear buffer of with contents of file)");
+	c->name = g_strdup_printf (_("%s [FILE]"), "r");
+	c->description = _("Reset the query buffer (fill buffer with contents of file)");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_reset_buffer;
 	c->user_data = data;
@@ -1325,7 +1325,7 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer");
-	c->name = _("w FILE");
+	c->name = g_strdup_printf (_("%s FILE"), "w");
 	c->description = _("Write query buffer to file");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_write_buffer;
@@ -1335,7 +1335,7 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer");
-	c->name = _("w_dict [QUERY_NAME]");
+	c->name = g_strdup_printf (_("%s [QUERY_NAME]"), "w_dict");
 	c->description = _("Save query buffer to dictionary");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_query_buffer_to_dict;
@@ -1345,7 +1345,7 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer");
-	c->name = _("r_dict QUERY_NAME");
+	c->name = g_strdup_printf (_("%s QUERY_NAME"), "r_dict");
 	c->description = _("Set named query from dictionary into query buffer");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_query_buffer_from_dict;
@@ -1355,7 +1355,7 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer");
-	c->name = _("set [NAME [VALUE|_null_]]");
+	c->name = g_strdup_printf (_("%s [NAME [VALUE|_null_]]"), "set");
 	c->description = _("Set or show internal parameter, or list all if no parameters");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_set;
@@ -1365,7 +1365,7 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer");
-	c->name = _("unset NAME");
+	c->name = g_strdup_printf (_("%s NAME"), "unset");
 	c->description = _("Unset (delete) internal parameter");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_unset;
@@ -1375,7 +1375,7 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Formatting");
-	c->name = _("H [HTML|XML|DEFAULT]");
+	c->name = "H [HTML|XML|DEFAULT]";
 	c->description = _("Set output format");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_set_output_format;

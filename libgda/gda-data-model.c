@@ -2321,12 +2321,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 				g_strfreev (cols_str [i]);
 			g_free (cols_str);
 		}
-		if (n_rows > 1)
-			g_string_append_printf (string, _("(%d rows)\n"), n_rows);
-		else if (n_rows == 1)
-			g_string_append_printf (string, _("(1 row)\n"));
-		else
-			g_string_append_printf (string, _("(no row)\n"));
+		g_string_append_printf (string, ngettext("(%d row)\n", "(%d rows)\n", n_rows), n_rows);
 	}
 	else 
 		g_string_append (string, _("Model does not support random access, not showing data\n"));

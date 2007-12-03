@@ -82,7 +82,7 @@ gint main (int argc, char **argv) {
 	config = g_new0 (TestConfig, 1);
 	html_init_config (HTML_CONFIG (config));
 	config->config.index = html_file_new (HTML_CONFIG (config), 
-					      "index.html", "GdaDataModelQuery modification query generation testing");		
+					      "index.html", _("GdaDataModelQuery modification query generation testing"));
         config->config.dir = str;
 	node = xmlNewChild (config->config.index->body, NULL, "h1", _("List of tests"));
 	ul = xmlNewChild (config->config.index->body, NULL, "ul", NULL);
@@ -102,7 +102,7 @@ gint main (int argc, char **argv) {
 	/* open file containing the tests */
 	config->tests_doc = xmlParseFile (infile);
         if (!config->tests_doc) {
-                g_print ("Cant' load XML file '%s'\n", infile);
+                g_print (_("Cant' load XML file '%s'\n"), infile);
                 exit (1);
         }
 	

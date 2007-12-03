@@ -70,7 +70,7 @@ dnl ******************************
 GETTEXT_PACKAGE=libgda-$LIBGDA_ABI_VERSION
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE")
-ALL_LINGUAS="ar az ca cs da de dz el en_CA en_GB es eu fa fi fr ga gl hr hu it ja ko lt ml ms nb ne nl oc pl pt pt_BR ru rw sk sl sq sr sr@Latn sv tr uk vi zh_CN zh_HK zh_TW"
+ALL_LINGUAS="ar az ca cs da de dz el en_CA en_GB es eu fa fi fr ga gl hr hu it ja ko lt mk ml ms nb ne nl oc pa pl pt pt_BR ru rw sk sl sq sr sr@Latn sv tr uk vi zh_CN zh_HK zh_TW"
 AM_GLIB_GNU_GETTEXT
 
 dnl ******************************
@@ -177,7 +177,7 @@ dnl ******************************
 dnl Checks for Gnome VFS
 dnl ******************************
 
-GNOMEVFS_MODULES="gnome-vfs-2.0"
+GNOMEVFS_MODULES="gnome-vfs-2.0 >= 2.20"
 PKG_CHECK_MODULES(GNOMEVFS, $GNOMEVFS_MODULES, have_gnomevfs=yes, have_gnomevfs=no)
 AM_CONDITIONAL(HAVE_GNOMEVFS, test x"$have_gnomevfs" = "xyes")
 if test x"$have_gnomevfs" = "xyes"
@@ -272,8 +272,10 @@ fi
 AM_CONDITIONAL(BDB, test x$bdbdir != x)
 if test x$bdbdir != x; then
 	LIBGDA_BDB_INC="#include <libgda/gda-data-model-bdb.h>"
+	LIBGDA_BDB_TYPE="gda_data_model_bdb_get_type"
 fi
 AC_SUBST(LIBGDA_BDB_INC)
+AC_SUBST(LIBGDA_BDB_TYPE)
 
 dnl Test for ODBC
 try_odbc=true
@@ -1211,6 +1213,7 @@ tests/data-models/Makefile
 tests/providers/Makefile
 doc/Makefile
 doc/C/Makefile
+doc/C/libgda-3.0.types
 data/Makefile
 stamp.h
 ])

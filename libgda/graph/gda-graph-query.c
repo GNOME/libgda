@@ -118,7 +118,7 @@ gda_graph_query_new (GdaQuery *query)
 
 	reg = gda_dict_get_object_type_registration (dict, GDA_TYPE_GRAPH);
 	if (!reg) {
-		g_warning (_("The dictionary use by this GdaQuery does not support graphs, this support is now added"));
+		g_warning (_("The dictionary used by this GdaQuery does not support graphs, this support is now added"));
 		gda_dict_register_object_type (dict, gda_graphs_get_register ());
 		reg = gda_dict_get_object_type_registration (dict, GDA_TYPE_GRAPH);
 	}

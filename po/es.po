@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda.HEAD.es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-25 19:17+0100\n"
-"PO-Revision-Date: 2007-11-03 14:19+0100\n"
+"POT-Creation-Date: 2007-11-03 13:20+0000\n"
+"PO-Revision-Date: 2007-11-21 20:49+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Spanish <traductores@es.gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -308,13 +308,13 @@ msgstr ""
 #: ../libgda/gda-data-model-dir.c:381 ../libgda/gda-data-model-import.c:1727
 #: ../libgda/gda-server-operation.c:778
 #: ../libgda/sqlite/gda-sqlite-provider.c:1188
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:472
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:473
 #: ../providers/mdb/gda-mdb-provider.c:346
 #: ../providers/oracle/gda-oracle-provider.c:1070
 #: ../providers/oracle/gda-oracle-provider.c:2001
-#: ../providers/postgres/gda-postgres-provider.c:1234
-#: ../providers/postgres/gda-postgres-provider.c:1264
-#: ../providers/postgres/gda-postgres-provider.c:1407
+#: ../providers/postgres/gda-postgres-provider.c:1247
+#: ../providers/postgres/gda-postgres-provider.c:1277
+#: ../providers/postgres/gda-postgres-provider.c:1420
 #: ../tools/gda-list-server-op.c:123 ../tools/gda-sql.c:230
 #: ../tools/gda-sql.c:284 ../tools/gda-sql.c:842 ../tools/gda-sql.c:854
 msgid "No detail"
@@ -355,7 +355,7 @@ msgstr "No se puede establecer la columna"
 #: ../libgda/gda-data-model-dir.c:1231
 #, c-format
 msgid "Cannot set contents of filename '%s'"
-msgstr ""
+msgstr "No se puede establecer el contenido del archivo «%s»"
 
 #: ../libgda/gda-data-model-dir.c:1242
 #, c-format
@@ -712,7 +712,7 @@ msgstr "GdaDataProxy no puede manipular modelos de acceso a datos no aleatorios"
 
 #: ../libgda/gda-data-proxy.c:1394 ../libgda/gda-data-proxy.c:3469
 msgid "The first row is an empty row artificially prepended and cannot be removed"
-msgstr ""
+msgstr "La primera fila es una fila vacía al comienzo y no se puede eliminar"
 
 #: ../libgda/gda-data-proxy.c:1876
 msgid "Modifications cancelled"
@@ -753,7 +753,7 @@ msgstr "El valor es de sólo lectura"
 
 #: ../libgda/gda-data-proxy.c:3248
 msgid "The first row is an empty row artificially prepended and cannot be altered"
-msgstr ""
+msgstr "La primera fila es una fila vacía al comienzo y no se puede alterar"
 
 #: ../libgda/gda-data-proxy.c:3340
 #, c-format
@@ -1030,6 +1030,8 @@ msgid ""
 "Trying to make an object assumed when object class %s is not registered in "
 "the dictionary"
 msgstr ""
+"Se asumió que se quería hacer un objeto cuando la clase del objeto %s no está registrada "
+"en el diccionario"
 
 #: ../libgda/gda-dict.c:1841
 msgid ""
@@ -2412,8 +2414,8 @@ msgstr "Sólo se permite una base de datos por conexión"
 #: ../providers/mysql/gda-mysql-provider.c:664
 #: ../providers/oracle/gda-oracle-provider.c:890
 #: ../providers/oracle/gda-oracle-provider.c:919
-#: ../providers/postgres/gda-postgres-provider.c:908
-#: ../providers/postgres/gda-postgres-provider.c:937
+#: ../providers/postgres/gda-postgres-provider.c:921
+#: ../providers/postgres/gda-postgres-provider.c:950
 #, c-format
 msgid "Missing spec. file '%s'"
 msgstr "Falta el archivo spec. «%s»"
@@ -2439,7 +2441,7 @@ msgstr "No existe un manejador del tipo de datos «%s»"
 #: ../providers/oracle/gda-oracle-provider.c:1108
 #: ../providers/oracle/gda-oracle-provider.c:1204
 #: ../providers/oracle/gda-oracle-provider.c:1266
-#: ../providers/postgres/gda-postgres-provider.c:1612
+#: ../providers/postgres/gda-postgres-provider.c:1625
 msgid "Transactions are not supported in read-only mode"
 msgstr "Las transacciones no están soportadas en el modo de sólo lectura"
 
@@ -2468,7 +2470,7 @@ msgstr "Se debe especificar el nombre de espacio"
 msgid "Connection was not represented in hub"
 msgstr "La conexión no estaba representada en el concentrador"
 
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:471
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:472
 #, c-format
 msgid "Could not add virtual table %s: %s"
 msgstr "No se pudo añadir la tabla virtual %s: %s"
@@ -3856,7 +3858,7 @@ msgstr "PRIMERO, ÚLTIMO o NO: sólo con el motor COMBINAR (MERGE)"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:60
 msgid "Federated"
-msgstr ""
+msgstr "Federado"
 
 #. foreign key spec
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:62
@@ -4439,14 +4441,14 @@ msgstr "No se ha podido copiar el localizador Lob"
 
 #: ../providers/postgres/gda-postgres-blob-op.c:109
 #: ../providers/postgres/gda-postgres-handler-bin.c:195
-#: ../providers/postgres/gda-postgres-provider.c:710
-#: ../providers/postgres/gda-postgres-provider.c:801
-#: ../providers/postgres/gda-postgres-provider.c:858
-#: ../providers/postgres/gda-postgres-provider.c:1116
-#: ../providers/postgres/gda-postgres-provider.c:1366
-#: ../providers/postgres/gda-postgres-provider.c:1566
-#: ../providers/postgres/gda-postgres-provider.c:1740
-#: ../providers/postgres/gda-postgres-provider.c:3266
+#: ../providers/postgres/gda-postgres-provider.c:723
+#: ../providers/postgres/gda-postgres-provider.c:814
+#: ../providers/postgres/gda-postgres-provider.c:871
+#: ../providers/postgres/gda-postgres-provider.c:1129
+#: ../providers/postgres/gda-postgres-provider.c:1379
+#: ../providers/postgres/gda-postgres-provider.c:1579
+#: ../providers/postgres/gda-postgres-provider.c:1753
+#: ../providers/postgres/gda-postgres-provider.c:3279
 #: ../providers/postgres/gda-postgres-recordset.c:170
 #: ../providers/postgres/gda-postgres-recordset.c:535
 msgid "Invalid PostgreSQL handle"
@@ -4458,7 +4460,7 @@ msgstr "Número de filas obtenidas cada vez"
 
 #: ../providers/postgres/gda-postgres-cursor-recordset.c:155
 msgid "Number of rows chunks read since the object creation"
-msgstr ""
+msgstr "Número de trozos de la fila leídos desde la creación el objeto"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:116
 msgid "Postgresql binary handler"
@@ -4480,39 +4482,39 @@ msgstr "Memoria insuficiente para convertir el búfer binario a una cadena"
 msgid "Insufficient memory to convert string to binary buffer"
 msgstr "Memoria insuficiente para convertir la cadena a un búfer binario"
 
-#: ../providers/postgres/gda-postgres-provider.c:1133
+#: ../providers/postgres/gda-postgres-provider.c:1146
 #, c-format
 msgid "Parameter ITER_MODEL_ONLY should be a boolean, not a '%s'"
 msgstr "El parámetro ITER_MODEL_ONLY debería ser booleano, no un «%s»"
 
-#: ../providers/postgres/gda-postgres-provider.c:1144
+#: ../providers/postgres/gda-postgres-provider.c:1157
 #, c-format
 msgid "Parameter ITER_CHUNCK_SIZE should be a gint, not a '%s'"
 msgstr "El parámetro ITER_CHUNCK_SIZE debe ser gint, no «%s»"
 
-#: ../providers/postgres/gda-postgres-provider.c:1191
+#: ../providers/postgres/gda-postgres-provider.c:1204
 msgid "Could not create a SELECT query to fetch existing BLOB values"
 msgstr "No se pudo crear la consulta SELECT para obtener los valores BLOB existentes"
 
-#: ../providers/postgres/gda-postgres-provider.c:1213
+#: ../providers/postgres/gda-postgres-provider.c:1226
 #, c-format
 msgid "Missing parameter for '%s'"
 msgstr "Falta algún parámetro para «%s»"
 
-#: ../providers/postgres/gda-postgres-provider.c:1231
+#: ../providers/postgres/gda-postgres-provider.c:1244
 #, c-format
 msgid "Could not render SQL for SELECT query to fetch existing BLOB values: %s"
 msgstr ""
 "No se pudo renderizar el SQL para la consulta SELECT para obtener los "
 "valores BLOB existentes: %s"
 
-#: ../providers/postgres/gda-postgres-provider.c:1621
+#: ../providers/postgres/gda-postgres-provider.c:1634
 msgid "Transactions are not supported in read uncommitted isolation level"
 msgstr ""
 "Las transacciones no están soportadas en el nivel de aislamiento de lectura "
 "no efectuada"
 
-#: ../providers/postgres/gda-postgres-provider.c:1624
+#: ../providers/postgres/gda-postgres-provider.c:1637
 msgid "Transactions are not supported in repeatable read isolation level"
 msgstr ""
 "Las transacciones no están soportadas en el nivel de aislamiento de lectura "
@@ -5910,6 +5912,11 @@ msgid ""
 "      or any query terminated by a semicolon\n"
 "\n"
 msgstr ""
+"Escriba: \\copyright para mostrar los términos de uso y distribución\n"
+"      \\? para obtener ayuda con los comandos internos\n"
+"      \\q (o Ctrl+D) para salir\n"
+"      o cualquier consulta terminada por un punto y coma\n"
+"\n"
 
 #: ../tools/gda-sql.c:230
 #, c-format

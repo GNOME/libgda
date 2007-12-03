@@ -429,7 +429,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
-		gda_connection_add_event_string (cnc, _("Invalid MYSQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MySQL handle"));
 		return NULL;
 	}
 
@@ -553,7 +553,7 @@ gda_mysql_provider_get_database (GdaServerProvider *provider,
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
-		gda_connection_add_event_string (cnc, _("Invalid MYSQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MySQL handle"));
 		return NULL;
 	}
 
@@ -576,7 +576,7 @@ gda_mysql_provider_change_database (GdaServerProvider *provider,
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
-		gda_connection_add_event_string (cnc, _("Invalid MYSQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MySQL handle"));
 		return FALSE;
 	}
 
@@ -855,7 +855,7 @@ gda_mysql_provider_get_last_insert_id (GdaServerProvider *provider,
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
-		gda_connection_add_event_string (cnc, _("Invalid MYSQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MySQL handle"));
 		return NULL;
 	}
 
@@ -879,7 +879,7 @@ gda_mysql_provider_begin_transaction (GdaServerProvider *provider,
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
-		gda_connection_add_event_string (cnc, _("Invalid MYSQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MySQL handle"));
 		return FALSE;
 	}
 
@@ -939,7 +939,7 @@ gda_mysql_provider_commit_transaction (GdaServerProvider *provider,
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
-		gda_connection_add_event_string (cnc, _("Invalid MYSQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MySQL handle"));
 		return FALSE;
 	}
 
@@ -974,7 +974,7 @@ gda_mysql_provider_rollback_transaction (GdaServerProvider *provider,
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
-		gda_connection_add_event_string (cnc, _("Invalid MYSQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MySQL handle"));
 		return FALSE;
 	}
 
@@ -2264,7 +2264,7 @@ gda_mysql_provider_value_to_sql_string (GdaServerProvider *provider, /* we dont 
 		mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 		
 		if (!mysql) {
-			gda_connection_add_event_string (cnc, _("Invalid MYSQL handle"));
+			gda_connection_add_event_string (cnc, _("Invalid MySQL handle"));
 			return NULL;
 		}
 		quoted = ret = g_malloc(strlen(val_str) * 2 + 3);

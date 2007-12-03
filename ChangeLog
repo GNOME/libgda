@@ -1,4 +1,64 @@
-2007-11-06 Vivien Malerba <malerba@gnome-db.org>
+2007-12-03  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-data-model-import.c: fixed a wrong property name and
+	fixed CVS parsing when the string to parse does not end with a newline.
+	* libgda/gda-data-model-hash.c: applied patch from Sumit Kumar Jain to
+	fix a row append problem
+	* providers/postgres/gda-postgres-recordset.c: modification to correctly
+	handle the libgda/gda-data-model-hash.c correction
+
+2007-12-02  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-query.c: quick and dirty fix to be able to handle
+	queries having the GROUP BY clause
+
+2007-12-01  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in: check for GnomeVFS >= 2.20, for bug #498213
+
+2007-12-01  Vivien Malerba <malerba@gnome-db.org>
+
+	* doc/C/libgda-3.0.types.in:
+	* doc/C/libgda-3.0.types:
+	* configure.in: allow documentation when the --without-bdb flag is 
+	used, bug #498836
+
+2007-12-01  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda-report/engine/gda-report-engine.c:
+	* tools/gda-diagnose.c:
+	* tools/gda-sql.c:
+	* testing/gda-test-model-query.c:
+	* providers/sybase/gda-sybase-provider.c:
+	* providers/mysql/gda-mysql-provider.c:
+	* libgda/gda-data-model-query.c:
+	* libgda/gda-data-model.c:
+	* libgda/gda-data-model-array.c:
+	* libgda/graph/gda-graph-query.c:
+	* libgda/gda-query.c: applied patch to fix bug #494337 (Claude Paroz)
+
+2007-12-01  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in: fixed ALL_LINGUAS variable to add Macedonian language,
+	bug #500756
+
+2007-12-01  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in: fixed ALL_LINGUAS variable to add Punjabi language,
+	bug #500755
+
+
+2007-11-18  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-client.h:
+	* libgda/gda-data-model-iter.h:
+	* libgda/gda-data-model.h:
+	* libgda/gda-dict.h:
+	* libgda/gda-query.h:
+	* libgda/gda-transaction-status.h: Remove trailing commas in 
+	separators to avoid warnings when using -pedantic with gcc.
+
+2007-11-06  Vivien Malerba <malerba@gnome-db.org>
 
 	Merged changes from trunk between revisions 3004 and 3016
 
@@ -1296,7 +1356,7 @@ Released 3.0.0
 	* Makefile.am: Add gda-sharp.snk to EXTRA_DIST as suggested in 
 	bug #390609.
 
-2007-03-08   Daniel Espinosa  <esodan@gmail.com>>
+2007-03-08   Daniel Espinosa  <esodan@gmail.com>
 
 	* configure.in: Require mono 1.2 if building the gda-sharp 
 	bindings.

@@ -502,17 +502,16 @@ gda_data_model_hash_clear (GdaDataModelHash *model)
 						   NULL, free_hash);
 
 	/* free array if exists */
-	if (model->priv->row_map != NULL)
-	{
+	if (model->priv->row_map != NULL) {
 		g_array_free (model->priv->row_map, TRUE);
 		model->priv->row_map = NULL;
 	}
 
-	/* get number of entries in data model */
-	model->priv->number_of_hash_table_rows = gda_data_model_get_n_rows (GDA_DATA_MODEL (model));
-
 	/* create row mapping array */
 	model->priv->row_map = g_array_new (FALSE, FALSE, sizeof (gint));
+
+	/* get number of entries in data model */
+	model->priv->number_of_hash_table_rows = gda_data_model_get_n_rows (GDA_DATA_MODEL (model));
 
         /* Initialize row mapping array */
         for (i = 0; i < model->priv->number_of_hash_table_rows; i++)
