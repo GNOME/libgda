@@ -77,6 +77,11 @@ gda_sql_3_0_LDADD = \
 	$(READLINE_LIB) \
         $(HISTORY_LIB)
 
+# setenv() is in libiberty in mingw
+if PLATFORM_WIN32
+gda_sql_3_0_LDADD += -liberty
+endif
+
 gda_list_server_op_3_0_SOURCES = \
         gda-list-server-op.c
 

@@ -1,3 +1,10 @@
+2007-12-09  Vivien Malerba <malerba@gnome-db.org>
+
+	* tools/Makefile.am: Link gda-sql against libiberty on windows because 
+	it provides setenv(), fixed bug 502481 (Armin Burgmeier)
+	* providers/ldap/gda-ldap-provider.c:
+	* libgda-report/engine/Makefile.am: other Win32 fixes
+
 2007-12-03  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-data-model-import.c: fixed a wrong property name and
