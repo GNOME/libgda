@@ -24,6 +24,24 @@
 /* include source file as mentionned in gbr_init_lib()'s doc */
 #include "binreloc.c"
 
+#ifdef G_OS_WIN32
+#include <windows.h>
+/* Remember HMODULE to retrieve path to it lateron */
+static HMODULE hdllmodule = NULL;
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
+{
+	switch(fdwReason)
+	{
+	case DLL_PROCESS_ATTACH:
+		hdllmodule = (HMODULE)hinstDLL;
+		break;
+	}
+
+	return TRUE;
+}
+#endif
+
+
 /**
  * gda_gbr_init
  */
@@ -48,6 +66,11 @@ gda_gbr_get_file_path (GdaPrefixDir where, ...)
 	gchar **parts;
 	gint size, i;
 	const gchar *prefix_dir_name;
+
+#ifdef G_OS_WIN32
+	wchar_t path[MAX_PATH];
+	gchar* p;
+#endif
 
 	switch (where) {
 	default:
@@ -82,7 +105,16 @@ gda_gbr_get_file_path (GdaPrefixDir where, ...)
 #endif
 	/* prefix part */
 #ifdef G_OS_WIN32
-	prefix = g_win32_get_package_installation_directory (GETTEXT_PACKAGE, NULL);
+	/* Get from location of libgda DLL */
+	GetModuleFileNameW (hdllmodule, path, MAX_PATH);
+	prefix = g_utf16_to_utf8 (path, -1, NULL, NULL, NULL);
+	if ((p = strrchr (prefix, G_DIR_SEPARATOR)) != NULL)
+		*p = '\0';
+
+	p = strrchr (prefix, G_DIR_SEPARATOR);
+	if(p && (g_ascii_strcasecmp (p + 1, "bin") == 0 ||
+	         g_ascii_strcasecmp (p + 1, "lib") == 0))
+		*p = '\0';	
 #else
 	prefix = _gda_gbr_find_prefix (LIBGDAPREFIX);
 #endif
