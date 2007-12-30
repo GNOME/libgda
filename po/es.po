@@ -1,4 +1,4 @@
-# translation of libgda.HEAD.es.po to Spanish
+# translation of libgda.HEAD.po to Español
 # Copyright © 2002-2003, 2006, 2007 Free Software Foundation, Inc.
 # This file is distributed under the same license as the libgda package.
 #
@@ -13,12 +13,12 @@
 # Jorge González <jorgegonz@svn.gnome.org>, 2007.
 msgid ""
 msgstr ""
-"Project-Id-Version: libgda.HEAD.es\n"
+"Project-Id-Version: libgda.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-01 14:30+0000\n"
-"PO-Revision-Date: 2007-12-11 14:13+0100\n"
+"POT-Creation-Date: 2007-12-11 13:14+0000\n"
+"PO-Revision-Date: 2007-12-30 01:22+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
-"Language-Team: Spanish <traductores@es.gnome.org>\n"
+"Language-Team: Español <<gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -224,6 +224,8 @@ msgid ""
 "Prepared statements hash not initialized, call "
 "gda_connection_init_prepared_statement_hash() first"
 msgstr ""
+"El «hash» de las declaraciones preparadas no se ha inicializado, llame primero a "
+"gda_connection_init_prepared_statement_hash()"
 
 #: ../libgda/gda-data-access-wrapper.c:524
 #: ../libgda/gda-data-model-array.c:110
@@ -301,7 +303,7 @@ msgstr ""
 "La implementación del modelo personalizado BDB no está completa: falta el "
 "método «update_data_part»"
 
-#: ../libgda/gda-data-model-dir.c:381 ../libgda/gda-data-model-import.c:1727
+#: ../libgda/gda-data-model-dir.c:381 ../libgda/gda-data-model-import.c:1736
 #: ../libgda/gda-server-operation.c:778
 #: ../libgda/sqlite/gda-sqlite-provider.c:1188
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:473
@@ -427,68 +429,68 @@ msgid "Error while parsing CSV file: %s"
 msgstr "Error al analizar el archivo CSV: %s"
 
 #. error
-#: ../libgda/gda-data-model-import.c:1215
+#: ../libgda/gda-data-model-import.c:1224
 msgid "Failed to read node in XML file"
 msgstr "Falló al leer el nodo en el archivo XML"
 
-#: ../libgda/gda-data-model-import.c:1234
+#: ../libgda/gda-data-model-import.c:1243
 #, c-format
 msgid "Expected <gda_array> node in XML file, got <%s>"
 msgstr "Se esperaba un nodo <gda_array> en el archivo XML, se obtuvo <%s>"
 
-#: ../libgda/gda-data-model-import.c:1287
-#: ../libgda/gda-data-model-import.c:1619
+#: ../libgda/gda-data-model-import.c:1296
+#: ../libgda/gda-data-model-import.c:1628
 msgid "No \"gdatype\" attribute specified in <gda_array_field>"
 msgstr "No hay un atributo \"gdatype\" especificado en <gda_array_field>"
 
-#: ../libgda/gda-data-model-import.c:1334
+#: ../libgda/gda-data-model-import.c:1343
 msgid "Expected <gda_array_field> in <gda_array>"
 msgstr "Se esperaba <gda_array_field> en <gda_array>"
 
-#: ../libgda/gda-data-model-import.c:1375
+#: ../libgda/gda-data-model-import.c:1384
 #, c-format
 msgid "Expected <gda_array_data> in <gda_array>, got <%s>"
 msgstr "Se esperaba <gda_array_data> en <gda_array>, se obtuvo <%s>"
 
-#: ../libgda/gda-data-model-import.c:1377
+#: ../libgda/gda-data-model-import.c:1386
 msgid "Expected <gda_array_data> in <gda_array>"
 msgstr "Se esperaba <gda_array_data>, en <gda_array>"
 
-#: ../libgda/gda-data-model-import.c:1389
+#: ../libgda/gda-data-model-import.c:1398
 msgid "Can't read the contents of the <gda_array_data> node"
 msgstr "No se puede leer el contenido del nodo <gda_array_data>"
 
-#: ../libgda/gda-data-model-import.c:1444
+#: ../libgda/gda-data-model-import.c:1453
 #, c-format
 msgid "Expected <gda_array_row> in <gda_array_data>, got <%s>"
 msgstr "Se esperaba <gda_array_row> en <gda_array_data>, se obtuvo <%s>"
 
-#: ../libgda/gda-data-model-import.c:1468
+#: ../libgda/gda-data-model-import.c:1477
 msgid "Row has too many values (which are ignored)"
 msgstr "La fila tiene demasiados valores (los cuales se ignoran)"
 
-#: ../libgda/gda-data-model-import.c:1515
+#: ../libgda/gda-data-model-import.c:1524
 #, c-format
 msgid "Could not convert '%s' to a value of type %s"
 msgstr "No se puede convertir '%s' a un valor de tipo %s"
 
-#: ../libgda/gda-data-model-import.c:1588
+#: ../libgda/gda-data-model-import.c:1597
 #, c-format
 msgid "Expected <gda_array> node but got <%s>"
 msgstr "Se esperaba <gda_array> pero se obtuvo <%s>"
 
-#: ../libgda/gda-data-model-import.c:1666
+#: ../libgda/gda-data-model-import.c:1675
 msgid "No <gda_array_field> specified in <gda_array>"
 msgstr "No hay especificado ningún <gda_array_field> especificado en <gda_array>"
 
-#: ../libgda/gda-data-model-import.c:1915
+#: ../libgda/gda-data-model-import.c:1924
 #, c-format
 msgid "Row at line %d does not have enough values, completed with NULL values"
 msgstr ""
 "La fila en la línea %d no tiene valores suficientes, se completaron con "
 "valores NULL"
 
-#: ../libgda/gda-data-model-import.c:1935
+#: ../libgda/gda-data-model-import.c:1944
 #, c-format
 msgid "Row at line %d does not have enough values (which are thus ignored)"
 msgstr "La fila en la línea %d no tiene suficientes valores (los cuales se ignoran)"
@@ -499,8 +501,8 @@ msgid ""
 "Type of parameter '%s' is '%s' when it should be '%s', GdaDataModelQuery "
 "object will not work correctly"
 msgstr ""
-"El tipo de parámetro «%s» es «%s» cuando debería ser «%s», el objeto GdaDataModelQuery "
-"no funcionará correctamente"
+"El tipo de parámetro «%s» es «%s» cuando debería ser «%s», el objeto "
+"GdaDataModelQuery no funcionará correctamente"
 
 #: ../libgda/gda-data-model-query.c:495
 #, c-format
@@ -1033,6 +1035,8 @@ msgid ""
 "Trying to assume an object when object class is not registered in the "
 "dictionary"
 msgstr ""
+"Se asumió un objeto cuando la clase del objeto no está registrada en el "
+"diccionario"
 
 #: ../libgda/gda-dict.c:1906
 #, c-format
@@ -1619,42 +1623,42 @@ msgstr "Seleccionar (excepción)"
 msgid "SQL text"
 msgstr "Texto SQL"
 
-#: ../libgda/gda-query.c:1407
+#: ../libgda/gda-query.c:1410
 #, c-format
 msgid "Error during query parsing (%s)"
 msgstr "Error al analizar la consulta (%s)"
 
-#: ../libgda/gda-query.c:1426
+#: ../libgda/gda-query.c:1429
 msgid "Multiple statements in SQL, only the first one kept"
 msgstr "Múltiples declaraciones en SQL, sólo se mantiene la primera"
 
-#: ../libgda/gda-query.c:1457
+#: ../libgda/gda-query.c:1460
 msgid "No valid type specified for parameter, using gchararray"
 msgstr "El tipo especificado para el parámetro no es válido, usando gchararray"
 
-#: ../libgda/gda-query.c:1950
+#: ../libgda/gda-query.c:1953
 msgid "The query represented by a target must be a sub-query of the current query"
 msgstr ""
 "La consulta representada por un destino debe ser una sub-consulta de la "
 "consulta actual"
 
-#: ../libgda/gda-query.c:1965
+#: ../libgda/gda-query.c:1968
 msgid "Queries which update data can only have one target"
 msgstr "Las consultas que actualicen datos sólo pueden tener un destino"
 
-#: ../libgda/gda-query.c:1975
+#: ../libgda/gda-query.c:1978
 msgid "Aggregation queries may only have sub-queries, not targets."
 msgstr "Las consultas de agregados pueden tener sólo sub-peticiones, no destinos."
 
-#: ../libgda/gda-query.c:2800
+#: ../libgda/gda-query.c:2803
 msgid "No connection associated to query's dictionary"
 msgstr "No hay conexión asociada al diccionario de la consulta"
 
-#: ../libgda/gda-query.c:2805
+#: ../libgda/gda-query.c:2808
 msgid "Connection associated to query's dictionary is closed"
 msgstr "La conexión asociada al diccionario de consultas está cerrada"
 
-#: ../libgda/gda-query.c:3009 ../testing/gda-test-model-query.c:143
+#: ../libgda/gda-query.c:3012 ../testing/gda-test-model-query.c:143
 #: ../testing/gda-test-model-query.c:170 ../testing/gda-test-models.c:152
 #: ../testing/gda-test-models.c:179 ../testing/gda-test-models.c:394
 #: ../testing/gda-test-models.c:410 ../testing/gda-test-models.c:461
@@ -1667,7 +1671,7 @@ msgstr "La conexión asociada al diccionario de consultas está cerrada"
 msgid "Unknown error"
 msgstr "Error desconocido"
 
-#: ../libgda/gda-query.c:3595
+#: ../libgda/gda-query.c:3598
 msgid ""
 "While adding to a GdaQuery: Blobs are not supported by the connection's "
 "provider and may be rendered incorrectly"
@@ -1675,7 +1679,7 @@ msgstr ""
 "Al añadir a un GdaQuery: el proveedor de la conexión no soporta BLOBS y "
 "pueden ser renderizados incorrectamente"
 
-#: ../libgda/gda-query.c:3601
+#: ../libgda/gda-query.c:3604
 #, c-format
 msgid ""
 "While adding to a GdaQuery: field type '%s' is not supported by the "
@@ -1684,124 +1688,124 @@ msgstr ""
 "Al añadir a un GdaQuery: el tipo de campo «%s» no está soportado por el "
 "proveedor de la conexión y puede ser renderizado incorrectamente"
 
-#: ../libgda/gda-query.c:4256
+#: ../libgda/gda-query.c:4259
 msgid "XML Tag is not <gda_query>"
 msgstr "La etiqueta XML no es <gda_query>"
 
-#: ../libgda/gda-query.c:4272
+#: ../libgda/gda-query.c:4275
 msgid "XML ID for a query should be QUxxx where xxx is a number"
 msgstr "El ID XML para una consulta debería ser QUxxx donde xxx es un número"
 
-#: ../libgda/gda-query.c:4327
+#: ../libgda/gda-query.c:4330
 msgid "First query of <gda_model_query> must be a SELECT query"
 msgstr "La primera consulta de <gda_model_query> debe ser una consulta SELECT"
 
-#: ../libgda/gda-query.c:4419
+#: ../libgda/gda-query.c:4422
 msgid "Missing both attributes 'entity_ref' and 'table_name' from <gda_query_target>"
 msgstr "Faltan ambos atributos 'entity_ref' y 'table_name' de <gda_query_target>"
 
-#: ../libgda/gda-query.c:4443
+#: ../libgda/gda-query.c:4446
 #, c-format
 msgid "Can't find field '%s'"
 msgstr "No puede encontrar campo «%s»"
 
-#: ../libgda/gda-query.c:4562
+#: ../libgda/gda-query.c:4565
 msgid "Problem loading <gda_query>"
 msgstr "Problema cargando <gda_query>"
 
-#: ../libgda/gda-query.c:4735
+#: ../libgda/gda-query.c:4738
 msgid "More than two sub-queries for an EXCEPT query"
 msgstr "Más de dos sub-consultas para una consulta EXCEPT"
 
-#: ../libgda/gda-query.c:4752
+#: ../libgda/gda-query.c:4755
 msgid "Empty query"
 msgstr "Consulta vacía"
 
-#: ../libgda/gda-query.c:4807
+#: ../libgda/gda-query.c:4810
 #, c-format
 msgid "Invalid parameter '%s'"
 msgstr "Parámetro inválido «%s»"
 
-#: ../libgda/gda-query.c:4813
+#: ../libgda/gda-query.c:4816
 msgid "Missing parameters"
 msgstr "Faltan parámetros"
 
-#: ../libgda/gda-query.c:4887
+#: ../libgda/gda-query.c:4890
 #, c-format
 msgid "Query %s is not a selection query"
 msgstr "La consulta %s no es una consulta de selección"
 
-#: ../libgda/gda-query.c:4919
+#: ../libgda/gda-query.c:4922
 msgid "No target defined to apply modifications"
 msgstr "No ha sido definido un destino donde aplicar modificaciones"
 
-#: ../libgda/gda-query.c:4927
+#: ../libgda/gda-query.c:4930
 msgid "More than one target defined to apply modifications"
 msgstr "Más de un destino definido donde aplicar modificaciones"
 
-#: ../libgda/gda-query.c:4938
+#: ../libgda/gda-query.c:4941
 #, c-format
 msgid "Entity %s is not writable"
 msgstr "La entidad %s no es escribible"
 
-#: ../libgda/gda-query.c:4957
+#: ../libgda/gda-query.c:4960
 msgid "Modification query field has incompatible type"
 msgstr "El campo de consulta de modificación tiene tipo incompatible"
 
-#: ../libgda/gda-query.c:4976
+#: ../libgda/gda-query.c:4979
 msgid "An insertion query can only have one sub-query"
 msgstr "Una consulta de inserción sólo puede tener una sub-consulta"
 
-#: ../libgda/gda-query.c:4984
+#: ../libgda/gda-query.c:4987
 msgid "Insertion query fields incompatible with sub-query's fields"
 msgstr ""
 "Los campos de la consulta de inserción son incompatibles con campos de la "
 "sub-consulta"
 
-#: ../libgda/gda-query.c:5002
+#: ../libgda/gda-query.c:5005
 msgid "Insertion query field has incompatible value assignment"
 msgstr "El campo de la consulta de inserción tiene un valor asignado incompatible"
 
-#: ../libgda/gda-query.c:5017
+#: ../libgda/gda-query.c:5020
 msgid "Insertion query can't have any conditions"
 msgstr "La consulta de inserción no puede tener ninguna condición"
 
-#: ../libgda/gda-query.c:5032
+#: ../libgda/gda-query.c:5035
 msgid "Deletion query can't have any visible field"
 msgstr "La consulta de borrado no puede tener ningún campo visible"
 
-#: ../libgda/gda-query.c:5052
+#: ../libgda/gda-query.c:5055
 msgid "Update query field has incompatible value assignment"
 msgstr ""
 "El campo de la consulta de actualización tiene valor de asignación "
 "incompatible"
 
-#: ../libgda/gda-query.c:5081
+#: ../libgda/gda-query.c:5084
 msgid "An aggregate type (UNION, etc) of query can't have any targets"
 msgstr "Un tipo agregado (UNION, etc) de consulta no puede tener ningún destino"
 
-#: ../libgda/gda-query.c:5089
+#: ../libgda/gda-query.c:5092
 msgid "An aggregate type (UNION, etc) of query can't have any conditions"
 msgstr "Un tipo agregado (UNION, etc) de consulta no puede tener ninguna condición"
 
-#: ../libgda/gda-query.c:5609
+#: ../libgda/gda-query.c:5612
 msgid "Can't correctly print the list of columns to use."
 msgstr "No se puede imprimir correctamente la lista de columnas a usar."
 
-#: ../libgda/gda-query.c:5759
+#: ../libgda/gda-query.c:5762
 msgid "Missing values"
 msgstr "Faltan valores"
 
-#: ../libgda/gda-query.c:6013
+#: ../libgda/gda-query.c:6016
 #, c-format
 msgid "Query '%s'"
 msgstr "Consulta «%s»"
 
-#: ../libgda/gda-query.c:6015
+#: ../libgda/gda-query.c:6018
 msgid "Unnamed Query"
 msgstr "Consulta anónima"
 
-#: ../libgda/gda-query.c:6066
+#: ../libgda/gda-query.c:6069
 #, c-format
 msgid "Couldn't expand '%s.*' into a list of fields"
 msgstr "No se pudo expandir «%s.*» en una lista de campos"
@@ -2220,8 +2224,8 @@ msgid ""
 "The dictionary used by this GdaQuery does not support graphs, this support "
 "is now added"
 msgstr ""
-"El diccionario que usa esta GdaQuery no soporta gráficos, ahora se ha añadido "
-"este soporte"
+"El diccionario que usa esta GdaQuery no soporta gráficos, ahora se ha "
+"añadido este soporte"
 
 #: ../libgda/graph/gda-graph.c:661
 msgid "XML Tag is not <gda_graph>"
@@ -6011,7 +6015,7 @@ msgstr "Información"
 #: ../tools/gda-sql.c:1259
 #, c-format
 msgid "%s [TABLE]"
-msgstr ""
+msgstr "[TABLA] %s"
 
 #: ../tools/gda-sql.c:1260
 msgid "List all tables and views (or named table or view)"
@@ -6160,7 +6164,7 @@ msgstr "%s NOMBRE_DE_LA_CONSULTA"
 
 #: ../tools/gda-sql.c:1471
 msgid "Set named query from dictionary into query buffer"
-msgstr ""
+msgstr "Establecer la consulta con nombre del diccionario en el búfer de consulta"
 
 #: ../tools/gda-sql.c:1480
 #, c-format
