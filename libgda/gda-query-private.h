@@ -21,6 +21,8 @@
 #ifndef __GDA_QUERY_PRIVATE__
 #define __GDA_QUERY_PRIVATE__
 
+#ifndef GDA_DISABLE_DEPRECATED
+
 #include "gda-query.h"
 #include "sql-delimiter/gda-sql-delimiter.h"
 
@@ -65,6 +67,8 @@ struct _GdaQueryPrivate
 };
 
 G_END_DECLS
+
+#endif /* GDA_DISABLE_DEPRECATED */
 
 #endif
 

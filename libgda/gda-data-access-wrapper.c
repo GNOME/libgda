@@ -27,6 +27,7 @@
 #include <libgda/gda-enums.h>
 #include <libgda/gda-parameter.h>
 #include <libgda/gda-data-model.h>
+#include <libgda/gda-data-model-extra.h>
 #include <libgda/gda-data-model-iter.h>
 #include <libgda/gda-row.h>
 
@@ -187,19 +188,19 @@ gda_data_access_wrapper_init (GdaDataAccessWrapper *model, GdaDataAccessWrapperC
 static void
 model_row_inserted_cb (GdaDataModel *mod, gint row, GdaDataAccessWrapper *model)
 {
-	gda_data_model_row_inserted (model, row);
+	gda_data_model_row_inserted ((GdaDataModel*) model, row);
 }
 
 static void
 model_row_updated_cb (GdaDataModel *mod, gint row, GdaDataAccessWrapper *model)
 {
-	gda_data_model_row_updated (model, row);
+	gda_data_model_row_updated ((GdaDataModel*) model, row);
 }
 
 static void
 model_row_removed_cb (GdaDataModel *mod, gint row, GdaDataAccessWrapper *model)
 {
-	gda_data_model_row_removed (model, row);
+	gda_data_model_row_removed ((GdaDataModel*) model, row);
 }
 
 static void

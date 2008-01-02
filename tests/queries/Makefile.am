@@ -1,5 +1,6 @@
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
+	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
 	-DCHECK_XML_FILES=\""$(top_srcdir)"\" \

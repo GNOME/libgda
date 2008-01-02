@@ -22,6 +22,8 @@
 #ifndef __GDA_QUERY_FIELD_VALUE_H_
 #define __GDA_QUERY_FIELD_VALUE_H_
 
+#ifndef GDA_DISABLE_DEPRECATED
+
 #include "gda-query-field.h"
 #include "gda-value.h"
 
@@ -78,5 +80,7 @@ gboolean          gda_query_field_value_restrict            (GdaQueryFieldValue 
 							     GdaDataModel *model, gint col, GError **error);
 
 G_END_DECLS
+
+#endif /* GDA_DISABLE_DEPRECATED */
 
 #endif

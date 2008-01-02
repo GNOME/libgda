@@ -18,6 +18,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#undef GDA_DISABLE_DEPRECATED
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include "gda-query.h"
@@ -496,6 +497,8 @@ gda_query_init (GdaQuery * gda_query)
  * Creates a new #GdaQuery object
  *
  * Returns: the new object
+ *
+ * Deprecated: 3.2:
  */
 GdaQuery*
 gda_query_new (GdaDict *dict)
@@ -519,6 +522,8 @@ gda_query_new (GdaDict *dict)
  * Copy constructor
  *
  * Returns: a the new copy of @orig
+ *
+ * Deprecated: 3.2:
  */
 GdaQuery *
 gda_query_new_copy (GdaQuery *orig, GHashTable *replacements)
@@ -705,6 +710,8 @@ gda_query_new_copy (GdaQuery *orig, GHashTable *replacements)
  * object which is returned.
  *
  * Returns: a new #GdaQuery
+ *
+ * Deprecated: 3.2:
  */
 GdaQuery *
 gda_query_new_from_sql (GdaDict *dict, const gchar *sql, GError **error) 
@@ -886,6 +893,8 @@ gda_query_get_property (GObject *object,
  *
  * This functions is called automatically from each gda_query_condition_new* function, and it should not be necessary 
  * to call it except for classes extending the #GdaQueryCondition class.
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_query_declare_condition (GdaQuery *query, GdaQueryCondition *cond)
@@ -915,6 +924,8 @@ gda_query_declare_condition (GdaQuery *query, GdaQueryCondition *cond)
  *
  * Explicitely ask @query to forget about the existence of @cond. This function is used by the
  * #GdaQueryCondition implementation, and should not be called directly
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_query_undeclare_condition (GdaQuery *query, GdaQueryCondition *cond)
@@ -1123,6 +1134,8 @@ id_field_changed_cb (GdaQueryField *field, GdaQuery *query)
  * @type: the new type of query
  *
  * Sets the type of @query
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_query_set_query_type (GdaQuery *query, GdaQueryType type)
@@ -1153,6 +1166,8 @@ gda_query_set_query_type (GdaQuery *query, GdaQueryType type)
  * Get the type of a query
  *
  * Returns: the type of @query
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryType
 gda_query_get_query_type (GdaQuery *query)
@@ -1170,6 +1185,8 @@ gda_query_get_query_type (GdaQuery *query)
  * Get the type of a query as a human readable string
  *
  * Returns: a string for the type of @query
+ *
+ * Deprecated: 3.2:
  */
 const gchar *
 gda_query_get_query_type_string  (GdaQuery *query)
@@ -1208,6 +1225,8 @@ gda_query_get_query_type_string  (GdaQuery *query)
  * Tells if @query is a SELECTION query (a simple SELECT, UNION, INTERSECT or EXCEPT);
  *
  * Returns: TRUE if @query is a selection query
+ *
+ * Deprecated: 3.2:
  */
 gboolean
 gda_query_is_select_query (GdaQuery *query)
@@ -1236,6 +1255,8 @@ gda_query_is_select_query (GdaQuery *query)
  * Tells if @query is a INSERT query.
  *
  * Returns: TRUE if @query is an insertion query
+ *
+ * Deprecated: 3.2:
  */
 gboolean
 gda_query_is_insert_query (GdaQuery *query)
@@ -1261,6 +1282,8 @@ gda_query_is_insert_query (GdaQuery *query)
  * Tells if @query is a UPDATE query.
  *
  * Returns: TRUE if @query is an update query
+ *
+ * Deprecated: 3.2:
  */
 gboolean
 gda_query_is_update_query (GdaQuery *query)
@@ -1286,6 +1309,8 @@ gda_query_is_update_query (GdaQuery *query)
  * Tells if @query is a DELETE query.
  *
  * Returns: TRUE if @query is an delete query
+ *
+ * Deprecated: 3.2:
  */
 gboolean
 gda_query_is_delete_query (GdaQuery *query)
@@ -1312,6 +1337,8 @@ gda_query_is_delete_query (GdaQuery *query)
  * queries are not handled and will always return FALSE.
  *
  * Returns: TRUE if @query is a modification query
+ *
+ * Deprecated: 3.2:
  */
 gboolean
 gda_query_is_modify_query (GdaQuery *query)
@@ -1345,6 +1372,8 @@ gda_query_is_modify_query (GdaQuery *query)
 * if @sql contains in fact several SQL statements (separated by ';'), then
 * only the first statement will be taken into account, and @error's code will be
 * set to GDA_QUERY_MULTIPLE_STATEMENTS_ERROR.
+ *
+ * Deprecated: 3.2:
 */
 void
 gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
@@ -1561,6 +1590,8 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
  * methods.
  *
  * Returns: the new string
+ *
+ * Deprecated: 3.2:
  */
 gchar *
 gda_query_get_sql_text (GdaQuery *query)
@@ -1582,6 +1613,8 @@ gda_query_get_sql_text (GdaQuery *query)
  * Get the parent query of @query
  *
  * Returns: the parent query, or NULL if @query does not have any parent
+ *
+ * Deprecated: 3.2:
  */
 GdaQuery *
 gda_query_get_parent_query (GdaQuery *query)
@@ -1605,6 +1638,8 @@ gda_query_get_parent_query (GdaQuery *query)
  * If @target is specified, then the returned field will be linked to that #GdaQueryTarget object.
  *
  * Returns: a #GdaQueryFieldField object or %NULL
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryField *
 gda_query_get_field_by_ref_field (GdaQuery *query, GdaQueryTarget *target, GdaEntityField *ref_field, GdaQueryFieldState field_state)
@@ -1641,6 +1676,8 @@ gda_query_get_field_by_ref_field (GdaQuery *query, GdaQueryTarget *target, GdaEn
  * Finds the first occurence of a #GdaQueryFieldField object whose target is @target in @query
  *
  * Returns: the requested field, or %NULL
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryField *
 gda_query_get_first_field_for_target (GdaQuery *query, GdaQueryTarget *target)
@@ -1672,6 +1709,8 @@ gda_query_get_first_field_for_target (GdaQuery *query, GdaQueryTarget *target)
  * Get a list of all the sub-queries managed by @query
  *
  * Returns: a new list of the sub-queries
+ *
+ * Deprecated: 3.2:
  */
 GSList *
 gda_query_get_sub_queries (GdaQuery *query)
@@ -1692,6 +1731,8 @@ gda_query_get_sub_queries (GdaQuery *query)
  *
  * Tells @query that @param_source is a query which potentially will constraint the possible values
  * of one or more of @query's parameters. This implies that @query keeps a reference on @param_source.
+ *
+ * Deprecated: 3.2:
  */
 void 
 gda_query_add_param_source (GdaQuery *query, GdaDataModel *param_source)
@@ -1729,6 +1770,8 @@ destroyed_param_source_cb (GdaDataModel *param_source, GdaQuery *query)
  *
  * Tells @query that it should no longer take care of @param_source.
  * The parameters which depend on @param_source will still depend on it, though.
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_query_del_param_source (GdaQuery *query, GdaDataModel *param_source)
@@ -1748,6 +1791,8 @@ gda_query_del_param_source (GdaQuery *query, GdaDataModel *param_source)
  * Get a list of the parameter source queries that are references as such by @query.
  *
  * Returns: the list of #GdaQuery objects
+ *
+ * Deprecated: 3.2:
  */
 const GSList *
 gda_query_get_param_sources (GdaQuery *query)
@@ -1766,6 +1811,8 @@ gda_query_get_param_sources (GdaQuery *query)
  *
  * Add @sub_query to @query. Sub queries are managed by their parent query, and as such they
  * are destroyed when their parent query is destroyed.
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_query_add_sub_query (GdaQuery *query, GdaQuery *sub_query)
@@ -1839,6 +1886,8 @@ changed_sub_query_cb (GdaQuery *sub_query, GdaQuery *query)
  * @sub_query: a #GdaQuery object
  *
  * Removes @sub_query from @query. @sub_query MUST be present within @query.
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_query_del_sub_query (GdaQuery *query, GdaQuery *sub_query)
@@ -1895,6 +1944,8 @@ destroyed_parent_query (GdaQuery *parent_query, GdaQuery *query)
  * Get a list of all the targets used in @query
  *
  * Returns: a new list of the targets
+ *
+ * Deprecated: 3.2:
  */
 GSList *
 gda_query_get_targets (GdaQuery *query)
@@ -1928,6 +1979,8 @@ static void gda_query_assign_targets_aliases (GdaQuery *query);
  * For UNION and INTERSECT queries, there is no possible #GdaQueryTarget object.
  *
  * Returns: TRUE if no error occurred
+ *
+ * Deprecated: 3.2:
  */
 gboolean
 gda_query_add_target (GdaQuery *query, GdaQueryTarget *target, GError **error)
@@ -2077,6 +2130,8 @@ gda_query_assign_targets_aliases (GdaQuery *query)
  *
  * Removes @target from @query. @target MUST be present within @query. Warning:
  * All the joins and fields which depended on @target are also removed.
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_query_del_target (GdaQuery *query, GdaQueryTarget *target)
@@ -2100,6 +2155,8 @@ gda_query_del_target (GdaQuery *query, GdaQueryTarget *target)
  * its XML Id
  *
  * Returns: the #GdaQueryTarget object, or NULL if not found
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryTarget *
 gda_query_get_target_by_xml_id (GdaQuery *query, const gchar *xml_id)
@@ -2132,6 +2189,8 @@ gda_query_get_target_by_xml_id (GdaQuery *query, const gchar *xml_id)
  * its alias (if not found then @alias_or_name is interpreted as the target name)
  *
  * Returns: the #GdaQueryTarget object, or NULL if not found
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryTarget *
 gda_query_get_target_by_alias (GdaQuery *query, const gchar *alias_or_name)
@@ -2177,6 +2236,8 @@ gda_query_get_target_by_alias (GdaQuery *query, const gchar *alias_or_name)
  * primary key's fields are not present in @query, then the returned value is %NULL.
  *
  * Returns: a new GSList, or %NULL.
+ *
+ * Deprecated: 3.2:
  */
 GSList *
 gda_query_get_target_pkfields (GdaQuery *query, GdaQueryTarget *target)
@@ -2233,6 +2294,8 @@ gda_query_get_target_pkfields (GdaQuery *query, GdaQueryTarget *target)
  * Get a list of all the joins used in @query
  *
  * Returns: a new list of the joins
+ *
+ * Deprecated: 3.2:
  */
 GSList *
 gda_query_get_joins (GdaQuery *query)
@@ -2255,6 +2318,8 @@ gda_query_get_joins (GdaQuery *query)
  * Find a join in @query which joins the @target1 and @target2 targets
  *
  * Returns: the #GdaQueryJoin object, or %NULL
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryJoin *
 gda_query_get_join_by_targets (GdaQuery *query, GdaQueryTarget *target1, GdaQueryTarget *target2)
@@ -2304,6 +2369,8 @@ static void joins_pack_del_join (GdaQuery *query, GdaQueryJoin *join);
  * two.
  *
  * Returns: TRUE on success, and FALSE otherwise
+ *
+ * Deprecated: 3.2:
  */
 gboolean
 gda_query_add_join (GdaQuery *query, GdaQueryJoin *join)
@@ -2403,6 +2470,8 @@ changed_join_cb (GdaQueryJoin *join, GdaQuery *query)
  * @join: a #GdaQueryJoin object
  *
  * Removes @join from @query. @join MUST be present within @query.
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_query_del_join (GdaQuery *query, GdaQueryJoin *join)
@@ -2604,6 +2673,8 @@ joins_pack_del_join (GdaQuery *query, GdaQueryJoin *join)
  * Get the query's associated condition
  *
  * Returns: the #GdaQueryCondition object
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryCondition *
 gda_query_get_condition (GdaQuery *query)
@@ -2623,6 +2694,8 @@ gda_query_get_condition (GdaQuery *query)
  * then the old one is trashed first.
  *
  * Pass %NULL as the @cond argument to remove any query condition
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_query_set_condition (GdaQuery *query, GdaQueryCondition *cond)
@@ -2701,6 +2774,8 @@ destroyed_cond_cb (GdaQueryCondition *cond, GdaQuery *query)
  * Get a list of parameters which the query accepts.
  *
  * Returns: a list of #GdaParameter objects (the list and objects must be freed by the caller)
+ *
+ * Deprecated: 3.2:
  */
 GSList *
 gda_query_get_parameters (GdaQuery *query)
@@ -2740,6 +2815,8 @@ gda_query_get_parameters (GdaQuery *query)
  * to the gda_query_execute() method.
  *
  * Returns: a new #GdaParameterList object, or %NULL if @query does not accept any parameter.
+ *
+ * Deprecated: 3.2:
  */
 GdaParameterList *
 gda_query_get_parameter_list (GdaQuery *query)
@@ -2780,6 +2857,8 @@ gda_query_get_parameter_list (GdaQuery *query)
  * For more information about the returned value, see gda_server_provider_execute_command().
  *
  * Returns: a #GdaDataModel, a #GdaParameterList or %NULL.
+ *
+ * Deprecated: 3.2:
  */
 GdaObject *
 gda_query_execute (GdaQuery *query, GdaParameterList *params, gboolean iter_model_only_requested, GError **error)
@@ -2886,6 +2965,8 @@ gda_query_execute (GdaQuery *query, GdaParameterList *params, gboolean iter_mode
  * field, then add it to @query.
  *
  * Returns: a new #GdaQueryField object, or %NULL
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryField *
 gda_query_add_field_from_sql (GdaQuery *query, const gchar *field, GError **error)
@@ -3043,6 +3124,8 @@ gda_query_set_int_id (GdaQueryObject *query, guint id)
  *
  * Sets @field to be used in the ORDER BY clause (using the @order and @ascendant attributes) if
  * @order >= 0. If @order < 0, then @field will not be used in the ORDER BY clause.
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_query_set_order_by_field (GdaQuery *query, GdaQueryField *field, gint order, gboolean ascendant)
@@ -3084,6 +3167,8 @@ gda_query_set_order_by_field (GdaQuery *query, GdaQueryField *field, gint order,
  * Tells if @field (which MUST be in @query) is part of the ORDER BY clause.
  *
  * Returns: -1 if no, and the order where it appears in the ORDER BY list otherwise
+ *
+ * Deprecated: 3.2:
  */
 gint
 gda_query_get_order_by_field (GdaQuery *query, GdaQueryField *field, gboolean *ascendant)
@@ -3106,6 +3191,8 @@ gda_query_get_order_by_field (GdaQuery *query, GdaQueryField *field, gboolean *a
  * @offset: the row offset to start getting rows
  *
  * For a SELECT query, sets the limits for the number of rows returned when the query is executed
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_query_set_results_limit (GdaQuery *query, gboolean has_limit, guint limit, guint offset)
@@ -3131,6 +3218,8 @@ gda_query_set_results_limit (GdaQuery *query, gboolean has_limit, guint limit, g
  * For a SELECT query, get the limits for the number of rows returned when the query is executed
  *
  * Returns: FALSE if no limit is set in @query (in which case @limit and @offset are unchanged)
+ *
+ * Deprecated: 3.2:
  */
 gboolean
 gda_query_get_results_limit (GdaQuery *query, guint *limit, guint *offset)
@@ -3165,6 +3254,8 @@ gda_query_get_results_limit (GdaQuery *query, guint *limit, guint *offset)
  * the ones which are not visible and are not internal query fields.
  *
  * Returns: a new list of fields
+ *
+ * Deprecated: 3.2:
  */
 GSList *
 gda_query_get_all_fields (GdaQuery *query)
@@ -3191,6 +3282,8 @@ gda_query_get_all_fields (GdaQuery *query)
  * @sql_name: the SQL naming for the requested field
  *
  * Returns:
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryField *
 gda_query_get_field_by_sql_naming (GdaQuery *query, const gchar *sql_name) {
@@ -3208,6 +3301,8 @@ gda_query_get_field_by_sql_naming (GdaQuery *query, const gchar *sql_name) {
  * Get a pointer to the #GdaQueryFieldValue object which is a parameter named @param_name
  *
  * Returns: a pointer to the requested query field, or %NULL if it was not found
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryField *
 gda_query_get_field_by_param_name (GdaQuery *query, const gchar *param_name)
@@ -3239,6 +3334,8 @@ gda_query_get_field_by_param_name (GdaQuery *query, const gchar *param_name)
  * @fields_list: an explicit list of fields to search into
  *
  * Returns:
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryField *
 gda_query_get_field_by_sql_naming_fields (GdaQuery *query, const gchar *sql_name, GSList *fields_list)
@@ -3530,6 +3627,8 @@ gda_query_get_field_index (GdaEntity *iface, GdaEntityField *field)
  * @target.
  *
  * Returns: a new list of #GdaQueryField objects
+ *
+ * Deprecated: 3.2:
  */
 GSList *
 gda_query_get_fields_by_target (GdaQuery *query, GdaQueryTarget *target, gboolean visible_fields_only)
@@ -3755,6 +3854,8 @@ gda_query_is_writable (GdaEntity *iface)
  * --> "A and (B and not C)", it will contain {A, B, not C}
  *
  * Returns: a new list of #GdaQueryCondition objects
+ *
+ * Deprecated: 3.2:
  */
 GSList *
 gda_query_get_main_conditions (GdaQuery *query)
@@ -3778,6 +3879,8 @@ gda_query_get_main_conditions (GdaQuery *query)
  * have any condition, then the result is the same as gda_query_set_condition();
  * otherwise, @cond is added to @query's condition, using the AND operator
  * if @append_as_and is TRUE, and an OR operator if @append_as_and is FALSE.
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_query_append_condition (GdaQuery *query, GdaQueryCondition *cond, gboolean append_as_and)
@@ -4657,6 +4760,8 @@ static gboolean assert_coherence_aggregate_query (GdaQuery *query, GdaParameterL
  * SQL can be done without error
  *
  * Returns: FALSE if @query is not well formed
+ *
+ * Deprecated: 3.2:
  */
 gboolean
 gda_query_is_well_formed (GdaQuery *query, GdaParameterList *context, GError **error)
@@ -6041,6 +6146,8 @@ gda_query_is_valid (GdaRenderer *iface, GdaParameterList *context, GError **erro
  * The returned list must be free'd by the caller using g_slist_free().
  *
  * Returns: a new list of the #GdaQueryField objects which have been created
+ *
+ * Deprecated: 3.2:
  */
 GSList *
 gda_query_expand_all_field (GdaQuery *query, GdaQueryTarget *target)
@@ -6102,6 +6209,8 @@ gda_query_expand_all_field (GdaQuery *query, GdaQueryTarget *target)
  *
  * Re-orders the fields in @query using the joins' conditions: for each join condition,
  * the used query fields are grouped together near the 1st visible field.
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_query_order_fields_using_join_conds (GdaQuery *query)

@@ -22,6 +22,8 @@
 #ifndef __GDA_QUERY_JOIN_H_
 #define __GDA_QUERY_JOIN_H_
 
+#ifndef GDA_DISABLE_DEPRECATED
+
 #include <libgda/gda-query-object.h>
 #include "gda-decl.h"
 #include <libgda/libgda.h>
@@ -95,5 +97,7 @@ gboolean           gda_query_join_set_condition_from_sql    (GdaQueryJoin *join,
 const gchar       *gda_query_join_render_type               (GdaQueryJoin *join);
 
 G_END_DECLS
+
+#endif /* GDA_DISABLE_DEPRECATED */
 
 #endif

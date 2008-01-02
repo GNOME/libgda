@@ -1,0 +1,190 @@
+<!-- ##### SECTION Title ##### -->
+GdaStatement
+
+<!-- ##### SECTION Short_Description ##### -->
+Single SQL statement
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+The #GdaStatement represents a single SQL statement (multiple statements can be groupped in a #GdaBatch object).
+</para>
+<para>
+A #GdaStatement can either be built "manually" by building a #GdaSqlStatement structure, or from an SQL statement using
+a #GdaSqlParser object.
+</para>
+<para>
+If a #GdaStatement is created by a #GdaSqlParser, 
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+#GdaBatch
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaStatement ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL GdaStatement::dict-checked ##### -->
+<para>
+This signal is emitted anytime the data in @gdastatement specific to a #GdaDict object has changed.
+</para>
+
+@gdastatement: the object which received the signal.
+@arg1: a pointer to the #GdaDict object, or %NULL
+@arg2: TRUE if @gdastatement's database objects all exist in the dictionary
+
+<!-- ##### SIGNAL GdaStatement::reset ##### -->
+<para>
+This signal is emitted whenever the internal #GdaSqlStatement structure has changed
+</para>
+
+@gdastatement: the object which received the signal.
+
+<!-- ##### ARG GdaStatement:structure ##### -->
+<para>
+This property changes or queries the internal #GdaSqlStatement structure. A copy is made when either setting or getting that property.
+</para>
+
+<!-- ##### ENUM GdaStatementSqlFlag ##### -->
+<para>
+These flags control how a #GdaStatement will be rendered as SQL. If no "GDA_STATEMENT_SQL_PARAMS..." flag is specified, then
+for each parameter (variable) required by the statement, there must be a value provided when converting to SQL (through
+the @params argument of the gda_statement_to_sql_extended() function), or an error will be reported.
+</para>
+
+@GDA_STATEMENT_SQL_PRETTY: indents the output for easier readability
+@GDA_STATEMENT_SQL_PARAMS_LONG: use the &lt;default value&gt; /* ... */ syntax for each parameter
+@GDA_STATEMENT_SQL_PARAMS_SHORT: use the ##&lt;param_name&gt; syntax for each parameter when possible
+@GDA_STATEMENT_SQL_PARAMS_AS_COLON: use the :&lt;param_name&gt; syntax for each parameter, replacing any char not in [0-9A-Za-z] by '_'
+@GDA_STATEMENT_SQL_PARAMS_AS_DOLLAR: use the $&lt;param_number&gt; syntax for each parameter (starting numbering at 1)
+@GDA_STATEMENT_SQL_PARAMS_AS_QMARK: use the ?&lt;param_number&gt; syntax for each parameter (starting numbering at 1)
+
+<!-- ##### ENUM GdaStatementModelUsage ##### -->
+<para>
+These flags specify how the #GdaDataModel returned when executing a #GdaStatement will be used
+</para>
+
+@GDA_STATEMENT_MODEL_RANDOM_ACCESS: access to the data model will be random (usually this will result in a data model completely stored in memory)
+@GDA_STATEMENT_MODEL_CURSOR_FORWARD: access to the data model will be done using a cursor moving forward
+@GDA_STATEMENT_MODEL_CURSOR_BACKWARD: access to the data model will be done using a cursor moving backward
+
+<!-- ##### ENUM GdaStatementError ##### -->
+<para>
+
+</para>
+
+@GDA_STATEMENT_PARSE_ERROR: 
+@GDA_STATEMENT_SYNTAX_ERROR: 
+@GDA_STATEMENT_NO_CNC_ERROR: 
+@GDA_STATEMENT_CNC_CLOSED_ERROR: 
+@GDA_STATEMENT_EXEC_ERROR: 
+@GDA_STATEMENT_PARAM_TYPE_ERROR: 
+@GDA_STATEMENT_PARAM_ERROR: 
+
+<!-- ##### FUNCTION gda_statement_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_statement_serialize ##### -->
+<para>
+
+</para>
+
+@stmt: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_statement_deserialize ##### -->
+<para>
+
+</para>
+
+@str: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_statement_get_parameters ##### -->
+<para>
+
+</para>
+
+@stmt: 
+@out_params: 
+@error: 
+@Returns: 
+
+
+<!-- ##### MACRO gda_statement_to_sql ##### -->
+<para>
+
+</para>
+
+@stmt: 
+@params: 
+@error: 
+
+
+<!-- ##### FUNCTION gda_statement_to_sql_extended ##### -->
+<para>
+
+</para>
+
+@stmt: 
+@cnc: 
+@params: 
+@flags: 
+@params_used: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_statement_get_statement_type ##### -->
+<para>
+
+</para>
+
+@stmt: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_statement_is_useless ##### -->
+<para>
+
+</para>
+
+@stmt: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_statement_check_structure ##### -->
+<para>
+
+</para>
+
+@stmt: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_statement_check_with_dict ##### -->
+<para>
+
+</para>
+
+@stmt: 
+@dict: 
+@error: 
+@Returns: 
+
+

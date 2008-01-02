@@ -30,6 +30,8 @@
 #include <libgda/gda-parameter-list.h>
 #include <libgda/gda-renderer.h>
 #include <libgda/gda-util.h>
+#include <libgda/gda-set.h>
+#include <sql-parser/gda-sql-parser.h>
 #include <string.h>
 #include <glib/gi18n-lib.h>
 
@@ -42,6 +44,15 @@ static void gda_server_provider_init       (GdaServerProvider *provider,
 static void gda_server_provider_finalize   (GObject *object);
 
 static GObjectClass *parent_class = NULL;
+
+/* module error */
+GQuark gda_server_provider_error_quark (void)
+{
+        static GQuark quark;
+        if (!quark)
+                quark = g_quark_from_static_string ("gda_server_provider_error");
+        return quark;
+}
 
 /*
  * GdaServerProvider class implementation
@@ -726,7 +737,7 @@ gda_server_provider_execute_command (GdaServerProvider *provider,
 
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (CLASS (provider)->execute_command != NULL, NULL);
+	g_return_val_if_fail (cmd != NULL, NULL);
 
 	if (!env_read) {
 		const gchar *str;
@@ -744,7 +755,107 @@ gda_server_provider_execute_command (GdaServerProvider *provider,
 	}
 
 	gda_connection_clear_events_list (cnc);
-	return CLASS (provider)->execute_command (provider, cnc, cmd, params);
+	if (CLASS (provider)->execute_command) 
+		return CLASS (provider)->execute_command (provider, cnc, cmd, params);
+	else {
+		/* use GdaStatement instead */
+		GList *reclist = NULL;
+		GdaCommandOptions options;
+		GdaBatch *batch = NULL;
+		const gchar *left = NULL;
+		const GSList *list;
+		GdaSqlParser *parser;
+		
+		parser = g_object_get_data (G_OBJECT (provider), "_gda_parser");
+		if (!parser) {
+			parser = gda_server_provider_create_parser (provider, NULL);
+			g_assert (parser);
+			g_object_set_data_full (G_OBJECT (provider), "_gda_parser", parser, g_object_unref);
+		}
+				
+		options = gda_command_get_options (cmd);
+		switch (gda_command_get_command_type (cmd)) {
+		case GDA_COMMAND_TYPE_SQL:
+			batch = gda_sql_parser_parse_string_as_batch (parser, gda_command_get_text (cmd), &left, NULL);
+			if (left && (*left != 0))
+				g_warning ("COMMAND SQL: %s (REMAIN:%s)\n", gda_command_get_text (cmd), left);
+			break;
+		case GDA_COMMAND_TYPE_TABLE: {
+			gchar **arr;
+			
+			/* there can be multiple table names */
+			arr = g_strsplit (gda_command_get_text (cmd), ";", 0);
+			if (arr) {
+				gint n = 0;
+				batch = gda_batch_new ();
+				while (arr[n]) {
+					gchar *sql = g_strdup_printf ("SELECT * FROM %s", arr[n]);
+					GdaStatement *stmt;
+					stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+					g_free (sql);
+					if (stmt) {
+						gda_batch_add_statement (batch, stmt);
+						g_object_unref (stmt);
+					}
+					else if (! (options & GDA_COMMAND_OPTION_IGNORE_ERRORS)) {
+						GdaConnectionEvent *error;
+						gchar *str;
+						error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+						str = g_strdup_printf ("Cannot use table name '%s'", arr[n]);
+						gda_connection_event_set_description (error, str);
+						g_free (str);
+						gda_connection_add_event (cnc, error);
+						g_object_unref (batch);
+						batch = NULL;
+						break;
+					}
+					n++;
+				}
+				g_strfreev (arr);
+			}
+			break;
+		}
+		case GDA_COMMAND_TYPE_XML:
+		case GDA_COMMAND_TYPE_SCHEMA:
+		case GDA_COMMAND_TYPE_PROCEDURE:
+			/* FIXME: Implement me */
+			return NULL;
+		case GDA_COMMAND_TYPE_INVALID:
+			return NULL;
+		}
+		
+		if (!batch)
+			return NULL;
+		for (list = gda_batch_get_statements (batch); list; list = list->next) {
+			GdaStatement *stmt = GDA_STATEMENT (list->data);
+			GObject *obj;
+			GError *error = NULL;
+			
+			obj = gda_server_provider_statement_execute (provider, cnc, stmt, NULL, 
+								     GDA_STATEMENT_MODEL_RANDOM_ACCESS, &error);
+			if (obj)
+				reclist = g_list_append (reclist, obj);
+			else if (options & GDA_COMMAND_OPTION_IGNORE_ERRORS) {
+				reclist = g_list_append (reclist, NULL);
+				if (error)
+					g_error_free (error);
+			}
+			else {
+				GdaConnectionEvent *event;
+				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				gda_connection_event_set_description (event, error && error->message ? 
+								      error->message : _("No detail"));
+				gda_connection_add_event (cnc, event);
+				reclist = g_list_append (reclist, NULL);
+				if (error)
+					g_error_free (error);
+				break;
+			}
+		}
+		g_object_unref (batch);
+		
+		return reclist;
+	}
 }
 
 /**
@@ -788,7 +899,6 @@ gda_server_provider_execute_query (GdaServerProvider *provider,
 
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (CLASS (provider)->execute_query != NULL, NULL);
 
 	if (!env_read) {
 		const gchar *str;
@@ -810,7 +920,63 @@ gda_server_provider_execute_query (GdaServerProvider *provider,
 	}
 	
 	gda_connection_clear_events_list (cnc);
-	return CLASS (provider)->execute_query (provider, cnc, query, params);
+	if (CLASS (provider)->execute_query)
+		return CLASS (provider)->execute_query (provider, cnc, query, params);
+	else {
+		/* use GdaStatement instead */
+		GdaStatement *stmt;
+		GObject *st_res;
+		GdaSet *params_set;
+		GdaSqlParser *parser;
+		
+		gchar *sql;
+		GError *error = NULL;
+
+		parser = g_object_get_data (G_OBJECT (provider), "_gda_parser");
+		if (!parser) {
+			parser = gda_server_provider_create_parser (provider, NULL);
+			g_assert (parser);
+			g_object_set_data_full (G_OBJECT (provider), "_gda_parser", parser, g_object_unref);
+		}
+
+		sql = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, NULL, 
+						  GDA_RENDERER_PARAMS_AS_DETAILED, &error);
+		if (!sql || 
+		    !(stmt = gda_sql_parser_parse_string (parser, sql, NULL, &error))) {
+			GdaConnectionEvent *event;
+			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+			gda_connection_event_set_description (event, error && error->message ? error->message : _("No detail"));
+			gda_connection_add_event (cnc, event);
+			g_error_free (error);
+			return NULL;
+		}
+		
+		params_set = gda_set_new_from_parameter_list (params);
+		st_res = gda_server_provider_statement_execute (provider, cnc, stmt, params_set, 
+								GDA_STATEMENT_MODEL_RANDOM_ACCESS, &error);
+		if (params_set)
+			g_object_unref (params_set);
+		if (!st_res) {
+			GdaConnectionEvent *event;
+			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+			gda_connection_event_set_description (event, error && error->message ? error->message : _("No detail"));
+			gda_connection_add_event (cnc, event);
+			g_error_free (error);
+			return NULL;
+		}
+		
+		if (GDA_IS_DATA_MODEL (st_res))
+			return GDA_OBJECT (st_res);
+		else if (GDA_IS_SET (st_res)) {
+			GdaParameterList *plist;
+			
+			plist = gda_parameter_list_new_from_set (GDA_SET (st_res), gda_object_get_dict (GDA_OBJECT (query)));
+			g_object_unref (st_res);
+			return GDA_OBJECT (plist);
+		}
+		else
+			g_assert_not_reached ();
+	}
 }
 
 
@@ -1323,4 +1489,193 @@ gda_server_provider_get_default_dbms_type (GdaServerProvider *provider,
 		return (CLASS (provider)->get_def_dbms_type)(provider, cnc, type);
 	else
 		return NULL;
+}
+
+/*
+ * GdaStatement
+ */
+
+/**
+ * gda_server_provider_create_parser
+ * @provider: a #GdaServerProvider provider object
+ * @cnc: a #GdaConnection, or %NULL
+ *
+ * Creates a new #GdaSqlParser object which is adapted to @provider (and possibly depending on
+ * @cnc for the actual database version).
+ *
+ * If @prov does not have its own parser, then %NULL is returned, and a general SQL parser can be obtained
+ * using gda_sql_parser_new().
+ *
+ * Returns: a new #GdaSqlParser object, or %NULL.
+ */
+GdaSqlParser *
+gda_server_provider_create_parser (GdaServerProvider *provider, GdaConnection *cnc)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	if (cnc)
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	if (CLASS (provider)->create_parser)
+		return (CLASS (provider)->create_parser)(provider, cnc);
+	else
+		return NULL;
+}
+
+/**
+ * gda_server_provider_statement_to_sql
+ * @provider: a #GdaServerProvider provider object
+ * @cnc: a #GdaConnection, or %NULL
+ * @stmt: a #GdaStatement object
+ * @params: a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
+ * @flags: SQL rendering flags, as #GdaStatementSqlFlag OR'ed values
+ * @params_used: a place to store the list of individual #GdaHolder objects within @params which have been used
+ * @error: a place to store errors, or %NULL
+ *
+ * Renders @stmt as an SQL statement, adapted to the SQL dialect used by @provider
+ *
+ * Returns: a new string, or %NULL if an error occurred
+ */
+gchar *
+gda_server_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection *cnc, 
+				      GdaStatement *stmt, GdaSet *params, GdaStatementSqlFlag flags,
+				      GSList **params_used, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	if (cnc)
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
+	
+	if (CLASS (provider)->statement_to_sql)
+		return (CLASS (provider)->statement_to_sql)(provider, cnc, stmt, params, flags, params_used, error);
+	else
+		return gda_statement_to_sql_extended (stmt, NULL, params, flags, params_used, error);
+}
+
+/**
+ * gda_server_provider_statement_prepare
+ * @provider: a #GdaServerProvider provider object
+ * @cnc: a #GdaConnection
+ * @stmt: a #GdaStatement object
+ * @error: a place to store errors, or %NULL
+ *
+ * Ask the database accessed through the @cnc connection to prepare the usage of @stmt. This is only usefull
+ * if @stmt will be used more than once (however some providers may always prepare stamements before executing them).
+ *
+ * This function is also usefull to make sure @stmt is fully understood by the database before actually executing it.
+ *
+ * Note however that it is also possible that gda_server_provider_statement_prepare() fails when
+ * gda_server_provider_statement_execute() does not fail (this will usually be the case with statements such as
+ * <![CDATA["SELECT * FROM ##tablename::string"]]> because database usually don't allow variables to be used in place of a 
+ * table name).
+ *
+ * Returns: TRUE if no error occurred.
+ */
+gboolean
+gda_server_provider_statement_prepare (GdaServerProvider *provider, GdaConnection *cnc,
+				       GdaStatement *stmt, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
+	
+	if (CLASS (provider)->statement_prepare)
+		return (CLASS (provider)->statement_prepare)(provider, cnc, stmt, error);
+	else {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
+			     _("Provider does not support statement preparation"));
+		return FALSE;
+	}
+}
+
+/**
+ * gda_server_provider_statement_execute
+ * @provider: a #GdaServerProvider provider object
+ * @cnc: a #GdaConnection
+ * @stmt: a #GdaStatement object
+ * @params: a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
+ * @model_usage: #GdaDataModel usage flags, as #GdaStatementModelUsage values
+ * @error: a place to store errors, or %NULL
+ *
+ * Executes @stmt. As @stmt can, by desing (and if not abused), contain only one SQL statement, the
+ * return object will either be:
+ * <itemizedlist>
+ *   <listitem><para>a #GdaDataModel if @stmt is a SELECT statement (a GDA_SQL_STATEMENT_SELECT, see #GdaSqlStatementType)
+ *             containing the results of the SELECT</para></listitem>
+ *   <listitem><para>a #GdaSet for any other SQL statement which correctly executed. In this case
+ *        (if the provider supports it), then the #GdaSet may contain value holders named:
+ *        <itemizedlist>
+ *          <listitem><para>a (gint) #GdaHolder named "IMPACTED_ROWS"</para></listitem>
+ *          <listitem><para>a (GObject) #GdaHolder named "EVENT" which contains a #GdaConnectionEvent</para></listitem>
+ *        </itemizedlist></para></listitem>
+ * </itemizedlist>
+ *
+ * Returns: a #GObject, or %NULL if an error occurred
+ */
+GObject *
+gda_server_provider_statement_execute (GdaServerProvider *provider, GdaConnection *cnc, 
+				       GdaStatement *stmt, GdaSet *params, 
+				       GdaStatementModelUsage model_usage, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
+	
+	if (CLASS (provider)->statement_execute)
+		return (CLASS (provider)->statement_execute)(provider, cnc, stmt, params, model_usage, error);
+	else {
+		/* use a GdaCommand to execute */
+		GdaCommand *command;
+		GdaParameterList *plist;
+		gchar *sql;
+		GList *res;
+		GSList *list;
+		GObject *retval = NULL;
+
+		sql = gda_server_provider_statement_to_sql (provider, cnc, stmt, params, 0, NULL, error);
+		if (!sql)
+			return NULL;
+
+		command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, 0);
+		g_free (sql);
+		
+		/* create a GdaParameterList object */
+		plist = gda_parameter_list_new (NULL);
+		if (params) {
+			for (list = params->holders; list; list = list->next) {
+				GdaHolder *holder = GDA_HOLDER (list->data);
+				if (!strcmp (gda_holder_get_id (holder), "ITER_CHUNCK_SIZE")) 
+					gda_parameter_list_add_param_from_value (plist, "ITER_CHUNCK_SIZE",
+										 (GValue*) gda_holder_get_value (holder));
+			}
+		}
+		if (! (model_usage & GDA_STATEMENT_MODEL_RANDOM_ACCESS))
+			gda_parameter_list_add_param_from_string (plist, "ITER_MODEL_ONLY", G_TYPE_BOOLEAN, "TRUE");
+		
+		res = gda_server_provider_execute_command (provider, cnc, command, plist);
+		g_object_unref (plist);
+		if (!res) 
+			return NULL;
+		
+		/* convert the returned GdaParameterList to a GdaSet */
+		g_assert (! res->next);
+		if (GDA_IS_DATA_MODEL (res->data)) 
+			retval = G_OBJECT (res->data);
+		else if (GDA_IS_PARAMETER_LIST (res->data)) {
+			GdaSet *set;
+			GSList *hlist = NULL;
+			for (list = GDA_PARAMETER_LIST (res->data)->parameters; list; list = list->next) {
+				GdaHolder *h;
+
+				h = gda_holder_new (gda_parameter_get_g_type (GDA_PARAMETER (list->data)));
+				gda_holder_set_value (h, gda_parameter_get_value (GDA_PARAMETER (list->data)));
+				hlist = g_slist_append (hlist, h);
+			}
+			set = gda_set_new (hlist);
+			g_slist_foreach (hlist, (GFunc) g_object_unref, NULL);
+			g_slist_free (hlist);
+			retval = G_OBJECT (set);
+		}
+		else
+			g_assert_not_reached ();
+		return retval;
+	}
 }

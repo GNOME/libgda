@@ -34,6 +34,7 @@
 #include <libgda/gda-connection-event.h>
 #include <libgda/gda-parameter.h>
 #include <libgda/gda-transaction-status.h>
+#include <libgda/gda-statement.h>
 
 G_BEGIN_DECLS
 
@@ -54,7 +55,8 @@ typedef enum {
 	GDA_CONNECTION_NO_CNC_SPEC_ERROR,
 	GDA_CONNECTION_NO_PROVIDER_SPEC_ERROR,
 	GDA_CONNECTION_OPEN_ERROR,
-	GDA_CONNECTION_EXECUTE_COMMAND_ERROR
+	GDA_CONNECTION_EXECUTE_COMMAND_ERROR,
+	GDA_CONNECTION_STATEMENT_TYPE_ERROR
 } GdaConnectionError;
 
 struct _GdaConnection {
@@ -133,13 +135,9 @@ gboolean             gda_connection_is_opened            (GdaConnection *cnc);
 
 GdaClient           *gda_connection_get_client           (GdaConnection *cnc);
 
-const gchar         *gda_connection_get_provider         (GdaConnection *cnc);
 GdaServerProvider   *gda_connection_get_provider_obj     (GdaConnection *cnc);
-GdaServerProviderInfo *gda_connection_get_infos          (GdaConnection *cnc);
 GdaConnectionOptions gda_connection_get_options          (GdaConnection *cnc);
 
-const gchar         *gda_connection_get_server_version   (GdaConnection *cnc);
-const gchar         *gda_connection_get_database         (GdaConnection *cnc);
 const gchar         *gda_connection_get_dsn              (GdaConnection *cnc);
 gboolean             gda_connection_set_dsn              (GdaConnection *cnc, const gchar *datasource);
 const gchar         *gda_connection_get_cnc_string       (GdaConnection *cnc);
@@ -154,14 +152,21 @@ void                 gda_connection_add_events_list      (GdaConnection *cnc, GL
 void                 gda_connection_clear_events_list    (GdaConnection *cnc);
 const GList         *gda_connection_get_events           (GdaConnection *cnc);
 
-gboolean             gda_connection_change_database      (GdaConnection *cnc, const gchar *name);
+GdaSqlParser        *gda_connection_create_parser        (GdaConnection *cnc);
+gchar               *gda_connection_statement_to_sql     (GdaConnection *cnc,
+							  GdaStatement *stmt, GdaSet *params, GdaStatementSqlFlag flags,
+							  GSList **params_used, GError **error);
+gboolean             gda_connection_statement_prepare    (GdaConnection *cnc,
+							  GdaStatement *stmt, GError **error);
+GObject             *gda_connection_statement_execute    (GdaConnection *cnc,
+							  GdaStatement *stmt, GdaSet *params,
+							  GdaStatementModelUsage model_usage, GError **error);
+GdaDataModel        *gda_connection_statement_execute_select (GdaConnection *cnc, GdaStatement *stmt,
+							      GdaSet *params, GdaStatementModelUsage model_usage,
+							      GError **error);
+gint                 gda_connection_statement_execute_non_select (GdaConnection *cnc, GdaStatement *stmt,
+								  GdaSet *params, GError **error);
 
-GdaDataModel        *gda_connection_execute_select_command (GdaConnection *cnc, GdaCommand *cmd,
-							    GdaParameterList *params, GError **error);
-gint                 gda_connection_execute_non_select_command (GdaConnection *cnc, GdaCommand *cmd,
-								GdaParameterList *params, GError **error);
-GList               *gda_connection_execute_command      (GdaConnection *cnc, GdaCommand *cmd,
-							  GdaParameterList *params, GError **error);
 gchar               *gda_connection_get_last_insert_id   (GdaConnection *cnc, GdaDataModel *recset);
 
 gboolean             gda_connection_begin_transaction    (GdaConnection *cnc, const gchar *name, 
@@ -180,6 +185,22 @@ gchar               *gda_connection_value_to_sql_string  (GdaConnection *cnc, GV
 gboolean             gda_connection_supports_feature     (GdaConnection *cnc, GdaConnectionFeature feature);
 GdaDataModel        *gda_connection_get_schema           (GdaConnection *cnc, GdaConnectionSchema schema,
 							  GdaParameterList *params, GError **error);
+
+#ifndef GDA_DISABLE_DEPRECATED
+const gchar         *gda_connection_get_provider         (GdaConnection *cnc);
+const gchar         *gda_connection_get_server_version   (GdaConnection *cnc);
+const gchar         *gda_connection_get_database         (GdaConnection *cnc);
+GdaServerProviderInfo *gda_connection_get_infos          (GdaConnection *cnc);
+gboolean             gda_connection_change_database      (GdaConnection *cnc, const gchar *name);
+
+GdaDataModel        *gda_connection_execute_select_command (GdaConnection *cnc, GdaCommand *cmd,
+							    GdaParameterList *params, GError **error);
+gint                 gda_connection_execute_non_select_command (GdaConnection *cnc, GdaCommand *cmd,
+								GdaParameterList *params, GError **error);
+GList               *gda_connection_execute_command      (GdaConnection *cnc, GdaCommand *cmd,
+							  GdaParameterList *params, GError **error);
+
+#endif /* GDA_DISABLE_DEPRECATED */
 
 G_END_DECLS
 

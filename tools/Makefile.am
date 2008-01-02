@@ -9,6 +9,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	-I$(top_srcdir)/libgda/sqlite \
+	-I$(top_srcdir)/libgda \
 	-I. \
 	$(LIBGDA_CFLAGS)
 
@@ -45,6 +46,11 @@ gda_sql_4_0_LDADD = \
         $(LIBGDA_LIBS) \
 	$(READLINE_LIB) \
         $(HISTORY_LIB)
+
+# setenv() is in libiberty in mingw
+if PLATFORM_WIN32
+gda_sql_3_0_LDADD += -liberty
+endif
 
 gda_list_server_op_4_0_SOURCES = \
         gda-list-server-op.c

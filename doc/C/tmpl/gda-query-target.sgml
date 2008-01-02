@@ -6,6 +6,9 @@ Represents a target entity within a query.
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+As of version 3.2, #GdaQueryTarget has been deprecated in favour of #GdaSqlStatement's structure (#GdaSqlSelectTarget).
+</para>
+<para>
 A #GdaQueryTarget object represents an entity (usually a table, as a #GdaDictTable) which is taking part in a query. 
 For SELECT queries, the targets are
 the entities listed after the FROM clause; for the INSERT, DELETE and UPDATE queries, there is only one target

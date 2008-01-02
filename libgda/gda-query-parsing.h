@@ -21,6 +21,8 @@
 #ifndef __GDA_QUERY_PARSING__
 #define __GDA_QUERY_PARSING__
 
+#ifndef GDA_DISABLE_DEPRECATED
+
 #include "gda-decl.h"
 #include <libsql/sql_parser.h>
 #include "sql-delimiter/gda-sql-delimiter.h"
@@ -59,6 +61,8 @@ GdaQueryCondition *parsed_create_complex_condition (GdaQuery *query, ParseData *
 GdaQueryField     *gda_query_get_field_by_sql_naming_fields (GdaQuery *query, const gchar *sql_name, GSList *fields_list);
 
 G_END_DECLS
+
+#endif /* GDA_DISABLE_DEPRECATED */
 
 #endif
 

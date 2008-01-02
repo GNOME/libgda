@@ -6,6 +6,9 @@ Represents a condition within a query
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+As of version 3.2, #GdaQueryCondition has been deprecated in favour of #GdaStatement's structure.
+</para>
+<para>
 This object represents a condition within a query. Usually there is one such object to express a WHERE condition
 and sometimes a #GdaQueryJoin object con contain one as well to express a specific joinning condition.
 </para>

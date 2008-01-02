@@ -18,6 +18,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#undef GDA_DISABLE_DEPRECATED
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include "gda-query-field-value.h"
@@ -304,6 +305,8 @@ gda_query_field_value_init (GdaQueryFieldValue *gda_query_field_value)
  * Creates a new GdaQueryFieldValue object which represents a value or a parameter.
  *
  * Returns: the new object
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryField*
 gda_query_field_value_new (GdaQuery *query, GType type)
@@ -567,6 +570,8 @@ gda_query_field_value_is_equal (GdaQueryField *qfield1, GdaQueryField *qfield2)
  * @val: the value to be set, or %NULL
  *
  * Sets the value of @field, or removes it (if @val is %NULL)
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_query_field_value_set_value (GdaQueryFieldValue *field, const GValue *val)
@@ -596,6 +601,8 @@ gda_query_field_value_set_value (GdaQueryFieldValue *field, const GValue *val)
  * The default value can be of a different type than the one expected by @field.
  *
  * Returns: the value or NULL
+ *
+ * Deprecated: 3.2:
  */
 const GValue *
 gda_query_field_value_get_value (GdaQueryFieldValue *field)
@@ -614,6 +621,8 @@ gda_query_field_value_get_value (GdaQueryFieldValue *field)
  * @default_val: the default value to be set, or %NULL
  *
  * Sets the default value of @field, or removes it (if @default_val is %NULL)
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_query_field_value_set_default_value (GdaQueryFieldValue *field, const GValue *default_val)
@@ -637,6 +646,8 @@ gda_query_field_value_set_default_value (GdaQueryFieldValue *field, const GValue
  * Get the default value stored by @field.
  *
  * Returns: the value or NULL
+ *
+ * Deprecated: 3.2:
  */
 const GValue *
 gda_query_field_value_get_default_value (GdaQueryFieldValue *field)
@@ -654,6 +665,8 @@ gda_query_field_value_get_default_value (GdaQueryFieldValue *field)
  * @is_param:
  *
  * Sets wether @field can be considered as a parameter
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_query_field_value_set_is_parameter (GdaQueryFieldValue *field, gboolean is_param)
@@ -672,6 +685,8 @@ gda_query_field_value_set_is_parameter (GdaQueryFieldValue *field, gboolean is_p
  * Tells if @field can be considered as a parameter
  *
  * Returns: TRUE if @field can be considered as a parameter
+ *
+ * Deprecated: 3.2:
  */
 gboolean
 gda_query_field_value_get_is_parameter (GdaQueryFieldValue *field)
@@ -741,6 +756,8 @@ gda_query_field_value_get_params (GdaQueryField *qfield)
  *
  * Sets if a NULL value is acceptable for @field. If @not_null is TRUE, then @field
  * can't have a NULL value.
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_query_field_value_set_not_null (GdaQueryFieldValue *field, gboolean not_null)
@@ -758,6 +775,8 @@ gda_query_field_value_set_not_null (GdaQueryFieldValue *field, gboolean not_null
  * Tells if @field can receive a NULL value.
  *
  * Returns: TRUE if @field can't have a NULL value
+ *
+ * Deprecated: 3.2:
  */
 gboolean
 gda_query_field_value_get_not_null (GdaQueryFieldValue *field)
@@ -775,6 +794,8 @@ gda_query_field_value_get_not_null (GdaQueryFieldValue *field)
  * @context: a #GdaParameterList object
  *
  * Tells if @field represents a NULL value.
+ *
+ * Deprecated: 3.2:
  *
  * Returns:
  */
@@ -809,6 +830,8 @@ gda_query_field_value_is_value_null (GdaQueryFieldValue *field, GdaParameterList
  * @model at column @col.
  *
  * Returns: TRUE if no error occurred
+ *
+ * Deprecated: 3.2:
  */
 gboolean
 gda_query_field_value_restrict (GdaQueryFieldValue *field, GdaDataModel *model, gint col, GError **error)
@@ -861,6 +884,8 @@ destroyed_restrict_cb (GdaObject *obj, GdaQueryFieldValue *field)
  * Get the index of @field in the query it belongs, among all the parameters.
  *
  * Returns: the index (starting at 1), or -1 if @field is not a parameter field.
+ *
+ * Deprecated: 3.2:
  */
 gint
 gda_query_field_value_get_parameter_index (GdaQueryFieldValue *field)

@@ -22,6 +22,8 @@
 #ifndef __GDA_GRAPHVIZ_H_
 #define __GDA_GRAPHVIZ_H_
 
+#ifndef GDA_DISABLE_DEPRECATED
+
 #include <libgda/gda-object.h>
 
 G_BEGIN_DECLS
@@ -66,5 +68,7 @@ GObject        *gda_graphviz_new              (GdaDict *dict);
 void            gda_graphviz_add_to_graph     (GdaGraphviz *graph, GObject *obj);
 gboolean        gda_graphviz_save_file        (GdaGraphviz *graph, const gchar *filename, GError **error);
 G_END_DECLS
+
+#endif /* GDA_DISABLE_DEPRECATED */
 
 #endif

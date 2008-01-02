@@ -5,6 +5,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda-report \
 	-I$(top_builddir) \
 	-I$(top_srcdir) \
+	-I$(top_srcdir)/libgda \
 	-I$(top_srcdir)/libgda/sqlite \
 	$(LIBGDA_CFLAGS)
 

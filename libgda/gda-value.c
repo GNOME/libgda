@@ -1175,6 +1175,7 @@ GValue *
 gda_value_new_from_xml (const xmlNodePtr node)
 {
 	GValue *value;
+	xmlChar *prop;
 
 	g_return_val_if_fail (node, NULL);
 
@@ -1183,12 +1184,15 @@ gda_value_new_from_xml (const xmlNodePtr node)
 		return NULL;
 
 	value = g_new0 (GValue, 1);
-	if (!gda_value_set_from_string (value,
-					(gchar*)xmlNodeGetContent (node),
-					g_type_from_name ((gchar*)xmlGetProp(node, (xmlChar*)"gdatype")))) {
+	prop = xmlGetProp (node, (xmlChar*)"gdatype");
+	if (prop && !gda_value_set_from_string (value,
+						(gchar*)xmlNodeGetContent (node),
+						gda_g_type_from_string ((gchar*) prop))) {
 		g_free (value);
 		value = NULL;
 	}
+	if (prop)
+		xmlFree (prop);
 
 	return value;
 }

@@ -22,6 +22,8 @@
 #ifndef __GDA_QUERY_H_
 #define __GDA_QUERY_H_
 
+#ifndef GDA_DISABLE_DEPRECATED
+
 #include <libgda/gda-query-object.h>
 #include "gda-decl.h"
 #include "gda-enums.h"
@@ -173,5 +175,7 @@ void               gda_query_declare_condition      (GdaQuery *query, GdaQueryCo
 void               gda_query_undeclare_condition    (GdaQuery *query, GdaQueryCondition *cond);
 
 G_END_DECLS
+
+#endif /* GDA_DISABLE_DEPRECATED */
 
 #endif

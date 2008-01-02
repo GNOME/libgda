@@ -1,0 +1,155 @@
+<!-- ##### SECTION Title ##### -->
+GdaSqlParser
+
+<!-- ##### SECTION Short_Description ##### -->
+SQL parser
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+  The #GdaSqlParser is an object dedicated to creating #GdaStatement and #GdaBatch objects from SQL strings. The actual contents
+  of the parsed statements is represented as #GdaSqlStatement structures (which can be obtained from any #GdaStatement through the
+  "structure" property).
+</para>
+<para>
+  #GdaSqlParser parsers can be created by calling gda_server_provider_create_parser() for a provider adapted SQL parser, or using
+  gda_sql_parser_new() for a general purpose SQL parser.
+</para>
+<para>
+  The #GdaSqlParser can either work in "parse" mode where it will try to parse the SQL string, or in "delimiter" mode where it will
+  only attempt at delimiting SQL statements in a string which may contain several SQL statements (usually separated by a semi column).
+  If operating in "parser" mode, and the parser can't correctly parse the string, then it will switch to the "delimiter" mode
+  for the next statement in the string to parse (and create a GDA_SQL_STATEMENT_UNKNOWN statement).
+</para>
+<para>
+The #GdaSqlParser object parses and analyses SQL statements and reports the following statement types:
+<itemizedlist>
+  <listitem><para>SELECT (and COMPOUND select), 
+      INSERT, UPDATE and DELETE SQL statements should be completely parsed. 
+  </para></listitem>
+  <listitem><para>Transaction related statements (corresponding to the BEGIN, COMMIT, ROLLBACK,
+  SAVEPOINT, ROLLBACK SAVEPOINT and DELETE SAVEPOINT) are parsed and a minimalist structure is created to 
+  extract some information (that structure is not enough per-se to re-create the complete SQL statement).
+  </para></listitem>
+  <listitem><para>Any other type of SQL statement (CREATE TABLE, ...) creates a #GdaStatement of type 
+      GDA_SQL_STATEMENT_UNKNOW, and it only able to locate place holders (variables) and end of statement
+      marks.</para></listitem>
+</itemizedlist>
+</para>
+<para>
+NOTE: Any SQL of a type which should be parsed which but which creates a #GdaStatement of type GDA_SQL_STATEMENT_UNKNOWN
+(check with gda_statement_get_statement_type()) should be reported as a bug.
+</para>
+
+<para>
+The #GdaSqlParser object recognizes place holders (variables), which can later be queried and valued using
+gda_statement_get_parameters(). The folllowing syntax are recognized (other syntaxes might be 
+recognized for specific database providers if the #GdaSqlParser is created using gda_server_provider_create_parser()
+but for portability reasons it's better to avoid them):
+<itemizedlist>
+  <listitem><para><![CDATA[##NAME[::TYPE[::NULL]]]]>: 
+      for a variable named NAME with the optional type TYPE (which can be a GType
+      name or a custom database type name), and with the optional "::NULL" to instruct that the variable can
+      be NULL.
+  </para></listitem>
+  <listitem><para><![CDATA[## /* name:NAME [type:TYPE] [nullok:[TRUE|FALSE]] [descr:DESCR] */]]>
+      for a variable named NAME with the optional type TYPE (which can be a GType
+      name or a custom database type name), with the optional "nullok" attribute and an optional
+      description DESCR.
+  </para></listitem>
+</itemizedlist>
+</para>
+
+<para>
+  The #GdaSqlParser object internally uses a LEMON generated parser (the same as the one used by SQLite).
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaSqlParser ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdaSqlParser:column-error ##### -->
+<para>
+Internal usage only.
+</para>
+
+<!-- ##### ARG GdaSqlParser:debug ##### -->
+<para>
+Forces the parser to display somme debug information.
+</para>
+
+<!-- ##### ARG GdaSqlParser:line-error ##### -->
+<para>
+Internal usage only.
+</para>
+
+<!-- ##### ARG GdaSqlParser:mode ##### -->
+<para>
+Controls the parsing mode determining how the parser operates.
+</para>
+
+<!-- ##### ARG GdaSqlParser:tokenizer-flavour ##### -->
+<para>
+Modifies the behaviour of the tokenizer, reserved for #GdaServerProvider implementations
+</para>
+
+<!-- ##### ENUM GdaSqlParserMode ##### -->
+<para>
+
+</para>
+
+@GDA_SQL_PARSER_MODE_PARSE: Parse mode, the parser tries to parse and build a structure representing the SQL statement
+@GDA_SQL_PARSER_MODE_DELIMIT: Delimit mode, the parser only tries to identify variables, will always return a statement of type GDA_SQL_STATEMENT_UNKNOW.
+
+<!-- ##### FUNCTION gda_sql_parser_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_parser_parse_string ##### -->
+<para>
+
+</para>
+
+@parser: 
+@sql: 
+@remain: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_parser_parse_string_as_batch ##### -->
+<para>
+
+</para>
+
+@parser: 
+@sql: 
+@remain: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_parser_parse_file_as_batch ##### -->
+<para>
+
+</para>
+
+@parser: 
+@filename: 
+@error: 
+@Returns: 
+
+

@@ -6,6 +6,9 @@ Represents a join between two different entities
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+As of version 3.2, #GdaQueryJoin has been deprecated in favour of #GdaSqlStatement's structure (#GdaSqlSelectJoin).
+</para>
+<para>
 This object is a join, within a SELECT query, between two different entities participating in the query;
 the entoties are themselves represented by #GdaQueryTarget objects. It is important to specify joinning conditions
 as joins and not simply as WHERE conditions because the joins carry more information than a simple condition

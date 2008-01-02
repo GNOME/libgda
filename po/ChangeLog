@@ -1,3 +1,22 @@
+2007-12-31  Yannig Marchegay <yannig@marchegay.org>
+
+	* oc.po: Updated Occitan translation.
+2007-12-30  Jorge Gonzalez  <jorgegonz@svn.gnome.org>  
+
+	* es.po: Updated Spanish translation 
+
+2007-12-23  Marco Ciampa  <ciampix@libero.it>
+
+	* it.po: updated italian translation.
+
+2007-12-11  Jorge Gonzalez  <jorgegonz@svn.gnome.org>  
+
+        * es.po: Updated Spanish translation   
+
+2007-12-05  Claude Paroz  <claude@2xlibre.net>
+
+	* fr.po: Updated French translation.
+
 2007-12-01  Vivien Malerba <malerba@gnome-db.org>
 
 	* POTFILES.in: added libgda/sqlite/virtual/libmain.c

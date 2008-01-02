@@ -22,6 +22,7 @@
 #define __GLOBAL_DECL_H_
 
 #include <glib.h>
+#include <libgda/gda-debug-macros.h>
 
 
 typedef struct _GdaConfig GdaConfig;
@@ -115,12 +116,24 @@ typedef struct _GdaParameter GdaParameter;
 typedef struct _GdaParameterClass GdaParameterClass;
 typedef struct _GdaParameterPrivate GdaParameterPrivate;
 
+typedef struct _GdaHolder GdaHolder;
+typedef struct _GdaHolderClass GdaHolderClass;
+typedef struct _GdaHolderPrivate GdaHolderPrivate;
+
+
 typedef struct _GdaParameterList GdaParameterList;
 typedef struct _GdaParameterListClass GdaParameterListClass;
 typedef struct _GdaParameterListNode GdaParameterListNode;
 typedef struct _GdaParameterListGroup GdaParameterListGroup;
 typedef struct _GdaParameterListSource GdaParameterListSource;
 typedef struct _GdaParameterListPrivate GdaParameterListPrivate;
+
+typedef struct _GdaSet GdaSet;
+typedef struct _GdaSetClass GdaSetClass;
+typedef struct _GdaSetNode GdaSetNode;
+typedef struct _GdaSetGroup GdaSetGroup;
+typedef struct _GdaSetSource GdaSetSource;
+typedef struct _GdaSetPrivate GdaSetPrivate;
 
 typedef struct _GdaXmlStorage       GdaXmlStorage;
 typedef struct _GdaXmlStorageIface  GdaXmlStorageIface;
@@ -179,6 +192,22 @@ typedef struct _GdaBlobOp GdaBlobOp;
 typedef struct _GdaBlobOpClass GdaBlobOpClass;
 
 /*
+ * Statements & parser
+ */
+
+typedef struct _GdaBatch GdaBatch;
+typedef struct _GdaBatchClass GdaBatchClass;
+typedef struct _GdaBatchPrivate GdaBatchPrivate;
+
+typedef struct _GdaStatement GdaStatement;
+typedef struct _GdaStatementClass GdaStatementClass;
+typedef struct _GdaStatementPrivate GdaStatementPrivate;
+
+typedef struct _GdaSqlParser GdaSqlParser;
+typedef struct _GdaSqlParserClass GdaSqlParserClass;
+typedef struct _GdaSqlParserPrivate GdaSqlParserPrivate;
+
+/*
  * Graphing part
  */
 typedef struct _GdaGraph GdaGraph;
@@ -199,28 +228,5 @@ typedef struct _GdaGraphItemPrivate GdaGraphItemPrivate;
 #ifdef G_OS_WIN32
 #define strtok_r(s,d,p) strtok(s,d)
 #endif 
-
-/*
- * Various macros
- */
-#ifdef GDA_DEBUG
-#define D_COL_NOR "\033[0m"
-#define D_COL_H0 "\033[;34;7m"
-#define D_COL_H1 "\033[;36;7m"
-#define D_COL_H2 "\033[;36;4m"
-#define D_COL_OK "\033[;32m"
-#define D_COL_ERR "\033[;31;1m"
-#define AAA(X) (g_print (D_COL_H1 "DEBUG MARK %d\n" D_COL_NOR, X))
-#define DEBUG_HEADER (g_print (D_COL_H0 "====================== %s %s():%d ======================\n" D_COL_NOR, __FILE__, __FUNCTION__, __LINE__))
-#define DEBUG_HEADER_STR(str) (g_print (D_COL_H0 "====================== %s %s %s():%d ======================\n" D_COL_NOR, (str), __FILE__, __FUNCTION__, __LINE__))
-#endif
-
-#ifndef TO_IMPLEMENT
-  #ifdef GDA_DEBUG
-    #define TO_IMPLEMENT g_print (D_COL_ERR "Implementation missing:" D_COL_NOR " %s() in %s line %d\n", __FUNCTION__, __FILE__,__LINE__)
-  #else
-    #define TO_IMPLEMENT g_print ("Implementation missing: %s() in %s line %d\n", __FUNCTION__, __FILE__,__LINE__)
-  #endif
-#endif
 
 #endif

@@ -3,9 +3,21 @@ provider_LTLIBRARIES = libgda-postgres.la
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
+	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
 	$(POSTGRES_CFLAGS) 
+
+parser.c parser.h: parser.y $(top_builddir)/libgda/sql-parser/lemon$(EXEEXT_FOR_BUILD)
+	- $(top_builddir)/libgda/sql-parser/lemon$(EXEEXT_FOR_BUILD) parser.y
+
+gen_def$(EXEEXT_FOR_BUILD): gen_def.c
+	$(CC_FOR_BUILD) -o gen_def$(EXEEXT_FOR_BUILD) -DIMPOSED_HEADER=\""$(top_builddir)/libgda/sql-parser/parser_tokens.h"\" gen_def.c
+
+postgres_token_types.h: gen_def$(EXEEXT_FOR_BUILD) parser.h
+	./gen_def$(EXEEXT_FOR_BUILD) > postgres_token_types.h
+
+$(OBJECTS) $(libgda_postgres_la_OBJECTS): postgres_token_types.h
 
 libgda_postgres_la_SOURCES = \
 	gda-postgres-blob-op.c \
@@ -16,12 +28,17 @@ libgda_postgres_la_SOURCES = \
 	gda-postgres-ddl.h \
 	gda-postgres-handler-bin.c \
 	gda-postgres-handler-bin.h \
+	gda-postgres-parser.c \
+	gda-postgres-parser.h \
 	gda-postgres-provider.c \
 	gda-postgres-provider.h \
 	gda-postgres-recordset.c \
 	gda-postgres-recordset.h \
 	gda-postgres.h \
 	libmain.c \
+	parser.h \
+	parser.c \
+	postgres_token_types.h \
 	utils.c
 libgda_postgres_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_postgres_la_LIBADD = \
@@ -49,5 +66,8 @@ xml_DATA = $(xml_in_files:.xml.in=.xml)
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgda-postgres-4.0.pc
 
-EXTRA_DIST = $(xml_in_files) libgda-postgres-4.0.pc.in
+EXTRA_DIST = $(xml_in_files) libgda-postgres-4.0.pc.in parser.y
 DISTCLEANFILES = $(xml_DATA)
+
+
+CLEANFILES = parser.h parser.c parser.out postgres_token_types.h gen_def$(EXEEXT_FOR_BUILD)

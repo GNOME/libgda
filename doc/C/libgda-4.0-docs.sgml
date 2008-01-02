@@ -129,6 +129,12 @@
 <!ENTITY libgda-GdaReportDocument SYSTEM "xml/gda-report-document.xml">
 <!ENTITY libgda-GdaReportDocbookDocument SYSTEM "xml/gda-report-docbook-document.xml">
 <!ENTITY libgda-GdaReportRmlDocument SYSTEM "xml/gda-report-rml-document.xml">
+<!ENTITY libgda-GdaHolder SYSTEM "xml/gda-holder.xml">
+<!ENTITY libgda-GdaSet SYSTEM "xml/gda-set.xml">
+<!ENTITY libgda-GdaStatement SYSTEM "xml/gda-statement.xml">
+<!ENTITY libgda-GdaSqlStatement SYSTEM "xml/gda-sql-statement.xml">
+<!ENTITY libgda-GdaBatch SYSTEM "xml/gda-batch.xml">
+<!ENTITY libgda-GdaSqlParser SYSTEM "xml/gda-sql-parser.xml">
 <!ENTITY libgda-Enums SYSTEM "xml/gda-enums.xml">
 <!ENTITY libgda-convenient SYSTEM "xml/gda-convenient.xml">
 <!ENTITY fdl-appendix SYSTEM "fdl-appendix.sgml">
@@ -333,7 +339,7 @@
             <para>Support for binary data and for BLOBs in a transparent way, see the <link linkend="libgda-Gda-Value">Gda value section</link></para>
           </listitem>
           <listitem>
-            <para>Support for detailed parameters in SQL queries, see the <link linkend="SQL_queries">SQL queries section</link></para>
+            <para>Support for detailed parameters in SQL queries, see the <link linkend="GdaSqlParser">GdaSqlParser</link> object</para>
           </listitem>
 	  <listitem>
             <para>Support for virtual connections, see the <link linkend="virtual_connection">Virtual connections chapter</link></para>
@@ -407,6 +413,22 @@
 	the suite, as well as any application that may make use of the client
 	libraries.
       </para>
+      <mediaobject>
+	<imageobject role="fo">
+          <imagedata fileref="architecture.svg" format="SVG"/>
+	</imageobject>
+	<imageobject role="html">
+          <imagedata fileref="architecture.png" format="PNG"/>
+	</imageobject>
+	<textobject>
+          <phrase>Typical &LIBGDA; application's architecture</phrase>
+	</textobject>
+	<caption>
+          <para>
+	    Architecture of an application connected to 4 databases of 3 different types.
+          </para>
+	</caption>
+      </mediaobject>
     </chapter>
 
     &install;
@@ -482,11 +504,40 @@
 
     <chapter id="connection">
       <title>Connections &amp; commands</title>
+      <para>
+	The &LIBGDA; library allows several connections to databases to be opened at once, all managed through a 
+	<link linkend="GdaClient">GdaClient</link> object (for
+	some special purposes, several <link linkend="GdaClient">GdaClient</link> objects can be used at once).
+	Once a connection (manipulated through the <link linkend="GdaConnection">GdaConnection</link> object)
+	has been created and is opened, it is able to proceed <link linkend="GdaStatement">GdaStatement</link> statements.
+      </para>
+      <para>
+	Each <link linkend="GdaStatement">GdaStatement</link> can only hold one SQL statement (such as SELECT, INSERT,
+	CREATE TABLE, BEGIN, etc) (tatements can be groupped together into  <link linkend="GdaBAtch">GdaBatch</link> batches
+	objects). There are two ways for creating a <link linkend="GdaStatement">GdaStatement</link> object:
+	<itemizedlist>
+	   <listitem><para>either by passing an SQL string to a parser (a <link linkend="GdaSqlParser">GdaSqlParser</link>), or
+	       </para></listitem>
+	   <listitem><para>by building it from its structure (see the <link linkend="GdaSqlStatement">GdaSqlStatement</link>).
+	   </para></listitem>
+	</itemizedlist>
+      </para>
+      <para>
+	As each database implements its own SQL variant (all variants more or less close to the SQL92 or SQL99 standards), the
+	&LIBGDA; library allows one to use either a generic SQL parser, or a parser provided by each database adaptator (database
+	provider), through the <link linkend="gda-connection-create-parser">gda_connection_create_parser()</link> method.
+      </para>
       &libgda-GdaClient;
       &libgda-GdaConnection;
+
+      &libgda-GdaSqlParser;
+      &libgda-GdaStatement;
+      &libgda-GdaBatch;
+      &libgda-GdaHolder;
+      &libgda-GdaSet;
+      &libgda-GdaSqlStatement;
       &libgda-GdaConnection-event;
       &libgda-transaction-status;
-      &libgda-GdaCommand;
       &libgda-convenient;
     </chapter>
 
@@ -644,21 +695,6 @@
     </chapter>
 
     <chapter>
-      <title>Data manipulation (DML) queries</title>
-      &libgda-query-intro;
-      &libgda-query-fields;
-      &libgda-GdaQuery;
-      &libgda-GdaQueryTarget;
-      &libgda-GdaQueryJoin;
-      &libgda-GdaQueryFieldAll;
-      &libgda-GdaQueryFieldField;
-      &libgda-GdaQueryFieldFunc;
-      &libgda-GdaQueryFieldAgg;
-      &libgda-GdaQueryFieldValue;
-      &libgda-GdaQueryCondition;
-    </chapter>
-
-    <chapter>
       <title>Data definition (DDL) queries</title>
       &libgda-serverop-intro;
       &libgda-GdaServerOperation;
@@ -673,8 +709,6 @@
       &libgda-GdaObjectRef;
       &libgda-GdaGraphviz;
       &libgda-GdaDataModelRow;
-      &libgda-GdaQueryField;
-      &libgda-GdaQueryObject;
       &libgda-GdaThreader;
     </chapter>
 
@@ -689,8 +723,26 @@
       &libgda-GdaEntity;
       &libgda-GdaEntityField;
       &libgda-GdaXmlStorage;
-      &libgda-GdaRenderer;
       &libgda-GdaReferer;
+    </chapter>
+
+    <chapter id="deprecated">
+      <title>Deprecated</title>
+      &libgda-GdaCommand;
+      &libgda-query-intro;
+      &libgda-query-fields;
+      &libgda-GdaQuery;
+      &libgda-GdaQueryTarget;
+      &libgda-GdaQueryJoin;
+      &libgda-GdaQueryFieldAll;
+      &libgda-GdaQueryFieldField;
+      &libgda-GdaQueryFieldFunc;
+      &libgda-GdaQueryFieldAgg;
+      &libgda-GdaQueryFieldValue;
+      &libgda-GdaQueryCondition;
+      &libgda-GdaQueryField;
+      &libgda-GdaQueryObject;
+      &libgda-GdaRenderer;
     </chapter>
   </part>
 

@@ -40,14 +40,18 @@
 #define OBJECT_DATA_SQLITE_HANDLE "GDA_Sqlite_SqliteHandle"
 
 typedef struct {
-	sqlite3_stmt *stmt;
-	gchar        *sql; /* SQL corresponding to @stmt */
+	gint          ref_count;
+	sqlite3_stmt *sqlite_stmt;
+	gboolean      stmt_used; /* TRUE if sqlite3_step() might be called again on this @sqlite_stmt */
+
+	gchar        *sql; /* actual SQL code used to prepare @sqlite_stmt */
+	GSList       *param_ids; /* list of parameters' IDs (as gchar *) */
 
 	gint          ncols;
 	gint          nrows;
 	GType        *types; /* array of ncols types */
 	int          *cols_size; /* array of ncols types */
-} SQLITEresult;
+} SQLitePreparedStatement;
 
 typedef struct {
 	sqlite3      *connection;
@@ -58,9 +62,8 @@ typedef struct {
 } SQLITEcnc;
 
 
-void gda_sqlite_update_types_hash (SQLITEcnc *scnc);
+void _gda_sqlite_update_types_hash (SQLITEcnc *scnc);
 
-void gda_sqlite_result_take_sql (SQLITEresult *sres, gchar *sql);
-void gda_sqlite_free_result (SQLITEresult *sres);
+void _gda_sqlite_prepared_statement_free (SQLitePreparedStatement *ps);
 
 #endif

@@ -24,11 +24,11 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-server-provider-extra.h>
 #include <glib/gi18n-lib.h>
 #include <stdlib.h>
-#include <string.h>
 #include "gda-ldap.h"
 #include "gda-ldap-recordset.h"
 

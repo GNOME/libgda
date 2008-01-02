@@ -24,6 +24,8 @@
 #ifndef __GDA_COMMAND_H__
 #define __GDA_COMMAND_H__
 
+#ifndef GDA_DISABLE_DEPRECATED
+
 #include <glib-object.h>
 #include <glib/gmacros.h>
 #include <glib/gtypes.h>
@@ -71,5 +73,7 @@ GdaCommandOptions gda_command_get_options (GdaCommand *cmd);
 void              gda_command_set_options (GdaCommand *cmd, GdaCommandOptions options);
 
 G_END_DECLS
+
+#endif /* GDA_DISABLE_DEPRECATED */
 
 #endif

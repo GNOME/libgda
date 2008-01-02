@@ -1,4 +1,5 @@
 #include <libgda/libgda.h>
+#include <sql-parser/gda-sql-parser.h>
 
 GdaConnection *open_connection (GdaClient *client);
 void display_products_contents (GdaConnection *cnc);
@@ -118,13 +119,19 @@ void
 display_products_contents (GdaConnection *cnc)
 {
 	GdaDataModel *data_model;
-	GdaCommand *command;
+	GdaStatement *stmt;
 	gchar *sql = "SELECT * FROM products";
 	GError *error = NULL;
+	GdaSqlParser *parser;
 
-	command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
-	data_model = gda_connection_execute_select_command (cnc, command, NULL, &error);
-	gda_command_free (command);
+	parser = gda_connection_create_parser (cnc);
+        if (!parser) /* @cnc doe snot provide its own parser => use default one */
+                parser = gda_sql_parser_new ();
+
+	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+	data_model = gda_connection_statement_execute_select (cnc, stmt, NULL, 
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS, &error);
+	g_object_unref (stmt);
         if (!data_model) 
                 g_error ("Could not get the contents of the 'products' table: %s\n",
                          error && error->message ? error->message : "No detail");

@@ -210,6 +210,154 @@ Management of connections to data sources
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_connection_create_parser ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_statement_to_sql ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@stmt: 
+@params: 
+@flags: 
+@params_used: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_statement_prepare ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@stmt: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_statement_execute ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@stmt: 
+@params: 
+@model_usage: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_statement_execute_select ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@stmt: 
+@params: 
+@model_usage: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_statement_execute_non_select ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@stmt: 
+@params: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_begin_transaction ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@name: 
+@level: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_commit_transaction ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_rollback_transaction ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_add_savepoint ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_rollback_savepoint ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_delete_savepoint ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_get_transaction_status ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_connection_get_client ##### -->
 <para>
 
@@ -395,6 +543,48 @@ Management of connections to data sources
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_connection_get_last_insert_id ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@recset: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_supports_feature ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@feature: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_get_schema ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@schema: 
+@params: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_value_to_sql_string ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@from: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_connection_execute_select_command ##### -->
 <para>
 
@@ -428,124 +618,6 @@ Management of connections to data sources
 @cmd: 
 @params: 
 @error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_get_last_insert_id ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@recset: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_begin_transaction ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@name: 
-@level: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_commit_transaction ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@name: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_rollback_transaction ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@name: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_add_savepoint ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@name: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_rollback_savepoint ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@name: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_delete_savepoint ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@name: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_get_transaction_status ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_supports_feature ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@feature: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_get_schema ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@schema: 
-@params: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_value_to_sql_string ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@from: 
 @Returns: 
 
 

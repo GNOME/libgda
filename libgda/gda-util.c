@@ -72,7 +72,13 @@ gda_g_type_from_string (const gchar *str)
 	
 	type = g_type_from_name (str);
 	if (type == 0) {
-		if (!strcmp (str, "null"))
+		if (!g_ascii_strcasecmp (str, "int"))
+			type = G_TYPE_INT;
+		else if (!g_ascii_strcasecmp (str, "string"))
+			type = G_TYPE_STRING;
+		else if (!g_ascii_strcasecmp (str, "date"))
+			type = G_TYPE_DATE;
+		else if (!strcmp (str, "null"))
 			type = GDA_TYPE_NULL;
 		else
 			/* could not find a valid GType for @str */
@@ -749,6 +755,155 @@ gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent,
 }
 
 /**
+ * gda_utility_holder_load_attributes
+ * @holder:
+ * @node: an xmlNodePtr with a &lt;parameter&gt; tag
+ * @sources: a list of #GdaDataModel
+ *
+ * WARNING: may set the "source" custom string property 
+ */
+void
+gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *sources)
+{
+	xmlChar *str;
+	xmlNodePtr vnode;
+
+	/* set properties from the XML spec */
+	str = xmlGetProp (node, BAD_CAST "id");
+	if (str) {
+		g_object_set (G_OBJECT (holder), "id", (gchar*)str, NULL);
+		xmlFree (str);
+	}	
+
+	str = xmlGetProp (node, BAD_CAST "name");
+	if (str) {
+		g_object_set (G_OBJECT (holder), "name", (gchar*)str, NULL);
+		xmlFree (str);
+	}
+	str = xmlGetProp (node, BAD_CAST "descr");
+	if (str) {
+		g_object_set (G_OBJECT (holder), "description", (gchar*)str, NULL);
+		xmlFree (str);
+	}
+	str = xmlGetProp (node, BAD_CAST "nullok");
+	if (str) {
+		gda_holder_set_not_null (holder, (*str == 'T') || (*str == 't') ? FALSE : TRUE);
+		xmlFree (str);
+	}
+	else
+		gda_holder_set_not_null (holder, FALSE);
+	str = xmlGetProp (node, BAD_CAST "plugin");
+	if (str) {
+		g_object_set (G_OBJECT (holder), "entry_plugin", (gchar*)str, NULL);
+		xmlFree (str);
+	}
+	
+	str = xmlGetProp (node, BAD_CAST "source");
+	if (str) 
+		g_object_set_data_full (G_OBJECT (holder), "source", (gchar*)str, g_free);
+
+	/* set restricting source if specified */
+	if (str && sources) {
+		gchar *ptr1, *ptr2 = NULL, *tok;
+		gchar *source;
+			
+		source = g_strdup ((gchar*)str);
+		ptr1 = strtok_r (source, ":", &tok);
+		if (ptr1)
+			ptr2 = strtok_r (NULL, ":", &tok);
+		
+		if (ptr1 && ptr2) {
+			GSList *tmp = sources;
+			GdaDataModel *model = NULL;
+			while (tmp && !model) {
+				if (!strcmp (gda_object_get_name (GDA_OBJECT (tmp->data)), ptr1))
+					model = GDA_DATA_MODEL (tmp->data);
+				tmp = g_slist_next (tmp);
+			}
+			
+			if (model) {
+				gint fno;
+				
+				fno = atoi (ptr2);
+				if ((fno < 0) ||
+				    (fno >= gda_data_model_get_n_columns (model))) 
+					g_warning (_("Field number %d not found in source named '%s'"), fno, ptr1); 
+				else {
+					if (gda_holder_set_source_model (holder, model, fno, NULL)) {
+						gchar *str;
+						/* rename the wrapper with the current holder's name */
+						g_object_get (G_OBJECT (holder), "name", &str, NULL);
+						g_object_set_data_full (G_OBJECT (model), "newname", str, g_free);
+						g_object_get (G_OBJECT (holder), "description", &str, NULL);
+						g_object_set_data_full (G_OBJECT (model), "newdescr", str, g_free);
+					}
+				}
+			}
+		}
+	}
+
+	/* specified value */
+	vnode = node->children;
+	if (vnode) {
+		xmlChar *this_lang, *isnull;
+		const gchar *lang;
+		GType gdatype;
+
+		gdatype = gda_holder_get_g_type (holder);
+#ifdef HAVE_LC_MESSAGES
+		lang = setlocale (LC_MESSAGES, NULL);
+#else
+		lang = setlocale (LC_CTYPE, NULL);
+#endif
+		while (vnode) {
+			if (xmlNodeIsText (vnode)) {
+				vnode = vnode->next;
+				continue;
+			}
+
+			if (strcmp ((gchar*)vnode->name, "gda_value")) {
+				vnode = vnode->next;
+				continue;
+			}
+
+			/* don't care about entries for the wrong locale */
+			this_lang = xmlGetProp(vnode, (xmlChar*)"lang");
+			if (this_lang && strncmp ((gchar*)this_lang, lang, strlen ((gchar*)this_lang))) {
+				g_free (this_lang);
+				vnode = vnode->next;
+				continue;
+			}
+			
+			isnull = xmlGetProp(vnode, (xmlChar*)"isnull");
+			if (isnull) {
+				if ((*isnull == 'f') || (*isnull == 'F')) {
+					xmlFree (isnull);
+					isnull = NULL;
+				}
+			}
+			
+			if (!isnull) {
+				GValue *value;
+
+				value = g_new0 (GValue, 1);
+				if (! gda_value_set_from_string (value, (gchar*)xmlNodeGetContent (vnode), gdatype)) {
+					/* error */
+					g_free (value);
+				}
+				else 
+					gda_holder_take_value (holder, value);
+			}
+			else {
+				gda_holder_set_value (holder, NULL);
+				xmlFree (isnull);
+			}
+			
+			vnode = vnode->next;
+		}
+	}
+}
+
+/**
  * gda_utility_parameter_load_attributes
  * @param:
  * @node: an xmlNodePtr with a &lt;parameter&gt; tag
@@ -1040,4 +1195,49 @@ gda_alphanum_to_text (gchar *text)
 	}
 	/*g_print ("=>#%s#\n", text);*/
 	return text;
+}
+
+/*
+ * Returns: a new #GdaSet, or %NULL is @plist is %NULL
+ */
+GdaSet *
+gda_set_new_from_parameter_list (GdaParameterList *plist)
+{
+	GdaSet *set = NULL;
+	if (plist) {
+		GSList *list;
+		
+		set = gda_set_new (NULL);
+		for (list = plist->parameters; list; list = list->next) {
+			GdaParameter *param = GDA_PARAMETER (list->data);
+			GdaHolder *h;
+
+			h = gda_holder_new (gda_parameter_get_g_type (param));
+			g_object_set (G_OBJECT (h), "id", gda_object_get_name (GDA_OBJECT (param)), NULL);
+			gda_holder_set_value (h, gda_parameter_get_value (param));
+			gda_set_add_holder (set, h);
+			g_object_unref (h);
+		}
+	}
+	return set;
+}
+
+/*
+ * Returns: a new #GdaParameterList, or %NULL is @set is %NULL
+ */
+GdaParameterList *
+gda_parameter_list_new_from_set (GdaSet *set, GdaDict *dict)
+{
+	GdaParameterList *plist = NULL;
+	if (set) {
+		GSList *list;
+		
+		plist = GDA_PARAMETER_LIST (g_object_new (GDA_TYPE_PARAMETER_LIST, "dict", ASSERT_DICT (dict), NULL));
+		for (list = set->holders; list; list = list->next) {
+			GdaHolder *holder = GDA_HOLDER (list->data);
+			gda_parameter_list_add_param_from_value (plist, gda_holder_get_id (holder),
+								 (GValue*) gda_holder_get_value (holder));
+		}
+	}
+	return plist;
 }

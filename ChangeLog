@@ -1,3 +1,218 @@
+2008-01-02  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda-report/engine/Makefile.am:
+	* tools/command-exec.c:
+	* tools/command-exec.h:
+	* tools/gda-sql.c:
+	* tools/Makefile.am:
+	* tests/Makefile.am:
+	* tests/data-models/Makefile.am:
+	* tests/value-holders:
+	* tests/value-holders/stmt.data:
+	* tests/value-holders/check_statement.c:
+	* tests/value-holders/set.data:
+	* tests/value-holders/common.c:
+	* tests/value-holders/check_set.c:
+	* tests/value-holders/Makefile.am:
+	* tests/value-holders/check_holder.c:
+	* tests/value-holders/common.h:
+	* tests/parser:
+	* tests/parser/testdata.xml:
+	* tests/parser/Makefile.am:
+	* tests/parser/check_parser.c:
+	* tests/providers/Makefile.am:
+	* tests/queries/Makefile.am:
+	* doc/C/architecture.svg:
+	* doc/C/stmt-unknown.svg:
+	* doc/C/parts.svg:
+	* doc/C/libgda-3.0.types.in:
+	* doc/C/stmt-update.png:
+	* doc/C/stmt-update.svg:
+	* doc/C/libgda-3.0-docs.sgml:
+	* doc/C/libgda-3.0-sections.txt:
+	* doc/C/stmt-select.png:
+	* doc/C/stmt-compound.png:
+	* doc/C/stmt-insert1.png:
+	* doc/C/stmt-insert2.png:
+	* doc/C/stmt-select.svg:
+	* doc/C/architecture.png:
+	* doc/C/stmt-compound.svg:
+	* doc/C/stmt-unknown.png:
+	* doc/C/stmt-insert1.svg:
+	* doc/C/Makefile.am:
+	* doc/C/stmt-insert2.svg:
+	* doc/C/tmpl/gda-server-provider.sgml:
+	* doc/C/tmpl/gda-query-field-value.sgml:
+	* doc/C/tmpl/gda-query-join.sgml:
+	* doc/C/tmpl/gda-query.sgml:
+	* doc/C/tmpl/gda-renderer.sgml:
+	* doc/C/tmpl/gda-query-field-func.sgml:
+	* doc/C/tmpl/gda-query-condition.sgml:
+	* doc/C/tmpl/gda-set.sgml:
+	* doc/C/tmpl/gda-query-field-all.sgml:
+	* doc/C/tmpl/gda-holder.sgml:
+	* doc/C/tmpl/gda-command.sgml:
+	* doc/C/tmpl/gda-batch.sgml:
+	* doc/C/tmpl/gda-query-field-agg.sgml:
+	* doc/C/tmpl/gda-query-target.sgml:
+	* doc/C/tmpl/gda-statement.sgml:
+	* doc/C/tmpl/gda-query-object.sgml:
+	* doc/C/tmpl/gda-query-field.sgml:
+	* doc/C/tmpl/gda-sql-parser.sgml:
+	* doc/C/tmpl/gda-connection.sgml:
+	* doc/C/tmpl/gda-sql-statement.sgml:
+	* doc/C/tmpl/gda-query-field-field.sgml:
+	* doc/C/parts.png:
+	* testing/Makefile.am:
+	* providers/ldap/Makefile.am:
+	* providers/sybase/Makefile.am:
+	* providers/firebird/Makefile.am:
+	* providers/bdb/Makefile.am:
+	* providers/freetds/Makefile.am:
+	* providers/ibmdb2/Makefile.am:
+	* providers/sqlite/Makefile.am:
+	* providers/xbase/Makefile.am:
+	* providers/mdb/Makefile.am:
+	* providers/oracle/gda-oracle-provider.c:
+	* providers/oracle/Makefile.am:
+	* providers/mysql/gda-mysql-provider.c:
+	* providers/mysql/Makefile.am:
+	* providers/postgres/parser.y:
+	* providers/postgres/gda-postgres-parser.c:
+	* providers/postgres/gda-postgres-parser.h:
+	* providers/postgres/gen_def.c:
+	* providers/postgres/gda-postgres-provider.c:
+	* providers/postgres/Makefile.am:
+	* providers/odbc/Makefile.am:
+	* providers/msql/Makefile.am:
+	* libgda/gda-renderer.c:
+	* libgda/gda-statement.h:
+	* libgda/gda-renderer.h:
+	* libgda/gda-holder.c:
+	* libgda/gda-holder.h:
+	* libgda/gda-query-object.c:
+	* libgda/gda-debug-macros.h:
+	* libgda/gda-command.c:
+	* libgda/gda-query-object.h:
+	* libgda/gda-marshal.list:
+	* libgda/gda-query-private.h:
+	* libgda/gda-query-field-agg.c:
+	* libgda/gda-command.h:
+	* libgda/sqlite/gda-sqlite.h:
+	* libgda/sqlite/utils.c:
+	* libgda/sqlite/virtual/Makefile.am:
+	* libgda/sqlite/gda-sqlite-provider.c:
+	* libgda/sqlite/gda-sqlite-recordset.c:
+	* libgda/sqlite/gda-sqlite-recordset.h:
+	* libgda/sqlite/Makefile.am:
+	* libgda/gda-query-field-agg.h:
+	* libgda/gda-data-model-hash.h:
+	* libgda/sql-parser:
+	* libgda/sql-parser/gda-statement-struct-util.h:
+	* libgda/sql-parser/gda-sql-parser-private.h:
+	* libgda/sql-parser/gda-sql-statement.h:
+	* libgda/sql-parser/gda-statement-struct-compound.c:
+	* libgda/sql-parser/gda-statement-struct-select.h:
+	* libgda/sql-parser/gda-statement-struct-trans.c:
+	* libgda/sql-parser/gda-statement-struct-compound.h:
+	* libgda/sql-parser/gda-statement-struct-trans.h:
+	* libgda/sql-parser/gda-statement-struct-unknown.c:
+	* libgda/sql-parser/gda-statement-struct.c:
+	* libgda/sql-parser/lempar.c:
+	* libgda/sql-parser/gda-statement-struct-unknown.h:
+	* libgda/sql-parser/gda-statement-struct-insert.c:
+	* libgda/sql-parser/parser.y:
+	* libgda/sql-parser/gda-statement-struct.h:
+	* libgda/sql-parser/gda-statement-struct-insert.h:
+	* libgda/sql-parser/gda-statement-struct-update.c:
+	* libgda/sql-parser/gda-statement-struct-update.h:
+	* libgda/sql-parser/delimiter.y:
+	* libgda/sql-parser/gda-statement-struct-parts.c:
+	* libgda/sql-parser/lemon.c:
+	* libgda/sql-parser/gda-statement-struct-parts.h:
+	* libgda/sql-parser/gda-statement-struct-delete.c:
+	* libgda/sql-parser/gda-sql-parser.c:
+	* libgda/sql-parser/parser_tokens.h:
+	* libgda/sql-parser/gda-statement-struct-delete.h:
+	* libgda/sql-parser/gda-sql-parser.h:
+	* libgda/sql-parser/gen_def.c:
+	* libgda/sql-parser/gda-statement-struct-pspec.c:
+	* libgda/sql-parser/Makefile.am:
+	* libgda/sql-parser/gda-statement-struct-decl.h:
+	* libgda/sql-parser/gda-statement-struct-util.c:
+	* libgda/sql-parser/gda-statement-struct-select.c:
+	* libgda/sql-parser/gda-statement-struct-pspec.h:
+	* libgda/gda-query-field-all.c:
+	* libgda/gda-query-field-all.h:
+	* libgda/gda-query-parsing.c:
+	* libgda/gda-query-parsing.h:
+	* libgda/gda-util.c:
+	* libgda/gda-util.h:
+	* libgda/gda-query-condition.c:
+	* libgda/gda-query-condition.h:
+	* libgda/gda-server-provider.c:
+	* libgda/gda-connection.c:
+	* libgda/Makefile.am:
+	* libgda/gda-query-join.c:
+	* libgda/gda-server-provider.h:
+	* libgda/libgda.h.in:
+	* libgda/gda-connection.h:
+	* libgda/gda-query-join.h:
+	* libgda/gda-query-field-field.c:
+	* libgda/gda-query-field-field.h:
+	* libgda/gda-batch.c:
+	* libgda/gda-batch.h:
+	* libgda/gda-query-target.c:
+	* libgda/gda-query-target.h:
+	* libgda/gda-value.c:
+	* libgda/gda-query-field-func.c:
+	* libgda/gda-query-field-func.h:
+	* libgda/gda-graphviz.c:
+	* libgda/gda-set.c:
+	* libgda/gda-graphviz.h:
+	* libgda/gda-set.h:
+	* libgda/gda-query-field-value.c:
+	* libgda/gda-query-field-value.h:
+	* libgda/gda-connection-private.h:
+	* libgda/gda-query-field.c:
+	* libgda/gda-data-access-wrapper.c:
+	* libgda/gda-query-field.h:
+	* libgda/gda-query.c:
+	* libgda/gda-query.h:
+	* libgda/gda-decl.h:
+	* libgda/gda-statement-extra.h:
+	* libgda/gda-statement.c:
+	* configure.in:
+	* ChangeLog:
+	* samples/SqlParserConsole:
+	* samples/SqlParserConsole/graph.c:
+	* samples/SqlParserConsole/console.c:
+	* samples/SqlParserConsole/graph.h:
+	* samples/SqlParserConsole/Makefile:
+	* samples/SqlParserConsole/README:
+	* samples/DDL/ddl.c:
+	* samples/DDL/Makefile:
+	* samples/SimpleExample/example.c:
+	* samples/SimpleExample/Makefile:
+	* samples/README:
+	* libgda-xslt/Makefile.am: Introduced a new parsing mechanism (GdaSqlParser object), the
+	GdaStatement object which will replace both GdaQuery and GdaCommand objects in V4, added new
+	tests and example, update documentation, and minor other changes and improvements (started
+	to tag as deprecated some API).
+
+2007-12-12  Armin Burgmeier  <armin@openismus.com>
+
+	* libgda/binreloc/gda-binreloc.c: Locate file paths relative to
+	location of the libgda DLL file, do not rely on a registry entry to be
+	set to point to the path of the libgda installation.
+
+2007-12-09  Vivien Malerba <malerba@gnome-db.org>
+
+	* tools/Makefile.am: Link gda-sql against libiberty on windows because 
+	it provides setenv(), fixed bug 502481 (Armin Burgmeier)
+	* providers/ldap/gda-ldap-provider.c:
+	* libgda-report/engine/Makefile.am: other Win32 fixes
+
 2007-12-03  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-data-model-import.c: fixed a wrong property name and

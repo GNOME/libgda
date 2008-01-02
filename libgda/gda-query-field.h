@@ -32,6 +32,9 @@
 #ifndef __GDA_QUERY_FIELD_H_
 #define __GDA_QUERY_FIELD_H_
 
+#ifndef GDA_DISABLE_DEPRECATED
+
+
 #include "gda-decl.h"
 #include <libxml/tree.h>
 #include <libgda/gda-query-object.h>
@@ -94,5 +97,7 @@ gboolean          gda_query_field_is_equal        (GdaQueryField *qfield1, GdaQu
 gboolean          gda_query_field_is_list         (GdaQueryField *qfield);
 
 G_END_DECLS
+
+#endif /* GDA_DISABLE_DEPRECATED */
 
 #endif

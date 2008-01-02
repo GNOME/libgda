@@ -18,6 +18,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#undef GDA_DISABLE_DEPRECATED
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include "gda-query-field.h"
@@ -135,6 +136,8 @@ gda_query_field_set_int_id (GdaQueryObject *qfield, guint id)
  * Ths #GdaQueryField object MUST then be attached to @query
  * 
  * Returns: the newly created object
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryField *
 gda_query_field_new_from_xml (GdaQuery *query, xmlNodePtr node, GError **error)
@@ -218,6 +221,8 @@ gda_query_field_new_from_xml (GdaQuery *query, xmlNodePtr node, GError **error)
  * This is a copy constructor
  *
  * Returns: the new object
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryField *
 gda_query_field_new_copy (GdaQueryField *orig)
@@ -253,6 +258,8 @@ gda_query_field_new_copy (GdaQueryField *orig)
  * Creates a new #GdaQueryField from its SQL representation
  *
  * Returns: a new #GdaQueryField object, or %NULL if an error occurred
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryField *
 gda_query_field_new_from_sql (GdaQuery *query, const gchar *sqlfield, GError **error)
@@ -342,6 +349,8 @@ gda_query_field_finalize (GObject   * object)
  * @alias: the alias to set @qfield to
  *
  * Sets @qfield's alias
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_query_field_set_alias (GdaQueryField *qfield, const gchar *alias)
@@ -366,6 +375,8 @@ gda_query_field_set_alias (GdaQueryField *qfield, const gchar *alias)
  * Get @qfield's alias
  *
  * Returns: the alias
+ *
+ * Deprecated: 3.2:
  */
 const gchar *
 gda_query_field_get_alias (GdaQueryField *qfield)
@@ -385,6 +396,8 @@ gda_query_field_get_alias (GdaQueryField *qfield)
  * Sets the visibility of @qfield. A visible field will appear in the query's 
  * corresponding (virtual) entity, whereas a non visible one will be hidden (and
  * possibly not taking part in the query).
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_query_field_set_visible (GdaQueryField *qfield, gboolean visible)
@@ -413,6 +426,8 @@ gda_query_field_set_visible (GdaQueryField *qfield, gboolean visible)
  * @qfield: a #GdaQueryField object
  *
  * Returns: TRUE if @field is visible
+ *
+ * Deprecated: 3.2:
  */
 gboolean
 gda_query_field_is_visible (GdaQueryField *qfield)
@@ -430,6 +445,8 @@ gda_query_field_is_visible (GdaQueryField *qfield)
  *
  * Sets weather @qfield is internal or not. Internal fields in a query are fields added
  * or changed by libgnomedb itself, such fields may or may not be visible.
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_query_field_set_internal (GdaQueryField *qfield, gboolean internal)
@@ -446,6 +463,8 @@ gda_query_field_set_internal (GdaQueryField *qfield, gboolean internal)
  * @qfield: a #GdaQueryField object
  *
  * Returns: TRUE if @field is internal
+ *
+ * Deprecated: 3.2:
  */
 gboolean
 gda_query_field_is_internal (GdaQueryField *qfield)
@@ -464,6 +483,8 @@ gda_query_field_is_internal (GdaQueryField *qfield)
  * the return type, for a value, it returns its type, etc.
  *
  * Returns: the data type, or %NULL if @qfield does not have a data type.
+ *
+ * Deprecated: 3.2:
  */
 GdaDictType *
 gda_query_field_get_dict_type (GdaQueryField *qfield)
@@ -483,6 +504,8 @@ gda_query_field_get_dict_type (GdaQueryField *qfield)
  * rendered as a valid statement
  *
  * Returns: a new list of parameters for @qfield
+ *
+ * Deprecated: 3.2:
  */
 GSList *
 gda_query_field_get_parameters (GdaQueryField *qfield)
@@ -508,6 +531,8 @@ gda_query_field_get_parameters (GdaQueryField *qfield)
  * not compared, only the contents of the fields are.
  *
  * Returns: TRUE if they are equal and FALSE otherwise
+ *
+ * Deprecated: 3.2:
  */
 gboolean
 gda_query_field_is_equal (GdaQueryField *qfield1, GdaQueryField *qfield2)
@@ -552,6 +577,8 @@ gda_query_field_is_equal (GdaQueryField *qfield1, GdaQueryField *qfield2)
  * Tells if @qfield can potentially represent a list of values.
  *
  * Returns: TRUE if @field can be a list of values
+ *
+ * Deprecated: 3.2:
  */
 gboolean
 gda_query_field_is_list (GdaQueryField *qfield)

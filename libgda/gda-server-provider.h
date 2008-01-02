@@ -32,6 +32,7 @@
 #include <libgda/gda-data-model-index.h>
 #include <libgda/gda-quark-list.h>
 #include <libgda/gda-client.h>
+#include <libgda/gda-statement.h>
 
 G_BEGIN_DECLS
 
@@ -40,6 +41,19 @@ G_BEGIN_DECLS
 #define GDA_SERVER_PROVIDER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_SERVER_PROVIDER, GdaServerProviderClass))
 #define GDA_IS_SERVER_PROVIDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_SERVER_PROVIDER))
 #define GDA_IS_SERVER_PROVIDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_SERVER_PROVIDER))
+
+/* error reporting */
+extern GQuark gda_server_provider_error_quark (void);
+#define GDA_SERVER_PROVIDER_ERROR gda_server_provider_error_quark ()
+
+typedef enum
+{
+        GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
+	GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR,
+	GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
+	GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR,
+	GDA_SERVER_PROVIDER_OPERATION_ERROR
+} GdaServerProviderError;
 
 /* 
  * struct to hold any information specific to the provider used 
@@ -158,6 +172,7 @@ struct _GdaServerProviderClass {
 						       GdaServerOperation *op, GError **error);	
 
 	/* commands */
+#ifndef GDA_DISABLE_DEPRECATED
 	GList                  *(* execute_command) (GdaServerProvider *provider,
 						     GdaConnection *cnc,
 						     GdaCommand *cmd,
@@ -166,6 +181,10 @@ struct _GdaServerProviderClass {
 						   GdaConnection *cnc,
 						   GdaQuery *query,
 						   GdaParameterList *params);
+#else
+	gpointer                   deprecated1;
+	gpointer                   deprecated2;
+#endif
 	char                   *(* get_last_insert_id) (GdaServerProvider *provider,
 							GdaConnection *cnc,
 							GdaDataModel *recset);
@@ -191,11 +210,16 @@ struct _GdaServerProviderClass {
 							GdaConnection *cnc,
 							const gchar *name, GError **error);
 
-	/* future extensions */
-	gpointer                   reserved1; /* is_reserved_word() ? */
-	gpointer                   reserved2; /* ping_or_reconnect() ? */
-	gpointer                   reserved3; /* execute () ? */
-	gpointer                   reserved4;
+	/* GdaStatement */
+	GdaSqlParser           *(* create_parser)    (GdaServerProvider *provider, GdaConnection *cnc);
+	gchar                  *(* statement_to_sql) (GdaServerProvider *provider, GdaConnection *cnc, 
+						      GdaStatement *stmt, GdaSet *params, GdaStatementSqlFlag flags,
+						      GSList **params_used, GError **error);
+	gboolean                (* statement_prepare)(GdaServerProvider *provider, GdaConnection *cnc,
+						      GdaStatement *stmt, GError **error);
+	GObject                *(* statement_execute)(GdaServerProvider *provider, GdaConnection *cnc, 
+						      GdaStatement *stmt, GdaSet *params, 
+						      GdaStatementModelUsage model_usage, GError **error);
 	/* extended from 3.0 */
 
 	GdaConnection          *(* create_connection)  (GdaServerProvider *provider);
@@ -277,6 +301,7 @@ gchar                 *gda_server_provider_render_operation   (GdaServerProvider
 gboolean               gda_server_provider_perform_operation  (GdaServerProvider *provider, GdaConnection *cnc, 
 							       GdaServerOperation *op, GError **error);
 
+#ifndef GDA_DISABLE_DEPRECATED
 /* commands */
 GList        *gda_server_provider_execute_command    (GdaServerProvider *provider,
 						      GdaConnection *cnc,
@@ -286,9 +311,22 @@ GdaObject    *gda_server_provider_execute_query    (GdaServerProvider *provider,
 						    GdaConnection *cnc,
 						    GdaQuery *query,
 						    GdaParameterList *params);
+#endif
 gchar        *gda_server_provider_get_last_insert_id (GdaServerProvider *provider,
 						      GdaConnection *cnc,
 						      GdaDataModel *recset);
+
+/* GdaStatement */
+GdaSqlParser *gda_server_provider_create_parser     (GdaServerProvider *provider, GdaConnection *cnc);
+gchar        *gda_server_provider_statement_to_sql  (GdaServerProvider *provider, GdaConnection *cnc, 
+						     GdaStatement *stmt, GdaSet *params, GdaStatementSqlFlag flags,
+						     GSList **params_used, GError **error);
+gboolean      gda_server_provider_statement_prepare (GdaServerProvider *provider, GdaConnection *cnc,
+						     GdaStatement *stmt, GError **error);
+GObject      *gda_server_provider_statement_execute (GdaServerProvider *provider, GdaConnection *cnc, 
+						     GdaStatement *stmt, GdaSet *params, 
+						     GdaStatementModelUsage model_usage, GError **error);
+
 
 /* transactions */
 gboolean      gda_server_provider_begin_transaction    (GdaServerProvider *provider,

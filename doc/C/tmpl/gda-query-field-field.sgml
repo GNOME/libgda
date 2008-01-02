@@ -6,6 +6,9 @@ Represents one field of an entity (through a #GdaQueryTarget object)
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+As of version 3.2, #GdaQueryFieldField has been deprecated in favour of #GdaStatement's structure.
+</para>
+<para>
 
 </para>
 

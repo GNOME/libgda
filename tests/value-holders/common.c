@@ -1,0 +1,422 @@
+#include "common.h"
+#ifdef HAVE_JSON_GLIB
+#include <json-glib/json-glib.h>
+#endif
+
+static gchar *_json_quote_string (const gchar *str);
+
+void
+tests_common_display_value (const gchar *prefix, const GValue *value)
+{
+	gchar *str;
+
+	str = gda_value_stringify ((GValue*) value);
+	g_print ("*** %s: %s\n", prefix, str);
+	g_free (str);
+}
+
+gchar *
+tests_common_holder_serialize (GdaHolder *h)
+{
+	GString *string;
+	gchar *str, *json;
+	const GValue *value;
+
+	string = g_string_new ("{");
+
+	g_string_append (string, "\"type\":");
+	g_string_append_printf (string, "\"%s\"", g_type_name (gda_holder_get_g_type (h)));
+
+	g_string_append (string, ",\"id\":");
+	json = _json_quote_string (gda_holder_get_id (h));
+	g_string_append (string, json);
+	g_free (json);
+
+	g_object_get (G_OBJECT (h), "name", &str, NULL);
+	if (str) {
+		g_string_append (string, ",\"name\":");
+		json = _json_quote_string (str);
+		g_string_append (string, json);
+		g_free (json);
+		g_free (str);
+	}
+
+	g_object_get (G_OBJECT (h), "description", &str, NULL);
+	if (str) {
+		g_string_append (string, ",\"descr\":");
+		json = _json_quote_string (str);
+		g_string_append (string, json);
+		g_free (json);
+		g_free (str);
+	}
+
+	g_string_append (string, ",\"value\":");
+	value = gda_holder_get_value (h);
+	str = gda_value_stringify (value);
+	json = _json_quote_string (str);
+	g_free (str);
+	g_string_append (string, json);
+	g_free (json);
+
+	g_string_append (string, ",\"default_value\":");
+	value = gda_holder_get_default_value (h);
+	str = gda_value_stringify (value);
+	json = _json_quote_string (str);
+	g_free (str);
+	g_string_append (string, json);
+	g_free (json);
+
+	g_string_append (string, ",\"is_default\":");
+	g_string_append_printf (string, gda_holder_value_is_default (h) ? "\"TRUE\"" : "\"FALSE\"");
+
+	g_string_append (string, ",\"is_valid\":");
+	g_string_append_printf (string, gda_holder_is_valid (h) ? "\"TRUE\"" : "\"FALSE\"");
+
+	g_string_append (string, ",\"not_null\":");
+	g_string_append_printf (string, gda_holder_get_not_null (h) ? "\"TRUE\"" : "\"FALSE\"");
+
+	g_string_append_c (string, '}');
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+}
+
+gchar *
+tests_common_set_serialize (GdaSet *set)
+{
+	GString *string;
+	gchar *str, *json;
+	GSList *list;
+
+	string = g_string_new ("{");
+
+	/* holders */
+	if (set->holders) {
+		g_string_append (string, "\"holders\":[");
+		for (list = set->holders; list; list = list->next) {
+			if (list != set->holders)
+				g_string_append_c (string, ',');
+			str = tests_common_holder_serialize (GDA_HOLDER (list->data));
+			g_string_append (string, str);
+			g_free (str);
+		}
+		g_string_append_c (string, ']');
+	}
+
+	/* set description */
+	g_object_get (G_OBJECT (set), "id", &str, NULL);
+	if (str) {
+		g_string_append (string, "\"id\":");
+		json = _json_quote_string (str);
+		g_string_append (string, json);
+		g_free (json);
+		g_free (str);
+	}
+
+	g_object_get (G_OBJECT (set), "name", &str, NULL);
+	if (str) {
+		g_string_append (string, ",\"name\":");
+		json = _json_quote_string (str);
+		g_string_append (string, json);
+		g_free (json);
+		g_free (str);
+	}
+
+	g_object_get (G_OBJECT (set), "description", &str, NULL);
+	if (str) {
+		g_string_append (string, ",\"descr\":");
+		json = _json_quote_string (str);
+		g_string_append (string, json);
+		g_free (json);
+		g_free (str);
+	}
+
+	/* public data */
+	if (set->nodes_list) {
+		g_string_append (string, ",\"nodes\":[");
+		for (list = set->nodes_list; list; list = list->next) {
+			GdaSetNode *node = (GdaSetNode*) list->data;
+			if (list != set->nodes_list)
+				g_string_append_c (string, ',');
+
+			g_string_append_c (string, '{');
+			g_string_append_printf (string, "\"holder\":%d", g_slist_index (set->holders, node->holder));
+
+			if (node->source_model) {
+				g_string_append (string, ",\"source_model\":");
+				if (gda_object_get_id (GDA_OBJECT (node->source_model)))
+					json = _json_quote_string (gda_object_get_id (GDA_OBJECT (node->source_model)));
+				else {
+					str = gda_data_model_export_to_string (node->source_model, 
+									       GDA_DATA_MODEL_IO_TEXT_SEPARATED,
+									       NULL, 0, NULL, 0, NULL);
+					json = _json_quote_string (str);
+					g_free (str);
+				}
+				g_string_append (string, json);
+				g_free (json);
+
+				g_string_append (string, ",\"source_column\":");
+				g_string_append_printf (string, "\"%d\"", node->source_column);
+				/* FIXME: node->hint */
+			}
+			g_string_append_c (string, '}');
+		}
+		g_string_append_c (string, ']');
+	}
+
+	if (set->sources_list) {
+		g_string_append (string, ",\"sources\":[");
+		for (list = set->sources_list; list; list = list->next) {
+			GdaSetSource *source = (GdaSetSource*) list->data;
+			if (list != set->sources_list)
+				g_string_append_c (string, ',');
+			g_string_append_c (string, '{');
+			g_string_append (string, "\"model\":");
+			if (gda_object_get_id (GDA_OBJECT (source->data_model)))
+				json = _json_quote_string (gda_object_get_id (GDA_OBJECT (source->data_model)));
+			else {
+				str = gda_data_model_export_to_string (source->data_model, 
+								       GDA_DATA_MODEL_IO_TEXT_SEPARATED,
+								       NULL, 0, NULL, 0, NULL);
+				json = _json_quote_string (str);
+				g_free (str);
+			}
+			g_string_append (string, json);
+			g_free (json);
+
+			g_string_append (string, ",\"nodes\":[");
+			GSList *nodes;
+			for (nodes = source->nodes; nodes; nodes = nodes->next) {
+				if (nodes != source->nodes)
+					g_string_append_c (string, ',');
+				g_string_append_printf (string, "%d", g_slist_index (set->nodes_list, nodes->data));
+			}
+			g_string_append_c (string, ']');
+
+			g_string_append_c (string, '}');
+		}
+		g_string_append_c (string, ']');
+	}
+
+	g_string_append_c (string, '}');
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+}
+
+gchar *
+_json_quote_string (const gchar *str)
+{
+	gchar *retval, *rptr;
+	const gchar *sptr;
+	gint len;
+
+	if (!str)
+		return g_strdup ("null");
+
+	len = strlen (str);
+	retval = g_new (gchar, 2*len + 3);
+	*retval = '"';
+	for (rptr = retval+1, sptr = str; *sptr; sptr++, rptr++) {
+		switch (*sptr) {
+		case '"':
+			*rptr = '\\';
+			rptr++;
+			*rptr = *sptr;
+			break;
+		case '\\':
+			*rptr = '\\';
+			rptr++;
+			*rptr = *sptr;
+			break;
+		case '/':
+			*rptr = '\\';
+			rptr++;
+			*rptr = *sptr;
+			break;
+		case '\b':
+			*rptr = '\\';
+			rptr++;
+			*rptr = 'b';
+			break;
+		case '\f':
+			*rptr = '\\';
+			rptr++;
+			*rptr = 'f';
+			break;
+		case '\n':
+			*rptr = '\\';
+			rptr++;
+			*rptr = 'n';
+			break;
+		case '\r':
+			*rptr = '\\';
+			rptr++;
+			*rptr = 'r';
+			break;
+		case '\t':
+			*rptr = '\\';
+			rptr++;
+			*rptr = 't';
+			break;
+		default:
+			*rptr = *sptr;
+			break;
+		}
+	}
+	*rptr = '"';
+	rptr++;
+	*rptr = 0;
+	return retval;
+}
+
+/*
+ * Loads @filename where each line (terminated by a '\n') is in the form <id>|<text>, and lines starting
+ * with a '#' will be ignored. The new hash table is indexed on the <id> part.
+ */
+GHashTable *
+tests_common_load_data (const gchar *filename)
+{
+	GHashTable *table;
+	gchar *contents;
+	GError *error = NULL;
+	gchar *ptr;
+	gchar *line_start, *line_end;
+	gboolean stop = FALSE;
+
+	ptr = g_build_filename (ROOT_DIR, "tests", "value-holders", filename, NULL);
+	if (!g_file_get_contents (ptr, &contents, NULL, &error)) 
+		g_error ("Could not load file '%s': %s", ptr,
+			 error->message);
+
+	table = g_hash_table_new (g_str_hash, g_str_equal);
+
+	line_start = contents;
+	line_end = line_start;
+	while (!stop) {
+		for (line_end = line_start; *line_end && (*line_end != '\n'); line_end++);
+		if (! *line_end) {
+			stop = TRUE;
+			if (line_end == line_start)
+				break;
+		}
+
+		*line_end = 0;
+		if (*line_start != '#') {
+			for (ptr = line_start; *ptr && (*ptr != '|'); ptr++);
+			*ptr = 0;
+			if (ptr == line_end)
+				g_warning ("Invalid line in data file: %s", line_start);
+			else {
+				g_hash_table_insert (table, line_start, ptr+1);
+				/*g_print ("ADDED (%s): %s\n", line_start, ptr+1);*/
+			}
+		}
+
+		if (!stop)
+			line_start = line_end + 1;
+	}
+	
+	return table;
+}
+
+gboolean
+tests_common_check_holder (GHashTable *data, const gchar *id, GdaHolder *h, GError **error)
+{
+	gchar *s;
+	const gchar *got;
+
+	s = tests_common_holder_serialize (h);
+	got = g_hash_table_lookup (data, id);
+	if (!got) {
+#ifdef HAVE_JSON_GLIB
+		JsonParser *jparser;
+		jparser = json_parser_new ();
+		if (!json_parser_load_from_data (jparser, s, -1, NULL)) 
+			g_set_error (error, 0, 0,
+				     "Unknown ID '%s', GdaHolder is: %s (JSON INVALID)\n", id, s);
+		else {
+			JsonGenerator *jgen;
+			gchar *out;
+			jgen = json_generator_new ();
+			g_object_set (G_OBJECT (jgen), "pretty", TRUE, "indent", 5, NULL);
+			json_generator_set_root (jgen, json_parser_get_root (jparser));
+			out = json_generator_to_data (jgen, NULL);
+			g_set_error (error, 0, 0,
+				     "Unknown ID '%s', GdaHolder is: %s\nJSON: %s\n", id, s, out);
+			g_print ("%s\n", out);
+			g_free (out);
+			g_object_unref (jgen);
+		}
+		g_object_unref (jparser);
+#else
+		g_set_error (error, 0, 0,
+			     "Unknown ID '%s', GdaHolder is: %s\n", id, s);
+#endif
+
+		g_free (s);
+		g_object_unref (h);
+		return FALSE;
+	}
+
+	if (strcmp (got, s)) {
+		g_set_error (error, 0, 0,
+			     "GdaHolder error:\nexp: %s\ngot:%s\n", got, s);
+		g_free (s);
+		g_object_unref (h);
+		return FALSE;
+	}
+	g_free (s);
+	return TRUE;
+}
+
+gboolean
+tests_common_check_set (GHashTable *data, const gchar *id, GdaSet *set, GError **error)
+{
+	gchar *s;
+	const gchar *got;
+
+	s = tests_common_set_serialize (set);
+	
+	got = g_hash_table_lookup (data, id);
+	if (!got) {
+#ifdef HAVE_JSON_GLIB
+		JsonParser *jparser;
+		jparser = json_parser_new ();
+		if (!json_parser_load_from_data (jparser, s, -1, NULL)) 
+			g_set_error (error, 0, 0,
+				     "Unknown ID '%s', GdaSet is: %s (JSON INVALID)\n", id, s);
+		else {
+			JsonGenerator *jgen;
+			gchar *out;
+			jgen = json_generator_new ();
+			g_object_set (G_OBJECT (jgen), "pretty", TRUE, "indent", 5, NULL);
+			json_generator_set_root (jgen, json_parser_get_root (jparser));
+			out = json_generator_to_data (jgen, NULL);
+			g_set_error (error, 0, 0,
+				     "Unknown ID '%s', GdaSet is: %s\nJSON: %s\n", id, s, out);
+			g_free (out);
+			g_object_unref (jgen);
+		}
+		g_object_unref (jparser);
+#else
+		g_set_error (error, 0, 0,
+			     "Unknown ID '%s', GdaSet is: %s\n", id, s);
+#endif
+
+		g_free (s);
+		g_object_unref (set);
+		return FALSE;
+	}
+
+	if (strcmp (got, s)) {
+		g_set_error (error, 0, 0,
+			     "GdaSet error:\nexp: %s\ngot:%s\n", got, s);
+		g_free (s);
+		g_object_unref (set);
+		return FALSE;
+	}
+	g_free (s);
+	return TRUE;
+}

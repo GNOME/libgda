@@ -43,9 +43,9 @@ gda_internal_command_exec_result_free (GdaInternalCommandResult *res)
 		if (res->u.model)
 			g_object_unref (res->u.model);
 		break;
-	case GDA_INTERNAL_COMMAND_RESULT_PLIST:
-		if (res->u.plist)
-			g_object_unref (res->u.plist);
+	case GDA_INTERNAL_COMMAND_RESULT_SET:
+		if (res->u.set)
+			g_object_unref (res->u.set);
 		break;
 	case GDA_INTERNAL_COMMAND_RESULT_TXT:
 	case GDA_INTERNAL_COMMAND_RESULT_TXT_STDOUT:
@@ -73,7 +73,7 @@ find_command (GdaInternalCommandsList *commands_list, const gchar *command_str, 
 	GSList *list;
 	gint length;
 
-	if (!command_str || (*command_str != '\\'))
+	if (!command_str || ((*command_str != '\\') && (*command_str != '.')))
 		return NULL;
 
 	length = strlen (command_str + 1);

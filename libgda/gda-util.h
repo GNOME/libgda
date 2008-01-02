@@ -27,6 +27,7 @@
 #include <glib/ghash.h>
 #include <glib/glist.h>
 #include "gda-parameter.h"
+#include "gda-holder.h"
 #include "gda-row.h"
 #include "gda-connection.h"
 
@@ -73,6 +74,7 @@ void     gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePt
 					      const gint *cols, gint nb_cols, const gint *rows, gint nb_rows,
 					      gboolean use_col_ids);
 void     gda_utility_parameter_load_attributes (GdaParameter *param, xmlNodePtr node, GSList *sources);
+void     gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *sources);
 GdaDictType *gda_utility_find_or_create_data_type (GdaDict *dict, GdaServerProvider *prov, GdaConnection *cnc, 
 					       const gchar *dbms_type, const gchar *g_type, gboolean *created);
 
@@ -80,6 +82,9 @@ GdaDictType *gda_utility_find_or_create_data_type (GdaDict *dict, GdaServerProvi
 gchar *gda_text_to_alphanum (const gchar *text);
 gchar *gda_alphanum_to_text (gchar *text);
 
+/* GdaSet <=> GdaParameterList conversion */
+GdaSet           *gda_set_new_from_parameter_list (GdaParameterList *plist);
+GdaParameterList *gda_parameter_list_new_from_set (GdaSet *set, GdaDict *dict);
 
 G_END_DECLS
 

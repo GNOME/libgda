@@ -22,8 +22,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_sqlite_recordset_h__)
-#  define __gda_sqlite_recordset_h__
+#ifndef __GDA_SQLITE_RECORDSET_H__
+#define __GDA_SQLITE_RECORDSET_H__
 
 #include <libgda/gda-data-model-hash.h>
 #include <libgda/gda-value.h>
@@ -52,8 +52,8 @@ struct _GdaSqliteRecordsetClass {
 };
 
 GType         gda_sqlite_recordset_get_type       (void) G_GNUC_CONST;
-GdaDataModel *gda_sqlite_recordset_new            (GdaConnection *cnc, SQLITEresult *sres);
-GdaDataModel *gda_sqlite_recordset_new_with_types (GdaConnection *cnc, SQLITEresult *sres, gint nbcols, ...);
+GdaDataModel *gda_sqlite_recordset_new            (GdaConnection *cnc, SQLitePreparedStatement *ps);
+GdaDataModel *gda_sqlite_recordset_new_with_types (GdaConnection *cnc, SQLitePreparedStatement *ps, gint nbcols, ...);
 
 G_END_DECLS
 

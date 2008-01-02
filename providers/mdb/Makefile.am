@@ -3,6 +3,7 @@ provider_LTLIBRARIES = libgda-mdb.la
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
+	-I$(top_srcdir)/libgda \
 	-I$(top_srcdir)/libgda/sqlite \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \

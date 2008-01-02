@@ -1,0 +1,337 @@
+/* 
+ * Copyright (C) 2007 Vivien Malerba
+ *
+ * This Library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This Library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this Library; see the file COPYING.LIB.  If not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#include <libgda/gda-debug-macros.h>
+#include <libgda/sql-parser/gda-statement-struct.h>
+#include <libgda/sql-parser/gda-statement-struct-select.h>
+#include <libgda/sql-parser/gda-statement-struct-pspec.h>
+#include <string.h>
+#include <glib/gi18n-lib.h>
+
+static gboolean gda_sql_statement_select_check_structure (GdaSqlAnyPart *stmt, gpointer data, GError **error);
+
+GdaSqlStatementContentsInfo select_infos = {
+	GDA_SQL_STATEMENT_SELECT,
+	"SELECT",
+	gda_sql_statement_select_new,
+	gda_sql_statement_select_free,
+	gda_sql_statement_select_copy,
+	gda_sql_statement_select_serialize,
+
+	gda_sql_statement_select_check_structure
+};
+
+GdaSqlStatementContentsInfo *
+gda_sql_statement_select_get_infos (void)
+{
+	return &select_infos;
+}
+
+gpointer
+gda_sql_statement_select_new (void)
+{
+	GdaSqlStatementSelect *stmt;
+	stmt = g_new0 (GdaSqlStatementSelect, 1);
+	GDA_SQL_ANY_PART (stmt)->type = GDA_SQL_ANY_STMT_SELECT;
+	return (gpointer) stmt;
+}
+
+void
+gda_sql_statement_select_free (gpointer stmt)
+{
+	GdaSqlStatementSelect *select = (GdaSqlStatementSelect *) stmt;
+
+	if (select->distinct_expr)
+		gda_sql_expr_free (select->distinct_expr);
+	if (select->expr_list) {
+		g_slist_foreach (select->expr_list, (GFunc) gda_sql_select_field_free, NULL);
+		g_slist_free (select->expr_list);
+	}
+	gda_sql_select_from_free (select->from);
+	gda_sql_expr_free (select->where_cond);
+	if (select->group_by) {
+		g_slist_foreach (select->group_by, (GFunc) gda_sql_expr_free, NULL);
+		g_slist_free (select->group_by);
+	}
+	gda_sql_expr_free (select->having_cond);
+	if (select->order_by) {
+		g_slist_foreach (select->order_by, (GFunc) gda_sql_select_order_free, NULL);
+		g_slist_free (select->order_by);
+	}
+	gda_sql_expr_free (select->limit_count);
+	gda_sql_expr_free (select->limit_offset);
+	g_free (select);
+}
+
+gpointer
+gda_sql_statement_select_copy (gpointer src)
+{
+	GdaSqlStatementSelect *dest;
+	GdaSqlStatementSelect *select = (GdaSqlStatementSelect *) src;
+	GSList *list;
+
+	dest = gda_sql_statement_select_new ();
+	dest->distinct = select->distinct;
+
+	dest->distinct_expr = gda_sql_expr_copy (select->distinct_expr);
+	gda_sql_any_part_set_parent (dest->distinct_expr, dest);
+
+	for (list = select->expr_list; list; list = list->next) {
+		dest->expr_list = g_slist_prepend (dest->expr_list,
+						   gda_sql_select_field_copy ((GdaSqlSelectField*) list->data));
+		gda_sql_any_part_set_parent (dest->expr_list->data, dest);
+	}
+	dest->expr_list = g_slist_reverse (dest->expr_list);
+
+	dest->from = gda_sql_select_from_copy (select->from);
+	gda_sql_any_part_set_parent (dest->from, dest);
+
+	dest->where_cond = gda_sql_expr_copy (select->where_cond);
+	gda_sql_any_part_set_parent (dest->where_cond, dest);
+
+	for (list = select->group_by; list; list = list->next) {
+		dest->group_by = g_slist_prepend (dest->group_by,
+						  gda_sql_expr_copy ((GdaSqlExpr*) list->data));
+		gda_sql_any_part_set_parent (dest->group_by->data, dest);
+	}
+	dest->group_by = g_slist_reverse (dest->group_by);
+
+	dest->having_cond = gda_sql_expr_copy (select->having_cond);
+	gda_sql_any_part_set_parent (dest->having_cond, dest);
+
+	for (list = select->order_by; list; list = list->next) {
+		dest->order_by = g_slist_prepend (dest->order_by,
+						  gda_sql_select_order_copy ((GdaSqlSelectOrder*) list->data));
+		gda_sql_any_part_set_parent (dest->order_by->data, dest);
+	}
+	dest->order_by = g_slist_reverse (dest->order_by);
+
+	dest->limit_count = gda_sql_expr_copy (select->limit_count);
+	gda_sql_any_part_set_parent (dest->limit_count, dest);
+
+	dest->limit_offset = gda_sql_expr_copy (select->limit_offset);
+	gda_sql_any_part_set_parent (dest->limit_offset, dest);
+
+	return dest;
+}
+
+gchar *
+gda_sql_statement_select_serialize (gpointer stmt)
+{
+	GString *string;
+	gchar *str;
+	GSList *list;
+	GdaSqlStatementSelect *select = (GdaSqlStatementSelect *) stmt;
+
+	g_return_val_if_fail (stmt, NULL);
+
+	string = g_string_new ("\"contents\":{");
+	/* distinct */
+	g_string_append (string, "\"distinct\":");
+	g_string_append (string, select->distinct ? "\"true\"" : "\"false\"");
+	if (select->distinct_expr) {
+		g_string_append (string, ",\"distinct_on\":");
+		str = gda_sql_expr_serialize (select->distinct_expr);
+		g_string_append (string, str);
+		g_free (str);
+	}
+	g_string_append (string, ",\"fields\":");
+	if (select->expr_list) {
+		g_string_append_c (string, '[');
+		for (list = select->expr_list; list; list = list->next) {
+			if (list != select->expr_list)
+				g_string_append_c (string, ',');
+			str = gda_sql_select_field_serialize ((GdaSqlSelectField*) list->data);
+			g_string_append (string, str);
+			g_free (str);
+		}
+		g_string_append_c (string, ']');
+	}
+	else
+		g_string_append (string, "null");
+
+	if (select->from) {
+		g_string_append (string, ",\"from\":");
+		str = gda_sql_select_from_serialize (select->from);
+		g_string_append (string, str);
+		g_free (str);
+	}
+
+	if (select->where_cond) {
+		g_string_append (string, ",\"where\":");
+		str = gda_sql_expr_serialize (select->where_cond);
+		g_string_append (string, str);
+		g_free (str);
+	}
+
+	if (select->group_by) {
+		g_string_append (string, ",\"group_by\":");
+		g_string_append_c (string, '[');
+		for (list = select->group_by; list; list = list->next) {
+			if (list != select->group_by)
+				g_string_append_c (string, ',');
+			str = gda_sql_expr_serialize ((GdaSqlExpr*) list->data);
+			g_string_append (string, str);
+			g_free (str);
+		}
+		g_string_append_c (string, ']');
+	}
+
+	if (select->having_cond) {
+		g_string_append (string, ",\"having\":");
+		str = gda_sql_expr_serialize (select->having_cond);
+		g_string_append (string, str);
+		g_free (str);
+	}
+
+	if (select->order_by) {
+		g_string_append (string, ",\"order_by\":");
+		g_string_append_c (string, '[');
+		for (list = select->order_by; list; list = list->next) {
+			if (list != select->order_by)
+				g_string_append_c (string, ',');
+			str = gda_sql_select_order_serialize ((GdaSqlSelectOrder*) list->data);
+			g_string_append (string, str);
+			g_free (str);
+		}
+		g_string_append_c (string, ']');
+	}
+
+	if (select->limit_count) {
+		g_string_append (string, ",\"limit\":");
+		str = gda_sql_expr_serialize (select->limit_count);
+		g_string_append (string, str);
+		g_free (str);
+
+		if (select->limit_offset) {
+			g_string_append (string, ",\"offset\":");
+			str = gda_sql_expr_serialize (select->limit_offset);
+			g_string_append (string, str);
+			g_free (str);
+		}
+	}
+
+	g_string_append_c (string, '}');
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;	
+}
+
+void
+gda_sql_statement_select_take_distinct (GdaSqlStatement *stmt, gboolean distinct, GdaSqlExpr *distinct_expr)
+{
+	GdaSqlStatementSelect *select = (GdaSqlStatementSelect *) stmt->contents;
+	select->distinct = distinct;
+	select->distinct_expr = distinct_expr;
+	gda_sql_any_part_set_parent (select->distinct_expr, select);
+}
+
+void
+gda_sql_statement_select_take_expr_list (GdaSqlStatement *stmt, GSList *expr_list)
+{
+	GSList *l;
+	GdaSqlStatementSelect *select = (GdaSqlStatementSelect *) stmt->contents;
+	select->expr_list = expr_list;
+	for (l = expr_list; l; l = l->next)
+		gda_sql_any_part_set_parent (l->data, select);
+}
+
+void
+gda_sql_statement_select_take_from (GdaSqlStatement *stmt, GdaSqlSelectFrom *from)
+{
+	GdaSqlStatementSelect *select = (GdaSqlStatementSelect *) stmt->contents;
+	select->from = from;
+	gda_sql_any_part_set_parent (from, select);
+}
+
+void
+gda_sql_statement_select_take_where_cond (GdaSqlStatement *stmt, GdaSqlExpr *expr)
+{
+	GdaSqlStatementSelect *select = (GdaSqlStatementSelect *) stmt->contents;
+	select->where_cond = expr;
+	gda_sql_any_part_set_parent (expr, select);
+}
+
+void
+gda_sql_statement_select_take_group_by (GdaSqlStatement *stmt, GSList *group_by)
+{
+	GSList *l;
+	GdaSqlStatementSelect *select = (GdaSqlStatementSelect *) stmt->contents;
+	select->group_by = group_by;
+	for (l = group_by; l; l = l->next)
+		gda_sql_any_part_set_parent (l->data, select);
+}
+
+void
+gda_sql_statement_select_take_having_cond (GdaSqlStatement *stmt, GdaSqlExpr *expr)
+{
+	GdaSqlStatementSelect *select = (GdaSqlStatementSelect *) stmt->contents;
+	select->having_cond = expr;
+	gda_sql_any_part_set_parent (expr, select);
+}
+
+void
+gda_sql_statement_select_take_order_by (GdaSqlStatement *stmt, GSList *order_by)
+{
+	GSList *l;
+	GdaSqlStatementSelect *select = (GdaSqlStatementSelect *) stmt->contents;
+	select->order_by = order_by;
+	for (l = order_by; l; l = l->next)
+		gda_sql_any_part_set_parent (l->data, select);
+}
+
+void
+gda_sql_statement_select_take_limits (GdaSqlStatement *stmt, GdaSqlExpr *count, GdaSqlExpr *offset)
+{
+	GdaSqlStatementSelect *select = (GdaSqlStatementSelect *) stmt->contents;
+	select->limit_count = count;
+	gda_sql_any_part_set_parent (count, select);
+	select->limit_offset = offset;
+	gda_sql_any_part_set_parent (offset, select);
+}
+
+static gboolean
+gda_sql_statement_select_check_structure (GdaSqlAnyPart *stmt, gpointer data, GError **error)
+{
+	GdaSqlStatementSelect *select = (GdaSqlStatementSelect *) stmt;
+	if (!select->expr_list) {
+		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+			     _("SELECT does not contain any expression"));
+		return FALSE;
+	}
+
+	if (select->distinct_expr && !select->distinct) {
+		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+			     _("SELECT can't have a DISTINCT expression if DISTINCT is not set"));
+		return FALSE;
+	}
+
+	if (select->having_cond && !select->group_by) {
+		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+			     _("SELECT can't have a HAVING without GROUP BY"));
+		return FALSE;
+	}
+
+	if (select->limit_offset && !select->limit_count) {
+		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+			     _("SELECT can't have a limit offset without a limit"));
+		return FALSE;
+	}
+	return TRUE;
+}

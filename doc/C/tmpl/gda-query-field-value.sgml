@@ -6,6 +6,9 @@ Represents a single value (or a parameter)
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+As of version 3.2, #GdaQueryFieldValue has been deprecated in favour of #GdaStatement's structure.
+</para>
+<para>
 The value held in this object can be of any type (a #GdaDictType object must be provided when
 creating the object). If the value can be considered as a parameter, then the possible values for this
 parameter can be limited by the result of the execution of a sub query (use the "value_provider*" properties

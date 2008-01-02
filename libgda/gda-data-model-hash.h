@@ -22,8 +22,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_data_model_hash_h__)
-#  define __gda_data_model_hash_h__
+#ifndef __GDA_DATA_MODEL_HASH_H__
+#define __GDA_DATA_MODEL_HASH_H__
 
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-data-model-row.h>
@@ -53,12 +53,8 @@ GType         gda_data_model_hash_get_type      (void) G_GNUC_CONST;
 GdaDataModel *gda_data_model_hash_new           (gint cols);
 
 void	      gda_data_model_hash_clear         (GdaDataModelHash *model);
-void	      gda_data_model_hash_set_n_columns (GdaDataModelHash *model,
-						 gint cols);
-
-void 	      gda_data_model_hash_insert_row    (GdaDataModelHash *model,
-						 gint rownum, 
-						 GdaRow *row);
+void	      gda_data_model_hash_set_n_columns (GdaDataModelHash *model, gint cols);
+void 	      gda_data_model_hash_insert_row    (GdaDataModelHash *model, gint rownum, GdaRow *row);
 
 
 G_END_DECLS

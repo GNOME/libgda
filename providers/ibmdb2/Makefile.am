@@ -4,6 +4,7 @@ provider_LTLIBRARIES = libgda-ibmdb2.la
 AM_CPPFLAGS = \
 	$(IBMDB2_CFLAGS) \
 	-I$(top_srcdir) \
+	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS)
 

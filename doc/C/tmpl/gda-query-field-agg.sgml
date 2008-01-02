@@ -6,6 +6,9 @@ Represents a function (selected by a GdaDictAggregate object)
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+As of version 3.2, #GdaQueryFieldAgg has been deprecated in favour of #GdaStatement's structure (#GdaSqlFunction).
+</para>
+<para>
 
 </para>
 

@@ -1,0 +1,27 @@
+Libgda SQL parser console
+=========================
+
+Description:
+------------
+
+The example in this directory illustrate how the GdaSqlParser object parses strings; it allows one
+to enter SQL statements (on one line) and reports how the string has been parsed.
+
+The default output mode is to display the contents of each GdaSqlStatement structure created
+by the parser using a JSON syntax, and the alternative mode is to create ".dot" files
+to represent them using the GraphViz tool (http://graphviz.org/).
+
+Compiling and running:
+----------------------
+
+To compile (make sure Libgda is installed prior to this):
+> make
+
+and to run:
+> ./console
+
+To switch to graph output mode, enter the "\graph" command. Each parsed statement will 
+then be saved as a "statement-XYZ.dot" file, which is converted to png or svg using:
+
+> make png
+> make svg

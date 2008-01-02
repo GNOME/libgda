@@ -6,6 +6,9 @@ Parent class for any object participating in a #GdaQuery query
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+As of version 3.2, #GdaQueryObject has been deprecated.
+</para>
+<para>
 
 </para>
 

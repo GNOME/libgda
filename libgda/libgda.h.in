@@ -100,6 +100,11 @@
 #include <libgda/gda-query-parsing.h>
 #include <libgda/gda-query-private.h>
 
+#include <libgda/gda-statement.h>
+#include <libgda/gda-batch.h>
+#include <libgda/gda-holder.h>
+#include <libgda/gda-set.h>
+
 G_BEGIN_DECLS
 
 extern GQuark gda_general_error_quark (void);

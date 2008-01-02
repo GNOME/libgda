@@ -6,7 +6,7 @@ Parent class for any query's field
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+As of version 3.2, #GdaQueryField has been deprecated in favour of #GdaSqlStatement's structure.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

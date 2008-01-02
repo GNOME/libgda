@@ -2,17 +2,38 @@
 GdaBatch
 
 <!-- ##### SECTION Short_Description ##### -->
-Batch command execution
+Multiple SQL statements goupped
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-  The #GdaBatch class provides a way to execute batch jobs on a given data source.
+The #GdaBatch object represents one or more SQL statements (as #GdaStatement objects) in a single object.
+</para>
+<para>
+A #GdaBatch can either be built "manually" by assembling together several #GdaStatement objects, or from an SQL string using
+a #GdaSqlParser object.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
+#GdaStatement
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaBatch ##### -->
+<para>
 
 </para>
+
+
+<!-- ##### SIGNAL GdaBatch::changed ##### -->
+<para>
+
+</para>
+
+@gdabatch: the object which received the signal.
+@arg1: 
 
 <!-- ##### FUNCTION gda_batch_new ##### -->
 <para>
@@ -22,101 +43,39 @@ Batch command execution
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_batch_free ##### -->
+<!-- ##### FUNCTION gda_batch_add_statement ##### -->
 <para>
 
 </para>
 
-@job: 
+@batch: 
+@stmt: 
 
 
-<!-- ##### FUNCTION gda_batch_load_file ##### -->
+<!-- ##### FUNCTION gda_batch_remove_statement ##### -->
 <para>
 
 </para>
 
-@job: 
-@filename: 
-@clean: 
+@batch: 
+@stmt: 
+
+
+<!-- ##### FUNCTION gda_batch_serialize ##### -->
+<para>
+
+</para>
+
+@batch: 
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_batch_add_command ##### -->
+<!-- ##### FUNCTION gda_batch_get_statements ##### -->
 <para>
 
 </para>
 
-@job: 
-@cmd: 
-
-
-<!-- ##### FUNCTION gda_batch_clear ##### -->
-<para>
-
-</para>
-
-@job: 
-
-
-<!-- ##### FUNCTION gda_batch_start ##### -->
-<para>
-
-</para>
-
-@job: 
+@batch: 
 @Returns: 
-
-
-<!-- ##### FUNCTION gda_batch_stop ##### -->
-<para>
-
-</para>
-
-@job: 
-
-
-<!-- ##### FUNCTION gda_batch_is_running ##### -->
-<para>
-
-</para>
-
-@job: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_batch_get_connection ##### -->
-<para>
-
-</para>
-
-@job: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_batch_set_connection ##### -->
-<para>
-
-</para>
-
-@job: 
-@cnc: 
-
-
-<!-- ##### FUNCTION gda_batch_get_transaction_mode ##### -->
-<para>
-
-</para>
-
-@job: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_batch_set_transaction_mode ##### -->
-<para>
-
-</para>
-
-@job: 
-@mode: 
 
 

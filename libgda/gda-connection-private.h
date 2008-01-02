@@ -31,6 +31,7 @@ void gda_connection_internal_transaction_rolledback (GdaConnection *cnc, const g
 void gda_connection_internal_transaction_committed (GdaConnection *cnc, const gchar *trans_name);
 
 void gda_connection_internal_sql_executed (GdaConnection *cnc, const gchar *sql, GdaConnectionEvent *error);
+void gda_connection_internal_statement_executed (GdaConnection *cnc, GdaStatement *stmt, GdaConnectionEvent *error);
 
 void gda_connection_internal_savepoint_added (GdaConnection *cnc, const gchar *parent_trans, const gchar *svp_name);
 void gda_connection_internal_savepoint_rolledback (GdaConnection *cnc, const gchar *svp_name);
@@ -46,9 +47,9 @@ void gda_connection_force_status (GdaConnection *cnc, gboolean opened);
 /* prepared statements support */
 void     gda_connection_init_prepared_statement_hash (GdaConnection *cnc, GDestroyNotify stmt_destroy_func);
 void     gda_connection_destroy_prepared_statement_hash (GdaConnection *cnc);
-void     gda_connection_add_prepared_statement (GdaConnection *cnc, GdaQuery *query, gpointer prepared_stmt); 
-void     gda_connection_del_prepared_statement (GdaConnection *cnc, GdaQuery *query); 
-gpointer gda_connection_get_prepared_statement (GdaConnection *cnc, GdaQuery *query);
+void     gda_connection_add_prepared_statement (GdaConnection *cnc, GObject *query, gpointer prepared_stmt); 
+void     gda_connection_del_prepared_statement (GdaConnection *cnc, GObject *query); 
+gpointer gda_connection_get_prepared_statement (GdaConnection *cnc, GObject *query);
 
 G_END_DECLS
 
