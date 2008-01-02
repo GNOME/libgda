@@ -18,6 +18,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#undef GDA_DISABLE_DEPRECATED
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include "gda-query-field-field.h"
@@ -300,6 +301,8 @@ gda_query_field_field_init (GdaQueryFieldField *gda_query_field_field)
  * </itemizedlist>
  *
  * Returns: the new object
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryField *
 gda_query_field_field_new (GdaQuery *query, const gchar *field)
@@ -692,6 +695,8 @@ gda_query_field_field_is_equal (GdaQueryField *qfield1, GdaQueryField *qfield2)
  * </itemizedlist>
  *
  * Returns: represented field name (free the memory after usage)
+ *
+ * Deprecated: 3.2:
  */
 gchar *
 gda_query_field_field_get_ref_field_name (GdaQueryFieldField *field)
@@ -731,6 +736,8 @@ gda_query_field_field_get_ref_field_name (GdaQueryFieldField *field)
  * referenced by @field
  *
  * Returns: the #GdaEntityField object, or NULL if @field is not active
+ *
+ * Deprecated: 3.2:
  */
 GdaEntityField *
 gda_query_field_field_get_ref_field (GdaQueryFieldField *field)
@@ -753,6 +760,8 @@ gda_query_field_field_get_ref_field (GdaQueryFieldField *field)
  * Get the #GdaQueryTarget object @field 'belongs' to
  *
  * Returns: the #GdaQueryTarget object
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryTarget *
 gda_query_field_field_get_target (GdaQueryFieldField *field)

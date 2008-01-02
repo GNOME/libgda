@@ -18,6 +18,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#undef GDA_DISABLE_DEPRECATED
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include "gda-query-field-func.h"
@@ -262,6 +263,8 @@ gda_query_field_func_init (GdaQueryFieldFunc *gda_query_field_func)
  * Creates a new GdaQueryFieldFunc object which represents the @func_name function
  *
  * Returns: the new object
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryField*
 gda_query_field_func_new (GdaQuery *query, const gchar *func_name)
@@ -507,6 +510,8 @@ gda_query_field_func_is_equal (GdaQueryField *qfield1, GdaQueryField *qfield2)
  * Get the real #GdaDictFunction object used by @func
  *
  * Returns: the #GdaDictFunction object, or NULL if @func is not active
+ *
+ * Deprecated: 3.2:
  */
 GdaDictFunction *
 gda_query_field_func_get_ref_func (GdaQueryFieldFunc *func)
@@ -529,6 +534,8 @@ gda_query_field_func_get_ref_func (GdaQueryFieldFunc *func)
  * Get the name of the function which @func represents
  *
  * Returns: the function name
+ *
+ * Deprecated: 3.2:
  */
 const gchar *
 gda_query_field_func_get_ref_func_name (GdaQueryFieldFunc *func)
@@ -556,6 +563,8 @@ gda_query_field_func_get_ref_func_name (GdaQueryFieldFunc *func)
  * is performed.
  *
  * Returns: TRUE if no error occurred
+ *
+ * Deprecated: 3.2:
  */
 gboolean
 gda_query_field_func_set_args (GdaQueryFieldFunc *func, GSList *args)
@@ -643,6 +652,8 @@ gda_query_field_func_set_args (GdaQueryFieldFunc *func, GSList *args)
  * of them are missing, then a %NULL is inserted where it should have been.
  *
  * Returns: a new list of arguments
+ *
+ * Deprecated: 3.2:
  */
 GSList *
 gda_query_field_func_get_args (GdaQueryFieldFunc *func)

@@ -4,6 +4,7 @@ provider_LTLIBRARIES = libgda-sybase.la
 AM_CPPFLAGS = \
 	$(SYBASE_CFLAGS) \
 	-I$(top_srcdir) \
+	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS)
 

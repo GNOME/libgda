@@ -18,6 +18,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#undef GDA_DISABLE_DEPRECATED
+
 #include "gda-query-field-all.h"
 #include "gda-xml-storage.h"
 #include "gda-entity-field.h"
@@ -258,6 +260,8 @@ gda_query_field_all_init (GdaQueryFieldAll *gda_query_field_all)
  * by a target.
  *
  * Returns: the new object
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryField *
 gda_query_field_all_new (GdaQuery *query, const gchar *target)
@@ -484,6 +488,8 @@ gda_query_field_all_is_equal (GdaQueryField *qfield1, GdaQueryField *qfield2)
  * Get the #GdaQueryTarget object @field 'belongs' to
  *
  * Returns: the #GdaQueryTarget object
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryTarget *
 gda_query_field_all_get_target (GdaQueryFieldAll *field)

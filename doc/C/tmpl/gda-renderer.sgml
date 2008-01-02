@@ -7,6 +7,9 @@ human readable text
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+As of version 3.2, #GdaRenderer has been deprecated in favour of gda_statement_to_sql().
+</para>
+<para>
 
 </para>
 

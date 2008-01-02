@@ -31,7 +31,7 @@
 #include <libgda/gda-util.h>
 
 struct _GdaSqliteRecordsetPrivate {
-	SQLITEresult  *sres;
+	SQLitePreparedStatement  *ps;
 	GdaConnection *cnc;
 	gint           ncolumns;
 	gint           nrows;
@@ -81,9 +81,10 @@ gda_sqlite_recordset_finalize (GObject *object)
 
 	g_return_if_fail (GDA_IS_SQLITE_RECORDSET (recset));
 
-	if (recset->priv->sres != NULL) {
-		gda_sqlite_free_result (recset->priv->sres);
-		recset->priv->sres = NULL;
+	if (recset->priv->ps) {
+		recset->priv->ps->stmt_used = FALSE;
+		_gda_sqlite_prepared_statement_free (recset->priv->ps);
+		recset->priv->ps = NULL;
 	}
 
 	g_free (recset->priv);
@@ -135,9 +136,9 @@ gda_sqlite_recordset_get_type (void)
 }
 
 
-static GType fuzzy_get_gtype (SQLITEcnc *scnc, SQLITEresult *sres, gint colnum);
+static GType fuzzy_get_gtype (SQLITEcnc *scnc, SQLitePreparedStatement *ps, gint colnum);
 static void
-gda_sqlite_recordset_fill (GdaSqliteRecordset *model, GdaConnection *cnc, SQLITEresult *sres)
+gda_sqlite_recordset_fill (GdaSqliteRecordset *model, GdaConnection *cnc, SQLitePreparedStatement *ps)
 {
 	gint i;
 	int rc;
@@ -147,56 +148,56 @@ gda_sqlite_recordset_fill (GdaSqliteRecordset *model, GdaConnection *cnc, SQLITE
 	scnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE);
 
 	/* Column titles */
-	for (i=0; i < sres->ncols; i++)
+	for (i=0; i < ps->ncols; i++)
 		gda_data_model_set_column_title (GDA_DATA_MODEL (model), i,
-						 sqlite3_column_name (sres->stmt, i));
+						 sqlite3_column_name (ps->sqlite_stmt, i));
 
 	/* filling the model with GValues, and computing data types */
 	i = 0;
 	while (!end) {
-		rc = sqlite3_step (sres->stmt);
+		rc = sqlite3_step (ps->sqlite_stmt);
 		switch (rc) {
 		case  SQLITE_ROW: {
 			GList *row_values = NULL; /* list of values for a row */
 			gint col;
 
-			for (col = 0; col < sres->ncols; col++) {
+			for (col = 0; col < ps->ncols; col++) {
 				GValue *value = NULL;
 				int size;
-				GType type = sres->types [col];
+				GType type = ps->types [col];
 
 				if (type == GDA_TYPE_NULL) {
-					type = fuzzy_get_gtype (scnc, sres, col);
+					type = fuzzy_get_gtype (scnc, ps, col);
 					if (type != GDA_TYPE_NULL) {
 						GdaColumn *column;
 						
-						sres->types [col] = type;
+						ps->types [col] = type;
 						column = gda_data_model_describe_column (GDA_DATA_MODEL (model), col);
 						gda_column_set_g_type (column, type);
 					}
 				}
 
 				/* compute GValue */
-				if ((sqlite3_column_type (sres->stmt, col) == SQLITE_NULL) ||
+				if ((sqlite3_column_type (ps->sqlite_stmt, col) == SQLITE_NULL) ||
 				    (type == GDA_TYPE_NULL))
 					value = gda_value_new_null ();
 				else if (type == G_TYPE_INT)
 					g_value_set_int (value = gda_value_new (G_TYPE_INT), 
-							 sqlite3_column_int (sres->stmt, col));
+							 sqlite3_column_int (ps->sqlite_stmt, col));
 				else if (type == G_TYPE_DOUBLE)
 					g_value_set_double (value = gda_value_new (G_TYPE_DOUBLE), 
-							    sqlite3_column_double (sres->stmt, col));
+							    sqlite3_column_double (ps->sqlite_stmt, col));
 				else if (type == G_TYPE_STRING)
 					g_value_set_string (value = gda_value_new (G_TYPE_STRING), 
-							    sqlite3_column_text (sres->stmt, col));
+							    sqlite3_column_text (ps->sqlite_stmt, col));
 				else if (type == GDA_TYPE_BINARY) {
 					GdaBinary *bin;
 
 					bin = g_new0 (GdaBinary, 1);
-					bin->binary_length = sqlite3_column_bytes (sres->stmt, col);
+					bin->binary_length = sqlite3_column_bytes (ps->sqlite_stmt, col);
 					if (bin->binary_length > 0) {
 						bin->data = g_new (guchar, bin->binary_length);
-						memcpy (bin->data, sqlite3_column_blob (sres->stmt, col),
+						memcpy (bin->data, sqlite3_column_blob (ps->sqlite_stmt, col),
 							bin->binary_length);
 					}
 					else
@@ -206,11 +207,11 @@ gda_sqlite_recordset_fill (GdaSqliteRecordset *model, GdaConnection *cnc, SQLITE
 				}
 				else
 					g_error ("Unhandled GDA type %s in SQLite recordset", 
-						 gda_g_type_to_string (sres->types [col]));
+						 gda_g_type_to_string (ps->types [col]));
 
-				size = sqlite3_column_bytes (sres->stmt, col);
-				if (sres->cols_size [col] < size)
-					sres->cols_size [col] = size;
+				size = sqlite3_column_bytes (ps->sqlite_stmt, col);
+				if (ps->cols_size [col] < size)
+					ps->cols_size [col] = size;
 
 				row_values = g_list_prepend (row_values, value);
 			}
@@ -239,26 +240,26 @@ gda_sqlite_recordset_fill (GdaSqliteRecordset *model, GdaConnection *cnc, SQLITE
 		}
 	}
 
-	sres->nrows = i;
-	model->priv->nrows = sres->nrows;
+	ps->nrows = i;
+	model->priv->nrows = ps->nrows;
 
 	/* show types */
 #ifdef GDA_DEBUG_NO
-		for (i = 0; i < sres->ncols; i++) 
+		for (i = 0; i < ps->ncols; i++) 
 			g_print ("Type for col %d: (GDA:%s)\n",
-				 i, gda_g_type_to_string (sres->types [i]));
+				 i, gda_g_type_to_string (ps->types [i]));
 		
 		gda_data_model_dump (GDA_DATA_MODEL (model), stdout);
 #endif
 
 	/* filling GdaDataModel columns data */
-	for (i = 0; i < sres->ncols; i++) {
+	for (i = 0; i < ps->ncols; i++) {
 		GdaColumn *column;
 		const char *tablename, *colname, *ctype;
 		int notnull, autoinc, pkey;
 
-		tablename = sqlite3_column_table_name (sres->stmt, i);
-		colname = sqlite3_column_origin_name (sres->stmt, i);
+		tablename = sqlite3_column_table_name (ps->sqlite_stmt, i);
+		colname = sqlite3_column_origin_name (ps->sqlite_stmt, i);
 		if (!tablename || !colname || 
 		    (sqlite3_table_column_metadata (scnc->connection, NULL, tablename, colname, NULL, NULL,
 						    &notnull, &pkey, &autoinc) != SQLITE_OK)) {
@@ -268,15 +269,15 @@ gda_sqlite_recordset_fill (GdaSqliteRecordset *model, GdaConnection *cnc, SQLITE
 		}
 
 		column = gda_data_model_describe_column (GDA_DATA_MODEL (model), i);
-		gda_column_set_name (column, sqlite3_column_name (sres->stmt, i));
+		gda_column_set_name (column, sqlite3_column_name (ps->sqlite_stmt, i));
 		gda_column_set_scale (column, -1);
-		gda_column_set_defined_size (column, -1 /*sres->cols_size [i]*/);
+		gda_column_set_defined_size (column, -1 /*ps->cols_size [i]*/);
 		gda_column_set_primary_key (column, pkey);
 		gda_column_set_unique_key (column, pkey);
 		gda_column_set_allow_null (column, !notnull);
 		gda_column_set_auto_increment (column, autoinc);
 
-		ctype = sqlite3_column_decltype (sres->stmt, i);
+		ctype = sqlite3_column_decltype (ps->sqlite_stmt, i);
 		if (ctype) {
 			gchar *start, *end;
 			for (start = (gchar *) ctype; *start && (*start != '('); start++);
@@ -305,11 +306,11 @@ gda_sqlite_recordset_fill (GdaSqliteRecordset *model, GdaConnection *cnc, SQLITE
 }
 
 /*
- * the @sres struct is modified and transfered to the new data model created in
+ * the @ps struct is modified and transfered to the new data model created in
  * this function
  */
 GdaDataModel *
-gda_sqlite_recordset_new_with_types (GdaConnection *cnc, SQLITEresult *sres, gint nbcols, ...)
+gda_sqlite_recordset_new_with_types (GdaConnection *cnc, SQLitePreparedStatement *ps, gint nbcols, ...)
 {
 	GdaSqliteRecordset *model;
 	SQLITEcnc *scnc;
@@ -317,93 +318,101 @@ gda_sqlite_recordset_new_with_types (GdaConnection *cnc, SQLITEresult *sres, gin
 	va_list ap;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (sres != NULL, NULL);
+	g_return_val_if_fail (ps != NULL, NULL);
 
 	scnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE);
 	
-	/* completing sres */
-	sres->ncols = sqlite3_column_count (sres->stmt);
-	g_return_val_if_fail (sres->ncols < nbcols, NULL);
-	sres->nrows = 0;
+	/* completing ps */
+	ps->stmt_used = TRUE;
+	ps->ncols = sqlite3_column_count (ps->sqlite_stmt);
+	g_return_val_if_fail (ps->ncols < nbcols, NULL);
+	ps->nrows = 0;
 
 	/* model creation */
 	model = g_object_new (GDA_TYPE_SQLITE_RECORDSET, NULL);
-	model->priv->sres = sres;
+	model->priv->ps = ps;
+	ps->ref_count ++;
 	model->priv->cnc = cnc;
-	model->priv->ncolumns = sres->ncols;
+	model->priv->ncolumns = ps->ncols;
 	gda_data_model_hash_set_n_columns (GDA_DATA_MODEL_HASH (model),
 					   model->priv->ncolumns);
 
 	/* computing column types and titles */
-	sres->types = g_new0 (GType, sres->ncols);
-	sres->cols_size = g_new0 (int, sres->ncols);
-	if (!scnc->types)
-		gda_sqlite_update_types_hash (scnc);
+	if (!ps->types) {
+		ps->types = g_new0 (GType, ps->ncols);
+		ps->cols_size = g_new0 (int, ps->ncols);
+		if (!scnc->types)
+			_gda_sqlite_update_types_hash (scnc);
+	}
 
 	/* Gda type */
 	va_start (ap, nbcols);
 	for (i = 0; i < nbcols; i++) 
-		sres->types [i] = va_arg (ap, GType);
+		ps->types [i] = va_arg (ap, GType);
 	
-	gda_sqlite_recordset_fill (model, cnc, sres);
+	gda_sqlite_recordset_fill (model, cnc, ps);
 
 	return GDA_DATA_MODEL (model);
 }
 
 
 /*
- * the @sres struct is modified and transfered to the new data model created in
+ * the @ps struct is modified and transfered to the new data model created in
  * this function
  */
 GdaDataModel *
-gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
+gda_sqlite_recordset_new (GdaConnection *cnc, SQLitePreparedStatement *ps)
 {
 	GdaSqliteRecordset *model;
 	SQLITEcnc *scnc;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (sres != NULL, NULL);
+	g_return_val_if_fail (ps != NULL, NULL);
 
 	scnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE);
 	
-	/* completing sres */
-	sres->ncols = sqlite3_column_count (sres->stmt);
-	sres->nrows = 0;
+	/* completing ps */
+	ps->stmt_used = TRUE;
+	ps->ncols = sqlite3_column_count (ps->sqlite_stmt);
+	ps->nrows = 0;
 
 	/* model creation */
 	model = g_object_new (GDA_TYPE_SQLITE_RECORDSET, NULL);
-	model->priv->sres = sres;
+	model->priv->ps = ps;
+	ps->ref_count ++;
 	model->priv->cnc = cnc;
-	model->priv->ncolumns = sres->ncols;
+	model->priv->ncolumns = ps->ncols;
 	gda_data_model_hash_set_n_columns (GDA_DATA_MODEL_HASH (model),
 					   model->priv->ncolumns);
 
 	/* computing column types and titles */
-	sres->types = g_new0 (GType, sres->ncols); /* all types are initialized to GDA_TYPE_NULL */
-	sres->cols_size = g_new0 (int, sres->ncols);
-	if (!scnc->types)
-		gda_sqlite_update_types_hash (scnc);
+	if (!ps->types) {
+		ps->types = g_new0 (GType, ps->ncols); /* all types are initialized to GDA_TYPE_NULL */
+		ps->cols_size = g_new0 (int, ps->ncols);
+		if (!scnc->types)
+			_gda_sqlite_update_types_hash (scnc);
+	}
 
-	gda_sqlite_recordset_fill (model, cnc, sres);
+	gda_sqlite_recordset_fill (model, cnc, ps);
 
 	return GDA_DATA_MODEL (model);
 }
 
 static GType
-fuzzy_get_gtype (SQLITEcnc *scnc, SQLITEresult *sres, gint colnum)
+fuzzy_get_gtype (SQLITEcnc *scnc, SQLitePreparedStatement *ps, gint colnum)
 {
 	const gchar *ctype;
 	GType gtype = GDA_TYPE_NULL;
 
-	if (sres->types [colnum] != GDA_TYPE_NULL)
-		return sres->types [colnum];
+	if (ps->types [colnum] != GDA_TYPE_NULL)
+		return ps->types [colnum];
 	
-	ctype = sqlite3_column_decltype (sres->stmt, colnum);
+	ctype = sqlite3_column_decltype (ps->sqlite_stmt, colnum);
 	if (ctype)
 		gtype = GPOINTER_TO_INT (g_hash_table_lookup (scnc->types, ctype));
 	else {
 		int stype;
-		stype = sqlite3_column_type (sres->stmt, colnum);
+		stype = sqlite3_column_type (ps->sqlite_stmt, colnum);
 
 		switch (stype) {
 		case SQLITE_INTEGER:

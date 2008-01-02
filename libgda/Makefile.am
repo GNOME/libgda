@@ -1,6 +1,6 @@
 lib_LTLIBRARIES = libgda-3.0.la
 
-SUBDIRS = sqlite sql-delimiter sql-transaction graph handlers binreloc
+SUBDIRS = sqlite sql-delimiter sql-transaction graph handlers binreloc sql-parser
 
 if BDB 
 GDA_BDB_H=gda-data-model-bdb.h
@@ -11,6 +11,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	-I$(top_srcdir)/libgda/sqlite \
+	-I$(top_srcdir)/libgda \
 	$(LIBGDA_CFLAGS) \
 	$(FAM_CFLAGS) \
 	$(BDB_CFLAGS) \
@@ -25,6 +26,7 @@ gda-marshal.c: gda-marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --body --prefix=gda_marshal > $@
 
 gda_headers = \
+	gda-batch.h \
 	gda-blob-op.h \
 	gda-client.h \
 	gda-column.h \
@@ -50,6 +52,7 @@ gda_headers = \
 	gda-data-model-query.h \
 	gda-data-access-wrapper.h \
 	gda-data-proxy.h \
+	gda-debug-macros.h \
 	gda-decl.h \
 	gda-dict-aggregate.h \
 	gda-dict-constraint.h \
@@ -68,6 +71,7 @@ gda_headers = \
 	gda-entity.h \
 	gda-enums.h \
 	gda-graphviz.h \
+	gda-holder.h \
 	gda-log.h \
 	gda-marshal.h \
 	gda-object.h \
@@ -91,12 +95,14 @@ gda_headers = \
 	gda-query-target.h \
 	gda-referer.h \
 	gda-renderer.h \
+	gda-set.h \
 	gda-row.h \
 	gda-data-model-filter-sql.h \
 	gda-server-operation.h \
 	gda-server-provider.h \
 	gda-server-provider-extra.h \
 	gda-server-provider-private.h \
+	gda-statement.h \
 	gda-threader.h \
 	gda-transaction-status.h \
 	gda-transaction-status-private.h \
@@ -108,6 +114,7 @@ gda_headers = \
 libgda_sources =  \
 	csv.h \
 	libcsv.c \
+	gda-batch.c \
 	dir-blob-op.h \
 	dir-blob-op.c \
 	$(gda_headers) \
@@ -148,6 +155,7 @@ libgda_sources =  \
 	gda-entity.c \
 	gda-entity-field.c \
 	gda-graphviz.c \
+	gda-holder.c \
 	gda-init.c \
 	gda-log.c \
 	gda-marshal.c \
@@ -170,10 +178,12 @@ libgda_sources =  \
 	gda-query-target.c \
 	gda-referer.c \
 	gda-renderer.c \
+	gda-set.c \
 	gda-row.c \
 	gda-server-operation.c \
 	gda-server-provider.c \
 	gda-server-provider-extra.c \
+	gda-statement.c \
 	gda-threader.c \
 	gda-transaction-status.c \
 	gda-util.c \
@@ -223,8 +233,13 @@ libgda_3_0_la_SOURCES = \
 	$(libgda_built_cfiles) \
 	$(libgda_sources)
 
-libgda_3_0_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) $(NO_UNDEFINED)
+libgda_3_0_la_LDFLAGS = \
+	-version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) \
+	$(NO_UNDEFINED) \
+	-export-dynamic $(no_undefined) $(LIBTOOL_EXPORT_OPTIONS)
+
 libgda_3_0_la_LIBADD = sql-transaction/libgda_sql_transaction-3.0.la \
+	sql-parser/libgda_sql_parser-3.0.la \
 	sql-delimiter/libgda_sql_delimiter-3.0.la \
 	graph/libgda_graph-3.0.la \
 	handlers/libgda_handlers-3.0.la \

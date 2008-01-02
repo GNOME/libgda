@@ -6,6 +6,9 @@ Issuing commands to the provider
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+As of version 3.2, #GdaCommand has been deprecated in favour of #GdaStatement.
+</para>
+<para>
   The #GdaCommand structure holds data needed to issue a command to the
   providers.
   Applications usually create a #GdaCommand (via #gda_command_new), set its

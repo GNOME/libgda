@@ -18,6 +18,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#undef GDA_DISABLE_DEPRECATED
+
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include "gda-query-join.h"
@@ -265,6 +267,8 @@ gda_query_join_init (GdaQueryJoin * join)
  * may decide to swap the two if necessary.
  *
  * Returns: the new object
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryJoin*
 gda_query_join_new_with_targets (GdaQuery *query, GdaQueryTarget *target_1, GdaQueryTarget *target_2)
@@ -298,6 +302,8 @@ gda_query_join_new_with_targets (GdaQuery *query, GdaQueryTarget *target_1, GdaQ
  * may decide to swap the two if necessary.
  *
  * Returns: the new object
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryJoin *
 gda_query_join_new_with_xml_ids (GdaQuery *query, const gchar *target_1_xml_id, const gchar *target_2_xml_id)
@@ -339,6 +345,8 @@ gda_query_join_new_with_xml_ids (GdaQuery *query, const gchar *target_1_xml_id, 
  * Copy constructor
  *
  * Returns: a the new copy of @orig
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryJoin *
 gda_query_join_new_copy (GdaQueryJoin *orig, GHashTable *replacements)
@@ -625,6 +633,8 @@ gda_query_join_get_property (GObject *object,
  * @type: the new type of join
  *
  * Sets the type of @join
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_query_join_set_join_type (GdaQueryJoin *join, GdaQueryJoinType type)
@@ -652,6 +662,8 @@ gda_query_join_set_join_type (GdaQueryJoin *join, GdaQueryJoinType type)
  * Get the type of a join
  *
  * Returns: the type of @join
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryJoinType
 gda_query_join_get_join_type (GdaQueryJoin *join)
@@ -670,6 +682,8 @@ gda_query_join_get_join_type (GdaQueryJoin *join)
  * Get the #GdaQuery to which @join is attached to
  *
  * Returns: the #GdaQuery
+ *
+ * Deprecated: 3.2:
  */
 GdaQuery *
 gda_query_join_get_query (GdaQueryJoin *join)
@@ -687,6 +701,8 @@ gda_query_join_get_query (GdaQueryJoin *join)
  * Get the 1st #GdaQueryTarget participating in the join
  *
  * Returns: the #GdaQueryTarget
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryTarget *
 gda_query_join_get_target_1 (GdaQueryJoin *join)
@@ -710,6 +726,8 @@ gda_query_join_get_target_1 (GdaQueryJoin *join)
  * Get the 2nd #GdaQueryTarget participating in the join
  *
  * Returns: the #GdaQueryTarget
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryTarget *
 gda_query_join_get_target_2 (GdaQueryJoin *join)
@@ -734,6 +752,8 @@ gda_query_join_get_target_2 (GdaQueryJoin *join)
  * Changes the relative roles of the two #GdaQueryTarget objects. It does not
  * change the join condition itself, and is usefull only for the internals
  * of the #GdaQuery object
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_query_join_swap_targets (GdaQueryJoin *join)
@@ -771,6 +791,8 @@ gda_query_join_swap_targets (GdaQueryJoin *join)
  *
  * Returns: TRUE if suitable foreign keys were found and a join condition
  * has been created
+ *
+ * Deprecated: 3.2:
  */
 gboolean
 gda_query_join_set_condition_from_fkcons (GdaQueryJoin *join)
@@ -892,6 +914,8 @@ gda_query_join_set_condition_from_fkcons (GdaQueryJoin *join)
  * condition, then set it to be @join's condition.
  *
  * Returns: a TRUE on success
+ *
+ * Deprecated: 3.2:
  */
 gboolean
 gda_query_join_set_condition_from_sql (GdaQueryJoin *join, const gchar *cond, GError **error)
@@ -954,6 +978,8 @@ gda_query_join_set_condition_from_sql (GdaQueryJoin *join, const gchar *cond, GE
  * targets which @join uses, or any other query field type.
  *
  * Returns: TRUE if no error occurred
+ *
+ * Deprecated: 3.2:
  */
 gboolean
 gda_query_join_set_condition (GdaQueryJoin *join, GdaQueryCondition *cond)
@@ -1003,6 +1029,8 @@ gda_query_join_set_condition (GdaQueryJoin *join, GdaQueryCondition *cond)
  * Get the join's associated condition
  *
  * Returns: the #GdaQueryCondition object
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryCondition *
 gda_query_join_get_condition (GdaQueryJoin *join)
@@ -1021,6 +1049,8 @@ gda_query_join_get_condition (GdaQueryJoin *join)
  * Get the SQL version of the join type ("INNER JOIN", "LEFT JOIN", etc)
  *
  * Returns: the type as a const string
+ *
+ * Deprecated: 3.2:
  */
 const gchar *
 gda_query_join_render_type (GdaQueryJoin *join)

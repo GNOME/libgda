@@ -1,0 +1,1906 @@
+/* gda-statement.c
+ *
+ * Copyright (C) 2007 Vivien Malerba
+ *
+ * This Library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This Library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this Library; see the file COPYING.LIB.  If not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#include <string.h>
+#include <glib/gi18n-lib.h>
+#include <libgda/gda-statement.h>
+#include <libgda/gda-debug-macros.h>
+#include <libgda/sql-parser/gda-statement-struct-util.h>
+#include <libgda/sql-parser/gda-statement-struct-parts.h>
+#include <libgda/sql-parser/gda-statement-struct-unknown.h>
+#include <libgda/sql-parser/gda-statement-struct-insert.h>
+#include <libgda/sql-parser/gda-statement-struct-delete.h>
+#include <libgda/sql-parser/gda-statement-struct-update.h>
+#include <libgda/sql-parser/gda-statement-struct-compound.h>
+#include <libgda/sql-parser/gda-statement-struct-select.h>
+#include <libgda/gda-marshal.h>
+#include <libgda/gda-server-provider.h>
+#include <libgda/gda-statement-extra.h>
+#include <libgda/gda-holder.h>
+#include <libgda/gda-set.h>
+#include <libgda/gda-connection.h>
+#include <libgda/gda-util.h>
+
+/* 
+ * Main static functions 
+ */
+static void gda_statement_class_init (GdaStatementClass *klass);
+static void gda_statement_init (GdaStatement *stmt);
+static void gda_statement_dispose (GObject *object);
+static void gda_statement_finalize (GObject *object);
+
+static void gda_statement_set_property (GObject *object,
+					guint param_id,
+					const GValue *value,
+					GParamSpec *pspec);
+static void gda_statement_get_property (GObject *object,
+					guint param_id,
+					GValue *value,
+					GParamSpec *pspec);
+/* get a pointer to the parents to be able to call their destructor */
+static GObjectClass  *parent_class = NULL;
+
+struct _GdaStatementPrivate {
+	GdaSqlStatement *internal_struct;
+	
+	GdaDict         *check_dict;
+	gboolean         checked_with_dict;
+};
+
+/* signals */
+enum
+{
+	RESET,
+	DICT_CHECKED,
+	LAST_SIGNAL
+};
+
+static gint gda_statement_signals[LAST_SIGNAL] = { 0, 0 };
+
+/* properties */
+enum
+{
+	PROP_0,
+	PROP_STRUCTURE
+};
+
+/* module error */
+GQuark gda_statement_error_quark (void)
+{
+	static GQuark quark;
+	if (!quark)
+		quark = g_quark_from_static_string ("gda_statement_error");
+	return quark;
+}
+
+
+GType
+gda_statement_get_type (void)
+{
+	static GType type = 0;
+
+	if (G_UNLIKELY (type == 0)) {
+		static const GTypeInfo info = {
+			sizeof (GdaStatementClass),
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gda_statement_class_init,
+			NULL,
+			NULL,
+			sizeof (GdaStatement),
+			0,
+			(GInstanceInitFunc) gda_statement_init
+		};
+		
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaStatement", &info, 0);
+	}
+	return type;
+}
+
+static void
+gda_statement_class_init (GdaStatementClass * klass)
+{
+	GObjectClass   *object_class = G_OBJECT_CLASS (klass);
+	parent_class = g_type_class_peek_parent (klass);
+
+	gda_statement_signals[RESET] =
+		g_signal_new ("reset",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_FIRST,
+			      G_STRUCT_OFFSET (GdaStatementClass, reset),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__VOID, G_TYPE_NONE,
+			      0);
+	gda_statement_signals[DICT_CHECKED] =
+		g_signal_new ("dict_checked",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_FIRST,
+			      G_STRUCT_OFFSET (GdaStatementClass, dict_checked),
+			      NULL, NULL,
+			      gda_marshal_VOID__OBJECT_BOOLEAN, G_TYPE_NONE,
+			      2, GDA_TYPE_DICT, G_TYPE_BOOLEAN);
+
+	klass->reset = NULL;
+	klass->dict_checked = NULL;
+
+	object_class->dispose = gda_statement_dispose;
+	object_class->finalize = gda_statement_finalize;
+
+	/* Properties */
+	object_class->set_property = gda_statement_set_property;
+	object_class->get_property = gda_statement_get_property;
+	g_object_class_install_property (object_class, PROP_STRUCTURE,
+					 g_param_spec_pointer ("structure", NULL, NULL, 
+							       G_PARAM_WRITABLE | G_PARAM_READABLE));
+}
+
+static void
+gda_statement_init (GdaStatement * stmt)
+{
+	stmt->priv = g_new0 (GdaStatementPrivate, 1);
+	stmt->priv->internal_struct = NULL;
+	stmt->priv->check_dict = NULL;
+	stmt->priv->checked_with_dict = FALSE;
+}
+
+/**
+ * gda_statement_new
+ *
+ * Creates a new #GdaStatement object
+ *
+ * Returns: the new object
+ */
+GdaStatement*
+gda_statement_new (void)
+{
+	GObject *obj;
+
+	obj = g_object_new (GDA_TYPE_STATEMENT, NULL);
+	return GDA_STATEMENT (obj);
+}
+
+
+/**
+ * gda_statement_new_copy
+ * @orig: a #GdaStatement to make a copy of
+ * 
+ * Copy constructor
+ *
+ * Returns: a the new copy of @orig
+ */
+GdaStatement *
+gda_statement_new_copy (GdaStatement *orig)
+{
+	GObject *obj;
+
+	g_return_val_if_fail (GDA_IS_STATEMENT (orig), NULL);
+
+	obj = g_object_new (GDA_TYPE_STATEMENT, "structure", orig->priv->internal_struct, NULL);
+	return GDA_STATEMENT (obj);
+}
+
+/* called when @dict has been destroyed and is no longer useable */
+static void
+check_dict_weak_notify (GdaStatement *stmt, GdaDict *dict)
+{
+	stmt->priv->check_dict = NULL;
+	if (stmt->priv->checked_with_dict)
+		g_signal_emit (stmt, gda_statement_signals [DICT_CHECKED], 0, NULL, FALSE);
+	stmt->priv->checked_with_dict = FALSE;
+}
+
+static void
+gda_statement_dispose (GObject *object)
+{
+	GdaStatement *stmt;
+
+	g_return_if_fail (object != NULL);
+	g_return_if_fail (GDA_IS_STATEMENT (object));
+
+	stmt = GDA_STATEMENT (object);
+	if (stmt->priv) {
+		if (stmt->priv->check_dict) {
+			g_object_weak_unref (G_OBJECT (stmt->priv->check_dict), (GWeakNotify) check_dict_weak_notify, stmt);
+			stmt->priv->check_dict = NULL;
+		}
+		stmt->priv->checked_with_dict = FALSE;
+		if (stmt->priv->internal_struct) {
+			gda_sql_statement_free (stmt->priv->internal_struct);
+			stmt->priv->internal_struct = NULL;
+		}
+	}
+
+	/* parent class */
+	parent_class->dispose (object);
+}
+
+static void
+gda_statement_finalize (GObject *object)
+{
+	GdaStatement *stmt;
+
+	g_return_if_fail (object != NULL);
+	g_return_if_fail (GDA_IS_STATEMENT (object));
+
+	stmt = GDA_STATEMENT (object);
+	if (stmt->priv) {
+		g_free (stmt->priv);
+		stmt->priv = NULL;
+	}
+
+	/* parent class */
+	parent_class->finalize (object);
+}
+
+
+static void 
+gda_statement_set_property (GObject *object,
+			     guint param_id,
+			     const GValue *value,
+			     GParamSpec *pspec)
+{
+	GdaStatement *stmt;
+
+	stmt = GDA_STATEMENT (object);
+	if (stmt->priv) {
+		switch (param_id) {
+		case PROP_STRUCTURE:
+			if (stmt->priv->internal_struct) {
+				gda_sql_statement_free (stmt->priv->internal_struct);
+				stmt->priv->internal_struct = NULL;
+			}
+			stmt->priv->internal_struct = gda_sql_statement_copy (g_value_get_pointer (value));
+			g_signal_emit (stmt, gda_statement_signals [RESET], 0);
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
+		}
+	}
+}
+
+static void
+gda_statement_get_property (GObject *object,
+			     guint param_id,
+			     GValue *value,
+			     GParamSpec *pspec)
+{
+	GdaStatement *stmt;
+	stmt = GDA_STATEMENT (object);
+	
+	if (stmt->priv) {
+		switch (param_id) {
+		case PROP_STRUCTURE:
+			g_value_set_pointer (value, gda_sql_statement_copy (stmt->priv->internal_struct));
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
+		}	
+	}
+}
+
+/**
+ * gda_statement_get_statement_type
+ * @stmt: a #GdaStatement object
+ *
+ * Get the type of statement held by @stmt. It returns GDA_SQL_STATEMENT_NONE if
+ * @stmt does not hold any statement
+ *
+ * Returns: the statement type
+ */
+GdaSqlStatementType
+gda_statement_get_statement_type (GdaStatement *stmt)
+{
+	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), GDA_SQL_STATEMENT_NONE);
+	g_return_val_if_fail (stmt->priv, GDA_SQL_STATEMENT_NONE);
+
+	if (stmt->priv->internal_struct)
+		return stmt->priv->internal_struct->stmt_type;
+	else
+		return GDA_SQL_STATEMENT_NONE;
+}
+
+/**
+ * gda_statement_is_useless
+ * @stmt: a #GdaStatement object
+ *
+ * Tells if @stmt is composed only of spaces (that is it has no real SQL code), and is completely
+ * useless as such.
+ *
+ * Returns: TRUE if executing @stmt does nothing
+ */
+gboolean
+gda_statement_is_useless (GdaStatement *stmt)
+{
+	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
+	g_return_val_if_fail (stmt->priv, FALSE);
+
+	if (stmt->priv->internal_struct &&
+	    stmt->priv->internal_struct->stmt_type == GDA_SQL_STATEMENT_UNKNOWN) {
+		GSList *list;
+		GdaSqlStatementUnknown *unknown;
+		unknown = (GdaSqlStatementUnknown*) stmt->priv->internal_struct->contents;
+		for (list = unknown->expressions; list; list = list->next) {
+			GdaSqlExpr *expr = (GdaSqlExpr *) list->data;
+			if (expr->param_spec)
+				return FALSE;
+			if (expr->value) {
+				if (G_VALUE_TYPE (expr->value) == G_TYPE_STRING) {
+					const gchar *str;
+					for (str = g_value_get_string (expr->value); 
+					     (*str == ' ') || (*str == '\t') || (*str == '\n') || 
+						     (*str == '\f') || (*str == '\r'); str++);
+					if (*str)
+						return FALSE;
+				}
+				else {
+					TO_IMPLEMENT;
+					return FALSE;
+				}
+			}
+		}
+		return TRUE;
+	}
+	return FALSE;
+}
+
+/**
+ * gda_statement_check_structure
+ * @stmt: a #GdaStatement object
+ * @error: a place to store errors, or %NULL
+ * 
+ * Checks that @stmt's structure is correct.
+ *
+ * Returns: TRUE if @stmt's structure is correct
+ */
+gboolean
+gda_statement_check_structure (GdaStatement *stmt, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
+	g_return_val_if_fail (stmt->priv, FALSE);
+
+	return gda_sql_statement_check_structure (stmt->priv->internal_struct, error);
+}
+
+/* called when a reference to an object in stmt->priv->check_dict is lost; signal is emitted only if stmt->priv->checked_with_dict
+ * is TRUE */
+static void
+check_dict_func (GdaSqlAnyPart *node, GdaStatement *stmt)
+{
+	/* reference lost for @node */
+	if (stmt->priv->checked_with_dict)
+		g_signal_emit (stmt, gda_statement_signals [DICT_CHECKED], 0, stmt->priv->check_dict, FALSE);
+	stmt->priv->checked_with_dict = FALSE;
+}
+
+/**
+ * gda_statement_check_with_dict
+ * @stmt: a #GdaStatement object
+ * @dict: a #GdaDict object, or %NULL
+ * @error: a place to store errors, or %NULL
+ *
+ * If @dict is not %NULL then checks that every object (table, field, function) used in @stmt 
+ * actually exists in @dict.
+ *
+ * If @dict is %NULL, then cleans anything related to @dict in @stmt.
+ *
+ * Returns: TRUE if every object actually exists in @dict
+ */
+gboolean
+gda_statement_check_with_dict (GdaStatement *stmt, GdaDict *dict, GError **error)
+{
+	gboolean retval;
+	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
+	g_return_val_if_fail (stmt->priv, FALSE);
+	g_return_val_if_fail (!dict || GDA_IS_DICT (dict), FALSE);
+
+	if (stmt->priv->checked_with_dict) {
+		g_signal_emit (stmt, gda_statement_signals [DICT_CHECKED], 0, stmt->priv->check_dict, FALSE);
+		stmt->priv->checked_with_dict = FALSE;
+	}
+	if (stmt->priv->check_dict) {
+		/* clean everything related to stmt->priv->check_dict */
+		stmt->priv->check_dict = NULL;
+		g_object_weak_unref (G_OBJECT (dict), (GWeakNotify) check_dict_weak_notify, stmt);
+	}
+
+	retval = gda_sql_statement_check_with_dict (stmt->priv->internal_struct, dict, 
+						    (GdaSqlStatementFunc) check_dict_func, stmt, error);
+	if (dict) {
+		stmt->priv->check_dict = dict;
+		g_object_weak_ref (G_OBJECT (dict), (GWeakNotify) check_dict_weak_notify, stmt);
+		stmt->priv->checked_with_dict = retval;
+		g_signal_emit (stmt, gda_statement_signals [DICT_CHECKED], 0, stmt->priv->check_dict, retval);
+	}
+
+	return retval;
+}
+
+/**
+ * gda_statement_serialize
+ * @stmt: a #GdaStatement object
+ *
+ * Creates a string representing the contents of @stmt.
+ *
+ * Returns: a string containing the serialized version of @stmt
+ */
+gchar *
+gda_statement_serialize (GdaStatement *stmt)
+{
+	gchar *str;
+	GString *string;
+	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
+	g_return_val_if_fail (stmt->priv, NULL);
+
+	string = g_string_new ("{");
+	g_string_append (string, "\"statement\":");
+	str = gda_sql_statement_serialize (stmt->priv->internal_struct);
+	if (str) {
+		g_string_append (string, str);
+		g_free (str);
+	}
+	else
+		g_string_append (string, "null");
+	g_string_append_c (string, '}');
+
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+}
+
+/**
+ * gda_statement_deserialize
+ * @str: a string containing a serialized version of a #GdaStatement
+ * @error: a place to store errors, or %NULL
+ *
+ * Creates a new #GdaStatement from a string
+ *
+ * Returns: a new #GdaStatement object, or %NULL if an error occurred
+ */
+GdaStatement *
+gda_statement_deserialize (const gchar *str, GError **error)
+{
+	g_return_val_if_fail (str || *str, NULL);
+	TO_IMPLEMENT;
+
+	return NULL;
+}
+
+static gboolean
+get_params_foreach_func (GdaSqlAnyPart *node, GdaSet **params, GError **error)
+{
+	GdaSqlParamSpec *pspec;
+	if (!node) return TRUE;
+
+	if ((node->type == GDA_SQL_ANY_EXPR) &&
+	    (pspec = ((GdaSqlExpr*) node)->param_spec)) {
+		GdaHolder *h;
+
+		if ((pspec->g_type == 0) && pspec->type)
+			pspec->g_type = gda_g_type_from_string (pspec->type);
+		if (pspec->g_type == 0) {
+			g_set_error (error, GDA_STATEMENT_ERROR, GDA_STATEMENT_PARAM_TYPE_ERROR,
+				     _("Could not determine GType for parameter '%s'"),
+				     pspec->name ? pspec->name : _("Unnamed"));
+			return FALSE;
+		}
+		if (!*params) 
+			*params = gda_set_new (NULL);
+		h = gda_holder_new (pspec->g_type);
+		g_object_set (G_OBJECT (h), "id", pspec->name, "name", pspec->name,
+			      "description", pspec->descr, NULL);
+		gda_holder_set_not_null (h, ! pspec->nullok);
+		if (((GdaSqlExpr*) node)->value) {
+			gda_holder_set_default_value (h, ((GdaSqlExpr*) node)->value);
+			gda_holder_set_value_to_default (h);
+		}
+		gda_set_add_holder (*params, h);
+		g_object_unref (h);
+	}
+	return TRUE;
+}
+
+/**
+ * gda_statement_get_parameters
+ * @stmt: a #GdaStatement object
+ * @out_params: a place to store a new #GdaSet object, or %NULL
+ * @error: a place to store errors, or %NULL
+ *
+ * Get a new #GdaSet object which groups all the execution parameters
+ * which @stmt needs. This new object is returned though @out_params.
+ *
+ * Returns: TRUE if no error occurred.
+ */
+gboolean
+gda_statement_get_parameters (GdaStatement *stmt, GdaSet **out_params, GError **error)
+{
+	GdaSet *set = NULL;
+	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
+	g_return_val_if_fail (stmt->priv, FALSE);
+
+	if (out_params)
+		*out_params = NULL;
+
+	if (!gda_sql_any_part_foreach (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents),
+				       (GdaSqlForeachFunc) get_params_foreach_func, &set, error)) {
+		if (set) {
+			g_object_unref (set);
+			set = NULL;
+		}
+		return FALSE;
+	}
+	
+	if (out_params)
+		*out_params = set;
+	else
+		g_object_unref (set);
+	return TRUE;
+}
+
+/*
+ * SQL rendering
+ */
+static gchar *default_render_value (const GValue *value, GdaSqlRenderingContext *context, GError **error);
+static gchar *default_render_param_spec (GdaSqlParamSpec *pspec, GdaSqlExpr *expr, GdaSqlRenderingContext *context, 
+					 gboolean *is_default, gboolean *is_null, GError **error);
+
+static gchar *default_render_unknown (GdaSqlStatementUnknown *stmt, GdaSqlRenderingContext *context, GError **error);
+static gchar *default_render_select (GdaSqlStatementSelect *stmt, GdaSqlRenderingContext *context, GError **error);
+static gchar *default_render_insert (GdaSqlStatementInsert *stmt, GdaSqlRenderingContext *context, GError **error);
+static gchar *default_render_delete (GdaSqlStatementDelete *stmt, GdaSqlRenderingContext *context, GError **error);
+static gchar *default_render_update (GdaSqlStatementUpdate *stmt, GdaSqlRenderingContext *context, GError **error);
+static gchar *default_render_compound (GdaSqlStatementCompound *stmt, GdaSqlRenderingContext *context, GError **error);
+
+static gchar *default_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, 
+				   gboolean *is_default, gboolean *is_null, GError **error);
+static gchar *default_render_table (GdaSqlTable *table, GdaSqlRenderingContext *context, GError **error);
+static gchar *default_render_field (GdaSqlField *field, GdaSqlRenderingContext *context, GError **error);
+static gchar *default_render_function (GdaSqlFunction *func, GdaSqlRenderingContext *context, GError **error);
+static gchar *default_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, GError **error);
+static gchar *default_render_case (GdaSqlCase *case_s, GdaSqlRenderingContext *context, GError **error);
+static gchar *default_render_select_field (GdaSqlSelectField *field, GdaSqlRenderingContext *context, GError **error);
+static gchar *default_render_select_target (GdaSqlSelectTarget *target, GdaSqlRenderingContext *context, GError **error);
+static gchar *default_render_select_join (GdaSqlSelectJoin *join, GdaSqlRenderingContext *context, GError **error);
+static gchar *default_render_select_from (GdaSqlSelectFrom *from, GdaSqlRenderingContext *context, GError **error);
+static gchar *default_render_select_order (GdaSqlSelectOrder *order, GdaSqlRenderingContext *context, GError **error);
+
+gchar *
+gda_statement_to_sql_real (GdaStatement *stmt, GdaSqlRenderingContext *context, GError **error)
+{
+	GdaSqlStatementContentsInfo *cinfo;
+	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
+	g_return_val_if_fail (stmt->priv, NULL);
+
+	if (!context->render_value) 
+		context->render_value = default_render_value;
+	if (!context->render_param_spec) 
+		context->render_param_spec = default_render_param_spec;
+	if (!context->render_expr) 
+		context->render_expr = default_render_expr;
+
+	if (!context->render_unknown) 
+		context->render_unknown = (GdaSqlRenderingFunc) default_render_unknown;
+	if (!context->render_select) 
+		context->render_select = (GdaSqlRenderingFunc) default_render_select;
+	if (!context->render_insert) 
+		context->render_insert = (GdaSqlRenderingFunc) default_render_insert;
+	if (!context->render_delete) 
+		context->render_delete = (GdaSqlRenderingFunc) default_render_delete;
+	if (!context->render_update) 
+		context->render_update = (GdaSqlRenderingFunc) default_render_update;
+	if (!context->render_compound) 
+		context->render_compound = (GdaSqlRenderingFunc) default_render_compound;
+
+	if (!context->render_table) 
+		context->render_table = (GdaSqlRenderingFunc) default_render_table;
+	if (!context->render_field) 
+		context->render_field = (GdaSqlRenderingFunc) default_render_field;
+	if (!context->render_function) 
+		context->render_function = (GdaSqlRenderingFunc) default_render_function;
+	if (!context->render_operation) 
+		context->render_operation = (GdaSqlRenderingFunc) default_render_operation;
+	if (!context->render_case) 
+		context->render_case = (GdaSqlRenderingFunc) default_render_case;
+	if (!context->render_select_field)
+		context->render_select_field = (GdaSqlRenderingFunc) default_render_select_field;
+	if (!context->render_select_target)
+		context->render_select_target = (GdaSqlRenderingFunc) default_render_select_target;
+	if (!context->render_select_join)
+		context->render_select_join = (GdaSqlRenderingFunc) default_render_select_join;
+	if (!context->render_select_from)
+		context->render_select_from = (GdaSqlRenderingFunc) default_render_select_from;
+	if (!context->render_select_order)
+		context->render_select_order = (GdaSqlRenderingFunc) default_render_select_order;
+
+	cinfo = gda_sql_statement_get_contents_infos (stmt->priv->internal_struct->stmt_type);
+	if (cinfo->check_structure_func && !cinfo->check_structure_func (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents), 
+									 NULL, error))
+		return NULL;
+
+	switch (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents)->type) {
+	case GDA_SQL_ANY_STMT_UNKNOWN:
+		return context->render_unknown (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents), context, error);
+	case GDA_SQL_ANY_STMT_BEGIN:
+		if (context->render_begin)
+			return context->render_begin (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents), context, error);
+		break;
+	case GDA_SQL_ANY_STMT_ROLLBACK:
+		if (context->render_rollback)
+			return context->render_rollback (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents), context, error);
+		break;
+        case GDA_SQL_ANY_STMT_COMMIT:
+		if (context->render_commit)
+			return context->render_commit (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents), context, error);
+		break;
+        case GDA_SQL_ANY_STMT_SAVEPOINT:
+		if (context->render_savepoint)
+			return context->render_savepoint (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents), context, error);
+		break;
+        case GDA_SQL_ANY_STMT_ROLLBACK_SAVEPOINT:
+		if (context->render_rollback_savepoint)
+			return context->render_rollback_savepoint (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents), context, error);
+		break;
+        case GDA_SQL_ANY_STMT_DELETE_SAVEPOINT:
+		if (context->render_delete_savepoint)
+			return context->render_delete_savepoint (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents), context, error);
+		break;
+	case GDA_SQL_ANY_STMT_SELECT:
+		return context->render_select (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents), context, error);
+	case GDA_SQL_ANY_STMT_INSERT:
+		return context->render_insert (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents), context, error);
+	case GDA_SQL_ANY_STMT_DELETE:
+		return context->render_delete (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents), context, error);
+	case GDA_SQL_ANY_STMT_UPDATE:
+		return context->render_update (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents), context, error);
+	case GDA_SQL_ANY_STMT_COMPOUND:
+		return context->render_compound (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents), context, error);
+	default:
+		TO_IMPLEMENT;
+		return NULL;
+		break;
+	}
+
+	/* default action is to use stmt->priv->internal_struct->sql */
+	if (stmt->priv->internal_struct->sql)
+		return g_strdup (stmt->priv->internal_struct->sql);
+	else {
+		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+			     _("Missing SQL code"));
+		return NULL;
+	}
+}
+
+static gchar *
+default_render_value (const GValue *value, GdaSqlRenderingContext *context, GError **error)
+{
+	return gda_value_stringify ((GValue*) value);
+}
+
+/**
+ * gda_statement_to_sql_extended
+ * @stmt: a #GdaStatement object
+ * @cnc: a #GdaConnection object, or %NULL
+ * @params: parameters contained in a single #GdaSet object
+ * @flags: a set of flags to control the rendering
+ * @params_used: a place to store the list of actual #GdaHolder objects in @params used to do the rendering, or %NULL
+ * @error: a place to store errors, or %NULL
+ *
+ * Renders @stmt as an SQL statement, with some control on how it is rendered.
+ *
+ * If @cnc is not %NULL, then the rendered SQL will better be suited to be used by @cnc (in particular
+ * it may include some SQL tweaks and/or proprietary extensions specific to the database engine used by @cnc).
+ *
+ * Returns: a new string if no error occurred
+ */
+gchar *
+gda_statement_to_sql_extended (GdaStatement *stmt, GdaConnection *cnc, GdaSet *params, GdaStatementSqlFlag flags, 
+			       GSList **params_used, GError **error)
+{
+	gchar *str;
+	GdaSqlRenderingContext context;
+
+	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
+	g_return_val_if_fail (stmt->priv, NULL);
+	if (cnc) {
+		GdaServerProvider *prov;
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+		
+		prov = gda_connection_get_provider_obj (cnc);
+		return gda_server_provider_statement_to_sql (prov, cnc, stmt, params, flags, params_used, error);
+	}
+
+	memset (&context, 0, sizeof (context));
+	context.params = params;
+	context.flags = flags;
+
+	str = gda_statement_to_sql_real (stmt, &context, error);
+
+	if (str) {
+		if (params_used)
+			*params_used = context.params_used;
+		else
+			g_slist_free (context.params_used);
+	}
+	else {
+		if (params_used)
+			*params_used = NULL;
+		g_slist_free (context.params_used);
+	}
+	return str;
+}
+
+static gchar *
+default_render_unknown (GdaSqlStatementUnknown *stmt, GdaSqlRenderingContext *context, GError **error)
+{
+	GString *string;
+	gchar *str;
+	GSList *list;
+
+	g_return_val_if_fail (stmt, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (stmt)->type == GDA_SQL_ANY_STMT_UNKNOWN, NULL);
+
+	string = g_string_new ("");
+	for (list = stmt->expressions; list; list = list->next) {
+		str = context->render_expr ((GdaSqlExpr*) list->data, context, NULL, NULL, error);
+		if (!str) goto err;
+		g_string_append (string, str);
+		g_free (str);
+	}
+
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+
+ err:
+	g_string_free (string, TRUE);
+	return NULL;
+}
+
+static gchar *
+default_render_insert (GdaSqlStatementInsert *stmt, GdaSqlRenderingContext *context, GError **error)
+{
+	GString *string;
+	gchar *str;
+	GSList *list;
+
+	g_return_val_if_fail (stmt, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (stmt)->type == GDA_SQL_ANY_STMT_INSERT, NULL);
+
+	string = g_string_new ("INSERT ");
+	
+	/* conflict algo */
+	if (stmt->on_conflict)
+		g_string_append_printf (string, "OR %s ", stmt->on_conflict);
+
+	/* INTO */
+	g_string_append (string, "INTO ");
+	str = context->render_table (GDA_SQL_ANY_PART (stmt->table), context, error);
+	if (!str) goto err;
+	g_string_append (string, str);
+	g_free (str);
+
+	/* fields list */
+	for (list = stmt->fields_list; list; list = list->next) {
+		if (list == stmt->fields_list)
+			g_string_append (string, " (");
+		else
+			g_string_append (string, ", ");
+		str = context->render_field (GDA_SQL_ANY_PART (list->data), context, error);
+		if (!str) goto err;
+		g_string_append (string, str);
+		g_free (str);
+	}
+	if (stmt->fields_list)
+		g_string_append_c (string, ')');
+
+	/* values */
+	if (stmt->select) {
+		g_string_append_c (string, ' ');
+		str = context->render_select (GDA_SQL_ANY_PART (stmt->select), context, error);
+		if (!str) goto err;
+		g_string_append (string, str);
+			g_free (str);
+	}
+	else {
+		for (list = stmt->values_list; list; list = list->next) {
+			GSList *rlist;
+			if (list == stmt->values_list)
+				g_string_append (string, " VALUES ");
+			else
+				g_string_append (string, ", ");
+			for (rlist = (GSList*) list->data; rlist; rlist = rlist->next) {
+				if (rlist == (GSList*) list->data)
+					g_string_append (string, " (");
+				else
+					g_string_append (string, ", ");
+				str = context->render_expr ((GdaSqlExpr*) rlist->data, context, NULL, NULL, error);
+				if (!str) goto err;
+				g_string_append (string, str);
+				g_free (str);
+			}
+			g_string_append_c (string, ')');
+		}
+	}
+	
+
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+
+ err:
+	g_string_free (string, TRUE);
+	return NULL;	
+}
+
+static gchar *
+default_render_delete (GdaSqlStatementDelete *stmt, GdaSqlRenderingContext *context, GError **error)
+{
+	GString *string;
+	gchar *str;
+
+	g_return_val_if_fail (stmt, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (stmt)->type == GDA_SQL_ANY_STMT_DELETE, NULL);
+
+	string = g_string_new ("DELETE FROM ");
+	
+	/* FROM */
+	str = context->render_table (GDA_SQL_ANY_PART (stmt->table), context, error);
+	if (!str) goto err;
+	g_string_append (string, str);
+	g_free (str);
+
+	/* cond */
+	if (stmt->cond) {
+		g_string_append (string, " WHERE ");
+		str = context->render_expr (stmt->cond, context, NULL, NULL, error);
+		if (!str) goto err;
+		g_string_append (string, str);
+		g_free (str);
+	}	
+
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+
+ err:
+	g_string_free (string, TRUE);
+	return NULL;	
+}
+
+static gchar *
+default_render_update (GdaSqlStatementUpdate *stmt, GdaSqlRenderingContext *context, GError **error)
+{
+	GString *string;
+	gchar *str;
+	GSList *flist, *elist;
+
+	g_return_val_if_fail (stmt, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (stmt)->type == GDA_SQL_ANY_STMT_UPDATE, NULL);
+
+	string = g_string_new ("UPDATE ");
+	/* conflict algo */
+	if (stmt->on_conflict)
+		g_string_append_printf (string, "OR %s ", stmt->on_conflict);
+
+	/* table */
+	str = context->render_table (GDA_SQL_ANY_PART (stmt->table), context, error);
+	if (!str) goto err;
+	g_string_append (string, str);
+	g_free (str);
+
+	/* columns set */
+	g_string_append (string, " SET ");
+	for (flist = stmt->fields_list, elist = stmt->expr_list; flist && elist; flist = flist->next, elist = elist->next) {
+		if (flist != stmt->fields_list)
+			g_string_append (string, ", ");
+		str = context->render_field (GDA_SQL_ANY_PART (flist->data), context, error);
+		if (!str) goto err;
+		g_string_append (string, str);
+		g_free (str);
+		g_string_append_c (string, '=');
+		str = context->render_expr ((GdaSqlExpr *) elist->data, context, NULL, NULL, error);
+		if (!str) goto err;
+		g_string_append (string, str);
+		g_free (str);
+	}
+
+	/* cond */
+	if (stmt->cond) {
+		g_string_append (string, " WHERE ");
+		str = context->render_expr (stmt->cond, context, NULL, NULL, error);
+		if (!str) goto err;
+		g_string_append (string, str);
+		g_free (str);
+	}	
+
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+
+ err:
+	g_string_free (string, TRUE);
+	return NULL;
+}
+
+static gchar *
+default_render_compound (GdaSqlStatementCompound *stmt, GdaSqlRenderingContext *context, GError **error)
+{
+	GString *string;
+	gchar *str;
+	GSList *list;
+
+	g_return_val_if_fail (stmt, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (stmt)->type == GDA_SQL_ANY_STMT_COMPOUND, NULL);
+
+	string = g_string_new ("");
+
+	for (list = stmt->stmt_list; list; list = list->next) {
+		GdaSqlStatement *sqlstmt = (GdaSqlStatement*) list->data;
+		if (list != stmt->stmt_list) {
+			switch (stmt->compound_type) {
+			case GDA_SQL_STATEMENT_COMPOUND_UNION:
+				g_string_append (string, " UNION ");
+				break;
+			case GDA_SQL_STATEMENT_COMPOUND_UNION_ALL:
+				g_string_append (string, " UNION ALL ");
+				break;
+			case GDA_SQL_STATEMENT_COMPOUND_INTERSECT:
+				g_string_append (string, " INTERSECT ");
+				break;
+			case GDA_SQL_STATEMENT_COMPOUND_INTERSECT_ALL:
+				g_string_append (string, " INTERSECT ALL ");
+				break;
+			case GDA_SQL_STATEMENT_COMPOUND_EXCEPT:
+				g_string_append (string, " EXCEPT ");
+				break;
+			case GDA_SQL_STATEMENT_COMPOUND_EXCEPT_ALL:
+				g_string_append (string, " EXCEPT ALL ");
+				break;
+			default:
+				g_assert_not_reached ();
+			}
+		}
+		switch (sqlstmt->stmt_type) {
+		case GDA_SQL_ANY_STMT_SELECT:
+			str = context->render_select (GDA_SQL_ANY_PART (sqlstmt->contents), context, error);
+			if (!str) goto err;
+			g_string_append (string, str);
+			g_free (str);
+			break;
+		case GDA_SQL_ANY_STMT_COMPOUND:
+			str = context->render_compound (GDA_SQL_ANY_PART (sqlstmt->contents), context, error);
+			if (!str) goto err;
+			g_string_append_c (string, '(');
+			g_string_append (string, str);
+			g_string_append_c (string, ')');
+			g_free (str);
+			break;
+		default:
+			g_assert_not_reached ();
+		}
+	}
+
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+
+ err:
+	g_string_free (string, TRUE);
+	return NULL;	
+}
+
+static gchar *
+default_render_select (GdaSqlStatementSelect *stmt, GdaSqlRenderingContext *context, GError **error)
+{
+	GString *string;
+	gchar *str;
+	GSList *list;
+
+	g_return_val_if_fail (stmt, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (stmt)->type == GDA_SQL_ANY_STMT_SELECT, NULL);
+
+	string = g_string_new ("SELECT ");
+	/* distinct */
+	if (stmt->distinct) {
+		g_string_append (string, "DISTINCT ");
+		if (stmt->distinct_expr) {
+			str = context->render_expr (stmt->distinct_expr, context, NULL, NULL, error);
+			if (!str) goto err;
+			g_string_append (string, "ON ");
+			g_string_append (string, str);
+			g_string_append_c (string, ' ');
+			g_free (str);
+		}
+	}
+	
+	/* selected expressions */
+	for (list = stmt->expr_list; list; list = list->next) {
+		str = context->render_select_field (GDA_SQL_ANY_PART (list->data), context, error);
+		if (!str) goto err;
+		if (list != stmt->expr_list)
+			g_string_append (string, ", ");
+		g_string_append (string, str);
+		g_free (str);
+	}
+
+	/* FROM */
+	if (stmt->from) {
+		str = context->render_select_from (GDA_SQL_ANY_PART (stmt->from), context, error);
+		if (!str) goto err;
+		g_string_append_c (string, ' ');
+		g_string_append (string, str);
+		g_free (str);
+	}
+
+	/* WHERE */
+	if (stmt->where_cond) {
+		g_string_append (string, " WHERE ");
+		str = context->render_expr (stmt->where_cond, context, NULL, NULL, error);
+		if (!str) goto err;
+		g_string_append (string, str);
+		g_free (str);
+	}
+
+	/* GROUP BY */
+	for (list = stmt->group_by; list; list = list->next) {
+		str = context->render_expr (list->data, context, NULL, NULL, error);
+		if (!str) goto err;
+		if (list != stmt->group_by)
+			g_string_append (string, ", ");
+		else
+			g_string_append (string, " GROUP BY ");
+		g_string_append (string, str);
+		g_free (str);
+	}
+
+	/* HAVING */
+	if (stmt->having_cond) {
+		g_string_append (string, " HAVING ");
+		str = context->render_expr (stmt->having_cond, context, NULL, NULL, error);
+		if (!str) goto err;
+		g_string_append (string, str);
+		g_free (str);
+	}
+
+	/* ORDER BY */
+	for (list = stmt->order_by; list; list = list->next) {
+		str = context->render_select_order (GDA_SQL_ANY_PART (list->data), context, error);
+		if (!str) goto err;
+		if (list != stmt->order_by)
+			g_string_append (string, ", ");
+		else
+			g_string_append (string, " ORDER BY ");
+		g_string_append (string, str);
+		g_free (str);
+	}
+
+	/* LIMIT */
+	if (stmt->limit_count) {
+		g_string_append (string, " LIMIT ");
+		str = context->render_expr (stmt->limit_count, context, NULL, NULL, error);
+		if (!str) goto err;
+		g_string_append (string, str);
+		g_free (str);
+		if (stmt->limit_offset) {
+			g_string_append (string, " OFFSET ");
+			str = context->render_expr (stmt->limit_offset, context, NULL, NULL, error);
+			if (!str) goto err;
+			g_string_append (string, str);
+			g_free (str);
+		}
+	}
+
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+
+ err:
+	g_string_free (string, TRUE);
+	return NULL;
+}
+
+/*
+ * Randers @pspec, and the default value stored in @expr->value if it exists
+ */
+static gchar *
+default_render_param_spec (GdaSqlParamSpec *pspec, GdaSqlExpr *expr, GdaSqlRenderingContext *context, 
+			   gboolean *is_default, gboolean *is_null, GError **error)
+{
+	GString *string;
+	gchar *str;
+	GdaHolder *h = NULL;
+	gboolean render_pspec; /* if TRUE, then don't render parameter as its value but as a param specification */
+
+	g_return_val_if_fail (pspec, NULL);
+
+	render_pspec = FALSE;
+	if (context->flags & (GDA_STATEMENT_SQL_PARAMS_LONG |
+			      GDA_STATEMENT_SQL_PARAMS_SHORT |
+			      GDA_STATEMENT_SQL_PARAMS_AS_COLON |
+			      GDA_STATEMENT_SQL_PARAMS_AS_DOLLAR |
+			      GDA_STATEMENT_SQL_PARAMS_AS_QMARK))
+		render_pspec = TRUE;
+
+	if (is_default)
+		*is_default = FALSE;
+	if (is_null)
+		*is_null = FALSE;
+
+	string = g_string_new ("");
+
+	/* try to use a GdaHolder in context->params */
+	if (context->params) {
+		h = gda_set_get_holder (context->params, pspec->name);
+		if (h && (gda_holder_get_g_type (h) != pspec->g_type)) {
+			g_set_error (error, GDA_STATEMENT_ERROR, GDA_STATEMENT_PARAM_ERROR,
+				     _("Wrong parameter type for '%s': expected type '%s' and got '%s'"), 
+				     pspec->name, g_type_name (pspec->g_type), g_type_name (gda_holder_get_g_type (h)));
+			goto err;
+		}
+	}
+	if (!h && 
+	    (!render_pspec ||
+	     (context->flags & (GDA_STATEMENT_SQL_PARAMS_AS_DOLLAR | GDA_STATEMENT_SQL_PARAMS_AS_QMARK)))) {
+		/* a real value is needed or @context->params_used needs to be correct, and no GdaHolder found */
+		g_set_error (error, GDA_STATEMENT_ERROR, GDA_STATEMENT_PARAM_ERROR,
+			     _("Missing parameter '%s'"), pspec->name);
+		goto err;
+	}
+	if (h) {
+		/* keep track of the params used */
+		context->params_used = g_slist_append (context->params_used, h);
+
+		if (! render_pspec) {
+			const GValue *cvalue;
+			
+			if (!gda_holder_is_valid (h)) {
+				g_set_error (error, GDA_STATEMENT_ERROR, GDA_STATEMENT_PARAM_ERROR,
+					     _("Parameter '%s' is invalid"), pspec->name);
+				goto err;
+			}
+			cvalue = gda_holder_get_value (h);
+			if (cvalue) {
+				str = context->render_value ((GValue*) cvalue, context, error);
+				if (!str) goto err;
+				g_string_append (string, str);
+				g_free (str);
+				if (is_null && gda_value_is_null (cvalue))
+					*is_null = TRUE;
+			}
+			else {
+				/* @h is set to a default value */
+				g_string_append (string, "DEFAULT");
+				if (is_default)
+					*is_default = TRUE;
+			}
+			goto out;
+		}
+	}
+
+	/* no parameter found in context->params => insert an SQL parameter */
+	if (context->flags & GDA_STATEMENT_SQL_PARAMS_AS_COLON) {
+		gchar *str;
+
+		str = gda_text_to_alphanum (pspec->name);
+		g_string_append_printf (string, ":%s", str);
+		g_free (str);
+	}
+	else if (context->flags & (GDA_STATEMENT_SQL_PARAMS_AS_DOLLAR | GDA_STATEMENT_SQL_PARAMS_AS_QMARK)) {
+		if (context->flags & GDA_STATEMENT_SQL_PARAMS_AS_DOLLAR)
+			g_string_append_printf (string, "$%d", g_slist_length (context->params_used));
+		else
+			g_string_append_printf (string, "?%d", g_slist_length (context->params_used));
+	}
+	else {
+		GdaStatementSqlFlag flag = context->flags;
+		gchar *quoted_pname;
+
+		if (! pspec->name) {
+			g_set_error (error, GDA_STATEMENT_ERROR, GDA_STATEMENT_PARAM_ERROR,
+				     _("Unnamed parameter"));
+			goto err;
+		}
+		quoted_pname = _add_quotes (pspec->name);
+
+		if (! (flag & (GDA_STATEMENT_SQL_PARAMS_LONG | GDA_STATEMENT_SQL_PARAMS_SHORT))) {
+			if (!expr->value || gda_value_is_null (expr->value) || strcmp (quoted_pname, pspec->name))
+				flag = GDA_STATEMENT_SQL_PARAMS_LONG;
+			else
+				flag = GDA_STATEMENT_SQL_PARAMS_SHORT;
+		}
+
+		if (flag & GDA_STATEMENT_SQL_PARAMS_LONG) {
+			if (expr->value) {
+				str = context->render_value (expr->value, context, error);
+				if (!str) {
+					g_free (quoted_pname);
+					goto err;
+				}
+				g_string_append (string, str);
+				g_free (str);
+			}
+			else
+				g_string_append (string, "##");
+			
+			g_string_append (string, " /* ");
+			g_string_append_printf (string, "name:%s", quoted_pname);
+			if (pspec->type) {
+				str = _add_quotes (pspec->type);
+				g_string_append_printf (string, " type:%s", str);
+				g_free (str);
+			}
+			if (pspec->descr) {
+				str = _add_quotes (pspec->type);
+				g_string_append_printf (string, " descr:%s", str);
+				g_free (str);
+			}
+			if (pspec->nullok) 
+				g_string_append (string, " nullok:true");
+
+			g_string_append (string, " */");
+		}
+		else {
+			g_string_append (string, "##");
+			g_string_append (string, pspec->name);
+			if (pspec->type) {
+				g_string_append (string, "::");
+				g_string_append (string, pspec->type);
+				if (pspec->nullok) 
+					g_string_append (string, "::NULL");
+			}
+		}
+
+		g_free (quoted_pname);
+	}
+
+ out:
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+
+ err:
+	g_string_free (string, TRUE);
+	return NULL;
+}
+
+static gchar *
+default_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, gboolean *is_default, gboolean *is_null, GError **error)
+{
+	GString *string;
+	gchar *str = NULL;
+
+	g_return_val_if_fail (expr, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (expr)->type == GDA_SQL_ANY_EXPR, NULL);
+
+	if (is_default)
+		*is_default = FALSE;
+	if (is_null)
+		*is_null = FALSE;
+
+	/* can't have: 
+	 *  - expr->cast_as && expr->param_spec 
+	 */
+	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (expr), error)) return NULL;
+
+	string = g_string_new ("");
+	if (expr->param_spec) {
+		str = context->render_param_spec (expr->param_spec, expr, context, is_default, is_null, error);
+		if (!str) goto err;
+	}
+	else if (expr->value) {
+		str = context->render_value (expr->value, context, error);
+		if (!str) goto err;
+		if (is_null && gda_value_is_null (expr->value))
+			*is_null = TRUE;
+		else if (is_default && (G_VALUE_TYPE (expr->value) == G_TYPE_STRING) && 
+			 !g_ascii_strcasecmp (g_value_get_string (expr->value), "default"))
+			*is_default = TRUE;
+	}
+	else if (expr->func) {
+		str = context->render_function (GDA_SQL_ANY_PART (expr->func), context, error);
+		if (!str) goto err;
+	}
+	else if (expr->cond) {
+		str = context->render_operation (GDA_SQL_ANY_PART (expr->cond), context, error);
+		if (!str) goto err;
+	}
+	else if (expr->select) {
+		gchar *str1;
+		str1 = context->render_select (GDA_SQL_ANY_PART (expr->select), context, error);
+		if (!str1) goto err;
+		str = g_strdup_printf ("(%s)", str1);
+		g_free (str1);
+	}
+	else if (expr->case_s) {
+		str = context->render_case (GDA_SQL_ANY_PART (expr->case_s), context, error);
+		if (!str) goto err;
+	}
+	else {
+		if (is_null)
+			*is_null = TRUE;
+		str = g_strdup ("NULL");
+	}
+
+	if (!str) {
+		/* TO REMOVE */
+		str = g_strdup ("[...]");
+	}
+
+	if (expr->cast_as) 
+		g_string_append_printf (string, "CAST (%s AS %s)", str, expr->cast_as);
+	else
+		g_string_append (string, str);
+	g_free (str);
+
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+
+ err:
+	g_string_free (string, TRUE);
+	return NULL;
+}
+
+static gchar *
+default_render_field (GdaSqlField *field, GdaSqlRenderingContext *context, GError **error)
+{
+	g_return_val_if_fail (field, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (field)->type == GDA_SQL_ANY_SQL_FIELD, NULL);
+
+	/* can't have: field->field_name not a valid SQL identifier */
+	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (field), error)) return NULL;
+
+	return g_strdup (field->field_name);
+}
+
+static gchar *
+default_render_table (GdaSqlTable *table, GdaSqlRenderingContext *context, GError **error)
+{
+	g_return_val_if_fail (table, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (table)->type == GDA_SQL_ANY_SQL_TABLE, NULL);
+
+	/* can't have: table->table_name not a valid SQL identifier */
+	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (table), error)) return NULL;
+
+	return g_strdup (table->table_name);
+}
+
+static gchar *
+default_render_function (GdaSqlFunction *func, GdaSqlRenderingContext *context, GError **error)
+{
+	GString *string;
+	gchar *str;
+	GSList *list;
+
+	g_return_val_if_fail (func, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (func)->type == GDA_SQL_ANY_SQL_FUNCTION, NULL);
+
+	/* can't have: func->function_name == NULL */
+	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (func), error)) return NULL;
+
+	string = g_string_new (func->function_name);
+	g_string_append_c (string, '(');
+	for (list = func->args_list; list; list = list->next) {
+		if (list != func->args_list)
+			g_string_append (string, ", ");
+		str = context->render_expr (list->data, context, NULL, NULL, error);
+		if (!str) goto err;
+		g_string_append (string, str);
+		g_free (str);
+	}
+	g_string_append_c (string, ')');
+
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+
+ err:
+	g_string_free (string, TRUE);
+	return NULL;
+}
+
+static gchar *
+default_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, GError **error)
+{
+	gchar *str;
+	GSList *list;
+	GSList *sql_list; /* list of SqlOperand */
+	GString *string;
+	gchar *multi_op = NULL;
+
+	typedef struct {
+		gchar    *sql;
+		gboolean  is_null;
+		gboolean  is_default;
+		gboolean  is_composed;
+	} SqlOperand;
+#define SQL_OPERAND(x) ((SqlOperand*)(x))
+
+	g_return_val_if_fail (op, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (op)->type == GDA_SQL_ANY_SQL_OPERATION, NULL);
+
+	/* can't have: 
+	 *  - op->operands == NULL 
+	 *  - incorrect number of operands
+	 */
+	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (op), error)) return NULL;
+
+	/* render operands */
+	for (list = op->operands, sql_list = NULL; list; list = list->next) {
+		SqlOperand *sqlop = g_new0 (SqlOperand, 1);
+		GdaSqlExpr *expr = (GdaSqlExpr*) list->data;
+		str = context->render_expr (expr, context, &(sqlop->is_default), &(sqlop->is_null), error);
+		if (!str) {
+			g_free (sqlop);
+			goto out;
+		}
+		sqlop->sql = str;
+		if (expr->cond || expr->case_s || expr->select)
+			sqlop->is_composed = TRUE;
+		sql_list = g_slist_prepend (sql_list, sqlop);
+	}
+	sql_list = g_slist_reverse (sql_list);
+
+	str = NULL;
+	switch (op->operator) {
+	case GDA_SQL_OPERATOR_EQ:
+		if (SQL_OPERAND (sql_list->next->data)->is_null) 
+			str = g_strdup_printf ("%s IS NULL", SQL_OPERAND (sql_list->data)->sql);
+		else
+			str = g_strdup_printf ("%s = %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
+		break;
+	case GDA_SQL_OPERATOR_IS:
+		str = g_strdup_printf ("%s IS %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
+		break;
+	case GDA_SQL_OPERATOR_LIKE:
+		str = g_strdup_printf ("%s LIKE %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
+		break;
+	case GDA_SQL_OPERATOR_GT:
+		str = g_strdup_printf ("%s > %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
+		break;
+	case GDA_SQL_OPERATOR_LT:
+		str = g_strdup_printf ("%s < %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
+		break;
+	case GDA_SQL_OPERATOR_GEQ:
+		str = g_strdup_printf ("%s >= %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
+		break;
+	case GDA_SQL_OPERATOR_LEQ:
+		str = g_strdup_printf ("%s <= %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
+		break;
+	case GDA_SQL_OPERATOR_DIFF:
+		str = g_strdup_printf ("%s != %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
+		break;
+	case GDA_SQL_OPERATOR_REGEXP:
+		str = g_strdup_printf ("%s ~ %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
+		break;
+	case GDA_SQL_OPERATOR_REGEXP_CI:
+		str = g_strdup_printf ("%s ~* %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
+		break;
+	case GDA_SQL_OPERATOR_NOT_REGEXP:
+		str = g_strdup_printf ("%s !~ %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
+		break;
+	case GDA_SQL_OPERATOR_NOT_REGEXP_CI:
+		str = g_strdup_printf ("%s !~* %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
+		break;
+	case GDA_SQL_OPERATOR_SIMILAR:
+		str = g_strdup_printf ("%s SIMILAR TO %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
+		break;
+	case GDA_SQL_OPERATOR_REM:
+		str = g_strdup_printf ("%s %% %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
+		break;
+	case GDA_SQL_OPERATOR_DIV:
+		str = g_strdup_printf ("%s / %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
+		break;
+	case GDA_SQL_OPERATOR_BITAND:
+		str = g_strdup_printf ("%s & %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
+		break;
+	case GDA_SQL_OPERATOR_BITOR:
+		str = g_strdup_printf ("%s | %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
+		break;
+	case GDA_SQL_OPERATOR_BETWEEN:
+		str = g_strdup_printf ("%s BETWEEN %s AND %s", SQL_OPERAND (sql_list->data)->sql, 
+				       SQL_OPERAND (sql_list->next->data)->sql,
+				       SQL_OPERAND (sql_list->next->next->data)->sql);
+		break;
+	case GDA_SQL_OPERATOR_ISNULL:
+		str = g_strdup_printf ("%s IS NULL", SQL_OPERAND (sql_list->data)->sql);
+		break;
+	case GDA_SQL_OPERATOR_ISNOTNULL:
+		str = g_strdup_printf ("%s IS NOT NULL", SQL_OPERAND (sql_list->data)->sql);
+		break;
+	case GDA_SQL_OPERATOR_BITNOT:
+		str = g_strdup_printf ("~ %s", SQL_OPERAND (sql_list->data)->sql);
+		break;
+	case GDA_SQL_OPERATOR_NOT:
+		str = g_strdup_printf ("NOT %s", SQL_OPERAND (sql_list->data)->sql);
+		break;
+	case GDA_SQL_OPERATOR_IN:
+		string = g_string_new (SQL_OPERAND (sql_list->data)->sql);
+		g_string_append (string, " IN (");
+		for (list = sql_list->next; list; list = list->next) {
+			if (list != sql_list->next)
+				g_string_append (string, ", ");
+			g_string_append (string, SQL_OPERAND (list->data)->sql);
+		}
+		g_string_append_c (string, ')');
+		str = string->str;
+		g_string_free (string, FALSE);
+		break;
+	case GDA_SQL_OPERATOR_CONCAT:
+		multi_op = "||";
+		break;
+	case GDA_SQL_OPERATOR_PLUS:
+		multi_op = "+";
+		break;
+	case GDA_SQL_OPERATOR_MINUS:
+		multi_op = "-";
+		break;
+	case GDA_SQL_OPERATOR_STAR:
+		multi_op = "*";
+		break;
+	case GDA_SQL_OPERATOR_AND:
+		multi_op = "AND";
+		break;
+	case GDA_SQL_OPERATOR_OR:
+		multi_op = "OR";
+		break;
+	default:
+		g_assert_not_reached ();
+		break;
+	}
+
+	if (multi_op) {
+		if (!sql_list->next) {
+			/* 1 operand only */
+			string = g_string_new ("");
+			g_string_append_printf (string, "%s %s", multi_op, SQL_OPERAND (sql_list->data)->sql);
+		}
+		else {
+			/* 2 or more operands */
+			if (SQL_OPERAND (sql_list->data)->is_composed) {
+				string = g_string_new ("(");
+				g_string_append (string, SQL_OPERAND (sql_list->data)->sql);
+				g_string_append_c (string, ')');
+			}
+			else
+				string = g_string_new (SQL_OPERAND (sql_list->data)->sql);
+			for (list = sql_list->next; list; list = list->next) {
+				g_string_append_printf (string, " %s ", multi_op);
+				if (SQL_OPERAND (list->data)->is_composed) {
+					g_string_append_c (string, '(');
+					g_string_append (string, SQL_OPERAND (list->data)->sql);
+					g_string_append_c (string, ')');
+				}
+				else
+					g_string_append (string, SQL_OPERAND (list->data)->sql);
+			}
+		}
+		str = string->str;
+		g_string_free (string, FALSE);
+	}
+
+ out:
+	for (list = sql_list; list; list = list->next) {
+		g_free (((SqlOperand*)list->data)->sql);
+		g_free (list->data);
+	}
+	g_slist_free (sql_list);
+
+	return str;
+}
+
+static gchar *
+default_render_case (GdaSqlCase *case_s, GdaSqlRenderingContext *context, GError **error)
+{
+	GString *string;
+	gchar *str;
+	GSList *wlist, *tlist;
+
+	g_return_val_if_fail (case_s, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (case_s)->type == GDA_SQL_ANY_SQL_CASE, NULL);
+
+	/* can't have:
+	 *  - case_s->when_expr_list == NULL
+	 *  - g_slist_length (sc->when_expr_list) != g_slist_length (sc->then_expr_list)
+	 */
+	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (case_s), error)) return NULL;
+
+	string = g_string_new ("CASE");
+	if (case_s->base_expr) {
+		g_string_append_c (string, ' ');
+		str = context->render_expr (case_s->base_expr, context, NULL, NULL, error);
+		if (!str) goto err;
+		g_string_append (string, str);
+		g_free (str);
+	}
+
+	for (wlist = case_s->when_expr_list, tlist = case_s->then_expr_list;
+	     wlist && tlist;
+	     wlist = wlist->next, tlist = tlist->next) {
+		g_string_append (string, " WHEN ");
+		str = context->render_expr ((GdaSqlExpr*) wlist->data, context, NULL, NULL, error);
+		if (!str) goto err;
+		g_string_append (string, str);
+		g_free (str);
+		g_string_append (string, " THEN ");
+		str = context->render_expr ((GdaSqlExpr*) tlist->data, context, NULL, NULL, error);
+		if (!str) goto err;
+		g_string_append (string, str);
+		g_free (str);
+	}
+
+	if (case_s->else_expr) {
+		g_string_append (string, " ELSE ");
+		str = context->render_expr (case_s->else_expr, context, NULL, NULL, error);
+		if (!str) goto err;
+		g_string_append (string, str);
+		g_free (str);
+	}
+
+	g_string_append (string, " END");
+	
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+
+ err:
+	g_string_free (string, TRUE);
+	return NULL;
+}
+
+static gchar *
+default_render_select_field (GdaSqlSelectField *field, GdaSqlRenderingContext *context, GError **error)
+{
+	GString *string;
+	gchar *str;
+
+	g_return_val_if_fail (field, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (field)->type == GDA_SQL_ANY_SQL_SELECT_FIELD, NULL);
+
+	/* can't have: field->expr == NULL */
+	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (field), error)) return NULL;
+
+	string = g_string_new ("");
+	str = context->render_expr (field->expr, context, NULL, NULL, error);
+	if (!str) goto err;
+	g_string_append (string, str);
+	g_free (str);
+
+	if (field->as)
+		g_string_append_printf (string, " AS %s", field->as);
+
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+
+ err:
+	g_string_free (string, TRUE);
+	return NULL;
+}
+
+static gchar *
+default_render_select_target (GdaSqlSelectTarget *target, GdaSqlRenderingContext *context, GError **error)
+{
+	GString *string;
+	gchar *str;
+
+	g_return_val_if_fail (target, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (target)->type == GDA_SQL_ANY_SQL_SELECT_TARGET, NULL);
+
+	/* can't have: target->expr == NULL */
+	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (target), error)) return NULL;
+
+	string = g_string_new ("");
+	str = context->render_expr (target->expr, context, NULL, NULL, error);
+	if (!str) goto err;
+	g_string_append (string, str);
+	g_free (str);
+
+	if (target->as)
+		g_string_append_printf (string, " AS %s", target->as);
+
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+
+ err:
+	g_string_free (string, TRUE);
+	return NULL;
+}
+
+static gchar *
+default_render_select_join (GdaSqlSelectJoin *join, GdaSqlRenderingContext *context, GError **error)
+{
+	GString *string;
+	gchar *str;
+
+	g_return_val_if_fail (join, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (join)->type == GDA_SQL_ANY_SQL_SELECT_JOIN, NULL);
+
+	/* can't have: 
+	 *  - join->expr && join->using 
+	 *  - (join->type == GDA_SQL_SELECT_JOIN_CROSS) && (join->expr || join->using)
+	 */
+	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (join), error)) return NULL;
+
+	switch (join->type) {
+	case GDA_SQL_SELECT_JOIN_CROSS:
+		string = g_string_new (",");
+		break;
+        case GDA_SQL_SELECT_JOIN_INNER:
+		string = g_string_new ("INNER JOIN");
+		break;
+        case GDA_SQL_SELECT_JOIN_LEFT:
+		string = g_string_new ("LEFT JOIN");
+		break;
+        case GDA_SQL_SELECT_JOIN_RIGHT:
+		string = g_string_new ("RIGHT JOIN");
+		break;
+        case GDA_SQL_SELECT_JOIN_FULL:
+		string = g_string_new ("FULL JOIN");
+		break;
+	default:
+		g_assert_not_reached ();
+	}
+
+	/* find joinned target */
+	GdaSqlSelectFrom *from = (GdaSqlSelectFrom *) GDA_SQL_ANY_PART (join)->parent;
+	if (!from || (GDA_SQL_ANY_PART (from)->type != GDA_SQL_ANY_SQL_SELECT_FROM)) {
+		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+			     _("Join is not in a FROM statement"));
+		goto err;
+	}
+	GdaSqlSelectTarget *target;
+	target = g_slist_nth_data (from->targets, join->position);
+	if (!target || (GDA_SQL_ANY_PART (target)->type != GDA_SQL_ANY_SQL_SELECT_TARGET)) {
+		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+			     _("Could not find target the join is for"));
+		goto err;
+	}
+	str = context->render_select_target (GDA_SQL_ANY_PART (target), context, error);
+	if (!str) goto err;
+	g_string_append_c (string, ' ');
+	g_string_append (string, str);
+	g_free (str);
+
+	if (join->expr) {
+		g_string_append (string, " ON (");
+		str = context->render_expr (join->expr, context, NULL, NULL, error);
+		if (!str) goto err;
+		g_string_append (string, str);
+		g_free (str);
+		g_string_append_c (string, ')');
+	}
+	else if (join->using) {
+		GSList *list;
+		g_string_append (string, " USING (");
+		for (list = join->using; list; list = list->next) {
+			if (list != join->using)
+				g_string_append (string, ", ");
+			str = context->render_field (GDA_SQL_ANY_PART (list->data), context, error);
+			if (!str) goto err;
+			g_string_append (string, str);
+			g_free (str);
+		}
+		g_string_append_c (string, ')');
+	}
+
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+
+ err:
+	g_string_free (string, TRUE);
+	return NULL;
+}
+
+static GdaSqlSelectJoin *
+find_join_for_pos (GSList *joins_list, gint pos)
+{
+	GSList *list;
+	for (list = joins_list; list; list = list->next) {
+		if (((GdaSqlSelectJoin*) list->data)->position == pos)
+			return (GdaSqlSelectJoin*) list->data;
+	}
+	return NULL;
+}
+
+static gchar *
+default_render_select_from (GdaSqlSelectFrom *from, GdaSqlRenderingContext *context, GError **error)
+{
+	GString *string;
+	gchar *str;
+	GSList *tlist;
+	gint i;
+
+	g_return_val_if_fail (from, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (from)->type == GDA_SQL_ANY_SQL_SELECT_FROM, NULL);
+
+	/* can't have: from->targets == NULL */
+	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (from), error)) return NULL;
+
+	string = g_string_new ("FROM ");
+	for (tlist = from->targets, i = 0; tlist; tlist = tlist->next, i++) {
+		GdaSqlSelectJoin *join = NULL;
+		if (tlist != from->targets) 
+			join = find_join_for_pos (from->joins, i);
+		
+		if (join) {
+			str = context->render_select_join (GDA_SQL_ANY_PART (join), context, error);
+			if (!str) goto err;
+			g_string_append_c (string, ' ');
+			g_string_append (string, str);
+			g_free (str);
+			g_string_append_c (string, ' ');
+		}
+		else {
+			if (tlist != from->targets)
+				g_string_append (string, ", ");
+			str = context->render_select_target (GDA_SQL_ANY_PART (tlist->data), context, error);
+			if (!str) goto err;
+			g_string_append (string, str);
+			g_free (str);
+		}
+	}
+
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+
+ err:
+	g_string_free (string, TRUE);
+	return NULL;
+}
+
+static gchar *
+default_render_select_order (GdaSqlSelectOrder *order, GdaSqlRenderingContext *context, GError **error)
+{
+	GString *string;
+	gchar *str;
+
+	g_return_val_if_fail (order, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (order)->type == GDA_SQL_ANY_SQL_SELECT_ORDER, NULL);
+
+	/* can't have: order->expr == NULL */
+	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (order), error)) return NULL;
+
+	string = g_string_new ("");
+	str = context->render_expr (order->expr, context, NULL, NULL, error);
+	if (!str) goto err;
+	g_string_append (string, str);
+	g_free (str);
+
+	if (order->collation_name) 
+		g_string_append_printf (string, " COLLATE %s", order->collation_name);
+
+	if (order->asc)
+		g_string_append (string, " ASC");
+	else
+		g_string_append (string, " DESC");
+
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+
+ err:
+	g_string_free (string, TRUE);
+	return NULL;
+}

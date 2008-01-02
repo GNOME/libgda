@@ -1,0 +1,262 @@
+<!-- ##### SECTION Title ##### -->
+GdaSet
+
+<!-- ##### SECTION Short_Description ##### -->
+Container for several values
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+The #GdaSet object is a container for several values (as #GdaHolder objects), which also offers
+different classifications of the group of #GdaHolder values.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaSet ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL GdaSet::holder-attr-changed ##### -->
+<para>
+
+</para>
+
+@gdaset: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaSet::holder-changed ##### -->
+<para>
+
+</para>
+
+@gdaset: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaSet::holder-plugin-changed ##### -->
+<para>
+
+</para>
+
+@gdaset: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaSet::public-data-changed ##### -->
+<para>
+
+</para>
+
+@gdaset: the object which received the signal.
+
+<!-- ##### ARG GdaSet:description ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaSet:holders ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaSet:id ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaSet:name ##### -->
+<para>
+
+</para>
+
+<!-- ##### ENUM GdaSetHint ##### -->
+<para>
+
+</para>
+
+@GDA_SET_HOLDER_READ_ONLY: 
+@GDA_SET_HOLDER_HIDE: 
+
+<!-- ##### STRUCT GdaSetNode ##### -->
+<para>
+
+</para>
+
+@holder: 
+@source_model: 
+@source_column: 
+@hint: 
+
+<!-- ##### STRUCT GdaSetGroup ##### -->
+<para>
+
+</para>
+
+@nodes: 
+@nodes_source: 
+
+<!-- ##### STRUCT GdaSetSource ##### -->
+<para>
+
+</para>
+
+@data_model: 
+@nodes: 
+@shown_n_cols: 
+@shown_cols_index: 
+@ref_n_cols: 
+@ref_cols_index: 
+
+<!-- ##### FUNCTION gda_set_new ##### -->
+<para>
+
+</para>
+
+@holders: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_set_new_inline ##### -->
+<para>
+
+</para>
+
+@nb: 
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_set_new_from_spec_string ##### -->
+<para>
+
+</para>
+
+@dict: 
+@xml_spec: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_set_new_from_spec_node ##### -->
+<para>
+
+</para>
+
+@dict: 
+@xml_spec: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_set_get_spec ##### -->
+<para>
+
+</para>
+
+@set: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_set_set_holder_value ##### -->
+<para>
+
+</para>
+
+@set: 
+@holder_id: 
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_set_get_holder ##### -->
+<para>
+
+</para>
+
+@set: 
+@holder_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_set_add_holder ##### -->
+<para>
+
+</para>
+
+@set: 
+@holder: 
+
+
+<!-- ##### FUNCTION gda_set_remove_holder ##### -->
+<para>
+
+</para>
+
+@set: 
+@holder: 
+
+
+<!-- ##### FUNCTION gda_set_merge_with_set ##### -->
+<para>
+
+</para>
+
+@set: 
+@set_to_merge: 
+
+
+<!-- ##### FUNCTION gda_set_is_valid ##### -->
+<para>
+
+</para>
+
+@set: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_set_get_node ##### -->
+<para>
+
+</para>
+
+@set: 
+@param: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_set_get_source_for_model ##### -->
+<para>
+
+</para>
+
+@set: 
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_set_get_source ##### -->
+<para>
+
+</para>
+
+@set: 
+@param: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_set_get_group ##### -->
+<para>
+
+</para>
+
+@set: 
+@param: 
+@Returns: 
+
+

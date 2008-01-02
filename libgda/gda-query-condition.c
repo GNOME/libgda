@@ -18,6 +18,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#undef GDA_DISABLE_DEPRECATED
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include "gda-query-condition.h"
@@ -250,6 +251,8 @@ gda_query_condition_init (GdaQueryCondition *condition)
  * Creates a new #GdaQueryCondition object
  *
  * Returns: the newly created object
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryCondition *
 gda_query_condition_new (GdaQuery *query, GdaQueryConditionType type)
@@ -283,6 +286,8 @@ ops_ref_lost_cb (GdaObjectRef *refbase, GdaQueryCondition *cond)
  * This is a copy constructor
  *
  * Returns: the new object
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryCondition *
 gda_query_condition_new_copy (GdaQueryCondition *orig, GHashTable *replacements)
@@ -342,6 +347,8 @@ gda_query_condition_new_copy (GdaQueryCondition *orig, GHashTable *replacements)
  * from the @sql_cond statement.
  *
  * Returns: a new #GdaQueryCondition, or %NULL if there was an error in @sql_cond
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryCondition *
 gda_query_condition_new_from_sql (GdaQuery *query, const gchar *sql_cond, GSList **targets, GError **error)
@@ -613,6 +620,8 @@ condition_type_is_node (GdaQueryConditionType type)
  * Sets the kind of condition @condition represents. If @type implies a node condition and
  * @condition currently represents a leaf, or if @type implies a leaf condition and
  * @condition currently represents a node, then @condition is changed without any error.
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_query_condition_set_cond_type (GdaQueryCondition *condition, GdaQueryConditionType type)
@@ -639,6 +648,8 @@ gda_query_condition_set_cond_type (GdaQueryCondition *condition, GdaQueryConditi
  * Get the type of @condition
  *
  * Returns: the type
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryConditionType
 gda_query_condition_get_cond_type (GdaQueryCondition *condition)
@@ -656,6 +667,8 @@ gda_query_condition_get_cond_type (GdaQueryCondition *condition)
  * Get a list of #GdaQueryCondition objects which are children of @condition
  *
  * Returns: a new list of #GdaQueryCondition objects
+ *
+ * Deprecated: 3.2:
  */
 GSList *
 gda_query_condition_get_children (GdaQueryCondition *condition)
@@ -676,6 +689,8 @@ gda_query_condition_get_children (GdaQueryCondition *condition)
  * Get the #GdaQueryCondition object which is parent of @condition
  *
  * Returns: the parent object, or %NULL
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryCondition *
 gda_query_condition_get_parent (GdaQueryCondition *condition)
@@ -695,6 +710,8 @@ gda_query_condition_get_parent (GdaQueryCondition *condition)
  * Get a pointer to a #GdaQueryCondition child from its XML Id
  *
  * Returns: the #GdaQueryCondition object, or %NULL if not found
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryCondition *
 gda_query_condition_get_child_by_xml_id (GdaQueryCondition *condition, const gchar *xml_id)
@@ -711,6 +728,8 @@ gda_query_condition_get_child_by_xml_id (GdaQueryCondition *condition, const gch
  * Tests if @ancestor is an ancestor of @condition
  *
  * Returns: TRUE if @ancestor is an ancestor of @condition
+ *
+ * Deprecated: 3.2:
  */
 gboolean
 gda_query_condition_is_ancestor (GdaQueryCondition *condition, GdaQueryCondition *ancestor)
@@ -735,6 +754,8 @@ gda_query_condition_is_ancestor (GdaQueryCondition *condition, GdaQueryCondition
  * Tells if @condition is a leaf condition (not AND, OR, NOT, etc)
  *
  * Returns: TRUE if @condition is a leaf condition
+ *
+ * Deprecated: 3.2:
  */
 gboolean
 gda_query_condition_is_leaf (GdaQueryCondition *condition)
@@ -764,6 +785,8 @@ static gboolean gda_query_condition_node_add_child_pos (GdaQueryCondition *condi
  * Adds a child to @condition; this is possible only if @condition is a node type (AND, OR, etc)
  *
  * Returns: TRUE if no error occurred
+ *
+ * Deprecated: 3.2:
  */
 gboolean
 gda_query_condition_node_add_child (GdaQueryCondition *condition, GdaQueryCondition *child, GError **error)
@@ -835,6 +858,8 @@ child_cond_changed_cb (GdaQueryCondition *child, GdaQueryCondition *cond)
  * @child: a #GdaQueryCondition object
  *
  * Removes a child from @condition; this is possible only if @condition is a node type (AND, OR, etc)
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_query_condition_node_del_child (GdaQueryCondition *condition, GdaQueryCondition *child)
@@ -856,6 +881,8 @@ gda_query_condition_node_del_child (GdaQueryCondition *condition, GdaQueryCondit
  * @field: a # GdaQueryField object
  *
  * Sets one of @condition's operators
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_query_condition_leaf_set_operator (GdaQueryCondition *condition, GdaQueryConditionOperator op, GdaQueryField *field)
@@ -885,6 +912,8 @@ gda_query_condition_leaf_set_operator (GdaQueryCondition *condition, GdaQueryCon
  * Get one of @condition's operators.
  *
  * Returns: the requested #GdaQueryField object
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryField *
 gda_query_condition_leaf_get_operator  (GdaQueryCondition *condition, GdaQueryConditionOperator op)
@@ -1094,6 +1123,8 @@ gda_query_condition_represents_join_real (GdaQueryCondition *condition,
  * untouched.
  * 
  * Returns: TRUE if @condition is a join condition
+ *
+ * Deprecated: 3.2:
  */
 gboolean
 gda_query_condition_represents_join (GdaQueryCondition *condition,
@@ -1119,6 +1150,8 @@ gda_query_condition_represents_join (GdaQueryCondition *condition,
  * untouched.
  * 
  * Returns: TRUE if @condition is a strict join condition
+ *
+ * Deprecated: 3.2:
  */
 gboolean
 gda_query_condition_represents_join_strict (GdaQueryCondition *condition,
@@ -1169,6 +1202,8 @@ cond_get_main_sub_conditions (GdaQueryCondition *cond)
  * </itemizedlist>
  *
  * Returns: a new list of #GdaQueryCondition objects
+ *
+ * Deprecated: 3.2:
  */
 GSList *
 gda_query_condition_get_main_conditions (GdaQueryCondition *condition)
@@ -1885,6 +1920,8 @@ gda_query_condition_get_ref_objects (GdaReferer *iface)
  * function applied to @cond).
  *
  * Returns: a new list of referenced objects
+ *
+ * Deprecated: 3.2:
  */
 GSList *
 gda_query_condition_get_ref_objects_all (GdaQueryCondition *cond)

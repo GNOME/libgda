@@ -22,6 +22,8 @@
 #ifndef __GDA_QUERY_FIELD_ALL_H_
 #define __GDA_QUERY_FIELD_ALL_H_
 
+#ifndef GDA_DISABLE_DEPRECATED
+
 #include "gda-decl.h"
 #include "gda-query-field.h"
 
@@ -63,5 +65,7 @@ GdaQueryField  *gda_query_field_all_new                  (GdaQuery *query, const
 GdaQueryTarget *gda_query_field_all_get_target           (GdaQueryFieldAll *field);
 
 G_END_DECLS
+
+#endif /* GDA_DISABLE_DEPRECATED */
 
 #endif

@@ -22,6 +22,8 @@
 #ifndef __GDA_RENDERER_H_
 #define __GDA_RENDERER_H_
 
+#ifndef GDA_DISABLE_DEPRECATED
+
 #include <glib-object.h>
 #include <libxml/tree.h>
 #include "gda-decl.h"
@@ -64,5 +66,7 @@ gchar          *gda_renderer_render_as_str   (GdaRenderer *iface, GdaParameterLi
 gboolean        gda_renderer_is_valid        (GdaRenderer *iface, GdaParameterList *context, GError **error);
 
 G_END_DECLS
+
+#endif /* GDA_DISABLE_DEPRECATED */
 
 #endif

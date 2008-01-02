@@ -18,6 +18,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#undef GDA_DISABLE_DEPRECATED
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include "gda-query-field-agg.h"
@@ -262,6 +263,8 @@ gda_query_field_agg_init (GdaQueryFieldAgg *gda_query_field_agg)
  * Creates a new GdaQueryFieldAgg object which represents the @agg aggregate
  *
  * Returns: the new object
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryField*
 gda_query_field_agg_new (GdaQuery *query, const gchar *agg_name)
@@ -499,6 +502,8 @@ gda_query_field_agg_is_equal (GdaQueryField *qfield1, GdaQueryField *qfield2)
  * Get the real #GdaDictAggregate object used by @agg
  *
  * Returns: the #GdaDictAggregate object, or NULL if @agg is not active
+ *
+ * Deprecated: 3.2:
  */
 GdaDictAggregate *
 gda_query_field_agg_get_ref_agg (GdaQueryFieldAgg *agg)
@@ -526,6 +531,8 @@ gda_query_field_agg_get_ref_agg (GdaQueryFieldAgg *agg)
  * is performed.
  *
  * Returns: TRUE if no error occurred
+ *
+ * Deprecated: 3.2:
  */
 gboolean
 gda_query_field_agg_set_arg (GdaQueryFieldAgg *agg, GdaQueryField *arg)
@@ -593,6 +600,8 @@ gda_query_field_agg_set_arg (GdaQueryFieldAgg *agg, GdaQueryField *arg)
  * of them are missing, then a %NULL is inserted where it should have been.
  *
  * Returns: the #GnomeDbQField argument
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryField *
 gda_query_field_agg_get_arg (GdaQueryFieldAgg *agg)

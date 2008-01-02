@@ -1,0 +1,1000 @@
+<testdata>
+  <!-- Empty SQL -->
+  <test id="0">
+    <sql></sql>
+    <expected></expected>
+  </test>
+
+  <!-- Error SQL -->
+  <test id="0.1">
+    <sql>non terminated 'string</sql>
+    <error line="1" col="16"/>
+  </test>
+
+  <!-- Simple param notation -->
+  <test id="1">
+    <sql>##</sql>
+    <error line="1" col="3"/>
+  </test>
+
+  <test id="2">
+    <sql>##pname</sql>
+    <expected>{"statements":[{"statement":{"sql":"##pname","stmt_type":"UNKNOWN","contents":[{"value":null,"param_spec":{"name":"pname","descr":null,"type":null,"is_param":true,"nullok":false}}]}}]}</expected>
+  </test>
+
+  <test id="3">
+    <sql>##pname::gint</sql>
+    <expected>{"statements":[{"statement":{"sql":"##pname::gint","stmt_type":"UNKNOWN","contents":[{"value":null,"param_spec":{"name":"pname","descr":null,"type":"gint","is_param":true,"nullok":false}}]}}]}</expected>
+  </test>
+
+  <test id="4">
+    <sql>##pname::gint::null</sql>
+    <expected>{"statements":[{"statement":{"sql":"##pname::gint::null","stmt_type":"UNKNOWN","contents":[{"value":null,"param_spec":{"name":"pname","descr":null,"type":"gint","is_param":true,"nullok":true}}]}}]}</expected>
+  </test>
+
+  <!-- Extendend param notation, unspec value -->
+  <test id="5">
+    <sql>##/* name:pname */</sql>
+    <expected>{"statements":[{"statement":{"sql":"##\/* name:pname *\/","stmt_type":"UNKNOWN","contents":[{"value":null,"param_spec":{"name":"pname","descr":null,"type":null,"is_param":true,"nullok":false}}]}}]}</expected>
+  </test>
+
+  <test id="6">
+    <sql>## /* name:pname */</sql>
+    <expected>{"statements":[{"statement":{"sql":"## \/* name:pname *\/","stmt_type":"UNKNOWN","contents":[{"value":null,"param_spec":{"name":"pname","descr":null,"type":null,"is_param":true,"nullok":false}}]}}]}</expected>
+  </test>
+
+  <test id="7">
+    <sql>## /* type:gint */</sql>
+    <expected>{"statements":[{"statement":{"sql":"## \/* type:gint *\/","stmt_type":"UNKNOWN","contents":[{"value":null,"param_spec":{"name":null,"descr":null,"type":"gint","is_param":true,"nullok":false}}]}}]}</expected>
+  </test>
+
+  <test id="8">
+    <sql>## /* descr:A_Description */</sql>
+    <expected>{"statements":[{"statement":{"sql":"## \/* descr:A_Description *\/","stmt_type":"UNKNOWN","contents":[{"value":null,"param_spec":{"name":null,"descr":"A_Description","type":null,"is_param":true,"nullok":false}}]}}]}</expected>
+  </test>
+
+  <test id="9">
+    <sql>## /* name:'A param name' */</sql>
+    <expected>{"statements":[{"statement":{"sql":"## \/* name:'A param name' *\/","stmt_type":"UNKNOWN","contents":[{"value":null,"param_spec":{"name":"A param name","descr":null,"type":null,"is_param":true,"nullok":false}}]}}]}</expected>
+  </test>
+
+  <test id="10">
+    <sql>## /* name:"A param name" */</sql>
+    <expected>{"statements":[{"statement":{"sql":"## \/* name:\"A param name\" *\/","stmt_type":"UNKNOWN","contents":[{"value":null,"param_spec":{"name":"A param name","descr":null,"type":null,"is_param":true,"nullok":false}}]}}]}</expected>
+  </test>
+
+  <!-- Simple values -->
+  <test id="11">
+    <sql>123</sql>
+    <expected>{"statements":[{"statement":{"sql":"123","stmt_type":"UNKNOWN","contents":[{"value":"123"}]}}]}</expected>
+  </test>
+
+  <test id="12">
+    <sql>1.23</sql>
+    <expected>{"statements":[{"statement":{"sql":"1.23","stmt_type":"UNKNOWN","contents":[{"value":"1.23"}]}}]}</expected>
+  </test>
+
+  <test id="13">
+    <sql>'A simple ''quotes string'</sql>
+    <expected>{"statements":[{"statement":{"sql":"'A simple ''quotes string'","stmt_type":"UNKNOWN","contents":[{"value":"'A simple ''quotes string'"}]}}]}</expected>
+  </test>
+
+  <test id="14">
+    <sql>"A double "" quotes string"</sql>
+    <expected>{"statements":[{"statement":{"sql":"\"A double \"\" quotes string\"","stmt_type":"UNKNOWN","contents":[{"value":"\"A double \"\" quotes string\""}]}}]}</expected>
+  </test>
+
+  <test id="15">
+    <sql>'A simple "quotes" string'</sql>
+    <expected>{"statements":[{"statement":{"sql":"'A simple \"quotes\" string'","stmt_type":"UNKNOWN","contents":[{"value":"'A simple \"quotes\" string'"}]}}]}</expected>
+  </test>
+
+  <test id="16">
+    <sql>"A double 'quotes' string"</sql>
+    <expected>{"statements":[{"statement":{"sql":"\"A double 'quotes' string\"","stmt_type":"UNKNOWN","contents":[{"value":"\"A double 'quotes' string\""}]}}]}</expected>
+  </test>
+
+  <!-- Extendend param notation, with value -->
+  <test id="17">
+    <sql>12 /* type:gint name:myparam */</sql>
+    <expected>{"statements":[{"statement":{"sql":"12 \/* type:gint name:myparam *\/","stmt_type":"UNKNOWN","contents":[{"value":"12","param_spec":{"name":"myparam","descr":null,"type":"gint","is_param":true,"nullok":false}}]}}]}</expected>
+  </test>
+
+
+  <test id="18">
+    <sql>'A string' /* name:'A string param' type:'gchararray' */</sql>
+    <expected>{"statements":[{"statement":{"sql":"'A string' \/* name:'A string param' type:'gchararray' *\/","stmt_type":"UNKNOWN","contents":[{"value":"'A string'","param_spec":{"name":"A string param","descr":null,"type":"gchararray","is_param":true,"nullok":false}}]}}]}</expected>
+  </test>
+
+  <!-- multiple parts in single statement -->
+  <test id="19">
+    <sql>aa bb</sql>
+    <expected>{"statements":[{"statement":{"sql":"aa bb","stmt_type":"UNKNOWN","contents":[{"value":"aa"},{"value":" "},{"value":"bb"}]}}]}</expected>
+  </test>
+
+  <test id="20">
+    <sql>aa ##pname bb</sql>
+    <expected>{"statements":[{"statement":{"sql":"aa ##pname bb","stmt_type":"UNKNOWN","contents":[{"value":"aa"},{"value":" "},{"value":null,"param_spec":{"name":"pname","descr":null,"type":null,"is_param":true,"nullok":false}},{"value":" "},{"value":"bb"}]}}]}</expected>
+  </test>
+
+  <test id="21">
+    <sql>aa   1.45/* name:myparam */    ccc</sql>
+    <expected>{"statements":[{"statement":{"sql":"aa   1.45\/* name:myparam *\/    ccc","stmt_type":"UNKNOWN","contents":[{"value":"aa"},{"value":"   "},{"value":"1.45","param_spec":{"name":"myparam","descr":null,"type":null,"is_param":true,"nullok":false}},{"value":"    "},{"value":"ccc"}]}}]}</expected>
+  </test>
+
+  <!-- multiple statements -->
+  <test id="22">
+    <sql>aa;bb</sql>
+    <expected>{"statements":[{"statement":{"sql":"aa;","stmt_type":"UNKNOWN","contents":[{"value":"aa"}]}},{"statement":{"sql":"bb","stmt_type":"UNKNOWN","contents":[{"value":"bb"}]}}]}</expected>
+  </test>
+
+  <test id="23">
+    <sql>aa;;bb;</sql>
+    <expected>{"statements":[{"statement":{"sql":"aa;","stmt_type":"UNKNOWN","contents":[{"value":"aa"}]}},{"statement":{"sql":"bb;","stmt_type":"UNKNOWN","contents":[{"value":"bb"}]}}]}</expected>
+  </test>
+
+  <test id="24">
+    <sql>;;;</sql>
+    <expected></expected>
+  </test>
+
+  <test id="25">
+    <sql>aa bb;  ; c</sql>
+    <expected>{"statements":[{"statement":{"sql":"aa bb;","stmt_type":"UNKNOWN","contents":[{"value":"aa"},{"value":" "},{"value":"bb"}]}},{"statement":{"sql":" c","stmt_type":"UNKNOWN","contents":[{"value":" "},{"value":"c"}]}}]}</expected>
+  </test>
+
+  <test id="26">
+    <sql>aa bb;;cc</sql>
+    <expected>{"statements":[{"statement":{"sql":"aa bb;","stmt_type":"UNKNOWN","contents":[{"value":"aa"},{"value":" "},{"value":"bb"}]}},{"statement":{"sql":"cc","stmt_type":"UNKNOWN","contents":[{"value":"cc"}]}}]}</expected>
+  </test>
+
+  <!-- SQLite parameters specific -->
+  <test id="27" provider="SQLite">
+    <sql>?</sql>
+    <expected>{"statements":[{"statement":{"sql":"?","stmt_type":"UNKNOWN","contents":[{"value":null,"param_spec":{"name":null,"descr":null,"type":null,"is_param":true,"nullok":false}}]}}]}</expected>
+  </test>
+
+  <test id="28" provider="SQLite">
+    <sql>?123</sql>
+    <expected>{"statements":[{"statement":{"sql":"?123","stmt_type":"UNKNOWN","contents":[{"value":null,"param_spec":{"name":"123","descr":null,"type":null,"is_param":true,"nullok":false}}]}}]}</expected>
+  </test>
+
+  <test id="29" provider="SQLite">
+    <sql>:pname</sql>
+    <expected>{"statements":[{"statement":{"sql":":pname","stmt_type":"UNKNOWN","contents":[{"value":null,"param_spec":{"name":"pname","descr":null,"type":null,"is_param":true,"nullok":false}}]}}]}</expected>
+  </test>
+
+  <test id="30" provider="SQLite">
+    <sql>@pname</sql>
+    <expected>{"statements":[{"statement":{"sql":"@pname","stmt_type":"UNKNOWN","contents":[{"value":null,"param_spec":{"name":"pname","descr":null,"type":null,"is_param":true,"nullok":false}}]}}]}</expected>
+  </test>
+
+  <test id="31" provider="SQLite">
+    <sql>$pname</sql>
+    <expected>{"statements":[{"statement":{"sql":"$pname","stmt_type":"UNKNOWN","contents":[{"value":null,"param_spec":{"name":"pname","descr":null,"type":null,"is_param":true,"nullok":false}}]}}]}</expected>
+  </test>
+
+  <!-- BEGIN ...; END; statement type-->
+  <test id="32">
+    <sql>blah begin toto; end;</sql>
+    <expected>{"statements":[{"statement":{"sql":"blah begin toto; end;","stmt_type":"UNKNOWN","contents":[{"value":"blah"},{"value":" "},{"value":"begin"},{"value":" "},{"value":"toto"},{"value":";"},{"value":" "},{"value":"end"}]}}]}</expected>
+  </test>
+
+  <test id="33">
+    <sql>blah begin aaa; begin sub_aaa; end; bbb; end;</sql>
+    <expected>{"statements":[{"statement":{"sql":"blah begin aaa; begin sub_aaa; end; bbb; end;","stmt_type":"UNKNOWN","contents":[{"value":"blah"},{"value":" "},{"value":"begin"},{"value":" "},{"value":"aaa"},{"value":";"},{"value":" "},{"value":"begin"},{"value":" "},{"value":"sub_aaa"},{"value":";"},{"value":" "},{"value":"end"},{"value":";"},{"value":" "},{"value":"bbb"},{"value":";"},{"value":" "},{"value":"end"}]}}]}</expected>
+  </test>
+
+  <test id="33.1">
+    <sql>DECLARE var1 int; var2 varchar; begin blah; bloh; end;</sql>
+    <expected>{"statements":[{"statement":{"sql":"DECLARE var1 int; var2 varchar; begin blah; bloh; end;","stmt_type":"UNKNOWN","contents":[{"value":"DECLARE"},{"value":" "},{"value":"var1"},{"value":" "},{"value":"int"},{"value":";"},{"value":" "},{"value":"var2"},{"value":" "},{"value":"varchar"},{"value":";"},{"value":" "},{"value":"begin"},{"value":" "},{"value":"blah"},{"value":";"},{"value":" "},{"value":"bloh"},{"value":";"},{"value":" "},{"value":"end"}]}}]}</expected>
+  </test>
+
+  <test id="33.2">
+    <sql>DECLARE var1 int; var2 varchar (23); begin blah; bloh; end;</sql>
+    <expected>{"statements":[{"statement":{"sql":"DECLARE var1 int; var2 varchar (23); begin blah; bloh; end;","stmt_type":"UNKNOWN","contents":[{"value":"DECLARE"},{"value":" "},{"value":"var1"},{"value":" "},{"value":"int"},{"value":";"},{"value":" "},{"value":"var2"},{"value":" "},{"value":"varchar"},{"value":" "},{"value":"("},{"value":"23"},{"value":")"},{"value":";"},{"value":" "},{"value":"begin"},{"value":" "},{"value":"blah"},{"value":";"},{"value":" "},{"value":"bloh"},{"value":";"},{"value":" "},{"value":"end"}]}}]}</expected>
+  </test>
+  
+  <test id="33.3">
+    <sql>DECLARE a T1.e%TYPE; b T1.f%TYPE;CURSOR T1Cursor IS SELECT e, f FROM T1 WHERE e &lt; f FOR UPDATE; BEGIN OPEN T1Cursor; LOOP FETCH T1Cursor INTO a, b; EXIT WHEN T1Cursor%NOTFOUND; DELETE FROM T1 WHERE CURRENT OF T1Cursor; INSERT INTO T1 VALUES(b, a); END LOOP;CLOSE T1Cursor;END;</sql>
+    <expected>{"statements":[{"statement":{"sql":"DECLARE a T1.e%TYPE; b T1.f%TYPE;CURSOR T1Cursor IS SELECT e, f FROM T1 WHERE e &lt; f FOR UPDATE; BEGIN OPEN T1Cursor; LOOP FETCH T1Cursor INTO a, b; EXIT WHEN T1Cursor%NOTFOUND; DELETE FROM T1 WHERE CURRENT OF T1Cursor; INSERT INTO T1 VALUES(b, a); END LOOP;CLOSE T1Cursor;END;","stmt_type":"UNKNOWN","contents":[{"value":"DECLARE"},{"value":" "},{"value":"a"},{"value":" "},{"value":"T1.e%TYPE"},{"value":";"},{"value":" "},{"value":"b"},{"value":" "},{"value":"T1.f%TYPE"},{"value":";"},{"value":"CURSOR"},{"value":" "},{"value":"T1Cursor"},{"value":" "},{"value":"IS"},{"value":" "},{"value":"SELECT"},{"value":" "},{"value":"e,"},{"value":" "},{"value":"f"},{"value":" "},{"value":"FROM"},{"value":" "},{"value":"T1"},{"value":" "},{"value":"WHERE"},{"value":" "},{"value":"e"},{"value":" "},{"value":"&lt;"},{"value":" "},{"value":"f"},{"value":" "},{"value":"FOR"},{"value":" "},{"value":"UPDATE"},{"value":";"},{"value":" "},{"value":"BEGIN"},{"value":" "},{"value":"OPEN"},{"value":" "},{"value":"T1Cursor"},{"value":";"},{"value":" "},{"value":"LOOP"},{"value":" "},{"value":"FETCH"},{"value":" "},{"value":"T1Cursor"},{"value":" "},{"value":"INTO"},{"value":" "},{"value":"a,"},{"value":" "},{"value":"b"},{"value":";"},{"value":" "},{"value":"EXIT"},{"value":" "},{"value":"WHEN"},{"value":" "},{"value":"T1Cursor%NOTFOUND"},{"value":";"},{"value":" "},{"value":"DELETE"},{"value":" "},{"value":"FROM"},{"value":" "},{"value":"T1"},{"value":" "},{"value":"WHERE"},{"value":" "},{"value":"CURRENT"},{"value":" "},{"value":"OF"},{"value":" "},{"value":"T1Cursor"},{"value":";"},{"value":" "},{"value":"INSERT"},{"value":" "},{"value":"INTO"},{"value":" "},{"value":"T1"},{"value":" "},{"value":"VALUES"},{"value":"("},{"value":"b,"},{"value":" "},{"value":"a)"},{"value":";"},{"value":" "},{"value":"END LOOP"},{"value":";"},{"value":"CLOSE"},{"value":" "},{"value":"T1Cursor"},{"value":";"},{"value":"END"}]}}]}</expected>
+  </test>
+
+  <!-- PostgreSQL's Dollar-Quoted string constants -->
+  <test id="34" provider="PostgreSQL">
+    <sql>$a$hello'$a$</sql>
+    <expected>{"statements":[{"statement":{"sql":"$a$hello'$a$","stmt_type":"UNKNOWN","contents":[{"value":"$a$hello'$a$"}]}}]}</expected>
+  </test>
+
+  <test id="35" provider="PostgreSQL">
+    <sql>$a$hello'$ba$ more $a$</sql>
+    <expected>{"statements":[{"statement":{"sql":"$a$hello'$ba$ more $a$","stmt_type":"UNKNOWN","contents":[{"value":"$a$hello'$ba$ more $a$"}]}}]}</expected>
+  </test>
+
+  <test id="36" provider="PostgreSQL">
+    <sql>$a$hello'$b</sql>
+    <error line="1" col="1"/>
+  </test>
+
+  <test id="37" provider="PostgreSQL">
+    <sql>$function$BEGIN RETURN ($1 ~ $q$[\t\r\n\v\\]$q$); END;$function$</sql>
+    <expected>{"statements":[{"statement":{"sql":"$function$BEGIN RETURN ($1 ~ $q$[\\t\\r\\n\\v\\\\]$q$); END;$function$","stmt_type":"UNKNOWN","contents":[{"value":"$function$BEGIN RETURN ($1 ~ $q$[\\t\\r\\n\\v\\\\]$q$); END;$function$"}]}}]}</expected>
+  </test>
+
+  <test id="38" provider="PostgreSQL">
+    <sql>$function$BEGIN RETURN ($1 ~ $q$[\t\r\n\v\\]$q$); END;$function$ /* name:mydef */</sql>
+    <expected>{"statements":[{"statement":{"sql":"$function$BEGIN RETURN ($1 ~ $q$[\\t\\r\\n\\v\\\\]$q$); END;$function$ \/* name:mydef *\/","stmt_type":"UNKNOWN","contents":[{"value":"$function$BEGIN RETURN ($1 ~ $q$[\\t\\r\\n\\v\\\\]$q$); END;$function$","param_spec":{"name":"mydef","descr":null,"type":null,"is_param":true,"nullok":false}}]}}]}</expected>
+  </test>
+
+  <test id="39" provider="PostgreSQL">
+    <sql>$$any string is ok ?*/$a' $$</sql>
+    <expected>{"statements":[{"statement":{"sql":"$$any string is ok ?*\/$a' $$","stmt_type":"UNKNOWN","contents":[{"value":"$$any string is ok ?*\/$a' $$"}]}}]}</expected>
+  </test>
+
+  <!-- Oracle's IS and AS used in function or precedure definitions -->
+  <test id="40" provider="Oracle">
+    <sql>CREATE PROCEDURE addtuple1(i IN NUMBER) AS var1 int; begin blah; end;</sql>
+    <expected>{"statements":[{"statement":{"sql":"CREATE PROCEDURE addtuple1(i IN NUMBER) AS var1 int; begin blah; end;","stmt_type":"UNKNOWN","contents":[{"value":"CREATE"},{"value":" "},{"value":"PROCEDURE"},{"value":" "},{"value":"addtuple1(i"},{"value":" "},{"value":"IN"},{"value":" "},{"value":"NUMBER)"},{"value":" "},{"value":"AS"},{"value":" "},{"value":"var1"},{"value":" "},{"value":"int"},{"value":";"},{"value":" "},{"value":"begin"},{"value":" "},{"value":"blah"},{"value":";"},{"value":" "},{"value":"end"}]}}]}</expected>
+  </test>
+
+  <test id="41" provider="Oracle">
+    <sql>CREATE PROCEDURE addtuple1(i IN NUMBER) IS var1 int; begin blah; end;</sql>
+    <expected>{"statements":[{"statement":{"sql":"CREATE PROCEDURE addtuple1(i IN NUMBER) IS var1 int; begin blah; end;","stmt_type":"UNKNOWN","contents":[{"value":"CREATE"},{"value":" "},{"value":"PROCEDURE"},{"value":" "},{"value":"addtuple1(i"},{"value":" "},{"value":"IN"},{"value":" "},{"value":"NUMBER)"},{"value":" "},{"value":"IS"},{"value":" "},{"value":"var1"},{"value":" "},{"value":"int"},{"value":";"},{"value":" "},{"value":"begin"},{"value":" "},{"value":"blah"},{"value":";"},{"value":" "},{"value":"end"}]}}]}</expected>
+  </test>
+
+  <!-- Misc SQL -->
+  <test id="42">
+    <sql>SELECT * from table as t;</sql>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"SELECT * from table as t;","stmt_type":"UNKNOWN","contents":[{"value":"SELECT"},{"value":" "},{"value":"*"},{"value":" "},{"value":"from"},{"value":" "},{"value":"table"},{"value":" "},{"value":"as"},{"value":" "},{"value":"t"}]}}]}</expected>
+  </test>
+
+  <!-- MySQL DELIMITER command -->
+  <test id="43" provider="MySQL">
+    <sql>aa;bb;delimiter|aa|bb|delimiter;cc</sql>
+    <expected>{"statements":[{"statement":{"sql":"aa;","stmt_type":"UNKNOWN","contents":[{"value":"aa"}]}},{"statement":{"sql":"bb;","stmt_type":"UNKNOWN","contents":[{"value":"bb"}]}},{"statement":{"sql":"delimiter|","stmt_type":"UNKNOWN","contents":[{"value":"delimiter"}]}},{"statement":{"sql":"aa|","stmt_type":"UNKNOWN","contents":[{"value":"aa"}]}},{"statement":{"sql":"bb|","stmt_type":"UNKNOWN","contents":[{"value":"bb"}]}},{"statement":{"sql":"delimiter;","stmt_type":"UNKNOWN","contents":[{"value":"delimiter"}]}},{"statement":{"sql":"cc","stmt_type":"UNKNOWN","contents":[{"value":"cc"}]}}]}</expected>
+  </test>
+
+  <!-- Transactions, SQLite -->
+  <test id="1000">
+    <sql>begin</sql>
+    <expected>{"statements":[{"statement":{"sql":"begin","stmt_type":"BEGIN","contents":{"trans_mode":null,"trans_name":null,"isol_level":null}}}]}</expected>
+  </test>
+
+  <test id="1001">
+    <sql>begin;</sql>
+    <expected>{"statements":[{"statement":{"sql":"begin;","stmt_type":"BEGIN","contents":{"trans_mode":null,"trans_name":null,"isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"begin;","stmt_type":"UNKNOWN","contents":[{"value":"begin"}]}}]}</expected>
+  </test>
+
+  <test id="1002">
+    <sql>begin transaction;</sql>
+    <expected>{"statements":[{"statement":{"sql":"begin transaction;","stmt_type":"BEGIN","contents":{"trans_mode":null,"trans_name":null,"isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"begin transaction;","stmt_type":"UNKNOWN","contents":[{"value":"begin"},{"value":" "},{"value":"transaction"}]}}]}</expected>
+  </test>
+
+  <test id="1003">
+    <sql>begin transaction mytrans</sql>
+    <expected>{"statements":[{"statement":{"sql":"begin transaction mytrans","stmt_type":"BEGIN","contents":{"trans_mode":null,"trans_name":"mytrans","isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"begin transaction mytrans","stmt_type":"UNKNOWN","contents":[{"value":"begin"},{"value":" "},{"value":"transaction"},{"value":" "},{"value":"mytrans"}]}}]}</expected>
+  </test>
+
+  <test id="1004">
+    <sql>BEGIN DEFERRED</sql>
+    <expected>{"statements":[{"statement":{"sql":"BEGIN DEFERRED","stmt_type":"BEGIN","contents":{"trans_mode":"DEFERRED","trans_name":null,"isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"BEGIN DEFERRED","stmt_type":"UNKNOWN","contents":[{"value":"BEGIN"},{"value":" "},{"value":"DEFERRED"}]}}]}</expected>
+  </test>
+
+  <test id="1005">
+    <sql>BEGIN DEFERRED TRANSACTION</sql>
+    <expected>{"statements":[{"statement":{"sql":"BEGIN DEFERRED TRANSACTION","stmt_type":"BEGIN","contents":{"trans_mode":"DEFERRED","trans_name":null,"isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"BEGIN DEFERRED TRANSACTION","stmt_type":"UNKNOWN","contents":[{"value":"BEGIN"},{"value":" "},{"value":"DEFERRED"},{"value":" "},{"value":"TRANSACTION"}]}}]}</expected>
+  </test>
+
+  <test id="1006">
+    <sql>bEgIn immediate</sql>
+    <expected>{"statements":[{"statement":{"sql":"bEgIn immediate","stmt_type":"BEGIN","contents":{"trans_mode":"immediate","trans_name":null,"isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"bEgIn immediate","stmt_type":"UNKNOWN","contents":[{"value":"bEgIn"},{"value":" "},{"value":"immediate"}]}}]}</expected>
+  </test>
+
+  <test id="1007">
+    <sql>Begin Exclusive</sql>
+    <expected>{"statements":[{"statement":{"sql":"Begin Exclusive","stmt_type":"BEGIN","contents":{"trans_mode":"Exclusive","trans_name":null,"isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"Begin Exclusive","stmt_type":"UNKNOWN","contents":[{"value":"Begin"},{"value":" "},{"value":"Exclusive"}]}}]}</expected>
+  </test>
+
+  <test id="1008">
+    <sql>end;</sql>
+    <expected>{"statements":[{"statement":{"sql":"end;","stmt_type":"COMMIT","contents":{"trans_mode":null,"trans_name":null,"isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"end;","stmt_type":"UNKNOWN","contents":[{"value":"end"}]}}]}</expected>
+  </test>
+
+  <test id="1009">
+    <sql>commit transaction;</sql>
+    <expected>{"statements":[{"statement":{"sql":"commit transaction;","stmt_type":"COMMIT","contents":{"trans_mode":null,"trans_name":null,"isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"commit transaction;","stmt_type":"UNKNOWN","contents":[{"value":"commit"},{"value":" "},{"value":"transaction"}]}}]}</expected>
+  </test>
+
+  <test id="1010">
+    <sql>rollback transaction my_trans;</sql>
+    <expected>{"statements":[{"statement":{"sql":"rollback transaction my_trans;","stmt_type":"ROLLBACK","contents":{"trans_mode":null,"trans_name":"my_trans","isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"rollback transaction my_trans;","stmt_type":"UNKNOWN","contents":[{"value":"rollback"},{"value":" "},{"value":"transaction"},{"value":" "},{"value":"my_trans"}]}}]}</expected>
+  </test>
+
+  <!-- Transactions, PostgreSQL -->
+  <test id="1011">
+    <sql>BEGIN ISOLATION LEVEL SERIALIZABLE</sql>
+    <expected>{"statements":[{"statement":{"sql":"BEGIN ISOLATION LEVEL SERIALIZABLE","stmt_type":"BEGIN","contents":{"trans_mode":null,"trans_name":null,"isol_level":"SERIALIZABLE"}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"BEGIN ISOLATION LEVEL SERIALIZABLE","stmt_type":"UNKNOWN","contents":[{"value":"BEGIN"},{"value":" "},{"value":"ISOLATION"},{"value":" "},{"value":"LEVEL"},{"value":" "},{"value":"SERIALIZABLE"}]}}]}</expected>
+  </test>
+
+  <test id="1012">
+    <sql>begin isolation  level REPEATABLE    READ</sql>
+    <expected>{"statements":[{"statement":{"sql":"begin isolation  level REPEATABLE    READ","stmt_type":"BEGIN","contents":{"trans_mode":null,"trans_name":null,"isol_level":"REPEATABLE_READ"}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"begin isolation  level REPEATABLE    READ","stmt_type":"UNKNOWN","contents":[{"value":"begin"},{"value":" "},{"value":"isolation"},{"value":"  "},{"value":"level"},{"value":" "},{"value":"REPEATABLE"},{"value":"    "},{"value":"READ"}]}}]}</expected>
+  </test>
+
+  <test id="1013">
+    <sql>begin isolation LEVEL READ COMMITTED;</sql>
+    <expected>{"statements":[{"statement":{"sql":"begin isolation LEVEL READ COMMITTED;","stmt_type":"BEGIN","contents":{"trans_mode":null,"trans_name":null,"isol_level":"COMMITTED_READ"}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"begin isolation LEVEL READ COMMITTED;","stmt_type":"UNKNOWN","contents":[{"value":"begin"},{"value":" "},{"value":"isolation"},{"value":" "},{"value":"LEVEL"},{"value":" "},{"value":"READ"},{"value":" "},{"value":"COMMITTED"}]}}]}</expected>
+  </test>
+
+  <test id="1014">
+    <sql>begin isolation LEVEL READ uncommitted;</sql>
+    <expected>{"statements":[{"statement":{"sql":"begin isolation LEVEL READ uncommitted;","stmt_type":"BEGIN","contents":{"trans_mode":null,"trans_name":null,"isol_level":"UNCOMMITTED_READ"}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"begin isolation LEVEL READ uncommitted;","stmt_type":"UNKNOWN","contents":[{"value":"begin"},{"value":" "},{"value":"isolation"},{"value":" "},{"value":"LEVEL"},{"value":" "},{"value":"READ"},{"value":" "},{"value":"uncommitted"}]}}]}</expected>
+  </test>
+
+  <test id="1015" provider="PostgreSQL">
+    <sql>begin work;</sql>
+    <expected>{"statements":[{"statement":{"sql":"begin work;","stmt_type":"BEGIN","contents":{"trans_mode":null,"trans_name":null,"isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"begin work;","stmt_type":"UNKNOWN","contents":[{"value":"begin"},{"value":" "},{"value":"work"}]}}]}</expected>
+  </test>
+
+  <test id="1016">
+    <sql>begin isolation LEVEL READ COMMITTED, READ WRITE</sql>
+    <expected>{"statements":[{"statement":{"sql":"begin isolation LEVEL READ COMMITTED, READ WRITE","stmt_type":"BEGIN","contents":{"trans_mode":"READ_WRITE","trans_name":null,"isol_level":"COMMITTED_READ"}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"begin isolation LEVEL READ COMMITTED, READ WRITE","stmt_type":"UNKNOWN","contents":[{"value":"begin"},{"value":" "},{"value":"isolation"},{"value":" "},{"value":"LEVEL"},{"value":" "},{"value":"READ"},{"value":" "},{"value":"COMMITTED"},{"value":","},{"value":" "},{"value":"READ"},{"value":" "},{"value":"WRITE"}]}}]}</expected>
+  </test>
+
+  <test id="1017">
+    <sql>begin READ ONLY, ISOLATION level READ COMMITTED</sql>
+    <expected>{"statements":[{"statement":{"sql":"begin READ ONLY, ISOLATION level READ COMMITTED","stmt_type":"BEGIN","contents":{"trans_mode":"READ_ONLY","trans_name":null,"isol_level":"COMMITTED_READ"}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"begin READ ONLY, ISOLATION level READ COMMITTED","stmt_type":"UNKNOWN","contents":[{"value":"begin"},{"value":" "},{"value":"READ"},{"value":" "},{"value":"ONLY"},{"value":","},{"value":" "},{"value":"ISOLATION"},{"value":" "},{"value":"level"},{"value":" "},{"value":"READ"},{"value":" "},{"value":"COMMITTED"}]}}]}</expected>
+  </test>
+
+  <test id="1018">
+    <sql>begin transaction READ ONLY, ISOLATION level READ COMMITTED;</sql>
+    <expected>{"statements":[{"statement":{"sql":"begin transaction READ ONLY, ISOLATION level READ COMMITTED;","stmt_type":"BEGIN","contents":{"trans_mode":"READ_ONLY","trans_name":null,"isol_level":"COMMITTED_READ"}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"begin transaction READ ONLY, ISOLATION level READ COMMITTED;","stmt_type":"UNKNOWN","contents":[{"value":"begin"},{"value":" "},{"value":"transaction"},{"value":" "},{"value":"READ"},{"value":" "},{"value":"ONLY"},{"value":","},{"value":" "},{"value":"ISOLATION"},{"value":" "},{"value":"level"},{"value":" "},{"value":"READ"},{"value":" "},{"value":"COMMITTED"}]}}]}</expected>
+  </test>
+
+  <test id="1019">
+    <sql>begin transaction READ ONLY ISOLATION level READ COMMITTED;</sql>
+    <expected>{"statements":[{"statement":{"sql":"begin transaction READ ONLY ISOLATION level READ COMMITTED;","stmt_type":"BEGIN","contents":{"trans_mode":"READ_ONLY","trans_name":null,"isol_level":"COMMITTED_READ"}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"begin transaction READ ONLY ISOLATION level READ COMMITTED;","stmt_type":"UNKNOWN","contents":[{"value":"begin"},{"value":" "},{"value":"transaction"},{"value":" "},{"value":"READ"},{"value":" "},{"value":"ONLY"},{"value":" "},{"value":"ISOLATION"},{"value":" "},{"value":"level"},{"value":" "},{"value":"READ"},{"value":" "},{"value":"COMMITTED"}]}}]}</expected>
+  </test>
+
+  <test id="1020">
+    <sql>begin transaction ISOLATION level READ UNCOMMITTED READ WRITE;</sql>
+    <expected>{"statements":[{"statement":{"sql":"begin transaction ISOLATION level READ UNCOMMITTED READ WRITE;","stmt_type":"BEGIN","contents":{"trans_mode":"READ_WRITE","trans_name":null,"isol_level":"UNCOMMITTED_READ"}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"begin transaction ISOLATION level READ UNCOMMITTED READ WRITE;","stmt_type":"UNKNOWN","contents":[{"value":"begin"},{"value":" "},{"value":"transaction"},{"value":" "},{"value":"ISOLATION"},{"value":" "},{"value":"level"},{"value":" "},{"value":"READ"},{"value":" "},{"value":"UNCOMMITTED"},{"value":" "},{"value":"READ"},{"value":" "},{"value":"WRITE"}]}}]}</expected>
+  </test>
+
+  <test id="1021" provider="PostgreSQL">
+    <sql>start;</sql>
+    <expected>{"statements":[{"statement":{"sql":"start;","stmt_type":"BEGIN","contents":{"trans_mode":null,"trans_name":null,"isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"start;","stmt_type":"UNKNOWN","contents":[{"value":"start"}]}}]}</expected>
+  </test>
+
+  <test id="1022">
+    <sql>commit</sql>
+    <expected>{"statements":[{"statement":{"sql":"commit","stmt_type":"COMMIT","contents":{"trans_mode":null,"trans_name":null,"isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"commit","stmt_type":"UNKNOWN","contents":[{"value":"commit"}]}}]}</expected>
+  </test>
+
+  <test id="1023">
+    <sql>commit work;</sql>
+    <expected>{"statements":[{"statement":{"sql":"commit work;","stmt_type":"COMMIT","contents":{"trans_mode":null,"trans_name":null,"isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"commit work;","stmt_type":"UNKNOWN","contents":[{"value":"commit"},{"value":" "},{"value":"work"}]}}]}</expected>
+  </test>
+
+  <test id="1024">
+    <sql>commit transaction;</sql>
+    <expected>{"statements":[{"statement":{"sql":"commit transaction;","stmt_type":"COMMIT","contents":{"trans_mode":null,"trans_name":null,"isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"commit transaction;","stmt_type":"UNKNOWN","contents":[{"value":"commit"},{"value":" "},{"value":"transaction"}]}}]}</expected>
+  </test>
+
+  <test id="1025">
+    <sql>end;</sql>
+    <expected>{"statements":[{"statement":{"sql":"end;","stmt_type":"COMMIT","contents":{"trans_mode":null,"trans_name":null,"isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"end;","stmt_type":"UNKNOWN","contents":[{"value":"end"}]}}]}</expected>
+  </test>
+
+  <test id="1026">
+    <sql>end transaction</sql>
+    <expected>{"statements":[{"statement":{"sql":"end transaction","stmt_type":"COMMIT","contents":{"trans_mode":null,"trans_name":null,"isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"end transaction","stmt_type":"UNKNOWN","contents":[{"value":"end"},{"value":" "},{"value":"transaction"}]}}]}</expected>
+  </test>
+
+  <test id="1027">
+    <sql>end transaction mytrans;</sql>
+    <expected>{"statements":[{"statement":{"sql":"end transaction mytrans;","stmt_type":"COMMIT","contents":{"trans_mode":null,"trans_name":"mytrans","isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"end transaction mytrans;","stmt_type":"UNKNOWN","contents":[{"value":"end"},{"value":" "},{"value":"transaction"},{"value":" "},{"value":"mytrans"}]}}]}</expected>
+  </test>
+
+  <test id="1028">
+    <sql>end mytrans;</sql>
+    <expected>{"statements":[{"statement":{"sql":"end mytrans;","stmt_type":"COMMIT","contents":{"trans_mode":null,"trans_name":"mytrans","isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"end mytrans;","stmt_type":"UNKNOWN","contents":[{"value":"end"},{"value":" "},{"value":"mytrans"}]}}]}</expected>
+  </test>
+
+  <test id="1029">
+    <sql>rollback;</sql>
+    <expected>{"statements":[{"statement":{"sql":"rollback;","stmt_type":"ROLLBACK","contents":{"trans_mode":null,"trans_name":null,"isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"rollback;","stmt_type":"UNKNOWN","contents":[{"value":"rollback"}]}}]}</expected>
+  </test>
+
+  <test id="1030">
+    <sql>rollback transaction</sql>
+    <expected>{"statements":[{"statement":{"sql":"rollback transaction","stmt_type":"ROLLBACK","contents":{"trans_mode":null,"trans_name":null,"isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"rollback transaction","stmt_type":"UNKNOWN","contents":[{"value":"rollback"},{"value":" "},{"value":"transaction"}]}}]}</expected>
+  </test>
+
+  <test id="1031">
+    <sql>rollback transaction mytrans;</sql>
+    <expected>{"statements":[{"statement":{"sql":"rollback transaction mytrans;","stmt_type":"ROLLBACK","contents":{"trans_mode":null,"trans_name":"mytrans","isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"rollback transaction mytrans;","stmt_type":"UNKNOWN","contents":[{"value":"rollback"},{"value":" "},{"value":"transaction"},{"value":" "},{"value":"mytrans"}]}}]}</expected>
+  </test>
+
+  <test id="1032">
+    <sql>Rollback My_trans;</sql>
+    <expected>{"statements":[{"statement":{"sql":"Rollback My_trans;","stmt_type":"ROLLBACK","contents":{"trans_mode":null,"trans_name":"My_trans","isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"Rollback My_trans;","stmt_type":"UNKNOWN","contents":[{"value":"Rollback"},{"value":" "},{"value":"My_trans"}]}}]}</expected>
+  </test>
+
+  <test id="1032.1" provider="Oracle">
+    <sql>commit force 'a comment';</sql>
+    <expected>{"statements":[{"statement":{"sql":"commit force 'a comment';","stmt_type":"COMMIT","contents":{"trans_mode":null,"trans_name":null,"isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"commit force 'a comment';","stmt_type":"UNKNOWN","contents":[{"value":"commit"},{"value":" "},{"value":"force"},{"value":" "},{"value":"'a comment'"}]}}]}</expected>
+  </test>
+
+  <test id="1032.2" provider="Oracle">
+    <sql>commit force 'a comment',2</sql>
+    <expected>{"statements":[{"statement":{"sql":"commit force 'a comment',2","stmt_type":"COMMIT","contents":{"trans_mode":null,"trans_name":null,"isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"commit force 'a comment',2","stmt_type":"UNKNOWN","contents":[{"value":"commit"},{"value":" "},{"value":"force"},{"value":" "},{"value":"'a comment'"},{"value":","},{"value":"2"}]}}]}</expected>
+  </test>
+
+  <test id="1032.3">
+    <sql>commit comment 'a comment'</sql>
+    <expected>{"statements":[{"statement":{"sql":"commit comment 'a comment'","stmt_type":"COMMIT","contents":{"trans_mode":null,"trans_name":null,"isol_level":null}}}]}</expected>
+  </test>
+
+  <test id="1032.4" provider="Oracle">
+    <sql>commit write batch</sql>
+    <expected>{"statements":[{"statement":{"sql":"commit write batch","stmt_type":"COMMIT","contents":{"trans_mode":null,"trans_name":null,"isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"commit write batch","stmt_type":"UNKNOWN","contents":[{"value":"commit"},{"value":" "},{"value":"write"},{"value":" "},{"value":"batch"}]}}]}</expected>
+  </test>
+
+  <test id="1032.5" provider="Oracle">
+    <sql>commit write nowait</sql>
+    <expected>{"statements":[{"statement":{"sql":"commit write nowait","stmt_type":"COMMIT","contents":{"trans_mode":null,"trans_name":null,"isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"commit write nowait","stmt_type":"UNKNOWN","contents":[{"value":"commit"},{"value":" "},{"value":"write"},{"value":" "},{"value":"nowait"}]}}]}</expected>
+  </test>
+
+  <test id="1032.6" provider="Oracle">
+    <sql>commit write immediate wait</sql>
+    <expected>{"statements":[{"statement":{"sql":"commit write immediate wait","stmt_type":"COMMIT","contents":{"trans_mode":null,"trans_name":null,"isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"commit write immediate wait","stmt_type":"UNKNOWN","contents":[{"value":"commit"},{"value":" "},{"value":"write"},{"value":" "},{"value":"immediate"},{"value":" "},{"value":"wait"}]}}]}</expected>
+  </test>
+
+  <test id="1032.7" provider="Oracle">
+    <sql>commit comment 'blah' write immediate nowait</sql>
+    <expected>{"statements":[{"statement":{"sql":"commit comment 'blah' write immediate nowait","stmt_type":"COMMIT","contents":{"trans_mode":null,"trans_name":null,"isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"commit comment 'blah' write immediate nowait","stmt_type":"UNKNOWN","contents":[{"value":"commit"},{"value":" "},{"value":"comment"},{"value":" "},{"value":"'blah'"},{"value":" "},{"value":"write"},{"value":" "},{"value":"immediate"},{"value":" "},{"value":"nowait"}]}}]}</expected>
+  </test>
+
+  <!-- Savepoints -->
+  <test id="1033">
+    <sql>savepoint my_savepoint;</sql>
+    <expected>{"statements":[{"statement":{"sql":"savepoint my_savepoint;","stmt_type":"SAVEPOINT","contents":{"trans_mode":null,"trans_name":"my_savepoint","isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"savepoint my_savepoint;","stmt_type":"UNKNOWN","contents":[{"value":"savepoint"},{"value":" "},{"value":"my_savepoint"}]}}]}</expected>
+  </test>
+
+  <test id="1034">
+    <sql>release my_svp;</sql>
+    <expected>{"statements":[{"statement":{"sql":"release my_svp;","stmt_type":"DELETE_SAVEPOINT","contents":{"trans_mode":null,"trans_name":"my_svp","isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"release my_svp;","stmt_type":"UNKNOWN","contents":[{"value":"release"},{"value":" "},{"value":"my_svp"}]}}]}</expected>
+  </test>
+
+  <test id="1035">
+    <sql>release savepoint my_svp;</sql>
+    <expected>{"statements":[{"statement":{"sql":"release savepoint my_svp;","stmt_type":"DELETE_SAVEPOINT","contents":{"trans_mode":null,"trans_name":"my_svp","isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"release savepoint my_svp;","stmt_type":"UNKNOWN","contents":[{"value":"release"},{"value":" "},{"value":"savepoint"},{"value":" "},{"value":"my_svp"}]}}]}</expected>
+  </test>
+
+  <test id="1036">
+    <sql>rollback to mysvp;</sql>
+    <expected>{"statements":[{"statement":{"sql":"rollback to mysvp;","stmt_type":"ROLLBACK_SAVEPOINT","contents":{"trans_mode":null,"trans_name":"mysvp","isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"rollback to mysvp;","stmt_type":"UNKNOWN","contents":[{"value":"rollback"},{"value":" "},{"value":"to"},{"value":" "},{"value":"mysvp"}]}}]}</expected>
+  </test>
+
+  <test id="1037">
+    <sql>rollback to savepoint mysvp;</sql>
+    <expected>{"statements":[{"statement":{"sql":"rollback to savepoint mysvp;","stmt_type":"ROLLBACK_SAVEPOINT","contents":{"trans_mode":null,"trans_name":"mysvp","isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"rollback to savepoint mysvp;","stmt_type":"UNKNOWN","contents":[{"value":"rollback"},{"value":" "},{"value":"to"},{"value":" "},{"value":"savepoint"},{"value":" "},{"value":"mysvp"}]}}]}</expected>
+  </test>
+
+  <test id="1038">
+    <sql>rollback transaction to savepoint mysvp;</sql>
+    <expected>{"statements":[{"statement":{"sql":"rollback transaction to savepoint mysvp;","stmt_type":"ROLLBACK_SAVEPOINT","contents":{"trans_mode":null,"trans_name":"mysvp","isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"rollback transaction to savepoint mysvp;","stmt_type":"UNKNOWN","contents":[{"value":"rollback"},{"value":" "},{"value":"transaction"},{"value":" "},{"value":"to"},{"value":" "},{"value":"savepoint"},{"value":" "},{"value":"mysvp"}]}}]}</expected>
+  </test>
+
+  <test id="1039">
+    <sql>rollback work to savepoint mysvp;</sql>
+    <expected>{"statements":[{"statement":{"sql":"rollback work to savepoint mysvp;","stmt_type":"ROLLBACK_SAVEPOINT","contents":{"trans_mode":null,"trans_name":"mysvp","isol_level":null}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"rollback work to savepoint mysvp;","stmt_type":"UNKNOWN","contents":[{"value":"rollback"},{"value":" "},{"value":"work"},{"value":" "},{"value":"to"},{"value":" "},{"value":"savepoint"},{"value":" "},{"value":"mysvp"}]}}]}</expected>
+  </test>
+
+  <!-- INSERT -->
+  <test id="2000">
+    <sql>insert into mytable (a, b) values (1, 2);</sql>
+    <expected>{"statements":[{"statement":{"sql":"insert into mytable (a, b) values (1, 2);","stmt_type":"INSERT","contents":{"table":"mytable","fields":["a","b"],"values":[[{"value":"1"},{"value":"2"}]]}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"insert into mytable (a, b) values (1, 2);","stmt_type":"UNKNOWN","contents":[{"value":"insert"},{"value":" "},{"value":"into"},{"value":" "},{"value":"mytable"},{"value":" "},{"value":"("},{"value":"a,"},{"value":" "},{"value":"b)"},{"value":" "},{"value":"values"},{"value":" "},{"value":"("},{"value":"1"},{"value":","},{"value":" "},{"value":"2"},{"value":")"}]}}]}</expected>
+  </test>
+
+  <test id="2001">
+    <sql>insert into mytable (a, b) values (1, 2), (3, 4);</sql>
+    <expected>{"statements":[{"statement":{"sql":"insert into mytable (a, b) values (1, 2), (3, 4);","stmt_type":"INSERT","contents":{"table":"mytable","fields":["a","b"],"values":[[{"value":"1"},{"value":"2"}],[{"value":"3"},{"value":"4"}]]}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"insert into mytable (a, b) values (1, 2), (3, 4);","stmt_type":"UNKNOWN","contents":[{"value":"insert"},{"value":" "},{"value":"into"},{"value":" "},{"value":"mytable"},{"value":" "},{"value":"("},{"value":"a,"},{"value":" "},{"value":"b)"},{"value":" "},{"value":"values"},{"value":" "},{"value":"("},{"value":"1"},{"value":","},{"value":" "},{"value":"2"},{"value":")"},{"value":","},{"value":" "},{"value":"("},{"value":"3"},{"value":","},{"value":" "},{"value":"4"},{"value":")"}]}}]}</expected>
+  </test>
+
+  <test id="2002">
+    <sql>insert into cat.schema.mytable (a, b) values (null, 1);</sql>
+    <expected>{"statements":[{"statement":{"sql":"insert into cat.schema.mytable (a, b) values (null, 1);","stmt_type":"INSERT","contents":{"table":"cat.schema.mytable","fields":["a","b"],"values":[[{"value":null},{"value":"1"}]]}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"insert into cat.schema.mytable (a, b) values (null, 1);","stmt_type":"UNKNOWN","contents":[{"value":"insert"},{"value":" "},{"value":"into"},{"value":" "},{"value":"cat.schema.mytable"},{"value":" "},{"value":"("},{"value":"a,"},{"value":" "},{"value":"b)"},{"value":" "},{"value":"values"},{"value":" "},{"value":"("},{"value":"null"},{"value":","},{"value":" "},{"value":"1"},{"value":")"}]}}]}</expected>
+  </test>
+
+  <test id="2003">
+    <sql>insert or replace into schema.mytable (a, b) values (null, 1);</sql>
+    <expected>{"statements":[{"statement":{"sql":"insert or replace into schema.mytable (a, b) values (null, 1);","stmt_type":"INSERT","contents":{"table":"schema.mytable","fields":["a","b"],"values":[[{"value":null},{"value":"1"}]],"on_conflict":"replace"}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"insert or replace into schema.mytable (a, b) values (null, 1);","stmt_type":"UNKNOWN","contents":[{"value":"insert"},{"value":" "},{"value":"or"},{"value":" "},{"value":"replace"},{"value":" "},{"value":"into"},{"value":" "},{"value":"schema.mytable"},{"value":" "},{"value":"("},{"value":"a,"},{"value":" "},{"value":"b)"},{"value":" "},{"value":"values"},{"value":" "},{"value":"("},{"value":"null"},{"value":","},{"value":" "},{"value":"1"},{"value":")"}]}}]}</expected>
+  </test>
+
+  <test id="2004">
+    <sql>insert into schema.mytable (a, b, c, d, e) values (null, DEFAULT, 12, 1.23, 'a string');</sql>
+    <expected>{"statements":[{"statement":{"sql":"insert into schema.mytable (a, b, c, d, e) values (null, DEFAULT, 12, 1.23, 'a string');","stmt_type":"INSERT","contents":{"table":"schema.mytable","fields":["a","b","c","d","e"],"values":[[{"value":null},{"value":"DEFAULT"},{"value":"12"},{"value":"1.23"},{"value":"'a string'"}]]}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"insert into schema.mytable (a, b, c, d, e) values (null, DEFAULT, 12, 1.23, 'a string');","stmt_type":"UNKNOWN","contents":[{"value":"insert"},{"value":" "},{"value":"into"},{"value":" "},{"value":"schema.mytable"},{"value":" "},{"value":"("},{"value":"a,"},{"value":" "},{"value":"b,"},{"value":" "},{"value":"c,"},{"value":" "},{"value":"d,"},{"value":" "},{"value":"e)"},{"value":" "},{"value":"values"},{"value":" "},{"value":"("},{"value":"null"},{"value":","},{"value":" "},{"value":"DEFAULT,"},{"value":" "},{"value":"12"},{"value":","},{"value":" "},{"value":"1.23"},{"value":","},{"value":" "},{"value":"'a string'"},{"value":")"}]}}]}</expected>
+  </test>
+
+  <test id="2005">
+    <sql>insert into schema.mytable (a, b, c, d, e) values (null, DEFAULT, 12, 1.23, f('a string'));</sql>
+    <expected>{"statements":[{"statement":{"sql":"insert into schema.mytable (a, b, c, d, e) values (null, DEFAULT, 12, 1.23, f('a string'));","stmt_type":"INSERT","contents":{"table":"schema.mytable","fields":["a","b","c","d","e"],"values":[[{"value":null},{"value":"DEFAULT"},{"value":"12"},{"value":"1.23"},{"func":{"function_name":"f","function_args":[{"value":"'a string'"}]}}]]}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"insert into schema.mytable (a, b, c, d, e) values (null, DEFAULT, 12, 1.23, f('a string'));","stmt_type":"UNKNOWN","contents":[{"value":"insert"},{"value":" "},{"value":"into"},{"value":" "},{"value":"schema.mytable"},{"value":" "},{"value":"("},{"value":"a,"},{"value":" "},{"value":"b,"},{"value":" "},{"value":"c,"},{"value":" "},{"value":"d,"},{"value":" "},{"value":"e)"},{"value":" "},{"value":"values"},{"value":" "},{"value":"("},{"value":"null"},{"value":","},{"value":" "},{"value":"DEFAULT,"},{"value":" "},{"value":"12"},{"value":","},{"value":" "},{"value":"1.23"},{"value":","},{"value":" "},{"value":"f("},{"value":"'a string'"},{"value":")"},{"value":")"}]}}]}</expected>
+  </test>
+
+  <test id="2006">
+    <sql>insert into schema.mytable values (f1('a string'), f2(aa.bb, dd));</sql>
+    <expected>{"statements":[{"statement":{"sql":"insert into schema.mytable values (f1('a string'), f2(aa.bb, dd));","stmt_type":"INSERT","contents":{"table":"schema.mytable","fields":null,"values":[[{"func":{"function_name":"f1","function_args":[{"value":"'a string'"}]}},{"func":{"function_name":"f2","function_args":[{"value":"aa.bb"},{"value":"dd"}]}}]]}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"insert into schema.mytable values (f1('a string'), f2(aa.bb, dd));","stmt_type":"UNKNOWN","contents":[{"value":"insert"},{"value":" "},{"value":"into"},{"value":" "},{"value":"schema.mytable"},{"value":" "},{"value":"values"},{"value":" "},{"value":"("},{"value":"f1("},{"value":"'a string'"},{"value":")"},{"value":","},{"value":" "},{"value":"f2(aa.bb,"},{"value":" "},{"value":"dd))"}]}}]}</expected>
+  </test>
+
+  <test id="2006.1">
+    <sql>insert into tab select * from otab;</sql>
+    <expected>{"statements":[{"statement":{"sql":"insert into tab select * from otab;","stmt_type":"INSERT","contents":{"table":"tab","fields":null,"select":{"contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"otab"},"table_name":"otab"}]}}}}}}]}</expected>
+  </test>
+
+  <test id="2006.1">
+    <sql>insert into tab (A, b) select c, d from otab;</sql>
+    <expected>{"statements":[{"statement":{"sql":"insert into tab (A, b) select c, d from otab;","stmt_type":"INSERT","contents":{"table":"tab","fields":["A","b"],"select":{"contents":{"distinct":"false","fields":[{"expr":{"value":"c"},"field_name":"c"},{"expr":{"value":"d"},"field_name":"d"}],"from":{"targets":[{"expr":{"value":"otab"},"table_name":"otab"}]}}}}}}]}</expected>
+  </test>
+
+  <!-- DELETE -->
+  <test id="2007">
+    <sql>delete from s.my_table where ##id=f(4)</sql>
+    <expected>{"statements":[{"statement":{"sql":"delete from s.my_table where ##id=f(4)","stmt_type":"DELETE","contents":{"table":"s.my_table","condition":{"operation":{"operator":"=","operand0":{"value":null,"param_spec":{"name":"id","descr":null,"type":null,"is_param":true,"nullok":false}},"operand1":{"func":{"function_name":"f","function_args":[{"value":"4"}]}}}}}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"delete from s.my_table where ##id=f(4)","stmt_type":"UNKNOWN","contents":[{"value":"delete"},{"value":" "},{"value":"from"},{"value":" "},{"value":"s.my_table"},{"value":" "},{"value":"where"},{"value":" "},{"value":null,"param_spec":{"name":"id","descr":null,"type":null,"is_param":true,"nullok":false}},{"value":"="},{"value":"f(4)"}]}}]}</expected>
+  </test>
+
+  <test id="2008">
+    <sql>delete from s.my_table where ##id=(f(4))</sql>
+    <expected>{"statements":[{"statement":{"sql":"delete from s.my_table where ##id=(f(4))","stmt_type":"DELETE","contents":{"table":"s.my_table","condition":{"operation":{"operator":"=","operand0":{"value":null,"param_spec":{"name":"id","descr":null,"type":null,"is_param":true,"nullok":false}},"operand1":{"func":{"function_name":"f","function_args":[{"value":"4"}]}}}}}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"delete from s.my_table where ##id=(f(4))","stmt_type":"UNKNOWN","contents":[{"value":"delete"},{"value":" "},{"value":"from"},{"value":" "},{"value":"s.my_table"},{"value":" "},{"value":"where"},{"value":" "},{"value":null,"param_spec":{"name":"id","descr":null,"type":null,"is_param":true,"nullok":false}},{"value":"="},{"value":"("},{"value":"f(4))"}]}}]}</expected>
+  </test>
+
+  <test id="2009">
+    <sql>delete from s.my_table where not a;</sql>
+    <expected>{"statements":[{"statement":{"sql":"delete from s.my_table where not a;","stmt_type":"DELETE","contents":{"table":"s.my_table","condition":{"operation":{"operator":"NOT","operand0":{"value":"a"}}}}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"delete from s.my_table where not a;","stmt_type":"UNKNOWN","contents":[{"value":"delete"},{"value":" "},{"value":"from"},{"value":" "},{"value":"s.my_table"},{"value":" "},{"value":"where"},{"value":" "},{"value":"not"},{"value":" "},{"value":"a"}]}}]}</expected>
+  </test>
+
+  <test id="2010">
+    <sql>delete from s.my_table where not a &gt; b</sql>
+    <expected>{"statements":[{"statement":{"sql":"delete from s.my_table where not a > b","stmt_type":"DELETE","contents":{"table":"s.my_table","condition":{"operation":{"operator":"NOT","operand0":{"operation":{"operator":">","operand0":{"value":"a"},"operand1":{"value":"b"}}}}}}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"delete from s.my_table where not a > b","stmt_type":"UNKNOWN","contents":[{"value":"delete"},{"value":" "},{"value":"from"},{"value":" "},{"value":"s.my_table"},{"value":" "},{"value":"where"},{"value":" "},{"value":"not"},{"value":" "},{"value":"a"},{"value":" "},{"value":">"},{"value":" "},{"value":"b"}]}}]}</expected>
+  </test>
+
+  <test id="2011">
+    <sql>delete from s.my_table where a = b or c &gt; d</sql>
+    <expected>{"statements":[{"statement":{"sql":"delete from s.my_table where a = b or c > d","stmt_type":"DELETE","contents":{"table":"s.my_table","condition":{"operation":{"operator":"OR","operand0":{"operation":{"operator":"=","operand0":{"value":"a"},"operand1":{"value":"b"}}},"operand1":{"operation":{"operator":">","operand0":{"value":"c"},"operand1":{"value":"d"}}}}}}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"delete from s.my_table where a = b or c > d","stmt_type":"UNKNOWN","contents":[{"value":"delete"},{"value":" "},{"value":"from"},{"value":" "},{"value":"s.my_table"},{"value":" "},{"value":"where"},{"value":" "},{"value":"a"},{"value":" "},{"value":"="},{"value":" "},{"value":"b"},{"value":" "},{"value":"or"},{"value":" "},{"value":"c"},{"value":" "},{"value":">"},{"value":" "},{"value":"d"}]}}]}</expected>
+  </test>
+
+  <test id="2012">
+    <sql>delete from s.my_table where a &lt; b or c &lt;= d or e &gt;= f</sql>
+    <expected>{"statements":[{"statement":{"sql":"delete from s.my_table where a &lt; b or c &lt;= d or e &gt;= f","stmt_type":"DELETE","contents":{"table":"s.my_table","condition":{"operation":{"operator":"OR","operand0":{"operation":{"operator":"&lt;","operand0":{"value":"a"},"operand1":{"value":"b"}}},"operand1":{"operation":{"operator":"&lt;=","operand0":{"value":"c"},"operand1":{"value":"d"}}},"operand2":{"operation":{"operator":"&gt;=","operand0":{"value":"e"},"operand1":{"value":"f"}}}}}}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"delete from s.my_table where a &lt; b or c &lt;= d or e &gt;= f","stmt_type":"UNKNOWN","contents":[{"value":"delete"},{"value":" "},{"value":"from"},{"value":" "},{"value":"s.my_table"},{"value":" "},{"value":"where"},{"value":" "},{"value":"a"},{"value":" "},{"value":"&lt;"},{"value":" "},{"value":"b"},{"value":" "},{"value":"or"},{"value":" "},{"value":"c"},{"value":" "},{"value":"&lt;="},{"value":" "},{"value":"d"},{"value":" "},{"value":"or"},{"value":" "},{"value":"e"},{"value":" "},{"value":"&gt;="},{"value":" "},{"value":"f"}]}}]}</expected>
+  </test>
+
+  <test id="2013">
+    <sql>delete from s.my_table where a is b and c != d and e similar to f</sql>
+    <expected>{"statements":[{"statement":{"sql":"delete from s.my_table where a is b and c != d and e similar to f","stmt_type":"DELETE","contents":{"table":"s.my_table","condition":{"operation":{"operator":"AND","operand0":{"operation":{"operator":"IS","operand0":{"value":"a"},"operand1":{"value":"b"}}},"operand1":{"operation":{"operator":"!=","operand0":{"value":"c"},"operand1":{"value":"d"}}},"operand2":{"operation":{"operator":"SIMILAR TO","operand0":{"value":"e"},"operand1":{"value":"f"}}}}}}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"delete from s.my_table where a is b and c != d and e similar to f","stmt_type":"UNKNOWN","contents":[{"value":"delete"},{"value":" "},{"value":"from"},{"value":" "},{"value":"s.my_table"},{"value":" "},{"value":"where"},{"value":" "},{"value":"a"},{"value":" "},{"value":"is"},{"value":" "},{"value":"b"},{"value":" "},{"value":"and"},{"value":" "},{"value":"c"},{"value":" "},{"value":"!"},{"value":"="},{"value":" "},{"value":"d"},{"value":" "},{"value":"and"},{"value":" "},{"value":"e"},{"value":" "},{"value":"similar to"},{"value":" "},{"value":"f"}]}}]}</expected>
+  </test>
+
+  <test id="2014" provider="PostgreSQL">
+    <sql>delete from s.my_table where a ~b and c~*d and e!~ f and g!~*h</sql>
+    <expected>{"statements":[{"statement":{"sql":"delete from s.my_table where a ~b and c~*d and e!~ f and g!~*h","stmt_type":"DELETE","contents":{"table":"s.my_table","condition":{"operation":{"operator":"AND","operand0":{"operation":{"operator":"RE","operand0":{"value":"a"},"operand1":{"value":"b"}}},"operand1":{"operation":{"operator":"CI_RE","operand0":{"value":"c"},"operand1":{"value":"d"}}},"operand2":{"operation":{"operator":"!RE","operand0":{"value":"e"},"operand1":{"value":"f"}}},"operand3":{"operation":{"operator":"!CI_RE","operand0":{"value":"g"},"operand1":{"value":"h"}}}}}}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"delete from s.my_table where a ~b and c~*d and e!~ f and g!~*h","stmt_type":"UNKNOWN","contents":[{"value":"delete"},{"value":" "},{"value":"from"},{"value":" "},{"value":"s.my_table"},{"value":" "},{"value":"where"},{"value":" "},{"value":"a"},{"value":" "},{"value":"~b and c~"},{"value":"*"},{"value":"d"},{"value":" "},{"value":"and"},{"value":" "},{"value":"e!~"},{"value":" "},{"value":"f"},{"value":" "},{"value":"and"},{"value":" "},{"value":"g!~"},{"value":"*"},{"value":"h"}]}}]}</expected>
+  </test>
+
+  <test id="2015">
+    <sql>delete from s.my_table where a=b and c=d or e=f</sql>
+    <expected>{"statements":[{"statement":{"sql":"delete from s.my_table where a=b and c=d or e=f","stmt_type":"DELETE","contents":{"table":"s.my_table","condition":{"operation":{"operator":"OR","operand0":{"operation":{"operator":"AND","operand0":{"operation":{"operator":"=","operand0":{"value":"a"},"operand1":{"value":"b"}}},"operand1":{"operation":{"operator":"=","operand0":{"value":"c"},"operand1":{"value":"d"}}}}},"operand1":{"operation":{"operator":"=","operand0":{"value":"e"},"operand1":{"value":"f"}}}}}}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"delete from s.my_table where a=b and c=d or e=f","stmt_type":"UNKNOWN","contents":[{"value":"delete"},{"value":" "},{"value":"from"},{"value":" "},{"value":"s.my_table"},{"value":" "},{"value":"where"},{"value":" "},{"value":"a=b"},{"value":" "},{"value":"and"},{"value":" "},{"value":"c=d"},{"value":" "},{"value":"or"},{"value":" "},{"value":"e=f"}]}}]}</expected>
+  </test>
+
+ <test id="2015.1">
+    <sql>delete from s.my_table where (a=b and c=d) or e=f</sql>
+    <expected>{"statements":[{"statement":{"sql":"delete from s.my_table where (a=b and c=d) or e=f","stmt_type":"DELETE","contents":{"table":"s.my_table","condition":{"operation":{"operator":"OR","operand0":{"operation":{"operator":"AND","operand0":{"operation":{"operator":"=","operand0":{"value":"a"},"operand1":{"value":"b"}}},"operand1":{"operation":{"operator":"=","operand0":{"value":"c"},"operand1":{"value":"d"}}}}},"operand1":{"operation":{"operator":"=","operand0":{"value":"e"},"operand1":{"value":"f"}}}}}}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"delete from s.my_table where (a=b and c=d) or e=f","stmt_type":"UNKNOWN","contents":[{"value":"delete"},{"value":" "},{"value":"from"},{"value":" "},{"value":"s.my_table"},{"value":" "},{"value":"where"},{"value":" "},{"value":"("},{"value":"a=b"},{"value":" "},{"value":"and"},{"value":" "},{"value":"c=d)"},{"value":" "},{"value":"or"},{"value":" "},{"value":"e=f"}]}}]}</expected>
+  </test>
+
+  <test id="2016">
+    <sql>delete from s.my_table where a=b and (c=d or e=f)</sql>
+    <expected>{"statements":[{"statement":{"sql":"delete from s.my_table where a=b and (c=d or e=f)","stmt_type":"DELETE","contents":{"table":"s.my_table","condition":{"operation":{"operator":"AND","operand0":{"operation":{"operator":"=","operand0":{"value":"a"},"operand1":{"value":"b"}}},"operand1":{"operation":{"operator":"OR","operand0":{"operation":{"operator":"=","operand0":{"value":"c"},"operand1":{"value":"d"}}},"operand1":{"operation":{"operator":"=","operand0":{"value":"e"},"operand1":{"value":"f"}}}}}}}}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"delete from s.my_table where a=b and (c=d or e=f)","stmt_type":"UNKNOWN","contents":[{"value":"delete"},{"value":" "},{"value":"from"},{"value":" "},{"value":"s.my_table"},{"value":" "},{"value":"where"},{"value":" "},{"value":"a=b"},{"value":" "},{"value":"and"},{"value":" "},{"value":"("},{"value":"c=d"},{"value":" "},{"value":"or"},{"value":" "},{"value":"e=f)"}]}}]}</expected>
+  </test>
+
+  <test id="2017">
+    <sql>delete from s.my_table where a between b and c</sql>
+    <expected>{"statements":[{"statement":{"sql":"delete from s.my_table where a between b and c","stmt_type":"DELETE","contents":{"table":"s.my_table","condition":{"operation":{"operator":"BETWEEN","operand0":{"value":"a"},"operand1":{"value":"b"},"operand2":{"value":"c"}}}}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"delete from s.my_table where a between b and c","stmt_type":"UNKNOWN","contents":[{"value":"delete"},{"value":" "},{"value":"from"},{"value":" "},{"value":"s.my_table"},{"value":" "},{"value":"where"},{"value":" "},{"value":"a"},{"value":" "},{"value":"between"},{"value":" "},{"value":"b"},{"value":" "},{"value":"and"},{"value":" "},{"value":"c"}]}}]}</expected>
+  </test>
+
+  <test id="2018">
+    <sql>delete from s.my_table where a is null or b is not null</sql>
+    <expected>{"statements":[{"statement":{"sql":"delete from s.my_table where a is null or b is not null","stmt_type":"DELETE","contents":{"table":"s.my_table","condition":{"operation":{"operator":"OR","operand0":{"operation":{"operator":"IS NULL","operand0":{"value":"a"}}},"operand1":{"operation":{"operator":"IS NOT NULL","operand0":{"value":"b"}}}}}}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"delete from s.my_table where a is null or b is not null","stmt_type":"UNKNOWN","contents":[{"value":"delete"},{"value":" "},{"value":"from"},{"value":" "},{"value":"s.my_table"},{"value":" "},{"value":"where"},{"value":" "},{"value":"a"},{"value":" "},{"value":"is null"},{"value":" "},{"value":"or"},{"value":" "},{"value":"b"},{"value":" "},{"value":"is"},{"value":" "},{"value":"not null"}]}}]}</expected>
+  </test>
+
+  <!-- UPDATE -->
+  <test id="2100">
+    <sql>update mytable set a=b, e='yes'</sql>
+    <expected>{"statements":[{"statement":{"sql":"update mytable set a=b, e='yes'","stmt_type":"UPDATE","contents":{"table":"mytable","fields":["a","e"],"expressions":[{"value":"b"},{"value":"'yes'"}]}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"update mytable set a=b, e='yes'","stmt_type":"UNKNOWN","contents":[{"value":"update"},{"value":" "},{"value":"mytable"},{"value":" "},{"value":"set"},{"value":" "},{"value":"a=b,"},{"value":" "},{"value":"e="},{"value":"'yes'"}]}}]}</expected>
+  </test>
+
+  <test id="2101">
+    <sql>update mytable set a=b where c is not null;</sql>
+    <expected>{"statements":[{"statement":{"sql":"update mytable set a=b where c is not null;","stmt_type":"UPDATE","contents":{"table":"mytable","fields":["a"],"expressions":[{"value":"b"}],"condition":{"operation":{"operator":"IS NOT NULL","operand0":{"value":"c"}}}}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"update mytable set a=b where c is not null;","stmt_type":"UNKNOWN","contents":[{"value":"update"},{"value":" "},{"value":"mytable"},{"value":" "},{"value":"set"},{"value":" "},{"value":"a=b"},{"value":" "},{"value":"where"},{"value":" "},{"value":"c"},{"value":" "},{"value":"is"},{"value":" "},{"value":"not null"}]}}]}</expected>
+  </test>
+
+  <test id="2102">
+    <sql>update or replace mytable set a=b</sql>
+    <expected>{"statements":[{"statement":{"sql":"update or replace mytable set a=b","stmt_type":"UPDATE","contents":{"table":"mytable","fields":["a"],"expressions":[{"value":"b"}],"on_conflict":"replace"}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"update or replace mytable set a=b","stmt_type":"UNKNOWN","contents":[{"value":"update"},{"value":" "},{"value":"or"},{"value":" "},{"value":"replace"},{"value":" "},{"value":"mytable"},{"value":" "},{"value":"set"},{"value":" "},{"value":"a=b"}]}}]}</expected>
+  </test>
+
+  <!-- SELECT -->
+  <test id="2200">
+    <sql>select a</sql>
+    <expected>{"statements":[{"statement":{"sql":"select a","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"a"},"field_name":"a"}]}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"select a","stmt_type":"UNKNOWN","contents":[{"value":"select"},{"value":" "},{"value":"a"}]}}]}</expected>
+  </test>
+
+  <test id="2201">
+    <sql>select t1.field1, t1.field_2</sql>
+    <expected>{"statements":[{"statement":{"sql":"select t1.field1, t1.field_2","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"t1.field1"},"field_name":"field1","table_name":"t1"},{"expr":{"value":"t1.field_2"},"field_name":"field_2","table_name":"t1"}]}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"select t1.field1, t1.field_2","stmt_type":"UNKNOWN","contents":[{"value":"select"},{"value":" "},{"value":"t1.field1,"},{"value":" "},{"value":"t1.field_2"}]}}]}</expected>
+  </test>
+
+  <test id="2202">
+    <sql>select all s1.t1.field1, s2.t1.field_2 as newname</sql>
+    <expected>{"statements":[{"statement":{"sql":"select all s1.t1.field1, s2.t1.field_2 as newname","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"s1.t1.field1"},"field_name":"field1","table_name":"s1.t1"},{"expr":{"value":"s2.t1.field_2"},"field_name":"field_2","table_name":"s2.t1","as":"newname"}]}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"select all s1.t1.field1, s2.t1.field_2 as newname","stmt_type":"UNKNOWN","contents":[{"value":"select"},{"value":" "},{"value":"all"},{"value":" "},{"value":"s1.t1.field1,"},{"value":" "},{"value":"s2.t1.field_2"},{"value":" "},{"value":"as"},{"value":" "},{"value":"newname"}]}}]}</expected>
+  </test>
+
+  <test id="2203">
+    <sql>select distinct s1.t1.field1, s2.t1.field_2 as "newname"</sql>
+    <expected>{"statements":[{"statement":{"sql":"select distinct s1.t1.field1, s2.t1.field_2 as \"newname\"","stmt_type":"SELECT","contents":{"distinct":"true","fields":[{"expr":{"value":"s1.t1.field1"},"field_name":"field1","table_name":"s1.t1"},{"expr":{"value":"s2.t1.field_2"},"field_name":"field_2","table_name":"s2.t1","as":"\"newname\""}]}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"select distinct s1.t1.field1, s2.t1.field_2 as \"newname\"","stmt_type":"UNKNOWN","contents":[{"value":"select"},{"value":" "},{"value":"distinct"},{"value":" "},{"value":"s1.t1.field1,"},{"value":" "},{"value":"s2.t1.field_2"},{"value":" "},{"value":"as"},{"value":" "},{"value":"\"newname\""}]}}]}</expected>
+  </test>
+
+  <test id="2203">
+    <sql>select distinct ON a=b s1.t1.field1, s2.t1.field_2 as 'newname'</sql>
+    <expected>{"statements":[{"statement":{"sql":"select distinct ON a=b s1.t1.field1, s2.t1.field_2 as 'newname'","stmt_type":"SELECT","contents":{"distinct":"true","distinct_on":{"operation":{"operator":"=","operand0":{"value":"a"},"operand1":{"value":"b"}}},"fields":[{"expr":{"value":"s1.t1.field1"},"field_name":"field1","table_name":"s1.t1"},{"expr":{"value":"s2.t1.field_2"},"field_name":"field_2","table_name":"s2.t1","as":"'newname'"}]}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"select distinct ON a=b s1.t1.field1, s2.t1.field_2 as 'newname'","stmt_type":"UNKNOWN","contents":[{"value":"select"},{"value":" "},{"value":"distinct"},{"value":" "},{"value":"ON"},{"value":" "},{"value":"a=b"},{"value":" "},{"value":"s1.t1.field1,"},{"value":" "},{"value":"s2.t1.field_2"},{"value":" "},{"value":"as"},{"value":" "},{"value":"'newname'"}]}}]}</expected>
+  </test>
+
+  <test id="2204">
+    <sql>select distinct ON (a=b) s1.t1.field1 as _bla, func (s2.t1.field_2) as 123;</sql>
+    <expected>{"statements":[{"statement":{"sql":"select distinct ON (a=b) s1.t1.field1 as _bla, func (s2.t1.field_2) as 123;","stmt_type":"SELECT","contents":{"distinct":"true","distinct_on":{"operation":{"operator":"=","operand0":{"value":"a"},"operand1":{"value":"b"}}},"fields":[{"expr":{"value":"s1.t1.field1"},"field_name":"field1","table_name":"s1.t1","as":"_bla"},{"expr":{"func":{"function_name":"func","function_args":[{"value":"s2.t1.field_2"}]}},"as":"123"}]}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"select distinct ON (a=b) s1.t1.field1 as _bla, func (s2.t1.field_2) as 123;","stmt_type":"UNKNOWN","contents":[{"value":"select"},{"value":" "},{"value":"distinct"},{"value":" "},{"value":"ON"},{"value":" "},{"value":"("},{"value":"a=b)"},{"value":" "},{"value":"s1.t1.field1"},{"value":" "},{"value":"as"},{"value":" "},{"value":"_bla,"},{"value":" "},{"value":"func"},{"value":" "},{"value":"("},{"value":"s2.t1.field_2)"},{"value":" "},{"value":"as"},{"value":" "},{"value":"123"}]}}]}</expected>
+  </test>
+
+  <test id="2205">
+    <sql>select (a), ((b)), ((c))</sql>
+    <expected>{"statements":[{"statement":{"sql":"select (a), ((b)), ((c))","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"a"},"field_name":"a"},{"expr":{"value":"b"},"field_name":"b"},{"expr":{"value":"c"},"field_name":"c"}]}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"select (a), ((b)), ((c))","stmt_type":"UNKNOWN","contents":[{"value":"select"},{"value":" "},{"value":"("},{"value":"a),"},{"value":" "},{"value":"("},{"value":"("},{"value":"b)),"},{"value":" "},{"value":"("},{"value":"("},{"value":"c))"}]}}]}</expected>
+  </test>
+
+  <test id="2206">
+    <sql>select * from mytable as T;</sql>
+    <expected>{"statements":[{"statement":{"sql":"select * from mytable as T;","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"mytable"},"table_name":"mytable","as":"T"}]}}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"select * from mytable as T;","stmt_type":"UNKNOWN","contents":[{"value":"select"},{"value":" "},{"value":"*"},{"value":" "},{"value":"from"},{"value":" "},{"value":"mytable"},{"value":" "},{"value":"as"},{"value":" "},{"value":"T"}]}}]}</expected>
+  </test>
+
+  <test id="2207">
+    <sql>select * from t1</sql>
+    <expected>{"statements":[{"statement":{"sql":"select * from t1","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"t1"},"table_name":"t1"}]}}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"select * from t1","stmt_type":"UNKNOWN","contents":[{"value":"select"},{"value":" "},{"value":"*"},{"value":" "},{"value":"from"},{"value":" "},{"value":"t1"}]}}]}</expected>
+  </test>
+
+  <test id="2208">
+    <sql>select t1.*, t2.* from t1</sql>
+    <expected>{"statements":[{"statement":{"sql":"select t1.*, t2.* from t1","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"t1.*"}},{"expr":{"value":"t2.*"}}],"from":{"targets":[{"expr":{"value":"t1"},"table_name":"t1"}]}}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"select t1.*, t2.* from t1","stmt_type":"UNKNOWN","contents":[{"value":"select"},{"value":" "},{"value":"t1."},{"value":"*"},{"value":","},{"value":" "},{"value":"t2."},{"value":"*"},{"value":" "},{"value":"from"},{"value":" "},{"value":"t1"}]}}]}</expected>
+  </test>
+
+  <test id="2209">
+    <sql>select * from (select afield as fname from mytable) as src</sql>
+    <expected>{"statements":[{"statement":{"sql":"select * from (select afield as fname from mytable) as src","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"select":{"contents":{"distinct":"false","fields":[{"expr":{"value":"afield"},"field_name":"afield","as":"fname"}],"from":{"targets":[{"expr":{"value":"mytable"},"table_name":"mytable"}]}}}},"as":"src"}]}}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"select * from (select afield as fname from mytable) as src","stmt_type":"UNKNOWN","contents":[{"value":"select"},{"value":" "},{"value":"*"},{"value":" "},{"value":"from"},{"value":" "},{"value":"("},{"value":"select"},{"value":" "},{"value":"afield"},{"value":" "},{"value":"as"},{"value":" "},{"value":"fname"},{"value":" "},{"value":"from"},{"value":" "},{"value":"mytable)"},{"value":" "},{"value":"as"},{"value":" "},{"value":"src"}]}}]}</expected>
+  </test>
+
+  <test id="2210">
+    <sql>select a, (select afield as fname from mytable) as src from table</sql>
+    <expected>{"statements":[{"statement":{"sql":"select a, (select afield as fname from mytable) as src from table","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"a"},"field_name":"a"},{"expr":{"select":{"contents":{"distinct":"false","fields":[{"expr":{"value":"afield"},"field_name":"afield","as":"fname"}],"from":{"targets":[{"expr":{"value":"mytable"},"table_name":"mytable"}]}}}},"as":"src"}],"from":{"targets":[{"expr":{"value":"table"},"table_name":"table"}]}}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"select a, (select afield as fname from mytable) as src from table","stmt_type":"UNKNOWN","contents":[{"value":"select"},{"value":" "},{"value":"a,"},{"value":" "},{"value":"("},{"value":"select"},{"value":" "},{"value":"afield"},{"value":" "},{"value":"as"},{"value":" "},{"value":"fname"},{"value":" "},{"value":"from"},{"value":" "},{"value":"mytable)"},{"value":" "},{"value":"as"},{"value":" "},{"value":"src"},{"value":" "},{"value":"from"},{"value":" "},{"value":"table"}]}}]}</expected>
+  </test>
+
+  <test id="2211">
+    <sql>select a, (select afield as fname from mytable) as src from table</sql>
+    <expected>{"statements":[{"statement":{"sql":"select a, (select afield as fname from mytable) as src from table","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"a"},"field_name":"a"},{"expr":{"select":{"contents":{"distinct":"false","fields":[{"expr":{"value":"afield"},"field_name":"afield","as":"fname"}],"from":{"targets":[{"expr":{"value":"mytable"},"table_name":"mytable"}]}}}},"as":"src"}],"from":{"targets":[{"expr":{"value":"table"},"table_name":"table"}]}}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"select a, (select afield as fname from mytable) as src from table","stmt_type":"UNKNOWN","contents":[{"value":"select"},{"value":" "},{"value":"a,"},{"value":" "},{"value":"("},{"value":"select"},{"value":" "},{"value":"afield"},{"value":" "},{"value":"as"},{"value":" "},{"value":"fname"},{"value":" "},{"value":"from"},{"value":" "},{"value":"mytable)"},{"value":" "},{"value":"as"},{"value":" "},{"value":"src"},{"value":" "},{"value":"from"},{"value":" "},{"value":"table"}]}}]}</expected>
+  </test>
+
+  <test id="2212">
+    <sql>select a, b from t1, t2</sql>
+    <expected>{"statements":[{"statement":{"sql":"select a, b from t1, t2","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"a"},"field_name":"a"},{"expr":{"value":"b"},"field_name":"b"}],"from":{"targets":[{"expr":{"value":"t1"},"table_name":"t1"},{"expr":{"value":"t2"},"table_name":"t2"}],"joins":[{"join_type":"CROSS","join_pos":"1"}]}}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"select a, b from t1, t2","stmt_type":"UNKNOWN","contents":[{"value":"select"},{"value":" "},{"value":"a,"},{"value":" "},{"value":"b"},{"value":" "},{"value":"from"},{"value":" "},{"value":"t1,"},{"value":" "},{"value":"t2"}]}}]}</expected>
+  </test>
+
+  <test id="2213">
+    <sql>select a, b from t1 join t2</sql>
+    <expected>{"statements":[{"statement":{"sql":"select a, b from t1 join t2","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"a"},"field_name":"a"},{"expr":{"value":"b"},"field_name":"b"}],"from":{"targets":[{"expr":{"value":"t1"},"table_name":"t1"},{"expr":{"value":"t2"},"table_name":"t2"}],"joins":[{"join_type":"INNER","join_pos":"1"}]}}}}]}</expected>
+  </test>
+
+  <test id="2214">
+    <sql>select a, b from t1 inner join t2</sql>
+    <expected>{"statements":[{"statement":{"sql":"select a, b from t1 inner join t2","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"a"},"field_name":"a"},{"expr":{"value":"b"},"field_name":"b"}],"from":{"targets":[{"expr":{"value":"t1"},"table_name":"t1"},{"expr":{"value":"t2"},"table_name":"t2"}],"joins":[{"join_type":"INNER","join_pos":"1"}]}}}}]}</expected>
+  </test>
+
+  <test id="2215">
+    <sql>select a, b from t1 inner join t2 on (a=g)</sql>
+    <expected>{"statements":[{"statement":{"sql":"select a, b from t1 inner join t2 on (a=g)","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"a"},"field_name":"a"},{"expr":{"value":"b"},"field_name":"b"}],"from":{"targets":[{"expr":{"value":"t1"},"table_name":"t1"},{"expr":{"value":"t2"},"table_name":"t2"}],"joins":[{"join_type":"INNER","join_pos":"1","on_cond":{"operation":{"operator":"=","operand0":{"value":"a"},"operand1":{"value":"g"}}}}]}}}}]}</expected>
+  </test>
+
+  <test id="2216">
+    <sql>select a, b from t1 inner join t2 on a=g</sql>
+    <expected>{"statements":[{"statement":{"sql":"select a, b from t1 inner join t2 on a=g","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"a"},"field_name":"a"},{"expr":{"value":"b"},"field_name":"b"}],"from":{"targets":[{"expr":{"value":"t1"},"table_name":"t1"},{"expr":{"value":"t2"},"table_name":"t2"}],"joins":[{"join_type":"INNER","join_pos":"1","on_cond":{"operation":{"operator":"=","operand0":{"value":"a"},"operand1":{"value":"g"}}}}]}}}}]}</expected>
+  </test>
+
+  <test id="2217">
+    <sql>select a, b from t1 inner join t2 on a=g and (c!=f)</sql>
+    <expected>{"statements":[{"statement":{"sql":"select a, b from t1 inner join t2 on a=g and (c!=f)","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"a"},"field_name":"a"},{"expr":{"value":"b"},"field_name":"b"}],"from":{"targets":[{"expr":{"value":"t1"},"table_name":"t1"},{"expr":{"value":"t2"},"table_name":"t2"}],"joins":[{"join_type":"INNER","join_pos":"1","on_cond":{"operation":{"operator":"AND","operand0":{"operation":{"operator":"=","operand0":{"value":"a"},"operand1":{"value":"g"}}},"operand1":{"operation":{"operator":"!=","operand0":{"value":"c"},"operand1":{"value":"f"}}}}}}]}}}}]}</expected>
+  </test>
+
+  <test id="2218">
+    <sql>select a, b from t1 inner join t2 using (e)</sql>
+    <expected>{"statements":[{"statement":{"sql":"select a, b from t1 inner join t2 using (e)","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"a"},"field_name":"a"},{"expr":{"value":"b"},"field_name":"b"}],"from":{"targets":[{"expr":{"value":"t1"},"table_name":"t1"},{"expr":{"value":"t2"},"table_name":"t2"}],"joins":[{"join_type":"INNER","join_pos":"1","using":["e"]}]}}}}]}</expected>
+  </test>
+
+  <test id="2219">
+    <sql>select * from t1 left join t2 using (e, a, b)</sql>
+    <expected>{"statements":[{"statement":{"sql":"select * from t1 left join t2 using (e, a, b)","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"t1"},"table_name":"t1"},{"expr":{"value":"t2"},"table_name":"t2"}],"joins":[{"join_type":"LEFT","join_pos":"1","using":["e","a","b"]}]}}}}]}</expected>
+  </test>
+
+  <test id="2220">
+    <sql>select * from t1 right outer join t2 on (t1.id=t2.fk) full join t3 on (t3.id=t1.no)</sql>
+    <expected>{"statements":[{"statement":{"sql":"select * from t1 right outer join t2 on (t1.id=t2.fk) full join t3 on (t3.id=t1.no)","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"t1"},"table_name":"t1"},{"expr":{"value":"t2"},"table_name":"t2"},{"expr":{"value":"t3"},"table_name":"t3"}],"joins":[{"join_type":"RIGHT","join_pos":"1","on_cond":{"operation":{"operator":"=","operand0":{"value":"t1.id"},"operand1":{"value":"t2.fk"}}}},{"join_type":"FULL","join_pos":"2","on_cond":{"operation":{"operator":"=","operand0":{"value":"t3.id"},"operand1":{"value":"t1.no"}}}}]}}}}]}</expected>
+  </test>
+
+  <test id="2221">
+    <sql>select * from t0, t1 inner join t2 on (t1.id=t2.fk or a!=b)</sql>
+    <expected>{"statements":[{"statement":{"sql":"select * from t0, t1 inner join t2 on (t1.id=t2.fk or a!=b)","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"t0"},"table_name":"t0"},{"expr":{"value":"t1"},"table_name":"t1"},{"expr":{"value":"t2"},"table_name":"t2"}],"joins":[{"join_type":"CROSS","join_pos":"1"},{"join_type":"INNER","join_pos":"2","on_cond":{"operation":{"operator":"OR","operand0":{"operation":{"operator":"=","operand0":{"value":"t1.id"},"operand1":{"value":"t2.fk"}}},"operand1":{"operation":{"operator":"!=","operand0":{"value":"a"},"operand1":{"value":"b"}}}}}}]}}}}]}</expected>
+  </test>
+
+  <test id="2222">
+    <sql>select * from table where a=b or c is null</sql>
+    <expected>{"statements":[{"statement":{"sql":"select * from table where a=b or c is null","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"table"},"table_name":"table"}]},"where":{"operation":{"operator":"OR","operand0":{"operation":{"operator":"=","operand0":{"value":"a"},"operand1":{"value":"b"}}},"operand1":{"operation":{"operator":"IS NULL","operand0":{"value":"c"}}}}}}}}]}</expected>
+  </test>
+
+  <test id="2223">
+    <sql>select * from table where a=(select c from tab2)</sql>
+    <expected>{"statements":[{"statement":{"sql":"select * from table where a=(select c from tab2)","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"table"},"table_name":"table"}]},"where":{"operation":{"operator":"=","operand0":{"value":"a"},"operand1":{"select":{"contents":{"distinct":"false","fields":[{"expr":{"value":"c"},"field_name":"c"}],"from":{"targets":[{"expr":{"value":"tab2"},"table_name":"tab2"}]}}}}}}}}}]}</expected>
+  </test>
+
+  <test id="2224">
+    <sql>select * from table group by z, u</sql>
+    <expected>{"statements":[{"statement":{"sql":"select * from table group by z, u","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"table"},"table_name":"table"}]},"group_by":[{"value":"z"},{"value":"u"}]}}}]}</expected>
+  </test>
+
+  <test id="2225">
+    <sql>select * from table where id&lt;100 group by z, u having c(id)&gt;=0</sql>
+    <expected>{"statements":[{"statement":{"sql":"select * from table where id&lt;100 group by z, u having c(id)&gt;=0","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"table"},"table_name":"table"}]},"where":{"operation":{"operator":"&lt;","operand0":{"value":"id"},"operand1":{"value":"100"}}},"group_by":[{"value":"z"},{"value":"u"}],"having":{"operation":{"operator":"&gt;=","operand0":{"func":{"function_name":"c","function_args":[{"value":"id"}]}},"operand1":{"value":"0"}}}}}}]}</expected>
+  </test>
+
+  <test id="2226">
+    <sql>select * from table order by col1 ASC, col2 DESC, col3;</sql>
+    <expected>{"statements":[{"statement":{"sql":"select * from table order by col1 ASC, col2 DESC, col3;","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"table"},"table_name":"table"}]},"order_by":[{"expr":{"value":"col1"},"sort":"ASC"},{"expr":{"value":"col2"},"sort":"DESC"},{"expr":{"value":"col3"},"sort":"ASC"}]}}}]}</expected>
+  </test>
+
+  <test id="2227">
+    <sql>select * from table limit 4 offset 5</sql>
+    <expected>{"statements":[{"statement":{"sql":"select * from table limit 4 offset 5","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"table"},"table_name":"table"}]},"limit":{"value":"4"},"offset":{"value":"5"}}}}]}</expected>
+  </test>
+
+  <test id="2228">
+    <sql>select * from table limit 4,5;</sql>
+    <expected>{"statements":[{"statement":{"sql":"select * from table limit 4,5;","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"table"},"table_name":"table"}]},"limit":{"value":"4"},"offset":{"value":"5"}}}}]}</expected>
+  </test>
+
+  <test id="2229">
+    <sql>select * from table limit ##limval::gint</sql>
+    <expected>{"statements":[{"statement":{"sql":"select * from table limit ##limval::gint","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"table"},"table_name":"table"}]},"limit":{"value":null,"param_spec":{"name":"limval","descr":null,"type":"gint","is_param":true,"nullok":false}}}}}]}</expected>
+  </test>
+
+  <test id="2230">
+    <sql>select exists (select id from tab);</sql>
+    <expected>{"statements":[{"statement":{"sql":"select exists (select id from tab);","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"func":{"function_name":"exists","function_args":[{"select":{"contents":{"distinct":"false","fields":[{"expr":{"value":"id"},"field_name":"id"}],"from":{"targets":[{"expr":{"value":"tab"},"table_name":"tab"}]}}}}]}}}]}}}]}</expected>
+  </test>
+
+  <test id="2231">
+    <sql>select not exists (select id from tab);</sql>
+    <expected>{"statements":[{"statement":{"sql":"select not exists (select id from tab);","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"operation":{"operator":"NOT","operand0":{"func":{"function_name":"exists","function_args":[{"select":{"contents":{"distinct":"false","fields":[{"expr":{"value":"id"},"field_name":"id"}],"from":{"targets":[{"expr":{"value":"tab"},"table_name":"tab"}]}}}}]}}}}}]}}}]}</expected>
+  </test>
+
+  <test id="2232">
+    <sql>select cast (id as varchar)</sql>
+    <expected>{"statements":[{"statement":{"sql":"select cast (id as varchar)","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"id","cast":"varchar"},"field_name":"id"}]}}}]}</expected>
+  </test>
+
+  <test id="2233" provider="PostgreSQL">
+    <sql>select id::varchar, name</sql>
+    <expected>{"statements":[{"statement":{"sql":"select id::varchar, name","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"id","cast":"varchar"},"field_name":"id"},{"expr":{"value":"name"},"field_name":"name"}]}}}]}</expected>
+  </test>
+
+  <test id="2234">
+    <sql>select version() in ('V4', 'V5');</sql>
+    <expected>{"statements":[{"statement":{"sql":"select version() in ('V4', 'V5');","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"operation":{"operator":"IN","operand0":{"func":{"function_name":"version","function_args":null}},"operand1":{"value":"'V4'"},"operand2":{"value":"'V5'"}}}}]}}}]}</expected>
+  </test>
+
+  <test id="2235">
+    <sql>select version() in (select V from allowed_versions);</sql>
+    <expected>{"statements":[{"statement":{"sql":"select version() in (select V from allowed_versions);","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"operation":{"operator":"IN","operand0":{"func":{"function_name":"version","function_args":null}},"operand1":{"select":{"contents":{"distinct":"false","fields":[{"expr":{"value":"V"},"field_name":"V"}],"from":{"targets":[{"expr":{"value":"allowed_versions"},"table_name":"allowed_versions"}]}}}}}}}]}}}]}</expected>
+  </test>
+
+  <test id="2236">
+    <sql>select case when B then C else D end;</sql>
+    <expected>{"statements":[{"statement":{"sql":"select case when B then C else D end;","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"case":{"base_expr":null,"body":[{"when":{"value":"B"},"then":{"value":"C"}}],"else_expr":{"value":"D"}}}}]}}}]}</expected>
+  </test>
+
+  <test id="2237">
+    <sql>select case A when B then C else D end;</sql>
+    <expected>{"statements":[{"statement":{"sql":"select case A when B then C else D end;","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"case":{"base_expr":{"value":"A"},"body":[{"when":{"value":"B"},"then":{"value":"C"}}],"else_expr":{"value":"D"}}}}]}}}]}</expected>
+  </test>
+
+  <test id="2238">
+    <sql>select case A when B then C when X then Y end, Z</sql>
+    <expected>{"statements":[{"statement":{"sql":"select case A when B then C when X then Y end, Z","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"case":{"base_expr":{"value":"A"},"body":[{"when":{"value":"B"},"then":{"value":"C"}},{"when":{"value":"X"},"then":{"value":"Y"}}],"else_expr":null}}},{"expr":{"value":"Z"},"field_name":"Z"}]}}}]}</expected>
+  </test>
+
+  <!-- composed expressions -->
+  <test id="2239">
+    <sql>select 'hello' || ' ' || 'World'</sql>
+    <expected>{"statements":[{"statement":{"sql":"select 'hello' || ' ' || 'World'","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"operation":{"operator":"||","operand0":{"value":"'hello'"},"operand1":{"value":"' '"},"operand2":{"value":"'World'"}}}}]}}}]}</expected>
+  </test>
+
+  <test id="2240">
+    <sql>select 2+3+(5-3), -3, +23</sql>
+    <expected>{"statements":[{"statement":{"sql":"select 2+3+(5-3), -3, +23","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"operation":{"operator":"+","operand0":{"value":"2"},"operand1":{"value":"3"},"operand2":{"operation":{"operator":"-","operand0":{"value":"5"},"operand1":{"value":"3"}}}}}},{"expr":{"operation":{"operator":"-","operand0":{"value":"3"}}}},{"expr":{"operation":{"operator":"+","operand0":{"value":"23"}}}}]}}}]}</expected>
+  </test>
+
+  <test id="2241">
+    <sql>select not A between B and C</sql>
+    <expected>{"statements":[{"statement":{"sql":"select not A between B and C","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"operation":{"operator":"NOT","operand0":{"operation":{"operator":"BETWEEN","operand0":{"value":"A"},"operand1":{"value":"B"},"operand2":{"value":"C"}}}}}}]}}}]}</expected>
+  </test>
+
+  <test id="2242">
+    <sql>select a/b, a*b, a%b</sql>
+    <expected>{"statements":[{"statement":{"sql":"select a\/b, a*b, a%b","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"operation":{"operator":"\/","operand0":{"value":"a"},"operand1":{"value":"b"}}}},{"expr":{"operation":{"operator":"*","operand0":{"value":"a"},"operand1":{"value":"b"}}}},{"expr":{"operation":{"operator":"%","operand0":{"value":"a"},"operand1":{"value":"b"}}}}]}}}]}</expected>
+  </test>
+
+  <test id="2243">
+    <sql>select a/b/c, a*b*c, a%b%c</sql>
+    <expected>{"statements":[{"statement":{"sql":"select a\/b\/c, a*b*c, a%b%c","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"operation":{"operator":"\/","operand0":{"operation":{"operator":"\/","operand0":{"value":"a"},"operand1":{"value":"b"}}},"operand1":{"value":"c"}}}},{"expr":{"operation":{"operator":"*","operand0":{"value":"a"},"operand1":{"value":"b"},"operand2":{"value":"c"}}}},{"expr":{"operation":{"operator":"%","operand0":{"operation":{"operator":"%","operand0":{"value":"a"},"operand1":{"value":"b"}}},"operand1":{"value":"c"}}}}]}}}]}</expected>
+  </test>
+
+  <test id="2244">
+    <sql>select a&amp;b, a|b, ~b;</sql>
+    <expected>{"statements":[{"statement":{"sql":"select a&amp;b, a|b, ~b;","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"operation":{"operator":"&amp;","operand0":{"value":"a"},"operand1":{"value":"b"}}}},{"expr":{"operation":{"operator":"|","operand0":{"value":"a"},"operand1":{"value":"b"}}}},{"expr":{"operation":{"operator":"~","operand0":{"value":"b"}}}}]}}}]}</expected>
+  </test>
+
+  <test id="2245">
+    <sql>select a in (SELECT name from cust);</sql>
+    <expected>{"statements":[{"statement":{"sql":"select a in (SELECT name from cust);","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"operation":{"operator":"IN","operand0":{"value":"a"},"operand1":{"select":{"contents":{"distinct":"false","fields":[{"expr":{"value":"name"},"field_name":"name"}],"from":{"targets":[{"expr":{"value":"cust"},"table_name":"cust"}]}}}}}}}]}}}]}</expected>
+  </test>
+
+  <test id="2246">
+    <sql>select a not in (SELECT name from cust);</sql>
+    <expected>{"statements":[{"statement":{"sql":"select a not in (SELECT name from cust);","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"operation":{"operator":"NOT","operand0":{"operation":{"operator":"IN","operand0":{"value":"a"},"operand1":{"select":{"contents":{"distinct":"false","fields":[{"expr":{"value":"name"},"field_name":"name"}],"from":{"targets":[{"expr":{"value":"cust"},"table_name":"cust"}]}}}}}}}}}]}}}]}</expected>
+  </test>
+
+  <test id="2247">
+    <sql>select a not in (1, 2, 3, '007')</sql>
+    <expected>{"statements":[{"statement":{"sql":"select a not in (1, 2, 3, '007')","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"operation":{"operator":"NOT","operand0":{"operation":{"operator":"IN","operand0":{"value":"a"},"operand1":{"value":"1"},"operand2":{"value":"2"},"operand3":{"value":"3"},"operand4":{"value":"'007'"}}}}}}]}}}]}</expected>
+  </test>
+
+  <test id="2248">
+    <sql>select a not between 3 and 5</sql>
+    <expected>{"statements":[{"statement":{"sql":"select a not between 3 and 5","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"operation":{"operator":"NOT","operand0":{"operation":{"operator":"BETWEEN","operand0":{"value":"a"},"operand1":{"value":"3"},"operand2":{"value":"5"}}}}}}]}}}]}</expected>
+  </test>
+
+  <test id="2249">
+    <sql>select A union select B</sql>
+    <expected>{"statements":[{"statement":{"sql":"select A union select B","stmt_type":"COMPOUND","contents":{"compount_type":"UNION","select_stmts":[{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"A"},"field_name":"A"}]}},{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"B"},"field_name":"B"}]}}]}}}]}</expected>
+  </test>
+
+  <test id="2250">
+    <sql>select A union all select B union select C</sql>
+    <expected>{"statements":[{"statement":{"sql":"select A union all select B union select C","stmt_type":"COMPOUND","contents":{"compount_type":"UNION","select_stmts":[{"sql":null,"stmt_type":"COMPOUND","contents":{"compount_type":"AUNION","select_stmts":[{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"A"},"field_name":"A"}]}},{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"B"},"field_name":"B"}]}}]}},{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"C"},"field_name":"C"}]}}]}}}]}</expected>
+  </test>
+
+  <test id="2251">
+    <sql>select A UNION select B union select C</sql>
+    <expected>{"statements":[{"statement":{"sql":"select A UNION select B union select C","stmt_type":"COMPOUND","contents":{"compount_type":"UNION","select_stmts":[{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"A"},"field_name":"A"}]}},{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"B"},"field_name":"B"}]}},{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"C"},"field_name":"C"}]}}]}}}]}</expected>
+  </test>
+
+  <test id="2252">
+    <sql>select A UNION select B EXCEPT select C</sql>
+    <expected>{"statements":[{"statement":{"sql":"select A UNION select B EXCEPT select C","stmt_type":"COMPOUND","contents":{"compount_type":"EXCEPT","select_stmts":[{"sql":null,"stmt_type":"COMPOUND","contents":{"compount_type":"UNION","select_stmts":[{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"A"},"field_name":"A"}]}},{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"B"},"field_name":"B"}]}}]}},{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"C"},"field_name":"C"}]}}]}}}]}</expected>
+  </test>
+
+  <test id="2253">
+    <sql>select A except all select B union select C;</sql>
+    <expected>{"statements":[{"statement":{"sql":"select A except all select B union select C;","stmt_type":"COMPOUND","contents":{"compount_type":"UNION","select_stmts":[{"sql":null,"stmt_type":"COMPOUND","contents":{"compount_type":"AEXCEPT","select_stmts":[{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"A"},"field_name":"A"}]}},{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"B"},"field_name":"B"}]}}]}},{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"C"},"field_name":"C"}]}}]}}}]}</expected>
+  </test>
+
+  <test id="2254">
+    <sql>select A intersect select B union select C;</sql>
+    <expected>{"statements":[{"statement":{"sql":"select A intersect select B union select C;","stmt_type":"COMPOUND","contents":{"compount_type":"UNION","select_stmts":[{"sql":null,"stmt_type":"COMPOUND","contents":{"compount_type":"INTERSECT","select_stmts":[{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"A"},"field_name":"A"}]}},{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"B"},"field_name":"B"}]}}]}},{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"C"},"field_name":"C"}]}}]}}}]}</expected>
+  </test>
+
+  <test id="2255">
+    <sql>select A union select B intersect select C;</sql>
+    <expected>{"statements":[{"statement":{"sql":"select A union select B intersect select C;","stmt_type":"COMPOUND","contents":{"compount_type":"INTERSECT","select_stmts":[{"sql":null,"stmt_type":"COMPOUND","contents":{"compount_type":"UNION","select_stmts":[{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"A"},"field_name":"A"}]}},{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"B"},"field_name":"B"}]}}]}},{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"C"},"field_name":"C"}]}}]}}}]}</expected>
+  </test>
+
+  <test id="2255.1" provider="PostgreSQL">    <sql>select A union select B intersect select C;</sql>    <expected>{"statements":[{"statement":{"sql":"select A union select B intersect select C;","stmt_type":"COMPOUND","contents":{"compount_type":"UNION","select_stmts":[{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"A"},"field_name":"A"}]}},{"sql":null,"stmt_type":"COMPOUND","contents":{"compount_type":"INTERSECT","select_stmts":[{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"B"},"field_name":"B"}]}},{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"C"},"field_name":"C"}]}}]}}]}}}]}</expected>
+  </test>
+
+  <test id="2256">
+    <sql>(select A union select B) intersect select C;</sql>
+    <expected>{"statements":[{"statement":{"sql":"(select A union select B) intersect select C;","stmt_type":"COMPOUND","contents":{"compount_type":"INTERSECT","select_stmts":[{"sql":null,"stmt_type":"COMPOUND","contents":{"compount_type":"UNION","select_stmts":[{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"A"},"field_name":"A"}]}},{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"B"},"field_name":"B"}]}}]}},{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"C"},"field_name":"C"}]}}]}}}]}</expected>
+  </test>
+
+</testdata>

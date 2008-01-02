@@ -15,5 +15,6 @@ Currently the contents are:
 * in Report/: reports examples
 * in XSLT/: example using Libgda's extension to libxslt
 * in DDL/: example using the GdaServerOperation object to perform a CREATE TABLE query
+* in SqlParserConsole/: simple console to test how the GdaSqlParser object parses strings
 
 Good luck and happy hacking!

@@ -21,6 +21,8 @@
 #ifndef __GDA_QUERY_OBJECT_H_
 #define __GDA_QUERY_OBJECT_H_
 
+#ifndef GDA_DISABLE_DEPRECATED
+
 #include <glib-object.h>
 #include <libgda/gda-object.h>
 
@@ -59,5 +61,7 @@ void         gda_query_object_set_int_id      (GdaQueryObject *qobj, guint id);
 guint        gda_query_object_get_int_id      (GdaQueryObject *qobj);
 
 G_END_DECLS
+
+#endif /* GDA_DISABLE_DEPRECATED */
 
 #endif

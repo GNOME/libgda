@@ -32,7 +32,7 @@
 typedef enum {
 	GDA_INTERNAL_COMMAND_RESULT_EMPTY,
 	GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL,
-	GDA_INTERNAL_COMMAND_RESULT_PLIST,
+	GDA_INTERNAL_COMMAND_RESULT_SET,
 	GDA_INTERNAL_COMMAND_RESULT_TXT,
 	GDA_INTERNAL_COMMAND_RESULT_TXT_STDOUT,
 	GDA_INTERNAL_COMMAND_RESULT_MULTIPLE,
@@ -43,7 +43,7 @@ typedef struct {
 	GdaInternalCommandResultType type;
 	union {
 		GdaDataModel     *model;
-		GdaParameterList *plist;
+		GdaSet           *set;
 		GString          *txt;
 		GSList           *multiple_results; /* for GDA_INTERNAL_COMMAND_RESULT_MULTIPLE */
 	} u;

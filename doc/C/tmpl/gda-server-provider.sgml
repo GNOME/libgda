@@ -38,6 +38,17 @@ must inherit, and implement its virtual mathods.
 @quote_non_lc_identifiers: 
 @reserved: 
 
+<!-- ##### ENUM GdaServerProviderError ##### -->
+<para>
+
+</para>
+
+@GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR: 
+@GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR: 
+@GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR: 
+@GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR: 
+@GDA_SERVER_PROVIDER_OPERATION_ERROR: 
+
 <!-- ##### FUNCTION gda_server_provider_get_version ##### -->
 <para>
 
@@ -156,6 +167,57 @@ must inherit, and implement its virtual mathods.
 @provider: 
 @cnc: 
 @op: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_create_parser ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_statement_to_sql ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@stmt: 
+@params: 
+@flags: 
+@params_used: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_statement_prepare ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@stmt: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_statement_execute ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@stmt: 
+@params: 
+@model_usage: 
 @error: 
 @Returns: 
 

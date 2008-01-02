@@ -3,6 +3,7 @@ provider_LTLIBRARIES = libgda-msql.la
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
+	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
 	$(MSQL_CFLAGS)

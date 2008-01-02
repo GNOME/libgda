@@ -1,0 +1,273 @@
+#include <libgda/libgda.h>
+#include <sql-parser/gda-sql-parser.h>
+#include <string.h>
+#include <gmodule.h>
+#include "common.h"
+
+static GdaSqlParser *create_parser_for_provider (const gchar *prov_name);
+
+/* 
+ * tests
+ */
+typedef gboolean (*TestFunc) (GError **);
+static gboolean test1 (GError **error);
+static gboolean test2 (GError **error);
+
+GHashTable *data;
+TestFunc tests[] = {
+	test1,
+	test2
+};
+
+int 
+main (int argc, char** argv)
+{
+	g_type_init ();
+	gda_init ("Test", "version", argc, argv);
+
+	gint failures = 0;
+	gint i, ntests = 0;
+  
+	data = tests_common_load_data ("stmt.data");
+	for (i = 0; i < sizeof (tests) / sizeof (TestFunc); i++) {
+		GError *error = NULL;
+		if (! tests[i] (&error)) {
+			g_print ("Test %d failed: %s\n", i+1, 
+				 error && error->message ? error->message : "No detail");
+			if (error)
+				g_error_free (error);
+			failures ++;
+		}
+		ntests ++;
+	}
+
+	g_print ("TESTS COUNT: %d\n", ntests);
+	g_print ("FAILURES: %d\n", failures);
+
+	return failures != 0 ? 1 : 0;
+}
+
+typedef struct {
+	gboolean result; /* TRUE if test is supposed to succeed */
+	gchar *id; /* same id as in data file */
+	gchar *sql;
+} ATest;
+
+static ATest test1_data[] = {
+	{FALSE, NULL,    "SELECT ##p1::gint, 12.3 /* name:p2 */"},
+	{TRUE,  "T1.1",  "SELECT ##p1::gint, 12.3 /* name:p2 type:gfloat */"},
+	{TRUE,  "T1.2",  "SELECT ##p1::gint, 12.3 /* name:p1 type:gfloat */"},
+	{TRUE,  "T1.3",  "SELECT a, b FROM (SELECT version(##vers::date), ##aparam::string)"} 
+};
+
+/*
+ * get_parameters()
+ */
+static gboolean
+test1 (GError **error)
+{
+	GdaSqlParser *parser;
+	gint i;
+
+	parser = gda_sql_parser_new ();
+	
+	for (i = 0; i < sizeof (test1_data) / sizeof (ATest); i++) {
+		ATest *test = &(test1_data[i]);
+		GdaStatement *stmt;
+		GError *lerror = NULL;
+
+		stmt = gda_sql_parser_parse_string (parser, test->sql, NULL, &lerror);
+		if (!stmt) {
+			if (test->result) {
+				if (lerror) 
+					g_propagate_error (error, lerror);
+				return FALSE;
+			}
+		}
+		else { 
+			GdaSet *set;
+			if (!gda_statement_get_parameters (stmt, &set, &lerror)) {
+				if (test->result) {
+					if (lerror) 
+						g_propagate_error (error, lerror);
+					return FALSE;
+				}
+			}
+			else if (set) {
+				if (!tests_common_check_set (data, test->id, set, &lerror)) {
+					if (lerror) 
+						g_propagate_error (error, lerror);
+					return FALSE;
+				}
+				g_object_unref (set);
+			}
+			g_object_unref (stmt);
+		}
+
+		if (lerror)
+			g_error_free (lerror);
+	}
+
+	g_object_unref (parser);
+
+	return TRUE;
+}
+
+/*
+ * render SQL
+ */
+static gboolean
+test2 (GError **error)
+{
+	GdaSqlParser *parser;
+	GHashTable *parsers_hash;
+	GList *list;
+
+	/* create parsers */
+	parsers_hash = g_hash_table_new (g_str_hash, g_str_equal);
+	for (list = gda_config_get_provider_list (); list; list = list->next) {
+		GdaProviderInfo *pinfo = (GdaProviderInfo*) list->data;
+		parser = create_parser_for_provider (pinfo->id);
+		g_hash_table_insert (parsers_hash, pinfo->id, parser);
+		g_print ("Created parser for provider %s\n", pinfo->id);
+	}
+	g_hash_table_insert (parsers_hash, "", gda_sql_parser_new ());
+	
+	xmlDocPtr doc;
+        xmlNodePtr root, node;
+	gchar *fname;
+	
+	fname = g_build_filename (ROOT_DIR, "tests", "parser", "testdata.xml", NULL);
+	if (! g_file_test (fname, G_FILE_TEST_EXISTS)) {
+                g_set_error (error, 0, 0, "File '%s' does not exist\n", fname);
+		return FALSE;
+        }
+	doc = xmlParseFile (fname);
+        g_free (fname);
+        g_assert (doc);
+        root = xmlDocGetRootElement (doc);
+	g_assert (!strcmp ((gchar*) root->name, "testdata"));
+        for (node = root->children; node; node = node->next) {
+		if (strcmp ((gchar*) node->name, "test"))
+                        continue;
+		xmlNodePtr snode;
+                xmlChar *sql = NULL;
+                xmlChar *id;
+                xmlChar *prov_name;
+
+		prov_name = xmlGetProp (node, BAD_CAST "provider");
+		if (prov_name) {
+			parser = g_hash_table_lookup (parsers_hash, (gchar *) prov_name);
+			xmlFree (prov_name);
+		}
+		else
+			parser = g_hash_table_lookup (parsers_hash, "");
+		g_assert (parser);
+
+		for (snode = node->children; snode && strcmp ((gchar*) snode->name, "sql"); snode = snode->next);
+		if (!snode)
+			continue;
+		sql = xmlNodeGetContent (snode);
+		if (!sql)
+			continue;
+		
+		GdaStatement *stmt;
+		GError *lerror = NULL;
+		
+		stmt = gda_sql_parser_parse_string (parser, sql, NULL, &lerror);
+		xmlFree (sql);
+		id = xmlGetProp (node, BAD_CAST "id");
+		g_print ("===== TEST %s\n", id);
+
+		if (!stmt) {
+			/* skip that SQL if it can't be parsed */
+			g_error_free (lerror);
+			continue;
+		}
+		else { 
+			GdaStatement *stmt2;
+			gchar *rsql;
+			gchar *ser1, *ser2;
+			
+			rsql = gda_statement_to_sql_extended (stmt, NULL, NULL, 0, NULL, &lerror);
+			if (!rsql) {
+				g_print ("REM: test '%s' can't be rendered: %s\n", id,
+					 lerror && lerror->message ? lerror->message : "No detail");
+				xmlFree (id);
+				continue;
+			}
+			
+			/*g_print ("--> rendered SQL: %s\n", rsql);*/
+			stmt2 = gda_sql_parser_parse_string (parser, rsql, NULL, error);
+			if (!stmt2) 
+				return FALSE;
+			
+			GdaSqlStatement *sqlst;
+			
+			g_object_get (G_OBJECT (stmt), "structure", &sqlst, NULL);
+			g_free (sqlst->sql);
+			sqlst->sql = NULL;
+			ser1 = gda_sql_statement_serialize (sqlst);
+			gda_sql_statement_free (sqlst);
+			
+			g_object_get (G_OBJECT (stmt2), "structure", &sqlst, NULL);
+			g_free (sqlst->sql);
+			sqlst->sql = NULL;
+			ser2 = gda_sql_statement_serialize (sqlst);
+			gda_sql_statement_free (sqlst);
+			
+			if (strcmp (ser1, ser2)) {
+				g_set_error (error, 0, 0,
+					     "Statement failed, ID: %s\nSQL: %s\nSER1: %s\nSER2 :%s", 
+					     id, rsql, ser1, ser2);
+				g_free (ser1);
+				g_free (ser2);
+				return FALSE;
+			}
+			
+			g_free (rsql);
+			g_free (ser1);
+			g_free (ser2);
+			g_object_unref (stmt);
+			g_object_unref (stmt2);
+		}
+		
+		xmlFree (id);
+
+		if (lerror)
+			g_error_free (lerror);
+	}
+
+	g_object_unref (parser);
+
+	return TRUE;
+}
+
+static GdaSqlParser *
+create_parser_for_provider (const gchar *prov_name)
+{
+	GdaProviderInfo *pinfo = NULL;
+	GdaServerProvider *prov;
+	GModule *handle;
+	GdaServerProvider *(*plugin_create_provider) (void);
+	GdaSqlParser *parser;
+
+	pinfo = gda_config_get_provider_by_name (prov_name);
+	if (!pinfo) 
+		pinfo = gda_config_get_provider_by_name ("SQLite");
+	g_assert (pinfo);
+
+	handle = g_module_open (pinfo->location, G_MODULE_BIND_LAZY);
+	g_assert (handle);
+	g_module_symbol (handle, "plugin_create_provider",
+			 (gpointer) &plugin_create_provider);
+	g_assert (plugin_create_provider);
+	prov = plugin_create_provider ();
+	g_assert (prov);
+	parser = gda_server_provider_create_parser (prov, NULL);
+	if (!parser)
+		parser = gda_sql_parser_new ();
+	g_object_unref (prov);
+
+	return parser;
+}

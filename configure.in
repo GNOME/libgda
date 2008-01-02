@@ -44,6 +44,47 @@ AC_SUBST(INTLTOOL_XML_RULE)
 
 AC_DEFINE_UNQUOTED(BONOBO_EXPLICIT_TRANSLATION_DOMAIN, "libgda-3.0")
 
+dnl **********************
+dnl Cross compilation test
+dnl **********************
+AM_CONDITIONAL(CROSS_COMPILING, test $cross_compiling = yes)
+AC_MSG_CHECKING([for a C compiler for build tools])
+if test $cross_compiling = yes; then
+  AC_CHECK_PROGS(CC_FOR_BUILD, gcc cc)
+else
+  CC_FOR_BUILD=$CC
+fi
+AC_MSG_RESULT([$CC_FOR_BUILD])
+AC_SUBST(CC_FOR_BUILD)
+
+AC_MSG_CHECKING([for suffix of executable build tools])
+if test $cross_compiling = yes; then
+  cat >conftest.c <<\_______EOF
+int
+main ()
+{
+  exit (0);
+}
+_______EOF
+  for i in .exe ""; do
+    compile="$CC_FOR_BUILD conftest.c -o conftest$i"
+    if AC_TRY_EVAL(compile); then
+      if (./conftest) 2>&AC_FD_CC; then
+	EXEEXT_FOR_BUILD=$i
+	break
+      fi
+    fi
+  done
+  rm -f conftest*
+  if test "${EXEEXT_FOR_BUILD+set}" != set; then
+    EXEEXT_FOR_BUILD=
+  fi
+else
+  EXEEXT_FOR_BUILD=$EXEEXT
+fi
+AC_MSG_RESULT([$EXEEXT_FOR_BUILD])
+AC_SUBST(EXEEXT_FOR_BUILD)
+
 dnl ******************************
 dnl Checks for programs
 dnl ******************************
@@ -98,21 +139,25 @@ case "$host" in
     platform_win32=yes
     NO_UNDEFINED='-no-undefined'
     SOPREFIX='cyg'
+    LIBTOOL_EXPORT_OPTIONS=
     ;;
 *-mingw*)
     platform_win32=yes
     NO_UNDEFINED='-no-undefined'
     SOPREFIX='lib'
+    LIBTOOL_EXPORT_OPTIONS=
     ;;
 *)
     platform_win32=no
     NO_UNDEFINED=''
     SOPREFIX='lib'
     AM_BINRELOC
+    LIBTOOL_EXPORT_OPTIONS='-export-symbols-regex "^[[^_]].*"'
     ;;
 esac
 AC_MSG_RESULT([$platform_win32])
 AM_CONDITIONAL(PLATFORM_WIN32, [test $platform_win32 = yes])
+AC_SUBST(LIBTOOL_EXPORT_OPTIONS)
 AC_SUBST(NO_UNDEFINED)
 AC_SUBST(SOPREFIX)
 
@@ -199,6 +244,20 @@ then
 fi
 AC_SUBST(LIBXSLT_CFLAGS)
 AC_SUBST(LIBXSLT_LIBS)
+
+dnl ******************************
+dnl Checks for json-glib
+dnl ******************************
+
+JSON_GLIB_MODULES="json-glib-1.0"
+PKG_CHECK_MODULES(JSON_GLIB, $JSON_GLIB_MODULES, have_json=yes, have_json=no)
+AM_CONDITIONAL(HAVE_JSON_GLIB, test x"$have_json" = "xyes")
+if test x"$have_json" = "xyes"
+then
+        JSON_GLIB_CFLAGS="$JSON_GLIB_CFLAGS -DHAVE_JSON_GLIB"
+fi
+AC_SUBST(JSON_GLIB_CFLAGS)
+AC_SUBST(JSON_GLIB_LIBS)
 
 dnl ******************************
 dnl gtk-doc
@@ -1161,6 +1220,7 @@ libgda/libgda.h
 libgda/binreloc/Makefile
 libgda/handlers/Makefile
 libgda/sql-delimiter/Makefile
+libgda/sql-parser/Makefile
 libgda/sql-transaction/Makefile
 libgda/sqlite/Makefile
 libgda/sqlite/sqlite-src/Makefile
@@ -1205,11 +1265,13 @@ libgda-xslt/Makefile
 tools/Makefile
 testing/Makefile
 tests/Makefile
+tests/parser/Makefile
 tests/queries/Makefile
 tests/queries/dict_pg.xml
 tests/queries/bug_param_sql_dict.xml
 tests/data-models/Makefile
 tests/providers/Makefile
+tests/value-holders/Makefile
 doc/Makefile
 doc/C/Makefile
 doc/C/libgda-3.0.types

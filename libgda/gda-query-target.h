@@ -22,6 +22,8 @@
 #ifndef __GDA_QUERY_TARGET_H_
 #define __GDA_QUERY_TARGET_H_
 
+#ifndef GDA_DISABLE_DEPRECATED
+
 #include <libgda/gda-query-object.h>
 #include "gda-decl.h"
 
@@ -73,5 +75,7 @@ const gchar    *gda_query_target_get_alias              (GdaQueryTarget *target)
 gchar          *gda_query_target_get_complete_name      (GdaQueryTarget *target);
 
 G_END_DECLS
+
+#endif /* GDA_DISABLE_DEPRECATED */
 
 #endif

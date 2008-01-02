@@ -24,6 +24,8 @@
 #include <glib/gmem.h>
 #include <glib/gmessages.h>
 #include <glib/gstrfuncs.h>
+
+#undef GDA_DISABLE_DEPRECATED
 #include <libgda/gda-command.h>
 
 GType
@@ -51,6 +53,8 @@ gda_command_get_type (void)
  * #GDA_COMMAND_OPTION_DEFAULT.
  *
  * Returns: a newly allocated #GdaCommand.
+ *
+ * Deprecated: 3.2:
  */
 GdaCommand *
 gda_command_new (const gchar *text, GdaCommandType type, GdaCommandOptions options)
@@ -72,6 +76,8 @@ gda_command_new (const gchar *text, GdaCommandType type, GdaCommandOptions optio
  * @cmd: a #GdaCommand.
  *
  * Frees the resources allocated by #gda_command_new.
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_command_free (GdaCommand *cmd)
@@ -89,6 +95,8 @@ gda_command_free (GdaCommand *cmd)
  * Creates a new #GdaCommand from an existing one.
  * 
  * Returns: a newly allocated #GdaCommand with a copy of the data in @cmd.
+ *
+ * Deprecated: 3.2:
  */
 GdaCommand *
 gda_command_copy (GdaCommand *cmd)
@@ -109,6 +117,8 @@ gda_command_copy (GdaCommand *cmd)
  * Gets the command text held by @cmd.
  * 
  * Returns: the command string of @cmd.
+ *
+ * Deprecated: 3.2:
  */
 const gchar *
 gda_command_get_text (GdaCommand *cmd)
@@ -123,6 +133,8 @@ gda_command_get_text (GdaCommand *cmd)
  * @text: the command text.
  *
  * Sets the command text of @cmd.
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_command_set_text (GdaCommand *cmd, const gchar *text)
@@ -159,6 +171,8 @@ gda_command_get_command_type (GdaCommand *cmd)
  * @type: the command type.
  *
  * Sets the command type of @cmd.
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_command_set_command_type (GdaCommand *cmd, GdaCommandType type)
@@ -174,6 +188,8 @@ gda_command_set_command_type (GdaCommand *cmd, GdaCommandType type)
  * Gets the command options of @cmd.
  * 
  * Returns: the command options of @cmd.
+ *
+ * Deprecated: 3.2:
  */
 GdaCommandOptions
 gda_command_get_options (GdaCommand *cmd)
@@ -188,6 +204,8 @@ gda_command_get_options (GdaCommand *cmd)
  * @options: the command options.
  *
  * Sets the command options of @cmd. 
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_command_set_options (GdaCommand *cmd, GdaCommandOptions options)

@@ -18,6 +18,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#undef GDA_DISABLE_DEPRECATED
+
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include "gda-query-target.h"
@@ -237,6 +239,8 @@ gda_query_target_init (GdaQueryTarget *target)
  * Creates a new #GdaQueryTarget object, specifying the name of the table to reference.
  *
  * Returns: the new object
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryTarget *
 gda_query_target_new (GdaQuery *query, const gchar *table)
@@ -260,6 +264,8 @@ gda_query_target_new (GdaQuery *query, const gchar *table)
  * Makes a copy of an existing object (copy constructor)
  *
  * Returns: the new object
+ *
+ * Deprecated: 3.2:
  */
 GdaQueryTarget *
 gda_query_target_new_copy (GdaQueryTarget *orig)
@@ -450,6 +456,8 @@ gda_query_target_get_property (GObject *object,
  * Get the #GdaQuery in which @target is
  *
  * Returns: the #GdaQuery object
+ *
+ * Deprecated: 3.2:
  */
 GdaQuery *
 gda_query_target_get_query (GdaQueryTarget *target)
@@ -467,6 +475,8 @@ gda_query_target_get_query (GdaQueryTarget *target)
  * Get the #GdaEntity object which is represented by @target
  *
  * Returns: the #GdaEntity object or NULL if @target is not active
+ *
+ * Deprecated: 3.2:
  */
 GdaEntity *
 gda_query_target_get_represented_entity (GdaQueryTarget *target)
@@ -491,6 +501,8 @@ gda_query_target_get_represented_entity (GdaQueryTarget *target)
  * Get the table name represented by @target
  *
  * Returns: the table name or NULL if @target does not represent a database table
+ *
+ * Deprecated: 3.2:
  */
 const gchar *
 gda_query_target_get_represented_table_name (GdaQueryTarget *target)
@@ -521,6 +533,8 @@ gda_query_target_get_represented_table_name (GdaQueryTarget *target)
  * @alias: the alias
  *
  * Sets @target's alias to @alias
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_query_target_set_alias (GdaQueryTarget *target, const gchar *alias)
@@ -544,6 +558,8 @@ gda_query_target_set_alias (GdaQueryTarget *target, const gchar *alias)
  * Get @target's alias
  *
  * Returns: the alias
+ *
+ * Deprecated: 3.2:
  */
 const gchar *
 gda_query_target_get_alias (GdaQueryTarget *target)
@@ -565,6 +581,8 @@ gda_query_target_get_alias (GdaQueryTarget *target)
  * Get a complete name for target in the form of "&lt;entity name&gt; AS &lt;target alias&gt;"
  *
  * Returns: a new string
+ *
+ * Deprecated: 3.2:
  */
 gchar *
 gda_query_target_get_complete_name (GdaQueryTarget *target)

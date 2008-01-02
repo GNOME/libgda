@@ -18,6 +18,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#undef GDA_DISABLE_DEPRECATED
 #include "gda-renderer.h"
 
 static void gda_renderer_iface_init (gpointer g_class);
@@ -75,6 +76,8 @@ gda_renderer_iface_init (gpointer g_class)
  * it is only once listed in the resulting list).
  *
  * Returns: the new SQL statement (new string), or %NULL in case of error
+ *
+ * Deprecated: 3.2:
  */
 gchar *
 gda_renderer_render_as_sql (GdaRenderer *iface, GdaParameterList *context, GSList **out_params_used,
@@ -98,6 +101,8 @@ gda_renderer_render_as_sql (GdaRenderer *iface, GdaParameterList *context, GSLis
  * Build a human readable string representing the object, in the specified context.
  *
  * Returns: the new string
+ *
+ * Deprecated: 3.2:
  */
 gchar *
 gda_renderer_render_as_str (GdaRenderer *iface, GdaParameterList *context)
@@ -120,6 +125,8 @@ gda_renderer_render_as_str (GdaRenderer *iface, GdaParameterList *context)
  * into a valid statement (which can be executed).
  *
  * Returns: TRUE if @iface can be rendered with @context
+ *
+ * Deprecated: 3.2:
  */
 gboolean
 gda_renderer_is_valid (GdaRenderer *iface, GdaParameterList *context, GError **error)

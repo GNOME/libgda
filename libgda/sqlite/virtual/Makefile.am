@@ -16,6 +16,7 @@ AM_CPPFLAGS = \
 	$(SQLITE_CFLAGS) \
 	-I$(top_srcdir)/libgda/sqlite \
         -I$(top_builddir)/libgda/sqlite \
+	-I$(top_srcdir)/libgda \
 	$(sqliteinc) 
 
 virtual_headers = \

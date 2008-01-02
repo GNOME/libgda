@@ -35,6 +35,7 @@
 #include <libgda/gda-util.h>
 #include <libgda/gda-renderer.h>
 #include "gda-postgres.h"
+#include "gda-postgres-parser.h"
 #include "gda-postgres-provider.h"
 #include "gda-postgres-ddl.h"
 #include "gda-postgres-blob-op.h"
@@ -151,6 +152,8 @@ static gchar *gda_postgres_provider_escape_string (GdaServerProvider *provider,
 						   GdaConnection *cnc, const gchar *str);
 static gchar *gda_postgres_provider_unescape_string (GdaServerProvider *provider, 
 						   GdaConnection *cnc, const gchar *str);
+
+static GdaSqlParser *gda_postgres_provider_create_parser (GdaServerProvider *provider, GdaConnection *cnc);
 				 		 
 typedef struct {
 	gint ncolumns;
@@ -218,6 +221,11 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	provider_class->add_savepoint = gda_postgres_provider_add_savepoint;
 	provider_class->rollback_savepoint = gda_postgres_provider_rollback_savepoint;
 	provider_class->delete_savepoint = gda_postgres_provider_delete_savepoint;
+
+	provider_class->create_parser = gda_postgres_provider_create_parser;
+        provider_class->statement_to_sql = NULL;
+        provider_class->statement_prepare = NULL;
+        provider_class->statement_execute = NULL;
 }
 
 static void
@@ -3299,4 +3307,12 @@ gda_postgres_provider_unescape_string (GdaServerProvider *provider, GdaConnectio
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 
 	return gda_default_unescape_string (str);
+}
+
+static GdaSqlParser *
+gda_postgres_provider_create_parser (GdaServerProvider *provider, GdaConnection *cnc)
+{
+        g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+        return (GdaSqlParser*) g_object_new (GDA_TYPE_POSTGRES_PARSER, "tokenizer-flavour", 
+					     GDA_SQL_PARSER_FLAVOUR_POSTGRESQL, NULL);
 }

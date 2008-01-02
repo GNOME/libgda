@@ -22,6 +22,8 @@
 #ifndef __GDA_QUERY_FIELD_FUNC_H_
 #define __GDA_QUERY_FIELD_FUNC_H_
 
+#ifndef GDA_DISABLE_DEPRECATED
+
 #include <libgda/gda-object.h>
 #include "gda-decl.h"
 #include "gda-query-field.h"
@@ -67,5 +69,7 @@ gboolean               gda_query_field_func_set_args          (GdaQueryFieldFunc
 GSList                *gda_query_field_func_get_args          (GdaQueryFieldFunc *func);
 
 G_END_DECLS
+
+#endif /* GDA_DISABLE_DEPRECATED */
 
 #endif

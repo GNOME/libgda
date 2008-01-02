@@ -6,6 +6,9 @@ Represents any kind of DML query
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+As of version 3.2, #GdaQuery has been deprecated in favour of #GdaStatement.
+</para>
+<para>
   A #GdaQuery object represents any query (of any type, see the #GdaQueryType enum), and can contain some variables
   to be set before the query can be executed (also refered to as <emphasis>place holders</emphasis> or
   <emphasis>query parameters</emphasis>). As there is no standard about how to represent variables in 

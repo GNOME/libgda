@@ -22,6 +22,8 @@
 #ifndef __GDA_QUERY_CONDITION_H_
 #define __GDA_QUERY_CONDITION_H_
 
+#ifndef GDA_DISABLE_DEPRECATED
+
 #include <libgda/gda-query-object.h>
 #include "gda-decl.h"
 #include <libgda/libgda.h>
@@ -121,5 +123,7 @@ gboolean              gda_query_condition_represents_join_strict (GdaQueryCondit
 								  GdaQueryTarget **target1, GdaQueryTarget **target2);
 GSList               *gda_query_condition_get_main_conditions    (GdaQueryCondition *condition);
 G_END_DECLS
+
+#endif /* GDA_DISABLE_DEPRECATED */
 
 #endif

@@ -47,6 +47,7 @@
 #include <libgda/handlers/gda-handler-string.h>
 #include <libgda/handlers/gda-handler-type.h>
 
+#include <libgda/sql-parser/gda-sql-parser.h>
 #include <libgda/sql-delimiter/gda-sql-delimiter.h>
 #include <libgda/binreloc/gda-binreloc.h>
 
@@ -118,6 +119,7 @@ static const gchar* gda_oracle_provider_get_default_dbms_type (GdaServerProvider
 							      GdaConnection *cnc,
 							      GType type);
 
+static GdaSqlParser *gda_oracle_provider_create_parser (GdaServerProvider *provider, GdaConnection *cnc);
 
 static GList *process_sql_commands (GList *reclist, GdaConnection *cnc, 
 				    const gchar *sql, GdaParameterList *params, 
@@ -176,6 +178,11 @@ gda_oracle_provider_class_init (GdaOracleProviderClass *klass)
 	provider_class->add_savepoint = NULL;
 	provider_class->rollback_savepoint = NULL;
 	provider_class->delete_savepoint = NULL;
+
+	provider_class->create_parser = gda_oracle_provider_create_parser;
+        provider_class->statement_to_sql = NULL;
+        provider_class->statement_prepare = NULL;
+        provider_class->statement_execute = NULL;
 }
 
 static void
@@ -2216,4 +2223,12 @@ gda_oracle_provider_get_data_handler (GdaServerProvider *provider,
 	}
 
 	return dh;	
+}
+
+static GdaSqlParser *
+gda_oracle_provider_create_parser (GdaServerProvider *provider, GdaConnection *cnc)
+{
+        g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+        return (GdaSqlParser*) g_object_new (GDA_TYPE_SQL_PARSER, "tokenizer-flavour", 
+					     GDA_SQL_PARSER_FLAVOUR_ORACLE, NULL);
 }

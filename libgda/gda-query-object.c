@@ -18,6 +18,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#undef GDA_DISABLE_DEPRECATED
+
 #include <string.h>
 #include <libgda/gda-query-object.h>
 #include "gda-marshal.h"
@@ -142,6 +144,8 @@ gda_query_object_finalize (GObject   * object)
  *
  * Sets the integer ID of @qobj; this also triggers a change in the string ID 
  * (which can be obtained using gda_object_get_id()) of the object.
+ *
+ * Deprecated: 3.2:
  */
 void
 gda_query_object_set_int_id (GdaQueryObject *qobj, guint id)
@@ -173,6 +177,8 @@ gda_query_object_set_int_id (GdaQueryObject *qobj, guint id)
  * Get the integer ID of @qobj
  *
  * Return: the integer ID
+ *
+ * Deprecated: 3.2:
  */
 guint
 gda_query_object_get_int_id (GdaQueryObject *qobj)
