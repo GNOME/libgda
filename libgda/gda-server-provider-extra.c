@@ -36,6 +36,27 @@
 #include <libgda/gda-query-field-field.h>
 #include <libgda/gda-query-field-value.h>
 
+/**
+ * gda_server_provider_internal_get_parser
+ * @prov:
+ *
+ * This is a factory method to get a unique instance of a #GdaSqlParser object
+ * for each #GdaServerProvider object
+ * Don't unref() it.
+ *
+ * Returns: a #GdaSqlParser
+ */
+GdaSqlParser *
+gda_server_provider_internal_get_parser (GdaServerProvider *prov)
+{
+	
+	if (prov->priv->parser)
+		return prov->priv->parser;
+	prov->priv->parser = gda_server_provider_create_parser (prov, NULL);
+	if (!prov->priv->parser)
+		prov->priv->parser = gda_sql_parser_new ();
+	return prov->priv->parser;
+}
 
 /**
  * gda_server_provider_get_schema_nb_columns

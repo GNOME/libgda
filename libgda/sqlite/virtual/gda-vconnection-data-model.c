@@ -26,6 +26,7 @@
 #include "gda-vconnection-data-model.h"
 #include "gda-vconnection-data-model-private.h"
 #include "gda-virtual-provider.h"
+#include <libgda/gda-connection-private.h>
 #include "../gda-sqlite.h"
 
 struct _GdaVconnectionDataModelPrivate {
@@ -221,11 +222,9 @@ gda_vconnection_data_model_add (GdaVconnectionDataModel *cnc, GdaVconnectionData
 	if (spec->data_model)
 		g_return_val_if_fail (GDA_IS_DATA_MODEL (spec->data_model), FALSE);
 
-	scnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE);
-	if (!scnc) {
-		gda_connection_add_event_string ((GdaConnection *) cnc, _("Invalid SQLite handle"));
+	scnc = (SQLITEcnc*) gda_connection_internal_get_provider_data ((GdaConnection *) cnc);
+	if (!scnc) 
 		return FALSE;
-	}
 
 	/* create a new GdaVConnectionTableData structure for this virtual table */
 	GdaVConnectionTableData *td;
@@ -284,11 +283,9 @@ gda_vconnection_data_model_remove (GdaVconnectionDataModel *cnc, const gchar *ta
 	g_return_val_if_fail (GDA_IS_VCONNECTION_DATA_MODEL (cnc), FALSE);
 	g_return_val_if_fail (table_name && *table_name, FALSE);
 
-	scnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE);
-	if (!scnc) {
-		gda_connection_add_event_string ((GdaConnection *) cnc, _("Invalid SQLite handle"));
+	scnc = (SQLITEcnc*) gda_connection_internal_get_provider_data ((GdaConnection *) cnc);
+	if (!scnc) 
 		return FALSE;
-	}
 
 	td = gda_vconnection_get_table_data_by_name (cnc, table_name);
 	if (!td) {

@@ -1,1 +1,1 @@
-SUBDIRS = C #es pt_BR
+SUBDIRS = C 

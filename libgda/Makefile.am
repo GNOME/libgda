@@ -1,6 +1,6 @@
 lib_LTLIBRARIES = libgda-4.0.la
 
-SUBDIRS = sqlite sql-delimiter sql-transaction graph handlers binreloc sql-parser
+SUBDIRS = sqlite sql-delimiter sql-transaction graph handlers binreloc sql-parser providers-support
 
 if BDB 
 GDA_BDB_H=gda-data-model-bdb.h
@@ -242,6 +242,7 @@ libgda_4_0_la_LDFLAGS = \
 
 libgda_4_0_la_LIBADD = sql-transaction/libgda_sql_transaction-4.0.la \
 	sql-parser/libgda_sql_parser-4.0.la \
+	providers-support/libgda-psupport.la \
 	sql-delimiter/libgda_sql_delimiter-4.0.la \
 	graph/libgda_graph-4.0.la \
 	handlers/libgda_handlers-4.0.la \

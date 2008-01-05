@@ -1,3 +1,80 @@
+2008-01-05  Vivien Malerba <malerba@gnome-db.org>
+
+	* tools/Makefile.am:
+	* tests/Makefile.am:
+	* tests/data-models/check_data_proxy.c:
+	* tests/data-models/check_model_import.c:
+	* tests/data-models/Makefile.am:
+	* tests/value-holders/check_statement.c:
+	* tests/value-holders/Makefile.am:
+	* tests/parser/Makefile.am:
+	* tests/parser/check_parser.c:
+	* tests/providers/check_sqlite.c:
+	* tests/providers/prov-test-common.h:
+	* tests/providers/DATA_film.xml:
+	* tests/providers/check_oracle.c:
+	* tests/providers/check_odbc.c:
+	* tests/providers/check_msql.c:
+	* tests/providers/FIELDS_SCHEMA_SQLite_actor.xml:
+	* tests/providers/check_ldap.c:
+	* tests/providers/prov-test-util.c:
+	* tests/providers/DATA_actor.xml:
+	* tests/providers/check_sybase.c:
+	* tests/providers/check_firebird.c:
+	* tests/providers/prov-test-util.h:
+	* tests/providers/check_bdb.c:
+	* tests/providers/FIELDS_SCHEMA_SQLite_film_actor.xml:
+	* tests/providers/DATA_film_actor.xml:
+	* tests/providers/FIELDS_SCHEMA_SQLite_language.xml:
+	* tests/providers/DATA_language.xml:
+	* tests/providers/check_mdb.c:
+	* tests/providers/check_xbase.c:
+	* tests/providers/check_mysql.c:
+	* tests/providers/check_postgres.c:
+	* tests/providers/TYPES_SCHEMA_SQLite.xml:
+	* tests/providers/TYPES_SCHEMA_PostgreSQL.xml:
+	* tests/providers/Makefile.am:
+	* tests/providers/check_freetds.c:
+	* tests/providers/prov-test-common.c:
+	* tests/providers/check_ibmdb2.c:
+	* tests/providers/FIELDS_SCHEMA_SQLite_film.xml:
+	* doc/C:
+	* doc/Makefile.am:
+	* providers/sybase/gda-sybase-provider.c:
+	* providers/postgres:
+	* providers/postgres/utils.c:
+	* libgda/gda-statement.h:
+	* libgda/providers-support:
+	* libgda/sqlite/gda-sqlite-pstmt.c:
+	* libgda/sqlite/gda-sqlite.h:
+	* libgda/sqlite/gda-sqlite-pstmt.h:
+	* libgda/sqlite/virtual/gda-vprovider-data-model.c:
+	* libgda/sqlite/virtual/gda-vconnection-data-model.c:
+	* libgda/sqlite/gda-sqlite-provider.c:
+	* libgda/sqlite/gda-sqlite-recordset.c:
+	* libgda/sqlite/gda-sqlite-recordset.h:
+	* libgda/sqlite/Makefile.am:
+	* libgda/sql-parser:
+	* libgda/sql-parser/Makefile.am:
+	* libgda/gda-data-model.h:
+	* libgda/gda-server-provider.c:
+	* libgda/gda-connection.c:
+	* libgda/Makefile.am:
+	* libgda/gda-server-provider.h:
+	* libgda/gda-connection.h:
+	* libgda/gda-server-provider-private.h:
+	* libgda/gda-connection-private.h:
+	* libgda/gda-client.c:
+	* libgda/gda-server-provider-extra.c:
+	* libgda/gda-server-provider-extra.h:
+	* libgda/gda-statement-extra.h:
+	* libgda/gda-statement.c:
+	* configure.in: lots of minor corrections
+		- don't use the Check unit test program anymore (simplifies tests writing)
+		- updared valid tests and removed obsolete ones
+		- improved documentation (removed unmaintained translations)
+		- ...
+
 2008-01-02  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda-report/engine/Makefile.am:

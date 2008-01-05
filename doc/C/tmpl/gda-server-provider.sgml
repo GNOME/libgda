@@ -48,6 +48,7 @@ must inherit, and implement its virtual mathods.
 @GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR: 
 @GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR: 
 @GDA_SERVER_PROVIDER_OPERATION_ERROR: 
+@GDA_SERVER_PROVIDER_INTERNAL_ERROR: 
 
 <!-- ##### FUNCTION gda_server_provider_get_version ##### -->
 <para>

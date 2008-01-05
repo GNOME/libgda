@@ -14,8 +14,8 @@
     <gda_array_row>
       <gda_value>film_id</gda_value>
       <gda_value>INTEGER</gda_value>
-      <gda_value>0</gda_value>
-      <gda_value>0</gda_value>
+      <gda_value>-1</gda_value>
+      <gda_value>-1</gda_value>
       <gda_value>TRUE</gda_value>
       <gda_value>TRUE</gda_value>
       <gda_value>FALSE</gda_value>
@@ -26,8 +26,8 @@
     <gda_array_row>
       <gda_value>title</gda_value>
       <gda_value>VARCHAR(255)</gda_value>
-      <gda_value>0</gda_value>
-      <gda_value>0</gda_value>
+      <gda_value>255</gda_value>
+      <gda_value>-1</gda_value>
       <gda_value>TRUE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
@@ -38,8 +38,8 @@
     <gda_array_row>
       <gda_value>description</gda_value>
       <gda_value>TEXT</gda_value>
-      <gda_value>0</gda_value>
-      <gda_value>0</gda_value>
+      <gda_value>-1</gda_value>
+      <gda_value>-1</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
@@ -50,8 +50,8 @@
     <gda_array_row>
       <gda_value>release_year</gda_value>
       <gda_value>year</gda_value>
-      <gda_value>0</gda_value>
-      <gda_value>0</gda_value>
+      <gda_value>-1</gda_value>
+      <gda_value>-1</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
@@ -62,8 +62,8 @@
     <gda_array_row>
       <gda_value>language_id</gda_value>
       <gda_value>SMALLINT</gda_value>
-      <gda_value>0</gda_value>
-      <gda_value>0</gda_value>
+      <gda_value>-1</gda_value>
+      <gda_value>-1</gda_value>
       <gda_value>TRUE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
@@ -74,8 +74,8 @@
     <gda_array_row>
       <gda_value>original_language_id</gda_value>
       <gda_value>SMALLINT</gda_value>
-      <gda_value>0</gda_value>
-      <gda_value>0</gda_value>
+      <gda_value>-1</gda_value>
+      <gda_value>-1</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
@@ -86,8 +86,8 @@
     <gda_array_row>
       <gda_value>rental_duration</gda_value>
       <gda_value>SMALLINT</gda_value>
-      <gda_value>0</gda_value>
-      <gda_value>0</gda_value>
+      <gda_value>-1</gda_value>
+      <gda_value>-1</gda_value>
       <gda_value>TRUE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
@@ -98,8 +98,8 @@
     <gda_array_row>
       <gda_value>rental_rate</gda_value>
       <gda_value>NUMERIC(4,2)</gda_value>
-      <gda_value>0</gda_value>
-      <gda_value>0</gda_value>
+      <gda_value>4</gda_value>
+      <gda_value>2</gda_value>
       <gda_value>TRUE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
@@ -110,8 +110,8 @@
     <gda_array_row>
       <gda_value>length</gda_value>
       <gda_value>SMALLINT</gda_value>
-      <gda_value>0</gda_value>
-      <gda_value>0</gda_value>
+      <gda_value>-1</gda_value>
+      <gda_value>-1</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
@@ -122,8 +122,8 @@
     <gda_array_row>
       <gda_value>replacement_cost</gda_value>
       <gda_value>NUMERIC(5,2)</gda_value>
-      <gda_value>0</gda_value>
-      <gda_value>0</gda_value>
+      <gda_value>5</gda_value>
+      <gda_value>2</gda_value>
       <gda_value>TRUE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
@@ -134,8 +134,8 @@
     <gda_array_row>
       <gda_value>rating</gda_value>
       <gda_value>VARCHAR</gda_value>
-      <gda_value>0</gda_value>
-      <gda_value>0</gda_value>
+      <gda_value>-1</gda_value>
+      <gda_value>-1</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
@@ -146,8 +146,8 @@
     <gda_array_row>
       <gda_value>special_features</gda_value>
       <gda_value>TEXT[]</gda_value>
-      <gda_value>0</gda_value>
-      <gda_value>0</gda_value>
+      <gda_value>-1</gda_value>
+      <gda_value>-1</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
@@ -158,8 +158,8 @@
     <gda_array_row>
       <gda_value>last_update</gda_value>
       <gda_value>TIMESTAMP</gda_value>
-      <gda_value>0</gda_value>
-      <gda_value>0</gda_value>
+      <gda_value>-1</gda_value>
+      <gda_value>-1</gda_value>
       <gda_value>TRUE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>

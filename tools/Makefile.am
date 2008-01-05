@@ -49,7 +49,7 @@ gda_sql_4_0_LDADD = \
 
 # setenv() is in libiberty in mingw
 if PLATFORM_WIN32
-gda_sql_3_0_LDADD += -liberty
+gda_sql_4_0_LDADD += -liberty
 endif
 
 gda_list_server_op_4_0_SOURCES = \

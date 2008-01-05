@@ -28,6 +28,11 @@
 G_BEGIN_DECLS
 
 /*
+ * GdaSqlParser associated to each provider
+ */
+GdaSqlParser *gda_server_provider_internal_get_parser (GdaServerProvider *prov);
+
+/*
  * Help to implement providers, so the schemas return the same
  * number of columns and column titles across the providers.
  */

@@ -394,24 +394,6 @@ Management of connections to data sources
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_connection_get_server_version ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_get_database ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_connection_set_dsn ##### -->
 <para>
 
@@ -531,16 +513,6 @@ Management of connections to data sources
 </para>
 
 @cnc: 
-
-
-<!-- ##### FUNCTION gda_connection_change_database ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@name: 
-@Returns: 
 
 
 <!-- ##### FUNCTION gda_connection_get_last_insert_id ##### -->

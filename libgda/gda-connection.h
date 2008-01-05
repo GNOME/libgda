@@ -188,10 +188,7 @@ GdaDataModel        *gda_connection_get_schema           (GdaConnection *cnc, Gd
 
 #ifndef GDA_DISABLE_DEPRECATED
 const gchar         *gda_connection_get_provider         (GdaConnection *cnc);
-const gchar         *gda_connection_get_server_version   (GdaConnection *cnc);
-const gchar         *gda_connection_get_database         (GdaConnection *cnc);
 GdaServerProviderInfo *gda_connection_get_infos          (GdaConnection *cnc);
-gboolean             gda_connection_change_database      (GdaConnection *cnc, const gchar *name);
 
 GdaDataModel        *gda_connection_execute_select_command (GdaConnection *cnc, GdaCommand *cmd,
 							    GdaParameterList *params, GError **error);

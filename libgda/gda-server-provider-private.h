@@ -22,7 +22,8 @@
 #define __GDA_SERVER_PROVIDER_PRIVATE__
 
 struct _GdaServerProviderPrivate {
-	GHashTable *data_handlers; /* key = a GdaServerProviderHandlerInfo pointer, value = a GdaDataHandler */
+	GHashTable    *data_handlers; /* key = a GdaServerProviderHandlerInfo pointer, value = a GdaDataHandler */
+	GdaSqlParser  *parser;
 };
 
 G_END_DECLS

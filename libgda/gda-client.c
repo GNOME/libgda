@@ -749,8 +749,7 @@ gda_client_prepare_create_database (GdaClient *client, const gchar *db_name, con
 							   GDA_SERVER_OPERATION_CREATE_DB, 
 							   NULL, NULL);
 		if (op) {
-			g_object_set_data_full (G_OBJECT (op), "_gda_provider_name", 
-						prov, g_object_unref);
+			g_object_set_data (G_OBJECT (op), "_gda_provider_name", prov);
 			if (db_name)
 				gda_server_operation_set_value_at (op, db_name, 
 								   NULL, "/DB_DEF_P/DB_NAME");
@@ -794,8 +793,7 @@ gda_client_prepare_drop_database (GdaClient *client, const gchar *db_name, const
 							   GDA_SERVER_OPERATION_DROP_DB, 
 							   NULL, NULL);
 		if (op) {
-			g_object_set_data_full (G_OBJECT (op), "_gda_provider_name", 
-						prov, g_object_unref);
+			g_object_set_data (G_OBJECT (op), "_gda_provider_name", prov);
 			if (db_name)
 				gda_server_operation_set_value_at (op, db_name, 
 								   NULL, "/DB_DESC_P/DB_NAME");

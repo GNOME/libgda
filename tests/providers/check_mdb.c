@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define PROVIDER "MS Access"
+#define PROVIDER "MSAccess"
 #include "prov-test-common.h"
 
 extern GdaProviderInfo *pinfo;
@@ -16,7 +16,7 @@ main (int argc, char **argv)
 	gda_init ("check-providers", PACKAGE_VERSION, argc, argv);
 
 	setenv ("GDA_PROVIDERS_ROOT_DIR", GDA_PROVIDERS_ROOT_DIR, 0);
-	pinfo = gda_config_get_provider_by_name (PROVIDER);
+	pinfo = gda_config_get_provider_info (PROVIDER);
 	if (!pinfo) {
 		g_warning ("Could not find provider information for %s", PROVIDER);
 		return EXIT_FAILURE;

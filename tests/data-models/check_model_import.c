@@ -3,93 +3,13 @@
 #include <glib.h>
 #include <libgda/libgda.h>
 
-#ifdef HAVE_CHECK
-#include <check.h>
-#else
 #define fail(x) g_warning (x)
 #define fail_if(x,y) if (x) g_warning (y)
 #define fail_unless(x,y) if (!(x)) g_warning (y)
-#endif
 
 #define CHECK_EXTRA_INFO
 static gboolean do_test_load_file (const gchar *filename);
 
-#ifdef HAVE_CHECK
-
-GArray *tested_files;
-
-START_TEST (load_test)
-{
-	gchar *filename;
-
-	filename = g_array_index (tested_files, gchar *, _i);
-	g_print ("Tested: %s\n", filename);
-	if (!do_test_load_file (filename)) {
-		gchar *str = g_strdup_printf ("Could not load file '%s'", filename);
-		fail (str);
-	}
-}
-END_TEST
-
-Suite *
-test1_suite (void)
-{
-	Suite *s = suite_create ("Test import");
-	GDir *dir;
-	gchar *dirname;
-	GError *err = NULL;
-	const gchar *name;
-	
-	tested_files = g_array_new (FALSE, FALSE, sizeof (gchar *));
-
-	/* Core test case */
-	TCase *tc_core = tcase_create ("Load and compare");
-
-	dirname = g_build_filename (CHECK_FILES, "tests", "providers", NULL);
-	if (!(dir = g_dir_open (dirname, 0, &err))) {
-#ifdef CHECK_EXTRA_INFO
-		g_warning ("Could not open directory '%s': %s", dirname,
-			   err && err->message ? err->message : "No detail");
-#endif
-		exit (EXIT_FAILURE);
-	}
-	g_free (dirname);
-
-	while ((name = g_dir_read_name (dir))) {
-		if (g_str_has_suffix (name, ".xml")) {
-			gchar *str = g_strdup (name);
-			g_array_append_val (tested_files, str);
-		}
-	}
-	g_dir_close (dir);
-
-	tcase_add_loop_test (tc_core, load_test, 0, tested_files->len);
-	suite_add_tcase (s, tc_core);
-	
-	return s;
-}
-
-int
-main (int argc, char **argv)
-{
-	int number_failed = 0;
-
-	gda_init ("check-model-import", PACKAGE_VERSION, argc, argv);
-
-	Suite *s = test1_suite ();
-	SRunner *sr = srunner_create (s);
-		
-	srunner_run_all (sr, CK_NORMAL);
-	number_failed += srunner_ntests_failed (sr);
-	srunner_free (sr);
-	
-	return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
-}
-#else
-
-/*
- * The Check library is not available
- */
 int
 main (int argc, char **argv)
 {
@@ -130,7 +50,6 @@ main (int argc, char **argv)
 
 	return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
-#endif
 
 static gboolean
 do_test_load_file (const gchar *filename)

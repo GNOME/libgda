@@ -31,6 +31,7 @@
 #include <libgda/sql-parser/gda-statement-struct-compound.h>
 #include <libgda/sql-parser/gda-statement-struct-select.h>
 #include <libgda/gda-marshal.h>
+#include <libgda/gda-data-handler.h>
 #include <libgda/gda-server-provider.h>
 #include <libgda/gda-statement-extra.h>
 #include <libgda/gda-holder.h>
@@ -691,7 +692,21 @@ gda_statement_to_sql_real (GdaStatement *stmt, GdaSqlRenderingContext *context, 
 static gchar *
 default_render_value (const GValue *value, GdaSqlRenderingContext *context, GError **error)
 {
-	return gda_value_stringify ((GValue*) value);
+	if (value && !gda_value_is_null (value)) {
+		GdaDataHandler *dh;
+		if (context->provider)
+			dh = gda_server_provider_get_data_handler_gtype (context->provider, context->cnc, G_VALUE_TYPE (value));
+		else
+			dh = gda_dict_get_default_handler (NULL, G_VALUE_TYPE (value));
+		if (!dh) {
+			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+				     _("No data handler for type '%s'"), g_type_name (G_VALUE_TYPE (value)));
+			return NULL;
+		}
+		return gda_data_handler_get_sql_from_value (dh, value);
+	}
+	else
+		return g_strdup ("NULL");
 }
 
 /**
@@ -719,17 +734,14 @@ gda_statement_to_sql_extended (GdaStatement *stmt, GdaConnection *cnc, GdaSet *p
 
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
 	g_return_val_if_fail (stmt->priv, NULL);
-	if (cnc) {
-		GdaServerProvider *prov;
-		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-		
-		prov = gda_connection_get_provider_obj (cnc);
-		return gda_server_provider_statement_to_sql (prov, cnc, stmt, params, flags, params_used, error);
-	}
 
 	memset (&context, 0, sizeof (context));
 	context.params = params;
 	context.flags = flags;
+	if (cnc) {
+		context.cnc = cnc;
+		context.provider = gda_connection_get_provider_obj (cnc);
+	}
 
 	str = gda_statement_to_sql_real (stmt, &context, error);
 
@@ -1306,7 +1318,7 @@ default_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, gboolean
 		if (!str) goto err;
 	}
 	else if (expr->value) {
-		str = context->render_value (expr->value, context, error);
+		str = gda_value_stringify (expr->value);
 		if (!str) goto err;
 		if (is_null && gda_value_is_null (expr->value))
 			*is_null = TRUE;

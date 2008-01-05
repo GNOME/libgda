@@ -32,15 +32,19 @@ G_BEGIN_DECLS
 typedef struct _GdaSqlRenderingContext GdaSqlRenderingContext;
 typedef gchar *(*GdaSqlRenderingFunc)      (GdaSqlAnyPart *node, GdaSqlRenderingContext *context, GError **error);
 typedef gchar *(*GdaSqlRenderingExpr)      (GdaSqlExpr *expr, GdaSqlRenderingContext *context, 
-					    gboolean *is_default, gboolean *is_null, GError **error);
+					    gboolean *is_default, gboolean *is_null, 
+					    GError **error);
 typedef gchar *(*GdaSqlRenderingPSpecFunc) (GdaSqlParamSpec *pspec, GdaSqlExpr *expr, GdaSqlRenderingContext *context, 
-					    gboolean *is_default, gboolean *is_null, GError **error);
+					    gboolean *is_default, gboolean *is_null, 
+					    GError **error);
 typedef gchar *(*GdaSqlRenderingValue)     (const GValue *value, GdaSqlRenderingContext *context, GError **error);
 
 struct _GdaSqlRenderingContext {
-	GdaStatementSqlFlag   flags;
-	GdaSet               *params;
-	GSList               *params_used;
+	GdaStatementSqlFlag      flags;
+	GdaSet                  *params;
+	GSList                  *params_used;
+	GdaServerProvider       *provider; /* may be NULL */
+	GdaConnection           *cnc;      /* may be NULL */
 
 	/* rendering functions */
 	GdaSqlRenderingValue     render_value;

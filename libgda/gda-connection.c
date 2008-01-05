@@ -62,6 +62,9 @@ struct _GdaConnectionPrivate {
 
 	GdaTransactionStatus *trans_status;
 	GHashTable           *prepared_stmts;
+
+	gpointer              provider_data;
+	GDestroyNotify        provider_data_destroy_func;
 };
 
 static void gda_connection_class_init (GdaConnectionClass *klass);
@@ -218,6 +221,7 @@ gda_connection_init (GdaConnection *cnc, GdaConnectionClass *klass)
 	cnc->priv->trans_status = NULL; /* no transaction yet */
 }
 
+static void prepared_stms_foreach_func (GdaStatement *gda_stmt, GdaStatement *prepared_stmt, GdaConnection *cnc);
 static void
 gda_connection_dispose (GObject *object)
 {
@@ -228,7 +232,11 @@ gda_connection_dispose (GObject *object)
 	/* free memory */
 	gda_connection_close_no_warning (cnc);
 
-	gda_connection_destroy_prepared_statement_hash (cnc);
+	if (cnc->priv->prepared_stmts) {
+		g_hash_table_foreach (cnc->priv->prepared_stmts, (GHFunc) prepared_stms_foreach_func, cnc);
+		g_hash_table_destroy (cnc->priv->prepared_stmts);
+		cnc->priv->prepared_stmts = NULL;
+	}
 
 	if (cnc->priv->provider_obj) {
 		g_object_unref (G_OBJECT (cnc->priv->provider_obj));
@@ -244,6 +252,14 @@ gda_connection_dispose (GObject *object)
 	if (cnc->priv->trans_status) {
 		g_object_unref (cnc->priv->trans_status);
 		cnc->priv->trans_status = NULL;
+	}
+
+	if (cnc->priv->provider_data) {
+		if (cnc->priv->provider_data_destroy_func)
+			cnc->priv->provider_data_destroy_func (cnc->priv->provider_data);
+		else
+			g_warning ("Provider did not clean its connection data");
+		cnc->priv->provider_data = NULL;
 	}
 
 	/* chain to parent class */
@@ -716,49 +732,6 @@ gda_connection_get_infos (GdaConnection *cnc)
 }
 
 /**
- * gda_connection_get_server_version
- * @cnc: a #GdaConnection object.
- *
- * Gets the version string of the underlying database server.
- *
- * Returns: the server version string.
- *
- * Deprecated: 3.2:
- */
-const gchar *
-gda_connection_get_server_version (GdaConnection *cnc)
-{
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (cnc->priv, NULL);
-	if (!cnc->priv->provider_obj)
-		return NULL;
-
-	return gda_server_provider_get_server_version (cnc->priv->provider_obj, cnc);
-}
-
-/**
- * gda_connection_get_database
- * @cnc: A #GdaConnection object.
- *
- * Gets the name of the currently active database in the given
- * @GdaConnection.
- *
- * Returns: the name of the current database.
- *
- * Deprecated: 3.2:
- */
-const gchar *
-gda_connection_get_database (GdaConnection *cnc)
-{
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (cnc->priv, NULL);
-	if (!cnc->priv->provider_obj)
-		return NULL;
-
-	return gda_server_provider_get_database (cnc->priv->provider_obj, cnc);
-}
-
-/**
  * gda_connection_set_dsn
  * @cnc: a #GdaConnection object
  * @datasource: a gda datasource
@@ -1123,30 +1096,6 @@ gda_connection_clear_events_list (GdaConnection *cnc)
 		gda_connection_event_list_free (cnc->priv->events_list);
 		cnc->priv->events_list =  NULL;
 	}
-}
-
-
-/**
- * gda_connection_change_database
- * @cnc: a #GdaConnection object.
- * @name: name of database to switch to.
- *
- * Changes the current database for the given connection. This operation
- * is not available in all providers.
- *
- * Returns: %TRUE if successful, %FALSE otherwise.
- *
- * Deprecated: 3.2:
- */
-gboolean
-gda_connection_change_database (GdaConnection *cnc, const gchar *name)
-{
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (name != NULL, FALSE);
-	if (!cnc->priv->provider_obj)
-		return FALSE;
-
-	return gda_server_provider_change_database (cnc->priv->provider_obj, cnc, name);
 }
 
 /**
@@ -2210,91 +2159,101 @@ gda_connection_force_status (GdaConnection *cnc, gboolean opened)
  * Prepared statements handling
  */
 
-static void prepared_stms_query_destroyed_cb (GObject *query, GdaConnection *cnc);
+static void prepared_stms_stmt_destroyed_cb (GdaStatement *gda_stmt, GdaConnection *cnc);
 static void statement_weak_notify_cb (GdaConnection *cnc, GdaStatement *stmt);
-static void
-prepared_stms_foreach_func (GdaQuery *query, gpointer prepared_stmt, GdaConnection *cnc)
-{
-	g_signal_handlers_disconnect_by_func (query, G_CALLBACK (prepared_stms_query_destroyed_cb), cnc);
-}
-
-void 
-gda_connection_destroy_prepared_statement_hash (GdaConnection *cnc)
-{
-	if (!cnc->priv->prepared_stmts)
-		return;
-
-	g_hash_table_foreach (cnc->priv->prepared_stmts, (GHFunc) prepared_stms_foreach_func, cnc);
-	g_hash_table_destroy (cnc->priv->prepared_stmts);
-	cnc->priv->prepared_stmts = NULL;
-}
-
-void
-gda_connection_init_prepared_statement_hash (GdaConnection *cnc, GDestroyNotify stmt_destroy_func)
-{
-	g_return_if_fail (GDA_IS_CONNECTION (cnc));
-	g_return_if_fail (cnc->priv);
-
-	if (!cnc->priv->prepared_stmts)
-		cnc->priv->prepared_stmts = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, stmt_destroy_func);
-}
 
 static void 
-prepared_stms_query_destroyed_cb (GObject *query, GdaConnection *cnc)
+prepared_stms_stmt_destroyed_cb (GdaStatement *gda_stmt, GdaConnection *cnc)
 {
-	g_signal_handlers_disconnect_by_func (query, G_CALLBACK (prepared_stms_query_destroyed_cb), cnc);
-	g_object_weak_unref (G_OBJECT (query), (GWeakNotify) statement_weak_notify_cb, cnc);
-	g_hash_table_remove (cnc->priv->prepared_stmts, query);
+	g_signal_handlers_disconnect_by_func (gda_stmt, G_CALLBACK (prepared_stms_stmt_destroyed_cb), cnc);
+	g_object_weak_unref (G_OBJECT (gda_stmt), (GWeakNotify) statement_weak_notify_cb, cnc);
+	g_assert (cnc->priv->prepared_stmts);
+	g_hash_table_remove (cnc->priv->prepared_stmts, gda_stmt);
 }
 
 static void
 statement_weak_notify_cb (GdaConnection *cnc, GdaStatement *stmt)
 {
+	g_assert (cnc->priv->prepared_stmts);
 	g_hash_table_remove (cnc->priv->prepared_stmts, stmt);
 }
 
 void 
-gda_connection_add_prepared_statement (GdaConnection *cnc, GObject *query, gpointer prepared_stmt)
+gda_connection_add_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stmt, gpointer prepared_stmt)
 {
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (cnc->priv);
 
-	if (!cnc->priv->prepared_stmts) {
-		g_warning (_("Prepared statements hash not initialized, "
-			     "call gda_connection_init_prepared_statement_hash() first"));
-		return;
-	}
-	g_hash_table_remove (cnc->priv->prepared_stmts, query);
-	g_hash_table_insert (cnc->priv->prepared_stmts, query, prepared_stmt);
+	if (!cnc->priv->prepared_stmts)
+		cnc->priv->prepared_stmts = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, g_object_unref);
+	g_hash_table_remove (cnc->priv->prepared_stmts, gda_stmt);
+	g_hash_table_insert (cnc->priv->prepared_stmts, gda_stmt, prepared_stmt);
 	
-	/* destroy the prepared statement if query is destroyed, or changes */
-	if (GDA_IS_QUERY (query)) {
-		gda_object_connect_destroy (GDA_OBJECT (query), G_CALLBACK (prepared_stms_query_destroyed_cb), cnc);
-		g_signal_connect (G_OBJECT (query), "changed", G_CALLBACK (prepared_stms_query_destroyed_cb), cnc);
-	}
-	else {
-		g_object_weak_ref (G_OBJECT (query), (GWeakNotify) statement_weak_notify_cb, cnc);
-		g_signal_connect (G_OBJECT (query), "reset", G_CALLBACK (prepared_stms_query_destroyed_cb), cnc);
-	}
+	/* destroy the prepared statement if gda_stmt is destroyed, or changes */
+	g_object_weak_ref (G_OBJECT (gda_stmt), (GWeakNotify) statement_weak_notify_cb, cnc);
+	g_signal_connect (G_OBJECT (gda_stmt), "reset", G_CALLBACK (prepared_stms_stmt_destroyed_cb), cnc);
 }
 
 gpointer
-gda_connection_get_prepared_statement (GdaConnection *cnc, GObject *query)
+gda_connection_get_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stmt)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv, NULL);
 
-	if (!cnc->priv->prepared_stmts) {
-		g_warning (_("Prepared statements hash not initialized, "
-			     "call gda_connection_init_prepared_statement_hash() first"));
+	if (!cnc->priv->prepared_stmts) 
 		return NULL;
-	}
-	return g_hash_table_lookup (cnc->priv->prepared_stmts, query);
+
+	return g_hash_table_lookup (cnc->priv->prepared_stmts, gda_stmt);
 }
 
 void
-gda_connection_del_prepared_statement (GdaConnection *cnc, GObject *query)
+gda_connection_del_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stmt)
 {
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
-	prepared_stms_query_destroyed_cb (query, cnc);
+	prepared_stms_stmt_destroyed_cb (gda_stmt, cnc);
+}
+
+static void
+prepared_stms_foreach_func (GdaStatement *gda_stmt, GdaStatement *prepared_stmt, GdaConnection *cnc)
+{
+	g_signal_handlers_disconnect_by_func (gda_stmt, G_CALLBACK (prepared_stms_stmt_destroyed_cb), cnc);
+}
+
+
+/*
+ * Provider's specific connection data management
+ */
+
+/**
+ * gda_connection_internal_set_provider_data
+ * @cnc: a #GdaConnection object
+ * @data: an opaque structure, known only to the provider for which @cnc is opened
+ * @destroy_func: function to call when the connection closes and @data needs to be destroyed
+ *
+ * Note: calling this function more than once will not make it call @destroy_func on any previously
+ * set opaque @data, you'll have to do it yourself.
+ */
+void 
+gda_connection_internal_set_provider_data (GdaConnection *cnc, gpointer data, GDestroyNotify destroy_func)
+{
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+	cnc->priv->provider_data = data;
+	cnc->priv->provider_data_destroy_func = destroy_func;
+}
+
+/**
+ * gda_connection_internal_get_provider_data
+ * @cnc: a #GdaConnection object
+ *
+ * Get the opaque pointer previously set using gda_connection_internal_set_provider_data().
+ * If it's not set, then add a connection event and returns %NULL
+ *
+ * Returns: the pointer to the opaque structure set using gda_connection_internal_set_provider_data()
+ */
+gpointer
+gda_connection_internal_get_provider_data (GdaConnection *cnc)
+{
+	if (! cnc->priv->provider_data)
+		gda_connection_add_event_string (cnc, _("Internal error: invalid provider handle"));
+	return cnc->priv->provider_data;
 }

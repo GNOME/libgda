@@ -14,8 +14,8 @@
     <gda_array_row>
       <gda_value>actor_id</gda_value>
       <gda_value>INTEGER</gda_value>
-      <gda_value>0</gda_value>
-      <gda_value>0</gda_value>
+      <gda_value>-1</gda_value>
+      <gda_value>-1</gda_value>
       <gda_value>TRUE</gda_value>
       <gda_value>TRUE</gda_value>
       <gda_value>FALSE</gda_value>
@@ -26,8 +26,8 @@
     <gda_array_row>
       <gda_value>first_name</gda_value>
       <gda_value>VARCHAR(45)</gda_value>
-      <gda_value>0</gda_value>
-      <gda_value>0</gda_value>
+      <gda_value>45</gda_value>
+      <gda_value>-1</gda_value>
       <gda_value>TRUE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
@@ -38,8 +38,8 @@
     <gda_array_row>
       <gda_value>last_name</gda_value>
       <gda_value>VARCHAR(45)</gda_value>
-      <gda_value>0</gda_value>
-      <gda_value>0</gda_value>
+      <gda_value>45</gda_value>
+      <gda_value>-1</gda_value>
       <gda_value>TRUE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>
@@ -50,8 +50,8 @@
     <gda_array_row>
       <gda_value>last_update</gda_value>
       <gda_value>TIMESTAMP</gda_value>
-      <gda_value>0</gda_value>
-      <gda_value>0</gda_value>
+      <gda_value>-1</gda_value>
+      <gda_value>-1</gda_value>
       <gda_value>TRUE</gda_value>
       <gda_value>FALSE</gda_value>
       <gda_value>FALSE</gda_value>

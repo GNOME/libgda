@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<gda_array id="EXPORT" name="Exported Data">
+  <gda_array_field id="EXPORT:FI0" name="language_id" title="language_id" gdatype="gint" size="4" nullok="TRUE" table="language"/>
+  <gda_array_field id="EXPORT:FI1" name="name" title="name" gdatype="gchararray" size="-1" nullok="TRUE" table="language"/>
+  <gda_array_field id="EXPORT:FI2" name="last_update" title="last_update" gdatype="GdaTimestamp" size="8" nullok="TRUE" table="language"/>
+  <gda_array_data>
+    <gda_array_row>
+      <gda_value>1</gda_value>
+      <gda_value>English             </gda_value>
+      <gda_value>2006-02-15 10:02:19+0</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>2</gda_value>
+      <gda_value>Italian             </gda_value>
+      <gda_value>2006-02-15 10:02:19+0</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>3</gda_value>
+      <gda_value>Japanese            </gda_value>
+      <gda_value>2006-02-15 10:02:19+0</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>4</gda_value>
+      <gda_value>Mandarin            </gda_value>
+      <gda_value>2006-02-15 10:02:19+0</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>5</gda_value>
+      <gda_value>French              </gda_value>
+      <gda_value>2006-02-15 10:02:19+0</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>6</gda_value>
+      <gda_value>German              </gda_value>
+      <gda_value>2006-02-15 10:02:19+0</gda_value>
+    </gda_array_row>
+  </gda_array_data>
+</gda_array>

@@ -4,13 +4,9 @@
 #include <libgda/libgda.h>
 #include <stdarg.h>
 
-#ifdef HAVE_CHECK
-#include <check.h>
-#else
 #define fail(x) g_warning (x)
 #define fail_if(x,y) if (x) g_warning (y)
 #define fail_unless(x,y) if (!(x)) g_warning (y)
-#endif
 
 #define CHECK_EXTRA_INFO
 /*#undef CHECK_EXTRA_INFO*/
@@ -50,203 +46,7 @@ static gboolean check_data_model_remove_row (GdaDataModel *model, gint row);
 static GList *make_values_list (gint dummy, ...);
 static void free_values_list (GList *list);
 
-#ifdef HAVE_CHECK
 
-START_TEST (test1)
-{
-	prepend_null_row = FALSE;
-	defer_sync = FALSE;
-	if (!do_test_read_direct_1 ()) 
-		fail ("test read only with no sample size failed (defer sync = FALSE)");
-	defer_sync = TRUE;
-	if (!do_test_read_direct_1 ()) 
-		fail ("test read only with no sample size failed (defer sync = TRUE)");
-}
-END_TEST
-
-START_TEST (test2)
-{
-	prepend_null_row = FALSE;
-	defer_sync = FALSE;
-	if (!do_test_read_direct_2 ()) 
-		fail ("test read only with default sample size failed (defer sync = FALSE)");
-	defer_sync = TRUE;
-	if (!do_test_read_direct_2 ()) 
-		fail ("test read only with default sample size failed (defer sync = TRUE)");
-}
-END_TEST
-
-START_TEST (test3)
-{
-	prepend_null_row = FALSE;
-	defer_sync = FALSE;
-	if (!do_test_array ()) 
-		fail ("test read write failed (defer sync = FALSE)");
-	defer_sync = TRUE;
-	if (!do_test_array ()) 
-		fail ("test read write failed (defer sync = TRUE)");
-}
-END_TEST
-
-START_TEST (test4)
-{
-	prepend_null_row = TRUE;
-	defer_sync = FALSE;
-	if (!do_test_read_direct_1 ()) 
-		fail ("test read only with no sample size failed (defer sync = FALSE)");
-	defer_sync = TRUE;
-	if (!do_test_read_direct_1 ()) 
-		fail ("test read only with no sample size failed (defer sync = TRUE)");
-}
-END_TEST
-
-START_TEST (test5)
-{
-	prepend_null_row = TRUE;
-	defer_sync = FALSE;
-	if (!do_test_read_direct_2 ()) 
-		fail ("test read only with default sample size failed (defer sync = FALSE)");
-	defer_sync = TRUE;
-	if (!do_test_read_direct_2 ()) 
-		fail ("test read only with default sample size failed (defer sync = TRUE)");
-}
-END_TEST
-
-START_TEST (test6)
-{
-	prepend_null_row = TRUE;
-	defer_sync = FALSE;
-	if (!do_test_array ()) 
-		fail ("test read write failed (defer sync = FALSE)");
-	defer_sync = TRUE;
-	if (!do_test_array ()) 
-		fail ("test read write failed (defer sync = TRUE)");
-}
-END_TEST
-
-START_TEST (test7)
-{
-	prepend_null_row = FALSE;
-	defer_sync = FALSE;
-	if (!do_test_prop_change ())
-		fail ("test prop change failed");
-	defer_sync = TRUE;
-	if (!do_test_prop_change ())
-		fail ("test prop change failed");
-}
-END_TEST
-
-START_TEST (test8)
-{
-	prepend_null_row = FALSE;
-	defer_sync = FALSE;
-	if (!do_test_proxied_model_modif ())
-		fail ("proxied model modif failed");
-	defer_sync = TRUE;
-	if (!do_test_proxied_model_modif ())
-		fail ("proxied model modif failed");
-
-	prepend_null_row = TRUE;
-	defer_sync = FALSE;
-	if (!do_test_proxied_model_modif ())
-		fail ("poxied model mod failed");
-	defer_sync = TRUE;
-	if (!do_test_proxied_model_modif ())
-		fail ("poxied model mod failed");
-}
-END_TEST
-
-Suite *
-test_1_suite (void)
-{
-	Suite *s = suite_create ("Test");
-
-	/* Core test case */
-        TCase *tc_core = tcase_create ("Test read only");
-	tcase_set_timeout (tc_core, 10);
-	tcase_add_test (tc_core, test1);
-	tcase_add_test (tc_core, test2);
-	suite_add_tcase (s, tc_core);
-
-	tc_core = tcase_create ("Test read write");
-	tcase_set_timeout (tc_core, 10);
-	tcase_add_test (tc_core, test3);
-	suite_add_tcase (s, tc_core);
-	
-	return s;
-}
-
-Suite *
-test_2_suite (void)
-{
-	Suite *s = suite_create ("Test");
-
-	/* Core test case */
-        TCase *tc_core = tcase_create ("Test read only");
-	tcase_set_timeout (tc_core, 10);
-	tcase_add_test (tc_core, test4);
-	tcase_add_test (tc_core, test5);
-	suite_add_tcase (s, tc_core);
-
-	tc_core = tcase_create ("Test read write");
-	tcase_set_timeout (tc_core, 10);
-	tcase_add_test (tc_core, test6);
-	suite_add_tcase (s, tc_core);
-
-	tc_core = tcase_create ("Test prop change");
-	tcase_set_timeout (tc_core, 10);
-	tcase_add_test (tc_core, test7);
-	suite_add_tcase (s, tc_core);
-	
-	return s;
-}
-
-Suite *
-test_3_suite (void)
-{
-	Suite *s = suite_create ("Test");
-
-	/* Core test case */
-        TCase *tc_core = tcase_create ("Proxied model modified");
-	tcase_set_timeout (tc_core, 10);
-	tcase_add_test (tc_core, test8);
-	suite_add_tcase (s, tc_core);
-	
-	return s;
-}
-
-int
-main (int argc, char **argv)
-{
-	int number_failed = 0;
-
-	gda_init ("check-data-proxy", PACKAGE_VERSION, argc, argv);
-
-	Suite *s = test_1_suite ();
-	SRunner *sr = srunner_create (s);
-	srunner_run_all (sr, CK_NORMAL);
-	number_failed += srunner_ntests_failed (sr);
-	srunner_free (sr);
-
-	s = test_2_suite ();
-	sr = srunner_create (s);
-	srunner_run_all (sr, CK_NORMAL);
-	number_failed += srunner_ntests_failed (sr);
-	srunner_free (sr);
-
-	s = test_3_suite ();
-	sr = srunner_create (s);
-	srunner_run_all (sr, CK_NORMAL);
-	number_failed += srunner_ntests_failed (sr);
-	srunner_free (sr);
-	
-	return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
-}
-#else
-
-/*
- * The Check library is not available
- */
 int
 main (int argc, char **argv)
 {
@@ -325,7 +125,6 @@ main (int argc, char **argv)
 
 	return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
-#endif
 
 
 static gboolean

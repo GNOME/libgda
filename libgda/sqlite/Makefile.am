@@ -29,6 +29,8 @@ libgda_sqlite_la_SOURCES = \
 	gda-sqlite-handler-bin.c \
 	gda-sqlite-handler-bin.h \
 	gda-sqlite-provider.c \
+	gda-sqlite-pstmt.h \
+	gda-sqlite-pstmt.c \
 	gda-sqlite-recordset.c \
 	gda-sqlite-recordset.h \
 	gda-sqlite.h \

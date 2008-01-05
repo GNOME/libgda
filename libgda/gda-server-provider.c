@@ -116,7 +116,9 @@ gda_server_provider_finalize (GObject *object)
 	/* free memory */
 	if (provider->priv) {
 		g_hash_table_destroy (provider->priv->data_handlers);
-		
+		if (provider->priv->parser)
+			g_object_unref (provider->priv->parser);
+
 		g_free (provider->priv);
 		provider->priv = NULL;
 	}
@@ -766,13 +768,7 @@ gda_server_provider_execute_command (GdaServerProvider *provider,
 		const GSList *list;
 		GdaSqlParser *parser;
 		
-		parser = g_object_get_data (G_OBJECT (provider), "_gda_parser");
-		if (!parser) {
-			parser = gda_server_provider_create_parser (provider, NULL);
-			g_assert (parser);
-			g_object_set_data_full (G_OBJECT (provider), "_gda_parser", parser, g_object_unref);
-		}
-				
+		parser = gda_server_provider_internal_get_parser (provider);			
 		options = gda_command_get_options (cmd);
 		switch (gda_command_get_command_type (cmd)) {
 		case GDA_COMMAND_TYPE_SQL:
@@ -932,13 +928,7 @@ gda_server_provider_execute_query (GdaServerProvider *provider,
 		gchar *sql;
 		GError *error = NULL;
 
-		parser = g_object_get_data (G_OBJECT (provider), "_gda_parser");
-		if (!parser) {
-			parser = gda_server_provider_create_parser (provider, NULL);
-			g_assert (parser);
-			g_object_set_data_full (G_OBJECT (provider), "_gda_parser", parser, g_object_unref);
-		}
-
+		parser = gda_server_provider_internal_get_parser (provider);
 		sql = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, NULL, 
 						  GDA_RENDERER_PARAMS_AS_DETAILED, &error);
 		if (!sql || 
@@ -1547,7 +1537,7 @@ gda_server_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection
 	if (CLASS (provider)->statement_to_sql)
 		return (CLASS (provider)->statement_to_sql)(provider, cnc, stmt, params, flags, params_used, error);
 	else
-		return gda_statement_to_sql_extended (stmt, NULL, params, flags, params_used, error);
+		return gda_statement_to_sql_extended (stmt, cnc, params, flags, params_used, error);
 }
 
 /**
@@ -1657,7 +1647,9 @@ gda_server_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		
 		/* convert the returned GdaParameterList to a GdaSet */
 		g_assert (! res->next);
-		if (GDA_IS_DATA_MODEL (res->data)) 
+		if (!res->data)
+			retval = NULL;
+		else if (GDA_IS_DATA_MODEL (res->data)) 
 			retval = G_OBJECT (res->data);
 		else if (GDA_IS_PARAMETER_LIST (res->data)) {
 			GdaSet *set;

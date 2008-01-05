@@ -268,9 +268,8 @@ gda_vprovider_data_model_open_connection (GdaServerProvider *provider, GdaConnec
 	gda_quark_list_free (m_params);
 
 	SQLITEcnc *scnc;
-	scnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE);
+	scnc = (SQLITEcnc*) gda_connection_internal_get_provider_data ((GdaConnection *) cnc);
 	if (!scnc) {
-		gda_connection_add_event_string (cnc, _("Invalid SQLite handle"));
 		gda_connection_close_no_warning (cnc);
 
 		return FALSE;

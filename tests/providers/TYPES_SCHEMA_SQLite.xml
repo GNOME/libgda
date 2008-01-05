@@ -31,7 +31,28 @@
       <gda_value>blob</gda_value>
       <gda_value>system</gda_value>
       <gda_value>Blob of data, stored exactly as it was input</gda_value>
-      <gda_value>134565056</gda_value>
+      <gda_value>145570992</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>timestamp</gda_value>
+      <gda_value>system</gda_value>
+      <gda_value>Time stamp, stored as 'YYYY-MM-DD HH:MM:SS.SSS'</gda_value>
+      <gda_value>145573576</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>time</gda_value>
+      <gda_value>system</gda_value>
+      <gda_value>Time, stored as 'HH:MM:SS.SSS'</gda_value>
+      <gda_value>145568736</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>date</gda_value>
+      <gda_value>system</gda_value>
+      <gda_value>Date, stored as 'YYYY-MM-DD'</gda_value>
+      <gda_value>145570864</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>

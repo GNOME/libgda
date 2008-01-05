@@ -1,2 +1,2 @@
-SUBDIRS = queries data-models providers parser value-holders
+SUBDIRS = providers parser value-holders data-models
 
