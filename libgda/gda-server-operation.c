@@ -749,17 +749,25 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root)
 
 		/* don't care about entries for the wrong locale */
 		this_lang = xmlGetProp(node, (xmlChar*)"lang");
-		if (this_lang && strncmp ((gchar*)this_lang, lang, strlen ((gchar*)this_lang))) {
-			g_free (this_lang);
+		if (this_lang) {
+			if (strncmp ((gchar*)this_lang, lang, strlen ((gchar*)this_lang))) {
+				xmlFree (this_lang);
+				node = node->next;
+				continue;
+			}
+
+			xmlFree(this_lang);
+		}
+
+		id = xmlGetProp (node, BAD_CAST "id");
+		if (!id) {
 			node = node->next;
 			continue;
 		}
 
-		id = xmlGetProp (node, BAD_CAST "id");
 		complete_path = g_strdup_printf ("%s/%s", root ? root : "", id);
 		path_name = g_strdup ((gchar*)id);
-		if (id)
-			xmlFree (id);
+		xmlFree (id);
 
 		old_opnode = node_find (op, complete_path);
 		if (old_opnode) {

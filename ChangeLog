@@ -1,3 +1,9 @@
+2008-01-26  Armin Burgmeier  <armin@openismus.com>
+
+	* libgda/gda-server-operation.c:
+	(xml_load_file): Don't leak this_lang, ignore entry when id is NULL
+	which caused a segfault on Windows.
+
 2007-10-29  Kjartan Maraas  <kmaraas@gnome.org>
 
 	* configure.in: Remove no from ALL_LINGUAS.
