@@ -1,3 +1,5 @@
+3.0.2:
+
 2008-01-26  Armin Burgmeier  <armin@openismus.com>
 
 	* libgda/gda-server-operation.c:
@@ -26,12 +28,12 @@
 
 	* libgda/gda-column.c: don't g_free() several times the same string
 	* libgda/gda-connection.c: correctly output the number of rows in a returned
-	data model when that number is not known
+	data model when that number is not known.
 
 2007-06-03  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-client.c: fixed gda_client_find_connection() where the first existing
-	connection was always returned regardless of the requested DSN
+	connection was always returned regardless of the requested DSN.
 
 2007-05-28  Hans de Goede <j.w.r.degoede@hhs.nl>
 

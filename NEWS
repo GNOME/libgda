@@ -1,3 +1,33 @@
+libgda 3.0.2, 2007-05-10
+
+
+* GdaClient:
+  - gda_client_find_connection(): The first existing connection was 
+  always returned regardless of the requested DSN.
+  - Correctly implement connection sharing.
+  - correctly emit the "event_notification" signal when a connection is opened. 
+    Bug #316698.
+  (Vivien Malerba)
+* GdaColumn: Avoid a double free and a memory leak.
+* GdaConnection: correctly output the number of rows in a returned
+  data model when that number is not known.
+  (Vivien Malerba)
+* GdaGraph: Correctly interpret the ID of a graph when loaded from XML.
+  (Vivien Malerba)
+* GdaServerOperation: Fixed a leak (and crash on Window).
+  (Armin Burgmeier)
+
+* Postgres provider: Allow spaces in the username and password, 
+  by using quotes. (Murray Cumming) Bug #491171.
+* LDAP provider: Build fixes. (Hans de Goede)
+* SQLLite provider:
+  - Fix handling of NOT NULL.
+  - Fixed crash in gda_connection_commit_transaction(). Bug #493360.
+  - Force SQLite to re-read the database structure in case it has been modified 
+    by another connection since the last time an SQL statement was executed.
+  (Vivien Malerba)
+* Various other small fixes. (Vivien Malerba)
+
 libgda 3.0.1, 2007-05-10
 
  - Bug fixes: #433687, #434464, #432798, #432798

@@ -1,3 +1,8 @@
 providers/sqlite/sqlite-src/os_common.h
 providers/sqlite/sqlite-src/vdbe.c
 providers/sybase/main.c
+libgda/sql-delimiter/lexer.c
+libgda/sql-delimiter/parser.c
+libgda/sql-transaction/parser.c
+libsql/lexer.c
+libsql/parser.c
