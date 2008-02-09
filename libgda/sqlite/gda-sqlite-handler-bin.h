@@ -1,6 +1,6 @@
 /* gda-sqlite-handler-bin.h
  *
- * Copyright (C) 2006 Vivien Malerba
+ * Copyright (C) 2006 - 2008 Vivien Malerba
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -20,15 +20,15 @@
 #ifndef __GDA_SQLITE_HANDLER_BIN__
 #define __GDA_SQLITE_HANDLER_BIN__
 
-#include <libgda/gda-object.h>
+#include <glib-object.h>
 #include <libgda/gda-data-handler.h>
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_HANDLER_BIN          (gda_sqlite_handler_bin_get_type())
+#define GDA_TYPE_SQLITE_HANDLER_BIN          (gda_sqlite_handler_bin_get_type())
 #define GDA_SQLITE_HANDLER_BIN(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_sqlite_handler_bin_get_type(), GdaSqliteHandlerBin)
 #define GDA_SQLITE_HANDLER_BIN_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_sqlite_handler_bin_get_type (), GdaSqliteHandlerBinClass)
-#define GDA_IS_HANDLER_BIN(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_sqlite_handler_bin_get_type ())
+#define GDA_IS_SQLITE_HANDLER_BIN(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_sqlite_handler_bin_get_type ())
 
 
 typedef struct _GdaSqliteHandlerBin      GdaSqliteHandlerBin;
@@ -39,7 +39,7 @@ typedef struct _GdaSqliteHandlerBinPriv  GdaSqliteHandlerBinPriv;
 /* struct for the object's data */
 struct _GdaSqliteHandlerBin
 {
-	GdaObject           object;
+	GObject                   object;
 
 	GdaSqliteHandlerBinPriv  *priv;
 };
@@ -47,7 +47,7 @@ struct _GdaSqliteHandlerBin
 /* struct for the object's class */
 struct _GdaSqliteHandlerBinClass
 {
-	GdaObjectClass      parent_class;
+	GObjectClass              parent_class;
 };
 
 

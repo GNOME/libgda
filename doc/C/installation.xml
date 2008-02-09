@@ -128,14 +128,14 @@
       to use the <command>pkg-config</command> command.
     </para>
     <programlisting>
-<systemitem class="prompt">$</systemitem>gcc -c full_example.c `pkg-config --cflags libgda-3.0`
-<systemitem class="prompt">$</systemitem>gcc -o full_example `pkg-config --libs libgda-3.0` full_example.o
+<systemitem class="prompt">$</systemitem>gcc -c full_example.c `pkg-config --cflags libgda-4.0`
+<systemitem class="prompt">$</systemitem>gcc -o full_example `pkg-config --libs libgda-4.0` full_example.o
     </programlisting>
     <para>
       Doing this will add to the C compiler command line all needed header files
       and library directories as well as all needed libraries for linking your GDA
-      application. To include header files, you can just use <filename>libgda/libgda.h</filename>,
-      which will include all GDA header files.
+      application. To include header files, you can use <filename>libgda/libgda.h</filename>
+      (more headers may be needed depending on some features, and are included in the documentation).
     </para>
   </sect1>
   <sect1 id="installation-configuring">
@@ -165,10 +165,11 @@
         <filename>/etc/ld.so.conf</filename> file).
       </para>
       <para>
-        Programs which need to use &LIBGDA;'s features need to include a headers file, which is:
+        Programs which need to use &LIBGDA;'s features need to include headers files, which are:
       </para>
       <programlisting>
 #include &lt;libgda/libgda.h&gt;
+#include &lt;sql-parser/gda-sql-parser.h&gt;
       </programlisting>
       and to use reports:
       <programlisting>
@@ -189,8 +190,8 @@
 	To access a database, it must have a database provider (if &LIBGDA; does not
 	support the type of database to access, make a bug report in 
 	<ulink url="http://bugzilla.gnome.org/">bugzilla</ulink>), and that database provider
-	must be compiled an installed: the <command>gda-list-config-3.0</command> or 
-	<command>gda-sql-3.0 -L</command> commands will
+	must be compiled an installed: the <command>gda-list-config-4.0</command> or 
+	<command>gda-sql-4.0 -L</command> commands will
 	show a list of the installed and configured database providers.
       </para>
       <para>
@@ -211,7 +212,7 @@
 	own DSN definitions are stored in the <filename>$HOME/.libgda/config</filename> file (which
 	is created the first time &LIBGDA; is used within an application. System wide DSN are defined in the
 	<filename>&lt;prefix&gt;/etc/libgda/config</filename>. Rather than editing that
-	file manually, it is possible to use the <command>gnome-database-properties-3.0</command>
+	file manually, it is possible to use the <command>gnome-database-properties-4.0</command>
 	from the <ulink url="http://www.gnome-db.org">Libgnomedb</ulink> library.
       </para>
     </sect2>

@@ -22,7 +22,6 @@
 
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-data-model.h>
-#include <libgda/gda-parameter.h>
 #include <libgda/gda-data-model-iter.h>
 #include <libgda/gda-data-model-private.h>
 #include <string.h>
@@ -30,6 +29,7 @@
 #include "gda-prow.h"
 #include "gda-pstmt.h"
 #include <libgda/gda-statement.h>
+#include <libgda/gda-holder.h>
 
 #define CLASS(x) (GDA_PMODEL_CLASS (G_OBJECT_GET_CLASS (x)))
 
@@ -117,7 +117,7 @@ gda_pmodel_get_type (void)
 			NULL
 		};
 
-		type = g_type_register_static (GDA_TYPE_OBJECT, "GdaPModel", &info, 0);
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaPModel", &info, 0);
 		g_type_add_interface_static (type, GDA_TYPE_DATA_MODEL, &data_model_info);
 	}
 	return type;
@@ -148,9 +148,6 @@ gda_pmodel_class_init (GdaPModelClass *klass)
 	/* virtual functions */
 	object_class->dispose = gda_pmodel_dispose;
 	object_class->finalize = gda_pmodel_finalize;
-
-	/* class attributes */
-	GDA_OBJECT_CLASS (klass)->id_unique_enforced = FALSE;
 }
 
 static void
@@ -653,13 +650,13 @@ update_iter (GdaPModel *imodel, GdaPRow *prow)
 	g_object_set (G_OBJECT (iter), "update_model", FALSE, NULL);
 	
 	length = gda_prow_get_length (prow);
-	g_assert (length == g_slist_length (GDA_PARAMETER_LIST (iter)->parameters));
-	for (i = 0, plist = GDA_PARAMETER_LIST (iter)->parameters; 
+	g_assert (length == g_slist_length (GDA_SET (iter)->holders));
+	for (i = 0, plist = GDA_SET (iter)->holders; 
 	     i < length;
 	     i++, plist = plist->next) {
 		const GValue *value;
 		value = gda_prow_get_value (prow, i);
-		gda_parameter_set_value (GDA_PARAMETER (plist->data), value);
+		gda_holder_set_value (GDA_HOLDER (plist->data), value);
         }
 
 	g_object_set (G_OBJECT (iter), "current-row", imodel->priv->iter_row, NULL);

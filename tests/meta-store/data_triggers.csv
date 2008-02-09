@@ -1,0 +1,6 @@
+"meta","pg_catalog","pg_stats","INSERT","meta","pg_catalog","pg_locks","EXECUTE PROCEDURE flatfile_update_trigger()","STATEMENT","AFTER","NULL","pg_stats","pg_stats"
+"meta","pg_catalog","pg_stats","DELETE","meta","pg_catalog","pg_locks","EXECUTE PROCEDURE flatfile_update_trigger()","STATEMENT","AFTER","NULL","pg_stats","pg_stats"
+"meta","pg_catalog","pg_stats","UPDATE","meta","pg_catalog","pg_locks","EXECUTE PROCEDURE flatfile_update_trigger()","STATEMENT","AFTER","NULL","pg_stats","pg_stats"
+"meta","pg_catalog","pg_locks","INSERT","meta","pg_catalog","pg_stats","EXECUTE PROCEDURE flatfile_update_trigger()","STATEMENT","AFTER","NULL","pg_locks","pg_locks"
+"meta","pg_catalog","pg_locks","DELETE","meta","pg_catalog","pg_stats","EXECUTE PROCEDURE flatfile_update_trigger()","STATEMENT","AFTER","NULL","pg_locks","pg_locks"
+"meta","pg_catalog","pg_locks","UPDATE","meta","pg_catalog","pg_stats","EXECUTE PROCEDURE flatfile_update_trigger()","STATEMENT","AFTER","NULL","pg_locks","pg_locks"

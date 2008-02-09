@@ -63,7 +63,7 @@ struct _GdaClientClass {
 	void (* event_notification) (GdaClient *client,
 				     GdaConnection *cnc,
 				     GdaClientEvent event,
-				     GdaParameterList *params);
+				     GdaSet *params);
 };
 
 /* error reporting */
@@ -100,7 +100,7 @@ GdaConnection *gda_client_find_connection                    (GdaClient *client,
 void           gda_client_close_all_connections              (GdaClient *client);
 
 void           gda_client_notify_event                       (GdaClient *client, GdaConnection *cnc,
-							      GdaClientEvent event, GdaParameterList *params);
+							      GdaClientEvent event, GdaSet *params);
 void           gda_client_notify_error_event                 (GdaClient *client, GdaConnection *cnc, GdaConnectionEvent *error);
 void           gda_client_notify_connection_opened_event     (GdaClient *client, GdaConnection *cnc);
 void           gda_client_notify_connection_closed_event     (GdaClient *client, GdaConnection *cnc);

@@ -1,5 +1,5 @@
-/* GDA SQLite provider
- * Copyright (C) 2007 The GNOME Foundation.
+/* GDA library
+ * Copyright (C) 2007 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -134,7 +134,7 @@ gda_data_model_dsn_list_init (GdaDataModelDsnList *model,
 	gda_column_set_g_type (col, G_TYPE_BOOLEAN);
 	model->priv->columns = g_slist_append (model->priv->columns, col);
 
-	gda_object_set_name (GDA_OBJECT (model), _("List of defined data sources"));
+	g_object_set_data (G_OBJECT (model), "name", _("List of defined data sources"));
 
 	config = gda_config_get ();
 	g_signal_connect (G_OBJECT (config), "dsn_added",
@@ -236,7 +236,7 @@ gda_data_model_dsn_list_get_type (void)
                         NULL
                 };
 
-		type = g_type_register_static (GDA_TYPE_OBJECT, "GdaDataModelDsnList", &info, 0);
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaDataModelDsnList", &info, 0);
 		g_type_add_interface_static (type, GDA_TYPE_DATA_MODEL, &data_model_info);
 	}
 

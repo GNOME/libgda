@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 Vivien Malerba
+ * Copyright (C) 2007 - 2008 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -21,6 +21,7 @@
 #include <glib/gi18n-lib.h>
 #include <libgda/sql-parser/gda-statement-struct.h>
 #include <libgda/gda-debug-macros.h>
+#include <libgda/gda-connection.h>
 #include <libgda/sql-parser/gda-statement-struct-util.h>
 #include <libgda/sql-parser/gda-statement-struct-unknown.h>
 #include <libgda/sql-parser/gda-statement-struct-trans.h>
@@ -29,7 +30,6 @@
 #include <libgda/sql-parser/gda-statement-struct-delete.h>
 #include <libgda/sql-parser/gda-statement-struct-update.h>
 #include <libgda/sql-parser/gda-statement-struct-compound.h>
-#include <libgda/gda-entity.h>
 
 /*
  * Error reporting
@@ -224,70 +224,63 @@ gda_sql_statement_serialize (GdaSqlStatement *stmt)
  * Check with dict data structure
  */
 typedef struct {
-	GdaDict             *dict;
-	GdaSqlStatementFunc  func;
-	gpointer             func_data;
+	GdaConnection *cnc;
 } DictCheckData;
 
-static gboolean foreach_check_with_dict (GdaSqlAnyPart *node, DictCheckData *data, GError **error);
-static gboolean gda_sql_expr_check_with_dict (GdaSqlExpr *expr, DictCheckData *data, GError **error);
-static gboolean gda_sql_field_check_with_dict (GdaSqlField *field, DictCheckData *data, GError **error);
-static gboolean gda_sql_table_check_with_dict (GdaSqlTable *table, DictCheckData *data, GError **error);
-static gboolean gda_sql_function_check_with_dict (GdaSqlFunction *function, DictCheckData *data, GError **error);
-static gboolean gda_sql_select_field_check_with_dict (GdaSqlSelectField *field, DictCheckData *data, GError **error);
-static gboolean gda_sql_select_target_check_with_dict (GdaSqlSelectTarget *target, DictCheckData *data, GError **error);
+static gboolean foreach_check_cnc (GdaSqlAnyPart *node, DictCheckData *data, GError **error);
+static gboolean gda_sql_expr_check_cnc (GdaSqlExpr *expr, DictCheckData *data, GError **error);
+static gboolean gda_sql_field_check_cnc (GdaSqlField *field, DictCheckData *data, GError **error);
+static gboolean gda_sql_table_check_cnc (GdaSqlTable *table, DictCheckData *data, GError **error);
+static gboolean gda_sql_function_check_cnc (GdaSqlFunction *function, DictCheckData *data, GError **error);
+static gboolean gda_sql_select_field_check_cnc (GdaSqlSelectField *field, DictCheckData *data, GError **error);
+static gboolean gda_sql_select_target_check_cnc (GdaSqlSelectTarget *target, DictCheckData *data, GError **error);
 
 /**
- * gda_sql_statement_check_with_dict
+ * gda_sql_statement_check_connection
  * @stmt: a #GdaSqlStatement pointer
- * @dict: a #GdaDict object, or %NULL
- * @func: a #GdaSqlStatementFunc function to be called when the representation of a database object in @dict is removed
- * @func_data: data to pass to @func when it's called
+ * @cnc: a #GdaConnection object, or %NULL
  * @error: a place to store errors, or %NULL
  *
- * If @dict is not %NULL, then checks that all the database objects referenced in the statement actually
- * exist in the dictionary (for example the table being updated in a UPDATE statement must exist in the
- * dictionary for the check to succeed).
+ * If @cnc is not %NULL, then checks that all the database objects referenced in the statement actually
+ * exist in the connection's database (for example the table being updated in a UPDATE statement must exist in the
+ * connection's database for the check to succeed).
  *
- * If @dict is %NULL, then remove any reference to any @dict's object used in @stmt.
+ * If @cnc is %NULL, then remove any information from a previous call to this method stored in @stmt.
  *
  * Returns: TRUE if no error occurred
  */
 gboolean
-gda_sql_statement_check_with_dict (GdaSqlStatement *stmt, GdaDict *dict, GdaSqlStatementFunc func, gpointer func_data, 
-				   GError **error)
+gda_sql_statement_check_connection (GdaSqlStatement *stmt, GdaConnection *cnc, GError **error)
 {
 	DictCheckData data;
 
 	g_return_val_if_fail (stmt, FALSE);
-	g_return_val_if_fail (!dict || GDA_IS_DICT (dict), FALSE);
+	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), FALSE);
 
-	data.dict = dict;
-	data.func = func;
-	data.func_data = func_data;
+	data.cnc = cnc;
 
 	return gda_sql_any_part_foreach (GDA_SQL_ANY_PART (stmt->contents), 
-					 (GdaSqlForeachFunc) foreach_check_with_dict, &data, error);
+					 (GdaSqlForeachFunc) foreach_check_cnc, &data, error);
 }
 
 static gboolean
-foreach_check_with_dict (GdaSqlAnyPart *node, DictCheckData *data, GError **error)
+foreach_check_cnc (GdaSqlAnyPart *node, DictCheckData *data, GError **error)
 {
 	if (!node) return TRUE;
 
 	switch (node->type) {
 	case GDA_SQL_ANY_EXPR:
-		return gda_sql_expr_check_with_dict ((GdaSqlExpr*) node, data, error);
+		return gda_sql_expr_check_cnc ((GdaSqlExpr*) node, data, error);
 	case GDA_SQL_ANY_SQL_FIELD:
-		return gda_sql_field_check_with_dict ((GdaSqlField*) node, data, error);
+		return gda_sql_field_check_cnc ((GdaSqlField*) node, data, error);
 	case GDA_SQL_ANY_SQL_TABLE:
-		return gda_sql_table_check_with_dict ((GdaSqlTable*) node, data, error);
+		return gda_sql_table_check_cnc ((GdaSqlTable*) node, data, error);
 	case GDA_SQL_ANY_SQL_FUNCTION:
-		return gda_sql_function_check_with_dict ((GdaSqlFunction*) node, data, error);
+		return gda_sql_function_check_cnc ((GdaSqlFunction*) node, data, error);
 	case GDA_SQL_ANY_SQL_SELECT_FIELD:
-		return gda_sql_select_field_check_with_dict ((GdaSqlSelectField*) node, data, error);
+		return gda_sql_select_field_check_cnc ((GdaSqlSelectField*) node, data, error);
 	case GDA_SQL_ANY_SQL_SELECT_TARGET:
-		return gda_sql_select_target_check_with_dict ((GdaSqlSelectTarget*) node, data, error);
+		return gda_sql_select_target_check_cnc ((GdaSqlSelectTarget*) node, data, error);
 	default:
 		break;
 	}
@@ -295,7 +288,7 @@ foreach_check_with_dict (GdaSqlAnyPart *node, DictCheckData *data, GError **erro
 }
 
 static gboolean
-gda_sql_expr_check_with_dict (GdaSqlExpr *expr, DictCheckData *data, GError **error)
+gda_sql_expr_check_cnc (GdaSqlExpr *expr, DictCheckData *data, GError **error)
 {
 	if (!expr) return TRUE;
 	if (!expr->param_spec) return TRUE;
@@ -310,19 +303,8 @@ gda_sql_expr_check_with_dict (GdaSqlExpr *expr, DictCheckData *data, GError **er
         return FALSE;
 }
 
-
-static void
-gda_sql_field_weak_notify (GdaSqlField *field, GObject *obj)
-{
-	field->dict_field = NULL;
-	if (field->dict_func)
-		field->dict_func (GDA_SQL_ANY_PART (field), field->dict_data);
-	field->dict_func = NULL;
-	field->dict_data = NULL;
-}
-
 static gboolean
-gda_sql_field_check_with_dict (GdaSqlField *field, DictCheckData *data, GError **error)
+gda_sql_field_check_cnc (GdaSqlField *field, DictCheckData *data, GError **error)
 {
 	GdaSqlAnyPart *any;
 	GdaSqlTable *stable;
@@ -330,7 +312,7 @@ gda_sql_field_check_with_dict (GdaSqlField *field, DictCheckData *data, GError *
 	if (!field) return TRUE;
 	gda_sql_field_check_clean (field);
 
-	if (!data->dict) return TRUE;
+	if (!data->cnc) return TRUE;
 
 	for (any = GDA_SQL_ANY_PART(field)->parent; 
 	     any && (any->type != GDA_SQL_ANY_STMT_INSERT) && (any->type != GDA_SQL_ANY_STMT_UPDATE); 
@@ -357,21 +339,27 @@ gda_sql_field_check_with_dict (GdaSqlField *field, DictCheckData *data, GError *
 				     _("Missing table in UPDATE statement"));
 		return FALSE;
 	}
-	if (!stable->dict_table) {
-		if (! gda_sql_table_check_with_dict (stable, data, error))
+	if (!stable->full_table_name) {
+		if (! gda_sql_table_check_cnc (stable, data, error))
 			return FALSE;
-		g_assert (stable->dict_table);
-		GdaDictDatabase *db;
+		g_assert (stable->full_table_name);
 
-		db = gda_dict_get_database (data->dict);
-		field->dict_field = gda_entity_get_field_by_name (GDA_ENTITY (stable->dict_table), 
-								  field->field_name);
-		if (!field->dict_field) {
+		GdaDataModel *model;
+		GValue *v1, *v2;
+		g_value_set_string (v1 = gda_value_new (G_TYPE_STRING), stable->table_name);
+		g_value_set_string (v2 = gda_value_new (G_TYPE_STRING), field->field_name);
+		model = gda_connection_get_meta_store_data (data->cnc, GDA_CONNECTION_META_FIELDS, error, 2,
+							    "name", v1, "field_name", v2);
+		if (!model)
+			return FALSE;
+		if (gda_data_model_get_n_rows (model) == 0) {
 			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_DICT_ELEMENT_MISSING_ERROR,
-				     _("Field %s.%s not found in dictionary"), stable->table_name, field->field_name);
+				     _("Field %s.%s not found"), stable->table_name, field->field_name);
+			g_object_unref (model);
 			return FALSE;
 		}
-		g_object_weak_ref (G_OBJECT (field->dict_field), (GWeakNotify) gda_sql_field_weak_notify, field);
+		g_object_unref (model);
+		return TRUE;
 	}
 
         return TRUE;
@@ -389,12 +377,11 @@ void
 gda_sql_field_check_clean (GdaSqlField *field)
 {
 	if (!field) return;
-	if (field->dict_field)
-		g_object_weak_unref (G_OBJECT (field->dict_field), (GWeakNotify) gda_sql_field_weak_notify, field);
+	/* nothing to do */
 }
 
 static gboolean
-gda_sql_table_check_with_dict (GdaSqlTable *table, DictCheckData *data, GError **error)
+gda_sql_table_check_cnc (GdaSqlTable *table, DictCheckData *data, GError **error)
 {
 	if (!table) return TRUE;
 
@@ -406,12 +393,14 @@ void
 gda_sql_table_check_clean (GdaSqlTable *table)
 {
 	if (!table) return;
-	if (table->dict_table)
-		TO_IMPLEMENT;
+	if (table->full_table_name) {
+		g_free (table->full_table_name);
+		table->full_table_name = NULL;
+	}
 }
 
 static gboolean
-gda_sql_function_check_with_dict (GdaSqlFunction *function, DictCheckData *data, GError **error)
+gda_sql_function_check_cnc (GdaSqlFunction *function, DictCheckData *data, GError **error)
 {
 	if (!function) return TRUE;
 
@@ -419,16 +408,18 @@ gda_sql_function_check_with_dict (GdaSqlFunction *function, DictCheckData *data,
         return FALSE;
 }
 
-void 
+void
 gda_sql_function_check_clean (GdaSqlFunction *function)
 {
-	if (!function) return;
-	if (function->dict_function)
-		TO_IMPLEMENT;
+	if (!function) return TRUE;
+	if (function->full_function_name) {
+		g_free (function->full_function_name);
+		function->full_function_name = NULL;
+	}
 }
 
 static gboolean
-gda_sql_select_field_check_with_dict (GdaSqlSelectField *field, DictCheckData *data, GError **error)
+gda_sql_select_field_check_cnc (GdaSqlSelectField *field, DictCheckData *data, GError **error)
 {
 	if (!field) return TRUE;
 
@@ -440,12 +431,14 @@ void
 gda_sql_select_field_check_clean (GdaSqlSelectField *field)
 {
 	if (!field) return;
-	if (field->dict_field || field->dict_table)
-		TO_IMPLEMENT;
+	if (field->full_table_name) {
+		g_free (field->full_table_name);
+		field->full_table_name = NULL;
+	}
 }
 
 static gboolean
-gda_sql_select_target_check_with_dict (GdaSqlSelectTarget *target, DictCheckData *data, GError **error)
+gda_sql_select_target_check_cnc (GdaSqlSelectTarget *target, DictCheckData *data, GError **error)
 {
 	if (!target) return TRUE;
 
@@ -457,8 +450,10 @@ void
 gda_sql_select_target_check_clean (GdaSqlSelectTarget *target)
 {
 	if (!target) return;
-	if (target->dict_table)
-		TO_IMPLEMENT;
+	if (target->full_table_name) {
+		g_free (target->full_table_name);
+		target->full_table_name = NULL;
+	}
 }
 
 

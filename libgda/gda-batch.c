@@ -150,7 +150,7 @@ gda_batch_new (void)
 
 
 /**
- * gda_batch_new_copy
+ * gda_batch_copy
  * @orig: a #GdaBatch to make a copy of
  * 
  * Copy constructor
@@ -158,7 +158,7 @@ gda_batch_new (void)
  * Returns: a the new copy of @orig
  */
 GdaBatch *
-gda_batch_new_copy (GdaBatch *orig)
+gda_batch_copy (GdaBatch *orig)
 {
 	GObject *obj;
 	GdaBatch *batch;
@@ -172,7 +172,7 @@ gda_batch_new_copy (GdaBatch *orig)
 	for (list = orig->priv->statements; list; list = list->next) {
 		GdaStatement *copy;
 
-		copy = gda_statement_new_copy (GDA_STATEMENT (list->data));
+		copy = gda_statement_copy (GDA_STATEMENT (list->data));
 		batch->priv->statements = g_slist_prepend (batch->priv->statements, copy);
 	}
 	batch->priv->statements = g_slist_reverse (batch->priv->statements);

@@ -1,5 +1,5 @@
 /* GDA Sqlite Provider
- * Copyright (C) 2006 The GNOME Foundation
+ * Copyright (C) 2006 - 2008 The GNOME Foundation
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -27,17 +27,21 @@
 G_BEGIN_DECLS
 
 gchar *gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc, 
-				      GdaServerOperation *op, GError **error);
+				       GdaServerOperation *op, GError **error);
 gchar *gda_sqlite_render_DROP_TABLE   (GdaServerProvider *provider, GdaConnection *cnc, 
-				      GdaServerOperation *op, GError **error);
+				       GdaServerOperation *op, GError **error);
 gchar *gda_sqlite_render_RENAME_TABLE (GdaServerProvider *provider, GdaConnection *cnc, 
-				      GdaServerOperation *op, GError **error);
+				       GdaServerOperation *op, GError **error);
 gchar *gda_sqlite_render_ADD_COLUMN  (GdaServerProvider *provider, GdaConnection *cnc, 
 				      GdaServerOperation *op, GError **error);
 gchar *gda_sqlite_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cnc, 
-				      GdaServerOperation *op, GError **error);
+				       GdaServerOperation *op, GError **error);
 gchar *gda_sqlite_render_DROP_INDEX   (GdaServerProvider *provider, GdaConnection *cnc, 
-				      GdaServerOperation *op, GError **error);
+				       GdaServerOperation *op, GError **error);
+gchar *gda_sqlite_render_CREATE_VIEW  (GdaServerProvider *provider, GdaConnection *cnc, 
+				       GdaServerOperation *op, GError **error);
+gchar *gda_sqlite_render_DROP_VIEW    (GdaServerProvider *provider, GdaConnection *cnc, 
+				       GdaServerOperation *op, GError **error);
 
 G_END_DECLS
 

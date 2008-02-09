@@ -558,7 +558,7 @@ prov_test_check_table_cursor_model (GdaConnection *cnc, const gchar *table)
 	
 	/* create models */
 	GdaDataModel *ref_model, *cursor_model;
-	ref_model = gda_connection_statement_execute_select (cnc, stmt, NULL, GDA_STATEMENT_MODEL_RANDOM_ACCESS, NULL);
+	ref_model = gda_connection_statement_execute_select (cnc, stmt, NULL, NULL);
 	if (!ref_model) {
 #ifdef CHECK_EXTRA_INFO
 		g_warning ("Can't execute GdaStatement (random access requested)!");
@@ -571,7 +571,7 @@ prov_test_check_table_cursor_model (GdaConnection *cnc, const gchar *table)
 #endif
 		return FALSE;
 	}
-	cursor_model = gda_connection_statement_execute_select (cnc, stmt, NULL, GDA_STATEMENT_MODEL_CURSOR_FORWARD, NULL);
+	cursor_model = gda_connection_statement_execute_select_fullv (cnc, stmt, NULL, GDA_STATEMENT_MODEL_CURSOR_FORWARD, NULL, -1);
 	if (!cursor_model) {
 #ifdef CHECK_EXTRA_INFO
 		g_warning ("Can't execute GdaStatement (forward cursor access requested)!");

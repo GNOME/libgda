@@ -1,5 +1,5 @@
 /* GNOME DB Sqlite Provider
- * Copyright (C) 2006 The GNOME Foundation
+ * Copyright (C) 2006 - 2008 The GNOME Foundation
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -430,3 +430,71 @@ gda_sqlite_render_DROP_INDEX (GdaServerProvider *provider, GdaConnection *cnc,
 	return sql;
 }
 
+gchar *
+gda_sqlite_render_CREATE_VIEW (GdaServerProvider *provider, GdaConnection *cnc, 
+			       GdaServerOperation *op, GError **error)
+{
+	GString *string;
+	const GValue *value;
+	gboolean allok = TRUE;
+	gchar *sql = NULL;
+
+	string = g_string_new ("CREATE ");
+	value = gda_server_operation_get_value_at (op, "/VIEW_DEF_P/VIEW_TEMP");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
+		g_string_append (string, "TEMP ");
+
+	g_string_append (string, "VIEW ");
+
+	value = gda_server_operation_get_value_at (op, "/VIEW_DEF_P/VIEW_IFNOTEXISTS");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
+		g_string_append (string, "IF NOT EXISTS ");
+
+		
+	value = gda_server_operation_get_value_at (op, "/VIEW_DEF_P/VIEW_NAME");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append (string, g_value_get_string (value));
+	
+	if (allok) {
+		value = gda_server_operation_get_value_at (op, "/VIEW_DEF_P/VIEW_DEF");
+		g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+		g_string_append (string, " AS ");
+		g_string_append (string, g_value_get_string (value));
+	}
+
+	if (allok) {
+		sql = string->str;
+		g_string_free (string, FALSE);
+	}
+	else {
+		sql = NULL;
+		g_string_free (string, TRUE);
+	}
+
+	return sql;
+}
+	
+gchar *
+gda_sqlite_render_DROP_VIEW (GdaServerProvider *provider, GdaConnection *cnc, 
+			     GdaServerOperation *op, GError **error)
+{
+	GString *string;
+	const GValue *value;
+	gchar *sql = NULL;
+
+	string = g_string_new ("DROP VIEW");
+
+	value = gda_server_operation_get_value_at (op, "/VIEW_DESC_P/VIEW_IFEXISTS");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
+		g_string_append (string, " IF EXISTS");
+
+	value = gda_server_operation_get_value_at (op, "/VIEW_DESC_P/VIEW_NAME");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append_c (string, ' ');
+	g_string_append (string, g_value_get_string (value));
+
+	sql = string->str;
+	g_string_free (string, FALSE);
+
+	return sql;
+}

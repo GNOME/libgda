@@ -85,8 +85,7 @@ display_products_contents (GdaConnection *cnc)
 
 	parser = g_object_get_data (G_OBJECT (cnc), "parser");
 	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
-	data_model = gda_connection_statement_execute_select (cnc, stmt, NULL, 
-							      GDA_STATEMENT_MODEL_RANDOM_ACCESS, &error);
+	data_model = gda_connection_statement_execute_select (cnc, stmt, NULL, &error);
 	g_object_unref (stmt);
         if (!data_model) 
                 g_error ("Could not get the contents of the 'products' table: %s\n",
@@ -112,7 +111,7 @@ run_sql_non_select (GdaConnection *cnc, const gchar *sql)
 	if (remain) 
 		g_print ("REMAINS: %s\n", remain);
 
-        nrows = gda_connection_statement_execute_non_select (cnc, stmt, NULL, &error);
+        nrows = gda_connection_statement_execute_non_select (cnc, stmt, NULL, NULL, &error);
         if (nrows == -1)
                 g_error ("NON SELECT error: %s\n", error && error->message ? error->message : "no detail");
 	g_object_unref (stmt);

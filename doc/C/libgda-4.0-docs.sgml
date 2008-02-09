@@ -29,9 +29,6 @@
 <!ENTITY GDADATAMODEL    "<link linkend='GdaDataModel'>GdaDataModel</link>">
 <!ENTITY GDADATAMODELARRAY "<link linkend='GdaDataModelArray'>GdaDataModelArray</link>">
 <!ENTITY GDADATAMODELHASH "<link linkend='GdaDataModelHash'>GdaDataModelHash</link>">
-<!ENTITY gda-author-dict-file "<command>gda-author-dict-file-4.0</command>">
-<!ENTITY gda-diagnose "<command>gda-diagnose-4.0</command>">
-<!ENTITY gda-inspect-dict-file "<command>gda-inspect-dict-file-4.0</command>">
 <!ENTITY gda-list-server-op "<command>gda-list-server-op-4.0</command>">
 <!ENTITY gda-list-config "<command>gda-list-config-4.0</command>">
 <!ENTITY gda-sql "<command>gda-sql-4.0</command>">
@@ -40,6 +37,7 @@
 <!ENTITY install SYSTEM "installation.xml">
 <!ENTITY examples SYSTEM "gettingstarted.xml">
 <!ENTITY migration SYSTEM "migration.xml">
+<!ENTITY migration2 SYSTEM "migration2.xml">
 <!ENTITY limitations SYSTEM "limitations.xml">
 <!ENTITY libgda-GdaClient SYSTEM "xml/gda-client.xml">
 <!ENTITY libgda-GdaCommand SYSTEM "xml/gda-command.xml">
@@ -63,10 +61,8 @@
 <!ENTITY libgda-GdaDataModelIndex SYSTEM "xml/gda-data-model-index.xml">
 <!ENTITY libgda-init SYSTEM "xml/libgda.xml">
 <!ENTITY libgda-log SYSTEM "xml/gda-log.xml">
-<!ENTITY libgda-GdaParameter SYSTEM "xml/gda-parameter.xml">
 <!ENTITY libgda-quark-list SYSTEM "xml/gda-quark-list.xml">
 <!ENTITY libgda-GdaRow SYSTEM "xml/gda-row.xml">
-<!ENTITY libgda-GdaDataModelFilterSQL SYSTEM "xml/gda-data-model-filter-sql.xml">
 <!ENTITY libgda-GdaServerProvider SYSTEM "xml/gda-server-provider.xml">
 <!ENTITY libgda-GdaVirtualProvider SYSTEM "xml/gda-virtual-provider.xml">
 <!ENTITY libgda-GdaVproviderDataModel SYSTEM "xml/gda-vprovider-data-model.xml">
@@ -81,14 +77,8 @@
 <!ENTITY libgda-transaction-status SYSTEM "xml/gda-transaction-status.xml">
 <!ENTITY libgda-util SYSTEM "xml/gda-util.xml">
 <!ENTITY libgda-GValue SYSTEM "xml/gda-value.xml">
-<!ENTITY libgda-GdaDict SYSTEM "xml/gda-dict.xml">
-<!ENTITY libgda-GdaDictExtend SYSTEM "xml/gda-dict-extend.xml">
 <!ENTITY libgda-GdaConnection SYSTEM "xml/gda-connection.xml">
-<!ENTITY libgda-GdaObject SYSTEM "xml/gda-object.xml">
-<!ENTITY libgda-GdaXmlStorage SYSTEM "xml/gda-xml-storage.xml">
-<!ENTITY libgda-GdaDictType SYSTEM "xml/gda-dict-type.xml">
-<!ENTITY libgda-GdaDictFunction SYSTEM "xml/gda-dict-function.xml">
-<!ENTITY libgda-GdaDictAggregate SYSTEM "xml/gda-dict-aggregate.xml">
+<!ENTITY GdaStoreMetaType SYSTEM "store-meta-type.xml">
 <!ENTITY libgda-GdaDataHandler SYSTEM "xml/gda-data-handler.xml">
 <!ENTITY libgda-GdaHandlerString SYSTEM "xml/gda-handler-string.xml">
 <!ENTITY libgda-GdaHandlerBoolean SYSTEM "xml/gda-handler-boolean.xml">
@@ -96,35 +86,7 @@
 <!ENTITY libgda-GdaHandlerNumerical SYSTEM "xml/gda-handler-numerical.xml">
 <!ENTITY libgda-GdaHandlerBin SYSTEM "xml/gda-handler-bin.xml">
 <!ENTITY libgda-GdaHandlerType SYSTEM "xml/gda-handler-type.xml">
-<!ENTITY libgda-GdaDictDatabase SYSTEM "xml/gda-dict-database.xml">
-<!ENTITY libgda-GdaDictTable SYSTEM "xml/gda-dict-table.xml">
-<!ENTITY libgda-GdaDictField SYSTEM "xml/gda-dict-field.xml">
-<!ENTITY libgda-GdaEntity SYSTEM "xml/gda-entity.xml">
-<!ENTITY libgda-GdaEntityField SYSTEM "xml/gda-entity-field.xml">
-<!ENTITY libgda-GdaRenderer SYSTEM "xml/gda-renderer.xml">
-<!ENTITY libgda-GdaReferer SYSTEM "xml/gda-referer.xml">
-<!ENTITY libgda-GdaDictConstraint SYSTEM "xml/gda-dict-constraint.xml">
-<!ENTITY libgda-GdaObjectRef SYSTEM "xml/gda-object-ref.xml">
-<!ENTITY libgda-query-intro SYSTEM "query.xml">
-<!ENTITY libgda-query-fields SYSTEM "query-fields.xml">
-<!ENTITY libgda-GdaQuery SYSTEM "xml/gda-query.xml">
-<!ENTITY libgda-GdaQueryObject SYSTEM "xml/gda-query-object.xml">
-<!ENTITY libgda-GdaQueryTarget SYSTEM "xml/gda-query-target.xml">
-<!ENTITY libgda-GdaQueryField SYSTEM "xml/gda-query-field.xml">
-<!ENTITY libgda-GdaQueryFieldAll SYSTEM "xml/gda-query-field-all.xml">
-<!ENTITY libgda-GdaQueryFieldField SYSTEM "xml/gda-query-field-field.xml">
-<!ENTITY libgda-GdaQueryFieldFunc SYSTEM "xml/gda-query-field-func.xml">
-<!ENTITY libgda-GdaQueryFieldAgg SYSTEM "xml/gda-query-field-agg.xml">
-<!ENTITY libgda-GdaQueryFieldValue SYSTEM "xml/gda-query-field-value.xml">
-<!ENTITY libgda-GdaQueryJoin SYSTEM "xml/gda-query-join.xml">
-<!ENTITY libgda-GdaParameter SYSTEM "xml/gda-parameter.xml">
-<!ENTITY libgda-GdaQueryCondition SYSTEM "xml/gda-query-condition.xml">
-<!ENTITY libgda-GdaParameterList SYSTEM "xml/gda-parameter-list.xml">
-<!ENTITY libgda-GdaGraphviz SYSTEM "xml/gda-graphviz.xml">
-<!ENTITY libgda-GdaGraph SYSTEM "xml/gda-graph.xml">
 <!ENTITY libgda-GdaBlobOp SYSTEM "xml/gda-blob-op.xml">
-<!ENTITY libgda-GdaGraphQuery SYSTEM "xml/gda-graph-query.xml">
-<!ENTITY libgda-GdaGraphItem SYSTEM "xml/gda-graph-item.xml">
 <!ENTITY libgda-GdaReportEngine SYSTEM "xml/gda-report-engine.xml">
 <!ENTITY libgda-GdaReportDocument SYSTEM "xml/gda-report-document.xml">
 <!ENTITY libgda-GdaReportDocbookDocument SYSTEM "xml/gda-report-docbook-document.xml">
@@ -135,6 +97,7 @@
 <!ENTITY libgda-GdaSqlStatement SYSTEM "xml/gda-sql-statement.xml">
 <!ENTITY libgda-GdaBatch SYSTEM "xml/gda-batch.xml">
 <!ENTITY libgda-GdaSqlParser SYSTEM "xml/gda-sql-parser.xml">
+<!ENTITY libgda-GdaMetaStore SYSTEM "xml/gda-meta-store.xml">
 <!ENTITY libgda-Enums SYSTEM "xml/gda-enums.xml">
 <!ENTITY libgda-convenient SYSTEM "xml/gda-convenient.xml">
 <!ENTITY fdl-appendix SYSTEM "fdl-appendix.sgml">
@@ -208,9 +171,9 @@
         </contrib>
       </author>
     </authorgroup>
-    <date>1999 February</date>
+    <date>2008</date>
     <copyright>
-      <year>1999 - 2007</year>
+      <year>1999 - 2008</year>
       <holder>The GNOME Foundation</holder>
     </copyright>
     <abstract>
@@ -311,29 +274,23 @@
 	      same time.</para>
           </listitem>
           <listitem>
-            <para>Run any SQL query against an opened connection; any SQL query can be extended to define query parameters
+            <para>Run any SQL query against an opened connection; furthermore any SQL query can be extended to define query parameters
 	      using an easy to understand notation. If the SQL query was a SELECT statement, then an array of data is
 	      returned (as a <classname>GdaDataModel</classname> object), and otherwise the number of rows affected
 	      by the query is returned. For very large data sets, it is possible to specify that the returned array
-	      of data should be based on a cursor to avoid loading it into memory (this feature is not currently
-	      implemented in any provider, though).</para>
+	      of data should be based on a cursor to avoid loading it into memory .</para>
           </listitem>
           <listitem>
             <para>Perform most of the data definition queries (including database creation) for the database types which support
-	      it</para>
+	      it using a key/value mechanism.</para>
           </listitem>
           <listitem>
-            <para>Create and maintain an up to date dictionary of the structure of a database containing the definitions of
-	      the tables, constraints, data types, ... A dictionary is represented by a <classname>GdaDict</classname>
-	      object</para>
+            <para>Create, maintain and extend a view of the database's structure and meta data including the definitions of
+	      the tables, constraints, data types, .... It is defined as closely as possible to the information schema SQL
+	    standard (ISO/IEC 9075).</para>
           </listitem>
           <listitem>
-            <para>Define and store query objects which are transformed into SQL before being executed and for which it is 
-	      possible to know if they use only defined database objects. Query objects can be defined by hand coded
-	      construction or by parsing SQL.</para>
-          </listitem>
-          <listitem>
-            <para>Easy to extend data models for custom requirements which can integrate within the Libgnomedb library</para>
+            <para>Easy to extend data models for custom requirements</para>
           </listitem>
           <listitem>
             <para>Support for binary data and for BLOBs in a transparent way, see the <link linkend="libgda-Gda-Value">Gda value section</link></para>
@@ -434,6 +391,7 @@
     &install;
     &examples;
     &migration;
+    &migration2;
     &limitations;
   </part>  
   <part id="part_libgda_api">
@@ -529,7 +487,6 @@
       </para>
       &libgda-GdaClient;
       &libgda-GdaConnection;
-
       &libgda-GdaSqlParser;
       &libgda-GdaStatement;
       &libgda-GdaBatch;
@@ -539,6 +496,7 @@
       &libgda-GdaConnection-event;
       &libgda-transaction-status;
       &libgda-convenient;
+      &GdaStoreMetaType;
     </chapter>
 
     <chapter id="virtual_connection">
@@ -597,8 +555,6 @@
       </para>
       &libgda-GValue;
       &libgda-GdaBlobOp;
-      &libgda-GdaParameter;
-      &libgda-GdaParameterList;
       &libgda-GdaDataModel;
       &libgda-GdaColumn;
       &libgda-GdaDataModelIter;
@@ -609,7 +565,6 @@
       &libgda-GdaDataModelDir;
       &libgda-GdaDataModelHash;
       &libgda-GdaDataModelQuery;
-      &libgda-GdaDataModelFilterSQL;
       &libgda-GdaDataProxy;
       &libgda-GdaDataModelIndex;
       &libgda-GdaColumnIndex;
@@ -672,26 +627,19 @@
     </chapter>
 
     <chapter>
-      <title>Dictionary and related objects</title>
-      &libgda-GdaDict;
-      &libgda-GdaDictType;
-      &libgda-GdaDictFunction;
-      &libgda-GdaDictAggregate;
+      <title>Dictionary</title>
       <para>
-	These objects make the in-memory representation of a database structure (Tables, fields, ...),
-	they are part of the data dictionary (see <link linkend="GdaDict">GdaDict</link>).
-	Related interfaces are:  
-	<link linkend="GdaXmlStorage">GdaXmlStorage</link>, 
-	<link linkend="GdaEntity">GdaEntity</link>,
-	<link linkend="GdaEntityField">GdaEntityField</link>, 
-	<link linkend="GdaRenderer">GdaRenderer</link> and 
-	<link linkend="GdaReferer">GdaReferer</link>.
+	Each connection has a dictionary object (a <link linkend="GdaMetaStore">GdaMetaStore</link>) attached to it. That
+	dictionary is either created by the connection when it needs it, or is set by the user (to be able to re-use
+	a dictionary), using the <link linkend="GdaConnection--meta-store">"meta-store"</link> property of the 
+	<link linkend="GdaConnection">GdaConnection</link> object.
       </para>
-      &libgda-GdaDictDatabase;
-      &libgda-GdaDictTable;
-      &libgda-GdaDictField;
-      &libgda-GdaDictConstraint;
-      &libgda-GdaDictExtend;
+      <para>
+	&LIBGDA; requires (and creates) a default dictionary structure which is a set of tables implementing an 
+	"information schema" schema (as defined in the SQL standard and adapted to add more information). The user
+	is then free to add more tables to contain his own data in the dictionary.
+      </para>
+      &libgda-GdaMetaStore;
     </chapter>
 
     <chapter>
@@ -705,44 +653,8 @@
       &libgda-util;
       &libgda-log;
       &libgda-quark-list;
-      &libgda-GdaObject;
-      &libgda-GdaObjectRef;
-      &libgda-GdaGraphviz;
       &libgda-GdaDataModelRow;
       &libgda-GdaThreader;
-    </chapter>
-
-    <chapter>
-      <title>Graphs</title>
-      &libgda-GdaGraph;
-      &libgda-GdaGraphQuery;
-      &libgda-GdaGraphItem;
-    </chapter>
-    <chapter>
-      <title>List of lesser used interfaces</title>
-      &libgda-GdaEntity;
-      &libgda-GdaEntityField;
-      &libgda-GdaXmlStorage;
-      &libgda-GdaReferer;
-    </chapter>
-
-    <chapter id="deprecated">
-      <title>Deprecated</title>
-      &libgda-GdaCommand;
-      &libgda-query-intro;
-      &libgda-query-fields;
-      &libgda-GdaQuery;
-      &libgda-GdaQueryTarget;
-      &libgda-GdaQueryJoin;
-      &libgda-GdaQueryFieldAll;
-      &libgda-GdaQueryFieldField;
-      &libgda-GdaQueryFieldFunc;
-      &libgda-GdaQueryFieldAgg;
-      &libgda-GdaQueryFieldValue;
-      &libgda-GdaQueryCondition;
-      &libgda-GdaQueryField;
-      &libgda-GdaQueryObject;
-      &libgda-GdaRenderer;
     </chapter>
   </part>
 
@@ -871,41 +783,6 @@ Data source: Sales
       <para>
 	This tool is a 'ping' like tool to test connectivity to databases. Connections can either
 	be declared as DSN, or described in the command line.
-      </para>
-    </chapter>
-
-    <chapter id="libgda-tools-author-dict">
-      <title>&gda-author-dict-file;</title>
-      <para>
-	The &gda-author-dict-file; tool allows to create a XML dictionary file which can be loaded into a 
-	#GdaDict object, specifying a data source to use. Specifically it does (depending on command line
-	options):
-	<itemizedlist>
-	  <listitem>
-            <para>reports errors if the XML file already exists can't be loaded</para>
-	  </listitem>
-	  <listitem>
-            <para>synchronizes the contents of the dictionary with a data source</para>
-	  </listitem>
-	</itemizedlist>
-	Use the <option>--help</option> option to list all the possible options.
-      </para>
-    </chapter>
-
-    <chapter id="libgda-tools-inspect-dict">
-      <title>&gda-inspect-dict-file;</title>
-      <para>
-	The &gda-inspect-dict-file; tool tests an existing XML dictionary file and (depending on command line
-	options):
-	<itemizedlist>
-	  <listitem>
-            <para>reports errors if the file can't be loaded or if saving it back produces a different file</para>
-	  </listitem>
-	  <listitem>
-            <para>lists all the pre-defined queries and creates .dot files for each of them</para>
-	  </listitem>
-	</itemizedlist>
-	Use the <option>--help</option> option to list all the possible options.
       </para>
     </chapter>
 
@@ -1044,8 +921,7 @@ Description for type: DROP_COLUMN
       <para>
 	Providers must also create their own object to implement the virtual
 	methods defined in &GDADATAMODEL; or one of
-	its subclasses (currently &GDADATAMODELARRAY; and &GDADATAMODELHASH;) 
-	to support recordsets.
+	its subclasses to support recordsets.
       </para>
       <para>
 	Since &LIBGDA; itself is developed in the C language, and that most
@@ -1058,387 +934,15 @@ Description for type: DROP_COLUMN
     <chapter id="libgda-provider-class">
       <title>Virtual methods for providers</title>
       <para>
-	The &GDASERVERPROVIDER; is the class you should implement for adding
-	a new provider. This class is just a typical GObject-based class,
-	with a set of virtual methods, that are the ones that you must
-	implement. These virtual methods are declared in the class structure,
-	in the <filename>gda-server-provider.h</filename> file. They are
-	explained in detail in the following subsections.
+	To write.
       </para>
-
-      <sect1 id="libgda-provider-get-version">
-	<title>get_version</title>
-	<para>
-	  Returns a string containing the version of the provider
-	</para>
-      </sect1>
-
-      <sect1 id="libgda-provider-get-server-version">
-	<title>get_server_version</title>
-	<para>
-	  Returns a string containing the version of the server if the connection
-	  is opened
-	</para>
-      </sect1>
-
-      <sect1 id="libgda-provider-get-info">
-	<title>get_info</title>
-	<para>
-	  Get some information about the provider, as a <link linkend="GdaServerProviderInfo">GdaServerProviderInfo</link>
-	  structure
-	</para>
-      </sect1>
-
-      <sect1 id="libgda-provider-supports-feature">
-	<title>supports_feature</title>
-	<para>
-	  Tests if a given feature is supported by the provider and the
-	  DB back-end. You can view the list of features in <filename>
-	    gda-connection.h</filename>, enumeration GdaConnectionFeature.
-	</para>
-      </sect1>
-
-      <sect1 id="libgda-provider-get-data-handler">
-	<title>get_data_handler</title>
-	<para>
-	</para>
-      </sect1>
-
-      <sect1 id="libgda-provider-string-to-handler">
-	<title>string_to_handler</title>
-	<para>
-	</para>
-      </sect1>
-
-      <sect1 id="libgda-provider-get-def-dbms-type">
-	<title>get_def_dbms_type</title>
-	<para>
-	</para>
-      </sect1>
-
-      <sect1 id="libgda-provider-open-connection">
-	<title>open_connection</title>
-	<para>
-	  Sets up the connection to the database back-end using the parameters
-	  received as arguments and returns a boolean TRUE if the connection
-	  is successfully established, otherwise FALSE.
-	</para>
-      </sect1>
-      <sect1 id="libgda-provider-close-connection">
-	<title>close_connection</title>
-	<para>
-	  Frees the resources allocated for the connection and returns TRUE
-	  if everything is ok
-	</para>
-      </sect1>
-      <sect1 id="libgda-provider-get-database">
-	<title>get_database</title>
-	<para>
-	  Returns the name of the currently open database for a given
-	  connection.
-	</para>
-      </sect1>
-      <sect1 id="libgda-provider-change-database">
-	<title>change_database</title>
-	<para>
-	  Change the database being used in the active connection.
-	</para>
-      </sect1>
-
-      <sect1 id="libgda-provider-supports-operation">
-	<title>supports_operation</title>
-	<para>
-	</para>
-      </sect1>
-
-      <sect1 id="libgda-provider-create-operation">
-	<title>create_operation</title>
-	<para>
-	</para>
-      </sect1>
-
-      <sect1 id="libgda-provider-render-operation">
-	<title>render_operation</title>
-	<para>
-	</para>
-      </sect1>
-
-      <sect1 id="libgda-provider-perform-operation">
-	<title>perform_operation</title>
-	<para>
-	</para>
-      </sect1>
-
-      <sect1 id="libgda-provider-execute-command">
-	<title>execute_command</title>
-	<para>
-	  Executes a command and returns a GList of &GDADATAMODEL; with the
-	  results.
-	</para>
-      </sect1>
-
-      <sect1 id="get-last-insert-id">
-	<title>get_last_insert_id</title>
-	<para>
-	</para>
-      </sect1>
-
-      <sect1 id="libgda-provider-begin-transaction">
-	<title>begin_transaction</title>
-	<para>
-	  Initiates a transaction if the DB back-end supports transactions.
-	</para>
-      </sect1>
-      <sect1 id="libgda-provider-commit-transaction">
-	<title>commit_transaction</title>
-	<para>
-	  Commits a transaction if the DB back-end supports transactions.
-	</para>
-      </sect1>
-      <sect1 id="libgda-provider-rollback-transaction">
-	<title>rollback_transaction</title>
-	<para>
-	  Rollback a transaction if the DB back-end supports transactions.
-	</para>
-      </sect1>
-
-      <sect1 id="create-blob">
-	<title>create_blob</title>
-	<para>
-	</para>
-      </sect1>
-
-      <sect1 id="fetch-blob">
-	<title>fetch_blob</title>
-	<para>
-	</para>
-      </sect1>
-
-      <sect1 id="libgda-provider-get-schema">
-	<title>get_schema</title>
-	<para>
-	  Returns a &GDADATAMODEL; with the schema information requested.
-	  You can view the list of features in <filename>
-	    gda-connection.h</filename>, enumeration GdaConnectionSchema.
-	  This schema information is what describes the objects in the
-	  database, and is the way applications can manage the structure
-	  of several database systems without knowing anything about
-	  their specific way of retrieving this information.
-	</para>
-	<para>
-	  The <function>get_schema</function> virtual method gets a
-	  <type>GdaConnectionSchema</type> argument, which describes
-	  the kind of schema the client making the call is interested
-	  in, along with a <type>GdaParameterList</type> argument,
-	  which contains the list of arguments sent by the user to
-	  explicitly provide more information for the search.
-	</para>
-	<para>
-	  The information to be returned for each schema, along with
-	  the supported parameters, is described in the following table.
-	</para>
-	<table frame="all">
-	  <title>Standard Schema and supported parameters</title>
-	  <tgroup cols="4" colsep="1" rowsep="1" align="justify">
-	    <colspec colname="c1"/>
-	    <colspec colname="c2"/>
-	    <colspec colname="c3"/>
-	    <colspec colname="c4"/>
-	    <thead>
-	      <row>
-		<entry>Object type</entry>
-		<entry>GDA identifier</entry>
-		<entry>Supported Parameters</entry>
-		<entry>Returned fields</entry>
-	      </row>
-	    </thead>
-	    <tbody>
-	      <row>
-		<entry>Databases</entry>
-		<entry><parameter>GDA_CONNECTION_SCHEMA_DATABASES</parameter></entry>
-		<entry></entry>
-		<entry>name</entry>
-	      </row>
-	      <row>
-		<entry>Schemas (also namespaces), a feature supported by Postgres which allows to
-                  define multiple domains within a single database</entry>
-		<entry><parameter>GDA_CONNECTION_SCHEMA_NAMESPACES</parameter></entry>
-		<entry></entry>
-		<entry>name</entry>
-	      </row>
-	      <row>
-		<entry>Tables</entry>
-		<entry><parameter>GDA_CONNECTION_SCHEMA_TABLES</parameter></entry>
-		<entry>"name" (name of table, optional)</entry>
-		<entry>name, owner, comments, SQL definition</entry>
-	      </row>
-	      <row>
-		<entry>Tables' parents</entry>
-		<entry><parameter>GDA_CONNECTION_SCHEMA_PARENT_TABLES</parameter></entry>
-		<entry>"name" (name of table, optional)</entry>
-		<entry>name, order of inheritance</entry>
-	      </row>
-	      <row>
-		<entry>Views</entry>
-		<entry><parameter>GDA_CONNECTION_SCHEMA_VIEWS</parameter></entry>
-		<entry>"name" (name of view, optional)</entry>
-		<entry>name, owner, comments, SQL definition</entry>
-	      </row>
-	      <row>
-		<entry>Table (or view) fields</entry>
-		<entry><parameter>GDA_CONNECTION_SCHEMA_FIELDS</parameter></entry>
-		<entry>"name" (name of table (or view), required)</entry>
-		<entry>name, type, size, scale, not null?, primary key?, unique index?, references, default value, comma separated extra attributes (AUTO_INCREMENT)</entry>
-	      </row>
-	      <row>
-		<entry>Sequences</entry>
-		<entry><parameter>GDA_CONNECTION_SCHEMA_SEQUENCES</parameter></entry>
-		<entry>"name" (name of sequence, optional)</entry>
-		<entry>name, owner, comments, SQL definition</entry>
-	      </row>
-	      <row>
-		<entry>Procedures</entry>
-		<entry><parameter>GDA_CONNECTION_SCHEMA_PROCEDURES</parameter></entry>
-		<entry>"name" (name of procedure, optional)</entry>
-		<entry>name, unique id, owner, comments, return type, number of arguments, arguments types 
-		  (arguments types in the order, comma separated) and SQL definition.
-		  For the arguments where any type is accepted, '-' is returned as type.</entry>
-	      </row>
-	      <row>
-		<entry>Aggregates</entry>
-		<entry><parameter>GDA_CONNECTION_SCHEMA_AGGREGATES</parameter></entry>
-		<entry>"name" (name of aggregate, optional)</entry>
-		<entry>name, unique id, owner, comments, return type, argument type, SQL definition.
-		  If the argument can be of any type, then '-' is returned as type.</entry>
-	      </row>
-	      <row>
-		<entry>Types</entry>
-		<entry><parameter>GDA_CONNECTION_SCHEMA_TYPES</parameter></entry>
-		<entry>"name" (name of type, optional)</entry>
-		<entry>name, owner, comments, GDA type, synonyms (comma separated)</entry>
-	      </row>
-	      <row>
-		<entry>Tables' constraints</entry>
-		<entry><parameter>GDA_CONNECTION_SCHEMA_CONSTRAINTS</parameter></entry>
-		<entry>"name" (name of table)</entry>
-		<entry>constraint name, constraint type (FOREIGN_KEY, PRIMARY_KEY, UNIQUE, CHECK), on fields (comma separated), 
-		  definition, options (ON_UPDATE_*, ON_DELETE_*, DEFERRABLE, INITIALLY_DEFERRED)</entry>
-	      </row>
-	    </tbody>
-	  </tgroup>
-	</table>
-      </sect1>
     </chapter>
 
     <chapter id="libgda-provider-recordset">
       <title>Virtual methods for recordsets</title>
       <para>
-	You have to extend one of &GDADATAMODEL;, &GDADATAMODELARRAY; or
-	&GDADATAMODELHASH;. The easiest to extend are the last two. They both
-	derive from &GDADATAMODEL;.
+	To write.
       </para>
-      <para>
-	Here is the list of methods that you have to override. If you use
-	&GDADATAMODELHASH;, you don't need to override 
-	append_row.
-      </para>
-      <itemizedlist>
-	<listitem>
-	  <para>get_n_rows</para>
-	  <para>
-	    Returns the number of rows in the data model. If the provider
-	    can know in advance the number of rows the database server has
-	    returned, this function should just return that, and not
-	    retrieve any data. On the other hand, if it can't it should
-	    either retrieve all data, or move to the last record in the
-	    recordset and retrieve the row number, if the underlying
-	    data source allows it.
-	  </para>
-	</listitem>
-	<listitem>
-	  <para>get_n_columns</para>
-	  <para>
-	    Returns the number of columns in the data model.
-	  </para>
-	</listitem>
-	<listitem>
-	  <para>describe_column</para>
-	  <para>
-	    Returns information about a given column, in the form of
-	    a <link linkend="GdaColumn">GdaColumn</link>.
-	  </para>
-	</listitem>
-	<listitem>
-	  <para>get_row</para>
-	  <para>
-	    Retrieves a row from the data model. This function is very important
-	    for the implementation of editable data models. What this function
-	    returns is a <link linkend="GdaRow">GdaRow</link>, which providers
-	    should uniquely identify (via <link linkend="gda-row-set-id">gda_row_set_id</link>).
-	    This is needed so that later on, client applications can use the same
-	    <link linkend="GdaRow">GdaRow</link> returned by this method in
-	    the <function>update_row</function> and <function>remove_row</function>
-	    methods.
-	  </para>
-	</listitem>
-	<listitem>
-	  <para>get_value_at</para>
-	  <para>
-	    Returns the value stored in a given cell of the data model.
-	  </para>
-	</listitem>
-	<listitem>
-	  <para>is_editable</para>
-	  <para>
-	    Checks whether the data model can be modified or not. If the provider
-	    supports the edition of data models, it should return TRUE in this
-	    function. If it doesn't (for instance, because it can't uniquely identify
-	    rows in the data model), it should return FALSE.
-	  </para>
-	  <para>
-	    Before a data model can be edited, client applications must call the
-	    <link linkend="gda-data-model-begin-edit">gda_data_model_begin_edit</link>
-	    function, which emits the "begin_edit" signal on the
-	    <link linkend="GdaDataModel">GdaDataModel</link> class. So, providers
-	    should connect to this signal to be informed when the data model
-	    starts being editing. In the callback connected to that signal,
-	    it should start a transaction, for instance.
-	  </para>
-	  <para>
-	    In a similar way, there are 2 other signals that provider's data model
-	    implementations should pay attention to. Those are "end_edit" and
-	    "cancel_edit". In "end_edit", if all went ok, providers should
-	    COMMIT the transaction started in "begin_edit". In "cancel_edit",
-	    a ROLLBACK should be made.
-	  </para>
-	</listitem>
-	<listitem>
-	  <para>append_row</para>
-	  <para>
-	    Appends a row to the data model. Usually, this means, in the provider,
-	    executing an INSERT SQL command on the table being read by the
-	    data model.
-	  </para>
-	</listitem>
-	<listitem>
-	  <para>update_row</para>
-	  <para>
-	    Updates an existing row in the data model. The row should have been
-	    uniquely identified in the provider code, as explained for the
-	    get_row method.
-	  </para>
-	</listitem>
-	<listitem>
-	  <para>remove_row</para>
-	  <para>
-	    Removes a row from the data model. Usually, this means, in the provider,
-	    executing a DELETE SQL command on the table being read by the data model.
-	    The row should have been
-	    uniquely identified in the provider code, as explained for the
-	    get_row method.
-	  </para>
-	</listitem>
-      </itemizedlist>
     </chapter>
     &libgda-GdaServerProvider;
   </part>

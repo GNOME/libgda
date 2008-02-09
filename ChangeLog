@@ -1,8 +1,18 @@
+2008-02-09  Vivien Malerba <malerba@gnome-db.org>
+
+	Major cleanup as the base for the V4:
+	* removed GdaDict and related (introduced a new GdaMetaStore object as a replacement)
+	* merged GdaCommand and GdaQuery into a single GdaStatement object
+	* numerous other small changes
+
+	This is an untested version, and the only provider working is SQLite.
+
 2008-01-26  Armin Burgmeier  <armin@openismus.com>
 
 	* libgda/gda-server-operation.c:
 	(xml_load_file): Don't leak this_lang, ignore entry when id is NULL
 	which caused a segfault on Windows.
+
 
 2008-01-05  Vivien Malerba <malerba@gnome-db.org>
 

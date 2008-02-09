@@ -1,6 +1,6 @@
 /* gda-holder.c
  *
- * Copyright (C) 2003 - 2007 Vivien Malerba
+ * Copyright (C) 2003 - 2008 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -21,11 +21,12 @@
 #include <stdarg.h>
 #include <string.h>
 #include "gda-holder.h"
-#include "gda-dict-type.h"
 #include "gda-statement.h"
 #include "gda-data-model.h"
 #include "gda-data-handler.h"
 #include "gda-marshal.h"
+#include "gda-util.h"
+#include <libgda.h>
 	
 /* 
  * Main static functions 
@@ -630,6 +631,38 @@ gda_holder_get_value (GdaHolder *holder)
 		return gda_holder_get_value (holder->priv->full_bind);
 }
 
+/**
+ * gda_holder_get_value_str
+ * @holder: a #GdaHolder object
+ * @dh: a #GdaDataHandler to use, or %NULL
+ *
+ * Same functionality as gda_holder_get_value() except that it returns the value as a string
+ * (the conversion is done using @dh if not %NULL, or the default data handler otherwise).
+ *
+ * Returns: the value, or %NULL
+ */
+gchar *
+gda_holder_get_value_str (GdaHolder *holder, GdaDataHandler *dh)
+{
+	const GValue *current_val;
+
+	g_return_val_if_fail (GDA_IS_HOLDER (holder), NULL);
+	g_return_val_if_fail (holder->priv, NULL);
+
+	current_val = gda_holder_get_value (holder);
+        if (!current_val || gda_value_is_null (current_val))
+                return NULL;
+        else {
+                GdaDataHandler *dh;
+
+                dh = gda_get_default_handler (holder->priv->g_type);
+                if (dh)
+                        return gda_data_handler_get_str_from_value (dh, current_val);
+                else
+                        return NULL;
+        }
+}
+
 static gboolean real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy);
 
 /**
@@ -655,6 +688,49 @@ gda_holder_set_value (GdaHolder *holder, const GValue *value)
 	g_return_val_if_fail (holder->priv, FALSE);
 
 	return real_gda_holder_set_value (holder, (GValue*) value, TRUE);
+}
+
+/**
+ * gda_holder_set_value_str
+ * @holder: a #GdaHolder object
+ * @dh: a #GdaDataHandler to use, or %NULL
+ * @value: a value to set the holder to, as a string
+ *
+ * Same functionality as gda_holder_set_value() except that it uses a string representation
+ * of the value to set, which will be converted into a GValue first (using default data handler if
+ * @dh is %NULL).
+ *
+ * Note that is @value is %NULL or is the "NULL" string, then @holder's value is set to %NULL.
+ *
+ * Returns: TRUE if value has been set
+ */
+gboolean
+gda_holder_set_value_str (GdaHolder *holder, GdaDataHandler *dh, const gchar *value)
+{
+	g_return_val_if_fail (GDA_IS_HOLDER (holder), FALSE);
+	g_return_val_if_fail (holder->priv, FALSE);
+	g_return_val_if_fail (!dh || GDA_IS_DATA_HANDLER (dh), FALSE);
+
+	if (!value || !g_ascii_strcasecmp (value, "NULL")) {
+                gda_holder_set_value (holder, NULL);
+                return TRUE;
+        }
+        else {
+                GValue *gdaval = NULL;
+
+		if (!dh)
+			dh = gda_get_default_handler (holder->priv->g_type);
+                if (dh)
+                        gdaval = gda_data_handler_get_value_from_str (dh, value, holder->priv->g_type);
+
+                if (gdaval) {
+                        gda_holder_set_value (holder, gdaval);
+                        gda_value_free (gdaval);
+                        return TRUE;
+                }
+                else
+                        return FALSE;
+        }
 }
 
 /**

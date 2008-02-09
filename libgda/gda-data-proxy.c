@@ -1,6 +1,6 @@
 /* gda-data-proxy.c
  *
- * Copyright (C) 2005 - 2007 Vivien Malerba
+ * Copyright (C) 2005 - 2008 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -25,8 +25,8 @@
 #include "gda-data-model-extra.h"
 #include "gda-data-model-iter.h"
 #include "gda-data-model-query.h"
-#include "gda-parameter.h"
-#include "gda-parameter-list.h"
+#include "gda-holder.h"
+#include "gda-set.h"
 #include "gda-marshal.h"
 #include "gda-enums.h"
 #include "gda-util.h"
@@ -34,8 +34,7 @@
 #include "gda-data-access-wrapper.h"
 #include "gda-enum-types.h"
 #include <virtual/libgda-virtual.h>
-#include "gda-query.h"
-#include "gda-renderer.h"
+#include <sql-parser/gda-sql-parser.h>
 
 /* 
  * Main static functions 
@@ -78,17 +77,13 @@ static void                 gda_data_proxy_set_notify      (GdaDataModel *model,
 static gboolean             gda_data_proxy_get_notify      (GdaDataModel *model);
 static void                 gda_data_proxy_send_hint       (GdaDataModel *model, GdaDataModelHint hint, 
 							    const GValue *hint_value);
-
-
-static void destroyed_object_cb (GdaObject *obj, GdaDataProxy *proxy);
-#ifdef GDA_DEBUG
-static void gda_data_proxy_dump (GdaDataProxy *proxy, guint offset);
-#endif
 #define DEBUG_SYNC
 #undef DEBUG_SYNC
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
+
+static GdaSqlParser *internal_parser;
 
 /* signals */
 enum
@@ -499,7 +494,7 @@ gda_data_proxy_get_type (void)
 			NULL
 		};
 		
-		type = g_type_register_static (GDA_TYPE_OBJECT, "GdaDataProxy", &info, 0);
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaDataProxy", &info, 0);
 		g_type_add_interface_static (type, GDA_TYPE_DATA_MODEL, &data_model_info);
 		
 	}
@@ -584,10 +579,6 @@ gda_data_proxy_class_init (GdaDataProxyClass *class)
 	class->post_changes_applied = NULL;
 
 	/* virtual functions */
-#ifdef GDA_DEBUG
-	GDA_OBJECT_CLASS (class)->dump = (void (*)(GdaObject *, guint)) gda_data_proxy_dump;
-#endif
-
 	object_class->dispose = gda_data_proxy_dispose;
 	object_class->finalize = gda_data_proxy_finalize;
 
@@ -608,6 +599,8 @@ gda_data_proxy_class_init (GdaDataProxyClass *class)
 	g_object_class_install_property (object_class, PROP_SAMPLE_SIZE,
 					 g_param_spec_int ("sample_size", NULL, NULL, 0, G_MAXINT - 1, 300,
 							   (G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT)));
+
+	internal_parser = gda_sql_parser_new ();
 }
 
 static void
@@ -689,16 +682,9 @@ gda_data_proxy_new (GdaDataModel *model)
 
 	g_return_val_if_fail (model && GDA_IS_DATA_MODEL (model), NULL);
 
-	obj = g_object_new (GDA_TYPE_DATA_PROXY, "dict", gda_object_get_dict (GDA_OBJECT (model)), 
-			    "model", model, NULL);
+	obj = g_object_new (GDA_TYPE_DATA_PROXY, "model", model, NULL);
 
 	return obj;
-}
-
-static void
-destroyed_object_cb (GdaObject *obj, GdaDataProxy *proxy)
-{
-	gda_object_destroy (GDA_OBJECT (proxy));
 }
 
 static void
@@ -757,9 +743,6 @@ clean_proxy (GdaDataProxy *proxy)
 						      G_CALLBACK (proxied_model_row_removed_cb), proxy);
 		g_signal_handlers_disconnect_by_func (G_OBJECT (proxy->priv->model),
 						      G_CALLBACK (proxied_model_reset_cb), proxy);
-
-		g_signal_handlers_disconnect_by_func (G_OBJECT (proxy->priv->model),
-						      G_CALLBACK (destroyed_object_cb), proxy);
 		g_object_unref (proxy->priv->model);
 		proxy->priv->model = NULL;
 	}
@@ -781,10 +764,8 @@ gda_data_proxy_dispose (GObject *object)
 	g_return_if_fail (GDA_IS_DATA_PROXY (object));
 
 	proxy = GDA_DATA_PROXY (object);
-	if (proxy->priv) {
-		gda_object_destroy_check (GDA_OBJECT (object));
+	if (proxy->priv) 
 		clean_proxy (proxy);
-	}
 
 	/* parent class */
 	parent_class->dispose (object);
@@ -834,7 +815,6 @@ gda_data_proxy_set_property (GObject *object,
 			}
 			proxy->priv->model = model;
 			g_object_ref (model);
-			gda_object_connect_destroy (GDA_OBJECT (model), G_CALLBACK (destroyed_object_cb), object);
 			
 			proxy->priv->model_nb_cols = gda_data_model_get_n_columns (model);
 			proxy->priv->model_nb_rows = gda_data_model_get_n_rows (model);
@@ -1830,11 +1810,6 @@ gda_data_proxy_apply_row_changes (GdaDataProxy *proxy, gint proxy_row, GError **
 	g_return_val_if_fail (proxy->priv, FALSE);
 	g_return_val_if_fail (proxy_row >= 0, FALSE);
 
-#ifdef GDA_DEBUG_NO
-	DEBUG_HEADER;
-	gda_object_dump (proxy, 5);
-#endif
-
 	return commit_row_modif (proxy, proxy_row_to_row_modif (proxy, proxy_row), TRUE, error);
 }
 
@@ -2117,18 +2092,6 @@ gda_data_proxy_get_n_modified_rows (GdaDataProxy *proxy)
         return g_slist_length (proxy->priv->all_modifs);
 }
 
-#ifdef GDA_DEBUG
-static void
-gda_data_proxy_dump (GdaDataProxy *proxy, guint offset)
-{
-	g_return_if_fail (GDA_IS_DATA_PROXY (proxy));
-	g_return_if_fail (proxy->priv);
-
-	/* FIXME */
-	gda_data_model_dump (GDA_DATA_MODEL (proxy), stdout);
-}
-#endif
-
 /**
  * gda_data_proxy_set_sample_size
  * @proxy: a #GdaDataProxy object
@@ -2363,7 +2326,7 @@ chunk_sync_idle (GdaDataProxy *proxy)
 
 	/* disable the emision of the "changed" signal each time a "row_*" signal is
 	 * emitted, and instead send that signal only once at the end */
-	gda_object_block_changed (GDA_OBJECT (proxy));
+	gda_data_model_freeze (GDA_DATA_MODEL (proxy));
 	for (index = proxy->priv->chunk_sep, step = 0; 
 	     step < max_steps && !finished; 
 	     step++) {
@@ -2449,7 +2412,7 @@ chunk_sync_idle (GdaDataProxy *proxy)
 		
 	/* re-enable the emision of the "changed" signal each time a "row_*" signal is
 	 * emitted */
-	gda_object_unblock_changed (GDA_OBJECT (proxy));
+	gda_data_model_thaw (GDA_DATA_MODEL (proxy));
 	if (has_changed)
 		gda_data_model_signal_emit_changed ((GdaDataModel *) proxy);
 
@@ -2810,8 +2773,7 @@ gda_data_proxy_set_filter_expr (GdaDataProxy *proxy, const gchar *filter_expr, G
 	static GdaVirtualProvider *provider = NULL;
 	GdaConnection *vcnc;
 	gchar *sql;
-	GdaQuery *query;
-	GError *lerror = NULL;
+	GdaStatement *stmt;
 	GdaDataModel *filtered_rows = NULL;
 
 	g_return_val_if_fail (GDA_IS_DATA_PROXY (proxy), FALSE);
@@ -2863,14 +2825,14 @@ gda_data_proxy_set_filter_expr (GdaDataProxy *proxy, const gchar *filter_expr, G
 		sql = g_strdup_printf ("SELECT __gda_row_nb FROM proxy WHERE %s", filter_expr);
 	g_free (tmp);
 
-	query = gda_query_new_from_sql (gda_object_get_dict (GDA_OBJECT (proxy)), sql, &lerror);
+	stmt = gda_sql_parser_parse_string (internal_parser, sql, NULL, NULL);
 	g_free (sql);
-	if (lerror) {
+	if (!stmt || (gda_statement_get_statement_type (stmt) != GDA_SQL_STATEMENT_SELECT)) {
 		/* also catches problems with multiple statements in @filter_expr, such as SQL code injection */
 		g_set_error (error, GDA_DATA_PROXY_ERROR, GDA_DATA_PROXY_FILTER_ERROR,
 			     _("Incorrect filter expression"));
-		g_object_unref (query);
-		g_error_free (lerror);
+		if (stmt)
+			g_object_unref (stmt);
 		proxy->priv->force_direct_mapping = FALSE;
 		return FALSE;
 	}
@@ -2891,14 +2853,9 @@ gda_data_proxy_set_filter_expr (GdaDataProxy *proxy, const gchar *filter_expr, G
 	g_object_unref (wrapper);
 	
 	
-	/* render and execute SQL */
-	sql = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, NULL, 0, NULL);
-	g_object_unref (query);
-	if (sql) {
-		GdaCommand *command;
-		command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, 0);
-		filtered_rows = gda_connection_execute_select_command (vcnc, command, NULL, NULL);
-	}
+	/* execute statement */
+	filtered_rows = gda_connection_statement_execute_select (vcnc, stmt, NULL, NULL);
+	g_object_unref (stmt);
 
 	/* remove virtual table */
 	g_assert (gda_vconnection_data_model_remove (GDA_VCONNECTION_DATA_MODEL (vcnc), "proxy", NULL));
@@ -2908,7 +2865,6 @@ gda_data_proxy_set_filter_expr (GdaDataProxy *proxy, const gchar *filter_expr, G
 		proxy->priv->force_direct_mapping = FALSE;
 		return FALSE;
 	}
-	g_assert (GDA_IS_DATA_MODEL (filtered_rows));
 	/*gda_data_model_dump (filtered_rows, stdout);*/
 
 	proxy->priv->force_direct_mapping = FALSE;
@@ -3186,21 +3142,19 @@ gda_data_proxy_create_iter (GdaDataModel *model)
 	if (iter2) {
 		GSList *plist1, *plist2;
 
-		plist1 = GDA_PARAMETER_LIST (iter)->parameters;
-		plist2 = GDA_PARAMETER_LIST (iter2)->parameters;
+		plist1 = GDA_SET (iter)->holders;
+		plist2 = GDA_SET (iter2)->holders;
 		for (; plist1 && plist2; plist1 = plist1->next, plist2 = plist2->next) {
-			gchar *plugin;
+			const gchar *plugin;
 
-			g_object_get (G_OBJECT (plist2->data), "entry_plugin", &plugin, NULL);
-			if (plugin) {
-				g_object_set (G_OBJECT (plist1->data), "entry_plugin", plugin, NULL);
-				g_free (plugin);
-			}
+			plugin = g_object_get_data (G_OBJECT (plist2->data), "__gda_entry_plugin");
+			if (plugin) 
+				g_object_set_data_full (G_OBJECT (plist1->data), "__gda_entry_plugin", g_strdup (plugin), g_free);
 		}
 		if (plist1 || plist2) 
 			g_warning ("Proxy iterator does not have the same length as proxied model's iterator: %d/%d",
-				   g_slist_length (GDA_PARAMETER_LIST (iter)->parameters),
-				   g_slist_length (GDA_PARAMETER_LIST (iter2)->parameters));
+				   g_slist_length (GDA_SET (iter)->holders),
+				   g_slist_length (GDA_SET (iter2)->holders));
 		g_object_unref (iter2);
 	}
 

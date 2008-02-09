@@ -1,0 +1,14 @@
+USAGE
+-----
+
+Run "make check" in this directory to test the GdaMetaStore object with different providers.
+
+To be tested, each provider needs to be compiled in these sources, and some environment
+variables need to be set for each provider. If no variable is set, then no test will be done with the
+corresponding provider and the test will report a success.
+
+For each provider, the environment variable to set is <provider_name>_META_CNC,
+for example "POSTGRESQL_META_CNC" (to set for example to "DB_NAME=meta").
+
+The database must already exist for the test to succeed, and all the data within
+the database may be destroyed.

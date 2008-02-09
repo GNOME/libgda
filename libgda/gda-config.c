@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2007 The GNOME Foundation.
+ * Copyright (C) 2007 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -29,7 +29,8 @@
 #include <libgda/binreloc/gda-binreloc.h>
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-data-model-dsn-list.h>
-#include <libgda/gda-parameter-list.h>
+#include <libgda/gda-set.h>
+#include <libgda/gda-holder.h>
 #include <libgda/gda-log.h>
 #ifdef HAVE_FAM
 #include <fam.h>
@@ -209,7 +210,7 @@ load_config_file (const gchar *file, gboolean is_system)
 	if (root) {
 		xmlNodePtr node;
 		for (node = root->children; node; node = node->next) { /* iter over the <section> tags */
-			if (strcmp (node->name, "section"))
+			if (strcmp ((gchar *) node->name, "section"))
 				continue;
 
 			xmlChar *prop;
@@ -218,10 +219,10 @@ load_config_file (const gchar *file, gboolean is_system)
 			gboolean is_new = FALSE;
 			xmlNodePtr entry;
 			
-			prop = xmlGetProp (node, "path");
+			prop = xmlGetProp (node, BAD_CAST "path");
 			if (!prop)
 				continue;
-			for (ptr = ((gchar *) prop) + strlen (prop) - 1; ptr >= (gchar *) prop; ptr--) {
+			for (ptr = ((gchar *) prop) + strlen ((gchar *) prop) - 1; ptr >= (gchar *) prop; ptr--) {
 				if (*ptr == '/') {
 					ptr++;
 					break;
@@ -245,26 +246,26 @@ load_config_file (const gchar *file, gboolean is_system)
 			
 			for (entry = node->children; entry; entry = entry->next) { /* iter over the <entry> tags */
 				xmlChar *value;
-				if (strcmp (entry->name, "entry"))
+				if (strcmp ((gchar *)entry->name, "entry"))
 					continue;
-				prop = xmlGetProp (entry, "name");
+				prop = xmlGetProp (entry, BAD_CAST "name");
 				if (!prop)
 					continue;
-				value = xmlGetProp (entry, "value");
+				value = xmlGetProp (entry, BAD_CAST "value");
 				if (!value) {
 					xmlFree (prop);
 					continue;
 				}
-				if (!strcmp (prop, "DSN"))
-					info->cnc_string = g_strdup (value);
-				else if (!strcmp (prop, "Provider"))
-					info->provider = g_strdup (value);
-				else if (!strcmp (prop, "Description"))
-					info->description = g_strdup (value);
-				else if (!strcmp (prop, "Username"))
-					info->username = g_strdup (value);
-				else if (!strcmp (prop, "Password"))
-					info->password = g_strdup (value);
+				if (!strcmp ((gchar *) prop, "DSN"))
+					info->cnc_string = g_strdup ((gchar *)value);
+				else if (!strcmp ((gchar *) prop, "Provider"))
+					info->provider = g_strdup ((gchar *)value);
+				else if (!strcmp ((gchar *) prop, "Description"))
+					info->description = g_strdup ((gchar *)value);
+				else if (!strcmp ((gchar *) prop, "Username"))
+					info->username = g_strdup ((gchar *)value);
+				else if (!strcmp ((gchar *) prop, "Password"))
+					info->password = g_strdup ((gchar *)value);
 				xmlFree (prop);
 				xmlFree (value);
 			}
@@ -306,40 +307,40 @@ save_config_file (const gchar *file, gboolean is_system)
 
 		xmlNodePtr section, entry;
 		gchar *prop;
-		section = xmlNewChild (root, NULL, "section", NULL);
+		section = xmlNewChild (root, NULL, BAD_CAST "section", NULL);
 		prop = g_strdup_printf ("/apps/libgda/Datasources/%s", info->name);
-		xmlSetProp (section, "path", BAD_CAST prop);
+		xmlSetProp (section, BAD_CAST "path", BAD_CAST prop);
 		g_free (prop);
 
 		/* provider */
-		entry = xmlNewChild (section, NULL, "entry", NULL);
-		xmlSetProp (entry, "name", BAD_CAST "Provider");
-		xmlSetProp (entry, "type", BAD_CAST "string");
-		xmlSetProp (entry, "value", BAD_CAST (info->provider));
+		entry = xmlNewChild (section, NULL, BAD_CAST "entry", NULL);
+		xmlSetProp (entry, BAD_CAST "name", BAD_CAST "Provider");
+		xmlSetProp (entry, BAD_CAST "type", BAD_CAST "string");
+		xmlSetProp (entry, BAD_CAST "value", BAD_CAST (info->provider));
 
 		/* DSN */
-		entry = xmlNewChild (section, NULL, "entry", NULL);
-		xmlSetProp (entry, "name", BAD_CAST "DSN");
-		xmlSetProp (entry, "type", BAD_CAST "string");
-		xmlSetProp (entry, "value", BAD_CAST (info->cnc_string));
+		entry = xmlNewChild (section, NULL, BAD_CAST "entry", NULL);
+		xmlSetProp (entry, BAD_CAST "name", BAD_CAST "DSN");
+		xmlSetProp (entry, BAD_CAST "type", BAD_CAST "string");
+		xmlSetProp (entry, BAD_CAST "value", BAD_CAST (info->cnc_string));
 
 		/* description */
-		entry = xmlNewChild (section, NULL, "entry", NULL);
-		xmlSetProp (entry, "name", BAD_CAST "Description");
-		xmlSetProp (entry, "type", BAD_CAST "string");
-		xmlSetProp (entry, "value", BAD_CAST (info->description));
+		entry = xmlNewChild (section, NULL, BAD_CAST "entry", NULL);
+		xmlSetProp (entry, BAD_CAST "name", BAD_CAST "Description");
+		xmlSetProp (entry, BAD_CAST "type", BAD_CAST "string");
+		xmlSetProp (entry, BAD_CAST "value", BAD_CAST (info->description));
 
 		/* username */
-		entry = xmlNewChild (section, NULL, "entry", NULL);
-		xmlSetProp (entry, "name", BAD_CAST "Username");
-		xmlSetProp (entry, "type", BAD_CAST "string");
-		xmlSetProp (entry, "value", BAD_CAST (info->username));
+		entry = xmlNewChild (section, NULL, BAD_CAST "entry", NULL);
+		xmlSetProp (entry, BAD_CAST "name", BAD_CAST "Username");
+		xmlSetProp (entry, BAD_CAST "type", BAD_CAST "string");
+		xmlSetProp (entry, BAD_CAST "value", BAD_CAST (info->username));
 
 		/* password */
-		entry = xmlNewChild (section, NULL, "entry", NULL);
-		xmlSetProp (entry, "name", BAD_CAST "Password");
-		xmlSetProp (entry, "type", BAD_CAST "string");
-		xmlSetProp (entry, "value", BAD_CAST (info->password));
+		entry = xmlNewChild (section, NULL, BAD_CAST "entry", NULL);
+		xmlSetProp (entry, BAD_CAST "name", BAD_CAST "Password");
+		xmlSetProp (entry, BAD_CAST "type", BAD_CAST "string");
+		xmlSetProp (entry, BAD_CAST"value", BAD_CAST (info->password));
 	}
 
 #ifdef HAVE_FAM
@@ -1006,7 +1007,7 @@ gda_config_list_providers (void)
 	gda_data_model_set_column_title (model, 1, _("Description"));
 	gda_data_model_set_column_title (model, 2, _("DSN parameters"));
 	gda_data_model_set_column_title (model, 3, _("File"));
-	gda_object_set_name (GDA_OBJECT (model), _("List of installed providers"));
+	g_object_set_data (G_OBJECT (model), "name", _("List of installed providers"));
 
 	for (list = unique_instance->priv->prov_list; list; list = list->next) {
 		GdaProviderInfo *info = (GdaProviderInfo *) list->data;
@@ -1026,15 +1027,14 @@ gda_config_list_providers (void)
 		if (info->gda_params) {
 			GSList *params;
 			GString *string = g_string_new ("");
-			for (params = info->gda_params->parameters;
+			for (params = info->gda_params->holders;
 			     params; params = params->next) {
-				gchar *tmp;
+				gchar *id;
 
-				g_object_get (G_OBJECT (params->data), "string_id", &tmp, NULL);
-				if (params != info->gda_params->parameters)
+				id = gda_holder_get_id (GDA_HOLDER (params->data));
+				if (params != info->gda_params->holders)
 					g_string_append (string, ",\n");
-				g_string_append (string, tmp);
-				g_free (tmp);
+				g_string_append (string, id);
 			}
 			value = gda_value_new_from_string (string->str, G_TYPE_STRING);
 			g_string_free (string, TRUE);
@@ -1156,7 +1156,7 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 
 			info->dsn_spec = plugin_get_dsn_spec ();
 			if (info->dsn_spec) {
-				info->gda_params = gda_parameter_list_new_from_spec_string (NULL, info->dsn_spec, &error);
+				info->gda_params = gda_set_new_from_spec_string (info->dsn_spec, &error);
 				if (!info->gda_params) {
 					g_warning ("Invalid format for provider '%s' DSN spec : %s",
 						   info->id,

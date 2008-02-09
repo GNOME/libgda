@@ -1,0 +1,268 @@
+<sect1 id="GdaConnectionMetaTypeHead">
+  <title>Description of the data model returned by gda_connection_get_meta_store_data()</title>
+  <para>
+    The <link linkend="gda-connection-get-meta-store-data">gda_connection_get_meta_store_data()</link> method allows
+    one to get the meta-data information about a database such as its structure (schema). The following table describes
+    the actual data retreived by each <link linkend="GdaConnectionMetaType">GdaConnectionMetaType</link> type of request.
+  </para>
+
+  <sect2 id="GdaConnectionMetaTypeGDA_CONNECTION_META_NAMESPACES">
+    <title>GDA_CONNECTION_META_NAMESPACES</title>
+    <para>Lists the namespaces (also known as "schemas" by PostgreSQL).
+    </para>
+    <para>Optional filter:
+      <itemizedlist>
+	<listitem><para>"name" (G_TYPE_STRING): the name of the namespace</para></listitem>
+      </itemizedlist>
+    </para>
+    <para>Columns of the returned data model:
+      <table frame="all">
+        <tgroup cols="3" colsep="1" rowsep="1" align="justify">
+          <thead>
+            <row>
+              <entry>Column #</entry>
+              <entry>Type</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+	  <tbody>
+            <row>
+              <entry>0</entry> 
+              <entry>G_TYPE_STRING</entry>
+              <entry>Namespace name</entry>
+            </row>
+            <row>
+              <entry>1</entry> 
+              <entry>G_TYPE_STRING</entry>
+              <entry>Namespace owner</entry>
+            </row>
+            <row>
+              <entry>2</entry> 
+              <entry>G_TYPE_BOOLEAN</entry>
+              <entry>TRUE if this namespace is reserved for internal use by the database</entry>
+            </row>
+	  </tbody>
+	</tgroup>
+      </table>
+    </para>
+  </sect2>
+
+<sect2 id="GdaConnectionMetaTypeGDA_CONNECTION_META_TYPES">
+    <title>GDA_CONNECTION_META_TYPES</title>
+    <para>Lists all the data types
+    </para>
+    <para>Optional filter:
+      <itemizedlist>
+	<listitem><para>"name" (G_TYPE_STRING): a type name</para></listitem>
+      </itemizedlist>
+    </para>
+    <para>Columns of the returned data model:
+      <table frame="all">
+        <tgroup cols="3" colsep="1" rowsep="1" align="justify">
+          <thead>
+            <row>
+              <entry>Column #</entry>
+              <entry>Type</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+	  <tbody>
+            <row>
+              <entry>0</entry> 
+              <entry>G_TYPE_STRING</entry>
+              <entry>Type name</entry>
+            </row>
+            <row>
+              <entry>1</entry> 
+              <entry>G_TYPE_STRING</entry>
+              <entry>Type's associated GType type</entry>
+            </row>
+            <row>
+              <entry>2</entry> 
+              <entry>G_TYPE_STRING</entry>
+              <entry>Type's comments</entry>
+            </row>
+            <row>
+              <entry>3</entry> 
+              <entry>G_TYPE_STRING</entry>
+              <entry>Synonyms (separated by commas)</entry>
+            </row>
+	  </tbody>
+	</tgroup>
+      </table>
+    </para>
+  </sect2>
+
+  <sect2 id="GdaConnectionMetaTypeGDA_CONNECTION_META_TABLES">
+    <title>GDA_CONNECTION_META_TABLES</title>
+    <para>Lists the tables.
+    </para>
+    <para>Optional filter:
+      <itemizedlist>
+	<listitem><para>"name" (G_TYPE_STRING): the full name of the table</para></listitem>
+      </itemizedlist>
+    </para>
+    <para>Columns of the returned data model:
+      <table frame="all">
+        <tgroup cols="3" colsep="1" rowsep="1" align="justify">
+          <thead>
+            <row>
+              <entry>Column #</entry>
+              <entry>Type</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+	  <tbody>
+            <row>
+              <entry>0</entry> 
+              <entry>G_TYPE_STRING</entry>
+              <entry>Table's name</entry>
+            </row>
+            <row>
+              <entry>1</entry> 
+              <entry>G_TYPE_STRING</entry>
+              <entry>Namespace in which the table is</entry>
+            </row>
+            <row>
+              <entry>2</entry> 
+              <entry>G_TYPE_STRING</entry>
+              <entry>Table's complete name (if the table is not in the default namespace)</entry>
+            </row>
+            <row>
+              <entry>3</entry> 
+              <entry>G_TYPE_STRING</entry>
+              <entry>Table owner</entry>
+            </row>
+            <row>
+              <entry>4</entry> 
+              <entry>G_TYPE_STRING</entry>
+              <entry>Table's associated comments</entry>
+            </row>
+	  </tbody>
+	</tgroup>
+      </table>
+    </para>
+  </sect2>
+
+  <sect2 id="GdaConnectionMetaTypeGDA_CONNECTION_META_VIEWS">
+    <title>GDA_CONNECTION_META_VIEWS</title>
+    <para>Lists the views.
+    </para>
+    <para>Optional filter:
+      <itemizedlist>
+	<listitem><para>"name" (G_TYPE_STRING): the full name of the view</para></listitem>
+      </itemizedlist>
+    </para>
+    <para>Columns of the returned data model:
+      <table frame="all">
+        <tgroup cols="3" colsep="1" rowsep="1" align="justify">
+          <thead>
+            <row>
+              <entry>Column #</entry>
+              <entry>Type</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+	  <tbody>
+            <row>
+              <entry>0</entry> 
+              <entry>G_TYPE_STRING</entry>
+              <entry>View's name</entry>
+            </row>
+            <row>
+              <entry>1</entry> 
+              <entry>G_TYPE_STRING</entry>
+              <entry>Namespace in which the view is</entry>
+            </row>
+            <row>
+              <entry>2</entry> 
+              <entry>G_TYPE_STRING</entry>
+              <entry>View's complete name (if the view is not in the default namespace)</entry>
+            </row>
+            <row>
+              <entry>3</entry> 
+              <entry>G_TYPE_STRING</entry>
+              <entry>View owner</entry>
+            </row>
+            <row>
+              <entry>4</entry> 
+              <entry>G_TYPE_STRING</entry>
+              <entry>View's associated comments</entry>
+            </row>
+	  </tbody>
+	</tgroup>
+      </table>
+    </para>
+  </sect2>
+
+  <sect2 id="GdaConnectionMetaTypeGDA_CONNECTION_META_FIELDS">
+    <title>GDA_CONNECTION_META_FIELDS</title>
+    <para>Lists a table or view's fields
+    </para>
+    <para>Mandatory filter:
+      <itemizedlist>
+	<listitem><para>"name" (G_TYPE_STRING): the full name of the table or view</para></listitem>
+      </itemizedlist>
+    </para>
+    <para>Optional filter:
+      <itemizedlist>
+	<listitem><para>"field_name" (G_TYPE_STRING): the name of a field</para></listitem>
+      </itemizedlist>
+    </para>
+    <para>Columns of the returned data model:
+      <table frame="all">
+        <tgroup cols="3" colsep="1" rowsep="1" align="justify">
+          <thead>
+            <row>
+              <entry>Column #</entry>
+              <entry>Type</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+	  <tbody>
+            <row>
+              <entry>0</entry> 
+              <entry>G_TYPE_STRING</entry>
+              <entry>Field's name</entry>
+            </row>
+            <row>
+              <entry>1</entry> 
+              <entry>G_TYPE_STRING</entry>
+              <entry>Field's data type</entry>
+            </row>
+            <row>
+              <entry>2</entry> 
+              <entry>G_TYPE_STRING</entry>
+              <entry>Field's GType type</entry>
+            </row>
+            <row>
+              <entry>3</entry> 
+              <entry>G_TYPE_INT</entry>
+              <entry>Field's size</entry>
+            </row>
+            <row>
+              <entry>4</entry> 
+              <entry>G_TYPE_INT</entry>
+              <entry>Field's scale</entry>
+            </row>
+            <row>
+              <entry>5</entry> 
+              <entry>G_TYPE_BOOLEAN</entry>
+              <entry>TRUE if the field does not have a NOT NULL constraint</entry>
+            </row>
+            <row>
+              <entry>6</entry> 
+              <entry>G_TYPE_STRING</entry>
+              <entry>Field's default value</entry>
+            </row>
+            <row>
+              <entry>7</entry> 
+              <entry>G_TYPE_STRING</entry>
+              <entry>Extra attributes for the field as a comma separated values list of keywords (AUTO_INCREMENT)</entry>
+            </row>
+	  </tbody>
+	</tgroup>
+      </table>
+    </para>
+  </sect2>
+</sect1>

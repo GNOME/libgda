@@ -1,2 +1,2 @@
-SUBDIRS = providers parser value-holders data-models
+SUBDIRS = providers parser value-holders meta-store data-models
 

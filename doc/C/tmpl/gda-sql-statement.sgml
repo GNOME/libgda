@@ -129,15 +129,13 @@ Known types of statements
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_sql_statement_check_with_dict ##### -->
+<!-- ##### FUNCTION gda_sql_statement_check_connection ##### -->
 <para>
 
 </para>
 
 @stmt: 
-@dict: 
-@func: 
-@func_data: 
+@cnc: 
 @error: 
 @Returns: 
 
@@ -791,9 +789,6 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 
 @any: inheritance structure
 @field_name: a table's field name, in the form [[[catalog.]schema.]table.]field_name
-@dict_field: 
-@dict_func: 
-@dict_data: 
 
 <!-- ##### FUNCTION gda_sql_field_new ##### -->
 <para>
@@ -846,9 +841,7 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 
 @any: inheritance structure
 @table_name: a table's name, in the form [[catalog.]schema.]table
-@dict_table: 
-@dict_func: 
-@dict_data: 
+@full_table_name: 
 
 <!-- ##### FUNCTION gda_sql_table_new ##### -->
 <para>
@@ -902,9 +895,7 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 @any: inheritance structure
 @function_name: name of the function , in the form [[catalog.]schema.]function_name
 @args_list: list of #GdaSqlExpr expressions, one for each argument
-@dict_function: 
-@dict_func: 
-@dict_data: 
+@full_function_name: 
 
 <!-- ##### FUNCTION gda_sql_function_new ##### -->
 <para>
@@ -967,6 +958,41 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 @any: inheritance structure
 @operator: type of operation
 @operands: list of #GdaSqlExpr operands
+
+<!-- ##### ENUM GdaSqlOperator ##### -->
+<para>
+
+</para>
+
+@GDA_SQL_OPERATOR_AND: 
+@GDA_SQL_OPERATOR_OR: 
+@GDA_SQL_OPERATOR_EQ: 
+@GDA_SQL_OPERATOR_IS: 
+@GDA_SQL_OPERATOR_LIKE: 
+@GDA_SQL_OPERATOR_BETWEEN: 
+@GDA_SQL_OPERATOR_GT: 
+@GDA_SQL_OPERATOR_LT: 
+@GDA_SQL_OPERATOR_GEQ: 
+@GDA_SQL_OPERATOR_LEQ: 
+@GDA_SQL_OPERATOR_DIFF: 
+@GDA_SQL_OPERATOR_REGEXP: 
+@GDA_SQL_OPERATOR_REGEXP_CI: 
+@GDA_SQL_OPERATOR_NOT_REGEXP: 
+@GDA_SQL_OPERATOR_NOT_REGEXP_CI: 
+@GDA_SQL_OPERATOR_SIMILAR: 
+@GDA_SQL_OPERATOR_ISNULL: 
+@GDA_SQL_OPERATOR_ISNOTNULL: 
+@GDA_SQL_OPERATOR_NOT: 
+@GDA_SQL_OPERATOR_IN: 
+@GDA_SQL_OPERATOR_CONCAT: 
+@GDA_SQL_OPERATOR_PLUS: 
+@GDA_SQL_OPERATOR_MINUS: 
+@GDA_SQL_OPERATOR_STAR: 
+@GDA_SQL_OPERATOR_DIV: 
+@GDA_SQL_OPERATOR_REM: 
+@GDA_SQL_OPERATOR_BITAND: 
+@GDA_SQL_OPERATOR_BITOR: 
+@GDA_SQL_OPERATOR_BITNOT: 
 
 <!-- ##### FUNCTION gda_sql_operation_new ##### -->
 <para>
@@ -1078,10 +1104,7 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 @field_name: field name part of @expr if @expr represents a field
 @table_name: table name part of @expr if @expr represents a field
 @as: alias
-@dict_field: 
-@dict_table: 
-@dict_func: 
-@dict_data: 
+@full_table_name: 
 
 <!-- ##### FUNCTION gda_sql_select_field_new ##### -->
 <para>
@@ -1155,9 +1178,7 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 @expr: expression
 @table_name: table name part of @expr if @expr represents a table
 @as: alias
-@dict_table: 
-@dict_func: 
-@dict_data: 
+@full_table_name: 
 
 <!-- ##### FUNCTION gda_sql_select_target_new ##### -->
 <para>

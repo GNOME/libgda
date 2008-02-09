@@ -1,6 +1,6 @@
 lib_LTLIBRARIES = libgda-4.0.la
 
-SUBDIRS = sqlite sql-delimiter sql-transaction graph handlers binreloc sql-parser providers-support
+SUBDIRS = sqlite handlers binreloc sql-parser providers-support
 
 if BDB 
 GDA_BDB_H=gda-data-model-bdb.h
@@ -31,7 +31,6 @@ gda_headers = \
 	gda-client.h \
 	gda-column.h \
 	gda-column-index.h \
-	gda-command.h \
 	gda-config.h \
 	gda-connection-event.h \
 	gda-connection.h \
@@ -43,7 +42,6 @@ gda_headers = \
 	$(GDA_BDB_H) \
 	gda-data-model-dir.h \
 	gda-data-model-extra.h \
-	gda-data-model-filter-sql.h \
 	gda-data-model-hash.h \
 	gda-data-model-import.h \
 	gda-data-model-index.h \
@@ -54,50 +52,14 @@ gda_headers = \
 	gda-data-proxy.h \
 	gda-debug-macros.h \
 	gda-decl.h \
-	gda-dict-aggregate.h \
-	gda-dict-constraint.h \
-	gda-dict-database.h \
-	gda-dict-field.h \
-	gda-dict-function.h \
-	gda-dict.h \
-	gda-dict-private.h \
-	gda-dict-reg-queries.h \
-	gda-dict-reg-types.h \
-	gda-dict-reg-aggregates.h \
-	gda-dict-reg-functions.h \
-	gda-dict-table.h \
-	gda-dict-type.h \
-	gda-entity-field.h \
-	gda-entity.h \
 	gda-enums.h \
-	gda-graphviz.h \
 	gda-holder.h \
 	gda-log.h \
 	gda-marshal.h \
-	gda-object.h \
-	gda-object-ref.h \
-	gda-parameter.h \
-	gda-parameter-list.h \
-	gda-parameter-util.h \
+	gda-meta-store.h \
 	gda-quark-list.h \
-	gda-query-condition.h \
-	gda-query-field-agg.h \
-	gda-query-field-all.h \
-	gda-query-field-field.h \
-	gda-query-field-func.h \
-	gda-query-field.h \
-	gda-query-field-value.h \
-	gda-query.h \
-	gda-query-join.h \
-	gda-query-object.h \
-	gda-query-parsing.h \
-	gda-query-private.h \
-	gda-query-target.h \
-	gda-referer.h \
-	gda-renderer.h \
 	gda-set.h \
 	gda-row.h \
-	gda-data-model-filter-sql.h \
 	gda-server-operation.h \
 	gda-server-provider.h \
 	gda-server-provider-extra.h \
@@ -108,7 +70,6 @@ gda_headers = \
 	gda-transaction-status-private.h \
 	gda-util.h \
 	gda-value.h \
-	gda-xml-storage.h \
 	libgda.h 
 
 libgda_sources =  \
@@ -122,7 +83,6 @@ libgda_sources =  \
 	gda-client.c \
 	gda-column.c \
 	gda-column-index.c \
-	gda-command.c \
 	gda-config.c \
 	gda-connection.c \
 	gda-connection-event.c \
@@ -134,7 +94,6 @@ libgda_sources =  \
 	gda-data-model-dir.c \
 	gda-data-model-dsn-list.c \
 	gda-data-model-dsn-list.h \
-	gda-data-model-filter-sql.c \
 	gda-data-model-hash.c \
 	gda-data-model-import.c \
 	gda-data-model-index.c \
@@ -142,44 +101,12 @@ libgda_sources =  \
 	gda-data-model-query.c \
 	gda-data-access-wrapper.c \
 	gda-data-proxy.c \
-	gda-dict-aggregate.c \
-	gda-dict.c \
-	gda-dict-constraint.c \
-	gda-dict-database.c \
-	gda-dict-field.c \
-	gda-dict-function.c \
-	gda-dict-table.c \
-	gda-dict-type.c \
-	gda-dict-reg-queries.c \
-	gda-dict-reg-types.c \
-	gda-dict-reg-aggregates.c \
-	gda-dict-reg-functions.c \
-	gda-entity.c \
-	gda-entity-field.c \
-	gda-graphviz.c \
 	gda-holder.c \
 	gda-init.c \
 	gda-log.c \
 	gda-marshal.c \
-	gda-object.c \
-	gda-object-ref.c \
-	gda-parameter.c \
-	gda-parameter-list.c \
+	gda-meta-store.c \
 	gda-quark-list.c \
-	gda-query.c \
-	gda-query-condition.c \
-	gda-query-field-agg.c \
-	gda-query-field-all.c \
-	gda-query-field.c \
-	gda-query-field-field.c \
-	gda-query-field-func.c \
-	gda-query-field-value.c \
-	gda-query-join.c \
-	gda-query-object.c \
-	gda-query-parsing.c \
-	gda-query-target.c \
-	gda-referer.c \
-	gda-renderer.c \
 	gda-set.c \
 	gda-row.c \
 	gda-server-operation.c \
@@ -189,8 +116,7 @@ libgda_sources =  \
 	gda-threader.c \
 	gda-transaction-status.c \
 	gda-util.c \
-	gda-value.c \
-	gda-xml-storage.c 
+	gda-value.c 
 
 gda-enum-types.h: s-enum-types-h
 	@true
@@ -240,15 +166,12 @@ libgda_4_0_la_LDFLAGS = \
 	$(NO_UNDEFINED) \
 	-export-dynamic $(no_undefined) $(LIBTOOL_EXPORT_OPTIONS)
 
-libgda_4_0_la_LIBADD = sql-transaction/libgda_sql_transaction-4.0.la \
+libgda_4_0_la_LIBADD = \
 	sql-parser/libgda_sql_parser-4.0.la \
 	providers-support/libgda-psupport.la \
-	sql-delimiter/libgda_sql_delimiter-4.0.la \
-	graph/libgda_graph-4.0.la \
 	handlers/libgda_handlers-4.0.la \
 	binreloc/libgda_binreloc-4.0.la \
 	sqlite/libgda-sqlite.la \
-	$(top_builddir)/libsql/libgdasql-4.0.la \
 	$(LIBGDA_LIBS) $(FAM_LIBS) \
 	$(BDB_LIBS) $(GNOMEVFS_LIBS) $(LIBGCRYPT_LIBS)
 
@@ -265,7 +188,10 @@ CLEANFILES = $(libgda_built_headers) $(libgda_built_cfiles) \
 dist-hook:
 	cd $(distdir); rm -f $(libgda_built_headers) $(libgda_built_cfiles)
 
-DTD_FILES = libgda-dict.dtd libgda-array.dtd libgda-paramlist.dtd  libgda-server-operation.dtd
+xmldir   = $(datadir)/libgda-4.0
+xml_DATA = information_schema.xml
+
+DTD_FILES = libgda-array.dtd libgda-paramlist.dtd  libgda-server-operation.dtd
 dtddir=$(LIBGDA_DTDDIR)
 dtd_DATA=$(DTD_FILES)
 EXTRA_DIST = \

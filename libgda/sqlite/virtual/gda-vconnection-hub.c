@@ -1,6 +1,6 @@
 /* 
  * GDA common library
- * Copyright (C) 2007 The GNOME Foundation.
+ * Copyright (C) 2007 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -25,20 +25,21 @@
 #include <string.h>
 #include "gda-vconnection-hub.h"
 #include "gda-virtual-provider.h"
-#include <libgda/gda-dict.h>
-#include <libgda/gda-dict-database.h>
-#include <libgda/gda-dict-table.h>
+#include <sql-parser/gda-sql-parser.h>
+#include <libgda/gda-util.h>
+#include <libgda/gda-data-model-query.h>
 
 typedef struct {
 	GdaVconnectionHub *hub;
 	GdaConnection     *cnc;
-	GdaDict           *dict;
 	gchar             *ns; /* can be NULL in one case only among all the HubConnection structs */
 } HubConnection;
 
 static void hub_connection_free (HubConnection *hc);
 static gboolean attach_hub_connection (GdaVconnectionHub *hub, HubConnection *hc, GError **error);
 static void detach_hub_connection (GdaVconnectionHub *hub, HubConnection *hc);
+
+static GdaSqlParser *internal_parser;
 
 struct _GdaVconnectionHubPrivate {
 	GSList *hub_connections; /* list of HubConnection structures */
@@ -66,8 +67,6 @@ static GObjectClass  *parent_class = NULL;
 static HubConnection *get_hub_cnc_by_ns (GdaVconnectionHub *hub, const gchar *ns);
 static HubConnection *get_hub_cnc_by_cnc (GdaVconnectionHub *hub, GdaConnection *cnc);
 
-static gchar *get_complete_table_name (HubConnection *hc, GdaDictTable *table);
-
 /*
  * GdaVconnectionHub class implementation
  */
@@ -83,6 +82,9 @@ gda_vconnection_hub_class_init (GdaVconnectionHubClass *klass)
 	/* Properties */
         object_class->set_property = gda_vconnection_hub_set_property;
         object_class->get_property = gda_vconnection_hub_get_property;
+
+	/* static objects */
+	internal_parser = gda_sql_parser_new ();
 }
 
 static void
@@ -217,7 +219,6 @@ gda_vconnection_hub_add (GdaVconnectionHub *hub,
 	hc->hub = hub;
 	hc->cnc = cnc;
 	g_object_ref (cnc);
-	hc->dict = NULL;
 	hc->ns = ns ? g_strdup (ns) : NULL;
 	
 	if (!attach_hub_connection (hub, hc, error)) {
@@ -333,200 +334,241 @@ gda_vconnection_hub_foreach (GdaVconnectionHub *hub,
 	}
 }
 
-static void table_added_cb (GdaDictDatabase *gdadictdatabase, GdaDictTable *table, HubConnection *hc);
-static void table_removed_cb (GdaDictDatabase *gdadictdatabase, GdaDictTable *table, HubConnection *hc);
-static void table_updated_cb (GdaDictDatabase *gdadictdatabase, GdaDictTable *table, HubConnection *hc);
+static void meta_changed_cb (GdaMetaStore *store, GSList *changes, HubConnection *hc);
 
 typedef struct {
 	GdaVconnectionDataModelSpec spec;
-	GdaDictTable *table;
+	GValue *table_name;
 	HubConnection *hc;
 } LocalSpec;
+
+static void local_spec_free (LocalSpec *spec)
+{
+	gda_value_free (spec->table_name);
+	g_free (spec);
+}
 
 static GList *
 dict_table_create_columns_func (GdaVconnectionDataModelSpec *spec)
 {
-	gint i, ncols;
+	LocalSpec *lspec = (LocalSpec *) spec;
+	gint i, nrows;
 	GList *columns = NULL;
-	GdaDictTable *table = GDA_DICT_TABLE (((LocalSpec*)spec)->table);
-	ncols = gda_entity_get_n_fields (GDA_ENTITY (table));
-	for (i = 0; i < ncols; i++) {
-		GdaEntityField *field = gda_entity_get_field_by_index ((GdaEntity *) table, i);
+	GdaDataModel *model;
+
+	model = gda_connection_get_meta_store_data (lspec->hc->cnc, 
+						    GDA_CONNECTION_META_FIELDS, NULL, 1, "name", lspec->table_name);
+	if (!model)
+		return NULL;
+	nrows = gda_data_model_get_n_rows (model);
+	for (i = 0; i < nrows; i++) {
 		GdaColumn *col;
 		col = gda_column_new ();
-		gda_column_set_name (col, gda_entity_field_get_name (field));
-		gda_column_set_g_type (col, gda_entity_field_get_g_type (field));
-		gda_column_set_dbms_type (col, gda_dict_type_get_sqlname (gda_entity_field_get_dict_type (field)));
+		gda_column_set_name (col, g_value_get_string (gda_data_model_get_value_at (model, 0, i)));
+		gda_column_set_g_type (col, 
+			   gda_g_type_from_string (g_value_get_string (gda_data_model_get_value_at (model, 2, i))));
+		gda_column_set_dbms_type (col, g_value_get_string (gda_data_model_get_value_at (model, 1, i)));
 		columns = g_list_prepend (columns, col);
 	}
+	g_object_unref (model);
+
 	return g_list_reverse (columns);
 }
+
 static GdaDataModel *
 dict_table_create_model_func (GdaVconnectionDataModelSpec *spec)
 {
 	GdaDataModel *model;
-	GdaQuery *query;
-	const gchar *table_name;
+	GdaStatement *stmt;
 	gchar *tmp;
 	LocalSpec *lspec = (LocalSpec *) spec;
 	
-	table_name = gda_object_get_name ((GdaObject*) lspec->table);
-	tmp = g_strdup_printf ("SELECT * FROM %s", table_name);
-	query = gda_query_new_from_sql (lspec->hc->dict, tmp, NULL);
+	tmp = g_strdup_printf ("SELECT * FROM %s", g_value_get_string (lspec->table_name));
+	stmt = gda_sql_parser_parse_string (internal_parser, tmp, NULL, NULL);
 	g_free (tmp);
-	model = gda_data_model_query_new (query);
-	g_object_unref (query);
-	gda_data_model_query_compute_modification_queries (GDA_DATA_MODEL_QUERY (model), table_name, 
+	model = gda_data_model_query_new (lspec->hc->cnc, stmt);
+	g_object_unref (stmt);
+	gda_data_model_query_compute_modification_queries (GDA_DATA_MODEL_QUERY (model), 
+							   g_value_get_string (lspec->table_name), 
 							   GDA_DATA_MODEL_QUERY_OPTION_USE_ALL_FIELDS_IF_NO_PK, NULL);
 
 	return model;
 }
+static gboolean table_add (HubConnection *hc, const GValue *table_name, GError **error);
+static void table_remove (HubConnection *hc, const GValue *table_name);
+static gchar *get_complete_table_name (HubConnection *hc, const GValue *table_name);
 
 static gboolean
 attach_hub_connection (GdaVconnectionHub *hub, HubConnection *hc, GError **error)
 {
-	GdaDictDatabase *db;
-	GSList *tables, *list;
 	gchar *tmp;
+	GdaMetaStore *store;
+	GdaMetaContext context;
 	
-	/* make sure there is a GdaDict */
-	if (!hc->dict) {
-		hc->dict = gda_dict_new ();
-		gda_dict_set_connection (hc->dict, hc->cnc);
-		if (!gda_dict_update_dbms_meta_data (hc->dict, GDA_TYPE_DICT_TABLE, NULL, error))
-			return FALSE;
-	}
+	g_object_get (G_OBJECT (hc->cnc), "meta-store", &store, NULL);
+	g_assert (store);
+
+	/* make sure the meta store is up to date */
+	context.table_name = "_tables";
+	context.size = 0;
+	if (!gda_connection_update_meta_store (hc->cnc, &context, error))
+		return FALSE;
 
 	/* add a :memory: database */
 	if (hc->ns) {
-		GdaCommand *command;
-		GList *list;
+		GdaStatement *stmt;
 		tmp = g_strdup_printf ("ATTACH ':memory:' AS %s", hc->ns);
-		command = gda_command_new (tmp, GDA_COMMAND_TYPE_SQL, 0);
-		list = gda_connection_execute_command (GDA_CONNECTION (hub), command, NULL, error);
+		stmt = gda_sql_parser_parse_string (internal_parser, tmp, NULL, NULL);
 		g_free (tmp);
-		if (!list)
+		g_assert (stmt);
+		if (gda_connection_statement_execute_non_select (GDA_CONNECTION (hub), stmt, NULL, NULL, error) == -1) {
+			g_object_unref (stmt);
 			return FALSE;
-		g_list_foreach (list, (GFunc) g_object_unref, NULL);
-		g_list_free (list);
+		}
+		g_object_unref (stmt);
 	}
 
 	/* add virtual tables */
-	db = gda_dict_get_database (hc->dict);
-	tables = gda_dict_database_get_tables (db);
-	for (list = tables; list; list = list->next) {
-		LocalSpec *lspec;
-		lspec = g_new0 (LocalSpec, 1);
-		GDA_VCONNECTION_DATA_MODEL_SPEC (lspec)->data_model = NULL;
-		GDA_VCONNECTION_DATA_MODEL_SPEC (lspec)->create_columns_func = (GdaVconnectionDataModelCreateColumnsFunc) dict_table_create_columns_func;
-		GDA_VCONNECTION_DATA_MODEL_SPEC (lspec)->create_model_func = (GdaVconnectionDataModelCreateModelFunc) dict_table_create_model_func;
-		lspec->table = GDA_DICT_TABLE (list->data);
-		lspec->hc = hc;
-		tmp = get_complete_table_name (hc, GDA_DICT_TABLE (list->data));
-		if (!gda_vconnection_data_model_add (GDA_VCONNECTION_DATA_MODEL (hub), (GdaVconnectionDataModelSpec*) lspec, 
-							  g_free, tmp, error)) {
-			g_free (tmp);
+	GdaDataModel *model;
+	gint i, nrows;
+	model = gda_connection_get_meta_store_data (hc->cnc, GDA_CONNECTION_META_TABLES, error, 0);
+	if (!model)
+		return FALSE;
+	nrows = gda_data_model_get_n_rows (model);
+	for (i = 0; i < nrows; i++) {
+		if (!table_add (hc, gda_data_model_get_value_at (model, 0, i), error)) {
+			g_object_unref (model);
 			return FALSE;
 		}
-		g_free (tmp);		
 	}
-	g_slist_free (tables);
+	g_object_unref (model);
 
-	/* monitor changes in dictionary */
-	g_signal_connect (db, "table-added",
-			  G_CALLBACK (table_added_cb), hc);
-	g_signal_connect (db, "table-removed",
-			  G_CALLBACK (table_removed_cb), hc);
-	g_signal_connect (db, "table-updated",
-			  G_CALLBACK (table_updated_cb), hc);
+	/* monitor changes */
+	g_signal_connect (store, "meta_changed", G_CALLBACK (meta_changed_cb), hc);
 
 	hub->priv->hub_connections = g_slist_append (hub->priv->hub_connections, hc);
 	return TRUE;
 }
 
 static gchar *
-get_complete_table_name (HubConnection *hc, GdaDictTable *table)
+get_complete_table_name (HubConnection *hc, const GValue *table_name)
 {
 	if (hc->ns)
-		return g_strdup_printf ("%s.%s", hc->ns, gda_object_get_name ((GdaObject *) table));
+		return g_strdup_printf ("%s.%s", hc->ns, g_value_get_string (table_name));
 	else
-		return g_strdup (gda_object_get_name ((GdaObject *) table));
+		return g_strdup (g_value_get_string (table_name));
 }
 
 static void
-table_added_cb (GdaDictDatabase *gdadictdatabase, GdaDictTable *table, HubConnection *hc)
+meta_changed_cb (GdaMetaStore *store, GSList *changes, HubConnection *hc)
+{
+	GSList *list;
+	for (list = changes; list; list = list->next) {
+		GdaMetaStoreChange *ch = (GdaMetaStoreChange*) list->data;
+		GValue *tsn, *tn;
+			
+		/* we are only intsrested in changes occuring in the "_tables" table */
+		if (!strcmp (ch->table_name, "_tables")) {
+			switch (ch->c_type) {
+			case GDA_META_STORE_ADD: {
+				/* we only want tables where table_short_name = table_name */
+				tsn = g_hash_table_lookup (ch->keys, "+6");
+				tn = g_hash_table_lookup (ch->keys, "+2");
+				if (! gda_value_compare_ext (tsn, tn))
+					table_add (hc, tn, NULL);
+				break;
+			}
+			case GDA_META_STORE_REMOVE: {
+				/* we only want tables where table_short_name = table_name */
+				tsn = g_hash_table_lookup (ch->keys, "-6");
+				tn = g_hash_table_lookup (ch->keys, "-2");
+				if (! gda_value_compare_ext (tsn, tn))
+					table_remove (hc, tn);
+				break;
+			}
+			case GDA_META_STORE_MODIFY: {
+				/* we only want tables where table_short_name = table_name */
+				tsn = g_hash_table_lookup (ch->keys, "-6");
+				tn = g_hash_table_lookup (ch->keys, "-2");
+				if (! gda_value_compare_ext (tsn, tn))
+					table_remove (hc, tn);
+				tsn = g_hash_table_lookup (ch->keys, "+6");
+				tn = g_hash_table_lookup (ch->keys, "+2");
+				if (! gda_value_compare_ext (tsn, tn))
+					table_add (hc, tn, NULL);
+				break;
+			}
+			}
+		}
+		else if (!strcmp (ch->table_name, "_columns")) {
+			TO_IMPLEMENT;
+		}
+	}
+}
+
+static gboolean
+table_add (HubConnection *hc, const GValue *table_name, GError **error)
 {
 	LocalSpec *lspec;
-	GError *error = NULL;
 	gchar *tmp;
 
 	lspec = g_new0 (LocalSpec, 1);
 	GDA_VCONNECTION_DATA_MODEL_SPEC (lspec)->data_model = NULL;
 	GDA_VCONNECTION_DATA_MODEL_SPEC (lspec)->create_columns_func = (GdaVconnectionDataModelCreateColumnsFunc) dict_table_create_columns_func;
 	GDA_VCONNECTION_DATA_MODEL_SPEC (lspec)->create_model_func = (GdaVconnectionDataModelCreateModelFunc) dict_table_create_model_func;
-	lspec->table = table;
+	lspec->table_name = gda_value_copy (table_name);
 	lspec->hc = hc;
-	tmp = get_complete_table_name (hc, table);
+	tmp = get_complete_table_name (hc, lspec->table_name);
 	if (!gda_vconnection_data_model_add (GDA_VCONNECTION_DATA_MODEL (hc->hub), (GdaVconnectionDataModelSpec*) lspec, 
-					     g_free, tmp, &error)) {
-		gda_connection_add_event_string (GDA_CONNECTION (hc->hub), _("Could not add virtual table %s: %s"), 
-						 tmp, error && error->message ? error->message : _("No detail"));
-		g_error_free (error);
+					     (GDestroyNotify) local_spec_free, tmp, error)) {
+		g_free (tmp);
+		return FALSE;
 	}
 	g_free (tmp);
+	return TRUE;
 }
 
 static void
-table_removed_cb (GdaDictDatabase *gdadictdatabase, GdaDictTable *table, HubConnection *hc)
+table_remove (HubConnection *hc, const GValue *table_name)
 {
 	gchar *name;
 
-	name = get_complete_table_name (hc, table);
+	name = get_complete_table_name (hc, table_name);
 	gda_vconnection_data_model_remove (GDA_VCONNECTION_DATA_MODEL (hc->hub), name, NULL);
 	g_free (name);
 }
 
 static void
-table_updated_cb (GdaDictDatabase *gdadictdatabase, GdaDictTable *table, HubConnection *hc)
-{
-	table_removed_cb (gdadictdatabase, table, hc);
-	table_added_cb (gdadictdatabase, table, hc);
-}
-
-static void
 detach_hub_connection (GdaVconnectionHub *hub, HubConnection *hc)
 {
-	GdaDictDatabase *db;
-	GSList *tables, *list;
-	gchar *tmp;
+	GdaMetaStore *store;
+	GdaDataModel *model;
+	gint i, nrows;
 
-	/* unmonitor changes in dictionary */
-	db = gda_dict_get_database (hc->dict);
-	g_signal_handlers_disconnect_by_func (db, G_CALLBACK (table_added_cb), hc);
-	g_signal_handlers_disconnect_by_func (db, G_CALLBACK (table_removed_cb), hc);
-	g_signal_handlers_disconnect_by_func (db, G_CALLBACK (table_updated_cb), hc);
+	/* un-monitor changes */
+	g_object_get (G_OBJECT (hc->cnc), "meta-store", &store, NULL);
+	g_assert (store);
+	g_signal_handlers_disconnect_by_func (store, G_CALLBACK (meta_changed_cb), hc);
 
 	/* remove virtual tables */
-	tables = gda_dict_database_get_tables (db);
-	for (list = tables; list; list = list->next) {
-		tmp = get_complete_table_name (hc, GDA_DICT_TABLE (list->data));
-		gda_vconnection_data_model_remove (GDA_VCONNECTION_DATA_MODEL (hub), tmp, NULL);
-		g_free (tmp);
-	}
-	g_slist_free (tables);
+	model = gda_connection_get_meta_store_data (hc->cnc, GDA_CONNECTION_META_TABLES, NULL, 0);
+	if (!model)
+		return;
+	nrows = gda_data_model_get_n_rows (model);
+	for (i = 0; i < nrows; i++) 
+		table_remove (hc, gda_data_model_get_value_at (model, 0, i));
+	g_object_unref (model);
 
 	/* remove the :memory: database */
 	if (hc->ns) {
-		GdaCommand *command;
-		GList *list;
+		GdaStatement *stmt;
+		gchar *tmp;
 		tmp = g_strdup_printf ("DETACH %s", hc->ns);
-		command = gda_command_new (tmp, GDA_COMMAND_TYPE_SQL, 0);
-		list = gda_connection_execute_command (GDA_CONNECTION (hub), command, NULL, NULL);
+		stmt = gda_sql_parser_parse_string (internal_parser, tmp, NULL, NULL);
 		g_free (tmp);
-		if (list) {
-			g_list_foreach (list, (GFunc) g_object_unref, NULL);
-			g_list_free (list);
-		}
+		g_assert (stmt);
+		gda_connection_statement_execute_non_select (GDA_CONNECTION (hub), stmt, NULL, NULL, NULL);
+		g_object_unref (stmt);
 	}	
 
 	hub->priv->hub_connections = g_slist_remove (hub->priv->hub_connections, hc);
@@ -536,8 +578,6 @@ detach_hub_connection (GdaVconnectionHub *hub, HubConnection *hc)
 static void
 hub_connection_free (HubConnection *hc)
 {
-	if (hc->dict)
-		g_object_unref (hc->dict);
 	g_object_unref (hc->cnc);
 	g_free (hc->ns);
 	g_free (hc);

@@ -23,6 +23,8 @@
 #ifndef __GDA_CONNECTION_PRIVATE_H_
 #define __GDA_CONNECTION_PRIVATE_H_
 
+#include <libgda/gda-meta-store.h>
+
 G_BEGIN_DECLS
 
 /*
@@ -48,17 +50,17 @@ void gda_connection_internal_savepoint_removed (GdaConnection *cnc, const gchar 
 void gda_connection_internal_change_transaction_state (GdaConnection *cnc,
 						       GdaTransactionStatusState newstate);
 
-/* helper function, fuzzy analysis of "standard" SQL for transactions */
-void gda_connection_internal_treat_sql (GdaConnection *cnc, const gchar *sql, GdaConnectionEvent *error);
-
-void gda_connection_force_status (GdaConnection *cnc, gboolean opened);
-
 /* 
  * prepared statements support
  */
 void     gda_connection_add_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stmt, gpointer prepared_stmt); 
 void     gda_connection_del_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stmt); 
 gpointer gda_connection_get_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stmt);
+
+/*
+ * GdaMetaStore handling
+ */
+GdaMetaStore *gda_connection_get_meta_store    (GdaConnection *cnc);
 
 G_END_DECLS
 

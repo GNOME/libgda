@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2007 The GNOME Foundation.
+ * Copyright (C) 1998 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -30,8 +30,8 @@
 #include <libgda/gda-server-provider.h>
 #include <string.h>
 #include "gda-marshal.h"
-#include "gda-dict.h"
-#include "gda-parameter-list.h"
+#include "gda-set.h"
+#include "gda-holder.h"
 #include "gda-value.h"
 #include "gda-enum-types.h"
 
@@ -84,7 +84,7 @@ gda_client_class_init (GdaClientClass *klass)
 			      G_STRUCT_OFFSET (GdaClientClass, event_notification),
 			      NULL, NULL,
 			      gda_marshal_VOID__OBJECT_ENUM_OBJECT,
-			      G_TYPE_NONE, 3, GDA_TYPE_CONNECTION, GDA_TYPE_CLIENT_EVENT, GDA_TYPE_PARAMETER_LIST);
+			      G_TYPE_NONE, 3, GDA_TYPE_CONNECTION, GDA_TYPE_CLIENT_EVENT, GDA_TYPE_SET);
 
 	object_class->finalize = gda_client_finalize;
 }
@@ -196,7 +196,7 @@ gda_client_declare_connection (GdaClient *client, GdaConnection *cnc)
 
 /**
  * gda_client_open_connection
- * @client: a #GdaClient object.
+ * @client: a #GdaClient object, or %NULL
  * @dsn: data source name.
  * @username: user name or %NULL
  * @password: password for @username, or %NULL
@@ -235,7 +235,7 @@ gda_client_open_connection (GdaClient *client,
 	GdaConnection *cnc = NULL;
 	GdaDataSourceInfo *dsn_info;
 
-	g_return_val_if_fail (GDA_IS_CLIENT (client), NULL);
+	g_return_val_if_fail (!client || GDA_IS_CLIENT (client), NULL);
 
 	/* get the data source info */
 	dsn_info = gda_config_get_dsn (dsn);
@@ -247,7 +247,7 @@ gda_client_open_connection (GdaClient *client,
 	}
 
 	/* search for the connection in our private list */
-	if (! (options & GDA_CONNECTION_OPTIONS_DONT_SHARE)) {
+	if (client && ! (options & GDA_CONNECTION_OPTIONS_DONT_SHARE)) {
 		cnc = gda_client_find_connection (client, dsn, username, password);
 		if (cnc &&
 		    ! (gda_connection_get_options (cnc) & GDA_CONNECTION_OPTIONS_DONT_SHARE)) {
@@ -260,7 +260,7 @@ gda_client_open_connection (GdaClient *client,
 		}
 	}
 
-	/* try to find provider in our hash table */
+	/* try to find provider */
 	if (dsn_info->provider != NULL) {
 		GdaServerProvider *prov;
 
@@ -280,7 +280,7 @@ gda_client_open_connection (GdaClient *client,
 			     _("Datasource configuration error: no provider specified"));
 	}
 
-	if (cnc) 
+	if (cnc && client) 
 		gda_client_declare_connection (client, cnc);
 
 	return cnc;
@@ -288,7 +288,7 @@ gda_client_open_connection (GdaClient *client,
 
 /**
  * gda_client_open_connection_from_string
- * @client: a #GdaClient object.
+ * @client: a #GdaClient object, or %NULL
  * @provider_id: provider ID to connect to, or %NULL
  * @cnc_string: connection string.
  * @username: user name.
@@ -335,7 +335,7 @@ gda_client_open_connection_from_string (GdaClient *client,
 	GList *l;
 	gchar *ptr, *dup;
 
-	g_return_val_if_fail (GDA_IS_CLIENT (client), NULL);
+	g_return_val_if_fail (!client || GDA_IS_CLIENT (client), NULL);
 	g_return_val_if_fail (cnc_string, NULL);
 
 	/* try to see if connection string has the "<provider>://<real cnc string>" format */
@@ -355,12 +355,12 @@ gda_client_open_connection_from_string (GdaClient *client,
 		return NULL;
 	}
 
-	if (! (options & GDA_CONNECTION_OPTIONS_DONT_SHARE)) {
+	if (client && ! (options & GDA_CONNECTION_OPTIONS_DONT_SHARE)) {
 		for (l = client->priv->connections; l != NULL; l = l->next) {
 			const gchar *tmp_prov, *tmp_cnc_string;
 	
 			cnc = GDA_CONNECTION (l->data);
-			tmp_prov = gda_connection_get_provider (cnc);
+			tmp_prov = gda_connection_get_provider_name (cnc);
 			tmp_cnc_string = gda_connection_get_cnc_string (cnc);
 	
 			if (strcmp (provider_id, tmp_prov) == 0
@@ -371,7 +371,7 @@ gda_client_open_connection_from_string (GdaClient *client,
 		}
 	}
 
-	/* try to find provider in our hash table */
+	/* try to find provider */
 	if (provider_id) {
 		GdaServerProvider *prov;
 
@@ -498,7 +498,7 @@ void
 gda_client_notify_event (GdaClient *client,
 			 GdaConnection *cnc,
 			 GdaClientEvent event,
-			 GdaParameterList *params)
+			 GdaSet *params)
 {
 	if (!client)
 		return;
@@ -519,8 +519,8 @@ gda_client_notify_event (GdaClient *client,
 void
 gda_client_notify_error_event (GdaClient *client, GdaConnection *cnc, GdaConnectionEvent *error)
 {
-	GdaParameterList *params;
-	GdaParameter *param;
+	GdaSet *params;
+	GdaHolder *param;
 	GValue *value;
 
 	if (!client)
@@ -529,15 +529,14 @@ gda_client_notify_error_event (GdaClient *client, GdaConnection *cnc, GdaConnect
 	g_return_if_fail (GDA_IS_CLIENT (client));
 	g_return_if_fail (error != NULL);
 
-	param = gda_parameter_new (G_TYPE_OBJECT);
-	gda_object_set_name (GDA_OBJECT (param), "error");
+	param = gda_holder_new (G_TYPE_OBJECT);
+	g_object_set (G_OBJECT (param), "id", "error", NULL);
 	value = g_value_init (g_new0 (GValue, 1), G_TYPE_OBJECT);
 	g_value_set_object (value, G_OBJECT (error));
-	gda_parameter_set_value (param, value);
-	gda_value_free (value);
+	gda_holder_take_value (param, value);
 
-	params = gda_parameter_list_new (NULL);
-	gda_parameter_list_add_param (params, param);
+	params = gda_set_new (NULL);
+	gda_set_add_holder (params, param);
 	g_object_unref (param);
 	gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_ERROR, params);
 	g_object_unref (params);

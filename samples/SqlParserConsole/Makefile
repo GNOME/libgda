@@ -1,5 +1,5 @@
-CFLAGS = -Wall -g `pkg-config --cflags libgda-3.0 json-glib-1.0`
-LDFLAGS = `pkg-config --libs libgda-3.0 json-glib-1.0`
+CFLAGS = -Wall -g `pkg-config --cflags libgda-4.0 json-glib-1.0`
+LDFLAGS = `pkg-config --libs libgda-4.0 json-glib-1.0`
 
 alldot = $(wildcard *.dot)
 allpng = $(alldot:dot=png)

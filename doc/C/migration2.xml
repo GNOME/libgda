@@ -1,0 +1,116 @@
+<chapter id="migration-2">
+  <title>Migration from 3.X versions</title>
+  <sect1><title>Overview</title>
+    <para>Version 4.0 of &LIBGDA; is a major rework of the library for the following benefits:
+      <itemizedlist>
+	<listitem><para>easier to understand and to use API, with less strange path usage (which were inherited
+	from modifications above modifications where no global coherence was adressed)</para></listitem>
+	<listitem><para>reduce the size of the library (now 1.1M compared to 1.7M once stripped) and the number of symbols 
+	    (880 compared to 1420) and have less complicated and thus more maintanable code (180 files compared to 250).
+	</para></listitem>
+	<listitem><para>merge the GdaQuery and GdaCommand into only one object to represent statements</para></listitem>
+	<listitem><para>improve the quantity of information stored in the dictionary and make it easy to include some
+	application-specific data, while at the same time reduce the memory footprint of the dictionary</para></listitem>
+	<listitem><para>rework provider's code to make it more common and provide skeletal implementations to make it easy to write
+	new database providers</para></listitem>
+	<listitem><para>provide more efficient and complete SQL parsing (don't use Lex/Yacc anymore since there can be 
+	    difficult to track problems when several parsers are used at the same time)</para></listitem>
+      </itemizedlist>
+    </para>
+  </sect1>  
+
+  <sect1><title>New unique parser</title>
+    <para>Previous &LIBGDA; versions had several builtin parsers relying on Lex/Yacc (or Flex/Bison) to analyse SQL with 
+      the following limitations:
+      <itemizedlist>
+	<listitem><para>not all the SELECT, INSERT, DELETE and UPDATE constructions were recognized</para></listitem>
+	<listitem><para>the parsers were generic and could not be adapted to the different database's SQL dialects</para></listitem>
+	<listitem><para>there were some difficult to track problems when several parsers are used at the same time</para></listitem>
+      </itemizedlist>
+    </para>
+    <para>All the parsers have been removed in favor of a new parser <link linkend="GdaSqlParser">GdaSqlParser</link> object which
+      can be generic or specific to a database provider if the provider has specified it.</para>
+    <para>To create a generic <link linkend="GdaSqlParser">GdaSqlParser</link> object, one can use the
+      <link linkend="gda-sql-parser-new">gda_sql_parser_new()</link> method, and for a parser adapted to a specific 
+      database's SQL dialect, use the <link linkend="gda-connection-create-parser">gda_connection_create_parser()</link> method.</para>
+    <para>The new parser uses <ulink url="http://www.hwaci.com/sw/lemon">LEMON</ulink> generated parsers.</para>
+  </sect1>  
+
+  <sect1><title>GdaQuery and GdaCommand merge into GdaStatement</title>
+    <para>Previous &LIBGDA; versions proposed the GdaCommand and GdaQuery objects to execute SQL statements, with different 
+      features (GdaCommand was more generic but did not allow parameters bindings while GdaQuery allowed parameters bindings but
+      could not execute some kind of problems)
+    </para>
+    <para>Both of these objects have been removed and replaced by a new <link linkend="GdaStatement">GdaStatement</link> object
+      which combines the features of both GdaCommand and GdaQuery. Most of the time <link linkend="GdaStatement">GdaStatement</link> 
+      object are created by <link linkend="GdaSqlParser">GdaSqlParser</link> objects. 
+      See this object's documentation for more information.</para>
+  </sect1>  
+
+  <sect1><title>Dictionary changes</title>
+    <para>The GdaDict object has been removed and the <link linkend="GdaMetaStore">GdaMetaStore</link> object introduced to
+      replace it, but with slightly different features.</para>
+    <para>The GdaDict object used an XML file to store its data which imposed parsing potentially big XML files and creating its own
+      internal structures from it (before discarding the XML tree) which was both CPU and memory intensive. Memory was
+      also wasted as most of the time not all the dictionary would be exploited. The new 
+      <link linkend="GdaMetaStore">GdaMetaStore</link> object relies on a database (an SQLite file by default) to store its data
+      which solves the problems mentionned above.</para>
+    <para>It was difficult for applications to add their own data in the dictionary (the API existed but was difficult to understand
+      and use), this has been solved by allowing applications to create DBMS objects into the 
+      <link linkend="GdaMetaStore">GdaMetaStore</link>'s associated database.</para>
+    <para>There was a <emphasis>strange</emphasis> relation between a GdaDict object and a 
+      <link linkend="GdaConnection">GdaConnection</link> object as a connection <emphasis>needed to</emphasis> be assigned
+      to a GdaDict object; this is not the case as now each <link linkend="GdaConnection">GdaConnection</link> object builts
+      a <link linkend="GdaMetaStore">GdaMetaStore</link> when it needs it (providers implementations may benefit from it) and
+      the user can provide his own <link linkend="GdaMetaStore">GdaMetaStore</link> object when needed.</para>
+  </sect1>  
+
+  <sect1><title>Other changes</title>
+    <sect2><title>API changes</title>
+      <para>
+	<itemizedlist>
+ 	  <listitem><para>gda_server_provider_get_last_insert_id() has been removed in favor of the "last_insert_row" argument
+	  of the <link linkend="gda-connection-statement-execute">gda_connection_statement_execute ()</link> and
+	  <link linkend="gda-connection-statement-execute-non-select">gda_connection_statement_execute_non_select ()</link>
+	  methods. If that argument is not NULL, then if the statement is an INSERT statement, the argument will
+	  contain a list of values, one for each column of the modified table.</para></listitem>
+	  <listitem><para>The GdaServerProviderInfo structure has been removed as it was useless, and the 
+	  gda_server_provider_get_info() has been replaced by a 
+	      <link linkend="gda-server-provider-get-name">gda_server_provider_get_name ()</link> method to access the
+	  provider's name.</para></listitem>
+	</itemizedlist>
+      </para>
+    </sect2>
+
+    <sect2><title>List of removed objects and interfaces</title>
+      <para>
+	<itemizedlist>
+ 	  <listitem><para>GdaRenderer, GdaXmlStorage, GdaEntity, GdaEntityField and GdaReferer interfaces</para></listitem>
+ 	  <listitem><para>GdaDict, GdaDictType, GdaDictDatabase, GdaDictTable, GdaDictAggregate, GdaDictField, 
+	      GdaDictConstraint and GdaDictFunction dictionary related objects</para></listitem>
+ 	  <listitem><para>GdaQuery, GdaQueryObject, GdaQueryFieldAgg, GdaQueryFieldAll, GdaQueryCondition, GdaQueryJoin, 
+	      GdaQueryFieldField, GdaQueryTarget, GdaQueryFieldFunc, GdaQueryFieldValue and GdaQueryField query related
+	      objects</para></listitem>
+ 	  <listitem><para>GdaCommand</para></listitem>
+ 	  <listitem><para>GdaParameterList (replaced by <link linkend="GdaSet">GdaSet</link>), 
+	      GdaParameter (replaced by <link linkend="GdaHolder">GdaHolder</link>)</para></listitem>
+ 	  <listitem><para>GdaObject, GdaObjectRef</para></listitem>
+ 	  <listitem><para>GdaDataModelFilterSQL</para></listitem>
+ 	  <listitem><para>GdaGraph, GdaGraphItem, GdaGraphQuery</para></listitem>
+ 	  <listitem><para>GdaGraphviz</para></listitem>
+	</itemizedlist>
+      </para>
+    </sect2>
+
+    <sect2><title>List of removed functions</title>
+      <para>
+	<itemizedlist>
+ 	  <listitem><para>gda_delimiter_*()</para></listitem>
+ 	  <listitem><para>gda_sql_transaction_parse*()</para></listitem>
+ 	  <listitem><para>sql_*() (from the libsql library)</para></listitem>
+	</itemizedlist>
+      </para>
+    </sect2>
+  </sect1>  
+
+</chapter>

@@ -1,6 +1,6 @@
 /* gda-handler-string.h
  *
- * Copyright (C) 2003 - 2007 Vivien Malerba
+ * Copyright (C) 2003 - 2008 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -21,7 +21,7 @@
 #ifndef __GDA_HANDLER_STRING__
 #define __GDA_HANDLER_STRING__
 
-#include <libgda/gda-object.h>
+#include <glib-object.h>
 #include <libgda/gda-data-handler.h>
 
 G_BEGIN_DECLS
@@ -31,16 +31,14 @@ G_BEGIN_DECLS
 #define GDA_HANDLER_STRING_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_handler_string_get_type (), GdaHandlerStringClass)
 #define GDA_IS_HANDLER_STRING(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_handler_string_get_type ())
 
-
 typedef struct _GdaHandlerString      GdaHandlerString;
 typedef struct _GdaHandlerStringClass GdaHandlerStringClass;
 typedef struct _GdaHandlerStringPriv  GdaHandlerStringPriv;
 
-
 /* struct for the object's data */
 struct _GdaHandlerString
 {
-	GdaObject                object;
+	GObject                object;
 
 	GdaHandlerStringPriv  *priv;
 };
@@ -48,7 +46,7 @@ struct _GdaHandlerString
 /* struct for the object's class */
 struct _GdaHandlerStringClass
 {
-	GdaObjectClass            parent_class;
+	GObjectClass           parent_class;
 };
 
 

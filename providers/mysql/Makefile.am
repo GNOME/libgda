@@ -36,11 +36,13 @@ xml_in_files = \
         mysql_specs_drop_index.xml.in \
 	mysql_specs_rename_table.xml.in \
 	mysql_specs_add_column.xml.in \
-	mysql_specs_drop_column.xml.in
+	mysql_specs_drop_column.xml.in \
+	mysql_specs_create_view.xml.in \
+	mysql_specs_drop_view.xml.in
 
 @INTLTOOL_XML_RULE@
 
-xml_DATA = $(xml_in_files:.xml.in=.xml)
+xml_DATA = $(xml_in_files:.xml.in=.xml) 
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgda-mysql-4.0.pc

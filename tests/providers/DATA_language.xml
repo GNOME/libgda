@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <gda_array id="EXPORT" name="Exported Data">
-  <gda_array_field id="EXPORT:FI0" name="language_id" title="language_id" gdatype="gint" size="4" nullok="TRUE" table="language"/>
-  <gda_array_field id="EXPORT:FI1" name="name" title="name" gdatype="gchararray" size="-1" nullok="TRUE" table="language"/>
-  <gda_array_field id="EXPORT:FI2" name="last_update" title="last_update" gdatype="GdaTimestamp" size="8" nullok="TRUE" table="language"/>
+  <gda_array_field id="FI0" name="language_id" title="language_id" gdatype="gint" size="4" nullok="TRUE" table="language"/>
+  <gda_array_field id="FI1" name="name" title="name" gdatype="gchararray" size="-1" nullok="TRUE" table="language"/>
+  <gda_array_field id="FI2" name="last_update" title="last_update" gdatype="GdaTimestamp" size="8" nullok="TRUE" table="language"/>
   <gda_array_data>
     <gda_array_row>
       <gda_value>1</gda_value>

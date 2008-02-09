@@ -241,7 +241,6 @@ compose_multiple_compounds (GdaSqlStatementCompoundType ctype, GdaSqlStatement *
   IGNORE IMMEDIATE INITIALLY INSTEAD LIKE MATCH PLAN
   QUERY KEY OF OFFSET PRAGMA RAISE REPLACE RESTRICT ROW
   TEMP TRIGGER VACUUM VIEW VIRTUAL
-  EXCEPT INTERSECT UNION
   REINDEX RENAME CTIME_KW IF
   DELIMITER COMMIT ROLLBACK ISOLATION LEVEL SERIALIZABLE READ COMMITTED 
   UNCOMMITTED REPEATABLE WRITE ONLY SAVEPOINT RELEASE COMMENT FORCE WAIT NOWAIT BATCH.
@@ -680,7 +679,7 @@ jointype(J) ::= COMMA. {J = GDA_SQL_SELECT_JOIN_CROSS;}
 jointype(J) ::= JOIN. {J = GDA_SQL_SELECT_JOIN_INNER;}
 jointype(J) ::= CROSS JOIN. {J = GDA_SQL_SELECT_JOIN_CROSS;}
 jointype(J) ::= INNER JOIN. {J = GDA_SQL_SELECT_JOIN_INNER;}
-jointype(J) ::= NATURAL JOIN. {J = GDA_SQL_SELECT_JOIN_INNER;}
+jointype(J) ::= NATURAL JOIN. {J = GDA_SQL_SELECT_JOIN_NATURAL;}
 jointype(J) ::= LEFT JOIN. {J = GDA_SQL_SELECT_JOIN_LEFT;}
 jointype(J) ::= LEFT OUTER JOIN. {J = GDA_SQL_SELECT_JOIN_LEFT;}
 jointype(J) ::= RIGHT JOIN. {J = GDA_SQL_SELECT_JOIN_RIGHT;}
@@ -694,6 +693,10 @@ jointype(J) ::= FULL OUTER JOIN. {J = GDA_SQL_SELECT_JOIN_FULL;}
 seltarget(T) ::= fullname(F) as(A). {T = gda_sql_select_target_new (NULL);
 				     gda_sql_select_target_take_alias (T, A);
 				     gda_sql_select_target_take_table_name (T, F);
+}
+seltarget(T) ::= fullname(F) ID(A). {T = gda_sql_select_target_new (NULL);
+                                     gda_sql_select_target_take_alias (T, A);
+                                     gda_sql_select_target_take_table_name (T, F);
 }
 seltarget(T) ::= LP compound(S) RP as(A). {T = gda_sql_select_target_new (NULL);
 					     gda_sql_select_target_take_alias (T, A);

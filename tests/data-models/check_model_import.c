@@ -83,6 +83,7 @@ do_test_load_file (const gchar *filename)
 
 		g_warning ("Model exported as string differs from loaded data model:");
 		g_print ("========== Export as string ==========\n%s\n", export);
+		g_file_set_contents ("err.xml", export, -1, NULL);
 #endif
 		retval = FALSE;
 		goto out;

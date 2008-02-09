@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 2005 The GNOME Foundation.
+ * Copyright (C) 2005 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -24,7 +24,7 @@
 #define __GDA_DATA_MODEL_QUERY_H__
 
 #include <libgda/gda-data-model.h>
-#include <libgda/gda-object.h>
+#include <libgda/gda-connection.h>
 
 G_BEGIN_DECLS
 
@@ -44,7 +44,9 @@ extern GQuark gda_data_model_query_error_quark (void);
 
 typedef enum {
         GDA_DATA_MODEL_QUERY_XML_LOAD_ERROR,
-	GDA_DATA_MODEL_QUERY_COMPUTE_MODIF_QUERIES_ERROR
+	GDA_DATA_MODEL_QUERY_COMPUTE_MODIF_STATEMENTS_ERROR,
+	GDA_DATA_MODEL_QUERY_MODIF_STATEMENT_ERROR,
+	GDA_DATA_MODEL_QUERY_CONNECTION_ERROR
 } GdaDataModelQueryError;
 
 typedef enum {
@@ -52,21 +54,21 @@ typedef enum {
 } GdaDataModelQueryOptions;
 
 struct _GdaDataModelQuery {
-	GdaObject                  object;
+	GObject                    object;
 	GdaDataModelQueryPrivate  *priv;
 };
 
 struct _GdaDataModelQueryClass {
-	GdaObjectClass             parent_class;
+	GObjectClass               parent_class;
 };
 
 GType             gda_data_model_query_get_type                     (void) G_GNUC_CONST;
-GdaDataModel     *gda_data_model_query_new                          (GdaQuery *query);
+GdaDataModel     *gda_data_model_query_new                          (GdaConnection *cnc, GdaStatement *select_stmt);
 
-GdaParameterList *gda_data_model_query_get_parameter_list           (GdaDataModelQuery *model);
+GdaSet           *gda_data_model_query_get_parameter_list           (GdaDataModelQuery *model);
 gboolean          gda_data_model_query_refresh                      (GdaDataModelQuery *model, GError **error);
 gboolean          gda_data_model_query_set_modification_query       (GdaDataModelQuery *model, 
-								     const gchar *query, GError **error);
+								     GdaStatement *mod_stmt, GError **error);
 gboolean          gda_data_model_query_compute_modification_queries (GdaDataModelQuery *model, const gchar *target,
 								     GdaDataModelQueryOptions options, GError **error);
 

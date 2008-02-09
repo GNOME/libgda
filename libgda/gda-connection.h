@@ -1,5 +1,5 @@
 /* GDA client library
- * Copyright (C) 1998 - 2007 The GNOME Foundation.
+ * Copyright (C) 1998 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -27,14 +27,12 @@
 #define __GDA_CONNECTION_H__
 
 #include "gda-decl.h"
-#include <libgda/gda-object.h>
-#include <libgda/gda-command.h>
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-data-model-index.h>
 #include <libgda/gda-connection-event.h>
-#include <libgda/gda-parameter.h>
 #include <libgda/gda-transaction-status.h>
 #include <libgda/gda-statement.h>
+#include <libgda/gda-meta-store.h>
 
 G_BEGIN_DECLS
 
@@ -120,6 +118,14 @@ typedef enum {
 	GDA_CONNECTION_SCHEMA_TABLE_CONTENTS
 } GdaConnectionSchema;
 
+typedef enum {
+	GDA_CONNECTION_META_NAMESPACES,
+	GDA_CONNECTION_META_TYPES,
+	GDA_CONNECTION_META_TABLES,
+	GDA_CONNECTION_META_VIEWS,
+	GDA_CONNECTION_META_FIELDS
+} GdaConnectionMetaType;
+
 
 GType                gda_connection_get_type            (void) G_GNUC_CONST;
 GdaConnection       *gda_connection_new                 (GdaClient *client,
@@ -134,9 +140,10 @@ void                 gda_connection_close_no_warning     (GdaConnection *cnc);
 gboolean             gda_connection_is_opened            (GdaConnection *cnc);
 
 GdaClient           *gda_connection_get_client           (GdaConnection *cnc);
+GdaConnectionOptions gda_connection_get_options          (GdaConnection *cnc);
 
 GdaServerProvider   *gda_connection_get_provider_obj     (GdaConnection *cnc);
-GdaConnectionOptions gda_connection_get_options          (GdaConnection *cnc);
+const gchar         *gda_connection_get_provider_name    (GdaConnection *cnc);
 
 const gchar         *gda_connection_get_dsn              (GdaConnection *cnc);
 gboolean             gda_connection_set_dsn              (GdaConnection *cnc, const gchar *datasource);
@@ -153,21 +160,28 @@ void                 gda_connection_clear_events_list    (GdaConnection *cnc);
 const GList         *gda_connection_get_events           (GdaConnection *cnc);
 
 GdaSqlParser        *gda_connection_create_parser        (GdaConnection *cnc);
+GObject             *gda_connection_batch_execute        (GdaConnection *cnc,
+							  GdaBatch *batch, GdaSet *params,
+							  GdaStatementModelUsage model_usage, GError **error);
+
 gchar               *gda_connection_statement_to_sql     (GdaConnection *cnc,
 							  GdaStatement *stmt, GdaSet *params, GdaStatementSqlFlag flags,
 							  GSList **params_used, GError **error);
 gboolean             gda_connection_statement_prepare    (GdaConnection *cnc,
 							  GdaStatement *stmt, GError **error);
-GObject             *gda_connection_statement_execute    (GdaConnection *cnc,
-							  GdaStatement *stmt, GdaSet *params,
-							  GdaStatementModelUsage model_usage, GError **error);
+GObject             *gda_connection_statement_execute    (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params, 
+							  GdaStatementModelUsage model_usage, GdaSet **last_insert_row,
+							  GError **error);
 GdaDataModel        *gda_connection_statement_execute_select (GdaConnection *cnc, GdaStatement *stmt,
-							      GdaSet *params, GdaStatementModelUsage model_usage,
-							      GError **error);
+							      GdaSet *params, GError **error);
+GdaDataModel        *gda_connection_statement_execute_select_fullv (GdaConnection *cnc, GdaStatement *stmt,
+								    GdaSet *params, GdaStatementModelUsage model_usage,
+								    GError **error, ...);
+GdaDataModel        *gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *stmt,
+								   GdaSet *params, GdaStatementModelUsage model_usage,
+								   GType *col_types, GError **error);
 gint                 gda_connection_statement_execute_non_select (GdaConnection *cnc, GdaStatement *stmt,
-								  GdaSet *params, GError **error);
-
-gchar               *gda_connection_get_last_insert_id   (GdaConnection *cnc, GdaDataModel *recset);
+								  GdaSet *params, GdaSet **last_insert_row, GError **error);
 
 gboolean             gda_connection_begin_transaction    (GdaConnection *cnc, const gchar *name, 
 							  GdaTransactionIsolation level, GError **error);
@@ -183,21 +197,9 @@ GdaTransactionStatus *gda_connection_get_transaction_status (GdaConnection *cnc)
 gchar               *gda_connection_value_to_sql_string  (GdaConnection *cnc, GValue *from);
 
 gboolean             gda_connection_supports_feature     (GdaConnection *cnc, GdaConnectionFeature feature);
-GdaDataModel        *gda_connection_get_schema           (GdaConnection *cnc, GdaConnectionSchema schema,
-							  GdaParameterList *params, GError **error);
-
-#ifndef GDA_DISABLE_DEPRECATED
-const gchar         *gda_connection_get_provider         (GdaConnection *cnc);
-GdaServerProviderInfo *gda_connection_get_infos          (GdaConnection *cnc);
-
-GdaDataModel        *gda_connection_execute_select_command (GdaConnection *cnc, GdaCommand *cmd,
-							    GdaParameterList *params, GError **error);
-gint                 gda_connection_execute_non_select_command (GdaConnection *cnc, GdaCommand *cmd,
-								GdaParameterList *params, GError **error);
-GList               *gda_connection_execute_command      (GdaConnection *cnc, GdaCommand *cmd,
-							  GdaParameterList *params, GError **error);
-
-#endif /* GDA_DISABLE_DEPRECATED */
+gboolean             gda_connection_update_meta_store    (GdaConnection *cnc, GdaMetaContext *context, GError **error);
+GdaDataModel        *gda_connection_get_meta_store_data  (GdaConnection *cnc, GdaConnectionMetaType meta_type,
+							  GError **error, gint nb_filters, ...);
 
 G_END_DECLS
 

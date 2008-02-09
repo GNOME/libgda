@@ -1,5 +1,5 @@
 /* GDA Postgres Provider
- * Copyright (C) 2006 The GNOME Foundation
+ * Copyright (C) 2006 - 2008 The GNOME Foundation
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -43,6 +43,10 @@ gchar *gda_postgres_render_DROP_COLUMN  (GdaServerProvider *provider, GdaConnect
 gchar *gda_postgres_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cnc, 
 					 GdaServerOperation *op, GError **error);
 gchar *gda_postgres_render_DROP_INDEX   (GdaServerProvider *provider, GdaConnection *cnc, 
+					 GdaServerOperation *op, GError **error);
+gchar *gda_postgres_render_CREATE_VIEW  (GdaServerProvider *provider, GdaConnection *cnc, 
+					 GdaServerOperation *op, GError **error);
+gchar *gda_postgres_render_DROP_VIEW    (GdaServerProvider *provider, GdaConnection *cnc, 
 					 GdaServerOperation *op, GError **error);
 
 G_END_DECLS

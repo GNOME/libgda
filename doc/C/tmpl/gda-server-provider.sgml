@@ -24,20 +24,6 @@ must inherit, and implement its virtual mathods.
 </para>
 
 
-<!-- ##### STRUCT GdaServerProviderInfo ##### -->
-<para>
-
-</para>
-
-@provider_name: 
-@is_case_insensitive: 
-@implicit_data_types_casts: 
-@alias_needs_as_keyword: 
-@supports_alias: 
-@supports_prefixed_fields: 
-@quote_non_lc_identifiers: 
-@reserved: 
-
 <!-- ##### ENUM GdaServerProviderError ##### -->
 <para>
 
@@ -50,6 +36,15 @@ must inherit, and implement its virtual mathods.
 @GDA_SERVER_PROVIDER_OPERATION_ERROR: 
 @GDA_SERVER_PROVIDER_INTERNAL_ERROR: 
 
+<!-- ##### FUNCTION gda_server_provider_get_name ##### -->
+<para>
+
+</para>
+
+@provider: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_server_provider_get_version ##### -->
 <para>
 
@@ -59,7 +54,7 @@ must inherit, and implement its virtual mathods.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_server_provider_get_info ##### -->
+<!-- ##### FUNCTION gda_server_provider_get_server_version ##### -->
 <para>
 
 </para>
@@ -83,16 +78,6 @@ must inherit, and implement its virtual mathods.
 
 
 <!-- ##### FUNCTION gda_server_provider_close_connection ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_get_server_version ##### -->
 <para>
 
 </para>
@@ -182,82 +167,6 @@ must inherit, and implement its virtual mathods.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_server_provider_statement_to_sql ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@stmt: 
-@params: 
-@flags: 
-@params_used: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_statement_prepare ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@stmt: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_statement_execute ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@stmt: 
-@params: 
-@model_usage: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_execute_command ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@cmd: 
-@params: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_execute_query ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@query: 
-@params: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_get_last_insert_id ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@recset: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_server_provider_begin_transaction ##### -->
 <para>
 
@@ -339,19 +248,6 @@ must inherit, and implement its virtual mathods.
 @provider: 
 @cnc: 
 @feature: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_get_schema ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@schema: 
-@params: 
-@error: 
 @Returns: 
 
 

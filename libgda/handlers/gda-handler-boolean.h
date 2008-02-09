@@ -1,6 +1,6 @@
 /* gda-handler-boolean.h
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2008 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -21,7 +21,7 @@
 #ifndef __GDA_HANDLER_BOOLEAN__
 #define __GDA_HANDLER_BOOLEAN__
 
-#include <libgda/gda-object.h>
+#include <glib-object.h>
 #include <libgda/gda-data-handler.h>
 
 G_BEGIN_DECLS
@@ -31,16 +31,14 @@ G_BEGIN_DECLS
 #define GDA_HANDLER_BOOLEAN_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_handler_boolean_get_type (), GdaHandlerBooleanClass)
 #define GDA_IS_HANDLER_BOOLEAN(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_handler_boolean_get_type ())
 
-
 typedef struct _GdaHandlerBoolean      GdaHandlerBoolean;
 typedef struct _GdaHandlerBooleanClass GdaHandlerBooleanClass;
 typedef struct _GdaHandlerBooleanPriv  GdaHandlerBooleanPriv;
 
-
 /* struct for the object's data */
 struct _GdaHandlerBoolean
 {
-	GdaObject                object;
+	GObject                 object;
 
 	GdaHandlerBooleanPriv  *priv;
 };
@@ -48,7 +46,7 @@ struct _GdaHandlerBoolean
 /* struct for the object's class */
 struct _GdaHandlerBooleanClass
 {
-	GdaObjectClass            parent_class;
+	GObjectClass           parent_class;
 };
 
 

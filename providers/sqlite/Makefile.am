@@ -30,7 +30,9 @@ xml_in_files = sqlite_specs_create_db.xml.in \
 	sqlite_specs_create_index.xml.in \
 	sqlite_specs_drop_index.xml.in \
 	sqlite_specs_rename_table.xml.in \
-	sqlite_specs_add_column.xml.in
+	sqlite_specs_add_column.xml.in \
+	sqlite_specs_create_view.xml.in \
+	sqlite_specs_drop_view.xml.in
 
 gdaincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/virtual
 gdainclude_HEADERS=$(virtualheaders)

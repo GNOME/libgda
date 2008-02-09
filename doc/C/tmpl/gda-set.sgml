@@ -137,7 +137,6 @@ different classifications of the group of #GdaHolder values.
 
 </para>
 
-@dict: 
 @xml_spec: 
 @error: 
 @Returns: 
@@ -148,7 +147,6 @@ different classifications of the group of #GdaHolder values.
 
 </para>
 
-@dict: 
 @xml_spec: 
 @error: 
 @Returns: 
@@ -160,6 +158,16 @@ different classifications of the group of #GdaHolder values.
 </para>
 
 @set: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_set_get_holder_value ##### -->
+<para>
+
+</para>
+
+@set: 
+@holder_id: 
 @Returns: 
 
 

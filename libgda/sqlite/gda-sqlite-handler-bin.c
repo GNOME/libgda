@@ -1,6 +1,6 @@
 /* gda-sqlite-handler-bin.c
  *
- * Copyright (C) 2006 Vivien Malerba
+ * Copyright (C) 2006 - 2008 Vivien Malerba
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -75,7 +75,7 @@ gda_sqlite_handler_bin_get_type (void)
 			NULL
 		};
 
-		type = g_type_register_static (GDA_TYPE_OBJECT, "GdaSqliteHandlerBin", &info, 0);
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaSqliteHandlerBin", &info, 0);
 		g_type_add_interface_static (type, GDA_TYPE_DATA_HANDLER, &data_entry_info);
 	}
 	return type;
@@ -116,8 +116,8 @@ gda_sqlite_handler_bin_init (GdaSqliteHandlerBin * hdl)
 	hdl->priv->valid_g_types = g_new0 (GType, hdl->priv->nb_g_types);
 	hdl->priv->valid_g_types[0] = GDA_TYPE_BINARY;
 
-	gda_object_set_name (GDA_OBJECT (hdl), _("SqliteBin"));
-	gda_object_set_description (GDA_OBJECT (hdl), _("SQlite binary representation"));
+	g_object_set_data (G_OBJECT (hdl), "name", _("SqliteBin"));
+	g_object_set_data (G_OBJECT (hdl), "descr", _("SQlite binary representation"));
 }
 
 static void
@@ -126,13 +126,11 @@ gda_sqlite_handler_bin_dispose (GObject   * object)
 	GdaSqliteHandlerBin *hdl;
 
 	g_return_if_fail (object != NULL);
-	g_return_if_fail (GDA_IS_HANDLER_BIN (object));
+	g_return_if_fail (GDA_IS_SQLITE_HANDLER_BIN (object));
 
 	hdl = GDA_SQLITE_HANDLER_BIN (object);
 
 	if (hdl->priv) {
-		gda_object_destroy_check (GDA_OBJECT (object));
-
 		g_free (hdl->priv->valid_g_types);
 		hdl->priv->valid_g_types = NULL;
 
@@ -156,7 +154,7 @@ gda_sqlite_handler_bin_new (void)
 {
 	GObject *obj;
 
-	obj = g_object_new (GDA_TYPE_HANDLER_BIN, "dict", NULL, NULL);
+	obj = g_object_new (GDA_TYPE_SQLITE_HANDLER_BIN, NULL);
 
 	return (GdaDataHandler *) obj;
 }
@@ -167,7 +165,7 @@ gda_sqlite_handler_bin_get_sql_from_value (GdaDataHandler *iface, const GValue *
 	gchar *retval;
 	GdaSqliteHandlerBin *hdl;
 
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_BIN (iface), NULL);
+	g_return_val_if_fail (GDA_IS_SQLITE_HANDLER_BIN (iface), NULL);
 	hdl = GDA_SQLITE_HANDLER_BIN (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
@@ -207,7 +205,7 @@ gda_sqlite_handler_bin_get_str_from_value (GdaDataHandler *iface, const GValue *
 	gchar *retval;
 	GdaSqliteHandlerBin *hdl;
 
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_BIN (iface), NULL);
+	g_return_val_if_fail (GDA_IS_SQLITE_HANDLER_BIN (iface), NULL);
 	hdl = GDA_SQLITE_HANDLER_BIN (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
@@ -257,7 +255,7 @@ gda_sqlite_handler_bin_get_value_from_sql (GdaDataHandler *iface, const gchar *s
 	GdaSqliteHandlerBin *hdl;
 	GValue *value = NULL;
 
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_BIN (iface), NULL);
+	g_return_val_if_fail (GDA_IS_SQLITE_HANDLER_BIN (iface), NULL);
 	hdl = GDA_SQLITE_HANDLER_BIN (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
@@ -295,7 +293,7 @@ gda_sqlite_handler_bin_get_value_from_str (GdaDataHandler *iface, const gchar *s
 	GdaSqliteHandlerBin *hdl;
 	GValue *value = NULL;
 
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_BIN (iface), NULL);
+	g_return_val_if_fail (GDA_IS_SQLITE_HANDLER_BIN (iface), NULL);
 	hdl = GDA_SQLITE_HANDLER_BIN (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
@@ -341,7 +339,7 @@ gda_sqlite_handler_bin_get_nb_g_types (GdaDataHandler *iface)
 {
 	GdaSqliteHandlerBin *hdl;
 
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_BIN (iface), 0);
+	g_return_val_if_fail (GDA_IS_SQLITE_HANDLER_BIN (iface), 0);
 	hdl = GDA_SQLITE_HANDLER_BIN (iface);
 	g_return_val_if_fail (hdl->priv, 0);
 
@@ -356,7 +354,7 @@ gda_sqlite_handler_bin_accepts_g_type (GdaDataHandler *iface, GType type)
 	guint i = 0;
 	gboolean found = FALSE;
 
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_BIN (iface), FALSE);
+	g_return_val_if_fail (GDA_IS_SQLITE_HANDLER_BIN (iface), FALSE);
 	g_return_val_if_fail (type != G_TYPE_INVALID, FALSE);
 	hdl = GDA_SQLITE_HANDLER_BIN (iface);
 	g_return_val_if_fail (hdl->priv, 0);
@@ -375,7 +373,7 @@ gda_sqlite_handler_bin_get_g_type_index (GdaDataHandler *iface, guint index)
 {
 	GdaSqliteHandlerBin *hdl;
 
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_BIN (iface), G_TYPE_INVALID);
+	g_return_val_if_fail (GDA_IS_SQLITE_HANDLER_BIN (iface), G_TYPE_INVALID);
 	hdl = GDA_SQLITE_HANDLER_BIN (iface);
 	g_return_val_if_fail (hdl->priv, G_TYPE_INVALID);
 	g_return_val_if_fail (index < hdl->priv->nb_g_types, G_TYPE_INVALID);
@@ -388,9 +386,9 @@ gda_sqlite_handler_bin_get_descr (GdaDataHandler *iface)
 {
 	GdaSqliteHandlerBin *hdl;
 
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_BIN (iface), NULL);
+	g_return_val_if_fail (GDA_IS_SQLITE_HANDLER_BIN (iface), NULL);
 	hdl = GDA_SQLITE_HANDLER_BIN (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
-	return gda_object_get_description (GDA_OBJECT (hdl));
+	return g_object_get_data (G_OBJECT (hdl), "descr");
 }

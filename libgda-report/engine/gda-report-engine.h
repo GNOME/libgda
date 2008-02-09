@@ -1,5 +1,5 @@
 /* GDA 
- * Copyright (C) 2007 The GNOME Foundation.
+ * Copyright (C) 2007 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -26,7 +26,7 @@
 #include <glib-object.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
-#include <libgda/gda-query.h>
+#include <libgda/gda-statement.h>
 
 #define GDA_TYPE_REPORT_ENGINE            (gda_report_engine_get_type())
 #define GDA_REPORT_ENGINE(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_REPORT_ENGINE, GdaReportEngine))

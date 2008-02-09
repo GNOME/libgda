@@ -472,7 +472,6 @@ gda_postgres_cursor_recordset_create_iter (GdaDataModel *model)
 	/* Create the iter if necessary, or just return the existing iter: */
 	if (! imodel->priv->iter) {
 		imodel->priv->iter = (GdaDataModelIter *) g_object_new (GDA_TYPE_DATA_MODEL_ITER, 
-									"dict", gda_object_get_dict (GDA_OBJECT (model)), 
 									"data_model", model, NULL);
 
 		imodel->priv->iter_row = -1;

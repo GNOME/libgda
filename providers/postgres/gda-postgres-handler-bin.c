@@ -163,7 +163,7 @@ gda_postgres_handler_bin_new (GdaConnection *cnc)
 	GObject *obj;
 	GdaPostgresHandlerBin *hdl;
 
-	obj = g_object_new (GDA_TYPE_POSTGRES_HANDLER_BIN, "dict", NULL, NULL);
+	obj = g_object_new (GDA_TYPE_POSTGRES_HANDLER_BIN, NULL);
 	hdl = (GdaPostgresHandlerBin*) obj;
 
 	if (cnc) {

@@ -6,7 +6,6 @@ endif
 
 SUBDIRS = \
 	po \
-	libsql \
 	libgda \
 	providers \
 	libgda-report \

@@ -211,7 +211,7 @@ gda_vconnection_data_model_add (GdaVconnectionDataModel *cnc, GdaVconnectionData
 	int rc;
 	char *zErrMsg = NULL;
 	gboolean retval = TRUE;
-	SQLITEcnc *scnc;
+	SqliteConnectionData *scnc;
 
 	static gint counter = 0;
 
@@ -222,7 +222,7 @@ gda_vconnection_data_model_add (GdaVconnectionDataModel *cnc, GdaVconnectionData
 	if (spec->data_model)
 		g_return_val_if_fail (GDA_IS_DATA_MODEL (spec->data_model), FALSE);
 
-	scnc = (SQLITEcnc*) gda_connection_internal_get_provider_data ((GdaConnection *) cnc);
+	scnc = (SqliteConnectionData*) gda_connection_internal_get_provider_data ((GdaConnection *) cnc);
 	if (!scnc) 
 		return FALSE;
 
@@ -278,12 +278,12 @@ gda_vconnection_data_model_remove (GdaVconnectionDataModel *cnc, const gchar *ta
 	int rc;
 	char *zErrMsg = NULL;
 	gboolean retval = TRUE;
-	SQLITEcnc *scnc;
+	SqliteConnectionData *scnc;
 
 	g_return_val_if_fail (GDA_IS_VCONNECTION_DATA_MODEL (cnc), FALSE);
 	g_return_val_if_fail (table_name && *table_name, FALSE);
 
-	scnc = (SQLITEcnc*) gda_connection_internal_get_provider_data ((GdaConnection *) cnc);
+	scnc = (SqliteConnectionData*) gda_connection_internal_get_provider_data ((GdaConnection *) cnc);
 	if (!scnc) 
 		return FALSE;
 

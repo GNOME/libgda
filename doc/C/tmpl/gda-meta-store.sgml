@@ -1,0 +1,170 @@
+<!-- ##### SECTION Title ##### -->
+GdaMetaStore
+
+<!-- ##### SECTION Short_Description ##### -->
+Dictionary object
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+  Previous versions of &LIBGDA; relied on an XML based file to store dictionary information, such as
+  the database's schema (tables, views, etc) and various other information. The problems were that it was
+  difficult for an application to integrate its own data into the dictionary and that there were some
+  performances problems as the XML file needed to be parsed (and converted into its own in-memory structure)
+  before any data could be read out of it.
+</para>
+<para>
+  The new dictionary now relies on a database structure to store its data. The actual database can be a
+  single file (using an SQLite database), an entirely in memory database (also using an SQLite database), or
+  a more conventional backend such as a PostgreSQL database for a shared dictionary on a server.
+</para>
+<para>
+  &LIBGDA; imposes its own structure (based on objects such as tables and views which name starts with an underscore '_'),
+  but a user can also add its own tables or other database objects. The following diagram shows the tables and
+  views initially defined by &LIBGDA; for its internal needs:
+  <mediaobject>
+    <imageobject role="fo">
+      <imagedata fileref="information_schema.svg" format="SVG"/>
+    </imageobject>
+    <imageobject role="html">
+      <imagedata fileref="information_schema.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>Dictioanry's tables and views initially defined by &LIBGDA;</phrase>
+    </textobject>
+    <caption>
+      <para>
+	The square boxes represent tables and the round onew the views. Edges represent foreign keys for
+	tables and used tables for views.
+      </para>
+    </caption>
+  </mediaobject>
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaMetaStore ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL GdaMetaStore::meta-changed ##### -->
+<para>
+
+</para>
+
+@gdametastore: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaMetaStore::suggest-update ##### -->
+<para>
+
+</para>
+
+@gdametastore: the object which received the signal.
+@arg1: 
+
+<!-- ##### ARG GdaMetaStore:cnc ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaMetaStore:cnc-string ##### -->
+<para>
+
+</para>
+
+<!-- ##### ENUM GdaMetaStoreError ##### -->
+<para>
+
+</para>
+
+@GDA_META_STORE_INCORRECT_SCHEMA: 
+@GDA_META_STORE_UNSUPPORTED_PROVIDER: 
+@GDA_META_STORE_INTERNAL_ERROR: 
+@GDA_META_STORE_MODIFY_CONTENTS_ERROR: 
+
+<!-- ##### STRUCT GdaMetaStoreChange ##### -->
+<para>
+
+</para>
+
+@c_type: 
+@table_name: 
+@keys: 
+
+<!-- ##### ENUM GdaMetaStoreChangeType ##### -->
+<para>
+
+</para>
+
+@GDA_META_STORE_ADD: 
+@GDA_META_STORE_REMOVE: 
+@GDA_META_STORE_MODIFY: 
+
+<!-- ##### STRUCT GdaMetaContext ##### -->
+<para>
+
+</para>
+
+@table_name: 
+@size: 
+@column_names: 
+@column_values: 
+
+<!-- ##### FUNCTION gda_meta_store_new ##### -->
+<para>
+
+</para>
+
+@cnc_string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_meta_store_new_with_file ##### -->
+<para>
+
+</para>
+
+@file_name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_meta_store_get_version ##### -->
+<para>
+
+</para>
+
+@store: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_meta_store_get_internal_connection ##### -->
+<para>
+
+</para>
+
+@store: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_meta_store_modify ##### -->
+<para>
+
+</para>
+
+@store: 
+@table_name: 
+@new_data: 
+@condition: 
+@error: 
+@Varargs: 
+@Returns: 
+
+

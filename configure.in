@@ -1202,19 +1202,15 @@ libgda-4.0.pc
 libgda-report-4.0.pc
 libgda-xslt-4.0.pc
 po/Makefile.in
-libsql/Makefile
 libgda/Makefile
 libgda/libgda.h
 libgda/binreloc/Makefile
 libgda/handlers/Makefile
 libgda/providers-support/Makefile
-libgda/sql-delimiter/Makefile
 libgda/sql-parser/Makefile
-libgda/sql-transaction/Makefile
 libgda/sqlite/Makefile
 libgda/sqlite/sqlite-src/Makefile
 libgda/sqlite/virtual/Makefile
-libgda/graph/Makefile
 providers/Makefile
 providers/bdb/Makefile
 providers/bdb/libgda-bdb-4.0.pc
@@ -1244,6 +1240,9 @@ providers/sybase/Makefile
 providers/sybase/libgda-sybase-4.0.pc
 providers/xbase/Makefile
 providers/xbase/libgda-xbase-4.0.pc
+providers/skel-implementation/Makefile
+providers/skel-implementation/capi/Makefile
+providers/skel-implementation/capi/libgda-capi-4.0.pc
 libgda-report/Makefile
 libgda-report/engine/Makefile
 libgda-report/DocBook/Makefile
@@ -1258,6 +1257,7 @@ tests/parser/Makefile
 tests/data-models/Makefile
 tests/providers/Makefile
 tests/value-holders/Makefile
+tests/meta-store/Makefile
 doc/Makefile
 doc/C/Makefile
 doc/C/libgda-4.0.types

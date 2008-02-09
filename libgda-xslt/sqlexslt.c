@@ -1,8 +1,9 @@
 /* GDA common library
- * Copyright (C) 2007 The GNOME Foundation.
+ * Copyright (C) 2007 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Pawe³ Cesar Sanjuan Szklarz <paweld2@gmail.com>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -78,18 +79,12 @@ GdaXsltExCont *
 gda_xslt_create_context_simple (GdaConnection * cnc, GError ** error)
 {
 	GdaXsltExCont *local = NULL;
-	GdaDict *gda_dict = NULL;
-
-	gda_dict = gda_dict_new ();
-	gda_dict_set_connection (gda_dict, cnc);
 
 	local = (GdaXsltExCont *) g_new0 (GdaXsltExCont, 1);
 	local->init = 1;
 	local->cnc = cnc;
 	local->error = NULL;
-	local->gda_dict = gda_dict;
-	local->query_hash =
-		g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
+	local->query_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
 	return local;
 }
 

@@ -1,4 +1,5 @@
 #include <libgda/libgda.h>
+#include <sql-parser/gda-sql-parser.h>
 #include <glib/gi18n-lib.h>
 #include <string.h>
 
@@ -18,12 +19,14 @@ static GOptionEntry entries[] = {
 	{ NULL }
 };
 
-static gboolean clear_blobs (GdaDict *dict, GError **error);
-static gboolean insert_blob (GdaDict *dict, gint id, const gchar *data, glong binary_length, GError **error);
-static gboolean update_blob (GdaDict *dict, gint id, const gchar *data, glong binary_length, GError **error);
-static gboolean update_multiple_blobs (GdaDict *dict, const gchar *data, glong binary_length, GError **error);
-static gboolean display_blobs (GdaDict *dict, GError **error);
-static gboolean do_query (GdaQuery *query, GdaParameterList *plist, GError **error);
+static gboolean clear_blobs (GdaConnection *cnc, GError **error);
+static gboolean insert_blob (GdaConnection *cnc, gint id, const gchar *data, glong binary_length, GError **error);
+static gboolean update_blob (GdaConnection *cnc, gint id, const gchar *data, glong binary_length, GError **error);
+static gboolean update_multiple_blobs (GdaConnection *cnc, const gchar *data, glong binary_length, GError **error);
+static gboolean display_blobs (GdaConnection *cnc, GError **error);
+static gboolean exec_statement (GdaConnection *cnc, GdaStatement *stmt, GdaSet *plist, GError **error);
+
+GdaSqlParser *parser;
 
 int 
 main (int argc, char **argv)
@@ -33,7 +36,6 @@ main (int argc, char **argv)
 
 	GdaClient *client;
 	GdaConnection *cnc;
-	GdaDict *dict;
 	gchar *blob_data;
 
 	/* command line parsing */
@@ -96,26 +98,18 @@ main (int argc, char **argv)
 	g_print (_("Connection successfully opened!\n"));
 	g_object_unref (G_OBJECT (client));
 
-	/* dictionary */
-	dict = gda_dict_new ();
-	gda_dict_set_connection (dict, cnc);
-
-	if (error) {
-		g_error_free (error);
-		error = NULL;
-	}
-
+	parser = gda_connection_create_parser (cnc);
 	gda_connection_begin_transaction (cnc, NULL, GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL);
 
 	/* 
 	 * clear all blobs 
 	 */
-	if (!clear_blobs (dict, &error))
+	if (!clear_blobs (cnc, &error))
 		g_error ("Blobs clear error: %s", error && error->message ? error->message : "No detail");
 
 	/* insert a blob */
 	blob_data = "Blob Data 1";
-	if (!insert_blob (dict, 1, blob_data, strlen (blob_data), &error)) 
+	if (!insert_blob (cnc, 1, blob_data, strlen (blob_data), &error)) 
 		g_error ("Blob insert error: %s", error && error->message ? error->message : "No detail");
 	else if (error) {
 		g_print ("Msg: %s\n", error->message);
@@ -125,39 +119,39 @@ main (int argc, char **argv)
 
 	/* insert a blob */
 	blob_data = "Blob Data 2";
-	if (!insert_blob (dict, 2, blob_data, strlen (blob_data), &error)) 
+	if (!insert_blob (cnc, 2, blob_data, strlen (blob_data), &error)) 
 		g_error ("Blob insert error: %s", error && error->message ? error->message : "No detail");
 	else if (error) {
 		g_print ("Msg: %s\n", error->message);
 		g_error_free (error);
 		error = NULL;
 	}
-	if (!display_blobs (dict, &error))
+	if (!display_blobs (cnc, &error))
 		g_error ("Blobs display error: %s", error && error->message ? error->message : "No detail");
 
 
 	/* update blob */
 	blob_data = "New blob 1 contents is now this one...";
-	if (!update_blob (dict, 1, blob_data, strlen (blob_data), &error)) 
+	if (!update_blob (cnc, 1, blob_data, strlen (blob_data), &error)) 
 		g_error ("Blob update error: %s", error && error->message ? error->message : "No detail");
 	else if (error) {
 		g_print ("Msg: %s\n", error->message);
 		g_error_free (error);
 		error = NULL;
 	}
-	if (!display_blobs (dict, &error))
+	if (!display_blobs (cnc, &error))
 		g_error ("Blobs display error: %s", error && error->message ? error->message : "No detail");
 
 	/* update blob */
 	blob_data = "After several blobs updated";
-	if (!update_multiple_blobs (dict, blob_data, strlen (blob_data), &error)) 
+	if (!update_multiple_blobs (cnc, blob_data, strlen (blob_data), &error)) 
 		g_error ("Multiple blob update error: %s", error && error->message ? error->message : "No detail");
 	else if (error) {
 		g_print ("Msg: %s\n", error->message);
 		g_error_free (error);
 		error = NULL;
 	}
-	if (!display_blobs (dict, &error))
+	if (!display_blobs (cnc, &error))
 		g_error ("Blobs display error: %s", error && error->message ? error->message : "No detail");
 
 
@@ -180,147 +174,150 @@ show_header (const gchar *str)
 }
 
 static gboolean
-clear_blobs (GdaDict *dict, GError **error)
+clear_blobs (GdaConnection *cnc, GError **error)
 {
-	GdaQuery *query;
+	GdaStatement *stmt;
 	gboolean retval;
 #define SQL_DELETE "DELETE FROM blobs"
 	show_header ("Clear blobs");
-	query = gda_query_new_from_sql (dict, SQL_DELETE, NULL);
-	if (!query)
+	stmt = gda_sql_parser_parse_string (parser, SQL_DELETE, NULL, error);
+	if (!stmt)
 		return FALSE;
 	
-	retval = do_query (query, NULL, error);
-	g_object_unref (query);
+	retval = exec_statement (cnc, stmt, NULL, error);
+	g_object_unref (stmt);
 
 	return retval;
 }
 
 static gboolean
-insert_blob (GdaDict *dict, gint id, const gchar *data, glong binary_length, GError **error)
+insert_blob (GdaConnection *cnc, gint id, const gchar *data, glong binary_length, GError **error)
 {
-	GdaQuery *query;
-	GdaParameterList *plist;
-	GdaParameter *param;
+	GdaStatement *stmt;
+	GdaSet *plist;
+	GdaHolder *param;
 	GValue *value;
 	gchar *str;
 	gboolean retval;
 	#define SQL_INSERT "INSERT INTO blobs (id, name, data) VALUES (##/*name:'id' type:gint*/, ##/*name:'name' type:gchararray*/, ##/*name:'theblob' type:'GdaBlob'*/)"
 
 	show_header ("Insert a blob");
-	query = gda_query_new_from_sql (dict, SQL_INSERT, NULL);
-	if (!query)
+	stmt = gda_sql_parser_parse_string (parser, SQL_INSERT, NULL, error);
+	if (!stmt)
 		return FALSE;
-	plist = gda_query_get_parameter_list (query);
+	if (!gda_statement_get_parameters (stmt, &plist, NULL))
+		return FALSE;
 
 	/* blob id */
-	param = gda_parameter_list_find_param (plist, "id");
+	param = gda_set_get_holder (plist, "id");
 	str = g_strdup_printf ("%d", id);
-	gda_parameter_set_value_str (param, str);
+	gda_holder_set_value_str (param, NULL, str);
 	g_free (str);
 
 	/* blob name */
-	param = gda_parameter_list_find_param (plist, "name");
+	param = gda_set_get_holder (plist, "name");
 	str = g_strdup_printf ("BLOB_%d", id);
-	gda_parameter_set_value_str (param, str);
+	gda_holder_set_value_str (param, NULL, str);
 	g_free (str);
 
 	/* blob data */
-	param = gda_parameter_list_find_param (plist, "theblob");
+	param = gda_set_get_holder (plist, "theblob");
 	value = gda_value_new_blob (data, binary_length);
-	gda_parameter_set_value (param, value);
+	gda_holder_set_value (param, value);
 	gda_value_free (value);
 
-	gda_connection_clear_events_list (gda_dict_get_connection (dict));
-	retval = do_query (query, plist, error);
-	g_object_unref (query);
+	gda_connection_clear_events_list (cnc);
+	retval = exec_statement (cnc, stmt, plist, error);
+	g_object_unref (stmt);
 	g_object_unref (plist);
 
 	return retval;
 }
 
 static gboolean
-update_blob (GdaDict *dict, gint id, const gchar *data, glong binary_length, GError **error)
+update_blob (GdaConnection *cnc, gint id, const gchar *data, glong binary_length, GError **error)
 {
-	GdaQuery *query;
-	GdaParameterList *plist;
-	GdaParameter *param;
+	GdaStatement *stmt;
+	GdaSet *plist;
+	GdaHolder *param;
 	GValue *value;
 	gchar *str;
 	gboolean retval;
 	const gchar* SQL_UPDATE = "UPDATE blobs set name = ##/*name:'name' type:gchararray*/, data = ##/*name:'theblob' type:'GdaBlob'*/ WHERE id= ##/*name:'id' type:gint*/";
 
 	show_header ("Update a blob");
-	query = gda_query_new_from_sql (dict, SQL_UPDATE, NULL);
-	if (!query)
+	stmt = gda_sql_parser_parse_string (parser, SQL_UPDATE, NULL, error);
+	if (!stmt)
 		return FALSE;
-	plist = gda_query_get_parameter_list (query);
+	if (!gda_statement_get_parameters (stmt, &plist, NULL))
+		return FALSE;
 
 	/* blob id */
-	param = gda_parameter_list_find_param (plist, "id");
+	param = gda_set_get_holder (plist, "id");
 	str = g_strdup_printf ("%d", id);
-	gda_parameter_set_value_str (param, str);
+	gda_holder_set_value_str (param, NULL, str);
 	g_free (str);
 
 	/* blob name */
-	param = gda_parameter_list_find_param (plist, "name");
+	param = gda_set_get_holder (plist, "name");
 	str = g_strdup_printf ("BLOB_%d", id);
-	gda_parameter_set_value_str (param, str);
+	gda_holder_set_value_str (param, NULL, str);
 	g_free (str);
 
 	/* blob data */
-	param = gda_parameter_list_find_param (plist, "theblob");
+	param = gda_set_get_holder (plist, "theblob");
 	value = gda_value_new_blob (data, binary_length);
-	gda_parameter_set_value (param, value);
+	gda_holder_set_value (param, value);
 	gda_value_free (value);
 
-	gda_connection_clear_events_list (gda_dict_get_connection (dict));
-	retval = do_query (query, plist, error);
-	g_object_unref (query);
+	gda_connection_clear_events_list (cnc);
+	retval = exec_statement (cnc, stmt, plist, error);
+	g_object_unref (stmt);
 	g_object_unref (plist);
 
 	return retval;
 }
 
 static gboolean
-update_multiple_blobs (GdaDict *dict, const gchar *data, glong binary_length, GError **error)
+update_multiple_blobs (GdaConnection *cnc, const gchar *data, glong binary_length, GError **error)
 {
-	GdaQuery *query;
-	GdaParameterList *plist;
-	GdaParameter *param;
+	GdaStatement *stmt;
+	GdaSet *plist;
+	GdaHolder *param;
 	GValue *value;
-	gchar *str;
 	gboolean retval;
 	const gchar* SQL_UPDATE = "UPDATE blobs set name = ##/*name:'name' type:gchararray*/, data = ##/*name:'theblob' type:'GdaBlob'*/";
 
 	show_header ("Update several blobs at once");
-	query = gda_query_new_from_sql (dict, SQL_UPDATE, NULL);
-	if (!query)
+	stmt = gda_sql_parser_parse_string (parser, SQL_UPDATE, NULL, error);
+	if (!stmt)
 		return FALSE;
-	plist = gda_query_get_parameter_list (query);
+	if (!gda_statement_get_parameters (stmt, &plist, NULL))
+		return FALSE;
 
 	/* blob name */
-	param = gda_parameter_list_find_param (plist, "name");
-	gda_parameter_set_value_str (param, "---");
+	param = gda_set_get_holder (plist, "name");
+	gda_holder_set_value_str (param, NULL, "---");
 
 	/* blob data */
-	param = gda_parameter_list_find_param (plist, "theblob");
+	param = gda_set_get_holder (plist, "theblob");
 	value = gda_value_new_blob (data, binary_length);
-	gda_parameter_set_value (param, value);
+	gda_holder_set_value (param, value);
 	gda_value_free (value);
 
-	gda_connection_clear_events_list (gda_dict_get_connection (dict));
-	retval = do_query (query, plist, error);
-	g_object_unref (query);
+	gda_connection_clear_events_list (cnc);
+	retval = exec_statement (cnc, stmt, plist, error);
+	g_object_unref (stmt);
 	g_object_unref (plist);
 
 	return retval;
 }
 
-static gboolean do_query (GdaQuery *query, GdaParameterList *plist, GError **error)
+static gboolean
+exec_statement (GdaConnection *cnc, GdaStatement *stmt, GdaSet *plist, GError **error)
 {
-	GdaObject *exec_res;
-	exec_res = gda_query_execute (query, plist, FALSE, error);
+	GObject *exec_res;
+	exec_res = gda_connection_statement_execute (cnc, stmt, plist, GDA_STATEMENT_MODEL_RANDOM_ACCESS, NULL, error);
 	if (!exec_res)
 		return FALSE;
 	
@@ -329,14 +326,14 @@ static gboolean do_query (GdaQuery *query, GdaParameterList *plist, GError **err
 		gda_data_model_dump ((GdaDataModel*) exec_res, stdout);
 	}
 	else {
-		if (GDA_IS_PARAMETER_LIST (exec_res)) {
+		if (GDA_IS_SET (exec_res)) {
 			GSList *list;
 
-			g_print ("Query returned a GdaParameterList:\n");
-			for (list = GDA_PARAMETER_LIST (exec_res)->parameters; list; list = list->next) {
+			g_print ("Query returned a GdaSet:\n");
+			for (list = GDA_SET (exec_res)->holders; list; list = list->next) {
 				gchar *str;
-				str = gda_parameter_get_value_str (GDA_PARAMETER (list->data));
-				g_print (" %s => %s\n", gda_object_get_name (GDA_OBJECT (list->data)), str);
+				str = gda_holder_get_value_str (GDA_HOLDER (list->data), NULL);
+				g_print (" %s => %s\n", gda_holder_get_id (GDA_HOLDER (list->data)), str);
 				g_free (str);
 			}
 					 
@@ -349,16 +346,17 @@ static gboolean do_query (GdaQuery *query, GdaParameterList *plist, GError **err
 }
 
 static gboolean
-display_blobs (GdaDict *dict, GError **error)
+display_blobs (GdaConnection *cnc, GError **error)
 {
-	GdaCommand *command;
+	GdaStatement *stmt;
 	gboolean retval;
 	GdaDataModel *model;
 
-	/* no blob is actually manipulated here, so let's use a GdaCommand */
-	command = gda_command_new ("SELECT * FROM blobs", GDA_COMMAND_TYPE_SQL, 0);
-	model = gda_connection_execute_select_command (gda_dict_get_connection (dict), command, NULL, error);
-	gda_command_free (command);
+	stmt = gda_sql_parser_parse_string (parser, "SELECT * FROM blobs", NULL, error);
+	if (!stmt)
+		return FALSE;
+
+	model = gda_connection_statement_execute_select (cnc, stmt, NULL, error);
 
 	retval = model ? TRUE : FALSE;
 	if (model) {

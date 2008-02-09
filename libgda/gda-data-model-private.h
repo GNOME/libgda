@@ -27,20 +27,12 @@
 #include <glib-object.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
-#include <libgda/gda-command.h>
 #include <libgda/gda-decl.h>
 #include <libgda/gda-column.h>
 #include <libgda/gda-value.h>
 #include <libgda/gda-data-model-extra.h>
 
 G_BEGIN_DECLS
-
-/* Not implemented. See bug http://bugzilla.gnome.org/show_bug.cgi?id=411811:
-const gchar                  *gda_data_model_get_command_text       (GdaDataModel *model);
-gboolean                      gda_data_model_set_command_text       (GdaDataModel *model, const gchar *txt);
-GdaCommandType                gda_data_model_get_command_type       (GdaDataModel *model);
-gboolean                      gda_data_model_set_command_type       (GdaDataModel *model, GdaCommandType type);
-*/
 
 xmlNodePtr                    gda_data_model_to_xml_node            (GdaDataModel *model, const gint *cols, gint nb_cols, 
 								     const gint *rows, gint nb_rows, const gchar *name);

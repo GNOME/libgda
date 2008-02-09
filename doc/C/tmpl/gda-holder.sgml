@@ -171,12 +171,33 @@ of the contained value (default value, ...)
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_holder_get_value_str ##### -->
+<para>
+
+</para>
+
+@holder: 
+@dh: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_holder_set_value ##### -->
 <para>
 
 </para>
 
 @holder: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_holder_set_value_str ##### -->
+<para>
+
+</para>
+
+@holder: 
+@dh: 
 @value: 
 @Returns: 
 

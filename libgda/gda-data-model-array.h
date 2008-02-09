@@ -40,12 +40,12 @@ typedef struct _GdaDataModelArrayClass   GdaDataModelArrayClass;
 typedef struct _GdaDataModelArrayPrivate GdaDataModelArrayPrivate;
 
 struct _GdaDataModelArray {
-	GdaDataModelRow model;
+	GdaDataModelRow           model;
 	GdaDataModelArrayPrivate *priv;
 };
 
 struct _GdaDataModelArrayClass {
-	GdaDataModelRowClass parent_class;
+	GdaDataModelRowClass      parent_class;
 };
 
 GType         gda_data_model_array_get_type          (void) G_GNUC_CONST;

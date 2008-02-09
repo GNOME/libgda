@@ -1,6 +1,6 @@
 /* gda-handler-bin.c
  *
- * Copyright (C) 2005 - 2007 Vivien Malerba
+ * Copyright (C) 2005 - 2008 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -23,6 +23,7 @@
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-server-provider.h>
 #include <libgda/gda-util.h>
+#include <libgda/gda-blob-op.h>
 
 static void gda_handler_bin_class_init (GdaHandlerBinClass * class);
 static void gda_handler_bin_init (GdaHandlerBin * wid);
@@ -76,7 +77,7 @@ gda_handler_bin_get_type (void)
 			NULL
 		};
 
-		type = g_type_register_static (GDA_TYPE_OBJECT, "GdaHandlerBin", &info, 0);
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaHandlerBin", &info, 0);
 		g_type_add_interface_static (type, GDA_TYPE_DATA_HANDLER, &data_entry_info);
 	}
 	return type;
@@ -118,8 +119,8 @@ gda_handler_bin_init (GdaHandlerBin * hdl)
 	hdl->priv->valid_g_types[0] = GDA_TYPE_BINARY;
 	hdl->priv->valid_g_types[1] = GDA_TYPE_BLOB;
 
-	gda_object_set_name (GDA_OBJECT (hdl), _("InternalBin"));
-	gda_object_set_description (GDA_OBJECT (hdl), _("Binary representation"));
+	g_object_set_data (G_OBJECT (hdl), "name", _("InternalBin"));
+	g_object_set_data (G_OBJECT (hdl), "descr", _("Binary representation"));
 }
 
 static void
@@ -133,8 +134,6 @@ gda_handler_bin_dispose (GObject   * object)
 	hdl = GDA_HANDLER_BIN (object);
 
 	if (hdl->priv) {
-		gda_object_destroy_check (GDA_OBJECT (object));
-
 		g_free (hdl->priv->valid_g_types);
 		hdl->priv->valid_g_types = NULL;
 
@@ -158,7 +157,7 @@ gda_handler_bin_new (void)
 {
 	GObject *obj;
 
-	obj = g_object_new (GDA_TYPE_HANDLER_BIN, "dict", NULL, NULL);
+	obj = g_object_new (GDA_TYPE_HANDLER_BIN, NULL);
 
 	return (GdaDataHandler *) obj;
 }
@@ -185,7 +184,7 @@ gda_handler_bin_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 		}
 		else {
 			GdaBlob *blob;
-			blob = gda_value_get_blob ((GValue *) value);
+			blob = (GdaBlob*) gda_value_get_blob ((GValue *) value);
 			if (blob->op)
 				gda_blob_op_read_all (blob->op, blob);
 
@@ -218,7 +217,7 @@ gda_handler_bin_get_str_from_value (GdaDataHandler *iface, const GValue *value)
 			retval = gda_binary_to_string (gda_value_get_binary ((GValue *) value), 0);
 		else {
 			GdaBlob *blob;
-			blob = gda_value_get_blob ((GValue *) value);
+			blob = (GdaBlob*) gda_value_get_blob ((GValue *) value);
 			if (blob->op)
 				gda_blob_op_read_all (blob->op, blob);
 			retval = gda_binary_to_string ((GdaBinary *) blob, 0);
@@ -338,5 +337,5 @@ gda_handler_bin_get_descr (GdaDataHandler *iface)
 	hdl = GDA_HANDLER_BIN (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
-	return gda_object_get_description (GDA_OBJECT (hdl));
+	return g_object_get_data (G_OBJECT (hdl), "descr");
 }

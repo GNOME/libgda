@@ -26,3 +26,5 @@ check_statement_LDADD = $(JSON_GLIB_LIBS) \
 	$(top_builddir)/libgda/libgda-4.0.la \
 	$(LIBGDA_LIBS)
 
+
+EXTRA_DIST = set.data stmt.data

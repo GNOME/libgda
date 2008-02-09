@@ -579,24 +579,19 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
 		gda_sql_statement_free (piface.parsed_statement);
 	}
 	else {
-		GError *lerror = NULL;
-		/* save error codes to local error pointer */
-		if ((ntokens <= 1) && (parser->priv->context->token_type != L_ILLEGAL))
-			g_set_error (&lerror, GDA_SQL_PARSER_ERROR, GDA_SQL_PARSER_EMPTY_SQL_ERROR,
-				     _("SQL code does not contain any statement"));
-		else
-			g_set_error (&lerror, GDA_SQL_PARSER_ERROR, parser->priv->error_type,
-				     parser->priv->error_msg);
-
 		if (parser->priv->mode == GDA_SQL_PARSER_MODE_PARSE) {
 			/* try to create a statement using the delimiter mode */
 			parser->priv->mode = GDA_SQL_PARSER_MODE_DELIMIT;
-			stmt = gda_sql_parser_parse_string (parser, sql, remain, NULL);
+			stmt = gda_sql_parser_parse_string (parser, sql, remain, error);
 		}
-
-		/* set error codes */
-		if (!stmt) 
-			g_propagate_error (error, lerror);
+		else if (error) {
+			if ((ntokens <= 1) && (parser->priv->context->token_type != L_ILLEGAL))
+				g_set_error (error, GDA_SQL_PARSER_ERROR, GDA_SQL_PARSER_EMPTY_SQL_ERROR,
+					_ ("SQL code does not contain any statement"));
+			else
+				g_set_error (error, GDA_SQL_PARSER_ERROR, parser->priv->error_type,
+					parser->priv->error_msg);
+		}
 	}
 
 	parser->priv->mode = parse_mode;
@@ -628,7 +623,7 @@ gda_sql_parser_parse_string_as_batch (GdaSqlParser *parser, const gchar *sql, co
 {
 	GdaBatch *batch;
 	GdaStatement *stmt;
-	const gchar *int_remain;
+	const gchar *int_sql;
 	gboolean allok = TRUE;
 	gint n_stmt = 0;
 	gint n_empty = 0;
@@ -636,14 +631,19 @@ gda_sql_parser_parse_string_as_batch (GdaSqlParser *parser, const gchar *sql, co
 	g_return_val_if_fail (GDA_IS_SQL_PARSER (parser), NULL);
 	g_return_val_if_fail (parser->priv, NULL);
 
+	if (remain)
+		*remain = NULL;
+	
 	batch = gda_batch_new ();
 	if (!sql)
 		return batch;
 
-	int_remain = sql;
-	while (int_remain && allok) {
+	int_sql = sql;
+	while (int_sql && allok) {
 		GError *lerror = NULL;
-		stmt = gda_sql_parser_parse_string (parser, int_remain, &int_remain, &lerror);
+		const gchar *int_remain = NULL;
+		
+		stmt = gda_sql_parser_parse_string (parser, int_sql, &int_remain, &lerror);
 		if (stmt) {
 			if (gda_statement_is_useless (stmt)) 
 				n_empty++;
@@ -666,6 +666,7 @@ gda_sql_parser_parse_string_as_batch (GdaSqlParser *parser, const gchar *sql, co
 		}
 		if (lerror)
 			g_error_free (lerror);
+		int_sql = int_remain;
 	}
 
 	if ((n_stmt == 0) && (n_empty != 0))
@@ -674,7 +675,7 @@ gda_sql_parser_parse_string_as_batch (GdaSqlParser *parser, const gchar *sql, co
 
 	if (!allok || (n_stmt == 0)) {
 		if (remain)
-			*remain = int_remain;
+			*remain = int_sql;
 		g_object_unref (batch);
 		batch = NULL;
 	}
@@ -1025,18 +1026,16 @@ getToken (GdaSqlParser *parser)
 		break;
 	}
 	case '-': 
-		if (parser->priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
-			if ( z[1]=='-' ){
-				for (i=2;  (c=z[i])!=0 && c!='\n'; i++){}
-				parser->priv->context->token_type = L_SQLCOMMENT;
-				consumed_chars = i;
-			}
-			else {
-				parser->priv->context->token_type = L_MINUS;
-				consumed_chars = 1;
-			}
-			break;
+		if ( z[1]=='-' ){
+			for (i=2;  (c=z[i])!=0 && c!='\n'; i++){}
+			parser->priv->context->token_type = L_SQLCOMMENT;
+			consumed_chars = i;
 		}
+		else {
+			parser->priv->context->token_type = L_MINUS;
+			consumed_chars = 1;
+		}
+		break;
 
 	case '(': 
 		parser->priv->context->token_type = L_LP;
@@ -1201,7 +1200,7 @@ getToken (GdaSqlParser *parser)
 		} 
 		else {
 			parser->priv->context->token_type = L_ILLEGAL;
-			consumed_chars = i;
+			consumed_chars = 0;
 		}
 		break;
 	}

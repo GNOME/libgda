@@ -1,6 +1,6 @@
 /* gda-data-model-iter.c
  *
- * Copyright (C) 2005 - 2007 Vivien Malerba
+ * Copyright (C) 2005 - 2008 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -23,7 +23,7 @@
 #include "gda-data-model-iter.h"
 #include "gda-data-model.h"
 #include "gda-data-model-private.h"
-#include "gda-parameter.h"
+#include "gda-holder.h"
 #include "gda-marshal.h"
 #include "gda-data-proxy.h"
 #include "gda-enums.h"
@@ -45,20 +45,12 @@ static void gda_data_model_iter_get_property (GObject *object,
 					      GValue *value,
 					      GParamSpec *pspec);
 
-/* When the GdaDataModel or a parameter is destroyed */
-static void destroyed_object_cb (GdaObject *obj, GdaDataModelIter *iter);
-static void destroyed_param_cb (GdaObject *obj, GdaDataModelIter *iter);
-
 /* follow model changes */
 static void model_row_updated_cb (GdaDataModel *model, gint row, GdaDataModelIter *iter);
 static void model_row_removed_cb (GdaDataModel *model, gint row, GdaDataModelIter *iter);
 
-static void param_changed_cb (GdaParameterList *paramlist, GdaParameter *param);
-static void param_attr_changed_cb (GdaParameterList *paramlist, GdaParameter *param);
-
-#ifdef GDA_DEBUG
-static void gda_data_model_iter_dump (GdaDataModelIter *iter, guint offset);
-#endif
+static void holder_changed_cb (GdaSet *paramlist, GdaHolder *param);
+static void holder_attr_changed_cb (GdaSet *paramlist, GdaHolder *param);
 
 /* get a pointer to the parents to be able to cvalue their destructor */
 static GObjectClass  *parent_class = NULL;
@@ -122,7 +114,7 @@ gda_data_model_iter_get_type (void)
 		};
 
 		
-		type = g_type_register_static (GDA_TYPE_PARAMETER_LIST, "GdaDataModelIter", &info, 0);
+		type = g_type_register_static (GDA_TYPE_SET, "GdaDataModelIter", &info, 0);
 	}
 	return type;
 }
@@ -151,7 +143,7 @@ static void
 gda_data_model_iter_class_init (GdaDataModelIterClass *class)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
-	GdaParameterListClass *paramlist_class = GDA_PARAMETER_LIST_CLASS (class);
+	GdaSetClass *paramlist_class = GDA_SET_CLASS (class);
 
 	parent_class = g_type_class_peek_parent (class);
 
@@ -183,8 +175,8 @@ gda_data_model_iter_class_init (GdaDataModelIterClass *class)
 
 	object_class->dispose = gda_data_model_iter_dispose;
 	object_class->finalize = gda_data_model_iter_finalize;
-	paramlist_class->param_changed = param_changed_cb;
-	paramlist_class->param_attr_changed = param_attr_changed_cb;
+	paramlist_class->holder_changed = holder_changed_cb;
+	paramlist_class->holder_attr_changed = holder_attr_changed_cb;
 
 	/* Properties */
 	object_class->set_property = gda_data_model_iter_set_property;
@@ -206,10 +198,6 @@ gda_data_model_iter_class_init (GdaDataModelIterClass *class)
 					 g_param_spec_boolean ("update_model", "Tells if parameters changes are forwarded "
 							       "to the GdaDataModel", NULL, TRUE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
-	/* virtual functions */
-#ifdef GDA_DEBUG
-        GDA_OBJECT_CLASS (class)->dump = (void (*)(GdaObject *, guint)) gda_data_model_iter_dump;
-#endif
 }
 
 static void
@@ -279,7 +267,7 @@ model_row_removed_cb (GdaDataModel *model, gint row, GdaDataModelIter *iter)
  * paramlist is an iter for
  */
 static void
-param_changed_cb (GdaParameterList *paramlist, GdaParameter *param)
+holder_changed_cb (GdaSet *paramlist, GdaHolder *param)
 {
 	GdaDataModelIter *iter;
 	gint col;
@@ -294,10 +282,10 @@ param_changed_cb (GdaParameterList *paramlist, GdaParameter *param)
 		g_return_if_fail (col >= 0);
 		
 		if (! gda_data_model_set_value_at (GDA_DATA_MODEL (iter->priv->data_model), 
-						   col, iter->priv->row, gda_parameter_get_value (param), NULL)) {
+						   col, iter->priv->row, gda_holder_get_value (param), NULL)) {
 			/* writing to the model failed, revert back the change to parameter */
 			iter->priv->keep_param_changes = TRUE;
-			gda_parameter_set_value (param, gda_data_model_get_value_at (GDA_DATA_MODEL (iter->priv->data_model), 
+			gda_holder_set_value (param, gda_data_model_get_value_at (GDA_DATA_MODEL (iter->priv->data_model), 
 										     col, iter->priv->row)); 
 			iter->priv->keep_param_changes = FALSE;
 		}
@@ -307,8 +295,8 @@ param_changed_cb (GdaParameterList *paramlist, GdaParameter *param)
 	}
 
 	/* for the parent class */
-	if (((GdaParameterListClass *) parent_class)->param_changed)
-		((GdaParameterListClass *) parent_class)->param_changed (paramlist, param);
+	if (((GdaSetClass *) parent_class)->holder_changed)
+		((GdaSetClass *) parent_class)->holder_changed (paramlist, param);
 }
 
 /*
@@ -317,7 +305,7 @@ param_changed_cb (GdaParameterList *paramlist, GdaParameter *param)
  * paramlist is an iter for
  */
 static void
-param_attr_changed_cb (GdaParameterList *paramlist, GdaParameter *param)
+holder_attr_changed_cb (GdaSet *paramlist, GdaHolder *param)
 {
 	GdaDataModelIter *iter;
 	gint col;
@@ -336,7 +324,7 @@ param_attr_changed_cb (GdaParameterList *paramlist, GdaParameter *param)
 		g_return_if_fail (col >= 0);
 		
 		g_object_get (G_OBJECT (param), "use-default-value", &toset, NULL);
-		if (toset && gda_parameter_get_exists_default_value (param))
+		if (toset && gda_holder_get_default_value (param))
 			gda_data_proxy_alter_value_attributes (GDA_DATA_PROXY (iter->priv->data_model), 
 							       iter->priv->row, col, 
 							       GDA_VALUE_ATTR_CAN_BE_DEFAULT | GDA_VALUE_ATTR_IS_DEFAULT);
@@ -346,30 +334,8 @@ param_attr_changed_cb (GdaParameterList *paramlist, GdaParameter *param)
 	}
 
 	/* for the parent class */
-	if (((GdaParameterListClass *) parent_class)->param_attr_changed)
-		((GdaParameterListClass *) parent_class)->param_attr_changed (paramlist, param);
-}
-
-static void 
-destroyed_object_cb (GdaObject *obj, GdaDataModelIter *iter)
-{
-	g_assert (obj == (GdaObject*) iter->priv->data_model);
-	g_signal_handler_disconnect (G_OBJECT (obj),
-				     iter->priv->model_changes_signals [0]);
-	g_signal_handler_disconnect (G_OBJECT (obj),
-				     iter->priv->model_changes_signals [1]);
-	g_signal_handlers_disconnect_by_func (G_OBJECT (obj),
-					      G_CALLBACK (destroyed_object_cb), iter);
-	iter->priv->data_model = NULL;
-}
-
-static void
-destroyed_param_cb (GdaObject *obj, GdaDataModelIter *iter)
-{
-	g_signal_handlers_disconnect_by_func (obj,
-					      G_CALLBACK (destroyed_param_cb), iter);
-	g_signal_handlers_disconnect_by_func (obj,
-					      G_CALLBACK (param_changed_cb), iter);
+	if (((GdaSetClass *) parent_class)->holder_attr_changed)
+		((GdaSetClass *) parent_class)->holder_attr_changed (paramlist, param);
 }
 
 static void
@@ -382,9 +348,13 @@ gda_data_model_iter_dispose (GObject *object)
 
 	iter = GDA_DATA_MODEL_ITER (object);
 	if (iter->priv) {
-		gda_object_destroy_check (GDA_OBJECT (object));
-		if (iter->priv->data_model) 
-			destroyed_object_cb ((GdaObject *) iter->priv->data_model, iter);
+		if (iter->priv->data_model) { 
+			g_signal_handler_disconnect (iter->priv->data_model, iter->priv->model_changes_signals [0]);
+			g_signal_handler_disconnect (iter->priv->data_model, iter->priv->model_changes_signals [1]);
+			g_object_remove_weak_pointer (G_OBJECT (iter->priv->data_model), 
+						      (gpointer*) &(iter->priv->data_model));
+			iter->priv->data_model = NULL;
+		}
 	}
 
 	/* parent class */
@@ -424,8 +394,7 @@ gda_data_model_iter_set_property (GObject *object,
 		case PROP_DATA_MODEL: {
 			GdaDataModel *model;
 			gint col, ncols;
-			GdaParameter *param;
-			GdaDict *dict;
+			GdaHolder *param;
 			GdaColumn *column;
 
 			GObject* ptr = g_value_get_object (value);
@@ -435,28 +404,29 @@ gda_data_model_iter_set_property (GObject *object,
 			/* REM: model is actually set using the next property */
 
 			/* compute parameters */
-			dict = gda_object_get_dict (GDA_OBJECT (iter));
 			ncols = gda_data_model_get_n_columns (model);
 			for (col = 0; col < ncols; col++) {
 				const gchar *str;
 				column = gda_data_model_describe_column (model, col);
-				param = (GdaParameter *) g_object_new (GDA_TYPE_PARAMETER, "dict", dict,
-								       "g_type", 
-								       gda_column_get_g_type (column), NULL);
+				param = (GdaHolder *) g_object_new (GDA_TYPE_HOLDER, 
+								    "g_type", 
+								    gda_column_get_g_type (column), NULL);
 
-				gda_parameter_set_not_null (param, !gda_column_get_allow_null (column));
+				gda_holder_set_not_null (param, !gda_column_get_allow_null (column));
 				str = gda_column_get_title (column);
 				if (!str)
 					str = gda_column_get_name (column);
 				if (str)
-					gda_object_set_name (GDA_OBJECT (param), str);
-				if (gda_column_get_default_value (column) || 
-				    gda_column_get_auto_increment (column))
-					gda_parameter_set_exists_default_value (param, TRUE);
-				gda_parameter_list_add_param ((GdaParameterList *) iter, param);
+					g_object_set (G_OBJECT (param), "id", str, NULL);
+				if (gda_column_get_default_value (column))
+					gda_holder_set_default_value (param, gda_column_get_default_value (column));
+				else if (gda_column_get_auto_increment (column)) {
+					GValue *v = gda_value_new_null ();
+					gda_holder_set_default_value (param, v);
+					gda_value_free (v);
+				}
+				gda_set_add_holder ((GdaSet *) iter, param);
 				g_object_set_data (G_OBJECT (param), "model_col", GINT_TO_POINTER (col + 1));
-				gda_object_connect_destroy (param,
-							    G_CALLBACK (destroyed_param_cb), iter);
 				g_object_unref (param);
 			}
 		}
@@ -467,13 +437,15 @@ gda_data_model_iter_set_property (GObject *object,
 			if (iter->priv->data_model) {
 				if (iter->priv->data_model == GDA_DATA_MODEL (ptr))
 					return;
-
-				destroyed_object_cb ((GdaObject *) iter->priv->data_model, iter);
+				g_signal_handler_disconnect (iter->priv->data_model, iter->priv->model_changes_signals [0]);
+				g_signal_handler_disconnect (iter->priv->data_model, iter->priv->model_changes_signals [1]);
+				g_object_remove_weak_pointer (G_OBJECT (iter->priv->data_model), 
+							      (gpointer*) &(iter->priv->data_model)); 	
 			}
 
 			iter->priv->data_model = GDA_DATA_MODEL (ptr);
-			gda_object_connect_destroy (ptr,
-						    G_CALLBACK (destroyed_object_cb), iter);
+			g_object_add_weak_pointer (G_OBJECT (iter->priv->data_model),
+						   (gpointer*) &(iter->priv->data_model));
 			iter->priv->model_changes_signals [0] = g_signal_connect (G_OBJECT (ptr), "row_updated",
 										  G_CALLBACK (model_row_updated_cb), iter);
 			iter->priv->model_changes_signals [1] = g_signal_connect (G_OBJECT (ptr), "row_removed",
@@ -646,9 +618,9 @@ gda_data_model_iter_invalidate_contents (GdaDataModelIter *iter)
 	g_return_if_fail (iter->priv);
 
 	iter->priv->keep_param_changes = TRUE;
-	list = GDA_PARAMETER_LIST (iter)->parameters;
+	list = GDA_SET (iter)->holders;
 	while (list) {
-		gda_parameter_declare_invalid (GDA_PARAMETER (list->data));
+		gda_holder_force_invalid (GDA_HOLDER (list->data));
 		list = g_slist_next (list);
 	}
 	iter->priv->keep_param_changes = FALSE;
@@ -674,7 +646,7 @@ gda_data_model_iter_is_valid (GdaDataModelIter *iter)
 /**
  * gda_data_model_iter_get_column_for_param
  * @iter: a #GdaDataModelIter object
- * @param: a #GdaParameter object, listed in @iter
+ * @param: a #GdaHolder object, listed in @iter
  *
  * Get the column number in the #GdaDataModel for which @iter is an iterator as
  * represented by the @param parameter
@@ -682,14 +654,14 @@ gda_data_model_iter_is_valid (GdaDataModelIter *iter)
  * Returns: the column number, or @param is not valid
  */
 gint
-gda_data_model_iter_get_column_for_param (GdaDataModelIter *iter, GdaParameter *param)
+gda_data_model_iter_get_column_for_param (GdaDataModelIter *iter, GdaHolder *param)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), -1);
 	g_return_val_if_fail (iter->priv, -1);
-	g_return_val_if_fail (GDA_IS_PARAMETER (param), -1);
-	g_return_val_if_fail (g_slist_find (((GdaParameterList *) iter)->parameters, param), -1);
+	g_return_val_if_fail (GDA_IS_HOLDER (param), -1);
+	g_return_val_if_fail (g_slist_find (((GdaSet *) iter)->holders, param), -1);
 
-	return g_slist_index (((GdaParameterList *) iter)->parameters, param);
+	return g_slist_index (((GdaSet *) iter)->holders, param);
 }
 
 /**
@@ -697,18 +669,18 @@ gda_data_model_iter_get_column_for_param (GdaDataModelIter *iter, GdaParameter *
  * @iter: a #GdaDataModelIter object
  * @col: the requested column
  *
- * Fetch a pointer to the #GdaParameter object which is synchronized with data at 
+ * Fetch a pointer to the #GdaHolder object which is synchronized with data at 
  * column @col
  *
- * Returns: the #GdaParameter, or %NULL if an error occurred
+ * Returns: the #GdaHolder, or %NULL if an error occurred
  */
-GdaParameter *
+GdaHolder *
 gda_data_model_iter_get_param_for_column (GdaDataModelIter *iter, gint col)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), NULL);
 	g_return_val_if_fail (iter->priv, NULL);
 
-	return g_slist_nth_data (((GdaParameterList *) iter)->parameters, col);
+	return g_slist_nth_data (((GdaSet *) iter)->holders, col);
 }
 
 /**
@@ -723,14 +695,14 @@ gda_data_model_iter_get_param_for_column (GdaDataModelIter *iter, gint col)
 const GValue *
 gda_data_model_iter_get_value_at (GdaDataModelIter *iter, gint col)
 {
-	GdaParameter *param;
+	GdaHolder *param;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), NULL);
 	g_return_val_if_fail (iter->priv, NULL);
 
-	param = (GdaParameter *) g_slist_nth_data (((GdaParameterList *) iter)->parameters, col);
+	param = (GdaHolder *) g_slist_nth_data (((GdaSet *) iter)->holders, col);
 	if (param)
-		return gda_parameter_get_value (param);
+		return gda_holder_get_value (param);
 	else
 		return NULL;
 }
@@ -747,41 +719,14 @@ gda_data_model_iter_get_value_at (GdaDataModelIter *iter, gint col)
 const GValue *
 gda_data_model_iter_get_value_for_field (GdaDataModelIter *iter, const gchar *field_name)
 {
-	GdaParameter *param;
+	GdaHolder *param;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), NULL);
 	g_return_val_if_fail (iter->priv, NULL);
 
-	param = gda_parameter_list_find_param ((GdaParameterList *) iter, field_name);
+	param = gda_set_get_holder ((GdaSet *) iter, field_name);
 	if (param)
-		return gda_parameter_get_value (param);
+		return gda_holder_get_value (param);
 	else
 		return NULL;
 }
-
-
-#ifdef GDA_DEBUG
-static void
-gda_data_model_iter_dump (GdaDataModelIter *iter, guint offset)
-{
-	gchar *str;
-	GdaDict *dict;
-
-	g_return_if_fail (GDA_IS_DATA_MODEL_ITER (iter));
-	dict = gda_object_get_dict (GDA_OBJECT (iter));
-       
-        /* string for the offset */
-        str = g_new0 (gchar, offset+1);
-	memset (str, ' ', offset);
-
-        /* dump */
-        if (iter->priv) {
-		GdaObjectClass *plist_class;
-		plist_class = g_type_class_peek (GDA_TYPE_PARAMETER_LIST);
-		(plist_class->dump) ((GdaObject *) iter, offset);
-	}
-        else
-                g_print ("%s" D_COL_ERR "Using finalized object %p" D_COL_NOR, str, iter);
-	g_free (str);
-}
-#endif

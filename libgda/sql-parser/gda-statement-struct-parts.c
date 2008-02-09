@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 Vivien Malerba
+ * Copyright (C) 2007 - 2008 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -1035,6 +1035,8 @@ gda_sql_select_join_type_to_string (GdaSqlSelectJoinType type)
 	switch (type) {
 	case GDA_SQL_SELECT_JOIN_CROSS:
 		return "CROSS";
+	case GDA_SQL_SELECT_JOIN_NATURAL:
+		return "NATURAL";
 	case GDA_SQL_SELECT_JOIN_INNER:
 		return "INNER";
 	case GDA_SQL_SELECT_JOIN_LEFT:

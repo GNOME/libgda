@@ -6,14 +6,22 @@ Single SQL statement
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-The #GdaStatement represents a single SQL statement (multiple statements can be groupped in a #GdaBatch object).
+  The #GdaStatement represents a single SQL statement (multiple statements can be groupped in a #GdaBatch object).
 </para>
 <para>
-A #GdaStatement can either be built "manually" by building a #GdaSqlStatement structure, or from an SQL statement using
-a #GdaSqlParser object.
+  A #GdaStatement can either be built "manually" by building a #GdaSqlStatement structure, or from an SQL statement using
+  a #GdaSqlParser object.
 </para>
 <para>
-If a #GdaStatement is created by a #GdaSqlParser, 
+  A #GdaConnection can use a #GdaStatement to:
+  <itemizedlist>
+    <listitem><para>prepare it for a future execution, the preparation step involves converting the #GdaStatement
+	object into a structure used by the database's own API, see gda_connection_statement_prepare()</para></listitem>
+    <listitem><para>execute it using gda_connection_statement_execute_select() if it is known that the statement is a
+	selection statement, gda_connection_statement_execute_non_select() if it is not a selection statement, or
+	gda_connection_statement_execute() when the type of expected result is unknown.</para></listitem>
+  </itemizedlist>
+  Note that it is possible to use the same #GdaStatement object at the same time with several #GdaConnection objects.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -30,14 +38,14 @@ If a #GdaStatement is created by a #GdaSqlParser,
 </para>
 
 
-<!-- ##### SIGNAL GdaStatement::dict-checked ##### -->
+<!-- ##### SIGNAL GdaStatement::checked ##### -->
 <para>
-This signal is emitted anytime the data in @gdastatement specific to a #GdaDict object has changed.
+
 </para>
 
 @gdastatement: the object which received the signal.
-@arg1: a pointer to the #GdaDict object, or %NULL
-@arg2: TRUE if @gdastatement's database objects all exist in the dictionary
+@arg1: 
+@arg2: 
 
 <!-- ##### SIGNAL GdaStatement::reset ##### -->
 <para>
@@ -93,6 +101,15 @@ These flags specify how the #GdaDataModel returned when executing a #GdaStatemen
 
 </para>
 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_statement_copy ##### -->
+<para>
+
+</para>
+
+@orig: 
 @Returns: 
 
 
@@ -178,13 +195,13 @@ These flags specify how the #GdaDataModel returned when executing a #GdaStatemen
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_statement_check_with_dict ##### -->
+<!-- ##### FUNCTION gda_statement_check_connection ##### -->
 <para>
 
 </para>
 
 @stmt: 
-@dict: 
+@cnc: 
 @error: 
 @Returns: 
 

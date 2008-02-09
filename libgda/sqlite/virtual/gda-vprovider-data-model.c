@@ -1,6 +1,6 @@
 /* 
  * GDA common library
- * Copyright (C) 2007 The GNOME Foundation.
+ * Copyright (C) 2007 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -66,8 +66,7 @@ static gboolean       gda_vprovider_data_model_open_connection (GdaServerProvide
 								const gchar *password);
 static gboolean       gda_vprovider_data_model_close_connection (GdaServerProvider *provider,
 								 GdaConnection *cnc);
-static GdaServerProviderInfo *gda_vprovider_data_model_get_info (GdaServerProvider *provider,
-								 GdaConnection *cnc);
+static const gchar   *gda_vprovider_data_model_get_name (GdaServerProvider *provider);
 
 /*
  * GdaVproviderDataModel class implementation
@@ -85,7 +84,7 @@ gda_vprovider_data_model_class_init (GdaVproviderDataModelClass *klass)
 	server_class->open_connection = gda_vprovider_data_model_open_connection;
 	server_class->close_connection = gda_vprovider_data_model_close_connection;
 
-	server_class->get_info = gda_vprovider_data_model_get_info;
+	server_class->get_name = gda_vprovider_data_model_get_name;
 
 	/* Properties */
         object_class->set_property = gda_vprovider_data_model_set_property;
@@ -267,8 +266,8 @@ gda_vprovider_data_model_open_connection (GdaServerProvider *provider, GdaConnec
 	}
 	gda_quark_list_free (m_params);
 
-	SQLITEcnc *scnc;
-	scnc = (SQLITEcnc*) gda_connection_internal_get_provider_data ((GdaConnection *) cnc);
+	SqliteConnectionData *scnc;
+	scnc = (SqliteConnectionData*) gda_connection_internal_get_provider_data ((GdaConnection *) cnc);
 	if (!scnc) {
 		gda_connection_close_no_warning (cnc);
 
@@ -303,21 +302,10 @@ gda_vprovider_data_model_close_connection (GdaServerProvider *provider, GdaConne
 	return GDA_SERVER_PROVIDER_CLASS (parent_class)->close_connection (GDA_SERVER_PROVIDER (provider), cnc);
 }
 
-static GdaServerProviderInfo *
-gda_vprovider_data_model_get_info (GdaServerProvider *provider, GdaConnection *cnc)
+static const gchar *
+gda_vprovider_data_model_get_name (GdaServerProvider *provider)
 {
-	static GdaServerProviderInfo info;
-        static gboolean init_done = FALSE;
-
-        if (!init_done) {
-                GdaServerProviderInfo *vinfo;
-                vinfo = GDA_SERVER_PROVIDER_CLASS (parent_class)->get_info (provider, cnc);
-                info = *vinfo;
-                info.provider_name = "Virtual";
-                init_done = TRUE;
-        }
-
-        return &info;
+	return "Virtual";
 }
 
 /* module implementation */
@@ -375,7 +363,6 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 		else {
 			if (gda_data_model_get_access_flags (td->spec->data_model) & GDA_DATA_MODEL_ACCESS_RANDOM)
 				proxy = g_object_new (GDA_TYPE_DATA_PROXY, 
-						      "dict", gda_object_get_dict (GDA_OBJECT (td->spec->data_model)), 
 						      "model", td->spec->data_model, 
 						      "sample_size", 0, NULL);
 			else {
@@ -624,7 +611,7 @@ virtualColumn (sqlite3_vtab_cursor *cur, sqlite3_context *ctx, int i)
 
 	TRACE ();
 
-	GdaParameter *param;
+	GdaHolder *param;
 	
 	if (i == cursor->ncols) {
 		/* private hidden column, which returns the row number */
@@ -639,7 +626,7 @@ virtualColumn (sqlite3_vtab_cursor *cur, sqlite3_context *ctx, int i)
 	}
 	else {
 		const GValue *value;
-		value = gda_parameter_get_value (param);
+		value = gda_holder_get_value (param);
 
 		if (!value || gda_value_is_null (value))
 			sqlite3_result_null (ctx);
@@ -738,7 +725,7 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 
 			/*g_print ("%d => %s\n", i, sqlite3_value_text (apData [i]));*/
 			type = gda_column_get_g_type (gda_data_model_describe_column ((GdaDataModel*) vtable->proxy, i - 2));
-			value = gda_value_new_from_string (sqlite3_value_text (apData [i]), type);
+			value = gda_value_new_from_string ((const gchar*) sqlite3_value_text (apData [i]), type);
 			res = gda_data_model_set_value_at ((GdaDataModel*) vtable->proxy, i - 2, rowid, value, &error);
 			gda_value_free (value);
 			if (!res) {
@@ -767,7 +754,7 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 			GValue *value;
 			type = gda_column_get_g_type (gda_data_model_describe_column ((GdaDataModel*) vtable->proxy, i - 2));
 			if (sqlite3_value_text (apData [i]))
-				value = gda_value_new_from_string (sqlite3_value_text (apData [i]), type);
+				value = gda_value_new_from_string ((const gchar*) sqlite3_value_text (apData [i]), type);
 			else
 				value = gda_value_new_null ();
 			/*g_print ("TXT #%s# => value %p (type=%s)\n", sqlite3_value_text (apData [i]), value,

@@ -134,10 +134,10 @@ do_test_read_direct_1 ()
 	gchar *file;
 	GdaDataModel *import, *proxy;
 	GSList *errors;
-	GdaParameterList *options;
+	GdaSet *options;
 
 	file = g_build_filename (CHECK_FILES, "tests", "data-models", FILE, NULL);
-	options = gda_parameter_list_new_inline (NULL, "TITLE_AS_FIRST_LINE", G_TYPE_BOOLEAN, TRUE, NULL);
+	options = gda_set_new_inline (1, "TITLE_AS_FIRST_LINE", G_TYPE_BOOLEAN, TRUE);
 	import = gda_data_model_import_new_file (file, TRUE, options);
 	g_free (file);
 	g_object_unref (options);
@@ -150,8 +150,7 @@ do_test_read_direct_1 ()
 		return FALSE;
 	}
 
-	proxy = g_object_new (GDA_TYPE_DATA_PROXY, "dict", gda_object_get_dict (GDA_OBJECT (import)), 
-			      "model", import, "sample_size", 0, NULL);
+	proxy = g_object_new (GDA_TYPE_DATA_PROXY, "model", import, "sample_size", 0, NULL);
 	g_object_unref (import);
 	if (!proxy) {
 #ifdef CHECK_EXTRA_INFO
@@ -170,10 +169,10 @@ do_test_read_direct_2 ()
 	gchar *file;
 	GdaDataModel *import, *proxy;
 	GSList *errors;
-	GdaParameterList *options;
+	GdaSet *options;
 
 	file = g_build_filename (CHECK_FILES, "tests", "data-models", FILE, NULL);
-	options = gda_parameter_list_new_inline (NULL, "TITLE_AS_FIRST_LINE", G_TYPE_BOOLEAN, TRUE, NULL);
+	options = gda_set_new_inline (1, "TITLE_AS_FIRST_LINE", G_TYPE_BOOLEAN, TRUE);
 	import = gda_data_model_import_new_file (file, TRUE, options);
 	g_free (file);
 	g_object_unref (options);
@@ -206,10 +205,10 @@ do_test_array ()
 	gchar *file;
 	GdaDataModel *import, *model, *proxy;
 	GSList *errors;
-	GdaParameterList *options;
+	GdaSet *options;
 
 	file = g_build_filename (CHECK_FILES, "tests", "data-models", FILE, NULL);
-	options = gda_parameter_list_new_inline (NULL, "TITLE_AS_FIRST_LINE", G_TYPE_BOOLEAN, TRUE, NULL);
+	options = gda_set_new_inline (1, "TITLE_AS_FIRST_LINE", G_TYPE_BOOLEAN, TRUE);
 	import = gda_data_model_import_new_file (file, TRUE, options);
 	g_free (file);
 	g_object_unref (options);
@@ -253,10 +252,10 @@ do_test_prop_change (void)
 	gchar *file;
 	GdaDataModel *import, *model, *proxy;
 	GSList *errors;
-	GdaParameterList *options;
+	GdaSet *options;
 
 	file = g_build_filename (CHECK_FILES, "tests", "data-models", FILE, NULL);
-	options = gda_parameter_list_new_inline (NULL, "TITLE_AS_FIRST_LINE", G_TYPE_BOOLEAN, TRUE, NULL);
+	options = gda_set_new_inline (1, "TITLE_AS_FIRST_LINE", G_TYPE_BOOLEAN, TRUE);
 	import = gda_data_model_import_new_file (file, TRUE, options);
 	g_free (file);
 	g_object_unref (options);
@@ -339,7 +338,6 @@ do_test_prop_change (void)
 	clean_expected_signals (proxy);
 
 	retval = TRUE;
- out:
 	g_object_unref (proxy);
 	return retval;
 }
@@ -352,10 +350,10 @@ do_test_proxied_model_modif (void)
 	gchar *file;
 	GdaDataModel *import, *model, *proxy;
 	GSList *errors;
-	GdaParameterList *options;
+	GdaSet *options;
 
 	file = g_build_filename (CHECK_FILES, "tests", "data-models", FILE, NULL);
-	options = gda_parameter_list_new_inline (NULL, "TITLE_AS_FIRST_LINE", G_TYPE_BOOLEAN, TRUE, NULL);
+	options = gda_set_new_inline (1, "TITLE_AS_FIRST_LINE", G_TYPE_BOOLEAN, TRUE);
 	import = gda_data_model_import_new_file (file, TRUE, options);
 	g_free (file);
 	g_object_unref (options);

@@ -3,7 +3,7 @@
  *
  * AUTHORS:
  *	   Rodrigo Moya <rodrigo@gnome-db.org>
- *         Carlos Perelló Marín <carlos@gnome-db.org>
+ *         Carlos Perellï¿½ Marï¿½n <carlos@gnome-db.org>
  *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
@@ -143,12 +143,16 @@ read_rows_to_init_col_types (GdaSqliteRecordset *model)
 		if (pmodel->prep_stmt->types[i] == GDA_TYPE_NULL)
 			missing_cols [nb_missing++] = i;
 	}
+	/*
+	if (nb_missing == 0)
+		g_print ("Hey!, all columns are known for prep stmt %p\n", pmodel->prep_stmt);
+	*/
 	for (; nb_missing > 0; ) {
 		GdaPRow *prow;
-		/*g_print ("Reading row %d\n", model->priv->next_row_num);*/
 		prow = fetch_next_sqlite_row (model, TRUE, NULL);
 		if (!prow)
 			break;
+		/*g_print ("Read row %d for prep stmt %p\n", model->priv->next_row_num - 1, pmodel->prep_stmt);*/
 		for (i = nb_missing - 1; i >= 0; i--) {
 			if (pmodel->prep_stmt->types [missing_cols [i]] != GDA_TYPE_NULL) {
 				/*g_print ("Found type '%s' for col %d\n", 
@@ -159,6 +163,8 @@ read_rows_to_init_col_types (GdaSqliteRecordset *model)
 			}
 		}
 	}
+	if (nb_missing > 0)
+		g_print ("Hey!, some columns are still not known for prep stmt %p\n", pmodel->prep_stmt);
 	g_free (missing_cols);
 }
 
@@ -167,17 +173,17 @@ read_rows_to_init_col_types (GdaSqliteRecordset *model)
  * this function
  */
 GdaDataModel *
-gda_sqlite_recordset_new_with_types (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaDataModelAccessFlags flags, gint nbcols, ...)
+gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaDataModelAccessFlags flags, GType *col_types)
 {
 	GdaSqliteRecordset *model;
-        SQLITEcnc *scnc;
+        SqliteConnectionData *scnc;
         gint i;
 	GdaDataModelAccessFlags rflags;
 
         g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
         g_return_val_if_fail (ps != NULL, NULL);
 
-	scnc = (SQLITEcnc*) gda_connection_internal_get_provider_data (cnc);
+	scnc = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!scnc)
 		return NULL;
 
@@ -201,11 +207,19 @@ gda_sqlite_recordset_new_with_types (GdaConnection *cnc, GdaSqlitePStmt *ps, Gda
 
 		/* create prepared statement's types */
 		_GDA_PSTMT (ps)->types = g_new0 (GType, _GDA_PSTMT (ps)->ncols); /* all types are initialized to GDA_TYPE_NULL */
-		va_list ap;
-		va_start (ap, nbcols);
-		for (i = 0; (i < nbcols) && (i < _GDA_PSTMT (ps)->ncols); i++)
-			_GDA_PSTMT (ps)->types [i] = va_arg (ap, GType);
-		va_end (ap);
+		if (col_types) {
+			for (i = 0; ; i++) {
+				if (col_types [i] > 0) {
+					if (col_types [i] == G_TYPE_NONE)
+						break;
+					if (i >= _GDA_PSTMT (ps)->ncols)
+						g_warning (_("Column %d is out of range (0-%d), ignoring its specified type"), i,
+							   _GDA_PSTMT (ps)->ncols - 1);
+					else
+						_GDA_PSTMT (ps)->types [i] = col_types [i];
+				}
+			}
+		}
 		
 		/* fill GdaColumn's data */
 		for (i=0, list = _GDA_PSTMT (ps)->tmpl_columns; 
@@ -277,19 +291,8 @@ gda_sqlite_recordset_new_with_types (GdaConnection *cnc, GdaSqlitePStmt *ps, Gda
         return GDA_DATA_MODEL (model);
 }
 
-
-/*
- * the @ps struct is modified and transfered to the new data model created in
- * this function
- */
-GdaDataModel *
-gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaDataModelAccessFlags flags)
-{
-	return gda_sqlite_recordset_new_with_types (cnc, ps, flags, 0);
-}
-
 static GType
-fuzzy_get_gtype (SQLITEcnc *scnc, GdaSqlitePStmt *ps, gint colnum)
+fuzzy_get_gtype (SqliteConnectionData *scnc, GdaSqlitePStmt *ps, gint colnum)
 {
 	const gchar *ctype;
 	GType gtype = GDA_TYPE_NULL;
@@ -300,7 +303,7 @@ fuzzy_get_gtype (SQLITEcnc *scnc, GdaSqlitePStmt *ps, gint colnum)
 	ctype = sqlite3_column_decltype (ps->sqlite_stmt, colnum);
 	if (ctype)
 		gtype = GPOINTER_TO_INT (g_hash_table_lookup (scnc->types, ctype));
-	else {
+	if (gtype == GDA_TYPE_NULL) {
 		int stype;
 		stype = sqlite3_column_type (ps->sqlite_stmt, colnum);
 
@@ -333,11 +336,11 @@ static GdaPRow *
 fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **error)
 {
 	int rc;
-	SQLITEcnc *scnc;
+	SqliteConnectionData *scnc;
 	GdaSqlitePStmt *ps;
 	GdaPRow *prow = NULL;
 
-	scnc = (SQLITEcnc*) gda_connection_internal_get_provider_data (model->priv->cnc);
+	scnc = (SqliteConnectionData*) gda_connection_internal_get_provider_data (model->priv->cnc);
 	if (!scnc)
 		return NULL;
 	ps = GDA_SQLITE_PSTMT (GDA_PMODEL (model)->prep_stmt);
@@ -391,6 +394,17 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 				else
 					bin->binary_length = 0;
 				gda_value_take_binary (value, bin);
+			}
+			else if (type == G_TYPE_BOOLEAN)
+				g_value_set_boolean (value, sqlite3_column_int (ps->sqlite_stmt, col) == 0 ? FALSE : TRUE);
+			else if (type == G_TYPE_DATE) {
+				TO_IMPLEMENT;
+			}
+			else if (type == GDA_TYPE_TIME) {
+				TO_IMPLEMENT;
+			}
+			else if (type == GDA_TYPE_TIMESTAMP) {
+				TO_IMPLEMENT;
 			}
 			else 
 				g_error ("Unhandled GDA type %s in SQLite recordset", 

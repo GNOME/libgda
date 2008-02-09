@@ -3,7 +3,7 @@
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
- *	Carlos Perelló Marín <carlos@gnome-db.org>
+ *	Carlos PerellÃ³ MarÃ­n <carlos@gnome-db.org>
  *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
@@ -27,8 +27,7 @@
 
 #include <glib/gmacros.h>
 #include <glib/gtypes.h>
-#include <libgda/gda-value.h>
-#include <libgda/gda-connection.h>
+#include <libgda/libgda.h>
 
 #ifdef HAVE_SQLITE
 #include <sqlite3.h>
@@ -45,12 +44,12 @@ typedef struct {
 	GHashTable   *types; /* key = type name, value = GType */
 	GdaDataModel *functions_model;
 	GdaDataModel *aggregates_model;
-} SQLITEcnc;
+} SqliteConnectionData;
 
 
 /* 
  * Utility functions
  */
-void _gda_sqlite_update_types_hash (SQLITEcnc *scnc);
+void _gda_sqlite_update_types_hash (SqliteConnectionData *scnc);
 
 #endif

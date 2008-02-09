@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 2007 The GNOME Foundation
+ * Copyright (C) 2007 - 2008 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -130,9 +130,6 @@ static gboolean             gda_data_model_dir_set_values (GdaDataModel *model, 
 static gint                 gda_data_model_dir_append_values (GdaDataModel *model, const GList *values, GError **error);
 static gboolean             gda_data_model_dir_remove_row (GdaDataModel *model, gint row, GError **error);
 
-#ifdef GDA_DEBUG
-static void gda_data_model_dir_dump (GdaDataModelDir *model, guint offset);
-#endif
 static void add_error (GdaDataModelDir *model, const gchar *err);
 static void update_data_model (GdaDataModelDir *model);
 
@@ -198,12 +195,6 @@ gda_data_model_dir_class_init (GdaDataModelDirClass *klass)
 
 	/* virtual functions */
 	object_class->dispose = gda_data_model_dir_dispose;
-#ifdef GDA_DEBUG
-        GDA_OBJECT_CLASS (klass)->dump = (void (*)(GdaObject *, guint)) gda_data_model_dir_dump;
-#endif
-
-        /* class attributes */
-        GDA_OBJECT_CLASS (klass)->id_unique_enforced = FALSE;
 }
 
 static void
@@ -282,7 +273,7 @@ gda_data_model_dir_get_type (void)
                         NULL
                 };
 
-		type = g_type_register_static (GDA_TYPE_OBJECT, "GdaDataModelDir", &info, 0);
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaDataModelDir", &info, 0);
 		g_type_add_interface_static (type, GDA_TYPE_DATA_MODEL, &data_model_info);
 	}
 	return type;
@@ -653,29 +644,6 @@ gda_data_model_dir_get_property (GObject *object,
 		}
 	}
 }
-
-#ifdef GDA_DEBUG
-static void
-gda_data_model_dir_dump (GdaDataModelDir *model, guint offset)
-{
-	gchar *stroff;
-
-	stroff = g_new0 (gchar, offset+1);
-	memset (stroff, ' ', offset);
-
-	if (model->priv) {
-		g_print ("%s" D_COL_H1 "GdaDataModelDir %p (name=%s, id=%s)\n" D_COL_NOR,
-			 stroff, model, gda_object_get_name (GDA_OBJECT (model)), 
-			 gda_object_get_id (GDA_OBJECT (model)));
-		
-	}
-	else
-		g_print ("%s" D_COL_ERR "Using finalized object %p" D_COL_NOR, stroff, model);
-
-	g_free (stroff);
-}
-#endif
-
 
 /**
  * gda_data_model_dir_new
@@ -1197,7 +1165,8 @@ gda_data_model_dir_append_values (GdaDataModel *model, const GList *values, GErr
 				bin_data = g_new0 (GdaBinary, 1);
 				bin_to_free = TRUE;
 			}
-			if (g_file_set_contents (complete_filename, bin_data->data, bin_data->binary_length, NULL)) {
+			if (g_file_set_contents (complete_filename, (gchar *) bin_data->data, 
+						 bin_data->binary_length, NULL)) {
 				FileRow *row;
 				
 				row = file_row_new ();

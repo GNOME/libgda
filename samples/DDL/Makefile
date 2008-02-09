@@ -1,5 +1,5 @@
-CFLAGS = -Wall -g -DGDA_DISABLE_DEPRECATED `pkg-config --cflags libgda-3.0`
-LDFLAGS = `pkg-config --libs libgda-3.0`
+CFLAGS = -Wall -g -DGDA_DISABLE_DEPRECATED `pkg-config --cflags libgda-4.0`
+LDFLAGS = `pkg-config --libs libgda-4.0`
 
 all: ddl
 

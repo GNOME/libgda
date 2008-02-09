@@ -150,16 +150,6 @@ GdaDataModelIter
 @iter: 
 
 
-<!-- ##### FUNCTION gda_data_model_iter_get_column_for_param ##### -->
-<para>
-
-</para>
-
-@iter: 
-@param: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_data_model_iter_get_param_for_column ##### -->
 <para>
 

@@ -69,8 +69,10 @@ const gchar        *gda_holder_get_id                  (GdaHolder *holder);
 #define gda_holder_new_int(id,anint) gda_holder_new_inline (G_TYPE_INT, (id), (anint))
 
 const GValue       *gda_holder_get_value               (GdaHolder *holder);
+gchar              *gda_holder_get_value_str           (GdaHolder *holder, GdaDataHandler *dh);
 gboolean            gda_holder_set_value               (GdaHolder *holder, const GValue *value);
 gboolean            gda_holder_take_value              (GdaHolder *holder, GValue *value);
+gboolean            gda_holder_set_value_str           (GdaHolder *holder, GdaDataHandler *dh, const gchar *value);
 
 const GValue       *gda_holder_get_default_value       (GdaHolder *holder);
 void                gda_holder_set_default_value       (GdaHolder *holder, const GValue *value);

@@ -1,0 +1,111 @@
+"bool","pg_catalog.bool","NULL","boolean, 'true'/'false'","NULL",FALSE
+"bytea","pg_catalog.bytea","NULL","variable-length string, binary values escaped","NULL",FALSE
+"char","pg_catalog.char","NULL","single character","NULL",FALSE
+"name","pg_catalog.name","NULL","63-character type for storing system identifiers","NULL",FALSE
+"int8","pg_catalog.int8","NULL","~18 digit integer, 8-byte storage","NULL",FALSE
+"int2","pg_catalog.int2","NULL","-32 thousand to 32 thousand, 2-byte storage","NULL",FALSE
+"int2vector","pg_catalog.int2vector","NULL","array of int2, used in system tables","NULL",TRUE
+"int4","pg_catalog.int4","NULL","-2 billion to 2 billion integer, 4-byte storage","NULL",FALSE
+"regproc","pg_catalog.regproc","NULL","registered procedure","NULL",TRUE
+"text","pg_catalog.text","NULL","variable-length string, no limit specified","NULL",FALSE
+"oid","pg_catalog.oid","NULL","object identifier(oid), maximum 4 billion","NULL",TRUE
+"tid","pg_catalog.tid","NULL","(Block, offset), physical location of tuple","NULL",TRUE
+"xid","pg_catalog.xid","NULL","transaction id","NULL",TRUE
+"cid","pg_catalog.cid","NULL","command identifier type, sequence in transaction id","NULL",TRUE
+"oidvector","pg_catalog.oidvector","NULL","array of oids, used in system tables","NULL",TRUE
+"smgr","pg_catalog.smgr","NULL","storage manager","NULL",TRUE
+"point","pg_catalog.point","NULL","geometric point '(x, y)'","NULL",FALSE
+"lseg","pg_catalog.lseg","NULL","geometric line segment '(pt1,pt2)'","NULL",FALSE
+"path","pg_catalog.path","NULL","geometric path '(pt1,...)'","NULL",FALSE
+"box","pg_catalog.box","NULL","geometric box '(lower left,upper right)'","NULL",FALSE
+"polygon","pg_catalog.polygon","NULL","geometric polygon '(pt1,...)'","NULL",FALSE
+"line","pg_catalog.line","NULL","geometric line (not implemented)'","NULL",FALSE
+"_line","pg_catalog._line","NULL","NULL","NULL",TRUE
+"float4","pg_catalog.float4","NULL","single-precision floating point number, 4-byte storage","NULL",FALSE
+"float8","pg_catalog.float8","NULL","double-precision floating point number, 8-byte storage","NULL",FALSE
+"abstime","pg_catalog.abstime","NULL","absolute, limited-range date and time (Unix system time)","NULL",FALSE
+"reltime","pg_catalog.reltime","NULL","relative, limited-range time interval (Unix delta time)","NULL",FALSE
+"tinterval","pg_catalog.tinterval","NULL","(abstime,abstime), time interval","NULL",FALSE
+"unknown","pg_catalog.unknown","NULL","NULL","NULL",TRUE
+"circle","pg_catalog.circle","NULL","geometric circle '(center,radius)'","NULL",FALSE
+"_circle","pg_catalog._circle","NULL","NULL","NULL",TRUE
+"money","pg_catalog.money","NULL","monetary amounts, $d,ddd.cc","NULL",FALSE
+"_money","pg_catalog._money","NULL","NULL","NULL",TRUE
+"macaddr","pg_catalog.macaddr","NULL","XX:XX:XX:XX:XX:XX, MAC address","NULL",FALSE
+"inet","pg_catalog.inet","NULL","IP address/netmask, host address, netmask optional","NULL",FALSE
+"cidr","pg_catalog.cidr","NULL","network IP address/netmask, network address","NULL",FALSE
+"_bool","pg_catalog._bool","NULL","NULL","NULL",TRUE
+"_bytea","pg_catalog._bytea","NULL","NULL","NULL",TRUE
+"_char","pg_catalog._char","NULL","NULL","NULL",TRUE
+"_name","pg_catalog._name","NULL","NULL","NULL",TRUE
+"_int2","pg_catalog._int2","NULL","NULL","NULL",TRUE
+"_int2vector","pg_catalog._int2vector","NULL","NULL","NULL",TRUE
+"_int4","pg_catalog._int4","NULL","NULL","NULL",TRUE
+"_regproc","pg_catalog._regproc","NULL","NULL","NULL",TRUE
+"_text","pg_catalog._text","NULL","NULL","NULL",TRUE
+"_oid","pg_catalog._oid","NULL","NULL","NULL",TRUE
+"_tid","pg_catalog._tid","NULL","NULL","NULL",TRUE
+"_xid","pg_catalog._xid","NULL","NULL","NULL",TRUE
+"_cid","pg_catalog._cid","NULL","NULL","NULL",TRUE
+"_oidvector","pg_catalog._oidvector","NULL","NULL","NULL",TRUE
+"_bpchar","pg_catalog._bpchar","NULL","NULL","NULL",TRUE
+"_varchar","pg_catalog._varchar","NULL","NULL","NULL",TRUE
+"_int8","pg_catalog._int8","NULL","NULL","NULL",TRUE
+"_point","pg_catalog._point","NULL","NULL","NULL",TRUE
+"_lseg","pg_catalog._lseg","NULL","NULL","NULL",TRUE
+"_path","pg_catalog._path","NULL","NULL","NULL",TRUE
+"_box","pg_catalog._box","NULL","NULL","NULL",TRUE
+"_float4","pg_catalog._float4","NULL","NULL","NULL",TRUE
+"_float8","pg_catalog._float8","NULL","NULL","NULL",TRUE
+"_abstime","pg_catalog._abstime","NULL","NULL","NULL",TRUE
+"_reltime","pg_catalog._reltime","NULL","NULL","NULL",TRUE
+"_tinterval","pg_catalog._tinterval","NULL","NULL","NULL",TRUE
+"_polygon","pg_catalog._polygon","NULL","NULL","NULL",TRUE
+"aclitem","pg_catalog.aclitem","NULL","access control list","NULL",TRUE
+"_aclitem","pg_catalog._aclitem","NULL","NULL","NULL",TRUE
+"_macaddr","pg_catalog._macaddr","NULL","NULL","NULL",TRUE
+"_inet","pg_catalog._inet","NULL","NULL","NULL",TRUE
+"_cidr","pg_catalog._cidr","NULL","NULL","NULL",TRUE
+"bpchar","pg_catalog.bpchar","NULL","char(length), blank-padded string, fixed storage length","NULL",FALSE
+"varchar","pg_catalog.varchar","NULL","varchar(length), non-blank-padded string, variable storage length","NULL",FALSE
+"date","pg_catalog.date","NULL","ANSI SQL date","NULL",FALSE
+"time","pg_catalog.time","NULL","hh:mm:ss, ANSI SQL time","NULL",FALSE
+"timestamp","pg_catalog.timestamp","NULL","date and time","NULL",FALSE
+"_timestamp","pg_catalog._timestamp","NULL","NULL","NULL",TRUE
+"_date","pg_catalog._date","NULL","NULL","NULL",TRUE
+"_time","pg_catalog._time","NULL","NULL","NULL",TRUE
+"timestamptz","pg_catalog.timestamptz","NULL","date and time with time zone","NULL",FALSE
+"_timestamptz","pg_catalog._timestamptz","NULL","NULL","NULL",TRUE
+"interval","pg_catalog.interval","NULL","@ <number> <units>, time interval","NULL",FALSE
+"_interval","pg_catalog._interval","NULL","NULL","NULL",TRUE
+"_numeric","pg_catalog._numeric","NULL","NULL","NULL",TRUE
+"timetz","pg_catalog.timetz","NULL","hh:mm:ss, ANSI SQL time","NULL",FALSE
+"_timetz","pg_catalog._timetz","NULL","NULL","NULL",TRUE
+"bit","pg_catalog.bit","NULL","fixed-length bit string","NULL",FALSE
+"_bit","pg_catalog._bit","NULL","NULL","NULL",TRUE
+"varbit","pg_catalog.varbit","NULL","variable-length bit string","NULL",FALSE
+"_varbit","pg_catalog._varbit","NULL","NULL","NULL",TRUE
+"numeric","pg_catalog.numeric","NULL","numeric(precision, decimal), arbitrary precision number","NULL",FALSE
+"refcursor","pg_catalog.refcursor","NULL","reference cursor (portal name)","NULL",TRUE
+"_refcursor","pg_catalog._refcursor","NULL","NULL","NULL",TRUE
+"regprocedure","pg_catalog.regprocedure","NULL","registered procedure (with args)","NULL",TRUE
+"regoper","pg_catalog.regoper","NULL","registered operator","NULL",TRUE
+"regoperator","pg_catalog.regoperator","NULL","registered operator (with args)","NULL",TRUE
+"regclass","pg_catalog.regclass","NULL","registered class","NULL",TRUE
+"regtype","pg_catalog.regtype","NULL","registered type","NULL",TRUE
+"_regprocedure","pg_catalog._regprocedure","NULL","NULL","NULL",TRUE
+"_regoper","pg_catalog._regoper","NULL","NULL","NULL",TRUE
+"_regoperator","pg_catalog._regoperator","NULL","NULL","NULL",TRUE
+"_regclass","pg_catalog._regclass","NULL","NULL","NULL",TRUE
+"_regtype","pg_catalog._regtype","NULL","NULL","NULL",TRUE
+"record","pg_catalog.record","NULL","NULL","NULL",TRUE
+"cstring","pg_catalog.cstring","NULL","NULL","NULL",TRUE
+"any","pg_catalog.any","NULL","NULL","NULL",TRUE
+"anyarray","pg_catalog.anyarray","NULL","NULL","NULL",TRUE
+"void","pg_catalog.void","NULL","NULL","NULL",TRUE
+"trigger","pg_catalog.trigger","NULL","NULL","NULL",TRUE
+"language_handler","pg_catalog.language_handler","NULL","NULL","NULL",TRUE
+"internal","pg_catalog.internal","NULL","NULL","NULL",TRUE
+"opaque","pg_catalog.opaque","NULL","NULL","NULL",TRUE
+"anyelement","pg_catalog.anyelement","NULL","NULL","NULL",TRUE
+"to_remove","pg_catalog.to_remove","NULL","NULL","NULL",TRUE

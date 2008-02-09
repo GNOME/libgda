@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<serv_op>
+  <parameters id="VIEW_DESC_P">
+    <parameter id="VIEW_NAME" _name="View" _descr="View to delete" gdatype="gchararray" nullok="FALSE" source="_DICT_VIEWS_"/>
+    <parameter id="VIEW_IFEXISTS" _name="If exists" _descr="Drop view only if it exists" gdatype="gboolean"/>
+    <parameter id="REFERENCED_ACTION" _name="References" _descr="What to do with objects referencing the view" gdatype="gchararray" nullok="FALSE" source="action_cb:0">
+      <gda_value>RESTRICT</gda_value>
+    </parameter>
+  </parameters>
+
+  <!-- Sources -->
+  <sources>
+    <gda_array name="action_cb">
+      <gda_array_field name="id" gdatype="gchararray"/>
+      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_data>
+        <gda_array_row>
+          <gda_value>CASCADE</gda_value>
+          <_gda_value>Automatically drop objects that depend on the view (CASCADE)</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>RESTRICT</gda_value>
+          <_gda_value>Refuse to drop the view if any objects depend on it (RESTRICT)</_gda_value>
+        </gda_array_row>
+      </gda_array_data>
+    </gda_array>
+  </sources>
+</serv_op>

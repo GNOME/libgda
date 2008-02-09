@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2007 The GNOME Foundation.
+ * Copyright (C) 2007 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -24,7 +24,7 @@
 #define __GDA_DATA_MODEL_DSN_LIST_H__
 
 #include "gda-decl.h"
-#include <libgda/gda-object.h>
+#include <glib-object.h>
 
 G_BEGIN_DECLS
 
@@ -39,12 +39,12 @@ typedef struct _GdaDataModelDsnListClass GdaDataModelDsnListClass;
 typedef struct _GdaDataModelDsnListPrivate GdaDataModelDsnListPrivate;
 
 struct _GdaDataModelDsnList {
-	GdaObject                     object;
+	GObject                     object;
 	GdaDataModelDsnListPrivate *priv;
 };
 
 struct _GdaDataModelDsnListClass {
-	GdaObjectClass                object_class;
+	GObjectClass                object_class;
 };
 
 GType gda_data_model_dsn_list_get_type (void) G_GNUC_CONST;

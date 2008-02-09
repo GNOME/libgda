@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <gda_array id="EXPORT" name="Exported Data">
-  <gda_array_field id="EXPORT:FI0" name="actor_id" title="actor_id" gdatype="GdaShort" size="2" nullok="TRUE" table="film_actor"/>
-  <gda_array_field id="EXPORT:FI1" name="film_id" title="film_id" gdatype="GdaShort" size="2" nullok="TRUE" table="film_actor"/>
-  <gda_array_field id="EXPORT:FI2" name="last_update" title="last_update" gdatype="GdaTimestamp" size="8" nullok="TRUE" table="film_actor"/>
+  <gda_array_field id="FI0" name="actor_id" title="actor_id" gdatype="GdaShort" size="2" nullok="TRUE" table="film_actor"/>
+  <gda_array_field id="FI1" name="film_id" title="film_id" gdatype="GdaShort" size="2" nullok="TRUE" table="film_actor"/>
+  <gda_array_field id="FI2" name="last_update" title="last_update" gdatype="GdaTimestamp" size="8" nullok="TRUE" table="film_actor"/>
   <gda_array_data>
     <gda_array_row>
       <gda_value>1</gda_value>

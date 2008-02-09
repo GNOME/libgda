@@ -1,5 +1,5 @@
 /* GNOME DB Postgres Provider
- * Copyright (C) 1998 - 2007 The GNOME Foundation
+ * Copyright (C) 1998 - 2008 The GNOME Foundation
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -496,6 +496,22 @@ get_pg_version_float (const gchar *str)
 	return retval;
 }
 
+static void
+pq_notice_processor (GdaPostgresConnectionData *data, const char *message)
+{
+	GdaConnectionEvent *error;
+
+	if (!message)
+		return;
+
+        error = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
+        gda_connection_event_set_description (error, message);
+        gda_connection_event_set_code (error, -1);
+        gda_connection_event_set_source (error, gda_connection_get_provider (data->cnc));
+        gda_connection_event_set_sqlstate (error, "-1");
+
+        gda_connection_add_event (data->cnc, error);
+}
 
 /* open_connection handler for the GdaPostgresProvider class */
 static gboolean
@@ -620,7 +636,7 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	PQclear (pg_res);
 
 	/*
-	 * Get the vesrion as a float
+	 * Get the version as a float
 	 */
 	pg_res = gda_postgres_PQexec_wrap (cnc, pconn, "SELECT version ()");
 	version = g_strdup (PQgetvalue(pg_res, 0, 0));
@@ -676,6 +692,9 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE, priv_data);
 
+	/* handle LibPQ's notices */
+	PQsetNoticeProcessor (pconn, (PQnoticeProcessor) pq_notice_processor, priv_data);
+	
 	return TRUE;
 }
 
@@ -900,6 +919,9 @@ gda_postgres_provider_supports_operation (GdaServerProvider *provider, GdaConnec
 
 	case GDA_SERVER_OPERATION_CREATE_INDEX:
 	case GDA_SERVER_OPERATION_DROP_INDEX:
+
+	case GDA_SERVER_OPERATION_CREATE_VIEW:
+	case GDA_SERVER_OPERATION_DROP_VIEW:
 		return TRUE;
 	default:
 		return FALSE;
@@ -991,6 +1013,12 @@ gda_postgres_provider_render_operation (GdaServerProvider *provider, GdaConnecti
 		break;
 	case GDA_SERVER_OPERATION_DROP_INDEX:
 		sql = gda_postgres_render_DROP_INDEX (provider, cnc, op, error);
+		break;
+	case GDA_SERVER_OPERATION_CREATE_VIEW:
+		sql = gda_postgres_render_CREATE_VIEW (provider, cnc, op, error);
+		break;
+	case GDA_SERVER_OPERATION_DROP_VIEW:
+		sql = gda_postgres_render_DROP_VIEW (provider, cnc, op, error);
 		break;
 	default:
 		g_assert_not_reached ();

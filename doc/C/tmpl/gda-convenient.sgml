@@ -75,6 +75,15 @@ Do quickly some actions
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_get_default_handler ##### -->
+<para>
+
+</para>
+
+@for_type: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_insert_row_into_table ##### -->
 <para>
 

@@ -1,5 +1,5 @@
 /* GNOME DB Postgres Provider
- * Copyright (C) 2006 The GNOME Foundation
+ * Copyright (C) 2006 - 2008 The GNOME Foundation
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -636,3 +636,106 @@ gda_postgres_render_DROP_INDEX   (GdaServerProvider *provider, GdaConnection *cn
 	return sql;
 }
 
+gchar *
+gda_postgres_render_CREATE_VIEW (GdaServerProvider *provider, GdaConnection *cnc, 
+				 GdaServerOperation *op, GError **error)
+{
+	GString *string;
+	const GValue *value;
+	gboolean allok = TRUE;
+	gchar *sql = NULL;
+	GdaServerOperationNode *node;
+
+	string = g_string_new ("CREATE ");
+
+	value = gda_server_operation_get_value_at (op, "/VIEW_DEF_P/VIEW_OR_REPLACE");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
+		g_string_append (string, "OR REPLACE ");
+
+	value = gda_server_operation_get_value_at (op, "/VIEW_DEF_P/VIEW_TEMP");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
+		g_string_append (string, "TEMP ");
+
+	g_string_append (string, "VIEW ");
+		
+	value = gda_server_operation_get_value_at (op, "/VIEW_DEF_P/VIEW_NAME");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append (string, g_value_get_string (value));
+
+	node = gda_server_operation_get_node_info (op, "/FIELDS_A");
+	if (node) {
+		gint nrows;
+		gint i;
+		/* finding if there is a composed primary key */
+		nrows = gda_data_model_get_n_rows (node->model);
+		for (i = 0; (i < nrows) && allok; i++) {
+			if (i == 0)
+				g_string_append (string, " (");
+			value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_NAME/%d", i);
+			if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value)) {
+				if (i != 0) 
+					g_string_append (string, ", ");
+				
+				g_string_append_c (string, '`');
+				g_string_append (string, g_value_get_string (value));
+				g_string_append_c (string, '`');
+				g_string_append_c (string, ' ');
+			}
+			else {
+				g_set_error (error, 0, 0, _("Incorrect specified column name"));
+				allok = FALSE;
+			}
+		}
+		if (i > 0)
+			g_string_append (string, ")");
+	}
+	
+	if (allok) {
+		value = gda_server_operation_get_value_at (op, "/VIEW_DEF_P/VIEW_DEF");
+		g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+		g_string_append (string, " AS ");
+		g_string_append (string, g_value_get_string (value));
+	}
+
+	if (allok) {
+		sql = string->str;
+		g_string_free (string, FALSE);
+	}
+	else {
+		sql = NULL;
+		g_string_free (string, TRUE);
+	}
+
+	return sql;
+}
+	
+gchar *
+gda_postgres_render_DROP_VIEW (GdaServerProvider *provider, GdaConnection *cnc, 
+			       GdaServerOperation *op, GError **error)
+{
+	GString *string;
+	const GValue *value;
+	gchar *sql = NULL;
+
+	string = g_string_new ("DROP VIEW");
+
+	value = gda_server_operation_get_value_at (op, "/VIEW_DESC_P/VIEW_IFEXISTS");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
+		g_string_append (string, " IF EXISTS");
+
+	value = gda_server_operation_get_value_at (op, "/VIEW_DESC_P/VIEW_NAME");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append_c (string, ' ');
+	g_string_append (string, g_value_get_string (value));
+
+	value = gda_server_operation_get_value_at (op, "/TABLE_DESC_P/REFERENCED_ACTION");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
+		g_string_append_c (string, ' ');
+		g_string_append (string, g_value_get_string (value));
+	}
+
+	sql = string->str;
+	g_string_free (string, FALSE);
+
+	return sql;
+}

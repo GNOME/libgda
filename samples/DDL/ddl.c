@@ -129,8 +129,7 @@ display_products_contents (GdaConnection *cnc)
                 parser = gda_sql_parser_new ();
 
 	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
-	data_model = gda_connection_statement_execute_select (cnc, stmt, NULL, 
-							      GDA_STATEMENT_MODEL_RANDOM_ACCESS, &error);
+	data_model = gda_connection_statement_execute_select (cnc, stmt, NULL, &error);
 	g_object_unref (stmt);
         if (!data_model) 
                 g_error ("Could not get the contents of the 'products' table: %s\n",

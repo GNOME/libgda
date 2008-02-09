@@ -1,6 +1,6 @@
 /* 
  * GDA common library
- * Copyright (C) 2007 The GNOME Foundation.
+ * Copyright (C) 2007 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -26,11 +26,11 @@
 #include "gda-report-engine.h"
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-data-model-iter.h>
-#include <libgda/gda-parameter.h>
-#include <libgda/gda-dict.h>
+#include <libgda/gda-holder.h>
 #include <libgda/gda-connection.h>
 #include <libgda/gda-data-handler.h>
 #include <virtual/libgda-virtual.h>
+#include <sql-parser/gda-sql-parser.h>
 
 #include <libgda/handlers/gda-handler-boolean.h>
 #include <libgda/handlers/gda-handler-numerical.h>
@@ -39,10 +39,10 @@
 #include <libgda/handlers/gda-handler-type.h>
 
 struct _GdaReportEnginePrivate {
-	xmlDocPtr   doc; /* may be %NULL */
-	xmlNodePtr  spec;
-	xmlNodePtr  result;
-	GHashTable *objects;
+	xmlDocPtr     doc; /* may be %NULL */
+	xmlNodePtr    spec;
+	xmlNodePtr    result;
+	GHashTable   *objects;
 };
 
 /* properties */
@@ -283,7 +283,7 @@ gda_report_engine_new_from_file (const gchar *spec_file_name)
  *
  * Declares an object which will be used in @engine, referenced by the @obj_name name.
  *
- * @object must be of a supported types, that it must be a #GdaDict, #GdaConnection, #GdaQuery or #GdaParameter object.
+ * @object must be of a supported types, that it must be a #GdaConnection, #GdaStatement or #GdaHolder object.
  */
 void
 gda_report_engine_declare_object (GdaReportEngine *engine, GObject *object, const gchar *obj_name)
@@ -295,14 +295,12 @@ gda_report_engine_declare_object (GdaReportEngine *engine, GObject *object, cons
 	g_return_if_fail (G_IS_OBJECT (object));
 	g_return_if_fail (obj_name);
 
-	if (GDA_IS_QUERY (object))
-		prefix = 'Q';
+	if (GDA_IS_STATEMENT (object))
+		prefix = 'S';
 	else if (GDA_IS_CONNECTION (object))
 		prefix = 'C';
-	else if (GDA_IS_DICT (object))
-		prefix = 'D';
-	else if (GDA_IS_PARAMETER (object))
-		prefix = 'P';
+	else if (GDA_IS_HOLDER (object))
+		prefix = 'H';
 	else {
 		g_warning (_("Object type '%s' cannot be declared in this context"), G_OBJECT_TYPE_NAME (object));
 		return;
@@ -340,14 +338,12 @@ gda_report_engine_find_declared_object (GdaReportEngine *engine, GType obj_type,
 	g_return_val_if_fail (engine->priv, NULL);
 	g_return_val_if_fail (obj_name, NULL);
 
-	if (obj_type == GDA_TYPE_QUERY)
-		prefix = 'Q';
+	if (obj_type == GDA_TYPE_STATEMENT)
+		prefix = 'S';
 	else if (obj_type == GDA_TYPE_CONNECTION)
 		prefix = 'C';
-	else if (obj_type == GDA_TYPE_DICT)
-		prefix = 'D';
-	else if (obj_type == GDA_TYPE_PARAMETER)
-		prefix = 'P';
+	else if (obj_type == GDA_TYPE_HOLDER)
+		prefix = 'H';
 	else {
 		g_warning (_("Object type '%s' cannot be requested in this context"), g_type_name (obj_type));
 		return NULL;
@@ -416,33 +412,17 @@ gda_report_engine_run_as_doc (GdaReportEngine *engine, GError **error)
 	return doc;
 }
 
-#ifdef GDA_DEBUG
-static void
-dump_node (xmlNodePtr node)
-{
-	xmlBufferPtr buf;
-
-	buf = xmlBufferCreate ();
-	xmlNodeDump (buf, NULL, node, 5, 1);
-	g_print ("----------------- DUMP -----------------\n");
-	xmlBufferDump (stdout, buf);
-	g_print ("\n-------------- END OF DUMP --------------\n");
-	xmlBufferFree (buf);
-}
-#else
-#define dump_node(x)
-#endif
-
-
 struct _RunContext {
 	RunContext         *parent;
 
-	GdaQuery           *query;
+	GdaConnection      *cnc;
+	GdaStatement       *stmt;
 	GdaDataModel       *model;
 	GdaDataModelIter   *iter;
 };
-static GdaParameter *run_context_find_param (GdaReportEngine *engine, RunContext *context, const xmlChar *name);
-static GdaQuery *run_context_find_query (GdaReportEngine *engine, RunContext *context, const xmlChar *name);
+static GdaHolder *run_context_find_param (GdaReportEngine *engine, RunContext *context, const xmlChar *name);
+static GdaStatement *run_context_find_stmt (GdaReportEngine *engine, RunContext *context, const xmlChar *name);
+static GdaConnection *run_context_find_connection (GdaReportEngine *engine, RunContext *context, const xmlChar *name);
 
 static gboolean command_gda_report_section_run (GdaReportEngine *engine, xmlNodePtr node, GSList **created_nodes,
 						RunContext *context, GError **error);
@@ -455,7 +435,7 @@ static gboolean command_gda_report_eval_expr (GdaReportEngine *engine, xmlNodePt
 static gboolean command_gda_report_if (GdaReportEngine *engine, xmlNodePtr node, GSList **created_nodes,
 				       RunContext *context, GError **error);
 
-static gboolean assign_parameters_values (GdaReportEngine *engine, RunContext *context, GdaParameterList *plist, GError **error);
+static gboolean assign_parameters_values (GdaReportEngine *engine, RunContext *context, GdaSet *plist, GError **error);
 static GValue *evaluate_expression (GdaReportEngine *engine, RunContext *context, const gchar *expr, GError **error);
 static xmlNodePtr value_to_node (GdaReportEngine *engine, RunContext *context, const GValue *value);
 
@@ -550,8 +530,9 @@ real_run_at_node (GdaReportEngine *engine, xmlNodePtr topnode, RunContext *conte
 /*
  * Commands implementation
  */
-static RunContext *run_context_push_with_query (GdaReportEngine *engine, RunContext *context, 
-						GdaQuery *query,const gchar *query_name,  GError **error);
+static RunContext *run_context_push_with_stmt (GdaReportEngine *engine, RunContext *context, 
+					       GdaConnection *cnc, GdaStatement *stmt, const gchar *stmt_name,  
+					       GError **error);
 static void        run_context_pop (GdaReportEngine *engine, RunContext *context);
 
 /*
@@ -571,74 +552,93 @@ command_gda_report_section_run (GdaReportEngine *engine, xmlNodePtr node, GSList
 	xmlChar *qname;
 	RunContext *ctx = NULL;
 	
-	/* compute query to push a RunContext */
+	/* compute stmt to push a RunContext */
 	qname = xmlGetProp (node, BAD_CAST "query_name");
 	if (qname) {
-		GdaQuery *query;
-		query = run_context_find_query (engine, context, qname);
-		if (!query) {
+		GdaStatement *stmt;
+		GdaConnection *cnc = NULL;
+		xmlChar *prop;
+
+		/* find statement */
+		stmt = run_context_find_stmt (engine, context, qname);
+		if (!stmt) {
 			g_set_error (error, 0, 0,
 				     _("Unknown query '%s'"), qname);
 			xmlFree (qname);
 			return FALSE;
 		}
-		if (! gda_query_is_select_query (query)) {
-			g_set_error (error, 0, 0,
-				     _("Query must be a SELECT query"));
-			xmlFree (qname);
+
+		/* find which connection to use */
+		prop = xmlGetProp (node, "cnc_name");
+		cnc = run_context_find_connection (engine, context, (gchar *) prop);
+		if (!cnc) {
+			if (prop) {
+				g_set_error (error, 0, 0,
+					     _("No connection named '%s' found"), prop);
+				xmlFree (prop);
+			}
+			else
+				g_set_error (error, 0, 0,
+					     _("No connection specified"));
 			return FALSE;
 		}
-		ctx = run_context_push_with_query (engine, context, query, (gchar *) qname, error);
+
+		ctx = run_context_push_with_stmt (engine, context, cnc, stmt, (gchar *) qname, error);
 		xmlFree (qname);
 	}
 	else {
 		xmlNodePtr child;
 		for (child = node->children; child; child = child->next) {
 			if (!strcmp ((gchar *) child->name, "gda_report_query")) {
-				GdaQuery *query;
+				GdaStatement *stmt;
 				xmlChar *prop;
-				GdaDict *dict = NULL;
 				GdaConnection *cnc = NULL;
+				GdaSqlParser *parser = NULL;
 
-				prop = xmlGetProp (child, "dict_name");
-				if (prop) {
-					dict = (GdaDict *) gda_report_engine_find_declared_object (engine, GDA_TYPE_DICT, 
-												   (gchar *) prop);
-					xmlFree (prop);
-				}
-				if (!dict) {
-					prop = xmlGetProp (child, "cnc_name");
+				/* find which connection to use */
+				prop = xmlGetProp (child, "cnc_name");
+				cnc = run_context_find_connection (engine, context, (gchar *) prop);
+				if (!cnc) {
 					if (prop) {
-						cnc = (GdaConnection *)
-							gda_report_engine_find_declared_object (engine, GDA_TYPE_CONNECTION, 
-												(gchar *) prop);
+						g_set_error (error, 0, 0,
+							     _("No connection named '%s' found"), prop);
 						xmlFree (prop);
-						if (cnc) {
-							dict = gda_dict_new ();
-							gda_dict_set_connection (dict, cnc);
-						}
 					}
+					else
+						g_set_error (error, 0, 0,
+							     _("No connection specified"));
+					return FALSE;
 				}
-
-				query = gda_query_new_from_sql (dict, (gchar *) xmlNodeGetContent (child), 
-								NULL);
-				if (cnc) 
-					/* dict has been created only for this query => destroy it with the query */
-					g_object_set_data_full (G_OBJECT (query), "__gda_dict", dict, g_object_unref);
+				
+				/* parser object */
+				parser = g_object_get_data (G_OBJECT (cnc), "__gda_parser");
+				if (!parser) {
+					parser = gda_connection_create_parser (cnc);
+					g_object_set_data_full (G_OBJECT (cnc), "__gda_parser", 
+								parser, g_object_unref);
+				}
+				
+				/* statement */
+				stmt = gda_sql_parser_parse_string (parser, (gchar *) xmlNodeGetContent (child), 
+								    NULL, error);
+				if (!stmt)
+					return FALSE;
 
 				qname = xmlGetProp (child, BAD_CAST "query_name");
 				if (qname) {
-					ctx = run_context_push_with_query (engine, context, 
-									   query, (gchar *) qname, error);
+					ctx = run_context_push_with_stmt (engine, context, cnc,
+									  stmt, (gchar *) qname, error);
 					xmlFree (qname);
 				}
 				else
-					ctx = run_context_push_with_query (engine, context, 
-									   query, "context", error);
+					ctx = run_context_push_with_stmt (engine, context, cnc,
+									  stmt, "context", error);
 				if (ctx)
-					ctx->query = query;
-				else
+					ctx->stmt = stmt;
+				else {
+					g_object_unref (stmt);
 					return FALSE;
+				}
 				break;
 			}
 		}
@@ -714,47 +714,49 @@ command_gda_report_iter_run (GdaReportEngine *engine, xmlNodePtr node, GSList **
 /*
  * run_context_push
  *
- * Add a new run context level below @context, running @query to create a data model
+ * Add a new run context level below @context, running @stmt to create a data model
  */
 static RunContext *
-run_context_push_with_query (GdaReportEngine *engine, RunContext *context, 
-			     GdaQuery *query, const gchar *query_name, GError **error)
+run_context_push_with_stmt (GdaReportEngine *engine, RunContext *context, GdaConnection *cnc, 
+			    GdaStatement *stmt, const gchar *stmt_name, GError **error)
 {
 	GdaDataModel *model;
-	GdaParameterList *plist;
+	GdaSet *plist;
 
-	plist = gda_query_get_parameter_list (query);
-	if (plist) {
-		if (!assign_parameters_values (engine, context, plist, error)) {
-			g_object_unref (plist);
-			return NULL;
-		}
+	g_assert (cnc);
+	if (!gda_statement_get_parameters (stmt, &plist, error)) 
+		return NULL;
+
+	if (plist && !assign_parameters_values (engine, context, plist, error)) {
+		g_object_unref (plist);
+		return NULL;
 	}
-	model = (GdaDataModel *) gda_query_execute (query, plist, TRUE, error);
+	model = gda_connection_statement_execute_select (cnc, stmt, plist, error);
 	if (plist)
 		g_object_unref (plist);
 	if (!model) 
 		return NULL;
-	gda_object_set_name (GDA_OBJECT (model), (gchar *) query_name);
+	g_object_set_data_full (G_OBJECT (model), "name", g_strdup (stmt_name), g_free);
 	
 	/* create a new RunContext */
 	RunContext *ctx;
 	ctx = g_new0 (RunContext, 1);
-	ctx->query = NULL;
+	ctx->stmt = NULL;
+	ctx->cnc = cnc;
 	ctx->parent = context;
 	ctx->model = model;
 	ctx->iter = gda_data_model_create_iter (model);
 	
 	/* add a parameter for the number of rows, attached to ctx->model */
-	GdaParameter *param;
+	GdaHolder *param;
 	GValue *value;
 	gchar *name;
-	param = gda_parameter_new (G_TYPE_INT);
+	param = gda_holder_new (G_TYPE_INT);
 	value = gda_value_new (G_TYPE_INT);
 	g_value_set_int (value, gda_data_model_get_n_rows  (ctx->model));
-	gda_parameter_set_value (param, value);
+	gda_holder_set_value (param, value);
 	gda_value_free (value);
-	name = g_strdup_printf ("%s/%%nrows", query_name);
+	name = g_strdup_printf ("%s/%%nrows", stmt_name);
 	g_object_set_data_full (G_OBJECT (ctx->model), name, param, g_object_unref);
 	g_free (name);
 
@@ -769,8 +771,8 @@ static void
 run_context_pop (GdaReportEngine *engine, RunContext *context)
 {
 	/*g_print ("<<<< POP CONTEXT %p\n", context);*/
-	if (context->query)
-		g_object_unref (context->query);
+	if (context->stmt)
+		g_object_unref (context->stmt);
 	g_object_unref (context->iter);
 	g_object_unref (context->model);
 	g_free (context);
@@ -791,7 +793,7 @@ command_gda_report_param_value (GdaReportEngine *engine, xmlNodePtr node, GSList
 	xmlChar *prop;
 	prop = xmlGetProp (node, BAD_CAST "param_name");
 	if (prop) {
-		GdaParameter *param;
+		GdaHolder *param;
 		
 		param = run_context_find_param (engine, context, prop);
 		if (!param) {
@@ -804,7 +806,7 @@ command_gda_report_param_value (GdaReportEngine *engine, xmlNodePtr node, GSList
 			const GValue *value;
 			xmlNodePtr child;
 
-			value = gda_parameter_get_value (param);
+			value = gda_holder_get_value (param);
 			child = value_to_node (engine, context, value);
 			*created_nodes = g_slist_prepend (NULL, child);
 		}
@@ -926,35 +928,35 @@ command_gda_report_if (GdaReportEngine *engine, xmlNodePtr node, GSList **create
  * Returns: TRUE on success
  */
 static gboolean
-assign_parameters_values (GdaReportEngine *engine, RunContext *context, GdaParameterList *plist, GError **error)
+assign_parameters_values (GdaReportEngine *engine, RunContext *context, GdaSet *plist, GError **error)
 {
 	if (plist) {
 		GSList *list;
-		for (list = plist->parameters; list; list = list->next) {
-			GdaParameter *source_param;
+		for (list = plist->holders; list; list = list->next) {
+			GdaHolder *source_param;
 			source_param = run_context_find_param (engine, context, 
-							       BAD_CAST gda_object_get_name (GDA_OBJECT (list->data)));
+							       BAD_CAST gda_holder_get_id (GDA_HOLDER (list->data)));
 			if (!source_param) {
 				g_set_error (error, 0, 0,
 					     _("Unknown parameter '%s'"), 
-					     gda_object_get_name (GDA_OBJECT (list->data)));
+					     gda_holder_get_id (GDA_HOLDER (list->data)));
 				return FALSE;
 			}
-			gda_parameter_set_not_null (GDA_PARAMETER (list->data), FALSE);
+			gda_holder_set_not_null (GDA_HOLDER (list->data), FALSE);
 
 			GType ptype, source_ptype;
-			ptype = gda_parameter_get_g_type (GDA_PARAMETER (list->data));
-			source_ptype = gda_parameter_get_g_type (source_param);
+			ptype = gda_holder_get_g_type (GDA_HOLDER (list->data));
+			source_ptype = gda_holder_get_g_type (source_param);
 			if (ptype == source_ptype)
-				gda_parameter_bind_to_param (GDA_PARAMETER (list->data), source_param);
+				gda_holder_set_bind (GDA_HOLDER (list->data), source_param);
 			else {
 				const GValue *source_value;
-				source_value = gda_parameter_get_value (source_param);
+				source_value = gda_holder_get_value (source_param);
 				if (source_value && !gda_value_is_null (source_value)) {
 					GValue *trans;
 					trans = gda_value_new (ptype);
 					if (g_value_transform (source_value, trans)) {
-						gda_parameter_set_value (GDA_PARAMETER (list->data), trans);
+						gda_holder_set_value (GDA_HOLDER (list->data), trans);
 						gda_value_free (trans);
 					}
 					else {
@@ -966,7 +968,7 @@ assign_parameters_values (GdaReportEngine *engine, RunContext *context, GdaParam
 					}
 				}
 				else
-					gda_parameter_set_value (GDA_PARAMETER (list->data), NULL);
+					gda_holder_set_value (GDA_HOLDER (list->data), NULL);
 			}
 		}
 	}
@@ -983,45 +985,63 @@ assign_parameters_values (GdaReportEngine *engine, RunContext *context, GdaParam
 static GValue *
 evaluate_expression (GdaReportEngine *engine, RunContext *context, const gchar *expr, GError **error)
 {
-	static GdaDict *dict = NULL;
-	GdaQuery *query;
-	GdaParameterList *plist;
+	GdaStatement *stmt;
+	GdaSet *plist;
 	GdaDataModel *model;
 	GValue *retval;
 	gchar *sql;
+	GdaConnection *vcnc = NULL;
+	GdaSqlParser *parser;
 
 	/* create a virtual connection to execute the expression, if it's the first time */
-	if (!dict) {
-		GdaVirtualProvider *provider;
-		GdaConnection *vcnc = NULL;
+	if (!vcnc) {
+		static GdaVirtualProvider *provider = NULL;
 
-		provider = gda_vprovider_data_model_new ();
+		if (!provider)
+			provider = gda_vprovider_data_model_new ();
 		vcnc = gda_server_provider_create_connection (NULL, GDA_SERVER_PROVIDER (provider), NULL, NULL, NULL, 0);
-		g_assert (gda_connection_open (vcnc, NULL));
+		if (! gda_connection_open (vcnc, error)) {
+			g_object_unref (vcnc);
+			return NULL;
+		}
+	}
 
-		dict = gda_dict_new ();
-		gda_dict_set_connection (dict, vcnc);
+	/* parser */
+	parser = g_object_get_data (G_OBJECT (context->cnc), "__gda_parser");
+	if (!parser) {
+		parser = gda_connection_create_parser (context->cnc);
+		g_object_set_data_full (G_OBJECT (context->cnc), "__gda_parser", 
+					parser, g_object_unref);
 	}
 	
-	/* create the query 
-	 * REM: SQL injection is prevented because only the first statement is kept by GdaQuery 
+	/* create the stmt 
+	 * REM: SQL injection is prevented because only the first statement is kept by GdaStatement 
 	 */
 	sql = g_strdup_printf ("SELECT %s", expr);
-	query = gda_query_new_from_sql (dict, sql, NULL);
-	g_free (sql);
-	plist = gda_query_get_parameter_list (query);
+	stmt = gda_sql_parser_parse_string (parser, sql, NULL, error);
+	if (!stmt)
+		return NULL;
+	
+	if (!gda_statement_get_parameters (stmt, &plist, error)) {
+		g_object_unref (stmt);
+		return NULL;
+	}
+
 	if (plist) {
 		if (!assign_parameters_values (engine, context, plist, error)) {
+			g_object_unref (stmt);
 			g_object_unref (plist);
 			return NULL;
 		}
 	}
-	model = (GdaDataModel *) gda_query_execute (query, plist, TRUE, error);
+
+	model = gda_connection_statement_execute_select (vcnc, stmt, plist, error);
 	if (plist)
 		g_object_unref (plist);
-	g_object_unref (query);
-	if (!model || !GDA_IS_DATA_MODEL (model)) 
+	g_object_unref (stmt);
+	if (!model) 
 		return NULL;
+
 	if (gda_data_model_get_n_rows (model) != 1) {
 		g_set_error (error, 0, 0,
 			     _("Expression '%s' should return exactly one value"), expr);
@@ -1109,10 +1129,10 @@ value_to_node (GdaReportEngine *engine, RunContext *context, const GValue *value
  *
  * Find a parameter in the context
  */
-static GdaParameter *
+static GdaHolder *
 run_context_find_param (GdaReportEngine *engine, RunContext *context, const xmlChar *name)
 {
-	GdaParameter *retval = NULL;
+	GdaHolder *retval = NULL;
 	RunContext *ctx;
 	gchar **array;
 
@@ -1126,15 +1146,13 @@ run_context_find_param (GdaReportEngine *engine, RunContext *context, const xmlC
 			if (!ctx->model || !ctx->iter)
 				continue;
 			const gchar *obj_name;
-			obj_name = gda_object_get_name (GDA_OBJECT (ctx->model));
+			obj_name = g_object_get_data (G_OBJECT (ctx->model), "name");
 			if (obj_name && !strcmp (obj_name, model_name)) {
 				if (*col_name == '@')
-					retval = gda_parameter_list_find_param (GDA_PARAMETER_LIST (ctx->iter),
-										col_name + 1);
+					retval = gda_set_get_holder (GDA_SET (ctx->iter), col_name + 1);
 				else if (*col_name == '#') {
 					gint nth = atoi (col_name + 1);
-					retval = g_slist_nth_data (GDA_PARAMETER_LIST (ctx->iter)->parameters,
-								   nth);
+					retval = g_slist_nth_data (GDA_SET (ctx->iter)->holders, nth);
 				}
 				else 
 					retval = g_object_get_data (G_OBJECT (ctx->model), name);
@@ -1146,31 +1164,45 @@ run_context_find_param (GdaReportEngine *engine, RunContext *context, const xmlC
 
 	/* try among the engine's declared parameters */
 	if (!retval) 
-		retval = (GdaParameter *) gda_report_engine_find_declared_object (engine, GDA_TYPE_PARAMETER, name);
+		retval = (GdaHolder *) gda_report_engine_find_declared_object (engine, GDA_TYPE_HOLDER, name);
 
 	/*g_print ("=> %p\n", retval);*/
 	return retval;
 }
 
 /*
- * run_context_find_query
+ * run_context_find_stmt
  *
- * Find a query in the context
+ * Find a stmt in the context
  */
-static GdaQuery *
-run_context_find_query (GdaReportEngine *engine, RunContext *context, const xmlChar *name)
+static GdaStatement *
+run_context_find_stmt (GdaReportEngine *engine, RunContext *context, const xmlChar *name)
 {
 	/* search through the contexts */
 	RunContext *ctx;
 	for (ctx = context; ctx; ctx = ctx->parent) {
-		if (ctx->query) {
-			const gchar *qname = gda_object_get_name (GDA_OBJECT (ctx->query));
+		if (ctx->stmt) {
+			const gchar *qname = g_object_get_data (G_OBJECT (ctx->stmt), "name");
 			if (qname && !strcmp (qname, (gchar *)name))
-				return ctx->query;
+				return ctx->stmt;
 		}
 	}
 
 	/* search through the list of declared queries */
-	return (GdaQuery *) gda_report_engine_find_declared_object (engine, GDA_TYPE_QUERY, name);
+	return (GdaStatement *) gda_report_engine_find_declared_object (engine, GDA_TYPE_STATEMENT, name);
 }
 
+/*
+ * run_context_find_connection
+ *
+ * Find a connection in the context, if connection is not named, use the last one available in a Context 
+ */
+static GdaConnection *
+run_context_find_connection (GdaReportEngine *engine, RunContext *context, const xmlChar *name)
+{
+	/* use connection's name if provided */
+	if (name) 
+		return (GdaConnection *) gda_report_engine_find_declared_object (engine, GDA_TYPE_CONNECTION, name);
+	else
+		return context->cnc;
+}

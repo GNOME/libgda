@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2007 The GNOME Foundation.
+ * Copyright (C) 1998 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -27,8 +27,6 @@
 #include <libgda/gda-server-provider-extra.h>
 #include <libgda/gda-server-provider-private.h>
 #include <libgda/gda-data-handler.h>
-#include <libgda/gda-parameter-list.h>
-#include <libgda/gda-renderer.h>
 #include <libgda/gda-util.h>
 #include <libgda/gda-set.h>
 #include <sql-parser/gda-sql-parser.h>
@@ -43,7 +41,21 @@ static void gda_server_provider_init       (GdaServerProvider *provider,
 					    GdaServerProviderClass *klass);
 static void gda_server_provider_finalize   (GObject *object);
 
+static void gda_server_provider_set_property (GObject *object,
+					      guint param_id,
+					      const GValue *value,
+					      GParamSpec *pspec);
+static void gda_server_provider_get_property (GObject *object,
+					      guint param_id,
+					      GValue *value,
+					      GParamSpec *pspec);
+
 static GObjectClass *parent_class = NULL;
+
+/* properties */
+enum {
+        PROP_0,
+};
 
 /* module error */
 GQuark gda_server_provider_error_quark (void)
@@ -69,9 +81,8 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 
 	klass->get_version = NULL;
 	klass->get_server_version = NULL;
-	klass->get_info = NULL;
+	klass->get_name = NULL;
 	klass->supports_feature = NULL;
-	klass->get_schema = NULL;
 
 	klass->get_data_handler = NULL;
 	klass->string_to_value = NULL;
@@ -86,11 +97,13 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 	klass->render_operation = NULL;
 	klass->perform_operation = NULL;
 
-	klass->execute_command = NULL;
-	klass->get_last_insert_id = NULL;
 	klass->begin_transaction = NULL;
 	klass->commit_transaction = NULL;
 	klass->rollback_transaction = NULL;
+
+	 /* Properties */
+        object_class->set_property = gda_server_provider_set_property;
+        object_class->get_property = gda_server_provider_get_property;
 }
 
 static void
@@ -150,11 +163,43 @@ gda_server_provider_get_type (void)
 	return type;
 }
 
+static void
+gda_server_provider_set_property (GObject *object,
+				  guint param_id,
+				  const GValue *value,
+				  GParamSpec *pspec) {
+        GdaServerProvider *prov;
+
+        prov = GDA_SERVER_PROVIDER (object);
+        if (prov->priv) {
+                switch (param_id) {
+		default:
+			g_assert_not_reached ();
+		}
+	}
+}
+
+static void
+gda_server_provider_get_property (GObject *object,
+				  guint param_id,
+				  GValue *value,
+				  GParamSpec *pspec) {
+        GdaServerProvider *prov;
+
+        prov = GDA_SERVER_PROVIDER (object);
+        if (prov->priv) {
+                switch (param_id) {
+		default:
+			g_assert_not_reached ();
+		}
+	}
+}
+
 /**
  * gda_server_provider_get_version
  * @provider: a #GdaServerProvider object.
  *
- * Get the version of the given provider.
+ * Get the version of the provider.
  *
  * Returns: a string containing the version identification.
  */
@@ -172,44 +217,27 @@ gda_server_provider_get_version (GdaServerProvider *provider)
 /**
  * gda_server_provider_get_info
  * @provider: a #GdaServerProvider object.
- * @cnc: a #GdaConnection, or %NULL
  *
- * Retreive some information specific to the provider. The returned #GdaServerProviderInfo
- * structure must not be modified
+ * Get the name (identifier) of the provider
  *
- * Returns: a #GdaServerProviderInfo pointer or %NULL if an error occurred
+ * Returns: a string containing the provider's name
  */
-GdaServerProviderInfo *
-gda_server_provider_get_info (GdaServerProvider *provider, GdaConnection *cnc)
+const gchar *
+gda_server_provider_get_name (GdaServerProvider *provider)
 {
-	GdaServerProviderInfo *retval = NULL;
-	static GdaServerProviderInfo *default_info = NULL;
-
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
-	if (cnc)
-		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	if (CLASS (provider)->get_info != NULL)
-		retval = CLASS (provider)->get_info (provider, cnc);
-
-	if (!retval) {
-		if (!default_info) {
-			default_info = g_new0 (GdaServerProviderInfo, 1);
-			default_info->provider_name = NULL;
-			default_info->is_case_insensitive = TRUE;
-			default_info->implicit_data_types_casts = TRUE;
-			default_info->alias_needs_as_keyword = TRUE;
-		}
-
-		retval = default_info;
+	if (CLASS (provider)->get_name != NULL)
+		return CLASS (provider)->get_name (provider);
+	else {
+		g_warning ("Provider does not implement the get_name() virtual method");
+		return NULL;
 	}
-
-	return retval;
 }
 
 /**
  * gda_server_provider_create_connection
- * @client: a #GdaClient object to which the returned connection will be attached
+ * @client: a #GdaClient object to which the returned connection will be attached, or %NULL
  * @provider: a #GdaServerProvider object.
  * @dsn: a DSN string.
  * @params:
@@ -253,7 +281,7 @@ gda_server_provider_create_connection (GdaClient *client, GdaServerProvider *pro
 
 /**
  * gda_server_provider_create_connection_from_string
- * @client: a #GdaClient object to which the returned connection will be attached
+ * @client: a #GdaClient object to which the returned connection will be attached, or %NULL
  * @provider: a #GdaServerProvider object.
  * @cnc_string: a connection string.
  * @params:
@@ -439,7 +467,7 @@ gda_server_provider_change_database (GdaServerProvider *provider,
  */
 gboolean
 gda_server_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc, 
-					GdaServerOperationType type, GdaParameterList *options)
+					GdaServerOperationType type, GdaSet *options)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 	if (cnc) {
@@ -518,6 +546,18 @@ static OpReq op_req_DROP_INDEX [] = {
 	{NULL}
 };
 
+static OpReq op_req_CREATE_VIEW [] = {
+	{"/VIEW_DEF_P",               GDA_SERVER_OPERATION_NODE_PARAMLIST, 0},
+	{"/VIEW_DEF_P/VIEW_NAME",     GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
+	{"/VIEW_DEF_P/VIEW_DEF",      GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
+	{NULL}
+};
+
+static OpReq op_req_DROP_VIEW [] = {
+	{"/VIEW_DESC_P/VIEW_NAME",   GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
+	{NULL}
+};
+
 /**
  * gda_server_provider_create_operation
  * @provider: a #GdaServerProvider object
@@ -539,7 +579,7 @@ static OpReq op_req_DROP_INDEX [] = {
 GdaServerOperation *
 gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc, 
 				      GdaServerOperationType type, 
-				      GdaParameterList *options, GError **error)
+				      GdaSet *options, GError **error)
 {
 	OpReq **op_req_table = NULL;
 
@@ -558,6 +598,9 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
 
 		op_req_table [GDA_SERVER_OPERATION_CREATE_INDEX] = op_req_CREATE_INDEX;
 		op_req_table [GDA_SERVER_OPERATION_DROP_INDEX] = op_req_DROP_INDEX;
+
+		op_req_table [GDA_SERVER_OPERATION_CREATE_VIEW] = op_req_CREATE_VIEW;
+		op_req_table [GDA_SERVER_OPERATION_DROP_VIEW] = op_req_DROP_VIEW;
 	}
 
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
@@ -567,9 +610,7 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
 	}
 	if (CLASS (provider)->create_operation) {
 		GdaServerOperation *op;
-		GdaServerProviderInfo *pinfo;
 
-		pinfo = gda_server_provider_get_info (provider, cnc);
 		op = CLASS (provider)->create_operation (provider, cnc, type, options, error);
 		if (op) {
 			/* test op's conformance */
@@ -579,11 +620,11 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
 				node_type = gda_server_operation_get_node_type (op, opreq->path, NULL);
 				if (node_type == GDA_SERVER_OPERATION_NODE_UNKNOWN) 
 					g_warning (_("Provider %s created a GdaServerOperation without node for '%s'"),
-						   pinfo->provider_name, opreq->path);
+						   gda_server_provider_get_name (provider), opreq->path);
 				else 
 					if (node_type != opreq->node_type)
 						g_warning (_("Provider %s created a GdaServerOperation with wrong node type for '%s'"),
-							   pinfo->provider_name, opreq->path);
+							   gda_server_provider_get_name (provider), opreq->path);
 				opreq += 1;
 			}
 
@@ -593,13 +634,13 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
 				xmlNodePtr top, node;
 
 				top =  xmlNewNode (NULL, BAD_CAST "serv_op_data");
-				for (list = options->parameters; list; list = list->next) {
+				for (list = options->holders; list; list = list->next) {
 					const gchar *id;
 					gchar *str = NULL;
 					const GValue *value;
 
-					id = gda_object_get_id (GDA_OBJECT (list->data));
-					value = gda_parameter_get_value (GDA_PARAMETER (list->data));
+					id = gda_holder_get_id (GDA_HOLDER (list->data));
+					value = gda_holder_get_value (GDA_HOLDER (list->data));
 					if (value)
 						str = gda_value_stringify (value);
 					node = xmlNewChild (top, NULL, BAD_CAST "op_data", BAD_CAST str);
@@ -670,332 +711,24 @@ gda_server_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 	else {
 		/* use the SQL from the provider to perform the action */
 		gchar *sql;
-		GdaCommand *cmd;
-		GList *reslist;
+		GdaStatement *stmt;
 
 		sql = gda_server_provider_render_operation (provider, cnc, op, error);
 		if (!sql)
 			return FALSE;
 
-		cmd = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+		stmt = gda_sql_parser_parse_string (provider->priv->parser, sql, NULL, error);
 		g_free (sql);
-		reslist = gda_connection_execute_command (cnc, cmd, NULL, error);		
-		gda_command_free (cmd);
-		if (reslist) {
-			GList *list;
-			for (list = reslist; list; list = list->next)
-				if (list->data)
-					g_object_unref (list->data);
-			g_list_free (reslist);
-			return TRUE;
-		}
-		else
+		if (!stmt)
 			return FALSE;
-	}
-}
 
-/**
- * gda_server_provider_execute_command
- * @provider: a #GdaServerProvider object
- * @cnc: a #GdaConnection object using 
- * @cmd: a #GdaCommand 
- * @params: a #GdaParameterList containing a list of optional parameters
- *
- * Executes one or more SQL statements stored in @command, and returns a list of
- * #GdaDataModel and/or #GdaParameterList (or %NULL) objects for each SQL statement
- * in @command following the rule (the number and order of items contained in the returned list is the 
- * same as the number and order of SQL queries in @command if there is no error, 
- * otherwise it depends on the execution options in @params):
- * <itemizedlist>
- *   <listitem><para>A #GdaDataModel is in the list if the statement was a SELECT statement and the statement was successufully executed</para></listitem>
- *   <listitem><para>A #GdaParameterList is in the list if the statement was not a SELECT 
- *        statement and the statement was successufully executed. In this case
- *        (if the provider supports it), then the #GdaParameterList may contain:
- *        <itemizedlist>
- *          <listitem><para>a (gint) #GdaParameter named "IMPACTED_ROWS"</para></listitem>
- *          <listitem><para>a (GObject) #GdaParameter named "EVENT" which contains a GdaConnectionEvent</para></listitem>
- *        </itemizedlist>
- *   </para></listitem>
- *   <listitem><para>%NULL is in the list if the correcponding statement could not be executed</para></listitem>
- * </itemizedlist>
- *
- * See the documentation of the gda_connection_execute_command() for information
- * about the @params list of parameters.
- *
- * For every executed statement, a #GdaDataModel, a #GdaParameterList or %NULL will be appended to the returned list.
- * The returned list may contain fewer items than the @cmd command contained statements depending on the
- * options of @command (see gda_command_set_options()).
- *
- * Returns: a new list, or %NULL
- */
-GList *
-gda_server_provider_execute_command (GdaServerProvider *provider,
-				     GdaConnection *cnc,
-				     GdaCommand *cmd,
-				     GdaParameterList *params)
-{
-	static gboolean env_read = FALSE;
-	static gboolean debug = FALSE;
-
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (cmd != NULL, NULL);
-
-	if (!env_read) {
-		const gchar *str;
-		env_read = TRUE;
-		str = getenv ("GDA_CONNECTION_COMMANDS_SHOW");
-		if (str)
-			debug = TRUE;
-	}
-	if (debug) {
-		static GdaServerProviderInfo *info = NULL;
-
-		if (!info)
-			info = gda_server_provider_get_info (provider, cnc);
-		g_print ("COMMAND> %s (Provider %s on cnx %p)\n", cmd->text, info->provider_name, cnc);
-	}
-
-	gda_connection_clear_events_list (cnc);
-	if (CLASS (provider)->execute_command) 
-		return CLASS (provider)->execute_command (provider, cnc, cmd, params);
-	else {
-		/* use GdaStatement instead */
-		GList *reclist = NULL;
-		GdaCommandOptions options;
-		GdaBatch *batch = NULL;
-		const gchar *left = NULL;
-		const GSList *list;
-		GdaSqlParser *parser;
-		
-		parser = gda_server_provider_internal_get_parser (provider);			
-		options = gda_command_get_options (cmd);
-		switch (gda_command_get_command_type (cmd)) {
-		case GDA_COMMAND_TYPE_SQL:
-			batch = gda_sql_parser_parse_string_as_batch (parser, gda_command_get_text (cmd), &left, NULL);
-			if (left && (*left != 0))
-				g_warning ("COMMAND SQL: %s (REMAIN:%s)\n", gda_command_get_text (cmd), left);
-			break;
-		case GDA_COMMAND_TYPE_TABLE: {
-			gchar **arr;
-			
-			/* there can be multiple table names */
-			arr = g_strsplit (gda_command_get_text (cmd), ";", 0);
-			if (arr) {
-				gint n = 0;
-				batch = gda_batch_new ();
-				while (arr[n]) {
-					gchar *sql = g_strdup_printf ("SELECT * FROM %s", arr[n]);
-					GdaStatement *stmt;
-					stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
-					g_free (sql);
-					if (stmt) {
-						gda_batch_add_statement (batch, stmt);
-						g_object_unref (stmt);
-					}
-					else if (! (options & GDA_COMMAND_OPTION_IGNORE_ERRORS)) {
-						GdaConnectionEvent *error;
-						gchar *str;
-						error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
-						str = g_strdup_printf ("Cannot use table name '%s'", arr[n]);
-						gda_connection_event_set_description (error, str);
-						g_free (str);
-						gda_connection_add_event (cnc, error);
-						g_object_unref (batch);
-						batch = NULL;
-						break;
-					}
-					n++;
-				}
-				g_strfreev (arr);
-			}
-			break;
+		if (gda_connection_statement_execute_non_select (cnc, stmt, NULL, NULL, error) == -1) {
+			g_object_unref (stmt);
+			return FALSE;
 		}
-		case GDA_COMMAND_TYPE_XML:
-		case GDA_COMMAND_TYPE_SCHEMA:
-		case GDA_COMMAND_TYPE_PROCEDURE:
-			/* FIXME: Implement me */
-			return NULL;
-		case GDA_COMMAND_TYPE_INVALID:
-			return NULL;
-		}
-		
-		if (!batch)
-			return NULL;
-		for (list = gda_batch_get_statements (batch); list; list = list->next) {
-			GdaStatement *stmt = GDA_STATEMENT (list->data);
-			GObject *obj;
-			GError *error = NULL;
-			
-			obj = gda_server_provider_statement_execute (provider, cnc, stmt, NULL, 
-								     GDA_STATEMENT_MODEL_RANDOM_ACCESS, &error);
-			if (obj)
-				reclist = g_list_append (reclist, obj);
-			else if (options & GDA_COMMAND_OPTION_IGNORE_ERRORS) {
-				reclist = g_list_append (reclist, NULL);
-				if (error)
-					g_error_free (error);
-			}
-			else {
-				GdaConnectionEvent *event;
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
-				gda_connection_event_set_description (event, error && error->message ? 
-								      error->message : _("No detail"));
-				gda_connection_add_event (cnc, event);
-				reclist = g_list_append (reclist, NULL);
-				if (error)
-					g_error_free (error);
-				break;
-			}
-		}
-		g_object_unref (batch);
-		
-		return reclist;
+		g_object_unref (stmt);
+		return TRUE;
 	}
-}
-
-/**
- * gda_server_provider_execute_query
- * @provider: a #GdaServerProvider object
- * @cnc: a #GdaConnection object using 
- * @query: a #GdaQuery 
- * @params: a #GdaParameterList object obtained using gda_query_get_parameter_list(@query)
- *
- * Executes the @query query, and returns:
- * <itemizedlist>
- *   <listitem><para>A #GdaDataModel if the query was a SELECT statement and the statement was successufully executed</para></listitem>
- *   <listitem><para>A #GdaParameterList if the query was not a SELECT 
- *        query and the query was successufully executed. In this case
- *        (if the provider supports it), then the #GdaParameterList may contain:
- *        <itemizedlist>
- *          <listitem><para>a (gint) #GdaParameter named "IMPACTED_ROWS"</para></listitem>
- *          <listitem><para>a (GObject) #GdaParameter named "EVENT" which contains a GdaConnectionEvent</para></listitem>
- *        </itemizedlist>
- *   </para></listitem>
- *   <listitem><para>%NULL is in the list if the query could not be executed</para></listitem>
- * </itemizedlist>
- *
- * The differences between this function and gda_server_provider_execute_command() are:
- * <itemizedlist>
- *   <listitem><para>Only one query can be executed at a time</para></listitem>
- *   <listitem><para>If the database provider supports it, prepared statements can be used</para></listitem>
- *   <listitem><para>Blobs are handled correctly (because blobs are usually not handled using SQL)</para></listitem>
- * </itemizedlist>
- *
- * Returns: a new (#GdaDataModel or #GdaParameterList) object, or %NULL
- */
-GdaObject *
-gda_server_provider_execute_query (GdaServerProvider *provider,
-				   GdaConnection *cnc,
-				   GdaQuery *query,
-				   GdaParameterList *params)
-{
-	static gboolean env_read = FALSE;
-	static gboolean debug = FALSE;
-
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-
-	if (!env_read) {
-		const gchar *str;
-		env_read = TRUE;
-		str = getenv ("GDA_CONNECTION_COMMANDS_SHOW");
-		if (str)
-			debug = TRUE;
-	}
-
-	if (debug) {
-		static GdaServerProviderInfo *info = NULL;
-		gchar *sql;
-
-		if (!info)
-			info = gda_server_provider_get_info (provider, cnc);
-		sql = gda_renderer_render_as_sql (GDA_RENDERER (query), params, NULL, 0, NULL);
-		g_print ("QUERY> %s (Provider %s on cnx %p)\n", sql, info->provider_name, cnc);
-		g_free (sql);
-	}
-	
-	gda_connection_clear_events_list (cnc);
-	if (CLASS (provider)->execute_query)
-		return CLASS (provider)->execute_query (provider, cnc, query, params);
-	else {
-		/* use GdaStatement instead */
-		GdaStatement *stmt;
-		GObject *st_res;
-		GdaSet *params_set;
-		GdaSqlParser *parser;
-		
-		gchar *sql;
-		GError *error = NULL;
-
-		parser = gda_server_provider_internal_get_parser (provider);
-		sql = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, NULL, 
-						  GDA_RENDERER_PARAMS_AS_DETAILED, &error);
-		if (!sql || 
-		    !(stmt = gda_sql_parser_parse_string (parser, sql, NULL, &error))) {
-			GdaConnectionEvent *event;
-			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
-			gda_connection_event_set_description (event, error && error->message ? error->message : _("No detail"));
-			gda_connection_add_event (cnc, event);
-			g_error_free (error);
-			return NULL;
-		}
-		
-		params_set = gda_set_new_from_parameter_list (params);
-		st_res = gda_server_provider_statement_execute (provider, cnc, stmt, params_set, 
-								GDA_STATEMENT_MODEL_RANDOM_ACCESS, &error);
-		if (params_set)
-			g_object_unref (params_set);
-		if (!st_res) {
-			GdaConnectionEvent *event;
-			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
-			gda_connection_event_set_description (event, error && error->message ? error->message : _("No detail"));
-			gda_connection_add_event (cnc, event);
-			g_error_free (error);
-			return NULL;
-		}
-		
-		if (GDA_IS_DATA_MODEL (st_res))
-			return GDA_OBJECT (st_res);
-		else if (GDA_IS_SET (st_res)) {
-			GdaParameterList *plist;
-			
-			plist = gda_parameter_list_new_from_set (GDA_SET (st_res), gda_object_get_dict (GDA_OBJECT (query)));
-			g_object_unref (st_res);
-			return GDA_OBJECT (plist);
-		}
-		else
-			g_assert_not_reached ();
-	}
-}
-
-
-/**
- * gda_server_provider_get_last_insert_id
- * @provider: a #GdaServerProvider object.
- * @cnc: connection to act upon.
- * @recset: resultset to get the last insert ID from.
- *
- * Retrieve from the given #GdaServerProvider the ID of the last inserted row.
- * A connection must be specified, and, optionally, a result set. If not NULL,
- * the provider should try to get the last insert ID for the given result set.
- *
- * Beware however that the interpretation and usage of this value depends on the
- * DBMS type being used, see the <link linkend="limitations">limitations</link> 
- * of each DBMS for more information.
- *
- * Returns: a string representing the ID of the last inserted row, or NULL
- * if an error occurred or no row has been inserted. It is the caller's
- * reponsibility to free the returned string.
- */
-gchar *
-gda_server_provider_get_last_insert_id (GdaServerProvider *provider, GdaConnection *cnc, GdaDataModel *recset)
-{
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (CLASS (provider)->get_last_insert_id != NULL, NULL);
-
-	return CLASS (provider)->get_last_insert_id (provider, cnc, recset);
 }
 
 /**
@@ -1169,42 +902,6 @@ gda_server_provider_supports_feature (GdaServerProvider *provider,
 
 	return retval;
 
-}
-
-/**
- * gda_server_provider_get_schema
- * @provider: a #GdaServerProvider object
- * @cnc: a #GdaConnection object, or %NULL
- * @schema: the requested kind of information
- * @params: optional parameters
- *
- * Get a #GdaDataModel containing the requested information. See <link linkend="libgda-provider-get-schema">this section</link> for more 
- * information on the columns of the returned #GdaDataModel depending on requested @schema, and for the possible
- * parameters of @params, see the
- * <link linkend="libgda-provider-get-schema">get_schema() virtual method for providers</link> for more details.
- *
- * Returns: a new #GdaDataModel, or %NULL if an error occurred.
- */
-GdaDataModel *
-gda_server_provider_get_schema (GdaServerProvider *provider,
-				GdaConnection *cnc,
-				GdaConnectionSchema schema,
-				GdaParameterList *params,
-				GError **error)
-{
-	GdaDataModel *model;
-
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
-	if (cnc)
-		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (CLASS (provider)->get_schema != NULL, NULL);
-
-	model = CLASS (provider)->get_schema (provider, cnc, schema, params);
-	if (model)
-		/* test model validity */
-		gda_server_provider_test_schema_model (model, schema, error);
-
-	return model;
 }
 
 /**
@@ -1510,164 +1207,3 @@ gda_server_provider_create_parser (GdaServerProvider *provider, GdaConnection *c
 		return NULL;
 }
 
-/**
- * gda_server_provider_statement_to_sql
- * @provider: a #GdaServerProvider provider object
- * @cnc: a #GdaConnection, or %NULL
- * @stmt: a #GdaStatement object
- * @params: a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
- * @flags: SQL rendering flags, as #GdaStatementSqlFlag OR'ed values
- * @params_used: a place to store the list of individual #GdaHolder objects within @params which have been used
- * @error: a place to store errors, or %NULL
- *
- * Renders @stmt as an SQL statement, adapted to the SQL dialect used by @provider
- *
- * Returns: a new string, or %NULL if an error occurred
- */
-gchar *
-gda_server_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection *cnc, 
-				      GdaStatement *stmt, GdaSet *params, GdaStatementSqlFlag flags,
-				      GSList **params_used, GError **error)
-{
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
-	if (cnc)
-		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
-	
-	if (CLASS (provider)->statement_to_sql)
-		return (CLASS (provider)->statement_to_sql)(provider, cnc, stmt, params, flags, params_used, error);
-	else
-		return gda_statement_to_sql_extended (stmt, cnc, params, flags, params_used, error);
-}
-
-/**
- * gda_server_provider_statement_prepare
- * @provider: a #GdaServerProvider provider object
- * @cnc: a #GdaConnection
- * @stmt: a #GdaStatement object
- * @error: a place to store errors, or %NULL
- *
- * Ask the database accessed through the @cnc connection to prepare the usage of @stmt. This is only usefull
- * if @stmt will be used more than once (however some providers may always prepare stamements before executing them).
- *
- * This function is also usefull to make sure @stmt is fully understood by the database before actually executing it.
- *
- * Note however that it is also possible that gda_server_provider_statement_prepare() fails when
- * gda_server_provider_statement_execute() does not fail (this will usually be the case with statements such as
- * <![CDATA["SELECT * FROM ##tablename::string"]]> because database usually don't allow variables to be used in place of a 
- * table name).
- *
- * Returns: TRUE if no error occurred.
- */
-gboolean
-gda_server_provider_statement_prepare (GdaServerProvider *provider, GdaConnection *cnc,
-				       GdaStatement *stmt, GError **error)
-{
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
-	
-	if (CLASS (provider)->statement_prepare)
-		return (CLASS (provider)->statement_prepare)(provider, cnc, stmt, error);
-	else {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     _("Provider does not support statement preparation"));
-		return FALSE;
-	}
-}
-
-/**
- * gda_server_provider_statement_execute
- * @provider: a #GdaServerProvider provider object
- * @cnc: a #GdaConnection
- * @stmt: a #GdaStatement object
- * @params: a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
- * @model_usage: #GdaDataModel usage flags, as #GdaStatementModelUsage values
- * @error: a place to store errors, or %NULL
- *
- * Executes @stmt. As @stmt can, by desing (and if not abused), contain only one SQL statement, the
- * return object will either be:
- * <itemizedlist>
- *   <listitem><para>a #GdaDataModel if @stmt is a SELECT statement (a GDA_SQL_STATEMENT_SELECT, see #GdaSqlStatementType)
- *             containing the results of the SELECT</para></listitem>
- *   <listitem><para>a #GdaSet for any other SQL statement which correctly executed. In this case
- *        (if the provider supports it), then the #GdaSet may contain value holders named:
- *        <itemizedlist>
- *          <listitem><para>a (gint) #GdaHolder named "IMPACTED_ROWS"</para></listitem>
- *          <listitem><para>a (GObject) #GdaHolder named "EVENT" which contains a #GdaConnectionEvent</para></listitem>
- *        </itemizedlist></para></listitem>
- * </itemizedlist>
- *
- * Returns: a #GObject, or %NULL if an error occurred
- */
-GObject *
-gda_server_provider_statement_execute (GdaServerProvider *provider, GdaConnection *cnc, 
-				       GdaStatement *stmt, GdaSet *params, 
-				       GdaStatementModelUsage model_usage, GError **error)
-{
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
-	
-	if (CLASS (provider)->statement_execute)
-		return (CLASS (provider)->statement_execute)(provider, cnc, stmt, params, model_usage, error);
-	else {
-		/* use a GdaCommand to execute */
-		GdaCommand *command;
-		GdaParameterList *plist;
-		gchar *sql;
-		GList *res;
-		GSList *list;
-		GObject *retval = NULL;
-
-		sql = gda_server_provider_statement_to_sql (provider, cnc, stmt, params, 0, NULL, error);
-		if (!sql)
-			return NULL;
-
-		command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, 0);
-		g_free (sql);
-		
-		/* create a GdaParameterList object */
-		plist = gda_parameter_list_new (NULL);
-		if (params) {
-			for (list = params->holders; list; list = list->next) {
-				GdaHolder *holder = GDA_HOLDER (list->data);
-				if (!strcmp (gda_holder_get_id (holder), "ITER_CHUNCK_SIZE")) 
-					gda_parameter_list_add_param_from_value (plist, "ITER_CHUNCK_SIZE",
-										 (GValue*) gda_holder_get_value (holder));
-			}
-		}
-		if (! (model_usage & GDA_STATEMENT_MODEL_RANDOM_ACCESS))
-			gda_parameter_list_add_param_from_string (plist, "ITER_MODEL_ONLY", G_TYPE_BOOLEAN, "TRUE");
-		
-		res = gda_server_provider_execute_command (provider, cnc, command, plist);
-		g_object_unref (plist);
-		if (!res) 
-			return NULL;
-		
-		/* convert the returned GdaParameterList to a GdaSet */
-		g_assert (! res->next);
-		if (!res->data)
-			retval = NULL;
-		else if (GDA_IS_DATA_MODEL (res->data)) 
-			retval = G_OBJECT (res->data);
-		else if (GDA_IS_PARAMETER_LIST (res->data)) {
-			GdaSet *set;
-			GSList *hlist = NULL;
-			for (list = GDA_PARAMETER_LIST (res->data)->parameters; list; list = list->next) {
-				GdaHolder *h;
-
-				h = gda_holder_new (gda_parameter_get_g_type (GDA_PARAMETER (list->data)));
-				gda_holder_set_value (h, gda_parameter_get_value (GDA_PARAMETER (list->data)));
-				hlist = g_slist_append (hlist, h);
-			}
-			set = gda_set_new (hlist);
-			g_slist_foreach (hlist, (GFunc) g_object_unref, NULL);
-			g_slist_free (hlist);
-			retval = G_OBJECT (set);
-		}
-		else
-			g_assert_not_reached ();
-		return retval;
-	}
-}

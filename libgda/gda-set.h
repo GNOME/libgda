@@ -1,6 +1,6 @@
 /* gda-set.h
  *
- * Copyright (C) 2003 - 2007 Vivien Malerba
+ * Copyright (C) 2003 - 2008 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -22,7 +22,6 @@
 #ifndef __GDA_SET_H_
 #define __GDA_SET_H_
 
-#include <libgda/gda-object.h>
 #include "gda-value.h"
 #include <libxml/tree.h>
 
@@ -128,18 +127,19 @@ struct _GdaSetClass
 	void                  (*holder_changed)        (GdaSet *set, GdaHolder *holder);
 	void                  (*holder_plugin_changed) (GdaSet *set, GdaHolder *holder);
 	void                  (*holder_attr_changed)   (GdaSet *set, GdaHolder *holder);
-	void                  (*public_data_changed)  (GdaSet *set);
+	void                  (*public_data_changed)   (GdaSet *set);
 };
 
 GType         gda_set_get_type                 (void) G_GNUC_CONST;
 GdaSet       *gda_set_new                      (GSList *holders);
 GdaSet       *gda_set_new_inline               (gint nb, ...);
 
-GdaSet       *gda_set_new_from_spec_string     (GdaDict *dict, const gchar *xml_spec, GError **error);
-GdaSet       *gda_set_new_from_spec_node       (GdaDict *dict, xmlNodePtr xml_spec, GError **error);
+GdaSet       *gda_set_new_from_spec_string     (const gchar *xml_spec, GError **error);
+GdaSet       *gda_set_new_from_spec_node       (xmlNodePtr xml_spec, GError **error);
 gchar        *gda_set_get_spec                 (GdaSet *set);
 
 gboolean      gda_set_set_holder_value         (GdaSet *set, const gchar *holder_id, ...);
+const GValue *gda_set_get_holder_value         (GdaSet *set, const gchar *holder_id);
 GdaHolder    *gda_set_get_holder               (GdaSet *set, const gchar *holder_id);
 void          gda_set_add_holder               (GdaSet *set, GdaHolder *holder);
 void          gda_set_remove_holder            (GdaSet *set, GdaHolder *holder);

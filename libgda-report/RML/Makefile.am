@@ -7,6 +7,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda-report \
 	-I$(top_builddir) \
 	-I$(top_srcdir) \
+	-I$(top_srcdir)/libgda \
 	$(LIBGDA_CFLAGS) 
 
 gda_report_headers = \

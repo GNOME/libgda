@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2007 The GNOME Foundation.
+ * Copyright (C) 1998 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -31,22 +31,18 @@
 #include <libgda/gda-connection-private.h>
 #include <libgda/gda-connection-event.h>
 #include <glib/gi18n-lib.h>
-#include <libgda/gda-dict.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-server-provider.h>
-#include <libgda/gda-parameter-list.h>
 #include "gda-marshal.h"
 #include <libgda/gda-transaction-status-private.h>
 #include <string.h>
-#include <libgda/sql-transaction/gda-sql-transaction-parser.h>
-#include <libgda/sql-transaction/gda-sql-transaction-tree.h> /* For gda_sql_transaction_destroy(). */
 #include <libgda/gda-enum-types.h>
 #include <libgda/gda-holder.h>
 #include <libgda/gda-set.h>
-#include <libgda/gda-query.h>
+#include <sql-parser/gda-sql-parser.h>
 #include <sql-parser/gda-statement-struct-trans.h>
 
-#define PARENT_TYPE G_TYPE_OBJECT
+#define PROV_CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
 
 struct _GdaConnectionPrivate {
 	GdaClient            *client;
@@ -57,6 +53,8 @@ struct _GdaConnectionPrivate {
 	gchar                *username;
 	gchar                *password;
 	gboolean              is_open;
+
+	GdaMetaStore         *meta_store;
 	GList                *events_list;
 	GList                *recset_list;
 
@@ -103,6 +101,7 @@ enum
         PROP_USERNAME,
         PROP_PASSWORD,
         PROP_OPTIONS,
+	PROP_META_STORE
 };
 
 static GObjectClass *parent_class = NULL;
@@ -198,6 +197,11 @@ gda_connection_class_init (GdaConnectionClass *klass)
                                          g_param_spec_flags ("options", _("Options (connection sharing)"),
 							    NULL, GDA_TYPE_CONNECTION_OPTIONS, GDA_CONNECTION_OPTIONS_NONE,
 							    (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+        g_object_class_install_property (object_class, PROP_META_STORE,
+					 g_param_spec_object ("meta-store", _ ("GdaMetaStore used by the connection"),
+							      NULL, GDA_TYPE_META_STORE,
+							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+
 	
 	object_class->dispose = gda_connection_dispose;
 	object_class->finalize = gda_connection_finalize;
@@ -318,7 +322,7 @@ gda_connection_get_type (void)
 			0,
 			(GInstanceInitFunc) gda_connection_init
 		};
-		type = g_type_register_static (PARENT_TYPE, "GdaConnection", &info, 0);
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaConnection", &info, 0);
 	}
 
 	return type;
@@ -368,6 +372,15 @@ gda_connection_set_property (GObject *object,
                 case PROP_OPTIONS:
 			cnc->priv->options = g_value_get_flags (value);
 			break;
+		case PROP_META_STORE:
+			if (cnc->priv->meta_store) {
+				g_object_unref (cnc->priv->meta_store);
+				cnc->priv->meta_store = NULL;
+			}
+			cnc->priv->meta_store = g_value_get_object (value);
+			if (cnc->priv->meta_store)
+				g_object_ref (cnc->priv->meta_store);
+			break;
                 }
         }	
 }
@@ -404,6 +417,9 @@ gda_connection_get_property (GObject *object,
                 case PROP_OPTIONS:
 			g_value_set_flags (value, cnc->priv->options);
 			break;
+		case PROP_META_STORE:
+			g_value_set_object (value, cnc->priv->meta_store);
+			break;
                 }
         }	
 }
@@ -411,7 +427,7 @@ gda_connection_get_property (GObject *object,
 
 /**
  * gda_connection_new
- * @client: a #GdaClient object.
+ * @client: a #GdaClient object, or %NULL
  * @provider: a #GdaServerProvider object.
  * @dsn: GDA data source to connect to.
  * @username: user name to use to connect.
@@ -437,7 +453,7 @@ gda_connection_new (GdaClient *client,
 {
 	GdaConnection *cnc;
 
-	g_return_val_if_fail (GDA_IS_CLIENT (client), NULL);
+	g_return_val_if_fail (!client || GDA_IS_CLIENT (client), NULL);
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 
 	cnc = g_object_new (GDA_TYPE_CONNECTION, "client", client, "provider_obj", provider, 
@@ -712,23 +728,22 @@ gda_connection_get_provider_obj (GdaConnection *cnc)
 }
 
 /**
- * gda_connection_get_infos
+ * gda_connection_get_provider_name
  * @cnc: a #GdaConnection object
  *
- * Get a pointer to a #GdaServerProviderInfo structure (which must not be modified)
- * to retreive specific information about the provider used by @cnc.
+ * Get the name (identifier) of the database provider used by @cnc
  *
- * Deprecated: 3.2:
+ * Returns: a non modifiable string
  */
-GdaServerProviderInfo *
-gda_connection_get_infos (GdaConnection *cnc)
+const gchar *
+gda_connection_get_provider_name (GdaConnection *cnc)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv, NULL);
 	if (!cnc->priv->provider_obj)
 		return NULL;
 
-	return gda_server_provider_get_info (cnc->priv->provider_obj, cnc);
+	return gda_server_provider_get_name (cnc->priv->provider_obj);
 }
 
 /**
@@ -808,32 +823,6 @@ gda_connection_get_cnc_string (GdaConnection *cnc)
 	g_return_val_if_fail (cnc->priv, NULL);
 
 	return (const gchar *) cnc->priv->cnc_string;
-}
-
-/**
- * gda_connection_get_provider
- * @cnc: a #GdaConnection object.
- *
- * Gets the provider id that this connection is connected to.
- *
- * Returns: the provider ID used to open this connection.
- *
- * Deprecated: 3.2:
- */
-const gchar *
-gda_connection_get_provider (GdaConnection *cnc)
-{
-	GdaServerProviderInfo *pinfo = NULL;
-
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (cnc->priv, NULL);
-
-	if (cnc->priv->provider_obj)
-		pinfo = gda_server_provider_get_info (cnc->priv->provider_obj, NULL);
-	if (pinfo)
-		return(const gchar *) pinfo-> provider_name;
-	else
-		return NULL;
 }
 
 /**
@@ -1035,7 +1024,7 @@ gda_connection_add_event_string (GdaConnection *cnc, const gchar *str, ...)
 	error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 	gda_connection_event_set_description (error, sz);
 	gda_connection_event_set_code (error, -1);
-	gda_connection_event_set_source (error, gda_connection_get_provider (cnc));
+	gda_connection_event_set_source (error, gda_connection_get_provider_name (cnc));
 	gda_connection_event_set_sqlstate (error, "-1");
 	
 	gda_connection_add_event (cnc, error);
@@ -1099,86 +1088,6 @@ gda_connection_clear_events_list (GdaConnection *cnc)
 }
 
 /**
- * gda_connection_execute_command
- * @cnc: a #GdaConnection object.
- * @cmd: a #GdaCommand.
- * @params: parameter list for the commands
- * @error: a place to store an error, or %NULL
- *
- * If you know what to expect from @command (ie if you know it contains a query which will return
- * a data set or a query which will not return a data set) and if @command contains only one query,
- * then you should use
- * gda_connection_execute_select_command() and gda_connection_execute_non_select_command() which are easier
- * to use.
- *
- * This function provides the way to send several commands
- * at once to the data source being accessed by the given
- * #GdaConnection object. The #GdaCommand specified can contain
- * a list of commands in its "text" property (usually a set
- * of SQL commands separated by ';').
- *
- * The return value is a GList of #GdaDataModel's, and #GdaParameterList which you
- * are responsible to free when not needed anymore (and unref the
- * data models and parameter lists when they are not used anymore). See the documentation
- * of gda_server_provider_execute_command() for more information about the returned list.
- *
- * The @params can contain the following parameters:
- * <itemizedlist>
- *   <listitem><para>a "ITER_MODEL_ONLY" parameter of type #G_TYPE_BOOLEAN which, if set to TRUE
- *             will preferably return a data model which can be accessed only using an iterator.</para></listitem>
- *   <listitem><para>a "ITER_CHUNCK_SIZE" parameter of type #G_TYPE_INT which specifies, if "ITER_MODEL_ONLY"
- *             is set to TRUE, how many rows are fetched (and cached) from the database everytime the iterator needs
- *             to access a row for which the data must be fetched from the database. For the providers which support this
- *             setting this parameter to a value greater than one will increase mamory usage but reduce the time spent
- *             to transfer data from the database.</para></listitem>
- * </itemizedlist>
- *
- * Returns: a list of #GdaDataModel and #GdaParameterList or %NULL, as returned by the underlying
- * provider, or %NULL if an error occurred.
- *
- * Deprecated: 3.2:
- */
-GList *
-gda_connection_execute_command (GdaConnection *cnc, GdaCommand *cmd,
-				GdaParameterList *params, GError **error)
-{
-	GList *retval, *events;
-	gboolean has_error = FALSE;
-
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (cnc->priv, NULL);
-	g_return_val_if_fail (cmd != NULL, NULL);
-	g_return_val_if_fail (cnc->priv->provider_obj, NULL);
-
-	/* execute the command on the provider */
-	retval = gda_server_provider_execute_command (cnc->priv->provider_obj,
-						      cnc, cmd, params);
-
-	/* make an error if necessary */
-	events = cnc->priv->events_list;
-	while (events && !has_error) {
-		if (gda_connection_event_get_event_type (GDA_CONNECTION_EVENT (events->data)) == 
-		    GDA_CONNECTION_EVENT_ERROR) {
-			g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_EXECUTE_COMMAND_ERROR,
-				     gda_connection_event_get_description (GDA_CONNECTION_EVENT (events->data)));
-			has_error = TRUE;
-		}
-		events = g_list_next (events);
-	}
-	if (has_error) {
-		GList *list;
-
-		for (list = retval; list; list = list->next)
-			if (list->data)
-				g_object_unref ((GObject*) list->data);
-		g_list_free (retval);
-		retval = NULL;
-	}
-
-	return retval;
-}
-
-/**
  * gda_connection_create_parser
  * @cnc: a #GdaConnection object
  *
@@ -1221,8 +1130,12 @@ gda_connection_statement_to_sql (GdaConnection *cnc, GdaStatement *stmt, GdaSet 
 	g_return_val_if_fail (cnc->priv->provider_obj, NULL);
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
 
-	return gda_server_provider_statement_to_sql (cnc->priv->provider_obj, cnc, stmt, params, flags, params_used,
-						     error);
+	if (PROV_CLASS (cnc->priv->provider_obj)->statement_to_sql)
+		return (PROV_CLASS (cnc->priv->provider_obj)->statement_to_sql) (cnc->priv->provider_obj, 
+										 cnc, stmt, params, flags, 
+										 params_used, error);
+	else
+		return gda_statement_to_sql_extended (stmt, cnc, params, flags, params_used, error);
 }
 
 /**
@@ -1252,39 +1165,113 @@ gda_connection_statement_prepare (GdaConnection *cnc, GdaStatement *stmt, GError
 	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
 
-	return gda_server_provider_statement_prepare (cnc->priv->provider_obj, cnc, stmt, error);
+	if (PROV_CLASS (cnc->priv->provider_obj)->statement_prepare)
+		return (PROV_CLASS (cnc->priv->provider_obj)->statement_prepare)(cnc->priv->provider_obj, 
+										 cnc, stmt, error);
+	else {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
+			     _("Provider does not support statement preparation"));
+		return FALSE;
+	}
 }
+
+static GType *
+make_col_types_array (gint init_size, va_list args)
+{
+	GType *types;
+	gint max = 10;
+	gint col;
+
+	types = g_new (GType, max + 1);
+	for (col = 0; col <= max; col ++)
+		types[col] = G_TYPE_NONE;
+	for (col = va_arg (args, gint); col >= 0; col = va_arg (args, gint)) {
+		if (col > max) {
+			gint i;
+			types = g_renew (GType, types, col + 5 + 1);
+			for (i = max; col <= col + 5; i ++)
+				types[i] = G_TYPE_NONE;
+			max = col + 5;
+		}
+		types [col] = va_arg (args, GType);
+	}
+	return types;
+}
+
+/*
+ * Wrapper which adds @...
+ */
+static GObject *
+gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params, 
+				    GdaStatementModelUsage model_usage, GdaSet **last_insert_row, GError **error, ...)
+{
+	va_list ap;
+	GObject *obj;
+	GType *types;
+	va_start (ap, error);
+	types = make_col_types_array (10, ap);
+	va_end (ap);
+	obj = PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, 
+								       cnc, stmt, params, 
+								       model_usage, 
+								       types, last_insert_row, error);
+	g_free (types);
+	return obj;
+}
+
 
 /**
  * gda_connection_statement_execute
  * @cnc: a #GdaConnection
  * @stmt: a #GdaStatement object
  * @params: a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
- * @model_usage: #GdaDataModel usage flags, as #GdaStatementModelUsage values
+ * @last_insert_row: a place to store a new #GdaSet object which contains the values of the last inserted row, or %NULL
  * @error: a place to store errors, or %NULL
  *
- * Executes @stmt. See gda_server_provider_statement_execute() for more information about the
- * returned #GObject.
+ * Executes @stmt. As @stmt can, by desing (and if not abused), contain only one SQL statement, the
+ * return object will either be:
+ * <itemizedlist>
+ *   <listitem><para>a #GdaDataModel if @stmt is a SELECT statement (a GDA_SQL_STATEMENT_SELECT, see #GdaSqlStatementType)
+ *             containing the results of the SELECT</para></listitem>
+ *   <listitem><para>a #GdaSet for any other SQL statement which correctly executed. In this case
+ *        (if the provider supports it), then the #GdaSet may contain value holders named:
+ *        <itemizedlist>
+ *          <listitem><para>a (gint) #GdaHolder named "IMPACTED_ROWS"</para></listitem>
+ *          <listitem><para>a (GObject) #GdaHolder named "EVENT" which contains a #GdaConnectionEvent</para></listitem>
+ *        </itemizedlist></para></listitem>
+ * </itemizedlist>
+ *
+ * If @last_insert_row is not %NULL and @stmt is an INSERT statement, then it will contain (if the
+ * provider used by @cnc supports it) a new #GdaSet object composed of value holders named "+&lt;column number&gt;"
+ * starting at column 0 which contain the actual inserted values.
  *
  * Returns: a #GObject, or %NULL if an error occurred 
  */
 GObject *
-gda_connection_statement_execute (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params,
-				  GdaStatementModelUsage model_usage, GError **error)
+gda_connection_statement_execute (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params, 
+				  GdaStatementModelUsage model_usage, GdaSet **last_insert_row, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv, NULL);
 	g_return_val_if_fail (cnc->priv->provider_obj, NULL);
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
 
-	return gda_server_provider_statement_execute (cnc->priv->provider_obj, cnc, stmt, params, model_usage, error);
+	if (PROV_CLASS (cnc->priv->provider_obj)->statement_execute)
+		return gda_connection_statement_execute_v (cnc, stmt, params, model_usage, last_insert_row, error, -1);
+	else {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
+			     _("Provider does not support statement execution"));
+		return NULL;
+	}
 }
+
 
 /**
  * gda_connection_statement_execute_non_select
  * @cnc: a #GdaConnection object.
  * @stmt: a #GdaStatement object.
  * @params: a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
+ * @last_insert_row: a place to store a new #GdaSet object which contains the values of the last inserted row, or %NULL
  * @error: a place to store an error, or %NULL
  *
  * Executes a non-selection statement on the given connection.
@@ -1297,11 +1284,15 @@ gda_connection_statement_execute (GdaConnection *cnc, GdaStatement *stmt, GdaSet
  * See the documentation of the gda_connection_execute_statement() for information
  * about the @params list of parameters.
  *
+ * If @last_insert_row is not %NULL and @stmt is an INSERT statement, then it will contain (if the
+ * provider used by @cnc supports it) a new #GdaSet object composed of value holders named "+&lt;column number&gt;"
+ * starting at column 0 which contain the actual inserted values.
+ *
  * Returns: the number of rows affected (&gt;=0) or -1 or -2 
  */
 gint
 gda_connection_statement_execute_non_select (GdaConnection *cnc, GdaStatement *stmt,
-					     GdaSet *params, GError **error)
+					     GdaSet *params, GdaSet **last_insert_row, GError **error)
 {
 	GdaSet *set;
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), -1);
@@ -1316,10 +1307,23 @@ gda_connection_statement_execute_non_select (GdaConnection *cnc, GdaStatement *s
 		return -1;
 	}
 	
-	set = (GdaSet *) gda_server_provider_statement_execute (cnc->priv->provider_obj, cnc, stmt, params, 0, error);
-	if (!set)
+	if (last_insert_row)
+		*last_insert_row = NULL;
+
+	if (PROV_CLASS (cnc->priv->provider_obj)->statement_execute) {
+		set = (GdaSet *) gda_connection_statement_execute_v (cnc, stmt, params, 
+								     GDA_STATEMENT_MODEL_RANDOM_ACCESS, last_insert_row, 
+								     error, -1);
+		if (!set)
+			return -1;
+	}
+	else {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
+			     _("Provider does not support statement execution"));
 		return -1;
-	else if (!GDA_IS_SET (set)) {
+	}
+	
+	if (!GDA_IS_SET (set)) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
 			     _("Statement is a selection statement"));
 		g_object_unref (set);
@@ -1342,7 +1346,7 @@ gda_connection_statement_execute_non_select (GdaConnection *cnc, GdaStatement *s
 }
 
 /**
- *  gda_connection_statement_execute_select
+ * gda_connection_statement_execute_select
  * @cnc: a #GdaConnection object.
  * @stmt: a #GdaStatement object.
  * @params: a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
@@ -1364,56 +1368,104 @@ gda_connection_statement_execute_non_select (GdaConnection *cnc, GdaStatement *s
  */
 GdaDataModel *
 gda_connection_statement_execute_select (GdaConnection *cnc, GdaStatement *stmt,
-					 GdaSet *params, GdaStatementModelUsage model_usage,
-					 GError **error)
+					 GdaSet *params, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv, NULL);
 	g_return_val_if_fail (cnc->priv->provider_obj, NULL);
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
 
-	if ((gda_statement_get_statement_type (stmt) != GDA_SQL_STATEMENT_SELECT) &&
-	    (gda_statement_get_statement_type (stmt) != GDA_SQL_STATEMENT_COMPOUND)) {
-		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
-			     _("Statement is not a selection statement"));
+	if (PROV_CLASS (cnc->priv->provider_obj)->statement_execute) {
+		GdaDataModel *model;
+		model = (GdaDataModel *) gda_connection_statement_execute_v (cnc, stmt, params, 
+									     GDA_STATEMENT_MODEL_RANDOM_ACCESS, NULL,
+									     error, -1);
+		if (model && !GDA_IS_DATA_MODEL (model)) {
+			g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
+				     _("Statement is not a selection statement"));
+			g_object_unref (model);
+			model = NULL;
+		}
+		return model;
+	}
+	else {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
+			     _("Provider does not support statement execution"));
 		return NULL;
 	}
-	return (GdaDataModel *) gda_server_provider_statement_execute (cnc->priv->provider_obj, cnc, stmt, params, 
-								       model_usage, error);
 }
 
 /**
- * gda_connection_get_last_insert_id
+ * gda_connection_statement_execute_select_fullv
  * @cnc: a #GdaConnection object.
- * @recset: recordset.
+ * @stmt: a #GdaStatement object.
+ * @params: a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
+ * @model_usage: specifies how the returned data model will be used as a #GdaStatementModelUsage enum
+ * @error: a place to store an error, or %NULL
+ * @...: a (-1 terminated) list of (column number, GType) specifying for each column mentionned the GType
+ * of the column in the returned #GdaDataModel.
  *
- * Retrieve from the given #GdaConnection the ID of the last inserted row.
- * A connection must be specified, and, optionally, a result set. If not NULL,
- * the underlying provider should try to get the last insert ID for the given result set.
+ * Executes a selection command on the given connection.
  *
- * Beware however that the interpretation and usage of this value depends on the
- * DBMS type being used, , see the <link linkend="limitations">limitations</link> 
- * of each DBMS for more information.
+ * This function returns a #GdaDataModel resulting from the SELECT statement, or %NULL
+ * if an error occurred.
  *
- * Returns: a string representing the ID of the last inserted row, or NULL
- * if an error occurred or no row has been inserted. It is the caller's
- * reponsibility to free the returned string.
+ * This function is just a convenience function around the gda_connection_execute_command()
+ * function.
+ *
+ * See the documentation of the gda_connection_execute_statement() for information
+ * about the @params list of parameters.
+ *
+ * Returns: a #GdaDataModel containing the data returned by the
+ * data source, or %NULL if an error occurred
  */
-gchar *
-gda_connection_get_last_insert_id (GdaConnection *cnc, GdaDataModel *recset)
+GdaDataModel *
+gda_connection_statement_execute_select_fullv (GdaConnection *cnc, GdaStatement *stmt,
+					       GdaSet *params, GdaStatementModelUsage model_usage,
+					       GError **error, ...)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv, NULL);
 	g_return_val_if_fail (cnc->priv->provider_obj, NULL);
+	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
 
-	return gda_server_provider_get_last_insert_id (cnc->priv->provider_obj, cnc, recset);
+	if (PROV_CLASS (cnc->priv->provider_obj)->statement_execute) {
+		va_list ap;
+		GdaDataModel *model;
+		GType *types;
+
+		va_start (ap, error);
+		types = make_col_types_array (10, ap);
+		va_end (ap);
+		model = (GdaDataModel *) PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, 
+												  cnc, stmt, params, 
+												  model_usage, 
+												  types, NULL, error);
+		g_free (types);
+		if (model && !GDA_IS_DATA_MODEL (model)) {
+			g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
+				     _("Statement is not a selection statement"));
+			g_object_unref (model);
+			model = NULL;
+		}
+		return model;
+	}
+	else {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
+			     _("Provider does not support statement execution"));
+		return NULL;
+	}
 }
 
 /**
- * gda_connection_execute_select_command
+ * gda_connection_statement_execute_select_full
  * @cnc: a #GdaConnection object.
- * @cmd: a #GdaCommand.
- * @params: parameter list for the command
+ * @stmt: a #GdaStatement object.
+ * @params: a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
+ * @model_usage: specifies how the returned data model will be used as a #GdaStatementModelUsage enum
+ * @col_types: an array of GType to request each returned #GdaDataModel's column's GType, terminated with the G_TYPE_NONE
+ * value. Any value left to 0 will make the database provider determine the real GType. @col_types can also be %NULL if no
+ * column type is specified.
  * @error: a place to store an error, or %NULL
  *
  * Executes a selection command on the given connection.
@@ -1421,135 +1473,44 @@ gda_connection_get_last_insert_id (GdaConnection *cnc, GdaDataModel *recset)
  * This function returns a #GdaDataModel resulting from the SELECT statement, or %NULL
  * if an error occurred.
  *
- * Note that no check is made regarding the actual number of statements in @cmd or if it really contains a SELECT
- * statement. This function is just a convenience function around the gda_connection_execute_command()
- * function. If @cmd contains several statements, the last #GdaDataModel is returned.
+ * This function is just a convenience function around the gda_connection_execute_command()
+ * function.
  *
- * See the documentation of the gda_connection_execute_command() for information
+ * See the documentation of the gda_connection_execute_statement() for information
  * about the @params list of parameters.
  *
  * Returns: a #GdaDataModel containing the data returned by the
  * data source, or %NULL if an error occurred
- *
- * Deprecated: 3.2:
  */
 GdaDataModel *
-gda_connection_execute_select_command (GdaConnection *cnc, GdaCommand *cmd,
-				       GdaParameterList *params, GError **error)
+gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *stmt,
+					      GdaSet *params, GdaStatementModelUsage model_usage,
+					      GType *col_types, GError **error)
 {
-	GList *reclist, *list;
-	GdaDataModel *model = NULL;
-
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv, NULL);
-	g_return_val_if_fail (cmd != NULL, NULL);
+	g_return_val_if_fail (cnc->priv->provider_obj, NULL);
+	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
 
-	reclist = gda_connection_execute_command (cnc, cmd, params, error);
-	if (!reclist)
-		return NULL;
-
-	for (list = g_list_last (reclist); list && !model; list = list->prev) {
-		model = (GdaDataModel *) (g_list_last (reclist)->data);
-		if (!GDA_IS_DATA_MODEL (model))
+	if (PROV_CLASS (cnc->priv->provider_obj)->statement_execute) {
+		GdaDataModel *model;
+		model = (GdaDataModel *) PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, 
+												  cnc, stmt, params, 
+												  model_usage, 
+												  col_types, NULL, error);
+		if (model && !GDA_IS_DATA_MODEL (model)) {
+			g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
+				     _("Statement is not a selection statement"));
+			g_object_unref (model);
 			model = NULL;
+		}
+		return model;
 	}
-	if (model) {
-		GdaConnectionEvent *event;
-		gchar *str;
-		gint nb = gda_data_model_get_n_rows (model);
-
-		event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
-		if (nb > 1)
-			str = g_strdup_printf (_("(%d rows)"), nb);
-		else if (nb >= 0)
-			str = g_strdup_printf (_("(%d row)"), nb);
-		else
-			str = g_strdup_printf (_("(unknown number of rows)"));
-			
-		gda_connection_event_set_description (event, str);
-		g_free (str);
-		gda_connection_add_event (cnc, event);
-
-		g_object_ref (G_OBJECT (model));
+	else {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
+			     _("Provider does not support statement execution"));
+		return NULL;
 	}
-
-	list = reclist;
-	for (list = reclist; list; list = g_list_next (list))
-		if (list->data)
-			g_object_unref (list->data);
-	g_list_free (reclist);
-
-	return model;
-}
-
-/**
- * gda_connection_execute_non_select_command
- * @cnc: a #GdaConnection object.
- * @cmd: a #GdaCommand.
- * @params: parameter list for the command
- * @error: a place to store an error, or %NULL
- *
- * Executes a non-selection command on the given connection.
- *
- * This function returns the number of rows affected by the execution of @cmd, or -1
- * if an error occurred, or -2 if the provider does not return the number of rows affected.
- *
- * Note that no check is made regarding the actual number of statements in @cmd or if it really contains a non SELECT
- * statement. This function is just a convenience function around the gda_connection_execute_command()
- * function. If @cmd contains several statements, the last #GdaParameterList is returned.
- *
- * See the documentation of the gda_connection_execute_command() for information
- * about the @params list of parameters.
- *
- * Returns: the number of rows affected (&gt;=0) or -1 or -2 
- *
- * Deprecated: 3.2:
- */
-gint
-gda_connection_execute_non_select_command (GdaConnection *cnc, GdaCommand *cmd,
-					   GdaParameterList *params, GError **error)
-{
-	GList *reclist, *list;
-	GdaParameterList *plist = NULL;
-	gint retval = 0;
-
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), -1);
-	g_return_val_if_fail (cnc->priv, -1);
-	g_return_val_if_fail (cmd != NULL, -1);
-
-	reclist = gda_connection_execute_command (cnc, cmd, params, error);
-	if (!reclist)
-		return -1;
-
-	for (list = g_list_last (reclist); list && !plist; list = list->prev) {
-		plist = (GdaParameterList *) (g_list_last (reclist)->data);
-		if (!GDA_IS_PARAMETER_LIST (plist))
-			plist = NULL;
-	}
-	if (plist) {
-		GdaParameter *param;
-
-		param = gda_parameter_list_find_param (plist, "IMPACTED_ROWS");
-		if (param) {
-			const GValue *value;
-
-			value = gda_parameter_get_value (param);
-			if (G_VALUE_TYPE (value) == G_TYPE_INT)
-				retval = g_value_get_int (value);
-			else
-				retval = -2;
-		} 
-		else
-			retval = -2;
-	}
-
-	list = reclist;
-	for (list = reclist; list; list = g_list_next (list))
-		if (list->data)
-			g_object_unref (list->data);
-	g_list_free (reclist);
-
-	return retval;
 }
 
 /**
@@ -1742,38 +1703,329 @@ gda_connection_supports_feature (GdaConnection *cnc, GdaConnectionFeature featur
 	return gda_server_provider_supports_feature (cnc->priv->provider_obj, cnc, feature);
 }
 
+typedef struct {
+	GdaServerProvider  *prov;
+	GdaConnection      *cnc;
+	GError            **error;
+	gboolean            error_set;
+} DetailledCallbackData;
+
+static void
+suggest_update_cb_detailled (GdaMetaStore *store, GdaMetaContext *suggest, DetailledCallbackData *data)
+{
+	if (data->error_set)
+		return;
+	if (!PROV_CLASS (data->prov)->meta_update (data->prov, data->cnc, suggest, data->error)) 
+		data->error_set = TRUE;
+}
+
 /**
- * gda_connection_get_schema
+ * gda_connection_update_meta_store
  * @cnc: a #GdaConnection object.
- * @schema: database schema to get.
- * @params: parameter list.
+ * @context: description of which part of @cnc's associated #GdaMetaStore should be updated, or %NULL
  * @error: a place to store errors, or %NULL
  *
- * Asks the underlying data source for a list of database objects.
+ * Updates @cnc's associated #GdaMetaStore. If @context is not %NULL, then only the parts described by
+ * @context will be updated, and if it is %NULL, then the complete meta store will be updated.
  *
- * This is the function that lets applications ask the different
- * providers about all their database objects (tables, views, procedures,
- * etc). The set of database objects that are retrieved are given by the
- * 2 parameters of this function: @schema, which specifies the specific
- * schema required, and @params, which is a list of parameters that can
- * be used to give more detail about the objects to be returned.
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, GError **error)
+{
+	GdaMetaStore *store;
+	gboolean retval = TRUE;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
+
+	if (!(PROV_CLASS (cnc->priv->provider_obj)->meta_update)) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
+			     _("Provider does not report meta data"));
+		return FALSE;
+	}
+
+	/* Get or create the GdaMetaStore object */
+	store = gda_connection_get_meta_store (cnc);
+	g_assert (store);
+
+	/* prepare local context */
+	if (!context) {
+		GSList *tables, *list;
+		tables = gda_meta_store_get_schema_tables (store);
+		for (list = tables; list; list = list->next) {
+			GdaMetaContext lcontext;
+			memset (&lcontext, 0, sizeof (GdaMetaContext));
+			lcontext.table_name = (gchar *) list->data;
+			if (! PROV_CLASS (cnc->priv->provider_obj)->meta_update (cnc->priv->provider_obj, 
+										 cnc, &lcontext, error)) {
+				retval = FALSE;
+				break;
+			}
+		}
+		g_slist_free (tables);
+	}
+	else {
+		GdaMetaContext lcontext;
+		lcontext = *context;
+		/* alter local context because "_tables" and "_views" always go together so only
+		   "_tables" should be updated and providers should always update "_tables" and "_views"
+		*/
+		if (!strcmp (lcontext.table_name, "_views"))
+			lcontext.table_name = "_tables";
+
+		/* actual update */
+		gulong signal_id;
+		DetailledCallbackData cbd;
+		GError *lerror = NULL;
+		
+		cbd.prov = cnc->priv->provider_obj;
+		cbd.cnc = cnc;
+		cbd.error = &lerror;
+		cbd.error_set = FALSE;
+		signal_id = g_signal_connect (store, "suggest_update",
+					      G_CALLBACK (suggest_update_cb_detailled), &cbd);
+		
+		retval = PROV_CLASS (cnc->priv->provider_obj)->meta_update (cnc->priv->provider_obj, cnc, &lcontext, error);
+		
+		g_signal_handler_disconnect (store, signal_id);
+		if (cbd.error_set)
+			g_propagate_error (error, lerror);
+	}
+
+	return retval;
+}
+
+/*
+ * predefined statements for meta store data retreival
+ */
+typedef struct {
+	GdaConnectionMetaType  meta_type;
+	gint                   nb_filters;
+	gchar                **filters;
+} MetaKey;
+
+static guint
+meta_key_hash (gconstpointer key)
+{
+	return ((((MetaKey*) key)->meta_type) << 2) + ((MetaKey*) key)->nb_filters;
+}
+
+static gboolean
+meta_key_equal (gconstpointer a, gconstpointer b)
+{
+	MetaKey* ak = (MetaKey*) a;
+	MetaKey* bk = (MetaKey*) b;
+	gint i;
+
+	if ((ak->meta_type != bk->meta_type) ||
+	    (ak->nb_filters != bk->nb_filters))
+		return FALSE;
+	for (i = 0; i < ak->nb_filters; i++) 
+		if (strcmp (ak->filters[i], bk->filters[i]))
+			return FALSE;
+
+	return TRUE;
+}
+
+static GHashTable *
+prepare_meta_statements_hash (void)
+{
+	GHashTable *h;
+	MetaKey *key;
+	GdaStatement *stmt;
+	GdaSqlParser *parser = gda_sql_parser_new ();
+	const gchar *sql;
+
+	gchar **name_array = g_new (gchar *, 1);
+	name_array[0] = "name";
+
+	h = g_hash_table_new (meta_key_hash, meta_key_equal);
+	
+	/* GDA_CONNECTION_META_NAMESPACES */
+	key = g_new0 (MetaKey, 1);
+	key->meta_type = GDA_CONNECTION_META_NAMESPACES;
+	sql = "SELECT schema_name, schema_owner, schema_internal FROM _schemata";
+	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+	if (!stmt)
+		g_error ("Could not parse internal statement: %s\n", sql);
+	g_hash_table_insert (h, key, stmt);
+	
+	key = g_new0 (MetaKey, 1);
+	key->meta_type = GDA_CONNECTION_META_NAMESPACES;
+	key->nb_filters = 1;
+	key->filters = name_array;
+	sql = "SELECT schema_name, schema_owner, schema_internal FROM _schemata WHERE schema_name=##name::string";
+	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+	if (!stmt)
+		g_error ("Could not parse internal statement: %s\n", sql);
+	g_hash_table_insert (h, key, stmt);
+
+	/* GDA_CONNECTION_META_TYPES */
+	key = g_new0 (MetaKey, 1);
+	key->meta_type = GDA_CONNECTION_META_TYPES;
+	sql = "SELECT short_type_name, gtype, comments, synonyms FROM _all_types WHERE NOT internal";
+	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+	if (!stmt)
+		g_error ("Could not parse internal statement: %s\n", sql);
+	g_hash_table_insert (h, key, stmt);
+
+	key = g_new0 (MetaKey, 1);
+	key->meta_type = GDA_CONNECTION_META_TYPES;
+	key->nb_filters = 1;
+	key->filters = name_array;
+	sql = "SELECT short_type_name, gtype, comments, synonyms FROM _all_types WHERE NOT internal AND short_type_name=##name::string";
+	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+	if (!stmt)
+		g_error ("Could not parse internal statement: %s\n", sql);
+	g_hash_table_insert (h, key, stmt);
+
+	/* GDA_CONNECTION_META_TABLES */
+	key = g_new0 (MetaKey, 1);
+	key->meta_type = GDA_CONNECTION_META_TABLES;
+	sql = "SELECT table_short_name, table_schema, table_full_name, table_owner, table_comments FROM _tables WHERE table_type='BASE TABLE'";
+	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+	if (!stmt)
+		g_error ("Could not parse internal statement: %s\n", sql);
+	g_hash_table_insert (h, key, stmt);
+
+	key = g_new0 (MetaKey, 1);
+	key->meta_type = GDA_CONNECTION_META_TABLES;
+	key->nb_filters = 1;
+	key->filters = name_array;
+	sql = "SELECT table_short_name, table_schema, table_full_name, table_owner, table_comments FROM _tables WHERE table_type='BASE TABLE' AND table_short_name=##name::string";
+	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+	if (!stmt)
+		g_error ("Could not parse internal statement: %s\n", sql);
+	g_hash_table_insert (h, key, stmt);
+
+	/* GDA_CONNECTION_META_VIEWS */
+	key = g_new0 (MetaKey, 1);
+	key->meta_type = GDA_CONNECTION_META_VIEWS;
+	sql = "SELECT t.table_short_name, t.table_schema, t.table_full_name, t.table_owner, t.table_comments, v.view_definition FROM _views as v NATURAL JOIN _tables as t";
+	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+	if (!stmt)
+		g_error ("Could not parse internal statement: %s\n", sql);
+	g_hash_table_insert (h, key, stmt);
+
+	key = g_new0 (MetaKey, 1);
+	key->meta_type = GDA_CONNECTION_META_VIEWS;
+	key->nb_filters = 1;
+	key->filters = name_array;
+	sql = "SELECT t.table_short_name, t.table_schema, t.table_full_name, t.table_owner, t.table_comments, v.view_definition FROM _views as v NATURAL JOIN _tables as t WHERE table_short_name=##name::string";
+	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+	if (!stmt)
+		g_error ("Could not parse internal statement: %s\n", sql);
+	g_hash_table_insert (h, key, stmt);
+
+	/* GDA_CONNECTION_META_FIELDS */
+	key = g_new0 (MetaKey, 1);
+	key->meta_type = GDA_CONNECTION_META_FIELDS;
+	key->nb_filters = 1;
+	key->filters = name_array;
+	sql = "SELECT c.column_name, c.data_type, c.gtype, c.numeric_precision, c.numeric_scale, c.is_nullable AS 'Nullable', c.column_default, c.extra FROM _columns as c NATURAL JOIN _tables as t WHERE t.table_short_name=##name::string";
+	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+	if (!stmt)
+		g_error ("Could not parse internal statement: %s\n", sql);
+	g_hash_table_insert (h, key, stmt);
+
+	
+
+	return h;
+}
+
+/**
+ * gda_connection_get_meta_store_data
+ * @cnc: a #GdaConnection object.
+ * @meta_type: describes which data to get.
+ * @error: a place to store errors, or %NULL
+ * @nb_filters: the number of filters in the @... argument
+ * @...: a list of (filter name (gchar *), filter value (GValue*)) pairs specifying
+ * the filter to apply to the returned data model's contents (there must be @nb_filters pairs)
  *
- * The list of parameters is specific to each schema type, see the
- * <link linkend="libgda-provider-get-schema">get_schema() virtual method for providers</link> for more details.
+ * Retreives data stored in @cnc's associated #GdaMetaStore object. This method is usefull
+ * to easily get some information about the meta-data associated to @cnc, such as the list of
+ * tables, views, and other database objects.
  *
+ * Note: it's up to the caller to make sure the information contained within @cnc's associated #GdaMetaStore
+ * is up to date using gda_connection_update_meta_store() (it can become outdated if the database's schema
+ * is accessed from outside of Libgda).
+ *
+ * For more information about the returned data model's attributes, or about the @meta_type and @... filter arguments,
+ * see <link linkend="GdaConnectionMetaTypeHead">this description</link>.
+ * 
  * Returns: a #GdaDataModel containing the data required. The caller is responsible
  * of freeing the returned model using g_object_unref().
  */
 GdaDataModel *
-gda_connection_get_schema (GdaConnection *cnc,
-			   GdaConnectionSchema schema,
-			   GdaParameterList *params,
-			   GError **error)
+gda_connection_get_meta_store_data (GdaConnection *cnc,
+				    GdaConnectionMetaType meta_type,
+				    GError **error, gint nb_filters, ...)
 {
+	GdaMetaStore *store;
+	GdaDataModel *model = NULL;
+	static GHashTable *stmt_hash = NULL;
+	GdaStatement *stmt;
+	GdaSet *set = NULL;
+	va_list ap;
+
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv->provider_obj, NULL);
 
-	return gda_server_provider_get_schema (cnc->priv->provider_obj, cnc, schema, params, error);
+	if (!(PROV_CLASS (cnc->priv->provider_obj)->meta_update)) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
+			     _("Provider does not report meta data"));
+		return NULL;
+	}
+
+	/* Get or create the GdaMetaStore object */
+	store = gda_connection_get_meta_store (cnc);
+	g_assert (store);
+	
+	/* fetch the statement */
+	MetaKey key;
+	gint i;
+	gchar *fname;
+	if (!stmt_hash)
+		stmt_hash = prepare_meta_statements_hash ();
+	key.meta_type = meta_type;
+	key.nb_filters = nb_filters;
+	key.filters = g_new (gchar *, nb_filters);
+	va_start (ap, nb_filters);
+	for (i = 0, fname = va_arg (ap, gchar*); fname && (i < nb_filters); fname = va_arg (ap, gchar*), i++) {
+		GdaHolder *h;
+		GValue *v;
+
+		v = va_arg (ap, GValue*);
+		if (!v || gda_value_is_null (v))
+			continue;
+		if (!set)
+			set = gda_set_new (NULL);
+		h = g_object_new (GDA_TYPE_HOLDER, "g-type", G_VALUE_TYPE (v), "id", fname, NULL);
+		gda_holder_set_value (h, v);
+		gda_set_add_holder (set, h);
+		g_object_unref (h);
+		key.filters[i] = fname;
+	}
+	va_end (ap);
+	stmt = g_hash_table_lookup (stmt_hash, &key);
+	g_free (key.filters);
+	if (!stmt) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
+			     _("Wrong filter arguments"));
+		return NULL;
+	}
+
+	/* execute statement to fetch the requested result from the meta store's connection
+	 * REM: at a latter time the data model should be specific and update itself whenever
+	 * the meta store is updated
+	 */
+	model = gda_connection_statement_execute_select (gda_meta_store_get_internal_connection (store), 
+							 stmt, set, error);
+	if (set)
+		g_object_unref (set);
+	
+	return model;
 }
 
 /**
@@ -2013,49 +2265,6 @@ gda_connection_internal_savepoint_removed (GdaConnection *cnc, const gchar *svp_
 #endif		
 }
 
-
-void
-gda_connection_internal_treat_sql (GdaConnection *cnc, const gchar *sql, GdaConnectionEvent *error)
-{
-	gboolean done = FALSE;
-
-	if (!error || (error && (gda_connection_event_get_event_type (error) != GDA_CONNECTION_EVENT_ERROR))) {
-		GdaSqlTransaction *trans;
-
-		trans = gda_sql_transaction_parse_with_error (sql, NULL);
-		if (trans) {
-			switch (trans->trans_type) {
-			case GDA_SQL_TRANSACTION_BEGIN:
-				gda_connection_internal_transaction_started (cnc, NULL, trans->trans_name, 
-									     GDA_TRANSACTION_ISOLATION_UNKNOWN);
-				break;
-			case GDA_SQL_TRANSACTION_COMMIT:
-				gda_connection_internal_transaction_committed (cnc, trans->trans_name);
-				break;
-			case GDA_SQL_TRANSACTION_ROLLBACK:
-				gda_connection_internal_transaction_rolledback (cnc, trans->trans_name);
-				break;
-			case GDA_SQL_TRANSACTION_SAVEPOINT_ADD:
-				gda_connection_internal_savepoint_added (cnc, NULL, trans->trans_name);
-				break;
-			case GDA_SQL_TRANSACTION_SAVEPOINT_REMOVE:
-				gda_connection_internal_savepoint_removed (cnc, trans->trans_name);
-				break;
-			case GDA_SQL_TRANSACTION_SAVEPOINT_ROLLBACK:
-				gda_connection_internal_savepoint_rolledback (cnc, trans->trans_name);
-				break;
-			default:
-				g_assert_not_reached ();
-			}
-			gda_sql_transaction_destroy (trans);
-			done = TRUE;
-		}
-	}
-	
-	if (!done)
-		gda_connection_internal_sql_executed (cnc, sql, error);
-}
-
 void 
 gda_connection_internal_statement_executed (GdaConnection *cnc, GdaStatement *stmt, GdaConnectionEvent *error)
 {
@@ -2111,48 +2320,6 @@ gda_connection_internal_change_transaction_state (GdaConnection *cnc,
 #ifdef GDA_DEBUG_signal
 	g_print ("<< 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
 #endif
-}
-
-void
-gda_connection_force_status (GdaConnection *cnc, gboolean opened)
-{
-	g_return_if_fail (GDA_IS_CONNECTION (cnc));
-
-	if (opened && !cnc->priv->is_open) {
-		cnc->priv->is_open = TRUE;
-#ifdef GDA_DEBUG_signal
-		g_print (">> 'CONN_OPENED' from %s\n", __FUNCTION__);
-#endif
-		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[CONN_OPENED], 0);
-#ifdef GDA_DEBUG_signal
-		g_print ("<< 'CONN_OPENED' from %s\n", __FUNCTION__);
-#endif
-		if (cnc->priv->client)
-			gda_client_notify_connection_opened_event (cnc->priv->client, cnc);
-		return;
-	}
-
-	if (!opened && cnc->priv->is_open) {
-		cnc->priv->is_open = FALSE;
-
-#ifdef GDA_DEBUG_signal
-		g_print (">> 'CONN_TO_CLOSE' from %s\n", __FUNCTION__);
-#endif
-		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[CONN_TO_CLOSE], 0);
-#ifdef GDA_DEBUG_signal
-		g_print ("<< 'CONN_TO_CLOSE' from %s\n", __FUNCTION__);
-#endif
-#ifdef GDA_DEBUG_signal
-		g_print (">> 'CONN_CLOSED' from %s\n", __FUNCTION__);
-#endif
-		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[CONN_CLOSED], 0);
-#ifdef GDA_DEBUG_signal
-		g_print ("<< 'CONN_CLOSED' from %s\n", __FUNCTION__);
-#endif
-
-		if (cnc->priv->client)
-			gda_client_notify_connection_closed_event (cnc->priv->client, cnc);
-	}
 }
 
 /*
@@ -2256,4 +2423,22 @@ gda_connection_internal_get_provider_data (GdaConnection *cnc)
 	if (! cnc->priv->provider_data)
 		gda_connection_add_event_string (cnc, _("Internal error: invalid provider handle"));
 	return cnc->priv->provider_data;
+}
+
+/**
+ * gda_connection_get_meta_store
+ * @cnc: a #GdaConnection object
+ *
+ * Get or initializes the #GdaMetaStore associated to @cnc
+ *
+ * Returns: a #GdaMetaStore object
+ */
+GdaMetaStore *
+gda_connection_get_meta_store (GdaConnection *cnc)
+{
+	if (cnc->priv->meta_store)
+		return cnc->priv->meta_store;
+
+	cnc->priv->meta_store = gda_meta_store_new (NULL);
+	return cnc->priv->meta_store;
 }

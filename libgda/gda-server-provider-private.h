@@ -1,6 +1,6 @@
 /* gda-server-provider-private.h
  *
- * Copyright (C) 2005 - 2007 Vivien Malerba
+ * Copyright (C) 2005 - 2008 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -20,6 +20,8 @@
 
 #ifndef __GDA_SERVER_PROVIDER_PRIVATE__
 #define __GDA_SERVER_PROVIDER_PRIVATE__
+
+#include <libgda/gda-meta-store.h>
 
 struct _GdaServerProviderPrivate {
 	GHashTable    *data_handlers; /* key = a GdaServerProviderHandlerInfo pointer, value = a GdaDataHandler */

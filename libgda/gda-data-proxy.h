@@ -1,6 +1,6 @@
 /* gda-data-proxy.h
  *
- * Copyright (C) 2005 - 2007 Vivien Malerba
+ * Copyright (C) 2005 - 2008 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -23,7 +23,7 @@
 #define __GDA_DATA_PROXY_H_
 
 #include "gda-decl.h"
-#include <libgda/gda-object.h>
+#include <glib-object.h>
 #include <libgda/gda-value.h>
 #include <libgda/gda-enums.h>
 
@@ -50,7 +50,7 @@ typedef enum {
 /* struct for the object's data */
 struct _GdaDataProxy
 {
-	GdaObject               object;
+	GObject                 object;
 	GdaDataProxyPrivate    *priv;
 };
 
@@ -58,7 +58,7 @@ struct _GdaDataProxy
 /* struct for the object's class */
 struct _GdaDataProxyClass
 {
-	GdaObjectClass          parent_class;
+	GObjectClass            parent_class;
 
 	void                 (* row_delete_changed)   (GdaDataProxy *proxy, gint row, gboolean to_be_deleted);
 

@@ -23,7 +23,6 @@
 #ifndef __GDA_PMODEL_H__
 #define __GDA_PMODEL_H__
 
-#include <libgda/gda-object.h>
 #include <glib-object.h>
 #include <libgda/providers-support/gda-prow.h>
 #include <libgda/providers-support/gda-pstmt.h>
@@ -41,7 +40,7 @@ typedef struct _GdaPModelClass   GdaPModelClass;
 typedef struct _GdaPModelPrivate GdaPModelPrivate;
 
 struct _GdaPModel {
-	GdaObject         object;
+	GObject           object;
 	GdaPModelPrivate *priv;
 	GdaPStmt         *prep_stmt; /* use the "prepared-stmt" property to set this */
 	gint              advertized_nrows; /* set when the number of rows becomes known */
@@ -60,7 +59,7 @@ struct _GdaPModel {
  *     OPTIONAL: fetch_at
  */
 struct _GdaPModelClass {
-	GdaObjectClass    parent_class;
+	GObjectClass      parent_class;
 
 	/* GDA_DATA_MODEL_ACCESS_RANDOM */
 	gint             (*fetch_nb_rows) (GdaPModel *model);

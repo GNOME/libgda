@@ -4,7 +4,7 @@
     <title>Initialising</title>
     <para>
       First of all you have to initialise the gda library, i.e. to call the
-      <link linkend="gda-init"><emphasis>gda_init ()</emphasis></link> function, for example:
+      <link linkend="gda-init">gda_init ()</link> function, for example:
     </para>
     <programlisting>
 gda_init ("TestGDA", "0.1", argc, argv);
@@ -97,7 +97,7 @@ do_stuff () {
     <para>
       Closing the connection can be ordered using <link linkend="gda-connection-close">gda_connection_close ()</link>,
       or is automatically done when the connection object is destroyed (as is the case in the example abive when 
-      g_object_unref() is called with the connection as argument).
+      <link linkend="g-object-unref">g_object_unref()</link> is called with the connection as argument).
     </para>
   </sect1>
 
@@ -105,171 +105,41 @@ do_stuff () {
   <sect1>
     <title>Executing queries</title>
     <para>
-      &LIBGDA; offers several ways of executing queries which are outlined here:
+      Any query within &LIBGDA; is represented as a <link linkend="GdaStatement">GdaStatement</link> object. Each 
+      <link linkend="GdaStatement">GdaStatement</link> object can store exactly one SQL statement (SQL statements
+      are generally separated by semi-colons). Several statements can be groupped into a 
+      <link linkend="GdaBatch">GdaBatch</link> object.
+    </para>
+
+    <para>
+      A <link linkend="GdaStatement">GdaStatement</link> object can contain variables, and a value needs to be assigned to
+      each one before the query can be run; the same query object can then be run as a prepared statement, only binding
+      variables each time.
+    </para>
+    <para>
+      GdaStatement objects can be created by:
       <itemizedlist>
-	<listitem><para>Using a <link linkend="GdaCommand">GdaCommand</link> structure which is the simplest
-	    way, and allows one to specify an SQL statement.</para></listitem>
-	<listitem><para>Using a <link linkend="GdaQuery">GdaQuery</link> object which needs a bit more code
-	    but also offers additional features</para></listitem>
+	  <listitem><para>parsing SQL code using <link linkend="gda-sql-parser-parse-string">gda_sql_parser_parse_string ()</link>
+	  from a <link linkend="GdaSqlParser">GdaSqlParser</link> object.</para></listitem>
+	  <listitem><para>building a <link linkend="GdaSqlStatement">GdaSqlStatement</link> structure and creating 
+	  a <link linkend="GdaStatement">GdaStatement</link> object around that structure. This method requires more
+	  knowledge but is more portable across databases</para></listitem>
       </itemizedlist>
     </para>
-    <sect2 id="using-GdaCommand">
-      <para>
-	A <link linkend="GdaCommand">GdaCommand</link> can only contain a <emphasis>static</emphasis> SQL statement
-	without any variables in it, and it is very easy to use.
-      </para>
-      <title>Using a GdaCommand</title>
-      <sect3 id="building-commands">
-	<title>GdaCommand: building a command</title>
-	<para>
-	  A <link linkend="GdaCommand">GdaCommand</link> structure can be created using <link linkend="gda-command-new">
-	    gda_command_new ()</link>. To execute a SQL statement, specify  
-	  <link linkend="GdaCommandType">GDA_COMMAND_TYPE_SQL</link> as the command type. It is also possible to specify
-	  execution options using the <link linkend="GdaCommandOptions">GdaCommandOptions</link> options. 
-	</para>
-	<para>
-	  It is also possible to bundle together several SQL statement within a single GdaCommand structure (the SQL
-	  statements are separated by a ";").
-	</para>
-	<para>
-          For example executing a SELECT statement could be done as in the following code (note that in this code the
-	  programmer <emphasis>knows</emphasis> that the "sql" argument
-	  is a SELECT statement):
-          <programlisting>
-GdaDataModel *
-execute_sql (GdaConnection *connection, const gchar *sql)
-{
-          GdaCommand *command;
-          GdaDataModel *result;
-          
-          command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
-          result  = gda_connection_execute_select_command (connection, command, NULL, NULL);
-          gda_command_free (command);
-          
-          return result;
-}
-          </programlisting>
-	</para>
-      </sect3>
-
-      <sect3 id="normal-queries">
-	<title>GdaCommand: SELECT queries</title>
-	<para>
-	  If the programmer <emphasis>knows</emphasis> that the command is a SELECT query (and that there is
-	  only one statement) then it's best to use the 
-	  <link linkend="gda-connection-execute-select-command">gda_connection_execute_select_command ()</link> method
-	  which will return a single <link linkend="GdaDataModel">GdaDataModel</link> object containing the resultset
-	  of the command's execution, or NULL if an error occurred. 
-	  See the <link linkend="GdaDataModel">GdaDataModel</link>'s documentation for
-	  more information about how to use the resultset, or look at the 
-	  <link linkend="data-model">managing data models</link> section.
-	</para>
-	<para>
-	  For example the following function cound be used to execute a non SELECT query from an SQL statement:
-	  <programlisting>
-static GdaDataModel *
-run_sql_select (GdaConnection *cnc, const gchar *sql)
-{
-        GdaCommand *command;
-        GError *error = NULL;
-        GdaDataModel *res;
-
-        command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, 0);
-        res = gda_connection_execute_select_command (cnc, command, NULL, &amp;error);
-        gda_command_free (command);
-        if (!res)
-                g_error ("Could not execute query: %s\n",error &amp;&amp; error->message ? error->message : "no detail");
-        return res;
-}
-	  </programlisting>
-	</para>
-      </sect3>
-
-      <sect3 id="making-queries">
-	<title>GdaCommand: non SELECT queries</title>
-	<para>
-	  If the programmer <emphasis>knows</emphasis> that the command is not a SELECT query, such as INSERT,
-	  UPDATE or DELETE commands (and that there is
-	  only one statement) then it's best to use the 
-	  <link linkend="gda-connection-execute-non-select-command">gda_connection_execute_non_select_command ()</link> method
-	  which will return the number of affected rows, or a negative value if an error occurred.
-	</para>
-	<para>
-	  Note that it's also possible to use DDL statements (such as "CREATE TABLE...", etc) statement, but in this case
-	  for more portability, it is recommended to use &LIBGDA;'s specific API, 
-	  see <link linkend="DDLIntro">this section</link> for more information.
-	</para>
-	<para>
-	  For example the following function cound be used to execute a non SELECT query from an SQL statement:
-	  <programlisting>
-void
-run_sql_non_select (GdaConnection *cnc, const gchar *sql)
-{
-        GdaCommand *command;
-        GError *error = NULL;
-        gint nrows;
-
-        command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, 0);
-        nrows = gda_connection_execute_non_select_command (cnc, command, NULL, &amp;error);
-        gda_command_free (command);
-        if (nrows == -1)
-                g_error ("NON SELECT error: %s\n", error &amp;&amp; error->message ? error->message : "no detail");
-}
-	  </programlisting>
-	</para>
-      </sect3>
-
-      <sect3 id="multiple-queries">
-	<title>GdaCommand: general usage, multiple statements</title>
-	<para>
-	  In the event the number of SQL statements in the command is unknown, or the kind of SQL statement is unknown,
-	  then the general way is to use the 
-	  <link linkend="gda-connection-execute-command">gda_connection_execute_command ()</link> which returns a list
-	  of objects, one per SQL statement. It is of course also possible to use this method in place of the
-	  other methods examined in the previous sections.
-	</para>
-      </sect3>
-    </sect2>
-
-    <sect2 id="using-GdaQuery">
-      <title>Using a GdaQuery</title>
-      <para>
-	A <link linkend="GdaQuery">GdaQuery</link> object can contain variables, and a value needs to be assigned to
-	each before the query can be run; the same query object can then be run as a prepared statement, only binding
-	variables each time.
-      </para>
-      <para>
-	a GdaQuery object can <emphasis>understood</emphasis> by &LIBGDA; (it can find the fields, the expressions, the tables
-	involved, etc), and the API to maniplate its internals is quite long (it is of a good usage when building queries
-	from known elements without using SQL). However &LIBGDA; offers a simple method to create a GdaQuery from a SQL
-	statement using <link linkend="gda-query-new-from-sql">gda_query_new_from_sql ()</link>.
-      </para>
-      <para>
-	Using a GdaQuery to execute commands has the following advantages:
-	<itemizedlist>
-	  <listitem><para>the SQL statement can be internally treaded as a prepared statement (depending on the database
-	  provider) which speeds query execution</para></listitem>
-	  <listitem><para>variables (place holders) can be used, their syntax being independant of the database actually used,
-	  see the <link linkend="SQL_queries">GDA SQL query syntax</link> for more information</para></listitem>
-	  <listitem><para>if used with a <link linkend="GdaDict">GdaDict</link> dictionary, it is possible to tell
-	  if the query only references existing objects (with some limitations, though)</para></listitem>
-	  <listitem><para>it is possible to know the kind of query a GdaQuery is (SELECT, INSERT, etc)</para></listitem>
-	  <listitem><para>a GdaQuery can only contain one SQL statement</para></listitem>
-	</itemizedlist>
-      </para>
-      <para>
-	Executing a GdaQuery query is a matter of calling <link linkend="gda-query-execute">gda_query_execute ()</link>.
-	Note however that the actual connection object used to execute the query is the 
-	<link linkend="gda-dict-set-connection">connection assigned</link> to the
-	dictionary referenced by the GdaQuery object (the 1st argument of the gda_query_new_from_sql() call).
-      </para>
-      <para>
-	The following example shows how to use a GdaQuery to list the details of some data while making a variable
-	(named "the_id") vary from 0 to 9 (for simplicity, error checking has been removed):
-	<programlisting>
-GdaQuery *query;
-GdaParameterList *params;
-GdaParameter *p;
+    <para>
+      Executing a statement is a matter of calling 
+      <link linkend="gda-connection-statement-execute">gda_connection_statement_execute ()</link> or one of its simplified
+      versions if the nature of the statement (SELECT or not) is known.
+    </para>
+    <para>
+      The following example shows how to use a GdaStatement to list the details of some data while making a variable
+      (named "the_id") vary from 0 to 9 (for simplicity, error checking has been removed):
+      <programlisting>
+GdaConnection *cnc;
+GdaSqlParser *parser;
+GdaStatement *stmt;
+GdaSet *params;
+GdaHolder *p;
 GValue *value;
 gint i;
 
@@ -277,28 +147,23 @@ cnc = ...;
 
 [...]
 
-gda_dict_set_connection (default_dict, cnc);
-query = gda_query_new_from_sql (NULL, 
-                                "SELECT * FROM customers WHERE id=##the_id::gint", NULL);
-params = gda_query_get_parameter_list (query);
-p = gda_parameter_list_find_param (params, "the_id");
+stmt = gda_sql_parser_parse_string (parser, "SELECT * FROM customers WHERE id=##the_id::gint", NULL, NULL);
+gda_statement_get_parameters (stmt, &amp;params, NULL);
+
+p = gda_set_get_holder (params, "the_id");
 value = gda_value_new (G_TYPE_INT);
 for (i = 0; i &lt; 10; i++) {
 	GdaDataModel *res;
 	g_value_set_int (value, i);
-	gda_parameter_set_value (p, value);
-	res = gda_query_execute (query, params, FALSE, NULL);
+	gda_holder_set_value (p, value);
+	res = gda_connection_statement_execute_select (cnc, stmt, params, NULL);
 	gda_data_model_dump (res, stdout);
 	g_object_unref (res);
 }
 g_object_unref (params);
-g_object_unref (query);
-	</programlisting>
-	Note that in the example above, the GdaQuery object is created using the default dictionary (the NULL value is
-	passed as gda_query_new_from_sql() first argument), which is the reason why we assign the "cnc" connection to
-	"default_dict" before.
-      </para>
-    </sect2>
+g_object_unref (stmt);
+      </programlisting>
+    </para>
   </sect1>
   
   <sect1 id="data-model">
@@ -371,8 +236,6 @@ void
 show_data_model (GdaDataModel *dm)
 {
           gint column_id;
-          GdaParameter *param;
-          const GValue *value;
           GdaDataModelIter *iter;
           
           for (column_id = 0; column_id &lt; gda_data_model_get_n_columns (dm);
@@ -384,11 +247,8 @@ show_data_model (GdaDataModel *dm)
           gda_data_model_iter_move_next (iter);
           while (gda_data_model_iter_is_valid (iter)) {
                     GSList *list;
-                    for (list = GDA_PARAMETER_LIST (iter)-&gt;parameters; list; list = list-&gt;next) {
-                              char *str;
-
-                              value = gda_parameter_get_value (GDA_PARAMETER (list-&gt;data));
-                              str = gda_value_stringify (value);
+                    for (list = GDA_SET (iter)-&gt;holder; list; list = list-&gt;next) {
+                              str = gda_holder_get_value_str (GDA_HOLDER (list-&gt;data), NULL);
                               g_print ("%s\t", str);
                               g_free (str);
                     }
@@ -411,7 +271,8 @@ show_data_model (GdaDataModel *dm)
   <sect1 id="transactions">
     <title>Managing transactions</title>
     <para>
-      On any connection (as a GdaConnection object), if the database provider used by the connection supports it, 
+      On any connection (as a <link linkend="GdaConnection">GdaConnection</link> object), 
+      if the database provider used by the connection supports it, 
       transactions may be started, committed or rolledback, or savepoints added, removed or rolledback. 
       These operations can be performed using Libgda's API (such as 
       <link linkend="gda-connection-begin-transaction">gda_connection_begin_transaction</link>()), 
@@ -464,6 +325,15 @@ cc -o example example.c `pkg-config --cflags --libs libgda-3.0`
       The code is:
       <programlisting>
 &fullexample;
+      </programlisting>
+      and executing should output something like:
+      <programlisting>> ./example 
+ref | name  | price   
+----+-------+---------
+p1  | chair | 2.000000
+p2  | table | 5.000000
+p3  | glass | 1.100000
+(3 rows)
       </programlisting>
     </para>
   </sect1>

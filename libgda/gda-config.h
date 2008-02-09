@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2007 The GNOME Foundation.
+ * Copyright (C) 2007 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -63,7 +63,7 @@ struct _GdaProviderInfo {
         gchar             *id;
         gchar             *location;
         gchar             *description;
-        GdaParameterList  *gda_params; /* Contains a list of GdaParameter to create a DSN */
+        GdaSet            *gda_params; /* Specs to create a DSN */
         gchar             *dsn_spec; /* XML string with all the parameters required to create a DSN */
 };
 

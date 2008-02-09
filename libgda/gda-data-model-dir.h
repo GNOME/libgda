@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 2007 The GNOME Foundation.
+ * Copyright (C) 2007 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -23,7 +23,7 @@
 #ifndef __GDA_DATA_MODEL_DIR_H__
 #define __GDA_DATA_MODEL_DIR_H__
 
-#include <libgda/gda-object.h>
+#include <libgda/gda-data-model.h>
 
 G_BEGIN_DECLS
 
@@ -38,12 +38,12 @@ typedef struct _GdaDataModelDirClass   GdaDataModelDirClass;
 typedef struct _GdaDataModelDirPrivate GdaDataModelDirPrivate;
 
 struct _GdaDataModelDir {
-	GdaObject               object;
+	GObject                 object;
 	GdaDataModelDirPrivate *priv;
 };
 
 struct _GdaDataModelDirClass {
-	GdaObjectClass          parent_class;
+	GObjectClass            parent_class;
 };
 
 GType         gda_data_model_dir_get_type     (void) G_GNUC_CONST;

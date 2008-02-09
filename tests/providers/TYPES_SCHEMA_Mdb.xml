@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <gda_array id="EXPORT" name="Exported Data">
-  <gda_array_field id="EXPORT:FI0" name="Type" title="Type" gdatype="gchararray" nullok="TRUE"/>
-  <gda_array_field id="EXPORT:FI1" name="Owner" title="Owner" gdatype="gchararray" nullok="TRUE"/>
-  <gda_array_field id="EXPORT:FI2" name="Comments" title="Comments" gdatype="gchararray" nullok="TRUE"/>
-  <gda_array_field id="EXPORT:FI3" name="GDA type" title="GDA type" gdatype="gulong" nullok="TRUE"/>
-  <gda_array_field id="EXPORT:FI4" name="Synonyms" title="Synonyms" gdatype="gchararray" nullok="TRUE"/>
+  <gda_array_field id="FI0" name="Type" title="Type" gdatype="gchararray" nullok="TRUE"/>
+  <gda_array_field id="FI1" name="Owner" title="Owner" gdatype="gchararray" nullok="TRUE"/>
+  <gda_array_field id="FI2" name="Comments" title="Comments" gdatype="gchararray" nullok="TRUE"/>
+  <gda_array_field id="FI3" name="GDA type" title="GDA type" gdatype="gulong" nullok="TRUE"/>
+  <gda_array_field id="FI4" name="Synonyms" title="Synonyms" gdatype="gchararray" nullok="TRUE"/>
   <gda_array_data>
     <gda_array_row>
       <gda_value>boolean</gda_value>

@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 Vivien Malerba
+ * Copyright (C) 2007 - 2008 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -23,8 +23,7 @@
 #include <glib.h>
 #include <glib-object.h>
 #include <sql-parser/gda-statement-struct-decl.h>
-
-typedef void (*GdaSqlStatementFunc) (GdaSqlAnyPart*, gpointer);
+#include <libgda/gda-meta-store.h>
 
 struct _GdaSqlStatement {
 	gchar               *sql;
@@ -40,11 +39,9 @@ gchar                       *gda_sql_statement_serialize (GdaSqlStatement *stmt)
 const gchar                 *gda_sql_statement_type_to_string (GdaSqlStatementType type);
 GdaSqlStatementType          gda_sql_statement_string_to_type (const gchar *type);
 
-gboolean                     gda_sql_statement_check_structure   (GdaSqlStatement *stmt, GError **error);
-gboolean                     gda_sql_statement_check_with_dict   (GdaSqlStatement *stmt, 
-								  GdaDict *dict, GdaSqlStatementFunc func, gpointer func_data, 
-								  GError **error);
-void                         gda_sql_statement_check_clean       (GdaSqlStatement *stmt);
+gboolean                     gda_sql_statement_check_structure (GdaSqlStatement *stmt, GError **error);
+gboolean                     gda_sql_statement_check_connection(GdaSqlStatement *stmt, GdaConnection *cnc, GError **error);
+void                         gda_sql_statement_check_clean     (GdaSqlStatement *stmt);
 
 GdaSqlStatementContentsInfo *gda_sql_statement_get_contents_infos (GdaSqlStatementType type) ;
 

@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 1998 - 2007 The GNOME Foundation.
+ * Copyright (C) 1998 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -27,7 +27,6 @@
 #include <glib-object.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
-#include <libgda/gda-command.h>
 #include <libgda/gda-decl.h>
 #include <libgda/gda-column.h>
 #include <libgda/gda-value.h>
@@ -100,20 +99,13 @@ struct _GdaDataModelClass {
 	void                 (* i_set_notify)       (GdaDataModel *model, gboolean do_notify_changes);
 	gboolean             (* i_get_notify)       (GdaDataModel *model);
 	void                 (* i_send_hint)        (GdaDataModel *model, GdaDataModelHint hint, const GValue *hint_value);
-	gpointer                reserved1;
-	gpointer                reserved2;
-	gpointer                reserved3;
-	gpointer                reserved4;
 
 	/* signals */
 	void                 (* row_inserted)       (GdaDataModel *model, gint row);
 	void                 (* row_updated)        (GdaDataModel *model, gint row);
 	void                 (* row_removed)        (GdaDataModel *model, gint row);
+	void                 (* changed)            (GdaDataModel *model);
 	void                 (* reset)              (GdaDataModel *model);
-	gpointer                sig_reserved1;
-	gpointer                sig_reserved2;
-	gpointer                sig_reserved3;
-	gpointer                sig_reserved4;
 };
 
 GType               gda_data_model_get_type               (void) G_GNUC_CONST;
@@ -152,21 +144,21 @@ void                gda_data_model_send_hint              (GdaDataModel *model, 
 /* contents saving and loading */
 gchar              *gda_data_model_export_to_string       (GdaDataModel *model, GdaDataModelIOFormat format, 
 							   const gint *cols, gint nb_cols, 
-							   const gint *rows, gint nb_rows, GdaParameterList *options);
+							   const gint *rows, gint nb_rows, GdaSet *options);
 gboolean            gda_data_model_export_to_file         (GdaDataModel *model, GdaDataModelIOFormat format, 
 							   const gchar *file,
 							   const gint *cols, gint nb_cols, 
 							   const gint *rows, gint nb_rows, 
-							   GdaParameterList *options, GError **error);
+							   GdaSet *options, GError **error);
 
 gboolean            gda_data_model_import_from_model      (GdaDataModel *to, GdaDataModel *from, gboolean overwrite,
 							   GHashTable *cols_trans, GError **error);
 gboolean            gda_data_model_import_from_string     (GdaDataModel *model,
 							   const gchar *string, GHashTable *cols_trans,
-							   GdaParameterList *options, GError **error);
+							   GdaSet *options, GError **error);
 gboolean            gda_data_model_import_from_file       (GdaDataModel *model,
 							   const gchar *file, GHashTable *cols_trans,
-							   GdaParameterList *options, GError **error);
+							   GdaSet *options, GError **error);
 
 /* debug functions */
 void                gda_data_model_dump                   (GdaDataModel *model, FILE *to_stream);
