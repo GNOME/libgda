@@ -1,8 +1,9 @@
 /* GDA Berkeley-DB Provider
- * Copyright (C) 1998-2002 The GNOME Foundation
+ * Copyright (C) 1998 - 2008 The GNOME Foundation
  *
  * AUTHORS:
  *         Laurent Sansonetti <lrz@gnome.org>
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -30,28 +31,20 @@
 #define GDA_IS_BDB_PROVIDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_BDB_PROVIDER))
 #define GDA_IS_BDB_PROVIDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_BDB_PROVIDER))
 
-#define PARENT_TYPE 			GDA_TYPE_VPROVIDER_DATA_MODEL
-#define OBJECT_DATA_BDB_HANDLE 		"GDA_BDB_BDBHandle"
-
 typedef struct _GdaBdbProvider      GdaBdbProvider;
 typedef struct _GdaBdbProviderClass GdaBdbProviderClass;
 
 struct _GdaBdbProvider {
-	GdaVproviderDataModel provider;
+	GdaVproviderDataModel      provider;
 };
 
 struct _GdaBdbProviderClass {
 	GdaVproviderDataModelClass parent_class;
 };
 
-typedef struct {
-	gchar *dbname;
-} GdaBdbConnectionData;
-
 G_BEGIN_DECLS
 
-GType              gda_bdb_provider_get_type (void) G_GNUC_CONST;
-GdaServerProvider *gda_bdb_provider_new (void);
+GType gda_bdb_provider_get_type (void) G_GNUC_CONST;
 
 G_END_DECLS
 

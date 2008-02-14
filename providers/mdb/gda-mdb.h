@@ -1,5 +1,5 @@
 /* GDA MDB provider
- * Copyright (C) 1998 - 2007 The GNOME Foundation.
+ * Copyright (C) 1998 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -24,24 +24,21 @@
 #ifndef __GDA_MDB_H__
 #define __GDA_MDB_H__
 
-#include <glib/gmacros.h>
+/*
+ * Provider name
+ */
+#define MDB_PROVIDER_NAME "MSAccess"
+
 #include <libgda/gda-connection.h>
-#include <libgda/gda-server-provider.h>
-#include <glib/gi18n-lib.h>
-#include <libgda/gda-value.h>
 #include <mdbtools.h>
-#include "gda-mdb-provider.h"
 
-G_BEGIN_DECLS
-
+/*
+ * Provider's specific connection data
+ */
 typedef struct {
 	GdaConnection  *cnc;
 	MdbHandle      *mdb;
 	gchar          *server_version;
-} GdaMdbConnection;
-
-#define PARENT_TYPE GDA_TYPE_VPROVIDER_DATA_MODEL
-
-G_END_DECLS
+} MdbConnectionData;
 
 #endif

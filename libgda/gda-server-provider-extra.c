@@ -29,6 +29,12 @@
 #include <glib/gi18n-lib.h>
 #include <libgda/sql-parser/gda-sql-parser.h>
 
+#include <libgda/handlers/gda-handler-numerical.h>
+#include <libgda/handlers/gda-handler-boolean.h>
+#include <libgda/handlers/gda-handler-time.h>
+#include <libgda/handlers/gda-handler-string.h>
+#include <libgda/handlers/gda-handler-type.h>
+
 /**
  * gda_server_provider_internal_get_parser
  * @prov:
@@ -50,6 +56,130 @@ gda_server_provider_internal_get_parser (GdaServerProvider *prov)
 		prov->priv->parser = gda_sql_parser_new ();
 	return prov->priv->parser;
 }
+
+/**
+ * gda_server_provider_perform_operation_default
+ * @provider: a #GdaServerProvider object
+ * @cnc: a #GdaConnection object which will be used to perform an action, or %NULL
+ * @op: a #GdaServerOperation object
+ * @error: a place to store an error, or %NULL
+ *
+ * Performs the operation described by @op, using the SQL from the rendering of the operation
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_server_provider_perform_operation_default (GdaServerProvider *provider, GdaConnection *cnc,
+					       GdaServerOperation *op, GError **error)
+{
+	gchar *sql;
+	GdaBatch *batch;
+	const GSList *list;
+	gboolean retval = TRUE;
+
+	sql = gda_server_provider_render_operation (provider, cnc, op, error);
+	if (!sql)
+		return FALSE;
+
+	batch = gda_sql_parser_parse_string_as_batch (provider->priv->parser, sql, NULL, error);
+	g_free (sql);
+	if (!batch)
+		return FALSE;
+
+	for (list = gda_batch_get_statements (batch); list; list = list->next) {
+		if (gda_connection_statement_execute_non_select (cnc, GDA_STATEMENT (list->data), NULL, NULL, error) == -1) {
+			retval = FALSE;
+			break;
+		}
+	}
+	g_object_unref (batch);
+
+	return retval;;
+}
+
+/**
+ * gda_server_provider_get_data_handler_default
+ * @provider: a server provider.
+ * @cnc: a #GdaConnection object, or %NULL
+ * @for_type: a #GType
+ * @dbms_type: a DBMS type definition
+ *
+ * Provides the implementation when the default Libgda's data handlers must be used
+ * 
+ * Returns: a #GdaDataHandler, or %NULL
+ */
+GdaDataHandler *
+gda_server_provider_get_data_handler_default (GdaServerProvider *provider, GdaConnection *cnc,
+					      GType type, const gchar *dbms_type)
+{
+	GdaDataHandler *dh;
+	if ((type == G_TYPE_INT64) ||
+	    (type == G_TYPE_UINT64) ||
+	    (type == G_TYPE_DOUBLE) ||
+	    (type == G_TYPE_INT) ||
+	    (type == GDA_TYPE_NUMERIC) ||
+	    (type == G_TYPE_FLOAT) ||
+	    (type == GDA_TYPE_SHORT) ||
+	    (type == GDA_TYPE_USHORT) ||
+	    (type == G_TYPE_CHAR) ||
+	    (type == G_TYPE_UCHAR) ||
+	    (type == G_TYPE_UINT)) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
+		if (!dh) {
+			dh = gda_handler_numerical_new ();
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_INT64, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_UINT64, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_DOUBLE, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_INT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_NUMERIC, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_FLOAT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_SHORT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_USHORT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_CHAR, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_UCHAR, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_UINT, NULL);
+			g_object_unref (dh);
+		}
+	}
+        else if ((type == GDA_TYPE_BINARY) ||
+		 (type == GDA_TYPE_BLOB)) {
+		/* no default binary data handler, it's too database specific */
+		dh = NULL;
+	}
+        else if (type == G_TYPE_BOOLEAN) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
+		if (!dh) {
+			dh = gda_handler_boolean_new ();
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_BOOLEAN, NULL);
+			g_object_unref (dh);
+		}
+	}
+	else if ((type == GDA_TYPE_TIME) ||
+		 (type == GDA_TYPE_TIMESTAMP) ||
+		 (type == G_TYPE_DATE)) {
+		/* no default time related data handler, it's too database specific */
+		dh = NULL;
+	}
+	else if (type == G_TYPE_STRING) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
+		if (!dh) {
+			dh = gda_handler_string_new ();
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_STRING, NULL);
+			g_object_unref (dh);
+		}
+	}
+	else if (type == G_TYPE_ULONG) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
+		if (!dh) {
+			dh = gda_handler_type_new ();
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_ULONG, NULL);
+			g_object_unref (dh);
+		}
+	}
+
+	return dh;
+}
+
 
 /**
  * gda_server_provider_get_schema_nb_columns
@@ -348,37 +478,6 @@ gda_server_provider_test_schema_model (GdaDataModel *model, GdaConnectionSchema 
 		}
         }
 	return TRUE;
-}
-
-guint
-gda_server_provider_handler_info_hash_func  (GdaServerProviderHandlerInfo *key)
-{
-	guint hash;
-
-	hash = g_int_hash (&(key->g_type));
-	if (key->dbms_type)
-		hash += g_str_hash (key->dbms_type);
-	hash += GPOINTER_TO_UINT (key->cnc);
-
-	return hash;
-}
-
-gboolean
-gda_server_provider_handler_info_equal_func (GdaServerProviderHandlerInfo *a, GdaServerProviderHandlerInfo *b)
-{
-	if ((a->g_type == b->g_type) &&
-	    (a->cnc == b->cnc) &&
-	    ((!a->dbms_type && !b->dbms_type) || !strcmp (a->dbms_type, b->dbms_type)))
-		return TRUE;
-	else
-		return FALSE;
-}
-
-void
-gda_server_provider_handler_info_free (GdaServerProviderHandlerInfo *info)
-{
-	g_free (info->dbms_type);
-	g_free (info);
 }
 
 GdaDataHandler *

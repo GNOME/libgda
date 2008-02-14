@@ -74,16 +74,16 @@ static char get_affinity (const gchar *type)
 }
 
 void
-_gda_sqlite_update_types_hash (SqliteConnectionData *scnc)
+_gda_sqlite_update_types_hash (SqliteConnectionData *cdata)
 {
 	GHashTable *types;
 	gint status;
 	sqlite3_stmt *tables_stmt = NULL;
 
-	types = scnc->types;
+	types = cdata->types;
 	if (!types) {
 		types = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL); /* key= type name, value= gda type */
-		scnc->types = types;
+		cdata->types = types;
 	}
 	
 	g_hash_table_insert (types, g_strdup ("integer"), GINT_TO_POINTER (G_TYPE_INT));
@@ -96,14 +96,14 @@ _gda_sqlite_update_types_hash (SqliteConnectionData *scnc)
 	g_hash_table_insert (types, g_strdup ("blob"), GINT_TO_POINTER (GDA_TYPE_BINARY));
 
 	/* HACK: force SQLite to reparse the schema and thus discover new tables if necessary */
-	status = sqlite3_prepare_v2 (scnc->connection, "SELECT 1 FROM sqlite_master LIMIT 1", -1, &tables_stmt, NULL);
+	status = sqlite3_prepare_v2 (cdata->connection, "SELECT 1 FROM sqlite_master LIMIT 1", -1, &tables_stmt, NULL);
 	if (status == SQLITE_OK)
 		sqlite3_step (tables_stmt);
 	if (tables_stmt)
 		sqlite3_finalize (tables_stmt);
 
 	/* build a list of tables */
-	status = sqlite3_prepare_v2 (scnc->connection, "SELECT name "
+	status = sqlite3_prepare_v2 (cdata->connection, "SELECT name "
 				     " FROM (SELECT * FROM sqlite_master UNION ALL "
 				     "       SELECT * FROM sqlite_temp_master) "
 				     " WHERE name not like 'sqlite_%%'", -1, &tables_stmt, NULL);
@@ -115,7 +115,7 @@ _gda_sqlite_update_types_hash (SqliteConnectionData *scnc)
 		gint fields_status;
 
 		sql = g_strdup_printf ("PRAGMA table_info('%s');", sqlite3_column_text (tables_stmt, 0));
-		fields_status = sqlite3_prepare_v2 (scnc->connection, sql, -1, &fields_stmt, NULL);
+		fields_status = sqlite3_prepare_v2 (cdata->connection, sql, -1, &fields_stmt, NULL);
 		g_free (sql);
 		if ((fields_status != SQLITE_OK) || !fields_stmt)
 			break;

@@ -22,6 +22,7 @@
 #include <glib/gi18n-lib.h>
 #include "gda-data-proxy.h"
 #include "gda-data-model.h"
+#include "gda-data-model-array.h"
 #include "gda-data-model-extra.h"
 #include "gda-data-model-iter.h"
 #include "gda-data-model-query.h"
@@ -78,7 +79,7 @@ static gboolean             gda_data_proxy_get_notify      (GdaDataModel *model)
 static void                 gda_data_proxy_send_hint       (GdaDataModel *model, GdaDataModelHint hint, 
 							    const GValue *hint_value);
 #define DEBUG_SYNC
-#undef DEBUG_SYNC
+/*#undef DEBUG_SYNC*/
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
@@ -2287,7 +2288,6 @@ chunk_sync_idle (GdaDataProxy *proxy)
 #define IDLE_STEP 50
 
 	gboolean finished = FALSE;
-	gboolean has_changed = FALSE;
 	gint index;
 	gint step, max_steps;
 	GdaDataModelIter *iter = NULL;
@@ -2324,9 +2324,6 @@ chunk_sync_idle (GdaDataProxy *proxy)
 	display_chunks_dump (proxy);
 #endif
 
-	/* disable the emision of the "changed" signal each time a "row_*" signal is
-	 * emitted, and instead send that signal only once at the end */
-	gda_data_model_freeze (GDA_DATA_MODEL (proxy));
 	for (index = proxy->priv->chunk_sep, step = 0; 
 	     step < max_steps && !finished; 
 	     step++) {
@@ -2371,10 +2368,10 @@ chunk_sync_idle (GdaDataProxy *proxy)
 
 			if (cur_row != repl_row) 
 				if (proxy->priv->notify_changes) {
-					gda_data_model_row_updated ((GdaDataModel *) proxy, index + signal_row_offset);
 #ifdef DEBUG_SYNC
 					g_print ("Signal: Update row %d\n", index + signal_row_offset);
 #endif
+					gda_data_model_row_updated ((GdaDataModel *) proxy, index + signal_row_offset);
 				}
 			index++;
 		}
@@ -2384,10 +2381,10 @@ chunk_sync_idle (GdaDataProxy *proxy)
 				g_array_remove_index (proxy->priv->chunk->mapping, index);
 			proxy->priv->chunk_proxy_nb_rows--;
 			if (proxy->priv->notify_changes) {
-				gda_data_model_row_removed ((GdaDataModel *) proxy, index + signal_row_offset);
 #ifdef DEBUG_SYNC
 				g_print ("Signal: Remove row %d\n", index + signal_row_offset);
 #endif
+				gda_data_model_row_removed ((GdaDataModel *) proxy, index + signal_row_offset);
 			}
 		}
 		else if ((cur_row < 0) && (repl_row >= 0)) {
@@ -2410,12 +2407,6 @@ chunk_sync_idle (GdaDataProxy *proxy)
 	if (iter)
 		g_object_unref (iter);
 		
-	/* re-enable the emision of the "changed" signal each time a "row_*" signal is
-	 * emitted */
-	gda_data_model_thaw (GDA_DATA_MODEL (proxy));
-	if (has_changed)
-		gda_data_model_signal_emit_changed ((GdaDataModel *) proxy);
-
 	if (finished) {
 		if (proxy->priv->chunk_sync_idle_id) {
 			g_idle_remove_by_data (proxy);
@@ -2825,9 +2816,9 @@ gda_data_proxy_set_filter_expr (GdaDataProxy *proxy, const gchar *filter_expr, G
 		sql = g_strdup_printf ("SELECT __gda_row_nb FROM proxy WHERE %s", filter_expr);
 	g_free (tmp);
 
-	stmt = gda_sql_parser_parse_string (internal_parser, sql, NULL, NULL);
+	stmt = gda_sql_parser_parse_string (internal_parser, sql, &ptr, NULL);
 	g_free (sql);
-	if (!stmt || (gda_statement_get_statement_type (stmt) != GDA_SQL_STATEMENT_SELECT)) {
+	if (ptr || !stmt || (gda_statement_get_statement_type (stmt) != GDA_SQL_STATEMENT_SELECT)) {
 		/* also catches problems with multiple statements in @filter_expr, such as SQL code injection */
 		g_set_error (error, GDA_DATA_PROXY_ERROR, GDA_DATA_PROXY_FILTER_ERROR,
 			     _("Incorrect filter expression"));
@@ -2852,21 +2843,28 @@ gda_data_proxy_set_filter_expr (GdaDataProxy *proxy, const gchar *filter_expr, G
 	}
 	g_object_unref (wrapper);
 	
-	
 	/* execute statement */
 	filtered_rows = gda_connection_statement_execute_select (vcnc, stmt, NULL, NULL);
 	g_object_unref (stmt);
-
-	/* remove virtual table */
-	g_assert (gda_vconnection_data_model_remove (GDA_VCONNECTION_DATA_MODEL (vcnc), "proxy", NULL));
-	if (!filtered_rows) {
+     	if (!filtered_rows) {
 		g_set_error (error, GDA_DATA_PROXY_ERROR, GDA_DATA_PROXY_FILTER_ERROR,
 			     _("Error in filter expression"));
 		proxy->priv->force_direct_mapping = FALSE;
 		return FALSE;
 	}
-	/*gda_data_model_dump (filtered_rows, stdout);*/
 
+	/* copy filtered_rows and remove virtual table */
+	GdaDataModel *copy;
+	copy = gda_data_model_array_copy_model (filtered_rows, NULL);
+	g_object_unref (filtered_rows);
+	gda_vconnection_data_model_remove (GDA_VCONNECTION_DATA_MODEL (vcnc), "proxy", NULL);
+	if (!copy) {
+		g_set_error (error, GDA_DATA_PROXY_ERROR, GDA_DATA_PROXY_FILTER_ERROR,
+			     _("Error in filter expression"));
+		proxy->priv->force_direct_mapping = FALSE;
+		return FALSE;
+	}
+	filtered_rows = copy;
 	proxy->priv->force_direct_mapping = FALSE;
 
 

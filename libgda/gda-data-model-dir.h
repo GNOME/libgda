@@ -49,7 +49,7 @@ struct _GdaDataModelDirClass {
 GType         gda_data_model_dir_get_type     (void) G_GNUC_CONST;
 GdaDataModel *gda_data_model_dir_new          (const gchar *basedir);
 
-GSList       *gda_data_model_dir_get_errors   (GdaDataModelDir *model);
+const GSList *gda_data_model_dir_get_errors   (GdaDataModelDir *model);
 void          gda_data_model_dir_clean_errors (GdaDataModelDir *model);
 G_END_DECLS
 

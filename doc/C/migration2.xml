@@ -108,6 +108,7 @@
  	  <listitem><para>gda_delimiter_*()</para></listitem>
  	  <listitem><para>gda_sql_transaction_parse*()</para></listitem>
  	  <listitem><para>sql_*() (from the libsql library)</para></listitem>
+	  <listitem><para>gda_server_provider_change_database()</para></listitem>
 	</itemizedlist>
       </para>
     </sect2>

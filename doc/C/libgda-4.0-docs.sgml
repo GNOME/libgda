@@ -98,8 +98,13 @@
 <!ENTITY libgda-GdaBatch SYSTEM "xml/gda-batch.xml">
 <!ENTITY libgda-GdaSqlParser SYSTEM "xml/gda-sql-parser.xml">
 <!ENTITY libgda-GdaMetaStore SYSTEM "xml/gda-meta-store.xml">
+<!ENTITY libgda-PRow SYSTEM "xml/gda-prow.xml">
+<!ENTITY libgda-PModel SYSTEM "xml/gda-pmodel.xml">
+<!ENTITY libgda-PStmt SYSTEM "xml/gda-pstmt.xml">
 <!ENTITY libgda-Enums SYSTEM "xml/gda-enums.xml">
 <!ENTITY libgda-convenient SYSTEM "xml/gda-convenient.xml">
+<!ENTITY provider-writing SYSTEM "prov-writing.xml">
+<!ENTITY provider-support SYSTEM "xml/provider-support.xml">
 <!ENTITY fdl-appendix SYSTEM "fdl-appendix.sgml">
 <!ENTITY libgda-TreeIndex SYSTEM "xml/tree_index.sgml">
 ]>
@@ -911,40 +916,48 @@ Description for type: DROP_COLUMN
 
   <part id="part_providers">
     <title>Databases providers for developers</title>
-    <chapter id="libgda-provider-introduction">
-      <title>Introduction</title>
       <para>
-	For each different data source supported by &LIBGDA; there must be a
-	GObject that implements the virtual methods defined in &GDASERVERPROVIDER;
-	class.
+	For each database engine, &LIBGDA; requires an object which maps &LIBGDA;'s API
+	to the native API offered by that database engine. That object, a <emphasis>database provider</emphasis> 
+	needs to inherit <link linkend="GdaServerProvider">GdaServerProvider</link> and implement its
+	virtual methods.
       </para>
       <para>
-	Providers must also create their own object to implement the virtual
-	methods defined in &GDADATAMODEL; or one of
-	its subclasses to support recordsets.
+	Database provider objects are generally instanciated once by the &LIBGDA; framework and can be used several
+	times to open and work on connections to several databases of the same type.
       </para>
       <para>
 	Since &LIBGDA; itself is developed in the C language, and that most
 	providers are also implemented in that language, the &LIBGDA; library
 	itself contains a set of helper classes and functions to guide you
-	in the addition of a new provider to the GDA framework.
-      </para>
-    </chapter>
+	in the addition of a new provider to the GDA framework. Two reference implementations
+	are provided in the <filename class="directory">providers/skel-implementation</filename>
+	directory of &LIBGDA;'s sources:
+	<itemizedlist>
+	  <listitem><para>in <filename class="directory">providers/skel-implementation/capi</filename>: a skeleton
+	    implementation from scratch for a database accessed through a C API, where all the methods to implement are partially
+	    coded</para></listitem>
+	  <listitem><para>in <filename class="directory">providers/skel-implementation/models</filename>: a skeleton
+	    implementation to write a provider for sources which are not databases (which do not implement any SQL) such
+	    as the Berkeley DB provider (a BDB database is a key/value collection) or the MDB (MS Access files) provider.
+	    This kind of provider "export" tables which are in fact data models.</para></listitem>
+      </itemizedlist>
+    </para>
+    <para>
+      The helper objects and functions to write database providers are documented in the 
+      <link linkend="psupport">Providers' support API</link> section.
+    </para>
 
-    <chapter id="libgda-provider-class">
-      <title>Virtual methods for providers</title>
-      <para>
-	To write.
-      </para>
-    </chapter>
 
-    <chapter id="libgda-provider-recordset">
-      <title>Virtual methods for recordsets</title>
-      <para>
-	To write.
-      </para>
+    <chapter id="psupport">
+      <title>Providers' support API</title>
+      &libgda-GdaServerProvider;
+      &libgda-PModel;
+      &libgda-PRow;
+      &libgda-PStmt;
+      &provider-support;
     </chapter>
-    &libgda-GdaServerProvider;
+    &provider-writing;
   </part>
 
   &fdl-appendix;

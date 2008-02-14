@@ -1,6 +1,6 @@
 /* 
  * GDA common library
- * Copyright (C) 2007 The GNOME Foundation.
+ * Copyright (C) 2007 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -30,31 +30,31 @@
 #define CLASS(obj) (GDA_VIRTUAL_CONNECTION_CLASS (G_OBJECT_GET_CLASS (obj)))
 
 struct _GdaVirtualConnectionPrivate {
-	
+	gpointer              v_provider_data;
+        GDestroyNotify        v_provider_data_destroy_func;
 };
 
-/* properties */
-enum
-{
-        PROP_0,
-};
 
 static void gda_virtual_connection_class_init (GdaVirtualConnectionClass *klass);
-static void gda_virtual_connection_init       (GdaVirtualConnection *prov, GdaVirtualConnectionClass *klass);
+static void gda_virtual_connection_init       (GdaVirtualConnection *vcnc, GdaVirtualConnectionClass *klass);
 static void gda_virtual_connection_finalize   (GObject *object);
-static void gda_virtual_connection_set_property (GObject *object,
-						 guint param_id,
-						 const GValue *value,
-						 GParamSpec *pspec);
-static void gda_virtual_connection_get_property (GObject *object,
-						 guint param_id,
-						 GValue *value,
-						 GParamSpec *pspec);
 static GObjectClass *parent_class = NULL;
 
 /*
  * GdaVirtualConnection class implementation
  */
+static void
+conn_closed_cb (GdaVirtualConnection *vcnc)
+{
+	if (vcnc->priv->v_provider_data) {
+                if (vcnc->priv->v_provider_data_destroy_func)
+                        vcnc->priv->v_provider_data_destroy_func (vcnc->priv->v_provider_data);
+                else
+                        g_warning ("Provider did not clean its connection data");
+                vcnc->priv->v_provider_data = NULL;
+        }
+}
+
 static void
 gda_virtual_connection_class_init (GdaVirtualConnectionClass *klass)
 {
@@ -64,28 +64,27 @@ gda_virtual_connection_class_init (GdaVirtualConnectionClass *klass)
 
 	/* virtual methods */
 	object_class->finalize = gda_virtual_connection_finalize;
-
-	/* Properties */
-        object_class->set_property = gda_virtual_connection_set_property;
-        object_class->get_property = gda_virtual_connection_get_property;
+	GDA_CONNECTION_CLASS (klass)->conn_closed = conn_closed_cb;
 }
 
 static void
-gda_virtual_connection_init (GdaVirtualConnection *vprov, GdaVirtualConnectionClass *klass)
+gda_virtual_connection_init (GdaVirtualConnection *vcnc, GdaVirtualConnectionClass *klass)
 {
-	vprov->priv = g_new (GdaVirtualConnectionPrivate, 1);
+	vcnc->priv = g_new0 (GdaVirtualConnectionPrivate, 1);
+	vcnc->priv->v_provider_data = NULL;
+	vcnc->priv->v_provider_data_destroy_func = NULL;
 }
 
 static void
 gda_virtual_connection_finalize (GObject *object)
 {
-	GdaVirtualConnection *prov = (GdaVirtualConnection *) object;
+	GdaVirtualConnection *vcnc = (GdaVirtualConnection *) object;
 
-	g_return_if_fail (GDA_IS_VIRTUAL_CONNECTION (prov));
+	g_return_if_fail (GDA_IS_VIRTUAL_CONNECTION (vcnc));
 
 	/* free memory */
-	g_free (prov->priv);
-	prov->priv = NULL;
+	g_free (vcnc->priv);
+	vcnc->priv = NULL;
 
 	/* chain to parent class */
 	parent_class->finalize (object);
@@ -116,36 +115,37 @@ gda_virtual_connection_get_type (void)
 	return type;
 }
 
-static void
-gda_virtual_connection_set_property (GObject *object,
-				   guint param_id,
-				   const GValue *value,
-				   GParamSpec *pspec)
+/**
+ * gda_virtual_connection_internal_set_provider_data
+ * @vcnc: a #GdaConnection object
+ * @data: an opaque structure, known only to the provider for which @vcnc is opened
+ * @destroy_func: function to call when the connection closes and @data needs to be destroyed
+ *
+ * Note: calling this function more than once will not make it call @destroy_func on any previously
+ * set opaque @data, you'll have to do it yourself.
+ */
+void
+gda_virtual_connection_internal_set_provider_data (GdaVirtualConnection *vcnc, gpointer data, GDestroyNotify destroy_func)
 {
-        GdaVirtualConnection *prov;
-
-        prov = GDA_VIRTUAL_CONNECTION (object);
-        if (prov->priv) {
-                switch (param_id) {
-		default:
-			break;
-                }
-        }
+        g_return_if_fail (GDA_IS_VIRTUAL_CONNECTION (vcnc));
+        vcnc->priv->v_provider_data = data;
+        vcnc->priv->v_provider_data_destroy_func = destroy_func;
 }
 
-static void
-gda_virtual_connection_get_property (GObject *object,
-				 guint param_id,
-				 GValue *value,
-				 GParamSpec *pspec)
+/**
+ * gda_virtual_connection_internal_get_provider_data
+ * @vcnc: a #GdaConnection object
+ *
+ * Get the opaque pointer previously set using gda_virtual_connection_internal_set_provider_data().
+ * If it's not set, then add a connection event and returns %NULL
+ *
+ * Returns: the pointer to the opaque structure set using gda_virtual_connection_internal_set_provider_data()
+ */
+gpointer
+gda_virtual_connection_internal_get_provider_data (GdaVirtualConnection *vcnc)
 {
-        GdaVirtualConnection *prov;
-
-        prov = GDA_VIRTUAL_CONNECTION (object);
-        if (prov->priv) {
-		switch (param_id) {
-		default:
-			break;
-		}
-        }
+	g_return_val_if_fail (GDA_IS_VIRTUAL_CONNECTION (vcnc), NULL);
+        if (! vcnc->priv->v_provider_data)
+                gda_connection_add_event_string (GDA_CONNECTION (vcnc), _("Internal error: invalid provider handle"));
+        return vcnc->priv->v_provider_data;
 }

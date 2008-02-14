@@ -2,7 +2,7 @@
  * Copyright (C) 2008 The GNOME Foundation.
  *
  * AUTHORS:
- *      Vivien Malerba <malerba@gnome-db.org>
+ *      TO_ADD: your name and email
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -23,17 +23,18 @@
 #ifndef __GDA_CAPI_H__
 #define __GDA_CAPI_H__
 
-#include <glib/gmacros.h>
-#include <glib/gtypes.h>
-#include <libgda/libgda.h>
+/*
+ * Provider name
+ */
+#define CAPI_PROVIDER_NAME "Capi"
 
-/*REF: include headers necessary for the C or C++ API */
+/* TO_ADD: include headers necessary for the C or C++ API */
 
 /*
  * Provider's specific connection data
  */
 typedef struct {
-	/*REF: this structure holds any information necessary to specialize the GdaConnection, usually a connection
+	/* TO_ADD: this structure holds any information necessary to specialize the GdaConnection, usually a connection
 	 * handle from the C or C++ API
 	 */
 } CapiConnectionData;

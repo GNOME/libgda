@@ -1,5 +1,7 @@
 #include <libgda/libgda.h>
+#include <sql-parser/gda-sql-parser.h>
 #include <string.h>
+#include <db.h>
 
 #define DB_FILE	"bdb_test.db"
 
@@ -27,12 +29,10 @@ create_db (const gchar *filename)
 	DB *dbp;
 	int ret, i;
 	
+	g_print ("Creating BDB database in '%s'\n", filename);
 	g_assert (db_create (&dbp, NULL, 0) == 0);
 
-	ret = dbp->open (dbp, 
-			 NULL,
-			 filename, NULL, DB_BTREE,
-			 DB_CREATE, 0664);
+	ret = dbp->open (dbp, NULL, filename, NULL, DB_BTREE, DB_CREATE, 0664);
 	g_assert (ret == 0);
 
 	for (i = 0; i < MAXNUMBERS; i++) {
@@ -53,6 +53,7 @@ create_db (const gchar *filename)
 	}
 	
 	dbp->close (dbp, 0);
+	g_print ("End of BDB database creation\n");
 }
 
 static void
@@ -60,39 +61,43 @@ gda_stuff (gpointer filename)
 {
 	gchar *cncstring;
 	GdaClient *client;
-	GdaConnection *conn;
+	GdaConnection *cnc;
 	GdaDataModel *model;
-	int i, j;
 	GError *error = NULL;
-	GdaCommand *command;
+
+	GdaSqlParser *parser;
+	GdaStatement *stmt;
 	
 	/* create dsn */
-	cncstring = g_strdup_printf ("FILE=%s", (gchar *) filename);
+	cncstring = g_strdup_printf ("DB_NAME=%s", (gchar *) filename);
 
 	/* connect to the db */
 	client = gda_client_new ();
 	g_assert (client != NULL);
-	conn = gda_client_open_connection_from_string (client, "Berkeley-DB", cncstring, NULL, NULL, 0, &error);
-	if (!conn) {
+	cnc = gda_client_open_connection_from_string (client, "Berkeley-DB", cncstring, NULL, NULL, 0, &error);
+	if (!cnc) {
 		g_print ("Could not open connection; %s\n", error && error->message ? error->message : "no detail");
 		exit (1);
 	}
 
 	/* get model */
-	command = gda_command_new ("SELECT * from data", GDA_COMMAND_TYPE_SQL, 0);
-	model = gda_connection_execute_select_command (conn, command, NULL, &error);
+	parser = gda_connection_create_parser (cnc);
+	stmt = gda_sql_parser_parse_string (parser, "SELECT * from data", NULL, NULL);
+	g_object_unref (parser);
+	model = gda_connection_statement_execute_select (cnc, stmt, NULL, &error);
 	if (!model) {
 		g_print ("Could execute command; %s\n", error && error->message ? error->message : "no detail");
 		exit (1);
 	}
 
-	gda_command_free (command);
+	g_object_unref (stmt);
 	g_assert (gda_data_model_get_n_rows (model) == MAXNUMBERS);
 
 	gda_data_model_dump (model, stdout);
 	g_object_unref (model);
 
 #ifdef NO
+	int i, j;
 	for (i = 0; i < MAXNUMBERS; i++) {
 		GValue *val;
 		gchar *tmp;
@@ -121,7 +126,7 @@ gda_stuff (gpointer filename)
 #endif
 
 	/* disconnect, remove dsn & quit */
-	gda_connection_close (conn);
+	gda_connection_close (cnc);
 }
 
 int main (int argc, char **argv)

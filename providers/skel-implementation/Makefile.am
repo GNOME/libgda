@@ -1,2 +1,3 @@
 SUBDIRS = \
-	capi
+	capi \
+	models

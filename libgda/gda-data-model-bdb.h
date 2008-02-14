@@ -64,7 +64,7 @@ struct _GdaDataModelBdbClass {
 GType         gda_data_model_bdb_get_type     (void) G_GNUC_CONST;
 GdaDataModel *gda_data_model_bdb_new          (const gchar *filename, const gchar *db_name);
 
-GSList       *gda_data_model_bdb_get_errors   (GdaDataModelBdb *model);
+const GSList *gda_data_model_bdb_get_errors   (GdaDataModelBdb *model);
 void          gda_data_model_bdb_clean_errors (GdaDataModelBdb *model);
 G_END_DECLS
 

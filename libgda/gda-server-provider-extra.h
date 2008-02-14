@@ -40,6 +40,16 @@ gint      gda_server_provider_get_schema_nb_columns (GdaConnectionSchema schema)
 gboolean  gda_server_provider_init_schema_model     (GdaDataModel *model, GdaConnectionSchema schema);
 gboolean  gda_server_provider_test_schema_model     (GdaDataModel *model, GdaConnectionSchema schema, GError **error);
 
+/*
+ * Default perform operation
+ */
+gboolean gda_server_provider_perform_operation_default (GdaServerProvider *provider, GdaConnection *cnc,
+							GdaServerOperation *op, GError **error);
+
+/* default data handler method */
+GdaDataHandler *gda_server_provider_get_data_handler_default (GdaServerProvider *provider, GdaConnection *cnc,
+							      GType type, const gchar *dbms_type);
+
 
 /*
  * Help to implement the GdaDataHandler retreiving for the providers
@@ -49,11 +59,6 @@ typedef struct {
 	GType          g_type;
 	gchar         *dbms_type;
 } GdaServerProviderHandlerInfo;
-
-guint           gda_server_provider_handler_info_hash_func  (GdaServerProviderHandlerInfo *key);
-gboolean        gda_server_provider_handler_info_equal_func (GdaServerProviderHandlerInfo *a, 
-							     GdaServerProviderHandlerInfo *b);
-void            gda_server_provider_handler_info_free       (GdaServerProviderHandlerInfo *info);
 
 GdaDataHandler *gda_server_provider_handler_find            (GdaServerProvider *prov, GdaConnection *cnc, 
 							     GType g_type, const gchar *dbms_type);

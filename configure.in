@@ -114,6 +114,12 @@ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE")
 ALL_LINGUAS="ar az ca cs da de dz el en_CA en_GB es eu fa fi fr ga gl hr hu it ja ko lt mk ml ms nb ne nl oc pa pl pt pt_BR ru rw sk sl sq sr sr@Latn sv tr uk vi zh_CN zh_HK zh_TW"
 AM_GLIB_GNU_GETTEXT
 
+
+dnl ******************************
+dnl Check for pkg-config version; want >= 0.18 because we need PKG_CHECK_EXISTS
+dnl ******************************
+PKG_PROG_PKG_CONFIG([0.18])
+
 dnl ******************************
 dnl Checks for libraries
 dnl ******************************
@@ -184,39 +190,6 @@ else
 fi
 AC_SUBST(FAM_LIBS)
 AC_SUBST(FAM_CFLAGS)
-
-dnl ******************************
-dnl Checks for libgcrypt
-dnl ******************************
-LIBGCRYPT_CFLAGS=""
-LIBGCRYPT_LIBS=""
-if test x$platform_win32 != xyes; then
-        AC_DEFUN([VERSION_TO_NUMBER],[`$1 | awk 'BEGIN { FS = "."; } { printf "%d", ([$]1 * 1000 + [$]2) * 1000 + [$]3;}'`])
-        AC_PATH_PROG(LIBGCRYPT_CONFIG, libgcrypt-config, no)
-        if test "$LIBGCRYPT_CONFIG" != "no" ; then
-                LIBGCRYPT_VERSION=`$LIBGCRYPT_CONFIG --version`
-                if test VERSION_TO_NUMBER(echo $LIBGCRYPT_VERSION) -lt VERSION_TO_NUMBER(echo "1.1.42") ; then
-                        LIBGCRYPT_CFLAGS=""
-                        LIBGCRYPT_LIBS=""
-                        AM_CONDITIONAL(HAVE_LIBGCRYPT, 0)
-                        echo "GdaDataModelDir object won't compute MD5 column, install libgcrypt >= 1.1.42 and reconfigure to make available."
-                else
-                        LIBGCRYPT_CFLAGS="`$LIBGCRYPT_CONFIG $libgcrypt_config_args --cflags` -DHAVE_LIBGCRYPT"
-                        LIBGCRYPT_LIBS=`$LIBGCRYPT_CONFIG $libgcrypt_config_args --libs`
-                        AM_CONDITIONAL(HAVE_LIBGCRYPT, true)
-                fi
-        else
-        LIBGCRYPT_CFLAGS=""
-        LIBGCRYPT_LIBS=""
-        AM_CONDITIONAL(HAVE_LIBGCRYPT, 0)
-        echo "GdaDataModelDir object won't compute MD5 column, install libgcrypt and reconfigure to make available."
-        fi
-else
-        AM_CONDITIONAL(HAVE_LIBGCRYPT, false)
-fi
-
-AC_SUBST(LIBGCRYPT_CFLAGS)
-AC_SUBST(LIBGCRYPT_LIBS)
 
 dnl ******************************
 dnl Checks for Gnome VFS
@@ -300,10 +273,13 @@ fi
 bdbdir=""
 if test $try_bdb = true
 then
-	AC_CHECK_HEADER(db.h, bdb_ok=yes, bdb_ok=no, [])
-	if test $bdb_ok = yes ; then
-		bdbdir=yes
-		BDB_LIBS="-ldb"
+	if test $withval = yes
+	then
+		AC_CHECK_HEADER(db.h, bdb_ok=yes, bdb_ok=no, [])
+		if test $bdb_ok = yes ; then
+		        bdbdir=yes
+		   	BDB_LIBS="-ldb"
+		fi
 	else
 		AC_MSG_CHECKING(for Berkeley DB files)
 		for d in $dir /usr /usr/local
@@ -1243,6 +1219,8 @@ providers/xbase/libgda-xbase-4.0.pc
 providers/skel-implementation/Makefile
 providers/skel-implementation/capi/Makefile
 providers/skel-implementation/capi/libgda-capi-4.0.pc
+providers/skel-implementation/models/Makefile
+providers/skel-implementation/models/libgda-models-4.0.pc
 libgda-report/Makefile
 libgda-report/engine/Makefile
 libgda-report/DocBook/Makefile

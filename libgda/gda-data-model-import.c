@@ -1125,10 +1125,8 @@ init_xml_import (GdaDataModelImport *model)
 		node = xmlTextReaderCurrentNode (reader);
 		
 		prop = (gchar*)xmlGetProp (node, (xmlChar*)"id");
-		if (prop) {
-			g_warning ("TO REMOVE: the 'id' property is not used anymore");
-			xmlFree (prop);
-		}
+		if (prop) 
+			g_object_set_data_full (G_OBJECT (model), "id", prop, xmlFree);
 		prop = (gchar*)xmlGetProp (node, (xmlChar*)"name");
 		if (prop) 
 			g_object_set_data_full (G_OBJECT (model), "name", prop, xmlFree);
@@ -1550,10 +1548,8 @@ init_node_import (GdaDataModelImport *model)
 	ramodel = gda_data_model_array_new (nbfields);
 	model->priv->random_access_model = ramodel;
 	str = (gchar*)xmlGetProp (node, (xmlChar*)"id");
-	if (str) {
-		g_warning ("TO REMOVE: the 'id' property is not used anymore");
-		xmlFree (str);
-	}
+	if (str) 
+		g_object_set_data_full (G_OBJECT (model), "id", str, xmlFree);
 	str = (gchar*)xmlGetProp (node, (xmlChar*)"name");
 	if (str) 
 		g_object_set_data_full (G_OBJECT (model), "name", str, xmlFree);

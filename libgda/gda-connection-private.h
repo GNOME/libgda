@@ -41,7 +41,7 @@ void gda_connection_internal_transaction_started (GdaConnection *cnc, const gcha
 void gda_connection_internal_transaction_rolledback (GdaConnection *cnc, const gchar *trans_name);
 void gda_connection_internal_transaction_committed (GdaConnection *cnc, const gchar *trans_name);
 
-void gda_connection_internal_sql_executed (GdaConnection *cnc, const gchar *sql, GdaConnectionEvent *error);
+void gda_connection_internal_sql_executed (GdaConnection *cnc, const gchar *sql, GdaConnectionEvent *error); /* REMOVE */
 void gda_connection_internal_statement_executed (GdaConnection *cnc, GdaStatement *stmt, GdaConnectionEvent *error);
 
 void gda_connection_internal_savepoint_added (GdaConnection *cnc, const gchar *parent_trans, const gchar *svp_name);

@@ -55,7 +55,7 @@ struct _GdaPModel {
  *     REQUIRED: fetch_next
  *     OPTIONAL: fetch_at
  * if GDA_STATEMENT_MODEL_CURSOR_BACKWARD:
- *     REQUIRED: fetch_next
+ *     REQUIRED: fetch_prev
  *     OPTIONAL: fetch_at
  */
 struct _GdaPModelClass {
@@ -65,7 +65,7 @@ struct _GdaPModelClass {
 	gint             (*fetch_nb_rows) (GdaPModel *model);
 	GdaPRow         *(*fetch_random)  (GdaPModel *model, gint rownum, GError **error);
 
-	/* GDA_STATEMENT_MODEL_CURSOR */
+	/* GDA_STATEMENT_MODEL_CURSOR_* */
 	GdaPRow         *(*fetch_next)    (GdaPModel *model, gint rownum, GError **error);
 	GdaPRow         *(*fetch_prev)    (GdaPModel *model, gint rownum, GError **error);
 	GdaPRow         *(*fetch_at)      (GdaPModel *model, gint rownum, GError **error);

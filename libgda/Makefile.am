@@ -15,8 +15,7 @@ AM_CPPFLAGS = \
 	$(LIBGDA_CFLAGS) \
 	$(FAM_CFLAGS) \
 	$(BDB_CFLAGS) \
-	$(GNOMEVFS_CFLAGS) \
-	$(LIBGCRYPT_CFLAGS)
+	$(GNOMEVFS_CFLAGS)
 
 gda_marshal_built_files = gda-marshal.h gda-marshal.c
 
@@ -116,7 +115,10 @@ libgda_sources =  \
 	gda-threader.c \
 	gda-transaction-status.c \
 	gda-util.c \
-	gda-value.c 
+	gda-value.c \
+	global.h \
+	md5.h \
+	md5c.c
 
 gda-enum-types.h: s-enum-types-h
 	@true
@@ -173,7 +175,7 @@ libgda_4_0_la_LIBADD = \
 	binreloc/libgda_binreloc-4.0.la \
 	sqlite/libgda-sqlite.la \
 	$(LIBGDA_LIBS) $(FAM_LIBS) \
-	$(BDB_LIBS) $(GNOMEVFS_LIBS) $(LIBGCRYPT_LIBS)
+	$(BDB_LIBS) $(GNOMEVFS_LIBS) 
 
 gdaincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda
 gdainclude_HEADERS=$(libgda_built_headers) $(gda_headers)

@@ -1,3 +1,41 @@
+2008-02-14  Vivien Malerba <malerba@gnome-db.org>
+
+	* Makefile.am:
+	* libgda/global.h:
+	* libgda/md5.h:
+	* libgda/md5c.c: imported files from the RSA reference implementation included in the RFC-1321,
+	see http://www.freesoft.org/CIE/RFC/1321/
+	* libgda/gda-data-model-dir.c: don't use libgcrypt anymore for MD5 computation, see bug #513019
+	* libgda/gda-data-model-dir.c: implemented gda_data_model_dir_get_errors() and
+	gda_data_model_dir_clean_errors()
+	* libgda/gda-data-model-bdb.c: implemented gda_data_model_bdb_get_errors() and
+	gda_data_model_bdb_clean_errors()
+	* configure.in:
+	   - don't check for libgcrypt,
+	   - add a minimum pkg-config version of 0.18 because PKG_CHECK_EXISTS is used, see bug #514925
+	   - use the BDB version in 'dir' when the --with-bdb=dir flag is used
+	   - create Makefiles and XML files for skeleton implementations in
+	     providers/skel-implementation, but don't compile or install them
+	* providers/Makefile.am: re-enabled compilation of the BDB and MDB providers
+	* providers/bdb/gda-bdb-provider.c:
+	* providers/bdb/gda-bdb-test.c:
+	* providers/mdb/gda-mdb-provider.c: modifications to make the providers work again
+	* providers/skel-implementation/capi/*: completed the skeleton implementation for providers
+	based on a C API
+	* providers/skel-implementation/models/*: new skeleton implementation for providers based
+	on tables which are implemented by libgda's data model objects
+	* sqlite/virtual/gda-virtual-connection.[ch]: added gda_virtual_connection_internal_[sg]et_provider_data()
+	for virtual provider's implementations
+	* libgda/gda-connection.c: clear provider specific data when connection is closed (and not when
+	the object is destroyed)
+	* doc/C: documentation updates, with new instructions on how to write database providers
+	* tests/providers/prov-test-util.c:
+	* tests/meta-store: updated tests
+	* providers/sqlite/libmain.c: removed gda_sqlite_provider_new()
+	* libgda/:
+	* libgda/sqlite/: misc. improvements
+	* samples/BDB/access-raw.c: updated example
+
 2008-02-09  Vivien Malerba <malerba@gnome-db.org>
 
 	Major cleanup as the base for the V4:

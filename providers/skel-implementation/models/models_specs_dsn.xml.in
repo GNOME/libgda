@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<data-set-spec>
+  <parameters>
+    <parameter id="DB_NAME" _name="Database name" _descr="The name of a database to use" gdatype="gchararray" nullok="FALSE"/>
+  </parameters>
+</data-set-spec>

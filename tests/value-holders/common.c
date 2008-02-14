@@ -144,8 +144,8 @@ tests_common_set_serialize (GdaSet *set)
 
 			if (node->source_model) {
 				g_string_append (string, ",\"source_model\":");
-				if (gda_object_get_id (GDA_OBJECT (node->source_model)))
-					json = _json_quote_string (gda_object_get_id (GDA_OBJECT (node->source_model)));
+				if (g_object_get_data (G_OBJECT (node->source_model), "name"))
+					json = _json_quote_string (g_object_get_data (G_OBJECT (node->source_model), "name"));
 				else {
 					str = gda_data_model_export_to_string (node->source_model, 
 									       GDA_DATA_MODEL_IO_TEXT_SEPARATED,
@@ -173,8 +173,8 @@ tests_common_set_serialize (GdaSet *set)
 				g_string_append_c (string, ',');
 			g_string_append_c (string, '{');
 			g_string_append (string, "\"model\":");
-			if (gda_object_get_id (GDA_OBJECT (source->data_model)))
-				json = _json_quote_string (gda_object_get_id (GDA_OBJECT (source->data_model)));
+			if (g_object_get_data (G_OBJECT (source->data_model), "name"))
+				json = _json_quote_string (g_object_get_data (G_OBJECT (source->data_model), "name"));
 			else {
 				str = gda_data_model_export_to_string (source->data_model, 
 								       GDA_DATA_MODEL_IO_TEXT_SEPARATED,

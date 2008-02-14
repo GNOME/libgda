@@ -176,19 +176,19 @@ GdaDataModel *
 gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaDataModelAccessFlags flags, GType *col_types)
 {
 	GdaSqliteRecordset *model;
-        SqliteConnectionData *scnc;
+        SqliteConnectionData *cdata;
         gint i;
 	GdaDataModelAccessFlags rflags;
 
         g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
         g_return_val_if_fail (ps != NULL, NULL);
 
-	scnc = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
-	if (!scnc)
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
 		return NULL;
 
-        if (!scnc->types)
-                _gda_sqlite_update_types_hash (scnc);
+        if (!cdata->types)
+                _gda_sqlite_update_types_hash (cdata);
 
         /* make sure @ps reports the correct number of columns */
 	if (_GDA_PSTMT (ps)->ncols < 0) 
@@ -236,7 +236,7 @@ gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaDataModelAc
 			tablename = sqlite3_column_table_name (ps->sqlite_stmt, i);
 			colname = sqlite3_column_origin_name (ps->sqlite_stmt, i);
 			if (!tablename || !colname ||
-			    (sqlite3_table_column_metadata (scnc->connection, NULL, tablename, colname, NULL, NULL,
+			    (sqlite3_table_column_metadata (cdata->connection, NULL, tablename, colname, NULL, NULL,
 							    &notnull, &pkey, &autoinc) != SQLITE_OK)) {
 				notnull = FALSE;
 				autoinc = FALSE;
@@ -292,7 +292,7 @@ gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaDataModelAc
 }
 
 static GType
-fuzzy_get_gtype (SqliteConnectionData *scnc, GdaSqlitePStmt *ps, gint colnum)
+fuzzy_get_gtype (SqliteConnectionData *cdata, GdaSqlitePStmt *ps, gint colnum)
 {
 	const gchar *ctype;
 	GType gtype = GDA_TYPE_NULL;
@@ -302,7 +302,7 @@ fuzzy_get_gtype (SqliteConnectionData *scnc, GdaSqlitePStmt *ps, gint colnum)
 	
 	ctype = sqlite3_column_decltype (ps->sqlite_stmt, colnum);
 	if (ctype)
-		gtype = GPOINTER_TO_INT (g_hash_table_lookup (scnc->types, ctype));
+		gtype = GPOINTER_TO_INT (g_hash_table_lookup (cdata->types, ctype));
 	if (gtype == GDA_TYPE_NULL) {
 		int stype;
 		stype = sqlite3_column_type (ps->sqlite_stmt, colnum);
@@ -336,12 +336,12 @@ static GdaPRow *
 fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **error)
 {
 	int rc;
-	SqliteConnectionData *scnc;
+	SqliteConnectionData *cdata;
 	GdaSqlitePStmt *ps;
 	GdaPRow *prow = NULL;
 
-	scnc = (SqliteConnectionData*) gda_connection_internal_get_provider_data (model->priv->cnc);
-	if (!scnc)
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (model->priv->cnc);
+	if (!cdata)
 		return NULL;
 	ps = GDA_SQLITE_PSTMT (GDA_PMODEL (model)->prep_stmt);
 
@@ -356,7 +356,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 			GType type = _GDA_PSTMT (ps)->types [col];
 			
 			if (type == GDA_TYPE_NULL) {
-				type = fuzzy_get_gtype (scnc, ps, col);
+				type = fuzzy_get_gtype (cdata, ps, col);
 				if (type != GDA_TYPE_NULL) {
 					GdaColumn *column;
 					
@@ -423,7 +423,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 		break;
 	case SQLITE_ERROR:
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-			     GDA_SERVER_PROVIDER_INTERNAL_ERROR, sqlite3_errmsg (scnc->connection));
+			     GDA_SERVER_PROVIDER_INTERNAL_ERROR, sqlite3_errmsg (cdata->connection));
 		break;
 	case SQLITE_DONE:
 		GDA_PMODEL (model)->advertized_nrows = model->priv->next_row_num;

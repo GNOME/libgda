@@ -61,17 +61,26 @@ struct _GdaServerProvider {
 	GdaServerProviderPrivate *priv;
 };
 
+typedef struct {
+	gboolean (*info)          (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*btypes)        (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*schemata)      (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **, 
+				   const GValue *schema_name);
+	gboolean (*tables_views)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*tables_views_s)(GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **, 
+				   const GValue *table_schema, const GValue *table_name);
+	gboolean (*columns)       (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*columns_t)     (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **, 
+				   const GValue *table_schema, const GValue *table_name);
+	gboolean (*columns_c)     (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **, 
+				   const GValue *table_schema, const GValue *table_name, const GValue *column_name);
+} GdaServerProviderMeta;
+
 struct _GdaServerProviderClass {
 	GObjectClass parent_class;
 
 	/* signals */
 	void                   (* last_connection_gone) (GdaServerProvider *provider);
-	gpointer                  sig_reserved1;
-	gpointer                  sig_reserved2;
-	gpointer                  sig_reserved3;
-	gpointer                  sig_reserved4;
-
-	/* virtual methods */
 
 	/* provider information */
 	const gchar           *(* get_name) (GdaServerProvider *provider);
@@ -86,11 +95,6 @@ struct _GdaServerProviderClass {
 						     GdaConnection *cnc,
 						     GType g_type,
 						     const gchar *dbms_type);
-	GValue                *(* string_to_value) (GdaServerProvider *provider,
-						    GdaConnection *cnc,
-						    const gchar *string, 
-						    GType prefered_type,
-						    gchar **dbms_type);
 	const gchar           *(*get_def_dbms_type) (GdaServerProvider *provider,
 						     GdaConnection *cnc,
 						     GType g_type);
@@ -110,9 +114,6 @@ struct _GdaServerProviderClass {
 	
 	const gchar           *(* get_database) (GdaServerProvider *provider,
 						 GdaConnection *cnc);
-	gboolean               (* change_database) (GdaServerProvider *provider,
-						    GdaConnection *cnc,
-						    const gchar *name);
 	/* operations */
 	gboolean               (* supports_operation) (GdaServerProvider *provider, GdaConnection *cnc, 
 						       GdaServerOperationType type, GdaSet *options);
@@ -158,11 +159,8 @@ struct _GdaServerProviderClass {
 						      GType *col_types, GdaSet **last_inserted_row, GError **error);
 
 	GdaConnection          *(* create_connection)  (GdaServerProvider *provider);
-	gboolean                (* meta_update)       (GdaServerProvider *provider, GdaConnection *cnc,
-						       GdaMetaContext *context, GError **error);
+	GdaServerProviderMeta      meta_funcs;
 };
-
-
 
 GType                  gda_server_provider_get_type (void) G_GNUC_CONST;
 
@@ -218,9 +216,6 @@ gboolean               gda_server_provider_close_connection (GdaServerProvider *
 
 const gchar           *gda_server_provider_get_database     (GdaServerProvider *provider,
 							     GdaConnection *cnc);
-gboolean               gda_server_provider_change_database  (GdaServerProvider *provider,
-							     GdaConnection *cnc,
-							     const gchar *name);
 
 /* actions with parameters */
 gboolean               gda_server_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc, 

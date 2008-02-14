@@ -207,7 +207,6 @@ add_error (GdaDataModelBdb *model, const gchar *err)
 	GError *error = NULL;
 
         g_set_error (&error, 0, 0, err);
-	g_print ("ADD_ERROR (%s)\n", err);
         model->priv->errors = g_slist_append (model->priv->errors, error);
 }
 
@@ -429,6 +428,43 @@ gda_data_model_bdb_new (const gchar *filename, const gchar *db_name)
 
 	return model;
 }
+
+/**
+ * gda_data_model_bdb_get_errors
+ * @model: a #GdaDataModelBdb object
+ *
+ * Get the list of errors which have occurred while using @model
+ *
+ * Returns: a read-only list of #GError pointers, or %NULL if no error has occurred
+ */
+const GSList *
+gda_data_model_bdb_get_errors (GdaDataModelBdb *model)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_BDB (model), NULL);
+	g_return_val_if_fail (model->priv, NULL);
+
+	return model->priv->errors;
+}
+
+/**
+ * gda_data_model_bdb_clean_errors
+ * @model: a #GdaDataModelBdb object
+ *
+ * Reset the list of errors which have occurred while using @model
+ */
+void
+gda_data_model_bdb_clean_errors (GdaDataModelBdb *model)
+{
+	g_return_if_fail (GDA_IS_DATA_MODEL_BDB (model));
+	g_return_if_fail (model->priv);
+
+	if (model->priv->errors) {
+		g_slist_foreach (model->priv->errors, (GFunc) g_error_free, NULL);
+		g_slist_free (model->priv->errors);
+		model->priv->errors = NULL;
+	}
+}
+
 
 static gint
 gda_data_model_bdb_get_n_rows (GdaDataModel *model)

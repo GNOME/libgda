@@ -1,5 +1,5 @@
 /* GDA MDB Provider
- * Copyright (C) 1998 - 2007 The GNOME Foundation
+ * Copyright (C) 1998 - 2008 The GNOME Foundation
  *
  * AUTHORS:
  *         Rodrigo Moya <rodrigo@gnome-db.org>
@@ -21,8 +21,9 @@
  */
 
 #include <glib/gi18n-lib.h>
-#include "gda-mdb.h"
 #include <libgda/gda-server-provider-extra.h>
+#include "gda-mdb.h"
+#include "gda-mdb-provider.h"
 
 static gchar *module_path = NULL;
 
@@ -41,7 +42,7 @@ plugin_init (const gchar *real_path)
 const gchar *
 plugin_get_name (void)
 {
-	return "MSAccess";
+	return MDB_PROVIDER_NAME;
 }
 
 const gchar *

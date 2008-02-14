@@ -51,15 +51,12 @@ GDA_LDAP_SERVER=ldap
 endif
 
 SUBDIRS = \
-        sqlite
-
-#SUBDIRS = \
-#	sqlite \
-#	$(GDA_BDB_SERVER) \
+	sqlite \
+	$(GDA_BDB_SERVER) \
+	$(GDA_MDB_SERVER)
 #	$(GDA_FREETDS_SERVER) \
 #	$(GDA_IBMDB2_SERVER) \
 #	$(GDA_FIREBIRD_SERVER) \
-#	$(GDA_MDB_SERVER) \
 #	$(GDA_MYSQL_SERVER) \
 #       $(GDA_MSQL_SERVER) \
 #	$(GDA_ODBC_SERVER) \

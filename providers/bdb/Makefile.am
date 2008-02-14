@@ -12,8 +12,8 @@ AM_CPPFLAGS = \
 libgda_bdb_la_SOURCES = \
 	gda-bdb-provider.c \
 	gda-bdb-provider.h \
-	gda-bdb.h \
 	libmain.c
+
 libgda_bdb_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_bdb_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-4.0.la \

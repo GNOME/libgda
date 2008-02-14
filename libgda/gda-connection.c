@@ -144,7 +144,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
         gda_connection_signals[CONN_CLOSED] =    /* runs after user handlers */
                 g_signal_new ("conn_closed",
                               G_TYPE_FROM_CLASS (object_class),
-                              G_SIGNAL_RUN_FIRST,
+                              G_SIGNAL_RUN_LAST,
                               G_STRUCT_OFFSET (GdaConnectionClass, conn_closed),
                               NULL, NULL,
                               gda_marshal_VOID__VOID,
@@ -256,14 +256,6 @@ gda_connection_dispose (GObject *object)
 	if (cnc->priv->trans_status) {
 		g_object_unref (cnc->priv->trans_status);
 		cnc->priv->trans_status = NULL;
-	}
-
-	if (cnc->priv->provider_data) {
-		if (cnc->priv->provider_data_destroy_func)
-			cnc->priv->provider_data_destroy_func (cnc->priv->provider_data);
-		else
-			g_warning ("Provider did not clean its connection data");
-		cnc->priv->provider_data = NULL;
 	}
 
 	/* chain to parent class */
@@ -647,6 +639,14 @@ gda_connection_close_no_warning (GdaConnection *cnc)
 	gda_server_provider_close_connection (cnc->priv->provider_obj, cnc);
 	gda_client_notify_connection_closed_event (cnc->priv->client, cnc);
 	cnc->priv->is_open = FALSE;
+
+	if (cnc->priv->provider_data) {
+		if (cnc->priv->provider_data_destroy_func)
+			cnc->priv->provider_data_destroy_func (cnc->priv->provider_data);
+		else
+			g_warning ("Provider did not clean its connection data");
+		cnc->priv->provider_data = NULL;
+	}
 
 #ifdef GDA_DEBUG_signal
         g_print (">> 'CONN_CLOSED' from %s\n", __FUNCTION__);
@@ -1203,7 +1203,7 @@ make_col_types_array (gint init_size, va_list args)
  */
 static GObject *
 gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params, 
-				    GdaStatementModelUsage model_usage, GdaSet **last_insert_row, GError **error, ...)
+				    GdaStatementModelUsage model_usage, GdaSet **last_inserted_row, GError **error, ...)
 {
 	va_list ap;
 	GObject *obj;
@@ -1211,10 +1211,13 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
 	va_start (ap, error);
 	types = make_col_types_array (10, ap);
 	va_end (ap);
+
+	if (last_inserted_row) 
+		*last_inserted_row = NULL;
 	obj = PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, 
 								       cnc, stmt, params, 
 								       model_usage, 
-								       types, last_insert_row, error);
+								       types, last_inserted_row, error);
 	g_free (types);
 	return obj;
 }
@@ -1249,20 +1252,18 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
  */
 GObject *
 gda_connection_statement_execute (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params, 
-				  GdaStatementModelUsage model_usage, GdaSet **last_insert_row, GError **error)
+				  GdaStatementModelUsage model_usage, GdaSet **last_inserted_row, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv, NULL);
 	g_return_val_if_fail (cnc->priv->provider_obj, NULL);
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
+	g_return_val_if_fail (PROV_CLASS (cnc->priv->provider_obj)->statement_execute, NULL);
 
-	if (PROV_CLASS (cnc->priv->provider_obj)->statement_execute)
-		return gda_connection_statement_execute_v (cnc, stmt, params, model_usage, last_insert_row, error, -1);
-	else {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     _("Provider does not support statement execution"));
-		return NULL;
-	}
+	if (last_inserted_row) 
+		*last_inserted_row = NULL;
+
+	return gda_connection_statement_execute_v (cnc, stmt, params, model_usage, last_inserted_row, error, -1);
 }
 
 
@@ -1299,6 +1300,7 @@ gda_connection_statement_execute_non_select (GdaConnection *cnc, GdaStatement *s
 	g_return_val_if_fail (cnc->priv, -1);
 	g_return_val_if_fail (cnc->priv->provider_obj, -1);
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), -1);
+	g_return_val_if_fail (PROV_CLASS (cnc->priv->provider_obj)->statement_execute, -1);
 
 	if ((gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_SELECT) ||
 	    (gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_COMPOUND)) {
@@ -1310,18 +1312,11 @@ gda_connection_statement_execute_non_select (GdaConnection *cnc, GdaStatement *s
 	if (last_insert_row)
 		*last_insert_row = NULL;
 
-	if (PROV_CLASS (cnc->priv->provider_obj)->statement_execute) {
-		set = (GdaSet *) gda_connection_statement_execute_v (cnc, stmt, params, 
-								     GDA_STATEMENT_MODEL_RANDOM_ACCESS, last_insert_row, 
-								     error, -1);
-		if (!set)
-			return -1;
-	}
-	else {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     _("Provider does not support statement execution"));
+	set = (GdaSet *) gda_connection_statement_execute_v (cnc, stmt, params, 
+							     GDA_STATEMENT_MODEL_RANDOM_ACCESS, last_insert_row, 
+							     error, -1);
+	if (!set)
 		return -1;
-	}
 	
 	if (!GDA_IS_SET (set)) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
@@ -1370,29 +1365,24 @@ GdaDataModel *
 gda_connection_statement_execute_select (GdaConnection *cnc, GdaStatement *stmt,
 					 GdaSet *params, GError **error)
 {
+	GdaDataModel *model;
+
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv, NULL);
 	g_return_val_if_fail (cnc->priv->provider_obj, NULL);
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
+	g_return_val_if_fail (PROV_CLASS (cnc->priv->provider_obj)->statement_execute, NULL);
 
-	if (PROV_CLASS (cnc->priv->provider_obj)->statement_execute) {
-		GdaDataModel *model;
-		model = (GdaDataModel *) gda_connection_statement_execute_v (cnc, stmt, params, 
-									     GDA_STATEMENT_MODEL_RANDOM_ACCESS, NULL,
-									     error, -1);
-		if (model && !GDA_IS_DATA_MODEL (model)) {
-			g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
-				     _("Statement is not a selection statement"));
-			g_object_unref (model);
-			model = NULL;
-		}
-		return model;
+	model = (GdaDataModel *) gda_connection_statement_execute_v (cnc, stmt, params, 
+								     GDA_STATEMENT_MODEL_RANDOM_ACCESS, NULL,
+								     error, -1);
+	if (model && !GDA_IS_DATA_MODEL (model)) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
+			     _("Statement is not a selection statement"));
+		g_object_unref (model);
+		model = NULL;
 	}
-	else {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     _("Provider does not support statement execution"));
-		return NULL;
-	}
+	return model;
 }
 
 /**
@@ -1428,33 +1418,27 @@ gda_connection_statement_execute_select_fullv (GdaConnection *cnc, GdaStatement 
 	g_return_val_if_fail (cnc->priv, NULL);
 	g_return_val_if_fail (cnc->priv->provider_obj, NULL);
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
+	g_return_val_if_fail (PROV_CLASS (cnc->priv->provider_obj)->statement_execute, NULL);
 
-	if (PROV_CLASS (cnc->priv->provider_obj)->statement_execute) {
-		va_list ap;
-		GdaDataModel *model;
-		GType *types;
-
-		va_start (ap, error);
-		types = make_col_types_array (10, ap);
-		va_end (ap);
-		model = (GdaDataModel *) PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, 
-												  cnc, stmt, params, 
-												  model_usage, 
-												  types, NULL, error);
-		g_free (types);
-		if (model && !GDA_IS_DATA_MODEL (model)) {
-			g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
-				     _("Statement is not a selection statement"));
-			g_object_unref (model);
-			model = NULL;
-		}
-		return model;
+	va_list ap;
+	GdaDataModel *model;
+	GType *types;
+	
+	va_start (ap, error);
+	types = make_col_types_array (10, ap);
+	va_end (ap);
+	model = (GdaDataModel *) PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, 
+											  cnc, stmt, params, 
+											  model_usage, 
+											  types, NULL, error);
+	g_free (types);
+	if (model && !GDA_IS_DATA_MODEL (model)) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
+			     _("Statement is not a selection statement"));
+		g_object_unref (model);
+		model = NULL;
 	}
-	else {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     _("Provider does not support statement execution"));
-		return NULL;
-	}
+	return model;
 }
 
 /**
@@ -1487,30 +1471,25 @@ gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *
 					      GdaSet *params, GdaStatementModelUsage model_usage,
 					      GType *col_types, GError **error)
 {
+	GdaDataModel *model;
+
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv, NULL);
 	g_return_val_if_fail (cnc->priv->provider_obj, NULL);
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
+	g_return_val_if_fail (PROV_CLASS (cnc->priv->provider_obj)->statement_execute, NULL);
 
-	if (PROV_CLASS (cnc->priv->provider_obj)->statement_execute) {
-		GdaDataModel *model;
-		model = (GdaDataModel *) PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, 
-												  cnc, stmt, params, 
-												  model_usage, 
-												  col_types, NULL, error);
-		if (model && !GDA_IS_DATA_MODEL (model)) {
-			g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
-				     _("Statement is not a selection statement"));
-			g_object_unref (model);
-			model = NULL;
-		}
-		return model;
+	model = (GdaDataModel *) PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, 
+											  cnc, stmt, params, 
+											  model_usage, 
+											  col_types, NULL, error);
+	if (model && !GDA_IS_DATA_MODEL (model)) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
+			     _("Statement is not a selection statement"));
+		g_object_unref (model);
+		model = NULL;
 	}
-	else {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     _("Provider does not support statement execution"));
-		return NULL;
-	}
+	return model;
 }
 
 /**
@@ -1525,7 +1504,7 @@ gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *
  *
  * Before starting a transaction, you can check whether the underlying
  * provider does support transactions or not by using the
- * #gda_connection_supports_feature() function.
+ * gda_connection_supports_feature() function.
  *
  * Returns: %TRUE if the transaction was started successfully, %FALSE
  * otherwise.
@@ -1703,6 +1682,210 @@ gda_connection_supports_feature (GdaConnection *cnc, GdaConnectionFeature featur
 	return gda_server_provider_supports_feature (cnc->priv->provider_obj, cnc, feature);
 }
 
+/*
+ *
+ */
+static gint
+check_parameters (GdaMetaContext *context, GError **error, gint nb, ...)
+{
+#define MAX_PARAMS 10
+	gint i;
+	va_list ap;
+	gint retval = -1;
+	GValue **pvalue;
+	struct {
+		GValue **pvalue;
+		GType    type;
+	} spec_array [MAX_PARAMS];
+	gint nb_params = 0;
+
+	va_start (ap, nb);
+	/* make a list of all the GValue pointers */
+	for (pvalue = va_arg (ap, GValue **); pvalue; pvalue = va_arg (ap, GValue **), nb_params++) {
+		g_assert (nb_params < MAX_PARAMS); /* hard limit, recompile to change it (should never be needed) */
+		spec_array[nb_params].pvalue = pvalue;
+		spec_array[nb_params].type = va_arg (ap, GType);
+	}
+
+	/* test against each test case */
+	for (i = 0; i < nb; i++) {
+		gchar *pname;
+		gboolean allfound = TRUE;
+		gint j;
+		for (j = 0; j < nb_params; j++)
+			*(spec_array[j].pvalue) = NULL;
+
+		for (pname = va_arg (ap, gchar*); pname; pname = va_arg (ap, gchar*)) {
+			gint j;
+			pvalue = va_arg (ap, GValue **);
+			*pvalue = NULL;
+			for (j = 0; allfound && (j < context->size); j++) {
+				if (!strcmp (context->column_names[j], pname)) {
+					*pvalue = context->column_values[j];
+					break;
+				}
+			}
+			if (j == context->size)
+				allfound = FALSE;
+		}
+		if (allfound) {
+			retval = i;
+			break;
+		}
+	}
+	va_end (ap);
+
+	if (retval >= 0) {
+		gint j;
+		for (j = 0; j < nb_params; j++) {
+			GValue *v = *(spec_array[j].pvalue);
+			if (v && (gda_value_is_null (v) || (G_VALUE_TYPE (v) != spec_array[j].type))) {
+				g_set_error (error, 0, 0,
+					     _("Invalid argument"));
+				retval = -1;
+			}
+		}
+	}
+	else 
+		g_set_error (error, 0, 0,
+			     _("Missing and/or wrong arguments"));
+
+	g_print ("Check context => %d\n", retval);
+	return retval;
+}
+
+static gboolean
+local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaContext *context, GError **error)
+{
+#ifdef GDA_DEBUG
+#define ASSERT_TABLE_NAME(x,y) g_assert (!strcmp ((x), (y)));
+#else
+#define ASSERT_TABLE_NAME(x,y)
+#endif
+	const gchar *tname = context->table_name;
+	GdaMetaStore *store;
+
+	if (*tname != '_')
+		return TRUE;
+	tname ++;
+	
+	store = gda_connection_get_meta_store (cnc);
+	switch (*tname) {
+	case 'i':
+		/* _information_schema_catalog_name, params: 
+		 *  - none
+		 */
+		ASSERT_TABLE_NAME (tname, "information_schema_catalog_name")
+		if (!PROV_CLASS (provider)->meta_funcs.info)
+			break;
+		return PROV_CLASS (provider)->meta_funcs.info (provider, cnc, store, context, error);
+
+	case 's': {
+		/* _schemata, params: 
+		 *  - none
+		 *  - @schema_name
+		 */
+		GValue *p_schema_name = NULL;
+		if (check_parameters (context, error, 2,
+				      &p_schema_name, G_TYPE_STRING, NULL,
+				      "schema_name", &p_schema_name, NULL,
+				      NULL) < 0)
+			return FALSE;
+		ASSERT_TABLE_NAME (tname, "schemata")
+		if (!PROV_CLASS (provider)->meta_funcs.schemata)
+			break;
+		return PROV_CLASS (provider)->meta_funcs.schemata (provider, cnc, store, context, error, p_schema_name);
+	}
+	case 't': 
+		if ((tname[1] == 'a') && (tname[2] == 'b') && (tname[3] == 'l') && (tname[4] == 'e') && (tname[5] == 's')) {
+			/* _tables, params: 
+			 *  - none
+			 *  - @table_schema
+			 *  - @table_schema AND @table_name
+			 */
+			const GValue *p_table_schema = NULL;
+			const GValue *p_table_name = NULL;
+			if (check_parameters (context, error, 3,
+					      &p_table_schema, G_TYPE_STRING,
+					      &p_table_name, G_TYPE_STRING, NULL,
+					      "table_schema", &p_table_schema, "table_name", &p_table_name, NULL,
+					      "table_schema", &p_table_schema, NULL,
+					      NULL) < 0)
+				return FALSE;
+			
+			ASSERT_TABLE_NAME (tname, "tables")
+				if (p_table_schema) {
+					if (!PROV_CLASS (provider)->meta_funcs.tables_views_s)
+						break;
+					return PROV_CLASS (provider)->meta_funcs.tables_views_s (provider, cnc, store, context, error, 
+												 p_table_schema, p_table_name);
+				}
+				else {
+					if (!PROV_CLASS (provider)->meta_funcs.tables_views)
+						break;
+					return PROV_CLASS (provider)->meta_funcs.tables_views (provider, cnc, store, context, error);
+				}
+		}
+		break;
+
+	case 'c': 
+		if ((tname[1] == 'o') && (tname[2] == 'l') && (tname[2] == 'u')) {
+			/* _columns,  params: 
+			 *  - none
+			 *  - @table_schema AND @table_name
+			 *  - @table_schema AND @table_name AND @column_name
+			 */
+			const GValue *p_table_schema = NULL;
+			const GValue *p_table_name = NULL;
+			const GValue *p_column_name = NULL;
+			
+			if (check_parameters (context, error, 3,
+					      &p_table_schema, G_TYPE_STRING,
+					      &p_table_name, G_TYPE_STRING,
+					      &p_column_name, G_TYPE_STRING, NULL,
+					      "table_schema", &p_table_schema, "table_name", &p_table_name, "column_name", &p_column_name, NULL,
+					      "table_schema", &p_table_schema, "table_name", &p_table_name, NULL,
+					      NULL) < 0)
+				return FALSE;
+			
+			ASSERT_TABLE_NAME (tname, "columns")
+			if (p_table_schema) {
+				if (p_column_name) {
+					if (!PROV_CLASS (provider)->meta_funcs.columns_c)
+						return FALSE;
+					return PROV_CLASS (provider)->meta_funcs.columns_c (provider, cnc, store, context, error, 
+											    p_table_schema, p_table_name, p_column_name);
+				}
+				else {
+					if (!PROV_CLASS (provider)->meta_funcs.columns_t)
+						return FALSE;
+					return PROV_CLASS (provider)->meta_funcs.columns_t (provider, cnc, store, context, error, 
+											    p_table_schema, p_table_name);
+				}
+			}
+			else {
+				if (!PROV_CLASS (provider)->meta_funcs.columns)
+					return FALSE;
+				return PROV_CLASS (provider)->meta_funcs.columns (provider, cnc, store, context, error);
+			}
+		}
+		break;
+	
+	case 'b': {
+		/* _builtin_data_types, params: 
+		 *  - none
+		 */
+		ASSERT_TABLE_NAME (tname, "builtin_data_types")
+		if (!PROV_CLASS (provider)->meta_funcs.btypes)
+			break;
+		return PROV_CLASS (provider)->meta_funcs.btypes (provider, cnc, store, context, error);
+	}
+	default:
+		break;
+	}
+	return TRUE;
+}
+
 typedef struct {
 	GdaServerProvider  *prov;
 	GdaConnection      *cnc;
@@ -1715,7 +1898,7 @@ suggest_update_cb_detailled (GdaMetaStore *store, GdaMetaContext *suggest, Detai
 {
 	if (data->error_set)
 		return;
-	if (!PROV_CLASS (data->prov)->meta_update (data->prov, data->cnc, suggest, data->error)) 
+	if (!local_meta_update (data->prov, data->cnc, suggest, data->error))
 		data->error_set = TRUE;
 }
 
@@ -1739,12 +1922,6 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
 
-	if (!(PROV_CLASS (cnc->priv->provider_obj)->meta_update)) {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     _("Provider does not report meta data"));
-		return FALSE;
-	}
-
 	/* Get or create the GdaMetaStore object */
 	store = gda_connection_get_meta_store (cnc);
 	g_assert (store);
@@ -1757,8 +1934,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 			GdaMetaContext lcontext;
 			memset (&lcontext, 0, sizeof (GdaMetaContext));
 			lcontext.table_name = (gchar *) list->data;
-			if (! PROV_CLASS (cnc->priv->provider_obj)->meta_update (cnc->priv->provider_obj, 
-										 cnc, &lcontext, error)) {
+			if (!local_meta_update (cnc->priv->provider_obj, cnc, &lcontext, error)) {
 				retval = FALSE;
 				break;
 			}
@@ -1786,7 +1962,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		signal_id = g_signal_connect (store, "suggest_update",
 					      G_CALLBACK (suggest_update_cb_detailled), &cbd);
 		
-		retval = PROV_CLASS (cnc->priv->provider_obj)->meta_update (cnc->priv->provider_obj, cnc, &lcontext, error);
+		retval = local_meta_update (cnc->priv->provider_obj, cnc, &lcontext, error);
 		
 		g_signal_handler_disconnect (store, signal_id);
 		if (cbd.error_set)
@@ -1971,12 +2147,6 @@ gda_connection_get_meta_store_data (GdaConnection *cnc,
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv->provider_obj, NULL);
-
-	if (!(PROV_CLASS (cnc->priv->provider_obj)->meta_update)) {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     _("Provider does not report meta data"));
-		return NULL;
-	}
 
 	/* Get or create the GdaMetaStore object */
 	store = gda_connection_get_meta_store (cnc);
@@ -2420,6 +2590,7 @@ gda_connection_internal_set_provider_data (GdaConnection *cnc, gpointer data, GD
 gpointer
 gda_connection_internal_get_provider_data (GdaConnection *cnc)
 {
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	if (! cnc->priv->provider_data)
 		gda_connection_add_event_string (cnc, _("Internal error: invalid provider handle"));
 	return cnc->priv->provider_data;

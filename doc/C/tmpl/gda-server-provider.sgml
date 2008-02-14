@@ -6,8 +6,12 @@ Base class for all the DBMS providers
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-The #GdaServerProvider class is a virtual class which all the DBMS providers
-must inherit, and implement its virtual mathods.
+  The #GdaServerProvider class is a virtual class which all the DBMS providers
+  must inherit, and implement its virtual mathods.
+</para>
+<para>
+  See the <link linkend="libgda-provider-class">Virtual methods for providers</link> section for more information
+  about how to implement the virtual methods.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -24,6 +28,41 @@ must inherit, and implement its virtual mathods.
 </para>
 
 
+<!-- ##### STRUCT GdaServerProviderClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+@last_connection_gone: 
+@get_name: 
+@get_version: 
+@get_server_version: 
+@supports_feature: 
+@get_data_handler: 
+@get_def_dbms_type: 
+@escape_string: 
+@unescape_string: 
+@open_connection: 
+@close_connection: 
+@get_database: 
+@supports_operation: 
+@create_operation: 
+@render_operation: 
+@perform_operation: 
+@begin_transaction: 
+@commit_transaction: 
+@rollback_transaction: 
+@add_savepoint: 
+@rollback_savepoint: 
+@delete_savepoint: 
+@create_parser: 
+@statement_to_sql: 
+@statement_prepare: 
+@statement_execute: 
+@create_connection: 
+@meta_funcs: 
+
 <!-- ##### ENUM GdaServerProviderError ##### -->
 <para>
 
@@ -35,6 +74,20 @@ must inherit, and implement its virtual mathods.
 @GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR: 
 @GDA_SERVER_PROVIDER_OPERATION_ERROR: 
 @GDA_SERVER_PROVIDER_INTERNAL_ERROR: 
+
+<!-- ##### STRUCT GdaServerProviderMeta ##### -->
+<para>
+
+</para>
+
+@info: 
+@btypes: 
+@schemata: 
+@tables_views: 
+@tables_views_s: 
+@columns: 
+@columns_t: 
+@columns_c: 
 
 <!-- ##### FUNCTION gda_server_provider_get_name ##### -->
 <para>
@@ -94,17 +147,6 @@ must inherit, and implement its virtual mathods.
 
 @provider: 
 @cnc: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_change_database ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@name: 
 @Returns: 
 
 

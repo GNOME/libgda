@@ -15,7 +15,7 @@ gda_meta_store_change_free (GdaMetaStoreChange *change) {
 GSList *expected_changes;
 
 static void meta_changed_cb (GdaMetaStore *store, GSList *changes, gpointer data);
-static void suggest_insert_cb (GdaMetaStore *store, GdaMetaContext *context, gpointer data);
+static void suggest_update_cb (GdaMetaStore *store, GdaMetaContext *context, gpointer data);
 
 /*
  * Declare a GdaMetaStore to test
@@ -24,7 +24,7 @@ void
 common_declare_meta_store (GdaMetaStore *store)
 {
 	g_signal_connect (store, "meta-changed", G_CALLBACK (meta_changed_cb), NULL);
-	g_signal_connect (store, "suggest_insert", G_CALLBACK (suggest_insert_cb), NULL);
+	g_signal_connect (store, "suggest_update", G_CALLBACK (suggest_update_cb), NULL);
 }
 
 static void
@@ -92,10 +92,10 @@ meta_changed_cb (GdaMetaStore *store, GSList *changes, gpointer data)
 }
 
 static void
-suggest_insert_cb (GdaMetaStore *store, GdaMetaContext *context, gpointer data)
+suggest_update_cb (GdaMetaStore *store, GdaMetaContext *context, gpointer data)
 {
 	gint i;
-	g_print ("Insertion suggested for table %s:\n", context->table_name);
+	g_print ("Update suggested for table %s:\n", context->table_name);
 	for (i = 0; i < context->size; i++) {
 		gchar *str;
 		str = gda_value_stringify (context->column_values[i]);
@@ -295,7 +295,7 @@ common_drop_all_tables (GdaMetaStore *store)
 		sql = g_strdup_printf ("DROP VIEW %s", view_names[i]);
 		stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
 		g_free (sql);
-		res = gda_connection_statement_execute_non_select (cnc, stmt, NULL, &error);
+		res = gda_connection_statement_execute_non_select (cnc, stmt, NULL, NULL, &error);
 		if (res == -1) {
 			g_print ("DROP view '%s' error: %s\n", view_names[i],
 				error && error->message ? error->message : "No detail");
@@ -314,7 +314,7 @@ common_drop_all_tables (GdaMetaStore *store)
 		sql = g_strdup_printf ("DROP TABLE %s", table_names[i]);
 		stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
 		g_free (sql);
-		res = gda_connection_statement_execute_non_select (cnc, stmt, NULL, &error);
+		res = gda_connection_statement_execute_non_select (cnc, stmt, NULL, NULL, &error);
 		if (res == -1) {
 			g_print ("DROP table '%s' error: %s\n", table_names[i],
 				error && error->message ? error->message : "No detail");
@@ -548,7 +548,7 @@ test_columns (GdaMetaStore *store)
 	TEST_HEADER;
 
 	/* load CSV file */
-	import = common_load_csv_file ("data_columns.csv", 4, "gint", 6, "boolean", 8, "gint", 9, "gint", 10, "gint", 11, "gint", 12, "gint", 20, "boolean", -1);
+	import = common_load_csv_file ("data_columns.csv", 4, "gint", 6, "boolean", 9, "gint", 10, "gint", 11, "gint", 12, "gint", 13, "gint", 21, "boolean", -1);
 	common_declare_expected_insertions_from_model (TNAME, import);
 	TEST_MODIFY (store, TNAME, import, NULL, &error, NULL);
 	TEST_END (import);

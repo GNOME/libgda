@@ -11,7 +11,6 @@
 
 #define DB_NAME "gda_check_db"
 #define CREATE_FILES 0
-GdaDict *dict = NULL;
 GdaSqlParser *parser = NULL;
 
 /*
@@ -284,7 +283,7 @@ prov_test_clean_connection (GdaConnection *cnc, gboolean destroy_db)
 	gchar *str, *upname;
 
 	client = gda_connection_get_client (cnc);
-	prov_id = g_strdup (gda_connection_get_provider (cnc));
+	prov_id = g_strdup (gda_connection_get_provider_name (cnc));
 	gda_connection_close (cnc);
 	g_object_unref (cnc);
 
@@ -343,44 +342,45 @@ prov_test_create_tables_sql (GdaConnection *cnc)
 	const gchar *prov_id;
 	gchar *tmp, *filename;
 	gboolean retval = TRUE;
-	gchar *contents;
-        gsize size;
 	GError *error = NULL;
+	const GSList *list;
 
-	prov_id = gda_connection_get_provider (cnc);
+	prov_id = gda_connection_get_provider_name (cnc);
 
 	tmp = g_strdup_printf ("%s_create_tables.sql", prov_id);
 	filename = g_build_filename (CHECK_SQL_FILES, "tests", "providers", tmp, NULL);
 	g_free (tmp);
 
-	/* read the contents of the file */
-        if (! g_file_get_contents (filename, &contents, &size, &error)) {
+	if (!parser) 
+		parser = gda_sql_parser_new ();
+
+	GdaBatch *batch;
+	batch = gda_sql_parser_parse_file_as_batch (parser, filename, &error);
+	if (!batch) {
 #ifdef CHECK_EXTRA_INFO
-                g_warning ("Could not read file '%s': %s", filename,
+                g_warning ("Could not parser file '%s': %s", filename,
 			   error && error->message ? error->message : "No detail");
 #endif
 		g_error_free (error);
 		error = NULL;
-		retval = FALSE;
-        }
-	else {
-		GdaCommand *command;
-		command = gda_command_new (contents, GDA_COMMAND_TYPE_SQL,
-					   GDA_COMMAND_OPTION_STOP_ON_ERRORS);
-		g_free (contents);
-		if (gda_connection_execute_non_select_command (cnc, command, NULL, &error) < 0) {
-#ifdef CHECK_EXTRA_INFO
-			g_warning ("Could execute SQL in file '%s': %s", filename,
-				   error && error->message ? error->message : "No detail");
-#endif
-			g_error_free (error);
-			error = NULL;
-			retval = FALSE;
-		}
-		gda_command_free (command);
+		g_free (filename);
+		return FALSE;
 	}
-	g_free (filename);
 
+	for (list = gda_batch_get_statements (batch); list; list = list->next) {
+		if (gda_connection_statement_execute_non_select (cnc, GDA_STATEMENT (list->data),
+								 NULL, NULL, &error) == -1) {
+#ifdef CHECK_EXTRA_INFO
+			g_warning ("Could execute statement: %s",
+				   error && error->message ? error->message : "No detail");
+			g_error_free (error);
+#endif
+			retval = FALSE;
+			break;
+		}
+	}
+
+	g_object_unref (batch);
 	return retval;
 }
 
@@ -399,19 +399,16 @@ prov_test_check_table_schema (GdaConnection *cnc, const gchar *table)
 		return FALSE;
 	}
 
-	if (!dict)
-		dict = gda_dict_new ();
-
 	GdaServerProvider *prov;
 	GdaDataModel *schema_m;
 	GError *error = NULL;
-	GdaParameterList *plist;
 	gchar *str;
+	GValue *v;
 	
 	prov = gda_connection_get_provider_obj (cnc);
-	plist = gda_parameter_list_new_inline (dict, "name", G_TYPE_STRING, table, NULL);
-	schema_m = gda_server_provider_get_schema (prov, cnc, GDA_CONNECTION_SCHEMA_FIELDS, plist, &error);
-	g_object_unref (plist);
+	g_value_set_string (v = gda_value_new (G_TYPE_STRING), table);
+	schema_m = gda_connection_get_meta_store_data (cnc, GDA_CONNECTION_META_FIELDS, &error, 1, "name", v);
+	gda_value_free (v);
 	if (!schema_m) {
 #ifdef CHECK_EXTRA_INFO
 		g_warning ("Could not get FIELDS schema for table '%s': %s", table,
@@ -420,10 +417,11 @@ prov_test_check_table_schema (GdaConnection *cnc, const gchar *table)
 		return FALSE;
 	}
 
-	str = g_strdup_printf ("FIELDS_SCHEMA_%s_%s.xml", gda_connection_get_provider (cnc), table);
+	str = g_strdup_printf ("FIELDS_SCHEMA_%s_%s.xml", gda_connection_get_provider_name (cnc), table);
 	if (CREATE_FILES) {
+		GdaSet *plist;
 		/* export schema model to a file, to create first version of the files, not to be used in actual checks */
-		plist = gda_parameter_list_new_inline (dict, "OVERWRITE", G_TYPE_BOOLEAN, TRUE, NULL);
+		plist = gda_set_new_inline (1, "OVERWRITE", G_TYPE_BOOLEAN, TRUE);
 		if (! (gda_data_model_export_to_file (schema_m, GDA_DATA_MODEL_IO_DATA_ARRAY_XML, str, 
 						      NULL, 0, NULL, 0, plist, &error))) {
 #ifdef CHECK_EXTRA_INFO
@@ -435,15 +433,6 @@ prov_test_check_table_schema (GdaConnection *cnc, const gchar *table)
 		g_object_unref (plist);
 	}
 	else {
-		/* test schema validity */
-		if (!gda_server_provider_test_schema_model (schema_m, GDA_CONNECTION_SCHEMA_FIELDS, &error)) {
-#ifdef CHECK_EXTRA_INFO
-			g_warning ("Reported schema does not conform to GDA's requirements: %s", 
-				   error && error->message ? error->message : "No detail");
-#endif
-			return FALSE;
-		}
-
 		/* compare schema with what's expected */
 		gchar *file = g_build_filename (CHECK_SQL_FILES, "tests", "providers", str, NULL);
 		if (!compare_data_model_with_expected (schema_m, file))
@@ -478,7 +467,7 @@ if (!cnc || !gda_connection_is_opened (cnc)) {
 	gchar *str;
 	
 	prov = gda_connection_get_provider_obj (cnc);
-	schema_m = gda_server_provider_get_schema (prov, cnc, GDA_CONNECTION_SCHEMA_TYPES, NULL, &error);
+	schema_m = gda_connection_get_meta_store_data (cnc, GDA_CONNECTION_META_TYPES, &error, 0);
 	if (!schema_m) {
 #ifdef CHECK_EXTRA_INFO
 		g_warning ("Could not get the TYPES schema: %s",
@@ -487,11 +476,11 @@ if (!cnc || !gda_connection_is_opened (cnc)) {
 		return FALSE;
 	}
 
-	str = g_strdup_printf ("TYPES_SCHEMA_%s.xml", gda_connection_get_provider (cnc));
+	str = g_strdup_printf ("TYPES_SCHEMA_%s.xml", gda_connection_get_provider_name (cnc));
 	if (CREATE_FILES) {
 		/* export schema model to a file, to create first version of the files, not to be used in actual checks */
-		GdaParameterList *plist;
-		plist = gda_parameter_list_new_inline (dict, "OVERWRITE", G_TYPE_BOOLEAN, TRUE, NULL);
+		GdaSet *plist;
+		plist = gda_set_new_inline (1, "OVERWRITE", G_TYPE_BOOLEAN, TRUE);
 		if (! (gda_data_model_export_to_file (schema_m, GDA_DATA_MODEL_IO_DATA_ARRAY_XML, str, 
 						      NULL, 0, NULL, 0, plist, &error))) {
 #ifdef CHECK_EXTRA_INFO
@@ -503,15 +492,6 @@ if (!cnc || !gda_connection_is_opened (cnc)) {
 		g_object_unref (plist);
 	}
 	else {
-		/* test schema validity */
-		if (!gda_server_provider_test_schema_model (schema_m, GDA_CONNECTION_SCHEMA_TYPES, &error)) {
-#ifdef CHECK_EXTRA_INFO
-			g_warning ("Reported schema does not conform to GDA's requirements: %s", 
-				   error && error->message ? error->message : "No detail");
-#endif
-			return FALSE;
-		}
-
 		/* compare schema with what's expected */
 		gchar *file = g_build_filename (CHECK_SQL_FILES, "tests", "providers", str, NULL);
 		if (!compare_data_model_with_expected (schema_m, file))
@@ -620,15 +600,15 @@ iter_is_correct (GdaDataModelIter *iter, GdaDataModel *ref_model)
         g_object_get (G_OBJECT (iter), "current-row", &rownum, NULL);
 
         cols = gda_data_model_get_n_columns (ref_model);
-        if (cols != g_slist_length (GDA_PARAMETER_LIST (iter)->parameters)) {
+        if (cols != g_slist_length (GDA_SET (iter)->holders)) {
 #ifdef CHECK_EXTRA_INFO
                 g_warning ("Number of columns in iter is not the same as for the referenced data model\n");
 #endif
                 return FALSE;
         }
-        for (i = 0, list = GDA_PARAMETER_LIST (iter)->parameters; i < cols; i++, list = list->next) {
+        for (i = 0, list = GDA_SET (iter)->holders; i < cols; i++, list = list->next) {
                 const GValue *v1, *v2;
-                v1 = gda_parameter_get_value (GDA_PARAMETER (list->data));
+                v1 = gda_holder_get_value (GDA_HOLDER (list->data));
                 v2 = gda_data_model_get_value_at (ref_model, i, rownum);
                 if (gda_value_compare_ext (v1, v2)) {
 #ifdef CHECK_EXTRA_INFO
@@ -757,7 +737,7 @@ prov_test_load_data (GdaConnection *cnc, const gchar *table)
 			g_free (tmp);			
 		}
 
-		if (gda_connection_statement_execute_non_select (cnc, insert, set, &error) == -1) {
+		if (gda_connection_statement_execute_non_select (cnc, insert, set, NULL, &error) == -1) {
 #ifdef CHECK_EXTRA_INFO
 			g_warning ("Could not execute the INSERT statement for row %d: %s",
 				   row,

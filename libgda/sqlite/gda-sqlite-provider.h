@@ -1,5 +1,5 @@
 /* GDA SQLite provider
- * Copyright (C) 1998 - 2007 The GNOME Foundation.
+ * Copyright (C) 1998 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -47,7 +47,6 @@ struct _GdaSqliteProviderClass {
 G_BEGIN_DECLS
 
 GType              gda_sqlite_provider_get_type (void) G_GNUC_CONST;
-GdaServerProvider *gda_sqlite_provider_new (void);
 
 G_END_DECLS
 
