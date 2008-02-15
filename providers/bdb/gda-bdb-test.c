@@ -74,7 +74,7 @@ gda_stuff (gpointer filename)
 	/* connect to the db */
 	client = gda_client_new ();
 	g_assert (client != NULL);
-	cnc = gda_client_open_connection_from_string (client, "Berkeley-DB", cncstring, NULL, NULL, 0, &error);
+	cnc = gda_client_open_connection_from_string (client, "Berkeley-DB", cncstring, NULL, 0, &error);
 	if (!cnc) {
 		g_print ("Could not open connection; %s\n", error && error->message ? error->message : "no detail");
 		exit (1);

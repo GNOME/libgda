@@ -1,3 +1,47 @@
+2008-02-15  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-config.c:
+	* libgda/sqlite/virtual/gda-virtual-connection.c:
+	* libgda/gda-set.c:
+	* libgda/sql-parser/gda-statement-struct.c:
+	* libgda/sql-parser/gda-statement-struct-pspec.c: remove compilation warnings
+	* libgda/gda-server-provider.h: removed unused "last_connection_gone" member
+	* libgda/sqlite/sqlite-src/: up to SQLite version 3.5.6
+	* libgda/gda-server-provider.[ch]:
+	* libgda/gda-connection.c:
+	* providers/skel-implementation/models/gda-models-provider.c:
+	* providers/skel-implementation/capi/gda-capi-provider.c:
+	* providers/bdb/gda-bdb-provider.c:
+	* providers/mdb/gda-mdb-provider.c:
+	* libgda/sqlite/gda-sqlite-provider.c: modified interface to the provider's open_connection(),
+	perform_operation() and statement_execute() virtual methods to be able to add asynchronous
+	support at a later time
+	* libgda-report/engine/gda-report-engine.c:
+	* testing/gda-test-connection.c:
+	* testing/gda-test-blob.c:
+	* libgda/gda-data-proxy.c:
+	* libgda/gda-config.[ch]:
+	* libgda/gda-meta-store.c:
+	* providers/skel-implementation/models/gda-models-provider.c:
+	* providers/skel-implementation/capi/gda-capi-provider.c:
+	* providers/bdb/gda-bdb-provider.c:
+	* providers/bdb/gda-bdb-test.c:
+	* providers/mdb/gda-mdb-provider.c
+	* libgda/sqlite/gda-sqlite-provider.c:
+	* libgda/gda-init.c:
+	* libgda/gda-client.[ch]:
+	* libgda/gda-server-provider.[ch]:
+	* libgda/gda-connection.[ch]: replaced the username/password authentification parameters by
+	a more flexible approach where providers can declare their own authentification
+	parameters (if no declaration, then defaults back to username/password), this partially
+	fixes bug #112822
+	* providers/bdb/libmain.c:
+	* providers/mdb/libmain.c:
+	* providers/skel-implementation/models/libmain.c:
+	* providers/sqlite/libmain.c: added a plugin_get_auth_spec() function to tell
+	that these providers do not require any authentification parameter
+	* doc/C: documentation updates, with new instructions on how to write database providers
+
 2008-02-14  Vivien Malerba <malerba@gnome-db.org>
 
 	* Makefile.am:

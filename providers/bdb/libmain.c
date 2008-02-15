@@ -62,6 +62,16 @@ plugin_get_dsn_spec (void)
 	return ret;
 }
 
+gchar *
+plugin_get_auth_spec (void)
+{
+#define AUTH "<?xml version=\"1.0\"?>" \
+             "<data-set-spec>" \
+             "  <parameters/>" \
+             "</data-set-spec>"
+
+        return g_strdup (AUTH);
+}
 
 GdaServerProvider *
 plugin_create_provider (void)

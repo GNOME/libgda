@@ -34,7 +34,6 @@ Base class for all the DBMS providers
 </para>
 
 @parent_class: 
-@last_connection_gone: 
 @get_name: 
 @get_version: 
 @get_server_version: 
@@ -60,6 +59,7 @@ Base class for all the DBMS providers
 @statement_to_sql: 
 @statement_prepare: 
 @statement_execute: 
+@cancel: 
 @create_connection: 
 @meta_funcs: 
 
@@ -74,6 +74,7 @@ Base class for all the DBMS providers
 @GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR: 
 @GDA_SERVER_PROVIDER_OPERATION_ERROR: 
 @GDA_SERVER_PROVIDER_INTERNAL_ERROR: 
+@GDA_SERVER_PROVIDER_BUSY_ERROR: 
 
 <!-- ##### STRUCT GdaServerProviderMeta ##### -->
 <para>
@@ -88,6 +89,18 @@ Base class for all the DBMS providers
 @columns: 
 @columns_t: 
 @columns_c: 
+
+<!-- ##### USER_FUNCTION GdaServerProviderAsyncCallback ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@task_id: 
+@result_status: 
+@data: 
+
 
 <!-- ##### FUNCTION gda_server_provider_get_name ##### -->
 <para>
@@ -125,8 +138,7 @@ Base class for all the DBMS providers
 @provider: 
 @cnc: 
 @params: 
-@username: 
-@password: 
+@auth: 
 @Returns: 
 
 

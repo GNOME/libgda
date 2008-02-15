@@ -37,13 +37,10 @@ static void gda_bdb_provider_finalize   (GObject *object);
 
 static const gchar *gda_bdb_provider_get_name (GdaServerProvider *provider);
 static const gchar *gda_bdb_provider_get_version (GdaServerProvider *provider);
-static gboolean gda_bdb_provider_open_connection (GdaServerProvider *provider,
-						  GdaConnection *cnc,
-						  GdaQuarkList *params,
-						  const gchar *username,
-						  const gchar *password);
-static const gchar *gda_bdb_provider_get_server_version (GdaServerProvider *provider,
-						         GdaConnection *cnc);
+static gboolean gda_bdb_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
+						  GdaQuarkList *params, GdaQuarkList *auth,
+						  guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data);
+static const gchar *gda_bdb_provider_get_server_version (GdaServerProvider *provider, GdaConnection *cnc);
 static const gchar *gda_bdb_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc);
 
 static GObjectClass *parent_class = NULL;
@@ -134,9 +131,8 @@ gda_bdb_provider_get_version (GdaServerProvider *provider)
  */
 static gboolean
 gda_bdb_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-				  GdaQuarkList *params,
-				  const gchar *username,
-				  const gchar *password)
+				  GdaQuarkList *params, GdaQuarkList *auth,
+				  guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data)
 {
 	BdbConnectionData *cdata;
 	gchar *bdb_file, *bdb_db, *dirname;
@@ -147,6 +143,11 @@ gda_bdb_provider_open_connection (GdaServerProvider *provider, GdaConnection *cn
 	
 	g_return_val_if_fail (GDA_IS_BDB_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	if (async_cb) {
+		gda_connection_add_event_string (cnc, _("Provider does not support asynchronous connection open"));
+                return FALSE;
+	}
 
 	/* parse connection string */
 	dirname = g_strdup (gda_quark_list_find (params, "DB_DIR"));
@@ -188,7 +189,7 @@ gda_bdb_provider_open_connection (GdaServerProvider *provider, GdaConnection *cn
 
 	/* open virtual connection */
 	if (! GDA_SERVER_PROVIDER_CLASS (parent_class)->open_connection (GDA_SERVER_PROVIDER (provider), cnc, params,
-									 NULL, NULL)) {
+									 NULL, NULL, NULL, NULL)) {
 		gda_connection_add_event_string (cnc, _("Can't open virtual connection"));
 		return FALSE;
 	}

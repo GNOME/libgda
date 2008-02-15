@@ -69,15 +69,6 @@ or destroy a database.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_client_declare_connection ##### -->
-<para>
-
-</para>
-
-@client: 
-@cnc: 
-
-
 <!-- ##### FUNCTION gda_client_open_connection ##### -->
 <para>
 
@@ -85,8 +76,7 @@ or destroy a database.
 
 @client: 
 @dsn: 
-@username: 
-@password: 
+@auth_string: 
 @options: 
 @error: 
 @Returns: 
@@ -100,8 +90,7 @@ or destroy a database.
 @client: 
 @provider_id: 
 @cnc_string: 
-@username: 
-@password: 
+@auth_string: 
 @options: 
 @error: 
 @Returns: 
@@ -123,8 +112,7 @@ or destroy a database.
 
 @client: 
 @dsn: 
-@username: 
-@password: 
+@auth_string: 
 @Returns: 
 
 
@@ -206,16 +194,6 @@ or destroy a database.
 @client: 
 @name: 
 @error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_client_get_dsn_specs ##### -->
-<para>
-
-</para>
-
-@client: 
-@provider: 
 @Returns: 
 
 

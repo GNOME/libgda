@@ -50,8 +50,7 @@ struct _GdaConnectionPrivate {
 	GdaConnectionOptions  options; /* ORed flags */
 	gchar                *dsn;
 	gchar                *cnc_string;
-	gchar                *username;
-	gchar                *password;
+	gchar                *auth_string;
 	gboolean              is_open;
 
 	GdaMetaStore         *meta_store;
@@ -98,8 +97,7 @@ enum
         PROP_DSN,
         PROP_CNC_STRING,
         PROP_PROVIDER_OBJ,
-        PROP_USERNAME,
-        PROP_PASSWORD,
+        PROP_AUTH_STRING,
         PROP_OPTIONS,
 	PROP_META_STORE
 };
@@ -185,12 +183,8 @@ gda_connection_class_init (GdaConnectionClass *klass)
                                                                GDA_TYPE_SERVER_PROVIDER,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 
-        g_object_class_install_property (object_class, PROP_USERNAME,
-                                         g_param_spec_string ("username", _("Username to use"),
-                                                              NULL, NULL,
-                                                              (G_PARAM_READABLE | G_PARAM_WRITABLE)));
-        g_object_class_install_property (object_class, PROP_PASSWORD,
-                                         g_param_spec_string ("password", _("Password to use"),
+        g_object_class_install_property (object_class, PROP_AUTH_STRING,
+                                         g_param_spec_string ("auth_string", _("Authentification string to use"),
                                                               NULL, NULL,
                                                               (G_PARAM_READABLE | G_PARAM_WRITABLE)));
         g_object_class_install_property (object_class, PROP_OPTIONS,
@@ -217,8 +211,7 @@ gda_connection_init (GdaConnection *cnc, GdaConnectionClass *klass)
 	cnc->priv->provider_obj = NULL;
 	cnc->priv->dsn = NULL;
 	cnc->priv->cnc_string = NULL;
-	cnc->priv->username = NULL;
-	cnc->priv->password = NULL;
+	cnc->priv->auth_string = NULL;
 	cnc->priv->is_open = FALSE;
 	cnc->priv->events_list = NULL;
 	cnc->priv->recset_list = NULL;
@@ -272,8 +265,7 @@ gda_connection_finalize (GObject *object)
 	/* free memory */
 	g_free (cnc->priv->dsn);
 	g_free (cnc->priv->cnc_string);
-	g_free (cnc->priv->username);
-	g_free (cnc->priv->password);
+	g_free (cnc->priv->auth_string);
 
 	g_free (cnc->priv);
 	cnc->priv = NULL;
@@ -355,11 +347,14 @@ gda_connection_set_property (GObject *object,
 			cnc->priv->provider_obj = g_value_get_object (value);
 			g_object_ref (G_OBJECT (cnc->priv->provider_obj));
                         break;
-                case PROP_USERNAME:
-			gda_connection_set_username (cnc, g_value_get_string (value));
-                        break;
-                case PROP_PASSWORD:
-			gda_connection_set_password (cnc, g_value_get_string (value));
+                case PROP_AUTH_STRING:
+			if (! cnc->priv->is_open) {
+				const gchar *str = g_value_get_string (value);
+				g_free (cnc->priv->auth_string);
+				cnc->priv->auth_string = NULL;
+				if (str)
+					cnc->priv->auth_string = g_strdup (str);
+			}
                         break;
                 case PROP_OPTIONS:
 			cnc->priv->options = g_value_get_flags (value);
@@ -400,11 +395,8 @@ gda_connection_get_property (GObject *object,
                 case PROP_PROVIDER_OBJ:
 			g_value_set_object (value, G_OBJECT (cnc->priv->provider_obj));
                         break;
-                case PROP_USERNAME:
-			g_value_set_string (value, cnc->priv->username);
-                        break;
-                case PROP_PASSWORD:
-			g_value_set_string (value, cnc->priv->password);
+                case PROP_AUTH_STRING:
+			g_value_set_string (value, cnc->priv->auth_string);
                         break;
                 case PROP_OPTIONS:
 			g_value_set_flags (value, cnc->priv->options);
@@ -422,8 +414,7 @@ gda_connection_get_property (GObject *object,
  * @client: a #GdaClient object, or %NULL
  * @provider: a #GdaServerProvider object.
  * @dsn: GDA data source to connect to.
- * @username: user name to use to connect.
- * @password: password for @username.
+ * @auth_string: authentification string.
  * @options: options for the connection.
  *
  * This function creates a new #GdaConnection object. It is not
@@ -436,11 +427,8 @@ gda_connection_get_property (GObject *object,
  * Returns: a newly allocated #GdaConnection object.
  */
 GdaConnection *
-gda_connection_new (GdaClient *client,
-		    GdaServerProvider *provider,
-		    const gchar *dsn,
-		    const gchar *username,
-		    const gchar *password,
+gda_connection_new (GdaClient *client, GdaServerProvider *provider,
+		    const gchar *dsn, const gchar *auth_string,
 		    GdaConnectionOptions options)
 {
 	GdaConnection *cnc;
@@ -449,9 +437,7 @@ gda_connection_new (GdaClient *client,
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 
 	cnc = g_object_new (GDA_TYPE_CONNECTION, "client", client, "provider_obj", provider, 
-			    "dsn", dsn, 
-			    "username", username, 
-			    "password", password, 
+			    "dsn", dsn, "auth_string", auth_string, 
 			    "options", options, NULL);
 	return cnc;
 }
@@ -469,9 +455,8 @@ gboolean
 gda_connection_open (GdaConnection *cnc, GError **error)
 {
 	GdaDataSourceInfo *dsn_info = NULL;
-	GdaQuarkList *params;
-	char *real_username = NULL;
-	char *real_password = NULL;
+	GdaQuarkList *params, *auth;
+	char *real_auth_string = NULL;
 
 	g_return_val_if_fail (cnc && GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv, FALSE);
@@ -514,40 +499,28 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 
 	params = gda_quark_list_new_from_string (cnc->priv->cnc_string);
 
-	/* retrieve correct username/password */
-	if (cnc->priv->username)
-		real_username = g_strdup (cnc->priv->username);
+	/* retrieve correct auth_string */
+	if (cnc->priv->auth_string)
+		real_auth_string = g_strdup (cnc->priv->auth_string);
 	else {
-		if (dsn_info && dsn_info->username)
-			real_username = g_strdup (dsn_info->username);
+		if (dsn_info && dsn_info->auth_string)
+			real_auth_string = g_strdup (dsn_info->auth_string);
 		else {
+			TO_IMPLEMENT; /* look into @params */
+			/*
 			const gchar *s;
 			s = gda_quark_list_find (params, "USER");
 			if (s) {
 				real_username = g_strdup (s);
 				gda_quark_list_remove (params, "USER");
 			}
-		}
-	}
-
-	if (cnc->priv->password)
-		real_password = g_strdup (cnc->priv->password);
-	else {
-		if (dsn_info && dsn_info->password)
-			real_password = g_strdup (dsn_info->password);
-		else {
-			const gchar *s;
-			s = gda_quark_list_find (params, "PASSWORD");
-			if (s) {
-				real_password = g_strdup (s);
-				gda_quark_list_remove (params, "PASSWORD");
-			}
+			*/
 		}
 	}
 
 	/* try to open the connection */
-	if (gda_server_provider_open_connection (cnc->priv->provider_obj, cnc, params,
-						 real_username, real_password)) {
+	auth = gda_quark_list_new_from_string (cnc->priv->cnc_string);
+	if (gda_server_provider_open_connection (cnc->priv->provider_obj, cnc, params, auth)) {
 		cnc->priv->is_open = TRUE;
 		gda_client_notify_connection_opened_event (cnc->priv->client, cnc);
 	}
@@ -577,8 +550,8 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 
 	/* free memory */
 	gda_quark_list_free (params);
-	g_free (real_username);
-	g_free (real_password);
+	gda_quark_list_free (auth);
+	g_free (real_auth_string);
 
 	if (cnc->priv->is_open) {
 #ifdef GDA_DEBUG_signal
@@ -826,34 +799,7 @@ gda_connection_get_cnc_string (GdaConnection *cnc)
 }
 
 /**
- * gda_connection_set_username
- * @cnc: a #GdaConnection object
- * @username:
- *
- * Sets the user name for the connection. If the connection is already opened,
- * then no action is performed at all and FALSE is returned.
- *
- * Returns: TRUE on success
- */
-gboolean
-gda_connection_set_username (GdaConnection *cnc, const gchar *username)
-{
-	g_return_val_if_fail (cnc && GDA_IS_CONNECTION (cnc), FALSE);
-        g_return_val_if_fail (cnc->priv, FALSE);
-
-        if (cnc->priv->is_open)
-                return FALSE;
-
-        g_free (cnc->priv->username);
-	if (username)
-		cnc->priv->username = g_strdup (username);
-	else
-		cnc->priv->username = NULL;
-        return TRUE;
-}
-
-/**
- * gda_connection_get_username
+ * gda_connection_get_authentification
  * @cnc: a #GdaConnection object.
  *
  * Gets the user name used to open this connection.
@@ -861,57 +807,12 @@ gda_connection_set_username (GdaConnection *cnc, const gchar *username)
  * Returns: the user name.
  */
 const gchar *
-gda_connection_get_username (GdaConnection *cnc)
+gda_connection_get_authentification (GdaConnection *cnc)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv, NULL);
 
-	return (const gchar *) cnc->priv->username;
-}
-
-/**
- * gda_connection_set_password
- * @cnc: a #GdaConnection object
- * @password:
- *
- * Sets the user password for the connection to the server. If the connection is already opened,
- * then no action is performed at all and FALSE is returned.
- *
- * Returns: TRUE on success
- */
-gboolean
-gda_connection_set_password (GdaConnection *cnc, const gchar *password)
-{
-	g_return_val_if_fail (cnc && GDA_IS_CONNECTION (cnc), FALSE);
-        g_return_val_if_fail (cnc->priv, FALSE);
-
-        if (cnc->priv->is_open)
-                return FALSE;
-
-        g_free (cnc->priv->password);
-	if (password)
-		cnc->priv->password = g_strdup (password);
-	else
-		cnc->priv->password = NULL;
-
-        return TRUE;
-}
-
-/**
- * gda_connection_get_password
- * @cnc: a #GdaConnection object.
- *
- * Gets the password used to open this connection.
- *
- * Returns: the password.
- */
-const gchar *
-gda_connection_get_password (GdaConnection *cnc)
-{
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (cnc->priv, NULL);
-
-	return (const gchar *) cnc->priv->password;
+	return (const gchar *) cnc->priv->auth_string;
 }
 
 /**
@@ -1214,10 +1115,9 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
 
 	if (last_inserted_row) 
 		*last_inserted_row = NULL;
-	obj = PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, 
-								       cnc, stmt, params, 
-								       model_usage, 
-								       types, last_inserted_row, error);
+	obj = PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, cnc, stmt, params, 
+								       model_usage, types, last_inserted_row, 
+								       NULL, NULL, NULL, error);
 	g_free (types);
 	return obj;
 }
@@ -1428,9 +1328,9 @@ gda_connection_statement_execute_select_fullv (GdaConnection *cnc, GdaStatement 
 	types = make_col_types_array (10, ap);
 	va_end (ap);
 	model = (GdaDataModel *) PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, 
-											  cnc, stmt, params, 
-											  model_usage, 
-											  types, NULL, error);
+											  cnc, stmt, params, model_usage, 
+											  types, NULL, NULL, 
+											  NULL, NULL, error);
 	g_free (types);
 	if (model && !GDA_IS_DATA_MODEL (model)) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
@@ -1481,8 +1381,8 @@ gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *
 
 	model = (GdaDataModel *) PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, 
 											  cnc, stmt, params, 
-											  model_usage, 
-											  col_types, NULL, error);
+											  model_usage, col_types, NULL, 
+											  NULL, NULL, NULL, error);
 	if (model && !GDA_IS_DATA_MODEL (model)) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
 			     _("Statement is not a selection statement"));

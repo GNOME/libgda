@@ -34,11 +34,9 @@ static void gda_models_provider_finalize   (GObject *object);
 
 static const gchar *gda_models_provider_get_name (GdaServerProvider *provider);
 static const gchar *gda_models_provider_get_version (GdaServerProvider *provider);
-static gboolean gda_models_provider_open_connection (GdaServerProvider *provider,
-						     GdaConnection *cnc,
-						     GdaQuarkList *params,
-						     const gchar *username,
-						     const gchar *password);
+static gboolean gda_models_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc, 
+						     GdaQuarkList *params, GdaQuarkList *auth,
+						     guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data);
 static const gchar *gda_models_provider_get_server_version (GdaServerProvider *provider,
 							    GdaConnection *cnc);
 static const gchar *gda_models_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc);
@@ -143,12 +141,17 @@ gda_models_provider_get_version (GdaServerProvider *provider)
  */
 static gboolean
 gda_models_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-				     GdaQuarkList *params,
-				     const gchar *username,
-				     const gchar *password)
+				     GdaQuarkList *params, GdaQuarkList *auth,
+				     guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data)
 {
 	g_return_val_if_fail (GDA_IS_MODELS_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	/* Don't allow asynchronous connection opening for virtual providers */
+	if (async_cb) {
+		gda_connection_add_event_string (cnc, _("Provider does not support asynchronous connection open"));
+                return FALSE;
+	}
 
 	/* Check for connection parameters */
         /* TO_ADD: your own connection parameters */
@@ -169,7 +172,7 @@ gda_models_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 
 	/* open virtual connection */
 	if (! GDA_SERVER_PROVIDER_CLASS (parent_class)->open_connection (GDA_SERVER_PROVIDER (provider), cnc, params,
-                                                                         NULL, NULL)) {
+                                                                         NULL, NULL, NULL, NULL)) {
                 gda_connection_add_event_string (cnc, _("Can't open virtual connection"));
                 return FALSE;
         }

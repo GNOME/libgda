@@ -264,8 +264,7 @@ gda_server_provider_get_name (GdaServerProvider *provider)
  * @provider: a #GdaServerProvider object.
  * @dsn: a DSN string.
  * @params:
- * @username: user name for logging in.
- * @password: password for authentication.
+ * @auth_string: authentification string
  * @options: options for the connection (see #GdaConnectionOptions).
  *
  * Requests that the @provider creates a new #GdaConnection connection object.
@@ -276,9 +275,7 @@ gda_server_provider_get_name (GdaServerProvider *provider)
  */
 GdaConnection *
 gda_server_provider_create_connection (GdaClient *client, GdaServerProvider *provider, 
-				       const gchar *dsn,
-				       const gchar *username,
-				       const gchar *password,
+				       const gchar *dsn, const gchar *auth_string,
 				       GdaConnectionOptions options)
 {
 	GdaConnection *cnc;
@@ -290,14 +287,11 @@ gda_server_provider_create_connection (GdaClient *client, GdaServerProvider *pro
 			g_object_set (G_OBJECT (cnc), "client", client, "provider_obj", provider, NULL);
 			if (dsn && *dsn)
 				g_object_set (G_OBJECT (cnc), "dsn", dsn, NULL);
-			g_object_set (G_OBJECT (cnc), 
-				      "username", username,
-				      "password", password,
-				      "options", options, NULL);
+			g_object_set (G_OBJECT (cnc), "auth_string", auth_string, "options", options, NULL);
 		}
 	}
 	else 
-		cnc = gda_connection_new (client, provider, dsn, username, password, options);
+		cnc = gda_connection_new (client, provider, dsn, auth_string, options);
 
 	return cnc;
 }
@@ -308,8 +302,7 @@ gda_server_provider_create_connection (GdaClient *client, GdaServerProvider *pro
  * @provider: a #GdaServerProvider object.
  * @cnc_string: a connection string.
  * @params:
- * @username: user name for logging in.
- * @password: password for authentication.
+ * @auth_string: authentification string
  * @options: options for the connection (see #GdaConnectionOptions).
  *
  * Requests that the @provider creates a new #GdaConnection connection object.
@@ -320,9 +313,7 @@ gda_server_provider_create_connection (GdaClient *client, GdaServerProvider *pro
  */
 GdaConnection *
 gda_server_provider_create_connection_from_string (GdaClient *client, GdaServerProvider *provider, 
-						   const gchar *cnc_string,
-						   const gchar *username,
-						   const gchar *password,
+						   const gchar *cnc_string, const gchar *auth_string,
 						   GdaConnectionOptions options)
 {
 	GdaConnection *cnc;
@@ -334,17 +325,12 @@ gda_server_provider_create_connection_from_string (GdaClient *client, GdaServerP
 			g_object_set (G_OBJECT (cnc), "client", client, "provider_obj", provider, NULL);
 			if (cnc_string && *cnc_string)
 				g_object_set (G_OBJECT (cnc), "cnc_string", cnc_string, NULL);
-			g_object_set (G_OBJECT (cnc), 
-				      "username", username,
-				      "password", password,
-				      "options", options, NULL);
+			g_object_set (G_OBJECT (cnc), "auth_string", auth_string, "options", options, NULL);
 		}
 	}
 	else 
 		cnc = (GdaConnection *) g_object_new (GDA_TYPE_CONNECTION, "client", client, "provider_obj", provider,
-						      "cnc-string", cnc_string,
-						      "username", username,
-						      "password", password,
+						      "cnc-string", cnc_string, "auth_string", auth_string,
 						      "options", options, NULL);
 
 	return cnc;
@@ -355,8 +341,7 @@ gda_server_provider_create_connection_from_string (GdaClient *client, GdaServerP
  * @provider: a #GdaServerProvider object.
  * @cnc: a #GdaConnection object.
  * @params:
- * @username: user name for logging in.
- * @password: password for authentication.
+ * @auth: authentification information
  *
  * Tries to open the @cnc connection using methods implemented by @provider. In case of failure,
  * or as a general notice, some #GdaConnectionEvent events (or errors) may be added to the connection
@@ -365,32 +350,21 @@ gda_server_provider_create_connection_from_string (GdaClient *client, GdaServerP
  * Returns: TRUE if no error occurred
  */
 gboolean
-gda_server_provider_open_connection (GdaServerProvider *provider,
-				     GdaConnection *cnc,
-				     GdaQuarkList *params,
-				     const gchar *username,
-				     const gchar *password)
+gda_server_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
+				     GdaQuarkList *params, GdaQuarkList *auth)
 {
 	gboolean retcode;
-	const gchar *pooling;
 
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (CLASS (provider)->open_connection != NULL, FALSE);
 
-	/* check if POOLING is specified */
-	pooling = gda_quark_list_find (params, "POOLING");
-	if (pooling) {
-		if (!strcmp (pooling, "1")) {
-		}
-
-		gda_quark_list_remove (params, "POOLING");
-	}
-
-	retcode = CLASS (provider)->open_connection (provider, cnc, params, username, password);
+	retcode = CLASS (provider)->open_connection (provider, cnc, params, auth, NULL, NULL, NULL);
 
 	return retcode;
 }
+
+
 
 /**
  * gda_server_provider_close_connection
@@ -700,7 +674,7 @@ gda_server_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 	if (CLASS (provider)->perform_operation)
-		return CLASS (provider)->perform_operation (provider, cnc, op, error);
+		return CLASS (provider)->perform_operation (provider, cnc, op, NULL, NULL, NULL, error);
 	else 
 		return gda_server_provider_perform_operation_default (provider, cnc, op, error);
 }

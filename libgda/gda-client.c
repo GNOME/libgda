@@ -169,37 +169,10 @@ gda_client_new (void)
 }
 
 /**
- * gda_client_declare_connection
- * @client: a #GdaClient object
- * @cnc: a #GdaConnection object
- *
- * Declares the @cnc to @client. This function should not be used directly
- */
-void
-gda_client_declare_connection (GdaClient *client, GdaConnection *cnc)
-{
-	g_return_if_fail (client && GDA_IS_CLIENT (client));
-	g_return_if_fail (client->priv);
-	g_return_if_fail (cnc && GDA_IS_CONNECTION (cnc));
-	g_return_if_fail (cnc->priv);
-	
-	if (g_list_find (client->priv->connections, cnc))
-		return;
-
-	client->priv->connections = g_list_append (client->priv->connections, cnc);
-	g_object_ref (cnc);
-
-	/* signals */
-	g_signal_connect (G_OBJECT (cnc), "error",
-			  G_CALLBACK (cnc_error_cb), client);
-}
-
-/**
  * gda_client_open_connection
  * @client: a #GdaClient object, or %NULL
  * @dsn: data source name.
- * @username: user name or %NULL
- * @password: password for @username, or %NULL
+ * @auth_string: authentification string
  * @options: options for the connection (see #GdaConnectionOptions).
  * @error: a place to store an error, or %NULL
  *
@@ -211,13 +184,10 @@ gda_client_declare_connection (GdaClient *client, GdaConnection *cnc)
  * specify #GDA_CONNECTION_OPTIONS_DONT_SHARE as one of the flags in
  * the @options parameter.
  *
- * The username and password used to actually open the connection are the first
- * non-NULL string being chosen by order from
- * <itemizedlist>
- *  <listitem>the @username or @password</listitem>
- *  <listitem>the username or password sprcified in the DSN definition</listitem>
- *  <listitem>the USERNAME= and PASSWORD= parts of the connection string in the DSN definition</listitem>
- * </itemizedlist>
+ * The @auth_string must contain the authentification information for the server
+ * to accept the connection. It is a string containing semi-colon seperated named value, usually 
+ * like "USERNAME=...;PASSWORD=..." where the ... are replaced by actual values. However some database
+ * providers may require different information.
  *
  * If a new #GdaConnection is created, then the caller will hold a reference on it, and if a #GdaConnection
  * already existing is used, then the reference count of that object will be increased by one.
@@ -227,8 +197,7 @@ gda_client_declare_connection (GdaClient *client, GdaConnection *cnc)
 GdaConnection *
 gda_client_open_connection (GdaClient *client,
 			    const gchar *dsn,
-			    const gchar *username,
-			    const gchar *password,
+			    const gchar *auth_string,
 			    GdaConnectionOptions options,
 			    GError **error)
 {
@@ -248,7 +217,7 @@ gda_client_open_connection (GdaClient *client,
 
 	/* search for the connection in our private list */
 	if (client && ! (options & GDA_CONNECTION_OPTIONS_DONT_SHARE)) {
-		cnc = gda_client_find_connection (client, dsn, username, password);
+		cnc = gda_client_find_connection (client, dsn, auth_string);
 		if (cnc &&
 		    ! (gda_connection_get_options (cnc) & GDA_CONNECTION_OPTIONS_DONT_SHARE)) {
 			if (!gda_connection_open (cnc, error)) 
@@ -266,8 +235,7 @@ gda_client_open_connection (GdaClient *client,
 
 		prov = gda_config_get_provider_object (dsn_info->provider, error);
 		if (prov) {
-			cnc = gda_server_provider_create_connection (client, prov, dsn, username, password,
-								     options);
+			cnc = gda_server_provider_create_connection (client, prov, dsn, auth_string, options);
 			if (!gda_connection_open (cnc, error)) {
 				g_object_unref (cnc);
 				cnc = NULL;
@@ -280,8 +248,16 @@ gda_client_open_connection (GdaClient *client,
 			     _("Datasource configuration error: no provider specified"));
 	}
 
-	if (cnc && client) 
-		gda_client_declare_connection (client, cnc);
+	if (cnc && client) {
+		if (!g_list_find (client->priv->connections, cnc)) {
+			client->priv->connections = g_list_append (client->priv->connections, cnc);
+			g_object_ref (cnc);
+			
+			/* signals */
+			g_signal_connect (G_OBJECT (cnc), "error",
+					  G_CALLBACK (cnc_error_cb), client);
+		}
+	}
 
 	return cnc;
 }
@@ -291,8 +267,7 @@ gda_client_open_connection (GdaClient *client,
  * @client: a #GdaClient object, or %NULL
  * @provider_id: provider ID to connect to, or %NULL
  * @cnc_string: connection string.
- * @username: user name.
- * @password: password for @username.
+ * @auth_string: authentification string
  * @options: options for the connection (see #GdaConnectionOptions).
  * @error: a place to store an error, or %NULL
  *
@@ -307,12 +282,10 @@ gda_client_open_connection (GdaClient *client,
  * For example the connection string to open an SQLite connection to a database
  * file named "my_data.db" in the current directory would be "DB_DIR=.;DB_NAME=my_data".
  *
- * The username and password used to actually open the connection are the first
- * non-NULL string being chosen by order from
- * <itemizedlist>
- *  <listitem>the @username or @password</listitem>
- *  <listitem>the USERNAME= and PASSWORD= parts of the @cnc_string</listitem>
- * </itemizedlist>
+ * The @auth_string must contain the authentification information for the server
+ * to accept the connection. It is a string containing semi-colon seperated named value, usually 
+ * like "USERNAME=...;PASSWORD=..." where the ... are replaced by actual values. However some database
+ * providers may require different information.
  *
  * Additionnally, it is possible to have the connection string
  * respect the "&lt;provider_name&gt;://&lt;real cnc string&gt;" format, in which case the provider name
@@ -326,8 +299,7 @@ GdaConnection *
 gda_client_open_connection_from_string (GdaClient *client,
 					const gchar *provider_id,
 					const gchar *cnc_string,
-					const gchar *username,
-					const gchar *password,
+					const gchar *auth_string,
 					GdaConnectionOptions options,
 					GError **error)
 {
@@ -377,8 +349,8 @@ gda_client_open_connection_from_string (GdaClient *client,
 
 		prov = gda_config_get_provider_object (provider_id, error);
 		if (prov) {
-			cnc = gda_server_provider_create_connection_from_string (client, prov,
-										 cnc_string, username, password, options);
+			cnc = gda_server_provider_create_connection_from_string (client, prov, 
+										 cnc_string, auth_string, options);
 			if (!gda_connection_open (cnc, error)) {
 				g_object_unref (cnc);
 				cnc = NULL;
@@ -417,7 +389,7 @@ gda_client_get_connections (GdaClient *client)
  * gda_client_find_connection
  * @client: a #GdaClient object.
  * @dsn: data source name.
- * @username: user name.
+ * @auth_string: authentification string.
  * @password: password for @username.
  *
  * Looks for an open connection given a data source name (per libgda
@@ -425,16 +397,13 @@ gda_client_get_connections (GdaClient *client)
  *
  * This function iterates over the list of open connections in the
  * given #GdaClient and looks for one that matches the given data source
- * name, username and password.
+ * name and authentification string.
  *
  * Returns: a pointer to the found connection, or %NULL if it could not
  * be found.
  */
 GdaConnection *
-gda_client_find_connection (GdaClient *client,
-			    const gchar *dsn,
-			    const gchar *username,
-			    const gchar *password)
+gda_client_find_connection (GdaClient *client, const gchar *dsn, const gchar *auth_string)
 {
 	GList *l;
 	GdaDataSourceInfo *dsn_info;
@@ -450,18 +419,15 @@ gda_client_find_connection (GdaClient *client,
 	}
 
 	for (l = client->priv->connections; l; l = l->next) {
-		const gchar *tmp_dsn, *tmp_usr, *tmp_pwd;
+		const gchar *tmp_dsn, *tmp_auth;
 
 		cnc = GDA_CONNECTION (l->data);
 		tmp_dsn = gda_connection_get_dsn (cnc);
-		tmp_usr = gda_connection_get_username (cnc);
-		tmp_pwd = gda_connection_get_password (cnc);
+		tmp_auth = gda_connection_get_authentification (cnc);
 
 		if (!strcmp (tmp_dsn ? tmp_dsn : "", dsn_info->name ? dsn_info->name : "")
-		    && !strcmp (tmp_usr ? tmp_usr : "", username ? username : "")
-		    && !strcmp (tmp_pwd ? tmp_pwd : "", password ? password : "")) {
+		    && !strcmp (tmp_auth ? tmp_auth : "", auth_string ? auth_string : ""))
 			return cnc;
-		}
 	}
 
 	return NULL;
@@ -686,33 +652,6 @@ gda_client_rollback_transaction (GdaClient *client, const gchar *name, GError **
 	}
 
 	return failures == 0 ? TRUE : FALSE;
-}
-
-/**
- * gda_client_get_dsn_specs
- * @client: a #GdaClient object.
- * @provider: a provider
- *
- * Get an XML string representing the parameters which can be present in the
- * DSN string used to open a connection.
- *
- * Returns: a string (free it after usage), or %NULL if an error occurred
- *
- */
-gchar *
-gda_client_get_dsn_specs (GdaClient *client, const gchar *provider)
-{
-	GdaProviderInfo *pinfo;
-	g_return_val_if_fail (client && GDA_IS_CLIENT (client), NULL);
-	
-	if (!provider || !*provider)
-		return NULL;
-
-	pinfo = gda_config_get_provider_info (provider);
-	if (pinfo) 
-		return g_strdup (pinfo->dsn_spec);
-	else
-		return NULL;
 }
 
 /**

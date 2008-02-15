@@ -1,6 +1,6 @@
---- sqlite3.c.orig	2007-08-31 11:17:03.000000000 +0200
-+++ sqlite3.c	2007-08-31 11:18:40.000000000 +0200
-@@ -52438,6 +52438,37 @@
+--- sqlite3.c.orig	2008-02-15 10:52:13.000000000 +0100
++++ sqlite3.c	2008-02-15 11:03:32.000000000 +0100
+@@ -58394,6 +58394,39 @@
  
  #ifndef SQLITE_OMIT_SCHEMA_PRAGMAS
    /*
@@ -20,17 +20,19 @@
 +    func_hash = &(db->aFunc);
 +
 +    sqlite3VdbeSetNumCols(v, 3);
-+    sqlite3VdbeSetColName(v, 0, COLNAME_NAME, "name", P3_STATIC);
-+    sqlite3VdbeSetColName(v, 1, COLNAME_NAME, "is_aggregate", P3_STATIC);
-+    sqlite3VdbeSetColName(v, 2, COLNAME_NAME, "nargs", P3_STATIC);
++    pParse->nMem = 3;
++    sqlite3VdbeSetColName(v, 0, COLNAME_NAME, "name", P4_STATIC);
++    sqlite3VdbeSetColName(v, 1, COLNAME_NAME, "is_aggregate", P4_STATIC);
++    sqlite3VdbeSetColName(v, 2, COLNAME_NAME, "nargs", P4_STATIC);
 +
 +    for (func_elem = sqliteHashFirst (func_hash); func_elem ; func_elem = sqliteHashNext (func_elem)) {
 +      FuncDef *func;
 +      func = sqliteHashData (func_elem);
-+      sqlite3VdbeOp3(v, OP_String8, 0, 0, func->zName, 0);
-+      sqlite3VdbeAddOp(v, OP_Integer, func->xFinalize ? 1 : 0, 0);
-+      sqlite3VdbeAddOp(v, OP_Integer, func->nArg, 0);
-+      sqlite3VdbeAddOp(v, OP_Callback, 3, 0);
++
++      sqlite3VdbeAddOp4(v, OP_String8, 0, 1, 0, func->zName, 0);
++      sqlite3VdbeAddOp2(v, OP_Integer, func->xFinalize ? 1 : 0, 2);
++      sqlite3VdbeAddOp2(v, OP_Integer, func->nArg, 3);
++      sqlite3VdbeAddOp2(v, OP_ResultRow, 1, 3);
 +    }
 +  }else
 +

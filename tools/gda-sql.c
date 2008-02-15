@@ -33,6 +33,7 @@
 #include "command-exec.h"
 #include <unistd.h>
 #include <sys/types.h>
+#include <libgda/gda-quark-list.h>
 
 #ifndef G_OS_WIN32
 #include <signal.h>
@@ -830,6 +831,7 @@ open_connection (MainData *data, const gchar *cnc_name, const gchar *dsn, const 
 	GdaConnection *newcnc = NULL;
 	ConnectionSetting *cs = NULL;
 	static gint cncindex = 0;
+	gchar *auth_string = NULL;
 
 	if (!data->client)
 		data->client = gda_client_new ();
@@ -840,6 +842,12 @@ open_connection (MainData *data, const gchar *cnc_name, const gchar *dsn, const 
 		return NULL;
 	}
 
+	if (user) {
+		if (pass)
+			auth_string = g_strdup_printf ("USERNAME=%s;PASSWORD=%s", user, pass);
+		else
+			auth_string = g_strdup_printf ("USERNAME=%s", user);
+	}
 	if (dsn) {
                 GdaDataSourceInfo *info = NULL;
                 info = gda_config_get_dsn (dsn);
@@ -850,13 +858,13 @@ open_connection (MainData *data, const gchar *cnc_name, const gchar *dsn, const 
 		}
                 else 
                         newcnc = gda_client_open_connection (data->client, info->name,
-							     user ? user : info->username,
-							     pass ? pass : ((info->password) ? info->password : ""),
+							     auth_string ? auth_string : info->auth_string,
 							     0, error);
         }
         if (!newcnc && direct) 
 		newcnc = gda_client_open_connection_from_string (data->client, provider, direct,
-								 user, pass, 0, error);
+								 auth_string, 0, error);
+	g_free (auth_string);
 
 	if (newcnc) {
 		cs = g_new0 (ConnectionSetting, 1);
@@ -1684,8 +1692,13 @@ GdaInternalCommandResult *extra_command_manage_cnc (GdaConnection *cnc, const gc
 			gda_data_model_set_value_at (model, 2, row, value, NULL);
 			gda_value_free (value);
 
-			cstr = gda_connection_get_username (cs->cnc);
+			/* only get USERNAME from the the authentification string */
+			GdaQuarkList* ql;
+			cstr = gda_connection_get_authentification (cs->cnc);
+			ql = gda_quark_list_new_from_string (cstr);
+			cstr = gda_quark_list_find (ql, "USERNAME");
 			value = gda_value_new_from_string (cstr ? cstr : "", G_TYPE_STRING);
+			gda_quark_list_free (ql);
 			gda_data_model_set_value_at (model, 3, row, value, NULL);
 			gda_value_free (value);
 		}
@@ -1781,7 +1794,7 @@ GdaInternalCommandResult *extra_command_bind_cnc (GdaConnection *cnc, const gcha
 		vprovider = gda_vprovider_hub_new ();
 	g_assert (vprovider);
 
-	virtual = gda_server_provider_create_connection (NULL, GDA_SERVER_PROVIDER (vprovider), NULL, NULL, NULL, 0);
+	virtual = gda_server_provider_create_connection (NULL, GDA_SERVER_PROVIDER (vprovider), NULL, NULL, 0);
 	if (!virtual || !gda_connection_open (virtual, NULL)) {
 		g_set_error (error, 0, 0,
 				     _("Could not create virtual connection"));

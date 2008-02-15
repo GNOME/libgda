@@ -36,6 +36,7 @@ main (int argc, char **argv)
 
 	GdaClient *client;
 	GdaConnection *cnc;
+	gchar *auth_string = NULL;
 	gchar *blob_data;
 
 	/* command line parsing */
@@ -65,6 +66,12 @@ main (int argc, char **argv)
 	gda_init ("Gda connection tester", PACKAGE_VERSION, argc, argv);
 
 	/* open connection */
+	if (user) {
+		if (pass)
+			auth_string = g_strdup_printf ("USERNAME=%s;PASSWORD=%s", user, pass);
+		else
+			auth_string = g_strdup_printf ("USERNAME=%s", user);
+	}
 	client = gda_client_new ();
 	if (dsn) {
 		GdaDataSourceInfo *info = NULL;
@@ -73,8 +80,7 @@ main (int argc, char **argv)
 			g_error (_("DSN '%s' is not declared"), dsn);
 		else {
 			cnc = gda_client_open_connection (client, info->name, 
-							  user ? user : info->username, 
-							  pass ? pass : ((info->password) ? info->password : ""),
+							  auth_string ? auth_string : info->auth_string,
 							  0, &error);
 			if (!cnc) {
 				g_warning (_("Can't open connection to DSN %s: %s\n"), info->name,
@@ -86,14 +92,14 @@ main (int argc, char **argv)
 	}
 	else {
 		
-		cnc = gda_client_open_connection_from_string (client, prov, direct, 
-							      user, pass, 0, &error);
+		cnc = gda_client_open_connection_from_string (client, prov, direct, auth_string, 0, &error);
 		if (!cnc) {
 			g_warning (_("Can't open specified connection: %s\n"),
 				   error && error->message ? error->message : "???");
 			exit (1);
 		}
 	}
+	g_free (auth_string);
 
 	g_print (_("Connection successfully opened!\n"));
 	g_object_unref (G_OBJECT (client));

@@ -24,6 +24,7 @@
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-data-model.h>
+#include <libgda/gda-quark-list.h>
 #include <libgda/gda-data-model-extra.h>
 #include <libgda/gda-data-model-dsn-list.h>
 #include <libgda/gda-config.h>
@@ -308,9 +309,14 @@ gda_data_model_dsn_list_get_value_at (GdaDataModel *model, gint col, gint row)
 		case 3:
 			g_value_set_string (val, info->cnc_string);
 			break;
-		case 4:
-			g_value_set_string (val, info->username);
+		case 4: {
+			GdaQuarkList* ql;
+			ql = gda_quark_list_new_from_string (info->auth_string);
+			
+			g_value_set_string (val, gda_quark_list_find (ql, "USERNAME"));
+			gda_quark_list_free (ql);
 			break;
+		}
 		case 5:
 			g_value_set_boolean (val, info->is_system);
 			break;

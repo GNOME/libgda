@@ -5,7 +5,6 @@ GdaClient
 GdaClientEvent
 GdaClientSpecsType
 gda_client_new
-gda_client_declare_connection
 gda_client_open_connection
 gda_client_open_connection_from_string
 gda_client_get_connections
@@ -18,7 +17,6 @@ gda_client_notify_connection_closed_event
 gda_client_begin_transaction
 gda_client_commit_transaction
 gda_client_rollback_transaction
-gda_client_get_dsn_specs
 gda_client_prepare_create_database
 gda_client_perform_create_database
 gda_client_prepare_drop_database
@@ -110,9 +108,9 @@ gda_column_get_type
 <FILE>gda-config</FILE>
 <TITLE>Configuration</TITLE>
 GdaConfig
-GdaProviderInfo
-GdaDataSourceInfo
 gda_config_get
+<SUBSECTION>
+GdaDataSourceInfo
 gda_config_get_dsn
 gda_config_define_dsn
 gda_config_remove_dsn
@@ -121,6 +119,8 @@ gda_config_get_nb_dsn
 gda_config_get_dsn_index
 gda_config_get_dsn_at_index
 gda_config_can_modify_system_config
+<SUBSECTION>
+GdaProviderInfo
 gda_config_get_provider_info
 gda_config_get_provider_object
 gda_config_list_providers
@@ -199,10 +199,7 @@ gda_connection_get_provider_name
 gda_connection_set_dsn
 gda_connection_get_dsn
 gda_connection_get_cnc_string
-gda_connection_set_username
-gda_connection_get_username
-gda_connection_set_password
-gda_connection_get_password
+gda_connection_get_authentification
 <SUBSECTION>
 gda_connection_add_event
 gda_connection_add_event_string
@@ -627,6 +624,7 @@ GdaServerProvider
 GdaServerProviderClass
 GdaServerProviderError
 GdaServerProviderMeta
+GdaServerProviderAsyncCallback
 gda_server_provider_get_name
 gda_server_provider_get_version
 gda_server_provider_get_server_version

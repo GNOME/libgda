@@ -615,8 +615,6 @@ gda_set_new_from_spec_node (xmlNodePtr xml_spec, GError **error)
 	gboolean allok = TRUE;
 	gchar *str;
 
-	GdaServerProvider *prov = NULL; /* TODO, be able to change this value */
-
 #ifdef HAVE_LC_MESSAGES
 	lang = setlocale (LC_MESSAGES, NULL);
 #else

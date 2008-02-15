@@ -122,7 +122,7 @@ _gda_sqlite_update_types_hash (SqliteConnectionData *cdata)
 		
 		for (fields_status = sqlite3_step (fields_stmt); fields_status == SQLITE_ROW; 
 		     fields_status = sqlite3_step (fields_stmt)) {
-			const gchar *typname = sqlite3_column_text (fields_stmt, 2);
+			const gchar *typname = (gchar *) sqlite3_column_text (fields_stmt, 2);
 			if (typname && !g_hash_table_lookup (types, typname)) {
 				GType type;
 				switch (get_affinity (typname)) {

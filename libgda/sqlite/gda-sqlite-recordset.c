@@ -380,7 +380,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 			else if (type == G_TYPE_DOUBLE)
 				g_value_set_double (value, sqlite3_column_double (ps->sqlite_stmt, col));
 			else if (type == G_TYPE_STRING)
-				g_value_set_string (value, sqlite3_column_text (ps->sqlite_stmt, col));
+				g_value_set_string (value, (gchar *) sqlite3_column_text (ps->sqlite_stmt, col));
 			else if (type == GDA_TYPE_BINARY) {
 				GdaBinary *bin;
 				

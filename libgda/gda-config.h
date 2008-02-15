@@ -52,10 +52,9 @@ typedef enum {
 struct _GdaDataSourceInfo {
         gchar    *name;
         gchar    *provider;
-        gchar    *cnc_string;
         gchar    *description;
-        gchar    *username;
-        gchar    *password;
+        gchar    *cnc_string;
+        gchar    *auth_string;
         gboolean  is_system;
 };
 
@@ -63,8 +62,8 @@ struct _GdaProviderInfo {
         gchar             *id;
         gchar             *location;
         gchar             *description;
-        GdaSet            *gda_params; /* Specs to create a DSN */
-        gchar             *dsn_spec; /* XML string with all the parameters required to create a DSN */
+        GdaSet            *dsn_params;  /* Specs to create a DSN */
+	GdaSet            *auth_params; /* Specs to authenticate a client */
 };
 
 struct _GdaConfig {

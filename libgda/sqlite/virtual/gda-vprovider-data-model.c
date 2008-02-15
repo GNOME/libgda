@@ -59,11 +59,10 @@ static void gda_vprovider_data_model_get_property (GObject *object,
 static GObjectClass  *parent_class = NULL;
 
 static GdaConnection *gda_vprovider_data_model_create_connection (GdaServerProvider *provider);
-static gboolean       gda_vprovider_data_model_open_connection (GdaServerProvider *provider,
-								GdaConnection *cnc,
-								GdaQuarkList *params,
-								const gchar *username,
-								const gchar *password);
+static gboolean       gda_vprovider_data_model_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
+								GdaQuarkList *params, GdaQuarkList *auth,
+								guint *task_id, GdaServerProviderAsyncCallback async_cb, 
+								gpointer cb_data);
 static gboolean       gda_vprovider_data_model_close_connection (GdaServerProvider *provider,
 								 GdaConnection *cnc);
 static const gchar   *gda_vprovider_data_model_get_name (GdaServerProvider *provider);
@@ -249,14 +248,18 @@ gda_vprovider_data_model_create_connection (GdaServerProvider *provider)
 
 static gboolean
 gda_vprovider_data_model_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-					  GdaQuarkList *params,
-					  const gchar *username,
-					  const gchar *password)
+					  GdaQuarkList *params, GdaQuarkList *auth,
+					  guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data)
 {
 	GdaQuarkList *m_params;
 
 	g_return_val_if_fail (GDA_IS_VPROVIDER_DATA_MODEL (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_VCONNECTION_DATA_MODEL (cnc), FALSE);
+
+	if (async_cb) {
+		gda_connection_add_event_string (cnc, _("Provider does not support asynchronous connection open"));
+                return FALSE;
+	}
 
 	if (params) {
 		m_params = gda_quark_list_copy (params);
@@ -266,7 +269,7 @@ gda_vprovider_data_model_open_connection (GdaServerProvider *provider, GdaConnec
 		params = gda_quark_list_new_from_string ("_IS_VIRTUAL=TRUE;LOAD_GDA_FUNCTIONS=TRUE");
 
 	if (! GDA_SERVER_PROVIDER_CLASS (parent_class)->open_connection (GDA_SERVER_PROVIDER (provider), cnc, m_params,
-									 NULL, NULL)) {
+									 auth, NULL, NULL, NULL)) {
 		gda_quark_list_free (m_params);
 		return FALSE;
 	}

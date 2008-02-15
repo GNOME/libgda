@@ -547,13 +547,21 @@ gda_open_connection (const gchar *dsn, const gchar *username, const gchar *passw
 {
 	static GdaClient *client = NULL;
 	GdaConnection *cnn;
+	gchar *auth_string = NULL;
 	
 	g_return_val_if_fail (dsn != NULL, NULL);
 	
 	if (!client)
 		client = gda_client_new ();
 	
-	cnn = gda_client_open_connection (client, dsn, username, password, options, error);
+	if (username) {
+		if (password)
+			auth_string = g_strdup_printf ("USERNAME=%s;PASSWORD=%s", username, password);
+		else
+			auth_string = g_strdup_printf ("USERNAME=%s", username);
+	}
+	cnn = gda_client_open_connection (client, dsn, auth_string, options, error);
+	g_free (auth_string);
 	
 	return cnn;
     

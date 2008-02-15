@@ -127,13 +127,10 @@ typedef enum {
 } GdaConnectionMetaType;
 
 
-GType                gda_connection_get_type            (void) G_GNUC_CONST;
-GdaConnection       *gda_connection_new                 (GdaClient *client,
-							 GdaServerProvider *provider,
-							 const gchar *dsn,
-							 const gchar *username,
-							 const gchar *password,
-							 GdaConnectionOptions options);
+GType                gda_connection_get_type             (void) G_GNUC_CONST;
+GdaConnection       *gda_connection_new                  (GdaClient *client, GdaServerProvider *provider,
+							  const gchar *dsn, const gchar *auth_string,
+							  GdaConnectionOptions options);
 gboolean             gda_connection_open                 (GdaConnection *cnc, GError **error);
 void                 gda_connection_close                (GdaConnection *cnc);
 void                 gda_connection_close_no_warning     (GdaConnection *cnc);
@@ -148,10 +145,7 @@ const gchar         *gda_connection_get_provider_name    (GdaConnection *cnc);
 const gchar         *gda_connection_get_dsn              (GdaConnection *cnc);
 gboolean             gda_connection_set_dsn              (GdaConnection *cnc, const gchar *datasource);
 const gchar         *gda_connection_get_cnc_string       (GdaConnection *cnc);
-const gchar         *gda_connection_get_username         (GdaConnection *cnc);
-gboolean             gda_connection_set_username         (GdaConnection *cnc, const gchar *username);
-const gchar         *gda_connection_get_password         (GdaConnection *cnc);
-gboolean             gda_connection_set_password         (GdaConnection *cnc, const gchar *password);
+const gchar         *gda_connection_get_authentification (GdaConnection *cnc);
 
 void                 gda_connection_add_event            (GdaConnection *cnc, GdaConnectionEvent *event);
 GdaConnectionEvent  *gda_connection_add_event_string     (GdaConnection *cnc, const gchar *str, ...);

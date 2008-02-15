@@ -569,8 +569,8 @@ command_gda_report_section_run (GdaReportEngine *engine, xmlNodePtr node, GSList
 		}
 
 		/* find which connection to use */
-		prop = xmlGetProp (node, "cnc_name");
-		cnc = run_context_find_connection (engine, context, (gchar *) prop);
+		prop = xmlGetProp (node, BAD_CAST "cnc_name");
+		cnc = run_context_find_connection (engine, context, prop);
 		if (!cnc) {
 			if (prop) {
 				g_set_error (error, 0, 0,
@@ -596,7 +596,7 @@ command_gda_report_section_run (GdaReportEngine *engine, xmlNodePtr node, GSList
 				GdaSqlParser *parser = NULL;
 
 				/* find which connection to use */
-				prop = xmlGetProp (child, "cnc_name");
+				prop = xmlGetProp (child, BAD_CAST "cnc_name");
 				cnc = run_context_find_connection (engine, context, (gchar *) prop);
 				if (!cnc) {
 					if (prop) {
@@ -862,7 +862,7 @@ command_gda_report_if (GdaReportEngine *engine, xmlNodePtr node, GSList **create
 	gboolean expr_is_true = FALSE;
 	xmlChar *prop;
 
-	prop = xmlGetProp (node, "expr");
+	prop = xmlGetProp (node, BAD_CAST "expr");
 	if (!prop) {
 		g_set_error (error, 0, 0,
 			     _("No expression speficied")); 
@@ -999,7 +999,7 @@ evaluate_expression (GdaReportEngine *engine, RunContext *context, const gchar *
 
 		if (!provider)
 			provider = gda_vprovider_data_model_new ();
-		vcnc = gda_server_provider_create_connection (NULL, GDA_SERVER_PROVIDER (provider), NULL, NULL, NULL, 0);
+		vcnc = gda_server_provider_create_connection (NULL, GDA_SERVER_PROVIDER (provider), NULL, NULL, 0);
 		if (! gda_connection_open (vcnc, error)) {
 			g_object_unref (vcnc);
 			return NULL;
@@ -1155,7 +1155,7 @@ run_context_find_param (GdaReportEngine *engine, RunContext *context, const xmlC
 					retval = g_slist_nth_data (GDA_SET (ctx->iter)->holders, nth);
 				}
 				else 
-					retval = g_object_get_data (G_OBJECT (ctx->model), name);
+					retval = g_object_get_data (G_OBJECT (ctx->model), (gchar*) name);
 				break;
 			}
 		}
@@ -1164,7 +1164,8 @@ run_context_find_param (GdaReportEngine *engine, RunContext *context, const xmlC
 
 	/* try among the engine's declared parameters */
 	if (!retval) 
-		retval = (GdaHolder *) gda_report_engine_find_declared_object (engine, GDA_TYPE_HOLDER, name);
+		retval = (GdaHolder *) gda_report_engine_find_declared_object (engine, GDA_TYPE_HOLDER, 
+									       (gchar *) name);
 
 	/*g_print ("=> %p\n", retval);*/
 	return retval;
@@ -1189,7 +1190,8 @@ run_context_find_stmt (GdaReportEngine *engine, RunContext *context, const xmlCh
 	}
 
 	/* search through the list of declared queries */
-	return (GdaStatement *) gda_report_engine_find_declared_object (engine, GDA_TYPE_STATEMENT, name);
+	return (GdaStatement *) gda_report_engine_find_declared_object (engine, GDA_TYPE_STATEMENT, 
+									(gchar *) name);
 }
 
 /*
@@ -1202,7 +1204,8 @@ run_context_find_connection (GdaReportEngine *engine, RunContext *context, const
 {
 	/* use connection's name if provided */
 	if (name) 
-		return (GdaConnection *) gda_report_engine_find_declared_object (engine, GDA_TYPE_CONNECTION, name);
+		return (GdaConnection *) gda_report_engine_find_declared_object (engine, GDA_TYPE_CONNECTION, 
+										 (gchar *) name);
 	else
 		return context->cnc;
 }

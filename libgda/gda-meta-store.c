@@ -539,7 +539,7 @@ gda_meta_store_set_property (GObject *object,
 					if (cnc_string) {
 						GdaConnection *cnc;
 						cnc = gda_client_open_connection_from_string (NULL, NULL, cnc_string,
-							NULL, NULL, 0, NULL);
+											      NULL, 0, NULL);
 						store->priv->cnc = cnc;
 					}
 				}

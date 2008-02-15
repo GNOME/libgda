@@ -238,12 +238,12 @@ load_config_file (const gchar *file, gboolean is_system)
 				g_free (info->provider); info->provider = NULL;
 				g_free (info->cnc_string); info->cnc_string = NULL;
 				g_free (info->description); info->description = NULL;
-				g_free (info->username); info->username = NULL;
-				g_free (info->password); info->password = NULL;
+				g_free (info->auth_string); info->auth_string = NULL;
 			}
 			info->is_system = is_system;
 			xmlFree (prop);
 			
+			gchar *username = NULL, *password = NULL;
 			for (entry = node->children; entry; entry = entry->next) { /* iter over the <entry> tags */
 				xmlChar *value;
 				if (strcmp ((gchar *)entry->name, "entry"))
@@ -262,13 +262,29 @@ load_config_file (const gchar *file, gboolean is_system)
 					info->provider = g_strdup ((gchar *)value);
 				else if (!strcmp ((gchar *) prop, "Description"))
 					info->description = g_strdup ((gchar *)value);
+				if (!strcmp ((gchar *) prop, "Auth"))
+					info->auth_string = g_strdup ((gchar *)value);
 				else if (!strcmp ((gchar *) prop, "Username"))
-					info->username = g_strdup ((gchar *)value);
+					username = g_strdup ((gchar*) value);
 				else if (!strcmp ((gchar *) prop, "Password"))
-					info->password = g_strdup ((gchar *)value);
+					password =  g_strdup ((gchar*) value);
 				xmlFree (prop);
 				xmlFree (value);
 			}
+			
+			if (username) {
+				if (!info->auth_string) {
+					/* migrate username/password to auth_string */
+					if (password)
+						info->auth_string = g_strdup_printf ("USERNAME=%s;PASSWORD=%s",
+										     username, password);
+					else
+						info->auth_string = g_strdup_printf ("USERNAME=%s", username);
+				}
+				g_free (username);
+				g_free (password);
+			}
+
 			/* signals */
 			if (is_new) {
 				unique_instance->priv->dsn_list = g_slist_insert_sorted (unique_instance->priv->dsn_list, info,
@@ -324,23 +340,17 @@ save_config_file (const gchar *file, gboolean is_system)
 		xmlSetProp (entry, BAD_CAST "type", BAD_CAST "string");
 		xmlSetProp (entry, BAD_CAST "value", BAD_CAST (info->cnc_string));
 
+		/* auth */
+		entry = xmlNewChild (section, NULL, BAD_CAST "entry", NULL);
+		xmlSetProp (entry, BAD_CAST "name", BAD_CAST "Auth");
+		xmlSetProp (entry, BAD_CAST "type", BAD_CAST "string");
+		xmlSetProp (entry, BAD_CAST "value", BAD_CAST (info->auth_string));
+
 		/* description */
 		entry = xmlNewChild (section, NULL, BAD_CAST "entry", NULL);
 		xmlSetProp (entry, BAD_CAST "name", BAD_CAST "Description");
 		xmlSetProp (entry, BAD_CAST "type", BAD_CAST "string");
 		xmlSetProp (entry, BAD_CAST "value", BAD_CAST (info->description));
-
-		/* username */
-		entry = xmlNewChild (section, NULL, BAD_CAST "entry", NULL);
-		xmlSetProp (entry, BAD_CAST "name", BAD_CAST "Username");
-		xmlSetProp (entry, BAD_CAST "type", BAD_CAST "string");
-		xmlSetProp (entry, BAD_CAST "value", BAD_CAST (info->username));
-
-		/* password */
-		entry = xmlNewChild (section, NULL, BAD_CAST "entry", NULL);
-		xmlSetProp (entry, BAD_CAST "name", BAD_CAST "Password");
-		xmlSetProp (entry, BAD_CAST "type", BAD_CAST "string");
-		xmlSetProp (entry, BAD_CAST"value", BAD_CAST (info->password));
 	}
 
 #ifdef HAVE_FAM
@@ -668,18 +678,15 @@ gda_config_define_dsn (const GdaDataSourceInfo *info, GError **error)
 		g_free (einfo->provider); einfo->provider = NULL;
 		g_free (einfo->cnc_string); einfo->cnc_string = NULL;
 		g_free (einfo->description); einfo->description = NULL;
-		g_free (einfo->username); einfo->username = NULL;
-		g_free (einfo->password); einfo->password = NULL;
+		g_free (einfo->auth_string); einfo->auth_string = NULL;
 		if (info->provider)
 			einfo->provider = g_strdup (info->provider);
 		if (info->cnc_string)
 			einfo->cnc_string = g_strdup (info->cnc_string);
 		if (info->description)
 			einfo->description = g_strdup (info->description);
-		if (info->username)
-			einfo->username = g_strdup (info->username);
-		if (info->password)
-			einfo->password = g_strdup (info->password);
+		if (info->auth_string)
+			einfo->auth_string = g_strdup (info->auth_string);
 		
 		if (info->is_system != einfo->is_system) {
 			save_system = TRUE;
@@ -697,10 +704,8 @@ gda_config_define_dsn (const GdaDataSourceInfo *info, GError **error)
 			einfo->cnc_string = g_strdup (info->cnc_string);
 		if (info->description)
 			einfo->description = g_strdup (info->description);
-		if (info->username)
-			einfo->username = g_strdup (info->username);
-		if (info->password)
-			einfo->password = g_strdup (info->password);
+		if (info->auth_string)
+			einfo->auth_string = g_strdup (info->auth_string);
 		einfo->is_system = info->is_system;
 
 		unique_instance->priv->dsn_list = g_slist_insert_sorted (unique_instance->priv->dsn_list, einfo,
@@ -784,7 +789,7 @@ gda_config_remove_dsn (const gchar *dsn_name, GError **error)
  *  <listitem><para>Provider name</para></listitem>
  *  <listitem><para>Description</para></listitem>
  *  <listitem><para>Connection string</para></listitem>
- *  <listitem><para>Username</para></listitem>
+ *  <listitem><para>Username if it exists</para></listitem>
  * </itemizedlist>
  *
  * Returns: a new #GdaDataModel
@@ -980,6 +985,7 @@ gda_config_get_provider_object (const gchar *provider_name, GError **error)
  *  <listitem><para>Provider name</para></listitem>
  *  <listitem><para>Description</para></listitem>
  *  <listitem><para>DSN parameters</para></listitem>
+ *  <listitem><para>Authentification parameters</para></listitem>
  *  <listitem><para>File</para></listitem>
  * </itemizedlist>
  *
@@ -998,7 +1004,8 @@ gda_config_list_providers (void)
 	if (!unique_instance->priv->prov_list) 
 		load_all_providers ();
 
-	model = gda_data_model_array_new_with_g_types (4,
+	model = gda_data_model_array_new_with_g_types (5,
+						       G_TYPE_STRING,
 						       G_TYPE_STRING,
 						       G_TYPE_STRING,
 						       G_TYPE_STRING,
@@ -1006,7 +1013,8 @@ gda_config_list_providers (void)
 	gda_data_model_set_column_title (model, 0, _("Provider"));
 	gda_data_model_set_column_title (model, 1, _("Description"));
 	gda_data_model_set_column_title (model, 2, _("DSN parameters"));
-	gda_data_model_set_column_title (model, 3, _("File"));
+	gda_data_model_set_column_title (model, 3, _("Authentification"));
+	gda_data_model_set_column_title (model, 4, _("File"));
 	g_object_set_data (G_OBJECT (model), "name", _("List of installed providers"));
 
 	for (list = unique_instance->priv->prov_list; list; list = list->next) {
@@ -1024,15 +1032,15 @@ gda_config_list_providers (void)
 		gda_data_model_set_value_at (model, 1, row, value, NULL);
 		gda_value_free (value);
 
-		if (info->gda_params) {
+		if (info->dsn_params) {
 			GSList *params;
 			GString *string = g_string_new ("");
-			for (params = info->gda_params->holders;
+			for (params = info->dsn_params->holders;
 			     params; params = params->next) {
-				gchar *id;
+				const gchar *id;
 
 				id = gda_holder_get_id (GDA_HOLDER (params->data));
-				if (params != info->gda_params->holders)
+				if (params != info->dsn_params->holders)
 					g_string_append (string, ",\n");
 				g_string_append (string, id);
 			}
@@ -1042,8 +1050,26 @@ gda_config_list_providers (void)
 			gda_value_free (value);
 		}
 
+		if (info->auth_params) {
+			GSList *params;
+			GString *string = g_string_new ("");
+			for (params = info->auth_params->holders;
+			     params; params = params->next) {
+				const gchar *id;
+
+				id = gda_holder_get_id (GDA_HOLDER (params->data));
+				if (params != info->auth_params->holders)
+					g_string_append (string, ",\n");
+				g_string_append (string, id);
+			}
+			value = gda_value_new_from_string (string->str, G_TYPE_STRING);
+			g_string_free (string, TRUE);
+			gda_data_model_set_value_at (model, 3, row, value, NULL);
+			gda_value_free (value);
+		}
+
 		value = gda_value_new_from_string (info->location, G_TYPE_STRING);
-		gda_data_model_set_value_at (model, 3, row, value, NULL);
+		gda_data_model_set_value_at (model, 4, row, value, NULL);
 		gda_value_free (value);
 	}
 	g_object_set (G_OBJECT (model), "read-only", TRUE, NULL);
@@ -1099,6 +1125,7 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 		const gchar * (* plugin_get_name) (void);
 		const gchar * (* plugin_get_description) (void);
 		gchar * (* plugin_get_dsn_spec) (void);
+		gchar * (* plugin_get_auth_spec) (void);
 
 		if (recurs) {
 			gchar *cname;
@@ -1123,15 +1150,12 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 			continue;
 		}
 
-		if (g_module_symbol (handle, "plugin_init",
-				     (gpointer *) &plugin_init))
+		if (g_module_symbol (handle, "plugin_init", (gpointer *) &plugin_init))
 			plugin_init (dirname);
-		g_module_symbol (handle, "plugin_get_name",
-				 (gpointer *) &plugin_get_name);
-		g_module_symbol (handle, "plugin_get_description",
-				 (gpointer *) &plugin_get_description);
-		g_module_symbol (handle, "plugin_get_dsn_spec",
-				 (gpointer *) &plugin_get_dsn_spec);
+		g_module_symbol (handle, "plugin_get_name", (gpointer *) &plugin_get_name);
+		g_module_symbol (handle, "plugin_get_description", (gpointer *) &plugin_get_description);
+		g_module_symbol (handle, "plugin_get_dsn_spec", (gpointer *) &plugin_get_dsn_spec);
+		g_module_symbol (handle, "plugin_get_auth_spec", (gpointer *) &plugin_get_auth_spec);
 
 		ip = g_new0 (InternalProvider, 1);
 		ip->handle = handle;
@@ -1148,24 +1172,25 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 		else
 			info->description = NULL;
 
-		info->dsn_spec = NULL;
-		info->gda_params = NULL;
-
+		/* DSN parameters */
+		info->dsn_params = NULL;
 		if (plugin_get_dsn_spec) {
 			GError *error = NULL;
+			gchar *dsn_spec;
 
-			info->dsn_spec = plugin_get_dsn_spec ();
-			if (info->dsn_spec) {
-				info->gda_params = gda_set_new_from_spec_string (info->dsn_spec, &error);
-				if (!info->gda_params) {
+			dsn_spec = plugin_get_dsn_spec ();
+			if (dsn_spec) {
+				info->dsn_params = gda_set_new_from_spec_string (dsn_spec, &error);
+				if (!info->dsn_params) {
 					g_warning ("Invalid format for provider '%s' DSN spec : %s",
 						   info->id,
 						   error ? error->message : "Unknown error");
 					if (error)
 						g_error_free (error);
 				}
+				g_free (dsn_spec);
 			}
-			else {
+			if (!info->dsn_params) {
 				/* there may be traces of the provider installed but some parts are missing,
 				   forget about that provider... */
 				internal_provider_free (ip);
@@ -1174,6 +1199,42 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 		}
 		else
 			g_warning ("Provider '%s' does not provide a DSN spec", info->id);
+
+		/* Authentification parameters */
+		info->auth_params = NULL;
+		if (plugin_get_auth_spec) {
+			GError *error = NULL;
+			gchar *auth_spec;
+
+			auth_spec = plugin_get_auth_spec ();
+			if (auth_spec) {
+				info->auth_params = gda_set_new_from_spec_string (auth_spec, &error);
+				if (!info->auth_params) {
+					g_warning ("Invalid format for provider '%s' AUTH spec : %s",
+						   info->id,
+						   error ? error->message : "Unknown error");
+					if (error)
+						g_error_free (error);
+				}
+				g_free (auth_spec);
+			}
+			if (!info->auth_params) {
+				/* there may be traces of the provider installed but some parts are missing,
+				   forget about that provider... */
+				internal_provider_free (ip);
+				ip = NULL;
+			}
+		}
+		else {
+			/* default to username/password */
+			GdaHolder *h;
+			info->auth_params = gda_set_new_inline (2, "USERNAME", G_TYPE_STRING, NULL,
+								"PASSWORD", G_TYPE_STRING, NULL);
+			h = gda_set_get_holder (info->auth_params, "USERNAME");
+			g_object_set (G_OBJECT (h), "name", _("Username"), NULL);
+			h = gda_set_get_holder (info->auth_params, "PASSWORD");
+			g_object_set (G_OBJECT (h), "name", _("Password"), NULL);
+		}
 
 		if (ip) {
 			unique_instance->priv->prov_list = g_slist_prepend (unique_instance->priv->prov_list, ip);
@@ -1209,8 +1270,7 @@ data_source_info_free (GdaDataSourceInfo *info)
 	g_free (info->provider); 
 	g_free (info->cnc_string); 
 	g_free (info->description);
-	g_free (info->username);
-	g_free (info->password);
+	g_free (info->auth_string);
 	g_free (info);
 }
 
@@ -1226,8 +1286,7 @@ internal_provider_free (InternalProvider *ip)
 	g_free (info->id);
 	g_free (info->location);
 	g_free (info->description);
-	g_free (info->gda_params);
-	g_free (info->dsn_spec);
+	g_object_unref (info->dsn_params);
 	g_free (ip);
 }
 

@@ -10,6 +10,11 @@ Access/Management of libgda configuration
   configuration, thus making them able to access the list of data sources
   configured in the system, for instance.
 </para>
+<para>
+  Upon initialization, a single instance <link linkend="GdaConfig">GdaConfig</link> object is created, 
+  and no other will need to be created. A pointer to this object can be obtained with
+  <link linkend="gda-config-get">gda_config_get()</link>.
+</para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
@@ -67,16 +72,13 @@ Access/Management of libgda configuration
 
 </para>
 
-<!-- ##### STRUCT GdaProviderInfo ##### -->
+<!-- ##### FUNCTION gda_config_get ##### -->
 <para>
 
 </para>
 
-@id: 
-@location: 
-@description: 
-@gda_params: 
-@dsn_spec: 
+@Returns: 
+
 
 <!-- ##### STRUCT GdaDataSourceInfo ##### -->
 <para>
@@ -85,19 +87,10 @@ Access/Management of libgda configuration
 
 @name: 
 @provider: 
-@cnc_string: 
 @description: 
-@username: 
-@password: 
+@cnc_string: 
+@auth_string: 
 @is_system: 
-
-<!-- ##### FUNCTION gda_config_get ##### -->
-<para>
-
-</para>
-
-@Returns: 
-
 
 <!-- ##### FUNCTION gda_config_get_dsn ##### -->
 <para>
@@ -169,6 +162,17 @@ Access/Management of libgda configuration
 
 @Returns: 
 
+
+<!-- ##### STRUCT GdaProviderInfo ##### -->
+<para>
+
+</para>
+
+@id: 
+@location: 
+@description: 
+@dsn_params: 
+@auth_params: 
 
 <!-- ##### FUNCTION gda_config_get_provider_info ##### -->
 <para>

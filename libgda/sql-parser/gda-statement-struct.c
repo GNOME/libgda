@@ -411,7 +411,7 @@ gda_sql_function_check_cnc (GdaSqlFunction *function, DictCheckData *data, GErro
 void
 gda_sql_function_check_clean (GdaSqlFunction *function)
 {
-	if (!function) return TRUE;
+	if (!function) return;
 	if (function->full_function_name) {
 		g_free (function->full_function_name);
 		function->full_function_name = NULL;

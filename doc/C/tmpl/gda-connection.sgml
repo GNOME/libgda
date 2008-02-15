@@ -73,6 +73,11 @@ Management of connections to data sources
 
 @gdaconnection: the object which received the signal.
 
+<!-- ##### ARG GdaConnection:auth-string ##### -->
+<para>
+
+</para>
+
 <!-- ##### ARG GdaConnection:client ##### -->
 <para>
 
@@ -98,17 +103,7 @@ Management of connections to data sources
 
 </para>
 
-<!-- ##### ARG GdaConnection:password ##### -->
-<para>
-
-</para>
-
 <!-- ##### ARG GdaConnection:provider-obj ##### -->
-<para>
-
-</para>
-
-<!-- ##### ARG GdaConnection:username ##### -->
 <para>
 
 </para>
@@ -130,8 +125,7 @@ Management of connections to data sources
 @client: 
 @provider: 
 @dsn: 
-@username: 
-@password: 
+@auth_string: 
 @options: 
 @Returns: 
 
@@ -412,36 +406,7 @@ Management of connections to data sources
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_connection_set_username ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@username: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_get_username ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_set_password ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@password: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_get_password ##### -->
+<!-- ##### FUNCTION gda_connection_get_authentification ##### -->
 <para>
 
 </para>

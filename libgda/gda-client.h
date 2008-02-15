@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -80,23 +80,19 @@ GdaClient     *gda_client_new                                (void);
 
 GdaConnection *gda_client_open_connection                    (GdaClient *client,
 							      const gchar *dsn,
-							      const gchar *username,
-							      const gchar *password,
+							      const gchar *auth_string,
 							      GdaConnectionOptions options,
 							      GError **error);
-void           gda_client_declare_connection                 (GdaClient *client, GdaConnection *cnc);
 GdaConnection *gda_client_open_connection_from_string        (GdaClient *client,
 							      const gchar *provider_id,
 							      const gchar *cnc_string,
-							      const gchar *username,
-							      const gchar *password,
+							      const gchar *auth_string,
 							      GdaConnectionOptions options,
 							      GError **error);
 const GList   *gda_client_get_connections                    (GdaClient *client);
 GdaConnection *gda_client_find_connection                    (GdaClient *client,
 							      const gchar *dsn,
-							      const gchar *username,
-							      const gchar *password);
+							      const gchar *auth_string);
 void           gda_client_close_all_connections              (GdaClient *client);
 
 void           gda_client_notify_event                       (GdaClient *client, GdaConnection *cnc,
@@ -104,11 +100,6 @@ void           gda_client_notify_event                       (GdaClient *client,
 void           gda_client_notify_error_event                 (GdaClient *client, GdaConnection *cnc, GdaConnectionEvent *error);
 void           gda_client_notify_connection_opened_event     (GdaClient *client, GdaConnection *cnc);
 void           gda_client_notify_connection_closed_event     (GdaClient *client, GdaConnection *cnc);
-
-/*
- * General provider information
- */
-gchar         *gda_client_get_dsn_specs                      (GdaClient *client, const gchar *provider);
 
 /*
  * Database creation and destruction functions

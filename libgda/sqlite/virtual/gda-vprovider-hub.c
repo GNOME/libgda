@@ -1,6 +1,6 @@
 /* 
  * GDA common library
- * Copyright (C) 2007 The GNOME Foundation.
+ * Copyright (C) 2007 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -50,13 +50,11 @@ static void gda_vprovider_hub_get_property (GObject *object,
 static GObjectClass  *parent_class = NULL;
 
 static GdaConnection *gda_vprovider_hub_create_connection (GdaServerProvider *provider);
-static gboolean       gda_vprovider_hub_open_connection (GdaServerProvider *provider,
-								GdaConnection *cnc,
-								GdaQuarkList *params,
-								const gchar *username,
-								const gchar *password);
-static gboolean       gda_vprovider_hub_close_connection (GdaServerProvider *provider,
-								 GdaConnection *cnc);
+static gboolean       gda_vprovider_hub_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
+							 GdaQuarkList *params, GdaQuarkList *auth,
+							 guint *task_id, GdaServerProviderAsyncCallback async_cb, 
+							 gpointer cb_data);
+static gboolean       gda_vprovider_hub_close_connection (GdaServerProvider *provider, GdaConnection *cnc);
 
 
 /*
@@ -191,13 +189,13 @@ gda_vprovider_hub_create_connection (GdaServerProvider *provider)
 
 static gboolean
 gda_vprovider_hub_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-				   GdaQuarkList *params,
-				   const gchar *username,
-				   const gchar *password)
+				   GdaQuarkList *params, GdaQuarkList *auth,
+				   guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data)
 {
 	/* nothing to do here */
 	return GDA_SERVER_PROVIDER_CLASS (parent_class)->open_connection (GDA_SERVER_PROVIDER (provider), 
-									  cnc, params, username, password);
+									  cnc, params, auth, 
+									  task_id, async_cb, cb_data);
 }
 
 static void

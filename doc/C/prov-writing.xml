@@ -29,6 +29,25 @@
     to "models" with the correct provider name, and implement the missing parts, using if necessary the
     BDB an MDB providers' implementations as examples.
   </para>
+
+  <sect1>
+    <title>Synchronous / asynchronous mode</title>
+    <para>
+      All the provider's commands are executed in a synchronous mode (the caller is blocked until the provider's
+      method terminates). However some virtual methods have the <parameter>task_id</parameter>, 
+      <parameter>async_cb</parameter> and <parameter>cb_data</parameter> which can be set when an asynchronous mode 
+      is required; asynchronous mode is requested if and only if the <parameter>async_cb</parameter> is not NULL.
+    </para>
+    <para>
+      When an asynchronous mode is requested, the method should return a temporary result and set a task identifier
+      into the <parameter>task_id</parameter> parameter if not NULL.
+    </para>
+    <para>
+      When the provider's method terminates, it then should call the function passed as <parameter>async_cb</parameter>
+      with the <parameter>cb_data</parameter> as last parameters.
+    </para>
+  </sect1>
+
   <sect1>
     <title>Methods - provider's information</title>
     <sect2 id="prov-get-name">
@@ -266,6 +285,12 @@
   <sect1>
     <title>Methods - misc.</title>
     <sect2>
+      <title>cancel()</title>
+      <para>
+	This method cancels an asynchronous task.
+      </para>
+    </sect2>
+    <sect2>
       <title>create_connection()</title>
       <para>
 	Reserved for internal implementation.
@@ -448,6 +473,17 @@
 	</programlisting>
 	Note that the the attributes which have a name starting with an underscore should be translated (see the
 	<filename>Makefile.am</filename> file for some example on ho this is done).
+      </para>
+    </sect2>
+    <sect2>
+      <title>plugin_get_auth_spec()</title>
+      <para>
+	This function returns a description of the authentification information required by the provider. If the
+	only information is a username/password pair, then it is not necessary to implement that function.
+      </para>
+      <para>
+	However, if a username is required, then it must be name "USERNAME", and if a password is required,
+	it must be named "PASSWORD".
       </para>
     </sect2>
     <sect2>
