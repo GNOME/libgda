@@ -79,12 +79,15 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 
 	object_class->finalize = gda_server_provider_finalize;
 
+	klass->get_name = NULL;
 	klass->get_version = NULL;
 	klass->get_server_version = NULL;
-	klass->get_name = NULL;
 	klass->supports_feature = NULL;
 
 	klass->get_data_handler = NULL;
+	klass->get_def_dbms_type = NULL;
+	klass->escape_string = NULL;
+	klass->unescape_string = NULL;
 
 	klass->open_connection = NULL;
 	klass->close_connection = NULL;
@@ -98,6 +101,19 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 	klass->begin_transaction = NULL;
 	klass->commit_transaction = NULL;
 	klass->rollback_transaction = NULL;
+	klass->add_savepoint = NULL;
+	klass->rollback_savepoint = NULL;
+	klass->delete_savepoint = NULL;
+
+	klass->create_parser = NULL;
+	klass->statement_to_sql = NULL;
+	klass->statement_prepare = NULL;
+	klass->statement_execute = NULL;
+	
+	klass->is_busy = NULL;
+	klass->cancel = NULL;
+	klass->create_connection = NULL;
+	memset (&(klass->meta_funcs), 0, sizeof (GdaServerProviderMeta));
 
 	 /* Properties */
         object_class->set_property = gda_server_provider_set_property;

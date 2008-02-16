@@ -146,6 +146,7 @@ struct _GdaServerProviderClass {
 							  gpointer cb_data, GError **error);
 
 	/* Misc */
+	gboolean                (* is_busy)              (GdaServerProvider *provider, GdaConnection *cnc);
 	gboolean                (* cancel)               (GdaServerProvider *provider, GdaConnection *cnc, guint task_id);
 	GdaConnection          *(* create_connection)    (GdaServerProvider *provider);
 	GdaServerProviderMeta      meta_funcs;

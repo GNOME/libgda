@@ -1,3 +1,4 @@
+libgda/gda-batch.c
 libgda/gda-client.c
 libgda/gda-config.c
 libgda/gda-connection.c
@@ -17,6 +18,8 @@ libgda/gda-meta-store.c
 libgda/gda-server-operation.c
 libgda/gda-server-provider-extra.c
 libgda/gda-server-provider.c
+libgda/gda-set.c
+libgda/gda-statement.c
 libgda/gda-util.c
 libgda/handlers/gda-handler-bin.c
 libgda/handlers/gda-handler-boolean.c
@@ -24,6 +27,13 @@ libgda/handlers/gda-handler-numerical.c
 libgda/handlers/gda-handler-string.c
 libgda/handlers/gda-handler-time.c
 libgda/handlers/gda-handler-type.c
+libgda/sql-parser/gda-sql-parser.c
+libgda/sql-parser/gda-statement-struct-compound.c
+libgda/sql-parser/gda-statement-struct-delete.c
+libgda/sql-parser/gda-statement-struct-insert.c
+libgda/sql-parser/gda-statement-struct-select.c
+libgda/sql-parser/gda-statement-struct-update.c
+libgda/sql-parser/gda-statement-struct.c 
 libgda/sqlite/gda-sqlite-ddl.c
 libgda/sqlite/gda-sqlite-handler-bin.c
 libgda/sqlite/gda-sqlite-provider.c
@@ -131,11 +141,6 @@ providers/xbase/libmain.c
 providers/xbase/xbase_specs_dsn.xml.in
 testing/gda-test-blob.c
 testing/gda-test-connection.c
-testing/gda-test-model-query.c
-testing/gda-test-models.c
-testing/gda-test-server-operation.c
-testing/gda-test-sql.c
-testing/html.c
 tools/command-exec.c
 tools/gda-list-config.c
 tools/gda-list-server-op.c
