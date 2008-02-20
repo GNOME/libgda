@@ -916,7 +916,7 @@ gda_config_get_provider_info (const gchar *provider_name)
 		load_all_providers ();
 
 	for (list = unique_instance->priv->prov_list; list; list = list->next)
-		if (!strcmp (((GdaProviderInfo*) list->data)->id, provider_name)) {
+		if (!g_ascii_strcasecmp (((GdaProviderInfo*) list->data)->id, provider_name)) {
 			GDA_CONFIG_UNLOCK ();
 			return (GdaProviderInfo*) list->data;
 		}

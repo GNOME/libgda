@@ -597,7 +597,7 @@ command_gda_report_section_run (GdaReportEngine *engine, xmlNodePtr node, GSList
 
 				/* find which connection to use */
 				prop = xmlGetProp (child, BAD_CAST "cnc_name");
-				cnc = run_context_find_connection (engine, context, (gchar *) prop);
+				cnc = run_context_find_connection (engine, context, prop);
 				if (!cnc) {
 					if (prop) {
 						g_set_error (error, 0, 0,

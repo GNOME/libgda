@@ -1481,6 +1481,7 @@ real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stm
 
 	/* create a prepared statement */
 	ps = gda_sqlite_pstmt_new (sqlite_stmt);
+	gda_pstmt_set_gda_statement (_GDA_PSTMT (ps), stmt);
 	_GDA_PSTMT (ps)->param_ids = param_ids;
 	_GDA_PSTMT (ps)->sql = sql;
 	return ps;

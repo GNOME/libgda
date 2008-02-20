@@ -1,6 +1,9 @@
-/* gda-postgres-parser.h
+/* GDA Postgres provider
  *
- * Copyright (C) 2007 Vivien Malerba
+ * Copyright (C) 2008 The GNOME Foundation
+ *
+ * AUTHORS:
+ *      TO_ADD: your name and email
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -26,10 +29,11 @@
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_POSTGRES_PARSER          (gda_postgres_parser_get_type())
-#define GDA_POSTGRES_PARSER(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_postgres_parser_get_type(), GdaPostgresParser)
-#define GDA_POSTGRES_PARSER_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_postgres_parser_get_type (), GdaPostgresParserClass)
-#define GDA_IS_POSTGRES_PARSER(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_postgres_parser_get_type ())
+#define GDA_TYPE_POSTGRES_PARSER            (gda_postgres_parser_get_type())
+#define GDA_POSTGRES_PARSER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_POSTGRES_PARSER, GdaPostgresParser))
+#define GDA_POSTGRES_PARSER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_POSTGRES_PARSER, GdaPostgresParserClass))
+#define GDA_IS_POSTGRES_PARSER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_POSTGRES_PARSER))
+#define GDA_IS_POSTGRES_PARSER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_POSTGRES_PARSER))
 
 typedef struct _GdaPostgresParser GdaPostgresParser;
 typedef struct _GdaPostgresParserClass GdaPostgresParserClass;
@@ -38,17 +42,17 @@ typedef struct _GdaPostgresParserPrivate GdaPostgresParserPrivate;
 /* struct for the object's data */
 struct _GdaPostgresParser
 {
-	GdaSqlParser              object;
+	GdaSqlParser          object;
 	GdaPostgresParserPrivate *priv;
 };
 
 /* struct for the object's class */
 struct _GdaPostgresParserClass
 {
-	GdaSqlParserClass         parent_class;
+	GdaSqlParserClass      parent_class;
 };
 
-GType               gda_postgres_parser_get_type               (void) G_GNUC_CONST;
+GType gda_postgres_parser_get_type (void) G_GNUC_CONST;
 
 G_END_DECLS
 

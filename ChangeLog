@@ -1,3 +1,31 @@
+2008-02-20  Vivien Malerba <malerba@gnome-db.org>
+
+	* tools/gda-sql.c: if the GDA_NO_PAGER environment variable is set, then don't use a pager at all
+	* libgda/providers-support/gda-pstmt.[ch]: prepared statement can now hold a (weak)reference to the
+	GdaStatement from which it has been prepared
+	* libgda/providers-support/gda-pmodel.[ch]: changed the signature of the virtual functions to allow
+	implementations to return errors
+	* libgda/gda-client.[ch]:
+	* libgda/gda-client-private.h:
+	* libgda/gda-connection.c: removed some symbols from the API/ABI
+	* libgda/gda-client.[ch]: removed gda_client_close_all_connections(), gda_client_begin_transaction(),
+	gda_client_commit_transaction(), gda_client_rollback_transaction() and gda_client_find_connection()
+	because their implementation was obvious and it could lead to assume some extra services where
+	provided which was not true
+	* libgda/gda-client.[ch]: use explicit error codes
+	* libgda/gda-connection.[ch]: removed gda_connection_new() because creating connection objects
+	should only be done using gda_client_open_connection...()
+	* doc/C: doc. improvements
+	* libgda/gda-config.c:
+	* libgda/gda-client.c: provider names are now case insensitive
+	* providers/Makefile.am:
+	* providers/postgres/: rewrote the PostgreSQL provider
+	* providers/skel-implementation/capi/: improved the skeleton example
+	* providers/prepare_provider_sources.sh: new script to change all files and objects names
+	to reflect the real provider name when starting a provider by making a copy of a
+	skeleton implementation
+	* other files: compilation warnings removed
+
 2008-02-16  Vivien Malerba <malerba@gnome-db.org>
 
 	* tests/data-models/check_virtual.c: fixed compilation error

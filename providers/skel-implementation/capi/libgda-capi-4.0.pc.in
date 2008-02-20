@@ -4,6 +4,6 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: libgda-postgres-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@
-Description: GDA (GNOME Data Access) CApi provider
+Description: GDA (GNOME Data Access) Capi provider
 Requires: libgda-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@
 Version: @VERSION@

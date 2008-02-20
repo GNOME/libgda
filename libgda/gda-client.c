@@ -24,6 +24,7 @@
 
 #include <gmodule.h>
 #include <libgda/gda-client.h>
+#include <libgda/gda-client-private.h>
 #include <libgda/gda-config.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-log.h>
@@ -44,6 +45,7 @@ static void gda_client_init       (GdaClient *client, GdaClientClass *klass);
 static void gda_client_finalize   (GObject *object);
 
 static void cnc_error_cb (GdaConnection *cnc, GdaConnectionEvent *error, GdaClient *client);
+static GdaConnection *gda_client_find_connection (GdaClient *client, const gchar *dsn, const gchar *auth_string);
 
 enum {
 	EVENT_NOTIFICATION,
@@ -63,7 +65,7 @@ cnc_error_cb (GdaConnection *cnc, GdaConnectionEvent *error, GdaClient *client)
 	g_return_if_fail (GDA_IS_CLIENT (client));
 
 	/* notify error */
-	gda_client_notify_error_event (client, cnc, error);
+	_gda_client_notify_error_event (client, cnc, error);
 }
 
 /*
@@ -186,8 +188,10 @@ gda_client_new (void)
  *
  * The @auth_string must contain the authentification information for the server
  * to accept the connection. It is a string containing semi-colon seperated named value, usually 
- * like "USERNAME=...;PASSWORD=..." where the ... are replaced by actual values. However some database
- * providers may require different information.
+ * like "USERNAME=...;PASSWORD=..." where the ... are replaced by actual values. 
+ * The actual named parameters required depend on the provider being used, and that list is available
+ * as the <parameter>auth_params</parameter> member of the #GdaProviderInfo struncture for each installed
+ * provider (use gda_config_get_provider_info() to get it).
  *
  * If a new #GdaConnection is created, then the caller will hold a reference on it, and if a #GdaConnection
  * already existing is used, then the reference count of that object will be increased by one.
@@ -195,11 +199,8 @@ gda_client_new (void)
  * Returns: the opened connection if successful, %NULL if there was an error.
  */
 GdaConnection *
-gda_client_open_connection (GdaClient *client,
-			    const gchar *dsn,
-			    const gchar *auth_string,
-			    GdaConnectionOptions options,
-			    GError **error)
+gda_client_open_connection (GdaClient *client, const gchar *dsn, const gchar *auth_string,
+			    GdaConnectionOptions options, GError **error)
 {
 	GdaConnection *cnc = NULL;
 	GdaDataSourceInfo *dsn_info;
@@ -210,7 +211,7 @@ gda_client_open_connection (GdaClient *client,
 	dsn_info = gda_config_get_dsn (dsn);
 	if (!dsn_info) {
 		gda_log_error (_("Data source %s not found in configuration"), dsn);
-		g_set_error (error, GDA_CLIENT_ERROR, 0, 
+		g_set_error (error, GDA_CLIENT_ERROR, GDA_CLIENT_DSN_NOT_FOUND_ERROR, 
 			     _("Data source %s not found in configuration"), dsn);
 		return NULL;
 	}
@@ -244,7 +245,7 @@ gda_client_open_connection (GdaClient *client,
 	}
 	else {
 		g_warning (_("Datasource configuration error: no provider specified"));
-		g_set_error (error, GDA_CLIENT_ERROR, 0, 
+		g_set_error (error, GDA_CLIENT_ERROR, GDA_CLIENT_PROVIDER_NOT_FOUND_ERROR, 
 			     _("Datasource configuration error: no provider specified"));
 	}
 
@@ -284,8 +285,10 @@ gda_client_open_connection (GdaClient *client,
  *
  * The @auth_string must contain the authentification information for the server
  * to accept the connection. It is a string containing semi-colon seperated named value, usually 
- * like "USERNAME=...;PASSWORD=..." where the ... are replaced by actual values. However some database
- * providers may require different information.
+ * like "USERNAME=...;PASSWORD=..." where the ... are replaced by actual values. 
+ * The actual named parameters required depend on the provider being used, and that list is available
+ * as the <parameter>auth_params</parameter> member of the #GdaProviderInfo struncture for each installed
+ * provider (use gda_config_get_provider_info() to get it).
  *
  * Additionnally, it is possible to have the connection string
  * respect the "&lt;provider_name&gt;://&lt;real cnc string&gt;" format, in which case the provider name
@@ -296,11 +299,8 @@ gda_client_open_connection (GdaClient *client,
  * an error.
  */
 GdaConnection *
-gda_client_open_connection_from_string (GdaClient *client,
-					const gchar *provider_id,
-					const gchar *cnc_string,
-					const gchar *auth_string,
-					GdaConnectionOptions options,
+gda_client_open_connection_from_string (GdaClient *client, const gchar *provider_id, const gchar *cnc_string,
+					const gchar *auth_string, GdaConnectionOptions options,
 					GError **error)
 {
 	GdaConnection *cnc = NULL;
@@ -322,7 +322,8 @@ gda_client_open_connection_from_string (GdaClient *client,
 	}
 	
 	if (!provider_id) {
-		g_set_error (error, GDA_CLIENT_ERROR, 0, _("No provider specified"));
+		g_set_error (error, GDA_CLIENT_ERROR, GDA_CLIENT_PROVIDER_NOT_FOUND_ERROR, 
+			     _("No provider specified"));
 		g_free (dup);
 		return NULL;
 	}
@@ -335,7 +336,7 @@ gda_client_open_connection_from_string (GdaClient *client,
 			tmp_prov = gda_connection_get_provider_name (cnc);
 			tmp_cnc_string = gda_connection_get_cnc_string (cnc);
 	
-			if (strcmp (provider_id, tmp_prov) == 0
+			if (g_ascii_strcasecmp (provider_id, tmp_prov) == 0
 			    && (! strcmp (cnc_string, tmp_cnc_string))) {
 				g_free (dup);
 				return cnc;
@@ -359,7 +360,7 @@ gda_client_open_connection_from_string (GdaClient *client,
 	}
 	else {
 		g_warning (_("Datasource configuration error: no provider specified"));
-		g_set_error (error, GDA_CLIENT_ERROR, 0, 
+		g_set_error (error, GDA_CLIENT_ERROR, GDA_CLIENT_PROVIDER_NOT_FOUND_ERROR, 
 			     _("Datasource configuration error: no provider specified"));
 	}
 
@@ -385,7 +386,7 @@ gda_client_get_connections (GdaClient *client)
 	return (const GList *) client->priv->connections;
 }
 
-/**
+/*
  * gda_client_find_connection
  * @client: a #GdaClient object.
  * @dsn: data source name.
@@ -402,7 +403,7 @@ gda_client_get_connections (GdaClient *client)
  * Returns: a pointer to the found connection, or %NULL if it could not
  * be found.
  */
-GdaConnection *
+static GdaConnection *
 gda_client_find_connection (GdaClient *client, const gchar *dsn, const gchar *auth_string)
 {
 	GList *l;
@@ -434,23 +435,7 @@ gda_client_find_connection (GdaClient *client, const gchar *dsn, const gchar *au
 }
 
 /**
- * gda_client_close_all_connections
- * @client: a #GdaClient object.
- *
- * Closes all connections opened by the given #GdaClient object.
- */
-void
-gda_client_close_all_connections (GdaClient *client)
-{
-	g_return_if_fail (GDA_IS_CLIENT (client));
-	g_return_if_fail (client->priv);
-
-	if (client->priv->connections) 
-		g_list_foreach (client->priv->connections, (GFunc) gda_connection_close, NULL);
-}
-
-/**
- * gda_client_notify_event
+ * _gda_client_notify_event
  * @client: a #GdaClient object.
  * @cnc: a #GdaConnection object where the event has occurred.
  * @event: event ID.
@@ -461,10 +446,7 @@ gda_client_close_all_connections (GdaClient *client)
  * operation, to changes made to a table in an underlying database.
  */
 void
-gda_client_notify_event (GdaClient *client,
-			 GdaConnection *cnc,
-			 GdaClientEvent event,
-			 GdaSet *params)
+_gda_client_notify_event (GdaClient *client, GdaConnection *cnc, GdaClientEvent event, GdaSet *params)
 {
 	if (!client)
 		return;
@@ -475,7 +457,7 @@ gda_client_notify_event (GdaClient *client,
 }
 
 /**
- * gda_client_notify_error_event
+ * _gda_client_notify_error_event
  * @client: a #GdaClient object.
  * @cnc: a #GdaConnection object.
  * @error: the error to be notified.
@@ -483,7 +465,7 @@ gda_client_notify_event (GdaClient *client,
  * Notifies the given #GdaClient of the #GDA_CLIENT_EVENT_ERROR event.
  */
 void
-gda_client_notify_error_event (GdaClient *client, GdaConnection *cnc, GdaConnectionEvent *error)
+_gda_client_notify_error_event (GdaClient *client, GdaConnection *cnc, GdaConnectionEvent *error)
 {
 	GdaSet *params;
 	GdaHolder *param;
@@ -504,12 +486,12 @@ gda_client_notify_error_event (GdaClient *client, GdaConnection *cnc, GdaConnect
 	params = gda_set_new (NULL);
 	gda_set_add_holder (params, param);
 	g_object_unref (param);
-	gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_ERROR, params);
+	_gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_ERROR, params);
 	g_object_unref (params);
 }
 
 /**
- * gda_client_notify_connection_opened_event
+ * _gda_client_notify_connection_opened_event
  * @client: a #GdaClient object.
  * @cnc: a #GdaConnection object.
  *
@@ -517,7 +499,7 @@ gda_client_notify_error_event (GdaClient *client, GdaConnection *cnc, GdaConnect
  * event.
  */
 void
-gda_client_notify_connection_opened_event (GdaClient *client, GdaConnection *cnc)
+_gda_client_notify_connection_opened_event (GdaClient *client, GdaConnection *cnc)
 {
 	if (!client)
 		return;
@@ -525,11 +507,11 @@ gda_client_notify_connection_opened_event (GdaClient *client, GdaConnection *cnc
 	g_return_if_fail (GDA_IS_CLIENT (client));
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 
-	gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_CONNECTION_OPENED, NULL);
+	_gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_CONNECTION_OPENED, NULL);
 }
 
 /**
- * gda_client_notify_connection_closed_event
+ * _gda_client_notify_connection_closed_event
  * @client: a #GdaClient object.
  * @cnc: a #GdaConnection object.
  *
@@ -537,7 +519,7 @@ gda_client_notify_connection_opened_event (GdaClient *client, GdaConnection *cnc
  * event.
  */
 void
-gda_client_notify_connection_closed_event (GdaClient *client, GdaConnection *cnc)
+_gda_client_notify_connection_closed_event (GdaClient *client, GdaConnection *cnc)
 {
 	if (!client)
 		return;
@@ -545,113 +527,7 @@ gda_client_notify_connection_closed_event (GdaClient *client, GdaConnection *cnc
 	g_return_if_fail (GDA_IS_CLIENT (client));
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 
-	gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_CONNECTION_CLOSED, NULL);
-}
-
-/**
- * gda_client_begin_transaction
- * @client: a #GdaClient object.
- * @name: the name of the transation to start
- * @level:
- * @error: a place to store errors, or %NULL
- *
- * Starts a transaction on all connections being managed by the given
- * #GdaClient. It is important to note that this operates on all
- * connections opened within a #GdaClient, which could not be what
- * you're looking for.
- *
- * To execute a transaction on a unique connection, use
- * #gda_connection_begin_transaction, #gda_connection_commit_transaction
- * and #gda_connection_rollback_transaction.
- *
- * Returns: %TRUE if all transactions could be started successfully,
- * or %FALSE if one of them fails.
- */
-gboolean
-gda_client_begin_transaction (GdaClient *client, const gchar *name, GdaTransactionIsolation level,
-			      GError **error)
-{
-	GList *l;
-
-	g_return_val_if_fail (GDA_IS_CLIENT (client), FALSE);
-
-	for (l = client->priv->connections; l != NULL; l = l->next) {
-		if (!gda_connection_begin_transaction (GDA_CONNECTION (l->data), name, level, error)) {
-			gda_client_rollback_transaction (client, name, NULL);
-			return FALSE;
-		}
-	}
-
-	return TRUE;
-}
-
-/**
- * gda_client_commit_transaction
- * @client: a #GdaClient object.
- * @name: the name of the transation to commit
- * @error: a place to store errors, or %NULL
- *
- * Commits a running transaction on all connections being managed by the given
- * #GdaClient. It is important to note that this operates on all
- * connections opened within a #GdaClient, which could not be what
- * you're looking for.
- *
- * To execute a transaction on a unique connection, use
- * #gda_connection_begin_transaction, #gda_connection_commit_transaction
- * and #gda_connection_rollback_transaction.
- *
- * Returns: %TRUE if all transactions could be committed successfully,
- * or %FALSE if one of them fails.
- */
-gboolean
-gda_client_commit_transaction (GdaClient *client, const gchar *name, GError **error)
-{
-	GList *l;
-
-	g_return_val_if_fail (GDA_IS_CLIENT (client), FALSE);
-
-	for (l = client->priv->connections; l != NULL; l = l->next) {
-		if (!gda_connection_commit_transaction (GDA_CONNECTION (l->data), name, error)) {
-			gda_client_rollback_transaction (client, name, NULL);
-			return FALSE;
-		}
-	}
-
-	return TRUE;
-}
-
-/**
- * gda_client_rollback_transaction
- * @client: a #GdaClient object.
- * @name: the name of the transation to rollback
- * @error: a place to store errors, or %NULL
- *
- * Cancels a running transaction on all connections being managed by the given
- * #GdaClient. It is important to note that this operates on all
- * connections opened within a #GdaClient, which could not be what
- * you're looking for.
- *
- * To execute a transaction on a unique connection, use
- * #gda_connection_begin_transaction, #gda_connection_commit_transaction
- * and #gda_connection_rollback_transaction.
- *
- * Returns: %TRUE if all transactions could be cancelled successfully,
- * or %FALSE if one of them fails.
- */
-gboolean
-gda_client_rollback_transaction (GdaClient *client, const gchar *name, GError **error)
-{
-	GList *l;
-	gint failures = 0;
-
-	g_return_val_if_fail (GDA_IS_CLIENT (client), FALSE);
-
-	for (l = client->priv->connections; l != NULL; l = l->next) {
-		if (!gda_connection_rollback_transaction (GDA_CONNECTION (l->data), name, error))
-			failures++;
-	}
-
-	return failures == 0 ? TRUE : FALSE;
+	_gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_CONNECTION_CLOSED, NULL);
 }
 
 /**
@@ -765,7 +641,7 @@ gda_client_perform_create_database (GdaClient *client, GdaServerOperation *op, G
 	if (provider) 
 		return gda_server_provider_perform_operation (provider, NULL, op, error);
 	else {
-		g_set_error (error, GDA_CLIENT_ERROR, 0, 
+		g_set_error (error, GDA_CLIENT_ERROR, GDA_CLIENT_PROVIDER_NOT_FOUND_ERROR, 
 			     _("Could not find operation's associated provider, "
 			       "did you use gda_client_prepare_create_database() ?")); 
 		return FALSE;
@@ -795,7 +671,7 @@ gda_client_perform_drop_database (GdaClient *client, GdaServerOperation *op, GEr
 	if (provider) 
 		return gda_server_provider_perform_operation (provider, NULL, op, error);
 	else {
-		g_set_error (error, GDA_CLIENT_ERROR, GDA_CLIENT_GENERAL_ERROR, 
+		g_set_error (error, GDA_CLIENT_ERROR, GDA_CLIENT_PROVIDER_NOT_FOUND_ERROR, 
 			     _("Could not find operation's associated provider, "
 			       "did you use gda_client_prepare_drop_database() ?")); 
 		return FALSE;

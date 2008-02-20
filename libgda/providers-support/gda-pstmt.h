@@ -24,6 +24,7 @@
 #define __GDA_PSTMT_H__
 
 #include <glib-object.h>
+#include <libgda/gda-statement.h>
 
 G_BEGIN_DECLS
 
@@ -39,6 +40,7 @@ typedef struct _GdaPStmtClass   GdaPStmtClass;
 struct _GdaPStmt {
 	GObject       object;
 
+	GdaStatement *stmt; /* GdaPStmt object holds a reference on this stmt object, may be NULL */
 	gchar        *sql; /* actual SQL code used for this prepared statement, mem freed by GdaPStmt */
         GSList       *param_ids; /* list of parameters' IDs (as gchar *), mem freed by GdaPStmt */
 
@@ -53,8 +55,9 @@ struct _GdaPStmtClass {
 	GObjectClass  parent_class;
 };
 
-GType gda_pstmt_get_type      (void) G_GNUC_CONST;
-void  gda_pstmt_copy_contents (GdaPStmt *src, GdaPStmt *dest);
+GType gda_pstmt_get_type          (void) G_GNUC_CONST;
+void  gda_pstmt_set_gda_statement (GdaPStmt *pstmt, GdaStatement *stmt);
+void  gda_pstmt_copy_contents     (GdaPStmt *src, GdaPStmt *dest);
 
 G_END_DECLS
 

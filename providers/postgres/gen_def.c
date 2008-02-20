@@ -1,5 +1,4 @@
 /* 
- *
  * Copyright (C) 2007 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or

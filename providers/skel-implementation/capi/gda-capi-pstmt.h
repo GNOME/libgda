@@ -29,10 +29,10 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_CAPI_PSTMT            (gda_capi_pstmt_get_type())
-#define GDA_CAPI_PSTMT(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_PSTMT, GdaCapiPStmt))
-#define GDA_CAPI_PSTMT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_PSTMT, GdaCapiPStmtClass))
-#define GDA_IS_CAPI_PSTMT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_PSTMT))
-#define GDA_IS_CAPI_PSTMT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_PSTMT))
+#define GDA_CAPI_PSTMT(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_CAPI_PSTMT, GdaCapiPStmt))
+#define GDA_CAPI_PSTMT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_CAPI_PSTMT, GdaCapiPStmtClass))
+#define GDA_IS_CAPI_PSTMT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_CAPI_PSTMT))
+#define GDA_IS_CAPI_PSTMT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_CAPI_PSTMT))
 
 typedef struct _GdaCapiPStmt        GdaCapiPStmt;
 typedef struct _GdaCapiPStmtClass   GdaCapiPStmtClass;

@@ -1028,9 +1028,18 @@ output_string (MainData *data, const gchar *str)
 	FILE *to_stream;
 	gboolean append_nl = FALSE;
 	gint length;
+	static gint force_no_pager = -1;
 	
 	if (!str)
 		return;
+
+	if (force_no_pager < 0) {
+		/* still unset... */
+		if (getenv ("GDA_NO_PAGER"))
+			force_no_pager = 1;
+		else
+			force_no_pager = 0;	
+	}
 
 	length = strlen (str);
 	if (str[length] != '\n')
@@ -1041,7 +1050,7 @@ output_string (MainData *data, const gchar *str)
 	else
 		to_stream = stdout;
 
-	if (isatty (fileno (to_stream))) {
+	if (!force_no_pager && isatty (fileno (to_stream))) {
 		/* use pager */
 		FILE *pipe;
 		const char *pager;

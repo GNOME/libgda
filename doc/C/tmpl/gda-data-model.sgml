@@ -17,10 +17,14 @@ gda_data_model_get_access_flags() method.
 </para>
 <para>
 Again, depending on the real implementation, data retreiving can be done either accessing direct random
-values located by their row and column, or using a #GdaDataModelIter cursor, or both. Use the 
-gda_data_model_get_access_flags() method to know how the data model can be accessed. Note that a #GdaDatamodel
-which can be accessed in a random way can also be accessed using cursors (and several cusrors may be used at the same
-time), whereas data model which can only be accessed using cursors can only have one cursor for iterating.
+values located by their row and column, or using a cursor, or both. Use the gda_data_model_get_access_flags() 
+method to know how the data model can be accessed. 
+<itemizedlist>
+  <listitem><para>Random access to a data model's contents is done using gda_data_model_get_value_at(), or using
+      one or more #GdaDataModelIter object(s);</para></listitem>
+  <listitem><para>Cursor access to a data model's contents is done using a #GdaDataModelIter object (only one can be created),
+      it is <emphasis>not possible</emphasis> to use gda_data_model_get_value_at() in this mode.</para></listitem>
+</itemizedlist>
 </para>
 <para>
 Random access data models are easier to use since picking a value is very simple using the gda_data_model_get_value_at(),

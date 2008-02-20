@@ -128,9 +128,6 @@ typedef enum {
 
 
 GType                gda_connection_get_type             (void) G_GNUC_CONST;
-GdaConnection       *gda_connection_new                  (GdaClient *client, GdaServerProvider *provider,
-							  const gchar *dsn, const gchar *auth_string,
-							  GdaConnectionOptions options);
 gboolean             gda_connection_open                 (GdaConnection *cnc, GError **error);
 void                 gda_connection_close                (GdaConnection *cnc);
 void                 gda_connection_close_no_warning     (GdaConnection *cnc);

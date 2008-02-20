@@ -39,6 +39,7 @@ Proposed base implementation for data models returned by the execution of a SELE
 @object: base object
 @priv: private data
 @prep_stmt: SELECT prepared statement for which the execution gave this object
+@nb_stored_rows: 
 @advertized_nrows: initially set to -1, set to a value >= 0 when the number of rows in the data model is known
 
 <!-- ##### STRUCT GdaPModelClass ##### -->
@@ -49,6 +50,7 @@ Proposed base implementation for data models returned by the execution of a SELE
 @parent_class: parent object class
 @fetch_nb_rows: virtual method which must be implemented when access method is GDA_DATA_MODEL_ACCESS_RANDOM
 @fetch_random: virtual method which must be implemented when access method is GDA_DATA_MODEL_ACCESS_RANDOM
+@store_all: 
 @fetch_next: virtual method which must be implemented when access method is GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD
 @fetch_prev: virtual method which must be implemented when access method is GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD
 @fetch_at: virtual method which can be implemented when access method is GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD or GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD
@@ -70,6 +72,29 @@ Proposed base implementation for data models returned by the execution of a SELE
 
 @model: 
 @rownum: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_pmodel_set_modification_query ##### -->
+<para>
+
+</para>
+
+@model: 
+@mod_stmt: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_pmodel_compute_modification_queries ##### -->
+<para>
+
+</para>
+
+@model: 
+@target: 
+@use_all_fields_if_no_pk: 
+@error: 
 @Returns: 
 
 

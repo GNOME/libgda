@@ -59,9 +59,16 @@ Base class for all the DBMS providers
 @statement_to_sql: 
 @statement_prepare: 
 @statement_execute: 
+@is_busy: 
 @cancel: 
 @create_connection: 
 @meta_funcs: 
+@_gda_reserved1: 
+@_gda_reserved2: 
+@_gda_reserved3: 
+@_gda_reserved4: 
+@_gda_reserved5: 
+@_gda_reserved6: 
 
 <!-- ##### ENUM GdaServerProviderError ##### -->
 <para>
@@ -75,6 +82,7 @@ Base class for all the DBMS providers
 @GDA_SERVER_PROVIDER_OPERATION_ERROR: 
 @GDA_SERVER_PROVIDER_INTERNAL_ERROR: 
 @GDA_SERVER_PROVIDER_BUSY_ERROR: 
+@GDA_SERVER_PROVIDER_NON_SUPPORTED_ERROR: 
 
 <!-- ##### STRUCT GdaServerProviderMeta ##### -->
 <para>

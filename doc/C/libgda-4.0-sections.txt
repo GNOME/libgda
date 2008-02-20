@@ -2,21 +2,13 @@
 <FILE>gda-client</FILE>
 <TITLE>GdaClient</TITLE>
 GdaClient
+GdaClientError
 GdaClientEvent
-GdaClientSpecsType
 gda_client_new
 gda_client_open_connection
 gda_client_open_connection_from_string
 gda_client_get_connections
-gda_client_find_connection
-gda_client_close_all_connections
-gda_client_notify_event
-gda_client_notify_error_event
-gda_client_notify_connection_opened_event
-gda_client_notify_connection_closed_event
-gda_client_begin_transaction
-gda_client_commit_transaction
-gda_client_rollback_transaction
+<SUBSECTION>
 gda_client_prepare_create_database
 gda_client_perform_create_database
 gda_client_prepare_drop_database
@@ -170,7 +162,6 @@ gda_connection_event_get_type
 <TITLE>GdaConnection</TITLE>
 GdaConnection
 GdaConnectionOptions
-gda_connection_new
 gda_connection_open
 gda_connection_close
 gda_connection_close_no_warning
@@ -1432,6 +1423,8 @@ GdaPModel
 GdaPModelClass
 gda_pmodel_take_row
 gda_pmodel_get_stored_row
+gda_pmodel_set_modification_query
+gda_pmodel_compute_modification_queries
 <SUBSECTION Standard>
 GDA_IS_PMODEL
 GDA_PMODEL
@@ -1445,6 +1438,7 @@ gda_pmodel_get_type
 <TITLE>GdaPStmt</TITLE>
 <INCLUDE>providers-support/gda-pstmt.h</INCLUDE>
 GdaPStmt
+gda_pstmt_set_gda_statement
 gda_pstmt_copy_contents
 <SUBSECTION Standard>
 GDA_IS_PSTMT

@@ -55,7 +55,11 @@ enum
         PROP_0,
 	PROP_PREP_STMT,
 	PROP_MOD_STMT,
-	PROP_FLAGS
+	PROP_FLAGS,
+	PROP_ALL_STORED,
+	PROP_INS_QUERY,
+	PROP_UPD_QUERY,
+	PROP_DEL_QUERY
 };
 
 static void gda_pmodel_class_init (GdaPModelClass *klass);
@@ -144,6 +148,27 @@ gda_pmodel_class_init (GdaPModelClass *klass)
 							    GDA_DATA_MODEL_ACCESS_RANDOM, G_MAXUINT,
 							    GDA_DATA_MODEL_ACCESS_RANDOM,
 							    G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
+	g_object_class_install_property (object_class, PROP_ALL_STORED,
+					 g_param_spec_boolean ("store-all-rows", "Store all the rows",
+							       "Tells if model has analysed all the rows", FALSE,
+							       G_PARAM_READABLE | G_PARAM_WRITABLE));
+	g_object_class_install_property (object_class, PROP_INS_QUERY,
+                                         g_param_spec_object ("insert_query", "INSERT query", 
+							      "INSERT Query to be executed to add data",
+							      GDA_TYPE_STATEMENT,
+							      G_PARAM_READABLE | G_PARAM_WRITABLE));
+
+	g_object_class_install_property (object_class, PROP_UPD_QUERY,
+                                         g_param_spec_object ("update_query", "UPDATE query", 
+							      "UPDATE Query to be executed to update data",
+							      GDA_TYPE_STATEMENT,
+							      G_PARAM_READABLE | G_PARAM_WRITABLE));
+
+	g_object_class_install_property (object_class, PROP_DEL_QUERY,
+                                         g_param_spec_object ("delete_query", "DELETE query", 
+							      "DELETE Query to be executed to remove data",
+							      GDA_TYPE_STATEMENT,
+							      G_PARAM_READABLE | G_PARAM_WRITABLE));
 
 	/* virtual functions */
 	object_class->dispose = gda_pmodel_dispose;
@@ -308,6 +333,19 @@ gda_pmodel_set_property (GObject *object,
 			model->priv->usage_flags = flags;
 			break;
 		}
+		case PROP_ALL_STORED:
+			if ((model->advertized_nrows < 0) && CLASS (model)->fetch_nb_rows)
+				CLASS (model)->fetch_nb_rows (model);
+				
+			if (model->nb_stored_rows != model->advertized_nrows) {
+				if (CLASS (model)->store_all)
+					CLASS (model)->store_all (model, NULL);
+			}
+			break;
+		case PROP_INS_QUERY:
+		case PROP_DEL_QUERY:
+		case PROP_UPD_QUERY:
+			TO_IMPLEMENT;
 		default:
 			break;
 		}
@@ -332,6 +370,20 @@ gda_pmodel_get_property (GObject *object,
 		case PROP_FLAGS:
 			g_value_set_uint (value, model->priv->usage_flags);
 			break;
+		case PROP_ALL_STORED:
+			if (!model->priv->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)
+				g_warning ("Cannot set the 'store-all-rows' property when acces mode is cursor based");
+			else {
+				if ((model->advertized_nrows < 0) && CLASS (model)->fetch_nb_rows)
+					CLASS (model)->fetch_nb_rows (model);
+				g_value_set_boolean (value, model->nb_stored_rows == model->advertized_nrows);
+			}
+			break;
+		case PROP_INS_QUERY:
+		case PROP_DEL_QUERY:
+		case PROP_UPD_QUERY:
+			TO_IMPLEMENT;
+
 		default:
 			break;
 		}
@@ -344,7 +396,8 @@ gda_pmodel_get_property (GObject *object,
  * @row: a #GdaPRow row
  * @rownum: "external" advertized row number
  *
- * Stores @row into @model, externally advertized at row number @rownum
+ * Stores @row into @model, externally advertized at row number @rownum. The reference to
+ * @row is stolen.
  */
 void
 gda_pmodel_take_row (GdaPModel *model, GdaPRow *row, gint rownum)
@@ -357,7 +410,7 @@ gda_pmodel_take_row (GdaPModel *model, GdaPRow *row, gint rownum)
 
 	g_hash_table_insert (model->priv->index, GINT_TO_POINTER (rownum + 1), GINT_TO_POINTER (model->priv->rows->len + 1));
 	g_array_append_val (model->priv->rows, row);
-	g_object_ref (row);
+	model->nb_stored_rows = model->priv->rows->len;
 }
 
 /**
@@ -381,6 +434,51 @@ gda_pmodel_get_stored_row (GdaPModel *model, gint rownum)
 		return NULL;
 	else 
 		return g_array_index (model->priv->rows, GdaPRow *, irow - 1);
+}
+
+/**
+ * gda_pmodel_set_modification_query
+ * @model: a #GdaPModel data model
+ * @mod_stmt: a #GdaStatement (INSERT, UPDATE or DELETE)
+ * @error: a place to store errors, or %NULL
+ *
+ * Forces @model to allow data modification using @mod_stmt as the statement executed when the corresponding
+ * modification is requested
+ *
+ * Returns: TRUE if no error occurred.
+ */
+gboolean
+gda_pmodel_set_modification_query (GdaPModel *model, GdaStatement *mod_stmt, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_PMODEL (model), FALSE);
+	g_return_val_if_fail (model->priv, FALSE);
+	g_return_val_if_fail (GDA_IS_STATEMENT (mod_stmt), FALSE);
+
+	TO_IMPLEMENT;
+
+	return FALSE;
+}
+
+/**
+ * gda_pmodel_compute_modification_queries
+ * @model: a #GdaPModel data model
+ * @target: the name of the target to modify (a table name or alias)
+ * @use_all_fields_if_no_pk: set to TRUE if all fields must be used in the WHERE condition when no primary key exists
+ * @error: a place to store errors, or %NULL
+ *
+ * Makes @model try to compute INSERT, UPDATE and DELETE statements to be used when modifying @model's contents
+ *
+ * Returns: TRUE if no error occurred.
+ */
+gboolean
+gda_pmodel_compute_modification_queries (GdaPModel *model, const gchar *target, gboolean use_all_fields_if_no_pk, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_PMODEL (model), FALSE);
+	g_return_val_if_fail (model->priv, FALSE);
+
+	TO_IMPLEMENT;
+
+	return FALSE;
 }
 
 /*
@@ -449,27 +547,34 @@ static const GValue *
 gda_pmodel_get_value_at (GdaDataModel *model, gint col, gint row)
 {
 	GdaPRow *prow;
-	gint irow;
+	gint irow, nrows;
 	GdaPModel *imodel;
 
 	g_return_val_if_fail (GDA_IS_PMODEL (model), NULL);
 	imodel = (GdaPModel *) model;
-	g_return_val_if_fail (imodel->priv, 0);
+	g_return_val_if_fail (imodel->priv, NULL);
 
 	/* available only if GDA_DATA_MODEL_ACCESS_RANDOM */
 	if (! (imodel->priv->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM))
 		return NULL;
 
+	/* check row number validity */
+	nrows = imodel->advertized_nrows < 0 ? gda_pmodel_get_n_rows (model) : imodel->advertized_nrows;
+	if ((row < 0) || ((nrows >= 0) && (row >= nrows)))
+		return NULL;
+
 	irow = GPOINTER_TO_INT (g_hash_table_lookup (imodel->priv->index, GINT_TO_POINTER (row + 1)));
 	if (irow <= 0) {
-		if (CLASS (model)->fetch_random)
-			prow = CLASS (model)->fetch_random (imodel, row, NULL);
+		prow = NULL;
+		if (CLASS (model)->fetch_random) 
+			CLASS (model)->fetch_random (imodel, &prow, row, NULL);
 	}
 	else 
 		prow = g_array_index (imodel->priv->rows, GdaPRow *, irow - 1);
 	
 	if (prow) 
 		return gda_prow_get_value (prow, col);
+
 	return NULL;
 }
 
@@ -520,10 +625,12 @@ gda_pmodel_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 	GdaPModel *imodel;
 	GdaPRow *prow = NULL;
 	gint target_iter_row;
+	gint irow;
 
-	g_return_val_if_fail (GDA_IS_PMODEL (model), 0);
+	g_return_val_if_fail (GDA_IS_PMODEL (model), FALSE);
 	imodel = (GdaPModel *) model;
-	g_return_val_if_fail (imodel->priv, 0);
+	g_return_val_if_fail (imodel->priv, FALSE);
+	g_return_val_if_fail (CLASS (model)->fetch_next, FALSE);
 
 	if (imodel->priv->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM) 
 		return gda_data_model_move_iter_next_default (model, iter);
@@ -538,10 +645,11 @@ gda_pmodel_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 	else
 		target_iter_row = imodel->priv->iter_row + 1;
 
-	if (CLASS (model)->fetch_next)
-		prow = CLASS (model)->fetch_next (imodel, target_iter_row, NULL);
-	else
-		g_error ("INTERNAL error: fetch_next() virtual method not implemented, aborting");
+	irow = GPOINTER_TO_INT (g_hash_table_lookup (imodel->priv->index, GINT_TO_POINTER (target_iter_row + 1)));
+	if (irow > 0)
+		prow = g_array_index (imodel->priv->rows, GdaPRow *, irow - 1);
+	if (!CLASS (model)->fetch_next (imodel, &prow, target_iter_row, NULL))
+		TO_IMPLEMENT;
 	
 	if (prow) {
 		imodel->priv->iter_row = target_iter_row;
@@ -562,10 +670,12 @@ gda_pmodel_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 	GdaPModel *imodel;
 	GdaPRow *prow = NULL;
 	gint target_iter_row;
+	gint irow;
 
-	g_return_val_if_fail (GDA_IS_PMODEL (model), 0);
+	g_return_val_if_fail (GDA_IS_PMODEL (model), FALSE);
 	imodel = (GdaPModel *) model;
-	g_return_val_if_fail (imodel->priv, 0);
+	g_return_val_if_fail (imodel->priv, FALSE);
+	g_return_val_if_fail (CLASS (model)->fetch_prev, FALSE);
 
 	if (imodel->priv->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM) 
 		return gda_data_model_move_iter_prev_default (model, iter);
@@ -583,18 +693,17 @@ gda_pmodel_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
         else
                 target_iter_row = imodel->priv->iter_row - 1;
 
-	if (CLASS (model)->fetch_prev)
-		prow = CLASS (model)->fetch_prev (imodel, target_iter_row, NULL);
-	else
-		g_error ("INTERNAL error: fetch_prev() virtual method not implemented, aborting");
+	irow = GPOINTER_TO_INT (g_hash_table_lookup (imodel->priv->index, GINT_TO_POINTER (target_iter_row + 1)));
+	if (irow > 0)
+		prow = g_array_index (imodel->priv->rows, GdaPRow *, irow - 1);
+	if (!CLASS (model)->fetch_prev (imodel, &prow, target_iter_row, NULL))
+		TO_IMPLEMENT;
 
 	if (prow) {
 		imodel->priv->iter_row = target_iter_row;
                 update_iter (imodel, prow);
                 return TRUE;
 	}
-	else 
-		goto prev_error;
 
  prev_error:
         g_object_set (G_OBJECT (iter), "current-row", -1, NULL);
@@ -607,10 +716,11 @@ gda_pmodel_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint row)
 {
 	GdaPModel *imodel;
 	GdaPRow *prow = NULL;
+	gint irow;
 
-	g_return_val_if_fail (GDA_IS_PMODEL (model), 0);
+	g_return_val_if_fail (GDA_IS_PMODEL (model), FALSE);
 	imodel = (GdaPModel *) model;
-	g_return_val_if_fail (imodel->priv, 0);
+	g_return_val_if_fail (imodel->priv, FALSE);
 
 	if (imodel->priv->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM) 
 		return gda_data_model_move_iter_at_row_default (model, iter, row);
@@ -618,8 +728,13 @@ gda_pmodel_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint row)
         g_return_val_if_fail (iter, FALSE);
         g_return_val_if_fail (imodel->priv->iter == iter, FALSE);
 
+	irow = GPOINTER_TO_INT (g_hash_table_lookup (imodel->priv->index, GINT_TO_POINTER (row + 1)));
+	if (irow > 0)
+		prow = g_array_index (imodel->priv->rows, GdaPRow *, irow - 1);
+
 	if (CLASS (model)->fetch_at) {
-		prow = CLASS (model)->fetch_at (imodel, row, NULL);
+		if (!CLASS (model)->fetch_at (imodel, &prow, row, NULL))
+			TO_IMPLEMENT;
 		if (prow) {
 			imodel->priv->iter_row = row;
 			update_iter (imodel, prow);
@@ -632,9 +747,16 @@ gda_pmodel_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint row)
 		}
 	}
 	else {
-		/* implementation of fetch_at() is optional */
-		TO_IMPLEMENT; /* iter back or forward the right number of times */
-		return FALSE;
+		if (prow) {
+			imodel->priv->iter_row = row;
+			update_iter (imodel, prow);
+			return TRUE;
+		}
+		else {
+			/* implementation of fetch_at() is optional */
+			TO_IMPLEMENT; /* iter back or forward the right number of times */
+			return FALSE;
+		}
 	}
 }
 

@@ -42,7 +42,9 @@ typedef struct _GdaPModelPrivate GdaPModelPrivate;
 struct _GdaPModel {
 	GObject           object;
 	GdaPModelPrivate *priv;
+	/* read only information */
 	GdaPStmt         *prep_stmt; /* use the "prepared-stmt" property to set this */
+	gint              nb_stored_rows; /* number of GdaPRow objects currently stored */
 	gint              advertized_nrows; /* set when the number of rows becomes known */
 };
 
@@ -63,17 +65,22 @@ struct _GdaPModelClass {
 
 	/* GDA_DATA_MODEL_ACCESS_RANDOM */
 	gint             (*fetch_nb_rows) (GdaPModel *model);
-	GdaPRow         *(*fetch_random)  (GdaPModel *model, gint rownum, GError **error);
+	gboolean         (*fetch_random)  (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error);
+	gboolean         (*store_all)     (GdaPModel *model, GError **error);
 
 	/* GDA_STATEMENT_MODEL_CURSOR_* */
-	GdaPRow         *(*fetch_next)    (GdaPModel *model, gint rownum, GError **error);
-	GdaPRow         *(*fetch_prev)    (GdaPModel *model, gint rownum, GError **error);
-	GdaPRow         *(*fetch_at)      (GdaPModel *model, gint rownum, GError **error);
+	gboolean         (*fetch_next)    (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error);
+	gboolean         (*fetch_prev)    (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error);
+	gboolean         (*fetch_at)      (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error);
 };
 
-GType    gda_pmodel_get_type       (void) G_GNUC_CONST;
-void     gda_pmodel_take_row       (GdaPModel *model, GdaPRow *row, gint rownum);
-GdaPRow *gda_pmodel_get_stored_row (GdaPModel *model, gint rownum);
+GType    gda_pmodel_get_type                     (void) G_GNUC_CONST;
+void     gda_pmodel_take_row                     (GdaPModel *model, GdaPRow *row, gint rownum);
+GdaPRow *gda_pmodel_get_stored_row               (GdaPModel *model, gint rownum);
+
+gboolean gda_pmodel_set_modification_query       (GdaPModel *model, GdaStatement *mod_stmt, GError **error);
+gboolean gda_pmodel_compute_modification_queries (GdaPModel *model, const gchar *target, 
+						  gboolean use_all_fields_if_no_pk, GError **error);
 
 G_END_DECLS
 

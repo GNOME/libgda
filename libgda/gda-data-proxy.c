@@ -3178,7 +3178,6 @@ gda_data_proxy_set_value_at (GdaDataModel *model, gint col, gint proxy_row, cons
 			     GError **error)
 {
 	GdaDataProxy *proxy;
-	GdaValueAttribute att = 0;
 
 	g_return_val_if_fail (GDA_IS_DATA_PROXY (model), FALSE);
 	proxy = GDA_DATA_PROXY (model);
@@ -3187,13 +3186,6 @@ gda_data_proxy_set_value_at (GdaDataModel *model, gint col, gint proxy_row, cons
 
 	/* ensure that there is no sync to be done */
 	ensure_chunk_sync (proxy);
-
-	att = gda_data_proxy_get_value_attributes (proxy, proxy_row, col);
-	if (att & GDA_VALUE_ATTR_NO_MODIF) {
-		g_set_error (error, GDA_DATA_PROXY_ERROR, GDA_DATA_PROXY_READ_ONLY_VALUE,
-			     _("Value is read-only"));
-		return FALSE;
-	}
 
 	if ((proxy_row == 0) && proxy->priv->add_null_entry) {
 		g_set_error (error, GDA_DATA_PROXY_ERROR, GDA_DATA_PROXY_READ_ONLY_ROW,

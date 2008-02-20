@@ -151,7 +151,6 @@ gda_capi_provider_class_init (GdaCapiProviderClass *klass)
 	provider_class->get_data_handler = gda_capi_provider_get_data_handler;
 	provider_class->get_def_dbms_type = gda_capi_provider_get_default_dbms_type;
 
-	provider_class->create_connection = NULL;
 	provider_class->open_connection = gda_capi_provider_open_connection;
 	provider_class->close_connection = gda_capi_provider_close_connection;
 	provider_class->get_database = gda_capi_provider_get_database;
@@ -172,6 +171,10 @@ gda_capi_provider_class_init (GdaCapiProviderClass *klass)
 	provider_class->statement_to_sql = gda_capi_provider_statement_to_sql;
 	provider_class->statement_prepare = gda_capi_provider_statement_prepare;
 	provider_class->statement_execute = gda_capi_provider_statement_execute;
+
+	provider_class->is_busy = NULL;
+	provider_class->cancel = NULL;
+	provider_class->create_connection = NULL;
 
 	memset (&(provider_class->meta_funcs), 0, sizeof (GdaServerProviderMeta));
 	provider_class->meta_funcs.info = _gda_capi_meta_info;
@@ -569,9 +572,8 @@ gda_capi_provider_begin_transaction (GdaServerProvider *provider, GdaConnection 
  * Commit transaction request
  */
 static gboolean
-gda_capi_provider_commit_transaction (GdaServerProvider *provider,
-					GdaConnection *cnc,
-					const gchar *name, GError **error)
+gda_capi_provider_commit_transaction (GdaServerProvider *provider, GdaConnection *cnc,
+				      const gchar *name, GError **error)
 {
 	CapiConnectionData *cdata;
 
@@ -591,9 +593,8 @@ gda_capi_provider_commit_transaction (GdaServerProvider *provider,
  * Rollback transaction request
  */
 static gboolean
-gda_capi_provider_rollback_transaction (GdaServerProvider *provider,
-					  GdaConnection *cnc,
-					  const gchar *name, GError **error)
+gda_capi_provider_rollback_transaction (GdaServerProvider *provider, GdaConnection *cnc,
+					const gchar *name, GError **error)
 {
 	CapiConnectionData *cdata;
 
@@ -678,6 +679,11 @@ gda_capi_provider_delete_savepoint (GdaServerProvider *provider, GdaConnection *
 static gboolean
 gda_capi_provider_supports_feature (GdaServerProvider *provider, GdaConnection *cnc, GdaConnectionFeature feature)
 {
+	if (cnc) {
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+		g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	}
+
 	switch (feature) {
 	case GDA_CONNECTION_FEATURE_SQL :
 		return TRUE;
@@ -955,7 +961,7 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 			break;
 		}
 
-		/* actual binding using the C API */
+		/* actual binding using the C API, for parameter at position @i */
 		const GValue *value = gda_holder_get_value (h);
 		TO_IMPLEMENT;
 	}

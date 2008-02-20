@@ -1,5 +1,5 @@
 /* GDA Capi provider
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+ * Copyright (C) 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      TO_ADD: your name and email

@@ -306,8 +306,10 @@ gda_server_provider_create_connection (GdaClient *client, GdaServerProvider *pro
 			g_object_set (G_OBJECT (cnc), "auth_string", auth_string, "options", options, NULL);
 		}
 	}
-	else 
-		cnc = gda_connection_new (client, provider, dsn, auth_string, options);
+	else
+		cnc = g_object_new (GDA_TYPE_CONNECTION, "client", client, "provider_obj", provider, 
+				    "dsn", dsn, "auth_string", auth_string, 
+				    "options", options, NULL);
 
 	return cnc;
 }

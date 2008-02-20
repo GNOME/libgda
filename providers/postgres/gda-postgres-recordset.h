@@ -1,11 +1,8 @@
-/* GDA DB Postgres provider
- * Copyright (C) 1998 - 2002 The GNOME Foundation
+/* GDA postgres provider
+ * Copyright (C) 1998 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
- *      Michael Lausch <michael@lausch.at>
- *	Rodrigo Moya <rodrigo@gnome-db.org>
- *      Vivien Malerba <malerba@gnome-db.org>
- *      Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -26,9 +23,9 @@
 #ifndef __GDA_POSTGRES_RECORDSET_H__
 #define __GDA_POSTGRES_RECORDSET_H__
 
-#include <libgda/gda-data-model-hash.h>
-#include <libgda/gda-value.h>
-#include <libpq-fe.h>
+#include <libgda/libgda.h>
+#include <providers-support/gda-pmodel.h>
+#include "gda-postgres-pstmt.h"
 
 G_BEGIN_DECLS
 
@@ -43,20 +40,19 @@ typedef struct _GdaPostgresRecordsetClass   GdaPostgresRecordsetClass;
 typedef struct _GdaPostgresRecordsetPrivate GdaPostgresRecordsetPrivate;
 
 struct _GdaPostgresRecordset {
-	GdaDataModelHash model;
+	GdaPModel                model;
 	GdaPostgresRecordsetPrivate *priv;
 };
 
 struct _GdaPostgresRecordsetClass {
-	GdaDataModelHashClass parent_class;
+	GdaPModelClass             parent_class;
 };
 
-GType         gda_postgres_recordset_get_type (void) G_GNUC_CONST;
-GdaDataModel *gda_postgres_recordset_new (GdaConnection *cnc, PGresult *pgres);
+GType         gda_postgres_recordset_get_type   (void) G_GNUC_CONST;
+GdaDataModel *gda_postgres_recordset_new_random (GdaConnection *cnc, GdaPostgresPStmt *ps, PGresult *pg_res, GType *col_types);
+GdaDataModel *gda_postgres_recordset_new_cursor (GdaConnection *cnc, GdaPostgresPStmt *ps, gchar *cursor_name, GType *col_types);
 
-PGresult     *gda_postgres_recordset_get_pgresult (GdaPostgresRecordset *recset);
 
 G_END_DECLS
 
 #endif
-

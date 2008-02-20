@@ -54,7 +54,8 @@ typedef enum
 	GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR,
 	GDA_SERVER_PROVIDER_OPERATION_ERROR,
 	GDA_SERVER_PROVIDER_INTERNAL_ERROR,
-	GDA_SERVER_PROVIDER_BUSY_ERROR
+	GDA_SERVER_PROVIDER_BUSY_ERROR,
+	GDA_SERVER_PROVIDER_NON_SUPPORTED_ERROR
 } GdaServerProviderError;
 
 struct _GdaServerProvider {
@@ -150,6 +151,14 @@ struct _GdaServerProviderClass {
 	gboolean                (* cancel)               (GdaServerProvider *provider, GdaConnection *cnc, guint task_id);
 	GdaConnection          *(* create_connection)    (GdaServerProvider *provider);
 	GdaServerProviderMeta      meta_funcs;
+
+	/* Padding for future expansion */
+	void                    (*_gda_reserved1)        (void);
+	void                    (*_gda_reserved2)        (void);
+	void                    (*_gda_reserved3)        (void);
+	void                    (*_gda_reserved4)        (void);
+	void                    (*_gda_reserved5)        (void);
+	void                    (*_gda_reserved6)        (void);
 };
 
 GType                  gda_server_provider_get_type (void) G_GNUC_CONST;

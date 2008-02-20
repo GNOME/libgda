@@ -9,7 +9,7 @@ Database client access
   This class is the main entry point for libgda client applications. It provides
   the way by which client applications open connections. Thus, before using any other
   database-oriented function in libgda, applications must create a #GdaClient object
-  (via #gda_client_new), and, once created, open the connections from it.
+  (via gda_client_new()), and, once created, open the connections from it.
 </para>
 <para>
   #GdaClient also provides a way to treat several connections as if they were only
@@ -18,10 +18,11 @@ Database client access
   obtain the list of all tables in all opened connections.
 </para>
 <para>
-Database creation and destruction is done through a #GdaClient object uding the
-gda_client_create_database() and gda_client_drop_database() methods. Note however that 
-depending on the provider, an opened connection may be required in order to create
-or destroy a database.
+  Database creation and destruction is done through a #GdaClient object uding the
+  gda_client_prepare_create_database(), gda_client_perform_create_database(), 
+  gda_client_prepare_drop_database() and gda_client_perform_drop_database() methods. Note however that 
+  depending on the provider, an opened connection may be required in order to create
+  or destroy a database.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -47,6 +48,14 @@ or destroy a database.
 @arg1: 
 @arg2: 
 @arg3: 
+
+<!-- ##### ENUM GdaClientError ##### -->
+<para>
+
+</para>
+
+@GDA_CLIENT_DSN_NOT_FOUND_ERROR: 
+@GDA_CLIENT_PROVIDER_NOT_FOUND_ERROR: 
 
 <!-- ##### ENUM GdaClientEvent ##### -->
 <para>
@@ -102,98 +111,6 @@ or destroy a database.
 </para>
 
 @client: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_client_find_connection ##### -->
-<para>
-
-</para>
-
-@client: 
-@dsn: 
-@auth_string: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_client_close_all_connections ##### -->
-<para>
-
-</para>
-
-@client: 
-
-
-<!-- ##### FUNCTION gda_client_notify_event ##### -->
-<para>
-
-</para>
-
-@client: 
-@cnc: 
-@event: 
-@params: 
-
-
-<!-- ##### FUNCTION gda_client_notify_error_event ##### -->
-<para>
-
-</para>
-
-@client: 
-@cnc: 
-@error: 
-
-
-<!-- ##### FUNCTION gda_client_notify_connection_opened_event ##### -->
-<para>
-
-</para>
-
-@client: 
-@cnc: 
-
-
-<!-- ##### FUNCTION gda_client_notify_connection_closed_event ##### -->
-<para>
-
-</para>
-
-@client: 
-@cnc: 
-
-
-<!-- ##### FUNCTION gda_client_begin_transaction ##### -->
-<para>
-
-</para>
-
-@client: 
-@name: 
-@level: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_client_commit_transaction ##### -->
-<para>
-
-</para>
-
-@client: 
-@name: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_client_rollback_transaction ##### -->
-<para>
-
-</para>
-
-@client: 
-@name: 
-@error: 
 @Returns: 
 
 

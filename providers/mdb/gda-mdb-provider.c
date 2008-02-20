@@ -473,7 +473,7 @@ table_create_model_func (LocalSpec *spec)
 				GdaBinary bin;
 				
 				bin.binary_length = mdb_ole_read (spec->cdata->mdb, mdb_col, bound_values[c], MDB_BIND_SIZE);
-				bin.data = bound_values[c];
+				bin.data = (guchar*) bound_values[c];
 				gda_value_set_binary ((tmpval = gda_value_new (coltypes [c])), &bin);
 				
 #ifdef DUMP_BINARY

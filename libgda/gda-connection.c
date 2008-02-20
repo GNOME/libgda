@@ -26,6 +26,7 @@
 #undef GDA_DISABLE_DEPRECATED
 #include <stdio.h>
 #include <libgda/gda-client.h>
+#include <libgda/gda-client-private.h>
 #include <libgda/gda-config.h>
 #include <libgda/gda-connection.h>
 #include <libgda/gda-connection-private.h>
@@ -408,40 +409,6 @@ gda_connection_get_property (GObject *object,
         }	
 }
 
-
-/**
- * gda_connection_new
- * @client: a #GdaClient object, or %NULL
- * @provider: a #GdaServerProvider object.
- * @dsn: GDA data source to connect to.
- * @auth_string: authentification string.
- * @options: options for the connection.
- *
- * This function creates a new #GdaConnection object. It is not
- * intended to be used directly by applications (use
- * #gda_client_open_connection instead).
- *
- * The connection is not opened at this stage; use 
- * gda_connection_open() to open the connection.
- *
- * Returns: a newly allocated #GdaConnection object.
- */
-GdaConnection *
-gda_connection_new (GdaClient *client, GdaServerProvider *provider,
-		    const gchar *dsn, const gchar *auth_string,
-		    GdaConnectionOptions options)
-{
-	GdaConnection *cnc;
-
-	g_return_val_if_fail (!client || GDA_IS_CLIENT (client), NULL);
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
-
-	cnc = g_object_new (GDA_TYPE_CONNECTION, "client", client, "provider_obj", provider, 
-			    "dsn", dsn, "auth_string", auth_string, 
-			    "options", options, NULL);
-	return cnc;
-}
-
 /**
  * gda_connection_open
  * @cnc: a #GdaConnection object
@@ -505,24 +472,16 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 	else {
 		if (dsn_info && dsn_info->auth_string)
 			real_auth_string = g_strdup (dsn_info->auth_string);
-		else {
-			TO_IMPLEMENT; /* look into @params */
-			/*
-			const gchar *s;
-			s = gda_quark_list_find (params, "USER");
-			if (s) {
-				real_username = g_strdup (s);
-				gda_quark_list_remove (params, "USER");
-			}
-			*/
-		}
+		else 
+			/* look for authentification parameters in cnc string */
+			real_auth_string = g_strdup (cnc->priv->cnc_string);
 	}
 
 	/* try to open the connection */
-	auth = gda_quark_list_new_from_string (cnc->priv->cnc_string);
+	auth = gda_quark_list_new_from_string (real_auth_string);
 	if (gda_server_provider_open_connection (cnc->priv->provider_obj, cnc, params, auth)) {
 		cnc->priv->is_open = TRUE;
-		gda_client_notify_connection_opened_event (cnc->priv->client, cnc);
+		_gda_client_notify_connection_opened_event (cnc->priv->client, cnc);
 	}
 	else {
 		const GList *events;
@@ -539,8 +498,8 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 					if (error && !(*error))
 						g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_OPEN_ERROR,
 							     gda_connection_event_get_description (event));
-					gda_client_notify_error_event (cnc->priv->client, cnc, 
-								       GDA_CONNECTION_EVENT (l->data));
+					_gda_client_notify_error_event (cnc->priv->client, cnc, 
+									GDA_CONNECTION_EVENT (l->data));
 				}
 			}
 		}
@@ -610,7 +569,7 @@ gda_connection_close_no_warning (GdaConnection *cnc)
 		return;
 
 	gda_server_provider_close_connection (cnc->priv->provider_obj, cnc);
-	gda_client_notify_connection_closed_event (cnc->priv->client, cnc);
+	_gda_client_notify_connection_closed_event (cnc->priv->client, cnc);
 	cnc->priv->is_open = FALSE;
 
 	if (cnc->priv->provider_data) {
@@ -1135,7 +1094,9 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
  * return object will either be:
  * <itemizedlist>
  *   <listitem><para>a #GdaDataModel if @stmt is a SELECT statement (a GDA_SQL_STATEMENT_SELECT, see #GdaSqlStatementType)
- *             containing the results of the SELECT</para></listitem>
+ *             containing the results of the SELECT. The resulting data model is by default read only, but
+ *             modifications can be made possible using gda_pmodel_set_modification_query() and/or
+ *             gda_pmodel_compute_modification_queries().</para></listitem>
  *   <listitem><para>a #GdaSet for any other SQL statement which correctly executed. In this case
  *        (if the provider supports it), then the #GdaSet may contain value holders named:
  *        <itemizedlist>
@@ -1180,9 +1141,9 @@ gda_connection_statement_execute (GdaConnection *cnc, GdaStatement *stmt, GdaSet
  * This function returns the number of rows affected by the execution of @stmt, or -1
  * if an error occurred, or -2 if the connection's provider does not return the number of rows affected.
  *
- * This function is just a convenience function around the gda_connection_execute_statement()
+ * This function is just a convenience function around the gda_connection_statement_execute()
  * function. 
- * See the documentation of the gda_connection_execute_statement() for information
+ * See the documentation of the gda_connection_statement_execute() for information
  * about the @params list of parameters.
  *
  * If @last_insert_row is not %NULL and @stmt is an INSERT statement, then it will contain (if the
@@ -1252,10 +1213,10 @@ gda_connection_statement_execute_non_select (GdaConnection *cnc, GdaStatement *s
  * This function returns a #GdaDataModel resulting from the SELECT statement, or %NULL
  * if an error occurred.
  *
- * This function is just a convenience function around the gda_connection_execute_command()
+ * This function is just a convenience function around the gda_connection_statement_execute()
  * function.
  *
- * See the documentation of the gda_connection_execute_statement() for information
+ * See the documentation of the gda_connection_statement_execute() for information
  * about the @params list of parameters.
  *
  * Returns: a #GdaDataModel containing the data returned by the
@@ -1300,10 +1261,10 @@ gda_connection_statement_execute_select (GdaConnection *cnc, GdaStatement *stmt,
  * This function returns a #GdaDataModel resulting from the SELECT statement, or %NULL
  * if an error occurred.
  *
- * This function is just a convenience function around the gda_connection_execute_command()
+ * This function is just a convenience function around the gda_connection_statement_execute()
  * function.
  *
- * See the documentation of the gda_connection_execute_statement() for information
+ * See the documentation of the gda_connection_statement_execute() for information
  * about the @params list of parameters.
  *
  * Returns: a #GdaDataModel containing the data returned by the
@@ -1357,10 +1318,10 @@ gda_connection_statement_execute_select_fullv (GdaConnection *cnc, GdaStatement 
  * This function returns a #GdaDataModel resulting from the SELECT statement, or %NULL
  * if an error occurred.
  *
- * This function is just a convenience function around the gda_connection_execute_command()
+ * This function is just a convenience function around the gda_connection_statement_execute()
  * function.
  *
- * See the documentation of the gda_connection_execute_statement() for information
+ * See the documentation of the gda_connection_statement_execute() for information
  * about the @params list of parameters.
  *
  * Returns: a #GdaDataModel containing the data returned by the
@@ -1421,7 +1382,7 @@ gda_connection_begin_transaction (GdaConnection *cnc, const gchar *name, GdaTran
 
 	retval = gda_server_provider_begin_transaction (cnc->priv->provider_obj, cnc, name, level, error);
 	if (retval)
-		gda_client_notify_event (cnc->priv->client, cnc, GDA_CLIENT_EVENT_TRANSACTION_STARTED, NULL);
+		_gda_client_notify_event (cnc->priv->client, cnc, GDA_CLIENT_EVENT_TRANSACTION_STARTED, NULL);
 
 	return retval;
 }
@@ -1449,7 +1410,7 @@ gda_connection_commit_transaction (GdaConnection *cnc, const gchar *name, GError
 
 	retval = gda_server_provider_commit_transaction (cnc->priv->provider_obj, cnc, name, error);
 	if (retval)
-		gda_client_notify_event (cnc->priv->client, cnc, GDA_CLIENT_EVENT_TRANSACTION_COMMITTED, NULL);
+		_gda_client_notify_event (cnc->priv->client, cnc, GDA_CLIENT_EVENT_TRANSACTION_COMMITTED, NULL);
 
 	return retval;
 }
@@ -1478,7 +1439,7 @@ gda_connection_rollback_transaction (GdaConnection *cnc, const gchar *name, GErr
 
 	retval = gda_server_provider_rollback_transaction (cnc->priv->provider_obj, cnc, name, error);
 	if (retval)
-		gda_client_notify_event (cnc->priv->client, cnc, GDA_CLIENT_EVENT_TRANSACTION_CANCELLED, NULL);
+		_gda_client_notify_event (cnc->priv->client, cnc, GDA_CLIENT_EVENT_TRANSACTION_CANCELLED, NULL);
 
 	return retval;
 }

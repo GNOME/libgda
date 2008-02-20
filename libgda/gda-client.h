@@ -60,10 +60,7 @@ struct _GdaClientClass {
 	GObjectClass      parent_class;
 
 	/* signals */
-	void (* event_notification) (GdaClient *client,
-				     GdaConnection *cnc,
-				     GdaClientEvent event,
-				     GdaSet *params);
+	void (* event_notification) (GdaClient *client, GdaConnection *cnc, GdaClientEvent event, GdaSet *params);
 };
 
 /* error reporting */
@@ -72,53 +69,29 @@ extern GQuark gda_client_error_quark (void);
 
 typedef enum
 {
-  GDA_CLIENT_GENERAL_ERROR
+	GDA_CLIENT_DSN_NOT_FOUND_ERROR,
+	GDA_CLIENT_PROVIDER_NOT_FOUND_ERROR
 } GdaClientError;
 
-GType          gda_client_get_type                           (void) G_GNUC_CONST;
-GdaClient     *gda_client_new                                (void);
+GType               gda_client_get_type                      (void) G_GNUC_CONST;
+GdaClient          *gda_client_new                           (void);
 
-GdaConnection *gda_client_open_connection                    (GdaClient *client,
-							      const gchar *dsn,
-							      const gchar *auth_string,
-							      GdaConnectionOptions options,
-							      GError **error);
-GdaConnection *gda_client_open_connection_from_string        (GdaClient *client,
-							      const gchar *provider_id,
-							      const gchar *cnc_string,
-							      const gchar *auth_string,
-							      GdaConnectionOptions options,
-							      GError **error);
-const GList   *gda_client_get_connections                    (GdaClient *client);
-GdaConnection *gda_client_find_connection                    (GdaClient *client,
-							      const gchar *dsn,
-							      const gchar *auth_string);
-void           gda_client_close_all_connections              (GdaClient *client);
-
-void           gda_client_notify_event                       (GdaClient *client, GdaConnection *cnc,
-							      GdaClientEvent event, GdaSet *params);
-void           gda_client_notify_error_event                 (GdaClient *client, GdaConnection *cnc, GdaConnectionEvent *error);
-void           gda_client_notify_connection_opened_event     (GdaClient *client, GdaConnection *cnc);
-void           gda_client_notify_connection_closed_event     (GdaClient *client, GdaConnection *cnc);
+GdaConnection      *gda_client_open_connection               (GdaClient *client, const gchar *dsn, const gchar *auth_string,
+							      GdaConnectionOptions options, GError **error);
+GdaConnection      *gda_client_open_connection_from_string   (GdaClient *client, const gchar *provider_id,
+							      const gchar *cnc_string, const gchar *auth_string,
+							      GdaConnectionOptions options, GError **error);
+const GList        *gda_client_get_connections               (GdaClient *client);
 
 /*
  * Database creation and destruction functions
  */
-GdaServerOperation *gda_client_prepare_create_database       (GdaClient *client, const gchar *db_name, 
-							      const gchar *provider);
-gboolean       gda_client_perform_create_database            (GdaClient *client, GdaServerOperation *op, GError **error);
-GdaServerOperation *gda_client_prepare_drop_database         (GdaClient *client, const gchar *db_name, 
-							      const gchar *provider);
-gboolean       gda_client_perform_drop_database              (GdaClient *client, GdaServerOperation *op, GError **error);
+GdaServerOperation *gda_client_prepare_create_database       (GdaClient *client, const gchar *db_name, const gchar *provider);
+gboolean            gda_client_perform_create_database       (GdaClient *client, GdaServerOperation *op, GError **error);
+GdaServerOperation *gda_client_prepare_drop_database         (GdaClient *client, const gchar *db_name, const gchar *provider);
+gboolean            gda_client_perform_drop_database         (GdaClient *client, GdaServerOperation *op, GError **error);
 
-/*
- * Connection stack functions
- */
 
-gboolean       gda_client_begin_transaction                  (GdaClient *client, const gchar *name, GdaTransactionIsolation level,
-							      GError **error);
-gboolean       gda_client_commit_transaction                 (GdaClient *client, const gchar *name, GError **error);
-gboolean       gda_client_rollback_transaction               (GdaClient *client, const gchar *name, GError **error);
 
 
 

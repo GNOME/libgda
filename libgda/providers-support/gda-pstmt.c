@@ -27,7 +27,8 @@
 
 static void gda_pstmt_class_init (GdaPStmtClass *klass);
 static void gda_pstmt_init       (GdaPStmt *pstmt, GdaPStmtClass *klass);
-static void gda_pstmt_finalize    (GObject *object);
+static void gda_pstmt_dispose    (GObject *object);
+static void gda_pstmt_finalize   (GObject *object);
 
 static GObjectClass *parent_class = NULL;
 
@@ -66,6 +67,7 @@ gda_pstmt_class_init (GdaPStmtClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	/* virtual functions */
+	object_class->dispose = gda_pstmt_dispose;
 	object_class->finalize = gda_pstmt_finalize;
 }
 
@@ -81,11 +83,23 @@ gda_pstmt_init (GdaPStmt *pstmt, GdaPStmtClass *klass)
 }
 
 static void
-gda_pstmt_finalize (GObject *object)
+gda_pstmt_dispose (GObject *object)
 {
 	GdaPStmt *pstmt = (GdaPStmt *) object;
 
-	g_return_if_fail (GDA_IS_PSTMT (pstmt));
+	if (pstmt->stmt) {
+		g_object_remove_weak_pointer ((GObject*) pstmt->stmt, (gpointer*) &(pstmt->stmt));
+		pstmt->stmt = NULL;
+	}
+
+	/* chain to parent class */
+	parent_class->dispose (object);
+}
+
+static void
+gda_pstmt_finalize (GObject *object)
+{
+	GdaPStmt *pstmt = (GdaPStmt *) object;
 
 	/* free memory */
 	if (pstmt->sql) {
@@ -110,7 +124,33 @@ gda_pstmt_finalize (GObject *object)
 	parent_class->finalize (object);
 }
 
-/*
+/**
+ * gda_pstmt_set_gda_statement
+ * @pstmt: a #GdaPStmt object
+ * @stmt: a #GdaStatement object
+ *
+ * Informs @pstmt that it corresponds to the preparation of the @stmt statement
+ */
+void
+gda_pstmt_set_gda_statement (GdaPStmt *pstmt, GdaStatement *stmt)
+{
+	g_return_if_fail (GDA_IS_PSTMT (pstmt));
+	g_return_if_fail (!stmt || GDA_IS_STATEMENT (stmt));
+
+	if (pstmt->stmt == stmt)
+		return;
+	if (pstmt->stmt)
+		g_object_unref (pstmt->stmt);
+	pstmt->stmt = stmt;
+	if (stmt)
+		g_object_add_weak_pointer ((GObject*) stmt, (gpointer*) &(pstmt->stmt));
+}
+
+/**
+ * gda_pstmt_copy_contents
+ * @src: a #GdaPStmt object
+ * @dest: a #GdaPStmt object
+ *
  * Copies @src's data to @dest 
  */
 void
