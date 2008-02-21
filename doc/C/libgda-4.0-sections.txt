@@ -1,29 +1,4 @@
 <SECTION>
-<FILE>gda-client</FILE>
-<TITLE>GdaClient</TITLE>
-GdaClient
-GdaClientError
-GdaClientEvent
-gda_client_new
-gda_client_open_connection
-gda_client_open_connection_from_string
-gda_client_get_connections
-<SUBSECTION>
-gda_client_prepare_create_database
-gda_client_perform_create_database
-gda_client_prepare_drop_database
-gda_client_perform_drop_database
-<SUBSECTION Standard>
-GDA_CLIENT
-GDA_CLIENT_CLASS
-GDA_CLIENT_ERROR
-GDA_IS_CLIENT
-GDA_IS_CLIENT_CLASS
-GDA_TYPE_CLIENT
-gda_client_get_type
-</SECTION>
-
-<SECTION>
 <FILE>gda-column-index</FILE>
 <TITLE>GdaColumnIndex</TITLE>
 GdaColumnIndex
@@ -162,6 +137,8 @@ gda_connection_event_get_type
 <TITLE>GdaConnection</TITLE>
 GdaConnection
 GdaConnectionOptions
+gda_connection_open_from_dsn
+gda_connection_open_from_string
 gda_connection_open
 gda_connection_close
 gda_connection_close_no_warning
@@ -183,7 +160,6 @@ gda_connection_rollback_savepoint
 gda_connection_delete_savepoint
 <SUBSECTION>
 gda_connection_get_transaction_status
-gda_connection_get_client
 gda_connection_get_options
 gda_connection_get_provider_obj
 gda_connection_get_provider_name
@@ -619,21 +595,12 @@ GdaServerProviderAsyncCallback
 gda_server_provider_get_name
 gda_server_provider_get_version
 gda_server_provider_get_server_version
-gda_server_provider_open_connection
-gda_server_provider_reset_connection
-gda_server_provider_close_connection
 gda_server_provider_get_database
 gda_server_provider_supports_operation
 gda_server_provider_create_operation
 gda_server_provider_render_operation
 gda_server_provider_perform_operation
 gda_server_provider_create_parser
-gda_server_provider_begin_transaction
-gda_server_provider_commit_transaction
-gda_server_provider_rollback_transaction
-gda_server_provider_add_savepoint
-gda_server_provider_rollback_savepoint
-gda_server_provider_delete_savepoint
 gda_server_provider_supports_feature
 gda_server_provider_get_data_handler_gtype
 gda_server_provider_get_data_handler_dbms
@@ -696,6 +663,8 @@ gda_vprovider_hub_get_type
 <FILE>gda-virtual-connection</FILE>
 <TITLE>GdaVirtualConnection</TITLE>
 GdaVirtualConnection
+gda_virtual_connection_open
+<SUBSECTION>
 gda_virtual_connection_internal_set_provider_data
 gda_virtual_connection_internal_get_provider_data
 <SUBSECTION Standard>
@@ -1008,17 +977,24 @@ gda_handler_type_get_type
 <SECTION>
 <FILE>gda-convenient</FILE>
 <TITLE>Convenient functions</TITLE>
-gda_open_connection
+gda_prepare_create_database
+gda_perform_create_database
+gda_prepare_drop_database
+gda_perform_drop_database
+<SUBSECTION>
 gda_execute_select_command
-gda_execute_sql_command
+gda_execute_non_select_command
+<SUBSECTION>
 gda_create_table
 gda_drop_table
-gda_get_default_handler
+<SUBSECTION>
 gda_insert_row_into_table
 gda_insert_row_into_table_from_string
 gda_update_value_in_table
 gda_update_values_in_table
 gda_delete_row_from_table
+<SUBSECTION>
+gda_get_default_handler
 </SECTION>
 
 <SECTION>
@@ -1389,6 +1365,7 @@ gda_meta_store_new
 gda_meta_store_new_with_file
 gda_meta_store_get_version
 gda_meta_store_get_internal_connection
+gda_meta_store_extract
 gda_meta_store_modify
 <SUBSECTION Standard>
 GDA_IS_META_STORE

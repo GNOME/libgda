@@ -41,7 +41,9 @@ static gboolean append_a_row (GdaDataModel *to_model, GError **error, gint nb, .
 typedef enum {
         I_STMT_CATALOG,
 	I_STMT_BTYPES,
-	I_STMT_SCHEMATA
+	I_STMT_SCHEMATA,
+	I_STMT_TABLES,
+	I_STMT_VIEWS,
 } InternalStatementItem;
 
 
@@ -51,7 +53,9 @@ typedef enum {
 static gchar *internal_sql[] = {
 	"SELECT pg_catalog.current_database()",
 	"SELECT t.typname, 'pg_catalog.' || t.typname, 'gchararray', pg_catalog.obj_description(t.oid), NULL, CASE WHEN t.typname ~ '^_' THEN TRUE WHEN typtype = 'p' THEN TRUE WHEN t.typname in ('any', 'anyarray', 'anyelement', 'cid', 'cstring', 'int2vector', 'internal', 'language_handler', 'oidvector', 'opaque', 'record', 'refcursor', 'regclass', 'regoper', 'regoperator', 'regproc', 'regprocedure', 'regtype', 'SET', 'smgr', 'tid', 'trigger', 'unknown', 'void', 'xid', 'oid', 'aclitem') THEN TRUE ELSE FALSE END, CAST (t.oid AS int8) FROM pg_catalog.pg_type t, pg_catalog.pg_user u, pg_catalog.pg_namespace n WHERE t.typowner=u.usesysid AND n.oid = t.typnamespace AND pg_catalog.pg_type_is_visible(t.oid) AND (typtype='b' OR typtype='p')",
-	"SELECT catalog_name, schema_name, schema_owner, CASE WHEN schema_name ~'^pg_' THEN TRUE WHEN schema_name ='information_schema' THEN TRUE ELSE FALSE END FROM information_schema.schemata"
+	"SELECT catalog_name, schema_name, schema_owner, CASE WHEN schema_name ~'^pg_' THEN TRUE WHEN schema_name ='information_schema' THEN TRUE ELSE FALSE END FROM information_schema.schemata",
+	"SELECT current_database()::information_schema.sql_identifier AS table_catalog, nc.nspname::information_schema.sql_identifier AS table_schema, c.relname::information_schema.sql_identifier AS table_name, CASE WHEN nc.oid = pg_my_temp_schema() THEN 'LOCAL TEMPORARY'::text WHEN c.relkind = 'r' THEN 'BASE TABLE' WHEN c.relkind = 'v' THEN 'VIEW' ELSE NULL::text END::information_schema.character_data AS table_type, CASE WHEN c.relkind = 'r' THEN TRUE ELSE FALSE END, pg_catalog.obj_description(c.oid), CASE WHEN pg_catalog.pg_table_is_visible(c.oid) IS TRUE AND nc.nspname!='pg_catalog' THEN c.relname ELSE coalesce (nc.nspname || '.', '') || c.relname END, coalesce (nc.nspname || '.', '') || c.relname, o.rolname FROM pg_namespace nc, pg_class c, pg_authid o WHERE c.relnamespace = nc.oid AND (c.relkind = ANY (ARRAY['r', 'v'])) AND NOT pg_is_other_temp_schema(nc.oid) AND (pg_has_role(c.relowner, 'USAGE'::text) OR has_table_privilege(c.oid, 'SELECT'::text) OR has_table_privilege(c.oid, 'INSERT'::text) OR has_table_privilege(c.oid, 'UPDATE'::text) OR has_table_privilege(c.oid, 'DELETE'::text) OR has_table_privilege(c.oid, 'REFERENCES'::text) OR has_table_privilege(c.oid, 'TRIGGER'::text)) AND o.oid=c.relowner",
+	"SELECT current_database()::information_schema.sql_identifier AS table_catalog, nc.nspname::information_schema.sql_identifier AS table_schema, c.relname::information_schema.sql_identifier AS table_name, pg_catalog.pg_get_viewdef(c.oid, TRUE), NULL, CASE WHEN c.relkind = 'r'::\"char\" THEN TRUE ELSE FALSE END FROM pg_namespace nc, pg_class c WHERE c.relnamespace = nc.oid AND c.relkind = 'v' AND NOT pg_is_other_temp_schema(nc.oid) AND (pg_has_role(c.relowner, 'USAGE'::text) OR has_table_privilege(c.oid, 'SELECT'::text) OR has_table_privilege(c.oid, 'INSERT'::text) OR has_table_privilege(c.oid, 'UPDATE'::text) OR has_table_privilege(c.oid, 'DELETE'::text) OR has_table_privilege(c.oid, 'REFERENCES'::text) OR has_table_privilege(c.oid, 'TRIGGER'::text))"
 };
 
 /*
@@ -182,17 +186,31 @@ gboolean
 _gda_postgres_meta_tables_views (GdaServerProvider *prov, GdaConnection *cnc, 
 				 GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
-	GdaDataModel *model;
+	GdaDataModel *tables_model, *views_model;
 	gboolean retval = TRUE;
 
-	model = gda_meta_store_create_modify_data_model (store, context->table_name);
-	g_assert (model);
+	tables_model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_TABLES], NULL, error);
+	if (!tables_model)
+		return FALSE;
+	views_model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_VIEWS], NULL, error);
+	if (!views_model) {
+		g_object_unref (tables_model);
+		return FALSE;
+	}
 
-	/* fill in @model */
-	TO_IMPLEMENT;
-	if (retval)
-		retval = gda_meta_store_modify (store, context->table_name, model, NULL, error, NULL);
-	g_object_unref (model);
+	GdaMetaContext c2;
+	c2 = *context; /* copy contents, just because we need to modify @context->table_name */
+	if (retval) {
+		c2.table_name = "_tables";
+		retval = gda_meta_store_modify_with_context (store, &c2, tables_model, error);
+	}
+	if (retval) {
+		c2.table_name = "_views";
+		retval = gda_meta_store_modify_with_context (store, &c2, views_model, error);
+	}
+	g_object_unref (tables_model);
+	g_object_unref (views_model);
+
 
 	return retval;
 }

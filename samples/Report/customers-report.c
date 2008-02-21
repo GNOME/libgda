@@ -2,7 +2,7 @@
 #include <gda-report-engine.h>
 #include <sql-parser/gda-sql-parser.h>
 
-GdaConnection *open_connection (GdaClient *client);
+GdaConnection *open_connection (void);
 GSList        *create_queries (GdaConnection *cnc);
 
 int 
@@ -10,7 +10,6 @@ main (int argc, char **argv)
 {
 	gchar *spec;
 	GdaReportEngine *eng;
-	GdaClient *client;
 	GdaConnection *cnc;
 	GdaHolder *param;
 
@@ -22,8 +21,7 @@ main (int argc, char **argv)
 	g_free (spec);
 
 	/* GdaConnection */
-	client = gda_client_new ();
-	cnc = open_connection (client);
+	cnc = open_connection ();
 	gda_report_engine_declare_object (eng, G_OBJECT (cnc), "main_cnc");
 
 	/* define parameters */
@@ -62,13 +60,13 @@ main (int argc, char **argv)
 }
 
 GdaConnection *
-open_connection (GdaClient *client)
+open_connection (void)
 {
         GdaConnection *cnc;
         GError *error = NULL;
-        cnc = gda_client_open_connection (client, "SalesTest", NULL, NULL,
-                                          GDA_CONNECTION_OPTIONS_DONT_SHARE,
-                                          &error);
+        cnc = gda_connection_open_from_dsn ("SalesTest", NULL, NULL,
+					    GDA_CONNECTION_OPTIONS_DONT_SHARE,
+					    &error);
         if (!cnc) {
                 g_print ("Could not open connection to DSN 'SalesTest': %s\n",
                          error && error->message ? error->message : "No detail");

@@ -28,6 +28,7 @@
 
 #define PARENT_TYPE GDA_TYPE_CONNECTION
 #define CLASS(obj) (GDA_VIRTUAL_CONNECTION_CLASS (G_OBJECT_GET_CLASS (obj)))
+#define PROV_CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
 
 struct _GdaVirtualConnectionPrivate {
 	gpointer              v_provider_data;
@@ -113,6 +114,37 @@ gda_virtual_connection_get_type (void)
 	}
 
 	return type;
+}
+
+/**
+ * gda_virtual_connection_open
+ * @virtual_provider: a #GdaVirtualProvider object
+ * @error: a place to store errors, or %NULL
+ *
+ * Creates and opens a new virtual connection using the @virtual_provider provider
+ *
+ * Returns: a new #GdaConnection object, or %NULL if an error occurred
+ */
+GdaConnection *
+gda_virtual_connection_open (GdaVirtualProvider *virtual_provider, GError **error)
+{
+	GdaConnection *cnc = NULL;
+	g_return_val_if_fail (GDA_IS_VIRTUAL_PROVIDER (virtual_provider), NULL);
+
+	if (PROV_CLASS (virtual_provider)->create_connection) {
+		cnc = PROV_CLASS (virtual_provider)->create_connection (virtual_provider);
+		if (cnc) {
+			g_object_set (G_OBJECT (cnc), "provider_obj", virtual_provider, NULL);
+			if (!gda_connection_open (cnc, error)) {
+				g_object_unref (cnc);
+				cnc = NULL;
+			}
+		}
+	}
+	else
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_PROVIDER_ERROR,
+			     _("Internal error: virtual provider does not implement the create_operation() virtual method"));
+	return cnc;
 }
 
 /**

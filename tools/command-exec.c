@@ -326,7 +326,7 @@ gda_internal_command_dict_sync (GdaConnection *cnc, const gchar **args, GError *
 }
 
 GdaInternalCommandResult *
-gda_internal_command_list_tables_views (GdaConnection *cnc, const gchar **args, GError **error, gpointer data)
+gda_internal_command_list_tables (GdaConnection *cnc, const gchar **args, GError **error, gpointer data)
 {
 	GdaInternalCommandResult *res;
 	GdaDataModel *model;
@@ -338,17 +338,65 @@ gda_internal_command_list_tables_views (GdaConnection *cnc, const gchar **args, 
 
 	if (args[0] && *args[0]) {
 		GValue *v;
+		const gchar *sql = "SELECT table_schema AS Schema, table_name AS Name, table_type as Type, "
+			"table_owner as Owner, table_comments as Description "
+			"FROM _tables WHERE table_name=##tname::string AND "
+			"table_type LIKE '%TABLE%' AND table_short_name = table_name";
+
 		g_value_set_string (v = gda_value_new (G_TYPE_STRING), args[0]);
-		model = gda_connection_get_meta_store_data (cnc, GDA_CONNECTION_META_TABLES, error, 1, "name", v);
+		model = gda_meta_store_extract (gda_connection_get_meta_store (cnc), sql, error, "tname", v, NULL);
 		gda_value_free (v);
 	}
 	else {
-		model = gda_connection_get_meta_store_data (cnc, GDA_CONNECTION_META_TABLES, error, 0);
+		const gchar *sql = "SELECT table_schema AS Schema, table_name AS Name, table_type as Type, "
+			"table_owner as Owner, table_comments as Description "
+			"FROM _tables WHERE table_type LIKE '%TABLE%' AND table_short_name = table_name";
+		model = gda_meta_store_extract (gda_connection_get_meta_store (cnc), sql, error);
 	}
 	if (!model)
 		return NULL;
 
-	g_object_set_data (G_OBJECT (model), "name", _("List of tables and views"));
+	g_object_set_data (G_OBJECT (model), "name", _("List of tables"));
+	
+	res = g_new0 (GdaInternalCommandResult, 1);
+	res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+	res->u.model = model;
+
+	return res;
+}
+
+GdaInternalCommandResult *
+gda_internal_command_list_views (GdaConnection *cnc, const gchar **args, GError **error, gpointer data)
+{
+	GdaInternalCommandResult *res;
+	GdaDataModel *model;
+
+	if (!cnc) {
+		g_set_error (error, 0, 0, _("No current connection"));
+		return NULL;
+	}
+
+	if (args[0] && *args[0]) {
+		GValue *v;
+		const gchar *sql = "SELECT table_schema AS Schema, table_name AS Name, table_type as Type, "
+			"table_owner as Owner, table_comments as Description "
+			"FROM _tables WHERE table_name=##tname::string AND "
+			"table_type = 'VIEW' AND table_short_name = table_name";
+
+		g_value_set_string (v = gda_value_new (G_TYPE_STRING), args[0]);
+		model = gda_meta_store_extract (gda_connection_get_meta_store (cnc), sql, error, "tname", v, NULL);
+		gda_value_free (v);
+	}
+	else {
+		const gchar *sql = "SELECT table_schema AS Schema, table_name AS Name, table_type as Type, "
+			"table_owner as Owner, table_comments as Description "
+			"FROM _tables WHERE table_type='VIEW' AND table_short_name = table_name";
+		model = gda_meta_store_extract (gda_connection_get_meta_store (cnc), sql, error);
+	}
+	if (!model)
+		return NULL;
+
+	g_object_set_data (G_OBJECT (model), "name", _("List of views"));
 	
 	res = g_new0 (GdaInternalCommandResult, 1);
 	res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;

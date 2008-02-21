@@ -78,11 +78,6 @@ Management of connections to data sources
 
 </para>
 
-<!-- ##### ARG GdaConnection:client ##### -->
-<para>
-
-</para>
-
 <!-- ##### ARG GdaConnection:cnc-string ##### -->
 <para>
 
@@ -115,7 +110,31 @@ Management of connections to data sources
 
 @GDA_CONNECTION_OPTIONS_NONE: 
 @GDA_CONNECTION_OPTIONS_READ_ONLY: 
-@GDA_CONNECTION_OPTIONS_DONT_SHARE: 
+
+<!-- ##### FUNCTION gda_connection_open_from_dsn ##### -->
+<para>
+
+</para>
+
+@dsn: 
+@auth_string: 
+@options: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_open_from_string ##### -->
+<para>
+
+</para>
+
+@provider_name: 
+@cnc_string: 
+@auth_string: 
+@options: 
+@error: 
+@Returns: 
+
 
 <!-- ##### FUNCTION gda_connection_open ##### -->
 <para>
@@ -321,15 +340,6 @@ Management of connections to data sources
 
 
 <!-- ##### FUNCTION gda_connection_get_transaction_status ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_get_client ##### -->
 <para>
 
 </para>

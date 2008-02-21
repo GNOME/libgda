@@ -60,7 +60,6 @@ static void
 gda_stuff (gpointer filename)
 {
 	gchar *cncstring;
-	GdaClient *client;
 	GdaConnection *cnc;
 	GdaDataModel *model;
 	GError *error = NULL;
@@ -72,9 +71,7 @@ gda_stuff (gpointer filename)
 	cncstring = g_strdup_printf ("DB_NAME=%s", (gchar *) filename);
 
 	/* connect to the db */
-	client = gda_client_new ();
-	g_assert (client != NULL);
-	cnc = gda_client_open_connection_from_string (client, "Berkeley-DB", cncstring, NULL, 0, &error);
+	cnc = gda_connection_open_from_string ("Berkeley-DB", cncstring, NULL, 0, &error);
 	if (!cnc) {
 		g_print ("Could not open connection; %s\n", error && error->message ? error->message : "no detail");
 		exit (1);

@@ -39,7 +39,6 @@
 <!ENTITY migration SYSTEM "migration.xml">
 <!ENTITY migration2 SYSTEM "migration2.xml">
 <!ENTITY limitations SYSTEM "limitations.xml">
-<!ENTITY libgda-GdaClient SYSTEM "xml/gda-client.xml">
 <!ENTITY libgda-GdaCommand SYSTEM "xml/gda-command.xml">
 <!ENTITY libgda-config SYSTEM "xml/gda-config.xml">
 <!ENTITY libgda-GdaConnection SYSTEM "xml/gda-connection.xml">
@@ -127,15 +126,6 @@
           <address><email>rodrigo@gnome-db.org</email></address>
         </affiliation>
       </author>
-      <author>
-        <firstname>Vivien</firstname>
-        <surname>Malerba</surname>
-        <affiliation>
-          <address><email>malerba@gnome-db.org</email></address>
-        </affiliation>
-	<contrib>Current maintainer
-        </contrib>
-      </author>
       <author role="clean up">
 	<firstname>Sean</firstname>
 	<surname>Allen</surname>
@@ -173,6 +163,25 @@
           <address><email>bas.driessen@xobas.com</email></address>
         </affiliation>
 	<contrib>libgda, gda-postgres, gda-mysql
+        </contrib>
+      </author>
+      <author>
+        <firstname>Daniel</firstname>
+        <surname>Espinosa Ortiz</surname>
+        <affiliation>
+          <orgname></orgname>
+          <address><email>esodan@gmail.com</email></address>
+        </affiliation>
+	<contrib>libgda, gda-postgres, gda-mysql
+        </contrib>
+      </author>
+      <author>
+        <firstname>Vivien</firstname>
+        <surname>Malerba</surname>
+        <affiliation>
+          <address><email>malerba@gnome-db.org</email></address>
+        </affiliation>
+	<contrib>Current maintainer
         </contrib>
       </author>
     </authorgroup>
@@ -468,9 +477,7 @@
     <chapter id="connection">
       <title>Connections &amp; commands</title>
       <para>
-	The &LIBGDA; library allows several connections to databases to be opened at once, all managed through a 
-	<link linkend="GdaClient">GdaClient</link> object (for
-	some special purposes, several <link linkend="GdaClient">GdaClient</link> objects can be used at once).
+	The &LIBGDA; library allows several connections to databases to be opened at once.
 	Once a connection (manipulated through the <link linkend="GdaConnection">GdaConnection</link> object)
 	has been created and is opened, it is able to proceed <link linkend="GdaStatement">GdaStatement</link> statements.
       </para>
@@ -490,7 +497,7 @@
 	&LIBGDA; library allows one to use either a generic SQL parser, or a parser provided by each database adaptator (database
 	provider), through the <link linkend="gda-connection-create-parser">gda_connection_create_parser()</link> method.
       </para>
-      &libgda-GdaClient;
+      &libgda-convenient;
       &libgda-GdaConnection;
       &libgda-GdaSqlParser;
       &libgda-GdaStatement;
@@ -500,7 +507,6 @@
       &libgda-GdaSqlStatement;
       &libgda-GdaConnection-event;
       &libgda-transaction-status;
-      &libgda-convenient;
       &GdaStoreMetaType;
     </chapter>
 

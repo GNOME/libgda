@@ -8,24 +8,19 @@ gboolean copy_products (GdaConnection *virtual);
 int
 main (int argc, char *argv[])
 {
-        GdaClient *client;
         GdaConnection *s_cnc, *d_cnc, *virtual;
 
         gda_init ("LibgdaCopyTableEasier", "1.0", argc, argv);
 
-        /* Create a GdaClient object which is the central object which manages all connections */
-        client = gda_client_new ();
-
 	/* open "real" connections */
-	s_cnc = open_source_connection (client);
-        d_cnc = open_destination_connection (client);
+	s_cnc = open_source_connection ();
+        d_cnc = open_destination_connection ();
 
 	/* virtual connection settings */
 	GdaVirtualProvider *provider;
 	GError *error = NULL;
 	provider = gda_vprovider_hub_new ();
-        virtual = gda_server_provider_create_connection (NULL, GDA_SERVER_PROVIDER (provider), NULL, NULL, NULL, 0);
-        g_assert (gda_connection_open (virtual, NULL));
+        virtual = gda_virtual_connection_open (provider, NULL);
 
 	/* adding connections to the cirtual connection */
         if (!gda_vconnection_hub_add (GDA_VCONNECTION_HUB (virtual), s_cnc, "source", &error)) {

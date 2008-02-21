@@ -33,6 +33,7 @@
     <gda_array_field id="COLUMN_SIZE" _name="Size" gdatype="guint"/>
     <gda_array_field id="COLUMN_SCALE" _name="Scale" gdatype="guint"/>
     <gda_array_field id="COLUMN_NNUL" _name="Not NULL" gdatype="gboolean"/>
+    <gda_array_field id="COLUMN_AUTOINC" _name="Auto increment" gdatype="gboolean"/>
     <gda_array_field id="COLUMN_UNIQUE" _name="Unique" gdatype="gboolean"/>
     <gda_array_field id="COLUMN_PKEY" _name="Primary key" gdatype="gboolean"/>
     <gda_array_field id="COLUMN_DEFAULT" _name="Default" _descr="Default value" gdatype="gchararray"/>
@@ -43,8 +44,9 @@
             <gda_value>serial</gda_value>
             <gda_value></gda_value>
             <gda_value></gda_value>
-            <gda_value>FALSE</gda_value>
-            <gda_value>FALSE</gda_value>
+            <gda_value>TRUE</gda_value>
+	    <gda_value>TRUE</gda_value>
+            <gda_value>TRUE</gda_value>
             <gda_value>TRUE</gda_value>
             <gda_value></gda_value>
             <gda_value></gda_value>

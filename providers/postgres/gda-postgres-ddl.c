@@ -76,9 +76,14 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 			value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_NAME/%d", i);
 			g_string_append (string, g_value_get_string (value));
 			g_string_append_c (string, ' ');
-				
-			value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_TYPE/%d", i);
-			g_string_append (string, g_value_get_string (value));
+			
+			value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_AUTOINC/%d", i);
+			if (value)
+				g_string_append (string, "serial");
+			else {
+				value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_TYPE/%d", i);
+				g_string_append (string, g_value_get_string (value));
+			}
 				
 			value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_DEFAULT/%d", i);
 			if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {

@@ -999,11 +999,9 @@ evaluate_expression (GdaReportEngine *engine, RunContext *context, const gchar *
 
 		if (!provider)
 			provider = gda_vprovider_data_model_new ();
-		vcnc = gda_server_provider_create_connection (NULL, GDA_SERVER_PROVIDER (provider), NULL, NULL, 0);
-		if (! gda_connection_open (vcnc, error)) {
-			g_object_unref (vcnc);
+		vcnc = gda_virtual_connection_open (provider, error);
+		if (! vcnc) 
 			return NULL;
-		}
 	}
 
 	/* parser */

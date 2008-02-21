@@ -1,4 +1,4 @@
-/* GDA client library
+/* GDA library
  * Copyright (C) 1998 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
@@ -47,6 +47,9 @@ extern GQuark gda_connection_error_quark (void);
 #define GDA_CONNECTION_ERROR gda_connection_error_quark ()
 
 typedef enum {
+	GDA_CONNECTION_DSN_NOT_FOUND_ERROR,
+	GDA_CONNECTION_PROVIDER_NOT_FOUND_ERROR,
+	GDA_CONNECTION_PROVIDER_ERROR,
         GDA_CONNECTION_CONN_OPEN_ERROR,
         GDA_CONNECTION_DO_QUERY_ERROR,
 	GDA_CONNECTION_NONEXIST_DSN_ERROR,
@@ -77,7 +80,6 @@ struct _GdaConnectionClass {
 typedef enum {
         GDA_CONNECTION_OPTIONS_NONE = 0,
 	GDA_CONNECTION_OPTIONS_READ_ONLY = 1 << 0,
-	GDA_CONNECTION_OPTIONS_DONT_SHARE = 2 << 0
 } GdaConnectionOptions;
 
 typedef enum {
@@ -128,12 +130,16 @@ typedef enum {
 
 
 GType                gda_connection_get_type             (void) G_GNUC_CONST;
+GdaConnection       *gda_connection_open_from_dsn        (const gchar *dsn, const gchar *auth_string,
+							  GdaConnectionOptions options, GError **error);
+GdaConnection       *gda_connection_open_from_string     (const gchar *provider_name, 
+							  const gchar *cnc_string, const gchar *auth_string,
+							  GdaConnectionOptions options, GError **error);
 gboolean             gda_connection_open                 (GdaConnection *cnc, GError **error);
 void                 gda_connection_close                (GdaConnection *cnc);
 void                 gda_connection_close_no_warning     (GdaConnection *cnc);
 gboolean             gda_connection_is_opened            (GdaConnection *cnc);
 
-GdaClient           *gda_connection_get_client           (GdaConnection *cnc);
 GdaConnectionOptions gda_connection_get_options          (GdaConnection *cnc);
 
 GdaServerProvider   *gda_connection_get_provider_obj     (GdaConnection *cnc);

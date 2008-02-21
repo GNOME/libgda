@@ -23,7 +23,6 @@
 #include <libgda/gda-meta-store.h>
 #include <sql-parser/gda-sql-parser.h>
 #include <sql-parser/gda-sql-statement.h>
-#include <libgda/gda-client.h>
 #include <libgda/gda-connection.h>
 #include <libgda/gda-server-provider.h>
 #include <libgda/gda-data-handler.h>
@@ -538,8 +537,7 @@ gda_meta_store_set_property (GObject *object,
 					cnc_string = g_value_get_string (value);
 					if (cnc_string) {
 						GdaConnection *cnc;
-						cnc = gda_client_open_connection_from_string (NULL, NULL, cnc_string,
-											      NULL, 0, NULL);
+						cnc = gda_connection_open_from_string (NULL, cnc_string, NULL, 0, NULL);
 						store->priv->cnc = cnc;
 					}
 				}
@@ -1666,6 +1664,80 @@ gda_meta_store_get_internal_connection (GdaMetaStore *store) {
 	g_return_val_if_fail (store->priv, 0);
 	
 	return store->priv->cnc;
+}
+
+/**
+ * gda_meta_store_extract
+ * @store: a #GdaMetaStore object
+ * @select_sql: a SELECT statement
+ * @error: a place to store errors, or %NULL
+ * @...: a list of (variable name (gchar *), GValue *value) terminated with NULL, representing values for all the
+ * variables mentionned in @select_sql. If there is no variable then this part can be omitted.
+ *
+ * Extracts some data stored in @store using a custom SELECT query.
+ *
+ * Returns: a new #GdaDataModel, or %NULL if an error occurred
+ */
+GdaDataModel *
+gda_meta_store_extract (GdaMetaStore *store, const gchar *select_sql, GError **error, ...)
+{
+	GdaMetaStoreClass *klass;
+	GdaStatement *stmt;
+	const gchar *remain;
+	GdaDataModel *model;
+	GdaSet *params = NULL;
+
+	g_return_val_if_fail (GDA_IS_META_STORE (store), NULL);
+	g_return_val_if_fail (store->priv, NULL);
+
+	/* statement creation */
+	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
+	stmt = gda_sql_parser_parse_string (klass->cpriv->parser, select_sql, &remain, error);
+	if (!stmt)
+		return NULL;
+	if (remain) {
+		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_EXTRACT_SQL_ERROR,
+			     _("More than one SQL statement"));
+		g_object_unref (stmt);
+		return NULL;
+	}
+	
+	/* parameters */
+	if (!gda_statement_get_parameters (stmt, &params, error)) {
+		g_object_unref (stmt);
+		return NULL;
+	}
+	if (params) {
+		va_list ap;
+		gchar *pname;
+		va_start (ap, error);
+		for (pname = va_arg (ap, gchar *); pname; pname = va_arg (ap, gchar *)) {
+			GValue *value;
+			GdaHolder *h;
+			value = va_arg (ap, GValue *);
+			h = gda_set_get_holder (params, pname);
+			if (!h)
+				g_warning (_("Parameter '%s' is not present in statement"), pname);
+			else {
+				if (!gda_holder_set_value (h, value)) {
+					g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_EXTRACT_SQL_ERROR,
+						     _("Could not set value of parameter '%s'"), pname);
+					g_object_unref (stmt);
+					g_object_unref (params);
+					va_end (ap);
+					return NULL;
+				}
+			}
+		}
+		va_end (ap);
+	}
+
+	/* execution */
+	model = gda_connection_statement_execute_select (store->priv->cnc, stmt, params, error);
+	g_object_unref (stmt);
+	if (params)
+		g_object_unref (params);
+	return model;
 }
 
 static gboolean prepare_tables_infos (GdaMetaStore *store, TableInfo **out_table_infos, 

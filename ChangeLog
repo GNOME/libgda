@@ -1,3 +1,28 @@
+2008-02-21  Vivien Malerba <malerba@gnome-db.org>
+
+	* Removed the GdaClient class, connections are now opened using gda_connection_open_from_dsn()
+	and gda_connection_open_from_string().
+	* libgda/sqlite/virtual/gda-virtual-connection.[ch]: added gda_virtual_connection_open() as
+	the only recommended way to create virtual connections
+	* libgda/libgda.h.in:
+	* libgda/gda-init.c:
+	* libgda/gda-easy.[ch]: moved to convenience functions to new files
+	* libgda/gda-server-provider.[ch]: removed gda_server_provider_create_connection(),
+	gda_server_provider_create_connection_from_string(), gda_server_provider_open_connection(),
+	gda_server_provider_close_connection(), gda_server_provider_get_database(),
+	gda_server_provider_begin_transaction(), gda_server_provider_commit_transaction(),
+	gda_server_provider_rollback_transaction(), gda_server_provider_add_savepoint(),
+	gda_server_provider_rollback_savepoint() and gda_server_provider_delete_savepoint()
+	because an easier API is available
+	* tools/gda-sql.c:
+	* tools/command-exec.[ch]: improved tables and views listing
+	* providers/postgres/gda-postgres-ddl.c:
+	* providers/postgres/postgres_specs_create_table.xml.in: partially applied patch by Daniel
+	Espinosa for bug #515306
+	* providers/postgres/gda-postgres-meta.c:
+	* providers/postgres/gda-postgres-provider.c: more work
+	* doc/C: doc. update
+
 2008-02-20  Vivien Malerba <malerba@gnome-db.org>
 
 	* tools/gda-sql.c: if the GDA_NO_PAGER environment variable is set, then don't use a pager at all

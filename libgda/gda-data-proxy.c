@@ -2784,9 +2784,8 @@ gda_data_proxy_set_filter_expr (GdaDataProxy *proxy, const gchar *filter_expr, G
 
 	vcnc = proxy->priv->filter_vcnc;
 	if (!vcnc) {
-
-		vcnc = gda_server_provider_create_connection (NULL, GDA_SERVER_PROVIDER (provider), NULL, NULL, 0);
-		if (! gda_connection_open (vcnc, NULL)) {
+		vcnc = gda_virtual_connection_open (provider, NULL);
+		if (! vcnc) {
 			g_set_error (error, GDA_DATA_PROXY_ERROR, GDA_DATA_PROXY_FILTER_ERROR,
 				     _("Could not create virtual connection"));
 			g_object_unref (vcnc);

@@ -7,7 +7,6 @@
 #include <RML/gda-report-rml-document.h>
 #include <DocBook/gda-report-docbook-document.h>
 gda_blob_op_get_type
-gda_client_get_type
 gda_column_get_type
 gda_column_index_get_type
 gda_config_get_type

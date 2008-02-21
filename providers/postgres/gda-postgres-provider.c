@@ -1950,6 +1950,23 @@ gda_postgres_free_cnc_data (PostgresConnectionData *cdata)
 
 	if (cdata->pconn)
                 PQfinish (cdata->pconn);
-	TO_IMPLEMENT;
+
+	if (cdata->type_data) {
+		gint i;
+		for (i = 0; i < cdata->ntypes; i++) {
+			g_free (cdata->type_data[i].name);
+			g_free (cdata->type_data[i].comments);
+			g_free (cdata->type_data[i].owner);
+		}
+		g_free (cdata->type_data);
+	}
+	
+	if (cdata->h_table)
+		g_hash_table_destroy (cdata->h_table);
+	
+	g_free (cdata->version);
+	g_free (cdata->avoid_types_oids);
+	g_free (cdata->any_type_oid);
+
 	g_free (cdata);
 }

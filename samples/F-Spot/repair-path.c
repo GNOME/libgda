@@ -25,7 +25,6 @@ static gint          run_and_show_sql_select (GdaConnection *cnc, const gchar *s
 int
 main (int argc, char *argv [])
 {
-	GdaClient *client;
 	GOptionContext *context;
 	GdaDataModel *dir_model;
 	GError *error = NULL;
@@ -78,9 +77,8 @@ main (int argc, char *argv [])
 	cnc_string = g_strdup_printf ("DB_DIR=%s;DB_NAME=%s", cnc_dir_name, cnc_db_name);
 
 	/* open connection */
-	client = gda_client_new ();
-	cnc = gda_client_open_connection_from_string (client, "SQLite", cnc_string, NULL, NULL, 
-						      GDA_CONNECTION_OPTIONS_READ_ONLY, &error);
+	cnc = gda_connection_open_from_string ("SQLite", cnc_string, NULL, NULL, 
+					       GDA_CONNECTION_OPTIONS_READ_ONLY, &error);
 	if (!cnc) {
 		g_print ("Could not open connection to F-Spot database file: %s\n", 
 			 error && error->message ? error->message : "No detail");
@@ -97,8 +95,9 @@ main (int argc, char *argv [])
 
 	/* Set up Connection hub */
         provider = gda_vprovider_hub_new ();
-        hub = gda_server_provider_create_connection (NULL, GDA_SERVER_PROVIDER (provider), NULL, NULL, NULL, 0);
-        g_assert (gda_connection_open (hub, NULL));
+        hub = gda_virtual_connection (provider, NULL);
+        g_assert (hub);
+
 	if (!gda_vconnection_hub_add (GDA_VCONNECTION_HUB (hub), cnc, "spot", &error)) {
 		g_print ("Could not add F-Spot connection to hub: %s\n", 
 			 error && error->message ? error->message : "No detail");

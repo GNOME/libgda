@@ -20,14 +20,11 @@ gda_init ("TestGDA", "0.1", argc, argv);
 void
 do_stuff () 
 {
-	GdaClient *client;
 	GdaConnection *connection;
       
         /* open a connection */
-	client = gda_client_new ();      
 	g_print ("CONNECTING\n");
-	connection = gda_client_open_connection (client, "calvaris", NULL, NULL,
-						 GDA_CONNECTION_OPTIONS_READ_ONLY);
+	connection = gda_connection_open_from_dsn ("calvaris", NULL, NULL, GDA_CONNECTION_OPTIONS_READ_ONLY);
 	g_print ("CONNECTED\n");
       
         /* use the connection */
@@ -35,7 +32,6 @@ do_stuff ()
       
         /* close the connection */
         g_object_unref (G_OBJECT (connection));
-	g_object_unref (G_OBJECT (client));
 }
       
       
@@ -61,28 +57,21 @@ main (int argc, char **argv)
       required information to actually open a connection (except the name and password if they are required). Of
       course it's still possible to open a connection without having defined a DSN, in which case a <emphasis>connection
       string</emphasis> is used to specify all the parameters resuired to open a connection. For more information
-      about connection strings, see the <link linkend="gda-client-open-connection-from-string">gda_client_open_connection_from_string ()</link>'s documentation.
+      about connection strings, see the <link linkend="gda-connection-open-from-string">gda_connection_open_from_string ()</link>'s documentation.
     </para>
     <para>
-      Connections are created by a <link linkend="GdaClient">GdaClient</link> object which can also manage connection pools.
-      So the first step is to create a GdaClient object using 
-      <link linkend="gda-client-new">gda_client_new ()</link>, and then use
-      <link linkend="gda-client-open-connection">gda_client_open_connection ()</link> (or 
-      <link linkend="gda-client-open-connection-from-string">gda_client_open_connection_from_string ()</link>
-      for connections not defined as DSN)
-      to create connection objects (<link linkend="GdaConnection">GdaConnection</link> objects). Each connection object
-      can then be used to actually execute queries, for example:
+      Connections are opened using <link linkend="gda-connection-open-from-dsn">gda_connection_open_from_dsn ()</link> for
+      connections which are defined as a data source (DSN), or
+      or <link linkend="gda-connection-open-from-string">gda_connection_open_from_string ()</link> otherwise. 
+      Each connection object can then be used to actually execute queries, for example:
       <programlisting>
 void
 do_stuff () {
-	GdaClient *client;
 	GdaConnection *connection;
       
         /* open a connection */
-	client = gda_client_new ();      
 	g_print ("CONNECTING\n");
-	connection = gda_client_open_connection (client, "calvaris", NULL, NULL,
-						 GDA_CONNECTION_OPTIONS_READ_ONLY);
+	connection = gda_connection_open_from_dsn ("calvaris", NULL, NULL, GDA_CONNECTION_OPTIONS_READ_ONLY);
 	g_print ("CONNECTED\n");
       
         /* use the connection */
@@ -90,7 +79,6 @@ do_stuff () {
       
         /* close the connection */
         g_object_unref (G_OBJECT (connection));
-	g_object_unref (G_OBJECT (client));
 }
       </programlisting>
     </para>

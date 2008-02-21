@@ -8,6 +8,8 @@
 	<listitem><para>reduce the size of the library (now 1.1M compared to 1.7M once stripped) and the number of symbols 
 	    (880 compared to 1420) and have less complicated and thus more maintanable code (180 files compared to 250).
 	</para></listitem>
+	<listitem><para>removal of the GdaClient object from which connections were created: this object did not offer
+	    any significant features and made the API more difficult to use</para></listitem>
 	<listitem><para>merge the GdaQuery and GdaCommand into only one object to represent statements</para></listitem>
 	<listitem><para>improve the quantity of information stored in the dictionary and make it easy to include some
 	application-specific data, while at the same time reduce the memory footprint of the dictionary</para></listitem>
@@ -69,6 +71,13 @@
     <sect2><title>API changes</title>
       <para>
 	<itemizedlist>
+	  <listitem><para>Connections are now opened using 
+	      <link linkend="gda-connection-open-from-dsn">gda_connection_open_from_dsn ()</link> or
+	      <link linkend="gda-connection-open-from-string">gda_connection_open_from_string () depending
+		on how the connection is defined</link></para></listitem>
+	  <listitem><para>Upon opening a connection, the <argument>username</argument> and <argument>password</argument>
+	      arguments have heen replaced by a more flexible arguments passing mechanism where providers can specify
+	      what authorization parameters they use</para></listitem>
  	  <listitem><para>gda_server_provider_get_last_insert_id() has been removed in favor of the "last_insert_row" argument
 	  of the <link linkend="gda-connection-statement-execute">gda_connection_statement_execute ()</link> and
 	  <link linkend="gda-connection-statement-execute-non-select">gda_connection_statement_execute_non_select ()</link>
@@ -85,6 +94,7 @@
     <sect2><title>List of removed objects and interfaces</title>
       <para>
 	<itemizedlist>
+ 	  <listitem><para>GdaClient</para></listitem>
  	  <listitem><para>GdaRenderer, GdaXmlStorage, GdaEntity, GdaEntityField and GdaReferer interfaces</para></listitem>
  	  <listitem><para>GdaDict, GdaDictType, GdaDictDatabase, GdaDictTable, GdaDictAggregate, GdaDictField, 
 	      GdaDictConstraint and GdaDictFunction dictionary related objects</para></listitem>

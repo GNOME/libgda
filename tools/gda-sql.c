@@ -102,7 +102,6 @@ typedef struct {
 
 /* structure to hold program's data */
 typedef struct {
-	GdaClient *client;
 	GSList *settings; /* list all the CncSetting */
 	ConnectionSetting *current; /* current connection setting to which commands are sent */
 	GdaInternalCommandsList *internal_commands;
@@ -320,8 +319,6 @@ main (int argc, char *argv[])
 		g_free (cs->name);
 		g_free (cs);
 	}
-	if (data->client)
-		g_object_unref (data->client);
 	set_input_file (data, NULL, NULL); 
 	set_output_file (data, NULL, NULL); 
 
@@ -833,9 +830,6 @@ open_connection (MainData *data, const gchar *cnc_name, const gchar *dsn, const 
 	static gint cncindex = 0;
 	gchar *auth_string = NULL;
 
-	if (!data->client)
-		data->client = gda_client_new ();
-	
 	if (cnc_name && ! connection_name_is_valid (cnc_name)) {
 		g_set_error (error, 0, 0,
 			     _("Connection name '%s' is invalid"), cnc_name);
@@ -857,13 +851,11 @@ open_connection (MainData *data, const gchar *cnc_name, const gchar *dsn, const 
 					     _("DSN '%s' is not declared"), dsn);
 		}
                 else 
-                        newcnc = gda_client_open_connection (data->client, info->name,
-							     auth_string ? auth_string : info->auth_string,
-							     0, error);
+                        newcnc = gda_connection_open_from_dsn (info->name, auth_string ? auth_string : info->auth_string,
+							       0, error);
         }
         if (!newcnc && direct) 
-		newcnc = gda_client_open_connection_from_string (data->client, provider, direct,
-								 auth_string, 0, error);
+		newcnc = gda_connection_open_from_string (provider, direct, auth_string, 0, error);
 	g_free (auth_string);
 
 	if (newcnc) {
@@ -1178,9 +1170,19 @@ build_internal_commands_list (MainData *data)
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Information");
 	c->name = g_strdup_printf (_("%s [TABLE]"), "dt");
-	c->description = _("List all tables and views (or named table or view)");
+	c->description = _("List all tables (or named table)");
 	c->args = NULL;
-	c->command_func = gda_internal_command_list_tables_views;
+	c->command_func = gda_internal_command_list_tables;
+	c->user_data = NULL;
+	c->arguments_delimiter_func = NULL;
+	commands->commands = g_slist_prepend (commands->commands, c);
+
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("Information");
+	c->name = g_strdup_printf (_("%s [VIEW]"), "dv");
+	c->description = _("List all views (or named view)");
+	c->args = NULL;
+	c->command_func = gda_internal_command_list_views;
 	c->user_data = NULL;
 	c->arguments_delimiter_func = NULL;
 	commands->commands = g_slist_prepend (commands->commands, c);
@@ -1803,10 +1805,9 @@ GdaInternalCommandResult *extra_command_bind_cnc (GdaConnection *cnc, const gcha
 		vprovider = gda_vprovider_hub_new ();
 	g_assert (vprovider);
 
-	virtual = gda_server_provider_create_connection (NULL, GDA_SERVER_PROVIDER (vprovider), NULL, NULL, 0);
-	if (!virtual || !gda_connection_open (virtual, NULL)) {
-		g_set_error (error, 0, 0,
-				     _("Could not create virtual connection"));
+	virtual = gda_virtual_connection_open (vprovider, NULL);
+	if (!virtual) {
+		g_set_error (error, 0, 0, _("Could not create virtual connection"));
 		return NULL;
 	}
 

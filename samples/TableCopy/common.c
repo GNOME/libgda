@@ -3,13 +3,13 @@
 #include <sql-parser/gda-sql-parser.h>
 
 GdaConnection *
-open_source_connection (GdaClient *client)
+open_source_connection (void)
 {
 	GdaConnection *cnc;
 	GError *error = NULL;
-	cnc = gda_client_open_connection (client, "SalesTest", NULL, NULL,
-                                          GDA_CONNECTION_OPTIONS_DONT_SHARE,
-                                          &error);
+	cnc = gda_connection_open_from_dsn ("SalesTest", NULL, NULL,
+					    GDA_CONNECTION_OPTIONS_DONT_SHARE,
+					    &error);
         if (!cnc) {
                 g_print ("Could not open connection to DSN 'SalesTest': %s\n",
                          error && error->message ? error->message : "No detail");
@@ -19,15 +19,15 @@ open_source_connection (GdaClient *client)
 }
 
 GdaConnection *
-open_destination_connection (GdaClient *client)
+open_destination_connection (void)
 {
 	/* create connection */
 	GdaConnection *cnc;
 	GError *error = NULL;
-	cnc = gda_client_open_connection_from_string (client, "SQLite", "DB_DIR=.;DB_NAME=copy",
-						      NULL, NULL,
-						      GDA_CONNECTION_OPTIONS_DONT_SHARE,
-						      &error);
+	cnc = gda_connection_open_from_string ("SQLite", "DB_DIR=.;DB_NAME=copy",
+					       NULL, NULL,
+					       GDA_CONNECTION_OPTIONS_DONT_SHARE,
+					       &error);
         if (!cnc) {
                 g_print ("Could not open connection to local SQLite database: %s\n",
                          error && error->message ? error->message : "No detail");

@@ -11,15 +11,11 @@ main (int argc, char *argv[])
 {
         gda_init ("LibgdaCopyTable", "1.0", argc, argv);
 
-        GdaClient *client;
         GdaConnection *s_cnc, *d_cnc;
 
-        /* Create a GdaClient object which is the central object which manages all connections */
-        client = gda_client_new ();
-
 	/* open connections */
-	s_cnc = open_source_connection (client);
-	d_cnc = open_destination_connection (client);
+	s_cnc = open_source_connection ();
+	d_cnc = open_destination_connection ();
 
 	/* copy some contents of the 'products' table into the 'products_copied', method 1 */
 	if (! copy_products_1 (s_cnc, d_cnc)) 

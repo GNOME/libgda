@@ -17,15 +17,44 @@ Do quickly some actions
 <!-- ##### SECTION Stability_Level ##### -->
 
 
-<!-- ##### FUNCTION gda_open_connection ##### -->
+<!-- ##### FUNCTION gda_prepare_create_database ##### -->
 <para>
 
 </para>
 
-@dsn: 
-@username: 
-@password: 
-@options: 
+@provider: 
+@db_name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_perform_create_database ##### -->
+<para>
+
+</para>
+
+@op: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_prepare_drop_database ##### -->
+<para>
+
+</para>
+
+@provider: 
+@db_name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_perform_drop_database ##### -->
+<para>
+
+</para>
+
+@op: 
 @error: 
 @Returns: 
 
@@ -35,18 +64,18 @@ Do quickly some actions
 
 </para>
 
-@cnn: 
+@cnc: 
 @sql: 
 @error: 
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_execute_sql_command ##### -->
+<!-- ##### FUNCTION gda_execute_non_select_command ##### -->
 <para>
 
 </para>
 
-@cnn: 
+@cnc: 
 @sql: 
 @error: 
 @Returns: 
@@ -57,7 +86,7 @@ Do quickly some actions
 
 </para>
 
-@cnn: 
+@cnc: 
 @table_name: 
 @error: 
 @Varargs: 
@@ -69,18 +98,9 @@ Do quickly some actions
 
 </para>
 
-@cnn: 
+@cnc: 
 @table_name: 
 @error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_get_default_handler ##### -->
-<para>
-
-</para>
-
-@for_type: 
 @Returns: 
 
 
@@ -89,7 +109,7 @@ Do quickly some actions
 
 </para>
 
-@cnn: 
+@cnc: 
 @table_name: 
 @error: 
 @Varargs: 
@@ -101,7 +121,7 @@ Do quickly some actions
 
 </para>
 
-@cnn: 
+@cnc: 
 @table_name: 
 @error: 
 @Varargs: 
@@ -113,7 +133,7 @@ Do quickly some actions
 
 </para>
 
-@cnn: 
+@cnc: 
 @table_name: 
 @search_for_column: 
 @condition: 
@@ -128,7 +148,7 @@ Do quickly some actions
 
 </para>
 
-@cnn: 
+@cnc: 
 @table_name: 
 @condition_column_name: 
 @condition: 
@@ -142,11 +162,20 @@ Do quickly some actions
 
 </para>
 
-@cnn: 
+@cnc: 
 @table_name: 
 @condition_column_name: 
 @condition: 
 @error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_get_default_handler ##### -->
+<para>
+
+</para>
+
+@for_type: 
 @Returns: 
 
 

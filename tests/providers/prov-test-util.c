@@ -157,7 +157,6 @@ GdaConnection *
 prov_test_setup_connection (GdaProviderInfo *prov_info, gboolean *params_provided, gboolean *db_created)
 {
 	GdaConnection *cnc = NULL;
-	GdaClient *client;
 	gchar *str, *upname;
 	const gchar *db_params, *cnc_params;
 	GError *error = NULL;
@@ -166,8 +165,6 @@ prov_test_setup_connection (GdaProviderInfo *prov_info, gboolean *params_provide
 	GdaQuarkList *db_quark_list = NULL, *cnc_quark_list = NULL;
 
 	g_assert (prov_info);
-
-	client = gda_client_new ();
 
 	upname = prov_name_upcase (prov_info->id);
 	str = g_strdup_printf ("%s_DBCREATE_PARAMS", upname);
@@ -178,14 +175,14 @@ prov_test_setup_connection (GdaProviderInfo *prov_info, gboolean *params_provide
 
 		db_name = DB_NAME;
 		db_quark_list = gda_quark_list_new_from_string (db_params);
-		op = gda_client_prepare_drop_database (client, db_name, prov_info->id);
+		op = gda_prepare_drop_database (client, db_name, prov_info->id);
 		gda_quark_list_foreach (db_quark_list, (GHFunc) db_create_quark_foreach_func, op);
-		gda_client_perform_create_database (client, op, NULL);
+		gda_perform_create_database (client, op, NULL);
 		g_object_unref (op);
 
-		op = gda_client_prepare_create_database (client, db_name, prov_info->id);
+		op = gda_prepare_create_database (client, db_name, prov_info->id);
 		gda_quark_list_foreach (db_quark_list, (GHFunc) db_create_quark_foreach_func, op);
-		if (!gda_client_perform_create_database (client, op, &error)) {
+		if (!gda_perform_create_database (client, op, &error)) {
 #ifdef CHECK_EXTRA_INFO
 			g_warning ("Could not create the '%s' database (provider %s): %s", db_name,
 				   prov_info->id, error && error->message ? error->message : "No detail");
@@ -229,8 +226,8 @@ prov_test_setup_connection (GdaProviderInfo *prov_info, gboolean *params_provide
 		password = getenv (str);
 		g_free (str);
 
-		cnc = gda_client_open_connection_from_string (client, prov_info->id, data.string->str, username, password, 
-							      GDA_CONNECTION_OPTIONS_NONE, &error);
+		cnc = gda_connection_open_from_string (prov_info->id, data.string->str, username, password, 
+						       GDA_CONNECTION_OPTIONS_NONE, &error);
 		if (!cnc && error) {
 #ifdef CHECK_EXTRA_INFO
 			g_warning ("Could not open connection to %s (provider %s): %s",
@@ -277,12 +274,10 @@ db_drop_quark_foreach_func (gchar *name, gchar *value, GdaServerOperation *op)
 gboolean
 prov_test_clean_connection (GdaConnection *cnc, gboolean destroy_db)
 {
-	GdaClient *client;
 	gchar *prov_id;
 	gboolean retval = TRUE;
 	gchar *str, *upname;
 
-	client = gda_connection_get_client (cnc);
 	prov_id = g_strdup (gda_connection_get_provider_name (cnc));
 	gda_connection_close (cnc);
 	g_object_unref (cnc);
@@ -309,12 +304,12 @@ prov_test_clean_connection (GdaConnection *cnc, gboolean destroy_db)
 		g_free (str);
 		g_assert (db_params);
 
-		op = gda_client_prepare_drop_database (client, DB_NAME, prov_id);
+		op = gda_prepare_drop_database (client, DB_NAME, prov_id);
 		db_quark_list = gda_quark_list_new_from_string (db_params);
 		gda_quark_list_foreach (db_quark_list, (GHFunc) db_drop_quark_foreach_func, op);
 		gda_quark_list_free (db_quark_list);
 
-		if (!gda_client_perform_drop_database (client, op, &error)) {
+		if (!gda_perform_drop_database (client, op, &error)) {
 #ifdef CHECK_EXTRA_INFO
 			g_warning ("Could not drop the '%s' database (provider %s): %s", DB_NAME,
 				   prov_id, error && error->message ? error->message : "No detail");

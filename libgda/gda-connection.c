@@ -25,8 +25,6 @@
 
 #undef GDA_DISABLE_DEPRECATED
 #include <stdio.h>
-#include <libgda/gda-client.h>
-#include <libgda/gda-client-private.h>
 #include <libgda/gda-config.h>
 #include <libgda/gda-connection.h>
 #include <libgda/gda-connection-private.h>
@@ -46,7 +44,6 @@
 #define PROV_CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
 
 struct _GdaConnectionPrivate {
-	GdaClient            *client;
 	GdaServerProvider    *provider_obj;
 	GdaConnectionOptions  options; /* ORed flags */
 	gchar                *dsn;
@@ -94,7 +91,6 @@ static gint gda_connection_signals[LAST_SIGNAL] = { 0, 0, 0, 0, 0, 0 };
 enum
 {
         PROP_0,
-	PROP_CLIENT,
         PROP_DSN,
         PROP_CNC_STRING,
         PROP_PROVIDER_OBJ,
@@ -169,10 +165,6 @@ gda_connection_class_init (GdaConnectionClass *klass)
         object_class->set_property = gda_connection_set_property;
         object_class->get_property = gda_connection_get_property;
 
-	g_object_class_install_property (object_class, PROP_CLIENT,
-                                         g_param_spec_object ("client", _("GdaClient to use"), NULL,
-                                                               GDA_TYPE_CLIENT,
-							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_DSN,
                                          g_param_spec_string ("dsn", _("DSN to use"), NULL, NULL,
 							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
@@ -208,7 +200,6 @@ gda_connection_init (GdaConnection *cnc, GdaConnectionClass *klass)
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 
 	cnc->priv = g_new0 (GdaConnectionPrivate, 1);
-	cnc->priv->client = NULL;
 	cnc->priv->provider_obj = NULL;
 	cnc->priv->dsn = NULL;
 	cnc->priv->cnc_string = NULL;
@@ -324,14 +315,6 @@ gda_connection_set_property (GObject *object,
         cnc = GDA_CONNECTION (object);
         if (cnc->priv) {
                 switch (param_id) {
-                case PROP_CLIENT:
-                        if (cnc->priv->client)
-				g_object_unref(cnc->priv->client);
-
-			cnc->priv->client = g_value_get_object (value);
-			if (cnc->priv->client)
-				g_object_ref (cnc->priv->client);
-			break;
                 case PROP_DSN:
 			gda_connection_set_dsn (cnc, g_value_get_string (value));
                         break;
@@ -384,9 +367,6 @@ gda_connection_get_property (GObject *object,
         cnc = GDA_CONNECTION (object);
         if (cnc->priv) {
                 switch (param_id) {
-                case PROP_CLIENT:
-			g_value_set_object (value, G_OBJECT (cnc->priv->client));
-			break;
                 case PROP_DSN:
 			g_value_set_string (value, cnc->priv->dsn);
                         break;
@@ -408,6 +388,176 @@ gda_connection_get_property (GObject *object,
                 }
         }	
 }
+
+/**
+ * gda_connection_open_from_dsn
+ * @dsn: data source name.
+ * @auth_string: authentification string
+ * @options: options for the connection (see #GdaConnectionOptions).
+ * @error: a place to store an error, or %NULL
+ *
+ * This function is the way of opening database connections with libgda.
+ *
+ * Establishes a connection to a data source. 
+ *
+ * The @auth_string must contain the authentification information for the server
+ * to accept the connection. It is a string containing semi-colon seperated named value, usually 
+ * like "USERNAME=...;PASSWORD=..." where the ... are replaced by actual values. 
+ * The actual named parameters required depend on the provider being used, and that list is available
+ * as the <parameter>auth_params</parameter> member of the #GdaProviderInfo struncture for each installed
+ * provider (use gda_config_get_provider_info() to get it). Also one can use the "gda-sql-4.0 -L" command to 
+ * list the possible named parameters.
+ *
+ * If a new #GdaConnection is created, then the caller will hold a reference on it.
+ *
+ * Returns: the opened connection if successful, %NULL if there was an error.
+ */
+GdaConnection *
+gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string, 
+			      GdaConnectionOptions options, GError **error)
+{
+	GdaConnection *cnc = NULL;
+	GdaDataSourceInfo *dsn_info;
+
+	g_return_val_if_fail (dsn && *dsn, NULL);
+
+	/* get the data source info */
+	dsn_info = gda_config_get_dsn (dsn);
+	if (!dsn_info) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_DSN_NOT_FOUND_ERROR, 
+			     _("Data source %s not found in configuration"), dsn);
+		return NULL;
+	}
+
+	/* try to find provider */
+	if (dsn_info->provider != NULL) {
+		GdaServerProvider *prov;
+
+		prov = gda_config_get_provider_object (dsn_info->provider, error);
+		if (prov) {
+			if (PROV_CLASS (prov)->create_connection) {
+				cnc = PROV_CLASS (prov)->create_connection (prov);
+				if (cnc) {
+					g_object_set (G_OBJECT (cnc), "provider_obj", prov, NULL);
+					if (dsn && *dsn)
+						g_object_set (G_OBJECT (cnc), "dsn", dsn, NULL);
+					g_object_set (G_OBJECT (cnc), "auth_string", auth_string, "options", options, NULL);
+				}
+			}
+			else
+				cnc = g_object_new (GDA_TYPE_CONNECTION, "provider_obj", prov, 
+						    "dsn", dsn, "auth_string", auth_string, 
+						    "options", options, NULL);
+			
+			/* open connection */
+			if (!gda_connection_open (cnc, error)) {
+				g_object_unref (cnc);
+				cnc = NULL;
+			}
+		}
+	}
+	else 
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_PROVIDER_NOT_FOUND_ERROR, 
+			     _("Datasource configuration error: no provider specified"));
+
+	return cnc;
+}
+
+/**
+ * gda_connection_open_from_string
+ * @provider_name: provider ID to connect to, or %NULL
+ * @cnc_string: connection string.
+ * @auth_string: authentification string
+ * @options: options for the connection (see #GdaConnectionOptions).
+ * @error: a place to store an error, or %NULL
+ *
+ * Opens a connection given a provider ID and a connection string. This
+ * allows applications to open connections without having to create
+ * a data source in the configuration. The format of @cnc_string is
+ * similar to PostgreSQL and MySQL connection strings. It is a semicolumn-separated
+ * series of key=value pairs. Do not add extra whitespace after the semicolumn
+ * separator. The possible keys depend on the provider, the "gda-sql-4.0 -L" command
+ * can be used to list the actual keys for each installed database provider.
+ *
+ * For example the connection string to open an SQLite connection to a database
+ * file named "my_data.db" in the current directory would be "DB_DIR=.;DB_NAME=my_data".
+ *
+ * The @auth_string must contain the authentification information for the server
+ * to accept the connection. It is a string containing semi-colon seperated named value, usually 
+ * like "USERNAME=...;PASSWORD=..." where the ... are replaced by actual values. 
+ * The actual named parameters required depend on the provider being used, and that list is available
+ * as the <parameter>auth_params</parameter> member of the #GdaProviderInfo struncture for each installed
+ * provider (use gda_config_get_provider_info() to get it). Similarly to the format of the connection
+ * string, use the "gda-sql-4.0 -L" command to list the possible named parameters.
+ *
+ * Additionnally, it is possible to have the connection string
+ * respect the "&lt;provider_name&gt;://&lt;real cnc string&gt;" format, in which case the provider name
+ * and the real connection string will be extracted from that string (note that if @provider_name
+ * is not %NULL then it will still be used as the provider ID).
+ *
+ * Returns: the opened connection if successful, %NULL if there is
+ * an error.
+ */
+GdaConnection *
+gda_connection_open_from_string (const gchar *provider_name, const gchar *cnc_string, const gchar *auth_string,
+				 GdaConnectionOptions options, GError **error)
+{
+	GdaConnection *cnc = NULL;
+	gchar *ptr, *dup;
+
+	g_return_val_if_fail (cnc_string && *cnc_string, NULL);
+
+	/* try to see if connection string has the "<provider>://<real cnc string>" format */
+	dup = g_strdup (cnc_string);
+	for (ptr = dup; *ptr; ptr++) {
+		if ((*ptr == ':') && (*(ptr+1) == '/') && (*(ptr+2) == '/')) {
+			if (!provider_name)
+				provider_name = dup;
+			*ptr = 0;
+			cnc_string = ptr + 3;
+		}
+	}
+	
+	if (!provider_name) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_PROVIDER_NOT_FOUND_ERROR, 
+			     _("No provider specified"));
+		g_free (dup);
+		return NULL;
+	}
+
+	/* try to find provider */
+	if (provider_name) {
+		GdaServerProvider *prov;
+
+		prov = gda_config_get_provider_object (provider_name, error);
+		if (prov) {
+			if (PROV_CLASS (prov)->create_connection) {
+				cnc = PROV_CLASS (prov)->create_connection (prov);
+				if (cnc) {
+					g_object_set (G_OBJECT (cnc), "provider_obj", prov, NULL);
+					if (cnc_string && *cnc_string)
+						g_object_set (G_OBJECT (cnc), "cnc_string", cnc_string, NULL);
+					g_object_set (G_OBJECT (cnc), "auth_string", auth_string, "options", options, NULL);
+				}
+			}
+			else 
+				cnc = (GdaConnection *) g_object_new (GDA_TYPE_CONNECTION, "provider_obj", prov,
+								      "cnc-string", cnc_string, "auth_string", auth_string,
+								      "options", options, NULL);
+			
+			/* open the connection */
+			if (!gda_connection_open (cnc, error)) {
+				g_object_unref (cnc);
+				cnc = NULL;
+			}
+		}
+	}	
+
+	g_free (dup);
+
+	return cnc;
+}
+
 
 /**
  * gda_connection_open
@@ -458,9 +608,13 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 
 	/* provider test */
 	if (!cnc->priv->provider_obj) {
-		gda_log_error (_("No provider specified"));
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_NO_PROVIDER_SPEC_ERROR,
 			     _("No provider specified"));
+		return FALSE;
+	}
+	if (!PROV_CLASS (cnc->priv->provider_obj)->open_connection) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_PROVIDER_ERROR,
+			     _("Internal error: provider does not implement the open_connection() virtual method"));
 		return FALSE;
 	}
 
@@ -479,10 +633,10 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 
 	/* try to open the connection */
 	auth = gda_quark_list_new_from_string (real_auth_string);
-	if (gda_server_provider_open_connection (cnc->priv->provider_obj, cnc, params, auth)) {
+
+	if (PROV_CLASS (cnc->priv->provider_obj)->open_connection (cnc->priv->provider_obj, cnc, params, auth,
+								   NULL, NULL, NULL))
 		cnc->priv->is_open = TRUE;
-		_gda_client_notify_connection_opened_event (cnc->priv->client, cnc);
-	}
 	else {
 		const GList *events;
 		
@@ -498,8 +652,6 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 					if (error && !(*error))
 						g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_OPEN_ERROR,
 							     gda_connection_event_get_description (event));
-					_gda_client_notify_error_event (cnc->priv->client, cnc, 
-									GDA_CONNECTION_EVENT (l->data));
 				}
 			}
 		}
@@ -568,8 +720,8 @@ gda_connection_close_no_warning (GdaConnection *cnc)
 	if (! cnc->priv->is_open)
 		return;
 
-	gda_server_provider_close_connection (cnc->priv->provider_obj, cnc);
-	_gda_client_notify_connection_closed_event (cnc->priv->client, cnc);
+	if (PROV_CLASS (cnc->priv->provider_obj)->close_connection) 
+		PROV_CLASS (cnc->priv->provider_obj)->close_connection (cnc->priv->provider_obj, cnc);
 	cnc->priv->is_open = FALSE;
 
 	if (cnc->priv->provider_data) {
@@ -606,24 +758,6 @@ gda_connection_is_opened (GdaConnection *cnc)
 	return cnc->priv->is_open;
 }
 
-/**
- * gda_connection_get_client
- * @cnc: a #GdaConnection object.
- *
- * Gets the #GdaClient object associated with a connection. This
- * is always the client that created the connection, as returned
- * by #gda_client_open_connection.
- *
- * Returns: the client to which the connection belongs to.
- */
-GdaClient *
-gda_connection_get_client (GdaConnection *cnc)
-{
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (cnc->priv, NULL);
-
-	return cnc->priv->client;
-}
 
 /**
  * gda_connection_get_options
@@ -785,8 +919,7 @@ gda_connection_get_authentification (GdaConnection *cnc)
  *
  * As soon as a provider (or a client, it does not matter) calls this
  * function with an @event object which is an error,
- * the connection object (and the associated #GdaClient object)
- * emits the "error" signal, to which clients can connect to be
+ * the connection object emits the "error" signal, to which clients can connect to be
  * informed of events.
  *
  * WARNING: the reference to the @event object is stolen by this function!
@@ -1374,17 +1507,14 @@ gboolean
 gda_connection_begin_transaction (GdaConnection *cnc, const gchar *name, GdaTransactionIsolation level,
 				  GError **error)
 {
-	gboolean retval;
-
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv, FALSE);
 	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
 
-	retval = gda_server_provider_begin_transaction (cnc->priv->provider_obj, cnc, name, level, error);
-	if (retval)
-		_gda_client_notify_event (cnc->priv->client, cnc, GDA_CLIENT_EVENT_TRANSACTION_STARTED, NULL);
-
-	return retval;
+	if (PROV_CLASS (cnc->priv->provider_obj)->begin_transaction)
+		return PROV_CLASS (cnc->priv->provider_obj)->begin_transaction (cnc->priv->provider_obj, cnc, name, level, error);
+	else
+		return FALSE;
 }
 
 /**
@@ -1402,17 +1532,14 @@ gda_connection_begin_transaction (GdaConnection *cnc, const gchar *name, GdaTran
 gboolean
 gda_connection_commit_transaction (GdaConnection *cnc, const gchar *name, GError **error)
 {
-	gboolean retval;
-
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv, FALSE);
 	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
 
-	retval = gda_server_provider_commit_transaction (cnc->priv->provider_obj, cnc, name, error);
-	if (retval)
-		_gda_client_notify_event (cnc->priv->client, cnc, GDA_CLIENT_EVENT_TRANSACTION_COMMITTED, NULL);
-
-	return retval;
+	if (PROV_CLASS (cnc->priv->provider_obj)->commit_transaction)
+		return PROV_CLASS (cnc->priv->provider_obj)->commit_transaction (cnc->priv->provider_obj, cnc, name, error);
+	else
+		return FALSE;
 }
 
 /**
@@ -1431,17 +1558,14 @@ gda_connection_commit_transaction (GdaConnection *cnc, const gchar *name, GError
 gboolean
 gda_connection_rollback_transaction (GdaConnection *cnc, const gchar *name, GError **error)
 {
-	gboolean retval;
-
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv, FALSE);
 	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
 
-	retval = gda_server_provider_rollback_transaction (cnc->priv->provider_obj, cnc, name, error);
-	if (retval)
-		_gda_client_notify_event (cnc->priv->client, cnc, GDA_CLIENT_EVENT_TRANSACTION_CANCELLED, NULL);
-
-	return retval;
+	if (PROV_CLASS (cnc->priv->provider_obj)->rollback_transaction)
+		return PROV_CLASS (cnc->priv->provider_obj)->rollback_transaction (cnc->priv->provider_obj, cnc, name, error);
+	else
+		return FALSE;
 }
 
 /**
@@ -1461,7 +1585,10 @@ gda_connection_add_savepoint (GdaConnection *cnc, const gchar *name, GError **er
 	g_return_val_if_fail (cnc->priv, FALSE);
 	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
 	
-	return gda_server_provider_add_savepoint (cnc->priv->provider_obj, cnc, name, error);
+	if (PROV_CLASS (cnc->priv->provider_obj)->add_savepoint)
+		return PROV_CLASS (cnc->priv->provider_obj)->add_savepoint (cnc->priv->provider_obj, cnc, name, error);
+	else
+		return FALSE;
 }
 
 /**
@@ -1481,7 +1608,10 @@ gda_connection_rollback_savepoint (GdaConnection *cnc, const gchar *name, GError
 	g_return_val_if_fail (cnc->priv, FALSE);
 	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);	
 
-	return gda_server_provider_rollback_savepoint (cnc->priv->provider_obj, cnc, name, error);
+	if (PROV_CLASS (cnc->priv->provider_obj)->rollback_savepoint)
+		return PROV_CLASS (cnc->priv->provider_obj)->rollback_savepoint (cnc->priv->provider_obj, cnc, name, error);
+	else
+		return FALSE;
 }
 
 /**
@@ -1501,7 +1631,10 @@ gda_connection_delete_savepoint (GdaConnection *cnc, const gchar *name, GError *
 	g_return_val_if_fail (cnc->priv, FALSE);
 	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
 
-	return gda_server_provider_delete_savepoint (cnc->priv->provider_obj, cnc, name, error);
+	if (PROV_CLASS (cnc->priv->provider_obj)->delete_savepoint)
+		return PROV_CLASS (cnc->priv->provider_obj)->delete_savepoint (cnc->priv->provider_obj, cnc, name, error);
+	else
+		return FALSE;
 }
 
 /**

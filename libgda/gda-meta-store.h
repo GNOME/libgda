@@ -45,7 +45,8 @@ typedef enum {
 	GDA_META_STORE_INCORRECT_SCHEMA,
 	GDA_META_STORE_UNSUPPORTED_PROVIDER,
 	GDA_META_STORE_INTERNAL_ERROR,
-	GDA_META_STORE_MODIFY_CONTENTS_ERROR
+	GDA_META_STORE_MODIFY_CONTENTS_ERROR,
+	GDA_META_STORE_EXTRACT_SQL_ERROR
 } GdaMetaStoreError;
 
 /* 
@@ -96,6 +97,7 @@ GdaMetaStore     *gda_meta_store_new                      (const gchar *cnc_stri
 gint              gda_meta_store_get_version              (GdaMetaStore *store);
 
 GdaConnection    *gda_meta_store_get_internal_connection  (GdaMetaStore *store);
+GdaDataModel     *gda_meta_store_extract                  (GdaMetaStore *store, const gchar *select_sql, GError **error, ...);
 
 gboolean          gda_meta_store_modify                   (GdaMetaStore *store, const gchar *table_name, 
 							   GdaDataModel *new_data, const gchar *condition, GError **error, ...);

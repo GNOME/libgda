@@ -27,7 +27,6 @@ gda-marshal.c: gda-marshal.list $(GLIB_GENMARSHAL)
 gda_headers = \
 	gda-batch.h \
 	gda-blob-op.h \
-	gda-client.h \
 	gda-column.h \
 	gda-column-index.h \
 	gda-config.h \
@@ -51,6 +50,7 @@ gda_headers = \
 	gda-data-proxy.h \
 	gda-debug-macros.h \
 	gda-decl.h \
+	gda-easy.h \
 	gda-enums.h \
 	gda-holder.h \
 	gda-log.h \
@@ -79,7 +79,6 @@ libgda_sources =  \
 	dir-blob-op.c \
 	$(gda_headers) \
 	gda-blob-op.c \
-	gda-client.c \
 	gda-column.c \
 	gda-column-index.c \
 	gda-config.c \
@@ -100,6 +99,7 @@ libgda_sources =  \
 	gda-data-model-query.c \
 	gda-data-access-wrapper.c \
 	gda-data-proxy.c \
+	gda-easy.c \
 	gda-holder.c \
 	gda-init.c \
 	gda-log.c \

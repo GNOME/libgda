@@ -12,9 +12,10 @@
   <para>
     A virtual connection is not created in the same way as for a normal connection:
     <itemizedlist>
-      <listitem><para>No <link linkend="GdaClient">GdaClient</link> object is involved</para></listitem>
       <listitem><para>A specific <link linkend="GdaServerProvider">GdaServerProvider</link> object is required</para></listitem>
       <listitem><para>No data source (DSN) or connection string can be used</para></listitem>
+      <listitem><para>One must use the <link linkend="gda-virtual-connection-open">gda_virtual_connection_open()</link>
+	  method which creates and "opens" a virtual connection. </para></listitem>
     </itemizedlist>
     Here is an example of code on how to create a virtual connection using the <link linkend="GdaVproviderDataModel">GdaVproviderDataModel</link> virtual provider:
     <programlisting>
@@ -22,8 +23,7 @@ GdaConnection *cnc;
 GdaVirtualProvider *provider;
 
 provider = gda_vprovider_data_model_new ();
-cnc = gda_server_provider_create_connection (NULL, GDA_SERVER_PROVIDER (provider), NULL, NULL, NULL, 0);
-gda_connection_open (cnc, NULL);
+cnc = gda_virtual_connection_open (provider, NULL);
     </programlisting>
   </para>
   <para>

@@ -138,38 +138,6 @@ Base class for all the DBMS providers
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_server_provider_open_connection ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@params: 
-@auth: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_close_connection ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_get_database ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_server_provider_supports_operation ##### -->
 <para>
 
@@ -226,79 +194,6 @@ Base class for all the DBMS providers
 
 @provider: 
 @cnc: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_begin_transaction ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@name: 
-@level: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_commit_transaction ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@name: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_rollback_transaction ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@name: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_add_savepoint ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@name: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_rollback_savepoint ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@name: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_delete_savepoint ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@name: 
-@error: 
 @Returns: 
 
 

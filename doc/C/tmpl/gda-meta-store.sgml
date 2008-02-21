@@ -89,6 +89,7 @@ Dictionary object
 @GDA_META_STORE_UNSUPPORTED_PROVIDER: 
 @GDA_META_STORE_INTERNAL_ERROR: 
 @GDA_META_STORE_MODIFY_CONTENTS_ERROR: 
+@GDA_META_STORE_EXTRACT_SQL_ERROR: 
 
 <!-- ##### STRUCT GdaMetaStoreChange ##### -->
 <para>
@@ -151,6 +152,18 @@ Dictionary object
 </para>
 
 @store: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_meta_store_extract ##### -->
+<para>
+
+</para>
+
+@store: 
+@select_sql: 
+@error: 
+@Varargs: 
 @Returns: 
 
 

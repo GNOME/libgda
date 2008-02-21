@@ -22,7 +22,6 @@ static int sqlxslt_process_xslt_file_ext (GdaXsltExCont *sql_ctx,
 int
 main (int argc, char *argv[])
 {
-        GdaClient *client;
         GdaConnection *cnc;
 	GError *error = NULL;
 	GOptionContext *context;
@@ -50,13 +49,8 @@ main (int argc, char *argv[])
 
         gda_init ("LibgdaXsltProc", "1.0", argc, argv);
 
-        /* Create a GdaClient object which is the central object which manages all connections */
-        client = gda_client_new ();
-
 	/* open connection */
-        cnc = gda_client_open_connection (client, "SalesTest", NULL, NULL,
-                                          GDA_CONNECTION_OPTIONS_DONT_SHARE,
-                                          &error);
+        cnc = gda_connection_open_from_dsn ("SalesTest", NULL, NULL, 0, &error);
         if (!cnc) {
                 g_print ("Could not open connection to DSN 'SalesTest': %s\n",
                          error && error->message ? error->message : "No detail");
@@ -86,7 +80,6 @@ main (int argc, char *argv[])
 
 	/* close connection */
         g_object_unref (G_OBJECT (cnc));
-        g_object_unref (G_OBJECT (client));
 
         return EXIT_SUCCESS;
 }
