@@ -946,12 +946,12 @@
 
   <test id="2246">
     <sql>select a not in (SELECT name from cust);</sql>
-    <expected>{"statements":[{"statement":{"sql":"select a not in (SELECT name from cust);","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"operation":{"operator":"NOT","operand0":{"operation":{"operator":"IN","operand0":{"value":"a"},"operand1":{"select":{"contents":{"distinct":"false","fields":[{"expr":{"value":"name"},"field_name":"name"}],"from":{"targets":[{"expr":{"value":"cust"},"table_name":"cust"}]}}}}}}}}}]}}}]}</expected>
+    <expected>{"statements":[{"statement":{"sql":"select a not in (SELECT name from cust);","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"operation":{"operator":"NOT IN","operand0":{"value":"a"},"operand1":{"select":{"contents":{"distinct":"false","fields":[{"expr":{"value":"name"},"field_name":"name"}],"from":{"targets":[{"expr":{"value":"cust"},"table_name":"cust"}]}}}}}}}]}}}]}</expected>
   </test>
 
   <test id="2247">
     <sql>select a not in (1, 2, 3, '007')</sql>
-    <expected>{"statements":[{"statement":{"sql":"select a not in (1, 2, 3, '007')","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"operation":{"operator":"NOT","operand0":{"operation":{"operator":"IN","operand0":{"value":"a"},"operand1":{"value":"1"},"operand2":{"value":"2"},"operand3":{"value":"3"},"operand4":{"value":"'007'"}}}}}}]}}}]}</expected>
+    <expected>{"statements":[{"statement":{"sql":"select a not in (1, 2, 3, '007')","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"operation":{"operator":"NOT IN","operand0":{"value":"a"},"operand1":{"value":"1"},"operand2":{"value":"2"},"operand3":{"value":"3"},"operand4":{"value":"'007'"}}}}]}}}]}</expected>
   </test>
 
   <test id="2248">

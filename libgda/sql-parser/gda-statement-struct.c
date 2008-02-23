@@ -653,6 +653,7 @@ gda_sql_any_part_check_structure (GdaSqlAnyPart *node, GError **error)
 		case GDA_SQL_OPERATOR_AND:
 		case GDA_SQL_OPERATOR_OR:
 		case GDA_SQL_OPERATOR_IN:
+		case GDA_SQL_OPERATOR_NOTIN:
 		case GDA_SQL_OPERATOR_CONCAT:
 		case GDA_SQL_OPERATOR_STAR:
 			if (g_slist_length (operation->operands) < 2) {

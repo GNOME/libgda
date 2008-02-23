@@ -261,6 +261,7 @@ static gboolean
 gda_capi_recordset_store_all (GdaPModel *model, GError **error)
 {
 	GdaCapiRecordset *imodel;
+	gint i;
 
 	imodel = GDA_CAPI_RECORDSET (model);
 

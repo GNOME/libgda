@@ -509,6 +509,8 @@ gda_sql_operation_operator_to_string (GdaSqlOperator op)
 		return "IS NOT NULL";
 	case GDA_SQL_OPERATOR_IN:
 		return "IN";
+	case GDA_SQL_OPERATOR_NOTIN:
+		return "NOT IN";
 	case GDA_SQL_OPERATOR_LIKE:
 		return "LIKE";
 	case GDA_SQL_OPERATOR_BETWEEN:

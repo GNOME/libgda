@@ -132,6 +132,7 @@ struct _GdaSetClass
 
 GType         gda_set_get_type                 (void) G_GNUC_CONST;
 GdaSet       *gda_set_new                      (GSList *holders);
+GdaSet       *gda_set_copy                     (GdaSet *set);
 GdaSet       *gda_set_new_inline               (gint nb, ...);
 
 GdaSet       *gda_set_new_from_spec_string     (const gchar *xml_spec, GError **error);

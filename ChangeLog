@@ -1,3 +1,18 @@
+2008-02-23  Vivien Malerba <malerba@gnome-db.org>
+
+	* doc/C/libgda-4.0-sections.txt:
+	* libgda/gda-set.[ch]: added gda_set_copy()
+	* providers/skel-implementation/capi/gda-capi-recordset.c: fixed compilation problem
+	* libgda/sqlite/gda-sqlite-provider.c:
+	* libgda/sql-parser/gda-statement-struct.c:
+	* libgda/sql-parser/parser.y:
+	* providers/postgres/parser.y:
+	* libgda/sql-parser/gda-statement-struct-parts.c:
+	* libgda/sql-parser/gda-statement-struct-parts.h:
+	* libgda/gda-statement.c:
+	* tests/parser/testdata.xml: fixed the SQL parser because "field NOT IN (...)" is not
+	the same as "NOT field IN (...)"
+
 2008-02-21  Vivien Malerba <malerba@gnome-db.org>
 
 	* Removed the GdaClient class, connections are now opened using gda_connection_open_from_dsn()

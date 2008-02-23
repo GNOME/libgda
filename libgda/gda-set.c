@@ -286,6 +286,32 @@ gda_set_new (GSList *holders)
 }
 
 /**
+ * gda_set_copy
+ * @set: a #GdaSet object
+ *
+ * Creates a new #GdaSet object, opy of @set
+ *
+ * Returns: a new #GdaSet object
+ */
+GdaSet *
+gda_set_copy (GdaSet *set)
+{
+	GdaSet *copy;
+	GSList *list, *holders = NULL;
+	g_return_val_if_fail (GDA_IS_SET (set), NULL);
+	
+	for (list = set->holders; list; list = list->next) 
+		holders = g_slist_prepend (holders, gda_holder_copy (GDA_HOLDER (list->data)));
+	holders = g_slist_reverse (holders);
+
+	copy = g_object_new (GDA_TYPE_SET, "holders", holders, NULL);
+	g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
+	g_slist_free (holders);
+
+	return copy;
+}
+
+/**
  * gda_set_new_inline
  * @nb: the number of value holders which will be contained in the new #GdaSet
  * @...: a serie of a (const gchar*) id, (GType) type, and value

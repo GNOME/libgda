@@ -886,43 +886,27 @@ expr(E) ::= expr(R) IN LP compound(S) RP. {GdaSqlOperation *cond;
 					    GDA_SQL_ANY_PART (R)->parent = GDA_SQL_ANY_PART (cond);
 }
 expr(E) ::= expr(R) NOT IN LP exprlist(L) RP. {GdaSqlOperation *cond;
-					       GdaSqlExpr *expr;
 					       GSList *list;
-					       expr = gda_sql_expr_new (NULL);
-					       cond = gda_sql_operation_new (GDA_SQL_ANY_PART (expr));
-					       expr->cond = cond;
-					       cond->operator = GDA_SQL_OPERATOR_IN;
-					       cond->operands = g_slist_prepend (L, R);
-					       for (list = cond->operands; list; list = list->next)
-						       GDA_SQL_ANY_PART (list->data)->parent = GDA_SQL_ANY_PART (cond);
-					       
 					       E = gda_sql_expr_new (NULL);
 					       cond = gda_sql_operation_new (GDA_SQL_ANY_PART (E));
 					       E->cond = cond;
-					       cond->operator = GDA_SQL_OPERATOR_NOT;
-					       cond->operands = g_slist_prepend (NULL, expr);
-					       GDA_SQL_ANY_PART (expr)->parent = GDA_SQL_ANY_PART (cond);
+					       cond->operator = GDA_SQL_OPERATOR_NOTIN;
+					       cond->operands = g_slist_prepend (L, R);
+					       for (list = cond->operands; list; list = list->next)
+						       GDA_SQL_ANY_PART (list->data)->parent = GDA_SQL_ANY_PART (cond);
 }
 expr(E) ::= expr(R) NOT IN LP compound(S) RP. {GdaSqlOperation *cond;
-						GdaSqlExpr *expr1, *expr2;
-						expr1 = gda_sql_expr_new (NULL);
-						cond = gda_sql_operation_new (GDA_SQL_ANY_PART (expr1));
-						expr1->cond = cond;
-						cond->operator = GDA_SQL_OPERATOR_IN;
-						
-						expr2 = gda_sql_expr_new (NULL);
-						gda_sql_expr_take_select (expr2, S);
-						cond->operands = g_slist_prepend (NULL, expr2);
-						GDA_SQL_ANY_PART (expr2)->parent = GDA_SQL_ANY_PART (cond);
-						cond->operands = g_slist_prepend (cond->operands, R);
-						GDA_SQL_ANY_PART (R)->parent = GDA_SQL_ANY_PART (cond);
-						
-						E = gda_sql_expr_new (NULL);
-						cond = gda_sql_operation_new (GDA_SQL_ANY_PART (E));
-						E->cond = cond;
-						cond->operator = GDA_SQL_OPERATOR_NOT;
-						cond->operands = g_slist_prepend (NULL, expr1);
-						GDA_SQL_ANY_PART (expr1)->parent = GDA_SQL_ANY_PART (cond);
+					       GdaSqlExpr *expr;
+					       E = gda_sql_expr_new (NULL);
+					       cond = gda_sql_operation_new (GDA_SQL_ANY_PART (E));
+					       E->cond = cond;
+					       cond->operator = GDA_SQL_OPERATOR_NOTIN;
+					       
+					       expr = gda_sql_expr_new (GDA_SQL_ANY_PART (cond));
+					       gda_sql_expr_take_select (expr, S);
+					       cond->operands = g_slist_prepend (NULL, expr);
+					       cond->operands = g_slist_prepend (cond->operands, R);
+					       GDA_SQL_ANY_PART (R)->parent = GDA_SQL_ANY_PART (cond);
 }
 expr(A) ::= CASE case_operand(X) case_exprlist(Y) case_else(Z) END. {
 	GdaSqlCase *sc;
