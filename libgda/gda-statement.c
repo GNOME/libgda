@@ -1503,7 +1503,7 @@ default_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, 
 		str = g_strdup_printf ("NOT %s", SQL_OPERAND (sql_list->data)->sql);
 		break;
 	case GDA_SQL_OPERATOR_IN:
-	case GDA_SQL_OPERATOR_NOTIN:
+	case GDA_SQL_OPERATOR_NOTIN: {
 		gboolean add_p = TRUE;
 		if (sql_list->next && !(sql_list->next->next) &&
 		    *(SQL_OPERAND (sql_list->next->data)->sql)=='(')
@@ -1526,6 +1526,7 @@ default_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, 
 		str = string->str;
 		g_string_free (string, FALSE);
 		break;
+	}
 	case GDA_SQL_OPERATOR_CONCAT:
 		multi_op = "||";
 		break;
