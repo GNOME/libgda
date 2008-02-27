@@ -1,5 +1,12 @@
 2008-02-27  Vivien Malerba <malerba@gnome-db.org>
 
+	* libgda/gda-util.c: applied patch to change the default string escape for a 
+	single-quote char from backslash single-quote (\') to single-quote 
+	single-quote ('') so that SQLite will accept it (thanks to Phil
+	Longstaff)
+
+2008-02-27  Vivien Malerba <malerba@gnome-db.org>
+
 	* libgda/gda-query.c: corrected a bug in gda_query_execute() where
 	an error was reported even when there was none (thanks to Phil Longstaff)
 
