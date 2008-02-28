@@ -303,99 +303,215 @@ gda_create_table (GdaConnection *cnn, const gchar *table_name, GError **error, .
 {
 	GdaServerOperation *op;
 	GdaServerProvider *server;
-	
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnn), FALSE);
-	g_return_val_if_fail (gda_connection_is_opened (cnn), FALSE);
-	
+			
+	g_return_val_if_fail (gda_connection_is_opened (cnn), FALSE);	
+		
 	server = gda_connection_get_provider_obj(cnn);
 	
-	op = gda_server_provider_create_operation (server, cnn, 
-						   GDA_SERVER_OPERATION_CREATE_TABLE, NULL, error);
-	if (GDA_IS_SERVER_OPERATION (op)) {
+	if (!gda_server_provider_supports_operation (server, cnn, GDA_SERVER_OPERATION_CREATE_TABLE, NULL))
+	{
+		*error = g_error_new (GDA_GENERAL_ERROR, GDA_GENERAL_OBJECT_NAME_ERROR, 
+			    "CREATE TABLE operation is not supported by the database server");
+		return FALSE;
+	}
+	else
+	{
+	
+		op = gda_server_provider_create_operation (server, cnn, 
+							   GDA_SERVER_OPERATION_CREATE_TABLE, NULL, error);
+	
+		GError *gda_returned_error = NULL;
 		va_list  args;
 		gchar   *arg;
 		GType    type;
 		gchar   *dbms_type;
-		xmlDocPtr parameters;
-		xmlNodePtr root;
-		xmlNodePtr table, op_data, array_data, array_row, array_value;
-		
+		GdaGeneralCreateTableFlag flag;
+		gint i;
+	
 		if (table_name == NULL) {
 			g_message("Table name is NULL!");      
-			g_set_error (error, GDA_GENERAL_ERROR, GDA_GENERAL_OBJECT_NAME_ERROR, 
-				    "Couldn't create table with a NULL string");
-			return FALSE;    
+			*error = g_error_new (GDA_GENERAL_ERROR, GDA_GENERAL_OBJECT_NAME_ERROR, 
+									"Couldn't create table with a NULL string");
+			return FALSE;
 		}
-		
 	
-		/* Initation of the xmlDoc */
-		parameters = xmlNewDoc ((xmlChar*)"1.0");
-		
-		root = xmlNewDocNode (parameters, NULL, (xmlChar*)"serv_op_data", NULL);
-		xmlDocSetRootElement (parameters, root);
-		table = xmlNewChild (root, NULL, (xmlChar*)"op_data", (xmlChar*)table_name);
-		xmlSetProp(table, (xmlChar*)"path", (xmlChar*)"/TABLE_DEF_P/TABLE_NAME");
-
-		op_data = xmlNewChild (root, NULL, (xmlChar*)"op_data", NULL);
-		xmlSetProp(op_data, (xmlChar*)"path", (xmlChar*)"/FIELDS_A");
-		array_data = xmlNewChild (op_data, NULL, (xmlChar*)"gda_array_data", NULL);
-			
+		gda_server_operation_set_value_at (op, table_name, error, "/TABLE_DEF_P/TABLE_NAME");
+				
 		va_start (args, error);
 		type = 0;
 		arg = NULL;
+		i = 0;
 		
 		while ((arg = va_arg (args, gchar*))) {
-			g_message("Getting the arguments...");			
+			/* First argument for Column's name */			
+			gda_server_operation_set_value_at (op, arg, error, "/FIELDS_A/@COLUMN_NAME/%d", i);
+		
+			/* Second to Define column's type */
 			type = va_arg (args, GType);
 			if (type == 0) {
-				g_set_error(error, GDA_GENERAL_ERROR, GDA_GENERAL_INCORRECT_VALUE_ERROR, 
-					    "Error the number of arguments are incorrect; couldn't create the table");
+				*error = g_error_new (GDA_GENERAL_ERROR, 
+									  GDA_GENERAL_INCORRECT_VALUE_ERROR, 
+									  "Error the number of arguments are incorrect; \
+									  couldn't create the table");
 				g_object_unref (op);
-				xmlFreeDoc(parameters);
 				return FALSE;
 			}
-			
 			dbms_type = (gchar *) gda_server_provider_get_default_dbms_type (server, 
 											 cnn, type);
-			array_row = xmlNewChild (array_data, NULL, (xmlChar*)"gda_array_row", NULL);
-			array_value = xmlNewChild (array_row, NULL, (xmlChar*)"gda_array_value", (xmlChar*)arg);
-			xmlSetProp(array_value, (xmlChar*)"colid", (xmlChar*)"COLUMN_NAME");
+			gda_server_operation_set_value_at (op, dbms_type, error, "/FIELDS_A/@COLUMN_TYPE/%d", i);
 		
-			array_value = xmlNewChild(array_row, NULL, (xmlChar*)"gda_array_value", (xmlChar*)dbms_type);
-			xmlSetProp(array_value, (xmlChar*)"colid", (xmlChar*)"COLUMN_TYPE");
-			
+			i++;
 		}
 		
+	
 		va_end(args);
 		
-		if (!gda_server_operation_load_data_from_xml (op, root, error)) {
-			/* error */
-			g_set_error (error, GDA_GENERAL_ERROR, GDA_GENERAL_OPERATION_ERROR, 
-				     "The XML operation doesn't exist or could't be loaded");
-			g_object_unref (op);
-			xmlFreeDoc(parameters);
-			return FALSE;
-		}
-		else {
-			if (gda_server_provider_perform_operation (server, cnn, op, error)) {
+		if (!gda_server_provider_perform_operation (server, cnn, op, &gda_returned_error)) {
 				/* error */
-				g_set_error(error, GDA_GENERAL_ERROR, GDA_GENERAL_OPERATION_ERROR, 
-					    "The Server couldn't perform the CREATE TABLE operation!");
+				*error = g_error_new (GDA_GENERAL_ERROR, GDA_GENERAL_OPERATION_ERROR, 
+						"The Server couldn't perform the CREATE TABLE operation!. \
+						Provider Error Message: '%s'", gda_returned_error->message);
 				g_object_unref (op);
-				xmlFreeDoc(parameters);
 				return FALSE;
-			}
 		}
-		
+
 		g_object_unref (op);
-		xmlFreeDoc(parameters);
+		return TRUE;
 	}
-	else {
-		g_set_error(error, GDA_GENERAL_ERROR, GDA_GENERAL_OBJECT_NAME_ERROR, 
-			    "The Server doesn't support the CREATE TABLE operation!");
+}
+
+/**
+ * gda_create_table_full
+ * @cnn: an opened connection
+ * @table_name:
+ * @num_columns
+ * @error: a place to store errors, or %NULL
+ * @...: column's name, #GType and #GdaGeneralCreateTableFlag, finish with NULL
+ * 
+ * Create a Table over an opened connection using a list of arguments, in order:
+ * colum's name, column's GType and one #GdaGeneralCreateTableFlag,
+ * you need to finish the list using NULL.
+ *
+ * This is just a convenient function to create tables quickly, 
+ * using defaults for the provider and converting the #GType passed to the corresponding 
+ * type in the provider; to use a custom type or more advanced characteristics in a 
+ * specific provider use the #GdaServerOperation framework.
+ *
+ * Returns: TRUE if the table was created; FALSE and set @error otherwise
+ */
+gboolean
+gda_create_table_full (GdaConnection *cnn, const gchar *table_name, GError **error, ...)
+{
+	GdaServerOperation *op;
+	GdaServerProvider *server;
+			
+	g_return_val_if_fail (gda_connection_is_opened (cnn), FALSE);	
+		
+	server = gda_connection_get_provider_obj(cnn);
+	
+	/* FIXME: Need to create a GdaParameterList with the flags supported in this function */
+	if (!gda_server_provider_supports_operation (server, cnn, GDA_SERVER_OPERATION_CREATE_TABLE, NULL))
+	{
+		*error = g_error_new (GDA_GENERAL_ERROR, GDA_GENERAL_OBJECT_NAME_ERROR, 
+			    "CREATE TABLE operation is not supported by the database server");
 		return FALSE;
 	}
-	return TRUE;
+	else
+	{
+	
+		op = gda_server_provider_create_operation (server, cnn, 
+							   GDA_SERVER_OPERATION_CREATE_TABLE, NULL, error);
+	
+		GError *gda_returned_error = NULL;
+		va_list  args;
+		gchar   *arg;
+		GType    type;
+		gchar   *dbms_type;
+		GdaGeneralCreateTableFlag flag;
+		gint i;
+	
+		if (table_name == NULL) {
+			g_message("Table name is NULL!");      
+			*error = g_error_new (GDA_GENERAL_ERROR, GDA_GENERAL_OBJECT_NAME_ERROR, 
+									"Couldn't create table with a NULL string");
+			return FALSE;
+		}
+	
+		gda_server_operation_set_value_at (op, table_name, error, "/TABLE_DEF_P/TABLE_NAME");
+				
+		va_start (args, error);
+		type = 0;
+		arg = NULL;
+		i = 0;
+		
+		while ((arg = va_arg (args, gchar*))) {
+			/* First argument for Column's name */			
+			gda_server_operation_set_value_at (op, arg, error, "/FIELDS_A/@COLUMN_NAME/%d", i);
+		
+			/* Second to Define column's type */
+			type = va_arg (args, GType);
+			if (type == 0) {
+				*error = g_error_new (GDA_GENERAL_ERROR, 
+									  GDA_GENERAL_INCORRECT_VALUE_ERROR, 
+									  "Error the number of arguments are incorrect; \
+									  couldn't create the table");
+				g_object_unref (op);
+				return FALSE;
+			}
+			dbms_type = (gchar *) gda_server_provider_get_default_dbms_type (server, 
+											 cnn, type);
+			gda_server_operation_set_value_at (op, dbms_type, error, "/FIELDS_A/@COLUMN_TYPE/%d", i);
+		
+			/* Third for column's flags */
+			flag = va_arg (args, GdaGeneralCreateTableFlag);
+			switch (flag)
+			{
+				case GDA_GENERAL_CREATE_TABLE_NOTHING_FLAG:
+					break;
+				case GDA_GENERAL_CREATE_TABLE_PKEY_FLAG:
+				{
+					gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_PKEY/%d", i);
+					break;
+				}
+				case GDA_GENERAL_CREATE_TABLE_NOT_NULL_FLAG:
+				{
+					gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_NNUL/%d", i);
+					break;
+				}
+				case GDA_GENERAL_CREATE_TABLE_AUTOINC_FLAG:
+				{
+					gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_AUTOINC/%d", i);
+					break;
+				}
+				case GDA_GENERAL_CREATE_TABLE_PKEY_AUTOINC_FLAG:
+				{
+					GValue *val;
+					
+					gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_PKEY/%d", i);
+					
+					gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_AUTOINC/%d", i);
+					
+					break;
+				}
+			}
+			i++;
+		}
+		
+	
+		va_end(args);
+		
+		if (!gda_server_provider_perform_operation (server, cnn, op, &gda_returned_error)) {
+				/* error */
+				*error = g_error_new (GDA_GENERAL_ERROR, GDA_GENERAL_OPERATION_ERROR, 
+						"The Server couldn't perform the CREATE TABLE operation!. \
+						Provider Error Message: '%s'", gda_returned_error->message);
+				g_object_unref (op);
+				return FALSE;
+		}
+
+		g_object_unref (op);
+		return TRUE;
+	}
 }
 
 /**

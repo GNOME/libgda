@@ -1,3 +1,9 @@
+2008-02-28  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-init.c:
+	* libgda/libgda.h: applied patch to add a new gda_create_table_full()
+	function (thanks to Daniel Espinosa) with a better API
+
 2008-02-27  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-util.c: applied patch to change the default string escape for a 

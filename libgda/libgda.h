@@ -109,6 +109,17 @@ typedef enum  {
     GDA_GENERAL_OPERATION_ERROR
 } GdaGeneralError;
 
+
+typedef enum
+{
+	GDA_GENERAL_CREATE_TABLE_NOTHING_FLAG,
+	GDA_GENERAL_CREATE_TABLE_PKEY_FLAG,
+	GDA_GENERAL_CREATE_TABLE_NOT_NULL_FLAG,
+	GDA_GENERAL_CREATE_TABLE_AUTOINC_FLAG,
+	/* Combination Flags */
+	GDA_GENERAL_CREATE_TABLE_PKEY_AUTOINC_FLAG
+} GdaGeneralCreateTableFlag;
+
 void     gda_init             (const gchar *app_id, const gchar *version, gint nargs, gchar *args[]);
 GdaDict *gda_get_default_dict (void);
 
@@ -152,6 +163,10 @@ gint                gda_execute_sql_command    (GdaConnection *cnn, const gchar 
 
 gboolean            gda_create_table           (GdaConnection *cnn, 
 						const gchar *table_name, GError **error, ...);
+
+gboolean            gda_create_table_full      (GdaConnection *cnn, 
+						const gchar *table_name, GError **error, ...);
+
 gboolean            gda_drop_table             (GdaConnection *cnn, 
 						const gchar *table_name, GError **error);
 
