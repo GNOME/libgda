@@ -904,8 +904,8 @@ output_data_model (MainData *data, GdaDataModel *model)
 	static gboolean env_set = FALSE;
 
 	if (!env_set) {
-		setenv ("GDA_DATA_MODEL_DUMP_TITLE", "Yes", TRUE);
-		setenv ("GDA_DATA_MODEL_NULL_AS_EMPTY", "Yes", TRUE);
+		g_setenv ("GDA_DATA_MODEL_DUMP_TITLE", "Yes", TRUE);
+		g_setenv ("GDA_DATA_MODEL_NULL_AS_EMPTY", "Yes", TRUE);
 		env_set = TRUE;
 	}
 

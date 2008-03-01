@@ -1,3 +1,9 @@
+2008-03-01  Nathan  <nbinont@yahoo.ca>
+
+	* tools/gda-sql.c: (output_data_model): Use g_setenv() instead of 
+	setenv() to fix the build on Windows.
+	Bug #510739.
+
 2008-01-26  Armin Burgmeier  <armin@openismus.com>
 
 	* libgda/gda-server-operation.c:
