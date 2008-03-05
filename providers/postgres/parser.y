@@ -103,6 +103,8 @@ sql_operation_string_to_operator (const gchar *op)
 	case '<':
 		if (op[1] == '=')
 			return GDA_SQL_OPERATOR_LEQ;
+		else if (op[1] == '>')
+			return GDA_SQL_OPERATOR_DIFF;
 		else if (op[1] == 0)
 			return GDA_SQL_OPERATOR_LT;
 		break;

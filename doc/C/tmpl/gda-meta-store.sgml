@@ -22,9 +22,6 @@ Dictionary object
   but a user can also add its own tables or other database objects. The following diagram shows the tables and
   views initially defined by &LIBGDA; for its internal needs:
   <mediaobject>
-    <imageobject role="fo">
-      <imagedata fileref="information_schema.svg" format="SVG"/>
-    </imageobject>
     <imageobject role="html">
       <imagedata fileref="information_schema.png" format="PNG"/>
     </imageobject>

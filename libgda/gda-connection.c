@@ -1489,12 +1489,12 @@ gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *
 /**
  * gda_connection_begin_transaction
  * @cnc: a #GdaConnection object.
- * @name: the name of the transation to start
+ * @name: the name of the transation to start, or %NULL
  * @level:
  * @error: a place to store errors, or %NULL
  *
  * Starts a transaction on the data source, identified by the
- * @xaction parameter.
+ * @name parameter.
  *
  * Before starting a transaction, you can check whether the underlying
  * provider does support transactions or not by using the
@@ -1520,7 +1520,7 @@ gda_connection_begin_transaction (GdaConnection *cnc, const gchar *name, GdaTran
 /**
  * gda_connection_commit_transaction
  * @cnc: a #GdaConnection object.
- * @name: the name of the transation to commit
+ * @name: the name of the transation to commit, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Commits the given transaction to the backend database. You need to call
@@ -1545,7 +1545,7 @@ gda_connection_commit_transaction (GdaConnection *cnc, const gchar *name, GError
 /**
  * gda_connection_rollback_transaction
  * @cnc: a #GdaConnection object.
- * @name: the name of the transation to commit
+ * @name: the name of the transation to commit, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Rollbacks the given transaction. This means that all changes
@@ -1744,7 +1744,7 @@ check_parameters (GdaMetaContext *context, GError **error, gint nb, ...)
 		g_set_error (error, 0, 0,
 			     _("Missing and/or wrong arguments"));
 
-	g_print ("Check context => %d\n", retval);
+	/*g_print ("Check arguments context => found %d\n", retval);*/
 	return retval;
 }
 
@@ -1752,9 +1752,11 @@ static gboolean
 local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaContext *context, GError **error)
 {
 #ifdef GDA_DEBUG
-#define ASSERT_TABLE_NAME(x,y) g_assert (!strcmp ((x), (y)));
+#define ASSERT_TABLE_NAME(x,y) g_assert (!strcmp ((x), (y)))
+#define WARN_METHOD_NOT_IMPLEMENTED(prov,method) g_warning ("Provider '%s' does not implement the META method '%s()', please report the error to bugzilla.gnome.org", gda_server_provider_get_name (prov), (method))
 #else
 #define ASSERT_TABLE_NAME(x,y)
+#define WARN_METHOD_NOT_IMPLEMENTED(prov,method)
 #endif
 	const gchar *tname = context->table_name;
 	GdaMetaStore *store;
@@ -1765,14 +1767,109 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 	
 	store = gda_connection_get_meta_store (cnc);
 	switch (*tname) {
+	case 'b': {
+		/* _builtin_data_types, params: 
+		 *  - none
+		 */
+		ASSERT_TABLE_NAME (tname, "builtin_data_types");
+		if (!PROV_CLASS (provider)->meta_funcs.btypes) {
+			WARN_METHOD_NOT_IMPLEMENTED (provider, "btypes");
+			break;
+		}
+		return PROV_CLASS (provider)->meta_funcs.btypes (provider, cnc, store, context, error);
+	}
 	case 'i':
 		/* _information_schema_catalog_name, params: 
 		 *  - none
 		 */
-		ASSERT_TABLE_NAME (tname, "information_schema_catalog_name")
-		if (!PROV_CLASS (provider)->meta_funcs.info)
+		ASSERT_TABLE_NAME (tname, "information_schema_catalog_name");
+		if (!PROV_CLASS (provider)->meta_funcs.info) {
+			WARN_METHOD_NOT_IMPLEMENTED (provider, "info");
 			break;
+		}
 		return PROV_CLASS (provider)->meta_funcs.info (provider, cnc, store, context, error);
+	case 'c': 
+		if ((tname[1] == 'o') && (tname[2] == 'l') && (tname[3] == 'u')) {
+			/* _columns,  params: 
+			 *  - none
+			 *  - @table_schema AND @table_name
+			 *  - @table_schema AND @table_name AND @column_name
+			 */
+			const GValue *p_table_schema = NULL;
+			const GValue *p_table_name = NULL;
+			const GValue *p_column_name = NULL;
+			
+			if (check_parameters (context, error, 3,
+					      &p_table_schema, G_TYPE_STRING,
+					      &p_table_name, G_TYPE_STRING,
+					      &p_column_name, G_TYPE_STRING, NULL,
+					      "table_schema", &p_table_schema, "table_name", &p_table_name, "column_name", &p_column_name, NULL,
+					      "table_schema", &p_table_schema, "table_name", &p_table_name, NULL,
+					      NULL) < 0)
+				return FALSE;
+			
+			ASSERT_TABLE_NAME (tname, "columns");
+			if (p_table_schema) {
+				if (p_column_name) {
+					if (!PROV_CLASS (provider)->meta_funcs.columns_c) {
+						WARN_METHOD_NOT_IMPLEMENTED (provider, "columns_c");
+						break;
+					}
+					return PROV_CLASS (provider)->meta_funcs.columns_c (provider, cnc, store, context, error, 
+											    p_table_schema, p_table_name, p_column_name);
+				}
+				else {
+					if (!PROV_CLASS (provider)->meta_funcs.columns_t) {
+						WARN_METHOD_NOT_IMPLEMENTED (provider, "columns_t");
+						break;
+					}
+					return PROV_CLASS (provider)->meta_funcs.columns_t (provider, cnc, store, context, error, 
+											    p_table_schema, p_table_name);
+				}
+			}
+			else {
+				if (!PROV_CLASS (provider)->meta_funcs.columns) {
+					WARN_METHOD_NOT_IMPLEMENTED (provider, "columns");
+					break;
+				}
+				return PROV_CLASS (provider)->meta_funcs.columns (provider, cnc, store, context, error);
+			}
+		}
+		break;
+
+	case 'r': 
+		if ((tname[1] == 'e') && (tname[2] == 'f')) {
+			/* _referential_constraints, params: 
+			 *  - none
+			 *  - @constraint_schema AND @constraint_name
+			 */
+			const GValue *p_constraint_schema = NULL;
+			const GValue *p_constraint_name = NULL;
+			if (check_parameters (context, error, 3,
+					      &p_constraint_schema, G_TYPE_STRING,
+					      &p_constraint_name, G_TYPE_STRING, NULL,
+					      "constraint_schema", &p_constraint_schema, "constraint_name", &p_constraint_name, NULL,
+					      NULL) < 0)
+				return FALSE;
+			
+			ASSERT_TABLE_NAME (tname, "referential_constraints");
+			if (p_constraint_schema) {
+				if (!PROV_CLASS (provider)->meta_funcs.constraints_ref_c) {
+					WARN_METHOD_NOT_IMPLEMENTED (provider, "constraints_ref_c");
+					break;
+				}
+				return PROV_CLASS (provider)->meta_funcs.constraints_ref_c (provider, cnc, store, context, error, 
+											    p_constraint_schema, p_constraint_name);
+			}
+			else {
+				if (!PROV_CLASS (provider)->meta_funcs.constraints_ref) {
+					WARN_METHOD_NOT_IMPLEMENTED (provider, "constraints_ref");
+					break;
+				}
+				return PROV_CLASS (provider)->meta_funcs.constraints_ref (provider, cnc, store, context, error);
+			}
+		}
+		break;
 
 	case 's': {
 		/* _schemata, params: 
@@ -1785,9 +1882,11 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 				      "schema_name", &p_schema_name, NULL,
 				      NULL) < 0)
 			return FALSE;
-		ASSERT_TABLE_NAME (tname, "schemata")
-		if (!PROV_CLASS (provider)->meta_funcs.schemata)
+		ASSERT_TABLE_NAME (tname, "schemata");
+		if (!PROV_CLASS (provider)->meta_funcs.schemata) {
+			WARN_METHOD_NOT_IMPLEMENTED (provider, "schemata");
 			break;
+		}
 		return PROV_CLASS (provider)->meta_funcs.schemata (provider, cnc, store, context, error, p_schema_name);
 	}
 	case 't': 
@@ -1807,73 +1906,56 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 					      NULL) < 0)
 				return FALSE;
 			
-			ASSERT_TABLE_NAME (tname, "tables")
-				if (p_table_schema) {
-					if (!PROV_CLASS (provider)->meta_funcs.tables_views_s)
-						break;
-					return PROV_CLASS (provider)->meta_funcs.tables_views_s (provider, cnc, store, context, error, 
-												 p_table_schema, p_table_name);
+			ASSERT_TABLE_NAME (tname, "tables");
+			if (p_table_schema) {
+				if (!PROV_CLASS (provider)->meta_funcs.tables_views_s) {
+					WARN_METHOD_NOT_IMPLEMENTED (provider, "tables_views_s");
+					break;
 				}
-				else {
-					if (!PROV_CLASS (provider)->meta_funcs.tables_views)
-						break;
-					return PROV_CLASS (provider)->meta_funcs.tables_views (provider, cnc, store, context, error);
+				return PROV_CLASS (provider)->meta_funcs.tables_views_s (provider, cnc, store, context, error, 
+											 p_table_schema, p_table_name);
+			}
+			else {
+				if (!PROV_CLASS (provider)->meta_funcs.tables_views) {
+					WARN_METHOD_NOT_IMPLEMENTED (provider, "tables_views");
+					break;
 				}
+				return PROV_CLASS (provider)->meta_funcs.tables_views (provider, cnc, store, context, error);
+			}
 		}
-		break;
-
-	case 'c': 
-		if ((tname[1] == 'o') && (tname[2] == 'l') && (tname[2] == 'u')) {
-			/* _columns,  params: 
+		else if ((tname[1] == 'a') && (tname[2] == 'b') && (tname[3] == 'l') && (tname[4] == 'e') && 
+			 (tname[5] == '_') && (tname[6] == 'c')) {
+			/* _tables_constraints, params: 
 			 *  - none
 			 *  - @table_schema AND @table_name
-			 *  - @table_schema AND @table_name AND @column_name
 			 */
 			const GValue *p_table_schema = NULL;
 			const GValue *p_table_name = NULL;
-			const GValue *p_column_name = NULL;
-			
 			if (check_parameters (context, error, 3,
 					      &p_table_schema, G_TYPE_STRING,
-					      &p_table_name, G_TYPE_STRING,
-					      &p_column_name, G_TYPE_STRING, NULL,
-					      "table_schema", &p_table_schema, "table_name", &p_table_name, "column_name", &p_column_name, NULL,
+					      &p_table_name, G_TYPE_STRING, NULL,
 					      "table_schema", &p_table_schema, "table_name", &p_table_name, NULL,
 					      NULL) < 0)
 				return FALSE;
 			
-			ASSERT_TABLE_NAME (tname, "columns")
+			ASSERT_TABLE_NAME (tname, "table_constraints");
 			if (p_table_schema) {
-				if (p_column_name) {
-					if (!PROV_CLASS (provider)->meta_funcs.columns_c)
-						return FALSE;
-					return PROV_CLASS (provider)->meta_funcs.columns_c (provider, cnc, store, context, error, 
-											    p_table_schema, p_table_name, p_column_name);
+				if (!PROV_CLASS (provider)->meta_funcs.constraints_tab_s) {
+					WARN_METHOD_NOT_IMPLEMENTED (provider, "constraints_tab_s");
+					break;
 				}
-				else {
-					if (!PROV_CLASS (provider)->meta_funcs.columns_t)
-						return FALSE;
-					return PROV_CLASS (provider)->meta_funcs.columns_t (provider, cnc, store, context, error, 
+				return PROV_CLASS (provider)->meta_funcs.constraints_tab_s (provider, cnc, store, context, error, 
 											    p_table_schema, p_table_name);
-				}
 			}
 			else {
-				if (!PROV_CLASS (provider)->meta_funcs.columns)
-					return FALSE;
-				return PROV_CLASS (provider)->meta_funcs.columns (provider, cnc, store, context, error);
+				if (!PROV_CLASS (provider)->meta_funcs.constraints_tab) {
+					WARN_METHOD_NOT_IMPLEMENTED (provider, "constraints_tab");
+					break;
+				}
+				return PROV_CLASS (provider)->meta_funcs.constraints_tab (provider, cnc, store, context, error);
 			}
 		}
 		break;
-	
-	case 'b': {
-		/* _builtin_data_types, params: 
-		 *  - none
-		 */
-		ASSERT_TABLE_NAME (tname, "builtin_data_types")
-		if (!PROV_CLASS (provider)->meta_funcs.btypes)
-			break;
-		return PROV_CLASS (provider)->meta_funcs.btypes (provider, cnc, store, context, error);
-	}
 	default:
 		break;
 	}
@@ -1959,8 +2041,10 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		retval = local_meta_update (cnc->priv->provider_obj, cnc, &lcontext, error);
 		
 		g_signal_handler_disconnect (store, signal_id);
-		if (cbd.error_set)
+		if (cbd.error_set) {
 			g_propagate_error (error, lerror);
+			retval = FALSE;
+		}
 	}
 
 	return retval;
@@ -2334,28 +2418,6 @@ gda_connection_internal_transaction_committed (GdaConnection *cnc, const gchar *
 }
 
 void
-gda_connection_internal_sql_executed (GdaConnection *cnc, const gchar *sql, GdaConnectionEvent *error)
-{
-	GdaTransactionStatus *st = NULL;
-	
-	if (cnc->priv->trans_status)
-		st = gda_transaction_status_find_current (cnc->priv->trans_status, NULL, FALSE);
-	if (st)
-		gda_transaction_status_add_event_sql (st, sql, error);
-#ifdef GDA_DEBUG_signal
-		g_print (">> 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
-#endif
-		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[TRANSACTION_STATUS_CHANGED], 0);
-#ifdef GDA_DEBUG_signal
-		g_print ("<< 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
-#endif
-#ifdef GDA_DEBUG_NO
-	if (cnc->priv->trans_status)
-		gda_transaction_status_dump (cnc->priv->trans_status, 5);
-#endif
-}
-
-void
 gda_connection_internal_savepoint_added (GdaConnection *cnc, const gchar *parent_trans, const gchar *svp_name)
 {
 	GdaTransactionStatus *st;
@@ -2430,7 +2492,7 @@ gda_connection_internal_savepoint_removed (GdaConnection *cnc, const gchar *svp_
 }
 
 void 
-gda_connection_internal_statement_executed (GdaConnection *cnc, GdaStatement *stmt, GdaConnectionEvent *error)
+gda_connection_internal_statement_executed (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params, GdaConnectionEvent *error)
 {
 	if (!error || (error && (gda_connection_event_get_event_type (error) != GDA_CONNECTION_EVENT_ERROR))) {
 		GdaSqlStatement *sqlst;
@@ -2459,9 +2521,36 @@ gda_connection_internal_statement_executed (GdaConnection *cnc, GdaStatement *st
 		case GDA_SQL_STATEMENT_DELETE_SAVEPOINT:
 			gda_connection_internal_savepoint_removed (cnc, trans->trans_name);
 			break;
-		default:
-			gda_connection_internal_sql_executed (cnc, sqlst->sql, error);
+		default: {
+			GdaTransactionStatus *st = NULL;
+			
+			if (cnc->priv->trans_status)
+				st = gda_transaction_status_find_current (cnc->priv->trans_status, NULL, FALSE);
+			if (st) {
+				if (sqlst->sql)
+					gda_transaction_status_add_event_sql (st, sqlst->sql, error);
+				else {
+					gchar *sql;
+					sql = gda_statement_to_sql_extended (stmt, cnc, NULL, 
+									     GDA_STATEMENT_SQL_PARAMS_SHORT,
+									     NULL, NULL);
+					gda_transaction_status_add_event_sql (st, sql, error);
+					g_free (sql);
+				}
+			}
+#ifdef GDA_DEBUG_signal
+			g_print (">> 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
+#endif
+			g_signal_emit (G_OBJECT (cnc), gda_connection_signals[TRANSACTION_STATUS_CHANGED], 0);
+#ifdef GDA_DEBUG_signal
+			g_print ("<< 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
+#endif
+#ifdef GDA_DEBUG_NO
+			if (cnc->priv->trans_status)
+				gda_transaction_status_dump (cnc->priv->trans_status, 5);
+#endif
 			break;
+		}
 		}
 		gda_sql_statement_free (sqlst);
 	}

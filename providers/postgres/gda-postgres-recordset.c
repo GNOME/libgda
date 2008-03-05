@@ -294,7 +294,11 @@ finish_prep_stmt_init (PostgresConnectionData *cdata, GdaPostgresPStmt *ps, PGre
 			GType gtype;
 			column = GDA_COLUMN (list->data);
 			postgres_type = PQftype (pg_res, i);
-			gtype = _gda_postgres_type_oid_to_gda (cdata, postgres_type);
+			gtype = _GDA_PSTMT (ps)->types [i];
+			if (gtype == 0) {
+				gtype = _gda_postgres_type_oid_to_gda (cdata, postgres_type);
+				_GDA_PSTMT (ps)->types [i] = gtype;
+			}
 			_GDA_PSTMT (ps)->types [i] = gtype;
 			gda_column_set_g_type (column, gtype);
 			gda_column_set_name (column, PQfname (pg_res, i));

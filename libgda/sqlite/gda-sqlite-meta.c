@@ -67,6 +67,7 @@ static GValue       *table_type_value;
 static GValue       *view_type_value;
 static GValue       *view_check_option;
 static GValue       *false_value;
+static GValue       *zero_value;
 static GdaSet       *pragma_set;
 
 /*
@@ -100,6 +101,7 @@ _gda_sqlite_provider_meta_init (GdaServerProvider *provider)
 	g_value_set_string ((view_type_value = gda_value_new (G_TYPE_STRING)), "VIEW");
 	g_value_set_string ((view_check_option = gda_value_new (G_TYPE_STRING)), "NONE");
 	g_value_set_boolean ((false_value = gda_value_new (G_TYPE_BOOLEAN)), FALSE);
+	g_value_set_int ((zero_value = gda_value_new (G_TYPE_INT)), 0);
 
 	pragma_set = gda_set_new_inline (1, "tblname", G_TYPE_STRING, "");
 }
@@ -475,7 +477,7 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 		}
 		else
 			g_value_set_string ((v6 = gda_value_new (G_TYPE_STRING)), g_type_name (gtype));
-		if (! append_a_row (mod_model, error, 23, 
+		if (! append_a_row (mod_model, error, 25, 
 				    FALSE, catalog_value,
 				    FALSE, p_table_schema,
 				    FALSE, p_table_name,
@@ -484,6 +486,8 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 				    FALSE, gda_data_model_get_value_at (tmpmodel, 4, i), /* column default */
 				    TRUE, v3, /* is_nullable */
 				    TRUE, v2, /* data_type */
+				    FALSE, zero_value, /* array_dimension */
+				    FALSE, NULL, /* element_type */
 				    TRUE, v6, /* gtype */
 				    FALSE, NULL, /* character_maximum_length */
 				    FALSE, NULL, /* character_octet_length */
@@ -577,6 +581,40 @@ _gda_sqlite_meta_columns_c (GdaServerProvider *prov, GdaConnection *cnc,
 	g_object_unref (mod_model);
 
 	return retval;
+}
+
+gboolean
+_gda_sqlite_meta_constraints_tab (GdaServerProvider *prov, GdaConnection *cnc, 
+				  GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean 
+_gda_sqlite_meta_constraints_tab_s (GdaServerProvider *prov, GdaConnection *cnc, 
+				    GdaMetaStore *store, GdaMetaContext *context, GError **error,
+				    const GValue *table_schema, const GValue *table_name)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_sqlite_meta_constraints_ref (GdaServerProvider *prov, GdaConnection *cnc, 
+				  GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_sqlite_meta_constraints_ref_c (GdaServerProvider *prov, GdaConnection *cnc, 
+				    GdaMetaStore *store, GdaMetaContext *context, GError **error,
+				    const GValue *table_schema, const GValue *table_name)
+{
+	TO_IMPLEMENT;
+	return TRUE;
 }
 
 /*

@@ -122,6 +122,15 @@ different classifications of the group of #GdaHolder values.
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_set_copy ##### -->
+<para>
+
+</para>
+
+@set: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_set_new_inline ##### -->
 <para>
 

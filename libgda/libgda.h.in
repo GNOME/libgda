@@ -64,6 +64,7 @@
 #include <libgda/handlers/gda-handler-time.h>
 #include <libgda/handlers/gda-handler-type.h>
 #include <libgda/gda-meta-store.h>
+#include <libgda/gda-meta-struct.h>
 
 #include <libgda/gda-statement.h>
 #include <libgda/gda-batch.h>

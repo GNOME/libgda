@@ -97,6 +97,7 @@
 <!ENTITY libgda-GdaBatch SYSTEM "xml/gda-batch.xml">
 <!ENTITY libgda-GdaSqlParser SYSTEM "xml/gda-sql-parser.xml">
 <!ENTITY libgda-GdaMetaStore SYSTEM "xml/gda-meta-store.xml">
+<!ENTITY libgda-GdaMetaStruct SYSTEM "xml/gda-meta-struct.xml">
 <!ENTITY libgda-PRow SYSTEM "xml/gda-prow.xml">
 <!ENTITY libgda-PModel SYSTEM "xml/gda-pmodel.xml">
 <!ENTITY libgda-PStmt SYSTEM "xml/gda-pstmt.xml">
@@ -385,9 +386,6 @@
 	libraries.
       </para>
       <mediaobject>
-	<imageobject role="fo">
-          <imagedata fileref="architecture.svg" format="SVG"/>
-	</imageobject>
 	<imageobject role="html">
           <imagedata fileref="architecture.png" format="PNG"/>
 	</imageobject>
@@ -608,16 +606,9 @@
 	need to unref() it after usage, data handler objects are stateless), and so to obtain such a pointer one can:
 	<itemizedlist>
 	  <listitem>
-	    <para>Ask a <link linkend="GdaDict">GdaDict</link> object for one using the 
-	      <link linkend="gda-dict-get-default-handler">gda_dict_get_default_handler()</link>: the returned data handler
+	    <para>Use the <link linkend="gda-get-default-handler">gda_get_default_handler()</link>: the returned data handler
 	      is a generic one and should not be used to convert data to use with any connection, but only to have
 	      a portable way of storing and loading data in a locale independant fashion (for serialization purposes).</para>
-	  </listitem>
-	  <listitem>
-	    <para>Ask a <link linkend="GdaDict">GdaDict</link> object for one using the 
-	      <link linkend="gda-dict-get-handler">gda_dict_get_handler()</link>: the returned data handler can safely be used
-	      to convert data to use with the connection assigned to the dictionary (see this method's documentation
-	      for more information)</para>
 	  </listitem>
 	  <listitem>
 	    <para>Ask a <link linkend="GdaServerProvider">GdaServerProvider</link> object for one using the
@@ -638,7 +629,7 @@
     </chapter>
 
     <chapter>
-      <title>Dictionary</title>
+      <title>Dictionary - metadata</title>
       <para>
 	Each connection has a dictionary object (a <link linkend="GdaMetaStore">GdaMetaStore</link>) attached to it. That
 	dictionary is either created by the connection when it needs it, or is set by the user (to be able to re-use
@@ -650,7 +641,13 @@
 	"information schema" schema (as defined in the SQL standard and adapted to add more information). The user
 	is then free to add more tables to contain his own data in the dictionary.
       </para>
+      <para>
+	Extracting information about database objects can easily be done using a 
+	<link linkend="GdaMetaStruct">GdaMetaStruct</link> structure which creates an easy to use in-memory representation
+	of some database objects.
+      </para>
       &libgda-GdaMetaStore;
+      &libgda-GdaMetaStruct;
     </chapter>
 
     <chapter>
@@ -746,6 +743,18 @@ id | name        | default_served_by | country | city
  9 | Greg Popoff |                 2 | SP      | MDR 
 c0> ]]>
       </programlisting>
+      <para>
+	The &gda-sql; tool uses the following environment variables, when set:
+	<itemizedlist>
+	  <listitem><para>GDA_SQL_CNC: may contain an all-in-one connection string to open upon startup</para></listitem>
+	  <listitem><para>GDA_NO_PAGER: if set, then no pager will be used</para></listitem>
+	  <listitem><para>PAGER: if set, indicates which pager program to use (the "more" program is used if not set)</para></listitem>
+	  <listitem><para>GDA_SQL_EDITOR, EDITOR, VISUAL (by precedence order): if set specifies which editor is used (the "notepad.exe" editor is used on Windows
+	      platforms or the "vi" on others if not set)</para></listitem>
+	  <listitem><para>GDA_SQL_VIEWER_PNG: specifies the viewer to use to display graphs (as PNG files)</para></listitem>
+	  <listitem><para>GDA_SQL_VIEWER_PDF: specifies the viewer to use to display graphs (as PDF files)</para></listitem>
+	</itemizedlist>
+      </para>
     </chapter>
 
     <chapter id="libgda-tools-list-config">

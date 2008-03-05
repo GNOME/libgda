@@ -93,7 +93,7 @@ gda_g_type_from_string (const gchar *str)
  * @string: string to escape
  *
  * Escapes @string to make it understandable by a DBMS. The escape method is very common and replaces any
- * occurence of "'" with "\'" and "\" with "\\".
+ * occurence of "'" with "''" and "\" with "\\"
  */
 gchar *
 gda_default_escape_string (const gchar *string)
@@ -119,7 +119,12 @@ gda_default_escape_string (const gchar *string)
 	ret = g_new0 (gchar, size);
 	retptr = ret;
 	while (*ptr) {
-		if ((*ptr == '\'') || (*ptr == '\\')) {
+		if (*ptr == '\'') {
+			*retptr = '\'';
+			*(retptr+1) = *ptr;
+			retptr += 2;
+		}
+		else if (*ptr == '\\') {
 			*retptr = '\\';
 			*(retptr+1) = *ptr;
 			retptr += 2;

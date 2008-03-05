@@ -1378,6 +1378,26 @@ gda_meta_store_get_type
 </SECTION>
 
 <SECTION>
+<FILE>gda-meta-struct</FILE>
+<TITLE>GdaMetaStruct</TITLE>
+GdaMetaStruct
+GdaMetaStructError
+GDA_META_STRUCT_ERROR
+GdaMetaDbObjectType
+GdaMetaDbObject
+GdaMetaTable
+GdaMetaView
+GdaMetaTableColumn
+GdaMetaTableForeignKey
+gda_meta_struct_new
+gda_meta_struct_complement
+gda_meta_struct_order_db_objects
+gda_meta_struct_get_db_object
+gda_meta_struct_get_table_column
+gda_meta_struct_free
+</SECTION>
+
+<SECTION>
 <FILE>gda-prow</FILE>
 <TITLE>GdaPRow</TITLE>
 <INCLUDE>providers-support/gda-prow.h</INCLUDE>

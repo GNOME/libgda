@@ -235,6 +235,10 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 	provider_class->meta_funcs.columns = _gda_sqlite_meta_columns;
 	provider_class->meta_funcs.columns_t = _gda_sqlite_meta_columns_t;
 	provider_class->meta_funcs.columns_c = _gda_sqlite_meta_columns_c;
+	provider_class->meta_funcs.constraints_tab = _gda_sqlite_meta_constraints_tab;
+	provider_class->meta_funcs.constraints_tab_s = _gda_sqlite_meta_constraints_tab_s;
+	provider_class->meta_funcs.constraints_ref = _gda_sqlite_meta_constraints_ref;
+	provider_class->meta_funcs.constraints_ref_c = _gda_sqlite_meta_constraints_ref_c;
 }
 
 static void
@@ -1461,7 +1465,6 @@ real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stm
 		goto out_err;
 
 	/* prepare statement */
-	g_print ("PREP1%s\n", sql);
 	status = sqlite3_prepare_v2 (cdata->connection, sql, -1, &sqlite_stmt, &left);
 	if (status != SQLITE_OK) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR,
@@ -1569,7 +1572,6 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			if (!sql)
 				return NULL;
 
-			g_print ("PREP2%s\n", sql);
 			status = sqlite3_prepare_v2 (cdata->connection, sql, -1, &sqlite_stmt, (const char**) &left);
 			if (status != SQLITE_OK) {
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR,
@@ -1659,7 +1661,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			sqlite3_bind_null (ps->sqlite_stmt, i);
 		else if (G_VALUE_TYPE (value) == G_TYPE_STRING)
 			sqlite3_bind_text (ps->sqlite_stmt, i, 
-					   g_value_get_string (value), -1, SQLITE_STATIC);
+					   g_value_get_string (value), -1, SQLITE_TRANSIENT);
 		else if (G_VALUE_TYPE (value) == G_TYPE_INT)
 			sqlite3_bind_int (ps->sqlite_stmt, i, g_value_get_int (value));
 		else if (G_VALUE_TYPE (value) == G_TYPE_DOUBLE)
@@ -1685,12 +1687,12 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_BLOB) {
 			GdaBinary *bin = (GdaBinary *) gda_value_get_blob (value);
 			sqlite3_bind_blob (ps->sqlite_stmt, i, 
-					   bin->data, bin->binary_length, SQLITE_STATIC);
+					   bin->data, bin->binary_length, SQLITE_TRANSIENT);
 		}
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_BINARY) {
 			GdaBinary *bin = (GdaBinary *) gda_value_get_binary (value);
 			sqlite3_bind_blob (ps->sqlite_stmt, i, 
-					   bin->data, bin->binary_length, SQLITE_STATIC);
+					   bin->data, bin->binary_length, SQLITE_TRANSIENT);
 		}
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_TIME) {
 			gchar *str;
@@ -1723,7 +1725,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			const GdaNumeric *gdan;
 			
 			gdan = gda_value_get_numeric (value);
-			sqlite3_bind_text (ps->sqlite_stmt, i, gdan->number, -1, SQLITE_STATIC);
+			sqlite3_bind_text (ps->sqlite_stmt, i, gdan->number, -1, SQLITE_TRANSIENT);
 		}
 		else {
 			gchar *str;
@@ -1761,7 +1763,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			flags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD;
 
                 data_model = (GObject *) gda_sqlite_recordset_new (cnc, ps, flags, col_types);
-		gda_connection_internal_statement_executed (cnc, stmt, NULL);
+		gda_connection_internal_statement_executed (cnc, stmt, params, NULL);
 		return data_model;
         }
 	else {
@@ -1781,7 +1783,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
                                 gda_connection_add_event (cnc, event);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR, errmsg);
-				gda_connection_internal_statement_executed (cnc, stmt, event);
+				gda_connection_internal_statement_executed (cnc, stmt, params, event);
 				return NULL;
                         }
 			else {
@@ -1831,7 +1833,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
                                 g_free (str);
                                 gda_connection_add_event (cnc, event);
                         }
-			gda_connection_internal_statement_executed (cnc, stmt, event);
+			gda_connection_internal_statement_executed (cnc, stmt, params, event);
 			return set;
 		}
 	}

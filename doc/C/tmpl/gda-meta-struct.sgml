@@ -1,0 +1,192 @@
+<!-- ##### SECTION Title ##### -->
+GdaMetaStruct
+
+<!-- ##### SECTION Short_Description ##### -->
+In memory representation of some database objects
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+  The #GdaMetaStruct structure reads data from a #GdaMetaStore object and
+  creates an easy to use in memory representation for some database objects. For example one can easily
+  analyse the columns of a table (or its foreign keys) using a #GdaMetaStruct.
+</para>
+<para>
+  It is not permitted to modify a #GdaMetaStruct structure, one should only use the public API
+  to add information about database objects (using gda_meta_struct_complement()).
+</para>
+<para>
+  In the following code sample, one prints the columns names and types of a table:
+  <programlisting>
+GdaMetaStruct *mstruct;
+GdaMetaDbObject *dbo;
+GValue *catalog, *schema, *name;
+
+/* Define catalog, schema and name */
+[...]
+
+mstruct = gda_meta_struct_new ();
+gda_meta_struct_complement (mstruct, store, GDA_META_DB_TABLE, catalog, schema, name, NULL);
+dbo = gda_meta_struct_get_db_object (mstruct, catalog, schema, name);
+if (!dbo)
+        g_print ("Table not found\n");
+else {
+        GSList *list;
+        for (list = GDA_META_DB_OBJECT_GET_TABLE (dbo)->columns; list; list = list->next) {
+                GdaMetaTableColumn *tcol = GDA_META_TABLE_COLUMN (list->data);
+                g_print ("COLUMN: %s (%s)\n", tcol->column_name, tcol->column_type);
+        }
+}
+gda_meta_struct_free (mstruct);
+  </programlisting>
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaMetaStruct ##### -->
+<para>
+
+</para>
+
+@db_objects: 
+@index: 
+
+<!-- ##### ENUM GdaMetaStructError ##### -->
+<para>
+
+</para>
+
+@GDA_META_STRUCT_UNKNOWN_OBJECT_ERROR: 
+@GDA_META_STRUCT_DUPLICATE_OBJECT_ERROR: 
+@GDA_META_STRUCT_INCOHERENCE_ERROR: 
+
+<!-- ##### MACRO GDA_META_STRUCT_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### ENUM GdaMetaDbObjectType ##### -->
+<para>
+
+</para>
+
+@GDA_META_DB_UNKNOWN: 
+@GDA_META_DB_TABLE: 
+@GDA_META_DB_VIEW: 
+
+<!-- ##### STRUCT GdaMetaTable ##### -->
+<para>
+
+</para>
+
+@columns: 
+@pk_cols_array: 
+@pk_cols_nb: 
+@reverse_fk_list: 
+@fk_list: 
+
+<!-- ##### STRUCT GdaMetaView ##### -->
+<para>
+
+</para>
+
+@table: 
+@view_def: 
+@is_updatable: 
+
+<!-- ##### STRUCT GdaMetaTableColumn ##### -->
+<para>
+
+</para>
+
+@column_name: 
+@column_type: 
+@gtype: 
+@pkey: 
+@nullok: 
+@default_value: 
+
+<!-- ##### STRUCT GdaMetaTableForeignKey ##### -->
+<para>
+
+</para>
+
+@meta_table: 
+@depend_on: 
+@cols_nb: 
+@fk_cols_array: 
+@fk_names_array: 
+@ref_pk_cols_array: 
+@ref_pk_names_array: 
+
+<!-- ##### FUNCTION gda_meta_struct_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_meta_struct_complement ##### -->
+<para>
+
+</para>
+
+@mstruct: 
+@store: 
+@type: 
+@catalog: 
+@schema: 
+@name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_meta_struct_order_db_objects ##### -->
+<para>
+
+</para>
+
+@mstruct: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_meta_struct_get_db_object ##### -->
+<para>
+
+</para>
+
+@mstruct: 
+@catalog: 
+@schema: 
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_meta_struct_get_table_column ##### -->
+<para>
+
+</para>
+
+@mstruct: 
+@table: 
+@col_name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_meta_struct_free ##### -->
+<para>
+
+</para>
+
+@mstruct: 
+
+

@@ -10,9 +10,6 @@ Every SQL statement can be decomposed in a #GdaSqlStatement structure. This is n
 which can be manipulated directly. The structure is a tree composed of several key structures which are show in the following diagram
 (even though it does not show, all structures "inherit" the #GdaSqlAnyPart structure which holds some basic information).
 <mediaobject>
-  <imageobject role="fo">
-    <imagedata fileref="parts.svg" format="SVG"/>
-  </imageobject>
   <imageobject role="html">
     <imagedata fileref="parts.png" format="PNG"/>
   </imageobject>
@@ -223,9 +220,6 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
   when it cannot parse the SQL string, or when operating in delimiter mode (it only tries to delimit statements if there are several
   ones in the same SQL string).
 <mediaobject>
-  <imageobject role="fo">
-    <imagedata fileref="stmt-unknown.svg" format="SVG"/>
-  </imageobject>
   <imageobject role="html">
     <imagedata fileref="stmt-unknown.png" format="PNG"/>
   </imageobject>
@@ -298,9 +292,6 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
   (if this is not the case
   then report a bug).
   <mediaobject>
-    <imageobject role="fo">
-      <imagedata fileref="stmt-select.svg" format="SVG"/>
-    </imageobject>
     <imageobject role="html">
       <imagedata fileref="stmt-select.png" format="PNG"/>
     </imageobject>
@@ -404,9 +395,6 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
   (if this is not the case
   then report a bug).
   <mediaobject>
-    <imageobject role="fo">
-      <imagedata fileref="stmt-insert1.svg" format="SVG"/>
-    </imageobject>
     <imageobject role="html">
       <imagedata fileref="stmt-insert1.png" format="PNG"/>
     </imageobject>
@@ -418,9 +406,6 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
     </caption>
   </mediaobject>
   <mediaobject>
-    <imageobject role="fo">
-      <imagedata fileref="stmt-insert2.svg" format="SVG"/>
-    </imageobject>
     <imageobject role="html">
       <imagedata fileref="stmt-insert2.png" format="PNG"/>
     </imageobject>
@@ -529,9 +514,6 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
   (if this is not the case
   then report a bug).
   <mediaobject>
-    <imageobject role="fo">
-      <imagedata fileref="stmt-update.svg" format="SVG"/>
-    </imageobject>
     <imageobject role="html">
       <imagedata fileref="stmt-update.png" format="PNG"/>
     </imageobject>
@@ -594,9 +576,6 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
   (if this is not the case
   then report a bug).
   <mediaobject>
-    <imageobject role="fo">
-      <imagedata fileref="stmt-compound.svg" format="SVG"/>
-    </imageobject>
     <imageobject role="html">
       <imagedata fileref="stmt-compound.png" format="PNG"/>
     </imageobject>
@@ -984,6 +963,7 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 @GDA_SQL_OPERATOR_ISNOTNULL: 
 @GDA_SQL_OPERATOR_NOT: 
 @GDA_SQL_OPERATOR_IN: 
+@GDA_SQL_OPERATOR_NOTIN: 
 @GDA_SQL_OPERATOR_CONCAT: 
 @GDA_SQL_OPERATOR_PLUS: 
 @GDA_SQL_OPERATOR_MINUS: 

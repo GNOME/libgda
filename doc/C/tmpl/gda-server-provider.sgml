@@ -86,7 +86,9 @@ Base class for all the DBMS providers
 
 <!-- ##### STRUCT GdaServerProviderMeta ##### -->
 <para>
-
+These methods must be implemented by providers to update a connection's associated metadata (in a 
+#GdaMetaStore object), see the <link linkend="prov-metadata">Virtual methods for providers/Methods - metadata</link>
+for more information.
 </para>
 
 @info: 
@@ -97,6 +99,10 @@ Base class for all the DBMS providers
 @columns: 
 @columns_t: 
 @columns_c: 
+@constraints_tab: 
+@constraints_tab_s: 
+@constraints_ref: 
+@constraints_ref_c: 
 
 <!-- ##### USER_FUNCTION GdaServerProviderAsyncCallback ##### -->
 <para>

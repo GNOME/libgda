@@ -193,6 +193,10 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	provider_class->meta_funcs.columns = _gda_postgres_meta_columns;
 	provider_class->meta_funcs.columns_t = _gda_postgres_meta_columns_t;
 	provider_class->meta_funcs.columns_c = _gda_postgres_meta_columns_c;
+	provider_class->meta_funcs.constraints_tab = _gda_postgres_meta_constraints_tab;
+	provider_class->meta_funcs.constraints_tab_s = _gda_postgres_meta_constraints_tab_s;
+	provider_class->meta_funcs.constraints_ref = _gda_postgres_meta_constraints_ref;
+	provider_class->meta_funcs.constraints_ref_c = _gda_postgres_meta_constraints_ref_c;
 }
 
 static void
@@ -1748,7 +1752,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 		
 		/* create data model in CURSOR mode */
 		recset = gda_postgres_recordset_new_cursor (cnc, ps, cursor_name, col_types);
-		gda_connection_internal_statement_executed (cnc, stmt, NULL); /* required: help @cnc keep some stats */
+		gda_connection_internal_statement_executed (cnc, stmt, params, NULL); /* required: help @cnc keep some stats */
 		return (GObject*) recset;
 	}
 
@@ -1935,7 +1939,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 			event = _gda_postgres_make_error (cnc, cdata->pconn, NULL, error);
 	}
 
-	gda_connection_internal_statement_executed (cnc, stmt, NULL); /* required: help @cnc keep some stats */
+	gda_connection_internal_statement_executed (cnc, stmt, params, NULL); /* required: help @cnc keep some stats */
 	return retval;
 }
 

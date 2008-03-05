@@ -164,7 +164,7 @@ typedef struct {
 struct _GdaMetaStoreClassPrivate {
 	GdaSqlParser  *parser;;
 	GdaStatement **prep_stmts; /* Simple prepared statements, of size STMT_LAST, general usage */
-	
+
 	/* Internal database's schema information */
 	GSList        *db_objects; /* list of DbObject structures */
 	GHashTable    *db_objects_hash; /* key = table name, value = a DbObject structure */
@@ -374,7 +374,7 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass) {
 		if (lerror)
 			g_error_free (lerror);
 	}
-	
+	g_string_free (string, TRUE);
 #endif
 }
 
@@ -1710,6 +1710,7 @@ gda_meta_store_extract (GdaMetaStore *store, const gchar *select_sql, GError **e
 	if (params) {
 		va_list ap;
 		gchar *pname;
+		GSList *list, *params_set = NULL;
 		va_start (ap, error);
 		for (pname = va_arg (ap, gchar *); pname; pname = va_arg (ap, gchar *)) {
 			GValue *value;
@@ -1725,11 +1726,20 @@ gda_meta_store_extract (GdaMetaStore *store, const gchar *select_sql, GError **e
 					g_object_unref (stmt);
 					g_object_unref (params);
 					va_end (ap);
+					g_slist_free (params_set);
 					return NULL;
 				}
+				params_set = g_slist_prepend (params_set, h);
 			}
 		}
 		va_end (ap);
+
+		for (list = params->holders; list; list = list->next) {
+			if (!g_slist_find (params_set, list->data))
+				g_warning (_("No value set for parameter '%s'"), 
+					   gda_holder_get_id (GDA_HOLDER (list->data)));
+		}
+		g_slist_free (params_set);
 	}
 
 	/* execution */
@@ -1858,7 +1868,8 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 	gboolean prep, with_cond;
 	gboolean retval = TRUE;
 	GSList *all_changes = NULL;
-	
+	gboolean started_transaction;
+
 	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
 	g_return_val_if_fail (store->priv, FALSE);
 	g_return_val_if_fail (store->priv->cnc, FALSE);
@@ -1893,6 +1904,14 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 	gda_data_model_dump (current, stdout);
 #endif
 	
+	/* start a transaction if possible */
+	if (! gda_connection_get_transaction_status (store->priv->cnc)) {
+		started_transaction = gda_connection_begin_transaction (store->priv->cnc, NULL,
+									GDA_TRANSACTION_ISOLATION_UNKNOWN,
+									NULL);
+		g_print ("------- BEGIN\n");
+	}
+
 	/* treat rows to insert / update */
 	if (new_data) {
 		gint new_n_rows, new_n_cols;
@@ -2006,7 +2025,16 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 				for (k = 0; k < tfk->cols_nb; k++) 
 					context.column_values [k] = (GValue*) gda_data_model_get_value_at (new_data, 
 													   tfk->ref_pk_cols_array[k], i);
-				g_print ("Suggest update data into table '%s'...\n", tfk->table_info->obj_name);
+#ifdef GDA_DEBUG
+				g_print ("Suggest update data into table '%s':", tfk->table_info->obj_name);
+				for (k = 0; k < tfk->cols_nb; k++) {
+					gchar *str;
+					str = gda_value_stringify (context.column_values [k]);
+					g_print (" [%s => %s]", context.column_names[k], str);
+					g_free (str);
+				}
+				g_print ("\n");
+#endif
 				g_signal_emit (store, gda_meta_store_signals[SUGGEST_UPDATE], 0, &context);
 				g_free (context.column_values);
 			}
@@ -2075,7 +2103,11 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 		}
 	}
 
-	if (all_changes) 
+	if (retval && started_transaction) {
+		retval = gda_connection_commit_transaction (store->priv->cnc, NULL, NULL);
+		g_print ("------- COMMIT\n");
+	}
+	if (retval && all_changes) 
 		g_signal_emit (store, gda_meta_store_signals[META_CHANGED], 0, all_changes);
 	
 out:
@@ -2086,6 +2118,10 @@ out:
 	g_free (rows_to_del);
 	if (current)
 		g_object_unref (current);
+	if (!retval && started_transaction) {
+		gda_connection_rollback_transaction (store->priv->cnc, NULL, NULL);
+		g_print ("------- ROLLBACK\n");
+	}
 	return retval;
 }
 
@@ -2111,7 +2147,7 @@ find_row_in_model (GdaDataModel *find_in, GdaDataModel *data, gint row, gint *pk
 	if (erow >= 0) {
 		gint ncols;
 		ncols = gda_data_model_get_n_columns (find_in);
-		if (ncols != gda_data_model_get_n_columns (data)) {
+		if (ncols > gda_data_model_get_n_columns (data)) {
 			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_MODIFY_CONTENTS_ERROR,
 				_("Data models should have the same number of columns"));
 			erow = -2;

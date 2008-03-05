@@ -988,7 +988,7 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 			flags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD;
 
                 data_model = (GObject *) gda_capi_recordset_new (cnc, ps, flags, col_types);
-		gda_connection_internal_statement_executed (cnc, stmt, NULL); /* required: help @cnc keep some stats */
+		gda_connection_internal_statement_executed (cnc, stmt, params, NULL); /* required: help @cnc keep some stats */
 		return data_model;
         }
 	else {
@@ -998,7 +998,7 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
                 /* Create a #GdaSet containing "IMPACTED_ROWS" */
 		/* Create GdaConnectionEvent notice with the type of command and impacted rows */
 
-		gda_connection_internal_statement_executed (cnc, stmt, event); /* required: help @cnc keep some stats */
+		gda_connection_internal_statement_executed (cnc, stmt, params, event); /* required: help @cnc keep some stats */
 		return (GObject*) set;
 	}
 }

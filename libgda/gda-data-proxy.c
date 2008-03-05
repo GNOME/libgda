@@ -79,7 +79,7 @@ static gboolean             gda_data_proxy_get_notify      (GdaDataModel *model)
 static void                 gda_data_proxy_send_hint       (GdaDataModel *model, GdaDataModelHint hint, 
 							    const GValue *hint_value);
 #define DEBUG_SYNC
-/*#undef DEBUG_SYNC*/
+#undef DEBUG_SYNC
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;

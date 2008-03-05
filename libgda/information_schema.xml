@@ -37,7 +37,7 @@
     <column name="catalog_name" pkey="TRUE"/>
   </table>
 
-  <table name="_schemata">
+  <table name="_schemata" descr="List of schemas">
     <column name="catalog_name" pkey="TRUE"/>
     <column name="schema_name" pkey="TRUE"/>
     <column name="schema_owner" nullok="TRUE"/>
@@ -47,7 +47,7 @@
     </fkey>
   </table>
 
-  <table name="_builtin_data_types">
+  <table name="_builtin_data_types" descr="List of built-in data types such as varchar, int, ...">
     <column name="short_type_name"/>
     <column name="full_type_name" pkey="TRUE"/>
     <column name="gtype" nullok="TRUE"/>
@@ -59,7 +59,7 @@
     </unique>
   </table>
 
-  <table name="_udt">
+  <table name="_udt" descr="User defined data types">
     <column name="udt_catalog" pkey="TRUE"/>
     <column name="udt_schema" pkey="TRUE"/>
     <column name="udt_name" pkey="TRUE"/>
@@ -74,12 +74,12 @@
     </unique>
   </table>
 
-  <table name="_udt_columns">
+  <table name="_udt_columns" descr="List of components for a user defined data type">
     <column name="udt_catalog" pkey="TRUE"/>
     <column name="udt_schema" pkey="TRUE"/>
     <column name="udt_name" pkey="TRUE"/>
     <column name="udt_column" pkey="TRUE"/>
-    <column name="data_type"/>
+    <column name="data_type" descr="References _all_types.full_type_name or _element_types.specific_name"/>
     <column name="character_maximum_length" type="gint" nullok="TRUE"/>
     <column name="character_octet_length" type="gint" nullok="TRUE"/>
     <column name="numeric_precision" type="gint" nullok="TRUE"/>
@@ -98,11 +98,12 @@
     </fkey>
   </table>
 
-  <table name="_enums">
+  <table name="_enums" descr="List of possible enumeration labels for enumerations">
     <column name="udt_catalog" pkey="TRUE"/>
     <column name="udt_schema" pkey="TRUE"/>
     <column name="udt_name" pkey="TRUE"/>
     <column name="label" pkey="TRUE"/>
+    <column name="ordinal_position" type="gint" descr="Position, starts at 1"/>
     <fkey ref_table="_udt">
       <part column="udt_catalog"/>
       <part column="udt_schema"/>
@@ -110,7 +111,7 @@
     </fkey>
   </table>
 
-  <table name="_element_types">
+  <table name="_element_types" descr="">
     <column name="specific_name" pkey="TRUE"/>
     <column name="object_catalog"/>
     <column name="object_schema"/>
@@ -122,7 +123,7 @@
     <column name="max_cardinality" type="gint"/>
   </table>
 
-  <table name="_domains">
+  <table name="_domains" descr="List of domains">
     <column name="domain_catalog" pkey="TRUE"/>
     <column name="domain_schema" pkey="TRUE"/>
     <column name="domain_name" pkey="TRUE"/>
@@ -177,7 +178,7 @@
     <column name="table_schema" pkey="TRUE"/>
     <column name="table_name" pkey="TRUE"/>
     <column name="view_definition" nullok="TRUE"/>
-    <column name="check_option" nullok="TRUE" note="CASCADE if the statement used to create the view included the WITH CHECK OPTION; otherwise, NONE"/>
+    <column name="check_option" nullok="TRUE" descr="CASCADE if the statement used to create the view included the WITH CHECK OPTION; otherwise, NONE"/>
     <column name="is_updatable" type="boolean" nullok="TRUE"/>
     <fkey ref_table="_tables">
       <part column="table_catalog"/>
@@ -290,10 +291,12 @@
     <column name="table_schema" pkey="TRUE"/>
     <column name="table_name" pkey="TRUE"/>
     <column name="column_name" pkey="TRUE"/>
-    <column name="ordinal_position" type="gint" note="Column position, starts at 1"/>
+    <column name="ordinal_position" type="gint" descr="Column position, starts at 1"/>
     <column name="column_default" nullok="TRUE"/>
     <column name="is_nullable" type="boolean"/>
-    <column name="data_type" note="References a _all_types.full_type_name or _element_types.specific_name"/>
+    <column name="data_type" descr="References _all_types.full_type_name"/>
+    <column name="array_dimension" type="gint"/>
+    <column name="element_type" nullok="TRUE" descr="References _element_types.specific_name, for arrays of @data_type base type"/>
     <column name="gtype"/>
     <column name="character_maximum_length" type="gint" nullok="TRUE"/>
     <column name="character_octet_length" type="gint" nullok="TRUE"/>
@@ -306,7 +309,7 @@
     <column name="collation_catalog" nullok="TRUE"/>
     <column name="collation_schema" nullok="TRUE"/>
     <column name="collation_name" nullok="TRUE"/>
-    <column name="extra" nullok="TRUE" note="CSV string with: AUTO_INCREMENT"/>
+    <column name="extra" nullok="TRUE" descr="CSV string with: AUTO_INCREMENT"/>
     <column name="is_updatable" type="boolean" nullok="TRUE"/>
     <column name="column_comments" nullok="TRUE"/>
     <fkey ref_table="_tables">
@@ -333,7 +336,7 @@
     <column name="table_catalog"/>
     <column name="table_schema"/>
     <column name="table_name"/>
-    <column name="constraint_type"/>
+    <column name="constraint_type" descr="CHECK, FOREIGN KEY, PRIMARY KEY or UNIQUE"/>
     <column name="check_clause" nullok="TRUE"/>
     <column name="is_deferrable" type="boolean" nullok="TRUE"/>
     <column name="initially_deferred" type="boolean" nullok="TRUE"/>

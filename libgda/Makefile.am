@@ -56,6 +56,7 @@ gda_headers = \
 	gda-log.h \
 	gda-marshal.h \
 	gda-meta-store.h \
+	gda-meta-struct.h \
 	gda-quark-list.h \
 	gda-set.h \
 	gda-row.h \
@@ -105,6 +106,7 @@ libgda_sources =  \
 	gda-log.c \
 	gda-marshal.c \
 	gda-meta-store.c \
+	gda-meta-struct.c \
 	gda-quark-list.c \
 	gda-set.c \
 	gda-row.c \

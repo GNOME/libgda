@@ -93,9 +93,14 @@ GdaInternalCommandResult *gda_internal_command_list_tables (GdaConnection *cnc, 
 							    GError **error, gpointer data);
 GdaInternalCommandResult *gda_internal_command_list_views (GdaConnection *cnc, const gchar **args,
 							   GError **error, gpointer data);
+GdaInternalCommandResult *gda_internal_command_list_schemas (GdaConnection *cnc, const gchar **args,
+							     GError **error, gpointer data);
 GdaInternalCommandResult *gda_internal_command_list_queries (GdaConnection *cnc, const gchar **args,
 							     GError **error, gpointer data);
 GdaInternalCommandResult *gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 						       GError **error, gpointer data);
+
+/* Misc */
+GdaMetaStruct            *gda_internal_command_build_meta_struct (GdaConnection *cnc, const gchar **args, GError **error);
 
 #endif

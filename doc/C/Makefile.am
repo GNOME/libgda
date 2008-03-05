@@ -61,3 +61,18 @@ EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration
 	architecture.svg parts.svg stmt-unknown.svg stmt-select.svg stmt-insert1.svg stmt-insert2.svg \
 	stmt-update.svg stmt-compound.svg information_schema.svg
 
+# Files not to distribute
+# for --rebuild-types in $(SCAN_OPTIONS), e.g. $(DOC_MODULE).types
+# for --rebuild-sections in $(SCAN_OPTIONS) e.g. $(DOC_MODULE)-sections.txt
+DISTCLEANFILES = $(DOC_MODULE)-docs.sgml.pdf
+
+DOC_STAMPS += pdf-build.stamp
+CLEANFILES += $(DOC_STAMPS)
+
+# Create the PDF
+PDF: pdf-build.stamp
+pdf-build.stamp:
+	if test -f $(srcdir)/$(DOC_MAIN_SGML_FILE); then \
+		dblatex $(srcdir)/$(DOC_MAIN_SGML_FILE); \
+	fi
+	touch pdf-build.stamp

@@ -75,6 +75,12 @@ typedef struct {
 				   const GValue *table_schema, const GValue *table_name);
 	gboolean (*columns_c)     (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **, 
 				   const GValue *table_schema, const GValue *table_name, const GValue *column_name);
+	gboolean (*constraints_tab)(GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*constraints_tab_s)(GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **, 
+				      const GValue *table_schema, const GValue *table_name);
+	gboolean (*constraints_ref)(GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*constraints_ref_c)(GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **, 
+				      const GValue *constraint_schema, const GValue *constraint_name);
 } GdaServerProviderMeta;
 
 typedef void (*GdaServerProviderAsyncCallback) (GdaServerProvider *provider, GdaConnection *cnc, guint task_id, 

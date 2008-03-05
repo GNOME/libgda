@@ -282,6 +282,117 @@
     </sect2>
   </sect1>
 
+  <sect1 id="prov-metadata">
+    <title>Methods - metadata</title>
+    <para>
+      The <fieldsynopsis>meta_funcs</fieldsynopsis> is composed of several functions which are listed in the
+      <link linkend="GdaServerProviderMeta">GdaServerProviderMeta</link> structure, used internally by
+      the <link linkend="GdaConnection">GdaConnection</link> object when one calls the
+      <link linkend="gda-connection-update-meta-store">gda_connection_update_meta_store()</link> method. 
+      Each method must update the contents of one table in the connection's associated metadata
+      (in its associated <link linkend="GdaMetaStore">GdaMetaStore</link> object), each has the same
+      "base" arguments and some have extra arguments further specifying what needs to be updated. The methods
+      are listed here with a brief explanation for each.
+    </para>
+    <sect2>
+      <title>info()</title>
+      <para>
+	This method must update the contents of the "_information_schema_catalog_name" table, which must contain exactly
+	one row describing the catalog name for the connection.
+      </para>
+    </sect2>
+    <sect2>
+      <title>schemata()</title>
+      <para>
+	This method must update the contents of the "_schemata" table, which lists all the schemas (namespaces).
+	There is one specific <parameter>schema_name</parameter> argument which, if not NULL specifies that only the
+	information regarding that schema must be updated.
+      </para>
+    </sect2>
+    <sect2>
+      <title>btypes()</title>
+      <para>
+	This method must update the contents of the "_builtin_data_types" table which lists all the
+	database's built in data types. There is no specific parameter.
+      </para>
+    </sect2>
+    <sect2>
+      <title>tables_views()</title>
+      <para>
+	This method must update the contents of the "_tables" and "_views" tables which list all the
+	tables and views. There is no specific parameter.
+      </para>
+    </sect2>
+    <sect2>
+      <title>tables_views_s()</title>
+      <para>
+	This method must update the contents of the "_tables" and "_views" tables which list all the
+	tables and views, but only for the schema named by the <parameter>table_schema</parameter> argument (which
+	is never NULL), and (if	not NULL) only for the table or view named by 
+	the <parameter>table_name</parameter> argument.
+      </para>
+    </sect2>
+    <sect2>
+      <title>columns()</title>
+      <para>
+	This method must update the contents of the "_columns" table which lists all the
+	columns of all the tables and views. There is no specific parameter.
+      </para>
+    </sect2>
+    <sect2>
+      <title>columns_t()</title>
+      <para>
+	This method must update the contents of the "_columns" table which lists all the
+	columns of all the tables and views but only for the tables and views which are in the schema named
+	by the <parameter>table_schema</parameter> argument (which
+	is never NULL), and  (if not NULL) only for the table or view named by 
+	the <parameter>table_name</parameter> argument.
+      </para>
+    </sect2>
+    <sect2>
+      <title>columns_c()</title>
+      <para>
+	This method must update the contents of the "_columns" table which lists all the
+	columns of all the tables and views but only for the tables and views which are in the schema named
+	by the <parameter>table_schema</parameter> argument (which
+	is never NULL), (if not NULL) only for the table or view named by 
+	the <parameter>table_name</parameter> argument, and for the column named by 
+	the <parameter>column_name</parameter> argument.
+      </para>
+    </sect2>
+    <sect2>
+      <title>constraints_tab()</title>
+      <para>
+	This method must update the contents of the "_table_constraints" table which lists all the
+	constraints for each table. There is no specific parameter.
+      </para>
+    </sect2>
+    <sect2>
+      <title>constraints_tab_s()</title>
+      <para>
+	This method must update the contents of the "_table_constraints" table which lists all the
+	constraints for the table which is in the schema named by the <parameter>table_schema</parameter> argument (which
+	is never NULL), and which is named by the <parameter>table_name</parameter> argument (which is also never NULL).
+      </para>
+    </sect2>
+<sect2>
+      <title>constraints_ref()</title>
+      <para>
+	This method must update the contents of the "_referential_constraints" table which lists all the
+	refetential constraints (which are also listed in the "_table_constraints" table). There is no specific parameter.
+      </para>
+    </sect2>
+    <sect2>
+      <title>constraints_ref_s()</title>
+      <para>
+	This method must update the contents of the "_referential_constraints" table which lists all the
+	refetential constraints (which are also listed in the "_table_constraints" table) for the constraint which is 
+	in the schema named by the <parameter>constraint_schema</parameter> argument (which
+	is never NULL), and which is named by the <parameter>constraint_name</parameter> argument (which is also never NULL).
+      </para>
+    </sect2>
+  </sect1>
+
   <sect1>
     <title>Methods - misc.</title>
     <sect2>
@@ -297,11 +408,9 @@
       </para>
     </sect2>
     <sect2>
-      <title>meta_funcs</title>
+      <title>is_busy()</title>
       <para>
-	The <fieldsynopsis>meta_funcs</fieldsynopsis> is composed of several functions which are listed in the
-	<link linkend="GdaServerProviderMeta">GdaServerProviderMeta</link> structure.
-	Related to <link linkend="GdaMetaStore">GdaMetaStore</link>.
+	This method tests if a connection is already busy in a, asynchronous task.
       </para>
     </sect2>
   </sect1>

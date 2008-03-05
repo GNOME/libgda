@@ -588,7 +588,7 @@ gda_pmodel_get_attributes_at (GdaDataModel *model, gint col, gint row)
 	imodel = (GdaPModel *) model;
 	g_return_val_if_fail (imodel->priv, 0);
 	
-	TO_IMPLEMENT;
+	/*FIXME: depending on modification queries being set or not */
 	flags = GDA_VALUE_ATTR_NO_MODIF;
 	
 	return flags;

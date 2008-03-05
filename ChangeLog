@@ -1,3 +1,33 @@
+2008-03-05  Vivien Malerba <malerba@gnome-db.org>
+
+	* doc/C: providers writing improvements and generate PDF file, and doc. update
+	* libgda/gda-util.c: applied patch to change the default string escape for a
+	single-quote char from backslash single-quote (\') to single-quote
+	single-quote ('') so that SQLite will accept it (thanks to Phil Longstaff)
+	* misc: removed debug info.
+	* providers/postgres/parser.y:
+	* sql-parser/parser.y: recognize "<>" as the DIFF operator
+	* libgda/sqlite/gda-sqlite-provider.c: bind the variables using the SQLITE_TRANSIENT flag
+	because the bound data depends on a GdaSet object which may be destroyed (or changed) afterwards
+	which leads to uncorrect results
+	* providers/skel-implementation/capi/gda-capi-provider.c:
+	* providers/postgres/gda-postgres-provider.c:
+	* libgda/sqlite/gda-sqlite-provider.c:
+	* libgda/gda-connection.c:
+	* libgda/gda-connection-private.h: removed gda_connection_internal_sql_executed() and altered
+	gda_connection_internal_statement_executed() to add the statement execution parameters for
+	future usage
+	* providers/postgres/gda-postgres-provider.c:
+	* providers/postgres/gda-postgres-meta.[ch]: more methods implemented
+	* libgda/information_schema.xml: GdaMetaStore internal schema improvements
+	* tools/gda-sql.c:
+	* tools/command-exec.[ch]: several improvements (new \dn and \graph commands, improved
+	tables' details report)
+	* libgda/Makefile.am:
+	* libgda/libgda.h.in:
+	* libgda/gda-meta-struct.[ch]: new structure to easily handle database objects defined in
+	a GdaMetaStore
+
 2008-02-23  Vivien Malerba <malerba@gnome-db.org>
 
 	* doc/C/libgda-4.0-sections.txt:

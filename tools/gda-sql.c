@@ -34,6 +34,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <libgda/gda-quark-list.h>
+#include <libgda/gda-meta-struct.h>
 
 #ifndef G_OS_WIN32
 #include <signal.h>
@@ -244,8 +245,12 @@ main (int argc, char *argv[])
 	init_input ();
 	init_history ();
 	for (;;) {
-		gchar *cmde = read_a_line (data);
+		gchar *cmde;
 
+		/* run any pending iterations */
+		while (g_main_context_iteration (NULL, FALSE));
+
+		cmde = read_a_line (data);
 		if (!cmde) {
 			save_history (NULL, NULL);
 			if (!data->output_stream)
@@ -1141,6 +1146,9 @@ static GdaInternalCommandResult *extra_command_set (GdaConnection *cnc, const gc
 static GdaInternalCommandResult *extra_command_unset (GdaConnection *cnc, const gchar **args,
 						      GError **error, MainData *data);
 
+static GdaInternalCommandResult *extra_command_graph (GdaConnection *cnc, const gchar **args,
+						      GError **error, MainData *data);
+
 static GdaInternalCommandsList *
 build_internal_commands_list (MainData *data)
 {
@@ -1189,10 +1197,30 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Information");
-	c->name = g_strdup_printf (_("%s [NAME]"), "d");
-	c->description = _("Describe table or view");
+	c->name = g_strdup_printf (_("%s [SCHEMA]"), "dn");
+	c->description = _("List all schemas (or named schema)");
+	c->args = NULL;
+	c->command_func = gda_internal_command_list_schemas;
+	c->user_data = NULL;
+	c->arguments_delimiter_func = NULL;
+	commands->commands = g_slist_prepend (commands->commands, c);
+
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("Information");
+	c->name = g_strdup_printf (_("%s [OBJ_NAME|SCHEMA.*]"), "d");
+	c->description = _("Describe object or full list of objects");
 	c->args = NULL;
 	c->command_func = gda_internal_command_detail;
+	c->user_data = NULL;
+	c->arguments_delimiter_func = NULL;
+	commands->commands = g_slist_prepend (commands->commands, c);
+
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("Information");
+	c->name = g_strdup_printf (_("%s [TABLE1 [TABLE2...]]"), "graph");
+	c->description = _("Create a graph of all or the listed tables");
+	c->args = NULL;
+	c->command_func = (GdaInternalCommandFunc) extra_command_graph;
 	c->user_data = NULL;
 	c->arguments_delimiter_func = NULL;
 	commands->commands = g_slist_prepend (commands->commands, c);
@@ -1213,7 +1241,7 @@ build_internal_commands_list (MainData *data)
 	c->name = g_strdup_printf (_("%s [CNC_NAME [DSN [USER [PASSWORD]]]]"), "c");
 	c->description = _("Connect to another defined data source (DSN, see \\dsn_list)");
 	c->args = NULL;
-	c->command_func = (GdaInternalCommandFunc)extra_command_manage_cnc;
+	c->command_func = (GdaInternalCommandFunc) extra_command_manage_cnc;
 	c->user_data = data;
 	c->arguments_delimiter_func = NULL;
 	commands->commands = g_slist_prepend (commands->commands, c);
@@ -2323,6 +2351,183 @@ extra_command_unset (GdaConnection *cnc, const gchar **args,
 		
 	return res;
 }
+
+#define DO_UNLINK(x) g_unlink(x)
+static void
+graph_func_child_died_cb (GPid pid, gint status, gchar *fname)
+{
+	DO_UNLINK (fname);
+	g_free (fname);
+	g_spawn_close_pid (pid);
+}
+
+static gchar *
+create_graph_from_meta_struct (GdaConnection *cnc, GdaMetaStruct *mstruct, GError **error)
+{
+#define FNAME "graph.dot"
+	GString *string;
+	gint i;
+
+	/* prepare the graph */
+	string = g_string_new ("digraph G {\nrankdir = BT;\nnode [shape = plaintext];\n");
+	GSList *dbo_list;
+	for (dbo_list = mstruct->db_objects; dbo_list; dbo_list = dbo_list->next) {
+		gchar *objname, *fullname;
+		GdaMetaDbObject *dbo = GDA_META_DB_OBJECT (dbo_list->data);
+		GSList *list;
+
+		/* obj human readable name, and full name */
+		fullname = g_strdup_printf ("%s.%s.%s", dbo->obj_catalog, dbo->obj_schema, dbo->obj_name);
+		if (dbo->obj_short_name) 
+			objname = g_strdup (dbo->obj_short_name);
+		else
+			objname = g_strdup_printf ("%s.%s", dbo->obj_schema, dbo->obj_name);
+
+		/* node */
+		switch (dbo->obj_type) {
+		case GDA_META_DB_UNKNOWN:
+			break;
+		case GDA_META_DB_TABLE:
+			g_string_append_printf (string, "\"%s\" [label=<<TABLE BORDER=\"1\" CELLBORDER=\"0\" CELLSPACING=\"0\">", fullname);
+			g_string_append_printf (string, "<TR><TD COLSPAN=\"2\" BGCOLOR=\"grey\" BORDER=\"1\">%s</TD></TR>", objname);
+			break;
+		case GDA_META_DB_VIEW:
+			g_string_append_printf (string, "\"%s\" [label=<<TABLE BORDER=\"1\" CELLBORDER=\"0\" CELLSPACING=\"0\">", fullname);
+			g_string_append_printf (string, "<TR><TD BGCOLOR=\"yellow\" BORDER=\"1\">%s</TD></TR>", objname);
+			break;
+		default:
+			TO_IMPLEMENT;
+			g_string_append_printf (string, "\"%s\" [ shape = note ", fullname);
+			break;
+		}
+
+		/* columns, only for tables */
+		if (dbo->obj_type == GDA_META_DB_TABLE) {
+			GdaMetaTable *mt = GDA_META_DB_OBJECT_GET_TABLE (dbo);
+			for (list = mt->columns; list; list = list->next) {
+				GdaMetaTableColumn *tcol = GDA_META_TABLE_COLUMN (list->data);
+				GString *extra = g_string_new ("");
+				if (tcol->pkey)
+					g_string_append_printf (extra, "key");
+				g_string_append_printf (string, "<TR><TD ALIGN=\"left\">%s</TD><TD ALIGN=\"right\">%s</TD></TR>", 
+							tcol->column_name, extra->str);
+				g_string_free (extra, TRUE);
+			}
+			g_string_append (string, "</TABLE>>];\n");
+			/* foreign keys */
+			for (i = 1, list = mt->fk_list; list; i++, list = list->next) {
+				GdaMetaTableForeignKey *tfk = GDA_META_TABLE_FOREIGN_KEY (list->data);
+				if (tfk->depend_on->obj_type != GDA_META_DB_UNKNOWN) 
+					g_string_append_printf (string, "\"%s\" -> \"%s.%s.%s\" [label=\"(%d)\"];\n", fullname,
+								tfk->depend_on->obj_catalog, tfk->depend_on->obj_schema, 
+								tfk->depend_on->obj_name, i);
+			}
+		}
+		else if (dbo->obj_type == GDA_META_DB_VIEW) {
+			GdaMetaTable *mt = GDA_META_DB_OBJECT_GET_TABLE (dbo);
+			for (list = mt->columns; list; list = list->next) {
+				GdaMetaTableColumn *tcol = GDA_META_TABLE_COLUMN (list->data);
+				g_string_append_printf (string, "<TR><TD ALIGN=\"left\">%s</TD></TR>", tcol->column_name);
+			}
+			g_string_append (string, "</TABLE>>];\n");
+		}
+
+		g_free (objname);
+		g_free (fullname);
+	}
+	g_string_append_c (string, '}');
+
+	/* do something with the graph */
+	gchar *result = NULL;
+	if (g_file_set_contents (FNAME, string->str, -1, error)) {
+		const gchar *viewer;
+		const gchar *format;
+		
+		viewer = g_getenv ("GDA_SQL_VIEWER_PNG");
+		if (viewer)
+			format = "png";
+		else {
+			viewer = g_getenv ("GDA_SQL_VIEWER_PDF");
+			if (viewer)
+				format = "pdf";
+		}
+		if (viewer) {
+			static gint counter = 0;
+			gchar *tmpname, *suffix;
+			gchar *argv[] = {"dot", NULL, "-o",  NULL, FNAME, NULL};
+			guint eventid = 0;
+
+			suffix = g_strdup_printf (".gda_graph_tmp-%d", counter++);
+			tmpname = g_build_filename (g_get_tmp_dir (), suffix, NULL);
+			g_free (suffix);
+			argv[1] = g_strdup_printf ("-T%s", format);
+			argv[3] = tmpname;
+			if (g_spawn_sync (NULL, argv, NULL,
+					  G_SPAWN_SEARCH_PATH | G_SPAWN_STDOUT_TO_DEV_NULL | G_SPAWN_STDERR_TO_DEV_NULL, 
+					  NULL, NULL,
+					  NULL, NULL, NULL, NULL)) {
+				gchar *vargv[3];
+				GPid pid;
+				vargv[0] = (gchar *) viewer;
+				vargv[1] = tmpname;
+				vargv[2] = NULL;
+				if (g_spawn_async (NULL, vargv, NULL,
+						   G_SPAWN_SEARCH_PATH | G_SPAWN_STDOUT_TO_DEV_NULL | 
+						   G_SPAWN_STDERR_TO_DEV_NULL | G_SPAWN_DO_NOT_REAP_CHILD, 
+						   NULL, NULL,
+						   &pid, NULL)) {
+					eventid = g_child_watch_add (pid, (GChildWatchFunc) graph_func_child_died_cb, 
+								     tmpname);
+				}
+			}
+			if (eventid == 0) {
+				DO_UNLINK (tmpname);
+				g_free (tmpname);
+			}
+			g_free (argv[1]);
+			result = g_strdup_printf (_("Graph written to '%s'\n"), FNAME);
+		}
+		else 
+			result = g_strdup_printf (_("Graph written to '%s'\n"
+						    "Use 'dot' (from the GraphViz package) to create a picture, for example:\n"
+						    "\tdot -Tpng -o graph.png %s\n"
+						    "Note: set the GDA_SQL_VIEWER_PNG or GDA_SQL_VIEWER_PDF environment "
+						    "variables to view the graph"), FNAME, FNAME);
+	}
+	g_string_free (string, TRUE);
+	return result;
+}
+
+static GdaInternalCommandResult *
+extra_command_graph (GdaConnection *cnc, const gchar **args,
+		     GError **error, MainData *data)
+{
+	gchar *result;
+	GdaMetaStruct *mstruct;
+
+	if (!cnc) {
+		g_set_error (error, 0, 0, _("No current connection"));
+		return NULL;
+	}
+
+	mstruct = gda_internal_command_build_meta_struct (cnc, args, error);
+	if (!mstruct)
+		return NULL;
+	
+	result = create_graph_from_meta_struct (cnc, mstruct, error);
+	gda_meta_struct_free (mstruct);
+	if (result) {
+		GdaInternalCommandResult *res;
+		res = g_new0 (GdaInternalCommandResult, 1);
+		res->type = GDA_INTERNAL_COMMAND_RESULT_TXT_STDOUT;
+		res->u.txt = g_string_new (result);
+		g_free (result);
+		return res;
+	}
+	else 
+		return NULL;
+}
+
 
 static gchar **
 args_as_string_func (const gchar *str)
