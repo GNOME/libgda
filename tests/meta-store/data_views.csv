@@ -1,0 +1,58 @@
+"meta","pg_catalog","pg_stats"," SELECT n.nspname AS schemaname, c.relname AS tablename, a.attname, s.stanullfrac AS null_frac, s.stawidth AS avg_width, s.stadistinct AS n_distinct, 
+        CASE 1
+            WHEN s.stakind1 THEN s.stavalues1
+            WHEN s.stakind2 THEN s.stavalues2
+            WHEN s.stakind3 THEN s.stavalues3
+            WHEN s.stakind4 THEN s.stavalues4
+            ELSE NULL::anyarray
+        END AS most_common_vals, 
+        CASE 1
+            WHEN s.stakind1 THEN s.stanumbers1
+            WHEN s.stakind2 THEN s.stanumbers2
+            WHEN s.stakind3 THEN s.stanumbers3
+            WHEN s.stakind4 THEN s.stanumbers4
+            ELSE NULL::real[]
+        END AS most_common_freqs, 
+        CASE 2
+            WHEN s.stakind1 THEN s.stavalues1
+            WHEN s.stakind2 THEN s.stavalues2
+            WHEN s.stakind3 THEN s.stavalues3
+            WHEN s.stakind4 THEN s.stavalues4
+            ELSE NULL::anyarray
+        END AS histogram_bounds, 
+        CASE 3
+            WHEN s.stakind1 THEN s.stanumbers1[1]
+            WHEN s.stakind2 THEN s.stanumbers2[1]
+            WHEN s.stakind3 THEN s.stanumbers3[1]
+            WHEN s.stakind4 THEN s.stanumbers4[1]
+            ELSE NULL::real
+        END AS correlation
+   FROM pg_statistic s
+   JOIN pg_class c ON c.oid = s.starelid
+   JOIN pg_attribute a ON c.oid = a.attrelid AND a.attnum = s.staattnum
+   LEFT JOIN pg_namespace n ON n.oid = c.relnamespace
+  WHERE has_table_privilege(c.oid, 'select'::text);","NULL",FALSE
+"meta","pg_catalog","pg_locks"," SELECT l.locktype, l.""database"", l.relation, l.page, l.tuple, l.transactionid, l.classid, l.objid, l.objsubid, l.""transaction"", l.pid, l.""mode"", l.""granted""
+   FROM pg_lock_status() l(locktype text, ""database"" oid, relation oid, page integer, tuple smallint, transactionid xid, classid oid, objid oid, objsubid smallint, ""transaction"" xid, pid integer, ""mode"" text, ""granted"" boolean);","NULL",FALSE
+"meta","public","_all_types","( SELECT _builtin_data_types.short_type_name, _builtin_data_types.gtype, _builtin_data_types.full_type_name, _builtin_data_types.comments, _builtin_data_types.internal, NULL::""unknown"" AS domain_catalog, NULL::""unknown"" AS domain_schema, NULL::""unknown"" AS domain_name, NULL::""unknown"" AS udt_catalog, NULL::""unknown"" AS udt_schema, NULL::""unknown"" AS udt_name
+   FROM _builtin_data_types
+UNION 
+ SELECT _udt.udt_short_name AS short_type_name, _udt.udt_gtype AS gtype, _udt.udt_full_name AS full_type_name, _udt.udt_comments AS comments, _udt.udt_internal AS internal, NULL::""unknown"" AS domain_catalog, NULL::""unknown"" AS domain_schema, NULL::""unknown"" AS domain_name, _udt.udt_catalog, _udt.udt_schema, _udt.udt_name
+   FROM _udt)
+UNION 
+ SELECT _domains.domain_short_name AS short_type_name, _domains.domain_gtype AS gtype, _domains.domain_full_name AS full_type_name, _domains.domain_comments AS comments, _domains.domain_internal AS internal, _domains.domain_catalog, _domains.domain_schema, _domains.domain_name, NULL::""unknown"" AS udt_catalog, NULL::""unknown"" AS udt_schema, NULL::""unknown"" AS udt_name
+   FROM _domains;","NULL",FALSE
+"meta","public","_constraint_column_usage"," SELECT _key_column_usage.table_catalog, _key_column_usage.table_schema, _key_column_usage.table_name, _key_column_usage.column_name, _key_column_usage.constraint_catalog, _key_column_usage.constraint_schema, _key_column_usage.constraint_name
+   FROM _key_column_usage
+UNION 
+ SELECT _check_column_usage.table_catalog, _check_column_usage.table_schema, _check_column_usage.table_name, _check_column_usage.column_name, _check_column_usage.constraint_catalog, _check_column_usage.constraint_schema, _check_column_usage.constraint_name
+   FROM _check_column_usage;","NULL",FALSE
+"meta","public","_constraint_table_usage"," SELECT DISTINCT _constraint_column_usage.table_catalog, _constraint_column_usage.table_schema, _constraint_column_usage.table_name, _constraint_column_usage.constraint_catalog, _constraint_column_usage.constraint_schema, _constraint_column_usage.constraint_name
+   FROM _constraint_column_usage
+  ORDER BY _constraint_column_usage.table_catalog, _constraint_column_usage.table_schema, _constraint_column_usage.table_name, _constraint_column_usage.constraint_catalog, _constraint_column_usage.constraint_schema, _constraint_column_usage.constraint_name;","NULL",FALSE
+"meta","public","_view_table_usage"," SELECT DISTINCT _view_column_usage.view_catalog, _view_column_usage.view_schema, _view_column_usage.view_name, _view_column_usage.table_catalog, _view_column_usage.table_schema, _view_column_usage.table_name
+   FROM _view_column_usage
+  ORDER BY _view_column_usage.view_catalog, _view_column_usage.view_schema, _view_column_usage.view_name, _view_column_usage.table_catalog, _view_column_usage.table_schema, _view_column_usage.table_name;","NULL",FALSE
+"meta","public","_domain_column_usage"," SELECT d.domain_catalog, d.domain_schema, d.domain_name, c.table_catalog, c.table_schema, c.table_name, c.column_name
+   FROM _domains d
+   JOIN _columns c ON c.data_type::text = d.domain_full_name::text;","NULL",FALSE

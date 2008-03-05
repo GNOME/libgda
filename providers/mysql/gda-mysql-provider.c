@@ -614,6 +614,9 @@ gda_mysql_provider_supports_operation (GdaServerProvider *provider, GdaConnectio
 
 	case GDA_SERVER_OPERATION_CREATE_INDEX:
 	case GDA_SERVER_OPERATION_DROP_INDEX:
+
+	case GDA_SERVER_OPERATION_CREATE_VIEW:
+	case GDA_SERVER_OPERATION_DROP_VIEW:
 		return TRUE;
 	default:
 		return FALSE;
@@ -637,12 +640,13 @@ gda_mysql_provider_create_operation (GdaServerProvider *provider, GdaConnection 
 	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
 	file = gda_server_provider_find_file (provider, dir, str);
 	g_free (dir);
-	g_free (str);
 
 	if (! file) {
-		g_set_error (error, 0, 0, _("Missing spec. file '%s'"), file);
+		g_set_error (error, 0, 0, _("Missing spec. file '%s'"), str);
+		g_free (str);
 		return NULL;
 	}
+	g_free (str);
 
 	op = gda_server_operation_new (type, file);
 	g_free (file);
@@ -705,6 +709,12 @@ gda_mysql_provider_render_operation (GdaServerProvider *provider, GdaConnection 
 		break;
 	case GDA_SERVER_OPERATION_DROP_INDEX:
 		sql = gda_mysql_render_DROP_INDEX (provider, cnc, op, error);
+		break;
+	case GDA_SERVER_OPERATION_CREATE_VIEW:
+		sql = gda_mysql_render_CREATE_VIEW (provider, cnc, op, error);
+		break;
+	case GDA_SERVER_OPERATION_DROP_VIEW:
+		sql = gda_mysql_render_DROP_VIEW (provider, cnc, op, error);
 		break;
 	default:
 		g_assert_not_reached ();

@@ -1,5 +1,6 @@
 #include <libgda/libgda.h>
 #include <virtual/libgda-virtual.h>
+#include <sql-parser/gda-sql-parser.h>
 
 #define OUTFILE "results.csv"
 
@@ -16,8 +17,8 @@ main (int argc, char **argv)
 	gda_init ("SQlite virtual test", "1.0", argc, argv);
 
 	provider = gda_vprovider_data_model_new ();
-	cnc = gda_server_provider_create_connection (NULL, GDA_SERVER_PROVIDER (provider), NULL, NULL, NULL, 0);
-	g_assert (gda_connection_open (cnc, NULL));
+	cnc = gda_virtual_connection_open (provider, NULL);
+	g_assert (cnc);
 
 	/* create RW data model to store results */
 	rw_model = gda_data_model_array_new_with_g_types (2, G_TYPE_STRING, G_TYPE_INT);
@@ -26,7 +27,7 @@ main (int argc, char **argv)
 
 	/* load CSV data models */
 	GdaDataModel *country_model, *city_model;
-	GdaParameterList *plist = gda_parameter_list_new_inline (NULL, "TITLE_AS_FIRST_LINE", G_TYPE_BOOLEAN, TRUE, NULL);
+	GdaSet *plist = gda_set_new_inline (1, "TITLE_AS_FIRST_LINE", G_TYPE_BOOLEAN, TRUE);
 	city_model = gda_data_model_import_new_file ("city.csv", TRUE, plist);
 	country_model = gda_data_model_import_new_file ("country.csv", TRUE, plist);
 	g_object_unref (plist);
@@ -44,7 +45,7 @@ main (int argc, char **argv)
 		g_error ("Could not run computation query");
 
 	/* save resulting data model to CSV */
-	plist = gda_parameter_list_new_inline (NULL, "OVERWRITE", G_TYPE_BOOLEAN, TRUE, NULL);
+	plist = gda_set_new_inline (1, "OVERWRITE", G_TYPE_BOOLEAN, TRUE);
 	gda_data_model_export_to_file (rw_model, GDA_DATA_MODEL_IO_TEXT_SEPARATED, OUTFILE,
 				       NULL, 0, NULL, 0, plist, NULL);
 	g_object_unref (plist);
@@ -61,19 +62,23 @@ main (int argc, char **argv)
 static gboolean
 run_sql_non_select (GdaConnection *cnc, const gchar *sql)
 {
-	GdaCommand *command;
-	GError *error = NULL; 
-	gint nrows;
+	GdaStatement *stmt;
+        GError *error = NULL;
+        gint nrows;
+        GdaSqlParser *parser;
 
-	command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, 0);
-	nrows = gda_connection_execute_non_select_command (cnc, command, NULL, &error);
-	gda_command_free (command);
-	if (nrows == -1) {
+        parser = gda_connection_create_parser (cnc);
+        stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+        g_object_unref (parser);
+
+        nrows = gda_connection_statement_execute_non_select (cnc, stmt, NULL, NULL, &error);
+        g_object_unref (stmt);
+        if (nrows == -1) {
 		g_print ("NON SELECT error: %s\n", error && error->message ? error->message : "no detail");
-		g_error_free (error);
-		error = NULL;
-		return FALSE;
+                g_error_free (error);
+                error = NULL;
+                return FALSE;
 	}
-	
+
 	return TRUE;
 }

@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 2006 The GNOME Foundation.
+ * Copyright (C) 2006 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -23,8 +23,9 @@
 #ifndef __GDA_DATA_MODEL_IMPORT_H__
 #define __GDA_DATA_MODEL_IMPORT_H__
 
-#include <libgda/gda-object.h>
+#include <glib-object.h>
 #include <libxml/tree.h>
+#include <libgda/gda-set.h>
 
 G_BEGIN_DECLS
 
@@ -39,19 +40,17 @@ typedef struct _GdaDataModelImportClass   GdaDataModelImportClass;
 typedef struct _GdaDataModelImportPrivate GdaDataModelImportPrivate;
 
 struct _GdaDataModelImport {
-	GdaObject                  object;
+	GObject                    object;
 	GdaDataModelImportPrivate *priv;
 };
 
 struct _GdaDataModelImportClass {
-	GdaObjectClass             parent_class;
+	GObjectClass               parent_class;
 };
 
 GType         gda_data_model_import_get_type     (void) G_GNUC_CONST;
-GdaDataModel *gda_data_model_import_new_file     (const gchar *filename, gboolean random_access,
-						  GdaParameterList *options);
-GdaDataModel *gda_data_model_import_new_mem      (const gchar *data, gboolean random_access, 
-						  GdaParameterList *options);
+GdaDataModel *gda_data_model_import_new_file     (const gchar *filename, gboolean random_access, GdaSet *options);
+GdaDataModel *gda_data_model_import_new_mem      (const gchar *data, gboolean random_access, GdaSet *options);
 GdaDataModel *gda_data_model_import_new_xml_node (xmlNodePtr node);
 
 GSList       *gda_data_model_import_get_errors   (GdaDataModelImport *model);

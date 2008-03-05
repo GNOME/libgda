@@ -1,5 +1,5 @@
 /* GDA MDB Provider
- * Copyright (C) 1998 - 2007 The GNOME Foundation
+ * Copyright (C) 1998 - 2008 The GNOME Foundation
  *
  * AUTHORS:
  *         Rodrigo Moya <rodrigo@gnome-db.org>
@@ -21,8 +21,9 @@
  */
 
 #include <glib/gi18n-lib.h>
-#include "gda-mdb.h"
 #include <libgda/gda-server-provider-extra.h>
+#include "gda-mdb.h"
+#include "gda-mdb-provider.h"
 
 static gchar *module_path = NULL;
 
@@ -41,7 +42,7 @@ plugin_init (const gchar *real_path)
 const gchar *
 plugin_get_name (void)
 {
-	return "MSAccess";
+	return MDB_PROVIDER_NAME;
 }
 
 const gchar *
@@ -56,6 +57,17 @@ plugin_get_dsn_spec (void)
 	return gda_server_provider_load_file_contents (module_path, LIBGDA_DATA_DIR, "mdb_specs_dsn.xml");
 }
 
+gchar *
+plugin_get_auth_spec (void)
+{
+#define AUTH "<?xml version=\"1.0\"?>" \
+             "<data-set-spec>" \
+             "  <parameters/>" \
+             "</data-set-spec>"
+
+        return g_strdup (AUTH);
+}
+
 GdaServerProvider *
 plugin_create_provider (void)
 {
@@ -64,18 +76,4 @@ plugin_create_provider (void)
         prov = gda_mdb_provider_new ();
         g_object_set_data (G_OBJECT (prov), "GDA_PROVIDER_DIR", module_path);
         return prov;
-}
-
-/*
- * GModule functions
- */
-const gchar *
-g_module_check_init (void)
-{
-	return NULL;
-}
-
-void
-g_module_unload (void)
-{
 }

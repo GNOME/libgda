@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 The GNOME Foundation.
+ * Copyright (C) 2007 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -52,9 +52,7 @@ typedef struct {
 /*
  * Command definition
  */
-typedef GdaInternalCommandResult *(*GdaInternalCommandFunc) (GdaConnection *, GdaDict *,
-							     const gchar **,
-							     GError **, gpointer);
+typedef GdaInternalCommandResult *(*GdaInternalCommandFunc) (GdaConnection *, const gchar **, GError **, gpointer);
 typedef gchar                   **(*GdaInternalCommandArgsFunc) (const gchar *);
 typedef struct {
 	gchar    *name;
@@ -81,32 +79,28 @@ typedef struct {
 
 /* Commands execution */
 GdaInternalCommandResult *gda_internal_command_execute (GdaInternalCommandsList *commands_list,
-							GdaConnection *cnc, GdaDict *dict, 
-							const gchar *command_str, GError **error);
+							GdaConnection *cnc, const gchar *command_str, GError **error);
 void                      gda_internal_command_exec_result_free (GdaInternalCommandResult *res);
 
-
 /* Available commands */
-GdaInternalCommandResult *gda_internal_command_help (GdaConnection *cnc, GdaDict *dict, 
-						     const gchar **args,
+GdaInternalCommandResult *gda_internal_command_help (GdaConnection *cnc, const gchar **args,
 						     GError **error, GdaInternalCommandsList *clist);
-GdaInternalCommandResult *gda_internal_command_history (GdaConnection *cnc, GdaDict *dict, 
-							const gchar **args,
+GdaInternalCommandResult *gda_internal_command_history (GdaConnection *cnc, const gchar **args,
 							GError **error, gpointer data);
-GdaInternalCommandResult *gda_internal_command_dict_sync (GdaConnection *cnc, GdaDict *dict,
-							  const gchar **args,
+GdaInternalCommandResult *gda_internal_command_dict_sync (GdaConnection *cnc, const gchar **args,
 							  GError **error, gpointer data);
-GdaInternalCommandResult *gda_internal_command_dict_save (GdaConnection *cnc, GdaDict *dict, 
-							  const gchar **args,
-							  GError **error, gpointer data);
-GdaInternalCommandResult *gda_internal_command_list_tables_views (GdaConnection *cnc, GdaDict *dict, 
-								  const gchar **args,
-								  GError **error, gpointer data);
-GdaInternalCommandResult *gda_internal_command_list_queries (GdaConnection *cnc, GdaDict *dict, 
-							     const gchar **args,
+GdaInternalCommandResult *gda_internal_command_list_tables (GdaConnection *cnc, const gchar **args,
+							    GError **error, gpointer data);
+GdaInternalCommandResult *gda_internal_command_list_views (GdaConnection *cnc, const gchar **args,
+							   GError **error, gpointer data);
+GdaInternalCommandResult *gda_internal_command_list_schemas (GdaConnection *cnc, const gchar **args,
 							     GError **error, gpointer data);
-GdaInternalCommandResult *gda_internal_command_detail (GdaConnection *cnc, GdaDict *dict, 
-						       const gchar **args,
+GdaInternalCommandResult *gda_internal_command_list_queries (GdaConnection *cnc, const gchar **args,
+							     GError **error, gpointer data);
+GdaInternalCommandResult *gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 						       GError **error, gpointer data);
+
+/* Misc */
+GdaMetaStruct            *gda_internal_command_build_meta_struct (GdaConnection *cnc, const gchar **args, GError **error);
 
 #endif

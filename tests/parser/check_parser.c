@@ -25,7 +25,8 @@ main (int argc, char** argv)
 	gint ntests = 0;
 	gchar *fname;
 	GHashTable *parsers_hash;
-	GList *list;
+	GdaDataModel *providers_model;
+	gint i;
 
 	gda_init ("Parser check", ".1", argc, argv);
 
@@ -38,12 +39,15 @@ main (int argc, char** argv)
 
 	/* create parsers */
 	parsers_hash = g_hash_table_new (g_str_hash, g_str_equal);
-	for (list = gda_config_get_provider_list (); list; list = list->next) {
-		GdaProviderInfo *pinfo = (GdaProviderInfo*) list->data;
-		parser = create_parser_for_provider (pinfo->id);
-		g_hash_table_insert (parsers_hash, pinfo->id, parser);
-		g_print ("Created parser for provider %s\n", pinfo->id);
+	providers_model = gda_config_list_providers ();
+	for (i = 0; i < gda_data_model_get_n_rows (providers_model); i++) {
+		const GValue *pname;
+		pname = gda_data_model_get_value_at (providers_model, 0, i);
+		parser = create_parser_for_provider (g_value_get_string (pname));
+		g_hash_table_insert (parsers_hash, g_strdup (g_value_get_string (pname)), parser);
+		g_print ("Created parser for provider %s\n", g_value_get_string (pname));
 	}
+	g_object_unref (providers_model);
 	g_hash_table_insert (parsers_hash, "", gda_sql_parser_new ());
 
 	/* use test data */
@@ -207,28 +211,18 @@ do_test (GdaSqlParser *parser, const xmlChar *id, const xmlChar *sql, const xmlC
 static GdaSqlParser *
 create_parser_for_provider (const gchar *prov_name)
 {
-	GdaProviderInfo *pinfo = NULL;
 	GdaServerProvider *prov;
-	GModule *handle;
-	GdaServerProvider *(*plugin_create_provider) (void);
 	GdaSqlParser *parser;
+	GError *error = NULL;
 
-	pinfo = gda_config_get_provider_by_name (prov_name);
-	if (!pinfo) 
-		pinfo = gda_config_get_provider_by_name ("SQLite");
-	g_assert (pinfo);
+	prov = gda_config_get_provider_object (prov_name, &error);
+	if (!prov) 
+		g_error ("Could not create provider for '%s': %s\n", prov_name,
+			 error && error->message ? error->message : "No detail");
 
-	handle = g_module_open (pinfo->location, G_MODULE_BIND_LAZY);
-	g_assert (handle);
-	g_module_symbol (handle, "plugin_create_provider",
-			 (gpointer) &plugin_create_provider);
-	g_assert (plugin_create_provider);
-	prov = plugin_create_provider ();
-	g_assert (prov);
 	parser = gda_server_provider_create_parser (prov, NULL);
 	if (!parser)
 		parser = gda_sql_parser_new ();
-	g_object_unref (prov);
 
 	return parser;
 }

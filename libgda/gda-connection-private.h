@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2006 - 2007 The GNOME Foundation.
+ * Copyright (C) 2006 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -23,15 +23,25 @@
 #ifndef __GDA_CONNECTION_PRIVATE_H_
 #define __GDA_CONNECTION_PRIVATE_H_
 
+#include <libgda/gda-meta-store.h>
+
 G_BEGIN_DECLS
 
+/*
+ * Provider's specific connection data management
+ */
+void     gda_connection_internal_set_provider_data (GdaConnection *cnc, gpointer data, GDestroyNotify destroy_func);
+gpointer gda_connection_internal_get_provider_data (GdaConnection *cnc);
+
+/*
+ * Transaction related
+ */
 void gda_connection_internal_transaction_started (GdaConnection *cnc, const gchar *parent_trans, const gchar *trans_name, 
 						  GdaTransactionIsolation isol_level);
 void gda_connection_internal_transaction_rolledback (GdaConnection *cnc, const gchar *trans_name);
 void gda_connection_internal_transaction_committed (GdaConnection *cnc, const gchar *trans_name);
 
-void gda_connection_internal_sql_executed (GdaConnection *cnc, const gchar *sql, GdaConnectionEvent *error);
-void gda_connection_internal_statement_executed (GdaConnection *cnc, GdaStatement *stmt, GdaConnectionEvent *error);
+void gda_connection_internal_statement_executed (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params, GdaConnectionEvent *error);
 
 void gda_connection_internal_savepoint_added (GdaConnection *cnc, const gchar *parent_trans, const gchar *svp_name);
 void gda_connection_internal_savepoint_rolledback (GdaConnection *cnc, const gchar *svp_name);
@@ -39,17 +49,17 @@ void gda_connection_internal_savepoint_removed (GdaConnection *cnc, const gchar 
 void gda_connection_internal_change_transaction_state (GdaConnection *cnc,
 						       GdaTransactionStatusState newstate);
 
-/* helper function, fuzzy analysis of "standard" SQL for transactions */
-void gda_connection_internal_treat_sql (GdaConnection *cnc, const gchar *sql, GdaConnectionEvent *error);
+/* 
+ * prepared statements support
+ */
+void     gda_connection_add_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stmt, gpointer prepared_stmt); 
+void     gda_connection_del_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stmt); 
+gpointer gda_connection_get_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stmt);
 
-void gda_connection_force_status (GdaConnection *cnc, gboolean opened);
-
-/* prepared statements support */
-void     gda_connection_init_prepared_statement_hash (GdaConnection *cnc, GDestroyNotify stmt_destroy_func);
-void     gda_connection_destroy_prepared_statement_hash (GdaConnection *cnc);
-void     gda_connection_add_prepared_statement (GdaConnection *cnc, GObject *query, gpointer prepared_stmt); 
-void     gda_connection_del_prepared_statement (GdaConnection *cnc, GObject *query); 
-gpointer gda_connection_get_prepared_statement (GdaConnection *cnc, GObject *query);
+/*
+ * GdaMetaStore handling
+ */
+GdaMetaStore *gda_connection_get_meta_store    (GdaConnection *cnc);
 
 G_END_DECLS
 

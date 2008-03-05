@@ -3,7 +3,7 @@
 AUTOMAKE_OPTIONS = 1.6
 
 # The name of the module.
-DOC_MODULE=libgda-3.0
+DOC_MODULE=libgda-4.0
 
 # The top-level SGML file.
 DOC_MAIN_SGML_FILE=$(DOC_MODULE)-docs.sgml
@@ -34,8 +34,8 @@ GTKDOC_CFLAGS = -I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
         $(LIBGDA_CFLAGS) \
 	-DGETTEXT_PACKAGE=\""$(GETTEXT_PACKAGE)"\"
-GTKDOC_LIBS =  $(top_builddir)/libgda/libgda-3.0.la \
-	$(top_builddir)/libgda-report/libgda-report-3.0.la \
+GTKDOC_LIBS =  $(top_builddir)/libgda/libgda-4.0.la \
+	$(top_builddir)/libgda-report/libgda-report-4.0.la \
 	$(LIBGDA_LIBS)
 
 # Extra options to supply to gtkdoc-mkdb
@@ -45,9 +45,9 @@ MKDB_OPTIONS=--sgml-mode --output-format=xml --ignore-files="lexer.c"
 content_files = fdl-appendix.sgml 
 
 # Images to copy into HTML directory
-HTML_IMAGES = query01.png query02.png query03.png query04.png query05.png query06.png DataModels.png \
+HTML_IMAGES = DataModels.png \
 	architecture.png parts.png stmt-unknown.png stmt-select.png stmt-insert1.png stmt-insert2.png \
-	stmt-update.png stmt-compound.png
+	stmt-update.png stmt-compound.png information_schema.png
 
 # Extra options to supply to gtkdoc-fixref
 FIXXREF_OPTIONS=
@@ -55,9 +55,24 @@ FIXXREF_OPTIONS=
 include $(top_srcdir)/gtk-doc.make
 
 # Other files to distribute
-EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration.xml query.xml query-fields.xml \
-	server-operation.xml gettingstarted.xml virtual.xml virtual-notice.xml\
-	query01.svg query02.svg query03.svg query04.svg query05.svg query06.svg DataModels.svg \
+EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration.xml migration2.xml \
+	server-operation.xml gettingstarted.xml virtual.xml virtual-notice.xml store-meta-type.xml \
+	DataModels.svg \
 	architecture.svg parts.svg stmt-unknown.svg stmt-select.svg stmt-insert1.svg stmt-insert2.svg \
-	stmt-update.svg stmt-compound.svg
+	stmt-update.svg stmt-compound.svg information_schema.svg
 
+# Files not to distribute
+# for --rebuild-types in $(SCAN_OPTIONS), e.g. $(DOC_MODULE).types
+# for --rebuild-sections in $(SCAN_OPTIONS) e.g. $(DOC_MODULE)-sections.txt
+DISTCLEANFILES = $(DOC_MODULE)-docs.sgml.pdf
+
+DOC_STAMPS += pdf-build.stamp
+CLEANFILES += $(DOC_STAMPS)
+
+# Create the PDF
+PDF: pdf-build.stamp
+pdf-build.stamp:
+	if test -f $(srcdir)/$(DOC_MAIN_SGML_FILE); then \
+		dblatex $(srcdir)/$(DOC_MAIN_SGML_FILE); \
+	fi
+	touch pdf-build.stamp

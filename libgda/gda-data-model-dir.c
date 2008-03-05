@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 2007 The GNOME Foundation
+ * Copyright (C) 2007 - 2008 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -31,9 +31,9 @@
 #include <libgnomevfs/gnome-vfs-mime.h>
 #endif
 
-#ifdef HAVE_LIBGCRYPT
-#include <gcrypt.h>
-#endif
+/* Use the RSA reference implementation included in the RFC-1321, http://www.freesoft.org/CIE/RFC/1321/ */
+#include "global.h"
+#include "md5.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -130,9 +130,6 @@ static gboolean             gda_data_model_dir_set_values (GdaDataModel *model, 
 static gint                 gda_data_model_dir_append_values (GdaDataModel *model, const GList *values, GError **error);
 static gboolean             gda_data_model_dir_remove_row (GdaDataModel *model, gint row, GError **error);
 
-#ifdef GDA_DEBUG
-static void gda_data_model_dir_dump (GdaDataModelDir *model, guint offset);
-#endif
 static void add_error (GdaDataModelDir *model, const gchar *err);
 static void update_data_model (GdaDataModelDir *model);
 
@@ -198,12 +195,6 @@ gda_data_model_dir_class_init (GdaDataModelDirClass *klass)
 
 	/* virtual functions */
 	object_class->dispose = gda_data_model_dir_dispose;
-#ifdef GDA_DEBUG
-        GDA_OBJECT_CLASS (klass)->dump = (void (*)(GdaObject *, guint)) gda_data_model_dir_dump;
-#endif
-
-        /* class attributes */
-        GDA_OBJECT_CLASS (klass)->id_unique_enforced = FALSE;
 }
 
 static void
@@ -251,7 +242,6 @@ add_error (GdaDataModelDir *model, const gchar *err)
 	GError *error = NULL;
 
         g_set_error (&error, 0, 0, err);
-	g_print ("ADD_ERROR (%s)\n", err);
         model->priv->errors = g_slist_append (model->priv->errors, error);
 }
 
@@ -282,7 +272,7 @@ gda_data_model_dir_get_type (void)
                         NULL
                 };
 
-		type = g_type_register_static (GDA_TYPE_OBJECT, "GdaDataModelDir", &info, 0);
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaDataModelDir", &info, 0);
 		g_type_add_interface_static (type, GDA_TYPE_DATA_MODEL, &data_model_info);
 	}
 	return type;
@@ -491,14 +481,10 @@ update_file_md5sum (FileRow *row, const gchar *complete_filename)
 {
 	gboolean changed = TRUE;
 	GValue *value = NULL;
-
-	/* compute md5sum value */
-#ifdef HAVE_LIBGCRYPT
-	gcry_md_hd_t mdctx = NULL;
 	int fd;
-	gpointer map;
-	guint length;
-		
+        gpointer map;
+        guint length;
+
 	/* file mapping in mem */
 	length = g_value_get_uint (row->size_value);
 	if (length == 0)
@@ -525,25 +511,23 @@ update_file_md5sum (FileRow *row, const gchar *complete_filename)
 		goto md5end;
 	}
 #endif /* !G_OS_WIN32 */
+
 	/* MD5 computation */
-	gcry_md_open (&mdctx, GCRY_MD_MD5, 0);
-	if (mdctx) {
-		unsigned char *md5str;
-		int i;
-		GString *md5pass;
-			
-		gcry_md_write (mdctx, map, length);
-		md5str = gcry_md_read (mdctx, GCRY_MD_MD5);
-			
-		md5pass = g_string_new ("");
-		for (i = 0; i < 16; i++)
-			g_string_append_printf (md5pass, "%02x", md5str[i]);
-		value = gda_value_new (G_TYPE_STRING);
-		g_value_take_string (value, md5pass->str);
-		g_string_free (md5pass, FALSE);
-			
-		gcry_md_close (mdctx);	
-	}
+	MD5_CTX context;
+	unsigned char digest[16];
+	GString *md5str;
+	gint i;
+
+	MD5Init (&context);
+	MD5Update (&context, map, length);
+	MD5Final (digest, &context);
+	
+	md5str = g_string_new ("");
+	for (i = 0; i < 16; i++)
+		g_string_append_printf (md5str, "%02x", digest[i]);
+	value = gda_value_new (G_TYPE_STRING);
+	g_value_take_string (value, md5str->str);
+	g_string_free (md5str, FALSE);
 		
 #ifndef G_OS_WIN32
 	munmap (map, length);
@@ -551,7 +535,7 @@ update_file_md5sum (FileRow *row, const gchar *complete_filename)
 	UnmapViewOfFile (map);
 #endif /* !G_OS_WIN32 */
 	close (fd);
-#endif /* HAVE_LIBGCRYPT */
+
  md5end:
 	if (value) {
 		if (row->md5sum_value && (G_VALUE_TYPE (row->md5sum_value) == G_TYPE_STRING)
@@ -654,29 +638,6 @@ gda_data_model_dir_get_property (GObject *object,
 	}
 }
 
-#ifdef GDA_DEBUG
-static void
-gda_data_model_dir_dump (GdaDataModelDir *model, guint offset)
-{
-	gchar *stroff;
-
-	stroff = g_new0 (gchar, offset+1);
-	memset (stroff, ' ', offset);
-
-	if (model->priv) {
-		g_print ("%s" D_COL_H1 "GdaDataModelDir %p (name=%s, id=%s)\n" D_COL_NOR,
-			 stroff, model, gda_object_get_name (GDA_OBJECT (model)), 
-			 gda_object_get_id (GDA_OBJECT (model)));
-		
-	}
-	else
-		g_print ("%s" D_COL_ERR "Using finalized object %p" D_COL_NOR, stroff, model);
-
-	g_free (stroff);
-}
-#endif
-
-
 /**
  * gda_data_model_dir_new
  * @basedir: a directory
@@ -695,6 +656,42 @@ gda_data_model_dir_new (const gchar *basedir)
 	model = (GdaDataModel *) g_object_new (GDA_TYPE_DATA_MODEL_DIR, "basedir", basedir, NULL); 
 
 	return model;
+}
+
+/**
+ * gda_data_model_dir_get_errors
+ * @model: a #GdaDataModelDir object
+ *
+ * Get the list of errors which have occurred while using @model
+ *
+ * Returns: a read-only list of #GError pointers, or %NULL if no error has occurred
+ */
+const GSList *
+gda_data_model_dir_get_errors (GdaDataModelDir *model)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_DIR (model), NULL);
+	g_return_val_if_fail (model->priv, NULL);
+
+	return model->priv->errors;
+}
+
+/**
+ * gda_data_model_dir_clean_errors
+ * @model: a #GdaDataModelDir object
+ *
+ * Reset the list of errors which have occurred while using @model
+ */
+void
+gda_data_model_dir_clean_errors (GdaDataModelDir *model)
+{
+	g_return_if_fail (GDA_IS_DATA_MODEL_DIR (model));
+	g_return_if_fail (model->priv);
+
+	if (model->priv->errors) {
+		g_slist_foreach (model->priv->errors, (GFunc) g_error_free, NULL);
+		g_slist_free (model->priv->errors);
+		model->priv->errors = NULL;
+	}
 }
 
 static gint
@@ -1197,7 +1194,8 @@ gda_data_model_dir_append_values (GdaDataModel *model, const GList *values, GErr
 				bin_data = g_new0 (GdaBinary, 1);
 				bin_to_free = TRUE;
 			}
-			if (g_file_set_contents (complete_filename, bin_data->data, bin_data->binary_length, NULL)) {
+			if (g_file_set_contents (complete_filename, (gchar *) bin_data->data, 
+						 bin_data->binary_length, NULL)) {
 				FileRow *row;
 				
 				row = file_row_new ();

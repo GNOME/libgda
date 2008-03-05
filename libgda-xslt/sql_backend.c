@@ -1,8 +1,9 @@
 /* GDA common library
- * Copyright (C) 2007 The GNOME Foundation.
+ * Copyright (C) 2007 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Pawe³ Cesar Sanjuan Szklarz <paweld2@gmail.com>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -24,7 +25,6 @@
 #include <libxslt/variables.h>
 
 #include <libgda/libgda.h>
-#include <libgda/gda-parameter-util.h>
 
 #include "libgda-xslt.h"
 #include "sql_backend.h"
@@ -37,6 +37,8 @@
 #include <libgda/handlers/gda-handler-time.h>
 #include <libgda/handlers/gda-handler-type.h>
 
+#include <sql-parser/gda-sql-parser.h>
+
 static GHashTable *data_handlers = NULL;	/* key = GType, value = GdaDataHandler obj */
 static xmlChar *value_to_xmlchar (const GValue * value);
 
@@ -44,11 +46,11 @@ static xmlChar *value_to_xmlchar (const GValue * value);
 
 static void look_predefined_query_by_name (GdaXsltExCont * exec,
 					   const char *query_name,
-					   GdaQuery ** query);
+					   GdaStatement ** query);
 
 static void set_resultset_value (GdaXsltIntCont * pdata,
 				 const char *resultset_name,
-				 GdaObject * result, GError ** error);
+				 GObject * result, GError ** error);
 static int get_resultset_col_value (GdaXsltIntCont * pdata,
 				    const char *resultset_name,
 				    const char *colname, char **outvalue,
@@ -66,8 +68,7 @@ static int gda_xslt_bk_internal_query (GdaXsltExCont * exec,
 				       xmlNodePtr query_node);
 
 int
-gda_xslt_parameter_set_value (GdaParameter * param,
-			      xsltTransformContextPtr ctxt)
+gda_xslt_holder_set_value (GdaHolder *param, xsltTransformContextPtr ctxt)
 {
 	GType gdatype;
 	gchar *name;
@@ -76,8 +77,8 @@ gda_xslt_parameter_set_value (GdaParameter * param,
 	xmlXPathObjectPtr xsltvar;
 
 	/* information from libgda */
-	gdatype = gda_parameter_get_g_type (param);
-	name = gda_parameter_get_alphanum_name (param);
+	gdatype = gda_holder_get_g_type (param);
+	name = gda_text_to_alphanum (gda_holder_get_id (param));
 
 	/* information from libxslt and libxml */
 	xsltvar = xsltVariableLookup (ctxt, (const xmlChar *) name, NULL);
@@ -91,7 +92,7 @@ gda_xslt_parameter_set_value (GdaParameter * param,
 		return -1;
 	}
 	else {
-		gda_parameter_set_value (param, value);
+		gda_holder_set_value (param, value);
 		g_free (xvalue);
 		gda_value_free (value);
 	}
@@ -235,7 +236,7 @@ gda_xslt_bk_fun_checkif (xmlChar * setname, xmlChar * sql_condition,
 /* utility functions */
 static void
 set_resultset_value (GdaXsltIntCont * pdata, const char *resultset_name,
-		     GdaObject * result, GError ** error)
+		     GObject * result, GError ** error)
 {
 #ifdef GDA_DEBUG_NO
 	g_print ("new resultset: name[%s]", resultset_name);
@@ -251,7 +252,7 @@ get_resultset_col_value (GdaXsltIntCont * pdata, const char *resultset_name,
 {
 	gpointer orig_key = NULL;
 	gpointer value = NULL;
-	GdaObject *result;
+	GObject *result;
 #ifdef GDA_DEBUG_NO
 	g_print ("searching resultset[%s]", resultset_name);
 #endif
@@ -261,7 +262,7 @@ get_resultset_col_value (GdaXsltIntCont * pdata, const char *resultset_name,
 #ifdef GDA_DEBUG_NO
 		g_print ("resultset found [%p]", value);
 #endif
-		result = (GdaObject *) value;
+		result = (GObject *) value;
 	}
 	else {
 #ifdef GDA_DEBUG_NO
@@ -279,9 +280,7 @@ get_resultset_col_value (GdaXsltIntCont * pdata, const char *resultset_name,
 		return -1;
 	}
 	gint col_index;
-	col_index =
-		gda_data_model_get_column_index_by_name (GDA_DATA_MODEL
-							 (result), colname);
+	col_index = gda_data_model_get_column_index_by_name (GDA_DATA_MODEL (result), colname);
 	if (col_index < 0) {
 #ifdef GDA_DEBUG_NO
 		g_print ("no column found by name [%s]", colname);
@@ -290,9 +289,7 @@ get_resultset_col_value (GdaXsltIntCont * pdata, const char *resultset_name,
 		return -1;
 	}
 	const GValue *db_value;
-	db_value =
-		gda_data_model_get_value_at (GDA_DATA_MODEL (result),
-					     col_index, 0);
+	db_value = gda_data_model_get_value_at (GDA_DATA_MODEL (result), col_index, 0);
 	if (db_value == NULL) {
 #ifdef GDA_DEBUG_NO
 		g_print ("no value found on col_index [%d]", col_index);
@@ -320,7 +317,7 @@ get_resultset_nodeset (GdaXsltIntCont * pdata, const char *resultset_name,
 {
 	gpointer orig_key = NULL;
 	gpointer value = NULL;
-	GdaObject *result;
+	GObject *result;
 	int res;
 #ifdef GDA_DEBUG_NO
 	g_print ("searching resultset[%s]", resultset_name);
@@ -331,7 +328,7 @@ get_resultset_nodeset (GdaXsltIntCont * pdata, const char *resultset_name,
 #ifdef GDA_DEBUG_NO
 		g_print ("resultset found [%p]\n", value);
 #endif
-		result = (GdaObject *) value;
+		result = (GObject *) value;
 	}
 	else {
 #ifdef GDA_DEBUG_NO
@@ -438,7 +435,7 @@ _utility_data_model_to_nodeset (GdaDataModel * model,
 
 static void
 look_predefined_query_by_name (GdaXsltExCont * exec, const char *query_name,
-			       GdaQuery ** query)
+			       GdaStatement ** query)
 {
 	gpointer orig_key = NULL;
 	gpointer value = NULL;
@@ -451,7 +448,7 @@ look_predefined_query_by_name (GdaXsltExCont * exec, const char *query_name,
 #ifdef GDA_DEBUG_NO
 		g_print ("query found [%p]", value);
 #endif
-		*query = (GdaQuery *) value;
+		*query = (GdaStatement *) value;
 	}
 	else {
 #ifdef GDA_DEBUG_NO
@@ -466,10 +463,10 @@ gda_xslt_bk_internal_query (GdaXsltExCont * exec, GdaXsltIntCont * pdata,
 			    xsltTransformContextPtr ctxt,
 			    xmlNodePtr query_node)
 {
-	GdaQuery *query = NULL;
-	GdaParameterList *params;
+	GdaStatement *query = NULL;
+	GdaSet *params;
 	int ret = 0;
-	GdaObject *resQuery;
+	GdaDataModel *resQuery;
 	GSList *plist;
 	int predefined = 0;
 
@@ -501,15 +498,14 @@ gda_xslt_bk_internal_query (GdaXsltExCont * exec, GdaXsltIntCont * pdata,
 		printf ("query_content[%s]\n", XML_GET_CONTENT (sqltxt_node));
 #endif
 		/* create the query */
-		query = gda_query_new_from_sql (exec->gda_dict,
-						XML_GET_CONTENT
-						(sqltxt_node),
-						&(exec->error));
+		GdaSqlParser *parser;
+		parser = gda_connection_create_parser (exec->cnc);
+		query = gda_sql_parser_parse_string (parser, XML_GET_CONTENT (sqltxt_node), NULL, &(exec->error));
+		g_object_unref (parser);
 		if (!query) {
 #ifdef GDA_DEBUG_NO
 			g_print ("gda_query_new_from_sql:error [%s]\n",
-				 exec->error
-				 && exec->error->message ? exec->error->
+				 exec->error && exec->error->message ? exec->error->
 				 message : "No detail");
 #endif
 			return -1;
@@ -521,20 +517,20 @@ gda_xslt_bk_internal_query (GdaXsltExCont * exec, GdaXsltIntCont * pdata,
 	}
 
 	/* find the parameters on xsltcontext */
-	params = gda_query_get_parameter_list (query);
+	if (! gda_statement_get_parameters (query, &params, &(exec->error)))
+		return -1;
+
 	if (params != NULL) {
-		plist = params->parameters;
+		plist = params->holders;
 		while (plist && ret == 0) {
-			ret = gda_xslt_parameter_set_value (GDA_PARAMETER
-							    (plist->data),
-							    ctxt);
+			ret = gda_xslt_holder_set_value (GDA_HOLDER (plist->data), ctxt);
 			plist = g_slist_next (plist);
 		}
 	}
+
 	/* run the query */
-	resQuery = gda_query_execute (query, params, FALSE, &(exec->error));
-	if (resQuery == NULL) {
-//       ERROR
+	resQuery = gda_connection_statement_execute_select (exec->cnc, query, params, &(exec->error));
+	if (!resQuery) {
 #ifdef GDA_DEBUG_NO
 		g_print ("gda_query_execute:error [%s]\n",
 			 exec->error
@@ -543,19 +539,9 @@ gda_xslt_bk_internal_query (GdaXsltExCont * exec, GdaXsltIntCont * pdata,
 #endif
 		return -1;
 	}
-	else {
-		if (!GDA_IS_DATA_MODEL (resQuery)) {
-#ifdef GDA_DEBUG_NO
-			g_print ("gda_xslt_bk_internal_query: the result object is not a Data Model\n");
-#endif
-			g_set_error (&(exec->error), 0, 0,
-				     "gda_xslt_bk_internal_query: the result object is not a Data Model\n");
-			return -1;
-		}
-	}
+
 	/* save the result to the internal context */
-	set_resultset_value (pdata, (const char *) query_name, resQuery,
-			     &(exec->error));
+	set_resultset_value (pdata, (const char *) query_name, (GObject*) resQuery, &(exec->error));
 
 	/* free the parameters */
 	if (params)

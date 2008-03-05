@@ -1,5 +1,5 @@
-CFLAGS = -Wall -g `pkg-config --cflags libgda-xslt-3.0`
-LDFLAGS = `pkg-config --libs libgda-xslt-3.0`
+CFLAGS = -Wall -g `pkg-config --cflags libgda-xslt-4.0`
+LDFLAGS = `pkg-config --libs libgda-xslt-4.0`
 
 all: transform
 

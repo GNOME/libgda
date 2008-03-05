@@ -1,6 +1,6 @@
 /* gda-handler-string.c
  *
- * Copyright (C) 2003 - 2007 Vivien Malerba
+ * Copyright (C) 2003 - 2008 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -81,7 +81,7 @@ gda_handler_string_get_type (void)
 			NULL
 		};
 
-		type = g_type_register_static (GDA_TYPE_OBJECT, "GdaHandlerString", &info, 0);
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaHandlerString", &info, 0);
 		g_type_add_interface_static (type, GDA_TYPE_DATA_HANDLER, &data_entry_info);
 	}
 	return type;
@@ -122,8 +122,8 @@ gda_handler_string_init (GdaHandlerString * hdl)
 	hdl->priv->valid_g_types = g_new0 (GType, 1);
 	hdl->priv->valid_g_types[0] = G_TYPE_STRING;
 
-	gda_object_set_name (GDA_OBJECT (hdl), _("InternalString"));
-	gda_object_set_description (GDA_OBJECT (hdl), _("Strings representation"));
+	g_object_set_data (G_OBJECT (hdl), "name", _("InternalString"));
+	g_object_set_data (G_OBJECT (hdl), "descr", _("Strings representation"));
 }
 
 static void
@@ -137,8 +137,6 @@ gda_handler_string_dispose (GObject   * object)
 	hdl = GDA_HANDLER_STRING (object);
 
 	if (hdl->priv) {
-		gda_object_destroy_check (GDA_OBJECT (object));
-
 		g_free (hdl->priv->valid_g_types);
 		hdl->priv->valid_g_types = NULL;
 
@@ -167,7 +165,7 @@ gda_handler_string_new (void)
 {
 	GObject *obj;
 
-	obj = g_object_new (GDA_TYPE_HANDLER_STRING, "dict", NULL, NULL);
+	obj = g_object_new (GDA_TYPE_HANDLER_STRING, NULL);
 
 	return (GdaDataHandler *) obj;
 }
@@ -191,7 +189,7 @@ gda_handler_string_new_with_provider (GdaServerProvider *prov, GdaConnection *cn
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (prov), NULL);
 	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);
 
-	obj = g_object_new (GDA_TYPE_HANDLER_STRING, "dict", NULL, NULL);
+	obj = g_object_new (GDA_TYPE_HANDLER_STRING, NULL);
 	dh = (GdaHandlerString*) obj;
 
 	dh->priv->prov = prov;
@@ -363,5 +361,5 @@ gda_handler_string_get_descr (GdaDataHandler *iface)
 	hdl = GDA_HANDLER_STRING (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
-	return gda_object_get_description (GDA_OBJECT (hdl));
+	return g_object_get_data (G_OBJECT (hdl), "descr");
 }

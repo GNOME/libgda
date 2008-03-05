@@ -1,0 +1,640 @@
+#include "common.h"
+#include <sql-parser/gda-sql-parser.h>
+
+/* copied from gda-meta-store.c */
+static void
+gda_meta_store_change_free (GdaMetaStoreChange *change) {
+	if (!change) return;
+	
+	g_free (change->table_name);
+	g_hash_table_destroy (change->keys);
+	g_free (change);
+}
+
+/* list of changes expected during a modify operation */
+GSList *expected_changes;
+
+static void meta_changed_cb (GdaMetaStore *store, GSList *changes, gpointer data);
+static void suggest_update_cb (GdaMetaStore *store, GdaMetaContext *context, gpointer data);
+
+/*
+ * Declare a GdaMetaStore to test
+ */
+void
+common_declare_meta_store (GdaMetaStore *store)
+{
+	g_signal_connect (store, "meta-changed", G_CALLBACK (meta_changed_cb), NULL);
+	g_signal_connect (store, "suggest_update", G_CALLBACK (suggest_update_cb), NULL);
+}
+
+static void
+change_key_func (const gchar *key, const GValue *value, GString *string)
+{
+	gchar *str = gda_value_stringify (value);
+	g_string_append_printf (string, "\t%s => %s\n", key, str);
+	g_free (str);
+}
+
+static gchar *
+stringify_a_change (GdaMetaStoreChange *ac)
+{
+	GString *string;
+	gchar *str;
+	
+	string = g_string_new (ac->table_name);
+	if (ac->c_type == GDA_META_STORE_ADD)
+		g_string_append (string, " (ADD)");
+	else if (ac->c_type == GDA_META_STORE_MODIFY)
+		g_string_append (string, " (MOD)");
+	else
+		g_string_append (string, " (DEL)");
+	g_string_append_c (string, '\n');
+	g_hash_table_foreach (ac->keys, (GHFunc) change_key_func, string);
+	
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+}
+
+static gboolean
+find_expected_change (const gchar *change_as_str)
+{
+	GSList *el;
+	for (el = expected_changes; el; el = el->next) {
+		gchar *estr = (gchar *) el->data;
+		if (!strcmp (estr, change_as_str)) {
+			g_free (estr);
+			expected_changes = g_slist_delete_link (expected_changes, el);
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+
+static void
+meta_changed_cb (GdaMetaStore *store, GSList *changes, gpointer data)
+{
+	GSList *gl, *el;
+	gint i;
+	for (i = 0, gl = changes; gl; gl = gl->next) {
+		gchar *gstr = stringify_a_change ((GdaMetaStoreChange *) gl->data);
+		if (!find_expected_change (gstr)) {
+			g_print ("Unexpected GdaMetaStoreChange: %s", gstr);
+			exit (EXIT_FAILURE);
+		}
+	}
+	if (expected_changes) {
+		/* expected more changes */
+		gchar *estr = (gchar *) el->data;
+		g_print ("Received no change but EXPECTED GdaMetaStoreChange: %s", estr);
+		exit (EXIT_FAILURE);
+	}
+}
+
+static void
+suggest_update_cb (GdaMetaStore *store, GdaMetaContext *context, gpointer data)
+{
+	gint i;
+	g_print ("Update suggested for table %s:\n", context->table_name);
+	for (i = 0; i < context->size; i++) {
+		gchar *str;
+		str = gda_value_stringify (context->column_values[i]);
+		g_print ("\t%s => %s\n", context->column_names[i], str);
+		g_free (str);
+	}
+}
+
+/*
+ * Loading a CSV file
+ * ... is a (-1 terminated) list of triplets composed of:
+ *   - a column number (gint)
+ *   - the column (gchar *)
+ */
+GdaDataModel *
+common_load_csv_file (const gchar *data_file, ...)
+{
+	GdaDataModel *model;
+	GdaSet *options;
+	va_list args;
+	gchar *fname;
+	gint cnum;
+	
+	/* create options */
+	options = gda_set_new (NULL);
+	va_start (args, data_file);
+	for (cnum = va_arg (args, gint); cnum >= 0; cnum= va_arg (args, gint)) {
+		GdaHolder *holder;
+		GValue *v;
+		gchar *id;
+		
+		holder = gda_holder_new (G_TYPE_ULONG);
+		id = g_strdup_printf ("GDA_TYPE_%d", cnum);
+		g_object_set (G_OBJECT (holder), "id", id, NULL);
+		g_free (id);
+		
+		v = gda_value_new (G_TYPE_ULONG);
+		g_value_set_ulong (v, gda_g_type_from_string (va_arg (args, gchar*)));
+		gda_holder_take_value (holder, v);
+		
+		gda_set_add_holder (options, holder);
+		g_object_unref (holder);
+	}
+	va_end (args);
+	
+	/* load file */
+	fname = g_build_filename (ROOT_DIR, "tests", "meta-store", data_file, NULL);
+	model = gda_data_model_import_new_file (fname, TRUE, options);
+	g_object_unref (options);
+	
+	GSList *errors;
+	if ((errors = gda_data_model_import_get_errors (GDA_DATA_MODEL_IMPORT (model)))) {
+		g_print ("Error importing file '%s':\n", fname);
+		for (; errors; errors = errors->next) {
+			GError *error = (GError*) errors->data;
+			g_print ("\t* %s\n", error && error->message ? error->message : "No detail");
+		}
+		g_object_unref (model);
+		model = NULL;
+		exit (1);
+	}
+	g_free (fname);
+	
+	return model;
+}
+
+
+/*
+ * Declaring an expected GdaMetaStoreChange change
+ * ... is a NULL terminated list of:
+ *    - para name (gchar*)
+ *    - param value (gchar *)
+ */
+void
+common_declare_expected_change (const gchar *table_name, GdaMetaStoreChangeType type, ...)
+{
+	if (!table_name) {
+		/* clear any remaining changes not handled */
+		if (expected_changes) {
+			/* expected more changes */
+			gchar *estr = stringify_a_change ((GdaMetaStoreChange *) expected_changes->data);
+			g_print ("Received no change but EXPECTED GdaMetaStoreChange: %s", estr);
+			exit (EXIT_FAILURE);
+		}
+		g_slist_foreach (expected_changes, (GFunc) g_free, NULL);
+		g_slist_free (expected_changes);
+		expected_changes = NULL;
+	}
+	else {
+		GdaMetaStoreChange *ac;
+		ac = g_new0 (GdaMetaStoreChange, 1);
+		ac->c_type = type;
+		ac->table_name = g_strdup (table_name);
+		ac->keys = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, (GDestroyNotify) gda_value_free);
+
+		/* use args */
+		va_list args;
+		gchar *pname;
+		va_start (args, type);
+		for (pname = va_arg (args, gchar*); pname; pname = va_arg (args, gchar*)) {
+			GValue *v;
+			g_value_set_string ((v = gda_value_new (G_TYPE_STRING)), va_arg (args, gchar*));
+			g_hash_table_insert (ac->keys, g_strdup (pname), v);
+		}
+		va_end (args);
+
+		gchar *str;
+		str = stringify_a_change (ac);
+		expected_changes = g_slist_append (expected_changes, str);
+		gda_meta_store_change_free (ac);
+	}
+}
+
+void
+common_declare_expected_insertions_from_model (const gchar *table_name, GdaDataModel *model)
+{
+	gint ncols, nrows, i, j;
+	ncols = gda_data_model_get_n_columns (model);
+	nrows = gda_data_model_get_n_rows (model);
+	for (i = 0; i < nrows; i++) {
+		GdaMetaStoreChange *ac;
+		ac = g_new0 (GdaMetaStoreChange, 1);
+		ac->c_type = GDA_META_STORE_ADD;
+		ac->table_name = g_strdup (table_name);
+		ac->keys = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, (GDestroyNotify) gda_value_free);
+
+		for (j = 0; j < ncols; j++) {
+			gchar *str;
+			const GValue *value;
+			str = g_strdup_printf ("+%d", j);
+			value = gda_data_model_get_value_at (model, j, i);
+			g_hash_table_insert (ac->keys, str, gda_value_copy (value));
+		}
+
+		gchar *str;
+		str = stringify_a_change (ac);
+		expected_changes = g_slist_append (expected_changes, str);
+		gda_meta_store_change_free (ac);
+	}
+}
+
+
+/*
+ * Clean all tables in connection
+ */
+void
+common_drop_all_tables (GdaMetaStore *store)
+{
+	gchar *table_names [] = {
+		"_attributes",
+		"_information_schema_catalog_name",
+		"_schemata",
+		"_builtin_data_types",
+		"_udt",
+		"_udt_columns",
+		"_enums",
+		"_element_types",
+		"_domains",
+		"_tables",
+		"_views",
+		"_collations",
+		"_character_sets",
+		"_routines",
+		"_triggers",
+		"_columns",
+		"_table_constraints",
+		"_referential_constraints",
+		"_key_column_usage",
+		"_check_column_usage",
+		"_view_column_usage",
+		"_domain_constraints",
+		"_parameters",
+		"_routine_columns"
+	};
+	gchar *view_names [] = {
+		"_all_types",
+		"_constraint_column_usage",
+		"_constraint_table_usage",
+		"_view_table_usage",
+		"_check_constraints",
+		"_domain_column_usage"
+	};
+	
+	GdaConnection *cnc = gda_meta_store_get_internal_connection (store);
+	GdaSqlParser *parser;
+	parser = gda_sql_parser_new ();
+	
+	gint i;
+		
+	/* drop views */
+	for (i = (sizeof (view_names) / sizeof (gchar*)) - 1 ; i >= 0; i--) {
+		GdaStatement *stmt;
+		gchar *sql;
+		gint res;
+		GError *error = NULL;
+
+		sql = g_strdup_printf ("DROP VIEW %s", view_names[i]);
+		stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+		g_free (sql);
+		res = gda_connection_statement_execute_non_select (cnc, stmt, NULL, NULL, &error);
+		if (res == -1) {
+			g_print ("DROP view '%s' error: %s\n", view_names[i],
+				error && error->message ? error->message : "No detail");
+			if (error)
+				g_error_free (error);
+		}
+	}
+	
+	/* drop tables */
+	for (i = (sizeof (table_names) / sizeof (gchar*)) - 1 ; i >= 0; i--) {
+		GdaStatement *stmt;
+		gchar *sql;
+		gint res;
+		GError *error = NULL;
+		
+		sql = g_strdup_printf ("DROP TABLE %s", table_names[i]);
+		stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+		g_free (sql);
+		res = gda_connection_statement_execute_non_select (cnc, stmt, NULL, NULL, &error);
+		if (res == -1) {
+			g_print ("DROP table '%s' error: %s\n", table_names[i],
+				error && error->message ? error->message : "No detail");
+			if (error)
+				g_error_free (error);
+		}
+	}
+}
+
+/*
+ *
+ * Test groups
+ *
+ */
+void
+tests_group_1 (GdaMetaStore *store)
+{
+	common_declare_meta_store (store);
+
+	test_information_schema_catalog_name (store);
+	test_schemata_1 (store);
+	test_schemata_2 (store);
+	test_builtin_data_types (store);
+	test_domains (store);
+	test_tables (store);
+	test_views (store);
+	test_routines (store);
+	test_triggers (store);
+	test_columns (store);
+	test_table_constraints (store);
+	test_referential_constraints (store);
+	test_key_column_usage (store);
+	test_domain_constraints (store);
+	test_parameters (store);
+}
+
+/*
+ *
+ *
+ * Individual Tests
+ *
+ *
+ */
+GdaDataModel *import;
+GError *error = NULL;
+	
+#define TEST_HEADER g_print ("... TEST '%s' ...\n", __FUNCTION__)
+#define TEST_MODIFY(s,n,m,c,e,...) \
+if (!gda_meta_store_modify ((s),(n),(m),(c),(e),__VA_ARGS__)) { \
+		g_print ("Error while modifying GdaMetaStore: %s\n", \
+			 error && error->message ? error->message : "No detail"); \
+		exit (EXIT_FAILURE); \
+	}
+
+#define DECL_CHANGE(n,t,...) common_declare_expected_change ((n),(t),__VA_ARGS__)
+#define TEST_END(m) \
+	if (m) g_object_unref (m); \
+	common_declare_expected_change (NULL, GDA_META_STORE_ADD, -1)
+	
+void
+test_information_schema_catalog_name (GdaMetaStore *store)
+{
+#define TNAME "_information_schema_catalog_name"	
+	TEST_HEADER;
+
+	import = common_load_csv_file ("data_information_schema_catalog_name.csv", -1);
+	DECL_CHANGE (TNAME, GDA_META_STORE_ADD, "+0", "meta", NULL);
+	TEST_MODIFY (store, TNAME, import, NULL, &error, NULL);
+	TEST_END (import);
+#undef TNAME
+}
+
+void
+test_schemata_1 (GdaMetaStore *store)
+{
+#define TNAME "_schemata"
+	TEST_HEADER;
+
+	import = common_load_csv_file ("data_schemata.csv", 3, "gboolean", -1);
+	DECL_CHANGE (TNAME, GDA_META_STORE_ADD, "+0", "meta", "+1", "pg_catalog", "+2", "a user", "+3", "TRUE", NULL);
+	DECL_CHANGE (TNAME, GDA_META_STORE_ADD, "+0", "meta", "+1", "public", "+2", "postgres", "+3", "FALSE", NULL);
+	DECL_CHANGE (TNAME, GDA_META_STORE_ADD, "+0", "meta", "+1", "information_schema", "+2", "postgres", "+3", "TRUE", NULL);
+	TEST_MODIFY (store, TNAME, import, NULL, &error, NULL);
+	TEST_END (import);
+#undef TNAME
+}
+
+void
+test_schemata_2 (GdaMetaStore *store)
+{
+#define TNAME "_schemata"
+	TEST_HEADER;
+
+	import = common_load_csv_file ("data_schemata_1.csv", 3, "gboolean", -1);	
+	DECL_CHANGE (TNAME, GDA_META_STORE_MODIFY, "-0", "meta", "-1", "pg_catalog", "+0", "meta", "+1", "pg_catalog", "+2", "postgres", "+3", "TRUE", NULL);
+	
+	GValue *v1, *v2;
+	g_value_set_string (v1 = gda_value_new (G_TYPE_STRING), "meta");
+	g_value_set_string (v2 = gda_value_new (G_TYPE_STRING), "pg_catalog");
+	TEST_MODIFY (store, TNAME, import, 
+		"catalog_name=##cn::string AND schema_name=##sn::string", &error,
+		"cn", v1, "sn", v2, NULL);
+	
+	gda_value_free (v1);
+	gda_value_free (v2);
+	TEST_END (import);
+#undef TNAME
+}
+
+void
+test_builtin_data_types (GdaMetaStore *store)
+{
+#define TNAME "_builtin_data_types"
+	TEST_HEADER;
+
+	import = common_load_csv_file ("data_builtin_data_types.csv", 5, "gboolean", -1);
+	common_declare_expected_insertions_from_model (TNAME, import);
+	TEST_MODIFY (store, TNAME, import, NULL, &error, NULL);
+	TEST_END (import);
+
+	/* remove last line */
+	GValue *v1;
+	g_value_set_string (v1 = gda_value_new (G_TYPE_STRING), "pg_catalog.to_remove");
+	DECL_CHANGE (TNAME, GDA_META_STORE_REMOVE, "-1", "pg_catalog.to_remove", NULL);
+	TEST_MODIFY (store, TNAME, NULL, 
+		     "full_type_name=##ftn::string", &error, 
+		     "ftn", v1, NULL);
+	gda_value_free (v1);
+	TEST_END (NULL);
+#undef TNAME
+}
+
+void
+test_domains (GdaMetaStore *store)
+{
+#define TNAME "_domains"
+	TEST_HEADER;
+
+	/* insert 1st part of the domains */
+	import = common_load_csv_file ("data_domains.csv", 4, "gint", 5, "gint", 12, "gint", 13, "gint", 19, "boolean", -1);
+	common_declare_expected_insertions_from_model (TNAME, import);
+	TEST_MODIFY (store, TNAME, import, NULL, &error, NULL);
+	TEST_END (import);
+
+	/* simulate a domains update updating only 1 domain */
+	GValue *v1, *v2, *v3;
+	g_value_set_string (v1 = gda_value_new (G_TYPE_STRING), "meta");
+	g_value_set_string (v2 = gda_value_new (G_TYPE_STRING), "information_schema");
+	g_value_set_string (v3 = gda_value_new (G_TYPE_STRING), "sql_identifier");
+	import = common_load_csv_file ("data_domains_1.csv", 4, "gint", 5, "gint", 12, "gint", 13, "gint", 19, "boolean", -1);
+	common_declare_expected_insertions_from_model (TNAME, import);
+	TEST_MODIFY (store, TNAME, import, 
+		     "domain_catalog=##dc::string AND domain_schema=##ds::string AND domain_name=##dn::string", &error, 
+		     "dc", v1, "ds", v2, "dn", v3, NULL);
+	TEST_END (import);
+#undef TNAME
+}
+
+void
+test_tables (GdaMetaStore *store)
+{
+#define TNAME "_tables"
+	TEST_HEADER;
+
+	import = common_load_csv_file ("data_tables.csv", 4, "boolean", -1);
+	common_declare_expected_insertions_from_model (TNAME, import);
+	TEST_MODIFY (store, TNAME, import, NULL, &error, NULL);
+	TEST_END (import);
+#undef TNAME
+}
+
+void
+test_views (GdaMetaStore *store)
+{
+#define TNAME "_views"
+	TEST_HEADER;
+
+	/* load CSV file */
+	import = common_load_csv_file ("data_views.csv", 5, "boolean", -1);
+	common_declare_expected_insertions_from_model (TNAME, import);
+	TEST_MODIFY (store, TNAME, import, NULL, &error, NULL);
+	TEST_END (import);
+
+	/* remove some lines */
+	DECL_CHANGE (TNAME, GDA_META_STORE_REMOVE, "-0", "meta", "-1", "pg_catalog", "-2", "pg_stats", NULL);
+	DECL_CHANGE (TNAME, GDA_META_STORE_REMOVE, "-0", "meta", "-1", "pg_catalog", "-2", "pg_locks", NULL);
+	TEST_MODIFY (store, TNAME, NULL, 
+		     "table_catalog='meta' AND table_schema='pg_catalog'", &error, NULL);
+	TEST_END (NULL);
+#undef TNAME
+}
+
+void
+test_routines (GdaMetaStore *store)
+{
+#define TNAME "_routines"
+	TEST_HEADER;
+
+	/* load CSV file */
+	import = common_load_csv_file ("data_routines.csv", 8, "boolean", 14, "boolean", 16, "boolean", -1);
+	common_declare_expected_insertions_from_model (TNAME, import);
+	TEST_MODIFY (store, TNAME, import, NULL, &error, NULL);
+	TEST_END (import);
+
+	/* remove some lines */
+	DECL_CHANGE (TNAME, GDA_META_STORE_REMOVE, "-0", "meta", "-1", "information_schema", "-2", "_pg_numeric_precision_radix_10632", NULL);
+	TEST_MODIFY (store, TNAME, NULL, 
+		     "specific_name='_pg_numeric_precision_radix_10632'", &error, NULL);
+	TEST_END (NULL);
+#undef TNAME
+}
+
+void
+test_triggers (GdaMetaStore *store)
+{
+#define TNAME "_triggers"
+	TEST_HEADER;
+
+	/* load CSV file */
+	import = common_load_csv_file ("data_triggers.csv", -1);
+	common_declare_expected_insertions_from_model (TNAME, import);
+	TEST_MODIFY (store, TNAME, import, NULL, &error, NULL);
+	TEST_END (import);
+#undef TNAME
+}
+
+void
+test_columns (GdaMetaStore *store)
+{
+#define TNAME "_columns"
+	TEST_HEADER;
+
+	/* load CSV file */
+	import = common_load_csv_file ("data_columns.csv", 4, "gint", 6, "boolean", 9, "gint", 10, "gint", 11, "gint", 12, "gint", 13, "gint", 21, "boolean", -1);
+	common_declare_expected_insertions_from_model (TNAME, import);
+	TEST_MODIFY (store, TNAME, import, NULL, &error, NULL);
+	TEST_END (import);
+#undef TNAME
+}
+
+void
+test_table_constraints (GdaMetaStore *store)
+{
+#define TNAME "_table_constraints"
+	TEST_HEADER;
+
+	/* load CSV file */
+	import = common_load_csv_file ("data_table_constraints.csv", 8, "boolean", 9, "boolean", -1);
+	common_declare_expected_insertions_from_model (TNAME, import);
+	TEST_MODIFY (store, TNAME, import, NULL, &error, NULL);
+	TEST_END (import);
+#undef TNAME
+}
+
+void
+test_referential_constraints (GdaMetaStore *store)
+{
+#define TNAME "_referential_constraints"
+	TEST_HEADER;
+
+	/* load CSV file */
+	import = common_load_csv_file ("data_referential_constraints.csv", -1);
+	common_declare_expected_insertions_from_model (TNAME, import);
+	TEST_MODIFY (store, TNAME, import, NULL, &error, NULL);
+	TEST_END (import);
+#undef TNAME
+}
+
+void
+test_key_column_usage (GdaMetaStore *store)
+{
+#define TNAME "_key_column_usage"
+	TEST_HEADER;
+
+	/* load CSV file */
+	import = common_load_csv_file ("data_key_column_usage.csv", 7, "gint", -1);
+	common_declare_expected_insertions_from_model (TNAME, import);
+	TEST_MODIFY (store, TNAME, import, NULL, &error, NULL);
+	TEST_END (import);
+#undef TNAME
+}
+
+void
+test_view_column_usage (GdaMetaStore *store)
+{
+#define TNAME "_view_column_usage"
+	TEST_HEADER;
+
+	/* load CSV file */
+	import = common_load_csv_file ("data_view_column_usage.csv", -1);
+	common_declare_expected_insertions_from_model (TNAME, import);
+	TEST_MODIFY (store, TNAME, import, NULL, &error, NULL);
+	TEST_END (import);
+#undef TNAME
+}
+
+void
+test_domain_constraints (GdaMetaStore *store)
+{
+#define TNAME "_domain_constraints"
+	TEST_HEADER;
+
+	/* load CSV file */
+	import = common_load_csv_file ("data_domain_constraints.csv", 7, "boolean", 8, "boolean", -1);
+	common_declare_expected_insertions_from_model (TNAME, import);
+	TEST_MODIFY (store, TNAME, import, NULL, &error, NULL);
+	TEST_END (import);
+#undef TNAME
+}
+
+void
+test_parameters (GdaMetaStore *store)
+{
+#define TNAME "_parameters"
+	TEST_HEADER;
+
+	/* load CSV file */
+	import = common_load_csv_file ("data_parameters.csv", 3, "gint", -1);
+	common_declare_expected_insertions_from_model (TNAME, import);
+	TEST_MODIFY (store, TNAME, import, NULL, &error, NULL);
+	TEST_END (import);
+#undef TNAME
+}

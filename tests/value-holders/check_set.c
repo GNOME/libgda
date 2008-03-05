@@ -98,7 +98,7 @@ test2 (GError **error)
 	gchar *model_data="1,John\n2,Jack";
 
 	model = gda_data_model_import_new_mem (model_data, TRUE, NULL);
-	gda_object_set_id (GDA_OBJECT (model), "model1");
+	g_object_set_data (G_OBJECT (model), "name", "model1");
 	
 	set = gda_set_new_inline (3, 
 				  "H1", G_TYPE_STRING, "A string",

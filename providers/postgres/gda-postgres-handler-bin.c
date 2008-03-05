@@ -1,6 +1,8 @@
-/* gda-postgres-handler-bin.c
+/* GDA postgres provider
+ * Copyright (C) 2007 - 2008 The GNOME Foundation.
  *
- * Copyright (C) 2007 Vivien Malerba
+ * AUTHORS:
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -18,7 +20,7 @@
  */
 
 #include "gda-postgres-handler-bin.h"
-#include "gda-postgres-provider.h"
+#include "gda-postgres.h"
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-server-provider.h>
@@ -77,7 +79,7 @@ gda_postgres_handler_bin_get_type (void)
 			NULL
 		};
 
-		type = g_type_register_static (GDA_TYPE_OBJECT, "GdaPostgresHandlerBin", &info, 0);
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaPostgresHandlerBin", &info, 0);
 		g_type_add_interface_static (type, GDA_TYPE_DATA_HANDLER, &data_entry_info);
 	}
 	return type;
@@ -119,8 +121,8 @@ gda_postgres_handler_bin_init (GdaPostgresHandlerBin * hdl)
 	hdl->priv->valid_g_types[0] = GDA_TYPE_BINARY;
 	hdl->priv->valid_g_types[1] = GDA_TYPE_BLOB;
 
-	gda_object_set_name (GDA_OBJECT (hdl), _("PostgresqlBin"));
-	gda_object_set_description (GDA_OBJECT (hdl), _("PostgreSQL binary representation"));
+	g_object_set_data (G_OBJECT (hdl), "name", _("PostgresqlBin"));
+	g_object_set_data (G_OBJECT (hdl), "descr", _("PostgreSQL binary representation"));
 }
 
 static void
@@ -134,8 +136,6 @@ gda_postgres_handler_bin_dispose (GObject   * object)
 	hdl = GDA_POSTGRES_HANDLER_BIN (object);
 
 	if (hdl->priv) {
-		gda_object_destroy_check (GDA_OBJECT (object));
-
 		g_free (hdl->priv->valid_g_types);
 		hdl->priv->valid_g_types = NULL;
 
@@ -163,7 +163,7 @@ gda_postgres_handler_bin_new (GdaConnection *cnc)
 	GObject *obj;
 	GdaPostgresHandlerBin *hdl;
 
-	obj = g_object_new (GDA_TYPE_POSTGRES_HANDLER_BIN, "dict", NULL, NULL);
+	obj = g_object_new (GDA_TYPE_POSTGRES_HANDLER_BIN, NULL);
 	hdl = (GdaPostgresHandlerBin*) obj;
 
 	if (cnc) {
@@ -180,7 +180,7 @@ gda_postgres_handler_bin_get_sql_from_value (GdaDataHandler *iface, const GValue
 {
 	gchar *retval;
 	GdaPostgresHandlerBin *hdl;
-	GdaPostgresConnectionData *priv_data = NULL;
+	PostgresConnectionData *cdata = NULL;
 
 	g_return_val_if_fail (iface && GDA_IS_POSTGRES_HANDLER_BIN (iface), NULL);
 	
@@ -190,11 +190,9 @@ gda_postgres_handler_bin_get_sql_from_value (GdaDataHandler *iface, const GValue
 	if (hdl->priv->cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (hdl->priv->cnc), NULL);
 		
-		priv_data = g_object_get_data (G_OBJECT (hdl->priv->cnc), OBJECT_DATA_POSTGRES_HANDLE);
-		if (!priv_data) {
-			gda_connection_add_event_string (hdl->priv->cnc, _("Invalid PostgreSQL handle"));
-			return NULL;
-		}
+		cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (hdl->priv->cnc);
+		if (!cdata) 
+			return FALSE;
 	}
 
 	if (value) {
@@ -203,12 +201,13 @@ gda_postgres_handler_bin_get_sql_from_value (GdaDataHandler *iface, const GValue
 			if (data) {
 				gchar *tmp;
 				size_t retlength;
-				if (0 && priv_data) {
+				if (0 && cdata) {
 					/* FIXME: use this call but it's only defined for Postgres >= 8.1 */
-					/*tmp = PQescapeByteaConn (priv_data->pconn, data, length, &retlength);*/
+					/*tmp = PQescapeByteaConn (cdata->pconn, data, length, &retlength);*/
 				}
 				else
-					tmp = PQescapeBytea (data->data, data->binary_length, &retlength);
+					tmp = (gchar *)PQescapeBytea (data->data, 
+								      data->binary_length, &retlength);
 			
 				if (tmp) {
 					retval = g_strdup_printf ("'%s'", tmp);
@@ -272,7 +271,7 @@ gda_postgres_handler_bin_get_value_from_sql (GdaDataHandler *iface, const gchar 
 				size_t retlength;
 				
 				str[i-1] = 0;
-				unstr = PQunescapeBytea (str+1, &retlength);
+				unstr = PQunescapeBytea ((guchar*) (str+1), &retlength);
 				if (unstr) {
 					value = gda_value_new_binary (unstr, retlength);
 					PQfreemem (unstr);
@@ -365,5 +364,5 @@ gda_postgres_handler_bin_get_descr (GdaDataHandler *iface)
 	hdl = GDA_POSTGRES_HANDLER_BIN (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
-	return gda_object_get_description (GDA_OBJECT (hdl));
+	return g_object_get_data (G_OBJECT (hdl), "descr");
 }

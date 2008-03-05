@@ -6,7 +6,6 @@ endif
 
 SUBDIRS = \
 	po \
-	libsql \
 	libgda \
 	providers \
 	libgda-report \
@@ -75,7 +74,7 @@ EXTRA_DIST = \
 	$(example_files)
 
 pkgconfigdir=$(libdir)/pkgconfig
-pkgconfig_DATA = libgda-3.0.pc libgda-report-3.0.pc libgda-xslt-3.0.pc
+pkgconfig_DATA = libgda-$(GDA_ABI_VERSION).pc libgda-report-$(GDA_ABI_VERSION).pc libgda-xslt-$(GDA_ABI_VERSION).pc
 
 all-local: libgda.spec
 

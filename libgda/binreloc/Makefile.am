@@ -7,9 +7,9 @@ AM_CPPFLAGS = \
 	$(BINRELOC_CFLAGS) \
 	-DLIBGDAPREFIX=\""$(prefix)"\"
 
-noinst_LTLIBRARIES = libgda_binreloc-3.0.la
+noinst_LTLIBRARIES = libgda_binreloc-4.0.la
 
-libgda_binreloc_3_0_la_SOURCES = \
+libgda_binreloc_4_0_la_SOURCES = \
 	gda-binreloc.c \
 	gda-binreloc.h 
 

@@ -1,5 +1,5 @@
 /* GDA Berkeley-DB data model
- * Copyright (C) 1998 - 2007 The GNOME Foundation
+ * Copyright (C) 1998 - 2008 The GNOME Foundation
  *
  * AUTHORS:
  *      Laurent Sansonetti <lrz@gnome.org>
@@ -26,7 +26,6 @@
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-data-model-bdb.h>
 
-#define PARENT_TYPE GDA_TYPE_OBJECT
 #define BDB_VERSION  (10000*DB_VERSION_MAJOR+100*DB_VERSION_MINOR+DB_VERSION_PATCH)
 
 struct _GdaDataModelBdbPrivate {
@@ -86,9 +85,6 @@ static gint                 gda_data_model_bdb_append_values (GdaDataModel *mode
 static gint                 gda_data_model_bdb_append_row (GdaDataModel *model, GError **error); 
 static gboolean             gda_data_model_bdb_remove_row (GdaDataModel *model, gint row, GError **error);
 
-#ifdef GDA_DEBUG
-static void gda_data_model_bdb_dump (GdaDataModelBdb *model, guint offset);
-#endif
 static void add_error (GdaDataModelBdb *model, const gchar *err);
 static void free_current_cursor_values (GdaDataModelBdb *model);
 
@@ -162,12 +158,6 @@ gda_data_model_bdb_class_init (GdaDataModelBdbClass *klass)
 
 	/* virtual functions */
 	object_class->dispose = gda_data_model_bdb_dispose;
-#ifdef GDA_DEBUG
-        GDA_OBJECT_CLASS (klass)->dump = (void (*)(GdaObject *, guint)) gda_data_model_bdb_dump;
-#endif
-
-        /* class attributes */
-        GDA_OBJECT_CLASS (klass)->id_unique_enforced = FALSE;
 }
 
 static void
@@ -217,7 +207,6 @@ add_error (GdaDataModelBdb *model, const gchar *err)
 	GError *error = NULL;
 
         g_set_error (&error, 0, 0, err);
-	g_print ("ADD_ERROR (%s)\n", err);
         model->priv->errors = g_slist_append (model->priv->errors, error);
 }
 
@@ -248,7 +237,7 @@ gda_data_model_bdb_get_type (void)
                         NULL
                 };
 
-		type = g_type_register_static (PARENT_TYPE, "GdaDataModelBdb", &info, 0);
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaDataModelBdb", &info, 0);
 		g_type_add_interface_static (type, GDA_TYPE_DATA_MODEL, &data_model_info);
 	}
 	return type;
@@ -416,28 +405,6 @@ gda_data_model_bdb_get_property (GObject *object,
 	}
 }
 
-#ifdef GDA_DEBUG
-static void
-gda_data_model_bdb_dump (GdaDataModelBdb *model, guint offset)
-{
-	gchar *stroff;
-
-	stroff = g_new0 (gchar, offset+1);
-	memset (stroff, ' ', offset);
-
-	if (model->priv) {
-		g_print ("%s" D_COL_H1 "GdaDataModelBdb %p (name=%s, id=%s)\n" D_COL_NOR,
-			 stroff, model, gda_object_get_name (GDA_OBJECT (model)), 
-			 gda_object_get_id (GDA_OBJECT (model)));
-		
-        }
-        else
-                g_print ("%s" D_COL_ERR "Using finalized object %p" D_COL_NOR, stroff, model);
-
-	g_free (stroff);
-}
-#endif
-
 
 /**
  * gda_data_model_bdb_new
@@ -461,6 +428,43 @@ gda_data_model_bdb_new (const gchar *filename, const gchar *db_name)
 
 	return model;
 }
+
+/**
+ * gda_data_model_bdb_get_errors
+ * @model: a #GdaDataModelBdb object
+ *
+ * Get the list of errors which have occurred while using @model
+ *
+ * Returns: a read-only list of #GError pointers, or %NULL if no error has occurred
+ */
+const GSList *
+gda_data_model_bdb_get_errors (GdaDataModelBdb *model)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_BDB (model), NULL);
+	g_return_val_if_fail (model->priv, NULL);
+
+	return model->priv->errors;
+}
+
+/**
+ * gda_data_model_bdb_clean_errors
+ * @model: a #GdaDataModelBdb object
+ *
+ * Reset the list of errors which have occurred while using @model
+ */
+void
+gda_data_model_bdb_clean_errors (GdaDataModelBdb *model)
+{
+	g_return_if_fail (GDA_IS_DATA_MODEL_BDB (model));
+	g_return_if_fail (model->priv);
+
+	if (model->priv->errors) {
+		g_slist_foreach (model->priv->errors, (GFunc) g_error_free, NULL);
+		g_slist_free (model->priv->errors);
+		model->priv->errors = NULL;
+	}
+}
+
 
 static gint
 gda_data_model_bdb_get_n_rows (GdaDataModel *model)

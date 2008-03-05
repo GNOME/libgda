@@ -16,7 +16,7 @@ main (int argc, char *argv [])
 
 	gda_init ("bdb test", "3.1.1", argc, argv);
 	if (! g_file_test (DATABASE, G_FILE_TEST_EXISTS)) {
-		g_print ("File '%s' done not exist\n", DATABASE);
+		g_print ("File '%s' does not exist\n", DATABASE);
 		exit (1);
 	}
 	model = gda_data_model_bdb_new (DATABASE, NULL);

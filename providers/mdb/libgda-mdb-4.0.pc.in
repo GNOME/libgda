@@ -1,0 +1,9 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: libgda-mdb-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@
+Description: GDA (GNOME Data Access) MDB provider
+Requires: libgda-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@
+Version: @VERSION@

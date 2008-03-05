@@ -1,6 +1,6 @@
 /* gda-set.c
  *
- * Copyright (C) 2003 - 2006 Vivien Malerba
+ * Copyright (C) 2003 - 2008 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -28,17 +28,10 @@
 #include <locale.h>
 #endif
 #include "gda-set.h"
-#include "gda-query.h"
 #include "gda-marshal.h"
 #include "gda-data-model.h"
 #include "gda-data-model-import.h"
 #include "gda-holder.h"
-#include "gda-entity-field.h"
-#include "gda-referer.h"
-#include "gda-entity.h"
-#include "gda-entity-field.h"
-#include "gda-dict-type.h"
-#include "gda-query-field.h"
 #include "gda-connection.h"
 #include "gda-server-provider.h"
 #include "gda-util.h"
@@ -293,6 +286,32 @@ gda_set_new (GSList *holders)
 }
 
 /**
+ * gda_set_copy
+ * @set: a #GdaSet object
+ *
+ * Creates a new #GdaSet object, opy of @set
+ *
+ * Returns: a new #GdaSet object
+ */
+GdaSet *
+gda_set_copy (GdaSet *set)
+{
+	GdaSet *copy;
+	GSList *list, *holders = NULL;
+	g_return_val_if_fail (GDA_IS_SET (set), NULL);
+	
+	for (list = set->holders; list; list = list->next) 
+		holders = g_slist_prepend (holders, gda_holder_copy (GDA_HOLDER (list->data)));
+	holders = g_slist_reverse (holders);
+
+	copy = g_object_new (GDA_TYPE_SET, "holders", holders, NULL);
+	g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
+	g_slist_free (holders);
+
+	return copy;
+}
+
+/**
  * gda_set_new_inline
  * @nb: the number of value holders which will be contained in the new #GdaSet
  * @...: a serie of a (const gchar*) id, (GType) type, and value
@@ -360,6 +379,10 @@ gda_set_new_inline (gint nb, ...)
 			gda_value_set_numeric (value, va_arg (ap, GdaNumeric *));
 		else if (type == G_TYPE_DATE)
 			g_value_set_boxed (value, va_arg (ap, GDate *));
+		else if (type == G_TYPE_LONG)
+			g_value_set_long (value, va_arg (ap, glong));
+		else if (type == G_TYPE_ULONG)
+			g_value_set_ulong (value, va_arg (ap, gulong));
 		else
 			g_warning (_("%s() does not handle values of type %s, value not assigned."),
 				   __FUNCTION__, g_type_name (type));
@@ -441,6 +464,10 @@ gda_set_set_holder_value (GdaSet *set, const gchar *holder_id, ...)
 		gda_value_set_numeric (value, va_arg (ap, GdaNumeric *));
 	else if (type == G_TYPE_DATE)
 		g_value_set_boxed (value, va_arg (ap, GDate *));
+	else if (type == G_TYPE_LONG)
+		g_value_set_long (value, va_arg (ap, glong));
+	else if (type == G_TYPE_ULONG)
+		g_value_set_ulong (value, va_arg (ap, gulong));
 	else
 		g_warning (_("%s() does not handle values of type %s, value not assigned."),
 			   __FUNCTION__, g_type_name (type));
@@ -451,6 +478,30 @@ gda_set_set_holder_value (GdaSet *set, const gchar *holder_id, ...)
 		return FALSE;
 	}
 	return TRUE;
+}
+
+/**
+ * gda_set_get_holder_value
+ * @set: a #GdaSet object
+ * @holder_id: the ID of the holder to set the value
+ *
+ * Get the value of the #GdaHolder which ID is @holder_id
+ *
+ * Returns: the requested GValue, or %NULL (see gda_holder_get_value())
+ */
+const GValue *
+gda_set_get_holder_value (GdaSet *set, const gchar *holder_id)
+{
+	GdaHolder *holder;
+
+	g_return_val_if_fail (GDA_IS_SET (set), FALSE);
+	g_return_val_if_fail (set->priv, FALSE);
+
+	holder = gda_set_get_holder (set, holder_id);
+	if (holder) 
+		return gda_holder_get_value (holder);
+	else
+		return NULL;
 }
 
 static void
@@ -478,7 +529,6 @@ xml_validity_error_func (void *ctx, const char *msg, ...)
 
 /**
  * gda_set_new_from_spec_string
- * @dict: a #GdaDict object, or %NULL
  * @xml_spec: a string
  * @error: a place to store the error, or %NULL
  *
@@ -488,13 +538,11 @@ xml_validity_error_func (void *ctx, const char *msg, ...)
  * Returns: a new object, or %NULL if an error occurred
  */
 GdaSet *
-gda_set_new_from_spec_string (GdaDict *dict, const gchar *xml_spec, GError **error)
+gda_set_new_from_spec_string (const gchar *xml_spec, GError **error)
 {
 	xmlDocPtr doc;
 	xmlNodePtr root;
 	GdaSet *set;
-
-	g_return_val_if_fail (!dict || GDA_IS_DICT (dict), NULL);
 
 	/* string parsing */
 	doc = xmlParseMemory (xml_spec, strlen (xml_spec));
@@ -565,7 +613,7 @@ gda_set_new_from_spec_string (GdaDict *dict, const gchar *xml_spec, GError **err
 	while (xmlNodeIsText (root)) 
 		root = root->next; 
 
-	set = gda_set_new_from_spec_node (dict, root, error);
+	set = gda_set_new_from_spec_node (root, error);
 	xmlFreeDoc(doc);
 	return set;
 }
@@ -573,7 +621,6 @@ gda_set_new_from_spec_string (GdaDict *dict, const gchar *xml_spec, GError **err
 
 /**
  * gda_set_new_from_spec_node
- * @dict: a #GdaDict object, or %NULL
  * @xml_spec: a #xmlNodePtr for a &lt;holders&gt; tag
  * @error: a place to store the error, or %NULL
  *
@@ -583,7 +630,7 @@ gda_set_new_from_spec_string (GdaDict *dict, const gchar *xml_spec, GError **err
  * Returns: a new object, or %NULL if an error occurred
  */
 GdaSet *
-gda_set_new_from_spec_node (GdaDict *dict, xmlNodePtr xml_spec, GError **error)
+gda_set_new_from_spec_node (xmlNodePtr xml_spec, GError **error)
 {
 	GdaSet *set = NULL;
 	GSList *holders = NULL, *sources = NULL;
@@ -594,25 +641,15 @@ gda_set_new_from_spec_node (GdaDict *dict, xmlNodePtr xml_spec, GError **error)
 	gboolean allok = TRUE;
 	gchar *str;
 
-	GdaServerProvider *prov = NULL;
-        GdaConnection *cnc = NULL;
-
-	g_return_val_if_fail (!dict || GDA_IS_DICT (dict), NULL);
-
 #ifdef HAVE_LC_MESSAGES
 	lang = setlocale (LC_MESSAGES, NULL);
 #else
 	lang = setlocale (LC_CTYPE, NULL);
 #endif
 
-	if (dict)
-		cnc = gda_dict_get_connection (dict);
-        if (cnc)
-                prov = gda_connection_get_provider_obj (cnc);
-
-	if (strcmp ((gchar*)xml_spec->name, "holders") != 0){
+	if (strcmp ((gchar*)xml_spec->name, "parameters") != 0){
 		g_set_error (error, GDA_SET_ERROR, GDA_SET_XML_SPEC_ERROR,
-			     _("Missing node <holders>: '%s'"), xml_spec->name);
+			     _("Missing node <parameters>: '%s'"), xml_spec->name);
 		return NULL;
 	}
 
@@ -641,10 +678,8 @@ gda_set_new_from_spec_node (GdaDict *dict, xmlNodePtr xml_spec, GError **error)
 				else  {
 					sources = g_slist_prepend (sources, model);
 					str = (gchar*)xmlGetProp(cur, (xmlChar*)"name");
-					if (str) {
-						gda_object_set_name (GDA_OBJECT (model), str);
-						g_free (str);
-					}
+					if (str) 
+						g_object_set_data_full (G_OBJECT (model), "name", str, g_free);
 				}
 			}
 		}
@@ -657,12 +692,9 @@ gda_set_new_from_spec_node (GdaDict *dict, xmlNodePtr xml_spec, GError **error)
 
 		if (!strcmp ((gchar*)cur->name, "parameter")) {
 			GdaHolder *holder = NULL;
-			GdaDictType *dtype = NULL;
 			gchar *str, *id;
-			gboolean dtype_created = FALSE;
 			xmlChar *this_lang;
-			xmlChar *dbmstype, *gdatype;
-			xmlChar *xmlstr;
+			xmlChar *gdatype;
 
 			/* don't care about entries for the wrong locale */
 			this_lang = xmlGetProp(cur, (xmlChar*)"lang");
@@ -689,33 +721,16 @@ gda_set_new_from_spec_node (GdaDict *dict, xmlNodePtr xml_spec, GError **error)
 			
 
 			/* find data type and create GdaHolder */
-			dbmstype = xmlGetProp (cur, BAD_CAST "dbmstype");
 			gdatype = xmlGetProp (cur, BAD_CAST "gdatype");
-			dtype = gda_utility_find_or_create_data_type (dict, prov, cnc,
-								  (gchar*)dbmstype, (gchar*)gdatype, &dtype_created);
-			if (dbmstype) xmlFree (dbmstype);
-			if (gdatype) xmlFree (gdatype);
-
-			if (!dtype) {
-				xmlstr = xmlGetProp(cur, BAD_CAST "name");
-				
-				g_set_error (error, GDA_SET_ERROR, GDA_SET_XML_SPEC_ERROR,
-					     _("Can't find a data type for holder '%s'"), 
-					     xmlstr ? (gchar *) xmlstr : "unnamed");
-				xmlFree (xmlstr);
-
-				allok = FALSE;
-				continue;
-			}
 
 			if (!holder) {
 				holder = GDA_HOLDER (g_object_new (GDA_TYPE_HOLDER,
-								   "g_type", gda_dict_type_get_g_type (dtype),
+								   "g_type", 
+								   gdatype ? gda_g_type_from_string ((gchar *) gdatype) : G_TYPE_STRING,
 								   NULL));
 				holders = g_slist_append (holders, holder);
 			}
-			if (dtype_created)
-				g_object_unref (dtype);
+			if (gdatype) xmlFree (gdatype);
 			
 			/* set holder's attributes */
 			gda_utility_holder_load_attributes (holder, cur, sources);
@@ -727,12 +742,12 @@ gda_set_new_from_spec_node (GdaDict *dict, xmlNodePtr xml_spec, GError **error)
 	while (list) {
 		str = g_object_get_data (G_OBJECT (list->data), "newname");
 		if (str) {
-			gda_object_set_name (GDA_OBJECT (list->data), str);
+			g_object_set_data_full (G_OBJECT (list->data), "name", str, g_free);
 			g_object_set_data (G_OBJECT (list->data), "newname", NULL);
 		}
 		str = g_object_get_data (G_OBJECT (list->data), "newdescr");
 		if (str) {
-			gda_object_set_description (GDA_OBJECT (list->data), str);
+			g_object_set_data_full (G_OBJECT (list->data), "descr", str, g_free);
 			g_object_set_data (G_OBJECT (list->data), "newdescr", NULL);
 		}
 		list = g_slist_next (list);
@@ -800,7 +815,6 @@ gda_set_get_spec (GdaSet *set)
 	for (list = set->holders; list; list = list->next) {
 		xmlNodePtr node;
 		GdaHolder *holder = GDA_HOLDER (list->data);
-		/*GdaDictType *dtype;*/
 		gchar *str;
 		const gchar *cstr;
 
@@ -823,17 +837,14 @@ gda_set_get_spec (GdaSet *set)
 		xmlSetProp(node, (xmlChar*)"gdatype", (xmlChar*)gda_g_type_to_string (gda_holder_get_g_type (holder)));
 
 		xmlSetProp(node, (xmlChar*)"nullok", (xmlChar*)(gda_holder_get_not_null (holder) ? "FALSE" : "TRUE"));
-		g_object_get (G_OBJECT (holder), "entry_plugin", &str, NULL);
-		if (str) {
+		str = g_object_get_data (G_OBJECT (holder), "__gda_entry_plugin");
+		if (str) 
 			xmlSetProp(node, (xmlChar*)"plugin", (xmlChar*)str);
-			g_free (str);
-		}
 	}
 
 	/* holders' values, sources, constraints: TODO */
 
 	xmlDocDumpFormatMemory(doc, &xmlbuff, &buffersize, 1);
-	g_print ((gchar *) xmlbuff);
 	
 	xmlFreeDoc(doc);
 	return (gchar *) xmlbuff;
@@ -939,8 +950,15 @@ gda_set_dispose (GObject *object)
 	set = GDA_SET (object);
 	/* free the holders list */
 	if (set->holders) {
-		for (list = set->holders; list; list = list->next)
+		for (list = set->holders; list; list = list->next) {
+			g_signal_handlers_disconnect_by_func (G_OBJECT (list->data),
+				G_CALLBACK (changed_holder_cb), set);
+			g_signal_handlers_disconnect_by_func (G_OBJECT (list->data),
+				G_CALLBACK (source_changed_holder_cb), set);
+			g_signal_handlers_disconnect_by_func (G_OBJECT (list->data),
+				G_CALLBACK (notify_holder_cb), set);
 			g_object_unref (G_OBJECT (list->data));
+		}
 		g_slist_free (set->holders);
 	}
 
@@ -1231,12 +1249,10 @@ gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
 				  G_CALLBACK (source_changed_holder_cb), set);
 		g_signal_connect (G_OBJECT (holder), "notify",
 				  G_CALLBACK (notify_holder_cb), set);
-
-		g_object_ref (G_OBJECT (holder));
 	}
 #ifdef GDA_DEBUG_NO
 	else 
-		g_print ("Holder %p and %p are similar, keeping %p only\n", similar, holder, similar);
+		g_print ("In Set %p, Holder %p and %p are similar, keeping %p only\n", set, similar, holder, similar);
 #endif
 }
 
@@ -1246,12 +1262,14 @@ gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
  * @set: a #GdaSet object
  * @set_to_merge: a #GdaSet object
  *
- * Add to @set all the holders of @set_to_merge.
+ * Add to @set all the holders of @set_to_merge. 
+ * Note1: only the #GdaHolder of @set_to_merge for which no holder in @set has the same ID are merged
+ * Note2: all the #GdaHolder merged in @set are still used by @set_to_merge.
  */
 void
 gda_set_merge_with_set (GdaSet *set, GdaSet *set_to_merge)
 {
-	GSList *holders = set_to_merge->holders;
+	GSList *holders;
 	g_return_if_fail (GDA_IS_SET (set));
 	g_return_if_fail (set_to_merge && GDA_IS_SET (set_to_merge));
 

@@ -25,6 +25,11 @@ one provided th the #GdaDict object to which the query relates.
 </para>
 
 
+<!-- ##### ARG GdaDataModelQuery:connection ##### -->
+<para>
+
+</para>
+
 <!-- ##### ARG GdaDataModelQuery:delete-query ##### -->
 <para>
 
@@ -75,7 +80,8 @@ one provided th the #GdaDict object to which the query relates.
 
 </para>
 
-@query: 
+@cnc: 
+@select_stmt: 
 @Returns: 
 
 
@@ -104,7 +110,7 @@ one provided th the #GdaDict object to which the query relates.
 </para>
 
 @model: 
-@query: 
+@mod_stmt: 
 @error: 
 @Returns: 
 

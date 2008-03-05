@@ -1,0 +1,251 @@
+<!-- ##### SECTION Title ##### -->
+Misc API
+
+<!-- ##### SECTION Short_Description ##### -->
+Methods dedicated to implementing providers
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### FUNCTION gda_server_provider_internal_get_parser ##### -->
+<para>
+
+</para>
+
+@prov: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_perform_operation_default ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@op: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_get_data_handler_default ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@type: 
+@dbms_type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_handler_find ##### -->
+<para>
+
+</para>
+
+@prov: 
+@cnc: 
+@g_type: 
+@dbms_type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_handler_declare ##### -->
+<para>
+
+</para>
+
+@prov: 
+@dh: 
+@cnc: 
+@g_type: 
+@dbms_type: 
+
+
+<!-- ##### FUNCTION gda_server_provider_find_file ##### -->
+<para>
+
+</para>
+
+@prov: 
+@inst_dir: 
+@filename: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_load_file_contents ##### -->
+<para>
+
+</para>
+
+@inst_dir: 
+@data_dir: 
+@filename: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_internal_set_provider_data ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@data: 
+@destroy_func: 
+
+
+<!-- ##### FUNCTION gda_connection_internal_get_provider_data ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_virtual_connection_internal_set_provider_data ##### -->
+<para>
+
+</para>
+
+@vcnc: 
+@data: 
+@destroy_func: 
+
+
+<!-- ##### FUNCTION gda_virtual_connection_internal_get_provider_data ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_add_prepared_statement ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@gda_stmt: 
+@prepared_stmt: 
+
+
+<!-- ##### FUNCTION gda_connection_del_prepared_statement ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@gda_stmt: 
+
+
+<!-- ##### FUNCTION gda_connection_get_prepared_statement ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@gda_stmt: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_internal_transaction_started ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@parent_trans: 
+@trans_name: 
+@isol_level: 
+
+
+<!-- ##### FUNCTION gda_connection_internal_transaction_rolledback ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@trans_name: 
+
+
+<!-- ##### FUNCTION gda_connection_internal_transaction_committed ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@trans_name: 
+
+
+<!-- ##### FUNCTION gda_connection_internal_statement_executed ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@stmt: 
+@params: 
+@error: 
+
+
+<!-- ##### FUNCTION gda_connection_internal_savepoint_added ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@parent_trans: 
+@svp_name: 
+
+
+<!-- ##### FUNCTION gda_connection_internal_savepoint_rolledback ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@svp_name: 
+
+
+<!-- ##### FUNCTION gda_connection_internal_savepoint_removed ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@svp_name: 
+
+
+<!-- ##### FUNCTION gda_connection_internal_change_transaction_state ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@newstate: 
+
+
+<!-- ##### FUNCTION gda_connection_get_meta_store ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+

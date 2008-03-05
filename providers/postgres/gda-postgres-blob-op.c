@@ -1,5 +1,5 @@
 /* GDA Postgres blob
- * Copyright (C) 2005 - 2007 The GNOME Foundation
+ * Copyright (C) 2005 - 2008 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -24,13 +24,7 @@
 #include <string.h>
 #include "gda-postgres.h"
 #include "gda-postgres-blob-op.h"
-#include <libpq/libpq-fs.h>
-
-#ifdef PARENT_TYPE
-#undef PARENT_TYPE
-#endif
-
-#define PARENT_TYPE GDA_TYPE_BLOB_OP
+#include "gda-postgres-util.h"
 
 struct _GdaPostgresBlobOpPrivate {
 	GdaConnection *cnc;
@@ -69,7 +63,7 @@ gda_postgres_blob_op_get_type (void)
 			0,
 			(GInstanceInitFunc) gda_postgres_blob_op_init
 		};
-		type = g_type_register_static (PARENT_TYPE, "GdaPostgresBlobOp", &info, 0);
+		type = g_type_register_static (GDA_TYPE_BLOB_OP, "GdaPostgresBlobOp", &info, 0);
 	}
 	return type;
 }
@@ -102,33 +96,40 @@ gda_postgres_blob_op_class_init (GdaPostgresBlobOpClass *klass)
 static PGconn *
 get_pconn (GdaConnection *cnc)
 {
-	GdaPostgresConnectionData *priv_data;
+	PostgresConnectionData *cdata;
 
-	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
-	if (!priv_data) {
-		gda_connection_add_event_string (cnc, _("Invalid PostgreSQL handle"));
+	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata) 
 		return NULL;
-	}
 
-	return priv_data->pconn;
+	return cdata->pconn;
 }
 
 static gboolean
 blob_op_open (GdaPostgresBlobOp *pgop)
 {
+	gboolean use_svp = FALSE;
+
 	if (pgop->priv->blobid == InvalidOid)
 		return FALSE;
 	if (pgop->priv->fd >= 0)
 		return TRUE;
 
-	/* add a savepoint to prevent a blob open failure from rendering the transaction unuseable */
-	gda_connection_add_savepoint (pgop->priv->cnc, "__gda_blob_read_svp", NULL);
+	if (gda_connection_get_transaction_status (pgop->priv->cnc)) 
+		/* add a savepoint to prevent a blob open failure from rendering the transaction unuseable */
+		use_svp = TRUE;
+
+	if (use_svp)
+		gda_connection_add_savepoint (pgop->priv->cnc, "__gda_blob_read_svp", NULL);
+	
 	pgop->priv->fd = lo_open (get_pconn (pgop->priv->cnc), pgop->priv->blobid, INV_READ | INV_WRITE);
 	if (pgop->priv->fd < 0) {
-		gda_connection_rollback_savepoint (pgop->priv->cnc, "__gda_blob_read_svp", NULL);
+		if (use_svp)
+			gda_connection_rollback_savepoint (pgop->priv->cnc, "__gda_blob_read_svp", NULL);
 		return FALSE;
 	}
-	gda_connection_delete_savepoint (pgop->priv->cnc, "__gda_blob_read_svp", NULL);
+	if (use_svp)
+		gda_connection_delete_savepoint (pgop->priv->cnc, "__gda_blob_read_svp", NULL);
 	return TRUE;
 }
 
@@ -193,7 +194,7 @@ gda_postgres_blob_op_declare_blob (GdaPostgresBlobOp *pgop)
 		PGconn *pconn = get_pconn (pgop->priv->cnc);
 		pgop->priv->blobid = lo_creat (pconn, INV_READ | INV_WRITE);
 		if (pgop->priv->blobid == InvalidOid) {
-			gda_postgres_make_error (pgop->priv->cnc, pconn, NULL);
+			_gda_postgres_make_error (pgop->priv->cnc, pconn, NULL, NULL);
 			return FALSE;
 		}
 	}
@@ -283,14 +284,14 @@ gda_postgres_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong siz
 
 	pconn = get_pconn (pgop->priv->cnc);
 	if (lo_lseek (pconn, pgop->priv->fd, offset, SEEK_SET) < 0) {
-		gda_postgres_make_error (pgop->priv->cnc, pconn, NULL);
+		_gda_postgres_make_error (pgop->priv->cnc, pconn, NULL, NULL);
 		return -1;
 	}
 
 	bin = (GdaBinary *) blob;
 	if (bin->data) 
 		g_free (bin->data);
-	bin->data = g_new0 (gchar, size);
+	bin->data = g_new0 (guchar, size);
 	bin->binary_length = lo_read (pconn, pgop->priv->fd, (char *) (bin->data), size);
 	return bin->binary_length;
 }
@@ -314,14 +315,14 @@ gda_postgres_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 
 	pconn = get_pconn (pgop->priv->cnc);
 	if (lo_lseek (pconn, pgop->priv->fd, offset, SEEK_SET) < 0) {
-		gda_postgres_make_error (pgop->priv->cnc, pconn, NULL);
+		_gda_postgres_make_error (pgop->priv->cnc, pconn, NULL, NULL);
 		return -1;
 	}
 
 	bin = (GdaBinary *) blob;
 	nbwritten = lo_write (pconn, pgop->priv->fd, (char*) bin->data, bin->binary_length);
 	if (nbwritten == -1) {
-		gda_postgres_make_error (pgop->priv->cnc, pconn, NULL);
+		_gda_postgres_make_error (pgop->priv->cnc, pconn, NULL, NULL);
 		return -1;
 	}
 

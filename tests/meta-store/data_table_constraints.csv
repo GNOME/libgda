@@ -1,0 +1,194 @@
+"meta","public","2200_78469_1_not_null","meta","public","_attributes","CHECK","att_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78469_2_not_null","meta","public","_attributes","CHECK","att_value IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78476_1_not_null","meta","public","_information_schema_catalog_name","CHECK","catalog_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78483_1_not_null","meta","public","_builtin_data_types","CHECK","short_type_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78483_2_not_null","meta","public","_builtin_data_types","CHECK","full_type_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78483_6_not_null","meta","public","_builtin_data_types","CHECK","internal IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78490_1_not_null","meta","public","_udt","CHECK","udt_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78490_2_not_null","meta","public","_udt","CHECK","udt_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78490_3_not_null","meta","public","_udt","CHECK","udt_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78490_6_not_null","meta","public","_udt","CHECK","udt_short_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78490_7_not_null","meta","public","_udt","CHECK","udt_full_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78490_8_not_null","meta","public","_udt","CHECK","udt_internal IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78497_1_not_null","meta","public","_element_types","CHECK","specific_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78497_2_not_null","meta","public","_element_types","CHECK","object_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78497_3_not_null","meta","public","_element_types","CHECK","object_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78497_4_not_null","meta","public","_element_types","CHECK","object_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78497_6_not_null","meta","public","_element_types","CHECK","object_type IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78497_7_not_null","meta","public","_element_types","CHECK","data_type IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78497_8_not_null","meta","public","_element_types","CHECK","min_cardinality IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78497_9_not_null","meta","public","_element_types","CHECK","max_cardinality IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78504_1_not_null","meta","public","_schemata","CHECK","catalog_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78504_2_not_null","meta","public","_schemata","CHECK","schema_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78504_4_not_null","meta","public","_schemata","CHECK","schema_internal IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78516_11_not_null","meta","public","_udt_columns","CHECK","character_set_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78516_12_not_null","meta","public","_udt_columns","CHECK","character_set_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78516_13_not_null","meta","public","_udt_columns","CHECK","character_set_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78516_14_not_null","meta","public","_udt_columns","CHECK","collation_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78516_15_not_null","meta","public","_udt_columns","CHECK","collation_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78516_16_not_null","meta","public","_udt_columns","CHECK","collation_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78516_1_not_null","meta","public","_udt_columns","CHECK","udt_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78516_2_not_null","meta","public","_udt_columns","CHECK","udt_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78516_3_not_null","meta","public","_udt_columns","CHECK","udt_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78516_4_not_null","meta","public","_udt_columns","CHECK","udt_column IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78516_5_not_null","meta","public","_udt_columns","CHECK","data_type IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78528_1_not_null","meta","public","_enums","CHECK","udt_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78528_2_not_null","meta","public","_enums","CHECK","udt_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78528_3_not_null","meta","public","_enums","CHECK","udt_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78528_4_not_null","meta","public","_enums","CHECK","label IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78540_18_not_null","meta","public","_domains","CHECK","domain_short_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78540_19_not_null","meta","public","_domains","CHECK","domain_full_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78540_1_not_null","meta","public","_domains","CHECK","domain_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78540_20_not_null","meta","public","_domains","CHECK","domain_internal IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78540_2_not_null","meta","public","_domains","CHECK","domain_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78540_3_not_null","meta","public","_domains","CHECK","domain_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78552_1_not_null","meta","public","_tables","CHECK","table_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78552_2_not_null","meta","public","_tables","CHECK","table_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78552_3_not_null","meta","public","_tables","CHECK","table_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78552_4_not_null","meta","public","_tables","CHECK","table_type IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78552_7_not_null","meta","public","_tables","CHECK","table_short_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78552_8_not_null","meta","public","_tables","CHECK","table_full_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78564_1_not_null","meta","public","_collations","CHECK","collation_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78564_2_not_null","meta","public","_collations","CHECK","collation_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78564_3_not_null","meta","public","_collations","CHECK","collation_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78564_5_not_null","meta","public","_collations","CHECK","collation_short_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78564_6_not_null","meta","public","_collations","CHECK","collation_full_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78576_19_not_null","meta","public","_routines","CHECK","routine_short_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78576_1_not_null","meta","public","_routines","CHECK","specific_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78576_20_not_null","meta","public","_routines","CHECK","routine_full_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78576_2_not_null","meta","public","_routines","CHECK","specific_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78576_3_not_null","meta","public","_routines","CHECK","specific_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78576_6_not_null","meta","public","_routines","CHECK","routine_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78576_9_not_null","meta","public","_routines","CHECK","returns_set IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78588_1_not_null","meta","public","_views","CHECK","table_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78588_2_not_null","meta","public","_views","CHECK","table_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78588_3_not_null","meta","public","_views","CHECK","table_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78600_1_not_null","meta","public","_character_sets","CHECK","character_set_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78600_2_not_null","meta","public","_character_sets","CHECK","character_set_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78600_3_not_null","meta","public","_character_sets","CHECK","character_set_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78600_8_not_null","meta","public","_character_sets","CHECK","character_set_short_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78600_9_not_null","meta","public","_character_sets","CHECK","character_set_full_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78617_10_not_null","meta","public","_triggers","CHECK","condition_timing IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78617_12_not_null","meta","public","_triggers","CHECK","trigger_short_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78617_13_not_null","meta","public","_triggers","CHECK","trigger_full_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78617_1_not_null","meta","public","_triggers","CHECK","trigger_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78617_2_not_null","meta","public","_triggers","CHECK","trigger_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78617_3_not_null","meta","public","_triggers","CHECK","trigger_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78617_4_not_null","meta","public","_triggers","CHECK","event_manipulation IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78617_5_not_null","meta","public","_triggers","CHECK","event_object_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78617_6_not_null","meta","public","_triggers","CHECK","event_object_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78617_7_not_null","meta","public","_triggers","CHECK","event_object_table IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78617_9_not_null","meta","public","_triggers","CHECK","action_orientation IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78634_1_not_null","meta","public","_table_constraints","CHECK","constraint_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78634_2_not_null","meta","public","_table_constraints","CHECK","constraint_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78634_3_not_null","meta","public","_table_constraints","CHECK","constraint_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78634_4_not_null","meta","public","_table_constraints","CHECK","table_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78634_5_not_null","meta","public","_table_constraints","CHECK","table_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78634_6_not_null","meta","public","_table_constraints","CHECK","table_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78634_7_not_null","meta","public","_table_constraints","CHECK","constraint_type IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78651_1_not_null","meta","public","_domain_constraints","CHECK","constraint_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78651_2_not_null","meta","public","_domain_constraints","CHECK","constraint_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78651_3_not_null","meta","public","_domain_constraints","CHECK","constraint_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78651_4_not_null","meta","public","_domain_constraints","CHECK","domain_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78651_5_not_null","meta","public","_domain_constraints","CHECK","domain_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78651_6_not_null","meta","public","_domain_constraints","CHECK","domain_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78668_1_not_null","meta","public","_parameters","CHECK","specific_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78668_2_not_null","meta","public","_parameters","CHECK","specific_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78668_3_not_null","meta","public","_parameters","CHECK","specific_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78668_4_not_null","meta","public","_parameters","CHECK","ordinal_position IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78668_5_not_null","meta","public","_parameters","CHECK","parameter_mode IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78668_7_not_null","meta","public","_parameters","CHECK","data_type IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78680_1_not_null","meta","public","_routine_columns","CHECK","specific_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78680_2_not_null","meta","public","_routine_columns","CHECK","specific_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78680_3_not_null","meta","public","_routine_columns","CHECK","specific_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78680_4_not_null","meta","public","_routine_columns","CHECK","column_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78680_5_not_null","meta","public","_routine_columns","CHECK","ordinal_position IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78680_6_not_null","meta","public","_routine_columns","CHECK","data_type IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78696_1_not_null","meta","public","_columns","CHECK","table_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78696_2_not_null","meta","public","_columns","CHECK","table_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78696_3_not_null","meta","public","_columns","CHECK","table_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78696_4_not_null","meta","public","_columns","CHECK","column_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78696_5_not_null","meta","public","_columns","CHECK","ordinal_position IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78696_7_not_null","meta","public","_columns","CHECK","is_nullable IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78696_8_not_null","meta","public","_columns","CHECK","data_type IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78718_1_not_null","meta","public","_referential_constraints","CHECK","constraint_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78718_2_not_null","meta","public","_referential_constraints","CHECK","constraint_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78718_3_not_null","meta","public","_referential_constraints","CHECK","constraint_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78718_4_not_null","meta","public","_referential_constraints","CHECK","unique_constraint_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78718_5_not_null","meta","public","_referential_constraints","CHECK","unique_constraint_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78718_6_not_null","meta","public","_referential_constraints","CHECK","unique_constraint_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78738_1_not_null","meta","public","_key_column_usage","CHECK","constraint_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78738_2_not_null","meta","public","_key_column_usage","CHECK","constraint_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78738_3_not_null","meta","public","_key_column_usage","CHECK","constraint_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78738_4_not_null","meta","public","_key_column_usage","CHECK","table_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78738_5_not_null","meta","public","_key_column_usage","CHECK","table_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78738_6_not_null","meta","public","_key_column_usage","CHECK","table_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78738_7_not_null","meta","public","_key_column_usage","CHECK","column_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78738_8_not_null","meta","public","_key_column_usage","CHECK","ordinal_position IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78755_1_not_null","meta","public","_check_column_usage","CHECK","constraint_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78755_2_not_null","meta","public","_check_column_usage","CHECK","constraint_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78755_3_not_null","meta","public","_check_column_usage","CHECK","constraint_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78755_4_not_null","meta","public","_check_column_usage","CHECK","table_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78755_5_not_null","meta","public","_check_column_usage","CHECK","table_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78755_6_not_null","meta","public","_check_column_usage","CHECK","table_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78755_7_not_null","meta","public","_check_column_usage","CHECK","column_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78772_1_not_null","meta","public","_view_column_usage","CHECK","view_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78772_2_not_null","meta","public","_view_column_usage","CHECK","view_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78772_3_not_null","meta","public","_view_column_usage","CHECK","view_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78772_4_not_null","meta","public","_view_column_usage","CHECK","table_catalog IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78772_5_not_null","meta","public","_view_column_usage","CHECK","table_schema IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78772_6_not_null","meta","public","_view_column_usage","CHECK","table_name IS NOT NULL",FALSE,FALSE
+"meta","public","2200_78772_7_not_null","meta","public","_view_column_usage","CHECK","column_name IS NOT NULL",FALSE,FALSE
+"meta","public","_attributes_pkey","meta","public","_attributes","PRIMARY KEY","NULL",FALSE,FALSE
+"meta","public","_builtin_data_types_pkey","meta","public","_builtin_data_types","PRIMARY KEY","NULL",FALSE,FALSE
+"meta","public","_character_sets_character_set_catalog_fkey","meta","public","_character_sets","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_character_sets_default_collate_catalog_fkey","meta","public","_character_sets","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_character_sets_pkey","meta","public","_character_sets","PRIMARY KEY","NULL",FALSE,FALSE
+"meta","public","_check_column_usage_constraint_catalog_fkey","meta","public","_check_column_usage","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_check_column_usage_pkey","meta","public","_check_column_usage","PRIMARY KEY","NULL",FALSE,FALSE
+"meta","public","_check_column_usage_table_catalog_fkey","meta","public","_check_column_usage","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_collations_collation_catalog_fkey","meta","public","_collations","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_collations_pkey","meta","public","_collations","PRIMARY KEY","NULL",FALSE,FALSE
+"meta","public","_columns_character_set_catalog_fkey","meta","public","_columns","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_columns_collation_catalog_fkey","meta","public","_columns","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_columns_pkey","meta","public","_columns","PRIMARY KEY","NULL",FALSE,FALSE
+"meta","public","_columns_table_catalog_fkey","meta","public","_columns","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_domain_constraints_constraint_catalog_fkey","meta","public","_domain_constraints","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_domain_constraints_domain_catalog_fkey","meta","public","_domain_constraints","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_domain_constraints_pkey","meta","public","_domain_constraints","PRIMARY KEY","NULL",FALSE,FALSE
+"meta","public","_domains_domain_catalog_fkey","meta","public","_domains","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_domains_pkey","meta","public","_domains","PRIMARY KEY","NULL",FALSE,FALSE
+"meta","public","_element_types_pkey","meta","public","_element_types","PRIMARY KEY","NULL",FALSE,FALSE
+"meta","public","_enums_pkey","meta","public","_enums","PRIMARY KEY","NULL",FALSE,FALSE
+"meta","public","_enums_udt_catalog_fkey","meta","public","_enums","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_information_schema_catalog_name_pkey","meta","public","_information_schema_catalog_name","PRIMARY KEY","NULL",FALSE,FALSE
+"meta","public","_key_column_usage_constraint_catalog_fkey","meta","public","_key_column_usage","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_key_column_usage_pkey","meta","public","_key_column_usage","PRIMARY KEY","NULL",FALSE,FALSE
+"meta","public","_key_column_usage_table_catalog_fkey","meta","public","_key_column_usage","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_parameters_pkey","meta","public","_parameters","PRIMARY KEY","NULL",FALSE,FALSE
+"meta","public","_parameters_specific_catalog_fkey","meta","public","_parameters","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_referential_constraints_constraint_catalog_fkey","meta","public","_referential_constraints","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_referential_constraints_pkey","meta","public","_referential_constraints","PRIMARY KEY","NULL",FALSE,FALSE
+"meta","public","_referential_constraints_unique_constraint_catalog_fkey","meta","public","_referential_constraints","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_routine_columns_pkey","meta","public","_routine_columns","PRIMARY KEY","NULL",FALSE,FALSE
+"meta","public","_routine_columns_specific_catalog_fkey","meta","public","_routine_columns","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_routines_pkey","meta","public","_routines","PRIMARY KEY","NULL",FALSE,FALSE
+"meta","public","_routines_specific_catalog_fkey","meta","public","_routines","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_schemata_catalog_name_fkey","meta","public","_schemata","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_schemata_pkey","meta","public","_schemata","PRIMARY KEY","NULL",FALSE,FALSE
+"meta","public","_table_constraints_constraint_catalog_fkey","meta","public","_table_constraints","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_table_constraints_pkey","meta","public","_table_constraints","PRIMARY KEY","NULL",FALSE,FALSE
+"meta","public","_table_constraints_table_catalog_fkey","meta","public","_table_constraints","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_tables_pkey","meta","public","_tables","PRIMARY KEY","NULL",FALSE,FALSE
+"meta","public","_tables_table_catalog_fkey","meta","public","_tables","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_triggers_event_object_catalog_fkey","meta","public","_triggers","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_triggers_pkey","meta","public","_triggers","PRIMARY KEY","NULL",FALSE,FALSE
+"meta","public","_triggers_trigger_catalog_fkey","meta","public","_triggers","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_udt_columns_pkey","meta","public","_udt_columns","PRIMARY KEY","NULL",FALSE,FALSE
+"meta","public","_udt_columns_udt_catalog_fkey","meta","public","_udt_columns","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_udt_pkey","meta","public","_udt","PRIMARY KEY","NULL",FALSE,FALSE
+"meta","public","_view_column_usage_pkey","meta","public","_view_column_usage","PRIMARY KEY","NULL",FALSE,FALSE
+"meta","public","_view_column_usage_table_catalog_fkey","meta","public","_view_column_usage","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_view_column_usage_view_catalog_fkey","meta","public","_view_column_usage","FOREIGN KEY","NULL",FALSE,FALSE
+"meta","public","_views_pkey","meta","public","_views","PRIMARY KEY","NULL",FALSE,FALSE
+"meta","public","_views_table_catalog_fkey","meta","public","_views","FOREIGN KEY","NULL",FALSE,FALSE

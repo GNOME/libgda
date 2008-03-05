@@ -1,6 +1,11 @@
+2008-03-05  Vivien Malerba <malerba@gnome-db.org>
+
+	* Merged all the developments of the V4-branch branch into trunk.
+	* Updated the po/POTFILES.in and po/POTFILES.skip.
+
 2008-03-01  Nathan  <nbinont@yahoo.ca>
 
-	* tools/gda-sql.c: (output_data_model): Use g_setenv() instead of 
+	* tools/gda-sql.c: (output_data_model): Use g_setenv() instead of
 	setenv() to fix the build on Windows.
 	Bug #510739.
 

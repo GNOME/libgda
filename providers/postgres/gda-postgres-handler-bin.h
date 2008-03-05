@@ -1,6 +1,8 @@
-/* gda-postgres-handler-bin.h
+/* GDA postgres provider
+ * Copyright (C) 2007 - 2008 The GNOME Foundation.
  *
- * Copyright (C) 2007 Vivien Malerba
+ * AUTHORS:
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -20,15 +22,14 @@
 #ifndef __GDA_POSTGRES_HANDLER_BIN__
 #define __GDA_POSTGRES_HANDLER_BIN__
 
-#include <libgda/gda-object.h>
 #include <libgda/gda-data-handler.h>
 
 G_BEGIN_DECLS
 
 #define GDA_TYPE_POSTGRES_HANDLER_BIN          (gda_postgres_handler_bin_get_type())
-#define GDA_POSTGRES_HANDLER_BIN(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_postgres_handler_bin_get_type(), GdaPostgresHandlerBin)
-#define GDA_POSTGRES_HANDLER_BIN_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_postgres_handler_bin_get_type (), GdaPostgresHandlerBinClass)
-#define GDA_IS_POSTGRES_HANDLER_BIN(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_postgres_handler_bin_get_type ())
+#define GDA_POSTGRES_HANDLER_BIN(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_POSTGRES_HANDLER_BIN, GdaPostgresHandlerBin)
+#define GDA_POSTGRES_HANDLER_BIN_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_POSTGRES_HANDLER_BIN, GdaPostgresHandlerBinClass)
+#define GDA_IS_POSTGRES_HANDLER_BIN(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_POSTGRES_HANDLER_BIN)
 
 
 typedef struct _GdaPostgresHandlerBin      GdaPostgresHandlerBin;
@@ -39,7 +40,7 @@ typedef struct _GdaPostgresHandlerBinPriv  GdaPostgresHandlerBinPriv;
 /* struct for the object's data */
 struct _GdaPostgresHandlerBin
 {
-	GdaObject           object;
+	GObject                     object;
 
 	GdaPostgresHandlerBinPriv  *priv;
 };
@@ -47,7 +48,7 @@ struct _GdaPostgresHandlerBin
 /* struct for the object's class */
 struct _GdaPostgresHandlerBinClass
 {
-	GdaObjectClass      parent_class;
+	GObjectClass                parent_class;
 };
 
 

@@ -1,9 +1,0 @@
-prefix=@prefix@
-exec_prefix=@exec_prefix@
-libdir=@libdir@
-includedir=@includedir@
-
-Name: libgda-firebird-3.0
-Description: GDA (GNOME Data Access) Firebird provider
-Requires: libgda-3.0
-Version: @VERSION@

@@ -1,6 +1,6 @@
 /* gda-data-model-iter.h
  *
- * Copyright (C) 2005 ( 2006 Vivien Malerba
+ * Copyright (C) 2005 - 2008 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -23,7 +23,7 @@
 #define __GDA_DATA_MODEL_ITER_H_
 
 #include "gda-decl.h"
-#include "gda-parameter-list.h"
+#include "gda-set.h"
 
 G_BEGIN_DECLS
 
@@ -46,14 +46,14 @@ typedef enum
 /* struct for the object's data */
 struct _GdaDataModelIter
 {
-	GdaParameterList           object;
+	GdaSet                     object;
 	GdaDataModelIterPrivate   *priv;
 };
 
 /* struct for the object's class */
 struct _GdaDataModelIterClass
 {
-	GdaParameterListClass      parent_class;
+	GdaSetClass                parent_class;
 
 	gboolean                (* row_to_change)    (GdaDataModelIter *iter, gint row);
 	void                    (* row_changed)      (GdaDataModelIter *iter, gint row);
@@ -75,8 +75,7 @@ gboolean          gda_data_model_iter_can_be_moved         (GdaDataModelIter *it
 void              gda_data_model_iter_invalidate_contents  (GdaDataModelIter *iter);
 gboolean          gda_data_model_iter_is_valid             (GdaDataModelIter *iter);
 
-gint              gda_data_model_iter_get_column_for_param (GdaDataModelIter *iter, GdaParameter *param);
-GdaParameter     *gda_data_model_iter_get_param_for_column (GdaDataModelIter *iter, gint col);
+GdaHolder        *gda_data_model_iter_get_param_for_column (GdaDataModelIter *iter, gint col);
 
 G_END_DECLS
 

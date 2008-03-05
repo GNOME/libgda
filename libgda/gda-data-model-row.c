@@ -1,6 +1,6 @@
 /* 
  * GDA common library
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+ * Copyright (C) 1998 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -35,7 +35,6 @@
 #include <libxml/tree.h>
 #include <string.h>
 
-#define PARENT_TYPE GDA_TYPE_OBJECT
 #define CLASS(model) (GDA_DATA_MODEL_ROW_CLASS (G_OBJECT_GET_CLASS (model)))
 
 struct _GdaDataModelRowPrivate {
@@ -43,17 +42,13 @@ struct _GdaDataModelRowPrivate {
 	GHashTable    *column_spec;
 
 	gboolean       read_only;
-	gchar         *command_text;
-	GdaCommandType command_type;
 };
 
 /* properties */
 enum
 {
         PROP_0,
-	PROP_READ_ONLY,
-        PROP_COMMAND_TEXT,
-        PROP_COMMAND_TYPE,
+	PROP_READ_ONLY
 };
 
 static void gda_data_model_row_class_init (GdaDataModelRowClass *klass);
@@ -103,9 +98,6 @@ gda_data_model_row_class_init (GdaDataModelRowClass *klass)
 
 	object_class->finalize = gda_data_model_row_finalize;
 
-	/* class attributes */
-	GDA_OBJECT_CLASS (klass)->id_unique_enforced = FALSE;
-
 	/* Properties */
         object_class->set_property = gda_data_model_row_set_property;
         object_class->get_property = gda_data_model_row_get_property;
@@ -113,14 +105,6 @@ gda_data_model_row_class_init (GdaDataModelRowClass *klass)
                                          g_param_spec_boolean ("read_only", NULL, NULL,
 							       FALSE, 
 							       G_PARAM_READABLE | G_PARAM_WRITABLE));
-        g_object_class_install_property (object_class, PROP_COMMAND_TEXT,
-                                         g_param_spec_string ("command_text", NULL, NULL,
-							      NULL, G_PARAM_READABLE | G_PARAM_WRITABLE));
-        g_object_class_install_property (object_class, PROP_COMMAND_TYPE,
-                                         g_param_spec_int ("command_type", NULL, NULL,
-                                                            GDA_COMMAND_TYPE_SQL, GDA_COMMAND_TYPE_INVALID, 
-							   GDA_COMMAND_TYPE_INVALID, 
-							   G_PARAM_READABLE | G_PARAM_WRITABLE));
 }
 
 static void
@@ -153,13 +137,9 @@ gda_data_model_row_data_model_init (GdaDataModelClass *iface)
 static void
 gda_data_model_row_init (GdaDataModelRow *model, GdaDataModelRowClass *klass)
 {
-	g_return_if_fail (GDA_IS_DATA_MODEL (model));
-
 	model->priv = g_new (GdaDataModelRowPrivate, 1);
 	model->priv->notify_changes = TRUE;
 	model->priv->column_spec = g_hash_table_new (g_direct_hash, g_direct_equal);
-	model->priv->command_text = NULL;
-	model->priv->command_type = GDA_COMMAND_TYPE_INVALID;
 	model->priv->read_only = FALSE;
 }
 
@@ -178,15 +158,10 @@ gda_data_model_row_finalize (GObject *object)
 {
 	GdaDataModelRow *model = (GdaDataModelRow *) object;
 
-	g_return_if_fail (GDA_IS_DATA_MODEL (model));
-
 	/* free memory */
 	g_hash_table_foreach (model->priv->column_spec, (GHFunc) hash_free_column, model);
 	g_hash_table_destroy (model->priv->column_spec);
 	model->priv->column_spec = NULL;
-
-	g_free (model->priv->command_text);
-	model->priv->command_text = NULL;
 
 	g_free (model->priv);
 	model->priv = NULL;
@@ -218,7 +193,7 @@ gda_data_model_row_get_type (void)
 			NULL
 		};
 		
-		type = g_type_register_static (PARENT_TYPE, "GdaDataModelRow", &info, G_TYPE_FLAG_ABSTRACT);
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaDataModelRow", &info, G_TYPE_FLAG_ABSTRACT);
 		g_type_add_interface_static (type, GDA_TYPE_DATA_MODEL, &data_model_info);
 	}
 
@@ -239,17 +214,6 @@ gda_data_model_row_set_property (GObject *object,
 		case PROP_READ_ONLY:
 			row->priv->read_only = g_value_get_boolean (value);
 			break;
-                case PROP_COMMAND_TEXT:
-			if (row->priv->command_text) {
-				g_free (row->priv->command_text);
-				row->priv->command_text = NULL;
-			}
-			
-                        row->priv->command_text = g_strdup (g_value_get_string (value));
-                        break;
-                case PROP_COMMAND_TYPE:
-			row->priv->command_type = g_value_get_int (value);
-			break;
                 }
         }
 }
@@ -268,12 +232,6 @@ gda_data_model_row_get_property (GObject *object,
 		case PROP_READ_ONLY:
 			g_value_set_boolean (value, row->priv->read_only);
 			break;
-                case PROP_COMMAND_TEXT:
-			g_value_set_string (value, row->priv->command_text);
-                        break;
-                case PROP_COMMAND_TYPE:
-			g_value_set_int (value, row->priv->command_type);
-                        break;
                 }
         }
 }
@@ -281,19 +239,17 @@ gda_data_model_row_get_property (GObject *object,
 static gint
 gda_data_model_row_get_n_rows (GdaDataModel *model)
 {
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ROW (model), -1);
 	g_return_val_if_fail (CLASS (model)->get_n_rows != NULL, -1);
 	
-	return CLASS (model)->get_n_rows (GDA_DATA_MODEL_ROW (model));
+	return CLASS (model)->get_n_rows ((GdaDataModelRow*) model);
 }
 
 static gint
 gda_data_model_row_get_n_columns (GdaDataModel *model)
 {
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ROW (model), -1);
 	g_return_val_if_fail (CLASS (model)->get_n_columns != NULL, -1);
 	
-	return CLASS (model)->get_n_columns (GDA_DATA_MODEL_ROW (model));
+	return CLASS (model)->get_n_columns ((GdaDataModelRow*) model);
 }
 
 static GdaColumn *
@@ -301,21 +257,19 @@ gda_data_model_row_describe_column (GdaDataModel *model, gint col)
 {
 	GdaColumn *column;
 
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ROW (model), NULL);
-
 	if (col >= gda_data_model_get_n_columns (model)) {
 		g_warning ("Column %d out of range 0 - %d", col, gda_data_model_get_n_columns (model) - 1);
 		return NULL;
 	}
 
-	column = g_hash_table_lookup (GDA_DATA_MODEL_ROW (model)->priv->column_spec,
+	column = g_hash_table_lookup (((GdaDataModelRow*) model)->priv->column_spec,
 				      GINT_TO_POINTER (col));
 	if (!column) {
 		column = gda_column_new ();
 		g_signal_connect (G_OBJECT (column), "g_type_changed",
 				  G_CALLBACK (column_g_type_changed_cb), model);
 		gda_column_set_position (column, col);
-		g_hash_table_insert (GDA_DATA_MODEL_ROW (model)->priv->column_spec,
+		g_hash_table_insert (((GdaDataModelRow*) model)->priv->column_spec,
 				     GINT_TO_POINTER (col), column);
 	}
 
@@ -376,7 +330,6 @@ column_g_type_changed_cb (GdaColumn *column, GType old, GType new, GdaDataModelR
 GdaRow *
 gda_data_model_row_get_row (GdaDataModelRow *model, gint row, GError **error)
 {
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ROW (model), NULL);
 	g_return_val_if_fail (CLASS (model)->get_value_at != NULL, NULL);
 	
 	return CLASS (model)->get_row (model, row, error);
@@ -389,10 +342,9 @@ gda_data_model_row_get_row (GdaDataModelRow *model, gint row, GError **error)
 static const GValue *
 gda_data_model_row_get_value_at (GdaDataModel *model, gint col, gint row)
 {
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ROW (model), NULL);
 	g_return_val_if_fail (CLASS (model)->get_value_at != NULL, NULL);
 	
-	return CLASS (model)->get_value_at (GDA_DATA_MODEL_ROW (model), col, row);
+	return CLASS (model)->get_value_at ((GdaDataModelRow*) model, col, row);
 }
 
 static GdaValueAttribute
@@ -401,8 +353,6 @@ gda_data_model_row_get_attributes_at (GdaDataModel *model, gint col, gint row)
 	const GValue *gdavalue;
 	GdaValueAttribute flags = 0;
 	GdaColumn *column;
-
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ROW (model), 0);
 
 	column = gda_data_model_row_describe_column (model, col);
 	if (gda_column_get_allow_null (column))
@@ -428,11 +378,10 @@ gda_data_model_row_get_access_flags (GdaDataModel *model)
 	GdaDataModelAccessFlags flags = GDA_DATA_MODEL_ACCESS_RANDOM | 
 		GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD |
 		GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD;
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ROW (model), FALSE);
 
 	if (! ((GdaDataModelRow *)model)->priv->read_only &&
 	    CLASS (model)->is_updatable &&
-	    CLASS (model)->is_updatable (GDA_DATA_MODEL_ROW (model)))
+	    CLASS (model)->is_updatable ((GdaDataModelRow*) model))
 		flags |= GDA_DATA_MODEL_ACCESS_WRITE;
 	
 	return flags;
@@ -444,7 +393,6 @@ gda_data_model_row_set_value_at (GdaDataModel *model, gint col, gint row,
 {
 	GdaRow *gdarow;
 
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ROW (model), FALSE);
 	g_return_val_if_fail (row >= 0, FALSE);
 	g_return_val_if_fail (CLASS (model)->update_row != NULL, FALSE);
 	g_return_val_if_fail (CLASS (model)->get_row != NULL, FALSE);
@@ -454,10 +402,10 @@ gda_data_model_row_set_value_at (GdaDataModel *model, gint col, gint row,
 		return FALSE;
 	}
 
-	gdarow = CLASS (model)->get_row (GDA_DATA_MODEL_ROW (model), row, error);
+	gdarow = CLASS (model)->get_row ((GdaDataModelRow*) model, row, error);
 	if (gdarow) {
 		gda_row_set_value (gdarow, col, value);
-		return CLASS (model)->update_row (GDA_DATA_MODEL_ROW (model), gdarow, error);
+		return CLASS (model)->update_row ((GdaDataModelRow*) model, gdarow, error);
 	}
 	else
 		return FALSE;
@@ -468,7 +416,6 @@ gda_data_model_row_set_values (GdaDataModel *model, gint row, GList *values, GEr
 {
 	GdaRow *gdarow;
 
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ROW (model), FALSE);
 	g_return_val_if_fail (row >= 0, FALSE);
 	g_return_val_if_fail (CLASS (model)->update_row != NULL, FALSE);
 	g_return_val_if_fail (CLASS (model)->get_row != NULL, FALSE);
@@ -487,7 +434,7 @@ gda_data_model_row_set_values (GdaDataModel *model, gint row, GList *values, GEr
 		return FALSE;
 	}
 
-	gdarow = CLASS (model)->get_row (GDA_DATA_MODEL_ROW (model), row, error);
+	gdarow = CLASS (model)->get_row ((GdaDataModelRow*) model, row, error);
 	if (gdarow) {
 		GList *list;
 		gint col = 0;
@@ -497,7 +444,7 @@ gda_data_model_row_set_values (GdaDataModel *model, gint row, GList *values, GEr
 			list = g_list_next (list);
 			col++;
 		}
-		return CLASS (model)->update_row (GDA_DATA_MODEL_ROW (model), gdarow, error);
+		return CLASS (model)->update_row ((GdaDataModelRow*) model, gdarow, error);
 	}
 
 	return FALSE;
@@ -509,7 +456,6 @@ gda_data_model_row_append_values (GdaDataModel *model, const GList *values, GErr
 {
 	GdaRow *row;
 
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ROW (model), -1);
 	g_return_val_if_fail (CLASS (model)->append_values != NULL, -1);
 
 	if (((GdaDataModelRow *)model)->priv->read_only) {
@@ -517,7 +463,7 @@ gda_data_model_row_append_values (GdaDataModel *model, const GList *values, GErr
 		return FALSE;
 	}
 	
-	row = CLASS (model)->append_values (GDA_DATA_MODEL_ROW (model), values, error);
+	row = CLASS (model)->append_values ((GdaDataModelRow*) model, values, error);
 	if (row)
 		return gda_row_get_number (row);
 	else
@@ -530,7 +476,6 @@ gda_data_model_row_append_row (GdaDataModel *model, GError **error)
 	GdaRow *row;
 	gint retval = -1;
 
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ROW (model), -1);
 	g_return_val_if_fail (CLASS (model)->append_row != NULL, -1);
 
 	if (((GdaDataModelRow *)model)->priv->read_only) {
@@ -539,7 +484,7 @@ gda_data_model_row_append_row (GdaDataModel *model, GError **error)
 	}
 
 	row = gda_row_new (model, gda_data_model_get_n_columns (model));
-	if (CLASS (model)->append_row (GDA_DATA_MODEL_ROW (model), row, error))
+	if (CLASS (model)->append_row ((GdaDataModelRow*) model, row, error))
 		retval = gda_row_get_number (row);
 	g_object_unref (row);
 
@@ -551,7 +496,6 @@ gda_data_model_row_remove_row (GdaDataModel *model, gint row, GError **error)
 {
 	GdaRow *gdarow;
 
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ROW (model), FALSE);
 	g_return_val_if_fail (row >= 0, FALSE);
 	g_return_val_if_fail (CLASS (model)->remove_row != NULL, FALSE);
 	g_return_val_if_fail (CLASS (model)->get_row != NULL, FALSE);
@@ -561,9 +505,9 @@ gda_data_model_row_remove_row (GdaDataModel *model, gint row, GError **error)
 		return FALSE;
 	}
 
-	gdarow = CLASS (model)->get_row (GDA_DATA_MODEL_ROW (model), row, error);
+	gdarow = CLASS (model)->get_row ((GdaDataModelRow*) model, row, error);
 	if (gdarow)
-		return CLASS (model)->remove_row (GDA_DATA_MODEL_ROW (model), gdarow, error);
+		return CLASS (model)->remove_row ((GdaDataModelRow*) model, gdarow, error);
 	else
 		return FALSE;
 }
@@ -571,13 +515,11 @@ gda_data_model_row_remove_row (GdaDataModel *model, gint row, GError **error)
 static void
 gda_data_model_row_set_notify (GdaDataModel *model, gboolean do_notify_changes)
 {
-	g_return_if_fail (GDA_IS_DATA_MODEL_ROW (model));
-	GDA_DATA_MODEL_ROW (model)->priv->notify_changes = do_notify_changes;
+	((GdaDataModelRow*) model)->priv->notify_changes = do_notify_changes;
 }
 
 static gboolean
 gda_data_model_row_get_notify (GdaDataModel *model)
 {
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ROW (model), FALSE);
-	return GDA_DATA_MODEL_ROW (model)->priv->notify_changes;
+	return ((GdaDataModelRow*) model)->priv->notify_changes;
 }

@@ -23,3 +23,32 @@ This is a base virtual class for all virtual connection implementations
 </para>
 
 
+<!-- ##### FUNCTION gda_virtual_connection_open ##### -->
+<para>
+
+</para>
+
+@virtual_provider: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_virtual_connection_internal_set_provider_data ##### -->
+<para>
+
+</para>
+
+@vcnc: 
+@data: 
+@destroy_func: 
+
+
+<!-- ##### FUNCTION gda_virtual_connection_internal_get_provider_data ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+

@@ -20,7 +20,6 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <glib/gi18n-lib.h>
 #include <string.h>
 #define __GDA_INTERNAL__
 #include "dir-blob-op.h"
@@ -203,7 +202,7 @@ gda_dir_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 		g_free (bin->data);
 		bin->data = NULL;
 	}
-	bin->data = g_new0 (gchar, size);
+	bin->data = g_new0 (guchar, size);
 	nread = fread ((char *) (bin->data), 1, size, file);
 	bin->binary_length = (nread >= 0) ? nread : 0;
 	fclose (file);

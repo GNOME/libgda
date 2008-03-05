@@ -10,6 +10,11 @@ Access/Management of libgda configuration
   configuration, thus making them able to access the list of data sources
   configured in the system, for instance.
 </para>
+<para>
+  Upon initialization, a single instance <link linkend="GdaConfig">GdaConfig</link> object is created, 
+  and no other will need to be created. A pointer to this object can be obtained with
+  <link linkend="gda-config-get">gda_config_get()</link>.
+</para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
@@ -19,13 +24,143 @@ Access/Management of libgda configuration
 <!-- ##### SECTION Stability_Level ##### -->
 
 
-<!-- ##### USER_FUNCTION GdaConfigListenerFunc ##### -->
+<!-- ##### STRUCT GdaConfig ##### -->
 <para>
 
 </para>
 
-@path: 
-@user_data: 
+
+<!-- ##### SIGNAL GdaConfig::dsn-added ##### -->
+<para>
+
+</para>
+
+@gdaconfig: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaConfig::dsn-changed ##### -->
+<para>
+
+</para>
+
+@gdaconfig: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaConfig::dsn-removed ##### -->
+<para>
+
+</para>
+
+@gdaconfig: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaConfig::dsn-to-be-removed ##### -->
+<para>
+
+</para>
+
+@gdaconfig: the object which received the signal.
+@arg1: 
+
+<!-- ##### ARG GdaConfig:system-file ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaConfig:user-file ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gda_config_get ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### STRUCT GdaDataSourceInfo ##### -->
+<para>
+
+</para>
+
+@name: 
+@provider: 
+@description: 
+@cnc_string: 
+@auth_string: 
+@is_system: 
+
+<!-- ##### FUNCTION gda_config_get_dsn ##### -->
+<para>
+
+</para>
+
+@dsn_name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_define_dsn ##### -->
+<para>
+
+</para>
+
+@info: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_remove_dsn ##### -->
+<para>
+
+</para>
+
+@dsn_name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_list_dsn ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_get_nb_dsn ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_get_dsn_index ##### -->
+<para>
+
+</para>
+
+@dsn_name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_get_dsn_at_index ##### -->
+<para>
+
+</para>
+
+@index: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_can_modify_system_config ##### -->
+<para>
+
+</para>
+
+@Returns: 
 
 
 <!-- ##### STRUCT GdaProviderInfo ##### -->
@@ -36,324 +171,33 @@ Access/Management of libgda configuration
 @id: 
 @location: 
 @description: 
-@gda_params: 
-@dsn_spec: 
+@dsn_params: 
+@auth_params: 
 
-<!-- ##### STRUCT GdaDataSourceInfo ##### -->
+<!-- ##### FUNCTION gda_config_get_provider_info ##### -->
 <para>
 
 </para>
 
-@name: 
-@provider: 
-@cnc_string: 
-@description: 
-@username: 
-@password: 
-@is_global: 
-
-<!-- ##### FUNCTION gda_config_get_string ##### -->
-<para>
-
-</para>
-
-@path: 
+@provider_name: 
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_config_get_int ##### -->
+<!-- ##### FUNCTION gda_config_get_provider_object ##### -->
 <para>
 
 </para>
 
-@path: 
+@provider_name: 
+@error: 
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_config_get_float ##### -->
-<para>
-
-</para>
-
-@path: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_config_get_boolean ##### -->
-<para>
-
-</para>
-
-@path: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_config_set_string ##### -->
-<para>
-
-</para>
-
-@path: 
-@new_value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_config_set_int ##### -->
-<para>
-
-</para>
-
-@path: 
-@new_value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_config_set_float ##### -->
-<para>
-
-</para>
-
-@path: 
-@new_value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_config_set_boolean ##### -->
-<para>
-
-</para>
-
-@path: 
-@new_value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_config_remove_section ##### -->
-<para>
-
-</para>
-
-@path: 
-
-
-<!-- ##### FUNCTION gda_config_remove_key ##### -->
-<para>
-
-</para>
-
-@path: 
-
-
-<!-- ##### FUNCTION gda_config_has_section ##### -->
-<para>
-
-</para>
-
-@path: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_config_has_key ##### -->
-<para>
-
-</para>
-
-@path: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_config_list_sections ##### -->
-<para>
-
-</para>
-
-@path: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_config_list_keys ##### -->
-<para>
-
-</para>
-
-@path: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_config_free_list ##### -->
-<para>
-
-</para>
-
-@list: 
-
-
-<!-- ##### FUNCTION gda_config_get_provider_list ##### -->
+<!-- ##### FUNCTION gda_config_list_providers ##### -->
 <para>
 
 </para>
 
 @Returns: 
-
-
-<!-- ##### FUNCTION gda_config_free_provider_list ##### -->
-<para>
-
-</para>
-
-@list: 
-
-
-<!-- ##### FUNCTION gda_config_get_provider_by_name ##### -->
-<para>
-
-</para>
-
-@name: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_config_get_provider_model ##### -->
-<para>
-
-</para>
-
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_provider_info_copy ##### -->
-<para>
-
-</para>
-
-@src: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_provider_info_free ##### -->
-<para>
-
-</para>
-
-@provider_info: 
-
-
-<!-- ##### FUNCTION gda_config_get_data_source_list ##### -->
-<para>
-
-</para>
-
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_config_find_data_source ##### -->
-<para>
-
-</para>
-
-@name: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_data_source_info_copy ##### -->
-<para>
-
-</para>
-
-@src: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_data_source_info_equal ##### -->
-<para>
-
-</para>
-
-@info1: 
-@info2: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_data_source_info_free ##### -->
-<para>
-
-</para>
-
-@info: 
-
-
-<!-- ##### FUNCTION gda_config_free_data_source_list ##### -->
-<para>
-
-</para>
-
-@list: 
-
-
-<!-- ##### FUNCTION gda_config_get_data_source_model ##### -->
-<para>
-
-</para>
-
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_config_can_modify_global_config ##### -->
-<para>
-
-</para>
-
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_config_save_data_source ##### -->
-<para>
-
-</para>
-
-@name: 
-@provider: 
-@cnc_string: 
-@description: 
-@username: 
-@password: 
-@is_global: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_config_save_data_source_info ##### -->
-<para>
-
-</para>
-
-@dsn_info: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_config_remove_data_source ##### -->
-<para>
-
-</para>
-
-@name: 
-
-
-<!-- ##### FUNCTION gda_config_add_listener ##### -->
-<para>
-
-</para>
-
-@path: 
-@func: 
-@user_data: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_config_remove_listener ##### -->
-<para>
-
-</para>
-
-@id: 
 
 

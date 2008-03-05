@@ -1,17 +1,16 @@
 #include <libgda/libgda.h>
 #include <libgda-report/libgda-report.h>
+#include <sql-parser/gda-sql-parser.h>
 
-GdaConnection *open_connection (GdaClient *client);
-GSList        *create_queries (GdaDict *dict);
+GdaConnection *open_connection (void);
+GSList        *create_queries (GdaConnection *cnc);
 
 int 
 main (int argc, char **argv)
 {
 	GdaReportEngine *eng;
-	GdaClient *client;
-	GdaDict *dict;
 	GdaConnection *cnc;
-	GdaParameter *param;
+	GdaHolder *param;
 	GdaReportDocument *doc;
 
 	gda_init ("Customers report example (DocBook)", "3.1.1", argc, argv);
@@ -23,23 +22,19 @@ main (int argc, char **argv)
 	g_object_set (G_OBJECT (doc), "fo-stylesheet", "/usr/share/xml/docbook/stylesheet/nwalsh/fo/docbook.xsl", NULL);
 	
 	/* GdaConnection */
-	client = gda_client_new ();
-	cnc = open_connection (client);
-	dict = gda_dict_new ();
-	gda_dict_set_connection (dict, cnc);
+	cnc = open_connection ();
 	gda_report_engine_declare_object (eng, G_OBJECT (cnc), "main_cnc");
-	gda_report_engine_declare_object (eng, G_OBJECT (dict), "main_dict");
 
 	/* define parameters */
-	param = gda_parameter_new_string ("abstract", "-- This text is from a parameter set in the code, not in the spec. file --");
+	param = gda_holder_new_string ("abstract", "-- This text is from a parameter set in the code, not in the spec. file --");
 	gda_report_engine_declare_object (eng, G_OBJECT (param), "abstract");
 	g_object_unref (param);
 
 	/* create queries */
 	GSList *queries, *list;
-	queries = create_queries (dict);
+	queries = create_queries (cnc);
 	for (list = queries; list; list = list->next) {
-		gda_report_engine_declare_object (eng, G_OBJECT (list->data), gda_object_get_name (GDA_OBJECT (list->data)));
+		gda_report_engine_declare_object (eng, G_OBJECT (list->data), g_object_get_data (G_OBJECT (list->data), "name"));
 		g_object_unref (G_OBJECT (list->data));
 	}
 	g_slist_free (queries);
@@ -74,13 +69,13 @@ main (int argc, char **argv)
 }
 
 GdaConnection *
-open_connection (GdaClient *client)
+open_connection (void)
 {
         GdaConnection *cnc;
         GError *error = NULL;
-        cnc = gda_client_open_connection (client, "SalesTest", NULL, NULL,
-                                          GDA_CONNECTION_OPTIONS_DONT_SHARE,
-                                          &error);
+        cnc = gda_connection_open_from_dsn (client, "SalesTest", NULL, NULL,
+					    GDA_CONNECTION_OPTIONS_DONT_SHARE,
+					    &error);
         if (!cnc) {
                 g_print ("Could not open connection to DSN 'SalesTest': %s\n",
                          error && error->message ? error->message : "No detail");
@@ -90,20 +85,26 @@ open_connection (GdaClient *client)
 }
 
 GSList *
-create_queries (GdaDict *dict)
+create_queries (GdaConnection *cnc)
 {
-	GdaQuery *query;
+	GdaSqlParser *parser;
+	GdaStatement *stmt;
 	GSList *list = NULL;
 
-	query = gda_query_new_from_sql (dict, "SELECT * FROM customers", NULL);
-	gda_object_set_name ((GdaObject*) query, "customers");
-	list = g_slist_prepend (list, query);
+	parser = gda_connection_create_parser (cnc);
 
-	query = gda_query_new_from_sql (dict, "SELECT s.* FROM salesrep s "
+	stmt = gda_sql_parser_parse_string (parser, "SELECT * FROM customers", NULL, NULL);
+	g_object_set_data ((GObject*) stmt, "name", "customers");
+	list = g_slist_prepend (list, stmt);
+
+	
+	stmt = gda_sql_parser_parse_string (parser, "SELECT s.* FROM salesrep s "
 					"INNER JOIN customers c ON (s.id=c.default_served_by) "
-					"WHERE c.id=## /* name:\"customers/id\" type:gint */", NULL);
-	gda_object_set_name ((GdaObject*) query, "salesrep_for_customer");
-	list = g_slist_prepend (list, query);
+					    "WHERE c.id=## /* name:\"customers/id\" type:gint */", NULL, NULL);
+	g_object_set_data ((GObject*) stmt, "name", "salesrep_for_customer");
+	list = g_slist_prepend (list, stmt);
+
+	g_object_unref (parser);
 
 	return list;
 }

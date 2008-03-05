@@ -1,5 +1,5 @@
 /* GDA virtual connection
- * Copyright (C) 2007 The GNOME Foundation.
+ * Copyright (C) 2007 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -24,6 +24,7 @@
 #define __GDA_VIRTUAL_CONNECTION_H__
 
 #include <libgda/gda-connection.h>
+#include <virtual/gda-virtual-provider.h>
 
 #define GDA_TYPE_VIRTUAL_CONNECTION            (gda_virtual_connection_get_type())
 #define GDA_VIRTUAL_CONNECTION(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_VIRTUAL_CONNECTION, GdaVirtualConnection))
@@ -46,7 +47,11 @@ struct _GdaVirtualConnectionClass {
 	GdaConnectionClass           parent_class;
 };
 
-GType          gda_virtual_connection_get_type          (void) G_GNUC_CONST;
+GType          gda_virtual_connection_get_type                   (void) G_GNUC_CONST;
+GdaConnection *gda_virtual_connection_open                       (GdaVirtualProvider *virtual_provider, GError **error);
+void           gda_virtual_connection_internal_set_provider_data (GdaVirtualConnection *vcnc, 
+								  gpointer data, GDestroyNotify destroy_func);
+gpointer       gda_virtual_connection_internal_get_provider_data (GdaVirtualConnection *cnc);
 
 G_END_DECLS
 

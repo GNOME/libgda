@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 2006 The GNOME Foundation.
+ * Copyright (C) 2006 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -23,7 +23,7 @@
 #ifndef __GDA_DATA_ACCESS_WRAPPER_H__
 #define __GDA_DATA_ACCESS_WRAPPER_H__
 
-#include <libgda/gda-object.h>
+#include <libgda/gda-data-model.h>
 #include <libxml/tree.h>
 
 G_BEGIN_DECLS
@@ -39,12 +39,12 @@ typedef struct _GdaDataAccessWrapperClass   GdaDataAccessWrapperClass;
 typedef struct _GdaDataAccessWrapperPrivate GdaDataAccessWrapperPrivate;
 
 struct _GdaDataAccessWrapper {
-	GdaObject                      object;
+	GObject                        object;
 	GdaDataAccessWrapperPrivate   *priv;
 };
 
 struct _GdaDataAccessWrapperClass {
-	GdaObjectClass                 parent_class;
+	GObjectClass                   parent_class;
 };
 
 GType         gda_data_access_wrapper_get_type    (void) G_GNUC_CONST;

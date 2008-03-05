@@ -1,0 +1,60 @@
+/* GDA Sqlite Provider
+ * Copyright (C) 2008 The GNOME Foundation
+ *
+ * AUTHORS:
+ *         Vivien Malerba <malerba@gnome-db.org>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the Free
+ * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+#ifndef __GDA_SQLITE_META_H__
+#define __GDA_SQLITE_META_H__
+
+#include <libgda/gda-server-provider.h>
+
+G_BEGIN_DECLS
+
+void     _gda_sqlite_provider_meta_init    (GdaServerProvider *provider);
+gboolean _gda_sqlite_meta_info             (GdaServerProvider *prov, GdaConnection *cnc, 
+					    GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_sqlite_meta_btypes           (GdaServerProvider *prov, GdaConnection *cnc, 
+					    GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_sqlite_meta_schemata         (GdaServerProvider *prov, GdaConnection *cnc, 
+					    GdaMetaStore *store, GdaMetaContext *context, GError **error, 
+					    const GValue *schema_name);
+gboolean _gda_sqlite_meta_tables_views     (GdaServerProvider *prov, GdaConnection *cnc, 
+					    GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_sqlite_meta_tables_views_s   (GdaServerProvider *prov, GdaConnection *cnc, 
+					    GdaMetaStore *store, GdaMetaContext *context, GError **error, 
+					    const GValue *table_schema, const GValue *table_name);
+gboolean _gda_sqlite_meta_columns           (GdaServerProvider *prov, GdaConnection *cnc, 
+					     GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_sqlite_meta_columns_t         (GdaServerProvider *prov, GdaConnection *cnc, 
+					     GdaMetaStore *store, GdaMetaContext *context, GError **error, 
+					     const GValue *table_schema, const GValue *table_name);
+gboolean _gda_sqlite_meta_columns_c         (GdaServerProvider *prov, GdaConnection *cnc, 
+					     GdaMetaStore *store, GdaMetaContext *context, GError **error, 
+					     const GValue *table_schema, const GValue *table_name, const GValue *column_name);
+gboolean _gda_sqlite_meta_constraints_tab   (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+gboolean _gda_sqlite_meta_constraints_tab_s (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **, 
+					     const GValue *table_schema, const GValue *table_name);
+
+gboolean _gda_sqlite_meta_constraints_ref   (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+gboolean _gda_sqlite_meta_constraints_ref_c (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **, 
+					     const GValue *table_schema, const GValue *table_name);
+G_END_DECLS
+
+#endif
+

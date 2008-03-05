@@ -6,8 +6,12 @@ Base class for all the DBMS providers
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-The #GdaServerProvider class is a virtual class which all the DBMS providers
-must inherit, and implement its virtual mathods.
+  The #GdaServerProvider class is a virtual class which all the DBMS providers
+  must inherit, and implement its virtual mathods.
+</para>
+<para>
+  See the <link linkend="libgda-provider-class">Virtual methods for providers</link> section for more information
+  about how to implement the virtual methods.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -24,19 +28,47 @@ must inherit, and implement its virtual mathods.
 </para>
 
 
-<!-- ##### STRUCT GdaServerProviderInfo ##### -->
+<!-- ##### STRUCT GdaServerProviderClass ##### -->
 <para>
 
 </para>
 
-@provider_name: 
-@is_case_insensitive: 
-@implicit_data_types_casts: 
-@alias_needs_as_keyword: 
-@supports_alias: 
-@supports_prefixed_fields: 
-@quote_non_lc_identifiers: 
-@reserved: 
+@parent_class: 
+@get_name: 
+@get_version: 
+@get_server_version: 
+@supports_feature: 
+@get_data_handler: 
+@get_def_dbms_type: 
+@escape_string: 
+@unescape_string: 
+@open_connection: 
+@close_connection: 
+@get_database: 
+@supports_operation: 
+@create_operation: 
+@render_operation: 
+@perform_operation: 
+@begin_transaction: 
+@commit_transaction: 
+@rollback_transaction: 
+@add_savepoint: 
+@rollback_savepoint: 
+@delete_savepoint: 
+@create_parser: 
+@statement_to_sql: 
+@statement_prepare: 
+@statement_execute: 
+@is_busy: 
+@cancel: 
+@create_connection: 
+@meta_funcs: 
+@_gda_reserved1: 
+@_gda_reserved2: 
+@_gda_reserved3: 
+@_gda_reserved4: 
+@_gda_reserved5: 
+@_gda_reserved6: 
 
 <!-- ##### ENUM GdaServerProviderError ##### -->
 <para>
@@ -48,6 +80,50 @@ must inherit, and implement its virtual mathods.
 @GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR: 
 @GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR: 
 @GDA_SERVER_PROVIDER_OPERATION_ERROR: 
+@GDA_SERVER_PROVIDER_INTERNAL_ERROR: 
+@GDA_SERVER_PROVIDER_BUSY_ERROR: 
+@GDA_SERVER_PROVIDER_NON_SUPPORTED_ERROR: 
+
+<!-- ##### STRUCT GdaServerProviderMeta ##### -->
+<para>
+These methods must be implemented by providers to update a connection's associated metadata (in a 
+#GdaMetaStore object), see the <link linkend="prov-metadata">Virtual methods for providers/Methods - metadata</link>
+for more information.
+</para>
+
+@info: 
+@btypes: 
+@schemata: 
+@tables_views: 
+@tables_views_s: 
+@columns: 
+@columns_t: 
+@columns_c: 
+@constraints_tab: 
+@constraints_tab_s: 
+@constraints_ref: 
+@constraints_ref_c: 
+
+<!-- ##### USER_FUNCTION GdaServerProviderAsyncCallback ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@task_id: 
+@result_status: 
+@data: 
+
+
+<!-- ##### FUNCTION gda_server_provider_get_name ##### -->
+<para>
+
+</para>
+
+@provider: 
+@Returns: 
+
 
 <!-- ##### FUNCTION gda_server_provider_get_version ##### -->
 <para>
@@ -58,39 +134,6 @@ must inherit, and implement its virtual mathods.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_server_provider_get_info ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_open_connection ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@params: 
-@username: 
-@password: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_close_connection ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_server_provider_get_server_version ##### -->
 <para>
 
@@ -98,27 +141,6 @@ must inherit, and implement its virtual mathods.
 
 @provider: 
 @cnc: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_get_database ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_change_database ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@name: 
 @Returns: 
 
 
@@ -181,155 +203,6 @@ must inherit, and implement its virtual mathods.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_server_provider_statement_to_sql ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@stmt: 
-@params: 
-@flags: 
-@params_used: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_statement_prepare ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@stmt: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_statement_execute ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@stmt: 
-@params: 
-@model_usage: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_execute_command ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@cmd: 
-@params: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_execute_query ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@query: 
-@params: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_get_last_insert_id ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@recset: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_begin_transaction ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@name: 
-@level: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_commit_transaction ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@name: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_rollback_transaction ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@name: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_add_savepoint ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@name: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_rollback_savepoint ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@name: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_delete_savepoint ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@name: 
-@error: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_server_provider_supports_feature ##### -->
 <para>
 
@@ -338,19 +211,6 @@ must inherit, and implement its virtual mathods.
 @provider: 
 @cnc: 
 @feature: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_get_schema ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@schema: 
-@params: 
-@error: 
 @Returns: 
 
 

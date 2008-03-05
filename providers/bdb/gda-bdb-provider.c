@@ -1,5 +1,5 @@
 /* GDA Berkeley-DB Provider
- * Copyright (C) 1998 - 2007 The GNOME Foundation
+ * Copyright (C) 1998 - 2008 The GNOME Foundation
  *
  * AUTHORS:
  *         Laurent Sansonetti <lrz@gnome.org> 
@@ -22,29 +22,33 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <glib/gi18n-lib.h>
 #include <libgda/gda-data-model-bdb.h>
 #include <virtual/gda-vconnection-data-model.h>
+#include <libgda/gda-connection-private.h>
 #include "gda-bdb.h"
 #include "gda-bdb-provider.h"
+#include <db.h> /* used only for its DB_VERSION_STRING declaration */
 
 static void gda_bdb_provider_class_init (GdaBdbProviderClass *klass);
 static void gda_bdb_provider_init       (GdaBdbProvider *provider,
 					 GdaBdbProviderClass *klass);
 static void gda_bdb_provider_finalize   (GObject *object);
 
+static const gchar *gda_bdb_provider_get_name (GdaServerProvider *provider);
 static const gchar *gda_bdb_provider_get_version (GdaServerProvider *provider);
-static gboolean gda_bdb_provider_open_connection (GdaServerProvider *provider,
-						  GdaConnection *cnc,
-						  GdaQuarkList *params,
-						  const gchar *username,
-						  const gchar *password);
-static const gchar *gda_bdb_provider_get_server_version (GdaServerProvider *provider,
-						         GdaConnection *cnc);
-static const gchar *gda_bdb_provider_get_database (GdaServerProvider *provider,
-						   GdaConnection *cnc);
-static GdaServerProviderInfo *gda_bdb_provider_get_info (GdaServerProvider *provider, GdaConnection *cnc);
+static gboolean gda_bdb_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
+						  GdaQuarkList *params, GdaQuarkList *auth,
+						  guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data);
+static const gchar *gda_bdb_provider_get_server_version (GdaServerProvider *provider, GdaConnection *cnc);
+static const gchar *gda_bdb_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc);
 
 static GObjectClass *parent_class = NULL;
+
+/* 
+ * private connection data destroy 
+ */
+static void gda_bdb_free_cnc_data (BdbConnectionData *cdata);
 
 /*
  * GdaBdbProvider class implementation
@@ -59,16 +63,11 @@ gda_bdb_provider_class_init (GdaBdbProviderClass *klass)
 
 	object_class->finalize = gda_bdb_provider_finalize;
 
+	provider_class->get_name = gda_bdb_provider_get_name;
 	provider_class->get_version = gda_bdb_provider_get_version;
 	provider_class->open_connection = gda_bdb_provider_open_connection;
 	provider_class->get_server_version = gda_bdb_provider_get_server_version;
 	provider_class->get_database = gda_bdb_provider_get_database;
-	provider_class->get_info = gda_bdb_provider_get_info;
-
-	provider_class->supports_operation = NULL;
-        provider_class->create_operation = NULL;
-        provider_class->render_operation = NULL;
-        provider_class->perform_operation = NULL;
 }
 
 static void
@@ -103,146 +102,162 @@ gda_bdb_provider_get_type (void)
 			0,
 			(GInstanceInitFunc) gda_bdb_provider_init
 		};
-		type = g_type_register_static (PARENT_TYPE, "GdaBdbProvider", &info, 0);
+		type = g_type_register_static (GDA_TYPE_VPROVIDER_DATA_MODEL, "GdaBdbProvider", &info, 0);
 	}
 
 	return type;
 }
 
-GdaServerProvider *
-gda_bdb_provider_new (void)
+/*
+ * Get provider name request
+ */
+static const gchar *
+gda_bdb_provider_get_name (GdaServerProvider *provider)
 {
-	GdaBdbProvider *provider;
-
-	provider = g_object_new (gda_bdb_provider_get_type (), NULL);
-	return GDA_SERVER_PROVIDER (provider);
+	return BDB_PROVIDER_NAME;
 }
 
-/* get_version handler for the GdaBdbProvider class */
+/* 
+ * Get version request
+ */
 static const gchar *
 gda_bdb_provider_get_version (GdaServerProvider *provider)
 {
-	GdaBdbProvider *bdb_prv = (GdaBdbProvider *) provider;
-
-	g_return_val_if_fail (GDA_IS_BDB_PROVIDER (bdb_prv), NULL);
 	return PACKAGE_VERSION;
 }
 
-/* open_connection handler for the GdaBdbProvider class */
+/* 
+ * Open connection request
+ */
 static gboolean
-gda_bdb_provider_open_connection (GdaServerProvider *provider,
-				  GdaConnection *cnc,
-				  GdaQuarkList *params,
-				  const gchar *username,
-				  const gchar *password)
+gda_bdb_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
+				  GdaQuarkList *params, GdaQuarkList *auth,
+				  guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data)
 {
-	GdaBdbConnectionData *priv_data;
-	gchar *bdb_file, *bdb_db;
-	GdaBdbProvider *bdb_prv;
+	BdbConnectionData *cdata;
+	gchar *bdb_file, *bdb_db, *dirname;
 	GdaDataModel *model;
 	GError *error = NULL;
 	gboolean retval = TRUE;
+	const GSList *clist;
 	
-	bdb_prv = (GdaBdbProvider *) provider;
-	g_return_val_if_fail (GDA_IS_BDB_PROVIDER (bdb_prv), FALSE);
+	g_return_val_if_fail (GDA_IS_BDB_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
-	/* open virtual connection */
-	if (! GDA_SERVER_PROVIDER_CLASS (parent_class)->open_connection (GDA_SERVER_PROVIDER (provider), cnc, params,
-									 NULL, NULL)) {
-		g_print ("Can't open BDB virtual connection\n");
-		return FALSE;
+	if (async_cb) {
+		gda_connection_add_event_string (cnc, _("Provider does not support asynchronous connection open"));
+                return FALSE;
 	}
 
 	/* parse connection string */
-	bdb_file = g_strdup (gda_quark_list_find (params, "FILE"));
-	bdb_db = g_strdup (gda_quark_list_find (params, "DATABASE"));
+	dirname = g_strdup (gda_quark_list_find (params, "DB_DIR"));
+	bdb_file = g_strdup (gda_quark_list_find (params, "DB_NAME"));
+	bdb_db = g_strdup (gda_quark_list_find (params, "DB_PART"));
 	if (bdb_file == NULL || *(g_strstrip (bdb_file)) == '\0') {
-		gda_connection_add_event_string (cnc, 
-						 _("The FILE parameter is "
-						   "not defined in the " 
-						   "connection string."));
+		gda_connection_add_event_string (cnc, _("The DB_NAME parameter is not defined in the " 
+							"connection string."));
 		return FALSE;
 	}
 	if (bdb_db != NULL && *(g_strstrip (bdb_db)) == '\0')
 		bdb_db = NULL;
 
 	/* create GdaDataModelBdb object */
-	model = gda_data_model_bdb_new (bdb_file, bdb_db);
+	if (dirname) {
+		gchar *file;
+		file = g_build_filename (dirname, bdb_file, NULL);
+		model = gda_data_model_bdb_new (file, bdb_db);
+		g_free (file);
+	}
+	else
+		model = gda_data_model_bdb_new (bdb_file, bdb_db);
+
+	/* check for errors in the BDB data model */
+	if ((clist = gda_data_model_bdb_get_errors (GDA_DATA_MODEL_BDB (model)))) {
+		gboolean hasmsg = FALSE;
+		for (; clist; clist = clist->next) {
+			GError *lerror = (GError *) clist->data;
+			if (lerror && lerror->message) {
+				gda_connection_add_event_string (cnc, lerror->message);
+				hasmsg = TRUE;
+			}
+		}
+		if (!hasmsg)
+			gda_connection_add_event_string (cnc, _("An error occurred while accessing the BDB database"));
+		g_object_unref (model);
+		return FALSE;
+	}
+
+	/* open virtual connection */
+	if (! GDA_SERVER_PROVIDER_CLASS (parent_class)->open_connection (GDA_SERVER_PROVIDER (provider), cnc, params,
+									 NULL, NULL, NULL, NULL)) {
+		gda_connection_add_event_string (cnc, _("Can't open virtual connection"));
+		return FALSE;
+	}
+
+	/* add the BDB data model as table "data" */
 	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (cnc), model, bdb_db ? bdb_db : "data", &error)) {
 		gda_connection_add_event_string (cnc, 
 						 _("Could not add BDB data model to connection: %s"),
 						 error && error->message ? error->message : _("no detail"));
 		g_error_free (error);
 		gda_connection_close_no_warning (cnc);
+		g_object_unref (model);
 
 		retval = FALSE;
 	}
-	g_object_unref (model);
-
-	/* set associated data */
-        priv_data = g_new0 (GdaBdbConnectionData, 1);
-        priv_data->dbname = g_strdup_printf ("%s (%s)",
-                                             bdb_file,
-                                             bdb_db ? bdb_db : _("-"));
-        g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_BDB_HANDLE, priv_data);
+	else {
+		/* set associated data */
+		cdata = g_new0 (BdbConnectionData, 1);
+		cdata->table_model = model;
+		cdata->dbname = g_strdup_printf ("%s (%s)", bdb_file,bdb_db ? bdb_db : _("-"));
+		gda_virtual_connection_internal_set_provider_data (GDA_VIRTUAL_CONNECTION (cnc), 
+								   cdata, (GDestroyNotify) gda_bdb_free_cnc_data);
+	}
 
 	g_free (bdb_file);
 	g_free (bdb_db);
+	g_free (dirname);
 
 	return retval;
 }
 
-/* get_server_version handler for the GdaBdbProvider class */
+/*
+ * Server version request
+ */
 static const gchar *
-gda_bdb_provider_get_server_version (GdaServerProvider *provider,
-				     GdaConnection *cnc)
+gda_bdb_provider_get_server_version (GdaServerProvider *provider, GdaConnection *cnc)
 {
-	GdaBdbProvider *bdb_prv;
-
-	bdb_prv = (GdaBdbProvider *) provider;
-	g_return_val_if_fail (GDA_IS_BDB_PROVIDER (bdb_prv), NULL);
-	if (cnc)
-		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	else
-		return NULL;
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+        g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, NULL);
 
 	return DB_VERSION_STRING;
 }
 
-/* get_database handler for the GdaBdbProvider class */
+/*
+ * Get database request
+ */
 static const gchar *
-gda_bdb_provider_get_database (GdaServerProvider *provider,
-			       GdaConnection *cnc)
+gda_bdb_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc)
 {
-	GdaBdbConnectionData *priv_data;
-	GdaBdbProvider *bdb_prv;
-	
-	bdb_prv = (GdaBdbProvider *) provider;
-	g_return_val_if_fail (GDA_IS_BDB_PROVIDER (bdb_prv), NULL);
+	BdbConnectionData *cdata;
+
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+        g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, NULL);
 
-	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_BDB_HANDLE);
-	if (priv_data == NULL) {
-		gda_connection_add_event_string (cnc, _("Invalid BDB handle"));
+	cdata = gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (cnc));
+	if (!cdata) 
 		return NULL;
-	}
 
-	return priv_data->dbname;
+	return cdata->dbname;
 }
 
-static GdaServerProviderInfo *
-gda_bdb_provider_get_info (GdaServerProvider *provider, GdaConnection *cnc)
+/*
+ * Free connection's specific data
+ */
+static void
+gda_bdb_free_cnc_data (BdbConnectionData *cdata)
 {
-	static GdaServerProviderInfo info = {
-		"Berkeley-DB",
-		TRUE, 
-		TRUE,
-		TRUE,
-		TRUE,
-		TRUE,
-		TRUE
-	};
-	
-	return &info;
+	g_object_unref (cdata->table_model);
+	g_free (cdata->dbname);
+	g_free (cdata);
 }

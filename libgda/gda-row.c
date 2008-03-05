@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2007 The GNOME Foundation.
+ * Copyright (C) 1998 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -34,7 +34,7 @@ struct _GdaRowPrivate {
         gint          number;
         gchar        *id;
 
-        GValue     *fields;        /* GValue for each column */
+        GValue       *fields;        /* GValue for each column */
         gboolean     *is_default;    /* one gboolean for each column */
         gint          nfields;
 };
@@ -204,7 +204,7 @@ gda_row_set_property (GObject *object,
 			for (i = 0, l = values; l != NULL; l = l->next, i++) {
 				const GValue *value = (const GValue *) l->data;
 				
-				if (value) {
+				if (value && !gda_value_is_null (value)) {
 					GValue *dest;
 					dest = gda_row_get_value (row, i);
 					gda_value_reset_with_type (dest, G_VALUE_TYPE ((GValue *) value));

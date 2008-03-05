@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <gda_array id="EXPORT" name="Exported Data">
-  <gda_array_field id="EXPORT:FI0" name="Type" title="Type" gdatype="gchararray" nullok="TRUE"/>
-  <gda_array_field id="EXPORT:FI1" name="Owner" title="Owner" gdatype="gchararray" nullok="TRUE"/>
-  <gda_array_field id="EXPORT:FI2" name="Comments" title="Comments" gdatype="gchararray" nullok="TRUE"/>
-  <gda_array_field id="EXPORT:FI3" name="GDA type" title="GDA type" gdatype="gulong" nullok="TRUE"/>
-  <gda_array_field id="EXPORT:FI4" name="Synonyms" title="Synonyms" gdatype="gchararray" nullok="TRUE"/>
+  <gda_array_field id="FI0" name="Type" title="Type" gdatype="gchararray" nullok="TRUE"/>
+  <gda_array_field id="FI1" name="Owner" title="Owner" gdatype="gchararray" nullok="TRUE"/>
+  <gda_array_field id="FI2" name="Comments" title="Comments" gdatype="gchararray" nullok="TRUE"/>
+  <gda_array_field id="FI3" name="GDA type" title="GDA type" gdatype="gulong" nullok="TRUE"/>
+  <gda_array_field id="FI4" name="Synonyms" title="Synonyms" gdatype="gchararray" nullok="TRUE"/>
   <gda_array_data>
     <gda_array_row>
       <gda_value>integer</gda_value>
@@ -31,7 +31,28 @@
       <gda_value>blob</gda_value>
       <gda_value>system</gda_value>
       <gda_value>Blob of data, stored exactly as it was input</gda_value>
-      <gda_value>134565056</gda_value>
+      <gda_value>145570992</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>timestamp</gda_value>
+      <gda_value>system</gda_value>
+      <gda_value>Time stamp, stored as 'YYYY-MM-DD HH:MM:SS.SSS'</gda_value>
+      <gda_value>145573576</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>time</gda_value>
+      <gda_value>system</gda_value>
+      <gda_value>Time, stored as 'HH:MM:SS.SSS'</gda_value>
+      <gda_value>145568736</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>date</gda_value>
+      <gda_value>system</gda_value>
+      <gda_value>Date, stored as 'YYYY-MM-DD'</gda_value>
+      <gda_value>145570864</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>

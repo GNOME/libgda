@@ -1,31 +1,31 @@
-/* GNOME DB Postgres Provider
- * Copyright (C) 1998 - 2007 The GNOME Foundation
+/* GDA postgres provider
+ * Copyright (C) 1998 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
  *         Rodrigo Moya <rodrigo@gnome-db.org>
  *         Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * This Library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This Library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Library General Public License for more details.
  *
  * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * License along with this Library; see the file COPYING.LIB.  If not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
  */
 
 #ifndef __GDA_POSTGRES_PROVIDER_H__
 #define __GDA_POSTGRES_PROVIDER_H__
 
 #include <libgda/gda-server-provider.h>
-#include <libpq-fe.h>
 
 #define GDA_TYPE_POSTGRES_PROVIDER            (gda_postgres_provider_get_type())
 #define GDA_POSTGRES_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_POSTGRES_PROVIDER, GdaPostgresProvider))
@@ -33,72 +33,21 @@
 #define GDA_IS_POSTGRES_PROVIDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_POSTGRES_PROVIDER))
 #define GDA_IS_POSTGRES_PROVIDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_POSTGRES_PROVIDER))
 
-#define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
-#define OBJECT_DATA_POSTGRES_HANDLE "GDA_Postgres_PostgresHandle"
-
-
 typedef struct _GdaPostgresProvider      GdaPostgresProvider;
 typedef struct _GdaPostgresProviderClass GdaPostgresProviderClass;
 
 struct _GdaPostgresProvider {
-	GdaServerProvider  provider;
+	GdaServerProvider      provider;
 };
 
 struct _GdaPostgresProviderClass {
 	GdaServerProviderClass parent_class;
 };
 
-/* Connection data. */
-typedef struct {
-	gchar              *name;
-	Oid                 oid;
-	GType               type;
-	gchar              *comments;
-	gchar              *owner;
-} GdaPostgresTypeOid;
-
-typedef struct {
-	GdaConnection      *cnc;
-	PGconn             *pconn;
-	gint                ntypes;
-	GdaPostgresTypeOid *type_data;
-	GHashTable         *h_table;
-
-	/* Version of the backend to which we are connected */
-	gchar              *version;
-	gfloat              version_float;
-
-	/* Internal data types not returned */
-	gchar              *avoid_types;
-	gchar              *avoid_types_oids;
-	gchar              *any_type_oid; /* oid for the 'any' data type, used to fetch aggregates and functions */
-
-	/* OID of the last inserted tuple */
-	Oid                 last_insert_id;
-
-	/* Cursor usage */
-	gboolean            use_cursor;
-	gint                chunk_size;
-} GdaPostgresConnectionData;
-
-/* NOTE ABOUT THE POSTGRES VERSIONS:
- * 
- * From Postgres versions <= 7.2.x to version 7.3:
- *  => introduction of schemas (namespaces) and the pg_namespace table
- *  => introduction of the "qualified name" construction for the database objects
- *  => introduction of dropped columns means that the column numbering may have gaps
- *     to be teste with the "attisdropped" attribute
- *  => tables names can start with "pg_" (so don't exclude them anymore)
- *  => aggregates now haves entries in the pg_proc table (pg_aggregate is now only
- *     an extension of pg_proc)
- */
-
 G_BEGIN_DECLS
 
-GType              gda_postgres_provider_get_type (void) G_GNUC_CONST;
-GdaServerProvider *gda_postgres_provider_new (void);
+GType gda_postgres_provider_get_type (void) G_GNUC_CONST;
 
 G_END_DECLS
 
 #endif
-

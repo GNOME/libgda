@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 1998 - 2007 The GNOME Foundation.
+ * Copyright (C) 1998 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -31,12 +31,10 @@
 #include <glib/gmessages.h>
 #include <glib/gstrfuncs.h>
 #include <glib/gprintf.h>
-#include <libsql/sql_parser.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-util.h>
 #include <libgda/gda-column.h>
-#include <libgda/gda-dict-field.h>
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
 #endif
@@ -78,6 +76,8 @@ gda_g_type_from_string (const gchar *str)
 			type = G_TYPE_STRING;
 		else if (!g_ascii_strcasecmp (str, "date"))
 			type = G_TYPE_DATE;
+		else if (!strcmp (str, "boolean"))
+                        type = G_TYPE_BOOLEAN;
 		else if (!strcmp (str, "null"))
 			type = GDA_TYPE_NULL;
 		else
@@ -93,7 +93,7 @@ gda_g_type_from_string (const gchar *str)
  * @string: string to escape
  *
  * Escapes @string to make it understandable by a DBMS. The escape method is very common and replaces any
- * occurence of "'" with "\'" and "\" with "\\".
+ * occurence of "'" with "''" and "\" with "\\"
  */
 gchar *
 gda_default_escape_string (const gchar *string)
@@ -119,7 +119,12 @@ gda_default_escape_string (const gchar *string)
 	ret = g_new0 (gchar, size);
 	retptr = ret;
 	while (*ptr) {
-		if ((*ptr == '\'') || (*ptr == '\\')) {
+		if (*ptr == '\'') {
+			*retptr = '\'';
+			*(retptr+1) = *ptr;
+			retptr += 2;
+		}
+		else if (*ptr == '\\') {
 			*retptr = '\\';
 			*(retptr+1) = *ptr;
 			retptr += 2;
@@ -284,34 +289,6 @@ gda_file_save (const gchar *filename, const gchar *buffer, gint len)
 
 	return res == -1 ? FALSE : TRUE;
 }
-
-/**
- * gda_utility_table_field_attrs_stringify
- */
-gchar *
-gda_utility_table_field_attrs_stringify (GdaValueAttribute attributes)
-{
-	if (attributes & FIELD_AUTO_INCREMENT)
-		return g_strdup ("AUTO_INCREMENT");
-
-	return NULL;
-}
-
-/**
- * gda_utility_table_field_attrs_parse
- */
-guint
-gda_utility_table_field_attrs_parse (const gchar *str)
-{
-	if (!str)
-		return 0;
-
-	if (!strcmp (str, "AUTO_INCREMENT"))
-		return FIELD_AUTO_INCREMENT;
-
-	return 0;
-}
-
 
 /**
  * gda_utility_build_encoded_id
@@ -793,10 +770,8 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 	else
 		gda_holder_set_not_null (holder, FALSE);
 	str = xmlGetProp (node, BAD_CAST "plugin");
-	if (str) {
-		g_object_set (G_OBJECT (holder), "entry_plugin", (gchar*)str, NULL);
-		xmlFree (str);
-	}
+	if (str) 
+		g_object_set_data_full (G_OBJECT (holder), "__gda_entry_plugin", str, xmlFree);
 	
 	str = xmlGetProp (node, BAD_CAST "source");
 	if (str) 
@@ -816,7 +791,8 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 			GSList *tmp = sources;
 			GdaDataModel *model = NULL;
 			while (tmp && !model) {
-				if (!strcmp (gda_object_get_name (GDA_OBJECT (tmp->data)), ptr1))
+				gchar *mname = g_object_get_data (G_OBJECT (tmp->data), "name");
+				if (mname && !strcmp (mname, ptr1))
 					model = GDA_DATA_MODEL (tmp->data);
 				tmp = g_slist_next (tmp);
 			}
@@ -903,213 +879,6 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 	}
 }
 
-/**
- * gda_utility_parameter_load_attributes
- * @param:
- * @node: an xmlNodePtr with a &lt;parameter&gt; tag
- * @sources: a list of #GdaDataModel
- *
- * WARNING: may set the "source" custom string property 
- */
-void
-gda_utility_parameter_load_attributes (GdaParameter *param, xmlNodePtr node, GSList *sources)
-{
-	xmlChar *str;
-	xmlNodePtr vnode;
-
-	/* set properties from the XML spec */
-	str = xmlGetProp (node, BAD_CAST "id");
-	if (str) {
-		g_object_set (G_OBJECT (param), "string_id", (gchar*)str, NULL);
-		xmlFree (str);
-	}	
-
-	str = xmlGetProp (node, BAD_CAST "name");
-	if (str) {
-		gda_object_set_name (GDA_OBJECT (param), (gchar*)str);
-		xmlFree (str);
-	}
-	str = xmlGetProp (node, BAD_CAST "descr");
-	if (str) {
-		gda_object_set_description (GDA_OBJECT (param), (gchar*)str);
-		xmlFree (str);
-	}
-	str = xmlGetProp (node, BAD_CAST "nullok");
-	if (str) {
-		gda_parameter_set_not_null (param, (*str == 'T') || (*str == 't') ? FALSE : TRUE);
-		xmlFree (str);
-	}
-	else
-		gda_parameter_set_not_null (param, FALSE);
-	str = xmlGetProp (node, BAD_CAST "plugin");
-	if (str) {
-		g_object_set (G_OBJECT (param), "entry_plugin", (gchar*)str, NULL);
-		xmlFree (str);
-	}
-	
-	str = xmlGetProp (node, BAD_CAST "source");
-	if (str) 
-		g_object_set_data_full (G_OBJECT (param), "source", (gchar*)str, g_free);
-
-	/* set restricting source if specified */
-	if (str && sources) {
-		gchar *ptr1, *ptr2 = NULL, *tok;
-		gchar *source;
-			
-		source = g_strdup ((gchar*)str);
-		ptr1 = strtok_r (source, ":", &tok);
-		if (ptr1)
-			ptr2 = strtok_r (NULL, ":", &tok);
-		
-		if (ptr1 && ptr2) {
-			GSList *tmp = sources;
-			GdaDataModel *model = NULL;
-			while (tmp && !model) {
-				if (!strcmp (gda_object_get_name (GDA_OBJECT (tmp->data)), ptr1))
-					model = GDA_DATA_MODEL (tmp->data);
-				tmp = g_slist_next (tmp);
-			}
-			
-			if (model) {
-				gint fno;
-				
-				fno = atoi (ptr2);
-				if ((fno < 0) ||
-				    (fno >= gda_data_model_get_n_columns (model))) 
-					g_warning (_("Field number %d not found in source named '%s'"), fno, ptr1); 
-				else {
-					if (gda_parameter_restrict_values (param, model, fno, NULL)) {
-						/* rename the wrapper with the current param's name */
-						g_object_set_data_full (G_OBJECT (model), "newname", 
-									g_strdup ((gchar *)gda_object_get_name (GDA_OBJECT (param))),
-									g_free);
-						g_object_set_data_full (G_OBJECT (model), "newdescr", 
-									g_strdup ((gchar *)gda_object_get_description (GDA_OBJECT (param))),
-									g_free);
-					}
-				}
-			}
-		}
-	}
-
-	/* specified value */
-	vnode = node->children;
-	if (vnode) {
-		xmlChar *this_lang, *isnull;
-		const gchar *lang;
-		GType gdatype;
-
-		gdatype = gda_parameter_get_g_type (param);
-#ifdef HAVE_LC_MESSAGES
-		lang = setlocale (LC_MESSAGES, NULL);
-#else
-		lang = setlocale (LC_CTYPE, NULL);
-#endif
-		while (vnode) {
-			if (xmlNodeIsText (vnode)) {
-				vnode = vnode->next;
-				continue;
-			}
-
-			if (strcmp ((gchar*)vnode->name, "gda_value")) {
-				vnode = vnode->next;
-				continue;
-			}
-
-			/* don't care about entries for the wrong locale */
-			this_lang = xmlGetProp(vnode, (xmlChar*)"lang");
-			if (this_lang && strncmp ((gchar*)this_lang, lang, strlen ((gchar*)this_lang))) {
-				g_free (this_lang);
-				vnode = vnode->next;
-				continue;
-			}
-			
-			isnull = xmlGetProp(vnode, (xmlChar*)"isnull");
-			if (isnull) {
-				if ((*isnull == 'f') || (*isnull == 'F')) {
-					xmlFree (isnull);
-					isnull = NULL;
-				}
-			}
-			
-			if (!isnull) {
-				GValue *value;
-
-				value = g_new0 (GValue, 1);
-				if (! gda_value_set_from_string (value, (gchar*)xmlNodeGetContent (vnode), gdatype)) {
-					/* error */
-					g_free (value);
-				}
-				else {
-					gda_parameter_set_value (param, value);
-					gda_value_free (value);
-				}
-			}
-			else {
-				gda_parameter_set_value (param, NULL);
-				xmlFree (isnull);
-			}
-			
-			vnode = vnode->next;
-		}
-	}
-}
-
-/**
- * @dict:
- * @prov:
- * @cnc:
- * @dbms_type:
- * @g_type:
- * @created: a place to return if the data type has been created and is thus considered as a custom
- *           data type. Can't be %NULL!
- *
- * Finds or creates anew GdaDictType if possible. if @created is returned as TRUE, then the
- * caller of this function _does_ have a reference on the returned object.
- *
- * Returns: a #GdaDictType, or %NULL if it was not possible to find and create one
- */
-GdaDictType *
-gda_utility_find_or_create_data_type (GdaDict *dict, GdaServerProvider *prov, GdaConnection *cnc, 
-				  const gchar *dbms_type, const gchar *g_type, gboolean *created)
-{
-	GdaDictType *dtype = NULL;
-
-	g_return_val_if_fail (created, NULL);
-	g_return_val_if_fail (!dict || GDA_IS_DICT (dict), NULL);
-	g_return_val_if_fail (!prov || GDA_IS_SERVER_PROVIDER (prov), NULL);
-	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);
-
-	*created = FALSE;
-	if (dbms_type)
-		dtype = gda_dict_get_dict_type_by_name (ASSERT_DICT (dict), dbms_type);
-
-	if (!dtype) {
-		if (g_type) {
-			GType gtype;
-			
-			gtype = gda_g_type_from_string (g_type);
-			if (prov) {
-				const gchar *deftype;
-				
-				deftype = gda_server_provider_get_default_dbms_type (prov, cnc, gtype);
-				if (deftype)
-					dtype = gda_dict_get_dict_type_by_name (ASSERT_DICT (dict), deftype);
-			}	
-			
-			if (!dtype) {
-				/* create a GdaDictType for that 'gda-type' */
-				dtype = GDA_DICT_TYPE (gda_dict_type_new (ASSERT_DICT (dict)));
-				gda_dict_type_set_sqlname (dtype, g_type);
-				gda_dict_type_set_g_type (dtype, gtype);
-				gda_dict_declare_object (ASSERT_DICT (dict), (GdaObject *) dtype);
-				*created = TRUE;
-			}
-		}
-	}
-
-	return dtype;
-}
 
 #define GDA_PARAM_ENCODE_TOKEN "__gda"
 /**
@@ -1197,47 +966,3 @@ gda_alphanum_to_text (gchar *text)
 	return text;
 }
 
-/*
- * Returns: a new #GdaSet, or %NULL is @plist is %NULL
- */
-GdaSet *
-gda_set_new_from_parameter_list (GdaParameterList *plist)
-{
-	GdaSet *set = NULL;
-	if (plist) {
-		GSList *list;
-		
-		set = gda_set_new (NULL);
-		for (list = plist->parameters; list; list = list->next) {
-			GdaParameter *param = GDA_PARAMETER (list->data);
-			GdaHolder *h;
-
-			h = gda_holder_new (gda_parameter_get_g_type (param));
-			g_object_set (G_OBJECT (h), "id", gda_object_get_name (GDA_OBJECT (param)), NULL);
-			gda_holder_set_value (h, gda_parameter_get_value (param));
-			gda_set_add_holder (set, h);
-			g_object_unref (h);
-		}
-	}
-	return set;
-}
-
-/*
- * Returns: a new #GdaParameterList, or %NULL is @set is %NULL
- */
-GdaParameterList *
-gda_parameter_list_new_from_set (GdaSet *set, GdaDict *dict)
-{
-	GdaParameterList *plist = NULL;
-	if (set) {
-		GSList *list;
-		
-		plist = GDA_PARAMETER_LIST (g_object_new (GDA_TYPE_PARAMETER_LIST, "dict", ASSERT_DICT (dict), NULL));
-		for (list = set->holders; list; list = list->next) {
-			GdaHolder *holder = GDA_HOLDER (list->data);
-			gda_parameter_list_add_param_from_value (plist, gda_holder_get_id (holder),
-								 (GValue*) gda_holder_get_value (holder));
-		}
-	}
-	return plist;
-}

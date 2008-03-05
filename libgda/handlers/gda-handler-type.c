@@ -1,6 +1,6 @@
 /* gda-handler-type.c
  *
- * Copyright (C) 2005 - 2006 Vivien Malerba
+ * Copyright (C) 2005 - 2008 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -75,7 +75,7 @@ gda_handler_type_get_type (void)
 			NULL
 		};
 
-		type = g_type_register_static (GDA_TYPE_OBJECT, "GdaHandlerType", &info, 0);
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaHandlerType", &info, 0);
 		g_type_add_interface_static (type, GDA_TYPE_DATA_HANDLER, &data_entry_info);
 	}
 	return type;
@@ -116,8 +116,8 @@ gda_handler_type_init (GdaHandlerType * hdl)
 	hdl->priv->valid_g_types = g_new0 (GType, 1);
 	hdl->priv->valid_g_types[0] = G_TYPE_ULONG;
 
-	gda_object_set_name (GDA_OBJECT (hdl), _("InternalType"));
-	gda_object_set_description (GDA_OBJECT (hdl), _("Gda type representation"));
+	g_object_set_data (G_OBJECT (hdl), "descr", _("InternalType"));
+	g_object_set_data (G_OBJECT (hdl), "descr", _("Gda type representation"));
 }
 
 static void
@@ -131,8 +131,6 @@ gda_handler_type_dispose (GObject   * object)
 	hdl = GDA_HANDLER_TYPE (object);
 
 	if (hdl->priv) {
-		gda_object_destroy_check (GDA_OBJECT (object));
-
 		g_free (hdl->priv->valid_g_types);
 		hdl->priv->valid_g_types = NULL;
 
@@ -156,7 +154,7 @@ gda_handler_type_new (void)
 {
 	GObject *obj;
 
-	obj = g_object_new (GDA_TYPE_HANDLER_TYPE, "dict", NULL, NULL);
+	obj = g_object_new (GDA_TYPE_HANDLER_TYPE, NULL);
 
 	return (GdaDataHandler *) obj;
 }
@@ -314,5 +312,5 @@ gda_handler_type_get_descr (GdaDataHandler *iface)
 	hdl = GDA_HANDLER_TYPE (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
-	return gda_object_get_description (GDA_OBJECT (hdl));
+	return g_object_get_data (G_OBJECT (hdl), "descr");
 }

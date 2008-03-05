@@ -1,6 +1,6 @@
 /* gda-statement.c
  *
- * Copyright (C) 2007 Vivien Malerba
+ * Copyright (C) 2007 - 2008 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -31,12 +31,15 @@
 #include <libgda/sql-parser/gda-statement-struct-compound.h>
 #include <libgda/sql-parser/gda-statement-struct-select.h>
 #include <libgda/gda-marshal.h>
+#include <libgda/gda-data-handler.h>
 #include <libgda/gda-server-provider.h>
 #include <libgda/gda-statement-extra.h>
 #include <libgda/gda-holder.h>
 #include <libgda/gda-set.h>
+#include <libgda/gda-meta-store.h>
 #include <libgda/gda-connection.h>
 #include <libgda/gda-util.h>
+#include <libgda/libgda.h>
 
 /* 
  * Main static functions 
@@ -59,16 +62,13 @@ static GObjectClass  *parent_class = NULL;
 
 struct _GdaStatementPrivate {
 	GdaSqlStatement *internal_struct;
-	
-	GdaDict         *check_dict;
-	gboolean         checked_with_dict;
 };
 
 /* signals */
 enum
 {
 	RESET,
-	DICT_CHECKED,
+	CHECKED,
 	LAST_SIGNAL
 };
 
@@ -128,17 +128,17 @@ gda_statement_class_init (GdaStatementClass * klass)
 			      NULL, NULL,
 			      g_cclosure_marshal_VOID__VOID, G_TYPE_NONE,
 			      0);
-	gda_statement_signals[DICT_CHECKED] =
-		g_signal_new ("dict_checked",
+	gda_statement_signals[CHECKED] =
+		g_signal_new ("checked",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_FIRST,
-			      G_STRUCT_OFFSET (GdaStatementClass, dict_checked),
+			      G_STRUCT_OFFSET (GdaStatementClass, checked),
 			      NULL, NULL,
 			      gda_marshal_VOID__OBJECT_BOOLEAN, G_TYPE_NONE,
-			      2, GDA_TYPE_DICT, G_TYPE_BOOLEAN);
+			      2, GDA_TYPE_CONNECTION, G_TYPE_BOOLEAN);
 
 	klass->reset = NULL;
-	klass->dict_checked = NULL;
+	klass->checked = NULL;
 
 	object_class->dispose = gda_statement_dispose;
 	object_class->finalize = gda_statement_finalize;
@@ -156,8 +156,6 @@ gda_statement_init (GdaStatement * stmt)
 {
 	stmt->priv = g_new0 (GdaStatementPrivate, 1);
 	stmt->priv->internal_struct = NULL;
-	stmt->priv->check_dict = NULL;
-	stmt->priv->checked_with_dict = FALSE;
 }
 
 /**
@@ -178,7 +176,7 @@ gda_statement_new (void)
 
 
 /**
- * gda_statement_new_copy
+ * gda_statement_copy
  * @orig: a #GdaStatement to make a copy of
  * 
  * Copy constructor
@@ -186,7 +184,7 @@ gda_statement_new (void)
  * Returns: a the new copy of @orig
  */
 GdaStatement *
-gda_statement_new_copy (GdaStatement *orig)
+gda_statement_copy (GdaStatement *orig)
 {
 	GObject *obj;
 
@@ -194,16 +192,6 @@ gda_statement_new_copy (GdaStatement *orig)
 
 	obj = g_object_new (GDA_TYPE_STATEMENT, "structure", orig->priv->internal_struct, NULL);
 	return GDA_STATEMENT (obj);
-}
-
-/* called when @dict has been destroyed and is no longer useable */
-static void
-check_dict_weak_notify (GdaStatement *stmt, GdaDict *dict)
-{
-	stmt->priv->check_dict = NULL;
-	if (stmt->priv->checked_with_dict)
-		g_signal_emit (stmt, gda_statement_signals [DICT_CHECKED], 0, NULL, FALSE);
-	stmt->priv->checked_with_dict = FALSE;
 }
 
 static void
@@ -216,11 +204,6 @@ gda_statement_dispose (GObject *object)
 
 	stmt = GDA_STATEMENT (object);
 	if (stmt->priv) {
-		if (stmt->priv->check_dict) {
-			g_object_weak_unref (G_OBJECT (stmt->priv->check_dict), (GWeakNotify) check_dict_weak_notify, stmt);
-			stmt->priv->check_dict = NULL;
-		}
-		stmt->priv->checked_with_dict = FALSE;
 		if (stmt->priv->internal_struct) {
 			gda_sql_statement_free (stmt->priv->internal_struct);
 			stmt->priv->internal_struct = NULL;
@@ -380,56 +363,29 @@ gda_statement_check_structure (GdaStatement *stmt, GError **error)
 	return gda_sql_statement_check_structure (stmt->priv->internal_struct, error);
 }
 
-/* called when a reference to an object in stmt->priv->check_dict is lost; signal is emitted only if stmt->priv->checked_with_dict
- * is TRUE */
-static void
-check_dict_func (GdaSqlAnyPart *node, GdaStatement *stmt)
-{
-	/* reference lost for @node */
-	if (stmt->priv->checked_with_dict)
-		g_signal_emit (stmt, gda_statement_signals [DICT_CHECKED], 0, stmt->priv->check_dict, FALSE);
-	stmt->priv->checked_with_dict = FALSE;
-}
-
 /**
- * gda_statement_check_with_dict
+ * gda_statement_check_connection
  * @stmt: a #GdaStatement object
- * @dict: a #GdaDict object, or %NULL
+ * @cnc: a #GdaConnection object, or %NULL
  * @error: a place to store errors, or %NULL
  *
- * If @dict is not %NULL then checks that every object (table, field, function) used in @stmt 
- * actually exists in @dict.
+ * If @cnc is not %NULL then checks that every object (table, field, function) used in @stmt 
+ * actually exists in @cnc's database
  *
- * If @dict is %NULL, then cleans anything related to @dict in @stmt.
+ * If @cnc is %NULL, then cleans anything related to @cnc in @stmt.
  *
- * Returns: TRUE if every object actually exists in @dict
+ * Returns: TRUE if every object actually exists in @cnc's database
  */
 gboolean
-gda_statement_check_with_dict (GdaStatement *stmt, GdaDict *dict, GError **error)
+gda_statement_check_connection (GdaStatement *stmt, GdaConnection *cnc, GError **error)
 {
 	gboolean retval;
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
 	g_return_val_if_fail (stmt->priv, FALSE);
-	g_return_val_if_fail (!dict || GDA_IS_DICT (dict), FALSE);
+	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), FALSE);
 
-	if (stmt->priv->checked_with_dict) {
-		g_signal_emit (stmt, gda_statement_signals [DICT_CHECKED], 0, stmt->priv->check_dict, FALSE);
-		stmt->priv->checked_with_dict = FALSE;
-	}
-	if (stmt->priv->check_dict) {
-		/* clean everything related to stmt->priv->check_dict */
-		stmt->priv->check_dict = NULL;
-		g_object_weak_unref (G_OBJECT (dict), (GWeakNotify) check_dict_weak_notify, stmt);
-	}
-
-	retval = gda_sql_statement_check_with_dict (stmt->priv->internal_struct, dict, 
-						    (GdaSqlStatementFunc) check_dict_func, stmt, error);
-	if (dict) {
-		stmt->priv->check_dict = dict;
-		g_object_weak_ref (G_OBJECT (dict), (GWeakNotify) check_dict_weak_notify, stmt);
-		stmt->priv->checked_with_dict = retval;
-		g_signal_emit (stmt, gda_statement_signals [DICT_CHECKED], 0, stmt->priv->check_dict, retval);
-	}
+	retval = gda_sql_statement_check_connection (stmt->priv->internal_struct, cnc, error);
+	g_signal_emit (stmt, gda_statement_signals [CHECKED], 0, cnc, retval);
 
 	return retval;
 }
@@ -526,6 +482,8 @@ get_params_foreach_func (GdaSqlAnyPart *node, GdaSet **params, GError **error)
  *
  * Get a new #GdaSet object which groups all the execution parameters
  * which @stmt needs. This new object is returned though @out_params.
+ *
+ * Note that if @stmt does not need any parameter, then @out_params is set to %NULL.
  *
  * Returns: TRUE if no error occurred.
  */
@@ -691,7 +649,22 @@ gda_statement_to_sql_real (GdaStatement *stmt, GdaSqlRenderingContext *context, 
 static gchar *
 default_render_value (const GValue *value, GdaSqlRenderingContext *context, GError **error)
 {
-	return gda_value_stringify ((GValue*) value);
+	if (value && !gda_value_is_null (value)) {
+		GdaDataHandler *dh;
+		if (context->provider)
+			dh = gda_server_provider_get_data_handler_gtype (context->provider, context->cnc, G_VALUE_TYPE (value));
+		else  			
+			dh = gda_get_default_handler (G_VALUE_TYPE (value));
+
+		if (!dh) {
+			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+				     _("No data handler for type '%s'"), g_type_name (G_VALUE_TYPE (value)));
+			return NULL;
+		}
+		return gda_data_handler_get_sql_from_value (dh, value);
+	}
+	else
+		return g_strdup ("NULL");
 }
 
 /**
@@ -719,17 +692,14 @@ gda_statement_to_sql_extended (GdaStatement *stmt, GdaConnection *cnc, GdaSet *p
 
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
 	g_return_val_if_fail (stmt->priv, NULL);
-	if (cnc) {
-		GdaServerProvider *prov;
-		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-		
-		prov = gda_connection_get_provider_obj (cnc);
-		return gda_server_provider_statement_to_sql (prov, cnc, stmt, params, flags, params_used, error);
-	}
 
 	memset (&context, 0, sizeof (context));
 	context.params = params;
 	context.flags = flags;
+	if (cnc) {
+		context.cnc = cnc;
+		context.provider = gda_connection_get_provider_obj (cnc);
+	}
 
 	str = gda_statement_to_sql_real (stmt, &context, error);
 
@@ -823,9 +793,9 @@ default_render_insert (GdaSqlStatementInsert *stmt, GdaSqlRenderingContext *cont
 		for (list = stmt->values_list; list; list = list->next) {
 			GSList *rlist;
 			if (list == stmt->values_list)
-				g_string_append (string, " VALUES ");
+				g_string_append (string, " VALUES");
 			else
-				g_string_append (string, ", ");
+				g_string_append_c (string, ',');
 			for (rlist = (GSList*) list->data; rlist; rlist = rlist->next) {
 				if (rlist == (GSList*) list->data)
 					g_string_append (string, " (");
@@ -1306,7 +1276,7 @@ default_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, gboolean
 		if (!str) goto err;
 	}
 	else if (expr->value) {
-		str = context->render_value (expr->value, context, error);
+		str = gda_value_stringify (expr->value);
 		if (!str) goto err;
 		if (is_null && gda_value_is_null (expr->value))
 			*is_null = TRUE;
@@ -1533,17 +1503,30 @@ default_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, 
 		str = g_strdup_printf ("NOT %s", SQL_OPERAND (sql_list->data)->sql);
 		break;
 	case GDA_SQL_OPERATOR_IN:
+	case GDA_SQL_OPERATOR_NOTIN: {
+		gboolean add_p = TRUE;
+		if (sql_list->next && !(sql_list->next->next) &&
+		    *(SQL_OPERAND (sql_list->next->data)->sql)=='(')
+			add_p = FALSE;
+
 		string = g_string_new (SQL_OPERAND (sql_list->data)->sql);
-		g_string_append (string, " IN (");
+		if (op->operator == GDA_SQL_OPERATOR_IN)
+			g_string_append (string, " IN ");
+		else
+			g_string_append (string, " NOT IN ");
+		if (add_p)
+			g_string_append_c (string, '(');
 		for (list = sql_list->next; list; list = list->next) {
 			if (list != sql_list->next)
 				g_string_append (string, ", ");
 			g_string_append (string, SQL_OPERAND (list->data)->sql);
 		}
-		g_string_append_c (string, ')');
+		if (add_p)
+			g_string_append_c (string, ')');
 		str = string->str;
 		g_string_free (string, FALSE);
 		break;
+	}
 	case GDA_SQL_OPERATOR_CONCAT:
 		multi_op = "||";
 		break;
@@ -1744,6 +1727,9 @@ default_render_select_join (GdaSqlSelectJoin *join, GdaSqlRenderingContext *cont
 	switch (join->type) {
 	case GDA_SQL_SELECT_JOIN_CROSS:
 		string = g_string_new (",");
+		break;
+        case GDA_SQL_SELECT_JOIN_NATURAL:
+		string = g_string_new ("NATURAL JOIN");
 		break;
         case GDA_SQL_SELECT_JOIN_INNER:
 		string = g_string_new ("INNER JOIN");

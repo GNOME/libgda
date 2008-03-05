@@ -1,7 +1,7 @@
 #include <libgda/libgda.h>
 #include <sql-parser/gda-sql-parser.h>
 
-GdaConnection *open_connection (GdaClient *client);
+GdaConnection *open_connection (void);
 void display_products_contents (GdaConnection *cnc);
 void create_table (GdaConnection *cnc);
 
@@ -10,14 +10,10 @@ main (int argc, char *argv[])
 {
         gda_init ("SimpleExample", "1.0", argc, argv);
 
-        GdaClient *client;
         GdaConnection *cnc;
 
-        /* Create a GdaClient object which is the central object which manages all connections */
-        client = gda_client_new ();
-
 	/* open connections */
-	cnc = open_connection (client);
+	cnc = open_connection ();
 	create_table (cnc);
 	display_products_contents (cnc);
         gda_connection_close (cnc);
@@ -29,13 +25,13 @@ main (int argc, char *argv[])
  * Open a connection to the example.db file
  */
 GdaConnection *
-open_connection (GdaClient *client)
+open_connection (void)
 {
         GdaConnection *cnc;
         GError *error = NULL;
-        cnc = gda_client_open_connection_from_string (client, "SQLite", "DB_DIR=.;DB_NAME=ddl_db", NULL, NULL,
-						      GDA_CONNECTION_OPTIONS_DONT_SHARE,
-						      &error);
+        cnc = gda_connection_open_from_string ("SQLite", "DB_DIR=.;DB_NAME=ddl_db", NULL, NULL,
+					       GDA_CONNECTION_OPTIONS_DONT_SHARE,
+					       &error);
         if (!cnc) {
                 g_print ("Could not open connection to SQLite database in example_db.db file: %s\n",
                          error && error->message ? error->message : "No detail");
@@ -129,8 +125,7 @@ display_products_contents (GdaConnection *cnc)
                 parser = gda_sql_parser_new ();
 
 	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
-	data_model = gda_connection_statement_execute_select (cnc, stmt, NULL, 
-							      GDA_STATEMENT_MODEL_RANDOM_ACCESS, &error);
+	data_model = gda_connection_statement_execute_select (cnc, stmt, NULL, &error);
 	g_object_unref (stmt);
         if (!data_model) 
                 g_error ("Could not get the contents of the 'products' table: %s\n",

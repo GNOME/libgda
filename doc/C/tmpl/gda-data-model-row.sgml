@@ -23,16 +23,6 @@ This object is not intended to be instanciated directly, but to be inherited.
 </para>
 
 
-<!-- ##### ARG GdaDataModelRow:command-text ##### -->
-<para>
-
-</para>
-
-<!-- ##### ARG GdaDataModelRow:command-type ##### -->
-<para>
-
-</para>
-
 <!-- ##### ARG GdaDataModelRow:read-only ##### -->
 <para>
 

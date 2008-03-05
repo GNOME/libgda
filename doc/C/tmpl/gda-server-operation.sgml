@@ -54,11 +54,6 @@ See the <link linkend="DDLIntro">global introduction about DDL</link> for more i
 
 </para>
 
-<!-- ##### ARG GdaServerOperation:dict ##### -->
-<para>
-
-</para>
-
 <!-- ##### ARG GdaServerOperation:op-type ##### -->
 <para>
 
@@ -88,6 +83,8 @@ See the <link linkend="DDLIntro">global introduction about DDL</link> for more i
 @GDA_SERVER_OPERATION_DROP_COLUMN: 
 @GDA_SERVER_OPERATION_CREATE_INDEX: 
 @GDA_SERVER_OPERATION_DROP_INDEX: 
+@GDA_SERVER_OPERATION_CREATE_VIEW: 
+@GDA_SERVER_OPERATION_DROP_VIEW: 
 @GDA_SERVER_OPERATION_NB: 
 
 <!-- ##### ENUM GdaServerOperationNodeType ##### -->

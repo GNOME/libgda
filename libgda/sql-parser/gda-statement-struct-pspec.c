@@ -61,10 +61,10 @@ gda_sql_param_spec_take_nullok (GdaSqlParamSpec *pspec, GValue *value)
 {
 	pspec->nullok = FALSE;
 	if (value) {
-		const gchar *str = g_value_get_string (value);
+		gchar *str = (gchar *) g_value_get_string (value);
 		if (str) {
-			gchar *tmp = _remove_quotes (str);
-			if ((*tmp == 't') || (*tmp == 'T'))
+			_remove_quotes (str);
+			if ((*str == 't') || (*str == 'T'))
 				pspec->nullok = TRUE;
 		}
 		g_value_unset (value);

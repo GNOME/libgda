@@ -90,6 +90,7 @@ static GdaDataModel *gda_sybase_execute_query (GdaConnection *cnc,
 static gboolean gda_sybase_execute_cmd (GdaConnection *cnc, const gchar *sql);
 
 static GObjectClass *parent_class = NULL;
+const sybase_Types gda_sybase_type_list[GDA_SYBASE_TYPE_CNT];
 
 /*
  * GdaSybaseProvider class implementation

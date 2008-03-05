@@ -63,12 +63,23 @@ plugin_get_dsn_spec (void)
 	return ret;
 }
 
+gchar *
+plugin_get_auth_spec (void)
+{
+#define AUTH "<?xml version=\"1.0\"?>" \
+	     "<data-set-spec>" \
+	     "  <parameters/>" \
+	     "</data-set-spec>"
+
+	return g_strdup (AUTH);
+}
+
 GdaServerProvider *
 plugin_create_provider (void)
 {
 	GdaServerProvider *prov;
 
-        prov = gda_sqlite_provider_new ();
+	prov = (GdaServerProvider*) g_object_new (GDA_TYPE_SQLITE_PROVIDER, NULL);
         g_object_set_data ((GObject *) prov, "GDA_PROVIDER_DIR", module_path);
         return prov;
 }

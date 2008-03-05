@@ -1,8 +1,12 @@
 #include <libgda/libgda.h>
 #include <gda-vprovider-data-model.h>
 #include <gda-vconnection-data-model.h>
+#include <sql-parser/gda-sql-parser.h>
+
 static gboolean test_sql_select (GdaConnection *cnc, const gchar *sql);
 static gboolean test_sql_non_select (GdaConnection *cnc, const gchar *sql);
+
+GdaSqlParser *parser;
 
 int 
 main (int argc, char **argv)
@@ -15,10 +19,11 @@ main (int argc, char **argv)
 	
 	gda_init ("SQlite virtual providers test", PACKAGE_VERSION, argc, argv);
 
+	parser = gda_sql_parser_new ();
+
 	provider = gda_vprovider_data_model_new ();
-	cnc = gda_server_provider_create_connection (NULL, GDA_SERVER_PROVIDER (provider), NULL, NULL, NULL, 0);
+	cnc = gda_virtual_connection_open (provider, NULL);
 	g_assert (GDA_IS_VCONNECTION_DATA_MODEL (cnc));
-	gda_connection_open (cnc, NULL);
 
 	g_print ("Connection status for %s: %s\n", G_OBJECT_TYPE_NAME (cnc), 
 		 gda_connection_is_opened (cnc) ? "Opened" : "Closed");
@@ -162,14 +167,15 @@ main (int argc, char **argv)
 static gboolean
 test_sql_select (GdaConnection *cnc, const gchar *sql)
 {
-	GdaCommand *command;
+	GdaStatement *stmt;
 	GdaDataModel *data;
 	GError *error = NULL; 
 
 	g_print ("\n\n============== SQL: %s\n", sql);
-	command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, 0);
-	data = gda_connection_execute_select_command (cnc, command, NULL, &error);
-	gda_command_free (command);
+	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+	g_assert (stmt);
+	data = gda_connection_statement_execute_select (cnc, stmt, NULL, &error);
+	g_object_unref (stmt);
 	if (data) {
 		gda_data_model_dump (data, stdout);
 		g_object_unref (data);
@@ -186,14 +192,15 @@ test_sql_select (GdaConnection *cnc, const gchar *sql)
 static gboolean
 test_sql_non_select (GdaConnection *cnc, const gchar *sql)
 {
-	GdaCommand *command;
+	GdaStatement *stmt;
 	GError *error = NULL; 
 	gint nrows;
 
 	g_print ("\n\n============== SQL: %s\n", sql);
-	command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, 0);
-	nrows = gda_connection_execute_non_select_command (cnc, command, NULL, &error);
-	gda_command_free (command);
+	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+	g_assert (stmt);
+	nrows = gda_connection_statement_execute_non_select (cnc, stmt, NULL, NULL, &error);
+	g_object_unref (stmt);
 	if (nrows == -1) {
 		g_print ("NON SELECT error: %s\n", error && error->message ? error->message : "no detail");
 		g_error_free (error);

@@ -1,6 +1,6 @@
 /* gda-batch.h
  *
- * Copyright (C) 2007 Vivien Malerba
+ * Copyright (C) 2007 - 2008 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -59,15 +59,7 @@ void               gda_batch_add_statement          (GdaBatch *batch, GdaStateme
 void               gda_batch_remove_statement       (GdaBatch *batch, GdaStatement *stmt);
 
 gchar             *gda_batch_serialize              (GdaBatch *batch);
-const GSList       *gda_batch_get_statements         (GdaBatch *batch);
-
-/*
-gboolean           gda_batch_complement_with_dict (GdaBatch *batch, GdaDict *dict);
-GdaParameterList  *gda_batch_get_parameter_list   (GdaBatch *batch);
-GdaObject         *gda_batch_execute              (GdaBatch *batch, GdaConnection  *cnc, 
-						       GdaParameterList *params,
-						       GdaBatchModelUsage usage, GError **error);
-*/
+const GSList      *gda_batch_get_statements         (GdaBatch *batch);
 
 G_END_DECLS
 

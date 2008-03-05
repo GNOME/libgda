@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 Vivien Malerba
+ * Copyright (C) 2007 - 2008 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -22,7 +22,6 @@
 
 #include <glib.h>
 #include <glib-object.h>
-#include <libgda/gda-dict.h>
 
 /* error reporting */
 extern GQuark gda_sql_error_quark (void);

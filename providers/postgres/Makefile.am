@@ -5,9 +5,9 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
-	$(LIBGDA_CFLAGS) \
-	$(POSTGRES_CFLAGS) 
+	$(LIBGDA_CFLAGS) $(POSTGRES_CFLAGS) 
 
+# parser generation
 parser.c parser.h: parser.y $(top_builddir)/libgda/sql-parser/lemon$(EXEEXT_FOR_BUILD)
 	- $(top_builddir)/libgda/sql-parser/lemon$(EXEEXT_FOR_BUILD) parser.y
 
@@ -22,8 +22,6 @@ $(OBJECTS) $(libgda_postgres_la_OBJECTS): postgres_token_types.h
 libgda_postgres_la_SOURCES = \
 	gda-postgres-blob-op.c \
 	gda-postgres-blob-op.h \
-	gda-postgres-cursor-recordset.c \
-	gda-postgres-cursor-recordset.h \
 	gda-postgres-ddl.c \
 	gda-postgres-ddl.h \
 	gda-postgres-handler-bin.c \
@@ -32,42 +30,48 @@ libgda_postgres_la_SOURCES = \
 	gda-postgres-parser.h \
 	gda-postgres-provider.c \
 	gda-postgres-provider.h \
+	gda-postgres-pstmt.c \
+	gda-postgres-pstmt.h \
+	gda-postgres-meta.c \
+	gda-postgres-meta.h \
 	gda-postgres-recordset.c \
 	gda-postgres-recordset.h \
+	gda-postgres-util.c \
+	gda-postgres-util.h \
 	gda-postgres.h \
 	libmain.c \
 	parser.h \
-	parser.c \
-	postgres_token_types.h \
-	utils.c
+        parser.c \
+        postgres_token_types.h
+
 libgda_postgres_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_postgres_la_LIBADD = \
-	$(top_builddir)/libgda/libgda-3.0.la \
-	$(LIBGDA_LIBS) \
-	$(POSTGRES_LIBS)
+	$(top_builddir)/libgda/libgda-4.0.la \
+	$(LIBGDA_LIBS) $(POSTGRES_LIBS)
 
-xmldir   = $(datadir)/libgda-3.0
+xmldir   = $(datadir)/libgda-4.0
 xml_in_files = \
 	postgres_specs_create_db.xml.in \
-	postgres_specs_drop_db.xml.in \
-	postgres_specs_dsn.xml.in \
-	postgres_specs_create_table.xml.in \
-	postgres_specs_drop_table.xml.in \
-	postgres_specs_create_index.xml.in \
-	postgres_specs_drop_index.xml.in \
-	postgres_specs_rename_table.xml.in \
-	postgres_specs_add_column.xml.in \
-	postgres_specs_drop_column.xml.in
+        postgres_specs_drop_db.xml.in \
+        postgres_specs_dsn.xml.in \
+        postgres_specs_create_table.xml.in \
+        postgres_specs_drop_table.xml.in \
+        postgres_specs_create_index.xml.in \
+        postgres_specs_drop_index.xml.in \
+        postgres_specs_rename_table.xml.in \
+        postgres_specs_add_column.xml.in \
+        postgres_specs_drop_column.xml.in \
+        postgres_specs_create_view.xml.in \
+        postgres_specs_drop_view.xml.in
 
 @INTLTOOL_XML_RULE@
 
-xml_DATA = $(xml_in_files:.xml.in=.xml)
+xml_DATA = $(xml_in_files:.xml.in=.xml) 
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = libgda-postgres-3.0.pc
+pkgconfig_DATA = libgda-postgres-4.0.pc
 
-EXTRA_DIST = $(xml_in_files) libgda-postgres-3.0.pc.in parser.y
+EXTRA_DIST = $(xml_in_files) libgda-postgres-4.0.pc.in parser.y
 DISTCLEANFILES = $(xml_DATA)
-
 
 CLEANFILES = parser.h parser.c parser.out postgres_token_types.h gen_def$(EXEEXT_FOR_BUILD)

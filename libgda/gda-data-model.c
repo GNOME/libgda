@@ -1,6 +1,6 @@
 /* 
  * GDA common library
- * Copyright (C) 1998 - 2007 The GNOME Foundation.
+ * Copyright (C) 1998 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -33,7 +33,6 @@
 #include <libgda/gda-log.h>
 #include <libgda/gda-util.h>
 #include <libgda/gda-row.h>
-#include <libgda/gda-object.h>
 #include <libgda/gda-enums.h>
 #include <string.h>
 #ifdef HAVE_LOCALE_H
@@ -48,6 +47,7 @@ static void gda_data_model_class_init (gpointer g_class);
 
 /* signals */
 enum {
+	CHANGED,
 	ROW_INSERTED,
 	ROW_UPDATED,
 	ROW_REMOVED,
@@ -76,7 +76,7 @@ gda_data_model_get_type (void)
 		};
 		
 		type = g_type_register_static (G_TYPE_INTERFACE, "GdaDataModel", &info, 0);
-		g_type_interface_add_prerequisite (type, GDA_TYPE_OBJECT);
+		g_type_interface_add_prerequisite (type, G_TYPE_OBJECT);
 	}
 	return type;
 }
@@ -87,6 +87,14 @@ gda_data_model_class_init (gpointer g_class)
 	static gboolean initialized = FALSE;
 
 	if (! initialized) {
+		gda_data_model_signals[CHANGED] =
+			g_signal_new ("changed",
+				      GDA_TYPE_DATA_MODEL,
+				      G_SIGNAL_RUN_LAST,
+				      G_STRUCT_OFFSET (GdaDataModelClass, changed),
+				      NULL, NULL,
+				      g_cclosure_marshal_VOID__VOID,
+				      G_TYPE_NONE, 0);
 		gda_data_model_signals[ROW_INSERTED] =
 			g_signal_new ("row_inserted",
 				      GDA_TYPE_DATA_MODEL,
@@ -149,7 +157,7 @@ gda_data_model_signal_emit_changed (GdaDataModel *model)
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 	
 	if (do_notify_changes (model)) 
-		gda_object_signal_emit_changed (GDA_OBJECT (model));
+		g_signal_emit (model, gda_data_model_signals[CHANGED], 0);
 }
 
 /**
@@ -671,7 +679,6 @@ gda_data_model_create_iter (GdaDataModel *model)
 	else 
 		/* default method */
 		return  g_object_new (GDA_TYPE_DATA_MODEL_ITER, 
-				      "dict", gda_object_get_dict (GDA_OBJECT (model)), 
 				      "data_model", model, NULL);
 }
 
@@ -701,7 +708,7 @@ gda_data_model_move_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gi
 		return gda_data_model_move_iter_at_row_default (model, iter, row);
 }
 
-static void set_param_attributes (GdaParameter *param, GdaValueAttribute flags);
+static void set_param_attributes (GdaHolder *holder, GdaValueAttribute flags);
 
 gboolean
 gda_data_model_move_iter_at_row_default (GdaDataModel *model, GdaDataModelIter *iter, gint row)
@@ -733,34 +740,28 @@ gda_data_model_move_iter_at_row_default (GdaDataModel *model, GdaDataModelIter *
 	/* actual sync. */
 	g_object_get (G_OBJECT (iter), "update_model", &update_model, NULL);
 	g_object_set (G_OBJECT (iter), "update_model", FALSE, NULL);
-	col = 0;
-	list = ((GdaParameterList *) iter)->parameters;
-	while (list) {
-		gda_parameter_set_value (GDA_PARAMETER (list->data), 
-					 gda_data_model_get_value_at (model, col, row));
+	for (col = 0, list = ((GdaSet *) iter)->holders; list; col++, list = list->next) {
+		gda_holder_set_value (GDA_HOLDER (list->data), 
+				      gda_data_model_get_value_at (model, col, row));
 
-		set_param_attributes (GDA_PARAMETER (list->data), 
+		set_param_attributes ((GdaHolder*) list->data, 
 				      gda_data_model_get_attributes_at (model, col, row));
-		list = g_slist_next (list);
-		col ++;
 	}
 	g_object_set (G_OBJECT (iter), "current_row", row, "update_model", update_model, NULL);
 	return TRUE;
 }
 
 static void
-set_param_attributes (GdaParameter *param, GdaValueAttribute flags)
+set_param_attributes (GdaHolder *holder, GdaValueAttribute flags)
 {
-	if (!gda_parameter_get_default_value (param))
-		gda_parameter_set_exists_default_value (param, 
-							flags & GDA_VALUE_ATTR_CAN_BE_DEFAULT);
 	if (flags & GDA_VALUE_ATTR_IS_DEFAULT)
-		g_object_set (G_OBJECT (param), "use-default-value", TRUE, NULL);
-	gda_parameter_set_not_null (param, ! (flags & GDA_VALUE_ATTR_CAN_BE_NULL));
+		gda_holder_set_value_to_default (holder);
+
+	gda_holder_set_not_null (holder, ! (flags & GDA_VALUE_ATTR_CAN_BE_NULL));
 	if (flags & GDA_VALUE_ATTR_IS_NULL)
-		gda_parameter_set_value (param, NULL);
+		gda_holder_set_value (holder, NULL);
 	if (flags & GDA_VALUE_ATTR_DATA_NON_VALID)
-		gda_parameter_declare_invalid (param);
+		gda_holder_force_invalid (holder);
 }
 
 /**
@@ -817,15 +818,11 @@ gda_data_model_move_iter_next_default (GdaDataModel *model, GdaDataModelIter *it
 	/* actual sync. */
 	g_object_get (G_OBJECT (iter), "update_model", &update_model, NULL);
 	g_object_set (G_OBJECT (iter), "update_model", FALSE, NULL);
-	col = 0;
-	list = ((GdaParameterList *) iter)->parameters;
-	while (list) {
-		gda_parameter_set_value (GDA_PARAMETER (list->data), 
-					 gda_data_model_get_value_at (model, col, row));
-		set_param_attributes (GDA_PARAMETER (list->data), 
+	for (col = 0, list = ((GdaSet *) iter)->holders; list; col++, list = list->next) {
+		gda_holder_set_value (GDA_HOLDER (list->data), 
+				      gda_data_model_get_value_at (model, col, row));
+		set_param_attributes ((GdaHolder *) list->data, 
 				      gda_data_model_get_attributes_at (model, col, row));
-		list = g_slist_next (list);
-		col ++;
 	}
 	g_object_set (G_OBJECT (iter), "current_row", row, 
 		      "update_model", update_model, NULL);
@@ -884,15 +881,11 @@ gda_data_model_move_iter_prev_default (GdaDataModel *model, GdaDataModelIter *it
 	/* actual sync. */
 	g_object_get (G_OBJECT (iter), "update_model", &update_model, NULL);
 	g_object_set (G_OBJECT (iter), "update_model", FALSE, NULL);
-	col = 0;
-	list = ((GdaParameterList *) iter)->parameters;
-	while (list) {
-		gda_parameter_set_value (GDA_PARAMETER (list->data), 
-					 gda_data_model_get_value_at (model, col, row));
-		set_param_attributes (GDA_PARAMETER (list->data), 
+	for (col = 0, list = ((GdaSet *) iter)->holders; list; col++, list = list->next) {
+		gda_holder_set_value (GDA_HOLDER (list->data), 
+				      gda_data_model_get_value_at (model, col, row));
+		set_param_attributes ((GdaHolder*) list->data,
 				      gda_data_model_get_attributes_at (model, col, row));
-		list = g_slist_next (list);
-		col ++;
 	}
 	g_object_set (G_OBJECT (iter), "current_row", row, 
 		      "update_model", update_model, NULL);
@@ -1096,10 +1089,10 @@ static gchar *export_to_text_separated (GdaDataModel *model, const gint *cols, g
 gchar *
 gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat format, 
 				 const gint *cols, gint nb_cols, 
-				 const gint *rows, gint nb_rows, GdaParameterList *options)
+				 const gint *rows, gint nb_rows, GdaSet *options)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
-	g_return_val_if_fail (!options || GDA_IS_PARAMETER_LIST (options), NULL);
+	g_return_val_if_fail (!options || GDA_IS_SET (options), NULL);
 
 	switch (format) {
 	case GDA_DATA_MODEL_IO_DATA_ARRAY_XML: {
@@ -1111,13 +1104,13 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 		xmlDocPtr xml_doc;
 
 		if (options) {
-			GdaParameter *param;
+			GdaHolder *holder;
 
-			param = gda_parameter_list_find_param (options, "NAME");
-			if (param) {
+			holder = gda_set_get_holder (options, "NAME");
+			if (holder) {
 				const GValue *value;
-				value = gda_parameter_get_value (param);
-				if (value && gda_value_isa ((GValue *) value, G_TYPE_STRING))
+				value = gda_holder_get_value (holder);
+				if (value && (G_VALUE_TYPE (value) == G_TYPE_STRING))
 					name = g_value_get_string ((GValue *) value);
 				else
 					g_warning (_("The 'NAME' parameter must hold a string value, ignored."));
@@ -1145,13 +1138,13 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 		gboolean field_quote = TRUE;
 
 		if (options) {
-			GdaParameter *param;
+			GdaHolder *holder;
 
-			param = gda_parameter_list_find_param (options, "SEPARATOR");
-			if (param) {
+			holder = gda_set_get_holder (options, "SEPARATOR");
+			if (holder) {
 				const GValue *value;
-				value = gda_parameter_get_value (param);
-				if (value && gda_value_isa ((GValue *) value, G_TYPE_STRING)) {
+				value = gda_holder_get_value (holder);
+				if (value && (G_VALUE_TYPE (value) == G_TYPE_STRING)) {
 					const gchar *str;
 
 					str = g_value_get_string ((GValue *) value);
@@ -1161,11 +1154,11 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 				else
 					g_warning (_("The 'SEPARATOR' parameter must hold a string value, ignored."));
 			}
-			param = gda_parameter_list_find_param (options, "QUOTE");
-			if (param) {
+			holder = gda_set_get_holder (options, "QUOTE");
+			if (holder) {
 				const GValue *value;
-				value = gda_parameter_get_value (param);
-				if (value && gda_value_isa ((GValue *) value, G_TYPE_STRING)) {
+				value = gda_holder_get_value (holder);
+				if (value && (G_VALUE_TYPE (value) == G_TYPE_STRING)) {
 					const gchar *str;
 
 					str = g_value_get_string ((GValue *) value);
@@ -1175,11 +1168,11 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 				else 
 					g_warning (_("The 'QUOTE' parameter must hold a string value, ignored."));
 			}
-			param = gda_parameter_list_find_param (options, "FIELD_QUOTE");
-			if (param) {
+			holder = gda_set_get_holder (options, "FIELD_QUOTE");
+			if (holder) {
 				const GValue *value;
-				value = gda_parameter_get_value (param);
-				if (value && gda_value_isa ((GValue *) value, G_TYPE_BOOLEAN)) 
+				value = gda_holder_get_value (holder);
+				if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))
 					field_quote = g_value_get_boolean ((GValue *) value);
 				else 
 					g_warning (_("The 'FIELD_QUOTE' parameter must hold a boolean value, ignored."));
@@ -1245,24 +1238,24 @@ gda_data_model_export_to_file (GdaDataModel *model, GdaDataModelIOFormat format,
 			       const gchar *file,
 			       const gint *cols, gint nb_cols, 
 			       const gint *rows, gint nb_rows, 
-			       GdaParameterList *options, GError **error)
+			       GdaSet *options, GError **error)
 {
 	gchar *body;
 	gboolean overwrite = FALSE;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (!options || GDA_IS_PARAMETER_LIST (options), FALSE);
+	g_return_val_if_fail (!options || GDA_IS_SET (options), FALSE);
 	g_return_val_if_fail (file, FALSE);
 
 	body = gda_data_model_export_to_string (model, format, cols, nb_cols, rows, nb_cols, options);
 	if (options) {
-		GdaParameter *param;
+		GdaHolder *holder;
 		
-		param = gda_parameter_list_find_param (options, "OVERWRITE");
-		if (param) {
+		holder = gda_set_get_holder (options, "OVERWRITE");
+		if (holder) {
 			const GValue *value;
-			value = gda_parameter_get_value (param);
-			if (value && gda_value_isa ((GValue *) value, G_TYPE_BOOLEAN))
+			value = gda_holder_get_value (holder);
+			if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))
 				overwrite = g_value_get_boolean ((GValue *) value);
 			else
 				g_warning (_("The 'OVERWRITE' parameter must hold a boolean value, ignored."));
@@ -1380,24 +1373,16 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 	xmlNodePtr node;
 	gint i;
 	gint *rcols, rnb_cols;
-	gchar *arrayid;
-	gchar *str;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
-	node = xmlNewNode (NULL, (xmlChar*)"gda_array");
-	
-	str = (gchar *) gda_object_get_id (GDA_OBJECT (model));
-	if (str)
-		arrayid = g_strdup_printf ("DA%s", str);
-	else
-		arrayid = g_strdup ("EXPORT");
-	xmlSetProp (node, (xmlChar*)"id", (xmlChar*)arrayid);
+	node = xmlNewNode (NULL, BAD_CAST "gda_array");
+	xmlSetProp (node, BAD_CAST "id", BAD_CAST "EXPORT");
 
 	if (name)
-		xmlSetProp (node, (xmlChar*)"name", (xmlChar*)name);
+		xmlSetProp (node, BAD_CAST "name", BAD_CAST name);
 	else
-		xmlSetProp (node, (xmlChar*)"name", (xmlChar*)_("Exported Data"));
+		xmlSetProp (node, BAD_CAST "name", BAD_CAST _("Exported Data"));
 
 	/* compute columns if not provided */
 	if (!cols) {
@@ -1424,21 +1409,21 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 			return NULL;
 		}
 
-		field = xmlNewChild (node, NULL, (xmlChar*)"gda_array_field", NULL);
-		str = g_strdup_printf ("%s:FI%d", arrayid, i);
-		xmlSetProp (field, (xmlChar*)"id", (xmlChar*)str);
+		field = xmlNewChild (node, NULL, BAD_CAST "gda_array_field", NULL);
+		str = g_strdup_printf ("FI%d", i);
+		xmlSetProp (field, BAD_CAST "id", BAD_CAST str);
 		g_free (str);
-		xmlSetProp (field, (xmlChar*)"name", (xmlChar*)gda_column_get_name (column));
+		xmlSetProp (field, BAD_CAST "name", BAD_CAST gda_column_get_name (column));
 		cstr = gda_column_get_title (column);
 		if (cstr && *cstr)
-			xmlSetProp (field, (xmlChar*)"title", (xmlChar*)cstr);
+			xmlSetProp (field, BAD_CAST "title", BAD_CAST cstr);
 		cstr = gda_column_get_caption (column);
 		if (cstr && *cstr)
-			xmlSetProp (field, (xmlChar*)"caption", (xmlChar*)cstr);
+			xmlSetProp (field, BAD_CAST "caption", BAD_CAST cstr);
 		cstr = gda_column_get_dbms_type (column);
 		if (cstr && *cstr)
-			xmlSetProp (field, (xmlChar*)"dbms_type", (xmlChar*)cstr);
-		xmlSetProp (field, (xmlChar*)"gdatype", (xmlChar*)gda_g_type_to_string (gda_column_get_g_type (column)));
+			xmlSetProp (field, BAD_CAST "dbms_type", BAD_CAST cstr);
+		xmlSetProp (field, BAD_CAST "gdatype", BAD_CAST gda_g_type_to_string (gda_column_get_g_type (column)));
 		if (gda_column_get_defined_size (column) != 0)
 			xml_set_int (field, "size", gda_column_get_defined_size (column));
 		if (gda_column_get_scale (column) != 0)
@@ -1453,10 +1438,10 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 			xml_set_boolean (field, "auto_increment", gda_column_get_auto_increment (column));
 		cstr = gda_column_get_references (column);
 		if (cstr && *cstr)
-			xmlSetProp (field, (xmlChar*)"ref", (xmlChar*)cstr);
+			xmlSetProp (field, BAD_CAST "ref", BAD_CAST cstr);
 		cstr = gda_column_get_table (column);
 		if (cstr && *cstr)
-			xmlSetProp (field, (xmlChar*)"table", (xmlChar*)cstr);
+			xmlSetProp (field, BAD_CAST "table", BAD_CAST cstr);
 	}
 	
 	/* add the model data to the XML output */
@@ -1465,7 +1450,6 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 	if (!cols)
 		g_free (rcols);
 
-	g_free (arrayid);
 	return node;
 }
 
@@ -1533,13 +1517,13 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 			continue;
 		}
 		
-		this_lang = xmlGetProp (xml_field, (xmlChar*)"lang");
+		this_lang = xmlGetProp (xml_field, BAD_CAST "lang");
 		if (this_lang && strncmp ((gchar*)this_lang, lang, strlen ((gchar*)this_lang))) {
 			xmlFree (this_lang);
 			continue;
 		}
 
-		colid = xmlGetProp (xml_field, (xmlChar*)"colid");
+		colid = xmlGetProp (xml_field, BAD_CAST "colid");
 
 		/* create the value for this field */
 		if (!colid) {
@@ -1564,7 +1548,7 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 			break;
 		}
 
-		isnull = (gchar*)xmlGetProp (xml_field, (xmlChar*)"isnull");
+		isnull = (gchar*)xmlGetProp (xml_field, BAD_CAST "isnull");
 		if (isnull) {
 			if ((*isnull == 'f') || (*isnull == 'F')) {
 				g_free (isnull);
@@ -1707,7 +1691,7 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 	/* make a list of the parameters which will be used during copy (stored in reverse order!) ,
 	 * an some tests */
 	for (i = 0; i < to_nb_cols; i++) {
-		GdaParameter *param = NULL;
+		GdaHolder *param = NULL;
 		gint col; /* source column number */
 		GdaColumn *column;
 
@@ -1736,15 +1720,15 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 		}
 		if (param) {
 			if ((gda_column_get_g_type (column) != G_TYPE_INVALID) &&
-			    (gda_parameter_get_g_type (param) != G_TYPE_INVALID) &&
-			    !g_value_type_transformable (gda_parameter_get_g_type (param), 
+			    (gda_holder_get_g_type (param) != G_TYPE_INVALID) &&
+			    !g_value_type_transformable (gda_holder_get_g_type (param), 
 							 gda_column_get_g_type (column))) {
 				g_set_error (error, 0, 0,
 					     _("Destination column %d has a gda type (%s) incompatible with "
 					       "source column %d type (%s)"), i,
 					     gda_g_type_to_string (gda_column_get_g_type (column)),
 					     col,
-					     gda_g_type_to_string (gda_parameter_get_g_type (param)));
+					     gda_g_type_to_string (gda_holder_get_g_type (param)));
 				return FALSE;
 			}
 		}
@@ -1758,14 +1742,12 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 	 * - a GValue of a different type is the value must be converted from the ser data model
 	 */
 	append_types = g_new0 (GType, to_nb_cols);
-	plist = copy_params;
-	i = 0;
-	while (plist) {
+	for (plist = copy_params, i = 0; plist; plist = plist->next, i++) {
 		GdaColumn *column;
 
 		column = gda_data_model_describe_column (to, i);
 		if (plist->data) {
-			if ((gda_parameter_get_g_type (GDA_PARAMETER (plist->data)) != 
+			if ((gda_holder_get_g_type (GDA_HOLDER (plist->data)) != 
 			     gda_column_get_g_type (column)) &&
 			    (gda_column_get_g_type (column) != G_TYPE_INVALID)) {
 				GValue *newval;
@@ -1780,9 +1762,6 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 		}
 		else
 			append_values = g_list_prepend (append_values, gda_value_new_null ());
-
-		plist = g_slist_next (plist);
-		i++;
 	}
 	
 	/* actual data copy (no memory allocation is needed here) */
@@ -1805,7 +1784,7 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 
 			value = (GValue *) (avlist->data);
 			if (plist->data) {
-				value = (GValue *) gda_parameter_get_value (GDA_PARAMETER (plist->data));
+				value = (GValue *) gda_holder_get_value (GDA_HOLDER (plist->data));
 				if (avlist->data) {
 					if (append_types [i] && gda_value_is_null ((GValue *) (avlist->data))) 
 						g_value_init ((GValue *) (avlist->data), append_types [i]);
@@ -1894,13 +1873,13 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 gboolean
 gda_data_model_import_from_string (GdaDataModel *model,
 				   const gchar *string, GHashTable *cols_trans,
-				   GdaParameterList *options, GError **error)
+				   GdaSet *options, GError **error)
 {
 	GdaDataModel *import;
 	gboolean retval;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (!options || GDA_IS_PARAMETER_LIST (options), FALSE);
+	g_return_val_if_fail (!options || GDA_IS_SET (options), FALSE);
 	if (!string)
 		return TRUE;
 
@@ -1926,13 +1905,13 @@ gda_data_model_import_from_string (GdaDataModel *model,
 gboolean
 gda_data_model_import_from_file (GdaDataModel *model, 
 				 const gchar *file, GHashTable *cols_trans,
-				 GdaParameterList *options, GError **error)
+				 GdaSet *options, GError **error)
 {
 	GdaDataModel *import;
 	gboolean retval;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (!options || GDA_IS_PARAMETER_LIST (options), FALSE);
+	g_return_val_if_fail (!options || GDA_IS_SET (options), FALSE);
 	if (!file)
 		return TRUE;
 
@@ -2162,7 +2141,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 	/* actual dumping of the contents: title */
 	if (dump_title) {
 		const gchar *title;
-		title = gda_object_get_name (GDA_OBJECT (model));
+		title = g_object_get_data (G_OBJECT (model), "name");
 		if (title) {
 			gint total_width = n_cols -1, i;
 

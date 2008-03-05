@@ -7,7 +7,7 @@ sqliteinc= -I$(top_srcdir)/libgda/sqlite/sqlite-src \
 	-I$(top_builddir)/libgda/sqlite/sqlite-src 
 endif
 
-noinst_LTLIBRARIES = libgda-virtual-3.0.la
+noinst_LTLIBRARIES = libgda-virtual-4.0.la
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
@@ -28,7 +28,7 @@ virtual_headers = \
 	gda-virtual-provider.h \
 	libgda-virtual.h
 
-libgda_virtual_3_0_la_SOURCES = \
+libgda_virtual_4_0_la_SOURCES = \
 	$(virtual_headers) \
 	gda-vconnection-data-model.c \
 	gda-vconnection-data-model-private.h \
@@ -41,7 +41,7 @@ libgda_virtual_3_0_la_SOURCES = \
 gdaincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/virtual
 gdainclude_HEADERS=$(virtual_headers)
 
-xmldir   = $(datadir)/libgda-3.0
+xmldir   = $(datadir)/libgda-4.0
 xml_in_files = 
 
 @INTLTOOL_XML_RULE@

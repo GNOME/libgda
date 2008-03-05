@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 2007 The GNOME Foundation.
+ * Copyright (C) 2007 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Pawe³ Cesar Sanjuan Szklarz <paweld2@gmail.com>
@@ -31,11 +31,10 @@ G_BEGIN_DECLS
 #define GDA_XSLT_EXTENSION_URI "http://www.gnome-db.org/ns/gda-sql-ext"
 struct _GdaXsltExCont
 {
-	int init;
+	int            init;
 	GdaConnection *cnc;
-	GdaDict *gda_dict;
-	GHashTable *query_hash;
-	GError *error;
+	GHashTable    *query_hash;
+	GError        *error;
 };
 typedef struct _GdaXsltExCont GdaXsltExCont;
 

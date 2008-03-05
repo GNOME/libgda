@@ -1,9 +1,9 @@
 /* GDA SQLite provider
- * Copyright (C) 1998 - 2007 The GNOME Foundation.
+ * Copyright (C) 1998 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
- *	Carlos Perelló Marín <carlos@gnome-db.org>
+ *	Carlos PerellÃ³ MarÃ­n <carlos@gnome-db.org>
  *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
@@ -27,8 +27,7 @@
 
 #include <glib/gmacros.h>
 #include <glib/gtypes.h>
-#include <libgda/gda-value.h>
-#include <libgda/gda-connection.h>
+#include <libgda/libgda.h>
 
 #ifdef HAVE_SQLITE
 #include <sqlite3.h>
@@ -36,34 +35,21 @@
 #include "sqlite-src/sqlite3.h"
 #endif
 
-#define GDA_SQLITE_PROVIDER_ID    "GDA SQLite provider"
-#define OBJECT_DATA_SQLITE_HANDLE "GDA_Sqlite_SqliteHandle"
-
-typedef struct {
-	gint          ref_count;
-	sqlite3_stmt *sqlite_stmt;
-	gboolean      stmt_used; /* TRUE if sqlite3_step() might be called again on this @sqlite_stmt */
-
-	gchar        *sql; /* actual SQL code used to prepare @sqlite_stmt */
-	GSList       *param_ids; /* list of parameters' IDs (as gchar *) */
-
-	gint          ncols;
-	gint          nrows;
-	GType        *types; /* array of ncols types */
-	int          *cols_size; /* array of ncols types */
-} SQLitePreparedStatement;
-
+/*
+ * Provider's specific connection data
+ */
 typedef struct {
 	sqlite3      *connection;
 	gchar        *file;
 	GHashTable   *types; /* key = type name, value = GType */
 	GdaDataModel *functions_model;
 	GdaDataModel *aggregates_model;
-} SQLITEcnc;
+} SqliteConnectionData;
 
 
-void _gda_sqlite_update_types_hash (SQLITEcnc *scnc);
-
-void _gda_sqlite_prepared_statement_free (SQLitePreparedStatement *ps);
+/* 
+ * Utility functions
+ */
+void _gda_sqlite_update_types_hash (SqliteConnectionData *scnc);
 
 #endif

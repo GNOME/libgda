@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2006 - 2007 The GNOME Foundation.
+ * Copyright (C) 2006 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -25,11 +25,11 @@
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-enums.h>
-#include <libgda/gda-parameter.h>
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-data-model-extra.h>
 #include <libgda/gda-data-model-iter.h>
 #include <libgda/gda-row.h>
+#include <libgda/gda-holder.h>
 
 
 struct _GdaDataAccessWrapperPrivate {
@@ -75,9 +75,6 @@ static GdaColumn           *gda_data_access_wrapper_describe_column (GdaDataMode
 static GdaDataModelAccessFlags gda_data_access_wrapper_get_access_flags(GdaDataModel *model);
 static const GValue      *gda_data_access_wrapper_get_value_at    (GdaDataModel *model, gint col, gint row);
 static GdaValueAttribute    gda_data_access_wrapper_get_attributes_at (GdaDataModel *model, gint col, gint row);
-#ifdef GDA_DEBUG
-static void gda_data_access_wrapper_dump (GdaDataAccessWrapper *model, guint offset);
-#endif
 
 static void iter_row_changed_cb (GdaDataModelIter *iter, gint row, GdaDataAccessWrapper *model);
 static void iter_end_of_data_cb (GdaDataModelIter *iter, GdaDataAccessWrapper *model);
@@ -115,7 +112,7 @@ gda_data_access_wrapper_get_type (void)
 			NULL
 		};
 
-		type = g_type_register_static (GDA_TYPE_OBJECT, "GdaDataAccessWrapper", &info, 0);
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaDataAccessWrapper", &info, 0);
 		g_type_add_interface_static (type, GDA_TYPE_DATA_MODEL, &data_model_info);
 	}
 	return type;
@@ -140,12 +137,6 @@ gda_data_access_wrapper_class_init (GdaDataAccessWrapperClass *klass)
 	/* virtual functions */
 	object_class->dispose = gda_data_access_wrapper_dispose;
 	object_class->finalize = gda_data_access_wrapper_finalize;
-#ifdef GDA_DEBUG
-        GDA_OBJECT_CLASS (klass)->dump = (void (*)(GdaObject *, guint)) gda_data_access_wrapper_dump;
-#endif
-
-	/* class attributes */
-	GDA_OBJECT_CLASS (klass)->id_unique_enforced = FALSE;
 }
 
 static void
@@ -204,29 +195,6 @@ model_row_removed_cb (GdaDataModel *mod, gint row, GdaDataAccessWrapper *model)
 }
 
 static void
-data_model_destroyed_cb (GdaDataModel *mod, GdaDataAccessWrapper *model)
-{
-	g_assert (model->priv->model == mod);
-	g_signal_handlers_disconnect_by_func (mod, G_CALLBACK (data_model_destroyed_cb), model);
-
-	if (model->priv->rows) {
-		g_hash_table_destroy (model->priv->rows);
-		model->priv->rows = NULL;
-	}
-	else {
-		g_signal_handlers_disconnect_by_func (G_OBJECT (mod),
-						      G_CALLBACK (model_row_inserted_cb), model);
-		g_signal_handlers_disconnect_by_func (G_OBJECT (mod),
-						      G_CALLBACK (model_row_updated_cb), model);
-		g_signal_handlers_disconnect_by_func (G_OBJECT (mod),
-						      G_CALLBACK (model_row_removed_cb), model);
-	}
-	model->priv->model = NULL;
-
-	g_object_unref (mod);
-}
-
-static void
 gda_data_access_wrapper_dispose (GObject *object)
 {
 	GdaDataAccessWrapper *model = (GdaDataAccessWrapper *) object;
@@ -251,8 +219,22 @@ gda_data_access_wrapper_dispose (GObject *object)
 		}
 
 		/* random access model free */
-		if (model->priv->model) 
-			data_model_destroyed_cb (model->priv->model, model);
+		if (model->priv->model) {
+			if (model->priv->rows) {
+				g_hash_table_destroy (model->priv->rows);
+				model->priv->rows = NULL;
+			}
+			else {
+				g_signal_handlers_disconnect_by_func (G_OBJECT (model->priv->model),
+								      G_CALLBACK (model_row_inserted_cb), model);
+				g_signal_handlers_disconnect_by_func (G_OBJECT (model->priv->model),
+								      G_CALLBACK (model_row_updated_cb), model);
+				g_signal_handlers_disconnect_by_func (G_OBJECT (model->priv->model),
+								      G_CALLBACK (model_row_removed_cb), model);
+			}
+			g_object_unref (model->priv->model);
+			model->priv->model = NULL;
+		}
 	}
 
 	/* chain to parent class */
@@ -317,8 +299,6 @@ gda_data_access_wrapper_set_property (GObject *object,
 
 				model->priv->model = mod;
 				g_object_ref (mod);
-				gda_object_connect_destroy (GDA_OBJECT (mod), 
-							    G_CALLBACK (data_model_destroyed_cb), model);
 				model->priv->nb_cols = gda_data_model_get_n_columns (mod);
 			}
 			break;
@@ -368,7 +348,6 @@ gda_data_access_wrapper_new (GdaDataModel *model)
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 	
 	retmodel = g_object_new (GDA_TYPE_DATA_ACCESS_WRAPPER,
-				 "dict", gda_object_get_dict (GDA_OBJECT (model)),
 				 "model", model, NULL);
 			      
 	return GDA_DATA_MODEL (retmodel);
@@ -396,31 +375,6 @@ gda_data_access_wrapper_row_exists (GdaDataAccessWrapper *wrapper, gint row)
 	else
 		return FALSE;
 }
-
-#ifdef GDA_DEBUG
-static void
-gda_data_access_wrapper_dump (GdaDataAccessWrapper *model, guint offset)
-{
-	gchar *str;
-
-	str = g_new0 (gchar, offset+1);
-	memset (str, ' ', offset);
-	if (model->priv) {
-		gint i;
-		if (model->priv->rows) {
-			for (i = 0; i <= model->priv->last_row; i++) {
-				GdaRow *row = g_hash_table_lookup (model->priv->rows, GINT_TO_POINTER (i));
-				g_print ("%srow %d: %s\n", str, i, row ? "SET" : "---");
-			}
-		}
-		if (model->priv->model) 
-			gda_data_model_dump (model->priv->model, stdout);
-	}
-	else
-		g_print ("%s" D_COL_ERR "Using finalized object %p" D_COL_NOR, str, model);
-	g_free (str);
-}
-#endif
 
 /*
  * GdaDataModel interface implementation
@@ -497,11 +451,11 @@ create_new_row (GdaDataAccessWrapper *model)
 
 	row = gda_row_new ((GdaDataModel *) model, model->priv->nb_cols);
 	for (i = 0; i < model->priv->nb_cols; i++) {
-		GdaParameter *param;
+		GdaHolder *holder;
 
-		param = gda_data_model_iter_get_param_for_column (model->priv->iter, i);
-		if (param)
-			gda_row_set_value (row, i, gda_parameter_get_value (param));
+		holder = gda_data_model_iter_get_param_for_column (model->priv->iter, i);
+		if (holder)
+			gda_row_set_value (row, i, gda_holder_get_value (holder));
 	}
 
 	g_hash_table_insert (model->priv->rows, GINT_TO_POINTER (model->priv->iter_row), row);

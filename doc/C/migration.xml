@@ -1,5 +1,5 @@
-<chapter id="migration">
-  <title>Migration from older versions</title>
+<chapter id="migration-1">
+  <title>Migration from 1.X versions</title>
   <sect1><title>GdaValue and GdaDataModel changes</title>
     <para>Libgda values were stored in <classname>GdaValue</classname> structures, this is no longer the case
       as the standard <classname>GValue</classname> container is now used. As a consequence data types are now

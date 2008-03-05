@@ -8,7 +8,7 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
 	$(MDB_CFLAGS) \
-	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-3.0"\"
+	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-4.0"\"
 
 libgda_mdb_la_SOURCES = \
 	gda-mdb-provider.c \
@@ -18,11 +18,11 @@ libgda_mdb_la_SOURCES = \
 
 libgda_mdb_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_mdb_la_LIBADD = \
-	$(top_builddir)/libgda/libgda-3.0.la \
+	$(top_builddir)/libgda/libgda-4.0.la \
 	$(LIBGDA_LIBS) \
 	$(MDB_LIBS)
 
-xmldir   = $(datadir)/libgda-3.0
+xmldir   = $(datadir)/libgda-4.0
 xml_in_files = mdb_specs_dsn.xml.in
 
 @INTLTOOL_XML_RULE@
@@ -30,9 +30,9 @@ xml_in_files = mdb_specs_dsn.xml.in
 xml_DATA = $(xml_in_files:.xml.in=.xml)
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = libgda-mdb-3.0.pc
+pkgconfig_DATA = libgda-mdb-4.0.pc
 
-EXTRA_DIST = $(xml_in_files) libgda-mdb-3.0.pc.in
+EXTRA_DIST = $(xml_in_files) libgda-mdb-4.0.pc.in
 DISTCLEANFILES = $(xml_DATA)
 
 

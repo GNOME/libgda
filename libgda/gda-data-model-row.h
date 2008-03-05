@@ -24,8 +24,7 @@
 #ifndef __GDA_DATA_MODEL_ROW_H__
 #define __GDA_DATA_MODEL_ROW_H__
 
-#include <libgda/gda-object.h>
-#include <libgda/gda-command.h>
+#include <glib-object.h>
 #include <libgda/gda-value.h>
 #include <libgda/gda-row.h>
 
@@ -42,12 +41,12 @@ typedef struct _GdaDataModelRowClass   GdaDataModelRowClass;
 typedef struct _GdaDataModelRowPrivate GdaDataModelRowPrivate;
 
 struct _GdaDataModelRow {
-	GdaObject               object;
+	GObject                 object;
 	GdaDataModelRowPrivate *priv;
 };
 
 struct _GdaDataModelRowClass {
-	GdaObjectClass parent_class;
+	GObjectClass            parent_class;
 
 	/* virtual methods */
 	gint                (* get_n_rows)      (GdaDataModelRow *model);

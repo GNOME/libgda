@@ -1,6 +1,6 @@
 m4_define(major, 3)
-m4_define(minor, 1)
-m4_define(micro, 3)
+m4_define(minor, 99)
+m4_define(micro, 1)
 
 AC_INIT(GNU Data Access, major.minor.micro, gnome-db-list@gnome.org, libgda)
 AC_PREREQ(2.59)
@@ -12,10 +12,11 @@ AC_SUBST(GDA_VERSION, major.minor.micro)
 # ABI version:
 # Careful. Changing these will break ABI, because it is used for the library name and header install path:
 # This allows us to do a 3.2 version that is ABI-compatible with 3.0, but with API additions.
-AC_SUBST(GDA_ABI_MAJOR_VERSION, 3)
+AC_SUBST(GDA_ABI_MAJOR_VERSION, 4)
 AC_SUBST(GDA_ABI_MINOR_VERSION, 0)
 #AC_SUBST(GDA_MICRO_VERSION, micro)
 LIBGDA_ABI_VERSION=$GDA_ABI_MAJOR_VERSION.$GDA_ABI_MINOR_VERSION
+AC_SUBST(GDA_ABI_VERSION, $LIBGDA_ABI_VERSION)
 LIBGDA_ABI_NAME="\\\"libgda-$LIBGDA_ABI_VERSION\\\""
 
 m4_undefine([major])
@@ -31,9 +32,9 @@ m4_define([req_ver_glib],	[2.8.0])
 # - If binary compatibility has been broken (e.g. removed or changed interfaces), set GDA_CURRENT += 1, GDA_REVISION and GDA_AGE to 0
 # - If interfaces is the same as the previous version, set GDA_REVISION += 1
 #
-GDA_CURRENT=3
+GDA_CURRENT=4
 GDA_REVISION=0
-GDA_AGE=1
+GDA_AGE=0
 
 AC_SUBST(GDA_CURRENT)
 AC_SUBST(GDA_REVISION)
@@ -42,7 +43,7 @@ AC_SUBST(GDA_AGE)
 AC_PROG_INTLTOOL([0.35.5])
 AC_SUBST(INTLTOOL_XML_RULE)
 
-AC_DEFINE_UNQUOTED(BONOBO_EXPLICIT_TRANSLATION_DOMAIN, "libgda-3.0")
+AC_DEFINE_UNQUOTED(BONOBO_EXPLICIT_TRANSLATION_DOMAIN, "libgda-$LIBGDA_ABI_VERSION")
 
 dnl **********************
 dnl Cross compilation test
@@ -107,11 +108,17 @@ AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 dnl ******************************
 dnl Translations
 dnl ******************************
-GETTEXT_PACKAGE=libgda-3.0
+GETTEXT_PACKAGE=libgda-$LIBGDA_ABI_VERSION
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE")
 ALL_LINGUAS="ar az ca cs da de dz el en_CA en_GB es eu fa fi fr ga gl hr hu it ja ko lt mk ml ms nb ne nl oc pa pl pt pt_BR ru rw sk sl sq sr sr@Latn sv tr uk vi zh_CN zh_HK zh_TW"
 AM_GLIB_GNU_GETTEXT
+
+
+dnl ******************************
+dnl Check for pkg-config version; want >= 0.18 because we need PKG_CHECK_EXISTS
+dnl ******************************
+PKG_PROG_PKG_CONFIG([0.18])
 
 dnl ******************************
 dnl Checks for libraries
@@ -183,39 +190,6 @@ else
 fi
 AC_SUBST(FAM_LIBS)
 AC_SUBST(FAM_CFLAGS)
-
-dnl ******************************
-dnl Checks for libgcrypt
-dnl ******************************
-LIBGCRYPT_CFLAGS=""
-LIBGCRYPT_LIBS=""
-if test x$platform_win32 != xyes; then
-        AC_DEFUN([VERSION_TO_NUMBER],[`$1 | awk 'BEGIN { FS = "."; } { printf "%d", ([$]1 * 1000 + [$]2) * 1000 + [$]3;}'`])
-        AC_PATH_PROG(LIBGCRYPT_CONFIG, libgcrypt-config, no)
-        if test "$LIBGCRYPT_CONFIG" != "no" ; then
-                LIBGCRYPT_VERSION=`$LIBGCRYPT_CONFIG --version`
-                if test VERSION_TO_NUMBER(echo $LIBGCRYPT_VERSION) -lt VERSION_TO_NUMBER(echo "1.1.42") ; then
-                        LIBGCRYPT_CFLAGS=""
-                        LIBGCRYPT_LIBS=""
-                        AM_CONDITIONAL(HAVE_LIBGCRYPT, 0)
-                        echo "GdaDataModelDir object won't compute MD5 column, install libgcrypt >= 1.1.42 and reconfigure to make available."
-                else
-                        LIBGCRYPT_CFLAGS="`$LIBGCRYPT_CONFIG $libgcrypt_config_args --cflags` -DHAVE_LIBGCRYPT"
-                        LIBGCRYPT_LIBS=`$LIBGCRYPT_CONFIG $libgcrypt_config_args --libs`
-                        AM_CONDITIONAL(HAVE_LIBGCRYPT, true)
-                fi
-        else
-        LIBGCRYPT_CFLAGS=""
-        LIBGCRYPT_LIBS=""
-        AM_CONDITIONAL(HAVE_LIBGCRYPT, 0)
-        echo "GdaDataModelDir object won't compute MD5 column, install libgcrypt and reconfigure to make available."
-        fi
-else
-        AM_CONDITIONAL(HAVE_LIBGCRYPT, false)
-fi
-
-AC_SUBST(LIBGCRYPT_CFLAGS)
-AC_SUBST(LIBGCRYPT_LIBS)
 
 dnl ******************************
 dnl Checks for Gnome VFS
@@ -299,10 +273,13 @@ fi
 bdbdir=""
 if test $try_bdb = true
 then
-	AC_CHECK_HEADER(db.h, bdb_ok=yes, bdb_ok=no, [])
-	if test $bdb_ok = yes ; then
-		bdbdir=yes
-		BDB_LIBS="-ldb"
+	if test $withval = yes
+	then
+		AC_CHECK_HEADER(db.h, bdb_ok=yes, bdb_ok=no, [])
+		if test $bdb_ok = yes ; then
+		        bdbdir=yes
+		   	BDB_LIBS="-ldb"
+		fi
 	else
 		AC_MSG_CHECKING(for Berkeley DB files)
 		for d in $dir /usr /usr/local
@@ -1125,7 +1102,7 @@ AC_SUBST(LIB_SUFFIX)
 dnl
 dnl where to install DTD files
 dnl
-LIBGDA_DTDDIR=${datadir}/libgda-3.0/dtd
+LIBGDA_DTDDIR=${datadir}/libgda-$LIBGDA_ABI_VERSION/dtd
 AC_SUBST(LIBGDA_DTDDIR)
 
 
@@ -1166,19 +1143,6 @@ AC_SUBST(XBASE_LIBS)
 AC_SUBST(XBASE_CFLAGS)
 
 dnl
-dnl Check if the "check" testing unit is found (http://check.sourceforge.net/)
-dnl
-Check_MODULES="check"
-PKG_CHECK_MODULES(CHECK, $Check_MODULES, have_check=yes, have_check=no)
-AM_CONDITIONAL(HAVE_CHECK, test x"$have_check" = "xyes")
-if test x"$have_check" = "xyes"
-then
-	CHECK_CFLAGS="$CHECK_CFLAGS -DHAVE_CHECK"
-fi
-AC_SUBST(CHECK_CFLAGS)
-AC_SUBST(CHECK_LIBS)
-
-dnl
 dnl Check if lib should be build with the debug mode
 dnl
 AC_ARG_ENABLE(debug,
@@ -1210,51 +1174,53 @@ AC_SUBST(REBUILD)
 AC_OUTPUT([
 Makefile
 libgda.spec
-libgda-3.0.pc
-libgda-report-3.0.pc
-libgda-xslt-3.0.pc
+libgda-4.0.pc
+libgda-report-4.0.pc
+libgda-xslt-4.0.pc
 po/Makefile.in
-libsql/Makefile
 libgda/Makefile
 libgda/libgda.h
 libgda/binreloc/Makefile
 libgda/handlers/Makefile
-libgda/sql-delimiter/Makefile
+libgda/providers-support/Makefile
 libgda/sql-parser/Makefile
-libgda/sql-transaction/Makefile
 libgda/sqlite/Makefile
 libgda/sqlite/sqlite-src/Makefile
 libgda/sqlite/virtual/Makefile
-libgda/graph/Makefile
 providers/Makefile
 providers/bdb/Makefile
-providers/bdb/libgda-bdb-3.0.pc
+providers/bdb/libgda-bdb-4.0.pc
 providers/freetds/Makefile
-providers/freetds/libgda-freetds-3.0.pc
+providers/freetds/libgda-freetds-4.0.pc
 providers/firebird/Makefile
-providers/firebird/libgda-firebird-3.0.pc
+providers/firebird/libgda-firebird-4.0.pc
 providers/ibmdb2/Makefile
-providers/ibmdb2/libgda-ibmdb2-3.0.pc
+providers/ibmdb2/libgda-ibmdb2-4.0.pc
 providers/ldap/Makefile
-providers/ldap/libgda-ldap-3.0.pc
+providers/ldap/libgda-ldap-4.0.pc
 providers/mdb/Makefile
-providers/mdb/libgda-mdb-3.0.pc
+providers/mdb/libgda-mdb-4.0.pc
 providers/mysql/Makefile
-providers/mysql/libgda-mysql-3.0.pc
+providers/mysql/libgda-mysql-4.0.pc
 providers/msql/Makefile
-providers/msql/libgda-msql-3.0.pc
+providers/msql/libgda-msql-4.0.pc
 providers/odbc/Makefile
-providers/odbc/libgda-odbc-3.0.pc
+providers/odbc/libgda-odbc-4.0.pc
 providers/oracle/Makefile
-providers/oracle/libgda-oracle-3.0.pc
+providers/oracle/libgda-oracle-4.0.pc
 providers/postgres/Makefile
-providers/postgres/libgda-postgres-3.0.pc
+providers/postgres/libgda-postgres-4.0.pc
 providers/sqlite/Makefile
-providers/sqlite/libgda-sqlite-3.0.pc
+providers/sqlite/libgda-sqlite-4.0.pc
 providers/sybase/Makefile
-providers/sybase/libgda-sybase-3.0.pc
+providers/sybase/libgda-sybase-4.0.pc
 providers/xbase/Makefile
-providers/xbase/libgda-xbase-3.0.pc
+providers/xbase/libgda-xbase-4.0.pc
+providers/skel-implementation/Makefile
+providers/skel-implementation/capi/Makefile
+providers/skel-implementation/capi/libgda-capi-4.0.pc
+providers/skel-implementation/models/Makefile
+providers/skel-implementation/models/libgda-models-4.0.pc
 libgda-report/Makefile
 libgda-report/engine/Makefile
 libgda-report/DocBook/Makefile
@@ -1266,15 +1232,13 @@ tools/Makefile
 testing/Makefile
 tests/Makefile
 tests/parser/Makefile
-tests/queries/Makefile
-tests/queries/dict_pg.xml
-tests/queries/bug_param_sql_dict.xml
 tests/data-models/Makefile
 tests/providers/Makefile
 tests/value-holders/Makefile
+tests/meta-store/Makefile
 doc/Makefile
 doc/C/Makefile
-doc/C/libgda-3.0.types
+doc/C/libgda-4.0.types
 data/Makefile
 stamp.h
 ])

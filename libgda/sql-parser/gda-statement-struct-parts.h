@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 Vivien Malerba
+ * Copyright (C) 2007 - 2008 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -66,11 +66,6 @@ void             gda_sql_expr_take_select    (GdaSqlExpr *expr, GdaSqlStatement 
 struct _GdaSqlField {
 	GdaSqlAnyPart       any;
 	gchar              *field_name;
-
-	/* GdaDict check */
-	gpointer            dict_field;
-	GdaSqlStatementFunc dict_func;
-	gpointer            dict_data;
 };
 GdaSqlField     *gda_sql_field_new            (GdaSqlAnyPart *parent);
 void             gda_sql_field_free           (GdaSqlField *field);
@@ -88,10 +83,8 @@ struct _GdaSqlTable
 	GdaSqlAnyPart       any;
 	gchar              *table_name;
 
-	/* GdaDict check */
-	gpointer            dict_table;
-	GdaSqlStatementFunc dict_func;
-	gpointer            dict_data;
+	/* GdaMetaStore check */
+	gpointer            full_table_name;
 };
 
 GdaSqlTable     *gda_sql_table_new            (GdaSqlAnyPart *parent);
@@ -111,9 +104,7 @@ struct _GdaSqlFunction {
 	GSList             *args_list;
 
 	/* GdaDict check */
-	gpointer            dict_function;
-	GdaSqlStatementFunc dict_func;
-	gpointer            dict_data;
+	gchar              *full_function_name;
 };
 
 GdaSqlFunction  *gda_sql_function_new            (GdaSqlAnyPart *parent);
@@ -150,6 +141,7 @@ typedef enum {
 	GDA_SQL_OPERATOR_ISNOTNULL,
 	GDA_SQL_OPERATOR_NOT,
 	GDA_SQL_OPERATOR_IN,
+	GDA_SQL_OPERATOR_NOTIN,
 
 	GDA_SQL_OPERATOR_CONCAT,
 	GDA_SQL_OPERATOR_PLUS,
@@ -204,10 +196,7 @@ struct _GdaSqlSelectField
 	gchar              *as; 
 
 	/* GdaDict check */
-	gpointer            dict_field;
-	gpointer            dict_table;
-	GdaSqlStatementFunc dict_func;
-	gpointer            dict_data;
+	gchar              *full_table_name;
 };
 
 GdaSqlSelectField *gda_sql_select_field_new            (GdaSqlAnyPart *parent);
@@ -231,9 +220,7 @@ struct _GdaSqlSelectTarget
 	gchar              *as; 
 
 	/* GdaDict check */
-	gpointer            dict_table;
-	GdaSqlStatementFunc dict_func;
-	gpointer            dict_data;
+	gchar              *full_table_name;
 };
 
 GdaSqlSelectTarget *gda_sql_select_target_new            (GdaSqlAnyPart *parent);
@@ -251,6 +238,7 @@ void                gda_sql_select_target_take_alias (GdaSqlSelectTarget *target
  */
 typedef enum {
 	GDA_SQL_SELECT_JOIN_CROSS,
+	GDA_SQL_SELECT_JOIN_NATURAL,
 	GDA_SQL_SELECT_JOIN_INNER,
 	GDA_SQL_SELECT_JOIN_LEFT,
 	GDA_SQL_SELECT_JOIN_RIGHT,

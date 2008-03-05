@@ -122,6 +122,15 @@ different classifications of the group of #GdaHolder values.
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_set_copy ##### -->
+<para>
+
+</para>
+
+@set: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_set_new_inline ##### -->
 <para>
 
@@ -137,7 +146,6 @@ different classifications of the group of #GdaHolder values.
 
 </para>
 
-@dict: 
 @xml_spec: 
 @error: 
 @Returns: 
@@ -148,7 +156,6 @@ different classifications of the group of #GdaHolder values.
 
 </para>
 
-@dict: 
 @xml_spec: 
 @error: 
 @Returns: 
@@ -160,6 +167,16 @@ different classifications of the group of #GdaHolder values.
 </para>
 
 @set: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_set_get_holder_value ##### -->
+<para>
+
+</para>
+
+@set: 
+@holder_id: 
 @Returns: 
 
 

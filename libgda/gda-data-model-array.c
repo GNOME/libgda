@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+ * Copyright (C) 1998 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -376,7 +376,7 @@ gda_data_model_array_new (gint cols)
 /**
  * gda_data_model_array_new_with_g_types
  * @cols: number of columns for rows in this data model.
- * @...: types of the columns of the model to create as #GType
+ * @...: types of the columns of the model to create as #GType, as many as indicated by @cols
  * 
  * Creates a new #GdaDataModel object with the column types as
  * specified.
@@ -427,8 +427,10 @@ gda_data_model_array_copy_model (GdaDataModel *src, GError **error)
 	nbfields = gda_data_model_get_n_columns (src);
 	model = gda_data_model_array_new (nbfields);
 
-	gda_object_set_name (GDA_OBJECT (model), gda_object_get_name (GDA_OBJECT (src)));
-	gda_object_set_description (GDA_OBJECT (model), gda_object_get_description (GDA_OBJECT (src)));
+	if (g_object_get_data (G_OBJECT (src), "name"))
+		g_object_set_data_full (G_OBJECT (model), "name", g_strdup (g_object_get_data (G_OBJECT (src), "name")), g_free);
+	if (g_object_get_data (G_OBJECT (src), "descr"))
+		g_object_set_data_full (G_OBJECT (model), "descr", g_strdup (g_object_get_data (G_OBJECT (src), "descr")), g_free);
 	for (i = 0; i < nbfields; i++) {
 		GdaColumn *copycol, *srccol;
 		gchar *colid;

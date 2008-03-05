@@ -1,5 +1,6 @@
 #include <libgda/libgda.h>
 #include <virtual/libgda-virtual.h>
+#include <sql-parser/gda-sql-parser.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,7 +25,6 @@ static gint          run_and_show_sql_select (GdaConnection *cnc, const gchar *s
 int
 main (int argc, char *argv [])
 {
-	GdaClient *client;
 	GOptionContext *context;
 	GdaDataModel *dir_model;
 	GError *error = NULL;
@@ -77,9 +77,8 @@ main (int argc, char *argv [])
 	cnc_string = g_strdup_printf ("DB_DIR=%s;DB_NAME=%s", cnc_dir_name, cnc_db_name);
 
 	/* open connection */
-	client = gda_client_new ();
-	cnc = gda_client_open_connection_from_string (client, "SQLite", cnc_string, NULL, NULL, 
-						      GDA_CONNECTION_OPTIONS_READ_ONLY, &error);
+	cnc = gda_connection_open_from_string ("SQLite", cnc_string, NULL, NULL, 
+					       GDA_CONNECTION_OPTIONS_READ_ONLY, &error);
 	if (!cnc) {
 		g_print ("Could not open connection to F-Spot database file: %s\n", 
 			 error && error->message ? error->message : "No detail");
@@ -96,8 +95,9 @@ main (int argc, char *argv [])
 
 	/* Set up Connection hub */
         provider = gda_vprovider_hub_new ();
-        hub = gda_server_provider_create_connection (NULL, GDA_SERVER_PROVIDER (provider), NULL, NULL, NULL, 0);
-        g_assert (gda_connection_open (hub, NULL));
+        hub = gda_virtual_connection (provider, NULL);
+        g_assert (hub);
+
 	if (!gda_vconnection_hub_add (GDA_VCONNECTION_HUB (hub), cnc, "spot", &error)) {
 		g_print ("Could not add F-Spot connection to hub: %s\n", 
 			 error && error->message ? error->message : "No detail");
@@ -179,13 +179,17 @@ run_and_show_sql_select (GdaConnection *cnc, const gchar *sql, const gchar *titl
 static GdaDataModel *
 run_sql_select (GdaConnection *cnc, const gchar *sql)
 {
-	GdaCommand *command;
+	GdaStatement *stmt;
 	GError *error = NULL;
 	GdaDataModel *res;
+	GdaSqlParser *parser;
 
-	command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, 0);
-        res = gda_connection_execute_select_command (cnc, command, NULL, &error);
-        gda_command_free (command);
+	parser = gda_connection_create_parser (cnc);
+	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+	g_object_unref (parser);
+
+        res = gda_connection_statement_execute_select (cnc, stmt, NULL, &error);
+        g_object_unref (stmt);
 	if (!res) 
 		g_error ("Could not execute query: %s\n", 
 			 error && error->message ? error->message : "no detail");
@@ -195,13 +199,17 @@ run_sql_select (GdaConnection *cnc, const gchar *sql)
 static void
 run_sql_non_select (GdaConnection *cnc, const gchar *sql)
 {
-        GdaCommand *command;
+	GdaStatement *stmt;
         GError *error = NULL;
         gint nrows;
+	GdaSqlParser *parser;
 
-        command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, 0);
-        nrows = gda_connection_execute_non_select_command (cnc, command, NULL, &error);
-        gda_command_free (command);
+	parser = gda_connection_create_parser (cnc);
+	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+	g_object_unref (parser);
+
+	nrows = gda_connection_statement_execute_non_select (cnc, stmt, NULL, NULL, &error);
+	g_object_unref (stmt);
         if (nrows == -1) 
                 g_error ("NON SELECT error: %s\n", error && error->message ? error->message : "no detail");
 }

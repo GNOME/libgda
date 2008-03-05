@@ -24,9 +24,14 @@ and <link linkend="GdaBlob">GdaBlob</link>:
 </para>
 
 <para>
-Note that a <link linkend="GdaBlob">GdaBlob</link> value will often not contain any data (or only some part of the actual BLOB)
-and that it's up to the user to use the associated <link linkend="GdaBlobOp">GdaBlobOp</link> object to "load" the data into
-the container (into the actual process heap).
+  Note that a <link linkend="GdaBlob">GdaBlob</link> value will often not contain any data (or only some part of the actual BLOB)
+  and that it's up to the user to use the associated <link linkend="GdaBlobOp">GdaBlobOp</link> object to "load" the data into
+  the container (into the actual process heap).
+</para>
+
+<para>
+  See the <link linkend="libgda-provider-blobop">Virtual methods for Blob operations</link> section for more information
+  about how to implement the virtual methods when creating a database provider.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

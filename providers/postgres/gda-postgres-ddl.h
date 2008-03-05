@@ -1,8 +1,10 @@
-/* GDA Postgres Provider
- * Copyright (C) 2006 The GNOME Foundation
+/* GDA postgres provider
+ * Copyright (C) 1998 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
+ *         Rodrigo Moya <rodrigo@gnome-db.org>
+ *         Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -26,25 +28,28 @@
 
 G_BEGIN_DECLS
 
-gchar *gda_postgres_render_CREATE_DB    (GdaServerProvider *provider, GdaConnection *cnc, 
-					 GdaServerOperation *op, GError **error);
-gchar *gda_postgres_render_DROP_DB      (GdaServerProvider *provider, GdaConnection *cnc, 
-					 GdaServerOperation *op, GError **error);
-gchar *gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc, 
-					 GdaServerOperation *op, GError **error);
-gchar *gda_postgres_render_RENAME_TABLE (GdaServerProvider *provider, GdaConnection *cnc, 
-					 GdaServerOperation *op, GError **error);
-gchar *gda_postgres_render_DROP_TABLE   (GdaServerProvider *provider, GdaConnection *cnc, 
-					 GdaServerOperation *op, GError **error);
-gchar *gda_postgres_render_ADD_COLUMN   (GdaServerProvider *provider, GdaConnection *cnc, 
-					 GdaServerOperation *op, GError **error);
-gchar *gda_postgres_render_DROP_COLUMN  (GdaServerProvider *provider, GdaConnection *cnc, 
-					 GdaServerOperation *op, GError **error);
-gchar *gda_postgres_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cnc, 
-					 GdaServerOperation *op, GError **error);
-gchar *gda_postgres_render_DROP_INDEX   (GdaServerProvider *provider, GdaConnection *cnc, 
-					 GdaServerOperation *op, GError **error);
-
+gchar *gda_postgres_render_CREATE_DB    (GdaServerProvider *provider, GdaConnection *cnc,
+                                         GdaServerOperation *op, GError **error);
+gchar *gda_postgres_render_DROP_DB      (GdaServerProvider *provider, GdaConnection *cnc,
+                                         GdaServerOperation *op, GError **error);
+gchar *gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
+                                         GdaServerOperation *op, GError **error);
+gchar *gda_postgres_render_RENAME_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
+                                         GdaServerOperation *op, GError **error);
+gchar *gda_postgres_render_DROP_TABLE   (GdaServerProvider *provider, GdaConnection *cnc,
+                                         GdaServerOperation *op, GError **error);
+gchar *gda_postgres_render_ADD_COLUMN   (GdaServerProvider *provider, GdaConnection *cnc,
+                                         GdaServerOperation *op, GError **error);
+gchar *gda_postgres_render_DROP_COLUMN  (GdaServerProvider *provider, GdaConnection *cnc,
+                                         GdaServerOperation *op, GError **error);
+gchar *gda_postgres_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cnc,
+                                         GdaServerOperation *op, GError **error);
+gchar *gda_postgres_render_DROP_INDEX   (GdaServerProvider *provider, GdaConnection *cnc,
+                                         GdaServerOperation *op, GError **error);
+gchar *gda_postgres_render_CREATE_VIEW  (GdaServerProvider *provider, GdaConnection *cnc,
+                                         GdaServerOperation *op, GError **error);
+gchar *gda_postgres_render_DROP_VIEW    (GdaServerProvider *provider, GdaConnection *cnc,
+                                         GdaServerOperation *op, GError **error);
 G_END_DECLS
 
 #endif

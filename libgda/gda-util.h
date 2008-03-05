@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 1998 - 2007 The GNOME Foundation.
+ * Copyright (C) 1998 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -26,7 +26,6 @@
 
 #include <glib/ghash.h>
 #include <glib/glist.h>
-#include "gda-parameter.h"
 #include "gda-holder.h"
 #include "gda-row.h"
 #include "gda-connection.h"
@@ -54,13 +53,6 @@ gchar    *gda_file_load (const gchar *filename);
 gboolean  gda_file_save (const gchar *filename, const gchar *buffer, gint len);
 
 /*
- * utilities dealing with storing and retreiving GdaDictField's attributes
- * which is a list of comma separated keywords
- */
-gchar *gda_utility_table_field_attrs_stringify (GdaValueAttribute attributes);
-guint  gda_utility_table_field_attrs_parse     (const gchar *str);
-
-/*
  * XML Id encoding and decoding
  */
 gchar *gda_utility_build_encoded_id (const gchar *prefix, const gchar *id);
@@ -73,18 +65,11 @@ gboolean gda_utility_check_data_model (GdaDataModel *model, gint nbcols, ...);
 void     gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent, 
 					      const gint *cols, gint nb_cols, const gint *rows, gint nb_rows,
 					      gboolean use_col_ids);
-void     gda_utility_parameter_load_attributes (GdaParameter *param, xmlNodePtr node, GSList *sources);
 void     gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *sources);
-GdaDictType *gda_utility_find_or_create_data_type (GdaDict *dict, GdaServerProvider *prov, GdaConnection *cnc, 
-					       const gchar *dbms_type, const gchar *g_type, gboolean *created);
 
 /* translate any text to an alphanumerical text */
 gchar *gda_text_to_alphanum (const gchar *text);
 gchar *gda_alphanum_to_text (gchar *text);
-
-/* GdaSet <=> GdaParameterList conversion */
-GdaSet           *gda_set_new_from_parameter_list (GdaParameterList *plist);
-GdaParameterList *gda_parameter_list_new_from_set (GdaSet *set, GdaDict *dict);
 
 G_END_DECLS
 

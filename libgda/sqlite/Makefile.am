@@ -28,7 +28,11 @@ libgda_sqlite_la_SOURCES = \
 	gda-sqlite-ddl.h \
 	gda-sqlite-handler-bin.c \
 	gda-sqlite-handler-bin.h \
+	gda-sqlite-meta.c \
+	gda-sqlite-meta.h \
 	gda-sqlite-provider.c \
+	gda-sqlite-pstmt.h \
+	gda-sqlite-pstmt.c \
 	gda-sqlite-recordset.c \
 	gda-sqlite-recordset.h \
 	gda-sqlite.h \
@@ -36,7 +40,7 @@ libgda_sqlite_la_SOURCES = \
 
 libgda_sqlite_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_sqlite_la_LIBADD = \
-	virtual/libgda-virtual-3.0.la \
+	virtual/libgda-virtual-4.0.la \
 	$(sqlitelibs) \
 	$(LIBGDA_LIBS)
 

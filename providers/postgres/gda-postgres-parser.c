@@ -1,6 +1,9 @@
-/* gda-postgres-parser.c
+/* GDA Postgres provider
  *
- * Copyright (C) 2007 Vivien Malerba
+ * Copyright (C) 2008 The GNOME Foundation
+ *
+ * AUTHORS:
+ *      TO_ADD: your name and email
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as

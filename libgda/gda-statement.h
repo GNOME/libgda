@@ -1,6 +1,6 @@
 /* gda-statement.h
  *
- * Copyright (C) 2007 Vivien Malerba
+ * Copyright (C) 2007 - 2008 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -48,9 +48,10 @@ typedef enum
 } GdaStatementError;
 
 typedef enum {
-	GDA_STATEMENT_MODEL_RANDOM_ACCESS,
-	GDA_STATEMENT_MODEL_CURSOR_FORWARD,
-	GDA_STATEMENT_MODEL_CURSOR_BACKWARD,
+	GDA_STATEMENT_MODEL_RANDOM_ACCESS   = 1 << 0,
+	GDA_STATEMENT_MODEL_CURSOR_FORWARD  = 1 << 1,
+	GDA_STATEMENT_MODEL_CURSOR_BACKWARD = 1 << 2,
+	GDA_STATEMENT_MODEL_CURSOR          = GDA_STATEMENT_MODEL_CURSOR_FORWARD | GDA_STATEMENT_MODEL_CURSOR_BACKWARD
 } GdaStatementModelUsage;
 
 typedef enum {
@@ -75,19 +76,19 @@ struct _GdaStatementClass
 	GObjectClass         parent_class;
 
 	/* signals */
-	void   (*dict_checked)  (GdaStatement *stmt, GdaDict *dict, gboolean checked);
-	void   (*reset)         (GdaStatement *stmt);
+	void   (*checked)   (GdaStatement *stmt, GdaConnection *cnc, gboolean checked);
+	void   (*reset)     (GdaStatement *stmt);
 };
 
 GType               gda_statement_get_type               (void) G_GNUC_CONST;
 GdaStatement       *gda_statement_new                    (void);
-GdaStatement       *gda_statement_new_copy               (GdaStatement *orig);
+GdaStatement       *gda_statement_copy                   (GdaStatement *orig);
 
 gchar              *gda_statement_serialize              (GdaStatement *stmt);
 GdaStatement       *gda_statement_deserialize            (const gchar *str, GError **error);
 
 gboolean            gda_statement_get_parameters         (GdaStatement *stmt, GdaSet **out_params, GError **error);
-#define             gda_statement_to_sql(stmt,params,error) gda_statement_to_sql_extended ((stmt), (params), NULL, 0, NULL, (error))
+#define             gda_statement_to_sql(stmt,params,error) gda_statement_to_sql_extended ((stmt), NULL, (params), NULL, GDA_STATEMENT_SQL_PARAMS_SHORT, NULL, (error))
 gchar              *gda_statement_to_sql_extended        (GdaStatement *stmt, GdaConnection *cnc, 
 							  GdaSet *params, GdaStatementSqlFlag flags, 
 							  GSList **params_used, GError **error);
@@ -95,7 +96,7 @@ gchar              *gda_statement_to_sql_extended        (GdaStatement *stmt, Gd
 GdaSqlStatementType gda_statement_get_statement_type     (GdaStatement *stmt);
 gboolean            gda_statement_is_useless             (GdaStatement *stmt);
 gboolean            gda_statement_check_structure        (GdaStatement *stmt, GError **error);
-gboolean            gda_statement_check_with_dict        (GdaStatement *stmt, GdaDict *dict, GError **error);
+gboolean            gda_statement_check_connection       (GdaStatement *stmt, GdaConnection *cnc, GError **error);
 
 /*
 GdaObject         *gda_statement_execute              (GdaStatement *stmt, GdaConnection  *cnc, 

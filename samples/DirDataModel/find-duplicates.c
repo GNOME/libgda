@@ -1,6 +1,6 @@
-/*AA*/
 #include <libgda/libgda.h>
 #include <virtual/libgda-virtual.h>
+#include <sql-parser/gda-sql-parser.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -97,8 +97,7 @@ main (int argc, char *argv [])
 
 	/* set up virtual environment */
 	provider = gda_vprovider_data_model_new ();
-        cnc = gda_server_provider_create_connection (NULL, GDA_SERVER_PROVIDER (provider), NULL, NULL, NULL, 0);
-        g_assert (gda_connection_open (cnc, NULL));
+        cnc = gda_virtual_connection_open (provider, NULL);
 
 	model = gda_data_model_dir_new (dirname);
 	g_print ("Finding duplicates among %d files\n", gda_data_model_get_n_rows (model));
@@ -125,30 +124,32 @@ main (int argc, char *argv [])
 		/* create a temproary table which contains only the potential duplicated files (from the MD5SUM) */
 		run_sql_non_select (cnc, SQL_CREATE_FILTERED_TABLE);
 
-		GdaQuery *query;
-		GdaParameterList *plist;
-		GdaParameter *param;
-		gchar *sql;
+		GdaSqlParser *parser;
+		GdaStatement *stmt;
+		GdaSet *plist;
+		GdaHolder *param;
+
+		parser = gda_connection_create_parser (cnc);
 		if (!delete) 
-			query = gda_query_new_from_sql (NULL, SQL_SELECT_FILE_DUPLICATES, NULL);
+			stmt = gda_sql_parser_parse_string (parser, SQL_SELECT_FILE_DUPLICATES, NULL, NULL);
 		else 
-			query = gda_query_new_from_sql (NULL, "CREATE TEMP TABLE to_del_files AS " SQL_SELECT_FILE_DUPLICATES, NULL);
+			stmt = gda_sql_parser_parse_string (parser, "CREATE TEMP TABLE to_del_files AS " SQL_SELECT_FILE_DUPLICATES, 
+							    NULL, NULL);
 		
-		plist = gda_query_get_parameter_list (query);
-		param = gda_parameter_list_find_param (plist, "dir_name");
-		gda_parameter_set_value_str (param, dirname);
-		param = gda_parameter_list_find_param (plist, "dir_name2");
-		gda_parameter_set_value_str (param, dirname);
-		param = gda_parameter_list_find_param (plist, "filename");
-		gda_parameter_set_value_str (param, filename);
-		param = gda_parameter_list_find_param (plist, "filename2");
-		gda_parameter_set_value_str (param, filename);
-		sql = gda_renderer_render_as_sql (GDA_RENDERER (query), plist, NULL, 0, NULL);
-		g_object_unref (plist);
+		gda_statement_get_parameters (stmt, &plist, NULL);
+		param = gda_set_get_holder (plist, "dir_name");
+		gda_holder_set_value_str (param, NULL, dirname);
+		param = gda_set_get_holder (plist, "dir_name2");
+		gda_holder_set_value_str (param, NULL, dirname);
+		param = gda_set_get_holder (plist, "filename");
+		gda_holder_set_value_str (param, NULL, filename);
+		param = gda_set_get_holder (plist, "filename2");
+		gda_holder_set_value_str (param, NULL, filename);
+		g_object_unref (parser);
 
 		/* list files duplicates */
 		if (!delete) {
-			duplicates = run_sql_select (cnc, sql);
+			duplicates = gda_connection_statement_execute_select (cnc, stmt, plist, NULL);
 			if (gda_data_model_get_n_rows (duplicates) > 0)
 				gda_data_model_dump (duplicates, stdout);
 			else
@@ -156,7 +157,7 @@ main (int argc, char *argv [])
 			g_object_unref (duplicates);
 		}
 		else {
-			run_sql_non_select (cnc, sql);
+			gda_connection_statement_execute_non_select (cnc, stmt, plist, NULL, NULL);
 
 			duplicates = run_sql_select (cnc, SQL_SELECT_FILES_TO_DEL);
 			if (gda_data_model_get_n_rows (duplicates) > 0) {
@@ -167,7 +168,9 @@ main (int argc, char *argv [])
 				g_print ("No duplicate file found\n");
 			g_object_unref (duplicates);
 		}
-		g_free (sql);
+
+		g_object_unref (stmt);
+		g_object_unref (plist);
 	}
 
 	return 0;
@@ -176,13 +179,17 @@ main (int argc, char *argv [])
 static GdaDataModel *
 run_sql_select (GdaConnection *cnc, const gchar *sql)
 {
-	GdaCommand *command;
+	GdaStatement *stmt;
 	GError *error = NULL;
 	GdaDataModel *res;
+	GdaSqlParser *parser;
 
-	command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, 0);
-        res = gda_connection_execute_select_command (cnc, command, NULL, &error);
-        gda_command_free (command);
+	parser = gda_connection_create_parser (cnc);
+	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+	g_object_unref (parser);
+
+        res = gda_connection_statement_execute_select (cnc, stmt, NULL, &error);
+        g_object_unref (stmt);
 	if (!res) 
 		g_error ("Could not execute query: %s\n", 
 			 error && error->message ? error->message : "no detail");
@@ -192,13 +199,17 @@ run_sql_select (GdaConnection *cnc, const gchar *sql)
 static void
 run_sql_non_select (GdaConnection *cnc, const gchar *sql)
 {
-        GdaCommand *command;
+	GdaStatement *stmt;
         GError *error = NULL;
         gint nrows;
+	GdaSqlParser *parser;
 
-        command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, 0);
-        nrows = gda_connection_execute_non_select_command (cnc, command, NULL, &error);
-        gda_command_free (command);
+	parser = gda_connection_create_parser (cnc);
+	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+	g_object_unref (parser);
+
+	nrows = gda_connection_statement_execute_non_select (cnc, stmt, NULL, NULL, &error);
+	g_object_unref (stmt);
         if (nrows == -1) 
                 g_error ("NON SELECT error: %s\n", error && error->message ? error->message : "no detail");
 }

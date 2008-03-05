@@ -18,7 +18,7 @@ main (int argc, char **argv)
 	gda_init ("check-providers", PACKAGE_VERSION, argc, argv);
 
 	setenv ("GDA_PROVIDERS_ROOT_DIR", GDA_PROVIDERS_ROOT_DIR, 0);
-	pinfo = gda_config_get_provider_by_name (PROVIDER);
+	pinfo = gda_config_get_provider_info (PROVIDER);
 	if (!pinfo) {
 		g_warning ("Could not find provider information for %s", PROVIDER);
 		return EXIT_FAILURE;
@@ -30,6 +30,8 @@ main (int argc, char **argv)
 	if (cnc) {
 		number_failed += prov_test_common_create_tables_sql ();
 		number_failed += prov_test_common_check_schemas ();
+		number_failed += prov_test_common_load_data ();
+		number_failed += prov_test_common_check_cursor_models ();
 		number_failed += prov_test_common_clean ();
 	}
 

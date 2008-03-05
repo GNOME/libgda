@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<serv_op>
+  <parameters id="VIEW_DEF_P" _name="View's description">
+    <parameter id="VIEW_NAME" _name="Name" _descr="View's name" gdatype="gchararray" nullok="FALSE">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter id="VIEW_OR_REPLACE" _name="Replace it already exists" _descr="Replace view definition if it already exists" gdatype="gboolean">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter id="VIEW_DEF" _name="Definition" _descr="View's definition" gdatype="gchararray" nullok="FALSE"/>
+  </parameters>
+  <gda_array id="FIELDS_A" _name="Columns' names">
+    <gda_array_field id="COLUMN_NAME" _name="column name" gdatype="gchararray" nullok="TRUE"/>
+  </gda_array>
+</serv_op>

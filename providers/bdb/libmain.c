@@ -21,10 +21,10 @@
  */
 
 #include <glib/gi18n-lib.h>
-#include <libgda/gda-config.h>
-#include "gda-bdb.h"
 #include <libgda/gda-server-provider-extra.h>
 #include <libgda/binreloc/gda-binreloc.h>
+#include "gda-bdb.h"
+#include "gda-bdb-provider.h"
 
 static gchar      *module_path = NULL;
 const gchar       *plugin_get_name (void);
@@ -42,7 +42,7 @@ plugin_init (const gchar *real_path)
 const gchar *
 plugin_get_name (void)
 {
-	return "Berkeley-DB";
+	return BDB_PROVIDER_NAME;
 }
 
 const gchar *
@@ -62,13 +62,23 @@ plugin_get_dsn_spec (void)
 	return ret;
 }
 
+gchar *
+plugin_get_auth_spec (void)
+{
+#define AUTH "<?xml version=\"1.0\"?>" \
+             "<data-set-spec>" \
+             "  <parameters/>" \
+             "</data-set-spec>"
+
+        return g_strdup (AUTH);
+}
 
 GdaServerProvider *
 plugin_create_provider (void)
 {
 	GdaServerProvider *prov;
-
-        prov = gda_bdb_provider_new ();
+	
+	prov = (GdaServerProvider *) g_object_new (GDA_TYPE_BDB_PROVIDER, NULL);
         g_object_set_data ((GObject *) prov, "GDA_PROVIDER_DIR", module_path);
         return prov;
 }

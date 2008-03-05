@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 2007 The GNOME Foundation.
+ * Copyright (C) 2007 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -24,7 +24,7 @@
 #define __GDA_DATA_MODEL_BDB_H__
 
 #include <db.h>
-#include <libgda/gda-object.h>
+#include <libgda/gda-data-model.h>
 
 G_BEGIN_DECLS
 
@@ -39,12 +39,12 @@ typedef struct _GdaDataModelBdbClass   GdaDataModelBdbClass;
 typedef struct _GdaDataModelBdbPrivate GdaDataModelBdbPrivate;
 
 struct _GdaDataModelBdb {
-	GdaObject               object;
+	GObject                 object;
 	GdaDataModelBdbPrivate *priv;
 };
 
 struct _GdaDataModelBdbClass {
-	GdaObjectClass          parent_class;
+	GObjectClass            parent_class;
 
 	/* virtual methods */
 	GSList                *(*create_key_columns)  (GdaDataModelBdb *model);
@@ -64,7 +64,7 @@ struct _GdaDataModelBdbClass {
 GType         gda_data_model_bdb_get_type     (void) G_GNUC_CONST;
 GdaDataModel *gda_data_model_bdb_new          (const gchar *filename, const gchar *db_name);
 
-GSList       *gda_data_model_bdb_get_errors   (GdaDataModelBdb *model);
+const GSList *gda_data_model_bdb_get_errors   (GdaDataModelBdb *model);
 void          gda_data_model_bdb_clean_errors (GdaDataModelBdb *model);
 G_END_DECLS
 

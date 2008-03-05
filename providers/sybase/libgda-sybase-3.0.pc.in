@@ -1,9 +1,0 @@
-prefix=@prefix@
-exec_prefix=@exec_prefix@
-libdir=@libdir@
-includedir=@includedir@
-
-Name: libgda-sybase-3.0
-Description: GDA (GNOME Data Access) Sybase provider
-Requires: libgda-3.0
-Version: @VERSION@

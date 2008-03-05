@@ -1,5 +1,5 @@
 /* GDA Berkeley-DB Provider
- * Copyright (C) 1998 - 2007 The GNOME Foundation
+ * Copyright (C) 1998 - 2008 The GNOME Foundation
  *
  * AUTHORS:
  *         Laurent Sansonetti <lrz@gnome.org>  
@@ -22,28 +22,17 @@
 #ifndef __GDA_BDB_H__
 #define __GDA_BDB_H__
 
-#if defined(HAVE_CONFIG_H)
-#endif
-
-#include <glib/gmacros.h>
-#include <glib/gi18n-lib.h>
-#include <libgda/gda-server-provider.h>
-#include <db.h>
-
-#include "gda-bdb-provider.h"
-
-#define GDA_BDB_PROVIDER_ID          "GDA Berkeley DB provider"
-
-#define BDB_VERSION  (10000*DB_VERSION_MAJOR+100*DB_VERSION_MINOR+DB_VERSION_PATCH)
-
-G_BEGIN_DECLS
+/*
+ * Provider name
+ */
+#define BDB_PROVIDER_NAME "Berkeley-DB"
 
 /*
- * Utility functions
+ * Provider's specific connection data
  */
+typedef struct {
+	GdaDataModel *table_model;
+	gchar        *dbname;
+} BdbConnectionData;
 
-GdaConnectionEvent *gda_bdb_make_error (int ret);
-
-G_END_DECLS
-
-#endif /* __gda_bdb_h__ */
+#endif

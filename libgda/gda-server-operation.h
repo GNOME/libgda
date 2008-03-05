@@ -53,6 +53,9 @@ typedef enum {
 	GDA_SERVER_OPERATION_CREATE_INDEX,
 	GDA_SERVER_OPERATION_DROP_INDEX,
 
+	GDA_SERVER_OPERATION_CREATE_VIEW,
+	GDA_SERVER_OPERATION_DROP_VIEW,
+
 	GDA_SERVER_OPERATION_NB
 } GdaServerOperationType;
 
@@ -77,10 +80,10 @@ typedef struct _GdaServerOperationNode {
 	GdaServerOperationNodeType    type;
 	GdaServerOperationNodeStatus  status;
 	
-	GdaParameterList             *plist;
+	GdaSet                       *plist;
 	GdaDataModel                 *model;
 	GdaColumn                    *column;
-	GdaParameter                 *param; 
+	GdaHolder                    *param; 
 	gpointer                      priv;
 } GdaServerOperationNode;
 
