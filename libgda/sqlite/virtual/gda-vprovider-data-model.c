@@ -566,7 +566,7 @@ virtualOpen (sqlite3_vtab *pVTab, sqlite3_vtab_cursor **ppCursor)
 	virtual_table_manage_real_data_model (vtable);
 
 	cursor = g_new0 (VirtualCursor, 1);
-	cursor->iter = gda_data_model_iter_new (GDA_DATA_MODEL (vtable->proxy));
+	cursor->iter = gda_data_model_create_iter (GDA_DATA_MODEL (vtable->proxy));
 	cursor->ncols = gda_data_model_get_n_columns (GDA_DATA_MODEL (vtable->td->real_model));
 	*ppCursor = &(cursor->base);
 	return SQLITE_OK;
@@ -628,7 +628,7 @@ virtualColumn (sqlite3_vtab_cursor *cur, sqlite3_context *ctx, int i)
 		return SQLITE_OK;
 	}
 
-	param = gda_data_model_iter_get_param_for_column (cursor->iter, i);
+	param = gda_data_model_iter_get_holder_for_field (cursor->iter, i);
 	if (!param) {
 		sqlite3_result_error (ctx, _("Column not found"), -1);
 		return SQLITE_EMPTY;

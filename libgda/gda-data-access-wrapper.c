@@ -453,7 +453,7 @@ create_new_row (GdaDataAccessWrapper *model)
 	for (i = 0; i < model->priv->nb_cols; i++) {
 		GdaHolder *holder;
 
-		holder = gda_data_model_iter_get_param_for_column (model->priv->iter, i);
+		holder = gda_data_model_iter_get_holder_for_field (model->priv->iter, i);
 		if (holder)
 			gda_row_set_value (row, i, gda_holder_get_value (holder));
 	}

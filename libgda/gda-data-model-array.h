@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+ * Copyright (C) 1998 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -48,12 +48,12 @@ struct _GdaDataModelArrayClass {
 	GdaDataModelRowClass      parent_class;
 };
 
-GType         gda_data_model_array_get_type          (void) G_GNUC_CONST;
-GdaDataModel *gda_data_model_array_new_with_g_types  (gint cols, ...);
-GdaDataModel *gda_data_model_array_new               (gint cols);
-GdaDataModel *gda_data_model_array_copy_model        (GdaDataModel *src, GError **error);
-void          gda_data_model_array_set_n_columns     (GdaDataModelArray *model, gint cols);
-void          gda_data_model_array_clear             (GdaDataModelArray *model);
+GType              gda_data_model_array_get_type          (void) G_GNUC_CONST;
+GdaDataModel      *gda_data_model_array_new_with_g_types  (gint cols, ...);
+GdaDataModel      *gda_data_model_array_new               (gint cols);
+GdaDataModelArray *gda_data_model_array_copy_model        (GdaDataModel *src, GError **error);
+void               gda_data_model_array_set_n_columns     (GdaDataModelArray *model, gint cols);
+void               gda_data_model_array_clear             (GdaDataModelArray *model);
 
 G_END_DECLS
 

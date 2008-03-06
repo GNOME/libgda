@@ -211,23 +211,6 @@ gda_data_model_iter_init (GdaDataModelIter *iter)
 	iter->priv->keep_param_changes = FALSE;
 }
 
-/**
- * gda_data_model_iter_new
- * @model: Model used to create the #GdaDataModelIter
- *
- * Creates a new GdaDataModelIter object which represents a value or a parameter.
- *
- * Returns: the new object
- */
-GdaDataModelIter *
-gda_data_model_iter_new (GdaDataModel *model)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
-
-	/* use the data model's own creation method here */
-	return gda_data_model_create_iter (model);
-}
-
 static void 
 model_row_updated_cb (GdaDataModel *model, gint row, GdaDataModelIter *iter)
 {
@@ -608,7 +591,8 @@ gda_data_model_iter_get_row (GdaDataModelIter *iter)
  * @iter: a #GdaDataModelIter object
  *
  * Declare all the parameters in @iter invalid, without modifying the
- * #GdaDataModel @iter is for or changing the row it represents
+ * #GdaDataModel @iter is for or changing the row it represents. This method
+ * is for internal usage.
  */
 void
 gda_data_model_iter_invalidate_contents (GdaDataModelIter *iter)
@@ -665,7 +649,7 @@ gda_data_model_iter_get_column_for_param (GdaDataModelIter *iter, GdaHolder *par
 }
 
 /**
- * gda_data_model_iter_get_param_for_column
+ * gda_data_model_iter_get_holder_for_field
  * @iter: a #GdaDataModelIter object
  * @col: the requested column
  *
@@ -675,7 +659,7 @@ gda_data_model_iter_get_column_for_param (GdaDataModelIter *iter, GdaHolder *par
  * Returns: the #GdaHolder, or %NULL if an error occurred
  */
 GdaHolder *
-gda_data_model_iter_get_param_for_column (GdaDataModelIter *iter, gint col)
+gda_data_model_iter_get_holder_for_field (GdaDataModelIter *iter, gint col)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), NULL);
 	g_return_val_if_fail (iter->priv, NULL);

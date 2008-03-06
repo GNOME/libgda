@@ -221,7 +221,7 @@ do_test_array ()
 		return FALSE;
 	}
 
-	model = gda_data_model_array_copy_model (import, &error);
+	model = (GdaDataModel*) gda_data_model_array_copy_model (import, &error);
 	if (!model) {
 #ifdef CHECK_EXTRA_INFO
 		g_print ("ERROR: Could not copy GdaDataModelImport into a GdaDataModelArray: %s\n", 
@@ -268,7 +268,7 @@ do_test_prop_change (void)
 		return FALSE;
 	}
 
-	model = gda_data_model_array_copy_model (import, &error);
+	model = (GdaDataModel*) gda_data_model_array_copy_model (import, &error);
 	if (!model) {
 #ifdef CHECK_EXTRA_INFO
 		g_print ("ERROR: Could not copy GdaDataModelImport into a GdaDataModelArray: %s\n", 
@@ -366,7 +366,7 @@ do_test_proxied_model_modif (void)
 		return FALSE;
 	}
 
-	model = gda_data_model_array_copy_model (import, &error);
+	model = (GdaDataModel*) gda_data_model_array_copy_model (import, &error);
 	if (!model) {
 #ifdef CHECK_EXTRA_INFO
 		g_print ("ERROR: Could not copy GdaDataModelImport into a GdaDataModelArray: %s\n", 

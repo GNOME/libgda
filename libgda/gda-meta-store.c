@@ -440,7 +440,8 @@ gda_meta_store_constructor (GType type,
  * Returns: the newly created object, or %NULL if an error occurred
  */
 GdaMetaStore *
-gda_meta_store_new_with_file (const gchar *file_name) {
+gda_meta_store_new_with_file (const gchar *file_name) 
+{
 	gchar *string;
 	gchar *base, *dir;
 	GdaMetaStore *store;
@@ -468,7 +469,8 @@ gda_meta_store_new_with_file (const gchar *file_name) {
  * Returns: the newly created object, or %NULL if an error occurred
  */
 GdaMetaStore *
-gda_meta_store_new (const gchar *string) {
+gda_meta_store_new (const gchar *string) 
+{
 	GObject *obj;
 	GdaMetaStore *store;
 	
@@ -486,7 +488,8 @@ gda_meta_store_new (const gchar *string) {
 }
 
 static void
-gda_meta_store_dispose (GObject   * object) {
+gda_meta_store_dispose (GObject *object) 
+{
 	GdaMetaStore *store;
 	
 	g_return_if_fail (GDA_IS_META_STORE (object));
@@ -505,7 +508,8 @@ gda_meta_store_dispose (GObject   * object) {
 }
 
 static void
-gda_meta_store_finalize (GObject   * object) {
+gda_meta_store_finalize (GObject *object)
+{
 	GdaMetaStore *store;
 	
 	g_return_if_fail (object != NULL);
@@ -523,9 +527,10 @@ gda_meta_store_finalize (GObject   * object) {
 
 static void
 gda_meta_store_set_property (GObject *object,
-	guint param_id,
-	const GValue *value,
-	GParamSpec *pspec) {
+			     guint param_id,
+			     const GValue *value,
+			     GParamSpec *pspec) 
+{
 	GdaMetaStore *store;
 	const gchar *cnc_string;
 	
@@ -552,9 +557,10 @@ gda_meta_store_set_property (GObject *object,
 
 static void
 gda_meta_store_get_property (GObject *object,
-	guint param_id,
-	GValue *value,
-	GParamSpec *pspec) {
+			     guint param_id,
+			     GValue *value,
+			     GParamSpec *pspec) 
+{
 	GdaMetaStore *store;
 	store = GDA_META_STORE (object);
 	
@@ -576,7 +582,8 @@ gda_meta_store_get_property (GObject *object,
 static gboolean prepare_server_operations (GdaMetaStore *store, GError **error);
 static gboolean handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **error);
 static gboolean
-initialize_cnc_struct (GdaMetaStore *store, GError **error) {
+initialize_cnc_struct (GdaMetaStore *store, GError **error)
+{
 	gboolean schema_present;
 	GdaMetaStoreClass *klass;
 	g_return_val_if_fail (GDA_IS_CONNECTION (store->priv->cnc), FALSE);
@@ -1868,7 +1875,7 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 	gboolean prep, with_cond;
 	gboolean retval = TRUE;
 	GSList *all_changes = NULL;
-	gboolean started_transaction;
+	gboolean started_transaction = FALSE;
 
 	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
 	g_return_val_if_fail (store->priv, FALSE);

@@ -40,7 +40,7 @@ main (int argc, char **argv)
 		gda_data_model_dump (xml_model, stdout);
 
 		GdaDataModelIter *iter;
-		iter = gda_data_model_iter_new (xml_model);
+		iter = gda_data_model_create_iter (xml_model);
 		gda_data_model_iter_set_at_row (iter, -1);
 		for (gda_data_model_iter_move_next (iter); gda_data_model_iter_is_valid (iter); 
 		     gda_data_model_iter_move_next (iter)) {
@@ -60,7 +60,7 @@ main (int argc, char **argv)
 		gda_data_model_dump (csv_model, stdout);
 
 		GdaDataModelIter *iter;
-		iter = gda_data_model_iter_new (csv_model);
+		iter = gda_data_model_create_iter (csv_model);
 		gda_data_model_iter_set_at_row (iter, -1);
 		for (gda_data_model_iter_move_next (iter); gda_data_model_iter_is_valid (iter); 
 		     gda_data_model_iter_move_next (iter)) {

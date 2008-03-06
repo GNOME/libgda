@@ -1,3 +1,33 @@
+2008-03-06  Vivien Malerba <malerba@gnome-db.org>
+
+	* tests/value-holders/check_statement.c:
+	* tests/parser/check_parser.c: don't crash on missing providers
+	* tests/data-models/check_virtual.c: fixed a compilation problem
+	* tests/data-models/check_data_proxy.c:
+	* libgda/gda-data-proxy.c:
+	* libgda/gda-server-operation.c:
+	* libgda/gda-data-model-array.[ch]: make gda_data_model_array_copy_model() return a
+	GdaDataModelArray instead of a GdaDataModel (fixes bug #519778)
+	* doc/C/tmpl/gda-data-model-iter.sgml: added instructions on how to use a
+	GdaDataModelIter (fixes bug #519769)
+	* libgda/gda-data-proxy.c:
+	* libgda/sqlite/virtual/virtual-test.c:
+	* libgda/sqlite/virtual/gda-vprovider-data-model.c:
+	* libgda/gda-data-model-iter.[ch]: removed gda_data_model_iter_new() as it is better to use
+	gda_data_model_create_iter()
+	* libgda/gda-data-access-wrapper.c:
+	* libgda/sqlite/virtual/gda-vprovider-data-model.c:
+	* libgda/gda-data-model.c:
+	* libgda/gda-data-model-iter.[ch]: replaced gda_data_model_iter_get_param_for_column() by
+	gda_data_model_iter_get_holder_for_field()
+	* libgda/gda-meta-store.c: correctly initialize transaction status variable
+	* tests/meta-store/data_columns.csv:
+	* tests/meta-store/common.c: adaptations to the GdaMetaStore's internal schema changes, make the
+	test pass again
+	* libgda/gda-meta-struct.[ch]: converted to a GObject, and added some new features
+	* tools/gda-sql.c: improved object's details reporting
+	* doc/C: misc doc. updates
+
 2008-03-05  Vivien Malerba <malerba@gnome-db.org>
 
 	* Merged all the developments of the V4-branch branch into trunk.

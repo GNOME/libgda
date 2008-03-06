@@ -463,7 +463,6 @@ gda_data_proxy_get_type
 <FILE>gda-data-model-iter</FILE>
 <TITLE>GdaDataModelIter</TITLE>
 GdaDataModelIter
-gda_data_model_iter_new
 gda_data_model_iter_get_value_at
 gda_data_model_iter_get_value_for_field
 gda_data_model_iter_is_valid
@@ -471,8 +470,8 @@ gda_data_model_iter_set_at_row
 gda_data_model_iter_move_next
 gda_data_model_iter_move_prev
 gda_data_model_iter_get_row
+gda_data_model_iter_get_holder_for_field
 gda_data_model_iter_invalidate_contents
-gda_data_model_iter_get_param_for_column
 <SUBSECTION Standard>
 GDA_DATA_MODEL_ITER
 GDA_DATA_MODEL_ITER_CLASS
@@ -1385,16 +1384,21 @@ GdaMetaStructError
 GDA_META_STRUCT_ERROR
 GdaMetaDbObjectType
 GdaMetaDbObject
+GDA_META_DB_OBJECT
+GDA_META_DB_OBJECT_GET_TABLE
+GDA_META_DB_OBJECT_GET_VIEW
 GdaMetaTable
 GdaMetaView
 GdaMetaTableColumn
+GDA_META_TABLE_COLUMN
 GdaMetaTableForeignKey
+GDA_META_TABLE_FOREIGN_KEY
 gda_meta_struct_new
 gda_meta_struct_complement
-gda_meta_struct_order_db_objects
+GdaMetaSortType
+gda_meta_struct_sort_db_objects
 gda_meta_struct_get_db_object
 gda_meta_struct_get_table_column
-gda_meta_struct_free
 </SECTION>
 
 <SECTION>

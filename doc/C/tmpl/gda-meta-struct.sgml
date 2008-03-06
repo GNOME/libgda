@@ -6,13 +6,15 @@ In memory representation of some database objects
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-  The #GdaMetaStruct structure reads data from a #GdaMetaStore object and
+  The #GdaMetaStruct object reads data from a #GdaMetaStore object and
   creates an easy to use in memory representation for some database objects. For example one can easily
   analyse the columns of a table (or its foreign keys) using a #GdaMetaStruct.
 </para>
 <para>
-  It is not permitted to modify a #GdaMetaStruct structure, one should only use the public API
-  to add information about database objects (using gda_meta_struct_complement()).
+  The #GdaMetaStruct object exports a single #GSList list of database objects as #GdaMetaDbObject structures,
+  which should not be modified. The list is the <parameter>db_objects</parameter> member of the
+  structure. Use gda_meta_struct_complement() to request that the #GdaMetaStruct object add some information
+  about some database object.
 </para>
 <para>
   In the following code sample, one prints the columns names and types of a table:
@@ -21,7 +23,7 @@ GdaMetaStruct *mstruct;
 GdaMetaDbObject *dbo;
 GValue *catalog, *schema, *name;
 
-/* Define catalog, schema and name */
+/* Define name (and optionnally catalog and schema) */
 [...]
 
 mstruct = gda_meta_struct_new ();
@@ -53,8 +55,9 @@ gda_meta_struct_free (mstruct);
 
 </para>
 
+@object: 
 @db_objects: 
-@index: 
+@priv: 
 
 <!-- ##### ENUM GdaMetaStructError ##### -->
 <para>
@@ -80,6 +83,30 @@ gda_meta_struct_free (mstruct);
 @GDA_META_DB_UNKNOWN: 
 @GDA_META_DB_TABLE: 
 @GDA_META_DB_VIEW: 
+
+<!-- ##### MACRO GDA_META_DB_OBJECT ##### -->
+<para>
+
+</para>
+
+@x: 
+
+
+<!-- ##### MACRO GDA_META_DB_OBJECT_GET_TABLE ##### -->
+<para>
+
+</para>
+
+@dbobj: 
+
+
+<!-- ##### MACRO GDA_META_DB_OBJECT_GET_VIEW ##### -->
+<para>
+
+</para>
+
+@dbobj: 
+
 
 <!-- ##### STRUCT GdaMetaTable ##### -->
 <para>
@@ -113,6 +140,14 @@ gda_meta_struct_free (mstruct);
 @nullok: 
 @default_value: 
 
+<!-- ##### MACRO GDA_META_TABLE_COLUMN ##### -->
+<para>
+
+</para>
+
+@x: 
+
+
 <!-- ##### STRUCT GdaMetaTableForeignKey ##### -->
 <para>
 
@@ -125,6 +160,14 @@ gda_meta_struct_free (mstruct);
 @fk_names_array: 
 @ref_pk_cols_array: 
 @ref_pk_names_array: 
+
+<!-- ##### MACRO GDA_META_TABLE_FOREIGN_KEY ##### -->
+<para>
+
+</para>
+
+@x: 
+
 
 <!-- ##### FUNCTION gda_meta_struct_new ##### -->
 <para>
@@ -149,12 +192,21 @@ gda_meta_struct_free (mstruct);
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_meta_struct_order_db_objects ##### -->
+<!-- ##### ENUM GdaMetaSortType ##### -->
+<para>
+
+</para>
+
+@GDA_META_SORT_ALHAPETICAL: sort by alphabetical order on the schema name and on the object name
+@GDA_META_SORT_DEPENDENCIES: sort such as that for any given #GdaMetaDbObject in the list, all its dependencies are _before_ it in the list
+
+<!-- ##### FUNCTION gda_meta_struct_sort_db_objects ##### -->
 <para>
 
 </para>
 
 @mstruct: 
+@sort_type: 
 @error: 
 @Returns: 
 
@@ -180,13 +232,5 @@ gda_meta_struct_free (mstruct);
 @table: 
 @col_name: 
 @Returns: 
-
-
-<!-- ##### FUNCTION gda_meta_struct_free ##### -->
-<para>
-
-</para>
-
-@mstruct: 
 
 

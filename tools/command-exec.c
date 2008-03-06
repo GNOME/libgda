@@ -549,68 +549,6 @@ gda_internal_command_build_meta_struct (GdaConnection *cnc, const gchar **args, 
 		GValue *v;
 		g_value_set_string (v = gda_value_new (G_TYPE_STRING), arg);
 
-		/* try to find it as a table or view */
-		{
-			GdaDataModel *model;
-			gint i, nrows;
-			gboolean include_deps = FALSE;
-
-			const gchar *sql = "SELECT t.table_catalog, t.table_schema, t.table_name, v.table_name FROM _tables as t LEFT JOIN _views as v ON (t.table_catalog=v.table_catalog AND t.table_schema=v.table_schema AND t.table_name=v.table_name) WHERE table_short_name = ##tname::string";
-
-			if (g_str_has_suffix (arg, "=")) {
-				gchar *str;
-				str = g_strdup (arg);
-				str[strlen (str) - 1] = 0;
-				g_value_take_string (v, str);
-				include_deps = TRUE;
-			}
-			model = gda_meta_store_extract (store, sql, error, "tname", v, NULL);
-			if (!model)
-				return NULL;
-			nrows = gda_data_model_get_n_rows (model);
-			for (i = 0; i < nrows; i++) {
-				const GValue *detv;
-				detv = gda_data_model_get_value_at (model, 3, i);
-				if (! gda_meta_struct_complement (mstruct, store, 
-								  detv && !gda_value_is_null (detv) && 
-								  g_value_get_string (detv) && *g_value_get_string (detv) ? 
-								  GDA_META_DB_VIEW : GDA_META_DB_TABLE,
-								  gda_data_model_get_value_at (model, 0, i),
-								  gda_data_model_get_value_at (model, 1, i),
-								  gda_data_model_get_value_at (model, 2, i), error)) 
-					goto onerror;
-			}
-			g_object_unref (model);
-
-			if (include_deps) {
-				GSList *list;
-				for (list = mstruct->db_objects; list; ) {
-					GdaMetaDbObject *dbo = GDA_META_DB_OBJECT (list->data);
-					GValue *v1, *v2, *v3;
-					
-					g_value_set_string ((v1 = gda_value_new (G_TYPE_STRING)), dbo->obj_catalog);
-					g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), dbo->obj_schema);
-					g_value_set_string ((v3 = gda_value_new (G_TYPE_STRING)), dbo->obj_name);
-					
-					if (dbo->obj_type == GDA_META_DB_UNKNOWN) {
-						if (! gda_meta_struct_complement (mstruct, store, GDA_META_DB_TABLE,
-										  v1, v2, v3, error)) {
-							gda_value_free (v1);
-							gda_value_free (v2);
-							gda_value_free (v3);
-							goto onerror;
-						}
-						gda_value_free (v1);
-						gda_value_free (v2);
-						gda_value_free (v3);
-						list = mstruct->db_objects;
-					}
-					else
-						list = list->next;	
-				}
-			}
-		}
-
 		/* see if we have the form <schema_name>.*, to list all the objects in a given schema */
 		if (g_str_has_suffix (arg, ".*") && (*arg != '.')) {
 			gchar *str;
@@ -639,6 +577,11 @@ gda_internal_command_build_meta_struct (GdaConnection *cnc, const gchar **args, 
 			}
 			g_object_unref (model);
 		}
+		else {
+			/* try to find it as a table or view */
+			if (!gda_meta_struct_complement (mstruct, store, GDA_META_DB_TABLE, NULL, NULL, v, NULL))
+				gda_meta_struct_complement (mstruct, store, GDA_META_DB_VIEW, NULL, NULL, v, NULL);
+		}
 	}
 
 	if (!mstruct->db_objects) {
@@ -646,11 +589,11 @@ gda_internal_command_build_meta_struct (GdaConnection *cnc, const gchar **args, 
 			     _("No object found"));
 		goto onerror;
 	}
-	gda_meta_struct_order_db_objects (mstruct, NULL);
+	gda_meta_struct_sort_db_objects (mstruct, GDA_META_SORT_ALHAPETICAL, NULL);
 	return mstruct;
 
  onerror:
-	gda_meta_struct_free (mstruct);
+	g_object_unref (mstruct);
 	return NULL;
 }
 
@@ -684,6 +627,54 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 	mstruct = gda_internal_command_build_meta_struct (cnc, args, error);
 	if (!mstruct)
 		return NULL;
+
+	/* if more than one object, then show a list */
+	if (mstruct->db_objects && mstruct->db_objects->next) {
+		model = gda_data_model_array_new (4);
+		gda_data_model_set_column_title (model, 0, _("Schema"));
+		gda_data_model_set_column_title (model, 1, _("Name"));
+		gda_data_model_set_column_title (model, 2, _("Type"));
+		gda_data_model_set_column_title (model, 3, _("Owner"));
+		for (dbo_list = mstruct->db_objects; dbo_list; dbo_list = dbo_list->next) {
+			GdaMetaDbObject *dbo = GDA_META_DB_OBJECT (dbo_list->data);
+			GList *values = NULL;
+			GValue *val;
+			
+			if (dbo->obj_type == GDA_META_DB_UNKNOWN)
+				continue;
+
+			g_value_set_string ((val = gda_value_new (G_TYPE_STRING)), dbo->obj_schema);
+			values = g_list_append (values, val);
+			g_value_set_string ((val = gda_value_new (G_TYPE_STRING)), dbo->obj_name);
+			values = g_list_append (values, val);
+
+			val = gda_value_new (G_TYPE_STRING);
+			switch (dbo->obj_type) {
+			case GDA_META_DB_TABLE:
+				g_value_set_string (val, "BASE TABLE");
+				break;
+			case GDA_META_DB_VIEW:
+				g_value_set_string (val, "VIEW");
+				break;
+			default:
+				g_value_set_string (val, "???");
+				TO_IMPLEMENT;
+			}
+			values = g_list_append (values, val);
+			if (dbo->obj_owner)
+				g_value_set_string ((val = gda_value_new (G_TYPE_STRING)), dbo->obj_owner);
+			else
+				g_value_set_string ((val = gda_value_new (G_TYPE_STRING)), "");
+			values = g_list_append (values, val);
+			gda_data_model_append_values (model, values, NULL);
+			g_list_foreach (values, (GFunc) gda_value_free, NULL);
+			g_list_free (values);
+		}
+		res = g_new0 (GdaInternalCommandResult, 1);
+		res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+		res->u.model = model;
+		return res;
+	}
 
 	res = g_new0 (GdaInternalCommandResult, 1);
 	res->type = GDA_INTERNAL_COMMAND_RESULT_MULTIPLE;
@@ -754,6 +745,6 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 		}
 	}
 
-	gda_meta_struct_free (mstruct);
+	g_object_unref (mstruct);
 	return res;
 }

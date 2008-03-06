@@ -416,7 +416,7 @@ gda_data_model_array_new_with_g_types (gint cols, ...)
  *
  * Returns: a new data model, or %NULL if an error occurred
  */
-GdaDataModel *
+GdaDataModelArray *
 gda_data_model_array_copy_model (GdaDataModel *src, GError **error)
 {
 	GdaDataModel *model;
@@ -458,7 +458,7 @@ gda_data_model_array_copy_model (GdaDataModel *src, GError **error)
 	/*else
 	  gda_data_model_dump (model, stdout);*/
 
-	return model;
+	return (GdaDataModelArray*) model;
 }
 
 /**

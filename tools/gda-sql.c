@@ -2515,7 +2515,7 @@ extra_command_graph (GdaConnection *cnc, const gchar **args,
 		return NULL;
 	
 	result = create_graph_from_meta_struct (cnc, mstruct, error);
-	gda_meta_struct_free (mstruct);
+	g_object_unref (mstruct);
 	if (result) {
 		GdaInternalCommandResult *res;
 		res = g_new0 (GdaInternalCommandResult, 1);

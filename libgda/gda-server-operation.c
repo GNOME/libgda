@@ -804,7 +804,7 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root)
 			}
 			else {
 				GdaDataModel *model;
-				model = gda_data_model_array_copy_model (import, NULL);
+				model = (GdaDataModel*) gda_data_model_array_copy_model (import, NULL);
 				opnode = node_new (parent, GDA_SERVER_OPERATION_NODE_DATA_MODEL, path_name);
 				opnode->d.model = model;
 				g_object_unref (import);

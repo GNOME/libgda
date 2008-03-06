@@ -522,29 +522,28 @@
     <chapter id="data_models">
       <title>Data handling</title>
       <para>
-	&LIBGDA; being a data oriented library, data handling is a central point of the library. 
-	Data handling is about:
+	&LIBGDA; being a data oriented library, data handling is a central point of the library:
 	<itemizedlist>
 	  <listitem>
-            <para>individual values: they are encapsulated within a <link linkend="GValue">GValue</link> 
-	      container (which is not much more than a <link linkend="GValue">GValue</link> from GLIB)</para>
+            <para>individual values are encapsulated within a <link linkend="GValue">GValue</link> 
+	      container (from GLIB)</para>
 	  </listitem>
 	  <listitem>
-            <para>parameters which are each a specification for a value: a type, a name, a description,
-	      a default value, etc. Parameters are encapsulated within a 
-	      <link linkend="GdaParameter">GdaParameter</link> container.</para>
+            <para>value holders which are each a specification for a value: a type, a name, a description,
+	      a default value, etc. Value holders are encapsulated within a 
+	      <link linkend="GdaHolder">GdaHolder</link> container object.</para>
 	    <para>
-	      Note that it is possible to set a hint on parameters to make them have a value which is
-	      among the values contained in a column of a <link linkend="GdaDataModel">GdaDataModel</link>.
+	      Note that it is possible to set a hint to make a value holder have its value constrained
+	      by the values contained in a column of a <link linkend="GdaDataModel">GdaDataModel</link>.
 	    </para>
 	  </listitem>
 	  <listitem>
-            <para>lists of parameters which are encapsulated within a 
-	      <link linkend="GdaParameterList">GdaParameterList</link> container.</para>
+            <para>lists of value holders which are encapsulated within a 
+	      <link linkend="GdaSet">GdaSet</link> container object.</para>
 	    <para>
-	      The GdaParameterList object also makes some computations to group parameters which are
-	      constrained by values in the same GdaDataModel to make it easy to use parameters
-	      which are not really independant.
+	      The GdaSet object also makes some computations to group value holders which are
+	      constrained by values in the same GdaDataModel (it makes it easy to use value holders
+	      which are not really independant).
 	    </para>
 	  </listitem>
 	  <listitem>
@@ -643,7 +642,7 @@
       </para>
       <para>
 	Extracting information about database objects can easily be done using a 
-	<link linkend="GdaMetaStruct">GdaMetaStruct</link> structure which creates an easy to use in-memory representation
+	<link linkend="GdaMetaStruct">GdaMetaStruct</link> object which creates an easy to use in-memory representation
 	of some database objects.
       </para>
       &libgda-GdaMetaStore;

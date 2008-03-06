@@ -364,8 +364,8 @@ GError *error = NULL;
 #define TEST_HEADER g_print ("... TEST '%s' ...\n", __FUNCTION__)
 #define TEST_MODIFY(s,n,m,c,e,...) \
 if (!gda_meta_store_modify ((s),(n),(m),(c),(e),__VA_ARGS__)) { \
-		g_print ("Error while modifying GdaMetaStore: %s\n", \
-			 error && error->message ? error->message : "No detail"); \
+		g_print ("Error while modifying GdaMetaStore, table '%s': %s\n", \
+			 (n), error && error->message ? error->message : "No detail"); \
 		exit (EXIT_FAILURE); \
 	}
 
@@ -548,7 +548,7 @@ test_columns (GdaMetaStore *store)
 	TEST_HEADER;
 
 	/* load CSV file */
-	import = common_load_csv_file ("data_columns.csv", 4, "gint", 6, "boolean", 9, "gint", 10, "gint", 11, "gint", 12, "gint", 13, "gint", 21, "boolean", -1);
+	import = common_load_csv_file ("data_columns.csv", 4, "gint", 6, "boolean", 8, "gint", 11, "gint", 12, "gint", 13, "gint", 14, "gint", 15, "gint", 23, "boolean", -1);
 	common_declare_expected_insertions_from_model (TNAME, import);
 	TEST_MODIFY (store, TNAME, import, NULL, &error, NULL);
 	TEST_END (import);

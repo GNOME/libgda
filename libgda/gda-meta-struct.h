@@ -22,27 +22,70 @@
 #define __GDA_META_STRUCT_H_
 
 #include <glib-object.h>
-#include <libgda/gda-enums.h>
 #include <libgda/gda-data-model.h>
+#include <libgda/gda-meta-store.h>
 
 G_BEGIN_DECLS
+
+#define GDA_TYPE_META_STRUCT          (gda_meta_struct_get_type())
+#define GDA_META_STRUCT(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_meta_struct_get_type(), GdaMetaStruct)
+#define GDA_META_STRUCT_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_meta_struct_get_type (), GdaMetaStructClass)
+#define GDA_IS_META_STRUCT(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_meta_struct_get_type ())
+
+typedef struct _GdaMetaStruct        GdaMetaStruct;
+typedef struct _GdaMetaStructClass   GdaMetaStructClass;
+typedef struct _GdaMetaStructPrivate GdaMetaStructPrivate;
 
 /* error reporting */
 extern GQuark gda_meta_struct_error_quark (void);
 #define GDA_META_STRUCT_ERROR gda_meta_struct_error_quark ()
 
 typedef enum {
-        GDA_META_STRUCT_UNKNOWN_OBJECT_ERROR,
-	GDA_META_STRUCT_DUPLICATE_OBJECT_ERROR,
-	GDA_META_STRUCT_INCOHERENCE_ERROR
+	GDA_META_STRUCT_UNKNOWN_OBJECT_ERROR,
+        GDA_META_STRUCT_DUPLICATE_OBJECT_ERROR,
+        GDA_META_STRUCT_INCOHERENCE_ERROR
 } GdaMetaStructError;
 
 
+/* struct for the object's data */
+struct _GdaMetaStruct
+{
+	GObject               object;
+	GSList                *db_objects; /* list of GdaMetaDbObject structures */
+	GdaMetaStructPrivate  *priv;
+};
+
+/* struct for the object's class */
+struct _GdaMetaStructClass
+{
+	GObjectClass              parent_class;
+};
+
+/*
+ * Type of database object which can be handled
+ */
 typedef enum {
 	GDA_META_DB_UNKNOWN,
 	GDA_META_DB_TABLE,
 	GDA_META_DB_VIEW
 } GdaMetaDbObjectType;
+
+/*
+ * Controls which features are computed about database objects
+ */
+typedef enum {
+	GDA_META_STRUCT_FEATURE_ALL,
+	GDA_META_STRUCT_FEATURE_FOREIGN_KEYS,
+	GDA_META_STRUCT_FEATURE_VIEW_DEPENDENCIES
+} GdaMetaStructFeature;
+
+/*
+ * Types of sorting
+ */
+typedef enum {
+	GDA_META_SORT_ALHAPETICAL,
+	GDA_META_SORT_DEPENDENCIES
+} GdaMetaSortType;
 
 /*
  * Complements the GdaMetaDbObject structure, for tables only
@@ -82,6 +125,7 @@ typedef struct {
 	gchar                  *obj_name;
 	gchar                  *obj_short_name;
 	gchar                  *obj_full_name;
+	gchar                  *obj_owner;
 
 	union {
 		GdaMetaTable    meta_table;
@@ -116,21 +160,17 @@ typedef struct {
 } GdaMetaTableForeignKey;
 #define GDA_META_TABLE_FOREIGN_KEY(x) ((GdaMetaTableForeignKey*)(x))
 
-typedef struct {
-	GSList *db_objects; /* list of GdaMetaDbObject structures */
-	GHashTable *index; /* key = [catalog].[schema].[name], value = a GdaMetaDbObject */
-} GdaMetaStruct;
 
+GType               gda_meta_struct_get_type         (void) G_GNUC_CONST;
 GdaMetaStruct      *gda_meta_struct_new              (void);
 GdaMetaDbObject    *gda_meta_struct_complement       (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaDbObjectType type,
-						      const GValue *catalog, const GValue *schema, const GValue *name, 
-						      GError **error);
-gboolean            gda_meta_struct_order_db_objects (GdaMetaStruct *mstruct, GError **error);
-GdaMetaDbObject    *gda_meta_struct_get_db_object    (GdaMetaStruct *mstruct, 
-						      const GValue *catalog, const GValue *schema, const GValue *name);
-GdaMetaTableColumn *gda_meta_struct_get_table_column (GdaMetaStruct *mstruct, GdaMetaTable *table, 
-						      const GValue *col_name);
-void                gda_meta_struct_free             (GdaMetaStruct *mstruct);
+                                                      const GValue *catalog, const GValue *schema, const GValue *name,
+                                                      GError **error);
+gboolean            gda_meta_struct_sort_db_objects  (GdaMetaStruct *mstruct, GdaMetaSortType sort_type, GError **error);
+GdaMetaDbObject    *gda_meta_struct_get_db_object    (GdaMetaStruct *mstruct,
+                                                      const GValue *catalog, const GValue *schema, const GValue *name);
+GdaMetaTableColumn *gda_meta_struct_get_table_column (GdaMetaStruct *mstruct, GdaMetaTable *table,
+                                                      const GValue *col_name);
 
 G_END_DECLS
 

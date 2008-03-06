@@ -166,7 +166,8 @@ test2 (GError **error)
 		}
 		else
 			parser = g_hash_table_lookup (parsers_hash, "");
-		g_assert (parser);
+		if (!parser)
+			continue;
 
 		for (snode = node->children; snode && strcmp ((gchar*) snode->name, "sql"); snode = snode->next);
 		if (!snode)

@@ -71,7 +71,8 @@ main (int argc, char** argv)
 		}
 		else
 			parser = g_hash_table_lookup (parsers_hash, "");
-		g_assert (parser);
+		if (!parser)
+			continue;
 
 		id = xmlGetProp (node, BAD_CAST "id");
 		for (snode = node->children; snode; snode = snode->next) {

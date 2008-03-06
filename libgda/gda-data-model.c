@@ -1707,7 +1707,7 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 		else
 			col = i;
 		if (col >= 0)
-			param = gda_data_model_iter_get_param_for_column (from_iter, col);
+			param = gda_data_model_iter_get_holder_for_field (from_iter, col);
 
 		/* tests */
 		column = gda_data_model_describe_column (to, i);

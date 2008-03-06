@@ -61,7 +61,6 @@ struct _GdaDataModelIterClass
 };
 
 GType             gda_data_model_iter_get_type             (void) G_GNUC_CONST;
-GdaDataModelIter *gda_data_model_iter_new                  (GdaDataModel *model);
 
 const GValue     *gda_data_model_iter_get_value_at         (GdaDataModelIter *iter, gint col);
 const GValue     *gda_data_model_iter_get_value_for_field  (GdaDataModelIter *iter, const gchar *field_name);
@@ -75,7 +74,7 @@ gboolean          gda_data_model_iter_can_be_moved         (GdaDataModelIter *it
 void              gda_data_model_iter_invalidate_contents  (GdaDataModelIter *iter);
 gboolean          gda_data_model_iter_is_valid             (GdaDataModelIter *iter);
 
-GdaHolder        *gda_data_model_iter_get_param_for_column (GdaDataModelIter *iter, gint col);
+GdaHolder        *gda_data_model_iter_get_holder_for_field (GdaDataModelIter *iter, gint col);
 
 G_END_DECLS
 

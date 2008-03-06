@@ -2854,7 +2854,7 @@ gda_data_proxy_set_filter_expr (GdaDataProxy *proxy, const gchar *filter_expr, G
 
 	/* copy filtered_rows and remove virtual table */
 	GdaDataModel *copy;
-	copy = gda_data_model_array_copy_model (filtered_rows, NULL);
+	copy = (GdaDataModel*) gda_data_model_array_copy_model (filtered_rows, NULL);
 	g_object_unref (filtered_rows);
 	gda_vconnection_data_model_remove (GDA_VCONNECTION_DATA_MODEL (vcnc), "proxy", NULL);
 	if (!copy) {
