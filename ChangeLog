@@ -1,3 +1,13 @@
+2008-03-11  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-data-model.c:
+	* libgda/gda-server-operation.c:
+	* libgda/gda-value.c:
+	Documentation: Change mentions of occured to occurred, and mentions of 
+	a XML to an XML.
+	PaulSchulz and Malcolm Parsons in Ubuntu launchpad bug 64451 for 
+	some reason.
+
 2008-02-28  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-init.c:

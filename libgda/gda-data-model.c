@@ -1516,9 +1516,9 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 /**
  * gda_data_model_add_data_from_xml_node
  * @model: a #GdaDataModel.
- * @node: a XML node representing a &lt;gda_array_data&gt; XML node.
+ * @node: an XML node representing a &lt;gda_array_data&gt; XML node.
  *
- * Adds the data from a XML node to the given data model (see the DTD for that node
+ * Adds the data from an XML node to the given data model (see the DTD for that node
  * in the $prefix/share/libgda/dtd/libgda-array.dtd file).
  *
  * Returns: %TRUE if successful, %FALSE otherwise.
