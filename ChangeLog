@@ -1,3 +1,20 @@
+2008-03-11  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/binreloc/binreloc.c:
+	* libgda/gda-data-model.c:
+	* libgda/gda-server-operation.c:
+	* libgda/gda-value.c:
+	* libgda/sql-parser/gda-sql-parser.c:
+	* libgda/sqlite/sqlite-src/sqlite3.c: (writeJournalHdr),
+	(sqlite3PagerOpen), (sqlite3PagerReleaseMemory), (pager_write),
+	(sqlite3BtreeRollback), (vdbeCommit), (sqlite3VdbeHalt),
+	(sqlite3VdbeExec), (findCollSeqEntry), (sqlite3InitOne),
+	(sqlite3Fts3Init):
+	Documentation: Change mentions of occured to occurred, and mentions of 
+	a XML to an XML.
+	PaulSchulz and Malcolm Parsons in Ubuntu launchpad bug 64451 for 
+	some reason.
+
 2008-03-06  Vivien Malerba <malerba@gnome-db.org>
 
 	* tests/value-holders/check_statement.c:

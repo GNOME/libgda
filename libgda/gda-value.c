@@ -1163,9 +1163,9 @@ gda_value_new_from_string (const gchar *as_string, GType type)
 
 /**
  * gda_value_new_from_xml
- * @node: a XML node representing the value.
+ * @node: an XML node representing the value.
  *
- * Creates a GValue from a XML representation of it. That XML
+ * Creates a GValue from an XML representation of it. That XML
  * node corresponds to the following string representation:
  *    &lt;value type="gdatype"&gt;value&lt;/value&gt;
  *
@@ -2051,7 +2051,7 @@ to_string (const GValue *value)
  * gda_value_to_xml
  * @value: a #GValue.
  *
- * Serializes the given #GValue to a XML node string.
+ * Serializes the given #GValue to an XML node string.
  *
  * Returns: the XML node. Once not needed anymore, you should free it.
  */

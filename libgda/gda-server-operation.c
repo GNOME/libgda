@@ -2036,7 +2036,7 @@ gda_server_operation_set_value_at (GdaServerOperation *op, const gchar *value, G
 /**
  * gda_server_operation_is_valid
  * @op: a #GdaServerOperation widget
- * @xml_file: a XML specification file (see gda_server_operation_new())
+ * @xml_file: an XML specification file (see gda_server_operation_new())
  * @error: a place to store an error, or %NULL
  *
  * Tells if all the required values in @op have been defined.

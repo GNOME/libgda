@@ -603,7 +603,7 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
  * gda_sql_parser_parse_string_as_batch
  * @parser: a #GdaSqlParser object
  * @sql: the SQL string to parse
- * @remain: location to store a pointer to remaining part of @sql in case an error occured while parsing @sql, or %NULL
+ * @remain: location to store a pointer to remaining part of @sql in case an error occurred while parsing @sql, or %NULL
  * @error: location to store error, or %NULL
  *
  * Parse @sql and creates a #GdaBatch object which contains all the #GdaStatement objects created while parsing (one object

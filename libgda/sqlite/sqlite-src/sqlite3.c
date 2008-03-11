@@ -12363,10 +12363,10 @@ SQLITE_PRIVATE void sqlite3SetString(char **pz, ...){
 ** sqlite3_realloc.
 **
 ** The returned value is normally a copy of the second argument to this
-** function. However, if a malloc() failure has occured since the previous
+** function. However, if a malloc() failure has occurred since the previous
 ** invocation SQLITE_NOMEM is returned instead. 
 **
-** If the first argument, db, is not NULL and a malloc() error has occured,
+** If the first argument, db, is not NULL and a malloc() error has occurred,
 ** then the connection error-code (the value returned by sqlite3_errcode())
 ** is set to SQLITE_NOMEM.
 */
@@ -22182,7 +22182,7 @@ static int jrnlBufferSize(Pager *pPager){
 ** A persistent error indicates that the contents of the pager-cache 
 ** cannot be trusted. This state can be cleared by completely discarding 
 ** the contents of the pager-cache. If a transaction was active when
-** the persistent error occured, then the rollback journal may need
+** the persistent error occurred, then the rollback journal may need
 ** to be replayed.
 */
 static void pager_unlock(Pager *pPager);
@@ -22377,7 +22377,7 @@ static int writeJournalHdr(Pager *pPager){
   ** A faster alternative is to write 0xFFFFFFFF to the nRec field. When
   ** reading the journal this value tells SQLite to assume that the
   ** rest of the journal file contains valid page records. This assumption
-  ** is dangerous, as if a failure occured whilst writing to the journal
+  ** is dangerous, as if a failure occurred whilst writing to the journal
   ** file it may contain some garbage data. There are two scenarios
   ** where this risk can be ignored:
   **
@@ -23570,7 +23570,7 @@ SQLITE_PRIVATE int sqlite3PagerOpen(
     pPager->pTmpSpace = (char *)sqlite3_malloc(nDefaultPage);
   }
 
-  /* If an error occured in either of the blocks above.
+  /* If an error occurred in either of the blocks above.
   ** Free the Pager structure and close the file.
   ** Since the pager is not allocated there is no need to set 
   ** any Pager.errMask variables.
@@ -24592,11 +24592,11 @@ SQLITE_PRIVATE int sqlite3PagerReleaseMemory(int nReq){
       sqlite3_free(pPg);
       pPager->nPage--;
     }else{
-      /* An error occured whilst writing to the database file or 
+      /* An error occurred whilst writing to the database file or 
       ** journal in pager_recycle(). The error is not returned to the 
       ** caller of this function. Instead, set the Pager.errCode variable.
       ** The error will be returned to the user (or users, in the case 
-      ** of a shared pager cache) of the pager for which the error occured.
+      ** of a shared pager cache) of the pager for which the error occurred.
       */
       assert(
           (rc&0xff)==SQLITE_IOERR ||
@@ -25473,7 +25473,7 @@ static int pager_write(PgHdr *pPg){
           PAGERTRACE5("JOURNAL %d page %d needSync=%d hash(%08x)\n",
                PAGERID(pPager), pPg->pgno, pPg->needSync, pager_pagehash(pPg));
 
-          /* An error has occured writing to the journal file. The 
+          /* An error has occurred writing to the journal file. The 
           ** transaction will be rolled back by the layer above.
           */
           if( rc!=SQLITE_OK ){
@@ -29712,7 +29712,7 @@ static int incrVacuumStep(BtShared *pBt, Pgno nFin){
 ** It performs a single unit of work towards an incremental vacuum.
 **
 ** If the incremental vacuum is finished after this function has run,
-** SQLITE_DONE is returned. If it is not finished, but no error occured,
+** SQLITE_DONE is returned. If it is not finished, but no error occurred,
 ** SQLITE_OK is returned. Otherwise an SQLite error code. 
 */
 SQLITE_PRIVATE int sqlite3BtreeIncrVacuum(Btree *p){
@@ -29996,7 +29996,7 @@ SQLITE_PRIVATE int sqlite3BtreeRollback(Btree *p){
   rc = saveAllCursors(pBt, 0, 0);
 #ifndef SQLITE_OMIT_SHARED_CACHE
   if( rc!=SQLITE_OK ){
-    /* This is a horrible situation. An IO or malloc() error occured whilst
+    /* This is a horrible situation. An IO or malloc() error occurred whilst
     ** trying to save cursor positions. If this is an automatic rollback (as
     ** the result of a constraint, malloc() failure or IO error) then 
     ** the cache may be internally inconsistent (not contain valid trees) so
@@ -36875,7 +36875,7 @@ static int vdbeCommit(sqlite3 *db){
     ** sqlite3BtreeCommitPhaseOne(), then there is a chance that the
     ** master journal file will be orphaned. But we cannot delete it,
     ** in case the master journal file name was written into the journal
-    ** file before the failure occured.
+    ** file before the failure occurred.
     */
     for(i=0; rc==SQLITE_OK && i<db->nDb; i++){ 
       Btree *pBt = db->aDb[i].pBt;
@@ -37083,7 +37083,7 @@ SQLITE_PRIVATE int sqlite3VdbeHalt(Vdbe *p){
     ** we do either a commit or rollback of the current transaction. 
     **
     ** Note: This block also runs if one of the special errors handled 
-    ** above has occured. 
+    ** above has occurred. 
     */
     if( db->autoCommit && db->activeVdbeCnt==1 ){
       if( p->rc==SQLITE_OK || (p->errorAction==OE_Fail && !isSpecialError) ){
@@ -40059,7 +40059,7 @@ case OP_Remainder: {           /* same as TK_REM, in1, in2, out3 */
         ** some architectures, the value overflows to (1<<63). On others,
         ** a SIGFPE is issued. The following statement normalizes this
         ** behaviour so that all architectures behave as if integer 
-        ** overflow occured.
+        ** overflow occurred.
         */
         if( a==-1 && b==(((i64)1)<<63) ) a = 1;
         b /= a;
@@ -43504,7 +43504,7 @@ case OP_VColumn: {
   rc = pModule->xColumn(pCur->pVtabCursor, &sContext, pOp->p2);
 
   /* Copy the result of the function to the P3 register. We
-  ** do this regardless of whether or not an error occured to ensure any
+  ** do this regardless of whether or not an error occurred to ensure any
   ** dynamic allocation in sContext.s (a Mem struct) is  released.
   */
   sqlite3VdbeChangeEncoding(&sContext.s, encoding);
@@ -52813,7 +52813,7 @@ static CollSeq *findCollSeqEntry(
       pColl[0].zName[nName] = 0;
       pDel = sqlite3HashInsert(&db->aCollSeq, pColl[0].zName, nName, pColl);
 
-      /* If a malloc() failure occured in sqlite3HashInsert(), it will 
+      /* If a malloc() failure occurred in sqlite3HashInsert(), it will 
       ** return the pColl pointer to be deleted (because it wasn't added
       ** to the hash table).
       */
@@ -59371,10 +59371,10 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
   }
   if( rc==SQLITE_OK || (db->flags&SQLITE_RecoveryMode)){
     /* Black magic: If the SQLITE_RecoveryMode flag is set, then consider
-    ** the schema loaded, even if errors occured. In this situation the 
+    ** the schema loaded, even if errors occurred. In this situation the 
     ** current sqlite3_prepare() operation will fail, but the following one
     ** will attempt to compile the supplied statement against whatever subset
-    ** of the schema was loaded before the error occured. The primary
+    ** of the schema was loaded before the error occurred. The primary
     ** purpose of this is to allow access to the sqlite_master table
     ** even when its contents have been corrupted.
     */
@@ -81297,7 +81297,7 @@ SQLITE_PRIVATE int sqlite3Fts3Init(sqlite3 *db){
     );
   }
 
-  /* An error has occured. Delete the hash table and return the error code. */
+  /* An error has occurred. Delete the hash table and return the error code. */
   assert( rc!=SQLITE_OK );
   if( pHash ){
     sqlite3Fts3HashClear(pHash);
