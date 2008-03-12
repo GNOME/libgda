@@ -24,6 +24,7 @@
 #include <glib-object.h>
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-meta-store.h>
+#include <libgda/gda-decl.h>
 
 G_BEGIN_DECLS
 
@@ -31,10 +32,6 @@ G_BEGIN_DECLS
 #define GDA_META_STRUCT(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_meta_struct_get_type(), GdaMetaStruct)
 #define GDA_META_STRUCT_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_meta_struct_get_type (), GdaMetaStructClass)
 #define GDA_IS_META_STRUCT(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_meta_struct_get_type ())
-
-typedef struct _GdaMetaStruct        GdaMetaStruct;
-typedef struct _GdaMetaStructClass   GdaMetaStructClass;
-typedef struct _GdaMetaStructPrivate GdaMetaStructPrivate;
 
 /* error reporting */
 extern GQuark gda_meta_struct_error_quark (void);
@@ -74,9 +71,12 @@ typedef enum {
  * Controls which features are computed about database objects
  */
 typedef enum {
-	GDA_META_STRUCT_FEATURE_ALL,
-	GDA_META_STRUCT_FEATURE_FOREIGN_KEYS,
-	GDA_META_STRUCT_FEATURE_VIEW_DEPENDENCIES
+	GDA_META_STRUCT_FEATURE_NONE              = 0,
+	GDA_META_STRUCT_FEATURE_FOREIGN_KEYS      = 1 << 0,
+	GDA_META_STRUCT_FEATURE_VIEW_DEPENDENCIES = 1 << 1,
+
+	GDA_META_STRUCT_FEATURE_ALL               = GDA_META_STRUCT_FEATURE_FOREIGN_KEYS |
+	                                            GDA_META_STRUCT_FEATURE_VIEW_DEPENDENCIES
 } GdaMetaStructFeature;
 
 /*
@@ -103,7 +103,7 @@ typedef struct {
 	GSList       *fk_list; /* list of GdaMetaTableForeignKey where @gda_meta_table == this GdaMetaDbObject */
 } GdaMetaTable;
 
-/*
+/**
  * Complements the GdaMetaDbObject structure, for views only
  * contains more information than for tables
  */
@@ -113,7 +113,7 @@ typedef struct {
 	gboolean      is_updatable;
 } GdaMetaView;
 
-/* 
+/*
  * Struture to hold information about each object
  * which can be created in the internal GdaMetaStore's connection.
  * It is available for tables, views, triggers, ...
@@ -162,7 +162,7 @@ typedef struct {
 
 
 GType               gda_meta_struct_get_type         (void) G_GNUC_CONST;
-GdaMetaStruct      *gda_meta_struct_new              (void);
+GdaMetaStruct      *gda_meta_struct_new              (GdaMetaStructFeature features);
 GdaMetaDbObject    *gda_meta_struct_complement       (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaDbObjectType type,
                                                       const GValue *catalog, const GValue *schema, const GValue *name,
                                                       GError **error);
@@ -171,6 +171,12 @@ GdaMetaDbObject    *gda_meta_struct_get_db_object    (GdaMetaStruct *mstruct,
                                                       const GValue *catalog, const GValue *schema, const GValue *name);
 GdaMetaTableColumn *gda_meta_struct_get_table_column (GdaMetaStruct *mstruct, GdaMetaTable *table,
                                                       const GValue *col_name);
+
+typedef enum {
+	GDA_META_GRAPH_COLUMNS = 1 << 0
+} GdaMetaGraphInfo;
+
+gchar              *gda_meta_struct_dump_as_graph    (GdaMetaStruct *mstruct, GdaMetaGraphInfo info, GError **error);
 
 G_END_DECLS
 

@@ -1,3 +1,21 @@
+2008-03-12  Vivien Malerba <malerba@gnome-db.org>
+
+	* tools/command-exec.c:
+	* tools/gda-sql.c:
+	* libgda/gda-meta-struct.[ch]: improvements (to compute only the necessary features, and others)
+	* doc/C: doc. updates
+	* po/POTFILES.in:
+	* po/POTFILES.skip: applied corrections (as proposed by
+	http://l10n.gnome.org/module/libgda)
+	* libgda/gda-easy.c: applied correction for gda_drop_table() (from Phil Longstaff)
+	* libgda/sqlite/gda-sqlite-provider.c: don't count the number of opened connections
+	* libgda/gda-meta-struct.[ch]:
+	* libgda/gda-meta-store.[ch]: added new methods
+	* tests/providers: changed tests to avoid needing reference XML files
+	* tools/gda-sql.c: allow to display a graph for a table and the tables it references (by
+	appending a '=' after that table name)
+	* others: misc. corrections
+
 2008-03-11  Murray Cumming  <murrayc@murrayc.com>
 
 	* libgda/binreloc/binreloc.c:
@@ -43,6 +61,7 @@
 	test pass again
 	* libgda/gda-meta-struct.[ch]: converted to a GObject, and added some new features
 	* tools/gda-sql.c: improved object's details reporting
+	* libgda/gda-config.c:
 	* doc/C: misc doc. updates
 
 2008-03-05  Vivien Malerba <malerba@gnome-db.org>

@@ -1164,7 +1164,7 @@ gda_statement_get_type
 <TITLE>GdaBatch</TITLE>
 GdaBatch
 gda_batch_new
-gda_batch_copy
+gda_batch_new_copy
 gda_batch_add_statement
 gda_batch_remove_statement
 gda_batch_serialize
@@ -1364,9 +1364,13 @@ GdaMetaContext
 gda_meta_store_new
 gda_meta_store_new_with_file
 gda_meta_store_get_version
-gda_meta_store_get_internal_connection
 gda_meta_store_extract
 gda_meta_store_modify
+gda_meta_store_schema_get_structure
+gda_meta_store_get_attribute_value
+gda_meta_store_set_attribute_value
+gda_meta_store_schema_add_custom_object
+gda_meta_store_get_internal_connection
 <SUBSECTION Standard>
 GDA_IS_META_STORE
 GDA_META_STORE
@@ -1380,8 +1384,8 @@ gda_meta_store_get_type
 <FILE>gda-meta-struct</FILE>
 <TITLE>GdaMetaStruct</TITLE>
 GdaMetaStruct
+GdaMetaStructFeature
 GdaMetaStructError
-GDA_META_STRUCT_ERROR
 GdaMetaDbObjectType
 GdaMetaDbObject
 GDA_META_DB_OBJECT
@@ -1393,12 +1397,15 @@ GdaMetaTableColumn
 GDA_META_TABLE_COLUMN
 GdaMetaTableForeignKey
 GDA_META_TABLE_FOREIGN_KEY
+GDA_META_STRUCT_ERROR
 gda_meta_struct_new
 gda_meta_struct_complement
 GdaMetaSortType
 gda_meta_struct_sort_db_objects
 gda_meta_struct_get_db_object
 gda_meta_struct_get_table_column
+GdaMetaGraphInfo
+gda_meta_struct_dump_as_graph
 </SECTION>
 
 <SECTION>

@@ -1953,8 +1953,11 @@ gda_server_operation_set_value_at (GdaServerOperation *op, const gchar *value, G
 				param = gda_set_get_holder (opnode->d.plist, extension);
 				if (param) {
 					GValue *v;
-					v = gda_value_new_from_string (value, 
-								       gda_holder_get_g_type (param));
+					if (value)
+						v = gda_value_new_from_string (value, 
+									       gda_holder_get_g_type (param));
+					else
+						v = gda_value_new_null ();
 					if (!gda_holder_take_value (param, v)) {
 						g_set_error (error, 0, 0,
 							     _("Could not set parameter '%s' to value '%s'"), 
@@ -1995,8 +1998,11 @@ gda_server_operation_set_value_at (GdaServerOperation *op, const gchar *value, G
 						
 						if (allok) {
 							GValue *gvalue;
-							gvalue = gda_value_new_from_string (value, 
-											    gda_column_get_g_type (column));
+							if (value)
+								gvalue = gda_value_new_from_string (value, 
+												    gda_column_get_g_type (column));
+							else
+								gvalue = gda_value_new_null ();
 							allok = gda_data_model_set_value_at (opnode->d.model,
 											     gda_column_get_position (column), 
 											     row, gvalue, error);
@@ -2009,8 +2015,11 @@ gda_server_operation_set_value_at (GdaServerOperation *op, const gchar *value, G
 		}
 		case GDA_SERVER_OPERATION_NODE_PARAM: {
 			GValue *v;
-			v = gda_value_new_from_string (value, 
-						       gda_holder_get_g_type (opnode->d.param));
+			if (value)
+				v = gda_value_new_from_string (value, 
+							       gda_holder_get_g_type (opnode->d.param));
+			else
+				v = gda_value_new_null ();
 			if (!gda_holder_take_value (opnode->d.param, v)) {
 				g_set_error (error, 0, 0,
 					     _("Could not set parameter '%s' to value '%s'"), 

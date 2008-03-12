@@ -194,6 +194,7 @@ GdaTransactionStatus *gda_connection_get_transaction_status (GdaConnection *cnc)
 gchar               *gda_connection_value_to_sql_string  (GdaConnection *cnc, GValue *from);
 
 gboolean             gda_connection_supports_feature     (GdaConnection *cnc, GdaConnectionFeature feature);
+GdaMetaStore        *gda_connection_get_meta_store       (GdaConnection *cnc);
 gboolean             gda_connection_update_meta_store    (GdaConnection *cnc, GdaMetaContext *context, GError **error);
 GdaDataModel        *gda_connection_get_meta_store_data  (GdaConnection *cnc, GdaConnectionMetaType meta_type,
 							  GError **error, gint nb_filters, ...);

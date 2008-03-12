@@ -185,8 +185,8 @@ _gda_sqlite_meta_btypes (GdaServerProvider *prov, GdaConnection *cnc,
 
 gboolean 
 _gda_sqlite_meta_schemata (GdaServerProvider *prov, GdaConnection *cnc, 
-			   GdaMetaStore *store, GdaMetaContext *context, GError **error, 
-			   const GValue *schema_name)
+			   GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			   const GValue *catalog_name, const GValue *schema_name_n)
 {
 	GdaDataModel *model, *tmpmodel;
 	gboolean retval = TRUE;
@@ -204,8 +204,8 @@ _gda_sqlite_meta_schemata (GdaServerProvider *prov, GdaConnection *cnc,
 		const GValue *cvalue;
 		
 		cvalue = gda_data_model_get_value_at (tmpmodel, 1, i);
-		if (!schema_name || 
-		    !gda_value_compare_ext (schema_name, cvalue)) {
+		if (!schema_name_n || 
+		    !gda_value_compare_ext (schema_name_n, cvalue)) {
 			const gchar *cstr;
 			GValue *v1;
 
@@ -318,56 +318,10 @@ fill_tables_views_model (GdaConnection *cnc,
         return retval;
 }
 
-gboolean
-_gda_sqlite_meta_tables_views (GdaServerProvider *prov, GdaConnection *cnc, 
-			       GdaMetaStore *store, GdaMetaContext *context, GError **error)
-{
-	GdaDataModel *tables_model, *views_model;
-	gboolean retval = TRUE;
-	tables_model = gda_meta_store_create_modify_data_model (store, "_tables");
-	g_assert (tables_model);
-	views_model = gda_meta_store_create_modify_data_model (store, "_views");
-	g_assert (views_model);
-	
-	GdaDataModel *sh_model;
-	sh_model = gda_connection_get_meta_store_data (cnc, GDA_CONNECTION_META_NAMESPACES, error, 0);
-	if (!sh_model)
-		retval = TRUE;
-	else {
-		gint nrows, i;
-		nrows = gda_data_model_get_n_rows (sh_model);
-		for (i = 0; i < nrows; i++) {
-			const GValue *p_table_schema = gda_data_model_get_value_at (sh_model, 0, i);
-			if (!fill_tables_views_model (cnc, tables_model, views_model, p_table_schema, NULL, error)) {
-				retval = FALSE;
-				break;
-			}
-		}
-		g_object_unref (sh_model);
-	}
-	
-	GdaMetaContext c2;
-	c2 = *context; /* copy contents, just because we need to modify @context->table_name */
-	if (retval) {
-		c2.table_name = "_tables";
-		retval = gda_meta_store_modify_with_context (store, &c2, tables_model, error);
-	}
-	if (retval) {
-		c2.table_name = "_views";
-		retval = gda_meta_store_modify_with_context (store, &c2, views_model, error);
-	}
-	g_object_unref (tables_model);
-	g_object_unref (views_model);
-
-	return retval;
-}
-
-
-
 gboolean 
-_gda_sqlite_meta_tables_views_s (GdaServerProvider *prov, GdaConnection *cnc, 
-				 GdaMetaStore *store, GdaMetaContext *context, GError **error, 
-				 const GValue *table_schema, const GValue *table_name)
+_gda_sqlite_meta_tables_views (GdaServerProvider *prov, GdaConnection *cnc, 
+			       GdaMetaStore *store, GdaMetaContext *context, GError **error, 
+			       const GValue *table_catalog, const GValue *table_schema, const GValue *table_name_n)
 {
 	GdaDataModel *tables_model, *views_model;
 	gboolean retval = TRUE;
@@ -376,7 +330,7 @@ _gda_sqlite_meta_tables_views_s (GdaServerProvider *prov, GdaConnection *cnc,
 	views_model = gda_meta_store_create_modify_data_model (store, "_views");
 	g_assert (views_model);
 
-	if (! fill_tables_views_model (cnc, tables_model, views_model, table_schema, table_name, error))
+	if (! fill_tables_views_model (cnc, tables_model, views_model, table_schema, table_name_n, error))
 		retval = FALSE;
 
 	GdaMetaContext c2;
@@ -399,7 +353,7 @@ static gboolean
 fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, 
 		    GdaDataModel *mod_model, 
 		    const GValue *p_table_schema, const GValue *p_table_name,
-		    const GValue *p_column_name, GError **error)
+		    GError **error)
 {
 	GdaDataModel *tmpmodel;
 	gboolean retval = TRUE;
@@ -439,11 +393,6 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 		GType gtype = 0;
 		
 		this_col_pname = gda_data_model_get_value_at (tmpmodel, 1, i);
-		if (p_column_name &&
-		    gda_value_compare_ext (p_column_name, this_col_pname))
-			continue;
-
-		
 		this_table_name = g_value_get_string (p_table_name);
 		g_assert (this_table_name);
 		if (!strcmp (this_table_name, "sqlite_sequence"))
@@ -454,10 +403,12 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 						   this_table_name, this_col_name,
 						   &pzDataType, &pzCollSeq, &pNotNull, &pPrimaryKey, &pAutoinc)
 		    != SQLITE_OK) {
-			g_set_error (error, 0, 0,
-				     _("Internal error"));
-			retval = FALSE;
-			break;
+			/* may fail because we have a view and not a table => use @tmpmodel to fetch info. */
+			pzDataType = g_value_get_string (gda_data_model_get_value_at (tmpmodel, 2, i));
+			pzCollSeq = NULL;
+			pNotNull = g_value_get_int (gda_data_model_get_value_at (tmpmodel, 3, i));
+			pPrimaryKey = g_value_get_boolean (gda_data_model_get_value_at (tmpmodel, 5, i));
+			pAutoinc = 0;
 		}
 		
 		v1 = gda_value_copy (gda_data_model_get_value_at (tmpmodel, 0, i));
@@ -469,18 +420,24 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 		g_value_set_int (v1, g_value_get_int (v1) + 1);
 
 		
-		if (pzDataType)
-			gtype = GPOINTER_TO_INT (g_hash_table_lookup (cdata->types, pzDataType));
-		if (gtype == 0) {
-			g_warning ("Internal error: could not get GType for DBMS type '%s'", pzDataType);
-			g_value_set_string ((v6 = gda_value_new (G_TYPE_STRING)), "string");
+		if (pzDataType) {
+			gchar *tmp = g_strdup (pzDataType);
+			gchar *ptr;
+			for (ptr = tmp; *ptr && (*ptr != '(') && (*ptr != '['); ptr++);
+			if (*ptr)
+				*ptr = 0;
+			gtype = GPOINTER_TO_INT (g_hash_table_lookup (cdata->types, tmp));
+			g_free (tmp);
 		}
+		if (gtype == 0) 
+			/* default to string if nothing else */
+			g_value_set_string ((v6 = gda_value_new (G_TYPE_STRING)), "string");
 		else
 			g_value_set_string ((v6 = gda_value_new (G_TYPE_STRING)), g_type_name (gtype));
 		if (! append_a_row (mod_model, error, 25, 
-				    FALSE, catalog_value,
-				    FALSE, p_table_schema,
-				    FALSE, p_table_name,
+				    FALSE, catalog_value, /* table_catalog */
+				    FALSE, p_table_schema, /* table_schema */
+				    FALSE, p_table_name, /* table_name */
 				    FALSE, this_col_pname, /* column name */
 				    TRUE, v1, /* ordinal_position */
 				    FALSE, gda_data_model_get_value_at (tmpmodel, 4, i), /* column default */
@@ -512,7 +469,8 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 
 gboolean
 _gda_sqlite_meta_columns (GdaServerProvider *prov, GdaConnection *cnc, 
-			  GdaMetaStore *store, GdaMetaContext *context, GError **error)
+			  GdaMetaStore *store, GdaMetaContext *context, GError **error, 
+			  const GValue *table_catalog, const GValue *table_schema, const GValue *table_name)
 {
 	gboolean retval = TRUE;
 	GdaDataModel *mod_model = NULL;
@@ -525,97 +483,34 @@ _gda_sqlite_meta_columns (GdaServerProvider *prov, GdaConnection *cnc,
 	mod_model = gda_meta_store_create_modify_data_model (store, context->table_name);
 	g_assert (mod_model);
 
-	GdaDataModel *tmpmodel;
-	
-	tmpmodel = gda_connection_get_meta_store_data (cnc, GDA_CONNECTION_META_TABLES, error, 0);
-	if (!tmpmodel)
-		retval = TRUE;
-	else {
-		gint nrows, i;
-		nrows = gda_data_model_get_n_rows (tmpmodel);
-		for (i = 0; i < nrows; i++) {
-			const GValue *p_table_name = gda_data_model_get_value_at (tmpmodel, 0, i);
-			const GValue *p_table_schema = gda_data_model_get_value_at (tmpmodel, 1, i);
-			if (!fill_columns_model (cnc, cdata, mod_model, p_table_schema, p_table_name, NULL, error)) {
-				retval = FALSE;
-				break;
-			}
-		}
-		g_object_unref (tmpmodel);
-	}
-	
+	retval = fill_columns_model (cnc, cdata, mod_model, table_schema, table_name, error);	
 	if (retval)
 		retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
 	g_object_unref (mod_model);
 
 	return retval;
-}
-
-gboolean
-_gda_sqlite_meta_columns_t (GdaServerProvider *prov, GdaConnection *cnc, 
-			    GdaMetaStore *store, GdaMetaContext *context, GError **error, 
-			    const GValue *table_schema, const GValue *table_name)
-{
-	return _gda_sqlite_meta_columns_c (prov, cnc, store, context, error, table_schema, table_name, NULL);
-}
-
-gboolean
-_gda_sqlite_meta_columns_c (GdaServerProvider *prov, GdaConnection *cnc, 
-			    GdaMetaStore *store, GdaMetaContext *context, GError **error, 
-			    const GValue *table_schema, const GValue *table_name, const GValue *column_name)
-{
-	gboolean retval = TRUE;
-	GdaDataModel *mod_model = NULL;
-	SqliteConnectionData *cdata;
-	
-	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata)
-		return FALSE;
-
-	mod_model = gda_meta_store_create_modify_data_model (store, context->table_name);
-	g_assert (mod_model);
-
-	retval = fill_columns_model (cnc, cdata, mod_model, table_schema, table_name, column_name, error);	
-	if (retval)
-		retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
-	g_object_unref (mod_model);
-
-	return retval;
-}
-
-gboolean
-_gda_sqlite_meta_constraints_tab (GdaServerProvider *prov, GdaConnection *cnc, 
-				  GdaMetaStore *store, GdaMetaContext *context, GError **error)
-{
-	TO_IMPLEMENT;
-	return TRUE;
 }
 
 gboolean 
-_gda_sqlite_meta_constraints_tab_s (GdaServerProvider *prov, GdaConnection *cnc, 
-				    GdaMetaStore *store, GdaMetaContext *context, GError **error,
-				    const GValue *table_schema, const GValue *table_name)
+_gda_sqlite_meta_constraints_tab (GdaServerProvider *prov, GdaConnection *cnc, 
+				  GdaMetaStore *store, GdaMetaContext *context, GError **error,
+				  const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
+				  const GValue *constraint_name_n)
 {
-	TO_IMPLEMENT;
+	/* not implemented in SQLite */
 	return TRUE;
 }
 
 gboolean
 _gda_sqlite_meta_constraints_ref (GdaServerProvider *prov, GdaConnection *cnc, 
-				  GdaMetaStore *store, GdaMetaContext *context, GError **error)
+				  GdaMetaStore *store, GdaMetaContext *context, GError **error,
+				  const GValue *table_catalog, const GValue *table_schema, const GValue *table_name, 
+				  const GValue *constraint_name)
 {
-	TO_IMPLEMENT;
+	/* not implemented in SQLite */
 	return TRUE;
 }
 
-gboolean
-_gda_sqlite_meta_constraints_ref_c (GdaServerProvider *prov, GdaConnection *cnc, 
-				    GdaMetaStore *store, GdaMetaContext *context, GError **error,
-				    const GValue *table_schema, const GValue *table_name)
-{
-	TO_IMPLEMENT;
-	return TRUE;
-}
 
 /*
  * @...: a list of TRUE/FALSE, GValue*  -- if TRUE then the following GValue must be freed

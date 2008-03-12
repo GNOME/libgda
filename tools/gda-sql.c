@@ -915,6 +915,7 @@ open_connection (MainData *data, const gchar *cnc_name, const gchar *dsn, const 
 				if (!data->output_stream) 
 					g_print (_(" Done.\n"));
 		}
+
 		g_object_unref (store);
 	}
 
@@ -2365,81 +2366,15 @@ static gchar *
 create_graph_from_meta_struct (GdaConnection *cnc, GdaMetaStruct *mstruct, GError **error)
 {
 #define FNAME "graph.dot"
-	GString *string;
-	gint i;
+	gchar *graph;
 
-	/* prepare the graph */
-	string = g_string_new ("digraph G {\nrankdir = BT;\nnode [shape = plaintext];\n");
-	GSList *dbo_list;
-	for (dbo_list = mstruct->db_objects; dbo_list; dbo_list = dbo_list->next) {
-		gchar *objname, *fullname;
-		GdaMetaDbObject *dbo = GDA_META_DB_OBJECT (dbo_list->data);
-		GSList *list;
-
-		/* obj human readable name, and full name */
-		fullname = g_strdup_printf ("%s.%s.%s", dbo->obj_catalog, dbo->obj_schema, dbo->obj_name);
-		if (dbo->obj_short_name) 
-			objname = g_strdup (dbo->obj_short_name);
-		else
-			objname = g_strdup_printf ("%s.%s", dbo->obj_schema, dbo->obj_name);
-
-		/* node */
-		switch (dbo->obj_type) {
-		case GDA_META_DB_UNKNOWN:
-			break;
-		case GDA_META_DB_TABLE:
-			g_string_append_printf (string, "\"%s\" [label=<<TABLE BORDER=\"1\" CELLBORDER=\"0\" CELLSPACING=\"0\">", fullname);
-			g_string_append_printf (string, "<TR><TD COLSPAN=\"2\" BGCOLOR=\"grey\" BORDER=\"1\">%s</TD></TR>", objname);
-			break;
-		case GDA_META_DB_VIEW:
-			g_string_append_printf (string, "\"%s\" [label=<<TABLE BORDER=\"1\" CELLBORDER=\"0\" CELLSPACING=\"0\">", fullname);
-			g_string_append_printf (string, "<TR><TD BGCOLOR=\"yellow\" BORDER=\"1\">%s</TD></TR>", objname);
-			break;
-		default:
-			TO_IMPLEMENT;
-			g_string_append_printf (string, "\"%s\" [ shape = note ", fullname);
-			break;
-		}
-
-		/* columns, only for tables */
-		if (dbo->obj_type == GDA_META_DB_TABLE) {
-			GdaMetaTable *mt = GDA_META_DB_OBJECT_GET_TABLE (dbo);
-			for (list = mt->columns; list; list = list->next) {
-				GdaMetaTableColumn *tcol = GDA_META_TABLE_COLUMN (list->data);
-				GString *extra = g_string_new ("");
-				if (tcol->pkey)
-					g_string_append_printf (extra, "key");
-				g_string_append_printf (string, "<TR><TD ALIGN=\"left\">%s</TD><TD ALIGN=\"right\">%s</TD></TR>", 
-							tcol->column_name, extra->str);
-				g_string_free (extra, TRUE);
-			}
-			g_string_append (string, "</TABLE>>];\n");
-			/* foreign keys */
-			for (i = 1, list = mt->fk_list; list; i++, list = list->next) {
-				GdaMetaTableForeignKey *tfk = GDA_META_TABLE_FOREIGN_KEY (list->data);
-				if (tfk->depend_on->obj_type != GDA_META_DB_UNKNOWN) 
-					g_string_append_printf (string, "\"%s\" -> \"%s.%s.%s\" [label=\"(%d)\"];\n", fullname,
-								tfk->depend_on->obj_catalog, tfk->depend_on->obj_schema, 
-								tfk->depend_on->obj_name, i);
-			}
-		}
-		else if (dbo->obj_type == GDA_META_DB_VIEW) {
-			GdaMetaTable *mt = GDA_META_DB_OBJECT_GET_TABLE (dbo);
-			for (list = mt->columns; list; list = list->next) {
-				GdaMetaTableColumn *tcol = GDA_META_TABLE_COLUMN (list->data);
-				g_string_append_printf (string, "<TR><TD ALIGN=\"left\">%s</TD></TR>", tcol->column_name);
-			}
-			g_string_append (string, "</TABLE>>];\n");
-		}
-
-		g_free (objname);
-		g_free (fullname);
-	}
-	g_string_append_c (string, '}');
+	graph = gda_meta_struct_dump_as_graph (mstruct, GDA_META_GRAPH_COLUMNS, error);
+	if (!graph)
+		return NULL;
 
 	/* do something with the graph */
 	gchar *result = NULL;
-	if (g_file_set_contents (FNAME, string->str, -1, error)) {
+	if (g_file_set_contents (FNAME, graph, -1, error)) {
 		const gchar *viewer;
 		const gchar *format;
 		
@@ -2494,7 +2429,7 @@ create_graph_from_meta_struct (GdaConnection *cnc, GdaMetaStruct *mstruct, GErro
 						    "Note: set the GDA_SQL_VIEWER_PNG or GDA_SQL_VIEWER_PDF environment "
 						    "variables to view the graph"), FNAME, FNAME);
 	}
-	g_string_free (string, TRUE);
+	g_free (graph);
 	return result;
 }
 

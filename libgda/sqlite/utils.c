@@ -73,6 +73,22 @@ static char get_affinity (const gchar *type)
 	return aff;
 }
 
+static guint
+nocase_str_hash (gconstpointer v)
+{
+	guint ret;
+	gchar *up = g_ascii_strup ((gchar *) v, -1);
+	ret = g_str_hash ((gconstpointer) up);
+	g_free (up);
+	return ret;
+}
+
+static gboolean
+nocase_str_equal (gconstpointer v1, gconstpointer v2)
+{
+	return g_ascii_strcasecmp ((gchar *) v1, (gchar *) v2) == 0 ? TRUE : FALSE;
+}
+
 void
 _gda_sqlite_update_types_hash (SqliteConnectionData *cdata)
 {
@@ -82,7 +98,7 @@ _gda_sqlite_update_types_hash (SqliteConnectionData *cdata)
 
 	types = cdata->types;
 	if (!types) {
-		types = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL); /* key= type name, value= gda type */
+		types = g_hash_table_new_full (nocase_str_hash, nocase_str_equal, g_free, NULL); /* key= type name, value= gda type */
 		cdata->types = types;
 	}
 	
@@ -93,6 +109,7 @@ _gda_sqlite_update_types_hash (SqliteConnectionData *cdata)
 	g_hash_table_insert (types, g_strdup ("timestamp"), GINT_TO_POINTER (GDA_TYPE_TIMESTAMP));
 	g_hash_table_insert (types, g_strdup ("real"), GINT_TO_POINTER (G_TYPE_DOUBLE));
 	g_hash_table_insert (types, g_strdup ("text"), GINT_TO_POINTER (G_TYPE_STRING));
+	g_hash_table_insert (types, g_strdup ("string"), GINT_TO_POINTER (G_TYPE_STRING));
 	g_hash_table_insert (types, g_strdup ("blob"), GINT_TO_POINTER (GDA_TYPE_BINARY));
 
 	/* HACK: force SQLite to reparse the schema and thus discover new tables if necessary */

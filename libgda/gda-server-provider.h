@@ -63,24 +63,39 @@ struct _GdaServerProvider {
 };
 
 typedef struct {
-	gboolean (*info)          (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
-	gboolean (*btypes)        (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
-	gboolean (*schemata)      (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **, 
-				   const GValue *schema_name);
-	gboolean (*tables_views)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
-	gboolean (*tables_views_s)(GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **, 
-				   const GValue *table_schema, const GValue *table_name);
-	gboolean (*columns)       (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
-	gboolean (*columns_t)     (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **, 
-				   const GValue *table_schema, const GValue *table_name);
-	gboolean (*columns_c)     (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **, 
-				   const GValue *table_schema, const GValue *table_name, const GValue *column_name);
-	gboolean (*constraints_tab)(GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
-	gboolean (*constraints_tab_s)(GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **, 
-				      const GValue *table_schema, const GValue *table_name);
-	gboolean (*constraints_ref)(GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
-	gboolean (*constraints_ref_c)(GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **, 
-				      const GValue *constraint_schema, const GValue *constraint_name);
+	/* _information_schema_catalog_name */
+	gboolean (*_info)            (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+
+	/* _builtin_data_types */
+	gboolean (*_btypes)          (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+
+
+	/* _schemata */
+	gboolean (*_schemata)        (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*schemata)         (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **, 
+				      const GValue *catalog_name, const GValue *schema_name_n);
+
+	/* _tables or _views */
+	gboolean (*_tables_views)    (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*tables_views)     (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
+				      const GValue *table_catalog, const GValue *table_schema, const GValue *table_name_n);
+
+	/* _columns */
+	gboolean (*_columns)         (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*columns)          (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
+				      const GValue *table_catalog, const GValue *table_schema, const GValue *table_name);
+
+	/* _table_constraints */
+	gboolean (*_constraints_tab) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*constraints_tab)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **, 
+				      const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
+				      const GValue *constraint_name_n);
+
+	/* _referential_constraints */
+	gboolean (*_constraints_ref) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*constraints_ref)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
+				      const GValue *table_catalog, const GValue *table_schema, const GValue *table_name, 
+				      const GValue *constraint_name);
 } GdaServerProviderMeta;
 
 typedef void (*GdaServerProviderAsyncCallback) (GdaServerProvider *provider, GdaConnection *cnc, guint task_id, 

@@ -227,18 +227,13 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 	provider_class->statement_execute = gda_sqlite_provider_statement_execute;
 
 	memset (&(provider_class->meta_funcs), 0, sizeof (GdaServerProviderMeta));
-	provider_class->meta_funcs.info = _gda_sqlite_meta_info;
-	provider_class->meta_funcs.btypes = _gda_sqlite_meta_btypes;
+	provider_class->meta_funcs._info = _gda_sqlite_meta_info;
+	provider_class->meta_funcs._btypes = _gda_sqlite_meta_btypes;
 	provider_class->meta_funcs.schemata = _gda_sqlite_meta_schemata;
 	provider_class->meta_funcs.tables_views = _gda_sqlite_meta_tables_views;
-	provider_class->meta_funcs.tables_views_s = _gda_sqlite_meta_tables_views_s;
 	provider_class->meta_funcs.columns = _gda_sqlite_meta_columns;
-	provider_class->meta_funcs.columns_t = _gda_sqlite_meta_columns_t;
-	provider_class->meta_funcs.columns_c = _gda_sqlite_meta_columns_c;
 	provider_class->meta_funcs.constraints_tab = _gda_sqlite_meta_constraints_tab;
-	provider_class->meta_funcs.constraints_tab_s = _gda_sqlite_meta_constraints_tab_s;
 	provider_class->meta_funcs.constraints_ref = _gda_sqlite_meta_constraints_ref;
-	provider_class->meta_funcs.constraints_ref_c = _gda_sqlite_meta_constraints_ref_c;
 }
 
 static void
@@ -479,7 +474,6 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 				     GdaQuarkList *params, GdaQuarkList *auth,
 				     guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data)
 {
-	static gint nb_opened = 1;
 	gchar *filename = NULL;
 	const gchar *dirname = NULL, *dbname = NULL;
 	const gchar *is_virtual = NULL;
@@ -581,11 +575,10 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	opening_cdata = cdata;
 #endif
 
-	errmsg = sqlite3_open (filename, &cdata->connection);
-	g_print ("SQLite opened %d connection(s)\n", nb_opened++);
-
 	if (filename)
 		cdata->file = g_strdup (filename);
+
+	errmsg = sqlite3_open (filename, &cdata->connection);
 
 	if (errmsg != SQLITE_OK) {
 		gda_connection_add_event_string (cnc, sqlite3_errmsg (cdata->connection));
@@ -596,6 +589,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 #endif
 		return FALSE;
 	}
+
 	gda_connection_internal_set_provider_data (cnc, cdata, (GDestroyNotify) gda_sqlite_free_cnc_data);
 
 	/* use extended result codes */

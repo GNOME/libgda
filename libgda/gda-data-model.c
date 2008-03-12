@@ -1548,26 +1548,21 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 			break;
 		}
 
+		gboolean nullforced = FALSE;
 		isnull = (gchar*)xmlGetProp (xml_field, BAD_CAST "isnull");
 		if (isnull) {
-			if ((*isnull == 'f') || (*isnull == 'F')) {
-				g_free (isnull);
-				isnull = NULL;
-			}
+			if ((*isnull == 't') || (*isnull == 't'))
+				nullforced = TRUE;
+			g_free (isnull);
 		}
 
-		if (!isnull) {
+		if (!nullforced) {
 			value = g_new0 (GValue, 1);
 			if (!gda_value_set_from_string (value, (gchar*)xmlNodeGetContent (xml_field), gdatype)) {
 				g_free (value);
-				g_set_error (error, 0, 0, _("Cannot interpret string as a valid %s value"), 
-					     gda_g_type_to_string (gdatype));
-				retval = FALSE;
-				break;
+				value = gda_value_new_null ();
 			}
 		}
-		else
-			g_free (isnull);
 
 		g_ptr_array_index (values, pos) = value;
 		if (this_lang)

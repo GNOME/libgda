@@ -15,7 +15,7 @@ gda_meta_store_change_free (GdaMetaStoreChange *change) {
 GSList *expected_changes;
 
 static void meta_changed_cb (GdaMetaStore *store, GSList *changes, gpointer data);
-static void suggest_update_cb (GdaMetaStore *store, GdaMetaContext *context, gpointer data);
+static GError *suggest_update_cb (GdaMetaStore *store, GdaMetaContext *context, gpointer data);
 
 /*
  * Declare a GdaMetaStore to test
@@ -91,17 +91,18 @@ meta_changed_cb (GdaMetaStore *store, GSList *changes, gpointer data)
 	}
 }
 
-static void
+static GError *
 suggest_update_cb (GdaMetaStore *store, GdaMetaContext *context, gpointer data)
 {
 	gint i;
-	g_print ("Update suggested for table %s:\n", context->table_name);
+	g_print ("test: Update suggested for table %s:\n", context->table_name);
 	for (i = 0; i < context->size; i++) {
 		gchar *str;
 		str = gda_value_stringify (context->column_values[i]);
 		g_print ("\t%s => %s\n", context->column_names[i], str);
 		g_free (str);
 	}
+	return NULL;
 }
 
 /*
@@ -272,11 +273,6 @@ common_drop_all_tables (GdaMetaStore *store)
 	};
 	gchar *view_names [] = {
 		"_all_types",
-		"_constraint_column_usage",
-		"_constraint_table_usage",
-		"_view_table_usage",
-		"_check_constraints",
-		"_domain_column_usage"
 	};
 	
 	GdaConnection *cnc = gda_meta_store_get_internal_connection (store);
@@ -346,7 +342,7 @@ tests_group_1 (GdaMetaStore *store)
 	test_columns (store);
 	test_table_constraints (store);
 	test_referential_constraints (store);
-	test_key_column_usage (store);
+	/*test_key_column_usage (store);*/
 	test_domain_constraints (store);
 	test_parameters (store);
 }

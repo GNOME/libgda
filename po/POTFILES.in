@@ -1,3 +1,4 @@
+doc/C/prov-writing.xml
 libgda/gda-batch.c
 libgda/gda-config.c
 libgda/gda-connection.c
@@ -110,6 +111,7 @@ providers/mysql/mysql_specs_drop_table.xml.in
 providers/mysql/mysql_specs_drop_view.xml.in
 providers/mysql/mysql_specs_dsn.xml.in
 providers/mysql/mysql_specs_rename_table.xml.in
+providers/odbc/gda-odbc-provider.c
 providers/odbc/gda-odbc-recordset.c
 providers/odbc/libmain.c
 providers/odbc/odbc_specs_dsn.xml.in
@@ -158,9 +160,12 @@ providers/sqlite/sqlite_specs_drop_table.xml.in
 providers/sqlite/sqlite_specs_drop_view.xml.in
 providers/sqlite/sqlite_specs_dsn.xml.in
 providers/sqlite/sqlite_specs_rename_table.xml.in
+providers/sybase/gda-sybase-provider.c
 providers/sybase/gda-sybase-recordset.c
+providers/sybase/gda-sybase-types.c
 providers/sybase/libmain.c
 providers/sybase/sybase_specs_dsn.xml.in
+providers/sybase/utils.c
 providers/xbase/gda-xbase-provider.c
 providers/xbase/libmain.c
 providers/xbase/xbase_specs_dsn.xml.in

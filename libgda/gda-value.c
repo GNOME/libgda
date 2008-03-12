@@ -1798,7 +1798,7 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 	g_return_val_if_fail (value1 && value2, -1);
 	g_return_val_if_fail (G_VALUE_TYPE (value1) == G_VALUE_TYPE (value2), -1);
 
-	type = G_VALUE_TYPE(value1);
+	type = G_VALUE_TYPE (value1);
 	
 	if (value1 == value2)
 		return 0;
@@ -1868,10 +1868,19 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 			return (v1 > v2) ? 1 : -1;
 	}
 
-	else if (type == GDA_TYPE_GEOMETRIC_POINT)
-		return memcmp (gda_value_get_geometric_point(value1) , 
-			       gda_value_get_geometric_point(value2),
-			       sizeof (GdaGeometricPoint));
+	else if (type == GDA_TYPE_GEOMETRIC_POINT) {
+		const GdaGeometricPoint *p1, *p2;
+		p1 = gda_value_get_geometric_point (value1);
+		p2 = gda_value_get_geometric_point (value2);
+		if (p1 && p2)
+			return memcmp (p1, p2, sizeof (GdaGeometricPoint));
+		else if (p1)
+			return 1;
+		else if (p2)
+			return -1;
+		else
+			return 0;
+	}
 
 	else if (type == G_TYPE_OBJECT) {
 		if (g_value_get_object (value1) == g_value_get_object (value2))
@@ -1958,15 +1967,34 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 		return retval;
 	}
 	
-	else if (type == GDA_TYPE_TIME)
-		return memcmp (gda_value_get_time(value1), gda_value_get_time(value2),
-			       sizeof (GdaTime));
+	else if (type == GDA_TYPE_TIME) {
+		const GdaTime *t1, *t2;
+		t1 = gda_value_get_time (value1);
+		t2 = gda_value_get_time (value2);
+		if (t1 && t2)
+			return memcmp (t1, t2, sizeof (GdaTime));
+		else if (t1)
+			return 1;
+		else if (t2)
+			return -1;
+		else
+			return 0;
+	}
 
-	else if (type == GDA_TYPE_TIMESTAMP)
-		return memcmp (gda_value_get_timestamp(value1), 
-			       gda_value_get_timestamp(value2),
-			       sizeof (GdaTimestamp));
-	
+	else if (type == GDA_TYPE_TIMESTAMP) {
+		const GdaTimestamp *ts1, *ts2;
+		ts1 = gda_value_get_timestamp (value1);
+		ts2 = gda_value_get_timestamp (value2);
+		if (ts1 && ts2)
+			return memcmp (ts1, ts2, sizeof (GdaTimestamp));
+		else if (ts1)
+			return 1;
+		else if (ts2)
+			return -1;
+		else
+			return 0;
+	}
+
 	else if (type == G_TYPE_CHAR)
 		return (g_value_get_char (value1) > g_value_get_char (value2)) ? 1 : 
 			((g_value_get_char (value1) == g_value_get_char (value2)) ? 0 : -1);

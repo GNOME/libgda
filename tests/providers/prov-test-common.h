@@ -13,7 +13,7 @@
 int prov_test_common_setup ();
 int prov_test_common_create_tables_sql ();
 int prov_test_common_load_data ();
-int prov_test_common_check_schemas ();
+int prov_test_common_check_meta ();
 int prov_test_common_check_cursor_models ();
 int prov_test_common_clean ();
 

@@ -1,142 +1,56 @@
 <?xml version="1.0"?>
 <gda_array id="EXPORT" name="Exported Data">
-  <gda_array_field id="FI0" name="Type" title="Type" gdatype="gchararray" nullok="TRUE"/>
-  <gda_array_field id="FI1" name="Owner" title="Owner" gdatype="gchararray" nullok="TRUE"/>
-  <gda_array_field id="FI2" name="Comments" title="Comments" gdatype="gchararray" nullok="TRUE"/>
-  <gda_array_field id="FI3" name="GDA type" title="GDA type" gdatype="gulong" nullok="TRUE"/>
-  <gda_array_field id="FI4" name="Synonyms" title="Synonyms" gdatype="gchararray" nullok="TRUE"/>
+  <gda_array_field id="FI0" name="short_type_name" title="short_type_name" gdatype="gchararray" size="-1" scale="-1"/>
+  <gda_array_field id="FI1" name="gtype" title="gtype" gdatype="gchararray" size="-1" scale="-1" nullok="TRUE"/>
+  <gda_array_field id="FI2" name="comments" title="comments" gdatype="gchararray" size="-1" scale="-1" nullok="TRUE"/>
+  <gda_array_field id="FI3" name="synonyms" title="synonyms" gdatype="gchararray" size="-1" scale="-1" nullok="TRUE"/>
   <gda_array_data>
     <gda_array_row>
-      <gda_value>integer</gda_value>
-      <gda_value>system</gda_value>
-      <gda_value>Signed integer, stored in 1, 2, 3, 4, 6, or 8 bytes depending on the magnitude of the value</gda_value>
-      <gda_value>24</gda_value>
+      <gda_value>blob</gda_value>
+      <gda_value>GdaBinary</gda_value>
+      <gda_value>Blob of data, stored exactly as it was input</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
+      <gda_value>boolean</gda_value>
+      <gda_value>gboolean</gda_value>
+      <gda_value>Boolean value</gda_value>
+      <gda_value>bool</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>date</gda_value>
+      <gda_value>GDate</gda_value>
+      <gda_value>Date, stored as 'YYYY-MM-DD'</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>integer</gda_value>
+      <gda_value>gint</gda_value>
+      <gda_value>Signed integer, stored in 1, 2, 3, 4, 6, or 8 bytes depending on the magnitude of the value</gda_value>
+      <gda_value>int</gda_value>
+    </gda_array_row>
+    <gda_array_row>
       <gda_value>real</gda_value>
-      <gda_value>system</gda_value>
+      <gda_value>gdouble</gda_value>
       <gda_value>Floating point value, stored as an 8-byte IEEE floating point number</gda_value>
-      <gda_value>60</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
       <gda_value>text</gda_value>
-      <gda_value>system</gda_value>
+      <gda_value>string</gda_value>
       <gda_value>Text string, stored using the database encoding</gda_value>
-      <gda_value>64</gda_value>
-      <gda_value isnull="t"/>
+      <gda_value>string</gda_value>
     </gda_array_row>
     <gda_array_row>
-      <gda_value>blob</gda_value>
-      <gda_value>system</gda_value>
-      <gda_value>Blob of data, stored exactly as it was input</gda_value>
-      <gda_value>145570992</gda_value>
+      <gda_value>time</gda_value>
+      <gda_value>GdaTime</gda_value>
+      <gda_value>Time, stored as 'HH:MM:SS.SSS'</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
       <gda_value>timestamp</gda_value>
-      <gda_value>system</gda_value>
+      <gda_value>GdaTimestamp</gda_value>
       <gda_value>Time stamp, stored as 'YYYY-MM-DD HH:MM:SS.SSS'</gda_value>
-      <gda_value>145573576</gda_value>
-      <gda_value isnull="t"/>
-    </gda_array_row>
-    <gda_array_row>
-      <gda_value>time</gda_value>
-      <gda_value>system</gda_value>
-      <gda_value>Time, stored as 'HH:MM:SS.SSS'</gda_value>
-      <gda_value>145568736</gda_value>
-      <gda_value isnull="t"/>
-    </gda_array_row>
-    <gda_array_row>
-      <gda_value>date</gda_value>
-      <gda_value>system</gda_value>
-      <gda_value>Date, stored as 'YYYY-MM-DD'</gda_value>
-      <gda_value>145570864</gda_value>
-      <gda_value isnull="t"/>
-    </gda_array_row>
-    <gda_array_row>
-      <gda_value>VARCHAR(45)</gda_value>
-      <gda_value>system</gda_value>
-      <gda_value isnull="t"/>
-      <gda_value>64</gda_value>
-      <gda_value isnull="t"/>
-    </gda_array_row>
-    <gda_array_row>
-      <gda_value>INTEGER</gda_value>
-      <gda_value>system</gda_value>
-      <gda_value isnull="t"/>
-      <gda_value>24</gda_value>
-      <gda_value isnull="t"/>
-    </gda_array_row>
-    <gda_array_row>
-      <gda_value>CHAR(20)</gda_value>
-      <gda_value>system</gda_value>
-      <gda_value isnull="t"/>
-      <gda_value>64</gda_value>
-      <gda_value isnull="t"/>
-    </gda_array_row>
-    <gda_array_row>
-      <gda_value>SMALLINT</gda_value>
-      <gda_value>system</gda_value>
-      <gda_value isnull="t"/>
-      <gda_value>24</gda_value>
-      <gda_value isnull="t"/>
-    </gda_array_row>
-    <gda_array_row>
-      <gda_value>VARCHAR</gda_value>
-      <gda_value>system</gda_value>
-      <gda_value isnull="t"/>
-      <gda_value>64</gda_value>
-      <gda_value isnull="t"/>
-    </gda_array_row>
-    <gda_array_row>
-      <gda_value>year</gda_value>
-      <gda_value>system</gda_value>
-      <gda_value isnull="t"/>
-      <gda_value>64</gda_value>
-      <gda_value isnull="t"/>
-    </gda_array_row>
-    <gda_array_row>
-      <gda_value>TEXT[]</gda_value>
-      <gda_value>system</gda_value>
-      <gda_value isnull="t"/>
-      <gda_value>64</gda_value>
-      <gda_value isnull="t"/>
-    </gda_array_row>
-    <gda_array_row>
-      <gda_value>VARCHAR(255)</gda_value>
-      <gda_value>system</gda_value>
-      <gda_value isnull="t"/>
-      <gda_value>64</gda_value>
-      <gda_value isnull="t"/>
-    </gda_array_row>
-    <gda_array_row>
-      <gda_value>TEXT</gda_value>
-      <gda_value>system</gda_value>
-      <gda_value isnull="t"/>
-      <gda_value>64</gda_value>
-      <gda_value isnull="t"/>
-    </gda_array_row>
-    <gda_array_row>
-      <gda_value>NUMERIC(4,2)</gda_value>
-      <gda_value>system</gda_value>
-      <gda_value isnull="t"/>
-      <gda_value>64</gda_value>
-      <gda_value isnull="t"/>
-    </gda_array_row>
-    <gda_array_row>
-      <gda_value>TIMESTAMP</gda_value>
-      <gda_value>system</gda_value>
-      <gda_value isnull="t"/>
-      <gda_value>64</gda_value>
-      <gda_value isnull="t"/>
-    </gda_array_row>
-    <gda_array_row>
-      <gda_value>NUMERIC(5,2)</gda_value>
-      <gda_value>system</gda_value>
-      <gda_value isnull="t"/>
-      <gda_value>64</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
   </gda_array_data>

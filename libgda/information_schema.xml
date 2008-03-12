@@ -69,6 +69,10 @@
     <column name="udt_full_name"/>
     <column name="udt_internal" type="boolean"/>
     <column name="udt_owner" nullok="TRUE"/>
+    <fkey ref_table="_schemata">
+      <part column="udt_catalog" ref_column="catalog_name"/>
+      <part column="udt_schema" ref_column="schema_name"/>
+    </fkey>
     <unique>
       <column name="udt_full_name"/>
     </unique>
@@ -330,14 +334,15 @@
   </table>
 
   <table name="_table_constraints">
-    <column name="constraint_catalog" pkey="TRUE"/>
-    <column name="constraint_schema" pkey="TRUE"/>
+    <column name="constraint_catalog" nullok="TRUE" descr="Name of the catalog that contains the constraint"/>
+    <column name="constraint_schema" nullok="TRUE" descr="Name of the schema that contains the constraint"/>
+
     <column name="constraint_name" pkey="TRUE"/>
-    <column name="table_catalog"/>
-    <column name="table_schema"/>
-    <column name="table_name"/>
+    <column name="table_catalog" pkey="TRUE"/>
+    <column name="table_schema" pkey="TRUE"/>
+    <column name="table_name" pkey="TRUE"/>
     <column name="constraint_type" descr="CHECK, FOREIGN KEY, PRIMARY KEY or UNIQUE"/>
-    <column name="check_clause" nullok="TRUE"/>
+    <column name="check_clause" nullok="TRUE" descr="The check expression if the constraint is a check constraint, NULL otherwise"/>
     <column name="is_deferrable" type="boolean" nullok="TRUE"/>
     <column name="initially_deferred" type="boolean" nullok="TRUE"/>
     <fkey ref_table="_tables">
@@ -345,46 +350,48 @@
       <part column="table_schema"/>
       <part column="table_name"/>
     </fkey>
-    <fkey ref_table="_schemata">
-      <part column="constraint_catalog" ref_column="catalog_name"/>
-      <part column="constraint_schema"  ref_column="schema_name"/>
-    </fkey>
   </table>
 
   <table name="_referential_constraints">
-    <column name="constraint_catalog" pkey="TRUE"/>
-    <column name="constraint_schema" pkey="TRUE"/>
+    <column name="table_catalog" pkey="TRUE"/>
+    <column name="table_schema" pkey="TRUE"/>
+    <column name="table_name" pkey="TRUE"/>
     <column name="constraint_name" pkey="TRUE"/>
-    <column name="unique_constraint_catalog"/>
-    <column name="unique_constraint_schema"/>
-    <column name="unique_constraint_name"/>
+
+    <column name="ref_table_catalog"/>
+    <column name="ref_table_schema"/>
+    <column name="ref_table_name"/>
+    <column name="ref_constraint_name"/>
+
     <column name="match_option" nullok="TRUE"/>
     <column name="update_rule" nullok="TRUE"/>
     <column name="delete_rule" nullok="TRUE"/>
     <fkey ref_table="_table_constraints">
-      <part column="constraint_catalog"/>
-      <part column="constraint_schema"/>
+      <part column="table_catalog"/>
+      <part column="table_schema"/>
+      <part column="table_name"/>
       <part column="constraint_name"/>
     </fkey>
     <fkey ref_table="_table_constraints">
-      <part column="unique_constraint_catalog" ref_column="constraint_catalog"/>
-      <part column="unique_constraint_schema" ref_column="constraint_schema"/>
-      <part column="unique_constraint_name" ref_column="constraint_name"/>
+      <part column="ref_table_catalog" ref_column="table_catalog"/>
+      <part column="ref_table_schema" ref_column="table_schema"/>
+      <part column="ref_table_name" ref_column="table_name"/>
+      <part column="ref_constraint_name" ref_column="constraint_name"/>
     </fkey>
   </table>
 
   <table name="_key_column_usage">
-    <column name="constraint_catalog" pkey="TRUE"/>
-    <column name="constraint_schema" pkey="TRUE"/>
+    <column name="table_catalog" pkey="TRUE"/>
+    <column name="table_schema" pkey="TRUE"/>
+    <column name="table_name" pkey="TRUE"/>
     <column name="constraint_name" pkey="TRUE"/>
-    <column name="table_catalog"/>
-    <column name="table_schema"/>
-    <column name="table_name"/>
-    <column name="column_name"/>
+    <column name="column_name" pkey="TRUE"/>
+
     <column name="ordinal_position" type="gint" pkey="TRUE"/>
     <fkey ref_table="_table_constraints">
-      <part column="constraint_catalog"/>
-      <part column="constraint_schema"/>
+      <part column="table_catalog"/>
+      <part column="table_schema"/>
+      <part column="table_name"/>
       <part column="constraint_name"/>
     </fkey>
     <fkey ref_table="_columns">
@@ -396,16 +403,15 @@
   </table>
 
   <table name="_check_column_usage">
-    <column name="constraint_catalog" pkey="TRUE"/>
-    <column name="constraint_schema" pkey="TRUE"/>
+    <column name="table_catalog" pkey="TRUE"/>
+    <column name="table_schema" pkey="TRUE"/>
+    <column name="table_name" pkey="TRUE"/>
     <column name="constraint_name" pkey="TRUE"/>
-    <column name="table_catalog"/>
-    <column name="table_schema"/>
-    <column name="table_name"/>
-    <column name="column_name"/>
+    <column name="column_name" pkey="TRUE"/>
     <fkey ref_table="_table_constraints">
-      <part column="constraint_catalog"/>
-      <part column="constraint_schema"/>
+      <part column="table_catalog"/>
+      <part column="table_schema"/>
+      <part column="table_name"/>
       <part column="constraint_name"/>
     </fkey>
     <fkey ref_table="_columns">
@@ -420,9 +426,6 @@
     <column name="view_catalog" pkey="TRUE"/>
     <column name="view_schema" pkey="TRUE"/>
     <column name="view_name" pkey="TRUE"/>
-    <column name="table_catalog" pkey="TRUE"/>
-    <column name="table_schema" pkey="TRUE"/>
-    <column name="table_name" pkey="TRUE"/>
     <column name="column_name" pkey="TRUE"/>
     <fkey ref_table="_views">
       <part column="view_catalog" ref_column="table_catalog"/>
@@ -430,20 +433,22 @@
       <part column="view_name" ref_column="table_name"/>
     </fkey>
     <fkey ref_table="_columns">
-      <part column="table_catalog"/>
-      <part column="table_schema"/>
-      <part column="table_name"/>
-      <part column="column_name"/>
+      <part column="view_catalog" ref_column="table_catalog"/>
+      <part column="view_schema" ref_column="table_schema"/>
+      <part column="view_name" ref_column="table_name"/>
+      <part column="column_name" ref_column="column_name"/>
     </fkey>
   </table>
 
   <table name="_domain_constraints">
-    <column name="constraint_catalog" pkey="TRUE"/>
-    <column name="constraint_schema" pkey="TRUE"/>
+    <column name="constraint_catalog" nullok="TRUE" descr="Name of the catalog that contains the constraint"/>
+    <column name="constraint_schema" nullok="TRUE" descr="Name of the schema that contains the constraint"/>
+
     <column name="constraint_name" pkey="TRUE"/>
-    <column name="domain_catalog"/>
-    <column name="domain_schema"/>
-    <column name="domain_name"/>
+    <column name="domain_catalog" pkey="TRUE"/>
+    <column name="domain_schema" pkey="TRUE"/>
+    <column name="domain_name" pkey="TRUE"/>
+
     <column name="check_clause" nullok="TRUE"/>
     <column name="is_deferrable" type="boolean" nullok="TRUE"/>
     <column name="initially_deferred" type="boolean" nullok="TRUE"/>
@@ -500,34 +505,5 @@ SELECT domain_short_name, domain_gtype, domain_full_name, domain_comments, domai
        domain_catalog, domain_schema, domain_name , NULL, NULL, NULL FROM _domains</definition>
   </view>
 
-  <view name="_constraint_column_usage">
-    <definition>SELECT table_catalog, table_schema, table_name, column_name, constraint_catalog, constraint_schema, constraint_name
-FROM _key_column_usage
-UNION
-SELECT table_catalog, table_schema, table_name, column_name, constraint_catalog, constraint_schema, constraint_name
-FROM _check_column_usage</definition>
-  </view>
-
-  <view name="_constraint_table_usage">
-    <definition>SELECT DISTINCT table_catalog, table_schema, table_name, constraint_catalog, constraint_schema, constraint_name
-FROM _constraint_column_usage</definition>
-  </view>
-
-  <view name="_view_table_usage">
-    <definition>SELECT DISTINCT view_catalog, view_schema, view_name, table_catalog, table_schema, table_name
-FROM _view_column_usage</definition>
-  </view>
-
-  <view name="_domain_column_usage">
-    <definition>SELECT d.domain_catalog, d.domain_schema, d.domain_name,
-       c.table_catalog, c.table_schema, c.table_name, c.column_name
-FROM _domains d INNER JOIN _columns c ON (c.data_type=d.domain_full_name)</definition>
-  </view>
-
-  <view name="_check_constraints">
-    <definition>SELECT constraint_catalog, constraint_schema, constraint_name, check_clause FROM _table_constraints
-      UNION
-      SELECT constraint_catalog, constraint_schema, constraint_name, check_clause FROM _domain_constraints</definition>
-  </view>
 
 </schema>

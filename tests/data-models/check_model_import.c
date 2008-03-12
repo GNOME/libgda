@@ -48,6 +48,10 @@ main (int argc, char **argv)
 		}
 	g_dir_close (dir);
 
+	if (number_failed == 0)
+		g_print ("Ok.\n");
+	else
+		g_print ("%d failed\n", number_failed);
 	return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 

@@ -10,7 +10,7 @@
 /*#undef CHECK_EXTRA_INFO*/
 
 #define DB_NAME "gda_check_db"
-#define CREATE_FILES 0
+#define CREATE_FILES 1
 GdaSqlParser *parser = NULL;
 
 /*
@@ -175,14 +175,14 @@ prov_test_setup_connection (GdaProviderInfo *prov_info, gboolean *params_provide
 
 		db_name = DB_NAME;
 		db_quark_list = gda_quark_list_new_from_string (db_params);
-		op = gda_prepare_drop_database (client, db_name, prov_info->id);
+		op = gda_prepare_drop_database (prov_info->id, db_name, NULL);
 		gda_quark_list_foreach (db_quark_list, (GHFunc) db_create_quark_foreach_func, op);
-		gda_perform_create_database (client, op, NULL);
+		gda_perform_create_database (op, NULL);
 		g_object_unref (op);
 
-		op = gda_prepare_create_database (client, db_name, prov_info->id);
+		op = gda_prepare_create_database (prov_info->id, db_name, NULL);
 		gda_quark_list_foreach (db_quark_list, (GHFunc) db_create_quark_foreach_func, op);
-		if (!gda_perform_create_database (client, op, &error)) {
+		if (!gda_perform_create_database (op, &error)) {
 #ifdef CHECK_EXTRA_INFO
 			g_warning ("Could not create the '%s' database (provider %s): %s", db_name,
 				   prov_info->id, error && error->message ? error->message : "No detail");
@@ -219,15 +219,23 @@ prov_test_setup_connection (GdaProviderInfo *prov_info, gboolean *params_provide
 		g_print ("Open connection string: %s\n", data.string->str);
 
 		const gchar *username, *password;
+		gchar *auth = NULL;
 		str = g_strdup_printf ("%s_USER", upname);
 		username = getenv (str);
 		g_free (str);
 		str = g_strdup_printf ("%s_PASS", upname);
 		password = getenv (str);
 		g_free (str);
+		if (username) {
+			if (password)
+				auth = g_strdup_printf ("USERNAME=%s;PASSWORD=%s", username, password);
+			else
+				auth = g_strdup_printf ("USERNAME=%s", username);
+		}
 
-		cnc = gda_connection_open_from_string (prov_info->id, data.string->str, username, password, 
+		cnc = gda_connection_open_from_string (prov_info->id, data.string->str, auth, 
 						       GDA_CONNECTION_OPTIONS_NONE, &error);
+		g_free (auth);
 		if (!cnc && error) {
 #ifdef CHECK_EXTRA_INFO
 			g_warning ("Could not open connection to %s (provider %s): %s",
@@ -304,12 +312,12 @@ prov_test_clean_connection (GdaConnection *cnc, gboolean destroy_db)
 		g_free (str);
 		g_assert (db_params);
 
-		op = gda_prepare_drop_database (client, DB_NAME, prov_id);
+		op = gda_prepare_drop_database (prov_id, DB_NAME, NULL);
 		db_quark_list = gda_quark_list_new_from_string (db_params);
 		gda_quark_list_foreach (db_quark_list, (GHFunc) db_drop_quark_foreach_func, op);
 		gda_quark_list_free (db_quark_list);
 
-		if (!gda_perform_drop_database (client, op, &error)) {
+		if (!gda_perform_drop_database (op, &error)) {
 #ifdef CHECK_EXTRA_INFO
 			g_warning ("Could not drop the '%s' database (provider %s): %s", DB_NAME,
 				   prov_id, error && error->message ? error->message : "No detail");
@@ -377,68 +385,6 @@ prov_test_create_tables_sql (GdaConnection *cnc)
 
 	g_object_unref (batch);
 	return retval;
-}
-
-/*
- * 
- * Check a table's schema
- *
- */
-gboolean
-prov_test_check_table_schema (GdaConnection *cnc, const gchar *table)
-{
-	if (!cnc || !gda_connection_is_opened (cnc)) {
-#ifdef CHECK_EXTRA_INFO
-		g_warning ("Connection is closed!");
-#endif
-		return FALSE;
-	}
-
-	GdaServerProvider *prov;
-	GdaDataModel *schema_m;
-	GError *error = NULL;
-	gchar *str;
-	GValue *v;
-	
-	prov = gda_connection_get_provider_obj (cnc);
-	g_value_set_string (v = gda_value_new (G_TYPE_STRING), table);
-	schema_m = gda_connection_get_meta_store_data (cnc, GDA_CONNECTION_META_FIELDS, &error, 1, "name", v);
-	gda_value_free (v);
-	if (!schema_m) {
-#ifdef CHECK_EXTRA_INFO
-		g_warning ("Could not get FIELDS schema for table '%s': %s", table,
-			   error && error->message ? error->message : "No detail");
-#endif
-		return FALSE;
-	}
-
-	str = g_strdup_printf ("FIELDS_SCHEMA_%s_%s.xml", gda_connection_get_provider_name (cnc), table);
-	if (CREATE_FILES) {
-		GdaSet *plist;
-		/* export schema model to a file, to create first version of the files, not to be used in actual checks */
-		plist = gda_set_new_inline (1, "OVERWRITE", G_TYPE_BOOLEAN, TRUE);
-		if (! (gda_data_model_export_to_file (schema_m, GDA_DATA_MODEL_IO_DATA_ARRAY_XML, str, 
-						      NULL, 0, NULL, 0, plist, &error))) {
-#ifdef CHECK_EXTRA_INFO
-			g_warning ("Could not export schema to file '%s': %s", str,
-				   error && error->message ? error->message : "No detail");
-#endif
-			return FALSE;
-		}
-		g_object_unref (plist);
-	}
-	else {
-		/* compare schema with what's expected */
-		gchar *file = g_build_filename (CHECK_SQL_FILES, "tests", "providers", str, NULL);
-		if (!compare_data_model_with_expected (schema_m, file))
-			return FALSE;
-		g_free (file);
-	}
-	g_free (str);
-
-	/*gda_data_model_dump (schema_m, stdout);*/
-	g_object_unref (schema_m);
-	return TRUE;
 }
 
 /*
@@ -711,6 +657,11 @@ prov_test_load_data (GdaConnection *cnc, const gchar *table)
 		return FALSE;
 	}
 	
+	/* try to start a transaction to spped things up */
+	gboolean started_transaction;
+	started_transaction = gda_connection_begin_transaction (cnc, NULL,
+								GDA_TRANSACTION_ISOLATION_UNKNOWN,
+								NULL);
 	gint row, nrows;
 	nrows = gda_data_model_get_n_rows (imodel);
 	for (row = 0; row < nrows; row++) {
@@ -742,6 +693,10 @@ prov_test_load_data (GdaConnection *cnc, const gchar *table)
 			return FALSE;
 		}
 	}
+
+	if (started_transaction) 
+		gda_connection_commit_transaction (cnc, NULL, NULL);
+
 #ifdef CHECK_EXTRA_INFO
 	g_print ("Loaded %d rows into table '%s'\n", nrows, table);
 #endif

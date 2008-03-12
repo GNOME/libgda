@@ -724,7 +724,7 @@ gda_config_define_dsn (const GdaDataSourceInfo *info, GError **error)
 
 /**
  * gda_config_remove_dsn
- * @info: a pointer to a filled GdaDataSourceInfo structure
+ * @dsn_name: the name of the DSN to remove
  * @error: a place to store errors, or %NULL
  *
  * Add or update a DSN from the definition in @info

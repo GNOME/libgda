@@ -150,7 +150,7 @@ gda_batch_new (void)
 
 
 /**
- * gda_batch_copy
+ * gda_batch_new_copy
  * @orig: a #GdaBatch to make a copy of
  * 
  * Copy constructor
@@ -158,7 +158,7 @@ gda_batch_new (void)
  * Returns: a the new copy of @orig
  */
 GdaBatch *
-gda_batch_copy (GdaBatch *orig)
+gda_batch_new_copy (GdaBatch *orig)
 {
 	GObject *obj;
 	GdaBatch *batch;

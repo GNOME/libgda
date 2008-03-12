@@ -31,6 +31,7 @@
 
 <!ELEMENT gda_value (#PCDATA)>
 <!ATTLIST gda_value
+	  isnull NMTOKEN #IMPLIED
 	  xml:lang CDATA #IMPLIED>
 
 <!ELEMENT gda_array_value (#PCDATA)>

@@ -123,6 +123,10 @@ main (int argc, char **argv)
 	if (!do_test_proxied_model_modif ())
 		number_failed ++;
 
+	if (number_failed == 0)
+		g_print ("Ok.\n");
+	else
+		g_print ("%d failed\n", number_failed);
 	return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 

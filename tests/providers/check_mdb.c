@@ -27,13 +27,15 @@ main (int argc, char **argv)
 
 	if (cnc) {
 		/* don't test create tables because it does not work for that provider */
-		number_failed += prov_test_common_check_schemas ();
+		number_failed += prov_test_common_check_meta ();
 		number_failed += prov_test_common_clean ();
 	}
 
 	if (! params_provided)
 		return EXIT_SUCCESS;
-	else
+	else {
+		g_print ("Test %s\n", (number_failed == 0) ? "Ok" : "failed");
 		return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
+	}
 }
 

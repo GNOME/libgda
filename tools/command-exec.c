@@ -519,7 +519,7 @@ gda_internal_command_build_meta_struct (GdaConnection *cnc, const gchar **args, 
 	GdaMetaStore *store;
 
 	store = gda_connection_get_meta_store (cnc);
-	mstruct = gda_meta_struct_new ();
+	mstruct = gda_meta_struct_new (GDA_META_STRUCT_FEATURE_ALL);
 
 	if (!args[0]) {
 		/* use all tables or views */
@@ -579,8 +579,41 @@ gda_internal_command_build_meta_struct (GdaConnection *cnc, const gchar **args, 
 		}
 		else {
 			/* try to find it as a table or view */
-			if (!gda_meta_struct_complement (mstruct, store, GDA_META_DB_TABLE, NULL, NULL, v, NULL))
-				gda_meta_struct_complement (mstruct, store, GDA_META_DB_VIEW, NULL, NULL, v, NULL);
+			if (!gda_meta_struct_complement (mstruct, store, GDA_META_DB_UNKNOWN, NULL, NULL, v, NULL)) {
+				if (g_str_has_suffix (arg, "=") && (*arg != '=')) {
+					GdaMetaDbObject *dbo;
+					gchar *str;
+					str = g_strdup (arg);
+					str[strlen (str) - 1] = 0;
+					g_value_take_string (v, str);
+					dbo = gda_meta_struct_complement (mstruct, store, GDA_META_DB_TABLE, 
+									  NULL, NULL, v, NULL);
+					if (!dbo)
+						dbo = gda_meta_struct_complement (mstruct, store, GDA_META_DB_VIEW, 
+										  NULL, NULL, v, NULL);
+					if (dbo && dbo->depend_list) {
+						GSList *list, *dep_list;
+						GValue *catalog, *schema, *name;
+
+						dep_list = g_slist_copy (dbo->depend_list);
+						for (list = dep_list; list; list = list->next) {
+							dbo = GDA_META_DB_OBJECT (list->data);
+							g_value_set_string ((catalog = gda_value_new (G_TYPE_STRING)), 
+									    dbo->obj_catalog);
+							g_value_set_string ((schema = gda_value_new (G_TYPE_STRING)), 
+									    dbo->obj_schema);
+							g_value_set_string ((name = gda_value_new (G_TYPE_STRING)), 
+									    dbo->obj_name);
+							gda_meta_struct_complement (mstruct, store, dbo->obj_type,
+										    catalog, schema, name, NULL);
+							gda_value_free (catalog);
+							gda_value_free (schema);
+							gda_value_free (name);
+						}
+						g_slist_free (dep_list);
+					}
+				}
+			}
 		}
 	}
 
@@ -628,8 +661,16 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 	if (!mstruct)
 		return NULL;
 
+	/* compute the number of known database objects */
+	gint nb_objects = 0;
+	for (dbo_list = mstruct->db_objects; dbo_list; dbo_list = dbo_list->next) {
+		GdaMetaDbObject *dbo = GDA_META_DB_OBJECT (dbo_list->data);
+		if (dbo->obj_type != GDA_META_DB_UNKNOWN)
+			nb_objects++;
+	}
+
 	/* if more than one object, then show a list */
-	if (mstruct->db_objects && mstruct->db_objects->next) {
+	if (nb_objects > 1) {
 		model = gda_data_model_array_new (4);
 		gda_data_model_set_column_title (model, 0, _("Schema"));
 		gda_data_model_set_column_title (model, 1, _("Name"));

@@ -91,18 +91,18 @@ These methods must be implemented by providers to update a connection's associat
 for more information.
 </para>
 
-@info: 
-@btypes: 
+@_info: 
+@_btypes: 
+@_schemata: 
 @schemata: 
+@_tables_views: 
 @tables_views: 
-@tables_views_s: 
+@_columns: 
 @columns: 
-@columns_t: 
-@columns_c: 
+@_constraints_tab: 
 @constraints_tab: 
-@constraints_tab_s: 
+@_constraints_ref: 
 @constraints_ref: 
-@constraints_ref_c: 
 
 <!-- ##### USER_FUNCTION GdaServerProviderAsyncCallback ##### -->
 <para>

@@ -26,13 +26,15 @@ main (int argc, char **argv)
 	number_failed = prov_test_common_setup ();
 
 	if (cnc) {
-		number_failed += prov_test_check_table_schema (cnc, "data");
+		number_failed += prov_test_common_check_meta ();
 		number_failed += prov_test_common_clean ();
 	}
 
 	if (! params_provided)
 		return EXIT_SUCCESS;
-	else
+	else {
+		g_print ("Test %s\n", (number_failed == 0) ? "Ok" : "failed");
 		return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
+	}
 }
 

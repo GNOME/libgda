@@ -31,29 +31,18 @@ gboolean _gda_sqlite_meta_info             (GdaServerProvider *prov, GdaConnecti
 					    GdaMetaStore *store, GdaMetaContext *context, GError **error);
 gboolean _gda_sqlite_meta_btypes           (GdaServerProvider *prov, GdaConnection *cnc, 
 					    GdaMetaStore *store, GdaMetaContext *context, GError **error);
-gboolean _gda_sqlite_meta_schemata         (GdaServerProvider *prov, GdaConnection *cnc, 
-					    GdaMetaStore *store, GdaMetaContext *context, GError **error, 
-					    const GValue *schema_name);
-gboolean _gda_sqlite_meta_tables_views     (GdaServerProvider *prov, GdaConnection *cnc, 
-					    GdaMetaStore *store, GdaMetaContext *context, GError **error);
-gboolean _gda_sqlite_meta_tables_views_s   (GdaServerProvider *prov, GdaConnection *cnc, 
-					    GdaMetaStore *store, GdaMetaContext *context, GError **error, 
-					    const GValue *table_schema, const GValue *table_name);
-gboolean _gda_sqlite_meta_columns           (GdaServerProvider *prov, GdaConnection *cnc, 
-					     GdaMetaStore *store, GdaMetaContext *context, GError **error);
-gboolean _gda_sqlite_meta_columns_t         (GdaServerProvider *prov, GdaConnection *cnc, 
-					     GdaMetaStore *store, GdaMetaContext *context, GError **error, 
-					     const GValue *table_schema, const GValue *table_name);
-gboolean _gda_sqlite_meta_columns_c         (GdaServerProvider *prov, GdaConnection *cnc, 
-					     GdaMetaStore *store, GdaMetaContext *context, GError **error, 
-					     const GValue *table_schema, const GValue *table_name, const GValue *column_name);
-gboolean _gda_sqlite_meta_constraints_tab   (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
-gboolean _gda_sqlite_meta_constraints_tab_s (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **, 
-					     const GValue *table_schema, const GValue *table_name);
-
-gboolean _gda_sqlite_meta_constraints_ref   (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
-gboolean _gda_sqlite_meta_constraints_ref_c (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **, 
-					     const GValue *table_schema, const GValue *table_name);
+gboolean _gda_sqlite_meta_schemata         (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **, 
+					    const GValue *catalog_name, const GValue *schema_name_n);
+gboolean _gda_sqlite_meta_tables_views     (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
+					    const GValue *table_catalog, const GValue *table_schema, const GValue *table_name_n);
+gboolean _gda_sqlite_meta_columns          (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
+					    const GValue *table_catalog, const GValue *table_schema, const GValue *table_name);
+gboolean _gda_sqlite_meta_constraints_tab  (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
+					    const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
+					    const GValue *constraint_name_n);
+gboolean _gda_sqlite_meta_constraints_ref  (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
+					    const GValue *table_catalog, const GValue *table_schema, const GValue *table_name, 
+					    const GValue *constraint_name);
 G_END_DECLS
 
 #endif

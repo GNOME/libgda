@@ -185,18 +185,13 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	provider_class->statement_execute = gda_postgres_provider_statement_execute;
 
 	memset (&(provider_class->meta_funcs), 0, sizeof (GdaServerProviderMeta));
-	provider_class->meta_funcs.info = _gda_postgres_meta_info;
-	provider_class->meta_funcs.btypes = _gda_postgres_meta_btypes;
+	provider_class->meta_funcs._info = _gda_postgres_meta_info;
+	provider_class->meta_funcs._btypes = _gda_postgres_meta_btypes;
 	provider_class->meta_funcs.schemata = _gda_postgres_meta_schemata;
 	provider_class->meta_funcs.tables_views = _gda_postgres_meta_tables_views;
-	provider_class->meta_funcs.tables_views_s = _gda_postgres_meta_tables_views_s;
 	provider_class->meta_funcs.columns = _gda_postgres_meta_columns;
-	provider_class->meta_funcs.columns_t = _gda_postgres_meta_columns_t;
-	provider_class->meta_funcs.columns_c = _gda_postgres_meta_columns_c;
 	provider_class->meta_funcs.constraints_tab = _gda_postgres_meta_constraints_tab;
-	provider_class->meta_funcs.constraints_tab_s = _gda_postgres_meta_constraints_tab_s;
 	provider_class->meta_funcs.constraints_ref = _gda_postgres_meta_constraints_ref;
-	provider_class->meta_funcs.constraints_ref_c = _gda_postgres_meta_constraints_ref_c;
 }
 
 static void

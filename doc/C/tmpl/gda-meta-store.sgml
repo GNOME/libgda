@@ -66,6 +66,7 @@ Dictionary object
 
 @gdametastore: the object which received the signal.
 @arg1: 
+@Returns: 
 
 <!-- ##### ARG GdaMetaStore:cnc ##### -->
 <para>
@@ -87,6 +88,10 @@ Dictionary object
 @GDA_META_STORE_INTERNAL_ERROR: 
 @GDA_META_STORE_MODIFY_CONTENTS_ERROR: 
 @GDA_META_STORE_EXTRACT_SQL_ERROR: 
+@GDA_META_STORE_ATTRIBUTE_NOT_FOUND_ERROR: 
+@GDA_META_STORE_ATTRIBUTE_ERROR: 
+@GDA_META_STORE_SCHEMA_OBJECT_CONFLICT_ERROR: 
+@GDA_META_STORE_SCHEMA_OBJECT_DESCR_ERROR: 
 
 <!-- ##### STRUCT GdaMetaStoreChange ##### -->
 <para>
@@ -143,15 +148,6 @@ Dictionary object
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_meta_store_get_internal_connection ##### -->
-<para>
-
-</para>
-
-@store: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_meta_store_extract ##### -->
 <para>
 
@@ -175,6 +171,60 @@ Dictionary object
 @condition: 
 @error: 
 @Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_meta_store_schema_get_structure ##### -->
+<para>
+
+</para>
+
+@store: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_meta_store_get_attribute_value ##### -->
+<para>
+
+</para>
+
+@store: 
+@att_name: 
+@att_value: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_meta_store_set_attribute_value ##### -->
+<para>
+
+</para>
+
+@store: 
+@att_name: 
+@att_value: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_meta_store_schema_add_custom_object ##### -->
+<para>
+
+</para>
+
+@store: 
+@xml_description: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_meta_store_get_internal_connection ##### -->
+<para>
+
+</para>
+
+@store: 
 @Returns: 
 
 

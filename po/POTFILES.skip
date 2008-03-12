@@ -1,3 +1,7 @@
+libgda/sql-parser/delimiter.c
+libgda/sql-parser/parser.c
+libgda/sqlite/sqlite-src/sqlite3.c
+providers/postgres/parser.c
 providers/skel-implementation/capi/capi_specs_create_table.xml.in
 providers/skel-implementation/capi/capi_specs_dsn.xml.in
 providers/skel-implementation/capi/gda-capi-blob-op.c

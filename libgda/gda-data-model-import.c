@@ -1186,7 +1186,7 @@ init_xml_import (GdaDataModelImport *model)
 				xmlFree (str);
 			}
 			str = (gchar*)xmlTextReaderGetAttribute (reader, (xmlChar*)"nullok");
-			spec->nullok = TRUE;
+			spec->nullok = FALSE;
 			if (str) {
 				spec->nullok = ((*str == 't') || (*str == 'T')) ? TRUE : FALSE;
 				xmlFree (str);

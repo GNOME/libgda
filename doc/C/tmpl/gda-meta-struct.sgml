@@ -40,6 +40,40 @@ else {
 }
 gda_meta_struct_free (mstruct);
   </programlisting>
+  If now the database object type is not known, one can use the following code:
+  <programlisting>
+GdaMetaStruct *mstruct;
+GdaMetaDbObject *dbo;
+GValue *catalog, *schema, *name;
+
+/* Define name (and optionnally catalog and schema) */
+[...]
+
+mstruct = gda_meta_struct_new ();
+gda_meta_struct_complement (mstruct, store, GDA_META_DB_UNKNOWN, catalog, schema, name, NULL);
+dbo = gda_meta_struct_get_db_object (mstruct, catalog, schema, name);
+if (!dbo)
+        g_print ("Object not found\n");
+else {
+        if ((dbo->obj_type == GDA_META_DB_TABLE) || (dbo->obj_type == GDA_META_DB_VIEW)) {
+                if (dbo->obj_type == GDA_META_DB_TABLE)
+                        g_print ("Is a table\n");
+                else if (dbo->obj_type == GDA_META_DB_VIEW) {
+                        g_print ("Is a view, definition is:\n");
+                        g_print ("%s\n", GDA_META_DB_OBJECT_GET_VIEW (dbo)->view_def);
+                }
+
+                GSList *list;
+                for (list = GDA_META_DB_OBJECT_GET_TABLE (dbo)->columns; list; list = list->next) {
+                        GdaMetaTableColumn *tcol = GDA_META_TABLE_COLUMN (list->data);
+                        g_print ("COLUMN: %s (%s)\n", tcol->column_name, tcol->column_type);
+                }
+        }
+        else 
+                g_print ("Not a table or a view\n");
+}
+gda_meta_struct_free (mstruct);
+  </programlisting>
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -55,9 +89,21 @@ gda_meta_struct_free (mstruct);
 
 </para>
 
-@object: 
-@db_objects: 
-@priv: 
+
+<!-- ##### ARG GdaMetaStruct:features ##### -->
+<para>
+
+</para>
+
+<!-- ##### ENUM GdaMetaStructFeature ##### -->
+<para>
+
+</para>
+
+@GDA_META_STRUCT_FEATURE_NONE: 
+@GDA_META_STRUCT_FEATURE_FOREIGN_KEYS: 
+@GDA_META_STRUCT_FEATURE_VIEW_DEPENDENCIES: 
+@GDA_META_STRUCT_FEATURE_ALL: 
 
 <!-- ##### ENUM GdaMetaStructError ##### -->
 <para>
@@ -67,13 +113,6 @@ gda_meta_struct_free (mstruct);
 @GDA_META_STRUCT_UNKNOWN_OBJECT_ERROR: 
 @GDA_META_STRUCT_DUPLICATE_OBJECT_ERROR: 
 @GDA_META_STRUCT_INCOHERENCE_ERROR: 
-
-<!-- ##### MACRO GDA_META_STRUCT_ERROR ##### -->
-<para>
-
-</para>
-
-
 
 <!-- ##### ENUM GdaMetaDbObjectType ##### -->
 <para>
@@ -169,11 +208,19 @@ gda_meta_struct_free (mstruct);
 @x: 
 
 
+<!-- ##### MACRO GDA_META_STRUCT_ERROR ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### FUNCTION gda_meta_struct_new ##### -->
 <para>
 
 </para>
 
+@features: 
 @Returns: 
 
 
@@ -231,6 +278,24 @@ gda_meta_struct_free (mstruct);
 @mstruct: 
 @table: 
 @col_name: 
+@Returns: 
+
+
+<!-- ##### ENUM GdaMetaGraphInfo ##### -->
+<para>
+
+</para>
+
+@GDA_META_GRAPH_COLUMNS: 
+
+<!-- ##### FUNCTION gda_meta_struct_dump_as_graph ##### -->
+<para>
+
+</para>
+
+@mstruct: 
+@info: 
+@error: 
 @Returns: 
 
 

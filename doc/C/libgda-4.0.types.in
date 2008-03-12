@@ -58,3 +58,4 @@ gda_batch_get_type
 gda_holder_get_type
 gda_set_get_type
 gda_meta_store_get_type
+gda_meta_struct_get_type

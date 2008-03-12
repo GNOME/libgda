@@ -29,7 +29,7 @@ main (int argc, char **argv)
 
 	if (cnc) {
 		number_failed += prov_test_common_create_tables_sql ();
-		number_failed += prov_test_common_check_schemas ();
+		number_failed += prov_test_common_check_meta ();
 		number_failed += prov_test_common_load_data ();
 		number_failed += prov_test_common_check_cursor_models ();
 		number_failed += prov_test_common_clean ();
@@ -37,7 +37,9 @@ main (int argc, char **argv)
 
 	if (! params_provided)
 		return EXIT_SUCCESS;
-	else
+	else {
+		g_print ("Test %s\n", (number_failed == 0) ? "Ok" : "failed");
 		return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
+	}
 }
 

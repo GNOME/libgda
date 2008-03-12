@@ -373,16 +373,11 @@ gda_drop_table (GdaConnection *cnc, const gchar *table_name, GError **error)
 	    
 		if (!gda_server_operation_load_data_from_xml (op, root, error)) {
 			/* error */
-			g_object_unref (op);
-			xmlFreeDoc(parameters);
 			retval = FALSE;
 		}
-		else {
-			if (gda_server_provider_perform_operation (server, cnc, op, error))
-				/* error */
-				g_object_unref (op);
-		        xmlFreeDoc(parameters);
-			return FALSE;
+		else if (!gda_server_provider_perform_operation (server, cnc, op, error)) {
+			/* error */
+			retval = FALSE;
 		}
 		g_object_unref (op);
 		xmlFreeDoc(parameters);

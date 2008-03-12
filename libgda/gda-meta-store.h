@@ -24,6 +24,7 @@
 #include <glib-object.h>
 #include <libgda/gda-enums.h>
 #include <libgda/gda-data-model.h>
+#include <libgda/gda-decl.h>
 
 G_BEGIN_DECLS
 
@@ -31,11 +32,6 @@ G_BEGIN_DECLS
 #define GDA_META_STORE(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_meta_store_get_type(), GdaMetaStore)
 #define GDA_META_STORE_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_meta_store_get_type (), GdaMetaStoreClass)
 #define GDA_IS_META_STORE(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_meta_store_get_type ())
-
-typedef struct _GdaMetaStore        GdaMetaStore;
-typedef struct _GdaMetaStoreClass   GdaMetaStoreClass;
-typedef struct _GdaMetaStorePrivate GdaMetaStorePrivate;
-typedef struct _GdaMetaStoreClassPrivate GdaMetaStoreClassPrivate;
 
 /* error reporting */
 extern GQuark gda_meta_store_error_quark (void);
@@ -46,7 +42,11 @@ typedef enum {
 	GDA_META_STORE_UNSUPPORTED_PROVIDER,
 	GDA_META_STORE_INTERNAL_ERROR,
 	GDA_META_STORE_MODIFY_CONTENTS_ERROR,
-	GDA_META_STORE_EXTRACT_SQL_ERROR
+	GDA_META_STORE_EXTRACT_SQL_ERROR,
+	GDA_META_STORE_ATTRIBUTE_NOT_FOUND_ERROR,
+	GDA_META_STORE_ATTRIBUTE_ERROR,
+	GDA_META_STORE_SCHEMA_OBJECT_CONFLICT_ERROR,
+	GDA_META_STORE_SCHEMA_OBJECT_DESCR_ERROR
 } GdaMetaStoreError;
 
 /* 
@@ -87,8 +87,9 @@ struct _GdaMetaStoreClass
 	GdaMetaStoreClassPrivate *cpriv;
 
 	/* signals the changes */
-	void    (*suggest_update)(GdaMetaStore *store, GdaMetaContext *suggest);
-	void    (*meta_changed)  (GdaMetaStore *store, GSList *changes);
+	void     (*reset)         (GdaMetaStore *store, GdaMetaContext *suggest);
+	GError  *(*suggest_update)(GdaMetaStore *store, GdaMetaContext *suggest);
+	void     (*meta_changed)  (GdaMetaStore *store, GSList *changes);
 };
 
 GType             gda_meta_store_get_type                 (void) G_GNUC_CONST;
@@ -98,14 +99,24 @@ gint              gda_meta_store_get_version              (GdaMetaStore *store);
 
 GdaConnection    *gda_meta_store_get_internal_connection  (GdaMetaStore *store);
 GdaDataModel     *gda_meta_store_extract                  (GdaMetaStore *store, const gchar *select_sql, GError **error, ...);
-
 gboolean          gda_meta_store_modify                   (GdaMetaStore *store, const gchar *table_name, 
 							   GdaDataModel *new_data, const gchar *condition, GError **error, ...);
 gboolean          gda_meta_store_modify_with_context      (GdaMetaStore *store, GdaMetaContext *context, 
 							   GdaDataModel *new_data, GError **error);
 GdaDataModel     *gda_meta_store_create_modify_data_model (GdaMetaStore *store, const gchar *table_name);
-GSList           *gda_meta_store_get_depending_tables     (GdaMetaStore *store, const gchar *table_name);
-GSList           *gda_meta_store_get_schema_tables        (GdaMetaStore *store);
+
+GdaMetaStruct    *gda_meta_store_schema_get_structure     (GdaMetaStore *store, GError **error);
+
+gboolean          gda_meta_store_get_attribute_value      (GdaMetaStore *store, const gchar *att_name, 
+							   gchar **att_value, GError **error);
+gboolean          gda_meta_store_set_attribute_value      (GdaMetaStore *store, const gchar *att_name, 
+							   const gchar *att_value, GError **error);
+
+gboolean          gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_description, 
+							   GError **error);
+
+/* TO REMOVE */
+GSList           *gda_meta_store_schema_get_tables        (GdaMetaStore *store);
 
 G_END_DECLS
 

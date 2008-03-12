@@ -35,6 +35,8 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <libgda/gda-util.h>
+#include <libgda/gda-meta-struct.h>
+#include <libgda/gda-connection.h>
 
 /*
  * Main static functions
@@ -63,7 +65,8 @@ static void gda_meta_store_change_free (GdaMetaStoreChange *change);
 enum {
 	STMT_GET_VERSION,
 	STMT_SET_VERSION,
-	
+	STMT_DEL_ATT_VALUE,
+	STMT_SET_ATT_VALUE,
 	STMT_LAST
 } PreStmtType;
 
@@ -191,6 +194,9 @@ struct _GdaMetaStorePrivate {
 	GdaConnection *cnc;
 	gint           version;
 	gboolean       schema_ok;
+
+	GSList        *custom_db_objects; /* list of DbObject structures */
+	GHashTable    *custom_db_objects_hash; /* key = table name, value = a DbObject structure */
 };
 
 static void db_object_free    (DbObject *dbobj);
@@ -281,19 +287,50 @@ ProviderSpecific_equal (gconstpointer a, gconstpointer b)
 		return TRUE;
 }
 
+static gboolean
+suggest_update_accumulator (GSignalInvocationHint *ihint,
+			    GValue *return_accu,
+			    const GValue *handler_return,
+			    gpointer data)
+{
+        GError *error;
+
+        error = g_value_get_pointer (handler_return);
+        g_value_set_pointer (return_accu, error);
+
+        return error ? FALSE : TRUE; /* stop signal if 'thisvalue' is FALSE */
+}
+
+static GError *
+m_suggest_update (GdaMetaStore *store, GdaMetaContext *suggest)
+{
+        return NULL; /* defaults allows update suggest */
+}
+
 static void
 gda_meta_store_class_init (GdaMetaStoreClass *klass) {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	
 	parent_class = g_type_class_peek_parent (klass);
 	
+	/**
+	 * GdaMetaStore::suggest-update:
+	 * @store: the #GdaMetaStore instance that emitted the signal
+	 * @suggest: the suggested update, as a #GdaMetaContext structure
+	 *
+	 * This signal is emitted when the contents of a table should be updated (data updated or inserted; 
+	 * deleting data is done automatically).
+	 *
+	 * Returns: a new #GError error structure if there was an error when processing the
+	 * signal, or %NULL if signal propagation should continue
+	 **/
 	gda_meta_store_signals[SUGGEST_UPDATE] =
 		g_signal_new ("suggest_update",
 		G_TYPE_FROM_CLASS (object_class),
-		G_SIGNAL_RUN_FIRST,
+		G_SIGNAL_RUN_LAST,
 		G_STRUCT_OFFSET (GdaMetaStoreClass, suggest_update),
-		NULL, NULL,
-		gda_marshal_VOID__POINTER, G_TYPE_NONE,
+		suggest_update_accumulator, NULL,
+		gda_marshal_POINTER__POINTER, G_TYPE_POINTER,
 		1, G_TYPE_POINTER);
 	gda_meta_store_signals[META_CHANGED] =
 		g_signal_new ("meta_changed",
@@ -304,7 +341,7 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass) {
 		gda_marshal_VOID__POINTER, G_TYPE_NONE,
 		1, G_TYPE_POINTER);
 	
-	klass->suggest_update = NULL;
+	klass->suggest_update = m_suggest_update;
 	klass->meta_changed = NULL;
 	
 	/* Properties */
@@ -337,7 +374,14 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass) {
 	klass->cpriv->prep_stmts[STMT_GET_VERSION] =
 		compute_prepared_stmt (klass->cpriv->parser, 
 				       "SELECT att_value FROM _attributes WHERE att_name='_schema_version'");
+	klass->cpriv->prep_stmts[STMT_DEL_ATT_VALUE] =
+		compute_prepared_stmt (klass->cpriv->parser, 
+				       "DELETE FROM _attributes WHERE att_name = ##name::string");
+	klass->cpriv->prep_stmts[STMT_SET_ATT_VALUE] =
+		compute_prepared_stmt (klass->cpriv->parser, 
+				       "INSERT INTO _attributes VALUES (##name::string, ##value::string::null)");
 
+/*#define GDA_DEBUG_GRAPH*/
 #ifdef GDA_DEBUG_GRAPH
 #define INFORMATION_SCHEMA_GRAPH_FILE "information_schema.dot"
 	GString *string;
@@ -353,7 +397,7 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass) {
 			g_string_append_printf (string, "%s [ shape = ellipse ];\n", dbo->obj_name);
 			break;
 		default:
-			g_string_append_printf (string, "%s [ shape = diamond ];\n", dbo->obj_name);
+			g_string_append_printf (string, "%s [ shape = note ];\n", dbo->obj_name);
 			break;
 		}
 
@@ -385,6 +429,9 @@ gda_meta_store_init (GdaMetaStore *store) {
 	store->priv->cnc = NULL;
 	store->priv->schema_ok = FALSE;
 	store->priv->version = 0;
+
+	store->priv->custom_db_objects = NULL;
+	store->priv->custom_db_objects_hash = g_hash_table_new (g_str_hash, g_str_equal);
 }
 
 static GObject *
@@ -496,6 +543,11 @@ gda_meta_store_dispose (GObject *object)
 	
 	store = GDA_META_STORE (object);
 	if (store->priv) {
+		/* custom db objects */
+		g_hash_table_destroy (store->priv->custom_db_objects_hash);
+		g_slist_foreach (store->priv->custom_db_objects, (GFunc) db_object_free, NULL);
+		g_slist_free (store->priv->custom_db_objects);
+
 		/* internal connection */
 		if (store->priv->cnc) {
 			g_object_unref (G_OBJECT (store->priv->cnc));
@@ -723,13 +775,23 @@ create_server_operation_for_table (GHashTable *specific_hash,
 		if (! gda_server_operation_set_value_at (op, repl ? repl : "string", error,
 							 "/FIELDS_A/@COLUMN_TYPE/%d", index))
 			goto onerror;
+		if (! gda_server_operation_set_value_at (op, NULL, error,
+							 "/FIELDS_A/@COLUMN_SIZE/%d", index))
+			goto onerror;
 		if (! gda_server_operation_set_value_at (op, tcol->nullok ? "FALSE" : "TRUE", error,
 							 "/FIELDS_A/@COLUMN_NNUL/%d", index))
 			goto onerror;
-		repl = provider_specific_match (specific_hash, prov, NULL, "/FIELDS_A/@COLUMN_PKEY");
+		if (! gda_server_operation_set_value_at (op, "FALSE", error,
+							 "/FIELDS_A/@COLUMN_AUTOINC/%d", index))
+			goto onerror;
+		repl = provider_specific_match (specific_hash, prov, "dummy", "/FIELDS_A/@COLUMN_PKEY");
 		if (repl) {
 			if (! gda_server_operation_set_value_at (op, tcol->pkey ? "TRUE" : "FALSE", error,
 								 "/FIELDS_A/@COLUMN_PKEY/%d", index))
+				goto onerror;
+		}
+		else {
+			if (! gda_server_operation_set_value_at (op, "FALSE", error, "/FIELDS_A/@COLUMN_PKEY/%d", index))
 				goto onerror;
 		}
 	}
@@ -1762,7 +1824,7 @@ static gboolean prepare_tables_infos (GdaMetaStore *store, TableInfo **out_table
 				      const gchar *table_name, const gchar *condition, GError **error, 
 				      gint nvalues, const gchar **value_names, const GValue **values);
 static gint find_row_in_model (GdaDataModel *find_in, GdaDataModel *data, gint row,
-			       gint *pk_cols, gint pk_cols_nb, GError **error);
+			       gint *pk_cols, gint pk_cols_nb, gboolean *out_has_changed, GError **error);
 static gboolean gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name, 
 					 GdaDataModel *new_data, const gchar *condition, GError **error, 
 					 gint nvalues, const gchar **value_names, const GValue **values);
@@ -1864,7 +1926,7 @@ gda_meta_store_modify_with_context (GdaMetaStore *store, GdaMetaContext *context
 	return retval;
 }
 
-
+/*#define DEBUG_STORE_MODIFY*/
 static gboolean
 gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name, 
 			 GdaDataModel *new_data, const gchar *condition, GError **error, 
@@ -1906,7 +1968,7 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 	current_n_cols = gda_data_model_get_n_columns (current);
 	rows_to_del = g_new (gboolean, current_n_rows);
 	memset (rows_to_del, TRUE, sizeof (gboolean) * current_n_rows);
-#ifdef GDA_DEBUG_NO
+#ifdef DEBUG_STORE_MODIFY
 	g_print ("CURRENT:\n");
 	gda_data_model_dump (current, stdout);
 #endif
@@ -1916,7 +1978,9 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 		started_transaction = gda_connection_begin_transaction (store->priv->cnc, NULL,
 									GDA_TRANSACTION_ISOLATION_UNKNOWN,
 									NULL);
+#ifdef DEBUG_STORE_MODIFY
 		g_print ("------- BEGIN\n");
+#endif
 	}
 
 	/* treat rows to insert / update */
@@ -1924,7 +1988,7 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 		gint new_n_rows, new_n_cols;
 		new_n_rows = gda_data_model_get_n_rows (new_data);
 		new_n_cols = gda_data_model_get_n_columns (new_data);
-#ifdef GDA_DEBUG_NO
+#ifdef DEBUG_STORE_MODIFY
 		g_print ("NEW:\n");
 		gda_data_model_dump (new_data, stdout);
 #endif		
@@ -1932,12 +1996,16 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 		for (i = 0; i < new_n_rows; i++) {
 			/* find existing row if necessary */
 			gint erow = -1;
-			if (current)
+			gboolean has_changed = FALSE;
+			if (current) {
 				erow = find_row_in_model (current, new_data, i,
-					schema_set->pk_cols_array, schema_set->pk_cols_nb, error);
-			if (erow == -3)
-				/* nothing to do */
-				continue;
+							  schema_set->pk_cols_array, schema_set->pk_cols_nb, &has_changed, 
+							  error);
+#ifdef DEBUG_STORE_MODIFY
+				g_print ("FIND row %d(/%d) returned row %d (%s)\n", i, new_n_rows - 1, erow, 
+					 has_changed ? "CHANGED" : "unchanged");
+#endif
+			}
 			if (erow < -1) {
 				retval = FALSE;
 				goto out;
@@ -1973,8 +2041,8 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 			/* execute INSERT or UPDATE statements */
 			if (erow == -1) {
 				/* INSERT: bind INSERT parameters */
-#ifdef GDA_DEBUG_NO
-				g_print ("Insert for new row %d...\n", i);
+#ifdef DEBUG_STORE_MODIFY
+				g_print ("Insert new row %d into table %s\n", i, table_name);
 #endif
 				if (gda_connection_statement_execute_non_select (store->priv->cnc,
 										 schema_set->insert, schema_set->params, 
@@ -1985,7 +2053,7 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 				if (change) 
 					change->c_type = GDA_META_STORE_ADD;
 			}
-			else {
+			else if (has_changed) {
 				/* also bind parameters with existing values */
 				for (j = 0; j < current_n_cols; j++) {
 					gchar *pid = g_strdup_printf ("-%d", j);
@@ -2003,8 +2071,8 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 					g_free (pid);
 				}
 				/* UPDATE */
-#ifdef GDA_DEBUG_NO
-				g_print ("Update for new row %d (old row was %d)...\n", i, erow);
+#ifdef DEBUG_STORE_MODIFY
+				g_print ("Update for row %d (old row was %d) into table %s\n", i, erow, table_name);
 #endif
 				if (gda_connection_statement_execute_non_select (store->priv->cnc,
 										 schema_set->update, schema_set->params, 
@@ -2016,6 +2084,9 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 					change->c_type = GDA_META_STORE_MODIFY;
 				rows_to_del [erow] = FALSE;
 			}
+			else
+				/* row has not changed */
+				rows_to_del [erow] = FALSE;
 
 			/* Dependencies update: reverse_fk_list */
 			GSList *list;
@@ -2032,7 +2103,7 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 				for (k = 0; k < tfk->cols_nb; k++) 
 					context.column_values [k] = (GValue*) gda_data_model_get_value_at (new_data, 
 													   tfk->ref_pk_cols_array[k], i);
-#ifdef GDA_DEBUG
+#ifdef DEBUG_STORE_MODIFY
 				g_print ("Suggest update data into table '%s':", tfk->table_info->obj_name);
 				for (k = 0; k < tfk->cols_nb; k++) {
 					gchar *str;
@@ -2042,8 +2113,19 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 				}
 				g_print ("\n");
 #endif
-				g_signal_emit (store, gda_meta_store_signals[SUGGEST_UPDATE], 0, &context);
+				GError *suggest_reports_error = NULL;
+				g_signal_emit (store, gda_meta_store_signals[SUGGEST_UPDATE], 0, &context, 
+					       &suggest_reports_error);
 				g_free (context.column_values);
+				if (suggest_reports_error) {
+					/*g_print ("SUGGEST META UPDATE Returned FALSE: %s\n",
+						 suggest_reports_error && suggest_reports_error->message ? 
+						 suggest_reports_error->message : "???");*/
+					retval = FALSE;
+					if (error && !(*error))
+						g_propagate_error (error, suggest_reports_error);
+					goto out;
+				}
 			}
 		}
 	}
@@ -2077,8 +2159,8 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 				}
 				g_free (pid);
 			}
-#ifdef GDA_DEBUG_NO
-			g_print ("Delete for existing row %d...\n", i);
+#ifdef DEBUG_STORE_MODIFY
+			g_print ("Delete existing row %d from table %s\n", i, table_name);
 #endif
 			/* reverse_fk_list */
 			GSList *list;
@@ -2112,7 +2194,9 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 
 	if (retval && started_transaction) {
 		retval = gda_connection_commit_transaction (store->priv->cnc, NULL, NULL);
+#ifdef DEBUG_STORE_MODIFY
 		g_print ("------- COMMIT\n");
+#endif
 	}
 	if (retval && all_changes) 
 		g_signal_emit (store, gda_meta_store_signals[META_CHANGED], 0, all_changes);
@@ -2127,7 +2211,9 @@ out:
 		g_object_unref (current);
 	if (!retval && started_transaction) {
 		gda_connection_rollback_transaction (store->priv->cnc, NULL, NULL);
+#ifdef DEBUG_STORE_MODIFY
 		g_print ("------- ROLLBACK\n");
+#endif
 	}
 	return retval;
 }
@@ -2136,13 +2222,14 @@ out:
  * Find the row in @find_in from the values of @data at line @row, and columns pointed by
  * the values of @pk_cols
  *
- * Returns: -3 if found and no change need to be made, 
+ * Returns: 
  *          -2 on error, 
  *          -1 if not found, 
- *          >0 if found and changes need to be made
+ *          >=0 if found (if changes need to be made, then @out_has_changed is set to TRUE).
  */
 static gint
-find_row_in_model (GdaDataModel *find_in, GdaDataModel *data, gint row, gint *pk_cols, gint pk_cols_nb, GError **error) {
+find_row_in_model (GdaDataModel *find_in, GdaDataModel *data, gint row, gint *pk_cols, gint pk_cols_nb, 
+		   gboolean *out_has_changed, GError **error) {
 	gint i, erow;
 	GSList *values = NULL;
 	
@@ -2165,27 +2252,12 @@ find_row_in_model (GdaDataModel *find_in, GdaDataModel *data, gint row, gint *pk
 				const GValue *v1, *v2;
 				v1 = gda_data_model_get_value_at (find_in, i, erow);
 				v2 = gda_data_model_get_value_at (data, i, row);
-				if (((!v1 || gda_value_is_null (v1)) && v2) || 
-				    (v1 && (!v2 || gda_value_is_null (v2)))) {
+				if (gda_value_compare_ext (v1, v2)) {
 					changed = TRUE;
 					break;
 				}
-				else if (v1 && v2) {
-					if (G_VALUE_TYPE (v1) != G_VALUE_TYPE (v2)) {
-						g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_MODIFY_CONTENTS_ERROR,
-							     _("Data types differ for column %d (expected type '%s' and got '%s')"),
-							     i, g_type_name (G_VALUE_TYPE (v1)), g_type_name (G_VALUE_TYPE (v2)));
-						erow = -2;
-						break;
-					}
-					if (gda_value_compare (v1, v2)) {
-						changed = TRUE;
-						break;
-					}
-				}
 			}
-			if (!changed && (erow >= 0))
-				erow = -3;
+			*out_has_changed = changed;
 		}
 	}
 	
@@ -2363,48 +2435,7 @@ gda_meta_store_create_modify_data_model (GdaMetaStore *store, const gchar *table
 }
 
 /**
- * gda_meta_store_get_depending_tables
- * @store: a #GdaMetaStore object
- * @table_name: the name of a table present in @store
- *
- * Get a list of the tables which depend on the table named @table_name.
- *
- * Returns: a new list of tables names (as gchar*), the list must be freed when no longer needed, 
- * but the strings present in the list must not be modified.
- */
-GSList *
-gda_meta_store_get_depending_tables (GdaMetaStore *store, const gchar *table_name)
-{
-	GSList *list, *ret;
-	GdaMetaStoreClass *klass;
-	DbObject *dbobj;
-	TableInfo *tinfo;
-
-	g_return_val_if_fail (GDA_IS_META_STORE (store), NULL);
-	g_return_val_if_fail (table_name && *table_name, NULL);
-
-	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
-	dbobj = g_hash_table_lookup (klass->cpriv->db_objects_hash, table_name);
-	if (!dbobj) {
-		g_warning ("Table '%s' is not known by the GdaMetaStore", table_name);
-		return NULL;
-	}
-	if (dbobj->obj_type != GDA_SERVER_OPERATION_CREATE_TABLE) {
-		g_warning ("Table '%s' is not a database table in the GdaMetaStore", table_name);
-		return NULL;
-	}
-
-	tinfo = TABLE_INFO (dbobj);
-	for (ret = NULL, list = tinfo->reverse_fk_list; list; list = list->next) {
-		TableFKey *tfk = (TableFKey*) list->data;
-		ret = g_slist_prepend (ret, tfk->table_info->obj_name);
-	}
-
-	return g_slist_reverse (ret);
-}
-
-/**
- * gda_meta_store_get_schema_tables
+ * gda_meta_store_schema_get_tables
  * @store: a #GdaMetaStore object
  *
  * Get an ordered list of the tables @store knows about. The tables are ordered in a way that tables dependencies
@@ -2415,7 +2446,7 @@ gda_meta_store_get_depending_tables (GdaMetaStore *store, const gchar *table_nam
  * but the strings present in the list must not be modified.
  */
 GSList *
-gda_meta_store_get_schema_tables (GdaMetaStore *store)
+gda_meta_store_schema_get_tables (GdaMetaStore *store)
 {
 	GSList *list, *ret;
 	GdaMetaStoreClass *klass;
@@ -2430,4 +2461,310 @@ gda_meta_store_get_schema_tables (GdaMetaStore *store)
 	}
 
 	return g_slist_reverse (ret);
+}
+
+
+/**
+ * gda_meta_store_schema_get_structure
+ * @store: a #GdaMetaStore object
+ * @error: a place to store errors, or %NULL
+ *
+ * Creates a new #GdaMetaStruct object representing @store's interal database structure.
+ *
+ * Returns: a new #GdaMetaStruct object, or %NULL if an error occurred
+ */
+GdaMetaStruct *
+gda_meta_store_schema_get_structure (GdaMetaStore *store, GError **error)
+{
+	GdaMetaStruct *mstruct;
+	GdaMetaStore *pstore;
+	GdaDataModel *model;
+	gint i, nrows;
+
+	g_return_val_if_fail (GDA_IS_META_STORE (store), NULL);
+
+	/* make sure the private connection's meta store is up to date */
+	if (! gda_connection_update_meta_store (store->priv->cnc, NULL, error))
+		return NULL;
+
+	/* create a GdaMetaStruct */
+	pstore = gda_connection_get_meta_store (store->priv->cnc);
+	model = gda_meta_store_extract (pstore, "SELECT table_catalog, table_schema, table_name FROM _tables", error, NULL);
+	if (!model)
+		return NULL;
+
+	mstruct = gda_meta_struct_new (GDA_META_STRUCT_FEATURE_ALL);
+	nrows = gda_data_model_get_n_rows (model);
+	for (i = 0; i < nrows; i++) {
+		if (!gda_meta_struct_complement (mstruct, pstore, GDA_META_DB_UNKNOWN,
+						 gda_data_model_get_value_at (model, 0, i),
+						 gda_data_model_get_value_at (model, 1, i),
+						 gda_data_model_get_value_at (model, 2, i), error)) {
+			g_object_unref (mstruct);
+			g_object_unref (model);
+			return NULL;
+		}
+	}
+	g_object_unref (model);
+
+	/* complement the meta struct with some info about dependencies */
+	GSList *list;
+	GdaMetaStoreClass *klass;
+
+	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (pstore);
+	for (list = klass->cpriv->db_objects; list; list = list->next) {
+		DbObject *dbobj = DB_OBJECT (list->data);
+		if (dbobj->obj_type == GDA_SERVER_OPERATION_CREATE_TABLE) {
+			GdaMetaDbObject *mdbo;
+			GSList *dep_list;
+			GValue *value;
+
+			g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), dbobj->obj_name);
+			mdbo = gda_meta_struct_get_db_object (mstruct, NULL, NULL, value);
+			gda_value_free (value);
+			if (!mdbo)
+				continue;
+			for (dep_list = dbobj->depend_list; dep_list; dep_list = dep_list->next) {
+				GdaMetaDbObject *dep_mdbo;
+				g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), DB_OBJECT (dep_list->data)->obj_name);
+				dep_mdbo = gda_meta_struct_get_db_object (mstruct, NULL, NULL, value);
+				gda_value_free (value);
+				if (dep_mdbo && !g_slist_find (mdbo->depend_list, dep_mdbo)) {
+					/* FIXME: dependencies are added using the mdbo->depend_list list, and not as
+					 * real foreign key */
+					mdbo->depend_list = g_slist_append (mdbo->depend_list, dep_mdbo);
+				}
+			}
+		}
+	}
+	
+	return mstruct;
+}
+
+/**
+ * gda_meta_store_get_attribute_value
+ * @store: a #GdaMetaStore object
+ * @att_name: name of the attribute to get
+ * @att_value: the place to store the attribute value
+ * @error: a place to store errors, or %NULL
+ *
+ * The #GdaMetaStore object maintains a list of (name,value) attributes (attributes names starting with a '_'
+ * character are for intarnal use only and cannot be altered). This method and the gda_meta_store_set_attribute_value()
+ * method allows the user to add, set or remove attributes specific to their usage.
+ * 
+ * This method allows to get the value of a attribute stored in @store. The returned attribute value is 
+ * placed at @att_value, the caller is responsible to free that string. 
+ *
+ * If there is no attribute named @att_name then @att_value is set to %NULL
+ * and @error will contain the GDA_META_STORE_ATTRIBUTE_NOT_FOUND_ERROR error code, and FALSE is returned.
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_meta_store_get_attribute_value (GdaMetaStore *store, const gchar *att_name, gchar **att_value, GError **error)
+{
+	GdaDataModel *model;
+	GValue *value;
+	gint nrows;
+	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
+	g_return_val_if_fail (att_name && *att_name, FALSE);
+	g_return_val_if_fail (att_value, FALSE);
+
+	*att_value = NULL;
+	g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), att_name);
+	model = gda_meta_store_extract (store, "SELECT att_value FROM _attributes WHERE att_name = ##n::string", error,
+					"n", value, NULL);
+	gda_value_free (value);
+	if (!model)
+		return FALSE;
+	nrows = gda_data_model_get_n_rows (model);
+	if (nrows < 1) 
+		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_ATTRIBUTE_NOT_FOUND_ERROR,
+			     _("Attribute '%s' not found"), att_name);
+	else if (nrows > 1) 
+		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_ATTRIBUTE_ERROR,
+			     _("Attribute '%s' has %d values"), att_name, nrows);
+	else {
+		value = (GValue*) gda_data_model_get_value_at (model, 0, 0);
+		if (value && (G_VALUE_TYPE (value) == G_TYPE_STRING)) {
+			const gchar *val;
+			val = g_value_get_string (value);
+			if (val) 
+				*att_value = g_strdup (val);
+		}
+		return TRUE;
+	}
+	return FALSE;
+}
+
+/**
+ * gda_meta_store_set_attribute_value
+ * @store: a #GdaMetaStore object
+ * @att_name: name of the attribute to set
+ * @att_value: value of the attribute to set, or %NULL to unset the attribute
+ * @error: a place to store errors, or %NULL
+ *
+ * Set the value of the attribute named @att_name to @att_value; see gda_meta_store_get_attribute_value() for
+ * more information.
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_meta_store_set_attribute_value (GdaMetaStore *store, const gchar *att_name, 
+				    const gchar *att_value, GError **error)
+{
+	GdaMetaStoreClass *klass;
+	static GdaSet *set = NULL;
+	gboolean started_transaction = FALSE;
+
+	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
+	g_return_val_if_fail (att_name && *att_name, FALSE);
+
+	if (*att_name == '_') {
+		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_ATTRIBUTE_ERROR,
+			     _("Attributes names starting with a '_' are reserved for internal usage"));
+		return FALSE;
+	}
+
+	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
+	if (!set) {
+		if (!gda_statement_get_parameters (klass->cpriv->prep_stmts [STMT_SET_ATT_VALUE], &set, error))
+			return FALSE;
+	}
+
+	if (!gda_set_set_holder_value (set, "name", att_name)) {
+		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_ATTRIBUTE_ERROR,
+			     _("Internal GdaMetaStore error"));
+		return FALSE;
+	}
+	
+	/* start a transaction if possible */
+	if (! gda_connection_get_transaction_status (store->priv->cnc)) 
+		started_transaction = gda_connection_begin_transaction (store->priv->cnc, NULL,
+									GDA_TRANSACTION_ISOLATION_UNKNOWN,
+									NULL);
+	else
+		g_warning (_("Could not start a transaction because one already started, this could lead to GdaMetaStore "
+			     "attributes problems"));
+
+	/* delete existing attribute */
+	if (gda_connection_statement_execute_non_select (store->priv->cnc, 
+							 klass->cpriv->prep_stmts [STMT_DEL_ATT_VALUE], set,
+							 NULL, error) == -1)
+		goto onerror;
+
+	if (att_value) {
+		/* set new attribute */
+		if (!gda_set_set_holder_value (set, "value", att_value)) {
+			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_ATTRIBUTE_ERROR,
+				     _("Internal GdaMetaStore error"));
+			goto onerror;
+		}
+		if (gda_connection_statement_execute_non_select (store->priv->cnc, 
+								 klass->cpriv->prep_stmts [STMT_SET_ATT_VALUE], set,
+								 NULL, error) == -1)
+			goto onerror;
+	}
+	if (started_transaction)
+		gda_connection_commit_transaction (store->priv->cnc, NULL, NULL);
+	return TRUE;
+
+ onerror:
+	if (started_transaction)
+		gda_connection_rollback_transaction (store->priv->cnc, NULL, NULL);
+	return FALSE;
+}
+
+/**
+ * gda_meta_store_schema_add_custom_object
+ * @store: a #GdaMetaStore object
+ * @xml_description: an XML description of the table or view to add to @store
+ * @error: a place to store errors, or %NULL
+ *
+ * The internal database used by @store can be 'augmented' with some user-defined database objects
+ * (such as tables or views). This method allows one to add a new database object.
+ *
+ * If the internal database already contains the object, then:
+ * <itemizedlist>
+ *   <listitem><para>if the object is equal to the provided description then TRUE is returned</para></listitem>
+ *   <listitem><para>if the object exists but differs from the provided description, then FALSE is returned,
+ *      with the GDA_META_STORE_SCHEMA_OBJECT_CONFLICT_ERROR error code</para></listitem>
+ * </itemizedlist>
+ *
+ * Returns: TRUE if the new object has sucessfully been added
+ */
+gboolean
+gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_description, GError **error)
+{
+	xmlDocPtr doc;
+	xmlNodePtr node;
+	GdaMetaStoreClass *klass;
+	DbObject *dbo = NULL;
+	GValue *value;
+	GdaMetaStore *pstore;
+	GdaMetaStruct *mstruct;
+
+	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
+	g_return_val_if_fail (xml_description && *xml_description, FALSE);
+
+	/* load XML description */
+	doc = xmlParseDoc (BAD_CAST xml_description);
+	if (!doc) {
+		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_SCHEMA_OBJECT_DESCR_ERROR,
+			     _("Could not parse XML description of custom database object to add"));
+		return FALSE;
+	}
+	node = xmlDocGetRootElement (doc);
+
+	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
+
+	/* create DbObject structure from XML description */
+	/* FIXME: create the DbObject but store it into @store->priv instead of klass->cpriv */
+	if (!strcmp ((gchar *) node->name, "table")) {
+		xmlChar *prop;
+		prop = xmlGetProp (node, BAD_CAST "name");
+		if (!prop) 
+			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_SCHEMA_OBJECT_DESCR_ERROR,
+				     _("Missing custom database object name"));
+		else if (*prop == '_') 
+			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_SCHEMA_OBJECT_DESCR_ERROR,
+				     _("Custom database object names starting with a '_' are reserved for internal usage"));
+		else
+			dbo = create_table_object (klass, node, error);
+	}
+	else if (!strcmp ((gchar *) node->name, "view")) {
+		xmlChar *prop;
+		prop = xmlGetProp (node, BAD_CAST "name");
+		if (!prop) 
+			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_SCHEMA_OBJECT_DESCR_ERROR,
+				     _("Missing custom database object name"));
+		else if (*prop == '_') 
+			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_SCHEMA_OBJECT_DESCR_ERROR,
+				     _("Custom database object names starting with a '_' are reserved for internal usage"));
+		else
+			dbo = create_view_object (klass, node, error);
+	}
+
+	xmlFreeDoc (doc);
+
+	if (!dbo) 
+		return FALSE;
+
+	/* check for an already existing database object with the same name */
+	g_print ("Obj name: %s\n", dbo->obj_name);
+
+	/* make sure the private connection's meta store is up to date */
+	if (! gda_connection_update_meta_store (store->priv->cnc, NULL, error))
+		return FALSE;
+
+	/* create a GdaMetaStruct */
+	pstore = gda_connection_get_meta_store (store->priv->cnc);
+	mstruct = gda_meta_struct_new (GDA_META_STRUCT_FEATURE_ALL);
+	g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), dbo->obj_name);
+	if (!gda_meta_struct_complement (mstruct, pstore, GDA_META_DB_UNKNOWN,
+					 NULL, NULL, value, error))
+		return FALSE;
+	gda_value_free (value);
+	
+	return TRUE;
 }
