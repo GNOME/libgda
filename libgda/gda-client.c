@@ -290,6 +290,7 @@ find_or_load_provider (GdaClient *client, const gchar *provider)
 
 	if (!prv->handle) {
 		emit_client_error (client, NULL, g_module_error ());
+		gda_provider_info_free(prv_info);
 		g_free (prv);
 		return NULL;
 	}
@@ -304,6 +305,8 @@ find_or_load_provider (GdaClient *client, const gchar *provider)
 		plugin_init (dirname);
 		g_free (dirname);
 	}
+
+	gda_provider_info_free(prv_info);
 
 	g_module_symbol (prv->handle, "plugin_get_name",
 			 (gpointer) &prv->plugin_get_name);
