@@ -14,8 +14,9 @@ the possible libgda defined data types.
 <para>
 The #GdaDataHandler object can convert a #GValue to and from both SQL and 'STR'. The SQL representation of a value is 
 the actual string which would be used in an SQL statement (for example a string's SQL representation is surrounded by 
-quotes such as 'that\'s a string'). The 'STR' representation is a user friendly representation of a value (and the
-previous example would simply be: that's a string).
+quotes such as 'that\'s a string'). The 'STR' representation is a human-readable representation of a value appropriate 
+for the user's current locale. The 'STR' respresentation of a string is simply the original string without quotes but 
+a numerical value or date, for instance, will be formatted according to the user's current locale.
 </para>
 <para>
 Only one object which implements this interface is needed for any given data type, and it mainly contains some
