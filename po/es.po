@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: libgda.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-03-05 17:44+0000\n"
-"PO-Revision-Date: 2008-03-10 09:38+0100\n"
+"PO-Revision-Date: 2008-03-16 13:28+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -1041,9 +1041,8 @@ msgid "DSN of the connection to use"
 msgstr "DSN de la conexión a usar"
 
 #: ../libgda/gda-dict.c:245
-#, fuzzy
 msgid "Username for the connection to use"
-msgstr "DSN de la conexión a usar"
+msgstr "Usuario para la conexión que usar"
 
 #: ../libgda/gda-dict.c:881
 #, c-format
@@ -1124,16 +1123,16 @@ msgstr ""
 "diccionario"
 
 #: ../libgda/gda-dict.c:1906
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Trying to make an object unassumed when object class %s is not registered in "
 "the dictionary"
 msgstr ""
-"Se asumió que se quería hacer un objeto cuando la clase del objeto %s no "
+"No se asumió que se quería hacer un objeto cuando la clase del objeto %s no "
 "está registrada en el diccionario"
 
 #: ../libgda/gda-dict.c:1961
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Trying to make if an object is assumed when object class %s is not "
 "registered in the dictionary"
@@ -1226,14 +1225,14 @@ msgid "Missing node <parameters>: '%s'"
 msgstr "Faltan <parameters> del nodo: «%s»"
 
 #: ../libgda/gda-parameter-list.c:652 ../libgda/gda-server-operation.c:869
-#, fuzzy, c-format
+#, c-format
 msgid "Can't find a data type for parameter '%s'"
-msgstr "No se puede encontrar el tipo de datos para el agregado «%s»"
+msgstr "No se puede encontrar el tipo para el parámetro «%s»"
 
 #: ../libgda/gda-parameter-list.c:1261
 #, c-format
 msgid "Could not add parameter of type %s with value '%s'"
-msgstr "No se ha podido añadir el parámetro de tipo %s con el valor «%s»"
+msgstr "No se puede añadir el parámetro de tipo %s con el valor «%s»"
 
 #: ../libgda/gda-parameter-list.c:1349
 #, c-format
@@ -1409,9 +1408,9 @@ msgid "Missing required attributes for <gda_query_fall>"
 msgstr "Faltan atributos requeridos por <gda_query_fall>"
 
 #: ../libgda/gda-query-field-all.c:717
-#, fuzzy, c-format
+#, c-format
 msgid "Can't find target '%s'"
-msgstr "No se encuentra agregado «%s»"
+msgstr "No se puede encontrar el objetivo «%s»"
 
 #: ../libgda/gda-query-field-all.c:741
 msgid "Non-activated field"
@@ -1517,9 +1516,9 @@ msgid "Invalid parameter '%s' (value: %s)"
 msgstr "Parámetro inválido «%s» (valor: %s)"
 
 #: ../libgda/gda-query-field-value.c:1557
-#, fuzzy, c-format
+#, c-format
 msgid "No specified value"
-msgstr "No especificado"
+msgstr "No se especificó un valor"
 
 #: ../libgda/gda-query-field.c:167
 #, c-format
@@ -1572,9 +1571,9 @@ msgid "Invalid ORDER BY clause: can't find field number %d"
 msgstr "Cláusula ORDER BY inválida: no se puede encontrar el número de campo %d"
 
 #: ../libgda/gda-query-parsing.c:445
-#, fuzzy, c-format
+#, c-format
 msgid "Missing UPDATE target entity"
-msgstr "Falta la entidad de destino de DELETE"
+msgstr "Falta la entidad UPDATE objetivo"
 
 #: ../libgda/gda-query-parsing.c:480
 #, c-format
@@ -1587,9 +1586,9 @@ msgid "Missing target fields to update"
 msgstr "Faltan campos de destino para actualizar"
 
 #: ../libgda/gda-query-parsing.c:557
-#, fuzzy, c-format
+#, c-format
 msgid "Missing INSERT target entity"
-msgstr "Falta la entidad de destino de DELETE"
+msgstr "Falta la entidad INSERT objetivo"
 
 #: ../libgda/gda-query-parsing.c:583
 #, c-format
@@ -1607,9 +1606,9 @@ msgid "INSERT has more insert fields than expression values"
 msgstr "INSERT tiene más campos a insertar que valores de expresión"
 
 #: ../libgda/gda-query-parsing.c:678
-#, fuzzy, c-format
+#, c-format
 msgid "INSERT expression is a target field"
-msgstr "INSERT tiene más valores de expresión que campos a insertar"
+msgstr "La expresión INSERT es un campo objetivo"
 
 #: ../libgda/gda-query-parsing.c:729
 #, c-format
@@ -1617,9 +1616,9 @@ msgid "Missing DELETE target entity"
 msgstr "Falta la entidad de destino de DELETE"
 
 #: ../libgda/gda-query-parsing.c:868
-#, fuzzy, c-format
+#, c-format
 msgid "Internal error: can't find target"
-msgstr "Error interno: no se encuentra destino"
+msgstr "Error interno: no se encuentra el objetivo"
 
 #: ../libgda/gda-query-parsing.c:932
 #, c-format
@@ -1701,9 +1700,8 @@ msgid "Can't set aggregate or function's arguments"
 msgstr "No se puede establecer agregado o argumentos de la función"
 
 #: ../libgda/gda-query-target.c:617 ../libgda/gda-query-target.c:625
-#, fuzzy
 msgid "No name"
-msgstr "Nuevo nombre"
+msgstr "Sin nombre"
 
 #: ../libgda/gda-query-target.c:776
 #, c-format
@@ -1826,7 +1824,6 @@ msgstr "La conexión asociada al diccionario de consultas está cerrada"
 #: ../testing/gda-test-sql.c:392 ../tools/gda-author-dict-file.c:184
 #: ../tools/gda-author-dict-file.c:195 ../tools/gda-author-dict-file.c:243
 #: ../tools/gda-author-dict-file.c:249 ../tools/gda-diagnose.c:616
-#, fuzzy
 msgid "Unknown error"
 msgstr "Error desconocido"
 
@@ -1888,14 +1885,14 @@ msgid "Empty query"
 msgstr "Consulta vacía"
 
 #: ../libgda/gda-query.c:4915
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid parameter '%s'"
-msgstr "Parámetro inválido «%s» (valor: %s)"
+msgstr "Parámetro inválido «%s»"
 
 #: ../libgda/gda-query.c:4921
-#, fuzzy, c-format
+#, c-format
 msgid "Missing parameters"
-msgstr "Falta algún parámetro para «%s»"
+msgstr "Faltan parámetros"
 
 #: ../libgda/gda-query.c:4995
 #, c-format
@@ -1972,9 +1969,9 @@ msgid "Can't correctly print the list of columns to use."
 msgstr "No se puede imprimir correctamente la lista de columnas a usar."
 
 #: ../libgda/gda-query.c:5867
-#, fuzzy, c-format
+#, c-format
 msgid "Missing values"
-msgstr "Falta el nombre de la consulta"
+msgstr "Faltan valores"
 
 #: ../libgda/gda-query.c:6121
 #, c-format
@@ -2015,14 +2012,11 @@ msgid "GdaServerOperation: could not load file '%s'"
 msgstr "GdaServerOperation: no se pudo cargar el archivo «%s»"
 
 #: ../libgda/gda-server-operation.c:785
-#, fuzzy, c-format
+#, c-format
 msgid "GdaServerOperation: error loading GdaParameterList spec %s: '%s'"
-msgstr ""
-"GdaServerOperation: error al cargar la especificación GdaParameterList %s: «%"
-"s»"
+msgstr "GdaServerOperation: error al cargar la especificación GdaParameterList %s: «%s»"
 
 #: ../libgda/gda-server-operation.c:870
-#, fuzzy
 msgid "unnamed"
 msgstr "sin nombre"
 
@@ -2519,7 +2513,7 @@ msgstr "Error de análisis cerca de «%s»"
 #: ../libgda/sql-delimiter/gda-sql-delimiter.c:62
 #: ../libgda/sql-transaction/gda-sql-transaction-parser.c:56
 #: ../libsql/sql_parser.c:63
-#, fuzzy, c-format
+#, c-format
 msgid "Syntax error near `%s'"
 msgstr "Error de análisis cerca de «%s»"
 
@@ -2849,14 +2843,13 @@ msgid "This report document does not handle PDF output"
 msgstr "Este informe del documento no maneja salidas en PDF"
 
 #: ../libsql/lexer.l:160
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown char '%s'"
-msgstr "Consulta «%s» desconocida"
+msgstr "Carácter «%s» desconocido"
 
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:1
-#, fuzzy
 msgid "Berkeley DB database file to be used"
-msgstr "Archivo de base de datos Berkeley DB para usar"
+msgstr "Archivo de base de datos Berkeley DB que usar"
 
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:2
 msgid "Database file"
@@ -2887,7 +2880,6 @@ msgid "Name of the database in the database file to be used"
 msgstr "Nombre de la base de datos en el archivo de base de datos a usar"
 
 #: ../providers/bdb/gda-bdb-provider.c:162
-#, fuzzy
 msgid "The FILE parameter is not defined in the connection string."
 msgstr "El parámetro FILE no está definido en la cadena de conexión."
 
@@ -3439,7 +3431,7 @@ msgstr "El campo referenciado especificado en la restricción de la clave está 
 #: ../providers/mysql/gda-mysql-provider.c:265
 #, c-format
 msgid "You cannot provide a UNIX SOCKET if you also provide either a HOST or a PORT."
-msgstr "No puede proveer un UNIX_SOCKET si también provee un HOST o un PUERTO."
+msgstr "No puede proveer un SOCKET UNIX si también provee un HOST o un PUERTO."
 
 #: ../providers/mysql/gda-mysql-provider.c:350
 #: ../providers/postgres/gda-postgres-provider.c:540
@@ -4742,7 +4734,7 @@ msgid "Could not create a SELECT query to fetch existing BLOB values"
 msgstr "No se pudo crear la consulta SELECT para obtener los valores BLOB existentes"
 
 #: ../providers/postgres/gda-postgres-provider.c:1234
-#, fuzzy, c-format
+#, c-format
 msgid "Missing parameter for '%s'"
 msgstr "Falta algún parámetro para «%s»"
 
@@ -5418,9 +5410,8 @@ msgid "Failed when attempting to retrieve the amount of client messages"
 msgstr "Falló al intentar obtener la cantidad de mensajes cliente"
 
 #: ../providers/sybase/utils.c:220 ../providers/sybase/utils.c:450
-#, fuzzy
 msgid "An error occurred when attempting to retrieve a client message"
-msgstr "Ha ocurrido un error al intentar obtener un mensaje del servidor"
+msgstr "Sucedió un error al intentar obtener un mensaje del cliente"
 
 #: ../providers/sybase/utils.c:229
 msgid "OS_Error:("
@@ -5561,7 +5552,6 @@ msgid "GdaDataModelQuery modification query generation testing"
 msgstr ""
 
 #: ../testing/gda-test-model-query.c:87
-#, fuzzy
 msgid "List of tests"
 msgstr "Lista de pruebas"
 
@@ -5705,7 +5695,6 @@ msgstr "Tabla de contenido"
 #: ../tools/gda-diagnose.c:392 ../tools/gda-diagnose.c:463
 #: ../tools/gda-diagnose.c:469 ../tools/gda-diagnose.c:480
 #: ../tools/gda-diagnose.c:508 ../tools/gda-diagnose.c:545 ../tools/html.c:293
-#, fuzzy
 msgid "Yes"
 msgstr "Sí"
 
@@ -5748,9 +5737,8 @@ msgid "No current connection"
 msgstr "No está conectado"
 
 #: ../tools/command-exec.c:378
-#, fuzzy
 msgid "List of tables and views"
-msgstr "Lista de pruebas"
+msgstr "Lista de tablas y vistas"
 
 #: ../tools/command-exec.c:394
 msgid "view"
@@ -5791,9 +5779,9 @@ msgid "Modifiers"
 msgstr "Modificadores"
 
 #: ../tools/command-exec.c:605
-#, fuzzy, c-format
+#, c-format
 msgid "Description of table '%s'"
-msgstr "Descripción para el tipo: %s\n"
+msgstr "Descripción de la tabla «%s»"
 
 #: ../tools/command-exec.c:722
 msgid "Constraint"
@@ -5804,21 +5792,18 @@ msgid "No constraint for this table."
 msgstr "No hay restricciones para esta tabla."
 
 #: ../tools/command-exec.c:819
-#, fuzzy
 msgid "View definition:"
 msgstr "Definición de la vista:"
 
 #: ../tools/command-exec.c:839
-#, fuzzy, c-format
+#, c-format
 msgid "No object named '%s' found"
-msgstr "No se encontró ninguna conexión llamada «%s»"
+msgstr "No se encontró ningún objeto llamado «%s»"
 
 #: ../tools/gda-author-dict-file.c:203
-#, fuzzy, c-format
+#, c-format
 msgid "Fetching meta-data from the DBMS server. This may take some time...\n"
-msgstr ""
-"Obtención de los meta-datos desde el servidor DBMS. Esto puede llevar algo "
-"de tiempo...\n"
+msgstr "Obtención de los metadatos desde el servidor DBMS. Esto puede llevar algo de tiempo...\n"
 
 #: ../tools/gda-author-dict-file.c:251
 #, c-format
@@ -5975,9 +5960,8 @@ msgid "Datasource's information"
 msgstr "Información del origen de datos"
 
 #: ../tools/gda-diagnose.c:1354
-#, fuzzy
 msgid "Can't open connection."
-msgstr "No puede abrir la conexión: %s\n"
+msgstr "No se puede abrir la conexión."
 
 #: ../tools/gda-inspect-dict-file.c:47
 #, c-format
@@ -6048,7 +6032,7 @@ msgstr ""
 "\n"
 
 #: ../tools/gda-inspect-dict-file.c:193
-#, fuzzy, c-format
+#, c-format
 msgid "Written graph to '%s'\n"
 msgstr "Gráfica escrita en «%s»\n"
 
@@ -6101,7 +6085,7 @@ msgid "Could not load provider at '%s'.\n"
 msgstr "No se pudo cargar el proveedor de «%s».\n"
 
 #: ../tools/gda-list-server-op.c:73
-#, fuzzy, c-format
+#, c-format
 msgid "Could not create provider object from '%s'\n"
 msgstr "No se ha podido crear el objeto proveedor de «%s»\n"
 
@@ -6301,7 +6285,6 @@ msgid "%s [TABLE]"
 msgstr "[TABLA] %s"
 
 #: ../tools/gda-sql.c:1287
-#, fuzzy
 msgid "List all tables and views (or named table or view)"
 msgstr "Lista de todas las tablas y vistas (o nombre de tabla o vista)"
 
@@ -6560,7 +6543,7 @@ msgid "Missing FILE to write to"
 msgstr "Falta el ARCHIVO al que escribir"
 
 #: ../tools/gda-sql.c:2270
-#, fuzzy, c-format
+#, c-format
 msgid "saved_query_%d"
 msgstr "consulta_guardada_%d"
 
