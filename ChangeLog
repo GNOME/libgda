@@ -1,3 +1,13 @@
+2008-03-16  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-dict-field.c: Removed enum for PROP_DICT_TYPE because 
+	there is no such property.
+	* libgda/gda-parameter.c:
+	* libgda/gda-server-provider.c:
+	* libgda/gda-data-model-iter.c:
+	* libgda/gda-dict-constraint.c: Corrected spelling mistakes in 
+	documentation.
+
 2008-03-14  Joel Pfaff  <joel.pfaff@gmail.com>
 
 	Bug 507698 – Memory leaks in GdaProviderInfo handling.

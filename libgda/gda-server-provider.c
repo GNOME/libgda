@@ -993,7 +993,7 @@ gda_server_provider_get_data_handler_dbms (GdaServerProvider *provider,
  *
  * Use @provider to create a new #GValue from a single string representation. 
  *
- * The @prefered_type can optionnaly ask @provider to return a #GValue of the requested type 
+ * The @prefered_type can optionally ask @provider to return a #GValue of the requested type 
  * (but if such a value can't be created from @string, then %NULL is returned); 
  * pass G_TYPE_INVALID if any returned type is acceptable.
  *

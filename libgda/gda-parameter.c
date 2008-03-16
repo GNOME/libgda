@@ -1120,11 +1120,11 @@ destroyed_restrict_cb (GdaObject *obj, GdaParameter *param)
 /**
  * gda_parameter_has_restrict_values
  * @param: a #GdaParameter
- * @model: a place to store a pointer to the model restricting the parameter, or %NULL
+ * @model: a place to store a pointer to the model restricting the parameter, or %NULL. 
  * @col: a place to store the column in the model restricting the parameter, or %NULL
  *
- * Tells if @param has its values restricted by a #GdaDataModel, and optionnaly
- * allows to fetch the resteictions.
+ * Tells if @param has its values restricted by a #GdaDataModel, and optionally
+ * allows to fetch the restrictions.
  *
  * Returns: TRUE if @param has its values restricted.
  */

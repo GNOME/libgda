@@ -696,7 +696,7 @@ gda_dict_constraint_pkey_get_fields (GdaDictConstraint *cstr)
 /** 
  * gda_dict_constraint_fkey_set_fields
  * @cstr: a #GdaDictConstraint object
- * @pairs: a list of #GdaDictField objects
+ * @pairs: a list of #GdaDictConstraintFkeyPair objects
  *
  * Sets the field pairs which make the foreign key represented by @cstr. All the field pairs
  * must list a field which belong to the same #GdaDictTable to which the constraint is attached
