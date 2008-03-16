@@ -495,7 +495,7 @@ gda_data_model_iter_can_be_moved (GdaDataModelIter *iter)
 	if (!gda_data_model_iter_is_valid (iter))
 		return TRUE;
 
-	/* optionaly validate the row change */
+	/* optionally validate the row change */
 	g_signal_emit (G_OBJECT (iter),
 		       gda_data_model_iter_signals[ROW_TO_CHANGE],
 		       0, iter->priv->row, &move_ok);
