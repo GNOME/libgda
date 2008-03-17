@@ -1,8 +1,19 @@
+2008-03-17  Phil Longstaff  <plongstaff@rogers.com>
+
+	* libgda/gda-data-model-array.c (gda_data_model_array_copy_model):
+	* libgda/gda-data-model.c (find_column_from_id, add_xml_row):
+	* libgda/gda-init.c (gda_drop_table):
+	* libgda/gda-server-operation.c (gda_server_operation_get_node_info,
+	  gda_server_operation_get_value_at,
+	  gda_server_operation_set_value_at):
+	* libgda/gda-util.c (gda_utility_data_model_dump_data_to_xml,
+	  gda_utility_parameter_load_attributes): Fixed some obvious memory leaks 
+	by freeing variables.
+
 2008-03-16  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-server-provider.c: fix a memory leak in the server
 	operations handling (reported by Phil Longstaff)
-
 
 2008-03-16  Murray Cumming  <murrayc@murrayc.com>
 

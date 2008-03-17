@@ -1036,6 +1036,7 @@ gda_server_operation_get_node_info (GdaServerOperation *op, const gchar *path_fo
 					g_object_get (G_OBJECT (column), "id", &colid, NULL);
 					if (!colid || strcmp (colid, extension +1))
 						column = NULL;
+					g_free(colid);
 				}
 			}
 			g_free (extension);
@@ -1829,6 +1830,7 @@ gda_server_operation_get_value_at (GdaServerOperation *op, const gchar *path_for
 					value = gda_data_model_get_value_at (node_info->model, 
 									     gda_column_get_position (node_info->column), 
 									     row);
+				g_free(extension);
 			}
 			g_free (str);
 		}		
@@ -1958,6 +1960,7 @@ gda_server_operation_set_value_at (GdaServerOperation *op, const gchar *value, G
 					g_object_get (G_OBJECT (column), "id", &colid, NULL);
 					if (!colid || strcmp (colid, colname +1))
 						column = NULL;
+					g_free(colid);
 				}
 				if (column) {
 					gchar *ptr;
@@ -2008,6 +2011,7 @@ gda_server_operation_set_value_at (GdaServerOperation *op, const gchar *value, G
 
 	g_free (extension);
 	g_free (colname);
+	g_free (path);
 	return allok;
 }
 

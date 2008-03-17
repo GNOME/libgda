@@ -1374,13 +1374,15 @@ find_column_from_id (GdaDataModel *model, const gchar *colid, gint *pos)
 	/* assume @colid is the ID of a column */
 	nbcols = gda_data_model_get_n_columns (model);
 	for (c = 0; !column && (c < nbcols); c++) {
-		const gchar *id;
+		gchar *id;
 		column = gda_data_model_describe_column (model, c);
 		g_object_get (column, "id", &id, NULL);
 		if (!id || strcmp (id, colid)) 
 			column = NULL;
 		else
 			*pos = c;
+		if(id != NULL)
+			g_free(id);
 	}
 
 	/* if no column has been found, assumr @colid is like "_%d" where %d is a column number */
@@ -1470,13 +1472,16 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 
 		if (!isnull) {
 			value = g_new0 (GValue, 1);
-			if (!gda_value_set_from_string (value, (gchar*)xmlNodeGetContent (xml_field), gdatype)) {
+			gchar* nodeval = (gchar*)xmlNodeGetContent (xml_field);
+			if (!gda_value_set_from_string (value, nodeval, gdatype)) {
 				g_free (value);
+				xmlFree(nodeval);
 				g_set_error (error, 0, 0, _("Cannot interpret string as a valid %s value"), 
 					     gda_g_type_to_string (gdatype));
 				retval = FALSE;
 				break;
 			}
+			xmlFree(nodeval);
 		}
 		else
 			g_free (isnull);

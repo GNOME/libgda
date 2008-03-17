@@ -558,11 +558,12 @@ gda_drop_table (GdaConnection *cnn, const gchar *table_name, GError **error)
 			retval = FALSE;
 		}
 		else {
-			if (gda_server_provider_perform_operation (server, cnn, op, error))
+			if (!gda_server_provider_perform_operation (server, cnn, op, error)) {
 				/* error */
 				g_object_unref (op);
-		        xmlFreeDoc(parameters);
-			return FALSE;
+		        	xmlFreeDoc(parameters);
+				return FALSE;
+			}
 		}
 		g_object_unref (op);
 		xmlFreeDoc(parameters);
