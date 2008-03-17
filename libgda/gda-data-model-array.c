@@ -440,6 +440,7 @@ gda_data_model_array_copy_model (GdaDataModel *src, GError **error)
 
 		g_object_get (G_OBJECT (srccol), "id", &colid, NULL);
 		g_object_set (G_OBJECT (copycol), "id", colid, NULL);
+		g_free(colid);
 		gda_column_set_title (copycol, gda_column_get_title (srccol));
 		gda_column_set_defined_size (copycol, gda_column_get_defined_size (srccol));
 		gda_column_set_name (copycol, gda_column_get_name (srccol));

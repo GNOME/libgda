@@ -666,10 +666,13 @@ gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent,
 		
 			column = gda_data_model_describe_column (model, rcols [c]);
 			g_object_get (G_OBJECT (column), "id", &id, NULL);
+
 			if (id && *id)
 				col_ids [c] = g_strdup (id);
 			else
 				col_ids [c] = g_strdup_printf ("_%d", c);
+
+			g_free(id);
 		}
 	}
 
@@ -860,14 +863,17 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 			
 			if (!isnull) {
 				GValue *value;
+				gchar* nodeval = (gchar*)xmlNodeGetContent (vnode);
 
 				value = g_new0 (GValue, 1);
-				if (! gda_value_set_from_string (value, (gchar*)xmlNodeGetContent (vnode), gdatype)) {
+				if (! gda_value_set_from_string (value, nodeval, gdatype)) {
 					/* error */
 					g_free (value);
 				}
 				else 
 					gda_holder_take_value (holder, value);
+
+ 				xmlFree(nodeval);
 			}
 			else {
 				gda_holder_set_value (holder, NULL);
