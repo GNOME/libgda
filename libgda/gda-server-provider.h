@@ -96,6 +96,12 @@ typedef struct {
 	gboolean (*constraints_ref)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
 				      const GValue *table_catalog, const GValue *table_schema, const GValue *table_name, 
 				      const GValue *constraint_name);
+
+	/* _key_column_usage */
+	gboolean (*_key_columns)     (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*key_columns)      (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
+				      const GValue *table_catalog, const GValue *table_schema, const GValue *table_name, 
+				      const GValue *constraint_name);
 } GdaServerProviderMeta;
 
 typedef void (*GdaServerProviderAsyncCallback) (GdaServerProvider *provider, GdaConnection *cnc, guint task_id, 

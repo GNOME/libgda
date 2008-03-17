@@ -716,75 +716,161 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 		res->u.model = model;
 		return res;
 	}
+	else if (nb_objects == 0) {
+		g_set_error (error, 0, 0, _("No object found"));
+		return NULL;
+	}
 
+	/* 
+	 * Information about a single object
+	 */
 	res = g_new0 (GdaInternalCommandResult, 1);
 	res->type = GDA_INTERNAL_COMMAND_RESULT_MULTIPLE;
 	res->u.multiple_results = NULL;
+	GdaMetaDbObject *dbo;
 
 	for (dbo_list = mstruct->db_objects; dbo_list; dbo_list = dbo_list->next) {
-		GdaMetaDbObject *dbo = GDA_META_DB_OBJECT (dbo_list->data);
+		dbo = GDA_META_DB_OBJECT (dbo_list->data);
+		if (dbo->obj_type == GDA_META_DB_UNKNOWN)
+			dbo = NULL;
+		else
+			break;
+	}
+	g_assert (dbo);
+
+	if ((dbo->obj_type == GDA_META_DB_VIEW) || (dbo->obj_type == GDA_META_DB_TABLE)) {
 		GdaInternalCommandResult *subres;
+		GdaMetaTable *mt = GDA_META_DB_OBJECT_GET_TABLE (dbo);
+		GSList *list;
 
-		switch (dbo->obj_type) {
-		case GDA_META_DB_UNKNOWN:
-			break;
-		case GDA_META_DB_VIEW: 
-		case GDA_META_DB_TABLE: {
-			GdaMetaTable *mt = GDA_META_DB_OBJECT_GET_TABLE (dbo);
-			GSList *list;
-
-			model = gda_data_model_array_new (4);
-			gda_data_model_set_column_title (model, 0, _("Column"));
-			gda_data_model_set_column_title (model, 1, _("Type"));
-			gda_data_model_set_column_title (model, 2, _("Nullable"));
-			gda_data_model_set_column_title (model, 3, _("Default"));
-			if (dbo->obj_type == GDA_META_DB_VIEW)
-				g_object_set_data_full (G_OBJECT (model), "name", 
-							g_strdup_printf (_("List of columns for view '%s'"), 
-									 dbo->obj_short_name), 	g_free);
-			else
-				g_object_set_data_full (G_OBJECT (model), "name", 
-							g_strdup_printf (_("List of columns for table '%s'"), 
-									 dbo->obj_short_name), g_free);
-			for (list = mt->columns; list; list = list->next) {
-				GdaMetaTableColumn *tcol = GDA_META_TABLE_COLUMN (list->data);
-				GList *values = NULL;
-				GValue *val;
-
-				g_value_set_string ((val = gda_value_new (G_TYPE_STRING)), tcol->column_name);
-				values = g_list_append (values, val);
-				g_value_set_string ((val = gda_value_new (G_TYPE_STRING)), tcol->column_type);
-				values = g_list_append (values, val);
-				g_value_set_string ((val = gda_value_new (G_TYPE_STRING)), tcol->nullok ? _("yes") : _("no"));
-				values = g_list_append (values, val);
-				g_value_set_string ((val = gda_value_new (G_TYPE_STRING)), tcol->default_value);
-				values = g_list_append (values, val);
-				gda_data_model_append_values (model, values, NULL);
-				g_list_foreach (values, (GFunc) gda_value_free, NULL);
-				g_list_free (values);
-			}
-
-			subres = g_new0 (GdaInternalCommandResult, 1);
-			subres->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
-			subres->u.model = model;
-			res->u.multiple_results = g_slist_append (res->u.multiple_results, subres);
-
-			if (dbo->obj_type == GDA_META_DB_VIEW) {
-				GdaMetaView *mv = GDA_META_DB_OBJECT_GET_VIEW (dbo);
-				
-				subres = g_new0 (GdaInternalCommandResult, 1);
-				subres->type = GDA_INTERNAL_COMMAND_RESULT_TXT;
-				subres->u.txt = g_string_new ("");
-				g_string_append_printf (subres->u.txt, _("View definition: %s"), mv->view_def);
-				res->u.multiple_results = g_slist_append (res->u.multiple_results, subres);
-			}
-			break;
+		model = gda_data_model_array_new (4);
+		gda_data_model_set_column_title (model, 0, _("Column"));
+		gda_data_model_set_column_title (model, 1, _("Type"));
+		gda_data_model_set_column_title (model, 2, _("Nullable"));
+		gda_data_model_set_column_title (model, 3, _("Default"));
+		if (dbo->obj_type == GDA_META_DB_VIEW)
+			g_object_set_data_full (G_OBJECT (model), "name", 
+						g_strdup_printf (_("List of columns for view '%s'"), 
+								 dbo->obj_short_name), 	g_free);
+		else
+			g_object_set_data_full (G_OBJECT (model), "name", 
+						g_strdup_printf (_("List of columns for table '%s'"), 
+								 dbo->obj_short_name), g_free);
+		for (list = mt->columns; list; list = list->next) {
+			GdaMetaTableColumn *tcol = GDA_META_TABLE_COLUMN (list->data);
+			GList *values = NULL;
+			GValue *val;
+			
+			g_value_set_string ((val = gda_value_new (G_TYPE_STRING)), tcol->column_name);
+			values = g_list_append (values, val);
+			g_value_set_string ((val = gda_value_new (G_TYPE_STRING)), tcol->column_type);
+			values = g_list_append (values, val);
+			g_value_set_string ((val = gda_value_new (G_TYPE_STRING)), tcol->nullok ? _("yes") : _("no"));
+			values = g_list_append (values, val);
+			g_value_set_string ((val = gda_value_new (G_TYPE_STRING)), tcol->default_value);
+			values = g_list_append (values, val);
+			gda_data_model_append_values (model, values, NULL);
+			g_list_foreach (values, (GFunc) gda_value_free, NULL);
+			g_list_free (values);
 		}
-		default:
-			TO_IMPLEMENT;
-			break;
+		
+		subres = g_new0 (GdaInternalCommandResult, 1);
+		subres->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+		subres->u.model = model;
+		res->u.multiple_results = g_slist_append (res->u.multiple_results, subres);
+		
+		if (dbo->obj_type == GDA_META_DB_VIEW) {
+			/* VIEW specific */
+			GdaMetaView *mv = GDA_META_DB_OBJECT_GET_VIEW (dbo);
+			
+			subres = g_new0 (GdaInternalCommandResult, 1);
+			subres->type = GDA_INTERNAL_COMMAND_RESULT_TXT;
+			subres->u.txt = g_string_new ("");
+			g_string_append_printf (subres->u.txt, _("View definition: %s"), mv->view_def);
+			res->u.multiple_results = g_slist_append (res->u.multiple_results, subres);
+		}
+		else {
+			/* TABLE specific */
+			GValue *catalog, *schema, *name;
+			gint i, nrows;
+			const gchar *sql = "SELECT constraint_type, constraint_name  "
+				"FROM _table_constraints WHERE table_catalog = ##tc::string "
+				"AND table_schema = ##ts::string AND table_name = ##tname::string "
+				"ORDER BY constraint_type, constraint_name";
+
+			g_value_set_string ((catalog = gda_value_new (G_TYPE_STRING)), dbo->obj_catalog);
+			g_value_set_string ((schema = gda_value_new (G_TYPE_STRING)), dbo->obj_schema);
+			g_value_set_string ((name = gda_value_new (G_TYPE_STRING)), dbo->obj_name);
+			model = gda_meta_store_extract (gda_connection_get_meta_store (cnc), sql, error, 
+							"tc", catalog, "ts", schema, "tname", name, NULL);
+			nrows = gda_data_model_get_n_rows (model);
+			for (i = 0; i < nrows; i++) {
+				GString *string = NULL;
+				const GValue *cvalue;
+				const gchar *str;
+
+				cvalue = gda_data_model_get_value_at (model, 0, i);
+				str = g_value_get_string (cvalue);
+				if (*str == 'P') {
+					/* primary key */
+					GdaDataModel *cols;
+					cvalue = gda_data_model_get_value_at (model, 1, i);
+					string = g_string_new ("Primary key ");
+					g_string_append_printf (string, "'%s'", g_value_get_string (cvalue));
+					str = "SELECT column_name, ordinal_position "
+						"FROM _key_column_usage WHERE table_catalog = ##tc::string "
+						"AND table_schema = ##ts::string AND table_name = ##tname::string AND "
+						"constraint_name = ##cname::string "
+						"ORDER BY ordinal_position";
+					
+					cols = gda_meta_store_extract (gda_connection_get_meta_store (cnc), str, error, 
+								       "tc", catalog, "ts", schema, "tname", name, "cname", cvalue, 
+								       NULL);
+					if (cols) {
+						gint j, cnrows;
+						cnrows = gda_data_model_get_n_rows (cols);
+						for (j = 0; j < cnrows; j++) {
+							if (j == 0)
+								g_string_append (string, ": ");
+							else
+								g_string_append (string, ", ");
+							g_string_append (string, 
+									 g_value_get_string (gda_data_model_get_value_at (cols, 0, j)));
+						}
+						g_object_unref (cols);
+					}
+				}
+				else if (*str == 'F') {
+					/* foreign key */
+					cvalue = gda_data_model_get_value_at (model, 1, i);
+					string = g_string_new ("Foreign key ");
+					g_string_append_printf (string, "'%s'", g_value_get_string (cvalue));
+				}
+				else if (*str == 'U') {
+					/* Unique constraint */
+					cvalue = gda_data_model_get_value_at (model, 1, i);
+					string = g_string_new ("Unique ");
+					g_string_append_printf (string, "'%s'", g_value_get_string (cvalue));
+				}
+
+				if (string) {
+					subres = g_new0 (GdaInternalCommandResult, 1);
+					subres->type = GDA_INTERNAL_COMMAND_RESULT_TXT;
+					subres->u.txt = string;
+					res->u.multiple_results = g_slist_append (res->u.multiple_results, subres);
+				}
+			}
+
+			gda_value_free (catalog);
+			gda_value_free (schema);
+			gda_value_free (name);
+
+			g_object_unref (model);
+			return res;
 		}
 	}
+	else 
+		TO_IMPLEMENT;
 
 	g_object_unref (mstruct);
 	return res;

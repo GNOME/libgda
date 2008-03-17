@@ -50,7 +50,8 @@ typedef enum {
 	I_STMT_COLUMNS_OF_TABLE,
 	I_STMT_TABLES_CONSTRAINTS,
 	I_STMT_TABLES_CONSTRAINT_NAMED,
-	I_STMT_REF_CONSTRAINTS
+	I_STMT_REF_CONSTRAINTS,
+	I_STMT_KEY_COLUMN_USAGE
 } InternalStatementItem;
 
 
@@ -92,7 +93,10 @@ static gchar *internal_sql[] = {
 	"SELECT constraint_catalog, constraint_schema, constraint_name, table_catalog, table_schema, table_name, constraint_type, NULL, CASE WHEN is_deferrable = 'YES' THEN TRUE ELSE FALSE END, CASE WHEN initially_deferred = 'YES' THEN TRUE ELSE FALSE END FROM information_schema.table_constraints WHERE table_catalog = ##cat::string AND table_schema = ##schema::string AND table_name = ##name::string AND constraint_name = ##name2::string",
 
 	/* I_STMT_REF_CONSTRAINTS */
-	" SELECT  current_database(), nt.nspname, t.relname, c.conname, current_database(), nref.nspname, ref.relname, pkc.conname, CASE c.confmatchtype WHEN 'f'::\"char\" THEN 'FULL'::text WHEN 'p'::\"char\" THEN 'PARTIAL'::text WHEN 'u'::\"char\" THEN 'NONE'::text ELSE NULL::text END AS match_option, CASE c.confupdtype WHEN 'c'::\"char\" THEN 'CASCADE'::text WHEN 'n'::\"char\" THEN 'SET NULL'::text WHEN 'd'::\"char\" THEN 'SET DEFAULT'::text WHEN 'r'::\"char\" THEN 'RESTRICT'::text WHEN 'a'::\"char\" THEN 'NO ACTION'::text ELSE NULL::text END AS update_rule, CASE c.confdeltype WHEN 'c'::\"char\" THEN 'CASCADE'::text WHEN 'n'::\"char\" THEN 'SET NULL'::text WHEN 'd'::\"char\" THEN 'SET DEFAULT'::text WHEN 'r'::\"char\" THEN 'RESTRICT'::text WHEN 'a'::\"char\" THEN 'NO ACTION'::text ELSE NULL::text END AS delete_rule FROM pg_constraint c INNER JOIN pg_class t ON (c.conrelid=t.oid) INNER JOIN pg_namespace nt ON (nt.oid=t.relnamespace) INNER JOIN pg_class ref ON (c.confrelid=ref.oid) INNER JOIN pg_namespace nref ON (nref.oid=ref.relnamespace) INNER JOIN pg_constraint pkc ON (c.confrelid = pkc.conrelid AND information_schema._pg_keysequal(c.confkey, pkc.conkey)) WHERE c.contype = 'f' AND current_database() = ##cat::string AND nt.nspname = ##schema::string AND t.relname = ##name::string AND c.conname = ##name2::string"
+	"SELECT current_database(), nt.nspname, t.relname, c.conname, current_database(), nref.nspname, ref.relname, pkc.conname, CASE c.confmatchtype WHEN 'f'::\"char\" THEN 'FULL'::text WHEN 'p'::\"char\" THEN 'PARTIAL'::text WHEN 'u'::\"char\" THEN 'NONE'::text ELSE NULL::text END AS match_option, CASE c.confupdtype WHEN 'c'::\"char\" THEN 'CASCADE'::text WHEN 'n'::\"char\" THEN 'SET NULL'::text WHEN 'd'::\"char\" THEN 'SET DEFAULT'::text WHEN 'r'::\"char\" THEN 'RESTRICT'::text WHEN 'a'::\"char\" THEN 'NO ACTION'::text ELSE NULL::text END AS update_rule, CASE c.confdeltype WHEN 'c'::\"char\" THEN 'CASCADE'::text WHEN 'n'::\"char\" THEN 'SET NULL'::text WHEN 'd'::\"char\" THEN 'SET DEFAULT'::text WHEN 'r'::\"char\" THEN 'RESTRICT'::text WHEN 'a'::\"char\" THEN 'NO ACTION'::text ELSE NULL::text END AS delete_rule FROM pg_constraint c INNER JOIN pg_class t ON (c.conrelid=t.oid) INNER JOIN pg_namespace nt ON (nt.oid=t.relnamespace) INNER JOIN pg_class ref ON (c.confrelid=ref.oid) INNER JOIN pg_namespace nref ON (nref.oid=ref.relnamespace) INNER JOIN pg_constraint pkc ON (c.confrelid = pkc.conrelid AND information_schema._pg_keysequal(c.confkey, pkc.conkey)) WHERE c.contype = 'f' AND current_database() = ##cat::string AND nt.nspname = ##schema::string AND t.relname = ##name::string AND c.conname = ##name2::string",
+
+	/* I_STMT_KEY_COLUMN_USAGE */
+	"SELECT table_catalog, table_schema, table_name, constraint_name, column_name, ordinal_position FROM information_schema.key_column_usage WHERE table_catalog = ##cat::string AND table_schema = ##schema::string AND table_name = ##name::string AND constraint_name = ##name2::string"
 };
 
 /*
@@ -422,3 +426,37 @@ _gda_postgres_meta_constraints_ref (GdaServerProvider *prov, GdaConnection *cnc,
 	return retval;
 }
 
+gboolean 
+_gda_postgres_meta_key_columns (GdaServerProvider *prov, GdaConnection *cnc, 
+				GdaMetaStore *store, GdaMetaContext *context, GError **error,
+				const GValue *table_catalog, const GValue *table_schema, const GValue *table_name, 
+				const GValue *constraint_name)
+{
+	GdaDataModel *model;
+	gboolean retval = TRUE;
+	PostgresConnectionData *cdata;
+
+	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return FALSE;
+
+	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog);
+	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema);
+	gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name);
+	gda_holder_set_value (gda_set_get_holder (i_set, "name2"), constraint_name);
+	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_KEY_COLUMN_USAGE], i_set, 
+							 error);
+	if (!model)
+		return FALSE;
+
+
+	/* modify meta store */
+	if (retval)
+		retval = gda_meta_store_modify (store, context->table_name, model, 
+						"table_schema = ##schema::string AND table_name = ##name::string AND constraint_name = ##name2::string", 
+						error, 
+						"schema", table_schema, "name", table_name, "name2", constraint_name, NULL);
+	g_object_unref (model);
+
+	return retval;	
+}

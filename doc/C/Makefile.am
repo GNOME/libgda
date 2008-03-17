@@ -34,6 +34,7 @@ GTKDOC_CFLAGS = -I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
         $(LIBGDA_CFLAGS) \
 	-DGETTEXT_PACKAGE=\""$(GETTEXT_PACKAGE)"\"
+
 GTKDOC_LIBS =  $(top_builddir)/libgda/libgda-4.0.la \
 	$(top_builddir)/libgda-report/libgda-report-4.0.la \
 	$(LIBGDA_LIBS)
@@ -47,7 +48,8 @@ content_files = fdl-appendix.sgml
 # Images to copy into HTML directory
 HTML_IMAGES = DataModels.png \
 	architecture.png parts.png stmt-unknown.png stmt-select.png stmt-insert1.png stmt-insert2.png \
-	stmt-update.png stmt-compound.png information_schema.png
+	stmt-update.png stmt-compound.png information_schema.png \
+	MetaStore1.png MetaStore2.png
 
 # Extra options to supply to gtkdoc-fixref
 FIXXREF_OPTIONS=

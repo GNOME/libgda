@@ -416,7 +416,7 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
 				      GdaServerOperationType type, 
 				      GdaSet *options, GError **error)
 {
-	OpReq **op_req_table = NULL;
+	static OpReq **op_req_table = NULL;
 
 	if (! op_req_table) {
 		op_req_table = g_new0 (OpReq *, GDA_SERVER_OPERATION_NB);

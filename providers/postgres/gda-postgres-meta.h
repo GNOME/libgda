@@ -43,7 +43,9 @@ gboolean _gda_postgres_meta_constraints_tab  (GdaServerProvider *, GdaConnection
 gboolean _gda_postgres_meta_constraints_ref  (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
 					      const GValue *table_catalog, const GValue *table_schema, const GValue *table_name, 
 					      const GValue *constraint_name);
-
+gboolean _gda_postgres_meta_key_columns      (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
+					      const GValue *table_catalog, const GValue *table_schema, const GValue *table_name, 
+					      const GValue *constraint_name);
 
 G_END_DECLS
 

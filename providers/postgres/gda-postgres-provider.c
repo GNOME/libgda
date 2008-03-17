@@ -192,6 +192,7 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	provider_class->meta_funcs.columns = _gda_postgres_meta_columns;
 	provider_class->meta_funcs.constraints_tab = _gda_postgres_meta_constraints_tab;
 	provider_class->meta_funcs.constraints_ref = _gda_postgres_meta_constraints_ref;
+	provider_class->meta_funcs.key_columns = _gda_postgres_meta_key_columns;
 }
 
 static void

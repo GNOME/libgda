@@ -363,9 +363,9 @@
     <column name="ref_table_name"/>
     <column name="ref_constraint_name"/>
 
-    <column name="match_option" nullok="TRUE"/>
-    <column name="update_rule" nullok="TRUE"/>
-    <column name="delete_rule" nullok="TRUE"/>
+    <column name="match_option" nullok="TRUE" descr="FULL, PARTIAL or NONE"/>
+    <column name="update_rule" nullok="TRUE" descr="CASCADE, SET NULL, SET DEFAULT, RESTRICT, NO ACTION or NONE"/>
+    <column name="delete_rule" nullok="TRUE" descr="CASCADE, SET NULL, SET DEFAULT, RESTRICT, NO ACTION or NONE"/>
     <fkey ref_table="_table_constraints">
       <part column="table_catalog"/>
       <part column="table_schema"/>

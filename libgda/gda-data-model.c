@@ -165,7 +165,10 @@ gda_data_model_signal_emit_changed (GdaDataModel *model)
  * @model: a #GdaDataModel object.
  * @row: row number.
  *
- * Emits the 'row_inserted' and 'changed' signals on @model.
+ * Emits the 'row_inserted' and 'changed' signals on @model. 
+ *
+ * This method should only be used by #GdaDataModel implementations to 
+ * signal that a row has been inserted.
  */
 void
 gda_data_model_row_inserted (GdaDataModel *model, gint row)
@@ -204,6 +207,9 @@ gda_data_model_row_inserted (GdaDataModel *model, gint row)
  * @row: row number.
  *
  * Emits the 'row_updated' and 'changed' signals on @model.
+ *
+ * This method should only be used by #GdaDataModel implementations to 
+ * signal that a row has been updated.
  */
 void
 gda_data_model_row_updated (GdaDataModel *model, gint row)
@@ -225,6 +231,9 @@ gda_data_model_row_updated (GdaDataModel *model, gint row)
  * @row: row number.
  *
  * Emits the 'row_removed' and 'changed' signal on @model.
+ *
+ * This method should only be used by #GdaDataModel implementations to 
+ * signal that a row has been removed
  */
 void
 gda_data_model_row_removed (GdaDataModel *model, gint row)
@@ -536,8 +545,10 @@ gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *tit
  * gda_data_model_create_iter().
  *
  * Note that the returned #GValue must not be modified directly (unexpected behaviours may
- * occur if you do so). If you want to
- * modify a value stored in a #GdaDataModel, use the gda_data_model_set_value() method.
+ * occur if you do so). Also that value may become invalid as soon as any Libgda part is executed again,
+ * which means if you want to keep the value, a copy must be made. 
+ *
+ * If you want to modify a value stored in a #GdaDataModel, use the gda_data_model_set_value() method.
  *
  * Returns: a #GValue containing the value stored in the given
  * position, or %NULL on error (out-of-bound position, etc).

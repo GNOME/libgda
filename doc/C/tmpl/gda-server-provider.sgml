@@ -103,6 +103,8 @@ for more information.
 @constraints_tab: 
 @_constraints_ref: 
 @constraints_ref: 
+@_key_columns: 
+@key_columns: 
 
 <!-- ##### USER_FUNCTION GdaServerProviderAsyncCallback ##### -->
 <para>

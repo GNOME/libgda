@@ -662,7 +662,7 @@ gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent,
 		col_ids = g_new0 (gchar *, rnb_cols);
 		for (c = 0; c < rnb_cols; c++) {
 			GdaColumn *column;
-			const gchar *id;
+			gchar *id;
 		
 			column = gda_data_model_describe_column (model, rcols [c]);
 			g_object_get (G_OBJECT (column), "id", &id, NULL);

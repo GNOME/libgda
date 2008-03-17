@@ -49,7 +49,7 @@
       See this object's documentation for more information.</para>
   </sect1>  
 
-  <sect1><title>Dictionary changes</title>
+  <sect1 id="migration-2-dict"><title>Dictionary changes</title>
     <para>The GdaDict object has been removed and the <link linkend="GdaMetaStore">GdaMetaStore</link> object introduced to
       replace it, but with slightly different features.</para>
     <para>The GdaDict object used an XML file to store its data which imposed parsing potentially big XML files and creating its own

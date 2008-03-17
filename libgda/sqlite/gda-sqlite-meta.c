@@ -40,7 +40,9 @@ static gboolean append_a_row (GdaDataModel *to_model, GError **error, gint nb, .
  */
 typedef enum {
         I_PRAGMA_DATABASE_LIST,
-	I_PRAGMA_TABLE_INFO
+	I_PRAGMA_TABLE_INFO,
+	I_PRAGMA_INDEX_LIST,
+	I_PRAGMA_FK_LIST
 } InternalStatementItem;
 
 
@@ -48,8 +50,17 @@ typedef enum {
  * predefined statements' SQL
  */
 static gchar *internal_sql[] = {
+	/* I_PRAGMA_DATABASE_LIST */
 	"PRAGMA database_list",
-	"PRAGMA table_info (##tblname::string)"
+
+	/* I_PRAGMA_TABLE_INFO */
+	"PRAGMA table_info (##tblname::string)",
+
+	/* I_PRAGMA_INDEX_LIST */
+	"PRAGMA index_list (##tblname::string)",
+
+	/* I_PRAGMA_FK_LIST */
+	"PRAGMA foreign_key_list (##tblname::string)"
 };
 
 /*
@@ -68,6 +79,7 @@ static GValue       *view_type_value;
 static GValue       *view_check_option;
 static GValue       *false_value;
 static GValue       *zero_value;
+static GValue       *rule_value;
 static GdaSet       *pragma_set;
 
 /*
@@ -94,14 +106,13 @@ _gda_sqlite_provider_meta_init (GdaServerProvider *provider)
 		}
         }
 
-	catalog_value = gda_value_new (G_TYPE_STRING);
-	g_value_set_string (catalog_value, "main");
-
+	g_value_set_string ((catalog_value = gda_value_new (G_TYPE_STRING)), "main");
 	g_value_set_string ((table_type_value = gda_value_new (G_TYPE_STRING)), "BASE TABLE");
 	g_value_set_string ((view_type_value = gda_value_new (G_TYPE_STRING)), "VIEW");
 	g_value_set_string ((view_check_option = gda_value_new (G_TYPE_STRING)), "NONE");
 	g_value_set_boolean ((false_value = gda_value_new (G_TYPE_BOOLEAN)), FALSE);
 	g_value_set_int ((zero_value = gda_value_new (G_TYPE_INT)), 0);
+	g_value_set_string ((rule_value = gda_value_new (G_TYPE_STRING)), "NONE");
 
 	pragma_set = gda_set_new_inline (1, "tblname", G_TYPE_STRING, "");
 }
@@ -418,7 +429,6 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 		if (pAutoinc)
 			g_value_set_string ((v5 = gda_value_new (G_TYPE_STRING)), "AUTO_INCREMENT");
 		g_value_set_int (v1, g_value_get_int (v1) + 1);
-
 		
 		if (pzDataType) {
 			gchar *tmp = g_strdup (pzDataType);
@@ -467,6 +477,8 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 	return retval;
 }
 
+
+
 gboolean
 _gda_sqlite_meta_columns (GdaServerProvider *prov, GdaConnection *cnc, 
 			  GdaMetaStore *store, GdaMetaContext *context, GError **error, 
@@ -491,15 +503,300 @@ _gda_sqlite_meta_columns (GdaServerProvider *prov, GdaConnection *cnc,
 	return retval;
 }
 
+static gboolean 
+fill_constraints_tab_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaDataModel *mod_model, 
+			    const GValue *p_table_schema, const GValue *p_table_name, const GValue *constraint_name_n,
+			    GError **error)
+{
+	GdaDataModel *tmpmodel;
+	gboolean retval = TRUE;
+	gint nrows;
+	const gchar *schema_name;
+	gint i;
+
+	/*
+	 * Setup pragma_set
+	 */
+	schema_name = g_value_get_string (p_table_schema);
+	if (strcmp (schema_name, "main")) {
+		gchar *str;
+		str = g_strdup_printf ("%s.%s", schema_name, g_value_get_string (p_table_name));
+		gda_set_set_holder_value (pragma_set, "tblname", str);
+		g_free (str);
+	}
+	else
+		gda_set_set_holder_value (pragma_set, "tblname", g_value_get_string (p_table_name));
+
+	
+	/* 
+	 * PRIMARY KEY
+	 *
+	 * SQLite only allows 1 primary key to be defined per table.
+	 */
+	GType pk_col_types[] = {G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT, 
+				G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_NONE};
+	gboolean has_pk = FALSE;
+
+	tmpmodel = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_PRAGMA_TABLE_INFO], pragma_set, 
+								 GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
+								 pk_col_types, error);
+	if (!tmpmodel)
+		return FALSE;
+		
+	nrows = gda_data_model_get_n_rows (tmpmodel);
+	for (i = 0; i < nrows; i++) {
+		char const *pzDataType; /* Declared data type */
+		char const *pzCollSeq; /* Collation sequence name */
+		int pNotNull; /* True if NOT NULL constraint exists */
+		int pPrimaryKey; /* True if column part of PK */
+		int pAutoinc; /* True if column is auto-increment */
+		const gchar *this_table_name;
+		const gchar *this_col_name;
+		const GValue *this_col_pname;
+		
+		this_col_pname = gda_data_model_get_value_at (tmpmodel, 1, i);
+		this_table_name = g_value_get_string (p_table_name);
+		g_assert (this_table_name);
+		if (!strcmp (this_table_name, "sqlite_sequence"))
+			continue; /* ignore that table */
+		
+		this_col_name = g_value_get_string (this_col_pname);
+		if (sqlite3_table_column_metadata (cdata->connection, g_value_get_string (p_table_schema), 
+						   this_table_name, this_col_name,
+						   &pzDataType, &pzCollSeq, &pNotNull, &pPrimaryKey, &pAutoinc)
+		    != SQLITE_OK) 
+			/* may fail because we have a view and not a table => use @tmpmodel to fetch info. */
+			pPrimaryKey = g_value_get_boolean (gda_data_model_get_value_at (tmpmodel, 5, i));
+		
+		if (pPrimaryKey) {
+			has_pk = TRUE;
+			break;
+		}
+	}
+
+	if (has_pk) {
+		if (!constraint_name_n || ! strcmp (g_value_get_string (constraint_name_n), "primary_key")) {
+			GValue *v1, *v2;
+			g_value_set_string ((v1 = gda_value_new (G_TYPE_STRING)), "primary_key");
+			g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), "PRIMARY KEY");
+			
+			if (! append_a_row (mod_model, error, 10, 
+					    FALSE, catalog_value, /* constraint_catalog */
+					    FALSE, p_table_schema, /* constraint_schema */
+					    TRUE, v1, /* constraint_name */
+					    FALSE, catalog_value, /* table_catalog */
+					    FALSE, p_table_schema, /* table_schema */
+					    FALSE, p_table_name, /* table_name */
+					    TRUE, v2, /* constraint_type */
+					    FALSE, NULL, /* check_clause */
+					    FALSE, NULL, /* is_deferrable */
+					    FALSE, NULL /* initially_deferred */))
+				retval = FALSE;
+		}
+	}
+
+	g_object_unref (tmpmodel);
+	if (!retval)
+		return FALSE;
+
+	/* 
+	 * UNIQUE 
+	 */
+	GType unique_col_types[] = {G_TYPE_INT, G_TYPE_STRING, G_TYPE_INT, G_TYPE_NONE};
+	
+	tmpmodel = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_PRAGMA_INDEX_LIST], pragma_set, 
+								 GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
+								 unique_col_types, error);
+	if (!tmpmodel)
+		return FALSE;
+		
+	nrows = gda_data_model_get_n_rows (tmpmodel);
+	for (i = 0; i < nrows; i++) {
+		const GValue *cvalue;
+		GValue *v2;
+
+		cvalue = gda_data_model_get_value_at (tmpmodel, 2, i);
+		if (!g_value_get_int (cvalue))
+			continue;
+		
+		cvalue = gda_data_model_get_value_at (tmpmodel, 1, i);
+		if (constraint_name_n && strcmp (g_value_get_string (constraint_name_n), g_value_get_string (cvalue)))
+			continue;
+
+		g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), "UNIQUE");
+		
+		if (! append_a_row (mod_model, error, 10, 
+				    FALSE, catalog_value, /* constraint_catalog */
+				    FALSE, p_table_schema, /* constraint_schema */
+				    FALSE, cvalue, /* constraint_name */
+				    FALSE, catalog_value, /* table_catalog */
+				    FALSE, p_table_schema, /* table_schema */
+				    FALSE, p_table_name, /* table_name */
+				    TRUE, v2, /* constraint_type */
+				    FALSE, NULL, /* check_clause */
+				    FALSE, NULL, /* is_deferrable */
+				    FALSE, NULL /* initially_deferred */))
+			retval = FALSE;
+	}
+	g_object_unref (tmpmodel);
+	if (!retval)
+		return FALSE;
+
+	/*
+	 * FOREIGN KEYS
+	 */
+	GType fk_col_types[] = {G_TYPE_INT, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_NONE};
+	gchar *ref_table = NULL;
+	tmpmodel = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_PRAGMA_FK_LIST], pragma_set, 
+								 GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
+								 fk_col_types, error);
+	if (!tmpmodel)
+		return FALSE;
+		
+	nrows = gda_data_model_get_n_rows (tmpmodel);
+	for (i = 0; i < nrows; i++) {
+		const GValue *cvalue;
+
+		cvalue = gda_data_model_get_value_at (tmpmodel, 2, i);
+		if (! ref_table || strcmp (ref_table, g_value_get_string (cvalue))) {
+			gchar *constname;
+			GValue *v1, *v2;
+
+			g_free (ref_table);
+			ref_table = g_strdup (g_value_get_string (cvalue));
+			constname = g_strdup_printf ("fk_%s", ref_table);
+			if (constraint_name_n && strcmp (g_value_get_string (constraint_name_n), constname)) {
+				g_free (constname);
+				continue;
+			}
+		
+			g_value_take_string ((v1 = gda_value_new (G_TYPE_STRING)), constname);
+			g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), "FOREIGN KEY");
+		
+			if (! append_a_row (mod_model, error, 10, 
+					    FALSE, catalog_value, /* constraint_catalog */
+					    FALSE, p_table_schema, /* constraint_schema */
+					    TRUE, v1, /* constraint_name */
+					    FALSE, catalog_value, /* table_catalog */
+					    FALSE, p_table_schema, /* table_schema */
+					    FALSE, p_table_name, /* table_name */
+					    TRUE, v2, /* constraint_type */
+					    FALSE, NULL, /* check_clause */
+					    FALSE, NULL, /* is_deferrable */
+					    FALSE, NULL /* initially_deferred */))
+				retval = FALSE;
+		}
+	}
+	g_free (ref_table);
+	g_object_unref (tmpmodel);
+
+	/*
+	 * CHECK constraint
+	 * FIXME: how to get that information?
+	 */
+
+	return retval;
+}
+
 gboolean 
 _gda_sqlite_meta_constraints_tab (GdaServerProvider *prov, GdaConnection *cnc, 
 				  GdaMetaStore *store, GdaMetaContext *context, GError **error,
 				  const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
 				  const GValue *constraint_name_n)
 {
-	/* not implemented in SQLite */
-	return TRUE;
+	gboolean retval = TRUE;
+	GdaDataModel *mod_model = NULL;
+	SqliteConnectionData *cdata;
+	
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return FALSE;
+
+	mod_model = gda_meta_store_create_modify_data_model (store, context->table_name);
+	g_assert (mod_model);
+
+	retval = fill_constraints_tab_model (cnc, cdata, mod_model, table_schema, table_name, constraint_name_n, error);	
+	if (retval)
+		retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
+	g_object_unref (mod_model);
+
+	return retval;
 }
+
+static gboolean 
+fill_constraints_ref_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaDataModel *mod_model, 
+			    const GValue *p_table_schema, const GValue *p_table_name, const GValue *constraint_name,
+			    GError **error)
+{
+	GdaDataModel *tmpmodel;
+	gboolean retval = TRUE;
+	gint nrows;
+	const gchar *schema_name;
+	gint i;
+
+	/*
+	 * Setup pragma_set
+	 */
+	schema_name = g_value_get_string (p_table_schema);
+	if (strcmp (schema_name, "main")) {
+		gchar *str;
+		str = g_strdup_printf ("%s.%s", schema_name, g_value_get_string (p_table_name));
+		gda_set_set_holder_value (pragma_set, "tblname", str);
+		g_free (str);
+	}
+	else
+		gda_set_set_holder_value (pragma_set, "tblname", g_value_get_string (p_table_name));	
+
+	GType fk_col_types[] = {G_TYPE_INT, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_NONE};
+	gchar *ref_table = NULL;
+	tmpmodel = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_PRAGMA_FK_LIST], pragma_set, 
+								 GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
+								 fk_col_types, error);
+	if (!tmpmodel)
+		return FALSE;
+		
+	nrows = gda_data_model_get_n_rows (tmpmodel);
+	for (i = 0; i < nrows; i++) {
+		const GValue *cvalue;
+
+		cvalue = gda_data_model_get_value_at (tmpmodel, 2, i);
+		if (! ref_table || strcmp (ref_table, g_value_get_string (cvalue))) {
+			gchar *constname;
+			GValue *v2, *v3, *v4;
+
+			g_free (ref_table);
+			ref_table = g_strdup (g_value_get_string (cvalue));
+			constname = g_strdup_printf ("fk_%s", ref_table);
+			if (strcmp (g_value_get_string (constraint_name), constname)) {
+				g_free (constname);
+				continue;
+			}
+		
+			g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), "FOREIGN KEY");
+			g_value_set_string ((v3 = gda_value_new (G_TYPE_STRING)), ref_table);
+			g_value_set_string ((v4 = gda_value_new (G_TYPE_STRING)), "primary_key");
+		
+			if (! append_a_row (mod_model, error, 11, 
+					    FALSE, catalog_value, /* table_catalog */
+					    FALSE, p_table_schema, /* table_schema */
+					    FALSE, p_table_name, /* table_name */
+					    FALSE, constraint_name, /* constraint_name */
+					    FALSE, catalog_value, /* ref_table_catalog */
+					    FALSE, p_table_schema, /* ref_table_schema */
+					    TRUE, v3, /* ref_table_name */
+					    TRUE, v4, /* ref_constraint_name */
+					    FALSE, NULL, /* match_option */
+					    FALSE, rule_value, /* update_rule */
+					    FALSE, rule_value /* delete_rule */))
+				retval = FALSE;
+		}
+	}
+	g_free (ref_table);
+	g_object_unref (tmpmodel);
+
+	return retval;
+}
+
 
 gboolean
 _gda_sqlite_meta_constraints_ref (GdaServerProvider *prov, GdaConnection *cnc, 
@@ -507,8 +804,185 @@ _gda_sqlite_meta_constraints_ref (GdaServerProvider *prov, GdaConnection *cnc,
 				  const GValue *table_catalog, const GValue *table_schema, const GValue *table_name, 
 				  const GValue *constraint_name)
 {
-	/* not implemented in SQLite */
-	return TRUE;
+	gboolean retval = TRUE;
+	GdaDataModel *mod_model = NULL;
+	SqliteConnectionData *cdata;
+	
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return FALSE;
+
+	mod_model = gda_meta_store_create_modify_data_model (store, context->table_name);
+	g_assert (mod_model);
+
+	retval = fill_constraints_ref_model (cnc, cdata, mod_model, table_schema, table_name, constraint_name, error);
+	if (retval)
+		retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
+	g_object_unref (mod_model);
+
+	return retval;
+}
+
+static gboolean 
+fill_key_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaDataModel *mod_model, 
+			const GValue *p_table_schema, const GValue *p_table_name, const GValue *constraint_name,
+			GError **error)
+{
+	GdaDataModel *tmpmodel;
+	gboolean retval = TRUE;
+	gint nrows;
+	const gchar *schema_name, *const_name;
+	gint i;
+
+	/*
+	 * Setup pragma_set
+	 */
+	schema_name = g_value_get_string (p_table_schema);
+	if (strcmp (schema_name, "main")) {
+		gchar *str;
+		str = g_strdup_printf ("%s.%s", schema_name, g_value_get_string (p_table_name));
+		gda_set_set_holder_value (pragma_set, "tblname", str);
+		g_free (str);
+	}
+	else
+		gda_set_set_holder_value (pragma_set, "tblname", g_value_get_string (p_table_name));	
+
+	const_name = g_value_get_string (constraint_name);
+	if (!strcmp (const_name, "primary_key")) {
+		/* 
+		 * PRIMARY KEY columns
+		 */
+		GType pk_col_types[] = {G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT, 
+					G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_NONE};
+		gint ord_pos = 1;
+		tmpmodel = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_PRAGMA_TABLE_INFO], pragma_set, 
+									 GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
+									 pk_col_types, error);
+		if (!tmpmodel)
+			return FALSE;
+		
+		nrows = gda_data_model_get_n_rows (tmpmodel);
+		for (i = 0; i < nrows; i++) {
+			char const *pzDataType; /* Declared data type */
+			char const *pzCollSeq; /* Collation sequence name */
+			int pNotNull; /* True if NOT NULL constraint exists */
+			int pPrimaryKey; /* True if column part of PK */
+			int pAutoinc; /* True if column is auto-increment */
+			const gchar *this_table_name;
+			const gchar *this_col_name;
+			const GValue *this_col_pname;
+			GValue *v1;
+			
+			this_col_pname = gda_data_model_get_value_at (tmpmodel, 1, i);
+			this_table_name = g_value_get_string (p_table_name);
+			g_assert (this_table_name);
+			if (!strcmp (this_table_name, "sqlite_sequence"))
+				continue; /* ignore that table */
+			
+			this_col_name = g_value_get_string (this_col_pname);
+			if (sqlite3_table_column_metadata (cdata->connection, g_value_get_string (p_table_schema), 
+							   this_table_name, this_col_name,
+							   &pzDataType, &pzCollSeq, &pNotNull, &pPrimaryKey, &pAutoinc)
+			    != SQLITE_OK) 
+				/* may fail because we have a view and not a table => use @tmpmodel to fetch info. */
+				pPrimaryKey = g_value_get_boolean (gda_data_model_get_value_at (tmpmodel, 5, i));
+			if (pPrimaryKey) {
+				g_value_set_int ((v1 = gda_value_new (G_TYPE_INT)), ord_pos++);
+				if (! append_a_row (mod_model, error, 6, 
+						    FALSE, catalog_value, /* table_catalog */
+						    FALSE, p_table_schema, /* table_schema */
+						    FALSE, p_table_name, /* table_name */
+						    FALSE, constraint_name, /* constraint_name */
+						    FALSE, gda_data_model_get_value_at (tmpmodel, 1, i), /* column_name */
+						    TRUE, v1 /* ordinal_position */)) {
+					retval = FALSE;
+					break;
+				}
+			}
+		}
+		g_object_unref (tmpmodel);
+	}
+	else if ((*const_name == 'f')  && (const_name[1] == 'k') && (const_name[2] == '_')) {
+		/*
+		 * FOREIGN key columns
+		 */
+		GType fk_col_types[] = {G_TYPE_INT, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_NONE};
+		gchar *ref_table = NULL;
+		gint ord_pos;
+		tmpmodel = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_PRAGMA_FK_LIST], pragma_set, 
+									 GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
+									 fk_col_types, error);
+		if (!tmpmodel)
+			return FALSE;
+		
+		nrows = gda_data_model_get_n_rows (tmpmodel);
+		for (i = 0; i < nrows; i++) {
+			const GValue *cvalue;
+			GValue *v1;
+			
+			cvalue = gda_data_model_get_value_at (tmpmodel, 2, i);
+			if (! ref_table || strcmp (ref_table, g_value_get_string (cvalue))) {
+				gchar *constname;
+				
+				g_free (ref_table);
+				ref_table = g_strdup (g_value_get_string (cvalue));
+				constname = g_strdup_printf ("fk_%s", ref_table);
+				if (strcmp (g_value_get_string (constraint_name), constname)) {
+					g_free (constname);
+					g_free (ref_table);
+					ref_table = NULL;
+					continue;
+				}
+				ord_pos = 1;
+			}
+			
+			g_value_set_int ((v1 = gda_value_new (G_TYPE_INT)), ord_pos++);
+			if (! append_a_row (mod_model, error, 6, 
+					    FALSE, catalog_value, /* table_catalog */
+					    FALSE, p_table_schema, /* table_schema */
+					    FALSE, p_table_name, /* table_name */
+					    FALSE, constraint_name, /* constraint_name */
+					    FALSE, gda_data_model_get_value_at (tmpmodel, 3, i), /* column_name */
+					    TRUE, v1 /* ordinal_position */))
+				retval = FALSE;
+		}
+
+		g_free (ref_table);
+		g_object_unref (tmpmodel);
+	}
+	else {
+		/*
+		 * UNIQUE columns
+		 */
+		TO_IMPLEMENT;
+	}
+
+	return retval;
+}
+
+gboolean 
+_gda_sqlite_meta_key_columns (GdaServerProvider *prov, GdaConnection *cnc, 
+			      GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			      const GValue *table_catalog, const GValue *table_schema, const GValue *table_name, 
+			      const GValue *constraint_name)
+{
+	gboolean retval = TRUE;
+	GdaDataModel *mod_model = NULL;
+	SqliteConnectionData *cdata;
+	
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return FALSE;
+
+	mod_model = gda_meta_store_create_modify_data_model (store, context->table_name);
+	g_assert (mod_model);
+
+	retval = fill_key_columns_model (cnc, cdata, mod_model, table_schema, table_name, constraint_name, error);
+	if (retval)
+		retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
+	g_object_unref (mod_model);
+
+	return retval;
 }
 
 

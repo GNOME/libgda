@@ -302,7 +302,8 @@
           <listitem>
             <para>Create, maintain and extend a view of the database's structure and meta data including the definitions of
 	      the tables, constraints, data types, .... It is defined as closely as possible to the information schema SQL
-	    standard (ISO/IEC 9075).</para>
+	    standard (ISO/IEC 9075); see the <link linkend="gda-dict">Dictionary - metadata</link> section 
+	      for more information.</para>
           </listitem>
           <listitem>
             <para>Easy to extend data models for custom requirements</para>
@@ -627,26 +628,159 @@
       &libgda-GdaHandlerType;
     </chapter>
 
-    <chapter>
+    <chapter id="gda-dict">
       <title>Dictionary - metadata</title>
       <para>
 	Each connection has a dictionary object (a <link linkend="GdaMetaStore">GdaMetaStore</link>) attached to it. That
-	dictionary is either created by the connection when it needs it, or is set by the user (to be able to re-use
-	a dictionary), using the <link linkend="GdaConnection--meta-store">"meta-store"</link> property of the 
-	<link linkend="GdaConnection">GdaConnection</link> object.
+	dictionary is either created by the connection when it needs it, or is created and set by the user 
+	(to be able to re-use a dictionary), using the <link linkend="GdaConnection--meta-store">"meta-store"</link> 
+	property of the <link linkend="GdaConnection">GdaConnection</link> object.
       </para>
       <para>
-	&LIBGDA; requires (and creates) a default dictionary structure which is a set of tables implementing an 
-	"information schema" schema (as defined in the SQL standard and adapted to add more information). The user
-	is then free to add more tables to contain his own data in the dictionary.
+	Previous versions of &LIBGDA; used an XML file based dictionary which had several drawbacks (see the 
+	<link linkend="migration-2-dict">migrations notes</link> for more details), now a database is used: the default
+	is to use an SQLite base database which is easily transportable and can be used in the same way the previous
+	XML based dictionary was used.
       </para>
       <para>
-	Extracting information about database objects can easily be done using a 
-	<link linkend="GdaMetaStruct">GdaMetaStruct</link> object which creates an easy to use in-memory representation
-	of some database objects.
+	Each <link linkend="GdaMetaStore">GdaMetaStore</link> requires (and creates) a dictionary 
+	structure which is a set of tables implementing an 
+	"information schema" schema (as defined in the information schema SQL standard (ISO/IEC 9075), and adapted). 
+	The user is then free to add more database objects (tables and views) to contain his own data in the dictionary,
+	using the <link linkend="gda-meta-store-schema-add-custom-object">gda_meta_store_schema_add_custom_object()</link>
+	method.
       </para>
+      <para>
+	Extracting information can be done using SQL statements on the dictionary database (a special 
+	<link linkend="gda_meta_store_extract">gda_meta_store_extract()</link> method), or, for information about
+	the database structure, using the <link linkend="GdaMetaStruct">GdaMetaStruct</link> object which creates
+	an easy to use in-memory representation	of some database objects.
+      </para>
+
       &libgda-GdaMetaStore;
       &libgda-GdaMetaStruct;
+
+      <sect2 id="GdaMetaStoreSetup">
+	<title>GdaConnection and GdaMetaStore setups</title>
+	<para>
+	  Each <link linkend="GdaMetaStore">GdaMetaStore</link> object internally uses a (private)
+	  <link linkend="GdaConnection">GdaConnection</link> connection object. The following figure illustrates
+	  the situation when the programmer uses a <link linkend="GdaConnection">GdaConnection</link> connection object
+	  when the meta data is stored in a different database (usually an SQLite file):
+	  <mediaobject>
+	    <imageobject role="html">
+              <imagedata fileref="MetaStore1.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+              <phrase></phrase>
+	    </textobject>
+	    <caption>
+              <para>
+		GdaConnection object and its associated GdaMetaStore using its own database to store the
+		meta data.
+              </para>
+	    </caption>
+	  </mediaobject>
+	</para>
+	<para>
+	  From a programmer's point of view, the following code example shows how to get a connection's associated
+	  meta store object, without being able to specify anything about the meta store's private connection (in which
+	  case the private connection will be an in-memory database destroyed when the meta store object is destroyed):
+	  <programlisting>
+GdaConnection *cnc;
+GdaMetaStore *store;
+
+cnc = gda_connection_open_from_dsn (...);
+g_object_get (G_OBJECT (cnc), "meta-store", &amp;store, NULL);
+
+[... use the meta store object ...]
+g_object_unref (store);
+	  </programlisting>
+	</para>
+	<para>
+	  One can also specify the meta store object to be used by a connection, as in:
+	  <programlisting>
+GdaConnection *cnc;
+GdaMetaStore *store;
+
+cnc = gda_connection_open_from_dsn (...);
+store = gda_meta_store_new_with_file ("/path/to/file");
+/* or */
+store = gda_meta_store_new ("PostgreSQL://DB_NAME=meta_db");
+
+g_object_set (G_OBJECT (cnc), "meta-store", store, NULL);
+g_object_unref (store);
+	  </programlisting>
+	</para>
+
+	<para>
+	  The meta data can also be stored in the same database as the connection the meta data is for. In this case
+	  (and if the associated database provider supports it), the dictionary structure can be placed into a spearate
+	  schema. The next figure illustrates this situation:
+	  <mediaobject>
+	    <imageobject role="html">
+              <imagedata fileref="MetaStore2.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+              <phrase></phrase>
+	    </textobject>
+	    <caption>
+              <para>
+		GdaConnection object and its associated GdaMetaStore using the same database.
+              </para>
+	    </caption>
+	  </mediaobject>
+	</para>
+	<para>
+	  From a programmer's point of view, the following code example shows how to do the setup:
+	  <programlisting>
+GdaConnection *cnc;
+GdaMetaStore *store;
+
+cnc = gda_connection_open_from_dsn (...);
+store = GDA_META_STORE (GDA_TYPE_META_STORE, "cnc", cnc, NULL);
+g_object_set (G_OBJECT (cnc), "meta-store", store, NULL);
+g_object_unref (store);
+	  </programlisting>
+	</para>
+      </sect2>
+
+      <sect2 id="GdaMetaStoreCustomData">
+	<title>How to store custom data in a GdaMetaStore</title>
+	<para>
+	  This section explains how to add application specific data to a #GdaMetaStore object.
+	</para>
+	<para>
+	  Applications of course don't need to use that feature to manage their own data but it makes sense to use
+	  it if the application also uses metadata to avoid having to manipulate several files for the same "task".
+	</para>
+	<sect3>
+	  <title>Storing data as (key, value) pairs</title>
+	  <para>
+	    In very simple cases, when the data to store is made of named values, the easiest way is to use the
+	    <link linkend="gda-meta-store-set-attribute-value">gda_meta_store_set_attribute_value()</link> and
+	    <link linkend="gda-meta-store-get-attribute-value">gda_meta_store_get_attribute_value()</link> methods
+	    where the values are stored and retreived as strings.
+	  </para>
+	</sect3>
+	<sect3>
+	  <title>Declaring the new custom database objects</title>
+	  <para>
+	  </para>
+	</sect3>
+	<sect3>
+	  <title>Adding and removing data</title>
+	  <para>
+	  </para>
+	</sect3>
+	<sect3>
+	  <title>Removing custom database objects</title>
+	  <para>
+	  </para>
+	</sect3>
+	<para>
+	</para>
+      </sect2>
     </chapter>
 
     <chapter>

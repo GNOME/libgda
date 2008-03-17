@@ -1676,6 +1676,65 @@ gda_connection_supports_feature (GdaConnection *cnc, GdaConnectionFeature featur
 	return gda_server_provider_supports_feature (cnc->priv->provider_obj, cnc, feature);
 }
 
+/* builds a list of #GdaMetaContext contexts templates: contexts which have a non NULL table_name,
+ * and empty or partially filled column names and values specifications */
+GSList *
+build_upstream_context_templates (GdaMetaStore *store, GdaMetaContext *context, GSList *elist, GError **error)
+{
+	GSList *depend_on_contexts;
+	GSList *retlist;
+	GError *lerror = NULL;
+	depend_on_contexts = _gda_meta_store_schema_get_upstream_contexts (store, context, &lerror);
+	if (!depend_on_contexts) {
+		if (lerror) {
+			/* error while getting dependencies */
+			g_propagate_error (error, lerror);
+			return FALSE;
+		}
+		return elist;
+	}
+	else {
+		GSList *list;
+		retlist = NULL;
+		for (list = depend_on_contexts; list; list = list->next) 
+			retlist = build_upstream_context_templates (store, (GdaMetaContext *) list->data,
+								    retlist, error);
+		list = g_slist_concat (depend_on_contexts, elist);
+		retlist = g_slist_concat (retlist, list);
+		return retlist;
+	}
+}
+
+
+/* builds a list of #GdaMetaContext contexts templates: contexts which have a non NULL table_name,
+ * and empty or partially filled column names and values specifications */
+GSList *
+build_downstream_context_templates (GdaMetaStore *store, GdaMetaContext *context, GSList *elist, GError **error)
+{
+	GSList *depending_contexts;
+	GSList *retlist;
+	GError *lerror = NULL;
+	depending_contexts = _gda_meta_store_schema_get_downstream_contexts (store, context, &lerror);
+	if (!depending_contexts) {
+		if (lerror) {
+			/* error while getting dependencies */
+			g_propagate_error (error, lerror);
+			return NULL;
+		}
+		return elist;
+	}
+	else {
+		GSList *list;
+		retlist = NULL;
+		for (list = depending_contexts; list; list = list->next) 
+			retlist = build_downstream_context_templates (store, (GdaMetaContext *) list->data,
+								      retlist, error);
+		list = g_slist_concat (elist, depending_contexts);
+		retlist = g_slist_concat (list, retlist);
+		return retlist;
+	}
+}
+
 /*
  *
  */
@@ -1742,10 +1801,27 @@ check_parameters (GdaMetaContext *context, GError **error, gint nb, ...)
 	}
 	else 
 		g_set_error (error, 0, 0,
-			     _("Missing and/or wrong arguments"));
+			     _("Missing or wrong arguments"));
 
 	/*g_print ("Check arguments context => found %d\n", retval);*/
 	return retval;
+}
+
+static void
+meta_context_dump (GdaMetaContext *context)
+{
+	gint i;
+	g_print ("GdaMetaContext for table %s:", context->table_name);
+	for (i = 0; i < context->size; i++) {
+		gchar *str;
+		str = gda_value_stringify (context->column_values[i]);
+		g_print (" [%s => %s]", context->column_names[i], str);
+		g_free (str);
+	}
+	if (i == 0)
+		g_print (" ---\n");
+	else
+		g_print ("\n");
 }
 
 static gboolean
@@ -1763,6 +1839,11 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 	const gchar *tname = context->table_name;
 	GdaMetaStore *store;
 	gboolean retval;
+
+#ifdef GDA_DEBUG_NO
+	g_print ("%s() => ", __FUNCTION__);
+	meta_context_dump (context);
+#endif
 
 	if (*tname != '_')
 		return TRUE;
@@ -1783,18 +1864,7 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 		WARN_META_UPDATE_FAILURE (retval, "_btypes");
 		return retval;
 	}
-	case 'i':
-		/* _information_schema_catalog_name, params: 
-		 *  - none
-		 */
-		ASSERT_TABLE_NAME (tname, "information_schema_catalog_name");
-		if (!PROV_CLASS (provider)->meta_funcs._info) {
-			WARN_METHOD_NOT_IMPLEMENTED (provider, "_info");
-			break;
-		}
-		retval = PROV_CLASS (provider)->meta_funcs._info (provider, cnc, store, context, error);
-		WARN_META_UPDATE_FAILURE (retval, "_info");
-		return retval;
+	
 	case 'c': 
 		if ((tname[1] == 'o') && (tname[2] == 'l') && (tname[3] == 'u')) {
 			/* _columns,  params: 
@@ -1833,6 +1903,56 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			}
 		}
 		break;
+
+	case 'i':
+		/* _information_schema_catalog_name, params: 
+		 *  - none
+		 */
+		ASSERT_TABLE_NAME (tname, "information_schema_catalog_name");
+		if (!PROV_CLASS (provider)->meta_funcs._info) {
+			WARN_METHOD_NOT_IMPLEMENTED (provider, "_info");
+			break;
+		}
+		retval = PROV_CLASS (provider)->meta_funcs._info (provider, cnc, store, context, error);
+		WARN_META_UPDATE_FAILURE (retval, "_info");
+		return retval;
+
+	case 'k': {
+		/* _key_column_usage, params: 
+		 *  -0- @table_catalog, @table_schema, @table_name, @constraint_name
+		 *  -0- @ref_table_catalog, @ref_table_schema, @ref_table_name, @ref_constraint_name
+		 */
+		const GValue *catalog = NULL;
+		const GValue *schema = NULL;
+		const GValue *tabname = NULL;
+		const GValue *cname = NULL;
+		gint i;
+		i = check_parameters (context, error, 2,
+				      &catalog, G_TYPE_STRING,
+				      &schema, G_TYPE_STRING,
+				      &tabname, G_TYPE_STRING,
+				      &cname, G_TYPE_STRING, NULL,
+				      "table_catalog", &catalog, "table_schema", &schema, "table_name", &tabname, "constraint_name", &cname, NULL,
+				      "table_catalog", &catalog, "table_schema", &schema, "table_name", &tabname, "column_name", &cname, NULL);
+		if (i < 0)
+			return FALSE;
+		
+		ASSERT_TABLE_NAME (tname, "key_column_usage");
+		if (i == 0) {
+			if (!PROV_CLASS (provider)->meta_funcs.key_columns) {
+				WARN_METHOD_NOT_IMPLEMENTED (provider, "key_columns");
+				break;
+			}
+			retval = PROV_CLASS (provider)->meta_funcs.key_columns (provider, cnc, store, context, error, 
+										catalog, schema, tabname, cname);
+			WARN_META_UPDATE_FAILURE (retval, "key_columns");
+			return retval;
+		}
+		else {
+			/* nothing to do */
+			return TRUE;
+		}
+	}
 
 	case 'r': 
 		if ((tname[1] == 'e') && (tname[2] == 'f')) {
@@ -1971,13 +2091,89 @@ typedef struct {
 	GdaConnection      *cnc;
 	GError            **error;
 	gboolean            error_set;
-} DetailledCallbackData;
+	GSList             *context_templates;
+	GHashTable         *context_templates_hash;
+} DownstreamCallbackData;
 
 static GError *
-suggest_update_cb_detailled (GdaMetaStore *store, GdaMetaContext *suggest, DetailledCallbackData *data)
+suggest_update_cb_downstream (GdaMetaStore *store, GdaMetaContext *suggest, DownstreamCallbackData *data)
 {
+#define MAX_CONTEXT_SIZE 10
 	if (data->error && *(data->error))
 		return *(data->error);
+
+	GdaMetaContext *templ_context;
+	GdaMetaContext loc_suggest;
+
+	/* if there is no context with the same table name in the templates, then exit right now */
+	templ_context = g_hash_table_lookup (data->context_templates_hash, suggest->table_name);
+	if (!templ_context)
+		return NULL;
+	
+	if (templ_context->size > 0) {
+		/* setup @loc_suggest */
+
+		gchar *column_names[MAX_CONTEXT_SIZE];
+		GValue *column_values[MAX_CONTEXT_SIZE];
+		gint i, j;
+
+		if (suggest->size > MAX_CONTEXT_SIZE) {
+			g_warning ("Internal limitation at %s(), limitation should be at least %d, please report a bug",
+				   __FUNCTION__, suggest->size);
+			return NULL;
+		}
+		loc_suggest.size = suggest->size;
+		loc_suggest.table_name = suggest->table_name;
+		loc_suggest.column_names = column_names;
+		loc_suggest.column_values = column_values;
+		memcpy (loc_suggest.column_names, suggest->column_names, sizeof (gchar *) * suggest->size);
+		memcpy (loc_suggest.column_values, suggest->column_values, sizeof (GValue *) * suggest->size);	
+		
+		/* check that any @suggest's columns which is in @templ_context's has the same values */
+		for (j = 0; j < suggest->size; j++) {
+			for (i = 0; i < templ_context->size; i++) {
+				if (!strcmp (templ_context->column_names[i], suggest->column_names[j])) {
+					/* same column name, now check column value */
+					if (G_VALUE_TYPE (templ_context->column_values[i]) != 
+					    G_VALUE_TYPE (suggest->column_values[j])) {
+						g_warning ("Internal error: column types mismatch for GdaMetaContext "
+							   "table '%s' and column '%s' (%s/%s)",
+							   templ_context->table_name, templ_context->column_names[i], 
+							   g_type_name (G_VALUE_TYPE (templ_context->column_values[i])),
+							   g_type_name (G_VALUE_TYPE (suggest->column_values[j])));
+						return NULL;
+					}
+					if (gda_value_compare_ext (templ_context->column_values[i], 
+								   (suggest->column_values[j])))
+						/* different values */
+						return NULL;
+					break;
+				}
+			}
+		}
+
+		/* @templ_context may contain some more columns => add them to @loc_suggest */
+		for (i = 0; i < templ_context->size; i++) {
+			for (j = 0; j < suggest->size; j++) {
+				if (!strcmp (templ_context->column_names[i], suggest->column_names[j])) {
+					j = -1;
+					break;
+				}
+			}
+			if (j >= 0) {
+				if (loc_suggest.size >= MAX_CONTEXT_SIZE) {
+					g_warning ("Internal limitation at %s(), limitation should be at least %d, please report a bug",
+						   __FUNCTION__, loc_suggest.size + 1);
+					return NULL;
+				}
+				loc_suggest.column_names [loc_suggest.size] = templ_context->column_names [i];
+				loc_suggest.column_values [loc_suggest.size] = templ_context->column_values [i];
+				loc_suggest.size ++;
+			}
+		}
+
+		suggest = &loc_suggest;
+	}
 
 	if (!local_meta_update (data->prov, data->cnc, suggest, data->error)) {
 		data->error_set = TRUE;
@@ -1988,10 +2184,9 @@ suggest_update_cb_detailled (GdaMetaStore *store, GdaMetaContext *suggest, Detai
 
 		return *(data->error);
 	}
+
 	return NULL;
 }
-
-static gboolean gda_connection_update_meta_clean_first = TRUE;
 
 /**
  * gda_connection_update_meta_store
@@ -2008,7 +2203,6 @@ gboolean
 gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, GError **error)
 {
 	GdaMetaStore *store;
-	gboolean retval = TRUE;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
@@ -2019,15 +2213,97 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 
 	/* prepare local context */
 	GdaMetaContext lcontext;
+
 	if (context) {
+		GSList *list;
+		GSList *up_templates;
+		GSList *dn_templates;
+		GError *lerror = NULL;
 		lcontext = *context;
 		/* alter local context because "_tables" and "_views" always go together so only
 		   "_tables" should be updated and providers should always update "_tables" and "_views"
 		*/
 		if (!strcmp (lcontext.table_name, "_views"))
 			lcontext.table_name = "_tables";
+
+		up_templates = build_upstream_context_templates (store, context, NULL, &lerror);
+		if (!up_templates) {
+			if (lerror) {
+				g_propagate_error (error, lerror);
+				return FALSE;
+			}
+		}
+		dn_templates = build_downstream_context_templates (store, context, NULL, &lerror);
+		if (!dn_templates) {
+			if (lerror) {
+				g_propagate_error (error, lerror);
+				return FALSE;
+			}
+		}
+
+#ifdef GDA_DEBUG_NO
+		g_print ("\n*********** TEMPLATES:\n");
+		for (list = up_templates; list; list = list->next) {
+			g_print ("UP: ");
+			meta_context_dump ((GdaMetaContext*) list->data);
+		}
+		g_print ("->: ");
+		meta_context_dump (context);
+		for (list = dn_templates; list; list = list->next) {
+			g_print ("DN: ");
+			meta_context_dump ((GdaMetaContext*) list->data);
+		}
+#endif
+					
+		gulong signal_id;
+		DownstreamCallbackData cbd;
+		gboolean retval = TRUE;
+		
+		cbd.prov = cnc->priv->provider_obj;
+		cbd.cnc = cnc;
+		cbd.error = &lerror;
+		cbd.error_set = FALSE;
+		cbd.context_templates = g_slist_concat (g_slist_append (up_templates, context), dn_templates);
+		cbd.context_templates_hash = g_hash_table_new (g_str_hash, g_str_equal);
+		for (list = cbd.context_templates; list; list = list->next) 
+			g_hash_table_insert (cbd.context_templates_hash, ((GdaMetaContext*)list->data)->table_name,
+					     list->data);
+		
+		signal_id = g_signal_connect (store, "suggest_update",
+					      G_CALLBACK (suggest_update_cb_downstream), &cbd);
+		
+		retval = local_meta_update (cnc->priv->provider_obj, cnc, 
+					    (GdaMetaContext*) (cbd.context_templates->data), error);
+		
+		g_signal_handler_disconnect (store, signal_id);
+		if (cbd.error_set) {
+			if (lerror) {
+				if (error && !*error)
+					g_propagate_error (error, lerror);
+				else
+					g_error_free (lerror);
+			}
+			retval = FALSE;
+		}
+
+		/* free the memory associated with each template */
+		for (list = cbd.context_templates; list; list = list->next) {
+			GdaMetaContext *c = (GdaMetaContext *) list->data;
+			if (c != context) {
+				if (c->size > 0) {
+					g_free (c->column_names);
+					g_free (c->column_values);
+				}
+				g_free (c);
+			}
+		}
+		g_slist_free (cbd.context_templates);
+		g_hash_table_destroy (cbd.context_templates_hash);
+
+		return retval;
 	}
 	else {
+		/* no context specified => update everything */
 		memset (&lcontext, 0, sizeof (GdaMetaContext));
 		lcontext.table_name = "_builtin_data_types";
 		if (!gda_connection_update_meta_store (cnc, &lcontext, error))
@@ -2040,29 +2316,6 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 			return FALSE;
 		return TRUE;
 	}
-	
-	/* actual update */
-	gulong signal_id;
-	DetailledCallbackData cbd;
-	GError *lerror = NULL;
-	
-	cbd.prov = cnc->priv->provider_obj;
-	cbd.cnc = cnc;
-	cbd.error = &lerror;
-	cbd.error_set = FALSE;
-	signal_id = g_signal_connect (store, "suggest_update",
-				      G_CALLBACK (suggest_update_cb_detailled), &cbd);
-	
-	retval = local_meta_update (cnc->priv->provider_obj, cnc, &lcontext, NULL);
-	
-	g_signal_handler_disconnect (store, signal_id);
-	if (cbd.error_set) {
-		if (lerror)
-			g_propagate_error (error, lerror);
-		retval = FALSE;
-	}
-
-	return retval;
 }
 
 /*

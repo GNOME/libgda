@@ -91,7 +91,7 @@ prov_test_common_check_meta ()
 
 	/* dump all tables */
 	store = gda_connection_get_meta_store (cnc);
-	tables = gda_meta_store_schema_get_tables (store);
+	tables = gda_meta_store_schema_get_all_tables (store);
 	ntables = g_slist_length (tables);
 	dump1 = g_new0 (gchar *, ntables + 1);
 

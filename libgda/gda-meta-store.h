@@ -41,10 +41,12 @@ typedef enum {
 	GDA_META_STORE_INCORRECT_SCHEMA,
 	GDA_META_STORE_UNSUPPORTED_PROVIDER,
 	GDA_META_STORE_INTERNAL_ERROR,
+	GDA_META_STORE_META_CONTEXT_ERROR,
 	GDA_META_STORE_MODIFY_CONTENTS_ERROR,
 	GDA_META_STORE_EXTRACT_SQL_ERROR,
 	GDA_META_STORE_ATTRIBUTE_NOT_FOUND_ERROR,
 	GDA_META_STORE_ATTRIBUTE_ERROR,
+	GDA_META_STORE_SCHEMA_OBJECT_NOT_FOUND_ERROR,
 	GDA_META_STORE_SCHEMA_OBJECT_CONFLICT_ERROR,
 	GDA_META_STORE_SCHEMA_OBJECT_DESCR_ERROR
 } GdaMetaStoreError;
@@ -105,18 +107,21 @@ gboolean          gda_meta_store_modify_with_context      (GdaMetaStore *store, 
 							   GdaDataModel *new_data, GError **error);
 GdaDataModel     *gda_meta_store_create_modify_data_model (GdaMetaStore *store, const gchar *table_name);
 
-GdaMetaStruct    *gda_meta_store_schema_get_structure     (GdaMetaStore *store, GError **error);
-
 gboolean          gda_meta_store_get_attribute_value      (GdaMetaStore *store, const gchar *att_name, 
 							   gchar **att_value, GError **error);
 gboolean          gda_meta_store_set_attribute_value      (GdaMetaStore *store, const gchar *att_name, 
 							   const gchar *att_value, GError **error);
 
-gboolean          gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_description, 
-							   GError **error);
+gboolean          gda_meta_store_schema_add_custom_object    (GdaMetaStore *store, const gchar *xml_description, 
+							      GError **error);
+gboolean          gda_meta_store_schema_remove_custom_object (GdaMetaStore *store, const gchar *obj_name, GError **error);
 
-/* TO REMOVE */
-GSList           *gda_meta_store_schema_get_tables        (GdaMetaStore *store);
+GSList           *gda_meta_store_schema_get_all_tables    (GdaMetaStore *store);
+GSList           *gda_meta_store_schema_get_depend_tables (GdaMetaStore *store, const gchar *table_name);
+GdaMetaStruct    *gda_meta_store_schema_get_structure     (GdaMetaStore *store, GError **error);
+
+GSList           *_gda_meta_store_schema_get_upstream_contexts (GdaMetaStore *store, GdaMetaContext *context, GError **error);
+GSList           *_gda_meta_store_schema_get_downstream_contexts (GdaMetaStore *store, GdaMetaContext *context, GError **error);
 
 G_END_DECLS
 

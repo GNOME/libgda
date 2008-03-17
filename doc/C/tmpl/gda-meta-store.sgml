@@ -68,12 +68,22 @@ Dictionary object
 @arg1: 
 @Returns: 
 
+<!-- ##### ARG GdaMetaStore:catalog ##### -->
+<para>
+
+</para>
+
 <!-- ##### ARG GdaMetaStore:cnc ##### -->
 <para>
 
 </para>
 
 <!-- ##### ARG GdaMetaStore:cnc-string ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaMetaStore:schema ##### -->
 <para>
 
 </para>
@@ -86,10 +96,12 @@ Dictionary object
 @GDA_META_STORE_INCORRECT_SCHEMA: 
 @GDA_META_STORE_UNSUPPORTED_PROVIDER: 
 @GDA_META_STORE_INTERNAL_ERROR: 
+@GDA_META_STORE_META_CONTEXT_ERROR: 
 @GDA_META_STORE_MODIFY_CONTENTS_ERROR: 
 @GDA_META_STORE_EXTRACT_SQL_ERROR: 
 @GDA_META_STORE_ATTRIBUTE_NOT_FOUND_ERROR: 
 @GDA_META_STORE_ATTRIBUTE_ERROR: 
+@GDA_META_STORE_SCHEMA_OBJECT_NOT_FOUND_ERROR: 
 @GDA_META_STORE_SCHEMA_OBJECT_CONFLICT_ERROR: 
 @GDA_META_STORE_SCHEMA_OBJECT_DESCR_ERROR: 
 

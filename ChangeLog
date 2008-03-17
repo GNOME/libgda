@@ -1,3 +1,26 @@
+2008-03-17  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-statement.h: correctly define gda_statement_to_sql(), thanks
+	to Carlos Savoretti
+	* po/POTFILES.skip: remove mention of temporary files
+	* libgda/gda-data-model.c: fixed documentation for bug #522365
+	* doc/C: dosumentation improvements
+	* libgda/gda-meta-store.[ch]:
+	* libgda/gda-connection.c: make the partial metadata sync with the database work, and
+	added the possibility for applications to add their own database objects in a GdaMetaStore
+	* libgda/gda-server-provider.c: fix a memory leak in the server operations handling (reported by
+	Phil Longstaff)
+	* libgda/information_schema.xml: more descriptions of the tables and columns
+	* libgda/sqlite/gda-sqlite-provider.c: make the "internal_stmt" array static to avoid collisions
+	* libgda/gda-server-provider.h:
+	* libgda/gda-connection.c:
+	* providers/postgres/gda-postgres-provider.c:
+	* providers/postgres/gda-postgres-meta.[ch]:
+	* libgda/sqlite/gda-sqlite-provider.c:
+	* libgda/sqlite/gda-sqlite-meta.[ch]: more meta data retreival implemented (constraints' columns)
+	* tests/providers/prov-test-common.c: follow API changes
+	* tools/command-exec.c: added a description of the table's constraints
+
 2008-03-17  Phil Longstaff  <plongstaff@rogers.com>
 
 	* libgda/gda-data-model-array.c (gda_data_model_array_copy_model):
@@ -12,12 +35,12 @@
 2008-03-16  Murray Cumming  <murrayc@murrayc.com>
 
 	* libgda/gda-data-model-iter.c:
-	* libgda/gda-server-provider.c: Corrected spelling mistakes in 
+	* libgda/gda-server-provider.c: Corrected spelling mistakes in
 	documentation.
 
 2008-03-14  Murray Cumming  <murrayc@murrayc.com>
 
-	* doc/C/tmpl/gda-data-handler.sgml: Improved the text of this 
+	* doc/C/tmpl/gda-data-handler.sgml: Improved the text of this
 	documentation.
 2008-03-12  Vivien Malerba <malerba@gnome-db.org>
 
@@ -49,9 +72,9 @@
 	(sqlite3BtreeRollback), (vdbeCommit), (sqlite3VdbeHalt),
 	(sqlite3VdbeExec), (findCollSeqEntry), (sqlite3InitOne),
 	(sqlite3Fts3Init):
-	Documentation: Change mentions of occured to occurred, and mentions of 
+	Documentation: Change mentions of occured to occurred, and mentions of
 	a XML to an XML.
-	PaulSchulz and Malcolm Parsons in Ubuntu launchpad bug 64451 for 
+	PaulSchulz and Malcolm Parsons in Ubuntu launchpad bug 64451 for
 	some reason.
 
 2008-03-06  Vivien Malerba <malerba@gnome-db.org>

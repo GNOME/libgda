@@ -88,7 +88,7 @@ gchar              *gda_statement_serialize              (GdaStatement *stmt);
 GdaStatement       *gda_statement_deserialize            (const gchar *str, GError **error);
 
 gboolean            gda_statement_get_parameters         (GdaStatement *stmt, GdaSet **out_params, GError **error);
-#define             gda_statement_to_sql(stmt,params,error) gda_statement_to_sql_extended ((stmt), NULL, (params), NULL, GDA_STATEMENT_SQL_PARAMS_SHORT, NULL, (error))
+#define             gda_statement_to_sql(stmt,params,error) gda_statement_to_sql_extended ((stmt), NULL, (params), GDA_STATEMENT_SQL_PARAMS_SHORT, NULL, (error))
 gchar              *gda_statement_to_sql_extended        (GdaStatement *stmt, GdaConnection *cnc, 
 							  GdaSet *params, GdaStatementSqlFlag flags, 
 							  GSList **params_used, GError **error);

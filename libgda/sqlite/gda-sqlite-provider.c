@@ -147,7 +147,7 @@ ScalarFunction scalars[] = {
 /*
  * Prepared internal statements
  */
-GdaStatement **internal_stmt;
+static GdaStatement **internal_stmt;
 
 typedef enum {
 	INTERNAL_PRAGMA_INDEX_LIST,
@@ -234,6 +234,7 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 	provider_class->meta_funcs.columns = _gda_sqlite_meta_columns;
 	provider_class->meta_funcs.constraints_tab = _gda_sqlite_meta_constraints_tab;
 	provider_class->meta_funcs.constraints_ref = _gda_sqlite_meta_constraints_ref;
+	provider_class->meta_funcs.key_columns = _gda_sqlite_meta_key_columns;
 }
 
 static void
