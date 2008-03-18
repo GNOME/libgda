@@ -276,7 +276,7 @@ find_or_load_provider (GdaClient *client, const gchar *provider)
 	GdaProviderInfo *prv_info;
 	void (*plugin_init) (const gchar *);
 
-	prv_info = gda_config_get_provider_by_name (provider);
+	prv_info = gda_config_get_provider_by_name (provider); /* This should not be freed. */
 	if (!prv_info) {
 		emit_client_error (client, NULL,
 				   _("Could not find provider %s in the current setup"),
@@ -290,7 +290,6 @@ find_or_load_provider (GdaClient *client, const gchar *provider)
 
 	if (!prv->handle) {
 		emit_client_error (client, NULL, g_module_error ());
-		gda_provider_info_free(prv_info);
 		g_free (prv);
 		return NULL;
 	}
@@ -305,8 +304,6 @@ find_or_load_provider (GdaClient *client, const gchar *provider)
 		plugin_init (dirname);
 		g_free (dirname);
 	}
-
-	gda_provider_info_free(prv_info);
 
 	g_module_symbol (prv->handle, "plugin_get_name",
 			 (gpointer) &prv->plugin_get_name);

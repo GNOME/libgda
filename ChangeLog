@@ -1,3 +1,8 @@
+2008-03-18  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-client.c: (find_or_load_provider): Reverted the change 
+	here too, because it freed data that it did not own, causing a crash.
+
 2008-03-18  Murray Cumming:  <murrayc@murrayc.com>
 
 	* libgda/gda-config.c: (gda_config_get_provider_by_name): 
