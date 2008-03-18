@@ -1,3 +1,9 @@
+2008-03-18  Murray Cumming:  <murrayc@murrayc.com>
+
+	* libgda/gda-config.c: (gda_config_get_provider_by_name): 
+	Revert the previous change because it leaked the info and freed the 
+	list though it did not have ownership, causing a crash.
+
 2008-03-17  Phil Longstaff  <plongstaff@rogers.com>
 
 	* libgda/gda-data-model-array.c (gda_data_model_array_copy_model):

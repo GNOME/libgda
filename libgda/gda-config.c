@@ -1616,8 +1616,6 @@ gda_config_get_provider_by_name (const gchar *name)
 	GList *l;
 	const gchar *tmpname;
 
-	GdaProviderInfo * info = NULL;
-
 	if (name)
 		tmpname = name;
 	else
@@ -1629,14 +1627,10 @@ gda_config_get_provider_by_name (const gchar *name)
 		GdaProviderInfo *provider_info = (GdaProviderInfo *) l->data;
 
 		if (provider_info && !strcmp (provider_info->id, tmpname))
-		{
-			info = gda_provider_info_copy(provider_info);
-		}
+			return provider_info;
 	}
 
-	gda_config_free_provider_list(prov_list);
-
-	return info;
+	return NULL;
 }
 
 /**
