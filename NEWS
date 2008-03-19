@@ -1,3 +1,26 @@
+libgda 3.99.1, 2008-03-19
+
+ This is a major re-write of the core parts of Libgda, and is API incompatible with the 3.x versions.
+ Changes include:
+ - Easier to understand and to use API, with less strange path usage
+ - Reduce the size of the library (almost half the size and half the symbols)
+ - Easier connection opening (removal of the GdaClient object)
+ - Merge of the GdaQuery and GdaCommand into only one object to represent statements
+ - New adaptative SQL parser (can be adaptated to each DBMS's SQL syntax)
+ - New database based dictionary which can handle namespaces
+ - Rework of the database adaptators (providers) for easier maintenance and more features
+ - Sample "skeleton" database adaptators to make it easy to write a database adaptator for a new
+   database type
+ - Updated documentation
+
+ Warnings:
+ - This is still an early version which probably has a lot of bugs and as such it should not be used
+   in a production environment.
+ - Most of the database adaptators (providers) need to be re-written, particularly MySQL (which is
+   currently being done) and Oracle
+ - Libgnomedb has not yet been updated and won't compile with this version
+
+
 libgda 3.1.2, 2007-10-24
 
  - Filtering based on an SQL expression is now possible in the GdaDataProxy data model (Vivien Malerba)

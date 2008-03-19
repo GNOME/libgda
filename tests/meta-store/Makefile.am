@@ -30,6 +30,20 @@ check_meta_store_mysql_LDADD = \
         $(top_builddir)/libgda/libgda-4.0.la \
         $(LIBGDA_LIBS)
 
-EXTRA_DIST = data_information_schema_catalog_name.csv \
-	data_schema_1.csv \
-	data_schema_2.csv
+EXTRA_DIST = data_builtin_data_types.csv \
+	data_columns.csv \
+	data_domain_constraints.csv \
+	data_domains_1.csv \
+	data_domains.csv \
+	data_information_schema_catalog_name.csv \
+	data_key_column_usage.csv \
+	data_parameters.csv \
+	data_referential_constraints.csv \
+	data_routines.csv \
+	data_schemata_1.csv \
+	data_schemata.csv \
+	data_table_constraints.csv \
+	data_tables.csv \
+	data_triggers.csv \
+	data_view_column_usage.csv \
+	data_views.csv

@@ -52,6 +52,7 @@ endif
 
 SUBDIRS = \
 	sqlite \
+	skel-implementation \
 	$(GDA_BDB_SERVER) \
 	$(GDA_MDB_SERVER) \
 	$(GDA_POSTGRES_SERVER)
