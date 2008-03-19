@@ -227,14 +227,47 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 	provider_class->statement_execute = gda_sqlite_provider_statement_execute;
 
 	memset (&(provider_class->meta_funcs), 0, sizeof (GdaServerProviderMeta));
-	provider_class->meta_funcs._info = _gda_sqlite_meta_info;
-	provider_class->meta_funcs._btypes = _gda_sqlite_meta_btypes;
+	provider_class->meta_funcs._info = _gda_sqlite_meta__info;
+	provider_class->meta_funcs._btypes = _gda_sqlite_meta__btypes;
+	provider_class->meta_funcs._udt = _gda_sqlite_meta__udt;
+	provider_class->meta_funcs.udt = _gda_sqlite_meta_udt;
+	provider_class->meta_funcs._udt_cols = _gda_sqlite_meta__udt_cols;
+	provider_class->meta_funcs.udt_cols = _gda_sqlite_meta_udt_cols;
+	provider_class->meta_funcs._enums = _gda_sqlite_meta__enums;
+	provider_class->meta_funcs.enums = _gda_sqlite_meta_enums;
+	provider_class->meta_funcs._domains = _gda_sqlite_meta__domains;
+	provider_class->meta_funcs.domains = _gda_sqlite_meta_domains;
+	provider_class->meta_funcs._constraints_dom = _gda_sqlite_meta__constraints_dom;
+	provider_class->meta_funcs.constraints_dom = _gda_sqlite_meta_constraints_dom;
+	provider_class->meta_funcs._el_types = _gda_sqlite_meta__el_types;
+	provider_class->meta_funcs._collations = _gda_sqlite_meta__collations;
+	provider_class->meta_funcs.collations = _gda_sqlite_meta_collations;
+	provider_class->meta_funcs._character_sets = _gda_sqlite_meta__character_sets;
+	provider_class->meta_funcs.character_sets = _gda_sqlite_meta_character_sets;
+	provider_class->meta_funcs._schemata = _gda_sqlite_meta__schemata;
 	provider_class->meta_funcs.schemata = _gda_sqlite_meta_schemata;
+	provider_class->meta_funcs._tables_views = _gda_sqlite_meta__tables_views;
 	provider_class->meta_funcs.tables_views = _gda_sqlite_meta_tables_views;
+	provider_class->meta_funcs._columns = _gda_sqlite_meta__columns;
 	provider_class->meta_funcs.columns = _gda_sqlite_meta_columns;
+	provider_class->meta_funcs._view_cols = _gda_sqlite_meta__view_cols;
+	provider_class->meta_funcs.view_cols = _gda_sqlite_meta_view_cols;
+	provider_class->meta_funcs._constraints_tab = _gda_sqlite_meta__constraints_tab;
 	provider_class->meta_funcs.constraints_tab = _gda_sqlite_meta_constraints_tab;
+	provider_class->meta_funcs._constraints_ref = _gda_sqlite_meta__constraints_ref;
 	provider_class->meta_funcs.constraints_ref = _gda_sqlite_meta_constraints_ref;
+	provider_class->meta_funcs._key_columns = _gda_sqlite_meta__key_columns;
 	provider_class->meta_funcs.key_columns = _gda_sqlite_meta_key_columns;
+	provider_class->meta_funcs._check_columns = _gda_sqlite_meta__check_columns;
+	provider_class->meta_funcs.check_columns = _gda_sqlite_meta_check_columns;
+	provider_class->meta_funcs._triggers = _gda_sqlite_meta__triggers;
+	provider_class->meta_funcs.triggers = _gda_sqlite_meta_triggers;
+	provider_class->meta_funcs._routines = _gda_sqlite_meta__routines;
+	provider_class->meta_funcs.routines = _gda_sqlite_meta_routines;
+	provider_class->meta_funcs._routine_col = _gda_sqlite_meta__routine_col;
+	provider_class->meta_funcs.routine_col = _gda_sqlite_meta_routine_col;
+	provider_class->meta_funcs._routine_par = _gda_sqlite_meta__routine_par;
+	provider_class->meta_funcs.routine_par = _gda_sqlite_meta_routine_par;
 }
 
 static void
@@ -1595,6 +1628,21 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		if (!nps)
 			return NULL;
 		ps = nps;
+	}
+
+	/* check that prepared stmt is not NULL, to avoid a crash */
+	if (!ps->sqlite_stmt) {
+		GdaConnectionEvent *event;
+		const char *errmsg;
+
+		errmsg = _("Empty statement");
+		event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+		gda_connection_event_set_description (event, errmsg);
+		gda_connection_add_event (cnc, event);
+		gda_connection_del_prepared_statement (cnc, stmt);
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_EMPTY_STMT_ERROR,
+			     errmsg);
+		return NULL;
 	}
 
 	/* reset prepared stmt */

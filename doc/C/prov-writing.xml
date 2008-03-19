@@ -285,110 +285,156 @@
   <sect1 id="prov-metadata">
     <title>Methods - metadata</title>
     <para>
-      The <fieldsynopsis>meta_funcs</fieldsynopsis> is composed of several functions which are listed in the
-      <link linkend="GdaServerProviderMeta">GdaServerProviderMeta</link> structure, used internally by
-      the <link linkend="GdaConnection">GdaConnection</link> object when one calls the
-      <link linkend="gda-connection-update-meta-store">gda_connection_update_meta_store()</link> method. 
+      The <link linkend="GdaServerProviderMeta">GdaServerProviderMeta</link> structure defines all the methods
+      which database providers must implement for the meta data extraction feature to work. Each method is
+      used internally by the <link linkend="GdaConnection">GdaConnection</link> object when one calls the
+      <link linkend="gda-connection-update-meta-store">gda_connection_update_meta_store()</link> method (where the
+      connection object itself computes the list and order of methods to call).
       Each method must update the contents of one table in the connection's associated metadata
       (in its associated <link linkend="GdaMetaStore">GdaMetaStore</link> object), each has the same
-      "base" arguments and some have extra arguments further specifying what needs to be updated. The methods
-      are listed here with a brief explanation for each.
+      "base" arguments and some have extra arguments further specifying what needs to be updated. 
+    </para>
+    <para>
+      For each table to update, there are two methods, which differ in their name only by the fact that one is starting 
+      with an underscore '_'. The method starting with an underscore must update the whole contents of the meta data
+      table, and the other one must accept some more parameters to refine what gets updated. There are exception 
+      to this rule (such as the
+      "tables_views()" method which must update both the "_tables" and "_views" tables, or the for the
+      tables which have no foreign key (no dependency) to any other table).
+    </para>
+    <para> 
+      Also, by convetion, the arguments can't be NULL unless the argument name has the "_n" suffix. For example
+      the signature of the "tables_views()" method has the following signature (as defined in the 
+      <filename>gda-server-provider.h</filename> file) 
+      <programlisting>
+gboolean (*tables_views) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                          GdaMetaContext *, GError **,
+                          const GValue *table_catalog, const GValue *table_schema, 
+                          const GValue *table_name_n);
+      </programlisting>
+      which means that the <parameter>table_catalog</parameter> and <parameter>table_schema</parameter>
+      arguments can't be NULL, whereas the <parameter>table_name</parameter> can be NULL (and in this case the 
+      "tables_views()" method must update the "_tables" and "_views" tables regarding all the tables which
+      are in the specified catalog and schema.
+    </para>
+    <para>
+      For further information about the tables, see the schema displayed in 
+      the <link linkend="GdaMetaStore">GdaMetaStore</link>'s documentation.
     </para>
     <sect2>
-      <title>info()</title>
+      <title>_info()</title>
       <para>
+	<programlisting>
+gboolean (*_info) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                   GdaMetaContext *, GError **);
+	</programlisting>
 	This method must update the contents of the "_information_schema_catalog_name" table, which must contain exactly
 	one row describing the catalog name for the connection.
       </para>
     </sect2>
+    
     <sect2>
-      <title>schemata()</title>
+      <title>_btypes()</title>
       <para>
-	This method must update the contents of the "_schemata" table, which lists all the schemas (namespaces).
-	There is one specific <parameter>schema_name</parameter> argument which, if not NULL specifies that only the
-	information regarding that schema must be updated.
-      </para>
-    </sect2>
-    <sect2>
-      <title>btypes()</title>
-      <para>
+	<programlisting>
+gboolean (*_btypes) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                     GdaMetaContext *, GError **);
+	</programlisting>
 	This method must update the contents of the "_builtin_data_types" table which lists all the
 	database's built in data types. There is no specific parameter.
       </para>
     </sect2>
+    
     <sect2>
-      <title>tables_views()</title>
+      <title>schemata() and _schemata()</title>
       <para>
+	<programlisting>
+gboolean (*_schemata) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                       GdaMetaContext *, GError **);
+gboolean (*schemata)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                       GdaMetaContext *, GError **,
+                       const GValue *catalog_name, const GValue *schema_name_n);
+	</programlisting>
+        This method must update the contents of the "_schemata" table, which lists all the schemas (namespaces). 
+      </para>
+    </sect2>
+    <sect2>
+      <title>tables_views() and _tables_views()</title>
+      <para>
+	<programlisting>
+gboolean (*_tables_views) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                           GdaMetaContext *, GError **);
+gboolean (*tables_views)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                           GdaMetaContext *, GError **,
+                           const GValue *table_catalog, const GValue *table_schema, 
+                           const GValue *table_name_n);
+	</programlisting>
 	This method must update the contents of the "_tables" and "_views" tables which list all the
-	tables and views. There is no specific parameter.
+	tables and views.
       </para>
     </sect2>
+
     <sect2>
-      <title>tables_views_s()</title>
+      <title>columns() and _columns()</title>
       <para>
-	This method must update the contents of the "_tables" and "_views" tables which list all the
-	tables and views, but only for the schema named by the <parameter>table_schema</parameter> argument (which
-	is never NULL), and (if	not NULL) only for the table or view named by 
-	the <parameter>table_name</parameter> argument.
-      </para>
-    </sect2>
-    <sect2>
-      <title>columns()</title>
-      <para>
+	<programlisting>
+gboolean (*_columns) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                      GdaMetaContext *, GError **);
+gboolean (*columns)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                      GdaMetaContext *, GError **,
+                      const GValue *table_catalog, const GValue *table_schema, 
+                      const GValue *table_name);
+	</programlisting>
 	This method must update the contents of the "_columns" table which lists all the
-	columns of all the tables and views. There is no specific parameter.
+	columns of all the tables and views.
       </para>
     </sect2>
+
     <sect2>
-      <title>columns_t()</title>
+      <title>constraints_tab() and _constraints_tab()</title>
       <para>
-	This method must update the contents of the "_columns" table which lists all the
-	columns of all the tables and views but only for the tables and views which are in the schema named
-	by the <parameter>table_schema</parameter> argument (which
-	is never NULL), and  (if not NULL) only for the table or view named by 
-	the <parameter>table_name</parameter> argument.
-      </para>
-    </sect2>
-    <sect2>
-      <title>columns_c()</title>
-      <para>
-	This method must update the contents of the "_columns" table which lists all the
-	columns of all the tables and views but only for the tables and views which are in the schema named
-	by the <parameter>table_schema</parameter> argument (which
-	is never NULL), (if not NULL) only for the table or view named by 
-	the <parameter>table_name</parameter> argument, and for the column named by 
-	the <parameter>column_name</parameter> argument.
-      </para>
-    </sect2>
-    <sect2>
-      <title>constraints_tab()</title>
-      <para>
+	<programlisting>
+gboolean (*_constraints_tab) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                              GdaMetaContext *, GError **);
+gboolean (*constraints_tab)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                              GdaMetaContext *, GError **,
+                              const GValue *table_catalog, const GValue *table_schema, 
+                              const GValue *table_name, const GValue *constraint_name_n);
+	</programlisting>
 	This method must update the contents of the "_table_constraints" table which lists all the
-	constraints for each table. There is no specific parameter.
+	constraints (primary key, foreing key, unique or check cnstraints) for each table.
       </para>
     </sect2>
+
     <sect2>
-      <title>constraints_tab_s()</title>
+      <title>constraints_ref() and _constraints_ref()</title>
       <para>
-	This method must update the contents of the "_table_constraints" table which lists all the
-	constraints for the table which is in the schema named by the <parameter>table_schema</parameter> argument (which
-	is never NULL), and which is named by the <parameter>table_name</parameter> argument (which is also never NULL).
-      </para>
-    </sect2>
-<sect2>
-      <title>constraints_ref()</title>
-      <para>
+	<programlisting>
+gboolean (*_constraints_ref) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                              GdaMetaContext *, GError **);
+gboolean (*constraints_ref)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                              GdaMetaContext *, GError **,
+                              const GValue *table_catalog, const GValue *table_schema, 
+                              const GValue *table_name, const GValue *constraint_name);
+	</programlisting>
 	This method must update the contents of the "_referential_constraints" table which lists all the
-	refetential constraints (which are also listed in the "_table_constraints" table). There is no specific parameter.
+	refetential constraints (which are also listed in the "_table_constraints" table).
       </para>
     </sect2>
+
     <sect2>
-      <title>constraints_ref_s()</title>
+      <title>key_columns() and _key_columns()</title>
       <para>
-	This method must update the contents of the "_referential_constraints" table which lists all the
-	refetential constraints (which are also listed in the "_table_constraints" table) for the constraint which is 
-	in the schema named by the <parameter>constraint_schema</parameter> argument (which
-	is never NULL), and which is named by the <parameter>constraint_name</parameter> argument (which is also never NULL).
+	<programlisting>
+gboolean (*_key_columns) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                          GdaMetaContext *, GError **);
+gboolean (*key_columns)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                          GdaMetaContext *, GError **,
+                          const GValue *table_catalog, const GValue *table_schema,
+                          const GValue *table_name, const GValue *constraint_name);
+	</programlisting>
+	This method must update the contents of the "_key_column_usage" table which lists all the
+	columns involved in each table constraint (as listed in the "_table_constraints" table.
       </para>
     </sect2>
   </sect1>

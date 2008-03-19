@@ -29,8 +29,8 @@ open_connection (void)
 {
         GdaConnection *cnc;
         GError *error = NULL;
-        cnc = gda_connection_open_from_string ("SQLite", "DB_DIR=.;DB_NAME=ddl_db", NULL, NULL,
-					       GDA_CONNECTION_OPTIONS_DONT_SHARE,
+        cnc = gda_connection_open_from_string ("SQLite", "DB_DIR=.;DB_NAME=ddl_db", NULL,
+					       GDA_CONNECTION_OPTIONS_NONE,
 					       &error);
         if (!cnc) {
                 g_print ("Could not open connection to SQLite database in example_db.db file: %s\n",

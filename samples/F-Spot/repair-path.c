@@ -77,7 +77,7 @@ main (int argc, char *argv [])
 	cnc_string = g_strdup_printf ("DB_DIR=%s;DB_NAME=%s", cnc_dir_name, cnc_db_name);
 
 	/* open connection */
-	cnc = gda_connection_open_from_string ("SQLite", cnc_string, NULL, NULL, 
+	cnc = gda_connection_open_from_string ("SQLite", cnc_string, NULL, 
 					       GDA_CONNECTION_OPTIONS_READ_ONLY, &error);
 	if (!cnc) {
 		g_print ("Could not open connection to F-Spot database file: %s\n", 
@@ -95,7 +95,7 @@ main (int argc, char *argv [])
 
 	/* Set up Connection hub */
         provider = gda_vprovider_hub_new ();
-        hub = gda_virtual_connection (provider, NULL);
+        hub = gda_virtual_connection_open (provider, NULL);
         g_assert (hub);
 
 	if (!gda_vconnection_hub_add (GDA_VCONNECTION_HUB (hub), cnc, "spot", &error)) {

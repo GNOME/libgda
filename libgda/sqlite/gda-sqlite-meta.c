@@ -42,6 +42,7 @@ typedef enum {
         I_PRAGMA_DATABASE_LIST,
 	I_PRAGMA_TABLE_INFO,
 	I_PRAGMA_INDEX_LIST,
+	I_PRAGMA_INDEX_INFO,
 	I_PRAGMA_FK_LIST
 } InternalStatementItem;
 
@@ -58,6 +59,9 @@ static gchar *internal_sql[] = {
 
 	/* I_PRAGMA_INDEX_LIST */
 	"PRAGMA index_list (##tblname::string)",
+
+	/* I_PRAGMA_INDEX_INFO */
+	"PRAGMA index_info (##idxname::string)",
 
 	/* I_PRAGMA_FK_LIST */
 	"PRAGMA foreign_key_list (##tblname::string)"
@@ -114,12 +118,13 @@ _gda_sqlite_provider_meta_init (GdaServerProvider *provider)
 	g_value_set_int ((zero_value = gda_value_new (G_TYPE_INT)), 0);
 	g_value_set_string ((rule_value = gda_value_new (G_TYPE_STRING)), "NONE");
 
-	pragma_set = gda_set_new_inline (1, "tblname", G_TYPE_STRING, "");
+	pragma_set = gda_set_new_inline (2, "tblname", G_TYPE_STRING, "",
+					 "idxname", G_TYPE_STRING, "");
 }
 
 gboolean
-_gda_sqlite_meta_info (GdaServerProvider *prov, GdaConnection *cnc, 
-		       GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_sqlite_meta__info (GdaServerProvider *prov, GdaConnection *cnc, 
+			GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	GdaDataModel *model;
 	gboolean retval = TRUE;
@@ -135,8 +140,8 @@ _gda_sqlite_meta_info (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_sqlite_meta_btypes (GdaServerProvider *prov, GdaConnection *cnc, 
-			 GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_sqlite_meta__btypes (GdaServerProvider *prov, GdaConnection *cnc, 
+			  GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	GdaDataModel *mod_model;
 	gboolean retval = TRUE;
@@ -192,6 +197,151 @@ _gda_sqlite_meta_btypes (GdaServerProvider *prov, GdaConnection *cnc,
 		retval = gda_meta_store_modify (store, context->table_name, mod_model, NULL, error, NULL);
 	g_object_unref (mod_model);
 	return retval;
+}
+
+gboolean
+_gda_sqlite_meta__udt (GdaServerProvider *prov, GdaConnection *cnc, 
+		       GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	/* get all the column types of all the tables */
+	return TRUE;
+}
+
+gboolean
+_gda_sqlite_meta_udt (GdaServerProvider *prov, GdaConnection *cnc, 
+		      GdaMetaStore *store, GdaMetaContext *context, GError **error,
+		      const GValue *udt_catalog, const GValue *udt_schema)
+{
+	TO_IMPLEMENT;
+	/* get all the column types of all the tables, with the correct name */
+	return TRUE;
+}
+
+gboolean
+_gda_sqlite_meta__udt_cols (GdaServerProvider *prov, GdaConnection *cnc, 
+			    GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	/* feature not supported by SQLite */
+	return TRUE;
+}
+
+gboolean
+_gda_sqlite_meta_udt_cols (GdaServerProvider *prov, GdaConnection *cnc, 
+			   GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			   const GValue *udt_catalog, const GValue *udt_schema, const GValue *udt_name)
+{
+	/* feature not supported by SQLite */
+	return TRUE;
+}
+
+gboolean
+_gda_sqlite_meta__enums (GdaServerProvider *prov, GdaConnection *cnc, 
+			 GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	/* feature not supported by SQLite */
+	return TRUE;
+}
+
+gboolean
+_gda_sqlite_meta_enums (GdaServerProvider *prov, GdaConnection *cnc, 
+			GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			const GValue *udt_catalog, const GValue *udt_schema, const GValue *udt_name)
+{
+	/* feature not supported by SQLite */
+	return TRUE;
+}
+
+gboolean
+_gda_sqlite_meta__domains (GdaServerProvider *prov, GdaConnection *cnc, 
+			   GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	/* feature not supported by SQLite */
+	return TRUE;
+}
+
+gboolean
+_gda_sqlite_meta_domains (GdaServerProvider *prov, GdaConnection *cnc, 
+			  GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			  const GValue *domain_catalog, const GValue *domain_schema)
+{
+	/* feature not supported by SQLite */
+	return TRUE;
+}
+
+gboolean
+_gda_sqlite_meta__constraints_dom (GdaServerProvider *prov, GdaConnection *cnc, 
+				   GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	/* feature not supported by SQLite */
+	return TRUE;
+}
+
+gboolean
+_gda_sqlite_meta_constraints_dom (GdaServerProvider *prov, GdaConnection *cnc, 
+				  GdaMetaStore *store, GdaMetaContext *context, GError **error,
+				  const GValue *domain_catalog, const GValue *domain_schema, 
+				  const GValue *domain_name)
+{
+	/* feature not supported by SQLite */
+	return TRUE;
+}
+
+gboolean
+_gda_sqlite_meta__el_types (GdaServerProvider *prov, GdaConnection *cnc, 
+			    GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	/* feature not supported by SQLite */
+	return TRUE;
+}
+
+gboolean
+_gda_sqlite_meta__collations (GdaServerProvider *prov, GdaConnection *cnc, 
+			      GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	/* How to do it ? Is it a static list ? */
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_sqlite_meta_collations (GdaServerProvider *prov, GdaConnection *cnc, 
+			     GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			     const GValue *collation_catalog, const GValue *collation_schema, 
+			     const GValue *collation_name_n)
+{
+	/* How to do it ? Is it a static list ? */
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_sqlite_meta__character_sets (GdaServerProvider *prov, GdaConnection *cnc, 
+				  GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	/* How to do it ? Is it a static list ? */
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_sqlite_meta_character_sets (GdaServerProvider *prov, GdaConnection *cnc, 
+				 GdaMetaStore *store, GdaMetaContext *context, GError **error,
+				 const GValue *chset_catalog, const GValue *chset_schema, 
+				 const GValue *chset_name_n)
+{
+	/* How to do it ? Is it a static list ? */
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_sqlite_meta__schemata (GdaServerProvider *prov, GdaConnection *cnc, 
+			    GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	/* use same technique as _gda_sqlite_meta_schemata, in a common function */
+	TO_IMPLEMENT;
+	return TRUE;
 }
 
 gboolean 
@@ -327,6 +477,14 @@ fill_tables_views_model (GdaConnection *cnc,
         g_object_unref (tmpmodel);
 
         return retval;
+}
+
+gboolean
+_gda_sqlite_meta__tables_views (GdaServerProvider *prov, GdaConnection *cnc, 
+				GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
 }
 
 gboolean 
@@ -477,7 +635,13 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 	return retval;
 }
 
-
+gboolean
+_gda_sqlite_meta__columns (GdaServerProvider *prov, GdaConnection *cnc, 
+			   GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
 
 gboolean
 _gda_sqlite_meta_columns (GdaServerProvider *prov, GdaConnection *cnc, 
@@ -503,6 +667,24 @@ _gda_sqlite_meta_columns (GdaServerProvider *prov, GdaConnection *cnc,
 	return retval;
 }
 
+gboolean
+_gda_sqlite_meta__view_cols (GdaServerProvider *prov, GdaConnection *cnc, 
+			     GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	/* FIXME: feature not natively supported by SQLite => parse view's definition ? */
+	return TRUE;
+}
+
+gboolean
+_gda_sqlite_meta_view_cols (GdaServerProvider *prov, GdaConnection *cnc, 
+			    GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			    const GValue *view_catalog, const GValue *view_schema, 
+			    const GValue *view_name)
+{
+	/* FIXME: feature not natively supported by SQLite => parse view's definition ? */
+	return TRUE;	
+}
+
 static gboolean 
 fill_constraints_tab_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaDataModel *mod_model, 
 			    const GValue *p_table_schema, const GValue *p_table_name, const GValue *constraint_name_n,
@@ -526,7 +708,6 @@ fill_constraints_tab_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 	}
 	else
 		gda_set_set_holder_value (pragma_set, "tblname", g_value_get_string (p_table_name));
-
 	
 	/* 
 	 * PRIMARY KEY
@@ -698,6 +879,14 @@ fill_constraints_tab_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 	return retval;
 }
 
+gboolean
+_gda_sqlite_meta__constraints_tab (GdaServerProvider *prov, GdaConnection *cnc, 
+				   GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
 gboolean 
 _gda_sqlite_meta_constraints_tab (GdaServerProvider *prov, GdaConnection *cnc, 
 				  GdaMetaStore *store, GdaMetaContext *context, GError **error,
@@ -797,6 +986,13 @@ fill_constraints_ref_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 	return retval;
 }
 
+gboolean
+_gda_sqlite_meta__constraints_ref (GdaServerProvider *prov, GdaConnection *cnc, 
+				   GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
 
 gboolean
 _gda_sqlite_meta_constraints_ref (GdaServerProvider *prov, GdaConnection *cnc, 
@@ -845,7 +1041,7 @@ fill_key_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaData
 		g_free (str);
 	}
 	else
-		gda_set_set_holder_value (pragma_set, "tblname", g_value_get_string (p_table_name));	
+		gda_set_set_holder_value (pragma_set, "tblname", g_value_get_string (p_table_name));
 
 	const_name = g_value_get_string (constraint_name);
 	if (!strcmp (const_name, "primary_key")) {
@@ -954,10 +1150,42 @@ fill_key_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaData
 		/*
 		 * UNIQUE columns
 		 */
-		TO_IMPLEMENT;
+		GType unique_col_types[] = {G_TYPE_INT, G_TYPE_INT, G_TYPE_STRING, G_TYPE_NONE};
+		
+		gda_set_set_holder_value (pragma_set, "idxname", g_value_get_string (constraint_name));
+		tmpmodel = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_PRAGMA_INDEX_INFO], pragma_set, 
+									 GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
+									 unique_col_types, error);
+		if (!tmpmodel)
+			return FALSE;
+		
+		nrows = gda_data_model_get_n_rows (tmpmodel);
+		for (i = 0; i < nrows; i++) {
+			GValue *v1;
+			
+			g_value_set_int ((v1 = gda_value_new (G_TYPE_INT)), 
+					 g_value_get_int (gda_data_model_get_value_at (tmpmodel, 1, i)) + 1);
+			if (! append_a_row (mod_model, error, 6, 
+					    FALSE, catalog_value, /* table_catalog */
+					    FALSE, p_table_schema, /* table_schema */
+					    FALSE, p_table_name, /* table_name */
+					    FALSE, constraint_name, /* constraint_name */
+					    FALSE, gda_data_model_get_value_at (tmpmodel, 2, i), /* column_name */
+					    TRUE, v1 /* ordinal_position */))
+				retval = FALSE;
+		}
+		g_object_unref (tmpmodel);
 	}
 
 	return retval;
+}
+
+gboolean
+_gda_sqlite_meta__key_columns (GdaServerProvider *prov, GdaConnection *cnc, 
+			       GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
 }
 
 gboolean 
@@ -985,6 +1213,97 @@ _gda_sqlite_meta_key_columns (GdaServerProvider *prov, GdaConnection *cnc,
 	return retval;
 }
 
+gboolean
+_gda_sqlite_meta__check_columns (GdaServerProvider *prov, GdaConnection *cnc, 
+				 GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	/* FIXME: How to get this ? */
+	return TRUE;
+}
+
+gboolean
+_gda_sqlite_meta_check_columns (GdaServerProvider *prov, GdaConnection *cnc, 
+				GdaMetaStore *store, GdaMetaContext *context, GError **error,
+				const GValue *table_catalog, const GValue *table_schema, 
+				const GValue *table_name, const GValue *constraint_name)
+{
+	/* FIXME: How to get this ? */
+	return TRUE;
+}
+
+gboolean
+_gda_sqlite_meta__triggers (GdaServerProvider *prov, GdaConnection *cnc, 
+			    GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	/* FIXME: How to get this ? */
+	return TRUE;
+}
+
+gboolean
+_gda_sqlite_meta_triggers (GdaServerProvider *prov, GdaConnection *cnc, 
+			   GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			   const GValue *table_catalog, const GValue *table_schema, 
+			   const GValue *table_name)
+{
+	/* FIXME: How to get this ? */
+	return TRUE;
+}
+
+gboolean
+_gda_sqlite_meta__routines (GdaServerProvider *prov, GdaConnection *cnc, 
+			    GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	/* use cdata->functions_model and cdata->aggregates_model */
+	return TRUE;
+}
+
+gboolean
+_gda_sqlite_meta_routines (GdaServerProvider *prov, GdaConnection *cnc, 
+			   GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			   const GValue *routine_catalog, const GValue *routine_schema, 
+			   const GValue *routine_name_n)
+{
+	TO_IMPLEMENT;
+	/* use cdata->functions_model and cdata->aggregates_model */
+	return TRUE;
+}
+
+gboolean
+_gda_sqlite_meta__routine_col (GdaServerProvider *prov, GdaConnection *cnc, 
+			       GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	/* feature not available in SQLite */
+	return TRUE;
+}
+
+gboolean
+_gda_sqlite_meta_routine_col (GdaServerProvider *prov, GdaConnection *cnc, 
+			      GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			      const GValue *rout_catalog, const GValue *rout_schema, 
+			      const GValue *rout_name)
+{
+	/* feature not available in SQLite */
+	return TRUE;
+}
+
+gboolean
+_gda_sqlite_meta__routine_par (GdaServerProvider *prov, GdaConnection *cnc, 
+			       GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_sqlite_meta_routine_par (GdaServerProvider *prov, GdaConnection *cnc, 
+			      GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			      const GValue *rout_catalog, const GValue *rout_schema, 
+			      const GValue *rout_name)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
 
 /*
  * @...: a list of TRUE/FALSE, GValue*  -- if TRUE then the following GValue must be freed

@@ -50,7 +50,7 @@ main (int argc, char *argv[])
         gda_init ("LibgdaXsltProc", "1.0", argc, argv);
 
 	/* open connection */
-        cnc = gda_connection_open_from_dsn ("SalesTest", NULL, NULL, 0, &error);
+        cnc = gda_connection_open_from_dsn ("SalesTest", NULL, 0, &error);
         if (!cnc) {
                 g_print ("Could not open connection to DSN 'SalesTest': %s\n",
                          error && error->message ? error->message : "No detail");

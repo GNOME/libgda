@@ -21,6 +21,7 @@
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-meta-store.h>
+#include <libgda/gda-meta-store-extra.h>
 #include <sql-parser/gda-sql-parser.h>
 #include <sql-parser/gda-sql-statement.h>
 #include <libgda/gda-connection.h>
@@ -202,6 +203,8 @@ struct _GdaMetaStorePrivate {
 
 	GSList        *p_db_objects; /* list of DbObject structures */
 	GHashTable    *p_db_objects_hash; /* key = table name, value = a DbObject structure */
+
+	gboolean       override_mode;
 };
 
 static void db_object_free    (DbObject *dbobj);
@@ -215,10 +218,11 @@ static GObjectClass  *parent_class = NULL;
 enum {
 	SUGGEST_UPDATE,
 	META_CHANGED,
+	META_RESET,
 	LAST_SIGNAL
 };
 
-static gint gda_meta_store_signals[LAST_SIGNAL] = { 0, 0 };
+static gint gda_meta_store_signals[LAST_SIGNAL] = { 0, 0, 0 };
 
 /* properties */
 enum {
@@ -348,9 +352,17 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 		NULL, NULL,
 		gda_marshal_VOID__POINTER, G_TYPE_NONE,
 		1, G_TYPE_POINTER);
+	gda_meta_store_signals[META_RESET] =
+		g_signal_new ("meta_reset",
+		G_TYPE_FROM_CLASS (object_class),
+		G_SIGNAL_RUN_FIRST,
+		G_STRUCT_OFFSET (GdaMetaStoreClass, meta_reset),
+		NULL, NULL,
+		gda_marshal_VOID__VOID, G_TYPE_NONE, 0);
 	
 	klass->suggest_update = m_suggest_update;
 	klass->meta_changed = NULL;
+	klass->meta_reset = NULL;
 	
 	/* Properties */
 	object_class->set_property = gda_meta_store_set_property;
@@ -450,6 +462,8 @@ gda_meta_store_init (GdaMetaStore *store)
 
 	store->priv->p_db_objects = NULL;
 	store->priv->p_db_objects_hash = g_hash_table_new (g_str_hash, g_str_equal);
+
+	store->priv->override_mode = FALSE;
 }
 
 static GObject *
@@ -582,6 +596,10 @@ gda_meta_store_dispose (GObject *object)
 	store = GDA_META_STORE (object);
 	if (store->priv) {
 		GSList *list;
+
+		if (store->priv->override_mode) 
+			_gda_meta_store_cancel_data_reset (store, NULL);
+
 		g_free (store->priv->catalog);
 		g_free (store->priv->schema);
 
@@ -871,27 +889,9 @@ create_server_operation_for_table (GHashTable *specific_hash,
 		}
 	}
 
-	/* foreign keys */
-	repl = provider_specific_match (specific_hash, prov, NULL, "/FKEY_S");
-	for (index = 0, list = TABLE_INFO (dbobj)->fk_list; repl && list; list = list->next, index++) {
-		TableFKey *tfk = (TableFKey*) list->data;
-		gint i;
-
-		if (! gda_server_operation_set_value_at (op, tfk->depend_on->obj_name, error,
-							 "/FKEY_S/%d/FKEY_REF_TABLE", index))
-			goto onerror;
-		for (i = 0; i < tfk->cols_nb; i++) {
-			TableColumn *tc = g_slist_nth_data (TABLE_INFO (dbobj)->columns, tfk->fk_cols_array [i]);
-			if (! gda_server_operation_set_value_at (op, tc->column_name, error,
-								 "/FKEY_S/%d/FKEY_FIELDS_A/@FK_FIELD/%d",
-								 index, i))
-				goto onerror;
-			if (! gda_server_operation_set_value_at (op, tfk->ref_pk_names_array [i], error,
-								 "/FKEY_S/%d/FKEY_FIELDS_A/@FK_REF_PK_FIELD/%d",
-								 index, i))
-				goto onerror;
-		}
-	}
+	/* foreign keys: just used as an indication by the GdaMetaStore object: they are not enforced because
+	 * the database may not be up to date everywhere at any time and because the references are sometimes
+	 * on views and not on tables, which is not supported by databases */
 
 	return op;
  onerror:
@@ -2023,6 +2023,10 @@ gda_meta_store_modify (GdaMetaStore *store, const gchar *table_name,
 	const GValue **values;
 	gchar *name;
 
+	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
+	g_return_val_if_fail (table_name, FALSE);
+	g_return_val_if_fail (!new_data || GDA_IS_DATA_MODEL (new_data), FALSE);
+
 	value_names = g_new (const gchar *, size);
 	values = g_new (const GValue *, size);
 
@@ -2115,31 +2119,41 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 	gint current_n_rows = 0, i;
 	gint current_n_cols = 0;
 
-	/* get current data */
-	current = gda_connection_statement_execute_select_full (store->priv->cnc,
-								with_cond ? custom_set->select : schema_set->current_all,
-								with_cond ? custom_set->params : NULL, 
-								GDA_STATEMENT_MODEL_RANDOM_ACCESS,	
-								schema_set->type_cols_array, error);
-	if (!current)
-		return FALSE;
-	current_n_rows = gda_data_model_get_n_rows (current);
-	current_n_cols = gda_data_model_get_n_columns (current);
-	rows_to_del = g_new (gboolean, current_n_rows);
-	memset (rows_to_del, TRUE, sizeof (gboolean) * current_n_rows);
+	if (! store->priv->override_mode) {
+		/* get current data */
+		current = gda_connection_statement_execute_select_full (store->priv->cnc,
+									with_cond ? custom_set->select : 
+									schema_set->current_all,
+									with_cond ? custom_set->params : NULL, 
+									GDA_STATEMENT_MODEL_RANDOM_ACCESS,	
+									schema_set->type_cols_array, error);
+		if (!current)
+			return FALSE;
+		current_n_rows = gda_data_model_get_n_rows (current);
+		current_n_cols = gda_data_model_get_n_columns (current);
+		rows_to_del = g_new (gboolean, current_n_rows);
+		memset (rows_to_del, TRUE, sizeof (gboolean) * current_n_rows);
 #ifdef DEBUG_STORE_MODIFY
-	g_print ("CURRENT:\n");
-	gda_data_model_dump (current, stdout);
+		g_print ("CURRENT:\n");
+		gda_data_model_dump (current, stdout);
 #endif
 	
-	/* start a transaction if possible */
-	if (! gda_connection_get_transaction_status (store->priv->cnc)) {
-		started_transaction = gda_connection_begin_transaction (store->priv->cnc, NULL,
-									GDA_TRANSACTION_ISOLATION_UNKNOWN,
-									NULL);
+		/* start a transaction if possible */
+		if (! gda_connection_get_transaction_status (store->priv->cnc)) {
+			started_transaction = gda_connection_begin_transaction (store->priv->cnc, NULL,
+										GDA_TRANSACTION_ISOLATION_UNKNOWN,
+										NULL);
 #ifdef DEBUG_STORE_MODIFY
-		g_print ("------- BEGIN\n");
+			g_print ("------- BEGIN\n");
 #endif
+		}
+	}
+	else {
+		/* remove everything from table */
+		if (gda_connection_statement_execute_non_select (store->priv->cnc,
+								 schema_set->delete_all, NULL, 
+								 NULL, error) == -1) 
+			return FALSE;
 	}
 
 	/* treat rows to insert / update */
@@ -2156,28 +2170,32 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 			/* find existing row if necessary */
 			gint erow = -1;
 			gboolean has_changed = FALSE;
-			if (current) {
-				erow = find_row_in_model (current, new_data, i,
-							  schema_set->pk_cols_array, schema_set->pk_cols_nb, &has_changed, 
-							  error);
-#ifdef DEBUG_STORE_MODIFY
-				g_print ("FIND row %d(/%d) returned row %d (%s)\n", i, new_n_rows - 1, erow, 
-					 has_changed ? "CHANGED" : "unchanged");
-#endif
-			}
-			if (erow < -1) {
-				retval = FALSE;
-				goto out;
-			}
-			
-			/* prepare change information */
 			GdaMetaStoreChange *change = NULL;
-			change = g_new0 (GdaMetaStoreChange, 1);
-			change->c_type = -1;
-			change->table_name = g_strdup (table_name);
-			change->keys = g_hash_table_new_full (g_str_hash, g_str_equal,
-							      g_free, (GDestroyNotify) gda_value_free);
-			all_changes = g_slist_append (all_changes, change);
+
+			if (!store->priv->override_mode) {
+				if (current) {
+					erow = find_row_in_model (current, new_data, i,
+								  schema_set->pk_cols_array, 
+								  schema_set->pk_cols_nb, &has_changed, 
+								  error);
+#ifdef DEBUG_STORE_MODIFY
+					g_print ("FIND row %d(/%d) returned row %d (%s)\n", i, new_n_rows - 1, erow, 
+						 has_changed ? "CHANGED" : "unchanged");
+#endif
+				}
+				if (erow < -1) {
+					retval = FALSE;
+					goto out;
+				}
+				
+				/* prepare change information */
+				change = g_new0 (GdaMetaStoreChange, 1);
+				change->c_type = -1;
+				change->table_name = g_strdup (table_name);
+				change->keys = g_hash_table_new_full (g_str_hash, g_str_equal,
+								      g_free, (GDestroyNotify) gda_value_free);
+				all_changes = g_slist_append (all_changes, change);
+			}
 			
 			/* bind parameters for new values */
 			gint j;
@@ -2243,122 +2261,126 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 					change->c_type = GDA_META_STORE_MODIFY;
 				rows_to_del [erow] = FALSE;
 			}
-			else
+			else if (rows_to_del) 
 				/* row has not changed */
 				rows_to_del [erow] = FALSE;
 
-			/* Dependencies update: reverse_fk_list */
-			GSList *list;
-			for (list = schema_set->reverse_fk_list; list; list = list->next) {
-				TableFKey *tfk = (TableFKey*) list->data;
-				gint k;
-				GdaMetaContext context;
-				
-				context.table_name = tfk->table_info->obj_name;
-				context.size = tfk->cols_nb;
-				context.column_names = tfk->fk_names_array;
-				context.column_values = g_new (GValue *, context.size);
-				
-				for (k = 0; k < tfk->cols_nb; k++) 
-					context.column_values [k] = (GValue*) gda_data_model_get_value_at (new_data, 
-													   tfk->ref_pk_cols_array[k], i);
+			if (!store->priv->override_mode) {
+				/* Dependencies update: reverse_fk_list */
+				GSList *list;
+				for (list = schema_set->reverse_fk_list; list; list = list->next) {
+					TableFKey *tfk = (TableFKey*) list->data;
+					gint k;
+					GdaMetaContext context;
+					
+					context.table_name = tfk->table_info->obj_name;
+					context.size = tfk->cols_nb;
+					context.column_names = tfk->fk_names_array;
+					context.column_values = g_new (GValue *, context.size);
+					
+					for (k = 0; k < tfk->cols_nb; k++) 
+						context.column_values [k] = (GValue*) gda_data_model_get_value_at (new_data, 
+										      tfk->ref_pk_cols_array[k], i);
 #ifdef DEBUG_STORE_MODIFY
-				g_print ("Suggest update data into table '%s':", tfk->table_info->obj_name);
-				for (k = 0; k < tfk->cols_nb; k++) {
-					gchar *str;
-					str = gda_value_stringify (context.column_values [k]);
-					g_print (" [%s => %s]", context.column_names[k], str);
-					g_free (str);
-				}
-				g_print ("\n");
+					g_print ("Suggest update data into table '%s':", tfk->table_info->obj_name);
+					for (k = 0; k < tfk->cols_nb; k++) {
+						gchar *str;
+						str = gda_value_stringify (context.column_values [k]);
+						g_print (" [%s => %s]", context.column_names[k], str);
+						g_free (str);
+					}
+					g_print ("\n");
 #endif
-				GError *suggest_reports_error = NULL;
-				g_signal_emit (store, gda_meta_store_signals[SUGGEST_UPDATE], 0, &context, 
-					       &suggest_reports_error);
-				g_free (context.column_values);
-				if (suggest_reports_error) {
-					g_print ("SUGGEST META UPDATE Returned FALSE: %s\n",
-						 suggest_reports_error && suggest_reports_error->message ? 
-						 suggest_reports_error->message : "???");
-					retval = FALSE;
-					if (error && !(*error))
-						g_propagate_error (error, suggest_reports_error);
-					goto out;
+					GError *suggest_reports_error = NULL;
+					g_signal_emit (store, gda_meta_store_signals[SUGGEST_UPDATE], 0, &context, 
+						       &suggest_reports_error);
+					g_free (context.column_values);
+					if (suggest_reports_error) {
+						g_print ("SUGGEST META UPDATE Returned FALSE: %s\n",
+							 suggest_reports_error && suggest_reports_error->message ? 
+							 suggest_reports_error->message : "???");
+						retval = FALSE;
+						if (error && !(*error))
+							g_propagate_error (error, suggest_reports_error);
+						goto out;
+					}
 				}
 			}
 		}
 	}
 	
-	/* treat rows to delete */
-	for (i = 0; i < current_n_rows; i++) {
-		if (rows_to_del [i]) {
-			/* prepare change information */
-			GdaMetaStoreChange *change = NULL;
-			change = g_new0 (GdaMetaStoreChange, 1);
-			change->c_type = GDA_META_STORE_REMOVE;
-			change->table_name = g_strdup (table_name);
-			change->keys = g_hash_table_new_full (g_str_hash, g_str_equal,
-							      g_free, (GDestroyNotify) gda_value_free);
-			all_changes = g_slist_append (all_changes, change);
-
-			/* DELETE */
-			gint j;
-			for (j = 0; j < current_n_cols; j++) {
-				gchar *pid = g_strdup_printf ("-%d", j);
-				GdaHolder *h;
-				h = gda_set_get_holder (schema_set->params, pid);
-				if (h) {
-					const GValue *value;
-					value = gda_data_model_get_value_at (current, j, i);
-					gda_holder_set_value (h, value);
-					if (change) {
-						g_hash_table_insert (change->keys, pid, gda_value_copy (value));
-						pid = NULL;
+	if (!store->priv->override_mode) {
+		/* treat rows to delete */
+		for (i = 0; i < current_n_rows; i++) {
+			if (rows_to_del [i]) {
+				/* prepare change information */
+				GdaMetaStoreChange *change = NULL;
+				change = g_new0 (GdaMetaStoreChange, 1);
+				change->c_type = GDA_META_STORE_REMOVE;
+				change->table_name = g_strdup (table_name);
+				change->keys = g_hash_table_new_full (g_str_hash, g_str_equal,
+								      g_free, (GDestroyNotify) gda_value_free);
+				all_changes = g_slist_append (all_changes, change);
+				
+				/* DELETE */
+				gint j;
+				for (j = 0; j < current_n_cols; j++) {
+					gchar *pid = g_strdup_printf ("-%d", j);
+					GdaHolder *h;
+					h = gda_set_get_holder (schema_set->params, pid);
+					if (h) {
+						const GValue *value;
+						value = gda_data_model_get_value_at (current, j, i);
+						gda_holder_set_value (h, value);
+						if (change) {
+							g_hash_table_insert (change->keys, pid, gda_value_copy (value));
+							pid = NULL;
+						}
 					}
+					g_free (pid);
 				}
-				g_free (pid);
-			}
 #ifdef DEBUG_STORE_MODIFY
-			g_print ("Delete existing row %d from table %s\n", i, table_name);
+				g_print ("Delete existing row %d from table %s\n", i, table_name);
 #endif
-			/* reverse_fk_list */
-			GSList *list;
-			for (list = schema_set->reverse_fk_list; list; list = list->next) {
-				TableFKey *tfk = (TableFKey*) list->data;
-				const GValue **values;
-				gint k;
-
-				/*g_print ("Also remove data from table '%s'...\n", tfk->table_info->obj_name);*/
-				values = g_new (const GValue *, tfk->cols_nb);
-				for (k = 0; k < tfk->cols_nb; k++) 
-					values [k] = gda_data_model_get_value_at (current, tfk->ref_pk_cols_array[k], i);
-				if (!gda_meta_store_modify_v (store, tfk->table_info->obj_name, NULL,
-							      tfk->fk_fields_cond, error, 
-							      tfk->cols_nb, (const gchar **) tfk->fk_names_array, values)) {
-					retval = FALSE;
+				/* reverse_fk_list */
+				GSList *list;
+				for (list = schema_set->reverse_fk_list; list; list = list->next) {
+					TableFKey *tfk = (TableFKey*) list->data;
+					const GValue **values;
+					gint k;
+					
+					/*g_print ("Also remove data from table '%s'...\n", tfk->table_info->obj_name);*/
+					values = g_new (const GValue *, tfk->cols_nb);
+					for (k = 0; k < tfk->cols_nb; k++) 
+						values [k] = gda_data_model_get_value_at (current, tfk->ref_pk_cols_array[k], i);
+					if (!gda_meta_store_modify_v (store, tfk->table_info->obj_name, NULL,
+								      tfk->fk_fields_cond, error, 
+								      tfk->cols_nb, (const gchar **) tfk->fk_names_array, values)) {
+						retval = FALSE;
+						g_free (values);
+						goto out;
+					}
 					g_free (values);
+				}
+				
+				if (gda_connection_statement_execute_non_select (store->priv->cnc,
+										 schema_set->delete, schema_set->params, 
+										 NULL, error) == -1) {
+					retval = FALSE;
 					goto out;
 				}
-				g_free (values);
-			}
-			
-			if (gda_connection_statement_execute_non_select (store->priv->cnc,
-									 schema_set->delete, schema_set->params, 
-									 NULL, error) == -1) {
-				retval = FALSE;
-				goto out;
 			}
 		}
-	}
 
-	if (retval && started_transaction) {
-		retval = gda_connection_commit_transaction (store->priv->cnc, NULL, NULL);
+		if (retval && started_transaction) {
+			retval = gda_connection_commit_transaction (store->priv->cnc, NULL, NULL);
 #ifdef DEBUG_STORE_MODIFY
-		g_print ("------- COMMIT\n");
+			g_print ("------- COMMIT\n");
 #endif
+		}
+		if (retval && all_changes) 
+			g_signal_emit (store, gda_meta_store_signals[META_CHANGED], 0, all_changes);
 	}
-	if (retval && all_changes) 
-		g_signal_emit (store, gda_meta_store_signals[META_CHANGED], 0, all_changes);
 	
 out:
 	if (all_changes) {
@@ -2376,6 +2398,7 @@ out:
 	}
 	return retval;
 }
+
 
 /*
  * Find the row in @find_in from the values of @data at line @row, and columns pointed by
@@ -2527,6 +2550,89 @@ out:
         g_free (set);
 	return NULL;
 }
+
+/**
+ * _gda_meta_store_begin_data_reset
+ * @store: a #GdaMetaStore object
+ * @error: a place to store errors, or %NULL
+ *
+ * Sets @store in a mode where only the modifications completely overriding a table
+ * will be allowed, where no detailled modifications report is made and where the "suggest-update"
+ * signal is not emitted.
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+_gda_meta_store_begin_data_reset (GdaMetaStore *store, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
+
+	if (store->priv->override_mode)
+		return TRUE;
+
+	if (! gda_connection_get_transaction_status (store->priv->cnc)) {
+		if (!gda_connection_begin_transaction (store->priv->cnc, NULL,
+						       GDA_TRANSACTION_ISOLATION_UNKNOWN, error))
+			return FALSE;
+	}
+	else {
+		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_TRANSACTION_ALREADY_STARTED_ERROR,
+			     _("A transaction has already been started"));
+		return FALSE;
+
+	}
+	store->priv->override_mode = TRUE;
+	return TRUE;
+}
+
+/**
+ * _gda_meta_store_cancel_data_reset
+ * @store: a #GdaMetaStore object
+ * @error: a place to store errors, or %NULL
+ *
+ * Cancels any modification done since _gda_meta_store_begin_data_reset() was called.
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+_gda_meta_store_cancel_data_reset (GdaMetaStore *store, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
+
+	if (!store->priv->override_mode)
+		return TRUE;
+	
+	store->priv->override_mode = FALSE;
+	return gda_connection_rollback_transaction (store->priv->cnc, NULL, error);
+}
+
+/**
+ * _gda_meta_store_finish_data_reset
+ * @store: a #GdaMetaStore object
+ * @error: a place to store errors, or %NULL
+ *
+ * Commits any modification done since _gda_meta_store_begin_data_reset() was called.
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+_gda_meta_store_finish_data_reset (GdaMetaStore *store, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
+
+	if (!store->priv->override_mode)
+		return TRUE;
+
+	store->priv->override_mode = FALSE;	
+	if (!gda_connection_commit_transaction (store->priv->cnc, NULL, error))
+		return FALSE;
+	else {
+		g_signal_emit (store, gda_meta_store_signals[META_RESET], 0);
+		return TRUE;
+	}
+}
+
+
 
 /*
  * gda_meta_store_change_free

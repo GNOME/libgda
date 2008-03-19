@@ -796,7 +796,7 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 			const gchar *sql = "SELECT constraint_type, constraint_name  "
 				"FROM _table_constraints WHERE table_catalog = ##tc::string "
 				"AND table_schema = ##ts::string AND table_name = ##tname::string "
-				"ORDER BY constraint_type, constraint_name";
+				"ORDER BY constraint_type DESC, constraint_name";
 
 			g_value_set_string ((catalog = gda_value_new (G_TYPE_STRING)), dbo->obj_catalog);
 			g_value_set_string ((schema = gda_value_new (G_TYPE_STRING)), dbo->obj_schema);
@@ -815,8 +815,8 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 					/* primary key */
 					GdaDataModel *cols;
 					cvalue = gda_data_model_get_value_at (model, 1, i);
-					string = g_string_new ("Primary key ");
-					g_string_append_printf (string, "'%s'", g_value_get_string (cvalue));
+					string = g_string_new (_("Primary key"));
+					g_string_append_printf (string, " '%s'", g_value_get_string (cvalue));
 					str = "SELECT column_name, ordinal_position "
 						"FROM _key_column_usage WHERE table_catalog = ##tc::string "
 						"AND table_schema = ##ts::string AND table_name = ##tname::string AND "
@@ -829,28 +829,96 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 					if (cols) {
 						gint j, cnrows;
 						cnrows = gda_data_model_get_n_rows (cols);
-						for (j = 0; j < cnrows; j++) {
-							if (j == 0)
-								g_string_append (string, ": ");
-							else
-								g_string_append (string, ", ");
-							g_string_append (string, 
-									 g_value_get_string (gda_data_model_get_value_at (cols, 0, j)));
+						if (cnrows > 0) {
+							g_string_append (string, " (");
+							for (j = 0; j < cnrows; j++) {
+								if (j > 0)
+									g_string_append (string, ", ");
+								g_string_append (string, 
+										 g_value_get_string (gda_data_model_get_value_at (cols, 0, j)));
+							}
+							g_string_append_c (string, ')');
 						}
 						g_object_unref (cols);
 					}
 				}
 				else if (*str == 'F') {
 					/* foreign key */
+					GdaDataModel *cols;
 					cvalue = gda_data_model_get_value_at (model, 1, i);
-					string = g_string_new ("Foreign key ");
-					g_string_append_printf (string, "'%s'", g_value_get_string (cvalue));
+					string = g_string_new (_("Foreign key"));
+					g_string_append_printf (string, " '%s'", g_value_get_string (cvalue));
+
+					str = "SELECT ref_table_schema, ref_table_name, fk_column, ref_column "
+						"FROM _detailled_fk WHERE fk_table_catalog = ##tc::string "
+						"AND fk_table_schema = ##ts::string AND fk_table_name = ##tname::string AND "
+						"fk_constraint_name = ##cname::string "
+						"ORDER BY ordinal_position";
+					
+					cols = gda_meta_store_extract (gda_connection_get_meta_store (cnc), str, error, 
+								       "tc", catalog, "ts", schema, "tname", name, "cname", cvalue, 
+								       NULL);
+					if (cols) {
+						gint j, cnrows;
+						cnrows = gda_data_model_get_n_rows (cols);
+						if (cnrows > 0) {
+							g_string_append (string, " (");
+							for (j = 0; j < cnrows; j++) {
+								if (j > 0)
+									g_string_append (string, ", ");
+								g_string_append (string, 
+										 g_value_get_string (gda_data_model_get_value_at (cols, 2, j)));
+							}
+							g_string_append (string, ") references ");
+
+							const GValue *v1, *v2;
+							
+							v1 = gda_data_model_get_value_at (cols, 0, 0);
+							v2 = gda_data_model_get_value_at (cols, 1, 0);
+							g_string_append_printf (string, " %s.%s (", 
+										g_value_get_string (v1),
+										g_value_get_string (v2));
+							for (j = 0; j < cnrows; j++) {
+								if (j > 0)
+									g_string_append (string, ", ");
+								g_string_append (string, 
+										 g_value_get_string (gda_data_model_get_value_at (cols, 2, j)));
+							}
+							g_string_append_c (string, ')');
+						}
+						g_object_unref (cols);
+					}
 				}
 				else if (*str == 'U') {
 					/* Unique constraint */
+					GdaDataModel *cols;
 					cvalue = gda_data_model_get_value_at (model, 1, i);
-					string = g_string_new ("Unique ");
-					g_string_append_printf (string, "'%s'", g_value_get_string (cvalue));
+					string = g_string_new (_("Unique"));
+					g_string_append_printf (string, " '%s'", g_value_get_string (cvalue));
+					str = "SELECT column_name, ordinal_position "
+						"FROM _key_column_usage WHERE table_catalog = ##tc::string "
+						"AND table_schema = ##ts::string AND table_name = ##tname::string AND "
+						"constraint_name = ##cname::string "
+						"ORDER BY ordinal_position";
+					
+					cols = gda_meta_store_extract (gda_connection_get_meta_store (cnc), str, error, 
+								       "tc", catalog, "ts", schema, "tname", name, "cname", cvalue, 
+								       NULL);
+					if (cols) {
+						gint j, cnrows;
+						cnrows = gda_data_model_get_n_rows (cols);
+						if (cnrows > 0) {
+							g_string_append (string, " (");
+							for (j = 0; j < cnrows; j++) {
+								if (j > 0)
+									g_string_append (string, ", ");
+								g_string_append (string, 
+										 g_value_get_string (gda_data_model_get_value_at (cols, 0, j)));
+							}
+							g_string_append_c (string, ')');
+						}
+						g_object_unref (cols);
+					}
 				}
 
 				if (string) {

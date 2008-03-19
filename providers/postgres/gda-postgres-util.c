@@ -122,14 +122,10 @@ _gda_postgres_PQexec_wrap (GdaConnection *cnc, PGconn *pconn, const char *query)
 GType
 _gda_postgres_type_oid_to_gda (PostgresConnectionData *cdata, Oid postgres_type)
 {
-	gint i;
-
-	for (i = 0; i < cdata->ntypes; i++)
-		if (cdata->type_data[i].oid == postgres_type) 
-			break;
-
-  	if (cdata->type_data[i].oid != postgres_type)
+	GType *type;
+	type = g_hash_table_lookup (cdata->h_table, GUINT_TO_POINTER (postgres_type));
+	if (type)
+		return *type;
+	else
 		return G_TYPE_STRING;
-
-	return cdata->type_data[i].type;
 }

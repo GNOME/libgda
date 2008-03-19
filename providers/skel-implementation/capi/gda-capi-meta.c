@@ -31,6 +31,7 @@
 #include <libgda/gda-connection-private.h>
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-set.h>
+#include <libgda/gda-holder.h>
 
 static gboolean append_a_row (GdaDataModel *to_model, GError **error, gint nb, ...);
 
@@ -53,7 +54,7 @@ static gchar *internal_sql[] = {
  * predefined statements' GdaStatement
  */
 static GdaStatement **internal_stmt;
-static GdaSet        *internal_params;
+static GdaSet        *i_set;
 
 /* 
  * global static values
@@ -71,22 +72,19 @@ _gda_capi_provider_meta_init (GdaServerProvider *provider)
 	InternalStatementItem i;
 
         internal_parser = gda_server_provider_internal_get_parser (provider);
-	internal_params = gda_set_new (NULL);
 
         internal_stmt = g_new0 (GdaStatement *, sizeof (internal_sql) / sizeof (gchar*));
         for (i = I_STMT_1; i < sizeof (internal_sql) / sizeof (gchar*); i++) {
-		GdaSet *set;
                 internal_stmt[i] = gda_sql_parser_parse_string (internal_parser, internal_sql[i], NULL, NULL);
                 if (!internal_stmt[i])
                         g_error ("Could not parse internal statement: %s\n", internal_sql[i]);
-		g_assert (gda_statement_get_parameters (internal_stmt[i], &set, NULL));
-		if (set) {
-			gda_set_merge_with_set (internal_params, set);
-			g_object_unref (set);
-		}
         }
 
 	/* initialize static values here */
+	i_set = gda_set_new_inline (4, "cat", G_TYPE_STRING, "", 
+				    "name", G_TYPE_STRING, "",
+				    "schema", G_TYPE_STRING, "",
+				    "name2", G_TYPE_STRING, "");
 }
 
 gboolean
@@ -94,145 +92,387 @@ _gda_capi_meta_info (GdaServerProvider *prov, GdaConnection *cnc,
 		     GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	GdaDataModel *model;
-	gboolean retval = TRUE;
+	gboolean retval;
 
-	model = gda_meta_store_create_modify_data_model (store, context->table_name);
-	g_assert (model);
-
-	/* fill in @model */
 	TO_IMPLEMENT;
-	if (retval)
-		retval = gda_meta_store_modify (store, context->table_name, model, NULL, error, NULL);
+	/* fill in @model, with something like:
+	 * model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_1], NULL, 
+	 *                                                  error);
+	 */
+	if (!model)
+		return FALSE;
+	retval = gda_meta_store_modify_with_context (store, context, model, error);
 	g_object_unref (model);
-
+		
 	return retval;
 }
 
 gboolean
-_gda_capi_meta_btypes (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_capi_meta__btypes (GdaServerProvider *prov, GdaConnection *cnc, 
+			GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta__udt (GdaServerProvider *prov, GdaConnection *cnc, 
+		     GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta_udt (GdaServerProvider *prov, GdaConnection *cnc, 
+		    GdaMetaStore *store, GdaMetaContext *context, GError **error,
+		    const GValue *udt_catalog, const GValue *udt_schema)
+{
+	GdaDataModel *model;
+	gboolean retval = TRUE;
+
+	/* set internal holder's values from the arguments */
+	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), udt_catalog);
+	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), udt_schema);
+
+	TO_IMPLEMENT;
+	/* fill in @model, with something like:
+	 * model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_UDT], i_set, error);
+	 */
+	if (!model)
+		return FALSE;
+	retval = gda_meta_store_modify_with_context (store, context, model, error);
+	g_object_unref (model);
+
+	return retval;
+}
+
+
+gboolean
+_gda_capi_meta__udt_cols (GdaServerProvider *prov, GdaConnection *cnc, 
+			  GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;	
+}
+
+gboolean
+_gda_capi_meta_udt_cols (GdaServerProvider *prov, GdaConnection *cnc, 
+			 GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			 const GValue *udt_catalog, const GValue *udt_schema, const GValue *udt_name)
+{
+	TO_IMPLEMENT;
+	return TRUE;	
+}
+
+gboolean
+_gda_capi_meta__enums (GdaServerProvider *prov, GdaConnection *cnc, 
 		       GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
-	GdaDataModel *model;
-	gboolean retval = TRUE;
-
-	model = gda_meta_store_create_modify_data_model (store, context->table_name);
-	g_assert (model);
-
-	/* fill in @model */
 	TO_IMPLEMENT;
-	if (retval)
-		retval = gda_meta_store_modify (store, context->table_name, model, NULL, error, NULL);
-	g_object_unref (model);
-
-	return retval;
+	return TRUE;	
 }
 
-gboolean 
+gboolean
+_gda_capi_meta_enums (GdaServerProvider *prov, GdaConnection *cnc, 
+		      GdaMetaStore *store, GdaMetaContext *context, GError **error,
+		      const GValue *udt_catalog, const GValue *udt_schema, const GValue *udt_name)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+
+gboolean
+_gda_capi_meta__domains (GdaServerProvider *prov, GdaConnection *cnc, 
+			 GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta_domains (GdaServerProvider *prov, GdaConnection *cnc, 
+			GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			const GValue *domain_catalog, const GValue *domain_schema)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta__constraints_dom (GdaServerProvider *prov, GdaConnection *cnc, 
+				 GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta_constraints_dom (GdaServerProvider *prov, GdaConnection *cnc, 
+				GdaMetaStore *store, GdaMetaContext *context, GError **error,
+				const GValue *domain_catalog, const GValue *domain_schema, 
+				const GValue *domain_name)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta__el_types (GdaServerProvider *prov, GdaConnection *cnc, 
+			  GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta__collations (GdaServerProvider *prov, GdaConnection *cnc, 
+			    GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta_collations (GdaServerProvider *prov, GdaConnection *cnc, 
+			   GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			   const GValue *collation_catalog, const GValue *collation_schema, 
+			   const GValue *collation_name_n)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta__character_sets (GdaServerProvider *prov, GdaConnection *cnc, 
+				GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta_character_sets (GdaServerProvider *prov, GdaConnection *cnc, 
+			       GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			       const GValue *chset_catalog, const GValue *chset_schema, 
+			       const GValue *chset_name_n)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta__schemata (GdaServerProvider *prov, GdaConnection *cnc, 
+			  GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
 _gda_capi_meta_schemata (GdaServerProvider *prov, GdaConnection *cnc, 
 			 GdaMetaStore *store, GdaMetaContext *context, GError **error, 
-			 const GValue *schema_name)
+			 const GValue *catalog_name, const GValue *schema_name_n)
 {
-	GdaDataModel *model;
-	gboolean retval = TRUE;
-
-	model = gda_meta_store_create_modify_data_model (store, context->table_name);
-	g_assert (model);
-
-	/* fill in @model */
 	TO_IMPLEMENT;
-	if (retval)
-		retval = gda_meta_store_modify (store, context->table_name, model, NULL, error, NULL);
-	g_object_unref (model);
-
-	return retval;
+	return TRUE;
 }
 
-
+gboolean
+_gda_capi_meta__tables_views (GdaServerProvider *prov, GdaConnection *cnc, 
+			      GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
 
 gboolean
 _gda_capi_meta_tables_views (GdaServerProvider *prov, GdaConnection *cnc, 
-			     GdaMetaStore *store, GdaMetaContext *context, GError **error)
+			     GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			     const GValue *table_catalog, const GValue *table_schema, 
+			     const GValue *table_name_n)
 {
-	GdaDataModel *model;
-	gboolean retval = TRUE;
-
-	model = gda_meta_store_create_modify_data_model (store, context->table_name);
-	g_assert (model);
-
-	/* fill in @model */
 	TO_IMPLEMENT;
-	if (retval)
-		retval = gda_meta_store_modify (store, context->table_name, model, NULL, error, NULL);
-	g_object_unref (model);
-
-	return retval;
+	return TRUE;
 }
 
-
-
-gboolean 
-_gda_capi_meta_tables_views_s (GdaServerProvider *prov, GdaConnection *cnc, 
-			       GdaMetaStore *store, GdaMetaContext *context, GError **error, 
-			       const GValue *table_schema, const GValue *table_name)
+gboolean
+_gda_capi_meta__columns (GdaServerProvider *prov, GdaConnection *cnc, 
+			 GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
-	GdaDataModel *model;
-	gboolean retval = TRUE;
-
-	model = gda_meta_store_create_modify_data_model (store, context->table_name);
-	g_assert (model);
-
-	/* fill in @model */
 	TO_IMPLEMENT;
-	if (retval)
-		retval = gda_meta_store_modify (store, context->table_name, model, NULL, error, NULL);
-	g_object_unref (model);
-
-	return retval;
+	return TRUE;
 }
 
 gboolean
 _gda_capi_meta_columns (GdaServerProvider *prov, GdaConnection *cnc, 
-			GdaMetaStore *store, GdaMetaContext *context, GError **error)
+			GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			const GValue *table_catalog, const GValue *table_schema, 
+			const GValue *table_name)
 {
-	GdaDataModel *model;
-	gboolean retval = TRUE;
-
-	model = gda_meta_store_create_modify_data_model (store, context->table_name);
-	g_assert (model);
-
-	/* fill in @model */
 	TO_IMPLEMENT;
-	if (retval)
-		retval = gda_meta_store_modify (store, context->table_name, model, NULL, error, NULL);
-	g_object_unref (model);
-
-	return retval;
+	return TRUE;
 }
 
 gboolean
-_gda_capi_meta_columns_t (GdaServerProvider *prov, GdaConnection *cnc, 
-			  GdaMetaStore *store, GdaMetaContext *context, GError **error, 
-			  const GValue *table_schema, const GValue *table_name)
+_gda_capi_meta__view_cols (GdaServerProvider *prov, GdaConnection *cnc, 
+			   GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
-	return _gda_capi_meta_columns_c (prov, cnc, store, context, error, table_schema, table_name, NULL);
+	TO_IMPLEMENT;
+	return TRUE;
 }
 
 gboolean
-_gda_capi_meta_columns_c (GdaServerProvider *prov, GdaConnection *cnc, 
-			  GdaMetaStore *store, GdaMetaContext *context, GError **error, 
-			  const GValue *table_schema, const GValue *table_name, const GValue *column_name)
+_gda_capi_meta_view_cols (GdaServerProvider *prov, GdaConnection *cnc, 
+			  GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			  const GValue *view_catalog, const GValue *view_schema, 
+			  const GValue *view_name)
 {
-	GdaDataModel *model;
-	gboolean retval = TRUE;
-
-	model = gda_meta_store_create_modify_data_model (store, context->table_name);
-	g_assert (model);
-
-	/* fill in @model */
 	TO_IMPLEMENT;
-	if (retval)
-		retval = gda_meta_store_modify (store, context->table_name, model, NULL, error, NULL);
-	g_object_unref (model);
+	return TRUE;
+}
 
-	return retval;
+gboolean
+_gda_capi_meta__constraints_tab (GdaServerProvider *prov, GdaConnection *cnc, 
+				 GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta_constraints_tab (GdaServerProvider *prov, GdaConnection *cnc, 
+				GdaMetaStore *store, GdaMetaContext *context, GError **error, 
+				const GValue *table_catalog, const GValue *table_schema, 
+				const GValue *table_name, const GValue *constraint_name_n)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta__constraints_ref (GdaServerProvider *prov, GdaConnection *cnc, 
+				 GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta_constraints_ref (GdaServerProvider *prov, GdaConnection *cnc, 
+				GdaMetaStore *store, GdaMetaContext *context, GError **error,
+				const GValue *table_catalog, const GValue *table_schema, const GValue *table_name, 
+				const GValue *constraint_name)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta__key_columns (GdaServerProvider *prov, GdaConnection *cnc, 
+			     GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta_key_columns (GdaServerProvider *prov, GdaConnection *cnc, 
+			    GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			    const GValue *table_catalog, const GValue *table_schema, 
+			    const GValue *table_name, const GValue *constraint_name)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta__check_columns (GdaServerProvider *prov, GdaConnection *cnc, 
+			       GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta_check_columns (GdaServerProvider *prov, GdaConnection *cnc, 
+			      GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			      const GValue *table_catalog, const GValue *table_schema, 
+			      const GValue *table_name, const GValue *constraint_name)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta__triggers (GdaServerProvider *prov, GdaConnection *cnc, 
+			  GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta_triggers (GdaServerProvider *prov, GdaConnection *cnc, 
+			 GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			 const GValue *table_catalog, const GValue *table_schema, 
+			 const GValue *table_name)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta__routines (GdaServerProvider *prov, GdaConnection *cnc, 
+			  GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta_routines (GdaServerProvider *prov, GdaConnection *cnc, 
+			 GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			 const GValue *routine_catalog, const GValue *routine_schema, 
+			 const GValue *routine_name_n)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta__routine_col (GdaServerProvider *prov, GdaConnection *cnc, 
+			     GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta_routine_col (GdaServerProvider *prov, GdaConnection *cnc, 
+			    GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			    const GValue *rout_catalog, const GValue *rout_schema, 
+			    const GValue *rout_name)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta__routine_par (GdaServerProvider *prov, GdaConnection *cnc, 
+			     GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta_routine_par (GdaServerProvider *prov, GdaConnection *cnc, 
+			    GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			    const GValue *rout_catalog, const GValue *rout_schema, 
+			    const GValue *rout_name)
+{
+	TO_IMPLEMENT;
+	return TRUE;
 }

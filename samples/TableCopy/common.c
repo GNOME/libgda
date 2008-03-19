@@ -7,8 +7,8 @@ open_source_connection (void)
 {
 	GdaConnection *cnc;
 	GError *error = NULL;
-	cnc = gda_connection_open_from_dsn ("SalesTest", NULL, NULL,
-					    GDA_CONNECTION_OPTIONS_DONT_SHARE,
+	cnc = gda_connection_open_from_dsn ("SalesTest", NULL,
+					    GDA_CONNECTION_OPTIONS_NONE,
 					    &error);
         if (!cnc) {
                 g_print ("Could not open connection to DSN 'SalesTest': %s\n",
@@ -25,8 +25,8 @@ open_destination_connection (void)
 	GdaConnection *cnc;
 	GError *error = NULL;
 	cnc = gda_connection_open_from_string ("SQLite", "DB_DIR=.;DB_NAME=copy",
-					       NULL, NULL,
-					       GDA_CONNECTION_OPTIONS_DONT_SHARE,
+					       NULL, 
+					       GDA_CONNECTION_OPTIONS_NONE,
 					       &error);
         if (!cnc) {
                 g_print ("Could not open connection to local SQLite database: %s\n",

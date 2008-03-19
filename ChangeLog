@@ -1,3 +1,38 @@
+2008-03-19  Vivien Malerba <malerba@gnome-db.org>
+
+	* tools/command-exec.c: now correctly reports primary key, foreign key and unique
+	constraints for tables
+	* libgda/information_schema.xml: added the '_detailled_fk' view to give an easy access
+	to all the foreign key's details
+	* libgda/sqlite/gda-sqlite-meta.c: finished implementing the key_columns() method
+	* libgda/gda-server-provider.h:
+	* libgda/sqlite/gda-sqlite-provider.c: check that SQLite's prepared statement is not NULL
+	to avoid crash (as reported by Massimo Cora). If it is NULL, then a
+	GDA_SERVER_PROVIDER_EMPTY_STMT_ERROR error is returned
+	* libgda/sqlite/sqlite-src: up to SQLite version 3.5.7
+	* samples/: adaptations to API changes
+	* libgda/libgda.h.in:
+	* libgda/Makefile.am:
+	* libgda/gda-data-model-hash.[ch]: removed that (unused) data model
+	* providers/skel-implementation/capi: backport the latest API changes regarding meta data
+	* doc/C: doc. updates
+	* libgda/sqlite/gda-sqlite-recordset.[ch]:
+	* providers/postgres/gda-postgres-recordset.[ch]
+	* libgda/providers-support/gda-pmodel.[ch]: added a "connection" property to get/set the
+	GdaConnection used when the data model was created (this has been removed from the
+	GdaSqliteRecordset and GdaPostgresRecordset implementation)
+	* libgda/providers-support/gda-pmodel.c: implemented the code for the "insert_query",
+	"update_query" and "delete_query" methods (first steps for bug #411811)
+	* libgda/gda-meta-store.c: don't declare foreign keys when creating the schema in a database
+	* libgda/sqlite/gda-sqlite-meta.[ch]:
+	* libgda/sqlite/gda-sqlite-provider.c:
+	* providers/postgres/gda-postgres-meta.[ch]:
+	* providers/postgres/gda-postgres-provider.c:
+	* providers/skel-implementation/capi/gda-capi-meta.[ch]:
+	* providers/skel-implementation/capi/gda-capi-provider.c: stabilized the interface providers
+	need to implement regarding meta data retreival
+	* libgda/gda-meta-store-extra.h: new file for some private API
+
 2008-03-17  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-statement.h: correctly define gda_statement_to_sql(), thanks

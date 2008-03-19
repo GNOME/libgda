@@ -282,25 +282,6 @@ gda_data_model_row_get_type
 </SECTION>
 
 <SECTION>
-<FILE>gda-data-model-hash</FILE>
-<TITLE>GdaDataModelHash</TITLE>
-GdaDataModelHash
-GdaDataModelHashClass
-GdaDataModelHashPrivate
-gda_data_model_hash_new
-gda_data_model_hash_insert_row
-gda_data_model_hash_set_n_columns
-gda_data_model_hash_clear
-<SUBSECTION Standard>
-GDA_DATA_MODEL_HASH
-GDA_DATA_MODEL_HASH_CLASS
-GDA_IS_DATA_MODEL_HASH
-GDA_IS_DATA_MODEL_HASH_CLASS
-GDA_TYPE_DATA_MODEL_HASH
-gda_data_model_hash_get_type
-</SECTION>
-
-<SECTION>
 <FILE>gda-data-model-import</FILE>
 <TITLE>GdaDataModelImport</TITLE>
 GdaDataModelImport
@@ -1366,6 +1347,7 @@ gda_meta_store_new_with_file
 gda_meta_store_get_version
 gda_meta_store_extract
 gda_meta_store_modify
+gda_meta_store_modify_with_context
 gda_meta_store_schema_get_structure
 gda_meta_store_get_attribute_value
 gda_meta_store_set_attribute_value
@@ -1432,6 +1414,7 @@ GdaPModel
 GdaPModelClass
 gda_pmodel_take_row
 gda_pmodel_get_stored_row
+gda_pmodel_get_connection
 gda_pmodel_set_modification_query
 gda_pmodel_compute_modification_queries
 <SUBSECTION Standard>

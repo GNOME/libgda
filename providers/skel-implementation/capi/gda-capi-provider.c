@@ -177,14 +177,47 @@ gda_capi_provider_class_init (GdaCapiProviderClass *klass)
 	provider_class->create_connection = NULL;
 
 	memset (&(provider_class->meta_funcs), 0, sizeof (GdaServerProviderMeta));
-	provider_class->meta_funcs.info = _gda_capi_meta_info;
-	provider_class->meta_funcs.btypes = _gda_capi_meta_btypes;
+	provider_class->meta_funcs._info = _gda_capi_meta__info;
+	provider_class->meta_funcs._btypes = _gda_capi_meta__btypes;
+	provider_class->meta_funcs._udt = _gda_capi_meta__udt;
+	provider_class->meta_funcs.udt = _gda_capi_meta_udt;
+	provider_class->meta_funcs._udt_cols = _gda_capi_meta__udt_cols;
+	provider_class->meta_funcs.udt_cols = _gda_capi_meta_udt_cols;
+	provider_class->meta_funcs._enums = _gda_capi_meta__enums;
+	provider_class->meta_funcs.enums = _gda_capi_meta_enums;
+	provider_class->meta_funcs._domains = _gda_capi_meta__domains;
+	provider_class->meta_funcs.domains = _gda_capi_meta_domains;
+	provider_class->meta_funcs._constraints_dom = _gda_capi_meta__constraints_dom;
+	provider_class->meta_funcs.constraints_dom = _gda_capi_meta_constraints_dom;
+	provider_class->meta_funcs._el_types = _gda_capi_meta__el_types;
+	provider_class->meta_funcs._collations = _gda_capi_meta__collations;
+	provider_class->meta_funcs.collations = _gda_capi_meta_collations;
+	provider_class->meta_funcs._character_sets = _gda_capi_meta__character_sets;
+	provider_class->meta_funcs.character_sets = _gda_capi_meta_character_sets;
+	provider_class->meta_funcs._schemata = _gda_capi_meta__schemata;
 	provider_class->meta_funcs.schemata = _gda_capi_meta_schemata;
+	provider_class->meta_funcs._tables_views = _gda_capi_meta__tables_views;
 	provider_class->meta_funcs.tables_views = _gda_capi_meta_tables_views;
-	provider_class->meta_funcs.tables_views_s = _gda_capi_meta_tables_views_s;
+	provider_class->meta_funcs._columns = _gda_capi_meta__columns;
 	provider_class->meta_funcs.columns = _gda_capi_meta_columns;
-	provider_class->meta_funcs.columns_t = _gda_capi_meta_columns_t;
-	provider_class->meta_funcs.columns_c = _gda_capi_meta_columns_c;
+	provider_class->meta_funcs._view_cols = _gda_capi_meta__view_cols;
+	provider_class->meta_funcs.view_cols = _gda_capi_meta_view_cols;
+	provider_class->meta_funcs._constraints_tab = _gda_capi_meta__constraints_tab;
+	provider_class->meta_funcs.constraints_tab = _gda_capi_meta_constraints_tab;
+	provider_class->meta_funcs._constraints_ref = _gda_capi_meta__constraints_ref;
+	provider_class->meta_funcs.constraints_ref = _gda_capi_meta_constraints_ref;
+	provider_class->meta_funcs._key_columns = _gda_capi_meta__key_columns;
+	provider_class->meta_funcs.key_columns = _gda_capi_meta_key_columns;
+	provider_class->meta_funcs._check_columns = _gda_capi_meta__check_columns;
+	provider_class->meta_funcs.check_columns = _gda_capi_meta_check_columns;
+	provider_class->meta_funcs._triggers = _gda_capi_meta__triggers;
+	provider_class->meta_funcs.triggers = _gda_capi_meta_triggers;
+	provider_class->meta_funcs._routines = _gda_capi_meta__routines;
+	provider_class->meta_funcs.routines = _gda_capi_meta_routines;
+	provider_class->meta_funcs._routine_col = _gda_capi_meta__routine_col;
+	provider_class->meta_funcs.routine_col = _gda_capi_meta_routine_col;
+	provider_class->meta_funcs._routine_par = _gda_capi_meta__routine_par;
+	provider_class->meta_funcs.routine_par = _gda_capi_meta_routine_par;
 }
 
 static void

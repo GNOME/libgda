@@ -77,6 +77,7 @@ Base class for all the DBMS providers
 
 @GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR: 
 @GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR: 
+@GDA_SERVER_PROVIDER_EMPTY_STMT_ERROR: 
 @GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR: 
 @GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR: 
 @GDA_SERVER_PROVIDER_OPERATION_ERROR: 
@@ -93,18 +94,45 @@ for more information.
 
 @_info: 
 @_btypes: 
+@_udt: 
+@udt: 
+@_udt_cols: 
+@udt_cols: 
+@_enums: 
+@enums: 
+@_domains: 
+@domains: 
+@_constraints_dom: 
+@constraints_dom: 
+@_el_types: 
+@_collations: 
+@collations: 
+@_character_sets: 
+@character_sets: 
 @_schemata: 
 @schemata: 
 @_tables_views: 
 @tables_views: 
 @_columns: 
 @columns: 
+@_view_cols: 
+@view_cols: 
 @_constraints_tab: 
 @constraints_tab: 
 @_constraints_ref: 
 @constraints_ref: 
 @_key_columns: 
 @key_columns: 
+@_check_columns: 
+@check_columns: 
+@_triggers: 
+@triggers: 
+@_routines: 
+@routines: 
+@_routine_col: 
+@routine_col: 
+@_routine_par: 
+@routine_par: 
 
 <!-- ##### USER_FUNCTION GdaServerProviderAsyncCallback ##### -->
 <para>

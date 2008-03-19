@@ -48,7 +48,8 @@ typedef enum {
 	GDA_META_STORE_ATTRIBUTE_ERROR,
 	GDA_META_STORE_SCHEMA_OBJECT_NOT_FOUND_ERROR,
 	GDA_META_STORE_SCHEMA_OBJECT_CONFLICT_ERROR,
-	GDA_META_STORE_SCHEMA_OBJECT_DESCR_ERROR
+	GDA_META_STORE_SCHEMA_OBJECT_DESCR_ERROR,
+	GDA_META_STORE_TRANSACTION_ALREADY_STARTED_ERROR
 } GdaMetaStoreError;
 
 /* 
@@ -89,7 +90,7 @@ struct _GdaMetaStoreClass
 	GdaMetaStoreClassPrivate *cpriv;
 
 	/* signals the changes */
-	void     (*reset)         (GdaMetaStore *store, GdaMetaContext *suggest);
+	void     (*meta_reset)    (GdaMetaStore *store);
 	GError  *(*suggest_update)(GdaMetaStore *store, GdaMetaContext *suggest);
 	void     (*meta_changed)  (GdaMetaStore *store, GSList *changes);
 };
@@ -119,9 +120,6 @@ gboolean          gda_meta_store_schema_remove_custom_object (GdaMetaStore *stor
 GSList           *gda_meta_store_schema_get_all_tables    (GdaMetaStore *store);
 GSList           *gda_meta_store_schema_get_depend_tables (GdaMetaStore *store, const gchar *table_name);
 GdaMetaStruct    *gda_meta_store_schema_get_structure     (GdaMetaStore *store, GError **error);
-
-GSList           *_gda_meta_store_schema_get_upstream_contexts (GdaMetaStore *store, GdaMetaContext *context, GError **error);
-GSList           *_gda_meta_store_schema_get_downstream_contexts (GdaMetaStore *store, GdaMetaContext *context, GError **error);
 
 G_END_DECLS
 

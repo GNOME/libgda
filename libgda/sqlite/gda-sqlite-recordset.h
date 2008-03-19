@@ -25,7 +25,6 @@
 #ifndef __GDA_SQLITE_RECORDSET_H__
 #define __GDA_SQLITE_RECORDSET_H__
 
-#include <libgda/gda-data-model-hash.h>
 #include <libgda/gda-value.h>
 #include <libgda/gda-connection.h>
 #include <libgda/providers-support/gda-pmodel.h>

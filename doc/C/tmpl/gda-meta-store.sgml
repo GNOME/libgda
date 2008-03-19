@@ -19,8 +19,8 @@ Dictionary object
 </para>
 <para>
   &LIBGDA; imposes its own structure (based on objects such as tables and views which name starts with an underscore '_'),
-  but a user can also add its own tables or other database objects. The following diagram shows the tables and
-  views initially defined by &LIBGDA; for its internal needs:
+  but a user can also add its own tables or other database objects. The following diagram shows the tables 
+  defined by &LIBGDA; for its internal needs:
   <mediaobject>
     <imageobject role="html">
       <imagedata fileref="information_schema.png" format="PNG"/>
@@ -28,12 +28,6 @@ Dictionary object
     <textobject>
       <phrase>Dictioanry's tables and views initially defined by &LIBGDA;</phrase>
     </textobject>
-    <caption>
-      <para>
-	The square boxes represent tables and the round onew the views. Edges represent foreign keys for
-	tables and used tables for views.
-      </para>
-    </caption>
   </mediaobject>
 </para>
 
@@ -58,6 +52,13 @@ Dictionary object
 
 @gdametastore: the object which received the signal.
 @arg1: 
+
+<!-- ##### SIGNAL GdaMetaStore::meta-reset ##### -->
+<para>
+
+</para>
+
+@gdametastore: the object which received the signal.
 
 <!-- ##### SIGNAL GdaMetaStore::suggest-update ##### -->
 <para>
@@ -104,6 +105,7 @@ Dictionary object
 @GDA_META_STORE_SCHEMA_OBJECT_NOT_FOUND_ERROR: 
 @GDA_META_STORE_SCHEMA_OBJECT_CONFLICT_ERROR: 
 @GDA_META_STORE_SCHEMA_OBJECT_DESCR_ERROR: 
+@GDA_META_STORE_TRANSACTION_ALREADY_STARTED_ERROR: 
 
 <!-- ##### STRUCT GdaMetaStoreChange ##### -->
 <para>
@@ -183,6 +185,18 @@ Dictionary object
 @condition: 
 @error: 
 @Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_meta_store_modify_with_context ##### -->
+<para>
+
+</para>
+
+@store: 
+@context: 
+@new_data: 
+@error: 
 @Returns: 
 
 

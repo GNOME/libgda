@@ -40,6 +40,7 @@
 #include <libgda/gda-set.h>
 #include <sql-parser/gda-sql-parser.h>
 #include <sql-parser/gda-statement-struct-trans.h>
+#include <libgda/gda-meta-store-extra.h>
 
 #define PROV_CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
 
@@ -1735,6 +1736,36 @@ build_downstream_context_templates (GdaMetaStore *store, GdaMetaContext *context
 	}
 }
 
+static gchar *
+meta_context_stringify (GdaMetaContext *context)
+{
+	gint i;
+	gchar *str;
+	GString *string = g_string_new ("");
+
+	for (i = 0; i < context->size; i++) {
+		if (i > 0)
+			g_string_append_c (string, ' ');
+		str = gda_value_stringify (context->column_values[i]);
+		g_string_append_printf (string, " [%s => %s]", context->column_names[i], str);
+		g_free (str);
+	}
+	if (i == 0)
+		g_string_append (string, "---");
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+}
+
+static void
+meta_context_dump (GdaMetaContext *context)
+{
+	gchar *str;
+	str = meta_context_stringify (context);
+	g_print ("GdaMetaContext for table %s: %s\n", context->table_name, str);
+	g_free (str);
+}
+
 /*
  *
  */
@@ -1799,29 +1830,16 @@ check_parameters (GdaMetaContext *context, GError **error, gint nb, ...)
 			}
 		}
 	}
-	else 
+	else {
+		gchar *str;
+		str = meta_context_stringify (context);
 		g_set_error (error, 0, 0,
-			     _("Missing or wrong arguments"));
+			     _("Missing or wrong arguments for table '%s': %s"), context->table_name, str);
+		g_free (str);
+	}
 
 	/*g_print ("Check arguments context => found %d\n", retval);*/
 	return retval;
-}
-
-static void
-meta_context_dump (GdaMetaContext *context)
-{
-	gint i;
-	g_print ("GdaMetaContext for table %s:", context->table_name);
-	for (i = 0; i < context->size; i++) {
-		gchar *str;
-		str = gda_value_stringify (context->column_values[i]);
-		g_print (" [%s => %s]", context->column_names[i], str);
-		g_free (str);
-	}
-	if (i == 0)
-		g_print (" ---\n");
-	else
-		g_print ("\n");
 }
 
 static gboolean
@@ -1839,6 +1857,12 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 	const gchar *tname = context->table_name;
 	GdaMetaStore *store;
 	gboolean retval;
+
+	const GValue *catalog = NULL;
+	const GValue *schema = NULL;
+	const GValue *name = NULL;
+	gint i;
+
 
 #ifdef GDA_DEBUG_NO
 	g_print ("%s() => ", __FUNCTION__);
@@ -1872,10 +1896,6 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			 *  -1- @character_set_catalog, @character_set_schema, @character_set_name
 			 *  -2- @collation_catalog, @collation_schema, @collation_name
 			 */
-			const GValue *catalog = NULL;
-			const GValue *schema = NULL;
-			const GValue *name = NULL;
-			gint i;
 			i = check_parameters (context, error, 3,
 					      &catalog, G_TYPE_STRING,
 					      &schema, G_TYPE_STRING,
@@ -1902,6 +1922,178 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 				return TRUE;
 			}
 		}
+		else if ((tname[1] == 'o') && (tname[2] == 'l')) {
+			/* _collations, params: 
+			 *  -0- @collation_catalog, @collation_schema, @collation_name
+			 *  -1- @collation_catalog, @collation_schema
+			 */
+			i = check_parameters (context, error, 2,
+					      &catalog, G_TYPE_STRING,
+					      &schema, G_TYPE_STRING,
+					      &name, G_TYPE_STRING, NULL,
+					      "collation_catalog", &catalog, "collation_schema", &schema, "collation_name", &name, NULL,
+					      "collation_catalog", &catalog, "collation_schema", &schema, NULL);
+			if (i < 0)
+				return FALSE;
+			
+			ASSERT_TABLE_NAME (tname, "collations");
+			if (!PROV_CLASS (provider)->meta_funcs.collations) {
+				WARN_METHOD_NOT_IMPLEMENTED (provider, "collations");
+				break;
+			}
+			retval = PROV_CLASS (provider)->meta_funcs.collations (provider, cnc, store, context, error, 
+									       catalog, schema, name);
+			WARN_META_UPDATE_FAILURE (retval, "collations");
+			return retval;
+		}
+		else if ((tname[1] == 'h') && (tname[1] == 'a')) {
+			/* _character_sets, params: 
+			 *  -0- @character_set_catalog, @character_set_schema, @character_set_name
+			 *  -1- @character_set_catalog, @character_set_schema
+			 */
+			i = check_parameters (context, error, 2,
+					      &catalog, G_TYPE_STRING,
+					      &schema, G_TYPE_STRING,
+					      &name, G_TYPE_STRING, NULL,
+					      "character_set_catalog", &catalog, "character_set_schema", &schema, "character_set_name", &name, NULL,
+					      "character_set_catalog", &catalog, "character_set_schema", &schema, NULL);
+			if (i < 0)
+				return FALSE;
+			
+			ASSERT_TABLE_NAME (tname, "character_sets");
+			if (!PROV_CLASS (provider)->meta_funcs.character_sets) {
+				WARN_METHOD_NOT_IMPLEMENTED (provider, "character_sets");
+				break;
+			}
+			retval = PROV_CLASS (provider)->meta_funcs.character_sets (provider, cnc, store, context, error, 
+										   catalog, schema, name);
+			WARN_META_UPDATE_FAILURE (retval, "character_sets");
+			return retval;
+		}
+		else if ((tname[1] == 'h') && (tname[1] == 'e')) {
+			/* _check_column_usage, params: 
+			 *  -0- @table_catalog, @table_schema, @table_name, @constraint_name
+			 *  -1- @table_catalog, @table_schema, @table_name, @column_name
+			 */
+			const GValue *tabname = NULL;
+			const GValue *cname = NULL;
+			i = check_parameters (context, error, 2,
+					      &catalog, G_TYPE_STRING,
+					      &schema, G_TYPE_STRING,
+					      &tabname, G_TYPE_STRING,
+					      &cname, G_TYPE_STRING, NULL,
+					      "table_catalog", &catalog, "table_schema", &schema, "table_name", &tabname, "constraint_name", &cname, NULL,
+					      "table_catalog", &catalog, "table_schema", &schema, "table_name", &tabname, "column_name", &cname, NULL);
+			if (i < 0)
+				return FALSE;
+			
+			ASSERT_TABLE_NAME (tname, "check_column_usage");
+			if (i == 0) {
+				if (!PROV_CLASS (provider)->meta_funcs.check_columns) {
+					WARN_METHOD_NOT_IMPLEMENTED (provider, "check_columns");
+					break;
+				}
+				retval = PROV_CLASS (provider)->meta_funcs.check_columns (provider, cnc, store, context, error, 
+											  catalog, schema, tabname, cname);
+				WARN_META_UPDATE_FAILURE (retval, "check_columns");
+				return retval;
+			}
+			else {
+				/* nothing to do */
+				return TRUE;
+			}
+		}
+		break;
+
+	case 'd': 
+		if ((tname[1] == 'o') && (tname[2] == 'm') && (tname[3] == 'a') && (tname[4] == 'i') && (tname[5] == 'n') &&
+		    (tname[6] == 's')) {
+			/* _domains, params: 
+			 *  -0- @domain_catalog, @domain_schema
+			 */
+			i = check_parameters (context, error, 1,
+					      &catalog, G_TYPE_STRING,
+					      &schema, G_TYPE_STRING, NULL,
+					      "domain_catalog", &catalog, "domain_schema", &schema, NULL);
+			if (i < 0)
+				return FALSE;
+			
+			ASSERT_TABLE_NAME (tname, "domains");
+			if (!PROV_CLASS (provider)->meta_funcs.domains) {
+				WARN_METHOD_NOT_IMPLEMENTED (provider, "domains");
+				break;
+			}
+			retval = PROV_CLASS (provider)->meta_funcs.domains (provider, cnc, store, context, error, 
+									    catalog, schema);
+			WARN_META_UPDATE_FAILURE (retval, "domains");
+			return retval;
+		}
+		else {
+			/* _domain_constraints, params: 
+			 *  -0- @domain_catalog, @domain_schema, @domain_name
+			 *  -1- @constraint_catalog, @constraint_schema
+			 */
+			const GValue *domname = NULL;
+			i = check_parameters (context, error, 2,
+					      &catalog, G_TYPE_STRING,
+					      &schema, G_TYPE_STRING,
+					      &domname, G_TYPE_STRING, NULL,
+					      "domain_catalog", &catalog, "domain_schema", &schema, "domain_name", &domname, NULL,
+					      "constraint_catalog", &catalog, "constraint_schema", &schema, NULL);
+
+			if (i < 0)
+				return FALSE;
+			if (i == 1)
+				return TRUE; /* nothing to do */
+
+			ASSERT_TABLE_NAME (tname, "domain_constraints");
+			if (!PROV_CLASS (provider)->meta_funcs.constraints_tab) {
+				WARN_METHOD_NOT_IMPLEMENTED (provider, "constraints_dom");
+				break;
+			}
+			retval = PROV_CLASS (provider)->meta_funcs.constraints_dom (provider, cnc, store, context, error,
+										    catalog, schema, domname);
+			WARN_META_UPDATE_FAILURE (retval, "constraints_dom");
+			return retval;
+		}
+		break;
+
+	case 'e':
+		if (tname[1] == 'n') {
+			/* _enums, params: 
+			 *  -0- @udt_catalog, @udt_schema, @udt_name
+			 */
+			i = check_parameters (context, error, 1,
+					      &catalog, G_TYPE_STRING,
+					      &schema, G_TYPE_STRING,
+					      &name, G_TYPE_STRING, NULL,
+					      "udt_catalog", &catalog, "udt_schema", &schema, "udt_name", &name, NULL);
+			if (i < 0)
+				return FALSE;
+			
+			ASSERT_TABLE_NAME (tname, "enums");
+			if (!PROV_CLASS (provider)->meta_funcs.enums) {
+				WARN_METHOD_NOT_IMPLEMENTED (provider, "enums");
+				break;
+			}
+			retval = PROV_CLASS (provider)->meta_funcs.enums (provider, cnc, store, context, error, 
+									  catalog, schema, name);
+			WARN_META_UPDATE_FAILURE (retval, "enums");
+			return retval;
+		}
+		else {
+			/* _element_types, params: 
+			 *  - none
+			 */
+			ASSERT_TABLE_NAME (tname, "element_types");
+			if (!PROV_CLASS (provider)->meta_funcs._el_types) {
+				WARN_METHOD_NOT_IMPLEMENTED (provider, "_el_types");
+				break;
+			}
+			retval = PROV_CLASS (provider)->meta_funcs._el_types (provider, cnc, store, context, error);
+			WARN_META_UPDATE_FAILURE (retval, "_el_types");
+			return retval;
+		}
 		break;
 
 	case 'i':
@@ -1922,11 +2114,8 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 		 *  -0- @table_catalog, @table_schema, @table_name, @constraint_name
 		 *  -0- @ref_table_catalog, @ref_table_schema, @ref_table_name, @ref_constraint_name
 		 */
-		const GValue *catalog = NULL;
-		const GValue *schema = NULL;
 		const GValue *tabname = NULL;
 		const GValue *cname = NULL;
-		gint i;
 		i = check_parameters (context, error, 2,
 				      &catalog, G_TYPE_STRING,
 				      &schema, G_TYPE_STRING,
@@ -1952,7 +2141,30 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			/* nothing to do */
 			return TRUE;
 		}
+		break;
 	}
+
+	case 'p':
+		/* _parameters, params: 
+		 *  -0- @specific_catalog, @specific_schema, @specific_name
+		 */
+		i = check_parameters (context, error, 1,
+				      &catalog, G_TYPE_STRING,
+				      &schema, G_TYPE_STRING,
+				      &name, G_TYPE_STRING, NULL,
+				      "specific_catalog", &catalog, "specific_schema", &schema, "specific_name", &name, NULL);
+		if (i < 0)
+			return FALSE;
+		
+		ASSERT_TABLE_NAME (tname, "parameters");
+		if (!PROV_CLASS (provider)->meta_funcs.routine_par) {
+			WARN_METHOD_NOT_IMPLEMENTED (provider, "routine_par");
+			break;
+		}
+		retval = PROV_CLASS (provider)->meta_funcs.routine_par (provider, cnc, store, context, error, 
+									catalog, schema, name);
+		WARN_META_UPDATE_FAILURE (retval, "routine_par");
+		return retval;
 
 	case 'r': 
 		if ((tname[1] == 'e') && (tname[2] == 'f')) {
@@ -1960,11 +2172,8 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			 *  -0- @table_catalog, @table_schema, @table_name, @constraint_name
 			 *  -0- @ref_table_catalog, @ref_table_schema, @ref_table_name, @ref_constraint_name
 			 */
-			const GValue *catalog = NULL;
-			const GValue *schema = NULL;
 			const GValue *tabname = NULL;
 			const GValue *cname = NULL;
-			gint i;
 			i = check_parameters (context, error, 2,
 					      &catalog, G_TYPE_STRING,
 					      &schema, G_TYPE_STRING,
@@ -1991,6 +2200,53 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 				return TRUE;
 			}
 		}
+		if ((tname[1] == 'o') && (tname[2] == 'u') && (tname[3] == 't') && (tname[4] == 'i') &&
+		    (tname[5] == 'n') && (tname[6] == 'e') && (tname[7] == 's')) {
+			/* _routines, params: 
+			 *  -0- @specific_catalog, @specific_schema, @specific_name
+			 *  -1- @specific_catalog, @specific_schema
+			 */
+			i = check_parameters (context, error, 2,
+					      &catalog, G_TYPE_STRING,
+					      &schema, G_TYPE_STRING,
+					      &name, G_TYPE_STRING, NULL,
+					      "specific_catalog", &catalog, "specific_schema", &schema, "specific_name", &name, NULL,
+					      "specific_catalog", &catalog, "specific_schema", &schema, NULL);
+			if (i < 0)
+				return FALSE;
+			
+			ASSERT_TABLE_NAME (tname, "routines");
+			if (!PROV_CLASS (provider)->meta_funcs.routines) {
+				WARN_METHOD_NOT_IMPLEMENTED (provider, "routines");
+				break;
+			}
+			retval = PROV_CLASS (provider)->meta_funcs.routines (provider, cnc, store, context, error, 
+									     catalog, schema, name);
+			WARN_META_UPDATE_FAILURE (retval, "routines");
+			return retval;
+		}
+		else {
+			/* _routine_columns, params: 
+			 *  -0- @specific_catalog, @specific_schema, @specific_name
+			 */
+			i = check_parameters (context, error, 1,
+					      &catalog, G_TYPE_STRING,
+					      &schema, G_TYPE_STRING,
+					      &name, G_TYPE_STRING, NULL,
+					      "specific_catalog", &catalog, "specific_schema", &schema, "specific_name", &name, NULL);
+			if (i < 0)
+				return FALSE;
+			
+			ASSERT_TABLE_NAME (tname, "routine_columns");
+			if (!PROV_CLASS (provider)->meta_funcs.routine_col) {
+				WARN_METHOD_NOT_IMPLEMENTED (provider, "routine_col");
+				break;
+			}
+			retval = PROV_CLASS (provider)->meta_funcs.routine_col (provider, cnc, store, context, error, 
+										catalog, schema, name);
+			WARN_META_UPDATE_FAILURE (retval, "routine_col");
+			return retval;
+		}
 		break;
 
 	case 's': {
@@ -1998,9 +2254,6 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 		 *  -0- @catalog_name, @schema_name 
 		 *  -1- @catalog_name
 		 */
-		GValue *catalog = NULL;
-		GValue *schema = NULL;
-		gint i;
 		i = check_parameters (context, error, 2,
 				      &schema, G_TYPE_STRING, NULL,
 				      "catalog_name", &catalog, "schema_name", &schema, NULL,
@@ -2024,10 +2277,6 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			 *  -0- @table_catalog, @table_schema, @table_name
 			 *  -1- @table_catalog, @table_schema
 			 */
-			const GValue *catalog = NULL;
-			const GValue *schema = NULL;
-			const GValue *name = NULL;
-			gint i;
 			i = check_parameters (context, error, 2,
 					      &catalog, G_TYPE_STRING,
 					      &schema, G_TYPE_STRING,
@@ -2053,11 +2302,8 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			 *  -0- @table_catalog, @table_schema, @table_name, @constraint_name
 			 *  -1- @table_catalog, @table_schema, @table_name
 			 */
-			const GValue *catalog = NULL;
-			const GValue *schema = NULL;
-			const GValue *tabname = NULL;
 			const GValue *cname = NULL;
-			gint i;
+			const GValue *tabname = NULL;
 			i = check_parameters (context, error, 2,
 					      &catalog, G_TYPE_STRING,
 					      &schema, G_TYPE_STRING,
@@ -2079,7 +2325,118 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			WARN_META_UPDATE_FAILURE (retval, "constraints_tab");
 			return retval;
 		}
+		if ((tname[1] == 'r') && (tname[2] == 'i')) {
+			/* _triggers,  params: 
+			 *  -0- @trigger_catalog, @trigger_schema
+			 *  -1- @event_object_catalog, @event_object_schema, @event_object_table
+			 */
+			i = check_parameters (context, error, 2,
+					      &catalog, G_TYPE_STRING,
+					      &schema, G_TYPE_STRING,
+					      &name, G_TYPE_STRING, NULL,
+					      "trigger_catalog", &catalog, "trigger_schema", &schema, NULL,
+					      "event_object_catalog", &catalog, "event_object_schema", &schema, "event_object_table", &name, NULL);
+			if (i < 0)
+				return FALSE;
+			
+			ASSERT_TABLE_NAME (tname, "triggers");
+			if (i == 1) {
+				if (!PROV_CLASS (provider)->meta_funcs.triggers) {
+					WARN_METHOD_NOT_IMPLEMENTED (provider, "triggers");
+					break;
+				}
+				retval = PROV_CLASS (provider)->meta_funcs.triggers (provider, cnc, store, context, error, 
+										     catalog, schema, name);
+				WARN_META_UPDATE_FAILURE (retval, "triggers");
+				return retval;
+			}
+			else {
+				/* nothing to do */
+				return TRUE;
+			}
+		}
 		break;
+
+	case 'u': 
+		if ((tname[1] == 'd') && (tname[2] == 't') && (tname[3] == 0)) {
+			/* _udt, params: 
+			 *  -0- @udt_catalog, @udt_schema
+			 */
+			i = check_parameters (context, error, 1,
+					      &catalog, G_TYPE_STRING,
+					      &schema, G_TYPE_STRING, NULL,
+					      "udt_catalog", &catalog, "udt_schema", &schema, NULL);
+			if (i < 0)
+				return FALSE;
+			
+			ASSERT_TABLE_NAME (tname, "udt");
+			if (!PROV_CLASS (provider)->meta_funcs.udt) {
+				WARN_METHOD_NOT_IMPLEMENTED (provider, "udt");
+				break;
+			}
+			retval = PROV_CLASS (provider)->meta_funcs.udt (provider, cnc, store, context, error, 
+									catalog, schema);
+			WARN_META_UPDATE_FAILURE (retval, "udt");
+			return retval;
+		}
+		else if ((tname[1] == 'd') && (tname[2] == 't') && (tname[3] == '_')) {
+			/* _udt, params: 
+			 *  -0- @udt_catalog, @udt_schema, @udt_name
+			 */
+			i = check_parameters (context, error, 1,
+					      &catalog, G_TYPE_STRING,
+					      &schema, G_TYPE_STRING,
+					      &name, G_TYPE_STRING, NULL,
+					      "udt_catalog", &catalog, "udt_schema", &schema, "udt_name", &name, NULL);
+			if (i < 0)
+				return FALSE;
+			
+			ASSERT_TABLE_NAME (tname, "udt_columns");
+			if (!PROV_CLASS (provider)->meta_funcs.udt_cols) {
+				WARN_METHOD_NOT_IMPLEMENTED (provider, "udt_cols");
+				break;
+			}
+			retval = PROV_CLASS (provider)->meta_funcs.udt_cols (provider, cnc, store, context, error, 
+									     catalog, schema, name);
+			WARN_META_UPDATE_FAILURE (retval, "udt_cols");
+			return retval;
+		}
+		break;
+
+	case 'v': {
+		/* _view_column_usage,  params: 
+		 *  -0- @view_catalog, @view_schema, @view_name
+		 *  -1- @table_catalog, @table_schema, @table_name, @column_name
+		 */
+		const GValue *colname = NULL;
+		i = check_parameters (context, error, 2,
+				      &catalog, G_TYPE_STRING,
+				      &schema, G_TYPE_STRING,
+				      &colname, G_TYPE_STRING,
+				      &name, G_TYPE_STRING, NULL,
+				      "view_catalog", &catalog, "view_schema", &schema, "view_name", &name, NULL,
+				      "table_catalog", &catalog, "table_schema", &schema, "table_name", &name, 
+				      "column_name", &colname, NULL);
+		if (i < 0)
+			return FALSE;
+		
+		ASSERT_TABLE_NAME (tname, "view_column_usage");
+		if (i == 0) {
+			if (!PROV_CLASS (provider)->meta_funcs.view_cols) {
+				WARN_METHOD_NOT_IMPLEMENTED (provider, "view_cols");
+				break;
+			}
+			retval = PROV_CLASS (provider)->meta_funcs.view_cols (provider, cnc, store, context, error, 
+									      catalog, schema, name);
+			WARN_META_UPDATE_FAILURE (retval, "view_cols");
+			return retval;
+		}
+		else {
+			/* nothing to do */
+			return TRUE;
+		}
+		break;
+	}
 	default:
 		break;
 	}
@@ -2089,8 +2446,7 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 typedef struct {
 	GdaServerProvider  *prov;
 	GdaConnection      *cnc;
-	GError            **error;
-	gboolean            error_set;
+	GError             *error;
 	GSList             *context_templates;
 	GHashTable         *context_templates_hash;
 } DownstreamCallbackData;
@@ -2099,8 +2455,8 @@ static GError *
 suggest_update_cb_downstream (GdaMetaStore *store, GdaMetaContext *suggest, DownstreamCallbackData *data)
 {
 #define MAX_CONTEXT_SIZE 10
-	if (data->error && *(data->error))
-		return *(data->error);
+	if (data->error)
+		return data->error;
 
 	GdaMetaContext *templ_context;
 	GdaMetaContext loc_suggest;
@@ -2174,15 +2530,18 @@ suggest_update_cb_downstream (GdaMetaStore *store, GdaMetaContext *suggest, Down
 
 		suggest = &loc_suggest;
 	}
-
-	if (!local_meta_update (data->prov, data->cnc, suggest, data->error)) {
-		data->error_set = TRUE;
-
-		if (! (*(data->error)))
-			g_set_error (data->error, 0, 0,
+	
+	GError *lerror = NULL;
+	if (!local_meta_update (data->prov, data->cnc, suggest, &lerror)) {
+		if (lerror)
+			data->error = lerror;
+		else {
+			g_set_error (&lerror, 0, 0,
 				     _("Meta update error"));
+			data->error = lerror;
+		}
 
-		return *(data->error);
+		return data->error;
 	}
 
 	return NULL;
@@ -2261,8 +2620,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		
 		cbd.prov = cnc->priv->provider_obj;
 		cbd.cnc = cnc;
-		cbd.error = &lerror;
-		cbd.error_set = FALSE;
+		cbd.error = NULL;
 		cbd.context_templates = g_slist_concat (g_slist_append (up_templates, context), dn_templates);
 		cbd.context_templates_hash = g_hash_table_new (g_str_hash, g_str_equal);
 		for (list = cbd.context_templates; list; list = list->next) 
@@ -2276,15 +2634,6 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 					    (GdaMetaContext*) (cbd.context_templates->data), error);
 		
 		g_signal_handler_disconnect (store, signal_id);
-		if (cbd.error_set) {
-			if (lerror) {
-				if (error && !*error)
-					g_propagate_error (error, lerror);
-				else
-					g_error_free (lerror);
-			}
-			retval = FALSE;
-		}
 
 		/* free the memory associated with each template */
 		for (list = cbd.context_templates; list; list = list->next) {
@@ -2303,18 +2652,84 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		return retval;
 	}
 	else {
-		/* no context specified => update everything */
-		memset (&lcontext, 0, sizeof (GdaMetaContext));
-		lcontext.table_name = "_builtin_data_types";
-		if (!gda_connection_update_meta_store (cnc, &lcontext, error))
+		typedef gboolean (*RFunc) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+					   GdaMetaContext *, GError **);
+		typedef struct {
+			gchar *table_name;
+			gchar *func_name;
+			RFunc  func;
+		} RMeta;
+
+		gint nb = 0, i;
+		static RMeta rmeta[] = {
+			{"_information_schema_catalog_name", "_info", NULL},
+			{"_builtin_data_types", "_btypes", NULL},
+			{"_udt", "_udt", NULL},
+			{"_udt_columns", "_udt_cols", NULL},
+			{"_enums", "_enums", NULL},
+			{"_domains", "_domains", NULL},
+			{"_domain_constraints", "_constraints_dom", NULL},
+			{"_element_types", "_el_types", NULL},
+			{"_collations", "_collations", NULL},
+			{"_character_sets", "_character_sets", NULL},
+			{"_schemata", "_schemata", NULL},
+			{"_tables_views", "_tables_views", NULL},
+			{"_columns", "_columns", NULL},
+			{"_view_column_usage", "_view_cols", NULL},
+			{"_table_constraints", "_constraints_tab", NULL},
+			{"_referential_constraints", "_constraints_ref", NULL},
+			{"_key_column_usage", "_key_columns", NULL},
+			{"_check_column_usage", "_check_columns", NULL},
+			{"_triggers", "_triggers", NULL},
+			{"_routines", "_routines", NULL},
+			{"_routine_columns", "_routine_col", NULL},
+			{"_parameters", "_routine_par", NULL}
+		};
+		GdaServerProvider *provider = cnc->priv->provider_obj;
+		rmeta [nb++].func = PROV_CLASS (provider)->meta_funcs._info;
+		rmeta [nb++].func = PROV_CLASS (provider)->meta_funcs._btypes;
+		rmeta [nb++].func = PROV_CLASS (provider)->meta_funcs._udt;
+		rmeta [nb++].func = PROV_CLASS (provider)->meta_funcs._udt_cols;
+		rmeta [nb++].func = PROV_CLASS (provider)->meta_funcs._enums;
+		rmeta [nb++].func = PROV_CLASS (provider)->meta_funcs._domains;
+		rmeta [nb++].func = PROV_CLASS (provider)->meta_funcs._constraints_dom;
+		rmeta [nb++].func = PROV_CLASS (provider)->meta_funcs._el_types;
+		rmeta [nb++].func = PROV_CLASS (provider)->meta_funcs._collations;
+		rmeta [nb++].func = PROV_CLASS (provider)->meta_funcs._character_sets;
+		rmeta [nb++].func = PROV_CLASS (provider)->meta_funcs._schemata;
+		rmeta [nb++].func = PROV_CLASS (provider)->meta_funcs._tables_views;
+		rmeta [nb++].func = PROV_CLASS (provider)->meta_funcs._columns;
+		rmeta [nb++].func = PROV_CLASS (provider)->meta_funcs._view_cols;
+		rmeta [nb++].func = PROV_CLASS (provider)->meta_funcs._constraints_tab;
+		rmeta [nb++].func = PROV_CLASS (provider)->meta_funcs._constraints_ref;
+		rmeta [nb++].func = PROV_CLASS (provider)->meta_funcs._key_columns;
+		rmeta [nb++].func = PROV_CLASS (provider)->meta_funcs._check_columns;
+		rmeta [nb++].func = PROV_CLASS (provider)->meta_funcs._triggers;
+		rmeta [nb++].func = PROV_CLASS (provider)->meta_funcs._routines;
+		rmeta [nb++].func = PROV_CLASS (provider)->meta_funcs._routine_col;
+		rmeta [nb++].func = PROV_CLASS (provider)->meta_funcs._routine_par;
+		g_assert (nb == sizeof (rmeta) / sizeof (RMeta));
+
+		if (! _gda_meta_store_begin_data_reset (store, error))
 			return FALSE;
-		lcontext.table_name = "_udt";
-		if (!gda_connection_update_meta_store (cnc, &lcontext, error))
-			return FALSE;
-		lcontext.table_name = "_information_schema_catalog_name";
-		if (!gda_connection_update_meta_store (cnc, &lcontext, error))
-			return FALSE;
-		return TRUE;
+
+		lcontext.size = 0;
+		for (i = 0; i < nb; i++) {
+			if (! rmeta [i].func) 
+				WARN_METHOD_NOT_IMPLEMENTED (provider, rmeta [i].func_name);
+			else {
+				lcontext.table_name = rmeta [i].table_name;
+				if (!rmeta [i].func (provider, cnc, store, &lcontext, error)) {
+					WARN_META_UPDATE_FAILURE (FALSE, rmeta [i].func_name);
+					goto onerror;
+				}
+			}
+		}
+		return _gda_meta_store_finish_data_reset (store, error);
+
+	onerror:
+		_gda_meta_store_cancel_data_reset (store, NULL);
+		return FALSE;
 	}
 }
 

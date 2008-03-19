@@ -28,12 +28,12 @@
   </specifics>
 
   <!-- schema description -->
-  <table name="_attributes">
+  <table name="_attributes" descr="(key,value) pairs, keys starting with '_' are reserved">
     <column name="att_name" pkey="TRUE"/>
     <column name="att_value"/>
   </table>
 
-  <table name="_information_schema_catalog_name">
+  <table name="_information_schema_catalog_name" descr="One row: the name of the current database (current catalog)">
     <column name="catalog_name" pkey="TRUE"/>
   </table>
 
@@ -83,18 +83,19 @@
     <column name="udt_schema" pkey="TRUE"/>
     <column name="udt_name" pkey="TRUE"/>
     <column name="udt_column" pkey="TRUE"/>
+    <column name="ordinal_position" type="gint" descr="Column position, starts at 1"/>
     <column name="data_type" descr="References _all_types.full_type_name or _element_types.specific_name"/>
     <column name="character_maximum_length" type="gint" nullok="TRUE"/>
     <column name="character_octet_length" type="gint" nullok="TRUE"/>
     <column name="numeric_precision" type="gint" nullok="TRUE"/>
     <column name="numeric_scale" type="gint" nullok="TRUE"/>
     <column name="datetime_precision" type="gint" nullok="TRUE"/>
-    <column name="character_set_catalog"/>
-    <column name="character_set_schema"/>
-    <column name="character_set_name"/>
-    <column name="collation_catalog"/>
-    <column name="collation_schema"/>
-    <column name="collation_name"/>
+    <column name="character_set_catalog" nullok="TRUE"/>
+    <column name="character_set_schema" nullok="TRUE"/>
+    <column name="character_set_name" nullok="TRUE"/>
+    <column name="collation_catalog" nullok="TRUE"/>
+    <column name="collation_schema" nullok="TRUE"/>
+    <column name="collation_name" nullok="TRUE"/>
     <fkey ref_table="_udt">
       <part column="udt_catalog"/>
       <part column="udt_schema"/>
@@ -132,6 +133,7 @@
     <column name="domain_schema" pkey="TRUE"/>
     <column name="domain_name" pkey="TRUE"/>
     <column name="data_type" nullok="TRUE"/>
+    <column name="gtype"/>
     <column name="character_maximum_length" type="gint" nullok="TRUE"/>
     <column name="character_octet_length" type="gint" nullok="TRUE"/>
     <column name="collation_catalog" nullok="TRUE"/>
@@ -143,7 +145,6 @@
     <column name="numeric_precision" type="gint" nullok="TRUE"/>
     <column name="numeric_scale" type="gint" nullok="TRUE"/>
     <column name="domain_default" nullok="TRUE"/>
-    <column name="domain_gtype" nullok="TRUE"/>
     <column name="domain_comments" nullok="TRUE"/>
     <column name="domain_short_name"/>
     <column name="domain_full_name"/>
@@ -426,6 +427,9 @@
     <column name="view_catalog" pkey="TRUE"/>
     <column name="view_schema" pkey="TRUE"/>
     <column name="view_name" pkey="TRUE"/>
+    <column name="table_catalog" pkey="TRUE"/>
+    <column name="table_schema" pkey="TRUE"/>
+    <column name="table_name" pkey="TRUE"/>
     <column name="column_name" pkey="TRUE"/>
     <fkey ref_table="_views">
       <part column="view_catalog" ref_column="table_catalog"/>
@@ -433,10 +437,10 @@
       <part column="view_name" ref_column="table_name"/>
     </fkey>
     <fkey ref_table="_columns">
-      <part column="view_catalog" ref_column="table_catalog"/>
-      <part column="view_schema" ref_column="table_schema"/>
-      <part column="view_name" ref_column="table_name"/>
-      <part column="column_name" ref_column="column_name"/>
+      <part column="table_catalog"/>
+      <part column="table_schema"/>
+      <part column="table_name"/>
+      <part column="column_name"/>
     </fkey>
   </table>
 
@@ -505,5 +509,16 @@ SELECT domain_short_name, domain_gtype, domain_full_name, domain_comments, domai
        domain_catalog, domain_schema, domain_name , NULL, NULL, NULL FROM _domains</definition>
   </view>
 
+  <view name="_detailled_fk">
+    <definition>SELECT rc.table_catalog as fk_table_catalog, rc.table_schema as fk_table_schema, rc.table_name as fk_table_name, kc1.column_name as fk_column,
+      rc.ref_table_catalog as ref_table_catalog, rc.ref_table_schema as ref_table_schema, rc.ref_table_name as ref_table_name, kc2.column_name as ref_column,
+      rc.constraint_name as fk_constraint_name, kc1.ordinal_position as ordinal_position
+      FROM _referential_constraints rc 
+      INNER JOIN _key_column_usage kc2 ON (rc.ref_table_catalog=kc2.table_catalog AND rc.ref_table_schema=kc2.table_schema AND rc.ref_table_name=kc2.table_name AND rc.ref_constraint_name=kc2.constraint_name) 
+      INNER JOIN _key_column_usage kc1 ON (rc.table_catalog=kc1.table_catalog AND rc.table_schema=kc1.table_schema AND rc.table_name=kc1.table_name AND rc.constraint_name=kc1.constraint_name) 
+      WHERE kc1.ordinal_position = kc2.ordinal_position 
+      ORDER BY rc.table_catalog, rc.table_schema, rc.table_name, kc1.ordinal_position
+    </definition>
+  </view>
 
 </schema>

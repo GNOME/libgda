@@ -47,7 +47,6 @@
 <!ENTITY libgda-GdaDataModelBdb SYSTEM "xml/gda-data-model-bdb.xml">
 <!ENTITY libgda-GdaDataModelDir SYSTEM "xml/gda-data-model-dir.xml">
 <!ENTITY libgda-GdaDataModelQuery SYSTEM "xml/gda-data-model-query.xml">
-<!ENTITY libgda-GdaDataModelHash SYSTEM "xml/gda-data-model-hash.xml">
 <!ENTITY libgda-GdaDataModelRow SYSTEM "xml/gda-data-model-row.xml">
 <!ENTITY libgda-GdaDataModel SYSTEM "xml/gda-data-model.xml">
 <!ENTITY libgda-GdaDataModelIter SYSTEM "xml/gda-data-model-iter.xml">
@@ -572,7 +571,6 @@
       &libgda-GdaDataModelArray;
       &libgda-GdaDataModelBdb;
       &libgda-GdaDataModelDir;
-      &libgda-GdaDataModelHash;
       &libgda-GdaDataModelQuery;
       &libgda-GdaDataProxy;
       &libgda-GdaDataModelIndex;

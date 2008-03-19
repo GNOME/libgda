@@ -33,8 +33,8 @@ open_connection ()
 	GdaSqlParser *parser;
 
 	/* open connection */
-        cnc = gda_connection_open_from_string ("SQLite", "DB_DIR=.;DB_NAME=example_db", NULL, NULL,
-					       GDA_CONNECTION_OPTIONS_DONT_SHARE,
+        cnc = gda_connection_open_from_string ("SQLite", "DB_DIR=.;DB_NAME=example_db", NULL,
+					       GDA_CONNECTION_OPTIONS_NONE,
 					       &error);
         if (!cnc) {
                 g_print ("Could not open connection to SQLite database in example_db.db file: %s\n",
@@ -63,6 +63,7 @@ create_table (GdaConnection *cnc)
                             "name string not null, price real)");
 	run_sql_non_select (cnc, "INSERT INTO products VALUES ('p1', 'chair', 2.0)");
 	run_sql_non_select (cnc, "INSERT INTO products VALUES ('p2', 'table', 5.0)");
+
 	run_sql_non_select (cnc, "INSERT INTO products VALUES ('p3', 'glass', 1.1)");
 }
 

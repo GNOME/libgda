@@ -33,9 +33,8 @@ open_connection (void)
 	GdaSqlParser *parser;
 
 	/* open connection */
-        cnc = gda_connection_open_from_string ("SQLite", "DB_DIR=.;DB_NAME=example_db", NULL, NULL,
-					       GDA_CONNECTION_OPTIONS_DONT_SHARE,
-					       &error);
+        cnc = gda_connection_open_from_string ("SQLite", "DB_DIR=.;DB_NAME=example_db", NULL,
+					       GDA_CONNECTION_OPTIONS_NONE, &error);
         if (!cnc) {
                 g_print ("Could not open connection to SQLite database in example_db.db file: %s\n",
                          error && error->message ? error->message : "No detail");

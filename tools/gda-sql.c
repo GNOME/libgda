@@ -2427,7 +2427,7 @@ create_graph_from_meta_struct (GdaConnection *cnc, GdaMetaStruct *mstruct, GErro
 						    "Use 'dot' (from the GraphViz package) to create a picture, for example:\n"
 						    "\tdot -Tpng -o graph.png %s\n"
 						    "Note: set the GDA_SQL_VIEWER_PNG or GDA_SQL_VIEWER_PDF environment "
-						    "variables to view the graph"), FNAME, FNAME);
+						    "variables to view the graph\n"), FNAME, FNAME);
 	}
 	g_free (graph);
 	return result;

@@ -40,7 +40,6 @@ gda_headers = \
 	$(GDA_BDB_H) \
 	gda-data-model-dir.h \
 	gda-data-model-extra.h \
-	gda-data-model-hash.h \
 	gda-data-model-import.h \
 	gda-data-model-index.h \
 	gda-data-model-iter.h \
@@ -93,7 +92,6 @@ libgda_sources =  \
 	gda-data-model-dir.c \
 	gda-data-model-dsn-list.c \
 	gda-data-model-dsn-list.h \
-	gda-data-model-hash.c \
 	gda-data-model-import.c \
 	gda-data-model-index.c \
 	gda-data-model-iter.c \
@@ -106,6 +104,7 @@ libgda_sources =  \
 	gda-log.c \
 	gda-marshal.c \
 	gda-meta-store.c \
+	gda-meta-store-extra.h \
 	gda-meta-struct.c \
 	gda-quark-list.c \
 	gda-set.c \

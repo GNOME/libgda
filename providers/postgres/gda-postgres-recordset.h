@@ -40,12 +40,12 @@ typedef struct _GdaPostgresRecordsetClass   GdaPostgresRecordsetClass;
 typedef struct _GdaPostgresRecordsetPrivate GdaPostgresRecordsetPrivate;
 
 struct _GdaPostgresRecordset {
-	GdaPModel                model;
+	GdaPModel                    model;
 	GdaPostgresRecordsetPrivate *priv;
 };
 
 struct _GdaPostgresRecordsetClass {
-	GdaPModelClass             parent_class;
+	GdaPModelClass               parent_class;
 };
 
 GType         gda_postgres_recordset_get_type   (void) G_GNUC_CONST;

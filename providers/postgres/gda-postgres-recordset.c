@@ -2,7 +2,7 @@
  * Copyright (C) 2008 The GNOME Foundation.
  *
  * AUTHORS:
- *      TO_ADD: your name and email
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -72,8 +72,6 @@ static gboolean fetch_row_number_chunk (GdaPostgresRecordset *model, int row_ind
 
 
 struct _GdaPostgresRecordsetPrivate {
-	GdaConnection    *cnc;
-
 	/* random access attributes */
 	PGresult         *pg_res;
 
@@ -107,7 +105,6 @@ gda_postgres_recordset_init (GdaPostgresRecordset *recset, GdaPostgresRecordsetC
 {
 	g_return_if_fail (GDA_IS_POSTGRES_RECORDSET (recset));
 	recset->priv = g_new0 (GdaPostgresRecordsetPrivate, 1);
-	recset->priv->cnc = NULL;
 
 	recset->priv->pg_res = NULL;
         recset->priv->pg_pos = G_MININT;
@@ -158,9 +155,6 @@ gda_postgres_recordset_dispose (GObject *object)
 	if (recset->priv) {
 		if (recset->priv->tmp_row)
 			g_object_unref (recset->priv->tmp_row);
-
-		if (recset->priv->cnc) 
-			g_object_unref (recset->priv->cnc);
 
 		if (recset->priv->pg_res)
 			PQclear (recset->priv->pg_res);
@@ -338,10 +332,9 @@ gda_postgres_recordset_new_random (GdaConnection *cnc, GdaPostgresPStmt *ps, PGr
 	finish_prep_stmt_init (cdata, ps, pg_res, col_types);
 
 	/* create data model */
-        model = g_object_new (GDA_TYPE_POSTGRES_RECORDSET, "prepared-stmt", ps, 
+        model = g_object_new (GDA_TYPE_POSTGRES_RECORDSET, "connection", cnc, 
+			      "prepared-stmt", ps, 
 			      "model-usage", GDA_DATA_MODEL_ACCESS_RANDOM, NULL);
-        model->priv->cnc = cnc;
-	g_object_ref (cnc);
 	model->priv->pg_res = pg_res;
 	((GdaPModel*) model)->advertized_nrows = PQntuples (model->priv->pg_res);
 
@@ -395,10 +388,9 @@ gda_postgres_recordset_new_cursor (GdaConnection *cnc, GdaPostgresPStmt *ps, gch
 		PQclear (pg_res);
 
 	/* create model */
-	model = g_object_new (GDA_TYPE_POSTGRES_RECORDSET, "prepared-stmt", ps, "model-usage", 
+	model = g_object_new (GDA_TYPE_POSTGRES_RECORDSET, "connection", cnc, 
+			      "prepared-stmt", ps, "model-usage", 
 			      GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD | GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD, NULL);
-        model->priv->cnc = cnc;
-	g_object_ref (cnc);
 	model->priv->pconn = cdata->pconn;
 	model->priv->cursor_name = cursor_name;
 	gboolean fetch_error;
@@ -801,7 +793,7 @@ new_row_from_pg_res (GdaPostgresRecordset *imodel, gint pg_res_rownum)
 	for (col = 0; col < ((GdaPModel*) imodel)->prep_stmt->ncols; col++) {
 		thevalue = PQgetvalue (imodel->priv->pg_res, pg_res_rownum, col);
 		isNull = thevalue && *thevalue != '\0' ? FALSE : PQgetisnull (imodel->priv->pg_res, pg_res_rownum, col);
-		set_value (imodel->priv->cnc, 
+		set_value (gda_pmodel_get_connection ((GdaPModel*) imodel),
 			   gda_prow_get_value (prow, col), 
 			   ((GdaPModel*) imodel)->prep_stmt->types [col], 
 			   thevalue, isNull, 
@@ -836,7 +828,8 @@ fetch_next_chunk (GdaPostgresRecordset *model, gboolean *fetch_error, GError **e
         status = PQresultStatus (model->priv->pg_res);
 	model->priv->chunks_read ++;
         if (status != PGRES_TUPLES_OK) {
-		_gda_postgres_make_error (model->priv->cnc, model->priv->pconn, model->priv->pg_res, error);
+		_gda_postgres_make_error (gda_pmodel_get_connection ((GdaPModel*) model), 
+					  model->priv->pconn, model->priv->pg_res, error);
                 PQclear (model->priv->pg_res);
                 model->priv->pg_res = NULL;
 		model->priv->pg_res_size = 0;
@@ -927,7 +920,8 @@ fetch_prev_chunk (GdaPostgresRecordset *model, gboolean *fetch_error, GError **e
         status = PQresultStatus (model->priv->pg_res);
 	model->priv->chunks_read ++;
         if (status != PGRES_TUPLES_OK) {
-		_gda_postgres_make_error (model->priv->cnc, model->priv->pconn, model->priv->pg_res, error);
+		_gda_postgres_make_error (gda_pmodel_get_connection ((GdaPModel*) model), 
+					  model->priv->pconn, model->priv->pg_res, error);
                 PQclear (model->priv->pg_res);
                 model->priv->pg_res = NULL;
 		model->priv->pg_res_size = 0;
@@ -1000,7 +994,8 @@ fetch_row_number_chunk (GdaPostgresRecordset *model, int row_index, gboolean *fe
         status = PQresultStatus (model->priv->pg_res);
         model->priv->chunks_read ++; /* Not really correct, because we are only fetching 1 row, not a whole chunk of rows. */
         if (status != PGRES_TUPLES_OK) {
-		_gda_postgres_make_error (model->priv->cnc, model->priv->pconn, model->priv->pg_res, error);
+		_gda_postgres_make_error (gda_pmodel_get_connection ((GdaPModel*) model), 
+					  model->priv->pconn, model->priv->pg_res, error);
                 PQclear (model->priv->pg_res);
                 model->priv->pg_res = NULL;
                 model->priv->pg_res_size = 0;

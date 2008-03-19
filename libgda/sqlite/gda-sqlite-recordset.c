@@ -48,7 +48,6 @@ static gboolean gda_sqlite_recordset_fetch_next (GdaPModel *model, GdaPRow **pro
 static GdaPRow *fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **error);
 
 struct _GdaSqliteRecordsetPrivate {
-	GdaConnection *cnc;
 	gint           next_row_num;
 	GdaPRow       *tmp_row; /* used in cursor mode */
 };
@@ -63,7 +62,6 @@ gda_sqlite_recordset_init (GdaSqliteRecordset *recset,
 {
 	g_return_if_fail (GDA_IS_SQLITE_RECORDSET (recset));
 	recset->priv = g_new0 (GdaSqliteRecordsetPrivate, 1);
-	recset->priv->cnc = NULL;
 	recset->priv->next_row_num = 0;
 }
 
@@ -93,8 +91,6 @@ gda_sqlite_recordset_dispose (GObject *object)
 
 	if (recset->priv) {
 		GDA_SQLITE_PSTMT (GDA_PMODEL (object)->prep_stmt)->stmt_used = FALSE;
-		if (recset->priv->cnc) 
-			g_object_unref (recset->priv->cnc);
 		if (recset->priv->tmp_row)
 			g_object_unref (recset->priv->tmp_row);
 		g_free (recset->priv);
@@ -283,9 +279,8 @@ gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaDataModelAc
 		rflags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD;
 
 	/* create data model */
-        model = g_object_new (GDA_TYPE_SQLITE_RECORDSET, "prepared-stmt", ps, "model-usage", rflags, NULL);
-        model->priv->cnc = cnc;
-	g_object_ref (cnc);
+        model = g_object_new (GDA_TYPE_SQLITE_RECORDSET, "connection", cnc, 
+			      "prepared-stmt", ps, "model-usage", rflags, NULL);
 
         /* fill the data model */
         read_rows_to_init_col_types (model);
@@ -342,7 +337,8 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 	GdaSqlitePStmt *ps;
 	GdaPRow *prow = NULL;
 
-	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (model->priv->cnc);
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data 
+		(gda_pmodel_get_connection ((GdaPModel*) model));
 	if (!cdata)
 		return NULL;
 	ps = GDA_SQLITE_PSTMT (GDA_PMODEL (model)->prep_stmt);

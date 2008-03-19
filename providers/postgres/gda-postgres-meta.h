@@ -27,25 +27,165 @@
 G_BEGIN_DECLS
 
 void     _gda_postgres_provider_meta_init    (GdaServerProvider *provider);
-gboolean _gda_postgres_meta_info             (GdaServerProvider *prov, GdaConnection *cnc, 
+
+/* _information_schema_catalog_name */
+gboolean _gda_postgres_meta__info            (GdaServerProvider *prov, GdaConnection *cnc, 
 					      GdaMetaStore *store, GdaMetaContext *context, GError **error);
-gboolean _gda_postgres_meta_btypes           (GdaServerProvider *prov, GdaConnection *cnc, 
+
+/* _builtin_data_types */
+gboolean _gda_postgres_meta__btypes          (GdaServerProvider *prov, GdaConnection *cnc, 
 					      GdaMetaStore *store, GdaMetaContext *context, GError **error);
-gboolean _gda_postgres_meta_schemata         (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **, 
+
+/* _udt */
+gboolean _gda_postgres_meta__udt             (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_postgres_meta_udt              (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error,
+					      const GValue *udt_catalog, const GValue *udt_schema);
+
+/* _udt_columns */
+gboolean _gda_postgres_meta__udt_cols        (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_postgres_meta_udt_cols         (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error,
+					      const GValue *udt_catalog, const GValue *udt_schema, const GValue *udt_name);
+
+/* _enums */
+gboolean _gda_postgres_meta__enums           (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_postgres_meta_enums            (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error,
+					      const GValue *udt_catalog, const GValue *udt_schema, const GValue *udt_name);
+
+/* _domains */
+gboolean _gda_postgres_meta__domains         (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_postgres_meta_domains          (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error,
+					      const GValue *domain_catalog, const GValue *domain_schema);
+
+/* _domain_constraints */
+gboolean _gda_postgres_meta__constraints_dom (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_postgres_meta_constraints_dom  (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error,
+					      const GValue *domain_catalog, const GValue *domain_schema, 
+					      const GValue *domain_name);
+
+/* _element_types */
+gboolean _gda_postgres_meta__el_types        (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error);
+
+/* _collations */
+gboolean _gda_postgres_meta__collations      (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_postgres_meta_collations       (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error,
+					      const GValue *collation_catalog, const GValue *collation_schema, 
+					      const GValue *collation_name_n);
+
+/* _character_sets */
+gboolean _gda_postgres_meta__character_sets  (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_postgres_meta_character_sets   (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error,
+					      const GValue *chset_catalog, const GValue *chset_schema, 
+					      const GValue *chset_name_n);
+
+/* _schemata */
+gboolean _gda_postgres_meta__schemata        (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_postgres_meta_schemata         (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error, 
 					      const GValue *catalog_name, const GValue *schema_name_n);
-gboolean _gda_postgres_meta_tables_views     (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
-					      const GValue *table_catalog, const GValue *table_schema, const GValue *table_name_n);
-gboolean _gda_postgres_meta_columns          (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
-					      const GValue *table_catalog, const GValue *table_schema, const GValue *table_name);
-gboolean _gda_postgres_meta_constraints_tab  (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
-					      const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
-					      const GValue *constraint_name_n);
-gboolean _gda_postgres_meta_constraints_ref  (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
+
+/* _tables or _views */
+gboolean _gda_postgres_meta__tables_views    (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_postgres_meta_tables_views     (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error,
+					      const GValue *table_catalog, const GValue *table_schema, 
+					      const GValue *table_name_n);
+
+/* _columns */
+gboolean _gda_postgres_meta__columns         (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_postgres_meta_columns          (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error,
+					      const GValue *table_catalog, const GValue *table_schema, 
+					      const GValue *table_name);
+
+/* _view_column_usage */
+gboolean _gda_postgres_meta__view_cols       (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_postgres_meta_view_cols        (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error,
+					      const GValue *view_catalog, const GValue *view_schema, 
+					      const GValue *view_name);
+
+/* _table_constraints */
+gboolean _gda_postgres_meta__constraints_tab (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_postgres_meta_constraints_tab  (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error, 
+					      const GValue *table_catalog, const GValue *table_schema, 
+					      const GValue *table_name, const GValue *constraint_name_n);
+
+/* _referential_constraints */
+gboolean _gda_postgres_meta__constraints_ref (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_postgres_meta_constraints_ref  (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error,
 					      const GValue *table_catalog, const GValue *table_schema, const GValue *table_name, 
 					      const GValue *constraint_name);
-gboolean _gda_postgres_meta_key_columns      (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
-					      const GValue *table_catalog, const GValue *table_schema, const GValue *table_name, 
-					      const GValue *constraint_name);
+
+/* _key_column_usage */
+gboolean _gda_postgres_meta__key_columns     (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_postgres_meta_key_columns      (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error,
+					      const GValue *table_catalog, const GValue *table_schema, 
+					      const GValue *table_name, const GValue *constraint_name);
+
+/* _check_column_usage */
+gboolean _gda_postgres_meta__check_columns   (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_postgres_meta_check_columns    (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error,
+					      const GValue *table_catalog, const GValue *table_schema, 
+					      const GValue *table_name, const GValue *constraint_name);
+
+/* _triggers */
+gboolean _gda_postgres_meta__triggers        (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_postgres_meta_triggers         (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error,
+					      const GValue *table_catalog, const GValue *table_schema, 
+					      const GValue *table_name);
+
+/* _routines */
+gboolean _gda_postgres_meta__routines       (GdaServerProvider *prov, GdaConnection *cnc, 
+					     GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_postgres_meta_routines        (GdaServerProvider *prov, GdaConnection *cnc, 
+					     GdaMetaStore *store, GdaMetaContext *context, GError **error,
+					     const GValue *routine_catalog, const GValue *routine_schema, 
+					     const GValue *routine_name_n);
+
+/* _routine_columns */
+gboolean _gda_postgres_meta__routine_col     (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_postgres_meta_routine_col      (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error,
+					      const GValue *rout_catalog, const GValue *rout_schema, 
+					      const GValue *rout_name);
+
+/* _parameters */
+gboolean _gda_postgres_meta__routine_par     (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_postgres_meta_routine_par      (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error,
+					      const GValue *rout_catalog, const GValue *rout_schema, 
+					      const GValue *rout_name);
 
 G_END_DECLS
 

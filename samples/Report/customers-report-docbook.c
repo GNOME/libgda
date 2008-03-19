@@ -73,8 +73,8 @@ open_connection (void)
 {
         GdaConnection *cnc;
         GError *error = NULL;
-        cnc = gda_connection_open_from_dsn (client, "SalesTest", NULL, NULL,
-					    GDA_CONNECTION_OPTIONS_DONT_SHARE,
+        cnc = gda_connection_open_from_dsn ("SalesTest", NULL, 
+					    GDA_CONNECTION_OPTIONS_NONE,
 					    &error);
         if (!cnc) {
                 g_print ("Could not open connection to DSN 'SalesTest': %s\n",

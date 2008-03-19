@@ -30,14 +30,25 @@
 #include "gda-pstmt.h"
 #include <libgda/gda-statement.h>
 #include <libgda/gda-holder.h>
+#include <libgda/gda-connection.h>
 
 #define CLASS(x) (GDA_PMODEL_CLASS (G_OBJECT_GET_CLASS (x)))
+
+enum
+{
+	FIRST_QUERY = 0,
+        INS_QUERY  = 0,
+        UPD_QUERY  = 1,
+        DEL_QUERY  = 2,
+	NB_QUERIES = 3
+};
 
 /*
  * Getting a GdaPRow from a model row:
  * model row ==(model->index)==> model->rows index ==(model->rows)==> GdaPRow
  */
 struct _GdaPModelPrivate {
+	GdaConnection          *cnc;
 	GSList                 *columns; /* list of GdaColumn objects */
 	GArray                 *rows; /* Array of GdaPRow */
 	GHashTable             *index; /* key = model row number + 1, value = index in @rows array + 1*/
@@ -47,14 +58,16 @@ struct _GdaPModelPrivate {
         GdaDataModelIter       *iter;
 
 	GdaDataModelAccessFlags usage_flags;
+	
+	GdaStatement           *modif_stmts[NB_QUERIES];
 };
 
 /* properties */
 enum
 {
         PROP_0,
+	PROP_CNC,
 	PROP_PREP_STMT,
-	PROP_MOD_STMT,
 	PROP_FLAGS,
 	PROP_ALL_STORED,
 	PROP_INS_QUERY,
@@ -137,11 +150,13 @@ gda_pmodel_class_init (GdaPModelClass *klass)
 	/* properties */
 	object_class->set_property = gda_pmodel_set_property;
         object_class->get_property = gda_pmodel_get_property;
+	g_object_class_install_property (object_class, PROP_CNC,
+                                         g_param_spec_object ("connection", 
+							      "Connection from which this data model is created", 
+							      NULL, GDA_TYPE_CONNECTION,
+							      G_PARAM_WRITABLE | G_PARAM_READABLE | G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_PREP_STMT,
                                          g_param_spec_object ("prepared-stmt", NULL, NULL, GDA_TYPE_PSTMT,
-							      G_PARAM_WRITABLE | G_PARAM_READABLE));
-	g_object_class_install_property (object_class, PROP_MOD_STMT,
-                                         g_param_spec_object ("modif-stmt", NULL, NULL, GDA_TYPE_STATEMENT,
 							      G_PARAM_WRITABLE | G_PARAM_READABLE));
 	g_object_class_install_property (object_class, PROP_FLAGS,
 					 g_param_spec_uint ("model-usage", NULL, NULL, 
@@ -207,6 +222,7 @@ gda_pmodel_init (GdaPModel *model, GdaPModelClass *klass)
 {
 	g_return_if_fail (GDA_IS_PMODEL (model));
 	model->priv = g_new0 (GdaPModelPrivate, 1);
+	model->priv->cnc = NULL;
 	model->priv->rows = g_array_new (FALSE, FALSE, sizeof (GdaPRow *));
 	model->priv->index = g_hash_table_new (g_direct_hash, g_direct_equal);
 	model->prep_stmt = NULL;
@@ -226,12 +242,16 @@ gda_pmodel_dispose (GObject *object)
 
 	/* free memory */
 	if (model->priv) {
+		gint i;
+		if (model->priv->cnc) {
+			g_object_unref (model->priv->cnc);
+			model->priv->cnc = NULL;
+		}
 		if (model->prep_stmt) {
 			g_object_unref (model->prep_stmt);
 			model->prep_stmt = NULL;
 		}
 		if (model->priv->rows) {
-			gint i;
 			for (i = 0; i < model->priv->rows->len; i++) {
 				GdaPRow *prow;
 				prow = g_array_index (model->priv->rows, GdaPRow *, i);
@@ -248,6 +268,13 @@ gda_pmodel_dispose (GObject *object)
 			g_slist_foreach (model->priv->columns, (GFunc) g_object_unref, NULL);
 			g_slist_free (model->priv->columns);
 			model->priv->columns = NULL;
+		}
+
+		for (i = FIRST_QUERY; i < NB_QUERIES; i++) {
+			if (model->priv->modif_stmts [i]) {
+				g_object_unref (model->priv->modif_stmts [i]);
+				model->priv->modif_stmts [i] = NULL;
+			}
 		}
 	}
 
@@ -314,6 +341,11 @@ gda_pmodel_set_property (GObject *object,
 	GdaPModel *model = (GdaPModel *) object;
 	if (model->priv) {
 		switch (param_id) {
+		case PROP_CNC:
+			model->priv->cnc = g_value_get_object (value);
+			if (model->priv->cnc)
+				g_object_ref (model->priv->cnc);
+			break;
 		case PROP_PREP_STMT:
 			if (model->prep_stmt)
 				g_object_unref (model->prep_stmt);
@@ -321,9 +353,6 @@ gda_pmodel_set_property (GObject *object,
 			if (model->prep_stmt)
 				g_object_ref (model->prep_stmt);
 			create_columns (model);
-			break;
-		case PROP_MOD_STMT:
-			TO_IMPLEMENT;
 			break;
 		case PROP_FLAGS: {
 			GdaDataModelAccessFlags flags = g_value_get_uint (value);
@@ -343,9 +372,26 @@ gda_pmodel_set_property (GObject *object,
 			}
 			break;
 		case PROP_INS_QUERY:
+			if (model->priv->modif_stmts [INS_QUERY])
+				g_object_unref (model->priv->modif_stmts [INS_QUERY]);
+			model->priv->modif_stmts [INS_QUERY] = g_value_get_object (value);
+			if (model->priv->modif_stmts [INS_QUERY])
+				g_object_ref (model->priv->modif_stmts [INS_QUERY]);
+			break;
 		case PROP_DEL_QUERY:
+			if (model->priv->modif_stmts [DEL_QUERY])
+				g_object_unref (model->priv->modif_stmts [DEL_QUERY]);
+			model->priv->modif_stmts [DEL_QUERY] = g_value_get_object (value);
+			if (model->priv->modif_stmts [DEL_QUERY])
+				g_object_ref (model->priv->modif_stmts [DEL_QUERY]);
+			break;
 		case PROP_UPD_QUERY:
-			TO_IMPLEMENT;
+			if (model->priv->modif_stmts [UPD_QUERY])
+				g_object_unref (model->priv->modif_stmts [UPD_QUERY]);
+			model->priv->modif_stmts [UPD_QUERY] = g_value_get_object (value);
+			if (model->priv->modif_stmts [UPD_QUERY])
+				g_object_ref (model->priv->modif_stmts [UPD_QUERY]);
+			break;
 		default:
 			break;
 		}
@@ -361,11 +407,11 @@ gda_pmodel_get_property (GObject *object,
 	GdaPModel *model = (GdaPModel *) object;
 	if (model->priv) {
 		switch (param_id) {
+		case PROP_CNC:
+			g_value_set_object (value, model->priv->cnc);
+			break;
 		case PROP_PREP_STMT:
 			g_value_set_object (value, model->prep_stmt);
-			break;
-		case PROP_MOD_STMT:
-			TO_IMPLEMENT;
 			break;
 		case PROP_FLAGS:
 			g_value_set_uint (value, model->priv->usage_flags);
@@ -380,10 +426,14 @@ gda_pmodel_get_property (GObject *object,
 			}
 			break;
 		case PROP_INS_QUERY:
+			g_value_set_object (value, model->priv->modif_stmts [INS_QUERY]);
+			break;
 		case PROP_DEL_QUERY:
+			g_value_set_object (value, model->priv->modif_stmts [DEL_QUERY]);
+			break;
 		case PROP_UPD_QUERY:
-			TO_IMPLEMENT;
-
+			g_value_set_object (value, model->priv->modif_stmts [UPD_QUERY]);
+			break;
 		default:
 			break;
 		}
@@ -434,6 +484,24 @@ gda_pmodel_get_stored_row (GdaPModel *model, gint rownum)
 		return NULL;
 	else 
 		return g_array_index (model->priv->rows, GdaPRow *, irow - 1);
+}
+
+/**
+ * gda_pmodel_get_connection
+ * @model: a #GdaPModel data model
+ *
+ * Get a pointer to the #GdaConnection object which was used when @model was created
+ * (and which may be used internally by @model).
+ *
+ * Returns: a pointer to the #GdaConnection, or %NULL
+ */
+GdaConnection *
+gda_pmodel_get_connection (GdaPModel *model)
+{
+	g_return_val_if_fail (GDA_IS_PMODEL (model), NULL);
+	g_return_val_if_fail (model->priv, NULL);
+
+	return model->priv->cnc;
 }
 
 /**

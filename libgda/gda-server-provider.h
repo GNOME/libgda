@@ -49,6 +49,7 @@ typedef enum
 {
         GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
 	GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR,
+	GDA_SERVER_PROVIDER_EMPTY_STMT_ERROR,
 	GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
 	GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR,
 	GDA_SERVER_PROVIDER_OPERATION_ERROR,
@@ -69,6 +70,44 @@ typedef struct {
 	/* _builtin_data_types */
 	gboolean (*_btypes)          (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
 
+	/* _udt */
+	gboolean (*_udt)             (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*udt)              (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
+				      const GValue *udt_catalog, const GValue *udt_schema);
+
+	/* _udt_columns */
+	gboolean (*_udt_cols)        (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*udt_cols)         (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
+				      const GValue *udt_catalog, const GValue *udt_schema, const GValue *udt_name);
+
+	/* _enums */
+	gboolean (*_enums)           (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*enums)            (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
+				      const GValue *udt_catalog, const GValue *udt_schema, const GValue *udt_name);
+
+	/* _domains */
+	gboolean (*_domains)         (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*domains)          (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
+				      const GValue *domain_catalog, const GValue *domain_schema);
+
+	/* _domain_constraints */
+	gboolean (*_constraints_dom) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*constraints_dom)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
+				      const GValue *domain_catalog, const GValue *domain_schema, const GValue *domain_name);
+
+	/* _element_types */
+	gboolean (*_el_types)        (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+
+	/* _collations */
+	gboolean (*_collations)       (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*collations)        (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
+				       const GValue *collation_catalog, const GValue *collation_schema, 
+				       const GValue *collation_name_n);
+
+	/* _character_sets */
+	gboolean (*_character_sets)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*character_sets)   (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
+				      const GValue *chset_catalog, const GValue *chset_schema, const GValue *chset_name_n);
 
 	/* _schemata */
 	gboolean (*_schemata)        (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
@@ -84,6 +123,11 @@ typedef struct {
 	gboolean (*_columns)         (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
 	gboolean (*columns)          (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
 				      const GValue *table_catalog, const GValue *table_schema, const GValue *table_name);
+
+	/* _view_column_usage */
+	gboolean (*_view_cols)       (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*view_cols)        (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
+				      const GValue *view_catalog, const GValue *view_schema, const GValue *view_name);
 
 	/* _table_constraints */
 	gboolean (*_constraints_tab) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
@@ -102,6 +146,34 @@ typedef struct {
 	gboolean (*key_columns)      (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
 				      const GValue *table_catalog, const GValue *table_schema, const GValue *table_name, 
 				      const GValue *constraint_name);
+
+	/* _check_column_usage */
+	gboolean (*_check_columns)   (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*check_columns)    (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
+				      const GValue *table_catalog, const GValue *table_schema, const GValue *table_name, 
+				      const GValue *constraint_name);
+
+	/* _triggers */
+	gboolean (*_triggers)        (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*triggers)         (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
+				      const GValue *table_catalog, const GValue *table_schema, const GValue *table_name);
+
+	/* _routines */
+	gboolean (*_routines)       (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*routines)        (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
+				     const GValue *routine_catalog, const GValue *routine_schema, 
+				     const GValue *routine_name_n);
+
+	/* _routine_columns */
+	gboolean (*_routine_col)     (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*routine_col)      (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
+				      const GValue *rout_catalog, const GValue *rout_schema, const GValue *rout_name);
+
+	/* _parameters */
+	gboolean (*_routine_par)     (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*routine_par)      (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
+				      const GValue *rout_catalog, const GValue *rout_schema, const GValue *rout_name);
+	
 } GdaServerProviderMeta;
 
 typedef void (*GdaServerProviderAsyncCallback) (GdaServerProvider *provider, GdaConnection *cnc, guint task_id, 

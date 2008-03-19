@@ -74,13 +74,14 @@ struct _GdaPModelClass {
 	gboolean         (*fetch_at)      (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error);
 };
 
-GType    gda_pmodel_get_type                     (void) G_GNUC_CONST;
-void     gda_pmodel_take_row                     (GdaPModel *model, GdaPRow *row, gint rownum);
-GdaPRow *gda_pmodel_get_stored_row               (GdaPModel *model, gint rownum);
+GType          gda_pmodel_get_type                     (void) G_GNUC_CONST;
+void           gda_pmodel_take_row                     (GdaPModel *model, GdaPRow *row, gint rownum);
+GdaPRow       *gda_pmodel_get_stored_row               (GdaPModel *model, gint rownum);
 
-gboolean gda_pmodel_set_modification_query       (GdaPModel *model, GdaStatement *mod_stmt, GError **error);
-gboolean gda_pmodel_compute_modification_queries (GdaPModel *model, const gchar *target, 
-						  gboolean use_all_fields_if_no_pk, GError **error);
+GdaConnection *gda_pmodel_get_connection               (GdaPModel *model);
+gboolean       gda_pmodel_set_modification_query       (GdaPModel *model, GdaStatement *mod_stmt, GError **error);
+gboolean       gda_pmodel_compute_modification_queries (GdaPModel *model, const gchar *target, 
+							gboolean use_all_fields_if_no_pk, GError **error);
 
 G_END_DECLS
 

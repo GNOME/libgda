@@ -75,6 +75,15 @@ Proposed base implementation for data models returned by the execution of a SELE
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_pmodel_get_connection ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_pmodel_set_modification_query ##### -->
 <para>
 
