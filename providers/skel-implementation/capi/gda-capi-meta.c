@@ -88,8 +88,8 @@ _gda_capi_provider_meta_init (GdaServerProvider *provider)
 }
 
 gboolean
-_gda_capi_meta_info (GdaServerProvider *prov, GdaConnection *cnc, 
-		     GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_capi_meta__info (GdaServerProvider *prov, GdaConnection *cnc, 
+		      GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	GdaDataModel *model;
 	gboolean retval;

@@ -9,7 +9,6 @@ libgda/gda-data-model-bdb.c
 libgda/gda-data-model.c
 libgda/gda-data-model-dir.c
 libgda/gda-data-model-dsn-list.c
-libgda/gda-data-model-hash.c
 libgda/gda-data-model-import.c
 libgda/gda-data-model-iter.c
 libgda/gda-data-model-query.c
@@ -49,7 +48,6 @@ libgda/sqlite/virtual/gda-virtual-provider.c
 libgda/sqlite/virtual/gda-vprovider-data-model.c
 libgda/sqlite/virtual/gda-vprovider-hub.c
 libgda/sqlite/virtual/libmain.c
-libgda/sql-parser/delimiter.c
 libgda/sql-parser/gda-sql-parser.c
 libgda/sql-parser/gda-statement-struct.c
 libgda/sql-parser/gda-statement-struct-compound.c
@@ -58,7 +56,6 @@ libgda/sql-parser/gda-statement-struct-insert.c
 libgda/sql-parser/gda-statement-struct-parts.c
 libgda/sql-parser/gda-statement-struct-select.c
 libgda/sql-parser/gda-statement-struct-update.c
-libgda/sql-parser/parser.c
 libgda-report/DocBook/gda-report-docbook-document.c
 libgda-report/engine/gda-report-engine.c
 libgda-report/gda-report-document.c
@@ -135,7 +132,6 @@ providers/postgres/gda-postgres-pstmt.c
 providers/postgres/gda-postgres-recordset.c
 providers/postgres/gda-postgres-util.c
 providers/postgres/libmain.c
-providers/postgres/parser.c
 providers/postgres/postgres_specs_add_column.xml.in
 providers/postgres/postgres_specs_create_db.xml.in
 providers/postgres/postgres_specs_create_index.xml.in

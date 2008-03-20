@@ -1241,7 +1241,15 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
  *
  * If @last_insert_row is not %NULL and @stmt is an INSERT statement, then it will contain (if the
  * provider used by @cnc supports it) a new #GdaSet object composed of value holders named "+&lt;column number&gt;"
- * starting at column 0 which contain the actual inserted values.
+ * starting at column 0 which contain the actual inserted values. For example if a table is composed of an 'id' column
+ * which is auto incremented and a 'name' column then the execution of a "INSERT INTO mytable (name) VALUES ('joe')"
+ * query will return a #GdaSet with two holders:
+ * <itemizedlist>
+ *   <listitem><para>one named '+0' which may for example contain 1</para></listitem>
+ *   <listitem><para>one named '+1' which will contain 'joe'</para></listitem>
+ * </itemizedlist>
+ * See the <link linkend="limitations">provider's limitations</link> section for more details about this feature
+ * depending on which database is accessed.
  *
  * Returns: a #GObject, or %NULL if an error occurred 
  */
@@ -1280,9 +1288,7 @@ gda_connection_statement_execute (GdaConnection *cnc, GdaStatement *stmt, GdaSet
  * See the documentation of the gda_connection_statement_execute() for information
  * about the @params list of parameters.
  *
- * If @last_insert_row is not %NULL and @stmt is an INSERT statement, then it will contain (if the
- * provider used by @cnc supports it) a new #GdaSet object composed of value holders named "+&lt;column number&gt;"
- * starting at column 0 which contain the actual inserted values.
+ * See gda_connection_statement_execute() form more information about @last_insert_row.
  *
  * Returns: the number of rows affected (&gt;=0) or -1 or -2 
  */

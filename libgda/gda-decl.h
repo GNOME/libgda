@@ -48,10 +48,6 @@ typedef struct _GdaServerOperation        GdaServerOperation;
 typedef struct _GdaServerOperationClass   GdaServerOperationClass;
 typedef struct _GdaServerOperationPrivate GdaServerOperationPrivate;
 
-typedef struct _GdaClient        GdaClient;
-typedef struct _GdaClientClass   GdaClientClass;
-typedef struct _GdaClientPrivate GdaClientPrivate;
-
 typedef struct _GdaDataModelClass   GdaDataModelClass;
 typedef struct _GdaDataModel        GdaDataModel;
 

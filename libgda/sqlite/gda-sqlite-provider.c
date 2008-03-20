@@ -1540,6 +1540,133 @@ real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stm
 	return NULL;
 }
 
+static GdaSet *
+make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, sqlite3_int64 last_id)
+{
+	GError *lerror = NULL;
+
+	/* analyse @stmt */
+	GdaSqlStatement *sql_insert;
+	GdaSqlStatementInsert *insert;
+	if (gda_statement_get_statement_type (stmt) != GDA_SQL_STATEMENT_INSERT)
+		/* unable to compute anything */
+		return NULL;
+	g_object_get (G_OBJECT (stmt), "structure", &sql_insert, NULL);
+	g_assert (sql_insert);
+	insert = (GdaSqlStatementInsert *) sql_insert->contents;
+
+	/* build corresponding SELECT statement */
+	GdaSqlStatementSelect *select;
+        GdaSqlSelectTarget *target;
+        GdaSqlStatement *sql_statement = gda_sql_statement_new (GDA_SQL_STATEMENT_SELECT);
+
+	select = g_new0 (GdaSqlStatementSelect, 1);
+        GDA_SQL_ANY_PART (select)->type = GDA_SQL_ANY_STMT_SELECT;
+        sql_statement->contents = select;
+
+	/* FROM */
+        select->from = gda_sql_select_from_new (GDA_SQL_ANY_PART (select));
+        target = gda_sql_select_target_new (GDA_SQL_ANY_PART (select->from));
+        gda_sql_select_from_take_new_target (select->from, target);
+
+	/* Filling in the target */
+        GValue *value;
+        g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), insert->table->table_name);
+        gda_sql_select_target_take_table_name (target, value);
+	gda_sql_statement_free (sql_insert);
+
+	/* selected fields */
+        GdaSqlSelectField *field;
+        GSList *fields_list = NULL;
+
+	field = gda_sql_select_field_new (GDA_SQL_ANY_PART (select));
+	g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), "*");
+	gda_sql_select_field_take_star_value (field, value);
+	fields_list = g_slist_append (fields_list, field);
+
+	gda_sql_statement_select_take_expr_list (sql_statement, fields_list);
+
+	/* WHERE */
+        GdaSqlExpr *where, *expr;
+	GdaSqlOperation *cond;
+	where = gda_sql_expr_new (GDA_SQL_ANY_PART (select));
+	cond = gda_sql_operation_new (GDA_SQL_ANY_PART (where));
+	where->cond = cond;
+	cond->operator = GDA_SQL_OPERATOR_EQ;
+	expr = gda_sql_expr_new (GDA_SQL_ANY_PART (cond));
+	g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), "_rowid_");
+	expr->value = value;
+	cond->operands = g_slist_append (NULL, expr);
+	gchar *str;
+	str = g_strdup_printf ("%lld", last_id);
+	expr = gda_sql_expr_new (GDA_SQL_ANY_PART (cond));
+	g_value_take_string ((value = gda_value_new (G_TYPE_STRING)), str);
+	expr->value = value;
+	cond->operands = g_slist_append (cond->operands, expr);
+
+	gda_sql_statement_select_take_where_cond (sql_statement, where);
+
+	if (gda_sql_statement_check_structure (sql_statement, &lerror) == FALSE) {
+                g_warning (_("Can't build SELECT statement to get last inserted row: %s)"),
+			     lerror && lerror->message ? lerror->message : _("No detail"));
+		if (lerror)
+			g_error_free (lerror);
+                gda_sql_statement_free (sql_statement);
+                return NULL;
+        }
+
+	/* execute SELECT statement */
+	GdaDataModel *model;
+	GdaStatement *statement = g_object_new (GDA_TYPE_STATEMENT, "structure", sql_statement, NULL);
+        gda_sql_statement_free (sql_statement);
+        model = gda_connection_statement_execute_select (cnc, statement, NULL, &lerror);
+	g_object_unref (statement);
+        if (!model) {
+                g_warning (_("Can't execute SELECT statement to get last inserted row: %s"),
+			   lerror && lerror->message ? lerror->message : _("No detail"));
+		if (lerror)
+			g_error_free (lerror);
+		return NULL;
+        }
+	else {
+		GdaSet *set;
+		GSList *holders = NULL;
+		gint nrows, ncols, i;
+
+		nrows = gda_data_model_get_n_rows (model);
+		if (nrows <= 0) {
+			g_warning (_("SELECT statement to get last inserted row did not return any row"));
+			return NULL;
+		}
+		else if (nrows > 1) {
+			g_warning (_("SELECT statement to get last inserted row returned too many (%d) rows"), 
+				   nrows);
+			return NULL;
+		}
+		ncols = gda_data_model_get_n_columns (model);
+		for (i = 0; i < ncols; i++) {
+			GdaHolder *h;
+			GdaColumn *col;
+			gchar *id;
+			col = gda_data_model_describe_column (model, i);
+			h = gda_holder_new (gda_column_get_g_type (col));
+			id = g_strdup_printf ("+%d", i);
+			g_object_set (G_OBJECT (h), "id", id, "not-null", FALSE, NULL);
+			g_free (id);
+			gda_holder_set_value (h, gda_data_model_get_value_at (model, i, 0));
+			holders = g_slist_prepend (holders, h);
+		}
+		g_object_unref (model);
+
+		holders = g_slist_reverse (holders);
+		set = gda_set_new (holders);
+		g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
+		g_slist_free (holders);
+
+		return set;
+	}
+}
+
 /*
  * Execute statement request
  */
@@ -1564,11 +1691,8 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
                 return NULL;
 	}
 
-	if (last_inserted_row) {
-		/* use sqlite3_last_insert_rowid() */
-		TO_IMPLEMENT;
+	if (last_inserted_row)
 		*last_inserted_row = NULL;
-	}
 
 	/* get SQLite's private data */
 	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
@@ -1846,10 +1970,13 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
                                 str = g_strdup_printf ("DELETE %d (see SQLite documentation for a \"DELETE * FROM table\" query)",
                                                        changes);
                         else {
-                                if (! g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "INSERT", 6))
-                                        str = g_strdup_printf ("INSERT %lld %d",
-                                                               sqlite3_last_insert_rowid (handle),
-                                                               changes);
+                                if (! g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "INSERT", 6)) {
+					sqlite3_int64 last_id;
+					last_id = sqlite3_last_insert_rowid (handle);
+                                        str = g_strdup_printf ("INSERT %lld %d", last_id, changes);
+					if (last_inserted_row)
+						*last_inserted_row = make_last_inserted_set (cnc, stmt, last_id);
+				}
                                 else {
                                         if (!g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "DELETE", 6))
                                                 str = g_strdup_printf ("DELETE %d", changes);

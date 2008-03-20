@@ -1,3 +1,25 @@
+2008-03-20  Vivien Malerba <malerba@gnome-db.org>
+
+	* po/POTFILES.in: remove references to non existing files
+	* providers/skel-implementation/models/Makefile.am:
+	* providers/skel-implementation/capi/Makefile.am:
+	* providers/prepare_provider_sources.sh: make the skeleton providers compile but not
+	install, and altered the preparetion script to compile and install
+	* providers/skel-implementation/capi/gda-capi-meta.c: corrected symbol name
+	* libgda/gda-data-model.c: corrected a nasty bug in gda_data_model_import_from_model()
+	* providers/postgres/gda-postgres-provider.c:
+	* libgda/sqlite/gda-sqlite-provider.c: now compute the GdaSet to return at *last_insert_row
+	in gda_sqlite_provider_statement_execute() if the last_insert_row argument is not NULL
+	* providers/postgres/gda-postgres-ddl.c: only set a column's type as "serial" when AUTOINC
+	is TRUE
+	* providers/sqlite/sqlite_specs_create_table.xml.in:
+	* providers/postgres/postgres_specs_create_table.xml.in: fixed typos
+	* providers/postgres/postgres_specs_create_table.xml.in: dy default tables are now created
+	with OIDs
+	* libgda/gda-decl.h: removed declarations related to GdaClient (thanks to Mark Johnson)
+	* libgda/gda-server-provider.c: doc. fixes and optional debug info
+	* doc/C: updates
+
 2008-03-19  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in: set to version 3.99.2

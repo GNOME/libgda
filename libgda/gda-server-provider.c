@@ -405,7 +405,7 @@ static OpReq op_req_DROP_VIEW [] = {
  * action. The @options can contain:
  * <itemizedlist>
  *  <listitem>parameters which ID is a path in the resulting GdaServerOperation object, to initialize some value</listitem>
- *  <listitem>parameters which may change the contents of the GdaServerOperation, see <link linkend="gda-server-op-information">this section</link> for more information</listitem>
+ *  <listitem>parameters which may change the contents of the GdaServerOperation, see <link linkend="gda-server-op-information-std">this section</link> for more information</listitem>
  * </itemizedlist>
  *
  * Returns: a new #GdaServerOperation object, or %NULL in the provider does not support the @type type
@@ -533,6 +533,20 @@ gda_server_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 				       GdaServerOperation *op, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+
+#ifdef GDA_DEBUG_NO
+	{
+		g_print ("Perform GdaServerOperation:\n");
+		xmlNodePtr node;
+		node = gda_server_operation_save_data_to_xml (op, NULL);
+		xmlDocPtr doc;
+		doc = xmlNewDoc ("1.0");
+		xmlDocSetRootElement (doc, node);
+		xmlDocDump (stdout, doc);
+		xmlFreeDoc (doc);
+	}
+#endif
+
 	if (CLASS (provider)->perform_operation)
 		return CLASS (provider)->perform_operation (provider, cnc, op, NULL, NULL, NULL, error);
 	else 

@@ -1,5 +1,6 @@
 providerdir=$(libdir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/providers
-provider_LTLIBRARIES = libgda-capi.la
+#provider_LTLIBRARIES = libgda-capi.la
+noinst_LTLIBRARIES = libgda-capi.la
 
 #Rem: CAPI_CFLAGS and CAPI_LIBS are the compile and link flags necessary to use the
 # C API. It is specific to the API and should be computed in the configure.in script.
@@ -53,10 +54,12 @@ xml_in_files = \
 
 @INTLTOOL_XML_RULE@
 
-xml_DATA = $(xml_in_files:.xml.in=.xml) 
+#xml_DATA = $(xml_in_files:.xml.in=.xml) 
+noinst_DATA = $(xml_in_files:.xml.in=.xml)
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = libgda-capi-4.0.pc
+#pkgconfig_DATA = libgda-capi-4.0.pc
+noinst_DATA += libgda-capi-4.0.pc
 
 EXTRA_DIST = $(xml_in_files) libgda-capi-4.0.pc.in parser.y
 DISTCLEANFILES = $(xml_DATA)

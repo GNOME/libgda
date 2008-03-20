@@ -1564,7 +1564,7 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 		gboolean nullforced = FALSE;
 		isnull = (gchar*)xmlGetProp (xml_field, BAD_CAST "isnull");
 		if (isnull) {
-			if ((*isnull == 't') || (*isnull == 't'))
+			if ((*isnull == 't') || (*isnull == 'T'))
 				nullforced = TRUE;
 			g_free (isnull);
 		}
@@ -1572,13 +1572,15 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 		if (!nullforced) {
 			value = g_new0 (GValue, 1);
 			gchar* nodeval = (gchar*)xmlNodeGetContent (xml_field);
-			if (!gda_value_set_from_string (value, nodeval, gdatype)) {
-				g_free (value);
-  				xmlFree(nodeval);
-				value = gda_value_new_null ();
+			if (nodeval) {
+				if (!gda_value_set_from_string (value, nodeval, gdatype)) {
+					g_free (value);
+					value = gda_value_new_null ();
+				}
+				xmlFree(nodeval);
 			}
-
-			xmlFree(nodeval);
+			else
+				value = gda_value_new_null ();	
 		}
 
 		g_ptr_array_index (values, pos) = value;
@@ -1751,7 +1753,7 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 	 * node->data is:
 	 * - NULL if the value must be replaced by the value of the copied model
 	 * - a GValue of type GDA_VALYE_TYPE_NULL if a null value must be inserted in the dest data model
-	 * - a GValue of a different type is the value must be converted from the ser data model
+	 * - a GValue of a different type if the value must be converted from the ser data model
 	 */
 	append_types = g_new0 (GType, to_nb_cols);
 	for (plist = copy_params, i = 0; plist; plist = plist->next, i++) {
@@ -1775,6 +1777,7 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 		else
 			append_values = g_list_prepend (append_values, gda_value_new_null ());
 	}
+	append_values = g_list_reverse (append_values);
 	
 	/* actual data copy (no memory allocation is needed here) */
 	gda_data_model_send_hint (to, GDA_DATA_MODEL_HINT_START_BATCH_UPDATE, NULL);
@@ -1800,7 +1803,8 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 				if (avlist->data) {
 					if (append_types [i] && gda_value_is_null ((GValue *) (avlist->data))) 
 						g_value_init ((GValue *) (avlist->data), append_types [i]);
-					if (!gda_value_is_null (value) && !g_value_transform (value, (GValue *) (avlist->data))) {
+					if (!gda_value_is_null (value) && 
+					    !g_value_transform (value, (GValue *) (avlist->data))) {
 						gchar *str;
 
 						str = gda_value_stringify (value);
@@ -1819,8 +1823,8 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 
 			values = g_list_prepend (values, value);
 
-			plist = g_slist_next (plist);
-			avlist = g_list_next (avlist);
+			plist = plist->next;
+			avlist = avlist->next;
 			i--;
 		}
 
@@ -2084,7 +2088,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 		GdaColumn *gdacol;
 		GType coltype;
 
-#ifdef GDA_DEBUG_NO
+#ifdef GDA_DEBUG
 		{
 			GdaColumn *col = gda_data_model_describe_column (model, i);
 			g_print ("Model col %d has type %s\n", i, gda_g_type_to_string (gda_column_get_g_type (col)));

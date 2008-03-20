@@ -155,7 +155,7 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 				
 
 			value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_AUTOINC/%d", i);
-			if (value)
+			if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
 				g_string_append (string, "serial");
 			else {
 				value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_TYPE/%d", i);

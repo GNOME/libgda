@@ -6,7 +6,7 @@
     </parameter>
     <parameter id="TABLE_TABLESPACE" _name="Tablespace" gdatype="gchararray"/>
     <parameter id="TABLE_WITH_OIDS" _name="With OIDs" gdatype="gboolean">
-      <gda_value>FALSE</gda_value>
+      <gda_value>TRUE</gda_value>
     </parameter>
     <parameter id="TABLE_TEMP" _name="Temporary table" gdatype="gboolean">
       <gda_value>FALSE</gda_value>
@@ -42,8 +42,8 @@
         <gda_array_row>
             <gda_value>id</gda_value>
             <gda_value>serial</gda_value>
-            <gda_value></gda_value>
-            <gda_value></gda_value>
+            <gda_value isnull="t"></gda_value>
+            <gda_value isnull="t"></gda_value>
             <gda_value>TRUE</gda_value>
 	    <gda_value>TRUE</gda_value>
             <gda_value>TRUE</gda_value>

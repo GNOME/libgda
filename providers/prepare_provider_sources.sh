@@ -53,3 +53,8 @@ do
     cat $file.1 | sed -e "s/$base/$provname/g" -e "s/$bupname/$upname/g" -e "s/$ballupname/$allupname/g"> $file
     rm -f $file.1
 done
+
+#
+# adaptating Makefile.am files
+#
+cat Makefile.am | sed -e 's/^#xml_DATA/xml_DATA/' -e 's/^#provider_LTLIBRARIES/provider_LTLIBRARIES/' -e 's/^#pkgconfig_DATA/pkgconfig_DATA/' -e '/^noinst_/d' > Makefile.am.tmp && mv Makefile.am.tmp Makefile.am

@@ -38,12 +38,23 @@
 	</itemizedlist>
       </para>
     </sect2>
+
+    <sect2><title>Last inserted row's values</title>
+      <para>
+	The <link linkend="gda-connection-statement-execute-non-select">gda_connection_statement_execute_non_select()</link>'s last_insert_row attribute will return a <link linkend="GdaSet">GdaSet</link> object only if the table has OIDs.
+      </para>
+    </sect2>
   </sect1>
 
   <sect1 id="limitations_sqlite"><title>For SQLite</title>
     <para>
-      The following limitations apply to SQLite databases accessed via Libgda: none.
+      The following limitations apply to SQLite databases accessed via Libgda:
     </para>
+    <sect2><title>Last inserted row's values</title>
+      <para>
+	The <link linkend="gda-connection-statement-execute-non-select">gda_connection_statement_execute_non_select()</link>'s last_insert_row attribute uses the hidden "_ROWID_" column for each table, but it may fail if the table has a column with the same name.
+      </para>
+    </sect2>
   </sect1>
   
 </chapter>

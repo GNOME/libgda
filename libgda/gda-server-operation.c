@@ -932,6 +932,18 @@ gda_server_operation_new (GdaServerOperationType op_type, const gchar *xml_file)
 	GObject *obj;
 
 	obj = g_object_new (GDA_TYPE_SERVER_OPERATION, "op_type", op_type, "spec_file", xml_file, NULL);
+#ifdef GDA_DEBUG_NO
+	{
+		g_print ("New GdaServerOperation:\n");
+		xmlNodePtr node;
+		node = gda_server_operation_save_data_to_xml ((GdaServerOperation *) obj, NULL);
+		xmlDocPtr doc;
+		doc = xmlNewDoc ("1.0");
+		xmlDocSetRootElement (doc, node);
+		xmlDocDump (stdout, doc);
+		xmlFreeDoc (doc);
+	}
+#endif
 	return (GdaServerOperation *) obj;
 }
 
