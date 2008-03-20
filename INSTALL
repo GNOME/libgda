@@ -1,832 +1,235 @@
-Making install in po
-make[1]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/po'
-/local/TESTS/V4/A/install-sh -d /local/G_EXTRA/share/locale
-linguas="ar az ca cs da de dz el en_CA en_GB es eu fa fi fr ga gl hr hu it ja ko lt mk ml ms nb ne nl oc pa pl pt pt_BR ru rw sk sl sq sr sr@Latn sv tr uk vi zh_CN zh_HK zh_TW "; \
-for lang in $linguas; do \
-  dir=/local/G_EXTRA/share/locale/$lang/LC_MESSAGES; \
-  /local/TESTS/V4/A/install-sh -d $dir; \
-  if test -r $lang.gmo; then \
-    /usr/bin/install -c -m 644 $lang.gmo $dir/libgda-4.0.mo; \
-    echo "installing $lang.gmo as $dir/libgda-4.0.mo"; \
-  else \
-    /usr/bin/install -c -m 644 ./$lang.gmo $dir/libgda-4.0.mo; \
-    echo "installing ./$lang.gmo as" \
-	 "$dir/libgda-4.0.mo"; \
-  fi; \
-  if test -r $lang.gmo.m; then \
-    /usr/bin/install -c -m 644 $lang.gmo.m $dir/libgda-4.0.mo.m; \
-    echo "installing $lang.gmo.m as $dir/libgda-4.0.mo.m"; \
-  else \
-    if test -r ./$lang.gmo.m ; then \
-      /usr/bin/install -c -m 644 ./$lang.gmo.m \
-	$dir/libgda-4.0.mo.m; \
-      echo "installing ./$lang.gmo.m as" \
-	   "$dir/libgda-4.0.mo.m"; \
-    else \
-      true; \
-    fi; \
-  fi; \
-done
-installing ar.gmo as /local/G_EXTRA/share/locale/ar/LC_MESSAGES/libgda-4.0.mo
-installing az.gmo as /local/G_EXTRA/share/locale/az/LC_MESSAGES/libgda-4.0.mo
-installing ca.gmo as /local/G_EXTRA/share/locale/ca/LC_MESSAGES/libgda-4.0.mo
-installing cs.gmo as /local/G_EXTRA/share/locale/cs/LC_MESSAGES/libgda-4.0.mo
-installing da.gmo as /local/G_EXTRA/share/locale/da/LC_MESSAGES/libgda-4.0.mo
-installing de.gmo as /local/G_EXTRA/share/locale/de/LC_MESSAGES/libgda-4.0.mo
-installing dz.gmo as /local/G_EXTRA/share/locale/dz/LC_MESSAGES/libgda-4.0.mo
-installing el.gmo as /local/G_EXTRA/share/locale/el/LC_MESSAGES/libgda-4.0.mo
-installing en_CA.gmo as /local/G_EXTRA/share/locale/en_CA/LC_MESSAGES/libgda-4.0.mo
-installing en_GB.gmo as /local/G_EXTRA/share/locale/en_GB/LC_MESSAGES/libgda-4.0.mo
-installing es.gmo as /local/G_EXTRA/share/locale/es/LC_MESSAGES/libgda-4.0.mo
-installing eu.gmo as /local/G_EXTRA/share/locale/eu/LC_MESSAGES/libgda-4.0.mo
-installing fa.gmo as /local/G_EXTRA/share/locale/fa/LC_MESSAGES/libgda-4.0.mo
-installing fi.gmo as /local/G_EXTRA/share/locale/fi/LC_MESSAGES/libgda-4.0.mo
-installing fr.gmo as /local/G_EXTRA/share/locale/fr/LC_MESSAGES/libgda-4.0.mo
-installing ga.gmo as /local/G_EXTRA/share/locale/ga/LC_MESSAGES/libgda-4.0.mo
-installing gl.gmo as /local/G_EXTRA/share/locale/gl/LC_MESSAGES/libgda-4.0.mo
-installing hr.gmo as /local/G_EXTRA/share/locale/hr/LC_MESSAGES/libgda-4.0.mo
-installing hu.gmo as /local/G_EXTRA/share/locale/hu/LC_MESSAGES/libgda-4.0.mo
-installing it.gmo as /local/G_EXTRA/share/locale/it/LC_MESSAGES/libgda-4.0.mo
-installing ja.gmo as /local/G_EXTRA/share/locale/ja/LC_MESSAGES/libgda-4.0.mo
-installing ko.gmo as /local/G_EXTRA/share/locale/ko/LC_MESSAGES/libgda-4.0.mo
-installing lt.gmo as /local/G_EXTRA/share/locale/lt/LC_MESSAGES/libgda-4.0.mo
-installing mk.gmo as /local/G_EXTRA/share/locale/mk/LC_MESSAGES/libgda-4.0.mo
-installing ml.gmo as /local/G_EXTRA/share/locale/ml/LC_MESSAGES/libgda-4.0.mo
-installing ms.gmo as /local/G_EXTRA/share/locale/ms/LC_MESSAGES/libgda-4.0.mo
-installing nb.gmo as /local/G_EXTRA/share/locale/nb/LC_MESSAGES/libgda-4.0.mo
-installing ne.gmo as /local/G_EXTRA/share/locale/ne/LC_MESSAGES/libgda-4.0.mo
-installing nl.gmo as /local/G_EXTRA/share/locale/nl/LC_MESSAGES/libgda-4.0.mo
-installing oc.gmo as /local/G_EXTRA/share/locale/oc/LC_MESSAGES/libgda-4.0.mo
-installing pa.gmo as /local/G_EXTRA/share/locale/pa/LC_MESSAGES/libgda-4.0.mo
-installing pl.gmo as /local/G_EXTRA/share/locale/pl/LC_MESSAGES/libgda-4.0.mo
-installing pt.gmo as /local/G_EXTRA/share/locale/pt/LC_MESSAGES/libgda-4.0.mo
-installing pt_BR.gmo as /local/G_EXTRA/share/locale/pt_BR/LC_MESSAGES/libgda-4.0.mo
-installing ru.gmo as /local/G_EXTRA/share/locale/ru/LC_MESSAGES/libgda-4.0.mo
-installing rw.gmo as /local/G_EXTRA/share/locale/rw/LC_MESSAGES/libgda-4.0.mo
-installing sk.gmo as /local/G_EXTRA/share/locale/sk/LC_MESSAGES/libgda-4.0.mo
-installing sl.gmo as /local/G_EXTRA/share/locale/sl/LC_MESSAGES/libgda-4.0.mo
-installing sq.gmo as /local/G_EXTRA/share/locale/sq/LC_MESSAGES/libgda-4.0.mo
-installing sr.gmo as /local/G_EXTRA/share/locale/sr/LC_MESSAGES/libgda-4.0.mo
-installing sr@Latn.gmo as /local/G_EXTRA/share/locale/sr@Latn/LC_MESSAGES/libgda-4.0.mo
-installing sv.gmo as /local/G_EXTRA/share/locale/sv/LC_MESSAGES/libgda-4.0.mo
-installing tr.gmo as /local/G_EXTRA/share/locale/tr/LC_MESSAGES/libgda-4.0.mo
-installing uk.gmo as /local/G_EXTRA/share/locale/uk/LC_MESSAGES/libgda-4.0.mo
-installing vi.gmo as /local/G_EXTRA/share/locale/vi/LC_MESSAGES/libgda-4.0.mo
-installing zh_CN.gmo as /local/G_EXTRA/share/locale/zh_CN/LC_MESSAGES/libgda-4.0.mo
-installing zh_HK.gmo as /local/G_EXTRA/share/locale/zh_HK/LC_MESSAGES/libgda-4.0.mo
-installing zh_TW.gmo as /local/G_EXTRA/share/locale/zh_TW/LC_MESSAGES/libgda-4.0.mo
-make[1]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/po'
-Making install in libgda
-make[1]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda'
-Making install in sqlite
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda/sqlite'
-Making install in sqlite-src
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda/sqlite/sqlite-src'
-make[4]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda/sqlite/sqlite-src'
-make[4]: Rien à faire pour `install-exec-am'.
-make[4]: Rien à faire pour `install-data-am'.
-make[4]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda/sqlite/sqlite-src'
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda/sqlite/sqlite-src'
-Making install in virtual
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda/sqlite/virtual'
-make[4]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda/sqlite/virtual'
-make[4]: Rien à faire pour `install-exec-am'.
-test -z "/local/G_EXTRA/include/libgda-4.0/virtual" || mkdir -p -- "/local/G_EXTRA/include/libgda-4.0/virtual"
- /usr/bin/install -c -m 644 'gda-vconnection-data-model.h' '/local/G_EXTRA/include/libgda-4.0/virtual/gda-vconnection-data-model.h'
- /usr/bin/install -c -m 644 'gda-vconnection-hub.h' '/local/G_EXTRA/include/libgda-4.0/virtual/gda-vconnection-hub.h'
- /usr/bin/install -c -m 644 'gda-vprovider-data-model.h' '/local/G_EXTRA/include/libgda-4.0/virtual/gda-vprovider-data-model.h'
- /usr/bin/install -c -m 644 'gda-vprovider-hub.h' '/local/G_EXTRA/include/libgda-4.0/virtual/gda-vprovider-hub.h'
- /usr/bin/install -c -m 644 'gda-virtual-connection.h' '/local/G_EXTRA/include/libgda-4.0/virtual/gda-virtual-connection.h'
- /usr/bin/install -c -m 644 'gda-virtual-provider.h' '/local/G_EXTRA/include/libgda-4.0/virtual/gda-virtual-provider.h'
- /usr/bin/install -c -m 644 'libgda-virtual.h' '/local/G_EXTRA/include/libgda-4.0/virtual/libgda-virtual.h'
-test -z "/local/G_EXTRA/share/libgda-4.0" || mkdir -p -- "/local/G_EXTRA/share/libgda-4.0"
-make[4]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda/sqlite/virtual'
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda/sqlite/virtual'
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda/sqlite'
-make[4]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda/sqlite'
-make[4]: Rien à faire pour `install-exec-am'.
-test -z "/local/G_EXTRA/include/libgda-4.0/libgda/sqlite" || mkdir -p -- "/local/G_EXTRA/include/libgda-4.0/libgda/sqlite"
- /usr/bin/install -c -m 644 'gda-sqlite-provider.h' '/local/G_EXTRA/include/libgda-4.0/libgda/sqlite/gda-sqlite-provider.h'
-make[4]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda/sqlite'
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda/sqlite'
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda/sqlite'
-Making install in handlers
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda/handlers'
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda/handlers'
-make[3]: Rien à faire pour `install-exec-am'.
-test -z "/local/G_EXTRA/include/libgda-4.0/libgda/handlers" || mkdir -p -- "/local/G_EXTRA/include/libgda-4.0/libgda/handlers"
- /usr/bin/install -c -m 644 'gda-handler-bin.h' '/local/G_EXTRA/include/libgda-4.0/libgda/handlers/gda-handler-bin.h'
- /usr/bin/install -c -m 644 'gda-handler-boolean.h' '/local/G_EXTRA/include/libgda-4.0/libgda/handlers/gda-handler-boolean.h'
- /usr/bin/install -c -m 644 'gda-handler-numerical.h' '/local/G_EXTRA/include/libgda-4.0/libgda/handlers/gda-handler-numerical.h'
- /usr/bin/install -c -m 644 'gda-handler-string.h' '/local/G_EXTRA/include/libgda-4.0/libgda/handlers/gda-handler-string.h'
- /usr/bin/install -c -m 644 'gda-handler-time.h' '/local/G_EXTRA/include/libgda-4.0/libgda/handlers/gda-handler-time.h'
- /usr/bin/install -c -m 644 'gda-handler-type.h' '/local/G_EXTRA/include/libgda-4.0/libgda/handlers/gda-handler-type.h'
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda/handlers'
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda/handlers'
-Making install in binreloc
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda/binreloc'
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda/binreloc'
-make[3]: Rien à faire pour `install-exec-am'.
-make[3]: Rien à faire pour `install-data-am'.
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda/binreloc'
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda/binreloc'
-Making install in sql-parser
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda/sql-parser'
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda/sql-parser'
-make[3]: Rien à faire pour `install-exec-am'.
-test -z "/local/G_EXTRA/include/libgda-4.0/sql-parser" || mkdir -p -- "/local/G_EXTRA/include/libgda-4.0/sql-parser"
- /usr/bin/install -c -m 644 'gda-sql-parser.h' '/local/G_EXTRA/include/libgda-4.0/sql-parser/gda-sql-parser.h'
- /usr/bin/install -c -m 644 'gda-sql-statement.h' '/local/G_EXTRA/include/libgda-4.0/sql-parser/gda-sql-statement.h'
- /usr/bin/install -c -m 644 'gda-statement-struct-decl.h' '/local/G_EXTRA/include/libgda-4.0/sql-parser/gda-statement-struct-decl.h'
- /usr/bin/install -c -m 644 'gda-statement-struct.h' '/local/G_EXTRA/include/libgda-4.0/sql-parser/gda-statement-struct.h'
- /usr/bin/install -c -m 644 'gda-statement-struct-compound.h' '/local/G_EXTRA/include/libgda-4.0/sql-parser/gda-statement-struct-compound.h'
- /usr/bin/install -c -m 644 'gda-statement-struct-delete.h' '/local/G_EXTRA/include/libgda-4.0/sql-parser/gda-statement-struct-delete.h'
- /usr/bin/install -c -m 644 'gda-statement-struct-update.h' '/local/G_EXTRA/include/libgda-4.0/sql-parser/gda-statement-struct-update.h'
- /usr/bin/install -c -m 644 'gda-statement-struct-insert.h' '/local/G_EXTRA/include/libgda-4.0/sql-parser/gda-statement-struct-insert.h'
- /usr/bin/install -c -m 644 'gda-statement-struct-parts.h' '/local/G_EXTRA/include/libgda-4.0/sql-parser/gda-statement-struct-parts.h'
- /usr/bin/install -c -m 644 'gda-statement-struct-pspec.h' '/local/G_EXTRA/include/libgda-4.0/sql-parser/gda-statement-struct-pspec.h'
- /usr/bin/install -c -m 644 'gda-statement-struct-select.h' '/local/G_EXTRA/include/libgda-4.0/sql-parser/gda-statement-struct-select.h'
- /usr/bin/install -c -m 644 'gda-statement-struct-trans.h' '/local/G_EXTRA/include/libgda-4.0/sql-parser/gda-statement-struct-trans.h'
- /usr/bin/install -c -m 644 'gda-statement-struct-unknown.h' '/local/G_EXTRA/include/libgda-4.0/sql-parser/gda-statement-struct-unknown.h'
- /usr/bin/install -c -m 644 'gda-statement-struct-util.h' '/local/G_EXTRA/include/libgda-4.0/sql-parser/gda-statement-struct-util.h'
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda/sql-parser'
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda/sql-parser'
-Making install in providers-support
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda/providers-support'
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda/providers-support'
-make[3]: Rien à faire pour `install-exec-am'.
-test -z "/local/G_EXTRA/include/libgda-4.0/providers-support" || mkdir -p -- "/local/G_EXTRA/include/libgda-4.0/providers-support"
- /usr/bin/install -c -m 644 'gda-pmodel.h' '/local/G_EXTRA/include/libgda-4.0/providers-support/gda-pmodel.h'
- /usr/bin/install -c -m 644 'gda-prow.h' '/local/G_EXTRA/include/libgda-4.0/providers-support/gda-prow.h'
- /usr/bin/install -c -m 644 'gda-pstmt.h' '/local/G_EXTRA/include/libgda-4.0/providers-support/gda-pstmt.h'
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda/providers-support'
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda/providers-support'
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda'
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda'
-test -z "/local/G_EXTRA/lib" || mkdir -p -- "/local/G_EXTRA/lib"
- /bin/sh ../libtool --mode=install /usr/bin/install -c  'libgda-4.0.la' '/local/G_EXTRA/lib/libgda-4.0.la'
-/usr/bin/install -c .libs/libgda-4.0.so.4.0.0 /local/G_EXTRA/lib/libgda-4.0.so.4.0.0
-(cd /local/G_EXTRA/lib && { ln -s -f libgda-4.0.so.4.0.0 libgda-4.0.so.4 || { rm -f libgda-4.0.so.4 && ln -s libgda-4.0.so.4.0.0 libgda-4.0.so.4; }; })
-(cd /local/G_EXTRA/lib && { ln -s -f libgda-4.0.so.4.0.0 libgda-4.0.so || { rm -f libgda-4.0.so && ln -s libgda-4.0.so.4.0.0 libgda-4.0.so; }; })
-/usr/bin/install -c .libs/libgda-4.0.lai /local/G_EXTRA/lib/libgda-4.0.la
-/usr/bin/install -c .libs/libgda-4.0.a /local/G_EXTRA/lib/libgda-4.0.a
-chmod 644 /local/G_EXTRA/lib/libgda-4.0.a
-ranlib /local/G_EXTRA/lib/libgda-4.0.a
-PATH="$PATH:/sbin" ldconfig -n /local/G_EXTRA/lib
-----------------------------------------------------------------------
-Libraries have been installed in:
-   /local/G_EXTRA/lib
+Installation Instructions
+*************************
 
-If you ever happen to want to link against installed libraries
-in a given directory, LIBDIR, you must either use libtool, and
-specify the full pathname of the library, or use the `-LLIBDIR'
-flag during linking and do at least one of the following:
-   - add LIBDIR to the `LD_LIBRARY_PATH' environment variable
-     during execution
-   - add LIBDIR to the `LD_RUN_PATH' environment variable
-     during linking
-   - use the `-Wl,--rpath -Wl,LIBDIR' linker flag
-   - have your system administrator add LIBDIR to `/etc/ld.so.conf'
+Copyright (C) 1994, 1995, 1996, 1999, 2000, 2001, 2002, 2004, 2005 Free
+Software Foundation, Inc.
 
-See any operating system documentation about shared libraries for
-more information, such as the ld(1) and ld.so(8) manual pages.
-----------------------------------------------------------------------
-test -z "/local/G_EXTRA/share/libgda-4.0/dtd" || mkdir -p -- "/local/G_EXTRA/share/libgda-4.0/dtd"
- /usr/bin/install -c -m 644 'libgda-array.dtd' '/local/G_EXTRA/share/libgda-4.0/dtd/libgda-array.dtd'
- /usr/bin/install -c -m 644 'libgda-paramlist.dtd' '/local/G_EXTRA/share/libgda-4.0/dtd/libgda-paramlist.dtd'
- /usr/bin/install -c -m 644 'libgda-server-operation.dtd' '/local/G_EXTRA/share/libgda-4.0/dtd/libgda-server-operation.dtd'
-test -z "/local/G_EXTRA/include/libgda-4.0/libgda" || mkdir -p -- "/local/G_EXTRA/include/libgda-4.0/libgda"
- /usr/bin/install -c -m 644 'gda-marshal.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-marshal.h'
- /usr/bin/install -c -m 644 'gda-enum-types.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-enum-types.h'
- /usr/bin/install -c -m 644 'gda-batch.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-batch.h'
- /usr/bin/install -c -m 644 'gda-blob-op.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-blob-op.h'
- /usr/bin/install -c -m 644 'gda-column.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-column.h'
- /usr/bin/install -c -m 644 'gda-column-index.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-column-index.h'
- /usr/bin/install -c -m 644 'gda-config.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-config.h'
- /usr/bin/install -c -m 644 'gda-connection-event.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-connection-event.h'
- /usr/bin/install -c -m 644 'gda-connection.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-connection.h'
- /usr/bin/install -c -m 644 'gda-connection-private.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-connection-private.h'
- /usr/bin/install -c -m 644 'gda-data-handler.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-data-handler.h'
- /usr/bin/install -c -m 644 'gda-data-model-array.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-data-model-array.h'
- /usr/bin/install -c -m 644 'gda-data-model-row.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-data-model-row.h'
- /usr/bin/install -c -m 644 'gda-data-model.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-data-model.h'
- /usr/bin/install -c -m 644 'gda-data-model-bdb.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-data-model-bdb.h'
- /usr/bin/install -c -m 644 'gda-data-model-dir.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-data-model-dir.h'
- /usr/bin/install -c -m 644 'gda-data-model-extra.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-data-model-extra.h'
- /usr/bin/install -c -m 644 'gda-data-model-import.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-data-model-import.h'
- /usr/bin/install -c -m 644 'gda-data-model-index.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-data-model-index.h'
- /usr/bin/install -c -m 644 'gda-data-model-iter.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-data-model-iter.h'
- /usr/bin/install -c -m 644 'gda-data-model-private.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-data-model-private.h'
- /usr/bin/install -c -m 644 'gda-data-model-query.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-data-model-query.h'
- /usr/bin/install -c -m 644 'gda-data-access-wrapper.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-data-access-wrapper.h'
- /usr/bin/install -c -m 644 'gda-data-proxy.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-data-proxy.h'
- /usr/bin/install -c -m 644 'gda-debug-macros.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-debug-macros.h'
- /usr/bin/install -c -m 644 'gda-decl.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-decl.h'
- /usr/bin/install -c -m 644 'gda-easy.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-easy.h'
- /usr/bin/install -c -m 644 'gda-enums.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-enums.h'
- /usr/bin/install -c -m 644 'gda-holder.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-holder.h'
- /usr/bin/install -c -m 644 'gda-log.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-log.h'
- /usr/bin/install -c -m 644 'gda-marshal.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-marshal.h'
- /usr/bin/install -c -m 644 'gda-meta-store.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-meta-store.h'
- /usr/bin/install -c -m 644 'gda-meta-struct.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-meta-struct.h'
- /usr/bin/install -c -m 644 'gda-quark-list.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-quark-list.h'
- /usr/bin/install -c -m 644 'gda-set.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-set.h'
- /usr/bin/install -c -m 644 'gda-row.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-row.h'
- /usr/bin/install -c -m 644 'gda-server-operation.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-server-operation.h'
- /usr/bin/install -c -m 644 'gda-server-provider.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-server-provider.h'
- /usr/bin/install -c -m 644 'gda-server-provider-extra.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-server-provider-extra.h'
- /usr/bin/install -c -m 644 'gda-server-provider-private.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-server-provider-private.h'
- /usr/bin/install -c -m 644 'gda-statement.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-statement.h'
- /usr/bin/install -c -m 644 'gda-threader.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-threader.h'
- /usr/bin/install -c -m 644 'gda-transaction-status.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-transaction-status.h'
- /usr/bin/install -c -m 644 'gda-transaction-status-private.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-transaction-status-private.h'
- /usr/bin/install -c -m 644 'gda-util.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-util.h'
- /usr/bin/install -c -m 644 'gda-value.h' '/local/G_EXTRA/include/libgda-4.0/libgda/gda-value.h'
- /usr/bin/install -c -m 644 'libgda.h' '/local/G_EXTRA/include/libgda-4.0/libgda/libgda.h'
-test -z "/local/G_EXTRA/share/libgda-4.0" || mkdir -p -- "/local/G_EXTRA/share/libgda-4.0"
- /usr/bin/install -c -m 644 'information_schema.xml' '/local/G_EXTRA/share/libgda-4.0/information_schema.xml'
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda'
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda'
-make[1]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda'
-Making install in providers
-make[1]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/providers'
-Making install in sqlite
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/providers/sqlite'
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/providers/sqlite'
-make[3]: Rien à faire pour `install-exec-am'.
-test -z "/local/G_EXTRA/include/libgda-4.0/virtual" || mkdir -p -- "/local/G_EXTRA/include/libgda-4.0/virtual"
-test -z "/local/G_EXTRA/lib/pkgconfig" || mkdir -p -- "/local/G_EXTRA/lib/pkgconfig"
- /usr/bin/install -c -m 644 'libgda-sqlite-4.0.pc' '/local/G_EXTRA/lib/pkgconfig/libgda-sqlite-4.0.pc'
-test -z "/local/G_EXTRA/lib/libgda-4.0/providers" || mkdir -p -- "/local/G_EXTRA/lib/libgda-4.0/providers"
- /bin/sh ../../libtool --mode=install /usr/bin/install -c  'libgda-sqlite.la' '/local/G_EXTRA/lib/libgda-4.0/providers/libgda-sqlite.la'
-libtool: install: warning: relinking `libgda-sqlite.la'
-(cd /local/TESTS/V4/A/providers/sqlite; /bin/sh ../../libtool  --tag=CC --mode=relink gcc -Wall -g -o libgda-sqlite.la -rpath /local/G_EXTRA/lib/libgda-4.0/providers -export-dynamic -module -avoid-version libmain.lo ../../libgda/libgda-4.0.la -pthread -Wl,--export-dynamic -L/local/G18/lib -lgobject-2.0 -lgthread-2.0 -lrt -lgmodule-2.0 -ldl -lglib-2.0 -lxml2 -lpthread )
-gcc -shared  .libs/libmain.o  -Wl,--rpath -Wl,/local/G_EXTRA/lib -Wl,--rpath -Wl,/local/G18/lib -L/local/G_EXTRA/lib -lgda-4.0 -L/local/G18/lib -lgobject-2.0 -lgthread-2.0 -lrt -lgmodule-2.0 -ldl -lglib-2.0 -lxml2 -lpthread  -pthread -Wl,--export-dynamic -Wl,-soname -Wl,libgda-sqlite.so -o .libs/libgda-sqlite.so
-/usr/bin/install -c .libs/libgda-sqlite.soT /local/G_EXTRA/lib/libgda-4.0/providers/libgda-sqlite.so
-/usr/bin/install -c .libs/libgda-sqlite.lai /local/G_EXTRA/lib/libgda-4.0/providers/libgda-sqlite.la
-/usr/bin/install -c .libs/libgda-sqlite.a /local/G_EXTRA/lib/libgda-4.0/providers/libgda-sqlite.a
-chmod 644 /local/G_EXTRA/lib/libgda-4.0/providers/libgda-sqlite.a
-ranlib /local/G_EXTRA/lib/libgda-4.0/providers/libgda-sqlite.a
-PATH="$PATH:/sbin" ldconfig -n /local/G_EXTRA/lib/libgda-4.0/providers
-----------------------------------------------------------------------
-Libraries have been installed in:
-   /local/G_EXTRA/lib/libgda-4.0/providers
+This file is free documentation; the Free Software Foundation gives
+unlimited permission to copy, distribute and modify it.
 
-If you ever happen to want to link against installed libraries
-in a given directory, LIBDIR, you must either use libtool, and
-specify the full pathname of the library, or use the `-LLIBDIR'
-flag during linking and do at least one of the following:
-   - add LIBDIR to the `LD_LIBRARY_PATH' environment variable
-     during execution
-   - add LIBDIR to the `LD_RUN_PATH' environment variable
-     during linking
-   - use the `-Wl,--rpath -Wl,LIBDIR' linker flag
-   - have your system administrator add LIBDIR to `/etc/ld.so.conf'
+Basic Installation
+==================
 
-See any operating system documentation about shared libraries for
-more information, such as the ld(1) and ld.so(8) manual pages.
-----------------------------------------------------------------------
-test -z "/local/G_EXTRA/share/libgda-4.0" || mkdir -p -- "/local/G_EXTRA/share/libgda-4.0"
- /usr/bin/install -c -m 644 'sqlite_specs_create_db.xml' '/local/G_EXTRA/share/libgda-4.0/sqlite_specs_create_db.xml'
- /usr/bin/install -c -m 644 'sqlite_specs_dsn.xml' '/local/G_EXTRA/share/libgda-4.0/sqlite_specs_dsn.xml'
- /usr/bin/install -c -m 644 'sqlite_specs_create_db.xml' '/local/G_EXTRA/share/libgda-4.0/sqlite_specs_create_db.xml'
- /usr/bin/install -c -m 644 'sqlite_specs_drop_db.xml' '/local/G_EXTRA/share/libgda-4.0/sqlite_specs_drop_db.xml'
- /usr/bin/install -c -m 644 'sqlite_specs_create_table.xml' '/local/G_EXTRA/share/libgda-4.0/sqlite_specs_create_table.xml'
- /usr/bin/install -c -m 644 'sqlite_specs_drop_table.xml' '/local/G_EXTRA/share/libgda-4.0/sqlite_specs_drop_table.xml'
- /usr/bin/install -c -m 644 'sqlite_specs_create_index.xml' '/local/G_EXTRA/share/libgda-4.0/sqlite_specs_create_index.xml'
- /usr/bin/install -c -m 644 'sqlite_specs_drop_index.xml' '/local/G_EXTRA/share/libgda-4.0/sqlite_specs_drop_index.xml'
- /usr/bin/install -c -m 644 'sqlite_specs_rename_table.xml' '/local/G_EXTRA/share/libgda-4.0/sqlite_specs_rename_table.xml'
- /usr/bin/install -c -m 644 'sqlite_specs_add_column.xml' '/local/G_EXTRA/share/libgda-4.0/sqlite_specs_add_column.xml'
- /usr/bin/install -c -m 644 'sqlite_specs_create_view.xml' '/local/G_EXTRA/share/libgda-4.0/sqlite_specs_create_view.xml'
- /usr/bin/install -c -m 644 'sqlite_specs_drop_view.xml' '/local/G_EXTRA/share/libgda-4.0/sqlite_specs_drop_view.xml'
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/providers/sqlite'
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/providers/sqlite'
-Making install in skel-implementation
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/providers/skel-implementation'
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/providers/skel-implementation'
-make[4]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/providers/skel-implementation'
-make[4]: Rien à faire pour `install-exec-am'.
-make[4]: Rien à faire pour `install-data-am'.
-make[4]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/providers/skel-implementation'
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/providers/skel-implementation'
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/providers/skel-implementation'
-Making install in bdb
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/providers/bdb'
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/providers/bdb'
-make[3]: Rien à faire pour `install-exec-am'.
-test -z "/local/G_EXTRA/lib/pkgconfig" || mkdir -p -- "/local/G_EXTRA/lib/pkgconfig"
- /usr/bin/install -c -m 644 'libgda-bdb-4.0.pc' '/local/G_EXTRA/lib/pkgconfig/libgda-bdb-4.0.pc'
-test -z "/local/G_EXTRA/lib/libgda-4.0/providers" || mkdir -p -- "/local/G_EXTRA/lib/libgda-4.0/providers"
- /bin/sh ../../libtool --mode=install /usr/bin/install -c  'libgda-bdb.la' '/local/G_EXTRA/lib/libgda-4.0/providers/libgda-bdb.la'
-libtool: install: warning: relinking `libgda-bdb.la'
-(cd /local/TESTS/V4/A/providers/bdb; /bin/sh ../../libtool  --tag=CC --mode=relink gcc -Wall -g -o libgda-bdb.la -rpath /local/G_EXTRA/lib/libgda-4.0/providers -export-dynamic -module -avoid-version gda-bdb-provider.lo libmain.lo ../../libgda/libgda-4.0.la -pthread -Wl,--export-dynamic -L/local/G18/lib -lgobject-2.0 -lgthread-2.0 -lrt -lgmodule-2.0 -ldl -lglib-2.0 -lxml2 -lpthread )
-gcc -shared  .libs/gda-bdb-provider.o .libs/libmain.o  -Wl,--rpath -Wl,/local/G_EXTRA/lib -Wl,--rpath -Wl,/local/G18/lib -L/local/G_EXTRA/lib -lgda-4.0 -L/local/G18/lib -lgobject-2.0 -lgthread-2.0 -lrt -lgmodule-2.0 -ldl -lglib-2.0 -lxml2 -lpthread  -pthread -Wl,--export-dynamic -Wl,-soname -Wl,libgda-bdb.so -o .libs/libgda-bdb.so
-/usr/bin/install -c .libs/libgda-bdb.soT /local/G_EXTRA/lib/libgda-4.0/providers/libgda-bdb.so
-/usr/bin/install -c .libs/libgda-bdb.lai /local/G_EXTRA/lib/libgda-4.0/providers/libgda-bdb.la
-/usr/bin/install -c .libs/libgda-bdb.a /local/G_EXTRA/lib/libgda-4.0/providers/libgda-bdb.a
-chmod 644 /local/G_EXTRA/lib/libgda-4.0/providers/libgda-bdb.a
-ranlib /local/G_EXTRA/lib/libgda-4.0/providers/libgda-bdb.a
-PATH="$PATH:/sbin" ldconfig -n /local/G_EXTRA/lib/libgda-4.0/providers
-----------------------------------------------------------------------
-Libraries have been installed in:
-   /local/G_EXTRA/lib/libgda-4.0/providers
+These are generic installation instructions.
 
-If you ever happen to want to link against installed libraries
-in a given directory, LIBDIR, you must either use libtool, and
-specify the full pathname of the library, or use the `-LLIBDIR'
-flag during linking and do at least one of the following:
-   - add LIBDIR to the `LD_LIBRARY_PATH' environment variable
-     during execution
-   - add LIBDIR to the `LD_RUN_PATH' environment variable
-     during linking
-   - use the `-Wl,--rpath -Wl,LIBDIR' linker flag
-   - have your system administrator add LIBDIR to `/etc/ld.so.conf'
+   The `configure' shell script attempts to guess correct values for
+various system-dependent variables used during compilation.  It uses
+those values to create a `Makefile' in each directory of the package.
+It may also create one or more `.h' files containing system-dependent
+definitions.  Finally, it creates a shell script `config.status' that
+you can run in the future to recreate the current configuration, and a
+file `config.log' containing compiler output (useful mainly for
+debugging `configure').
 
-See any operating system documentation about shared libraries for
-more information, such as the ld(1) and ld.so(8) manual pages.
-----------------------------------------------------------------------
-test -z "/local/G_EXTRA/share/libgda-4.0" || mkdir -p -- "/local/G_EXTRA/share/libgda-4.0"
- /usr/bin/install -c -m 644 'bdb_specs_dsn.xml' '/local/G_EXTRA/share/libgda-4.0/bdb_specs_dsn.xml'
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/providers/bdb'
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/providers/bdb'
-Making install in mdb
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/providers/mdb'
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/providers/mdb'
-make[3]: Rien à faire pour `install-exec-am'.
-test -z "/local/G_EXTRA/lib/pkgconfig" || mkdir -p -- "/local/G_EXTRA/lib/pkgconfig"
- /usr/bin/install -c -m 644 'libgda-mdb-4.0.pc' '/local/G_EXTRA/lib/pkgconfig/libgda-mdb-4.0.pc'
-test -z "/local/G_EXTRA/lib/libgda-4.0/providers" || mkdir -p -- "/local/G_EXTRA/lib/libgda-4.0/providers"
- /bin/sh ../../libtool --mode=install /usr/bin/install -c  'libgda-mdb.la' '/local/G_EXTRA/lib/libgda-4.0/providers/libgda-mdb.la'
-libtool: install: warning: relinking `libgda-mdb.la'
-(cd /local/TESTS/V4/A/providers/mdb; /bin/sh ../../libtool  --tag=CC --mode=relink gcc -Wall -g -o libgda-mdb.la -rpath /local/G_EXTRA/lib/libgda-4.0/providers -export-dynamic -module -avoid-version gda-mdb-provider.lo libmain.lo ../../libgda/libgda-4.0.la -pthread -Wl,--export-dynamic -L/local/G18/lib -lgobject-2.0 -lgthread-2.0 -lrt -lgmodule-2.0 -ldl -lglib-2.0 -lxml2 -L/local/G_EXTRA/lib -lmdb -lpthread )
-gcc -shared  .libs/gda-mdb-provider.o .libs/libmain.o  -Wl,--rpath -Wl,/local/G_EXTRA/lib -Wl,--rpath -Wl,/local/G18/lib -L/local/G_EXTRA/lib -lgda-4.0 -L/local/G18/lib -lgobject-2.0 -lgthread-2.0 -lrt -lgmodule-2.0 -ldl -lglib-2.0 -lxml2 -lmdb -lpthread  -pthread -Wl,--export-dynamic -Wl,-soname -Wl,libgda-mdb.so -o .libs/libgda-mdb.so
-/usr/bin/install -c .libs/libgda-mdb.soT /local/G_EXTRA/lib/libgda-4.0/providers/libgda-mdb.so
-/usr/bin/install -c .libs/libgda-mdb.lai /local/G_EXTRA/lib/libgda-4.0/providers/libgda-mdb.la
-/usr/bin/install -c .libs/libgda-mdb.a /local/G_EXTRA/lib/libgda-4.0/providers/libgda-mdb.a
-chmod 644 /local/G_EXTRA/lib/libgda-4.0/providers/libgda-mdb.a
-ranlib /local/G_EXTRA/lib/libgda-4.0/providers/libgda-mdb.a
-PATH="$PATH:/sbin" ldconfig -n /local/G_EXTRA/lib/libgda-4.0/providers
-----------------------------------------------------------------------
-Libraries have been installed in:
-   /local/G_EXTRA/lib/libgda-4.0/providers
+   It can also use an optional file (typically called `config.cache'
+and enabled with `--cache-file=config.cache' or simply `-C') that saves
+the results of its tests to speed up reconfiguring.  (Caching is
+disabled by default to prevent problems with accidental use of stale
+cache files.)
 
-If you ever happen to want to link against installed libraries
-in a given directory, LIBDIR, you must either use libtool, and
-specify the full pathname of the library, or use the `-LLIBDIR'
-flag during linking and do at least one of the following:
-   - add LIBDIR to the `LD_LIBRARY_PATH' environment variable
-     during execution
-   - add LIBDIR to the `LD_RUN_PATH' environment variable
-     during linking
-   - use the `-Wl,--rpath -Wl,LIBDIR' linker flag
-   - have your system administrator add LIBDIR to `/etc/ld.so.conf'
+   If you need to do unusual things to compile the package, please try
+to figure out how `configure' could check whether to do them, and mail
+diffs or instructions to the address given in the `README' so they can
+be considered for the next release.  If you are using the cache, and at
+some point `config.cache' contains results you don't want to keep, you
+may remove or edit it.
 
-See any operating system documentation about shared libraries for
-more information, such as the ld(1) and ld.so(8) manual pages.
-----------------------------------------------------------------------
-test -z "/local/G_EXTRA/share/libgda-4.0" || mkdir -p -- "/local/G_EXTRA/share/libgda-4.0"
- /usr/bin/install -c -m 644 'mdb_specs_dsn.xml' '/local/G_EXTRA/share/libgda-4.0/mdb_specs_dsn.xml'
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/providers/mdb'
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/providers/mdb'
-Making install in postgres
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/providers/postgres'
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/providers/postgres'
-make[3]: Rien à faire pour `install-exec-am'.
-test -z "/local/G_EXTRA/lib/pkgconfig" || mkdir -p -- "/local/G_EXTRA/lib/pkgconfig"
- /usr/bin/install -c -m 644 'libgda-postgres-4.0.pc' '/local/G_EXTRA/lib/pkgconfig/libgda-postgres-4.0.pc'
-test -z "/local/G_EXTRA/lib/libgda-4.0/providers" || mkdir -p -- "/local/G_EXTRA/lib/libgda-4.0/providers"
- /bin/sh ../../libtool --mode=install /usr/bin/install -c  'libgda-postgres.la' '/local/G_EXTRA/lib/libgda-4.0/providers/libgda-postgres.la'
-libtool: install: warning: relinking `libgda-postgres.la'
-(cd /local/TESTS/V4/A/providers/postgres; /bin/sh ../../libtool  --tag=CC --mode=relink gcc -Wall -g -o libgda-postgres.la -rpath /local/G_EXTRA/lib/libgda-4.0/providers -export-dynamic -module -avoid-version gda-postgres-blob-op.lo gda-postgres-ddl.lo gda-postgres-handler-bin.lo gda-postgres-parser.lo gda-postgres-provider.lo gda-postgres-pstmt.lo gda-postgres-meta.lo gda-postgres-recordset.lo gda-postgres-util.lo libmain.lo parser.lo ../../libgda/libgda-4.0.la -pthread -Wl,--export-dynamic -L/local/G18/lib -lgobject-2.0 -lgthread-2.0 -lrt -lgmodule-2.0 -ldl -lglib-2.0 -lxml2 -L/local/BASES/POSTGRES821/lib -lpq -lpthread )
-gcc -shared  .libs/gda-postgres-blob-op.o .libs/gda-postgres-ddl.o .libs/gda-postgres-handler-bin.o .libs/gda-postgres-parser.o .libs/gda-postgres-provider.o .libs/gda-postgres-pstmt.o .libs/gda-postgres-meta.o .libs/gda-postgres-recordset.o .libs/gda-postgres-util.o .libs/libmain.o .libs/parser.o  -Wl,--rpath -Wl,/local/G_EXTRA/lib -Wl,--rpath -Wl,/local/G18/lib -L/local/G_EXTRA/lib -lgda-4.0 -L/local/G18/lib -lgobject-2.0 -lgthread-2.0 -lrt -lgmodule-2.0 -ldl -lglib-2.0 -lxml2 -L/local/BASES/POSTGRES821/lib -lpq -lpthread  -pthread -Wl,--export-dynamic -Wl,-soname -Wl,libgda-postgres.so -o .libs/libgda-postgres.so
-/usr/bin/install -c .libs/libgda-postgres.soT /local/G_EXTRA/lib/libgda-4.0/providers/libgda-postgres.so
-/usr/bin/install -c .libs/libgda-postgres.lai /local/G_EXTRA/lib/libgda-4.0/providers/libgda-postgres.la
-/usr/bin/install -c .libs/libgda-postgres.a /local/G_EXTRA/lib/libgda-4.0/providers/libgda-postgres.a
-chmod 644 /local/G_EXTRA/lib/libgda-4.0/providers/libgda-postgres.a
-ranlib /local/G_EXTRA/lib/libgda-4.0/providers/libgda-postgres.a
-PATH="$PATH:/sbin" ldconfig -n /local/G_EXTRA/lib/libgda-4.0/providers
-----------------------------------------------------------------------
-Libraries have been installed in:
-   /local/G_EXTRA/lib/libgda-4.0/providers
+   The file `configure.ac' (or `configure.in') is used to create
+`configure' by a program called `autoconf'.  You only need
+`configure.ac' if you want to change it or regenerate `configure' using
+a newer version of `autoconf'.
 
-If you ever happen to want to link against installed libraries
-in a given directory, LIBDIR, you must either use libtool, and
-specify the full pathname of the library, or use the `-LLIBDIR'
-flag during linking and do at least one of the following:
-   - add LIBDIR to the `LD_LIBRARY_PATH' environment variable
-     during execution
-   - add LIBDIR to the `LD_RUN_PATH' environment variable
-     during linking
-   - use the `-Wl,--rpath -Wl,LIBDIR' linker flag
-   - have your system administrator add LIBDIR to `/etc/ld.so.conf'
+The simplest way to compile this package is:
 
-See any operating system documentation about shared libraries for
-more information, such as the ld(1) and ld.so(8) manual pages.
-----------------------------------------------------------------------
-test -z "/local/G_EXTRA/share/libgda-4.0" || mkdir -p -- "/local/G_EXTRA/share/libgda-4.0"
- /usr/bin/install -c -m 644 'postgres_specs_create_db.xml' '/local/G_EXTRA/share/libgda-4.0/postgres_specs_create_db.xml'
- /usr/bin/install -c -m 644 'postgres_specs_drop_db.xml' '/local/G_EXTRA/share/libgda-4.0/postgres_specs_drop_db.xml'
- /usr/bin/install -c -m 644 'postgres_specs_dsn.xml' '/local/G_EXTRA/share/libgda-4.0/postgres_specs_dsn.xml'
- /usr/bin/install -c -m 644 'postgres_specs_create_table.xml' '/local/G_EXTRA/share/libgda-4.0/postgres_specs_create_table.xml'
- /usr/bin/install -c -m 644 'postgres_specs_drop_table.xml' '/local/G_EXTRA/share/libgda-4.0/postgres_specs_drop_table.xml'
- /usr/bin/install -c -m 644 'postgres_specs_create_index.xml' '/local/G_EXTRA/share/libgda-4.0/postgres_specs_create_index.xml'
- /usr/bin/install -c -m 644 'postgres_specs_drop_index.xml' '/local/G_EXTRA/share/libgda-4.0/postgres_specs_drop_index.xml'
- /usr/bin/install -c -m 644 'postgres_specs_rename_table.xml' '/local/G_EXTRA/share/libgda-4.0/postgres_specs_rename_table.xml'
- /usr/bin/install -c -m 644 'postgres_specs_add_column.xml' '/local/G_EXTRA/share/libgda-4.0/postgres_specs_add_column.xml'
- /usr/bin/install -c -m 644 'postgres_specs_drop_column.xml' '/local/G_EXTRA/share/libgda-4.0/postgres_specs_drop_column.xml'
- /usr/bin/install -c -m 644 'postgres_specs_create_view.xml' '/local/G_EXTRA/share/libgda-4.0/postgres_specs_create_view.xml'
- /usr/bin/install -c -m 644 'postgres_specs_drop_view.xml' '/local/G_EXTRA/share/libgda-4.0/postgres_specs_drop_view.xml'
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/providers/postgres'
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/providers/postgres'
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/providers'
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/providers'
-make[3]: Rien à faire pour `install-exec-am'.
-make[3]: Rien à faire pour `install-data-am'.
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/providers'
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/providers'
-make[1]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/providers'
-Making install in libgda-report
-make[1]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report'
-Making install in engine
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report/engine'
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report/engine'
-make[3]: Rien à faire pour `install-exec-am'.
-test -z "/local/G_EXTRA/include/libgda-4.0/libgda-report" || mkdir -p -- "/local/G_EXTRA/include/libgda-4.0/libgda-report"
- /usr/bin/install -c -m 644 'gda-report-engine.h' '/local/G_EXTRA/include/libgda-4.0/libgda-report/gda-report-engine.h'
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report/engine'
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report/engine'
-Making install in DocBook
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report/DocBook'
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report/DocBook'
-make[3]: Rien à faire pour `install-exec-am'.
-test -z "/local/G_EXTRA/include/libgda-4.0/libgda-report" || mkdir -p -- "/local/G_EXTRA/include/libgda-4.0/libgda-report"
- /usr/bin/install -c -m 644 'gda-report-docbook-document.h' '/local/G_EXTRA/include/libgda-4.0/libgda-report/gda-report-docbook-document.h'
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report/DocBook'
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report/DocBook'
-Making install in RML
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report/RML'
-Making install in trml2html
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report/RML/trml2html'
-make[4]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report/RML/trml2html'
-mkdir -p /local/G_EXTRA/bin/gda_trml2html
-cd ../../../libgda-report/RML/trml2html && /usr/bin/install -c __init__.py trml2html.py utils.py /local/G_EXTRA/bin/gda_trml2html
-make[4]: Rien à faire pour `install-data-am'.
-make[4]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report/RML/trml2html'
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report/RML/trml2html'
-Making install in trml2pdf
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report/RML/trml2pdf'
-make[4]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report/RML/trml2pdf'
-mkdir -p /local/G_EXTRA/bin/gda_trml2pdf
-cd ../../../libgda-report/RML/trml2pdf && /usr/bin/install -c color.py __init__.py trml2pdf.py utils.py /local/G_EXTRA/bin/gda_trml2pdf
-make[4]: Rien à faire pour `install-data-am'.
-make[4]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report/RML/trml2pdf'
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report/RML/trml2pdf'
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report/RML'
-make[4]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report/RML'
-make[4]: Rien à faire pour `install-exec-am'.
-test -z "/local/G_EXTRA/include/libgda-4.0/libgda-report" || mkdir -p -- "/local/G_EXTRA/include/libgda-4.0/libgda-report"
- /usr/bin/install -c -m 644 'gda-report-rml-document.h' '/local/G_EXTRA/include/libgda-4.0/libgda-report/gda-report-rml-document.h'
-make[4]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report/RML'
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report/RML'
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report/RML'
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report'
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report'
-test -z "/local/G_EXTRA/lib" || mkdir -p -- "/local/G_EXTRA/lib"
- /bin/sh ../libtool --mode=install /usr/bin/install -c  'libgda-report-4.0.la' '/local/G_EXTRA/lib/libgda-report-4.0.la'
-libtool: install: warning: relinking `libgda-report-4.0.la'
-(cd /local/TESTS/V4/A/libgda-report; /bin/sh ../libtool  --tag=CC --mode=relink gcc -Wall -g -o libgda-report-4.0.la -rpath /local/G_EXTRA/lib -version-info 4:0:0 gda-report-document.lo engine/libgda-report-engine-4.0.la DocBook/libgda-report-docbook-4.0.la RML/libgda-report-rml-4.0.la -pthread -Wl,--export-dynamic -L/local/G18/lib -lgobject-2.0 -lgthread-2.0 -lrt -lgmodule-2.0 -ldl -lglib-2.0 -lxml2 -lpthread )
-gcc -shared  .libs/gda-report-document.o -Wl,--whole-archive engine/.libs/libgda-report-engine-4.0.a DocBook/.libs/libgda-report-docbook-4.0.a RML/.libs/libgda-report-rml-4.0.a -Wl,--no-whole-archive  -Wl,--rpath -Wl,/local/G_EXTRA/lib -Wl,--rpath -Wl,/local/G18/lib -L/local/G18/lib -L/local/G_EXTRA/lib -lgda-4.0 -lz -lm -lgamin-1 -ldb -lgobject-2.0 -lgthread-2.0 -lrt -lgmodule-2.0 -ldl -lglib-2.0 -lxml2 -lpthread  -pthread -Wl,--export-dynamic -Wl,-soname -Wl,libgda-report-4.0.so.4 -o .libs/libgda-report-4.0.so.4.0.0
-/usr/bin/install -c .libs/libgda-report-4.0.so.4.0.0T /local/G_EXTRA/lib/libgda-report-4.0.so.4.0.0
-(cd /local/G_EXTRA/lib && { ln -s -f libgda-report-4.0.so.4.0.0 libgda-report-4.0.so.4 || { rm -f libgda-report-4.0.so.4 && ln -s libgda-report-4.0.so.4.0.0 libgda-report-4.0.so.4; }; })
-(cd /local/G_EXTRA/lib && { ln -s -f libgda-report-4.0.so.4.0.0 libgda-report-4.0.so || { rm -f libgda-report-4.0.so && ln -s libgda-report-4.0.so.4.0.0 libgda-report-4.0.so; }; })
-/usr/bin/install -c .libs/libgda-report-4.0.lai /local/G_EXTRA/lib/libgda-report-4.0.la
-/usr/bin/install -c .libs/libgda-report-4.0.a /local/G_EXTRA/lib/libgda-report-4.0.a
-chmod 644 /local/G_EXTRA/lib/libgda-report-4.0.a
-ranlib /local/G_EXTRA/lib/libgda-report-4.0.a
-PATH="$PATH:/sbin" ldconfig -n /local/G_EXTRA/lib
-----------------------------------------------------------------------
-Libraries have been installed in:
-   /local/G_EXTRA/lib
+  1. `cd' to the directory containing the package's source code and type
+     `./configure' to configure the package for your system.  If you're
+     using `csh' on an old version of System V, you might need to type
+     `sh ./configure' instead to prevent `csh' from trying to execute
+     `configure' itself.
 
-If you ever happen to want to link against installed libraries
-in a given directory, LIBDIR, you must either use libtool, and
-specify the full pathname of the library, or use the `-LLIBDIR'
-flag during linking and do at least one of the following:
-   - add LIBDIR to the `LD_LIBRARY_PATH' environment variable
-     during execution
-   - add LIBDIR to the `LD_RUN_PATH' environment variable
-     during linking
-   - use the `-Wl,--rpath -Wl,LIBDIR' linker flag
-   - have your system administrator add LIBDIR to `/etc/ld.so.conf'
+     Running `configure' takes awhile.  While running, it prints some
+     messages telling which features it is checking for.
 
-See any operating system documentation about shared libraries for
-more information, such as the ld(1) and ld.so(8) manual pages.
-----------------------------------------------------------------------
-test -z "/local/G_EXTRA/include/libgda-4.0/libgda-report" || mkdir -p -- "/local/G_EXTRA/include/libgda-4.0/libgda-report"
- /usr/bin/install -c -m 644 'libgda-report.h' '/local/G_EXTRA/include/libgda-4.0/libgda-report/libgda-report.h'
- /usr/bin/install -c -m 644 'gda-report-document.h' '/local/G_EXTRA/include/libgda-4.0/libgda-report/gda-report-document.h'
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report'
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report'
-make[1]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda-report'
-Making install in libgda-xslt
-make[1]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda-xslt'
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/libgda-xslt'
-test -z "/local/G_EXTRA/lib" || mkdir -p -- "/local/G_EXTRA/lib"
- /bin/sh ../libtool --mode=install /usr/bin/install -c  'libgda-xslt-4.0.la' '/local/G_EXTRA/lib/libgda-xslt-4.0.la'
-libtool: install: warning: relinking `libgda-xslt-4.0.la'
-(cd /local/TESTS/V4/A/libgda-xslt; /bin/sh ../libtool  --tag=CC --mode=relink gcc -Wall -g -o libgda-xslt-4.0.la -rpath /local/G_EXTRA/lib sqlexslt.lo sql_exslt_internal.lo sql_backend.lo -pthread -Wl,--export-dynamic -L/local/G18/lib -lgobject-2.0 -lgthread-2.0 -lrt -lgmodule-2.0 -ldl -lglib-2.0 -lxml2 -L/local/G18/lib -lxslt -lz -lpthread -lm -lxml2 ../libgda/libgda-4.0.la -lpthread )
-gcc -shared  .libs/sqlexslt.o .libs/sql_exslt_internal.o .libs/sql_backend.o  -Wl,--rpath -Wl,/local/G18/lib -Wl,--rpath -Wl,/local/G_EXTRA/lib -L/local/G18/lib -lgobject-2.0 -lgthread-2.0 -lrt -lgmodule-2.0 -ldl -lglib-2.0 -lxslt -lz -lm -lxml2 -L/local/G_EXTRA/lib -lgda-4.0 -lpthread  -pthread -Wl,--export-dynamic -Wl,-soname -Wl,libgda-xslt-4.0.so.0 -o .libs/libgda-xslt-4.0.so.0.0.0
-/usr/bin/install -c .libs/libgda-xslt-4.0.so.0.0.0T /local/G_EXTRA/lib/libgda-xslt-4.0.so.0.0.0
-(cd /local/G_EXTRA/lib && { ln -s -f libgda-xslt-4.0.so.0.0.0 libgda-xslt-4.0.so.0 || { rm -f libgda-xslt-4.0.so.0 && ln -s libgda-xslt-4.0.so.0.0.0 libgda-xslt-4.0.so.0; }; })
-(cd /local/G_EXTRA/lib && { ln -s -f libgda-xslt-4.0.so.0.0.0 libgda-xslt-4.0.so || { rm -f libgda-xslt-4.0.so && ln -s libgda-xslt-4.0.so.0.0.0 libgda-xslt-4.0.so; }; })
-/usr/bin/install -c .libs/libgda-xslt-4.0.lai /local/G_EXTRA/lib/libgda-xslt-4.0.la
-/usr/bin/install -c .libs/libgda-xslt-4.0.a /local/G_EXTRA/lib/libgda-xslt-4.0.a
-chmod 644 /local/G_EXTRA/lib/libgda-xslt-4.0.a
-ranlib /local/G_EXTRA/lib/libgda-xslt-4.0.a
-PATH="$PATH:/sbin" ldconfig -n /local/G_EXTRA/lib
-----------------------------------------------------------------------
-Libraries have been installed in:
-   /local/G_EXTRA/lib
+  2. Type `make' to compile the package.
 
-If you ever happen to want to link against installed libraries
-in a given directory, LIBDIR, you must either use libtool, and
-specify the full pathname of the library, or use the `-LLIBDIR'
-flag during linking and do at least one of the following:
-   - add LIBDIR to the `LD_LIBRARY_PATH' environment variable
-     during execution
-   - add LIBDIR to the `LD_RUN_PATH' environment variable
-     during linking
-   - use the `-Wl,--rpath -Wl,LIBDIR' linker flag
-   - have your system administrator add LIBDIR to `/etc/ld.so.conf'
+  3. Optionally, type `make check' to run any self-tests that come with
+     the package.
 
-See any operating system documentation about shared libraries for
-more information, such as the ld(1) and ld.so(8) manual pages.
-----------------------------------------------------------------------
-test -z "/local/G_EXTRA/include/libgda-4.0/libgda-xslt" || mkdir -p -- "/local/G_EXTRA/include/libgda-4.0/libgda-xslt"
- /usr/bin/install -c -m 644 'libgda-xslt.h' '/local/G_EXTRA/include/libgda-4.0/libgda-xslt/libgda-xslt.h'
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda-xslt'
-make[1]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/libgda-xslt'
-Making install in tools
-make[1]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/tools'
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/tools'
-test -z "/local/G_EXTRA/bin" || mkdir -p -- "/local/G_EXTRA/bin"
-  /bin/sh ../libtool --mode=install /usr/bin/install -c 'gda-list-config-4.0' '/local/G_EXTRA/bin/gda-list-config-4.0'
-/usr/bin/install -c .libs/gda-list-config-4.0 /local/G_EXTRA/bin/gda-list-config-4.0
-  /bin/sh ../libtool --mode=install /usr/bin/install -c 'gda-sql-4.0' '/local/G_EXTRA/bin/gda-sql-4.0'
-/usr/bin/install -c .libs/gda-sql-4.0 /local/G_EXTRA/bin/gda-sql-4.0
-  /bin/sh ../libtool --mode=install /usr/bin/install -c 'gda-list-server-op-4.0' '/local/G_EXTRA/bin/gda-list-server-op-4.0'
-/usr/bin/install -c .libs/gda-list-server-op-4.0 /local/G_EXTRA/bin/gda-list-server-op-4.0
-make[2]: Rien à faire pour `install-data-am'.
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/tools'
-make[1]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/tools'
-Making install in tests
-make[1]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/tests'
-Making install in providers
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/tests/providers'
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/tests/providers'
-make[3]: Rien à faire pour `install-exec-am'.
-make[3]: Rien à faire pour `install-data-am'.
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/tests/providers'
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/tests/providers'
-Making install in parser
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/tests/parser'
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/tests/parser'
-make[3]: Rien à faire pour `install-exec-am'.
-make[3]: Rien à faire pour `install-data-am'.
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/tests/parser'
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/tests/parser'
-Making install in value-holders
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/tests/value-holders'
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/tests/value-holders'
-make[3]: Rien à faire pour `install-exec-am'.
-make[3]: Rien à faire pour `install-data-am'.
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/tests/value-holders'
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/tests/value-holders'
-Making install in meta-store
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/tests/meta-store'
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/tests/meta-store'
-make[3]: Rien à faire pour `install-exec-am'.
-make[3]: Rien à faire pour `install-data-am'.
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/tests/meta-store'
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/tests/meta-store'
-Making install in data-models
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/tests/data-models'
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/tests/data-models'
-make[3]: Rien à faire pour `install-exec-am'.
-make[3]: Rien à faire pour `install-data-am'.
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/tests/data-models'
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/tests/data-models'
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/tests'
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/tests'
-make[3]: Rien à faire pour `install-exec-am'.
-make[3]: Rien à faire pour `install-data-am'.
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/tests'
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/tests'
-make[1]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/tests'
-Making install in testing
-make[1]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/testing'
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/testing'
-test -z "/local/G_EXTRA/bin" || mkdir -p -- "/local/G_EXTRA/bin"
-  /bin/sh ../libtool --mode=install /usr/bin/install -c 'gda-test-connection-4.0' '/local/G_EXTRA/bin/gda-test-connection-4.0'
-/usr/bin/install -c .libs/gda-test-connection-4.0 /local/G_EXTRA/bin/gda-test-connection-4.0
-make[2]: Rien à faire pour `install-data-am'.
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/testing'
-make[1]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/testing'
-Making install in data
-make[1]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/data'
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/data'
-make[2]: Rien à faire pour `install-exec-am'.
-test -z "/local/G_EXTRA/etc/libgda-4.0" || mkdir -p -- "/local/G_EXTRA/etc/libgda-4.0"
- /usr/bin/install -c -m 644 'config' '/local/G_EXTRA/etc/libgda-4.0/config'
- /usr/bin/install -c -m 644 'sales_test.db' '/local/G_EXTRA/etc/libgda-4.0/sales_test.db'
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/data'
-make[1]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/data'
-Making install in doc
-make[1]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/doc'
-Making install in C
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/doc/C'
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/doc/C'
-make[3]: Rien à faire pour `install-exec-am'.
-installfiles=`echo ./html/*`; \
-if test "$installfiles" = './html/*'; \
-then echo '-- Nothing to install' ; \
-else \
-  /bin/sh ../../mkinstalldirs /local/G_EXTRA/share/gtk-doc/html/libgda-4.0; \
-  for i in $installfiles; do \
-    echo '-- Installing '$i ; \
-    /usr/bin/install -c -m 644 $i /local/G_EXTRA/share/gtk-doc/html/libgda-4.0; \
-  done; \
-  echo '-- Installing ./html/index.sgml' ; \
-  /usr/bin/install -c -m 644 ./html/index.sgml /local/G_EXTRA/share/gtk-doc/html/libgda-4.0 || :; \
-fi
--- Installing ./html/architecture.html
--- Installing ./html/architecture.png
--- Installing ./html/ch05s03.html
--- Installing ./html/ch06s02.html
--- Installing ./html/ch06s03.html
--- Installing ./html/ch07s02.html
--- Installing ./html/ch07s03.html
--- Installing ./html/ch07s05.html
--- Installing ./html/ch09.html
--- Installing ./html/ch16.html
--- Installing ./html/ch24.html
--- Installing ./html/ch26s02.html
--- Installing ./html/ch26s03.html
--- Installing ./html/ch26s04.html
--- Installing ./html/ch26s05.html
--- Installing ./html/ch26s06.html
--- Installing ./html/ch26s07.html
--- Installing ./html/ch26s09.html
--- Installing ./html/compiling.html
--- Installing ./html/connection.html
--- Installing ./html/connections.html
--- Installing ./html/data_conv.html
--- Installing ./html/data-model.html
--- Installing ./html/data_models.html
--- Installing ./html/DataModels.png
--- Installing ./html/ddl_example.html
--- Installing ./html/fdl.html
--- Installing ./html/fdl-section10.html
--- Installing ./html/fdl-section1.html
--- Installing ./html/fdl-section2.html
--- Installing ./html/fdl-section3.html
--- Installing ./html/fdl-section4.html
--- Installing ./html/fdl-section5.html
--- Installing ./html/fdl-section6.html
--- Installing ./html/fdl-section7.html
--- Installing ./html/fdl-section8.html
--- Installing ./html/fdl-section9.html
--- Installing ./html/fdl-using.html
--- Installing ./html/features.html
--- Installing ./html/GdaBatch.html
--- Installing ./html/GdaBlobOp.html
--- Installing ./html/GdaColumn.html
--- Installing ./html/GdaColumnIndex.html
--- Installing ./html/GdaConnectionEvent.html
--- Installing ./html/GdaConnection.html
--- Installing ./html/GdaDataAccessWrapper.html
--- Installing ./html/GdaDataModelArray.html
--- Installing ./html/GdaDataModelBdb.html
--- Installing ./html/GdaDataModelDir.html
--- Installing ./html/GdaDataModel.html
--- Installing ./html/GdaDataModelImport.html
--- Installing ./html/GdaDataModelIter.html
--- Installing ./html/GdaDataModelQuery.html
--- Installing ./html/GdaDataModelRow.html
--- Installing ./html/GdaDataProxy.html
--- Installing ./html/gda-dict.html
--- Installing ./html/GdaHandlerBin.html
--- Installing ./html/GdaHandlerBoolean.html
--- Installing ./html/GdaHandlerNumerical.html
--- Installing ./html/GdaHandlerString.html
--- Installing ./html/GdaHandlerTime.html
--- Installing ./html/GdaHandlerType.html
--- Installing ./html/GdaHolder.html
--- Installing ./html/GdaMetaStore.html
--- Installing ./html/GdaMetaStruct.html
--- Installing ./html/GdaReportDocbookDocument.html
--- Installing ./html/GdaReportDocument.html
--- Installing ./html/GdaReportEngine.html
--- Installing ./html/GdaReportRmlDocument.html
--- Installing ./html/GdaServerOperation.html
--- Installing ./html/GdaServerProvider.html
--- Installing ./html/GdaSet.html
--- Installing ./html/GdaSqlParser.html
--- Installing ./html/GdaStatement.html
--- Installing ./html/GdaThreader.html
--- Installing ./html/GdaTransactionStatus.html
--- Installing ./html/GdaVconnectionDataModel.html
--- Installing ./html/GdaVconnectionHub.html
--- Installing ./html/GdaVirtualConnection.html
--- Installing ./html/GdaVirtualProvider.html
--- Installing ./html/GdaVproviderDataModel.html
--- Installing ./html/GdaVproviderHub.html
--- Installing ./html/getting_started.html
--- Installing ./html/home.png
--- Installing ./html/index.html
--- Installing ./html/index.sgml
--- Installing ./html/information_schema.png
--- Installing ./html/init_config.html
--- Installing ./html/installation-configuring.html
--- Installing ./html/installation.html
--- Installing ./html/installation-installing.html
--- Installing ./html/introduction.html
--- Installing ./html/ix01.html
--- Installing ./html/left.png
--- Installing ./html/libgda-40-Configuration.html
--- Installing ./html/libgda-40-Convenient-functions.html
--- Installing ./html/libgda-40-Default-Data-handlers.html
--- Installing ./html/libgda-4.0.devhelp
--- Installing ./html/libgda-4.0.devhelp2
--- Installing ./html/libgda-40-GdaDataModelIndex.html
--- Installing ./html/libgda-40-GdaPModel.html
--- Installing ./html/libgda-40-GdaPRow.html
--- Installing ./html/libgda-40-GdaPStmt.html
--- Installing ./html/libgda-40-GdaSqlStatement.html
--- Installing ./html/libgda-40-Gda-Value.html
--- Installing ./html/libgda-40-Libgda-Initialization.html
--- Installing ./html/libgda-40-Logging.html
--- Installing ./html/libgda-40-Misc-API.html
--- Installing ./html/libgda-40-Quark-lists.html
--- Installing ./html/libgda-40-Utility-functions.html
--- Installing ./html/libgda-list-server-op.html
--- Installing ./html/libgda-provider-blobop.html
--- Installing ./html/libgda-provider-class.html
--- Installing ./html/libgda-provider-pack.html
--- Installing ./html/libgda-provider-recordset.html
--- Installing ./html/libgda-reports-introduction.html
--- Installing ./html/libgda-sql.html
--- Installing ./html/libgda-tools-introduction.html
--- Installing ./html/libgda-tools-list-config.html
--- Installing ./html/libgda-tools-test-connection.html
--- Installing ./html/limitations.html
--- Installing ./html/limitations_oracle.html
--- Installing ./html/limitations_postgres.html
--- Installing ./html/limitations_sqlite.html
--- Installing ./html/main_example.html
--- Installing ./html/managing-errors.html
--- Installing ./html/MetaStore1.png
--- Installing ./html/MetaStore2.png
--- Installing ./html/migration-1.html
--- Installing ./html/migration-2-dict.html
--- Installing ./html/migration-2.html
--- Installing ./html/misc.html
--- Installing ./html/other_examples.html
--- Installing ./html/part_begin.html
--- Installing ./html/part_libgda_api.html
--- Installing ./html/part_libgda-reports.html
--- Installing ./html/part_providers.html
--- Installing ./html/parts.png
--- Installing ./html/part_tools.html
--- Installing ./html/prov-metadata.html
--- Installing ./html/psupport.html
--- Installing ./html/right.png
--- Installing ./html/stmt-compound.png
--- Installing ./html/stmt-insert1.png
--- Installing ./html/stmt-insert2.png
--- Installing ./html/stmt-select.png
--- Installing ./html/stmt-unknown.png
--- Installing ./html/stmt-update.png
--- Installing ./html/style.css
--- Installing ./html/transactions.html
--- Installing ./html/up.png
--- Installing ./html/virtual_connection.html
--- Installing ./html/index.sgml
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/doc/C'
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/doc/C'
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/doc'
-make[3]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk/doc'
-make[3]: Rien à faire pour `install-exec-am'.
-make[3]: Rien à faire pour `install-data-am'.
-make[3]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/doc'
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/doc'
-make[1]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk/doc'
-make[1]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk'
-make[2]: Entre dans le répertoire `/local/TESTS/V4/libgda-trunk'
-make[2]: Rien à faire pour `install-exec-am'.
-test -z "/local/G_EXTRA/lib/pkgconfig" || mkdir -p -- "/local/G_EXTRA/lib/pkgconfig"
- /usr/bin/install -c -m 644 'libgda-4.0.pc' '/local/G_EXTRA/lib/pkgconfig/libgda-4.0.pc'
- /usr/bin/install -c -m 644 'libgda-report-4.0.pc' '/local/G_EXTRA/lib/pkgconfig/libgda-report-4.0.pc'
- /usr/bin/install -c -m 644 'libgda-xslt-4.0.pc' '/local/G_EXTRA/lib/pkgconfig/libgda-xslt-4.0.pc'
-make[2]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk'
-make[1]: Quitte le répertoire `/local/TESTS/V4/libgda-trunk'
+  4. Type `make install' to install the programs and any data files and
+     documentation.
+
+  5. You can remove the program binaries and object files from the
+     source code directory by typing `make clean'.  To also remove the
+     files that `configure' created (so you can compile the package for
+     a different kind of computer), type `make distclean'.  There is
+     also a `make maintainer-clean' target, but that is intended mainly
+     for the package's developers.  If you use it, you may have to get
+     all sorts of other programs in order to regenerate files that came
+     with the distribution.
+
+Compilers and Options
+=====================
+
+Some systems require unusual options for compilation or linking that the
+`configure' script does not know about.  Run `./configure --help' for
+details on some of the pertinent environment variables.
+
+   You can give `configure' initial values for configuration parameters
+by setting variables in the command line or in the environment.  Here
+is an example:
+
+     ./configure CC=c89 CFLAGS=-O2 LIBS=-lposix
+
+   *Note Defining Variables::, for more details.
+
+Compiling For Multiple Architectures
+====================================
+
+You can compile the package for more than one kind of computer at the
+same time, by placing the object files for each architecture in their
+own directory.  To do this, you must use a version of `make' that
+supports the `VPATH' variable, such as GNU `make'.  `cd' to the
+directory where you want the object files and executables to go and run
+the `configure' script.  `configure' automatically checks for the
+source code in the directory that `configure' is in and in `..'.
+
+   If you have to use a `make' that does not support the `VPATH'
+variable, you have to compile the package for one architecture at a
+time in the source code directory.  After you have installed the
+package for one architecture, use `make distclean' before reconfiguring
+for another architecture.
+
+Installation Names
+==================
+
+By default, `make install' installs the package's commands under
+`/usr/local/bin', include files under `/usr/local/include', etc.  You
+can specify an installation prefix other than `/usr/local' by giving
+`configure' the option `--prefix=PREFIX'.
+
+   You can specify separate installation prefixes for
+architecture-specific files and architecture-independent files.  If you
+pass the option `--exec-prefix=PREFIX' to `configure', the package uses
+PREFIX as the prefix for installing programs and libraries.
+Documentation and other data files still use the regular prefix.
+
+   In addition, if you use an unusual directory layout you can give
+options like `--bindir=DIR' to specify different values for particular
+kinds of files.  Run `configure --help' for a list of the directories
+you can set and what kinds of files go in them.
+
+   If the package supports it, you can cause programs to be installed
+with an extra prefix or suffix on their names by giving `configure' the
+option `--program-prefix=PREFIX' or `--program-suffix=SUFFIX'.
+
+Optional Features
+=================
+
+Some packages pay attention to `--enable-FEATURE' options to
+`configure', where FEATURE indicates an optional part of the package.
+They may also pay attention to `--with-PACKAGE' options, where PACKAGE
+is something like `gnu-as' or `x' (for the X Window System).  The
+`README' should mention any `--enable-' and `--with-' options that the
+package recognizes.
+
+   For packages that use the X Window System, `configure' can usually
+find the X include and library files automatically, but if it doesn't,
+you can use the `configure' options `--x-includes=DIR' and
+`--x-libraries=DIR' to specify their locations.
+
+Specifying the System Type
+==========================
+
+There may be some features `configure' cannot figure out automatically,
+but needs to determine by the type of machine the package will run on.
+Usually, assuming the package is built to be run on the _same_
+architectures, `configure' can figure that out, but if it prints a
+message saying it cannot guess the machine type, give it the
+`--build=TYPE' option.  TYPE can either be a short name for the system
+type, such as `sun4', or a canonical name which has the form:
+
+     CPU-COMPANY-SYSTEM
+
+where SYSTEM can have one of these forms:
+
+     OS KERNEL-OS
+
+   See the file `config.sub' for the possible values of each field.  If
+`config.sub' isn't included in this package, then this package doesn't
+need to know the machine type.
+
+   If you are _building_ compiler tools for cross-compiling, you should
+use the option `--target=TYPE' to select the type of system they will
+produce code for.
+
+   If you want to _use_ a cross compiler, that generates code for a
+platform different from the build platform, you should specify the
+"host" platform (i.e., that on which the generated programs will
+eventually be run) with `--host=TYPE'.
+
+Sharing Defaults
+================
+
+If you want to set default values for `configure' scripts to share, you
+can create a site shell script called `config.site' that gives default
+values for variables like `CC', `cache_file', and `prefix'.
+`configure' looks for `PREFIX/share/config.site' if it exists, then
+`PREFIX/etc/config.site' if it exists.  Or, you can set the
+`CONFIG_SITE' environment variable to the location of the site script.
+A warning: not all `configure' scripts look for a site script.
+
+Defining Variables
+==================
+
+Variables not defined in a site shell script can be set in the
+environment passed to `configure'.  However, some packages may run
+configure again during the build, and the customized values of these
+variables may be lost.  In order to avoid this problem, you should set
+them in the `configure' command line, using `VAR=value'.  For example:
+
+     ./configure CC=/usr/local2/bin/gcc
+
+causes the specified `gcc' to be used as the C compiler (unless it is
+overridden in the site shell script).  Here is a another example:
+
+     /bin/bash ./configure CONFIG_SHELL=/bin/bash
+
+Here the `CONFIG_SHELL=/bin/bash' operand causes subsequent
+configuration-related scripts to be executed by `/bin/bash'.
+
+`configure' Invocation
+======================
+
+`configure' recognizes the following options to control how it operates.
+
+`--help'
+`-h'
+     Print a summary of the options to `configure', and exit.
+
+`--version'
+`-V'
+     Print the version of Autoconf used to generate the `configure'
+     script, and exit.
+
+`--cache-file=FILE'
+     Enable the cache: use and save the results of the tests in FILE,
+     traditionally `config.cache'.  FILE defaults to `/dev/null' to
+     disable caching.
+
+`--config-cache'
+`-C'
+     Alias for `--cache-file=config.cache'.
+
+`--quiet'
+`--silent'
+`-q'
+     Do not print messages saying which checks are being made.  To
+     suppress all normal output, redirect it to `/dev/null' (any error
+     messages will still be shown).
+
+`--srcdir=DIR'
+     Look for the package's source code in directory DIR.  Usually
+     `configure' can determine that directory automatically.
+
+`configure' also accepts some other, not widely useful, options.  Run
+`configure --help' for more details.
