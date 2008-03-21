@@ -63,11 +63,21 @@ main (int argc,char** argv)
 	FILE *fd_delim;
 	HashEntry *illegal_entry;
 	HashEntry *rawstring_entry;
+	char *file_imposed;
 
 	memset (entries, 0, sizeof (entries));
-	fd_imposed = fopen (IMPOSED_HEADER, "r");
+#ifdef SRCDIR
+  #ifdef __WIN32__
+	file_imposed = SRCDIR "\\" IMPOSED_HEADER;
+  #else
+	file_imposed = SRCDIR "/" IMPOSED_HEADER;
+  #endif
+#else
+	file_imposed = IMPOSED_HEADER;
+#endif
+	fd_imposed = fopen (file_imposed, "r");
 	if (!fd_imposed) {
-		printf ("Can't open '%s':%s\n", IMPOSED_HEADER, strerror (errno));
+		printf ("Can't open '%s':%s\n", file_imposed, strerror (errno));
 		return 1;
 	}
 	fd_parser = fopen (PARSER_HEADER, "r");

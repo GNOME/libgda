@@ -13,10 +13,10 @@ AM_CPPFLAGS = \
 
 # parser generation
 parser.c parser.h: parser.y $(top_builddir)/libgda/sql-parser/lemon$(EXEEXT_FOR_BUILD)
-	- $(top_builddir)/libgda/sql-parser/lemon$(EXEEXT_FOR_BUILD) parser.y
+	- $(top_builddir)/libgda/sql-parser/lemon$(EXEEXT_FOR_BUILD) -q -d $(srcdir)/parser.y $(top_srcdir)/libgda/sql-parser/lempar.c
 
 gen_def$(EXEEXT_FOR_BUILD): gen_def.c
-	$(CC_FOR_BUILD) -o gen_def$(EXEEXT_FOR_BUILD) -DIMPOSED_HEADER=\""$(top_builddir)/libgda/sql-parser/parser_tokens.h"\" gen_def.c
+	$(CC_FOR_BUILD) -o gen_def$(EXEEXT_FOR_BUILD) -DIMPOSED_HEADER=\""$(top_srcdir)/libgda/sql-parser/parser_tokens.h"\" $(srcdir)/gen_def.c
 
 capi_token_types.h: gen_def$(EXEEXT_FOR_BUILD) parser.h
 	./gen_def$(EXEEXT_FOR_BUILD) > capi_token_types.h
@@ -32,6 +32,8 @@ libgda_capi_la_SOURCES = \
 	gda-capi-parser.h \
 	gda-capi-provider.c \
 	gda-capi-provider.h \
+	gda-capi-pstmt.h \
+	gda-capi-pstmt.c \
 	gda-capi-meta.c \
 	gda-capi-meta.h \
 	gda-capi-recordset.c \
@@ -61,7 +63,7 @@ pkgconfigdir = $(libdir)/pkgconfig
 #pkgconfig_DATA = libgda-capi-4.0.pc
 noinst_DATA += libgda-capi-4.0.pc
 
-EXTRA_DIST = $(xml_in_files) libgda-capi-4.0.pc.in parser.y
-DISTCLEANFILES = $(xml_DATA)
+EXTRA_DIST = $(xml_in_files) libgda-capi-4.0.pc.in parser.y gen_def.c
+DISTCLEANFILES = $(noinst_DATA)
 
 CLEANFILES = parser.h parser.c parser.out capi_token_types.h gen_def$(EXEEXT_FOR_BUILD)

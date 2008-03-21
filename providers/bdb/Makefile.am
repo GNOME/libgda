@@ -10,6 +10,7 @@ AM_CPPFLAGS = \
 	$(BDB_CFLAGS)
 
 libgda_bdb_la_SOURCES = \
+	gda-bdb.h \
 	gda-bdb-provider.c \
 	gda-bdb-provider.h \
 	libmain.c

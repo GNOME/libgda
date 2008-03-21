@@ -1,1 +1,1 @@
-"meta","information_schema","sql_identifier","pg_catalog.varchar","NULL","1073741824","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","information_schema.sql_identifier","information_schema.sql_identifier",FALSE,"postgres"
+"meta","information_schema","sql_identifier","pg_catalog.varchar","gchararray", "NULL","1073741824","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","information_schema.sql_identifier","information_schema.sql_identifier",FALSE,"postgres"

@@ -2088,7 +2088,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 		GdaColumn *gdacol;
 		GType coltype;
 
-#ifdef GDA_DEBUG
+#ifdef GDA_DEBUG_NO
 		{
 			GdaColumn *col = gda_data_model_describe_column (model, i);
 			g_print ("Model col %d has type %s\n", i, gda_g_type_to_string (gda_column_get_g_type (col)));

@@ -1,3 +1,6 @@
+doc/C/prov-writing.xml
+libgda/sqlite/sql-parser.c/lemon.c
+libgda/sqlite/sql-parser.c/lempar.c
 libgda/sqlite/sqlite-src/sqlite3.c
 providers/skel-implementation/capi/capi_specs_create_table.xml.in
 providers/skel-implementation/capi/capi_specs_dsn.xml.in

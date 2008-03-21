@@ -24,7 +24,8 @@ do_stuff ()
       
         /* open a connection */
 	g_print ("CONNECTING\n");
-	connection = gda_connection_open_from_dsn ("calvaris", NULL, NULL, GDA_CONNECTION_OPTIONS_READ_ONLY);
+	connection = gda_connection_open_from_dsn ("calvaris", NULL, 
+                                                   GDA_CONNECTION_OPTIONS_READ_ONLY, NULL);
 	g_print ("CONNECTED\n");
       
         /* use the connection */
@@ -71,7 +72,8 @@ do_stuff () {
       
         /* open a connection */
 	g_print ("CONNECTING\n");
-	connection = gda_connection_open_from_dsn ("calvaris", NULL, NULL, GDA_CONNECTION_OPTIONS_READ_ONLY);
+	connection = gda_connection_open_from_dsn ("calvaris", NULL, 
+                                                   GDA_CONNECTION_OPTIONS_READ_ONLY, NULL);
 	g_print ("CONNECTED\n");
       
         /* use the connection */

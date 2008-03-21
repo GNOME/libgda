@@ -7,16 +7,16 @@ AM_CPPFLAGS = \
         $(LIBGDA_CFLAGS)
 
 lemon$(EXEEXT_FOR_BUILD): lemon.c
-	$(CC_FOR_BUILD) -o lemon$(EXEEXT_FOR_BUILD) lemon.c
+	$(CC_FOR_BUILD) -o lemon$(EXEEXT_FOR_BUILD) $(srcdir)/lemon.c
 
 gen_def$(EXEEXT_FOR_BUILD): gen_def.c
-	 $(CC_FOR_BUILD) -o gen_def$(EXEEXT_FOR_BUILD) gen_def.c
+	 $(CC_FOR_BUILD) -o gen_def$(EXEEXT_FOR_BUILD) -DSRCDIR=\"$(srcdir)\" $(srcdir)/gen_def.c
 
 parser.c parser.h: parser.y lemon$(EXEEXT_FOR_BUILD)
-	- ./lemon$(EXEEXT_FOR_BUILD) parser.y
+	- ./lemon$(EXEEXT_FOR_BUILD) -q -d $(srcdir)/parser.y $(srcdir)/lempar.c
 
 delimiter.c delimiter.h: delimiter.y lemon$(EXEEXT_FOR_BUILD)
-	./lemon$(EXEEXT_FOR_BUILD) delimiter.y
+	./lemon$(EXEEXT_FOR_BUILD) -q -d $(srcdir)/delimiter.y $(srcdir)/lempar.c
 
 token_types.h: gen_def$(EXEEXT_FOR_BUILD) delimiter.h parser.h
 	./gen_def$(EXEEXT_FOR_BUILD) > token_types.h
@@ -63,7 +63,7 @@ libgda_sql_parser_4_0_la_SOURCES = \
         gda-statement-struct-unknown.c \
         gda-statement-struct-util.c
 
-EXTRA_DIST= parser.y delimiter.y lemon.c lempar.c gen_def.c
+EXTRA_DIST= parser.y delimiter.y lemon.c lempar.c gen_def.c parser_tokens.h
 
 CLEANFILES = parser.h parser.c parser.out delimiter.h delimiter.c delimiter.out token_types.h \
 	lemon$(EXEEXT_FOR_BUILD) gen_def$(EXEEXT_FOR_BUILD)

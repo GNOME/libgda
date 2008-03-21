@@ -64,6 +64,7 @@ gda_headers = \
 	gda-server-provider-extra.h \
 	gda-server-provider-private.h \
 	gda-statement.h \
+	gda-statement-extra.h \
 	gda-threader.h \
 	gda-transaction-status.h \
 	gda-transaction-status-private.h \
@@ -199,6 +200,7 @@ dtddir=$(LIBGDA_DTDDIR)
 dtd_DATA=$(DTD_FILES)
 EXTRA_DIST = \
 	$(DTD_FILES) \
+	$(xml_DATA) \
 	gda-marshal.list
 
 DISTCLEANFILES  = .deps/*.P

@@ -958,7 +958,7 @@ uni_op(O) ::= IS NOTNULL. {O = GDA_SQL_OPERATOR_ISNOTNULL;}
 // Values: for all constants (G_TYPE_STRING GValue)
 value(V) ::= NULL. {V = NULL;}
 value(V) ::= STRING(S). {V = S;}
-value(V) ::= TEXTUAL(T). {V = T;}
+//value(V) ::= TEXTUAL(T). {V = T;}
 value(V) ::= INTEGER(I). {V = I;}
 value(V) ::= FLOAT(F). {V = F;}
 
@@ -988,6 +988,7 @@ nm(A) ::= JOIN(X).       {A = X;}
 nm(A) ::= ID(X).       {A = X;}
 
 // Fully qualified name
+fullname(A) ::= TEXTUAL(X). {A = X;}
 fullname(A) ::= nm(X). {A = X;}
 fullname(A) ::= nm(S) DOT nm(X). {gchar *str;
 				  str = g_strdup_printf ("%s.%s", g_value_get_string (S), g_value_get_string (X));

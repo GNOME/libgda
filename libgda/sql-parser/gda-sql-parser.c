@@ -988,8 +988,8 @@ getToken (GdaSqlParser *parser)
 	GValue *retval = NULL;
 	gint consumed_chars = 1;
 
-	/* safe init */
-	parser->priv->context->token_type = L_ILLEGAL;
+	/* init to capture non treaded cases */
+	parser->priv->context->token_type = G_MININT;
 
 	if (!*z) {
 		parser->priv->context->token_type = L_END_OF_FILE;
@@ -1049,20 +1049,19 @@ getToken (GdaSqlParser *parser)
 		if (parser->priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
 			parser->priv->context->token_type = L_PLUS;
 			consumed_chars = 1;
-			break;
 		}
+		break;
 	case '*': 
 		if (z[1] == '/') {
 			parser->priv->context->token_type = L_RSBRACKET;
 			consumed_chars = 2;
 			parser->priv->context->in_param_spec = FALSE;
-			break;
 		}
 		else {
 			parser->priv->context->token_type = L_STAR;
 			consumed_chars = 1;
-			break;
 		}
+		break;
 	case '%':
 		if (parser->priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
 			parser->priv->context->token_type = L_REM;
@@ -1074,7 +1073,6 @@ getToken (GdaSqlParser *parser)
 			if (z[1] != '*' || z[2] == 0) {
 				parser->priv->context->token_type = L_SLASH;
 				consumed_chars = 1;
-				break;
 			}
 		}
 		else if (z[1] == '*') {
@@ -1082,25 +1080,28 @@ getToken (GdaSqlParser *parser)
 			parser->priv->context->token_type = L_LSBRACKET;
 			consumed_chars = 2;
 			parser->priv->context->in_param_spec = TRUE;
-			break;
 		}
+		break;
 	case '=': 
 		if (parser->priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
 			parser->priv->context->token_type = L_EQ;
 			consumed_chars = 1 + (z[1] == '=');
-			break;
 		}
+		break;
 	case '<': 
 		if ((c = z[1]) == '=') {
 			parser->priv->context->token_type = L_LEQ;
 			consumed_chars = 2;
-		} else if (c == '>') {
+		}
+		else if (c == '>') {
 			parser->priv->context->token_type = L_DIFF;
 			consumed_chars = 2;
-		} else if (c== '<') {
+		}
+		else if (c== '<') {
 			parser->priv->context->token_type = L_LSHIFT;
 			consumed_chars = 2;
-		} else {
+		}
+		else {
 			parser->priv->context->token_type = L_LT;
 			consumed_chars = 1;
 		}
@@ -1109,10 +1110,12 @@ getToken (GdaSqlParser *parser)
 		if ((c = z[1]) == '=') {
 			parser->priv->context->token_type = L_GEQ;
 			consumed_chars = 2;
-		} else if (c == '>') {
+		}
+		else if (c == '>') {
 			parser->priv->context->token_type = L_RSHIFT;
 			consumed_chars = 2;
-		} else {
+		}
+		else {
 			parser->priv->context->token_type = L_GT;
 			consumed_chars = 1;
 		}
@@ -1133,8 +1136,8 @@ getToken (GdaSqlParser *parser)
 					consumed_chars = 2;
 				}
 			}
-			break;
 		}
+		break;
 	case '|': 
 		if (parser->priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
 			if (z[1] != '|') {
@@ -1144,13 +1147,12 @@ getToken (GdaSqlParser *parser)
 				parser->priv->context->token_type = L_CONCAT;
 				consumed_chars = 2;
 			}
-			break;
 		}
 		else {
 			parser->priv->context->token_type = L_RAWSTRING;
 			consumed_chars = 1;
-			break;
 		}
+		break;
 	case ',': 
 		parser->priv->context->token_type = L_COMMA;
 		consumed_chars = 1;
@@ -1159,8 +1161,8 @@ getToken (GdaSqlParser *parser)
 		if (parser->priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
 			parser->priv->context->token_type = L_BITAND;
 			consumed_chars = 1;
-			break;
 		}
+		break;
 	case '~': 
 		if (parser->priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
 			if (z[1] == '*') {
@@ -1174,8 +1176,8 @@ getToken (GdaSqlParser *parser)
 					parser->priv->context->token_type = L_BITNOT;
 				consumed_chars = 1;
 			}
-			break;
 		}
+		break;
 	case '\'':
 	case '"': {
 		char delim = z[0];
@@ -1242,8 +1244,8 @@ getToken (GdaSqlParser *parser)
 			parser->priv->context->token_type = L_SIMPLEPARAM;
 			retval = token_as_string (parser->priv->context->next_token_start + 1, i - 1);
 			consumed_chars = i;
-			break;
 		}
+		break;
 	case '#': {
 		if (z[1] == '#') {
 			for (i=2; (z[i]) && (IdChar (z[i]) || (z[i] == '+') || (z[i] == '-') || (z[i] == '.') || (z[i] == ':')) &&
@@ -1290,7 +1292,6 @@ getToken (GdaSqlParser *parser)
 					}
 					i++;
 				}
-				break; /* case */
 			}
 		}
 		else if (parser->priv->flavour == GDA_SQL_PARSER_FLAVOUR_SQLITE) {
@@ -1298,21 +1299,19 @@ getToken (GdaSqlParser *parser)
 			parser->priv->context->token_type = L_SIMPLEPARAM;
 			retval = token_as_string (parser->priv->context->next_token_start + 1, i - 1);
 			consumed_chars = i;
-			break;
 		}
+		break;
 	case '@':
 	case ':':
-		if (parser->priv->flavour == GDA_SQL_PARSER_FLAVOUR_SQLITE) {
+		if (z[1] == ':') {
+			parser->priv->context->token_type = L_PGCAST;
+			consumed_chars = 2;
+		}
+		else if (parser->priv->flavour == GDA_SQL_PARSER_FLAVOUR_SQLITE) {
 			for(i=1; isalnum(z[i]) || (z[i] == '_'); i++){}
 			parser->priv->context->token_type = L_SIMPLEPARAM;
 			retval = token_as_string (parser->priv->context->next_token_start + 1, i - 1);
 			consumed_chars = i;
-			break;
-		}
-		else if ((parser->priv->flavour == GDA_SQL_PARSER_FLAVOUR_POSTGRESQL) && (z[1] == ':')) {
-			parser->priv->context->token_type = L_PGCAST;
-			consumed_chars = 2;
-			break;
 		}
 		break;
 #ifndef SQLITE_OMIT_BLOB_LITERAL
@@ -1333,18 +1332,22 @@ getToken (GdaSqlParser *parser)
 			}
 			if ( c ) i++;
 			consumed_chars = i;
-			break;
 		}
-		/* Otherwise fall through to the next case */
+		break;
 	}
 #endif
-	default: 
+	default:
+		break;
+	}
+
+	if (parser->priv->context->token_type == G_MININT) {
+		/* now treat non treated cases */
 		if ((parser->priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) && (! parser->priv->context->in_param_spec)) {
-			if (!IdChar (*z))
-				break;
-			for (i=1; IdChar (z[i]); i++){}
-			parser->priv->context->token_type = keywordCode (parser, (char*)z, i);
-			consumed_chars = i;
+			if (IdChar (*z)) {
+				for (i=1; IdChar (z[i]); i++){}
+				parser->priv->context->token_type = keywordCode (parser, (char*)z, i);
+				consumed_chars = i;
+			}
 		}
 		else {
 			if ((! parser->priv->context->in_param_spec) && IdChar (*z)) {
@@ -1355,47 +1358,52 @@ getToken (GdaSqlParser *parser)
 				if (ttype != L_RAWSTRING) {
 					parser->priv->context->token_type = ttype;
 					consumed_chars = i;
-					break;
 				}
 			}
 
-			if (!strncmp (parser->priv->context->next_token_start, "name:", 5)) {
-				parser->priv->context->next_token_start += 5;
-				retval = getToken (parser);
-				parser->priv->context->token_type = L_PNAME;
-				consumed_chars = 0;
-			}
-			else if (!strncmp (parser->priv->context->next_token_start, "type:", 5)) {
-				parser->priv->context->next_token_start += 5;
-				retval = getToken (parser);
-				parser->priv->context->token_type = L_PTYPE;
-				consumed_chars = 0;
-			}
-			else if (!strncmp (parser->priv->context->next_token_start, "descr:", 6)) {
-				parser->priv->context->next_token_start += 6;
-				retval = getToken (parser);
-				parser->priv->context->token_type = L_PDESCR;
-				consumed_chars = 0;
-			}
-			else if (!strncmp (parser->priv->context->next_token_start, "nullok:", 7)) {
-				parser->priv->context->next_token_start += 7;
-				retval = getToken (parser);
-				parser->priv->context->token_type = L_PNULLOK;
-				consumed_chars = 0;
-			}
-			else {
-				for (i=1; z[i] && (! isspace (z[i])) && 
-					     (z[i] != parser->priv->context->delimiter) && (z[i] != '*') && 
-					     (z[i] != '\'') && (z[i] != '"'); i++){}
-				parser->priv->context->token_type = L_RAWSTRING;
-				consumed_chars = i;
+			if (parser->priv->context->token_type == G_MININT) {
+				if (!strncmp (parser->priv->context->next_token_start, "name:", 5)) {
+					parser->priv->context->next_token_start += 5;
+					retval = getToken (parser);
+					parser->priv->context->token_type = L_PNAME;
+					consumed_chars = 0;
+				}
+				else if (!strncmp (parser->priv->context->next_token_start, "type:", 5)) {
+					parser->priv->context->next_token_start += 5;
+					retval = getToken (parser);
+					parser->priv->context->token_type = L_PTYPE;
+					consumed_chars = 0;
+				}
+				else if (!strncmp (parser->priv->context->next_token_start, "descr:", 6)) {
+					parser->priv->context->next_token_start += 6;
+					retval = getToken (parser);
+					parser->priv->context->token_type = L_PDESCR;
+					consumed_chars = 0;
+				}
+				else if (!strncmp (parser->priv->context->next_token_start, "nullok:", 7)) {
+					parser->priv->context->next_token_start += 7;
+					retval = getToken (parser);
+					parser->priv->context->token_type = L_PNULLOK;
+					consumed_chars = 0;
+				}
+				else {
+					for (i=1; z[i] && (! isspace (z[i])) && 
+						     (z[i] != parser->priv->context->delimiter) && (z[i] != '*') && 
+						     (z[i] != '\'') && (z[i] != '"'); i++){}
+					parser->priv->context->token_type = L_RAWSTRING;
+					consumed_chars = i;
+				}
 			}
 		}
 	}
 
-	if (!retval)
-		retval = token_as_string (parser->priv->context->next_token_start, consumed_chars);
+	/* fallback for the token type */
+	if (parser->priv->context->token_type == G_MININT)
+		parser->priv->context->token_type = L_ILLEGAL;
 
+	if (!retval)
+		retval = token_as_string (parser->priv->context->next_token_start, consumed_chars)
+;
  tok_end:
 	parser->priv->context->last_token_start = parser->priv->context->next_token_start;
 	parser->priv->context->next_token_start += consumed_chars;

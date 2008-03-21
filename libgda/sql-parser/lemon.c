@@ -263,6 +263,8 @@ struct lemon {
   char *vardest;           /* Code for the default non-terminal destructor */
   int  vardestln;          /* Line number for default non-term destructor code*/
   char *filename;          /* Name of the input file */
+  char *base_filename;     /* Name of the input file, without the path part */
+  char *tmplname;          /* Name of the template file */
   char *outname;           /* Name of the current output file */
   char *tokenprefix;       /* A prefix added to token names in the .h file */
   int nconflict;           /* Number of parsing conflicts */
@@ -1393,6 +1395,7 @@ char **argv;
   static int quiet = 0;
   static int statistics = 0;
   static int mhflag = 0;
+  static int local_out_dir = 0;
   static struct s_options options[] = {
     {OPT_FLAG, "b", (char*)&basisflag, "Print only the basis in report."},
     {OPT_FLAG, "c", (char*)&compress, "Don't compress the action table."},
@@ -1402,19 +1405,21 @@ char **argv;
     {OPT_FLAG, "q", (char*)&quiet, "(Quiet) Don't print the report file."},
     {OPT_FLAG, "s", (char*)&statistics,
                                    "Print parser stats to standard output."},
+    {OPT_FLAG, "d", (char*)&local_out_dir, "Output files in the current directory."},
     {OPT_FLAG, "x", (char*)&version, "Print the version number."},
     {OPT_FLAG,0,0,0}
   };
   int i;
   struct lemon lem;
+  char *def_tmpl_name = "lempar.c";
 
   OptInit(argv,options,stderr);
   if( version ){
      printf("Lemon version 1.0\n");
      exit(0); 
   }
-  if( OptNArgs()!=1 ){
-    fprintf(stderr,"Exactly one filename argument is required.\n");
+  if( (OptNArgs() != 1) && (OptNArgs() != 2) ){
+    fprintf(stderr,"Usage: %s file.y [path to lempar.c file].\n", argv[0]);
     exit(1);
   }
   memset(&lem, 0, sizeof(lem));
@@ -1426,6 +1431,21 @@ char **argv;
   State_init();
   lem.argv0 = argv[0];
   lem.filename = OptArg(0);
+  if (local_out_dir) {
+    char *ptr;
+    lem.base_filename = malloc (sizeof (char) * strlen (lem.filename) + 1);
+    memcpy (lem.base_filename, lem.filename, sizeof (char) * strlen (lem.filename) + 1);
+#ifdef __WIN32__
+    for (ptr = lem.base_filename + strlen (lem.filename) - 1; (ptr > lem.base_filename) && (*ptr != '\\'); ptr--);
+#else
+    for (ptr = lem.base_filename + strlen (lem.filename) - 1; (ptr > lem.base_filename) && (*ptr != '/'); ptr--);
+#endif
+    if (ptr > lem.base_filename)
+     lem.base_filename = ptr + 1;
+  }
+  else
+    lem.base_filename = OptArg(0);
+  lem.tmplname = (OptNArgs() == 2) ? OptArg(1) : def_tmpl_name;
   lem.basisflag = basisflag;
   Symbol_new("$");
   lem.errsym = Symbol_new("error");
@@ -2667,12 +2687,12 @@ char *suffix;
   char *name;
   char *cp;
 
-  name = malloc( strlen(lemp->filename) + strlen(suffix) + 5 );
+  name = malloc( strlen(lemp->base_filename) + strlen(suffix) + 5 );
   if( name==0 ){
     fprintf(stderr,"Can't allocate space for a filename.\n");
     exit(1);
   }
-  strcpy(name,lemp->filename);
+  strcpy(name,lemp->base_filename);
   cp = strrchr(name,'.');
   if( cp ) *cp = 0;
   strcat(name,suffix);
@@ -3008,7 +3028,6 @@ int *lineno;
 PRIVATE FILE *tplt_open(lemp)
 struct lemon *lemp;
 {
-  static char templatename[] = "lempar.c";
   char buf[1000];
   FILE *in;
   char *tpltname;
@@ -3022,20 +3041,20 @@ struct lemon *lemp;
   }
   if( access(buf,004)==0 ){
     tpltname = buf;
-  }else if( access(templatename,004)==0 ){
-    tpltname = templatename;
+  }else if( access(lemp->tmplname,004)==0 ){
+    tpltname = lemp->tmplname;
   }else{
-    tpltname = pathsearch(lemp->argv0,templatename,0);
+    tpltname = pathsearch(lemp->argv0,lemp->tmplname,0);
   }
   if( tpltname==0 ){
     fprintf(stderr,"Can't find the parser driver template file \"%s\".\n",
-    templatename);
+    lemp->tmplname);
     lemp->errorcnt++;
     return 0;
   }
   in = fopen(tpltname,"rb");
   if( in==0 ){
-    fprintf(stderr,"Can't open the template file \"%s\".\n",templatename);
+    fprintf(stderr,"Can't open the template file \"%s\".\n",lemp->tmplname);
     lemp->errorcnt++;
     return 0;
   }

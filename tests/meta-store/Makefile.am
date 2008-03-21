@@ -5,8 +5,7 @@ AM_CPPFLAGS = \
 	$(LIBGDA_CFLAGS) \
 	-DROOT_DIR=\""$(top_srcdir)"\"
 
-TESTS = check_meta_store_memory check_meta_store_sqlite check_meta_store_postgresql check_meta_store_mysql
-check_PROGRAMS = check_meta_store_memory check_meta_store_sqlite check_meta_store_postgresql check_meta_store_mysql
+noinst_PROGRAMS = check_meta_store_memory check_meta_store_sqlite check_meta_store_postgresql check_meta_store_mysql
 
 common_sources = common.c common.h
 

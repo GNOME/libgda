@@ -33,5 +33,5 @@ pkgconfigdir = $(libdir)/pkgconfig
 noinst_DATA += libgda-models-4.0.pc
 
 EXTRA_DIST = $(xml_in_files) libgda-models-4.0.pc.in
-DISTCLEANFILES = $(xml_DATA)
+DISTCLEANFILES = $(noinst_DATA)
 

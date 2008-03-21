@@ -96,8 +96,6 @@ AM_PROG_CC_C_O
 AC_STDC_HEADERS
 AC_ARG_PROGRAM
 AM_PROG_LIBTOOL
-AM_PROG_LEX
-AC_PROG_YACC
 AC_PROG_MAKE_SET
 
 dnl ******************************
@@ -1190,32 +1188,12 @@ libgda/sqlite/virtual/Makefile
 providers/Makefile
 providers/bdb/Makefile
 providers/bdb/libgda-bdb-4.0.pc
-providers/freetds/Makefile
-providers/freetds/libgda-freetds-4.0.pc
-providers/firebird/Makefile
-providers/firebird/libgda-firebird-4.0.pc
-providers/ibmdb2/Makefile
-providers/ibmdb2/libgda-ibmdb2-4.0.pc
-providers/ldap/Makefile
-providers/ldap/libgda-ldap-4.0.pc
 providers/mdb/Makefile
 providers/mdb/libgda-mdb-4.0.pc
-providers/mysql/Makefile
-providers/mysql/libgda-mysql-4.0.pc
-providers/msql/Makefile
-providers/msql/libgda-msql-4.0.pc
-providers/odbc/Makefile
-providers/odbc/libgda-odbc-4.0.pc
-providers/oracle/Makefile
-providers/oracle/libgda-oracle-4.0.pc
 providers/postgres/Makefile
 providers/postgres/libgda-postgres-4.0.pc
 providers/sqlite/Makefile
 providers/sqlite/libgda-sqlite-4.0.pc
-providers/sybase/Makefile
-providers/sybase/libgda-sybase-4.0.pc
-providers/xbase/Makefile
-providers/xbase/libgda-xbase-4.0.pc
 providers/skel-implementation/Makefile
 providers/skel-implementation/capi/Makefile
 providers/skel-implementation/capi/libgda-capi-4.0.pc
@@ -1250,19 +1228,19 @@ echo "   Installation prefix = $prefix"
 echo "   Building Libxslt extension: `if test x$have_xslt != xno; then echo yes; else echo no; fi`"
 echo "   Compiled providers:"
 echo "      Berkeley DB = `if test x$bdbdir != x; then echo yes; else echo no; fi`"
-echo "      FireBird = `if test x$firebirddir != x; then echo yes; else echo no; fi`"
-echo "      FreeTDS = `if test x$freetdsdir != x; then echo yes; else echo no; fi`"
-echo "      IBM DB2 = `if test x$ibmdb2dir != x; then echo yes; else echo no; fi`"
+dnl echo "      FireBird = `if test x$firebirddir != x; then echo yes; else echo no; fi`"
+dnl echo "      FreeTDS = `if test x$freetdsdir != x; then echo yes; else echo no; fi`"
+dnl echo "      IBM DB2 = `if test x$ibmdb2dir != x; then echo yes; else echo no; fi`"
 echo "      MDB (MS Access) = `if test x$mdbdir != x; then echo yes; else echo no; fi`"
-echo "      MySQL = `if test x$mysqldir != x; then echo yes; else echo no; fi`"
-echo "      mSQL = `if test x$msqldir != x; then echo yes; else echo no; fi`"
-echo "      ODBC = `if test x$odbcdir != x; then echo yes; else echo no; fi`"
-echo "      Oracle = `if test x$oracledir != x; then echo yes; else echo no; fi`"
+dnl echo "      MySQL = `if test x$mysqldir != x; then echo yes; else echo no; fi`"
+dnl echo "      mSQL = `if test x$msqldir != x; then echo yes; else echo no; fi`"
+dnl echo "      ODBC = `if test x$odbcdir != x; then echo yes; else echo no; fi`"
+dnl echo "      Oracle = `if test x$oracledir != x; then echo yes; else echo no; fi`"
 echo "      PostgreSQL = `if test x$postgresdir != x; then echo yes; else echo no; fi`"
 echo "      SQLite = yes `if test x$have_sqlite = xyes; then echo '(from system installation)'; else echo '(embedded)'; fi`"
-echo "      Sybase = `if test x$sybasedir != x; then echo yes; else echo no; fi`"
-echo "      xBase (dBase, Clipper, FoxPro) = `if test x$xbasedir != x; then echo yes; else echo no; fi`"
-echo "      LDAP = `if test x$ldapdir != x; then echo yes; else echo no; fi`"
+dnl echo "      Sybase = `if test x$sybasedir != x; then echo yes; else echo no; fi`"
+dnl echo "      xBase (dBase, Clipper, FoxPro) = `if test x$xbasedir != x; then echo yes; else echo no; fi`"
+dnl echo "      LDAP = `if test x$ldapdir != x; then echo yes; else echo no; fi`"
 if test x"$br_cv_binreloc" != "xyes" -a x"$platform_win32" != "xyes"
 then
        echo "   Binreloc support is disabled: Libgda will not be relocatable. To enable binreloc support re-run with --enable-binreloc (see http://autopackage.org/docs/binreloc for more information)"

@@ -273,6 +273,7 @@ common_drop_all_tables (GdaMetaStore *store)
 	};
 	gchar *view_names [] = {
 		"_all_types",
+		"_detailled_fk"
 	};
 	
 	GdaConnection *cnc = gda_meta_store_get_internal_connection (store);
@@ -450,7 +451,7 @@ test_domains (GdaMetaStore *store)
 	TEST_HEADER;
 
 	/* insert 1st part of the domains */
-	import = common_load_csv_file ("data_domains.csv", 4, "gint", 5, "gint", 12, "gint", 13, "gint", 19, "boolean", -1);
+	import = common_load_csv_file ("data_domains.csv", 5, "gint", 6, "gint", 13, "gint", 14, "gint", 19, "boolean", -1);
 	common_declare_expected_insertions_from_model (TNAME, import);
 	TEST_MODIFY (store, TNAME, import, NULL, &error, NULL);
 	TEST_END (import);
@@ -460,7 +461,7 @@ test_domains (GdaMetaStore *store)
 	g_value_set_string (v1 = gda_value_new (G_TYPE_STRING), "meta");
 	g_value_set_string (v2 = gda_value_new (G_TYPE_STRING), "information_schema");
 	g_value_set_string (v3 = gda_value_new (G_TYPE_STRING), "sql_identifier");
-	import = common_load_csv_file ("data_domains_1.csv", 4, "gint", 5, "gint", 12, "gint", 13, "gint", 19, "boolean", -1);
+	import = common_load_csv_file ("data_domains_1.csv", 5, "gint", 6, "gint", 13, "gint", 14, "gint", 19, "boolean", -1);
 	common_declare_expected_insertions_from_model (TNAME, import);
 	TEST_MODIFY (store, TNAME, import, 
 		     "domain_catalog=##dc::string AND domain_schema=##ds::string AND domain_name=##dn::string", &error, 

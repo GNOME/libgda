@@ -21,7 +21,7 @@ main (int argc, char **argv)
 	pinfo = gda_config_get_provider_info (PROVIDER);
 	if (!pinfo) {
 		g_warning ("Could not find provider information for %s", PROVIDER);
-		return EXIT_FAILURE;
+		return EXIT_SUCCESS;
 	}
 	g_print ("Provider now tested: %s\n", pinfo->id);
 	

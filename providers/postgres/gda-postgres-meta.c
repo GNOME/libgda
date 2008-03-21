@@ -69,6 +69,8 @@ typedef enum {
 	I_STMT_DOMAINS_CONSTRAINTS_ALL,
 	I_STMT_VIEWS_COLUMNS,
 	I_STMT_VIEWS_COLUMNS_ALL,
+	I_STMT_TRIGGERS,
+	I_STMT_TRIGGERS_ALL,
 } InternalStatementItem;
 
 
@@ -164,7 +166,13 @@ static gchar *internal_sql[] = {
 	"SELECT view_catalog, view_schema, view_name, table_catalog, table_schema, table_name, column_name FROM information_schema.view_column_usage WHERE view_catalog = ##cat::string AND view_schema = ##schema::string AND view_name = ##name::string",
 
 	/* I_STMT_VIEWS_COLUMNS_ALL */
-	"SELECT view_catalog, view_schema, view_name, table_catalog, table_schema, table_name, column_name FROM information_schema.view_column_usage"
+	"SELECT view_catalog, view_schema, view_name, table_catalog, table_schema, table_name, column_name FROM information_schema.view_column_usage",
+
+	/* I_STMT_TRIGGERS */
+	"SELECT current_database()::information_schema.sql_identifier, n.nspname::information_schema.sql_identifier, t.tgname::information_schema.sql_identifier, em.text::information_schema.character_data, current_database()::information_schema.sql_identifier, n.nspname::information_schema.sql_identifier, c.relname::information_schema.sql_identifier, \"substring\"(pg_get_triggerdef(t.oid), \"position\"(\"substring\"(pg_get_triggerdef(t.oid), 48), 'EXECUTE PROCEDURE'::text) + 47)::information_schema.character_data AS action_statement, CASE WHEN (t.tgtype::integer & 1) = 1 THEN 'ROW'::text ELSE 'STATEMENT'::text END::information_schema.character_data AS action_orientation, CASE WHEN (t.tgtype::integer & 2) = 2 THEN 'BEFORE'::text ELSE 'AFTER'::text END::information_schema.character_data AS condition_timing, pg_catalog.obj_description(t.oid), t.tgname, t.tgname FROM pg_namespace n, pg_class c, pg_trigger t, (( SELECT 4, 'INSERT' UNION ALL SELECT 8, 'DELETE') UNION ALL SELECT 16, 'UPDATE') em(num, text) WHERE n.oid = c.relnamespace AND c.oid = t.tgrelid AND (t.tgtype::integer & em.num) <> 0 AND NOT t.tgisconstraint AND NOT pg_is_other_temp_schema(n.oid) AND (pg_has_role(c.relowner, 'USAGE'::text) OR has_table_privilege(c.oid, 'INSERT'::text) OR has_table_privilege(c.oid, 'UPDATE'::text) OR has_table_privilege(c.oid, 'DELETE'::text) OR has_table_privilege(c.oid, 'REFERENCES'::text) OR has_table_privilege(c.oid, 'TRIGGER'::text)) AND current_database() = ##cat::string AND n.nspname = ##schema::string AND c.relname = ##name::string",
+	
+	/* I_STMT_TRIGGERS_ALL */
+	"SELECT current_database()::information_schema.sql_identifier, n.nspname::information_schema.sql_identifier, t.tgname::information_schema.sql_identifier, em.text::information_schema.character_data, current_database()::information_schema.sql_identifier, n.nspname::information_schema.sql_identifier, c.relname::information_schema.sql_identifier, \"substring\"(pg_get_triggerdef(t.oid), \"position\"(\"substring\"(pg_get_triggerdef(t.oid), 48), 'EXECUTE PROCEDURE'::text) + 47)::information_schema.character_data AS action_statement, CASE WHEN (t.tgtype::integer & 1) = 1 THEN 'ROW'::text ELSE 'STATEMENT'::text END::information_schema.character_data AS action_orientation, CASE WHEN (t.tgtype::integer & 2) = 2 THEN 'BEFORE'::text ELSE 'AFTER'::text END::information_schema.character_data AS condition_timing, pg_catalog.obj_description(t.oid), t.tgname, t.tgname FROM pg_namespace n, pg_class c, pg_trigger t, (( SELECT 4, 'INSERT' UNION ALL SELECT 8, 'DELETE') UNION ALL SELECT 16, 'UPDATE') em(num, text) WHERE n.oid = c.relnamespace AND c.oid = t.tgrelid AND (t.tgtype::integer & em.num) <> 0 AND NOT t.tgisconstraint AND NOT pg_is_other_temp_schema(n.oid) AND (pg_has_role(c.relowner, 'USAGE'::text) OR has_table_privilege(c.oid, 'INSERT'::text) OR has_table_privilege(c.oid, 'UPDATE'::text) OR has_table_privilege(c.oid, 'DELETE'::text) OR has_table_privilege(c.oid, 'REFERENCES'::text) OR has_table_privilege(c.oid, 'TRIGGER'::text))"
 };
 
 /*
@@ -922,8 +930,17 @@ gboolean
 _gda_postgres_meta__triggers (GdaServerProvider *prov, GdaConnection *cnc, 
 			      GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
-	TO_IMPLEMENT;
-	return TRUE;
+	GdaDataModel *model;
+	gboolean retval;
+
+	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_TRIGGERS_ALL], NULL, 
+							 error);
+	if (!model)
+		return FALSE;
+	retval = gda_meta_store_modify_with_context (store, context, model, error);
+	g_object_unref (model);
+		
+	return retval;
 }
 
 gboolean
@@ -932,8 +949,21 @@ _gda_postgres_meta_triggers (GdaServerProvider *prov, GdaConnection *cnc,
 			     const GValue *table_catalog, const GValue *table_schema, 
 			     const GValue *table_name)
 {
-	TO_IMPLEMENT;
-	return TRUE;
+	GdaDataModel *model;
+	gboolean retval = TRUE;
+
+	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog);
+	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema);
+	gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name);
+
+	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_TABLES_CONSTRAINTS], i_set, 
+							 error);
+	if (!model)
+		return FALSE;
+	retval = gda_meta_store_modify_with_context (store, context, model, error);
+	g_object_unref (model);
+		
+	return retval;
 }
 
 gboolean

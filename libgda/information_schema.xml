@@ -267,13 +267,14 @@
     <column name="trigger_catalog" pkey="TRUE"/>
     <column name="trigger_schema" pkey="TRUE"/>
     <column name="trigger_name" pkey="TRUE"/>
-    <column name="event_manipulation" pkey="TRUE"/>
-    <column name="event_object_catalog" pkey="TRUE"/>
-    <column name="event_object_schema" pkey="TRUE"/>
-    <column name="event_object_table" pkey="TRUE"/>
-    <column name="action_statement" nullok="TRUE"/>
-    <column name="action_orientation"/>
-    <column name="condition_timing"/>
+    <column name="event_manipulation" pkey="TRUE" descr="Event that fires the trigger (INSERT, UPDATE, or DELETE)"/>
+    <column name="event_object_catalog" pkey="TRUE" descr="Name of the database that contains the table that the trigger is defined on"/>
+    <column name="event_object_schema" pkey="TRUE" descr="Name of the schema that contains the table that the trigger is defined on"/>
+    <column name="event_object_table" pkey="TRUE" descr="Name of the table that the trigger is defined on"/>
+
+    <column name="action_statement" nullok="TRUE" descr="Statement that is executed by the trigger"/>
+    <column name="action_orientation" descr="Identifies whether the trigger fires once for each processed row or once for each statement (ROW or STATEMENT)"/>
+    <column name="condition_timing" descr="Time at which the trigger fires (BEFORE or AFTER)"/>
     <column name="trigger_comments" nullok="TRUE"/>
     <column name="trigger_short_name"/>
     <column name="trigger_full_name"/>

@@ -54,7 +54,6 @@ struct _GdaConnectionPrivate {
 
 	GdaMetaStore         *meta_store;
 	GList                *events_list;
-	GList                *recset_list;
 
 	GdaTransactionStatus *trans_status;
 	GHashTable           *prepared_stmts;
@@ -207,7 +206,6 @@ gda_connection_init (GdaConnection *cnc, GdaConnectionClass *klass)
 	cnc->priv->auth_string = NULL;
 	cnc->priv->is_open = FALSE;
 	cnc->priv->events_list = NULL;
-	cnc->priv->recset_list = NULL;
 	cnc->priv->trans_status = NULL; /* no transaction yet */
 }
 
@@ -236,9 +234,6 @@ gda_connection_dispose (GObject *object)
 	if (cnc->priv->events_list)
 		gda_connection_event_list_free (cnc->priv->events_list);
 
-	if (cnc->priv->recset_list)
-		g_list_foreach (cnc->priv->recset_list, (GFunc) g_object_unref, NULL);
-	
 	if (cnc->priv->trans_status) {
 		g_object_unref (cnc->priv->trans_status);
 		cnc->priv->trans_status = NULL;
@@ -409,9 +404,7 @@ gda_connection_get_property (GObject *object,
  * provider (use gda_config_get_provider_info() to get it). Also one can use the "gda-sql-4.0 -L" command to 
  * list the possible named parameters.
  *
- * If a new #GdaConnection is created, then the caller will hold a reference on it.
- *
- * Returns: the opened connection if successful, %NULL if there was an error.
+ * Returns: a new #GdaConnection if connection opening was sucessfull or %NULL if there was an error.
  */
 GdaConnection *
 gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string, 
@@ -496,8 +489,7 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
  * and the real connection string will be extracted from that string (note that if @provider_name
  * is not %NULL then it will still be used as the provider ID).
  *
- * Returns: the opened connection if successful, %NULL if there is
- * an error.
+ * Returns: a new #GdaConnection if connection opening was sucessfull or %NULL if there was an error.
  */
 GdaConnection *
 gda_connection_open_from_string (const gchar *provider_name, const gchar *cnc_string, const gchar *auth_string,

@@ -31,6 +31,9 @@
 
 #ifdef HAVE_SQLITE
 #include <sqlite3.h>
+  #if (SQLITE_VERSION_NUMBER < 3005000)
+  typedef sqlite_int64 sqlite3_int64;
+  #endif
 #else
 #include "sqlite-src/sqlite3.h"
 #endif
@@ -45,7 +48,6 @@ typedef struct {
 	GdaDataModel *functions_model;
 	GdaDataModel *aggregates_model;
 } SqliteConnectionData;
-
 
 /* 
  * Utility functions

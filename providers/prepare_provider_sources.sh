@@ -57,4 +57,4 @@ done
 #
 # adaptating Makefile.am files
 #
-cat Makefile.am | sed -e 's/^#xml_DATA/xml_DATA/' -e 's/^#provider_LTLIBRARIES/provider_LTLIBRARIES/' -e 's/^#pkgconfig_DATA/pkgconfig_DATA/' -e '/^noinst_/d' > Makefile.am.tmp && mv Makefile.am.tmp Makefile.am
+cat Makefile.am | sed -e 's/^#xml_DATA/xml_DATA/' -e 's/^#provider_LTLIBRARIES/provider_LTLIBRARIES/' -e 's/^#pkgconfig_DATA/pkgconfig_DATA/' -e '/^noinst_/d' -e 's/noinst_DATA/xml_DATA/' > Makefile.am.tmp && mv Makefile.am.tmp Makefile.am

@@ -1,3 +1,31 @@
+2008-03-21  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/sqlite/gda-sqlite.h: correction for SQLite versions < 3.5 (for bug #523613)
+	* providers/postgres/parser.y:
+	* libgda/sql-parser/parser.y: allow identifiers to be enclosed in double quotes
+	* tests/parser/testdata.xml:
+	* libgda/sql-parser/gda-sql-parser.c: corrected a nasty bug while using a case statement
+	* libgda/gda-data-model.c: removed debug info
+	* libgda/information_schema.xml: added some descriptive fields
+	* libgda/Makefile.am: added gda-statement-extra.h to list of headers
+	* configure.in: remove non compiling providers from AC_OUTPUT, don't check anymore for
+	LEX and YACC as they are not used anymore
+	* tests/providers/*: don't fail if the providers have not been compiled (and are thus not found)
+	* tests/meta-store/*: adaptations to the information schema changes
+	* libgda/sql-parser/Makefile.am:
+	* libgda/sql-parser/gen_def.c:
+	* providers/prepare_provider_sources.sh:
+	* providers/postgres/Makefile.am:
+	* providers/skel-implementation/models/Makefile.am:
+	* providers/skel-implementation/capi/Makefile.am: modifications to have "make distcheck" run
+	* libgda/sql-parser/LemonPatch: keep the lemon.c modifications in a separate file
+	* libgda/sql-parser/lemon.c: modified to be able to load the "lempar.c" file from a directory
+	different than the current directory, and be able to write output files to the current
+	directory
+	* libgda/sqlite/virtual/libmain.c:
+	* providers/postgres/gda-postgres-cursor-recordset.[ch]: removed unused files
+	* libgda/gda-connection.c: removed unused private attribute
+
 2008-03-20  Vivien Malerba <malerba@gnome-db.org>
 
 	* po/POTFILES.in: remove references to non existing files
