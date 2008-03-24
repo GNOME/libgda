@@ -1,3 +1,10 @@
+libgda 3.99.2, 2008-03-24
+
+ This version:
+ - fixes some compilation problems found in version 3.99.1 (now passes 'make distcheck')
+ - corrects some bugs
+
+
 libgda 3.99.1, 2008-03-19
 
  This is a major re-write of the core parts of Libgda, and is API incompatible with the 3.x versions.
