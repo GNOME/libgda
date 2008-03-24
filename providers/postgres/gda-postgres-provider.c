@@ -1604,7 +1604,7 @@ gda_postgres_provider_statement_prepare (GdaServerProvider *provider, GdaConnect
 	gchar *prep_stm_name;
 	GdaConnectionEvent *event = NULL;
 
-	prep_stm_name = g_strdup_printf ("PS%p", stmt);
+	prep_stm_name = g_strdup_printf ("ps%p", stmt);
 	pg_res = PQprepare (cdata->pconn, prep_stm_name, sql, 0, NULL);
 	if (!pg_res || (PQresultStatus (pg_res) != PGRES_COMMAND_OK)) {
 		event = _gda_postgres_make_error (cnc, cdata->pconn, pg_res, error);
@@ -1678,7 +1678,7 @@ prepare_stmt_simple (PostgresConnectionData *cdata, const gchar *sql, GError **e
 	gchar *prep_stm_name;
 	GdaConnectionEvent *event = NULL;
 
-	prep_stm_name = g_strdup_printf ("PS%d", counter++);
+	prep_stm_name = g_strdup_printf ("ps%d", counter++);
 	pg_res = PQprepare (cdata->pconn, prep_stm_name, sql, 0, NULL);
 	if (!pg_res || (PQresultStatus (pg_res) != PGRES_COMMAND_OK)) {
 		event = _gda_postgres_make_error (cdata->cnc, cdata->pconn, pg_res, error);
@@ -2110,7 +2110,7 @@ gda_postgres_free_cnc_data (PostgresConnectionData *cdata)
 	if (!cdata)
 		return;
 
-	if (cdata->pconn)
+	if (cdata->pconn) 
                 PQfinish (cdata->pconn);
 
 	if (cdata->type_data) {

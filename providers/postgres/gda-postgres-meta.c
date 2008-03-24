@@ -956,7 +956,7 @@ _gda_postgres_meta_triggers (GdaServerProvider *prov, GdaConnection *cnc,
 	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema);
 	gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name);
 
-	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_TABLES_CONSTRAINTS], i_set, 
+	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_TRIGGERS], i_set, 
 							 error);
 	if (!model)
 		return FALSE;

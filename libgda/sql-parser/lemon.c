@@ -131,6 +131,7 @@ struct symbol {
   } assoc;                 /* Associativity if predecence is defined */
   char *firstset;          /* First-set for all rules of this symbol */
   Boolean lambda;          /* True if NT and can generate an empty string */
+  int useCnt;              /* Number of times used */
   char *destructor;        /* Code which executes whenever this symbol is
                            ** popped from the stack during error processing */
   int destructorln;        /* Line number of destructor code */
@@ -191,7 +192,9 @@ struct action {
     ACCEPT,
     REDUCE,
     ERROR,
-    CONFLICT,                /* Was a reduce, but part of a conflict */
+    SSCONFLICT,              /* A shift/shift conflict */
+    SRCONFLICT,              /* Was a reduce, but part of a conflict */
+    RRCONFLICT,              /* Was a reduce, but part of a conflict */
     SH_RESOLVED,             /* Was a shift.  Precedence resolved conflict */
     RD_RESOLVED,             /* Was reduce.  Precedence resolved conflict */
     NOT_USED                 /* Deleted by compression */
@@ -339,7 +342,7 @@ static struct action *Action_new(void){
   if( freelist==0 ){
     int i;
     int amt = 100;
-    freelist = (struct action *)malloc( sizeof(struct action)*amt );
+    freelist = (struct action *)calloc(amt, sizeof(struct action));
     if( freelist==0 ){
       fprintf(stderr,"Unable to allocate memory for a new parser action.");
       exit(1);
@@ -362,8 +365,10 @@ static int actioncmp(
 ){
   int rc;
   rc = ap1->sp->index - ap2->sp->index;
-  if( rc==0 ) rc = (int)ap1->type - (int)ap2->type;
   if( rc==0 ){
+    rc = (int)ap1->type - (int)ap2->type;
+  }
+  if( rc==0 && ap1->type==REDUCE ){
     rc = ap1->x.rp->index - ap2->x.rp->index;
   }
   return rc;
@@ -439,7 +444,7 @@ void acttab_free(acttab *p){
 
 /* Allocate a new acttab structure */
 acttab *acttab_alloc(void){
-  acttab *p = malloc( sizeof(*p) );
+  acttab *p = calloc( 1, sizeof(*p) );
   if( p==0 ){
     fprintf(stderr,"Unable to allocate memory for a new acttab.");
     exit(1);
@@ -1012,7 +1017,7 @@ struct symbol *errsym;   /* The error symbol (if defined.  NULL otherwise) */
   int errcnt = 0;
   assert( apx->sp==apy->sp );  /* Otherwise there would be no conflict */
   if( apx->type==SHIFT && apy->type==SHIFT ){
-    apy->type = CONFLICT;
+    apy->type = SSCONFLICT;
     errcnt++;
   }
   if( apx->type==SHIFT && apy->type==REDUCE ){
@@ -1020,7 +1025,7 @@ struct symbol *errsym;   /* The error symbol (if defined.  NULL otherwise) */
     spy = apy->x.rp->precsym;
     if( spy==0 || spx->prec<0 || spy->prec<0 ){
       /* Not enough precedence information. */
-      apy->type = CONFLICT;
+      apy->type = SRCONFLICT;
       errcnt++;
     }else if( spx->prec>spy->prec ){    /* Lower precedence wins */
       apy->type = RD_RESOLVED;
@@ -1032,7 +1037,7 @@ struct symbol *errsym;   /* The error symbol (if defined.  NULL otherwise) */
       apx->type = SH_RESOLVED;
     }else{
       assert( spx->prec==spy->prec && spx->assoc==NONE );
-      apy->type = CONFLICT;
+      apy->type = SRCONFLICT;
       errcnt++;
     }
   }else if( apx->type==REDUCE && apy->type==REDUCE ){
@@ -1040,7 +1045,7 @@ struct symbol *errsym;   /* The error symbol (if defined.  NULL otherwise) */
     spy = apy->x.rp->precsym;
     if( spx==0 || spy==0 || spx->prec<0 ||
     spy->prec<0 || spx->prec==spy->prec ){
-      apy->type = CONFLICT;
+      apy->type = RRCONFLICT;
       errcnt++;
     }else if( spx->prec>spy->prec ){
       apy->type = RD_RESOLVED;
@@ -1051,10 +1056,14 @@ struct symbol *errsym;   /* The error symbol (if defined.  NULL otherwise) */
     assert( 
       apx->type==SH_RESOLVED ||
       apx->type==RD_RESOLVED ||
-      apx->type==CONFLICT ||
+      apx->type==SSCONFLICT ||
+      apx->type==SRCONFLICT ||
+      apx->type==RRCONFLICT ||
       apy->type==SH_RESOLVED ||
       apy->type==RD_RESOLVED ||
-      apy->type==CONFLICT
+      apy->type==SSCONFLICT ||
+      apy->type==SRCONFLICT ||
+      apy->type==RRCONFLICT
     );
     /* The REDUCE/SHIFT case cannot happen because SHIFTs come before
     ** REDUCEs on the list.  If we reach this point it must be because
@@ -1080,7 +1089,7 @@ PRIVATE struct config *newconfig(){
   if( freelist==0 ){
     int i;
     int amt = 3;
-    freelist = (struct config *)malloc( sizeof(struct config)*amt );
+    freelist = (struct config *)calloc( amt, sizeof(struct config) );
     if( freelist==0 ){
       fprintf(stderr,"Unable to allocate memory for a new configuration.");
       exit(1);
@@ -1449,6 +1458,7 @@ char **argv;
   lem.basisflag = basisflag;
   Symbol_new("$");
   lem.errsym = Symbol_new("error");
+  lem.errsym->useCnt = 0;
 
   /* Parse the input file */
   Parse(&lem);
@@ -1474,7 +1484,7 @@ char **argv;
     Reprint(&lem);
   }else{
     /* Initialize the size for all follow and first sets */
-    SetSize(lem.nterminal);
+    SetSize(lem.nterminal+1);
 
     /* Find the precedence for every production rule (that has one) */
     FindRulePrecedences(&lem);
@@ -2111,8 +2121,8 @@ to follow the previous rule.");
     case IN_RHS:
       if( x[0]=='.' ){
         struct rule *rp;
-        rp = (struct rule *)malloc( sizeof(struct rule) + 
-             sizeof(struct symbol*)*psp->nrhs + sizeof(char*)*psp->nrhs );
+        rp = (struct rule *)calloc( sizeof(struct rule) + 
+             sizeof(struct symbol*)*psp->nrhs + sizeof(char*)*psp->nrhs, 1);
         if( rp==0 ){
           ErrorMsg(psp->filename,psp->tokenlineno,
             "Can't allocate enough memory for this rule.");
@@ -2148,7 +2158,7 @@ to follow the previous rule.");
       }else if( isalpha(x[0]) ){
         if( psp->nrhs>=MAXRHS ){
           ErrorMsg(psp->filename,psp->tokenlineno,
-            "Too many symbols on RHS or rule beginning at \"%s\".",
+            "Too many symbols on RHS of rule beginning at \"%s\".",
             x);
           psp->errorcnt++;
           psp->state = RESYNC_AFTER_RULE_ERROR;
@@ -2161,11 +2171,11 @@ to follow the previous rule.");
         struct symbol *msp = psp->rhs[psp->nrhs-1];
         if( msp->type!=MULTITERMINAL ){
           struct symbol *origsp = msp;
-          msp = malloc(sizeof(*msp));
+          msp = calloc(1,sizeof(*msp));
           memset(msp, 0, sizeof(*msp));
           msp->type = MULTITERMINAL;
           msp->nsubsym = 1;
-          msp->subsym = malloc(sizeof(struct symbol*));
+          msp->subsym = calloc(1,sizeof(struct symbol*));
           msp->subsym[0] = origsp;
           msp->name = origsp->name;
           psp->rhs[psp->nrhs-1] = msp;
@@ -2618,7 +2628,7 @@ struct plink *Plink_new(){
   if( plink_freelist==0 ){
     int i;
     int amt = 100;
-    plink_freelist = (struct plink *)malloc( sizeof(struct plink)*amt );
+    plink_freelist = (struct plink *)calloc( amt, sizeof(struct plink) );
     if( plink_freelist==0 ){
       fprintf(stderr,
       "Unable to allocate memory for a new follow-set propagation link.\n");
@@ -2844,9 +2854,14 @@ int PrintAction(struct action *ap, FILE *fp, int indent){
     case ERROR:
       fprintf(fp,"%*s error",indent,ap->sp->name);
       break;
-    case CONFLICT:
+    case SRCONFLICT:
+    case RRCONFLICT:
       fprintf(fp,"%*s reduce %-3d ** Parsing conflict **",
         indent,ap->sp->name,ap->x.rp->index);
+      break;
+    case SSCONFLICT:
+      fprintf(fp,"%*s shift  %d ** Parsing conflict **", 
+        indent,ap->sp->name,ap->x.stp->statenum);
       break;
     case SH_RESOLVED:
     case RD_RESOLVED:
@@ -3355,7 +3370,7 @@ int mhflag;                 /* True if generating makeheaders output */
 
   /* Allocate and initialize types[] and allocate stddt[] */
   arraysize = lemp->nsymbol * 2;
-  types = (char**)malloc( arraysize * sizeof(char*) );
+  types = (char**)calloc( arraysize, sizeof(char*) );
   for(i=0; i<arraysize; i++) types[i] = 0;
   maxdtlength = 0;
   if( lemp->vartype ){
@@ -3436,7 +3451,9 @@ int mhflag;                 /* True if generating makeheaders output */
     fprintf(out,"  %s yy%d;\n",types[i],i+1); lineno++;
     free(types[i]);
   }
-  fprintf(out,"  int yy%d;\n",lemp->errsym->dtnum); lineno++;
+  if( lemp->errsym->useCnt ){
+    fprintf(out,"  int yy%d;\n",lemp->errsym->dtnum); lineno++;
+  }
   free(stddt);
   free(types);
   fprintf(out,"} YYMINORTYPE;\n"); lineno++;
@@ -3485,6 +3502,25 @@ static int axset_compare(const void *a, const void *b){
   struct axset *p2 = (struct axset*)b;
   return p2->nAction - p1->nAction;
 }
+
+/*
+** Write text on "out" that describes the rule "rp".
+*/
+static void writeRuleText(FILE *out, struct rule *rp){
+  int j;
+  fprintf(out,"%s ::=", rp->lhs->name);
+  for(j=0; j<rp->nrhs; j++){
+    struct symbol *sp = rp->rhs[j];
+    fprintf(out," %s", sp->name);
+    if( sp->type==MULTITERMINAL ){
+      int k;
+      for(k=1; k<sp->nsubsym; k++){
+        fprintf(out,"|%s",sp->subsym[k]->name);
+      }
+    }
+  }
+}
+
 
 /* Generate C source code for the parser */
 void ReportTable(lemp, mhflag)
@@ -3581,8 +3617,10 @@ int mhflag;     /* Output in makeheaders format if true */
   }
   fprintf(out,"#define YYNSTATE %d\n",lemp->nstate);  lineno++;
   fprintf(out,"#define YYNRULE %d\n",lemp->nrule);  lineno++;
-  fprintf(out,"#define YYERRORSYMBOL %d\n",lemp->errsym->index);  lineno++;
-  fprintf(out,"#define YYERRSYMDT yy%d\n",lemp->errsym->dtnum);  lineno++;
+  if( lemp->errsym->useCnt ){
+    fprintf(out,"#define YYERRORSYMBOL %d\n",lemp->errsym->index);  lineno++;
+    fprintf(out,"#define YYERRSYMDT yy%d\n",lemp->errsym->dtnum);  lineno++;
+  }
   if( lemp->has_fallback ){
     fprintf(out,"#define YYFALLBACK 1\n");  lineno++;
   }
@@ -3601,7 +3639,7 @@ int mhflag;     /* Output in makeheaders format if true */
   */
 
   /* Compute the actions on all states and count them up */
-  ax = malloc( sizeof(ax[0])*lemp->nstate*2 );
+  ax = calloc(lemp->nstate*2, sizeof(ax[0]));
   if( ax==0 ){
     fprintf(stderr,"malloc failed\n");
     exit(1);
@@ -3781,17 +3819,8 @@ int mhflag;     /* Output in makeheaders format if true */
   */
   for(i=0, rp=lemp->rule; rp; rp=rp->next, i++){
     assert( rp->index==i );
-    fprintf(out," /* %3d */ \"%s ::=", i, rp->lhs->name);
-    for(j=0; j<rp->nrhs; j++){
-      struct symbol *sp = rp->rhs[j];
-      fprintf(out," %s", sp->name);
-      if( sp->type==MULTITERMINAL ){
-        int k;
-        for(k=1; k<sp->nsubsym; k++){
-          fprintf(out,"|%s",sp->subsym[k]->name);
-        }
-      }
-    }
+    fprintf(out," /* %3d */ \"", i);
+    writeRuleText(out, rp);
     fprintf(out,"\",\n"); lineno++;
   }
   tplt_xfer(lemp->name,in,out,&lineno);
@@ -3804,7 +3833,8 @@ int mhflag;     /* Output in makeheaders format if true */
     for(i=0; i<lemp->nsymbol; i++){
       struct symbol *sp = lemp->symbols[i];
       if( sp==0 || sp->type!=TERMINAL ) continue;
-      fprintf(out,"    case %d:\n",sp->index); lineno++;
+      fprintf(out,"    case %d: /* %s */\n",
+              sp->index, sp->name); lineno++;
     }
     for(i=0; i<lemp->nsymbol && lemp->symbols[i]->type!=TERMINAL; i++);
     if( i<lemp->nsymbol ){
@@ -3818,7 +3848,8 @@ int mhflag;     /* Output in makeheaders format if true */
       struct symbol *sp = lemp->symbols[i];
       if( sp==0 || sp->type==TERMINAL ||
           sp->index<=0 || sp->destructor!=0 ) continue;
-      fprintf(out,"    case %d:\n",sp->index); lineno++;
+      fprintf(out,"    case %d: /* %s */\n",
+              sp->index, sp->name); lineno++;
       dflt_sp = sp;
     }
     if( dflt_sp!=0 ){
@@ -3829,7 +3860,8 @@ int mhflag;     /* Output in makeheaders format if true */
   for(i=0; i<lemp->nsymbol; i++){
     struct symbol *sp = lemp->symbols[i];
     if( sp==0 || sp->type==TERMINAL || sp->destructor==0 ) continue;
-    fprintf(out,"    case %d:\n",sp->index); lineno++;
+    fprintf(out,"    case %d: /* %s */\n",
+            sp->index, sp->name); lineno++;
 
     /* Combine duplicate destructors into a single case */
     for(j=i+1; j<lemp->nsymbol; j++){
@@ -3837,7 +3869,8 @@ int mhflag;     /* Output in makeheaders format if true */
       if( sp2 && sp2->type!=TERMINAL && sp2->destructor
           && sp2->dtnum==sp->dtnum
           && strcmp(sp->destructor,sp2->destructor)==0 ){
-         fprintf(out,"    case %d:\n",sp2->index); lineno++;
+         fprintf(out,"    case %d: /* %s */\n",
+                 sp2->index, sp2->name); lineno++;
          sp2->destructor = 0;
       }
     }
@@ -3868,10 +3901,14 @@ int mhflag;     /* Output in makeheaders format if true */
   for(rp=lemp->rule; rp; rp=rp->next){
     struct rule *rp2;
     if( rp->code==0 ) continue;
-    fprintf(out,"      case %d:\n",rp->index); lineno++;
+    fprintf(out,"      case %d: /* ", rp->index);
+    writeRuleText(out, rp);
+    fprintf(out, " */\n"); lineno++;
     for(rp2=rp->next; rp2; rp2=rp2->next){
       if( rp2->code==rp->code ){
-        fprintf(out,"      case %d:\n",rp2->index); lineno++;
+        fprintf(out,"      case %d: /* ", rp2->index);
+        writeRuleText(out, rp2);
+        fprintf(out," */\n"); lineno++;
         rp2->code = 0;
       }
     }
@@ -4072,13 +4109,11 @@ int n;
 /* Allocate a new set */
 char *SetNew(){
   char *s;
-  int i;
-  s = (char*)malloc( size );
+  s = (char*)calloc( size, 1);
   if( s==0 ){
     extern void memory_error();
     memory_error();
   }
-  for(i=0; i<size; i++) s[i] = 0;
   return s;
 }
 
@@ -4096,6 +4131,7 @@ char *s;
 int e;
 {
   int rv;
+  assert( e>=0 && e<size );
   rv = s[e];
   s[e] = 1;
   return !rv;
@@ -4285,7 +4321,7 @@ char *x;
 
   sp = Symbol_find(x);
   if( sp==0 ){
-    sp = (struct symbol *)malloc( sizeof(struct symbol) );
+    sp = (struct symbol *)calloc(1, sizeof(struct symbol) );
     MemoryCheck(sp);
     sp->name = Strsafe(x);
     sp->type = isupper(*x) ? TERMINAL : NONTERMINAL;
@@ -4297,8 +4333,10 @@ char *x;
     sp->lambda = LEMON_FALSE;
     sp->destructor = 0;
     sp->datatype = 0;
+    sp->useCnt = 0;
     Symbol_insert(sp,sp->name);
   }
+  sp->useCnt++;
   return sp;
 }
 
@@ -4468,7 +4506,7 @@ struct symbol **Symbol_arrayof()
   int i,size;
   if( x2a==0 ) return 0;
   size = x2a->count;
-  array = (struct symbol **)malloc( sizeof(struct symbol *)*size );
+  array = (struct symbol **)calloc(size, sizeof(struct symbol *));
   if( array ){
     for(i=0; i<size; i++) array[i] = x2a->tbl[i].data;
   }
@@ -4519,7 +4557,7 @@ struct config *a;
 struct state *State_new()
 {
   struct state *new;
-  new = (struct state *)malloc( sizeof(struct state) );
+  new = (struct state *)calloc(1, sizeof(struct state) );
   MemoryCheck(new);
   return new;
 }

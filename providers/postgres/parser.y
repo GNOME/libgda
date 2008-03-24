@@ -45,6 +45,7 @@
 #include <libgda/sql-parser/gda-statement-struct-select.h>
 #include <libgda/sql-parser/gda-statement-struct-compound.h>
 #include <libgda/sql-parser/gda-statement-struct-parts.h>
+#include <assert.h>
 
 #ifdef GDA_DEBUG_NO
 #define DEBUG(format, ...) g_print ("___" format "\n", __VA_ARGS__)

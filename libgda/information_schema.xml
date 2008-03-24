@@ -239,9 +239,9 @@
     <column name="routine_catalog" nullok="TRUE"/>
     <column name="routine_schema" nullok="TRUE"/>
     <column name="routine_name"/>
-    <column name="routine_type" nullok="TRUE"/>
+    <column name="routine_type" nullok="TRUE" descr="FUNCTION, PROCEDURE, AGGREGATE"/>
     <column name="return_type" nullok="TRUE"/>
-    <column name="returns_set" type="boolean"/>
+    <column name="returns_set" type="boolean" descr="True if function returns a set (i.e., multiple values of the specified data type)"/>
     <column name="routine_body" nullok="TRUE"/>
     <column name="routine_definition" nullok="TRUE"/>
     <column name="external_name" nullok="TRUE"/>

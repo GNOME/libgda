@@ -349,9 +349,7 @@ static int yy_find_shift_action(
   if( stateno>YY_SHIFT_MAX || (i = yy_shift_ofst[stateno])==YY_SHIFT_USE_DFLT ){
     return yy_default[stateno];
   }
-  if( iLookAhead==YYNOCODE ){
-    return YY_NO_ACTION;
-  }
+  assert( iLookAhead!=YYNOCODE );
   i += iLookAhead;
   if( i<0 || i>=YY_SZ_ACTTAB || yy_lookahead[i]!=iLookAhead ){
     if( iLookAhead>0 ){
@@ -402,21 +400,14 @@ static int yy_find_reduce_action(
   YYCODETYPE iLookAhead     /* The look-ahead token */
 ){
   int i;
-  /* int stateno = pParser->yystack[pParser->yyidx].stateno; */
- 
-  if( stateno>YY_REDUCE_MAX ||
-      (i = yy_reduce_ofst[stateno])==YY_REDUCE_USE_DFLT ){
-    return yy_default[stateno];
-  }
-  if( iLookAhead==YYNOCODE ){
-    return YY_NO_ACTION;
-  }
+  assert( stateno<=YY_REDUCE_MAX );
+  i = yy_reduce_ofst[stateno];
+  assert( i!=YY_REDUCE_USE_DFLT );
+  assert( iLookAhead!=YYNOCODE );
   i += iLookAhead;
-  if( i<0 || i>=YY_SZ_ACTTAB || yy_lookahead[i]!=iLookAhead ){
-    return yy_default[stateno];
-  }else{
-    return yy_action[i];
-  }
+  assert( i>=0 && i<YY_SZ_ACTTAB );
+  assert( yy_lookahead[i]==iLookAhead );
+  return yy_action[i];
 }
 
 /*
@@ -562,7 +553,8 @@ static void yy_reduce(
     {
       yy_shift(yypParser,yyact,yygoto,&yygotominor);
     }
-  }else if( yyact == YYNSTATE + YYNRULE + 1 ){
+  }else{
+    assert( yyact == YYNSTATE + YYNRULE + 1 );
     yy_accept(yypParser);
   }
 }
@@ -647,7 +639,9 @@ void Parse(
   YYMINORTYPE yyminorunion;
   int yyact;            /* The parser action. */
   int yyendofinput;     /* True if we are at the end of input */
+#ifdef YYERRORSYMBOL
   int yyerrorhit = 0;   /* True if yymajor has invoked an error */
+#endif
   yyParser *yypParser;  /* The parser */
 
   /* (re)initialize the parser, if necessary */
@@ -678,17 +672,17 @@ void Parse(
   do{
     yyact = yy_find_shift_action(yypParser,yymajor);
     if( yyact<YYNSTATE ){
+      assert( !yyendofinput );  /* Impossible to shift the $ token */
       yy_shift(yypParser,yyact,yymajor,&yyminorunion);
       yypParser->yyerrcnt--;
-      if( yyendofinput && yypParser->yyidx>=0 ){
-        yymajor = 0;
-      }else{
-        yymajor = YYNOCODE;
-      }
+      yymajor = YYNOCODE;
     }else if( yyact < YYNSTATE + YYNRULE ){
       yy_reduce(yypParser,yyact-YYNSTATE);
-    }else if( yyact == YY_ERROR_ACTION ){
+    }else{
+      assert( yyact == YY_ERROR_ACTION );
+#ifdef YYERRORSYMBOL
       int yymx;
+#endif
 #ifndef NDEBUG
       if( yyTraceFILE ){
         fprintf(yyTraceFILE,"%sSyntax Error!\n",yyTracePrompt);
@@ -769,9 +763,6 @@ void Parse(
       }
       yymajor = YYNOCODE;
 #endif
-    }else{
-      yy_accept(yypParser);
-      yymajor = YYNOCODE;
     }
   }while( yymajor!=YYNOCODE && yypParser->yyidx>=0 );
   return;

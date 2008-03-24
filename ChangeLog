@@ -1,3 +1,22 @@
+2008-03-24  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/sql-parser/lemon.c:
+	* libgda/sql-parser/LemonPatch:
+	* libgda/sql-parser/lempar.c: use the Lemon parser generator for SQLite 3.5.7
+	* libgda/sql-parser/parser.y:
+	* libgda/sql-parser/delimiter.y:
+	* providers/skel-implementation/capi/parser.y:
+	* providers/postgres/parser.y: add #include <assert.h> which is required by the
+	new version of the Lemon parser generator
+	* providers/postgres/gda-postgres-meta.c:
+	* providers/postgres/gda-postgres-provider.c: renamed the prepared statement with
+	lowercase only to avoid postgres warning about non existing prepared statement
+	when calling DEALLOCATE
+	* libgda/information_schema.xml: added some descriptions
+	* doc/C/information_schema.png:
+	* doc/C/information_schema.svg: updated the GdaMetaStore's internal structure's
+	diagram
+
 2008-03-21  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/sqlite/gda-sqlite.h: correction for SQLite versions < 3.5 (for bug #523613)
