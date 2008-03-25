@@ -1,3 +1,8 @@
+2008-03-25  Murray Cumming  <murrayc@murrayc.com>
+
+	* NEWS: Updated for a future libgda 3.1.3 release.
+	* po/POTFILES.in: Some corrections to fix distcheck.
+
 2008-03-25  Mark Johnson  <mrj001@shaw.ca>
 
 	* providers/postgres/utils.c:
@@ -39,7 +44,6 @@
 
 	* configure.in: fixed ALL_LINGUAS variable to add Punjabi language,
 	bug #500755
-
 
 2007-11-18  Murray Cumming  <murrayc@murrayc.com>
 

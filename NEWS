@@ -1,31 +1,15 @@
-libgda 3.99.2, 2008-03-24
+libgda 3.1.3, TODO
 
- This version:
- - fixes some compilation problems found in version 3.99.1 (now passes 'make distcheck')
- - corrects some bugs
-
-
-libgda 3.99.1, 2008-03-19
-
- This is a major re-write of the core parts of Libgda, and is API incompatible with the 3.x versions.
- Changes include:
- - Easier to understand and to use API, with less strange path usage
- - Reduce the size of the library (almost half the size and half the symbols)
- - Easier connection opening (removal of the GdaClient object)
- - Merge of the GdaQuery and GdaCommand into only one object to represent statements
- - New adaptative SQL parser (can be adaptated to each DBMS's SQL syntax)
- - New database based dictionary which can handle namespaces
- - Rework of the database adaptators (providers) for easier maintenance and more features
- - Sample "skeleton" database adaptators to make it easy to write a database adaptator for a new
-   database type
- - Updated documentation
-
- Warnings:
- - This is still an early version which probably has a lot of bugs and as such it should not be used
-   in a production environment.
- - Most of the database adaptators (providers) need to be re-written, particularly MySQL (which is
-   currently being done) and Oracle
- - Libgnomedb has not yet been updated and won't compile with this version
+* Postgres provider: Fix a big inefficiency in discovering the primary key, 
+  introduced in 3.1.x.
+  Mark Johnson. (Bug #513543)
+* Translation fixes.
+  Vivien Malerba. (Bug #494337 - Claude Paroz)
+* Build:
+  - Check for GnomeVFS >= 2.20.
+    Vivien Malerba. (Bug #498213)
+  - Allow documentation build when the --without-bdb flag is used.
+    Vivien Malerba. (Bug #498836)
 
 
 libgda 3.1.2, 2007-10-24
