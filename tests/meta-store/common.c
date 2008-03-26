@@ -143,7 +143,7 @@ common_load_csv_file (const gchar *data_file, ...)
 	va_end (args);
 	
 	/* load file */
-	fname = g_build_filename (ROOT_DIR, "tests", "meta-store", data_file, NULL);
+	fname = g_build_filename (TOP_SRC_DIR, "tests", "meta-store", data_file, NULL);
 	model = gda_data_model_import_new_file (fname, TRUE, options);
 	g_object_unref (options);
 	

@@ -15,9 +15,10 @@ main (int argc, char **argv)
 	int number_failed = 0;
 	fork_tests = FALSE;
 
+	/* set up test environment */
+	g_setenv ("GDA_TOP_BUILD_DIR", TOP_BUILD_DIR, 0);
 	gda_init ("check-providers", PACKAGE_VERSION, argc, argv);
 
-	setenv ("GDA_PROVIDERS_ROOT_DIR", GDA_PROVIDERS_ROOT_DIR, 0);
 	pinfo = gda_config_get_provider_info (PROVIDER);
 	if (!pinfo) {
 		g_warning ("Could not find provider information for %s", PROVIDER);

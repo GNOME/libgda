@@ -309,14 +309,17 @@ gda_data_model_dsn_list_get_value_at (GdaDataModel *model, gint col, gint row)
 		case 3:
 			g_value_set_string (val, info->cnc_string);
 			break;
-		case 4: {
-			GdaQuarkList* ql;
-			ql = gda_quark_list_new_from_string (info->auth_string);
-			
-			g_value_set_string (val, gda_quark_list_find (ql, "USERNAME"));
-			gda_quark_list_free (ql);
+		case 4: 
+			if (info->auth_string) {
+				GdaQuarkList* ql;
+				ql = gda_quark_list_new_from_string (info->auth_string);
+				
+				g_value_set_string (val, gda_quark_list_find (ql, "USERNAME"));
+				gda_quark_list_free (ql);
+			}
+			else
+				g_value_set_string (val, "");
 			break;
-		}
 		case 5:
 			g_value_set_boolean (val, info->is_system);
 			break;

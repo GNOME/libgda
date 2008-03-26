@@ -4,7 +4,7 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
 	-DCHECK_SQL_FILES=\""$(top_srcdir)"\" \
-	-DGDA_PROVIDERS_ROOT_DIR=\""$(top_builddir)/providers"\"
+	-DTOP_BUILD_DIR=\""$(top_builddir)"\"
 
 check_PROGRAMS = check_sqlite
 TESTS = check_sqlite

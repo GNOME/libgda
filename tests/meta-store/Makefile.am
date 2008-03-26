@@ -3,9 +3,11 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
-	-DROOT_DIR=\""$(top_srcdir)"\"
+	-DTOP_SRC_DIR=\""$(top_srcdir)"\" \
+	-DTOP_BUILD_DIR=\""$(top_builddir)"\"
 
-noinst_PROGRAMS = check_meta_store_memory check_meta_store_sqlite check_meta_store_postgresql check_meta_store_mysql
+TESTS = check_meta_store_memory check_meta_store_sqlite check_meta_store_postgresql check_meta_store_mysql
+check_PROGRAMS = check_meta_store_memory check_meta_store_sqlite check_meta_store_postgresql check_meta_store_mysql
 
 common_sources = common.c common.h
 
@@ -46,3 +48,5 @@ EXTRA_DIST = data_builtin_data_types.csv \
 	data_triggers.csv \
 	data_view_column_usage.csv \
 	data_views.csv
+
+DISTCLEANFILES = test.db

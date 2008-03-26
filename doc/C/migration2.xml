@@ -68,6 +68,20 @@
   </sect1>  
 
   <sect1><title>Other changes</title>
+    <sect2><title>Configuration management</title>
+      <para>
+	<itemizedlist>
+	  <listitem><para>Data sources and installed providers are now handled using the 
+	      <link linkend="GdaConfig">GdaConfig</link> object, with the particularity that there can only be one 
+	      such object instanciated per program.</para></listitem>
+	  <listitem><para>The GDA_DSN_LIST_IN_MEMORY environment variable which , if set, prevented &LIBGDA; from
+	      writing the list of defined data sources to a file has been removed. To obtain the same result,
+	      one must force the creation of the unique <link linkend="GdaConfig">GdaConfig</link> object with
+	      the <link linkend="GdaConfig--user-file">user-file</link> property set to NULL.</para></listitem>
+	</itemizedlist>
+      </para>
+    </sect2>
+
     <sect2><title>API changes</title>
       <para>
 	<itemizedlist>
@@ -75,7 +89,7 @@
 	      <link linkend="gda-connection-open-from-dsn">gda_connection_open_from_dsn ()</link> or
 	      <link linkend="gda-connection-open-from-string">gda_connection_open_from_string () depending
 		on how the connection is defined</link></para></listitem>
-	  <listitem><para>Upon opening a connection, the <argument>username</argument> and <argument>password</argument>
+	  <listitem><para>Upon opening a connection, the <parameter>username</parameter> and <parameter>password</parameter>
 	      arguments have heen replaced by a more flexible arguments passing mechanism where providers can specify
 	      what authorization parameters they use</para></listitem>
  	  <listitem><para>gda_server_provider_get_last_insert_id() has been removed in favor of the "last_insert_row" argument

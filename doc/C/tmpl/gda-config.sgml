@@ -11,9 +11,27 @@ Access/Management of libgda configuration
   configured in the system, for instance.
 </para>
 <para>
-  Upon initialization, a single instance <link linkend="GdaConfig">GdaConfig</link> object is created, 
+  As soon as a <link linkend="GdaConfig">GdaConfig</link> is needed (for example when requesting information
+  about a data source or about a server provider), a single instance object is created, 
   and no other will need to be created. A pointer to this object can be obtained with
-  <link linkend="gda-config-get">gda_config_get()</link>.
+  <link linkend="gda-config-get">gda_config_get()</link>. Of course one can (right after having called
+  <link linkend="gda-init">gda_init()</link>) force the creation of a GdaConfig object with some
+  specific properties set, using a simple call like:
+  <programlisting>
+g_object_new (GDA_TYPE_CONFIG, "user-file", "my_file", NULL);
+  </programlisting>
+  Please note that after that call, the caller has a reference to the newly created object, and should technically
+  call <link linkend="g-object-unref">g_object_unref()</link> when finished using it. It is safe to do this
+  but also poinless since that object should not be destroyed (as no other will be created) as &LIBGDA; also
+  keeps a reference for itself.
+</para>
+<para>
+  Data sources are defined in a per-user configuration file which is by default <filename>${HOME}/.libgda/config</filename> and
+  in a system wide configuration file which is by default <filename>${prefix}/etc/libgda-4.0/config</filename>. Those
+  filenames can be modified by setting the <link linkend="GdaConfig--user-file">user-file</link> and 
+  <link linkend="GdaConfig--system-file">system-file</link> properties for the single <link linkend="GdaConfig">GdaConfig</link>
+  instance. Note that setting either of these properties to <literal>NULL</literal> will disable using the corresponding
+  configuration file (DSN will exist only in memory and their definition will be lost when the application finishes).
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

@@ -77,7 +77,7 @@ static gint data_source_info_compare (GdaDataSourceInfo *infoa, GdaDataSourceInf
 static void data_source_info_free (GdaDataSourceInfo *info);
 static void internal_provider_free (InternalProvider *ip);
 static void load_config_file (const gchar *file, gboolean is_system);
-static void save_config_file (const gchar *file, gboolean is_system);
+static void save_config_file (gboolean is_system);
 static void load_all_providers (void);
 
 enum {
@@ -202,10 +202,9 @@ load_config_file (const gchar *file, gboolean is_system)
 	xmlNodePtr root;
 
 	doc = xmlParseFile (file);
-	if (!doc) {
-		g_warning (_("Could not load config file '%s'"), file);
+	if (!doc) 
 		return;
-	}
+
 	root = xmlDocGetRootElement (doc);
 	if (root) {
 		xmlNodePtr node;
@@ -299,7 +298,7 @@ load_config_file (const gchar *file, gboolean is_system)
 }
 
 static void
-save_config_file (const gchar *file, gboolean is_system)
+save_config_file (gboolean is_system)
 {
 	xmlDocPtr doc;
 	xmlNodePtr root;
@@ -389,11 +388,11 @@ gda_config_constructor (GType type,
 			GObjectConstructParam *prop = &(construct_properties[i]);
 			if (!strcmp (g_param_spec_get_name (prop->pspec), "user_file")) {
 				user_file_set = TRUE;
-				g_print ("GdaConfig user dir set\n");
+				/*g_print ("GdaConfig user dir set\n");*/
 			}
 			else if (!strcmp (g_param_spec_get_name (prop->pspec), "system_file")) {
 				system_file_set = TRUE;
-				g_print ("GdaConfig system dir set\n");
+				/*g_print ("GdaConfig system dir set\n");*/
 			}
 		}
 
@@ -402,9 +401,80 @@ gda_config_constructor (GType type,
 
 		/* define user and system dirs. if not already defined */
 		if (!user_file_set) {
-			if (g_get_home_dir ()) 
-				unique_instance->priv->user_file = g_build_filename (g_get_home_dir (),
-										    ".libgda", "config", NULL);
+			if (g_get_home_dir ()) {
+				gchar *confdir, *conffile;
+				gboolean setup_ok = TRUE;
+				confdir = g_build_path (G_DIR_SEPARATOR_S, g_get_home_dir (), ".libgda", NULL);
+				conffile = g_build_filename (g_get_home_dir (), ".libgda", "config", NULL);
+
+				if (!g_file_test (confdir, G_FILE_TEST_EXISTS)) {
+#ifdef LIBGDA_WIN32
+					if (mkdir (confdir))
+#else
+					if (mkdir (confdir, 0700))
+#endif
+						{
+							setup_ok = FALSE;
+							g_warning (_("Error creating user specific "
+								     "configuration directory '%s'"), 
+								   confdir);
+						}
+					if (setup_ok) {
+						gchar *str;
+						gchar *full_file;
+						gsize len;
+#define DB_FILE "sales_test.db"
+#define DEFAULT_CONFIG \
+"<?xml version=\"1.0\"?>\n" \
+"<libgda-config>\n" \
+"    <section path=\"/apps/libgda/Datasources/SalesTest\">\n" \
+"        <entry name=\"DSN\" type=\"string\" value=\"DB_DIR=%s;DB_NAME=sales_test.db\"/>\n" \
+"        <entry name=\"Description\" type=\"string\" value=\"Test database for a sales department\"/>\n" \
+"        <entry name=\"Provider\" type=\"string\" value=\"SQLite\"/>\n" \
+"    </section>\n" \
+"</libgda-config>\n"
+#define DEFAULT_CONFIG_EMPTY \
+"<?xml version=\"1.0\"?>\n" \
+"<libgda-config>\n" \
+"    <!-- User specific data sources go here -->\n" \
+"</libgda-config>\n"
+
+						str = gda_gbr_get_file_path (GDA_ETC_DIR, 
+									     LIBGDA_ABI_NAME, DB_FILE, NULL);
+						if (g_file_get_contents (str, &full_file, &len, NULL)) {
+							gchar *dbfile;
+							
+							/* copy the Sales test database */
+							dbfile = g_build_filename (confdir, DB_FILE, NULL);
+							if (g_file_set_contents (dbfile, full_file, len, NULL)) {
+								gchar *str2;
+								str2 = g_strdup_printf (DEFAULT_CONFIG, confdir);
+								g_file_set_contents (conffile, str2, -1, NULL);
+								g_free (str2);
+							}
+							else
+								g_file_set_contents (conffile, DEFAULT_CONFIG_EMPTY, -1, NULL);
+							g_free (dbfile);
+							g_free (full_file);
+						}
+						else 
+							g_file_set_contents (conffile, DEFAULT_CONFIG_EMPTY, -1, NULL);
+						g_free (str);
+					}
+				}
+				else if (!g_file_test (confdir, G_FILE_TEST_IS_DIR)) {
+					setup_ok = FALSE;
+					g_warning (_("User specific "
+						     "configuration directory '%s' exists and is not a directory"), 
+						   confdir);
+				}
+				g_free (confdir);
+
+				if (setup_ok)
+					unique_instance->priv->user_file = conffile;
+				else
+					g_free (conffile);
+			}
 		}
 		if (!system_file_set) 
 			unique_instance->priv->system_file = gda_gbr_get_file_path (GDA_ETC_DIR, 
@@ -714,9 +784,9 @@ gda_config_define_dsn (const GdaDataSourceInfo *info, GError **error)
 	}
 	
 	if (save_system)
-		save_config_file (unique_instance->priv->system_file, TRUE);
+		save_config_file (TRUE);
 	if (save_user)
-		save_config_file (unique_instance->priv->user_file, FALSE);
+		save_config_file (FALSE);
 
 	GDA_CONFIG_UNLOCK ();
 	return TRUE;
@@ -769,9 +839,9 @@ gda_config_remove_dsn (const gchar *dsn_name, GError **error)
 	data_source_info_free (info);
 	
 	if (save_system)
-		save_config_file (unique_instance->priv->system_file, TRUE);
+		save_config_file (TRUE);
 	if (save_user)
-		save_config_file (unique_instance->priv->user_file, FALSE);
+		save_config_file (FALSE);
 
 	GDA_CONFIG_UNLOCK ();
 	return TRUE;
@@ -1085,16 +1155,18 @@ load_all_providers (void)
 	const gchar *dirname;
 	g_assert (unique_instance);
 
-	dirname = getenv ("GDA_PROVIDERS_ROOT_DIR");
-	if (dirname)
-		load_providers_from_dir (dirname, TRUE);
+	dirname = g_getenv ("GDA_TOP_BUILD_DIR");
+	if (dirname) {
+		gchar *pdir;
+		pdir = g_build_path (G_DIR_SEPARATOR_S, dirname, "providers", NULL);
+		load_providers_from_dir (pdir, TRUE);
+	}
 	else {
 		gchar *str;
 		str = gda_gbr_get_file_path (GDA_LIB_DIR, LIBGDA_ABI_NAME, "providers", NULL);
 		load_providers_from_dir (str, FALSE);
 		g_free (str);
 	}
-
 }
 
 static void 

@@ -1,3 +1,39 @@
+2008-03-26  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-config.c: don't write a warning when configuration file does not load, and use
+	the GDA_TOP_BUILD_DIR environment variable if set (instead of GDA_PROVIDERS_ROOT_DIR) to
+	find database providers (used when running check tests)
+	* libgda/gda-meta-store.c: use the GDA_TOP_SRC_DIR environment variable if set to find
+	the information_schema.xml file (used when running check tests)
+	* libgda/gda-init.c: use the GDA_TOP_SRC_DIR environment variable if set to find
+	the DTD files (used when running check tests)
+	* tests/meta-store/Makefile.am:
+	* tests/meta-store/common.c:
+	* tests/meta-store/check_meta_store_sqlite.c:
+	* tests/meta-store/check_meta_store_postgresql.c:
+	* tests/meta-store/check_meta_store_mysql.c:
+	* tests/meta-store/check_meta_store_memory.c:
+	* tests/providers/check_sqlite.c:
+	* tests/providers/check_oracle.c:
+	* tests/providers/check_odbc.c:
+	* tests/providers/check_msql.c:
+	* tests/providers/check_ldap.c:
+	* tests/providers/check_firebird.c:
+	* tests/providers/check_sybase.c:
+	* tests/providers/check_bdb.c:
+	* tests/providers/check_mdb.c:
+	* tests/providers/check_xbase.c:
+	* tests/providers/check_mysql.c:
+	* tests/providers/check_postgres.c:
+	* tests/providers/Makefile.am:
+	* tests/providers/check_freetds.c:
+	* tests/providers/check_ibmdb2.c: set the GDA_TOP_SRC_DIR and GDA_TOP_BUILD_DIR
+	environment variables
+	* doc/C: doc. updates
+	* libgda/gda-config.c: restored the V3 behaviour of creating the ${HOME}/.libgda config
+	dir if it does not yet exist.
+	* libgda/gda-data-model-dsn-list.c: fixed warning if DSN does not have any authentification string
+
 2008-03-24  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in: set to version 3.99.3

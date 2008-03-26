@@ -943,8 +943,16 @@ create_db_objects (GdaMetaStoreClass *klass, GdaMetaStore *store)
 	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "information_schema.xml", NULL);
 	doc = xmlParseFile (file);
 	if (!doc) {
-		g_warning ("Missing or malformed file '%s', check your installation", file);
-		return;
+		if (g_getenv ("GDA_TOP_SRC_DIR")) {
+			g_free (file);
+			file = g_build_filename (g_getenv ("GDA_TOP_SRC_DIR"), "libgda", "information_schema.xml", NULL);
+			doc = xmlParseFile (file);
+		}
+		if (!doc) {
+			g_warning ("Missing or malformed file '%s', check your installation", file);
+			g_free (file);
+			return;
+		}
 	}
 	
 	node = xmlDocGetRootElement (doc);

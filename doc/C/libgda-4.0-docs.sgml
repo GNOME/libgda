@@ -437,10 +437,6 @@
 		displayed on STDOUT</para>
 	    </listitem>
 	    <listitem>
-              <para>GDA_DSN_LIST_IN_MEMORY: if set, then the list of defined data sources (DSN) will remain in 
-	      memory (will not be written to disk) and will be lost when the application terminates.</para>
-	    </listitem>
-	    <listitem>
               <para>GDA_PROVIDERS_ROOT_DIR: if set, must point to the directory where the providers files are (providers
 	      files are shared libraries)</para>
 	    </listitem>
