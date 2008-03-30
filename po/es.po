@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-26 20:37+0000\n"
-"PO-Revision-Date: 2008-03-28 20:46+0100\n"
+"POT-Creation-Date: 2008-03-29 01:22+0000\n"
+"PO-Revision-Date: 2008-03-30 14:47+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -2140,9 +2140,8 @@ msgstr "Sucedió un error al intentar obtener un mensaje del cliente"
 
 #: ../providers/bdb/gda-bdb-provider.c:193
 #: ../providers/mdb/gda-mdb-provider.c:303
-#, fuzzy
 msgid "Can't open virtual connection"
-msgstr "No se puede abrir la conexión."
+msgstr "No se puede abrir la conexión virtual"
 
 #: ../providers/bdb/gda-bdb-provider.c:200
 #, c-format
@@ -2240,14 +2239,14 @@ msgstr ""
 "DB_NAME y el mismo contenido"
 
 #: ../providers/postgres/gda-postgres-provider.c:693
-#, fuzzy, c-format
+#, c-format
 msgid "Could not set search_path to %s"
-msgstr "no se pudo iniciar el editor «%s»"
+msgstr "No se pudo establecer la ruta_de_búsqueda a %s"
 
 #: ../providers/postgres/gda-postgres-provider.c:701
-#, fuzzy, c-format
+#, c-format
 msgid "Search path %s is invalid)"
-msgstr "El nombre de la conexión «%s» no es válido"
+msgstr "La ruta de búsqueda %s no es válida)"
 
 #: ../providers/postgres/gda-postgres-provider.c:1106
 #: ../providers/postgres/gda-postgres-provider.c:1108
@@ -2271,22 +2270,22 @@ msgstr ""
 #: ../providers/postgres/gda-postgres-provider.c:1338
 #: ../providers/postgres/gda-postgres-recordset.c:436
 #: ../providers/postgres/gda-postgres-recordset.c:464
-#, fuzzy, c-format
+#, c-format
 msgid "Internal error"
-msgstr "TiempoInterno"
+msgstr "Error interno"
 
 #: ../providers/postgres/gda-postgres-provider.c:1238
 #: ../providers/postgres/gda-postgres-provider.c:1291
 #: ../providers/postgres/gda-postgres-provider.c:1344
 #, c-format
 msgid "Wrong savepoint name '%s'"
-msgstr ""
+msgstr "El nombre de punto de guardado «%s» es erróneo"
 
 #: ../providers/postgres/gda-postgres-provider.c:2001
 #: ../providers/postgres/gda-postgres-provider.c:2003
-#, fuzzy, c-format
+#, c-format
 msgid "Cannot start transaction"
-msgstr "No se ha podido iniciar la transacción de Oracle"
+msgstr "No se pude iniciar la transacción"
 
 #: ../providers/postgres/gda-postgres-recordset.c:138
 msgid "Number of rows fetched at a time"
@@ -2299,7 +2298,7 @@ msgstr "Número de trozos de la fila leídos desde la creación el objeto"
 #: ../providers/postgres/gda-postgres-recordset.c:718
 #, c-format
 msgid "Could not parse date '%s', assuming 01/01/0001"
-msgstr ""
+msgstr "No se pudo analizar la fecha «%s», se asume 01/01/0001"
 
 #: ../providers/postgres/libmain.c:50
 msgid "Provider for PostgreSQL databases"
@@ -2840,7 +2839,7 @@ msgstr "EL archivo «%s» ya existe"
 
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:5
 msgid "Replace view definition if it already exists"
-msgstr ""
+msgstr "Reemplazar la definición de la vista si ya existe"
 
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:6
 #: ../providers/sqlite/sqlite_specs_create_view.xml.in.h:5
@@ -2867,9 +2866,8 @@ msgid "View's name"
 msgstr "Nuevo nombre"
 
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:10
-#, fuzzy
 msgid "column name"
-msgstr "Sin nombre"
+msgstr "nombre de la columna"
 
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:1
 msgid "Automatically drop objects that depend on the column (CASCADE)"
@@ -2920,9 +2918,8 @@ msgstr "Borrar automáticamente los objetos que dependan de la tabla (CASCADE)"
 
 #: ../providers/postgres/postgres_specs_drop_view.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_drop_view.xml.in.h:1
-#, fuzzy
 msgid "Drop view only if it exists"
-msgstr "Borrar el índice sólo si existe"
+msgstr "Borrar la vista sólo si existe"
 
 #: ../providers/postgres/postgres_specs_drop_view.xml.in.h:3
 #: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:2
@@ -2938,14 +2935,12 @@ msgstr "Rehusar a borrar la tabla si cualquier objeto depende de ella (RESTRICT)
 
 #: ../providers/postgres/postgres_specs_drop_view.xml.in.h:7
 #: ../providers/sqlite/sqlite_specs_drop_view.xml.in.h:4
-#, fuzzy
 msgid "View to delete"
-msgstr "Índice que borrar"
+msgstr "Vista que borrar"
 
 #: ../providers/postgres/postgres_specs_drop_view.xml.in.h:8
-#, fuzzy
 msgid "What to do with objects referencing the view"
-msgstr "Qué hacer con las referencias"
+msgstr "Qué hacer con los objetos que referencien la vista"
 
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:9
 msgid "Search Path"
@@ -3036,9 +3031,8 @@ msgid "Create table only if it does not yet exist"
 msgstr "Crear la tabla sólo si no existe aún"
 
 #: ../providers/sqlite/sqlite_specs_create_view.xml.in.h:1
-#, fuzzy
 msgid "Create view only if it does not yet exist"
-msgstr "Crear un índice sólo si no existe"
+msgstr "Crear una vista sólo si aún no existe"
 
 #: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:1
 msgid "Drop index only if it exists"
@@ -3113,19 +3107,16 @@ msgid "No current connection"
 msgstr "No está conectado"
 
 #: ../tools/command-exec.c:361
-#, fuzzy
 msgid "List of tables"
-msgstr "Lista de pruebas"
+msgstr "Lista de tablas"
 
 #: ../tools/command-exec.c:403
-#, fuzzy
 msgid "List of views"
-msgstr "Lista de consultas"
+msgstr "Lista de vistas"
 
 #: ../tools/command-exec.c:443
-#, fuzzy
 msgid "List of schemas"
-msgstr "Lista de pruebas"
+msgstr "Lista de esquemas"
 
 #: ../tools/command-exec.c:492
 msgid "Parameters"
@@ -3140,46 +3131,44 @@ msgid "List of queries"
 msgstr "Lista de consultas"
 
 #: ../tools/command-exec.c:622 ../tools/command-exec.c:720
-#, fuzzy, c-format
+#, c-format
 msgid "No object found"
-msgstr "No se encontró ningún objeto llamado «%s»"
+msgstr "No hay ningún objeto"
 
 #: ../tools/command-exec.c:675
 msgid "Schema"
-msgstr ""
+msgstr "Esquema"
 
 #: ../tools/command-exec.c:747
 msgid "Column"
 msgstr "Columna"
 
 #: ../tools/command-exec.c:749
-#, fuzzy
 msgid "Nullable"
-msgstr "Tabla"
+msgstr "Puede ser «Null»"
 
 #: ../tools/command-exec.c:753
-#, fuzzy, c-format
+#, c-format
 msgid "List of columns for view '%s'"
-msgstr "Lista de tablas y vistas"
+msgstr "Listar las columnas para la vista «%s»"
 
 #: ../tools/command-exec.c:757
-#, fuzzy, c-format
+#, c-format
 msgid "List of columns for table '%s'"
-msgstr "Descripción de la tabla «%s»"
+msgstr "Listar las columnas para la tabla «%s»"
 
 #: ../tools/command-exec.c:768
-#, fuzzy
 msgid "yes"
-msgstr "Sí"
+msgstr "sí"
 
 #: ../tools/command-exec.c:768
 msgid "no"
-msgstr ""
+msgstr "no"
 
 #: ../tools/command-exec.c:789
-#, fuzzy, c-format
+#, c-format
 msgid "View definition: %s"
-msgstr "Definición de la vista:"
+msgstr "Definición de la vista: %s"
 
 #: ../tools/gda-list-server-op.c:29
 msgid "Gda server operations list"
@@ -3191,9 +3180,9 @@ msgid "Using XML descriptions in %s\n"
 msgstr "Usando descripciones XML en %s\n"
 
 #: ../tools/gda-list-server-op.c:46
-#, fuzzy, c-format
+#, c-format
 msgid "Could not create provider object: %s\n"
-msgstr "No se ha podido crear el objeto proveedor de «%s»\n"
+msgstr "No se pudo crear el objeto proveedor de «%s»\n"
 
 #: ../tools/gda-list-server-op.c:55
 #, c-format
@@ -3299,7 +3288,9 @@ msgstr "El nombre de la conexión «%s» no es válido"
 #: ../tools/gda-sql.c:903
 #, c-format
 msgid "Getting database schema information, this may take some time... "
-msgstr "Obteniendo la información de esquema de la base de datos, esto puede llevar un tiempo... "
+msgstr ""
+"Obteniendo la información de esquema de la base de datos, esto puede llevar "
+"un tiempo... "
 
 #: ../tools/gda-sql.c:909
 #, c-format
