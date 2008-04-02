@@ -738,19 +738,17 @@ gda_set_new_from_spec_node (xmlNodePtr xml_spec, GError **error)
 	}
 
 	/* setting prepared new names from sources (models) */
-	list = sources;
-	while (list) {
+	for (list = sources; list; list = list->next) {
 		str = g_object_get_data (G_OBJECT (list->data), "newname");
 		if (str) {
-			g_object_set_data_full (G_OBJECT (list->data), "name", str, g_free);
+			g_object_set_data_full (G_OBJECT (list->data), "name", g_strdup (str), g_free);
 			g_object_set_data (G_OBJECT (list->data), "newname", NULL);
 		}
 		str = g_object_get_data (G_OBJECT (list->data), "newdescr");
 		if (str) {
-			g_object_set_data_full (G_OBJECT (list->data), "descr", str, g_free);
+			g_object_set_data_full (G_OBJECT (list->data), "descr", g_strdup (str), g_free);
 			g_object_set_data (G_OBJECT (list->data), "newdescr", NULL);
 		}
-		list = g_slist_next (list);
 	}
 
 	/* holders' values, constraints: TODO */
