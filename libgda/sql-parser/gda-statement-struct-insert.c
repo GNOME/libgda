@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 Vivien Malerba
+ * Copyright (C) 2007 - 2008 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -40,7 +40,8 @@ GdaSqlStatementContentsInfo insert_infos = {
 	gda_sql_statement_insert_copy,
 	gda_sql_statement_insert_serialize,
 
-	gda_sql_statement_insert_check_structure
+	gda_sql_statement_insert_check_structure,
+	NULL
 };
 
 GdaSqlStatementContentsInfo *

@@ -25,6 +25,15 @@
 
 static GdaSqlParser *internal_parser = NULL;
 
+/* module error */
+GQuark gda_easy_error_quark (void)
+{
+	static GQuark quark;
+	if (!quark)
+		quark = g_quark_from_static_string ("gda_easy_error");
+	return quark;
+}
+
 /**
  * gda_prepare_create_database
  * @provider: the database provider to use
@@ -228,128 +237,142 @@ gda_execute_non_select_command (GdaConnection *cnc, const gchar *sql, GError **e
 }
 
 /**
- * gda_create_table
+ * gda_prepare_create_table
  * @cnc: an opened connection
  * @table_name:
  * @num_columns
  * @error: a place to store errors, or %NULL
- * @...: pairs of column name and #GType, finish with NULL
+ * @...: group of three arguments for column's name, column's #GType 
+ * and a #GdaEasyCreateTableFlag flag, finished with NULL
  * 
- * Create a Table over an opened connection using a pair list of colum name and 
- * GType as arguments, you need to finish the list using NULL.
+ * Create a #GdaServerOperation object using an opened connection, taking three 
+ * arguments, a colum's name the column's GType and #GdaEasyCreateTableFlag 
+ * flag, you need to finish the list using NULL.
  *
- * This is just a convenient function to create tables quickly, 
- * using defaults for the provider and converting the #GType passed to the corresponding 
- * type in the provider; to use a custom type or more advanced characteristics in a 
- * specific provider use the #GdaServerOperation framework.
- *
- * Returns: TRUE if the table was created; FALSE and set @error otherwise
+ * You'll be able to modify the #GdaServerOperation object to add custom options
+ * to the operation. When finish call #gda_perform_create_table 
+ * or #gda_server_operation_perform_operation
+ * in order to execute the operation.
+ * 
+ * Returns: a #GdaServerOperation if no errors; NULL and set @error otherwise
  */
-gboolean
-gda_create_table (GdaConnection *cnc, const gchar *table_name, GError **error, ...)
+GdaServerOperation*
+gda_prepare_create_table (GdaConnection *cnc, const gchar *table_name, GError **error, ...)
 {
 	GdaServerOperation *op;
 	GdaServerProvider *server;
-	
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (gda_connection_is_opened (cnc), FALSE);
+		
+	g_return_val_if_fail (gda_connection_is_opened (cnc), FALSE);	
 	
 	server = gda_connection_get_provider_obj(cnc);
 	
-	op = gda_server_provider_create_operation (server, cnc, GDA_SERVER_OPERATION_CREATE_TABLE, NULL, error);
-	if (GDA_IS_SERVER_OPERATION (op)) {
+	if (!table_name) {
+		g_set_error (error, GDA_EASY_ERROR, GDA_EASY_OBJECT_NAME_ERROR, 
+			     _("Unspecified table name"));
+		return NULL;
+	}
+	
+	if (gda_server_provider_supports_operation (server, cnc, GDA_SERVER_OPERATION_CREATE_TABLE, NULL)) {	
 		va_list  args;
 		gchar   *arg;
 		GType    type;
 		gchar   *dbms_type;
-		xmlDocPtr parameters;
-		xmlNodePtr root;
-		xmlNodePtr table, op_data, array_data, array_row, array_value;
-		
-		if (table_name == NULL) {
-			g_set_error (error, GDA_GENERAL_ERROR, GDA_GENERAL_OBJECT_NAME_ERROR, 
-				     _("Couldn't create table with a NULL string"));
-			return FALSE;    
-		}
-		
+		GdaEasyCreateTableFlag flag;
+		gint i;
 	
-		/* Initation of the xmlDoc */
-		parameters = xmlNewDoc ((xmlChar*)"1.0");
-		
-		root = xmlNewDocNode (parameters, NULL, (xmlChar*)"serv_op_data", NULL);
-		xmlDocSetRootElement (parameters, root);
-		table = xmlNewChild (root, NULL, (xmlChar*)"op_data", (xmlChar*)table_name);
-		xmlSetProp(table, (xmlChar*)"path", (xmlChar*)"/TABLE_DEF_P/TABLE_NAME");
-
-		op_data = xmlNewChild (root, NULL, (xmlChar*)"op_data", NULL);
-		xmlSetProp(op_data, (xmlChar*)"path", (xmlChar*)"/FIELDS_A");
-		array_data = xmlNewChild (op_data, NULL, (xmlChar*)"gda_array_data", NULL);
-			
+		op = gda_server_provider_create_operation (server, cnc, 
+							   GDA_SERVER_OPERATION_CREATE_TABLE, NULL, error);
+		gda_server_operation_set_value_at (op, table_name, error, "/TABLE_DEF_P/TABLE_NAME");
+				
 		va_start (args, error);
 		type = 0;
 		arg = NULL;
+		i = 0;
 		
 		while ((arg = va_arg (args, gchar*))) {
+			/* First argument for Column's name */			
+			gda_server_operation_set_value_at (op, arg, error, "/FIELDS_A/@COLUMN_NAME/%d", i);
+		
+			/* Second to Define column's type */
 			type = va_arg (args, GType);
 			if (type == 0) {
-				g_set_error(error, GDA_GENERAL_ERROR, GDA_GENERAL_INCORRECT_VALUE_ERROR, 
-					    _("Error the number of arguments are incorrect; couldn't create the table"));
+				g_set_error (error, GDA_EASY_ERROR, GDA_EASY_INCORRECT_VALUE_ERROR, 
+					     _("Invalid type"));
 				g_object_unref (op);
-				xmlFreeDoc(parameters);
-				return FALSE;
+				return NULL;
 			}
-			
 			dbms_type = (gchar *) gda_server_provider_get_default_dbms_type (server, 
 											 cnc, type);
-			array_row = xmlNewChild (array_data, NULL, (xmlChar*)"gda_array_row", NULL);
-			array_value = xmlNewChild (array_row, NULL, (xmlChar*)"gda_array_value", (xmlChar*)arg);
-			xmlSetProp(array_value, (xmlChar*)"colid", (xmlChar*)"COLUMN_NAME");
+			gda_server_operation_set_value_at (op, dbms_type, error, "/FIELDS_A/@COLUMN_TYPE/%d", i);
 		
-			array_value = xmlNewChild(array_row, NULL, (xmlChar*)"gda_array_value", (xmlChar*)dbms_type);
-			xmlSetProp(array_value, (xmlChar*)"colid", (xmlChar*)"COLUMN_TYPE");
-			
+			/* Third for column's flags */
+			flag = va_arg (args, GdaEasyCreateTableFlag);
+			if (flag & GDA_EASY_CREATE_TABLE_PKEY_FLAG)
+				gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_PKEY/%d", i);
+			if (flag & GDA_EASY_CREATE_TABLE_NOT_NULL_FLAG)
+				gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_NNUL/%d", i);
+			if (flag & GDA_EASY_CREATE_TABLE_AUTOINC_FLAG)
+				gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_AUTOINC/%d", i);
+			i++;
 		}
-		
-		va_end(args);
-		
-		if (!gda_server_operation_load_data_from_xml (op, root, error)) {
-			g_set_error (error, GDA_GENERAL_ERROR, GDA_GENERAL_OPERATION_ERROR, 
-				     _("The XML operation doesn't exist or could't be loaded"));
-			g_object_unref (op);
-			xmlFreeDoc(parameters);
-			return FALSE;
-		}
-		else {
-			if (!gda_server_provider_perform_operation (server, cnc, op, error)) {
-				g_object_unref (op);
-				xmlFreeDoc(parameters);
-				return FALSE;
-			}
-		}
-		
-		g_object_unref (op);
-		xmlFreeDoc(parameters);
-	}
 	
-	return TRUE;
+		va_end (args);
+		
+		g_object_set_data (G_OBJECT (op), "_gda_connection", cnc);
+		g_object_set_data (G_OBJECT (op), "_gda_provider_obj", server);
+		
+		return op;		
+	}
+	else {
+		g_set_error (error, GDA_EASY_ERROR, GDA_EASY_OBJECT_NAME_ERROR, 
+			     _("CREATE TABLE operation is not supported by the database server"));
+		return NULL;
+	}
 }
 
 /**
- * gda_drop_table
+ * gda_perform_create_table
+ * @op: a valid #GdaServerOperation
+ * @error: a place to store errors, or %NULL
+ * 
+ * Performs a prepared #GdaServerOperation to create a table. This could perform
+ * an operation created by #gda_prepare_create_table or any other using the
+ * the #GdaServerOperation API.
+ *
+ * Returns: TRUE if the table was created; FALSE and set @error otherwise
+ */
+gboolean
+gda_perform_create_table (GdaServerOperation *op, GError **error)
+{
+	GdaConnection *cnc;
+	GdaServerProvider *server;
+	
+	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);	
+	g_return_val_if_fail (gda_server_operation_get_op_type (op) ==
+						  GDA_SERVER_OPERATION_CREATE_TABLE, FALSE);
+	
+	server = GDA_SERVER_PROVIDER (g_object_get_data (G_OBJECT (op), "_gda_provider_obj"));
+	cnc = GDA_CONNECTION (g_object_get_data (G_OBJECT (op), "_gda_connection"));
+	
+	return gda_server_provider_perform_operation (server, cnc, op, error);
+}
+
+/**
+ * gda_prepare_drop_table
  * @cnc: an opened connection
  * @table_name:
  * @error: a place to store errors, or %NULL
  * 
- * This is just a convenient function to drop a table in an opened connection.
+ * This is just a convenient function to create a #GdaServerOperation to drop a 
+ * table in an opened connection.
  *
- * Returns: TRUE if the table was dropped
+ * Returns: a new #GdaServerOperation or NULL if couldn't create the opereration.
  */
-gboolean
-gda_drop_table (GdaConnection *cnc, const gchar *table_name, GError **error)
+GdaServerOperation*
+gda_prepare_drop_table (GdaConnection *cnc, const gchar *table_name, GError **error)
 {
 	GdaServerOperation *op;
 	GdaServerProvider *server;
-	gboolean retval = TRUE;
 
 	server = gda_connection_get_provider_obj (cnc);
 	
@@ -357,37 +380,46 @@ gda_drop_table (GdaConnection *cnc, const gchar *table_name, GError **error)
 						   GDA_SERVER_OPERATION_DROP_TABLE, NULL, error);
 	
 	if (GDA_IS_SERVER_OPERATION (op)) {
-		xmlDocPtr parameters;
-		xmlNodePtr root;
-		xmlNodePtr table;
-		
 		g_return_val_if_fail (table_name != NULL 
 				      || GDA_IS_CONNECTION (cnc) 
-				      || !gda_connection_is_opened (cnc), FALSE);
-    
-		parameters = xmlNewDoc ((xmlChar*)"1.0");
-		root = xmlNewDocNode (parameters, NULL, (xmlChar*)"serv_op_data", NULL);
-		xmlDocSetRootElement (parameters, root);
-		table = xmlNewChild (root, NULL, (xmlChar*)"op_data", (xmlChar*)table_name);
-		xmlSetProp(table, (xmlChar*)"path", (xmlChar*)"/TABLE_DESC_P/TABLE_NAME");
-	    
-		if (!gda_server_operation_load_data_from_xml (op, root, error)) {
-			/* error */
-			retval = FALSE;
+				      || !gda_connection_is_opened (cnc), NULL);
+		
+		if (gda_server_operation_set_value_at (op, table_name, 
+						       error, "/TABLE_DESC_P/TABLE_NAME")) {
+			g_object_set_data (G_OBJECT (op), "_gda_connection", cnc);
+			g_object_set_data (G_OBJECT (op), "_gda_provider_obj", server);
+			return op;
 		}
-		else if (!gda_server_provider_perform_operation (server, cnc, op, error)) {
-			/* error */
-			retval = FALSE;
-		}
-		g_object_unref (op);
-		xmlFreeDoc(parameters);
+		else 
+			return NULL;
 	}
-	else {
-		g_message("The Server doesn't support the DROP TABLE operation!\n\n");
-		retval = FALSE;
-	}
-    
-	return retval;
+	else
+		return NULL;
+}
+
+/**
+ * gda_perform_drop_table
+ * @op: a #GdaServerOperation object
+ * @error: a place to store errors, or %NULL
+ * 
+ * This is just a convenient function to perform a drop a table operation.
+ *
+ * Returns: TRUE if the table was dropped
+ */
+gboolean
+gda_perform_drop_table (GdaServerOperation *op, GError **error)
+{
+	GdaConnection *cnc;
+	GdaServerProvider *server;
+
+	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
+	g_return_val_if_fail (gda_server_operation_get_op_type (op) ==
+			      GDA_SERVER_OPERATION_DROP_TABLE, FALSE);
+	
+	server = GDA_SERVER_PROVIDER (g_object_get_data (G_OBJECT (op), "_gda_provider_obj"));
+	cnc = GDA_CONNECTION (g_object_get_data (G_OBJECT (op), "_gda_connection"));
+	
+	return gda_server_provider_perform_operation (server, cnc, op, error);
 }
 
 static guint
@@ -477,7 +509,7 @@ gda_insert_row_into_table_from_string (GdaConnection *cnc, const gchar *table_na
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_is_opened (cnc), FALSE);
 	g_return_val_if_fail (table_name && *table_name, FALSE);
-
+	
 	TO_IMPLEMENT;
 	return FALSE;
 }

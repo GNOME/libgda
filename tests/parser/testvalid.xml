@@ -1,0 +1,82 @@
+<testdata>
+  <!-- table not found -->
+  <test id="1">
+    <sql valid="f">SELECT id, name FROM customer</sql>
+  </test>
+
+  <!-- column ambiguity -->
+  <test id="2">
+    <sql valid="f">SELECT id FROM customers INNER JOIN salesrep</sql>
+  </test>
+
+  <test id="3">
+    <sql valid="t">SELECT customers.id FROM customers INNER JOIN salesrep</sql>
+  </test>
+
+  <test id="3">
+    <sql valid="t">SELECT c.id FROM customers as c INNER JOIN salesrep</sql>
+  </test>
+
+  <!-- multiple targets with naming conflicts -->
+  <test id="10">
+    <sql valid="f">SELECT c.id FROM customers as c INNER JOIN salesrep as c</sql>
+  </test>
+  <test id="11">
+    <sql valid="f">SELECT c.id FROM customers INNER JOIN salesrep as customers</sql>
+  </test>
+  <test id="11">
+    <sql valid="f">SELECT version() FROM customers, customers</sql>
+  </test>
+  
+  <!-- computing DML commands from SELECT -->
+
+  <!-- no target table to modify -->
+  <test id="pre0">
+    <sql valid="t">SELECT 3</sql>
+    <insert/>
+    <update/>
+    <delete/>
+  </test>
+
+  <!-- more than 1 target table to modify -->
+  <test id="pre1">
+    <sql valid="t">SELECT version() FROM customers, salesrep</sql>
+    <insert/>
+    <update/>
+    <delete/>
+  </test>
+
+  <!-- target is not a table -->
+  <test id="pre2">
+    <sql valid="t">SELECT 123 FROM (SELECT name FROM customers) as c</sql>
+    <insert/>
+    <update/>
+    <delete/>
+  </test>
+
+  <!-- target has no primary key -->
+  <test id="pre3">
+    <sql valid="t">SELECT * FROM sales_orga</sql>
+    <insert>unknown</insert>
+    <update/>
+    <delete/>
+  </test>
+
+  <test id="0">
+    <sql valid="t">SELECT id, name FROM customers</sql>
+    <insert>{"statement":{"sql":null,"stmt_type":"INSERT","contents":{"table":"customers","fields":["id","name"],"values":[[{"value":null,"param_spec":{"name":"+0","descr":null,"type":"gint","is_param":false,"nullok":false}},{"value":null,"param_spec":{"name":"+1","descr":null,"type":"gchararray","is_param":false,"nullok":false}}]]}}}</insert>
+    <update>unknown</update>
+    <delete>unknown</delete>
+  </test>
+
+  <test id="0.1">
+    <sql valid="t">SELECT id, 3.14, name FROM customers</sql>
+    <insert>{"statement":{"sql":null,"stmt_type":"INSERT","contents":{"table":"customers","fields":["id","name"],"values":[[{"value":null,"param_spec":{"name":"+0","descr":null,"type":"gint","is_param":false,"nullok":false}},{"value":null,"param_spec":{"name":"+2","descr":null,"type":"gchararray","is_param":false,"nullok":false}}]]}}}</insert>
+  </test>
+
+  <test id="0.2">
+    <sql valid="t">SELECT id, 3.14, name, id FROM customers</sql>
+    <insert>{"statement":{"sql":null,"stmt_type":"INSERT","contents":{"table":"customers","fields":["id","name"],"values":[[{"value":null,"param_spec":{"name":"+0","descr":null,"type":"gint","is_param":false,"nullok":false}},{"value":null,"param_spec":{"name":"+2","descr":null,"type":"gchararray","is_param":false,"nullok":false}}]]}}}</insert>
+  </test>
+
+</testdata>

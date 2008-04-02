@@ -28,11 +28,11 @@
 
 #include "gda-decl.h"
 #include <libgda/gda-data-model.h>
-#include <libgda/gda-data-model-index.h>
 #include <libgda/gda-connection-event.h>
 #include <libgda/gda-transaction-status.h>
 #include <libgda/gda-statement.h>
 #include <libgda/gda-meta-store.h>
+#include <libgda/gda-server-operation.h>
 
 G_BEGIN_DECLS
 
@@ -145,6 +145,10 @@ GdaConnectionOptions gda_connection_get_options          (GdaConnection *cnc);
 GdaServerProvider   *gda_connection_get_provider_obj     (GdaConnection *cnc);
 const gchar         *gda_connection_get_provider_name    (GdaConnection *cnc);
 
+GdaServerOperation  *gda_connection_create_operation     (GdaConnection *cnc, GdaServerOperationType type,
+                                                          GdaSet *options, GError **error);
+gboolean             gda_connection_perform_operation    (GdaConnection *cnc, GdaServerOperation *op, GError **error);
+                                                          
 const gchar         *gda_connection_get_dsn              (GdaConnection *cnc);
 gboolean             gda_connection_set_dsn              (GdaConnection *cnc, const gchar *datasource);
 const gchar         *gda_connection_get_cnc_string       (GdaConnection *cnc);

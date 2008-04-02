@@ -195,7 +195,7 @@ These flags specify how the #GdaDataModel returned when executing a #GdaStatemen
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_statement_check_connection ##### -->
+<!-- ##### FUNCTION gda_statement_check_validity ##### -->
 <para>
 
 </para>

@@ -43,6 +43,7 @@ Container structure for an SQL statement.
 @stmt_type: the type of statement (SELECT, INSERT, etc) as a #GdaSqlStatementType enum
 @contents: the actual contents of the statement, depends on @stmt_type (can be a pointer to a
 #GdaSqlStatementSelect, #GdaSqlStatementInsert, etc)
+@validity_meta_struct: 
 
 <!-- ##### ENUM GdaSqlStatementType ##### -->
 <para>
@@ -126,7 +127,7 @@ Known types of statements
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_sql_statement_check_connection ##### -->
+<!-- ##### FUNCTION gda_sql_statement_check_validity ##### -->
 <para>
 
 </para>
@@ -688,7 +689,7 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 @is_param: 
 @nullok: 
 @g_type: 
-@dict_type: 
+@validity_meta_dict: 
 
 <!-- ##### FUNCTION gda_sql_param_spec_new ##### -->
 <para>
@@ -768,6 +769,7 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 
 @any: inheritance structure
 @field_name: a table's field name, in the form [[[catalog.]schema.]table.]field_name
+@validity_meta_table_column: 
 
 <!-- ##### FUNCTION gda_sql_field_new ##### -->
 <para>
@@ -820,7 +822,7 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 
 @any: inheritance structure
 @table_name: a table's name, in the form [[catalog.]schema.]table
-@full_table_name: 
+@validity_meta_object: 
 
 <!-- ##### FUNCTION gda_sql_table_new ##### -->
 <para>
@@ -874,7 +876,7 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 @any: inheritance structure
 @function_name: name of the function , in the form [[catalog.]schema.]function_name
 @args_list: list of #GdaSqlExpr expressions, one for each argument
-@full_function_name: 
+@validity_meta_function: 
 
 <!-- ##### FUNCTION gda_sql_function_new ##### -->
 <para>
@@ -1084,7 +1086,8 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 @field_name: field name part of @expr if @expr represents a field
 @table_name: table name part of @expr if @expr represents a field
 @as: alias
-@full_table_name: 
+@validity_meta_object: 
+@validity_meta_table_column: 
 
 <!-- ##### FUNCTION gda_sql_select_field_new ##### -->
 <para>
@@ -1158,7 +1161,7 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 @expr: expression
 @table_name: table name part of @expr if @expr represents a table
 @as: alias
-@full_table_name: 
+@validity_meta_object: 
 
 <!-- ##### FUNCTION gda_sql_select_target_new ##### -->
 <para>

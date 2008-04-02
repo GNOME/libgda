@@ -1074,6 +1074,54 @@ gda_connection_clear_events_list (GdaConnection *cnc)
 }
 
 /**
+ * gda_connection_create_operation
+ * @cnc: a #GdaConnection object
+ * @type: the type of operation requested
+ * @options: an optional list of parameters
+ * @error: a place to store an error, or %NULL
+ *
+ * Creates a new #GdaServerOperation object which can be modified in order 
+ * to perform the type type of action. It is a wrapper around the gda_server_provider_create_operation()
+ * method.
+ *
+ * Returns: a new #GdaServerOperation object, or %NULL in the connection's provider does not support the @type type
+ * of operation or if an error occurred
+ */
+GdaServerOperation*
+gda_connection_create_operation (GdaConnection *cnc, GdaServerOperationType type, 
+                                 GdaSet *options, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (cnc->priv, NULL);
+	g_return_val_if_fail (cnc->priv->provider_obj, NULL);
+
+	return gda_server_provider_create_operation (cnc->priv->provider_obj, cnc, type, options, error);
+}
+
+/**
+ * gda_connection_perform_operation
+ * @cnc: a #GdaConnection object
+ * @op: a #GdaServerOperation object
+ * @error: a place to store an error, or %NULL
+ *
+ * Performs the operation described by @op (which should have been created using
+ * gda_connection_create_operation()). It is a wrapper around the gda_server_provider_perform_operation()
+ * method.
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_connection_perform_operation (GdaConnection *cnc, GdaServerOperation *op, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (cnc->priv, FALSE);
+	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
+	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
+
+	return gda_server_provider_perform_operation (cnc->priv->provider_obj, cnc, op, error);
+}
+
+/**
  * gda_connection_create_parser
  * @cnc: a #GdaConnection object
  *
@@ -1082,7 +1130,7 @@ gda_connection_clear_events_list (GdaConnection *cnc)
  * then %NULL is returned, and a general SQL parser can be obtained
  * using gda_sql_parser_new().
  *
- * Returns: a new #GdaSqlParser object
+ * Returns: a new #GdaSqlParser object, or %NULL
  */
 GdaSqlParser *
 gda_connection_create_parser (GdaConnection *cnc)
@@ -2902,7 +2950,6 @@ gda_connection_get_meta_store_data (GdaConnection *cnc,
 	static GHashTable *stmt_hash = NULL;
 	GdaStatement *stmt;
 	GdaSet *set = NULL;
-	va_list ap;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv->provider_obj, NULL);
@@ -2919,24 +2966,28 @@ gda_connection_get_meta_store_data (GdaConnection *cnc,
 		stmt_hash = prepare_meta_statements_hash ();
 	key.meta_type = meta_type;
 	key.nb_filters = nb_filters;
-	key.filters = g_new (gchar *, nb_filters);
-	va_start (ap, nb_filters);
-	for (i = 0, fname = va_arg (ap, gchar*); fname && (i < nb_filters); fname = va_arg (ap, gchar*), i++) {
-		GdaHolder *h;
-		GValue *v;
-
-		v = va_arg (ap, GValue*);
-		if (!v || gda_value_is_null (v))
-			continue;
-		if (!set)
-			set = gda_set_new (NULL);
-		h = g_object_new (GDA_TYPE_HOLDER, "g-type", G_VALUE_TYPE (v), "id", fname, NULL);
-		gda_holder_set_value (h, v);
-		gda_set_add_holder (set, h);
-		g_object_unref (h);
-		key.filters[i] = fname;
+	key.filters = NULL;
+	if (nb_filters > 0) {
+		va_list ap;
+		key.filters = g_new (gchar *, nb_filters);
+		va_start (ap, nb_filters);
+		for (i = 0, fname = va_arg (ap, gchar*); fname && (i < nb_filters); fname = va_arg (ap, gchar*), i++) {
+			GdaHolder *h;
+			GValue *v;
+			
+			v = va_arg (ap, GValue*);
+			if (!v || gda_value_is_null (v))
+				continue;
+			if (!set)
+				set = gda_set_new (NULL);
+			h = g_object_new (GDA_TYPE_HOLDER, "g-type", G_VALUE_TYPE (v), "id", fname, NULL);
+			gda_holder_set_value (h, v);
+			gda_set_add_holder (set, h);
+			g_object_unref (h);
+			key.filters[i] = fname;
+		}
+		va_end (ap);
 	}
-	va_end (ap);
 	stmt = g_hash_table_lookup (stmt_hash, &key);
 	g_free (key.filters);
 	if (!stmt) {

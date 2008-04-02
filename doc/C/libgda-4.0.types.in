@@ -8,7 +8,6 @@
 #include <DocBook/gda-report-docbook-document.h>
 gda_blob_op_get_type
 gda_column_get_type
-gda_column_index_get_type
 gda_config_get_type
 gda_connection_get_type
 gda_connection_event_get_type
@@ -25,7 +24,6 @@ gda_data_model_dir_get_type
 gda_data_model_row_get_type
 gda_data_model_get_type
 gda_data_model_import_get_type
-gda_data_model_index_get_type
 gda_data_model_iter_get_type
 gda_data_model_query_get_type
 gda_data_access_wrapper_get_type

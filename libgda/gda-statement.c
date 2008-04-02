@@ -364,7 +364,7 @@ gda_statement_check_structure (GdaStatement *stmt, GError **error)
 }
 
 /**
- * gda_statement_check_connection
+ * gda_statement_check_validity
  * @stmt: a #GdaStatement object
  * @cnc: a #GdaConnection object, or %NULL
  * @error: a place to store errors, or %NULL
@@ -374,17 +374,19 @@ gda_statement_check_structure (GdaStatement *stmt, GError **error)
  *
  * If @cnc is %NULL, then cleans anything related to @cnc in @stmt.
  *
+ * See gda_sql_statement_check_validity() for more information.
+ *
  * Returns: TRUE if every object actually exists in @cnc's database
  */
 gboolean
-gda_statement_check_connection (GdaStatement *stmt, GdaConnection *cnc, GError **error)
+gda_statement_check_validity (GdaStatement *stmt, GdaConnection *cnc, GError **error)
 {
 	gboolean retval;
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
 	g_return_val_if_fail (stmt->priv, FALSE);
 	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), FALSE);
 
-	retval = gda_sql_statement_check_connection (stmt->priv->internal_struct, cnc, error);
+	retval = gda_sql_statement_check_validity (stmt->priv->internal_struct, cnc, error);
 	g_signal_emit (stmt, gda_statement_signals [CHECKED], 0, cnc, retval);
 
 	return retval;

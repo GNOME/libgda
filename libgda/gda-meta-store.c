@@ -2419,7 +2419,8 @@ out:
  */
 static gint
 find_row_in_model (GdaDataModel *find_in, GdaDataModel *data, gint row, gint *pk_cols, gint pk_cols_nb, 
-		   gboolean *out_has_changed, GError **error) {
+		   gboolean *out_has_changed, GError **error)
+{
 	gint i, erow;
 	GSList *values = NULL;
 	

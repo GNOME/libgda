@@ -123,8 +123,11 @@ gda_meta_struct_init (GdaMetaStruct *mstruct) {
 
 /**
  * gda_meta_struct_new
- * @features: the kind of information the new #GdaMetaStruct object will compute (the more features, the more time
- * it takes to run)
+ * @features: the kind of extra information the new #GdaMetaStruct object will compute
+ *
+ * Creates a new #GdaMetaStruct object. The @features specifies the extra features which will also be computed:
+ * the more features, the more time it takes to run. Features such as table's columns, each column's attributes, etc
+ * are not optional and will always be computed.
  *
  * Returns: the newly created #GdaMetaStruct object
  */
@@ -494,12 +497,13 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMeta
 			goto onerror;
 
 		nrows = gda_data_model_get_n_rows (model);
-		if (0 && nrows >= 1) {
+		if (nrows >= 1) {
 			GdaDataModel *pkmodel;
-			sql = "SELECT column_name FROM _key_column_usage WHERE constraint_catalog = ##cc::string AND constraint_schema = ##cs::string AND constraint_name = ##cname::string ORDER BY ordinal_position";
+			sql = "SELECT column_name FROM _key_column_usage WHERE table_catalog = ##cc::string AND table_schema = ##cs::string AND table_name = ##tname::string AND constraint_name = ##cname::string ORDER BY ordinal_position";
 			pkmodel = gda_meta_store_extract (store, sql, error, 
-							  "cc", gda_data_model_get_value_at (model, 0, 0),
-							  "cs", gda_data_model_get_value_at (model, 1, 0),
+							  "cc", catalog,
+							  "cs", schema,
+							  "tname", name,
 							  "cname", gda_data_model_get_value_at (model, 0, 0), NULL);
 			if (!pkmodel) {
 				g_object_unref (model);
@@ -511,11 +515,11 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMeta
 			for (i = 0; i < nrows; i++) {
 				GdaMetaTableColumn *tcol;
 				tcol = gda_meta_struct_get_table_column (mstruct, mt, 
-									 gda_data_model_get_value_at (model, 0, i));
+									 gda_data_model_get_value_at (pkmodel, 0, i));
 				if (!tcol) {
 					mt->pk_cols_array [i] = -1;
 					g_warning (_("Internal GdaMetaStore error: column %s not found"),
-						   g_value_get_string (gda_data_model_get_value_at (model, 0, i)));
+						   g_value_get_string (gda_data_model_get_value_at (pkmodel, 0, i)));
 				}
 				else {
 					mt->pk_cols_array [i] = g_slist_index (mt->columns, tcol);

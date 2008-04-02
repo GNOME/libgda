@@ -25,6 +25,7 @@
 #include <sql-parser/gda-statement-struct.h>
 #include <sql-parser/gda-statement-struct-pspec.h>
 #include <sql-parser/gda-statement-struct-decl.h>
+#include <libgda/gda-meta-struct.h>
 
 typedef struct _GdaSqlExpr      GdaSqlExpr;
 typedef struct _GdaSqlField     GdaSqlField;
@@ -66,6 +67,9 @@ void             gda_sql_expr_take_select    (GdaSqlExpr *expr, GdaSqlStatement 
 struct _GdaSqlField {
 	GdaSqlAnyPart       any;
 	gchar              *field_name;
+
+	/* validity check with a connection */
+	GdaMetaTableColumn *validity_meta_table_column;
 };
 GdaSqlField     *gda_sql_field_new            (GdaSqlAnyPart *parent);
 void             gda_sql_field_free           (GdaSqlField *field);
@@ -83,8 +87,8 @@ struct _GdaSqlTable
 	GdaSqlAnyPart       any;
 	gchar              *table_name;
 
-	/* GdaMetaStore check */
-	gpointer            full_table_name;
+	/* validity check with a connection */
+	GdaMetaDbObject    *validity_meta_object;
 };
 
 GdaSqlTable     *gda_sql_table_new            (GdaSqlAnyPart *parent);
@@ -103,8 +107,8 @@ struct _GdaSqlFunction {
 	gchar              *function_name;
 	GSList             *args_list;
 
-	/* GdaDict check */
-	gchar              *full_function_name;
+	/* validity check with a connection */
+	gpointer            validity_meta_function; /* to be replaced with a pointer to a structure representing a DBMS data type in GdaMetaStruct */
 };
 
 GdaSqlFunction  *gda_sql_function_new            (GdaSqlAnyPart *parent);
@@ -195,8 +199,9 @@ struct _GdaSqlSelectField
 	gchar              *table_name; /* may be NULL if expr does not refer to a table.field */
 	gchar              *as; 
 
-	/* GdaDict check */
-	gchar              *full_table_name;
+	/* validity check with a connection */
+	GdaMetaDbObject    *validity_meta_object;
+	GdaMetaTableColumn *validity_meta_table_column;
 };
 
 GdaSqlSelectField *gda_sql_select_field_new            (GdaSqlAnyPart *parent);
@@ -219,8 +224,8 @@ struct _GdaSqlSelectTarget
 	gchar              *table_name; /* may be NULL if expr does not refer to a table */
 	gchar              *as; 
 
-	/* GdaDict check */
-	gchar              *full_table_name;
+	/* validity check with a connection */
+	GdaMetaDbObject    *validity_meta_object;
 };
 
 GdaSqlSelectTarget *gda_sql_select_target_new            (GdaSqlAnyPart *parent);

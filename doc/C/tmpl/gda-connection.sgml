@@ -458,6 +458,29 @@ Management of connections to data sources
 @cnc: 
 
 
+<!-- ##### FUNCTION gda_connection_create_operation ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@type: 
+@options: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_perform_operation ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@op: 
+@error: 
+@Returns: 
+
+
 <!-- ##### ENUM GdaConnectionFeature ##### -->
 <para>
 
@@ -487,6 +510,15 @@ Management of connections to data sources
 
 @cnc: 
 @feature: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_get_meta_store ##### -->
+<para>
+
+</para>
+
+@cnc: 
 @Returns: 
 
 

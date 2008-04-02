@@ -28,11 +28,11 @@ gda_headers = \
 	gda-batch.h \
 	gda-blob-op.h \
 	gda-column.h \
-	gda-column-index.h \
 	gda-config.h \
 	gda-connection-event.h \
 	gda-connection.h \
 	gda-connection-private.h \
+	gda-data-comparator.h \
 	gda-data-handler.h \
 	gda-data-model-array.h \
 	gda-data-model-row.h \
@@ -41,7 +41,6 @@ gda_headers = \
 	gda-data-model-dir.h \
 	gda-data-model-extra.h \
 	gda-data-model-import.h \
-	gda-data-model-index.h \
 	gda-data-model-iter.h \
 	gda-data-model-private.h \
 	gda-data-model-query.h \
@@ -81,10 +80,10 @@ libgda_sources =  \
 	$(gda_headers) \
 	gda-blob-op.c \
 	gda-column.c \
-	gda-column-index.c \
 	gda-config.c \
 	gda-connection.c \
 	gda-connection-event.c \
+	gda-data-comparator.c \
 	gda-data-handler.c \
 	gda-data-model-array.c \
 	$(GDA_BDB_S) \
@@ -94,7 +93,6 @@ libgda_sources =  \
 	gda-data-model-dsn-list.c \
 	gda-data-model-dsn-list.h \
 	gda-data-model-import.c \
-	gda-data-model-index.c \
 	gda-data-model-iter.c \
 	gda-data-model-query.c \
 	gda-data-access-wrapper.c \

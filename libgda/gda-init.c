@@ -236,16 +236,3 @@ gda_main_quit (void)
 	GDA_UNLOCK ();
 }
 
-/*
- * Convenient Functions
- */
-
-
-/* module error */
-GQuark gda_general_error_quark (void)
-{
-	static GQuark quark;
-	if (!quark)
-		quark = g_quark_from_static_string ("gda_general_error");
-	return quark;
-}

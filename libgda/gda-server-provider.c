@@ -404,8 +404,8 @@ static OpReq op_req_DROP_VIEW [] = {
  * Creates a new #GdaServerOperation object which can be modified in order to perform the @type type of
  * action. The @options can contain:
  * <itemizedlist>
- *  <listitem>parameters which ID is a path in the resulting GdaServerOperation object, to initialize some value</listitem>
- *  <listitem>parameters which may change the contents of the GdaServerOperation, see <link linkend="gda-server-op-information-std">this section</link> for more information</listitem>
+ *  <listitem>named values which ID is a path in the resulting GdaServerOperation object, to initialize some value</listitem>
+ *  <listitem>named values which may change the contents of the GdaServerOperation, see <link linkend="gda-server-op-information-std">this section</link> for more information</listitem>
  * </itemizedlist>
  *
  * Returns: a new #GdaServerOperation object, or %NULL in the provider does not support the @type type
@@ -524,7 +524,8 @@ gda_server_provider_render_operation (GdaServerProvider *provider, GdaConnection
  * @op: a #GdaServerOperation object
  * @error: a place to store an error, or %NULL
  *
- * Performs the operation described by @op.
+ * Performs the operation described by @op. Note that @op is not destroyed by this method
+ * and can be reused.
  *
  * Returns: TRUE if no error occurred
  */

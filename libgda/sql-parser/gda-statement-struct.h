@@ -29,6 +29,7 @@ struct _GdaSqlStatement {
 	gchar               *sql;
 	GdaSqlStatementType  stmt_type;
 	gpointer             contents; /* depends on stmt_type */
+	GdaMetaStruct       *validity_meta_struct; /* set when gda_sql_statement_check_validity() was last called */
 };
 
 GdaSqlStatement             *gda_sql_statement_new       (GdaSqlStatementType type);
@@ -40,7 +41,7 @@ const gchar                 *gda_sql_statement_type_to_string (GdaSqlStatementTy
 GdaSqlStatementType          gda_sql_statement_string_to_type (const gchar *type);
 
 gboolean                     gda_sql_statement_check_structure (GdaSqlStatement *stmt, GError **error);
-gboolean                     gda_sql_statement_check_connection(GdaSqlStatement *stmt, GdaConnection *cnc, GError **error);
+gboolean                     gda_sql_statement_check_validity  (GdaSqlStatement *stmt, GdaConnection *cnc, GError **error);
 void                         gda_sql_statement_check_clean     (GdaSqlStatement *stmt);
 
 GdaSqlStatementContentsInfo *gda_sql_statement_get_contents_infos (GdaSqlStatementType type) ;

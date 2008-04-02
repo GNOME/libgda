@@ -55,8 +55,6 @@
 <!ENTITY libgda-GdaDataProxy SYSTEM "xml/gda-data-proxy.xml">
 <!ENTITY libgda-GdaConnection-event SYSTEM "xml/gda-connection-event.xml">
 <!ENTITY libgda-GdaColumn SYSTEM "xml/gda-column.xml">
-<!ENTITY libgda-GdaColumnIndex SYSTEM "xml/gda-column-index.xml">
-<!ENTITY libgda-GdaDataModelIndex SYSTEM "xml/gda-data-model-index.xml">
 <!ENTITY libgda-init SYSTEM "xml/libgda.xml">
 <!ENTITY libgda-log SYSTEM "xml/gda-log.xml">
 <!ENTITY libgda-quark-list SYSTEM "xml/gda-quark-list.xml">
@@ -102,9 +100,11 @@
 <!ENTITY libgda-PStmt SYSTEM "xml/gda-pstmt.xml">
 <!ENTITY libgda-Enums SYSTEM "xml/gda-enums.xml">
 <!ENTITY libgda-convenient SYSTEM "xml/gda-convenient.xml">
+<!ENTITY libgda-GdaDataComparator SYSTEM "xml/gda-data-comparator.xml">
 <!ENTITY provider-writing SYSTEM "prov-writing.xml">
 <!ENTITY provider-support SYSTEM "xml/provider-support.xml">
 <!ENTITY fdl-appendix SYSTEM "fdl-appendix.sgml">
+<!ENTITY howto SYSTEM "howto.xml">
 <!ENTITY libgda-TreeIndex SYSTEM "xml/tree_index.sgml">
 ]>
 
@@ -412,6 +412,7 @@
       The following sections describe the API available for &GDA; applications.
     </para>
 
+    &howto;
     <chapter>
       <title>Object Hierarchy</title>
       &libgda-TreeIndex;
@@ -567,10 +568,9 @@
       &libgda-GdaDataModelArray;
       &libgda-GdaDataModelBdb;
       &libgda-GdaDataModelDir;
-      &libgda-GdaDataModelQuery;
       &libgda-GdaDataProxy;
-      &libgda-GdaDataModelIndex;
-      &libgda-GdaColumnIndex;
+      &libgda-GdaDataComparator;
+      &libgda-GdaDataModelQuery;
       <para>
 	The following UML diagram shows the various implementations of the GdaDataModel interface and their usage:
 	<mediaobject>

@@ -96,13 +96,7 @@ gchar              *gda_statement_to_sql_extended        (GdaStatement *stmt, Gd
 GdaSqlStatementType gda_statement_get_statement_type     (GdaStatement *stmt);
 gboolean            gda_statement_is_useless             (GdaStatement *stmt);
 gboolean            gda_statement_check_structure        (GdaStatement *stmt, GError **error);
-gboolean            gda_statement_check_connection       (GdaStatement *stmt, GdaConnection *cnc, GError **error);
-
-/*
-GdaObject         *gda_statement_execute              (GdaStatement *stmt, GdaConnection  *cnc, 
-						       GdaParameterList *params,
-						       GdaStatementModelUsage usage, GError **error);
-*/
+gboolean            gda_statement_check_validity         (GdaStatement *stmt, GdaConnection *cnc, GError **error);
 
 G_END_DECLS
 

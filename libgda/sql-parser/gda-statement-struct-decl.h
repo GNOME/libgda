@@ -22,6 +22,9 @@
 
 #include <glib.h>
 #include <glib-object.h>
+#include <libgda/gda-decl.h>
+#include <libgda/gda-meta-store.h>
+#include <libgda/gda-meta-struct.h>
 
 /* error reporting */
 extern GQuark gda_sql_error_quark (void);
@@ -30,7 +33,7 @@ extern GQuark gda_sql_error_quark (void);
 typedef enum {
 	GDA_SQL_STRUCTURE_CONTENTS_ERROR,
 	GDA_SQL_MALFORMED_IDENTIFIER_ERROR,
-	GDA_SQL_DICT_ELEMENT_MISSING_ERROR
+	GDA_SQL_VALIDATION_ERROR
 } GdaSqlErrorType;
 
 /*
@@ -137,6 +140,17 @@ typedef struct {
 
 	/* augmenting information precision using a dictionary */
 	GdaSqlForeachFunc     check_structure_func;
+	GdaSqlForeachFunc     check_validity_func;
 } GdaSqlStatementContentsInfo;
+
+/*
+ * Validation against a dictionary
+ */
+
+typedef struct {
+	GdaConnection *cnc;
+	GdaMetaStore  *store;
+	GdaMetaStruct *mstruct;
+} GdaSqlStatementCheckValidityData;
 
 #endif

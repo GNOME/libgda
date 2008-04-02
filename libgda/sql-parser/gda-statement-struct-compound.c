@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 Vivien Malerba
+ * Copyright (C) 2007 - 2008 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -24,8 +24,8 @@
 #include <string.h>
 #include <glib/gi18n-lib.h>
 
-static gpointer  gda_sql_statement_compound_new (void);
-static gboolean  gda_sql_statement_compound_check_structure (GdaSqlAnyPart *stmt, gpointer data, GError **error);
+static gpointer gda_sql_statement_compound_new (void);
+static gboolean gda_sql_statement_compound_check_structure (GdaSqlAnyPart *stmt, gpointer data, GError **error);
 
 GdaSqlStatementContentsInfo compound_infos = {
 	GDA_SQL_STATEMENT_COMPOUND,
@@ -35,7 +35,8 @@ GdaSqlStatementContentsInfo compound_infos = {
 	gda_sql_statement_compound_copy,
 	gda_sql_statement_compound_serialize,
 
-	gda_sql_statement_compound_check_structure
+	gda_sql_statement_compound_check_structure,
+	NULL
 };
 
 GdaSqlStatementContentsInfo *

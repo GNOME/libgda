@@ -1282,12 +1282,10 @@ gda_data_model_export_to_file (GdaDataModel *model, GdaDataModelIOFormat format,
 		}
 	}
 	
-	if (! gda_file_save (file, body, strlen (body))) {
-		g_set_error (error, 0, 0, _("Could not save file %s"), file);
+	if (! g_file_set_contents (file, body, -1, error)) {
 		g_free (body);
 		return FALSE;
 	}
-
 	g_free (body);
 	return TRUE;
 }

@@ -5,12 +5,17 @@ AM_CPPFLAGS = \
 	$(LIBGDA_CFLAGS) \
 	-DROOT_DIR=\""$(top_srcdir)"\" 
 
-TESTS = check_parser
-check_PROGRAMS = check_parser
+TESTS = check_parser check_validation
+check_PROGRAMS = check_parser check_validation
 
 check_parser_SOURCES = check_parser.c
 check_parser_LDADD = \
 	$(top_builddir)/libgda/libgda-4.0.la \
 	$(LIBGDA_LIBS)
 
-EXTRA_DIST = testdata.xml
+check_validation_SOURCES = check_validation.c
+check_validation_LDADD = \
+	$(top_builddir)/libgda/libgda-4.0.la \
+	$(LIBGDA_LIBS)
+
+EXTRA_DIST = testdata.xml testvalid.xml

@@ -1,0 +1,345 @@
+<chapter id="howto">
+  <title>HOWTO for common tasks</title>
+  <para>
+    This section is a list of small HOWTOs to get started quickly for some specific tasks, without the
+    need to read all the documentation: quickly get to the code and read the corresponding documentation
+    for further details.
+  </para>
+
+  <sect1>
+    <title>Open a connection</title>
+    <para>
+      Opening a connection to a database creates a <link linkend="GdaConnection">GdaConnection</link>
+      object which is required to execute commands. The connections' parameters (which are specific to each
+      type of database) can be either specified when opening the connection, or be used to define a
+      data source (<link linkend="connections">DSN</link>) and the DSN name is then specified to open the connection.
+    </para>
+    <para>
+      For example, opening a connection to a PostgreSQL database named "mydb" one could use the following code:
+      <programlisting>
+GdaConnection *connection;
+connection = gda_connection_open_from_string ("PostgreSQL", "DB_NAME=mydb", 
+                                              "USERNAME=martin;PASSWORD=luther",
+                                              GDA_CONNECTION_OPTIONS_READ_ONLY, NULL);
+if (!connection)
+    g_print ("CONNECTION FAILED\n");
+else {
+    /* use the opened connection */
+
+    /* close the connection (assuming it's not used by another object) */
+    g_object_unref (connection);
+}
+      </programlisting>
+    </para>
+  </sect1>
+
+  <sect1>
+    <title>Define a data source (DSN)</title>
+    <para>
+      The <link linkend="libgda-40-Configuration">Configuration section</link> details how to manage data sources
+      definitions. To define a data source, one needs to create and fill a 
+      <link linkend="GdaDataSourceInfo">GdaDataSourceInfo</link> structure, and use the
+      <link linkend="gda-config-define-dsn">gda_config_define_dsn()</link> function.
+    </para>
+    <para>
+      For example the following code defines a data source:
+      <programlisting>
+GError *error = NULL;
+GdaDataSourceInfo dsn_info = {
+    "My DSN",
+    "MySQL",
+    "Sample MySQL data source",
+    "HOST=myserver;DB_NAME=testdb"
+    NULL,
+    FALSE
+};
+if (!gda_config_define_dsn (&amp;dsn_info, &amp;error)) {
+    /* an error occurred, the details are in error */
+    g_error_free (error);
+}
+      </programlisting>
+    </para>
+  </sect1>
+
+  <sect1 id="howto-exec-select">
+    <title>Execute a SELECT command</title>
+    <para>
+      Any SQL command in &LIBGDA; must be converted to a <link linkend="GdaStatement">GdaStatement</link> object
+      which is then executed; if the statement defines some variable (place holders), then variables binding
+      (assigning values to variables) is done at execution time. Each database provider (database 
+      <emphasis>driver</emphasis> or <emphasis>adaptator</emphasis>) can implement its own parser to 
+      be able to parse its specific SQL dialect. Except for binding variables, and for reusability, the
+      <link linkend="GdaStatement">GdaStatement</link> object guarantees that it contains only one SQL statement
+      (it's not possible for it to contain several ones separated by a semicolon).
+    </para>
+    <para>
+      Parsing an SQL statement into a <link linkend="GdaStatement">GdaStatement</link> object is the job of an
+      <link linkend="SqlParser">SqlParser</link>.
+    </para>
+    <para>
+      However when one only wants to run a simple SQL statement, &LIBGDA; provides the
+      <link linkend="gda-execute-select-command">gda_execute_select_command()</link> function which does
+      everything in one step. The following codes illustrates parsing and executing a SELECT statement:
+    </para>
+    <para>
+      <programlisting>
+GdaSqlParser *parser;
+GdaStatament *stmt;
+GError *error = NULL;
+
+parser = gda_connection_create_parser (cnc);
+if (!parser) {
+    /* the database provider used by cnc does not implement its own parser,
+     * let's use a generic one */
+    parser = gda_sql_parser_new ();
+stmt = gda_sql_parser_parse_string (parser, "SELECT * FROM customers", NULL, &amp;error);
+g_object_unref (parser);
+if (!stmt) {
+    /* there was an error while parsing */
+}
+else {
+    GdaDataModel *model;
+    model = gda_connection_statement_execute_select (cnc, stmt, NULL, &amp;error);
+    if (model) {
+        /* dump to results to STDOUT */
+        gda_data_model_dump (model, stdout);
+        g_object_unref (model);
+    }
+    else {
+        /* there was an error while executing the statement */
+    }
+}
+g_object_unref (stmt);
+      </programlisting>
+    </para>
+  </sect1>
+
+  <sect1 id="howto-exec-non-select">
+    <title>Execute an INSERT, UPDATE or DELETE command</title>
+    <para>
+      INSERT, UPDATE or DELETE are treated in the same way as the SELECT command (see the 
+      <link linkend="howto-exec-select">HOWTO</link> about executing
+      a SELECT command), except that the function to execute the command is different because the retuned value
+      is not a data model but a success/failure value.
+    </para>
+    <para>
+      The following codes illustrates parsing and executing an UPDATE statement:
+      <programlisting>
+GdaSqlParser *parser;
+GdaStatament *stmt;
+GError *error = NULL;
+
+parser = gda_connection_create_parser (cnc);
+if (!parser) {
+    /* the database provider used by cnc does not implement its own parser,
+     * let's use a generic one */
+    parser = gda_sql_parser_new ();
+stmt = gda_sql_parser_parse_string (parser, "UPDATE customers set name='Joe' WHERE id=123", NULL, &amp;error);
+g_object_unref (parser);
+if (!stmt) {
+    /* there was an error while parsing */
+}
+else {
+    gint res;
+    res = gda_connection_statement_execute_non_select (cnc, stmt, NULL, NULL, &amp;error);
+    if (res == -1) {
+        /* there was an error while executing the statement */
+    }
+    else if (res >= 0) 
+        g_print ("Command Ok, %d row(s) impacted\n", res);
+    else
+        g_print ("Command Ok, number of rows impacted is not reported\n");
+}
+g_object_unref (stmt);
+      </programlisting>
+    </para>
+  </sect1>
+
+  <sect1>
+    <title>Get the last inserted row</title>
+    <para>
+      &LIBGDA; allows one to get the last inserted row right after an INSERT statement has been
+      executed. &LIBGDA; returns a new <link linkend="GdaSet">GdaSet</link> object (which the caller
+      must unref when not needed anymore) which contains named values, one for each column of the
+      table in which data has been inserted. To get that object, pass a place holder to the
+      <parameter>last_insert_row</parameter> of
+      <link linkend="gda-connection-statement-execute-non-select">gda_connection_statement_execute_non_select()</link>
+    </para>
+    <para>
+      The following code example show how to use the returned <link linkend="GdaSet">GdaSet</link> object:
+      <programlisting>
+GdaSet *last_row;
+GdaStatement *stmt;
+stmt = gda_sql_parser_parse_string (parser, "INSERT INTO mytable (name) VALUES ('joe')", NULL, NULL);
+if (gda_connection_statement_execute_non_select (connection, stmt, NULL, &amp;last_row, &amp;error) == -1) {
+    g_warning ("Can't execute INSERT: %s\n",
+              error &amp;&amp; error->message ? error->message : "???");
+    if (error)
+        g_error_free (error);
+}
+else {
+    if (!last_row)
+        g_print ("Last row not reported\n");
+    else {
+        GSList *list;
+        for (list = last_row->holders; list; list = list->next) {
+            GdaHolder *h = GDA_HOLDER (list->data);
+            gchar *str;
+            str = gda_value_stringify (gda_holder_get_value (h));
+            g_print ("\t%s => %s\n", gda_holder_get_id (h), str);
+            g_free (str);
+        }
+    g_object_unref (last_row);
+}
+g_object_unref (stmt);
+      </programlisting>
+      Which gives the following output (considering that in the example the "mytable" table has two columns: an Id
+      and a Name columns):
+      <programlisting>
+        +0 => 1
+        +1 => joe
+      </programlisting>
+    </para>
+  </sect1>
+
+  <sect1>
+    <title>Execute a DDL command</title>
+    <para>
+      DDL commands (commands to modify the database schema such as create tables and views, change
+      users' access rights, etc) are treated in the same way as non select commands (refer to 
+      the <link linkend="howto-exec-select">HOWTO</link> about executing non SELECT commands). However
+      &LIBGDA; offers a better and more portable way of executing such commands: using a
+      <link linkend="GdaServerOperation">GdaServerOperation</link> object.
+    </para>
+    <para>
+      Executing a DDL command involves the following steps:
+      <orderedlist>
+	<listitem><para>Request a new <link linkend="GdaServerOperation">GdaServerOperation</link> object from
+	    the database provider for a specific operation using the 
+	    <link linkend="gda-server-provider-create-operation">gda_server_provider_create_operation()</link> function.
+	</para></listitem>
+	<listitem><para>Specify the <link linkend="GdaServerOperation">GdaServerOperation</link> object's 
+	    behaviour by setting some pre-defined parameters; for example when creating a table, the parameters
+	    to be set include the tables name, the names of the columns, the constraints, etc. The list
+	    of parameters to set is listed by the <link linkend="libgda-list-server-op">gda-list-server-op</link>
+	    program.
+	</para></listitem>
+	<listitem><para>Ask the server provider to execute the operation based on the 
+	    <link linkend="GdaServerOperation">GdaServerOperation</link> object
+	</para></listitem>
+      </orderedlist>
+    </para>
+    <para>
+      The following code in part illustrates how to create a view:
+      <programlisting>
+GdaServerOperation *op;
+
+op = gda_connection_create_operation (cnc, GDA_SERVER_OPERATION_CREATE_VIEW, NULL, &amp;error);
+if (!op)
+    /* there was an error while creating the GdaServerOperation object */
+else {
+    /* define the view to create */
+    if (!gda_server_operation_set_value_at (op, "myview", &amp;error, 
+                                            "/VIEW_DEF_P/VIEW_NAME") ||
+        !gda_server_operation_set_value_at (op, "SELECT * FROM customers", &amp;error, 
+                                            "/VIEW_DEF_P/VIEW_DEF"))
+        /* there was an error */
+    else {
+        if (! gda_connection_perform_operation (cnc, op, &amp;error))
+            g_print ("Error\n");
+        else
+            g_print ("View created\n");
+    }
+    g_object_unref (op);
+}
+      </programlisting>
+    </para>
+    <para>
+      Please also note that &LIBGDA; provides some convenient functions to wrap this process, see the
+      <link linkend="libgda-40-Convenient-functions">Convenient functions</link> section for more
+      information.
+    </para>
+  </sect1>
+
+  <sect1 id="howto-meta1">
+    <title>Get information about a table's columns</title>
+    <para>
+      &LIBGDA; supports reporting meta data about a database (for which there is an opened connection). The
+      meta data are stored in a database (usually an in-memory database) which structure is close to the 
+      information schema SQL standard (ISO/IEC 9075), and adapted (form information, this database is managed by a
+      <link linkend="GdaMetaStore">GdaMetaStore</link> object). As databases don't notify the changes made to
+      their objects, it is necessary to update (or synchronize) the meta data if the database's schema has been
+      changed, or if the meta data has not yet been extracted: call
+      <link linkend="gda-connection-update-meta-store">gda_connection_update_meta_store()</link> for this purpose.
+    </para>
+    <para>
+      One then needs to find the data requested among the (rather large) quantity of meta data available, there are
+      two possibilities:
+      <itemizedlist>
+	<listitem><para>Knowing the information schema's structure (tables and views) used, 
+	    run some SELECT commands on the 
+	    <link linkend="GdaMetaStore">GdaMetaStore</link> object's internal connection: this solution is the most
+	    powerfull but requires some knowledge of the information schema's structure, and the data
+	    is not easy to use.</para></listitem>
+	<listitem><para>Use a <link linkend="GdaMetaStruct">GdaMetaStruct</link> object which 
+	    <emphasis>exports</emphasis> the meta data as a dynamic tree of pre-defined data structures, 
+	    easy to use.</para></listitem>
+      </itemizedlist>
+    </para>
+    <para>
+      The following code shows how to list all the colums of the "customers" table of a connection (the connection
+      is assumed to already be opened):
+      <programlisting>
+GdaMetaStruct *mstruct;
+GdaMetaDbObject *dbo;
+GValue *table_name;
+if (!gda_connection_update_meta_store (cnc, NULL, &amp;error)) {
+    /* there was an error */
+    return;
+}
+mstruct = gda_meta_struct_new (GDA_META_STRUCT_FEATURE_NONE);
+table_name = gda_value_new (G_TYPE_STRING);
+g_value_set_string (value, "customers");
+dbo = gda_meta_struct_complement (mstruct, gda_connection_get_meta_store (cnc),
+                                  GDA_META_DB_TABLE, NULL, NULL, 
+                                  table_name, &amp;error);
+gda_value_free (table_name);
+if (dbo) {
+    /* the "customers" table has been found, its details are in dbo */
+    GdaMetaTable *table = GDA_META_DB_OBJECT_GET_TABLE (dbo);
+    GSList *list;
+    for (list = table->columns: list; list = list->next) 
+        g_print ("Column: %s\n", ((GdaMetaTableColumn*) list->data)->column_name);
+}
+else
+    g_print ("Table not found\n");
+g_object_unref (mstruct);
+      </programlisting>
+    </para>
+  </sect1>
+
+  <sect1>
+    <title>Validate a DML statement</title>
+    <para>
+      &LIBGDA; supports validating DML (SELECT, INSERT, UPDATE and DELETE) statements: making sure every
+      database object referenced in the statement actually exists in the database being accessed through
+      a connection.
+      The validation process involves the meta data associated to a connection, son one must make that
+      meta data is up to date with the database being accessed, using 
+      <link linkend="gda-connection-update-meta-store">gda_connection_update_meta_store()</link> (also see the
+      <link linkend="howto-meta1">Get information about a table's columns</link> section).
+    </para>
+    <para>
+      The following code shows how to validate a statement (assuming the statement already exists):
+      <programlisting>
+if (!gda_statement_check_validity (stmt, cnc, &amp;error))
+    g_print ("Invalid statement: %s\n",
+             error &amp;&amp; error->message ? error->message : "No detail");
+else
+    g_print ("Statement is valid\n");
+      </programlisting>
+    </para>
+  </sect1>
+
+</chapter>
+

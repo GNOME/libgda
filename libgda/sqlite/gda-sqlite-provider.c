@@ -610,7 +610,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 #endif
 
 	if (filename)
-		cdata->file = g_strdup (filename);
+		cdata->file = filename;
 
 	errmsg = sqlite3_open (filename, &cdata->connection);
 

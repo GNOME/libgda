@@ -1,0 +1,124 @@
+<!-- ##### SECTION Title ##### -->
+GdaDataComparator
+
+<!-- ##### SECTION Short_Description ##### -->
+Simple data model's contents comparison
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+  The #GdaDataComparator is a simple object which takes two #GdaDataModel objects and compare them.
+  Actual comparison is performed when the gda_data_comparator_compute_diff() is called; for each
+  difference found, the <link linkend="GdaDataComparator-diff-computed">diff-computed</link> signal
+  is emitted (any user installed signal handler which returns FALSE stops the computing process).
+</para>
+<para>
+  After the differences have been computed, they can each be accessed using gda_data_comparator_get_diff(),
+  the number of differences found being returned by gda_data_comparator_get_n_diffs().
+</para>
+<para>
+  There are some limitations to this object:
+  <itemizedlist>
+    <listitem><para>The data models compared must have the same number and type of columns</para></listitem>
+    <listitem><para>The comparison is done column-for-column: one cannot omit columns in the comparison, nor compare
+    columns with different positions</para></listitem>
+  </itemizedlist>
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaDataComparator ##### -->
+<para>
+
+</para>
+
+@object: 
+@priv: 
+
+<!-- ##### STRUCT GdaDataComparatorClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+@diff_computed: 
+
+<!-- ##### STRUCT GdaDataComparatorPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_data_comparator_new ##### -->
+<para>
+
+</para>
+
+@old_model: 
+@new_model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_comparator_set_key_columns ##### -->
+<para>
+
+</para>
+
+@comp: 
+@col_numbers: 
+@nb_cols: 
+
+
+<!-- ##### STRUCT GdaDiff ##### -->
+<para>
+
+</para>
+
+@type: 
+@old_row: 
+@new_row: 
+@values: 
+
+<!-- ##### ENUM GdaDiffType ##### -->
+<para>
+
+</para>
+
+@GDA_DIFF_ADD_ROW: 
+@GDA_DIFF_REMOVE_ROW: 
+@GDA_DIFF_MODIFY_ROW: 
+
+<!-- ##### FUNCTION gda_data_comparator_compute_diff ##### -->
+<para>
+
+</para>
+
+@comp: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_comparator_get_n_diffs ##### -->
+<para>
+
+</para>
+
+@comp: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_comparator_get_diff ##### -->
+<para>
+
+</para>
+
+@comp: 
+@pos: 
+@Returns: 
+
+

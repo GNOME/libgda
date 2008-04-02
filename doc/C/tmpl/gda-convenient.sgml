@@ -81,7 +81,7 @@ Do quickly some actions
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_create_table ##### -->
+<!-- ##### FUNCTION gda_prepare_create_table ##### -->
 <para>
 
 </para>
@@ -93,13 +93,33 @@ Do quickly some actions
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_drop_table ##### -->
+<!-- ##### FUNCTION gda_perform_create_table ##### -->
+<para>
+
+</para>
+
+@op: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_prepare_drop_table ##### -->
 <para>
 
 </para>
 
 @cnc: 
 @table_name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_perform_drop_table ##### -->
+<para>
+
+</para>
+
+@op: 
 @error: 
 @Returns: 
 

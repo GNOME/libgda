@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 Vivien Malerba
+ * Copyright (C) 2007 - 2008 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -36,6 +36,7 @@ GdaSqlStatementContentsInfo begin_infos = {
 	gda_sql_statement_trans_free,
 	gda_sql_statement_trans_copy,
 	gda_sql_statement_trans_serialize,
+	NULL,
 	NULL
 };
 

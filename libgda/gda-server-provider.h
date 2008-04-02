@@ -28,7 +28,6 @@
 #include <libgda/gda-server-operation.h>
 #include <libgda/gda-connection.h>
 #include <libgda/gda-data-model.h>
-#include <libgda/gda-data-model-index.h>
 #include <libgda/gda-quark-list.h>
 #include <libgda/gda-statement.h>
 #include <libgda/gda-meta-store.h>

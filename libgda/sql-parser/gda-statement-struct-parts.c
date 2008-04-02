@@ -219,6 +219,7 @@ gda_sql_field_copy (GdaSqlField *field)
 	copy = gda_sql_field_new (NULL);
 	if (field->field_name)
 		copy->field_name = g_strdup (field->field_name);
+	copy->validity_meta_table_column = field->validity_meta_table_column;
 
 	return copy;
 }
@@ -274,6 +275,7 @@ gda_sql_table_copy (GdaSqlTable *table)
 	copy = gda_sql_table_new (NULL);
 	if (table->table_name)
 		copy->table_name = g_strdup (table->table_name);
+	copy->validity_meta_object = table->validity_meta_object;
 
 	return copy;
 }
@@ -345,7 +347,8 @@ gda_sql_function_copy (GdaSqlFunction *function)
 			gda_sql_any_part_set_parent (copy->args_list->data, copy);
 		}
 		copy->args_list = g_slist_reverse (copy->args_list);
-	}	
+	}
+	copy->validity_meta_function = function->validity_meta_function;
 
 	return copy;
 }
@@ -782,6 +785,10 @@ gda_sql_select_field_copy (GdaSqlSelectField *field)
 		copy->table_name = g_strdup (field->table_name);
 	if (field->as)
 		copy->as = g_strdup (field->as);
+
+	copy->validity_meta_object = field->validity_meta_object;
+	copy->validity_meta_table_column = field->validity_meta_table_column;
+
 	return copy;
 }
 
@@ -913,6 +920,9 @@ gda_sql_select_target_copy (GdaSqlSelectTarget *target)
 		copy->table_name = g_strdup (target->table_name);
 	if (target->as)
 		copy->as = g_strdup (target->as);
+
+	copy->validity_meta_object = target->validity_meta_object;
+
 	return copy;
 }
 

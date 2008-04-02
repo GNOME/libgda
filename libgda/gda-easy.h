@@ -3,6 +3,7 @@
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
+ *      Daniel Espinosa <esodan@gmail.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -34,14 +35,24 @@
 
 G_BEGIN_DECLS
 
-extern GQuark gda_general_error_quark (void);
-#define GDA_GENERAL_ERROR gda_general_error_quark ()
+extern GQuark gda_easy_error_quark (void);
+#define GDA_EASY_ERROR gda_easy_error_quark ()
 
 typedef enum  {
-    GDA_GENERAL_OBJECT_NAME_ERROR,
-    GDA_GENERAL_INCORRECT_VALUE_ERROR,
-    GDA_GENERAL_OPERATION_ERROR
-} GdaGeneralError;
+    GDA_EASY_OBJECT_NAME_ERROR,
+    GDA_EASY_INCORRECT_VALUE_ERROR,
+    GDA_EASY_OPERATION_ERROR
+} GdaEasyError;
+
+typedef enum
+{
+	GDA_EASY_CREATE_TABLE_PKEY_FLAG      = 1 << 0,
+	GDA_EASY_CREATE_TABLE_NOT_NULL_FLAG  = 1 << 1,
+	GDA_EASY_CREATE_TABLE_UNIQUE_FLAG    = 1 << 2,
+	GDA_EASY_CREATE_TABLE_AUTOINC_FLAG   = 1 << 3,
+	/* Flags combinations */
+	GDA_EASY_CREATE_TABLE_PKEY_AUTOINC_FLAG = GDA_EASY_CREATE_TABLE_PKEY_FLAG | GDA_EASY_CREATE_TABLE_AUTOINC_FLAG
+} GdaEasyCreateTableFlag;
 
 /* 
  * Convenient Functions
@@ -66,8 +77,10 @@ gboolean            gda_perform_drop_database         (GdaServerOperation *op, G
 /*
  * Tables creation and destruction
  */
-gboolean            gda_create_table                  (GdaConnection *cnc, const gchar *table_name, GError **error, ...);
-gboolean            gda_drop_table                    (GdaConnection *cnc, const gchar *table_name, GError **error);
+GdaServerOperation *gda_prepare_create_table	       (GdaConnection *cnc, const gchar *table_name, GError **error, ...);
+gboolean            gda_perform_create_table          (GdaServerOperation *op, GError **error);
+GdaServerOperation *gda_prepare_drop_table            (GdaConnection *cnc, const gchar *table_name, GError **error);
+gboolean            gda_perform_drop_table            (GdaServerOperation *op, GError **error);
 
 /*
  * Data in tables manipulation

@@ -25,6 +25,7 @@
 #include <glib/gi18n-lib.h>
 
 static gboolean gda_sql_statement_select_check_structure (GdaSqlAnyPart *stmt, gpointer data, GError **error);
+static gboolean gda_sql_statement_select_check_validity (GdaSqlAnyPart *stmt, gpointer data, GError **error);
 
 GdaSqlStatementContentsInfo select_infos = {
 	GDA_SQL_STATEMENT_SELECT,
@@ -34,7 +35,8 @@ GdaSqlStatementContentsInfo select_infos = {
 	gda_sql_statement_select_copy,
 	gda_sql_statement_select_serialize,
 
-	gda_sql_statement_select_check_structure
+	gda_sql_statement_select_check_structure,
+	gda_sql_statement_select_check_validity
 };
 
 GdaSqlStatementContentsInfo *
@@ -334,4 +336,49 @@ gda_sql_statement_select_check_structure (GdaSqlAnyPart *stmt, gpointer data, GE
 		return FALSE;
 	}
 	return TRUE;
+}
+
+static gboolean
+gda_sql_statement_select_check_validity (GdaSqlAnyPart *stmt, gpointer data, GError **error)
+{
+	GdaSqlStatementSelect *select = (GdaSqlStatementSelect *) stmt;
+	GdaSqlStatementCheckValidityData *ddata = (GdaSqlStatementCheckValidityData*) data;
+	gboolean retval = TRUE;
+
+	/* validate target's names and aliases:
+	 * - there can't be 2 targets with the same alias
+	 * - each target name or alias can only reference at most one target
+	 */
+	if (select->from && select->from->targets) {
+		GHashTable *hash; /* key = target name or alias, value = GdaSqlSelectTarget pointer */
+		GSList *list;
+		hash = g_hash_table_new (g_str_hash, g_str_equal);
+		for (list = select->from->targets; list; list = list->next) {
+			GdaSqlSelectTarget *t = (GdaSqlSelectTarget*) list->data;
+			if (t->table_name) {
+				if (g_hash_table_lookup (hash, t->table_name)) {
+					g_set_error (error, GDA_SQL_ERROR, GDA_SQL_VALIDATION_ERROR,
+						     _("Multiple targets named or aliased '%s'"), t->table_name);
+					retval = FALSE;
+					break;
+				}
+				g_hash_table_insert (hash, t->table_name, t);
+			}
+			if (t->as) {
+				if (g_hash_table_lookup (hash, t->as)) {
+					g_set_error (error, GDA_SQL_ERROR, GDA_SQL_VALIDATION_ERROR,
+						     _("Multiple targets named or aliased '%s'"), t->as);
+					retval = FALSE;
+					break;
+				}
+				g_hash_table_insert (hash, t->as, t);
+			}
+
+			if (!retval)
+				break;
+		}
+		g_hash_table_destroy (hash);
+	}
+
+	return retval;
 }

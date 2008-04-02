@@ -38,8 +38,6 @@ G_BEGIN_DECLS
 const gchar *gda_g_type_to_string (GType type);
 GType        gda_g_type_from_string (const gchar *str);
 
-GList       *gda_string_hash_to_list (GHashTable *hash_table);
-
 /* 
  * SQL escaping
  */
@@ -47,30 +45,26 @@ gchar       *gda_default_escape_string (const gchar *string);
 gchar       *gda_default_unescape_string (const gchar *string);
 
 /*
- * File management utility functions
- */
-gchar    *gda_file_load (const gchar *filename);
-gboolean  gda_file_save (const gchar *filename, const gchar *buffer, gint len);
-
-/*
- * XML Id encoding and decoding
- */
-gchar *gda_utility_build_encoded_id (const gchar *prefix, const gchar *id);
-gchar *gda_utility_build_decoded_id (const gchar *prefix, const gchar *id);
-
-/*
  * Param & model utilities
  */
-gboolean gda_utility_check_data_model (GdaDataModel *model, gint nbcols, ...);
-void     gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent, 
+gboolean     gda_utility_check_data_model (GdaDataModel *model, gint nbcols, ...);
+void         gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent, 
 					      const gint *cols, gint nb_cols, const gint *rows, gint nb_rows,
 					      gboolean use_col_ids);
-void     gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *sources);
+void         gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *sources);
 
-/* translate any text to an alphanumerical text */
-gchar *gda_text_to_alphanum (const gchar *text);
-gchar *gda_alphanum_to_text (gchar *text);
+/* 
+ * translate any text to an alphanumerical text 
+ */
+gchar       *gda_text_to_alphanum (const gchar *text);
+gchar       *gda_alphanum_to_text (gchar *text);
 
+/*
+ * Statement computation from meta store 
+ */
+gboolean     gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gboolean require_pk, 
+					 GdaStatement **insert, GdaStatement **update, GdaStatement **delete, 
+					 GError **error);
 G_END_DECLS
 
 #endif

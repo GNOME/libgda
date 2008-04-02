@@ -55,7 +55,9 @@ main (int argc, char **argv)
     <title>Connecting</title>
     <para>
       &LIBGDA; allows data sources (DSN) to be defined and refered to by a unique name which contains all the 
-      required information to actually open a connection (except the name and password if they are required). Of
+      required information to actually open a connection (except the name and password if they are required);
+      see the <link linkend="libgda-40-Configuration">Configuration section</link> for more information about
+      how to manage data sources. Of
       course it's still possible to open a connection without having defined a DSN, in which case a <emphasis>connection
       string</emphasis> is used to specify all the parameters resuired to open a connection. For more information
       about connection strings, see the <link linkend="gda-connection-open-from-string">gda_connection_open_from_string ()</link>'s documentation.
@@ -74,6 +76,10 @@ do_stuff () {
 	g_print ("CONNECTING\n");
 	connection = gda_connection_open_from_dsn ("calvaris", NULL, 
                                                    GDA_CONNECTION_OPTIONS_READ_ONLY, NULL);
+	if (!connection) {
+		g_print ("CONNECTION FAILED\n");
+		return;
+	}
 	g_print ("CONNECTED\n");
       
         /* use the connection */

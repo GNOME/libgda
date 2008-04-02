@@ -17,41 +17,12 @@ Utility functions
 <!-- ##### SECTION Stability_Level ##### -->
 
 
-<!-- ##### FUNCTION gda_string_hash_to_list ##### -->
-<para>
-
-</para>
-
-@hash_table: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_default_escape_string ##### -->
 <para>
 
 </para>
 
 @string: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_file_load ##### -->
-<para>
-
-</para>
-
-@filename: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_file_save ##### -->
-<para>
-
-</para>
-
-@filename: 
-@buffer: 
-@len: 
 @Returns: 
 
 

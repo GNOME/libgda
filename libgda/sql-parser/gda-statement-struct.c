@@ -22,6 +22,7 @@
 #include <libgda/sql-parser/gda-statement-struct.h>
 #include <libgda/gda-debug-macros.h>
 #include <libgda/gda-connection.h>
+#include <libgda/gda-meta-struct.h>
 #include <libgda/sql-parser/gda-statement-struct-util.h>
 #include <libgda/sql-parser/gda-statement-struct-unknown.h>
 #include <libgda/sql-parser/gda-statement-struct-trans.h>
@@ -111,6 +112,10 @@ gda_sql_statement_copy (GdaSqlStatement *stmt)
 	}
 	else 
 		TO_IMPLEMENT;
+	if (stmt->validity_meta_struct) {
+		copy->validity_meta_struct = stmt->validity_meta_struct;
+		g_object_ref (copy->validity_meta_struct);
+	}
 
 	return copy;
 }
@@ -129,6 +134,9 @@ gda_sql_statement_free (GdaSqlStatement *stmt)
 		else 
 			TO_IMPLEMENT;
 	}
+	if (stmt->validity_meta_struct)
+		g_object_unref (stmt->validity_meta_struct);
+
 	g_free (stmt);
 }
 
@@ -223,64 +231,99 @@ gda_sql_statement_serialize (GdaSqlStatement *stmt)
 /*
  * Check with dict data structure
  */
-typedef struct {
-	GdaConnection *cnc;
-} DictCheckData;
+static gboolean foreach_check_clean (GdaSqlAnyPart *node, gpointer data, GError **error);
 
-static gboolean foreach_check_cnc (GdaSqlAnyPart *node, DictCheckData *data, GError **error);
-static gboolean gda_sql_expr_check_cnc (GdaSqlExpr *expr, DictCheckData *data, GError **error);
-static gboolean gda_sql_field_check_cnc (GdaSqlField *field, DictCheckData *data, GError **error);
-static gboolean gda_sql_table_check_cnc (GdaSqlTable *table, DictCheckData *data, GError **error);
-static gboolean gda_sql_function_check_cnc (GdaSqlFunction *function, DictCheckData *data, GError **error);
-static gboolean gda_sql_select_field_check_cnc (GdaSqlSelectField *field, DictCheckData *data, GError **error);
-static gboolean gda_sql_select_target_check_cnc (GdaSqlSelectTarget *target, DictCheckData *data, GError **error);
+static gboolean foreach_check_validity (GdaSqlAnyPart *node, GdaSqlStatementCheckValidityData *data, GError **error);
+static gboolean gda_sql_expr_check_validity (GdaSqlExpr *expr, GdaSqlStatementCheckValidityData *data, GError **error);
+static gboolean gda_sql_field_check_validity (GdaSqlField *field, GdaSqlStatementCheckValidityData *data, GError **error);
+static gboolean gda_sql_table_check_validity (GdaSqlTable *table, GdaSqlStatementCheckValidityData *data, GError **error);
+static gboolean gda_sql_function_check_validity (GdaSqlFunction *function, GdaSqlStatementCheckValidityData *data, GError **error);
+static gboolean gda_sql_select_field_check_validity (GdaSqlSelectField *field, GdaSqlStatementCheckValidityData *data, GError **error);
+static gboolean gda_sql_select_target_check_validity (GdaSqlSelectTarget *target, GdaSqlStatementCheckValidityData *data, GError **error);
 
 /**
- * gda_sql_statement_check_connection
+ * gda_sql_statement_check_validity
  * @stmt: a #GdaSqlStatement pointer
  * @cnc: a #GdaConnection object, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * If @cnc is not %NULL, then checks that all the database objects referenced in the statement actually
  * exist in the connection's database (for example the table being updated in a UPDATE statement must exist in the
- * connection's database for the check to succeed).
+ * connection's database for the check to succeed). This method fills the @stmt-&gt;validity_meta_struct attribute.
  *
- * If @cnc is %NULL, then remove any information from a previous call to this method stored in @stmt.
+ * If @cnc is %NULL, then remove any information from a previous call to this method stored in @stmt. In this case,
+ * the @stmt-&gt;validity_meta_struct attribute is cleared.
  *
  * Returns: TRUE if no error occurred
  */
 gboolean
-gda_sql_statement_check_connection (GdaSqlStatement *stmt, GdaConnection *cnc, GError **error)
+gda_sql_statement_check_validity (GdaSqlStatement *stmt, GdaConnection *cnc, GError **error)
 {
-	DictCheckData data;
-
 	g_return_val_if_fail (stmt, FALSE);
 	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), FALSE);
 
-	data.cnc = cnc;
+	/* check the structure first */
+	if (!gda_sql_statement_check_structure (stmt, error))
+		return FALSE;
 
-	return gda_sql_any_part_foreach (GDA_SQL_ANY_PART (stmt->contents), 
-					 (GdaSqlForeachFunc) foreach_check_cnc, &data, error);
+	/* clear any previous setting */
+	gda_sql_statement_check_clean (stmt);
+
+	if (cnc) {
+		GdaSqlStatementCheckValidityData data;
+		gboolean retval;
+
+		/* prepare data */
+		data.cnc = cnc;
+		data.store = gda_connection_get_meta_store (cnc);
+		data.mstruct = gda_meta_struct_new (GDA_META_STRUCT_FEATURE_NONE);
+		
+		/* attach the GdaMetaStruct to @stmt */
+		stmt->validity_meta_struct = data.mstruct;
+		retval = gda_sql_any_part_foreach (GDA_SQL_ANY_PART (stmt->contents), 
+						   (GdaSqlForeachFunc) foreach_check_validity, &data, error);
+		return retval;
+	}
+	else
+		return TRUE;
 }
 
 static gboolean
-foreach_check_cnc (GdaSqlAnyPart *node, DictCheckData *data, GError **error)
+foreach_check_validity (GdaSqlAnyPart *node, GdaSqlStatementCheckValidityData *data, GError **error)
 {
 	if (!node) return TRUE;
 
 	switch (node->type) {
+	case GDA_SQL_ANY_STMT_SELECT:
+        case GDA_SQL_ANY_STMT_INSERT:
+        case GDA_SQL_ANY_STMT_UPDATE:
+        case GDA_SQL_ANY_STMT_DELETE:
+        case GDA_SQL_ANY_STMT_COMPOUND:
+        case GDA_SQL_ANY_STMT_BEGIN:
+        case GDA_SQL_ANY_STMT_ROLLBACK:
+        case GDA_SQL_ANY_STMT_COMMIT:
+        case GDA_SQL_ANY_STMT_SAVEPOINT:
+        case GDA_SQL_ANY_STMT_ROLLBACK_SAVEPOINT:
+        case GDA_SQL_ANY_STMT_DELETE_SAVEPOINT:
+        case GDA_SQL_ANY_STMT_UNKNOWN: {
+		GdaSqlStatementContentsInfo *cinfo;
+		cinfo = gda_sql_statement_get_contents_infos (node->type);
+		if (cinfo->check_validity_func)
+			return cinfo->check_validity_func (node, data, error);
+		break;
+	}
 	case GDA_SQL_ANY_EXPR:
-		return gda_sql_expr_check_cnc ((GdaSqlExpr*) node, data, error);
+		return gda_sql_expr_check_validity ((GdaSqlExpr*) node, data, error);
 	case GDA_SQL_ANY_SQL_FIELD:
-		return gda_sql_field_check_cnc ((GdaSqlField*) node, data, error);
+		return gda_sql_field_check_validity ((GdaSqlField*) node, data, error);
 	case GDA_SQL_ANY_SQL_TABLE:
-		return gda_sql_table_check_cnc ((GdaSqlTable*) node, data, error);
+		return gda_sql_table_check_validity ((GdaSqlTable*) node, data, error);
 	case GDA_SQL_ANY_SQL_FUNCTION:
-		return gda_sql_function_check_cnc ((GdaSqlFunction*) node, data, error);
+		return gda_sql_function_check_validity ((GdaSqlFunction*) node, data, error);
 	case GDA_SQL_ANY_SQL_SELECT_FIELD:
-		return gda_sql_select_field_check_cnc ((GdaSqlSelectField*) node, data, error);
+		return gda_sql_select_field_check_validity ((GdaSqlSelectField*) node, data, error);
 	case GDA_SQL_ANY_SQL_SELECT_TARGET:
-		return gda_sql_select_target_check_cnc ((GdaSqlSelectTarget*) node, data, error);
+		return gda_sql_select_target_check_validity ((GdaSqlSelectTarget*) node, data, error);
 	default:
 		break;
 	}
@@ -288,23 +331,31 @@ foreach_check_cnc (GdaSqlAnyPart *node, DictCheckData *data, GError **error)
 }
 
 static gboolean
-gda_sql_expr_check_cnc (GdaSqlExpr *expr, DictCheckData *data, GError **error)
+gda_sql_expr_check_validity (GdaSqlExpr *expr, GdaSqlStatementCheckValidityData *data, GError **error)
 {
 	if (!expr) return TRUE;
 	if (!expr->param_spec) return TRUE;
 	gda_sql_expr_check_clean (expr);
 
 	/* 2 checks to do here:
-	 *  - try to find the GdaDictType from expr->param_spec->type
+	 *  - try to find the data type from expr->param_spec->type using data->mstruct (not yet possible)
 	 *  - if expr->param_spec->type is NULL, then try to identify it (and expr->param_spec->g_type)
-	 *    using @expr context
+	 *    using @expr context, set expr->param_spec->validity_meta_dict.
 	 */
         TO_IMPLEMENT;
         return FALSE;
 }
 
+void
+gda_sql_expr_check_clean (GdaSqlExpr *expr)
+{
+	if (!expr) return;
+	if (expr->param_spec && expr->param_spec->validity_meta_dict)
+		TO_IMPLEMENT;
+}
+
 static gboolean
-gda_sql_field_check_cnc (GdaSqlField *field, DictCheckData *data, GError **error)
+gda_sql_field_check_validity (GdaSqlField *field, GdaSqlStatementCheckValidityData *data, GError **error)
 {
 	GdaSqlAnyPart *any;
 	GdaSqlTable *stable;
@@ -331,144 +382,308 @@ gda_sql_field_check_cnc (GdaSqlField *field, DictCheckData *data, GError **error
 		g_assert_not_reached ();
 
 	if (!stable) {
-		if (any->type == GDA_SQL_ANY_STMT_INSERT)
-			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-				     _("Missing table in INSERT statement"));
-		else
-			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-				     _("Missing table in UPDATE statement"));
+		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_VALIDATION_ERROR,
+			     _("Missing table in statement"));
 		return FALSE;
 	}
-	if (!stable->full_table_name) {
-		if (! gda_sql_table_check_cnc (stable, data, error))
+	if (!stable->validity_meta_object) {
+		if (! gda_sql_table_check_validity (stable, data, error))
 			return FALSE;
-		g_assert (stable->full_table_name);
-
-		GdaDataModel *model;
-		GValue *v1, *v2;
-		g_value_set_string (v1 = gda_value_new (G_TYPE_STRING), stable->table_name);
-		g_value_set_string (v2 = gda_value_new (G_TYPE_STRING), field->field_name);
-		model = gda_connection_get_meta_store_data (data->cnc, GDA_CONNECTION_META_FIELDS, error, 2,
-							    "name", v1, "field_name", v2);
-		if (!model)
-			return FALSE;
-		if (gda_data_model_get_n_rows (model) == 0) {
-			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_DICT_ELEMENT_MISSING_ERROR,
-				     _("Field %s.%s not found"), stable->table_name, field->field_name);
-			g_object_unref (model);
-			return FALSE;
-		}
-		g_object_unref (model);
-		return TRUE;
 	}
 
+	g_assert (stable->validity_meta_object);
+	GdaMetaTableColumn *tcol;
+	GValue value;
+	memset (&value, 0, sizeof (GValue));
+	g_value_set_string (g_value_init (&value, G_TYPE_STRING), field->field_name);
+	tcol = gda_meta_struct_get_table_column (data->mstruct, 
+						 GDA_META_DB_OBJECT_GET_TABLE (stable->validity_meta_object), 
+						 &value);
+	g_value_unset (&value);
+	field->validity_meta_table_column = tcol;
+	if (!tcol) {
+		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_VALIDATION_ERROR,
+			     _("Column '%s' not found"), field->field_name);
+		return FALSE;
+	}
+	
         return TRUE;
-}
-
-void
-gda_sql_expr_check_clean (GdaSqlExpr *expr)
-{
-	if (!expr) return;
-	if (expr->param_spec && expr->param_spec->dict_type)
-		TO_IMPLEMENT;
 }
 
 void 
 gda_sql_field_check_clean (GdaSqlField *field)
 {
 	if (!field) return;
-	/* nothing to do */
+	field->validity_meta_table_column = NULL;
+}
+
+/* For GdaSqlSelectTarget, GdaSqlSelectField and GdaSqlTable */
+static GdaMetaDbObject *
+find_table_or_view (GdaSqlAnyPart *part, GdaSqlStatementCheckValidityData *data, const gchar *name, GError **error)
+{
+	GdaMetaDbObject *dbo;
+	GValue value;
+	GError *lerror = NULL;
+	memset (&value, 0, sizeof (GValue));
+
+	/* use @name as the table or view's real name */
+	g_value_set_string (g_value_init (&value, G_TYPE_STRING), name);
+	dbo = gda_meta_struct_complement (data->mstruct, data->store, GDA_META_DB_UNKNOWN,
+					  NULL, NULL, &value, &lerror);
+	g_value_unset (&value);
+	if (!dbo) {
+		/* use @name as a table alias in the statement */
+		GdaSqlAnyPart *any;
+
+		for (any = part->parent; any && any->parent; any = any->parent);
+		if (!any) 
+			g_set_error (&lerror, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+				     _("GdaSqlSelectField is not part of a SELECT statement"));
+		else {
+			switch (any->type) {
+			case GDA_SQL_ANY_STMT_SELECT: {
+				GdaSqlStatementSelect *select = (GdaSqlStatementSelect*) any;
+				if (select->from) {
+					GSList *targets;
+					for (targets = select->from->targets; targets; targets = targets->next) {
+						GdaSqlSelectTarget *target = (GdaSqlSelectTarget*) targets->data;
+						if (!target->as)
+							continue;
+						g_value_set_string (g_value_init (&value, G_TYPE_STRING), 
+								    target->table_name);
+						dbo = gda_meta_struct_complement (data->mstruct, data->store, 
+										  GDA_META_DB_UNKNOWN,
+										  NULL, NULL, &value, NULL);
+						g_value_unset (&value);
+						if (dbo)
+							break;
+					}
+				}
+				break;
+			}
+			case GDA_SQL_ANY_STMT_INSERT:
+				TO_IMPLEMENT;
+				break;
+			case GDA_SQL_ANY_STMT_UPDATE:
+				TO_IMPLEMENT;
+				break;
+			case GDA_SQL_ANY_STMT_DELETE:
+				TO_IMPLEMENT;
+				break;
+			default:
+				g_assert_not_reached ();
+				break;
+			}
+		}
+	}
+	if (dbo) {
+		if (lerror)
+			g_error_free (lerror);
+	}
+	else {
+		if (lerror)
+			g_propagate_error (error, lerror);
+	}
+	return dbo;
 }
 
 static gboolean
-gda_sql_table_check_cnc (GdaSqlTable *table, DictCheckData *data, GError **error)
+gda_sql_table_check_validity (GdaSqlTable *table, GdaSqlStatementCheckValidityData *data, GError **error)
 {
-	if (!table) return TRUE;
+	GdaMetaDbObject *dbo;
 
-        TO_IMPLEMENT;
-        return FALSE;
+	if (!table) return TRUE;
+	gda_sql_table_check_clean (table);
+
+	if (!table->table_name) {
+		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_VALIDATION_ERROR,
+			     _("Missing table name in statement"));
+		return FALSE;
+	}
+
+	dbo = find_table_or_view ((GdaSqlAnyPart*) table, data, table->table_name, error);
+	if (dbo && ((dbo->obj_type != GDA_META_DB_TABLE) ||
+		    (dbo->obj_type != GDA_META_DB_VIEW))) {
+		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_VALIDATION_ERROR,
+			     _("Table '%s' not found"), table->table_name);
+		return FALSE;
+	}
+	table->validity_meta_object = dbo;
+
+	return table->validity_meta_object ? TRUE : FALSE;
 }
 
 void 
 gda_sql_table_check_clean (GdaSqlTable *table)
 {
 	if (!table) return;
-	if (table->full_table_name) {
-		g_free (table->full_table_name);
-		table->full_table_name = NULL;
-	}
+	table->validity_meta_object = NULL;
 }
 
 static gboolean
-gda_sql_function_check_cnc (GdaSqlFunction *function, DictCheckData *data, GError **error)
+gda_sql_function_check_validity (GdaSqlFunction *function, GdaSqlStatementCheckValidityData *data, GError **error)
 {
 	if (!function) return TRUE;
 
         TO_IMPLEMENT;
-        return FALSE;
+        return TRUE;
 }
 
 void
 gda_sql_function_check_clean (GdaSqlFunction *function)
 {
 	if (!function) return;
-	if (function->full_function_name) {
-		g_free (function->full_function_name);
-		function->full_function_name = NULL;
-	}
+	function->validity_meta_function = NULL;
 }
 
 static gboolean
-gda_sql_select_field_check_cnc (GdaSqlSelectField *field, DictCheckData *data, GError **error)
+gda_sql_select_field_check_validity (GdaSqlSelectField *field, GdaSqlStatementCheckValidityData *data, GError **error)
 {
-	if (!field) return TRUE;
+	GValue value;
+	GdaMetaDbObject *dbo = NULL;
+	gboolean starred_field = FALSE;
 
-	TO_IMPLEMENT;
-	return FALSE;
+	if (!field) return TRUE;
+	gda_sql_select_field_check_clean (field);
+
+	if (!field->field_name) 
+		/* field is not a table.field */
+		return TRUE;
+
+	memset (&value, 0, sizeof (GValue));
+	if (!strcmp (field->field_name, "*"))
+		starred_field = TRUE;
+
+	if (!field->table_name) {
+		/* go through all the SELECT's targets to see if there is a table with the corresponding field */
+		GdaSqlAnyPart *any;
+		GSList *targets;
+		GdaMetaTableColumn *tcol = NULL;
+
+		for (any = GDA_SQL_ANY_PART(field)->parent; 
+		     any && (any->type != GDA_SQL_ANY_STMT_SELECT);
+		     any = any->parent);
+		if (!any) {
+			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+				     _("GdaSqlSelectField is not part of a SELECT statement"));
+			return FALSE;
+		}
+
+		for (targets = ((GdaSqlStatementSelect *)any)->from->targets; targets; targets = targets->next) {
+			GdaSqlSelectTarget *target = (GdaSqlSelectTarget *) targets->data;
+			if (!target->validity_meta_object && 
+			    !gda_sql_select_target_check_validity (target, data, error))
+				return FALSE;
+
+			g_value_set_string (g_value_init (&value, G_TYPE_STRING), field->field_name);
+			tcol = gda_meta_struct_get_table_column (data->mstruct, 
+								 GDA_META_DB_OBJECT_GET_TABLE (target->validity_meta_object),
+								 &value);
+			g_value_unset (&value);
+			if (tcol) {
+				/* found a candidate */
+				if (dbo) {
+					g_set_error (error, GDA_SQL_ERROR, GDA_SQL_VALIDATION_ERROR,
+						     _("Could not identify table for field '%s'"), field->field_name);
+					return FALSE;
+				}
+				dbo = target->validity_meta_object;
+			}
+		}
+		if (!dbo) {
+			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_VALIDATION_ERROR,
+				     _("Could not identify table for field '%s'"), field->field_name);
+			return FALSE;
+		}
+		field->validity_meta_object = dbo;
+		field->validity_meta_table_column = tcol;
+	}
+	else {
+		/* table part */
+		dbo = find_table_or_view ((GdaSqlAnyPart*) field, data, field->table_name, error);
+		if (dbo && (dbo->obj_type != GDA_META_DB_TABLE) &&
+		    (dbo->obj_type != GDA_META_DB_VIEW)) {
+			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_VALIDATION_ERROR,
+				     _("Table '%s' not found"), field->table_name);
+			return FALSE;
+		}
+		field->validity_meta_object = dbo;
+		if (!field->validity_meta_object)
+			return FALSE;
+		
+		/* field part */
+		if (strcmp (field->field_name, "*")) {
+			GdaMetaTableColumn *tcol;
+			g_value_set_string (g_value_init (&value, G_TYPE_STRING), field->field_name);
+			tcol = gda_meta_struct_get_table_column (data->mstruct, 
+								 GDA_META_DB_OBJECT_GET_TABLE (field->validity_meta_object), 
+								 &value);
+			g_value_unset (&value);
+			field->validity_meta_table_column = tcol;
+			if (!tcol) {
+				g_set_error (error, GDA_SQL_ERROR, GDA_SQL_VALIDATION_ERROR,
+					     _("Column '%s' not found"), field->field_name);
+				return FALSE;
+			}
+		}
+	}
+	return TRUE;
 }
 
 void 
 gda_sql_select_field_check_clean (GdaSqlSelectField *field)
 {
 	if (!field) return;
-	if (field->full_table_name) {
-		g_free (field->full_table_name);
-		field->full_table_name = NULL;
-	}
+	field->validity_meta_object = NULL;
+	field->validity_meta_table_column = NULL;
 }
 
 static gboolean
-gda_sql_select_target_check_cnc (GdaSqlSelectTarget *target, DictCheckData *data, GError **error)
+gda_sql_select_target_check_validity (GdaSqlSelectTarget *target, GdaSqlStatementCheckValidityData *data, GError **error)
 {
-	if (!target) return TRUE;
+	GdaMetaDbObject *dbo;
 
-	TO_IMPLEMENT;
-	return FALSE;
+	if (!target) return TRUE;
+	if (!target->table_name)
+		return TRUE;
+
+	dbo = find_table_or_view ((GdaSqlAnyPart*) target, data, target->table_name, error);
+	if (dbo && (dbo->obj_type != GDA_META_DB_TABLE) &&
+	    (dbo->obj_type != GDA_META_DB_VIEW)) {
+		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_VALIDATION_ERROR,
+			     _("Table '%s' not found"), target->table_name);
+		return FALSE;
+	}
+	target->validity_meta_object = dbo;
+	return target->validity_meta_object ? TRUE : FALSE;
 }
 
 void 
 gda_sql_select_target_check_clean (GdaSqlSelectTarget *target)
 {
 	if (!target) return;
-	if (target->full_table_name) {
-		g_free (target->full_table_name);
-		target->full_table_name = NULL;
-	}
+	target->validity_meta_object = NULL;
 }
 
 
 
-static gboolean foreach_check_clean (GdaSqlAnyPart *node, gpointer data, GError **error);
 /**
  * gda_sql_statement_check_clean
+ * @stmt: a pinter to a #GdaSqlStatement structure
+ *
+ * Cleans any data set by a previous call to gda_sql_statement_check_validity().
  */
 void
 gda_sql_statement_check_clean (GdaSqlStatement *stmt)
 {
 	g_return_if_fail (stmt);
 
-	gda_sql_any_part_foreach (GDA_SQL_ANY_PART (stmt->contents), 
-				  (GdaSqlForeachFunc) foreach_check_clean, NULL, NULL);
+	if (stmt->validity_meta_struct) {
+		gda_sql_any_part_foreach (GDA_SQL_ANY_PART (stmt->contents), 
+					  (GdaSqlForeachFunc) foreach_check_clean, NULL, NULL);
+		g_object_unref (stmt->validity_meta_struct);
+		stmt->validity_meta_struct = NULL;
+	}
 }
 
 static gboolean

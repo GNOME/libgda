@@ -1,3 +1,47 @@
+2008-04-02  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/sqlite/gda-sqlite-provider.c: corrected mem leak (thanks to Phil Longstaff)
+	* libgda/gda-connection.c: corrected a mis-usage of variable number of arguments in
+	gda_connection_get_meta_store_data(), possibly fixes bug #524837
+	* libgda/gda-data-comparator.[ch]: new object to make it easy to compare the contents
+	of two data models.
+	* libgda/gda-server-provider.h:
+	* libgda/gda-connection.h:
+	* libgda/Makefile.am:
+	* libgda/libgda.h.in:
+	* libgda/gda-column-index.[ch]:
+	* libgda/gda-data-model-index.[ch]: removed useless code
+	* libgda/gda-data-model.c:
+	* libgda/gda-util.[ch]: removed unused functions: gda_utility_build_encoded_id(),
+	gda_utility_build_decoded_id(), gda_file_load(), gda_file_save(), gda_string_hash_to_list(),
+	and started to implement a new gda_compute_dml_statements() to compute INSERT, DELETE
+	and UPDATE statements corresponding to a SELECT statement (for writable data models)
+	* doc/C: added a HOWTO section for most common tasks, and misc. doc updates
+	* tools/gda-list-server-op.c: corrected version 3.0 to 4.0
+	* libgda/gda-statement.[ch]:
+	* libgda/sql-parser/gda-statement-struct.c: s/statement_check_connection/statement_check_validity/
+	for easier API understanding
+	* libgda/sql-parser/gda-statement-struct.[ch]:
+	* gda-statement-struct-parts.[ch]:
+	* gda-statement-struct-pspec.h: when validating a statement, first make sure it has a correct
+	structure, and then use a GdaMetaStruct object to find references to database objects.
+	* tests/parser/Makefile.am:
+	* tests/parser/testvalid.xml:
+	* tests/parser/check_validation.c: added a new test to verify statement validation and
+	computed (INSERT, UPDATE, DELETE) statements from SELECT statement
+	* libgda/gda-easy.[ch]:
+	* libgda/gda-init.c:
+	* libgda/gda-connection.[ch]: applied patch from Daniel Espinosa to implement the
+	gda_prepare_drop_table(), gda_perform_drop_table(), gda_prepare_create_table(),
+	gda_perform_create_table() and gda_connection_create_operation(), and also implemented
+	the gda_connection_perform_operation(), see bug #525603
+	* providers/postgres/gda-postgres-meta.c: code cleanup
+	* libgda/sql-parser/gda-statement-struct-*: added a check_validity() method which
+	can be implemented by some kind of statement to validate a statement using a
+	connection's meta data
+	* tests/parser/testvalid.xml:
+	* tests/parser/check_validation.c: new test for statement validation purposes
+
 2008-03-26  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-config.c: don't write a warning when configuration file does not load, and use
