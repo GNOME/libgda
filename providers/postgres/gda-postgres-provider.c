@@ -433,10 +433,12 @@ get_connection_type_list (GdaPostgresConnectionData *priv_td)
 	g_string_free (string, FALSE);
 
 	/* make a string of the oid of type 'any' */
-	priv_td->any_type_oid = "";
+	priv_td->any_type_oid = g_strdup("");
 	if (pg_res_anyoid) {
-		if (PQntuples (pg_res_anyoid) == 1) 
+		if (PQntuples (pg_res_anyoid) == 1) {
+			g_free (priv_td->any_type_oid);
 			priv_td->any_type_oid = g_strdup (PQgetvalue (pg_res_anyoid, 0, 0));
+		}
 		PQclear (pg_res_anyoid);
 	}
 	return 0;
@@ -695,6 +697,7 @@ gda_postgres_provider_close_connection (GdaServerProvider *provider, GdaConnecti
 	g_free (priv_data->type_data);
 	g_free (priv_data->version);
 	g_free (priv_data->avoid_types_oids);
+        g_free (priv_data->any_type_oid);
 	g_free (priv_data);
 
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE, NULL);

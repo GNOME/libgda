@@ -1,3 +1,16 @@
+2008-04-03  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-config.c (gda_config_get_provider_list, get_config_client):
+	Use g_getenv() instead of getenv() for portability.
+	* providers/postgres/gda-postgres-provider.c (get_connection_type_list,
+	  gda_postgres_provider_close_connection): Free any_type_oid instead of 
+	leaking it.
+	* providers/postgres/gda-postgres-recordset.c
+	  (gda_postgres_recordset_finalize): Free table_name instead of leaking 
+	it.
+	* providers/postgres/libmain.c (plugin_init): Add a comment that the 
+	module path is leaked, but that it is not a big deal.
+
 2008-03-18  Murray Cumming  <murrayc@murrayc.com>
 
 	* libgda/gda-client.c: (find_or_load_provider): Reverted the change 

@@ -279,7 +279,7 @@ get_config_client ()
 		xmlKeepBlanksDefault(0);
 
 		/* check if DSN list should only be stored in memory */
-		memonly = getenv ("GDA_DSN_LIST_IN_MEMORY");
+		memonly = g_getenv ("GDA_DSN_LIST_IN_MEMORY");
 		if (memonly) {
 			gsize length;
 			gchar *init_contents;
@@ -1569,7 +1569,7 @@ gda_config_get_provider_list (void)
 	if (!prov_list) {
 		const gchar *from_dir;
 
-		from_dir = getenv ("GDA_PROVIDERS_ROOT_DIR");
+		from_dir = g_getenv ("GDA_PROVIDERS_ROOT_DIR");
 		if (from_dir)
 			prov_list = load_providers_from_dir (from_dir, TRUE);
 		else

@@ -112,6 +112,10 @@ gda_postgres_recordset_finalize (GObject * object)
 
 	g_free (recset->priv->column_types);
 	recset->priv->column_types = NULL;
+
+        g_free (recset->priv->table_name);
+        recset->priv->table_name = NULL;
+
 	g_free (recset->priv);
 	recset->priv = NULL;
 
