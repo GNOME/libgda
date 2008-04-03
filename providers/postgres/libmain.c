@@ -34,6 +34,8 @@ GdaServerProvider *plugin_create_provider (void);
 void
 plugin_init (const gchar *real_path)
 {
+	/* This is never freed, but that is OK. It is only called once. */
+	/* But it would be nice to have some cleanup function just to shut valgrind up. murrayc. */
         if (real_path)
                 module_path = g_strdup (real_path);
 }

@@ -1,3 +1,11 @@
+2008-04-03  Murray Cumming  <murrayc@murrayc.com>
+
+	* providers/postgres/gda-postgres-provider.c
+	  (get_connection_type_list): g_strdup() the initial value of 
+	any_type_oid to avoid possibly freeing a static string.
+	* providers/postgres/libmain.c (plugin_init): Add a comment that the 
+	module path is leaked, but that it is not a big deal.
+
 2008-04-02  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-set.c: fixed a double free problem, for bug #525601

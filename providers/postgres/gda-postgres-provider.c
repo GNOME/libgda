@@ -505,10 +505,12 @@ get_connection_type_list (PostgresConnectionData *cdata)
 	g_string_free (string, FALSE);
 
 	/* make a string of the oid of type 'any' */
-	cdata->any_type_oid = "";
+	cdata->any_type_oid = g_strdup("");
 	if (pg_res_anyoid) {
-		if (PQntuples (pg_res_anyoid) == 1) 
+		if (PQntuples (pg_res_anyoid) == 1) {
+			g_free(cdata->any_type_oid);
 			cdata->any_type_oid = g_strdup (PQgetvalue (pg_res_anyoid, 0, 0));
+		}
 		PQclear (pg_res_anyoid);
 	}
 	return 0;
