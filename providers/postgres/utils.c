@@ -125,7 +125,7 @@ gda_postgres_type_oid_to_gda (GdaPostgresTypeOid *type_data, gint ntypes, Oid po
 	if(ntypes == 0)
 		return G_TYPE_STRING;
 
-	/* Avoid accesing beyone the array: */ 
+	/* Avoid accessing beyone the array: */ 
 	if(i >= ntypes)
 		i = ntypes -1;
        
