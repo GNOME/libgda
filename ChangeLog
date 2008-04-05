@@ -1,5 +1,10 @@
 2008-04-05  Murray Cumming  <murrayc@murrayc.com>
 
+	* libgda/gda-connection.c (gda_connection_dispose): Unref the client, 
+	to fix a leak. Bug #526034.
+
+2008-04-05  Murray Cumming  <murrayc@murrayc.com>
+
 	* libgda/gda-column.c (gda_column_set_default_value):
 	Free default_value with gda_value_free() instead of g_free(), to fix 
 	what valgrind says is a possible leak.

@@ -239,6 +239,11 @@ gda_connection_dispose (GObject *object)
 		cnc->priv->trans_status = NULL;
 	}
 
+        if (cnc->priv->client) {
+		g_object_unref (cnc->priv->client);
+		cnc->priv->client = NULL;
+	}
+
 	/* chain to parent class */
 	parent_class->dispose (object);
 }
