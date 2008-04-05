@@ -756,6 +756,6 @@ gda_column_set_default_value (GdaColumn *column, const GValue *default_value)
 	g_return_if_fail (default_value != NULL);
 
 	if (column->priv->default_value)
-		g_free (column->priv->default_value);
+		gda_value_free (column->priv->default_value);
 	column->priv->default_value = gda_value_copy ( (GValue*)default_value);
 }
