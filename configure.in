@@ -1190,6 +1190,8 @@ providers/bdb/Makefile
 providers/bdb/libgda-bdb-4.0.pc
 providers/mdb/Makefile
 providers/mdb/libgda-mdb-4.0.pc
+providers/mysql/Makefile
+providers/mysql/libgda-mysql-4.0.pc
 providers/postgres/Makefile
 providers/postgres/libgda-postgres-4.0.pc
 providers/sqlite/Makefile
@@ -1232,7 +1234,7 @@ dnl echo "      FireBird = `if test x$firebirddir != x; then echo yes; else echo
 dnl echo "      FreeTDS = `if test x$freetdsdir != x; then echo yes; else echo no; fi`"
 dnl echo "      IBM DB2 = `if test x$ibmdb2dir != x; then echo yes; else echo no; fi`"
 echo "      MDB (MS Access) = `if test x$mdbdir != x; then echo yes; else echo no; fi`"
-dnl echo "      MySQL = `if test x$mysqldir != x; then echo yes; else echo no; fi`"
+echo "      MySQL = `if test x$mysqldir != x; then echo yes; else echo no; fi`"
 dnl echo "      mSQL = `if test x$msqldir != x; then echo yes; else echo no; fi`"
 dnl echo "      ODBC = `if test x$odbcdir != x; then echo yes; else echo no; fi`"
 dnl echo "      Oracle = `if test x$oracledir != x; then echo yes; else echo no; fi`"

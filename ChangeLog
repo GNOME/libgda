@@ -1,3 +1,10 @@
+2008-04-06  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in:
+	* providers/Makefile.am:
+	* providers/mysql/*: merged Carlos Savoretti's preliminary MySQL provider's
+	rework
+
 2008-04-06  Murray Cumming  <murrayc@murrayc.com>
 
 	* libgda/gda-column.c (gda_column_set_default_value):

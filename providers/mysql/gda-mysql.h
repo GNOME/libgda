@@ -1,10 +1,8 @@
-/* GDA MySQL provider
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+/* GDA mysql provider
+ * Copyright (C) 2008 The GNOME Foundation.
  *
  * AUTHORS:
- *      Michael Lausch <michael@lausch.at>
- *	Rodrigo Moya <rodrigo@gnome-db.org>
- *      Vivien Malerba <malerba@gnome-db.org>
+ *      Carlos Savoretti <csavoretti@gmail.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -25,40 +23,30 @@
 #ifndef __GDA_MYSQL_H__
 #define __GDA_MYSQL_H__
 
-#include <glib/gmacros.h>
-#include <libgda/gda-connection.h>
-#include <libgda/gda-server-provider.h>
-#include <glib/gi18n-lib.h>
-#include <libgda/gda-value.h>
-#include "gda-mysql-provider.h"
+/*
+ * Provider name
+ */
+#define MYSQL_PROVIDER_NAME "Mysql"
 
-#ifdef G_OS_WIN32
-#include <windows.h>
-#endif
-
+#include <libgda/libgda.h>
 #include <mysql.h>
-#include <mysql_com.h>
-
-/* undefine the macros defined by Libgda because MySQL exports them */
-#undef PACKAGE_BUGREPORT
-#undef PACKAGE_NAME
-#undef PACKAGE_STRING
-#undef PACKAGE_TARNAME
-#undef PACKAGE_VERSION
-#include <my_config.h>
-
-#define GDA_MYSQL_PROVIDER_ID          "GDA MySQL provider"
-
-G_BEGIN_DECLS
 
 /*
- * Utility functions
+ * Provider's specific connection data
  */
+typedef struct {
+	/* TO_ADD: this structure holds any information necessary to specialize the GdaConnection, usually a connection
+	 * handle from the C or C++ API
+	 */
+	
+	GdaConnection    *cnc;
+	MYSQL            *mysql;
+	MYSQL_STMT       *mysql_stmt;
 
-GdaConnectionEvent     *gda_mysql_make_error    (MYSQL *handle);
-GType                   gda_mysql_type_to_gda   (enum enum_field_types mysql_type, gboolean is_unsigned);
-int                     gda_mysql_real_query_wrap (GdaConnection *cnc, MYSQL *mysql, 
-						   const char *stmt_str, unsigned long length);
-G_END_DECLS
+	/* Backend version (to which we're connected). */
+	gchar            *version;
+	unsigned long     version_long;
+	
+} MysqlConnectionData;
 
 #endif

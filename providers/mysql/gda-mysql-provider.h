@@ -1,10 +1,8 @@
-/* GDA MySQL provider
- * Copyright (C) 1998-2005 The GNOME Foundation.
+/* GDA mysql provider
+ * Copyright (C) 2008 The GNOME Foundation.
  *
  * AUTHORS:
- *      Michael Lausch <michael@lausch.at>
- *	Rodrigo Moya <rodrigo@gnome-db.org>
- *      Vivien Malerba <malerba@gnome-db.org>
+ *      Carlos Savoretti <csavoretti@gmail.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -22,12 +20,10 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_mysql_provider_h__)
-#  define __gda_mysql_provider_h__
+#ifndef __GDA_MYSQL_PROVIDER_H__
+#define __GDA_MYSQL_PROVIDER_H__
 
 #include <libgda/gda-server-provider.h>
-
-G_BEGIN_DECLS
 
 #define GDA_TYPE_MYSQL_PROVIDER            (gda_mysql_provider_get_type())
 #define GDA_MYSQL_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_MYSQL_PROVIDER, GdaMysqlProvider))
@@ -35,24 +31,21 @@ G_BEGIN_DECLS
 #define GDA_IS_MYSQL_PROVIDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_MYSQL_PROVIDER))
 #define GDA_IS_MYSQL_PROVIDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_MYSQL_PROVIDER))
 
-#define OBJECT_DATA_MYSQL_HANDLE "GDA_Mysql_MysqlHandle"
-
 typedef struct _GdaMysqlProvider      GdaMysqlProvider;
 typedef struct _GdaMysqlProviderClass GdaMysqlProviderClass;
 
 struct _GdaMysqlProvider {
-	GdaServerProvider provider;
+	GdaServerProvider      provider;
 };
 
 struct _GdaMysqlProviderClass {
 	GdaServerProviderClass parent_class;
 };
 
-GType              gda_mysql_provider_get_type (void) G_GNUC_CONST;
-GdaServerProvider *gda_mysql_provider_new (void);
-gchar *gda_mysql_provider_value_to_sql_string (GdaServerProvider *provider,
-						  GdaConnection *cnc,
-						  GValue *from);
+G_BEGIN_DECLS
+
+GType gda_mysql_provider_get_type (void) G_GNUC_CONST;
+
 G_END_DECLS
 
 #endif

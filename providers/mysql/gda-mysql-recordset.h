@@ -1,11 +1,8 @@
-/* GDA MySQL provider
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+/* GDA Mysql provider
+ * Copyright (C) 2008 The GNOME Foundation.
  *
  * AUTHORS:
- *      Michael Lausch <michael@lausch.at>
- *	Rodrigo Moya <rodrigo@gnome-db.org>
- *      Vivien Malerba <malerba@gnome-db.org>
- *	Bas Driessen <bas.driessen@xobas.com>
+ *      Carlos Savoretti <csavoretti@gmail.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -23,10 +20,12 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_mysql_recordset_h__)
-#  define __gda_mysql_recordset_h__
+#ifndef __GDA_MYSQL_RECORDSET_H__
+#define __GDA_MYSQL_RECORDSET_H__
 
-#include <libgda/gda-data-model-array.h>
+#include <libgda/libgda.h>
+#include <providers-support/gda-pmodel.h>
+#include "gda-mysql-pstmt.h"
 
 G_BEGIN_DECLS
 
@@ -36,21 +35,22 @@ G_BEGIN_DECLS
 #define GDA_IS_MYSQL_RECORDSET(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_MYSQL_RECORDSET))
 #define GDA_IS_MYSQL_RECORDSET_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_MYSQL_RECORDSET))
 
-typedef struct _GdaMysqlRecordset      GdaMysqlRecordset;
-typedef struct _GdaMysqlRecordsetClass GdaMysqlRecordsetClass;
+typedef struct _GdaMysqlRecordset        GdaMysqlRecordset;
+typedef struct _GdaMysqlRecordsetClass   GdaMysqlRecordsetClass;
 typedef struct _GdaMysqlRecordsetPrivate GdaMysqlRecordsetPrivate;
 
 struct _GdaMysqlRecordset {
-	GdaDataModelArray         model;
+	GdaPModel                model;
 	GdaMysqlRecordsetPrivate *priv;
 };
 
 struct _GdaMysqlRecordsetClass {
-	GdaDataModelArrayClass parent_class;
+	GdaPModelClass             parent_class;
 };
 
-GType              gda_mysql_recordset_get_type (void) G_GNUC_CONST;
-GdaMysqlRecordset *gda_mysql_recordset_new      (GdaConnection *cnc, MYSQL_RES *mysql_res, MYSQL *mysql);
+GType         gda_mysql_recordset_get_type  (void) G_GNUC_CONST;
+GdaDataModel *gda_mysql_recordset_new       (GdaConnection *cnc, GdaMysqlPStmt *ps, GdaDataModelAccessFlags flags, 
+					    GType *col_types);
 
 G_END_DECLS
 

@@ -1,10 +1,8 @@
-/* GDA MySQL Provider
- * Copyright (C) 1998 - 2007 The GNOME Foundation
+/* GDA Mysql Provider
+ * Copyright (C) 2008 The GNOME Foundation
  *
  * AUTHORS:
- * 	   Michael Lausch <michael@lausch.at>
- *         Rodrigo Moya <rodrigo@gnome-db.org>
- *         Vivien Malerba <malerba@gnome-db.org>
+ *      TO_ADD: your name and email
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -22,10 +20,10 @@
  */
 
 #include <glib/gi18n-lib.h>
-#include <libgda/gda-config.h>
-#include "gda-mysql-provider.h"
 #include <libgda/gda-server-provider-extra.h>
 #include <libgda/binreloc/gda-binreloc.h>
+#include "gda-mysql.h"
+#include "gda-mysql-provider.h"
 
 static gchar      *module_path = NULL;
 const gchar       *plugin_get_name (void);
@@ -36,20 +34,20 @@ GdaServerProvider *plugin_create_provider (void);
 void
 plugin_init (const gchar *real_path)
 {
-	if (real_path)
-		module_path = g_strdup (real_path);
+        if (real_path)
+                module_path = g_strdup (real_path);
 }
 
 const gchar *
 plugin_get_name (void)
 {
-	return "MySQL";
+	return MYSQL_PROVIDER_NAME;
 }
 
 const gchar *
 plugin_get_description (void)
 {
-	return _("Provider for MySQL databases");
+	return _("Example provider for C API databases");
 }
 
 gchar *
@@ -68,7 +66,7 @@ plugin_create_provider (void)
 {
 	GdaServerProvider *prov;
 
-	prov = gda_mysql_provider_new ();
-	g_object_set_data ((GObject* ) prov, "GDA_PROVIDER_DIR", module_path);
-	return prov;
+	prov = (GdaServerProvider*) g_object_new (GDA_TYPE_MYSQL_PROVIDER, NULL);
+        g_object_set_data ((GObject *) prov, "GDA_PROVIDER_DIR", module_path);
+        return prov;
 }
