@@ -2,7 +2,7 @@
  * Copyright (C) 2007 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
- *      Pawe³ Cesar Sanjuan Szklarz <paweld2@gmail.com>
+ *      Paweł Cesar Sanjuan Szklarz <paweld2@gmail.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -28,7 +28,7 @@
 #include <libxslt/transform.h>
 
 G_BEGIN_DECLS
-#define GDA_XSLT_EXTENSION_URI "http://www.gnome-db.org/ns/gda-sql-ext"
+#define GDA_XSLT_EXTENSION_URI "http://www.gnome-db.org/ns/gda-sql-ext-v4"
 struct _GdaXsltExCont
 {
 	int            init;

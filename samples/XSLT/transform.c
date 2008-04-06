@@ -5,11 +5,13 @@
 gchar *inputfile = NULL;
 gchar *outputfile = NULL;
 gchar *xslfile = NULL;
+gchar *dsn = NULL;
 
 static GOptionEntry entries[] = {
         { "in", 'i', 0, G_OPTION_ARG_STRING, &inputfile, "Input file", NULL},
         { "out", 'o', 0, G_OPTION_ARG_STRING, &outputfile, "Output file", NULL},
         { "xsl", 'x', 0, G_OPTION_ARG_STRING, &xslfile, "XSL file", NULL},
+	{ "dsn", 'd', 0, G_OPTION_ARG_STRING, &dsn, "Data source name", NULL},
         { NULL }
 };
 
@@ -46,13 +48,17 @@ main (int argc, char *argv[])
 		g_print ("Missing XSL file (use --help option)\n");
 		exit (EXIT_FAILURE);
 	}
+	if (!dsn) {
+		g_print ("Missing Data source name, using the default \"SalesTest\"\n");
+		dsn = "SalesTest";
+	}
 
         gda_init ("LibgdaXsltProc", "1.0", argc, argv);
 
 	/* open connection */
-        cnc = gda_connection_open_from_dsn ("SalesTest", NULL, 0, &error);
+	cnc = gda_connection_open_from_dsn (dsn, NULL, GDA_CONNECTION_OPTIONS_NONE, &error);
         if (!cnc) {
-                g_print ("Could not open connection to DSN 'SalesTest': %s\n",
+                g_print ("Could not open connection to DSN '%s': %s\n", dsn,
                          error && error->message ? error->message : "No detail");
                 exit (EXIT_FAILURE);
         }

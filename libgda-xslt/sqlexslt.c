@@ -2,7 +2,7 @@
  * Copyright (C) 2007 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
- *      Pawe≥ Cesar Sanjuan Szklarz <paweld2@gmail.com>
+ *      Pawe≈Ç Cesar Sanjuan Szklarz <paweld2@gmail.com>
  *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@
 /**
  * gda_xslt_register
  *
- * FIXME: ADD COMMENT
+ * Register the xslt extension to libxslt
  */
 void
 gda_xslt_register (void)
@@ -59,7 +59,7 @@ gda_xslt_register (void)
 /**
  * gda_xslt_set_execution_context
  *
- * FIXME: ADD COMMENT
+ * Set the internal gda-xslt context to the xsltTransformationContext.
  */
 void
 gda_xslt_set_execution_context (xsltTransformContextPtr tcxt,
@@ -71,7 +71,7 @@ gda_xslt_set_execution_context (xsltTransformContextPtr tcxt,
 /**
  * gda_xslt_create_context_simple
  *
- * FIXME: ADD COMMENT
+ *  create a gda-xslt context with the Gdaconnection and not predefined queries
  *
  * Returns:
  */
@@ -91,7 +91,7 @@ gda_xslt_create_context_simple (GdaConnection * cnc, GError ** error)
 /**
  * gda_xslt_finalize_context
  * 
- * FIXME: ADD COMMENT
+ * clear the gda-xslt context
  *
  * Returns:
  */

@@ -2,7 +2,7 @@
  * Copyright (C) 2007 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
- *      Pawe≥ Cesar Sanjuan Szklarz <paweld2@gmail.com>
+ *      Pawe≈Ç Cesar Sanjuan Szklarz <paweld2@gmail.com>
  *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
@@ -200,11 +200,16 @@ gda_xslt_bk_fun_getnodeset (xmlChar * set, GdaXsltExCont * exec,
 
 xmlXPathObjectPtr
 gda_xslt_bk_fun_getvalue (xmlChar * set, xmlChar * name, GdaXsltExCont * exec,
-			  GdaXsltIntCont * pdata)
+			  GdaXsltIntCont * pdata,int getXml)
 {
 	xmlXPathObjectPtr value;
 	int res;
-	printf ("running function:gda_xslt_bk_fun_getvalue\n");
+	xmlDocPtr sqlxmldoc;
+	xmlNodePtr rootnode;
+	xmlNodePtr copyrootnode;
+#ifdef GDA_DEBUG_NO
+	g_print ("running function:gda_xslt_bk_fun_getvalue (getxml [%d])", getXml);
+#endif
 	char *strvalue;
 	res = get_resultset_col_value (pdata, (const char *) set,
 				       (const char *) name, &strvalue,
@@ -214,8 +219,28 @@ gda_xslt_bk_fun_getvalue (xmlChar * set, xmlChar * name, GdaXsltExCont * exec,
 				  "gda_xslt_bk_fun_getvalue: internal error on get_resultset_col_value\n");
 		return NULL;
 	}
-	value = (xmlXPathObjectPtr) xmlXPathNewCString ((const char *)
-							strvalue);
+
+	if( getXml) {
+		sqlxmldoc = xmlParseDoc((const xmlChar *)strvalue);
+		if (sqlxmldoc == NULL) {
+			xsltGenericError (xsltGenericErrorContext,
+					"gda_xslt_bk_fun_getvalue: xmlParseDoc fauld\n");
+			return NULL;
+		}
+		rootnode = xmlDocGetRootElement(sqlxmldoc);
+		copyrootnode = xmlCopyNode(rootnode,1);
+		if (copyrootnode == NULL) {
+			xsltGenericError (xsltGenericErrorContext,
+					"gda_xslt_bk_fun_getvalue: get or copy of root node fauld\n");
+			return NULL;
+		}
+		value = (xmlXPathObjectPtr) xmlXPathNewNodeSet (copyrootnode);
+		xmlFreeDoc(sqlxmldoc );
+	} else {
+		value = (xmlXPathObjectPtr) xmlXPathNewCString ((const char *)
+								strvalue);
+	}
+
 	if (value == NULL) {
 		xsltGenericError (xsltGenericErrorContext,
 				  "gda_xslt_bk_fun_getvalue: internal error\n");

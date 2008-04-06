@@ -2,7 +2,7 @@
  * Copyright (C) 2007 The GNOME Foundation.
  *
  * AUTHORS:
- *      Pawe≥ Cesar Sanjuan Szklarz <paweld2@gmail.com>
+ *      Pawe≈Ç Cesar Sanjuan Szklarz <paweld2@gmail.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -38,6 +38,8 @@ static void gda_xslt_getnodeset_function (xmlXPathParserContextPtr ctxt,
 static void gda_xslt_checkif_function (xmlXPathParserContextPtr ctxt,
 				       int nargs);
 static void gda_xslt_getvalue_function (xmlXPathParserContextPtr ctxt,
+					int nargs);
+static void gda_xslt_getxmlvalue_function (xmlXPathParserContextPtr ctxt,
 					int nargs);
 static void gda_xslt_section_element (xsltTransformContextPtr tctxt,
 				      xmlNodePtr node, xmlNodePtr inst,
@@ -77,6 +79,10 @@ gda_xslt_extension_init (xsltTransformContextPtr ctxt, const xmlChar * URI)
 				       (const xmlChar *)
 				       GDA_XSLT_FUNC_GETVALUE, URI,
 				       gda_xslt_getvalue_function);
+	res = xsltRegisterExtFunction (ctxt,
+				       (const xmlChar *)
+				       GDA_XSLT_FUNC_GETXMLVALUE, URI,
+				       gda_xslt_getxmlvalue_function);
 	res |= xsltRegisterExtFunction (ctxt,
 					(const xmlChar *)
 					GDA_XSLT_FUNC_CHECKIF, URI,
@@ -119,7 +125,7 @@ gda_xslt_getnodeset_function (xmlXPathParserContextPtr ctxt, int nargs)
 	GdaXsltExCont *execc;
 	if (nargs != 1) {
 		xsltGenericError (xsltGenericErrorContext,
-				  "gda_xslt_getvalue_function: invalid number of arguments\n");
+				  "gda_xslt_getnodeset_function: invalid number of arguments\n");
 		return;
 	}
 	tctxt = xsltXPathGetTransformContext (ctxt);
@@ -133,13 +139,13 @@ gda_xslt_getnodeset_function (xmlXPathParserContextPtr ctxt, int nargs)
 						  GDA_XSLT_EXTENSION_URI);
 	if (data == NULL) {
 		xsltGenericError (xsltGenericErrorContext,
-				  "PEIMP_xslt_normal_latex_escape: failed to get module data\n");
+				  "sqlxslt: failed to get module data\n");
 		return;
 	}
 	setname = valuePop (ctxt);
 	if (setname == NULL) {
 		xsltGenericError (xsltGenericErrorContext,
-				  "PEIMP_xslt_normal_latex_escape: internal error\n");
+				  "sqlxslt: internal error\n");
 		return;
 	}
 
@@ -149,7 +155,7 @@ gda_xslt_getnodeset_function (xmlXPathParserContextPtr ctxt, int nargs)
 		setname = valuePop (ctxt);
 		if (setname == NULL) {
 			xsltGenericError (xsltGenericErrorContext,
-					  "PEIMP_xslt_normal_latex_escape: internal error\n");
+					  "sqlxslt: internal error\n");
 			return;
 		}
 	}
@@ -285,10 +291,77 @@ gda_xslt_getvalue_function (xmlXPathParserContextPtr ctxt, int nargs)
 	}
 
 	value = gda_xslt_bk_fun_getvalue (set->stringval, name->stringval,
-					  execc, data);
+					  execc, data,0);
 	if (value == NULL) {
 		xsltGenericError (xsltGenericErrorContext,
 				  "gda_xslt_getvalue_function: internal error. Empty value\n");
+		return;
+	}
+	valuePush (ctxt, value);
+}
+
+static void
+gda_xslt_getxmlvalue_function (xmlXPathParserContextPtr ctxt, int nargs)
+{
+	GdaXsltIntCont *data;
+	xsltTransformContextPtr tctxt;
+	xmlXPathObjectPtr set, name, value;
+	GdaXsltExCont *execc;
+
+	if (nargs != 2) {
+		xsltGenericError (xsltGenericErrorContext,
+				  "gda_xslt_getxmlvalue_function: invalid number of arguments\n");
+		return;
+	}
+	tctxt = xsltXPathGetTransformContext (ctxt);
+	if (tctxt == NULL) {
+		xsltGenericError (xsltGenericErrorContext,
+				  "gda_xslt_getxmlvalue_function: failed to get the transformation context\n");
+		return;
+	}
+
+	execc = (GdaXsltExCont *) tctxt->_private;
+	data = (GdaXsltIntCont *) xsltGetExtData (tctxt,
+						  GDA_XSLT_EXTENSION_URI);
+	if (data == NULL || execc == NULL) {
+		xsltGenericError (xsltGenericErrorContext,
+				  "gda_xslt_getxmlvalue_function: failed to get module internal data\n");
+		return;
+	}
+	name = valuePop (ctxt);
+	set = valuePop (ctxt);
+	if (name == NULL || set == NULL) {
+		xsltGenericError (xsltGenericErrorContext,
+				  "gda_xslt_getxmlvalue_function: internal error\n");
+		return;
+	}
+
+	if (name->type != XPATH_STRING) {
+		valuePush (ctxt, name);
+		xmlXPathStringFunction (ctxt, 1);
+		name = valuePop (ctxt);
+		if (name == NULL) {
+			xsltGenericError (xsltGenericErrorContext,
+					  "gda_xslt_getxmlvalue_function: internal error. Name parameter is not a string\n");
+			return;
+		}
+	}
+	if (set->type != XPATH_STRING) {
+		valuePush (ctxt, set);
+		xmlXPathStringFunction (ctxt, 1);
+		set = valuePop (ctxt);
+		if (set == NULL) {
+			xsltGenericError (xsltGenericErrorContext,
+					  "gda_xslt_getxmlvalue_function: internal error. Set parameter is not a string\n");
+			return;
+		}
+	}
+
+	value = gda_xslt_bk_fun_getvalue (set->stringval, name->stringval,
+					  execc, data,1);
+	if (value == NULL) {
+		xsltGenericError (xsltGenericErrorContext,
+				  "gda_xslt_getxmlvalue_function: internal error. Empty value\n");
 		return;
 	}
 	valuePush (ctxt, value);

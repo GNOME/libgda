@@ -1,6 +1,6 @@
 <xsl:stylesheet version = '1.0'
      xmlns:xsl='http://www.w3.org/1999/XSL/Transform'
-     xmlns:sql="http://www.gnome-db.org/ns/gda-sql-ext"
+     xmlns:sql="http://www.gnome-db.org/ns/gda-sql-ext-v4"
      extension-element-prefixes="sql">
 
 <xsl:output method="html" indent="yes" encoding="utf-8"/>

@@ -2,7 +2,7 @@
  * Copyright (C) 2007 The GNOME Foundation.
  *
  * AUTHORS:
- *      Pawe³ Cesar Sanjuan Szklarz <paweld2@gmail.com>
+ *      Paweł Cesar Sanjuan Szklarz <paweld2@gmail.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -32,6 +32,7 @@
 G_BEGIN_DECLS
 
 #define GDA_XSLT_FUNC_GETVALUE       "getvalue"
+#define GDA_XSLT_FUNC_GETXMLVALUE    "getxmlvalue"
 #define GDA_XSLT_FUNC_GETNODESET     "getnodeset"
 #define GDA_XSLT_FUNC_CHECKIF        "checkif"
 #define GDA_XSLT_ELEM_SECTION        "section"
@@ -59,7 +60,8 @@ int gda_xslt_bk_section (GdaXsltExCont * exec, GdaXsltIntCont * pdata,
 /* functions backend */
 xmlXPathObjectPtr gda_xslt_bk_fun_getvalue (xmlChar * set, xmlChar * name,
 					    GdaXsltExCont * exec,
-					    GdaXsltIntCont * pdata);
+					    GdaXsltIntCont * pdata,
+					    int getXml);
 xmlXPathObjectPtr gda_xslt_bk_fun_getnodeset (xmlChar * set,
 					      GdaXsltExCont * exec,
 					      GdaXsltIntCont * pdata);
