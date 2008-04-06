@@ -187,6 +187,7 @@ gda_postgres_recordset_get_row (GdaDataModelRow *model, gint row, GError **error
 	row_list = get_row (GDA_DATA_MODEL (model), priv_data, row, error);
 	gda_data_model_hash_insert_row (GDA_DATA_MODEL_HASH (model),
 					row, row_list);
+	g_object_unref (row_list); /* gda_data_model_hash_insert_row() holds a reference. */
 
 	return row_list;
 }
@@ -558,6 +559,8 @@ gda_postgres_recordset_get_value_at (GdaDataModelRow *model, gint col, gint row)
 	row_list = get_row (GDA_DATA_MODEL (model), priv_data, row, NULL);
 	gda_data_model_hash_insert_row (GDA_DATA_MODEL_HASH (model),
 					 row, row_list);
+	g_object_unref (row_list); /* gda_data_model_hash_insert_row() holds a reference. */
+
 	return gda_row_get_value (row_list, col);
 }
 

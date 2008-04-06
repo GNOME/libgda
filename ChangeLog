@@ -1,3 +1,11 @@
+2008-04-06  Murray Cumming  <murrayc@murrayc.com>
+
+	* providers/postgres/gda-postgres-recordset.c
+	  (gda_postgres_recordset_get_row,
+	  gda_postgres_recordset_get_value_at): unref the result of get_row() 
+	(not the get_row vfunc), because gda_data_model_hash_insert_row() 
+	holds its own reference. This fixes the leak of each GdaRow.
+
 2008-04-05  Murray Cumming  <murrayc@murrayc.com>
 
 	* libgda/gda-connection.c (gda_connection_dispose): Unref the client, 
