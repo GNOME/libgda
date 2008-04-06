@@ -1,3 +1,9 @@
+2008-04-06  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-column.c (gda_column_set_default_value):
+	Free default_value with gda_value_free() instead of g_free(), to fix 
+	what valgrind says is a possible leak.
+
 2008-04-06  Vivien Malerba <malerba@gnome-db.org>
 
 	* samples/XSLT/test.xsl:
