@@ -29,8 +29,10 @@
 #include <libgda/gda-data-model-extra.h>
 #include <libgda/gda-data-model-iter.h>
 #include <libgda/gda-statement.h>
+#include <libgda/gda-meta-struct.h>
 #include <libgda/gda-set.h>
 #include <libgda/gda-holder.h>
+#include <libgda/gda-util.h>
 #include <sql-parser/gda-sql-statement.h>
 
 struct _GdaDataModelQueryPrivate {
@@ -427,10 +429,6 @@ gda_data_model_query_set_property (GObject *object,
 				}
 				if (qindex == SEL_QUERY) {
 					/* SELECT statement */
-
-					/* expand any target.* field => add a gda_sql_statement_select_expand_all () method */
-					TO_IMPLEMENT;
-
 					if (model->priv->params[qindex])
 						g_signal_connect (model->priv->params[qindex], "holder_changed",
 								  G_CALLBACK (holder_changed_cb), model);
@@ -777,8 +775,6 @@ gda_data_model_query_get_n_columns (GdaDataModel *model)
 static void
 create_columns (GdaDataModelQuery *model)
 {
-	GSList *fields = NULL;
-
 	if (model->priv->columns)
 		return;
 	if (! model->priv->statements[SEL_QUERY])
@@ -788,30 +784,30 @@ create_columns (GdaDataModelQuery *model)
 	 * statement's GdaSqlSelectFields and if a name and GType can be determined, then use them, otherwise
 	 * use "column%d" and G_TYPE_STRING, and let the user modify that directly using gda_data_model_describe () 
 	 */
-	TO_IMPLEMENT;
-	if (0) {
-		GSList *list;
-		gboolean allok = TRUE;
-		
-		for (list = fields; list; list = list->next) {
-		}
-		if (! allok) 
-			return;
+	GdaSqlStatement *sqlst;
+	g_object_get (G_OBJECT (model->priv->statements[SEL_QUERY]), "structure", &sqlst, NULL);
 
-		list = fields;
-		while (list) {
+	if (gda_sql_statement_normalize (sqlst, model->priv->cnc, NULL)) {
+		GdaSqlStatementSelect *selst = (GdaSqlStatementSelect*) sqlst->contents;
+		GSList *list;
+		
+		for (list = selst->expr_list; list; list = list->next) {
+			GdaSqlSelectField *field = (GdaSqlSelectField*) list->data;
 			GdaColumn *col;
 
 			col = gda_column_new ();
-			gda_column_set_name (col, "col");
-			gda_column_set_title (col, "col");
-			gda_column_set_g_type (col, G_TYPE_STRING);
+			if (field->validity_meta_table_column) {
+				gda_column_set_name (col, field->validity_meta_table_column->column_name);
+				gda_column_set_title (col, field->validity_meta_table_column->column_name);
+				gda_column_set_g_type (col, field->validity_meta_table_column->gtype);
+			}
+			else {
+				gda_column_set_name (col, "col");
+				gda_column_set_title (col, "col");
+				gda_column_set_g_type (col, G_TYPE_STRING);
+			}
 			model->priv->columns = g_slist_append (model->priv->columns, col);
-			
-			list = g_slist_next (list);
 		}
-
-		g_slist_free (fields);
 	}
 	else {
 		if (model->priv->data) {
@@ -835,6 +831,7 @@ create_columns (GdaDataModelQuery *model)
 			model->priv->emit_reset = TRUE;
 		}
 	}
+	gda_sql_statement_free (sqlst);
 
 	if (model->priv->columns && model->priv->emit_reset) {
 		model->priv->emit_reset = FALSE;
@@ -1474,12 +1471,15 @@ gda_data_model_query_send_hint (GdaDataModel *model, GdaDataModelHint hint, cons
  * If @target is %NULL, then an error will be returned if @model's SELECT query has more than
  * one target.
  *
- * Returns: TRUE if the INSERT, DELETE and UPDATE statements have been computed.
+ * Returns: TRUE at least one of the INSERT, DELETE and UPDATE statements has been computed
  */
 gboolean
 gda_data_model_query_compute_modification_queries (GdaDataModelQuery *model, const gchar *target, 
 						   GdaDataModelQueryOptions options, GError **error)
 {
+	gint i;
+	gboolean require_pk = TRUE;
+	GdaStatement *ins, *upd, *del;
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_QUERY (model), FALSE);
 	g_return_val_if_fail (model->priv, FALSE);
 
@@ -1490,6 +1490,23 @@ gda_data_model_query_compute_modification_queries (GdaDataModelQuery *model, con
 		return FALSE;
 	}
 
-	TO_IMPLEMENT;
+	for (i = SEL_QUERY; i <= DEL_QUERY; i++) {
+		if (model->priv->statements[i])
+			forget_statement (model, model->priv->statements[i]);
+	}
+	
+	if (options & GDA_DATA_MODEL_QUERY_OPTION_USE_ALL_FIELDS_IF_NO_PK)
+		require_pk = FALSE;
+	if (gda_compute_dml_statements (model->priv->cnc, model->priv->statements[SEL_QUERY], require_pk, 
+					&ins, &upd, &del, error)) {
+		
+		g_object_set (G_OBJECT (model), "insert_query", ins, 
+			      "update-query", upd, "delete-query", del, NULL);
+		if (ins) g_object_unref (ins);
+		if (upd) g_object_unref (upd);
+		if (del) g_object_unref (del);
+		return TRUE;
+	}
+
 	return FALSE;
 }

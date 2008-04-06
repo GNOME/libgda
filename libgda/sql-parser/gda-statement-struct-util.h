@@ -27,8 +27,9 @@
 gchar *_remove_quotes (gchar *str);
 gchar *_add_quotes (const gchar *str);
 
-gchar *_json_quote_string (const gchar *str);
-gboolean _string_is_identifier (const gchar *str);
+gchar    *_json_quote_string (const gchar *str);
+gboolean  _string_is_identifier (const gchar *str);
+gboolean  _split_identifier_string (gchar *str, gchar **remain, gchar **last);
 
 /* to be removed, only here for debug */
 gchar *gda_sql_value_stringify (const GValue *value);

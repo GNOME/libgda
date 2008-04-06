@@ -206,3 +206,14 @@ These flags specify how the #GdaDataModel returned when executing a #GdaStatemen
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_statement_normalize ##### -->
+<para>
+
+</para>
+
+@stmt: 
+@cnc: 
+@error: 
+@Returns: 
+
+

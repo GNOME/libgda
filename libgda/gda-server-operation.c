@@ -166,11 +166,11 @@ gda_server_operation_class_init (GdaServerOperationClass *klass)
 	g_object_class_install_property (object_class, PROP_CNC,
 					 g_param_spec_object ("connection", NULL, NULL, 
 							      GDA_TYPE_CONNECTION,
-							      G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
+							      G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_PROV,
 					 g_param_spec_object ("provider_obj", NULL, NULL, 
-                                                               GDA_TYPE_SERVER_PROVIDER,
-							       G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
+							      GDA_TYPE_SERVER_PROVIDER,
+							      G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_SPEC_FILE,
 					 g_param_spec_string ("spec_file", NULL, NULL, 
 							      NULL, G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
@@ -511,7 +511,7 @@ gda_server_operation_set_property (GObject *object,
 			if (op->priv->cnc)
 				g_object_unref (op->priv->cnc);
 
-			op->priv->cnc = GDA_CONNECTION( g_value_get_object (value));
+			op->priv->cnc = GDA_CONNECTION (g_value_get_object (value));
 			op->priv->cnc_set = TRUE;
 
 			if (op->priv->cnc) {
@@ -641,6 +641,12 @@ gda_server_operation_get_property (GObject *object,
 	op = GDA_SERVER_OPERATION (object);
 	if (op->priv) {
 		switch (param_id) {
+		case PROP_CNC:
+			g_value_set_object (value, op->priv->cnc);
+			break;
+		case PROP_PROV:
+			g_value_set_object (value, op->priv->prov);
+			break;
 		case PROP_OP_TYPE:
 			g_value_set_int (value, op->priv->op_type);
 			break;

@@ -987,9 +987,9 @@ paramspec(P) ::= paramspec(E) PNULLOK(N). {if (!E) P = gda_sql_param_spec_new (N
 //
 nm(A) ::= JOIN(X).       {A = X;}
 nm(A) ::= ID(X).       {A = X;}
+nm(A) ::= TEXTUAL(X). {A = X;}
 
 // Fully qualified name
-fullname(A) ::= TEXTUAL(X). {A = X;}
 fullname(A) ::= nm(X). {A = X;}
 fullname(A) ::= nm(S) DOT nm(X). {gchar *str;
 				  str = g_strdup_printf ("%s.%s", g_value_get_string (S), g_value_get_string (X));

@@ -13,7 +13,8 @@
 #include <libxml/tree.h>
 
 GdaConnection *cnc;
-static gint do_test (const xmlChar *id, const xmlChar *sql, gboolean valid_expected);
+static gint do_test (const xmlChar *id, const xmlChar *sql, 
+		     const gchar *computed_type, const xmlChar *computed_exp, gboolean require_pk);
 
 int 
 main (int argc, char** argv)
@@ -62,25 +63,30 @@ main (int argc, char** argv)
 		xmlNodePtr snode;
 		xmlChar *sql = NULL;
 		xmlChar *id;
-		gboolean valid = FALSE;
 
 		id = xmlGetProp (node, BAD_CAST "id");
 		for (snode = node->children; snode; snode = snode->next) {
-			if (!strcmp ((gchar*) snode->name, "sql")) {
+			if (!strcmp ((gchar*) snode->name, "sql")) 
 				sql = xmlNodeGetContent (snode);
+			else if (!strcmp ((gchar*) snode->name, "insert") ||
+				 !strcmp ((gchar*) snode->name, "update") ||
+				 !strcmp ((gchar*) snode->name, "delete")) {
+				xmlChar *comp_exp;
 				xmlChar *prop;
-				prop = xmlGetProp (snode, "valid");
+				gboolean require_pk = TRUE;
+				comp_exp = xmlNodeGetContent (snode);
+				prop = xmlGetProp (snode, "need_pk");
 				if (prop) {
-					if ((*prop == 't') || (*prop == 'T') || (*prop == '1'))
-						valid = TRUE;
+					if ((*prop == 'f') || (*prop == 'F') || (*prop == '0'))
+						require_pk = FALSE;
 					xmlFree (prop);
 				}
+				if (sql) {
+					if (!do_test (id, sql, snode->name, comp_exp, require_pk))
+						failures++;
+					ntests++;
+				}
 			}
-		}
-		if (sql) {
-			if (!do_test (id, sql, valid))
-				failures++;
-			ntests++;
 		}
 
 		/* mem free */
@@ -99,11 +105,11 @@ main (int argc, char** argv)
  * Returns: the number of failures
  */
 static gint
-do_test (const xmlChar *id, const xmlChar *sql, gboolean valid_expected) 
+do_test (const xmlChar *id, const xmlChar *sql,
+	 const gchar *computed_type, const xmlChar *computed_exp, gboolean require_pk) 
 {
 	static GdaSqlParser *parser = NULL;
 	GdaStatement *stmt;
-	gboolean is_valid;
 	GError *error = NULL;
 
 	if (!parser) {
@@ -113,7 +119,8 @@ do_test (const xmlChar *id, const xmlChar *sql, gboolean valid_expected)
 	}
 
 #ifdef GDA_DEBUG
-	g_print ("===== TEST %s SQL: @%s@\n", id, sql);
+	g_print ("===== TEST %s COMPUTING %s (%s), SQL: @%s@\n", id, computed_type, 
+		 require_pk ? "PK fields" : "All fields", sql);
 #endif
 
 	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
@@ -121,21 +128,65 @@ do_test (const xmlChar *id, const xmlChar *sql, gboolean valid_expected)
 		g_print ("ERROR for test '%s': could not parse statement\n", id);
 		return FALSE;
 	}
-	is_valid = gda_statement_check_validity (stmt, cnc, &error);
-	if (is_valid && !valid_expected) {
-		g_print ("ERROR for test '%s': statement is valid but test expected it invalid\n", id);
-		g_object_unref (stmt);
-		return FALSE;
-	}
-	if (!is_valid && valid_expected) {
-		g_print ("ERROR for test '%s': statement is invalid but test expected it valid: %s\n", id,
-			 error && error->message ? error->message : "No detail");
-		g_object_unref (stmt);
-		return FALSE;
-	}
 	/*g_print ("EXP %d, got %d\n", valid_expected, is_valid);*/
 	/*g_print ("PARSED: %s\n", gda_statement_serialize (stmt));*/
 
+	if (computed_exp) {
+		GdaStatement *cstmt = NULL;
+		switch (*computed_type) {
+		case 'i':
+		case 'I':
+			gda_compute_dml_statements (cnc, stmt, require_pk, &cstmt, NULL, NULL, &error);
+			break;
+		case 'u':
+		case 'U':
+			gda_compute_dml_statements (cnc, stmt, require_pk, NULL, &cstmt, NULL, &error);
+			break;
+		case 'd':
+		case 'D':
+			gda_compute_dml_statements (cnc, stmt, require_pk, NULL, NULL, &cstmt, &error);
+			break;
+		default:
+			TO_IMPLEMENT;
+		}
+
+		if (!*computed_exp && cstmt) {
+			g_object_unref (stmt);
+			gchar *serial, *rend;
+			serial = gda_statement_serialize (cstmt);
+			rend = gda_statement_to_sql (cstmt, NULL, NULL);
+			g_print ("ERROR for test '%s': %s statement created but none expected\n"
+				 "\tgot: %s\n\tSQL: %s\n", id, computed_type, serial, rend);
+			g_free (serial);
+			g_free (rend);
+			g_object_unref (cstmt);
+			return FALSE;
+		}
+		if (*computed_exp && !cstmt) {
+			g_print ("ERROR for test '%s': %s statement not created but expected: %s\n", id,
+				 computed_type,
+				 error && error->message ? error->message : "No detail");
+			g_object_unref (stmt);
+			return FALSE;
+		}
+		if (*computed_exp && cstmt) {
+			gchar *serial;
+			serial = gda_statement_serialize (cstmt);
+			if (strcmp (serial, computed_exp)) {
+				gchar *rend;
+				rend = gda_statement_to_sql (cstmt, NULL, NULL);
+				g_print ("ERROR for test '%s': computed %s statement is incorrect:\n"
+					 "\texp: %s\n\tgot: %s\n\tSQL: %s\n", id, computed_type, computed_exp, serial,
+					 rend);
+				g_free (rend);
+				g_object_unref (stmt);
+				g_object_unref (cstmt);
+				g_free (serial);
+				return FALSE;
+			}
+			g_free (serial);
+		}
+	}
 	g_object_unref (stmt);
 	return TRUE;
 }

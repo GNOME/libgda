@@ -393,6 +393,27 @@ gda_statement_check_validity (GdaStatement *stmt, GdaConnection *cnc, GError **e
 }
 
 /**
+ * gda_statement_normalize
+ * @stmt: a #GdaStatement object
+ * @cnc: a #GdaConnection object
+ * @error: a place to store errors, or %NULL
+ *
+ * "Normalizes" some parts of @stmt, see gda_sql_statement_normalize() for more
+ * information.
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_statement_normalize (GdaStatement *stmt, GdaConnection *cnc, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
+	g_return_val_if_fail (stmt->priv, FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	return gda_sql_statement_normalize (stmt->priv->internal_struct, cnc, error);
+}
+
+/**
  * gda_statement_serialize
  * @stmt: a #GdaStatement object
  *

@@ -1083,6 +1083,7 @@ gda_statement_get_statement_type
 gda_statement_is_useless
 gda_statement_check_structure
 gda_statement_check_validity
+gda_statement_normalize
 <SUBSECTION Standard>
 GDA_IS_STATEMENT
 GDA_STATEMENT
@@ -1144,6 +1145,7 @@ gda_sql_statement_string_to_type
 gda_sql_statement_check_structure
 gda_sql_statement_check_validity
 gda_sql_statement_check_clean
+gda_sql_statement_normalize
 <SUBSECTION>
 GdaSqlAnyPart
 GdaSqlAnyPartType

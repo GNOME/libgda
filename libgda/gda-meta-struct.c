@@ -793,9 +793,9 @@ gda_meta_struct_get_db_object (GdaMetaStruct *mstruct, const GValue *catalog, co
 		for (list = mstruct->db_objects; list; list = list->next) {
 			GdaMetaDbObject *dbo;
 			dbo = GDA_META_DB_OBJECT (list->data);
-			if (!strcmp (dbo->obj_name, obj_name) &&
-			    (!obj_schema || !strcmp (dbo->obj_schema, obj_schema)) &&
-			    (!obj_catalog || !strcmp (dbo->obj_catalog, obj_catalog)))
+			if (gda_identifier_equal (dbo->obj_name, obj_name) &&
+			    (!obj_schema || gda_identifier_equal (dbo->obj_schema, obj_schema)) &&
+			    (!obj_catalog || gda_identifier_equal (dbo->obj_catalog, obj_catalog)))
 				matching = g_slist_prepend (matching, dbo);
 		}
 
@@ -828,6 +828,7 @@ gda_meta_struct_get_table_column (GdaMetaStruct *mstruct, GdaMetaTable *table, c
 {
 	GSList *list;
 	const gchar *cname;
+
 	g_return_val_if_fail (GDA_IS_META_STRUCT (mstruct), NULL);
 	g_return_val_if_fail (table, NULL);
 	g_return_val_if_fail (col_name && (G_VALUE_TYPE (col_name) == G_TYPE_STRING), NULL);
@@ -835,7 +836,7 @@ gda_meta_struct_get_table_column (GdaMetaStruct *mstruct, GdaMetaTable *table, c
 
 	for (list = table->columns; list; list = list->next) {
 		GdaMetaTableColumn *tcol = GDA_META_TABLE_COLUMN (list->data);
-		if (!strcmp (tcol->column_name, cname))
+		if (gda_identifier_equal (tcol->column_name, cname))
 			return tcol;
 	}
 	return NULL;

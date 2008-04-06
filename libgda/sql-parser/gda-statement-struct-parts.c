@@ -840,24 +840,8 @@ gda_sql_select_field_take_expr (GdaSqlSelectField *field, GdaSqlExpr *expr)
 	field->expr = expr;
 	gda_sql_any_part_set_parent (field->expr, field);
 
-	if (expr && expr->value) {
-		const gchar *str;
-		gchar *ptr;
-
-		str = g_value_get_string (expr->value);
-		if (_string_is_identifier (str)) {
-			for (ptr = (gchar *) str; *ptr; ptr++);
-			for (; (ptr > str) && (*ptr != '.'); ptr --);
-			if (ptr != str) {
-				field->field_name = g_strdup (ptr + 1);
-				*ptr = 0;
-				field->table_name = g_strdup (str);
-				*ptr = '.';
-			}
-			else 
-				field->field_name = g_strdup (ptr);
-		}
-	}
+	if (expr && expr->value) 
+		_split_identifier_string (g_value_dup_string (expr->value), &(field->table_name), &(field->field_name));
 }
 
 void

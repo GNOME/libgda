@@ -77,7 +77,7 @@ gboolean            gda_perform_drop_database         (GdaServerOperation *op, G
 /*
  * Tables creation and destruction
  */
-GdaServerOperation *gda_prepare_create_table	       (GdaConnection *cnc, const gchar *table_name, GError **error, ...);
+GdaServerOperation *gda_prepare_create_table	      (GdaConnection *cnc, const gchar *table_name, GError **error, ...);
 gboolean            gda_perform_create_table          (GdaServerOperation *op, GError **error);
 GdaServerOperation *gda_prepare_drop_table            (GdaConnection *cnc, const gchar *table_name, GError **error);
 gboolean            gda_perform_drop_table            (GdaServerOperation *op, GError **error);

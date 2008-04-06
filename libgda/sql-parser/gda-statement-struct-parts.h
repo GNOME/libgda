@@ -189,7 +189,7 @@ GdaSqlCase        *gda_sql_case_copy           (GdaSqlCase *scase);
 gchar             *gda_sql_case_serialize      (GdaSqlCase *scase);
 
 /*
- * Any expression in a SELECT ... before the FROM
+ * Any expression in a SELECT ... before the FROM clause
  */
 struct _GdaSqlSelectField
 {

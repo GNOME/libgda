@@ -607,6 +607,128 @@ gda_alphanum_to_text (gchar *text)
 }
 
 /*
+ * Checks related to the structure of the SELECT statement before computing the INSERT, UPDATE and DELETE
+ * corresponding statements.
+ */
+static gboolean
+dml_statements_check_select_structure (GdaConnection *cnc, GdaSqlStatement *sel_struct, GError **error)
+{
+	GdaSqlStatementSelect *stsel;
+	stsel = (GdaSqlStatementSelect*) sel_struct->contents;
+	if (!stsel->from) {
+		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+			     _("SELECT statement has no FROM part"));
+		return FALSE;
+	}
+	if (stsel->from->targets && stsel->from->targets->next) {
+		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+			     _("SELECT statement involves more than one table or expression"));
+		return FALSE;
+	}
+	GdaSqlSelectTarget *target;
+	target = (GdaSqlSelectTarget*) stsel->from->targets->data;
+	if (!target->table_name) {
+		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+			     _("SELECT statement involves more than one table or expression"));
+		return FALSE;
+	}
+	if (!gda_sql_statement_check_validity (sel_struct, cnc, error)) 
+		return FALSE;
+
+	/* check that we want to modify a table */
+	g_assert (target->validity_meta_object); /* because gda_sql_statement_check_validity() returned TRUE */
+	if (target->validity_meta_object->obj_type != GDA_META_DB_TABLE) {
+		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+			     _("Can only build modification statement for tables"));
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
+/*
+ * Builds the WHERE condition of the computed DML statement
+ */
+static GdaSqlExpr*
+dml_statements_build_condition (GdaSqlStatementSelect *stsel, GdaMetaTable *mtable, gboolean require_pk, GError **error)
+{
+	gint i;
+	GdaSqlExpr *expr;
+	GdaSqlOperation *and_cond = NULL;
+
+	if (mtable->pk_cols_nb == 0) {
+		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+			     _("Table does not have any primary key"));
+		return NULL;
+	}
+	
+	expr = gda_sql_expr_new (NULL); /* no parent */
+	if (require_pk) {
+		if (mtable->pk_cols_nb == 0) {
+			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+					     _("Table does not have any primary key"));
+			goto onerror;
+		}
+		else if (mtable->pk_cols_nb > 1) {
+			and_cond = gda_sql_operation_new (GDA_SQL_ANY_PART (expr));
+			and_cond->operator = GDA_SQL_OPERATOR_AND;
+			expr->cond = and_cond;
+		}
+		for (i = 0; i < mtable->pk_cols_nb; i++) {
+			GdaSqlSelectField *sfield = NULL;
+			GdaMetaTableColumn *tcol;
+			GSList *list;
+			
+			tcol = (GdaMetaTableColumn *) g_slist_nth_data (mtable->columns, mtable->pk_cols_array[i]);
+			for (list = stsel->expr_list; list; list = list->next) {
+				sfield = (GdaSqlSelectField *) list->data;
+				if (sfield->validity_meta_table_column == tcol)
+					break;
+				else
+					sfield = NULL;
+			}
+			if (!sfield) {
+				g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+					     _("Table's primary key is not selected"));
+				goto onerror;
+			}
+			else {
+				GdaSqlOperation *op;
+				GdaSqlExpr *opexpr;
+				GdaSqlParamSpec *pspec;
+
+				/* equal condition */
+				op = gda_sql_operation_new (GDA_SQL_ANY_PART (and_cond ? (gpointer)and_cond : (gpointer)expr));
+				op->operator = GDA_SQL_OPERATOR_EQ;
+				if (and_cond) 
+					and_cond->operands = g_slist_append (and_cond->operands, op);
+				else
+					expr->cond = op;
+				/* left operand */
+				opexpr = gda_sql_expr_new (GDA_SQL_ANY_PART (op));
+				g_value_set_string (opexpr->value = gda_value_new (G_TYPE_STRING), tcol->column_name);
+				op->operands = g_slist_append (op->operands, opexpr);
+
+				/* right operand */
+				opexpr = gda_sql_expr_new (GDA_SQL_ANY_PART (op));
+				pspec = g_new0 (GdaSqlParamSpec, 1);
+				pspec->name = g_strdup_printf ("-%d", mtable->pk_cols_array[i]);
+				pspec->g_type = tcol->gtype != G_TYPE_INVALID ? tcol->gtype: G_TYPE_STRING;
+				pspec->type = g_strdup (gda_g_type_to_string (pspec->g_type));
+				pspec->nullok = tcol->nullok;
+				opexpr->param_spec = pspec;
+				op->operands = g_slist_append (op->operands, opexpr);
+			}
+		}
+	}
+	return expr;
+	
+ onerror:
+	gda_sql_expr_free (expr);
+	return NULL;
+}
+
+/*
  * Statement computation from meta store 
  * @select_stmt: must be a SELECT statement (compound statements not handled)
  */
@@ -621,7 +743,11 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 	GdaStatement *ret_delete = NULL;
 	GdaMetaStruct *mstruct;
 	gboolean retval = TRUE;
-	GdaMetaTable *mtable;
+	GdaSqlSelectTarget *target;
+
+	GdaSqlStatementInsert *ist = NULL;
+	GdaSqlStatementUpdate *ust = NULL;
+	GdaSqlStatementDelete *dst = NULL;	
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (GDA_IS_STATEMENT (select_stmt), FALSE);
@@ -630,28 +756,13 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 	/*g_print ("*** %s\n", gda_statement_serialize (select_stmt));*/
 
 	g_object_get (G_OBJECT (select_stmt), "structure", &sel_struct, NULL);
-	stsel = (GdaSqlStatementSelect*) sel_struct->contents;
-	if (!stsel->from) {
-		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("SELECT statement has no FROM part"));
+	if (!dml_statements_check_select_structure (cnc, sel_struct, error)) {
 		retval = FALSE;
 		goto cleanup;
 	}
-	if (stsel->from->targets && stsel->from->targets->next) {
-		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("SELECT statement involves more than one table or expression"));
-		retval = FALSE;
-		goto cleanup;
-	}
-	GdaSqlSelectTarget *target;
-	target = (GdaSqlSelectTarget*) stsel->from->targets->data;
-	if (!target->table_name) {
-		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("SELECT statement involves more than one table or expression"));
-		retval = FALSE;
-		goto cleanup;
-	}
-	if (!gda_sql_statement_check_validity (sel_struct, cnc, error)) {
+
+	/* normalize the statement */
+	if (!gda_sql_statement_normalize (sel_struct, cnc, error)) {
 		retval = FALSE;
 		goto cleanup;
 	}
@@ -659,34 +770,11 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 	mstruct = sel_struct->validity_meta_struct;
 	g_assert (mstruct); /* because gda_sql_statement_check_validity() returned TRUE */
 
-	/* check that we want to modify a table */
-	if (target->validity_meta_object->obj_type != GDA_META_DB_TABLE) {
-		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("Can only build modification statement for tables"));
-		retval = FALSE;
-		goto cleanup;
-	}
-
 	/* check that the condition will be buildable */
-	mtable = GDA_META_DB_OBJECT_GET_TABLE (target->validity_meta_object);
-	if ((update || delete) && require_pk) {
-		gint i;
-		if (mtable->pk_cols_nb == 0) {
-			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("Table does not have any primary key"));
-			retval = FALSE;
-			goto cleanup;
-		}
-		for (i = 0; i < mtable->pk_cols_nb; i++) {
-			TO_IMPLEMENT;
-		}
-	}
+	stsel = (GdaSqlStatementSelect*) sel_struct->contents;
+	target = (GdaSqlSelectTarget*) stsel->from->targets->data;
 	
-	/* actual statement structure's computation */
-	GdaSqlStatementInsert *ist;
-	GdaSqlStatementUpdate *ust;
-	GdaSqlStatementDelete *dst;	
-        
+	/* actual statement structure's computation */        
 	if (insert) {
 		ist = g_new0 (GdaSqlStatementInsert, 1);
 		GDA_SQL_ANY_PART (ist)->type = GDA_SQL_ANY_STMT_INSERT;
@@ -699,6 +787,14 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 		GDA_SQL_ANY_PART (ust)->type = GDA_SQL_ANY_STMT_UPDATE;
 		ust->table = gda_sql_table_new (GDA_SQL_ANY_PART (ust));
 		ust->table->table_name = g_strdup ((gchar *) target->table_name);
+		ust->cond = dml_statements_build_condition (stsel, 
+							    GDA_META_DB_OBJECT_GET_TABLE (target->validity_meta_object),
+							    require_pk, error);
+		if (!ust->cond) {
+			retval = FALSE;
+			goto cleanup;
+		}
+		GDA_SQL_ANY_PART (ust->cond)->parent = GDA_SQL_ANY_PART (ust);
 	}
         
 	if (delete) {
@@ -706,27 +802,28 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 		GDA_SQL_ANY_PART (dst)->type = GDA_SQL_ANY_STMT_DELETE;
 		dst->table = gda_sql_table_new (GDA_SQL_ANY_PART (dst));
 		dst->table->table_name = g_strdup ((gchar *) target->table_name);
+		dst->cond = dml_statements_build_condition (stsel, 
+							    GDA_META_DB_OBJECT_GET_TABLE (target->validity_meta_object),
+							    require_pk, error);
+		if (!dst->cond) {
+			retval = FALSE;
+			goto cleanup;
+		}
+		GDA_SQL_ANY_PART (dst->cond)->parent = GDA_SQL_ANY_PART (dst);
 	}
 
 	GSList *expr_list;
 	gint colindex;
 	GSList *insert_values_list = NULL;
 	GHashTable *fields_hash; /* key = a table's field's name, value = we don't care */
-	fields_hash = g_hash_table_new (g_str_hash, g_str_equal);
+	fields_hash = g_hash_table_new ((GHashFunc) gda_identifier_hash, (GEqualFunc) gda_identifier_equal);
 	for (expr_list = stsel->expr_list, colindex = 0; 
 	     expr_list;
 	     expr_list = expr_list->next, colindex++) {
 		GdaSqlSelectField *selfield = (GdaSqlSelectField *) expr_list->data;
-		if (selfield->expr && selfield->expr->value && 
-		    !strcmp (g_value_get_string (selfield->expr->value), "*")) {
-			TO_IMPLEMENT;
+		if ((selfield->validity_meta_object != target->validity_meta_object) ||
+		    !selfield->validity_meta_table_column)
 			continue;
-		}
-		else {
-			if ((selfield->validity_meta_object != target->validity_meta_object) ||
-			    !selfield->validity_meta_table_column)
-				continue;
-		}
 
 		/* field to insert into */
 		if (g_hash_table_lookup (fields_hash, selfield->field_name))
@@ -775,9 +872,18 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 	/* finish the statements */
 	if (insert) {
 		GdaSqlStatement *st;
+
+		if (!ist->fields_list) {
+			/* nothing to insert => don't create statement */
+			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+				     _("Could not compute any field to insert into"));
+			retval = FALSE;
+			goto cleanup;
+		}
 		ist->values_list = g_slist_append (NULL, insert_values_list);
 		st = gda_sql_statement_new (GDA_SQL_STATEMENT_INSERT);
 		st->contents = ist;
+		ist = NULL;
 		ret_insert = g_object_new (GDA_TYPE_STATEMENT, "structure", st, NULL);
 		gda_sql_statement_free (st);
 	}
@@ -785,6 +891,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 		GdaSqlStatement *st;
 		st = gda_sql_statement_new (GDA_SQL_STATEMENT_UPDATE);
 		st->contents = ust;
+		ust = NULL;
 		ret_update = g_object_new (GDA_TYPE_STATEMENT, "structure", st, NULL);
 		gda_sql_statement_free (st);
 	}
@@ -792,12 +899,29 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 		GdaSqlStatement *st;
 		st = gda_sql_statement_new (GDA_SQL_STATEMENT_DELETE);
 		st->contents = dst;
+		dst = NULL;
 		ret_delete = g_object_new (GDA_TYPE_STATEMENT, "structure", st, NULL);
 		gda_sql_statement_free (st);
 	}
 	
  cleanup:
 	gda_sql_statement_free (sel_struct);
+	if (ist) {
+		GdaSqlStatementContentsInfo *cinfo;
+		cinfo = gda_sql_statement_get_contents_infos (GDA_SQL_STATEMENT_INSERT);
+		cinfo->free (ist);
+	}
+	if (ust) {
+		GdaSqlStatementContentsInfo *cinfo;
+		cinfo = gda_sql_statement_get_contents_infos (GDA_SQL_STATEMENT_UPDATE);
+		cinfo->free (ust);
+	}
+	if (dst) {
+		GdaSqlStatementContentsInfo *cinfo;
+		cinfo = gda_sql_statement_get_contents_infos (GDA_SQL_STATEMENT_DELETE);
+		cinfo->free (dst);
+	}
+		
 	if (insert)
 		*insert = ret_insert;
 	if (update)
@@ -805,4 +929,72 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 	if (delete)
 		*delete = ret_delete;
 	return retval;
+}
+
+/*
+ * computes a hash string from @is, to be used in hash tables as a GHashFunc
+ */
+guint
+gda_identifier_hash (const gchar *id)
+{
+	const signed char *p = (signed char *) id;
+	guint32 h = 0;
+	gboolean lower = FALSE;
+
+	if (*p != '"') {
+		lower = TRUE;
+		h = g_ascii_tolower (*p);
+	}
+	
+	for (p += 1; *p && *p != '"'; p++) {
+		if (lower)
+			h = (h << 5) - h + g_ascii_tolower (*p);
+		else
+			h = (h << 5) - h + *p;
+	}
+	if (*p == '"' && *(p+1)) 
+		g_warning ("Argument passed to %s() is not an SQL identifier", __FUNCTION__);
+
+	return h;
+}
+
+/*
+ * Does the same as strcmp(id1, id2), but handles the case where id1 and/or id2 are enclosed in double quotes,
+ * can also be used in hash tables as a GEqualFunc
+ */
+gboolean
+gda_identifier_equal (const gchar *id1, const gchar *id2)
+{
+	const gchar *ptr1, *ptr2;
+	gboolean dq1 = FALSE, dq2 = FALSE;
+
+	ptr1 = id1;
+	if (*ptr1 == '"') {
+		ptr1++;
+		dq1 = TRUE;
+	}
+	ptr2 = id2;
+	if (*ptr2 == '"') {
+		ptr2++;
+		dq2 = TRUE;
+	}
+	for (; *ptr1 && *ptr2; ptr1++, ptr2++) {
+		gchar c1, c2;
+		c1 = *ptr1;
+		c2 = *ptr2;
+		if (!dq1)
+			c1 = g_ascii_tolower (c1);
+		if (!dq2)
+			c2 = g_ascii_tolower (c2);
+		if (c1 != c2)
+			return FALSE;
+	}
+	if (*ptr1 || *ptr2) {
+		if (*ptr1 && (*ptr1 == '"'))
+			return TRUE;
+		if (*ptr2 && (*ptr2 == '"'))
+			return TRUE;
+		return FALSE;
+	}
+	return TRUE;
 }

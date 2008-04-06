@@ -43,6 +43,8 @@ GType        gda_g_type_from_string (const gchar *str);
  */
 gchar       *gda_default_escape_string (const gchar *string);
 gchar       *gda_default_unescape_string (const gchar *string);
+guint        gda_identifier_hash (const gchar *id);
+gboolean     gda_identifier_equal (const gchar *id1, const gchar *id2);
 
 /*
  * Param & model utilities

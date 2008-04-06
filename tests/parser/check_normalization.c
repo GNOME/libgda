@@ -13,7 +13,7 @@
 #include <libxml/tree.h>
 
 GdaConnection *cnc;
-static gint do_test (const xmlChar *id, const xmlChar *sql, gboolean valid_expected);
+static gint do_test (const xmlChar *id, const xmlChar *sql, const xmlChar *norm);
 
 int 
 main (int argc, char** argv)
@@ -62,29 +62,24 @@ main (int argc, char** argv)
 		xmlNodePtr snode;
 		xmlChar *sql = NULL;
 		xmlChar *id;
-		gboolean valid = FALSE;
+		xmlChar *norm = NULL;
 
 		id = xmlGetProp (node, BAD_CAST "id");
 		for (snode = node->children; snode; snode = snode->next) {
-			if (!strcmp ((gchar*) snode->name, "sql")) {
+			if (!strcmp ((gchar*) snode->name, "sql")) 
 				sql = xmlNodeGetContent (snode);
-				xmlChar *prop;
-				prop = xmlGetProp (snode, "valid");
-				if (prop) {
-					if ((*prop == 't') || (*prop == 'T') || (*prop == '1'))
-						valid = TRUE;
-					xmlFree (prop);
-				}
-			}
+			if (!strcmp ((gchar*) snode->name, "normalized")) 
+				norm = xmlNodeGetContent (snode);
 		}
-		if (sql) {
-			if (!do_test (id, sql, valid))
+		if (sql && norm) {
+			if (!do_test (id, sql, norm))
 				failures++;
 			ntests++;
 		}
 
 		/* mem free */
 		if (sql) xmlFree (sql);
+		if (norm) xmlFree (norm);
 		if (id)	xmlFree (id);
 	}
 	xmlFreeDoc (doc);
@@ -99,12 +94,12 @@ main (int argc, char** argv)
  * Returns: the number of failures
  */
 static gint
-do_test (const xmlChar *id, const xmlChar *sql, gboolean valid_expected) 
+do_test (const xmlChar *id, const xmlChar *sql, const xmlChar *norm) 
 {
 	static GdaSqlParser *parser = NULL;
 	GdaStatement *stmt;
-	gboolean is_valid;
 	GError *error = NULL;
+	gchar *str;
 
 	if (!parser) {
 		parser = gda_connection_create_parser (cnc);
@@ -121,21 +116,24 @@ do_test (const xmlChar *id, const xmlChar *sql, gboolean valid_expected)
 		g_print ("ERROR for test '%s': could not parse statement\n", id);
 		return FALSE;
 	}
-	is_valid = gda_statement_check_validity (stmt, cnc, &error);
-	if (is_valid && !valid_expected) {
-		g_print ("ERROR for test '%s': statement is valid but test expected it invalid\n", id);
-		g_object_unref (stmt);
-		return FALSE;
-	}
-	if (!is_valid && valid_expected) {
-		g_print ("ERROR for test '%s': statement is invalid but test expected it valid: %s\n", id,
+	if (!gda_statement_normalize (stmt, cnc, &error)) {
+		g_print ("ERROR for test '%s': statement can't be normalized: %s\n", id,
 			 error && error->message ? error->message : "No detail");
 		g_object_unref (stmt);
 		return FALSE;
 	}
-	/*g_print ("EXP %d, got %d\n", valid_expected, is_valid);*/
-	/*g_print ("PARSED: %s\n", gda_statement_serialize (stmt));*/
 
+	str = gda_statement_serialize (stmt);
+	if (strcmp (str, norm)) {
+		gchar *sql;
+		sql = gda_statement_to_sql (stmt, NULL, NULL);
+		g_print ("ERROR for test '%s': \n\tEXP: %s\n\tGOT: %s\n\tSQL: %s\n", id, norm, str, sql);
+		g_free (sql);
+		g_free (str);
+		return FALSE;
+	}
+	
+	g_free (str);
 	g_object_unref (stmt);
 	return TRUE;
 }

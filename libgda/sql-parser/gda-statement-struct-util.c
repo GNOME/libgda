@@ -249,13 +249,93 @@ _string_is_identifier (const gchar *str)
 
 	if (!str || !(*str)) 
 		return FALSE;
-	for (ptr = (gchar *) str; IdChar(*ptr) || (*ptr == '*') || (*ptr == '.'); ptr++);
+	for (ptr = *str == '"' ? str + 1 : str; 
+	     IdChar(*ptr) || (*ptr == '*') || (*ptr == '.') || ((*ptr == '"') && ptr[1] == 0); 
+	     ptr++);
 	if (*ptr) 
 		return FALSE;
+	if ((*str == '"') && (ptr[-1] == '"'))
+		return TRUE;
+
 	/* @str is composed only of character that can be used in an identifier */
 	d = g_ascii_strtod (str, &endptr);
 	if (!*endptr)
 		/* @str is a number */
 		return FALSE;
+	return TRUE;
+}
+
+/*
+ * Reuses @str and fills in @remain and @last
+ *
+ * @str "swallowed" by the function and must be allocated memory, and @remain and @last are
+ * also allocated memory.
+ *
+ * Accepted notations for each individual part:
+ *   - aaa
+ *   - "aaa"
+ *
+ * So "aaa".bbb, aaa.bbb, "aaa"."bbb", aaa."bbb" are Ok.
+ *
+ * Returns TRUE:
+ * if @str has the <part1>.<part2> form, then @last will contain <part2> and @remain will contain <part1>
+ * if @str has the <part1> form, then @last will contain <part1> and @remain will contain NULL
+ * 
+ * Returns FALSE:
+ * if @str is NULL:
+ * if @str is "":
+ * if @str is malformed:
+ *              @last and @remain will contain NULL
+ */
+gboolean
+_split_identifier_string (gchar *str, gchar **remain, gchar **last)
+{
+	gchar *ptr;
+	gboolean inq = FALSE;
+	gint len;
+
+	*remain = NULL;
+	*last = NULL;
+	if (!str)
+		return FALSE;
+	g_strchomp (str);
+	if (!*str) {
+		g_free (str);
+		return FALSE;
+	}
+
+	len = strlen (str) - 1;
+	if (((str[len] == '"') && (str[len-1] == '.')) ||
+	    (str[len] == '.')) {
+		g_free (str);
+		return FALSE;
+	}
+
+	if (((str[0] == '"') && (str[1] == '.')) ||
+	    (str[0] == '.')) {
+		g_free (str);
+		return FALSE;
+	}
+
+	for (ptr = str + strlen (str) - 1; ptr >= str; ptr--) {
+		if (*ptr == '"') 
+			inq = !inq;
+		else if ((*ptr == '.') && !inq) {
+			*ptr = 0;
+			*remain = str;
+			*last = g_strdup (ptr+1);
+			break;
+		}
+	}
+	if (!(*last) && !(*remain))
+		*last = str;
+
+	if (*last && !_string_is_identifier (*last)) {
+		g_free (*last);
+		*last = NULL;
+		g_free (*remain);
+		*remain = NULL;
+		return FALSE;
+	}
 	return TRUE;
 }

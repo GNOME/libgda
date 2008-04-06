@@ -64,7 +64,7 @@ gda_prepare_create_database (const gchar *provider, const gchar *db_name, GError
 		op = gda_server_provider_create_operation (prov, NULL, GDA_SERVER_OPERATION_CREATE_DB, 
 							   NULL, error);
 		if (op) {
-			g_object_set_data (G_OBJECT (op), "_gda_provider_obj", prov);
+			g_object_set_data_full (G_OBJECT (op), "_gda_provider_obj", g_object_ref (prov), g_object_unref);
 			if (db_name)
 				gda_server_operation_set_value_at (op, db_name, NULL, "/DB_DEF_P/DB_NAME");
 		}
@@ -95,9 +95,8 @@ gda_perform_create_database (GdaServerOperation *op, GError **error)
 	if (provider) 
 		return gda_server_provider_perform_operation (provider, NULL, op, error);
 	else {
-		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_PROVIDER_NOT_FOUND_ERROR, 
-			     _("Could not find operation's associated provider, "
-			       "did you use gda_prepare_create_database() ?")); 
+		g_warning ("Could not find operation's associated provider, "
+			   "did you use gda_prepare_create_database() ?");
 		return FALSE;
 	}
 }
@@ -132,7 +131,7 @@ gda_prepare_drop_database (const gchar *provider, const gchar *db_name, GError *
 		op = gda_server_provider_create_operation (prov, NULL, GDA_SERVER_OPERATION_DROP_DB, 
 							   NULL, error);
 		if (op) {
-			g_object_set_data (G_OBJECT (op), "_gda_provider_obj", prov);
+			g_object_set_data_full (G_OBJECT (op), "_gda_provider_obj", g_object_ref (prov), g_object_unref);
 			if (db_name)
 				gda_server_operation_set_value_at (op, db_name, NULL, "/DB_DESC_P/DB_NAME");
 		}
@@ -163,9 +162,8 @@ gda_perform_drop_database (GdaServerOperation *op, GError **error)
 	if (provider) 
 		return gda_server_provider_perform_operation (provider, NULL, op, error);
 	else {
-		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_PROVIDER_NOT_FOUND_ERROR, 
-			     _("Could not find operation's associated provider, "
-			       "did you use gda_prepare_drop_database() ?")); 
+		g_warning ("Could not find operation's associated provider, "
+			   "did you use gda_prepare_drop_database() ?"); 
 		return FALSE;
 	}
 }
@@ -264,7 +262,7 @@ gda_prepare_create_table (GdaConnection *cnc, const gchar *table_name, GError **
 		
 	g_return_val_if_fail (gda_connection_is_opened (cnc), FALSE);	
 	
-	server = gda_connection_get_provider_obj(cnc);
+	server = gda_connection_get_provider_obj (cnc);
 	
 	if (!table_name) {
 		g_set_error (error, GDA_EASY_ERROR, GDA_EASY_OBJECT_NAME_ERROR, 
@@ -318,8 +316,7 @@ gda_prepare_create_table (GdaConnection *cnc, const gchar *table_name, GError **
 	
 		va_end (args);
 		
-		g_object_set_data (G_OBJECT (op), "_gda_connection", cnc);
-		g_object_set_data (G_OBJECT (op), "_gda_provider_obj", server);
+		g_object_set_data_full (G_OBJECT (op), "_gda_connection", g_object_ref (cnc), g_object_unref);
 		
 		return op;		
 	}
@@ -345,16 +342,18 @@ gboolean
 gda_perform_create_table (GdaServerOperation *op, GError **error)
 {
 	GdaConnection *cnc;
-	GdaServerProvider *server;
 	
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);	
-	g_return_val_if_fail (gda_server_operation_get_op_type (op) ==
-						  GDA_SERVER_OPERATION_CREATE_TABLE, FALSE);
+	g_return_val_if_fail (gda_server_operation_get_op_type (op) == GDA_SERVER_OPERATION_CREATE_TABLE, FALSE);
 	
-	server = GDA_SERVER_PROVIDER (g_object_get_data (G_OBJECT (op), "_gda_provider_obj"));
-	cnc = GDA_CONNECTION (g_object_get_data (G_OBJECT (op), "_gda_connection"));
-	
-	return gda_server_provider_perform_operation (server, cnc, op, error);
+	cnc = g_object_get_data (G_OBJECT (op), "_gda_connection");
+	if (cnc) 
+		return gda_server_provider_perform_operation (gda_connection_get_provider_obj (cnc), cnc, op, error);
+	else {
+		g_warning ("Could not find operation's associated connection, "
+			   "did you use gda_prepare_create_table() ?"); 
+		return FALSE;
+	}
 }
 
 /**
@@ -386,8 +385,7 @@ gda_prepare_drop_table (GdaConnection *cnc, const gchar *table_name, GError **er
 		
 		if (gda_server_operation_set_value_at (op, table_name, 
 						       error, "/TABLE_DESC_P/TABLE_NAME")) {
-			g_object_set_data (G_OBJECT (op), "_gda_connection", cnc);
-			g_object_set_data (G_OBJECT (op), "_gda_provider_obj", server);
+			g_object_set_data_full (G_OBJECT (op), "_gda_connection", g_object_ref (cnc), g_object_unref);
 			return op;
 		}
 		else 
@@ -410,16 +408,18 @@ gboolean
 gda_perform_drop_table (GdaServerOperation *op, GError **error)
 {
 	GdaConnection *cnc;
-	GdaServerProvider *server;
-
-	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
-	g_return_val_if_fail (gda_server_operation_get_op_type (op) ==
-			      GDA_SERVER_OPERATION_DROP_TABLE, FALSE);
 	
-	server = GDA_SERVER_PROVIDER (g_object_get_data (G_OBJECT (op), "_gda_provider_obj"));
-	cnc = GDA_CONNECTION (g_object_get_data (G_OBJECT (op), "_gda_connection"));
+	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);	
+	g_return_val_if_fail (gda_server_operation_get_op_type (op) == GDA_SERVER_OPERATION_DROP_TABLE, FALSE);
 	
-	return gda_server_provider_perform_operation (server, cnc, op, error);
+	cnc = g_object_get_data (G_OBJECT (op), "_gda_connection");
+	if (cnc) 
+		return gda_server_provider_perform_operation (gda_connection_get_provider_obj (cnc), cnc, op, error);
+	else {
+		g_warning ("Could not find operation's associated connection, "
+			   "did you use gda_prepare_drop_table() ?"); 
+		return FALSE;
+	}
 }
 
 static guint

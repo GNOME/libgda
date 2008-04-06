@@ -1,3 +1,24 @@
+2008-04-06  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-server-operation.c:
+	* libgda/gda-easy.[ch]: modifications for bug #525877
+	* tests/parser/Makefile.am:
+	* tests/parser/check_validation.c:
+	* tests/parser/check_normalization.c:
+	* tests/parser/check_dml_comp.c: separated the validation check into a strict validation
+	check, a DML command computation from a SELECT command and a "normalization" check
+	* tests/parser/testvalid.xml: more test cases
+	* libgda/sql-parser/: improved GsaSqlStatement structure check, validation, and added
+	gda_sql_statement_normalize() which for example will expand all the '*' fields into the actual
+	list of fields in the table.
+	* libgda/gda-util.[ch]: added gda_identifier_equal() to compare SQL identifiers in
+	a safe way (case insensitive comparison unless double quoted) and gda_identifier_hash()
+	which computes a hash for an identifier (both can be used as base functions for a GHashTable)
+	* providers/skel-implementation/capi/parser.y:
+	* providers/postgres/parser.y:
+	* libgda/sql-parser/parser.y: modified parser to allow the "customers"."id" style syntax
+	* doc/C: misc doc updates
+
 2008-04-03  Murray Cumming  <murrayc@murrayc.com>
 
 	* providers/postgres/gda-postgres-provider.c

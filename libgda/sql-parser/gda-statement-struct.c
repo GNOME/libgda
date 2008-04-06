@@ -23,6 +23,7 @@
 #include <libgda/gda-debug-macros.h>
 #include <libgda/gda-connection.h>
 #include <libgda/gda-meta-struct.h>
+#include <libgda/gda-util.h>
 #include <libgda/sql-parser/gda-statement-struct-util.h>
 #include <libgda/sql-parser/gda-statement-struct-unknown.h>
 #include <libgda/sql-parser/gda-statement-struct-trans.h>
@@ -254,6 +255,9 @@ static gboolean gda_sql_select_target_check_validity (GdaSqlSelectTarget *target
  * If @cnc is %NULL, then remove any information from a previous call to this method stored in @stmt. In this case,
  * the @stmt-&gt;validity_meta_struct attribute is cleared.
  *
+ * Also note that some parts of @stmt may be modified: for example leading ad trailing spaces in aliases or
+ * objects names will be removed.
+ *
  * Returns: TRUE if no error occurred
  */
 gboolean
@@ -312,18 +316,104 @@ foreach_check_validity (GdaSqlAnyPart *node, GdaSqlStatementCheckValidityData *d
 			return cinfo->check_validity_func (node, data, error);
 		break;
 	}
-	case GDA_SQL_ANY_EXPR:
-		return gda_sql_expr_check_validity ((GdaSqlExpr*) node, data, error);
-	case GDA_SQL_ANY_SQL_FIELD:
-		return gda_sql_field_check_validity ((GdaSqlField*) node, data, error);
-	case GDA_SQL_ANY_SQL_TABLE:
-		return gda_sql_table_check_validity ((GdaSqlTable*) node, data, error);
-	case GDA_SQL_ANY_SQL_FUNCTION:
-		return gda_sql_function_check_validity ((GdaSqlFunction*) node, data, error);
-	case GDA_SQL_ANY_SQL_SELECT_FIELD:
-		return gda_sql_select_field_check_validity ((GdaSqlSelectField*) node, data, error);
-	case GDA_SQL_ANY_SQL_SELECT_TARGET:
-		return gda_sql_select_target_check_validity ((GdaSqlSelectTarget*) node, data, error);
+	case GDA_SQL_ANY_EXPR: {
+		GdaSqlExpr *expr = (GdaSqlExpr *) node;
+		if (expr->cast_as) {
+			g_strchomp (expr->cast_as);
+			if (! *(expr->cast_as)) {
+				g_free (expr->cast_as);
+				expr->cast_as = NULL;
+			}
+		}
+		return gda_sql_expr_check_validity (expr, data, error);
+	}
+	case GDA_SQL_ANY_SQL_FIELD: {
+		GdaSqlField *field = (GdaSqlField*) node;
+		if (field->field_name) {
+			g_strchomp (field->field_name);
+			if (! *(field->field_name)) {
+				g_free (field->field_name);
+				field->field_name = NULL;
+			}
+		}
+		return gda_sql_field_check_validity (field, data, error);
+	}
+	case GDA_SQL_ANY_SQL_TABLE: {
+		GdaSqlTable *table = (GdaSqlTable*) node;
+		if (table->table_name) {
+			g_strchomp (table->table_name);
+			if (! *(table->table_name)) {
+				g_free (table->table_name);
+				table->table_name = NULL;
+			}
+		}
+		return gda_sql_table_check_validity (table, data, error);
+	}
+	case GDA_SQL_ANY_SQL_FUNCTION: {
+		GdaSqlFunction *function = (GdaSqlFunction*) node;
+		if (function->function_name) {
+			g_strchomp (function->function_name);
+			if (! *(function->function_name)) {
+				g_free (function->function_name);
+				function->function_name = NULL;
+			}
+		}
+		return gda_sql_function_check_validity (function, data, error);
+	}
+	case GDA_SQL_ANY_SQL_SELECT_FIELD: {
+		GdaSqlSelectField *field = (GdaSqlSelectField*) node;
+		if (field->as) {
+			g_strchomp (field->as);
+			if (! *(field->as)) {
+				g_free (field->as);
+				field->as = NULL;
+			}
+		}
+
+		if (field->expr && field->expr->value && (G_VALUE_TYPE (field->expr->value) == G_TYPE_STRING)) {
+			g_free (field->field_name);
+			g_free (field->table_name);
+			_split_identifier_string (g_value_dup_string (field->expr->value), &(field->table_name),
+						  &(field->field_name));
+		}
+		if (field->table_name) {
+			g_strchomp (field->table_name);
+			if (! *(field->table_name)) {
+				g_free (field->table_name);
+				field->table_name = NULL;
+			}
+		}
+		if (field->field_name) {
+			g_strchomp (field->field_name);
+			if (! *(field->field_name)) {
+				g_free (field->field_name);
+				field->field_name = NULL;
+			}
+		}
+		return gda_sql_select_field_check_validity (field, data, error);
+	}
+	case GDA_SQL_ANY_SQL_SELECT_TARGET: {
+		GdaSqlSelectTarget *target = (GdaSqlSelectTarget*) node;
+		if (target->as) {
+			g_strchomp (target->as);
+			if (! *(target->as)) {
+				g_free (target->as);
+				target->as = NULL;
+			}
+		}
+		if (target->expr && target->expr->value && (G_VALUE_TYPE (target->expr->value) == G_TYPE_STRING)) {
+			g_free (target->table_name);
+			target->table_name = g_value_dup_string (target->expr->value);
+		}
+		if (target->table_name) {
+			g_strchomp (target->table_name);
+			if (! *(target->table_name)) {
+				g_free (target->table_name);
+				target->table_name = NULL;
+			}
+		}
+		return gda_sql_select_target_check_validity (target, data, error);
+	}
 	default:
 		break;
 	}
@@ -551,7 +641,7 @@ gda_sql_select_field_check_validity (GdaSqlSelectField *field, GdaSqlStatementCh
 		return TRUE;
 
 	memset (&value, 0, sizeof (GValue));
-	if (!strcmp (field->field_name, "*"))
+	if (gda_identifier_equal (field->field_name, "*"))
 		starred_field = TRUE;
 
 	if (!field->table_name) {
@@ -591,9 +681,15 @@ gda_sql_select_field_check_validity (GdaSqlSelectField *field, GdaSqlStatementCh
 			}
 		}
 		if (!dbo) {
-			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_VALIDATION_ERROR,
-				     _("Could not identify table for field '%s'"), field->field_name);
-			return FALSE;
+			targets = ((GdaSqlStatementSelect *)any)->from->targets;
+			if (starred_field && targets && !targets->next) 
+				/* only one target => it's the one */
+				dbo = ((GdaSqlSelectTarget*) targets->data)->validity_meta_object;
+			else {
+				g_set_error (error, GDA_SQL_ERROR, GDA_SQL_VALIDATION_ERROR,
+					     _("Could not identify table for field '%s'"), field->field_name);
+				return FALSE;
+			}
 		}
 		field->validity_meta_object = dbo;
 		field->validity_meta_table_column = tcol;
@@ -612,7 +708,7 @@ gda_sql_select_field_check_validity (GdaSqlSelectField *field, GdaSqlStatementCh
 			return FALSE;
 		
 		/* field part */
-		if (strcmp (field->field_name, "*")) {
+		if (!gda_identifier_equal (field->field_name, "*")) {
 			GdaMetaTableColumn *tcol;
 			g_value_set_string (g_value_init (&value, G_TYPE_STRING), field->field_name);
 			tcol = gda_meta_struct_get_table_column (data->mstruct, 
@@ -1159,4 +1255,99 @@ gda_sql_any_part_foreach (GdaSqlAnyPart *node, GdaSqlForeachFunc func, gpointer 
 
 	/* finally call @func for this node */
 	return func (node, data, error);
+}
+
+
+static gboolean foreach_normalize (GdaSqlAnyPart *node, GdaConnection *cnc, GError **error);
+
+/**
+ * gda_sql_statement_normalize
+ * @stmt: a pointer to a #GdaSqlStatement structure
+ * @cnc: a #GdaConnection object, or %NULL
+ *
+ * "Normalizes" (in place) some parts of @stmt, which means @stmt may be modified.
+ * At the moment any "*" field in a SELECT statement will be replaced by one
+ * #GdaSqlSelectField structure for each field in the referenced table.
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_sql_statement_normalize (GdaSqlStatement *stmt, GdaConnection *cnc, GError **error)
+{
+	gboolean retval;
+	g_return_val_if_fail (stmt, FALSE);
+
+	if (!stmt->validity_meta_struct && !gda_sql_statement_check_validity (stmt, cnc, error))
+		return FALSE;
+
+	retval = gda_sql_any_part_foreach (GDA_SQL_ANY_PART (stmt->contents), 
+					   (GdaSqlForeachFunc) foreach_normalize, cnc, error);
+#ifdef GDA_DEBUG
+	GError *lerror = NULL;
+	if (retval && !gda_sql_statement_check_validity (stmt, cnc, &lerror)) {
+		g_warning ("Internal error in %s(): statement is not valid anymore after: %s", __FUNCTION__,
+			   lerror && lerror->message ? lerror->message :  "No detail");
+		if (lerror)
+			g_error_free (lerror);
+	}
+#endif
+	return retval;
+}
+
+static gboolean
+foreach_normalize (GdaSqlAnyPart *node, GdaConnection *cnc, GError **error)
+{
+	if (!node) return TRUE;
+
+	if (node->type == GDA_SQL_ANY_SQL_SELECT_FIELD) {
+		GdaSqlSelectField *field = (GdaSqlSelectField*) node;
+		if (((field->field_name && gda_identifier_equal (field->field_name, "*")) ||
+		    (field->expr && field->expr->value && (G_VALUE_TYPE (field->expr->value) == G_TYPE_STRING) &&
+		     gda_identifier_equal (g_value_get_string (field->expr->value), "*"))) &&
+		    field->validity_meta_object) {
+			/* expand * to all the fields */
+			GdaMetaTable *mtable = GDA_META_DB_OBJECT_GET_TABLE (field->validity_meta_object);
+			GSList *list;
+			GdaSqlAnyPart *parent_node = ((GdaSqlAnyPart*) field)->parent;
+			gint nodepos = g_slist_index (((GdaSqlStatementSelect*) parent_node)->expr_list, node);
+			if (parent_node->type != GDA_SQL_ANY_STMT_SELECT) {
+				g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+					     _("Select field is not in a SELECT statement"));
+				return FALSE;
+			}
+			for (list = mtable->columns; list; list = list->next) {
+				GdaSqlSelectField *nfield;
+				GdaMetaTableColumn *tcol = (GdaMetaTableColumn *) list->data;
+
+				nfield = gda_sql_select_field_new (parent_node);
+				nfield->field_name = g_strdup (tcol->column_name);
+				if (field->table_name)
+					nfield->table_name = g_strdup (field->table_name);
+				nfield->validity_meta_object = field->validity_meta_object;
+				nfield->validity_meta_table_column = tcol;
+				nfield->expr = gda_sql_expr_new ((GdaSqlAnyPart*) nfield);
+				nfield->expr->value = gda_value_new (G_TYPE_STRING);
+				if (field->table_name)
+					g_value_take_string (nfield->expr->value, g_strdup_printf ("%s.%s", 
+												   nfield->table_name,
+												   nfield->field_name));
+				else
+					g_value_set_string (nfield->expr->value, nfield->field_name);
+
+				/* insert nfield into expr_list */
+				GSList *expr_list = ((GdaSqlStatementSelect*) parent_node)->expr_list;
+				if (list == mtable->columns) {
+					GSList *lnode = g_slist_nth (expr_list, nodepos);
+					lnode->data = nfield;
+				}
+				else 
+					((GdaSqlStatementSelect*) parent_node)->expr_list = 
+						g_slist_insert (expr_list, nfield, ++nodepos);
+			}
+			/* get rid of @field */
+			gda_sql_select_field_free (field);
+		}
+	}
+
+	return TRUE;
 }

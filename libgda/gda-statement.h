@@ -97,6 +97,7 @@ GdaSqlStatementType gda_statement_get_statement_type     (GdaStatement *stmt);
 gboolean            gda_statement_is_useless             (GdaStatement *stmt);
 gboolean            gda_statement_check_structure        (GdaStatement *stmt, GError **error);
 gboolean            gda_statement_check_validity         (GdaStatement *stmt, GdaConnection *cnc, GError **error);
+gboolean            gda_statement_normalize              (GdaStatement *stmt, GdaConnection *cnc, GError **error);
 
 G_END_DECLS
 
