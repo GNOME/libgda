@@ -1162,9 +1162,12 @@ fetch_existing_blobs (GdaConnection *cnc, PGconn *pconn, GdaQuery *query, GdaPar
 				g_object_unref (plist);
 			g_object_unref (select);
 			if (!sql || !*sql) {
+				/* TODO: valgrind reports this as a definite leak, 
+				 * but I can't see how. murrayc:
+				 */
 				gchar *msg = g_strdup_printf (_("Could not render SQL for SELECT "
 								"query to fetch existing BLOB values: %s"), 
-							      error && error->message ? 
+							      (error && error->message) ? 
 							      error->message : _("No detail"));
 				gda_connection_add_event_string (cnc, msg);
 				g_error_free (error);

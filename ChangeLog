@@ -1,5 +1,10 @@
 2008-04-07  Murray Cumming  <murrayc@murrayc.com>
 
+	* providers/postgres/gda-postgres-provider.c (fetch_existing_blobs):
+	Added a comment about a possible leak reported by valgrind.
+
+2008-04-07  Murray Cumming  <murrayc@murrayc.com>
+
 	* libgda/gda-client.c (find_or_load_provider): Do not do an extra 
 	reference on the new GdaProvider, because we already have an initial 
 	reference. This prevents it from being leaked, as found by valgrind.
