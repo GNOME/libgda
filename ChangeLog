@@ -1,3 +1,13 @@
+2008-04-07  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-client.c (find_or_load_provider): Do not do an extra 
+	reference on the new GdaProvider, because we already have an initial 
+	reference. This prevents it from being leaked, as found by valgrind.
+	* libgda/gda-init.c (gda_init):
+	* providers/postgres/libmain.c (plugin_init): Make sure that some 
+	strings are freed before being reassigned, though these are probably not 
+	the leaks that valgrind is reporting here.
+
 2008-04-06  Murray Cumming  <murrayc@murrayc.com>
 
 	* providers/postgres/gda-postgres-recordset.c
