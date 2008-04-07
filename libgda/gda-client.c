@@ -322,6 +322,7 @@ find_or_load_provider (GdaClient *client, const gchar *provider)
 		return NULL;
 	}
 	
+	/* plugin_create_provider() provides an initial reference: */
 	prv->provider = prv->plugin_create_provider ();
 	if (!prv->provider) {
 		emit_client_error (client, NULL,
@@ -330,8 +331,9 @@ find_or_load_provider (GdaClient *client, const gchar *provider)
 		return NULL;
 	}
 	
-	g_object_ref (G_OBJECT (prv->provider));
 	g_object_weak_ref (G_OBJECT (prv->provider), (GWeakNotify) provider_weak_cb, client);
+
+	/* Store it in our hash table so we can unref it in our finalize handler: */
 	g_hash_table_insert (client->priv->providers,
 			     g_strdup (provider),
 			     prv);

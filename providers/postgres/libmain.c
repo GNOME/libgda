@@ -37,8 +37,14 @@ plugin_init (const gchar *real_path)
 {
 	/* This is never freed, but that is OK. It is only called once. */
 	/* But it would be nice to have some cleanup function just to shut valgrind up. murrayc. */
-	if (real_path)
+	if (real_path) {
+		if(module_path) {
+			g_free (module_path);
+			module_path = NULL;
+		}
+
 		module_path = g_strdup (real_path);
+	}
 }
 
 const gchar *

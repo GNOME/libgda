@@ -101,8 +101,13 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 
 #define LIBGDA_DICT_DTD_FILE DTDINSTALLDIR"/libgda-dict.dtd"
 	gda_dict_dtd = xmlParseDTD (NULL, (xmlChar*)LIBGDA_DICT_DTD_FILE);
-	if (gda_dict_dtd)
+	if (gda_dict_dtd) {
+		if(gda_dict_dtd->name) {
+			g_free (gda_dict_dtd->name);
+			gda_dict_dtd->name = NULL;
+		}
 		gda_dict_dtd->name = xmlStrdup((xmlChar*) "gda_dict");
+	}
 	else
 		g_message (_("Could not parse " LIBGDA_DICT_DTD_FILE ": "
 			     "XML dictionaries validation will not be performed (some weird errors may occur)"));
