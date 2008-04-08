@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2008 The GNOME Foundation.
+ * Copyright (C) 1998 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -34,7 +34,7 @@ struct _GdaRowPrivate {
         gint          number;
         gchar        *id;
 
-        GValue       *fields;        /* GValue for each column */
+        GValue     *fields;        /* GValue for each column */
         gboolean     *is_default;    /* one gboolean for each column */
         gint          nfields;
 };
@@ -204,7 +204,7 @@ gda_row_set_property (GObject *object,
 			for (i = 0, l = values; l != NULL; l = l->next, i++) {
 				const GValue *value = (const GValue *) l->data;
 				
-				if (value && !gda_value_is_null (value)) {
+				if (value) {
 					GValue *dest;
 					dest = gda_row_get_value (row, i);
 					gda_value_reset_with_type (dest, G_VALUE_TYPE ((GValue *) value));
@@ -346,7 +346,7 @@ gda_row_copy (GdaRow *row)
  * @values: a list of #GValue's.
  *
  * Creates a #GdaRow from a list of #GValue's.  These GValue's are
- * value-copied and the user are still responsible for freeing them.
+ * value-copied and the user is still responsible for freeing them with g_object_unref().
  *
  * See the gda_row_new() function's documentation for more information about the @model attribute
  *
@@ -491,7 +491,7 @@ gda_row_set_id (GdaRow *row, const gchar *id)
  * Gets a pointer to a #GValue stored in a #GdaRow.
  *
  * This is a pointer to the internal array of values. Don't try to free
- * or modify it!
+ * or modify it.
  *
  * Returns: a pointer to the #GValue in the position @num of @row.
  */
