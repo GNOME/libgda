@@ -2938,7 +2938,7 @@ prepare_meta_statements_hash (void)
  * see <link linkend="GdaConnectionMetaTypeHead">this description</link>.
  * 
  * Returns: a #GdaDataModel containing the data required. The caller is responsible
- * of freeing the returned model using g_object_unref().
+ * for freeing the returned model using g_object_unref().
  */
 GdaDataModel *
 gda_connection_get_meta_store_data (GdaConnection *cnc,

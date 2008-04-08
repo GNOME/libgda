@@ -1,3 +1,9 @@
+2008-04-08  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-connection.c (gda_connection_supports_feature):
+	* libgda/gda-row.c (gda_row_copy, gda_row_set_id): Very minor  
+	corrections to documentation.
+
 2008-04-07  Murray Cumming  <murrayc@murrayc.com>
 
 	* providers/postgres/libmain.c (plugin_init): Make sure that the 

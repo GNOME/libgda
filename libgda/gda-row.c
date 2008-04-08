@@ -346,7 +346,7 @@ gda_row_copy (GdaRow *row)
  * @values: a list of #GValue's.
  *
  * Creates a #GdaRow from a list of #GValue's.  These GValue's are
- * value-copied and the user are still responsible for freeing them.
+ * value-copied and the user is still responsible for freeing them with g_object_unref().
  *
  * See the gda_row_new() function's documentation for more information about the @model attribute
  *
@@ -491,7 +491,7 @@ gda_row_set_id (GdaRow *row, const gchar *id)
  * Gets a pointer to a #GValue stored in a #GdaRow.
  *
  * This is a pointer to the internal array of values. Don't try to free
- * or modify it!
+ * or modify it.
  *
  * Returns: a pointer to the #GValue in the position @num of @row.
  */
