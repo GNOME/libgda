@@ -1269,7 +1269,7 @@ gda_config_has_key (const gchar *path)
  * @path: path to the configuration key.
  *
  * Gets a string representing the type of the value of the given key.
- * The caller is responsible of freeing the returned value.
+ * The caller is responsible for freeing the returned value.
  *
  * Returns: %NULL if not found. Otherwise: "string", "float", "long", "bool".
  */
@@ -1559,7 +1559,7 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
  * the system. Each of the nodes in the returned GList
  * is a #GdaProviderInfo.
  *
- * Returns: a GList of #GdaProviderInfo structures, don't free or modify it!
+ * Returns: a GList of #GdaProviderInfo structures. Don't free or modify it!
  */
 GList *
 gda_config_get_provider_list (void)

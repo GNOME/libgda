@@ -1,3 +1,11 @@
+2008-04-08  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-config.c (gda_config_has_key, load_providers_from_dir):
+	* libgda/gda-connection.c (gda_connection_supports_feature):
+	* libgda/gda-data-model-hash.c (gda_data_model_hash_new):
+	* libgda/gda-row.c (gda_row_copy, gda_row_set_id): Very minor  
+	corrections to documentation.
+
 2008-04-07  Murray Cumming  <murrayc@murrayc.com>
 
 	* providers/postgres/gda-postgres-provider.c (fetch_existing_blobs):

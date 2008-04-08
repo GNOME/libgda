@@ -1549,7 +1549,7 @@ gda_connection_supports_feature (GdaConnection *cnc, GdaConnectionFeature featur
  * <link linkend="libgda-provider-get-schema">get_schema() virtual method for providers</link> for more details.
  *
  * Returns: a #GdaDataModel containing the data required. The caller is responsible
- * of freeing the returned model using g_object_unref().
+ * for freeing the returned model using g_object_unref().
  */
 GdaDataModel *
 gda_connection_get_schema (GdaConnection *cnc,

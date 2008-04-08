@@ -427,7 +427,7 @@ gda_data_model_hash_new (gint cols)
  * gda_data_model_hash_insert_row
  * @model: the #GdaDataModelHash which is gonna hold the row.
  * @rownum: the number of the row.
- * @row: the row to insert. The model is responsible of freeing it!
+ * @row: the row to insert. The model is responsible for freeing it with g_object_unref().
  *
  * Inserts a @row in the @model.
  */
