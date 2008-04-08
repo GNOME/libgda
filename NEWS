@@ -1,8 +1,26 @@
-libgda 3.1.3, TODO
+libgda 3.1.3, 2008-04-08
 
-* Postgres provider: Fix a big inefficiency in discovering the primary key, 
+* Change the default string escape for a single-quote char from backslash 
+  single-quote (\') to single-quote single-quote ('') so that SQLite will 
+  accept it
+  (Phil Longstaff)
+* GdaQuery: gda_query_execute() Do not report an error when there is none.
+  (Phil Longstaff)
+* GdaClient: Do not leak the GdaProvider.
+* GdaConnection: Do not leak the GdaClient.
+* GdaColumn: Do not leak part of the GdaValue.
+(Murray Cumming)
+* GdaDataModel:
+* GdaDataModelArray:
+* GdaServerProvider: Fixed some leaks.
+  (Phil Longstaff)
+* PostgreSQL provider:
+  - Fix a big inefficiency in discovering the primary key, 
   introduced in 3.1.x.
-  Mark Johnson. (Bug #513543)
+  (Mark Johnson). (Bug #513543)
+  - Do not leak the GdaDataModelRow.
+  - Prevent an access outside an array and prevent some string leaks.
+  (Murray Cumming)
 * Translation fixes.
   Vivien Malerba. (Bug #494337 - Claude Paroz)
 * Build:
