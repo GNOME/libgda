@@ -1,3 +1,5 @@
+3.0.3:
+
 2008-04-08  Murray Cumming  <murrayc@murrayc.com>
 
 	* libgda/gda-config.c (gda_config_has_key, load_providers_from_dir):
