@@ -1,3 +1,24 @@
+libgda 3.0.3, 2008-04-08
+
+* Change the default string escape for a single-quote char from backslash 
+  single-quote (\') to single-quote single-quote ('') so that SQLite will 
+  accept it
+  (Phil Longstaff)
+* GdaQuery: gda_query_execute() Do not report an error when there is none.
+  (Phil Longstaff)
+* GdaClient: Do not leak the GdaProvider.
+* GdaConnection: Do not leak the GdaClient.
+* GdaColumn: Do not leak part of the GdaValue.
+(Murray Cumming)
+* GdaDataModel:
+* GdaDataModelArray:
+* GdaServerProvider: Fixed some leaks.
+  (Phil Longstaff)
+* PostgreSQL provider:
+  - Do not leak the GdaDataModelRow.
+  - Prevent an access outside an array and prevent some string leaks.
+  (Murray Cumming)
+
 libgda 3.0.2, 2008-01-29
 
 
