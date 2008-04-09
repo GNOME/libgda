@@ -73,28 +73,28 @@ main (int argc, char** argv)
 		if (!strcmp ((gchar *) node->name, "table")) {
 			xmlNodePtr snode, child, table, row, ref = NULL;
 			xmlChar *prop;
-			snode = xmlNewChild (out_top_node, NULL, "sect3", NULL);
+			snode = xmlNewChild (out_top_node, NULL, BAD_CAST "sect3", NULL);
 			prop = xmlGetProp (node, BAD_CAST "name");
 			if (prop) {
 				gchar *str;
 				str = g_strdup_printf ("is:%s", (gchar *) prop);
-				xmlSetProp (snode, "id", BAD_CAST str);
+				xmlSetProp (snode, BAD_CAST "id", BAD_CAST str);
 				g_free (str);
 
 				str = g_strdup_printf ("%s table", (gchar *) prop);
-				xmlNewChild (snode, NULL, "title", str);
+				xmlNewChild (snode, NULL, BAD_CAST "title", BAD_CAST str);
 				g_free (str);
 				xmlFree (prop);
 			}
 			else
-				xmlNewChild (snode, NULL, "title", "FIXME: table not named");
+				xmlNewChild (snode, NULL, BAD_CAST "title", BAD_CAST "FIXME: table not named");
 
 			prop = xmlGetProp (node, BAD_CAST "descr");
 			if (prop) {
-				xmlNewChild (snode, NULL, "para", prop);
+				xmlNewChild (snode, NULL, BAD_CAST "para", prop);
 				xmlFree (prop);
 			}
-			table = xmlNewChild (snode, NULL, BAD_CAST "para", "The following table describes the columns:");
+			table = xmlNewChild (snode, NULL, BAD_CAST "para", BAD_CAST "The following table describes the columns:");
 			table = xmlNewChild (table, NULL, BAD_CAST "informaltable", NULL);
 			xmlSetProp (table, BAD_CAST "frame", BAD_CAST "all");
 			table = xmlNewChild (table, NULL, BAD_CAST "tgroup", NULL);
@@ -159,7 +159,7 @@ main (int argc, char** argv)
 							xmlChar *column, *ref_column;
 							if (strcmp ((gchar *) subnode->name, "part")) 
 								continue;
-							column = xmlGetProp (subnode, "column");
+							column = xmlGetProp (subnode, BAD_CAST "column");
 							if (!column)
 								continue;
 							if (!fk_str) {
@@ -171,7 +171,7 @@ main (int argc, char** argv)
 								g_string_append (ref_pk_str, ", ");
 							}
 							g_string_append (fk_str, (gchar *) column);
-							ref_column = xmlGetProp (subnode, "ref_column");
+							ref_column = xmlGetProp (subnode, BAD_CAST "ref_column");
 							if (ref_column) {
 								g_string_append (ref_pk_str, (gchar *) ref_column);
 								xmlFree (ref_column);
@@ -186,7 +186,7 @@ main (int argc, char** argv)
 						}
 
 						if (fk_str) {
-							xmlNodeAddContent (fkey, fk_str->str);
+							xmlNodeAddContent (fkey, BAD_CAST fk_str->str);
 							g_string_free (fk_str, TRUE);
 						}
 						xmlNodeAddContent (fkey, BAD_CAST "references ");
@@ -195,7 +195,7 @@ main (int argc, char** argv)
 						xmlSetProp (link, BAD_CAST "linkend", BAD_CAST str);
 						g_free (str);
 						if (ref_pk_str) {
-							xmlNodeAddContent (fkey, ref_pk_str->str);
+							xmlNodeAddContent (fkey, BAD_CAST ref_pk_str->str);
 							g_string_free (ref_pk_str, TRUE);
 						}
 						
@@ -210,25 +210,25 @@ main (int argc, char** argv)
 		else if (!strcmp ((gchar *) node->name, "view")) {
 			xmlNodePtr snode, child, para;
 			xmlChar *prop;
-			snode = xmlNewChild (out_top_node, NULL, "sect3", NULL);
+			snode = xmlNewChild (out_top_node, NULL, BAD_CAST "sect3", NULL);
 			prop = xmlGetProp (node, BAD_CAST "name");
 			if (prop) {
 				gchar *str;
 				str = g_strdup_printf ("is:%s", (gchar *) prop);
-				xmlSetProp (snode, "id", BAD_CAST str);
+				xmlSetProp (snode, BAD_CAST "id", BAD_CAST str);
 				g_free (str);
 
 				str = g_strdup_printf ("%s view", (gchar *) prop);
-				xmlNewChild (snode, NULL, "title", str);
+				xmlNewChild (snode, NULL, BAD_CAST "title", BAD_CAST str);
 				g_free (str);
 				xmlFree (prop);
 			}
 			else
-				xmlNewChild (snode, NULL, "title", "FIXME: view not named");
+				xmlNewChild (snode, NULL, BAD_CAST "title", BAD_CAST "FIXME: view not named");
 
 			prop = xmlGetProp (node, BAD_CAST "descr");
 			if (prop) {
-				xmlNewChild (snode, NULL, "para", prop);
+				xmlNewChild (snode, NULL, BAD_CAST "para", prop);
 				xmlFree (prop);
 			}
 			for (child = node->children; child; child = child->next) {
@@ -236,8 +236,8 @@ main (int argc, char** argv)
 					xmlChar *def;
 
 					def = xmlNodeGetContent (child);
-					para = xmlNewChild (snode, NULL, "para", "Definition is:");
-					para = xmlNewChild (para, NULL, "programlisting", def);
+					para = xmlNewChild (snode, NULL, BAD_CAST "para", BAD_CAST "Definition is:");
+					para = xmlNewChild (para, NULL, BAD_CAST "programlisting", def);
 					xmlSetProp (para, BAD_CAST "width", BAD_CAST "80");
 					xmlFree (def);
 					break;
@@ -249,7 +249,7 @@ main (int argc, char** argv)
 
 	buf = xmlBufferCreate();
 	xmlNodeDump (buf, NULL, out_top_node, 0, 1);
-	if (! g_file_set_contents (OUT_FILE, xmlBufferContent (buf), -1, NULL)) 
+	if (! g_file_set_contents (OUT_FILE, (gchar*) xmlBufferContent (buf), -1, NULL)) 
 		g_print ("Could not write output file '%s'\n", OUT_FILE);
 	else
 		g_print ("Doc. written to '%s'\n", OUT_FILE);

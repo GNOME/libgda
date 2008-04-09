@@ -23,7 +23,6 @@
 #include <glib/gi18n-lib.h>
 #include <string.h>
 #include "tools-input.h"
-#include "parser.h"
 #ifdef HAVE_READLINE_HISTORY_H
 #include <readline/history.h>
 #endif

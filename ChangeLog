@@ -1,5 +1,10 @@
 2008-04-09  Vivien Malerba <malerba@gnome-db.org>
 
+	* tools/command-exec.c: removed bogus include
+	* tools/information-schema-doc.c: fixed warnings
+
+2008-04-09  Vivien Malerba <malerba@gnome-db.org>
+
 	* libgda/gda-value.c: corrected some memory leaks, for bug #526748
 	* libgda/gda-connection.c: make gda_connection_get_authentification() return the empty
 	string if the connection has no authentication string rather than NULL
