@@ -190,6 +190,7 @@ gda_capi_provider_class_init (GdaCapiProviderClass *klass)
 	provider_class->meta_funcs._constraints_dom = _gda_capi_meta__constraints_dom;
 	provider_class->meta_funcs.constraints_dom = _gda_capi_meta_constraints_dom;
 	provider_class->meta_funcs._el_types = _gda_capi_meta__el_types;
+	provider_class->meta_funcs.el_types = _gda_capi_meta_el_types;
 	provider_class->meta_funcs._collations = _gda_capi_meta__collations;
 	provider_class->meta_funcs.collations = _gda_capi_meta_collations;
 	provider_class->meta_funcs._character_sets = _gda_capi_meta__character_sets;

@@ -95,16 +95,64 @@ input_from_stream  (FILE *stream)
 	}
 }
 
+#ifdef HAVE_READLINE_READLINE_H	
+static char *
+completion_generator_func (const char *text, int state)
+{
+	static char **compl = NULL;
+	if (state == 0) {
+		/* clear any previous completion */
+		if (compl) {
+			/* don't free the contents of @array, it is freed by readline */
+			g_free (compl);
+			compl = NULL;
+		}
+
+		/* compute list of possible completions. It's very simple at the moment */
+		if (!(*text)) {
+			/* no completion possible */
+		}
+		else {
+			gchar *copy;
+
+			copy = g_strdup (text);
+			g_strchomp (copy);
+			if (*copy) {
+				const char *start;
+				for (start = copy + (strlen (copy) - 1); start >= copy; start--)
+					if (g_ascii_isspace (*start)) {
+						start ++;
+						break;
+					}
+				compl = g_new0 (char *, 2);
+				compl[0] = malloc (sizeof (char) * (strlen (start) + 1));
+				strcpy (compl[0], start);
+			}
+			g_free (copy);
+		}
+
+		if (compl)
+			return compl[0];
+		else
+			return NULL;
+	}
+	else 
+		return compl[state];
+}
+#endif
+
 /**
  * init_input
  *
- * Loads the contents of the history file, if supported
+ * Initializes input
  */
 void
 init_input ()
 {
 #ifdef HAVE_READLINE_READLINE_H	
 	rl_set_signals ();
+	rl_readline_name = "gda-sql";
+	rl_completion_entry_function = completion_generator_func;
 #endif
 }
 
@@ -162,6 +210,7 @@ init_history ()
 	}
 	else
 		history_file = g_build_filename (g_get_home_dir (), HISTORY_FILE, NULL);
+	using_history ();
 	read_history (history_file);
 	history_init_done = TRUE;
 #endif
@@ -197,7 +246,7 @@ save_history (const gchar *file, GError **error)
 #ifdef HAVE_READLINE_HISTORY_H
 	int res;
 	if (!history_init_done || !history_file)
-		return;
+		return FALSE;
 	res = append_history (1, file ? file : history_file);
 	if (res == ENOENT)
 		res = write_history (file ? file : history_file);

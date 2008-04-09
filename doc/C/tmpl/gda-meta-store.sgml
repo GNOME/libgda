@@ -13,22 +13,10 @@ Dictionary object
   before any data could be read out of it.
 </para>
 <para>
-  The new dictionary now relies on a database structure to store its data. The actual database can be a
+  The new dictionary now relies on a database structure to store its data (see the 
+  <link linkend="information_schema">database schema</link> section for a detailled description). The actual database can be a
   single file (using an SQLite database), an entirely in memory database (also using an SQLite database), or
   a more conventional backend such as a PostgreSQL database for a shared dictionary on a server.
-</para>
-<para>
-  &LIBGDA; imposes its own structure (based on objects such as tables and views which name starts with an underscore '_'),
-  but a user can also add its own tables or other database objects. The following diagram shows the tables 
-  defined by &LIBGDA; for its internal needs:
-  <mediaobject>
-    <imageobject role="html">
-      <imagedata fileref="information_schema.png" format="PNG"/>
-    </imageobject>
-    <textobject>
-      <phrase>Dictioanry's tables and views initially defined by &LIBGDA;</phrase>
-    </textobject>
-  </mediaobject>
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

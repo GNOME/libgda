@@ -240,12 +240,3 @@ Methods dedicated to implementing providers
 @newstate: 
 
 
-<!-- ##### FUNCTION gda_connection_get_meta_store ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@Returns: 
-
-

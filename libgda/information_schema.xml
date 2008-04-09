@@ -28,46 +28,46 @@
   </specifics>
 
   <!-- schema description -->
-  <table name="_attributes" descr="(key,value) pairs, keys starting with '_' are reserved">
+  <table name="_attributes" descr="Table to store (key,value) pairs (keys starting with '_' are reserved)">
     <column name="att_name" pkey="TRUE"/>
     <column name="att_value"/>
   </table>
 
-  <table name="_information_schema_catalog_name" descr="One row: the name of the current database (current catalog)">
+  <table name="_information_schema_catalog_name" descr="Name of the current database (current catalog), has only one row">
     <column name="catalog_name" pkey="TRUE"/>
   </table>
 
   <table name="_schemata" descr="List of schemas">
-    <column name="catalog_name" pkey="TRUE"/>
+    <column name="catalog_name" pkey="TRUE" descr="Name of the catalog that contains the schema"/>
     <column name="schema_name" pkey="TRUE"/>
-    <column name="schema_owner" nullok="TRUE"/>
-    <column name="schema_internal" type="boolean"/>
+    <column name="schema_owner" nullok="TRUE" descr="Name of the schema"/>
+    <column name="schema_internal" type="boolean"  descr="Tells if the schema is specific to the database implementation (and usually can't be modified)"/>
     <fkey ref_table="_information_schema_catalog_name">
       <part column="catalog_name" ref_column="catalog_name"/>
     </fkey>
   </table>
 
   <table name="_builtin_data_types" descr="List of built-in data types such as varchar, int, ...">
-    <column name="short_type_name"/>
-    <column name="full_type_name" pkey="TRUE"/>
+    <column name="short_type_name" descr="Short name of the data type"/>
+    <column name="full_type_name" pkey="TRUE" descr="Full name of the data type"/>
     <column name="gtype" nullok="TRUE"/>
     <column name="comments" nullok="TRUE"/>
     <column name="synonyms" nullok="TRUE"/>
-    <column name="internal" type="boolean"/>
+    <column name="internal" type="boolean" descr="Tells if the data type is reserved for the database implementation and should not be used in applications"/>
     <unique>
       <column name="short_type_name"/>
     </unique>
   </table>
 
   <table name="_udt" descr="User defined data types">
-    <column name="udt_catalog" pkey="TRUE"/>
-    <column name="udt_schema" pkey="TRUE"/>
-    <column name="udt_name" pkey="TRUE"/>
-    <column name="udt_gtype" nullok="TRUE"/>
+    <column name="udt_catalog" pkey="TRUE" descr="Name of the catalog that contains the data type"/>
+    <column name="udt_schema" pkey="TRUE" descr="Name of the schema that contains the data type"/>
+    <column name="udt_name" pkey="TRUE" descr="Name of the data type"/>
+    <column name="udt_gtype" nullok="TRUE" descr="GType associated to the data type"/>
     <column name="udt_comments" nullok="TRUE"/>
     <column name="udt_short_name"/>
     <column name="udt_full_name"/>
-    <column name="udt_internal" type="boolean"/>
+    <column name="udt_internal" type="boolean" descr="Tells if the data type is reserved for the database implementation and should not be used in applications"/>
     <column name="udt_owner" nullok="TRUE"/>
     <fkey ref_table="_schemata">
       <part column="udt_catalog" ref_column="catalog_name"/>
@@ -78,13 +78,14 @@
     </unique>
   </table>
 
-  <table name="_udt_columns" descr="List of components for a user defined data type">
-    <column name="udt_catalog" pkey="TRUE"/>
-    <column name="udt_schema" pkey="TRUE"/>
-    <column name="udt_name" pkey="TRUE"/>
-    <column name="udt_column" pkey="TRUE"/>
+  <table name="_udt_columns" descr="List of components for a user defined data type for composed data types (such as a complex number data type which has real and imaginary parts)">
+    <column name="udt_catalog" pkey="TRUE" descr="Name of the catalog that contains the user defined data type for which the column is"/>
+    <column name="udt_schema" pkey="TRUE" descr="Name of the schema that contains the user defined data type for which the column is"/>
+    <column name="udt_name" pkey="TRUE" descr="Name of the user defined data type for which the column is"/>
+    <column name="udt_column" pkey="TRUE" descr="Name of the column (part)"/>
     <column name="ordinal_position" type="gint" descr="Column position, starts at 1"/>
-    <column name="data_type" descr="References _all_types.full_type_name or _element_types.specific_name"/>
+    <column name="data_type" nullok="TRUE" descr="Data type of the column (if the column is an array, then 'array_spec' is set, and this may be NULL)"/>
+    <column name="array_spec" nullok="TRUE" descr="Array description if the column is an array"/>
     <column name="character_maximum_length" type="gint" nullok="TRUE"/>
     <column name="character_octet_length" type="gint" nullok="TRUE"/>
     <column name="numeric_precision" type="gint" nullok="TRUE"/>
@@ -101,12 +102,20 @@
       <part column="udt_schema"/>
       <part column="udt_name"/>
     </fkey>
+    <fkey ref_table="_element_types">
+      <part column="array_spec" ref_column="specific_name"/>
+    </fkey>
+    <!--
+    <fkey ref_table="_all_types">
+      <part column="data_type" ref_column="full_type_name"/>
+    </fkey>
+    -->
   </table>
 
   <table name="_enums" descr="List of possible enumeration labels for enumerations">
-    <column name="udt_catalog" pkey="TRUE"/>
-    <column name="udt_schema" pkey="TRUE"/>
-    <column name="udt_name" pkey="TRUE"/>
+    <column name="udt_catalog" pkey="TRUE" descr="Name of the catalog that contains the ENUM user defined data type"/>
+    <column name="udt_schema" pkey="TRUE" descr="Name of the schema that contains the ENUM user defined data type"/>
+    <column name="udt_name" pkey="TRUE" descr="Name of the ENUM user defined data type"/>
     <column name="label" pkey="TRUE"/>
     <column name="ordinal_position" type="gint" descr="Position, starts at 1"/>
     <fkey ref_table="_udt">
@@ -116,32 +125,33 @@
     </fkey>
   </table>
 
-  <table name="_element_types" descr="">
-    <column name="specific_name" pkey="TRUE"/>
-    <column name="object_catalog"/>
-    <column name="object_schema"/>
-    <column name="object_name"/>
-    <column name="object_ordinal_position" type="gint" nullok="TRUE"/>
-    <column name="object_type"/>
-    <column name="data_type"/>
-    <column name="min_cardinality" type="gint"/>
-    <column name="max_cardinality" type="gint"/>
+  <table name="_element_types" descr="Array specific attributes for array data types">
+    <column name="specific_name" pkey="TRUE" descr="No specific meaning, used as a primary key, and for joining"/>
+    <column name="object_catalog" descr="Name of the catalog that contains the object that uses the array being described"/>
+    <column name="object_schema" descr="Name of the schema that contains the object that uses the array being described"/>
+    <column name="object_name" descr="Name of the object that uses the array being described"/>
+    <column name="object_type" descr="The type of the object that uses the array being described TABLE_COL, DOMAIN, UDT_COL, ROUTINE_COL or ROUTINE_PAR"/>
+    <column name="data_type" nullok="TRUE" descr="Base data type of the array (if the base data type is an array, then 'array_spec' is set, and this may be NULL)"/>
+    <column name="array_spec" nullok="TRUE" descr="Array description if the base data type is an array"/>
+    <column name="min_cardinality" type="gint" nullok="TRUE"/>
+    <column name="max_cardinality" type="gint" nullok="TRUE"/>
   </table>
 
   <table name="_domains" descr="List of domains">
-    <column name="domain_catalog" pkey="TRUE"/>
-    <column name="domain_schema" pkey="TRUE"/>
-    <column name="domain_name" pkey="TRUE"/>
-    <column name="data_type" nullok="TRUE"/>
-    <column name="gtype"/>
+    <column name="domain_catalog" pkey="TRUE" descr="Name of catalog that contains the domain"/>
+    <column name="domain_schema" pkey="TRUE" descr="Name of schema that contains the domain"/>
+    <column name="domain_name" pkey="TRUE" descr="Name of the domain"/>
+    <column name="data_type" nullok="TRUE" descr="Data type of the domain (if the domain is an array, then 'array_spec' is set, and this may be NULL)"/>
+    <column name="array_spec" nullok="TRUE" descr="Array description if the domain is an array"/>
+    <column name="domain_gtype"/>
     <column name="character_maximum_length" type="gint" nullok="TRUE"/>
     <column name="character_octet_length" type="gint" nullok="TRUE"/>
-    <column name="collation_catalog" nullok="TRUE"/>
-    <column name="collation_schema" nullok="TRUE"/>
-    <column name="collation_name" nullok="TRUE"/>
-    <column name="character_set_catalog" nullok="TRUE"/>
-    <column name="character_set_schema" nullok="TRUE"/>
-    <column name="character_set_name" nullok="TRUE"/>
+    <column name="collation_catalog" nullok="TRUE" descr="Name of catalog that contains the associated collation"/>
+    <column name="collation_schema" nullok="TRUE" descr="Name of schema that contains the associated collation"/>
+    <column name="collation_name" nullok="TRUE" descr="Name of the associated collation"/>
+    <column name="character_set_catalog" nullok="TRUE" descr="Name of catalog that contains the associated character set"/>
+    <column name="character_set_schema" nullok="TRUE" descr="Name of schema that contains the associated character set"/>
+    <column name="character_set_name" nullok="TRUE" descr="Name of the associated character set"/>
     <column name="numeric_precision" type="gint" nullok="TRUE"/>
     <column name="numeric_scale" type="gint" nullok="TRUE"/>
     <column name="domain_default" nullok="TRUE"/>
@@ -154,17 +164,25 @@
       <part column="domain_catalog" ref_column="catalog_name"/>
       <part column="domain_schema" ref_column="schema_name"/>
     </fkey>
+    <fkey ref_table="_element_types">
+      <part column="array_spec" ref_column="specific_name"/>
+    </fkey>
+    <!--
+    <fkey ref_table="_all_types">
+      <part column="data_type" ref_column="full_type_name"/>
+    </fkey>
+    -->
     <unique>
       <column name="domain_full_name"/>
     </unique>
   </table>
 
-  <table name="_tables">
-    <column name="table_catalog" pkey="TRUE"/>
-    <column name="table_schema" pkey="TRUE"/>
-    <column name="table_name" pkey="TRUE"/>
-    <column name="table_type"/>
-    <column name="is_insertable_into" type="boolean" nullok="TRUE"/>
+  <table name="_tables" descr="List of tables (tables, views or other objects which can contain data)">
+    <column name="table_catalog" pkey="TRUE" descr="Name of catalog that contains the table"/>
+    <column name="table_schema" pkey="TRUE" descr="Name of schema that contains the table"/>
+    <column name="table_name" pkey="TRUE" descr="Name of the table"/>
+    <column name="table_type" descr="Type of table: BASE TABLE, VIEW, LOCAL TEMPORARY, SYSTEM TABLE, GLOBAL TEMPORARY, ALIAS or SYNONYM"/>
+    <column name="is_insertable_into" type="boolean" nullok="TRUE" descr="Tells if the table's contents can be modified"/>
     <column name="table_comments" nullok="TRUE"/>
     <column name="table_short_name"/>
     <column name="table_full_name"/>
@@ -178,13 +196,13 @@
     </unique>
   </table>
 
-  <table name="_views">
-    <column name="table_catalog" pkey="TRUE"/>
-    <column name="table_schema" pkey="TRUE"/>
-    <column name="table_name" pkey="TRUE"/>
-    <column name="view_definition" nullok="TRUE"/>
+  <table name="_views" descr="List of views and their specific information">
+    <column name="table_catalog" pkey="TRUE" descr="Name of catalog that contains the view"/>
+    <column name="table_schema" pkey="TRUE" descr="Name of schema that contains the view"/>
+    <column name="table_name" pkey="TRUE" descr="Name of the view"/>
+    <column name="view_definition" nullok="TRUE" descr="View as SQL"/>
     <column name="check_option" nullok="TRUE" descr="CASCADE if the statement used to create the view included the WITH CHECK OPTION; otherwise, NONE"/>
-    <column name="is_updatable" type="boolean" nullok="TRUE"/>
+    <column name="is_updatable" type="boolean" nullok="TRUE" descr="Tells if the view's contents can be modified"/>
     <fkey ref_table="_tables">
       <part column="table_catalog"/>
       <part column="table_schema"/>
@@ -192,7 +210,7 @@
     </fkey>
   </table>
 
-  <table name="_collations">
+  <table name="_collations" descr="List of collations methods">
     <column name="collation_catalog" pkey="TRUE"/>
     <column name="collation_schema" pkey="TRUE"/>
     <column name="collation_name" pkey="TRUE"/>
@@ -208,7 +226,7 @@
     </unique>
   </table>
 
-  <table name="_character_sets">
+  <table name="_character_sets" descr="List of character sets">
     <column name="character_set_catalog" pkey="TRUE"/>
     <column name="character_set_schema" pkey="TRUE"/>
     <column name="character_set_name" pkey="TRUE"/>
@@ -232,7 +250,7 @@
     </unique>
   </table>
 
-  <table name="_routines">
+  <table name="_routines" descr="List of functions and stored procedures">
     <column name="specific_catalog" pkey="TRUE"/>
     <column name="specific_schema" pkey="TRUE"/>
     <column name="specific_name" pkey="TRUE"/>
@@ -263,7 +281,7 @@
     </unique>
   </table>
 
-  <table name="_triggers">
+  <table name="_triggers" descr="List of triggers">
     <column name="trigger_catalog" pkey="TRUE"/>
     <column name="trigger_schema" pkey="TRUE"/>
     <column name="trigger_name" pkey="TRUE"/>
@@ -292,7 +310,7 @@
     </unique>
   </table>
 
-  <table name="_columns">
+  <table name="_columns" descr="List of columns composing tables">
     <column name="table_catalog" pkey="TRUE"/>
     <column name="table_schema" pkey="TRUE"/>
     <column name="table_name" pkey="TRUE"/>
@@ -300,9 +318,8 @@
     <column name="ordinal_position" type="gint" descr="Column position, starts at 1"/>
     <column name="column_default" nullok="TRUE"/>
     <column name="is_nullable" type="boolean"/>
-    <column name="data_type" descr="References _all_types.full_type_name"/>
-    <column name="array_dimension" type="gint"/>
-    <column name="element_type" nullok="TRUE" descr="References _element_types.specific_name, for arrays of @data_type base type"/>
+    <column name="data_type" nullok="TRUE" descr="Data type of the column (if the column is an array, then 'array_spec' is set, and this may be NULL)"/>
+    <column name="array_spec" nullok="TRUE" descr="Array description if the column is an array"/>
     <column name="gtype"/>
     <column name="character_maximum_length" type="gint" nullok="TRUE"/>
     <column name="character_octet_length" type="gint" nullok="TRUE"/>
@@ -333,9 +350,17 @@
       <part column="collation_schema"/>
       <part column="collation_name"/>
     </fkey>
+    <fkey ref_table="_element_types">
+      <part column="array_spec" ref_column="specific_name"/>
+    </fkey>
+    <!--
+    <fkey ref_table="_all_types">
+      <part column="data_type" ref_column="full_type_name"/>
+    </fkey>
+    -->
   </table>
 
-  <table name="_table_constraints">
+  <table name="_table_constraints" descr="List of constraints applied to tables (Check, primary or foreign key, or unique constraints)">
     <column name="constraint_catalog" nullok="TRUE" descr="Name of the catalog that contains the constraint"/>
     <column name="constraint_schema" nullok="TRUE" descr="Name of the schema that contains the constraint"/>
 
@@ -354,7 +379,7 @@
     </fkey>
   </table>
 
-  <table name="_referential_constraints">
+  <table name="_referential_constraints" descr="List of foreign key constraints, along with some specific attributes">
     <column name="table_catalog" pkey="TRUE"/>
     <column name="table_schema" pkey="TRUE"/>
     <column name="table_name" pkey="TRUE"/>
@@ -382,7 +407,7 @@
     </fkey>
   </table>
 
-  <table name="_key_column_usage">
+  <table name="_key_column_usage" descr="List of primary key constraints and the name of the tables' columns involved">
     <column name="table_catalog" pkey="TRUE"/>
     <column name="table_schema" pkey="TRUE"/>
     <column name="table_name" pkey="TRUE"/>
@@ -404,7 +429,7 @@
     </fkey>
   </table>
 
-  <table name="_check_column_usage">
+  <table name="_check_column_usage" descr="List of check constraints and the name of the tables' columns involved">
     <column name="table_catalog" pkey="TRUE"/>
     <column name="table_schema" pkey="TRUE"/>
     <column name="table_name" pkey="TRUE"/>
@@ -424,7 +449,7 @@
     </fkey>
   </table>
 
-  <table name="_view_column_usage">
+  <table name="_view_column_usage" descr="List of the tables' columns involved in a view">
     <column name="view_catalog" pkey="TRUE"/>
     <column name="view_schema" pkey="TRUE"/>
     <column name="view_name" pkey="TRUE"/>
@@ -445,7 +470,7 @@
     </fkey>
   </table>
 
-  <table name="_domain_constraints">
+  <table name="_domain_constraints" descr="List of constraints applicable to domains">
     <column name="constraint_catalog" nullok="TRUE" descr="Name of the catalog that contains the constraint"/>
     <column name="constraint_schema" nullok="TRUE" descr="Name of the schema that contains the constraint"/>
 
@@ -468,36 +493,54 @@
     </fkey>
   </table>
 
-  <table name="_parameters">
+  <table name="_parameters" descr="List of routines' (functions and stored procedures) parameters">
     <column name="specific_catalog" pkey="TRUE"/>
     <column name="specific_schema" pkey="TRUE"/>
     <column name="specific_name" pkey="TRUE"/>
     <column name="ordinal_position" type="gint" pkey="TRUE"/>
     <column name="parameter_mode"/>
     <column name="parameter_name" nullok="TRUE"/>
-    <column name="data_type"/>
+    <column name="data_type" nullok="TRUE" descr="Data type of the parameter (if the parameter is an array, then 'array_spec' is set, and this may be NULL)"/>
+    <column name="array_spec" nullok="TRUE" descr="Array description if the parameter is an array"/>
     <fkey ref_table="_routines">
       <part column="specific_catalog"/>
       <part column="specific_schema"/>
       <part column="specific_name"/>
     </fkey>
+    <fkey ref_table="_element_types">
+      <part column="array_spec" ref_column="specific_name"/>
+    </fkey>
+    <!--
+    <fkey ref_table="_all_types">
+      <part column="data_type" ref_column="full_type_name"/>
+    </fkey>
+    -->
   </table>
 
-  <table name="_routine_columns">
+  <table name="_routine_columns" descr="List of routines' (functions and stored procedures) returned values' parts (columns) for routines returning composed values">
     <column name="specific_catalog" pkey="TRUE"/>
     <column name="specific_schema" pkey="TRUE"/>
     <column name="specific_name" pkey="TRUE"/>
     <column name="column_name" pkey="TRUE"/>
     <column name="ordinal_position" type="gint" nullok="TRUE" pkey="TRUE"/>
-    <column name="data_type"/>
+    <column name="data_type" nullok="TRUE" descr="Data type of the column (if the column is an array, then 'array_spec' is set, and this may be NULL)"/>
+    <column name="array_spec" nullok="TRUE" descr="Array description if the column is an array"/>
     <fkey ref_table="_routines">
       <part column="specific_catalog"/>
       <part column="specific_schema"/>
       <part column="specific_name"/>
     </fkey>
+    <fkey ref_table="_element_types">
+      <part column="array_spec" ref_column="specific_name"/>
+    </fkey>
+    <!--
+    <fkey ref_table="_all_types">
+      <part column="data_type" ref_column="full_type_name"/>
+    </fkey>
+    -->
   </table>
   
-  <view name="_all_types">
+  <view name="_all_types" descr="List of all the data types">
     <definition>SELECT short_type_name AS short_type_name, gtype, full_type_name AS full_type_name, comments, internal AS internal, synonyms,
        NULL AS domain_catalog, NULL AS domain_schema, NULL AS domain_name,
        NULL AS udt_catalog, NULL AS udt_schema, NULL AS udt_name
@@ -510,7 +553,7 @@ SELECT domain_short_name, domain_gtype, domain_full_name, domain_comments, domai
        domain_catalog, domain_schema, domain_name , NULL, NULL, NULL FROM _domains</definition>
   </view>
 
-  <view name="_detailled_fk">
+  <view name="_detailled_fk" descr="For each foreign key constraint, lists all the tables' columns involved and the constraint name">
     <definition>SELECT rc.table_catalog as fk_table_catalog, rc.table_schema as fk_table_schema, rc.table_name as fk_table_name, kc1.column_name as fk_column,
       rc.ref_table_catalog as ref_table_catalog, rc.ref_table_schema as ref_table_schema, rc.ref_table_name as ref_table_name, kc2.column_name as ref_column,
       rc.constraint_name as fk_constraint_name, kc1.ordinal_position as ordinal_position

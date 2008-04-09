@@ -238,6 +238,7 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass  *klass)
         provider_class->meta_funcs._constraints_dom = _gda_mysql_meta__constraints_dom;
         provider_class->meta_funcs.constraints_dom = _gda_mysql_meta_constraints_dom;
         provider_class->meta_funcs._el_types = _gda_mysql_meta__el_types;
+        provider_class->meta_funcs.el_types = _gda_mysql_meta_el_types;
         provider_class->meta_funcs._collations = _gda_mysql_meta__collations;
         provider_class->meta_funcs.collations = _gda_mysql_meta_collations;
         provider_class->meta_funcs._character_sets = _gda_mysql_meta__character_sets;

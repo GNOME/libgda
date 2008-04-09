@@ -75,6 +75,9 @@ gboolean _gda_sqlite_meta_constraints_dom  (GdaServerProvider *prov, GdaConnecti
 /* _element_types */
 gboolean _gda_sqlite_meta__el_types        (GdaServerProvider *prov, GdaConnection *cnc, 
 					    GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_sqlite_meta_el_types         (GdaServerProvider *prov, GdaConnection *cnc, 
+					    GdaMetaStore *store, GdaMetaContext *context, GError **error,
+					    const GValue *specific_name);
 
 /* _collations */
 gboolean _gda_sqlite_meta__collations      (GdaServerProvider *prov, GdaConnection *cnc, 

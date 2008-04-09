@@ -278,6 +278,7 @@ static gboolean determine_db_object_from_missing_type (GdaMetaStruct *mstruct, G
 						       GdaMetaDbObjectType *out_type, GValue **out_short_name, 
 						       GValue **out_full_name, GValue **out_owner, const GValue *catalog, 
 						       const GValue *schema, const GValue *name);
+static gchar *array_type_to_sql (GdaMetaStore *store, const GValue *specific_name);
 
 /**
  * gda_meta_struct_complement
@@ -446,7 +447,7 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMeta
 	}
 	case GDA_META_DB_TABLE: {
 		/* columns */
-		gchar *sql = "SELECT c.column_name, c.data_type, c.gtype, c.is_nullable, t.table_short_name, t.table_full_name, c.column_default, t.table_owner FROM _columns as c NATURAL JOIN _tables as t WHERE table_catalog = ##tc::string AND table_schema = ##ts::string AND table_name = ##tname::string ORDER BY ordinal_position";
+		gchar *sql = "SELECT c.column_name, c.data_type, c.gtype, c.is_nullable, t.table_short_name, t.table_full_name, c.column_default, t.table_owner, c.array_spec FROM _columns as c NATURAL JOIN _tables as t WHERE table_catalog = ##tc::string AND table_schema = ##ts::string AND table_name = ##tname::string ORDER BY ordinal_position";
 		GdaMetaTable *mt;
 		GdaDataModel *model;
 		gint i, nrows;
@@ -475,12 +476,20 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMeta
 		for (i = 0; i < nrows; i++) {
 			GdaMetaTableColumn *tcol;
 			const GValue *val;
+			const gchar *cstr = NULL;
 			tcol = g_new0 (GdaMetaTableColumn, 1);
 			tcol->column_name = g_strdup (g_value_get_string (gda_data_model_get_value_at (model, 0, i)));
-			tcol->column_type = g_strdup (g_value_get_string (gda_data_model_get_value_at (model, 1, i)));
+			val = gda_data_model_get_value_at (model, 1, i);
+			if (val && !gda_value_is_null (val))
+				cstr = g_value_get_string (val);
+			if (cstr && *cstr)
+				tcol->column_type = g_strdup (cstr);
+			else 
+				tcol->column_type = array_type_to_sql (store, 
+								       gda_data_model_get_value_at (model, 8, i));
 			tcol->gtype = gda_g_type_from_string (g_value_get_string (gda_data_model_get_value_at (model, 2, i)));
 			tcol->nullok = g_value_get_boolean (gda_data_model_get_value_at (model, 3, i));
-			val = gda_data_model_get_value_at (model, 1, 6);
+			val = gda_data_model_get_value_at (model, 6, i);
 			if (val && !gda_value_is_null (val))
 				tcol->default_value = g_strdup (g_value_get_string (val));
 
@@ -649,6 +658,42 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMeta
 	if (owner) gda_value_free (owner);
 
 	return NULL;
+}
+
+static gchar *
+array_type_to_sql (GdaMetaStore *store, const GValue *specific_name)
+{
+	gchar *str;
+	GdaDataModel *model;
+	gint nrows;
+	const GValue *cvalue;
+
+	if (!specific_name || gda_value_is_null (specific_name)) 
+		return g_strdup ("[]");
+
+	model = gda_meta_store_extract (store, 	"SELECT data_type, array_spec FROM _element_types WHERE specific_name = ##name::string",
+					NULL, "name", specific_name, NULL);
+	if (!model) 
+		return g_strdup ("[]");
+	nrows = gda_data_model_get_n_rows (model);
+	if (nrows != 1) {
+		g_object_unref (model);
+		return g_strdup ("[]");
+	}
+	
+	cvalue = gda_data_model_get_value_at (model, 0, 0);
+	if (!cvalue || gda_value_is_null (cvalue) || !g_value_get_string (cvalue)) {
+		/* use array_spec */
+		gchar *str2;
+		cvalue = gda_data_model_get_value_at (model, 1, 0);
+		str2 = array_type_to_sql (store, cvalue);
+		str = g_strdup_printf ("%s[]", str2);
+		g_free (str2);
+	}
+	else
+		str = g_strdup_printf ("%s[]", g_value_get_string (gda_data_model_get_value_at (model, 0, 0)));
+	g_object_unref (model);
+	return str;
 }
 
 /*

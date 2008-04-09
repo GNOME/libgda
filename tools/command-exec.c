@@ -23,6 +23,7 @@
 #include <glib/gi18n-lib.h>
 #include <string.h>
 #include "tools-input.h"
+#include "parser.h"
 #ifdef HAVE_READLINE_HISTORY_H
 #include <readline/history.h>
 #endif
@@ -146,15 +147,106 @@ commands_compare_group (GdaInternalCommand *a, GdaInternalCommand *b)
 	}
 }
 
+/*
+ * Small tokenizer
+ */
+#define T_ILLEGAL                         1
+#define T_SPACE                           2
+#define T_TEXTUAL                         3
+#define T_WORD                            4
+#define T_STRING                          5
+static int
+getToken (const char *z, gint *tok_type)
+{
+	*tok_type = T_SPACE;
+	int i, c;
+
+	switch (*z) {
+	case ' ': case '\t': case '\n': case '\f': case '\r': {
+		for (i=1; g_ascii_isspace (z[i]); i++){}
+		*tok_type = T_SPACE;
+		return i;
+	}
+	case '\'':
+        case '"': {
+                char delim = z[0];
+                for (i = 1; (c = z[i]) != 0; i++) {
+                        if (c == delim) {
+                                if (z[i+1] == delim)
+                                        i++;
+                                else
+                                        break;
+                        }
+                        else if (c == '\\') {
+                                if (z[i+1] == delim)
+                                        i++;
+                        }
+                }
+                if (c) {
+                        if (delim == '"')
+                                *tok_type = T_TEXTUAL;
+                        else
+                                *tok_type = T_STRING;
+			return i+1;
+                }
+                else {
+                        *tok_type = T_ILLEGAL;
+                        return 0;
+                }
+                break;
+        }
+	default: 
+		for (i=0; z[i] && !g_ascii_isspace (z[i]); i++){}
+		*tok_type = T_WORD;
+		return i;
+	}
+}
+
 /* default function to split arguments */
 static gchar **
 default_gda_internal_commandargs_func (const gchar *string)
 {
-	gchar **array, **ptr;
+	gchar **array = NULL;
+	GSList *parsed_list = NULL;
+	gchar *ptr;
+	gint nparsed, token_type;
 
-	array = g_strsplit (string, " ", -1);
-	for (ptr = array; *ptr; ptr++)
-		g_strchug (*ptr);
+	ptr = (gchar *) string; 
+	nparsed = getToken (ptr, &token_type);
+	while (nparsed > 0) {
+		gint local_nparsed = nparsed;
+		gchar *local_ptr = ptr;
+		switch (token_type) {
+		case T_SPACE:
+		case T_ILLEGAL:
+			break;
+		case T_TEXTUAL:
+		case T_STRING:
+			local_ptr++;
+			local_nparsed -= 2;
+		default: {
+			gchar hold;
+			hold = local_ptr[local_nparsed];
+			local_ptr[local_nparsed] = 0;
+			parsed_list = g_slist_append (parsed_list, g_strdup (local_ptr));
+			local_ptr[local_nparsed] = hold;
+			break;
+		}
+		}
+		ptr += nparsed;
+		nparsed = getToken (ptr, &token_type);
+	}
+	
+	if (parsed_list) {
+		GSList *list;
+		gint i;
+		array = g_new0 (gchar*, g_slist_length (parsed_list) + 1);
+		for (i = 0, list = parsed_list; list; i++, list = list->next) {
+			array [i] = (gchar *) list->data;
+			/*g_print ("array [%d] = %s\n", i, array [i]);*/
+		}
+		g_slist_free (parsed_list);
+	}
 
 	return array;
 }

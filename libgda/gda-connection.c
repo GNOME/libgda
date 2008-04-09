@@ -53,7 +53,7 @@ struct _GdaConnectionPrivate {
 	gboolean              is_open;
 
 	GdaMetaStore         *meta_store;
-	GList                *events_list;
+	GList                *events_list; /* last event is stored as the first node */
 
 	GdaTransactionStatus *trans_status;
 	GHashTable           *prepared_stmts;
@@ -631,13 +631,13 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 								   NULL, NULL, NULL))
 		cnc->priv->is_open = TRUE;
 	else {
-		const GList *events;
+		GList *events;
 		
 		events = gda_connection_get_events (cnc);
 		if (events) {
 			GList *l;
 
-			for (l = (GList *) events; l != NULL; l = l->next) {
+			for (l = events; l; l = l->next) {
 				GdaConnectionEvent *event;
 
 				event = GDA_CONNECTION_EVENT (l->data);
@@ -647,6 +647,7 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 							     gda_connection_event_get_description (event));
 				}
 			}
+			g_list_free (events);
 		}
 
 		cnc->priv->is_open = FALSE;
@@ -898,7 +899,10 @@ gda_connection_get_authentification (GdaConnection *cnc)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv, NULL);
 
-	return (const gchar *) cnc->priv->auth_string;
+	if (cnc->priv->auth_string)
+		return (const gchar *) cnc->priv->auth_string;
+	else
+		return "";
 }
 
 /**
@@ -947,7 +951,7 @@ gda_connection_add_event (GdaConnection *cnc, GdaConnectionEvent *event)
 		}
 	}
 
-	cnc->priv->events_list = g_list_append (cnc->priv->events_list, event);
+	cnc->priv->events_list = g_list_prepend (cnc->priv->events_list, event);
 
 	if (debug > 0) {
 		const gchar *str = NULL;
@@ -1043,13 +1047,12 @@ gda_connection_add_events_list (GdaConnection *cnc, GList *events_list)
 	g_return_if_fail (cnc->priv);
 	g_return_if_fail (events_list != NULL);
 
-	cnc->priv->events_list = g_list_concat (cnc->priv->events_list, events_list);
-
-	/* notify errors */
-	for (l = events_list; l ; l = g_list_next (l))
+	for (l = events_list; l ; l = l->next) {
+		cnc->priv->events_list = g_list_prepend (cnc->priv->events_list, l->data);
 		if (gda_connection_event_get_event_type (GDA_CONNECTION_EVENT (l->data)) ==
 		    GDA_CONNECTION_EVENT_ERROR)
 			g_signal_emit (G_OBJECT (cnc), gda_connection_signals[ERROR], 0, l->data);
+	}
 
 	g_list_free (events_list);
 }
@@ -1264,7 +1267,9 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
  * @last_insert_row: a place to store a new #GdaSet object which contains the values of the last inserted row, or %NULL
  * @error: a place to store errors, or %NULL
  *
- * Executes @stmt. As @stmt can, by desing (and if not abused), contain only one SQL statement, the
+ * Executes @stmt. 
+ *
+ * As @stmt can, by desing (and if not abused), contain only one SQL statement, the
  * return object will either be:
  * <itemizedlist>
  *   <listitem><para>a #GdaDataModel if @stmt is a SELECT statement (a GDA_SQL_STATEMENT_SELECT, see #GdaSqlStatementType)
@@ -1318,7 +1323,8 @@ gda_connection_statement_execute (GdaConnection *cnc, GdaStatement *stmt, GdaSet
  * @last_insert_row: a place to store a new #GdaSet object which contains the values of the last inserted row, or %NULL
  * @error: a place to store an error, or %NULL
  *
- * Executes a non-selection statement on the given connection.
+ * Executes a non-selection statement on the given connection. The gda_execute_non_select_command() method can be easier
+ * to use if one prefers to use some SQL directly.
  *
  * This function returns the number of rows affected by the execution of @stmt, or -1
  * if an error occurred, or -2 if the connection's provider does not return the number of rows affected.
@@ -1388,7 +1394,8 @@ gda_connection_statement_execute_non_select (GdaConnection *cnc, GdaStatement *s
  * @params: a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
  * @error: a place to store an error, or %NULL
  *
- * Executes a selection command on the given connection.
+ * Executes a selection command on the given connection. The gda_execute_select_command() method can be easier
+ * to use if one prefers to use some SQL directly.
  *
  * This function returns a #GdaDataModel resulting from the SELECT statement, or %NULL
  * if an error occurred.
@@ -2129,15 +2136,21 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 		}
 		else {
 			/* _element_types, params: 
-			 *  - none
+			 *  -0- @specific_name
 			 */
+			i = check_parameters (context, error, 1,
+					      &name, G_TYPE_STRING, NULL,
+					      "specific_name", &name, NULL);
+			if (i < 0)
+				return FALSE;
+
 			ASSERT_TABLE_NAME (tname, "element_types");
-			if (!PROV_CLASS (provider)->meta_funcs._el_types) {
-				WARN_METHOD_NOT_IMPLEMENTED (provider, "_el_types");
+			if (!PROV_CLASS (provider)->meta_funcs.el_types) {
+				WARN_METHOD_NOT_IMPLEMENTED (provider, "el_types");
 				break;
 			}
-			retval = PROV_CLASS (provider)->meta_funcs._el_types (provider, cnc, store, context, error);
-			WARN_META_UPDATE_FAILURE (retval, "_el_types");
+			retval = PROV_CLASS (provider)->meta_funcs.el_types (provider, cnc, store, context, error, name);
+			WARN_META_UPDATE_FAILURE (retval, "el_types");
 			return retval;
 		}
 		break;
@@ -2426,7 +2439,7 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			return retval;
 		}
 		else if ((tname[1] == 'd') && (tname[2] == 't') && (tname[3] == '_')) {
-			/* _udt, params: 
+			/* _udt_columns, params: 
 			 *  -0- @udt_catalog, @udt_schema, @udt_name
 			 */
 			i = check_parameters (context, error, 1,
@@ -3012,19 +3025,21 @@ gda_connection_get_meta_store_data (GdaConnection *cnc,
  * gda_connection_get_events
  * @cnc: a #GdaConnection.
  *
- * Retrieves a list of the last errors occurred during the connection.
- * You can make a copy of the list using #gda_connection_event_list_copy.
- * 
- * Returns: a GList of #GdaConnectionEvent.
+ * Retrieves a list of the last errors occurred during the connection. The returned list is
+ * chronologically ordered such as that the most recent event is the #GdaConnectionEvent of the last node. 
  *
+ * The caller is responsible for freeing the returned list (but not the contents of each node) using
+ * g_list_free().
+ * 
+ * Returns: a new GList of #GdaConnectionEvent.
  */
-const GList *
+GList *
 gda_connection_get_events (GdaConnection *cnc)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv, FALSE);
 
-	return cnc->priv->events_list;
+	return g_list_reverse (cnc->priv->events_list);
 }
 
 /**

@@ -49,7 +49,7 @@ content_files = fdl-appendix.sgml
 HTML_IMAGES = DataModels.png \
 	architecture.png parts.png stmt-unknown.png stmt-select.png stmt-insert1.png stmt-insert2.png \
 	stmt-update.png stmt-compound.png information_schema.png \
-	MetaStore1.png MetaStore2.png
+	MetaStore1.png MetaStore2.png i_s_data_types.png
 
 # Extra options to supply to gtkdoc-fixref
 FIXXREF_OPTIONS=
@@ -59,7 +59,8 @@ include $(top_srcdir)/gtk-doc.make
 # Other files to distribute
 EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration.xml migration2.xml \
 	server-operation.xml gettingstarted.xml virtual.xml virtual-notice.xml store-meta-type.xml \
-	prov-writing.xml DataModels.svg \
+	prov-writing.xml i_s_doc.xml \
+	DataModels.svg \
 	architecture.svg parts.svg stmt-unknown.svg stmt-select.svg stmt-insert1.svg stmt-insert2.svg \
 	stmt-update.svg stmt-compound.svg information_schema.svg
 

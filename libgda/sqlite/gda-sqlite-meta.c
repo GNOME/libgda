@@ -300,6 +300,15 @@ _gda_sqlite_meta__el_types (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
+_gda_sqlite_meta_el_types (GdaServerProvider *prov, GdaConnection *cnc, 
+			   GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			   const GValue *specific_name)
+{
+	/* feature not supported by SQLite */
+	return TRUE;
+}
+
+gboolean
 _gda_sqlite_meta__collations (GdaServerProvider *prov, GdaConnection *cnc, 
 			      GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
@@ -646,7 +655,7 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 			g_value_set_string ((v6 = gda_value_new (G_TYPE_STRING)), "string");
 		else
 			g_value_set_string ((v6 = gda_value_new (G_TYPE_STRING)), g_type_name (gtype));
-		if (! append_a_row (mod_model, error, 25, 
+		if (! append_a_row (mod_model, error, 24, 
 				    FALSE, catalog_value, /* table_catalog */
 				    FALSE, p_table_schema, /* table_schema */
 				    FALSE, p_table_name, /* table_name */
@@ -655,8 +664,7 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 				    FALSE, gda_data_model_get_value_at (tmpmodel, 4, i), /* column default */
 				    TRUE, v3, /* is_nullable */
 				    TRUE, v2, /* data_type */
-				    FALSE, zero_value, /* array_dimension */
-				    FALSE, NULL, /* element_type */
+				    FALSE, NULL, /* array_spec */
 				    TRUE, v6, /* gtype */
 				    FALSE, NULL, /* character_maximum_length */
 				    FALSE, NULL, /* character_octet_length */

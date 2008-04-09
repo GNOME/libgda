@@ -103,6 +103,7 @@
 <!ENTITY libgda-GdaDataComparator SYSTEM "xml/gda-data-comparator.xml">
 <!ENTITY provider-writing SYSTEM "prov-writing.xml">
 <!ENTITY provider-support SYSTEM "xml/provider-support.xml">
+<!ENTITY i-s-doc SYSTEM "i_s_doc.xml">
 <!ENTITY fdl-appendix SYSTEM "fdl-appendix.sgml">
 <!ENTITY howto SYSTEM "howto.xml">
 <!ENTITY libgda-TreeIndex SYSTEM "xml/tree_index.sgml">
@@ -407,7 +408,7 @@
     &limitations;
   </part>  
   <part id="part_libgda_api">
-    <title>Client API Reference</title>
+    <title>Client API reference</title>
     <para>
       The following sections describe the API available for &GDA; applications.
     </para>
@@ -651,11 +652,8 @@
 	an easy to use in-memory representation	of some database objects.
       </para>
 
-      &libgda-GdaMetaStore;
-      &libgda-GdaMetaStruct;
-
-      <sect2 id="GdaMetaStoreSetup">
-	<title>GdaConnection and GdaMetaStore setups</title>
+      <sect1 id="GdaMetaStoreSetup">
+	<title>Setup</title>
 	<para>
 	  Each <link linkend="GdaMetaStore">GdaMetaStore</link> object internally uses a (private)
 	  <link linkend="GdaConnection">GdaConnection</link> connection object. The following figure illustrates
@@ -737,12 +735,12 @@ g_object_set (G_OBJECT (cnc), "meta-store", store, NULL);
 g_object_unref (store);
 	  </programlisting>
 	</para>
-      </sect2>
+      </sect1>
 
-      <sect2 id="GdaMetaStoreCustomData">
-	<title>How to store custom data in a GdaMetaStore</title>
+      <sect1 id="GdaMetaStoreCustomData">
+	<title>Adding custom data</title>
 	<para>
-	  This section explains how to add application specific data to a #GdaMetaStore object.
+	  This section explains how to add application specific data (custom data) to a #GdaMetaStore object.
 	</para>
 	<para>
 	  Applications of course don't need to use that feature to manage their own data but it makes sense to use
@@ -774,7 +772,102 @@ g_object_unref (store);
 	</sect3>
 	<para>
 	</para>
-      </sect2>
+      </sect1>
+
+      <sect1 id="information_schema">
+	<title>Database structure</title>
+	<para>
+	  &LIBGDA; imposes its own structure (based on objects such as tables and views which name starts with an 
+	  underscore '_') for the meta data database associated to a <link linkend="GdaMetaStore">GdaMetaStore</link> object,
+	  but a user can also add its own tables or other database objects. The following diagram shows the tables 
+	  defined by &LIBGDA; for its internal needs:
+	  <mediaobject>
+	    <imageobject role="html">
+	      <imagedata fileref="information_schema.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase>Dictioanry's tables and views initially defined by &LIBGDA;</phrase>
+	    </textobject>
+	  </mediaobject>
+	</para>
+
+	<sect2>
+	  <title>Data types</title>
+	  <para>
+	    Data types (as reported for example for table's columns) can be one of the following kinds:
+	    <itemizedlist>
+	      <listitem><para>Builtin data types offered by the database engine such as integers, varchar, etc. Those data 
+		  types are all listed in the 
+		  <link linkend="is:_builtin_data_types">"_builtin_data_types"</link> table.</para></listitem>
+	      <listitem><para>Database domains: domains are data types with optional constraints 
+		  (restrictions on the allowed set of values). A domain refers to the base data type from which it is defined
+		  (that base data type can also be an array). Those data types are all listed in the
+		  <link linkend="is:_domains">"_domains"</link> table.</para></listitem>
+	      <listitem><para>User defined data types (which are not part of the SQL standard but featured by some databases
+		  such as PostgreSQL) are simple or composed data types based on existing data types 
+		  (which may also be arrays). Those data types are all listed in the
+		  <link linkend="is:_udt">"_udt"</link> table.</para></listitem>
+	      <listitem><para>Arrays of any of the previous data types (one or more dimensions). Arrays are not per-se data
+		  types, but rather refer to an existing data type. Arrays are described in the 
+		  <link linkend="is:_element_types">"_element_types"</link> table.</para></listitem>
+	    </itemizedlist>
+	    Note that the data types which are built in, domains or user defined are all also listed in the
+	    <link linkend="is:_all_types">"_all_types"</link> view as a convenience.
+	  </para>
+	  <para>
+	    The impact of that data types' hierarchy is that everytime a data type is referenced (from a table's column
+	    definition for example), there will be two attributes for the data type: one named 
+	    <parameter>data_type</parameter> which, if not NULL, refers to a data type listed in the
+	    <link linkend="is:_all_types">"_all_types"</link> view (thus a built in, domain or user defined data type), and
+	    one named <parameter>array_spec</parameter> which, if not NULL, refers to an array, listed in the
+	    <link linkend="is:_element_types">"_element_types"</link> table. Any of these attributes can be NULL, but they
+	    should never be both NULL at the same time.
+	  </para>
+	  <para>
+	    Single dimension arrays will have the <parameter>data_type</parameter> attribute referencing a data type in the
+	    <link linkend="is:_all_types">"_all_types"</link> view (and the <parameter>array_spec</parameter> attribute
+	    set to NULL), whereas multi dimension arrays will have the <parameter>data_type</parameter> attribute set to NULL
+	    and the <parameter>array_spec</parameter> attribute referencing another tow in the 
+	    <link linkend="is:_element_types">"_element_types"</link> table.
+	  </para>
+	  <para>
+	    The following diagram illustrates the data types representation and how ther are refered from table's columns,
+	    domains, and other database objects which refer to a data type:
+	    <mediaobject>
+	      <imageobject role="html">
+		<imagedata fileref="i_s_data_types.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase>Dictioanry's tables and views initially defined by &LIBGDA;</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </para>
+	</sect2>
+
+	<sect2>
+	  <title>Short and full names</title>
+	  <para>
+	    Database objects will have two associated names, the <emphasis>short name</emphasis> and the
+	    <emphasis>long name</emphasis>, the difference being the same as machine in a local network being called
+	    either by its machine name such as "moon" or by its fully qualified domain name such as "moon.my.network", but
+	    applied to databases and schemas. The full name corresponding to the 
+	    &lt;database&gt;.&lt;schema&gt;.&lt;object_name&gt; or &lt;schema&gt;.&lt;object_name&gt;, and the
+	    short name corresponding to the &lt;object_name&gt;.
+	  </para>
+	  <para>
+	    Short name and full name differ when the schema being accessed is not the schema containing the named
+	    database object, in which case the full name must be used. Some database specific features may also alter
+	    the differences between the short name and the sull name such as the "search_path" variable for PostgreSQL
+	    (which is to a unix PATH variable but for schemas).
+	  </para>
+	</sect2>
+
+	<!-- tables and views documentation -->
+	&i-s-doc;
+      </sect1>
+
+      &libgda-GdaMetaStore;
+      &libgda-GdaMetaStruct;
     </chapter>
 
     <chapter>
@@ -1053,6 +1146,24 @@ Description for type: DROP_COLUMN
       &libgda-GdaReportDocument;
       &libgda-GdaReportDocbookDocument;
       &libgda-GdaReportRmlDocument;
+    </chapter>
+  </part>
+
+  <part id="part_libgda-xslt">
+    <title>XSLT extension</title>
+    <chapter id="libgda-xslt-introduction">
+      <title>Introduction</title>
+      <para>
+	&LIBGDA; features an XSLT extension...
+      </para>
+    </chapter>
+    <chapter id="libgda-xslt-api">
+      <title>API reference</title>
+      <para>TODO</para>
+    </chapter>
+    <chapter>
+      <title>Example</title>
+      <para>TODO</para>
     </chapter>
   </part>
 

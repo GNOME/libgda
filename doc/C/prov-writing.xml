@@ -299,7 +299,8 @@
       with an underscore '_'. The method starting with an underscore must update the whole contents of the meta data
       table, and the other one must accept some more parameters to refine what gets updated. There are exception 
       to this rule (such as the
-      "tables_views()" method which must update both the "_tables" and "_views" tables, or the for the
+      "tables_views()" method which must update both the <link linkend="is:_tables">"_tables"</link> and 
+      <link linkend="is:_views">"_views"</link> tables, or the for the
       tables which have no foreign key (no dependency) to any other table).
     </para>
     <para> 
@@ -314,7 +315,8 @@ gboolean (*tables_views) (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
       </programlisting>
       which means that the <parameter>table_catalog</parameter> and <parameter>table_schema</parameter>
       arguments can't be NULL, whereas the <parameter>table_name</parameter> can be NULL (and in this case the 
-      "tables_views()" method must update the "_tables" and "_views" tables regarding all the tables which
+      "tables_views()" method must update the <link linkend="is:_tables">"_tables"</link> and 
+      <link linkend="is:_views">"_views"</link> tables regarding all the tables which
       are in the specified catalog and schema.
     </para>
     <para>
@@ -328,7 +330,9 @@ gboolean (*tables_views) (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
 gboolean (*_info) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
                    GdaMetaContext *, GError **);
 	</programlisting>
-	This method must update the contents of the "_information_schema_catalog_name" table, which must contain exactly
+	This method must update the contents of the 
+	<link linkend="is:_information_schema_catalog_name">"_information_schema_catalog_name"</link>
+	table, which must contain exactly
 	one row describing the catalog name for the connection.
       </para>
     </sect2>
@@ -340,7 +344,8 @@ gboolean (*_info) (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
 gboolean (*_btypes) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
                      GdaMetaContext *, GError **);
 	</programlisting>
-	This method must update the contents of the "_builtin_data_types" table which lists all the
+	This method must update the contents of the <link linkend="is:_builtin_data_types">"_builtin_data_types"</link>
+	table which lists all the
 	database's built in data types. There is no specific parameter.
       </para>
     </sect2>
@@ -355,7 +360,8 @@ gboolean (*schemata)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
                        GdaMetaContext *, GError **,
                        const GValue *catalog_name, const GValue *schema_name_n);
 	</programlisting>
-        This method must update the contents of the "_schemata" table, which lists all the schemas (namespaces). 
+        This method must update the contents of the <link linkend="is:_schemata">"_schemata"</link> table, 
+	which lists all the schemas (namespaces). 
       </para>
     </sect2>
     <sect2>
@@ -369,7 +375,8 @@ gboolean (*tables_views)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
                            const GValue *table_catalog, const GValue *table_schema, 
                            const GValue *table_name_n);
 	</programlisting>
-	This method must update the contents of the "_tables" and "_views" tables which list all the
+	This method must update the contents of the <link linkend="is:_tables">"_tables"</link> and 
+	<link linkend="is:_views">"_views"</link> tables which list all the
 	tables and views.
       </para>
     </sect2>
@@ -385,7 +392,7 @@ gboolean (*columns)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
                       const GValue *table_catalog, const GValue *table_schema, 
                       const GValue *table_name);
 	</programlisting>
-	This method must update the contents of the "_columns" table which lists all the
+	This method must update the contents of the <link linkend="is:_columns">"_columns"</link> table which lists all the
 	columns of all the tables and views.
       </para>
     </sect2>
@@ -401,7 +408,8 @@ gboolean (*constraints_tab)  (GdaServerProvider *, GdaConnection *, GdaMetaStore
                               const GValue *table_catalog, const GValue *table_schema, 
                               const GValue *table_name, const GValue *constraint_name_n);
 	</programlisting>
-	This method must update the contents of the "_table_constraints" table which lists all the
+	This method must update the contents of the <link linkend="is:_table_constraints">"_table_constraints"</link>
+	table which lists all the
 	constraints (primary key, foreing key, unique or check cnstraints) for each table.
       </para>
     </sect2>
@@ -417,8 +425,10 @@ gboolean (*constraints_ref)  (GdaServerProvider *, GdaConnection *, GdaMetaStore
                               const GValue *table_catalog, const GValue *table_schema, 
                               const GValue *table_name, const GValue *constraint_name);
 	</programlisting>
-	This method must update the contents of the "_referential_constraints" table which lists all the
-	refetential constraints (which are also listed in the "_table_constraints" table).
+	This method must update the contents of the 
+	<link linkend="is:_referential_constraints">"_referential_constraints"</link> table which lists all the
+	refetential constraints (which are also listed in the 
+	<link linkend="is:_table_constraints">"_table_constraints"</link> table).
       </para>
     </sect2>
 
@@ -433,8 +443,10 @@ gboolean (*key_columns)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
                           const GValue *table_catalog, const GValue *table_schema,
                           const GValue *table_name, const GValue *constraint_name);
 	</programlisting>
-	This method must update the contents of the "_key_column_usage" table which lists all the
-	columns involved in each table constraint (as listed in the "_table_constraints" table.
+	This method must update the contents of the <link linkend="is:_key_column_usage">"_key_column_usage"</link>
+	table which lists all the
+	columns involved in each table constraint (as listed in the 
+	<link linkend="is:_table_constraints">"_table_constraints"</link> table).
       </para>
     </sect2>
   </sect1>

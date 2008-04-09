@@ -75,6 +75,9 @@ gboolean _gda_postgres_meta_constraints_dom  (GdaServerProvider *prov, GdaConnec
 /* _element_types */
 gboolean _gda_postgres_meta__el_types        (GdaServerProvider *prov, GdaConnection *cnc, 
 					      GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_postgres_meta_el_types         (GdaServerProvider *prov, GdaConnection *cnc, 
+					      GdaMetaStore *store, GdaMetaContext *context, GError **error,
+					      const GValue *specific_name);
 
 /* _collations */
 gboolean _gda_postgres_meta__collations      (GdaServerProvider *prov, GdaConnection *cnc, 

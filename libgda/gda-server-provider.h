@@ -96,6 +96,8 @@ typedef struct {
 
 	/* _element_types */
 	gboolean (*_el_types)        (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*el_types)         (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
+				      const GValue *specific_name);
 
 	/* _collations */
 	gboolean (*_collations)       (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);

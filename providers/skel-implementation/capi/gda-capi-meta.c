@@ -227,6 +227,15 @@ _gda_capi_meta__el_types (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
+_gda_capi_meta_el_types (GdaServerProvider *prov, GdaConnection *cnc, 
+			 GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			 const GValue *specific_name)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
 _gda_capi_meta__collations (GdaServerProvider *prov, GdaConnection *cnc, 
 			    GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {

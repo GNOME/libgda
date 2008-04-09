@@ -906,7 +906,7 @@ gda_handler_type_get_type
 
 <SECTION>
 <FILE>gda-convenient</FILE>
-<TITLE>Convenient functions</TITLE>
+<TITLE>Convenience functions</TITLE>
 gda_prepare_create_database
 gda_perform_create_database
 gda_prepare_drop_database
@@ -1425,8 +1425,6 @@ gda_connection_internal_savepoint_added
 gda_connection_internal_savepoint_rolledback
 gda_connection_internal_savepoint_removed
 gda_connection_internal_change_transaction_state
-<SUBSECTION>
-gda_connection_get_meta_store
 </SECTION>
 
 <SECTION>
