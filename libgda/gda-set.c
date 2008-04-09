@@ -88,6 +88,7 @@ struct _GdaSetPrivate
 	gchar           *id;
 	gchar           *name;
 	gchar           *descr;
+	GHashTable      *holders_hash; /* key = GdaHoler ID, value = GdaHolder */
 };
 
 static void 
@@ -262,6 +263,7 @@ gda_set_init (GdaSet *set)
 	set->nodes_list = NULL;
 	set->sources_list = NULL;
 	set->groups_list = NULL;
+	set->priv->holders_hash = g_hash_table_new (g_str_hash, g_str_equal);
 }
 
 
@@ -306,7 +308,6 @@ gda_set_copy (GdaSet *set)
 
 	copy = g_object_new (GDA_TYPE_SET, "holders", holders, NULL);
 	g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
-	g_slist_free (holders);
 
 	return copy;
 }
@@ -884,6 +885,7 @@ gda_set_remove_holder (GdaSet *set, GdaHolder *holder)
 	set_remove_node (set, node);
 
 	set->holders = g_slist_remove (set->holders, holder);
+	g_hash_table_remove (set->priv->holders_hash, gda_holder_get_id (holder));
 	g_object_unref (G_OBJECT (holder));
 }
 
@@ -958,6 +960,10 @@ gda_set_dispose (GObject *object)
 			g_object_unref (G_OBJECT (list->data));
 		}
 		g_slist_free (set->holders);
+	}
+	if (set->priv->holders_hash) {
+		g_hash_table_destroy (set->priv->holders_hash);
+		set->priv->holders_hash = NULL;
 	}
 
 	/* free the nodes if there are some */
@@ -1218,9 +1224,7 @@ gda_set_add_holder (GdaSet *set, GdaHolder *holder)
 static void
 gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
 {
-	GSList *holders;
-	GdaHolder *similar = NULL;
-	const gchar *ncid;
+	GdaHolder *similar;
 
 	if (g_slist_find (set->holders, holder))
 		return;
@@ -1229,17 +1233,11 @@ gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
 	 * try to find a similar holder in the set->holders:
 	 * a holder B is similar to a holder A if it has the same ID
 	 */
-	ncid = gda_holder_get_id (holder);
-	for (holders = set->holders; ncid && holders && !similar; holders = holders->next) {
-		const gchar *cid;
-		cid = gda_holder_get_id (GDA_HOLDER (holders->data));
-		if (cid && !strcmp (cid, ncid))
-			similar = GDA_HOLDER (holders->data);
-	}
-	
+	similar = (GdaHolder*) g_hash_table_lookup (set->priv->holders_hash, gda_holder_get_id (holder));
 	if (!similar) {
 		/* really add @holder to the set */
 		set->holders = g_slist_append (set->holders, holder);
+		g_hash_table_insert (set->priv->holders_hash, (gchar*) gda_holder_get_id (holder), holder);
 		g_object_ref (holder);
 		g_signal_connect (G_OBJECT (holder), "changed",
 				  G_CALLBACK (changed_holder_cb), set);
@@ -1345,20 +1343,10 @@ gda_set_is_valid (GdaSet *set)
 GdaHolder *
 gda_set_get_holder (GdaSet *set, const gchar *holder_id)
 {
-	GdaHolder *holder = NULL;
-	GSList *list;
-	gchar *hid;
-
 	g_return_val_if_fail (GDA_IS_SET (set), NULL);
 	g_return_val_if_fail (set->priv, NULL);
 
-	for (list = set->holders; list && !holder; list = list->next) {
-		hid = (gchar *) gda_holder_get_id (GDA_HOLDER (list->data));
-		if (hid && !strcmp (hid, holder_id))
-			holder = GDA_HOLDER (list->data);
-	}
-
-	return holder;
+	return (GdaHolder *) g_hash_table_lookup (set->priv->holders_hash, holder_id);
 }
 
 
