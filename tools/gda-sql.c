@@ -121,6 +121,7 @@ MainData *main_data;
 GString *prompt = NULL;
 
 static gchar   *read_a_line (MainData *data);
+static char    *completion_func (const char *text, int state);
 static void     compute_prompt (MainData *data, GString *string, gboolean in_command);
 static gboolean set_output_file (MainData *data, const gchar *file, GError **error);
 static gboolean set_input_file (MainData *data, const gchar *file, GError **error);
@@ -243,6 +244,7 @@ main (int argc, char *argv[])
 	/* loop over commands */
 	setup_sigint_handler ();
 	init_input ();
+	set_completion_func (completion_func);
 	init_history ();
 	for (;;) {
 		gchar *cmde;
@@ -369,7 +371,7 @@ display_result (MainData *data, GdaInternalCommandResult *res)
 				pnode = xmlNewNode (NULL, BAD_CAST "parameter");
 				xmlAddChild (node, pnode);
 				xmlSetProp (pnode, BAD_CAST "name", 
-					    gda_holder_get_id (GDA_HOLDER (list->data)));
+					    BAD_CAST gda_holder_get_id (GDA_HOLDER (list->data)));
 				value = gda_holder_get_value (GDA_HOLDER (list->data));
 				vnode = gda_value_to_xml (value);
 				xmlAddChild (pnode, vnode);
@@ -390,7 +392,7 @@ display_result (MainData *data, GdaInternalCommandResult *res)
 				pnode = xmlNewNode (NULL, BAD_CAST "li");
 				xmlAddChild (node, pnode);
 				xmlSetProp (pnode, BAD_CAST "name", 
-					    gda_holder_get_id (GDA_HOLDER (list->data)));
+					    BAD_CAST gda_holder_get_id (GDA_HOLDER (list->data)));
 				value = gda_holder_get_value (GDA_HOLDER (list->data));
 				vnode = gda_value_to_xml (value);
 				xmlAddChild (pnode, vnode);
@@ -432,7 +434,7 @@ display_result (MainData *data, GdaInternalCommandResult *res)
 		case OUTPUT_FORMAT_XML:
 			buffer = xmlBufferCreate ();
 			node = xmlNewNode (NULL, BAD_CAST "txt");
-			xmlNodeSetContent (node, res->u.txt->str);
+			xmlNodeSetContent (node, BAD_CAST res->u.txt->str);
 			xmlNodeDump (buffer, NULL, node, 0, 1);
 			output_string (data, (gchar *) xmlBufferContent (buffer));
 			xmlBufferFree (buffer);
@@ -441,7 +443,7 @@ display_result (MainData *data, GdaInternalCommandResult *res)
 		case OUTPUT_FORMAT_HTML: 
 			buffer = xmlBufferCreate ();
 			node = xmlNewNode (NULL, BAD_CAST "p");
-			xmlNodeSetContent (node, res->u.txt->str);
+			xmlNodeSetContent (node, BAD_CAST res->u.txt->str);
 			xmlNodeDump (buffer, NULL, node, 0, 1);
 			output_string (data, (gchar *) xmlBufferContent (buffer));
 			xmlBufferFree (buffer);
@@ -826,7 +828,8 @@ find_connection_from_name (MainData *data, const gchar *name)
  * Open a connection
  */
 static ConnectionSetting*
-open_connection (MainData *data, const gchar *cnc_name, const gchar *dsn, const gchar *provider, const gchar *direct, 
+open_connection (MainData *data, const gchar *cnc_name, const gchar *dsn, 
+		 const gchar *provider, const gchar *direct, 
 		 const gchar *user, const gchar *pass,
 		 GError **error)
 {
@@ -856,11 +859,24 @@ open_connection (MainData *data, const gchar *cnc_name, const gchar *dsn, const 
 					     _("DSN '%s' is not declared"), dsn);
 		}
                 else 
-                        newcnc = gda_connection_open_from_dsn (info->name, auth_string ? auth_string : info->auth_string,
+                        newcnc = gda_connection_open_from_dsn (info->name, 
+							       auth_string ? auth_string : info->auth_string,
 							       0, error);
         }
-        if (!newcnc && direct) 
-		newcnc = gda_connection_open_from_string (provider, direct, auth_string, 0, error);
+        if (!newcnc && direct) {
+		/* test if @direct is not in fact a DSN, in which case use it as a DSN */
+		GdaDataSourceInfo *info = NULL;
+                info = gda_config_get_dsn (direct);
+		if (info) {
+			newcnc = gda_connection_open_from_dsn (info->name, 
+							       auth_string ? auth_string : info->auth_string,
+							       0, error);
+			dsn = direct;
+			direct = NULL;
+		}
+		else
+			newcnc = gda_connection_open_from_string (provider, direct, auth_string, 0, error);
+	}
 	g_free (auth_string);
 
 	if (newcnc) {
@@ -980,7 +996,7 @@ output_data_model (MainData *data, GdaDataModel *model)
 		for (j = 0; j < ncols; j++) {
 			const gchar *cstr;
 			cstr = gda_data_model_get_column_title (model, j);
-			col_node = xmlNewChild (row_node, NULL, BAD_CAST "th", cstr);
+			col_node = xmlNewChild (row_node, NULL, BAD_CAST "th", BAD_CAST cstr);
 			xmlSetProp (col_node, BAD_CAST "align", BAD_CAST "center");
 		}
 
@@ -991,7 +1007,7 @@ output_data_model (MainData *data, GdaDataModel *model)
 				const GValue *value;
 				value = gda_data_model_get_value_at (model, j, i);
 				str = gda_value_stringify (value);
-				col_node = xmlNewChild (row_node, NULL, BAD_CAST "td", str);
+				col_node = xmlNewChild (row_node, NULL, BAD_CAST "td", BAD_CAST str);
 				xmlSetProp (col_node, BAD_CAST "align", BAD_CAST "left");
 				g_free (str);
 			}
@@ -2508,4 +2524,94 @@ static gchar **
 args_as_string_set (const gchar *str)
 {
 	return g_strsplit (str, " ", 3);
+}
+
+static char *
+completion_func (const char *text, int state)
+{
+	static GArray *compl = NULL;
+
+	if (state == 0) {
+		ConnectionSetting *cs = main_data->current;
+		/* clear any previous completion */
+		if (compl) {
+			/* don't free the contents of @array, it is freed by readline */
+			g_array_free (compl, TRUE);
+			compl = NULL;
+		}
+
+		/* compute list of possible completions. It's very simple at the moment */
+		if (!(*text)) {
+			/* no completion possible */
+		}
+		else if (cs) {
+			gchar *copy;
+
+			copy = g_strdup (text);
+			g_strchomp (copy);
+			if (*copy) {
+				const char *start;
+				gint nb_compl = 0;
+				for (start = copy + (strlen (copy) - 1); start > copy; start--)
+					if (g_ascii_isspace (*start)) {
+						start ++;
+						break;
+					}
+				GdaDataModel *model;
+				GdaMetaStore *store;
+				store = gda_connection_get_meta_store (cs->cnc);
+				model = gda_meta_store_extract (store, "SELECT table_schema, table_name FROM "
+								"_tables", NULL);
+				if (model) {
+					gint i, nrows;
+					gint len = strlen (start);
+					
+					compl = g_array_new (TRUE, TRUE, sizeof (char *));
+					nrows = gda_data_model_get_n_rows (model);
+					for (i = 0; i < nrows; i++) {
+						const gchar *tname;
+						tname = g_value_get_string (gda_data_model_get_value_at (model, 1, i));
+						if (!strncmp (tname, start, len)) {
+							char *str;
+							str = malloc (sizeof (char) * (strlen (tname) + 1));
+							strcpy (str, tname);
+							g_array_append_val (compl, str);
+							nb_compl++;
+						}
+					}
+					g_object_unref (model);
+				}
+
+				model = gda_meta_store_extract (store, "SELECT schema_name FROM "
+								"_schemata", NULL);
+				if (model) {
+					gint i, nrows;
+					gint len = strlen (start);
+					
+					compl = g_array_new (TRUE, TRUE, sizeof (char *));
+					nrows = gda_data_model_get_n_rows (model);
+					for (i = 0; i < nrows; i++) {
+						const gchar *tname;
+						tname = g_value_get_string (gda_data_model_get_value_at (model, 0, i));
+						if (!strncmp (tname, start, len)) {
+							char *str;
+							str = malloc (sizeof (char) * (strlen (tname) + 1));
+							strcpy (str, tname);
+							g_array_append_val (compl, str);
+							nb_compl++;
+						}
+					}
+					g_object_unref (model);
+				}
+			}
+			g_free (copy);
+		}
+
+		if (compl)
+			return g_array_index (compl, char*, 0);
+		else
+			return NULL;
+	}
+	else 
+		return g_array_index (compl, char*, state) ;
 }

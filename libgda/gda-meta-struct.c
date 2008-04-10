@@ -204,8 +204,10 @@ compute_view_dependencies (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaD
 	if (sqlst->stmt_type == GDA_SQL_STATEMENT_SELECT) {
 		GdaSqlStatementSelect *selst;
 		selst = (GdaSqlStatementSelect*) (sqlst->contents);
-		GSList *targets;
-		for (targets = selst->from->targets; targets; targets = targets->next) {
+		GSList *targets = NULL;
+		if (selst->from)
+			targets = selst->from->targets;
+		for (; targets; targets = targets->next) {
 			GdaSqlSelectTarget *t = (GdaSqlSelectTarget *) targets->data;
 			GValue *catalog, *schema, *name;
 			GdaMetaDbObject *ref_obj, *tmp_obj;

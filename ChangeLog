@@ -1,3 +1,11 @@
+2008-04-10  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-meta-struct.c: crash bug fixed
+	* providers/postgres/gda-postgres-meta.c: bug fixed
+	* tools/tools-input.[ch]:
+	* tools/gda-sql.c: implemented rudinentary command completion, and also tests
+	if the direct connection string is in fact a DSN when opening the connection
+
 2008-04-10  Murray Cumming  <murrayc@murrayc.com>
 
 	* doc/C/prov-writing.xml:
@@ -9,8 +17,22 @@
 	  gda_connection_open, gda_connection_get_cnc_string,
 	  gda_connection_get_authentication):
 	* libgda/gda-connection.h (GdaConnectionMetaType):
-	* tools/gda-sql.c (extra_command_manage_cnc): Rename authentification to 
+	* tools/gda-sql.c (extra_command_manage_cnc): Rename authentification to
 	authentication in API and implementation.
+
+2008-04-10  Vivien Malerba <malerba@gnome-db.org>
+
+	* doc/C/libgda-4.0-sections.txt:
+	* doc/C/tmpl/gda-pmodel.sgml:
+	* providers/postgres/gda-postgres-recordset.c:
+	* libgda/gda-holder.c:
+	* libgda/gda-data-model-iter.c:
+	* libgda/gda-value.c:
+	* libgda/providers-support/gda-pmodel.[ch]:
+	* libgda/providers-support/gda-prow.c:
+	* libgda/gda-value.h:
+	* libgda/gda-set.c:
+	* libgda/gda-data-model.c: minor tweaks to improve performances
 
 2008-04-09  Vivien Malerba <malerba@gnome-db.org>
 

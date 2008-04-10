@@ -25,6 +25,8 @@
 #include <stdio.h>
 #include <glib.h>
 
+typedef char *(*CompletionFunc) (const char *, int);
+
 gchar   *input_from_console (const gchar *prompt);
 gchar   *input_from_stream  (FILE *stream);
 
@@ -34,5 +36,6 @@ void     input_get_size (gint *width, gint *height);
 void     init_history ();
 void     add_to_history (const gchar *txt);
 gboolean save_history (const gchar *file, GError **error);
+void     set_completion_func (CompletionFunc func);
 
 #endif

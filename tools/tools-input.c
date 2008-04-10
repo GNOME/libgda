@@ -95,52 +95,6 @@ input_from_stream  (FILE *stream)
 	}
 }
 
-#ifdef HAVE_READLINE_READLINE_H	
-static char *
-completion_generator_func (const char *text, int state)
-{
-	static char **compl = NULL;
-	if (state == 0) {
-		/* clear any previous completion */
-		if (compl) {
-			/* don't free the contents of @array, it is freed by readline */
-			g_free (compl);
-			compl = NULL;
-		}
-
-		/* compute list of possible completions. It's very simple at the moment */
-		if (!(*text)) {
-			/* no completion possible */
-		}
-		else {
-			gchar *copy;
-
-			copy = g_strdup (text);
-			g_strchomp (copy);
-			if (*copy) {
-				const char *start;
-				for (start = copy + (strlen (copy) - 1); start >= copy; start--)
-					if (g_ascii_isspace (*start)) {
-						start ++;
-						break;
-					}
-				compl = g_new0 (char *, 2);
-				compl[0] = malloc (sizeof (char) * (strlen (start) + 1));
-				strcpy (compl[0], start);
-			}
-			g_free (copy);
-		}
-
-		if (compl)
-			return compl[0];
-		else
-			return NULL;
-	}
-	else 
-		return compl[state];
-}
-#endif
-
 /**
  * init_input
  *
@@ -152,8 +106,20 @@ init_input ()
 #ifdef HAVE_READLINE_READLINE_H	
 	rl_set_signals ();
 	rl_readline_name = "gda-sql";
-	rl_completion_entry_function = completion_generator_func;
 #endif
+}
+
+/**
+ * set_completion_func
+ *
+ *
+ */
+void
+set_completion_func (CompletionFunc func)
+{
+#ifdef HAVE_READLINE_READLINE_H	
+	rl_completion_entry_function = func;
+#endif	
 }
 
 /*

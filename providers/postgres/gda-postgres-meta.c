@@ -481,15 +481,16 @@ _gda_postgres_meta_el_types (GdaServerProvider *prov, GdaConnection *cnc,
 	GdaDataModel *model;
 	gboolean retval;
 
+	gda_holder_set_value (gda_set_get_holder (i_set, "name"), specific_name);
 	cstr = g_value_get_string (specific_name);
 	if (*cstr == 'C')
-		model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_EL_TYPES_COL], NULL, 
+		model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_EL_TYPES_COL], i_set, 
 								 error);
 	else if (*cstr == 'D')
-		model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_EL_TYPES_DOM], NULL, 
+		model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_EL_TYPES_DOM], i_set, 
 								 error);
 	else if (*cstr == 'U')
-		model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_EL_TYPES_UDT], NULL, 
+		model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_EL_TYPES_UDT], i_set, 
 								 error);
 	else
 		TO_IMPLEMENT;
