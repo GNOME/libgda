@@ -1,3 +1,8 @@
+libgda 3.0.4, 2008-04-10
+
+* GdaValue: Fixed memory leaks and potential crashes.
+  (Vivien Malerba) Bug #526748.
+
 libgda 3.0.3, 2008-04-08
 
 * Change the default string escape for a single-quote char from backslash 

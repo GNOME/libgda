@@ -538,7 +538,7 @@ list_to_string (const GValue *src, GValue *dest)
 	gchar *str;
 	const GdaValueList *list;
 	GList *l;
-	GString *gstr;
+	GString *gstr = NULL;
 	
 	g_return_if_fail (G_VALUE_HOLDS_STRING (dest) &&
 			  GDA_VALUE_HOLDS_LIST (src));
@@ -546,20 +546,16 @@ list_to_string (const GValue *src, GValue *dest)
 	list = gda_value_get_list ((GValue *) src);
 	
 	for (l = (GList *) list; l != NULL; l = l->next) {
-		gchar *s;
-
-		s = gda_value_stringify ((GValue *) l->data);
-		if (!str) {
-			gstr = g_string_new ("{ \"");
-			gstr = g_string_append (gstr, s);
-			gstr = g_string_append (gstr, "\"");
+		str = gda_value_stringify ((GValue *) l->data);
+		if (!gstr) {
+			gstr = g_string_new ("{ ");
+			gstr = g_string_append (gstr, str);
 		}
 		else {
-			gstr = g_string_append (gstr, ", \"");
-			gstr = g_string_append (gstr, s);
-			gstr = g_string_append (gstr, "\"");
+			gstr = g_string_append (gstr, ", ");
+			gstr = g_string_append (gstr, str);
 		}
-		g_free (s);
+		g_free (str);
 	}
 
 	if (gstr) {
@@ -1183,6 +1179,7 @@ GValue *
 gda_value_new_from_xml (const xmlNodePtr node)
 {
 	GValue *value;
+	xmlChar *prop;
 
 	g_return_val_if_fail (node, NULL);
 
@@ -1191,12 +1188,15 @@ gda_value_new_from_xml (const xmlNodePtr node)
 		return NULL;
 
 	value = g_new0 (GValue, 1);
-	if (!gda_value_set_from_string (value,
-					(gchar*)xmlNodeGetContent (node),
-					g_type_from_name ((gchar*)xmlGetProp(node, (xmlChar*)"gdatype")))) {
+	prop = xmlGetProp (node, (xmlChar*)"gdatype");
+	if (prop && !gda_value_set_from_string (value,
+						(gchar*)xmlNodeGetContent (node),
+						gda_g_type_from_string ((gchar*) prop))) {
 		g_free (value);
 		value = NULL;
 	}
+	if (prop)
+		xmlFree (prop);
 
 	return value;
 }
@@ -1753,6 +1753,26 @@ gda_value_stringify (const GValue *value)
 				else
 					return g_strdup ("0000-00-00");
 			}
+			else if (type == GDA_TYPE_LIST) {
+				const GdaValueList *list;
+				const GList *ptr;
+				GString *string;
+				gchar *tmp;
+
+				string = g_string_new ("[");
+				list = gda_value_get_list (value);
+				for (ptr = list; ptr; ptr = ptr->next) {
+					tmp = gda_value_stringify ((GValue *) ptr->data);
+					if (ptr != list)
+						g_string_append_c (string, ',');
+					g_string_append (string, tmp);
+					g_free (tmp);
+				}
+				g_string_append_c (string, ']');
+				tmp = string->str;
+				g_string_free (string, FALSE);
+				return tmp;
+			}
 			else
 				return g_strdup ("");
 		}
@@ -1782,7 +1802,7 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 	g_return_val_if_fail (value1 && value2, -1);
 	g_return_val_if_fail (G_VALUE_TYPE (value1) == G_VALUE_TYPE (value2), -1);
 
-	type = G_VALUE_TYPE(value1);
+	type = G_VALUE_TYPE (value1);
 	
 	if (value1 == value2)
 		return 0;
@@ -1810,9 +1830,13 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 	else if (type == GDA_TYPE_BLOB) {
 		const GdaBlob *blob1 = gda_value_get_blob (value1);
 		const GdaBlob *blob2 = gda_value_get_blob (value2);
-		if (blob1 && blob2 && (((GdaBinary *)blob1)->binary_length == ((GdaBinary *)blob2)->binary_length))
-			return memcmp (((GdaBinary *)blob1)->data, ((GdaBinary *)blob2)->data, 
-				       ((GdaBinary *)blob1)->binary_length) ;
+		if (blob1 && blob2 && (((GdaBinary *)blob1)->binary_length == ((GdaBinary *)blob2)->binary_length)) {
+			if (blob1->op == blob2->op)
+				return memcmp (((GdaBinary *)blob1)->data, ((GdaBinary *)blob2)->data, 
+					       ((GdaBinary *)blob1)->binary_length);
+			else
+				return -1;
+		}
 		else
 			return -1;
 	}
@@ -1848,10 +1872,19 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 			return (v1 > v2) ? 1 : -1;
 	}
 
-	else if (type == GDA_TYPE_GEOMETRIC_POINT)
-		return memcmp (gda_value_get_geometric_point(value1) , 
-			       gda_value_get_geometric_point(value2),
-			       sizeof (GdaGeometricPoint));
+	else if (type == GDA_TYPE_GEOMETRIC_POINT) {
+		const GdaGeometricPoint *p1, *p2;
+		p1 = gda_value_get_geometric_point (value1);
+		p2 = gda_value_get_geometric_point (value2);
+		if (p1 && p2)
+			return memcmp (p1, p2, sizeof (GdaGeometricPoint));
+		else if (p1)
+			return 1;
+		else if (p2)
+			return -1;
+		else
+			return 0;
+	}
 
 	else if (type == G_TYPE_OBJECT) {
 		if (g_value_get_object (value1) == g_value_get_object (value2))
@@ -1938,15 +1971,34 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 		return retval;
 	}
 	
-	else if (type == GDA_TYPE_TIME)
-		return memcmp (gda_value_get_time(value1), gda_value_get_time(value2),
-			       sizeof (GdaTime));
+	else if (type == GDA_TYPE_TIME) {
+		const GdaTime *t1, *t2;
+		t1 = gda_value_get_time (value1);
+		t2 = gda_value_get_time (value2);
+		if (t1 && t2)
+			return memcmp (t1, t2, sizeof (GdaTime));
+		else if (t1)
+			return 1;
+		else if (t2)
+			return -1;
+		else
+			return 0;
+	}
 
-	else if (type == GDA_TYPE_TIMESTAMP)
-		return memcmp (gda_value_get_timestamp(value1), 
-			       gda_value_get_timestamp(value2),
-			       sizeof (GdaTimestamp));
-	
+	else if (type == GDA_TYPE_TIMESTAMP) {
+		const GdaTimestamp *ts1, *ts2;
+		ts1 = gda_value_get_timestamp (value1);
+		ts2 = gda_value_get_timestamp (value2);
+		if (ts1 && ts2)
+			return memcmp (ts1, ts2, sizeof (GdaTimestamp));
+		else if (ts1)
+			return 1;
+		else if (ts2)
+			return -1;
+		else
+			return 0;
+	}
+
 	else if (type == G_TYPE_CHAR)
 		return (g_value_get_char (value1) > g_value_get_char (value2)) ? 1 : 
 			((g_value_get_char (value1) == g_value_get_char (value2)) ? 0 : -1);

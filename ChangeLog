@@ -1,3 +1,11 @@
+3.0.4:
+
+2008-04-10  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-value.c (list_to_string, gda_value_new_from_xml,
+	  gda_value_stringify, gda_value_compare): Backported stability 
+	improvements from svn trunk, by Vivien Malerba.
+
 2008-04-09  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-value.c: corrected some memory leaks, for bug #526748
