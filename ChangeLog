@@ -1,3 +1,7 @@
+2008-04-09  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-value.c: corrected some memory leaks, for bug #526748
+
 3.0.3:
 
 2008-04-08  Murray Cumming  <murrayc@murrayc.com>

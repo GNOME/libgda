@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 1998 - 2007 The GNOME Foundation.
+ * Copyright (C) 1998 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *	Michael Lausch <michael@lausch.at>
@@ -310,6 +310,7 @@ gda_binary_free (gpointer boxed)
 	g_return_if_fail (binary);
 		
 	g_free (binary->data);
+	g_free (binary);
 }
 
 /* 
@@ -509,16 +510,17 @@ gda_geometricpoint_copy (gpointer boxed)
 	
 	g_return_val_if_fail( val, NULL);
 		
-	copy = g_new0(GdaGeometricPoint, 1);
+	copy = g_new0 (GdaGeometricPoint, 1);
 	copy->x = val->x;
 	copy->y = val->y;
 
 	return copy;
 }
 
-void gda_geometricpoint_free (gpointer boxed)
+void
+gda_geometricpoint_free (gpointer boxed)
 {
-	
+	g_free (boxed);
 }
 
 
@@ -606,10 +608,11 @@ gda_value_list_copy (gpointer boxed)
 	return list;
 }
 
-void gda_value_list_free (gpointer boxed)
+void
+gda_value_list_free (gpointer boxed)
 {
 	GList *l = (GList*) boxed;
-	g_list_free(l);
+	g_list_free (l);
 }
 
 
@@ -739,7 +742,6 @@ gda_numeric_free (gpointer boxed)
 	g_return_if_fail (numeric);
 
 	g_free (numeric->number);
-
 	g_free (numeric);
 }
 
@@ -894,9 +896,9 @@ gda_time_copy (gpointer boxed)
 	GdaTime *src = (GdaTime*) boxed;
 	GdaTime *copy = NULL;
 	
-	g_return_val_if_fail(src, NULL);
+	g_return_val_if_fail (src, NULL);
 	
-	copy = g_new0(GdaTime, 1);
+	copy = g_new0 (GdaTime, 1);
 	copy->hour = src->hour;
 	copy->minute = src->minute;
 	copy->second = src->second;
@@ -906,9 +908,10 @@ gda_time_copy (gpointer boxed)
 	return copy;
 }
 
-void gda_time_free (gpointer boxed)
+void
+gda_time_free (gpointer boxed)
 {
-	
+	g_free (boxed);
 }
 
 
@@ -1007,7 +1010,7 @@ gda_timestamp_copy (gpointer boxed)
 	
 	g_return_val_if_fail(src, NULL);
 	
-	copy = g_new0(GdaTimestamp, 1);
+	copy = g_new0 (GdaTimestamp, 1);
 	copy->year = src->year;
 	copy->month = src->month;
 	copy->day = src->day;
@@ -1020,9 +1023,10 @@ gda_timestamp_copy (gpointer boxed)
 	return copy;
 }
 
-void gda_timestamp_free (gpointer boxed)
+void
+gda_timestamp_free (gpointer boxed)
 {
-	
+	g_free (boxed);
 }
 
 
