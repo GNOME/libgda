@@ -177,7 +177,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 
         g_object_class_install_property (object_class, PROP_AUTH_STRING,
-                                         g_param_spec_string ("auth_string", _("Authentification string to use"),
+                                         g_param_spec_string ("auth_string", _("Authentication string to use"),
                                                               NULL, NULL,
                                                               (G_PARAM_READABLE | G_PARAM_WRITABLE)));
         g_object_class_install_property (object_class, PROP_OPTIONS,
@@ -388,7 +388,7 @@ gda_connection_get_property (GObject *object,
 /**
  * gda_connection_open_from_dsn
  * @dsn: data source name.
- * @auth_string: authentification string
+ * @auth_string: authentication string
  * @options: options for the connection (see #GdaConnectionOptions).
  * @error: a place to store an error, or %NULL
  *
@@ -396,11 +396,11 @@ gda_connection_get_property (GObject *object,
  *
  * Establishes a connection to a data source. 
  *
- * The @auth_string must contain the authentification information for the server
+ * The @auth_string must contain the authentication information for the server
  * to accept the connection. It is a string containing semi-colon seperated named value, usually 
  * like "USERNAME=...;PASSWORD=..." where the ... are replaced by actual values. 
  * The actual named parameters required depend on the provider being used, and that list is available
- * as the <parameter>auth_params</parameter> member of the #GdaProviderInfo struncture for each installed
+ * as the <parameter>auth_params</parameter> member of the #GdaProviderInfo structure for each installed
  * provider (use gda_config_get_provider_info() to get it). Also one can use the "gda-sql-4.0 -L" command to 
  * list the possible named parameters.
  *
@@ -461,7 +461,7 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
  * gda_connection_open_from_string
  * @provider_name: provider ID to connect to, or %NULL
  * @cnc_string: connection string.
- * @auth_string: authentification string
+ * @auth_string: authentication string
  * @options: options for the connection (see #GdaConnectionOptions).
  * @error: a place to store an error, or %NULL
  *
@@ -476,15 +476,15 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
  * For example the connection string to open an SQLite connection to a database
  * file named "my_data.db" in the current directory would be "DB_DIR=.;DB_NAME=my_data".
  *
- * The @auth_string must contain the authentification information for the server
- * to accept the connection. It is a string containing semi-colon seperated named value, usually 
+ * The @auth_string must contain the authentication information for the server
+ * to accept the connection. It is a string containing semi-colon seperated named values, usually 
  * like "USERNAME=...;PASSWORD=..." where the ... are replaced by actual values. 
  * The actual named parameters required depend on the provider being used, and that list is available
- * as the <parameter>auth_params</parameter> member of the #GdaProviderInfo struncture for each installed
+ * as the <parameter>auth_params</parameter> member of the #GdaProviderInfo structure for each installed
  * provider (use gda_config_get_provider_info() to get it). Similarly to the format of the connection
  * string, use the "gda-sql-4.0 -L" command to list the possible named parameters.
  *
- * Additionnally, it is possible to have the connection string
+ * Additionally, it is possible to have the connection string
  * respect the "&lt;provider_name&gt;://&lt;real cnc string&gt;" format, in which case the provider name
  * and the real connection string will be extracted from that string (note that if @provider_name
  * is not %NULL then it will still be used as the provider ID).
@@ -620,7 +620,7 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 		if (dsn_info && dsn_info->auth_string)
 			real_auth_string = g_strdup (dsn_info->auth_string);
 		else 
-			/* look for authentification parameters in cnc string */
+			/* look for authentication parameters in cnc string */
 			real_auth_string = g_strdup (cnc->priv->cnc_string);
 	}
 
@@ -886,7 +886,7 @@ gda_connection_get_cnc_string (GdaConnection *cnc)
 }
 
 /**
- * gda_connection_get_authentification
+ * gda_connection_get_authentication
  * @cnc: a #GdaConnection object.
  *
  * Gets the user name used to open this connection.
@@ -894,7 +894,7 @@ gda_connection_get_cnc_string (GdaConnection *cnc)
  * Returns: the user name.
  */
 const gchar *
-gda_connection_get_authentification (GdaConnection *cnc)
+gda_connection_get_authentication (GdaConnection *cnc)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv, NULL);

@@ -1773,9 +1773,9 @@ extra_command_manage_cnc (GdaConnection *cnc, const gchar **args, GError **error
 			gda_data_model_set_value_at (model, 2, row, value, NULL);
 			gda_value_free (value);
 
-			/* only get USERNAME from the the authentification string */
+			/* only get USERNAME from the the authentication string */
 			GdaQuarkList* ql;
-			cstr = gda_connection_get_authentification (cs->cnc);
+			cstr = gda_connection_get_authentication (cs->cnc);
 			ql = gda_quark_list_new_from_string (cstr);
 			cstr = gda_quark_list_find (ql, "USERNAME");
 			value = gda_value_new_from_string (cstr ? cstr : "", G_TYPE_STRING);

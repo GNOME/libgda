@@ -1055,7 +1055,7 @@ gda_config_get_provider_object (const gchar *provider_name, GError **error)
  *  <listitem><para>Provider name</para></listitem>
  *  <listitem><para>Description</para></listitem>
  *  <listitem><para>DSN parameters</para></listitem>
- *  <listitem><para>Authentification parameters</para></listitem>
+ *  <listitem><para>Authentication parameters</para></listitem>
  *  <listitem><para>File</para></listitem>
  * </itemizedlist>
  *
@@ -1083,7 +1083,7 @@ gda_config_list_providers (void)
 	gda_data_model_set_column_title (model, 0, _("Provider"));
 	gda_data_model_set_column_title (model, 1, _("Description"));
 	gda_data_model_set_column_title (model, 2, _("DSN parameters"));
-	gda_data_model_set_column_title (model, 3, _("Authentification"));
+	gda_data_model_set_column_title (model, 3, _("Authentication"));
 	gda_data_model_set_column_title (model, 4, _("File"));
 	g_object_set_data (G_OBJECT (model), "name", _("List of installed providers"));
 
@@ -1272,7 +1272,7 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 		else
 			g_warning ("Provider '%s' does not provide a DSN spec", info->id);
 
-		/* Authentification parameters */
+		/* Authentication parameters */
 		info->auth_params = NULL;
 		if (plugin_get_auth_spec) {
 			GError *error = NULL;

@@ -152,7 +152,7 @@ gboolean             gda_connection_perform_operation    (GdaConnection *cnc, Gd
 const gchar         *gda_connection_get_dsn              (GdaConnection *cnc);
 gboolean             gda_connection_set_dsn              (GdaConnection *cnc, const gchar *datasource);
 const gchar         *gda_connection_get_cnc_string       (GdaConnection *cnc);
-const gchar         *gda_connection_get_authentification (GdaConnection *cnc);
+const gchar         *gda_connection_get_authentication (GdaConnection *cnc);
 
 void                 gda_connection_add_event            (GdaConnection *cnc, GdaConnectionEvent *event);
 GdaConnectionEvent  *gda_connection_add_event_string     (GdaConnection *cnc, const gchar *str, ...);

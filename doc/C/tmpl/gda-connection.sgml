@@ -403,7 +403,7 @@ Management of connections to data sources
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_connection_get_authentification ##### -->
+<!-- ##### FUNCTION gda_connection_get_authentication ##### -->
 <para>
 
 </para>

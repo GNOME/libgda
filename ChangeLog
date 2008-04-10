@@ -1,3 +1,17 @@
+2008-04-10  Murray Cumming  <murrayc@murrayc.com>
+
+	* doc/C/prov-writing.xml:
+	* doc/C/tmpl/gda-connection.sgml:
+	* libgda/gda-config.c (gda_config_get_provider_object,
+	  gda_config_list_providers, load_providers_from_dir):
+	* libgda/gda-connection.c (gda_connection_class_init,
+	  gda_connection_get_property, gda_connection_open_from_dsn,
+	  gda_connection_open, gda_connection_get_cnc_string,
+	  gda_connection_get_authentication):
+	* libgda/gda-connection.h (GdaConnectionMetaType):
+	* tools/gda-sql.c (extra_command_manage_cnc): Rename authentification to 
+	authentication in API and implementation.
+
 2008-04-09  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-set.c: use a GHashTable to find individual GdaHolder objects by

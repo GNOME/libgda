@@ -689,7 +689,7 @@ gboolean (*key_columns)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
     <sect2>
       <title>plugin_get_auth_spec()</title>
       <para>
-	This function returns a description of the authentification information required by the provider. If the
+	This function returns a description of the authentication information required by the provider. If the
 	only information is a username/password pair, then it is not necessary to implement that function.
       </para>
       <para>
