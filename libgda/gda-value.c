@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 1998 - 2007 The GNOME Foundation.
+ * Copyright (C) 1998 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *	Michael Lausch <michael@lausch.at>
@@ -310,6 +310,7 @@ gda_binary_free (gpointer boxed)
 	g_return_if_fail (binary);
 		
 	g_free (binary->data);
+	g_free (binary);
 }
 
 /* 
@@ -509,16 +510,17 @@ gda_geometricpoint_copy (gpointer boxed)
 	
 	g_return_val_if_fail( val, NULL);
 		
-	copy = g_new0(GdaGeometricPoint, 1);
+	copy = g_new0 (GdaGeometricPoint, 1);
 	copy->x = val->x;
 	copy->y = val->y;
 
 	return copy;
 }
 
-void gda_geometricpoint_free (gpointer boxed)
+void
+gda_geometricpoint_free (gpointer boxed)
 {
-	
+	g_free (boxed);
 }
 
 
@@ -602,10 +604,11 @@ gda_value_list_copy (gpointer boxed)
 	return list;
 }
 
-void gda_value_list_free (gpointer boxed)
+void
+gda_value_list_free (gpointer boxed)
 {
 	GList *l = (GList*) boxed;
-	g_list_free(l);
+	g_list_free (l);
 }
 
 
@@ -735,7 +738,6 @@ gda_numeric_free (gpointer boxed)
 	g_return_if_fail (numeric);
 
 	g_free (numeric->number);
-
 	g_free (numeric);
 }
 
@@ -890,9 +892,9 @@ gda_time_copy (gpointer boxed)
 	GdaTime *src = (GdaTime*) boxed;
 	GdaTime *copy = NULL;
 	
-	g_return_val_if_fail(src, NULL);
+	g_return_val_if_fail (src, NULL);
 	
-	copy = g_new0(GdaTime, 1);
+	copy = g_new0 (GdaTime, 1);
 	copy->hour = src->hour;
 	copy->minute = src->minute;
 	copy->second = src->second;
@@ -902,9 +904,10 @@ gda_time_copy (gpointer boxed)
 	return copy;
 }
 
-void gda_time_free (gpointer boxed)
+void
+gda_time_free (gpointer boxed)
 {
-	
+	g_free (boxed);
 }
 
 
@@ -1003,7 +1006,7 @@ gda_timestamp_copy (gpointer boxed)
 	
 	g_return_val_if_fail(src, NULL);
 	
-	copy = g_new0(GdaTimestamp, 1);
+	copy = g_new0 (GdaTimestamp, 1);
 	copy->year = src->year;
 	copy->month = src->month;
 	copy->day = src->day;
@@ -1016,9 +1019,10 @@ gda_timestamp_copy (gpointer boxed)
 	return copy;
 }
 
-void gda_timestamp_free (gpointer boxed)
+void
+gda_timestamp_free (gpointer boxed)
 {
-	
+	g_free (boxed);
 }
 
 
@@ -1163,9 +1167,9 @@ gda_value_new_from_string (const gchar *as_string, GType type)
 
 /**
  * gda_value_new_from_xml
- * @node: an XML node representing the value.
+ * @node: a XML node representing the value.
  *
- * Creates a GValue from an XML representation of it. That XML
+ * Creates a GValue from a XML representation of it. That XML
  * node corresponds to the following string representation:
  *    &lt;value type="gdatype"&gt;value&lt;/value&gt;
  *
@@ -1175,7 +1179,6 @@ GValue *
 gda_value_new_from_xml (const xmlNodePtr node)
 {
 	GValue *value;
-	xmlChar *prop;
 
 	g_return_val_if_fail (node, NULL);
 
@@ -1184,15 +1187,12 @@ gda_value_new_from_xml (const xmlNodePtr node)
 		return NULL;
 
 	value = g_new0 (GValue, 1);
-	prop = xmlGetProp (node, (xmlChar*)"gdatype");
-	if (prop && !gda_value_set_from_string (value,
-						(gchar*)xmlNodeGetContent (node),
-						gda_g_type_from_string ((gchar*) prop))) {
+	if (!gda_value_set_from_string (value,
+					(gchar*)xmlNodeGetContent (node),
+					g_type_from_name ((gchar*)xmlGetProp(node, (xmlChar*)"gdatype")))) {
 		g_free (value);
 		value = NULL;
 	}
-	if (prop)
-		xmlFree (prop);
 
 	return value;
 }
@@ -1798,7 +1798,7 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 	g_return_val_if_fail (value1 && value2, -1);
 	g_return_val_if_fail (G_VALUE_TYPE (value1) == G_VALUE_TYPE (value2), -1);
 
-	type = G_VALUE_TYPE (value1);
+	type = G_VALUE_TYPE(value1);
 	
 	if (value1 == value2)
 		return 0;
@@ -1868,19 +1868,10 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 			return (v1 > v2) ? 1 : -1;
 	}
 
-	else if (type == GDA_TYPE_GEOMETRIC_POINT) {
-		const GdaGeometricPoint *p1, *p2;
-		p1 = gda_value_get_geometric_point (value1);
-		p2 = gda_value_get_geometric_point (value2);
-		if (p1 && p2)
-			return memcmp (p1, p2, sizeof (GdaGeometricPoint));
-		else if (p1)
-			return 1;
-		else if (p2)
-			return -1;
-		else
-			return 0;
-	}
+	else if (type == GDA_TYPE_GEOMETRIC_POINT)
+		return memcmp (gda_value_get_geometric_point(value1) , 
+			       gda_value_get_geometric_point(value2),
+			       sizeof (GdaGeometricPoint));
 
 	else if (type == G_TYPE_OBJECT) {
 		if (g_value_get_object (value1) == g_value_get_object (value2))
@@ -1967,34 +1958,15 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 		return retval;
 	}
 	
-	else if (type == GDA_TYPE_TIME) {
-		const GdaTime *t1, *t2;
-		t1 = gda_value_get_time (value1);
-		t2 = gda_value_get_time (value2);
-		if (t1 && t2)
-			return memcmp (t1, t2, sizeof (GdaTime));
-		else if (t1)
-			return 1;
-		else if (t2)
-			return -1;
-		else
-			return 0;
-	}
+	else if (type == GDA_TYPE_TIME)
+		return memcmp (gda_value_get_time(value1), gda_value_get_time(value2),
+			       sizeof (GdaTime));
 
-	else if (type == GDA_TYPE_TIMESTAMP) {
-		const GdaTimestamp *ts1, *ts2;
-		ts1 = gda_value_get_timestamp (value1);
-		ts2 = gda_value_get_timestamp (value2);
-		if (ts1 && ts2)
-			return memcmp (ts1, ts2, sizeof (GdaTimestamp));
-		else if (ts1)
-			return 1;
-		else if (ts2)
-			return -1;
-		else
-			return 0;
-	}
-
+	else if (type == GDA_TYPE_TIMESTAMP)
+		return memcmp (gda_value_get_timestamp(value1), 
+			       gda_value_get_timestamp(value2),
+			       sizeof (GdaTimestamp));
+	
 	else if (type == G_TYPE_CHAR)
 		return (g_value_get_char (value1) > g_value_get_char (value2)) ? 1 : 
 			((g_value_get_char (value1) == g_value_get_char (value2)) ? 0 : -1);
@@ -2079,7 +2051,7 @@ to_string (const GValue *value)
  * gda_value_to_xml
  * @value: a #GValue.
  *
- * Serializes the given #GValue to an XML node string.
+ * Serializes the given #GValue to a XML node string.
  *
  * Returns: the XML node. Once not needed anymore, you should free it.
  */
