@@ -255,7 +255,7 @@ holder_changed_cb (GdaSet *paramlist, GdaHolder *param)
 	GdaDataModelIter *iter;
 	gint col;
 
-	iter = GDA_DATA_MODEL_ITER (paramlist);
+	iter = (GdaDataModelIter *) paramlist;
 	if (!iter->priv->keep_param_changes && (iter->priv->row >= 0)) {
 		g_signal_handler_block (iter->priv->data_model, iter->priv->model_changes_signals [0]);
 		g_signal_handler_block (iter->priv->data_model, iter->priv->model_changes_signals [1]);
@@ -264,7 +264,7 @@ holder_changed_cb (GdaSet *paramlist, GdaHolder *param)
 		col = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (param), "model_col")) - 1;
 		g_return_if_fail (col >= 0);
 		
-		if (! gda_data_model_set_value_at (GDA_DATA_MODEL (iter->priv->data_model), 
+		if (! gda_data_model_set_value_at ((GdaDataModel *) iter->priv->data_model, 
 						   col, iter->priv->row, gda_holder_get_value (param), NULL)) {
 			/* writing to the model failed, revert back the change to parameter */
 			iter->priv->keep_param_changes = TRUE;

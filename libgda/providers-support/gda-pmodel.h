@@ -46,6 +46,7 @@ struct _GdaPModel {
 	GdaPStmt         *prep_stmt; /* use the "prepared-stmt" property to set this */
 	gint              nb_stored_rows; /* number of GdaPRow objects currently stored */
 	gint              advertized_nrows; /* set when the number of rows becomes known */
+	GdaConnection    *cnc;
 };
 
 /*

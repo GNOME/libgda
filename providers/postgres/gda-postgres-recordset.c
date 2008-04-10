@@ -62,8 +62,9 @@ static gboolean gda_postgres_recordset_fetch_at (GdaPModel *model, GdaPRow **pro
 static void make_point (GdaGeometricPoint *point, const gchar *value);
 static void make_time (GdaTime *timegda, const gchar *value);
 static void make_timestamp (GdaTimestamp *timestamp, const gchar *value);
-static void set_value (GdaConnection *cnc, GValue *value, GType type, const gchar *thevalue, gboolean isNull, gint length);
+static void set_value (GdaConnection *cnc, GValue *value, GType type, const gchar *thevalue, gint length);
 
+static void     set_prow_with_pg_res (GdaPostgresRecordset *imodel, GdaPRow *prow, gint pg_res_rownum);
 static GdaPRow *new_row_from_pg_res (GdaPostgresRecordset *imodel, gint pg_res_rownum);
 static gboolean row_is_in_current_pg_res (GdaPostgresRecordset *model, gint row);
 static gboolean fetch_next_chunk (GdaPostgresRecordset *model, gboolean *fetch_error, GError **error);
@@ -487,21 +488,22 @@ gda_postgres_recordset_fetch_next (GdaPModel *model, GdaPRow **prow, gint rownum
 	if (*prow)
 		return TRUE;
 
-	if (imodel->priv->tmp_row) {
-		g_object_unref (imodel->priv->tmp_row);
-		imodel->priv->tmp_row = NULL;
-	}
-
 	if (row_is_in_current_pg_res (imodel, rownum)) {
-		*prow = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf);
-		imodel->priv->tmp_row = *prow;
+		if (imodel->priv->tmp_row)
+			set_prow_with_pg_res (imodel, imodel->priv->tmp_row, rownum - imodel->priv->pg_res_inf);
+		else
+			imodel->priv->tmp_row = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf);
+		*prow = imodel->priv->tmp_row;
 		return TRUE;
 	}
 	else {
 		gboolean fetch_error = FALSE;
 		if (fetch_next_chunk (imodel, &fetch_error, error)) {
-			*prow = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf);
-			imodel->priv->tmp_row = *prow;
+			if (imodel->priv->tmp_row)
+				set_prow_with_pg_res (imodel, imodel->priv->tmp_row, rownum - imodel->priv->pg_res_inf);
+			else
+				imodel->priv->tmp_row = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf);
+			*prow = imodel->priv->tmp_row;
 			return TRUE;
 		}
 		else
@@ -523,21 +525,22 @@ gda_postgres_recordset_fetch_prev (GdaPModel *model, GdaPRow **prow, gint rownum
 	if (*prow)
 		return TRUE;
 
-	if (imodel->priv->tmp_row) {
-		g_object_unref (imodel->priv->tmp_row);
-		imodel->priv->tmp_row = NULL;
-	}
-
 	if (row_is_in_current_pg_res (imodel, rownum)) {
-		*prow = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf);
-		imodel->priv->tmp_row = *prow;
+		if (imodel->priv->tmp_row)
+			set_prow_with_pg_res (imodel, imodel->priv->tmp_row, rownum - imodel->priv->pg_res_inf);
+		else
+			imodel->priv->tmp_row = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf);
+		*prow = imodel->priv->tmp_row;
 		return TRUE;
 	}
 	else {
 		gboolean fetch_error = FALSE;
 		if (fetch_prev_chunk (imodel, &fetch_error, error)) {
-			*prow = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf);
-			imodel->priv->tmp_row = *prow;
+			if (imodel->priv->tmp_row)
+				set_prow_with_pg_res (imodel, imodel->priv->tmp_row, rownum - imodel->priv->pg_res_inf);
+			else
+				imodel->priv->tmp_row = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf);
+			*prow = imodel->priv->tmp_row;
 			return TRUE;
 		}
 		else
@@ -669,13 +672,8 @@ make_timestamp (GdaTimestamp *timestamp, const gchar *value)
 
 static void
 set_value (GdaConnection *cnc, GValue *value, GType type,
-	   const gchar *thevalue, gboolean isNull, gint length)
+	   const gchar *thevalue, gint length)
 {
-	if (isNull) {
-		gda_value_set_null (value);
-		return;
-	}
-
 	gda_value_reset_with_type (value, type);
 
 	if (type == G_TYPE_BOOLEAN)
@@ -781,24 +779,32 @@ row_is_in_current_pg_res (GdaPostgresRecordset *model, gint row)
                 return FALSE;
 }
 
+static void
+set_prow_with_pg_res (GdaPostgresRecordset *imodel, GdaPRow *prow, gint pg_res_rownum)
+{
+	gchar *thevalue;
+	gint col;
+
+	for (col = 0; col < ((GdaPModel*) imodel)->prep_stmt->ncols; col++) {
+		thevalue = PQgetvalue (imodel->priv->pg_res, pg_res_rownum, col);
+		if (thevalue && (*thevalue != '\0' ? FALSE : PQgetisnull (imodel->priv->pg_res, pg_res_rownum, col)))
+			gda_value_set_null (gda_prow_get_value (prow, col));
+		else
+			set_value (((GdaPModel*) imodel)->cnc,
+				   gda_prow_get_value (prow, col), 
+				   ((GdaPModel*) imodel)->prep_stmt->types [col], 
+				   thevalue, 
+				   PQgetlength (imodel->priv->pg_res, pg_res_rownum, col));
+	}
+}
+
 static GdaPRow *
 new_row_from_pg_res (GdaPostgresRecordset *imodel, gint pg_res_rownum)
 {
 	GdaPRow *prow;
-	gchar *thevalue;
-	gboolean isNull;
-	gint col;
 
 	prow = gda_prow_new (((GdaPModel*) imodel)->prep_stmt->ncols);
-	for (col = 0; col < ((GdaPModel*) imodel)->prep_stmt->ncols; col++) {
-		thevalue = PQgetvalue (imodel->priv->pg_res, pg_res_rownum, col);
-		isNull = thevalue && *thevalue != '\0' ? FALSE : PQgetisnull (imodel->priv->pg_res, pg_res_rownum, col);
-		set_value (gda_pmodel_get_connection ((GdaPModel*) imodel),
-			   gda_prow_get_value (prow, col), 
-			   ((GdaPModel*) imodel)->prep_stmt->types [col], 
-			   thevalue, isNull, 
-			   PQgetlength (imodel->priv->pg_res, pg_res_rownum, col));
-	}
+	set_prow_with_pg_res (imodel, prow, pg_res_rownum);
 	return prow;
 }
 
@@ -828,7 +834,7 @@ fetch_next_chunk (GdaPostgresRecordset *model, gboolean *fetch_error, GError **e
         status = PQresultStatus (model->priv->pg_res);
 	model->priv->chunks_read ++;
         if (status != PGRES_TUPLES_OK) {
-		_gda_postgres_make_error (gda_pmodel_get_connection ((GdaPModel*) model), 
+		_gda_postgres_make_error (((GdaPModel*) model)->cnc, 
 					  model->priv->pconn, model->priv->pg_res, error);
                 PQclear (model->priv->pg_res);
                 model->priv->pg_res = NULL;
@@ -920,7 +926,7 @@ fetch_prev_chunk (GdaPostgresRecordset *model, gboolean *fetch_error, GError **e
         status = PQresultStatus (model->priv->pg_res);
 	model->priv->chunks_read ++;
         if (status != PGRES_TUPLES_OK) {
-		_gda_postgres_make_error (gda_pmodel_get_connection ((GdaPModel*) model), 
+		_gda_postgres_make_error (((GdaPModel*) model)->cnc,
 					  model->priv->pconn, model->priv->pg_res, error);
                 PQclear (model->priv->pg_res);
                 model->priv->pg_res = NULL;
@@ -994,7 +1000,7 @@ fetch_row_number_chunk (GdaPostgresRecordset *model, int row_index, gboolean *fe
         status = PQresultStatus (model->priv->pg_res);
         model->priv->chunks_read ++; /* Not really correct, because we are only fetching 1 row, not a whole chunk of rows. */
         if (status != PGRES_TUPLES_OK) {
-		_gda_postgres_make_error (gda_pmodel_get_connection ((GdaPModel*) model), 
+		_gda_postgres_make_error (((GdaPModel*) model)->cnc, 
 					  model->priv->pconn, model->priv->pg_res, error);
                 PQclear (model->priv->pg_res);
                 model->priv->pg_res = NULL;

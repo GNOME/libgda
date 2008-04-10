@@ -386,9 +386,6 @@ gda_holder_dispose (GObject *object)
 {
 	GdaHolder *holder;
 
-	g_return_if_fail (object != NULL);
-	g_return_if_fail (GDA_IS_HOLDER (object));
-
 	holder = GDA_HOLDER (object);
 	if (holder->priv) {
 		gda_holder_set_bind (holder, NULL);
@@ -765,6 +762,7 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy)
 	gboolean changed = TRUE;
 	gboolean newvalid;
 	const GValue *current_val;
+	gboolean newnull;
 #define DEBUG_HOLDER
 #undef DEBUG_HOLDER
 
@@ -775,27 +773,24 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy)
 	holder->priv->invalid_forced = FALSE;
 
 	/* holder will be changed? */
+	newnull = !value || gda_value_is_null (value);
 	current_val = gda_holder_get_value (holder);
 	if (current_val == value)
 		changed = FALSE;
-	else if ((!current_val || gda_value_is_null ((GValue *)current_val)) && 
-		 (!value       || gda_value_is_null (value))) 
+	else if ((!current_val || gda_value_is_null ((GValue *)current_val)) && newnull)
 		changed = FALSE;
 	else if (value && current_val &&
 		 (G_VALUE_TYPE (value) == G_VALUE_TYPE ((GValue *)current_val)))
-		changed = gda_value_compare (value, (GValue *)current_val);
+		changed = gda_value_bcompare (value, (GValue *)current_val);
 		
 	/* holder's validity */
 	newvalid = TRUE;
-	if (!value || gda_value_is_null (value))
+	if (newnull)
 		if (holder->priv->not_null)
 			newvalid = FALSE;
 
-	if (value &&
-	    (G_VALUE_TYPE (value) != GDA_TYPE_NULL) &&
-	    (G_VALUE_TYPE (value) != holder->priv->g_type)) {
+	if (!newnull && (G_VALUE_TYPE (value) != holder->priv->g_type)) 
 		newvalid = FALSE;
-	}
 
 #ifdef DEBUG_HOLDER
 	g_print ("Changed holder %p (%s): value %s --> %s \t(type %d -> %d) VALID: %d->%d CHANGED: %d\n", 
@@ -819,8 +814,7 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy)
 	/* check is the new value is the default one */
 	holder->priv->default_forced = FALSE;
 	if (holder->priv->default_value) {
-		if ((G_VALUE_TYPE (holder->priv->default_value) == GDA_TYPE_NULL) && 
-		    (!value || gda_value_is_null (value)))
+		if ((G_VALUE_TYPE (holder->priv->default_value) == GDA_TYPE_NULL) && newnull)
 			holder->priv->default_forced = TRUE;
 		else if ((G_VALUE_TYPE (holder->priv->default_value) == holder->priv->g_type) &&
 			 value && (G_VALUE_TYPE (value) == holder->priv->g_type))
@@ -1226,7 +1220,7 @@ gda_holder_set_full_bind (GdaHolder *holder, GdaHolder *alias_of)
 
 	/* get a copy of the current values of @holder and @alias_of */
 	if (alias_of) {
-		g_return_if_fail (alias_of && GDA_IS_HOLDER (alias_of));
+		g_return_if_fail (GDA_IS_HOLDER (alias_of));
 		g_return_if_fail (alias_of->priv);
 		g_return_if_fail (holder->priv->g_type == alias_of->priv->g_type);
 		cvalue = gda_holder_get_value (alias_of);

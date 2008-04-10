@@ -39,9 +39,7 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
-#define l_g_value_unset(val) if G_IS_VALUE (val) g_value_unset (val)
-
-
+#define l_g_value_unset(val) G_STMT_START{ if (G_IS_VALUE (val)) g_value_unset (val); }G_STMT_END
 
 static gboolean
 set_from_string (GValue *value, const gchar *as_string)
@@ -60,7 +58,7 @@ set_from_string (GValue *value, const gchar *as_string)
 	}
 
 	type = G_VALUE_TYPE (value);
-	gda_value_reset_with_type (value, type);
+	g_value_reset (value);
 
 	if (g_value_type_transformable (G_TYPE_STRING, type)) {
 		/* use the GLib type transformation function */
@@ -1227,11 +1225,15 @@ gda_value_reset_with_type (GValue *value, GType type)
 {
 	g_return_if_fail (value);
 
-	l_g_value_unset (value);
-	if (type == GDA_TYPE_NULL || type == G_TYPE_INVALID)
-		return;
-	else
-		g_value_init (value, type);
+	if (G_IS_VALUE (value) && (G_VALUE_TYPE (value) == type))
+		g_value_reset (value);
+	else {
+		l_g_value_unset (value);
+		if (type == GDA_TYPE_NULL || type == G_TYPE_INVALID)
+			return;
+		else
+			g_value_init (value, type);
+	}
 }
 
 
@@ -1782,6 +1784,124 @@ gda_value_stringify (const GValue *value)
 }
 	
 /**
+ * gda_value_bcompare
+ * @value1: a #GValue to compare.
+ * @value2: the other #GValue to be compared to @value1.
+ *
+ * Tells if two values are equal or not
+ *
+ * Returns: 0 if @value1 and @value2 are equal, and something else otherwise
+ */
+gint
+gda_value_bcompare (const GValue *value1, const GValue *value2)
+{
+	GType type;
+	g_return_val_if_fail (value1 && value2, FALSE);
+
+	/* blind value comparison */
+	if (!bcmp (value1, value2, sizeof (GValue)))
+		return 0;
+
+	type = G_VALUE_TYPE (value1);
+	if (type == GDA_TYPE_BINARY) {
+		const GdaBinary *binary1 = gda_value_get_binary (value1);
+		const GdaBinary *binary2 = gda_value_get_binary (value2);
+		if (binary1 && binary2 && (binary1->binary_length == binary2->binary_length))
+			return bcmp (binary1->data, binary2->data, binary1->binary_length) ;
+	}
+
+	else if (type == GDA_TYPE_BLOB) {
+		const GdaBlob *blob1 = gda_value_get_blob (value1);
+		const GdaBlob *blob2 = gda_value_get_blob (value2);
+		if (blob1 && blob2 && (((GdaBinary *)blob1)->binary_length == ((GdaBinary *)blob2)->binary_length)) {
+			if (blob1->op == blob2->op)
+				return bcmp (((GdaBinary *)blob1)->data, ((GdaBinary *)blob2)->data, 
+					     ((GdaBinary *)blob1)->binary_length);
+		}
+	}
+
+	else if (type == G_TYPE_DATE) {
+		GDate *d1, *d2;
+
+		d1 = (GDate *) g_value_get_boxed (value1);
+		d2 = (GDate *) g_value_get_boxed (value2);
+		if (d1 && d2)
+			return g_date_compare (d1, d2);
+	}
+
+	else if (type == GDA_TYPE_GEOMETRIC_POINT) {
+		const GdaGeometricPoint *p1, *p2;
+		p1 = gda_value_get_geometric_point (value1);
+		p2 = gda_value_get_geometric_point (value2);
+		if (p1 && p2)
+			return bcmp (p1, p2, sizeof (GdaGeometricPoint));
+	}
+
+	else if (type == G_TYPE_OBJECT) {
+		if (g_value_get_object (value1) == g_value_get_object (value2))
+			return 0;
+		else
+			return -1;
+	}
+
+	else if (type == GDA_TYPE_LIST) {
+		GList *l1, *l2;
+		for (l1 = (GList*) gda_value_get_list (value1), l2 = (GList*) gda_value_get_list (value2); 
+		     l1 != NULL && l2 != NULL; l1 = l1->next, l2 = l2->next){
+			if (gda_value_bcompare ((GValue *) l1->data, (GValue *) l2->data))
+				return 1;
+		}
+		return 0;
+	}
+
+	else if (type == GDA_TYPE_NUMERIC) {
+		const GdaNumeric *num1, *num2;
+		num1= gda_value_get_numeric (value1);
+		num2 = gda_value_get_numeric (value2);
+                if (num1 && num2)
+			return strcmp (num1->number, num2->number);
+	}
+
+	else if (type == GDA_TYPE_SHORT) {
+		gshort i1 = gda_value_get_short (value1);
+		gshort i2 = gda_value_get_short (value2);
+		return (i1 == i2) ? 0 : 1;
+	}
+	
+	else if (type == GDA_TYPE_USHORT) {
+		gushort i1 = gda_value_get_ushort (value1);
+		gushort i2 = gda_value_get_ushort (value2);
+		return (i1 == i2) ? 0 : 1;
+	}
+	
+	else if (type == G_TYPE_STRING)	{
+		const gchar *str1, *str2;
+		str1 = g_value_get_string (value1);
+		str2 = g_value_get_string (value2);
+		if (str1 && str2)
+			return strcmp (str1, str2);
+	}
+	
+	else if (type == GDA_TYPE_TIME) {
+		const GdaTime *t1, *t2;
+		t1 = gda_value_get_time (value1);
+		t2 = gda_value_get_time (value2);
+		if (t1 && t2)
+			return bcmp (t1, t2, sizeof (GdaTime));
+	}
+
+	else if (type == GDA_TYPE_TIMESTAMP) {
+		const GdaTimestamp *ts1, *ts2;
+		ts1 = gda_value_get_timestamp (value1);
+		ts2 = gda_value_get_timestamp (value2);
+		if (ts1 && ts2)
+			return bcmp (ts1, ts2, sizeof (GdaTimestamp));
+	}
+
+	return 1;
+}
+
+/**
  * gda_value_compare
  * @value1: a #GValue to compare.
  * @value2: the other #GValue to be compared to @value1.
@@ -1807,13 +1927,17 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 	if (value1 == value2)
 		return 0;
 
-	else if (type == G_TYPE_INT64) 
-		return (g_value_get_int64 (value1) > g_value_get_int64 (value2)) ? 1 : 
-			((g_value_get_int64 (value1) == g_value_get_int64 (value2)) ? 0 : -1);
+	else if (type == G_TYPE_INT64) {
+		gint64 i1 = g_value_get_int64 (value1);
+		gint64 i2 = g_value_get_int64 (value2);
+		return (i1 > i2) ? 1 : ((i1 == i2) ? 0 : -1);
+	}
 		
-	else if (type == G_TYPE_UINT64)
-		return (g_value_get_uint64 (value1) > g_value_get_uint64 (value2)) ? 1 : 
-			((g_value_get_uint64 (value1) == g_value_get_uint64 (value2)) ? 0 : -1);
+	else if (type == G_TYPE_UINT64) {
+		guint64 i1 = g_value_get_uint64 (value1);
+		guint64 i2 = g_value_get_uint64 (value2);
+		return (i1 > i2) ? 1 : ((i1 == i2) ? 0 : -1);
+	}
 
 	else if (type == GDA_TYPE_BINARY) {
 		const GdaBinary *binary1 = gda_value_get_binary (value1);
@@ -1894,8 +2018,7 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 	}
 
 	else if (type == G_TYPE_INT)
-		return (g_value_get_int (value1) > g_value_get_int (value2)) ? 1 : 
-			((g_value_get_int (value1) == g_value_get_int (value2)) ? 0 : -1);
+		return g_value_get_int (value1) - g_value_get_int (value2);
 
 	else if (type == GDA_TYPE_LIST) {
 		retval = 0;
@@ -1931,25 +2054,35 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 		return retval;
 	}
 
-	else if (type == G_TYPE_FLOAT)
-		return (g_value_get_float (value1) > g_value_get_float (value2)) ? 1 : 
-			((g_value_get_float (value1) == g_value_get_float (value2)) ? 0 : -1);
+	else if (type == G_TYPE_FLOAT) {
+		gfloat f1 = g_value_get_float (value1);
+		gfloat f2 = g_value_get_float (value2);
+		return (f1 > f2) ? 1 : ((f1 == f2) ? 0 : -1);
+	}
 
-	else if (type == GDA_TYPE_SHORT)
-		return (gda_value_get_short (value1) > gda_value_get_short (value2)) ? 1 : 
-			((gda_value_get_short (value1) == gda_value_get_short (value2)) ? 0 : -1);
+	else if (type == GDA_TYPE_SHORT) {
+		gshort i1 = gda_value_get_short (value1);
+		gshort i2 = gda_value_get_short (value2);
+		return (i1 > i2) ? 1 : ((i1 == i2) ? 0 : -1);
+	}
 
-	else if (type == G_TYPE_ULONG)
-		return (g_value_get_ulong (value1) > g_value_get_ulong (value2)) ? 1 : 
-			((g_value_get_ulong (value1) == g_value_get_ulong (value2)) ? 0 : -1);
+	else if (type == G_TYPE_ULONG) {
+		gulong i1 = g_value_get_ulong (value1);
+		gulong i2 = g_value_get_ulong (value2);
+		return (i1 > i2) ? 1 : ((i1 == i2) ? 0 : -1);
+	}
 
-	else if (type == G_TYPE_LONG)
-		return (g_value_get_long (value1) > g_value_get_long (value2)) ? 1 : 
-			((g_value_get_long (value1) == g_value_get_long (value2)) ? 0 : -1);
+	else if (type == G_TYPE_LONG) {
+		glong i1 = g_value_get_long (value1);
+		glong i2 = g_value_get_long (value2);
+		return (i1 > i2) ? 1 : ((i1 == i2) ? 0 : -1);
+	}
 	
-	else if (type == GDA_TYPE_USHORT)
-		return (gda_value_get_ushort (value1) > gda_value_get_ushort (value2)) ? 1 : 
-			((gda_value_get_ushort (value1) == gda_value_get_ushort (value2)) ? 0 : -1);
+	else if (type == GDA_TYPE_USHORT) {
+		gushort i1 = gda_value_get_ushort (value1);
+		gushort i2 = gda_value_get_ushort (value2);
+		return (i1 > i2) ? 1 : ((i1 == i2) ? 0 : -1);
+	}
 	
 	else if (type == G_TYPE_STRING)	{
 		const gchar *str1, *str2;
@@ -1999,18 +2132,23 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 			return 0;
 	}
 
-	else if (type == G_TYPE_CHAR)
-		return (g_value_get_char (value1) > g_value_get_char (value2)) ? 1 : 
-			((g_value_get_char (value1) == g_value_get_char (value2)) ? 0 : -1);
+	else if (type == G_TYPE_CHAR) {
+		gchar c1 = g_value_get_char (value1);
+		gchar c2 = g_value_get_char (value2);
+		return (c1 > c2) ? 1 : ((c1 == c2) ? 0 : -1);
+	}
 
-	else if (type == G_TYPE_UCHAR)
-		return (g_value_get_uchar (value1) > g_value_get_uchar (value2)) ? 1 : 
-			((g_value_get_uchar (value1) == g_value_get_uchar (value2)) ? 0 : -1);
+	else if (type == G_TYPE_UCHAR) {
+		guchar c1 = g_value_get_uchar (value1);
+		guchar c2 = g_value_get_uchar (value2);
+		return (c1 > c2) ? 1 : ((c1 == c2) ? 0 : -1);
+	}
 
-	else if (type == G_TYPE_UINT)
-		return (g_value_get_uint (value1) > g_value_get_uint (value2)) ? 1 : 
-			((g_value_get_uint (value1) == g_value_get_uint (value2)) ? 0 : -1);
-
+	else if (type == G_TYPE_UINT) {
+		guint i1 = g_value_get_uint (value1);
+		guint i2 = g_value_get_uint (value2);
+		return (i1 > i2) ? 1 : ((i1 == i2) ? 0 : -1);
+	}
 
 	g_warning ("%s() cannot handle values of type %s", __FUNCTION__, g_type_name (G_VALUE_TYPE (value1)));
 

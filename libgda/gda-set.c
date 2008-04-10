@@ -725,10 +725,10 @@ gda_set_new_from_spec_node (xmlNodePtr xml_spec, GError **error)
 			gdatype = xmlGetProp (cur, BAD_CAST "gdatype");
 
 			if (!holder) {
-				holder = GDA_HOLDER (g_object_new (GDA_TYPE_HOLDER,
-								   "g_type", 
-								   gdatype ? gda_g_type_from_string ((gchar *) gdatype) : G_TYPE_STRING,
-								   NULL));
+				holder = (GdaHolder*) (g_object_new (GDA_TYPE_HOLDER,
+								     "g_type", 
+								     gdatype ? gda_g_type_from_string ((gchar *) gdatype) : G_TYPE_STRING,
+								     NULL));
 				holders = g_slist_append (holders, holder);
 			}
 			if (gdatype) xmlFree (gdatype);
@@ -1035,7 +1035,7 @@ compute_public_data (GdaSet *set)
 	for (list = set->holders; list; list = list->next) {
 		node = g_new0 (GdaSetNode, 1);
 		node->holder = GDA_HOLDER (list->data);
-		node->source_model = gda_holder_get_source_model (GDA_HOLDER (list->data),
+		node->source_model = gda_holder_get_source_model (node->holder,
 								  &(node->source_column));
 		if (node->source_model)
 			g_object_ref (node->source_model);
@@ -1318,7 +1318,7 @@ gda_set_is_valid (GdaSet *set)
 	g_return_val_if_fail (set->priv, FALSE);
 
 	for (holders = set->holders; holders && retval; holders = g_slist_next (holders)) {
-		if (!gda_holder_is_valid (GDA_HOLDER (holders->data))) 
+		if (!gda_holder_is_valid ((GdaHolder*) holders->data)) 
 			retval = FALSE;
 		
 #ifdef GDA_DEBUG_NO

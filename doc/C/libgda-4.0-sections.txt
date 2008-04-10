@@ -776,6 +776,7 @@ gda_value_set_timestamp
 gda_value_set_from_string
 gda_value_set_from_value
 gda_value_stringify
+gda_value_bcompare
 gda_value_compare
 gda_value_compare_ext
 gda_value_to_xml

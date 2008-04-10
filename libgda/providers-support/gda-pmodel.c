@@ -48,7 +48,6 @@ enum
  * model row ==(model->index)==> model->rows index ==(model->rows)==> GdaPRow
  */
 struct _GdaPModelPrivate {
-	GdaConnection          *cnc;
 	GSList                 *columns; /* list of GdaColumn objects */
 	GArray                 *rows; /* Array of GdaPRow */
 	GHashTable             *index; /* key = model row number + 1, value = index in @rows array + 1*/
@@ -222,7 +221,7 @@ gda_pmodel_init (GdaPModel *model, GdaPModelClass *klass)
 {
 	g_return_if_fail (GDA_IS_PMODEL (model));
 	model->priv = g_new0 (GdaPModelPrivate, 1);
-	model->priv->cnc = NULL;
+	model->cnc = NULL;
 	model->priv->rows = g_array_new (FALSE, FALSE, sizeof (GdaPRow *));
 	model->priv->index = g_hash_table_new (g_direct_hash, g_direct_equal);
 	model->prep_stmt = NULL;
@@ -243,9 +242,9 @@ gda_pmodel_dispose (GObject *object)
 	/* free memory */
 	if (model->priv) {
 		gint i;
-		if (model->priv->cnc) {
-			g_object_unref (model->priv->cnc);
-			model->priv->cnc = NULL;
+		if (model->cnc) {
+			g_object_unref (model->cnc);
+			model->cnc = NULL;
 		}
 		if (model->prep_stmt) {
 			g_object_unref (model->prep_stmt);
@@ -342,9 +341,9 @@ gda_pmodel_set_property (GObject *object,
 	if (model->priv) {
 		switch (param_id) {
 		case PROP_CNC:
-			model->priv->cnc = g_value_get_object (value);
-			if (model->priv->cnc)
-				g_object_ref (model->priv->cnc);
+			model->cnc = g_value_get_object (value);
+			if (model->cnc)
+				g_object_ref (model->cnc);
 			break;
 		case PROP_PREP_STMT:
 			if (model->prep_stmt)
@@ -408,7 +407,7 @@ gda_pmodel_get_property (GObject *object,
 	if (model->priv) {
 		switch (param_id) {
 		case PROP_CNC:
-			g_value_set_object (value, model->priv->cnc);
+			g_value_set_object (value, model->cnc);
 			break;
 		case PROP_PREP_STMT:
 			g_value_set_object (value, model->prep_stmt);
@@ -501,7 +500,7 @@ gda_pmodel_get_connection (GdaPModel *model)
 	g_return_val_if_fail (GDA_IS_PMODEL (model), NULL);
 	g_return_val_if_fail (model->priv, NULL);
 
-	return model->priv->cnc;
+	return model->cnc;
 }
 
 /**
@@ -831,24 +830,24 @@ gda_pmodel_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint row)
 static void
 update_iter (GdaPModel *imodel, GdaPRow *prow)
 {
-        gint i, length;
+        gint i;
 	GdaDataModelIter *iter = imodel->priv->iter;
 	GSList *plist;
 	gboolean update_model;
 	
 	g_object_get (G_OBJECT (iter), "update_model", &update_model, NULL);
-	g_object_set (G_OBJECT (iter), "update_model", FALSE, NULL);
+	if (update_model)
+		g_object_set (G_OBJECT (iter), "update_model", FALSE, NULL);
 	
-	length = gda_prow_get_length (prow);
-	g_assert (length == g_slist_length (GDA_SET (iter)->holders));
 	for (i = 0, plist = GDA_SET (iter)->holders; 
-	     i < length;
+	     plist;
 	     i++, plist = plist->next) {
 		const GValue *value;
 		value = gda_prow_get_value (prow, i);
-		gda_holder_set_value (GDA_HOLDER (plist->data), value);
+		gda_holder_set_value ((GdaHolder*) plist->data, value);
         }
 
 	g_object_set (G_OBJECT (iter), "current-row", imodel->priv->iter_row, NULL);
-	g_object_set (G_OBJECT (iter), "update_model", update_model, NULL);
+	if (update_model)
+		g_object_set (G_OBJECT (iter), "update_model", update_model, NULL);
 }

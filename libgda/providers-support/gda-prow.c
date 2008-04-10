@@ -204,13 +204,9 @@ gda_prow_get_type (void)
 GdaPRow *
 gda_prow_new (gint count)
 {
-	GdaPRow *prow = NULL;
-
         g_return_val_if_fail (count > 0, NULL);
-
-	prow = g_object_new (GDA_TYPE_PROW, "nb_values", count, NULL);
-
-	return prow;
+	
+	return (GdaPRow*) g_object_new (GDA_TYPE_PROW, "nb_values", count, NULL);
 }
 
 /**
@@ -229,7 +225,6 @@ GValue *
 gda_prow_get_value (GdaPRow *prow, gint num)
 {
         g_return_val_if_fail (GDA_IS_PROW (prow), NULL);
-	g_return_val_if_fail (prow->priv, NULL);
         g_return_val_if_fail (num >= 0 && num < prow->priv->nfields, NULL);
 
         return & (prow->priv->fields[num]);

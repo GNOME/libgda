@@ -752,7 +752,7 @@ gda_data_model_move_iter_at_row_default (GdaDataModel *model, GdaDataModelIter *
 	g_object_get (G_OBJECT (iter), "update_model", &update_model, NULL);
 	g_object_set (G_OBJECT (iter), "update_model", FALSE, NULL);
 	for (col = 0, list = ((GdaSet *) iter)->holders; list; col++, list = list->next) {
-		gda_holder_set_value (GDA_HOLDER (list->data), 
+		gda_holder_set_value ((GdaHolder*) list->data, 
 				      gda_data_model_get_value_at (model, col, row));
 
 		set_param_attributes ((GdaHolder*) list->data, 
@@ -830,7 +830,7 @@ gda_data_model_move_iter_next_default (GdaDataModel *model, GdaDataModelIter *it
 	g_object_get (G_OBJECT (iter), "update_model", &update_model, NULL);
 	g_object_set (G_OBJECT (iter), "update_model", FALSE, NULL);
 	for (col = 0, list = ((GdaSet *) iter)->holders; list; col++, list = list->next) {
-		gda_holder_set_value (GDA_HOLDER (list->data), 
+		gda_holder_set_value ((GdaHolder *) list->data, 
 				      gda_data_model_get_value_at (model, col, row));
 		set_param_attributes ((GdaHolder *) list->data, 
 				      gda_data_model_get_attributes_at (model, col, row));
@@ -893,7 +893,7 @@ gda_data_model_move_iter_prev_default (GdaDataModel *model, GdaDataModelIter *it
 	g_object_get (G_OBJECT (iter), "update_model", &update_model, NULL);
 	g_object_set (G_OBJECT (iter), "update_model", FALSE, NULL);
 	for (col = 0, list = ((GdaSet *) iter)->holders; list; col++, list = list->next) {
-		gda_holder_set_value (GDA_HOLDER (list->data), 
+		gda_holder_set_value ((GdaHolder*) list->data, 
 				      gda_data_model_get_value_at (model, col, row));
 		set_param_attributes ((GdaHolder*) list->data,
 				      gda_data_model_get_attributes_at (model, col, row));
