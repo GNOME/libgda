@@ -320,8 +320,10 @@ gboolean (*tables_views) (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
       are in the specified catalog and schema.
     </para>
     <para>
-      For further information about the tables, see the schema displayed in 
-      the <link linkend="GdaMetaStore">GdaMetaStore</link>'s documentation.
+      Make sure you read the information about the meta data's database structure in the
+      <link linkend="information_schema">Database structure</link>, and specifically the
+      <link linkend="information_schema:data_types">data types</link> section and the 
+      <link linkend="information_schema:sql_identifiers">SQL identifiers</link> section.
     </para>
     <sect2>
       <title>_info()</title>

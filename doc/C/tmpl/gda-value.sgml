@@ -546,6 +546,16 @@ Single value stored in a #GdaDataModel
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_value_bcompare ##### -->
+<para>
+
+</para>
+
+@value1: 
+@value2: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_value_compare ##### -->
 <para>
 

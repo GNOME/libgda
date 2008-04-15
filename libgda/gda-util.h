@@ -45,6 +45,7 @@ gchar       *gda_default_escape_string (const gchar *string);
 gchar       *gda_default_unescape_string (const gchar *string);
 guint        gda_identifier_hash (const gchar *id);
 gboolean     gda_identifier_equal (const gchar *id1, const gchar *id2);
+gchar      **gda_completion_list_get (GdaConnection *cnc, const gchar *text, gint start, gint end);
 
 /*
  * Param & model utilities
@@ -67,6 +68,16 @@ gchar       *gda_alphanum_to_text (gchar *text);
 gboolean     gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gboolean require_pk, 
 					 GdaStatement **insert, GdaStatement **update, GdaStatement **delete, 
 					 GError **error);
+
+/*
+ * DSN and connection string manipulations
+ */
+gchar       *gda_rfc1738_encode          (const gchar *string);
+gboolean     gda_rfc1738_decode          (gchar *string);
+void         gda_dsn_split               (const gchar *string, gchar **out_dsn, 
+					  gchar **out_username, gchar **out_password);
+void         gda_connection_string_split (const gchar *string, gchar **out_cnc_params, gchar **out_provider, 
+					  gchar **out_username, gchar **out_password);
 G_END_DECLS
 
 #endif

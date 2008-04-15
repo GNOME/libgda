@@ -83,9 +83,16 @@ _remove_quotes (gchar *str)
 
 
         total = strlen (str);
-        g_assert (str[total-1] == delim);
-        g_memmove (str, str+1, total-2);
-        total -=2;
+        if (str[total-1] == delim) {
+		/* string is correclty terminated by a double quote */
+		g_memmove (str, str+1, total-2);
+		total -=2;
+	}
+	else {
+		/* string is _not_ correclty terminated by a double quote */
+		g_memmove (str, str+1, total-1);
+		total -=1;
+	}
         str[total] = 0;
 
         ptr = (gchar *) str;
@@ -265,6 +272,44 @@ _string_is_identifier (const gchar *str)
 	return TRUE;
 }
 
+/**
+ * identifier_needs_quotes
+ */
+gboolean
+_identifier_needs_quotes (const gchar *str)
+{
+	const gchar *ptr;
+
+	g_return_val_if_fail (str, FALSE);
+	for (ptr = str; *ptr; ptr++) {
+		if (*ptr != g_ascii_tolower (*ptr))
+			return TRUE;
+	}
+	return FALSE;
+}
+
+/*
+ * Prepares @str to be compared:
+ * - if surrounded by double quotes, then just remove the quotes
+ * - otherwise convert to lower case
+ *
+ * WARNING: @str must NOT be a composed identifier (<part1>."<part2>" for example)
+ * 
+ * Returns: @str
+ */
+gchar *
+_identifier_unquote (gchar *str)
+{
+	if (*str == '"')
+		return _remove_quotes (str);
+	else {
+		gchar *ptr;
+		for (ptr = str; *ptr; ptr++)
+			*ptr = g_ascii_tolower (*ptr);
+		return str;
+	}
+}
+
 /*
  * Reuses @str and fills in @remain and @last
  *
@@ -281,7 +326,7 @@ _string_is_identifier (const gchar *str)
  * if @str has the <part1>.<part2> form, then @last will contain <part2> and @remain will contain <part1>
  * if @str has the <part1> form, then @last will contain <part1> and @remain will contain NULL
  * 
- * Returns FALSE:
+ * Returns FALSE (in any case @str is also freed)
  * if @str is NULL:
  * if @str is "":
  * if @str is malformed:
@@ -305,10 +350,12 @@ _split_identifier_string (gchar *str, gchar **remain, gchar **last)
 	}
 
 	len = strlen (str) - 1;
-	if (((str[len] == '"') && (str[len-1] == '.')) ||
-	    (str[len] == '.')) {
-		g_free (str);
-		return FALSE;
+	if (len > 1) {
+		if (((str[len] == '"') && (str[len-1] == '.')) ||
+		    (str[len] == '.')) {
+			g_free (str);
+			return FALSE;
+		}
 	}
 
 	if (((str[0] == '"') && (str[1] == '.')) ||

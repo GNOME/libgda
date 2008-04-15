@@ -1,3 +1,43 @@
+2008-04-15  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in: Rename libext variable to avoid contaminating libtool-2.2
+	variable by same name, for bug #527892 (from Cygwin Ports maintainer)
+	* libgda/gda-connection.c: corrected a bug in gda_connection_get_events(): the
+	returned list is now read-only, the last GdaConnectionEvent being first in the list
+	* libgda/gda-connection-event.c: removed gda_connection_event_free() as
+	g_object_unref() should be used instead, removed gda_connection_event_list_free()
+	and gda_connection_event_list_copy()
+	* libgda/gda-util.[ch]: added a new gda_completion_list_get() function to make
+	Libgda compute a list of possible completions when writinf a SQL statement
+	* tools/command-exec.c:
+	* tools/gda-sql.c:
+	* tools/tools-input.c: improved completion mechanism using gda_completion_list_get()
+	* libgda/sql-parser/gda-statement-struct-util.[ch]:
+	* libgda/gda-meta-struct.[ch]: improved handling of double quoted SQL identifiers
+	* tools/gda-sql.c: removed the -p (Provider name), -s (Data source) and
+	-c (Direct connection string) options: now any number of connection can be opened
+	by listing them one after the other using either a DSN name or a connection string
+	like "PostgreSQL://DB_NAME=mydb"
+	* providers/postgres/gda-postgres-meta.c: bug fixed in the I_STMT_REF_CONSTRAINTS and
+	I_STMT_REF_CONSTRAINTS_ALL statements
+
+	Made a review of the DSN and connection strings in Libgda, and decided to require
+	string encoded using RFC 1738 (Uniform Resource Locators (URL)): the non ascii
+	(and some special characters) must be represented in their "%ab" form where
+	"ab" is their hexa. representation; this will solve problems where DSN and/or 
+	auth string must contain some ";" character.
+	* libgda/gda-util.[ch]: added the gda_rfc1738_encode(), gda_rfc1738_decode(),
+	gda_dsn_split() and gda_connection_string_split() functions
+	* libgda/gda-quark-list.c: modified gda_quark_list_new_from_string() and
+	gda_quark_list_add_from_string() to decode the key and value for each pair.
+	* libgda/gda-config.[ch]: use gda_rfc1738_encode() when reading provider name, username
+	and password from config file.
+	* libgda/gda-connection.c: changed gda_connection_open_from_dsn() to accept DSN in
+	the form [<username>[:<password>]@]<DSN> where <username> and <password> are RFC 1738
+	encoded.
+	* libgda/sql-parser/gda-statement-struct-parts.c: applied patch by Daniel Espinosa for
+	bug #528057
+
 2008-04-10  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-meta-struct.c: crash bug fixed

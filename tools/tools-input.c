@@ -118,7 +118,8 @@ void
 set_completion_func (CompletionFunc func)
 {
 #ifdef HAVE_READLINE_READLINE_H	
-	rl_completion_entry_function = func;
+	rl_attempted_completion_function = func;
+	rl_basic_word_break_characters = " \t\n\\'`@$><=;|&{(";
 #endif	
 }
 

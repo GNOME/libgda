@@ -17,6 +17,24 @@ Utility functions
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### FUNCTION gda_g_type_to_string ##### -->
+<para>
+
+</para>
+
+@type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_g_type_from_string ##### -->
+<para>
+
+</para>
+
+@str: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_default_escape_string ##### -->
 <para>
 
@@ -26,22 +44,84 @@ Utility functions
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_server_provider_get_schema_nb_columns ##### -->
+<!-- ##### FUNCTION gda_default_unescape_string ##### -->
 <para>
 
 </para>
 
-@schema: 
+@string: 
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_server_provider_init_schema_model ##### -->
+<!-- ##### FUNCTION gda_identifier_hash ##### -->
 <para>
 
 </para>
 
-@model: 
-@schema: 
+@id: 
 @Returns: 
+
+
+<!-- ##### FUNCTION gda_identifier_equal ##### -->
+<para>
+
+</para>
+
+@id1: 
+@id2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_completion_list_get ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@text: 
+@start: 
+@end: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_rfc1738_encode ##### -->
+<para>
+
+</para>
+
+@string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_rfc1738_decode ##### -->
+<para>
+
+</para>
+
+@string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dsn_split ##### -->
+<para>
+
+</para>
+
+@string: 
+@out_dsn: 
+@out_username: 
+@out_password: 
+
+
+<!-- ##### FUNCTION gda_connection_string_split ##### -->
+<para>
+
+</para>
+
+@string: 
+@out_cnc_params: 
+@out_provider: 
+@out_username: 
+@out_password: 
 
 

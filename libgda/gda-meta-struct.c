@@ -24,6 +24,7 @@
 #include <libgda/gda-util.h>
 #include <sql-parser/gda-sql-parser.h>
 #include <sql-parser/gda-sql-statement.h>
+#include <sql-parser/gda-statement-struct-util.h>
 
 /*
  * Main static functions
@@ -43,9 +44,13 @@ static void gda_meta_struct_get_property (GObject *object,
 
 
 struct _GdaMetaStructPrivate {
-	GHashTable *index; /* key = [catalog].[schema].[name], value = a GdaMetaDbObject */
+	GHashTable *index; /* key = [catalog].[schema].[name], value = a GdaMetaDbObject. Note: catalog, schema and name 
+			    * are case sensitive (and don't have any double quote around them) */
 	guint       features;
 };
+
+static GdaMetaDbObject *_meta_struct_get_db_object (GdaMetaStruct *mstruct, 
+						    const GValue *catalog, const GValue *schema, const GValue *name);
 
 static void gda_meta_db_object_free (GdaMetaDbObject *dbo);
 static void gda_meta_table_free_contents (GdaMetaTable *table);
@@ -234,7 +239,7 @@ compute_view_dependencies (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaD
 			g_value_set_string ((catalog = gda_value_new (G_TYPE_STRING)), tmp_obj->obj_catalog);
 			g_value_set_string ((schema = gda_value_new (G_TYPE_STRING)), tmp_obj->obj_schema);
 			g_value_set_string ((name = gda_value_new (G_TYPE_STRING)), tmp_obj->obj_name);
-			ref_obj = gda_meta_struct_get_db_object (mstruct, catalog, schema, name);
+			ref_obj = _meta_struct_get_db_object (mstruct, catalog, schema, name);
 			if (!ref_obj) {
 				gchar *str;
 				ref_obj = g_new0 (GdaMetaDbObject, 1);
@@ -295,11 +300,19 @@ static gchar *array_type_to_sql (GdaMetaStore *store, const GValue *specific_nam
  * Creates a new #GdaMetaDbObject structure in @mstruct to represent the database object (of type @type)
  * which can be uniquely identified as @catalog.@schema.@name.
  *
+ * If @catalog is not %NULL, then @schema should not be %NULL.
+ *
  * If @catalog is %NULL and @schema is not %NULL, then the database object will be the one which is
  * "visible" by default (that is which can be accessed only by its short @name name).
  *
  * If both @catalog and @schema are %NULL, then the database object will be the one which 
  * can be accessed by its @schema.@name name.
+ *
+ * Important note: @catalog, @schema and @name must respect the following convention:
+ * <itemizedlist>
+ *   <listitem><para>be surrounded by double quotes for a case sensitive search</para></listitem>
+ *   <listitem><para>otherwise they will be converted to lower case for search</para></listitem>
+ * </itemizedlist>
  *
  * Returns: the #GdaMetaDbObject corresponding to the database object if no error occurred, or %NULL
  */
@@ -310,60 +323,86 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMeta
 {
 	GdaMetaDbObject *dbo = NULL;
 	GdaMetaDbObjectType real_type = type;
-	GValue *real_catalog = NULL, *real_schema = NULL, *real_name = NULL;
 	GValue *short_name = NULL, *full_name=NULL, *owner=NULL;
+	GValue *icatalog = NULL, *ischema = NULL, *iname = NULL; /* GValue with identifiers ready to be compared */
 
+	/* checks */
 	g_return_val_if_fail (GDA_IS_META_STORE (store), NULL);
 	g_return_val_if_fail (GDA_IS_META_STRUCT (mstruct), NULL);
 	g_return_val_if_fail (name && (G_VALUE_TYPE (name) == G_TYPE_STRING), NULL);
+	g_return_val_if_fail (!catalog || (catalog && schema), NULL);
+	g_return_val_if_fail (!catalog || (G_VALUE_TYPE (catalog) == G_TYPE_STRING), NULL);
+	g_return_val_if_fail (!schema || (G_VALUE_TYPE (schema) == G_TYPE_STRING), NULL);
+
+	/* create ready to compare strings for catalog, schema and name */
+	gchar *schema_s, *name_s;
+	if (_split_identifier_string (g_value_dup_string (name), &schema_s, &name_s)) {
+		g_value_take_string ((iname = gda_value_new (G_TYPE_STRING)), _identifier_unquote (name_s));
+		if (schema_s)
+			g_value_take_string ((ischema = gda_value_new (G_TYPE_STRING)), _identifier_unquote (schema_s));
+	}
+	else
+		g_value_take_string ((iname = gda_value_new (G_TYPE_STRING)), 
+				     _identifier_unquote (g_value_dup_string (name)));
+	if (catalog)
+		g_value_take_string ((icatalog = gda_value_new (G_TYPE_STRING)), 
+				     _identifier_unquote (g_value_dup_string (catalog)));
+	if (schema && !ischema) 
+		g_value_take_string ((ischema = gda_value_new (G_TYPE_STRING)), 
+				     _identifier_unquote (g_value_dup_string (schema)));
 
 	if (!catalog) {
 		if (schema) {
 			g_return_val_if_fail (schema && (G_VALUE_TYPE (schema) == G_TYPE_STRING), NULL);
-			if (! determine_db_object_from_schema_and_name (mstruct, store, &real_type, &real_catalog, 
+			if (! determine_db_object_from_schema_and_name (mstruct, store, &real_type, &icatalog, 
 									&short_name, &full_name, &owner,
-									schema, name)) {
+									ischema, iname)) {
 				g_set_error (error, GDA_META_STRUCT_ERROR, GDA_META_STRUCT_UNKNOWN_OBJECT_ERROR,
 					     _("Could not find object named '%s.%s'"), 
 					     g_value_get_string (schema), g_value_get_string (name));
+				gda_value_free (ischema);
+				gda_value_free (iname);
 				return NULL;
 			}
-			catalog = real_catalog;
 		}
 		else {
-			if (! determine_db_object_from_short_name (mstruct, store, &real_type, &real_catalog, 
-								   &real_schema, &real_name, 
-								   &short_name, &full_name, &owner, name)) {
+			GValue *real_name = NULL;
+			if (! determine_db_object_from_short_name (mstruct, store, &real_type, &icatalog, 
+								   &ischema, &real_name, 
+								   &short_name, &full_name, &owner, iname)) {
 				g_set_error (error, GDA_META_STRUCT_ERROR, GDA_META_STRUCT_UNKNOWN_OBJECT_ERROR,
 					     _("Could not find object named '%s'"), g_value_get_string (name));
+				gda_value_free (iname);
 				return NULL;
 			}
-			if (real_name)
-				name = real_name;
-			catalog = real_catalog;
-			schema = real_schema;
+			if (real_name) {
+				gda_value_free (iname);
+				iname = real_name;
+			}
 		}
 	}
 	else if (type == GDA_META_DB_UNKNOWN) {
-		g_return_val_if_fail (catalog && (G_VALUE_TYPE (catalog) == G_TYPE_STRING), NULL);
-		g_return_val_if_fail (schema && (G_VALUE_TYPE (schema) == G_TYPE_STRING), NULL);
-
 		if (! determine_db_object_from_missing_type (mstruct, store, &real_type, &short_name, &full_name, &owner,
-							     catalog, schema, name)) {
+							     icatalog, ischema, iname)) {
 			g_set_error (error, GDA_META_STRUCT_ERROR, GDA_META_STRUCT_UNKNOWN_OBJECT_ERROR,
 				     _("Could not find object named '%s.%s.%s'"), g_value_get_string (catalog),
 				     g_value_get_string (schema), g_value_get_string (name));
+			gda_value_free (icatalog);
+			gda_value_free (ischema);
+			gda_value_free (iname);
 			return NULL;
 		}
 	}
 	type = real_type;
+
+	/* at this point icatalog, ischema and iname are NOT NULL */
 	
 	/* create new GdaMetaDbObject or get already existing one */
-	dbo = gda_meta_struct_get_db_object (mstruct, catalog, schema, name);
+	dbo = _meta_struct_get_db_object (mstruct, icatalog, ischema, iname);
 	if (!dbo) {
 		dbo = g_new0 (GdaMetaDbObject, 1);
-		dbo->obj_catalog = g_strdup (g_value_get_string (catalog));
-		dbo->obj_schema = g_strdup (g_value_get_string (schema));
+		dbo->obj_catalog = g_strdup (g_value_get_string (icatalog));
+		dbo->obj_schema = g_strdup (g_value_get_string (ischema));
 		dbo->obj_name = g_strdup (g_value_get_string (name));
 		if (short_name)
 			dbo->obj_short_name = g_strdup (g_value_get_string (short_name));
@@ -372,14 +411,18 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMeta
 		if (owner)
 			dbo->obj_owner = g_strdup (g_value_get_string (owner));
 	}
-	else if (dbo->obj_type == type)
+	else if (dbo->obj_type == type) {
+		if (icatalog) gda_value_free (icatalog);
+		if (ischema) gda_value_free (ischema);
+		gda_value_free (iname);
 		return dbo; /* nothing to do */
+	}
 	else if (dbo->obj_type != GDA_META_DB_UNKNOWN) {
 		/* DB Object already exists, return an error */
 		g_set_error (error, GDA_META_STRUCT_ERROR, GDA_META_STRUCT_DUPLICATE_OBJECT_ERROR,
 			     _("Object %s.%s.%s already exists in GdaMetaStruct and has a different object type"), 
-			     g_value_get_string (catalog), g_value_get_string (schema), 
-			     g_value_get_string (name));
+			     g_value_get_string (icatalog), g_value_get_string (ischema), 
+			     g_value_get_string (iname));
 		dbo = NULL;
 		goto onerror;
 	}
@@ -395,7 +438,7 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMeta
 		gint nrows;
 		GdaMetaView *mv;
 
-		model = gda_meta_store_extract (store, sql, error, "tc", catalog, "ts", schema, "tname", name, NULL);
+		model = gda_meta_store_extract (store, sql, error, "tc", icatalog, "ts", ischema, "tname", iname, NULL);
 		if (!model) 
 			goto onerror;
 		nrows = gda_data_model_get_n_rows (model);
@@ -403,8 +446,8 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMeta
 			g_object_unref (model);
 			g_set_error (error, GDA_META_STRUCT_ERROR, GDA_META_STRUCT_UNKNOWN_OBJECT_ERROR,
 				     _("View %s.%s.%s not found in meta store object"), 
-				     g_value_get_string (catalog), g_value_get_string (schema), 
-				     g_value_get_string (name));
+				     g_value_get_string (icatalog), g_value_get_string (ischema), 
+				     g_value_get_string (iname));
 			goto onerror;
 		}
 		
@@ -454,7 +497,7 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMeta
 		GdaDataModel *model;
 		gint i, nrows;
 
-		model = gda_meta_store_extract (store, sql, error, "tc", catalog, "ts", schema, "tname", name, NULL);
+		model = gda_meta_store_extract (store, sql, error, "tc", icatalog, "ts", ischema, "tname", iname, NULL);
 		if (!model) 
 			goto onerror;
 
@@ -463,8 +506,8 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMeta
 			g_object_unref (model);
 			g_set_error (error, GDA_META_STRUCT_ERROR, GDA_META_STRUCT_UNKNOWN_OBJECT_ERROR,
 				     _("Table %s.%s.%s not found in meta store object"), 
-				     g_value_get_string (catalog), g_value_get_string (schema), 
-				     g_value_get_string (name));
+				     g_value_get_string (icatalog), g_value_get_string (ischema), 
+				     g_value_get_string (iname));
 			goto onerror;
 		}
 		if (!dbo->obj_short_name)
@@ -503,7 +546,7 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMeta
 
 		/* primary key */
 		sql = "SELECT constraint_name FROM _table_constraints WHERE constraint_type='PRIMARY KEY' AND table_catalog = ##tc::string AND table_schema = ##ts::string AND table_name = ##tname::string";
-		model = gda_meta_store_extract (store, sql, error, "tc", catalog, "ts", schema, "tname", name, NULL);
+		model = gda_meta_store_extract (store, sql, error, "tc", icatalog, "ts", ischema, "tname", iname, NULL);
 		if (!model) 
 			goto onerror;
 
@@ -512,9 +555,9 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMeta
 			GdaDataModel *pkmodel;
 			sql = "SELECT column_name FROM _key_column_usage WHERE table_catalog = ##cc::string AND table_schema = ##cs::string AND table_name = ##tname::string AND constraint_name = ##cname::string ORDER BY ordinal_position";
 			pkmodel = gda_meta_store_extract (store, sql, error, 
-							  "cc", catalog,
-							  "cs", schema,
-							  "tname", name,
+							  "cc", icatalog,
+							  "cs", ischema,
+							  "tname", iname,
 							  "cname", gda_data_model_get_value_at (model, 0, 0), NULL);
 			if (!pkmodel) {
 				g_object_unref (model);
@@ -545,7 +588,7 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMeta
 		/* foreign keys */
 		if (mstruct->priv->features & GDA_META_STRUCT_FEATURE_FOREIGN_KEYS) { 
 			sql = "SELECT ref_table_catalog, ref_table_schema, ref_table_name FROM _referential_constraints WHERE table_catalog = ##tc::string AND table_schema = ##ts::string AND table_name = ##tname::string";
-			model = gda_meta_store_extract (store, sql, error, "tc", catalog, "ts", schema, "tname", name, NULL);
+			model = gda_meta_store_extract (store, sql, error, "tc", icatalog, "ts", ischema, "tname", iname, NULL);
 			if (!model) 
 				goto onerror;
 			
@@ -559,7 +602,7 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMeta
 				fk_name = gda_data_model_get_value_at (model, 2, i);
 				tfk = g_new0 (GdaMetaTableForeignKey, 1);
 				tfk->meta_table = dbo;
-				tfk->depend_on = gda_meta_struct_get_db_object (mstruct, fk_catalog, fk_schema, fk_name);
+				tfk->depend_on = _meta_struct_get_db_object (mstruct, fk_catalog, fk_schema, fk_name);
 				if (!tfk->depend_on) {
 					gchar *str;
 					tfk->depend_on = g_new0 (GdaMetaDbObject, 1);
@@ -594,9 +637,9 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMeta
 	if (dbo && !g_slist_find (mstruct->db_objects, dbo)) {
 		gchar *str;
 		mstruct->db_objects = g_slist_append (mstruct->db_objects, dbo);
-		str = g_strdup_printf ("%s.%s.%s", g_value_get_string (catalog), 
-				       g_value_get_string (schema), 
-				       g_value_get_string (name));
+		str = g_strdup_printf ("%s.%s.%s", g_value_get_string (icatalog), 
+				       g_value_get_string (ischema), 
+				       g_value_get_string (iname));
 		g_hash_table_insert (mstruct->priv->index, str, dbo);
 	}
 	if (dbo && (mstruct->priv->features & GDA_META_STRUCT_FEATURE_FOREIGN_KEYS)) {
@@ -641,20 +684,20 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMeta
 			}
 		}
 	}
-	if (real_catalog) gda_value_free (real_catalog);
-	if (real_schema) gda_value_free (real_schema);
-	if (real_name) gda_value_free (real_name);
+	gda_value_free (icatalog);
+	gda_value_free (ischema);
+	gda_value_free (iname);
 	if (short_name)	gda_value_free (short_name);
 	if (full_name)	gda_value_free (full_name);
 	if (owner) gda_value_free (owner);
 	return dbo;
 
  onerror:
+	gda_value_free (icatalog);
+	gda_value_free (ischema);
+	gda_value_free (iname);
 	if (dbo)
 		gda_meta_db_object_free (dbo);
-	if (real_catalog) gda_value_free (real_catalog);
-	if (real_schema) gda_value_free (real_schema);
-	if (real_name) gda_value_free (real_name);
 	if (short_name)	gda_value_free (short_name);
 	if (full_name)	gda_value_free (full_name);
 	if (owner) gda_value_free (owner);
@@ -788,29 +831,15 @@ gda_meta_struct_sort_db_objects (GdaMetaStruct *mstruct, GdaMetaSortType sort_ty
 	return TRUE;
 }
 
-/**
- * gda_meta_struct_get_db_object
- * @mstruct: a #GdaMetaStruct object
- * @catalog: the catalog the object belongs to (as a G_TYPE_STRING GValue), or %NULL
- * @schema: the schema the object belongs to (as a G_TYPE_STRING GValue), or %NULL
- * @name: the object's name (as a G_TYPE_STRING GValue), not %NULL
- *
- * Tries to locate the #GdaMetaDbObject structure representing the database object named after
- * @catalog, @schema and @name.
- *
- * If one or both of @catalog and @schema are %NULL, and more than one database object matches the name, then
- * the return value is also %NULL.
- *
- * Returns: the #GdaMetaDbObject or %NULL if not found
+/*
+ * Same as gda_meta_struct_get_db_object except that @catalog, @schema and @name are ready to be
+ * compared (no need to double quote)
  */
-GdaMetaDbObject *
-gda_meta_struct_get_db_object (GdaMetaStruct *mstruct, const GValue *catalog, const GValue *schema, const GValue *name)
+static GdaMetaDbObject *
+_meta_struct_get_db_object (GdaMetaStruct *mstruct, const GValue *catalog, const GValue *schema, const GValue *name)
 {
 	gchar *key;
 	GdaMetaDbObject *dbo;
-
-	g_return_val_if_fail (GDA_IS_META_STRUCT (mstruct), NULL);
-	g_return_val_if_fail (name && (G_VALUE_TYPE (name) == G_TYPE_STRING), NULL);
 
 	if (catalog && schema) {
 		g_return_val_if_fail (G_VALUE_TYPE (catalog) == G_TYPE_STRING, NULL);
@@ -858,6 +887,50 @@ gda_meta_struct_get_db_object (GdaMetaStruct *mstruct, const GValue *catalog, co
 			return NULL;
 		}
 	}
+}
+
+/**
+ * gda_meta_struct_get_db_object
+ * @mstruct: a #GdaMetaStruct object
+ * @catalog: the catalog the object belongs to (as a G_TYPE_STRING GValue), or %NULL
+ * @schema: the schema the object belongs to (as a G_TYPE_STRING GValue), or %NULL
+ * @name: the object's name (as a G_TYPE_STRING GValue), not %NULL
+ *
+ * Tries to locate the #GdaMetaDbObject structure representing the database object named after
+ * @catalog, @schema and @name.
+ *
+ * If one or both of @catalog and @schema are %NULL, and more than one database object matches the name, then
+ * the return value is also %NULL.
+ *
+ * Returns: the #GdaMetaDbObject or %NULL if not found
+ */
+GdaMetaDbObject *
+gda_meta_struct_get_db_object (GdaMetaStruct *mstruct, const GValue *catalog, const GValue *schema, const GValue *name)
+{
+	GdaMetaDbObject *dbo;
+	GValue *icatalog = NULL, *ischema = NULL, *iname = NULL; /* GValue with identifiers ready to be compared */
+
+	g_return_val_if_fail (GDA_IS_META_STRUCT (mstruct), NULL);
+	g_return_val_if_fail (name && (G_VALUE_TYPE (name) == G_TYPE_STRING), NULL);
+	g_return_val_if_fail (!catalog || (catalog && schema), NULL);
+	g_return_val_if_fail (!catalog || (G_VALUE_TYPE (catalog) == G_TYPE_STRING), NULL);
+	g_return_val_if_fail (!schema || (G_VALUE_TYPE (schema) == G_TYPE_STRING), NULL);
+
+	/* prepare identifiers */
+	g_value_take_string ((iname = gda_value_new (G_TYPE_STRING)), _identifier_unquote (g_value_dup_string (name)));
+	if (catalog)
+		g_value_take_string ((icatalog = gda_value_new (G_TYPE_STRING)), 
+				     _identifier_unquote (g_value_dup_string (catalog)));
+	if (schema) 
+		g_value_take_string ((ischema = gda_value_new (G_TYPE_STRING)), 
+				     _identifier_unquote (g_value_dup_string (schema)));
+
+	dbo = _meta_struct_get_db_object (mstruct, icatalog, ischema, iname);
+	if (icatalog) gda_value_free (icatalog);
+	if (ischema) gda_value_free (ischema);
+	gda_value_free (iname);
+
+	return dbo;
 }
 
 /**
@@ -1250,18 +1323,21 @@ determine_db_object_from_short_name (GdaMetaStruct *mstruct, GdaMetaStore *store
  next:
 	{
 		/* treat the case where name is in fact <schema>.<name> */
-		const gchar *sname;
-		gchar *ptr;
-		sname = g_value_get_string (name);
-		for (ptr = (gchar *) sname; *ptr && (*ptr != '.'); ptr++);
-		if (*ptr == '.') {
-			gchar *tmp = g_strdup (sname);
+		gchar *obj_schema;
+		gchar *obj_name;
+		if (_split_identifier_string (g_strdup ((gchar *) g_value_get_string (name)), &obj_schema, &obj_name)) {
 			GValue *sv, *nv;
 			gboolean retval;
-			ptr = tmp + (ptr - sname);
-			*ptr = 0;
-			g_value_set_string ((sv = gda_value_new (G_TYPE_STRING)), tmp);
-			g_value_set_string ((nv = gda_value_new (G_TYPE_STRING)), ptr + 1);
+			if (!obj_schema) {
+				g_free (obj_name);
+				return FALSE;
+			}
+			if (!obj_name) {
+				g_free (obj_schema);
+				return FALSE;
+			}
+			g_value_take_string ((sv = gda_value_new (G_TYPE_STRING)), _identifier_unquote (obj_schema));
+			g_value_take_string ((nv = gda_value_new (G_TYPE_STRING)), _identifier_unquote (obj_name));
 			retval = determine_db_object_from_schema_and_name (mstruct, store, in_out_type, out_catalog, 
 									   out_short_name, out_full_name, out_owner, 
 									   sv, nv);
@@ -1273,7 +1349,6 @@ determine_db_object_from_short_name (GdaMetaStruct *mstruct, GdaMetaStore *store
 				gda_value_free (sv);
 				gda_value_free (nv);
 			}
-			g_free (tmp);
 			return retval;
 		}
 	}

@@ -39,6 +39,7 @@
 #include <locale.h>
 #endif
 #include <libgda/sql-parser/gda-sql-statement.h>
+#include <sql-parser/gda-statement-struct-util.h>
 
 #include <libgda/binreloc/gda-binreloc.h>
 
@@ -997,4 +998,592 @@ gda_identifier_equal (const gchar *id1, const gchar *id2)
 		return FALSE;
 	}
 	return TRUE;
+}
+
+
+static char *copy_ident (const gchar *ident);
+static char *concat_ident (const gchar *prefix, const gchar *ident);
+
+static gchar *sql_start_words[] = {
+	"ALTER",
+	"SELECT",
+	"INSERT",
+	"DELETE",
+	"UPDATE",
+	"CREATE",
+	"DROP",
+	"ALTER",
+	"COMMENT",
+	"BEGIN",
+	"COMMIT",
+	"ROLLBACK"
+};
+
+static gchar *sql_middle_words[] = {
+	"FROM",
+	"INNER",
+	"JOIN",
+	"LEFT",
+	"OUTER",
+	"RIGHT",
+	"OUTER",
+	"WHERE",
+	"HAVING",
+	"LIMIT",
+	"AND",
+	"OR",
+	"NOT",
+	"SET"
+};
+
+/**
+ * gda_completion_list_get
+ * @cnc: a #GdaConnection object
+ * @sql: a partial SQL statement which is the context of the completion proposal
+ * @start: starting position within @sql of the "token" to complete (starts at 0)
+ * @end: ending position within @sql of the "token" to complete
+ *
+ * Creates an array of strings (terminated by a %NULL) corresponding to possible completions.
+ * If no completion is available, then the returned array contains just one NULL entry, and
+ * if it was not possible to try to compute a completions list, then %NULL is returned.
+ *
+ * Returns: a new array of strings, or %NULL (use g_strfreev() to free the returned array)
+ */
+gchar **
+gda_completion_list_get (GdaConnection *cnc, const gchar *sql, gint start, gint end)
+{
+	GArray *compl = NULL;
+	gchar *text;
+
+	if (!cnc) 
+		return NULL;
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	if (end < start)
+		return NULL;
+
+	/* init */
+	compl = g_array_new (TRUE, TRUE, sizeof (gchar *));
+	text = g_new0 (gchar, end - start + 2);
+	memcpy (text, sql + start, end - start + 1);
+	text [end - start + 1] = 0;
+
+	if (start == 0) {
+		/* 
+		 * start of a statement => complete with SQL start of statement words 
+		 */
+		gint len;
+		gint i;
+		len = strlen (text);
+		for (i = 0; i < (sizeof (sql_start_words) / sizeof (gchar*)); i++) {
+			gint clen = strlen (sql_start_words[i]);
+			if (!g_ascii_strncasecmp (sql_start_words[i], text, MIN (clen, len))) {
+				gchar *str;
+				str = g_strdup (sql_start_words[i]);
+				g_array_append_val (compl, str);
+			}
+		}
+		goto compl_finished;
+	}
+	
+	if (!*text)
+		goto compl_finished;
+	
+	gchar *obj_schema, *obj_name;
+	GValue *schema_value = NULL;
+	
+	if (!_split_identifier_string (g_strdup (text), &obj_schema, &obj_name) && 
+	    !_split_identifier_string (g_strdup_printf ("%s\"", text), &obj_schema, &obj_name)) {
+		if (text [strlen(text) - 1] == '.') {
+			obj_schema = g_strdup (text);
+			obj_schema [strlen(text) - 1] = 0;
+			obj_name = g_strdup ("");
+		}
+		else
+			goto compl_finished;
+	}
+	
+	if (*obj_name == '"') 
+		_remove_quotes (obj_name);
+	
+	if (obj_schema) {
+		if (*obj_schema == '"') 
+			_remove_quotes (obj_schema);
+		g_value_take_string ((schema_value = gda_value_new (G_TYPE_STRING)), obj_schema);
+	}
+	
+	/*
+	 * complete with "table" or "schema.table"
+	 */
+	GdaDataModel *model;
+	GdaMetaStore *store;
+	store = gda_connection_get_meta_store (cnc);
+	if (schema_value)
+		model = gda_meta_store_extract (store, 
+						"SELECT table_name FROM _tables WHERE table_schema = ##schema::string", 
+						NULL, "schema", schema_value, NULL);
+	else
+		model = gda_meta_store_extract (store, 
+						"SELECT table_name FROM _tables WHERE table_short_name != table_full_name",
+						NULL);
+	if (model) {
+		gint i, nrows;
+		gint len = strlen (obj_name);
+		
+		nrows = gda_data_model_get_n_rows (model);
+		for (i = 0; i < nrows; i++) {
+			const gchar *tname;
+			tname = g_value_get_string (gda_data_model_get_value_at (model, 0, i));
+			if (!strncmp (tname, obj_name, len)) {
+				gchar *str;
+				if (schema_value) 
+					str = concat_ident (obj_schema, tname);
+				else
+					str = copy_ident (tname);
+				g_array_append_val (compl, str);
+			}
+		}
+		g_object_unref (model);
+	}
+	
+	/*
+	 * complete with "table.column"
+	 */
+	model = NULL;
+	if (!schema_value)
+		model = gda_meta_store_extract (store, 
+						"SELECT column_name FROM _columns", NULL);
+	if (model) {
+		gint i, nrows;
+		gint len = strlen (obj_name);
+		
+		nrows = gda_data_model_get_n_rows (model);
+		for (i = 0; i < nrows; i++) {
+			const gchar *cname;
+			cname = g_value_get_string (gda_data_model_get_value_at (model, 0, i));
+			if (!strncmp (cname, obj_name, len)) {
+				gchar *str;
+				str = copy_ident (cname);
+				g_array_append_val (compl, str);
+			}
+		}
+		g_object_unref (model);
+	}
+	
+	/*
+	 * complete with "schema.table"
+	 */
+	model = NULL;
+	if (! schema_value)
+		model = gda_meta_store_extract (store, "SELECT schema_name FROM _schemata", NULL);
+	if (model) {
+		gint i, nrows;
+		gint len = strlen (obj_name);
+		
+		nrows = gda_data_model_get_n_rows (model);
+		for (i = 0; i < nrows; i++) {
+			const gchar *tname;
+			tname = g_value_get_string (gda_data_model_get_value_at (model, 0, i));
+			if (!strncmp (tname, obj_name, len)) {
+				char *str;
+				GdaDataModel *m2;
+				str = copy_ident (tname);
+				
+				m2 = gda_meta_store_extract (store, 
+							     "SELECT table_name FROM _tables WHERE table_schema = ##schema::string", 
+							     NULL, "schema", gda_data_model_get_value_at (model, 0, i), 
+							     NULL);
+				if (m2) {
+					gint i2, nrows2;
+					nrows2 = gda_data_model_get_n_rows (m2);
+					for (i2 = 0; i2 < nrows2; i2++) {
+						gchar *str2;
+						tname = g_value_get_string (gda_data_model_get_value_at (m2, 0, i2));
+						str2 = concat_ident (str, tname);
+						g_array_append_val (compl, str2);
+					}
+					
+					g_object_unref (m2);
+				}
+				free (str);
+			}
+		}
+		g_object_unref (model);
+		if (compl->len > 0)
+			goto compl_finished;
+	}
+	
+	if (schema_value)
+		gda_value_free (schema_value);
+	g_free (obj_name);
+	
+	/* 
+	 * middle of a statement and no completion yet => complete with SQL statement words 
+	 */
+	{
+		gint len;
+		gint i;
+		len = strlen (text);
+		for (i = 0; i < (sizeof (sql_middle_words) / sizeof (gchar*)); i++) {
+			gint clen = strlen (sql_middle_words[i]);
+			if (!g_ascii_strncasecmp (sql_middle_words[i], text, MIN (clen, len))) {
+				gchar *str;
+				str = g_strdup (sql_middle_words[i]);
+				g_array_append_val (compl, str);
+			}
+		}
+	}
+	
+ compl_finished:
+	g_free (text);
+	if (compl) {
+		gchar **ptr;
+		ptr = (gchar**) compl->data;
+		g_array_free (compl, FALSE);
+		return ptr;
+	}
+	else
+		return NULL;
+}
+
+
+static char *
+copy_ident (const gchar *ident)
+{
+	char *str;
+	gint tlen = strlen (ident);
+	if (_identifier_needs_quotes (ident)) {
+		str = malloc (sizeof (char) * (tlen + 3));
+		*str = '"';
+		strcpy (str+1, ident);
+		str [tlen + 1] = '"';
+		str [tlen + 2] = 0;
+	}
+	else {
+		str = malloc (sizeof (char) * (tlen + 1));
+		strcpy (str, ident);		
+	}
+	return str;
+}
+
+static char *
+concat_ident (const char *prefix, const gchar *ident)
+{
+	char *str;
+	gint tlen = strlen (ident);
+	gint plen = 0;
+
+	if (prefix)
+		plen = strlen (prefix) + 1;
+
+	if (_identifier_needs_quotes (ident)) {
+		str = malloc (sizeof (char) * (plen + tlen + 3));
+		if (prefix) {
+			strcpy (str, prefix);
+			str [plen - 1] = '.';
+			str [plen] = '"';
+			strcpy (str + plen + 1, ident);
+		}
+		else {
+			*str = '"';
+			strcpy (str+1, ident);
+		}
+		str [plen + tlen + 1] = '"';
+		str [plen + tlen + 2] = 0;
+	}
+	else {
+		str = malloc (sizeof (char) * (plen + tlen + 1));
+		if (prefix) {
+			strcpy (str, prefix);
+			str [plen - 1] = '.';
+			strcpy (str + plen, ident);
+		}
+		else
+			strcpy (str, ident);
+	}
+	return str;
+}
+
+/*
+ *  RFC 1738 defines that these characters should be escaped, as well
+ *  any non-US-ASCII character or anything between 0x00 - 0x1F.
+ */
+static char rfc1738_unsafe_chars[] =
+{
+    (char) 0x3C,               /* < */
+    (char) 0x3E,               /* > */
+    (char) 0x22,               /* " */
+    (char) 0x23,               /* # */
+    (char) 0x25,               /* % */
+    (char) 0x7B,               /* { */
+    (char) 0x7D,               /* } */
+    (char) 0x7C,               /* | */
+    (char) 0x5C,               /* \ */
+    (char) 0x5E,               /* ^ */
+    (char) 0x7E,               /* ~ */
+    (char) 0x5B,               /* [ */
+    (char) 0x5D,               /* ] */
+    (char) 0x60,               /* ` */
+    (char) 0x27,               /* ' */
+    (char) 0x20                /* space */
+};
+
+static char rfc1738_reserved_chars[] =
+{
+    (char) 0x3b,               /* ; */
+    (char) 0x2f,               /* / */
+    (char) 0x3f,               /* ? */
+    (char) 0x3a,               /* : */
+    (char) 0x40,               /* @ */
+    (char) 0x3d,               /* = */
+    (char) 0x26                /* & */
+};
+
+/**
+ * gda_rfc1738_encode
+ * @string: a string to encode 
+ *
+ * Encodes @string using the RFC 1738 recommendations: the
+ * <constant>&lt;&gt;&quot;#%{}|\^~[]&apos;`;/?:@=&amp;</constant> and space characters are replaced by 
+ * <constant>&quot;%%ab&quot;</constant> where
+ * <constant>ab</constant> is the hexadecimal number corresponding to the character.
+ *
+ * Returns: a new string
+ */
+gchar *
+gda_rfc1738_encode (const gchar *string)
+{
+	gchar *ret, *wptr;
+	const gchar *rptr;
+	gint i;
+
+	if (!string)
+		return NULL;
+	if (!*string)
+		return g_strdup ("");
+
+	ret = g_new0 (gchar, (strlen (string) * 3) + 1);
+	for (wptr = ret, rptr = string; *rptr; rptr++) {
+		gboolean enc = FALSE;
+
+		/* RFC 1738 defines these chars as unsafe */
+		for (i = 0; i < sizeof (rfc1738_reserved_chars) / sizeof (char); i++) {
+			if (*rptr == rfc1738_reserved_chars [i]) {
+				enc = TRUE;
+				break;
+			}
+		}
+		if (!enc) {
+			for (i = 0; i < sizeof (rfc1738_unsafe_chars) / sizeof (char); i++) {
+				if (*rptr == rfc1738_unsafe_chars [i]) {
+					enc = TRUE;
+					break;
+				}
+			}
+		}
+		if (!enc) {
+			/* RFC 1738 says any control chars (0x00-0x1F) are encoded */
+			if ((unsigned char) *rptr <= (unsigned char) 0x1F) 
+				enc = TRUE;
+			/* RFC 1738 says 0x7f is encoded */
+			else if (*rptr == (char) 0x7F)
+				enc = TRUE;
+			/* RFC 1738 says any non-US-ASCII are encoded */
+			else if (((unsigned char) *rptr >= (unsigned char) 0x80))
+				enc = TRUE;
+		}
+
+		if (enc) {
+			sprintf (wptr, "%%%02x", (unsigned char) *rptr);
+			wptr += 3;
+		}
+		else {
+			*wptr = *rptr;
+			wptr++;
+		}
+	}
+	return ret;
+}
+
+/**
+ * gda_rfc1738_decode
+ * @string: a string to encode 
+ *
+ * Decodes @string using the RFC 1738 recommendations: the
+ * <constant>&lt;&gt;&quot;#%{}|\^~[]&apos;`;/?:@=&amp;</constant> and space characters are replaced by 
+ * <constant>&quot;%%ab&quot;</constant> where
+ * <constant>ab</constant> is the hexadecimal number corresponding to the character.
+ *
+ * @string should respect the RFC 1738 encoding. If this is not the case (for example if there
+ * is a "%2z" because 2z is not an hexadecimal value), then the part with the problem
+ * is not decoded, and the function returns FALSE.
+ *
+ * @string is decoded in place, no new string gets created.
+ *
+ * Returns: TRUE if no error occurred.
+ */
+gboolean
+gda_rfc1738_decode (gchar *string)
+{
+	gchar *wptr, *rptr;
+	gboolean retval = TRUE;
+
+	if (!string || !*string)
+		return TRUE;
+
+	for (wptr = rptr = string; *rptr; wptr++, rptr++) {
+		*wptr = *rptr;
+		if (*rptr == '%') {
+			rptr++;
+			if ((((*rptr >= 'A') && (*rptr <= 'F')) ||
+			     ((*rptr >= 'a') && (*rptr <= 'f')) ||
+			     ((*rptr >= '0') && (*rptr <= '9'))) &&
+			    (((rptr[1] >= 'A') && (rptr[1] <= 'F')) ||
+			     ((rptr[1] >= 'a') && (rptr[1] <= 'f')) ||
+			     ((rptr[1] >= '0') && (rptr[1] <= '9')))) {
+				*wptr = 0;
+				if ((*rptr >= 'A') && (*rptr <= 'F'))
+					*wptr = *rptr - 'A' + 10;
+				else if ((*rptr >= 'a') && (*rptr <= 'f'))
+					*wptr = *rptr - 'a' + 10;
+				else
+					*wptr = *rptr - '0';
+				rptr++;
+				*wptr = *wptr << 4; /* multiply by 16 */
+				if (((*rptr >= 'A') && (*rptr <= 'F')) ||
+				    ((*rptr >= 'a') && (*rptr <= 'f')) ||
+				    ((*rptr >= '0') && (*rptr <= '9'))) {
+					if ((*rptr >= 'A') && (*rptr <= 'F'))
+						*wptr += *rptr - 'A' + 10;
+					else if ((*rptr >= 'a') && (*rptr <= 'f'))
+						*wptr += *rptr - 'a' + 10;
+					else
+						*wptr += *rptr - '0';
+				}
+			}
+			else {
+				/* error */
+				retval = FALSE;
+				rptr--;
+			}
+		}
+	}
+	*wptr = 0;
+	return TRUE;
+}
+
+
+/**
+ * gda_dsn_split
+ * @string: a string in the "[&lt;username&gt;[:&lt;password&gt;]@]&lt;DSN&gt;" form
+ * @out_dsn: a place to store the new string containing the &lt;DSN&gt; part
+ * @out_username: a place to store the new string containing the &lt;username&gt; part
+ * @out_password: a place to store the new string containing the &lt;password&gt; part
+ * @error: a place to store errors, or %NULL
+ *
+ * Extract the DSN, username and password from @string. in @string, the various parts are strings
+ * which are expected to be encoded using an RFC 1738 compliant encoding. If they are specified, 
+ * the returned username and password strings are correclty decoded.
+ *
+ * @out_username and @out_password may be set to %NULL depending on @string's format.
+ */
+void
+gda_dsn_split (const gchar *string, gchar **out_dsn, gchar **out_username, gchar **out_password)
+{
+	const gchar *ptr;
+	g_return_if_fail (string);
+	g_return_if_fail (out_dsn);
+	g_return_if_fail (out_username);
+	g_return_if_fail (out_password);
+
+	*out_dsn = NULL;
+	*out_username = NULL;
+	*out_password = NULL;
+	for (ptr = string; *ptr; ptr++) {
+		if (*ptr == '@') {
+			const gchar *tmp = ptr;
+			*out_dsn = g_strdup (ptr+1);
+			for (ptr = string; ptr < tmp; ptr++) {
+				if (*ptr == ':') {
+					*out_username = g_strndup (string, ptr - string);
+					*out_password = g_strndup (ptr+1, tmp - ptr - 1);
+				}
+			}
+			if (!*out_username) 
+				*out_username = g_strndup (string, tmp - string);
+			break;
+		}
+	}
+	if (!*out_dsn)
+		*out_dsn = g_strdup (string);
+
+	/* RFC 1738 decode username and password strings */
+	gda_rfc1738_decode (*out_username);
+	gda_rfc1738_decode (*out_password);
+}
+
+/**
+ * gda_connection_string_split
+ * @string: a string in the "[&lt;provider&gt;://][&lt;username&gt;[:&lt;password&gt;]@]&lt;connection_params&gt;" form
+ * @out_cnc_params: a place to store the new string containing the &lt;connection_params&gt; part
+ * @out_provider: a place to store the new string containing the &lt;provider&gt; part
+ * @out_username: a place to store the new string containing the &lt;username&gt; part
+ * @out_password: a place to store the new string containing the &lt;password&gt; part
+ * @error: a place to store errors, or %NULL
+ *
+ * Extract the provider, connection parameters, username and password from @string. 
+ * in @string, the various parts are strings
+ * which are expected to be encoded using an RFC 1738 compliant encoding. If they are specified, 
+ * the returned provider, username and password strings are correclty decoded.
+ */
+void
+gda_connection_string_split (const gchar *string, gchar **out_cnc_params, gchar **out_provider, 
+			     gchar **out_username, gchar **out_password)
+{
+	const gchar *ptr;
+	const gchar *ap;
+	g_return_if_fail (string);
+	g_return_if_fail (out_cnc_params);
+	g_return_if_fail (out_provider);
+	g_return_if_fail (out_username);
+	g_return_if_fail (out_password);
+
+	*out_cnc_params = NULL;
+	*out_provider = NULL;
+	*out_username = NULL;
+	*out_password = NULL;
+	for (ap = ptr = string; *ptr; ptr++) {
+		if ((ap == string) && (*ptr == '/') && (ptr[1] == '/')) {
+			if ((ptr == string) || (ptr[-1] != ':')) {
+				g_free (*out_cnc_params); *out_cnc_params = NULL;
+				g_free (*out_provider); *out_provider = NULL;
+				g_free (*out_username); *out_username = NULL;
+				g_free (*out_password); *out_password = NULL;
+				return;
+			}
+			*out_provider = g_strndup (string, ptr - string - 1);
+			ap = ptr+2;
+			ptr++;
+		}
+
+		if (*ptr == '@') {
+			const gchar *tmp = ptr;
+			*out_cnc_params = g_strdup (ptr+1);
+			for (ptr = ap; ptr < tmp; ptr++) {
+				if (*ptr == ':') {
+					*out_username = g_strndup (ap, ptr - ap);
+					*out_password = g_strndup (ptr+1, tmp - ptr - 1);
+				}
+			}
+			if (!*out_username) 
+				*out_username = g_strndup (ap, tmp - ap);
+			break;
+		}
+	}
+	if (!*out_cnc_params)
+		*out_cnc_params = g_strdup (ap);
+
+	/* RFC 1738 decode provider, username and password strings */
+	gda_rfc1738_decode (*out_provider);
+	gda_rfc1738_decode (*out_username);
+	gda_rfc1738_decode (*out_password);
 }

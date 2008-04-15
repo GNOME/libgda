@@ -221,8 +221,6 @@ default_gda_internal_commandargs_func (const gchar *string)
 			break;
 		case T_TEXTUAL:
 		case T_STRING:
-			local_ptr++;
-			local_nparsed -= 2;
 		default: {
 			gchar hold;
 			hold = local_ptr[local_nparsed];

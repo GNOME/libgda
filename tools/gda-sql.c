@@ -41,13 +41,12 @@
 #include <pwd.h>
 #endif
 
-/* options */
-gchar *pass = NULL;
-gchar *user = NULL;
+#ifdef HAVE_READLINE_READLINE_H
+#include <readline/readline.h>
+#endif
 
-gchar *dsn = NULL;
-gchar *direct = NULL;
-gchar *prov = NULL;
+/* options */
+gboolean ask_pass = FALSE;
 
 gchar *single_command = NULL;
 gchar *commandsfile = NULL;
@@ -57,13 +56,8 @@ gboolean list_providers = FALSE;
 
 gchar *outfile = NULL;
 
-
 static GOptionEntry entries[] = {
-        { "cnc", 'c', 0, G_OPTION_ARG_STRING, &direct, "Direct connection string", "connection string"},
-        { "provider", 'p', 0, G_OPTION_ARG_STRING, &prov, "Provider name", "provider"},
-        { "dsn", 's', 0, G_OPTION_ARG_STRING, &dsn, "Data source", "DSN"},
-        { "user", 'U', 0, G_OPTION_ARG_STRING, &user, "Username", "username" },
-        { "password", 'P', 0, G_OPTION_ARG_STRING, &pass, "Password", "password" },
+        { "no-password-ask", 'p', 0, G_OPTION_ARG_NONE, &ask_pass, "Don't ast for a password when it is empty", NULL },
 
         { "output-file", 'o', 0, G_OPTION_ARG_STRING, &outfile, "Output file", "output file"},
         { "command", 'C', 0, G_OPTION_ARG_STRING, &single_command, "Run only single command (SQL or internal) and exit", "command" },
@@ -121,15 +115,14 @@ MainData *main_data;
 GString *prompt = NULL;
 
 static gchar   *read_a_line (MainData *data);
-static char    *completion_func (const char *text, int state);
+static char   **completion_func (const char *text, int start, int end);
 static void     compute_prompt (MainData *data, GString *string, gboolean in_command);
 static gboolean set_output_file (MainData *data, const gchar *file, GError **error);
 static gboolean set_input_file (MainData *data, const gchar *file, GError **error);
 static void     output_data_model (MainData *data, GdaDataModel *model);
 static void     output_string (MainData *data, const gchar *str);
-static ConnectionSetting *open_connection (MainData *data, const gchar *cnc_name, const gchar *dsn,
-					   const gchar *provider, const gchar *direct, 
-					   const gchar *user, const gchar *pass, GError **error);
+static ConnectionSetting *open_connection (MainData *data, const gchar *cnc_name, const gchar *cnc_string,
+					   GError **error);
 static GdaDataModel *list_all_dsn (MainData *data);
 static GdaDataModel *list_all_providers (MainData *data);
 
@@ -149,7 +142,7 @@ main (int argc, char *argv[])
 	GSList *list;
 	prompt = g_string_new ("");
 
-	context = g_option_context_new (_("Gda SQL console"));        
+	context = g_option_context_new (_("[DSN|connection string]..."));        
 	g_option_context_add_main_entries (context, entries, GETTEXT_PACKAGE);
         if (!g_option_context_parse (context, &argc, &argv, &error)) {
                 g_print ("Can't parse arguments: %s\n", error->message);
@@ -161,14 +154,7 @@ main (int argc, char *argv[])
 	data = g_new0 (MainData, 1);
 	data->parameters = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
 	main_data = data;
-
-	/* test for command line or env. variable connection string */
-	if (!direct) {
-		if (argc >= 2)
-			direct = argv [1];
-		else 
-			direct = getenv ("GDA_SQL_CNC");
-	}
+	ask_pass = !ask_pass;
 
 	/* output file */
 	if (outfile) {
@@ -209,13 +195,6 @@ main (int argc, char *argv[])
 			data->input_stream = stdin;
 	}
 
-	/* check connection parameters coherence */
-	if (direct && dsn) {
-                g_fprintf (stderr, _("DSN and connection string are exclusive\n"));
-		exit_status = EXIT_FAILURE;
-                goto cleanup;
-        }
-
 	/* welcome message */
 	if (!data->output_stream) {
 		g_print (_("Welcome to the GDA SQL console, version " PACKAGE_VERSION));
@@ -227,12 +206,43 @@ main (int argc, char *argv[])
 			   "      or any query terminated by a semicolon\n\n"));
 	}
 
-        if (direct || dsn) {
+	/* open connections if specified */
+	gint i;
+	for (i = 1; i < argc; i++) {
 		/* open connection */
 		ConnectionSetting *cs;
-		cs = open_connection (data, NULL, dsn, prov, direct, user, pass, &error);
+		GdaDataSourceInfo *info = NULL;
+		gchar *str;
+
+                info = gda_config_get_dsn (argv[i]);
+		if (info)
+			str = g_strdup (info->name);
+		else
+			str = g_strdup_printf ("c%d", i-1);
+		if (!data->output_stream) 
+			g_print (_("Opening connection '%s' for: %s\n"), str, argv[i]);
+		cs = open_connection (data, str, argv[i], &error);
+		g_free (str);
 		if (!cs) {
-			g_print (_("Can't open connection: %s\n"), error && error->message ? error->message : _("No detail"));
+			g_print (_("Can't open connection %d: %s\n"), i,
+				 error && error->message ? error->message : _("No detail"));
+			exit_status = EXIT_FAILURE;
+			goto cleanup;
+		}
+	}
+	if (getenv ("GDA_SQL_CNC")) {
+		ConnectionSetting *cs;
+		gchar *str;
+		const gchar *envstr = getenv ("GDA_SQL_CNC");
+		str = g_strdup_printf ("c%d", i-1);
+		if (!data->output_stream) 
+			g_print (_("Opening connection '%s' for: %s (GDA_SQL_CNC environment variable)\n"), 
+				   str, envstr);
+		cs = open_connection (data, str, envstr, &error);
+		g_free (str);
+		if (!cs) {
+			g_print (_("Can't open connection defined by GDA_SQL_CNC: %s\n"),
+				 error && error->message ? error->message : _("No detail"));
 			exit_status = EXIT_FAILURE;
 			goto cleanup;
 		}
@@ -828,15 +838,11 @@ find_connection_from_name (MainData *data, const gchar *name)
  * Open a connection
  */
 static ConnectionSetting*
-open_connection (MainData *data, const gchar *cnc_name, const gchar *dsn, 
-		 const gchar *provider, const gchar *direct, 
-		 const gchar *user, const gchar *pass,
-		 GError **error)
+open_connection (MainData *data, const gchar *cnc_name, const gchar *cnc_string, GError **error)
 {
 	GdaConnection *newcnc = NULL;
 	ConnectionSetting *cs = NULL;
 	static gint cncindex = 0;
-	gchar *auth_string = NULL;
 
 	if (cnc_name && ! connection_name_is_valid (cnc_name)) {
 		g_set_error (error, 0, 0,
@@ -844,40 +850,75 @@ open_connection (MainData *data, const gchar *cnc_name, const gchar *dsn,
 		return NULL;
 	}
 
-	if (user) {
-		if (pass)
-			auth_string = g_strdup_printf ("USERNAME=%s;PASSWORD=%s", user, pass);
-		else
-			auth_string = g_strdup_printf ("USERNAME=%s", user);
+	GdaDataSourceInfo *info;
+	gchar *user, *pass, *real_cnc, *real_provider, *real_auth_string = NULL;
+	gda_connection_string_split (cnc_string, &real_cnc, &real_provider, &user, &pass);
+	if (!real_cnc) {
+		g_free (user);
+		g_free (pass);
+		g_free (real_provider);
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_DSN_NOT_FOUND_ERROR, 
+			     _("Malformed connection string '%s'"), cnc_string);
+		return NULL;
 	}
-	if (dsn) {
-                GdaDataSourceInfo *info = NULL;
-                info = gda_config_get_dsn (dsn);
-                if (!info) {
-			if (!direct)
-				g_set_error (error, 0, 0,
-					     _("DSN '%s' is not declared"), dsn);
+
+	if (ask_pass) {
+		if (user && !*user) {
+			gchar buf[80];
+			g_print (_("\tUsername for '%s': "), cnc_name);
+			if (scanf ("%80s", buf) == -1) {
+				g_free (real_cnc);
+				g_free (user);
+				g_free (pass);
+				g_free (real_provider);
+				g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_DSN_NOT_FOUND_ERROR, 
+					     _("No username for '%s'"), cnc_string);
+				return NULL;
+			}
+			g_free (user);
+			user = g_strdup (buf);
 		}
-                else 
-                        newcnc = gda_connection_open_from_dsn (info->name, 
-							       auth_string ? auth_string : info->auth_string,
-							       0, error);
-        }
-        if (!newcnc && direct) {
-		/* test if @direct is not in fact a DSN, in which case use it as a DSN */
-		GdaDataSourceInfo *info = NULL;
-                info = gda_config_get_dsn (direct);
-		if (info) {
-			newcnc = gda_connection_open_from_dsn (info->name, 
-							       auth_string ? auth_string : info->auth_string,
-							       0, error);
-			dsn = direct;
-			direct = NULL;
+		if (pass && !*pass) {
+			gchar buf[80];
+			g_print (_("\tPassword for '%s': "), cnc_name);
+			if (scanf ("%80s", buf) == -1) {
+				g_free (real_cnc);
+				g_free (user);
+				g_free (pass);
+				g_free (real_provider);
+				g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_DSN_NOT_FOUND_ERROR, 
+					     _("No password for '%s'"), cnc_string);
+				return NULL;
+			}
+			g_free (pass);
+			pass = g_strdup (buf);
 		}
-		else
-			newcnc = gda_connection_open_from_string (provider, direct, auth_string, 0, error);
+		if (user || pass) {
+			gchar *s1;
+			s1 = gda_rfc1738_encode (user);
+			if (pass) {
+				gchar *s2;
+				s2 = gda_rfc1738_encode (pass);
+				real_auth_string = g_strdup_printf ("USERNAME=%s;PASSWORD=%s", s1, s2);
+				g_free (s2);
+			}
+			else
+				real_auth_string = g_strdup_printf ("USERNAME=%s", s1);
+			g_free (s1);
+		}
 	}
-	g_free (auth_string);
+	
+	info = gda_config_get_dsn (real_cnc);
+	if (info && !real_provider)
+		newcnc = gda_connection_open_from_dsn (cnc_string, real_auth_string, 0, error);
+	else 
+		newcnc = gda_connection_open_from_string (NULL, cnc_string, real_auth_string, 0, error);
+	
+	g_free (real_cnc);
+	g_free (user);
+	g_free (pass);
+	g_free (real_provider);
+	g_free (real_auth_string);
 
 	if (newcnc) {
 		cs = g_new0 (ConnectionSetting, 1);
@@ -896,12 +937,12 @@ open_connection (MainData *data, const gchar *cnc_name, const gchar *dsn,
 		GdaMetaStore *store;
 		gboolean update_store = FALSE;
 
-		if (dsn) {
+		if (info) {
 			gchar *filename;
 #define LIBGDA_USER_CONFIG_DIR G_DIR_SEPARATOR_S ".libgda"
 			filename = g_strdup_printf ("%s%sgda-sql-%s.db", 
 						    g_get_home_dir (), LIBGDA_USER_CONFIG_DIR G_DIR_SEPARATOR_S,
-						    dsn);
+						    info->name);
 			if (! g_file_test (filename, G_FILE_TEST_EXISTS))
 				update_store = TRUE;
 			store = gda_meta_store_new_with_file (filename);
@@ -916,7 +957,7 @@ open_connection (MainData *data, const gchar *cnc_name, const gchar *dsn,
 		if (update_store) {
 			GError *lerror = NULL;
 			if (!data->output_stream) {
-				g_print (_("Getting database schema information, "
+				g_print (_("\tGetting database schema information, "
 					   "this may take some time... "));
 				fflush (stdout);
 			}
@@ -1654,7 +1695,7 @@ extra_command_manage_cnc (GdaConnection *cnc, const gchar **args, GError **error
 				if (args[3])
 					pass = args[3];
 			}
-			cs = open_connection (data, args[0], args[1], NULL, args[1], user, pass, error);
+			cs = open_connection (data, args[0], args[1], error);
 			if (cs) {
 				GdaInternalCommandResult *res;
 				
@@ -2526,92 +2567,41 @@ args_as_string_set (const gchar *str)
 	return g_strsplit (str, " ", 3);
 }
 
-static char *
-completion_func (const char *text, int state)
+
+
+static char **
+completion_func (const char *text, int start, int end)
 {
-	static GArray *compl = NULL;
+#ifdef HAVE_READLINE_READLINE_H
+	ConnectionSetting *cs = main_data->current;
+	char **array;
+	gchar **gda_compl;
+	gint i, nb_compl;
 
-	if (state == 0) {
-		ConnectionSetting *cs = main_data->current;
-		/* clear any previous completion */
-		if (compl) {
-			/* don't free the contents of @array, it is freed by readline */
-			g_array_free (compl, TRUE);
-			compl = NULL;
-		}
+	if (!cs)
+		return NULL;
+	gda_compl = gda_completion_list_get (cs->cnc, rl_line_buffer, start, end);
+	if (!gda_compl)
+		return NULL;
 
-		/* compute list of possible completions. It's very simple at the moment */
-		if (!(*text)) {
-			/* no completion possible */
-		}
-		else if (cs) {
-			gchar *copy;
+	for (nb_compl = 0; gda_compl[nb_compl]; nb_compl++);
 
-			copy = g_strdup (text);
-			g_strchomp (copy);
-			if (*copy) {
-				const char *start;
-				gint nb_compl = 0;
-				for (start = copy + (strlen (copy) - 1); start > copy; start--)
-					if (g_ascii_isspace (*start)) {
-						start ++;
-						break;
-					}
-				GdaDataModel *model;
-				GdaMetaStore *store;
-				store = gda_connection_get_meta_store (cs->cnc);
-				model = gda_meta_store_extract (store, "SELECT table_schema, table_name FROM "
-								"_tables", NULL);
-				if (model) {
-					gint i, nrows;
-					gint len = strlen (start);
-					
-					compl = g_array_new (TRUE, TRUE, sizeof (char *));
-					nrows = gda_data_model_get_n_rows (model);
-					for (i = 0; i < nrows; i++) {
-						const gchar *tname;
-						tname = g_value_get_string (gda_data_model_get_value_at (model, 1, i));
-						if (!strncmp (tname, start, len)) {
-							char *str;
-							str = malloc (sizeof (char) * (strlen (tname) + 1));
-							strcpy (str, tname);
-							g_array_append_val (compl, str);
-							nb_compl++;
-						}
-					}
-					g_object_unref (model);
-				}
+	array = malloc (sizeof (char*) * (nb_compl + 1));
+	for (i = 0; i < nb_compl; i++) {
+		char *str;
+		gchar *gstr;
+		gint l;
 
-				model = gda_meta_store_extract (store, "SELECT schema_name FROM "
-								"_schemata", NULL);
-				if (model) {
-					gint i, nrows;
-					gint len = strlen (start);
-					
-					compl = g_array_new (TRUE, TRUE, sizeof (char *));
-					nrows = gda_data_model_get_n_rows (model);
-					for (i = 0; i < nrows; i++) {
-						const gchar *tname;
-						tname = g_value_get_string (gda_data_model_get_value_at (model, 0, i));
-						if (!strncmp (tname, start, len)) {
-							char *str;
-							str = malloc (sizeof (char) * (strlen (tname) + 1));
-							strcpy (str, tname);
-							g_array_append_val (compl, str);
-							nb_compl++;
-						}
-					}
-					g_object_unref (model);
-				}
-			}
-			g_free (copy);
-		}
-
-		if (compl)
-			return g_array_index (compl, char*, 0);
-		else
-			return NULL;
+		gstr = gda_compl[i];
+		l = strlen (gstr) + 1;
+		str = malloc (sizeof (char) * l);
+		memcpy (str, gstr, l);
+		array[i] = str;
 	}
-	else 
-		return g_array_index (compl, char*, state) ;
+	array[i] = NULL;
+	g_strfreev (gda_compl);
+	return array;
+#else
+	return NULL;
+#endif
 }

@@ -250,8 +250,8 @@ esac
 
 dnl this is the shared link library extension, which varies by platform
 case $host_os in
-	cygwin*) libext=".dll.a" ;;
-	*) libext=".so" ;;
+	cygwin*) linklibext=".dll.a" ;;
+	*) linklibext=".so" ;;
 esac
 
 dnl Test for Berkeley DB
@@ -282,7 +282,7 @@ then
 		AC_MSG_CHECKING(for Berkeley DB files)
 		for d in $dir /usr /usr/local
 		do
-			if test -f $d/$lib/libdb$libext -a -f $d/include/db.h
+			if test -f $d/$lib/libdb$linklibext -a -f $d/include/db.h
 			then
 				AC_MSG_RESULT(found Berkeley DB in $d)
 				bdblib="-ldb"
@@ -330,14 +330,14 @@ then
 	AC_MSG_CHECKING(for ODBC files)
 	for d in $dir /usr /usr/local
 	do
-		if test -f $d/$lib/libodbc$libext -a -f $d/include/sql.h
+		if test -f $d/$lib/libodbc$linklibext -a -f $d/include/sql.h
 		then
 			AC_MSG_RESULT(found ODBC in $d)
 			odbclib="-lodbc"
 			odbcdir=$d
 			break
 		fi
-		if test -f $d/$lib/libiodbc$libext -a -f $d/include/sql.h
+		if test -f $d/$lib/libiodbc$linklibext -a -f $d/include/sql.h
 		then
 			AC_MSG_RESULT(found iODBC in $d)
 			odbclib="-liodbc"
@@ -393,14 +393,14 @@ then
 			else
 				mysqldir_suffix=
 			fi
-			if test -f $d/$lib/mysql/libmysqlclient.a -o -f $d/$lib/mysql/libmysqlclient$libext
+			if test -f $d/$lib/mysql/libmysqlclient.a -o -f $d/$lib/mysql/libmysqlclient$linklibext
 			then
 				AC_MSG_RESULT(found mysql in $d)
 				mysqldir=$d
 				mysqllibdir_suffix=/mysql
 				break
 			fi
-			if test -f $d/$lib/libmysqlclient.a -o -f $d/$lib/libmysqlclient$libext
+			if test -f $d/$lib/libmysqlclient.a -o -f $d/$lib/libmysqlclient$linklibext
 			then
 				AC_MSG_RESULT(found mysql in $d)
 				mysqldir=$d
@@ -452,14 +452,14 @@ then
 		else
 			msqldir_suffix=
 		fi
-		if test -f $d/$lib/msql/libmsql.a -o -f $d/$lib/msql/libmsql$libext
+		if test -f $d/$lib/msql/libmsql.a -o -f $d/$lib/msql/libmsql$linklibext
 		then
 			AC_MSG_RESULT(found mSQL in $d)
 			msqldir=$d
 			msqllibdir_suffix=/msql
 			break
 		fi
-		if test -f $d/$lib/libmsql.a -o -f $d/$lib/libmsql$libext
+		if test -f $d/$lib/libmsql.a -o -f $d/$lib/libmsql$linklibext
 		then
 			AC_MSG_RESULT(found mSQL in $d)
 			msqldir=$d
@@ -509,7 +509,7 @@ then
 	AC_MSG_CHECKING(for Postgres files)
 	for d in $dir /usr /usr/local/postgres /opt/postgres /opt/packages/postgres /disk/postgres /usr/local/pgsql
 	do
-		if test -f $d/$lib/libpq.a -o -f $d/$lib/libpq$libext
+		if test -f $d/$lib/libpq.a -o -f $d/$lib/libpq$linklibext
 		then
 			AC_MSG_RESULT(found Postgres in $d)
 			postgresdir=$d
@@ -569,13 +569,13 @@ then
 	AC_MSG_CHECKING(for freetds files)
 	for d in $dir /usr/local/freetds /usr /opt/freetds /opt/packages/freetds /opt/freetds-0.50
 	do
-		if test -f "$d/include/tds.h" -a -e "$d/$lib/libtds$libext" -a -f "$d/include/tdsver.h"
+		if test -f "$d/include/tds.h" -a -e "$d/$lib/libtds$linklibext" -a -f "$d/include/tdsver.h"
 		then
 			AC_MSG_RESULT(found freetds in $d)
 			freetdsdir="$d"
 			freetds_incdir="$d/include"
 			break
-		elif test -f "$d/include/freetds/tds.h" -a -e "$d/$lib/libtds$libext" -a -f "$d/include/freetds/tdsver.h"
+		elif test -f "$d/include/freetds/tds.h" -a -e "$d/$lib/libtds$linklibext" -a -f "$d/include/freetds/tdsver.h"
 		then
 			AC_MSG_RESULT(found freetds in $d and includes in $d/include/freetds)
 			freetdsdir="$d"
@@ -932,7 +932,7 @@ then
 	mdbdir=""
 	for d in $dir /usr /usr/local /opt/gnome
 	do
-		if test -f $d/include/mdbtools.h -a -f $d/$lib/libmdb$libext -o -f $d/include/mdbtools.h -a -f $d/$lib/libmdb.a
+		if test -f $d/include/mdbtools.h -a -f $d/$lib/libmdb$linklibext -o -f $d/include/mdbtools.h -a -f $d/$lib/libmdb.a
 		then
 			AC_MSG_RESULT(found MDB Tools in $d)
 			mdbdir=$d

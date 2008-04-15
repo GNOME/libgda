@@ -32,6 +32,7 @@
 #include <libgda/gda-set.h>
 #include <libgda/gda-holder.h>
 #include <libgda/gda-log.h>
+#include <libgda/gda-util.h>
 #ifdef HAVE_FAM
 #include <fam.h>
 #include <glib/giochannel.h>
@@ -255,9 +256,9 @@ load_config_file (const gchar *file, gboolean is_system)
 					xmlFree (prop);
 					continue;
 				}
-				if (!strcmp ((gchar *) prop, "DSN"))
+				if (!strcmp ((gchar *) prop, "DSN")) 
 					info->cnc_string = g_strdup ((gchar *)value);
-				else if (!strcmp ((gchar *) prop, "Provider"))
+				else if (!strcmp ((gchar *) prop, "Provider")) 
 					info->provider = g_strdup ((gchar *)value);
 				else if (!strcmp ((gchar *) prop, "Description"))
 					info->description = g_strdup ((gchar *)value);
@@ -274,11 +275,17 @@ load_config_file (const gchar *file, gboolean is_system)
 			if (username) {
 				if (!info->auth_string) {
 					/* migrate username/password to auth_string */
-					if (password)
-						info->auth_string = g_strdup_printf ("USERNAME=%s;PASSWORD=%s",
-										     username, password);
+					gchar *s1;
+					s1 = gda_rfc1738_encode (username);
+					if (password) {
+						gchar *s2;
+						s2 = gda_rfc1738_encode (password);
+						info->auth_string = g_strdup_printf ("USERNAME=%s;PASSWORD=%s", s1, s2);
+						g_free (s2);
+					}
 					else
-						info->auth_string = g_strdup_printf ("USERNAME=%s", username);
+						info->auth_string = g_strdup_printf ("USERNAME=%s", s1);
+					g_free (s1);
 				}
 				g_free (username);
 				g_free (password);

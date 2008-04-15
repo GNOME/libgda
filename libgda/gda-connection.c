@@ -41,6 +41,7 @@
 #include <sql-parser/gda-sql-parser.h>
 #include <sql-parser/gda-statement-struct-trans.h>
 #include <libgda/gda-meta-store-extra.h>
+#include <libgda/gda-util.h>
 
 #define PROV_CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
 
@@ -231,8 +232,10 @@ gda_connection_dispose (GObject *object)
 		cnc->priv->provider_obj = NULL;
 	}
 
-	if (cnc->priv->events_list)
-		gda_connection_event_list_free (cnc->priv->events_list);
+	if (cnc->priv->events_list) {
+		g_list_foreach (cnc->priv->events_list, (GFunc) g_object_unref, NULL);
+		cnc->priv->events_list = NULL;
+	}
 
 	if (cnc->priv->trans_status) {
 		g_object_unref (cnc->priv->trans_status);
@@ -388,17 +391,24 @@ gda_connection_get_property (GObject *object,
 /**
  * gda_connection_open_from_dsn
  * @dsn: data source name.
- * @auth_string: authentication string
+ * @auth_string: authentication string, or %NULL
  * @options: options for the connection (see #GdaConnectionOptions).
  * @error: a place to store an error, or %NULL
  *
- * This function is the way of opening database connections with libgda.
+ * This function is the way of opening database connections with libgda, using a pre-defined data source (DSN),
+ * see gda_config_define_dsn() for more information about how to define a DSN. If you don't want to define
+ * a DSN, it is possible to use gda_connection_open_from_string() instead of this method.
  *
- * Establishes a connection to a data source. 
+ * The @dsn string must have the following format: "[&lt;username&gt;[:&lt;password&gt;]@]&lt;DSN&gt;" 
+ * (if &lt;username&gt; and/or &lt;password&gt; are provided, and @auth_string is %NULL, then these username
+ * and passwords will be used). Note that if provided, &lt;username&gt; and &lt;password&gt; 
+ * must be encoded as per RFC 1738, see gda_rfc1738_encode() for more information.
  *
- * The @auth_string must contain the authentication information for the server
+ * The @auth_string can contain the authentication information for the server
  * to accept the connection. It is a string containing semi-colon seperated named value, usually 
- * like "USERNAME=...;PASSWORD=..." where the ... are replaced by actual values. 
+ * like "USERNAME=...;PASSWORD=..." where the ... are replaced by actual values. Note that each
+ * name and value must be encoded as per RFC 1738, see gda_rfc1738_encode() for more information.
+ *
  * The actual named parameters required depend on the provider being used, and that list is available
  * as the <parameter>auth_params</parameter> member of the #GdaProviderInfo structure for each installed
  * provider (use gda_config_get_provider_info() to get it). Also one can use the "gda-sql-4.0 -L" command to 
@@ -412,15 +422,41 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
 {
 	GdaConnection *cnc = NULL;
 	GdaDataSourceInfo *dsn_info;
+	gchar *user, *pass, *real_dsn;
+	gchar *real_auth_string = NULL;
 
 	g_return_val_if_fail (dsn && *dsn, NULL);
+	gda_dsn_split (dsn, &real_dsn, &user, &pass);
+	if (!real_dsn) {
+		g_free (user);
+		g_free (pass);
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_DSN_NOT_FOUND_ERROR, 
+			     _("Malformed data source specification '%s'"), dsn);
+		return NULL;
+	}
 
 	/* get the data source info */
-	dsn_info = gda_config_get_dsn (dsn);
+	dsn_info = gda_config_get_dsn (real_dsn);
 	if (!dsn_info) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_DSN_NOT_FOUND_ERROR, 
-			     _("Data source %s not found in configuration"), dsn);
+			     _("Data source %s not found in configuration"), real_dsn);
+		g_free (real_dsn);
+		g_free (user);
+		g_free (pass);
 		return NULL;
+	}
+	if (!auth_string && user) {
+		gchar *s1;
+		s1 = gda_rfc1738_encode (user);
+		if (pass) {
+			gchar *s2;
+			s2 = gda_rfc1738_encode (pass);
+			real_auth_string = g_strdup_printf ("USERNAME=%s;PASSWORD=%s", s1, s2);
+			g_free (s2);
+		}
+		else
+			real_auth_string = g_strdup_printf ("USERNAME=%s", s1);
+		g_free (s1);
 	}
 
 	/* try to find provider */
@@ -431,16 +467,18 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
 		if (prov) {
 			if (PROV_CLASS (prov)->create_connection) {
 				cnc = PROV_CLASS (prov)->create_connection (prov);
-				if (cnc) {
-					g_object_set (G_OBJECT (cnc), "provider_obj", prov, NULL);
-					if (dsn && *dsn)
-						g_object_set (G_OBJECT (cnc), "dsn", dsn, NULL);
-					g_object_set (G_OBJECT (cnc), "auth_string", auth_string, "options", options, NULL);
-				}
+				if (cnc) 
+					g_object_set (G_OBJECT (cnc), 
+						      "provider_obj", prov,
+						      "dsn", real_dsn,
+						      "auth_string", auth_string ? auth_string : real_auth_string, 
+						      "options", options, NULL);
 			}
 			else
-				cnc = g_object_new (GDA_TYPE_CONNECTION, "provider_obj", prov, 
-						    "dsn", dsn, "auth_string", auth_string, 
+				cnc = g_object_new (GDA_TYPE_CONNECTION, 
+						    "provider_obj", prov, 
+						    "dsn", real_dsn, 
+						    "auth_string", auth_string ? auth_string : real_auth_string, 
 						    "options", options, NULL);
 			
 			/* open connection */
@@ -454,6 +492,10 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_PROVIDER_NOT_FOUND_ERROR, 
 			     _("Datasource configuration error: no provider specified"));
 
+	g_free (real_auth_string);
+	g_free (real_dsn);
+	g_free (user);
+	g_free (pass);
 	return cnc;
 }
 
@@ -461,24 +503,35 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
  * gda_connection_open_from_string
  * @provider_name: provider ID to connect to, or %NULL
  * @cnc_string: connection string.
- * @auth_string: authentication string
+ * @auth_string: authentication string, or %NULL
  * @options: options for the connection (see #GdaConnectionOptions).
  * @error: a place to store an error, or %NULL
  *
  * Opens a connection given a provider ID and a connection string. This
  * allows applications to open connections without having to create
- * a data source in the configuration. The format of @cnc_string is
+ * a data source (DSN) in the configuration. The format of @cnc_string is
  * similar to PostgreSQL and MySQL connection strings. It is a semicolumn-separated
- * series of key=value pairs. Do not add extra whitespace after the semicolumn
- * separator. The possible keys depend on the provider, the "gda-sql-4.0 -L" command
+ * series of &lt;key&gt;=&lt;value&gt; pairs, where each key and value are encoded as per RFC 1738, 
+ * see gda_rfc1738_encode() for more information.
+ *
+ * The possible keys depend on the provider, the "gda-sql-4.0 -L" command
  * can be used to list the actual keys for each installed database provider.
  *
  * For example the connection string to open an SQLite connection to a database
- * file named "my_data.db" in the current directory would be "DB_DIR=.;DB_NAME=my_data".
+ * file named "my_data.db" in the current directory would be <constant>"DB_DIR=.;DB_NAME=my_data"</constant>.
+ *
+ * The @cnc_string string must have the following format: 
+ * "[&lt;provider&gt;://][&lt;username&gt;[:&lt;password&gt;]@]&lt;connection_params&gt;"
+ * (if &lt;username&gt; and/or &lt;password&gt; are provided, and @auth_string is %NULL, then these username
+ * and passwords will be used, and if &lt;provider&gt; is provided and @provider_name is %NULL then this
+ * provider will be used). Note that if provided, &lt;username&gt;, &lt;password&gt; and  &lt;provider&gt;
+ * must be encoded as per RFC 1738, see gda_rfc1738_encode() for more information.
  *
  * The @auth_string must contain the authentication information for the server
  * to accept the connection. It is a string containing semi-colon seperated named values, usually 
- * like "USERNAME=...;PASSWORD=..." where the ... are replaced by actual values. 
+ * like "USERNAME=...;PASSWORD=..." where the ... are replaced by actual values. Note that each
+ * name and value must be encoded as per RFC 1738, see gda_rfc1738_encode() for more information.
+ *
  * The actual named parameters required depend on the provider being used, and that list is available
  * as the <parameter>auth_params</parameter> member of the #GdaProviderInfo structure for each installed
  * provider (use gda_config_get_provider_info() to get it). Similarly to the format of the connection
@@ -496,46 +549,63 @@ gda_connection_open_from_string (const gchar *provider_name, const gchar *cnc_st
 				 GdaConnectionOptions options, GError **error)
 {
 	GdaConnection *cnc = NULL;
-	gchar *ptr, *dup;
+	gchar *user, *pass, *real_cnc, *real_provider;
+	gchar *real_auth_string = NULL;
 
 	g_return_val_if_fail (cnc_string && *cnc_string, NULL);
-
-	/* try to see if connection string has the "<provider>://<real cnc string>" format */
-	dup = g_strdup (cnc_string);
-	for (ptr = dup; *ptr; ptr++) {
-		if ((*ptr == ':') && (*(ptr+1) == '/') && (*(ptr+2) == '/')) {
-			if (!provider_name)
-				provider_name = dup;
-			*ptr = 0;
-			cnc_string = ptr + 3;
-		}
-	}
-	
-	if (!provider_name) {
-		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_PROVIDER_NOT_FOUND_ERROR, 
-			     _("No provider specified"));
-		g_free (dup);
+	gda_connection_string_split (cnc_string, &real_cnc, &real_provider, &user, &pass);
+	if (!real_cnc) {
+		g_free (user);
+		g_free (pass);
+		g_free (real_provider);
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_DSN_NOT_FOUND_ERROR, 
+			     _("Malformed connection string '%s'"), cnc_string);
 		return NULL;
 	}
 
+	if (!provider_name && !real_provider) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_PROVIDER_NOT_FOUND_ERROR, 
+			     _("No provider specified"));
+		g_free (user);
+		g_free (pass);
+		g_free (real_cnc);
+		return NULL;
+	}
+
+	if (!auth_string && user) {
+		gchar *s1;
+		s1 = gda_rfc1738_encode (user);
+		if (pass) {
+			gchar *s2;
+			s2 = gda_rfc1738_encode (pass);
+			real_auth_string = g_strdup_printf ("USERNAME=%s;PASSWORD=%s", s1, s2);
+			g_free (s2);
+		}
+		else
+			real_auth_string = g_strdup_printf ("USERNAME=%s", s1);
+		g_free (s1);
+	}
+
 	/* try to find provider */
-	if (provider_name) {
+	if (provider_name || real_provider) {
 		GdaServerProvider *prov;
 
-		prov = gda_config_get_provider_object (provider_name, error);
+		prov = gda_config_get_provider_object (provider_name ? provider_name : real_provider, error);
 		if (prov) {
 			if (PROV_CLASS (prov)->create_connection) {
 				cnc = PROV_CLASS (prov)->create_connection (prov);
-				if (cnc) {
-					g_object_set (G_OBJECT (cnc), "provider_obj", prov, NULL);
-					if (cnc_string && *cnc_string)
-						g_object_set (G_OBJECT (cnc), "cnc_string", cnc_string, NULL);
-					g_object_set (G_OBJECT (cnc), "auth_string", auth_string, "options", options, NULL);
-				}
+				if (cnc) 
+					g_object_set (G_OBJECT (cnc), 
+						      "provider_obj", prov,
+						      "cnc_string", real_cnc,
+						      "auth_string", auth_string ? auth_string : real_auth_string, 
+						      "options", options, NULL);
 			}
 			else 
-				cnc = (GdaConnection *) g_object_new (GDA_TYPE_CONNECTION, "provider_obj", prov,
-								      "cnc-string", cnc_string, "auth_string", auth_string,
+				cnc = (GdaConnection *) g_object_new (GDA_TYPE_CONNECTION, 
+								      "provider_obj", prov,
+								      "cnc-string", real_cnc, 
+								      "auth_string", auth_string ? auth_string : real_auth_string, 
 								      "options", options, NULL);
 			
 			/* open the connection */
@@ -546,7 +616,10 @@ gda_connection_open_from_string (const gchar *provider_name, const gchar *cnc_st
 		}
 	}	
 
-	g_free (dup);
+	g_free (real_cnc);
+	g_free (user);
+	g_free (pass);
+	g_free (real_provider);
 
 	return cnc;
 }
@@ -631,13 +704,13 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 								   NULL, NULL, NULL))
 		cnc->priv->is_open = TRUE;
 	else {
-		GList *events;
+		const GList *events;
 		
 		events = gda_connection_get_events (cnc);
 		if (events) {
 			GList *l;
 
-			for (l = events; l; l = l->next) {
+			for (l = g_list_last ((GList*) events); l; l = l->prev) {
 				GdaConnectionEvent *event;
 
 				event = GDA_CONNECTION_EVENT (l->data);
@@ -647,7 +720,6 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 							     gda_connection_event_get_description (event));
 				}
 			}
-			g_list_free (events);
 		}
 
 		cnc->priv->is_open = FALSE;
@@ -660,11 +732,11 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 
 	if (cnc->priv->is_open) {
 #ifdef GDA_DEBUG_signal
-        g_print (">> 'CONN_OPENED' from %s\n", __FUNCTION__);
+		g_print (">> 'CONN_OPENED' from %s\n", __FUNCTION__);
 #endif
-        g_signal_emit (G_OBJECT (cnc), gda_connection_signals[CONN_OPENED], 0);
+		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[CONN_OPENED], 0);
 #ifdef GDA_DEBUG_signal
-        g_print ("<< 'CONN_OPENED' from %s\n", __FUNCTION__);
+		g_print ("<< 'CONN_OPENED' from %s\n", __FUNCTION__);
 #endif
 	}
 
@@ -1071,7 +1143,7 @@ gda_connection_clear_events_list (GdaConnection *cnc)
 	g_return_if_fail (cnc->priv);
 	
 	if (cnc->priv->events_list != NULL) {
-		gda_connection_event_list_free (cnc->priv->events_list);
+		g_list_foreach (cnc->priv->events_list, (GFunc) g_object_unref, NULL);
 		cnc->priv->events_list =  NULL;
 	}
 }
@@ -3026,20 +3098,19 @@ gda_connection_get_meta_store_data (GdaConnection *cnc,
  * @cnc: a #GdaConnection.
  *
  * Retrieves a list of the last errors occurred during the connection. The returned list is
- * chronologically ordered such as that the most recent event is the #GdaConnectionEvent of the last node. 
+ * chronologically ordered such as that the most recent event is the #GdaConnectionEvent of the first node.
  *
- * The caller is responsible for freeing the returned list (but not the contents of each node) using
- * g_list_free().
- * 
- * Returns: a new GList of #GdaConnectionEvent.
+ * Warning: the @cnc object may change the list if connection events occur
+ *
+ * Returns: a GList of #GdaConnectionEvent objects (the list should not be modified)
  */
-GList *
+const GList *
 gda_connection_get_events (GdaConnection *cnc)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv, FALSE);
 
-	return g_list_reverse (cnc->priv->events_list);
+	return cnc->priv->events_list;
 }
 
 /**

@@ -791,7 +791,7 @@ g_object_unref (store);
 	  </mediaobject>
 	</para>
 
-	<sect2>
+	<sect2 id="information_schema:data_types">
 	  <title>Data types</title>
 	  <para>
 	    Data types (as reported for example for table's columns) can be one of the following kinds:
@@ -841,6 +841,21 @@ g_object_unref (store);
 		<phrase>Dictioanry's tables and views initially defined by &LIBGDA;</phrase>
 	      </textobject>
 	    </mediaobject>
+	  </para>
+	</sect2>
+
+	<sect2 id="information_schema:sql_identifiers">
+	  <title>SQL identifiers</title>
+	  <para>
+	    SQL identifiers (database object's names) are case insitive, but it is still possible to specify
+	    that an SQL identifier be case sensitive by putting it between double quotes. &LIBGDA; has chosen
+	    the convention that case insitive SQL identifiers should all be in lower case in the meta data's tables
+	    whereas case sensitive SQL identifiers can soncain some upper case ASCII characters.
+	  </para>
+	  <para>
+	    This convention must be respected by database providers' implementations or the 
+	    <link linkend="GdaMetaStruct">GdaMetaStruct</link> object and the associated features
+	    (such as keyword completion) will not work properly.
 	  </para>
 	</sect2>
 
@@ -927,19 +942,61 @@ DSN      | Provider   | Description  | Connection string      | Username
 Sales    | PostgreSQL | Sales        | DB_NAME=sales          |
 [...]
 	</programlisting>
-	To run an interractive session, just specify a DSN (using the <option>-s DSN</option> option) or
-	a connection string (using the <option>-c "connection string"</option> and <option>-p provider</option> options). 
-	Alternatively, it is also possible to use the &quot;&lt;provider&gt;://&lt;connection string&gt;&quot; 
-	format (such as for example "Firebird://DATABASE=/path/to/dbfile.fdb")for an all-in-one connection 
-	specification (pass this string without any option specifier), or set
-	the GDA_SQL_CNC environment variable to contain that string, and run the command without any argument.
+	To run an interractive session, just specify a DSN or a connection string using
+	the &quot;&lt;provider&gt;://&lt;connection string&gt;&quot; 
+	format (such as for example "Firebird://DATABASE=/path/to/dbfile.fdb"), or set
+	the GDA_SQL_CNC environment variable to contain that string, and run the command without any argument, 
+	for example:
+	<programlisting>
+[prompt]> gda-sql-4.0 PostgreSQL://DB_NAME=sales
+Welcome to the GDA SQL console, version 3.99.3
+
+Type: .copyright to show usage and distribution terms
+      .? for help with internal commands
+      .q (or CTRL-D) to quit
+      (the '.' can be replaced by a '\')
+      or any query terminated by a semicolon
+
+Opening connection 'c0' for: PostgreSQL://DB_NAME=sales
+        Getting database schema information, this may take some time... Done.
+c0>
+	</programlisting>
+	Note that the "c0" is the prompt for the first opened connection.
       </para>
       <para>
-	Several connections can be opened at once (with only one "active" at any given time), use the <option>\c</option>
+	Several connections can be opened at once (with only one "active" at any given time), by specifying
+	all of them on the command line, or by using the <option>\c</option>
 	and <option>\close</option> to manage (open, change, close) the connections; the prompt contains
-	the name of the current connection used. 
+	the name of the current connection used. The following example opens two connections, one for the "pgsales"
+	DSN, and one for the "PostgreSQL://DB_NAME=sales" connection string, and shows the usage of the ".c" command
+	to list the opened connections:
+	<programlisting>
+[prompt]> gda-sql-4.0 pgsales PostgreSQL://DB_NAME=sales
+Welcome to the GDA SQL console, version 3.99.3
+
+Type: .copyright to show usage and distribution terms
+      .? for help with internal commands
+      .q (or CTRL-D) to quit
+      (the '.' can be replaced by a '\')
+      or any query terminated by a semicolon
+
+Opening connection 'pgsales' for: pgsales
+Opening connection 'c1' for: PostgreSQL://DB_NAME=sales
+        Getting database schema information, this may take some time... Done.
+c1> .c
+             List of opened connections
+Name    | Provider   | DSN or connection string | Username
+--------+------------+--------------------------+---------
+pgsales | PostgreSQL | pgsales                  |         
+c1      | PostgreSQL | DB_NAME=sales            |         
+(2 rows)
+
+c1>
+	</programlisting>
       </para>
-      <programlisting><![CDATA[
+      <para>
+	Here is another sample session showing how to use variables in statements:
+	<programlisting><![CDATA[
 [prompt]> gda-sql-4.0 -p SQLite -c "DB_DIR=.;DB_NAME=sales_test"
 Welcome to the GDA SQL console, version 3.1.2
 
@@ -962,7 +1019,8 @@ id | name        | default_served_by | country | city
 ---+-------------+-------------------+---------+-----
  9 | Greg Popoff |                 2 | SP      | MDR 
 c0> ]]>
-      </programlisting>
+	</programlisting>
+      </para>
       <para>
 	The &gda-sql; tool uses the following environment variables, when set:
 	<itemizedlist>

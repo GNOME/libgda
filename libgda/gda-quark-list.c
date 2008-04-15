@@ -1,5 +1,5 @@
 /* GDA Common Library
- * Copyright (C) 1998 - 2007 The GNOME Foundation.
+ * Copyright (C) 1998 - 2008 The GNOME Foundation.
  *
  * Authors:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -22,6 +22,7 @@
  */
 
 #include <libgda/gda-quark-list.h>
+#include <libgda/gda-util.h>
 #include <glib/ghash.h>
 #include <glib/gmem.h>
 #include <glib/gmessages.h>
@@ -84,9 +85,17 @@ gda_quark_list_new (void)
 
 /**
  * gda_quark_list_new_from_string
- * @string: a connection string.
+ * @string: a string.
  *
- * Creates a new #GdaQuarkList given a connection string.
+ * Creates a new #GdaQuarkList given a string.
+ *
+ * @string must be a semi-colon separated list of "&lt;key&gt;=&lt;value&gt;" strings (for example
+ * "DB_NAME=notes;USERNAME=alfred"). Each key and value must respect the RFC 1738 recommendations: the
+ * <constant>&lt;&gt;&quot;#%{}|\^~[]&apos;`;/?:@=&amp;</constant> and space characters are replaced by 
+ * <constant>&quot;%%ab&quot;</constant> where
+ * <constant>ab</constant> is the hexadecimal number corresponding to the character (for example the
+ * "DB_NAME=notes;USERNAME=al%%20fred" string will specify a username as "al fred"). If this formalism
+ * is not respected, then some unexpected results may occur.
  *
  * Returns: the newly created #GdaQuarkList.
  */
@@ -158,17 +167,23 @@ gda_quark_list_copy (GdaQuarkList *qlist)
 /**
  * gda_quark_list_add_from_string
  * @qlist: a #GdaQuarkList.
- * @string: a connection string.
+ * @string: a string.
  * @cleanup: whether to cleanup the previous content or not.
+ *
+ * @string must be a semi-colon separated list of "&lt;key&gt;=&lt;value&gt;" strings (for example
+ * "DB_NAME=notes;USERNAME=alfred"). Each key and value must respect the RFC 1738 recommendations: the
+ * <constant>&lt;&gt;&quot;#%{}|\^~[]&apos;`;/?:@=&amp;</constant> and space characters are replaced by 
+ * <constant>&quot;%%ab&quot;</constant> where
+ * <constant>ab</constant> is the hexadecimal number corresponding to the character (for example the
+ * "DB_NAME=notes;USERNAME=al%%20fred" string will specify a username as "al fred"). If this formalism
+ * is not respected, then some unexpected results may occur.
  *
  * Adds new key->value pairs from the given @string. If @cleanup is
  * set to %TRUE, the previous contents will be discarded before adding
  * the new pairs.
  */
 void
-gda_quark_list_add_from_string (GdaQuarkList *qlist,
-				const gchar *string,
-				gboolean cleanup)
+gda_quark_list_add_from_string (GdaQuarkList *qlist, const gchar *string, gboolean cleanup)
 {
 	gchar **arr;
 
@@ -189,10 +204,10 @@ gda_quark_list_add_from_string (GdaQuarkList *qlist,
 			if (pair && pair[0]) {
 				gchar *name = pair[0];
 				gchar *value = pair[1];
-				g_hash_table_insert (qlist->hash_table,
-						     (gpointer) g_strdup (name),
-						     (gpointer) g_strdup (value));
-				g_strfreev (pair);
+				gda_rfc1738_decode (name);
+				gda_rfc1738_decode (value);
+				g_hash_table_insert (qlist->hash_table, (gpointer) name, (gpointer) value);
+				g_free (pair);
 			}
 			n++;
 		}

@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <glib.h>
 
-typedef char *(*CompletionFunc) (const char *, int);
+typedef char **(*CompletionFunc) (const char *, int, int);
 
 gchar   *input_from_console (const gchar *prompt);
 gchar   *input_from_stream  (FILE *stream);

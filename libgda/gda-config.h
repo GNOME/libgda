@@ -50,11 +50,11 @@ typedef enum {
 } GdaConfigError;
 
 struct _GdaDataSourceInfo {
-        gchar    *name;
-        gchar    *provider;
-        gchar    *description;
-        gchar    *cnc_string;
-        gchar    *auth_string;
+        gchar    *name;        /* plain text, not RFC 1738 encoded */
+        gchar    *provider;    /* plain text, not RFC 1738 encoded */
+        gchar    *description; /* plain text, not RFC 1738 encoded */
+        gchar    *cnc_string;  /* semi-colon separated <key>=<value> list where <key> and <value> are RFC 1738 encoded */
+        gchar    *auth_string; /* semi-colon separated <key>=<value> list where <key> and <value> are RFC 1738 encoded */
         gboolean  is_system;
 };
 

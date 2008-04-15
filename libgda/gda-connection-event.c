@@ -187,56 +187,6 @@ static void gda_connection_event_get_property (GObject *object, guint prop_id, G
 }
 
 /**
- * gda_connection_event_free:
- * @event: the event object.
- *
- * Frees the memory allocated by the event object.
- */
-void
-gda_connection_event_free (GdaConnectionEvent *event)
-{
-	g_object_unref (G_OBJECT (event));
-}
-
-/**
- * gda_connection_event_list_copy:
- * @events: a GList holding event objects.
- *
- * Creates a new list which contains the same events as @events and
- * adds a reference for each event in the list.
- *
- * You must free the list using #gda_connection_event_list_free.
- * Returns: a list of events.
- */
-GList *
-gda_connection_event_list_copy (const GList * events)
-{
-	GList *l;
-	GList *new_list;
-
-	new_list = g_list_copy ((GList *) events);
-	for (l = new_list; l; l = l->next)
-		g_object_ref (G_OBJECT (l->data));
-
-	return new_list;
-}
-
-/**
- * gda_connection_event_list_free:
- * @events: a GList holding event objects.
- *
- * Frees all event objects in the list and the list itself.
- * After this function has been called, the @events parameter doesn't point
- * to valid storage any more.
- */
-void
-gda_connection_event_list_free (GList * events)
-{
-	g_list_foreach (events, (GFunc) gda_connection_event_free, NULL);
-	g_list_free (events);
-}
-
-/**
  * gda_connection_event_set_event_type
  * @event: a #GdaConnectionEvent object
  * @type: the severity of the event

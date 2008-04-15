@@ -81,9 +81,6 @@ typedef enum
 
 GType                   gda_connection_event_get_type (void) G_GNUC_CONST;
 GdaConnectionEvent     *gda_connection_event_new (GdaConnectionEventType type);
-void                    gda_connection_event_free (GdaConnectionEvent * event);
-GList                  *gda_connection_event_list_copy (const GList * events);
-void                    gda_connection_event_list_free (GList * events);
 
 void                    gda_connection_event_set_event_type (GdaConnectionEvent *event, GdaConnectionEventType type);
 GdaConnectionEventType  gda_connection_event_get_event_type (GdaConnectionEvent *event);

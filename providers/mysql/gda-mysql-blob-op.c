@@ -165,7 +165,7 @@ gda_mysql_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 	bin = (GdaBinary *) blob;
 	if (bin->data) 
 		g_free (bin->data);
-	bin->data = g_new0 (gchar, size);
+	bin->data = g_new0 (guchar, size);
 	bin->binary_length = 0;
 
 	/* fetch blob data using C API into bin->data, and set bin->binary_length */

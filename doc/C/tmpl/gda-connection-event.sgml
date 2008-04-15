@@ -80,31 +80,6 @@ gda_connection_get_events() function.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_connection_event_free ##### -->
-<para>
-
-</para>
-
-@event: 
-
-
-<!-- ##### FUNCTION gda_connection_event_list_copy ##### -->
-<para>
-
-</para>
-
-@events: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_event_list_free ##### -->
-<para>
-
-</para>
-
-@events: 
-
-
 <!-- ##### FUNCTION gda_connection_event_set_event_type ##### -->
 <para>
 

@@ -684,16 +684,19 @@ gda_transaction_status_get_type
 <SECTION>
 <FILE>gda-util</FILE>
 <TITLE>Utility functions</TITLE>
-g_type_to_string
-g_type_from_string
-gda_string_hash_to_list
+gda_g_type_to_string
+gda_g_type_from_string
+<SUBSECTION>
 gda_default_escape_string
-gda_sql_replace_placeholders
-gda_file_load
-gda_file_save
-gda_server_provider_get_schema_nb_columns
-gda_server_provider_init_schema_model
-<SUBSECTION Standard>
+gda_default_unescape_string
+gda_identifier_hash
+gda_identifier_equal
+gda_completion_list_get
+<SUBSECTION>
+gda_rfc1738_encode
+gda_rfc1738_decode
+gda_dsn_split
+gda_connection_string_split
 </SECTION>
 
 <SECTION>
