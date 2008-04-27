@@ -843,7 +843,7 @@ gda_set_get_spec (GdaSet *set)
 
 	/* holders' values, sources, constraints: TODO */
 
-	xmlDocDumpFormatMemory(doc, &xmlbuff, &buffersize, 1);
+	xmlDocDumpFormatMemory (doc, &xmlbuff, &buffersize, 1);
 	
 	xmlFreeDoc(doc);
 	return (gchar *) xmlbuff;

@@ -306,7 +306,7 @@ dbo = gda_meta_struct_complement (mstruct, gda_connection_get_meta_store (cnc),
 gda_value_free (table_name);
 if (dbo) {
     /* the "customers" table has been found, its details are in dbo */
-    GdaMetaTable *table = GDA_META_DB_OBJECT_GET_TABLE (dbo);
+    GdaMetaTable *table = GDA_META_TABLE (dbo);
     GSList *list;
     for (list = table->columns: list; list = list->next) 
         g_print ("Column: %s\n", ((GdaMetaTableColumn*) list->data)->column_name);

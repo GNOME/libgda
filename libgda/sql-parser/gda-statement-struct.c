@@ -487,7 +487,7 @@ gda_sql_field_check_validity (GdaSqlField *field, GdaSqlStatementCheckValidityDa
 	memset (&value, 0, sizeof (GValue));
 	g_value_set_string (g_value_init (&value, G_TYPE_STRING), field->field_name);
 	tcol = gda_meta_struct_get_table_column (data->mstruct, 
-						 GDA_META_DB_OBJECT_GET_TABLE (stable->validity_meta_object), 
+						 GDA_META_TABLE (stable->validity_meta_object), 
 						 &value);
 	g_value_unset (&value);
 	field->validity_meta_table_column = tcol;
@@ -667,7 +667,7 @@ gda_sql_select_field_check_validity (GdaSqlSelectField *field, GdaSqlStatementCh
 
 			g_value_set_string (g_value_init (&value, G_TYPE_STRING), field->field_name);
 			tcol = gda_meta_struct_get_table_column (data->mstruct, 
-								 GDA_META_DB_OBJECT_GET_TABLE (target->validity_meta_object),
+								 GDA_META_TABLE (target->validity_meta_object),
 								 &value);
 			g_value_unset (&value);
 			if (tcol) {
@@ -712,7 +712,7 @@ gda_sql_select_field_check_validity (GdaSqlSelectField *field, GdaSqlStatementCh
 			GdaMetaTableColumn *tcol;
 			g_value_set_string (g_value_init (&value, G_TYPE_STRING), field->field_name);
 			tcol = gda_meta_struct_get_table_column (data->mstruct, 
-								 GDA_META_DB_OBJECT_GET_TABLE (field->validity_meta_object), 
+								 GDA_META_TABLE (field->validity_meta_object), 
 								 &value);
 			g_value_unset (&value);
 			field->validity_meta_table_column = tcol;
@@ -1306,7 +1306,7 @@ foreach_normalize (GdaSqlAnyPart *node, GdaConnection *cnc, GError **error)
 		     gda_identifier_equal (g_value_get_string (field->expr->value), "*"))) &&
 		    field->validity_meta_object) {
 			/* expand * to all the fields */
-			GdaMetaTable *mtable = GDA_META_DB_OBJECT_GET_TABLE (field->validity_meta_object);
+			GdaMetaTable *mtable = GDA_META_TABLE (field->validity_meta_object);
 			GSList *list;
 			GdaSqlAnyPart *parent_node = ((GdaSqlAnyPart*) field)->parent;
 			gint nodepos = g_slist_index (((GdaSqlStatementSelect*) parent_node)->expr_list, node);

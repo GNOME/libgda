@@ -1890,7 +1890,8 @@ gda_meta_store_get_version (GdaMetaStore *store) {
  * its contents.
  *
  * The returned connection can be used to access some other data than the one managed by @store
- * itself. Don not close the connection.
+ * itself. The returned object is not owned by the caller (if you need to keep it, then use g_object_ref()).
+ * Do not close the connection.
  *
  * Returns: a #GdaConnection, or %NULL
  */
@@ -3125,7 +3126,7 @@ gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_d
 			if (dbo->obj_type != GDA_SERVER_OPERATION_CREATE_TABLE)
 				conflict = TRUE;
 			else {
-				GdaMetaTable *mt = GDA_META_DB_OBJECT_GET_TABLE (eobj);
+				GdaMetaTable *mt = GDA_META_TABLE (eobj);
 				TableInfo *ti = TABLE_INFO (dbo);
 				if (g_slist_length (mt->columns) != g_slist_length (ti->columns))
 					conflict = TRUE;
@@ -3135,7 +3136,7 @@ gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_d
 			if (dbo->obj_type != GDA_SERVER_OPERATION_CREATE_VIEW)
 				conflict = TRUE;
 			else {
-				GdaMetaView *mv = GDA_META_DB_OBJECT_GET_VIEW (eobj);
+				GdaMetaView *mv = GDA_META_VIEW (eobj);
 				ViewInfo *vi = VIEW_INFO (dbo);
 				if (!mv->view_def ||
 				    !vi->view_def ||

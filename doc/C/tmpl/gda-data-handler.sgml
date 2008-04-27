@@ -6,22 +6,29 @@ Interface which provides data handling capabilities
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-Because data types vary a lot from a DBMS to another, the #GdaDataHandler interface helps
-designing modules which can handle very specific pieces of data through plugins.
-Each object which imlements the #GdaDataHandler interface is expected to handle a subset of
-the possible libgda defined data types.
+  Because data types vary a lot from a DBMS to another, the #GdaDataHandler interface helps
+  designing modules which can handle very specific pieces of data through plugins.
+  Each object which imlements the #GdaDataHandler interface is expected to handle a subset of
+  the possible libgda defined data types.
 </para>
 <para>
-The #GdaDataHandler object can convert a #GValue to and from both SQL and 'STR'. The SQL representation of a value is 
-the actual string which would be used in an SQL statement (for example a string's SQL representation is surrounded by 
-quotes such as 'that\'s a string'). The 'STR' representation is a human-readable representation of a value appropriate 
-for the user's current locale. The 'STR' respresentation of a string is simply the original string without quotes but 
-a numerical value or date, for instance, will be formatted according to the user's current locale.
+  The #GdaDataHandler object can convert a #GValue to and from both SQL and 'STR'. The SQL representation of a value is 
+  the actual string which would be used in an SQL statement (for example a string's SQL representation is surrounded by 
+  quotes such as 'that\'s a string'). The 'STR' representation is a human-readable representation of a value appropriate 
+  for the user's current locale. The 'STR' respresentation of a string is simply the original string without quotes but 
+  a numerical value or date, for instance, will be formatted according to the user's current locale.
 </para>
 <para>
-Only one object which implements this interface is needed for any given data type, and it mainly contains some
-methods to manage values (as #GValue structures). The #GnomeDbDataEntry interface is complementary to this one since
-it it implemented by widgets where the user can enter or modify some data.
+  Only one object which implements this interface is needed for any given data type, and it mainly contains some
+  methods to manage values (as #GValue structures). The #GnomeDbDataEntry interface is complementary to this one since
+  it it implemented by widgets where the user can enter or modify some data.
+</para>
+<para>
+  #GdaDataHandler objects specific for each database provider and for each data type can be obtained using 
+  <link linkend="gda-server-provider-get-data-handler-gtype">gda_server_provider_get_data_handler_gtype()</link> or
+  <link linkend="gda-server-provider-get-data-handler-dbms">gda_server_provider_get_data_handler_dbms()</link>, and
+  generic data handlers (for each type) can be obtained using
+  <link linkend="gda-get-default-handler">gda_get_default_handler()</link>.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

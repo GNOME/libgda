@@ -589,8 +589,8 @@ test7 (GError **error)
 	const GValue *cvalue;
 	GValue *value;
 
-	h1 = gda_holder_new_string ("Slave", "Master string");
-	h2 = gda_holder_new_string ("Master", "Slave string");
+	h1 = gda_holder_new_string ("Slave", "Slave string");
+	h2 = gda_holder_new_string ("Master", "Master string");
 	emitted_signals_monitor_holder (h1);
 	emitted_signals_monitor_holder (h2);
 	emitted_signals_reset ();

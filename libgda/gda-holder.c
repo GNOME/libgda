@@ -1187,9 +1187,8 @@ gda_holder_set_bind (GdaHolder *holder, GdaHolder *bind_to)
 		g_signal_connect (G_OBJECT (holder->priv->simple_bind), "changed",
 				  G_CALLBACK (full_bind_changed_cb), holder);
 
-		/* if alias_of has a different value than holder, then we set holder to the new value */
-		if (gda_value_compare_ext (value1, value2))
-			g_signal_emit (holder, gda_holder_signals[CHANGED], 0);
+		/* if bind_to has a different value than holder, then we set holder to the new value */
+		gda_holder_set_value (holder, value2);
 		if (value1)
 			gda_value_free (value1);
 	}

@@ -460,20 +460,18 @@ fill_tables_views_model (GdaConnection *cnc,
                         if (*(g_value_get_string (tvalue)) == 'v')
                                 is_view = TRUE;
                         g_value_set_boolean ((v1 = gda_value_new (G_TYPE_BOOLEAN)), TRUE);
-                        if (strcmp (schema_name, "main")) {
-                                str = g_strdup_printf ("%s.%s", schema_name, g_value_get_string (cvalue));
-                                g_value_take_string ((v2 = gda_value_new (G_TYPE_STRING)), str);
-                        }
+			str = g_strdup_printf ("%s.%s", schema_name, g_value_get_string (cvalue));
+			g_value_take_string ((v2 = gda_value_new (G_TYPE_STRING)), str);
                         if (! append_a_row (to_tables_model, error, 9,
-                                            FALSE, catalog_value,
-                                            FALSE, p_table_schema,
-                                            FALSE, cvalue,
-                                            FALSE, is_view ? view_type_value : table_type_value,
-                                            TRUE, v1,
-                                            FALSE, NULL,
-                                            FALSE, cvalue,
-                                            v2 ? TRUE : FALSE, v2 ? v2 : cvalue,
-                                            FALSE, NULL))
+                                            FALSE, catalog_value, /* table_catalog */
+                                            FALSE, p_table_schema, /* table_schema */
+                                            FALSE, cvalue, /* table_name */
+                                            FALSE, is_view ? view_type_value : table_type_value, /* table_type */
+                                            TRUE, v1, /* is_insertable_into */
+                                            FALSE, NULL, /* table_comments */
+                                            FALSE, cvalue, /* table_short_name */
+                                            TRUE, v2, /* table_full_name */
+                                            FALSE, NULL)) /* table_owner */
                                 retval = FALSE;
                         if (is_view && ! append_a_row (to_views_model, error, 6,
                                                        FALSE, catalog_value,

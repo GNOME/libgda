@@ -1,3 +1,28 @@
+2008-04-27  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-set.[ch]:
+	* libgda/sql-parser/gda-statement-struct-select.c:
+	* libgda/gda-data-model.c:
+	* libgda/gda-connection.c:
+	* tools/gda-sql.c: cosmetic changes
+	* tests/value-holders/check_holder.c! corrected test case
+	* libgda/gda-holder.c: fixed a bug in binding an object to another
+	* libgda/gda-meta-struct.h: reorganized the GdaMetaDbObject structure
+	* libgda/gda-config.[ch]: added gda_config_dsn_needs_authentication(),
+	and gda_config_get_dsn() now accepts username:password prepended to the DSN
+	* libgda/sqlite/gda-sqlite-meta.c: corrected the way tables are reported
+	* libgda/sqlite/gda-sqlite-provider.c: now render the FALSE keyword as 0 and
+	TRUE as 1 (this is how SQLite handles booleans)
+	* libgda/gda-meta-store.c:
+	* doc/C: docs. update
+	* libgda/gda-util.c: fixed a bug in the completion function when no proposal
+	exists
+	* libgda/gda-meta-struct.[ch]: added gda_meta_struct_complement_schema() and
+	gda_meta_struct_complement_default() which respectively fast-adds all the objects of a
+	schema or all the objects which can be named without the schema
+	prefix. Also added gda_meta_struct_complement_depend() which add to
+	the object all the database objects on which an object depends.
+
 2008-04-15  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in: Rename libext variable to avoid contaminating libtool-2.2
@@ -24,7 +49,7 @@
 	Made a review of the DSN and connection strings in Libgda, and decided to require
 	string encoded using RFC 1738 (Uniform Resource Locators (URL)): the non ascii
 	(and some special characters) must be represented in their "%ab" form where
-	"ab" is their hexa. representation; this will solve problems where DSN and/or 
+	"ab" is their hexa. representation; this will solve problems where DSN and/or
 	auth string must contain some ";" character.
 	* libgda/gda-util.[ch]: added the gda_rfc1738_encode(), gda_rfc1738_decode(),
 	gda_dsn_split() and gda_connection_string_split() functions

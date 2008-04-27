@@ -40,9 +40,6 @@
 #endif
 #include "csv.h"
 
-#define PARENT_TYPE G_TYPE_OBJECT
-#define CLASS(model) (GDA_DATA_MODEL_CLASS (G_OBJECT_GET_CLASS (model)))
-
 static void gda_data_model_class_init (gpointer g_class);
 
 /* signals */

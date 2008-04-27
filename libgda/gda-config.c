@@ -272,7 +272,7 @@ load_config_file (const gchar *file, gboolean is_system)
 				xmlFree (value);
 			}
 			
-			if (username) {
+			if (username && *username) {
 				if (!info->auth_string) {
 					/* migrate username/password to auth_string */
 					gchar *s1;
@@ -287,9 +287,10 @@ load_config_file (const gchar *file, gboolean is_system)
 						info->auth_string = g_strdup_printf ("USERNAME=%s", s1);
 					g_free (s1);
 				}
-				g_free (username);
-				g_free (password);
 			}
+			g_free (username);
+			g_free (password);
+
 
 			/* signals */
 			if (is_new) {
@@ -692,7 +693,11 @@ gda_config_get (void)
  * gda_config_get_dsn
  * @dsn_name: the name of the DSN to look for
  *
- * Get information about the DSN named @dsn_name
+ * Get information about the DSN named @dsn_name. 
+ *
+ * @dsn_name's format is "[&lt;username&gt;[:&lt;password&gt;]@]&lt;DSN&gt;" (if &lt;username&gt;
+ * and optionaly &lt;password&gt; are provided, they are ignored). Also see the gda_dsn_split() utility
+ * function.
  *
  * Returns: a a pointer to read-only #GdaDataSourceInfo structure, or %NULL if not found
  */
@@ -703,16 +708,27 @@ gda_config_get_dsn (const gchar *dsn_name)
 
 	g_return_val_if_fail (dsn_name, NULL);
 
+	gchar *user, *pass, *real_dsn;
+        gda_dsn_split (dsn_name, &real_dsn, &user, &pass);
+	g_free (user);
+	g_free (pass);
+        if (!real_dsn) {
+		g_warning (_("Malformed data source name '%s'"), dsn_name);
+                return NULL;
+	}
+
 	GDA_CONFIG_LOCK ();
 	if (!unique_instance)
 		gda_config_get ();
 
 	for (list = unique_instance->priv->dsn_list; list; list = list->next)
-		if (!strcmp (((GdaDataSourceInfo*) list->data)->name, dsn_name)) {
+		if (!strcmp (((GdaDataSourceInfo*) list->data)->name, real_dsn)) {
 			GDA_CONFIG_UNLOCK ();
+			g_free (real_dsn);
 			return (GdaDataSourceInfo*) list->data;
 		}
 	GDA_CONFIG_UNLOCK ();
+	g_free (real_dsn);
 	return NULL;
 }
 
@@ -852,6 +868,35 @@ gda_config_remove_dsn (const gchar *dsn_name, GError **error)
 
 	GDA_CONFIG_UNLOCK ();
 	return TRUE;
+}
+
+/**
+ * gda_config_dsn_needs_auth
+ * @dsn_name: the name of a DSN, in the "[&lt;username&gt;[:&lt;password&gt;]@]&lt;DSN&gt;" format
+ * 
+ * Tells if the data source identified as @dsn_name needs any authentication. If a &lt;username&gt;
+ * and optionaly a &lt;password&gt; are specified, they are ignored.
+ *
+ * Returns: TRUE if an authentication is needed
+ */
+gboolean
+gda_config_dsn_needs_authentication (const gchar *dsn_name)
+{
+	GdaDataSourceInfo *info;
+	GdaProviderInfo *pinfo;
+
+	info = gda_config_get_dsn (dsn_name);
+	if (!info)
+		return FALSE;
+	pinfo = gda_config_get_provider_info (info->provider);
+	if (!pinfo) {
+		g_warning (_("Provider '%s' not found"), info->provider);
+		return FALSE;
+	}
+	if (pinfo->auth_params && pinfo->auth_params->holders)
+		return TRUE;
+	else
+		return FALSE;
 }
 
 /**

@@ -1882,6 +1882,7 @@ meta_context_stringify (GdaMetaContext *context)
 	return str;
 }
 
+#ifdef GDA_DEBUG_NO
 static void
 meta_context_dump (GdaMetaContext *context)
 {
@@ -1890,6 +1891,7 @@ meta_context_dump (GdaMetaContext *context)
 	g_print ("GdaMetaContext for table %s: %s\n", context->table_name, str);
 	g_free (str);
 }
+#endif
 
 /*
  *
@@ -3508,6 +3510,7 @@ gda_connection_internal_get_provider_data (GdaConnection *cnc)
 GdaMetaStore *
 gda_connection_get_meta_store (GdaConnection *cnc)
 {
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	if (cnc->priv->meta_store)
 		return cnc->priv->meta_store;
 

@@ -139,6 +139,15 @@ g_object_new (GDA_TYPE_CONFIG, "user-file", "my_file", NULL);
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_config_dsn_needs_authentication ##### -->
+<para>
+
+</para>
+
+@dsn_name: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_config_list_dsn ##### -->
 <para>
 

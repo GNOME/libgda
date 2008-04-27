@@ -933,7 +933,6 @@ open_connection (MainData *data, const gchar *cnc_name, const gchar *cnc_string,
 		data->settings = g_slist_append (data->settings, cs);
 		data->current = cs;
 
-		/* set the GdaDict object's attributes */
 		GdaMetaStore *store;
 		gboolean update_store = FALSE;
 

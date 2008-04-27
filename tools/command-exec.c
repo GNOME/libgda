@@ -612,26 +612,8 @@ gda_internal_command_build_meta_struct (GdaConnection *cnc, const gchar **args, 
 
 	if (!args[0]) {
 		/* use all tables or views */
-		GdaDataModel *model;
-		gint i, nrows;
-		const gchar *sql = "SELECT t.table_catalog, t.table_schema, t.table_name, v.table_name FROM _tables as t LEFT JOIN _views as v ON (t.table_catalog=v.table_catalog AND t.table_schema=v.table_schema AND t.table_name=v.table_name) WHERE table_short_name != table_full_name";
-		model = gda_meta_store_extract (store, sql, error, NULL);
-		if (!model)
-			return NULL;
-		nrows = gda_data_model_get_n_rows (model);
-		for (i = 0; i < nrows; i++) {
-			const GValue *detv;
-			detv = gda_data_model_get_value_at (model, 3, i);
-			if (! gda_meta_struct_complement (mstruct, store, 
-							  detv && !gda_value_is_null (detv) && 
-							  g_value_get_string (detv) && *g_value_get_string (detv) ? 
-							  GDA_META_DB_VIEW : GDA_META_DB_TABLE,
-							  gda_data_model_get_value_at (model, 0, i),
-							  gda_data_model_get_value_at (model, 1, i),
-							  gda_data_model_get_value_at (model, 2, i), error)) 
-				goto onerror;
-		}
-		g_object_unref (model);
+		if (!gda_meta_struct_complement_default (mstruct, store, error))
+			goto onerror;
 	}
 
 	for (index = 0, arg = args[0]; arg; index++, arg = args[index]) {
@@ -641,30 +623,13 @@ gda_internal_command_build_meta_struct (GdaConnection *cnc, const gchar **args, 
 		/* see if we have the form <schema_name>.*, to list all the objects in a given schema */
 		if (g_str_has_suffix (arg, ".*") && (*arg != '.')) {
 			gchar *str;
-			GdaDataModel *model;
-			gint i, nrows;
 
 			str = g_strdup (arg);
 			str[strlen (str) - 2] = 0;
 			g_value_take_string (v, str);
-			const gchar *sql = "SELECT t.table_catalog, t.table_schema, t.table_name, v.table_name FROM _tables as t LEFT JOIN _views as v ON (t.table_catalog=v.table_catalog AND t.table_schema=v.table_schema AND t.table_name=v.table_name) WHERE t.table_schema = ##ts::string";
-			model = gda_meta_store_extract (store, sql, error, "ts", v, NULL);
-			if (!model)
-				return NULL;
-			nrows = gda_data_model_get_n_rows (model);
-			for (i = 0; i < nrows; i++) {
-				const GValue *detv;
-				detv = gda_data_model_get_value_at (model, 3, i);
-				if (! gda_meta_struct_complement (mstruct, store, 
-								  detv && !gda_value_is_null (detv) && 
-								  g_value_get_string (detv) && *g_value_get_string (detv) ? 
-								  GDA_META_DB_VIEW : GDA_META_DB_TABLE,
-								  gda_data_model_get_value_at (model, 0, i),
-								  gda_data_model_get_value_at (model, 1, i),
-								  gda_data_model_get_value_at (model, 2, i), error)) 
-					goto onerror;
-			}
-			g_object_unref (model);
+
+			if (!gda_meta_struct_complement_schema (mstruct, store, NULL, v, error))
+				goto onerror;
 		}
 		else {
 			/* try to find it as a table or view */
@@ -675,32 +640,10 @@ gda_internal_command_build_meta_struct (GdaConnection *cnc, const gchar **args, 
 					str = g_strdup (arg);
 					str[strlen (str) - 1] = 0;
 					g_value_take_string (v, str);
-					dbo = gda_meta_struct_complement (mstruct, store, GDA_META_DB_TABLE, 
+					dbo = gda_meta_struct_complement (mstruct, store, GDA_META_DB_UNKNOWN, 
 									  NULL, NULL, v, NULL);
-					if (!dbo)
-						dbo = gda_meta_struct_complement (mstruct, store, GDA_META_DB_VIEW, 
-										  NULL, NULL, v, NULL);
-					if (dbo && dbo->depend_list) {
-						GSList *list, *dep_list;
-						GValue *catalog, *schema, *name;
-
-						dep_list = g_slist_copy (dbo->depend_list);
-						for (list = dep_list; list; list = list->next) {
-							dbo = GDA_META_DB_OBJECT (list->data);
-							g_value_set_string ((catalog = gda_value_new (G_TYPE_STRING)), 
-									    dbo->obj_catalog);
-							g_value_set_string ((schema = gda_value_new (G_TYPE_STRING)), 
-									    dbo->obj_schema);
-							g_value_set_string ((name = gda_value_new (G_TYPE_STRING)), 
-									    dbo->obj_name);
-							gda_meta_struct_complement (mstruct, store, dbo->obj_type,
-										    catalog, schema, name, NULL);
-							gda_value_free (catalog);
-							gda_value_free (schema);
-							gda_value_free (name);
-						}
-						g_slist_free (dep_list);
-					}
+					if (dbo)
+						gda_meta_struct_complement_depend (mstruct, store, dbo, NULL);
 				}
 			}
 		}
@@ -829,7 +772,7 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 
 	if ((dbo->obj_type == GDA_META_DB_VIEW) || (dbo->obj_type == GDA_META_DB_TABLE)) {
 		GdaInternalCommandResult *subres;
-		GdaMetaTable *mt = GDA_META_DB_OBJECT_GET_TABLE (dbo);
+		GdaMetaTable *mt = GDA_META_TABLE (dbo);
 		GSList *list;
 
 		model = gda_data_model_array_new (4);
@@ -870,7 +813,7 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 		
 		if (dbo->obj_type == GDA_META_DB_VIEW) {
 			/* VIEW specific */
-			GdaMetaView *mv = GDA_META_DB_OBJECT_GET_VIEW (dbo);
+			GdaMetaView *mv = GDA_META_VIEW (dbo);
 			
 			subres = g_new0 (GdaInternalCommandResult, 1);
 			subres->type = GDA_INTERNAL_COMMAND_RESULT_TXT;

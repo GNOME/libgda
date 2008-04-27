@@ -153,7 +153,6 @@ GdaSetSource *gda_set_get_source_for_model     (GdaSet *set, GdaDataModel *model
 GdaSetSource *gda_set_get_source               (GdaSet *set, GdaHolder *param);
 GdaSetGroup  *gda_set_get_group                (GdaSet *set, GdaHolder *param);
 
-
 G_END_DECLS
 
 #endif

@@ -730,7 +730,7 @@ GdaConnection *cnc;
 GdaMetaStore *store;
 
 cnc = gda_connection_open_from_dsn (...);
-store = GDA_META_STORE (GDA_TYPE_META_STORE, "cnc", cnc, NULL);
+store = GDA_META_STORE (g_object_new (GDA_TYPE_META_STORE, "cnc", cnc, NULL));
 g_object_set (G_OBJECT (cnc), "meta-store", store, NULL);
 g_object_unref (store);
 	  </programlisting>

@@ -87,6 +87,7 @@ GdaConfig*         gda_config_get                 (void);
 GdaDataSourceInfo *gda_config_get_dsn             (const gchar *dsn_name);
 gboolean           gda_config_define_dsn          (const GdaDataSourceInfo *info, GError **error);
 gboolean           gda_config_remove_dsn          (const gchar *dsn_name, GError **error);
+gboolean           gda_config_dsn_needs_authentication (const gchar *dsn_name);
 GdaDataModel      *gda_config_list_dsn            (void);
 gboolean           gda_config_can_modify_system_config (void);
 

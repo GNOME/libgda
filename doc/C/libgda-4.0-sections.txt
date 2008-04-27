@@ -53,6 +53,7 @@ GdaDataSourceInfo
 gda_config_get_dsn
 gda_config_define_dsn
 gda_config_remove_dsn
+gda_config_dsn_needs_authentication
 gda_config_list_dsn
 gda_config_get_nb_dsn
 gda_config_get_dsn_index
@@ -1329,8 +1330,8 @@ GdaMetaStructError
 GdaMetaDbObjectType
 GdaMetaDbObject
 GDA_META_DB_OBJECT
-GDA_META_DB_OBJECT_GET_TABLE
-GDA_META_DB_OBJECT_GET_VIEW
+GDA_META_TABLE
+GDA_META_VIEW
 GdaMetaTable
 GdaMetaView
 GdaMetaTableColumn
@@ -1340,6 +1341,8 @@ GDA_META_TABLE_FOREIGN_KEY
 GDA_META_STRUCT_ERROR
 gda_meta_struct_new
 gda_meta_struct_complement
+gda_meta_struct_complement_schema
+gda_meta_struct_complement_default
 GdaMetaSortType
 gda_meta_struct_sort_db_objects
 gda_meta_struct_get_db_object

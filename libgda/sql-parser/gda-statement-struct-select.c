@@ -342,7 +342,6 @@ static gboolean
 gda_sql_statement_select_check_validity (GdaSqlAnyPart *stmt, gpointer data, GError **error)
 {
 	GdaSqlStatementSelect *select = (GdaSqlStatementSelect *) stmt;
-	GdaSqlStatementCheckValidityData *ddata = (GdaSqlStatementCheckValidityData*) data;
 	gboolean retval = TRUE;
 
 	/* validate target's names and aliases:

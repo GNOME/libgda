@@ -1202,7 +1202,10 @@ gda_sqlite_provider_create_parser (GdaServerProvider *provider, GdaConnection *c
 /*
  * GdaStatement to SQL request
  */
-static gchar * sqlite_render_statement (GdaSqlOperation *op, GdaSqlRenderingContext *context, GError **error);
+static gchar *sqlite_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, GError **error);
+static gchar *sqlite_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, 
+				  gboolean *is_default, gboolean *is_null,
+				  GError **error);
 static gchar *
 gda_sqlite_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection *cnc,
 				      GdaStatement *stmt, GdaSet *params, GdaStatementSqlFlag flags,
@@ -1220,9 +1223,8 @@ gda_sqlite_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection
 	memset (&context, 0, sizeof (context));
 	context.params = params;
 	context.flags = flags;
-	context.render_operation = (GdaSqlRenderingFunc) sqlite_render_statement; /* only this part of the context is 
-										   * modified for SQLite, other rendering
-										   * is the default */
+	context.render_operation = (GdaSqlRenderingFunc) sqlite_render_operation; /* specific REGEXP rendering */
+	context.render_expr = sqlite_render_expr; /* render "FALSE" as 0 and TRUE as !0 */
 
 	str = gda_statement_to_sql_real (stmt, &context, error);
 
@@ -1241,7 +1243,7 @@ gda_sqlite_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection
 }
 
 static gchar *
-sqlite_render_statement (GdaSqlOperation *op, GdaSqlRenderingContext *context, GError **error)
+sqlite_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, GError **error)
 {
 	gchar *str;
 	GSList *list;
@@ -1437,6 +1439,94 @@ sqlite_render_statement (GdaSqlOperation *op, GdaSqlRenderingContext *context, G
 	g_slist_free (sql_list);
 
 	return str;
+}
+
+static gchar *
+sqlite_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, 
+		    gboolean *is_default, gboolean *is_null,
+		    GError **error)
+{
+	GString *string;
+	gchar *str = NULL;
+
+	g_return_val_if_fail (expr, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (expr)->type == GDA_SQL_ANY_EXPR, NULL);
+
+	if (is_default)
+		*is_default = FALSE;
+	if (is_null)
+		*is_null = FALSE;
+
+	/* can't have: 
+	 *  - expr->cast_as && expr->param_spec 
+	 */
+	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (expr), error)) return NULL;
+
+	string = g_string_new ("");
+	if (expr->param_spec) {
+		str = context->render_param_spec (expr->param_spec, expr, context, is_default, is_null, error);
+		if (!str) goto err;
+	}
+	else if (expr->value) {
+		str = gda_value_stringify (expr->value);
+		if (!str) goto err;
+		if (is_null && gda_value_is_null (expr->value))
+			*is_null = TRUE;
+		else if (is_default && (G_VALUE_TYPE (expr->value) == G_TYPE_STRING) && 
+			 !g_ascii_strcasecmp (g_value_get_string (expr->value), "default"))
+			*is_default = TRUE;
+		else if (!g_ascii_strcasecmp (str, "FALSE")) {
+			g_free (str);
+			str = g_strdup ("0");
+		}
+		else if (!g_ascii_strcasecmp (str, "TRUE")) {
+			g_free (str);
+			str = g_strdup ("1");
+		}
+	}
+	else if (expr->func) {
+		str = context->render_function (GDA_SQL_ANY_PART (expr->func), context, error);
+		if (!str) goto err;
+	}
+	else if (expr->cond) {
+		str = context->render_operation (GDA_SQL_ANY_PART (expr->cond), context, error);
+		if (!str) goto err;
+	}
+	else if (expr->select) {
+		gchar *str1;
+		str1 = context->render_select (GDA_SQL_ANY_PART (expr->select), context, error);
+		if (!str1) goto err;
+		str = g_strdup_printf ("(%s)", str1);
+		g_free (str1);
+	}
+	else if (expr->case_s) {
+		str = context->render_case (GDA_SQL_ANY_PART (expr->case_s), context, error);
+		if (!str) goto err;
+	}
+	else {
+		if (is_null)
+			*is_null = TRUE;
+		str = g_strdup ("NULL");
+	}
+
+	if (!str) {
+		/* TO REMOVE */
+		str = g_strdup ("[...]");
+	}
+
+	if (expr->cast_as) 
+		g_string_append_printf (string, "CAST (%s AS %s)", str, expr->cast_as);
+	else
+		g_string_append (string, str);
+	g_free (str);
+
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+
+ err:
+	g_string_free (string, TRUE);
+	return NULL;
 }
 
 /*

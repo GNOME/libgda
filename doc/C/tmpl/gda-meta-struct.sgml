@@ -33,7 +33,7 @@ if (!dbo)
         g_print ("Table not found\n");
 else {
         GSList *list;
-        for (list = GDA_META_DB_OBJECT_GET_TABLE (dbo)->columns; list; list = list->next) {
+        for (list = GDA_META_TABLE (dbo)->columns; list; list = list->next) {
                 GdaMetaTableColumn *tcol = GDA_META_TABLE_COLUMN (list->data);
                 g_print ("COLUMN: %s (%s)\n", tcol->column_name, tcol->column_type);
         }
@@ -60,11 +60,11 @@ else {
                         g_print ("Is a table\n");
                 else if (dbo->obj_type == GDA_META_DB_VIEW) {
                         g_print ("Is a view, definition is:\n");
-                        g_print ("%s\n", GDA_META_DB_OBJECT_GET_VIEW (dbo)->view_def);
+                        g_print ("%s\n", GDA_META_VIEW (dbo)->view_def);
                 }
 
                 GSList *list;
-                for (list = GDA_META_DB_OBJECT_GET_TABLE (dbo)->columns; list; list = list->next) {
+                for (list = GDA_META_TABLE (dbo)->columns; list; list = list->next) {
                         GdaMetaTableColumn *tcol = GDA_META_TABLE_COLUMN (list->data);
                         g_print ("COLUMN: %s (%s)\n", tcol->column_name, tcol->column_type);
                 }
@@ -123,6 +123,20 @@ gda_meta_struct_free (mstruct);
 @GDA_META_DB_TABLE: 
 @GDA_META_DB_VIEW: 
 
+<!-- ##### STRUCT GdaMetaDbObject ##### -->
+<para>
+
+</para>
+
+@obj_type: 
+@obj_catalog: 
+@obj_schema: 
+@obj_name: 
+@obj_short_name: 
+@obj_full_name: 
+@obj_owner: 
+@depend_list: 
+
 <!-- ##### MACRO GDA_META_DB_OBJECT ##### -->
 <para>
 
@@ -131,7 +145,7 @@ gda_meta_struct_free (mstruct);
 @x: 
 
 
-<!-- ##### MACRO GDA_META_DB_OBJECT_GET_TABLE ##### -->
+<!-- ##### MACRO GDA_META_TABLE ##### -->
 <para>
 
 </para>
@@ -139,7 +153,7 @@ gda_meta_struct_free (mstruct);
 @dbobj: 
 
 
-<!-- ##### MACRO GDA_META_DB_OBJECT_GET_VIEW ##### -->
+<!-- ##### MACRO GDA_META_VIEW ##### -->
 <para>
 
 </para>
@@ -235,6 +249,30 @@ gda_meta_struct_free (mstruct);
 @catalog: 
 @schema: 
 @name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_meta_struct_complement_schema ##### -->
+<para>
+
+</para>
+
+@mstruct: 
+@store: 
+@catalog: 
+@schema: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_meta_struct_complement_default ##### -->
+<para>
+
+</para>
+
+@mstruct: 
+@store: 
 @error: 
 @Returns: 
 

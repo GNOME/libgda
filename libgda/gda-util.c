@@ -789,7 +789,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 		ust->table = gda_sql_table_new (GDA_SQL_ANY_PART (ust));
 		ust->table->table_name = g_strdup ((gchar *) target->table_name);
 		ust->cond = dml_statements_build_condition (stsel, 
-							    GDA_META_DB_OBJECT_GET_TABLE (target->validity_meta_object),
+							    GDA_META_TABLE (target->validity_meta_object),
 							    require_pk, error);
 		if (!ust->cond) {
 			retval = FALSE;
@@ -804,7 +804,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 		dst->table = gda_sql_table_new (GDA_SQL_ANY_PART (dst));
 		dst->table->table_name = g_strdup ((gchar *) target->table_name);
 		dst->cond = dml_statements_build_condition (stsel, 
-							    GDA_META_DB_OBJECT_GET_TABLE (target->validity_meta_object),
+							    GDA_META_TABLE (target->validity_meta_object),
 							    require_pk, error);
 		if (!dst->cond) {
 			retval = FALSE;
@@ -1236,10 +1236,16 @@ gda_completion_list_get (GdaConnection *cnc, const gchar *sql, gint start, gint 
  compl_finished:
 	g_free (text);
 	if (compl) {
-		gchar **ptr;
-		ptr = (gchar**) compl->data;
-		g_array_free (compl, FALSE);
-		return ptr;
+		if (compl->len >= 1) {
+			gchar **ptr;
+			ptr = (gchar**) compl->data;
+			g_array_free (compl, FALSE);
+			return ptr;
+		}
+		else {
+			g_array_free (compl, TRUE);
+			return NULL;
+		}
 	}
 	else
 		return NULL;

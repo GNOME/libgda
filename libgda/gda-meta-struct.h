@@ -100,7 +100,7 @@ typedef struct {
 
 	/* Foreign keys */
 	GSList       *reverse_fk_list; /* list of GdaMetaTableForeignKey where @depend_on == this GdaMetaDbObject */
-	GSList       *fk_list; /* list of GdaMetaTableForeignKey where @gda_meta_table == this GdaMetaDbObject */
+	GSList       *fk_list; /* list of GdaMetaTableForeignKey where @meta_table == this GdaMetaDbObject */
 } GdaMetaTable;
 
 /**
@@ -123,6 +123,10 @@ typedef struct {
  *       before using in an SQL statement
  */
 typedef struct {
+	union {
+		GdaMetaTable    meta_table;
+		GdaMetaView     meta_view;
+	}                       extra;
 	GdaMetaDbObjectType     obj_type;
 	gchar                  *obj_catalog;
 	gchar                  *obj_schema;
@@ -131,16 +135,11 @@ typedef struct {
 	gchar                  *obj_full_name;
 	gchar                  *obj_owner;
 
-	union {
-		GdaMetaTable    meta_table;
-		GdaMetaView     meta_view;
-	}                       extra;
-
 	GSList                 *depend_list; /* list of GdaMetaDbObject pointers on which this object depends */
 } GdaMetaDbObject;
 #define GDA_META_DB_OBJECT(x) ((GdaMetaDbObject*)(x))
-#define GDA_META_DB_OBJECT_GET_TABLE(dbobj) (&((dbobj)->extra.meta_table))
-#define GDA_META_DB_OBJECT_GET_VIEW(dbobj) (&((dbobj)->extra.meta_view))
+#define GDA_META_TABLE(dbobj) (&((dbobj)->extra.meta_table))
+#define GDA_META_VIEW(dbobj) (&((dbobj)->extra.meta_view))
 
 typedef struct {
 	gchar        *column_name;
@@ -165,22 +164,28 @@ typedef struct {
 #define GDA_META_TABLE_FOREIGN_KEY(x) ((GdaMetaTableForeignKey*)(x))
 
 
-GType               gda_meta_struct_get_type         (void) G_GNUC_CONST;
-GdaMetaStruct      *gda_meta_struct_new              (GdaMetaStructFeature features);
-GdaMetaDbObject    *gda_meta_struct_complement       (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaDbObjectType type,
-                                                      const GValue *catalog, const GValue *schema, const GValue *name,
-                                                      GError **error);
-gboolean            gda_meta_struct_sort_db_objects  (GdaMetaStruct *mstruct, GdaMetaSortType sort_type, GError **error);
-GdaMetaDbObject    *gda_meta_struct_get_db_object    (GdaMetaStruct *mstruct,
-                                                      const GValue *catalog, const GValue *schema, const GValue *name);
-GdaMetaTableColumn *gda_meta_struct_get_table_column (GdaMetaStruct *mstruct, GdaMetaTable *table,
-                                                      const GValue *col_name);
+GType               gda_meta_struct_get_type          (void) G_GNUC_CONST;
+GdaMetaStruct      *gda_meta_struct_new               (GdaMetaStructFeature features);
+GdaMetaDbObject    *gda_meta_struct_complement        (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaDbObjectType type,
+						       const GValue *catalog, const GValue *schema, const GValue *name,
+						       GError **error);
+gboolean            gda_meta_struct_complement_schema (GdaMetaStruct *mstruct, GdaMetaStore *store,
+						       const GValue *catalog, const GValue *schema, GError **error);
+gboolean            gda_meta_struct_complement_default (GdaMetaStruct *mstruct, GdaMetaStore *store, GError **error);
+gboolean            gda_meta_struct_complement_depend (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaDbObject *dbo,
+						       GError **error);
+
+gboolean            gda_meta_struct_sort_db_objects   (GdaMetaStruct *mstruct, GdaMetaSortType sort_type, GError **error);
+GdaMetaDbObject    *gda_meta_struct_get_db_object     (GdaMetaStruct *mstruct,
+						       const GValue *catalog, const GValue *schema, const GValue *name);
+GdaMetaTableColumn *gda_meta_struct_get_table_column  (GdaMetaStruct *mstruct, GdaMetaTable *table,
+						       const GValue *col_name);
 
 typedef enum {
 	GDA_META_GRAPH_COLUMNS = 1 << 0
 } GdaMetaGraphInfo;
 
-gchar              *gda_meta_struct_dump_as_graph    (GdaMetaStruct *mstruct, GdaMetaGraphInfo info, GError **error);
+gchar              *gda_meta_struct_dump_as_graph     (GdaMetaStruct *mstruct, GdaMetaGraphInfo info, GError **error);
 
 G_END_DECLS
 
