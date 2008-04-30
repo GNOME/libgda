@@ -62,7 +62,7 @@ main (int argc, char *argv [])
         }
         g_option_context_free (context);
 
-	gda_init ("find_duplicates", "3.1.1", argc, argv);
+	gda_init ();
 
 	if (argc == 2)
 		dirname = argv [1];

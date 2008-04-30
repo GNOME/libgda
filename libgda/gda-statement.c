@@ -1454,86 +1454,86 @@ default_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, 
 
 	str = NULL;
 	switch (op->operator) {
-	case GDA_SQL_OPERATOR_EQ:
+	case GDA_SQL_OPERATOR_TYPE_EQ:
 		if (SQL_OPERAND (sql_list->next->data)->is_null) 
 			str = g_strdup_printf ("%s IS NULL", SQL_OPERAND (sql_list->data)->sql);
 		else
 			str = g_strdup_printf ("%s = %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
 		break;
-	case GDA_SQL_OPERATOR_IS:
+	case GDA_SQL_OPERATOR_TYPE_IS:
 		str = g_strdup_printf ("%s IS %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
 		break;
-	case GDA_SQL_OPERATOR_LIKE:
+	case GDA_SQL_OPERATOR_TYPE_LIKE:
 		str = g_strdup_printf ("%s LIKE %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
 		break;
-	case GDA_SQL_OPERATOR_GT:
+	case GDA_SQL_OPERATOR_TYPE_GT:
 		str = g_strdup_printf ("%s > %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
 		break;
-	case GDA_SQL_OPERATOR_LT:
+	case GDA_SQL_OPERATOR_TYPE_LT:
 		str = g_strdup_printf ("%s < %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
 		break;
-	case GDA_SQL_OPERATOR_GEQ:
+	case GDA_SQL_OPERATOR_TYPE_GEQ:
 		str = g_strdup_printf ("%s >= %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
 		break;
-	case GDA_SQL_OPERATOR_LEQ:
+	case GDA_SQL_OPERATOR_TYPE_LEQ:
 		str = g_strdup_printf ("%s <= %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
 		break;
-	case GDA_SQL_OPERATOR_DIFF:
+	case GDA_SQL_OPERATOR_TYPE_DIFF:
 		str = g_strdup_printf ("%s != %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
 		break;
-	case GDA_SQL_OPERATOR_REGEXP:
+	case GDA_SQL_OPERATOR_TYPE_REGEXP:
 		str = g_strdup_printf ("%s ~ %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
 		break;
-	case GDA_SQL_OPERATOR_REGEXP_CI:
+	case GDA_SQL_OPERATOR_TYPE_REGEXP_CI:
 		str = g_strdup_printf ("%s ~* %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
 		break;
-	case GDA_SQL_OPERATOR_NOT_REGEXP:
+	case GDA_SQL_OPERATOR_TYPE_NOT_REGEXP:
 		str = g_strdup_printf ("%s !~ %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
 		break;
-	case GDA_SQL_OPERATOR_NOT_REGEXP_CI:
+	case GDA_SQL_OPERATOR_TYPE_NOT_REGEXP_CI:
 		str = g_strdup_printf ("%s !~* %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
 		break;
-	case GDA_SQL_OPERATOR_SIMILAR:
+	case GDA_SQL_OPERATOR_TYPE_SIMILAR:
 		str = g_strdup_printf ("%s SIMILAR TO %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
 		break;
-	case GDA_SQL_OPERATOR_REM:
+	case GDA_SQL_OPERATOR_TYPE_REM:
 		str = g_strdup_printf ("%s %% %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
 		break;
-	case GDA_SQL_OPERATOR_DIV:
+	case GDA_SQL_OPERATOR_TYPE_DIV:
 		str = g_strdup_printf ("%s / %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
 		break;
-	case GDA_SQL_OPERATOR_BITAND:
+	case GDA_SQL_OPERATOR_TYPE_BITAND:
 		str = g_strdup_printf ("%s & %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
 		break;
-	case GDA_SQL_OPERATOR_BITOR:
+	case GDA_SQL_OPERATOR_TYPE_BITOR:
 		str = g_strdup_printf ("%s | %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
 		break;
-	case GDA_SQL_OPERATOR_BETWEEN:
+	case GDA_SQL_OPERATOR_TYPE_BETWEEN:
 		str = g_strdup_printf ("%s BETWEEN %s AND %s", SQL_OPERAND (sql_list->data)->sql, 
 				       SQL_OPERAND (sql_list->next->data)->sql,
 				       SQL_OPERAND (sql_list->next->next->data)->sql);
 		break;
-	case GDA_SQL_OPERATOR_ISNULL:
+	case GDA_SQL_OPERATOR_TYPE_ISNULL:
 		str = g_strdup_printf ("%s IS NULL", SQL_OPERAND (sql_list->data)->sql);
 		break;
-	case GDA_SQL_OPERATOR_ISNOTNULL:
+	case GDA_SQL_OPERATOR_TYPE_ISNOTNULL:
 		str = g_strdup_printf ("%s IS NOT NULL", SQL_OPERAND (sql_list->data)->sql);
 		break;
-	case GDA_SQL_OPERATOR_BITNOT:
+	case GDA_SQL_OPERATOR_TYPE_BITNOT:
 		str = g_strdup_printf ("~ %s", SQL_OPERAND (sql_list->data)->sql);
 		break;
-	case GDA_SQL_OPERATOR_NOT:
+	case GDA_SQL_OPERATOR_TYPE_NOT:
 		str = g_strdup_printf ("NOT %s", SQL_OPERAND (sql_list->data)->sql);
 		break;
-	case GDA_SQL_OPERATOR_IN:
-	case GDA_SQL_OPERATOR_NOTIN: {
+	case GDA_SQL_OPERATOR_TYPE_IN:
+	case GDA_SQL_OPERATOR_TYPE_NOTIN: {
 		gboolean add_p = TRUE;
 		if (sql_list->next && !(sql_list->next->next) &&
 		    *(SQL_OPERAND (sql_list->next->data)->sql)=='(')
 			add_p = FALSE;
 
 		string = g_string_new (SQL_OPERAND (sql_list->data)->sql);
-		if (op->operator == GDA_SQL_OPERATOR_IN)
+		if (op->operator == GDA_SQL_OPERATOR_TYPE_IN)
 			g_string_append (string, " IN ");
 		else
 			g_string_append (string, " NOT IN ");
@@ -1550,22 +1550,22 @@ default_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, 
 		g_string_free (string, FALSE);
 		break;
 	}
-	case GDA_SQL_OPERATOR_CONCAT:
+	case GDA_SQL_OPERATOR_TYPE_CONCAT:
 		multi_op = "||";
 		break;
-	case GDA_SQL_OPERATOR_PLUS:
+	case GDA_SQL_OPERATOR_TYPE_PLUS:
 		multi_op = "+";
 		break;
-	case GDA_SQL_OPERATOR_MINUS:
+	case GDA_SQL_OPERATOR_TYPE_MINUS:
 		multi_op = "-";
 		break;
-	case GDA_SQL_OPERATOR_STAR:
+	case GDA_SQL_OPERATOR_TYPE_STAR:
 		multi_op = "*";
 		break;
-	case GDA_SQL_OPERATOR_AND:
+	case GDA_SQL_OPERATOR_TYPE_AND:
 		multi_op = "AND";
 		break;
-	case GDA_SQL_OPERATOR_OR:
+	case GDA_SQL_OPERATOR_TYPE_OR:
 		multi_op = "OR";
 		break;
 	default:

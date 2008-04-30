@@ -53,7 +53,7 @@ main (int argc, char *argv[])
 		dsn = "SalesTest";
 	}
 
-        gda_init ("LibgdaXsltProc", "1.0", argc, argv);
+        gda_init ();
 
 	/* open connection */
 	cnc = gda_connection_open_from_dsn (dsn, NULL, GDA_CONNECTION_OPTIONS_NONE, &error);

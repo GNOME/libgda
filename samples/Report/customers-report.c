@@ -13,7 +13,7 @@ main (int argc, char **argv)
 	GdaConnection *cnc;
 	GdaHolder *param;
 
-	gda_init ("Customers report example", "3.1.1", argc, argv);
+	gda_init ();
 
 	/* Engine object */
 	g_assert (g_file_get_contents ("customers-report-spec.xml", &spec, NULL, NULL));

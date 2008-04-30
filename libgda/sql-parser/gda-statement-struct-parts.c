@@ -688,68 +688,68 @@ gda_sql_operation_serialize (GdaSqlOperation *operation)
  * Returns: a string with the operator's name or NULL in case @op is invalid.
  */
 const gchar *
-gda_sql_operation_operator_to_string (GdaSqlOperator op)
+gda_sql_operation_operator_to_string (GdaSqlOperatorType op)
 {
 	switch (op) {
-	case GDA_SQL_OPERATOR_AND:
+	case GDA_SQL_OPERATOR_TYPE_AND:
 		return "AND";
-	case GDA_SQL_OPERATOR_OR:
+	case GDA_SQL_OPERATOR_TYPE_OR:
 		return "OR";
-	case GDA_SQL_OPERATOR_NOT:
+	case GDA_SQL_OPERATOR_TYPE_NOT:
 		return "NOT";
-	case GDA_SQL_OPERATOR_EQ:
+	case GDA_SQL_OPERATOR_TYPE_EQ:
 		return "=";
-	case GDA_SQL_OPERATOR_IS:
+	case GDA_SQL_OPERATOR_TYPE_IS:
 		return "IS";
-	case GDA_SQL_OPERATOR_ISNULL:
+	case GDA_SQL_OPERATOR_TYPE_ISNULL:
 		return "IS NULL";
-	case GDA_SQL_OPERATOR_ISNOTNULL:
+	case GDA_SQL_OPERATOR_TYPE_ISNOTNULL:
 		return "IS NOT NULL";
-	case GDA_SQL_OPERATOR_IN:
+	case GDA_SQL_OPERATOR_TYPE_IN:
 		return "IN";
-	case GDA_SQL_OPERATOR_NOTIN:
+	case GDA_SQL_OPERATOR_TYPE_NOTIN:
 		return "NOT IN";
-	case GDA_SQL_OPERATOR_LIKE:
+	case GDA_SQL_OPERATOR_TYPE_LIKE:
 		return "LIKE";
-	case GDA_SQL_OPERATOR_BETWEEN:
+	case GDA_SQL_OPERATOR_TYPE_BETWEEN:
 		return "BETWEEN";
-	case GDA_SQL_OPERATOR_GT:
+	case GDA_SQL_OPERATOR_TYPE_GT:
 		return ">";
-	case GDA_SQL_OPERATOR_LT:
+	case GDA_SQL_OPERATOR_TYPE_LT:
 		return "<";
-	case GDA_SQL_OPERATOR_GEQ:
+	case GDA_SQL_OPERATOR_TYPE_GEQ:
 		return ">=";
-	case GDA_SQL_OPERATOR_LEQ:
+	case GDA_SQL_OPERATOR_TYPE_LEQ:
 		return "<=";
-	case GDA_SQL_OPERATOR_DIFF:
+	case GDA_SQL_OPERATOR_TYPE_DIFF:
 		return "!=";
-	case GDA_SQL_OPERATOR_REGEXP:
+	case GDA_SQL_OPERATOR_TYPE_REGEXP:
 		return "RE";
-	case GDA_SQL_OPERATOR_REGEXP_CI:
+	case GDA_SQL_OPERATOR_TYPE_REGEXP_CI:
 		return "CI_RE";
-	case GDA_SQL_OPERATOR_NOT_REGEXP:
+	case GDA_SQL_OPERATOR_TYPE_NOT_REGEXP:
 		return "!RE";
-	case GDA_SQL_OPERATOR_NOT_REGEXP_CI:
+	case GDA_SQL_OPERATOR_TYPE_NOT_REGEXP_CI:
 		return "!CI_RE";
-	case GDA_SQL_OPERATOR_SIMILAR:
+	case GDA_SQL_OPERATOR_TYPE_SIMILAR:
 		return "SIMILAR TO";
-	case GDA_SQL_OPERATOR_CONCAT:
+	case GDA_SQL_OPERATOR_TYPE_CONCAT:
 		return "||";
-	case GDA_SQL_OPERATOR_PLUS:
+	case GDA_SQL_OPERATOR_TYPE_PLUS:
 		return "+";
-	case GDA_SQL_OPERATOR_MINUS:
+	case GDA_SQL_OPERATOR_TYPE_MINUS:
 		return "-";
-	case GDA_SQL_OPERATOR_STAR:
+	case GDA_SQL_OPERATOR_TYPE_STAR:
 		return "*";
-	case GDA_SQL_OPERATOR_DIV:
+	case GDA_SQL_OPERATOR_TYPE_DIV:
 		return "/";
-	case GDA_SQL_OPERATOR_REM:
+	case GDA_SQL_OPERATOR_TYPE_REM:
 		return "%";
-	case GDA_SQL_OPERATOR_BITAND:
+	case GDA_SQL_OPERATOR_TYPE_BITAND:
 		return "&";
-	case GDA_SQL_OPERATOR_BITOR:
+	case GDA_SQL_OPERATOR_TYPE_BITOR:
 		return "|";
-	case GDA_SQL_OPERATOR_BITNOT:
+	case GDA_SQL_OPERATOR_TYPE_BITNOT:
 		return "~";
 	default:
 		g_error ("Unhandled operator constant %d\n", op);
@@ -761,74 +761,74 @@ gda_sql_operation_operator_to_string (GdaSqlOperator op)
  * gda_sql_operator_from_string
  * @op: a #GdaSqlOperation structure
  * 
- * Returns #GdaSqlOperator that correspond with the string @op.
+ * Returns #GdaSqlOperatorType that correspond with the string @op.
  *
- * Returns: #GdaSqlOperator
+ * Returns: #GdaSqlOperatorType
  */
-GdaSqlOperator 
+GdaSqlOperatorType 
 gda_sql_operation_operator_from_string (const gchar *op)
 {
 	switch (g_ascii_toupper (*op)) {
 	case 'A':
-		return GDA_SQL_OPERATOR_AND;
+		return GDA_SQL_OPERATOR_TYPE_AND;
 	case 'O':
-		return GDA_SQL_OPERATOR_OR;
+		return GDA_SQL_OPERATOR_TYPE_OR;
 	case 'N':
-		return GDA_SQL_OPERATOR_NOT;
+		return GDA_SQL_OPERATOR_TYPE_NOT;
 	case '=':
-		return GDA_SQL_OPERATOR_EQ;
+		return GDA_SQL_OPERATOR_TYPE_EQ;
 	case 'I':
 		if (op[1] == 'S')
-			return GDA_SQL_OPERATOR_IS;
+			return GDA_SQL_OPERATOR_TYPE_IS;
 		else if (op[1] == 'N')
-			return GDA_SQL_OPERATOR_IN;
+			return GDA_SQL_OPERATOR_TYPE_IN;
 		break;
 	case 'L':
-		return GDA_SQL_OPERATOR_LIKE;
+		return GDA_SQL_OPERATOR_TYPE_LIKE;
 	case 'B':
-		return GDA_SQL_OPERATOR_BETWEEN;
+		return GDA_SQL_OPERATOR_TYPE_BETWEEN;
 	case '>':
 		if (op[1] == '=')
-			return GDA_SQL_OPERATOR_GEQ;
+			return GDA_SQL_OPERATOR_TYPE_GEQ;
 		else if (op[1] == 0)
-			return GDA_SQL_OPERATOR_GT;
+			return GDA_SQL_OPERATOR_TYPE_GT;
 		break;
 	case '<':
 		if (op[1] == '=')
-			return GDA_SQL_OPERATOR_LEQ;
+			return GDA_SQL_OPERATOR_TYPE_LEQ;
 		else if (op[1] == 0)
-			return GDA_SQL_OPERATOR_LT;
+			return GDA_SQL_OPERATOR_TYPE_LT;
 		break;
 	case '!':
 		if (op[1] == '=')
-			return GDA_SQL_OPERATOR_DIFF;
+			return GDA_SQL_OPERATOR_TYPE_DIFF;
 		else if (op[1] == 'R') 
-			return GDA_SQL_OPERATOR_NOT_REGEXP;
+			return GDA_SQL_OPERATOR_TYPE_NOT_REGEXP;
 		else
-			return GDA_SQL_OPERATOR_NOT_REGEXP_CI;
+			return GDA_SQL_OPERATOR_TYPE_NOT_REGEXP_CI;
 	case 'R':
-		return GDA_SQL_OPERATOR_REGEXP;
+		return GDA_SQL_OPERATOR_TYPE_REGEXP;
 	case 'C':
-		return GDA_SQL_OPERATOR_REGEXP_CI;
+		return GDA_SQL_OPERATOR_TYPE_REGEXP_CI;
 	case 'S':
-		return GDA_SQL_OPERATOR_SIMILAR;
+		return GDA_SQL_OPERATOR_TYPE_SIMILAR;
 	case '|':
 		if (op[1] == '|')
-			return GDA_SQL_OPERATOR_CONCAT;
+			return GDA_SQL_OPERATOR_TYPE_CONCAT;
 		else
-			return GDA_SQL_OPERATOR_BITOR;
+			return GDA_SQL_OPERATOR_TYPE_BITOR;
 	case '+':
-		return GDA_SQL_OPERATOR_PLUS;
+		return GDA_SQL_OPERATOR_TYPE_PLUS;
 	case '-':
-		return GDA_SQL_OPERATOR_MINUS;
+		return GDA_SQL_OPERATOR_TYPE_MINUS;
 	case '*':
-		return GDA_SQL_OPERATOR_STAR;
+		return GDA_SQL_OPERATOR_TYPE_STAR;
 	case '/':
-		return GDA_SQL_OPERATOR_DIV;
+		return GDA_SQL_OPERATOR_TYPE_DIV;
 	case '%':
-		return GDA_SQL_OPERATOR_REM;
+		return GDA_SQL_OPERATOR_TYPE_REM;
 	case '&':
-		return GDA_SQL_OPERATOR_BITAND;
+		return GDA_SQL_OPERATOR_TYPE_BITAND;
 	}
 	g_error ("Unhandled operator named '%s'\n", op);
 	return 0;

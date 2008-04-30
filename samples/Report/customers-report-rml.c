@@ -13,7 +13,7 @@ main (int argc, char **argv)
 	GdaHolder *param;
 	GdaReportDocument *doc;
 
-	gda_init ("Customers report example (RML)", "3.1.1", argc, argv);
+	gda_init ();
 
 	/* Doc object */
 	doc = gda_report_rml_document_new (NULL);

@@ -22,25 +22,5 @@ Library initialization
 
 </para>
 
-@app_id: 
-@version: 
-@nargs: 
-@args: 
-
-
-<!-- ##### FUNCTION gda_main_run ##### -->
-<para>
-
-</para>
-
-@init_func: 
-@user_data: 
-
-
-<!-- ##### FUNCTION gda_main_quit ##### -->
-<para>
-
-</para>
-
 
 

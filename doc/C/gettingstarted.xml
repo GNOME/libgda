@@ -7,13 +7,10 @@
       <link linkend="gda-init">gda_init ()</link> function, for example:
     </para>
     <programlisting>
-gda_init ("TestGDA", "0.1", argc, argv);
+gda_init ();
     </programlisting>
     <para>
-      After initialising you can work as usual or make &LIBGDA; call a custom defined function
-      calling <link linkend="gda-main-run">gda_main_run()</link> (note that
-      if you use this way you will need to call <link linkend="gda-main-quit">gda_main_quit()</link> 
-      in order to finish the program).
+      After initialising you can work as usual or make &LIBGDA; 
     </para>
     <para>For example a basic program would look like:
       <programlisting>
@@ -41,7 +38,7 @@ main (int argc, char **argv)
 {
 	g_print ("STARTING\n");
 
-	gda_init ("TestGDA", "0.1", argc, argv);
+	gda_init ();
       	do_stuff();
 
 	g_print("ENDING\n");      

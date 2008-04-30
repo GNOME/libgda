@@ -672,7 +672,7 @@ dml_statements_build_condition (GdaSqlStatementSelect *stsel, GdaMetaTable *mtab
 		}
 		else if (mtable->pk_cols_nb > 1) {
 			and_cond = gda_sql_operation_new (GDA_SQL_ANY_PART (expr));
-			and_cond->operator = GDA_SQL_OPERATOR_AND;
+			and_cond->operator = GDA_SQL_OPERATOR_TYPE_AND;
 			expr->cond = and_cond;
 		}
 		for (i = 0; i < mtable->pk_cols_nb; i++) {
@@ -700,7 +700,7 @@ dml_statements_build_condition (GdaSqlStatementSelect *stsel, GdaMetaTable *mtab
 
 				/* equal condition */
 				op = gda_sql_operation_new (GDA_SQL_ANY_PART (and_cond ? (gpointer)and_cond : (gpointer)expr));
-				op->operator = GDA_SQL_OPERATOR_EQ;
+				op->operator = GDA_SQL_OPERATOR_TYPE_EQ;
 				if (and_cond) 
 					and_cond->operands = g_slist_append (and_cond->operands, op);
 				else
@@ -844,12 +844,12 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 		}
 
 		/* parameter for the inserted value */
-		GdaSqlParamSpec *pspec = g_new0 (GdaSqlParamSpec, 1);
 		GdaSqlExpr *expr;
 		GdaMetaTableColumn *tcol;
 
 		tcol = selfield->validity_meta_table_column;
 		if (insert) {
+			GdaSqlParamSpec *pspec = g_new0 (GdaSqlParamSpec, 1);
 			pspec->name = g_strdup_printf ("+%d", colindex);
 			pspec->g_type = tcol->gtype != G_TYPE_INVALID ? tcol->gtype: G_TYPE_STRING;
 			pspec->type = g_strdup (gda_g_type_to_string (pspec->g_type));
@@ -859,6 +859,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 			insert_values_list = g_slist_append (insert_values_list, expr);
 		}
 		if (update) {
+			GdaSqlParamSpec *pspec = g_new0 (GdaSqlParamSpec, 1);
 			pspec->name = g_strdup_printf ("+%d", colindex);
 			pspec->g_type = tcol->gtype != G_TYPE_INVALID ? tcol->gtype: G_TYPE_STRING;
 			pspec->type = g_strdup (gda_g_type_to_string (pspec->g_type));
@@ -932,8 +933,13 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 	return retval;
 }
 
-/*
- * computes a hash string from @is, to be used in hash tables as a GHashFunc
+/**
+ * gda_identifier_hash
+ * @id: an identifier string
+ *
+ * computes a hash string from @id, to be used in hash tables as a #GHashFunc
+ *
+ * Returns: a new hash
  */
 guint
 gda_identifier_hash (const gchar *id)
@@ -959,15 +965,26 @@ gda_identifier_hash (const gchar *id)
 	return h;
 }
 
-/*
- * Does the same as strcmp(id1, id2), but handles the case where id1 and/or id2 are enclosed in double quotes,
- * can also be used in hash tables as a GEqualFunc
+/**
+ * gda_identifier_equal
+ * @id1: an identifier string
+ * @id2: an identifier string
+ *
+ * Does the same as strcmp(@id1, @id2), but handles the case where id1 and/or id2 are enclosed in double quotes.
+ * can also be used in hash tables as a #GEqualFunc.
+ *
+ * Returns: TRUE if @id1 and @id2 are equal.
  */
 gboolean
 gda_identifier_equal (const gchar *id1, const gchar *id2)
 {
 	const gchar *ptr1, *ptr2;
 	gboolean dq1 = FALSE, dq2 = FALSE;
+
+	if ((!id1 && id2) || (id1 && !id2))
+		return FALSE;
+	if (!id1 && !id2)
+		return TRUE;
 
 	ptr1 = id1;
 	if (*ptr1 == '"') {
@@ -1396,6 +1413,10 @@ gda_rfc1738_encode (const gchar *string)
 			/* RFC 1738 says any non-US-ASCII are encoded */
 			else if (((unsigned char) *rptr >= (unsigned char) 0x80))
 				enc = TRUE;
+		}
+		if (!enc && (*rptr == '=')) {
+			/* also encode the '=' */
+			enc = TRUE;
 		}
 
 		if (enc) {

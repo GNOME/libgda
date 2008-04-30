@@ -16,7 +16,7 @@ main (int argc, char **argv)
 	GdaDataModel *rw_model;
 	gchar *file;
 	
-	gda_init ("SQlite virtual test", "1.0", argc, argv);
+	gda_init ();
 
 	provider = gda_vprovider_data_model_new ();
 	cnc = gda_virtual_connection_open (provider, NULL);

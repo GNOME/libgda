@@ -33,7 +33,7 @@
 #include <libgda/gda-data-access-wrapper.h>
 #include <libgda/gda-blob-op.h>
 #include "../gda-sqlite.h"
-
+#include <sql-parser/gda-statement-struct-util.h>
 
 struct _GdaVproviderDataModelPrivate {
 	
@@ -408,6 +408,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 	for (i = 0; i < ncols; i++) {
 		GdaColumn *column;
 		const gchar *name, *type;
+		gchar *newcolname;
 
 		if (i != 0)
 			g_string_append (sql, ", ");
@@ -420,15 +421,16 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 			g_string_free (sql, TRUE);
 			return SQLITE_ERROR;
 		}
+
 		name = gda_column_get_name (column);
-		type = gda_column_get_dbms_type (column);
-		if (!type) 
-			type = g_type_name (gda_column_get_g_type (column));
-		if (!name) {
-			*pzErr = sqlite3_mprintf (_("Can't get data model's column name for column %d"), i);
-			g_string_free (sql, TRUE);
-			return SQLITE_ERROR;
-		}
+		if (!name || !(*name))
+			newcolname = g_strdup_printf ("_%d", i + 1);
+		else if (_identifier_needs_quotes (name))
+			newcolname = g_strdup_printf ("\"%s\"", name);
+		else
+			newcolname = g_strdup (name);
+
+		type = g_type_name (gda_column_get_g_type (column));
 		if (!type) {
 			*pzErr = sqlite3_mprintf (_("Can't get data model's column type or type for column %d"), i);
 			g_string_free (sql, TRUE);
@@ -461,7 +463,8 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 				type = "text";
 		}
 
-		g_string_append (sql, name);
+		g_string_append (sql, newcolname);
+		g_free (newcolname);
 		g_string_append_c (sql, ' ');
 		g_string_append (sql, type);
 		if (! gda_column_get_allow_null (column)) 

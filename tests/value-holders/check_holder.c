@@ -47,7 +47,7 @@ int
 main (int argc, char** argv)
 {
 	g_type_init ();
-	gda_init ("Test", "version", argc, argv);
+	gda_init ();
 
 	gint failures = 0;
 	gint i, ntests = 0;

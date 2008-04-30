@@ -86,9 +86,13 @@ gda_postgres_pstmt_finalize (GObject *object)
 
 	/* deallocate statement */
 	gchar *sql;
+	PGresult *pg_res;
+
 	sql = g_strdup_printf ("DEALLOCATE %s", pstmt->prep_name);
-	_gda_postgres_PQexec_wrap (pstmt->cnc, pstmt->pconn, sql);
+	pg_res = _gda_postgres_PQexec_wrap (pstmt->cnc, pstmt->pconn, sql);
 	g_free (sql);
+	if (pg_res) 
+		PQclear (pg_res);
 	
 	/* free memory */
 	g_free (pstmt->prep_name);

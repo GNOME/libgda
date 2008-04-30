@@ -417,8 +417,6 @@ gda_data_model_iter_get_type
 <FILE>libgda</FILE>
 <TITLE>Libgda Initialization</TITLE>
 gda_init
-gda_main_run
-gda_main_quit
 <SUBSECTION Standard>
 </SECTION>
 
@@ -1239,7 +1237,7 @@ gda_sql_function_take_name
 gda_sql_function_take_args_list
 <SUBSECTION>
 GdaSqlOperation
-GdaSqlOperator
+GdaSqlOperatorType
 gda_sql_operation_new
 gda_sql_operation_free
 gda_sql_operation_copy

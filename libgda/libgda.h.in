@@ -73,11 +73,7 @@
 
 G_BEGIN_DECLS
 
-void     gda_init             (const gchar *app_id, const gchar *version, gint nargs, gchar *args[]);
-
-typedef  void (* GdaInitFunc) (gpointer user_data);
-void     gda_main_run         (GdaInitFunc init_func, gpointer user_data);
-void     gda_main_quit        (void);
+void gda_init (void);
 
 G_END_DECLS
 

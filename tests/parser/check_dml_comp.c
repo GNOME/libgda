@@ -25,7 +25,7 @@ main (int argc, char** argv)
 	gint ntests = 0;
 	gchar *fname;
 
-	gda_init ("Parser validation", ".1", argc, argv);
+	gda_init ();
 
 	/* open connection */
 	gchar *cnc_string;

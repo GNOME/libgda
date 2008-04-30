@@ -28,7 +28,7 @@ main (int argc, char** argv)
 	GdaDataModel *providers_model;
 	gint i;
 
-	gda_init ("Parser check", ".1", argc, argv);
+	gda_init ();
 
 	/* load file */
 	fname = g_build_filename (ROOT_DIR, "tests", "parser", "testdata.xml", NULL);

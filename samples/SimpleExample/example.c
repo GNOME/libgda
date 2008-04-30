@@ -9,7 +9,7 @@ void run_sql_non_select (GdaConnection *cnc, const gchar *sql);
 int
 main (int argc, char *argv[])
 {
-        gda_init ("SimpleExample", "1.0", argc, argv);
+        gda_init ();
 
         GdaConnection *cnc;
 

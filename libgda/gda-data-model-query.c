@@ -427,6 +427,7 @@ gda_data_model_query_set_property (GObject *object,
 						     "expect some problems with the GdaDataModelQuery"));
 					model->priv->params[qindex] = NULL;
 				}
+
 				if (qindex == SEL_QUERY) {
 					/* SELECT statement */
 					if (model->priv->params[qindex])
@@ -471,8 +472,6 @@ gda_data_model_query_set_property (GObject *object,
 										gda_holder_set_default_value (holder, value);
 										gda_value_free (value);
 									}
-									g_object_set ((GObject*) holder, "id",
-										      gda_column_get_name (col), NULL);
 								}
 							}
 							else {
@@ -997,7 +996,11 @@ gda_data_model_query_create_iter (GdaDataModel *model)
 	iter = (GdaDataModelIter *) g_object_new (GDA_TYPE_DATA_MODEL_ITER, 
 						  "data_model", model, NULL);
 	/* set the "__gda_entry_plugin" property for all the parameters depending on the SELECT query field */
-	TO_IMPLEMENT;
+	static gboolean warned = FALSE;
+	if (!warned) {
+		warned = TRUE;
+		TO_IMPLEMENT;
+	}
 	/*
 	if (gda_query_is_select_query (GDA_DATA_MODEL_QUERY (model)->priv->statements[SEL_QUERY])) {
 		GSList *list, *fields;
@@ -1490,7 +1493,7 @@ gda_data_model_query_compute_modification_queries (GdaDataModelQuery *model, con
 		return FALSE;
 	}
 
-	for (i = SEL_QUERY; i <= DEL_QUERY; i++) {
+	for (i = SEL_QUERY + 1; i <= DEL_QUERY; i++) {
 		if (model->priv->statements[i])
 			forget_statement (model, model->priv->statements[i]);
 	}

@@ -46,7 +46,7 @@ main (int argc, char *argv [])
         }
         g_option_context_free (context);
 
-	gda_init ("repair_path", "3.1.1", argc, argv);
+	gda_init ();
 
 	if (argc == 2)
 		base_dir = argv [1];

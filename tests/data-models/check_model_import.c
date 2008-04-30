@@ -19,7 +19,7 @@ main (int argc, char **argv)
 	GError *err = NULL;
 	const gchar *name;
 
-	gda_init ("check-model-import", PACKAGE_VERSION, argc, argv);
+	gda_init ();
 
 	dirname = g_build_filename (CHECK_FILES, "tests", "providers", NULL);
 	if (!(dir = g_dir_open (dirname, 0, &err))) {

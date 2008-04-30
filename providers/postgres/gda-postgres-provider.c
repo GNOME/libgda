@@ -1634,6 +1634,7 @@ gda_postgres_provider_statement_prepare (GdaServerProvider *provider, GdaConnect
                                              _("Unnammed parameter is not allowed in prepared statements"));
                                 g_slist_foreach (param_ids, (GFunc) g_free, NULL);
                                 g_slist_free (param_ids);
+				g_free (prep_stm_name);
                                 goto out_err;
                         }
                 }
@@ -1641,6 +1642,7 @@ gda_postgres_provider_statement_prepare (GdaServerProvider *provider, GdaConnect
 
         /* create a prepared statement */
         ps = gda_postgres_pstmt_new (cnc, cdata->pconn, prep_stm_name);
+	g_free (prep_stm_name);
 	gda_pstmt_set_gda_statement (_GDA_PSTMT (ps), stmt);
         _GDA_PSTMT (ps)->param_ids = param_ids;
         _GDA_PSTMT (ps)->sql = sql;
@@ -1752,7 +1754,7 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, Oid last_id)
 	where = gda_sql_expr_new (GDA_SQL_ANY_PART (select));
 	cond = gda_sql_operation_new (GDA_SQL_ANY_PART (where));
 	where->cond = cond;
-	cond->operator = GDA_SQL_OPERATOR_EQ;
+	cond->operator = GDA_SQL_OPERATOR_TYPE_EQ;
 	expr = gda_sql_expr_new (GDA_SQL_ANY_PART (cond));
 	g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), "oid");
 	expr->value = value;
@@ -2064,6 +2066,11 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 	GObject *retval = NULL;
 	pg_res = PQexecPrepared (cdata->pconn, ps->prep_name, nb_params, (const char * const *) param_values,
 				 param_lengths, param_formats, 0);
+
+	g_strfreev (param_values);
+	g_free (param_lengths);
+	g_free (param_formats);
+
 	if (!pg_res) 
 		event = _gda_postgres_make_error (cnc, cdata->pconn, NULL, error);
 	else {

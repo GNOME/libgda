@@ -39,7 +39,7 @@ main (int argc,char** argv)
 		exit (1);
         }
 
-	gda_init ("SqlParserConsole", ".1", argc, argv);
+	gda_init ();
 
 	/* create a parser */
 	parser = create_parser_for_provider (prov_name);

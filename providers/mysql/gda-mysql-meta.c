@@ -33,7 +33,10 @@
 #include <libgda/gda-set.h>
 #include <libgda/gda-holder.h>
 
-static gboolean append_a_row (GdaDataModel *to_model, GError **error, gint nb, ...);
+static gboolean append_a_row (GdaDataModel  *to_model,
+			      GError       **error,
+			      gint           nb,
+			                     ...);
 
 /*
  * predefined statements' IDs
@@ -49,10 +52,79 @@ typedef enum {
  */
 static gchar *internal_sql[] = {
 	/* I_STMT_CATALOG */
-        "SELECT database()",
+        "SELECT DATABASE()",
 
         /* I_STMT_BTYPES */
-        "SELECT DISTINCT data_type, CONCAT(table_schema, '.', data_type),  CASE data_type WHEN 'bigint' THEN 'gint' WHEN 'blob' THEN 'GdaBinary' WHEN 'date' THEN 'GDate' WHEN 'time' THEN 'GdaTime' WHEN 'double' THEN 'gdouble' WHEN 'timestamp' THEN 'GdaTimestamp' ELSE 'string' END  ,    CONCAT('Desc:', data_type), NULL, 0   FROM information_schema.columns WHERE table_schema = SCHEMA() ORDER BY 1"
+        "SELECT DISTINCT data_type, CONCAT(table_schema, '.', data_type),  CASE data_type WHEN 'int' THEN 'gint' WHEN 'bigint' THEN 'gint64' WHEN 'blob' THEN 'GdaBinary' WHEN 'date' THEN 'GDate' WHEN 'time' THEN 'GdaTime' WHEN 'double' THEN 'gdouble' WHEN 'timestamp' THEN 'GdaTimestamp' ELSE 'string' END  ,    CONCAT('Desc:', data_type), NULL, 0   FROM information_schema.columns WHERE table_schema = SCHEMA() ORDER BY 1",
+
+        /* I_STMT_SCHEMAS */
+
+        /* I_STMT_SCHEMAS_ALL */
+
+        /* I_STMT_SCHEMA_NAMED */
+
+        /* I_STMT_TABLES */
+
+        /* I_STMT_TABLES_ALL */
+
+        /* I_STMT_TABLE_NAMED */
+
+        /* I_STMT_VIEWS */
+
+        /* I_STMT_VIEWS_ALL */
+
+        /* I_STMT_VIEW_NAMED */
+
+        /* I_STMT_COLUMNS_OF_TABLE */
+
+        /* I_STMT_COLUMNS_ALL */
+
+        /* I_STMT_TABLES_CONSTRAINTS */
+
+        /* I_STMT_TABLES_CONSTRAINTS_ALL */
+
+        /* I_STMT_TABLES_CONSTRAINTS_NAMED */
+
+        /* I_STMT_REF_CONSTRAINTS */
+
+        /* I_STMT_REF_CONSTRAINTS_ALL */
+
+        /* I_STMT_KEY_COLUMN_USAGE */
+
+        /* I_STMT_KEY_COLUMN_USAGE_ALL */
+
+        /* I_STMT_UDT */
+
+        /* I_STMT_UDT_ALL */
+
+        /* I_STMT_UDT_COLUMNS */
+
+        /* I_STMT_UDT_COLUMNS_ALL */
+
+        /* I_STMT_DOMAINS */
+
+        /* I_STMT_DOMAINS_ALL */
+
+        /* I_STMT_DOMAINS_CONSTRAINTS */
+
+        /* I_STMT_DOMAINS_CONSTRAINTS_ALL */
+
+        /* I_STMT_VIEWS_COLUMNS */
+
+        /* I_STMT_VIEWS_COLUMNS_ALL */
+
+        /* I_STMT_TRIGGERS */
+
+        /* I_STMT_TRIGGERS_ALL */
+
+        /* I_STMT_EL_TYPES_COL */
+
+        /* I_STMT_EL_TYPES_DOM */
+
+        /* I_STMT_EL_TYPES_UDT */
+
+        /* I_STMT_EL_TYPES_ALL */
+
 };
 
 /*
@@ -72,7 +144,7 @@ static GdaSqlParser *internal_parser = NULL;
  * Meta initialization
  */
 void
-_gda_mysql_provider_meta_init (GdaServerProvider *provider)
+_gda_mysql_provider_meta_init (GdaServerProvider  *provider)
 {
 	InternalStatementItem i;
 
@@ -92,8 +164,11 @@ _gda_mysql_provider_meta_init (GdaServerProvider *provider)
 }
 
 gboolean
-_gda_mysql_meta__info (GdaServerProvider *prov, GdaConnection *cnc, 
-		      GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_mysql_meta__info (GdaServerProvider  *prov,
+		       GdaConnection      *cnc, 
+		       GdaMetaStore       *store,
+		       GdaMetaContext     *context,
+		       GError            **error)
 {
 	GdaDataModel *model;
         gboolean retval;
@@ -109,8 +184,11 @@ _gda_mysql_meta__info (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_mysql_meta__btypes (GdaServerProvider *prov, GdaConnection *cnc, 
-			GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_mysql_meta__btypes (GdaServerProvider  *prov,
+			 GdaConnection      *cnc, 
+			 GdaMetaStore       *store,
+			 GdaMetaContext     *context,
+			 GError            **error)
 {
 	g_print ("*** %s\n", __func__);
         GdaDataModel *model;
@@ -132,17 +210,24 @@ _gda_mysql_meta__btypes (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_mysql_meta__udt (GdaServerProvider *prov, GdaConnection *cnc, 
-		     GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_mysql_meta__udt (GdaServerProvider  *prov,
+		      GdaConnection      *cnc, 
+		      GdaMetaStore       *store,
+		      GdaMetaContext     *context,
+		      GError            **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta_udt (GdaServerProvider *prov, GdaConnection *cnc, 
-		    GdaMetaStore *store, GdaMetaContext *context, GError **error,
-		    const GValue *udt_catalog, const GValue *udt_schema)
+_gda_mysql_meta_udt (GdaServerProvider  *prov,
+		     GdaConnection      *cnc, 
+		     GdaMetaStore       *store,
+		     GdaMetaContext     *context,
+		     GError            **error,
+		     const GValue       *udt_catalog,
+		     const GValue       *udt_schema)
 {
 	GdaDataModel *model;
 	gboolean retval = TRUE;
@@ -165,34 +250,50 @@ _gda_mysql_meta_udt (GdaServerProvider *prov, GdaConnection *cnc,
 
 
 gboolean
-_gda_mysql_meta__udt_cols (GdaServerProvider *prov, GdaConnection *cnc, 
-			  GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_mysql_meta__udt_cols (GdaServerProvider  *prov,
+			   GdaConnection      *cnc, 
+			   GdaMetaStore       *store,
+			   GdaMetaContext     *context,
+			   GError            **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;	
 }
 
 gboolean
-_gda_mysql_meta_udt_cols (GdaServerProvider *prov, GdaConnection *cnc, 
-			 GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			 const GValue *udt_catalog, const GValue *udt_schema, const GValue *udt_name)
+_gda_mysql_meta_udt_cols (GdaServerProvider  *prov,
+			  GdaConnection      *cnc, 
+			  GdaMetaStore       *store,
+			  GdaMetaContext     *context,
+			  GError            **error,
+			  const GValue       *udt_catalog,
+			  const GValue       *udt_schema,
+			  const GValue       *udt_name)
 {
 	TO_IMPLEMENT;
 	return TRUE;	
 }
 
 gboolean
-_gda_mysql_meta__enums (GdaServerProvider *prov, GdaConnection *cnc, 
-		       GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_mysql_meta__enums (GdaServerProvider  *prov,
+			GdaConnection      *cnc, 
+			GdaMetaStore       *store,
+			GdaMetaContext     *context,
+			GError            **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;	
 }
 
 gboolean
-_gda_mysql_meta_enums (GdaServerProvider *prov, GdaConnection *cnc, 
-		      GdaMetaStore *store, GdaMetaContext *context, GError **error,
-		      const GValue *udt_catalog, const GValue *udt_schema, const GValue *udt_name)
+_gda_mysql_meta_enums (GdaServerProvider  *prov,
+		       GdaConnection      *cnc, 
+		       GdaMetaStore       *store,
+		       GdaMetaContext     *context,
+		       GError            **error,
+		       const GValue       *udt_catalog,
+		       const GValue       *udt_schema,
+		       const GValue       *udt_name)
 {
 	TO_IMPLEMENT;
 	return TRUE;
@@ -200,43 +301,60 @@ _gda_mysql_meta_enums (GdaServerProvider *prov, GdaConnection *cnc,
 
 
 gboolean
-_gda_mysql_meta__domains (GdaServerProvider *prov, GdaConnection *cnc, 
-			 GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_mysql_meta__domains (GdaServerProvider  *prov,
+			  GdaConnection      *cnc, 
+			  GdaMetaStore       *store,
+			  GdaMetaContext     *context,
+			  GError            **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta_domains (GdaServerProvider *prov, GdaConnection *cnc, 
-			GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			const GValue *domain_catalog, const GValue *domain_schema)
+_gda_mysql_meta_domains (GdaServerProvider  *prov,
+			 GdaConnection      *cnc, 
+			 GdaMetaStore       *store,
+			 GdaMetaContext     *context,
+			 GError            **error,
+			 const GValue       *domain_catalog,
+			 const GValue       *domain_schema)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta__constraints_dom (GdaServerProvider *prov, GdaConnection *cnc, 
-				 GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_mysql_meta__constraints_dom (GdaServerProvider  *prov,
+				  GdaConnection      *cnc, 
+				  GdaMetaStore       *store,
+				  GdaMetaContext     *context,
+				  GError            **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta_constraints_dom (GdaServerProvider *prov, GdaConnection *cnc, 
-				GdaMetaStore *store, GdaMetaContext *context, GError **error,
-				const GValue *domain_catalog, const GValue *domain_schema, 
-				const GValue *domain_name)
+_gda_mysql_meta_constraints_dom (GdaServerProvider  *prov,
+				 GdaConnection      *cnc, 
+				 GdaMetaStore       *store,
+				 GdaMetaContext     *context,
+				 GError            **error,
+				 const GValue       *domain_catalog,
+				 const GValue       *domain_schema, 
+				 const GValue       *domain_name)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta__el_types (GdaServerProvider *prov, GdaConnection *cnc, 
-			  GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_mysql_meta__el_types (GdaServerProvider  *prov,
+			   GdaConnection      *cnc, 
+			   GdaMetaStore       *store,
+			   GdaMetaContext     *context,
+			   GError            **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
@@ -251,252 +369,355 @@ _gda_mysql_meta_el_types (GdaServerProvider *prov, GdaConnection *cnc,
 	return TRUE;
 }
 
+
 gboolean
-_gda_mysql_meta__collations (GdaServerProvider *prov, GdaConnection *cnc, 
-			    GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_mysql_meta__collations (GdaServerProvider  *prov,
+			     GdaConnection      *cnc, 
+			     GdaMetaStore       *store,
+			     GdaMetaContext     *context,
+			     GError            **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta_collations (GdaServerProvider *prov, GdaConnection *cnc, 
-			   GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			   const GValue *collation_catalog, const GValue *collation_schema, 
-			   const GValue *collation_name_n)
+_gda_mysql_meta_collations (GdaServerProvider  *prov,
+			    GdaConnection      *cnc, 
+			    GdaMetaStore       *store,
+			    GdaMetaContext     *context,
+			    GError            **error,
+			    const GValue       *collation_catalog,
+			    const GValue       *collation_schema, 
+			    const GValue       *collation_name_n)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta__character_sets (GdaServerProvider *prov, GdaConnection *cnc, 
-				GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_mysql_meta__character_sets (GdaServerProvider  *prov,
+				 GdaConnection      *cnc, 
+				 GdaMetaStore       *store,
+				 GdaMetaContext     *context,
+				 GError            **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta_character_sets (GdaServerProvider *prov, GdaConnection *cnc, 
-			       GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			       const GValue *chset_catalog, const GValue *chset_schema, 
-			       const GValue *chset_name_n)
+_gda_mysql_meta_character_sets (GdaServerProvider  *prov,
+				GdaConnection      *cnc, 
+				GdaMetaStore       *store,
+				GdaMetaContext     *context,
+				GError            **error,
+				const GValue       *chset_catalog,
+				const GValue       *chset_schema, 
+				const GValue       *chset_name_n)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta__schemata (GdaServerProvider *prov, GdaConnection *cnc, 
-			  GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_mysql_meta__schemata (GdaServerProvider  *prov,
+			   GdaConnection      *cnc, 
+			   GdaMetaStore       *store,
+			   GdaMetaContext     *context,
+			   GError            **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta_schemata (GdaServerProvider *prov, GdaConnection *cnc, 
-			 GdaMetaStore *store, GdaMetaContext *context, GError **error, 
-			 const GValue *catalog_name, const GValue *schema_name_n)
+_gda_mysql_meta_schemata (GdaServerProvider  *prov,
+			  GdaConnection      *cnc, 
+			  GdaMetaStore       *store,
+			  GdaMetaContext     *context,
+			  GError            **error, 
+			  const GValue       *catalog_name,
+			  const GValue       *schema_name_n)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta__tables_views (GdaServerProvider *prov, GdaConnection *cnc, 
-			      GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_mysql_meta__tables_views (GdaServerProvider  *prov,
+			       GdaConnection      *cnc, 
+			       GdaMetaStore       *store,
+			       GdaMetaContext     *context,
+			       GError            **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta_tables_views (GdaServerProvider *prov, GdaConnection *cnc, 
-			     GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			     const GValue *table_catalog, const GValue *table_schema, 
-			     const GValue *table_name_n)
+_gda_mysql_meta_tables_views (GdaServerProvider  *prov,
+			      GdaConnection      *cnc, 
+			      GdaMetaStore       *store,
+			      GdaMetaContext     *context,
+			      GError            **error,
+			      const GValue       *table_catalog,
+			      const GValue       *table_schema, 
+			      const GValue       *table_name_n)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta__columns (GdaServerProvider *prov, GdaConnection *cnc, 
-			 GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_mysql_meta__columns (GdaServerProvider  *prov,
+			  GdaConnection      *cnc, 
+			  GdaMetaStore       *store,
+			  GdaMetaContext     *context,
+			  GError            **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta_columns (GdaServerProvider *prov, GdaConnection *cnc, 
-			GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			const GValue *table_catalog, const GValue *table_schema, 
-			const GValue *table_name)
+_gda_mysql_meta_columns (GdaServerProvider  *prov,
+			 GdaConnection      *cnc, 
+			 GdaMetaStore       *store,
+			 GdaMetaContext     *context,
+			 GError            **error,
+			 const GValue       *table_catalog,
+			 const GValue       *table_schema, 
+			 const GValue       *table_name)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta__view_cols (GdaServerProvider *prov, GdaConnection *cnc, 
-			   GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_mysql_meta__view_cols (GdaServerProvider  *prov,
+			    GdaConnection      *cnc, 
+			    GdaMetaStore       *store,
+			    GdaMetaContext     *context,
+			    GError            **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta_view_cols (GdaServerProvider *prov, GdaConnection *cnc, 
-			  GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			  const GValue *view_catalog, const GValue *view_schema, 
-			  const GValue *view_name)
+_gda_mysql_meta_view_cols (GdaServerProvider  *prov,
+			   GdaConnection      *cnc, 
+			   GdaMetaStore       *store,
+			   GdaMetaContext     *context,
+			   GError            **error,
+			   const GValue       *view_catalog,
+			   const GValue       *view_schema, 
+			   const GValue       *view_name)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta__constraints_tab (GdaServerProvider *prov, GdaConnection *cnc, 
-				 GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_mysql_meta__constraints_tab (GdaServerProvider  *prov,
+				  GdaConnection      *cnc, 
+				  GdaMetaStore       *store,
+				  GdaMetaContext     *context,
+				  GError            **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta_constraints_tab (GdaServerProvider *prov, GdaConnection *cnc, 
-				GdaMetaStore *store, GdaMetaContext *context, GError **error, 
-				const GValue *table_catalog, const GValue *table_schema, 
-				const GValue *table_name, const GValue *constraint_name_n)
+_gda_mysql_meta_constraints_tab (GdaServerProvider  *prov,
+				 GdaConnection      *cnc, 
+				 GdaMetaStore       *store,
+				 GdaMetaContext     *context,
+				 GError            **error, 
+				 const GValue       *table_catalog,
+				 const GValue       *table_schema, 
+				 const GValue       *table_name,
+				 const GValue       *constraint_name_n)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta__constraints_ref (GdaServerProvider *prov, GdaConnection *cnc, 
-				 GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_mysql_meta__constraints_ref (GdaServerProvider  *prov,
+				  GdaConnection      *cnc, 
+				  GdaMetaStore       *store,
+				  GdaMetaContext     *context,
+				  GError            **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta_constraints_ref (GdaServerProvider *prov, GdaConnection *cnc, 
-				GdaMetaStore *store, GdaMetaContext *context, GError **error,
-				const GValue *table_catalog, const GValue *table_schema, const GValue *table_name, 
-				const GValue *constraint_name)
+_gda_mysql_meta_constraints_ref (GdaServerProvider  *prov,
+				 GdaConnection      *cnc, 
+				 GdaMetaStore       *store,
+				 GdaMetaContext     *context,
+				 GError            **error,
+				 const GValue       *table_catalog,
+				 const GValue       *table_schema,
+				 const GValue       *table_name, 
+				 const GValue       *constraint_name)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta__key_columns (GdaServerProvider *prov, GdaConnection *cnc, 
-			     GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_mysql_meta__key_columns (GdaServerProvider  *prov,
+			      GdaConnection      *cnc, 
+			      GdaMetaStore       *store,
+			      GdaMetaContext     *context,
+			      GError            **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta_key_columns (GdaServerProvider *prov, GdaConnection *cnc, 
-			    GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			    const GValue *table_catalog, const GValue *table_schema, 
-			    const GValue *table_name, const GValue *constraint_name)
+_gda_mysql_meta_key_columns (GdaServerProvider  *prov,
+			     GdaConnection      *cnc, 
+			     GdaMetaStore       *store,
+			     GdaMetaContext     *context,
+			     GError            **error,
+			     const GValue       *table_catalog,
+			     const GValue       *table_schema, 
+			     const GValue       *table_name,
+			     const GValue       *constraint_name)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta__check_columns (GdaServerProvider *prov, GdaConnection *cnc, 
-			       GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_mysql_meta__check_columns (GdaServerProvider  *prov,
+				GdaConnection      *cnc, 
+				GdaMetaStore       *store,
+				GdaMetaContext     *context,
+				GError            **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta_check_columns (GdaServerProvider *prov, GdaConnection *cnc, 
-			      GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			      const GValue *table_catalog, const GValue *table_schema, 
-			      const GValue *table_name, const GValue *constraint_name)
+_gda_mysql_meta_check_columns (GdaServerProvider  *prov,
+			       GdaConnection      *cnc, 
+			       GdaMetaStore       *store,
+			       GdaMetaContext     *context,
+			       GError            **error,
+			       const GValue       *table_catalog,
+			       const GValue       *table_schema, 
+			       const GValue       *table_name,
+			       const GValue       *constraint_name)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta__triggers (GdaServerProvider *prov, GdaConnection *cnc, 
-			  GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_mysql_meta__triggers (GdaServerProvider  *prov,
+			   GdaConnection      *cnc, 
+			   GdaMetaStore       *store,
+			   GdaMetaContext     *context,
+			   GError            **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta_triggers (GdaServerProvider *prov, GdaConnection *cnc, 
-			 GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			 const GValue *table_catalog, const GValue *table_schema, 
-			 const GValue *table_name)
+_gda_mysql_meta_triggers (GdaServerProvider  *prov,
+			  GdaConnection      *cnc, 
+			  GdaMetaStore       *store,
+			  GdaMetaContext     *context,
+			  GError            **error,
+			  const GValue       *table_catalog,
+			  const GValue       *table_schema, 
+			  const GValue       *table_name)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta__routines (GdaServerProvider *prov, GdaConnection *cnc, 
-			  GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_mysql_meta__routines (GdaServerProvider  *prov,
+			   GdaConnection      *cnc, 
+			   GdaMetaStore       *store,
+			   GdaMetaContext     *context,
+			   GError            **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta_routines (GdaServerProvider *prov, GdaConnection *cnc, 
-			 GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			 const GValue *routine_catalog, const GValue *routine_schema, 
-			 const GValue *routine_name_n)
+_gda_mysql_meta_routines (GdaServerProvider  *prov,
+			  GdaConnection      *cnc, 
+			  GdaMetaStore       *store,
+			  GdaMetaContext     *context,
+			  GError            **error,
+			  const GValue       *routine_catalog,
+			  const GValue       *routine_schema, 
+			  const GValue       *routine_name_n)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta__routine_col (GdaServerProvider *prov, GdaConnection *cnc, 
-			     GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_mysql_meta__routine_col (GdaServerProvider  *prov,
+			      GdaConnection      *cnc, 
+			      GdaMetaStore       *store,
+			      GdaMetaContext     *context,
+			      GError            **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta_routine_col (GdaServerProvider *prov, GdaConnection *cnc, 
-			    GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			    const GValue *rout_catalog, const GValue *rout_schema, 
-			    const GValue *rout_name)
+_gda_mysql_meta_routine_col (GdaServerProvider  *prov,
+			     GdaConnection      *cnc, 
+			     GdaMetaStore       *store,
+			     GdaMetaContext     *context,
+			     GError            **error,
+			     const GValue       *rout_catalog,
+			     const GValue       *rout_schema, 
+			     const GValue       *rout_name)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta__routine_par (GdaServerProvider *prov, GdaConnection *cnc, 
-			     GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_mysql_meta__routine_par (GdaServerProvider  *prov,
+			      GdaConnection      *cnc, 
+			      GdaMetaStore       *store,
+			      GdaMetaContext     *context,
+			      GError            **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_mysql_meta_routine_par (GdaServerProvider *prov, GdaConnection *cnc, 
-			    GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			    const GValue *rout_catalog, const GValue *rout_schema, 
-			    const GValue *rout_name)
+_gda_mysql_meta_routine_par (GdaServerProvider  *prov,
+			     GdaConnection      *cnc, 
+			     GdaMetaStore       *store,
+			     GdaMetaContext     *context,
+			     GError            **error,
+			     const GValue       *rout_catalog,
+			     const GValue       *rout_schema, 
+			     const GValue       *rout_name)
 {
 	TO_IMPLEMENT;
 	return TRUE;

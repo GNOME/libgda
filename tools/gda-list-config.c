@@ -7,7 +7,7 @@ gint
 main (int argc, char **argv) {
 	GdaDataModel *model;
 
-	gda_init ("list-sources", PACKAGE_VERSION, argc, argv);
+	gda_init ();
 	setenv ("GDA_DATA_MODEL_DUMP_TITLE", "TRUE", TRUE);
 
 	model = gda_config_list_providers ();

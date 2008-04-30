@@ -52,7 +52,7 @@ main (int argc, char **argv)
 {
 	int number_failed = 0;
 
-	gda_init ("check-data-proxy", PACKAGE_VERSION, argc, argv);
+	gda_init ();
 
 	prepend_null_row = FALSE;
 	defer_sync  = FALSE;

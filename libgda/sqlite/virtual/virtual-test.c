@@ -17,7 +17,7 @@ main (int argc, char **argv)
 	GdaDataModel *xml_model, *csv_model, *rw_model;
 	GdaDataModel *proxy = NULL;
 	
-	gda_init ("SQlite virtual providers test", PACKAGE_VERSION, argc, argv);
+	gda_init ();
 
 	parser = gda_sql_parser_new ();
 

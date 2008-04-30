@@ -1325,7 +1325,7 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
                                         ust->cond = expr;
                                 else {
                                         g_assert (ust->cond->cond);
-                                        if (ust->cond->cond->operator == GDA_SQL_OPERATOR_AND)
+                                        if (ust->cond->cond->operator == GDA_SQL_OPERATOR_TYPE_AND)
                                                 ust->cond->cond->operands = g_slist_append (ust->cond->cond->operands,
                                                                                             expr);
                                         else {
@@ -1340,7 +1340,7 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
                                         dst->cond = expr;
                                 else {
                                         g_assert (dst->cond->cond);
-                                        if (dst->cond->cond->operator == GDA_SQL_OPERATOR_AND)
+                                        if (dst->cond->cond->operator == GDA_SQL_OPERATOR_TYPE_AND)
                                                 dst->cond->cond->operands = g_slist_append (dst->cond->cond->operands,
                                                                                             expr);
                                         else {
@@ -1538,7 +1538,7 @@ make_expr_AND (GdaSqlAnyPart *parent, GdaSqlExpr *current)
 	GdaSqlExpr *expr;
 	expr = gda_sql_expr_new (parent);
 	expr->cond = gda_sql_operation_new (GDA_SQL_ANY_PART (expr));
-	expr->cond->operator = GDA_SQL_OPERATOR_AND;
+	expr->cond->operator = GDA_SQL_OPERATOR_TYPE_AND;
 
 	expr->cond->operands = g_slist_append (NULL, current);
 	GDA_SQL_ANY_PART (current)->parent = GDA_SQL_ANY_PART (expr->cond);
@@ -1556,7 +1556,7 @@ make_expr_EQUAL (GdaSqlAnyPart *parent, xmlChar *cname, xmlChar *type, GType pty
 	retexpr = gda_sql_expr_new (parent);
 
 	op = gda_sql_operation_new (GDA_SQL_ANY_PART (expr));
-	op->operator = GDA_SQL_OPERATOR_EQ;
+	op->operator = GDA_SQL_OPERATOR_TYPE_EQ;
 	retexpr->cond = op;
 	
 	expr = gda_sql_expr_new (GDA_SQL_ANY_PART (op));

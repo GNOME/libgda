@@ -36,6 +36,8 @@
 #include "gda-enum-types.h"
 #include <virtual/libgda-virtual.h>
 #include <sql-parser/gda-sql-parser.h>
+#include <sql-parser/gda-sql-statement.h>
+#include <sql-parser/gda-statement-struct-util.h>
 
 /* 
  * Main static functions 
@@ -182,6 +184,7 @@ struct _GdaDataProxyPrivate
 
 	GdaConnection     *filter_vcnc;   /* virtual connection used for filtering */
 	gchar             *filter_expr;   /* NULL if no filter applied */
+	GdaStatement      *filter_stmt;   /* NULL if no filter applied */
 	GdaDataModel      *filtered_rows; /* NULL if no filter applied. Lists rows (by their number) which must be displayed */
 
 	GValue           **columns_attrs; /* Each GValue holds a flag of GdaValueAttribute to proxy. cols. attributes */
@@ -707,6 +710,11 @@ clean_proxy (GdaDataProxy *proxy)
 		proxy->priv->filter_expr = NULL;
 	}
 
+	if (proxy->priv->filter_stmt) {
+		g_object_unref (proxy->priv->filter_stmt);
+		proxy->priv->filter_stmt = NULL;
+	}
+
 	if (proxy->priv->filtered_rows) {
 		g_object_unref (proxy->priv->filtered_rows);
 		proxy->priv->filtered_rows = NULL;
@@ -1033,7 +1041,7 @@ static void
 proxied_model_reset_cb (GdaDataModel *model, GdaDataProxy *proxy)
 {
 	gboolean add_null_entry = proxy->priv->add_null_entry;
-	
+
 	g_object_ref (G_OBJECT (model));
 	clean_proxy (proxy);
 	gda_data_proxy_init (proxy);
@@ -2741,39 +2749,60 @@ gda_data_proxy_cancel_all_changes (GdaDataProxy *proxy)
 	return TRUE;
 }
 
-/**
- * gda_data_proxy_set_filter_expr
- * @proxy: a #GdaDataProxy object
- * @filter_expr: an SQL based expression which will filter the contents of @proxy, or %NULL to remove any previous filter
- * @error: a place to store errors, or %NULL
- *
- * Sets a filter among the rows presented by @proxy. The filter is defined by a filter expression
- * which can be any SQL valid expression using @proxy's columns. For instance if @proxy has the "id" and
- * "name" columns, then a filter can be "length(name) < 5" to filter only the rows where the length of the
- * name is strictly inferior to 5, or "id >= 1000 and id < 2000 order by name limit 50" to filter only the rows where the id
- * is between 1000 and 2000, ordered by name and limited to 50 rows.
- *
- * Note that any previous filter expression is replaced with the new @filter_expr if no error occurs
- * (if an error occurs, then any previous filter is left unchanged).
- *
- * Returns: TRUE if no error occurred
+static gboolean
+sql_where_foreach (GdaSqlAnyPart *part, GdaDataModel *model, GError **error)
+{
+	if (part->type == GDA_SQL_ANY_EXPR) {
+		GdaSqlExpr *expr = (GdaSqlExpr*) part;
+		if (expr->value && (G_VALUE_TYPE (expr->value) == G_TYPE_STRING)) {
+			const gchar *cstr = g_value_get_string (expr->value);
+			if (*cstr == '_') {
+				const gchar *ptr;
+				for (ptr = cstr+1; *ptr; ptr++)
+					if ((*ptr < '0') || (*ptr > '9'))
+						break;
+				if (!*ptr) {
+					/* column name is "_<number>", use column: <number> - 1 */
+					gint colnum;
+					colnum = atoi (cstr+1) - 1;
+					if (colnum >= 0) {
+						GdaColumn *col = gda_data_model_describe_column (model, colnum);
+						const gchar *cname = gda_column_get_name (col);
+						if (cname && *cname) {
+							if (_identifier_needs_quotes (cname))
+								g_value_take_string (expr->value, 
+										     g_strdup_printf ("\"%s\"", cname));
+							else
+								g_value_set_string (expr->value, cname);
+						}
+					}
+				}
+			}
+		}
+	}
+	return TRUE;
+}
+
+/*
+ * Applies proxy->priv->filter_stmt
  */
-gboolean
-gda_data_proxy_set_filter_expr (GdaDataProxy *proxy, const gchar *filter_expr, GError **error)
+static gboolean
+apply_filter_statement (GdaDataProxy *proxy, GError **error)
 {
 	static GdaVirtualProvider *provider = NULL;
 	GdaConnection *vcnc;
-	gchar *sql;
-	GdaStatement *stmt;
 	GdaDataModel *filtered_rows = NULL;
+	GdaStatement *stmt = NULL;
 
-	g_return_val_if_fail (GDA_IS_DATA_PROXY (proxy), FALSE);
-	g_return_val_if_fail (proxy->priv, FALSE);
+	if (proxy->priv->filter_stmt) {
+		stmt = proxy->priv->filter_stmt;
+		proxy->priv->filter_stmt = NULL;
+	}
 
 	/* ensure that there is no sync to be done */
 	ensure_chunk_sync (proxy);
 
-	if (!filter_expr)
+	if (!stmt)
 		goto clean_previous_filter;
 
 	if (!provider) 
@@ -2790,10 +2819,140 @@ gda_data_proxy_set_filter_expr (GdaDataProxy *proxy, const gchar *filter_expr, G
 				     _("Could not create virtual connection"));
 			g_object_unref (vcnc);
 			proxy->priv->force_direct_mapping = FALSE;
-			return FALSE;
+			goto clean_previous_filter;
 		}
 
 		proxy->priv->filter_vcnc = vcnc;
+	}
+
+	/* Add the @proxy to the virtual connection.
+	 *
+	 * REM: use a GdaDataModelWrapper to force the viewing of the un-modified columns of @proxy,
+	 * otherwise the GdaVconnectionDataModel will just take into account the modified columns
+	 */
+	GdaDataModel *wrapper;
+	wrapper = gda_data_access_wrapper_new ((GdaDataModel*) proxy);
+	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (vcnc), wrapper,
+						   "proxy", error)) {
+		g_object_unref (wrapper);
+		proxy->priv->force_direct_mapping = FALSE;
+		goto clean_previous_filter;
+	}
+	g_object_unref (wrapper);
+	
+	/* remork the statement for column names */
+	GdaSqlStatement *sqlst;
+	g_object_get (G_OBJECT (stmt), "structure", &sqlst, NULL);
+	g_assert (sqlst->stmt_type == GDA_SQL_STATEMENT_SELECT);
+	gda_sql_any_part_foreach (GDA_SQL_ANY_PART (sqlst->contents), (GdaSqlForeachFunc) sql_where_foreach, proxy, NULL);
+	g_object_set (G_OBJECT (stmt), "structure", sqlst, NULL);
+#ifdef GDA_DEBUG_NO
+	gchar *ser;
+	ser = gda_sql_statement_serialize (sqlst);
+	g_print ("Modified Filter: %s\n", ser);
+	g_free (ser);
+#endif
+	gda_sql_statement_free (sqlst);
+
+	/* execute statement */
+	filtered_rows = gda_connection_statement_execute_select (vcnc, stmt, NULL, NULL);
+     	if (!filtered_rows) {
+		g_set_error (error, GDA_DATA_PROXY_ERROR, GDA_DATA_PROXY_FILTER_ERROR,
+			     _("Error in filter expression"));
+		proxy->priv->force_direct_mapping = FALSE;
+		gda_vconnection_data_model_remove (GDA_VCONNECTION_DATA_MODEL (vcnc), "proxy", NULL);
+		goto clean_previous_filter;
+	}
+
+	/* copy filtered_rows and remove virtual table */
+	GdaDataModel *copy;
+	copy = (GdaDataModel*) gda_data_model_array_copy_model (filtered_rows, NULL);
+	g_object_unref (filtered_rows);
+	gda_vconnection_data_model_remove (GDA_VCONNECTION_DATA_MODEL (vcnc), "proxy", NULL);
+	if (!copy) {
+		g_set_error (error, GDA_DATA_PROXY_ERROR, GDA_DATA_PROXY_FILTER_ERROR,
+			     _("Error in filter expression"));
+		proxy->priv->force_direct_mapping = FALSE;
+		filtered_rows = NULL;
+		goto clean_previous_filter;
+	}
+	filtered_rows = copy;
+	proxy->priv->force_direct_mapping = FALSE;
+
+ clean_previous_filter:
+	if (proxy->priv->filter_expr) {
+		g_free (proxy->priv->filter_expr);
+		proxy->priv->filter_expr = NULL;
+	}
+	if (proxy->priv->filtered_rows) {
+		g_object_unref (proxy->priv->filtered_rows);
+		proxy->priv->filtered_rows = NULL;
+	}
+#define FILTER_SELECT_WHERE "SELECT __gda_row_nb FROM proxy WHERE "
+#define FILTER_SELECT_NOWHERE "SELECT __gda_row_nb FROM proxy "
+	if (filtered_rows) {
+		gchar *sql;
+		sql = gda_statement_to_sql (stmt, NULL, NULL);
+		if (sql) {
+			if (!g_ascii_strncasecmp (sql, FILTER_SELECT_WHERE, strlen (FILTER_SELECT_WHERE))) 
+				proxy->priv->filter_expr = g_strdup (sql + strlen (FILTER_SELECT_WHERE));
+			else if (!g_ascii_strncasecmp (sql, FILTER_SELECT_NOWHERE, strlen (FILTER_SELECT_NOWHERE))) 
+				proxy->priv->filter_expr = g_strdup (sql + strlen (FILTER_SELECT_NOWHERE));
+			g_free (sql);
+		}
+		proxy->priv->filtered_rows = filtered_rows;
+		proxy->priv->filter_stmt = stmt;
+	}
+	else if (stmt)
+		g_object_unref (stmt);
+
+	g_signal_emit (G_OBJECT (proxy),
+		       gda_data_proxy_signals[FILTER_CHANGED],
+		       0);
+
+	adjust_displayed_chunk (proxy);
+
+	if (!stmt)
+		return TRUE;
+	else
+		return filtered_rows ? TRUE : FALSE;
+}
+
+/**
+ * gda_data_proxy_set_filter_expr
+ * @proxy: a #GdaDataProxy object
+ * @filter_expr: an SQL based expression which will filter the contents of @proxy, or %NULL to remove any previous filter
+ * @error: a place to store errors, or %NULL
+ *
+ * Sets a filter among the rows presented by @proxy. The filter is defined by a filter expression
+ * which can be any SQL valid expression using @proxy's columns. For instance if @proxy has the "id" and
+ * "name" columns, then a filter can be "length(name) < 5" to filter only the rows where the length of the
+ * name is strictly inferior to 5, or "id >= 1000 and id < 2000 order by name limit 50" to filter only the rows where the id
+ * is between 1000 and 2000, ordered by name and limited to 50 rows.
+ *
+ * Note about column names: real column names can be used (double quoted if necessary), but columns can also be named
+ * "_&lt;column number&gt;" with colmun numbers starting at 1.
+ *
+ * Note that any previous filter expression is replaced with the new @filter_expr if no error occurs
+ * (if an error occurs, then any previous filter is left unchanged).
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_data_proxy_set_filter_expr (GdaDataProxy *proxy, const gchar *filter_expr, GError **error)
+{
+	gchar *sql;
+	GdaStatement *stmt = NULL;
+
+	g_return_val_if_fail (GDA_IS_DATA_PROXY (proxy), FALSE);
+	g_return_val_if_fail (proxy->priv, FALSE);
+
+	if (!filter_expr) {
+		if (proxy->priv->filter_stmt) 
+			g_object_unref (proxy->priv->filter_stmt);
+		proxy->priv->filter_stmt = NULL;
+
+		return apply_filter_statement (proxy, error);
 	}
 
 	/* generate SQL with a special case if expression starts with "ORDER BY" */
@@ -2810,9 +2969,9 @@ gda_data_proxy_set_filter_expr (GdaDataProxy *proxy, const gchar *filter_expr, G
 		}
 	}
 	if (! g_ascii_strncasecmp (tmp, "orderby", 7)) 
-		sql = g_strdup_printf ("SELECT __gda_row_nb FROM proxy %s", filter_expr);
+		sql = g_strdup_printf (FILTER_SELECT_NOWHERE "%s", filter_expr);
 	else
-		sql = g_strdup_printf ("SELECT __gda_row_nb FROM proxy WHERE %s", filter_expr);
+		sql = g_strdup_printf (FILTER_SELECT_WHERE "%s", filter_expr);
 	g_free (tmp);
 
 	stmt = gda_sql_parser_parse_string (internal_parser, sql, &ptr, NULL);
@@ -2827,70 +2986,102 @@ gda_data_proxy_set_filter_expr (GdaDataProxy *proxy, const gchar *filter_expr, G
 		return FALSE;
 	}
 
-	/* Add the @proxy to the virtual connection.
-	 *
-	 * REM: use a GdaDataModelWrapper to force the viewing of the un-modified columns of @proxy,
-	 * otherwise the GdaVconnectionDataModel will just take into account the modified columns
-	 */
-	GdaDataModel *wrapper;
-	wrapper = gda_data_access_wrapper_new ((GdaDataModel*) proxy);
-	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (vcnc), wrapper,
-						   "proxy", error)) {
-		g_object_unref (wrapper);
-		proxy->priv->force_direct_mapping = FALSE;
-		return FALSE;
-	}
-	g_object_unref (wrapper);
-	
-	/* execute statement */
-	filtered_rows = gda_connection_statement_execute_select (vcnc, stmt, NULL, NULL);
-	g_object_unref (stmt);
-     	if (!filtered_rows) {
-		g_set_error (error, GDA_DATA_PROXY_ERROR, GDA_DATA_PROXY_FILTER_ERROR,
-			     _("Error in filter expression"));
-		proxy->priv->force_direct_mapping = FALSE;
-		return FALSE;
-	}
+	if (proxy->priv->filter_stmt) 
+		g_object_unref (proxy->priv->filter_stmt);
+	proxy->priv->filter_stmt = stmt;
 
-	/* copy filtered_rows and remove virtual table */
-	GdaDataModel *copy;
-	copy = (GdaDataModel*) gda_data_model_array_copy_model (filtered_rows, NULL);
-	g_object_unref (filtered_rows);
-	gda_vconnection_data_model_remove (GDA_VCONNECTION_DATA_MODEL (vcnc), "proxy", NULL);
-	if (!copy) {
-		g_set_error (error, GDA_DATA_PROXY_ERROR, GDA_DATA_PROXY_FILTER_ERROR,
-			     _("Error in filter expression"));
-		proxy->priv->force_direct_mapping = FALSE;
-		return FALSE;
+	return apply_filter_statement (proxy, error);
+}
+
+/**
+ * gda_data_proxy_set_ordering_column
+ * @proxy: a #GdaDataProxy object
+ * @col: the column number to order from
+ * @error: a place to store errors, or %NULL
+ *
+ * Orders by the @col column
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_data_proxy_set_ordering_column (GdaDataProxy *proxy, gint col, GError **error)
+{
+	gboolean retval;
+	g_return_val_if_fail (GDA_IS_DATA_PROXY (proxy), FALSE);
+	g_return_val_if_fail (proxy->priv, FALSE);
+	g_return_val_if_fail (col >= 0, FALSE);
+	g_return_val_if_fail (col < gda_data_model_get_n_columns ((GdaDataModel*) proxy), FALSE);
+
+	if (proxy->priv->filter_stmt) {
+		GdaSqlStatement *sqlst;
+		GdaSqlStatementSelect *selst;
+		gboolean replaced = FALSE;
+		const gchar *cname;
+		gchar *colname;
+
+		cname = gda_column_get_name (gda_data_model_describe_column ((GdaDataModel*) proxy, col));
+		if (cname && *cname) {
+			if (_identifier_needs_quotes (cname))
+				colname = g_strdup_printf ("\"%s\"", cname);
+			else
+				colname = g_strdup (cname);
+		}
+		else
+			colname = g_strdup_printf ("_%d", col + 1);
+
+		g_object_get (G_OBJECT (proxy->priv->filter_stmt), "structure", &sqlst, NULL);
+		g_assert (sqlst->stmt_type == GDA_SQL_STATEMENT_SELECT);
+		g_free (sqlst->sql);
+		sqlst->sql = NULL;
+		selst = (GdaSqlStatementSelect*) sqlst->contents;
+
+		/* test if we can actually toggle the sort ASC <-> DESC */
+		if (selst->order_by && !selst->order_by->next) {
+			GdaSqlSelectOrder *order_by = (GdaSqlSelectOrder*) selst->order_by->data;
+			if (order_by->expr && order_by->expr->value && 
+			    (G_VALUE_TYPE (order_by->expr->value) == G_TYPE_STRING) &&
+			    gda_identifier_equal (g_value_get_string (order_by->expr->value), colname)) {
+				order_by->asc = !order_by->asc;
+				replaced = TRUE;
+				g_free (colname);
+			}
+		}
+
+		if (!replaced) {
+			/* replace the whole ordering part */
+			if (selst->order_by) {
+				g_slist_foreach (selst->order_by, (GFunc) gda_sql_select_order_free, NULL);
+				g_slist_free (selst->order_by);
+				selst->order_by = NULL;
+			}
+			
+			GdaSqlSelectOrder *order_by;
+			GdaSqlExpr *expr;
+			order_by = gda_sql_select_order_new (GDA_SQL_ANY_PART (selst));
+			selst->order_by = g_slist_prepend (NULL, order_by);
+			expr = gda_sql_expr_new (GDA_SQL_ANY_PART (order_by));
+			order_by->expr = expr;
+			order_by->asc = TRUE;
+			expr->value = gda_value_new (G_TYPE_STRING);
+			g_value_take_string (expr->value, colname);
+		}
+
+		g_object_set (G_OBJECT (proxy->priv->filter_stmt), "structure", sqlst, NULL);
+#ifdef GDA_DEBUG_NO
+		gchar *ser;
+		ser = gda_sql_statement_serialize (sqlst);
+		g_print ("Modified Filter: %s\n", ser);
+		g_free (ser);
+#endif
+		gda_sql_statement_free (sqlst);
+		retval = apply_filter_statement (proxy, error);
 	}
-	filtered_rows = copy;
-	proxy->priv->force_direct_mapping = FALSE;
-
-
- clean_previous_filter:
-	if (proxy->priv->filter_expr) {
-		g_free (proxy->priv->filter_expr);
-		proxy->priv->filter_expr = NULL;
+	else {
+		gchar *str;
+		str = g_strdup_printf ("ORDER BY _%d", col + 1);
+		retval = gda_data_proxy_set_filter_expr (proxy, str, error);
 	}
-	if (proxy->priv->filtered_rows) {
-		g_object_unref (proxy->priv->filtered_rows);
-		proxy->priv->filtered_rows = NULL;
-	}
-	if (filtered_rows) {
-		proxy->priv->filtered_rows = filtered_rows;
-		proxy->priv->filter_expr = g_strdup (filter_expr);
-	}
-
-	g_signal_emit (G_OBJECT (proxy),
-		       gda_data_proxy_signals[FILTER_CHANGED],
-		       0);
-
-	adjust_displayed_chunk (proxy);
-
-	if (!filter_expr)
-		return TRUE;
-	else
-		return filtered_rows ? TRUE : FALSE;
+	return retval;
 }
 
 /**
@@ -3002,20 +3193,23 @@ static void create_columns (GdaDataProxy *proxy)
 	/* proxied data model's values (original values), again reference columns from proxied data model */
 	for (; i < 2 * proxy->priv->model_nb_cols; i++) {
 		GdaColumn *orig;
+		const gchar *cname;
 		gchar *newname;
 
 		orig = gda_data_model_describe_column (proxy->priv->model, 
 						       i -  proxy->priv->model_nb_cols);
 		proxy->priv->columns[i] = gda_column_copy (orig);
-		newname = g_strdup_printf ("_%s", gda_column_get_name (orig));
+		cname =  gda_column_get_name (orig);
+		if (cname && *cname) 
+			newname = g_strdup_printf ("pre%s", cname);
+		else
+			newname = g_strdup_printf ("pre%d", i);
 		gda_column_set_name (proxy->priv->columns[i], newname);
 		gda_column_set_title (proxy->priv->columns[i], newname);
 		g_free (newname);
 		gda_column_set_position (proxy->priv->columns[i], i);
 	}
 }
-	
-
 
 static GdaColumn *
 gda_data_proxy_describe_column (GdaDataModel *model, gint col)

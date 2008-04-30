@@ -14,7 +14,7 @@ main (int argc, char *argv [])
 	gint i, nrows;
 	GError *error = NULL;
 
-	gda_init ("bdb test", "3.1.1", argc, argv);
+	gda_init ();
 	if (! g_file_test (DATABASE, G_FILE_TEST_EXISTS)) {
 		g_print ("File '%s' does not exist\n", DATABASE);
 		exit (1);

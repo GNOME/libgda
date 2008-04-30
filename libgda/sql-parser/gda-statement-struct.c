@@ -921,60 +921,60 @@ gda_sql_any_part_check_structure (GdaSqlAnyPart *node, GError **error)
 			return FALSE;
 		}
 		switch (operation->operator) {
-		case GDA_SQL_OPERATOR_EQ:
-		case GDA_SQL_OPERATOR_IS:
-		case GDA_SQL_OPERATOR_LIKE:
-		case GDA_SQL_OPERATOR_GT:
-		case GDA_SQL_OPERATOR_LT:
-		case GDA_SQL_OPERATOR_GEQ:
-		case GDA_SQL_OPERATOR_LEQ:
-		case GDA_SQL_OPERATOR_DIFF:
-		case GDA_SQL_OPERATOR_REGEXP:
-		case GDA_SQL_OPERATOR_REGEXP_CI:
-		case GDA_SQL_OPERATOR_NOT_REGEXP:
-		case GDA_SQL_OPERATOR_NOT_REGEXP_CI:
-		case GDA_SQL_OPERATOR_SIMILAR:
-		case GDA_SQL_OPERATOR_REM:
-		case GDA_SQL_OPERATOR_DIV:
-		case GDA_SQL_OPERATOR_BITAND:
-		case GDA_SQL_OPERATOR_BITOR:
+		case GDA_SQL_OPERATOR_TYPE_EQ:
+		case GDA_SQL_OPERATOR_TYPE_IS:
+		case GDA_SQL_OPERATOR_TYPE_LIKE:
+		case GDA_SQL_OPERATOR_TYPE_GT:
+		case GDA_SQL_OPERATOR_TYPE_LT:
+		case GDA_SQL_OPERATOR_TYPE_GEQ:
+		case GDA_SQL_OPERATOR_TYPE_LEQ:
+		case GDA_SQL_OPERATOR_TYPE_DIFF:
+		case GDA_SQL_OPERATOR_TYPE_REGEXP:
+		case GDA_SQL_OPERATOR_TYPE_REGEXP_CI:
+		case GDA_SQL_OPERATOR_TYPE_NOT_REGEXP:
+		case GDA_SQL_OPERATOR_TYPE_NOT_REGEXP_CI:
+		case GDA_SQL_OPERATOR_TYPE_SIMILAR:
+		case GDA_SQL_OPERATOR_TYPE_REM:
+		case GDA_SQL_OPERATOR_TYPE_DIV:
+		case GDA_SQL_OPERATOR_TYPE_BITAND:
+		case GDA_SQL_OPERATOR_TYPE_BITOR:
 			if (g_slist_length (operation->operands) != 2) {
 				g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
 					     _("Wrong number of operands"));
 				return FALSE;
 			}
 			break;
-		case GDA_SQL_OPERATOR_BETWEEN:
+		case GDA_SQL_OPERATOR_TYPE_BETWEEN:
 			if (g_slist_length (operation->operands) != 3) {
 				g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
 					     _("Wrong number of operands"));
 				return FALSE;
 			}
 			break;
-		case GDA_SQL_OPERATOR_BITNOT:
-		case GDA_SQL_OPERATOR_ISNULL:
-		case GDA_SQL_OPERATOR_ISNOTNULL:
-		case GDA_SQL_OPERATOR_NOT:
+		case GDA_SQL_OPERATOR_TYPE_BITNOT:
+		case GDA_SQL_OPERATOR_TYPE_ISNULL:
+		case GDA_SQL_OPERATOR_TYPE_ISNOTNULL:
+		case GDA_SQL_OPERATOR_TYPE_NOT:
 			if (g_slist_length (operation->operands) != 1) {
 				g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
 					     _("Wrong number of operands"));
 				return FALSE;
 			}
 			break;
-		case GDA_SQL_OPERATOR_AND:
-		case GDA_SQL_OPERATOR_OR:
-		case GDA_SQL_OPERATOR_IN:
-		case GDA_SQL_OPERATOR_NOTIN:
-		case GDA_SQL_OPERATOR_CONCAT:
-		case GDA_SQL_OPERATOR_STAR:
+		case GDA_SQL_OPERATOR_TYPE_AND:
+		case GDA_SQL_OPERATOR_TYPE_OR:
+		case GDA_SQL_OPERATOR_TYPE_IN:
+		case GDA_SQL_OPERATOR_TYPE_NOTIN:
+		case GDA_SQL_OPERATOR_TYPE_CONCAT:
+		case GDA_SQL_OPERATOR_TYPE_STAR:
 			if (g_slist_length (operation->operands) < 2) {
 				g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
 					     _("Wrong number of operands"));
 				return FALSE;
 			}
 			break;
-		case GDA_SQL_OPERATOR_MINUS:
-		case GDA_SQL_OPERATOR_PLUS:
+		case GDA_SQL_OPERATOR_TYPE_MINUS:
+		case GDA_SQL_OPERATOR_TYPE_PLUS:
 			if (g_slist_length (operation->operands) == 0) {
 				g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
 					     _("Wrong number of operands"));

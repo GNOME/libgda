@@ -124,52 +124,52 @@ void             gda_sql_function_take_args_list (GdaSqlFunction *function, GSLi
  * An operation on one or more expressions
  */
 typedef enum {
-	GDA_SQL_OPERATOR_AND,
-	GDA_SQL_OPERATOR_OR,
+	GDA_SQL_OPERATOR_TYPE_AND,
+	GDA_SQL_OPERATOR_TYPE_OR,
 
-	GDA_SQL_OPERATOR_EQ, 
-	GDA_SQL_OPERATOR_IS, 
-	GDA_SQL_OPERATOR_LIKE,
-	GDA_SQL_OPERATOR_BETWEEN,
-	GDA_SQL_OPERATOR_GT,
-	GDA_SQL_OPERATOR_LT,
-	GDA_SQL_OPERATOR_GEQ,
-	GDA_SQL_OPERATOR_LEQ,
-	GDA_SQL_OPERATOR_DIFF,
-	GDA_SQL_OPERATOR_REGEXP,
-	GDA_SQL_OPERATOR_REGEXP_CI,
-	GDA_SQL_OPERATOR_NOT_REGEXP,
-	GDA_SQL_OPERATOR_NOT_REGEXP_CI,
-	GDA_SQL_OPERATOR_SIMILAR,
-	GDA_SQL_OPERATOR_ISNULL,
-	GDA_SQL_OPERATOR_ISNOTNULL,
-	GDA_SQL_OPERATOR_NOT,
-	GDA_SQL_OPERATOR_IN,
-	GDA_SQL_OPERATOR_NOTIN,
+	GDA_SQL_OPERATOR_TYPE_EQ, 
+	GDA_SQL_OPERATOR_TYPE_IS, 
+	GDA_SQL_OPERATOR_TYPE_LIKE,
+	GDA_SQL_OPERATOR_TYPE_BETWEEN,
+	GDA_SQL_OPERATOR_TYPE_GT,
+	GDA_SQL_OPERATOR_TYPE_LT,
+	GDA_SQL_OPERATOR_TYPE_GEQ,
+	GDA_SQL_OPERATOR_TYPE_LEQ,
+	GDA_SQL_OPERATOR_TYPE_DIFF,
+	GDA_SQL_OPERATOR_TYPE_REGEXP,
+	GDA_SQL_OPERATOR_TYPE_REGEXP_CI,
+	GDA_SQL_OPERATOR_TYPE_NOT_REGEXP,
+	GDA_SQL_OPERATOR_TYPE_NOT_REGEXP_CI,
+	GDA_SQL_OPERATOR_TYPE_SIMILAR,
+	GDA_SQL_OPERATOR_TYPE_ISNULL,
+	GDA_SQL_OPERATOR_TYPE_ISNOTNULL,
+	GDA_SQL_OPERATOR_TYPE_NOT,
+	GDA_SQL_OPERATOR_TYPE_IN,
+	GDA_SQL_OPERATOR_TYPE_NOTIN,
 
-	GDA_SQL_OPERATOR_CONCAT,
-	GDA_SQL_OPERATOR_PLUS,
-	GDA_SQL_OPERATOR_MINUS,
-	GDA_SQL_OPERATOR_STAR,
-	GDA_SQL_OPERATOR_DIV,
-	GDA_SQL_OPERATOR_REM,
-	GDA_SQL_OPERATOR_BITAND,
-	GDA_SQL_OPERATOR_BITOR,
-	GDA_SQL_OPERATOR_BITNOT
-} GdaSqlOperator;
+	GDA_SQL_OPERATOR_TYPE_CONCAT,
+	GDA_SQL_OPERATOR_TYPE_PLUS,
+	GDA_SQL_OPERATOR_TYPE_MINUS,
+	GDA_SQL_OPERATOR_TYPE_STAR,
+	GDA_SQL_OPERATOR_TYPE_DIV,
+	GDA_SQL_OPERATOR_TYPE_REM,
+	GDA_SQL_OPERATOR_TYPE_BITAND,
+	GDA_SQL_OPERATOR_TYPE_BITOR,
+	GDA_SQL_OPERATOR_TYPE_BITNOT
+} GdaSqlOperatorType;
 
 struct _GdaSqlOperation {
-	GdaSqlAnyPart    any;
-	GdaSqlOperator   operator;
-	GSList          *operands;
+	GdaSqlAnyPart       any;
+	GdaSqlOperatorType  operator;
+	GSList             *operands;
 };
 
 GdaSqlOperation  *gda_sql_operation_new            (GdaSqlAnyPart *parent);
 void              gda_sql_operation_free           (GdaSqlOperation *operation);
 GdaSqlOperation  *gda_sql_operation_copy           (GdaSqlOperation *operation);
 gchar            *gda_sql_operation_serialize      (GdaSqlOperation *operation);
-const gchar      *gda_sql_operation_operator_to_string (GdaSqlOperator op);
-GdaSqlOperator    gda_sql_operation_operator_from_string (const gchar *op);
+const gchar      *gda_sql_operation_operator_to_string (GdaSqlOperatorType op);
+GdaSqlOperatorType    gda_sql_operation_operator_from_string (const gchar *op);
 
 /*
  * A CASE expression

@@ -62,7 +62,7 @@ main (int argc, char **argv)
 		exit (1);
 	}
 
-	gda_init ("Gda connection tester", PACKAGE_VERSION, argc, argv);
+	gda_init ();
 
 	/* open connection */
 	if (user) {

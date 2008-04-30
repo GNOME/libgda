@@ -10,7 +10,7 @@ main (int argc, char *argv[])
 {
         GdaConnection *s_cnc, *d_cnc, *virtual;
 
-        gda_init ("LibgdaCopyTableEasier", "1.0", argc, argv);
+        gda_init ();
 
 	/* open "real" connections */
 	s_cnc = open_source_connection ();

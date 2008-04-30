@@ -898,7 +898,7 @@ source_changed_holder_cb (GdaHolder *holder, GdaSet *set)
 static void
 notify_holder_cb (GdaHolder *holder, GParamSpec *pspec, GdaSet *set)
 {
-	if (!strcmp (pspec->name, "entry-plugin")) {
+	if (!strcmp (pspec->name, "plugin")) {
 #ifdef GDA_DEBUG_signal
 		g_print (">> 'HOLDER_PLUGIN_CHANGED' from %s\n", __FUNCTION__);
 #endif

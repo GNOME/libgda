@@ -277,6 +277,7 @@ gda_sql_parser_finalize (GObject *object)
 		
 		klass = (GdaSqlParserClass*) G_OBJECT_GET_CLASS (parser);
 		gda_sql_parser_reset (parser);
+		g_free (parser->priv->context);
 
 		if (klass->delim_alloc) {
 			g_assert (klass->delim_free);
@@ -1402,8 +1403,7 @@ getToken (GdaSqlParser *parser)
 		parser->priv->context->token_type = L_ILLEGAL;
 
 	if (!retval)
-		retval = token_as_string (parser->priv->context->next_token_start, consumed_chars)
-;
+		retval = token_as_string (parser->priv->context->next_token_start, consumed_chars);
  tok_end:
 	parser->priv->context->last_token_start = parser->priv->context->next_token_start;
 	parser->priv->context->next_token_start += consumed_chars;
@@ -1520,6 +1520,9 @@ fetch_forward (GdaSqlParser *parser, gint *out_nb_pushed, ...)
 			v1 = v2;
 		}
 		if (ttype != exp_type) {
+			g_value_reset (v1);
+			g_free (v1);
+
 			/* not what was expected => pop all the contexts */
 			for (; npushed > nmatched ; npushed--)
 				pop_tokenizer_context (parser);

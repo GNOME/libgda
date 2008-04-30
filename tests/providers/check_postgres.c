@@ -17,7 +17,7 @@ main (int argc, char **argv)
 
 	/* set up test environment */
 	g_setenv ("GDA_TOP_BUILD_DIR", TOP_BUILD_DIR, 0);
-	gda_init ("check-providers", PACKAGE_VERSION, argc, argv);
+	gda_init ();
 
 	pinfo = gda_config_get_provider_info (PROVIDER);
 	if (!pinfo) {

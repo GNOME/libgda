@@ -9,7 +9,7 @@ gboolean      copy_products_2 (GdaConnection *source, GdaConnection *dest);
 int
 main (int argc, char *argv[])
 {
-        gda_init ("LibgdaCopyTable", "1.0", argc, argv);
+        gda_init ();
 
         GdaConnection *s_cnc, *d_cnc;
 

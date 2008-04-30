@@ -15,7 +15,7 @@ main (int argc, char *argv [])
 	gint i, nrows;
 	GError *error = NULL;
 
-	gda_init ("bdb test", "3.1.1", argc, argv);
+	gda_init ();
 	model = g_object_new (TYPE_CUSTOM_DATA_MODEL, "filename", DATABASE, NULL);
 	gda_data_model_dump (model, stdout);
 

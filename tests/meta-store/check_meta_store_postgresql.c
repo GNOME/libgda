@@ -12,7 +12,7 @@ main(int argc, char ** argv)
 	/* set up test environment */
 	g_setenv ("GDA_TOP_SRC_DIR", TOP_SRC_DIR, TRUE);
 	g_setenv ("GDA_TOP_BUILD_DIR", TOP_BUILD_DIR, TRUE);
-	gda_init ("GdaMetaStore", "0.1", argc, argv);
+	gda_init ();
 
 	/* connection parameters */
 	cnc_string = getenv ("POSTGRESQL_META_CNC");

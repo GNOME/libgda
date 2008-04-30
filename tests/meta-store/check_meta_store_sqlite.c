@@ -11,7 +11,7 @@ main(int argc, char ** argv)
 	/* set up test environment */
 	g_setenv ("GDA_TOP_SRC_DIR", TOP_SRC_DIR, TRUE);
 	g_setenv ("GDA_TOP_BUILD_DIR", TOP_BUILD_DIR, TRUE);
-	gda_init ("GdaMetaStore", "0.1", argc, argv);
+	gda_init ();
 
 	/* Clean eveything which might exist in the store */
 	store = gda_meta_store_new_with_file ("test.db");

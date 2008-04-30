@@ -157,6 +157,13 @@ gda_vconnection_data_model_get_property (GObject *object,
         }
 }
 
+static void
+spec_destroy_func (GdaVconnectionDataModelSpec *spec)
+{
+	g_object_unref (spec->data_model);
+	g_free (spec);
+}
+
 /**
  * gda_vconnection_data_model_add_model
  * @cnc: a #GdaVconnectionDataModel connection
@@ -181,7 +188,8 @@ gda_vconnection_data_model_add_model (GdaVconnectionDataModel *cnc,
 
 	spec = g_new0 (GdaVconnectionDataModelSpec, 1);
 	spec->data_model = model;
-	retval = gda_vconnection_data_model_add (cnc, spec, g_free, table_name, error);
+	g_object_ref (model);
+	retval = gda_vconnection_data_model_add (cnc, spec, (GDestroyNotify) spec_destroy_func, table_name, error);
 
 	return retval;
 }

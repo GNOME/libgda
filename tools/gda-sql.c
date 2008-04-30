@@ -150,7 +150,7 @@ main (int argc, char *argv[])
 		goto cleanup;
         }
         g_option_context_free (context);
-        gda_init ("Gda SQL console", PACKAGE_VERSION, argc, argv);
+        gda_init ();
 	data = g_new0 (MainData, 1);
 	data->parameters = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
 	main_data = data;

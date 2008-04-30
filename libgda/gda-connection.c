@@ -3456,7 +3456,7 @@ gda_connection_del_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stm
 static void
 prepared_stms_foreach_func (GdaStatement *gda_stmt, GdaStatement *prepared_stmt, GdaConnection *cnc)
 {
-	g_signal_handlers_disconnect_by_func (gda_stmt, G_CALLBACK (prepared_stms_stmt_destroyed_cb), cnc);
+	prepared_stms_stmt_destroyed_cb (gda_stmt, cnc);
 }
 
 

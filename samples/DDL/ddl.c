@@ -8,7 +8,7 @@ void create_table (GdaConnection *cnc);
 int
 main (int argc, char *argv[])
 {
-        gda_init ("SimpleExample", "1.0", argc, argv);
+        gda_init ();
 
         GdaConnection *cnc;
 

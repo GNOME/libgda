@@ -128,7 +128,7 @@ gda_stuff (gpointer filename)
 
 int main (int argc, char **argv)
 {
-	gda_init ("gda_bdb_test", "0.0.0", argc, argv);
+	gda_init ();
 	create_db (DB_FILE);
 	gda_stuff (DB_FILE);
 	g_print ("OK\n");
