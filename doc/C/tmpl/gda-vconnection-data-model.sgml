@@ -25,16 +25,6 @@ The #GdaVproviderDataModel provider to use to create such connection objects.
 </para>
 
 
-<!-- ##### USER_FUNCTION GdaVConnectionDataModelFunc ##### -->
-<para>
-
-</para>
-
-@model: 
-@table_name: 
-@data: 
-
-
 <!-- ##### STRUCT GdaVconnectionDataModelSpec ##### -->
 <para>
 

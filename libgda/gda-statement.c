@@ -1129,7 +1129,8 @@ default_render_param_spec (GdaSqlParamSpec *pspec, GdaSqlExpr *expr, GdaSqlRende
 			      GDA_STATEMENT_SQL_PARAMS_SHORT |
 			      GDA_STATEMENT_SQL_PARAMS_AS_COLON |
 			      GDA_STATEMENT_SQL_PARAMS_AS_DOLLAR |
-			      GDA_STATEMENT_SQL_PARAMS_AS_QMARK))
+			      GDA_STATEMENT_SQL_PARAMS_AS_QMARK |
+			      GDA_STATEMENT_SQL_PARAMS_AS_UQMARK))
 		render_pspec = TRUE;
 
 	if (is_default)
@@ -1151,7 +1152,9 @@ default_render_param_spec (GdaSqlParamSpec *pspec, GdaSqlExpr *expr, GdaSqlRende
 	}
 	if (!h && 
 	    (!render_pspec ||
-	     (context->flags & (GDA_STATEMENT_SQL_PARAMS_AS_DOLLAR | GDA_STATEMENT_SQL_PARAMS_AS_QMARK)))) {
+	     (context->flags & (GDA_STATEMENT_SQL_PARAMS_AS_DOLLAR | 
+				GDA_STATEMENT_SQL_PARAMS_AS_QMARK |
+				GDA_STATEMENT_SQL_PARAMS_AS_UQMARK)))) {
 		/* a real value is needed or @context->params_used needs to be correct, and no GdaHolder found */
 		g_set_error (error, GDA_STATEMENT_ERROR, GDA_STATEMENT_PARAM_ERROR,
 			     _("Missing parameter '%s'"), pspec->name);
@@ -1196,11 +1199,15 @@ default_render_param_spec (GdaSqlParamSpec *pspec, GdaSqlExpr *expr, GdaSqlRende
 		g_string_append_printf (string, ":%s", str);
 		g_free (str);
 	}
-	else if (context->flags & (GDA_STATEMENT_SQL_PARAMS_AS_DOLLAR | GDA_STATEMENT_SQL_PARAMS_AS_QMARK)) {
+	else if (context->flags & (GDA_STATEMENT_SQL_PARAMS_AS_DOLLAR | 
+				   GDA_STATEMENT_SQL_PARAMS_AS_QMARK |
+				   GDA_STATEMENT_SQL_PARAMS_AS_UQMARK)) {
 		if (context->flags & GDA_STATEMENT_SQL_PARAMS_AS_DOLLAR)
 			g_string_append_printf (string, "$%d", g_slist_length (context->params_used));
-		else
+		else if (context->flags & GDA_STATEMENT_SQL_PARAMS_AS_QMARK)
 			g_string_append_printf (string, "?%d", g_slist_length (context->params_used));
+		else
+			g_string_append_c (string, '?');
 	}
 	else {
 		GdaStatementSqlFlag flag = context->flags;

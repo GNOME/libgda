@@ -492,7 +492,7 @@ Management of connections to data sources
 @GDA_CONNECTION_FEATURE_UPDATABLE_CURSOR: 
 @GDA_CONNECTION_FEATURE_USERS: 
 @GDA_CONNECTION_FEATURE_VIEWS: 
-@GDA_CONNECTION_FEATURE_XML_QUERIES: 
+@GDA_CONNECTION_FEATURE_LAST: 
 
 <!-- ##### FUNCTION gda_connection_supports_feature ##### -->
 <para>

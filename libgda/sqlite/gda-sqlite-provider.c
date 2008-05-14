@@ -1922,6 +1922,8 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 					   g_value_get_string (value), -1, SQLITE_TRANSIENT);
 		else if (G_VALUE_TYPE (value) == G_TYPE_INT)
 			sqlite3_bind_int (ps->sqlite_stmt, i, g_value_get_int (value));
+		else if (G_VALUE_TYPE (value) == G_TYPE_LONG)
+			sqlite3_bind_int (ps->sqlite_stmt, i, g_value_get_long (value));
 		else if (G_VALUE_TYPE (value) == G_TYPE_DOUBLE)
 			sqlite3_bind_double (ps->sqlite_stmt, i, g_value_get_double (value));
 		else if (G_VALUE_TYPE (value) == G_TYPE_FLOAT)

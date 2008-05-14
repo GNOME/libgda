@@ -24,6 +24,9 @@ main (int argc, char** argv)
 	gint ntests = 0;
 	gchar *fname;
 
+	/* set up test environment */
+        g_setenv ("GDA_TOP_BUILD_DIR", TOP_BUILD_DIR, 0);
+        g_setenv ("GDA_TOP_SRC_DIR", TOP_SRC_DIR, 0);
 	gda_init ();
 
 	/* open connection */

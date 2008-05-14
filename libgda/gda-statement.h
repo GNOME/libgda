@@ -60,7 +60,8 @@ typedef enum {
         GDA_STATEMENT_SQL_PARAMS_SHORT       = 1 << 2,
         GDA_STATEMENT_SQL_PARAMS_AS_COLON    = 1 << 3,
         GDA_STATEMENT_SQL_PARAMS_AS_DOLLAR   = 1 << 4,
-        GDA_STATEMENT_SQL_PARAMS_AS_QMARK    = 1 << 5 
+        GDA_STATEMENT_SQL_PARAMS_AS_QMARK    = 1 << 5,
+        GDA_STATEMENT_SQL_PARAMS_AS_UQMARK   = 1 << 6
 } GdaStatementSqlFlag;
 
 /* struct for the object's data */

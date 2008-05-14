@@ -23,7 +23,7 @@
 #include <glib/gi18n-lib.h>
 #include <string.h>
 #include "tools-input.h"
-#ifdef HAVE_READLINE_HISTORY_H
+#ifdef HAVE_HISTORY
 #include <readline/history.h>
 #endif
 
@@ -363,7 +363,7 @@ gda_internal_command_history (GdaConnection *cnc, const gchar **args, GError **e
 	res->type = GDA_INTERNAL_COMMAND_RESULT_TXT;
 
 	GString *string;
-#ifdef HAVE_READLINE_HISTORY_H
+#ifdef HAVE_HISTORY
 	if (args[0]) {
 		if (!save_history (args[0], error)) {
 			g_free (res);

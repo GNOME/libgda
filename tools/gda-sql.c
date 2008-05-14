@@ -41,7 +41,7 @@
 #include <pwd.h>
 #endif
 
-#ifdef HAVE_READLINE_READLINE_H
+#ifdef HAVE_READLINE
 #include <readline/readline.h>
 #endif
 
@@ -2571,7 +2571,7 @@ args_as_string_set (const gchar *str)
 static char **
 completion_func (const char *text, int start, int end)
 {
-#ifdef HAVE_READLINE_READLINE_H
+#ifdef HAVE_READLINE
 	ConnectionSetting *cs = main_data->current;
 	char **array;
 	gchar **gda_compl;

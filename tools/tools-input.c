@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 The GNOME Foundation.
+ * Copyright (C) 2007 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -29,10 +29,10 @@
 #include <sys/ioctl.h>
 #endif
 
-#ifdef HAVE_READLINE_READLINE_H
+#ifdef HAVE_READLINE
 #include <readline/readline.h>
 #endif
-#ifdef HAVE_READLINE_HISTORY_H
+#ifdef HAVE_HISTORY
 #include <readline/history.h>
 #endif
 
@@ -49,7 +49,7 @@ const gchar *history_file = NULL;
 gchar *
 input_from_console (const gchar *prompt)
 {
-#ifdef HAVE_READLINE_READLINE_H
+#ifdef HAVE_READLINE
 	char *read;
 
 	if (isatty (fileno (stdin))) {
@@ -103,7 +103,7 @@ input_from_stream  (FILE *stream)
 void
 init_input ()
 {
-#ifdef HAVE_READLINE_READLINE_H	
+#ifdef HAVE_READLINE	
 	rl_set_signals ();
 	rl_readline_name = "gda-sql";
 #endif
@@ -117,7 +117,7 @@ init_input ()
 void
 set_completion_func (CompletionFunc func)
 {
-#ifdef HAVE_READLINE_READLINE_H	
+#ifdef HAVE_READLINE	
 	rl_attempted_completion_function = func;
 	rl_basic_word_break_characters = " \t\n\\'`@$><=;|&{(";
 #endif	
@@ -163,7 +163,7 @@ input_get_size (gint *width, gint *height)
 void
 init_history ()
 {
-#ifdef HAVE_READLINE_HISTORY_H
+#ifdef HAVE_HISTORY
 	rl_set_signals ();
 	
 	if (history_init_done)
@@ -189,7 +189,7 @@ init_history ()
 void
 add_to_history (const gchar *txt)
 {
-#ifdef HAVE_READLINE_HISTORY_H
+#ifdef HAVE_HISTORY
 	if (!history_init_done)
 		init_history ();
 	if (!txt || !(*txt))
@@ -210,7 +210,7 @@ add_to_history (const gchar *txt)
 gboolean
 save_history (const gchar *file, GError **error)
 {
-#ifdef HAVE_READLINE_HISTORY_H
+#ifdef HAVE_HISTORY
 	int res;
 	if (!history_init_done || !history_file)
 		return FALSE;

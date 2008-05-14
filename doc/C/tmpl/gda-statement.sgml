@@ -72,6 +72,7 @@ the @params argument of the gda_statement_to_sql_extended() function), or an err
 @GDA_STATEMENT_SQL_PARAMS_AS_COLON: use the :&lt;param_name&gt; syntax for each parameter, replacing any char not in [0-9A-Za-z] by '_'
 @GDA_STATEMENT_SQL_PARAMS_AS_DOLLAR: use the $&lt;param_number&gt; syntax for each parameter (starting numbering at 1)
 @GDA_STATEMENT_SQL_PARAMS_AS_QMARK: use the ?&lt;param_number&gt; syntax for each parameter (starting numbering at 1)
+@GDA_STATEMENT_SQL_PARAMS_AS_UQMARK: use the ? syntax for each parameter (no numbering)
 
 <!-- ##### ENUM GdaStatementModelUsage ##### -->
 <para>

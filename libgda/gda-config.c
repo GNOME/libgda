@@ -258,8 +258,14 @@ load_config_file (const gchar *file, gboolean is_system)
 				}
 				if (!strcmp ((gchar *) prop, "DSN")) 
 					info->cnc_string = g_strdup ((gchar *)value);
-				else if (!strcmp ((gchar *) prop, "Provider")) 
-					info->provider = g_strdup ((gchar *)value);
+				else if (!strcmp ((gchar *) prop, "Provider")) {
+					GdaProviderInfo *pinfo;
+					pinfo = gda_config_get_provider_info ((gchar *)value);
+					if (pinfo)
+						info->provider = g_strdup (pinfo->id);
+					else
+						info->provider = g_strdup ((gchar *)value);
+				}
 				else if (!strcmp ((gchar *) prop, "Description"))
 					info->description = g_strdup ((gchar *)value);
 				if (!strcmp ((gchar *) prop, "Auth"))
@@ -1037,6 +1043,11 @@ gda_config_get_provider_info (const gchar *provider_name)
 	if (!unique_instance->priv->prov_list) 
 		load_all_providers ();
 
+	if (!g_ascii_strcasecmp (provider_name, "MS Access")) {
+		GDA_CONFIG_UNLOCK ();
+		return gda_config_get_provider_info ("MSAccess");
+	}
+
 	for (list = unique_instance->priv->prov_list; list; list = list->next)
 		if (!g_ascii_strcasecmp (((GdaProviderInfo*) list->data)->id, provider_name)) {
 			GDA_CONFIG_UNLOCK ();
@@ -1381,8 +1392,16 @@ data_source_info_compare (GdaDataSourceInfo *infoa, GdaDataSourceInfo *infob)
 	if (infoa) {
 		if (!infob)
 			return 1;
-		else
-			return strcmp (infoa->name, infob->name);
+		else {
+			gchar *u8a, *u8b;
+			gint res;
+			u8a = g_utf8_casefold (infoa->name, -1);
+			u8b = g_utf8_casefold (infob->name, -1);
+			res = strcmp (u8a, u8b);
+			g_free (u8a);
+			g_free (u8b);
+			return res;
+		}
 	}
 	else
 		return -1;

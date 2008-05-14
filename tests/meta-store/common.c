@@ -335,12 +335,12 @@ tests_group_1 (GdaMetaStore *store)
 	test_schemata_1 (store);
 	test_schemata_2 (store);
 	test_builtin_data_types (store);
-	test_domains (store);
+	//test_domains (store);
 	test_tables (store);
 	test_views (store);
 	test_routines (store);
 	test_triggers (store);
-	test_columns (store);
+	//test_columns (store);
 	test_table_constraints (store);
 	test_referential_constraints (store);
 	/*test_key_column_usage (store);*/

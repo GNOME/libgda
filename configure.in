@@ -1075,21 +1075,18 @@ if test x"$platform_win32" = "xyes"; then
 else
 	AC_CHECK_LIB(readline, readline, READLINE_LIB='-lreadline -lcurses', [], -lcurses)
 fi
+if test ! x"$READLINE_LIB" = x ; then
+   	AC_DEFINE(HAVE_READLINE)
+fi
 AM_CONDITIONAL(READLINE_LIB, test ! "x$READLINE_LIB" = "x")
 AC_SUBST(READLINE_LIB)
 
 AC_CHECK_LIB(history,add_history,HISTORY_LIB=-lhistory)
+if test ! x"$HISTORY_LIB" = x ; then
+   	AC_DEFINE(HAVE_HISTORY)
+fi
 AM_CONDITIONAL(HISTORY_LIB, test ! "x$HISTORY_LIB" = "x")
 AC_SUBST(HISTORY_LIB)
-
-AC_CHECK_HEADERS([readline/readline.h readline/history.h],,
-		CONFIG_TOOL_HEADERS="wrong" && \
-		echo Not building gda-config-tool)
-AM_CONDITIONAL(BUILD_CONFIG_TOOL, 
-		(test ! "x$CONFIG_TOOL_HEADERS" = "xwrong" -a \
-		      ! "x$READLINE_LIB" = "x" -a \
-		      ! "x$HISTORY_LIB" = "x" ))
-AC_SUBST(BUILD_CONFIG_TOOL)
 
 
 AC_SUBST(LIB_PREFIX)

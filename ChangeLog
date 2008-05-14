@@ -1,3 +1,30 @@
+2008-05-14  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-config.c: automatically correct spelling mistakes in
+	provider name, and correctly alphabetically order the DSN list
+	* libgda/gda-easy.c: don't warn if database name is NULL in gda_prepare_create_database()
+	and gda_prepare_drop_database()
+	* providers/mysql/gda-mysql.h: reset the provider's name to "MySQL"
+	* doc/C/Makefile.am:
+	* providers/mysql/Makefile.am: fixed "make distcheck" problem
+	* providers/postgres/postgres_specs_dsn.xml.in: doc improvement
+	* libgda/gda-connection.h: removed GDA_CONNECTION_FEATURE_XML_QUERIES and added
+	GDA_CONNECTION_FEATURE_LAST to set the last feature ID
+	* tests/meta-store/common.c: removed some useless test
+	* tests/parser/check_normalization.c:
+	* tests/parser/check_validation.c:
+	* tests/parser/check_dml_comp.c:
+	* tests/parser/Makefile.am: correctly set up the test environment so that "make distcheck"
+	works
+	* libgda/sqlite/gda-sqlite-provider.c: applied patch by Carlos Savoretti to handle
+	the G_TYPE_LONG type
+	* libgda/gda-statement.[ch]: added a GDA_STATEMENT_SQL_PARAMS_AS_UQMARK flag to
+	render variables in statements as a single "?"
+	* configure.in:
+	* tools/command-exec.c:
+	* tools/gda-sql.c:
+	* tools/tools-input.c: READLINE and HISTORY libraries detection made easier
+
 2008-04-30  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-util.c: also encode the '=' char in gda_rfc1738_encode()

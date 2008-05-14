@@ -56,7 +56,6 @@ gda_prepare_create_database (const gchar *provider, const gchar *db_name, GError
 	GdaServerProvider *prov;
 
 	g_return_val_if_fail (provider && *provider, NULL);
-	g_return_val_if_fail (db_name && *db_name, NULL);
 
 	prov = gda_config_get_provider_object (provider, error);
 	if (prov) {
@@ -123,7 +122,6 @@ gda_prepare_drop_database (const gchar *provider, const gchar *db_name, GError *
 	GdaServerProvider *prov;
 	
 	g_return_val_if_fail (provider && *provider, NULL);
-	g_return_val_if_fail (db_name && *db_name, NULL);
 
 	prov = gda_config_get_provider_object (provider, error);
 	if (prov) {

@@ -98,7 +98,8 @@ typedef enum {
 	GDA_CONNECTION_FEATURE_UPDATABLE_CURSOR,
 	GDA_CONNECTION_FEATURE_USERS,
 	GDA_CONNECTION_FEATURE_VIEWS,
-	GDA_CONNECTION_FEATURE_XML_QUERIES
+
+	GDA_CONNECTION_FEATURE_LAST
 } GdaConnectionFeature;
 
 typedef enum {
@@ -152,7 +153,7 @@ gboolean             gda_connection_perform_operation    (GdaConnection *cnc, Gd
 const gchar         *gda_connection_get_dsn              (GdaConnection *cnc);
 gboolean             gda_connection_set_dsn              (GdaConnection *cnc, const gchar *datasource);
 const gchar         *gda_connection_get_cnc_string       (GdaConnection *cnc);
-const gchar         *gda_connection_get_authentication (GdaConnection *cnc);
+const gchar         *gda_connection_get_authentication   (GdaConnection *cnc);
 
 void                 gda_connection_add_event            (GdaConnection *cnc, GdaConnectionEvent *event);
 GdaConnectionEvent  *gda_connection_add_event_string     (GdaConnection *cnc, const gchar *str, ...);

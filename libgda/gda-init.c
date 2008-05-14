@@ -96,8 +96,11 @@ gda_init (void)
 	gda_gbr_init ();
 
 	/* array DTD */
+	gda_array_dtd = NULL;
 	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "dtd", "libgda-array.dtd", NULL);
-	gda_array_dtd = xmlParseDTD (NULL, (xmlChar*)file);
+	if (g_file_test (file, G_FILE_TEST_EXISTS))
+		gda_array_dtd = xmlParseDTD (NULL, (xmlChar*)file);
+	
 	if (!gda_array_dtd) {
 		if (g_getenv ("GDA_TOP_SRC_DIR")) {
 			g_free (file);
@@ -114,8 +117,11 @@ gda_init (void)
 	g_free (file);
 
 	/* paramlist DTD */
+	gda_paramlist_dtd = NULL;
 	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "dtd", "libgda-paramlist.dtd", NULL);
-	gda_paramlist_dtd = xmlParseDTD (NULL, (xmlChar*)file);
+	if (g_file_test (file, G_FILE_TEST_EXISTS))
+		gda_paramlist_dtd = xmlParseDTD (NULL, (xmlChar*)file);
+
 	if (!gda_paramlist_dtd) {
 		if (g_getenv ("GDA_TOP_SRC_DIR")) {
 			g_free (file);
@@ -132,8 +138,11 @@ gda_init (void)
 	g_free (file);
 
 	/* server operation DTD */
+	gda_server_op_dtd = NULL;
 	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "dtd", "libgda-server-operation.dtd", NULL);
-	gda_server_op_dtd = xmlParseDTD (NULL, (xmlChar*)file);
+	if (g_file_test (file, G_FILE_TEST_EXISTS))
+		gda_server_op_dtd = xmlParseDTD (NULL, (xmlChar*)file);
+
 	if (!gda_server_op_dtd) {
 		if (g_getenv ("GDA_TOP_SRC_DIR")) {
 			g_free (file);

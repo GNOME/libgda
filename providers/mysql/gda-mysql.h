@@ -26,7 +26,7 @@
 /*
  * Provider name
  */
-#define MYSQL_PROVIDER_NAME "Mysql"
+#define MYSQL_PROVIDER_NAME "MySQL"
 
 #include <libgda/libgda.h>
 #include <mysql.h>

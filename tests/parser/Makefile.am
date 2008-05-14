@@ -3,7 +3,9 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
-	-DROOT_DIR=\""$(top_srcdir)"\" 
+	-DROOT_DIR=\""$(top_srcdir)"\"  \
+	-DTOP_BUILD_DIR=\""$(top_builddir)"\" \
+	-DTOP_SRC_DIR=\""$(top_srcdir)"\"
 
 TESTS = check_parser check_validation check_normalization check_dml_comp
 check_PROGRAMS = check_parser check_validation check_normalization check_dml_comp
