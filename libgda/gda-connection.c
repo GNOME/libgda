@@ -3063,10 +3063,13 @@ gda_connection_get_meta_store_data (GdaConnection *cnc,
 		va_list ap;
 		key.filters = g_new (gchar *, nb_filters);
 		va_start (ap, nb_filters);
-		for (i = 0, fname = va_arg (ap, gchar*); fname && (i < nb_filters); fname = va_arg (ap, gchar*), i++) {
+		for (i = 0; (i < nb_filters); i++) {
 			GdaHolder *h;
 			GValue *v;
 			
+			fname = va_arg (ap, gchar*);
+			if (!fname)
+				break;
 			v = va_arg (ap, GValue*);
 			if (!v || gda_value_is_null (v))
 				continue;
