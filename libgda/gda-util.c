@@ -307,7 +307,7 @@ gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent,
 			else
 				col_ids [c] = g_strdup_printf ("_%d", c);
 
-			g_free(id);
+			g_free (id);
 		}
 	}
 

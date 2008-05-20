@@ -1475,8 +1475,7 @@ find_column_from_id (GdaDataModel *model, const gchar *colid, gint *pos)
 			column = NULL;
 		else
 			*pos = c;
-		if(id != NULL)
-			g_free(id);
+		g_free (id);
 	}
 
 	/* if no column has been found, assumr @colid is like "_%d" where %d is a column number */

@@ -242,6 +242,11 @@ gda_connection_dispose (GObject *object)
 		cnc->priv->trans_status = NULL;
 	}
 
+	if (cnc->priv->meta_store != NULL) {
+	        g_object_unref (cnc->priv->meta_store);
+	        cnc->priv->meta_store = NULL;
+	}
+
 	/* chain to parent class */
 	parent_class->dispose (object);
 }
