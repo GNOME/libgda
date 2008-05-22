@@ -5,6 +5,7 @@
 	* libgda/gda-connection.c: get rid of all the prepared statements before
 	closing the connection, and not when the connection object is disposed
 	to prevent an error
+	* libgda/sqlite/sqlite-src/: up to version 3.5.9
 
 2008-05-20  Vivien Malerba <malerba@gnome-db.org>
 
