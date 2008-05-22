@@ -1,3 +1,11 @@
+2008-05-22  Vivien Malerba <malerba@gnome-db.org>
+
+	* tests/providers/prov-test-util.c: applied patch to improve
+	authentication (Carlos Savoretti)
+	* libgda/gda-connection.c: get rid of all the prepared statements before
+	closing the connection, and not when the connection object is disposed
+	to prevent an error
+
 2008-05-20  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-connection.c: applied path to fxi compiler warnings (thanks to

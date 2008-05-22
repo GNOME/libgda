@@ -221,12 +221,6 @@ gda_connection_dispose (GObject *object)
 	/* free memory */
 	gda_connection_close_no_warning (cnc);
 
-	if (cnc->priv->prepared_stmts) {
-		g_hash_table_foreach (cnc->priv->prepared_stmts, (GHFunc) prepared_stms_foreach_func, cnc);
-		g_hash_table_destroy (cnc->priv->prepared_stmts);
-		cnc->priv->prepared_stmts = NULL;
-	}
-
 	if (cnc->priv->provider_obj) {
 		g_object_unref (G_OBJECT (cnc->priv->provider_obj));
 		cnc->priv->provider_obj = NULL;
@@ -791,8 +785,18 @@ gda_connection_close_no_warning (GdaConnection *cnc)
 	if (! cnc->priv->is_open)
 		return;
 
+	/* get rid of prepared statements to avoid problems */
+	if (cnc->priv->prepared_stmts) {
+		g_hash_table_foreach (cnc->priv->prepared_stmts, 
+				      (GHFunc) prepared_stms_foreach_func, cnc);
+		g_hash_table_destroy (cnc->priv->prepared_stmts);
+		cnc->priv->prepared_stmts = NULL;
+	}
+
+	/* really close connection */
 	if (PROV_CLASS (cnc->priv->provider_obj)->close_connection) 
-		PROV_CLASS (cnc->priv->provider_obj)->close_connection (cnc->priv->provider_obj, cnc);
+		PROV_CLASS (cnc->priv->provider_obj)->close_connection (cnc->priv->provider_obj, 
+									cnc);
 	cnc->priv->is_open = FALSE;
 
 	if (cnc->priv->provider_data) {

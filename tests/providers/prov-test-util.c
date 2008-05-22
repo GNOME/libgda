@@ -218,24 +218,40 @@ prov_test_setup_connection (GdaProviderInfo *prov_info, gboolean *params_provide
 		}
 		g_print ("Open connection string: %s\n", data.string->str);
 
-		const gchar *username, *password;
-		gchar *auth = NULL;
-		str = g_strdup_printf ("%s_USER", upname);
-		username = getenv (str);
-		g_free (str);
-		str = g_strdup_printf ("%s_PASS", upname);
-		password = getenv (str);
-		g_free (str);
-		if (username) {
-			if (password)
-				auth = g_strdup_printf ("USERNAME=%s;PASSWORD=%s", username, password);
-			else
-				auth = g_strdup_printf ("USERNAME=%s", username);
+		/***/
+		gchar *auth_string = NULL;
+
+		GSList *current = prov_info->auth_params->holders;
+		while (current) {
+			GdaHolder *holder = (GdaHolder *) current->data;
+
+			const gchar *id = gda_holder_get_id (holder);
+			const gchar *env = NULL;
+			if (g_strrstr (id, "USER") != NULL) {
+				str = g_strdup_printf ("%s_USER", upname);
+				env = getenv (str);
+				g_free (str);
+			} else if (g_strrstr (id, "PASS") != NULL) {
+				str = g_strdup_printf ("%s_PASS", upname);
+				env = getenv (str);
+				g_free (str);
+			}
+
+			if (env) {
+				str = g_strdup_printf ("%s=%s;", id, env);
+
+				gchar *tmp = auth_string;
+				auth_string = g_strconcat (auth_string, str, NULL);
+				g_free (str);
+				g_free (tmp);
+			}
+
+			current = g_slist_next (current);
 		}
 
-		cnc = gda_connection_open_from_string (prov_info->id, data.string->str, auth, 
-						       GDA_CONNECTION_OPTIONS_NONE, &error);
-		g_free (auth);
+		cnc = gda_connection_open_from_string (prov_info->id, data.string->str, auth_string,
+ 						       GDA_CONNECTION_OPTIONS_NONE, &error);
+		g_free (auth_string);
 		if (!cnc && error) {
 #ifdef CHECK_EXTRA_INFO
 			g_warning ("Could not open connection to %s (provider %s): %s",
