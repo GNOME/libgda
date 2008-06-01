@@ -66,7 +66,7 @@ gchar       *gda_alphanum_to_text (gchar *text);
  * Statement computation from meta store 
  */
 gboolean     gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gboolean require_pk, 
-					 GdaStatement **insert, GdaStatement **update, GdaStatement **delete, 
+					 GdaStatement **insert_stmt, GdaStatement **update_stmt, GdaStatement **delete_stmt, 
 					 GError **error);
 
 /*

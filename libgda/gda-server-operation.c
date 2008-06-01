@@ -412,6 +412,7 @@ node_find_or_create (GdaServerOperation *op, const gchar *path)
 				node = NULL;
 				break;
 		}
+		g_free(cpath);
 	}
 
 	/*g_print ("# %s (%s) => %p\n", __FUNCTION__, path, node);*/

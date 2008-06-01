@@ -27,8 +27,12 @@
 #include <libgda/gda-data-model-dir.h>
 #include <libgda/gda-data-model-extra.h>
 
-#ifdef HAVE_GNOMEVFS
-#include <libgnomevfs/gnome-vfs-mime.h>
+#ifdef HAVE_GIO
+#include <gio/gio.h>
+#else
+  #ifdef HAVE_GNOMEVFS
+  #include <libgnomevfs/gnome-vfs-mime.h>
+  #endif
 #endif
 
 /* Use the RSA reference implementation included in the RFC-1321, http://www.freesoft.org/CIE/RFC/1321/ */
@@ -566,8 +570,23 @@ update_file_mime (FileRow *row, const gchar *complete_filename)
 {
 	gboolean changed = TRUE;
 	GValue *value = NULL;
-
-#ifdef HAVE_GNOMEVFS
+#ifdef HAVE_GIO
+	GFile *file;
+	GFileInfo *info;
+	file = g_file_new_for_path (complete_filename);
+	info = g_file_query_info (file,
+				  G_FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE,
+				  G_FILE_QUERY_INFO_NONE, NULL, NULL);
+	if (info) {
+		value = gda_value_new (G_TYPE_STRING);
+                g_value_set_string (value, g_file_info_get_content_type (info));
+		g_object_unref (info);
+	}
+	else
+		value = gda_value_new_null ();
+	g_object_unref (file);
+#else
+  #ifdef HAVE_GNOMEVFS
 	const gchar *mime;
 	
 	mime = gnome_vfs_get_file_mime_type (complete_filename, NULL, FALSE);
@@ -577,8 +596,9 @@ update_file_mime (FileRow *row, const gchar *complete_filename)
 	}
 	else 
 		value = gda_value_new_null ();
-#else
+  #else
 	value = gda_value_new_null ();
+  #endif
 #endif
 
 	if (value) {

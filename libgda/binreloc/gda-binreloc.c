@@ -39,6 +39,8 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 
 	return TRUE;
 }
+#elif HAVE_CARBON
+#include <Carbon/Carbon.h>
 #endif
 
 
@@ -49,6 +51,9 @@ void
 gda_gbr_init (void)
 {
 #ifdef G_OS_WIN32
+	/* nothing */
+#elif HAVE_CARBON
+	/* nothing */
 #else
 	_gda_gbr_init_lib (NULL);
 #endif
@@ -60,7 +65,7 @@ gda_gbr_init (void)
 gchar *
 gda_gbr_get_file_path (GdaPrefixDir where, ...)
 {
-	gchar *prefix;
+	gchar *prefix = NULL;
 	gchar *tmp, *file_part;
 	va_list ap;
 	gchar **parts;
@@ -71,7 +76,6 @@ gda_gbr_get_file_path (GdaPrefixDir where, ...)
 	wchar_t path[MAX_PATH];
 	gchar* p;
 #endif
-
 	switch (where) {
 	default:
 	case GDA_NO_DIR:
@@ -110,11 +114,23 @@ gda_gbr_get_file_path (GdaPrefixDir where, ...)
 	prefix = g_utf16_to_utf8 (path, -1, NULL, NULL, NULL);
 	if ((p = strrchr (prefix, G_DIR_SEPARATOR)) != NULL)
 		*p = '\0';
-
+	
 	p = strrchr (prefix, G_DIR_SEPARATOR);
-	if(p && (g_ascii_strcasecmp (p + 1, "bin") == 0 ||
-	         g_ascii_strcasecmp (p + 1, "lib") == 0))
+	if (p && (g_ascii_strcasecmp (p + 1, "bin") == 0 ||
+		  g_ascii_strcasecmp (p + 1, "lib") == 0))
 		*p = '\0';	
+#elif HAVE_CARBON
+#define MAXLEN 500
+	ProcessSerialNumber myProcess;
+	FSRef bundleLocation;
+	unsigned char bundlePath[MAXLEN];
+
+	if ((GetCurrentProcess (&myProcess) == noErr) &&
+	    (GetProcessBundleLocation (&myProcess, &bundleLocation) == noErr) &&
+	    (FSRefMakePath (&bundleLocation, bundlePath, MAXLEN) == noErr))
+		prefix = g_path_get_dirname ((const char*) bundlePath);
+	else
+		g_warning ("Could not get PREFIX (using Mac OS X Carbon)");
 #else
 	prefix = _gda_gbr_find_prefix (LIBGDAPREFIX);
 #endif

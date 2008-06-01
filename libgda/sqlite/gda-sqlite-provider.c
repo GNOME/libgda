@@ -1771,6 +1771,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 {
 	GdaSqlitePStmt *ps;
 	SqliteConnectionData *cdata;
+	gboolean new_ps = FALSE;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, NULL);
@@ -1831,6 +1832,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			/* create a SQLitePreparedStatement */
 			ps = gda_sqlite_pstmt_new (sqlite_stmt);
 			_GDA_PSTMT (ps)->sql = sql;
+			new_ps = TRUE;
 		}
 		else
 			ps = gda_connection_get_prepared_statement (cnc, stmt);
@@ -1839,10 +1841,11 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		/* Don't use @ps => prepare stmt again */
 		GdaSqlitePStmt *nps;
 		nps = real_prepare (provider, cnc, stmt, error);
-		gda_pstmt_copy_contents ((GdaPStmt *) ps, (GdaPStmt *) nps);
 		if (!nps)
 			return NULL;
+		gda_pstmt_copy_contents ((GdaPStmt *) ps, (GdaPStmt *) nps);
 		ps = nps;
+		new_ps = TRUE;
 	}
 
 	/* check that prepared stmt is not NULL, to avoid a crash */
@@ -1857,6 +1860,8 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		gda_connection_del_prepared_statement (cnc, stmt);
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_EMPTY_STMT_ERROR,
 			     errmsg);
+		if (new_ps)
+			g_object_unref (ps);
 		return NULL;
 	}
 
@@ -1873,6 +1878,8 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		gda_connection_del_prepared_statement (cnc, stmt);
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR,
 			     errmsg);
+		if (new_ps)
+			g_object_unref (ps);
 		return NULL;
 	}
 	
@@ -2002,6 +2009,8 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		
 	if (event) {
 		gda_connection_add_event (cnc, event);
+		if (new_ps)
+			g_object_unref (ps);
 		return NULL;
 	}
 	
@@ -2024,6 +2033,8 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 
                 data_model = (GObject *) gda_sqlite_recordset_new (cnc, ps, flags, col_types);
 		gda_connection_internal_statement_executed (cnc, stmt, params, NULL);
+		if (new_ps)
+			g_object_unref (ps);
 		return data_model;
         }
 	else {
@@ -2044,12 +2055,16 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR, errmsg);
 				gda_connection_internal_statement_executed (cnc, stmt, params, event);
+				if (new_ps)
+					g_object_unref (ps);
 				return NULL;
                         }
 			else {
 				/* could be SQLITE_SCHEMA if database schema has changed and
 				 * changes are incompatible with statement */
 				TO_IMPLEMENT;
+				if (new_ps)
+					g_object_unref (ps);
 				return NULL;
 			}
                 }
@@ -2097,6 +2112,8 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
                                 gda_connection_add_event (cnc, event);
                         }
 			gda_connection_internal_statement_executed (cnc, stmt, params, event);
+			if (new_ps)
+				g_object_unref (ps);
 			return set;
 		}
 	}

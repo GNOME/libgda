@@ -138,30 +138,46 @@ dnl ******************************
 dnl Check for Win32
 dnl ******************************
 
-AC_MSG_CHECKING([for some Win32 platform])
+AC_MSG_CHECKING([for platform])
+platform_win32=no
+platform_carbon=no
 case "$host" in
 *-cygwin*)
+    AC_MSG_RESULT([Win32 - cygwin])
     platform_win32=yes
     NO_UNDEFINED='-no-undefined'
     SOPREFIX='cyg'
     LIBTOOL_EXPORT_OPTIONS=
+    AC_MSG_RESULT([Win32])
     ;;
 *-mingw*)
+    AC_MSG_RESULT([Win32 - MinGW])
     platform_win32=yes
     NO_UNDEFINED='-no-undefined'
     SOPREFIX='lib'
     LIBTOOL_EXPORT_OPTIONS=
     ;;
+*-*-darwin*)
+    dnl Darwin based distributions (including Mac OS X)
+    AC_MSG_RESULT([Mac OS X - carbon])
+    platform_carbon=yes
+    SOPREFIX='lib'
+    AM_BINRELOC
+    LIBTOOL_EXPORT_OPTIONS='-export-symbols-regex "^[[^_]].*"'
+    AC_DEFINE(HAVE_CARBON)
+    dnl SO_SUFFIX=dylib
+  ;;
 *)
-    platform_win32=no
+    AC_MSG_RESULT([Unix])
     NO_UNDEFINED=''
     SOPREFIX='lib'
     AM_BINRELOC
     LIBTOOL_EXPORT_OPTIONS='-export-symbols-regex "^[[^_]].*"'
     ;;
 esac
-AC_MSG_RESULT([$platform_win32])
+
 AM_CONDITIONAL(PLATFORM_WIN32, [test $platform_win32 = yes])
+AM_CONDITIONAL(PLATFORM_CARBON, [test $platform_carbon = yes])
 AC_SUBST(LIBTOOL_EXPORT_OPTIONS)
 AC_SUBST(NO_UNDEFINED)
 AC_SUBST(SOPREFIX)
@@ -189,19 +205,34 @@ fi
 AC_SUBST(FAM_LIBS)
 AC_SUBST(FAM_CFLAGS)
 
-dnl ******************************
-dnl Checks for Gnome VFS
-dnl ******************************
+dnl ***********************************************
+dnl Checks for GIO or Gnome VFS, use GIO preferably
+dnl ***********************************************
 
 GNOMEVFS_MODULES="gnome-vfs-2.0 >= 2.20"
 PKG_CHECK_MODULES(GNOMEVFS, $GNOMEVFS_MODULES, have_gnomevfs=yes, have_gnomevfs=no)
-AM_CONDITIONAL(HAVE_GNOMEVFS, test x"$have_gnomevfs" = "xyes")
 if test x"$have_gnomevfs" = "xyes"
 then
         GNOMEVFS_CFLAGS="$GNOMEVFS_CFLAGS -DHAVE_GNOMEVFS"
 fi
+
+GIO_MODULES="gio-2.0"
+PKG_CHECK_MODULES(GIO, $GIO_MODULES, have_gio=yes, have_gio=no)
+AM_CONDITIONAL(HAVE_GIO, test x"$have_gio" = "xyes")
+if test x"$have_gio" = "xyes"
+then
+        GIO_CFLAGS="$GIO_CFLAGS -DHAVE_GIO"
+	GNOMEVFS_CFLAGS=""
+	GNOMEVFS_LIBS=""
+	have_gnomevfs=no
+fi
+AC_SUBST(GIO_CFLAGS)
+AC_SUBST(GIO_LIBS)
+
 AC_SUBST(GNOMEVFS_CFLAGS)
 AC_SUBST(GNOMEVFS_LIBS)
+AM_CONDITIONAL(HAVE_GNOMEVFS, test x"$have_gnomevfs" = "xyes")
+
 
 dnl ******************************
 dnl Checks for libxslt

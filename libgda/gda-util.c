@@ -735,7 +735,7 @@ dml_statements_build_condition (GdaSqlStatementSelect *stsel, GdaMetaTable *mtab
  */
 gboolean
 gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gboolean require_pk, 
-			    GdaStatement **insert, GdaStatement **update, GdaStatement **delete, GError **error)
+                            GdaStatement **insert_stmt, GdaStatement **update_stmt, GdaStatement **delete_stmt, GError **error)
 {
 	GdaSqlStatement *sel_struct;
 	GdaSqlStatementSelect *stsel;
@@ -776,14 +776,14 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 	target = (GdaSqlSelectTarget*) stsel->from->targets->data;
 	
 	/* actual statement structure's computation */        
-	if (insert) {
+	if (insert_stmt) {
 		ist = g_new0 (GdaSqlStatementInsert, 1);
 		GDA_SQL_ANY_PART (ist)->type = GDA_SQL_ANY_STMT_INSERT;
 		ist->table = gda_sql_table_new (GDA_SQL_ANY_PART (ist));
 		ist->table->table_name = g_strdup ((gchar *) target->table_name);
 	}
 	
-	if (update) {
+	if (update_stmt) {
 		ust = g_new0 (GdaSqlStatementUpdate, 1);
 		GDA_SQL_ANY_PART (ust)->type = GDA_SQL_ANY_STMT_UPDATE;
 		ust->table = gda_sql_table_new (GDA_SQL_ANY_PART (ust));
@@ -798,7 +798,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 		GDA_SQL_ANY_PART (ust->cond)->parent = GDA_SQL_ANY_PART (ust);
 	}
         
-	if (delete) {
+	if (delete_stmt) {
 		dst = g_new0 (GdaSqlStatementDelete, 1);
 		GDA_SQL_ANY_PART (dst)->type = GDA_SQL_ANY_STMT_DELETE;
 		dst->table = gda_sql_table_new (GDA_SQL_ANY_PART (dst));
@@ -830,13 +830,13 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 		if (g_hash_table_lookup (fields_hash, selfield->field_name))
 			continue;
 		g_hash_table_insert (fields_hash, selfield->field_name, GINT_TO_POINTER (1));
-		if (insert) {
+		if (insert_stmt) {
 			GdaSqlField *field;
 			field = gda_sql_field_new (GDA_SQL_ANY_PART (ist));
 			field->field_name = g_strdup (selfield->field_name);
 			ist->fields_list = g_slist_append (ist->fields_list, field);
 		}
-		if (update) {
+		if (update_stmt) {
 			GdaSqlField *field;
 			field = gda_sql_field_new (GDA_SQL_ANY_PART (ust));
 			field->field_name = g_strdup (selfield->field_name);
@@ -848,7 +848,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 		GdaMetaTableColumn *tcol;
 
 		tcol = selfield->validity_meta_table_column;
-		if (insert) {
+		if (insert_stmt) {
 			GdaSqlParamSpec *pspec = g_new0 (GdaSqlParamSpec, 1);
 			pspec->name = g_strdup_printf ("+%d", colindex);
 			pspec->g_type = tcol->gtype != G_TYPE_INVALID ? tcol->gtype: G_TYPE_STRING;
@@ -858,7 +858,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 			expr->param_spec = pspec;
 			insert_values_list = g_slist_append (insert_values_list, expr);
 		}
-		if (update) {
+		if (update_stmt) {
 			GdaSqlParamSpec *pspec = g_new0 (GdaSqlParamSpec, 1);
 			pspec->name = g_strdup_printf ("+%d", colindex);
 			pspec->g_type = tcol->gtype != G_TYPE_INVALID ? tcol->gtype: G_TYPE_STRING;
@@ -872,7 +872,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 	g_hash_table_destroy (fields_hash);
 
 	/* finish the statements */
-	if (insert) {
+	if (insert_stmt) {
 		GdaSqlStatement *st;
 
 		if (!ist->fields_list) {
@@ -889,7 +889,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 		ret_insert = g_object_new (GDA_TYPE_STATEMENT, "structure", st, NULL);
 		gda_sql_statement_free (st);
 	}
-	if (update) {
+	if (update_stmt) {
 		GdaSqlStatement *st;
 		st = gda_sql_statement_new (GDA_SQL_STATEMENT_UPDATE);
 		st->contents = ust;
@@ -897,7 +897,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 		ret_update = g_object_new (GDA_TYPE_STATEMENT, "structure", st, NULL);
 		gda_sql_statement_free (st);
 	}
-	if (delete) {
+  	if (delete_stmt) {
 		GdaSqlStatement *st;
 		st = gda_sql_statement_new (GDA_SQL_STATEMENT_DELETE);
 		st->contents = dst;
@@ -924,12 +924,12 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 		cinfo->free (dst);
 	}
 		
-	if (insert)
-		*insert = ret_insert;
-	if (update)
-		*update = ret_update;
-	if (delete)
-		*delete = ret_delete;
+	if (insert_stmt)
+		*insert_stmt = ret_insert;
+	if (update_stmt)
+		*update_stmt = ret_update;
+	if (delete_stmt)
+		*delete_stmt = ret_delete;
 	return retval;
 }
 
