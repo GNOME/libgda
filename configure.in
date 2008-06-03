@@ -551,27 +551,39 @@ then
 	then
 		AC_MSG_WARN(Postgres backend not used)
 	else
-		if test -f ${postgresdir}/include/libpq-fe.h
+		if test -f ${postgresdir}/bin/pg_config
 		then
-			POSTGRES_CFLAGS=-I${postgresdir}/include
-		elif test -f ${postgresdir}/include/pgsql/libpq-fe.h
-		then
-			POSTGRES_CFLAGS=-I${postgresdir}/include/pgsql
-		elif test -f ${postgresdir}/include/postgresql/libpq-fe.h
-		then
-			POSTGRES_CFLAGS=-I${postgresdir}/include/postgresql
-                elif test -f ${postgresdir}/include/postgresql/8.0/libpq-fe.h
-		then
-			POSTGRES_CFLAGS=-I${postgresdir}/include/8.0/postgresql
-                elif test -f ${postgresdir}/include/postgresql/7.4/libpq-fe.h
-		then
-			POSTGRES_CFLAGS=-I${postgresdir}/include/7.4/postgresql
+			PG_CONFIG=${postgresdir}/bin/pg_config
+			POSTGRES_CFLAGS=-I`${PG_CONFIG} --includedir`
+			POSTGRES_LIBS="-L`${PG_CONFIG} --libdir` -lpq"
+			AC_DEFINE(HAVE_POSTGRES, 1, [Have PostgreSQL])
 		else
-			AC_MSG_WARN(Postgres include files not found, backend not used)
-			postgresdir=""
+			if test -f ${postgresdir}/include/libpq-fe.h
+			then
+				POSTGRES_CFLAGS=-I${postgresdir}/include
+				AC_DEFINE(HAVE_POSTGRES, 1, [Have PostgreSQL])
+			elif test -f ${postgresdir}/include/pgsql/libpq-fe.h
+			then
+				POSTGRES_CFLAGS=-I${postgresdir}/include/pgsql
+				AC_DEFINE(HAVE_POSTGRES, 1, [Have PostgreSQL])
+			elif test -f ${postgresdir}/include/postgresql/libpq-fe.h
+			then
+				POSTGRES_CFLAGS=-I${postgresdir}/include/postgresql
+				AC_DEFINE(HAVE_POSTGRES, 1, [Have PostgreSQL])
+                	elif test -f ${postgresdir}/include/postgresql/8.2/libpq-fe.h
+			then
+				POSTGRES_CFLAGS=-I${postgresdir}/include/8.2/postgresql
+				AC_DEFINE(HAVE_POSTGRES, 1, [Have PostgreSQL])
+                	elif test -f ${postgresdir}/include/postgresql/8.3/libpq-fe.h
+			then
+				POSTGRES_CFLAGS=-I${postgresdir}/include/8.3/postgresql
+				AC_DEFINE(HAVE_POSTGRES, 1, [Have PostgreSQL])
+			else
+				AC_MSG_WARN(Postgres include files not found, backend not used)
+				postgresdir=""
+			fi
+			POSTGRES_LIBS="-L${postgresdir}/lib -lpq"
 		fi
-		POSTGRES_LIBS="-L${postgresdir}/lib -lpq"
-		AC_DEFINE(HAVE_POSTGRES, 1, [Have PostgreSQL])
 	fi
 fi
 

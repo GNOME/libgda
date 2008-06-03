@@ -114,6 +114,7 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 	klass->cancel = NULL;
 	klass->create_connection = NULL;
 	memset (&(klass->meta_funcs), 0, sizeof (GdaServerProviderMeta));
+	klass->xa_funcs = NULL;
 
 	 /* Properties */
         object_class->set_property = gda_server_provider_set_property;

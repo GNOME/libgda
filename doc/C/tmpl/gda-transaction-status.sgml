@@ -6,16 +6,20 @@ Keeps track of the transactional status of a connection
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-On any connection (as a #GdaConnection object), if the database provider used by the connection
-supports it, transactions may be started, committed or rolledback, or savepoints added, removed or rolledback.
-These operations can be performed using Libgda's API (such as gda_connection_begin_transaction()), or directly
-using some SQL on the connection (usually a "BEGIN;" command). The #GdaTransactionStatus's aim is to 
-make it easy to keep track of all the commands which have been issued on a connection regarding transactions.
+  On any connection (as a #GdaConnection object), if the database provider used by the connection
+  supports it, transactions may be started, committed or rolledback, or savepoints added, removed or rolledback.
+  These operations can be performed using Libgda's API (such as gda_connection_begin_transaction()), or directly
+  using some SQL on the connection (usually a "BEGIN;" command). The #GdaTransactionStatus's aim is to 
+  make it easy to keep track of all the commands which have been issued on a connection regarding transactions.
 </para>
 <para>
-One #GdaTransactionStatus object is automatically attached to a #GdaConnection when a transaction is started, and
-is destroyed when the transaction is finished. A pointer to this object can be fetched using
-gda_connection_get_transaction_status() (beware that it should then not be modified).
+  One #GdaTransactionStatus object is automatically attached to a #GdaConnection when a transaction is started, and
+  is destroyed when the transaction is finished. A pointer to this object can be fetched using
+  gda_connection_get_transaction_status() (beware that it should then not be modified). The end user is not
+  supposed to instantiate #GdaTransactionStatus objects
+</para>
+<para>
+  #GdaTransactionStatus's attributes are directly accessible using the public members of the object.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -70,13 +74,4 @@ gda_connection_get_transaction_status() (beware that it should then not be modif
 
 @GDA_TRANSACTION_STATUS_STATE_OK: 
 @GDA_TRANSACTION_STATUS_STATE_FAILED: 
-
-<!-- ##### FUNCTION gda_transaction_status_new ##### -->
-<para>
-
-</para>
-
-@name: 
-@Returns: 
-
 

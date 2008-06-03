@@ -462,6 +462,17 @@ _gda_postgres_meta__el_types (GdaServerProvider *prov, GdaConnection *cnc,
 	GdaDataModel *model;
 	gboolean retval;
 
+	/* check correct postgres server version */
+	PostgresConnectionData *cdata;
+	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return FALSE;
+	if (cdata->version_float < 8.2) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
+			     _("PostgreSQL version 8.2.0 at least is required"));
+		return FALSE;
+	}
+
 	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_EL_TYPES_ALL], NULL, 
 							 error);
 	if (!model)
@@ -483,9 +494,20 @@ _gda_postgres_meta_el_types (GdaServerProvider *prov, GdaConnection *cnc,
 
 	gda_holder_set_value (gda_set_get_holder (i_set, "name"), specific_name);
 	cstr = g_value_get_string (specific_name);
-	if (*cstr == 'C')
+	if (*cstr == 'C') {
+		/* check correct postgres server version */
+		PostgresConnectionData *cdata;
+		cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+		if (!cdata)
+			return FALSE;
+		if (cdata->version_float < 8.2) {
+			g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
+				     _("PostgreSQL version 8.2.0 at least is required"));
+			return FALSE;
+		}
 		model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_EL_TYPES_COL], i_set, 
 								 error);
+	}
 	else if (*cstr == 'D')
 		model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_EL_TYPES_DOM], i_set, 
 								 error);
@@ -591,6 +613,17 @@ _gda_postgres_meta__tables_views (GdaServerProvider *prov, GdaConnection *cnc,
 	GdaDataModel *tables_model, *views_model;
 	gboolean retval = TRUE;
 
+	/* check correct postgres server version */
+	PostgresConnectionData *cdata;
+	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return FALSE;
+	if (cdata->version_float < 8.2) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
+			     _("PostgreSQL version 8.2.0 at least is required"));
+		return FALSE;
+	}
+
 	tables_model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_TABLES_ALL], i_set, error);
 	if (!tables_model)
 		return FALSE;
@@ -624,6 +657,17 @@ _gda_postgres_meta_tables_views (GdaServerProvider *prov, GdaConnection *cnc,
 {
 	GdaDataModel *tables_model, *views_model;
 	gboolean retval = TRUE;
+
+	/* check correct postgres server version */
+	PostgresConnectionData *cdata;
+	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return FALSE;
+	if (cdata->version_float < 8.2) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
+			     _("PostgreSQL version 8.2.0 at least is required"));
+		return FALSE;
+	}
 
 	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog);
 	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema);
@@ -730,9 +774,15 @@ _gda_postgres_meta_columns (GdaServerProvider *prov, GdaConnection *cnc,
 		G_TYPE_INT, G_TYPE_NONE
 	};
 
+	/* check correct postgres server version */
 	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata)
 		return FALSE;
+	if (cdata->version_float < 8.2) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
+			     _("PostgreSQL version 8.2.0 at least is required"));
+		return FALSE;
+	}
 
 	/* use a prepared statement for the "base" model */
 	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog);
@@ -780,6 +830,17 @@ _gda_postgres_meta__view_cols (GdaServerProvider *prov, GdaConnection *cnc,
 {
 	GdaDataModel *model;
 	gboolean retval;
+
+	/* check correct postgres server version */
+	PostgresConnectionData *cdata;
+	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return FALSE;
+	if (cdata->version_float < 8.2) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
+			     _("PostgreSQL version 8.2.0 at least is required"));
+		return FALSE;
+	}
 
 	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_VIEWS_COLUMNS_ALL], i_set, error);
 	if (!model)
@@ -989,6 +1050,17 @@ _gda_postgres_meta__triggers (GdaServerProvider *prov, GdaConnection *cnc,
 	GdaDataModel *model;
 	gboolean retval;
 
+	/* check correct postgres server version */
+	PostgresConnectionData *cdata;
+	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return FALSE;
+	if (cdata->version_float < 8.2) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
+			     _("PostgreSQL version 8.2.0 at least is required"));
+		return FALSE;
+	}
+
 	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_TRIGGERS_ALL], NULL, 
 							 error);
 	if (!model)
@@ -1007,6 +1079,17 @@ _gda_postgres_meta_triggers (GdaServerProvider *prov, GdaConnection *cnc,
 {
 	GdaDataModel *model;
 	gboolean retval = TRUE;
+
+	/* check correct postgres server version */
+	PostgresConnectionData *cdata;
+	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return FALSE;
+	if (cdata->version_float < 8.2) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
+			     _("PostgreSQL version 8.2.0 at least is required"));
+		return FALSE;
+	}
 
 	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog);
 	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema);

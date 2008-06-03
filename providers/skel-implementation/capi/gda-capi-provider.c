@@ -112,6 +112,23 @@ static GObject             *gda_capi_provider_statement_execute (GdaServerProvid
 								 guint *task_id, GdaServerProviderAsyncCallback async_cb, 
 								 gpointer cb_data, GError **error);
 
+/* distributed transactions */
+static gboolean gda_capi_provider_xa_start    (GdaServerProvider *provider, GdaConnection *cnc, 
+						   const GdaXaTransactionId *xid, GError **error);
+
+static gboolean gda_capi_provider_xa_end      (GdaServerProvider *provider, GdaConnection *cnc, 
+						   const GdaXaTransactionId *xid, GError **error);
+static gboolean gda_capi_provider_xa_prepare  (GdaServerProvider *provider, GdaConnection *cnc, 
+						   const GdaXaTransactionId *xid, GError **error);
+
+static gboolean gda_capi_provider_xa_commit   (GdaServerProvider *provider, GdaConnection *cnc, 
+						   const GdaXaTransactionId *xid, GError **error);
+static gboolean gda_capi_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *cnc, 
+						   const GdaXaTransactionId *xid, GError **error);
+
+static GList   *gda_capi_provider_xa_recover  (GdaServerProvider *provider, GdaConnection *cnc, 
+						   GError **error);
+
 /* 
  * private connection data destroy 
  */
@@ -219,6 +236,15 @@ gda_capi_provider_class_init (GdaCapiProviderClass *klass)
 	provider_class->meta_funcs.routine_col = _gda_capi_meta_routine_col;
 	provider_class->meta_funcs._routine_par = _gda_capi_meta__routine_par;
 	provider_class->meta_funcs.routine_par = _gda_capi_meta_routine_par;
+
+	/* distributed transactions: if not supported, then provider_class->xa_funcs should be set to NULL */
+	provider_class->xa_funcs = g_new0 (GdaServerProviderXa, 1);
+	provider_class->xa_funcs->xa_start = gda_capi_provider_xa_start;
+	provider_class->xa_funcs->xa_end = gda_capi_provider_xa_end;
+	provider_class->xa_funcs->xa_prepare = gda_capi_provider_xa_prepare;
+	provider_class->xa_funcs->xa_commit = gda_capi_provider_xa_commit;
+	provider_class->xa_funcs->xa_rollback = gda_capi_provider_xa_rollback;
+	provider_class->xa_funcs->xa_recover = gda_capi_provider_xa_recover;
 }
 
 static void
@@ -1035,6 +1061,135 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 		gda_connection_internal_statement_executed (cnc, stmt, params, event); /* required: help @cnc keep some stats */
 		return (GObject*) set;
 	}
+}
+
+/*
+ * starts a distributed transaction: put the XA transaction in the ACTIVE state
+ */
+static gboolean
+gda_capi_provider_xa_start (GdaServerProvider *provider, GdaConnection *cnc, 
+				const GdaXaTransactionId *xid, GError **error)
+{
+	CapiConnectionData *cdata;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (xid, FALSE);
+
+	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata) 
+		return FALSE;
+
+	TO_IMPLEMENT;
+	return FALSE;
+}
+
+/*
+ * put the XA transaction in the IDLE state: the connection won't accept any more modifications.
+ * This state is required by some database providers before actually going to the PREPARED state
+ */
+static gboolean
+gda_capi_provider_xa_end (GdaServerProvider *provider, GdaConnection *cnc, 
+			      const GdaXaTransactionId *xid, GError **error)
+{
+	CapiConnectionData *cdata;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (xid, FALSE);
+
+	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata) 
+		return FALSE;
+
+	TO_IMPLEMENT;
+	return FALSE;
+}
+
+/*
+ * prepares the distributed transaction: put the XA transaction in the PREPARED state
+ */
+static gboolean
+gda_capi_provider_xa_prepare (GdaServerProvider *provider, GdaConnection *cnc, 
+				  const GdaXaTransactionId *xid, GError **error)
+{
+	CapiConnectionData *cdata;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (xid, FALSE);
+
+	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata) 
+		return FALSE;
+
+	TO_IMPLEMENT;
+	return FALSE;
+}
+
+/*
+ * commits the distributed transaction: actually write the prepared data to the database and
+ * terminates the XA transaction
+ */
+static gboolean
+gda_capi_provider_xa_commit (GdaServerProvider *provider, GdaConnection *cnc, 
+				 const GdaXaTransactionId *xid, GError **error)
+{
+	CapiConnectionData *cdata;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (xid, FALSE);
+
+	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata) 
+		return FALSE;
+
+	TO_IMPLEMENT;
+	return FALSE;
+}
+
+/*
+ * Rolls back an XA transaction, possible only if in the ACTIVE, IDLE or PREPARED state
+ */
+static gboolean
+gda_capi_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *cnc, 
+				   const GdaXaTransactionId *xid, GError **error)
+{
+	CapiConnectionData *cdata;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (xid, FALSE);
+
+	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata) 
+		return FALSE;
+
+	TO_IMPLEMENT;
+	return FALSE;
+}
+
+/*
+ * Lists all XA transactions that are in the PREPARED state
+ *
+ * Returns: a list of GdaXaTransactionId structures, which will be freed by the caller
+ */
+static GList *
+gda_capi_provider_xa_recover (GdaServerProvider *provider, GdaConnection *cnc,
+				  GError **error)
+{
+	CapiConnectionData *cdata;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, NULL);
+
+	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata) 
+		return NULL;
+
+	TO_IMPLEMENT;
+	return NULL;
 }
 
 /*

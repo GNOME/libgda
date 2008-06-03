@@ -69,6 +69,7 @@ gda_headers = \
 	gda-transaction-status-private.h \
 	gda-util.h \
 	gda-value.h \
+	gda-xa-transaction.h \
 	libgda.h 
 
 libgda_sources =  \
@@ -116,6 +117,7 @@ libgda_sources =  \
 	gda-transaction-status.c \
 	gda-util.c \
 	gda-value.c \
+	gda-xa-transaction.c \
 	global.h \
 	md5.h \
 	md5c.c

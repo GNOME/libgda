@@ -1,3 +1,19 @@
+2008-06-03  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in: use pg_config if possible to get PostgreSQL's
+	compilation arguments
+	* providers/postgres/gda-postgres-meta.c: check that the server's
+	version is at least 8.2 before using pg_is_other_temp_schema() in SQL
+	* libgda/Makefile.am:
+	* libgda/gda-xa-transaction.[ch]: new distributed transaction manager
+	* libgda/gda-server-provider.[ch]:
+	* libgda/libgda.h.in:
+	* libgda/sqlite/gda-sqlite-provider.c:
+	* providers/postgres/gda-postgres-provider.c:
+	* providers/skel-implementation/capi/gda-capi-provider.c: support for
+	the new distributed transaction manager object
+	* doc/C: doc updates
+
 2008-06-01  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/sqlite/gda-sqlite-provider.c:

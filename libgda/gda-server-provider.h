@@ -31,6 +31,7 @@
 #include <libgda/gda-quark-list.h>
 #include <libgda/gda-statement.h>
 #include <libgda/gda-meta-store.h>
+#include <libgda/gda-xa-transaction.h>
 
 G_BEGIN_DECLS
 
@@ -54,7 +55,8 @@ typedef enum
 	GDA_SERVER_PROVIDER_OPERATION_ERROR,
 	GDA_SERVER_PROVIDER_INTERNAL_ERROR,
 	GDA_SERVER_PROVIDER_BUSY_ERROR,
-	GDA_SERVER_PROVIDER_NON_SUPPORTED_ERROR
+	GDA_SERVER_PROVIDER_NON_SUPPORTED_ERROR,
+	GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR
 } GdaServerProviderError;
 
 struct _GdaServerProvider {
@@ -177,6 +179,19 @@ typedef struct {
 	
 } GdaServerProviderMeta;
 
+/* distributed transaction support */
+typedef struct {
+	gboolean (*xa_start)    (GdaServerProvider *, GdaConnection *, const GdaXaTransactionId *, GError **);
+
+	gboolean (*xa_end)      (GdaServerProvider *, GdaConnection *, const GdaXaTransactionId *, GError **);
+	gboolean (*xa_prepare)  (GdaServerProvider *, GdaConnection *, const GdaXaTransactionId *, GError **);
+
+	gboolean (*xa_commit)   (GdaServerProvider *, GdaConnection *, const GdaXaTransactionId *, GError **);
+	gboolean (*xa_rollback) (GdaServerProvider *, GdaConnection *, const GdaXaTransactionId *, GError **);
+
+	GList   *(*xa_recover)  (GdaServerProvider *, GdaConnection *, GError **);
+} GdaServerProviderXa;
+
 typedef void (*GdaServerProviderAsyncCallback) (GdaServerProvider *provider, GdaConnection *cnc, guint task_id, 
 						gboolean result_status, gpointer data);
 
@@ -250,7 +265,12 @@ struct _GdaServerProviderClass {
 	gboolean                (* cancel)               (GdaServerProvider *provider, GdaConnection *cnc, 
 							  guint task_id, GError **error);
 	GdaConnection          *(* create_connection)    (GdaServerProvider *provider);
+
+	/* meta data reporting */
 	GdaServerProviderMeta      meta_funcs;
+
+	/* distributed transaction */
+	GdaServerProviderXa       *xa_funcs; /* it is a pointer! => set to %NULL if unsupported by provider */
 
 	/* Padding for future expansion */
 	void                    (*_gda_reserved1)        (void);

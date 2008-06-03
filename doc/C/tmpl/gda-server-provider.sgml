@@ -63,6 +63,7 @@ Base class for all the DBMS providers
 @cancel: 
 @create_connection: 
 @meta_funcs: 
+@xa_funcs: 
 @_gda_reserved1: 
 @_gda_reserved2: 
 @_gda_reserved3: 
@@ -84,6 +85,7 @@ Base class for all the DBMS providers
 @GDA_SERVER_PROVIDER_INTERNAL_ERROR: 
 @GDA_SERVER_PROVIDER_BUSY_ERROR: 
 @GDA_SERVER_PROVIDER_NON_SUPPORTED_ERROR: 
+@GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR: 
 
 <!-- ##### STRUCT GdaServerProviderMeta ##### -->
 <para>

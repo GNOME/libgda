@@ -119,6 +119,23 @@ static GObject             *gda_postgres_provider_statement_execute (GdaServerPr
 								     guint *task_id, GdaServerProviderAsyncCallback async_cb, 
 								     gpointer cb_data, GError **error);
 
+/* distributed transactions */
+static gboolean gda_postgres_provider_xa_start    (GdaServerProvider *provider, GdaConnection *cnc, 
+						   const GdaXaTransactionId *xid, GError **error);
+
+static gboolean gda_postgres_provider_xa_end      (GdaServerProvider *provider, GdaConnection *cnc, 
+						   const GdaXaTransactionId *xid, GError **error);
+static gboolean gda_postgres_provider_xa_prepare  (GdaServerProvider *provider, GdaConnection *cnc, 
+						   const GdaXaTransactionId *xid, GError **error);
+
+static gboolean gda_postgres_provider_xa_commit   (GdaServerProvider *provider, GdaConnection *cnc, 
+						   const GdaXaTransactionId *xid, GError **error);
+static gboolean gda_postgres_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *cnc, 
+						   const GdaXaTransactionId *xid, GError **error);
+
+static GList   *gda_postgres_provider_xa_recover  (GdaServerProvider *provider, GdaConnection *cnc, 
+						   GError **error);
+
 /* 
  * private connection data destroy 
  */
@@ -136,12 +153,20 @@ typedef enum {
 	I_STMT_BEGIN,
 	I_STMT_COMMIT,
 	I_STMT_ROLLBACK,
+	I_STMT_XA_PREPARE,
+	I_STMT_XA_COMMIT,
+	I_STMT_XA_ROLLBACK,
+	I_STMT_XA_RECOVER
 } InternalStatementItem;
 
 gchar *internal_sql[] = {
 	"BEGIN",
 	"COMMIT",
-	"ROLLBACK"
+	"ROLLBACK",
+	"PREPARE TRANSACTION ##xid::string",
+	"COMMIT PREPARED ##xid::string",
+	"ROLLBACK PREPARED ##xid::string",
+	"SELECT gid FROM pg_catalog.pg_prepared_xacts"
 };
 
 /*
@@ -227,6 +252,14 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	provider_class->meta_funcs.routine_col = _gda_postgres_meta_routine_col;
 	provider_class->meta_funcs._routine_par = _gda_postgres_meta__routine_par;
 	provider_class->meta_funcs.routine_par = _gda_postgres_meta_routine_par;
+	
+	provider_class->xa_funcs = g_new0 (GdaServerProviderXa, 1);
+	provider_class->xa_funcs->xa_start = gda_postgres_provider_xa_start;
+	provider_class->xa_funcs->xa_end = gda_postgres_provider_xa_end;
+	provider_class->xa_funcs->xa_prepare = gda_postgres_provider_xa_prepare;
+	provider_class->xa_funcs->xa_commit = gda_postgres_provider_xa_commit;
+	provider_class->xa_funcs->xa_rollback = gda_postgres_provider_xa_rollback;
+	provider_class->xa_funcs->xa_recover = gda_postgres_provider_xa_recover;
 }
 
 static void
@@ -2110,6 +2143,165 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 	gda_connection_internal_statement_executed (cnc, stmt, params, NULL); /* required: help @cnc keep some stats */
 	return retval;
 }
+
+/*
+ * starts a distributed transaction: put the XA transaction in the ACTIVE state
+ */
+static gboolean
+gda_postgres_provider_xa_start (GdaServerProvider *provider, GdaConnection *cnc, 
+				const GdaXaTransactionId *xid, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (xid, FALSE);
+
+	return gda_postgres_provider_begin_transaction (provider, cnc, NULL, 
+							GDA_TRANSACTION_ISOLATION_READ_COMMITTED, error);
+}
+
+/*
+ * put the XA transaction in the IDLE state: the connection won't accept any more modifications.
+ * This state is required by some database providers before actually going to the PREPARED state
+ */
+static gboolean
+gda_postgres_provider_xa_end (GdaServerProvider *provider, GdaConnection *cnc, 
+			      const GdaXaTransactionId *xid, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (xid, FALSE);
+
+	/* nothing to do for PostgreSQL here */
+	return TRUE;
+}
+
+/*
+ * prepares the distributed transaction: put the XA transaction in the PREPARED state
+ */
+static gboolean
+gda_postgres_provider_xa_prepare (GdaServerProvider *provider, GdaConnection *cnc, 
+				  const GdaXaTransactionId *xid, GError **error)
+{
+	GdaSet *params;
+	gint affected;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (xid, FALSE);
+
+	if (!gda_statement_get_parameters (internal_stmt [I_STMT_XA_PREPARE], &params, error))
+		return FALSE;
+	if (!gda_set_set_holder_value (params, "xid", gda_xa_transaction_id_to_string (xid))) {
+		g_object_unref (params);
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+			     _("Could not set the XA transaction ID parameter"));
+		return FALSE;
+	}
+	affected = gda_connection_statement_execute_non_select (cnc, internal_stmt [I_STMT_XA_PREPARE], params, 
+								NULL, error);
+	g_object_unref (params);
+	if (affected == -1)
+		return FALSE;
+	else
+		return TRUE;
+}
+
+/*
+ * commits the distributed transaction: actually write the prepared data to the database and
+ * terminates the XA transaction
+ */
+static gboolean
+gda_postgres_provider_xa_commit (GdaServerProvider *provider, GdaConnection *cnc, 
+				 const GdaXaTransactionId *xid, GError **error)
+{
+	GdaSet *params;
+	gint affected;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (xid, FALSE);
+
+	if (!gda_statement_get_parameters (internal_stmt [I_STMT_XA_PREPARE], &params, error))
+		return FALSE;
+	if (!gda_set_set_holder_value (params, "xid", gda_xa_transaction_id_to_string (xid))) {
+		g_object_unref (params);
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+			     _("Could not set the XA transaction ID parameter"));
+		return FALSE;
+	}
+	affected = gda_connection_statement_execute_non_select (cnc, internal_stmt [I_STMT_XA_COMMIT], params, 
+								NULL, error);
+	g_object_unref (params);
+	if (affected == -1)
+		return FALSE;
+	else
+		return TRUE;
+}
+
+/*
+ * Rolls back an XA transaction, possible only if in the ACTIVE, IDLE or PREPARED state
+ */
+static gboolean
+gda_postgres_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *cnc, 
+				   const GdaXaTransactionId *xid, GError **error)
+{
+	GdaSet *params;
+	gint affected;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (xid, FALSE);
+
+	if (!gda_statement_get_parameters (internal_stmt [I_STMT_XA_PREPARE], &params, error))
+		return FALSE;
+	if (!gda_set_set_holder_value (params, "xid", gda_xa_transaction_id_to_string (xid))) {
+		g_object_unref (params);
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+			     _("Could not set the XA transaction ID parameter"));
+		return FALSE;
+	}
+	affected = gda_connection_statement_execute_non_select (cnc, internal_stmt [I_STMT_XA_ROLLBACK], params, 
+								NULL, error);
+	g_object_unref (params);
+	if (affected == -1)
+		return FALSE;
+	else
+		return TRUE;
+}
+
+/*
+ * Lists all XA transactions that are in the PREPARED state
+ *
+ * Returns: a list of GdaXaTransactionId structures, which will be freed by the caller
+ */
+static GList *
+gda_postgres_provider_xa_recover (GdaServerProvider *provider, GdaConnection *cnc,
+				  GError **error)
+{
+	GdaDataModel *model;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, NULL);
+
+	model = gda_connection_statement_execute_select (cnc, internal_stmt [I_STMT_XA_RECOVER], NULL, error);
+	if (!model)
+		return NULL;
+	else {
+		GList *list = NULL;
+		gint i, nrows;
+		
+		nrows = gda_data_model_get_n_rows (model);
+		for (i = 0; i < nrows; i++) {
+			const GValue *cvalue = gda_data_model_get_value_at (model, 0, i);
+			if (cvalue && !gda_value_is_null (cvalue))
+				list = g_list_prepend (list, 
+						       gda_xa_transaction_string_to_id (g_value_get_string (cvalue)));
+		}
+		g_object_unref (model);
+		return list;
+	}
+}
+
 
 /*
  * Free connection's specific data

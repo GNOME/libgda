@@ -70,6 +70,7 @@
 <!ENTITY libgda-serverop-intro SYSTEM "server-operation.xml">
 <!ENTITY libgda-virtual SYSTEM "virtual.xml">
 <!ENTITY libgda-virtual-notice SYSTEM "virtual-notice.xml">
+<!ENTITY libgda-xa-transaction SYSTEM "xml/gda-xa-transaction.xml">
 <!ENTITY libgda-transaction-status SYSTEM "xml/gda-transaction-status.xml">
 <!ENTITY libgda-util SYSTEM "xml/gda-util.xml">
 <!ENTITY libgda-GValue SYSTEM "xml/gda-value.xml">
@@ -503,6 +504,7 @@
       &libgda-GdaSqlStatement;
       &libgda-GdaConnection-event;
       &libgda-transaction-status;
+      &libgda-xa-transaction;
       &GdaStoreMetaType;
     </chapter>
 

@@ -269,6 +269,9 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 	provider_class->meta_funcs.routine_col = _gda_sqlite_meta_routine_col;
 	provider_class->meta_funcs._routine_par = _gda_sqlite_meta__routine_par;
 	provider_class->meta_funcs.routine_par = _gda_sqlite_meta_routine_par;
+
+	/* SQLite doe not support distributed transactions */
+	provider_class->xa_funcs = NULL;
 }
 
 static void

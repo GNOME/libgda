@@ -662,15 +662,38 @@ gda_threader_get_type
 </SECTION>
 
 <SECTION>
+<FILE>gda-xa-transaction</FILE>
+<TITLE>GdaXaTransaction</TITLE>
+GdaXaTransaction
+GdaXaTransactionError
+GdaXaTransactionId
+gda_xa_transaction_new
+gda_xa_transaction_register_connection
+gda_xa_transaction_unregister_connection
+gda_xa_transaction_begin
+gda_xa_transaction_commit
+gda_xa_transaction_rollback
+gda_xa_transaction_commit_recovered
+<SUBSECTION>
+gda_xa_transaction_id_to_string
+gda_xa_transaction_string_to_id
+<SUBSECTION Standard>
+GDA_IS_XA_TRANSACTION
+GDA_IS_XA_TRANSACTION_CLASS
+GDA_XA_TRANSACTION
+GDA_XA_TRANSACTION_CLASS
+GDA_TYPE_XA_TRANSACTION
+gda_xa_transaction_get_type
+</SECTION>
+
+<SECTION>
 <FILE>gda-transaction-status</FILE>
 <TITLE>GdaTransactionStatus</TITLE>
 GdaTransactionStatus
-_GdaTransactionStatus
 GdaTransactionIsolation
 GdaTransactionStatusEvent
 GdaTransactionStatusEventType
 GdaTransactionStatusState
-gda_transaction_status_new
 <SUBSECTION Standard>
 GDA_IS_TRANSACTION_STATUS
 GDA_IS_TRANSACTION_STATUS_CLASS
