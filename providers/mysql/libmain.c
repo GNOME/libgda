@@ -47,7 +47,7 @@ plugin_get_name (void)
 const gchar *
 plugin_get_description (void)
 {
-	return _("Example provider for C API databases");
+	return _("Provider for MySQL databases");
 }
 
 gchar *

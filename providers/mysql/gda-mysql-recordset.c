@@ -83,7 +83,6 @@ struct _GdaMysqlRecordsetPrivate {
 	/* TO_ADD: specific information */
 	
 	MYSQL_STMT  *mysql_stmt;
-	MYSQL_BIND  *mysql_bind;    /* Array to bind columns in the result set. */
 
 	gint  chunk_size;    /* Number of rows to fetch at a time when iterating forward/backward. */
 	gint  chunks_read;   /* Number of times that we've iterated forward/backward. */
@@ -218,16 +217,6 @@ gda_mysql_recordset_dispose (GObject  *object)
 		/* free specific information */
 		// TO_IMPLEMENT;
 		
-                gint i;
-                for (i = 0; i < (((GdaPModel *)recset)->prep_stmt)->ncols; ++i) {
-                        g_free (recset->priv->mysql_bind[i].buffer);
-                        g_free (recset->priv->mysql_bind[i].is_null);
-                        g_free (recset->priv->mysql_bind[i].length);
-                }
-                g_free (recset->priv->mysql_bind);
-                recset->priv->mysql_bind = NULL;
-
-		
 		g_free (recset->priv);
 		recset->priv = NULL;
 	}
@@ -277,9 +266,6 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
         MysqlConnectionData *cdata;
         gint i;
 	GdaDataModelAccessFlags rflags;
-	
-	MYSQL_BIND *mysql_bind = NULL;
-	
 
         g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
         g_return_val_if_fail (ps != NULL, NULL);
@@ -326,7 +312,7 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 		MYSQL_RES *mysql_res = mysql_stmt_result_metadata (cdata->mysql_stmt);
 		MYSQL_FIELD *mysql_fields = mysql_fetch_fields (mysql_res);
 		
-		mysql_bind = g_new0 (MYSQL_BIND, GDA_PSTMT (ps)->ncols);
+		MYSQL_BIND *mysql_bind_result = g_new0 (MYSQL_BIND, GDA_PSTMT (ps)->ncols);
 		//		
 		/* fill GdaColumn's data */
 		for (i=0, list = _GDA_PSTMT (ps)->tmpl_columns; 
@@ -365,19 +351,19 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 			*/
 
 			
-			mysql_bind[i].buffer_type = field->type;
-			switch (mysql_bind[i].buffer_type) {
+			mysql_bind_result[i].buffer_type = field->type;
+			switch (mysql_bind_result[i].buffer_type) {
 			case MYSQL_TYPE_TINY:
 			case MYSQL_TYPE_SHORT:
 			case MYSQL_TYPE_INT24:
 			case MYSQL_TYPE_LONG:
 			case MYSQL_TYPE_YEAR:
-				mysql_bind[i].buffer = g_malloc0 (sizeof(int));
-				mysql_bind[i].is_null = g_malloc0 (sizeof(my_bool));
+				mysql_bind_result[i].buffer = g_malloc0 (sizeof(int));
+				mysql_bind_result[i].is_null = g_malloc0 (sizeof(my_bool));
 				break;
 			case MYSQL_TYPE_LONGLONG:
-				mysql_bind[i].buffer = g_malloc0 (sizeof(long long));
-				mysql_bind[i].is_null = g_malloc0 (sizeof(my_bool));
+				mysql_bind_result[i].buffer = g_malloc0 (sizeof(long long));
+				mysql_bind_result[i].is_null = g_malloc0 (sizeof(my_bool));
 				break;
 			case MYSQL_TYPE_NULL:
 				break;
@@ -385,13 +371,13 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 			case MYSQL_TYPE_DATE:
 			case MYSQL_TYPE_DATETIME:
 			case MYSQL_TYPE_TIMESTAMP:
-				mysql_bind[i].buffer = g_malloc0 (sizeof(MYSQL_TIME));
-				mysql_bind[i].is_null = g_malloc0 (sizeof(my_bool));
+				mysql_bind_result[i].buffer = g_malloc0 (sizeof(MYSQL_TIME));
+				mysql_bind_result[i].is_null = g_malloc0 (sizeof(my_bool));
 				break;
 			case MYSQL_TYPE_FLOAT:
 			case MYSQL_TYPE_DOUBLE:
-				mysql_bind[i].buffer = g_malloc0 (sizeof(double));
-				mysql_bind[i].is_null = g_malloc0 (sizeof(my_bool));
+				mysql_bind_result[i].buffer = g_malloc0 (sizeof(double));
+				mysql_bind_result[i].is_null = g_malloc0 (sizeof(my_bool));
 				break;
 			case MYSQL_TYPE_STRING:
 			case MYSQL_TYPE_VAR_STRING:
@@ -401,23 +387,25 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 			case MYSQL_TYPE_LONG_BLOB:
 			case MYSQL_TYPE_NEWDECIMAL:
 			case MYSQL_TYPE_BIT:
-				mysql_bind[i].buffer = g_malloc0 (field->max_length + 1);
-				mysql_bind[i].buffer_length = field->max_length + 1;
-				mysql_bind[i].length = g_malloc0 (sizeof(unsigned long));
+				mysql_bind_result[i].buffer = g_malloc0 (field->max_length + 1);
+				mysql_bind_result[i].buffer_length = field->max_length + 1;
+				mysql_bind_result[i].length = g_malloc0 (sizeof(unsigned long));
 				break;
 			default:
-				g_warning (_("Invalid column bind data type.\n"),
-					   mysql_bind[i].buffer_type);
+				g_warning (_("Invalid column bind data type. %d\n"),
+					   mysql_bind_result[i].buffer_type);
 			}
 			
 		}
 		
-                if (mysql_stmt_bind_result (cdata->mysql_stmt, mysql_bind)) {
+                if (mysql_stmt_bind_result (cdata->mysql_stmt, mysql_bind_result)) {
                         g_warning ("mysql_stmt_bind_result failed: %s\n", mysql_stmt_error (cdata->mysql_stmt));
                 }
 		
 		mysql_free_result (mysql_res);
-		
+
+		ps->mysql_bind_result = mysql_bind_result;
+
         }
 
 	/* determine access mode: RANDOM or CURSOR FORWARD are the only supported */
@@ -436,9 +424,6 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 
 	/* post init specific code */
 	// TO_IMPLEMENT;
-	
-	if (mysql_bind != NULL)
-		model->priv->mysql_bind = mysql_bind;
 	
 	model->priv->mysql_stmt = cdata->mysql_stmt;
 
@@ -479,18 +464,18 @@ new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel,
 	g_print ("*** %s -- %d -- %d\n", __func__,
 		 ((GdaPModel *) imodel)->prep_stmt->ncols, rownum);
 	
-	MYSQL_BIND *mysql_bind = imodel->priv->mysql_bind;
-	g_assert (mysql_bind);
+	MYSQL_BIND *mysql_bind_result = ((GdaMysqlPStmt *) ((GdaPModel *) imodel)->prep_stmt)->mysql_bind_result;
+	g_assert (mysql_bind_result);
 	
 	GdaPRow *prow = gda_prow_new (((GdaPModel *) imodel)->prep_stmt->ncols);
 	gint col;
 	for (col = 0; col < ((GdaPModel *) imodel)->prep_stmt->ncols; ++col) {
 		
-		GValue *value = gda_prow_get_value (prow, col);
-		GType type = ((GdaPModel *) imodel)->prep_stmt->types[col];
-		gda_value_reset_with_type (value, type);
-		
 		gint i = col;
+		
+		GValue *value = gda_prow_get_value (prow, i);
+		GType type = ((GdaPModel *) imodel)->prep_stmt->types[i];
+		gda_value_reset_with_type (value, type);
 		
 		int intvalue = 0;
 		long long longlongvalue = 0;
@@ -500,14 +485,14 @@ new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel,
 		my_bool is_null;
 		unsigned long length;
 		
-		switch (mysql_bind[i].buffer_type) {
+		switch (mysql_bind_result[i].buffer_type) {
 		case MYSQL_TYPE_TINY:
 		case MYSQL_TYPE_SHORT:
 		case MYSQL_TYPE_INT24:
 		case MYSQL_TYPE_LONG:
 		case MYSQL_TYPE_YEAR:
-			g_memmove (&intvalue, mysql_bind[i].buffer, sizeof(int));
-			g_memmove (&is_null, mysql_bind[i].is_null, sizeof(my_bool));
+			g_memmove (&intvalue, mysql_bind_result[i].buffer, sizeof(int));
+			g_memmove (&is_null, mysql_bind_result[i].is_null, sizeof(my_bool));
 			
 			if (type == G_TYPE_INT)
 				g_value_set_int (value, intvalue);
@@ -521,8 +506,8 @@ new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel,
 			}
 			break;
 		case MYSQL_TYPE_LONGLONG:
-			g_memmove (&longlongvalue, mysql_bind[i].buffer, sizeof(long long));
-			g_memmove (&is_null, mysql_bind[i].is_null, sizeof(my_bool));
+			g_memmove (&longlongvalue, mysql_bind_result[i].buffer, sizeof(long long));
+			g_memmove (&is_null, mysql_bind_result[i].is_null, sizeof(my_bool));
 			break;
 		case MYSQL_TYPE_NULL:
 			g_value_unset (value);
@@ -531,8 +516,8 @@ new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel,
 		case MYSQL_TYPE_DATE:
 		case MYSQL_TYPE_DATETIME:
 		case MYSQL_TYPE_TIMESTAMP:
-			g_memmove (&timevalue, mysql_bind[i].buffer, sizeof(MYSQL_TIME));
-			g_memmove (&is_null, mysql_bind[i].is_null, sizeof(my_bool));
+			g_memmove (&timevalue, mysql_bind_result[i].buffer, sizeof(MYSQL_TIME));
+			g_memmove (&is_null, mysql_bind_result[i].is_null, sizeof(my_bool));
 
 			if (type == GDA_TYPE_TIME) {
 				GdaTime time = {
@@ -566,8 +551,8 @@ new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel,
 			break;
 		case MYSQL_TYPE_FLOAT:
 		case MYSQL_TYPE_DOUBLE:
-			g_memmove (&doublevalue, mysql_bind[i].buffer, sizeof(double));
-			g_memmove (&is_null, mysql_bind[i].is_null, sizeof(my_bool));
+			g_memmove (&doublevalue, mysql_bind_result[i].buffer, sizeof(double));
+			g_memmove (&is_null, mysql_bind_result[i].is_null, sizeof(my_bool));
 			
 			setlocale (LC_NUMERIC, "C");
 			if (type == G_TYPE_FLOAT)
@@ -589,8 +574,8 @@ new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel,
 		case MYSQL_TYPE_LONG_BLOB:
 		case MYSQL_TYPE_NEWDECIMAL:
 		case MYSQL_TYPE_BIT:
-			g_memmove (&length, mysql_bind[i].length, sizeof(unsigned long));
-			strvalue = g_memdup (mysql_bind[i].buffer, length + 1);
+			g_memmove (&length, mysql_bind_result[i].length, sizeof(unsigned long));
+			strvalue = g_memdup (mysql_bind_result[i].buffer, length + 1);
 			
 			if (type == G_TYPE_STRING)
 				g_value_set_string (value, strvalue);
@@ -604,7 +589,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel,
 				GdaBlob *blob = (GdaBlob *) gda_value_new_blob
 					((const guchar *) strvalue, (gulong) length);
 				gda_value_take_blob (value, blob);
-				gda_value_free (blob);
+				gda_value_free ((GValue *) blob);
 			} else if (type == G_TYPE_DOUBLE) {
 				setlocale (LC_NUMERIC, "C");
 				g_value_set_double (value, atof (strvalue));
@@ -617,9 +602,13 @@ new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel,
 			break;
 		default:
 			g_warning (_("Invalid column bind data type. %d\n"),
-				   mysql_bind[i].buffer_type);
+				   mysql_bind_result[i].buffer_type);
 		}
-		
+		//
+		gchar *str = gda_value_stringify (value);
+		g_print ("   V=%s, %d\n", str, is_null);
+		g_free (str);
+		//		
 	}
 	return prow;
 }
@@ -670,7 +659,7 @@ gda_mysql_recordset_fetch_random (GdaPModel  *model,
 	gda_pmodel_take_row (model, *prow, rownum);
 	
 	/* if (model->nb_stored_rows == model->advertized_nrows) { */
-	/* 	g_print ("*** All the row have been converted..."); */
+	/* 	g_print ("  All the row have been converted..."); */
 	/* } */
 	
 

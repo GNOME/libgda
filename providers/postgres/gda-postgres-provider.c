@@ -1416,6 +1416,7 @@ gda_postgres_provider_supports_feature (GdaServerProvider *provider, GdaConnecti
         case GDA_CONNECTION_FEATURE_USERS:
         case GDA_CONNECTION_FEATURE_VIEWS:
         case GDA_CONNECTION_FEATURE_BLOBS:
+        case GDA_CONNECTION_FEATURE_XA_TRANSACTIONS:
                 return TRUE;
         case GDA_CONNECTION_FEATURE_NAMESPACES:
                 if (cnc) {

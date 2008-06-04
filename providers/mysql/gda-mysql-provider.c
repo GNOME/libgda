@@ -158,6 +158,36 @@ static GObject             *gda_mysql_provider_statement_execute (GdaServerProvi
 								  GdaServerProviderAsyncCallback   async_cb, 
 								  gpointer                         cb_data,
 								  GError                         **error);
+//
+
+/* distributed transactions */
+static gboolean gda_mysql_provider_xa_start    (GdaServerProvider         *provider,
+						GdaConnection             *cnc, 
+						const GdaXaTransactionId  *xid,
+						GError                   **error);
+
+static gboolean gda_mysql_provider_xa_end      (GdaServerProvider         *provider,
+						GdaConnection             *cnc, 
+						const GdaXaTransactionId  *xid,
+						GError                   **error);
+static gboolean gda_mysql_provider_xa_prepare  (GdaServerProvider         *provider,
+						GdaConnection             *cnc, 
+						const GdaXaTransactionId  *xid,
+						GError                   **error);
+
+static gboolean gda_mysql_provider_xa_commit   (GdaServerProvider        *provider,
+						GdaConnection            *cnc, 
+						const GdaXaTransactionId  *xid,
+						GError                   **error);
+static gboolean gda_mysql_provider_xa_rollback (GdaServerProvider         *provider,
+						GdaConnection             *cnc, 
+						const GdaXaTransactionId  *xid,
+						GError                   **error);
+
+static GList   *gda_mysql_provider_xa_recover  (GdaServerProvider  *provider,
+						GdaConnection      *cnc, 
+						GError            **error);
+//
 
 /* 
  * private connection data destroy 
@@ -238,7 +268,6 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass  *klass)
         provider_class->meta_funcs._constraints_dom = _gda_mysql_meta__constraints_dom;
         provider_class->meta_funcs.constraints_dom = _gda_mysql_meta_constraints_dom;
         provider_class->meta_funcs._el_types = _gda_mysql_meta__el_types;
-        provider_class->meta_funcs.el_types = _gda_mysql_meta_el_types;
         provider_class->meta_funcs._collations = _gda_mysql_meta__collations;
         provider_class->meta_funcs.collations = _gda_mysql_meta_collations;
         provider_class->meta_funcs._character_sets = _gda_mysql_meta__character_sets;
@@ -267,6 +296,17 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass  *klass)
         provider_class->meta_funcs.routine_col = _gda_mysql_meta_routine_col;
         provider_class->meta_funcs._routine_par = _gda_mysql_meta__routine_par;
         provider_class->meta_funcs.routine_par = _gda_mysql_meta_routine_par;
+	//
+
+	/* distributed transactions: if not supported, then provider_class->xa_funcs should be set to NULL */
+	provider_class->xa_funcs = g_new0 (GdaServerProviderXa, 1);
+	provider_class->xa_funcs->xa_start = gda_mysql_provider_xa_start;
+	provider_class->xa_funcs->xa_end = gda_mysql_provider_xa_end;
+	provider_class->xa_funcs->xa_prepare = gda_mysql_provider_xa_prepare;
+	provider_class->xa_funcs->xa_commit = gda_mysql_provider_xa_commit;
+	provider_class->xa_funcs->xa_rollback = gda_mysql_provider_xa_rollback;
+	provider_class->xa_funcs->xa_recover = gda_mysql_provider_xa_recover;
+	//
 }
 
 static void
@@ -489,19 +529,19 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 					     (use_ssl != NULL) ? TRUE : FALSE,
 					     &error);
 	if (!mysql) {
-		_gda_mysql_make_error (cnc, mysql, NULL);
+		_gda_mysql_make_error (cnc, mysql, NULL, NULL);
 		return FALSE;
 	}
 
 	MYSQL_STMT *mysql_stmt = mysql_stmt_init (mysql);
 	if (!mysql_stmt) {
-		_gda_mysql_make_error (cnc, mysql, NULL);
+		_gda_mysql_make_error (cnc, NULL, mysql_stmt, NULL);
 		return FALSE;
 	}
 
 	my_bool update_max_length = 1;
 	if (mysql_stmt_attr_set (mysql_stmt, STMT_ATTR_UPDATE_MAX_LENGTH, (const void *) &update_max_length)) {
-		_gda_mysql_make_error (cnc, mysql, NULL);
+		_gda_mysql_make_error (cnc, NULL, mysql_stmt, NULL);
 		return FALSE;
 	}
 	
@@ -1155,7 +1195,7 @@ gda_mysql_provider_statement_prepare (GdaServerProvider  *provider,
 	GSList *used_set = NULL;
 	gchar *sql = gda_mysql_provider_statement_to_sql
 		(provider, cnc, stmt, set,
-		 GDA_STATEMENT_SQL_PARAMS_AS_QMARK, &used_set, error);
+		 GDA_STATEMENT_SQL_PARAMS_AS_UQMARK, &used_set, error);
 
 	
 	if (!sql)
@@ -1163,7 +1203,7 @@ gda_mysql_provider_statement_prepare (GdaServerProvider  *provider,
 
 	if (mysql_stmt_prepare (cdata->mysql_stmt, sql, strlen (sql))) {
 		GdaConnectionEvent *event = _gda_mysql_make_error
-			(cdata->cnc, cdata->mysql, NULL);
+			(cdata->cnc, NULL, cdata->mysql_stmt, NULL);
 		goto cleanup;
 	}
 
@@ -1224,7 +1264,7 @@ prepare_stmt_simple (MysqlConnectionData  *cdata,
 	
 	if (mysql_stmt_prepare (cdata->mysql_stmt, sql, strlen (sql))) {
 		GdaConnectionEvent *event = _gda_mysql_make_error
-			(cdata->cnc, cdata->mysql, NULL);
+			(cdata->cnc, NULL, cdata->mysql_stmt, NULL);
 		ps = NULL;
 	} else {
 		ps = gda_mysql_pstmt_new (cdata->cnc, cdata->mysql, cdata->mysql_stmt);
@@ -1310,6 +1350,9 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 	/* optionnally reset the prepared statement if required by the API */
 	// TO_IMPLEMENT;
 	
+	//
+	g_print ("   %s: SQL=%s\n", __func__, _GDA_PSTMT(ps)->sql);
+	//
 	/* bind statement's parameters */
 	GSList *list;
 	GdaConnectionEvent *event = NULL;
@@ -1319,15 +1362,13 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 	char **param_values = g_new0 (char *, nb_params + 1);
         int *param_lengths = g_new0 (int, nb_params + 1);
         int *param_formats = g_new0 (int, nb_params + 1);
-	g_print ("NB=%d\n", nb_params);
-	
-	for (i = 1, list = _GDA_PSTMT (ps)->param_ids; list; list = list->next, i++) {
-		const gchar *pname = (gchar *) list->data;
-		GdaHolder *h;
+	g_print ("NB=%d, SQL=%s\n", nb_params, _GDA_PSTMT(ps)->sql);
 
-		
-		g_print ("PNAME=%s\n", pname);
-		//		
+	MYSQL_BIND *mysql_bind_param = g_new0 (MYSQL_BIND, nb_params);
+	
+	for (i = 0, list = _GDA_PSTMT (ps)->param_ids; list; list = list->next, i++) {
+		const gchar *pname = (gchar *) list->data;
+
 		/* find requested parameter */
 		if (!params) {
 			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
@@ -1338,7 +1379,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			break;
 		}
 
-		h = gda_set_get_holder (params, pname);
+		GdaHolder *h = gda_set_get_holder (params, pname);
 		if (!h) {
 			gchar *tmp = gda_alphanum_to_text (g_strdup (pname + 1));
 			if (tmp) {
@@ -1359,11 +1400,58 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 
 		/* actual binding using the C API, for parameter at position @i */
 		const GValue *value = gda_holder_get_value (h);
-		TO_IMPLEMENT;
+		// TO_IMPLEMENT;
+
+		if (value == NULL || gda_value_is_null (value)) {
+			param_values[i] = NULL;
+		} else if ((G_VALUE_TYPE(value) == G_TYPE_DATE) ||
+			   (G_VALUE_TYPE(value) == GDA_TYPE_TIME) ||
+			   (G_VALUE_TYPE(value) == GDA_TYPE_TIMESTAMP)) {
+			//
+			GdaHandlerTime *handler_time = (GdaHandlerTime *) gda_server_provider_get_data_handler_gtype
+				(provider, cnc, G_VALUE_TYPE(value));
+			g_assert (handler_time);
+			param_values[i] = gda_handler_time_get_no_locale_str_from_value (handler_time,
+											 value);
+			//
+			g_print ("--- TIME=%s\n", param_values[i]);
+		} else {
+			GdaDataHandler *data_handler = gda_server_provider_get_data_handler_gtype
+				(provider, cnc, G_VALUE_TYPE(value));
+			if (data_handler == NULL)
+				param_values[i] = NULL;
+			else
+				param_values[i] = gda_data_handler_get_str_from_value (data_handler,
+										       value);
+			g_print ("--- PV=%s\n", param_values[i]);
+
+			mysql_bind_param[i].buffer_type = MYSQL_TYPE_STRING;
+			mysql_bind_param[i].buffer = g_strdup (param_values[i]);
+			mysql_bind_param[i].buffer_length = strlen (param_values[i]);
+			mysql_bind_param[i].length = g_malloc0 (sizeof(unsigned long));
+
+		}
+		//
+		gchar *str = gda_value_stringify (value);
+		g_print ("   %s: %s=%s\n", __func__, pname, str);
+		g_free (str);
+		//
+
 	}
 		
+	if (mysql_stmt_bind_param (cdata->mysql_stmt, mysql_bind_param)) {
+		g_warning ("mysql_stmt_bind_param failed: %s\n", mysql_stmt_error (cdata->mysql_stmt));
+	}
+
+	ps->mysql_bind_param = mysql_bind_param;
+
 	if (event) {
 		gda_connection_add_event (cnc, event);
+
+		g_strfreev (param_values);
+		g_free (param_lengths);
+		g_free (param_formats);
+
 		return NULL;
 	}
 	
@@ -1375,7 +1463,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 	
 	GObject *return_value = NULL;
 	if (mysql_stmt_execute (cdata->mysql_stmt)) {
-		event = _gda_mysql_make_error (cnc, cdata->mysql, error);
+		event = _gda_mysql_make_error (cnc, NULL, cdata->mysql_stmt, error);
 	} else {
 		//	
 		/* execute prepared statement using C API depending on its kind */
@@ -1385,7 +1473,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 		    !g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "EXPLAIN", 7)) {
 			
 			if (mysql_stmt_store_result (cdata->mysql_stmt)) {
-				_gda_mysql_make_error (cnc, cdata->mysql, error);
+				_gda_mysql_make_error (cnc, NULL, cdata->mysql_stmt, error);
 			} else {
 				GdaDataModelAccessFlags flags;
 
@@ -1428,6 +1516,152 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 	}
 	return return_value;
 	
+}
+
+/*
+ * starts a distributed transaction: put the XA transaction in the ACTIVE state
+ */
+static gboolean
+gda_mysql_provider_xa_start (GdaServerProvider         *provider,
+			     GdaConnection             *cnc, 
+			     const GdaXaTransactionId  *xid,
+			     GError                   **error)
+{
+	g_print ("*** %s\n", __func__);
+	MysqlConnectionData *cdata;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (xid, FALSE);
+
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata) 
+		return FALSE;
+
+	TO_IMPLEMENT;
+	return FALSE;
+}
+
+/*
+ * put the XA transaction in the IDLE state: the connection won't accept any more modifications.
+ * This state is required by some database providers before actually going to the PREPARED state
+ */
+static gboolean
+gda_mysql_provider_xa_end (GdaServerProvider         *provider,
+			   GdaConnection             *cnc, 
+			   const GdaXaTransactionId  *xid,
+			   GError                   **error)
+{
+	g_print ("*** %s\n", __func__);
+	MysqlConnectionData *cdata;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (xid, FALSE);
+
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata) 
+		return FALSE;
+
+	TO_IMPLEMENT;
+	return FALSE;
+}
+
+/*
+ * prepares the distributed transaction: put the XA transaction in the PREPARED state
+ */
+static gboolean
+gda_mysql_provider_xa_prepare (GdaServerProvider         *provider,
+			       GdaConnection             *cnc, 
+			       const GdaXaTransactionId  *xid,
+			       GError                   **error)
+{
+	g_print ("*** %s\n", __func__);
+	MysqlConnectionData *cdata;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (xid, FALSE);
+
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata) 
+		return FALSE;
+
+	TO_IMPLEMENT;
+	return FALSE;
+}
+
+/*
+ * commits the distributed transaction: actually write the prepared data to the database and
+ * terminates the XA transaction
+ */
+static gboolean
+gda_mysql_provider_xa_commit (GdaServerProvider         *provider,
+			      GdaConnection             *cnc, 
+			      const GdaXaTransactionId  *xid,
+			      GError                   **error)
+{
+	g_print ("*** %s\n", __func__);
+	MysqlConnectionData *cdata;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (xid, FALSE);
+
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata) 
+		return FALSE;
+
+	TO_IMPLEMENT;
+	return FALSE;
+}
+
+/*
+ * Rolls back an XA transaction, possible only if in the ACTIVE, IDLE or PREPARED state
+ */
+static gboolean
+gda_mysql_provider_xa_rollback (GdaServerProvider         *provider,
+				GdaConnection             *cnc, 
+				const GdaXaTransactionId  *xid,
+				GError                   **error)
+{
+	g_print ("*** %s\n", __func__);
+	MysqlConnectionData *cdata;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (xid, FALSE);
+
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata) 
+		return FALSE;
+
+	TO_IMPLEMENT;
+	return FALSE;
+}
+
+/*
+ * Lists all XA transactions that are in the PREPARED state
+ *
+ * Returns: a list of GdaXaTransactionId structures, which will be freed by the caller
+ */
+static GList *
+gda_mysql_provider_xa_recover (GdaServerProvider  *provider,
+			       GdaConnection      *cnc,
+			       GError            **error)
+{
+	g_print ("*** %s\n", __func__);
+	MysqlConnectionData *cdata;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, NULL);
+
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata) 
+		return NULL;
+
+	TO_IMPLEMENT;
+	return NULL;
 }
 
 /*

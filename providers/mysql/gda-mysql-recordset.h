@@ -48,9 +48,13 @@ struct _GdaMysqlRecordsetClass {
 	GdaPModelClass             parent_class;
 };
 
-GType         gda_mysql_recordset_get_type  (void) G_GNUC_CONST;
-GdaDataModel *gda_mysql_recordset_new       (GdaConnection *cnc, GdaMysqlPStmt *ps, GdaDataModelAccessFlags flags, 
-					    GType *col_types);
+GType
+gda_mysql_recordset_get_type  (void) G_GNUC_CONST;
+GdaDataModel *
+gda_mysql_recordset_new       (GdaConnection            *cnc,
+			       GdaMysqlPStmt            *ps,
+			       GdaDataModelAccessFlags   flags, 
+			       GType                    *col_types);
 
 G_END_DECLS
 

@@ -26,6 +26,7 @@ libgda/gda-set.c
 libgda/gda-statement.c
 libgda/gda-util.c
 libgda/gda-value.c
+libgda/gda-xa-transaction.c
 libgda/handlers/gda-handler-bin.c
 libgda/handlers/gda-handler-boolean.c
 libgda/handlers/gda-handler-numerical.c

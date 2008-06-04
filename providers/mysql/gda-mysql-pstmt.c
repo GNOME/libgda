@@ -2,7 +2,7 @@
  * Copyright (C) 2008 The GNOME Foundation.
  *
  * AUTHORS:
- *      TO_ADD: your name and email
+ *      Carlos Savoretti <csavoretti@gmail.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -82,6 +82,10 @@ gda_mysql_pstmt_init (GdaMysqlPStmt       *pstmt,
 	
 	/* initialize specific parts of @pstmt */
 	// TO_IMPLEMENT;
+	//
+	pstmt->mysql_bind_param = NULL;
+	pstmt->mysql_bind_result = NULL;
+	//
 }
 
 static void
@@ -94,6 +98,23 @@ gda_mysql_pstmt_finalize (GObject  *object)
 
 	/* free memory */
 	// TO_IMPLEMENT; /* free some specific parts of @pstmt */
+	//
+	gint i;
+	for (i = 0; i < g_slist_length (((GdaPStmt *) pstmt)->param_ids); ++i) {
+		g_free (pstmt->mysql_bind_param[i].buffer);
+		g_free (pstmt->mysql_bind_param[i].length);
+	}
+	g_free (pstmt->mysql_bind_param);
+	pstmt->mysql_bind_param = NULL;
+
+	for (i = 0; i < ((GdaPStmt *) pstmt)->ncols; ++i) {
+		g_free (pstmt->mysql_bind_result[i].buffer);
+		g_free (pstmt->mysql_bind_result[i].is_null);
+		g_free (pstmt->mysql_bind_result[i].length);
+	}
+	g_free (pstmt->mysql_bind_result);
+	pstmt->mysql_bind_result = NULL;
+	//
 
 	/* chain to parent class */
 	parent_class->finalize (object);

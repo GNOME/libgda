@@ -43,6 +43,8 @@ struct _GdaMysqlPStmt {
 	GdaConnection  *cnc;
 	MYSQL          *mysql;
 	MYSQL_STMT     *mysql_stmt;
+	MYSQL_BIND     *mysql_bind_param;
+	MYSQL_BIND     *mysql_bind_result;
 	
 };
 

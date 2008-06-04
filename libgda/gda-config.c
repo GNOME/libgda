@@ -1063,7 +1063,8 @@ gda_config_get_provider_info (const gchar *provider_name)
  * @error: a place to store errors, or %NULL
  *
  * Get a pointer to the session-wide #GdaServerProvider for the
- * provider named @provider_name
+ * provider named @provider_name. The caller must not call g_object_unref() on the
+ * returned object.
  *
  * Returns: a pointer to the #GdaServerProvider, or %NULL if an error occurred
  */

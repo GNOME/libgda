@@ -49,7 +49,8 @@
  */
 GdaConnectionEvent *
 _gda_mysql_make_error (GdaConnection  *cnc,
-		       MYSQL          *mysql, /* PGresult *pg_res, */
+		       MYSQL          *mysql,
+		       MYSQL_STMT     *mysql_stmt,
 		       GError        **error)
 {
 	/* GdaConnectionEvent *error_ev; */
@@ -114,6 +115,19 @@ _gda_mysql_make_error (GdaConnection  *cnc,
 			(event_error, mysql_errno (mysql));
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR,
 			     mysql_sqlstate (mysql));
+		//
+		g_print ("%s: %s\n", __func__, mysql_error (mysql));
+		//
+	} else if (mysql_stmt) {
+		gda_connection_event_set_description
+			(event_error, mysql_stmt_error (mysql_stmt));
+		gda_connection_event_set_code
+			(event_error, mysql_stmt_errno (mysql_stmt));
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR,
+			     mysql_stmt_sqlstate (mysql_stmt));
+		//
+		g_print ("%s: %s\n", __func__, mysql_stmt_error (mysql_stmt));
+		//
 	} else {
 		gda_connection_event_set_description
 			(event_error, _("No description"));

@@ -44,6 +44,7 @@ static gboolean append_a_row (GdaDataModel  *to_model,
 typedef enum {
 	I_STMT_CATALOG,
         I_STMT_BTYPES,
+        I_STMT_SCHEMAS_ALL,
 } InternalStatementItem;
 
 
@@ -60,6 +61,7 @@ static gchar *internal_sql[] = {
         /* I_STMT_SCHEMAS */
 
         /* I_STMT_SCHEMAS_ALL */
+	"SELECT catalog_name, schema_name, 'mysql', CASE schema_name WHEN 'information_schema' THEN TRUE WHEN 'mysql' THEN TRUE ELSE FALSE END   FROM information_schema.schemata",
 
         /* I_STMT_SCHEMA_NAMED */
 
@@ -170,15 +172,16 @@ _gda_mysql_meta__info (GdaServerProvider  *prov,
 		       GdaMetaContext     *context,
 		       GError            **error)
 {
+	g_print ("*** %s\n", __func__);
 	GdaDataModel *model;
         gboolean retval;
-
         model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_CATALOG], NULL, error);
-        if (!model)
-                return FALSE;
-
-        retval = gda_meta_store_modify (store, context->table_name, model, NULL, error, NULL);
-        g_object_unref (model);
+        if (model == NULL)
+                retval = FALSE;
+	else {
+		retval = gda_meta_store_modify (store, context->table_name, model, NULL, error, NULL);
+		g_object_unref (G_OBJECT(model));
+	}
 
         return retval;
 }
@@ -191,20 +194,20 @@ _gda_mysql_meta__btypes (GdaServerProvider  *prov,
 			 GError            **error)
 {
 	g_print ("*** %s\n", __func__);
-        GdaDataModel *model;
-        gboolean retval = TRUE;
 	GType col_types[] = {
                 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING,
                 G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_NONE
         };
+        GdaDataModel *model;
+        gboolean retval;
 	model = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_BTYPES], NULL,
                                                               GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types, error);
-        if (!model)
-                return FALSE;
-
-        if (retval)
+        if (model == NULL)
+                retval = FALSE;
+	else {
                 retval = gda_meta_store_modify (store, context->table_name, model, NULL, error, NULL);
-        g_object_unref (G_OBJECT(model));
+		g_object_unref (G_OBJECT(model));
+	}
 
         return retval;
 }
@@ -229,23 +232,26 @@ _gda_mysql_meta_udt (GdaServerProvider  *prov,
 		     const GValue       *udt_catalog,
 		     const GValue       *udt_schema)
 {
-	GdaDataModel *model;
-	gboolean retval = TRUE;
-
-	/* set internal holder's values from the arguments */
-	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), udt_catalog);
-	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), udt_schema);
 
 	TO_IMPLEMENT;
-	/* fill in @model, with something like:
-	 * model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_UDT], i_set, error);
-	 */
-	if (!model)
-		return FALSE;
-	retval = gda_meta_store_modify_with_context (store, context, model, error);
-	g_object_unref (model);
 
-	return retval;
+	/* /\* set internal holder's values from the arguments *\/ */
+	/* gda_holder_set_value (gda_set_get_holder (i_set, "cat"), udt_catalog); */
+	/* gda_holder_set_value (gda_set_get_holder (i_set, "schema"), udt_schema); */
+	/* GdaDataModel *model; */
+	/* gboolean retval; */
+	/* /\* fill in @model, with something like: */
+	/*  * model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_UDT], i_set, error); */
+	/*  *\/ */
+	/* if (model == NULL) */
+	/* 	retval = FALSE; */
+	/* else { */
+	/* 	retval = gda_meta_store_modify_with_context (store, context, model, error); */
+	/* 	g_object_unref (G_OBJECT(model)); */
+	/* } */
+
+	/* return retval; */
+	return TRUE;
 }
 
 
@@ -361,16 +367,6 @@ _gda_mysql_meta__el_types (GdaServerProvider  *prov,
 }
 
 gboolean
-_gda_mysql_meta_el_types (GdaServerProvider *prov, GdaConnection *cnc, 
-			  GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			  const GValue *specific_name)
-{
-	TO_IMPLEMENT;
-	return TRUE;
-}
-
-
-gboolean
 _gda_mysql_meta__collations (GdaServerProvider  *prov,
 			     GdaConnection      *cnc, 
 			     GdaMetaStore       *store,
@@ -427,8 +423,20 @@ _gda_mysql_meta__schemata (GdaServerProvider  *prov,
 			   GdaMetaContext     *context,
 			   GError            **error)
 {
-	TO_IMPLEMENT;
-	return TRUE;
+	g_print ("*** %s\n", __func__);
+	// TO_IMPLEMENT;
+
+	GdaDataModel *model;
+	gboolean retval;
+	model = gda_connection_statement_execute_select	(cnc, internal_stmt[I_STMT_SCHEMAS_ALL], i_set, error);
+	if (model == NULL)
+		retval = FALSE;
+	else {
+		retval = gda_meta_store_modify_with_context (store, context, model, error);
+		g_object_unref (G_OBJECT(model));
+	}
+
+	return retval;
 }
 
 gboolean

@@ -31,6 +31,7 @@ G_BEGIN_DECLS
 GdaConnectionEvent *
 _gda_mysql_make_error               (GdaConnection  *cnc,
 				     MYSQL          *mysql,
+				     MYSQL_STMT     *mysql_stmt,
 				     GError        **error);
 /* int */
 /* _gda_mysql_real_query_wrap          (GdaConnection  *cnc, */
