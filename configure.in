@@ -40,7 +40,7 @@ AC_SUBST(GDA_CURRENT)
 AC_SUBST(GDA_REVISION)
 AC_SUBST(GDA_AGE)
 
-AC_PROG_INTLTOOL([0.35.5])
+IT_PROG_INTLTOOL([0.35.5])
 AC_SUBST(INTLTOOL_XML_RULE)
 
 AC_DEFINE_UNQUOTED(BONOBO_EXPLICIT_TRANSLATION_DOMAIN, "libgda-$LIBGDA_ABI_VERSION")
@@ -109,7 +109,6 @@ dnl ******************************
 GETTEXT_PACKAGE=libgda-$LIBGDA_ABI_VERSION
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE")
-ALL_LINGUAS="ar az ca cs da de dz el en_CA en_GB es eu fa fi fr ga gl hr hu it ja ko lt mk ml ms nb ne nl oc pa pl pt pt_BR ru rw sk sl sq sr sr@Latn sv tr uk vi zh_CN zh_HK zh_TW"
 AM_GLIB_GNU_GETTEXT
 
 
@@ -131,16 +130,16 @@ PKG_CHECK_MODULES(LIBGDA, [
 ])
 TST_CFLAGS="$LIBGDA_CFLAGS"
 LIBGDA_CFLAGS="$LIBGDA_CFLAGS -DLIBGDA_ABI_NAME=$LIBGDA_ABI_NAME"
-AC_SUBST(LIBGDA_CFLAGS)
-AC_SUBST(LIBGDA_LIBS)
 
 dnl ******************************
 dnl Check for Win32
 dnl ******************************
+dnl linklibext is the shared link library extension, which varies by platform
 
 AC_MSG_CHECKING([for platform])
 platform_win32=no
 platform_carbon=no
+linklibext=".so"
 case "$host" in
 *-cygwin*)
     AC_MSG_RESULT([Win32 - cygwin])
@@ -148,14 +147,17 @@ case "$host" in
     NO_UNDEFINED='-no-undefined'
     SOPREFIX='cyg'
     LIBTOOL_EXPORT_OPTIONS=
+    linklibext=".dll.a"
     AC_MSG_RESULT([Win32])
     ;;
 *-mingw*)
     AC_MSG_RESULT([Win32 - MinGW])
     platform_win32=yes
+    AC_DEFINE(USING_MINGW)
     NO_UNDEFINED='-no-undefined'
     SOPREFIX='lib'
     LIBTOOL_EXPORT_OPTIONS=
+    linklibext=".dll.a"
     ;;
 *-*-darwin*)
     dnl Darwin based distributions (including Mac OS X)
@@ -279,12 +281,6 @@ x86_64* | sparc64* | s390x* | ppc64* | powerpc64* ) lib="lib64";;
 *) lib="lib";;
 esac
 
-dnl this is the shared link library extension, which varies by platform
-case $host_os in
-	cygwin*) linklibext=".dll.a" ;;
-	*) linklibext=".so" ;;
-esac
-
 dnl Test for Berkeley DB
 try_bdb=true
 AC_ARG_WITH(bdb,
@@ -294,7 +290,7 @@ then
 	try_bdb=false
 elif test $withval = yes
 then
-	dir="/usr"
+	dir="/usr /usr/local"
 else
 	dir=$withval
 fi
@@ -311,13 +307,25 @@ then
 		fi
 	else
 		AC_MSG_CHECKING(for Berkeley DB files)
-		for d in $dir /usr /usr/local
+		for d in $dir
 		do
-			if test -f $d/$lib/libdb$linklibext -a -f $d/include/db.h
+			if test $platform_win32 = yes -a -f $d/include/db.h -a -f $d/bin/libdb47.dll
 			then
 				AC_MSG_RESULT(found Berkeley DB in $d)
-				bdblib="-ldb"
+				AC_DEFINE(HAVE_BDB, 1, [Have Berkeley DB])
 				bdbdir=$d
+				BDB_CFLAGS="-I${bdbdir}/include"
+				BDB_LIBS="-L${bdbdir}/bin -ldb47"
+				break
+			fi
+
+			if test $platform_win32 = no -a -f $d/include/db.h -a -f $d/$lib/libdb$linklibext
+			then
+				AC_MSG_RESULT(found Berkeley DB in $d)
+				AC_DEFINE(HAVE_BDB, 1, [Have Berkeley DB])
+				bdbdir=$d
+				BDB_CFLAGS="-I${bdbdir}/include"
+				BDB_LIBS="-L${bdbdir}/${lib} -ldb"
 				break
 			fi
 			dnl FIXME: check for db1 (non-sleepycat implementation)
@@ -325,16 +333,13 @@ then
 		if test x$bdbdir = x
 		then
 			AC_MSG_WARN(Berkeley DB backend not used)
-		else
-			AC_DEFINE(HAVE_BDB, 1, [Have Berkeley DB])
-			BDB_CFLAGS="-I${bdbdir}/include"
-			BDB_LIBS="-L${bdbdir}/lib ${bdblib}"
 		fi
 	fi
 fi
 
 AM_CONDITIONAL(BDB, test x$bdbdir != x)
 if test x$bdbdir != x; then
+	LIBGDA_CFLAGS="$LIBGDA_CFLAGS $BDB_CFLAGS"
 	LIBGDA_BDB_INC="#include <libgda/gda-data-model-bdb.h>"
 	LIBGDA_BDB_TYPE="gda_data_model_bdb_get_type"
 fi
@@ -396,66 +401,60 @@ fi
 AM_CONDITIONAL(ODBC, test x$odbcdir != x)
 
 dnl Test for MySQL
-try_mysql=true
+mysql_req=none
 AC_ARG_WITH(mysql,
 [  --with-mysql=<directory>	use mysql backend in <directory>],[
 if test $withval = no
 then
-	try_mysql=false
+	mysql_req=none
 elif test $withval = yes
 then
-	dir="/usr/local"
+	mysql_req=none
+	if test $cross_compiling = yes
+	then
+		AC_MSG_WARN(Can't auto determine Mysql installation in cross-compiling environment)
+	else
+		AC_MSG_CHECKING(for MySQL files)
+		AC_PATH_PROG(MYSQL_CONFIG, mysql_config)
+	fi
 else
-	dir=$withval
+	AC_MSG_CHECKING(for MySQL files in $withval)
+	if test $cross_compiling = yes
+	then
+		mysql_req=$withval	
+	else
+		AC_PATH_PROG(MYSQL_CONFIG, mysql_config, [], $withval/bin)
+	fi	
 fi
 ])
 mysqldir=""
-if test $try_mysql = true
-then
-	AC_PATH_PROG(MYSQL_CONFIG, mysql_config)
 
-	if test x$MYSQL_CONFIG = x; then
-		AC_MSG_CHECKING(for MySQL files)
-		for d in $dir /usr /usr/local /usr/local/mysql /opt/mysql /opt/packages/mysql
-		do
-			if test -f $d/include/mysql/mysql.h
-			then
-				mysqldir_suffix=/mysql
-			else
-				mysqldir_suffix=
-			fi
-			if test -f $d/$lib/mysql/libmysqlclient.a -o -f $d/$lib/mysql/libmysqlclient$linklibext
-			then
-				AC_MSG_RESULT(found mysql in $d)
-				mysqldir=$d
-				mysqllibdir_suffix=/mysql
-				break
-			fi
-			if test -f $d/$lib/libmysqlclient.a -o -f $d/$lib/libmysqlclient$linklibext
-			then
-				AC_MSG_RESULT(found mysql in $d)
-				mysqldir=$d
-				mysqllibdir_suffix=
-				break
-			fi
-		done
-		if test x$mysqldir = x
+if test x$MYSQL_CONFIG != x
+then
+	mysqldir=yes
+	AC_MSG_RESULT(found mysql)
+	AC_DEFINE(HAVE_MYSQL, 1, [Have MySQL])
+	MYSQL_CFLAGS=`$MYSQL_CONFIG --cflags`
+	MYSQL_LIBS=`$MYSQL_CONFIG --libs`
+else
+	if test $cross_compiling = yes
+	then
+		if test $platform_win32 = yes -a -f $mysql_req/$lib/opt/libmysql.lib
 		then
-			AC_MSG_WARN(MySQL backend not used)
-		else
+			mysqldir=$mysql_req
+			
+			mysqllibdir_suffix=/opt
+			AC_MSG_RESULT(found mysql)
 			AC_DEFINE(HAVE_MYSQL, 1, [Have MySQL])
 			MYSQL_CFLAGS="-I${mysqldir}/include${mysqldir_suffix}"
-			MYSQL_LIBS="-L${mysqldir}/lib${mysqllibdir_suffix} -lmysqlclient"
+			MYSQL_LIBS="-L${mysqldir}/${lib}${mysqllibdir_suffix} -lmysql"
+		else
+			AC_MSG_WARN(MySQL backend not used)
 		fi
-	else
-		mysqldir=yes
-		AC_DEFINE(HAVE_MYSQL, 1, [Have MySQL])
-		MYSQL_CFLAGS=`$MYSQL_CONFIG --cflags`
-		MYSQL_LIBS=`$MYSQL_CONFIG --libs`
 	fi
 fi
-
 AM_CONDITIONAL(MYSQL, test x$mysqldir != x)
+
 
 dnl Test for mSQL
 try_msql=true
@@ -519,74 +518,58 @@ fi
 
 AM_CONDITIONAL(MSQL, test x$msqldir != x)
 
-
 dnl Test for PostgreSQL
-try_postgres=true
+postgres_req=none
 AC_ARG_WITH(postgres,
-[  --with-postgres=<directory>	use postgres backend in <directory>],[
+[  --with-postgres=<directory>	use PostgreSQL backend in <directory>],[
 if test $withval = no
 then
-	try_postgres=false
+	postgres_req=none
 elif test $withval = yes
 then
-	dir="/usr/local"
+	postgres_req=none
+	if test $cross_compiling = yes
+	then
+		AC_MSG_WARN(Can't auto determine PostgreSQL installation in cross-compiling environment)
+	else
+		AC_MSG_CHECKING(for Postgres files)
+		AC_PATH_PROG(POSTGRES_CONFIG, pg_config)
+	fi
 else
-	dir=$withval
+	AC_MSG_CHECKING(for PostgreSQL files in $withval)
+	if test $cross_compiling = yes
+	then
+		postgres_req=$withval	
+	else
+		AC_PATH_PROG(POSTGRES_CONFIG, pg_config, [], $withval/bin)
+	fi	
 fi
 ])
 postgresdir=""
-if test $try_postgres = true
+
+if test x$POSTGRES_CONFIG != x
 then
-	AC_MSG_CHECKING(for Postgres files)
-	for d in $dir /usr /usr/local/postgres /opt/postgres /opt/packages/postgres /disk/postgres /usr/local/pgsql
-	do
-		if test -f $d/$lib/libpq.a -o -f $d/$lib/libpq$linklibext
-		then
-			AC_MSG_RESULT(found Postgres in $d)
-			postgresdir=$d
-			break
-		fi
-	done
-	if test x$postgresdir = x
+	postgresdir=yes
+	AC_MSG_RESULT(found postgres)
+	AC_DEFINE(HAVE_POSTGRES, 1, [Have Postgres])
+	POSTGRES_CFLAGS=-I`$POSTGRES_CONFIG --includedir`
+	POSTGRES_LIBS="-L`$POSTGRES_CONFIG --libdir` -lpq"
+else
+	if test $cross_compiling = yes
 	then
-		AC_MSG_WARN(Postgres backend not used)
-	else
-		if test -f ${postgresdir}/bin/pg_config
+		if test $platform_win32 = yes -a -f $postgres_req/$lib/libpq.lib
 		then
-			PG_CONFIG=${postgresdir}/bin/pg_config
-			POSTGRES_CFLAGS=-I`${PG_CONFIG} --includedir`
-			POSTGRES_LIBS="-L`${PG_CONFIG} --libdir` -lpq"
-			AC_DEFINE(HAVE_POSTGRES, 1, [Have PostgreSQL])
+			postgresdir=$postgres_req
+			postgreslibdir_suffix=
+			AC_MSG_RESULT(found postgres)
+			AC_DEFINE(HAVE_POSTGRES, 1, [Have Postgres])
+			POSTGRES_CFLAGS="-I${postgresdir}/include${postgresdir_suffix}"
+			POSTGRES_LIBS="-L${postgresdir}/${lib}${postgreslibdir_suffix} -lpq"
 		else
-			if test -f ${postgresdir}/include/libpq-fe.h
-			then
-				POSTGRES_CFLAGS=-I${postgresdir}/include
-				AC_DEFINE(HAVE_POSTGRES, 1, [Have PostgreSQL])
-			elif test -f ${postgresdir}/include/pgsql/libpq-fe.h
-			then
-				POSTGRES_CFLAGS=-I${postgresdir}/include/pgsql
-				AC_DEFINE(HAVE_POSTGRES, 1, [Have PostgreSQL])
-			elif test -f ${postgresdir}/include/postgresql/libpq-fe.h
-			then
-				POSTGRES_CFLAGS=-I${postgresdir}/include/postgresql
-				AC_DEFINE(HAVE_POSTGRES, 1, [Have PostgreSQL])
-                	elif test -f ${postgresdir}/include/postgresql/8.2/libpq-fe.h
-			then
-				POSTGRES_CFLAGS=-I${postgresdir}/include/8.2/postgresql
-				AC_DEFINE(HAVE_POSTGRES, 1, [Have PostgreSQL])
-                	elif test -f ${postgresdir}/include/postgresql/8.3/libpq-fe.h
-			then
-				POSTGRES_CFLAGS=-I${postgresdir}/include/8.3/postgresql
-				AC_DEFINE(HAVE_POSTGRES, 1, [Have PostgreSQL])
-			else
-				AC_MSG_WARN(Postgres include files not found, backend not used)
-				postgresdir=""
-			fi
-			POSTGRES_LIBS="-L${postgresdir}/lib -lpq"
+			AC_MSG_WARN(Postgres backend not used)
 		fi
 	fi
 fi
-
 AM_CONDITIONAL(POSTGRES, test x$postgresdir != x)
 
 dnl Test for freetds provider
@@ -1208,6 +1191,8 @@ if test "x$enable_rebuilds" = "xyes" && \
 fi
 AC_SUBST(REBUILD)
 
+AC_SUBST(LIBGDA_CFLAGS)
+AC_SUBST(LIBGDA_LIBS)
 
 AC_OUTPUT([
 Makefile

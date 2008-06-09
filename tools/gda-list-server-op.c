@@ -55,7 +55,7 @@ main (int argc, char **argv) {
 			g_print (_("Existing operation types for provider '%s':\n"), prov);
 		else
 			g_print (_("Existing operation types:\n"));
-		for (type = GDA_SERVER_OPERATION_CREATE_DB; type < GDA_SERVER_OPERATION_NB; type++) {
+		for (type = GDA_SERVER_OPERATION_CREATE_DB; type < GDA_SERVER_OPERATION_LAST; type++) {
 			if (! prov_obj ||
 			    (prov_obj && gda_server_provider_supports_operation (prov_obj, NULL, type, NULL)))
 				g_print ("%s\n", gda_server_operation_op_type_to_string (type));
@@ -64,7 +64,7 @@ main (int argc, char **argv) {
 	}
 
 	GdaServerOperationType type;
-	for (type = GDA_SERVER_OPERATION_CREATE_DB; type != GDA_SERVER_OPERATION_NB; type++) {
+	for (type = GDA_SERVER_OPERATION_CREATE_DB; type != GDA_SERVER_OPERATION_LAST; type++) {
 		xmlDocPtr doc;
 		GError *error = NULL;
 		gboolean op_supported;

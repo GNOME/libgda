@@ -1121,7 +1121,7 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 				if (value && (G_VALUE_TYPE (value) == G_TYPE_STRING))
 					name = g_value_get_string ((GValue *) value);
 				else
-					g_warning (_("The 'NAME' parameter must hold a string value, ignored."));
+					g_warning (_("The '%s' parameter must hold a string value, ignored."), "NAME");
 			}
 		}
 
@@ -1160,7 +1160,7 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 						sep = *str;
 				}
 				else
-					g_warning (_("The 'SEPARATOR' parameter must hold a string value, ignored."));
+					g_warning (_("The '%s' parameter must hold a string value, ignored."), "SEPARATOR");
 			}
 			holder = gda_set_get_holder (options, "QUOTE");
 			if (holder) {
@@ -1174,7 +1174,7 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 						quote = *str;
 				}
 				else 
-					g_warning (_("The 'QUOTE' parameter must hold a string value, ignored."));
+					g_warning (_("The '%s' parameter must hold a string value, ignored."), "QUOTE");
 			}
 			holder = gda_set_get_holder (options, "FIELD_QUOTE");
 			if (holder) {
@@ -1183,7 +1183,7 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 				if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))
 					field_quote = g_value_get_boolean ((GValue *) value);
 				else 
-					g_warning (_("The 'FIELD_QUOTE' parameter must hold a boolean value, ignored."));
+					g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "FIELD_QUOTE");
 			}
 		}
 
@@ -1266,7 +1266,7 @@ gda_data_model_export_to_file (GdaDataModel *model, GdaDataModelIOFormat format,
 			if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))
 				overwrite = g_value_get_boolean ((GValue *) value);
 			else
-				g_warning (_("The 'OVERWRITE' parameter must hold a boolean value, ignored."));
+				g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "OVERWRITE");
 		}
 	}
 

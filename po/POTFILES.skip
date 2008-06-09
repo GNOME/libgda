@@ -34,7 +34,7 @@ providers/oracle/libmain.c
 providers/oracle/oracle_specs_drop_index.xml.in
 providers/oracle/oracle_specs_drop_table.xml.in
 providers/oracle/oracle_specs_dsn.xml.in
-providers/oracle/utils.c 
+providers/oracle/utils.c
 providers/skel-implementation/capi/capi_specs_create_table.xml.in
 providers/skel-implementation/capi/capi_specs_dsn.xml.in
 providers/skel-implementation/capi/gda-capi-blob-op.c
@@ -56,4 +56,5 @@ providers/sybase/sybase_specs_dsn.xml.in
 providers/sybase/utils.c
 providers/xbase/gda-xbase-provider.c
 providers/xbase/libmain.c
-providers/xbase/xbase_specs_dsn.xml.in 
+providers/xbase/xbase_specs_dsn.xml.in
+testing/html.c

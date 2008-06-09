@@ -8,7 +8,7 @@ main (int argc, char **argv) {
 	GdaDataModel *model;
 
 	gda_init ();
-	setenv ("GDA_DATA_MODEL_DUMP_TITLE", "TRUE", TRUE);
+	g_setenv ("GDA_DATA_MODEL_DUMP_TITLE", "TRUE", TRUE);
 
 	model = gda_config_list_providers ();
 	gda_data_model_dump (model, stdout);

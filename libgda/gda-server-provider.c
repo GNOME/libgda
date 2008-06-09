@@ -420,7 +420,7 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
 	static OpReq **op_req_table = NULL;
 
 	if (! op_req_table) {
-		op_req_table = g_new0 (OpReq *, GDA_SERVER_OPERATION_NB);
+		op_req_table = g_new0 (OpReq *, GDA_SERVER_OPERATION_LAST);
 
 		op_req_table [GDA_SERVER_OPERATION_CREATE_DB] = op_req_CREATE_DB;
 		op_req_table [GDA_SERVER_OPERATION_DROP_DB] = op_req_DROP_DB;

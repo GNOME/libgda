@@ -40,6 +40,9 @@
 #include <libxml/tree.h>
 
 #define l_g_value_unset(val) G_STMT_START{ if (G_IS_VALUE (val)) g_value_unset (val); }G_STMT_END
+#ifdef G_OS_WIN32
+#define bcmp(s1, s2, n) memcmp ((s1), (s2), (n))
+#endif
 
 static gboolean
 set_from_string (GValue *value, const gchar *as_string)

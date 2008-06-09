@@ -1,3 +1,6 @@
+#ifdef USING_MINGW
+#define _NO_OLDNAMES
+#endif
 #include <libgda/libgda.h>
 #include <sql-parser/gda-sql-parser.h>
 #include <string.h>

@@ -85,7 +85,7 @@ See the <link linkend="DDLIntro">global introduction about DDL</link> for more i
 @GDA_SERVER_OPERATION_DROP_INDEX: 
 @GDA_SERVER_OPERATION_CREATE_VIEW: 
 @GDA_SERVER_OPERATION_DROP_VIEW: 
-@GDA_SERVER_OPERATION_NB: 
+@GDA_SERVER_OPERATION_LAST: 
 
 <!-- ##### ENUM GdaServerOperationNodeType ##### -->
 <para>

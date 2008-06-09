@@ -185,6 +185,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
                                          g_param_spec_flags ("options", _("Options (connection sharing)"),
 							    NULL, GDA_TYPE_CONNECTION_OPTIONS, GDA_CONNECTION_OPTIONS_NONE,
 							    (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+	/* To translators: Don't translate "GdaMetaStore", it's a class name */
         g_object_class_install_property (object_class, PROP_META_STORE,
 					 g_param_spec_object ("meta-store", _ ("GdaMetaStore used by the connection"),
 							      NULL, GDA_TYPE_META_STORE,
@@ -3207,8 +3208,12 @@ gda_connection_internal_transaction_rolledback (GdaConnection *cnc, const gchar 
 		g_print ("<< 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
 #endif
 	}
-	else
-		g_warning (_("Connection transaction status tracking: no transaction exists for ROLLBACK"));
+	else {
+		gchar *str;
+		str = g_strdup_printf (_("Connection transaction status tracking: no transaction exists for %s"), "ROLLBACK");
+		g_warning (str);
+		g_free (str);
+	}
 #ifdef GDA_DEBUG_NO
 	if (cnc->priv->trans_status)
 		gda_transaction_status_dump (cnc->priv->trans_status, 5);
@@ -3241,8 +3246,12 @@ gda_connection_internal_transaction_committed (GdaConnection *cnc, const gchar *
 		g_print ("<< 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
 #endif
 	}
-	else
-		g_warning (_("Connection transaction status tracking: no transaction exists for COMMIT"));
+	else {
+		gchar *str;
+		str = g_strdup_printf (_("Connection transaction status tracking: no transaction exists for %s"), "COMMIT");
+		g_warning (str);
+		g_free (str);
+	}
 #ifdef GDA_DEBUG_NO
 	if (cnc->priv->trans_status)
 		gda_transaction_status_dump (cnc->priv->trans_status, 5);
@@ -3265,8 +3274,12 @@ gda_connection_internal_savepoint_added (GdaConnection *cnc, const gchar *parent
 		g_print ("<< 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
 #endif
 	}
-	else
-		g_warning (_("Connection transaction status tracking: no transaction exists for ADD SAVEPOINT"));
+	else {
+		gchar *str;
+		str = g_strdup_printf (_("Connection transaction status tracking: no transaction exists for %s"), "ADD SAVEPOINT");
+		g_warning (str);
+		g_free (str);
+	}
 #ifdef GDA_DEBUG_NO
 	if (cnc->priv->trans_status)
 		gda_transaction_status_dump (cnc->priv->trans_status, 5);
@@ -3290,8 +3303,12 @@ gda_connection_internal_savepoint_rolledback (GdaConnection *cnc, const gchar *s
 		g_print ("<< 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
 #endif
 	}
-	else
-		g_warning (_("Connection transaction status tracking: no transaction exists for ROLLBACK SAVEPOINT"));
+	else {
+		gchar *str;
+		str = g_strdup_printf (_("Connection transaction status tracking: no transaction exists for %s"), "ROLLBACK SAVEPOINT");
+		g_warning (str);
+		g_free (str);
+	}
 #ifdef GDA_DEBUG_NO
 	if (cnc->priv->trans_status)
 		gda_transaction_status_dump (cnc->priv->trans_status, 5);
@@ -3315,8 +3332,12 @@ gda_connection_internal_savepoint_removed (GdaConnection *cnc, const gchar *svp_
 		g_print ("<< 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
 #endif
 	}
-	else
-		g_warning (_("Connection transaction status tracking: no transaction exists for REMOVE SAVEPOINT"));
+	else {
+		gchar *str;
+		str = g_strdup_printf (_("Connection transaction status tracking: no transaction exists for %s"), "REMOVE SAVEPOINT");
+		g_warning (str);
+		g_free (str);
+	}
 #ifdef GDA_DEBUG_NO
 	if (cnc->priv->trans_status)
 		gda_transaction_status_dump (cnc->priv->trans_status, 5);

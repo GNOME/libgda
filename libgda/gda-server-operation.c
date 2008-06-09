@@ -176,7 +176,7 @@ gda_server_operation_class_init (GdaServerOperationClass *klass)
 							      NULL, G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_OP_TYPE,
 					 g_param_spec_int ("op_type", NULL, NULL, 
-							   0, GDA_SERVER_OPERATION_NB - 1, 
+							   0, GDA_SERVER_OPERATION_LAST - 1, 
 							   0, G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 }
 

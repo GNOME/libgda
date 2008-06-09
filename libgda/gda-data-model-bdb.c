@@ -21,10 +21,14 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#ifdef USING_MINGW
+#define _NO_OLDNAMES
+#endif
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-data-model-bdb.h>
+#include <db.h>
 
 #define BDB_VERSION  (10000*DB_VERSION_MAJOR+100*DB_VERSION_MINOR+DB_VERSION_PATCH)
 
@@ -626,9 +630,13 @@ gda_data_model_bdb_get_value_at (GdaDataModel *model, gint col, gint row)
 									      value);
 			}
 			else {
-				if (c == 0)
-					g_warning (_("Custom BDB model implementation is not complete: "
-						     "the 'get_key_part' method is missing"));
+				if (c == 0) {
+					gchar *str;
+					str = g_strdup_printf (_("Custom BDB model implementation is not complete: "
+								 "the '%s' method is missing"), "get_key_part");
+					g_warning (str);
+					g_free (str);
+				}
 				value = gda_value_new_null ();
 				imodel->priv->cursor_values = g_slist_append (imodel->priv->cursor_values, 
 									      value);
@@ -655,9 +663,13 @@ gda_data_model_bdb_get_value_at (GdaDataModel *model, gint col, gint row)
 									      value);
 			}
 			else {
-				if (c == 0)
-					g_warning (_("Custom BDB model implementation is not complete: "
-						     "the 'get_data_part' method is missing"));
+				if (c == 0) {
+					gchar *str;
+					str = g_strdup_printf (_("Custom BDB model implementation is not complete: "
+								 "the '%s' method is missing"), "get_data_part");
+					g_warning (str);
+					g_free (str);
+				}
 				value = gda_value_new_null ();
 				imodel->priv->cursor_values = g_slist_append (imodel->priv->cursor_values, 
 									      value);
@@ -750,7 +762,7 @@ alter_key_value (GdaDataModelBdb *model, DBT *key, GList **values, gboolean *has
 				}
 				else {
 					g_set_error (error, 0, 0, _("Custom BDB model implementation is not complete: "
-								    "the 'update_key_part' method is missing"));
+								    "the '%s' method is missing"), "update_key_part");
 					return FALSE;
 				}
 			}
@@ -836,7 +848,7 @@ gda_data_model_bdb_set_values (GdaDataModel *model, gint row, GList *values, GEr
 				}
 				else {
 					g_set_error (error, 0, 0, _("Custom BDB model implementation is not complete: "
-								    "the 'update_data_part' method is missing"));
+								    "the '%s' method is missing"), "update_data_part");
 					return FALSE;
 				}
 			}

@@ -24,15 +24,14 @@
 #include <sql-parser/gda-sql-parser.h>
 #include "html.h"
 #include <libgda/gda-enum-types.h>
+#include <libgda/sqlite/virtual/gda-virtual-provider.h>
 
 /* options */
 gboolean ask_pass = FALSE;
 gchar *outfile = NULL;
-gchar *raw_prov = NULL;
 
 static GOptionEntry entries[] = {
         { "no-password-ask", 'p', 0, G_OPTION_ARG_NONE, &ask_pass, "Don't ast for a password when it is empty", NULL },
-        { "prov", 'P', 0, G_OPTION_ARG_STRING, &raw_prov, "Provider to be used", NULL },
         { "output-file", 'o', 0, G_OPTION_ARG_STRING, &outfile, "Output file", "output file"},
         { NULL }
 };
@@ -49,7 +48,6 @@ main (int argc, char *argv[])
 	GError *error = NULL;
 	int exit_status = EXIT_SUCCESS;
 	GSList *list, *cnc_list = NULL;
-	GdaServerProvider *prov = NULL;
 
 	context = g_option_context_new ("[DSN|connection string]...");
 	g_option_context_add_main_entries (context, entries, GETTEXT_PACKAGE);
@@ -68,50 +66,61 @@ main (int argc, char *argv[])
 				       "index.html", "Providers status");
 	config->dir = g_strdup (".");
 
-	if (raw_prov) {
-		prov = gda_config_get_provider_object (raw_prov, &error);
-		if (!prov) {
-			g_print ("Can't load the '%s' provider: %s\n", raw_prov,
-				 error && error->message ? error->message : "No detail");
-			return EXIT_FAILURE;
-		}
-		if (!report_provider_status (prov, NULL)) {
-			exit_status = EXIT_FAILURE;
-			goto cleanup;
-
+	/* parse command line arguments for connections */
+	if (argc > 1) {
+		gint i;
+		for (i = 1; i < argc; i++) {
+			/* open connection */
+			GdaConnection *cnc;
+			cnc = open_connection (argv[i], &error);
+			if (!cnc) {
+				g_print ("Can't open connection to '%s': %s\n", argv[i],
+					 error && error->message ? error->message : "No detail");
+				exit_status = EXIT_FAILURE;
+				goto cleanup;
+			}
+			cnc_list = g_slist_append (cnc_list, cnc);
 		}
 	}
-
-	/* use connections if specified */
-	gint i;
-	for (i = 1; i < argc; i++) {
-		/* open connection */
-		GdaConnection *cnc;
-		cnc = open_connection (argv[i], &error);
-		if (!cnc) {
-			g_print ("Can't open connection to '%s': %s\n", argv[i],
-				 error && error->message ? error->message : "No detail");
-			exit_status = EXIT_FAILURE;
-			goto cleanup;
+	else {
+		if (getenv ("GDA_SQL_CNC")) {
+			GdaConnection *cnc;
+			cnc = open_connection (getenv ("GDA_SQL_CNC"), &error);
+			if (!cnc) {
+				g_print ("Can't open connection defined by GDA_SQL_CNC: %s\n",
+					 error && error->message ? error->message : "No detail");
+				exit_status = EXIT_FAILURE;
+				goto cleanup;
+			}
+			cnc_list = g_slist_append (cnc_list, cnc);
 		}
-		cnc_list = g_slist_append (cnc_list, cnc);
-	}
-	if (getenv ("GDA_SQL_CNC")) {
-		GdaConnection *cnc;
-		cnc = open_connection (getenv ("GDA_SQL_CNC"), &error);
-		if (!cnc) {
-			g_print ("Can't open connection defined by GDA_SQL_CNC: %s\n",
-				 error && error->message ? error->message : "No detail");
-			exit_status = EXIT_FAILURE;
-			goto cleanup;
+		else {
+			/* report status for all providers */
+			GdaDataModel *providers;
+			gint i, nb;
+			
+			providers = gda_config_list_providers ();
+			nb = gda_data_model_get_n_rows (providers);
+			for (i = 0; i < nb; i++) {
+				GdaServerProvider *prov = NULL;
+				const gchar *pname;
+				pname = g_value_get_string (gda_data_model_get_value_at (providers, 0, i));
+				prov = gda_config_get_provider_object (pname, &error);
+				if (!prov) 
+					g_error ("Can't load the '%s' provider: %s\n", pname,
+						 error && error->message ? error->message : "No detail");
+				if (!report_provider_status (prov, NULL)) {
+					exit_status = EXIT_FAILURE;
+					goto cleanup;
+				}
+			}
+			g_object_unref (providers);
 		}
-		cnc_list = g_slist_append (cnc_list, cnc);
 	}
-
 	
 	/* report provider's status for all the connections */
 	for (list = cnc_list; list; list = list->next) {
-		if (!report_provider_status (prov, GDA_CONNECTION (list->data))) {
+		if (!report_provider_status (NULL, GDA_CONNECTION (list->data))) {
 			exit_status = EXIT_FAILURE;
 			goto cleanup;
 
@@ -213,8 +222,17 @@ open_connection (const gchar *cnc_string, GError **error)
 static gboolean
 report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 {
-	gchar *str;
+	gchar *header_str;
 	HtmlFile *file = config->index;
+	gboolean is_virt;
+
+	typedef void (*AFunc) (void);
+	typedef struct {
+		const gchar *name;
+		gboolean     should_be;
+		void       (*func) (void);
+	} ProvFunc;
+	GdaServerProviderClass *pclass;
 
 	if (prov && cnc && (prov != gda_connection_get_provider_obj (cnc)))
 		/* ignoring connection as it has a different provider */
@@ -223,90 +241,15 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 
 	/* section */
 	if (cnc)
-		str = g_strdup_printf ("Report for connection '%s'", gda_connection_get_cnc_string (cnc));
+		header_str = g_strdup_printf ("Report for connection '%s'", gda_connection_get_cnc_string (cnc));
 	else
-		str = g_strdup_printf ("Report for '%s' provider", gda_server_provider_get_name (prov));
-	html_add_header (HTML_CONFIG (config), file, str);
-	g_free (str);
+		header_str = g_strdup_printf ("Report for '%s' provider", gda_server_provider_get_name (prov));
 
 	/* provider info */
 	if (!prov)
 		prov = gda_connection_get_provider_obj (cnc);
-	xmlNodePtr table, tr, td, hnode;
-	GdaSqlParser *parser;
-
-	hnode = xmlNewChild (file->body, NULL, "h3", "General information");	
-	table = xmlNewChild (file->body, NULL, "table", NULL);
-	//xmlSetProp(table, "width", (xmlChar*)"100%");
-	tr = xmlNewChild (table, NULL, "tr", NULL);
-	xmlNewChild (tr, NULL, "th", "Property");
-	xmlNewChild (tr, NULL, "th", "Value");
-
-	tr = xmlNewChild (table, NULL, "tr", NULL);
-	xmlNewChild (tr, NULL, "td", "Provider's name");
-	xmlNewChild (tr, NULL, "td", gda_server_provider_get_name (prov));
-
-	tr = xmlNewChild (table, NULL, "tr", NULL);
-	xmlNewChild (tr, NULL, "td", "Provider's version");
-	xmlNewChild (tr, NULL, "td", gda_server_provider_get_version (prov));
-
-	tr = xmlNewChild (table, NULL, "tr", NULL);
-	xmlNewChild (tr, NULL, "td", "Provider's server version");
-	xmlNewChild (tr, NULL, "td", cnc ? gda_server_provider_get_server_version (prov, cnc) : "---");
-
-	parser = gda_server_provider_create_parser (prov, cnc);
-	tr = xmlNewChild (table, NULL, "tr", NULL);
-	xmlNewChild (tr, NULL, "td", "Creates its own SQL parser");
-	xmlNewChild (tr, NULL, "td", parser ? "Yes" : "No");
-	if (parser)
-		g_object_unref (parser);
-
-	/* supported features */
-	GdaConnectionFeature f;
-	hnode = xmlNewChild (file->body, NULL, "h3", "Supported features");
-	table = xmlNewChild (file->body, NULL, "table", NULL);
-
-	tr = xmlNewChild (table, NULL, "tr", NULL);
-	xmlNewChild (tr, NULL, "th", "Feature");
-	xmlNewChild (tr, NULL, "th", "Supported ?");
-	for (f = 0; f < GDA_CONNECTION_FEATURE_LAST; f++) {
-		GEnumValue *ev;
-
-		ev = g_enum_get_value ((GEnumClass *) g_type_class_ref (GDA_TYPE_CONNECTION_FEATURE), f);
-
-		tr = xmlNewChild (table, NULL, "tr", NULL);
-		xmlNewChild (tr, NULL, "td", ev->value_name);
-		xmlNewChild (tr, NULL, "td", gda_server_provider_supports_feature (prov, cnc, f) ? "Yes" : "No");
-	}
-	
-	/* supported operations */
-	GdaServerOperationType op;
-	hnode = xmlNewChild (file->body, NULL, "h3", "Supported server operations");
-	table = xmlNewChild (file->body, NULL, "table", NULL);
-
-	tr = xmlNewChild (table, NULL, "tr", NULL);
-	xmlNewChild (tr, NULL, "th", "Server operation");
-	xmlNewChild (tr, NULL, "th", "Supported ?");
-	for (op = 0; op < GDA_SERVER_OPERATION_NB; op++) {
-		GEnumValue *ev;
-
-		ev = g_enum_get_value ((GEnumClass *) g_type_class_ref (GDA_TYPE_SERVER_OPERATION_TYPE), op);
-
-		tr = xmlNewChild (table, NULL, "tr", NULL);
-		xmlNewChild (tr, NULL, "td", ev->value_name);
-		xmlNewChild (tr, NULL, "td", gda_server_provider_supports_operation (prov, cnc, op, NULL) ? "Yes" : "No");
-	}
-
-	/* virtual methods implementation */
-	gint i;
-	typedef void (*AFunc) (void);
-	typedef struct {
-		const gchar *name;
-		gboolean     should_be;
-		void       (*func) (void);
-	} ProvFunc;
-	GdaServerProviderClass *pclass = (GdaServerProviderClass*) 
-		G_OBJECT_GET_CLASS (prov);
+	is_virt = GDA_IS_VIRTUAL_PROVIDER (prov);
+	pclass = (GdaServerProviderClass*) G_OBJECT_GET_CLASS (prov);
 	ProvFunc fa[] = {
 		{"get_name", TRUE, (AFunc) pclass->get_name},
 		{"get_version", TRUE, (AFunc) pclass->get_version},
@@ -319,7 +262,7 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 		{"open_connection", TRUE, (AFunc) pclass->open_connection},
 		{"close_connection", TRUE, (AFunc) pclass->close_connection},
 		{"get_database", TRUE, (AFunc) pclass->get_database},
-		{"supports_operation", TRUE, (AFunc) pclass->supports_operation},
+		{"supports_operation", is_virt ? FALSE : TRUE, (AFunc) pclass->supports_operation},
 		{"create_operation", FALSE, (AFunc) pclass->create_operation},
 		{"render_operation", FALSE, (AFunc) pclass->render_operation},
 		{"perform_operation", FALSE, (AFunc) pclass->perform_operation},
@@ -334,29 +277,10 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 		{"statement_prepare", TRUE, (AFunc) pclass->statement_prepare},
 		{"statement_execute", TRUE, (AFunc) pclass->statement_execute},
 	};
-	hnode = xmlNewChild (file->body, NULL, "h3", "Main virtual methods implementation");
-	table = xmlNewChild (file->body, NULL, "table", NULL);
 
-	tr = xmlNewChild (table, NULL, "tr", NULL);
-	xmlNewChild (tr, NULL, "th", "Server's virtual method");
-	xmlNewChild (tr, NULL, "th", "Implemented ?");
-
-	for (i = 0; i < sizeof (fa) / sizeof (ProvFunc); i++) {
-		gchar *str;
-		ProvFunc *pf = &(fa[i]);
-		tr = xmlNewChild (table, NULL, "tr", NULL);
-		str = g_strdup_printf ("%s ()", pf->name);
-		xmlNewChild (tr, NULL, "td", str);
-		g_free (str);
-		td = xmlNewChild (tr, NULL, "td", pf->func ? "Yes" : "No");
-		if (pf->should_be && !pf->func)
-			xmlSetProp(td, "class", (xmlChar*)"error");
-	}
-	
-	/* meta data implementation */
 	ProvFunc md[] = {
 		{"_info", TRUE, (AFunc) pclass->meta_funcs._info},
- 		{"_btypes", TRUE, (AFunc) pclass->meta_funcs._btypes},
+		{"_btypes", TRUE, (AFunc) pclass->meta_funcs._btypes},
 		{"_udt", TRUE, (AFunc) pclass->meta_funcs._udt},
 		{"udt", TRUE, (AFunc) pclass->meta_funcs.udt},
 		{"_udt_cols", TRUE, (AFunc) pclass->meta_funcs._udt_cols},
@@ -398,78 +322,248 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 		{"_routine_par", TRUE, (AFunc) pclass->meta_funcs._routine_par},
 		{"routine_par", TRUE, (AFunc) pclass->meta_funcs.routine_par},
 	};
-	hnode = xmlNewChild (file->body, NULL, "h3", "Meta data methods implementation");
+	gboolean has_xa = gda_server_provider_supports_feature (prov, cnc, 
+								GDA_CONNECTION_FEATURE_XA_TRANSACTIONS);
+
+
+	xmlNodePtr table, tr, td, span;
+	GdaSqlParser *parser;
+	GString *string;
+	gint i;
+	GdaProviderInfo *pinfo;
+
+	pinfo = gda_config_get_provider_info (gda_server_provider_get_name (prov));
+	g_assert (pinfo);
+
 	table = xmlNewChild (file->body, NULL, "table", NULL);
-
+	xmlSetProp (table, "width", (xmlChar*)"100%");
 	tr = xmlNewChild (table, NULL, "tr", NULL);
-	xmlNewChild (tr, NULL, "th", "Meta data's method");
-	xmlNewChild (tr, NULL, "th", "Implemented ?");
+	td = xmlNewChild (tr, NULL, "th", header_str);
+	xmlSetProp (td, "colspan", (xmlChar*)"4");
 
+	/* line 1 */
+	tr = xmlNewChild (table, NULL, "tr", NULL);
+	xmlNewChild (tr, NULL, "td", "Provider's name:");
+	td = xmlNewChild (tr, NULL, "td", gda_server_provider_get_name (prov));
+	xmlSetProp (td, "width", (xmlChar*)"35%");
+	xmlNewChild (tr, NULL, "td", "Provider is virtual:");
+	td = xmlNewChild (tr, NULL, "td", is_virt ? "Yes (uses the SQLite engine)" : "No");
+	xmlSetProp (td, "width", (xmlChar*)"35%");
+
+	/* line 2 */
+	tr = xmlNewChild (table, NULL, "tr", NULL);
+	xmlNewChild (tr, NULL, "td", "Provider's version:");
+	xmlNewChild (tr, NULL, "td", gda_server_provider_get_version (prov));
+	xmlNewChild (tr, NULL, "td", "Provider's server version:");
+	xmlNewChild (tr, NULL, "td", cnc ? gda_server_provider_get_server_version (prov, cnc) : "(non connected)");
+
+	/* line 3 */
+	tr = xmlNewChild (table, NULL, "tr", NULL);
+	xmlNewChild (tr, NULL, "td", "Provider's description:");
+	xmlNewChild (tr, NULL, "td", pinfo->description);
+	xmlNewChild (tr, NULL, "td", "Filename:");
+	xmlNewChild (tr, NULL, "td", pinfo->location);
+
+	/* line 4 */
+	parser = gda_server_provider_create_parser (prov, cnc);
+	tr = xmlNewChild (table, NULL, "tr", NULL);
+	xmlNewChild (tr, NULL, "td", "Creates its own SQL parser:");
+	xmlNewChild (tr, NULL, "td", parser ? "Yes" : "No");
+	if (parser)
+		g_object_unref (parser);
+	xmlNewChild (tr, NULL, "td", "Non implemented base methods:");
+	span = NULL;
+	td = xmlNewChild (tr, NULL, "td", NULL);
+	for (i = 0; i < sizeof (fa) / sizeof (ProvFunc); i++) {
+		gchar *str;
+		ProvFunc *pf = &(fa[i]);
+
+		if (pf->func)
+			continue;
+
+		if (span)
+			str = g_strdup_printf (", %s()", pf->name);
+		else
+			str = g_strdup_printf ("%s()", pf->name);
+		span = xmlNewChild (td, NULL, "span", str);
+		g_free (str);
+		if (pf->should_be)
+			xmlSetProp (span, "class", (xmlChar*)"error");
+	}
+	if (!span)
+		xmlNodeSetContent (td, (xmlChar*) "---");
+
+	/* line 5 */
+	tr = xmlNewChild (table, NULL, "tr", NULL);
+	xmlNewChild (tr, NULL, "td", "Non implemented meta data methods:");
+	span = NULL;
+	td = xmlNewChild (tr, NULL, "td", NULL);
 	for (i = 0; i < sizeof (md) / sizeof (ProvFunc); i++) {
 		gchar *str;
 		ProvFunc *pf = &(md[i]);
-		tr = xmlNewChild (table, NULL, "tr", NULL);
-		str = g_strdup_printf ("%s ()", pf->name);
-		xmlNewChild (tr, NULL, "td", str);
-		g_free (str);
-		td = xmlNewChild (tr, NULL, "td", pf->func ? "Yes" : "No");
-		if (pf->should_be && !pf->func)
-			xmlSetProp(td, "class", (xmlChar*)"error");
-	}
 
-	/* distributed transaction implementation */
-	gboolean has_xa = gda_server_provider_supports_feature (prov, cnc, 
-			  GDA_CONNECTION_FEATURE_XA_TRANSACTIONS);
-	hnode = xmlNewChild (file->body, NULL, "h3", "Distributed transaction implementation");
+		if (pf->func)
+			continue;
+
+		if (span)
+			str = g_strdup_printf (", %s()", pf->name);
+		else
+			str = g_strdup_printf ("%s()", pf->name);
+		span = xmlNewChild (td, NULL, "span", str);
+		g_free (str);
+		if (pf->should_be)
+			xmlSetProp (span, "class", (xmlChar*)"error");
+	}
+	if (!span)
+		xmlNodeSetContent (td, (xmlChar*) "---");
+
+	xmlNewChild (tr, NULL, "td", "Non implemented XA transactions:");
 	if (pclass->xa_funcs) {
 		if (!has_xa) {
-			xmlNodePtr para;
-			para = xmlNewChild (file->body, NULL, "para", 
-					    "The provider has the 'xa_funcs' part but "
-					    "reports that distributed transactions are "
-					    "not supported.");
-			xmlSetProp(para, "class", (xmlChar*)"warning");
+			td = xmlNewChild (tr, NULL, "td", 
+					  "The provider has the 'xa_funcs' part but "
+					  "reports that distributed transactions are "
+					  "not supported.");
+			xmlSetProp (td, "class", (xmlChar*)"warning");
 		}
-			
-		ProvFunc dt[] = {
-			{"xa_start", TRUE, (AFunc) pclass->xa_funcs->xa_start},
-			{"xa_end", FALSE, (AFunc) pclass->xa_funcs->xa_end},
-			{"xa_prepare", TRUE, (AFunc) pclass->xa_funcs->xa_prepare},
-			{"xa_commit", TRUE, (AFunc) pclass->xa_funcs->xa_commit},
-			{"xa_rollback", TRUE, (AFunc) pclass->xa_funcs->xa_rollback},
-			{"xa_recover", TRUE, (AFunc) pclass->xa_funcs->xa_recover},
-		};
-		
-		table = xmlNewChild (file->body, NULL, "table", NULL);
-		
-		tr = xmlNewChild (table, NULL, "tr", NULL);
-		xmlNewChild (tr, NULL, "th", "Meta data's method");
-		xmlNewChild (tr, NULL, "th", "Implemented ?");
-		
-		for (i = 0; i < sizeof (dt) / sizeof (ProvFunc); i++) {
-			gchar *str;
-			ProvFunc *pf = &(dt[i]);
-			tr = xmlNewChild (table, NULL, "tr", NULL);
-			str = g_strdup_printf ("%s ()", pf->name);
-			xmlNewChild (tr, NULL, "td", str);
-			g_free (str);
-			td = xmlNewChild (tr, NULL, "td", pf->func ? "Yes" : "No");
-			if (pf->should_be && !pf->func)
-				xmlSetProp(td, "class", (xmlChar*)"error");
+		else {
+			ProvFunc dt[] = {
+				{"xa_start", TRUE, (AFunc) pclass->xa_funcs->xa_start},
+				{"xa_end", FALSE, (AFunc) pclass->xa_funcs->xa_end},
+				{"xa_prepare", TRUE, (AFunc) pclass->xa_funcs->xa_prepare},
+				{"xa_commit", TRUE, (AFunc) pclass->xa_funcs->xa_commit},
+				{"xa_rollback", TRUE, (AFunc) pclass->xa_funcs->xa_rollback},
+				{"xa_recover", TRUE, (AFunc) pclass->xa_funcs->xa_recover},
+			};
+			span = NULL;
+			td = xmlNewChild (tr, NULL, "td", NULL);
+			for (i = 0; i < sizeof (dt) / sizeof (ProvFunc); i++) {
+				gchar *str;
+				ProvFunc *pf = &(dt[i]);
+					
+				if (pf->func)
+					continue;
+					
+				if (span)
+					str = g_strdup_printf (", %s()", pf->name);
+				else
+					str = g_strdup_printf ("%s()", pf->name);
+				span = xmlNewChild (td, NULL, "span", str);
+				g_free (str);
+				if (pf->should_be)
+					xmlSetProp (span, "class", (xmlChar*)"error");
+			}
+			if (!span)
+				xmlNodeSetContent (td, (xmlChar*) "---");
 		}
 	}
 	else {
 		if (has_xa) {
-			xmlNodePtr para;
-			para = xmlNewChild (file->body, NULL, "para", 
-					    "The provider does not have the 'xa_funcs' part but "
-					    "reports that distributed transactions are "
-					    "supported.");
-			xmlSetProp(para, "class", (xmlChar*)"warning");
+			td = xmlNewChild (tr, NULL, "td", 
+					  (xmlChar*) "The provider does not have the 'xa_funcs' part but "
+					  "reports that distributed transactions are "
+					  "supported.");
+			xmlSetProp (td, "class", (xmlChar*)"warning");
 		}
-		xmlNewChild (tr, NULL, "para", "Not implemented");
+		else
+			xmlNewChild (tr, NULL, "td", (xmlChar*) "---");
+	}	
+
+	/* line 6 */
+	tr = xmlNewChild (table, NULL, "tr", NULL);
+	xmlNewChild (tr, NULL, "td", "Connection's parameters:");
+	if (pinfo->dsn_params && pinfo->dsn_params->holders) {
+		GSList *list;
+		td = xmlNewChild (tr, NULL, "td", NULL);
+		for (list = pinfo->dsn_params->holders; list; list = list->next) {
+			xmlNodePtr div;
+			gchar *str, *descr;
+			GdaHolder *holder = GDA_HOLDER (list->data);
+			g_object_get (G_OBJECT (holder), "description", &descr, NULL);
+			if (descr)
+				str = g_strdup_printf ("%s: %s", gda_holder_get_id (holder), descr);
+			else
+				str = g_strdup (gda_holder_get_id (holder));
+			g_free (descr);
+			div = xmlNewChild (td, NULL, "div", str);
+			g_free (str);
+		}
 	}
-	
+	else {
+		td = xmlNewChild (tr, NULL, "td", "None provided");
+		xmlSetProp (td, "class", (xmlChar*)"error");
+	}
+	xmlNewChild (tr, NULL, "td", "Authentication's parameters:");
+	if (pinfo->auth_params) {
+		GSList *list;
+		if (pinfo->auth_params->holders) {
+			td = xmlNewChild (tr, NULL, "td", NULL);
+			for (list = pinfo->auth_params->holders; list; list = list->next) {
+				xmlNodePtr div;
+				gchar *str, *descr;
+				GdaHolder *holder = GDA_HOLDER (list->data);
+				g_object_get (G_OBJECT (holder), "description", &descr, NULL);
+				if (descr)
+					str = g_strdup_printf ("%s: %s", gda_holder_get_id (holder), descr);
+				else
+					str = g_strdup (gda_holder_get_id (holder));
+				g_free (descr);
+				div = xmlNewChild (td, NULL, "div", str);
+				g_free (str);
+			}
+		}
+		else
+			td = xmlNewChild (tr, NULL, "td", "None required");
+	}
+	else {
+		td = xmlNewChild (tr, NULL, "td", "None provided");
+		xmlSetProp (td, "class", (xmlChar*)"error");
+	}
+
+	/* line 7 */
+	GdaConnectionFeature f;
+	string = NULL;
+	tr = xmlNewChild (table, NULL, "tr", NULL);
+	xmlNewChild (tr, NULL, "td", "Supported features:");
+	for (f = 0; f < GDA_CONNECTION_FEATURE_LAST; f++) {
+		if (gda_server_provider_supports_feature (prov, cnc, f)) {
+			GEnumValue *ev;
+			
+			ev = g_enum_get_value ((GEnumClass *) g_type_class_ref (GDA_TYPE_CONNECTION_FEATURE), f);
+			if (!string)
+				string = g_string_new (ev->value_name);
+			else
+				g_string_append_printf (string, ", %s", ev->value_name);
+		}
+	}
+	if (string) {
+		xmlNewChild (tr, NULL, "td", string->str);
+		g_string_free (string, TRUE);
+	}
+	else
+		xmlNewChild (tr, NULL, "td", "---");
+
+	string = NULL;
+	xmlNewChild (tr, NULL, "td", "Unsupported features:");
+	for (f = 0; f < GDA_CONNECTION_FEATURE_LAST; f++) {
+		if (!gda_server_provider_supports_feature (prov, cnc, f)) {
+			GEnumValue *ev;
+			
+			ev = g_enum_get_value ((GEnumClass *) g_type_class_ref (GDA_TYPE_CONNECTION_FEATURE), f);
+			if (!string)
+				string = g_string_new (ev->value_name);
+			else
+				g_string_append_printf (string, ", %s", ev->value_name);
+		}
+	}
+	if (string) {
+		xmlNewChild (tr, NULL, "td", string->str);
+		g_string_free (string, TRUE);
+	}
+	else
+		xmlNewChild (tr, NULL, "td", "---");
+		
+	g_free (header_str);
 
 	return TRUE;
 }

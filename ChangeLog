@@ -1,3 +1,31 @@
+2008-06-09  Vivien Malerba <malerba@gnome-db.org>
+
+	* po/LINGUAS:
+	* configure.in: applied (slightly modified) patch for bug #536971 (thanks to Yuriy Penkin)
+	* po/POTFILES.in:
+	* po/POTFILES.skip: updated lists of files
+	* tools/gda-list-server-op.c:
+	* doc/C/:
+	* testing/gda-provider-status.c:
+	* libgda/gda-server-operation.[ch]:
+	* libgda/gda-server-provider.c: s/GDA_SERVER_OPERATION_NB/GDA_SERVER_OPERATION_LAST/
+	* testing/html.c: better output
+	* libgda/gda-value.c:
+	* libgda/gda-config.c:
+	* providers/mysql/gda-mysql.h:
+	* tools/gda-list-config.c:
+	* libgda/gda-data-model-bdb.c:
+	* configure.in: better detection of providers' libraries (specifically when cross
+	compiling with Mingw)
+	* providers/mysql/libmysql.def: file containing exported symbols for Win32 cross compiling
+	with Mingw
+	* providers/bdb/patch_db.h: patch to apply to db.h when compiling with MinGW
+	* providers/postgres/gda-postgres-ddl.c: implemented missing parts
+	* libgda/gda-config.c:
+	* libgda/gda-connection.c:
+	* libgda/gda-data-model-bdb.c:
+	* libgda/gda-data-model.c: some fixes for bug #537117
+
 2008-06-04  Vivien Malerba <malerba@gnome-db.org>
 
 	* po/POTFILES.in:

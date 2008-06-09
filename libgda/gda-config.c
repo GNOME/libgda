@@ -170,10 +170,12 @@ gda_config_class_init (GdaConfigClass *klass)
         object_class->set_property = gda_config_set_property;
         object_class->get_property = gda_config_get_property;
 
+	/* To translators: DSN stands for Data Source Name, it's a named connection string defined in ~/.libgda/config */
 	g_object_class_install_property (object_class, PROP_USER_FILE,
                                          g_param_spec_string ("user_file", _("File to use for per-user DSN list"), 
 							      NULL, NULL,
 							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+	/* To translators: DSN stands for Data Source Name, it's a named connection string defined in $PREFIX/etc/libgda-4.0/config */
 	g_object_class_install_property (object_class, PROP_USER_FILE,
                                          g_param_spec_string ("system_file", _("File to use for system-wide DSN list"), 
 							      NULL, NULL,
@@ -422,11 +424,7 @@ gda_config_constructor (GType type,
 				conffile = g_build_filename (g_get_home_dir (), ".libgda", "config", NULL);
 
 				if (!g_file_test (confdir, G_FILE_TEST_EXISTS)) {
-#ifdef LIBGDA_WIN32
-					if (mkdir (confdir))
-#else
-					if (mkdir (confdir, 0700))
-#endif
+					if (g_mkdir (confdir, 0700))
 						{
 							setup_ok = FALSE;
 							g_warning (_("Error creating user specific "
@@ -1093,14 +1091,14 @@ gda_config_get_provider_object (const gchar *provider_name, GError **error)
 	g_module_symbol (ip->handle, "plugin_create_provider", (gpointer) &plugin_create_provider);
 	if (!plugin_create_provider) {
 		g_set_error (error, GDA_CONFIG_ERROR, GDA_CONFIG_PROVIDER_CREATION_ERROR,
-			     _("Can't instanciate provider '%s'"), provider_name);
+			     _("Can't instantiate provider '%s'"), provider_name);
 		GDA_CONFIG_UNLOCK ();
 		return NULL;
 	}
 	ip->instance = plugin_create_provider ();
 	if (!ip->instance) {
 		g_set_error (error, GDA_CONFIG_ERROR, GDA_CONFIG_PROVIDER_CREATION_ERROR,
-			     _("Can't instanciate provider '%s'"), provider_name);
+			     _("Can't instantiate provider '%s'"), provider_name);
 		GDA_CONFIG_UNLOCK ();
 		return NULL;
 	}

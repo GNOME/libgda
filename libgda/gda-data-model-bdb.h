@@ -23,7 +23,6 @@
 #ifndef __GDA_DATA_MODEL_BDB_H__
 #define __GDA_DATA_MODEL_BDB_H__
 
-#include <db.h>
 #include <libgda/gda-data-model.h>
 
 G_BEGIN_DECLS

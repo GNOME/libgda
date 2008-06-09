@@ -29,6 +29,9 @@
 #define MYSQL_PROVIDER_NAME "MySQL"
 
 #include <libgda/libgda.h>
+#ifdef G_OS_WIN32
+#include <winsock.h>
+#endif
 #include <mysql.h>
 
 /*

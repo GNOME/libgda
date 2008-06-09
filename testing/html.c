@@ -27,7 +27,7 @@ html_file_new (HtmlConfig *config, const gchar *name, const gchar *title)
 	head = xmlNewChild (topnode, NULL, "head", NULL);
 
 	node = xmlNewChild (head, NULL, "meta", NULL);
-	xmlSetProp(node, "content", (xmlChar*)"charset=ISO-8859-1");
+	xmlSetProp(node, "content", (xmlChar*)"charset=UTF-8");
 	xmlSetProp(node, "http-equiv", (xmlChar*)"content-type");
 
 	node = xmlNewChild (head, NULL, "title", title);
@@ -62,11 +62,15 @@ html_file_new (HtmlConfig *config, const gchar *name, const gchar *title)
 "table {"
 "	font-size: 8pt;"
 "	/*border: 1pt solid #A8E775;*/"
-"	padding: 3px;"
+"	padding: 10px;"
 "}"
 ""
 "tr {"
-"	background:  #EFEEEF;"
+"	background:  #EFEFEF;"
+"}"
+""
+"th {"
+"	font-size: 12pt;"
 "}"
 ""
 ".none {"
@@ -77,13 +81,13 @@ html_file_new (HtmlConfig *config, const gchar *name, const gchar *title)
 ".error {"
 "        color: #FF0000;"
 "        font: bold;"
-"        font-size: large;"
+"        /*font-size: large;*/"
 "}"
 ""
 ".warning {"
 "        color: #ff9900;"
 "        font: bold;"
-"        font-size: medium;"
+"        /*font-size: medium;*/"
 "}"
 ""
 ".notice {"
@@ -109,9 +113,11 @@ html_file_new (HtmlConfig *config, const gchar *name, const gchar *title)
 	node = xmlNewChild (file->body, NULL, "h1", title);
 	xmlSetProp(node, "class", (xmlChar*)"title");
 
+#ifdef NO
 	/* toc */
 	file->toc = xmlNewChild (file->body, NULL, "ul", _("Table of contents"));
 	xmlSetProp(file->toc, "class", (xmlChar*)"none");
+#endif
 
 	/* add to @config's list of files */
 	config->all_files = g_slist_append (config->all_files, file);
