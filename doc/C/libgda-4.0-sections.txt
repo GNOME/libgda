@@ -125,6 +125,7 @@ gda_connection_statement_execute_select
 gda_connection_statement_execute_select_full
 gda_connection_statement_execute_select_fullv
 gda_connection_statement_execute_non_select
+gda_connection_batch_execute
 gda_connection_begin_transaction
 gda_connection_commit_transaction
 gda_connection_rollback_transaction
@@ -1124,11 +1125,12 @@ gda_statement_get_type
 <TITLE>GdaBatch</TITLE>
 GdaBatch
 gda_batch_new
-gda_batch_new_copy
+gda_batch_copy
 gda_batch_add_statement
 gda_batch_remove_statement
 gda_batch_serialize
 gda_batch_get_statements
+gda_batch_get_parameters
 <SUBSECTION Standard>
 GDA_IS_BATCH
 GDA_BATCH

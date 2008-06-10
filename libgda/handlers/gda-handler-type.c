@@ -116,7 +116,7 @@ gda_handler_type_init (GdaHandlerType * hdl)
 	hdl->priv->valid_g_types = g_new0 (GType, 1);
 	hdl->priv->valid_g_types[0] = G_TYPE_ULONG;
 
-	g_object_set_data (G_OBJECT (hdl), "descr", _("InternalType"));
+	g_object_set_data (G_OBJECT (hdl), "descr", "InternalType");
 	g_object_set_data (G_OBJECT (hdl), "descr", _("Gda type representation"));
 }
 

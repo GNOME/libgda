@@ -54,12 +54,13 @@ struct _GdaBatchClass
 
 GType              gda_batch_get_type               (void) G_GNUC_CONST;
 GdaBatch          *gda_batch_new                    (void);
-GdaBatch          *gda_batch_new_copy               (GdaBatch *orig);
+GdaBatch          *gda_batch_copy                   (GdaBatch *orig);
 void               gda_batch_add_statement          (GdaBatch *batch, GdaStatement *stmt);
 void               gda_batch_remove_statement       (GdaBatch *batch, GdaStatement *stmt);
 
 gchar             *gda_batch_serialize              (GdaBatch *batch);
 const GSList      *gda_batch_get_statements         (GdaBatch *batch);
+gboolean           gda_batch_get_parameters         (GdaBatch *batch, GdaSet **out_params, GError **error);
 
 G_END_DECLS
 

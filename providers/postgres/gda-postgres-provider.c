@@ -734,7 +734,7 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider, GdaConnectio
                         PQclear (pg_res);
                 }
                 else {
-			gda_connection_add_event_string (cnc, _("Search path %s is invalid)"), pg_searchpath);
+			gda_connection_add_event_string (cnc, _("Search path %s is invalid"), pg_searchpath);
 			gda_postgres_free_cnc_data (cdata);
                         return FALSE;
                 }
@@ -1665,7 +1665,7 @@ gda_postgres_provider_statement_prepare (GdaServerProvider *provider, GdaConnect
                         }
                         else {
                                 g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR,
-                                             _("Unnammed parameter is not allowed in prepared statements"));
+                                             _("Unnamed parameter is not allowed in prepared statements"));
                                 g_slist_foreach (param_ids, (GFunc) g_free, NULL);
                                 g_slist_free (param_ids);
 				g_free (prep_stm_name);

@@ -6,7 +6,8 @@ Methods dedicated to implementing providers
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+  The methods mentionned in this section are reserved for database providers implementatins and should
+  not bu used by developers outside that scope.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

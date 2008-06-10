@@ -476,7 +476,7 @@ gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row)
 	g_return_val_if_fail (row >= 0, NULL);
 
 	if (col >= imodel->priv->nb_cols) {
-		g_warning (_("Column %d out of range 0 - %d"), col, imodel->priv->nb_cols);
+		g_warning (_("Column %d out of range (0-%d)"), col, imodel->priv->nb_cols);
 		return NULL;
 	}
 

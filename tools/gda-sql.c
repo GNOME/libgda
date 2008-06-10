@@ -969,7 +969,7 @@ open_connection (MainData *data, const gchar *cnc_name, const gchar *cnc_string,
 			}
 			else
 				if (!data->output_stream) 
-					g_print (_(" Done.\n"));
+					g_print (_("Done.\n"));
 		}
 
 		g_object_unref (store);
@@ -1054,10 +1054,7 @@ output_data_model (MainData *data, GdaDataModel *model)
 		}
 
 		node = xmlNewChild (html, NULL, BAD_CAST "p", NULL);
-		if (nrows > 1)
-			str = g_strdup_printf (_("(%d rows)"), nrows);
-		else
-			str = g_strdup_printf (_("(%d row)"), nrows);
+		g_strdup_printf (ngettext ("(%d row)", "(%d rows)", nrows), nrows);
 		xmlNodeSetContent (node, BAD_CAST str);
 		g_free (str);
 
@@ -1754,7 +1751,7 @@ extra_command_manage_cnc (GdaConnection *cnc, const gchar **args, GError **error
 					}
 					else
 						if (!data->output_stream) 
-							g_print (_(" Done.\n"));
+							g_print (_("Done.\n"));
 					
 					res = g_new0 (GdaInternalCommandResult, 1);
 					res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
@@ -2267,7 +2264,7 @@ extra_command_query_buffer_to_dict (GdaConnection *cnc, const gchar **args,
 		else {
 			gint i;
 			for (i = 0; ; i++) {
-				qname = g_strdup_printf (_("saved_stmt_%d"), i);
+				qname = g_strdup_printf ("saved_stmt_%d", i);
 				stmt = find_statement_in_connection_meta_store (data->current->cnc, qname);
 				if (!stmt)
 					break;

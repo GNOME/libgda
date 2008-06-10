@@ -44,7 +44,7 @@ gda_init (void)
 	gchar *file;
 
 	if (initialized) {
-		gda_log_error (_("Attempt to re-initialize GDA library. ignored."));
+		gda_log_error (_("Ignoring attempt to re-initialize GDA library."));
 		return;
 	}
 

@@ -1,3 +1,50 @@
+2008-06-10  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in: if no --with-postgres or --with-mysql are passed to the configure
+	script, then try to find PotgreSQL or MySQL
+	* libgda/gda-connection.c:
+	* libgda/gda-data-model-dsn-list.c:
+	* libgda/gda-data-model-query.c:
+	* libgda/gda-init.c:
+	* libgda/gda-meta-store.c:
+	* libgda/gda-meta-struct.c:
+	* libgda/gda-server-operation.c:
+	* libgda/gda-server-provider.c:
+	* libgda/gda-server-provider-extra.c:
+	* libgda/gda-util.c:
+	* libgda/gda-xa-transaction.c:
+	* libgda/handlers/gda-handler-bin.c:
+	* libgda/handlers/gda-handler-boolean.c:
+	* libgda/handlers/gda-handler-numerical.c:
+	* libgda/handlers/gda-handler-time.c:
+	* libgda/handlers/gda-handler-type.c:
+	* libgda/sqlite/gda-sqlite-handler-bin.c:
+	* libgda/gda-data-access-wrapper.c:
+	* libgda/gda-data-model-array.c:
+	* libgda/gda-data-model-dir.c:
+	* libgda/gda-data-model-row.c:
+	* libgda-report/DocBook/gda-report-docbook-document.c:
+	* libgda-report/RML/gda-report-rml-document.c:
+	* libgda-report/gda-report-document.c:
+	* providers/mysql/mysql_specs_create_db.xml.in:
+	* providers/mysql/mysql_specs_create_table.xml.in:
+	* providers/postgres/postgres_specs_create_db.xml.in:
+	* providers/sqlite/sqlite_specs_create_index.xml.in:
+	* providers/sqlite/sqlite_specs_create_index.xml.in:
+	* providers/sqlite/sqlite_specs_create_table.xml.in:
+	* providers/mdb/mdb_specs_dsn.xml.in:
+	* tools/gda-sql.c:
+	* libgda-report/engine/gda-report-engine.c:
+	* providers/postgres/gda-postgres-provider.c:
+	* libgda/sqlite/gda-sqlite-provider.c:
+	* providers/postgres/gda-postgres-provider.c: corrections for bug #537117
+	* po/*: updated translation strings
+	* libgda/gda-batch.[ch]: s/gda_batch_new_copy/gda_batch_copy/, and added gda_batch_get_parameters(),
+	similar to gda_statement_get_parameters()
+	* libgda/gda-set.[ch]: make gda_set_add_holder() return TRUE if the holder has
+	really been added to the set
+	* libgda/gda-connection.c: implemented gda_connection_batch_execute(), corrects bug #537558
+
 2008-06-09  Vivien Malerba <malerba@gnome-db.org>
 
 	* po/LINGUAS:
@@ -42,7 +89,7 @@
 2008-06-04  Johannes Schmid <jhs@gnome.org>
 
 	* libgda/sql-parser/Makefile.am:
-	Added rules to generate gda-sql-parser-enum-types.[ch]
+	Added rules to generate gda-sql-parser-enum-types.[ch], fixes bug #536418
 
 2008-06-03  Vivien Malerba <malerba@gnome-db.org>
 

@@ -119,7 +119,7 @@ gda_handler_bin_init (GdaHandlerBin * hdl)
 	hdl->priv->valid_g_types[0] = GDA_TYPE_BINARY;
 	hdl->priv->valid_g_types[1] = GDA_TYPE_BLOB;
 
-	g_object_set_data (G_OBJECT (hdl), "name", _("InternalBin"));
+	g_object_set_data (G_OBJECT (hdl), "name", "InternalBin");
 	g_object_set_data (G_OBJECT (hdl), "descr", _("Binary representation"));
 }
 

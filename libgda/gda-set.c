@@ -54,7 +54,7 @@ static void source_changed_holder_cb (GdaHolder *holder, GdaSet *dataset);
 static void notify_holder_cb (GdaHolder *holder, GParamSpec *pspec, GdaSet *dataset);
 
 static void compute_public_data (GdaSet *set);
-static void gda_set_real_add_holder (GdaSet *set, GdaHolder *holder);
+static gboolean gda_set_real_add_holder (GdaSet *set, GdaHolder *holder);
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
@@ -1208,26 +1208,32 @@ compute_ref_columns_index (GdaSetSource *source)
  * Adds @holder to the list of holders managed within @set.
  *
  * NOTE: if @set already has a #GdaHolder with the same ID as @holder, then @holder
- * will not be added to the set, even if @holder's type or value is not the same as the
- * on already in @set.
+ * will not be added to the set (even if @holder's type or value is not the same as the
+ * one already in @set).
+ *
+ * Returns: TRUE if @holder has been added to @set (and FALSE if it has not been added because there is another #GdaHolder
+ * with the same ID)
  */
-void
+gboolean
 gda_set_add_holder (GdaSet *set, GdaHolder *holder)
 {
+	gboolean added;
 	g_return_if_fail (GDA_IS_SET (set));
 	g_return_if_fail (GDA_IS_HOLDER (holder));
 
-	gda_set_real_add_holder (set, holder);
-	compute_public_data (set);
+	added = gda_set_real_add_holder (set, holder);
+	if (added)
+		compute_public_data (set);
+	return added;
 }
 
-static void
+static gboolean
 gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
 {
 	GdaHolder *similar;
 
 	if (g_slist_find (set->holders, holder))
-		return;
+		return FALSE;
 
 	/* 
 	 * try to find a similar holder in the set->holders:
@@ -1245,11 +1251,14 @@ gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
 				  G_CALLBACK (source_changed_holder_cb), set);
 		g_signal_connect (G_OBJECT (holder), "notify",
 				  G_CALLBACK (notify_holder_cb), set);
+		return TRUE;
 	}
+	else {
 #ifdef GDA_DEBUG_NO
-	else 
 		g_print ("In Set %p, Holder %p and %p are similar, keeping %p only\n", set, similar, holder, similar);
 #endif
+		return FALSE;
+	}
 }
 
 

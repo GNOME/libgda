@@ -664,7 +664,7 @@ gda_data_model_query_refresh (GdaDataModelQuery *model, GError **error)
 	}
 	if (! gda_connection_is_opened (model->priv->cnc)) {
 		g_set_error (error, GDA_DATA_MODEL_QUERY_ERROR, GDA_DATA_MODEL_QUERY_CONNECTION_ERROR,
-			     _("Specified is closed"));
+			     _("Specified connection is closed"));
 		return FALSE;
 	}
 
@@ -1076,7 +1076,7 @@ run_modify_query (GdaDataModelQuery *selmodel, gint query_type, GError **error)
 	}
 	if (! gda_connection_is_opened (selmodel->priv->cnc)) {
 		g_set_error (error, GDA_DATA_MODEL_QUERY_ERROR, GDA_DATA_MODEL_QUERY_CONNECTION_ERROR,
-			     _("Specified is closed"));
+			     _("Specified connection is closed"));
 		return FALSE;
 	}
 

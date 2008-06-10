@@ -341,7 +341,7 @@ gda_report_document_run_as_html (GdaReportDocument *doc, const gchar *filename, 
 		return CLASS (doc)->run_as_html (doc, filename, error);
 	else {
 		g_set_error (error, 0, 0,
-			     _("This report document does not handle HTML output"));
+			     _("This report document does not handle %s output"), "HTML");
 		return FALSE;
 	}
 }
@@ -366,7 +366,7 @@ gda_report_document_run_as_pdf (GdaReportDocument *doc, const gchar *filename, G
 		return CLASS (doc)->run_as_pdf (doc, filename, error);
 	else {
 		g_set_error (error, 0, 0,
-			     _("This report document does not handle PDF output"));
+			     _("This report document does not handle %s output"), "PDF");
 		return FALSE;
 	}
 }

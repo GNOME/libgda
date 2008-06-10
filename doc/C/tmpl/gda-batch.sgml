@@ -43,7 +43,7 @@ a #GdaSqlParser object.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_batch_new_copy ##### -->
+<!-- ##### FUNCTION gda_batch_copy ##### -->
 <para>
 
 </para>

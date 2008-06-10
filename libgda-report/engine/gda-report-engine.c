@@ -865,7 +865,7 @@ command_gda_report_if (GdaReportEngine *engine, xmlNodePtr node, GSList **create
 	prop = xmlGetProp (node, BAD_CAST "expr");
 	if (!prop) {
 		g_set_error (error, 0, 0,
-			     _("No expression speficied")); 
+			     _("No expression specified")); 
 		return FALSE;
 	}
 

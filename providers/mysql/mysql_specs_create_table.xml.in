@@ -140,6 +140,7 @@
 	</gda_array_row>
 	<gda_array_row>
           <gda_value>SET NULL</gda_value>
+	  <!-- To translators: Action of setting a value to NULL -->
           <_gda_value>Set to NULL</_gda_value>
 	</gda_array_row>
       </gda_array_data>
@@ -229,6 +230,7 @@
 	</gda_array_row>
 	<gda_array_row>
           <gda_value>FIXED</gda_value>
+	  <!-- To translators: "Fixed" is a kind or MySQL's table's row format -->
           <_gda_value>Fixed</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
@@ -252,143 +254,143 @@
       <gda_array_data>
         <gda_array_row>
           <gda_value>utf8</gda_value>
-          <_gda_value>UTF-8 Unicode</_gda_value>
+	  <!-- To translators: Charset name --><_gda_value>UTF-8 Unicode</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>latin1</gda_value>
-          <_gda_value>ISO 8859-1 West European</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>ISO 8859-1 West European</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>latin2</gda_value>
-          <_gda_value>ISO 8859-2 Central European</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>ISO 8859-2 Central European</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>ascii</gda_value>
-          <_gda_value>US ASCII</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>US ASCII</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>big5</gda_value>
-          <_gda_value>Big5 Traditional Chinese</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>Big5 Traditional Chinese</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>dec8</gda_value>
-          <_gda_value>DEC West European</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>DEC West European</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>cp850</gda_value>
-          <_gda_value>DOS West European</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>DOS West European</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>hp8</gda_value>
-          <_gda_value>HP West European</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>HP West European</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>koi8r</gda_value>
-          <_gda_value>KOI8-R Relcom Russian</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>KOI8-R Relcom Russian</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>swe7</gda_value>
-          <_gda_value>7bit Swedish</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>7bit Swedish</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>ujis</gda_value>
-          <_gda_value>EUC-JP Japanese</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>EUC-JP Japanese</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>sjis</gda_value>
-          <_gda_value>Shift-JIS Japanese</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>Shift-JIS Japanese</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>hebrew</gda_value>
-          <_gda_value>ISO 8859-8 Hebrew</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>ISO 8859-8 Hebrew</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>tis620</gda_value>
-          <_gda_value>TIS620 Thai</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>TIS620 Thai</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>euckr</gda_value>
-          <_gda_value>EUC-KR Korean</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>EUC-KR Korean</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>koi8u</gda_value>
-          <_gda_value>KOI8-U Ukrainian</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>KOI8-U Ukrainian</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>gb2312</gda_value>
-          <_gda_value>GB2312 Simplified Chinese</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>GB2312 Simplified Chinese</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>greek</gda_value>
-          <_gda_value>ISO 8859-7 Greek</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>ISO 8859-7 Greek</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>cp1250</gda_value>
-          <_gda_value>Windows Central European</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>Windows Central European</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>gbk</gda_value>
-          <_gda_value>GBK Simplified Chinese</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>GBK Simplified Chinese</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>latin5</gda_value>
-          <_gda_value>ISO 8859-9 Turkish</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>ISO 8859-9 Turkish</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>armscii8</gda_value>
-          <_gda_value>ARMSCII-8 Armenian</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>ARMSCII-8 Armenian</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>ucs2</gda_value>
-          <_gda_value>UCS-2 Unicode</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>UCS-2 Unicode</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>cp866</gda_value>
-          <_gda_value>DOS Russian</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>DOS Russian</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>keybcs2</gda_value>
-          <_gda_value>DOS Kamenicky Czech-Slovak</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>DOS Kamenicky Czech-Slovak</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>macce</gda_value>
-          <_gda_value>Mac Central European</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>Mac Central European</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>macroman</gda_value>
-          <_gda_value>Mac West European</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>Mac West European</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>cp852</gda_value>
-          <_gda_value>DOS Central European</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>DOS Central European</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>latin7</gda_value>
-          <_gda_value>ISO 8859-13 Baltic</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>ISO 8859-13 Baltic</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>cp1251</gda_value>
-          <_gda_value>Windows Cyrillic</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>Windows Cyrillic</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>cp1256</gda_value>
-          <_gda_value>Windows Arabic</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>Windows Arabic</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>cp1257</gda_value>
-          <_gda_value>Windows Baltic</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>Windows Baltic</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>binary</gda_value>
-          <_gda_value>Binary pseudo charset</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>Binary pseudo charset</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>geostd8</gda_value>
-          <_gda_value>GEOSTD8 Georgian</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>GEOSTD8 Georgian</_gda_value>
         </gda_array_row>
         <gda_array_row>
           <gda_value>cp932</gda_value>
-          <_gda_value>SJIS for Windows Japanese</_gda_value>
+          <!-- To translators: Charset name --><_gda_value>SJIS for Windows Japanese</_gda_value>
         </gda_array_row>
       </gda_array_data>
     </gda_array>

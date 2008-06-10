@@ -877,6 +877,8 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 
 		if (!ist->fields_list) {
 			/* nothing to insert => don't create statement */
+			/* To translators: this error message occurs when no "INSERT INTO <table> (field1, ...)..." 
+			 * SQL statement can be computed because no table field can be used */
 			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
 				     _("Could not compute any field to insert into"));
 			retval = FALSE;

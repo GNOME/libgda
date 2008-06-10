@@ -201,7 +201,7 @@ gda_report_rml_document_run_as_html (GdaReportDocument *doc, const gchar *filena
 		}
 		if (!converter) {
 			g_set_error (error, 0, 0,
-				     _("Could not find the 'trml2html.py' program"));
+				     _("Could not find the '%s' program"), "trml2html.py");
 			return FALSE;
 		}
 	}
@@ -228,7 +228,7 @@ gda_report_rml_document_run_as_pdf (GdaReportDocument *doc, const gchar *filenam
 		}
 		if (!converter) {
 			g_set_error (error, 0, 0,
-				     _("Could not find the 'trml2pdf.py' program"));
+				     _("Could not find the '%s' program"), "trml2pdf.py");
 			return FALSE;
 		}
 	}

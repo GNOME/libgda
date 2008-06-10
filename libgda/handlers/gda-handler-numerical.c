@@ -127,7 +127,7 @@ gda_handler_numerical_init (GdaHandlerNumerical * hdl)
         hdl->priv->valid_g_types[9] = G_TYPE_UCHAR;
 	hdl->priv->valid_g_types[10] = G_TYPE_UINT;
 
-	g_object_set_data (G_OBJECT (hdl), "name", _("InternalNumerical"));
+	g_object_set_data (G_OBJECT (hdl), "name", "InternalNumerical");
 	g_object_set_data (G_OBJECT (hdl), "descr", _("Numerical representation"));
 }
 

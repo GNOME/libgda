@@ -163,7 +163,7 @@ gda_handler_time_init (GdaHandlerTime *hdl)
 	hdl->priv->str_locale->current_offset = 0;
 	hdl->priv->str_locale->separator = '-';
 
-	g_object_set_data (G_OBJECT (hdl), "name", _("InternalTime"));
+	g_object_set_data (G_OBJECT (hdl), "name", "InternalTime");
 	g_object_set_data (G_OBJECT (hdl), "descr", _("Time, Date and TimeStamp representation"));
 }
 

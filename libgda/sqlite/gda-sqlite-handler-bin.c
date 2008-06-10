@@ -116,7 +116,7 @@ gda_sqlite_handler_bin_init (GdaSqliteHandlerBin * hdl)
 	hdl->priv->valid_g_types = g_new0 (GType, hdl->priv->nb_g_types);
 	hdl->priv->valid_g_types[0] = GDA_TYPE_BINARY;
 
-	g_object_set_data (G_OBJECT (hdl), "name", _("SqliteBin"));
+	g_object_set_data (G_OBJECT (hdl), "name", "SqliteBin");
 	g_object_set_data (G_OBJECT (hdl), "descr", _("SQlite binary representation"));
 }
 

@@ -16,6 +16,7 @@
     <parameter id="INDEX_FIELD" _name="Indexed field or expression" gdatype="gchararray" nullok="FALSE" source="_INDEX_ON_TABLE/DICT_FIELDS_">
       <gda_value>indexed_field</gda_value>
     </parameter>
+    <!-- To translators: "Compare method" refers to the method SQLite has to compare values -->
     <parameter id="INDEX_COLLATE" _name="Compare method" _descr="Collation name (BINARY|NOCASE)" gdatype="gchararray"/>
     <parameter id="INDEX_SORT_ORDER" _name="Sort type" gdatype="gchararray" source="sort:0"/>
   </sequence>

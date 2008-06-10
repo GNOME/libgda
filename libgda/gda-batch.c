@@ -21,6 +21,8 @@
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-batch.h>
+#include <libgda/gda-set.h>
+#include <libgda/gda-holder.h>
 
 /* 
  * Main static functions 
@@ -150,7 +152,7 @@ gda_batch_new (void)
 
 
 /**
- * gda_batch_new_copy
+ * gda_batch_copy
  * @orig: a #GdaBatch to make a copy of
  * 
  * Copy constructor
@@ -158,7 +160,7 @@ gda_batch_new (void)
  * Returns: a the new copy of @orig
  */
 GdaBatch *
-gda_batch_new_copy (GdaBatch *orig)
+gda_batch_copy (GdaBatch *orig)
 {
 	GObject *obj;
 	GdaBatch *batch;
@@ -368,4 +370,81 @@ gda_batch_get_statements (GdaBatch *batch)
 	g_return_val_if_fail (batch->priv, NULL);
 
 	return batch->priv->statements;
+}
+
+/**
+ * gda_batch_get_parameters
+ * @batch: a #GdaBatch object
+ * @out_params: a place to store a new #GdaSet object, or %NULL
+ * @error: a place to store errors, or %NULL
+ *
+ * Get a new #GdaSet object which groups all the execution parameters
+ * which @batch needs for all the statements it includes.
+ * This new object is returned though @out_params.
+ *
+ * Note that if @batch does not need any parameter, then @out_params is set to %NULL.
+ *
+ * Returns: TRUE if no error occurred.
+ */
+gboolean
+gda_batch_get_parameters (GdaBatch *batch, GdaSet **out_params, GError **error)
+{
+	GdaSet *set = NULL;
+	GSList *list;
+
+	g_return_val_if_fail (GDA_IS_BATCH (batch), FALSE);
+	g_return_val_if_fail (batch->priv, FALSE);
+
+	if (out_params)
+		*out_params = NULL;	
+
+	if (!batch->priv->statements)
+		return TRUE;
+
+	for (list = batch->priv->statements; list; list = list->next) {
+		GdaSet *tmpset = NULL;
+		if (!gda_statement_get_parameters (GDA_STATEMENT (list->data), out_params ? &tmpset : NULL, error)) {
+			if (tmpset)
+				g_object_unref (tmpset);
+			if (set)
+				g_object_unref (set);
+			return FALSE;
+		}
+
+		if (tmpset && tmpset->holders) {
+			if (!set) {
+				set = tmpset;
+				tmpset = NULL;
+			}
+			else {
+				/* merge @set and @tmp_set */
+				GSList *holders;
+				for (holders = tmpset->holders; holders; holders = holders->next) {
+					GdaHolder *holder = (GdaHolder *) holders->data;
+					if (! gda_set_add_holder (set, holder)) {
+						GdaHolder *eholder = gda_set_get_holder (set, gda_holder_get_id (holder));
+						if (!eholder ||
+						    (gda_holder_get_g_type (eholder) != (gda_holder_get_g_type (holder)))) {
+							/* error */
+							g_set_error (error, GDA_BATCH_ERROR, 0,
+								     _("Conflicting parameter '%s'"), gda_holder_get_id (holder));
+							g_object_unref (tmpset);
+							g_object_unref (set);
+							return FALSE;
+						}
+					}
+				}
+			}
+		}
+		if (tmpset)
+			g_object_unref (tmpset);
+	}
+
+	if (set) {
+		if (out_params)
+			*out_params = set;
+		else
+			g_object_unref (set);
+	}
+	return TRUE;
 }

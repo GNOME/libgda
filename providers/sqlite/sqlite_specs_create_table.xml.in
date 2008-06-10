@@ -24,6 +24,7 @@
     <gda_array_field id="COLUMN_PKEY" _name="Primary key" gdatype="gboolean"/>
     <gda_array_field id="COLUMN_DEFAULT" _name="Default" _descr="Default value" gdatype="gchararray"/>
     <gda_array_field id="COLUMN_CHECK" _name="Check" _descr="Check constraint" gdatype="gchararray"/>
+    <!-- To translators: "Compare method" refers to the method SQLite has to compare values -->
     <gda_array_field id="COLUMN_COLLATE" _name="Compare method" _descr="Collation name (BINARY|NOCASE)" gdatype="gchararray"/>
     <gda_array_field id="COLUMN_CONFLICT" _name="Conflict" _descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE" gdatype="gchararray"/>
     <gda_array_data>

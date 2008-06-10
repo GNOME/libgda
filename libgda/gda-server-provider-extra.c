@@ -233,6 +233,7 @@ typedef struct {
 } GdaSchemaColData;
 
 GdaSchemaColData aggs_spec [] = {
+	/* To translators: "Aggregate": the noun */
 	{ N_("Aggregate"), G_TYPE_STRING},
 	{ N_("Id"), G_TYPE_STRING},
 	{ N_("Owner"), G_TYPE_STRING},
@@ -282,6 +283,7 @@ GdaSchemaColData procs_spec [] = {
 	{ N_("Owner"), G_TYPE_STRING},
 	{ N_("Comments"), G_TYPE_STRING},
 	{ N_("Return type"), G_TYPE_STRING},
+	/* To translators: "Nb args": the procedure's number of arguments */
 	{ N_("Nb args"), G_TYPE_INT},
 	{ N_("Args types"), G_TYPE_STRING},
 	{ N_("Definition"), G_TYPE_STRING}

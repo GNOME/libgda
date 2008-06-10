@@ -277,7 +277,7 @@ gda_report_docbook_document_run_as_html (GdaReportDocument *doc, const gchar *fi
 		}
 		if (!xsltproc) {
 			g_set_error (error, 0, 0,
-				     _("Could not find the 'xsltproc' program"));
+				     _("Could not find the '%s' program"), "xsltproc");
 			return FALSE;
 		}
 	}
@@ -343,7 +343,7 @@ gda_report_docbook_document_run_as_pdf (GdaReportDocument *doc, const gchar *fil
 		}
 		if (!fdoc->priv->fop_path) {
 			g_set_error (error, 0, 0,
-				     _("Could not find the 'fop' program"));
+				     _("Could not find the '%s' program"), "fop");
 			return FALSE;
 		}
 	}

@@ -2907,7 +2907,8 @@ gda_meta_store_get_attribute_value (GdaMetaStore *store, const gchar *att_name, 
 			     _("Attribute '%s' not found"), att_name);
 	else if (nrows > 1) 
 		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_ATTRIBUTE_ERROR,
-			     _("Attribute '%s' has %d values"), att_name, nrows);
+			     ngettext ("Attribute '%s' has %d value", "Attribute '%s' has %d values", nrows), 
+			     att_name, nrows);
 	else {
 		value = (GValue*) gda_data_model_get_value_at (model, 0, 0);
 		if (value && (G_VALUE_TYPE (value) == G_TYPE_STRING)) {

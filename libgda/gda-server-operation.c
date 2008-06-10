@@ -1123,7 +1123,8 @@ gda_server_operation_op_type_to_string (GdaServerOperationType type)
 	case GDA_SERVER_OPERATION_DROP_VIEW:
 		return "DROP_VIEW";
 	default:
-		g_error (_("Non handled GdaServerOperationType, please report error"));
+		g_error (_("Non handled GdaServerOperationType, please report error to "
+			   "http://bugzilla.gnome.org/ for the \"libgda\" product"));
 		return "";
 	}
 }
@@ -1295,7 +1296,7 @@ gda_server_operation_load_data_from_xml (GdaServerOperation *op, xmlNodePtr node
 	/* actual data loading */
 	if (strcmp ((gchar*)node->name, "serv_op_data")) {
 		g_set_error (error, 0, 0,
-			     _("Expected tag <serv_op_data>, got <%s>"), node->name);
+			     _("Expected tag <%s>, got <%s>"), "serv_op_data", node->name);
 		return FALSE;
 	}
 	
@@ -1309,7 +1310,7 @@ gda_server_operation_load_data_from_xml (GdaServerOperation *op, xmlNodePtr node
 
 		if (strcmp ((gchar*)cur->name, "op_data")) {
 			g_set_error (error, 0, 0,
-				     _("Expected tag <op_data>, got <%s>"), cur->name);
+				     _("Expected tag <%s>, got <%s>"), "op_data", cur->name);
 			return FALSE;
 		}
 

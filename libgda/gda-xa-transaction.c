@@ -373,8 +373,8 @@ gda_xa_transaction_begin  (GdaXaTransaction *xa_trans, GError **error)
 		if (cnc != xa_trans->priv->non_xa_cnc) {
 		       
 			if (!PROV_CLASS (prov)->xa_funcs->xa_start) {
-				g_warning (_("Provider error: method xa_start() not implemented for provider %s"),
-					   gda_server_provider_get_name (prov));
+				g_warning (_("Provider error: %s method not implemented for provider %s"),
+					   "xa_start()", gda_server_provider_get_name (prov));
 				break;
 			}
 			else {
@@ -404,8 +404,8 @@ gda_xa_transaction_begin  (GdaXaTransaction *xa_trans, GError **error)
 			prov = gda_connection_get_provider_obj (cnc);
 			if (cnc != xa_trans->priv->non_xa_cnc) {
 				if (!PROV_CLASS (prov)->xa_funcs->xa_rollback) 
-					g_warning (_("Provider error: method xa_rollback() not implemented for provider %s"),
-						   gda_server_provider_get_name (prov));
+					g_warning (_("Provider error: %s method not implemented for provider %s"),
+						   "xa_rollback()", gda_server_provider_get_name (prov));
 				else {
 					const GdaBinary *branch;
 					branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
@@ -475,13 +475,13 @@ gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 			break;
 
 		if (!PROV_CLASS (prov)->xa_funcs->xa_prepare) {
-			g_warning (_("Provider error: method xa_prepare() not implemented for provider %s"),
-				   gda_server_provider_get_name (prov));
+			g_warning (_("Provider error: %s method not implemented for provider %s"),
+				   "xa_prepare()", gda_server_provider_get_name (prov));
 			break;
 		}
 		if (!PROV_CLASS (prov)->xa_funcs->xa_commit) {
-			g_warning (_("Provider error: method xa_commit() not implemented for provider %s"),
-				   gda_server_provider_get_name (prov));
+			g_warning (_("Provider error: %s method not implemented for provider %s"),
+				   "xa_commit()", gda_server_provider_get_name (prov));
 			break;
 		}
 
@@ -507,8 +507,8 @@ gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 				if (PROV_CLASS (prov)->xa_funcs->xa_rollback)
 					PROV_CLASS (prov)->xa_funcs->xa_rollback (prov, cnc, &(xa_trans->priv->xid), NULL);
 				else
-					g_warning (_("Provider error: method xa_rollback() not implemented for provider %s"),
-						   gda_server_provider_get_name (prov));
+					g_warning (_("Provider error: %s method not implemented for provider %s"),
+						   "xa_rollback()", gda_server_provider_get_name (prov));
 			}
 		}
 		return FALSE;
@@ -537,8 +537,8 @@ gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 				if (PROV_CLASS (prov)->xa_funcs->xa_rollback)
 					PROV_CLASS (prov)->xa_funcs->xa_rollback (prov, cnc, &(xa_trans->priv->xid), NULL);
 				else
-					g_warning (_("Provider error: method xa_rollback() not implemented for provider %s"),
-						   gda_server_provider_get_name (prov));
+					g_warning (_("Provider error: %s method not implemented for provider %s"),
+						   "xa_rollback()", gda_server_provider_get_name (prov));
 			}
 		}
 		return FALSE;
@@ -595,8 +595,8 @@ gda_xa_transaction_rollback (GdaXaTransaction *xa_trans, GError **error)
 			memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length,
 			branch->data, branch->binary_length);
 			if (!PROV_CLASS (prov)->xa_funcs->xa_rollback) 
-				g_warning (_("Provider error: method xa_prepare() not implemented for provider %s"),
-					   gda_server_provider_get_name (prov));
+				g_warning (_("Provider error: %s method not implemented for provider %s"),
+					   "xa_prepare()", gda_server_provider_get_name (prov));
 			else
 				PROV_CLASS (prov)->xa_funcs->xa_rollback (prov, cnc, &(xa_trans->priv->xid), error);
 		}
@@ -641,8 +641,8 @@ gda_xa_transaction_commit_recovered (GdaXaTransaction *xa_trans, GSList **cnc_to
 			
 
 			if (!PROV_CLASS (prov)->xa_funcs->xa_recover) 
-				g_warning (_("Provider error: method xa_recover() not implemented for provider %s"),
-					   gda_server_provider_get_name (prov));
+				g_warning (_("Provider error: %s method not implemented for provider %s"),
+					   "xa_recover()", gda_server_provider_get_name (prov));
 			else {
 				const GdaBinary *branch;
 				GList *xlist;
@@ -675,8 +675,8 @@ gda_xa_transaction_commit_recovered (GdaXaTransaction *xa_trans, GSList **cnc_to
 
 				if (commit_needed) {
 					if (!PROV_CLASS (prov)->xa_funcs->xa_commit) {
-						g_warning (_("Provider error: method xa_commit() not implemented for provider %s"),
-							   gda_server_provider_get_name (prov));
+						g_warning (_("Provider error: %s method not implemented for provider %s"),
+							   "xa_commit()", gda_server_provider_get_name (prov));
 						retval = FALSE;
 					}
 					else {

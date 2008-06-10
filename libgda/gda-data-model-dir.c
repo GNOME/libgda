@@ -784,7 +784,7 @@ gda_data_model_dir_get_value_at (GdaDataModel *model, gint col, gint row)
 
 	if (row >= imodel->priv->rows->len) {
 		gchar *str;
-                str = g_strdup_printf (_("Row %d out of range 0 - %d"), row,
+                str = g_strdup_printf (_("Row %d out of range (0-%d)"), row,
 				       imodel->priv->rows->len - 1);
 		add_error (imodel, str);
 		g_free (str);
@@ -943,7 +943,7 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 
 	if (row >= imodel->priv->rows->len) {
 		gchar *str;
-                str = g_strdup_printf (_("Row %d out of range 0 - %d"), row,
+                str = g_strdup_printf (_("Row %d out of range (0-%d)"), row,
 				       imodel->priv->rows->len - 1);
 		add_error (imodel, str);
 		g_set_error (error, 0, 0, str);
@@ -1287,7 +1287,7 @@ gda_data_model_dir_remove_row (GdaDataModel *model, gint row, GError **error)
 
 	if (row >= imodel->priv->rows->len) {
 		gchar *str;
-                str = g_strdup_printf (_("Row %d out of range 0 - %d"), row,
+                str = g_strdup_printf (_("Row %d out of range (0-%d)"), row,
 				       imodel->priv->rows->len - 1);
 		add_error (imodel, str);
 		g_set_error (error, 0, 0, str);

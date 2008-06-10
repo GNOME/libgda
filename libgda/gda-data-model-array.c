@@ -80,7 +80,7 @@ gda_data_model_array_get_row (GdaDataModelRow *model, gint row, GError **error)
 
 	if (row >= GDA_DATA_MODEL_ARRAY (model)->priv->rows->len) {
 		g_set_error (error, 0, 0,
-			     _("Row %d out of range 0 - %d"), row,
+			     _("Row %d out of range (0-%d)"), row,
 			     GDA_DATA_MODEL_ARRAY (model)->priv->rows->len- 1);
 		return NULL;
 	}
@@ -101,13 +101,13 @@ gda_data_model_array_get_value_at (GdaDataModelRow *model, gint col, gint row)
 	}
 
 	if (row >= GDA_DATA_MODEL_ARRAY (model)->priv->rows->len) {
-		g_warning (_("Row %d out of range 0 - %d"), row, 
+		g_warning (_("Row %d out of range (0-%d)"), row, 
 			   GDA_DATA_MODEL_ARRAY (model)->priv->rows->len - 1);
 		return NULL;
 	}
 
 	if (col >= GDA_DATA_MODEL_ARRAY (model)->priv->number_of_columns) {
-		g_warning (_("Column %d out of range 0 - %d"), col, 
+		g_warning (_("Column %d out of range (0-%d)"), col, 
 			   GDA_DATA_MODEL_ARRAY (model)->priv->number_of_columns - 1);
 		return NULL;
 	}

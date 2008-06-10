@@ -118,7 +118,7 @@ gda_handler_boolean_init (GdaHandlerBoolean *hdl)
 	hdl->priv->valid_g_types = g_new0 (GType, 1);
 	hdl->priv->valid_g_types[0] = G_TYPE_BOOLEAN;
 
-	g_object_set_data (G_OBJECT (hdl), "name", _("InternalBoolean"));
+	g_object_set_data (G_OBJECT (hdl), "name", "InternalBoolean");
 	g_object_set_data (G_OBJECT (hdl), "descr", _("Boolean representation"));
 }
 

@@ -258,7 +258,7 @@ gda_data_model_row_describe_column (GdaDataModel *model, gint col)
 	GdaColumn *column;
 
 	if (col >= gda_data_model_get_n_columns (model)) {
-		g_warning ("Column %d out of range 0 - %d", col, gda_data_model_get_n_columns (model) - 1);
+		g_warning ("Column %d out of range (0-%d)", col, gda_data_model_get_n_columns (model) - 1);
 		return NULL;
 	}
 

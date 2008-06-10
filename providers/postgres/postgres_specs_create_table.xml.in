@@ -126,10 +126,12 @@
 	</gda_array_row>
 	<gda_array_row>
           <gda_value>SET NULL</gda_value>
+	  <!-- To translators: Action of setting a value to NULL -->
           <_gda_value>Set to NULL</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
           <gda_value>SET DEFAULT</gda_value>
+	  <!-- To translators: Action of setting a value to its default value -->
           <_gda_value>Set to default</_gda_value>
 	</gda_array_row>
       </gda_array_data>

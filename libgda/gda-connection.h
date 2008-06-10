@@ -163,7 +163,7 @@ void                 gda_connection_clear_events_list    (GdaConnection *cnc);
 const GList         *gda_connection_get_events           (GdaConnection *cnc);
 
 GdaSqlParser        *gda_connection_create_parser        (GdaConnection *cnc);
-GObject             *gda_connection_batch_execute        (GdaConnection *cnc,
+GSList              *gda_connection_batch_execute        (GdaConnection *cnc,
 							  GdaBatch *batch, GdaSet *params,
 							  GdaStatementModelUsage model_usage, GError **error);
 

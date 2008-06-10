@@ -822,8 +822,10 @@ gda_server_provider_escape_string (GdaServerProvider *provider, GdaConnection *c
 
 	if (CLASS (provider)->escape_string) {
 		if (! CLASS (provider)->unescape_string)
-			g_warning (_("GdaServerProvider object implements the escape_string() virtual method but "
-				     "does not implement the unescape_string() one, please report this bug."));
+			g_warning (_("GdaServerProvider object implements the %s virtual method but "
+				     "does not implement the %s one, please report this bug to "
+				     "http://bugzilla.gnome.org/ for the \"libgda\" product."), 
+				   "escape_string()", "unescape_string()");
 		return (CLASS (provider)->escape_string)(provider, cnc, str);
 	}
 	else 
@@ -849,8 +851,10 @@ gda_server_provider_unescape_string (GdaServerProvider *provider, GdaConnection 
 
 	if (CLASS (provider)->unescape_string) {
 		if (! CLASS (provider)->escape_string)
-			g_warning (_("GdaServerProvider object implements the unescape_string() virtual method but "
-				     "does not implement the escape_string() one, please report this bug."));
+			g_warning (_("GdaServerProvider object implements the %s virtual method but "
+				     "does not implement the %s one, please report this bug to "
+				     "http://bugzilla.gnome.org/ for the \"libgda\" product."),
+				   "unescape_string()", "escape_string()");
 		return (CLASS (provider)->unescape_string)(provider, cnc, str);
 	}
 	else

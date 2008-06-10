@@ -1610,7 +1610,7 @@ real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stm
 			}
 			else {
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR,
-					     _("Unnammed parameter is not allowed in prepared statements"));
+					     _("Unnamed parameter is not allowed in prepared statements"));
 				g_slist_foreach (param_ids, (GFunc) g_free, NULL);
 				g_slist_free (param_ids);
 				goto out_err;

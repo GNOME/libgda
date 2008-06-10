@@ -185,8 +185,8 @@ gda_connection_class_init (GdaConnectionClass *klass)
                                          g_param_spec_flags ("options", _("Options (connection sharing)"),
 							    NULL, GDA_TYPE_CONNECTION_OPTIONS, GDA_CONNECTION_OPTIONS_NONE,
 							    (G_PARAM_READABLE | G_PARAM_WRITABLE)));
-	/* To translators: Don't translate "GdaMetaStore", it's a class name */
         g_object_class_install_property (object_class, PROP_META_STORE,
+					 /* To translators: Don't translate "GdaMetaStore", it's a class name */
 					 g_param_spec_object ("meta-store", _ ("GdaMetaStore used by the connection"),
 							      NULL, GDA_TYPE_META_STORE,
 							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
@@ -1226,6 +1226,46 @@ gda_connection_create_parser (GdaConnection *cnc)
 
 	return gda_server_provider_create_parser (cnc->priv->provider_obj, cnc);
 }
+
+/**
+ * gda_connection_batch_execute
+ * @cnc: a #GdaConnection object
+ * @batch: a #GdaBatch object which contains all the statements to execute
+ * @params: a #GdaSet object (which can be obtained using gda_batch_get_parameters()), or %NULL
+ * @model_usage:  specifies how the returned data model(s) will be used, as a #GdaStatementModelUsage enum
+ * @error: a place to store errors, or %NULL
+ *
+ * Executes all the statements contained in @batch (in the order in which they were added to @batch), and
+ * returns a list of #GObject objects, at most one #GObject for each statement; see gda_connection_statement_execute()
+ * for details about the returned objects.
+ *
+ * If one of the statement fails, then none of the subsequent statement will be executed, and the method returns
+ * the list of #GObject created by the correct execution of the previous statements. If a transaction is required,
+ * then it should be started before calling this method.
+ *
+ * Returns: a list of #GObject objects
+ */
+GSList *
+gda_connection_batch_execute (GdaConnection *cnc, GdaBatch *batch, GdaSet *params,
+			      GdaStatementModelUsage model_usage, GError **error)
+{
+	GSList *retlist = NULL, *stmt_list;
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (cnc->priv, NULL);
+	g_return_val_if_fail (GDA_IS_BATCH (cnc), NULL);
+
+	for (stmt_list = (GSList*) gda_batch_get_statements (batch); stmt_list; stmt_list = stmt_list->next) {
+		GObject *obj;
+		obj = gda_connection_statement_execute (cnc, GDA_STATEMENT (stmt_list->data), params,
+							model_usage, NULL, error);
+		if (!obj)
+			break;
+		retlist = g_slist_prepend (retlist, obj);
+	}
+	
+	return g_slist_reverse (retlist);
+}
+
 
 /**
  * gda_connection_statement_to_sql

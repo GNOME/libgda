@@ -108,6 +108,9 @@ gda_meta_struct_class_init (GdaMetaStructClass *klass) {
         object_class->set_property = gda_meta_struct_set_property;
         object_class->get_property = gda_meta_struct_get_property;
         g_object_class_install_property (object_class, PROP_FEATURES,
+					 /* To translators: The GdaMetaStruct object computes lists of tables, views,
+					  * and some other information, the "Features to compute" allows one to avoid
+					  * computing some features which won't be used */
 					 g_param_spec_uint ("features", _ ("Features to compute"), NULL, 
 							    GDA_META_STRUCT_FEATURE_NONE, G_MAXINT,
 							    GDA_META_STRUCT_FEATURE_ALL,

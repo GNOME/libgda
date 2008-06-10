@@ -142,7 +142,7 @@ gchar        *gda_set_get_spec                 (GdaSet *set);
 gboolean      gda_set_set_holder_value         (GdaSet *set, const gchar *holder_id, ...);
 const GValue *gda_set_get_holder_value         (GdaSet *set, const gchar *holder_id);
 GdaHolder    *gda_set_get_holder               (GdaSet *set, const gchar *holder_id);
-void          gda_set_add_holder               (GdaSet *set, GdaHolder *holder);
+gboolean      gda_set_add_holder               (GdaSet *set, GdaHolder *holder);
 void          gda_set_remove_holder            (GdaSet *set, GdaHolder *holder);
 void          gda_set_merge_with_set           (GdaSet *set, GdaSet *set_to_merge);
 gboolean      gda_set_is_valid                 (GdaSet *set);
