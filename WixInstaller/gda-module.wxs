@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Module Id="libgda" Language="0" Version="$(var.VERSION)">
+
+    <Package Id="29ccc1c7-fd88-4da1-a5c8-d3203738cdeb" InstallerVersion="200"
+      Languages="1033" Manufacturer="GnomeDb" SummaryCodepage="1252" AdminImage="no" ShortNames="no" />
+
+      <Directory Id="TARGETDIR" Name="SourceDir">
+        <Directory Id="ProgramFilesFolder" Name="PFiles">
+          <Directory Id="GnomeDb" Name="GnomeDb">
+            <Directory Id="INSTALLDIR" Name="$(var.INSTALLDIR)">
+
+	      <!-- etc -->
+	      <Directory Id="etc" Name="etc">
+		<Directory Id="etc_libgda_4.0" Name="libgda-4.0">
+		  <Component Id="etc" Guid="35a8715d-a4fd-48f3-8b58-066ce6c1be31">
+			  <File Id="config" Name="config" Source="../etc/libgda-4.0/config" Vital="yes"/>
+			  <File Id="sales_test.db" Name="sales_test.db" Source="../etc/libgda-4.0/sales_test.db" Vital="yes"/>
+		  </Component>
+		</Directory>
+	      </Directory>
+
+	      <!-- bin -->
+              <Directory Id="BINDIR" Name="bin">
+		<Component Id="execs" Guid="cbc4f5bf-c087-4bc6-a9eb-cb9a613d84bd">
+		  <File Id="gda_sql_4.0.exe" Name="gda-sql-4.0.exe" Source="../bin/gda-sql-4.0.exe" Vital="yes">
+		    <Shortcut Id="gda_sql_4.0.exe.short" Directory="ProgramMenuDir" Name="Gda Sql console" WorkingDirectory="BINDIR"/>
+		  </File>
+		  <File Id="gda_test_connection_4.0.exe" Name="gda-test-connection-4.0.exe" Source="../bin/gda-test-connection-4.0.exe"/>
+		</Component>
+		
+		<Component Id="dlls" Guid="eb72c3cd-e761-4e13-b8cb-7bc0b6b6c4ab">
+		  <File Id="libgda_4.0_4.dll" Name="libgda-4.0-4.dll" Source="../bin/libgda-4.0-4.dll" Vital="yes"/>
+		</Component>
+
+		
+              </Directory>
+
+	      <!-- lib -->
+	      <Directory Id="lib" Name="lib">
+		<Directory Id="lib_libgda_4.0" Name="libgda-4.0">
+		  <Directory Id="PROVIDERSDIR" Name="providers">
+		    <Component Id="providers" Guid="c3d0b4ce-e262-4991-ba8f-a9ad6723efa9">
+		      <File Id="libgda_sqlite.dll" Name="libgda-sqlite.dll" Source="../lib/libgda-4.0/providers/libgda-sqlite.dll" Vital="yes"/>
+                      <File Id="libgda_postgres.dll" Name="libgda-postgres.dll" Source="../lib/libgda-4.0/providers/libgda-postgres.dll" Vital="yes"/>
+                      <File Id="libgda_mysql.dll" Name="libgda-mysql.dll" Source="../lib/libgda-4.0/providers/libgda-mysql.dll" Vital="yes"/>
+                      <File Id="libgda_mdb.dll" Name="libgda-mdb.dll" Source="../lib/libgda-4.0/providers/libgda-mdb.dll" Vital="yes"/>
+                      <File Id="libgda_bdb.dll" Name="libgda-bdb.dll" Source="../lib/libgda-4.0/providers/libgda-bdb.dll" Vital="yes"/>
+		    </Component>
+		  </Directory>
+		</Directory>
+              </Directory>
+
+            </Directory>
+          </Directory>
+        </Directory>
+
+	<Directory Id="ProgramMenuFolder" Name="Programs">
+	  <Directory Id="ProgramMenuDir" Name="GnomeDb"/>
+	</Directory>
+      </Directory>
+
+      <!-- GLib -->
+      <ComponentRef Id="GLIB_DLL"/> 
+
+      <!-- Database DLLs -->
+      <ComponentRef Id="BDB_DLL"/>
+      <ComponentRef Id="MDB_DLL"/>
+      <ComponentRef Id="MYSQL_DLL"/>
+      <ComponentRef Id="POSTGRES_DLL"/>
+
+      <ComponentRef Id="GDA_SHARE"/>
+      <ComponentRef Id="GDA_DTD"/>
+  </Module>
+</Wix>

@@ -415,7 +415,7 @@ then
 		AC_MSG_WARN(Can't auto determine Mysql installation in cross-compiling environment)
 	else
 		AC_MSG_CHECKING(for MySQL files)
-		AC_PATH_PROG(MYSQL_CONFIG, mysql_config)
+		AC_PATH_PROGS(MYSQL_CONFIG, mysql_config mysql_config5)
 	fi
 else
 	AC_MSG_CHECKING(for MySQL files in $withval)
@@ -423,7 +423,7 @@ else
 	then
 		mysql_req=$withval	
 	else
-		AC_PATH_PROG(MYSQL_CONFIG, mysql_config, [], $withval/bin)
+		AC_PATH_PROGS(MYSQL_CONFIG, mysql_config mysql_config5, [], $withval/bin)
 	fi	
 fi
 ])
@@ -432,7 +432,7 @@ mysqldir=""
 if test $mysql_req = auto
 then
 	AC_MSG_CHECKING(for MySQL files)
-	AC_PATH_PROG(MYSQL_CONFIG, mysql_config)
+	AC_PATH_PROGS(MYSQL_CONFIG, mysql_config mysql_config5)
 fi
 
 if test x$MYSQL_CONFIG != x

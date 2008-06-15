@@ -645,6 +645,50 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 @case_s: not %NULL if expression is a CASE WHEN ... expression
 @cast_as: not %NULL if expression must be cast to another data type
 
+<!-- ##### FUNCTION gda_sql_expr_new ##### -->
+<para>
+
+</para>
+
+@parent: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_expr_free ##### -->
+<para>
+
+</para>
+
+@expr: 
+
+
+<!-- ##### FUNCTION gda_sql_expr_copy ##### -->
+<para>
+
+</para>
+
+@expr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_expr_serialize ##### -->
+<para>
+
+</para>
+
+@expr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_expr_take_select ##### -->
+<para>
+
+</para>
+
+@expr: 
+@stmt: 
+
+
 <!-- ##### STRUCT GdaSqlParamSpec ##### -->
 <para>
 
@@ -734,12 +778,62 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
   This structure represents the name of a table's field.
 </para>
 
+@any: 
+@field_name: 
+@validity_meta_table_column: 
+
+<!-- ##### FUNCTION gda_sql_field_new ##### -->
+<para>
+
+</para>
+
+@parent: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_field_free ##### -->
+<para>
+
+</para>
+
+@field: 
+
+
+<!-- ##### FUNCTION gda_sql_field_copy ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_field_serialize ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_field_take_name ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+
 
 <!-- ##### STRUCT GdaSqlTable ##### -->
 <para>
   This structure represents the name of a table.
 </para>
 
+@any: 
+@table_name: 
+@validity_meta_object: 
 
 <!-- ##### FUNCTION gda_sql_table_new ##### -->
 <para>

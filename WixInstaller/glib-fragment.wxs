@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <DirectoryRef Id="INSTALLDIR">
+      <Directory Id="glib_bin" Name="bin">
+        <Component Id="GLIB_DLL" Guid="76b40e4c-3ae6-44ac-9e57-391c1a6fd960">
+	  <File Id="glib_file0" DiskId="1" Name="charset.dll" Source="../depend/gtk/bin/charset.dll" />
+	  <File Id="glib_file1" DiskId="1" Name="iconv.dll" Source="../depend/gtk/bin/iconv.dll" />
+	  <File Id="glib_file2" DiskId="1" Name="intl.dll" Source="../depend/gtk/bin/intl.dll" />
+	  <File Id="glib_file8" DiskId="1" Name="libgio-2.0-0.dll" Source="../depend/gtk/bin/libgio-2.0-0.dll" />
+	  <File Id="glib_file9" DiskId="1" Name="libglib-2.0-0.dll" Source="../depend/gtk/bin/libglib-2.0-0.dll" />
+	  <File Id="glib_file10" DiskId="1" Name="libgmodule-2.0-0.dll" Source="../depend/gtk/bin/libgmodule-2.0-0.dll" />
+	  <File Id="glib_file11" DiskId="1" Name="libgobject-2.0-0.dll" Source="../depend/gtk/bin/libgobject-2.0-0.dll" />
+	  <File Id="glib_file12" DiskId="1" Name="libgthread-2.0-0.dll" Source="../depend/gtk/bin/libgthread-2.0-0.dll" />
+	  <File Id="glib_file20" DiskId="1" Name="libxml2.dll" Source="../depend/gtk/bin/libxml2.dll" />
+	  <File Id="glib_file21" DiskId="1" Name="zlib1.dll" Source="../depend/gtk/bin/zlib1.dll" />
+        </Component>
+      </Directory>
+    </DirectoryRef>
+  </Fragment>
+</Wix>

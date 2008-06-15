@@ -387,6 +387,7 @@ real_open_connection (const gchar  *host,
 		      const gchar  *username,
 		      const gchar  *password,
 		      gboolean      use_ssl,
+		      gboolean      compress,
 		      GError      **error)
 {
 	g_print ("*** %s\n", __func__);
@@ -410,6 +411,9 @@ real_open_connection (const gchar  *host,
 
 	if (use_ssl)
 		flags |= CLIENT_SSL;
+	if (compress)
+		flags |= CLIENT_COMPRESS;
+	
 	
 	MYSQL *mysql = g_new0 (MYSQL, 1);
 	mysql_init (mysql);
@@ -511,10 +515,11 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 	user = gda_quark_list_find (params, "USER");
 	password = gda_quark_list_find (params, "PASSWORD");
 
-	const gchar *port, *unix_socket, *use_ssl;
+	const gchar *port, *unix_socket, *use_ssl, *compress;
 	port = gda_quark_list_find (params, "PORT");
 	unix_socket = gda_quark_list_find (params, "UNIX_SOCKET");
 	use_ssl = gda_quark_list_find (params, "USE_SSL");
+	compress = gda_quark_list_find (params, "COMPRESS");
 	
 	
 	/* open the real connection to the database */
@@ -526,7 +531,8 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 	MYSQL *mysql = real_open_connection (host, (port != NULL) ? atoi (port) : 0,
 					     unix_socket, db_name,
 					     user, password,
-					     (use_ssl != NULL) ? TRUE : FALSE,
+					     (use_ssl && ((*use_ssl == 't') || (*use_ssl == 'T'))) ? TRUE : FALSE,
+					     (compress && ((*compress == 't') || (*compress == 'T'))) ? TRUE : FALSE,
 					     &error);
 	if (!mysql) {
 		_gda_mysql_make_error (cnc, mysql, NULL, NULL);

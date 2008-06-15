@@ -1274,6 +1274,8 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 			continue;
 		if (strcmp (ext + 1, G_MODULE_SUFFIX))
 			continue;
+		if (!g_str_has_prefix (name, "libgda"))
+			continue;
 
 		path = g_build_path (G_DIR_SEPARATOR_S, dirname,
 				     name, NULL);
@@ -1329,6 +1331,7 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 				   forget about that provider... */
 				internal_provider_free (ip);
 				ip = NULL;
+				continue;
 			}
 		}
 		else
@@ -1357,6 +1360,7 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 				   forget about that provider... */
 				internal_provider_free (ip);
 				ip = NULL;
+				continue;
 			}
 		}
 		else {
@@ -1428,7 +1432,8 @@ internal_provider_free (InternalProvider *ip)
 	g_free (info->id);
 	g_free (info->location);
 	g_free (info->description);
-	g_object_unref (info->dsn_params);
+	if (info->dsn_params)
+		g_object_unref (info->dsn_params);
 	g_free (ip);
 }
 

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+  <Product Id="ed896b47-d102-47b0-b915-171c7eff56d8" Name="Gda Sql console" UpgradeCode="fc98463b-5f4f-4364-9764-e3c798c88ef2" Language="1033" Version="$(var.VERSION)" Manufacturer="GnomeDb">
+
+    <Package Manufacturer="GnomeDb" InstallerVersion="200" Compressed="yes" />
+
+    <Media Id="1" Cabinet="Sample.cab" EmbedCab="yes" DiskPrompt="CD-ROM #1" />
+    <Property Id="DiskPrompt" Value="GnomeDb install [1]" />
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder" Name="PFiles">
+        <Directory Id="GnomeDb" Name="GnomeDb">
+          <Directory Id="INSTALLDIR" Name="$(var.INSTALLDIR)">
+
+            <Merge Id="libgda.29ccc1c7-fd88-4da1-a5c8-d3203738cdeb" Language="1033" SourceFile="gda-module-$(var.VERSION).msm" DiskId="1" />
+
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <Feature Id="GdaModule" Display="hidden" Title="Core" Level="1">
+      <MergeRef Id="libgda.29ccc1c7-fd88-4da1-a5c8-d3203738cdeb" />
+    </Feature>
+
+     <UIRef Id="WixUI_Minimal" />
+     <WixVariable Id="WixUILicenseRtf" Value="gpl.rtf" />
+
+  </Product>
+</Wix>

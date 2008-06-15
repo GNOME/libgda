@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <DirectoryRef Id="BINDIR">
+      <Component Id="MDB_DLL" Guid="3e6192e0-aa2a-4567-af20-60205165eb1e">
+        <File Id="mdb_file0" DiskId="1" Name="libmdb-0.dll" Source="..\depend\mdb\bin\libmdb-0.dll" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+</Wix>

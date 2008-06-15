@@ -1,3 +1,17 @@
+2008-06-15  Vivien Malerba <malerba@gnome-db.org>
+
+	* providers/mysql/mysql_specs_dsn.xml.in:
+	* providers/mysql/gda-mysql-provider.c: added a COMPRESS option to specify the
+	CLIENT_COMPRESS flag when opening the connection
+	* WixInstaller/*: configuration files to use with the Wix Windows
+	installer to produce .msm and .msi files
+	* configure.in: also use the mysql_config5 program when detecting a
+	MySQL installation
+	* libgda/gda-config.c: crasher fixed
+	* tools/gda-sql.c: better interraction with the Windows console
+	* libgda/binreloc/gda-binreloc.c: cut the last "bin" part of a path
+	under MacOS X
+
 2008-06-10  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in: if no --with-postgres or --with-mysql are passed to the configure

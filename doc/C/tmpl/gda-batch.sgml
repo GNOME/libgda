@@ -88,3 +88,14 @@ a #GdaSqlParser object.
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_batch_get_parameters ##### -->
+<para>
+
+</para>
+
+@batch: 
+@out_params: 
+@error: 
+@Returns: 
+
+

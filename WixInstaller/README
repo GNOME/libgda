@@ -1,0 +1,37 @@
+Instructions on how to use Wix to build MSI files
+-------------------------------------------------
+Wix is available at http://wix.sourceforge/net under the "Common Public License".
+
+Before using Wix (Version 3), make sure you have the following directory layout:
+.
+|-- bin
+|   |-- ...
+|   `-- ...
+|-- depend
+|   |-- bdb
+|   |-- gtk
+|   |-- mdb
+|   |-- mysql
+|   |-- pgsql
+|-- etc
+|   `-- libgda-4.0
+|-- gdawix                  <-- current directory
+|   |-- README              <-- this file
+|   |-- Make.bat            <-- execute this to build
+|   |-- Clean.bat
+|   |-- bdb.wxs
+|   |-- gda-module.wxs
+|   |-- gda-share.wxs
+|   |-- gda-sql.wxs
+|   |-- glib-fragment.wxs
+|   |-- mdb.wxs
+|   |-- mysql.wxs
+|   `-- postgres.wxs
+|-- include
+|   `-- libgda-4.0
+|-- lib
+|   |-- ...
+|   `-- ...
+`-- share
+    |-- ...
+    `-- ...

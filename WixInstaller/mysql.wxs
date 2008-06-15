@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <DirectoryRef Id="BINDIR">
+      <Component Id="MYSQL_DLL" Guid="355dd2ba-8e87-43ba-88c4-6b76aa376573">
+	<File Id="mysql_file0" DiskId="1" Name="libmySQL.dll" Source="../depend/mysql/bin/libmySQL.dll" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+</Wix>

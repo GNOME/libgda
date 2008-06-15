@@ -208,6 +208,7 @@ different classifications of the group of #GdaHolder values.
 
 @set: 
 @holder: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_set_remove_holder ##### -->

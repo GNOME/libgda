@@ -39,6 +39,9 @@
 #ifndef G_OS_WIN32
 #include <signal.h>
 #include <pwd.h>
+#else
+#include <stdlib.h>
+#include <windows.h>
 #endif
 
 #ifdef HAVE_READLINE
@@ -197,6 +200,15 @@ main (int argc, char *argv[])
 
 	/* welcome message */
 	if (!data->output_stream) {
+#ifdef G_OS_WIN32
+		HANDLE wHnd;
+		SMALL_RECT windowSize = {0, 0, 139, 49};
+
+		wHnd = GetStdHandle(STD_OUTPUT_HANDLE);
+
+		SetConsoleTitle ("Gda console, version " PACKAGE_VERSION);
+		SetConsoleWindowInfo (wHnd, TRUE, &windowSize);
+#endif
 		g_print (_("Welcome to the GDA SQL console, version " PACKAGE_VERSION));
 		g_print ("\n\n");
 		g_print (_("Type: .copyright to show usage and distribution terms\n"
