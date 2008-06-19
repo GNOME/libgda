@@ -687,7 +687,7 @@ gda_postgres_render_CREATE_VIEW (GdaServerProvider *provider, GdaConnection *cnc
 				g_string_append_c (cols, ' ');
 			}
 			if (cols) {
-				g_string_append_c (cols, ")");
+				g_string_append_c (cols, ')');
 				g_string_append (string, cols->str);
 				g_string_free (cols, TRUE);
 			}

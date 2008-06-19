@@ -971,7 +971,7 @@ gda_meta_struct_complement_depend (GdaMetaStruct *mstruct, GdaMetaStore *store, 
 			continue;
 		
 		GValue *cat = NULL, *schema = NULL, *name = NULL;
-		gboolean allok;
+		GdaMetaDbObject *tmpobj;
 		g_return_val_if_fail (dep_dbo->obj_name, FALSE);
 		if (dep_dbo->obj_catalog)
 			g_value_take_string ((cat = gda_value_new (G_TYPE_STRING)), 
@@ -981,11 +981,11 @@ gda_meta_struct_complement_depend (GdaMetaStruct *mstruct, GdaMetaStore *store, 
 					     g_strdup_printf ("\"%s\"", dep_dbo->obj_schema));
 		g_value_take_string ((name = gda_value_new (G_TYPE_STRING)), 
 				     g_strdup_printf ("\"%s\"", dep_dbo->obj_name));
-		allok = gda_meta_struct_complement (mstruct, store, GDA_META_DB_UNKNOWN, cat, schema, name, error);
+		tmpobj = gda_meta_struct_complement (mstruct, store, GDA_META_DB_UNKNOWN, cat, schema, name, error);
 		if (cat) gda_value_free (cat);
 		if (schema) gda_value_free (schema);
 		gda_value_free (name);
-		if (!allok)
+		if (!tmpobj)
 			return FALSE;
 	}
 	return TRUE;
