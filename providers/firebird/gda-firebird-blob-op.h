@@ -1,8 +1,8 @@
-/* GDA DB Firebird Blob
- * Copyright (C) 2007 The GNOME Foundation
+/* GDA Firebird provider
+ * Copyright (C) 2008 The GNOME Foundation
  *
  * AUTHORS:
- *      Vivien Malerba <malerba@gnome-db.org>
+ *      TO_ADD: your name and email
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -23,9 +23,7 @@
 #ifndef __GDA_FIREBIRD_BLOB_OP_H__
 #define __GDA_FIREBIRD_BLOB_OP_H__
 
-#include <libgda/gda-value.h>
 #include <libgda/gda-blob-op.h>
-#include <ibase.h>
 
 G_BEGIN_DECLS
 
@@ -40,17 +38,18 @@ typedef struct _GdaFirebirdBlobOpClass   GdaFirebirdBlobOpClass;
 typedef struct _GdaFirebirdBlobOpPrivate GdaFirebirdBlobOpPrivate;
 
 struct _GdaFirebirdBlobOp {
-	GdaBlobOp                 parent;
+	GdaBlobOp             parent;
 	GdaFirebirdBlobOpPrivate *priv;
 };
 
 struct _GdaFirebirdBlobOpClass {
-	GdaBlobOpClass            parent_class;
+	GdaBlobOpClass        parent_class;
 };
 
 GType         gda_firebird_blob_op_get_type     (void) G_GNUC_CONST;
 GdaBlobOp    *gda_firebird_blob_op_new          (GdaConnection *cnc);
-GdaBlobOp    *gda_firebird_blob_op_new_with_id  (GdaConnection *cnc, const ISC_QUAD *blob_id);
+
+/* TO_ADD: more convenient API to create a GdaBlobOp with some specific information as argument */
 
 G_END_DECLS
 

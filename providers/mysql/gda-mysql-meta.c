@@ -44,7 +44,24 @@ static gboolean append_a_row (GdaDataModel  *to_model,
 typedef enum {
 	I_STMT_CATALOG,
         I_STMT_BTYPES,
+        I_STMT_SCHEMAS,
         I_STMT_SCHEMAS_ALL,
+        I_STMT_SCHEMA_NAMED,
+        I_STMT_TABLES,
+        I_STMT_TABLES_ALL,
+        I_STMT_TABLE_NAMED,
+        I_STMT_VIEWS,
+        I_STMT_VIEWS_ALL,
+        I_STMT_VIEW_NAMED,
+        I_STMT_COLUMNS_OF_TABLE,
+        I_STMT_COLUMNS_ALL,
+        I_STMT_TABLES_CONSTRAINTS,
+        I_STMT_TABLES_CONSTRAINTS_ALL,
+        I_STMT_TABLES_CONSTRAINTS_NAMED,
+        I_STMT_REF_CONSTRAINTS,
+        I_STMT_REF_CONSTRAINTS_ALL,
+        I_STMT_KEY_COLUMN_USAGE,
+        I_STMT_KEY_COLUMN_USAGE_ALL
 } InternalStatementItem;
 
 
@@ -56,44 +73,61 @@ static gchar *internal_sql[] = {
         "SELECT DATABASE()",
 
         /* I_STMT_BTYPES */
-        "SELECT DISTINCT data_type, CONCAT(table_schema, '.', data_type),  CASE data_type WHEN 'int' THEN 'gint' WHEN 'bigint' THEN 'gint64' WHEN 'blob' THEN 'GdaBinary' WHEN 'date' THEN 'GDate' WHEN 'time' THEN 'GdaTime' WHEN 'double' THEN 'gdouble' WHEN 'timestamp' THEN 'GdaTimestamp' ELSE 'string' END  ,    CONCAT('Desc:', data_type), NULL, 0   FROM information_schema.columns WHERE table_schema = SCHEMA() ORDER BY 1",
+        "SELECT DISTINCT data_type, CONCAT(table_schema, '.', data_type), CASE data_type WHEN 'int' THEN 'gint' WHEN 'bigint' THEN 'gint64' WHEN 'blob' THEN 'GdaBinary' WHEN 'date' THEN 'GDate' WHEN 'time' THEN 'GdaTime' WHEN 'double' THEN 'gdouble' WHEN 'timestamp' THEN 'GdaTimestamp' ELSE 'string' END, CONCAT('Desc:', data_type), NULL, 0 FROM information_schema.columns WHERE table_schema = SCHEMA() ORDER BY 1",
 
         /* I_STMT_SCHEMAS */
+	"SELECT IFNULL(catalog_name, schema_name), schema_name, NULL, CASE schema_name WHEN 'information_schema' THEN 1 ELSE 0 END FROM information_schema.schemata WHERE schema_name = ##cat::string",
 
         /* I_STMT_SCHEMAS_ALL */
-	"SELECT catalog_name, schema_name, 'mysql', CASE schema_name WHEN 'information_schema' THEN TRUE WHEN 'mysql' THEN TRUE ELSE FALSE END   FROM information_schema.schemata",
+	"SELECT IFNULL(catalog_name, schema_name), schema_name, NULL, CASE schema_name WHEN 'information_schema' THEN 1 ELSE 0 END FROM information_schema.schemata",
 
         /* I_STMT_SCHEMA_NAMED */
+	"SELECT IFNULL(catalog_name, schema_name), schema_name, NULL, CASE schema_name WHEN 'information_schema' THEN 1 ELSE 0 END FROM information_schema.schemata WHERE schema_name = ##name::string",
 
         /* I_STMT_TABLES */
+	"SELECT IFNULL(table_catalog, table_schema), table_schema, table_name, table_type, CASE table_type WHEN 'BASE TABLE' THEN 1 ELSE 0 END, table_comment, table_name, CONCAT(table_schema, '.', table_name), NULL FROM information_schema.tables WHERE table_catalog = ##cat::string AND schema_name = ##schema::string",
 
         /* I_STMT_TABLES_ALL */
+	"SELECT IFNULL(table_catalog, table_schema), table_schema, table_name, table_type, CASE table_type WHEN 'BASE TABLE' THEN 1 ELSE 0 END, table_comment, table_name, CONCAT(table_schema, '.', table_name), NULL FROM information_schema.tables",
 
         /* I_STMT_TABLE_NAMED */
+	"SELECT IFNULL(table_catalog, table_schema), table_schema, table_name, table_type, CASE table_type WHEN 'BASE TABLE' THEN 1 ELSE 0 END, table_comment, table_name, CONCAT(table_schema, '.', table_name), NULL FROM information_schema.tables WHERE table_catalog = ##cat::string AND schema_name = ##schema::string",
 
         /* I_STMT_VIEWS */
+	"SELECT IFNULL(table_catalog, table_schema), table_schema, table_name, view_definition, check_option, is_updatable FROM information_schema.views ",
 
         /* I_STMT_VIEWS_ALL */
+	"SELECT IFNULL(table_catalog, table_schema), table_schema, table_name, view_definition, check_option, is_updatable FROM information_schema.views ",
 
         /* I_STMT_VIEW_NAMED */
+	"SELECT IFNULL(table_catalog, table_schema), table_schema, table_name, view_definition, check_option, is_updatable FROM information_schema.views WHERE table_catalog = ##cat::string AND schema_name = ##schema::string",
 
         /* I_STMT_COLUMNS_OF_TABLE */
+	"SELECT IFNULL(table_catalog, table_schema), table_schema, table_name, column_name, ordinal_position, column_default, is_nullable, data_type, 'gchararray', character_maximum_length,character_octet_length, numeric_precision, numeric_scale, 0, character_set_name, character_set_name, character_set_name, collation_name, collation_name, collation_name, '', 1, column_comment FROM information_schema.columns WHERE table_catalog = ##cat::string AND table_schema = ##schema::string AND table_name = ##name::string",
 
         /* I_STMT_COLUMNS_ALL */
+	"SELECT IFNULL(table_catalog, table_schema), table_schema, table_name, column_name, ordinal_position, column_default, is_nullable, data_type, 'gchararray', character_maximum_length,character_octet_length, numeric_precision, numeric_scale, 0, character_set_name, character_set_name, character_set_name, collation_name, collation_name, collation_name, '', 1, column_comment FROM information_schema.columns",
 
         /* I_STMT_TABLES_CONSTRAINTS */
+	"SELECT IFNULL(constraint_catalog, constraint_schema), constraint_schema, constraint_name, IFNULL(table_catalog, table_schema), table_schema, table_name, constraint_type, NULL, 0, 0 FROM information_schema.table_constraints WHERE constraint_catalog = ##cat::string AND constraint_schema = ##schema::string AND table_name = ##name::string",
 
         /* I_STMT_TABLES_CONSTRAINTS_ALL */
+	"SELECT IFNULL(constraint_catalog, constraint_schema), constraint_schema, constraint_name, IFNULL(table_catalog, table_schema), table_schema, table_name, constraint_type, NULL, 0, 0 FROM information_schema.table_constraints",
 
         /* I_STMT_TABLES_CONSTRAINTS_NAMED */
+	"SELECT IFNULL(constraint_catalog, constraint_schema), constraint_schema, constraint_name, IFNULL(table_catalog, table_schema), table_schema, table_name, constraint_type, NULL, 0, 0 FROM information_schema.table_constraints WHERE constraint_catalog = ##cat::string AND constraint_schema = ##schema::string AND table_name = ##name::string AND constraint_name = ##name2::string",
 
         /* I_STMT_REF_CONSTRAINTS */
+	"SELECT IFNULL(t.constraint_catalog, t.constraint_schema), t.table_schema, t.table_name, t.constraint_name, IFNULL(k.constraint_catalog, k.constraint_schema), k.table_schema, k.table_name, k.constraint_name, NULL, NULL, NULL FROM information_schema.table_constraints t INNER JOIN information_schema.key_column_usage k ON t.table_schema=k.table_schema AND t.table_name=k.table_name AND t.constraint_name=k.constraint_name AND ((t.constraint_type = 'FOREIGN KEY' AND k.referenced_table_schema IS NOT NULL) OR (t.constraint_type != 'FOREIGN KEY' AND k.referenced_table_schema IS NULL)) WHERE t.constraint_catalog = ##cat::string AND t.table_schema = ##schema::string AND t.table_name = ##name::string AND t.constraint_name =  ##name2::string",
 
         /* I_STMT_REF_CONSTRAINTS_ALL */
+	"SELECT IFNULL(t.constraint_catalog, t.constraint_schema), t.table_schema, t.table_name, t.constraint_name, IFNULL(k.constraint_catalog, k.constraint_schema), k.table_schema, k.table_name, k.constraint_name, NULL, NULL, NULL FROM information_schema.table_constraints t INNER JOIN information_schema.key_column_usage k ON t.table_schema=k.table_schema AND t.table_name=k.table_name AND t.constraint_name=k.constraint_name AND ((t.constraint_type = 'FOREIGN KEY' AND k.referenced_table_schema IS NOT NULL) OR (t.constraint_type != 'FOREIGN KEY' AND k.referenced_table_schema IS NULL))",
 
         /* I_STMT_KEY_COLUMN_USAGE */
+	"SELECT IFNULL(table_catalog, table_schema), table_schema, table_name, constraint_name, column_name WHERE table_catalog = ##cat::string AND table_schema = ##schema::string AND table_name = ##name::string AND constraint_name = ##name2::string",
 
         /* I_STMT_KEY_COLUMN_USAGE_ALL */
+	"SELECT IFNULL(table_catalog, table_schema), table_schema, table_name, constraint_name, column_name",
 
         /* I_STMT_UDT */
 
@@ -172,7 +206,6 @@ _gda_mysql_meta__info (GdaServerProvider  *prov,
 		       GdaMetaContext     *context,
 		       GError            **error)
 {
-	g_print ("*** %s\n", __func__);
 	GdaDataModel *model;
         gboolean retval;
         model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_CATALOG], NULL, error);
@@ -193,7 +226,6 @@ _gda_mysql_meta__btypes (GdaServerProvider  *prov,
 			 GdaMetaContext     *context,
 			 GError            **error)
 {
-	g_print ("*** %s\n", __func__);
 	GType col_types[] = {
                 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING,
                 G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_NONE
@@ -232,25 +264,7 @@ _gda_mysql_meta_udt (GdaServerProvider  *prov,
 		     const GValue       *udt_catalog,
 		     const GValue       *udt_schema)
 {
-
 	TO_IMPLEMENT;
-
-	/* /\* set internal holder's values from the arguments *\/ */
-	/* gda_holder_set_value (gda_set_get_holder (i_set, "cat"), udt_catalog); */
-	/* gda_holder_set_value (gda_set_get_holder (i_set, "schema"), udt_schema); */
-	/* GdaDataModel *model; */
-	/* gboolean retval; */
-	/* /\* fill in @model, with something like: */
-	/*  * model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_UDT], i_set, error); */
-	/*  *\/ */
-	/* if (model == NULL) */
-	/* 	retval = FALSE; */
-	/* else { */
-	/* 	retval = gda_meta_store_modify_with_context (store, context, model, error); */
-	/* 	g_object_unref (G_OBJECT(model)); */
-	/* } */
-
-	/* return retval; */
 	return TRUE;
 }
 
@@ -423,7 +437,6 @@ _gda_mysql_meta__schemata (GdaServerProvider  *prov,
 			   GdaMetaContext     *context,
 			   GError            **error)
 {
-	g_print ("*** %s\n", __func__);
 	// TO_IMPLEMENT;
 
 	GdaDataModel *model;
@@ -448,8 +461,33 @@ _gda_mysql_meta_schemata (GdaServerProvider  *prov,
 			  const GValue       *catalog_name,
 			  const GValue       *schema_name_n)
 {
-	TO_IMPLEMENT;
-	return TRUE;
+	// TO_IMPLEMENT;
+	
+	GdaDataModel *model;
+	gboolean retval;
+
+	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), catalog_name);
+	if (!schema_name_n) {
+		model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_SCHEMAS], i_set, error);
+		if (model == NULL)
+			retval = FALSE;
+		else {
+			retval = gda_meta_store_modify (store, context->table_name, model, NULL, error, NULL);
+			g_object_unref (G_OBJECT(model));
+		}
+	} else {
+		gda_holder_set_value (gda_set_get_holder (i_set, "name"), schema_name_n);
+		model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_SCHEMA_NAMED], i_set, error);
+		if (model == NULL)
+			retval = FALSE;
+		else {
+			retval = gda_meta_store_modify (store, context->table_name, model,
+							"schema_name=##name::string", error, "name", schema_name_n, NULL);
+			g_object_unref (G_OBJECT(model));
+		}
+	}
+	
+	return retval;
 }
 
 gboolean
@@ -459,8 +497,43 @@ _gda_mysql_meta__tables_views (GdaServerProvider  *prov,
 			       GdaMetaContext     *context,
 			       GError            **error)
 {
-	TO_IMPLEMENT;
-	return TRUE;
+	// TO_IMPLEMENT;
+	
+	GdaDataModel *model_tables, *model_views;
+	gboolean retval;
+	/* Check correct mysql server version. */
+	MysqlConnectionData *cdata;
+	cdata = (MysqlConnectionData *) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return FALSE;
+	if (cdata->version_long < 50000) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
+			     _("Mysql version 5.0 at least is required"));
+		return FALSE;
+	}
+
+	/* Copy contents, just because we need to modify @context->table_name */
+	GdaMetaContext copy = *context;
+
+	model_tables = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_TABLES_ALL], i_set, error);
+	if (model_tables == NULL)
+		retval = FALSE;
+	else {
+		copy.table_name = "_tables";
+		retval = gda_meta_store_modify_with_context (store, &copy, model_tables, error);
+		g_object_unref (G_OBJECT(model_tables));
+	}
+
+	model_views = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_VIEWS_ALL], i_set, error);
+	if (model_views == NULL)
+		retval = FALSE;
+	else {
+		copy.table_name = "_views";
+		retval = gda_meta_store_modify_with_context (store, &copy, model_views, error);
+		g_object_unref (G_OBJECT(model_views));
+	}
+	
+	return retval;
 }
 
 gboolean
@@ -473,8 +546,193 @@ _gda_mysql_meta_tables_views (GdaServerProvider  *prov,
 			      const GValue       *table_schema, 
 			      const GValue       *table_name_n)
 {
-	TO_IMPLEMENT;
-	return TRUE;
+	// TO_IMPLEMENT;
+	
+	GdaDataModel *model_tables, *model_views;
+	gboolean retval;
+	/* Check correct mysql server version. */
+	MysqlConnectionData *cdata;
+	cdata = (MysqlConnectionData *) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return FALSE;
+	if (cdata->version_long < 50000) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
+			     _("Mysql version 5.0 at least is required"));
+		return FALSE;
+	}
+
+
+	/* Copy contents, just because we need to modify @context->table_name */
+	GdaMetaContext copy = *context;
+
+	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog);
+	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema);
+	if (!table_name_n) {
+		model_tables = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_TABLES], i_set, error);
+		if (model_tables == NULL)
+			retval = FALSE;
+		else {
+			retval = gda_meta_store_modify_with_context (store, &copy, model_tables, NULL);
+			g_object_unref (G_OBJECT(model_tables));
+		}
+
+		model_views = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_VIEWS], i_set, error);
+		if (model_views == NULL)
+			retval = FALSE;
+		else {
+			retval = gda_meta_store_modify_with_context (store, &copy, model_views, NULL);
+			g_object_unref (G_OBJECT(model_views));
+		}
+
+	} else {
+		gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name_n);
+		model_tables = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_TABLE_NAMED], i_set, error);
+		if (model_tables == NULL)
+			retval = FALSE;
+		else {
+			copy.table_name = "_tables";
+			retval = gda_meta_store_modify_with_context (store, &copy, model_tables, error);
+			g_object_unref (G_OBJECT(model_tables));
+		}
+
+		model_views = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_VIEW_NAMED], i_set, error);
+		if (model_views == NULL)
+			retval = FALSE;
+		else {
+			copy.table_name = "_views";
+			retval = gda_meta_store_modify_with_context (store, &copy, model_views, error);
+			g_object_unref (G_OBJECT(model_views));
+		}
+
+	}
+	
+	return retval;
+}
+
+/**
+ * map_mysql_to_gda:
+ * @value: a #GValue string.
+ *
+ * It maps a mysql type to a gda type.  This means that when a
+ * mysql type is given, it will return its mapped gda type.
+ *
+ * Returns a newly created GValue string.
+ */
+static inline GValue *
+map_mysql_to_gda (const GValue  *value)
+{
+	const gchar *string = g_value_get_string (value);
+	GValue *newvalue;
+	const gchar *newstring;
+	if (strcmp (string, "bool") == 0)
+		newstring = "gboolean";
+	else
+	if (strcmp (string, "blob") == 0)
+		newstring = "GdaBinary";
+	else
+	if (strcmp (string, "bigint") == 0)
+		newstring = "gint64";
+	else
+	if (strcmp (string, "bigint unsigned") == 0)
+		newstring = "guint64";
+	else
+	if (strcmp (string, "char") == 0)
+		newstring = "gchar";
+	else
+	if (strcmp (string, "date") == 0)
+		newstring = "GDate";
+	else
+	if (strcmp (string, "datetime") == 0)
+		newstring = "GdaTimestamp";
+	else
+	if (strcmp (string, "decimal") == 0)
+		newstring = "GdaNumeric";
+	else
+	if (strcmp (string, "double") == 0)
+		newstring = "gdouble";
+	else
+	if (strcmp (string, "double unsigned") == 0)
+		newstring = "double";
+	else
+	if (strcmp (string, "enum") == 0)
+		newstring = "gchararray";
+	else
+	if (strcmp (string, "float") == 0)
+		newstring = "gfloat";
+	else
+	if (strcmp (string, "float unsigned") == 0)
+		newstring = "gfloat";
+	else
+	if (strcmp (string, "int") == 0)
+		newstring = "int";
+	else
+	if (strcmp (string, "unsigned int") == 0)
+		newstring = "guint";
+	else
+	if (strcmp (string, "long") == 0)
+		newstring = "glong";
+	else
+	if (strcmp (string, "unsigned long") == 0)
+		newstring = "gulong";
+	else
+	if (strcmp (string, "longblob") == 0)
+		newstring = "GdaBinary";
+	else
+	if (strcmp (string, "longtext") == 0)
+		newstring = "GdaBinary";
+	else
+	if (strcmp (string, "mediumint") == 0)
+		newstring = "gint";
+	else
+	if (strcmp (string, "mediumint unsigned") == 0)
+		newstring = "guint";
+	else
+	if (strcmp (string, "mediumblob") == 0)
+		newstring = "GdaBinary";
+	else
+	if (strcmp (string, "mediumtext") == 0)
+		newstring = "GdaBinary";
+	else
+	if (strcmp (string, "set") == 0)
+		newstring = "gchararray";
+	else
+	if (strcmp (string, "smallint") == 0)
+		newstring = "gshort";
+	else
+	if (strcmp (string, "smallint unsigned") == 0)
+		newstring = "gushort";
+	else
+	if (strcmp (string, "text") == 0)
+		newstring = "GdaBinary";
+	else
+	if (strcmp (string, "tinyint") == 0)
+		newstring = "gchar";
+	else
+	if (strcmp (string, "tinyint unsigned") == 0)
+		newstring = "guchar";
+	else
+	if (strcmp (string, "tinyblob") == 0)
+		newstring = "GdaBinary";
+	else
+	if (strcmp (string, "time") == 0)
+		newstring = "GdaTime";
+	else
+	if (strcmp (string, "timestamp") == 0)
+		newstring = "GdaTimestamp";
+	else
+	if (strcmp (string, "varchar") == 0)
+		newstring = "gchararray";
+	else
+	if (strcmp (string, "year") == 0)
+		newstring = "gint";
+	else
+		newstring = "";
+
+	g_value_set_string (newvalue = gda_value_new (G_TYPE_STRING),
+			    newstring);
+	
+	
+	return newvalue;
 }
 
 gboolean
@@ -484,8 +742,55 @@ _gda_mysql_meta__columns (GdaServerProvider  *prov,
 			  GdaMetaContext     *context,
 			  GError            **error)
 {
-	TO_IMPLEMENT;
-	return TRUE;
+	// TO_IMPLEMENT;
+
+	/* GType col_types[] = { */
+	/* 	G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, */
+	/* 	G_TYPE_INT, G_TYPE_NONE */
+	/* }; */
+	GdaDataModel *model, *proxy;
+	gboolean retval;
+	/* Check correct mysql server version. */
+	MysqlConnectionData *cdata;
+	cdata = (MysqlConnectionData *) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return FALSE;
+	if (cdata->version_long < 50000) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
+			     _("Mysql version 5.0 at least is required"));
+		return FALSE;
+	}
+
+	/* Use a prepared statement for the "base" model. */
+	model = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_COLUMNS_ALL], i_set,
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS, /* col_types */ NULL, error);
+	if (model == NULL)
+		retval = FALSE;
+	else {
+		proxy = (GdaDataModel *) gda_data_proxy_new (model);
+		gda_data_proxy_set_sample_size ((GdaDataProxy *) proxy, 0);
+		gint n_rows = gda_data_model_get_n_rows (model);
+		gint i;
+		for (i = 0; i < n_rows; ++i) {
+			const GValue *value = gda_data_model_get_value_at (model, 7, i);
+
+			GValue *newvalue = map_mysql_to_gda (value);
+
+			retval = gda_data_model_set_value_at (GDA_DATA_MODEL(proxy), 8, i, newvalue, error);
+			gda_value_free (newvalue);
+			if (retval == 0)
+				break;
+
+		}
+
+		if (retval != 0)
+			retval = gda_meta_store_modify_with_context (store, context, proxy, error);
+		g_object_unref (G_OBJECT(proxy));
+		g_object_unref (G_OBJECT(model));
+
+	}
+
+	return retval;
 }
 
 gboolean
@@ -498,8 +803,60 @@ _gda_mysql_meta_columns (GdaServerProvider  *prov,
 			 const GValue       *table_schema, 
 			 const GValue       *table_name)
 {
-	TO_IMPLEMENT;
-	return TRUE;
+	// TO_IMPLEMENT;
+
+	/* GType col_types[] = { */
+	/* 	G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, */
+	/* 	G_TYPE_INT, G_TYPE_NONE */
+	/* }; */
+	GdaDataModel *model, *proxy;
+	gboolean retval;
+	/* Check correct mysql server version. */
+	MysqlConnectionData *cdata;
+	cdata = (MysqlConnectionData *) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return FALSE;
+	if (cdata->version_long < 50000) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
+			     _("Mysql version 5.0 at least is required"));
+		return FALSE;
+	}
+
+	/* Use a prepared statement for the "base" model. */
+	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog);
+	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema);
+	gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name);
+	model = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_COLUMNS_OF_TABLE], i_set,
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS, /* col_types */ NULL, error);
+	if (model == NULL)
+		retval = FALSE;
+	else {
+		proxy = (GdaDataModel *) gda_data_proxy_new (model);
+		gda_data_proxy_set_sample_size ((GdaDataProxy *) proxy, 0);
+		gint n_rows = gda_data_model_get_n_rows (model);
+		gint i;
+		for (i = 0; i < n_rows; ++i) {
+			const GValue *value = gda_data_model_get_value_at (model, 7, i);
+
+			GValue *newvalue = map_mysql_to_gda (value);
+
+			retval = gda_data_model_set_value_at (GDA_DATA_MODEL(proxy), 8, i, newvalue, error);
+			gda_value_free (newvalue);
+			if (retval == 0)
+				break;
+
+		}
+
+		if (retval != 0)
+			retval = gda_meta_store_modify (store, context->table_name, proxy,
+							"table_schema=##schema::string AND table_name=##name::string", error,
+							"schema", table_schema, "name", table_name, NULL);
+		g_object_unref (G_OBJECT(proxy));
+		g_object_unref (G_OBJECT(model));
+
+	}
+
+	return retval;
 }
 
 gboolean
@@ -560,8 +917,19 @@ _gda_mysql_meta__constraints_ref (GdaServerProvider  *prov,
 				  GdaMetaContext     *context,
 				  GError            **error)
 {
-	TO_IMPLEMENT;
-	return TRUE;
+	// TO_IMPLEMENT;
+
+	GdaDataModel *model;
+	gboolean retval;
+	model = gda_connection_statement_execute_select	(cnc, internal_stmt[I_STMT_REF_CONSTRAINTS_ALL], NULL, error);
+	if (model == NULL)
+		retval = FALSE;
+	else {
+		retval = gda_meta_store_modify_with_context (store, context, model, error);
+		g_object_unref (G_OBJECT(model));
+	}
+
+	return retval;
 }
 
 gboolean
@@ -575,8 +943,38 @@ _gda_mysql_meta_constraints_ref (GdaServerProvider  *prov,
 				 const GValue       *table_name, 
 				 const GValue       *constraint_name)
 {
-	TO_IMPLEMENT;
-	return TRUE;
+	// TO_IMPLEMENT;
+
+	GdaDataModel *model;
+	gboolean retval;
+	/* Check correct mysql server version. */
+	MysqlConnectionData *cdata;
+	cdata = (MysqlConnectionData *) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return FALSE;
+	if (cdata->version_long < 50000) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
+			     _("Mysql version 5.0 at least is required"));
+		return FALSE;
+	}
+
+	/* Use a prepared statement for the "base" model. */
+	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog);
+	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema);
+	gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name);
+	gda_holder_set_value (gda_set_get_holder (i_set, "name2"), constraint_name);
+	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_REF_CONSTRAINTS], i_set, error);
+	if (model == NULL)
+		retval = FALSE;
+	else {
+		retval = gda_meta_store_modify (store, context->table_name, model,
+						"table_schema=##schema::string AND table_name=##name::string AND constraint_name=##name2::string", error,
+						"schema", table_schema, "name", table_name, "name2", constraint_name, NULL);
+		g_object_unref (G_OBJECT(model));
+
+	}
+
+	return retval;
 }
 
 gboolean
@@ -586,8 +984,19 @@ _gda_mysql_meta__key_columns (GdaServerProvider  *prov,
 			      GdaMetaContext     *context,
 			      GError            **error)
 {
-	TO_IMPLEMENT;
-	return TRUE;
+	// TO_IMPLEMENT;
+
+	GdaDataModel *model;
+	gboolean retval;
+	model = gda_connection_statement_execute_select	(cnc, internal_stmt[I_STMT_KEY_COLUMN_USAGE_ALL], NULL, error);
+	if (model == NULL)
+		retval = FALSE;
+	else {
+		retval = gda_meta_store_modify_with_context (store, context, model, error);
+		g_object_unref (G_OBJECT(model));
+	}
+
+	return retval;
 }
 
 gboolean
@@ -601,8 +1010,38 @@ _gda_mysql_meta_key_columns (GdaServerProvider  *prov,
 			     const GValue       *table_name,
 			     const GValue       *constraint_name)
 {
-	TO_IMPLEMENT;
-	return TRUE;
+	// TO_IMPLEMENT;
+
+	GdaDataModel *model;
+	gboolean retval;
+	/* Check correct mysql server version. */
+	MysqlConnectionData *cdata;
+	cdata = (MysqlConnectionData *) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return FALSE;
+	if (cdata->version_long < 50000) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
+			     _("Mysql version 5.0 at least is required"));
+		return FALSE;
+	}
+
+	/* Use a prepared statement for the "base" model. */
+	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog);
+	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema);
+	gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name);
+	gda_holder_set_value (gda_set_get_holder (i_set, "name2"), constraint_name);
+	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_KEY_COLUMN_USAGE], i_set, error);
+	if (model == NULL)
+		retval = FALSE;
+	else {
+		retval = gda_meta_store_modify (store, context->table_name, model,
+						"table_schema=##schema::string AND table_name=##name::string AND constraint_name=##name2::string", error,
+						"schema", table_schema, "name", table_name, "name2", constraint_name, NULL);
+		g_object_unref (G_OBJECT(model));
+
+	}
+
+	return retval;
 }
 
 gboolean

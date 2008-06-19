@@ -65,7 +65,6 @@ void gda_lemon_mysql_parser (void*, int, GValue *, GdaSqlParserIface *);
 static void
 gda_mysql_parser_class_init (GdaMysqlParserClass * klass)
 {
-	g_print ("*** %s\n", __func__);
 	GdaSqlParserClass *pclass = GDA_SQL_PARSER_CLASS (klass);
 
 	pclass->parser_alloc = gda_lemon_mysql_parserAlloc;
@@ -78,5 +77,4 @@ gda_mysql_parser_class_init (GdaMysqlParserClass * klass)
 static void
 gda_mysql_parser_init (GdaMysqlParser *parser)
 {
-	g_print ("*** %s\n", __func__);
 }

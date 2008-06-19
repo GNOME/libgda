@@ -71,7 +71,6 @@ static void
 gda_mysql_blob_op_init (GdaMysqlBlobOp *op,
 			   GdaMysqlBlobOpClass *klass)
 {
-	g_print ("*** %s\n", __func__);
 	g_return_if_fail (GDA_IS_MYSQL_BLOB_OP (op));
 
 	op->priv = g_new0 (GdaMysqlBlobOpPrivate, 1);
@@ -83,7 +82,6 @@ gda_mysql_blob_op_init (GdaMysqlBlobOp *op,
 static void
 gda_mysql_blob_op_class_init (GdaMysqlBlobOpClass *klass)
 {
-	g_print ("*** %s\n", __func__);
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GdaBlobOpClass *blob_class = GDA_BLOB_OP_CLASS (klass);
 
@@ -98,7 +96,6 @@ gda_mysql_blob_op_class_init (GdaMysqlBlobOpClass *klass)
 static void
 gda_mysql_blob_op_finalize (GObject * object)
 {
-	g_print ("*** %s\n", __func__);
 	GdaMysqlBlobOp *pgop = (GdaMysqlBlobOp *) object;
 
 	g_return_if_fail (GDA_IS_MYSQL_BLOB_OP (pgop));
@@ -115,7 +112,6 @@ gda_mysql_blob_op_finalize (GObject * object)
 GdaBlobOp *
 gda_mysql_blob_op_new (GdaConnection *cnc)
 {
-	g_print ("*** %s\n", __func__);
 	GdaMysqlBlobOp *pgop;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
@@ -132,7 +128,6 @@ gda_mysql_blob_op_new (GdaConnection *cnc)
 static glong
 gda_mysql_blob_op_get_length (GdaBlobOp *op)
 {
-	g_print ("*** %s\n", __func__);
 	GdaMysqlBlobOp *pgop;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_BLOB_OP (op), -1);
@@ -150,7 +145,6 @@ gda_mysql_blob_op_get_length (GdaBlobOp *op)
 static glong
 gda_mysql_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 {
-	g_print ("*** %s\n", __func__);
 	GdaMysqlBlobOp *pgop;
 	GdaBinary *bin;
 
@@ -180,7 +174,6 @@ gda_mysql_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 static glong
 gda_mysql_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 {
-	g_print ("*** %s\n", __func__);
 	GdaMysqlBlobOp *pgop;
 	GdaBinary *bin;
 

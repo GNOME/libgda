@@ -1,1000 +1,110 @@
-/* GDA FireBird Provider
- * Copyright (C) 1998 - 2007 The GNOME Foundation
+/* GDA Firebird provider
+ * Copyright (C) 2008 The GNOME Foundation.
  *
  * AUTHORS:
- *         Albi Jeronimo <jeronimoalbi@yahoo.com.ar>
- *         Rodrigo Moya <rodrigo@gnome-db.org>
- *         Vivien Malerba <malerba@gnome-db.org>
+ *      TO_ADD: your name and email
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * This Library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This Library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Library General Public License for more details.
  *
  * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * License along with this Library; see the file COPYING.LIB.  If not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
  */
 
-
+#include <stdarg.h>
+#include <string.h>
+#include <glib/gi18n-lib.h>
+#include <libgda/gda-util.h>
+#include <libgda/gda-connection-private.h>
+#include "gda-firebird.h"
 #include "gda-firebird-recordset.h"
 #include "gda-firebird-provider.h"
-#include "gda-firebird-blob-op.h"
-#include <libgda/gda-quark-list.h>
-#include <libgda/gda-parameter-list.h>
-#include <glib/gi18n-lib.h>
-#include <glib/gprintf.h>
-#include <string.h>
-#include <math.h>
-                                                                                                                             
-#ifdef PARENT_TYPE
-#undef PARENT_TYPE
-#endif
-                                                                                                                            
-#define PARENT_TYPE GDA_TYPE_DATA_MODEL_ROW
+
+#define _GDA_PSTMT(x) ((GdaPStmt*)(x))
+
+static void gda_firebird_recordset_class_init (GdaFirebirdRecordsetClass *klass);
+static void gda_firebird_recordset_init       (GdaFirebirdRecordset *recset,
+					     GdaFirebirdRecordsetClass *klass);
+static void gda_firebird_recordset_dispose   (GObject *object);
+
+/* virtual methods */
+static gint     gda_firebird_recordset_fetch_nb_rows (GdaPModel *model);
+static gboolean gda_firebird_recordset_fetch_random (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error);
+static gboolean gda_firebird_recordset_fetch_next (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error);
+static gboolean gda_firebird_recordset_fetch_prev (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error);
+static gboolean gda_firebird_recordset_fetch_at (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error);
+
 
 struct _GdaFirebirdRecordsetPrivate {
 	GdaConnection *cnc;
-	GPtrArray *rows;
-	gchar *table_name;
-	gint ncolumns;
-	gint nrows;
-	gchar *sql_dialect;
-	
-	isc_stmt_handle sql_handle;
-	XSQLDA *sql_result;
-	ISC_STATUS fetch_stat;
-	gboolean sql_prepared;
-	gint fetched_rows;	
+	/* TO_ADD: specific information */
 };
-
-static void 			gda_firebird_recordset_class_init (GdaFirebirdRecordsetClass *klass);
-static void 			gda_firebird_recordset_init (GdaFirebirdRecordset *recset,
-							     GdaFirebirdRecordsetClass *klass);
-static void 			gda_firebird_recordset_finalize (GObject *object);
-
-static gint			gda_firebird_recordset_get_n_rows (GdaDataModelRow *model);
-static gint			gda_firebird_recordset_get_n_columns (GdaDataModelRow *model);
-static void       	        gda_firebird_recordset_describe_column (GdaDataModel *model, gint col);
-static GdaRow 	               *gda_firebird_recordset_get_row (GdaDataModelRow *model,
-								gint row, GError **error);
-static const GValue 	       *gda_firebird_recordset_get_value_at (GdaDataModelRow *model,
-								     gint col,
-								     gint row);
-static gboolean			gda_firebird_recordset_is_updatable (GdaDataModelRow *model);
-static GdaRow 	               *gda_firebird_recordset_append_values (GdaDataModelRow *model,
-								      const GList *values, GError **error);
-static gboolean			gda_firebird_recordset_remove_row (GdaDataModelRow *model,
-								   GdaRow *row, GError **error);
-
 static GObjectClass *parent_class = NULL;
 
-/*******************************/
-/* Firebird utility functions  */
-/*******************************/
-
-static GType
-fb_sql_type_to_g_type (const gshort field_type, gboolean has_decimals)
-{
-	switch (field_type) {
-	case SQL_ARRAY:
-	case SQL_ARRAY+1:
-		return GDA_TYPE_LIST;
-	case SQL_BLOB:
-	case SQL_BLOB+1:
-		return GDA_TYPE_BLOB;
-	case SQL_TIMESTAMP:
-	case SQL_TIMESTAMP+1:
-		return GDA_TYPE_TIMESTAMP;
-	case SQL_TYPE_TIME:
-	case SQL_TYPE_TIME+1:
-		return GDA_TYPE_TIME;
-	case SQL_TYPE_DATE:
-	case SQL_TYPE_DATE+1:
-		return G_TYPE_DATE;
-	case SQL_TEXT:
-	case SQL_TEXT+1:
-	case SQL_VARYING:
-	case SQL_VARYING+1:
-		return G_TYPE_STRING;
-	case SQL_SHORT:
-	case SQL_SHORT+1:
-		return GDA_TYPE_SHORT;
-	case SQL_LONG:
-	case SQL_LONG+1:
-		if (has_decimals)
-			return GDA_TYPE_NUMERIC;
-		else
-			return G_TYPE_INT;
-	case SQL_INT64:
-	case SQL_INT64+1:
-		return GDA_TYPE_NUMERIC;
-	case SQL_FLOAT:
-	case SQL_FLOAT+1:
-		return G_TYPE_FLOAT;
-	case SQL_DOUBLE:
-	case SQL_DOUBLE+1:
-		return G_TYPE_DOUBLE;
-	default:
-		return G_TYPE_INVALID;
-	}
-}
-
-
-static void 
-fb_sql_result_free (XSQLDA *sql_result)
-{
-	gint i;
-
-	if (sql_result) {
-		if (sql_result->sqlvar) {
-			/* Free memory for each column */
-			for (i = 0; i < sql_result->sqld; i++) {
-				g_free (sql_result->sqlvar[i].sqldata);
-				g_free (sql_result->sqlvar[i].sqlind);
-			}
-		}
-
-		/* Free sql_result */
-		g_free (sql_result);
-		sql_result = NULL;
-	}
-}
-
-static void 
-fb_sql_result_columns_malloc (XSQLDA *sql_result)
-{
-	gint i;
-
-	g_assert (sql_result != NULL);
-
-	/* Alloc memory to hold values */
-	for (i = 0; i < sql_result->sqld; i++) {
-		switch (sql_result->sqlvar[i].sqltype & ~1) {
-			case SQL_ARRAY:
-	  		case SQL_ARRAY+1:
-				sql_result->sqlvar[i].sqldata = (gchar *) g_malloc0 (sizeof (ISC_QUAD));
-				break;
-			case SQL_BLOB:
-			case SQL_BLOB+1:
-				sql_result->sqlvar[i].sqldata = (gchar *) g_malloc0 (sizeof (ISC_QUAD));
-				break;
-			case SQL_TIMESTAMP:
-			case SQL_TIMESTAMP+1:
-				sql_result->sqlvar[i].sqldata = (gchar *) g_malloc0 (sizeof (ISC_TIMESTAMP));
-				break;
-			case SQL_TYPE_TIME:
-			case SQL_TYPE_TIME+1:
-				sql_result->sqlvar[i].sqldata = (gchar *) g_malloc0 (sizeof (ISC_TIME));
-				break;
-			case SQL_TYPE_DATE:
-			case SQL_TYPE_DATE+1:
-				sql_result->sqlvar[i].sqldata = (gchar *) g_malloc0 (sizeof (ISC_DATE));
-				break;
-			case SQL_TEXT:
-			case SQL_TEXT+1:
-			case SQL_VARYING:
-			case SQL_VARYING+1:
-				sql_result->sqlvar[i].sqldata = (gchar *) g_malloc0 (sizeof (gchar) * 
-										     (sql_result->sqlvar[i].sqllen + 1));
-				break;
-			case SQL_SHORT:
-			case SQL_SHORT+1:
-				sql_result->sqlvar[i].sqldata = (gchar *) g_malloc0 (sizeof (ISC_USHORT));
-				break;
-			case SQL_LONG:
-			case SQL_LONG+1:
-				sql_result->sqlvar[i].sqldata = (gchar *) g_malloc0 (sizeof (glong));
-				break;																		
-			case SQL_INT64:
-			case SQL_INT64+1:
-				sql_result->sqlvar[i].sqldata = (gchar *) g_malloc0 (sizeof (ISC_INT64));
-				break;
-			case SQL_FLOAT:
-			case SQL_FLOAT+1:
-				sql_result->sqlvar[i].sqldata = (gchar *) g_malloc0 (sizeof (gfloat));
-				break;
-			case SQL_DOUBLE:
-			case SQL_DOUBLE+1:
-				sql_result->sqlvar[i].sqldata = (gchar *) g_malloc0 (sizeof (gdouble));
-				break;
-			default:
-				break;
-		}
-
-		/* Allocate space to hold 'allow NULL mark' */
-		sql_result->sqlvar[i].sqlind = (gshort *) g_malloc (sizeof (gshort));
-		*(sql_result->sqlvar[i].sqlind) = 0; /* default assume non-NULL */
-	}                        
-}
-
-static void 
-fb_sql_result_set_columns_number (GdaFirebirdConnection *fcnc,
-				  GdaFirebirdRecordset *recset)
-{
-	gint cols_number;
-
-	g_return_if_fail (GDA_IS_FIREBIRD_RECORDSET (recset));		
-	g_assert (recset->priv->sql_result != NULL);
-
-	/* Get information of retrieved columns */
-	isc_dsql_describe (fcnc->status, &(recset->priv->sql_handle), recset->priv->sql_result->version, 
-			   recset->priv->sql_result);
-						
-	cols_number = recset->priv->sql_result->sqld;
-
-	/* if we have more than @sql_result->sqln columns */
-	if (cols_number > recset->priv->sql_result->sqln) {
-
-		/* Free result (record members are not initialized) */
-		g_free (recset->priv->sql_result);
-
-		/* Allocate memory for result, to hold @col_number columns */
-		recset->priv->sql_result = (XSQLDA *) g_malloc0 (XSQLDA_LENGTH (cols_number));
-
-		/* Set SQLDA version and columns number */
-		recset->priv->sql_result->version = SQLDA_VERSION1;
-		recset->priv->sql_result->sqln = cols_number;
-
-		/* Get information of retrieved columns */
-		isc_dsql_describe (fcnc->status, &(recset->priv->sql_handle), recset->priv->sql_result->version,
-				   recset->priv->sql_result);
-	}
-	
-	recset->priv->ncolumns = cols_number;
-}
-
-
 /*
- *  fb_sql_get_statement_type
- *
- *  Gets statement type
- *
- *  Returns: 0 if error or isc_info_sql_stmt_select, isc_info_sql_stmt_insert,
- *           isc_info_sql_stmt_update, isc_info_sql_stmt_delete, isc_info_sql_stmt_ddl,
- *           ...(see ibase.h for more)
+ * Object init and finalize
  */
-static gint
-fb_sql_get_statement_type (GdaFirebirdConnection *fcnc,
-			   GdaFirebirdRecordset *recset)
-{
-	int length;
-	char type_item[] = { 
-		isc_info_sql_stmt_type
-	};
-	char buffer[8];
-                                                                                                                            
-	g_return_val_if_fail (GDA_IS_FIREBIRD_RECORDSET (recset), -1);
-	
-	/* Get statement info */
-	isc_dsql_sql_info (fcnc->status, &(recset->priv->sql_handle), sizeof (type_item), type_item, 
-			   sizeof (buffer), buffer);
-
-	/* If OK return statement type */
-	if (buffer[0] == isc_info_sql_stmt_type) {
-		length = isc_vax_integer (&(buffer[1]), 2);
-		return isc_vax_integer (&(buffer[3]), length);
-	}
-	
-	return 0;
-}
-
-/*
- * fb_sql_get_statement_impacted_rows
- */
-static gint
-fb_sql_get_statement_impacted_rows (GdaFirebirdConnection *fcnc,
-				    GdaFirebirdRecordset *recset, char type)
-{
-	static char count_info[] = { isc_info_sql_records };
-	char count_buffer [64];
-	long row_count = 0;
-	
-	if (isc_dsql_sql_info (fcnc->status, &(recset->priv->sql_handle),
-			       sizeof(count_info), count_info,
-			       sizeof(count_buffer), count_buffer))
-		return -1; /* error */
-
-	unsigned i = 3, result_size = isc_vax_integer (&count_buffer[1],2);
-	
-	while (count_buffer[i] != isc_info_end && (i < result_size)) {
-		short len = (short) isc_vax_integer (&count_buffer[i+1], 2);
-		if (count_buffer[i] == type)
-			row_count += isc_vax_integer (&count_buffer[i+3], len);
-		i += len + 3;
-	}
-	return row_count;
-}
-
-/*
- *  fb_sql_prepare
- *
- *  Prepares an unprepared statement
- *
- *  Returns: TRUE if sql prepared successfully, or FALSE otherwise
- */
-static gboolean 
-fb_sql_prepare (GdaFirebirdConnection *fcnc,
-		GdaFirebirdRecordset *recset,
-		isc_tr_handle *ftr,
-		const gchar *sql,
-		GdaConnectionEvent **event)
-{
-	GdaQuarkList *params;
-	gchar *fb_sql_dialect;
-	GdaConnectionEvent *ev = NULL;
-
-	if (event)
-		*event = NULL;
-
-	g_return_val_if_fail (GDA_IS_FIREBIRD_RECORDSET (recset), FALSE);		
-
-	if (ftr) {
-		if (! recset->priv->sql_prepared) {		
-			/* Allocate memory for result to hold 10 columns */
-			recset->priv->sql_result = (XSQLDA *) g_malloc0 (XSQLDA_LENGTH (13));
-			
-			/* Set SQLDA version and columns number */
-			recset->priv->sql_result->version = SQLDA_VERSION1;
-			recset->priv->sql_result->sqln = 13;
-			
-			/* Allocate statement */
-			recset->priv->sql_handle = NULL;
-			if (! isc_dsql_allocate_statement (fcnc->status, &(fcnc->handle), &(recset->priv->sql_handle))) {
-				/* Get SQL Dialect */
-				params = gda_quark_list_new_from_string (
-						gda_connection_get_cnc_string ((GdaConnection *) recset->priv->cnc));
-				fb_sql_dialect = (gchar *) gda_quark_list_find (params, "SQL_DIALECT");		
-				if (!fb_sql_dialect)
-					fb_sql_dialect = "3";
-				
-				gda_quark_list_free (params);
-				
-				/* Prepare statement */
-				if (! isc_dsql_prepare (fcnc->status, ftr, &(recset->priv->sql_handle), 0, (gchar *) sql, 
-							(gushort) atoi (fb_sql_dialect), recset->priv->sql_result)) {
-					fb_sql_result_set_columns_number (fcnc, recset);
-					fb_sql_result_columns_malloc (recset->priv->sql_result);
-					recset->priv->sql_prepared = TRUE;
-					return TRUE;
-				} 
-				else
-					ev = gda_firebird_connection_make_error (recset->priv->cnc, 0);
-
-			}
-			else
-				ev = gda_firebird_connection_make_error (recset->priv->cnc, 0);
-
-		} 
-		else
-			ev = gda_connection_add_event_string (recset->priv->cnc, _("Statement already prepared."));
-
-	}
-	else
-		ev = gda_connection_add_event_string (recset->priv->cnc, _("Transaction not initialized."));
-	
-	if (event)
-		*event = ev;
-
-	/* Free cursors */
-	isc_dsql_free_statement (fcnc->status, &(recset->priv->sql_handle), DSQL_drop);
-
-	/* Free SQL result */
-	fb_sql_result_free (recset->priv->sql_result);
-	recset->priv->sql_result = NULL;
-
-	return FALSE;
-}
-
-
-/*
- *  fb_sql_unprepare
- *
- *  Unprepares a prepared statement
- *
- *  Returns: TRUE if sql unprepared successfully, or FALSE otherwise
- */
-static gboolean 
-fb_sql_unprepare (GdaFirebirdConnection *fcnc, 
-		  GdaFirebirdRecordset *recset)
-{
-	g_return_val_if_fail (GDA_IS_FIREBIRD_RECORDSET (recset), FALSE);		
-	
-	if (recset->priv->sql_prepared) {
-
-		/* Free SQL result */
-		fb_sql_result_free (recset->priv->sql_result);
-		recset->priv->sql_result = NULL;
-
-		/* Free cursors */
-		if (recset->priv->sql_handle)
-			isc_dsql_free_statement (fcnc->status, &(recset->priv->sql_handle), DSQL_drop);
-		
-		return TRUE;
-	}
-	
-	return FALSE;
-}
-
-
-/*
- *  fb_sql_execute
- *
- *  Call #isc_dsql_execute to execute statement
- *
- *  Returns: TRUE if sql executed successfully, or FALSE otherwise
- */
-static gboolean
-fb_sql_execute (GdaFirebirdConnection *fcnc,
-		GdaFirebirdRecordset *recset,
-		isc_tr_handle *ftr,
-		const gchar *sql)
-{
-	g_return_val_if_fail (GDA_IS_FIREBIRD_RECORDSET (recset), FALSE);		
-	g_return_val_if_fail ((ftr != NULL), FALSE);		
-
-	/* Return statement execute status */
-	if (fb_sql_get_statement_type (fcnc, recset) == isc_info_sql_stmt_select)
-		return (! isc_dsql_execute (fcnc->status, ftr, &(recset->priv->sql_handle), 
-					    recset->priv->sql_result->version, recset->priv->sql_result));
-	else 
-		return (! isc_dsql_execute_immediate (fcnc->status, &(fcnc->handle), ftr, strlen (sql), 
-						      (gchar *) sql, atoi (recset->priv->sql_dialect), NULL));
-}
-
-static GdaValueList *
-fb_array_desc_to_list_value (GdaConnection *cnc, GdaFirebirdConnection *fcnc, isc_tr_handle *ftr, gpointer field_data,
-			     ISC_ARRAY_DESC *desc, short cell_type, short cell_size, short current_dim);
-/*
- *  fb_gda_value_fill
- *
- *  Fill a @gda_value with the value of @value
- *
- *  @type should contain Firebirds SQL datatype of @value
- */
-static void
-_real_fb_gda_value_fill (GValue *gda_value,
-			 GdaFirebirdRecordset *recset,
-			 const gshort field_type,
-			 gpointer field_data,
-			 gint field_number,
-			 gint sqlscale)
-{
-	GdaTime a_time;
-	GDate a_date;
-	GdaTimestamp a_times;
-	struct tm *a_date_time;
-#if FB_API_VER < 20
-	struct vary *var_text;
-#else
-	PARAMVARY *var_text;
-#endif
-	
-	switch (field_type) {
-	case SQL_ARRAY:
-	case SQL_ARRAY+1: {
-		/* fetch table and column names */
-		GdaColumn *gdacol;
-
-		gdacol = gda_data_model_describe_column (GDA_DATA_MODEL (recset), field_number);
-		g_assert (gdacol);
-
-		ISC_ARRAY_DESC desc;
-		GdaFirebirdConnection *fcnc;
-		isc_tr_handle *ftr;
-		
-		fcnc = g_object_get_data (G_OBJECT (recset->priv->cnc), CONNECTION_DATA);
-		if (!fcnc) {
-			gda_connection_add_event_string (recset->priv->cnc, _("Invalid Firebird handle"));
-			gda_value_set_null (gda_value);
-			return;
-		}
-		ftr = g_object_get_data (G_OBJECT (recset->priv->cnc), TRANSACTION_DATA);
-		
-		if (isc_array_lookup_bounds (fcnc->status, &(fcnc->handle), ftr,
-					     gda_column_get_table (gdacol),
-					     gda_column_get_name (gdacol), &desc)) {
-			gda_firebird_connection_make_error (recset->priv->cnc, 0);
-			gda_value_set_null (gda_value);
-			return;
-		}
-		
-		short cell_type;
-		short cell_size;
-		switch (desc.array_desc_dtype) {
-		case blr_text:
-		case blr_text2:
-			cell_type = SQL_TEXT;
-			cell_size = desc.array_desc_length + 1;
-			break;
-		case blr_short:
-			cell_type = SQL_SHORT;
-			cell_size = sizeof (short);
-			break;
-		case blr_long:
-			cell_type = SQL_LONG;
-			cell_size = sizeof (long);
-			break;
-		case blr_float:
-			cell_type = SQL_FLOAT;
-			cell_size = sizeof(float);
-			break;
-		case blr_double:
-			cell_type = SQL_DOUBLE;
-			cell_size = sizeof(double);
-			break;
-		case blr_date:
-			cell_type = SQL_DATE;
-			cell_size = sizeof(ISC_QUAD);
-			break;
-		case blr_varying:
-		case blr_varying2:	
-			cell_type = SQL_TEXT;
-			cell_size = desc.array_desc_length + sizeof(short);
-			break;
-		default:
-			gda_connection_add_event_string (recset->priv->cnc, _("Can't handle type of array element"));
-			gda_value_set_null (gda_value);
-			return;
-		}
-
-		GdaValueList *vlist;
-		vlist = fb_array_desc_to_list_value (recset->priv->cnc, fcnc, ftr, 
-						     field_data, &desc, cell_type, cell_size, 0);
-		if (vlist) {
-			g_value_init (gda_value, GDA_TYPE_LIST);
-			gda_value_set_list (gda_value, vlist);
-		}
-		else
-			gda_value_set_null (gda_value);
-		break;
-	}
-	case SQL_BLOB:
-	case SQL_BLOB+1: {
-		GdaBlob *blob;
-                GdaBlobOp *op;
-
-                blob = g_new0 (GdaBlob, 1);
-                op = gda_firebird_blob_op_new_with_id (recset->priv->cnc, (const ISC_QUAD *) field_data);
-                gda_blob_set_op (blob, op);
-                g_object_unref (op);
-		g_value_init (gda_value, GDA_TYPE_BLOB);
-                gda_value_take_blob (gda_value, blob);
-		break;
-	}
-	case SQL_TIMESTAMP:
-	case SQL_TIMESTAMP+1:
-		a_date_time = g_malloc0 (sizeof (struct tm));
-		isc_decode_timestamp ((ISC_TIMESTAMP *) field_data, a_date_time);
-		a_date_time->tm_mon ++;
-		a_date_time->tm_year += 1900;
-		a_times.hour = a_date_time->tm_hour;
-		a_times.minute = a_date_time->tm_min;
-		a_times.second = a_date_time->tm_sec;
-		a_times.year = a_date_time->tm_year;
-		a_times.month = a_date_time->tm_mon;
-		a_times.day = a_date_time->tm_mday;
-		a_times.timezone = 0; /* FIXME: timezone */
-		a_times.fraction = 0; /* FIXME: fraction */			
-
-		g_value_init (gda_value, GDA_TYPE_TIMESTAMP);
-		gda_value_set_timestamp (gda_value, (const GdaTimestamp *) &a_times);
-		g_free (a_date_time);
-		break;
-	case SQL_TYPE_TIME:
-	case SQL_TYPE_TIME+1:
-		a_date_time = g_malloc0 (sizeof (struct tm));
-		isc_decode_sql_time ((ISC_TIME *) field_data, a_date_time);
-		a_time.hour = a_date_time->tm_hour;
-		a_time.minute = a_date_time->tm_min;
-		a_time.second = a_date_time->tm_sec;
-		a_time.timezone = 0; /* FIXME: timezone */
-
-		g_value_init (gda_value, GDA_TYPE_TIME);
-		gda_value_set_time (gda_value, (const GdaTime *) &a_time);
-		g_free (a_date_time);
-		break;
-	case SQL_TYPE_DATE:
-	case SQL_TYPE_DATE+1:
-		a_date_time = g_malloc0 (sizeof (struct tm));
-		isc_decode_sql_date ((ISC_DATE *) field_data, a_date_time);
-		a_date_time->tm_mon++;
-		a_date_time->tm_year += 1900;
-		a_date.year = a_date_time->tm_year;
-		a_date.month = a_date_time->tm_mon;
-		a_date.day = a_date_time->tm_mday;
-
-		g_value_init (gda_value, G_TYPE_DATE);
-		g_value_set_boxed (gda_value, (const GDate *) &a_date);
-		g_free (a_date_time);			
-		break;
-	case SQL_TEXT: 
-	case SQL_TEXT+1: {
-		/* remove trailing spaces... */
-		gchar *str;
-		g_value_init (gda_value, G_TYPE_STRING);
-		str = g_strdup ((const gchar *) field_data);
-		g_strchomp (str);
-		g_value_take_string (gda_value, str);
-		break;
-	}
-	case SQL_VARYING:
-	case SQL_VARYING+1:
-#if FB_API_VER < 20
-		var_text = (struct vary *) field_data;
-#else
-		var_text = (PARAMVARY *) field_data;
-#endif
-		var_text->vary_string[var_text->vary_length] = '\0';
-
-		g_value_init (gda_value, G_TYPE_STRING);
-		g_value_set_string (gda_value, (const gchar *) var_text->vary_string);
-		break;
-	case SQL_SHORT:
-	case SQL_SHORT+1:
-		gda_value_set_short (gda_value, *((gshort *) field_data));
-		break;
-	case SQL_LONG:
-	case SQL_LONG+1:
-		g_value_init (gda_value, G_TYPE_LONG);
-		if (sqlscale < 0) 
-			g_value_set_long (gda_value, *((glong *) field_data) /
-					  pow (10, (sqlscale * -1)));
-		else
-			g_value_set_long (gda_value, *((glong *) field_data));
-		break;
-	case SQL_INT64:
-	case SQL_INT64+1:
-		g_value_init (gda_value, G_TYPE_INT64);
-		if (sqlscale < 0) 
-			g_value_set_int64 (gda_value, *((ISC_INT64 *) field_data) / 
-					   pow (10, (sqlscale * -1)));
-		else
-			g_value_set_int64 (gda_value, *((ISC_INT64 *) field_data));
-		break;
-	case SQL_FLOAT:
-	case SQL_FLOAT+1:
-		g_value_init (gda_value, G_TYPE_FLOAT);
-		g_value_set_float (gda_value, *((gfloat *) field_data));
-		break;
-	case SQL_DOUBLE:
-	case SQL_DOUBLE+1:
-		g_value_init (gda_value, G_TYPE_DOUBLE);
-		g_value_set_double (gda_value, *((gdouble *) field_data));
-		break;
-	default:
-		g_print (_("Unknown Firebird's field value!\n"));
-
-		gda_value_set_null (gda_value);
-		break;
-	};
-}
-
-static GdaValueList *
-fb_array_desc_to_list_value (GdaConnection *cnc, GdaFirebirdConnection *fcnc, isc_tr_handle *ftr, gpointer field_data,
-			     ISC_ARRAY_DESC *desc, short cell_type, short cell_size, short current_dim)
-{
-	GdaValueList *vlist = NULL;
-	gint i, min, max;
-	long len;
-	gchar *buffer;
-	
-	buffer = g_new0 (gchar, cell_size);
-	min = desc->array_desc_bounds[current_dim].array_bound_lower;
-	max = desc->array_desc_bounds[current_dim].array_bound_upper;
-	for (i = min; i <= max; i++) {
-		GValue *lv;
-		desc->array_desc_bounds[current_dim].array_bound_lower = i;
-		desc->array_desc_bounds[current_dim].array_bound_upper = i;
-
-		if (current_dim + 1 < desc->array_desc_dimensions) {
-			GdaValueList *sub_vlist;
-			sub_vlist = fb_array_desc_to_list_value (cnc, fcnc, ftr, field_data, 
-								 desc, cell_type, cell_size, current_dim + 1);
-			vlist = g_list_prepend (vlist, sub_vlist);
-		}
-		else {
-			len = cell_size;
-			if (isc_array_get_slice (fcnc->status, &(fcnc->handle), ftr, 
-						 field_data, desc, (void *)buffer, &len)) {
-				g_free (buffer);
-				gda_firebird_connection_make_error (cnc, 0);
-				return NULL;
-			}
-			lv = g_new0 (GValue, 1);
-			_real_fb_gda_value_fill (lv, NULL, cell_type, buffer, -1, 0);
-			vlist = g_list_prepend (vlist, lv);
-		}
-	}
-	desc->array_desc_bounds[current_dim].array_bound_lower = min;
-	desc->array_desc_bounds[current_dim].array_bound_upper = max;
-	g_free (buffer);
-
-	return g_list_reverse (vlist);
-}
-
-/*
- *  fb_gda_value_fill
- *
- *  Fill a @gda_value with the value of @value
- *
- *  @type should contain Firebirds SQL datatype of @value
- */
-static void
-fb_gda_value_fill (GValue *gda_value,
-		   GdaFirebirdRecordset *recset,
-		   const gshort field_type,
-		   gint field_number)
-{
-	gpointer field_data;
-	XSQLDA *sql_result;
-	
-	g_return_if_fail (GDA_IS_FIREBIRD_RECORDSET (recset));
-
-	sql_result = recset->priv->sql_result;
-	field_data = (gchar *) sql_result->sqlvar[field_number].sqldata;
-	
-	/* If value is null  */
-	if (*(sql_result->sqlvar[field_number].sqlind) == -1) {
-		gda_value_set_null (gda_value);
-		return;
-	}	
-
-	/* real value fill */
-	_real_fb_gda_value_fill (gda_value, recset, field_type, field_data, field_number, 
-				 sql_result->sqlvar[field_number].sqlscale);
-}
-
-
-/*
- *
- *  fb_sql_fetch_row
- *
- *  Fetch a single row
- *
- *  Returns: TRUE if fetched successfully, or FALSE otherwise
- */
-static gboolean
-fb_sql_fetch_row (GdaFirebirdConnection *fcnc,
-		  GdaFirebirdRecordset *recset)
-{
-	GdaRow *row;
-	gint col_n;
-	gshort field_type;
-
-	g_return_val_if_fail (GDA_IS_FIREBIRD_RECORDSET (recset), FALSE);
-
-	/* Fetch a single row */
-	recset->priv->fetch_stat = isc_dsql_fetch (fcnc->status, &(recset->priv->sql_handle), 
-						   recset->priv->sql_result->version, recset->priv->sql_result);
-	/* If we're not at end of file */
-	if (! (recset->priv->fetch_stat == 100L)) {
-
-		/* ... and fetch was successful */
-		if (recset->priv->fetch_stat == 0) {
-			recset->priv->fetched_rows++;
-
-			/* Create a row for the fetched data */
-			row = gda_row_new (GDA_DATA_MODEL (recset), recset->priv->ncolumns);
-
-			/* Fill each GValue in @row with fetched values */
-			for (col_n = 0; col_n < recset->priv->ncolumns; col_n++) {
-
-				/* Get current field type from statement XSQLDA's variable */
-				field_type = (((gshort) recset->priv->sql_result->sqlvar[col_n].sqltype) & ~1);
-
-				/* Set row's field value */
-				fb_gda_value_fill ((GValue *) gda_row_get_value (row, col_n), recset,
-						   (const gint) field_type, col_n);
-			}
-
-			/* Add value to rows array */
-			g_ptr_array_add (recset->priv->rows, row);
-			
-			return TRUE;
-		}
-		else /* Inform error */
-			gda_firebird_connection_make_error (recset->priv->cnc, 0);
-	}
-
-	return FALSE;
-}
-
-
-/**********************************************/
-/* GdaFirebirdRecordset class implementation  */
-/**********************************************/
-
-static gint
-gda_firebird_recordset_get_n_rows (GdaDataModelRow *model)
-{
-	GdaFirebirdRecordset *recset = (GdaFirebirdRecordset *) model;
-	
-	g_return_val_if_fail (GDA_IS_FIREBIRD_RECORDSET (recset), -1);
-	
-	return (recset->priv->nrows);
-}
-                                                                                                                            
-static gint
-gda_firebird_recordset_get_n_columns (GdaDataModelRow *model)
-{
-	GdaFirebirdRecordset *recset = (GdaFirebirdRecordset *) model;
-	
-	g_return_val_if_fail (GDA_IS_FIREBIRD_RECORDSET (recset), -1);
-	
-	return (recset->priv->ncolumns);
-}
-
-static GdaRow *
-gda_firebird_recordset_get_row (GdaDataModelRow *model, gint row, GError **error)
-{
-	GdaRow *fields = NULL;
-	GdaFirebirdConnection *fcnc;
-	GdaFirebirdRecordset *recset = (GdaFirebirdRecordset *) model;
-
-	g_return_val_if_fail (GDA_IS_FIREBIRD_RECORDSET (recset), NULL);
-
-	fcnc = g_object_get_data (G_OBJECT (recset->priv->cnc), CONNECTION_DATA);
-	if (!fcnc) {
-		gda_connection_add_event_string (recset->priv->cnc, _("Invalid Firebird handle"));
-		return NULL;
-	}
-
-	/* If row doesn't exists */
-	if (row >= recset->priv->nrows)
-		return NULL;
-		
-	/* If row was already fetched */
-	if (row < recset->priv->fetched_rows)
-		return (GdaRow *) g_ptr_array_index (recset->priv->rows, row);
-
-	/* Fetch if statement is a SELECT */
-	if (fb_sql_get_statement_type (fcnc, recset) == isc_info_sql_stmt_select) {
-
-		/* Disable DataModel's change notifications */
-		gda_data_model_freeze (GDA_DATA_MODEL (recset));
-
-		while (fb_sql_fetch_row (fcnc, recset) && (row > recset->priv->fetched_rows))
-			recset->priv->nrows++;
-
-		/* If row was fetched */
-		if (row == recset->priv->fetched_rows)
-			return (GdaRow *) g_ptr_array_index (recset->priv->rows, row);
-
-		/* Enable notificarions again */
-		gda_data_model_thaw (GDA_DATA_MODEL (recset));
-	}
-	
-	return (GdaRow *) fields;		
-}
-
-static const GValue *
-gda_firebird_recordset_get_value_at (GdaDataModelRow *model, 
-				     gint col,
-				     gint row)
-{
-	gint n_cols;
-	const GdaRow *fields;
-	GdaFirebirdRecordset *recset = (GdaFirebirdRecordset *) model;
-
-	g_return_val_if_fail (GDA_IS_FIREBIRD_RECORDSET (recset), NULL);
-                                                                                                                            
-	n_cols = recset->priv->ncolumns;
-	if (col >= n_cols)
-		return NULL;
-
-	fields = gda_firebird_recordset_get_row (model, row, NULL);
-	
-	return fields != NULL ? gda_row_get_value ((GdaRow *) fields, col) : NULL;
-}
-
-static gboolean
-gda_firebird_recordset_is_updatable (GdaDataModelRow *model)
-{
-	return FALSE;
-}
-                                                                                                                            
-static GdaRow *
-gda_firebird_recordset_append_values (GdaDataModelRow *model, const GList *values, GError **error)
-{
-	return NULL;
-}
-
-static gboolean
-gda_firebird_recordset_remove_row (GdaDataModelRow *model, GdaRow *row, GError **error)
-{
-	return FALSE;
-}
-
-
 static void
 gda_firebird_recordset_init (GdaFirebirdRecordset *recset,
-			     GdaFirebirdRecordsetClass *klass)
+			   GdaFirebirdRecordsetClass *klass)
 {
 	g_return_if_fail (GDA_IS_FIREBIRD_RECORDSET (recset));
-
-	/* Init private structure and properties */
 	recset->priv = g_new0 (GdaFirebirdRecordsetPrivate, 1);
-	recset->priv->rows = g_ptr_array_new ();
 	recset->priv->cnc = NULL;
-	recset->priv->sql_prepared = FALSE;
-	recset->priv->sql_result = NULL;
-	recset->priv->sql_handle = NULL;    
-	recset->priv->ncolumns = 0;
-	recset->priv->nrows = 0;
-	recset->priv->sql_dialect = "3";
-	recset->priv->fetched_rows = 0;	
-}			
 
-
-static void
-gda_firebird_recordset_finalize (GObject *object)
-{
-	GdaFirebirdConnection *fcnc;
-	GdaRow *row;
-	GdaFirebirdRecordset *recset = (GdaFirebirdRecordset *) object;
-
-	g_return_if_fail (GDA_IS_FIREBIRD_RECORDSET (recset));
-
-	fcnc = g_object_get_data (G_OBJECT (recset->priv->cnc), CONNECTION_DATA);		
-
-	/* Free Firebirds sql allocated space */
-	fb_sql_result_free (recset->priv->sql_result);
-	recset->priv->sql_result = NULL;
-
-	fb_sql_unprepare (fcnc, recset);
-
-	/* Free all rows */
-	while (recset->priv->rows->len > 0) {
-
-		/* Get row at zero position */
-		row = (GdaRow *) g_ptr_array_index (recset->priv->rows, 0);
-
-		/* if it exists then free it */
-		if (row != NULL)
-			g_object_unref (row);
-
-		/* Move down all existing rows */
-		g_ptr_array_remove_index (recset->priv->rows, 0);
-	}
-
-	/* Free rows pointer object */
-	g_ptr_array_free (recset->priv->rows, TRUE);
-	recset->priv->rows = NULL;
-
-	/* Free private properties */
-	g_free (recset->priv);
-	recset->priv = NULL;
-
-	/* Finally call parents finalize method */
-	parent_class->finalize (object);
-}	
-
+	/* initialize specific information */
+	TO_IMPLEMENT;
+}
 
 static void
 gda_firebird_recordset_class_init (GdaFirebirdRecordsetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaDataModelRowClass *model_class = GDA_DATA_MODEL_ROW_CLASS (klass);
+	GdaPModelClass *pmodel_class = GDA_PMODEL_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
-	object_class->finalize = gda_firebird_recordset_finalize;
-	model_class->get_n_rows = gda_firebird_recordset_get_n_rows;
-	model_class->get_n_columns = gda_firebird_recordset_get_n_columns;
-	model_class->get_row = gda_firebird_recordset_get_row;
-	model_class->get_value_at = gda_firebird_recordset_get_value_at;
-	model_class->is_updatable = gda_firebird_recordset_is_updatable;
-	model_class->append_values = gda_firebird_recordset_append_values;
-	model_class->update_row = NULL;
-	model_class->remove_row = gda_firebird_recordset_remove_row;
+	object_class->dispose = gda_firebird_recordset_dispose;
+	pmodel_class->fetch_nb_rows = gda_firebird_recordset_fetch_nb_rows;
+	pmodel_class->fetch_random = gda_firebird_recordset_fetch_random;
+
+	pmodel_class->fetch_next = gda_firebird_recordset_fetch_next;
+	pmodel_class->fetch_prev = gda_firebird_recordset_fetch_prev;
+	pmodel_class->fetch_at = gda_firebird_recordset_fetch_at;
 }
 
+static void
+gda_firebird_recordset_dispose (GObject *object)
+{
+	GdaFirebirdRecordset *recset = (GdaFirebirdRecordset *) object;
+
+	g_return_if_fail (GDA_IS_FIREBIRD_RECORDSET (recset));
+
+	if (recset->priv) {
+		if (recset->priv->cnc) 
+			g_object_unref (recset->priv->cnc);
+
+		/* free specific information */
+		TO_IMPLEMENT;
+		g_free (recset->priv);
+		recset->priv = NULL;
+	}
+
+	parent_class->dispose (object);
+}
+
+/*
+ * Public functions
+ */
 
 GType
 gda_firebird_recordset_get_type (void)
@@ -1013,182 +123,220 @@ gda_firebird_recordset_get_type (void)
 			0,
 			(GInstanceInitFunc) gda_firebird_recordset_init
 		};
-		
-		type = g_type_register_static (PARENT_TYPE, "GdaFirebirdRecordset", &info, 0);
+		type = g_type_register_static (GDA_TYPE_PMODEL, "GdaFirebirdRecordset", &info, 0);
 	}
 
 	return type;
 }
 
-
-static void
-gda_firebird_recordset_describe_column (GdaDataModel *model, gint col)
+/*
+ * the @ps struct is modified and transfered to the new data model created in
+ * this function
+ */
+GdaDataModel *
+gda_firebird_recordset_new (GdaConnection *cnc, GdaFirebirdPStmt *ps, GdaDataModelAccessFlags flags, GType *col_types)
 {
-	GdaColumn *fa;
-	GdaFirebirdRecordset *recset = (GdaFirebirdRecordset *) model;
+	GdaFirebirdRecordset *model;
+        FirebirdConnectionData *cdata;
+        gint i;
+	GdaDataModelAccessFlags rflags;
 
-	g_return_if_fail (GDA_IS_FIREBIRD_RECORDSET (recset));
-	g_return_if_fail (col < recset->priv->ncolumns);
+        g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+        g_return_val_if_fail (ps != NULL, NULL);
 
-	fa = gda_data_model_describe_column (model, col);
-	gda_column_set_title (fa, recset->priv->sql_result->sqlvar[col].sqlname);
-	gda_column_set_name (fa, (const gchar *) recset->priv->sql_result->sqlvar[col].sqlname);
-	gda_column_set_defined_size (fa, (glong) recset->priv->sql_result->sqlvar[col].sqllen);
-	gda_column_set_table (fa, (const gchar *) recset->priv->sql_result->sqlvar[col].relname);
-	gda_column_set_scale (fa, (glong) (recset->priv->sql_result->sqlvar[col].sqlscale * -1));
-	gda_column_set_g_type (fa, fb_sql_type_to_g_type (recset->priv->sql_result->sqlvar[col].sqltype,
-							  (recset->priv->sql_result->sqlvar[col].sqlscale < 0)));
-	gda_column_set_position (fa, col);
+	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return NULL;
 
-	/* FIXME */
-	gda_column_set_allow_null (fa, TRUE);
-	gda_column_set_primary_key (fa, FALSE);
-	gda_column_set_unique_key (fa, FALSE);
+	/* make sure @ps reports the correct number of columns using the API*/
+        if (_GDA_PSTMT (ps)->ncols < 0)
+                /*_GDA_PSTMT (ps)->ncols = ...;*/
+		TO_IMPLEMENT;
+
+        /* completing @ps if not yet done */
+        if (!_GDA_PSTMT (ps)->types && (_GDA_PSTMT (ps)->ncols > 0)) {
+		/* create prepared statement's columns */
+		GSList *list;
+		for (i = 0; i < _GDA_PSTMT (ps)->ncols; i++)
+			_GDA_PSTMT (ps)->tmpl_columns = g_slist_prepend (_GDA_PSTMT (ps)->tmpl_columns, 
+									 gda_column_new ());
+		_GDA_PSTMT (ps)->tmpl_columns = g_slist_reverse (_GDA_PSTMT (ps)->tmpl_columns);
+
+		/* create prepared statement's types */
+		_GDA_PSTMT (ps)->types = g_new0 (GType, _GDA_PSTMT (ps)->ncols); /* all types are initialized to GDA_TYPE_NULL */
+		if (col_types) {
+			for (i = 0; ; i++) {
+				if (col_types [i] > 0) {
+					if (col_types [i] == G_TYPE_NONE)
+						break;
+					if (i >= _GDA_PSTMT (ps)->ncols)
+						g_warning (_("Column %d is out of range (0-%d), ignoring its specified type"), i,
+							   _GDA_PSTMT (ps)->ncols - 1);
+					else
+						_GDA_PSTMT (ps)->types [i] = col_types [i];
+				}
+			}
+		}
+		
+		/* fill GdaColumn's data */
+		for (i=0, list = _GDA_PSTMT (ps)->tmpl_columns; 
+		     i < GDA_PSTMT (ps)->ncols; 
+		     i++, list = list->next) {
+			GdaColumn *column;
+			
+			column = GDA_COLUMN (list->data);
+
+			/* use C API to set columns' information using gda_column_set_*() */
+			TO_IMPLEMENT;
+		}
+        }
+
+	/* determine access mode: RANDOM or CURSOR FORWARD are the only supported */
+	if (flags & GDA_DATA_MODEL_ACCESS_RANDOM)
+		rflags = GDA_DATA_MODEL_ACCESS_RANDOM;
+	else
+		rflags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD;
+
+	/* create data model */
+        model = g_object_new (GDA_TYPE_FIREBIRD_RECORDSET, "prepared-stmt", ps, "model-usage", rflags, NULL);
+        model->priv->cnc = cnc;
+	g_object_ref (cnc);
+
+	/* post init specific code */
+	TO_IMPLEMENT;
+
+        return GDA_DATA_MODEL (model);
 }
 
-GdaFirebirdRecordset *
-gda_firebird_recordset_new (GdaConnection *cnc, 
-			    isc_tr_handle *ftr,
-			    const gchar *sql, GObject **non_select_obj, GdaConnectionEvent **event)
+
+/*
+ * Get the number of rows in @model, if possible
+ */
+static gint
+gda_firebird_recordset_fetch_nb_rows (GdaPModel *model)
 {
-	GdaFirebirdRecordset *recset;
-	GdaFirebirdConnection *fcnc;
-	gint field_n;
-	GdaConnectionEvent *ev = NULL;
+	GdaFirebirdRecordset *imodel;
 
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (ftr, NULL);
+	imodel = GDA_FIREBIRD_RECORDSET (model);
+	if (model->advertized_nrows >= 0)
+		return model->advertized_nrows;
 
-	if (event)
-		*event = NULL;
+	/* use C API to determine number of rows,if possible */
+	TO_IMPLEMENT;
 
-	fcnc = g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
-	if (!fcnc) {
-		ev = gda_connection_add_event_string (cnc, _("Invalid Firebird handle"));
-		if (event)
-			*event = ev;
-		return NULL;
+	return model->advertized_nrows;
+}
+
+/*
+ * Create a new filled #GdaPRow object for the row at position @rownum, and put it into *prow.
+ *
+ * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
+ *  -  If *prow is NULL then a new #GdaPRow object has to be created, 
+ *  -  and otherwise *prow contains a #GdaPRow object which has already been created 
+ *     (through a call to this very function), and in this case it should not be modified
+ *     but the function may return FALSE if an error occurred.
+ *
+ * Memory management for that new GdaPRow object is left to the implementation, which
+ * can use gda_pmodel_take_row(). If new row objects are "given" to the GdaPModel implemantation
+ * using that method, then this method should detect when all the data model rows have been analysed
+ * (when model->nb_stored_rows == model->advertized_nrows) and then possibly discard the API handle
+ * as it won't be used anymore to fetch rows.
+ */
+static gboolean 
+gda_firebird_recordset_fetch_random (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error)
+{
+	GdaFirebirdRecordset *imodel;
+
+	imodel = GDA_FIREBIRD_RECORDSET (model);
+
+	TO_IMPLEMENT;
+
+	return TRUE;
+}
+
+/*
+ * Create and "give" filled #GdaPRow object for all the rows in the model
+ */
+static gboolean
+gda_firebird_recordset_store_all (GdaPModel *model, GError **error)
+{
+	GdaFirebirdRecordset *imodel;
+	gint i;
+
+	imodel = GDA_FIREBIRD_RECORDSET (model);
+
+	/* default implementation */
+	for (i = 0; i < model->advertized_nrows; i++) {
+		GdaPRow *prow;
+		if (! gda_firebird_recordset_fetch_random (model, &prow, i, error))
+			return FALSE;
 	}
-	if (non_select_obj)
-		*non_select_obj = NULL;
+	return TRUE;
+}
 
-	/* Create Firebird Recordset object */
-	recset = g_object_new (GDA_TYPE_FIREBIRD_RECORDSET, NULL);
+/*
+ * Create a new filled #GdaPRow object for the next cursor row, and put it into *prow.
+ *
+ * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
+ *  -  If *prow is NULL then a new #GdaPRow object has to be created, 
+ *  -  and otherwise *prow contains a #GdaPRow object which has already been created 
+ *     (through a call to this very function), and in this case it should not be modified
+ *     but the function may return FALSE if an error occurred.
+ *
+ * Memory management for that new GdaPRow object is left to the implementation, which
+ * can use gda_pmodel_take_row().
+ */
+static gboolean 
+gda_firebird_recordset_fetch_next (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error)
+{
+	GdaFirebirdRecordset *imodel = (GdaFirebirdRecordset*) model;
+
+	TO_IMPLEMENT;
+
+	return TRUE;
+}
+
+/*
+ * Create a new filled #GdaPRow object for the previous cursor row, and put it into *prow.
+ *
+ * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
+ *  -  If *prow is NULL then a new #GdaPRow object has to be created, 
+ *  -  and otherwise *prow contains a #GdaPRow object which has already been created 
+ *     (through a call to this very function), and in this case it should not be modified
+ *     but the function may return FALSE if an error occurred.
+ *
+ * Memory management for that new GdaPRow object is left to the implementation, which
+ * can use gda_pmodel_take_row().
+ */
+static gboolean 
+gda_firebird_recordset_fetch_prev (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error)
+{
+	GdaFirebirdRecordset *imodel = (GdaFirebirdRecordset*) model;
+
+	TO_IMPLEMENT;
+
+	return TRUE;
+}
+
+/*
+ * Create a new filled #GdaPRow object for the cursor row at position @rownum, and put it into *prow.
+ *
+ * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
+ *  -  If *prow is NULL then a new #GdaPRow object has to be created, 
+ *  -  and otherwise *prow contains a #GdaPRow object which has already been created 
+ *     (through a call to this very function), and in this case it should not be modified
+ *     but the function may return FALSE if an error occurred.
+ *
+ * Memory management for that new GdaPRow object is left to the implementation, which
+ * can use gda_pmodel_take_row().
+ */
+static gboolean 
+gda_firebird_recordset_fetch_at (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error)
+{
+	GdaFirebirdRecordset *imodel = (GdaFirebirdRecordset*) model;
 	
-	/* Save connection */
-	recset->priv->cnc = cnc;
-	
-	/* Prepare statement */
-	if (fb_sql_prepare (fcnc, recset, ftr, sql, event)) {
-		gint stmt_type;
+	TO_IMPLEMENT;
 
-		ev = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
-		gda_connection_event_set_description (ev, sql);
-		gda_connection_add_event (cnc, ev);
-
-		stmt_type = fb_sql_get_statement_type (fcnc, recset);
-
-		/* ... and then execute it */
-		if (!fb_sql_execute (fcnc, recset, ftr, sql)) {
-			ev = gda_firebird_connection_make_error (cnc, stmt_type);
-			if (event)
-				*event = ev;
-
-			/* Free Firebirds sql allocated space */
-			fb_sql_result_free (recset->priv->sql_result);
-			recset->priv->sql_result = NULL;
-
-			fb_sql_unprepare (fcnc, recset);
-
-			/* Release recordset */
-			g_object_unref (recset);
-			
-			return NULL;
-		}
-
-		/* If statement is not a select release recordset */
-		if ((stmt_type != isc_info_sql_stmt_select) && 
-		    (stmt_type != isc_info_sql_stmt_select_for_upd)) {
-			GdaConnectionEvent *event;
-			const gchar *cstr;
-			char count_type = 0;
-				
-			switch (stmt_type) {
-			case isc_info_sql_stmt_insert:
-				count_type = isc_info_req_insert_count;
-				cstr = "INSERT";
-				break;
-			case isc_info_sql_stmt_update:
-				count_type = isc_info_req_update_count;
-				cstr = "UPDATE";
-				break;
-			case isc_info_sql_stmt_delete:
-				count_type = isc_info_req_delete_count;
-				cstr = "DELETE";
-				break;
-			case isc_info_sql_stmt_ddl:
-				cstr = "DDL";
-				break;
-			case isc_info_sql_stmt_get_segment:
-				cstr = "GET_SEGMENT";
-				break;
-			case isc_info_sql_stmt_put_segment:
-				cstr = "PUT_SEGMENT";
-				break;
-			case isc_info_sql_stmt_exec_procedure:
-				cstr = "EXECUTE";
-				break;
-			case isc_info_sql_stmt_start_trans:
-				cstr = "BEGIN";
-				break;
-			case isc_info_sql_stmt_commit:
-				cstr = "COMMIT";
-				break;
-			case isc_info_sql_stmt_rollback:
-				cstr = "ROLLBACK";
-				break;
-			case isc_info_sql_stmt_set_generator:
-				cstr = "SET_GENERATOR";
-				break;
-			case isc_info_sql_stmt_savepoint:
-				cstr = "SAVEPOINT";
-				break;
-			default:
-				cstr = "UNKNOWN";
-				break;
-			}
-			event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
-			gda_connection_event_set_description (event, cstr);
-			gda_connection_add_event (cnc, event);
-			
-
-			if (non_select_obj && (count_type != 0)) {
-				gint nb = fb_sql_get_statement_impacted_rows (fcnc, recset, count_type);
-				if (nb >= 0)
-					*non_select_obj = (GObject *) gda_parameter_list_new_inline (NULL, "IMPACTED_ROWS", 
-												     G_TYPE_INT, nb, NULL);
-			}
-			g_object_unref (recset);
-			return NULL;
-		}
-
-		/* Set column attributes */
-		for (field_n = 0; field_n < recset->priv->ncolumns; field_n++) {
-			gda_firebird_recordset_describe_column (GDA_DATA_MODEL (recset), field_n);
-			gda_data_model_set_column_title (GDA_DATA_MODEL(recset), field_n, 
-							 recset->priv->sql_result->sqlvar[field_n].sqlname);
-		}
-
-		/* Fetch all rows */
-		while (fb_sql_fetch_row (fcnc, recset))
-			recset->priv->nrows++;
-	}
-	else {	
-		/* Release recordset if statement couldn't be prepared, don't add any error as it has already been done */
-		g_object_unref (recset);
-		recset = NULL;
-	}
-
-	return recset;
-}					
+	return TRUE;
+}
 

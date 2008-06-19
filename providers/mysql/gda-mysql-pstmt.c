@@ -65,7 +65,6 @@ gda_mysql_pstmt_get_type (void)
 static void 
 gda_mysql_pstmt_class_init (GdaMysqlPStmtClass  *klass)
 {
-	g_print ("*** %s\n", __func__);
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	parent_class = g_type_class_peek_parent (klass);
 
@@ -77,28 +76,26 @@ static void
 gda_mysql_pstmt_init (GdaMysqlPStmt       *pstmt,
 		      GdaMysqlPStmtClass  *klass)
 {
-	g_print ("*** %s\n", __func__);
 	g_return_if_fail (GDA_IS_PSTMT (pstmt));
 	
 	/* initialize specific parts of @pstmt */
 	// TO_IMPLEMENT;
-	//
+	
 	pstmt->mysql_bind_param = NULL;
 	pstmt->mysql_bind_result = NULL;
-	//
+	
 }
 
 static void
 gda_mysql_pstmt_finalize (GObject  *object)
 {
-	g_print ("*** %s\n", __func__);
 	GdaMysqlPStmt *pstmt = (GdaMysqlPStmt *) object;
 
 	g_return_if_fail (GDA_IS_PSTMT (pstmt));
 
 	/* free memory */
 	// TO_IMPLEMENT; /* free some specific parts of @pstmt */
-	//
+	
 	gint i;
 	for (i = 0; i < g_slist_length (((GdaPStmt *) pstmt)->param_ids); ++i) {
 		g_free (pstmt->mysql_bind_param[i].buffer);
@@ -114,7 +111,7 @@ gda_mysql_pstmt_finalize (GObject  *object)
 	}
 	g_free (pstmt->mysql_bind_result);
 	pstmt->mysql_bind_result = NULL;
-	//
+	
 
 	/* chain to parent class */
 	parent_class->finalize (object);

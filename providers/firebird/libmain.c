@@ -1,10 +1,8 @@
-/* GDA FireBird Provider
- * Copyright (C) 1998 - 2007 The GNOME Foundation
+/* GDA Firebird Provider
+ * Copyright (C) 2008 The GNOME Foundation
  *
  * AUTHORS:
- *         Rodrigo Moya <rodrigo@gnome-db.org>
- *         Albi Jeronimo <jeronimoalbi@yahoo.com.ar>
- *         Vivien Malerba <malerba@gnome-db.org>
+ *      TO_ADD: your name and email
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -22,9 +20,10 @@
  */
 
 #include <glib/gi18n-lib.h>
-#include "gda-firebird-provider.h"
 #include <libgda/gda-server-provider-extra.h>
 #include <libgda/binreloc/gda-binreloc.h>
+#include "gda-firebird.h"
+#include "gda-firebird-provider.h"
 
 static gchar      *module_path = NULL;
 const gchar       *plugin_get_name (void);
@@ -42,19 +41,19 @@ plugin_init (const gchar *real_path)
 const gchar *
 plugin_get_name (void)
 {
-	return "Firebird";
+	return FIREBIRD_PROVIDER_NAME;
 }
 
 const gchar *
 plugin_get_description (void)
 {
-	return _("Provider for Firebird databases");
+	return _("Example provider for C API databases");
 }
 
 gchar *
 plugin_get_dsn_spec (void)
 {
-gchar *ret, *dir;
+	gchar *ret, *dir;
 
 	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
 	ret = gda_server_provider_load_file_contents (module_path, dir, "firebird_specs_dsn.xml");
@@ -67,7 +66,7 @@ plugin_create_provider (void)
 {
 	GdaServerProvider *prov;
 
-        prov = gda_firebird_provider_new ();
-        g_object_set_data (G_OBJECT (prov), "GDA_PROVIDER_DIR", module_path);
+	prov = (GdaServerProvider*) g_object_new (GDA_TYPE_FIREBIRD_PROVIDER, NULL);
+        g_object_set_data ((GObject *) prov, "GDA_PROVIDER_DIR", module_path);
         return prov;
 }

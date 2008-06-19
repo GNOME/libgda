@@ -158,7 +158,7 @@ static GObject             *gda_mysql_provider_statement_execute (GdaServerProvi
 								  GdaServerProviderAsyncCallback   async_cb, 
 								  gpointer                         cb_data,
 								  GError                         **error);
-//
+
 
 /* distributed transactions */
 static gboolean gda_mysql_provider_xa_start    (GdaServerProvider         *provider,
@@ -187,7 +187,7 @@ static gboolean gda_mysql_provider_xa_rollback (GdaServerProvider         *provi
 static GList   *gda_mysql_provider_xa_recover  (GdaServerProvider  *provider,
 						GdaConnection      *cnc, 
 						GError            **error);
-//
+
 
 /* 
  * private connection data destroy 
@@ -216,7 +216,6 @@ gchar *internal_sql[] = {
 static void
 gda_mysql_provider_class_init (GdaMysqlProviderClass  *klass)
 {
-	g_print ("*** %s\n", __func__);
 	GdaServerProviderClass *provider_class = GDA_SERVER_PROVIDER_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
@@ -296,7 +295,7 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass  *klass)
         provider_class->meta_funcs.routine_col = _gda_mysql_meta_routine_col;
         provider_class->meta_funcs._routine_par = _gda_mysql_meta__routine_par;
         provider_class->meta_funcs.routine_par = _gda_mysql_meta_routine_par;
-	//
+	
 
 	/* distributed transactions: if not supported, then provider_class->xa_funcs should be set to NULL */
 	provider_class->xa_funcs = g_new0 (GdaServerProviderXa, 1);
@@ -306,14 +305,13 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass  *klass)
 	provider_class->xa_funcs->xa_commit = gda_mysql_provider_xa_commit;
 	provider_class->xa_funcs->xa_rollback = gda_mysql_provider_xa_rollback;
 	provider_class->xa_funcs->xa_recover = gda_mysql_provider_xa_recover;
-	//
+	
 }
 
 static void
 gda_mysql_provider_init (GdaMysqlProvider       *mysql_prv,
 			 GdaMysqlProviderClass  *klass)
 {
-	g_print ("*** %s\n", __func__);
 	InternalStatementItem i;
 	GdaSqlParser *parser;
 
@@ -361,7 +359,6 @@ gda_mysql_provider_get_type (void)
 static const gchar *
 gda_mysql_provider_get_name (GdaServerProvider  *provider)
 {
-	g_print ("*** %s\n", __func__);
 	return MYSQL_PROVIDER_NAME;
 }
 
@@ -371,7 +368,6 @@ gda_mysql_provider_get_name (GdaServerProvider  *provider)
 static const gchar *
 gda_mysql_provider_get_version (GdaServerProvider  *provider)
 {
-	g_print ("*** %s\n", __func__);
 	return PACKAGE_VERSION;
 }
 
@@ -390,7 +386,6 @@ real_open_connection (const gchar  *host,
 		      gboolean      compress,
 		      GError      **error)
 {
-	g_print ("*** %s\n", __func__);
 	unsigned int flags = 0;
 
 	/* Exclusive: host/pair otherwise unix socket. */
@@ -457,7 +452,6 @@ real_open_connection (const gchar  *host,
 static gchar *
 get_mysql_version (MYSQL  *mysql)
 {
-	g_print ("*** %s\n", __func__);
 	g_return_val_if_fail (mysql != NULL, NULL);
 	unsigned long version_long;
 	version_long = mysql_get_server_version (mysql);
@@ -488,7 +482,6 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 				    GdaServerProviderAsyncCallback   async_cb,
 				    gpointer                         cb_data)
 {
-	g_print ("*** %s\n", __func__);
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
@@ -586,7 +579,6 @@ static gboolean
 gda_mysql_provider_close_connection (GdaServerProvider  *provider,
 				     GdaConnection      *cnc)
 {
-	g_print ("*** %s\n", __func__);
 	MysqlConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -614,7 +606,6 @@ static const gchar *
 gda_mysql_provider_get_server_version (GdaServerProvider  *provider,
 				       GdaConnection      *cnc)
 {
-	g_print ("*** %s\n", __func__);
 	MysqlConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
@@ -636,7 +627,6 @@ static const gchar *
 gda_mysql_provider_get_database (GdaServerProvider  *provider,
 				 GdaConnection      *cnc)
 {
-	g_print ("*** %s\n", __func__);
 	MysqlConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
@@ -666,7 +656,6 @@ gda_mysql_provider_supports_operation (GdaServerProvider       *provider,
 				       GdaServerOperationType   type,
 				       GdaSet                  *options)
 {
-	g_print ("*** %s\n", __func__);
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 		g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
@@ -707,7 +696,6 @@ gda_mysql_provider_create_operation (GdaServerProvider       *provider,
 				     GdaSet                  *options,
 				     GError                 **error)
 {
-	g_print ("*** %s\n", __func__);
         gchar *file;
         GdaServerOperation *op;
         gchar *str;
@@ -747,7 +735,6 @@ gda_mysql_provider_render_operation (GdaServerProvider   *provider,
 				     GdaServerOperation  *op,
 				     GError             **error)
 {
-	g_print ("*** %s\n", __func__);
         gchar *sql = NULL;
         gchar *file;
         gchar *str;
@@ -814,7 +801,6 @@ gda_mysql_provider_perform_operation (GdaServerProvider               *provider,
 				      gpointer                         cb_data,
 				      GError                         **error)
 {
-	g_print ("*** %s\n", __func__);
         GdaServerOperationType optype;
 
 	/* If asynchronous connection opening is not supported, then exit now */
@@ -848,7 +834,6 @@ gda_mysql_provider_begin_transaction (GdaServerProvider        *provider,
 				      GdaTransactionIsolation   level,
 				      GError                  **error)
 {
-	g_print ("*** %s\n", __func__);
 	MysqlConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -872,7 +857,6 @@ gda_mysql_provider_commit_transaction (GdaServerProvider  *provider,
 				       const gchar        *name,
 				       GError            **error)
 {
-	g_print ("*** %s\n", __func__);
 	MysqlConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -896,7 +880,6 @@ gda_mysql_provider_rollback_transaction (GdaServerProvider  *provider,
 					 const gchar        *name,
 					 GError            **error)
 {
-	g_print ("*** %s\n", __func__);
 	MysqlConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -920,7 +903,6 @@ gda_mysql_provider_add_savepoint (GdaServerProvider  *provider,
 				  const gchar        *name,
 				  GError            **error)
 {
-	g_print ("*** %s\n", __func__);
 	MysqlConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -944,7 +926,6 @@ gda_mysql_provider_rollback_savepoint (GdaServerProvider  *provider,
 				       const gchar        *name,
 				       GError            **error)
 {
-	g_print ("*** %s\n", __func__);
 	MysqlConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -968,7 +949,6 @@ gda_mysql_provider_delete_savepoint (GdaServerProvider  *provider,
 				     const gchar        *name,
 				     GError            **error)
 {
-	g_print ("*** %s\n", __func__);
 	MysqlConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -991,7 +971,6 @@ gda_mysql_provider_supports_feature (GdaServerProvider     *provider,
 				     GdaConnection         *cnc,
 				     GdaConnectionFeature   feature)
 {
-	g_print ("*** %s\n", __func__);
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 		g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
@@ -1026,7 +1005,6 @@ gda_mysql_provider_get_data_handler (GdaServerProvider  *provider,
 				     GType               type,
 				     const gchar        *dbms_type)
 {
-	g_print ("*** %s\n", __func__);
 	GdaDataHandler *dh;
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -1064,7 +1042,6 @@ gda_mysql_provider_get_default_dbms_type (GdaServerProvider  *provider,
 					  GdaConnection      *cnc,
 					  GType               type)
 {
-	g_print ("*** %s\n", __func__);
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 		g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
@@ -1125,7 +1102,6 @@ static GdaSqlParser *
 gda_mysql_provider_create_parser (GdaServerProvider  *provider,
 				  GdaConnection      *cnc)
 {
-	g_print ("*** %s\n", __func__);
 	// TO_IMPLEMENT;
 	return (GdaSqlParser *) g_object_new (GDA_TYPE_MYSQL_PARSER,
 					      "tokenizer-flavour", GDA_SQL_PARSER_FLAVOUR_MYSQL,
@@ -1150,7 +1126,6 @@ gda_mysql_provider_statement_to_sql (GdaServerProvider    *provider,
 				     GSList              **params_used,
 				     GError              **error)
 {
-	g_print ("*** %s\n", __func__);
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
@@ -1173,7 +1148,6 @@ gda_mysql_provider_statement_prepare (GdaServerProvider  *provider,
 				      GdaStatement       *stmt,
 				      GError            **error)
 {
-	g_print ("*** %s\n", __func__);
 	GdaMysqlPStmt *ps;
 	MysqlConnectionData *cdata;
 
@@ -1308,7 +1282,6 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				      gpointer                         cb_data,
 				      GError                         **error)
 {
-	g_print ("*** %s\n", __func__);
 	GdaMysqlPStmt *ps;
 	MysqlConnectionData *cdata;
 
@@ -1356,9 +1329,9 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 	/* optionnally reset the prepared statement if required by the API */
 	// TO_IMPLEMENT;
 	
-	//
+	
 	g_print ("   %s: SQL=%s\n", __func__, _GDA_PSTMT(ps)->sql);
-	//
+	
 	/* bind statement's parameters */
 	GSList *list;
 	GdaConnectionEvent *event = NULL;
@@ -1413,13 +1386,13 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 		} else if ((G_VALUE_TYPE(value) == G_TYPE_DATE) ||
 			   (G_VALUE_TYPE(value) == GDA_TYPE_TIME) ||
 			   (G_VALUE_TYPE(value) == GDA_TYPE_TIMESTAMP)) {
-			//
+			
 			GdaHandlerTime *handler_time = (GdaHandlerTime *) gda_server_provider_get_data_handler_gtype
 				(provider, cnc, G_VALUE_TYPE(value));
 			g_assert (handler_time);
 			param_values[i] = gda_handler_time_get_no_locale_str_from_value (handler_time,
 											 value);
-			//
+			
 			g_print ("--- TIME=%s\n", param_values[i]);
 		} else {
 			GdaDataHandler *data_handler = gda_server_provider_get_data_handler_gtype
@@ -1437,11 +1410,11 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			mysql_bind_param[i].length = g_malloc0 (sizeof(unsigned long));
 
 		}
-		//
+		
 		gchar *str = gda_value_stringify (value);
 		g_print ("   %s: %s=%s\n", __func__, pname, str);
 		g_free (str);
-		//
+		
 
 	}
 		
@@ -1533,7 +1506,6 @@ gda_mysql_provider_xa_start (GdaServerProvider         *provider,
 			     const GdaXaTransactionId  *xid,
 			     GError                   **error)
 {
-	g_print ("*** %s\n", __func__);
 	MysqlConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -1558,7 +1530,6 @@ gda_mysql_provider_xa_end (GdaServerProvider         *provider,
 			   const GdaXaTransactionId  *xid,
 			   GError                   **error)
 {
-	g_print ("*** %s\n", __func__);
 	MysqlConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -1582,7 +1553,6 @@ gda_mysql_provider_xa_prepare (GdaServerProvider         *provider,
 			       const GdaXaTransactionId  *xid,
 			       GError                   **error)
 {
-	g_print ("*** %s\n", __func__);
 	MysqlConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -1607,7 +1577,6 @@ gda_mysql_provider_xa_commit (GdaServerProvider         *provider,
 			      const GdaXaTransactionId  *xid,
 			      GError                   **error)
 {
-	g_print ("*** %s\n", __func__);
 	MysqlConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -1631,7 +1600,6 @@ gda_mysql_provider_xa_rollback (GdaServerProvider         *provider,
 				const GdaXaTransactionId  *xid,
 				GError                   **error)
 {
-	g_print ("*** %s\n", __func__);
 	MysqlConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -1656,7 +1624,6 @@ gda_mysql_provider_xa_recover (GdaServerProvider  *provider,
 			       GdaConnection      *cnc,
 			       GError            **error)
 {
-	g_print ("*** %s\n", __func__);
 	MysqlConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
@@ -1676,7 +1643,6 @@ gda_mysql_provider_xa_recover (GdaServerProvider  *provider,
 static void
 gda_mysql_free_cnc_data (MysqlConnectionData  *cdata)
 {
-	g_print ("*** %s\n", __func__);
 	if (!cdata)
 		return;
 
