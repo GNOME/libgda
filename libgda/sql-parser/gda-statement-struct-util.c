@@ -300,6 +300,8 @@ _identifier_needs_quotes (const gchar *str)
 gchar *
 _identifier_unquote (gchar *str)
 {
+	if (!str)
+		return NULL;
 	if (*str == '"')
 		return _remove_quotes (str);
 	else {

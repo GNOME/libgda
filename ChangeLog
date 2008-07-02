@@ -1,3 +1,27 @@
+2008-07-02  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-meta-struct.[ch]:
+	 - added a "store" property to reference a GdaMetaStore, and use
+	it in any gda_meta_struct_complement*()
+	 - made the db_objects instance	attribute private,
+	 - added gda_meta_struct_get_all_db_objects()
+	 - added an 'outdated' attribute to the GdaMetaDbObject structure
+	which tells if its contents may be outdated (compared to what's in
+	the GdaMetaStore)
+	* libgda/gda-meta-store.c: property doc. fixes, and adaptations
+	to the GdaMetaStruct changes
+	* tools/command-exec.c:
+	* libgda/sql-parser/gda-statement-struct.c: adaptations to
+	the GdaMetaStruct changes
+	* libgda/sql-parser/gda-statement-struct-util.c:
+	* libgda/gda-set.c: minor correction
+	* tools/gda-sql.c: correctly handle query buffer ending with a
+	';', and allow one to connect to the '~' connection to really
+	connect to the GdaMetaStore's connection to work with a connection's
+	meta data
+	* libgda/sql-parser/gda-sql-parser.c:
+	* doc/C: doc. improvements
+
 2008-06-19  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-meta-struct.c:

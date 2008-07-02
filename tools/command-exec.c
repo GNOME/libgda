@@ -606,13 +606,14 @@ gda_internal_command_build_meta_struct (GdaConnection *cnc, const gchar **args, 
 	gint index;
 	const gchar *arg;
 	GdaMetaStore *store;
+	GSList *objlist;
 
 	store = gda_connection_get_meta_store (cnc);
-	mstruct = gda_meta_struct_new (GDA_META_STRUCT_FEATURE_ALL);
+	mstruct = gda_meta_struct_new (store, GDA_META_STRUCT_FEATURE_ALL);
 
 	if (!args[0]) {
 		/* use all tables or views */
-		if (!gda_meta_struct_complement_default (mstruct, store, error))
+		if (!gda_meta_struct_complement_default (mstruct, error))
 			goto onerror;
 	}
 
@@ -628,32 +629,34 @@ gda_internal_command_build_meta_struct (GdaConnection *cnc, const gchar **args, 
 			str[strlen (str) - 2] = 0;
 			g_value_take_string (v, str);
 
-			if (!gda_meta_struct_complement_schema (mstruct, store, NULL, v, error))
+			if (!gda_meta_struct_complement_schema (mstruct, NULL, v, error))
 				goto onerror;
 		}
 		else {
 			/* try to find it as a table or view */
-			if (!gda_meta_struct_complement (mstruct, store, GDA_META_DB_UNKNOWN, NULL, NULL, v, NULL)) {
+			if (!gda_meta_struct_complement (mstruct, GDA_META_DB_UNKNOWN, NULL, NULL, v, NULL)) {
 				if (g_str_has_suffix (arg, "=") && (*arg != '=')) {
 					GdaMetaDbObject *dbo;
 					gchar *str;
 					str = g_strdup (arg);
 					str[strlen (str) - 1] = 0;
 					g_value_take_string (v, str);
-					dbo = gda_meta_struct_complement (mstruct, store, GDA_META_DB_UNKNOWN, 
+					dbo = gda_meta_struct_complement (mstruct, GDA_META_DB_UNKNOWN, 
 									  NULL, NULL, v, NULL);
 					if (dbo)
-						gda_meta_struct_complement_depend (mstruct, store, dbo, NULL);
+						gda_meta_struct_complement_depend (mstruct, dbo, NULL);
 				}
 			}
 		}
 	}
 
-	if (!mstruct->db_objects) {
+	objlist = gda_meta_struct_get_all_db_objects (mstruct);
+	if (!objlist) {
 		g_set_error (error, 0, 0,
 			     _("No object found"));
 		goto onerror;
 	}
+	g_slist_free (objlist);
 	gda_meta_struct_sort_db_objects (mstruct, GDA_META_SORT_ALHAPETICAL, NULL);
 	return mstruct;
 
@@ -688,14 +691,15 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 	}
 
 	GdaMetaStruct *mstruct;
-	GSList *dbo_list;
+	GSList *dbo_list, *tmplist;
 	mstruct = gda_internal_command_build_meta_struct (cnc, args, error);
 	if (!mstruct)
 		return NULL;
-
+	
 	/* compute the number of known database objects */
 	gint nb_objects = 0;
-	for (dbo_list = mstruct->db_objects; dbo_list; dbo_list = dbo_list->next) {
+	tmplist = gda_meta_struct_get_all_db_objects (mstruct);
+	for (dbo_list = tmplist; dbo_list; dbo_list = dbo_list->next) {
 		GdaMetaDbObject *dbo = GDA_META_DB_OBJECT (dbo_list->data);
 		if (dbo->obj_type != GDA_META_DB_UNKNOWN)
 			nb_objects++;
@@ -708,7 +712,7 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 		gda_data_model_set_column_title (model, 1, _("Name"));
 		gda_data_model_set_column_title (model, 2, _("Type"));
 		gda_data_model_set_column_title (model, 3, _("Owner"));
-		for (dbo_list = mstruct->db_objects; dbo_list; dbo_list = dbo_list->next) {
+		for (dbo_list = tmplist; dbo_list; dbo_list = dbo_list->next) {
 			GdaMetaDbObject *dbo = GDA_META_DB_OBJECT (dbo_list->data);
 			GList *values = NULL;
 			GValue *val;
@@ -746,10 +750,12 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 		res = g_new0 (GdaInternalCommandResult, 1);
 		res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
 		res->u.model = model;
+		g_slist_free (tmplist);
 		return res;
 	}
 	else if (nb_objects == 0) {
 		g_set_error (error, 0, 0, _("No object found"));
+		g_slist_free (tmplist);
 		return NULL;
 	}
 
@@ -761,7 +767,7 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 	res->u.multiple_results = NULL;
 	GdaMetaDbObject *dbo;
 
-	for (dbo_list = mstruct->db_objects; dbo_list; dbo_list = dbo_list->next) {
+	for (dbo_list = tmplist; dbo_list; dbo_list = dbo_list->next) {
 		dbo = GDA_META_DB_OBJECT (dbo_list->data);
 		if (dbo->obj_type == GDA_META_DB_UNKNOWN)
 			dbo = NULL;
@@ -769,6 +775,7 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 			break;
 	}
 	g_assert (dbo);
+	g_slist_free (tmplist);
 
 	if ((dbo->obj_type == GDA_META_DB_VIEW) || (dbo->obj_type == GDA_META_DB_TABLE)) {
 		GdaInternalCommandResult *subres;

@@ -31,6 +31,7 @@
  */
 static void gda_meta_struct_class_init (GdaMetaStructClass *klass);
 static void gda_meta_struct_init (GdaMetaStruct *mstruct);
+static void gda_meta_struct_dispose (GObject *object);
 static void gda_meta_struct_finalize (GObject *object);
 
 static void gda_meta_struct_set_property (GObject *object,
@@ -43,10 +44,15 @@ static void gda_meta_struct_get_property (GObject *object,
                                          GParamSpec *pspec);
 
 
+static void meta_store_changed_cb (GdaMetaStore *store, GSList *changes, GdaMetaStruct *mstruct);
+static void meta_store_reset_cb (GdaMetaStore *store, GdaMetaStruct *mstruct);
+
 struct _GdaMetaStructPrivate {
-	GHashTable *index; /* key = [catalog].[schema].[name], value = a GdaMetaDbObject. Note: catalog, schema and name 
-			    * are case sensitive (and don't have any double quote around them) */
-	guint       features;
+	GdaMetaStore *store;
+	GSList       *db_objects; /* list of GdaMetaDbObject structures */
+	GHashTable   *index; /* key = [catalog].[schema].[name], value = a GdaMetaDbObject. Note: catalog, schema and name 
+			      * are case sensitive (and don't have any double quote around them) */
+	guint         features;
 };
 
 static GdaMetaDbObject *_meta_struct_get_db_object (GdaMetaStruct *mstruct, 
@@ -64,6 +70,7 @@ static GObjectClass  *parent_class = NULL;
 /* properties */
 enum {
         PROP_0,
+	PROP_STORE,
         PROP_FEATURES
 };
 
@@ -107,6 +114,14 @@ gda_meta_struct_class_init (GdaMetaStructClass *klass) {
 	/* Properties */
         object_class->set_property = gda_meta_struct_set_property;
         object_class->get_property = gda_meta_struct_get_property;
+	g_object_class_install_property (object_class, PROP_STORE,
+					 /* To translators: GdaMetaStore is an object holding meta data information
+					  * which will be used as an information source */
+					 g_param_spec_object ("meta-store", NULL,
+							      _ ("GdaMetaStore object to fetch information from"),  
+							      GDA_TYPE_META_STORE, 
+							      (G_PARAM_WRITABLE | G_PARAM_READABLE | 
+							       G_PARAM_CONSTRUCT_ONLY)));
         g_object_class_install_property (object_class, PROP_FEATURES,
 					 /* To translators: The GdaMetaStruct object computes lists of tables, views,
 					  * and some other information, the "Features to compute" allows one to avoid
@@ -118,6 +133,7 @@ gda_meta_struct_class_init (GdaMetaStructClass *klass) {
 							     G_PARAM_CONSTRUCT_ONLY)));
 
 	/* virtual methods */
+	object_class->dispose = gda_meta_struct_dispose;
 	object_class->finalize = gda_meta_struct_finalize;
 }
 
@@ -125,12 +141,14 @@ gda_meta_struct_class_init (GdaMetaStructClass *klass) {
 static void
 gda_meta_struct_init (GdaMetaStruct *mstruct) {
 	mstruct->priv = g_new0 (GdaMetaStructPrivate, 1);
+	mstruct->priv->store = NULL;
 	mstruct->priv->index = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 }
 
 
 /**
  * gda_meta_struct_new
+ * @store: a #GdaMetaStore from which the new #GdaMetaStruct object will fetch information
  * @features: the kind of extra information the new #GdaMetaStruct object will compute
  *
  * Creates a new #GdaMetaStruct object. The @features specifies the extra features which will also be computed:
@@ -140,13 +158,35 @@ gda_meta_struct_init (GdaMetaStruct *mstruct) {
  * Returns: the newly created #GdaMetaStruct object
  */
 GdaMetaStruct *
-gda_meta_struct_new (GdaMetaStructFeature features) 
+gda_meta_struct_new (GdaMetaStore *store, GdaMetaStructFeature features) 
 {
-	return (GdaMetaStruct*) g_object_new (GDA_TYPE_META_STRUCT, "features", features, NULL);
+	g_return_val_if_fail (GDA_IS_META_STORE (store), NULL);
+	return (GdaMetaStruct*) g_object_new (GDA_TYPE_META_STRUCT, "meta-store", store, "features", features, NULL);
 }
 
 static void
-gda_meta_struct_finalize (GObject   * object) {
+gda_meta_struct_dispose (GObject *object) {
+	GdaMetaStruct *mstruct;
+	
+	g_return_if_fail (object != NULL);
+	g_return_if_fail (GDA_IS_META_STRUCT (object));
+	
+	mstruct = GDA_META_STRUCT (object);
+	if (mstruct->priv->store) {
+		g_signal_handlers_disconnect_by_func (G_OBJECT (mstruct->priv->store),
+						      G_CALLBACK (meta_store_changed_cb), mstruct);
+		g_signal_handlers_disconnect_by_func (G_OBJECT (mstruct->priv->store),
+						      G_CALLBACK (meta_store_reset_cb), mstruct);
+		g_object_ref (mstruct->priv->store);
+		mstruct->priv->store = NULL;
+	}
+	
+	/* parent class */
+	parent_class->finalize (object);
+}
+
+static void
+gda_meta_struct_finalize (GObject *object) {
 	GdaMetaStruct *mstruct;
 	
 	g_return_if_fail (object != NULL);
@@ -154,8 +194,8 @@ gda_meta_struct_finalize (GObject   * object) {
 	
 	mstruct = GDA_META_STRUCT (object);
 	if (mstruct->priv) {
-		g_slist_foreach (mstruct->db_objects, (GFunc) gda_meta_db_object_free, NULL);
-		g_slist_free (mstruct->db_objects);
+		g_slist_foreach (mstruct->priv->db_objects, (GFunc) gda_meta_db_object_free, NULL);
+		g_slist_free (mstruct->priv->db_objects);
 		g_hash_table_destroy (mstruct->priv->index);
 		g_free (mstruct->priv);
 		mstruct->priv = NULL;
@@ -176,6 +216,16 @@ gda_meta_struct_set_property (GObject *object,
         mstruct = GDA_META_STRUCT (object);
         if (mstruct->priv) {
                 switch (param_id) {
+		case PROP_STORE:
+			mstruct->priv->store = g_value_get_object (value);
+			if (mstruct->priv->store) {
+				g_object_ref (mstruct->priv->store);
+				g_signal_connect (G_OBJECT (mstruct->priv->store), "meta_changed",
+						  G_CALLBACK (meta_store_changed_cb), mstruct);
+				g_signal_connect (G_OBJECT (mstruct->priv->store), "meta_reset",
+						  G_CALLBACK (meta_store_reset_cb), mstruct);
+			}
+			break;
 		case PROP_FEATURES:
 			mstruct->priv->features = g_value_get_uint (value);
 			break;
@@ -196,6 +246,9 @@ gda_meta_struct_get_property (GObject *object,
 
         if (mstruct->priv) {
                 switch (param_id) {
+		case PROP_STORE:
+			g_value_set_object (value, mstruct->priv->store);
+			break;
 		case PROP_FEATURES:
 			g_value_set_uint (value, mstruct->priv->features);
 			break;
@@ -205,9 +258,25 @@ gda_meta_struct_get_property (GObject *object,
 	}
 }
 
+static void
+meta_store_changed_cb (GdaMetaStore *store, GSList *changes, GdaMetaStruct *mstruct)
+{
+	/* for now we mark ALL the db objects as outdated */
+	meta_store_reset_cb (store, mstruct);
+}
 
 static void
-compute_view_dependencies (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaDbObject *view_dbobj, GdaSqlStatement *sqlst) 
+meta_store_reset_cb (GdaMetaStore *store, GdaMetaStruct *mstruct)
+{
+	/* mark ALL the db objects as outdated */
+	GSList *list;
+	for (list = mstruct->priv->db_objects; list; list = list->next)
+		GDA_META_DB_OBJECT (list->data)->outdated = TRUE;
+}
+
+
+static void
+compute_view_dependencies (GdaMetaStruct *mstruct, GdaMetaDbObject *view_dbobj, GdaSqlStatement *sqlst) 
 {	
 	if (sqlst->stmt_type == GDA_SQL_STATEMENT_SELECT) {
 		GdaSqlStatementSelect *selst;
@@ -225,17 +294,18 @@ compute_view_dependencies (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaD
 			if (!t->table_name)
 				continue;
 			
-			m2 = gda_meta_struct_new (GDA_META_STRUCT_FEATURE_NONE);
+			m2 = gda_meta_struct_new (mstruct->priv->store, GDA_META_STRUCT_FEATURE_NONE);
 			g_value_set_string ((vname = gda_value_new (G_TYPE_STRING)), t->table_name);
-			if (! (tmp_obj = gda_meta_struct_complement (m2, store, GDA_META_DB_TABLE, NULL, NULL, vname, NULL)))
-				tmp_obj = gda_meta_struct_complement (m2, store, GDA_META_DB_VIEW, NULL, NULL, vname, NULL);
+			if (! (tmp_obj = gda_meta_struct_complement (m2, 
+								     GDA_META_DB_TABLE, NULL, NULL, vname, NULL)))
+				tmp_obj = gda_meta_struct_complement (m2,
+								      GDA_META_DB_VIEW, NULL, NULL, vname, NULL);
 			gda_value_free (vname);
+			g_object_unref (m2);
 
-			if (!tmp_obj) {
+			if (!tmp_obj) 
 				/* could not find dependency */
-				g_object_unref (m2);
 				continue;
-			}
 
 			/* the dependency exists, and is identified by tmp_obj->obj_catalog, tmp_obj->obj_schema 
 			 * and tmp_obj->obj_name */
@@ -251,13 +321,12 @@ compute_view_dependencies (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaD
 				ref_obj->obj_schema = g_strdup (tmp_obj->obj_schema);
 				ref_obj->obj_name = g_strdup (tmp_obj->obj_name);
 
-				mstruct->db_objects = g_slist_append (mstruct->db_objects, ref_obj);
+				mstruct->priv->db_objects = g_slist_append (mstruct->priv->db_objects, ref_obj);
 				str = g_strdup_printf ("%s.%s.%s", tmp_obj->obj_catalog,
 						       tmp_obj->obj_schema, tmp_obj->obj_name);
 				g_hash_table_insert (mstruct->priv->index, str, ref_obj);
 			}
 			g_assert (ref_obj);
-			g_object_unref (m2);
 			gda_value_free (catalog);
 			gda_value_free (schema);
 			gda_value_free (name);
@@ -270,25 +339,25 @@ compute_view_dependencies (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaD
 		GSList *list;
 		cst = (GdaSqlStatementCompound*) (sqlst->contents);
 		for (list = cst->stmt_list; list; list = list->next)
-			compute_view_dependencies (mstruct, store, view_dbobj, (GdaSqlStatement*) list->data);
+			compute_view_dependencies (mstruct, view_dbobj, (GdaSqlStatement*) list->data);
 	}
 	else
 		g_assert_not_reached ();
 }
 
-static GdaMetaDbObject * _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaDbObjectType type,
+static GdaMetaDbObject * _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 						  const GValue *icatalog, const GValue *ischema, const GValue *iname, 
 						  const GValue *short_name, const GValue *full_name, 
 						  const GValue *owner, GError **error);
-static gboolean determine_db_object_from_schema_and_name (GdaMetaStruct *mstruct, GdaMetaStore *store, 
+static gboolean determine_db_object_from_schema_and_name (GdaMetaStruct *mstruct,
 							  GdaMetaDbObjectType *int_out_type, GValue **out_catalog,
 							  GValue **out_short_name, GValue **out_full_name,
 							  GValue **out_owner, const GValue *schema, const GValue *name);
-static gboolean determine_db_object_from_short_name (GdaMetaStruct *mstruct, GdaMetaStore *store, 
+static gboolean determine_db_object_from_short_name (GdaMetaStruct *mstruct,
 						     GdaMetaDbObjectType *int_out_type, GValue **out_catalog,
 						     GValue **out_schema, GValue **out_name, GValue **out_short_name, 
 						     GValue **out_full_name, GValue **out_owner, const GValue *name);
-static gboolean determine_db_object_from_missing_type (GdaMetaStruct *mstruct, GdaMetaStore *store, 
+static gboolean determine_db_object_from_missing_type (GdaMetaStruct *mstruct,
 						       GdaMetaDbObjectType *out_type, GValue **out_short_name, 
 						       GValue **out_full_name, GValue **out_owner, const GValue *catalog, 
 						       const GValue *schema, const GValue *name);
@@ -297,7 +366,6 @@ static gchar *array_type_to_sql (GdaMetaStore *store, const GValue *specific_nam
 /**
  * gda_meta_struct_complement
  * @mstruct: a #GdaMetaStruct object
- * @store: the #GdaMetaStore to use
  * @type: the type of object to add (which can be GDA_META_DB_UNKNOWN)
  * @catalog: the catalog the object belongs to (as a G_TYPE_STRING GValue), or %NULL
  * @schema: the schema the object belongs to (as a G_TYPE_STRING GValue), or %NULL
@@ -324,7 +392,7 @@ static gchar *array_type_to_sql (GdaMetaStore *store, const GValue *specific_nam
  * Returns: the #GdaMetaDbObject corresponding to the database object if no error occurred, or %NULL
  */
 GdaMetaDbObject *
-gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaDbObjectType type,
+gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 			    const GValue *catalog, const GValue *schema, const GValue *name, 
 			    GError **error)
 {
@@ -334,9 +402,13 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMeta
 	GValue *icatalog = NULL, *ischema = NULL, *iname = NULL; /* GValue with identifiers ready to be compared */
 
 	/* checks */
-	g_return_val_if_fail (GDA_IS_META_STORE (store), NULL);
+	g_return_val_if_fail (mstruct->priv->store, NULL);
 	g_return_val_if_fail (GDA_IS_META_STRUCT (mstruct), NULL);
 	g_return_val_if_fail (name && (G_VALUE_TYPE (name) == G_TYPE_STRING), NULL);
+	if (catalog && (gda_value_is_null (catalog) || !g_value_get_string (catalog)))
+		catalog = NULL;
+	if (schema && (gda_value_is_null (schema) || !g_value_get_string (schema)))
+		schema = NULL;
 	g_return_val_if_fail (!catalog || (catalog && schema), NULL);
 	g_return_val_if_fail (!catalog || (G_VALUE_TYPE (catalog) == G_TYPE_STRING), NULL);
 	g_return_val_if_fail (!schema || (G_VALUE_TYPE (schema) == G_TYPE_STRING), NULL);
@@ -361,7 +433,7 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMeta
 	if (!catalog) {
 		if (schema) {
 			g_return_val_if_fail (schema && (G_VALUE_TYPE (schema) == G_TYPE_STRING), NULL);
-			if (! determine_db_object_from_schema_and_name (mstruct, store, &real_type, &icatalog, 
+			if (! determine_db_object_from_schema_and_name (mstruct, &real_type, &icatalog, 
 									&short_name, &full_name, &owner,
 									ischema, iname)) {
 				g_set_error (error, GDA_META_STRUCT_ERROR, GDA_META_STRUCT_UNKNOWN_OBJECT_ERROR,
@@ -374,7 +446,7 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMeta
 		}
 		else {
 			GValue *real_name = NULL;
-			if (! determine_db_object_from_short_name (mstruct, store, &real_type, &icatalog, 
+			if (! determine_db_object_from_short_name (mstruct, &real_type, &icatalog, 
 								   &ischema, &real_name, 
 								   &short_name, &full_name, &owner, iname)) {
 				g_set_error (error, GDA_META_STRUCT_ERROR, GDA_META_STRUCT_UNKNOWN_OBJECT_ERROR,
@@ -389,7 +461,7 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMeta
 		}
 	}
 	else if (type == GDA_META_DB_UNKNOWN) {
-		if (! determine_db_object_from_missing_type (mstruct, store, &real_type, &short_name, &full_name, &owner,
+		if (! determine_db_object_from_missing_type (mstruct, &real_type, &short_name, &full_name, &owner,
 							     icatalog, ischema, iname)) {
 			g_set_error (error, GDA_META_STRUCT_ERROR, GDA_META_STRUCT_UNKNOWN_OBJECT_ERROR,
 				     _("Could not find object named '%s.%s.%s'"), g_value_get_string (catalog),
@@ -401,7 +473,7 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMeta
 		}
 	}
 	type = real_type;
-	dbo = _meta_struct_complement (mstruct, store, type, icatalog, ischema, iname, short_name, full_name, owner, error);
+	dbo = _meta_struct_complement (mstruct, type, icatalog, ischema, iname, short_name, full_name, owner, error);
 
 	gda_value_free (icatalog);
 	gda_value_free (ischema);
@@ -414,7 +486,7 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMeta
 }
 
 static GdaMetaDbObject *
-_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaDbObjectType type,
+_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 			 const GValue *icatalog, const GValue *ischema, const GValue *iname, 
 			 const GValue *short_name, const GValue *full_name, const GValue *owner, GError **error)
 {
@@ -458,7 +530,8 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaDbO
 		gint nrows;
 		GdaMetaView *mv;
 
-		model = gda_meta_store_extract (store, sql, error, "tc", icatalog, "ts", ischema, "tname", iname, NULL);
+		model = gda_meta_store_extract (mstruct->priv->store, sql, 
+						error, "tc", icatalog, "ts", ischema, "tname", iname, NULL);
 		if (!model) 
 			goto onerror;
 		nrows = gda_data_model_get_n_rows (model);
@@ -496,7 +569,7 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaDbO
 			     (gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_COMPOUND))) {
 				GdaSqlStatement *sqlst;
 				g_object_get (G_OBJECT (stmt), "structure", &sqlst, NULL);
-				compute_view_dependencies (mstruct, store, dbo, sqlst);
+				compute_view_dependencies (mstruct, dbo, sqlst);
 				gda_sql_statement_free (sqlst);
 				g_object_unref (stmt);
 				
@@ -517,7 +590,8 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaDbO
 		GdaDataModel *model;
 		gint i, nrows;
 
-		model = gda_meta_store_extract (store, sql, error, "tc", icatalog, "ts", ischema, "tname", iname, NULL);
+		model = gda_meta_store_extract (mstruct->priv->store, sql, 
+						error, "tc", icatalog, "ts", ischema, "tname", iname, NULL);
 		if (!model) 
 			goto onerror;
 
@@ -550,7 +624,7 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaDbO
 			if (cstr && *cstr)
 				tcol->column_type = g_strdup (cstr);
 			else 
-				tcol->column_type = array_type_to_sql (store, 
+				tcol->column_type = array_type_to_sql (mstruct->priv->store, 
 								       gda_data_model_get_value_at (model, 8, i));
 			tcol->gtype = gda_g_type_from_string (g_value_get_string (gda_data_model_get_value_at (model, 2, i)));
 			tcol->nullok = g_value_get_boolean (gda_data_model_get_value_at (model, 3, i));
@@ -566,7 +640,8 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaDbO
 
 		/* primary key */
 		sql = "SELECT constraint_name FROM _table_constraints WHERE constraint_type='PRIMARY KEY' AND table_catalog = ##tc::string AND table_schema = ##ts::string AND table_name = ##tname::string";
-		model = gda_meta_store_extract (store, sql, error, "tc", icatalog, "ts", ischema, "tname", iname, NULL);
+		model = gda_meta_store_extract (mstruct->priv->store, sql, 
+						error, "tc", icatalog, "ts", ischema, "tname", iname, NULL);
 		if (!model) 
 			goto onerror;
 
@@ -574,7 +649,7 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaDbO
 		if (nrows >= 1) {
 			GdaDataModel *pkmodel;
 			sql = "SELECT column_name FROM _key_column_usage WHERE table_catalog = ##cc::string AND table_schema = ##cs::string AND table_name = ##tname::string AND constraint_name = ##cname::string ORDER BY ordinal_position";
-			pkmodel = gda_meta_store_extract (store, sql, error, 
+			pkmodel = gda_meta_store_extract (mstruct->priv->store, sql, error, 
 							  "cc", icatalog,
 							  "cs", ischema,
 							  "tname", iname,
@@ -607,8 +682,11 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaDbO
 
 		/* foreign keys */
 		if (mstruct->priv->features & GDA_META_STRUCT_FEATURE_FOREIGN_KEYS) { 
-			sql = "SELECT ref_table_catalog, ref_table_schema, ref_table_name FROM _referential_constraints WHERE table_catalog = ##tc::string AND table_schema = ##ts::string AND table_name = ##tname::string";
-			model = gda_meta_store_extract (store, sql, error, "tc", icatalog, "ts", ischema, "tname", iname, NULL);
+			sql = "SELECT ref_table_catalog, ref_table_schema, ref_table_name, constraint_name, ref_constraint_name FROM _referential_constraints WHERE table_catalog = ##tc::string AND table_schema = ##ts::string AND table_name = ##tname::string";
+			model = gda_meta_store_extract (mstruct->priv->store, sql, error, 
+							"tc", icatalog, 
+							"ts", ischema, 
+							"tname", iname, NULL);
 			if (!model) 
 				goto onerror;
 			
@@ -630,7 +708,7 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaDbO
 					tfk->depend_on->obj_catalog = g_strdup (g_value_get_string (fk_catalog));
 					tfk->depend_on->obj_schema = g_strdup (g_value_get_string (fk_schema));
 					tfk->depend_on->obj_name = g_strdup (g_value_get_string (fk_name));
-					mstruct->db_objects = g_slist_append (mstruct->db_objects, tfk->depend_on);
+					mstruct->priv->db_objects = g_slist_append (mstruct->priv->db_objects, tfk->depend_on);
 					str = g_strdup_printf ("%s.%s.%s", g_value_get_string (fk_catalog), 
 							       g_value_get_string (fk_schema), 
 							       g_value_get_string (fk_name));
@@ -644,6 +722,63 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaDbO
 				
 				/* FIXME: compute @cols_nb, and all the @*_array members (ref_pk_cols_array must be
 				 * initialized with -1 values everywhere */
+				sql = "SELECT k.column_name, c.ordinal_position FROM _key_column_usage k INNER JOIN _columns c ON (c.table_catalog = k.table_catalog AND c.table_schema = k.table_schema AND c.table_name=k.table_name AND c.column_name=k.column_name) WHERE k.table_catalog = ##tc::string AND k.table_schema = ##ts::string AND k.table_name = ##tname::string AND k.constraint_name = ##cname::string ORDER BY k.ordinal_position";
+				GdaDataModel *fk_cols, *ref_pk_cols;
+				gboolean fkerror = FALSE;
+				fk_cols = gda_meta_store_extract (mstruct->priv->store, sql, error, 
+								  "tc", icatalog, 
+								  "ts", ischema, 
+								  "tname", iname, 
+								  "cname", gda_data_model_get_value_at (model, 3, i), NULL);
+				ref_pk_cols = gda_meta_store_extract (mstruct->priv->store, sql, error, 
+								      "tc", fk_catalog,
+								      "ts", fk_schema,
+								      "tname", fk_name,
+								      "cname", gda_data_model_get_value_at (model, 4, i), NULL);
+				if (fk_cols && ref_pk_cols) {
+					gint fk_nrows, ref_pk_nrows;
+					fk_nrows = gda_data_model_get_n_rows (fk_cols);
+					ref_pk_nrows = gda_data_model_get_n_rows (ref_pk_cols);
+					if (fk_nrows != ref_pk_nrows)
+						fkerror = TRUE;
+					else {
+						gint n;
+						tfk->cols_nb = fk_nrows;
+						tfk->fk_cols_array = g_new0 (gint, fk_nrows);
+						tfk->fk_names_array = g_new0 (gchar *, fk_nrows);
+						tfk->ref_pk_cols_array = g_new0 (gint, fk_nrows);
+						tfk->ref_pk_names_array = g_new0 (gchar *, fk_nrows);
+						for (n = 0; n < fk_nrows; n++) {
+							const GValue *cv;
+							cv = gda_data_model_get_value_at (fk_cols, 1, n);
+							tfk->fk_cols_array [n] = g_value_get_int (cv);
+							cv = gda_data_model_get_value_at (fk_cols, 0, n);
+							tfk->fk_names_array [n] = g_value_dup_string (cv);
+
+							cv = gda_data_model_get_value_at (ref_pk_cols, 1, n);
+							tfk->ref_pk_cols_array [n] = g_value_get_int (cv);
+							cv = gda_data_model_get_value_at (ref_pk_cols, 0, n);
+							tfk->ref_pk_names_array [n] = g_value_dup_string (cv);
+						}
+					}
+				}
+				else
+					fkerror = TRUE;
+
+				if (fkerror)
+					g_warning (_("Meta data incoherence in foreign key constraint for table %s.%s.%s "
+						     "referencing table %s.%s.%s"),
+						   g_value_get_string (icatalog), 
+						   g_value_get_string (ischema), 
+						   g_value_get_string (iname),
+						   g_value_get_string (fk_catalog), 
+						   g_value_get_string (fk_schema), 
+						   g_value_get_string (fk_name));
+				if (fk_cols)
+					g_object_unref (fk_cols);
+				if (ref_pk_cols)
+					g_object_unref (ref_pk_cols);
+				
 				
 				mt->fk_list = g_slist_prepend (mt->fk_list, tfk);
 			}
@@ -658,9 +793,9 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaDbO
 		TO_IMPLEMENT;
 	}
 
-	if (dbo && !g_slist_find (mstruct->db_objects, dbo)) {
+	if (dbo && !g_slist_find (mstruct->priv->db_objects, dbo)) {
 		gchar *str;
-		mstruct->db_objects = g_slist_append (mstruct->db_objects, dbo);
+		mstruct->priv->db_objects = g_slist_append (mstruct->priv->db_objects, dbo);
 		str = g_strdup_printf ("%s.%s.%s", g_value_get_string (icatalog), 
 				       g_value_get_string (ischema), 
 				       g_value_get_string (iname));
@@ -670,7 +805,7 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaDbO
 	    (mstruct->priv->features & GDA_META_STRUCT_FEATURE_FOREIGN_KEYS)) {
 		/* compute GdaMetaTableForeignKey's @ref_pk_cols_array arrays and GdaMetaTable' @reverse_fk_list lists*/
 		GSList *list;
-		for (list = mstruct->db_objects; list; list = list->next) {
+		for (list = mstruct->priv->db_objects; list; list = list->next) {
 			GdaMetaDbObject *tmpdbo;
 			tmpdbo = GDA_META_DB_OBJECT (list->data);
 			if (tmpdbo->obj_type != GDA_META_DB_TABLE)
@@ -765,7 +900,6 @@ array_type_to_sql (GdaMetaStore *store, const GValue *specific_name)
 /**
  * gda_meta_struct_complement_schema
  * @mstruct: a #GdaMetaStruct object
- * @store: a #GdaMetaStore object
  * @catalog: name of a catalog, or %NULL
  * @schema: name of a schema, or %NULL
  * @error: a place to store errors, or %NULL
@@ -778,7 +912,7 @@ array_type_to_sql (GdaMetaStore *store, const GValue *specific_name)
  * Returns: TRUE if no error occurred
  */
 gboolean
-gda_meta_struct_complement_schema (GdaMetaStruct *mstruct, GdaMetaStore *store, const GValue *catalog, const GValue *schema,
+gda_meta_struct_complement_schema (GdaMetaStruct *mstruct, const GValue *catalog, const GValue *schema,
 				   GError **error)
 {
 	GdaDataModel *tables_model = NULL, *views_model = NULL;
@@ -810,30 +944,32 @@ gda_meta_struct_complement_schema (GdaMetaStruct *mstruct, GdaMetaStore *store, 
 		"FROM _tables WHERE table_type='VIEW' "
 		"ORDER BY table_schema, table_name";
 
-	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
 	g_return_val_if_fail (GDA_IS_META_STRUCT (mstruct), FALSE);
+	g_return_val_if_fail (mstruct->priv->store, FALSE);
 	g_return_val_if_fail (!catalog || (catalog && schema), FALSE);
 	g_return_val_if_fail (!catalog || (G_VALUE_TYPE (catalog) == G_TYPE_STRING), FALSE);
 	g_return_val_if_fail (!schema || (G_VALUE_TYPE (schema) == G_TYPE_STRING), FALSE);
 
 	if (schema) {
 		if (catalog) {
-			tables_model = gda_meta_store_extract (store, sql1, error, 
+			tables_model = gda_meta_store_extract (mstruct->priv->store, sql1, error, 
 							       "cat", catalog, "schema", schema, NULL);
 			if (tables_model)
-				views_model = gda_meta_store_extract (store, sql2, error, 
+				views_model = gda_meta_store_extract (mstruct->priv->store, sql2, error, 
 								      "cat", catalog, "schema", schema, NULL);
 		}
 		else {
-			tables_model = gda_meta_store_extract (store, sql3, error, "schema", schema, NULL);
+			tables_model = gda_meta_store_extract (mstruct->priv->store, sql3, 
+							       error, "schema", schema, NULL);
 			if (tables_model)
-				views_model = gda_meta_store_extract (store, sql4, error, "schema", schema, NULL);
+				views_model = gda_meta_store_extract (mstruct->priv->store, sql4, 
+								      error, "schema", schema, NULL);
 		}
 	}
 	else {
-		tables_model = gda_meta_store_extract (store, sql5, error, NULL);
+		tables_model = gda_meta_store_extract (mstruct->priv->store, sql5, error, NULL);
 		if (tables_model)
-			views_model = gda_meta_store_extract (store, sql6, error, NULL);
+			views_model = gda_meta_store_extract (mstruct->priv->store, sql6, error, NULL);
 	}
 
 	if (!tables_model || !views_model)
@@ -842,7 +978,7 @@ gda_meta_struct_complement_schema (GdaMetaStruct *mstruct, GdaMetaStore *store, 
 	/* tables */
 	nrows = gda_data_model_get_n_rows (tables_model);
 	for (i = 0; i < nrows; i++) {
-		if (!_meta_struct_complement (mstruct, store, GDA_META_DB_TABLE,
+		if (!_meta_struct_complement (mstruct, GDA_META_DB_TABLE,
 					      catalog ? catalog : gda_data_model_get_value_at (tables_model, 4, i),
 					      schema ? schema : gda_data_model_get_value_at (tables_model, 5, i),
 					      gda_data_model_get_value_at (tables_model, 3, i), 
@@ -859,7 +995,7 @@ gda_meta_struct_complement_schema (GdaMetaStruct *mstruct, GdaMetaStore *store, 
 	/* tables */
 	nrows = gda_data_model_get_n_rows (views_model);
 	for (i = 0; i < nrows; i++) {
-		if (!_meta_struct_complement (mstruct, store, GDA_META_DB_VIEW,
+		if (!_meta_struct_complement (mstruct, GDA_META_DB_VIEW,
 					      catalog ? catalog : gda_data_model_get_value_at (views_model, 4, i),
 					      schema ? schema : gda_data_model_get_value_at (views_model, 5, i),
 					      gda_data_model_get_value_at (views_model, 3, i), 
@@ -878,7 +1014,6 @@ gda_meta_struct_complement_schema (GdaMetaStruct *mstruct, GdaMetaStore *store, 
 /**
  * gda_meta_struct_complement_default
  * @mstruct: a #GdaMetaStruct object
- * @store: a #GdaMetaStore object
  * @error: a place to store errors, or %NULL
  *
  * This method is similar to gda_meta_struct_complement() but creates #GdaMetaDbObject for all the
@@ -888,7 +1023,7 @@ gda_meta_struct_complement_schema (GdaMetaStruct *mstruct, GdaMetaStore *store, 
  * Returns: TRUE if no error occurred
  */
 gboolean
-gda_meta_struct_complement_default (GdaMetaStruct *mstruct, GdaMetaStore *store, GError **error)
+gda_meta_struct_complement_default (GdaMetaStruct *mstruct, GError **error)
 {
 	GdaDataModel *model;
 	gint i, nrows;
@@ -899,16 +1034,16 @@ gda_meta_struct_complement_default (GdaMetaStruct *mstruct, GdaMetaStore *store,
 		"FROM _tables WHERE table_short_name = table_name AND table_type='VIEW' "
 		"ORDER BY table_schema, table_name";
 
-	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
 	g_return_val_if_fail (GDA_IS_META_STRUCT (mstruct), FALSE);
+	g_return_val_if_fail (mstruct->priv->store, FALSE);
 
 	/* tables */
-	model = gda_meta_store_extract (store, sql1, error, NULL);
+	model = gda_meta_store_extract (mstruct->priv->store, sql1, error, NULL);
 	if (!model)
 		return FALSE;
 	nrows = gda_data_model_get_n_rows (model);
 	for (i = 0; i < nrows; i++) {
-		if (!_meta_struct_complement (mstruct, store, GDA_META_DB_TABLE,
+		if (!_meta_struct_complement (mstruct, GDA_META_DB_TABLE,
 					      gda_data_model_get_value_at (model, 0, i),
 					      gda_data_model_get_value_at (model, 1, i),
 					      gda_data_model_get_value_at (model, 2, i),
@@ -922,12 +1057,12 @@ gda_meta_struct_complement_default (GdaMetaStruct *mstruct, GdaMetaStore *store,
 	g_object_unref (model);
 
 	/* views */
-	model = gda_meta_store_extract (store, sql2, error, NULL);
+	model = gda_meta_store_extract (mstruct->priv->store, sql2, error, NULL);
 	if (!model)
 		return FALSE;
 	nrows = gda_data_model_get_n_rows (model);
 	for (i = 0; i < nrows; i++) {
-		if (!_meta_struct_complement (mstruct, store, GDA_META_DB_VIEW,
+		if (!_meta_struct_complement (mstruct, GDA_META_DB_VIEW,
 					      gda_data_model_get_value_at (model, 0, i),
 					      gda_data_model_get_value_at (model, 1, i),
 					      gda_data_model_get_value_at (model, 2, i),
@@ -945,7 +1080,6 @@ gda_meta_struct_complement_default (GdaMetaStruct *mstruct, GdaMetaStore *store,
 /**
  * gda_meta_struct_complement_depend
  * @mstruct: a #GdaMetaStruct object
- * @store: a #GdaMetaStore object
  * @dbo: a #GdaMetaDbObject part of @mstruct
  * @error: a place to store errors, or %NULL
  *
@@ -955,15 +1089,15 @@ gda_meta_struct_complement_default (GdaMetaStruct *mstruct, GdaMetaStore *store,
  * Returns: TRUE if no error occurred
  */
 gboolean
-gda_meta_struct_complement_depend (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaDbObject *dbo,
+gda_meta_struct_complement_depend (GdaMetaStruct *mstruct, GdaMetaDbObject *dbo,
 				   GError **error)
 {
 	GSList *list;
 
-	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
 	g_return_val_if_fail (GDA_IS_META_STRUCT (mstruct), FALSE);
+	g_return_val_if_fail (mstruct->priv->store, FALSE);
 	g_return_val_if_fail (dbo, FALSE);
-	g_return_val_if_fail (g_slist_find (mstruct->db_objects, dbo), FALSE);
+	g_return_val_if_fail (g_slist_find (mstruct->priv->db_objects, dbo), FALSE);
 
 	for (list = dbo->depend_list; list; list = list->next) {
 		GdaMetaDbObject *dep_dbo = GDA_META_DB_OBJECT (list->data);
@@ -981,7 +1115,7 @@ gda_meta_struct_complement_depend (GdaMetaStruct *mstruct, GdaMetaStore *store, 
 					     g_strdup_printf ("\"%s\"", dep_dbo->obj_schema));
 		g_value_take_string ((name = gda_value_new (G_TYPE_STRING)), 
 				     g_strdup_printf ("\"%s\"", dep_dbo->obj_name));
-		tmpobj = gda_meta_struct_complement (mstruct, store, GDA_META_DB_UNKNOWN, cat, schema, name, error);
+		tmpobj = gda_meta_struct_complement (mstruct, GDA_META_DB_UNKNOWN, cat, schema, name, error);
 		if (cat) gda_value_free (cat);
 		if (schema) gda_value_free (schema);
 		gda_value_free (name);
@@ -1057,17 +1191,17 @@ gda_meta_struct_sort_db_objects (GdaMetaStruct *mstruct, GdaMetaSortType sort_ty
 
 	switch (sort_type) {
 	case GDA_META_SORT_ALHAPETICAL:
-		mstruct->db_objects = g_slist_sort (mstruct->db_objects, (GCompareFunc) db_object_sort_func);
-		ordered_list = mstruct->db_objects;
+		mstruct->priv->db_objects = g_slist_sort (mstruct->priv->db_objects, (GCompareFunc) db_object_sort_func);
+		ordered_list = mstruct->priv->db_objects;
 		break;
 	case GDA_META_SORT_DEPENDENCIES:
 		g_return_val_if_fail (mstruct, FALSE);
-		for (pass_list = build_pass (mstruct->db_objects, ordered_list); 
+		for (pass_list = build_pass (mstruct->priv->db_objects, ordered_list); 
 		     pass_list; 
-		     pass_list = build_pass (mstruct->db_objects, ordered_list)) 
+		     pass_list = build_pass (mstruct->priv->db_objects, ordered_list)) 
 			ordered_list = g_slist_concat (ordered_list, pass_list);
-		g_slist_free (mstruct->db_objects);
-		mstruct->db_objects = ordered_list;
+		g_slist_free (mstruct->priv->db_objects);
+		mstruct->priv->db_objects = ordered_list;
 		break;
 	default:
 		TO_IMPLEMENT;
@@ -1117,7 +1251,7 @@ _meta_struct_get_db_object (GdaMetaStruct *mstruct, const GValue *catalog, const
 			obj_schema = g_value_get_string (schema);
 		}
 
-		for (list = mstruct->db_objects; list; list = list->next) {
+		for (list = mstruct->priv->db_objects; list; list = list->next) {
 			GdaMetaDbObject *dbo;
 			dbo = GDA_META_DB_OBJECT (list->data);
 			if (gda_identifier_equal (dbo->obj_name, obj_name) &&
@@ -1138,6 +1272,25 @@ _meta_struct_get_db_object (GdaMetaStruct *mstruct, const GValue *catalog, const
 			return NULL;
 		}
 	}
+}
+
+/**
+ * gda_meta_struct_get_all_db_objects
+ * @mstruct: a #GdaMetaStruct object
+ *
+ * Get a list of all the #GdaMetaDbObject structures representing database objects in @mstruct. Note that
+ * no #GdaMetaDbObject structure must not be modified.
+ *
+ * Returns: a new #GSList list of pointers which must be destroyed after usage using g_slist_free().
+ */
+GSList *
+gda_meta_struct_get_all_db_objects (GdaMetaStruct *mstruct)
+{
+	g_return_val_if_fail (GDA_IS_META_STRUCT (mstruct), NULL);
+	if (mstruct->priv->db_objects)
+		return g_slist_copy (mstruct->priv->db_objects);
+	else
+		return NULL;
 }
 
 /**
@@ -1233,7 +1386,7 @@ gda_meta_struct_dump_as_graph (GdaMetaStruct *mstruct, GdaMetaGraphInfo info, GE
 	
 	string = g_string_new ("digraph G {\nrankdir = BT;\nnode [shape = plaintext];\n");
 	GSList *dbo_list;
-	for (dbo_list = mstruct->db_objects; dbo_list; dbo_list = dbo_list->next) {
+	for (dbo_list = mstruct->priv->db_objects; dbo_list; dbo_list = dbo_list->next) {
 		gchar *objname, *fullname;
 		GdaMetaDbObject *dbo = GDA_META_DB_OBJECT (dbo_list->data);
 		GSList *list;
@@ -1411,7 +1564,7 @@ gda_meta_table_foreign_key_free (GdaMetaTableForeignKey *tfk)
 }
 
 static gboolean 
-determine_db_object_from_schema_and_name (GdaMetaStruct *mstruct, GdaMetaStore *store, 
+determine_db_object_from_schema_and_name (GdaMetaStruct *mstruct, 
 					  GdaMetaDbObjectType *in_out_type, GValue **out_catalog,
 					  GValue **out_short_name, 
 					  GValue **out_full_name, GValue **out_owner, 
@@ -1425,14 +1578,14 @@ determine_db_object_from_schema_and_name (GdaMetaStruct *mstruct, GdaMetaStore *
 	switch (*in_out_type) {
 	case GDA_META_DB_UNKNOWN: {
 		GdaMetaDbObjectType type = GDA_META_DB_TABLE;
-		if (determine_db_object_from_schema_and_name (mstruct, store, &type, out_catalog,
+		if (determine_db_object_from_schema_and_name (mstruct, &type, out_catalog,
 							      out_short_name, out_full_name, out_owner,
 							      schema, name)) {
 			*in_out_type = GDA_META_DB_TABLE;
 			return TRUE;
 		}
 		type = GDA_META_DB_VIEW;
-		if (determine_db_object_from_schema_and_name (mstruct, store, &type, out_catalog,
+		if (determine_db_object_from_schema_and_name (mstruct, &type, out_catalog,
 							      out_short_name, out_full_name, out_owner,
 							      schema, name)) {
 			*in_out_type = GDA_META_DB_VIEW;
@@ -1446,7 +1599,7 @@ determine_db_object_from_schema_and_name (GdaMetaStruct *mstruct, GdaMetaStore *
 		const gchar *sql = "SELECT table_catalog, table_short_name, table_full_name, table_owner FROM _tables as t WHERE table_schema = ##ts::string AND table_short_name = ##tname::string AND table_name NOT IN (SELECT v.table_name FROM _views as v WHERE v.table_catalog=t.table_catalog AND v.table_schema=t.table_schema)";
 		GdaDataModel *model;
 		gint nrows;
-		model = gda_meta_store_extract (store, sql, NULL, "ts", schema, "tname", name, NULL);
+		model = gda_meta_store_extract (mstruct->priv->store, sql, NULL, "ts", schema, "tname", name, NULL);
 		if (!model) 
 			return FALSE;
 
@@ -1467,7 +1620,7 @@ determine_db_object_from_schema_and_name (GdaMetaStruct *mstruct, GdaMetaStore *
 		const gchar *sql = "SELECT table_catalog, table_short_name, table_full_name, table_owner FROM _tables NATURAL JOIN _views WHERE table_schema = ##ts::string AND table_short_name = ##tname::string";
 		GdaDataModel *model;
 		gint nrows;
-		model = gda_meta_store_extract (store, sql, NULL, "ts", schema, "tname", name, NULL);
+		model = gda_meta_store_extract (mstruct->priv->store, sql, NULL, "ts", schema, "tname", name, NULL);
 		if (!model) 
 			return FALSE;
 
@@ -1491,7 +1644,7 @@ determine_db_object_from_schema_and_name (GdaMetaStruct *mstruct, GdaMetaStore *
 }
 
 static gboolean
-determine_db_object_from_short_name (GdaMetaStruct *mstruct, GdaMetaStore *store, 
+determine_db_object_from_short_name (GdaMetaStruct *mstruct,
 				     GdaMetaDbObjectType *in_out_type, GValue **out_catalog,
 				     GValue **out_schema, GValue **out_name, GValue **out_short_name, 
 				     GValue **out_full_name, GValue **out_owner, const GValue *name)
@@ -1507,13 +1660,13 @@ determine_db_object_from_short_name (GdaMetaStruct *mstruct, GdaMetaStore *store
 	switch (*in_out_type) {
 	case GDA_META_DB_UNKNOWN: {
 		GdaMetaDbObjectType type = GDA_META_DB_TABLE;
-		if (determine_db_object_from_short_name (mstruct, store, &type, out_catalog, out_schema, out_name,
+		if (determine_db_object_from_short_name (mstruct, &type, out_catalog, out_schema, out_name,
 							 out_short_name, out_full_name, out_owner, name)) {
 			*in_out_type = GDA_META_DB_TABLE;
 			return TRUE;
 		}
 		type = GDA_META_DB_VIEW;
-		if (determine_db_object_from_short_name (mstruct, store, &type, out_catalog, out_schema, out_name,
+		if (determine_db_object_from_short_name (mstruct, &type, out_catalog, out_schema, out_name,
 							 out_short_name, out_full_name, out_owner, name)) {
 			*in_out_type = GDA_META_DB_VIEW;
 			return TRUE;
@@ -1526,7 +1679,7 @@ determine_db_object_from_short_name (GdaMetaStruct *mstruct, GdaMetaStore *store
 		const gchar *sql = "SELECT table_catalog, table_schema, table_name, table_short_name, table_full_name, table_owner FROM _tables as t WHERE table_short_name = ##tname::string AND table_name NOT IN (SELECT v.table_name FROM _views as v WHERE v.table_catalog=t.table_catalog AND v.table_schema=t.table_schema)";
 		GdaDataModel *model;
 		gint nrows;
-		model = gda_meta_store_extract (store, sql, NULL, "tname", name, NULL);
+		model = gda_meta_store_extract (mstruct->priv->store, sql, NULL, "tname", name, NULL);
 		if (!model) 
 			return FALSE;
 
@@ -1549,7 +1702,7 @@ determine_db_object_from_short_name (GdaMetaStruct *mstruct, GdaMetaStore *store
 		const gchar *sql = "SELECT table_catalog, table_schema, table_name, table_short_name, table_full_name, table_owner FROM _tables NATURAL JOIN _views WHERE table_short_name = ##tname::string";
 		GdaDataModel *model;
 		gint nrows;
-		model = gda_meta_store_extract (store, sql, NULL, "tname", name, NULL);
+		model = gda_meta_store_extract (mstruct->priv->store, sql, NULL, "tname", name, NULL);
 		if (!model) 
 			return FALSE;
 
@@ -1589,7 +1742,7 @@ determine_db_object_from_short_name (GdaMetaStruct *mstruct, GdaMetaStore *store
 			}
 			g_value_take_string ((sv = gda_value_new (G_TYPE_STRING)), _identifier_unquote (obj_schema));
 			g_value_take_string ((nv = gda_value_new (G_TYPE_STRING)), _identifier_unquote (obj_name));
-			retval = determine_db_object_from_schema_and_name (mstruct, store, in_out_type, out_catalog, 
+			retval = determine_db_object_from_schema_and_name (mstruct, in_out_type, out_catalog, 
 									   out_short_name, out_full_name, out_owner, 
 									   sv, nv);
 			if (retval) {
@@ -1608,7 +1761,7 @@ determine_db_object_from_short_name (GdaMetaStruct *mstruct, GdaMetaStore *store
 }
 
 static gboolean
-determine_db_object_from_missing_type (GdaMetaStruct *mstruct, GdaMetaStore *store, 
+determine_db_object_from_missing_type (GdaMetaStruct *mstruct, 
 				       GdaMetaDbObjectType *out_type, GValue **out_short_name, 
 				       GValue **out_full_name, GValue **out_owner, const GValue *catalog, 
 				       const GValue *schema, const GValue *name)
@@ -1617,7 +1770,7 @@ determine_db_object_from_missing_type (GdaMetaStruct *mstruct, GdaMetaStore *sto
 	const gchar *sql = "SELECT table_short_name, table_full_name, table_owner FROM _tables NATURAL JOIN _views WHERE table_catalog = ##tc::string AND table_schema = ##ts::string AND table_name = ##tname::string";
 	GdaDataModel *model;
 
-	model = gda_meta_store_extract (store, sql, NULL, "tc", catalog, "ts", schema, "tname", name, NULL);
+	model = gda_meta_store_extract (mstruct->priv->store, sql, NULL, "tc", catalog, "ts", schema, "tname", name, NULL);
 	if (model && (gda_data_model_get_n_rows (model) == 1)) {
 		*out_type = GDA_META_DB_VIEW;
 		*out_short_name = gda_value_copy (gda_data_model_get_value_at (model, 0, 0));
@@ -1630,7 +1783,7 @@ determine_db_object_from_missing_type (GdaMetaStruct *mstruct, GdaMetaStore *sto
 
 	/* try as a table */
 	sql = "SELECT table_short_name, table_full_name, table_owner FROM _tables WHERE table_catalog = ##tc::string AND table_schema = ##ts::string AND table_name = ##tname::string";
-	model = gda_meta_store_extract (store, sql, NULL, "tc", catalog, "ts", schema, "tname", name, NULL);
+	model = gda_meta_store_extract (mstruct->priv->store, sql, NULL, "tc", catalog, "ts", schema, "tname", name, NULL);
 	if (model && (gda_data_model_get_n_rows (model) == 1)) {
 		*out_type = GDA_META_DB_TABLE;
 		*out_short_name = gda_value_copy (gda_data_model_get_value_at (model, 0, 0));

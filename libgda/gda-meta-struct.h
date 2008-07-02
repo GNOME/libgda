@@ -47,8 +47,7 @@ typedef enum {
 /* struct for the object's data */
 struct _GdaMetaStruct
 {
-	GObject               object;
-	GSList                *db_objects; /* list of GdaMetaDbObject structures */
+	GObject                object;
 	GdaMetaStructPrivate  *priv;
 };
 
@@ -128,6 +127,7 @@ typedef struct {
 		GdaMetaView     meta_view;
 	}                       extra;
 	GdaMetaDbObjectType     obj_type;
+	gboolean                outdated;
 	gchar                  *obj_catalog;
 	gchar                  *obj_schema;
 	gchar                  *obj_name;
@@ -164,28 +164,29 @@ typedef struct {
 #define GDA_META_TABLE_FOREIGN_KEY(x) ((GdaMetaTableForeignKey*)(x))
 
 
-GType               gda_meta_struct_get_type          (void) G_GNUC_CONST;
-GdaMetaStruct      *gda_meta_struct_new               (GdaMetaStructFeature features);
-GdaMetaDbObject    *gda_meta_struct_complement        (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaDbObjectType type,
-						       const GValue *catalog, const GValue *schema, const GValue *name,
-						       GError **error);
-gboolean            gda_meta_struct_complement_schema (GdaMetaStruct *mstruct, GdaMetaStore *store,
-						       const GValue *catalog, const GValue *schema, GError **error);
-gboolean            gda_meta_struct_complement_default (GdaMetaStruct *mstruct, GdaMetaStore *store, GError **error);
-gboolean            gda_meta_struct_complement_depend (GdaMetaStruct *mstruct, GdaMetaStore *store, GdaMetaDbObject *dbo,
-						       GError **error);
+GType               gda_meta_struct_get_type           (void) G_GNUC_CONST;
+GdaMetaStruct      *gda_meta_struct_new                (GdaMetaStore *store, GdaMetaStructFeature features);
+GdaMetaDbObject    *gda_meta_struct_complement         (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
+							const GValue *catalog, const GValue *schema, const GValue *name,
+							GError **error);
+gboolean            gda_meta_struct_complement_schema  (GdaMetaStruct *mstruct,
+							const GValue *catalog, const GValue *schema, GError **error);
+gboolean            gda_meta_struct_complement_default (GdaMetaStruct *mstruct, GError **error);
+gboolean            gda_meta_struct_complement_depend  (GdaMetaStruct *mstruct, GdaMetaDbObject *dbo,
+							GError **error);
 
-gboolean            gda_meta_struct_sort_db_objects   (GdaMetaStruct *mstruct, GdaMetaSortType sort_type, GError **error);
-GdaMetaDbObject    *gda_meta_struct_get_db_object     (GdaMetaStruct *mstruct,
-						       const GValue *catalog, const GValue *schema, const GValue *name);
-GdaMetaTableColumn *gda_meta_struct_get_table_column  (GdaMetaStruct *mstruct, GdaMetaTable *table,
-						       const GValue *col_name);
+gboolean            gda_meta_struct_sort_db_objects    (GdaMetaStruct *mstruct, GdaMetaSortType sort_type, GError **error);
+GSList             *gda_meta_struct_get_all_db_objects (GdaMetaStruct *mstruct);
+GdaMetaDbObject    *gda_meta_struct_get_db_object      (GdaMetaStruct *mstruct,
+						        const GValue *catalog, const GValue *schema, const GValue *name);
+GdaMetaTableColumn *gda_meta_struct_get_table_column   (GdaMetaStruct *mstruct, GdaMetaTable *table,
+						        const GValue *col_name);
 
 typedef enum {
 	GDA_META_GRAPH_COLUMNS = 1 << 0
 } GdaMetaGraphInfo;
 
-gchar              *gda_meta_struct_dump_as_graph     (GdaMetaStruct *mstruct, GdaMetaGraphInfo info, GError **error);
+gchar              *gda_meta_struct_dump_as_graph      (GdaMetaStruct *mstruct, GdaMetaGraphInfo info, GError **error);
 
 G_END_DECLS
 

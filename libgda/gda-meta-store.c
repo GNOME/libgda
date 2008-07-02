@@ -368,17 +368,16 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 	object_class->set_property = gda_meta_store_set_property;
 	object_class->get_property = gda_meta_store_get_property;
 	g_object_class_install_property (object_class, PROP_CNC_STRING,
-		g_param_spec_string ("cnc-string", _ ("Connection string for the internal connection to use"), NULL, NULL,
+		g_param_spec_string ("cnc-string", NULL, _ ("Connection string for the internal connection to use"), NULL,
 		(G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
 	g_object_class_install_property (object_class, PROP_CNC_OBJECT,
-		g_param_spec_object ("cnc", _ ("Connection object internally used"),
-		NULL, GDA_TYPE_CONNECTION,
+		g_param_spec_object ("cnc", NULL, _ ("Connection object internally used"), GDA_TYPE_CONNECTION,
 		(G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
 	g_object_class_install_property (object_class, PROP_CATALOG,
-		g_param_spec_string ("catalog", _ ("Catalog in which the database objects will be created"), NULL, NULL,
+		g_param_spec_string ("catalog", NULL, _ ("Catalog in which the database objects will be created"), NULL,
 		(G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
 	g_object_class_install_property (object_class, PROP_SCHEMA,
-		g_param_spec_string ("schema", _ ("Schema in which the database objects will be created"), NULL, NULL,
+		g_param_spec_string ("schema", NULL, _ ("Schema in which the database objects will be created"), NULL,
 		(G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
 	
 	object_class->constructor = gda_meta_store_constructor;
@@ -2811,11 +2810,11 @@ gda_meta_store_schema_get_structure (GdaMetaStore *store, GError **error)
 	if (!model)
 		return NULL;
 
-	mstruct = gda_meta_struct_new (GDA_META_STRUCT_FEATURE_ALL);
+	mstruct = gda_meta_struct_new (pstore, GDA_META_STRUCT_FEATURE_ALL);
 	nrows = gda_data_model_get_n_rows (model);
 	for (i = 0; i < nrows; i++) {
 		/* FIXME: only take into account the database objects which have a corresponding DbObject */
-		if (!gda_meta_struct_complement (mstruct, pstore, GDA_META_DB_UNKNOWN,
+		if (!gda_meta_struct_complement (mstruct, GDA_META_DB_UNKNOWN,
 						 gda_data_model_get_value_at (model, 0, i),
 						 gda_data_model_get_value_at (model, 1, i),
 						 gda_data_model_get_value_at (model, 2, i), error)) {
@@ -3104,9 +3103,9 @@ gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_d
 	GdaMetaDbObject *eobj;
 	gboolean needs_creation = TRUE;
 	pstore = gda_connection_get_meta_store (store->priv->cnc);
-	mstruct = gda_meta_struct_new (GDA_META_STRUCT_FEATURE_ALL);
+	mstruct = gda_meta_struct_new (pstore, GDA_META_STRUCT_FEATURE_ALL);
 	g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), dbo->obj_name);
-	if (!(eobj = gda_meta_struct_complement (mstruct, pstore, GDA_META_DB_UNKNOWN,
+	if (!(eobj = gda_meta_struct_complement (mstruct, GDA_META_DB_UNKNOWN,
 						 NULL, NULL, value, &lerror))) {
 		if (lerror && (lerror->domain == GDA_META_STRUCT_ERROR) &&
 		    (lerror->code == GDA_META_STRUCT_UNKNOWN_OBJECT_ERROR))

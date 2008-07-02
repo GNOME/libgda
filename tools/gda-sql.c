@@ -626,22 +626,42 @@ static GdaInternalCommandResult *
 execute_external_command (MainData *data, const gchar *command, GError **error)
 {
 	GdaInternalCommandResult *res = NULL;
+	GdaBatch *batch;
+	const GSList *stmt_list;
 	GdaStatement *stmt;
 	GdaSet *params;
 	GObject *obj;
 	const gchar *remain = NULL;
 
-	stmt = gda_sql_parser_parse_string (data->current->parser, command, &remain, error);
-	if (! stmt)
+	batch = gda_sql_parser_parse_string_as_batch (data->current->parser, command, &remain, error);
+	if (!batch)
 		return NULL;
 	if (remain) {
-		g_set_error (error, 0, 0,
-			     _("More than one SQL statement, remaining is: %s"), remain);
+		g_object_unref (batch);
+		return NULL;
+	}
+	
+	stmt_list = gda_batch_get_statements (batch);
+	if (!stmt_list) {
+		g_object_unref (batch);
 		return NULL;
 	}
 
-	if (!gda_statement_get_parameters (stmt, &params, error))
+	if (stmt_list->next) {
+		g_set_error (error, 0, 0,
+			     _("More than one SQL statement"));
+		g_object_unref (batch);
 		return NULL;
+	}
+		
+	stmt = GDA_STATEMENT (stmt_list->data);
+	g_object_ref (stmt);
+	g_object_unref (batch);
+
+	if (!gda_statement_get_parameters (stmt, &params, error)) {
+		g_object_unref (stmt);
+		return NULL;
+	}
 
 	/* fill parameters with some defined parameters */
 	if (params && params->holders) {
@@ -1729,17 +1749,45 @@ extra_command_manage_cnc (GdaConnection *cnc, const gchar **args, GError **error
 			}
 			else {
 				if (*args [0] == '~') {
-					cs = find_connection_from_name (data, args[0] + 1);
-					if (!cs) {
+					if (*(args[0] + 1)) {
+						cs = find_connection_from_name (data, args[0] + 1);
+						if (!cs) {
+							g_set_error (error, 0, 0,
+								     _("No connection named '%s' found"), args[0] + 1);
+							return NULL;
+						}
+					}
+					else if (!data->current) {
 						g_set_error (error, 0, 0,
-							     _("No connection named '%s' found"), args[0] + 1);
+							     _("No current connection"));
 						return NULL;
 					}
+					else {
+						if (* (data->current->name) == '~') 
+							cs = find_connection_from_name (data, data->current->name + 1);
+						if (!cs) {
+							gchar *tmp;
+							tmp = g_strdup_printf ("~%s", data->current->name);
+							cs = find_connection_from_name (data, tmp);
+							g_free (tmp);
+						}
+						if (cs) {
+							GdaInternalCommandResult *res;
+							
+							res = g_new0 (GdaInternalCommandResult, 1);
+							res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
+							data->current = cs;
+							return res;
+						}
+
+						cs = data->current;
+					}
+
 					ConnectionSetting *ncs = g_new0 (ConnectionSetting, 1);
 					GdaMetaStore *store;
 					GdaInternalCommandResult *res;
 					
-					ncs->name = g_strdup (args[0]);
+					ncs->name = g_strdup_printf ("~%s", cs->name);
 					store = gda_connection_get_meta_store (cs->cnc);
 					ncs->cnc = gda_meta_store_get_internal_connection (store);
 					g_object_ref (ncs->cnc);

@@ -608,7 +608,7 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
  * @error: location to store error, or %NULL
  *
  * Parse @sql and creates a #GdaBatch object which contains all the #GdaStatement objects created while parsing (one object
- * per SQL statement).
+ * per SQL statement). Empty statements (composed of spaces only) do not appear in the resulting object.
  *
  * @sql is parsed and #GdaStatement objects are created as long as no error is found in @sql. If an error is found 
  * at some point, then the parsing stops and @remain may contain a non %NULL pointer, @error may be set, and %NULL

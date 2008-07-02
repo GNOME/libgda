@@ -1273,9 +1273,12 @@ Description for type: DROP_COLUMN
     &provider-writing;
   </part>
 
-  &fdl-appendix;
-  <index>
-    <title>Index</title>
-  </index>
+  <part id="part_index">
+    <title>Appendix</title>
+    &fdl-appendix;
+    <index>
+      <title>Index</title>
+    </index>
+  </part>
 </book>
 

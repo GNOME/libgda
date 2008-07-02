@@ -11,10 +11,15 @@ In memory representation of some database objects
   analyse the columns of a table (or its foreign keys) using a #GdaMetaStruct.
 </para>
 <para>
-  The #GdaMetaStruct object exports a single #GSList list of database objects as #GdaMetaDbObject structures,
-  which should not be modified. The list is the <parameter>db_objects</parameter> member of the
-  structure. Use gda_meta_struct_complement() to request that the #GdaMetaStruct object add some information
-  about some database object.
+  When created, the new #GdaMetaStruct object is empty (it does not have any information about any database object).
+  Information about database objects is computed upon request using the gda_meta_struct_complement() method. Information
+  about individual database objects is represented by #GdaMetaDbObject structures, which can be obtained using
+  gda_meta_struct_get_db_object() or gda_meta_struct_get_all_db_objects().
+</para>
+<para>
+  Note that the #GdaMetaDbObject structures may change or may be removed or replaced by others, so it not
+  advised to keep pointers to these structures: pointers to these structures should be considered valid
+  as long as gda_meta_struct_complement() and other similar functions have not been called.
 </para>
 <para>
   In the following code sample, one prints the columns names and types of a table:
@@ -95,6 +100,11 @@ gda_meta_struct_free (mstruct);
 
 </para>
 
+<!-- ##### ARG GdaMetaStruct:meta-store ##### -->
+<para>
+
+</para>
+
 <!-- ##### ENUM GdaMetaStructFeature ##### -->
 <para>
 
@@ -129,6 +139,7 @@ gda_meta_struct_free (mstruct);
 </para>
 
 @obj_type: 
+@outdated: 
 @obj_catalog: 
 @obj_schema: 
 @obj_name: 
@@ -234,6 +245,7 @@ gda_meta_struct_free (mstruct);
 
 </para>
 
+@store: 
 @features: 
 @Returns: 
 
@@ -244,7 +256,6 @@ gda_meta_struct_free (mstruct);
 </para>
 
 @mstruct: 
-@store: 
 @type: 
 @catalog: 
 @schema: 
@@ -259,7 +270,6 @@ gda_meta_struct_free (mstruct);
 </para>
 
 @mstruct: 
-@store: 
 @catalog: 
 @schema: 
 @error: 
@@ -272,7 +282,6 @@ gda_meta_struct_free (mstruct);
 </para>
 
 @mstruct: 
-@store: 
 @error: 
 @Returns: 
 
@@ -293,6 +302,15 @@ gda_meta_struct_free (mstruct);
 @mstruct: 
 @sort_type: 
 @error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_meta_struct_get_all_db_objects ##### -->
+<para>
+
+</para>
+
+@mstruct: 
 @Returns: 
 
 

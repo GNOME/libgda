@@ -1218,8 +1218,8 @@ gboolean
 gda_set_add_holder (GdaSet *set, GdaHolder *holder)
 {
 	gboolean added;
-	g_return_if_fail (GDA_IS_SET (set));
-	g_return_if_fail (GDA_IS_HOLDER (holder));
+	g_return_val_if_fail (GDA_IS_SET (set), FALSE);
+	g_return_val_if_fail (GDA_IS_HOLDER (holder), FALSE);
 
 	added = gda_set_real_add_holder (set, holder);
 	if (added)

@@ -413,8 +413,7 @@
     <column name="table_name" pkey="TRUE"/>
     <column name="constraint_name" pkey="TRUE"/>
     <column name="column_name" pkey="TRUE"/>
-
-    <column name="ordinal_position" type="gint" pkey="TRUE"/>
+    <column name="ordinal_position" type="gint" pkey="TRUE" descr="Ordinal position of the column within the constraint key (count starts at 1)"/>
     <fkey ref_table="_table_constraints">
       <part column="table_catalog"/>
       <part column="table_schema"/>

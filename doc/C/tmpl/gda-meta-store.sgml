@@ -115,13 +115,15 @@ Dictionary object
 
 <!-- ##### STRUCT GdaMetaContext ##### -->
 <para>
-
+  The <structname>GdaMetaContext</structname> represents a meta data modification
+  context: the <emphasis>how</emphasis> when used with gda_meta_store_modify_with_context(),
+  and the <emphasis>what</emphasis> when used with gda_connection_update_meta_store().
 </para>
 
-@table_name: 
-@size: 
-@column_names: 
-@column_values: 
+@table_name: the name of the table <emphasis>in the GdaMetaStore's internal database</emphasis>
+@size: the size of the @column_names and @column_values arrays
+@column_names: an array of column names (columns of the @table_name table)
+@column_values: an array of values, one for each column named in @column_names
 
 <!-- ##### FUNCTION gda_meta_store_new ##### -->
 <para>

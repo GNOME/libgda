@@ -280,7 +280,7 @@ gda_sql_statement_check_validity (GdaSqlStatement *stmt, GdaConnection *cnc, GEr
 		/* prepare data */
 		data.cnc = cnc;
 		data.store = gda_connection_get_meta_store (cnc);
-		data.mstruct = gda_meta_struct_new (GDA_META_STRUCT_FEATURE_NONE);
+		data.mstruct = gda_meta_struct_new (data.store, GDA_META_STRUCT_FEATURE_NONE);
 		
 		/* attach the GdaMetaStruct to @stmt */
 		stmt->validity_meta_struct = data.mstruct;
@@ -518,7 +518,7 @@ find_table_or_view (GdaSqlAnyPart *part, GdaSqlStatementCheckValidityData *data,
 
 	/* use @name as the table or view's real name */
 	g_value_set_string (g_value_init (&value, G_TYPE_STRING), name);
-	dbo = gda_meta_struct_complement (data->mstruct, data->store, GDA_META_DB_UNKNOWN,
+	dbo = gda_meta_struct_complement (data->mstruct, GDA_META_DB_UNKNOWN,
 					  NULL, NULL, &value, &lerror);
 	g_value_unset (&value);
 	if (!dbo) {
@@ -541,7 +541,7 @@ find_table_or_view (GdaSqlAnyPart *part, GdaSqlStatementCheckValidityData *data,
 							continue;
 						g_value_set_string (g_value_init (&value, G_TYPE_STRING), 
 								    target->table_name);
-						dbo = gda_meta_struct_complement (data->mstruct, data->store, 
+						dbo = gda_meta_struct_complement (data->mstruct, 
 										  GDA_META_DB_UNKNOWN,
 										  NULL, NULL, &value, NULL);
 						g_value_unset (&value);
