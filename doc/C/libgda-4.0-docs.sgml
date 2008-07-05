@@ -2,7 +2,7 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
      "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
 <!ENTITY nbsp            " ">
-<!ENTITY LIBGDA          "<application>libgda</application>">
+<!ENTITY LIBGDA          "<application>Libgda</application>">
 <!ENTITY GNOMEDB         "<application>GNOME-DB</application>">
 <!ENTITY igalia          '<emphasis><ulink url="http://www.igalia.com">Igalia, S.L.</ulink></emphasis>'>
 <!ENTITY xobas           '<emphasis><ulink url="http://www.xobas.com">Xobas Software</ulink></emphasis>'>
@@ -317,6 +317,10 @@
           </listitem>
 	  <listitem>
             <para>Support for virtual connections, see the <link linkend="virtual_connection">Virtual connections chapter</link></para>
+          </listitem>
+	  <listitem>
+            <para>Partially thread-safe, see <link linkend="threads">the threads limitation</link> for
+	      more details</para>
           </listitem>
 	</itemizedlist>
       </para>

@@ -1,3 +1,40 @@
+libgda 3.99.3, 2008-07-05
+
+ This version includes:
+ - lots of bug fixed, memory leaks fixes and general performance improvements 
+   (Murray Cumming, Daniel Espinosa, Cygwin Ports maintainer, Phil Longstaff, 
+   Carlos Savoretti, Johannes Schmid, Yuriy Penkin, Vivien Malerba)
+ - MySQL support starting to work again (Carlos Savoretti)
+ - documentation improvements
+ - added function to compute INSERT, UPDATE and DELETE statements from a SELECT
+   statement, to be able to have writable data models after a SELECT execution
+ - API changes for easier understanding and usage (gda_init() for example)
+ - added the possibility to check the validity of a statement using the database's
+   associated meta data
+ - improvements to the convenience functions when creating or dropping a table (Daniel Espinosa)
+ - new data model comparator object
+ - make the SQL parser(s) correctly handle SQL identifiers enclosed in double quotes
+ - more checks
+ - new function to the xslt extension libgda-xslt (Pawel Cesar)
+ - new SQL code completion feature (incorporated into the gda-sql tool)
+ - gda-sql tool improvements (SQL completion, command line parsing)
+ - reworked the authentication mechanism as some database don't require a username/password
+ - allow the [<username>[:<password>]@]<DSN> format of string when opening a connection using
+   a predefined data source, or [<provider>://][<username>[:<password>]@]<connection string>
+   when opening a connection without a predefined data source
+ - now internally use SQLite 3.5.9
+ - use GIO instead of GnomeVFS if found
+ - preliminary MacOS X support, and better support for cross compilation
+ - better support for thread safe support
+ - new distributed transaction support
+ - added speficications to create a .MSI file as a Windows installer
+ - bug fixes: #524837, #525601, #525877, #526748, #527892, #527002, #534805, #536418,
+   #536971, #537558, #537117
+ - Translations:
+	- es (Jorge Gonzalez)
+	- pt (Duarte Loreto)
+	- oc (Yannig Marchegay)
+
 libgda 3.99.2, 2008-03-24
 
  This version:

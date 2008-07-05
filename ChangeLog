@@ -1,5 +1,12 @@
 2008-07-05  Vivien Malerba <malerba@gnome-db.org>
 
+	* doc/C: doc. updates
+	* providers/firebird: added forgotten files
+	* po/POTFILES.in: added missing files
+	* NEWS: news for version
+
+2008-07-05  Vivien Malerba <malerba@gnome-db.org>
+
 	* configure.in: better detect Berkeley DB in 64 bits environment
 	* libgda/gda-meta-store.c: now caches the parsed SQL when using gda_meta_store_extract()
 	for better performances
@@ -201,12 +208,7 @@
 
 2008-05-20  Vivien Malerba <malerba@gnome-db.org>
 
-	* libgda/gda-connection.c: applied path to fxi compiler warnings (thanks to
-	Phil Longstaff)
-
-2008-05-20  Vivien Malerba <malerba@gnome-db.org>
-
-	* libgda/gda-connection.c: applied path to fxi mem leak (thanks to
+	* libgda/gda-connection.c: applied patch to fix mem leak (thanks to
 	Phil Longstaff)
 	* libgda/gda-data-model.c:
 	* libgda/gda-util.c:

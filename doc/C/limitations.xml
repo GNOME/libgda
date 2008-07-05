@@ -1,6 +1,20 @@
 <chapter id="limitations">
   <title>Limitations</title>
 
+  <sect1 id="limitations_global"><title>Global limitations</title>
+    <para>
+      &LIBGDA;'s global limitations are:
+      <sect2 id="threads"><title>Multi threading</title>
+	<para>&LIBGDA; is not thread safe. However it supports working with threads as long as
+	  any object created by the API is used by one single thread (that is there is no
+	  situation when two threads try to acces the same object at the same time).
+	</para>
+	<para>For example it is safe to start a thread and in that thread create a connection
+	  which is only used in that thread.</para>
+      </sect2>
+    </para>
+  </sect1>
+
   <sect1 id="limitations_mysql"><title>For MySQL</title>
     <para>
       The following limitations apply to MySQL databases accessed via Libgda: none.
