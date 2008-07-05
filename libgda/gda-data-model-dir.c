@@ -54,12 +54,14 @@
 #include "dir-blob-op.h"
 
 struct _GdaDataModelDirPrivate {
-	gchar  *basedir;
-	GSList *errors; /* list of errors as GError structures */
-	GSList *columns; /* list of GdaColumn objects */
+	gchar     *basedir;
+	GSList    *errors; /* list of errors as GError structures */
+	GSList    *columns; /* list of GdaColumn objects */
 
 	GPtrArray *rows; /* array of FileRow pointers */
 	gint       upd_row; /* internal usage when updating contents */
+
+	GValue    *tmp_value; /* GValue returned by gda_data_model_get_value_at() */
 };
 
 /* Row implementation details */
@@ -180,6 +182,7 @@ gda_data_model_dir_init (GdaDataModelDir *model,
 	model->priv->basedir = NULL;
 	model->priv->columns = NULL;
 	model->priv->rows = g_ptr_array_new (); /* array of FileRow pointers */
+	model->priv->tmp_value = NULL;
 }
 
 static void
@@ -215,6 +218,11 @@ gda_data_model_dir_dispose (GObject * object)
 	g_return_if_fail (GDA_IS_DATA_MODEL_DIR (model));
 
 	if (model->priv) {
+		if (model->priv->tmp_value) {
+			gda_value_free (model->priv->tmp_value);
+			model->priv->tmp_value = NULL;
+		}
+
 		if (model->priv->basedir) {
 			g_free (model->priv->basedir);
 			model->priv->basedir = NULL;
@@ -259,6 +267,7 @@ gda_data_model_dir_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
+		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
 		static const GTypeInfo info = {
 			sizeof (GdaDataModelDirClass),
 			(GBaseInitFunc) NULL,
@@ -276,8 +285,12 @@ gda_data_model_dir_get_type (void)
                         NULL
                 };
 
-		type = g_type_register_static (G_TYPE_OBJECT, "GdaDataModelDir", &info, 0);
-		g_type_add_interface_static (type, GDA_TYPE_DATA_MODEL, &data_model_info);
+		g_static_mutex_lock (&registering);
+		if (type == 0) {
+			type = g_type_register_static (G_TYPE_OBJECT, "GdaDataModelDir", &info, 0);
+			g_type_add_interface_static (type, GDA_TYPE_DATA_MODEL, &data_model_info);
+		}
+		g_static_mutex_unlock (&registering);
 	}
 	return type;
 }
@@ -290,7 +303,6 @@ gda_data_model_dir_set_property (GObject *object,
 {
         GdaDataModelDir *model;
         const gchar *string;
-	static gboolean basedir_set = FALSE;
 
         model = GDA_DATA_MODEL_DIR (object);
         if (model->priv) {
@@ -301,14 +313,12 @@ gda_data_model_dir_set_property (GObject *object,
 				model->priv->basedir = NULL;
 			}
 			string = g_value_get_string (value);
-			if (string) {
+			if (string) 
 				model->priv->basedir = g_strdup (string);
-				basedir_set = TRUE;
-			}
 			break;
 		}
 
-		if (basedir_set) {
+		if (model->priv->basedir) {
 			/* create columns */
 			model->priv->columns = NULL;
 			GdaColumn *column;
@@ -771,7 +781,6 @@ gda_data_model_dir_get_value_at (GdaDataModel *model, gint col, gint row)
 	GdaDataModelDir *imodel;
 	GValue *value = NULL;
 	FileRow *frow;
-	static GValue *tmp_value = NULL;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_DIR (model), NULL);
 	imodel = GDA_DATA_MODEL_DIR (model);
@@ -797,10 +806,10 @@ gda_data_model_dir_get_value_at (GdaDataModel *model, gint col, gint row)
 		case COL_DIRNAME: {
 			gchar *tmp;
 			tmp = compute_dirname (imodel, frow);
-			if (!tmp_value)
-				tmp_value = gda_value_new (G_TYPE_STRING);
-			g_value_take_string (tmp_value, tmp);
-			value = tmp_value;
+			if (!imodel->priv->tmp_value)
+				imodel->priv->tmp_value = gda_value_new (G_TYPE_STRING);
+			g_value_take_string (imodel->priv->tmp_value, tmp);
+			value = imodel->priv->tmp_value;
 			break;
 		}
 		case COL_FILENAME:

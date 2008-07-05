@@ -192,6 +192,7 @@ gda_server_provider_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
+		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
 		static const GTypeInfo info = {
 			sizeof (GdaServerProviderClass),
 			(GBaseInitFunc) NULL,
@@ -203,7 +204,10 @@ gda_server_provider_get_type (void)
 			0,
 			(GInstanceInitFunc) gda_server_provider_init
 		};
-		type = g_type_register_static (PARENT_TYPE, "GdaServerProvider", &info, G_TYPE_FLAG_ABSTRACT);
+		g_static_mutex_lock (&registering);
+		if (type == 0)
+			type = g_type_register_static (PARENT_TYPE, "GdaServerProvider", &info, G_TYPE_FLAG_ABSTRACT);
+		g_static_mutex_unlock (&registering);
 	}
 
 	return type;
@@ -417,8 +421,10 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
 				      GdaServerOperationType type, 
 				      GdaSet *options, GError **error)
 {
+	static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
 	static OpReq **op_req_table = NULL;
 
+	g_static_mutex_lock (&init_mutex);
 	if (! op_req_table) {
 		op_req_table = g_new0 (OpReq *, GDA_SERVER_OPERATION_LAST);
 
@@ -438,6 +444,7 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
 		op_req_table [GDA_SERVER_OPERATION_CREATE_VIEW] = op_req_CREATE_VIEW;
 		op_req_table [GDA_SERVER_OPERATION_DROP_VIEW] = op_req_DROP_VIEW;
 	}
+	g_static_mutex_unlock (&init_mutex);
 
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 

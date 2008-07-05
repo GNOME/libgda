@@ -274,6 +274,7 @@ gda_firebird_provider_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
+		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
 		static GTypeInfo info = {
 			sizeof (GdaFirebirdProviderClass),
 			(GBaseInitFunc) NULL,

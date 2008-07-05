@@ -328,6 +328,15 @@ then
 				BDB_LIBS="-L${bdbdir}/${lib} -ldb"
 				break
 			fi
+			if test $platform_win32 = no -a -f $d/include/db.h -a -f $d/lib/libdb$linklibext
+			then
+				AC_MSG_RESULT(found Berkeley DB in $d)
+				AC_DEFINE(HAVE_BDB, 1, [Have Berkeley DB])
+				bdbdir=$d
+				BDB_CFLAGS="-I${bdbdir}/include"
+				BDB_LIBS="-L${bdbdir}/lib -ldb"
+				break
+			fi
 			dnl FIXME: check for db1 (non-sleepycat implementation)
 		done
 		if test x$bdbdir = x

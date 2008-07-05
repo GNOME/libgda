@@ -109,19 +109,21 @@ gda_transaction_status_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		if (type == 0) {
-			static GTypeInfo info = {
-				sizeof (GdaTransactionStatusClass),
-				(GBaseInitFunc) NULL,
-				(GBaseFinalizeFunc) NULL,
-				(GClassInitFunc) gda_transaction_status_class_init,
-				NULL, NULL,
-				sizeof (GdaTransactionStatus),
-				0,
-				(GInstanceInitFunc) gda_transaction_status_init
-			};
+		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+		static GTypeInfo info = {
+			sizeof (GdaTransactionStatusClass),
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gda_transaction_status_class_init,
+			NULL, NULL,
+			sizeof (GdaTransactionStatus),
+			0,
+			(GInstanceInitFunc) gda_transaction_status_init
+		};
+		g_static_mutex_lock (&registering);
+		if (type == 0)
 			type = g_type_register_static (PARENT_TYPE, "GdaTransactionStatus", &info, 0);
-		}
+		g_static_mutex_unlock (&registering);
 	}
 
 	return type;

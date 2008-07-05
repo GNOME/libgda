@@ -34,16 +34,22 @@ xmlDtdPtr       gda_server_op_dtd = NULL;
 /**
  * gda_init
  * 
- * Initializes the GDA library. Must be called prior to any Libgda usage.
+ * Initializes the GDA library, must be called prior to any Libgda usage. Note that unless the
+ * LIBGDA_NO_THREADS environment variable is set (to any value), the GLib thread system will
+ * be initialized as well if not yet initialized.
  */
 void
 gda_init (void)
 {
+	static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
 	static gboolean initialized = FALSE;
+
 	GType type;
 	gchar *file;
 
+	g_static_mutex_lock (&init_mutex);
 	if (initialized) {
+		g_static_mutex_unlock (&init_mutex);
 		gda_log_error (_("Ignoring attempt to re-initialize GDA library."));
 		return;
 	}
@@ -160,4 +166,5 @@ gda_init (void)
 	g_free (file);
 
 	initialized = TRUE;
+	g_static_mutex_unlock (&init_mutex);
 }

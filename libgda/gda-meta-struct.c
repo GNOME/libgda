@@ -87,6 +87,7 @@ gda_meta_struct_get_type (void) {
 	static GType type = 0;
 	
 	if (G_UNLIKELY (type == 0)) {
+		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
 		static const GTypeInfo info = {
 			sizeof (GdaMetaStructClass),
 			(GBaseInitFunc) NULL,
@@ -99,7 +100,10 @@ gda_meta_struct_get_type (void) {
 			(GInstanceInitFunc) gda_meta_struct_init
 		};
 		
-		type = g_type_register_static (G_TYPE_OBJECT, "GdaMetaStruct", &info, 0);
+		g_static_mutex_lock (&registering);
+		if (type == 0)
+			type = g_type_register_static (G_TYPE_OBJECT, "GdaMetaStruct", &info, 0);
+		g_static_mutex_unlock (&registering);
 	}
 	return type;
 }

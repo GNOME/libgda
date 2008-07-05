@@ -41,6 +41,7 @@ gda_sqlite_pstmt_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
+		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
 		static const GTypeInfo info = {
 			sizeof (GdaSqlitePStmtClass),
 			(GBaseInitFunc) NULL,
@@ -53,7 +54,10 @@ gda_sqlite_pstmt_get_type (void)
 			(GInstanceInitFunc) gda_sqlite_pstmt_init
 		};
 
-		type = g_type_register_static (GDA_TYPE_PSTMT, "GdaSqlitePStmt", &info, 0);
+		g_static_mutex_lock (&registering);
+		if (type == 0)
+			type = g_type_register_static (GDA_TYPE_PSTMT, "GdaSqlitePStmt", &info, 0);
+		g_static_mutex_unlock (&registering);
 	}
 	return type;
 }

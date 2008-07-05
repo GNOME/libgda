@@ -121,6 +121,16 @@ should be the same, and the branch qualifier should vary between the connections
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_xa_transaction_rollback ##### -->
+<para>
+
+</para>
+
+@xa_trans: 
+@error: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_xa_transaction_commit_recovered ##### -->
 <para>
 

@@ -118,6 +118,7 @@ gda_holder_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
+		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
 		static const GTypeInfo info = {
 			sizeof (GdaHolderClass),
 			(GBaseInitFunc) NULL,
@@ -130,7 +131,10 @@ gda_holder_get_type (void)
 			(GInstanceInitFunc) gda_holder_init
 		};
 		
-		type = g_type_register_static (G_TYPE_OBJECT, "GdaHolder", &info, 0);
+		g_static_mutex_lock (&registering);
+		if (type == 0)
+			type = g_type_register_static (G_TYPE_OBJECT, "GdaHolder", &info, 0);
+		g_static_mutex_unlock (&registering);
 	}
 
 	return type;
@@ -323,6 +327,8 @@ GdaHolder *
 gda_holder_new_inline (GType type, const gchar *id, ...)
 {
 	GdaHolder *holder;
+
+	static GStaticMutex serial_mutex = G_STATIC_MUTEX_INIT;
 	static guint serial = 0;
 
 	holder = gda_holder_new (type);
@@ -332,8 +338,11 @@ gda_holder_new_inline (GType type, const gchar *id, ...)
 
 		if (id)
 			holder->priv->id = g_strdup (id);
-		else
+		else {
+			g_static_mutex_lock (&serial_mutex);
 			holder->priv->id = g_strdup_printf ("%d", serial++);
+			g_static_mutex_unlock (&serial_mutex);
+		}
 
 		va_start (ap, id);
 		value = gda_value_new (type);

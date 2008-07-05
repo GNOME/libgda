@@ -121,20 +121,22 @@ gda_report_document_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		if (type == 0) {
-			static GTypeInfo info = {
-				sizeof (GdaReportDocumentClass),
-				(GBaseInitFunc) NULL,
-				(GBaseFinalizeFunc) NULL,
-				(GClassInitFunc) gda_report_document_class_init,
-				NULL, NULL,
-				sizeof (GdaReportDocument),
-				0,
-				(GInstanceInitFunc) gda_report_document_init
-			};
-			
+		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+		static GTypeInfo info = {
+			sizeof (GdaReportDocumentClass),
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gda_report_document_class_init,
+			NULL, NULL,
+			sizeof (GdaReportDocument),
+			0,
+			(GInstanceInitFunc) gda_report_document_init
+		};
+		
+		g_static_mutex_lock (&registering);
+		if (type == 0)
 			type = g_type_register_static (G_TYPE_OBJECT, "GdaReportDocument", &info, G_TYPE_FLAG_ABSTRACT);
-		}
+		g_static_mutex_unlock (&registering);
 	}
 
 	return type;

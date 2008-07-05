@@ -74,13 +74,14 @@ gboolean                  gda_xa_transaction_register_connection  (GdaXaTransact
 void                      gda_xa_transaction_unregister_connection (GdaXaTransaction *xa_trans, GdaConnection *cnc);
 
 gboolean                  gda_xa_transaction_begin  (GdaXaTransaction *xa_trans, GError **error);
-gboolean                  gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, GError **error);gboolean                  gda_xa_transaction_rollback (GdaXaTransaction *xa_trans, GError **error);
+gboolean                  gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, GError **error);
+gboolean                  gda_xa_transaction_rollback (GdaXaTransaction *xa_trans, GError **error);
 
 gboolean                  gda_xa_transaction_commit_recovered (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 							       GError **error);
 
 /* utility functions */
-const gchar              *gda_xa_transaction_id_to_string (const GdaXaTransactionId *xid);
+gchar                    *gda_xa_transaction_id_to_string (const GdaXaTransactionId *xid);
 GdaXaTransactionId       *gda_xa_transaction_string_to_id (const gchar *str);
 
 G_END_DECLS

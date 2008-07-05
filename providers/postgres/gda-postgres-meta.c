@@ -192,16 +192,12 @@ static gchar *internal_sql[] = {
 };
 
 /*
- * predefined statements' GdaStatement
+ * global static values, and
+ * predefined statements' GdaStatement, all initialized in _gda_postgres_provider_meta_init()
  */
 static GdaStatement **internal_stmt;
-
-/* 
- * global static values
- */
 static GdaSqlParser *internal_parser = NULL;
 static GdaSet       *i_set;
-
 
 /*
  * Meta initialization
@@ -209,10 +205,12 @@ static GdaSet       *i_set;
 void
 _gda_postgres_provider_meta_init (GdaServerProvider *provider)
 {
+	static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
 	InternalStatementItem i;
 
-        internal_parser = gda_server_provider_internal_get_parser (provider);
+	g_static_mutex_lock (&init_mutex);
 
+        internal_parser = gda_server_provider_internal_get_parser (provider);
         internal_stmt = g_new0 (GdaStatement *, sizeof (internal_sql) / sizeof (gchar*));
         for (i = I_STMT_CATALOG; i < sizeof (internal_sql) / sizeof (gchar*); i++) {
                 internal_stmt[i] = gda_sql_parser_parse_string (internal_parser, internal_sql[i], NULL, NULL);
@@ -220,11 +218,12 @@ _gda_postgres_provider_meta_init (GdaServerProvider *provider)
                         g_error ("Could not parse internal statement: %s\n", internal_sql[i]);
         }
 
-	/* initialize static values here */
 	i_set = gda_set_new_inline (4, "cat", G_TYPE_STRING, "", 
 				    "name", G_TYPE_STRING, "",
 				    "schema", G_TYPE_STRING, "",
 				    "name2", G_TYPE_STRING, "");
+
+	g_static_mutex_unlock (&init_mutex);
 }
 
 gboolean

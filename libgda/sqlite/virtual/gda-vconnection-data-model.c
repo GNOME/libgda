@@ -104,6 +104,7 @@ gda_vconnection_data_model_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
+		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
 		if (type == 0) {
 			static GTypeInfo info = {
 				sizeof (GdaVconnectionDataModelClass),
@@ -116,7 +117,10 @@ gda_vconnection_data_model_get_type (void)
 				(GInstanceInitFunc) gda_vconnection_data_model_init
 			};
 			
+		g_static_mutex_lock (&registering);
+		if (type == 0)
 			type = g_type_register_static (GDA_TYPE_VIRTUAL_CONNECTION, "GdaVconnectionDataModel", &info, 0);
+		g_static_mutex_unlock (&registering);
 		}
 	}
 

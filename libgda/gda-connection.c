@@ -287,6 +287,7 @@ gda_connection_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
+		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
 		static GTypeInfo info = {
 			sizeof (GdaConnectionClass),
 			(GBaseInitFunc) NULL,
@@ -297,7 +298,10 @@ gda_connection_get_type (void)
 			0,
 			(GInstanceInitFunc) gda_connection_init
 		};
-		type = g_type_register_static (G_TYPE_OBJECT, "GdaConnection", &info, 0);
+		g_static_mutex_lock (&registering);
+		if (type == 0)
+			type = g_type_register_static (G_TYPE_OBJECT, "GdaConnection", &info, 0);
+		g_static_mutex_unlock (&registering);
 	}
 
 	return type;
@@ -2898,6 +2902,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 
 		lcontext.size = 0;
 		for (i = 0; i < nb; i++) {
+			/*g_print ("TH %p %s(cnc=>%p store=>%p)\n", g_thread_self(), rmeta [i].func_name, cnc, store);*/
 			if (! rmeta [i].func) 
 				WARN_METHOD_NOT_IMPLEMENTED (provider, rmeta [i].func_name);
 			else {
@@ -3084,6 +3089,7 @@ gda_connection_get_meta_store_data (GdaConnection *cnc,
 {
 	GdaMetaStore *store;
 	GdaDataModel *model = NULL;
+	static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
 	static GHashTable *stmt_hash = NULL;
 	GdaStatement *stmt;
 	GdaSet *set = NULL;
@@ -3099,8 +3105,12 @@ gda_connection_get_meta_store_data (GdaConnection *cnc,
 	MetaKey key;
 	gint i;
 	gchar *fname;
+
+	g_static_mutex_lock (&mutex);
 	if (!stmt_hash)
 		stmt_hash = prepare_meta_statements_hash ();
+	g_static_mutex_unlock (&mutex);
+
 	key.meta_type = meta_type;
 	key.nb_filters = nb_filters;
 	key.filters = NULL;

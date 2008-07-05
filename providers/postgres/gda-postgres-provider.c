@@ -286,6 +286,7 @@ gda_postgres_provider_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
+		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
 		static GTypeInfo info = {
 			sizeof (GdaPostgresProviderClass),
 			(GBaseInitFunc) NULL,
@@ -296,8 +297,10 @@ gda_postgres_provider_get_type (void)
 			0,
 			(GInstanceInitFunc) gda_postgres_provider_init
 		};
-		type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, "GdaPostgresProvider",
-					       &info, 0);
+		g_static_mutex_lock (&registering);
+		if (type == 0)
+			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, "GdaPostgresProvider", &info, 0);
+		g_static_mutex_unlock (&registering);
 	}
 
 	return type;
@@ -2185,6 +2188,7 @@ gda_postgres_provider_xa_prepare (GdaServerProvider *provider, GdaConnection *cn
 {
 	GdaSet *params;
 	gint affected;
+	gchar *str;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
@@ -2192,12 +2196,15 @@ gda_postgres_provider_xa_prepare (GdaServerProvider *provider, GdaConnection *cn
 
 	if (!gda_statement_get_parameters (internal_stmt [I_STMT_XA_PREPARE], &params, error))
 		return FALSE;
-	if (!gda_set_set_holder_value (params, "xid", gda_xa_transaction_id_to_string (xid))) {
+	str = gda_xa_transaction_id_to_string (xid);
+	if (!gda_set_set_holder_value (params, "xid", str)) {
+		g_free (str);
 		g_object_unref (params);
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
 			     _("Could not set the XA transaction ID parameter"));
 		return FALSE;
 	}
+	g_free (str);
 	affected = gda_connection_statement_execute_non_select (cnc, internal_stmt [I_STMT_XA_PREPARE], params, 
 								NULL, error);
 	g_object_unref (params);
@@ -2217,6 +2224,7 @@ gda_postgres_provider_xa_commit (GdaServerProvider *provider, GdaConnection *cnc
 {
 	GdaSet *params;
 	gint affected;
+	gchar *str;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
@@ -2224,12 +2232,15 @@ gda_postgres_provider_xa_commit (GdaServerProvider *provider, GdaConnection *cnc
 
 	if (!gda_statement_get_parameters (internal_stmt [I_STMT_XA_PREPARE], &params, error))
 		return FALSE;
-	if (!gda_set_set_holder_value (params, "xid", gda_xa_transaction_id_to_string (xid))) {
+	str = gda_xa_transaction_id_to_string (xid);
+	if (!gda_set_set_holder_value (params, "xid", str)) {
+		g_free (str);
 		g_object_unref (params);
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
 			     _("Could not set the XA transaction ID parameter"));
 		return FALSE;
 	}
+	g_free (str);
 	affected = gda_connection_statement_execute_non_select (cnc, internal_stmt [I_STMT_XA_COMMIT], params, 
 								NULL, error);
 	g_object_unref (params);
@@ -2248,6 +2259,7 @@ gda_postgres_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *c
 {
 	GdaSet *params;
 	gint affected;
+	gchar *str;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
@@ -2255,12 +2267,15 @@ gda_postgres_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *c
 
 	if (!gda_statement_get_parameters (internal_stmt [I_STMT_XA_PREPARE], &params, error))
 		return FALSE;
-	if (!gda_set_set_holder_value (params, "xid", gda_xa_transaction_id_to_string (xid))) {
+	str = gda_xa_transaction_id_to_string (xid);
+	if (!gda_set_set_holder_value (params, "xid", str)) {
+		g_free (str);
 		g_object_unref (params);
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
 			     _("Could not set the XA transaction ID parameter"));
 		return FALSE;
 	}
+	g_free (str);
 	affected = gda_connection_statement_execute_non_select (cnc, internal_stmt [I_STMT_XA_ROLLBACK], params, 
 								NULL, error);
 	g_object_unref (params);

@@ -47,6 +47,8 @@ static void gda_sql_parser_get_property (GObject *object,
 					GParamSpec *pspec);
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
+static GStaticRecMutex usage_mutex = G_STATIC_REC_MUTEX_INIT;
+
 
 static void gda_sql_parser_reset (GdaSqlParser *parser);
 static GValue *tokenizer_get_next_token (GdaSqlParser *parser); 
@@ -106,6 +108,7 @@ gda_sql_parser_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
+		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
 		static const GTypeInfo info = {
 			sizeof (GdaSqlParserClass),
 			(GBaseInitFunc) NULL,
@@ -118,7 +121,10 @@ gda_sql_parser_get_type (void)
 			(GInstanceInitFunc) gda_sql_parser_init
 		};
 		
-		type = g_type_register_static (G_TYPE_OBJECT, "GdaSqlParser", &info, 0);
+		g_static_mutex_lock (&registering);
+		if (type == 0)
+			type = g_type_register_static (G_TYPE_OBJECT, "GdaSqlParser", &info, 0);
+		g_static_mutex_unlock (&registering);
 	}
 	return type;
 }
@@ -414,6 +420,8 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
 	if (!sql)
 		return NULL;
 
+	g_static_rec_mutex_lock (&usage_mutex);
+
 	if (remain)
 		*remain = NULL;
 	
@@ -597,6 +605,8 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
 
 	parser->priv->mode = parse_mode;
 
+	g_static_rec_mutex_unlock (&usage_mutex);
+
 	return stmt;
 }
 
@@ -639,6 +649,8 @@ gda_sql_parser_parse_string_as_batch (GdaSqlParser *parser, const gchar *sql, co
 	if (!sql)
 		return batch;
 
+	g_static_rec_mutex_lock (&usage_mutex);
+
 	int_sql = sql;
 	while (int_sql && allok) {
 		GError *lerror = NULL;
@@ -680,6 +692,8 @@ gda_sql_parser_parse_string_as_batch (GdaSqlParser *parser, const gchar *sql, co
 		g_object_unref (batch);
 		batch = NULL;
 	}
+
+	g_static_rec_mutex_unlock (&usage_mutex);
 	
 	return batch;
 }
@@ -843,10 +857,12 @@ str_casehash (gconstpointer v)
 static gint
 keywordCode (GdaSqlParser *parser, gchar *str, gint len)
 {
+	static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
 	static GHashTable *keywords = NULL;
 	gint type;
 	gchar oldc;
 
+	g_static_mutex_lock (&mutex);
 	if (!keywords) {
 		/* if keyword begins with a number, it is the GdaSqlParserFlavour to which it only applies:
 		* for example "4start" would refer to the START keyword for PostgreSQL only */
@@ -930,7 +946,8 @@ keywordCode (GdaSqlParser *parser, gchar *str, gint len)
 		g_hash_table_insert (keywords, "work", GINT_TO_POINTER (L_TRANSACTION));
 		g_hash_table_insert (keywords, "write", GINT_TO_POINTER (L_WRITE));
 	}
-	
+	g_static_mutex_unlock (&mutex);
+
 	oldc = str[len];
 	str[len] = 0;
 	type = GPOINTER_TO_INT (g_hash_table_lookup (keywords, str));

@@ -57,6 +57,7 @@ static const gchar *gda_mdb_provider_get_database (GdaServerProvider *provider,
 
 
 static GObjectClass *parent_class = NULL;
+static GStaticMutex mdb_init_mutex = G_STATIC_MUTEX_INIT;
 static gint loaded_providers = 0;
 char *g_input_ptr;
 
@@ -101,9 +102,11 @@ gda_mdb_provider_finalize (GObject *object)
 	parent_class->finalize (object);
 
 	/* call MDB exit function if there are no more providers */
+	g_static_mutex_lock (&mdb_init_mutex);
 	loaded_providers--;
 	if (loaded_providers == 0)
 		mdb_exit ();
+	g_static_mutex_unlock (&mdb_init_mutex);
 }
 
 GType
@@ -112,6 +115,7 @@ gda_mdb_provider_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
+		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
 		static GTypeInfo info = {
 			sizeof (GdaMdbProviderClass),
 			(GBaseInitFunc) NULL,
@@ -122,7 +126,10 @@ gda_mdb_provider_get_type (void)
 			0,
 			(GInstanceInitFunc) gda_mdb_provider_init
 		};
-		type = g_type_register_static (GDA_TYPE_VPROVIDER_DATA_MODEL, "GdaMdbProvider", &info, 0);
+		g_static_mutex_lock (&registering);
+		if (type == 0)
+			type = g_type_register_static (GDA_TYPE_VPROVIDER_DATA_MODEL, "GdaMdbProvider", &info, 0);
+		g_static_mutex_unlock (&registering);
 	}
 
 	return type;
@@ -131,13 +138,13 @@ gda_mdb_provider_get_type (void)
 GdaServerProvider *
 gda_mdb_provider_new (void)
 {
-	static gboolean mdb_initialized = FALSE;
 	GdaMdbProvider *provider;
 
-	if (!mdb_initialized)
+	g_static_mutex_lock (&mdb_init_mutex);
+	if (loaded_providers == 0) 
 		mdb_init ();
-
 	loaded_providers++;
+	g_static_mutex_unlock (&mdb_init_mutex);
 
 	provider = g_object_new (gda_mdb_provider_get_type (), NULL);
 	return GDA_SERVER_PROVIDER (provider);

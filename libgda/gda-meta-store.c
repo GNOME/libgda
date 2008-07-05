@@ -62,6 +62,8 @@ static void gda_meta_store_get_property (GObject *object,
 static gboolean initialize_cnc_struct (GdaMetaStore *store, GError **error);
 static void gda_meta_store_change_free (GdaMetaStoreChange *change);
 
+static GStaticRecMutex init_mutex = G_STATIC_REC_MUTEX_INIT;
+
 /* simple predefined statements */
 enum {
 	STMT_GET_VERSION,
@@ -205,6 +207,10 @@ struct _GdaMetaStorePrivate {
 	GHashTable    *p_db_objects_hash; /* key = table name, value = a DbObject structure */
 
 	gboolean       override_mode;
+
+	gint           max_extract_stmt; /* 0 => don't keep GdaStatement */
+	gint           current_extract_stmt;
+	GHashTable    *extract_stmt_hash; /* key = a SQL string, value = a #GdaStatement */
 };
 
 static void db_object_free    (DbObject *dbobj);
@@ -212,7 +218,7 @@ static void create_db_objects (GdaMetaStoreClass *klass, GdaMetaStore *store);
 
 
 /* get a pointer to the parents to be able to call their destructor */
-static GObjectClass  *parent_class = NULL;
+static GObjectClass *parent_class = NULL;
 
 /* signals */
 enum {
@@ -241,7 +247,6 @@ GQuark gda_meta_store_error_quark (void) {
 	return quark;
 }
 
-
 GType
 gda_meta_store_get_type (void) {
 	static GType type = 0;
@@ -259,7 +264,10 @@ gda_meta_store_get_type (void) {
 			(GInstanceInitFunc) gda_meta_store_init
 		};
 		
-		type = g_type_register_static (G_TYPE_OBJECT, "GdaMetaStore", &info, 0);
+		g_static_rec_mutex_lock (&init_mutex);
+		if (type == 0)
+			type = g_type_register_static (G_TYPE_OBJECT, "GdaMetaStore", &info, 0);
+		g_static_rec_mutex_unlock (&init_mutex);
 	}
 	return type;
 }
@@ -322,7 +330,8 @@ static void
 gda_meta_store_class_init (GdaMetaStoreClass *klass) 
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	
+
+	g_static_rec_mutex_lock (&init_mutex);
 	parent_class = g_type_class_peek_parent (klass);
 	
 	/**
@@ -445,6 +454,8 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 	}
 	g_string_free (string, TRUE);
 #endif
+
+	g_static_rec_mutex_unlock (&init_mutex);
 }
 
 
@@ -463,6 +474,10 @@ gda_meta_store_init (GdaMetaStore *store)
 	store->priv->p_db_objects_hash = g_hash_table_new (g_str_hash, g_str_equal);
 
 	store->priv->override_mode = FALSE;
+
+	store->priv->max_extract_stmt = 10;
+	store->priv->current_extract_stmt = 0;
+	store->priv->extract_stmt_hash = NULL;
 }
 
 static GObject *
@@ -476,6 +491,7 @@ gda_meta_store_constructor (GType type,
 	GdaMetaStore *store;
 	gboolean been_specified = FALSE;
 	
+	g_static_rec_mutex_lock (&init_mutex);
 	object = G_OBJECT_CLASS (parent_class)->constructor (type,
 		n_construct_properties,
 		construct_properties);
@@ -494,7 +510,7 @@ gda_meta_store_constructor (GType type,
 	
 	if (!store->priv->cnc && !been_specified)
 		/* in memory DB */
-		g_object_set (object, "cnc-string", "SQLite://DB_DIR=.;DB_NAME=:memory:", NULL);
+		g_object_set (object, "cnc-string", "SQLite://DB_DIR=.;DB_NAME=__gda_tmp", NULL);
 	
 	if (store->priv->cnc) {
 		store->priv->schema_ok = initialize_cnc_struct (store, &error);
@@ -524,7 +540,8 @@ gda_meta_store_constructor (GType type,
 		else 
 			create_db_objects (klass, store);
 	}
-	
+	g_static_rec_mutex_unlock (&init_mutex);
+
 	return object;
 }
 
@@ -571,11 +588,13 @@ gda_meta_store_new (const gchar *string)
 {
 	GObject *obj;
 	GdaMetaStore *store;
-	
+
+	g_static_rec_mutex_lock (&init_mutex);
 	if (string)
 		obj = g_object_new (GDA_TYPE_META_STORE, "cnc-string", string, NULL);
 	else
-		obj = g_object_new (GDA_TYPE_META_STORE, "cnc-string", "SQLite://DB_NAME=:memory:", NULL);
+		obj = g_object_new (GDA_TYPE_META_STORE, "cnc-string", "SQLite://DB_NAME=__gda_tmp", NULL);
+	g_static_rec_mutex_unlock (&init_mutex);
 	store = GDA_META_STORE (obj);
 	if (!store->priv->cnc) {
 		g_object_unref (store);
@@ -595,6 +614,11 @@ gda_meta_store_dispose (GObject *object)
 	store = GDA_META_STORE (object);
 	if (store->priv) {
 		GSList *list;
+
+		if (store->priv->extract_stmt_hash) {
+			g_hash_table_destroy (store->priv->extract_stmt_hash);
+			store->priv->extract_stmt_hash = NULL;
+		}
 
 		if (store->priv->override_mode) 
 			_gda_meta_store_cancel_data_reset (store, NULL);
@@ -1917,25 +1941,40 @@ gda_meta_store_get_internal_connection (GdaMetaStore *store) {
 GdaDataModel *
 gda_meta_store_extract (GdaMetaStore *store, const gchar *select_sql, GError **error, ...)
 {
-	GdaMetaStoreClass *klass;
-	GdaStatement *stmt;
-	const gchar *remain;
+	GdaStatement *stmt = NULL;
 	GdaDataModel *model;
 	GdaSet *params = NULL;
 
 	g_return_val_if_fail (GDA_IS_META_STORE (store), NULL);
 	g_return_val_if_fail (store->priv, NULL);
 
+	if ((store->priv->max_extract_stmt > 0) && !store->priv->extract_stmt_hash)
+		store->priv->extract_stmt_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
+
 	/* statement creation */
-	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
-	stmt = gda_sql_parser_parse_string (klass->cpriv->parser, select_sql, &remain, error);
-	if (!stmt)
-		return NULL;
-	if (remain) {
-		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_EXTRACT_SQL_ERROR,
-			     _("More than one SQL statement"));
-		g_object_unref (stmt);
-		return NULL;
+	if (store->priv->extract_stmt_hash)
+		stmt = g_hash_table_lookup (store->priv->extract_stmt_hash, select_sql);
+	if (stmt) 
+		g_object_ref (stmt);
+	else {
+		GdaMetaStoreClass *klass;
+		const gchar *remain;
+
+		klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
+		stmt = gda_sql_parser_parse_string (klass->cpriv->parser, select_sql, &remain, error);
+		if (!stmt)
+			return NULL;
+		if (remain) {
+			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_EXTRACT_SQL_ERROR,
+				     _("More than one SQL statement"));
+			g_object_unref (stmt);
+			return NULL;
+		}
+
+		if (store->priv->current_extract_stmt < store->priv->max_extract_stmt) {
+			g_hash_table_insert (store->priv->extract_stmt_hash, g_strdup (select_sql), g_object_ref (stmt));
+			store->priv->current_extract_stmt++;
+		}
 	}
 	
 	/* parameters */
@@ -2872,7 +2911,7 @@ gda_meta_store_schema_get_structure (GdaMetaStore *store, GError **error)
  * @error: a place to store errors, or %NULL
  *
  * The #GdaMetaStore object maintains a list of (name,value) attributes (attributes names starting with a '_'
- * character are for intarnal use only and cannot be altered). This method and the gda_meta_store_set_attribute_value()
+ * character are for internal use only and cannot be altered). This method and the gda_meta_store_set_attribute_value()
  * method allows the user to add, set or remove attributes specific to their usage.
  * 
  * This method allows to get the value of a attribute stored in @store. The returned attribute value is 
@@ -2938,6 +2977,7 @@ gda_meta_store_set_attribute_value (GdaMetaStore *store, const gchar *att_name,
 				    const gchar *att_value, GError **error)
 {
 	GdaMetaStoreClass *klass;
+	static GStaticMutex set_mutex = G_STATIC_MUTEX_INIT;
 	static GdaSet *set = NULL;
 	gboolean started_transaction = FALSE;
 
@@ -2951,10 +2991,14 @@ gda_meta_store_set_attribute_value (GdaMetaStore *store, const gchar *att_name,
 	}
 
 	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
+	g_static_mutex_lock (&set_mutex);
 	if (!set) {
-		if (!gda_statement_get_parameters (klass->cpriv->prep_stmts [STMT_SET_ATT_VALUE], &set, error))
+		if (!gda_statement_get_parameters (klass->cpriv->prep_stmts [STMT_SET_ATT_VALUE], &set, error)) {
+			g_static_mutex_unlock (&set_mutex);
 			return FALSE;
+		}
 	}
+	g_static_mutex_unlock (&set_mutex);
 
 	if (!gda_set_set_holder_value (set, "name", att_name)) {
 		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_ATTRIBUTE_ERROR,

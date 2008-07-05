@@ -72,20 +72,22 @@ custom_data_model_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		if (type == 0) {
-			static GTypeInfo info = {
-				sizeof (CustomDataModelClass),
-				(GBaseInitFunc) NULL,
-				(GBaseFinalizeFunc) NULL,
-				(GClassInitFunc) custom_data_model_class_init,
-				NULL, NULL,
-				sizeof (CustomDataModel),
-				0,
-				(GInstanceInitFunc) custom_data_model_init
-			};
-			
+		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+		static GTypeInfo info = {
+			sizeof (CustomDataModelClass),
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) custom_data_model_class_init,
+			NULL, NULL,
+			sizeof (CustomDataModel),
+			0,
+			(GInstanceInitFunc) custom_data_model_init
+		};
+		
+		g_static_mutex_lock (&registering);
+		if (type == 0)
 			type = g_type_register_static (PARENT_TYPE, "CustomDataModel", &info, 0);
-		}
+		g_static_mutex_unlock (&registering);
 	}
 
 	return type;

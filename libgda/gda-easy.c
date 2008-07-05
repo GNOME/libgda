@@ -23,6 +23,7 @@
 #include <sql-parser/gda-sql-parser.h>
 #include <libgda/gda-config.h>
 
+static GStaticMutex parser_mutex = G_STATIC_MUTEX_INIT;
 static GdaSqlParser *internal_parser = NULL;
 
 /* module error */
@@ -188,8 +189,10 @@ gda_execute_select_command (GdaConnection *cnc, const gchar *sql, GError **error
 			      || g_str_has_prefix (sql, "SELECT"),
 			      NULL);
     
+	g_static_mutex_lock (&parser_mutex);
 	if (!internal_parser)
 		internal_parser = gda_sql_parser_new ();
+	g_static_mutex_unlock (&parser_mutex);
 
 	stmt = gda_sql_parser_parse_string (internal_parser, sql, NULL, error);
 	if (!stmt) 
@@ -220,8 +223,10 @@ gda_execute_non_select_command (GdaConnection *cnc, const gchar *sql, GError **e
 			      || GDA_IS_CONNECTION (cnc) 
 			      || !gda_connection_is_opened (cnc), -1);
     
+	g_static_mutex_lock (&parser_mutex);
 	if (!internal_parser)
 		internal_parser = gda_sql_parser_new ();
+	g_static_mutex_unlock (&parser_mutex);
 
 	stmt = gda_sql_parser_parse_string (internal_parser, sql, NULL, error);
 	if (!stmt) 
@@ -423,7 +428,7 @@ gda_perform_drop_table (GdaServerOperation *op, GError **error)
 static guint
 gtype_hash (gconstpointer key)
 {
-        return (guint) key;
+        return GPOINTER_TO_UINT (key);
 }
 
 static gboolean 
@@ -445,9 +450,11 @@ gtype_equal (gconstpointer a, gconstpointer b)
 GdaDataHandler *
 gda_get_default_handler (GType for_type)
 {
+	static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
 	static GHashTable *hash = NULL;
 	GdaDataHandler *dh;
 
+	g_static_mutex_lock (&mutex);
 	if (!hash) {
 		hash = g_hash_table_new_full (gtype_hash, gtype_equal,
 					      NULL, (GDestroyNotify) g_object_unref);
@@ -472,6 +479,7 @@ gda_get_default_handler (GType for_type)
                 g_hash_table_insert (hash, (gpointer) G_TYPE_ULONG, gda_handler_type_new ());
                 g_hash_table_insert (hash, (gpointer) G_TYPE_UINT, gda_handler_numerical_new ());
 	}
+	g_static_mutex_unlock (&mutex);
 	
 	dh = g_hash_table_lookup (hash, (gpointer) for_type);
 	return dh;

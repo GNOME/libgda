@@ -33,23 +33,24 @@
 #define BDB_VERSION  (10000*DB_VERSION_MAJOR+100*DB_VERSION_MINOR+DB_VERSION_PATCH)
 
 struct _GdaDataModelBdbPrivate {
-	gchar  *filename;
-	gchar  *db_name;
+	gchar    *filename;
+	gchar    *db_name;
+	gboolean  db_name_set;
 
-	DB     *dbp;
-	DBC    *dbpc; /* cursor */
-	int     cursor_pos; /* <0 if @dbpc is invalid */
+	DB       *dbp;
+	DBC      *dbpc; /* cursor */
+	int       cursor_pos; /* <0 if @dbpc is invalid */
 
-	GSList *errors; /* list of errors as GError structures*/
+	GSList   *errors; /* list of errors as GError structures*/
 
-	GSList *columns;
-	gint    n_columns; /* length of @columns */
-	gint    n_rows;
+	GSList   *columns;
+	gint      n_columns; /* length of @columns */
+	gint      n_rows;
 
-	gint    n_key_columns; /* > 0 if custom number of columns */
-	gint    n_data_columns;/* > 0 if custom number of columns */
+	gint      n_key_columns; /* > 0 if custom number of columns */
+	gint      n_data_columns;/* > 0 if custom number of columns */
 
-	GSList *cursor_values; /* list of GValues for the current row */
+	GSList   *cursor_values; /* list of GValues for the current row */
 };
 
 /* properties */
@@ -139,6 +140,7 @@ gda_data_model_bdb_init (GdaDataModelBdb *model,
 	model->priv->n_rows = 0;
 	model->priv->cursor_values = NULL;
 	model->priv->cursor_pos = -1;
+	model->priv->db_name_set = FALSE;
 }
 
 static void
@@ -224,6 +226,7 @@ gda_data_model_bdb_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
+		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
 		static const GTypeInfo info = {
 			sizeof (GdaDataModelBdbClass),
 			(GBaseInitFunc) NULL,
@@ -241,8 +244,12 @@ gda_data_model_bdb_get_type (void)
                         NULL
                 };
 
-		type = g_type_register_static (G_TYPE_OBJECT, "GdaDataModelBdb", &info, 0);
-		g_type_add_interface_static (type, GDA_TYPE_DATA_MODEL, &data_model_info);
+		g_static_mutex_lock (&registering);
+		if (type == 0) {
+			type = g_type_register_static (G_TYPE_OBJECT, "GdaDataModelBdb", &info, 0);
+			g_type_add_interface_static (type, GDA_TYPE_DATA_MODEL, &data_model_info);
+		}
+		g_static_mutex_unlock (&registering);
 	}
 	return type;
 }
@@ -281,7 +288,6 @@ gda_data_model_bdb_set_property (GObject *object,
 {
         GdaDataModelBdb *model;
         const gchar *string;
-	static gboolean db_name_set = FALSE, db_file_set = FALSE;
 
         model = GDA_DATA_MODEL_BDB (object);
         if (model->priv) {
@@ -292,10 +298,8 @@ gda_data_model_bdb_set_property (GObject *object,
 				model->priv->filename = NULL;
 			}
 			string = g_value_get_string (value);
-			if (string) {
+			if (string) 
 				model->priv->filename = g_strdup (string);
-				db_file_set = TRUE;
-			}
 			break;
                 case PROP_DB_NAME:
 			if (model->priv->db_name) {
@@ -305,12 +309,12 @@ gda_data_model_bdb_set_property (GObject *object,
 			string = g_value_get_string (value);
 			if (string) 
 				model->priv->db_name = g_strdup (string);
-			db_name_set = TRUE;
+			model->priv->db_name_set = TRUE;
 			break;
 		}
 	}
 
-	if (db_name_set && db_file_set) {
+	if (model->priv->db_name_set && model->priv->filename) {
 		/* open the DB file */
 		int ret;
 		DBC *dbpc;

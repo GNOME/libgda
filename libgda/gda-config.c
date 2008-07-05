@@ -622,7 +622,10 @@ gda_config_get_type (void)
 			0,
 			(GInstanceInitFunc) gda_config_init
 		};
-		type = g_type_register_static (G_TYPE_OBJECT, "GdaConfig", &info, 0);
+		GDA_CONFIG_LOCK ();
+		if (type == 0)
+			type = g_type_register_static (G_TYPE_OBJECT, "GdaConfig", &info, 0);
+		GDA_CONFIG_UNLOCK ();
 	}
 
 	return type;

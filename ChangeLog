@@ -1,3 +1,23 @@
+2008-07-05  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in: better detect Berkeley DB in 64 bits environment
+	* libgda/gda-meta-store.c: now caches the parsed SQL when using gda_meta_store_extract()
+	for better performances
+	* libgda/gda-init.c: doc. improvements
+	* libgda/gda-data-model-dir.c:
+	* libgda/gda-data-model-bdb.c: minor correction when setting properties
+	* libgda/gda-data-model-dir.c:
+	* libgda/gda-data-model-dsn-list.c: minor correction related to temporary
+	GValue
+	* libgda-report/engine/gda-report-engine.c:
+	* libgda/gda-easy.c: 64 bits type conversion corrected
+	* libgda/gda-xa-transaction.c: gda_xa_transaction_id_to_string() now returns a
+	new string
+	* other files: improvements to make Libgda behave correclty when multiple
+	threads are used each object is used by one thread only.
+	* libgda-4.0.pc.in: make Libgda depend on the gobject-2.0 module and
+	not only on glib-2.0
+
 2008-07-02  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-meta-struct.[ch]:

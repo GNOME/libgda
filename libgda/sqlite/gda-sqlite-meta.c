@@ -96,7 +96,10 @@ static GdaSet       *pragma_set;
 void
 _gda_sqlite_provider_meta_init (GdaServerProvider *provider)
 {
+	static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
 	InternalStatementItem i;
+
+	g_static_mutex_lock (&init_mutex);
 
         internal_parser = gda_server_provider_internal_get_parser (provider);
 	internal_params = gda_set_new (NULL);
@@ -124,6 +127,8 @@ _gda_sqlite_provider_meta_init (GdaServerProvider *provider)
 
 	pragma_set = gda_set_new_inline (2, "tblname", G_TYPE_STRING, "",
 					 "idxname", G_TYPE_STRING, "");
+
+	g_static_mutex_unlock (&init_mutex);
 }
 
 gboolean
@@ -196,10 +201,11 @@ _gda_sqlite_meta__btypes (GdaServerProvider *prov, GdaConnection *cnc,
 			break;
 		}
 	}
-	gda_value_free (vint);
-	if (retval)
+	if (retval) 
 		retval = gda_meta_store_modify (store, context->table_name, mod_model, NULL, error, NULL);
 	g_object_unref (mod_model);
+	gda_value_free (vint);
+
 	return retval;
 }
 

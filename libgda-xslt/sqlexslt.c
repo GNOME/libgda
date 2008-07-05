@@ -41,7 +41,10 @@
 void
 gda_xslt_register (void)
 {
+	static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
 	static int init = 0;
+
+	g_static_mutex_lock (&init_mutex);
 	if (!init) {
 		int init_res;
 		init = 1;
@@ -54,6 +57,7 @@ gda_xslt_register (void)
 				 init_res);
 		}
 	}
+	g_static_mutex_unlock (&init_mutex);
 }
 
 /**

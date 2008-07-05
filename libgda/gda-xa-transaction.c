@@ -216,19 +216,21 @@ gda_xa_transaction_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		if (type == 0) {
-			static GTypeInfo info = {
-				sizeof (GdaXaTransactionClass),
-				(GBaseInitFunc) NULL,
-				(GBaseFinalizeFunc) NULL,
-				(GClassInitFunc) gda_xa_transaction_class_init,
-				NULL, NULL,
-				sizeof (GdaXaTransaction),
-				0,
-				(GInstanceInitFunc) gda_xa_transaction_init
-			};
+		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+		static GTypeInfo info = {
+			sizeof (GdaXaTransactionClass),
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gda_xa_transaction_class_init,
+			NULL, NULL,
+			sizeof (GdaXaTransaction),
+			0,
+			(GInstanceInitFunc) gda_xa_transaction_init
+		};
+		g_static_mutex_lock (&registering);
+		if (type == 0)
 			type = g_type_register_static (G_TYPE_OBJECT, "GdaXaTransaction", &info, 0);
-		}
+		g_static_mutex_unlock (&registering);
 	}
 
 	return type;
@@ -702,19 +704,17 @@ gda_xa_transaction_commit_recovered (GdaXaTransaction *xa_trans, GSList **cnc_to
  * &lt;gtrid&gt; and &lt;bqual&gt; strings contain alphanumeric characters, and non alphanumeric characters
  * are converted to "%ab" where ab is the hexadecimal representation of the character.
  *
- * Returns: a read-only string representation of @xid
+ * Returns: a new string representation of @xid
  */
-const gchar *
+gchar *
 gda_xa_transaction_id_to_string (const GdaXaTransactionId *xid)
 {
 #define XID_SIZE (128 * 3 +15)
-	static gchar str[XID_SIZE];
+	gchar *str = g_new0 (gchar, XID_SIZE);
 	int index = 0, i;
 	
 	g_return_val_if_fail (xid, NULL);
 
-	memset (str, 0, XID_SIZE);
-	
 	/* global transaction ID */
 	for (i = 0; i < xid->gtrid_length; i++) {
 		if (g_ascii_isalnum (xid->data[i])) {

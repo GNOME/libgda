@@ -38,7 +38,6 @@
 #endif
 #include <glib/gi18n-lib.h>
 
-#define PARENT_TYPE G_TYPE_OBJECT
 #define CLASS(operation) (GDA_SERVER_OPERATION_CLASS (G_OBJECT_GET_CLASS (operation)))
 
 static void gda_server_operation_class_init (GdaServerOperationClass *klass);
@@ -243,6 +242,8 @@ gda_server_operation_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
+		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+
 		static const GTypeInfo info = {
 			sizeof (GdaServerOperationClass),
 			(GBaseInitFunc) NULL,
@@ -255,7 +256,10 @@ gda_server_operation_get_type (void)
 			(GInstanceInitFunc) gda_server_operation_init
 		};
 
-		type = g_type_register_static (PARENT_TYPE, "GdaServerOperation", &info, 0);
+		g_static_mutex_lock (&registering);
+		if (!type)
+			type = g_type_register_static (G_TYPE_OBJECT, "GdaServerOperation", &info, 0);
+		g_static_mutex_unlock (&registering);
 	}
 	return type;
 }
