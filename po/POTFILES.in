@@ -66,6 +66,8 @@ providers/bdb/libmain.c
 providers/mdb/gda-mdb-provider.c
 providers/mdb/libmain.c
 providers/mdb/mdb_specs_dsn.xml.in
+providers/firebird/firebird_specs_create_table.xml.in
+providers/firebird/gda-firebird-ddl.c
 providers/mysql/gda-mysql-ddl.c
 providers/mysql/gda-mysql-meta.c
 providers/mysql/gda-mysql-provider.c
