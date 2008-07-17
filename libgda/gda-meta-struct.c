@@ -59,6 +59,7 @@ static GdaMetaDbObject *_meta_struct_get_db_object (GdaMetaStruct *mstruct,
 						    const GValue *catalog, const GValue *schema, const GValue *name);
 
 static void gda_meta_db_object_free (GdaMetaDbObject *dbo);
+static void gda_meta_db_object_free_contents (GdaMetaDbObject *dbo);
 static void gda_meta_table_free_contents (GdaMetaTable *table);
 static void gda_meta_view_free_contents (GdaMetaView *view);
 static void gda_meta_table_column_free (GdaMetaTableColumn *tcol);
@@ -1400,8 +1401,10 @@ gda_meta_struct_dump_as_graph (GdaMetaStruct *mstruct, GdaMetaGraphInfo info, GE
 		fullname = g_strdup_printf ("%s.%s.%s", dbo->obj_catalog, dbo->obj_schema, dbo->obj_name);
 		if (dbo->obj_short_name) 
 			objname = g_strdup (dbo->obj_short_name);
-		else
+		else if (dbo->obj_schema)
 			objname = g_strdup_printf ("%s.%s", dbo->obj_schema, dbo->obj_name);
+		else
+			objname = g_strdup (dbo->obj_name);
 
 		/* node */
 		switch (dbo->obj_type) {
@@ -1502,7 +1505,7 @@ gda_meta_struct_dump_as_graph (GdaMetaStruct *mstruct, GdaMetaGraphInfo info, GE
 }
 
 static void
-gda_meta_db_object_free (GdaMetaDbObject *dbo)
+gda_meta_db_object_free_contents (GdaMetaDbObject *dbo)
 {
 	g_free (dbo->obj_catalog);
 	g_free (dbo->obj_schema);
@@ -1523,6 +1526,13 @@ gda_meta_db_object_free (GdaMetaDbObject *dbo)
 		TO_IMPLEMENT;
 	}
 	g_slist_free (dbo->depend_list);
+}
+
+static void
+gda_meta_db_object_free (GdaMetaDbObject *dbo)
+{
+	gda_meta_db_object_free_contents (dbo);
+	g_free (dbo);
 }
 
 static void
@@ -1799,4 +1809,64 @@ determine_db_object_from_missing_type (GdaMetaStruct *mstruct,
 	if (model) g_object_unref (model);
 	
 	return FALSE;
+}
+
+/**
+ * gda_meta_struct_add_db_object
+ * @mstruct: a #GdaMetaStruct object
+ * @dbo: a #GdaMetaDbObject structure
+ * @error: a place to store errors, or %NULL
+ *
+ * Adds @dbo to the database objects known to @mstruct. In any case (whether an error occured or not)
+ * @dbo's responsability is then transferred to @smtruct and should
+ * not be used after calling this function (it may have been destroyed). If you need a pointer to the #GdaMetaDbObject
+ * for a database object, use gda_meta_struct_get_db_object().
+ *
+ * Returns: a pointer to the #GdaMetaDbObject used in @mstruct to represent the added database object (may be @dbo or not)
+ */
+GdaMetaDbObject *
+gda_meta_struct_add_db_object (GdaMetaStruct *mstruct, GdaMetaDbObject *dbo, GError **error)
+{
+	GdaMetaDbObject *edbo;
+	GValue *v1 = NULL, *v2 = NULL, *v3 = NULL;
+	g_return_val_if_fail (GDA_IS_META_STRUCT (mstruct), NULL);
+	g_return_val_if_fail (dbo, NULL);
+
+	if (!dbo->obj_name) {
+		g_set_error (error, GDA_META_STRUCT_ERROR, GDA_META_STRUCT_INCOHERENCE_ERROR,
+			     _("Missing object name in GdaMetaDbObject structure"));
+		gda_meta_db_object_free (dbo);
+		return NULL;
+	}
+	if (dbo->obj_catalog)
+		g_value_set_string ((v1 = gda_value_new (G_TYPE_STRING)), dbo->obj_catalog);
+	if (dbo->obj_schema)
+		g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), dbo->obj_schema);
+	g_value_set_string ((v3 = gda_value_new (G_TYPE_STRING)), dbo->obj_name);
+
+	edbo = gda_meta_struct_get_db_object (mstruct, v1, v2, v3);
+	if (v1) gda_value_free (v1);
+	if (v2) gda_value_free (v2);
+	gda_value_free (v3);
+
+	if (edbo) {
+		if (edbo->obj_type == GDA_META_DB_UNKNOWN) {
+			/* overwrite */
+			gda_meta_db_object_free_contents (edbo);
+			*edbo = *dbo;
+			g_free (dbo);
+			return edbo;
+		}
+		else {
+			g_set_error (error, GDA_META_STRUCT_ERROR, GDA_META_STRUCT_DUPLICATE_OBJECT_ERROR,
+				     _("Database object '%s' already exists"), edbo->obj_full_name);
+			gda_meta_db_object_free (dbo);
+			return NULL;
+		}
+	}
+	else {
+		mstruct->priv->db_objects = g_slist_append (mstruct->priv->db_objects, dbo);
+		g_hash_table_insert (mstruct->priv->index, dbo->obj_full_name, dbo);
+		return dbo;
+	}
 }

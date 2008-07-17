@@ -1272,12 +1272,13 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 			g_free (cname);
 		}
 
-		ext = g_strrstr (name, ".");
-		if (!ext)
+		if (!g_str_has_suffix (name, "." G_MODULE_SUFFIX))
 			continue;
-		if (strcmp (ext + 1, G_MODULE_SUFFIX))
-			continue;
+#ifdef G_WITH_CYGWIN
+		if (!g_str_has_prefix (name, "cyggda"))
+#else
 		if (!g_str_has_prefix (name, "libgda"))
+#endif
 			continue;
 
 		path = g_build_path (G_DIR_SEPARATOR_S, dirname,

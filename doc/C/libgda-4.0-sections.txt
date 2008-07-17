@@ -158,6 +158,10 @@ gda_connection_update_meta_store
 GdaConnectionMetaType
 gda_connection_get_meta_store_data
 gda_connection_value_to_sql_string
+<SUBSECTION>
+gda_connection_lock
+gda_connection_trylock
+gda_connection_unlock
 <SUBSECTION Standard>
 GDA_CONNECTION
 GDA_CONNECTION_CLASS
@@ -522,6 +526,7 @@ GdaServerProviderClass
 GdaServerProviderError
 GdaServerProviderMeta
 GdaServerProviderAsyncCallback
+GdaServerProviderExecCallback
 gda_server_provider_get_name
 gda_server_provider_get_version
 gda_server_provider_get_server_version
@@ -645,6 +650,17 @@ GDA_VCONNECTION_HUB
 GDA_VCONNECTION_HUB_CLASS
 GDA_TYPE_VCONNECTION_HUB
 gda_vconnection_hub_get_type
+</SECTION>
+
+<SECTION>
+<FILE>gda-mutex</FILE>
+<TITLE>GdaMutex</TITLE>
+GdaMutex
+gda_mutex_new
+gda_mutex_lock
+gda_mutex_trylock
+gda_mutex_unlock
+gda_mutex_free
 </SECTION>
 
 <SECTION>
@@ -1150,6 +1166,10 @@ gda_sql_parser_new
 gda_sql_parser_parse_string
 gda_sql_parser_parse_string_as_batch
 gda_sql_parser_parse_file_as_batch
+<SUBSECTION>
+gda_sql_parser_lock
+gda_sql_parser_trylock
+gda_sql_parser_unlock
 <SUBSECTION Standard>
 GDA_IS_SQL_PARSER
 GDA_SQL_PARSER
@@ -1478,4 +1498,19 @@ GDA_DATA_COMPARATOR_ERROR
 GDA_IS_DATA_COMPARATOR
 GDA_TYPE_DATA_COMPARATOR
 gda_data_comparator_get_type
+</SECTION>
+
+<SECTION>
+<FILE>gda-lockable</FILE>
+<TITLE>GdaLockable</TITLE>
+GdaLockable
+gda_lockable_lock
+gda_lockable_trylock
+gda_lockable_unlock
+<SUBSECTION Standard>
+GDA_LOCKABLE
+GDA_LOCKABLE_GET_CLASS
+GDA_IS_LOCKABLE
+GDA_TYPE_LOCKABLE
+gda_lockable_get_type
 </SECTION>

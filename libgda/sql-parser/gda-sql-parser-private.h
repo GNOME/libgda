@@ -25,6 +25,7 @@
 #include <glib-object.h>
 #include "gda-sql-parser.h"
 #include "gda-statement-struct-pspec.h"
+#include <libgda/gda-mutex.h>
 
 G_BEGIN_DECLS
 
@@ -39,6 +40,7 @@ typedef struct {
 } TokenizerContext;
 
 struct _GdaSqlParserPrivate {
+	GdaMutex *mutex;
  	gchar    *sql;
 	GSList   *parsed_statements;
 

@@ -15,21 +15,12 @@ main (int argc, char **argv)
 {
 	int number_failed = 0;
 	GDir *dir;
-	gchar *dirname;
 	GError *err = NULL;
 	const gchar *name;
 
 	gda_init ();
 
-	dirname = g_build_filename (CHECK_FILES, "tests", "providers", NULL);
-	if (!(dir = g_dir_open (dirname, 0, &err))) {
-#ifdef CHECK_EXTRA_INFO
-		g_warning ("Could not open directory '%s': %s", dirname,
-			   err && err->message ? err->message : "No detail");
-#endif
-		return EXIT_FAILURE;
-	}
-	g_free (dirname);
+	
 
 	if (argc == 2) {
 		if (g_str_has_suffix (argv[1], ".xml")) {
@@ -38,38 +29,73 @@ main (int argc, char **argv)
 				number_failed ++;
 		}
 	}
-	else 
+	else {
+		/* data models in tests/providers */
+		gchar *dirname;
+		dirname = g_build_filename (CHECK_FILES, "tests", "providers", NULL);
+		if (!(dir = g_dir_open (dirname, 0, &err))) {
+#ifdef CHECK_EXTRA_INFO
+			g_warning ("Could not open directory '%s': %s", dirname,
+				   err && err->message ? err->message : "No detail");
+#endif
+			return EXIT_FAILURE;
+		}
+
 		while ((name = g_dir_read_name (dir))) {
 			if (g_str_has_suffix (name, ".xml")) {
-				g_print ("Tested: %s\n", name);
-				if (!do_test_load_file (name))
+				gchar *full_path = g_build_filename (dirname, name, NULL);
+				g_print ("Tested: %s\n", full_path);
+				if (!do_test_load_file (full_path))
 					number_failed ++;
+				g_free (full_path);
 			}
 		}
+		g_free (dirname);
+
+		/* data models in the current dir */
+		dirname = g_build_filename (CHECK_FILES, "tests", "data-models", NULL);
+		if (!(dir = g_dir_open (dirname, 0, &err))) {
+#ifdef CHECK_EXTRA_INFO
+			g_warning ("Could not open directory '%s': %s", dirname,
+				   err && err->message ? err->message : "No detail");
+#endif
+			return EXIT_FAILURE;
+		}
+
+		while ((name = g_dir_read_name (dir))) {
+			if (g_str_has_suffix (name, ".xml")) {
+				gchar *full_path = g_build_filename (dirname, name, NULL);
+				g_print ("Tested: %s\n", full_path);
+				if (!do_test_load_file (full_path))
+					number_failed ++;
+				g_free (full_path);
+			}
+		}
+		g_free (dirname);
+	}
 	g_dir_close (dir);
 
 	if (number_failed == 0)
 		g_print ("Ok.\n");
 	else
 		g_print ("%d failed\n", number_failed);
+
 	return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
 static gboolean
 do_test_load_file (const gchar *filename)
 {
-	gchar *file;
 	GdaDataModel *import;
 	GSList *errors;
 	gboolean retval = TRUE;
 	gchar *export, *contents;
 
-	file = g_build_filename (CHECK_FILES, "tests", "providers", filename, NULL);
-	import = gda_data_model_import_new_file (file, TRUE, NULL);
+	import = gda_data_model_import_new_file (filename, TRUE, NULL);
 
 	if ((errors = gda_data_model_import_get_errors (GDA_DATA_MODEL_IMPORT (import)))) {
 #ifdef CHECK_EXTRA_INFO
-		g_warning ("Could not load the expected schema file '%s': ", file);
+		g_warning ("Could not load file '%s': ", filename);
 		for (; errors; errors = errors->next) 
 			g_print ("\t%s\n", 
 				 ((GError *)(errors->data))->message ? ((GError *)(errors->data))->message : "No detail");
@@ -79,7 +105,7 @@ do_test_load_file (const gchar *filename)
 	}
 
 	export = gda_data_model_export_to_string (import, GDA_DATA_MODEL_IO_DATA_ARRAY_XML, NULL, 0, NULL, 0, NULL);
-	g_assert (g_file_get_contents (file, &contents, NULL, NULL));
+	g_assert (g_file_get_contents (filename, &contents, NULL, NULL));
 	if (strcmp (export, contents)) {
 #ifdef CHECK_EXTRA_INFO
 		g_print ("========== Imported data model ==========\n");

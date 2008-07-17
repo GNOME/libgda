@@ -193,12 +193,15 @@ typedef struct {
 } GdaServerProviderXa;
 
 typedef void (*GdaServerProviderAsyncCallback) (GdaServerProvider *provider, GdaConnection *cnc, guint task_id, 
-						gboolean result_status, gpointer data);
+						gboolean result_status, const GError *error, gpointer data);
+typedef void (*GdaServerProviderExecCallback) (GdaServerProvider *provider, GdaConnection *cnc, guint task_id, 
+					       GObject *result_obj, const GError *error, gpointer data);
 
 struct _GdaServerProviderClass {
 	GObjectClass parent_class;
 
 	/* provider information */
+	GThread                 * limiting_thread; /* if not NULL, then using the provider will be limited to this thread */
 	const gchar           *(* get_name)              (GdaServerProvider *provider);
 	const gchar           *(* get_version)           (GdaServerProvider *provider);
 	const gchar           *(* get_server_version)    (GdaServerProvider *provider, GdaConnection *cnc);
@@ -257,7 +260,7 @@ struct _GdaServerProviderClass {
 							  GdaStatement *stmt, GdaSet *params, 
 							  GdaStatementModelUsage model_usage, 
 							  GType *col_types, GdaSet **last_inserted_row, 
-							  guint *task_id, GdaServerProviderAsyncCallback async_cb, 
+							  guint *task_id, GdaServerProviderExecCallback exec_cb, 
 							  gpointer cb_data, GError **error);
 
 	/* Misc */

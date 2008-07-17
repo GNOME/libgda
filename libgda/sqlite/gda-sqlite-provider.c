@@ -274,6 +274,16 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 
 	/* SQLite doe not support distributed transactions */
 	provider_class->xa_funcs = NULL;
+
+	/* If SQLite was not compiled with the SQLITE_THREADSAFE flag, then it is not
+	 * considered thread safe, and we limit the usage of the provider from the current thread */
+	if (! sqlite3_threadsafe ()) {
+		gda_log_message ("SQLite was not compiled with the SQLITE_THREADSAFE flag, "
+				 "only one thread can access the provider");
+		provider_class->limiting_thread = g_thread_self ();
+	}
+	else
+		provider_class->limiting_thread = NULL;
 }
 
 static void
@@ -626,6 +636,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	}
 
 	cdata = g_new0 (SqliteConnectionData, 1);
+
 #ifdef HAVE_SQLITE
 	opening_cdata = cdata;
 #endif
@@ -724,6 +735,11 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 		db_connections_hash = g_hash_table_new (g_direct_hash, g_direct_equal);
 	g_hash_table_insert (db_connections_hash, cdata->connection, cdata);
 #endif
+	
+	/* Note: we need to set the thread owner because as mentionned in
+	 * http://www.sqlite.org/cvstrac/wiki?p=MultiThreading, for portability, a connection should only
+	 * be used by the thread which created it. */
+	g_object_set (G_OBJECT (cnc), "thread-owner", g_thread_self (), NULL);
 
 	g_static_rec_mutex_unlock (&cnc_mutex);
 	return TRUE;
@@ -738,7 +754,7 @@ gda_sqlite_provider_close_connection (GdaServerProvider *provider, GdaConnection
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
 
-	/* nothing specific to do */
+	/* nothing specific to do: sqlite3_close() is called when SqliteConnectionData is destroyed */
 	return TRUE;
 }
 

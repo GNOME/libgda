@@ -393,18 +393,31 @@ gda_data_model_iter_set_property (GObject *object,
 			/* compute parameters */
 			ncols = gda_data_model_get_n_columns (model);
 			for (col = 0; col < ncols; col++) {
-				const gchar *str;
+				gchar *str;
 				column = gda_data_model_describe_column (model, col);
 				param = (GdaHolder *) g_object_new (GDA_TYPE_HOLDER, 
 								    "g_type", 
 								    gda_column_get_g_type (column), NULL);
 
 				gda_holder_set_not_null (param, !gda_column_get_allow_null (column));
-				str = gda_column_get_title (column);
-				if (!str)
-					str = gda_column_get_name (column);
-				if (str)
+				g_object_get (G_OBJECT (column), "id", &str, NULL);
+				if (str) {
 					g_object_set (G_OBJECT (param), "id", str, NULL);
+					g_free (str);
+				}
+				else {
+					const gchar *cstr;
+					cstr = gda_column_get_title (column);
+					if (!cstr)
+						cstr = gda_column_get_name (column);
+					if (cstr)
+						g_object_set (G_OBJECT (param), "id", cstr, NULL);
+					else {
+						gchar *tmp = g_strdup_printf ("col%d", col);
+						g_object_set (G_OBJECT (param), "id", tmp, NULL);
+						g_free (tmp);
+					}
+				}
 				if (gda_column_get_default_value (column))
 					gda_holder_set_default_value (param, gda_column_get_default_value (column));
 				else if (gda_column_get_auto_increment (column)) {

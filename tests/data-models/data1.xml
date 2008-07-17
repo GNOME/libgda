@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<gda_array id="FIELDS_A" name="Table's columns">
+  <gda_array_field id="COLUMN_NAME" name="Field name" title="Field name" gdatype="gchararray"/>
+  <gda_array_field id="COLUMN_TYPE" name="Data type" title="Data type" gdatype="gchararray"/>
+  <gda_array_field id="COLUMN_SIZE" name="Size" title="Size" gdatype="guint"/>
+  <gda_array_field id="COLUMN_SCALE" name="Scale" title="Scale" gdatype="guint"/>
+  <gda_array_field id="COLUMN_NNUL" name="Not NULL" title="Not NULL" gdatype="gboolean"/>
+  <gda_array_field id="COLUMN_AUTOINC" name="Auto increment" title="Auto increment" gdatype="gboolean"/>
+  <gda_array_field id="COLUMN_UNIQUE" name="Unique" title="Unique" gdatype="gboolean"/>
+  <gda_array_field id="COLUMN_PKEY" name="Primary key" title="Primary key" gdatype="gboolean"/>
+  <gda_array_field id="COLUMN_DEFAULT" name="Default" title="Default" gdatype="gchararray"/>
+  <gda_array_field id="COLUMN_CHECK" name="Check" title="Check" gdatype="gchararray"/>
+  <gda_array_data>
+    <gda_array_row>
+      <gda_value>id</gda_value>
+      <gda_value>serial</gda_value>
+      <gda_value isnull="t"/>
+      <gda_value isnull="t"/>
+      <gda_value>TRUE</gda_value>
+      <gda_value>TRUE</gda_value>
+      <gda_value>TRUE</gda_value>
+      <gda_value>TRUE</gda_value>
+      <gda_value/>
+      <gda_value/>
+    </gda_array_row>
+  </gda_array_data>
+</gda_array>

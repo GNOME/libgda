@@ -51,10 +51,12 @@ gda_headers = \
 	gda-easy.h \
 	gda-enums.h \
 	gda-holder.h \
+	gda-lockable.h \
 	gda-log.h \
 	gda-marshal.h \
 	gda-meta-store.h \
 	gda-meta-struct.h \
+	gda-mutex.h \
 	gda-quark-list.h \
 	gda-set.h \
 	gda-row.h \
@@ -101,11 +103,15 @@ libgda_sources =  \
 	gda-easy.c \
 	gda-holder.c \
 	gda-init.c \
+	gda-lockable.c \
 	gda-log.c \
 	gda-marshal.c \
 	gda-meta-store.c \
 	gda-meta-store-extra.h \
+	gda-meta-struct-private.h \
 	gda-meta-struct.c \
+	gda-meta-struct-io.c \
+	gda-mutex.c \
 	gda-quark-list.c \
 	gda-set.c \
 	gda-row.c \

@@ -103,7 +103,6 @@ GdaBatch           *gda_sql_parser_parse_string_as_batch  (GdaSqlParser *parser,
 GdaBatch           *gda_sql_parser_parse_file_as_batch    (GdaSqlParser *parser, 
 							   const gchar *filename, GError **error);
 
-
 /* private API */
 void                gda_sql_parser_set_syntax_error      (GdaSqlParser *parser);
 void                gda_sql_parser_set_overflow_error    (GdaSqlParser *parser);

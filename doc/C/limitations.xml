@@ -4,21 +4,39 @@
   <sect1 id="limitations_global"><title>Global limitations</title>
     <para>
       &LIBGDA;'s global limitations are:
-      <sect2 id="threads"><title>Multi threading</title>
-	<para>&LIBGDA; is not thread safe. However it supports working with threads as long as
-	  any object created by the API is used by one single thread (that is there is no
-	  situation when two threads try to acces the same object at the same time).
+      <sect2 id="threads"><title>Multi threaded environment</title>
+	<para>&LIBGDA; is not thread safe. However it supports working with threads as long as any object 
+	  (except otherwise stated) created by the API is used by one single thread (that is there is no
+	  situation when two threads try to acces the same object at the same time). Exceptions are:
+	  <itemizedlist>
+	    <listitem><para>&LIBGDA;'s <link linkend="init_config">configuration</link> can be accessed from any thread</para></listitem>
+	    <listitem><para>Any object which implements the <link linkend="GdaLockable">GdaLockable</link> interface 
+		can be accessed from any thread. However 
+		one can use the <link linkend="gda-lockable-lock">gda_lockable_lock()</link> method to specifically 
+		lock an object's usage (especially when getting and
+		setting properties before or after calling methods).</para></listitem>
+	    <listitem><para>Any <link linkend="GdaConnection">GdaConnection</link> object can be accessed from any thread 
+		(that object implements the <link linkend="GdaLockable">GdaLockable</link> interface). Also
+		some database providers may impose other limitations (inherited from the database's specific client APIs)
+		such as only one thread can use the connection object, or even that only one thread can use the database
+		provider.</para></listitem>
+	  </itemizedlist>
 	</para>
-	<para>For example it is safe to start a thread and in that thread create a connection
-	  which is only used in that thread.</para>
+	
+	<para>Note that multi threading support is still at an early stage and may contain bugs</para>
       </sect2>
     </para>
   </sect1>
 
   <sect1 id="limitations_mysql"><title>For MySQL</title>
-    <para>
-      The following limitations apply to MySQL databases accessed via Libgda: none.
-    </para>
+    <sect2><title>Multi threaded environment</title>
+      <para>
+	If MySQL client was not compiled with the <option>--enable-thread-safe-client</option> flag, 
+	then the database provider will only allow
+	connections to be opened from the thread which initializes &LIBGDA;. Otherwise there is no limitation.
+      </para>
+    </sect2>
+
   </sect1>
 
   <sect1 id="limitations_oracle"><title>For Oracle</title>
@@ -58,6 +76,14 @@
 	The <link linkend="gda-connection-statement-execute-non-select">gda_connection_statement_execute_non_select()</link>'s last_insert_row attribute will return a <link linkend="GdaSet">GdaSet</link> object only if the table has OIDs.
       </para>
     </sect2>
+
+    <sect2><title>Multi threaded environment</title>
+      <para>
+	If PostgreSQL was not compiled with the <option>--enable-thread-safety</option> flag, 
+	then the database provider will only allow
+	connections to be opened from the thread which initializes &LIBGDA;. Otherwise there is no limitation.
+      </para>
+    </sect2>
   </sect1>
 
   <sect1 id="limitations_sqlite"><title>For SQLite</title>
@@ -67,6 +93,14 @@
     <sect2><title>Last inserted row's values</title>
       <para>
 	The <link linkend="gda-connection-statement-execute-non-select">gda_connection_statement_execute_non_select()</link>'s last_insert_row attribute uses the hidden "_ROWID_" column for each table, but it may fail if the table has a column with the same name.
+      </para>
+    </sect2>
+
+    <sect2><title>Multi threaded environment</title>
+      <para>
+	While waiting for the SQLite 3.6 (and the <option>SQLITE_CONFIG_SERIALIZED</option> flag), 
+	a connection object can only be used from the thread which created it (see
+	SQLite's <ulink url="http://www.sqlite.org/cvstrac/wiki?p=MultiThreading">documentation about threads</ulink>).
       </para>
     </sect2>
   </sect1>

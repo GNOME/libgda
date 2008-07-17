@@ -84,6 +84,7 @@ check_sqlite_SOURCES = $(common_sources) check_sqlite.c
 check_sqlite_CFLAGS = 
 check_sqlite_LDADD =  \
 	$(top_builddir)/libgda/libgda-4.0.la \
+	$(top_builddir)/tests/libgda-test-4.0.la \
 	$(LIBGDA_LIBS)
 
 check_bdb_SOURCES = $(common_sources) check_bdb.c

@@ -3,7 +3,7 @@
  * Copyright (C) 2008 The GNOME Foundation
  *
  * AUTHORS:
- *      TO_ADD: your name and email
+ *       Savoretti <csavoretti@gmail.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as

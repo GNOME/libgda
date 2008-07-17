@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <gda_array id="EXPORT" name="Exported Data">
   <gda_array_field id="FI0" name="short_type_name" title="short_type_name" gdatype="gchararray" size="-1" scale="-1"/>
-  <gda_array_field id="FI1" name="gtype" title="gtype" gdatype="gchararray" size="-1" scale="-1" nullok="TRUE"/>
+  <gda_array_field id="FI1" name="gtype" title="gtype" gdatype="gchararray" size="-1" scale="-1"/>
   <gda_array_field id="FI2" name="comments" title="comments" gdatype="gchararray" size="-1" scale="-1" nullok="TRUE"/>
   <gda_array_field id="FI3" name="synonyms" title="synonyms" gdatype="gchararray" size="-1" scale="-1" nullok="TRUE"/>
   <gda_array_data>

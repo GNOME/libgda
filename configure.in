@@ -143,10 +143,9 @@ linklibext=".so"
 case "$host" in
 *-cygwin*)
     AC_MSG_RESULT([Win32 - cygwin])
-    platform_win32=yes
     NO_UNDEFINED='-no-undefined'
     SOPREFIX='cyg'
-    LIBTOOL_EXPORT_OPTIONS=
+    LIBTOOL_EXPORT_OPTIONS='-export-symbols-regex "^[[^_]].*"'
     linklibext=".dll.a"
     AC_MSG_RESULT([Win32])
     ;;
@@ -158,6 +157,7 @@ case "$host" in
     SOPREFIX='lib'
     LIBTOOL_EXPORT_OPTIONS=
     linklibext=".dll.a"
+    AC_SUBST(WINDRES)
     ;;
 *-*-darwin*)
     dnl Darwin based distributions (including Mac OS X)
@@ -1262,6 +1262,7 @@ tests/data-models/Makefile
 tests/providers/Makefile
 tests/value-holders/Makefile
 tests/meta-store/Makefile
+tests/multi-threading/Makefile
 doc/Makefile
 doc/C/Makefile
 doc/C/libgda-4.0.types

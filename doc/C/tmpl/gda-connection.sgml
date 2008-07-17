@@ -103,6 +103,11 @@ Management of connections to data sources
 
 </para>
 
+<!-- ##### ARG GdaConnection:thread-owner ##### -->
+<para>
+
+</para>
+
 <!-- ##### ENUM GdaConnectionOptions ##### -->
 <para>
 

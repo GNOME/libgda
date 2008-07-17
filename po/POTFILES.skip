@@ -58,3 +58,4 @@ providers/xbase/gda-xbase-provider.c
 providers/xbase/libmain.c
 providers/xbase/xbase_specs_dsn.xml.in
 testing/html.c
+tests/gda-ddl-creator.c

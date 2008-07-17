@@ -42,6 +42,7 @@
 #include <libgda/gda-data-model-dir.h>
 #include <libgda/gda-data-access-wrapper.h>
 #include <libgda/gda-data-proxy.h>
+#include <libgda/gda-lockable.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-quark-list.h>
 #include <libgda/gda-row.h>
@@ -71,6 +72,8 @@
 #include <libgda/gda-set.h>
 
 #include <libgda/gda-meta-store.h>
+
+#include <libgda/gda-mutex.h>
 
 G_BEGIN_DECLS
 

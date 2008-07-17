@@ -179,7 +179,7 @@ struct _GdaMetaStoreClassPrivate {
         GHashTable    *table_cond_info_hash; /* key = string composed of the column names of
 					      * the parameters separated by a period, 
 					      * value = a TableConditionInfo structure */
-	GHashTable    *provider_specifics; /* key = a ProviderSpecificKey , value = a ProviderSpecificValue) */
+	GHashTable    *provider_specifics; /* key = a ProviderSpecificKey , value = a ProviderSpecificValue */
 };
 
 typedef struct {
@@ -785,7 +785,7 @@ initialize_cnc_struct (GdaMetaStore *store, GError **error)
 	if (gda_connection_statement_execute_non_select (store->priv->cnc,
 							 klass->cpriv->prep_stmts[STMT_SET_VERSION],
 							 NULL, NULL, NULL) == -1) {
-		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA,
+		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA_ERROR,
 			_ ("Could not set the internal schema's version"));
 		return FALSE;
 	}
@@ -1856,7 +1856,7 @@ handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **e
 	if (model) {
 		const GValue *version;
 		if (gda_data_model_get_n_rows (model) != 1) {
-			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA,
+			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA_ERROR,
 				_ ("Could not get the internal schema's version"));
 			g_object_unref (model);
 			return FALSE;
@@ -1864,7 +1864,7 @@ handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **e
 		
 		version = gda_data_model_get_value_at (model, 0, 0);
 		if (gda_value_is_null (version) || !gda_value_isa (version, G_TYPE_STRING)) {
-			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA,
+			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA_ERROR,
 				_ ("Could not get the internal schema's version"));
 			g_object_unref (model);
 			return FALSE;
@@ -1874,7 +1874,7 @@ handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **e
 		if (store->priv->version != 1) {
 			TO_IMPLEMENT; /* migrate to current version */
 			/* As there is now only version 1 => it's an error */
-			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA,
+			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA_ERROR,
 				_ ("Unknown internal schema's version: %d"), g_value_get_int (version));
 			g_object_unref (model);
 			return FALSE;
@@ -1883,7 +1883,7 @@ handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **e
 		return TRUE;
 	}
 	else {
-		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA,
+		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA_ERROR,
 			_ ("Could not get the internal schema's version"));
 		return FALSE;
 	}

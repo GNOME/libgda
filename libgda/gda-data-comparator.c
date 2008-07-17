@@ -120,13 +120,13 @@ diff_computed_accumulator (GSignalInvocationHint *ihint,
         thisvalue = g_value_get_boolean (handler_return);
         g_value_set_boolean (return_accu, thisvalue);
 
-        return thisvalue; /* stop signal if 'thisvalue' is FALSE */
+        return !thisvalue; /* stop signal if 'thisvalue' is FALSE */
 }
 
 static gboolean
 m_diff_computed (GdaDataComparator *comparator, GdaDiff *diff)
 {
-        return TRUE; /* default is to allow differences computing to proceed */
+        return FALSE; /* default is to allow differences computing to proceed (understand it as: FALSE => don't stop) */
 }
 
 static void

@@ -306,6 +306,13 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass  *klass)
 	provider_class->xa_funcs->xa_rollback = gda_mysql_provider_xa_rollback;
 	provider_class->xa_funcs->xa_recover = gda_mysql_provider_xa_recover;
 	
+	if (! mysql_thread_safe ()) {
+		gda_log_message ("MySQL was not compiled with the --enable-thread-safe-client flag, "
+				 "only one thread can access the provider");
+		provider_class->limiting_thread = g_thread_self ();
+	}
+	else
+		provider_class->limiting_thread = NULL;
 }
 
 static void
@@ -1447,7 +1454,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 	if (mysql_stmt_execute (cdata->mysql_stmt)) {
 		event = _gda_mysql_make_error (cnc, NULL, cdata->mysql_stmt, error);
 	} else {
-		//	
+
 		/* execute prepared statement using C API depending on its kind */
 		if (!g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "SELECT", 6) ||
 		    !g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "SHOW", 4) ||

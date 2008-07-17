@@ -49,6 +49,31 @@
   </sect1>
 
   <sect1>
+    <title>Multi threaded environment</title>
+    <para>
+      Each database provider should be useable in a multi threaded environment, even if they impose some restrictions
+      as to how they can be used in such an environment. The &LIBGDA;'s framework provides some locking mechanism which
+      is:
+      <itemizedlist>
+	<listitem><para>if multi threading cannot be supported at all (for example if the client library internally
+	    used by the provider does not support it), then the provider should make sure it refuses to work
+	    if used from any thread different than the thread which created it, the provider's class implementation
+	    should set the class's <structfield>limiting_thread</structfield> attribute to the thread which created it
+	    using <link linkend="g-thread-self">g_thread_self()</link></para>
+	</listitem>
+	<listitem><para>if multi threading is supported but any connection (or related object) can only be 
+	    used by the thread in which it was created, then for each opened connection, the 
+	    &quot;<link linkend="GdaConnection--thread-owner">thread-owner</link>&quot; connection's property
+	    must be set to the current thread (and other related objects must be locked in a similar way)</para>
+	</listitem>
+	<listitem><para>if no locking is done, then the provider is assumed to support full multi threading access,
+	  in this case make sure to set class's <structfield>limiting_thread</structfield> attribute to NULL.</para>
+	</listitem>
+      </itemizedlist>
+    </para>
+  </sect1>
+
+  <sect1>
     <title>Methods - provider's information</title>
     <sect2 id="prov-get-name">
       <title>get_name() - mandatory</title>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Tests databases schema
+-->
+
+
+<schema>
+  <!-- provider specific information 
+       use <replace> to replace something with something else (context can only be "/FIELDS_A/@COLUMN_TYPE" at the moment)
+       use <ignore> to ignore some parts (context can only be "/FKEY_S" or "/FIELDS_A/@COLUMN_PKEY" at the moment)
+    -->
+  <specifics>
+    <provider name="PostgreSQL">
+      <replace context="/FIELDS_A/@COLUMN_TYPE" expr="string" replace_with="varchar"/>
+      <replace context="/FIELDS_A/@COLUMN_TYPE" expr="gint" replace_with="int"/>
+    </provider>
+
+    <provider name="MySQL">
+      <replace context="/FIELDS_A/@COLUMN_TYPE" expr="string" replace_with="text"/>
+      <replace context="/FIELDS_A/@COLUMN_TYPE" expr="gint" replace_with="int"/>
+      <ignore context="/FKEY_S"/>
+      <ignore context="/FIELDS_A/@COLUMN_PKEY"/>
+    </provider>
+
+    <provider name="SQLite">
+      <replace context="/FIELDS_A/@COLUMN_TYPE" expr="gint" replace_with="int"/>
+    </provider>
+  </specifics>
+
+  <!-- actor table -->
+  <table name="actor"> <!-- possibly also schema attribute -->
+    <column name="actor_id" type="gint" pkey="TRUE" autoinc="TRUE"/>
+    <column name="first_name"/>
+    <column name="last_name"/>
+    <column name="last_update" type="timestamp">
+      <default symbolic="now"/>
+    </column>
+  </table>
+
+  <!-- film table -->
+  <table name="film">
+    <column name="film_id" type="gint" pkey="TRUE" autoinc="TRUE"/>
+    <column name="title"/>
+    <column name="description" type="date"/>
+    <column name="language_id" type="gint"/>
+    <column name="original_language_id" type="gint" nullok="TRUE"/>
+    <column name="rental_duration" type="smallint">
+      <extra context="COLUMN_DEFAULT">3</extra>
+    </column>
+    <column name="rental_rate" type="numeric(4,2)">
+      <extra context="COLUMN_DEFAULT">4.99</extra>
+    </column>
+    <column name="replacement_cost" type="numeric(5,2)">
+      <extra context="COLUMN_DEFAULT">19.99</extra>
+    </column>
+    <column name="rating" nullok="TRUE">
+      <extra context="COLUMN_DEFAULT">G</extra>
+    </column>
+    <column name="special_features" type="[string]"/>
+    <column name="last_update" type="timestamp">
+      <provider name="SQLite">
+	<extra context="COLUMN_DEFAULT">CURRENT_TIMESTAMP</extra>
+      </provider>
+      <provider name="PostgreSQL">
+	<extra context="COLUMN_DEFAULT">now()</extra>
+      </provider>
+    </column>
+
+    <check>((((rating = 'G') OR (rating = 'PG')) OR (rating = 'PG-13')) OR (rating = 'R')) OR (rating = 'NC-17')</check>
+
+    <fkey ref_table="language">
+      <part column="language_id" ref_column="language_id"/>
+    </fkey>
+
+    <fkey ref_table="language">
+      <part column="original_language_id" ref_column="language_id"/>
+    </fkey>
+  </table>
+
+  <!-- film_actor table -->
+  <table name="film_actor">
+    <column name="actor_id" type="gint"/>
+    <column name="film_id" type="gint"/>
+    <column name="last_update" type="timestamp">
+      <default symbolic="now"/>
+    </column>
+
+    <fkey ref_table="actor">
+      <part column="actor_id" ref_column="actor_id"/>
+    </fkey>
+
+    <fkey ref_table="film">
+      <part column="film_id" ref_column="film_id"/>
+    </fkey>
+  </table>
+
+  <!-- language table -->
+  <table name="language">
+    <column name="language_id" type="gint" pkey="TRUE" autoinc="TRUE"/>
+    <column name="name"/>
+    <column name="last_update" type="timestamp">
+      <default symbolic="now"/>
+    </column>
+  </table>
+
+  <!-- dummy table -->
+  <table name="dummy">
+    <column name="name"/>
+    <unique>
+      <column name="name"/>
+    </unique>
+  </table>
+
+  <!-- films_ordered view -->
+  <view name="films_ordered" descr="Ordered list of films">
+    <definition>SELECT * FROM films ORDER BY last_update</definition>
+  </view>
+
+</schema>

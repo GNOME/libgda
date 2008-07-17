@@ -433,7 +433,7 @@ do_test_proxied_model_modif (void)
 	clean_expected_signals (proxy);
 	if (!check_data_model_n_rows (proxy, 159)) goto out;
 
-	values = make_values_list (0, G_TYPE_STRING, "BigCity2", G_TYPE_STRING, NULL, G_TYPE_STRING, "567890", 0);
+	values = make_values_list (0, G_TYPE_STRING, "BigCity2", G_TYPE_STRING, NULL, G_TYPE_STRING, "567890", (GType) 0);
 	declare_expected_signals ("U158", "Set values of new proxied row - 1");
 	if (!check_data_model_set_values (model, 158, values)) goto out;
 	free_values_list (values);
@@ -499,7 +499,7 @@ do_test_proxied_model_modif (void)
 	/*
 	 * change new proxied's rows values
 	 */
-	values = make_values_list (0, G_TYPE_STRING, "SmallCity2", G_TYPE_STRING, NULL, G_TYPE_STRING, "4907", 0);
+	values = make_values_list (0, G_TYPE_STRING, "SmallCity2", G_TYPE_STRING, NULL, G_TYPE_STRING, "4907", (GType) 0);
 	declare_expected_signals ("U1", "Set values of new proxied row - 2");
 	if (!check_data_model_set_values (model, 21, values)) goto out;
 	free_values_list (values);
@@ -728,7 +728,7 @@ do_test_common_write (GdaDataModel *proxy)
 	/*
 	 * set several values for the new row 
 	 */
-	values = make_values_list (0, G_TYPE_STRING, "MyCity2", G_TYPE_STRING, NULL, G_TYPE_STRING, "12345", 0);
+	values = make_values_list (0, G_TYPE_STRING, "MyCity2", G_TYPE_STRING, NULL, G_TYPE_STRING, "12345", (GType) 0);
 	declare_expected_signals ("U159", "Set values of new row - new row");
 	if (!check_data_model_set_values (proxy, 159, values)) goto out;
 	free_values_list (values);
@@ -741,7 +741,7 @@ do_test_common_write (GdaDataModel *proxy)
 	if (!check_data_model_value (proxy, 159, 5, G_TYPE_STRING, NULL)) goto out;
 	if (!check_data_model_n_rows (proxy, 160)) goto out;
 
-	values = make_values_list (0, G_TYPE_STRING, "MyCity3", G_TYPE_STRING, "ZZZ", G_TYPE_STRING, "787", 0);
+	values = make_values_list (0, G_TYPE_STRING, "MyCity3", G_TYPE_STRING, "ZZZ", G_TYPE_STRING, "787", (GType) 0);
 	declare_expected_signals ("U157", "Set values of new row - existing row");
 	if (!check_data_model_set_values (proxy, 157, values)) goto out;
 	free_values_list (values);
@@ -838,16 +838,16 @@ do_test_common_write (GdaDataModel *proxy)
 	 * Set values for those 3 new rows
 	 */
 	declare_expected_signals ("4U50", "Set values of 3 new rows");
-	values = make_values_list (0, G_TYPE_STRING, "NR1", G_TYPE_STRING, "AAA", G_TYPE_STRING, "319", 0);
+	values = make_values_list (0, G_TYPE_STRING, "NR1", G_TYPE_STRING, "AAA", G_TYPE_STRING, "319", (GType) 0);
 	if (!check_data_model_set_values (proxy, 50, values)) goto out;
 	free_values_list (values);
-	values = make_values_list (0, G_TYPE_STRING, "NR2", G_TYPE_STRING, "BBB", G_TYPE_STRING, "320", 0);
+	values = make_values_list (0, G_TYPE_STRING, "NR2", G_TYPE_STRING, "BBB", G_TYPE_STRING, "320", (GType) 0);
 	if (!check_data_model_set_values (proxy, 51, values)) goto out;
 	free_values_list (values);
-	values = make_values_list (0, G_TYPE_STRING, "NR3", G_TYPE_STRING, "CCC", G_TYPE_STRING, "321", 0);
+	values = make_values_list (0, G_TYPE_STRING, "NR3", G_TYPE_STRING, "CCC", G_TYPE_STRING, "321", (GType) 0);
 	if (!check_data_model_set_values (proxy, 52, values)) goto out;
 	free_values_list (values);
-	values = make_values_list (0, G_TYPE_STRING, "NR4", G_TYPE_STRING, "DDD", G_TYPE_STRING, "330", 0);
+	values = make_values_list (0, G_TYPE_STRING, "NR4", G_TYPE_STRING, "DDD", G_TYPE_STRING, "330", (GType) 0);
 	if (!check_data_model_set_values (proxy, 53, values)) goto out;
 	free_values_list (values);
 	clean_expected_signals (proxy);
@@ -944,16 +944,16 @@ do_test_common_write (GdaDataModel *proxy)
 	 * Set values for those 4 new rows
 	 */
 	declare_expected_signals ("4U159", "Set values of 4 new rows");
-	values = make_values_list (0, G_TYPE_STRING, "NR1", G_TYPE_STRING, "AAA", G_TYPE_STRING, "319", 0);
+	values = make_values_list (0, G_TYPE_STRING, "NR1", G_TYPE_STRING, "AAA", G_TYPE_STRING, "319", (GType) 0);
 	if (!check_data_model_set_values (proxy, 159, values)) goto out;
 	free_values_list (values);
-	values = make_values_list (0, G_TYPE_STRING, "NR2", G_TYPE_STRING, "BBB", G_TYPE_STRING, "320", 0);
+	values = make_values_list (0, G_TYPE_STRING, "NR2", G_TYPE_STRING, "BBB", G_TYPE_STRING, "320", (GType) 0);
 	if (!check_data_model_set_values (proxy, 160, values)) goto out;
 	free_values_list (values);
-	values = make_values_list (0, G_TYPE_STRING, "NR3", G_TYPE_STRING, "CCC", G_TYPE_STRING, "321", 0);
+	values = make_values_list (0, G_TYPE_STRING, "NR3", G_TYPE_STRING, "CCC", G_TYPE_STRING, "321", (GType) 0);
 	if (!check_data_model_set_values (proxy, 161, values)) goto out;
 	free_values_list (values);
-	values = make_values_list (0, G_TYPE_STRING, "NR4", G_TYPE_STRING, "DDD", G_TYPE_STRING, "330", 0);
+	values = make_values_list (0, G_TYPE_STRING, "NR4", G_TYPE_STRING, "DDD", G_TYPE_STRING, "330", (GType) 0);
 	if (!check_data_model_set_values (proxy, 162, values)) goto out;
 	free_values_list (values);
 	clean_expected_signals (proxy);
@@ -1045,7 +1045,7 @@ do_test_common_write (GdaDataModel *proxy)
 		/*
 		 * Try to alter first row
 		 */
-		values = make_values_list (0, G_TYPE_STRING, "MyCity3", G_TYPE_STRING, "ZZZ", G_TYPE_STRING, "787", 0);
+		values = make_values_list (0, G_TYPE_STRING, "MyCity3", G_TYPE_STRING, "ZZZ", G_TYPE_STRING, "787", (GType) 0);
 		if (gda_data_model_set_values (proxy, 0, values, NULL)) {
 #ifdef CHECK_EXTRA_INFO
 			g_print ("ERROR: Should not be able to alter row 0 (as it is the prepended row)\n");

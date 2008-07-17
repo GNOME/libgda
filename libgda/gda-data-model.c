@@ -1386,16 +1386,26 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 	xmlNodePtr node;
 	gint i;
 	gint *rcols, rnb_cols;
+	const gchar *cstr;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
 	node = xmlNewNode (NULL, BAD_CAST "gda_array");
-	xmlSetProp (node, BAD_CAST "id", BAD_CAST "EXPORT");
+	cstr = g_object_get_data (G_OBJECT (model), "id");
+	if (cstr)
+		xmlSetProp (node, BAD_CAST "id", BAD_CAST cstr);
+	else
+		xmlSetProp (node, BAD_CAST "id", BAD_CAST "EXPORT");
 
 	if (name)
 		xmlSetProp (node, BAD_CAST "name", BAD_CAST name);
-	else
-		xmlSetProp (node, BAD_CAST "name", BAD_CAST _("Exported Data"));
+	else {
+		cstr = g_object_get_data (G_OBJECT (model), "name");
+		if (cstr)
+			xmlSetProp (node, BAD_CAST "name", BAD_CAST cstr);
+		else
+			xmlSetProp (node, BAD_CAST "name", BAD_CAST _("Exported Data"));
+	}
 
 	/* compute columns if not provided */
 	if (!cols) {
@@ -1423,7 +1433,9 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 		}
 
 		field = xmlNewChild (node, NULL, BAD_CAST "gda_array_field", NULL);
-		str = g_strdup_printf ("FI%d", i);
+		g_object_get (G_OBJECT (column), "id", &str, NULL);
+		if (!str)
+			str = g_strdup_printf ("FI%d", i);
 		xmlSetProp (field, BAD_CAST "id", BAD_CAST str);
 		g_free (str);
 		xmlSetProp (field, BAD_CAST "name", BAD_CAST gda_column_get_name (column));
@@ -1703,7 +1715,8 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 		return FALSE;
 	}
 
-	/* make a list of the parameters which will be used during copy (stored in reverse order!) ,
+	/* make a list of the parameters which will be used during copy (stored in reverse order: last column of data model
+	 * represented by the 1st GdaHolder) ,
 	 * an some tests */
 	for (i = 0; i < to_nb_cols; i++) {
 		GdaHolder *param = NULL;
@@ -1747,17 +1760,29 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 				return FALSE;
 			}
 		}
+		
 		copy_params = g_slist_prepend (copy_params, param);
 	}
+
+#ifdef GDA_DEBUG_NO
+	{
+		GSList *list;
+		for (list = copy_params; list; list = list->next) {
+			GdaHolder *param = GDA_HOLDER (list->data);
+			g_print ("Copy Param: %s (%s)\n", gda_holder_get_id (param), 
+				 gda_g_type_to_string (gda_holder_get_g_type (param)));
+		}
+	}
+#endif
 
 	/* build the append_values list (stored in reverse order!)
 	 * node->data is:
 	 * - NULL if the value must be replaced by the value of the copied model
 	 * - a GValue of type GDA_VALYE_TYPE_NULL if a null value must be inserted in the dest data model
-	 * - a GValue of a different type if the value must be converted from the ser data model
+	 * - a GValue of a different type if the value must be converted from the src data model
 	 */
 	append_types = g_new0 (GType, to_nb_cols);
-	for (plist = copy_params, i = 0; plist; plist = plist->next, i++) {
+	for (plist = copy_params, i = to_nb_cols - 1; plist; plist = plist->next, i--) {
 		GdaColumn *column;
 
 		column = gda_data_model_describe_column (to, i);
@@ -1779,6 +1804,13 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 			append_values = g_list_prepend (append_values, gda_value_new_null ());
 	}
 	append_values = g_list_reverse (append_values);
+#ifdef GDA_DEBUG_NO
+	{
+		GList *list;
+		for (list = append_values; list; list = list->next) 
+			g_print ("Append Value: %s\n", list->data ? gda_g_type_to_string (G_VALUE_TYPE ((GValue *) (list->data))) : "NULL");
+	}
+#endif
 	
 	/* actual data copy (no memory allocation is needed here) */
 	gda_data_model_send_hint (to, GDA_DATA_MODEL_HINT_START_BATCH_UPDATE, NULL);
@@ -2089,7 +2121,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 		GdaColumn *gdacol;
 		GType coltype;
 
-#ifdef GDA_DEBUG_NO
+#ifdef GDA_DEBUG
 		{
 			GdaColumn *col = gda_data_model_describe_column (model, i);
 			g_print ("Model col %d has type %s\n", i, gda_g_type_to_string (gda_column_get_g_type (col)));

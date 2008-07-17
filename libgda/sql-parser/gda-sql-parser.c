@@ -28,6 +28,7 @@
 #include <libgda/gda-debug-macros.h>
 #include <libgda/sql-parser/gda-statement-struct-util.h>
 #include <libgda/sql-parser/token_types.h>
+#include <libgda/gda-lockable.h>
 
 /* 
  * Main static functions 
@@ -45,10 +46,15 @@ static void gda_sql_parser_get_property (GObject *object,
 					guint param_id,
 					GValue *value,
 					GParamSpec *pspec);
+
+/* GdaLockable interface */
+static void                 gda_sql_parser_lockable_init (GdaLockableClass *iface);
+static void                 gda_sql_parser_lock      (GdaLockable *lockable);
+static gboolean             gda_sql_parser_trylock   (GdaLockable *lockable);
+static void                 gda_sql_parser_unlock    (GdaLockable *lockable);
+
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
-static GStaticRecMutex usage_mutex = G_STATIC_REC_MUTEX_INIT;
-
 
 static void gda_sql_parser_reset (GdaSqlParser *parser);
 static GValue *tokenizer_get_next_token (GdaSqlParser *parser); 
@@ -120,10 +126,18 @@ gda_sql_parser_get_type (void)
 			0,
 			(GInstanceInitFunc) gda_sql_parser_init
 		};
+
+		static GInterfaceInfo lockable_info = {
+                        (GInterfaceInitFunc) gda_sql_parser_lockable_init,
+			NULL,
+                        NULL
+                };
 		
 		g_static_mutex_lock (&registering);
-		if (type == 0)
+		if (type == 0) {
 			type = g_type_register_static (G_TYPE_OBJECT, "GdaSqlParser", &info, 0);
+			g_type_add_interface_static (type, GDA_TYPE_LOCKABLE, &lockable_info);
+		}
 		g_static_mutex_unlock (&registering);
 	}
 	return type;
@@ -170,6 +184,14 @@ gda_sql_parser_class_init (GdaSqlParserClass * klass)
 }
 
 static void
+gda_sql_parser_lockable_init (GdaLockableClass *iface)
+{
+	iface->i_lock = gda_sql_parser_lock;
+	iface->i_trylock = gda_sql_parser_trylock;
+	iface->i_unlock = gda_sql_parser_unlock;
+}
+
+static void
 gda_sql_parser_reset (GdaSqlParser *parser)
 {
 	g_free (parser->priv->sql);
@@ -209,6 +231,7 @@ gda_sql_parser_init (GdaSqlParser *parser)
 	klass = (GdaSqlParserClass*) G_OBJECT_GET_CLASS (parser);
 
 	parser->priv = g_new0 (GdaSqlParserPrivate, 1);
+	parser->priv->mutex = gda_mutex_new ();
 	parser->priv->flavour = GDA_SQL_PARSER_FLAVOUR_STANDARD;
 	if (klass->delim_alloc)
 		parser->priv->lemon_delimiter = klass->delim_alloc ((void*(*)(size_t)) g_malloc);
@@ -299,6 +322,8 @@ gda_sql_parser_finalize (GObject *object)
 			gda_sql_parserFree (parser->priv->lemon_parser, g_free);
 
 		g_array_free (parser->priv->passed_tokens, TRUE);
+
+		gda_mutex_free (parser->priv->mutex);
 		g_free (parser->priv);
 		parser->priv = NULL;
 	}
@@ -318,6 +343,7 @@ gda_sql_parser_set_property (GObject *object,
 
 	parser = GDA_SQL_PARSER (object);
 	if (parser->priv) {
+		gda_mutex_lock (parser->priv->mutex);
 		switch (param_id) {
 		case PROP_FLAVOUR:
 			parser->priv->flavour = g_value_get_int (value);
@@ -354,6 +380,7 @@ gda_sql_parser_set_property (GObject *object,
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
+		gda_mutex_unlock (parser->priv->mutex);
 	}
 }
 
@@ -420,7 +447,7 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
 	if (!sql)
 		return NULL;
 
-	g_static_rec_mutex_lock (&usage_mutex);
+	gda_mutex_lock (parser->priv->mutex);
 
 	if (remain)
 		*remain = NULL;
@@ -605,7 +632,7 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
 
 	parser->priv->mode = parse_mode;
 
-	g_static_rec_mutex_unlock (&usage_mutex);
+	gda_mutex_unlock (parser->priv->mutex);
 
 	return stmt;
 }
@@ -649,7 +676,7 @@ gda_sql_parser_parse_string_as_batch (GdaSqlParser *parser, const gchar *sql, co
 	if (!sql)
 		return batch;
 
-	g_static_rec_mutex_lock (&usage_mutex);
+	gda_mutex_lock (parser->priv->mutex);
 
 	int_sql = sql;
 	while (int_sql && allok) {
@@ -693,7 +720,7 @@ gda_sql_parser_parse_string_as_batch (GdaSqlParser *parser, const gchar *sql, co
 		batch = NULL;
 	}
 
-	g_static_rec_mutex_unlock (&usage_mutex);
+	gda_mutex_unlock (parser->priv->mutex);
 	
 	return batch;
 }
@@ -1582,4 +1609,31 @@ merge_tokenizer_contexts (GdaSqlParser *parser, gint n_contexts)
 		parser->priv->pushed_contexts = g_slist_remove (parser->priv->pushed_contexts, 
 								parser->priv->pushed_contexts->data);
 	}
+}
+
+static void
+gda_sql_parser_lock (GdaLockable *lockable)
+{
+	GdaSqlParser *parser = (GdaSqlParser *) lockable;
+	g_return_if_fail (parser->priv);
+
+	gda_mutex_lock (parser->priv->mutex);
+}
+
+static gboolean
+gda_sql_parser_trylock (GdaLockable *lockable)
+{
+	GdaSqlParser *parser = (GdaSqlParser *) lockable;
+	g_return_val_if_fail (parser->priv, FALSE);
+
+	return gda_mutex_trylock (parser->priv->mutex);
+}
+
+static void
+gda_sql_parser_unlock (GdaLockable *lockable)
+{
+	GdaSqlParser *parser = (GdaSqlParser *) lockable;
+	g_return_if_fail (parser->priv);
+
+	gda_mutex_unlock (parser->priv->mutex);
 }

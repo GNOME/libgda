@@ -42,6 +42,8 @@
 <!ENTITY libgda-GdaCommand SYSTEM "xml/gda-command.xml">
 <!ENTITY libgda-config SYSTEM "xml/gda-config.xml">
 <!ENTITY libgda-GdaConnection SYSTEM "xml/gda-connection.xml">
+<!ENTITY libgda-GdaMutex SYSTEM "xml/gda-mutex.xml">
+<!ENTITY libgda-GdaLockable SYSTEM "xml/gda-lockable.xml">
 <!ENTITY libgda-GdaThreader SYSTEM "xml/gda-threader.xml">
 <!ENTITY libgda-GdaDataModelArray SYSTEM "xml/gda-data-model-array.xml">
 <!ENTITY libgda-GdaDataModelBdb SYSTEM "xml/gda-data-model-bdb.xml">
@@ -903,6 +905,8 @@ g_object_unref (store);
       &libgda-log;
       &libgda-quark-list;
       &libgda-GdaDataModelRow;
+      &libgda-GdaMutex;
+      &libgda-GdaLockable;
       &libgda-GdaThreader;
     </chapter>
   </part>

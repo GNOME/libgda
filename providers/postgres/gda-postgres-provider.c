@@ -260,6 +260,16 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	provider_class->xa_funcs->xa_commit = gda_postgres_provider_xa_commit;
 	provider_class->xa_funcs->xa_rollback = gda_postgres_provider_xa_rollback;
 	provider_class->xa_funcs->xa_recover = gda_postgres_provider_xa_recover;
+
+	/* If PostgreSQL was not compiled with the --enable-thread-safety flag, then libPQ is not
+	 * considered thread safe, and we limit the usage of the provider from the current thread */
+	if (! PQisthreadsafe ()) {
+		gda_log_message ("PostgreSQL was not compiled with the --enable-thread-safety flag, "
+				 "only one thread can access the provider");
+		provider_class->limiting_thread = g_thread_self ();
+	}
+	else
+		provider_class->limiting_thread = NULL;
 }
 
 static void

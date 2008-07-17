@@ -1,3 +1,49 @@
+2008-07-17  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda-xslt/Makefile.am:
+	* configure.in:
+	* libgda/gda-config.c: applied patches for bug #541991 (thanks to Cygwin Ports maintainer)
+	* providers/mysql/libmain.c:
+	* providers/mysql/gda-mysql-meta.c:
+	* providers/mysql/gda-mysql-provider.c:
+	* providers/mysql/gda-mysql-meta.h:
+	* providers/mysql/gda-mysql-parser.c: another set of improvements to the MySQL provider
+	(thanks to Carlos Savoretti)
+	* tests/Makefile.am:
+	* tests/multi-threading/*:
+	* configure.in:
+	* libgda/gda-mutex.[ch]:
+	* libgda/Makefile.am:
+	* libgda/libgda.h.in: created the GdaMutex mutex which is dynamically
+	allocated and recursive
+	* libgda/Makefile.am:
+	* libgda/libgda.h.in:
+	* libgda/gda-lockable.[ch]: new GdaLockable interface to be used to lock objects
+	* sql-parser/gda-sql-parser-private.h:
+	* libgda/sql-parser/gda-sql-parser.c:
+	* libgda/gda-connection.c: implement the GdaLockable interface (GdaSqlParser no
+	uses a GdaMutex per GdaSqlParser instance instead of a global recursive mutex)
+	* tests/Makefile.am
+	* tests/multi-threading/: new multi threaded environment tests
+	* tests/data-models/check_data_proxy.c: correctly specify the GType type
+	in functions using an ellipse for 64 bits OS
+	* tests/data-models/Makefile.am:
+	* tests/data-models/data1.xml:
+	* tests/data-models/check_model_copy.c: test data model copy
+	* tests/data-models/check_model_import.c: also test data models in current
+	directory
+	* libgda/gda-set.c: make gda_set_real_add_holder() show a warning if the data
+	holder to add does not have any ID instead of crash
+	* libgda/gda-data-model-iter.c: use ID attribute of data model column
+	* libgda/gda-data-comparator.c: corrected the "diff_computed" signal accumulator
+	* libgda/gda-data-model.c: better determmine column and data model names when exporting
+	to XML, and corrected a bug in the data model import function
+	* doc/C: doc. updates
+	* tools/gda-sql.ico:
+	* tools/gda-sql-res.rc:
+	* tools/Makefile.am: added an icon in the gda-sql executable when compiling for a
+	Windows platform
+
 2008-07-06  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in: set to version 3.99.4

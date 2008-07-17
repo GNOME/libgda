@@ -1235,6 +1235,7 @@ static gboolean
 gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
 {
 	GdaHolder *similar;
+	const gchar *hid;
 
 	if (g_slist_find (set->holders, holder))
 		return FALSE;
@@ -1243,11 +1244,17 @@ gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
 	 * try to find a similar holder in the set->holders:
 	 * a holder B is similar to a holder A if it has the same ID
 	 */
-	similar = (GdaHolder*) g_hash_table_lookup (set->priv->holders_hash, gda_holder_get_id (holder));
+	hid = gda_holder_get_id (holder);
+	if (!hid) {
+		g_warning (_("GdaHolder needs to have an ID"));
+		return FALSE;
+	}
+	g_return_val_if_fail (hid, FALSE);
+	similar = (GdaHolder*) g_hash_table_lookup (set->priv->holders_hash, hid);
 	if (!similar) {
 		/* really add @holder to the set */
 		set->holders = g_slist_append (set->holders, holder);
-		g_hash_table_insert (set->priv->holders_hash, (gchar*) gda_holder_get_id (holder), holder);
+		g_hash_table_insert (set->priv->holders_hash, (gchar*) hid, holder);
 		g_object_ref (holder);
 		g_signal_connect (G_OBJECT (holder), "changed",
 				  G_CALLBACK (changed_holder_cb), set);

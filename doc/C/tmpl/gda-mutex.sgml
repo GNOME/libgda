@@ -1,0 +1,73 @@
+<!-- ##### SECTION Title ##### -->
+GdaMutex
+
+<!-- ##### SECTION Short_Description ##### -->
+Recursive mutex implementation
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+  #GdaMutex implements a recursive mutex (unlike the #GMutex implementation which offers no
+  guarantee about recursiveness). A recursive mutex is a mutex which can be locked several
+  times by the same thread (and needs to be unlocked the same number of times before
+  another thread can lock it).
+</para>
+<para>
+  A #GdaMutex can safely be used even in a non multi-threaded environment in which case
+  it does nothing.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaMutex ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_mutex_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_mutex_lock ##### -->
+<para>
+
+</para>
+
+@mutex: 
+
+
+<!-- ##### FUNCTION gda_mutex_trylock ##### -->
+<para>
+
+</para>
+
+@mutex: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_mutex_unlock ##### -->
+<para>
+
+</para>
+
+@mutex: 
+
+
+<!-- ##### FUNCTION gda_mutex_free ##### -->
+<para>
+
+</para>
+
+@mutex: 
+
+

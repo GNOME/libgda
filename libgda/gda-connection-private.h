@@ -56,11 +56,6 @@ void     gda_connection_add_prepared_statement (GdaConnection *cnc, GdaStatement
 void     gda_connection_del_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stmt); 
 gpointer gda_connection_get_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stmt);
 
-/*
- * GdaMetaStore handling
- */
-GdaMetaStore *gda_connection_get_meta_store    (GdaConnection *cnc);
-
 G_END_DECLS
 
 #endif

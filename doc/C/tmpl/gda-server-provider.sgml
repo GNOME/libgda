@@ -34,6 +34,7 @@ Base class for all the DBMS providers
 </para>
 
 @parent_class: 
+@limiting_thread: 
 @get_name: 
 @get_version: 
 @get_server_version: 
@@ -139,13 +140,27 @@ for more information.
 
 <!-- ##### USER_FUNCTION GdaServerProviderAsyncCallback ##### -->
 <para>
-
+  Function to be called by Libgda when the associated asynchronous method invoked finishes.
 </para>
 
 @provider: 
 @cnc: 
 @task_id: 
 @result_status: 
+@error: 
+@data: 
+
+
+<!-- ##### USER_FUNCTION GdaServerProviderExecCallback ##### -->
+<para>
+  Function to be called by Libgda when the associated asynchronous method invoked finishes.
+</para>
+
+@provider: 
+@cnc: 
+@task_id: 
+@result_obj: 
+@error: 
 @data: 
 
 

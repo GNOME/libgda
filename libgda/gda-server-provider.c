@@ -32,8 +32,8 @@
 #include <sql-parser/gda-sql-parser.h>
 #include <string.h>
 #include <glib/gi18n-lib.h>
+#include <libgda/gda-lockable.h>
 
-#define PARENT_TYPE G_TYPE_OBJECT
 #define CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
 
 static void gda_server_provider_class_init (GdaServerProviderClass *klass);
@@ -115,6 +115,8 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 	klass->create_connection = NULL;
 	memset (&(klass->meta_funcs), 0, sizeof (GdaServerProviderMeta));
 	klass->xa_funcs = NULL;
+
+	klass->limiting_thread = g_thread_self (); /* default safe behaviour */
 
 	 /* Properties */
         object_class->set_property = gda_server_provider_set_property;
@@ -206,7 +208,7 @@ gda_server_provider_get_type (void)
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)
-			type = g_type_register_static (PARENT_TYPE, "GdaServerProvider", &info, G_TYPE_FLAG_ABSTRACT);
+			type = g_type_register_static (G_TYPE_OBJECT, "GdaServerProvider", &info, G_TYPE_FLAG_ABSTRACT);
 		g_static_mutex_unlock (&registering);
 	}
 
@@ -282,7 +284,7 @@ gda_server_provider_get_name (GdaServerProvider *provider)
 /**
  * gda_server_provider_get_server_version
  * @provider: a #GdaServerProvider object.
- * @cnc: a #GdaConnection object.
+ * @cnc: a #GdaConnection object
  *
  * Get the version of the database to which the connection is opened.
  * 
@@ -291,10 +293,16 @@ gda_server_provider_get_name (GdaServerProvider *provider)
 const gchar *
 gda_server_provider_get_server_version (GdaServerProvider *provider, GdaConnection *cnc)
 {
+	const gchar *retval;
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (CLASS (provider)->get_server_version != NULL, NULL);
 
-	return CLASS (provider)->get_server_version (provider, cnc);
+	gda_lockable_lock ((GdaLockable*) cnc);
+	retval = CLASS (provider)->get_server_version (provider, cnc);
+	gda_lockable_unlock ((GdaLockable*) cnc);
+
+	return retval;
 }
 
 /**
@@ -313,11 +321,17 @@ gboolean
 gda_server_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc, 
 					GdaServerOperationType type, GdaSet *options)
 {
+	gboolean retval = FALSE;
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), FALSE);
+
+	if (cnc)
+		gda_lockable_lock ((GdaLockable*) cnc);
 	if (CLASS (provider)->supports_operation)
-		return CLASS (provider)->supports_operation (provider, cnc, type, options);
-	else
-		return FALSE;
+		retval = CLASS (provider)->supports_operation (provider, cnc, type, options);
+	if (cnc)
+		gda_lockable_unlock ((GdaLockable*) cnc);
+	return retval;
 }
 
 typedef struct {
@@ -447,10 +461,13 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
 	g_static_mutex_unlock (&init_mutex);
 
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), FALSE);
 
 	if (CLASS (provider)->create_operation) {
 		GdaServerOperation *op;
 
+		if (cnc)
+			gda_lockable_lock ((GdaLockable*) cnc);
 		op = CLASS (provider)->create_operation (provider, cnc, type, options, error);
 		if (op) {
 			/* test op's conformance */
@@ -493,6 +510,8 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
 				xmlFreeNode (top);
 			}
 		}
+		if (cnc)
+			gda_lockable_unlock ((GdaLockable*) cnc);
 		return op;
 	}
 	else
@@ -519,8 +538,17 @@ gda_server_provider_render_operation (GdaServerProvider *provider, GdaConnection
 				      GdaServerOperation *op, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
-	if (CLASS (provider)->render_operation)
-		return CLASS (provider)->render_operation (provider, cnc, op, error);
+	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);
+
+	if (CLASS (provider)->render_operation) {
+		gchar *retval;
+		if (cnc)
+			gda_lockable_lock ((GdaLockable*) cnc);
+		retval = CLASS (provider)->render_operation (provider, cnc, op, error);
+		if (cnc)
+			gda_lockable_unlock ((GdaLockable*) cnc);
+		return retval;
+	}
 	else
 		return NULL;
 }
@@ -541,7 +569,9 @@ gboolean
 gda_server_provider_perform_operation (GdaServerProvider *provider, GdaConnection *cnc, 
 				       GdaServerOperation *op, GError **error)
 {
+	gboolean retval;
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), FALSE);
 
 #ifdef GDA_DEBUG_NO
 	{
@@ -555,11 +585,15 @@ gda_server_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 		xmlFreeDoc (doc);
 	}
 #endif
-
+	if (cnc)
+		gda_lockable_lock ((GdaLockable*) cnc);
 	if (CLASS (provider)->perform_operation)
-		return CLASS (provider)->perform_operation (provider, cnc, op, NULL, NULL, NULL, error);
+		retval = CLASS (provider)->perform_operation (provider, cnc, op, NULL, NULL, NULL, error);
 	else 
-		return gda_server_provider_perform_operation_default (provider, cnc, op, error);
+		retval = gda_server_provider_perform_operation_default (provider, cnc, op, error);
+	if (cnc)
+		gda_lockable_unlock ((GdaLockable*) cnc);
+	return retval;
 }
 
 /**
@@ -579,7 +613,10 @@ gda_server_provider_supports_feature (GdaServerProvider *provider, GdaConnection
 	gboolean retval = FALSE;
 
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), FALSE);
 
+	if (cnc)
+		gda_lockable_lock ((GdaLockable*) cnc);
 	if (CLASS (provider)->supports_feature)
 		retval = CLASS (provider)->supports_feature (provider, cnc, feature);
 
@@ -604,7 +641,8 @@ gda_server_provider_supports_feature (GdaServerProvider *provider, GdaConnection
 			break;
 		}
 	}
-
+	if (cnc)
+		gda_lockable_unlock ((GdaLockable*) cnc);
 	return retval;
 }
 
@@ -621,12 +659,19 @@ gda_server_provider_supports_feature (GdaServerProvider *provider, GdaConnection
 GdaDataHandler *
 gda_server_provider_get_data_handler_gtype (GdaServerProvider *provider, GdaConnection *cnc, GType for_type)
 {
+	GdaDataHandler *retval;
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);
 
+	if (cnc)
+		gda_lockable_lock ((GdaLockable*) cnc);
 	if (CLASS (provider)->get_data_handler)
-		return CLASS (provider)->get_data_handler (provider, cnc, for_type, NULL);
+		retval = CLASS (provider)->get_data_handler (provider, cnc, for_type, NULL);
 	else
-		return gda_server_provider_get_data_handler_default (provider, cnc, for_type, NULL);
+		retval = gda_server_provider_get_data_handler_default (provider, cnc, for_type, NULL);
+	if (cnc)
+		gda_lockable_unlock ((GdaLockable*) cnc);
+	return retval;
 }
 
 /**
@@ -642,13 +687,20 @@ gda_server_provider_get_data_handler_gtype (GdaServerProvider *provider, GdaConn
 GdaDataHandler *
 gda_server_provider_get_data_handler_dbms (GdaServerProvider *provider, GdaConnection *cnc, const gchar *for_type)
 {
+	GdaDataHandler *retval;
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 	g_return_val_if_fail (for_type && *for_type, NULL);
+	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);
 
+	if (cnc)
+		gda_lockable_lock ((GdaLockable*) cnc);
 	if (CLASS (provider)->get_data_handler)
-		return CLASS (provider)->get_data_handler (provider, cnc, G_TYPE_INVALID, for_type);
+		retval = CLASS (provider)->get_data_handler (provider, cnc, G_TYPE_INVALID, for_type);
 	else
-		return gda_server_provider_get_data_handler_default (provider, cnc, G_TYPE_INVALID, for_type);
+		retval = gda_server_provider_get_data_handler_default (provider, cnc, G_TYPE_INVALID, for_type);
+	if (cnc)
+		gda_lockable_unlock ((GdaLockable*) cnc);
+	return retval;
 }
 
 /**
@@ -668,19 +720,26 @@ gda_server_provider_get_data_handler_dbms (GdaServerProvider *provider, GdaConne
 const gchar *
 gda_server_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConnection *cnc, GType type)
 {
+	const gchar *retval = NULL;
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
-	
-	if (CLASS (provider)->get_def_dbms_type)
-		return (CLASS (provider)->get_def_dbms_type)(provider, cnc, type);
-	else
-		return NULL;
+	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);
+
+	if (CLASS (provider)->get_def_dbms_type) {
+		if (cnc)
+			gda_lockable_lock ((GdaLockable*) cnc);
+		retval = (CLASS (provider)->get_def_dbms_type) (provider, cnc, type);
+		if (cnc)
+			gda_lockable_unlock ((GdaLockable*) cnc);
+	}
+
+	return retval;
 }
 
 
 /**
  * gda_server_provider_string_to_value
  * @provider: a server provider.
- * @cnc: a #GdaConnection object.
+ * @cnc: a #GdaConnection object, or %NULL
  * @string: the SQL string to convert to a value
  * @prefered_type: a #GType, or G_TYPE_INVALID
  *
@@ -706,7 +765,10 @@ gda_server_provider_string_to_value (GdaServerProvider *provider,  GdaConnection
 	gint i;
 
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);
 
+	if (cnc)
+		gda_lockable_lock ((GdaLockable*) cnc);
 	if (prefered_type != G_TYPE_INVALID) {
 		dh = gda_server_provider_get_data_handler_gtype (provider, cnc, prefered_type);
 		if (dh) {
@@ -775,6 +837,8 @@ gda_server_provider_string_to_value (GdaServerProvider *provider,  GdaConnection
 			}
 		}
 	}
+	if (cnc)
+		gda_lockable_unlock ((GdaLockable*) cnc);
 
 	return retval;
 }
@@ -795,18 +859,21 @@ gda_server_provider_value_to_sql_string (GdaServerProvider *provider,
 					 GdaConnection *cnc,
 					 GValue *from)
 {
+	gchar *retval = NULL;
 	GdaDataHandler *dh;
 
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
-	if (cnc)
-		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (from != NULL, NULL);
 
+	if (cnc)
+		gda_lockable_lock ((GdaLockable*) cnc);
 	dh = gda_server_provider_get_data_handler_gtype (provider, cnc, G_VALUE_TYPE (from));
 	if (dh)
 		return gda_data_handler_get_sql_from_value (dh, from);
-	else
-		return NULL;
+	if (cnc)
+		gda_lockable_unlock ((GdaLockable*) cnc);
+	return retval;
 }
 
 /**
@@ -824,16 +891,21 @@ gchar *
 gda_server_provider_escape_string (GdaServerProvider *provider, GdaConnection *cnc, const gchar *str)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
-	if (cnc)
-		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);
 
 	if (CLASS (provider)->escape_string) {
+		gchar *retval;
 		if (! CLASS (provider)->unescape_string)
 			g_warning (_("GdaServerProvider object implements the %s virtual method but "
 				     "does not implement the %s one, please report this bug to "
 				     "http://bugzilla.gnome.org/ for the \"libgda\" product."), 
 				   "escape_string()", "unescape_string()");
-		return (CLASS (provider)->escape_string)(provider, cnc, str);
+		if (cnc)
+			gda_lockable_lock ((GdaLockable*) cnc);
+		retval = (CLASS (provider)->escape_string) (provider, cnc, str);
+		if (cnc)
+			gda_lockable_unlock ((GdaLockable*) cnc);
+		return retval;
 	}
 	else 
 		return gda_default_escape_string (str);
@@ -853,16 +925,21 @@ gchar *
 gda_server_provider_unescape_string (GdaServerProvider *provider, GdaConnection *cnc, const gchar *str)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
-	if (cnc)
-		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);
 
 	if (CLASS (provider)->unescape_string) {
+		gchar *retval;
 		if (! CLASS (provider)->escape_string)
 			g_warning (_("GdaServerProvider object implements the %s virtual method but "
 				     "does not implement the %s one, please report this bug to "
 				     "http://bugzilla.gnome.org/ for the \"libgda\" product."),
 				   "unescape_string()", "escape_string()");
-		return (CLASS (provider)->unescape_string)(provider, cnc, str);
+		if (cnc)
+			gda_lockable_lock ((GdaLockable*) cnc);
+		retval = (CLASS (provider)->unescape_string)(provider, cnc, str);
+		if (cnc)
+			gda_lockable_unlock ((GdaLockable*) cnc);
+		return retval;
 	}
 	else
 		return gda_default_unescape_string (str);
@@ -885,11 +962,17 @@ gda_server_provider_unescape_string (GdaServerProvider *provider, GdaConnection 
 GdaSqlParser *
 gda_server_provider_create_parser (GdaServerProvider *provider, GdaConnection *cnc)
 {
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	GdaSqlParser *parser = NULL;
 
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);
+
+	if (cnc)
+		gda_lockable_lock ((GdaLockable*) cnc);
 	if (CLASS (provider)->create_parser)
-		return (CLASS (provider)->create_parser)(provider, cnc);
-	else
-		return NULL;
+		parser = (CLASS (provider)->create_parser) (provider, cnc);
+	if (cnc)
+		gda_lockable_unlock ((GdaLockable*) cnc);
+	return parser;
 }
 

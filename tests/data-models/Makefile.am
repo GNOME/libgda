@@ -5,8 +5,8 @@ AM_CPPFLAGS = \
 	$(LIBGDA_CFLAGS) \
 	-DCHECK_FILES=\""$(top_srcdir)"\"
 
-check_PROGRAMS = check_model_import check_virtual check_data_proxy
-TESTS = check_model_import check_virtual check_data_proxy
+check_PROGRAMS = check_model_import check_virtual check_data_proxy check_model_copy
+TESTS = check_model_import check_virtual check_data_proxy check_model_copy
 
 common_sources = 
 
@@ -28,8 +28,13 @@ check_data_proxy_LDADD = \
 	$(top_builddir)/libgda/libgda-4.0.la \
 	$(LIBGDA_LIBS)
 
+check_model_copy_SOURCES = $(common_sources) check_model_copy.c
+check_model_copy_LDADD = \
+	$(top_builddir)/libgda/libgda-4.0.la \
+	$(LIBGDA_LIBS)
 
 EXTRA_DIST = \
 	check_virtual.csv \
 	city.csv \
-	country.csv
+	country.csv \
+	data1.xml
