@@ -1,3 +1,10 @@
+2008-07-20  Armin Burgmeier  <armin@openismus.com>
+
+	* libgda/binreloc/gda-binreloc.c:
+	* tools/gda-sql.c: Applied the patches from bugs #510739 and
+	#503321. These have already been applied to trunk, but not to the 3.x
+	branch. This makes it easier to compile and use libgda on Windows.
+
 3.1.4:
 
 2008-04-09  Vivien Malerba <malerba@gnome-db.org>
