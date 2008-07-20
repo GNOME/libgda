@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-05 15:51+0000\n"
-"PO-Revision-Date: 2008-07-13 22:48+0200\n"
+"POT-Creation-Date: 2008-07-17 20:25+0000\n"
+"PO-Revision-Date: 2008-07-20 16:06+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -112,131 +112,142 @@ msgstr "Archivo"
 msgid "List of installed providers"
 msgstr "Lista de todos los proveedores instalados"
 
-#: ../libgda/gda-config.c:1287
+#: ../libgda/gda-config.c:1288
 #, c-format
 msgid "Error: %s"
 msgstr "Error: %s"
 
-#: ../libgda/gda-config.c:1375 ../libgda/gda-data-model-dsn-list.c:130
+#: ../libgda/gda-config.c:1376 ../libgda/gda-data-model-dsn-list.c:130
 #: ../libgda/gda-data-model-dsn-list.c:131 ../tools/gda-sql.c:1848
 msgid "Username"
 msgstr "Usuario"
 
 #. other table options
-#: ../libgda/gda-config.c:1377
+#: ../libgda/gda-config.c:1378
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:147
 msgid "Password"
 msgstr "Contraseña"
 
-#: ../libgda/gda-connection.c:170
+#: ../libgda/gda-connection.c:186
 msgid "DSN to use"
 msgstr "DSN a usar"
 
-#: ../libgda/gda-connection.c:173
+#: ../libgda/gda-connection.c:189
 msgid "Connection string to use"
 msgstr "Cadena de conexión a usar"
 
-#: ../libgda/gda-connection.c:176
+#: ../libgda/gda-connection.c:192
 msgid "Provider to use"
 msgstr "Proveedor a usar"
 
-#: ../libgda/gda-connection.c:181
+#: ../libgda/gda-connection.c:197
 msgid "Authentication string to use"
 msgstr "Cadena de autenticación que usar"
 
-#: ../libgda/gda-connection.c:185
+#: ../libgda/gda-connection.c:201
 msgid "Options (connection sharing)"
 msgstr "Opciones (compartir conexión)"
 
 #. To translators: Don't translate "GdaMetaStore", it's a class name
-#: ../libgda/gda-connection.c:190
+#: ../libgda/gda-connection.c:206
 msgid "GdaMetaStore used by the connection"
 msgstr "GdaMetaStore usada por la conexión"
 
-#: ../libgda/gda-connection.c:438
+#: ../libgda/gda-connection.c:212
+msgid ""
+"Unique GThread from which the connection will be available.This should only "
+"be modified by the database providers' implementation"
+msgstr ""
+
+#: ../libgda/gda-connection.c:509
 #, c-format
 msgid "Malformed data source specification '%s'"
 msgstr "Especificación de origen de datos «%s» mal formada"
 
-#: ../libgda/gda-connection.c:446 ../libgda/gda-connection.c:660
-#: ../libgda/gda-connection.c:662
+#: ../libgda/gda-connection.c:517 ../libgda/gda-connection.c:733
+#: ../libgda/gda-connection.c:735
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Origen de datos %s no encontrado en la configuración"
 
-#: ../libgda/gda-connection.c:497
+#: ../libgda/gda-connection.c:568
 #, c-format
 msgid "Datasource configuration error: no provider specified"
 msgstr "Error de configuración de la fuente de datos: no se especificó el proveedor"
 
-#: ../libgda/gda-connection.c:566 ../tools/gda-sql.c:893
+#: ../libgda/gda-connection.c:637 ../tools/gda-sql.c:893
 #, c-format
 msgid "Malformed connection string '%s'"
 msgstr "Cadena de conexión «%s» mal formada"
 
-#: ../libgda/gda-connection.c:572 ../libgda/gda-connection.c:682
+#: ../libgda/gda-connection.c:643 ../libgda/gda-connection.c:757
 #, c-format
 msgid "No provider specified"
 msgstr "Sin proveedor especificado"
 
-#: ../libgda/gda-connection.c:671 ../libgda/gda-connection.c:673
+#: ../libgda/gda-connection.c:745 ../libgda/gda-connection.c:747
 #, c-format
 msgid "No DSN or connection string specified"
 msgstr "Sin DSN o cadena de conexión especificada"
 
-#: ../libgda/gda-connection.c:687
+#: ../libgda/gda-connection.c:765
+#, c-format
+msgid "Provider does not allow usage from this thread"
+msgstr "El proveedor no permite uso desde este hilo"
+
+#: ../libgda/gda-connection.c:772
 #, c-format
 msgid ""
 "Internal error: provider does not implement the open_connection() virtual "
 "method"
 msgstr "Error interno: el proveedor no implementa el método virtual open_connection()"
 
-#: ../libgda/gda-connection.c:1336
+#: ../libgda/gda-connection.c:1450
 #, c-format
 msgid "Provider does not support statement preparation"
 msgstr "El proveedor no soporta la preparación de declaraciones"
 
-#: ../libgda/gda-connection.c:1481 ../libgda/gda-connection.c:1496
+#: ../libgda/gda-connection.c:1595 ../libgda/gda-connection.c:1610
 #, c-format
 msgid "Statement is a selection statement"
 msgstr "La declaración es una declaración de seleccion"
 
-#: ../libgda/gda-connection.c:1555 ../libgda/gda-connection.c:1611
-#: ../libgda/gda-connection.c:1662
+#: ../libgda/gda-connection.c:1669 ../libgda/gda-connection.c:1725
+#: ../libgda/gda-connection.c:1776
 #, c-format
 msgid "Statement is not a selection statement"
 msgstr "La declaración no es una declaración de selección"
 
-#: ../libgda/gda-connection.c:2009
+#: ../libgda/gda-connection.c:2123
 #, c-format
 msgid "Invalid argument"
 msgstr "Argumento no válido"
 
-#: ../libgda/gda-connection.c:2018
+#: ../libgda/gda-connection.c:2132
 #, c-format
 msgid "Missing or wrong arguments for table '%s': %s"
 msgstr "Faltan argumentos o son erróneos para la tabla «%s»: %s"
 
-#: ../libgda/gda-connection.c:2727
+#: ../libgda/gda-connection.c:2841
 #, c-format
 msgid "Meta update error"
 msgstr "Error en la metaactualización"
 
-#: ../libgda/gda-connection.c:3145
+#: ../libgda/gda-connection.c:3270
 #, c-format
 msgid "Wrong filter arguments"
 msgstr "Argumentos de filtrado erróneos"
 
-#: ../libgda/gda-connection.c:3263 ../libgda/gda-connection.c:3301
-#: ../libgda/gda-connection.c:3329 ../libgda/gda-connection.c:3358
-#: ../libgda/gda-connection.c:3387
+#: ../libgda/gda-connection.c:3401 ../libgda/gda-connection.c:3446
+#: ../libgda/gda-connection.c:3481 ../libgda/gda-connection.c:3517
+#: ../libgda/gda-connection.c:3553
 #, c-format
 msgid "Connection transaction status tracking: no transaction exists for %s"
 msgstr ""
 "Siguiendo el estado de la transacción de la conexión: no existe ninguna "
 "transacción para %s"
 
-#: ../libgda/gda-connection.c:3581
+#: ../libgda/gda-connection.c:3792
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:185
 msgid "Internal error: invalid provider handle"
 msgstr "Error interno: manejo del proveedor no válido"
@@ -358,40 +369,40 @@ msgstr "El parámetro «%s» debe contener un valor booleano, ignorado."
 msgid "File '%s' already exists"
 msgstr "EL archivo «%s» ya existe"
 
-#: ../libgda/gda-data-model.c:1398
+#: ../libgda/gda-data-model.c:1407
 msgid "Exported Data"
 msgstr "Datos exportados"
 
-#: ../libgda/gda-data-model.c:1529
+#: ../libgda/gda-data-model.c:1541
 #, c-format
 msgid "Expected tag <gda_value> or <gda_array_value>, got <%s>, ignoring"
 msgstr ""
 "Se esperaba la etiqueta <gda_value> o <gda_array_value>, se obtuvo <%s>, "
 "ignorando"
 
-#: ../libgda/gda-data-model.c:1560
+#: ../libgda/gda-data-model.c:1572
 #, c-format
 msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
 msgstr ""
 "No puede recuperar el tipo de datos de la columna (el tipo es DESCONOCIDO o "
 "no ha sido especificado)"
 
-#: ../libgda/gda-data-model.c:1642
+#: ../libgda/gda-data-model.c:1654
 #, c-format
 msgid "Expected tag <gda_array_data>, got <%s>"
 msgstr "Se esperaba la etiqueta <gda_array_data>, se obtuvo <%s>"
 
-#: ../libgda/gda-data-model.c:1702
+#: ../libgda/gda-data-model.c:1714
 #, c-format
 msgid "Could not get an iterator for source data model"
 msgstr "No se ha pudo obtener un iterador para el modelo de datos de origen"
 
-#: ../libgda/gda-data-model.c:1718
+#: ../libgda/gda-data-model.c:1731
 #, c-format
 msgid "Inexistent column in source data model: %d"
 msgstr "Columna inexistente en el modelo de datos origen: %d"
 
-#: ../libgda/gda-data-model.c:1732
+#: ../libgda/gda-data-model.c:1745
 #, c-format
 msgid ""
 "Destination column %d can't be NULL but has no correspondence in the source "
@@ -400,7 +411,7 @@ msgstr ""
 "La columna de destino %d no puede ser NULL pero no tiene ninguna "
 "correspondencia en el modelo de datos origen"
 
-#: ../libgda/gda-data-model.c:1742
+#: ../libgda/gda-data-model.c:1755
 #, c-format
 msgid ""
 "Destination column %d has a gda type (%s) incompatible with source column %d "
@@ -409,30 +420,30 @@ msgstr ""
 "La columna de destino %d tiene un tipo gda (%s) incompatible con el  de la "
 "columna de origen %d (tipo %s)"
 
-#: ../libgda/gda-data-model.c:1813
+#: ../libgda/gda-data-model.c:1845
 #, c-format
 msgid "Can't transform '%s' from GDA type %s to GDA type %s"
 msgstr "No se puede transformar «%s» del tipo GDA %s al tipo GDA %s"
 
-#: ../libgda/gda-data-model.c:2320
+#: ../libgda/gda-data-model.c:2352
 #, c-format
 msgid "(%d row)\n"
 msgid_plural "(%d rows)\n"
 msgstr[0] "(%d fila)\n"
 msgstr[1] "(%d filas)\n"
 
-#: ../libgda/gda-data-model.c:2323
+#: ../libgda/gda-data-model.c:2355
 msgid "Model does not support random access, not showing data\n"
 msgstr "El modelo no soporta acceso aleatorio, no se mostrarán los datos\n"
 
 #: ../libgda/gda-data-model-dir.c:385 ../libgda/gda-data-model-import.c:1597
 #: ../libgda/gda-meta-store.c:519 ../libgda/gda-server-operation.c:800
-#: ../libgda/sqlite/gda-sqlite-provider.c:1738
-#: ../libgda/sqlite/gda-sqlite-provider.c:1753
+#: ../libgda/sqlite/gda-sqlite-provider.c:1754
+#: ../libgda/sqlite/gda-sqlite-provider.c:1769
 #: ../providers/mdb/gda-mdb-provider.c:348
 #: ../providers/mysql/gda-mysql-util.c:137
-#: ../providers/postgres/gda-postgres-provider.c:1810
-#: ../providers/postgres/gda-postgres-provider.c:1825
+#: ../providers/postgres/gda-postgres-provider.c:1820
+#: ../providers/postgres/gda-postgres-provider.c:1835
 #: ../providers/postgres/gda-postgres-util.c:86
 #: ../providers/postgres/gda-postgres-util.c:89
 #: ../tools/gda-list-server-op.c:47 ../tools/gda-list-server-op.c:90
@@ -774,9 +785,8 @@ msgid "CREATE TABLE operation is not supported by the database server"
 msgstr "El servidor de la base de datos no soporta la operación CREATE TABLE"
 
 #: ../libgda/gda-init.c:53
-#, fuzzy
 msgid "Ignoring attempt to re-initialize GDA library."
-msgstr "Se ha intentado reinicializar la biblioteca GDA. ignorado."
+msgstr "Ignorando intento de reinicializar la biblioteca GDA."
 
 #: ../libgda/gda-init.c:75
 msgid "libgda needs GModule. Finishing..."
@@ -849,7 +859,8 @@ msgstr ""
 "La definición de la vista no es una declaración de selección (para la vista «%"
 "s»)"
 
-#: ../libgda/gda-meta-store.c:1199
+#. FIXME
+#: ../libgda/gda-meta-store.c:1199 ../libgda/gda-meta-struct-io.c:160
 #, c-format
 msgid "Missing table name from <table> node"
 msgstr "Falta el nombre de la tabla del nodo <table>"
@@ -869,10 +880,10 @@ msgstr ""
 msgid "Column '%s' not found in table '%s'"
 msgstr "No se encontró la columna «%s» en la tabla «%s»"
 
-#: ../libgda/gda-meta-store.c:1732 ../libgda/gda-meta-struct.c:845
-#, fuzzy, c-format
+#: ../libgda/gda-meta-store.c:1732 ../libgda/gda-meta-struct.c:846
+#, c-format
 msgid "Foreign key column '%s' not found in table '%s'"
-msgstr "Número del campo %d no encontrado en origen denominado «%s»"
+msgstr "La clave de la columna externa «%s» no se encontró en la tabla «%s»"
 
 #: ../libgda/gda-meta-store.c:1860 ../libgda/gda-meta-store.c:1868
 #: ../libgda/gda-meta-store.c:1887
@@ -994,33 +1005,33 @@ msgstr ""
 msgid "Another object with the same name already exists"
 msgstr "Ya existe un objeto con el mismo nombre"
 
-#: ../libgda/gda-meta-struct.c:125
+#: ../libgda/gda-meta-struct.c:126
 msgid "GdaMetaStore object to fetch information from"
 msgstr "Obejto GdaMetaStore del que obtener la información"
 
 #. To translators: The GdaMetaStruct object computes lists of tables, views,
 #. * and some other information, the "Features to compute" allows one to avoid
 #. * computing some features which won't be used
-#: ../libgda/gda-meta-struct.c:133
+#: ../libgda/gda-meta-struct.c:134
 msgid "Features to compute"
 msgstr "Características que computar"
 
-#: ../libgda/gda-meta-struct.c:444
+#: ../libgda/gda-meta-struct.c:445
 #, c-format
 msgid "Could not find object named '%s.%s'"
 msgstr "No se pudo encontrar el objeto llamado «%s.%s»"
 
-#: ../libgda/gda-meta-struct.c:457
+#: ../libgda/gda-meta-struct.c:458
 #, c-format
 msgid "Could not find object named '%s'"
 msgstr "No se pudo encontrar el objeto llamado «%s»"
 
-#: ../libgda/gda-meta-struct.c:471
+#: ../libgda/gda-meta-struct.c:472
 #, c-format
 msgid "Could not find object named '%s.%s.%s'"
 msgstr "No se pudo encontrar el objeto llamado «%s.%s.%s»"
 
-#: ../libgda/gda-meta-struct.c:519
+#: ../libgda/gda-meta-struct.c:520
 #, c-format
 msgid ""
 "Object %s.%s.%s already exists in GdaMetaStruct and has a different object "
@@ -1029,27 +1040,74 @@ msgstr ""
 "El objeto %s.%s.%s ya existe en GdaMetaStruct y tiene un tipo de objeto "
 "diferente"
 
-#: ../libgda/gda-meta-struct.c:545
+#: ../libgda/gda-meta-struct.c:546
 #, c-format
 msgid "View %s.%s.%s not found in meta store object"
 msgstr "No se encontró la vista %s.%s.%s en el objeto de meta almacenamiento"
 
-#: ../libgda/gda-meta-struct.c:606
+#: ../libgda/gda-meta-struct.c:607
 #, c-format
 msgid "Table %s.%s.%s not found in meta store object"
 msgstr "No se encontró la tabla %s.%s.%s en el objeto de meta almacenamiento"
 
-#: ../libgda/gda-meta-struct.c:674
+#: ../libgda/gda-meta-struct.c:675
 #, c-format
 msgid "Internal GdaMetaStore error: column %s not found"
 msgstr "Error interno de GdaMetaStore: no se encontró la cadena %s"
 
-#: ../libgda/gda-meta-struct.c:773
+#: ../libgda/gda-meta-struct.c:774
 #, c-format
 msgid ""
 "Meta data incoherence in foreign key constraint for table %s.%s.%s "
 "referencing table %s.%s.%s"
 msgstr ""
+
+#: ../libgda/gda-meta-struct.c:1837
+#, c-format
+msgid "Missing object name in GdaMetaDbObject structure"
+msgstr "Falta el nombre del objeto en la estructura GdaMetaDbObject"
+
+#: ../libgda/gda-meta-struct.c:1862
+#, c-format
+msgid "Database object '%s' already exists"
+msgstr "El objeto de la base de datos «%s» ya existe"
+
+#. FIXME
+#: ../libgda/gda-meta-struct-io.c:81
+#, c-format
+msgid "Could not load file '%s'"
+msgstr "No se pudo cargar el archivo «%s»"
+
+#. FIXME
+#: ../libgda/gda-meta-struct-io.c:88
+#, c-format
+msgid "Root node of file '%s' should be <schema>."
+msgstr "El nodo raíz del archivo «%s» debería ser <schema>."
+
+#. FIXME
+#: ../libgda/gda-meta-struct-io.c:226
+#, c-format
+msgid "Missing column name for table '%s'"
+msgstr "Falta el nombre de la columna para la tabla «%s»"
+
+#. FIXME
+#: ../libgda/gda-meta-struct-io.c:269
+#, c-format
+msgid "Missing foreign key's referenced table name for table '%s'"
+msgstr ""
+
+#. FIXME
+#: ../libgda/gda-meta-struct-io.c:280 ../libgda/gda-meta-struct-io.c:286
+#: ../libgda/gda-meta-struct-io.c:292
+#, c-format
+msgid "Invalid referenced table name '%s'"
+msgstr "El nombre de ta tabla referenciada «%s» no es válido"
+
+#. FIXME
+#: ../libgda/gda-meta-struct-io.c:331
+#, fuzzy, c-format
+msgid "Missing foreign key's column name for table '%s'"
+msgstr "Número del campo %d no encontrado en origen denominado «%s»"
 
 #: ../libgda/gda-server-operation.c:568
 #, c-format
@@ -1122,19 +1180,19 @@ msgstr "Falta el valor requerido para «%s»"
 msgid "Missing required value for list of parameters '%s'"
 msgstr "Falta el valor requerido para la lista de parámetros «%s»"
 
-#: ../libgda/gda-server-provider.c:462
+#: ../libgda/gda-server-provider.c:479
 #, c-format
 msgid "Provider %s created a GdaServerOperation without node for '%s'"
 msgstr "El proveedor %s creó un GdaServerOperation csin un nodo para «%s»"
 
-#: ../libgda/gda-server-provider.c:466
+#: ../libgda/gda-server-provider.c:483
 #, c-format
 msgid "Provider %s created a GdaServerOperation with wrong node type for '%s'"
 msgstr ""
 "El proveedor %s creó un GdaServerOperation con un tipo de nodo erróneo para «%"
 "s»"
 
-#: ../libgda/gda-server-provider.c:832 ../libgda/gda-server-provider.c:861
+#: ../libgda/gda-server-provider.c:899 ../libgda/gda-server-provider.c:933
 #, fuzzy, c-format
 msgid ""
 "GdaServerProvider object implements the %s virtual method but does not "
@@ -1198,6 +1256,7 @@ msgstr "Base de datos"
 
 #. list of fields
 #: ../libgda/gda-server-provider-extra.c:251
+#: ../providers/firebird/firebird_specs_create_table.xml.in.h:12
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:13
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:75
 #: ../providers/mysql/mysql_specs_drop_column.xml.in.h:2
@@ -1211,6 +1270,7 @@ msgstr "Nombre del campo"
 
 #. list of fields
 #: ../libgda/gda-server-provider-extra.c:252
+#: ../providers/firebird/firebird_specs_create_table.xml.in.h:6
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:10
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:53
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:4
@@ -1265,6 +1325,7 @@ msgstr "Referencias"
 
 #. list of fields
 #: ../libgda/gda-server-provider-extra.c:259
+#: ../providers/firebird/firebird_specs_create_table.xml.in.h:10
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:12
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:57
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:6
@@ -1363,6 +1424,7 @@ msgid "View"
 msgstr "Vista"
 
 #: ../libgda/gda-server-provider-extra.c:330
+#: ../providers/firebird/firebird_specs_create_table.xml.in.h:15
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:11
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:134
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:3
@@ -1441,6 +1503,10 @@ msgstr "Nodo raíz de las especificaciones != 'data-set-spec': «%s»"
 #, c-format
 msgid "Missing node <parameters>: '%s'"
 msgstr "Faltan <parameters> del nodo: «%s»"
+
+#: ../libgda/gda-set.c:1249
+msgid "GdaHolder needs to have an ID"
+msgstr "GdaGolder necesita tener un ID"
 
 #: ../libgda/gda-statement.c:484
 #, fuzzy, c-format
@@ -1529,12 +1595,12 @@ msgstr "No se ha podido abrir el archivo %s"
 
 #: ../libgda/gda-xa-transaction.c:159
 msgid "Global transaction ID can not have more than 64 bytes"
-msgstr ""
+msgstr "El ID de transacción global no puede tener más de 64 bytes"
 
 #: ../libgda/gda-xa-transaction.c:295
 #, c-format
 msgid "Connection aleardy registered with another GdaXaTransaction object"
-msgstr ""
+msgstr "La conexión ya está registrada con otro objeto GdaXaTransaction"
 
 #: ../libgda/gda-xa-transaction.c:308
 #, fuzzy, c-format
@@ -1603,6 +1669,7 @@ msgid "Gda type representation"
 msgstr "Representación de tipo Gda"
 
 #: ../libgda/sqlite/gda-sqlite-ddl.c:198
+#: ../providers/firebird/gda-firebird-ddl.c:136
 #: ../providers/mysql/gda-mysql-ddl.c:311
 #: ../providers/postgres/gda-postgres-ddl.c:361
 #, c-format
@@ -1617,23 +1684,23 @@ msgstr "Manejador binario SQlite"
 msgid "SQlite binary representation"
 msgstr "Representación binaria SQlite"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:536
+#: ../libgda/sqlite/gda-sqlite-provider.c:546
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:264
 #: ../providers/bdb/gda-bdb-provider.c:155
 #: ../providers/mdb/gda-mdb-provider.c:228
-#: ../providers/mysql/gda-mysql-provider.c:493
-#: ../providers/postgres/gda-postgres-provider.c:577
+#: ../providers/mysql/gda-mysql-provider.c:500
+#: ../providers/postgres/gda-postgres-provider.c:587
 #, fuzzy
 msgid "Provider does not support asynchronous connection open"
 msgstr "El proveedor no soporta la preparación de declaraciones"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:557
+#: ../libgda/sqlite/gda-sqlite-provider.c:567
 #: ../providers/mdb/gda-mdb-provider.c:242
 msgid "The connection string must contain DB_DIR and DB_NAME values"
 msgstr "La cadena de conexión debe contener los valores DB_DIR y DB_NAME"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:584
-#: ../libgda/sqlite/gda-sqlite-provider.c:592
+#: ../libgda/sqlite/gda-sqlite-provider.c:594
+#: ../libgda/sqlite/gda-sqlite-provider.c:602
 #, c-format
 msgid ""
 "The connection string format has changed: replace URI with DB_DIR (the path "
@@ -1644,102 +1711,102 @@ msgstr ""
 "(la ruta al archivo de la base de datos) y DB_NAME (el archivo de la base de "
 "datos sin el «%s» al final)."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:607
+#: ../libgda/sqlite/gda-sqlite-provider.c:617
 #: ../providers/mdb/gda-mdb-provider.c:283
 msgid "The DB_DIR part of the connection string must point to a valid directory"
 msgstr "La parte DB_DIR de la cadena de conexión debe apuntar a un directorio válido"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:667
+#: ../libgda/sqlite/gda-sqlite-provider.c:678
 msgid "Could not set empty_result_callbacks SQLite option"
 msgstr "No se ha podido establecer la opción de SQLite empty_result_callbacks"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:833
-#: ../libgda/sqlite/gda-sqlite-provider.c:866
-#: ../providers/mysql/gda-mysql-provider.c:722
-#: ../providers/mysql/gda-mysql-provider.c:762
-#: ../providers/postgres/gda-postgres-provider.c:904
-#: ../providers/postgres/gda-postgres-provider.c:942
+#: ../libgda/sqlite/gda-sqlite-provider.c:849
+#: ../libgda/sqlite/gda-sqlite-provider.c:882
+#: ../providers/mysql/gda-mysql-provider.c:729
+#: ../providers/mysql/gda-mysql-provider.c:769
+#: ../providers/postgres/gda-postgres-provider.c:914
+#: ../providers/postgres/gda-postgres-provider.c:952
 #, c-format
 msgid "Missing spec. file '%s'"
 msgstr "Falta el archivo spec. «%s»"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:924
-#: ../providers/mysql/gda-mysql-provider.c:812
-#: ../providers/postgres/gda-postgres-provider.c:1005
+#: ../libgda/sqlite/gda-sqlite-provider.c:940
+#: ../providers/mysql/gda-mysql-provider.c:819
+#: ../providers/postgres/gda-postgres-provider.c:1015
 #, fuzzy, c-format
 msgid "Provider does not support asynchronous server operation"
 msgstr "El proveedor no soporta la preparación de declaraciones"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1009
-#: ../providers/postgres/gda-postgres-provider.c:1134
-#: ../providers/postgres/gda-postgres-provider.c:1135
+#: ../libgda/sqlite/gda-sqlite-provider.c:1025
+#: ../providers/postgres/gda-postgres-provider.c:1144
+#: ../providers/postgres/gda-postgres-provider.c:1145
 #, c-format
 msgid "Transactions are not supported in read-only mode"
 msgstr "Las transacciones no están soportadas en el modo de sólo lectura"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1646
-#: ../providers/postgres/gda-postgres-provider.c:1671
+#: ../libgda/sqlite/gda-sqlite-provider.c:1662
+#: ../providers/postgres/gda-postgres-provider.c:1681
 #, fuzzy, c-format
 msgid "Unnamed parameter is not allowed in prepared statements"
 msgstr "No se permite un parámetro si nombre en las declaraciones preparadas"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1737
-#: ../providers/postgres/gda-postgres-provider.c:1809
+#: ../libgda/sqlite/gda-sqlite-provider.c:1753
+#: ../providers/postgres/gda-postgres-provider.c:1819
 #, c-format
 msgid "Can't build SELECT statement to get last inserted row: %s)"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1752
-#: ../providers/postgres/gda-postgres-provider.c:1824
+#: ../libgda/sqlite/gda-sqlite-provider.c:1768
+#: ../providers/postgres/gda-postgres-provider.c:1834
 #, c-format
 msgid "Can't execute SELECT statement to get last inserted row: %s"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1765
-#: ../providers/postgres/gda-postgres-provider.c:1837
+#: ../libgda/sqlite/gda-sqlite-provider.c:1781
+#: ../providers/postgres/gda-postgres-provider.c:1847
 msgid "SELECT statement to get last inserted row did not return any row"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1769
-#: ../providers/postgres/gda-postgres-provider.c:1841
+#: ../libgda/sqlite/gda-sqlite-provider.c:1785
+#: ../providers/postgres/gda-postgres-provider.c:1851
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1818
-#: ../providers/mysql/gda-mysql-provider.c:1298
-#: ../providers/postgres/gda-postgres-provider.c:1900
+#: ../libgda/sqlite/gda-sqlite-provider.c:1834
+#: ../providers/mysql/gda-mysql-provider.c:1305
+#: ../providers/postgres/gda-postgres-provider.c:1910
 #, fuzzy, c-format
 msgid "Provider does not support asynchronous statement execution"
 msgstr "El proveedor no soporta la preparación de declaraciones"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1892
+#: ../libgda/sqlite/gda-sqlite-provider.c:1908
 msgid "Empty statement"
 msgstr "Declaración vacía"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1931
-#: ../libgda/sqlite/gda-sqlite-provider.c:1934
-#: ../providers/mysql/gda-mysql-provider.c:1357
-#: ../providers/mysql/gda-mysql-provider.c:1360
-#: ../providers/postgres/gda-postgres-provider.c:2005
-#: ../providers/postgres/gda-postgres-provider.c:2008
+#: ../libgda/sqlite/gda-sqlite-provider.c:1947
+#: ../libgda/sqlite/gda-sqlite-provider.c:1950
+#: ../providers/mysql/gda-mysql-provider.c:1364
+#: ../providers/mysql/gda-mysql-provider.c:1367
+#: ../providers/postgres/gda-postgres-provider.c:2015
+#: ../providers/postgres/gda-postgres-provider.c:2018
 #, c-format
 msgid "Missing parameter(s) to execute query"
 msgstr "Falta(n) parámetro(s) para ejecutar la consulta"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1949
-#: ../providers/mysql/gda-mysql-provider.c:1374
-#: ../providers/postgres/gda-postgres-provider.c:2022
+#: ../libgda/sqlite/gda-sqlite-provider.c:1965
+#: ../providers/mysql/gda-mysql-provider.c:1381
+#: ../providers/postgres/gda-postgres-provider.c:2032
 #, c-format
 msgid "Missing parameter '%s' to execute query"
 msgstr "Falta el parámetro «%s» para ejecutar la consulta"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2035
+#: ../libgda/sqlite/gda-sqlite-provider.c:2051
 #, c-format
 msgid "Non handled data type '%s'"
 msgstr "No existe un manejador del tipo de datos «%s»"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2167
+#: ../libgda/sqlite/gda-sqlite-provider.c:2183
 msgid "Function requires one argument"
 msgstr "La función requiere un argumento."
 
@@ -1812,18 +1879,18 @@ msgstr "No se pudo declarar la tabla virtual (%s)"
 msgid "Column not found"
 msgstr "No se encontró la columna"
 
-#: ../libgda/sql-parser/gda-sql-parser.c:599
-#: ../libgda/sql-parser/gda-sql-parser.c:687
+#: ../libgda/sql-parser/gda-sql-parser.c:626
+#: ../libgda/sql-parser/gda-sql-parser.c:714
 #, c-format
 msgid "SQL code does not contain any statement"
 msgstr "El código SQL no contiene ninguna declaración"
 
-#: ../libgda/sql-parser/gda-sql-parser.c:770
+#: ../libgda/sql-parser/gda-sql-parser.c:797
 #, fuzzy, c-format
 msgid "Syntax error at line %d, column %d"
 msgstr "Error de análisis cerca de «%s»"
 
-#: ../libgda/sql-parser/gda-sql-parser.c:783
+#: ../libgda/sql-parser/gda-sql-parser.c:810
 #, c-format
 msgid "Overflow error at line %d, column %d"
 msgstr ""
@@ -2259,6 +2326,109 @@ msgstr "Proveedor para archivos de Microsoft Access"
 msgid "The name of a database to use (filename without the .mdb)"
 msgstr "El nombre de la base de datos que usar (nombre del archivo sin el .mdb)"
 
+#. list of fields
+#: ../providers/firebird/firebird_specs_create_table.xml.in.h:2
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:6
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:24
+#: ../providers/postgres/postgres_specs_add_column.xml.in.h:1
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:5
+#: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:1
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:4
+msgid "Check"
+msgstr "Comprobar"
+
+#. list of fields
+#: ../providers/firebird/firebird_specs_create_table.xml.in.h:4
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:7
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:26
+#: ../providers/postgres/postgres_specs_add_column.xml.in.h:2
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:7
+#: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:2
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:6
+msgid "Check constraint"
+msgstr "Comprobar restricción"
+
+#. list of fields
+#: ../providers/firebird/firebird_specs_create_table.xml.in.h:8
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:11
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:55
+#: ../providers/postgres/postgres_specs_add_column.xml.in.h:5
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:13
+#: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:5
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:19
+#: ../tools/command-exec.c:789
+msgid "Default"
+msgstr "Predeterminado"
+
+#. other table constraints
+#: ../providers/firebird/firebird_specs_create_table.xml.in.h:14
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:91
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:31
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:25
+msgid "Global constraints"
+msgstr "Restricciones globales"
+
+#. list of fields
+#: ../providers/firebird/firebird_specs_create_table.xml.in.h:17
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:14
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:137
+#: ../providers/postgres/postgres_specs_add_column.xml.in.h:10
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:43
+#: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:8
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:28
+msgid "Not NULL"
+msgstr "No NULL"
+
+#. list of fields
+#: ../providers/firebird/firebird_specs_create_table.xml.in.h:19
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:15
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:149
+#: ../providers/postgres/postgres_specs_add_column.xml.in.h:11
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:52
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:31
+#: ../tools/command-exec.c:857
+msgid "Primary key"
+msgstr "Clave primaria"
+
+#. list of fields
+#: ../providers/firebird/firebird_specs_create_table.xml.in.h:21
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:171
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:67
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:37
+msgid "Table's columns"
+msgstr "Columnas de la tabla"
+
+#: ../providers/firebird/firebird_specs_create_table.xml.in.h:22
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:173
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:68
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:38
+msgid "Table's description"
+msgstr "Descripción de la tabla"
+
+#: ../providers/firebird/firebird_specs_create_table.xml.in.h:23
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:19
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:176
+#: ../providers/mysql/mysql_specs_drop_column.xml.in.h:4
+#: ../providers/postgres/postgres_specs_add_column.xml.in.h:15
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:69
+#: ../providers/postgres/postgres_specs_drop_column.xml.in.h:7
+#: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:12
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:39
+msgid "Table's name"
+msgstr "Nombre de la tabla"
+
+#. list of fields
+#: ../providers/firebird/firebird_specs_create_table.xml.in.h:25
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:20
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:189
+#: ../providers/postgres/postgres_specs_add_column.xml.in.h:16
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:13
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:73
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:42
+#: ../tools/command-exec.c:935
+msgid "Unique"
+msgstr "Único"
+
 #: ../providers/mysql/gda-mysql-ddl.c:253
 #: ../providers/postgres/gda-postgres-ddl.c:269
 #, c-format
@@ -2288,34 +2458,36 @@ msgstr "El campo referenciado especificado en la restricción de la clave está 
 msgid "Incorrect specified column name"
 msgstr "Nombre de la tabla no especificado"
 
-#: ../providers/mysql/gda-mysql-meta.c:512
-#: ../providers/mysql/gda-mysql-meta.c:561
-#: ../providers/mysql/gda-mysql-meta.c:761
-#: ../providers/mysql/gda-mysql-meta.c:822
-#: ../providers/mysql/gda-mysql-meta.c:958
-#: ../providers/mysql/gda-mysql-meta.c:1025
+#: ../providers/mysql/gda-mysql-meta.c:611
+#: ../providers/mysql/gda-mysql-meta.c:660
+#: ../providers/mysql/gda-mysql-meta.c:860
+#: ../providers/mysql/gda-mysql-meta.c:921
+#: ../providers/mysql/gda-mysql-meta.c:981
+#: ../providers/mysql/gda-mysql-meta.c:1204
+#: ../providers/mysql/gda-mysql-meta.c:1272
+#: ../providers/mysql/gda-mysql-meta.c:1308
 #, fuzzy, c-format
 msgid "Mysql version 5.0 at least is required"
 msgstr "Se requiere al menos la versión 8.2.0 de PostgreSQL"
 
-#: ../providers/mysql/gda-mysql-provider.c:397
+#: ../providers/mysql/gda-mysql-provider.c:404
 #, c-format
 msgid "Cannot give a UNIX SOCKET if you also provide either a HOST or a PORT"
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-provider.c:446
+#: ../providers/mysql/gda-mysql-provider.c:453
 #, c-format
 msgid ""
 "Could not set client charset to UTF8. Using %s. It'll be problems with non "
 "UTF-8 characters"
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-provider.c:503
+#: ../providers/mysql/gda-mysql-provider.c:510
 #, fuzzy
 msgid "The connection string must contain the DB_NAME values"
 msgstr "La cadena de la conexión debe contener un valor DB_NAME"
 
-#: ../providers/mysql/gda-mysql-provider.c:1204
+#: ../providers/mysql/gda-mysql-provider.c:1211
 #, fuzzy, c-format
 msgid "Unnamed holder is not allowed in prepared statement."
 msgstr "No se permite un parámetro si nombre en las declaraciones preparadas"
@@ -2353,10 +2525,10 @@ msgid "Type %s not mapped for value %f"
 msgstr ""
 
 #: ../providers/mysql/gda-mysql-recordset.c:651
-#: ../providers/postgres/gda-postgres-provider.c:1170
-#: ../providers/postgres/gda-postgres-provider.c:1271
-#: ../providers/postgres/gda-postgres-provider.c:1324
-#: ../providers/postgres/gda-postgres-provider.c:1377
+#: ../providers/postgres/gda-postgres-provider.c:1180
+#: ../providers/postgres/gda-postgres-provider.c:1281
+#: ../providers/postgres/gda-postgres-provider.c:1334
+#: ../providers/postgres/gda-postgres-provider.c:1387
 #: ../providers/postgres/gda-postgres-recordset.c:441
 #: ../providers/postgres/gda-postgres-recordset.c:469
 #, c-format
@@ -2398,26 +2570,6 @@ msgstr ""
 msgid "Auto increment"
 msgstr "Autoincrementar"
 
-#. list of fields
-#: ../providers/mysql/mysql_specs_add_column.xml.in.h:6
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:24
-#: ../providers/postgres/postgres_specs_add_column.xml.in.h:1
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:5
-#: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:1
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:4
-msgid "Check"
-msgstr "Comprobar"
-
-#. list of fields
-#: ../providers/mysql/mysql_specs_add_column.xml.in.h:7
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:26
-#: ../providers/postgres/postgres_specs_add_column.xml.in.h:2
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:7
-#: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:2
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:6
-msgid "Check constraint"
-msgstr "Comprobar restricción"
-
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:8
 #: ../providers/mysql/mysql_specs_drop_column.xml.in.h:1
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:3
@@ -2432,59 +2584,6 @@ msgstr "Descripción de la columna"
 #, fuzzy
 msgid "Comment"
 msgstr "Comentarios"
-
-#. list of fields
-#: ../providers/mysql/mysql_specs_add_column.xml.in.h:11
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:55
-#: ../providers/postgres/postgres_specs_add_column.xml.in.h:5
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:13
-#: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:5
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:19
-#: ../tools/command-exec.c:789
-msgid "Default"
-msgstr "Predeterminado"
-
-#. list of fields
-#: ../providers/mysql/mysql_specs_add_column.xml.in.h:14
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:137
-#: ../providers/postgres/postgres_specs_add_column.xml.in.h:10
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:43
-#: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:8
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:28
-msgid "Not NULL"
-msgstr "No NULL"
-
-#. list of fields
-#: ../providers/mysql/mysql_specs_add_column.xml.in.h:15
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:149
-#: ../providers/postgres/postgres_specs_add_column.xml.in.h:11
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:52
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:31
-#: ../tools/command-exec.c:857
-msgid "Primary key"
-msgstr "Clave primaria"
-
-#: ../providers/mysql/mysql_specs_add_column.xml.in.h:19
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:176
-#: ../providers/mysql/mysql_specs_drop_column.xml.in.h:4
-#: ../providers/postgres/postgres_specs_add_column.xml.in.h:15
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:69
-#: ../providers/postgres/postgres_specs_drop_column.xml.in.h:7
-#: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:12
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:39
-msgid "Table's name"
-msgstr "Nombre de la tabla"
-
-#. list of fields
-#: ../providers/mysql/mysql_specs_add_column.xml.in.h:20
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:189
-#: ../providers/postgres/postgres_specs_add_column.xml.in.h:16
-#: ../providers/postgres/postgres_specs_create_index.xml.in.h:13
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:73
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:42
-#: ../tools/command-exec.c:935
-msgid "Unique"
-msgstr "Único"
 
 #. To translators: Charset name
 #. other table options
@@ -3035,13 +3134,6 @@ msgstr "Fijo"
 msgid "Foreign key"
 msgstr "Clave externa"
 
-#. other table constraints
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:91
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:31
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:25
-msgid "Global constraints"
-msgstr "Restricciones globales"
-
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:94
 msgid "ISAM"
 msgstr "ISAM"
@@ -3166,22 +3258,9 @@ msgstr "Formato de fila"
 msgid "Set to NULL"
 msgstr "Establecer a NULL"
 
-#. list of fields
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:171
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:67
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:37
-msgid "Table's columns"
-msgstr "Columnas de la tabla"
-
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:172
 msgid "Table's comment"
 msgstr "Comentario de la tabla"
-
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:173
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:68
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:38
-msgid "Table's description"
-msgstr "Descripción de la tabla"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:175
@@ -3382,11 +3461,11 @@ msgstr "Memoria insuficiente para convertir la cadena a un búfer binario"
 msgid "PostgreSQL version 8.2.0 at least is required"
 msgstr "Se requiere al menos la versión 8.2.0 de PostgreSQL"
 
-#: ../providers/postgres/gda-postgres-provider.c:603
+#: ../providers/postgres/gda-postgres-provider.c:613
 msgid "The connection string must contain a DB_NAME value"
 msgstr "La cadena de la conexión debe contener un valor DB_NAME"
 
-#: ../providers/postgres/gda-postgres-provider.c:607
+#: ../providers/postgres/gda-postgres-provider.c:617
 msgid ""
 "The connection string format has changed: replace DATABASE with DB_NAME and "
 "the same contents"
@@ -3394,48 +3473,48 @@ msgstr ""
 "El formato de la cadena de conexión ha cambiado, reemplace DATABASE con "
 "DB_NAME y el mismo contenido"
 
-#: ../providers/postgres/gda-postgres-provider.c:732
+#: ../providers/postgres/gda-postgres-provider.c:742
 #, c-format
 msgid "Could not set search_path to %s"
 msgstr "No se pudo establecer la ruta_de_búsqueda a %s"
 
-#: ../providers/postgres/gda-postgres-provider.c:740
+#: ../providers/postgres/gda-postgres-provider.c:750
 #, c-format
 msgid "Search path %s is invalid"
 msgstr "La ruta de búsqueda %s no es válida"
 
-#: ../providers/postgres/gda-postgres-provider.c:1145
-#: ../providers/postgres/gda-postgres-provider.c:1147
+#: ../providers/postgres/gda-postgres-provider.c:1155
+#: ../providers/postgres/gda-postgres-provider.c:1157
 #, c-format
 msgid "Transactions are not supported in read uncommitted isolation level"
 msgstr ""
 "Las transacciones no están soportadas en el nivel de aislamiento de lectura "
 "no efectuada"
 
-#: ../providers/postgres/gda-postgres-provider.c:1151
-#: ../providers/postgres/gda-postgres-provider.c:1153
+#: ../providers/postgres/gda-postgres-provider.c:1161
+#: ../providers/postgres/gda-postgres-provider.c:1163
 #, c-format
 msgid "Transactions are not supported in repeatable read isolation level"
 msgstr ""
 "Las transacciones no están soportadas en el nivel de aislamiento de lectura "
 "repetible"
 
-#: ../providers/postgres/gda-postgres-provider.c:1277
-#: ../providers/postgres/gda-postgres-provider.c:1330
-#: ../providers/postgres/gda-postgres-provider.c:1383
+#: ../providers/postgres/gda-postgres-provider.c:1287
+#: ../providers/postgres/gda-postgres-provider.c:1340
+#: ../providers/postgres/gda-postgres-provider.c:1393
 #, c-format
 msgid "Wrong savepoint name '%s'"
 msgstr "El nombre de punto de guardado «%s» es erróneo"
 
-#: ../providers/postgres/gda-postgres-provider.c:2043
-#: ../providers/postgres/gda-postgres-provider.c:2045
+#: ../providers/postgres/gda-postgres-provider.c:2053
+#: ../providers/postgres/gda-postgres-provider.c:2055
 #, c-format
 msgid "Cannot start transaction"
 msgstr "No se pude iniciar la transacción"
 
-#: ../providers/postgres/gda-postgres-provider.c:2204
-#: ../providers/postgres/gda-postgres-provider.c:2240
-#: ../providers/postgres/gda-postgres-provider.c:2275
+#: ../providers/postgres/gda-postgres-provider.c:2214
+#: ../providers/postgres/gda-postgres-provider.c:2250
+#: ../providers/postgres/gda-postgres-provider.c:2285
 #, c-format
 msgid "Could not set the XA transaction ID parameter"
 msgstr "No se pudo establecer la el parámetro ID de la transacción XA"
