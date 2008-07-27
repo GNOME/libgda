@@ -509,7 +509,7 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 			dbo->obj_short_name = g_strdup (g_value_get_string (short_name));
 		if (full_name)
 			dbo->obj_full_name = g_strdup (g_value_get_string (full_name));
-		if (owner)
+		if (owner && !gda_value_is_null (owner))
 			dbo->obj_owner = g_strdup (g_value_get_string (owner));
 	}
 	else if (dbo->obj_type == type) 
@@ -613,8 +613,11 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 			dbo->obj_short_name = g_strdup (g_value_get_string (gda_data_model_get_value_at (model, 4, 0)));
 		if (!dbo->obj_full_name)
 			dbo->obj_full_name = g_strdup (g_value_get_string (gda_data_model_get_value_at (model, 5, 0)));
-		if (!dbo->obj_owner)
-			dbo->obj_owner = g_strdup (g_value_get_string (gda_data_model_get_value_at (model, 7, 0)));
+		if (!dbo->obj_owner) {
+			const GValue *cv = gda_data_model_get_value_at (model, 7, 0);
+			if (cv && !gda_value_is_null (cv))
+				dbo->obj_owner = g_strdup (g_value_get_string (cv));
+		}
 
 		mt = GDA_META_TABLE (dbo);
 		for (i = 0; i < nrows; i++) {
@@ -1866,7 +1869,7 @@ gda_meta_struct_add_db_object (GdaMetaStruct *mstruct, GdaMetaDbObject *dbo, GEr
 	}
 	else {
 		mstruct->priv->db_objects = g_slist_append (mstruct->priv->db_objects, dbo);
-		g_hash_table_insert (mstruct->priv->index, dbo->obj_full_name, dbo);
+		g_hash_table_insert (mstruct->priv->index, g_strdup (dbo->obj_full_name), dbo);
 		return dbo;
 	}
 }

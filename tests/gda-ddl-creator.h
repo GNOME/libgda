@@ -47,17 +47,6 @@ typedef enum {
 	GDA_DDL_CREATOR_INCORRECT_SCHEMA_ERROR,
 	GDA_DDL_CREATOR_NO_CONNECTION_ERROR,
 	GDA_DDL_CREATOR_INTERNAL_ERROR, 
-
-	GDA_DDL_CREATOR_UNSUPPORTED_PROVIDER_ERROR,
-	GDA_DDL_CREATOR_DDL_CONTEXT_ERROR,
-	GDA_DDL_CREATOR_MODIFY_CONTENTS_ERROR,
-	GDA_DDL_CREATOR_EXTRACT_SQL_ERROR,
-	GDA_DDL_CREATOR_ATTRIBUTE_NOT_FOUND_ERROR,
-	GDA_DDL_CREATOR_ATTRIBUTE_ERROR,
-	GDA_DDL_CREATOR_SCHEMA_OBJECT_NOT_FOUND_ERROR,
-	GDA_DDL_CREATOR_SCHEMA_OBJECT_CONFLICT_ERROR,
-	GDA_DDL_CREATOR_SCHEMA_OBJECT_DESCR_ERROR,
-	GDA_DDL_CREATOR_TRANSACTION_ALREADY_STARTED_ERROR
 } GdaDDLCreatorError;
 
 
@@ -75,21 +64,17 @@ struct _GdaDDLCreatorClass
 };
 
 GType             gda_ddl_creator_get_type             (void) G_GNUC_CONST;
-GdaDDLCreator    *gda_ddl_creator_new_with_file        (const gchar *xml_spec_file, GError **error);
+GdaDDLCreator    *gda_ddl_creator_new                  (void);
+
+gboolean          gda_ddl_creator_set_dest_from_file   (GdaDDLCreator *ddlc, const gchar *xml_spec_file, 
+							GError **error);
+//gboolean          gda_ddl_creator_set_dest_from_meta   (GdaDDLCreator *ddlc, GdaMetaStruct *struct, GError **error);
 
 void              gda_ddl_creator_set_connection       (GdaDDLCreator *ddlc, GdaConnection *cnc);
-gchar            *gda_ddl_creator_get_sql_for_create_objects (GdaDDLCreator *ddlc, GError **error);
-
-/* must use a transaction, fails if it cannot start one */
-gboolean          gda_ddl_creator_create_objects       (GdaDDLCreator *ddlc, GError **error);
-gboolean          gda_ddl_creator_delete_objects       (GdaDDLCreator *ddlc, GError **error);
 
 
-/* ideas:
-GdaDDLCreator    *gda_ddl_creator_new_with_meta_struct (GdaMetaStruct *mstruct);
-
-gboolean          gda_ddl_creator_update_objects       (GdaDDLCreator ddlc, GError **error);
-*/
+gchar            *gda_ddl_creator_get_sql              (GdaDDLCreator *ddlc, GError **error);
+gboolean          gda_ddl_creator_execute              (GdaDDLCreator *ddlc, GError **error);
 
 G_END_DECLS
 

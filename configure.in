@@ -1085,7 +1085,7 @@ if test x"$platform_win32" = "xyes"
 then
         AM_CONDITIONAL(HAVE_SQLITE, 0)
 else
-	SQLITE_MODULES="sqlite3 >= 3.3"
+	SQLITE_MODULES="sqlite3 >= 3.6.0"
 	PKG_CHECK_MODULES(SQLITE, $SQLITE_MODULES, have_sqlite=yes, have_sqlite=no)
 	if test x"$have_sqlite" = "xyes"
 	then

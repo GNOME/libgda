@@ -3,6 +3,7 @@
 #include "prov-test-common.h"
 #include "prov-test-util.h"
 #include <sql-parser/gda-sql-statement.h>
+#include "../test-cnc-utils.h"
 
 #define CHECK_EXTRA_INFO
 /*#undef CHECK_EXTRA_INFO*/
@@ -10,7 +11,6 @@
 GdaProviderInfo *pinfo;
 GdaConnection   *cnc;
 gboolean         params_provided;
-gboolean         db_created;
 gboolean         fork_tests = TRUE;
 
 /*
@@ -23,9 +23,36 @@ int
 prov_test_common_setup ()
 {
 	int number_failed = 0;
-	cnc = prov_test_setup_connection (pinfo, &params_provided, &db_created);
-	if (params_provided)
-		fail_if (!cnc, "Could not setup connection");
+	GError *error = NULL;
+	cnc = test_cnc_setup_connection (pinfo->id, "testcheckdb", &error);
+	if (!cnc) {
+		if (error) {
+			if (error->domain != 0) {
+				gchar *str = g_strdup_printf ("Could not setup connection: %s", 
+							      error->message ? error->message : "No detail");
+				fail (str);
+				g_free (str);
+				number_failed++;
+			}
+			else
+				g_print ("==> %s\n", error->message ? error->message : "No detail");
+			g_error_free (error);
+		}
+	}
+	else {
+		gchar *file;
+		file = g_build_filename (CHECK_SQL_FILES, "tests", "providers", "prov_dbstruct.xml", NULL);
+		if (!test_cnc_setup_db_structure (cnc, file, &error)) {
+			gchar *str = g_strdup_printf ("Could not setup database structure: %s", 
+						      error && error->message ? error->message : "No detail");
+			fail (str);
+			g_free (str);
+			if (error)
+				g_error_free (error);
+			number_failed++;
+		}
+		g_free (file);
+	}
 	return number_failed;
 }
 
@@ -40,22 +67,7 @@ prov_test_common_clean ()
 {
 	int number_failed = 0;
 
-	if (!prov_test_clean_connection (cnc, db_created))
-		number_failed++;
-
-	return number_failed;	
-}
-
-/*
- *
- * CREATE_TABLES_SQL
- *
- */
-int
-prov_test_common_create_tables_sql ()
-{
-	int number_failed = 0;
-	if (!prov_test_create_tables_sql (cnc))
+	if (!test_cnc_clean_connection (cnc, NULL))
 		number_failed++;
 
 	return number_failed;	
@@ -171,6 +183,7 @@ prov_test_common_check_meta ()
 		if (strcmp (tmp, dump1[i])) {
 #ifdef CHECK_EXTRA_INFO
 			g_warning ("Meta data has changed after update for table %s\n", (gchar*) list->data);
+			g_print ("===\n%s\n===\n%s\n===\n", tmp, dump1[i]);
 #endif
 			number_failed++;
 			g_free (tmp);

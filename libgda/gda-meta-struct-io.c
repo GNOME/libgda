@@ -122,8 +122,22 @@ gda_meta_struct_load_from_xml_file (GdaMetaStruct *mstruct, const gchar *catalog
 	if (! gda_meta_struct_sort_db_objects (mstruct, GDA_META_SORT_DEPENDENCIES, error)) 
 		return FALSE;
 
+#ifdef GDA_DEBUG_NO
+	GSList *objlist, *list;
+	objlist = gda_meta_struct_get_all_db_objects (mstruct);
+
+	for (list = objlist; list; list = list->next) {
+		GSList *dl;
+		g_print ("Database object: %s\n", GDA_META_DB_OBJECT (list->data)->obj_name);
+		for (dl = GDA_META_DB_OBJECT (list->data)->depend_list; dl; dl = dl->next) {
+			g_print ("   depend on %s\n", GDA_META_DB_OBJECT (dl->data)->obj_name);
+		}
+	}
+	g_slist_free (objlist);
+#endif
+
 	/* dump as a graph */
-#ifdef GDA_DEBUG
+#ifdef GDA_DEBUG_NO
 	gchar *graph;
 	GError *lerror = NULL;
 	graph = gda_meta_struct_dump_as_graph (mstruct, GDA_META_GRAPH_COLUMNS, &lerror);
@@ -360,6 +374,12 @@ create_table_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar 
 			g_array_free (fk_names_array, FALSE);
 			g_array_free (ref_pk_names_array, FALSE);
 			mtable->fk_list = g_slist_append (mtable->fk_list, mfkey);
+
+			if (mfkey->depend_on->obj_type == GDA_META_DB_TABLE) {
+				GdaMetaTable *dot = GDA_META_TABLE (mfkey->depend_on);
+				dot->reverse_fk_list = g_slist_prepend (dot->reverse_fk_list, mfkey);
+			}
+			dbobj->depend_list = g_slist_append (dbobj->depend_list, mfkey->depend_on);
 		}
 	}
 	mtable->pk_cols_array = (gint*) pk_cols_array->data;

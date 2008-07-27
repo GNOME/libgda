@@ -96,11 +96,19 @@
       </para>
     </sect2>
 
+    <sect2><title>Date and time</title>
+      <para>
+	As SQLite stores dates and times as strings, &LIBGDA; only handles dates in the format recommended by SQLite,
+	which is "YYYY-MM-DD" for dates, "HH:MM:SS" for times and "YYYY-MM-DD HH:MM:SS" for timestamps (see 
+	<ulink url="http://www.sqlite.org/cvstrac/wiki?p=DateAndTimeFunctions">SQLite's documentation</ulink>).
+      </para>
+    </sect2>
+
     <sect2><title>Multi threaded environment</title>
       <para>
-	While waiting for the SQLite 3.6 (and the <option>SQLITE_CONFIG_SERIALIZED</option> flag), 
-	a connection object can only be used from the thread which created it (see
-	SQLite's <ulink url="http://www.sqlite.org/cvstrac/wiki?p=MultiThreading">documentation about threads</ulink>).
+	No limitation if sqlite has been compiled with the SQLITE_THREADSAFE=1 flag (which is the case for the
+	embedded version of SQLite). If the system installed SQLite is used and if it was not compiled using that
+	flag, then &LIBGDA; sets the SQLite library in a state where multi threading is fully supported.
       </para>
     </sect2>
   </sect1>

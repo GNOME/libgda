@@ -29,7 +29,6 @@ main (int argc, char **argv)
 	number_failed = prov_test_common_setup ();
 
 	if (cnc) {
-		number_failed += prov_test_common_create_tables_sql ();
 		number_failed += prov_test_common_check_meta ();
 		number_failed += prov_test_common_load_data ();
 		number_failed += prov_test_common_check_cursor_models ();

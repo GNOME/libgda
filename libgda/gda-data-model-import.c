@@ -1126,6 +1126,7 @@ init_xml_import (GdaDataModelImport *model)
 			g_free (str);
 			xmlFreeTextReader (reader);
 			model->priv->extract.xml.reader = NULL;
+			return;
 		}
 		node = xmlTextReaderCurrentNode (reader);
 		

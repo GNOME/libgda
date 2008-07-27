@@ -20,8 +20,6 @@ main (int argc, char **argv)
 
 	gda_init ();
 
-	
-
 	if (argc == 2) {
 		if (g_str_has_suffix (argv[1], ".xml")) {
 			g_print ("Tested: %s\n", argv[1]);
@@ -90,6 +88,21 @@ do_test_load_file (const gchar *filename)
 	GSList *errors;
 	gboolean retval = TRUE;
 	gchar *export, *contents;
+
+	/* make sure we only test data model dumps */
+	xmlDocPtr doc;
+	xmlNodePtr root;
+	doc = xmlParseFile (filename);
+	if (!doc) 
+		/* abort the test */
+		return TRUE;
+	root = xmlDocGetRootElement (doc);
+	if (strcmp (root->name, "gda_array")) {
+		/* abort the test */
+		xmlFreeDoc (doc);
+		return TRUE;
+	}
+	xmlFreeDoc (doc);
 
 	import = gda_data_model_import_new_file (filename, TRUE, NULL);
 

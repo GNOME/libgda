@@ -152,12 +152,16 @@ read_rows_to_init_col_types (GdaSqliteRecordset *model)
 		prow = fetch_next_sqlite_row (model, TRUE, NULL);
 		if (!prow)
 			break;
-		/*g_print ("Read row %d for prep stmt %p\n", model->priv->next_row_num - 1, pmodel->prep_stmt);*/
+#ifdef GDA_DEBUG_NO
+		g_print ("Read row %d for prep stmt %p\n", model->priv->next_row_num - 1, pmodel->prep_stmt);
+#endif
 		for (i = nb_missing - 1; i >= 0; i--) {
 			if (pmodel->prep_stmt->types [missing_cols [i]] != GDA_TYPE_NULL) {
-				/*g_print ("Found type '%s' for col %d\n", 
+#ifdef GDA_DEBUG_NO
+				g_print ("Found type '%s' for col %d\n", 
 					 g_type_name (pmodel->prep_stmt->types [missing_cols [i]]),
-					 missing_cols [i]);*/
+					 missing_cols [i]);
+#endif
 				memmove (missing_cols + i, missing_cols + i + 1, sizeof (gint) * (nb_missing - i - 1));
 				nb_missing --;
 			}
@@ -190,7 +194,7 @@ gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaDataModelAc
 		return NULL;
 
         if (!cdata->types)
-                _gda_sqlite_update_types_hash (cdata);
+                _gda_sqlite_compute_types_hash (cdata);
 
         /* make sure @ps reports the correct number of columns */
 	if (_GDA_PSTMT (ps)->ncols < 0) 
@@ -304,32 +308,9 @@ fuzzy_get_gtype (SqliteConnectionData *cdata, GdaSqlitePStmt *ps, gint colnum)
 	ctype = sqlite3_column_decltype (ps->sqlite_stmt, colnum);
 	if (ctype)
 		gtype = GPOINTER_TO_INT (g_hash_table_lookup (cdata->types, ctype));
-	if (gtype == GDA_TYPE_NULL) {
-		int stype;
-		stype = sqlite3_column_type (ps->sqlite_stmt, colnum);
+	if (gtype == GDA_TYPE_NULL) 
+		gtype = _gda_sqlite_compute_g_type (sqlite3_column_type (ps->sqlite_stmt, colnum));
 
-		switch (stype) {
-		case SQLITE_INTEGER:
-			gtype = G_TYPE_INT;
-			break;
-		case SQLITE_FLOAT:
-			gtype = G_TYPE_DOUBLE;
-			break;
-		case 0:
-		case SQLITE_TEXT:
-			gtype = G_TYPE_STRING;
-			break;
-		case SQLITE_BLOB:
-			gtype = GDA_TYPE_BINARY;
-			break;
-		case SQLITE_NULL:
-			gtype = GDA_TYPE_NULL;
-			break;
-		default:
-			g_error ("Unknown SQLite internal data type %d", stype);
-			break;
-		}
-	}
 	return gtype;
 }
 
@@ -351,6 +332,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 	switch (rc) {
 	case  SQLITE_ROW: {
 		gint col;
+		gboolean has_error = FALSE;
 		
 		prow = gda_prow_new (_GDA_PSTMT (ps)->ncols);
 		for (col = 0; col < _GDA_PSTMT (ps)->ncols; col++) {
@@ -372,52 +354,97 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 			
 			/* fill GValue */
 			value = gda_prow_get_value (prow, col);
-			if (type != GDA_TYPE_NULL)
-				g_value_init (value, type);
-			
-			if (type == GDA_TYPE_NULL)
-				;
-			else if (type == G_TYPE_INT)
-				g_value_set_int (value, sqlite3_column_int (ps->sqlite_stmt, col));
-			else if (type == G_TYPE_DOUBLE)
-				g_value_set_double (value, sqlite3_column_double (ps->sqlite_stmt, col));
-			else if (type == G_TYPE_STRING)
-				g_value_set_string (value, (gchar *) sqlite3_column_text (ps->sqlite_stmt, col));
-			else if (type == GDA_TYPE_BINARY) {
-				GdaBinary *bin;
+			if (sqlite3_column_text (ps->sqlite_stmt, col) == NULL) {
+				/* we have a NULL value */
+				gda_value_set_null (value);
+			}
+			else {
+				if (type != GDA_TYPE_NULL)
+					g_value_init (value, type);
 				
-				bin = g_new0 (GdaBinary, 1);
-				bin->binary_length = sqlite3_column_bytes (ps->sqlite_stmt, col);
-				if (bin->binary_length > 0) {
-					bin->data = g_new (guchar, bin->binary_length);
-					memcpy (bin->data, sqlite3_column_blob (ps->sqlite_stmt, col),
-						bin->binary_length);
+				if (type == GDA_TYPE_NULL)
+					;
+				else if (type == G_TYPE_INT)
+					g_value_set_int (value, sqlite3_column_int (ps->sqlite_stmt, col));
+				else if (type == G_TYPE_DOUBLE)
+					g_value_set_double (value, sqlite3_column_double (ps->sqlite_stmt, col));
+				else if (type == G_TYPE_STRING)
+					g_value_set_string (value, (gchar *) sqlite3_column_text (ps->sqlite_stmt, col));
+				else if (type == GDA_TYPE_BINARY) {
+					GdaBinary *bin;
+					
+					bin = g_new0 (GdaBinary, 1);
+					bin->binary_length = sqlite3_column_bytes (ps->sqlite_stmt, col);
+					if (bin->binary_length > 0) {
+						bin->data = g_new (guchar, bin->binary_length);
+						memcpy (bin->data, sqlite3_column_blob (ps->sqlite_stmt, col),
+							bin->binary_length);
+					}
+					else
+						bin->binary_length = 0;
+					gda_value_take_binary (value, bin);
 				}
-				else
-					bin->binary_length = 0;
-				gda_value_take_binary (value, bin);
+				else if (type == G_TYPE_BOOLEAN)
+					g_value_set_boolean (value, sqlite3_column_int (ps->sqlite_stmt, col) == 0 ? FALSE : TRUE);
+				else if (type == G_TYPE_DATE) {
+					GDate date;
+					if (!gda_parse_iso8601_date (&date, 
+								     (gchar *) sqlite3_column_text (ps->sqlite_stmt, col))) {
+						g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+							     GDA_SERVER_PROVIDER_DATA_ERROR,
+							     _("Invalid date '%s' (date format should be YYYY-MM-DD)"), 
+							     (gchar *) sqlite3_column_text (ps->sqlite_stmt, col));
+						has_error = TRUE;
+						break;
+					}
+					else
+						g_value_set_boxed (value, &date);
+				}
+				else if (type == GDA_TYPE_TIME) {
+					GdaTime timegda;
+					if (!gda_parse_iso8601_time (&timegda, 
+								     (gchar *) sqlite3_column_text (ps->sqlite_stmt, col))) {
+						g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+							     GDA_SERVER_PROVIDER_DATA_ERROR,
+							     _("Invalid time '%s' (time format should be HH:MM:SS[.ms])"), 
+							     (gchar *) sqlite3_column_text (ps->sqlite_stmt, col));
+						has_error = TRUE;
+						break;
+					}
+					else
+						gda_value_set_time (value, &timegda);
+				}
+				else if (type == GDA_TYPE_TIMESTAMP) {
+					GdaTimestamp timestamp;
+					if (!gda_parse_iso8601_timestamp (&timestamp, 
+									  (gchar *) sqlite3_column_text (ps->sqlite_stmt, col))) {
+						g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+							     GDA_SERVER_PROVIDER_DATA_ERROR,
+							     _("Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"), 
+							     (gchar *) sqlite3_column_text (ps->sqlite_stmt, col));
+						has_error = TRUE;
+						break;
+					}
+					else
+						gda_value_set_timestamp (value, &timestamp);
+				}
+				else 
+					g_error ("Unhandled GDA type %s in SQLite recordset", 
+						 gda_g_type_to_string (_GDA_PSTMT (ps)->types [col]));
 			}
-			else if (type == G_TYPE_BOOLEAN)
-				g_value_set_boolean (value, sqlite3_column_int (ps->sqlite_stmt, col) == 0 ? FALSE : TRUE);
-			else if (type == G_TYPE_DATE) {
-				TO_IMPLEMENT;
-			}
-			else if (type == GDA_TYPE_TIME) {
-				TO_IMPLEMENT;
-			}
-			else if (type == GDA_TYPE_TIMESTAMP) {
-				TO_IMPLEMENT;
-			}
-			else 
-				g_error ("Unhandled GDA type %s in SQLite recordset", 
-					 gda_g_type_to_string (_GDA_PSTMT (ps)->types [col]));
 		}
 		
-		if (do_store) {
-			/* insert row */
-			gda_pmodel_take_row (GDA_PMODEL (model), prow, model->priv->next_row_num);
+		if (has_error) {
+			g_object_unref (prow);
+			prow = NULL;
 		}
-		model->priv->next_row_num ++;
+		else {
+			if (do_store) {
+				/* insert row */
+				gda_pmodel_take_row (GDA_PMODEL (model), prow, model->priv->next_row_num);
+			}
+			model->priv->next_row_num ++;
+		}
 		break;
 	}
 	case SQLITE_BUSY:

@@ -110,6 +110,7 @@
 <!ENTITY fdl-appendix SYSTEM "fdl-appendix.sgml">
 <!ENTITY howto SYSTEM "howto.xml">
 <!ENTITY libgda-TreeIndex SYSTEM "xml/tree_index.sgml">
+<!ENTITY GdaSqlManual SYSTEM "gda-sql-manual.xml">
 ]>
 
 <book id="index">
@@ -1233,6 +1234,11 @@ Description for type: DROP_COLUMN
       <title>Example</title>
       <para>TODO</para>
     </chapter>
+  </part>
+
+  <part id="gda-sql">
+    <title>Gda SQL console' user manual</title>
+    &GdaSqlManual;
   </part>
 
   <part id="part_providers">

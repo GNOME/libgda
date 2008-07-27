@@ -2,8 +2,10 @@ doc/C/prov-writing.xml
 libgda/sqlite/sql-parser.c/lemon.c
 libgda/sqlite/sql-parser.c/lempar.c
 libgda/sqlite/sqlite-src/sqlite3.c
+providers/firebird/firebird_specs_create_table.xml.in
 providers/firebird/firebird_specs_dsn.xml.in
 providers/firebird/gda-firebird-blob-op.c
+providers/firebird/gda-firebird-ddl.c
 providers/firebird/gda-firebird-provider.c
 providers/firebird/gda-firebird-recordset.c
 providers/firebird/libmain.c

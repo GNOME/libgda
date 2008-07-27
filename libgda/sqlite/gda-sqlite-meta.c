@@ -43,7 +43,8 @@ typedef enum {
 	I_PRAGMA_TABLE_INFO,
 	I_PRAGMA_INDEX_LIST,
 	I_PRAGMA_INDEX_INFO,
-	I_PRAGMA_FK_LIST
+	I_PRAGMA_FK_LIST,
+	I_PRAGMA_PROCLIST
 } InternalStatementItem;
 
 
@@ -64,7 +65,10 @@ static gchar *internal_sql[] = {
 	"PRAGMA index_info (##idxname::string)",
 
 	/* I_PRAGMA_FK_LIST */
-	"PRAGMA foreign_key_list (##tblname::string)"
+	"PRAGMA foreign_key_list (##tblname::string)",
+
+	/* I_PRAGMA_PROCLIST */
+	"PRAGMA proc_list"
 };
 /* name of the temporary database we don't want */
 #define TMP_DATABASE_NAME "temp"
@@ -86,6 +90,7 @@ static GValue       *table_type_value;
 static GValue       *view_type_value;
 static GValue       *view_check_option;
 static GValue       *false_value;
+static GValue       *true_value;
 static GValue       *zero_value;
 static GValue       *rule_value;
 static GdaSet       *pragma_set;
@@ -122,6 +127,7 @@ _gda_sqlite_provider_meta_init (GdaServerProvider *provider)
 	g_value_set_string ((view_type_value = gda_value_new (G_TYPE_STRING)), "VIEW");
 	g_value_set_string ((view_check_option = gda_value_new (G_TYPE_STRING)), "NONE");
 	g_value_set_boolean ((false_value = gda_value_new (G_TYPE_BOOLEAN)), FALSE);
+	g_value_set_boolean ((true_value = gda_value_new (G_TYPE_BOOLEAN)), TRUE);
 	g_value_set_int ((zero_value = gda_value_new (G_TYPE_INT)), 0);
 	g_value_set_string ((rule_value = gda_value_new (G_TYPE_STRING)), "NONE");
 
@@ -176,8 +182,6 @@ _gda_sqlite_meta__btypes (GdaServerProvider *prov, GdaConnection *cnc,
 	mod_model = gda_meta_store_create_modify_data_model (store, context->table_name);
 	g_assert (mod_model);
 
-	GValue *vint;
-	g_value_set_boolean (vint = gda_value_new (G_TYPE_BOOLEAN), FALSE);
 	for (i = 0; i < sizeof (internal_types) / sizeof (InternalType); i++) {
 		GValue *v1, *v2, *v3, *v4;
 		InternalType *it = &(internal_types[i]);
@@ -196,7 +200,7 @@ _gda_sqlite_meta__btypes (GdaServerProvider *prov, GdaConnection *cnc,
 				   TRUE, v2, /* gtype */
 				   TRUE, v3, /* comments */
 				   TRUE, v4, /* synonyms */
-				   FALSE, vint /* internal */)) {
+				   FALSE, false_value /* internal */)) {
 			retval = FALSE;
 			break;
 		}
@@ -204,18 +208,186 @@ _gda_sqlite_meta__btypes (GdaServerProvider *prov, GdaConnection *cnc,
 	if (retval) 
 		retval = gda_meta_store_modify (store, context->table_name, mod_model, NULL, error, NULL);
 	g_object_unref (mod_model);
-	gda_value_free (vint);
 
 	return retval;
+}
+
+/* 
+ * copied from SQLite's sources to determine column affinity 
+ */
+static gint
+get_affinity (const gchar *type)
+{
+	guint32 h = 0;
+	gint aff = SQLITE_TEXT;
+	const unsigned char *ptr = (unsigned char *) type;
+	
+	while( *ptr ){
+		h = (h<<8) + g_ascii_tolower(*ptr);
+		ptr++;
+		if( h==(('c'<<24)+('h'<<16)+('a'<<8)+'r') ){             /* CHAR */
+			aff = SQLITE_TEXT;
+		}else if( h==(('c'<<24)+('l'<<16)+('o'<<8)+'b') ){       /* CLOB */
+			aff = SQLITE_TEXT;
+		}else if( h==(('t'<<24)+('e'<<16)+('x'<<8)+'t') ){       /* TEXT */
+			aff = SQLITE_TEXT;
+		}else if( h==(('b'<<24)+('l'<<16)+('o'<<8)+'b')          /* BLOB */
+			  && (aff==SQLITE_INTEGER || aff==SQLITE_FLOAT) ){
+			aff = 0;
+		}else if( h==(('r'<<24)+('e'<<16)+('a'<<8)+'l')          /* REAL */
+			  && aff==SQLITE_INTEGER ){
+			aff = SQLITE_FLOAT;
+		}else if( h==(('f'<<24)+('l'<<16)+('o'<<8)+'a')          /* FLOA */
+			  && aff==SQLITE_INTEGER ){
+			aff = SQLITE_FLOAT;
+		}else if( h==(('d'<<24)+('o'<<16)+('u'<<8)+'b')          /* DOUB */
+			  && aff==SQLITE_INTEGER ){
+			aff = SQLITE_FLOAT;
+		}else if( (h&0x00FFFFFF)==(('i'<<16)+('n'<<8)+'t') ){    /* INT */
+			aff = SQLITE_INTEGER;
+			break;
+		}
+	}
+	
+	return aff;
+}
+
+static gboolean
+fill_udt_model (SqliteConnectionData *cdata, GHashTable *added_hash, 
+		GdaDataModel *mod_model, const GValue *p_udt_schema, GError **error)
+{
+	gint status;
+	sqlite3_stmt *tables_stmt = NULL;
+	gchar *str;
+	const gchar *cstr;
+	gboolean retval = TRUE;
+
+	cstr = g_value_get_string (p_udt_schema);
+	str = g_strdup_printf ("SELECT name FROM %s.sqlite_master WHERE type='table' AND name not like 'sqlite_%%'", cstr);
+	status = sqlite3_prepare_v2 (cdata->connection, str, -1, &tables_stmt, NULL);
+	g_free (str);
+	if ((status != SQLITE_OK) || !tables_stmt)
+		return FALSE;
+	
+	if (!cdata->types)
+                _gda_sqlite_compute_types_hash (cdata);
+
+	for (status = sqlite3_step (tables_stmt); status == SQLITE_ROW; status = sqlite3_step (tables_stmt)) {
+		gchar *sql;
+		sqlite3_stmt *fields_stmt;
+		gint fields_status;
+
+		if (strcmp (cstr, "main")) 
+			sql = g_strdup_printf ("PRAGMA table_info('%s.%s');", cstr, sqlite3_column_text (tables_stmt, 0));
+		else
+			sql = g_strdup_printf ("PRAGMA table_info('%s');", sqlite3_column_text (tables_stmt, 0));
+		fields_status = sqlite3_prepare_v2 (cdata->connection, sql, -1, &fields_stmt, NULL);
+		g_free (sql);
+		if ((fields_status != SQLITE_OK) || !fields_stmt)
+			break;
+		
+		for (fields_status = sqlite3_step (fields_stmt); fields_status == SQLITE_ROW; 
+		     fields_status = sqlite3_step (fields_stmt)) {
+			GType gtype;
+			const gchar *typname = (gchar *) sqlite3_column_text (fields_stmt, 2);
+			if (!typname || !(*typname)) 
+				continue;
+
+			gtype = GPOINTER_TO_INT (g_hash_table_lookup (cdata->types, typname));
+			if ((gtype == GDA_TYPE_NULL) && !g_hash_table_lookup (added_hash, typname)) {
+				GValue *vname, *vgtyp;
+
+				gtype = _gda_sqlite_compute_g_type (get_affinity (typname));
+				g_value_set_string ((vname = gda_value_new (G_TYPE_STRING)), typname);
+				g_value_set_string ((vgtyp = gda_value_new (G_TYPE_STRING)), g_type_name (gtype));
+
+				if (!append_a_row (mod_model, error, 9,
+						   FALSE, catalog_value, /* udt_catalog */
+						   FALSE, p_udt_schema, /* udt_schema */
+						   FALSE, vname, /* udt_name */
+						   TRUE, vgtyp, /* udt_gtype */
+						   TRUE, NULL, /* udt_comments */
+						   FALSE, vname, /* udt_short_name */
+						   TRUE, vname, /* udt_full_name */
+						   FALSE, false_value, /* udt_internal */
+						   FALSE, NULL /* udt_owner */)) {
+					retval = FALSE;
+					break;
+				}
+				g_hash_table_insert (added_hash, g_strdup (typname), GINT_TO_POINTER (1));
+			}
+		}
+		sqlite3_finalize (fields_stmt);
+	}
+	sqlite3_finalize (tables_stmt);
+
+	return retval;
+}
+
+static guint
+nocase_str_hash (gconstpointer v)
+{
+	guint ret;
+	gchar *up = g_ascii_strup ((gchar *) v, -1);
+	ret = g_str_hash ((gconstpointer) up);
+	g_free (up);
+	return ret;
+}
+
+static gboolean
+nocase_str_equal (gconstpointer v1, gconstpointer v2)
+{
+	return g_ascii_strcasecmp ((gchar *) v1, (gchar *) v2) == 0 ? TRUE : FALSE;
 }
 
 gboolean
 _gda_sqlite_meta__udt (GdaServerProvider *prov, GdaConnection *cnc, 
 		       GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
-	TO_IMPLEMENT;
-	/* get all the column types of all the tables */
-	return TRUE;
+	SqliteConnectionData *cdata;
+	GdaDataModel *mod_model = NULL;
+	gboolean retval = TRUE;
+
+	GHashTable *added_hash;
+	GdaDataModel *tmpmodel;
+	gint i, nrows;
+
+	/* get connection's private data */
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return FALSE;
+
+	/* get list of schemas */
+	tmpmodel = (GdaDataModel *) gda_connection_statement_execute (cnc, internal_stmt[I_PRAGMA_DATABASE_LIST],
+                                                                      NULL, GDA_STATEMENT_MODEL_RANDOM_ACCESS, NULL, error);
+        if (!tmpmodel)
+                return FALSE;
+
+	/* prepare modification model */
+	added_hash = g_hash_table_new_full (nocase_str_hash, nocase_str_equal, g_free, NULL); 
+	mod_model = gda_meta_store_create_modify_data_model (store, context->table_name);
+	g_assert (mod_model);
+
+	nrows = gda_data_model_get_n_rows (tmpmodel);
+        for (i = 0; i < nrows; i++) {
+		/* iterate through the schemas */
+                const GValue *cvalue = gda_data_model_get_value_at (tmpmodel, 1, i);
+                if (!strcmp (g_value_get_string (cvalue), TMP_DATABASE_NAME))
+			continue; /* nothing to do */
+		if (! fill_udt_model (cdata, added_hash, mod_model, cvalue, error)) {
+			retval = FALSE;
+                        break;
+		}
+	}
+	g_object_unref (tmpmodel);
+	g_hash_table_destroy (added_hash);
+
+	/* actually use mod_model */
+	if (retval) 
+		retval = gda_meta_store_modify (store, context->table_name, mod_model, NULL, error, NULL);
+	g_object_unref (mod_model);
+
+	return retval;
 }
 
 gboolean
@@ -223,9 +395,33 @@ _gda_sqlite_meta_udt (GdaServerProvider *prov, GdaConnection *cnc,
 		      GdaMetaStore *store, GdaMetaContext *context, GError **error,
 		      const GValue *udt_catalog, const GValue *udt_schema)
 {
-	TO_IMPLEMENT;
-	/* get all the column types of all the tables, with the correct name */
-	return TRUE;
+	SqliteConnectionData *cdata;
+	GdaDataModel *mod_model = NULL;
+	gboolean retval = TRUE;
+
+	GHashTable *added_hash;
+
+	/* get connection's private data */
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return FALSE;
+
+	/* prepare modification model */
+	added_hash = g_hash_table_new_full (nocase_str_hash, nocase_str_equal, g_free, NULL); 
+	mod_model = gda_meta_store_create_modify_data_model (store, context->table_name);
+	g_assert (mod_model);
+
+	if (! fill_udt_model (cdata, added_hash, mod_model, udt_schema, error))
+		retval = FALSE;
+
+	g_hash_table_destroy (added_hash);
+
+	/* actually use mod_model */
+	if (retval) 
+		retval = gda_meta_store_modify (store, context->table_name, mod_model, NULL, error, NULL);
+	g_object_unref (mod_model);
+
+	return retval;
 }
 
 gboolean
@@ -1596,13 +1792,52 @@ _gda_sqlite_meta_triggers (GdaServerProvider *prov, GdaConnection *cnc,
 	return TRUE;
 }
 
+
 gboolean
 _gda_sqlite_meta__routines (GdaServerProvider *prov, GdaConnection *cnc, 
 			    GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
-	TO_IMPLEMENT;
-	/* use cdata->functions_model and cdata->aggregates_model */
-	return TRUE;
+	return _gda_sqlite_meta_routines (prov, cnc, store, context, error, NULL, NULL, NULL);
+}
+
+static gboolean
+fill_routines (GdaDataModel *mod_model, 
+	       const GValue *rname, const GValue *is_agg, const GValue *rnargs, const GValue *sname, GError **error)
+{
+	GValue *v0;
+	gboolean retval = TRUE;
+	
+	if (g_value_get_int (is_agg) == 0)
+		g_value_set_string ((v0 = gda_value_new (G_TYPE_STRING)), "FUNCTION");
+	else
+		g_value_set_string ((v0 = gda_value_new (G_TYPE_STRING)), "AGGREGATE");
+	if (!append_a_row (mod_model, error, 22,
+			   FALSE, catalog_value, /* specific_catalog */
+			   FALSE, catalog_value, /* specific_schema */
+			   FALSE, sname, /* specific_name */
+			   FALSE, NULL, /* routine_catalog */
+			   FALSE, NULL, /* routine_schema */
+			   FALSE, rname, /* routine_name */
+			   TRUE, v0, /* routine_type */
+			   FALSE, NULL, /* return_type */
+			   FALSE, false_value, /* returns_set */
+			   FALSE, rnargs, /* nb_args */
+			   FALSE, NULL, /* routine_body */
+			   FALSE, NULL, /* routine_definition */
+			   FALSE, NULL, /* external_name */
+			   FALSE, NULL, /* external_language */
+			   FALSE, NULL, /* parameter_style */
+			   FALSE, NULL, /* is_deterministic */
+			   FALSE, NULL, /* sql_data_access */
+			   FALSE, NULL, /* is_null_call */
+			   FALSE, NULL, /* routine_comments */
+			   FALSE, rname, /* routine_short_name */
+			   FALSE, rname, /* routine_full_name */
+			   FALSE, NULL /* routine_owner */)) {
+		retval = FALSE;
+	}
+
+	return retval;
 }
 
 gboolean
@@ -1611,9 +1846,104 @@ _gda_sqlite_meta_routines (GdaServerProvider *prov, GdaConnection *cnc,
 			   const GValue *routine_catalog, const GValue *routine_schema, 
 			   const GValue *routine_name_n)
 {
-	TO_IMPLEMENT;
-	/* use cdata->functions_model and cdata->aggregates_model */
-	return TRUE;
+	SqliteConnectionData *cdata;
+	gboolean retval = TRUE;
+
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return FALSE;
+	
+	if (cdata->functions_model) {
+		/* use cdata->functions_model and cdata->aggregates_model */
+		GdaDataModel *mod_model;
+		mod_model = gda_meta_store_create_modify_data_model (store, context->table_name);
+		g_assert (mod_model);
+		
+		if (cdata->functions_model) {
+			gint i, nrows;
+			for (i = 0; i < nrows; i++) {
+				const GValue *cv0, *cv2, *cv3;
+				cv0 = gda_data_model_get_value_at (cdata->functions_model, 0, i);
+				cv2 = gda_data_model_get_value_at (cdata->functions_model, 1, i);
+				cv3 = gda_data_model_get_value_at (cdata->functions_model, 2, i);
+				if (!cv0 || !cv2 ||!cv3) {
+					g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_DATA_ERROR,
+						     _("Can't read data"));
+					retval = FALSE;
+					break;
+				}
+				if ((!routine_name_n || (routine_name_n && !gda_value_compare (routine_name_n, cv0)))
+				    && ! fill_routines (mod_model, cv0, false_value, cv2, cv3, error)) {
+					retval = FALSE;
+					break;
+				}
+			}
+		}
+		if (cdata->aggregates_model) {
+			gint i, nrows;
+			for (i = 0; i < nrows; i++) {
+				const GValue *cv0, *cv2, *cv3;
+				cv0 = gda_data_model_get_value_at (cdata->aggregates_model, 0, i);
+				cv2 = gda_data_model_get_value_at (cdata->aggregates_model, 1, i);
+				cv3 = gda_data_model_get_value_at (cdata->aggregates_model, 2, i);
+				if (!cv0 || !cv2 ||!cv3) {
+					g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_DATA_ERROR,
+						     _("Can't read data"));
+					retval = FALSE;
+					break;
+				}
+				if ((!routine_name_n || (routine_name_n && !gda_value_compare (routine_name_n, cv0)))
+				    && ! fill_routines (mod_model, cv0, true_value, cv2, cv3, error)) {
+					retval = FALSE;
+					break;
+				}
+			}
+		}
+
+		if (retval)
+			retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
+		g_object_unref (mod_model);
+	}
+	else {
+		/* get list of procedures */
+		GdaDataModel *tmpmodel, *mod_model;
+		gint i, nrows;
+		tmpmodel = (GdaDataModel *) gda_connection_statement_execute (cnc, internal_stmt[I_PRAGMA_PROCLIST],
+									      NULL, GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
+									      NULL, error);
+		if (!tmpmodel)
+			return FALSE;
+
+		mod_model = gda_meta_store_create_modify_data_model (store, context->table_name);
+		g_assert (mod_model);
+
+		nrows = gda_data_model_get_n_rows (tmpmodel);
+		for (i = 0; i < nrows; i++) {
+			const GValue *cv0, *cv1, *cv2, *cv3;
+			cv0 = gda_data_model_get_value_at (tmpmodel, 0, i);
+			cv1 = gda_data_model_get_value_at (tmpmodel, 1, i);
+			cv2 = gda_data_model_get_value_at (tmpmodel, 2, i);
+			cv3 = gda_data_model_get_value_at (tmpmodel, 3, i);
+			if (!cv0 || !cv1 || !cv2 ||!cv3) {
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_DATA_ERROR,
+					     _("Can't read data"));
+				retval = FALSE;
+				break;
+			}
+			if ((!routine_name_n || (routine_name_n && !gda_value_compare (routine_name_n, cv0)))
+			    && ! fill_routines (mod_model, cv0, cv1, cv2, cv3, error)) {
+				retval = FALSE;
+				break;
+			}
+		}
+
+		if (retval)
+			retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
+		g_object_unref (mod_model);
+		g_object_unref (tmpmodel);
+	}
+
+	return retval;
 }
 
 gboolean
@@ -1638,7 +1968,7 @@ gboolean
 _gda_sqlite_meta__routine_par (GdaServerProvider *prov, GdaConnection *cnc, 
 			       GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
-	TO_IMPLEMENT;
+	/* Routines in SQLite accept any type of value => nothing to do */
 	return TRUE;
 }
 
@@ -1648,7 +1978,7 @@ _gda_sqlite_meta_routine_par (GdaServerProvider *prov, GdaConnection *cnc,
 			      const GValue *rout_catalog, const GValue *rout_schema, 
 			      const GValue *rout_name)
 {
-	TO_IMPLEMENT;
+	/* Routines in SQLite accept any type of value => nothing to do */
 	return TRUE;
 }
 

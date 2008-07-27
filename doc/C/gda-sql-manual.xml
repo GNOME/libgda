@@ -1,0 +1,150 @@
+<para>
+  The &LIBGDA;'s console tool allow one to send SQL commands to a database server, and
+  to easily browse the meta data associated to the database (ie. get information about
+  tables and their columns, functions, triggers, etc). This tool has a usage similar to
+  PostgreSQL's <application>psql</application>, MySQL's <application>mysql</application>, Oracle's
+  <application>sqlplus</application> or SQLite's <application>sqlite3</application> programs.
+</para>
+
+<para>
+  However, contrary to the programmed mentionned above, The &LIBGDA;'s console tool
+  offers the same features and usage for any of the databases supported by &LIBGDA;.
+</para>
+
+
+<chapter id="gda-sql-manual-run">
+  <title>Getting started</title>
+
+  <sect1>
+    <title>Features</title>
+    <para>
+      The &LIBGDA;'s console tool' main features are:
+      <itemizedlist>
+	<listitem><para>Can handle more than one connection at the same time</para></listitem>
+	<listitem><para>Reports meta data in a similar way, whatever the real type of database
+	    accessed</para></listitem>
+	<listitem><para>Can create <emphasis>virtual</emphasis> connections binding 
+	    several already opened connections (to run SQL commands across multiple 
+	    connections)</para></listitem>
+	<listitem><para>Allows one to define variables which can be referenced in any
+	    SQL statement (using a common syntax)</para></listitem>
+	<listitem><para>Has one query buffer per connection to edit complex queries (uses a
+	    parametrable external editor)</para></listitem>
+	<listitem><para>Easy command line editing and output using the Readline library and a
+	    (parametrable) pager</para></listitem>
+	<listitem><para>Works on any platform on which &LIBGDA; has been ported to.</para></listitem>
+      </itemizedlist>
+    </para>
+  </sect1>
+
+  <sect1>
+    <title>Execution</title>
+    <para>
+      The &LIBGDA;'s SQL console tool runs is a terminal emulator, and can be launched using
+      the <command>gda-sql-4.0</command>:
+      <cmdsynopsis>
+	<command>gda-sql-4.0</command>
+	<arg>--help</arg>
+	<arg>-l</arg>
+	<arg>-L</arg>
+	<arg>-C <replaceable>command</replaceable></arg>
+	<arg>-f <replaceable>commands file</replaceable></arg>
+	<arg>-o <replaceable>output file</replaceable></arg>
+	<arg>-p</arg>
+	<arg rep="repeat"><replaceable>connection specification</replaceable></arg>
+      </cmdsynopsis>
+      The options are the following ones:
+      <itemizedlist>
+	<listitem><para>the <option>--help</option> option gives a short help summary</para></listitem>
+	<listitem><para>the <option>-l</option> and <option>-L</option> options respectively
+	output a list of the defined data sources (DSN) and of the installed database adaptaters
+	(database providers):
+	    <programlisting>
+[prompt]> gda-sql-4.0 -l
+List of defined data sources
+DSN       | Provider | Description                          | Connection string     | Username | Global
+----------+----------+--------------------------------------+-----------------------+----------+-------
+SalesTest | SQLite   | Test database for a sales department | DB_NAME=sales_test.db |          | FALSE 
+(1 row)
+	    </programlisting>
+	    <programlisting>
+[prompt]> gda-sql-4.0 -L
+                                                        List of installed providers
+Provider    | Description                         | DSN parameters     | Authentication | File 
+                                     
+------------+-------------------------------------+--------------------+----------------+----------------------
+-------------------------------------
+PostgreSQL  | Provider for PostgreSQL databases   | DB_NAME,           | USERNAME,      | [...]libgda-postgres.so
+                                                    SEARCHPATH,          PASSWORD               
+                                                    HOST,                
+                                                    PORT,                    
+                                                    OPTIONS,                             
+                                                    USE_SSL          
+MSAccess    | Provider for Microsoft Access files | DB_NAME,           |                | [...]libgda-mdb.so     
+                                                    DB_DIR 
+[...]            
+	    </programlisting>
+	</para></listitem>
+	<listitem><para>the <option>-C</option> and <option>-f</option> options repectively allow
+	    one to specify a single command to be run or a filename containing the commands to run
+	    before the tool exits</para></listitem>
+	<listitem><para>the <option>-o</option> option allows to specify a file to write the 
+	    output to</para></listitem>
+	<listitem><para>the <option>-p</option> speficies that the tool should not ask for
+	    passwords when a username has been specified for a connection but no password has
+	    been specified.</para></listitem>
+      </itemizedlist>
+    </para>
+    <para>
+      Connections to be opened can be specified on the command line using either defined data 
+      sources (the ones listed using the <option>-l</option> option), or using connection strings
+      which have the following format: "[&lt;provider&gt;://][&lt;username&gt;[:&lt;password&gt;]@]&lt;connection_params&gt;". Note that if provided, &lt;username&gt;, &lt;password&gt; and &lt;provider&gt; must be encoded as per RFC 1738.
+    </para>
+    <para>
+      Connections can also be opened while the tool is running using the <command>.c</command> 
+      internal command.
+    </para>
+    <para>
+      Examples:
+      <programlisting>
+[prompt]> gda-sql-4.0 Sales
+[prompt]> gda-sql-4.0 Postgresql://username@DB_NAME=mydb SQLite://DB_NAME=fspot Sales	
+      </programlisting>
+    </para>
+  </sect1>
+
+</chapter>
+
+<chapter id="gda-sql-manual-open">
+  <title>Connections management</title>
+  <para>
+    Blah.
+  </para>
+
+  <sect1>
+    <title>Connection string's format</title>
+  </sect1>
+
+  <sect1>
+    <title>Meta data</title>
+  </sect1>
+
+</chapter>
+
+<chapter id="gda-sql-manual-commands">
+  <title>Executing commands</title>
+  <para>
+    Blah.
+  </para>
+
+  <sect1>
+    <title>SQL comands</title>
+  </sect1>
+
+  <sect1>
+    <title>Internal commands</title>
+  </sect1>
+
+</chapter>
+
+

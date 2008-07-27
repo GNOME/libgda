@@ -476,10 +476,10 @@ gda_data_comparator_compute_diff (GdaDataComparator *comp, GError **error)
 		GdaDiff *diff = NULL;
 		gboolean stop;
 		
-		erow = find_row_in_model (comp, i,  &has_changed, error);
+		erow = find_row_in_model (comp, i, &has_changed, error);
 		
 #ifdef DEBUG_STORE_MODIFY
-		g_print ("FIND row %d(/%d) returned row %d (%s)\n", i, new_n_rows - 1, erow, 
+		g_print ("FIND row %d returned row %d (%s)\n", i, erow, 
 			 has_changed ? "CHANGED" : "unchanged");
 #endif
 		if (erow < 0) {

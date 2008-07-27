@@ -60,8 +60,6 @@ static gboolean gda_postgres_recordset_fetch_at (GdaPModel *model, GdaPRow **pro
 
 /* static helper functions */
 static void make_point (GdaGeometricPoint *point, const gchar *value);
-static void make_time (GdaTime *timegda, const gchar *value);
-static void make_timestamp (GdaTimestamp *timestamp, const gchar *value);
 static void set_value (GdaConnection *cnc, GValue *value, GType type, const gchar *thevalue, gint length);
 
 static void     set_prow_with_pg_res (GdaPostgresRecordset *imodel, GdaPRow *prow, gint pg_res_rownum);
@@ -608,72 +606,6 @@ make_point (GdaGeometricPoint *point, const gchar *value)
 	point->y = atof (value);
 }
 
-/* Makes a GdaTime from a string like "12:30:15+01" */
-static void
-make_time (GdaTime *timegda, const gchar *value)
-{
-	timegda->hour = atoi (value);
-	value += 3;
-	timegda->minute = atoi (value);
-	value += 3;
-	timegda->second = atoi (value);
-	value += 2;
-	if (*value)
-		timegda->timezone = atoi (value);
-	else
-		timegda->timezone = GDA_TIMEZONE_INVALID;
-}
-
-/* Makes a GdaTimestamp from a string like "2003-12-13 13:12:01.12+01" */
-static void
-make_timestamp (GdaTimestamp *timestamp, const gchar *value)
-{
-	timestamp->year = atoi (value);
-	value += 5;
-	timestamp->month = atoi (value);
-	value += 3;
-	timestamp->day = atoi (value);
-	value += 3;
-	timestamp->hour = atoi (value);
-	value += 3;
-	timestamp->minute = atoi (value);
-	value += 3;
-	timestamp->second = atoi (value);
-	value += 2;
-	if (*value != '.') {
-		timestamp->fraction = 0;
-	} else {
-		gint ndigits = 0;
-		gint64 fraction;
-
-		value++;
-		fraction = atol (value);
-		while (*value && *value != '+') {
-			value++;
-			ndigits++;
-		}
-
-		while (ndigits < 3) {
-			fraction *= 10;
-			ndigits++;
-		}
-
-		while (fraction > 0 && ndigits > 3) {
-			fraction /= 10;
-			ndigits--;
-		}
-		
-		timestamp->fraction = fraction;
-	}
-
-	if (*value != '+') {
-		timestamp->timezone = 0;
-	} else {
-		value++;
-		timestamp->timezone = atol (value) * 60 * 60;
-	}
-}
-
 static void
 set_value (GdaConnection *cnc, GValue *value, GType type,
 	   const gchar *thevalue, gint length)
@@ -713,15 +645,11 @@ set_value (GdaConnection *cnc, GValue *value, GType type,
 		g_free (numeric.number);
 	}
 	else if (type == G_TYPE_DATE) {
-		GDate *gdate;
-		gdate = g_date_new ();
-		g_date_set_parse (gdate, thevalue);
-		if (!g_date_valid (gdate)) {
-			g_warning (_("Could not parse date '%s', assuming 01/01/0001"), thevalue);
-			g_date_clear (gdate, 1);
-			g_date_set_dmy (gdate, 1, 1, 1);
-		}
-		g_value_take_boxed (value, gdate);
+		GDate date;
+		if (!gda_parse_iso8601_date (&date, thevalue)) 
+			g_warning (_("Invalid date '%s' (date format should be YYYY-MM-DD)"), thevalue);
+		else
+			g_value_set_boxed (value, &date);
 	}
 	else if (type == GDA_TYPE_GEOMETRIC_POINT) {
 		GdaGeometricPoint point;
@@ -730,13 +658,18 @@ set_value (GdaConnection *cnc, GValue *value, GType type,
 	}
 	else if (type == GDA_TYPE_TIMESTAMP) {
 		GdaTimestamp timestamp;
-		make_timestamp (&timestamp, thevalue);
-		gda_value_set_timestamp (value, &timestamp);
+		if (! gda_parse_iso8601_timestamp (&timestamp, thevalue))
+			g_warning (_("Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"), 
+				   thevalue);
+		else
+			gda_value_set_timestamp (value, &timestamp);
 	}
 	else if (type == GDA_TYPE_TIME) {
 		GdaTime timegda;
-		make_time (&timegda, thevalue);
-		gda_value_set_time (value, &timegda);
+		if (!gda_parse_iso8601_time (&timegda, thevalue)) 
+			g_warning (_("Invalid time '%s' (time format should be HH:MM:SS[.ms])"), thevalue);
+		else
+			gda_value_set_time (value, &timegda);
 	}
 	else if (type == GDA_TYPE_BINARY) {
 		/*

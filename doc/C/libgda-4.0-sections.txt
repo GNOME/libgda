@@ -736,6 +736,10 @@ gda_rfc1738_encode
 gda_rfc1738_decode
 gda_dsn_split
 gda_connection_string_split
+<SUBSECTION>
+gda_parse_iso8601_date
+gda_parse_iso8601_time
+gda_parse_iso8601_timestamp
 </SECTION>
 
 <SECTION>

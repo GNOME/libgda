@@ -60,7 +60,7 @@ gboolean list_providers = FALSE;
 gchar *outfile = NULL;
 
 static GOptionEntry entries[] = {
-        { "no-password-ask", 'p', 0, G_OPTION_ARG_NONE, &ask_pass, "Don't ast for a password when it is empty", NULL },
+        { "no-password-ask", 'p', 0, G_OPTION_ARG_NONE, &ask_pass, "Don't ask for a password when it is empty", NULL },
 
         { "output-file", 'o', 0, G_OPTION_ARG_STRING, &outfile, "Output file", "output file"},
         { "command", 'C', 0, G_OPTION_ARG_STRING, &single_command, "Run only single command (SQL or internal) and exit", "command" },
@@ -96,6 +96,10 @@ typedef struct {
 	gchar         *name;
 	GdaConnection *cnc;
 	GdaSqlParser  *parser;
+	GString       *query_buffer;
+
+	GdaThreader   *threader;
+	guint          meta_job_id;
 } ConnectionSetting;
 
 /* structure to hold program's data */
@@ -110,7 +114,6 @@ typedef struct {
 	OutputFormat output_format;
 
 	GString *partial_command;
-	GString *query_buffer;
 
 	GHashTable *parameters; /* key = name, value = G_TYPE_STRING GdaParameter */
 } MainData;
@@ -126,6 +129,7 @@ static void     output_data_model (MainData *data, GdaDataModel *model);
 static void     output_string (MainData *data, const gchar *str);
 static ConnectionSetting *open_connection (MainData *data, const gchar *cnc_name, const gchar *cnc_string,
 					   GError **error);
+static void connection_settings_free (ConnectionSetting *cs);
 static GdaDataModel *list_all_dsn (MainData *data);
 static GdaDataModel *list_all_providers (MainData *data);
 
@@ -142,7 +146,6 @@ main (int argc, char *argv[])
 	GError *error = NULL;
 	MainData *data;
 	int exit_status = EXIT_SUCCESS;
-	GSList *list;
 	prompt = g_string_new ("");
 
 	context = g_option_context_new (_("[DSN|connection string]..."));        
@@ -299,9 +302,11 @@ main (int argc, char *argv[])
 				FILE *to_stream;
 
 				if ((*data->partial_command->str != '\\') && (*data->partial_command->str != '.')) {
-					if (!data->query_buffer)
-						data->query_buffer = g_string_new ("");
-					g_string_assign (data->query_buffer, data->partial_command->str);
+					if (data->current) {
+						if (!data->current->query_buffer)
+							data->current->query_buffer = g_string_new ("");
+						g_string_assign (data->current->query_buffer, data->partial_command->str);
+					}
 				}
 
 				if (data && data->output_stream)
@@ -339,15 +344,7 @@ main (int argc, char *argv[])
 	
 	/* cleanups */
  cleanup:
-	for (list = data->settings; list; list = list->next) {
-		ConnectionSetting *cs = (ConnectionSetting*) list->data;
-		if (cs->cnc)
-			g_object_unref (cs->cnc);
-		if (cs->parser)
-			g_object_unref (cs->parser);
-		g_free (cs->name);
-		g_free (cs);
-	}
+	g_slist_foreach (data->settings, (GFunc) connection_settings_free, NULL);
 	set_input_file (data, NULL, NULL); 
 	set_output_file (data, NULL, NULL); 
 
@@ -866,6 +863,18 @@ find_connection_from_name (MainData *data, const gchar *name)
 	return cs;
 }
 
+typedef struct {
+	MainData *data;
+	ConnectionSetting *cs;
+	gboolean cannot_lock;
+	gboolean result;
+	GError   *error;
+} MetaUpdateData;
+
+static gpointer thread_start_update_meta_store (MetaUpdateData *data);
+static void thread_ok_cb_update_meta_store (GdaThreader *threader, guint job, MetaUpdateData *data);
+static void thread_cancelled_cb_update_meta_store (GdaThreader *threader, guint job, MetaUpdateData *data);
+
 /*
  * Open a connection
  */
@@ -961,6 +970,9 @@ open_connection (MainData *data, const gchar *cnc_name, const gchar *cnc_string,
 		cncindex++;
 		cs->parser = gda_connection_create_parser (newcnc);
 		cs->cnc = newcnc;
+		cs->query_buffer = NULL;
+		cs->threader = NULL;
+		cs->meta_job_id = 0;
 
 		data->settings = g_slist_append (data->settings, cs);
 		data->current = cs;
@@ -987,27 +999,103 @@ open_connection (MainData *data, const gchar *cnc_name, const gchar *cnc_string,
 		g_object_set (G_OBJECT (cs->cnc), "meta-store", store, NULL);
 		if (update_store) {
 			GError *lerror = NULL;
-			if (!data->output_stream) {
-				g_print (_("\tGetting database schema information, "
-					   "this may take some time... "));
-				fflush (stdout);
-			}
-			if (!gda_connection_update_meta_store (cs->cnc, NULL, &lerror)) {
+			MetaUpdateData *thdata;
+			
+			cs->threader = (GdaThreader*) gda_threader_new ();
+			thdata = g_new0 (MetaUpdateData, 1);
+			thdata->data = data;
+			thdata->cs = cs;
+			thdata->cannot_lock = FALSE;
+			cs->meta_job_id = gda_threader_start_thread (cs->threader, 
+								     (GThreadFunc) thread_start_update_meta_store,
+								     thdata,
+								     (GdaThreaderFunc) thread_ok_cb_update_meta_store,
+								     (GdaThreaderFunc) thread_cancelled_cb_update_meta_store, 
+								     &lerror);
+			if (cs->meta_job_id == 0) {
 				if (!data->output_stream) 
-					g_print (_("error: %s\n"), 
+					g_print (_("Error getting meta data in background: %s\n"), 
 						 lerror && lerror->message ? lerror->message : _("No detail"));
 				if (lerror)
 					g_error_free (lerror);
 			}
-			else
-				if (!data->output_stream) 
-					g_print (_("Done.\n"));
 		}
 
 		g_object_unref (store);
 	}
 
 	return cs;
+}
+
+static gpointer
+thread_start_update_meta_store (MetaUpdateData *data)
+{
+	/* test if the connection can be locked, which means that multiple threads can access it at the same time.
+	 * If that is not possible, then quit the thread while positionning data->cannot_lock to TRUE so the
+	 * meta data update can be done while back in the main thread */
+	if (gda_lockable_trylock (GDA_LOCKABLE (data->cs->cnc))) {
+		gda_lockable_unlock (GDA_LOCKABLE (data->cs->cnc));
+		data->result = gda_connection_update_meta_store (data->cs->cnc, NULL, &(data->error));
+	}
+	else
+		data->cannot_lock = TRUE;
+	return NULL;
+}
+
+static void
+thread_ok_cb_update_meta_store (GdaThreader *threader, guint job, MetaUpdateData *data)
+{
+	data->cs->meta_job_id = 0;
+	if (data->cannot_lock) {
+		if (!data->data->output_stream) {
+			GError *lerror = NULL;
+			g_print (_("Getting database schema information for connection '%s', this may take some time... "),
+				 data->cs->name);
+			fflush (stdout);
+			if (!gda_connection_update_meta_store (data->cs->cnc, NULL, &lerror)) {
+				if (!data->data->output_stream) 
+					g_print (_("error: %s\n"), 
+						 lerror && lerror->message ? lerror->message : _("No detail"));
+				if (lerror)
+					g_error_free (lerror);
+			}
+			else
+				if (!data->data->output_stream) 
+					g_print (_("Done.\n"));
+		}
+	}
+	if (data->error)
+		g_error_free (data->error);
+
+	g_free (data);
+}
+
+static void
+thread_cancelled_cb_update_meta_store (GdaThreader *threader, guint job, MetaUpdateData *data)
+{
+	data->cs->meta_job_id = 0;
+	if (data->error)
+		g_error_free (data->error);
+	g_free (data);
+}
+
+/* free the connection settings */
+static void
+connection_settings_free (ConnectionSetting *cs)
+{
+	g_free (cs->name);
+	if (cs->cnc)
+		g_object_unref (cs->cnc);
+	if (cs->parser)
+		g_object_unref (cs->parser);
+	if (cs->query_buffer)
+		g_string_free (cs->query_buffer, TRUE);
+	if (cs->threader) {
+		if (cs->meta_job_id)
+			gda_threader_cancel (cs->threader, cs->meta_job_id);
+		g_object_unref (cs->threader);
+	}
+	g_free (cs);
 }
 
 /* 
@@ -1792,6 +1880,9 @@ extra_command_manage_cnc (GdaConnection *cnc, const gchar **args, GError **error
 					ncs->cnc = gda_meta_store_get_internal_connection (store);
 					g_object_ref (ncs->cnc);
 					ncs->parser = gda_connection_create_parser (ncs->cnc);
+					ncs->query_buffer = NULL;
+					ncs->threader = NULL;
+					ncs->meta_job_id = 0;
 					
 					data->settings = g_slist_append (data->settings, ncs);
 					data->current = ncs;
@@ -1862,14 +1953,14 @@ extra_command_manage_cnc (GdaConnection *cnc, const gchar **args, GError **error
 			gda_value_free (value);
 			
 			prov = gda_connection_get_provider_obj (cs->cnc);
-			if (GDA_IS_VIRTUAL_PROVIDER (prov))
+			if (GDA_IS_VPROVIDER_HUB (prov))
 				value = gda_value_new_from_string ("", G_TYPE_STRING);
 			else
 				value = gda_value_new_from_string (gda_connection_get_provider_name (cs->cnc), G_TYPE_STRING);
 			gda_data_model_set_value_at (model, 1, row, value, NULL);
 			gda_value_free (value);
 
-			if (GDA_IS_VIRTUAL_PROVIDER (prov)) {
+			if (GDA_IS_VPROVIDER_HUB (prov)) {
 				GString *string = g_string_new ("");
 				gda_vconnection_hub_foreach (GDA_VCONNECTION_HUB (cs->cnc), 
 							     (GdaVConnectionHubFunc) vconnection_hub_foreach_cb, string);
@@ -1934,10 +2025,7 @@ extra_command_close_cnc (GdaConnection *cnc, const gchar **args, GError **error,
 		data->current = g_slist_nth_data (data->settings, pos + 1);
 
 	data->settings = g_slist_remove (data->settings, cs);
-	g_object_unref (cs->cnc);
-	g_object_unref (cs->parser);
-	g_free (cs->name);
-	g_free (cs);
+	connection_settings_free (cs);
 
 	GdaInternalCommandResult *res;
 	
@@ -2009,6 +2097,9 @@ extra_command_bind_cnc (GdaConnection *cnc, const gchar **args, GError **error, 
 	cs->name = g_strdup (args[0]);
 	cs->cnc = virtual;
 	cs->parser = gda_connection_create_parser (virtual);
+	cs->query_buffer = NULL;
+	cs->threader = NULL;
+	cs->meta_job_id = 0;
 
 	data->settings = g_slist_append (data->settings, cs);
 	data->current = cs;
@@ -2120,8 +2211,13 @@ extra_command_edit_buffer (GdaConnection *cnc, const gchar **args,
 	gint systemres;
 	GdaInternalCommandResult *res = NULL;
 
-	if (!data->query_buffer) 
-		data->query_buffer = g_string_new ("");
+	if (!data->current) {
+		g_set_error (error, 0, 0, _("No connection opened"));
+		goto end_of_command;
+	}
+
+	if (!data->current->query_buffer) 
+		data->current->query_buffer = g_string_new ("");
 
 	if (args[0] && *args[0])
 		filename = (gchar *) args[0];
@@ -2131,7 +2227,8 @@ extra_command_edit_buffer (GdaConnection *cnc, const gchar **args,
 		fd = g_file_open_tmp (NULL, &filename, error);
 		if (fd < 0)
 			goto end_of_command;
-		if (write (fd, data->query_buffer->str, data->query_buffer->len) != data->query_buffer->len) {
+		if (write (fd, data->current->query_buffer->str, 
+			   data->current->query_buffer->len) != data->current->query_buffer->len) {
 			g_set_error (error, 0, 0,
 				     _("Could not write to temporary file '%s': %s"),
 				     filename, strerror (errno));
@@ -2183,7 +2280,7 @@ extra_command_edit_buffer (GdaConnection *cnc, const gchar **args,
 			
 			if (!g_file_get_contents (filename, &str, NULL, error))
 				goto end_of_command;
-			g_string_assign (data->query_buffer, str);
+			g_string_assign (data->current->query_buffer, str);
 			g_free (str);
 		}
 	}
@@ -2208,10 +2305,15 @@ extra_command_reset_buffer (GdaConnection *cnc, const gchar **args,
 {
 	GdaInternalCommandResult *res = NULL;
 
-	if (!data->query_buffer) 
-		data->query_buffer = g_string_new ("");
+	if (!data->current) {
+		g_set_error (error, 0, 0, _("No connection opened"));
+		return NULL;
+	}
+
+	if (!data->current->query_buffer) 
+		data->current->query_buffer = g_string_new ("");
 	else 
-		g_string_assign (data->query_buffer, "");
+		g_string_assign (data->current->query_buffer, "");
 
 	if (args[0]) {
 		const gchar *filename = NULL;
@@ -2221,7 +2323,7 @@ extra_command_reset_buffer (GdaConnection *cnc, const gchar **args,
 		if (!g_file_get_contents (filename, &str, NULL, error))
 			return NULL;
 
-		g_string_assign (data->query_buffer, str);
+		g_string_assign (data->current->query_buffer, str);
 		g_free (str);
 	}
 	
@@ -2237,11 +2339,16 @@ extra_command_show_buffer (GdaConnection *cnc, const gchar **args,
 {
 	GdaInternalCommandResult *res = NULL;
 
-	if (!data->query_buffer) 
-		data->query_buffer = g_string_new ("");
+	if (!data->current) {
+		g_set_error (error, 0, 0, _("No connection opened"));
+		return NULL;
+	}
+
+	if (!data->current->query_buffer) 
+		data->current->query_buffer = g_string_new ("");
 	res = g_new0 (GdaInternalCommandResult, 1);
 	res->type = GDA_INTERNAL_COMMAND_RESULT_TXT;
-	res->u.txt = g_string_new (data->query_buffer->str);
+	res->u.txt = g_string_new (data->current->query_buffer->str);
 
 	return res;
 }
@@ -2252,10 +2359,15 @@ extra_command_exec_buffer (GdaConnection *cnc, const gchar **args,
 {
 	GdaInternalCommandResult *res = NULL;
 
-	if (!data->query_buffer) 
-		data->query_buffer = g_string_new ("");
-	if (*data->query_buffer->str != 0)
-		res = command_execute (data, data->query_buffer->str, error);
+	if (!data->current) {
+		g_set_error (error, 0, 0, _("No connection opened"));
+		return NULL;
+	}
+
+	if (!data->current->query_buffer) 
+		data->current->query_buffer = g_string_new ("");
+	if (*data->current->query_buffer->str != 0)
+		res = command_execute (data, data->current->query_buffer->str, error);
 	else {
 		res = g_new0 (GdaInternalCommandResult, 1);
 		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
@@ -2269,13 +2381,19 @@ extra_command_write_buffer (GdaConnection *cnc, const gchar **args,
 			    GError **error, MainData *data)
 {
 	GdaInternalCommandResult *res = NULL;
-	if (!data->query_buffer) 
-		data->query_buffer = g_string_new ("");
+
+	if (!data->current) {
+		g_set_error (error, 0, 0, _("No connection opened"));
+		return NULL;
+	}
+
+	if (!data->current->query_buffer) 
+		data->current->query_buffer = g_string_new ("");
 	if (!args[0]) 
 		g_set_error (error, 0, 0, 
 			     _("Missing FILE to write to"));
 	else {
-		if (g_file_set_contents (args[0], data->query_buffer->str, -1, error)) {
+		if (g_file_set_contents (args[0], data->current->query_buffer->str, -1, error)) {
 			res = g_new0 (GdaInternalCommandResult, 1);
 			res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
 		}
@@ -2298,17 +2416,20 @@ extra_command_query_buffer_to_dict (GdaConnection *cnc, const gchar **args,
 {
 	GdaInternalCommandResult *res = NULL;
 
-	g_assert (data->current);
+	if (!data->current) {
+		g_set_error (error, 0, 0, _("No connection opened"));
+		return NULL;
+	}
 
-	if (!data->query_buffer) 
-		data->query_buffer = g_string_new ("");
-	if (*data->query_buffer->str != 0) {
+	if (!data->current->query_buffer) 
+		data->current->query_buffer = g_string_new ("");
+	if (*data->current->query_buffer->str != 0) {
 		GdaStatement *stmt;
 		gchar *qname;
 
 		/* check SQL validity */
 		const gchar *remain = NULL;
-		stmt = gda_sql_parser_parse_string (data->current->parser, data->query_buffer->str, &remain, error);
+		stmt = gda_sql_parser_parse_string (data->current->parser, data->current->query_buffer->str, &remain, error);
 		if (!stmt)
 			return NULL;
 		g_object_unref (stmt);
@@ -2331,7 +2452,7 @@ extra_command_query_buffer_to_dict (GdaConnection *cnc, const gchar **args,
 			}
 		}
 
-		TO_IMPLEMENT; /* add data->query_buffer->str as a new query in data->current->cnc's meta store */
+		TO_IMPLEMENT; /* add data->current->query_buffer->str as a new query in data->current->cnc's meta store */
 		g_free (qname);
 		res = g_new0 (GdaInternalCommandResult, 1);
 		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
@@ -2349,8 +2470,13 @@ extra_command_query_buffer_from_dict (GdaConnection *cnc, const gchar **args,
 {
 	GdaInternalCommandResult *res = NULL;
 
-	if (!data->query_buffer) 
-		data->query_buffer = g_string_new ("");
+	if (!data->current) {
+		g_set_error (error, 0, 0, _("No connection opened"));
+		return NULL;
+	}
+
+	if (!data->current->query_buffer) 
+		data->current->query_buffer = g_string_new ("");
 
 	if (args[0] && *args[0]) {
 		GdaStatement *stmt = find_statement_in_connection_meta_store (data->current->cnc, args[0]);
@@ -2361,7 +2487,7 @@ extra_command_query_buffer_from_dict (GdaConnection *cnc, const gchar **args,
 			if (!str)
 				return NULL;
 
-			g_string_assign (data->query_buffer, str);
+			g_string_assign (data->current->query_buffer, str);
 			g_free (str);
 			res = g_new0 (GdaInternalCommandResult, 1);
 			res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;

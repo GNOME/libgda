@@ -89,6 +89,7 @@ gda_mdb_provider_class_init (GdaMdbProviderClass *klass)
 static void
 gda_mdb_provider_init (GdaMdbProvider *myprv, GdaMdbProviderClass *klass)
 {
+	mdb_set_date_fmt ("%Y-%m-%d %H:%M:%S");
 }
 
 static void
@@ -231,9 +232,11 @@ gda_mdb_provider_open_connection (GdaServerProvider *provider, GdaConnection *cn
 
 	/* look for parameters */
 	dirname = gda_quark_list_find (params, "DB_DIR");
+	if (!dirname)
+		dirname= "."; /* default to current directory */
 	dbname = gda_quark_list_find (params, "DB_NAME");
 	
-	if (!dirname || !dbname) {
+	if (!dbname) {
                 const gchar *str;
 
                 str = gda_quark_list_find (params, "FILENAME");
@@ -245,6 +248,7 @@ gda_mdb_provider_open_connection (GdaServerProvider *provider, GdaConnection *cn
                 else {
                         gint len = strlen (str);
 			gint elen = strlen (FILE_EXTENSION);
+			dirname = NULL;
 
 			if (g_str_has_suffix (str, FILE_EXTENSION)) {
                                 gchar *ptr;
@@ -401,7 +405,8 @@ table_create_columns_func (LocalSpec *spec)
 		gda_column_set_name (gda_col, tmp);
 		g_free (tmp);
 		gda_column_set_g_type (gda_col, gda_mdb_type_to_gda (mdb_col->col_type));
-		tmp = sanitize_name (g_strdup (mdb_get_coltype_string (spec->cdata->mdb->default_backend, mdb_col->col_type)));
+		tmp = sanitize_name (g_strdup (mdb_get_coltype_string (spec->cdata->mdb->default_backend, 
+								       mdb_col->col_type)));
 		gda_column_set_dbms_type (gda_col, tmp);
 		g_free (tmp);
                 gda_column_set_defined_size (gda_col, mdb_col->col_size);
@@ -427,7 +432,7 @@ table_create_model_func (LocalSpec *spec)
 	mdb_rewind_table (mdb_table);
 
 	/* prepare data model */
-	g_print ("New data model for table %p\n", mdb_table);
+	/*g_print ("New data model for MDB table %p\n", mdb_table);*/
 	model = gda_data_model_array_new (mdb_table->num_cols);
 	
 	/* prepare column types */
@@ -464,8 +469,10 @@ table_create_model_func (LocalSpec *spec)
 		gda_column_set_dbms_type (gda_col, tmp);
 		g_free (tmp);
                 gda_column_set_g_type (gda_col, coltypes [c]);
-		/*g_print ("col: %s (%s/%s)\n", gda_column_get_name (gda_col), gda_column_get_dbms_type (gda_col),
-		  g_type_name (coltypes [c]));*/
+#ifdef GDA_DEBUG_NO
+		g_print ("col: %s (%s/%s)\n", gda_column_get_name (gda_col), gda_column_get_dbms_type (gda_col),
+			 g_type_name (coltypes [c]));
+#endif
         }
 
 	/* read data */
@@ -493,7 +500,8 @@ table_create_model_func (LocalSpec *spec)
 #endif
 			}
 			else
-				gda_value_set_from_string ((tmpval = gda_value_new (coltypes [c])), bound_values[c], coltypes [c]);
+				gda_value_set_from_string ((tmpval = gda_value_new (coltypes [c])), bound_values[c], 
+							   coltypes [c]);
                         value_list = g_list_append (value_list, tmpval);
 		}
 

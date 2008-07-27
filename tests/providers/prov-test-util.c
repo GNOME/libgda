@@ -10,7 +10,7 @@
 /*#undef CHECK_EXTRA_INFO*/
 
 #define DB_NAME "gda_check_db"
-#define CREATE_FILES 1
+#define CREATE_FILES 0
 GdaSqlParser *parser = NULL;
 
 /*
@@ -99,307 +99,6 @@ compare_data_model_with_expected (GdaDataModel *model, const gchar *expected_fil
 	/* FIXME: test that there are no left row in compare_m */
 	g_object_unref (compare_m);
 
-	return retval;
-}
-
-/*
- *
- * Connection SETUP
- *
- */
-typedef struct {
-	gchar        *db_name;
-	GdaQuarkList *ql;
-	GString      *string;
-} Data1;
-
-static void 
-db_create_quark_foreach_func (gchar *name, gchar *value, GdaServerOperation *op)
-{
-	gda_server_operation_set_value_at (op, value, NULL, "/SERVER_CNX_P/%s", name);
-}
-
-static void 
-cnc_quark_foreach_func (gchar *name, gchar *value, Data1 *data)
-{
-	if (data->db_name && !strcmp (name, "DB_NAME"))
-		return;
-
-	if (data->ql) {
-		if (!gda_quark_list_find (data->ql, name)) {
-			if (*(data->string->str) != 0)
-				g_string_append_c (data->string, ';');
-			g_string_append_printf (data->string, "%s=%s", name, value);
-		}
-	}
-	else {
-		if (*(data->string->str) != 0)
-			g_string_append_c (data->string, ';');
-		g_string_append_printf (data->string, "%s=%s", name, value);
-	}
-}
-
-static gchar *
-prov_name_upcase (const gchar *prov_name)
-{
-	gchar *str, *ptr;
-
-	str = g_ascii_strup (prov_name, -1);
-	for (ptr = str; *ptr; ptr++) {
-		if (! g_ascii_isalnum (*ptr))
-			*ptr = '_';
-	}
-
-	return str;
-}
-
-GdaConnection *
-prov_test_setup_connection (GdaProviderInfo *prov_info, gboolean *params_provided, gboolean *db_created)
-{
-	GdaConnection *cnc = NULL;
-	gchar *str, *upname;
-	const gchar *db_params, *cnc_params;
-	GError *error = NULL;
-	gchar *db_name = NULL;
-
-	GdaQuarkList *db_quark_list = NULL, *cnc_quark_list = NULL;
-
-	g_assert (prov_info);
-
-	upname = prov_name_upcase (prov_info->id);
-	str = g_strdup_printf ("%s_DBCREATE_PARAMS", upname);
-	db_params = getenv (str);
-	g_free (str);
-	if (db_params) {
-		GdaServerOperation *op;
-
-		db_name = DB_NAME;
-		db_quark_list = gda_quark_list_new_from_string (db_params);
-		op = gda_prepare_drop_database (prov_info->id, db_name, NULL);
-		gda_quark_list_foreach (db_quark_list, (GHFunc) db_create_quark_foreach_func, op);
-		gda_perform_create_database (op, NULL);
-		g_object_unref (op);
-
-		op = gda_prepare_create_database (prov_info->id, db_name, NULL);
-		gda_quark_list_foreach (db_quark_list, (GHFunc) db_create_quark_foreach_func, op);
-		if (!gda_perform_create_database (op, &error)) {
-#ifdef CHECK_EXTRA_INFO
-			g_warning ("Could not create the '%s' database (provider %s): %s", db_name,
-				   prov_info->id, error && error->message ? error->message : "No detail");
-#endif
-			g_error_free (error);
-			error = NULL;
-			goto out;
-		}
-	}
-
-	str = g_strdup_printf ("%s_CNC_PARAMS", upname);
-	cnc_params = getenv (str);
-	g_free (str);
-	if (cnc_params) 
-		cnc_quark_list = gda_quark_list_new_from_string (cnc_params);
-	
-	if (db_quark_list || cnc_quark_list) {
-		Data1 data;
-
-		data.string = g_string_new ("");
-		data.db_name = db_name;
-		data.ql = NULL;
-
-		if (db_quark_list) 
-			gda_quark_list_foreach (db_quark_list, (GHFunc) cnc_quark_foreach_func, &data);
-		data.ql = db_quark_list;
-		if (cnc_quark_list)
-			gda_quark_list_foreach (cnc_quark_list, (GHFunc) cnc_quark_foreach_func, &data);
-		if (db_name) {
-			if (*(data.string->str) != 0)
-				g_string_append_c (data.string, ';');
-			g_string_append_printf (data.string, "DB_NAME=%s", db_name);
-		}
-		g_print ("Open connection string: %s\n", data.string->str);
-
-		/***/
-		gchar *auth_string = NULL;
-
-		GSList *current = prov_info->auth_params->holders;
-		while (current) {
-			GdaHolder *holder = (GdaHolder *) current->data;
-
-			const gchar *id = gda_holder_get_id (holder);
-			const gchar *env = NULL;
-			if (g_strrstr (id, "USER") != NULL) {
-				str = g_strdup_printf ("%s_USER", upname);
-				env = getenv (str);
-				g_free (str);
-			} else if (g_strrstr (id, "PASS") != NULL) {
-				str = g_strdup_printf ("%s_PASS", upname);
-				env = getenv (str);
-				g_free (str);
-			}
-
-			if (env) {
-				str = g_strdup_printf ("%s=%s;", id, env);
-
-				gchar *tmp = auth_string;
-				auth_string = g_strconcat (auth_string, str, NULL);
-				g_free (str);
-				g_free (tmp);
-			}
-
-			current = g_slist_next (current);
-		}
-
-		cnc = gda_connection_open_from_string (prov_info->id, data.string->str, auth_string,
- 						       GDA_CONNECTION_OPTIONS_NONE, &error);
-		g_free (auth_string);
-		if (!cnc && error) {
-#ifdef CHECK_EXTRA_INFO
-			g_warning ("Could not open connection to %s (provider %s): %s",
-				   cnc_params, prov_info->id, error->message ? error->message : "No detail");
-#endif
-			g_error_free (error);
-			error = NULL;
-		}
-		g_string_free (data.string, TRUE);
-	}
-
-	if (db_quark_list)
-		gda_quark_list_free (db_quark_list);
-	if (cnc_quark_list)
-		gda_quark_list_free (cnc_quark_list);
-
- out:
-	*db_created = db_name ? TRUE : FALSE;
-
-	if (db_params || cnc_params)
-		*params_provided = TRUE;
-	else {
-		g_print ("Connection parameters not specified, test not executed (define %s_CNC_PARAMS or %s_DBCREATE_PARAMS to create a test DB)\n", upname, upname);
-		*params_provided = FALSE;
-	}
-	g_free (upname);
-
-	return cnc;
-}
-
-
-/*
- *
- * Connection CLEAN
- *
- */
-static void 
-db_drop_quark_foreach_func (gchar *name, gchar *value, GdaServerOperation *op)
-{
-	gda_server_operation_set_value_at (op, value, NULL, "/SERVER_CNX_P/%s", name);
-	gda_server_operation_set_value_at (op, value, NULL, "/DB_DESC_P/%s", name);
-}
-
-gboolean
-prov_test_clean_connection (GdaConnection *cnc, gboolean destroy_db)
-{
-	gchar *prov_id;
-	gboolean retval = TRUE;
-	gchar *str, *upname;
-
-	prov_id = g_strdup (gda_connection_get_provider_name (cnc));
-	gda_connection_close (cnc);
-	g_object_unref (cnc);
-
-	upname = prov_name_upcase (prov_id);
-	str = g_strdup_printf ("%s_DONT_REMOVE_DB", upname);
-	if (getenv (str))
-		destroy_db = FALSE;
-	g_free (str);
-
-	if (destroy_db) {
-		GdaServerOperation *op;
-		GError *error = NULL;
-		
-		const gchar *db_params;
-		GdaQuarkList *db_quark_list = NULL;
-
-#ifdef CHECK_EXTRA_INFO
-		g_print ("Waiting a bit for the server to register the disconnection...\n");
-#endif
-		sleep (1);
-		str = g_strdup_printf ("%s_DBCREATE_PARAMS", upname);
-		db_params = getenv (str);
-		g_free (str);
-		g_assert (db_params);
-
-		op = gda_prepare_drop_database (prov_id, DB_NAME, NULL);
-		db_quark_list = gda_quark_list_new_from_string (db_params);
-		gda_quark_list_foreach (db_quark_list, (GHFunc) db_drop_quark_foreach_func, op);
-		gda_quark_list_free (db_quark_list);
-
-		if (!gda_perform_drop_database (op, &error)) {
-#ifdef CHECK_EXTRA_INFO
-			g_warning ("Could not drop the '%s' database (provider %s): %s", DB_NAME,
-				   prov_id, error && error->message ? error->message : "No detail");
-#endif
-			g_error_free (error);
-			error = NULL;
-			retval = FALSE;
-		}
-	}
-	g_free (upname);
-
-	g_free (prov_id);
-
-	return retval;
-}
-
-/*
- *
- * Create tables SQL
- *
- */
-gboolean
-prov_test_create_tables_sql (GdaConnection *cnc)
-{
-	const gchar *prov_id;
-	gchar *tmp, *filename;
-	gboolean retval = TRUE;
-	GError *error = NULL;
-	const GSList *list;
-
-	prov_id = gda_connection_get_provider_name (cnc);
-
-	tmp = g_strdup_printf ("%s_create_tables.sql", prov_id);
-	filename = g_build_filename (CHECK_SQL_FILES, "tests", "providers", tmp, NULL);
-	g_free (tmp);
-
-	if (!parser) 
-		parser = gda_sql_parser_new ();
-
-	GdaBatch *batch;
-	batch = gda_sql_parser_parse_file_as_batch (parser, filename, &error);
-	if (!batch) {
-#ifdef CHECK_EXTRA_INFO
-                g_warning ("Could not parser file '%s': %s", filename,
-			   error && error->message ? error->message : "No detail");
-#endif
-		g_error_free (error);
-		error = NULL;
-		g_free (filename);
-		return FALSE;
-	}
-
-	for (list = gda_batch_get_statements (batch); list; list = list->next) {
-		if (gda_connection_statement_execute_non_select (cnc, GDA_STATEMENT (list->data),
-								 NULL, NULL, &error) == -1) {
-#ifdef CHECK_EXTRA_INFO
-			g_warning ("Could execute statement: %s",
-				   error && error->message ? error->message : "No detail");
-			g_error_free (error);
-#endif
-			retval = FALSE;
-			break;
-		}
-	}
-
-	g_object_unref (batch);
 	return retval;
 }
 
@@ -617,6 +316,15 @@ prov_test_load_data (GdaConnection *cnc, const gchar *table)
 		return FALSE;
 	}
 
+	{
+		gchar *csv;
+		csv = gda_data_model_export_to_string (imodel, GDA_DATA_MODEL_IO_TEXT_SEPARATED,
+						       NULL, 0, NULL, 0, NULL);
+		tmp = g_strdup_printf ("CSV_DATA_%s.csv", table);
+		g_file_set_contents (tmp, csv, -1, NULL);
+		g_free (tmp);
+	}
+
 	/* create INSERT GdaStatement */
 	GdaStatement *insert;
 	GdaSqlStatement *sqlst;
@@ -661,6 +369,8 @@ prov_test_load_data (GdaConnection *cnc, const gchar *table)
 	insert = gda_statement_new ();
 	g_object_set (G_OBJECT (insert), "structure", sqlst, NULL);
 	gda_sql_statement_free (sqlst);
+
+	/*g_print ("SQL: %s\n", gda_statement_to_sql (insert, NULL, NULL));*/
 
 	/* execute the INSERT statement */
 	GdaSet *set;

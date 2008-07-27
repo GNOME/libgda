@@ -125,3 +125,33 @@ Utility functions
 @out_password: 
 
 
+<!-- ##### FUNCTION gda_parse_iso8601_date ##### -->
+<para>
+
+</para>
+
+@gdate: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_parse_iso8601_time ##### -->
+<para>
+
+</para>
+
+@timegda: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_parse_iso8601_timestamp ##### -->
+<para>
+
+</para>
+
+@timestamp: 
+@value: 
+@Returns: 
+
+

@@ -261,12 +261,13 @@ gda_utility_check_data_model (GdaDataModel *model, gint nbcols, ...)
 
 /**
  * gda_utility_data_model_dump_data_to_xml
- * @model: 
+ * @model: a #GdaDataModel
+ * @parent: the parent XML node
  * @cols: an array containing which columns of @model will be exported, or %NULL for all columns
  * @nb_cols: the number of columns in @cols
  * @rows: an array containing which rows of @model will be exported, or %NULL for all rows
  * @nb_rows: the number of rows in @rows
- * @name: name to use for the XML resulting table.
+ * @use_col_ids:
  *
  * Dump the data in a #GdaDataModel into a xmlNodePtr (as used in libxml).
  */
@@ -317,7 +318,7 @@ gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent,
 	else
 		nrows = nb_rows;
 	if (nrows > 0) {
-		xmlNodePtr row, data, field;
+		xmlNodePtr row, data;
 		gint r, c;
 
 		data = xmlNewChild (parent, NULL, (xmlChar*)"gda_array_data", NULL);
@@ -326,34 +327,32 @@ gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent,
 			for (c = 0; c < rnb_cols; c++) {
 				GValue *value;
 				gchar *str = NULL;
-				gboolean isnull = FALSE;
+				xmlNodePtr field = NULL;
 
 				value = (GValue *) gda_data_model_get_value_at (model, rcols [c], rows ? rows [r] : r);
-				if (!value || gda_value_is_null ((GValue *) value)) 
-					isnull = TRUE;
-				else {
+				
+				if (value && !gda_value_is_null ((GValue *) value)) { 
 					if (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN)
 						str = g_strdup (g_value_get_boolean (value) ? "TRUE" : "FALSE");
 					else if (G_VALUE_TYPE (value) == G_TYPE_STRING) {
-						if (!g_value_get_string (value))
-							isnull = TRUE;
-						else
+						if (g_value_get_string (value))
 							str = gda_value_stringify (value);	
 					}
 					else
 						str = gda_value_stringify (value);
 				}
 				if (!use_col_ids) {
-					if (! str || (str && (*str == 0)))
-						field = xmlNewChild (row, NULL,  (xmlChar*)"gda_value", NULL);
-					else
+					if (str && *str) 
 						field = xmlNewChild (row, NULL,  (xmlChar*)"gda_value", (xmlChar*)str);
+					else
+						field = xmlNewChild (row, NULL,  (xmlChar*)"gda_value", NULL);
 				}
 				else {
 					field = xmlNewChild (row, NULL,  (xmlChar*)"gda_array_value", (xmlChar*)str);
 					xmlSetProp(field, (xmlChar*)"colid",  (xmlChar*)col_ids [c]);
 				}
-				if (isnull)
+
+				if (!str)
 					xmlSetProp(field,  (xmlChar*)"isnull", (xmlChar*)"t");
 
 				g_free (str);
@@ -1615,4 +1614,151 @@ gda_connection_string_split (const gchar *string, gchar **out_cnc_params, gchar 
 	gda_rfc1738_decode (*out_provider);
 	gda_rfc1738_decode (*out_username);
 	gda_rfc1738_decode (*out_password);
+}
+
+/**
+ * gda_parse_iso8601_date
+ * @gdate: a pointer to a #GDate structure which will be filled
+ * @value: a string
+ *
+ * Extracts date parts from @value, and sets @gdate's contents
+ *
+ * Accepted date format is "YYYY-MM-DD".
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_parse_iso8601_date (GDate *gdate, const gchar *value)
+{
+	GDateYear year;
+	GDateMonth month;
+	GDateDay day;
+
+	year = atoi (value);
+	value += 5;
+	month = atoi (value);
+	value += 3;
+	day = atoi (value);
+	
+	g_date_clear (gdate, 1);
+	if (g_date_valid_dmy (day, month, year)) {
+		g_date_set_dmy (gdate, day, month, year);
+		return TRUE;
+	}
+	else
+		return FALSE;
+}
+
+/**
+ * gda_parse_iso8601_time
+ * @timegda: a pointer to a #GdaTime structure which will be filled
+ * @value: a string
+ *
+ * Extracts time parts from @value, and sets @timegda's contents
+ *
+ * Accepted date format is "HH:MM:SS[.ms][TZ]" where TZ is +hour or -hour
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_parse_iso8601_time (GdaTime *timegda, const gchar *value)
+{
+	timegda->hour = atoi (value);
+	value += 3;
+	timegda->minute = atoi (value);
+	value += 3;
+	timegda->second = atoi (value);
+	value += 2;
+	if (*value != '.') {
+		timegda->fraction = 0;
+	} else {
+		gint ndigits = 0;
+		gint64 fraction;
+
+		value++;
+		fraction = atol (value);
+		while (*value && *value != '+') {
+			value++;
+			ndigits++;
+		}
+
+		while (ndigits < 3) {
+			fraction *= 10;
+			ndigits++;
+		}
+
+		while (fraction > 0 && ndigits > 3) {
+			fraction /= 10;
+			ndigits--;
+		}
+		
+		timegda->fraction = fraction;
+	}
+
+	if (*value)
+		timegda->timezone = atol (value) * 60 * 60;
+	else
+		timegda->timezone = 0;
+
+	return TRUE;
+}
+
+/**
+ * gda_parse_iso8601_timestamp
+ * @timestamp: a pointer to a #GdaTimeStamp structure which will be filled
+ * @value: a string
+ *
+ * Extracts date and time parts from @value, and sets @timestamp's contents
+ *
+ * Accepted date format is "YYYY-MM-DD HH:MM:SS[.ms][TZ]" where TZ is +hour or -hour
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_parse_iso8601_timestamp (GdaTimestamp *timestamp, const gchar *value)
+{
+	timestamp->year = atoi (value);
+	value += 5;
+	timestamp->month = atoi (value);
+	value += 3;
+	timestamp->day = atoi (value);
+	value += 3;
+	timestamp->hour = atoi (value);
+	value += 3;
+	timestamp->minute = atoi (value);
+	value += 3;
+	timestamp->second = atoi (value);
+	value += 2;
+	if (*value != '.') {
+		timestamp->fraction = 0;
+	} else {
+		gint ndigits = 0;
+		gint64 fraction;
+
+		value++;
+		fraction = atol (value);
+		while (*value && *value != '+') {
+			value++;
+			ndigits++;
+		}
+
+		while (ndigits < 3) {
+			fraction *= 10;
+			ndigits++;
+		}
+
+		while (fraction > 0 && ndigits > 3) {
+			fraction /= 10;
+			ndigits--;
+		}
+		
+		timestamp->fraction = fraction;
+	}
+
+	if (*value)
+		timestamp->timezone = atol (value) * 60 * 60;
+	else
+		timestamp->timezone = 0;
+
+	return TRUE;
 }

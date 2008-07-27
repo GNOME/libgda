@@ -26,6 +26,10 @@ main (int argc, char** argv)
 	gchar *fname;
 	GError *error = NULL;
 
+	/* set up test environment */
+        g_setenv ("GDA_TOP_BUILD_DIR", TOP_BUILD_DIR, 0);
+	g_setenv ("GDA_TOP_SRC_DIR", ROOT_DIR, 0);
+
 	g_type_init ();
 	gda_init ();
 

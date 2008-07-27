@@ -130,7 +130,7 @@
     <column name="object_catalog" descr="Name of the catalog that contains the object that uses the array being described"/>
     <column name="object_schema" descr="Name of the schema that contains the object that uses the array being described"/>
     <column name="object_name" descr="Name of the object that uses the array being described"/>
-    <column name="object_type" descr="The type of the object that uses the array being described TABLE_COL, DOMAIN, UDT_COL, ROUTINE_COL or ROUTINE_PAR"/>
+    <column name="object_type" descr="The type of the object that uses the array being described TABLE_COL, DOMAIN, UDT_COL, ROUTINE_COL, ROUTINE_PAR"/>
     <column name="data_type" nullok="TRUE" descr="Base data type of the array (if the base data type is an array, then 'array_spec' is set, and this may be NULL)"/>
     <column name="array_spec" nullok="TRUE" descr="Array description if the base data type is an array"/>
     <column name="min_cardinality" type="gint" nullok="TRUE"/>
@@ -250,24 +250,25 @@
     </unique>
   </table>
 
-  <table name="_routines" descr="List of functions and stored procedures">
-    <column name="specific_catalog" pkey="TRUE"/>
-    <column name="specific_schema" pkey="TRUE"/>
-    <column name="specific_name" pkey="TRUE"/>
-    <column name="routine_catalog" nullok="TRUE"/>
-    <column name="routine_schema" nullok="TRUE"/>
-    <column name="routine_name"/>
+  <table name="_routines" descr="List of functions and stored procedures (note: the primary jey for that table is composed of (specific_catalog, specific_schema, specific_name))">
+    <column name="specific_catalog" pkey="TRUE" descr="Specific name of catalog that contains the routine"/>
+    <column name="specific_schema" pkey="TRUE" descr="Specific name of schema that contains the routine"/>
+    <column name="specific_name" pkey="TRUE" descr="Specific name of the routine (may be mangled for polymorphic routines)"/>
+    <column name="routine_catalog" nullok="TRUE" descr="Name of catalog that contains the routine (may be NULL)"/>
+    <column name="routine_schema" nullok="TRUE" descr="Name of schema that contains the routine (may be NULL)"/>
+    <column name="routine_name" descr="Name of the routine"/>
     <column name="routine_type" nullok="TRUE" descr="FUNCTION, PROCEDURE, AGGREGATE"/>
-    <column name="return_type" nullok="TRUE"/>
-    <column name="returns_set" type="boolean" descr="True if function returns a set (i.e., multiple values of the specified data type)"/>
-    <column name="routine_body" nullok="TRUE"/>
-    <column name="routine_definition" nullok="TRUE"/>
-    <column name="external_name" nullok="TRUE"/>
-    <column name="external_language" nullok="TRUE"/>
-    <column name="parameter_style" nullok="TRUE"/>
-    <column name="is_deterministic" type="boolean" nullok="TRUE"/>
-    <column name="sql_data_access" nullok="TRUE"/>
-    <column name="is_null_call" type="boolean" nullok="TRUE"/>
+    <column name="return_type" nullok="TRUE" descr="Data type returned by the routine (may be NULL if routine does not return any value)"/>
+    <column name="returns_set" type="boolean" descr="True if routine returns a set (i.e., multiple values of the specified data type or if data type may vary)"/>
+    <column name="nb_args" type="gint" descr="Number of arguments (-1 for variable number of arguments)"/>
+    <column name="routine_body" nullok="TRUE" descr="If the routine is an SQL function, then SQL, else EXTERNAL"/>
+    <column name="routine_definition" nullok="TRUE" descr="The source text of the routine"/>
+    <column name="external_name" nullok="TRUE" descr="If the routine is an external function, then the external name (link symbol) of the function"/>
+    <column name="external_language" nullok="TRUE" descr="The language the routine is written in"/>
+    <column name="parameter_style" nullok="TRUE" descr="Parameter style (GENERAL, JAVA, SQL, GENERAL WITH NULLS)"/>
+    <column name="is_deterministic" type="boolean" nullok="TRUE" descr="Tells if the routine returns the same results given the same arguments forever"/>
+    <column name="sql_data_access" nullok="TRUE" descr="Whether the routine contains SQL and whether it reads or modifies data (NONE, CONTAINS, READS, MODIFIES)"/>
+    <column name="is_null_call" type="boolean" nullok="TRUE" descr="Tells if the routine will be called if any one of its arguments is NULL"/>
     <column name="routine_comments" nullok="TRUE"/>
     <column name="routine_short_name"/>
     <column name="routine_full_name"/>
@@ -492,14 +493,14 @@
     </fkey>
   </table>
 
-  <table name="_parameters" descr="List of routines' (functions and stored procedures) parameters">
+  <table name="_parameters" descr="List of routines' (functions and stored procedures) parameters (may not contain data for some routines which accept any type of parameter)">
     <column name="specific_catalog" pkey="TRUE"/>
     <column name="specific_schema" pkey="TRUE"/>
     <column name="specific_name" pkey="TRUE"/>
     <column name="ordinal_position" type="gint" pkey="TRUE"/>
     <column name="parameter_mode"/>
     <column name="parameter_name" nullok="TRUE"/>
-    <column name="data_type" nullok="TRUE" descr="Data type of the parameter (if the parameter is an array, then 'array_spec' is set, and this may be NULL)"/>
+    <column name="data_type" nullok="TRUE" descr="Data type of the parameter (if the parameter is an array, then 'array_spec' is set, and this may be NULL; can also be NULL if any type of parameter is accepted)"/>
     <column name="array_spec" nullok="TRUE" descr="Array description if the parameter is an array"/>
     <fkey ref_table="_routines">
       <part column="specific_catalog"/>

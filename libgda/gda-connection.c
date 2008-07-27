@@ -2342,7 +2342,7 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 				return TRUE; /* nothing to do */
 
 			ASSERT_TABLE_NAME (tname, "domain_constraints");
-			if (!PROV_CLASS (provider)->meta_funcs.constraints_tab) {
+			if (!PROV_CLASS (provider)->meta_funcs.constraints_dom) {
 				WARN_METHOD_NOT_IMPLEMENTED (provider, "constraints_dom");
 				break;
 			}
@@ -2967,7 +2967,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		} RMeta;
 
 		gint nb = 0, i;
-		static RMeta rmeta[] = {
+		RMeta rmeta[] = {
 			{"_information_schema_catalog_name", "_info", NULL},
 			{"_builtin_data_types", "_btypes", NULL},
 			{"_udt", "_udt", NULL},
@@ -3030,6 +3030,11 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 			else {
 				lcontext.table_name = rmeta [i].table_name;
 				if (!rmeta [i].func (provider, cnc, store, &lcontext, error)) {
+					g_print ("TH %p CNC %p ERROR, prov=%p (%s)\n", g_thread_self(), cnc,
+						 gda_connection_get_provider_obj (cnc),
+						 gda_connection_get_provider_name (cnc));
+					g_warning ("//");
+
 					WARN_META_UPDATE_FAILURE (FALSE, rmeta [i].func_name);
 					goto onerror;
 				}

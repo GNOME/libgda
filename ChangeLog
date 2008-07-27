@@ -1,3 +1,39 @@
+2008-07-27  Vivien Malerba <malerba@gnome-db.org>
+
+	* WixInstaller/make-zip-exe.sh: new script to create a .ZIP file containing
+	the minimum files required to execute gda-sql
+	* libgda/gda-data-model-import.c: fixed a crasher bug when the XML file being imported
+	has the wrong XML structure
+	* libgda/sqlite/sqlite-src/: up to version 3.6.0
+	* tests/: multiple improvements and corrections
+	* libgda/sqlite/gda-sqlite-recordset.c: correctly handle time and data values, and corrected
+	a bug related to NULL values
+	* libgda/gda-util.[ch]: new functions: gda_parse_iso8601_date(),
+	gda_parse_iso8601_time() and gda_parse_iso8601_timestamp(), implementation is very simple at
+	the moment
+	* libgda/gda-value.c: use the new gda_parse_iso8601*() functions in gda_value_set_from_string()
+	and the static set_from_string() function, and better explicit documentation
+	* libgda/sqlite/virtual/gda-vconnection-data-model.c: fixed the gda_vconnection_data_model_foreach()
+	function where it would not call the provided function if no data model had been associated
+	to the table
+	* libgda/sqlite/virtual/gda-vprovider-data-model.c: better data type mapping
+	* tools/gda-sql.c: query buffer (the one which stores the last executed query) is now per
+	connection and not global anymore, and initial meta data retreival is done
+	in background (sub thread) if possible
+	* libgda/sqlite/utils.c:
+	* libgda/sqlite/gda-sqlite.h: new utility function
+	* libgda/sqlite/gda-sql-meta.c:
+	* providers/postgres/gda-postgres-meta.c: finished implementing meta data extraction
+	* libgda/sqlite/gda-sql-provider.c: minor bug fixes, explicitely enable multi
+	threading support and better support for date, time and timestamp data types
+	* libgda/gda-server-provider.h: new error code
+	* libgda/information_schema.xml: documented some fields, and added an "nb_args"
+	attributes to the "_routines" table
+	* providers/mdb/gda-mdb-provider.c: better date handling, assume "." for DIR_NAME in
+	a connection string if not provided
+	* doc/C: new gda-sql command manual, and minor other improvements
+	* other files: bug fixes, or debug code desacivated
+
 2008-07-17  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda-xslt/Makefile.am:

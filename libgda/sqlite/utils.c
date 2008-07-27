@@ -29,50 +29,6 @@
 #include <libgda/gda-connection-private.h>
 #include "gda-sqlite-recordset.h"
 
-/* 
- * copied from SQLite's sources to determine column affinity 
- */
-#define SQLITE_AFF_TEXT     'a'
-#define SQLITE_AFF_NONE     'b'
-#define SQLITE_AFF_NUMERIC  'c'
-#define SQLITE_AFF_INTEGER  'd'
-#define SQLITE_AFF_REAL     'e'
-static char get_affinity (const gchar *type)
-{
-	guint32 h = 0;
-	char aff = SQLITE_AFF_NUMERIC;
-	const unsigned char *ptr = (unsigned char *) type;
-	
-	while( *ptr ){
-		h = (h<<8) + g_ascii_tolower(*ptr);
-		ptr++;
-		if( h==(('c'<<24)+('h'<<16)+('a'<<8)+'r') ){             /* CHAR */
-			aff = SQLITE_AFF_TEXT;
-		}else if( h==(('c'<<24)+('l'<<16)+('o'<<8)+'b') ){       /* CLOB */
-			aff = SQLITE_AFF_TEXT;
-		}else if( h==(('t'<<24)+('e'<<16)+('x'<<8)+'t') ){       /* TEXT */
-			aff = SQLITE_AFF_TEXT;
-		}else if( h==(('b'<<24)+('l'<<16)+('o'<<8)+'b')          /* BLOB */
-			  && (aff==SQLITE_AFF_NUMERIC || aff==SQLITE_AFF_REAL) ){
-			aff = SQLITE_AFF_NONE;
-		}else if( h==(('r'<<24)+('e'<<16)+('a'<<8)+'l')          /* REAL */
-			  && aff==SQLITE_AFF_NUMERIC ){
-			aff = SQLITE_AFF_REAL;
-		}else if( h==(('f'<<24)+('l'<<16)+('o'<<8)+'a')          /* FLOA */
-			  && aff==SQLITE_AFF_NUMERIC ){
-			aff = SQLITE_AFF_REAL;
-		}else if( h==(('d'<<24)+('o'<<16)+('u'<<8)+'b')          /* DOUB */
-			  && aff==SQLITE_AFF_NUMERIC ){
-			aff = SQLITE_AFF_REAL;
-		}else if( (h&0x00FFFFFF)==(('i'<<16)+('n'<<8)+'t') ){    /* INT */
-			aff = SQLITE_AFF_INTEGER;
-			break;
-		}
-	}
-	
-	return aff;
-}
-
 static guint
 nocase_str_hash (gconstpointer v)
 {
@@ -90,15 +46,13 @@ nocase_str_equal (gconstpointer v1, gconstpointer v2)
 }
 
 void
-_gda_sqlite_update_types_hash (SqliteConnectionData *cdata)
+_gda_sqlite_compute_types_hash (SqliteConnectionData *cdata)
 {
 	GHashTable *types;
-	gint status;
-	sqlite3_stmt *tables_stmt = NULL;
-
 	types = cdata->types;
 	if (!types) {
-		types = g_hash_table_new_full (nocase_str_hash, nocase_str_equal, g_free, NULL); /* key= type name, value= gda type */
+		types = g_hash_table_new_full (nocase_str_hash, nocase_str_equal, g_free, NULL); 
+		/* key= type name, value= gda type */
 		cdata->types = types;
 	}
 	
@@ -111,52 +65,26 @@ _gda_sqlite_update_types_hash (SqliteConnectionData *cdata)
 	g_hash_table_insert (types, g_strdup ("text"), GINT_TO_POINTER (G_TYPE_STRING));
 	g_hash_table_insert (types, g_strdup ("string"), GINT_TO_POINTER (G_TYPE_STRING));
 	g_hash_table_insert (types, g_strdup ("blob"), GINT_TO_POINTER (GDA_TYPE_BINARY));
-
-	/* HACK: force SQLite to reparse the schema and thus discover new tables if necessary */
-	status = sqlite3_prepare_v2 (cdata->connection, "SELECT 1 FROM sqlite_master LIMIT 1", -1, &tables_stmt, NULL);
-	if (status == SQLITE_OK)
-		sqlite3_step (tables_stmt);
-	if (tables_stmt)
-		sqlite3_finalize (tables_stmt);
-
-	/* build a list of tables */
-	status = sqlite3_prepare_v2 (cdata->connection, "SELECT name "
-				     " FROM (SELECT * FROM sqlite_master UNION ALL "
-				     "       SELECT * FROM sqlite_temp_master) "
-				     " WHERE name not like 'sqlite_%%'", -1, &tables_stmt, NULL);
-	if ((status != SQLITE_OK) || !tables_stmt)
-		return;
-	for (status = sqlite3_step (tables_stmt); status == SQLITE_ROW; status = sqlite3_step (tables_stmt)) {
-		gchar *sql;
-		sqlite3_stmt *fields_stmt;
-		gint fields_status;
-
-		sql = g_strdup_printf ("PRAGMA table_info('%s');", sqlite3_column_text (tables_stmt, 0));
-		fields_status = sqlite3_prepare_v2 (cdata->connection, sql, -1, &fields_stmt, NULL);
-		g_free (sql);
-		if ((fields_status != SQLITE_OK) || !fields_stmt)
-			break;
-		
-		for (fields_status = sqlite3_step (fields_stmt); fields_status == SQLITE_ROW; 
-		     fields_status = sqlite3_step (fields_stmt)) {
-			const gchar *typname = (gchar *) sqlite3_column_text (fields_stmt, 2);
-			if (typname && !g_hash_table_lookup (types, typname)) {
-				GType type;
-				switch (get_affinity (typname)) {
-				case SQLITE_AFF_INTEGER:
-					type = G_TYPE_INT;
-					break;
-				case SQLITE_AFF_REAL:
-					type = G_TYPE_DOUBLE;
-					break;
-				default:
-					type = G_TYPE_STRING;
-					break;
-				}
-				g_hash_table_insert (types, g_strdup (typname), GINT_TO_POINTER (type));
-			}
-		}
-		sqlite3_finalize (fields_stmt);
-	}
-	sqlite3_finalize (tables_stmt);
 }
+
+GType
+_gda_sqlite_compute_g_type (int sqlite_type)
+{
+	switch (sqlite_type) {
+	case SQLITE_INTEGER:
+		return G_TYPE_INT;
+	case SQLITE_FLOAT:
+		return G_TYPE_DOUBLE;
+	case 0:
+	case SQLITE_TEXT:
+		return G_TYPE_STRING;
+	case SQLITE_BLOB:
+		return GDA_TYPE_BINARY;
+	case SQLITE_NULL:
+		return GDA_TYPE_NULL;
+	default:
+		g_warning ("Unknown SQLite internal data type %d", sqlite_type);
+		return G_TYPE_STRING;
+	}
+}
+

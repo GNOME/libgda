@@ -109,7 +109,7 @@ static GObject             *gda_capi_provider_statement_execute (GdaServerProvid
 								 GdaStatement *stmt, GdaSet *params,
 								 GdaStatementModelUsage model_usage, 
 								 GType *col_types, GdaSet **last_inserted_row, 
-								 guint *task_id, GdaServerProviderAsyncCallback async_cb, 
+								 guint *task_id, GdaServerProviderExecCallback async_cb, 
 								 gpointer cb_data, GError **error);
 
 /* distributed transactions */
@@ -140,13 +140,13 @@ static void gda_capi_free_cnc_data (CapiConnectionData *cdata);
  * TO_ADD: any prepared statement to be used internally by the provider should be
  *         declared here, as constants and as SQL statements
  */
-GdaStatement **internal_stmt;
+static GdaStatement **internal_stmt;
 
 typedef enum {
 	INTERNAL_STMT1
 } InternalStatementItem;
 
-gchar *internal_sql[] = {
+static gchar *internal_sql[] = {
 	"SQL for INTERNAL_STMT1"
 };
 
@@ -946,7 +946,7 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 				     GdaStatementModelUsage model_usage, 
 				     GType *col_types, GdaSet **last_inserted_row, 
 				     guint *task_id, 
-				     GdaServerProviderAsyncCallback async_cb, gpointer cb_data, GError **error)
+				     GdaServerProviderExecCallback async_cb, gpointer cb_data, GError **error)
 {
 	GdaCapiPStmt *ps;
 	CapiConnectionData *cdata;

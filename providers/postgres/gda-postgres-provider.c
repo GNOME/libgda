@@ -116,7 +116,7 @@ static GObject             *gda_postgres_provider_statement_execute (GdaServerPr
 								     GdaStatement *stmt, GdaSet *params,
 								     GdaStatementModelUsage model_usage, 
 								     GType *col_types, GdaSet **last_inserted_row, 
-								     guint *task_id, GdaServerProviderAsyncCallback async_cb, 
+								     guint *task_id, GdaServerProviderExecCallback async_cb, 
 								     gpointer cb_data, GError **error);
 
 /* distributed transactions */
@@ -147,7 +147,7 @@ static void gda_postgres_free_cnc_data (PostgresConnectionData *cdata);
  * TO_ADD: any prepared statement to be used internally by the provider should be
  *         declared here, as constants and as SQL statements
  */
-GdaStatement **internal_stmt;
+static GdaStatement **internal_stmt;
 
 typedef enum {
 	I_STMT_BEGIN,
@@ -159,7 +159,7 @@ typedef enum {
 	I_STMT_XA_RECOVER
 } InternalStatementItem;
 
-gchar *internal_sql[] = {
+static gchar *internal_sql[] = {
 	"BEGIN",
 	"COMMIT",
 	"ROLLBACK",
@@ -1895,7 +1895,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 					 GdaStatementModelUsage model_usage, 
 					 GType *col_types, GdaSet **last_inserted_row, 
 					 guint *task_id, 
-					 GdaServerProviderAsyncCallback async_cb, gpointer cb_data, GError **error)
+					 GdaServerProviderExecCallback async_cb, gpointer cb_data, GError **error)
 {
 	GdaPostgresPStmt *ps;
 	PostgresConnectionData *cdata;

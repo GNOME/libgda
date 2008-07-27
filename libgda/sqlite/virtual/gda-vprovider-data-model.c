@@ -412,6 +412,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 	for (i = 0; i < ncols; i++) {
 		GdaColumn *column;
 		const gchar *name, *type;
+		GType gtype;
 		gchar *newcolname;
 
 		if (i != 0)
@@ -434,38 +435,32 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 		else
 			newcolname = g_strdup (name);
 
-		type = g_type_name (gda_column_get_g_type (column));
+		gtype = gda_column_get_g_type (column);
+		type = g_type_name (gtype);
 		if (!type) {
 			*pzErr = sqlite3_mprintf (_("Can't get data model's column type or type for column %d"), i);
 			g_string_free (sql, TRUE);
 			return SQLITE_ERROR;
 		}
-		else if (!strcmp (type, "GdaBlob") || !strcmp (type, "GdaBinary"))
+		else if ((gtype == GDA_TYPE_BLOB) || (gtype == GDA_TYPE_BINARY))
 			type = "blob";
-		else if (!strcmp (type, "gchararray"))
+		else if (gtype == G_TYPE_STRING)
 			type = "text";
-		else if (!strncmp (type, "gint", 4))
+		else if ((gtype == G_TYPE_INT) || (gtype == G_TYPE_UINT) || 
+			 (gtype == G_TYPE_INT64) || (gtype == G_TYPE_UINT64) ||
+			 (gtype == GDA_TYPE_SHORT) || (gtype == GDA_TYPE_USHORT) ||
+			 (gtype == G_TYPE_LONG) || (gtype == G_TYPE_ULONG))
 			type = "integer";
-		else if (!strcmp (type, "gdouble"))
+		else if ((gtype == G_TYPE_DOUBLE) || (gtype == G_TYPE_FLOAT))
 			type = "real";
-		else if (!strcmp (type, "gfloat"))
-			type = "real";
-		else {
-			/* use the declared GType */
-			type = g_type_name (gda_column_get_g_type (column));
-			if (!strcmp (type, "GdaBlob") || !strcmp (type, "GdaBinary"))
-				type = "blob";
-			else if (!strcmp (type, "gchararray"))
-				type = "text";
-			else if (!strncmp (type, "gint", 4))
-				type = "integer";
-			else if (!strcmp (type, "gdouble"))
-				type = "real";
-			else if (!strcmp (type, "gfloat"))
-				type = "real";
-			else
-				type = "text";
-		}
+		else if (gtype == G_TYPE_DATE)
+			type = "date";
+		else if (gtype == GDA_TYPE_TIME)
+			type = "time";
+		else if (gtype == GDA_TYPE_TIMESTAMP)
+			type = "timestamp";
+		else 
+			type = "text";
 
 		g_string_append (sql, newcolname);
 		g_free (newcolname);

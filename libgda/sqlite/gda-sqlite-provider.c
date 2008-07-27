@@ -122,7 +122,7 @@ static GObject             *gda_sqlite_provider_statement_execute (GdaServerProv
 								   GdaStatement *stmt, GdaSet *params,
 								   GdaStatementModelUsage model_usage, 
 								   GType *col_types, GdaSet **last_inserted_row, 
-								   guint *task_id, GdaServerProviderAsyncCallback async_cb, 
+								   guint *task_id, GdaServerProviderExecCallback async_cb, 
 								   gpointer cb_data, GError **error);
 
 /* 
@@ -140,7 +140,7 @@ typedef struct {
 	gpointer  user_data; /* retreive it in func. implementations using sqlite3_user_data() */
 	void    (*xFunc)(sqlite3_context*,int,sqlite3_value**);
 } ScalarFunction;
-ScalarFunction scalars[] = {
+static ScalarFunction scalars[] = {
 	{"gda_file_exists", 1, NULL, scalar_gda_file_exists_func},
 };
 
@@ -169,7 +169,7 @@ typedef enum {
 	INTERNAL_ROLLBACK_NAMED,
 } InternalStatementItem;
 
-gchar *internal_sql[] = {
+static gchar *internal_sql[] = {
 	"PRAGMA index_list(##tblname::string)",
 	"PRAGMA index_info(##idxname::string)",
 	"PRAGMA foreign_key_list (##tblname::string)",
@@ -294,7 +294,11 @@ gda_sqlite_provider_init (GdaSqliteProvider *sqlite_prv, GdaSqliteProviderClass 
 
 	parser = gda_server_provider_internal_get_parser ((GdaServerProvider*) sqlite_prv);
 	g_static_mutex_lock (&init_mutex);
+
 	if (!internal_stmt) {
+		/* configure multi threading environment */
+		sqlite3_config (SQLITE_CONFIG_SERIALIZED);
+
 		internal_stmt = g_new0 (GdaStatement *, sizeof (internal_sql) / sizeof (gchar*));
 		for (i = INTERNAL_PRAGMA_INDEX_LIST; i < sizeof (internal_sql) / sizeof (gchar*); i++) {
 			internal_stmt[i] = gda_sql_parser_parse_string (parser, internal_sql[i], NULL, NULL);
@@ -305,6 +309,7 @@ gda_sqlite_provider_init (GdaSqliteProvider *sqlite_prv, GdaSqliteProviderClass 
 
 	/* meta data init */
 	_gda_sqlite_provider_meta_init ((GdaServerProvider*) sqlite_prv);
+	
 	g_static_mutex_unlock (&init_mutex);
 }
 
@@ -369,7 +374,8 @@ add_g_list_row (gpointer data, GdaDataModelArray *recset)
 
 int sqlite3CreateFunc (sqlite3 *db, const char *name, int nArg, int eTextRep, void *data,
 		       void (*xFunc)(sqlite3_context*,int,sqlite3_value **),
-		       void (*xStep)(sqlite3_context*,int,sqlite3_value **), void (*xFinal)(sqlite3_context*))
+		       void (*xStep)(sqlite3_context*,int,sqlite3_value **), 
+		       void (*xFinal)(sqlite3_context*))
 {
 	SqliteConnectionData *cdata = NULL;
 	gboolean is_func = FALSE;
@@ -380,7 +386,7 @@ int sqlite3CreateFunc (sqlite3 *db, const char *name, int nArg, int eTextRep, vo
 			    void (*)(sqlite3_context*,int,sqlite3_value **),
 			    void (*)(sqlite3_context*,int,sqlite3_value **), void (*)(sqlite3_context*)) = NULL;
 
-	if(!func)
+	if (!func)
 		func = (int (*) (sqlite3 *, const char *, int, int, void *,
 				 void (*)(sqlite3_context*,int,sqlite3_value **),
 				 void (*)(sqlite3_context*,int,sqlite3_value **), 
@@ -398,10 +404,16 @@ int sqlite3CreateFunc (sqlite3 *db, const char *name, int nArg, int eTextRep, vo
 		/* It's a function */
 		recset = (GdaDataModelArray *) cdata->functions_model;
 		if (!recset) {
-			recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new 
-						       (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_PROCEDURES)));
-			g_assert (gda_server_provider_init_schema_model (GDA_DATA_MODEL (recset), 
-									 GDA_CONNECTION_SCHEMA_PROCEDURES));
+			recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new, 3);
+			gda_column_set_title (0, "name");
+			gda_column_set_name (0, "name");
+			gda_column_set_g_type (0, G_TYPE_STRING);
+			gda_column_set_title (1, "nargs");
+			gda_column_set_name (1, "nargs");
+			gda_column_set_g_type (1, G_TYPE_INT);
+			gda_column_set_title (2, "specificname");
+			gda_column_set_name (2, "specificname");
+			gda_column_set_g_type (2, G_TYPE_STRING);
 			cdata->functions_model = (GdaDataModel *) recset;
 		}
 		is_func = TRUE;
@@ -410,10 +422,17 @@ int sqlite3CreateFunc (sqlite3 *db, const char *name, int nArg, int eTextRep, vo
 		/* It's an aggregate */
 		recset = (GdaDataModelArray *) cdata->aggregates_model;
 		if (!recset) {
-			recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new 
-						       (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_AGGREGATES)));
-			g_assert (gda_server_provider_init_schema_model (GDA_DATA_MODEL (recset), 
-									 GDA_CONNECTION_SCHEMA_AGGREGATES));
+			recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new, 3);
+			gda_column_set_title (0, "name");
+			gda_column_set_name (0, "name");
+			gda_column_set_g_type (0, G_TYPE_STRING);
+			gda_column_set_title (1, "nargs");
+			gda_column_set_name (1, "nargs");
+			gda_column_set_g_type (1, G_TYPE_INT);
+			gda_column_set_title (2, "specificname");
+			gda_column_set_name (2, "specificname");
+			gda_column_set_g_type (2, G_TYPE_STRING);
+			cdata->functions_model = (GdaDataModel *) recset;
 			cdata->aggregates_model = (GdaDataModel *) recset;
 		}
 		is_agg = TRUE;
@@ -457,65 +476,23 @@ int sqlite3CreateFunc (sqlite3 *db, const char *name, int nArg, int eTextRep, vo
 		/* 'unlock' the data model */
 		g_object_set (G_OBJECT (recset), "read-only", FALSE, NULL);
 
-		/* Proc name */
+		/* name */
 		g_value_set_string (value = gda_value_new (G_TYPE_STRING), name);
 		rowlist = g_list_append (rowlist, value);
+
+		/* Number of args */
+		g_value_set_int (value = gda_value_new (G_TYPE_INT), nArg);
+		rowlist = g_list_append (rowlist, value);			
 				
-		/* Proc_Id */
-		if (! is_agg)
-			str = g_strdup_printf ("p%d", gda_data_model_get_n_rows ((GdaDataModel*) recset));
-		else
-			str = g_strdup_printf ("a%d", gda_data_model_get_n_rows ((GdaDataModel*) recset));
+		/* specific name */
+		str = g_strdup_printf ("%s_%d_%d", name, nArg, eTextRep);
 		g_value_take_string (value = gda_value_new (G_TYPE_STRING), str);
 		rowlist = g_list_append (rowlist, value);
-				
-		/* Owner */
-		g_value_set_string (value = gda_value_new (G_TYPE_STRING), "system");
-		rowlist = g_list_append (rowlist, value);
-		
-		/* Comments */ 
-		rowlist = g_list_append (rowlist, gda_value_new_null());
-		
-		/* Out type */ 
-		g_value_set_string (value = gda_value_new (G_TYPE_STRING), "text");
-		rowlist = g_list_append (rowlist, value);
-				
-		if (! is_agg) {
-			/* Number of args */
-			g_value_set_int (value = gda_value_new (G_TYPE_INT), nArg);
-			rowlist = g_list_append (rowlist, value);
-		}
-				
-		/* In types */
-		if (! is_agg) {
-			if (nArg > 0) {
-				GString *string;
-				gint j;
-				
-				string = g_string_new ("");
-				for (j = 0; j < nArg; j++) {
-					if (j > 0)
-						g_string_append_c (string, ',');
-					g_string_append_c (string, '-');
-				}
-				g_value_take_string (value = gda_value_new (G_TYPE_STRING), string->str);
-				g_string_free (string, FALSE);
-			}
-			else
-				g_value_set_string (value = gda_value_new (G_TYPE_STRING), "");
-		}
-		else
-			g_value_set_string (value = gda_value_new (G_TYPE_STRING), "");
-		rowlist = g_list_append (rowlist, value);
-
-		/* Definition */
-		rowlist = g_list_append (rowlist, gda_value_new_null());
-
+								
 		add_g_list_row ((gpointer) rowlist, recset);
 
 		/* 'lock' the data model */
 		g_object_set (G_OBJECT (recset), "read-only", TRUE, NULL);
-
 	}
 
 	return func (db, name, nArg, eTextRep, data, xFunc, xStep, xFinal);
@@ -736,10 +713,9 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	g_hash_table_insert (db_connections_hash, cdata->connection, cdata);
 #endif
 	
-	/* Note: we need to set the thread owner because as mentionned in
-	 * http://www.sqlite.org/cvstrac/wiki?p=MultiThreading, for portability, a connection should only
-	 * be used by the thread which created it. */
-	g_object_set (G_OBJECT (cnc), "thread-owner", g_thread_self (), NULL);
+	/* Note: we don't need to set the thread owner because as stating with SQLite version 3.6.0
+	 * connections and prepared statement can be shared by threads */
+	g_object_set (G_OBJECT (cnc), "thread-owner", NULL, NULL);
 
 	g_static_rec_mutex_unlock (&cnc_mutex);
 	return TRUE;
@@ -979,7 +955,6 @@ gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 		const GValue *value;
 		const gchar *dbname = NULL;
 		const gchar *dir = NULL;
-		gchar *filename, *tmp;
 		gboolean retval = TRUE;
 
 		value = gda_server_operation_get_value_at (op, "/DB_DESC_P/DB_NAME");
@@ -989,16 +964,24 @@ gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
                 if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
                         dir = g_value_get_string (value);
 
-		tmp = g_strdup_printf ("%s%s", dbname, FILE_EXTENSION);
-		filename = (gchar *) g_build_filename (dir, tmp, NULL);
-		g_free (tmp);
+		if (dbname && dir) {
+			gchar *filename, *tmp;
+			tmp = g_strdup_printf ("%s%s", dbname, FILE_EXTENSION);
+			filename = (gchar *) g_build_filename (dir, tmp, NULL);
+			g_free (tmp);
 
-		if (g_unlink (filename)) {
-			g_set_error (error, 0, 0,
-				     sys_errlist [errno]);
+			if (g_unlink (filename)) {
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_OPERATION_ERROR,
+					     sys_errlist [errno]);
+				retval = FALSE;
+			}
+			g_free (filename);
+		}
+		else {
+			g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_OPERATION_ERROR,
+				     _("Missing database name or directory"));
 			retval = FALSE;
 		}
-		g_free (filename);
 		
 		return retval;
 	}
@@ -1216,13 +1199,10 @@ gda_sqlite_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConne
 	if (type == G_TYPE_BOOLEAN)
 		return "boolean";
 	
-	if ((type == G_TYPE_DATE) || 
-	    (type == GDA_TYPE_GEOMETRIC_POINT) ||
+	if ((type == GDA_TYPE_GEOMETRIC_POINT) ||
 	    (type == G_TYPE_OBJECT) ||
 	    (type == GDA_TYPE_LIST) ||
 	    (type == G_TYPE_STRING) ||
-	    (type == GDA_TYPE_TIME) ||
-	    (type == GDA_TYPE_TIMESTAMP) ||
 	    (type == G_TYPE_INVALID))
 		return "string";
 
@@ -1818,7 +1798,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				       GdaStatement *stmt, GdaSet *params,
 				       GdaStatementModelUsage model_usage, 
 				       GType *col_types, GdaSet **last_inserted_row, 
-				       guint *task_id, GdaServerProviderAsyncCallback async_cb, 
+				       guint *task_id, GdaServerProviderExecCallback async_cb, 
 				       gpointer cb_data, GError **error)
 {
 	GdaSqlitePStmt *ps;

@@ -52,6 +52,7 @@ typedef struct {
 /* 
  * Utility functions
  */
-void _gda_sqlite_update_types_hash (SqliteConnectionData *scnc);
+void  _gda_sqlite_compute_types_hash (SqliteConnectionData *scnc);
+GType _gda_sqlite_compute_g_type (int sqlite_type);
 
 #endif

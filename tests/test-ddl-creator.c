@@ -32,8 +32,8 @@ main (int argc, char** argv)
 
 	gda_init ();
 	
-	ddl = gda_ddl_creator_new_with_file ("dbstruct.xml", &error);
-	if (!ddl) {
+	ddl = gda_ddl_creator_new ();
+	if (!gda_ddl_creator_set_dest_from_file (ddl, "dbstruct.xml", &error)) {
 		g_print ("Error creating GdaDDLCreator: %s\n", error && error->message ? error->message : "No detail");
 		g_error_free (error);
 		return EXIT_FAILURE;
@@ -50,7 +50,7 @@ main (int argc, char** argv)
 	g_object_unref (cnc);
 
 	/* get SQL */
-	str = gda_ddl_creator_get_sql_for_create_objects (ddl, &error);
+	str = gda_ddl_creator_get_sql (ddl, &error);
 	if (!str) {
 		g_print ("Error getting SQL: %s\n", error && error->message ? error->message : "No detail");
 		g_error_free (error);
@@ -60,7 +60,7 @@ main (int argc, char** argv)
 	g_free (str);
 
 	/* execute */
-	if (!gda_ddl_creator_create_objects (ddl, &error)) {
+	if (!gda_ddl_creator_execute (ddl, &error)) {
 		g_print ("Error creating database objects: %s\n", error && error->message ? error->message : "No detail");
 		g_error_free (error);
 		return EXIT_FAILURE;

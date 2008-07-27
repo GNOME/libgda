@@ -384,7 +384,11 @@ gda_vconnection_data_model_get_table_name (GdaVconnectionDataModel *cnc, GdaData
  * @func: a #GdaVConnectionDataModelFunc function pointer
  * @data: data to pass to @cunc calls
  *
- * Call @func for each #GdaDataModel represented as a table in @cnc.
+ * Call @func for each table in @cnc. 
+ *
+ * Warning: @func will be called for any table present in @cnc even if no data
+ * model represents the contents of the table (which means the 1st argument of @func
+ * may be %NULL)
  */
 void
 gda_vconnection_data_model_foreach (GdaVconnectionDataModel *cnc, 
@@ -401,8 +405,7 @@ gda_vconnection_data_model_foreach (GdaVconnectionDataModel *cnc,
 	while (list) {
 		GdaVConnectionTableData *td = (GdaVConnectionTableData*) list->data;
 		next = list->next;
-		if (td->spec->data_model)
-			func (td->spec->data_model, td->table_name, data);
+		func (td->spec->data_model, td->table_name, data);
 		list = next;
 	}
 }

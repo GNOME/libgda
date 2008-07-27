@@ -63,58 +63,38 @@ set_from_string (GValue *value, const gchar *as_string)
 	type = G_VALUE_TYPE (value);
 	g_value_reset (value);
 
-	if (g_value_type_transformable (G_TYPE_STRING, type)) {
-		/* use the GLib type transformation function */
-		GValue *string;
-
-                string = g_new0 (GValue, 1);
-                g_value_init (string, G_TYPE_STRING);
-                g_value_set_string (string, as_string);
-
-                g_value_transform (string, value);
-                gda_value_free (string);
-
-                return TRUE;
-	}
-
 	/* custom transform function */
 	retval = FALSE;
 	if (type == G_TYPE_BOOLEAN) {
-		if (g_ascii_strcasecmp (as_string, "true") == 0) {
+		if (((as_string[0] == 't') || (as_string[0] == 'T')) &&
+		    ((as_string[1] == 'r') || (as_string[1] == 'R')) &&
+		    ((as_string[2] == 'u') || (as_string[2] == 'U')) &&
+		    ((as_string[3] == 'e') || (as_string[3] == 'E'))) {
 			g_value_set_boolean (value, TRUE);
 			retval = TRUE;
 		}
-		else {
-			if (g_ascii_strcasecmp (as_string, "false") == 0) {
-				g_value_set_boolean (value, FALSE);
-				retval = TRUE;
-			}
+		else if (((as_string[0] == 'f') || (as_string[0] == 'F')) &&
+			 ((as_string[1] == 'a') || (as_string[1] == 'A')) &&
+			 ((as_string[2] == 'l') || (as_string[2] == 'L')) &&
+			 ((as_string[3] == 's') || (as_string[3] == 'S')) &&
+			 ((as_string[4] == 'e') || (as_string[4] == 'E'))) {
+			g_value_set_boolean (value, FALSE);
+			retval = TRUE;
 		}
 	}
-	else if (type == GDA_TYPE_BINARY) {
-		GdaBinary binary;
-		retval = gda_string_to_binary (as_string, &binary);
-		if (retval)
-			gda_value_set_binary (value, &binary);
-	}
-	else if (type == GDA_TYPE_BLOB) {
-		GdaBlob blob;
-		retval = gda_string_to_blob (as_string, &blob);
-		if (retval)
-			gda_value_set_blob (value, &blob);
-	}
 	else if (type == G_TYPE_INT64) {
-		/* Use g_strtod instead of strtoll */
-		dvalue = g_strtod (as_string, endptr);
+		gint64 i64;
+		i64 = g_ascii_strtoll (as_string, endptr, 10);
 		if (*as_string != '\0' && **endptr == '\0'){
-			g_value_set_int64 (value, (gint64) dvalue);
+			g_value_set_int64 (value, i64);
 			retval = TRUE;
 		}
 	}
 	else if (type == G_TYPE_UINT64) {
- 	        dvalue = g_strtod (as_string, endptr);
-                if (*as_string!=0 && **endptr==0) {
-			g_value_set_uint64(value,(guint64)dvalue);
+		guint64 ui64;
+		ui64 = g_ascii_strtoull (as_string, endptr, 10);
+		if (*as_string != '\0' && **endptr == '\0'){
+			g_value_set_uint64 (value, ui64);
 			retval = TRUE;
                 }
 	}
@@ -147,28 +127,28 @@ set_from_string (GValue *value, const gchar *as_string)
 		}
 	}
 	else if (type == G_TYPE_CHAR) {
-		lvalue = strtol(as_string, endptr, 10);
+		lvalue = strtol (as_string, endptr, 10);
 		if (*as_string!=0 && **endptr==0) {
 			g_value_set_char(value,(gchar)lvalue);
 			retval = TRUE;
 		}
 	}
 	else if (type == G_TYPE_UCHAR) {
-		ulvalue = strtoul(as_string,endptr, 10);
+		ulvalue = strtoul (as_string,endptr, 10);
 		if (*as_string!=0 && **endptr==0) {
 			g_value_set_uchar(value,(guchar)ulvalue);
 			retval = TRUE;
 		}
 	}
 	else if (type == G_TYPE_FLOAT) {
-		dvalue = g_strtod (as_string, endptr);
+		dvalue = g_ascii_strtod (as_string, endptr);
 		if (*as_string != '\0' && **endptr == '\0'){
 			g_value_set_float (value, (gfloat) dvalue);
 			retval = TRUE;
 		}
 	}
 	else if (type == G_TYPE_DOUBLE) {
-		dvalue = g_strtod (as_string, endptr);
+		dvalue = g_ascii_strtod (as_string, endptr);
 		if (*as_string != '\0' && **endptr == '\0'){
 			g_value_set_double (value, dvalue);
 			retval = TRUE;
@@ -176,7 +156,7 @@ set_from_string (GValue *value, const gchar *as_string)
 	}
 	else if (type == GDA_TYPE_NUMERIC) {
 		GdaNumeric numeric;
-		/* FIXME: what test whould i do for numeric? */
+		/* FIXME: what test whould i do for numeric? Use GMP (http://gmplib.org/) ?*/
 		numeric.number = g_strdup (as_string);
 		numeric.precision = 0; /* FIXME */
 		numeric.width = 0; /* FIXME */
@@ -187,13 +167,27 @@ set_from_string (GValue *value, const gchar *as_string)
 	else if (type == G_TYPE_DATE) {
 		GDate *gdate;
 		gdate = g_date_new ();
-		g_date_set_parse (gdate, as_string);
-		if (g_date_valid (gdate)) {
+
+		if (gda_parse_iso8601_date (gdate, as_string)) {
 			g_value_take_boxed (value, gdate);
 			retval = TRUE;
 		}
 		else
 			g_date_free (gdate);
+	}
+	else if (type == GDA_TYPE_TIME) {
+		GdaTime timegda;
+		if (gda_parse_iso8601_time (&timegda, as_string)) {
+			gda_value_set_time (value, &timegda);
+			retval = TRUE;
+		}
+	}
+	else if (type == GDA_TYPE_TIMESTAMP) {
+		GdaTimestamp timestamp;
+		if (gda_parse_iso8601_timestamp (&timestamp, as_string)) {
+			gda_value_set_timestamp (value, &timestamp);
+			retval = TRUE;
+		}
 	}
 	else if (type == GDA_TYPE_NULL) {
 		gda_value_set_null (value);
@@ -211,6 +205,33 @@ set_from_string (GValue *value, const gchar *as_string)
 				retval = TRUE;
 			}
 		}
+	}
+	else if (type == GDA_TYPE_BINARY) {
+		GdaBinary binary;
+		retval = gda_string_to_binary (as_string, &binary);
+		if (retval)
+			gda_value_set_binary (value, &binary);
+	}
+	else if (type == GDA_TYPE_BLOB) {
+		GdaBlob blob;
+		retval = gda_string_to_blob (as_string, &blob);
+		if (retval)
+			gda_value_set_blob (value, &blob);
+	}
+
+
+	if (!retval && g_value_type_transformable (G_TYPE_STRING, type)) {
+		/* use the GLib type transformation function */
+		GValue *string;
+
+                string = g_new0 (GValue, 1);
+                g_value_init (string, G_TYPE_STRING);
+                g_value_set_string (string, as_string);
+
+                g_value_transform (string, value);
+                gda_value_free (string);
+
+                retval = TRUE;
 	}
 
 	return retval;
@@ -1145,7 +1166,12 @@ gda_value_new_timestamp_from_timet (time_t val)
  * @as_string: stringified representation of the value.
  * @type: the new value type.
  *
- * Makes a new #GValue of type @type from its string representation.
+ * Makes a new #GValue of type @type from its string representation. 
+ *
+ * For more information
+ * about the string format, see the gda_value_set_from_string() function.
+ * This function is typically used when reading configuration files or other non-user input that should be locale 
+ * independent.
  *
  * Returns: the newly created #GValue or %NULL if the string representation
  * cannot be converted to the specified @type.
@@ -1172,9 +1198,14 @@ gda_value_new_from_string (const gchar *as_string, GType type)
  *
  * Creates a GValue from an XML representation of it. That XML
  * node corresponds to the following string representation:
- *    &lt;value type="gdatype"&gt;value&lt;/value&gt;
+ * &lt;value type="gdatype"&gt;value&lt;/value&gt;
  *
- * Returns:  the newly created #GValue.
+ * For more information
+ * about the string format, see the gda_value_set_from_string() function.
+ * This function is typically used when reading configuration files or other non-user input that should be locale 
+ * independent.
+ *
+ * Returns: the newly created #GValue.
  */
 GValue *
 gda_value_new_from_xml (const xmlNodePtr node)
@@ -1665,6 +1696,18 @@ gda_value_set_timestamp (GValue *value, const GdaTimestamp *val)
  * @type: the type of the value
  *
  * Stores the value data from its string representation as @type.
+ *
+ * The accepted formats are:
+ * <itemizedlist>
+ *   <listitem><para>G_TYPE_BOOLEAN: a caseless comparison is made with "true" or "false"</para></listitem>
+ *   <listitem><para>numerical types: C locale format (dot as a fraction separator)</para></listitem>
+ *   <listitem><para>G_TYPE_DATE: see <link linkend="gda-parse-iso8601-date">gda_parse_iso8601_date()</link></para></listitem>
+ *   <listitem><para>GDA_TYPE_TIME: see <link linkend="gda-parse-iso8601-time">gda_parse_iso8601_time()</link></para></listitem>
+ *   <listitem><para>GDA_TYPE_TIMESTAMP: see <link linkend="gda-parse-iso8601-timestamp">gda_parse_iso8601_timestamp()</link></para></listitem>
+ * </itemizedlist>
+ *
+ * This function is typically used when reading configuration files or other non-user input that should be locale 
+ * independent.
  *
  * Returns: %TRUE if the value has been converted to @type from
  * its string representation; it not means that the value is converted 

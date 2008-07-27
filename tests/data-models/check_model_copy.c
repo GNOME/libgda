@@ -92,6 +92,21 @@ do_test_load_file (const gchar *filename)
 	gboolean retval = TRUE;
 	GError *error = NULL;
 
+	/* make sure we only test data model dumps */
+	xmlDocPtr doc;
+	xmlNodePtr root;
+	doc = xmlParseFile (filename);
+	if (!doc) 
+		/* abort the test */
+		return TRUE;
+	root = xmlDocGetRootElement (doc);
+	if (strcmp (root->name, "gda_array")) {
+		/* abort the test */
+		xmlFreeDoc (doc);
+		return TRUE;
+	}
+	xmlFreeDoc (doc);
+
 	import = gda_data_model_import_new_file (filename, TRUE, NULL);
 
 	if ((errors = gda_data_model_import_get_errors (GDA_DATA_MODEL_IMPORT (import)))) {
