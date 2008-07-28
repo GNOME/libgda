@@ -34,6 +34,11 @@ An implementation of #GdaDataModel based on a #GArray.
 
 </para>
 
+<!-- ##### ARG GdaDataModelArray:read-only ##### -->
+<para>
+
+</para>
+
 <!-- ##### STRUCT GdaDataModelArrayClass ##### -->
 <para>
 
@@ -72,6 +77,17 @@ An implementation of #GdaDataModel based on a #GArray.
 </para>
 
 @src: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_array_get_row ##### -->
+<para>
+
+</para>
+
+@model: 
+@row: 
 @error: 
 @Returns: 
 

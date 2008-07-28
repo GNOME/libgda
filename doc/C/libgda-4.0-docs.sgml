@@ -45,11 +45,11 @@
 <!ENTITY libgda-GdaMutex SYSTEM "xml/gda-mutex.xml">
 <!ENTITY libgda-GdaLockable SYSTEM "xml/gda-lockable.xml">
 <!ENTITY libgda-GdaThreader SYSTEM "xml/gda-threader.xml">
+<!ENTITY libgda-GdaRow SYSTEM "xml/gda-row.xml">
 <!ENTITY libgda-GdaDataModelArray SYSTEM "xml/gda-data-model-array.xml">
 <!ENTITY libgda-GdaDataModelBdb SYSTEM "xml/gda-data-model-bdb.xml">
 <!ENTITY libgda-GdaDataModelDir SYSTEM "xml/gda-data-model-dir.xml">
 <!ENTITY libgda-GdaDataModelQuery SYSTEM "xml/gda-data-model-query.xml">
-<!ENTITY libgda-GdaDataModelRow SYSTEM "xml/gda-data-model-row.xml">
 <!ENTITY libgda-GdaDataModel SYSTEM "xml/gda-data-model.xml">
 <!ENTITY libgda-GdaDataModelIter SYSTEM "xml/gda-data-model-iter.xml">
 <!ENTITY libgda-GdaDataModelImport SYSTEM "xml/gda-data-model-import.xml">
@@ -60,7 +60,6 @@
 <!ENTITY libgda-init SYSTEM "xml/libgda.xml">
 <!ENTITY libgda-log SYSTEM "xml/gda-log.xml">
 <!ENTITY libgda-quark-list SYSTEM "xml/gda-quark-list.xml">
-<!ENTITY libgda-GdaRow SYSTEM "xml/gda-row.xml">
 <!ENTITY libgda-GdaServerProvider SYSTEM "xml/gda-server-provider.xml">
 <!ENTITY libgda-GdaVirtualProvider SYSTEM "xml/gda-virtual-provider.xml">
 <!ENTITY libgda-GdaVproviderDataModel SYSTEM "xml/gda-vprovider-data-model.xml">
@@ -98,7 +97,6 @@
 <!ENTITY libgda-GdaSqlParser SYSTEM "xml/gda-sql-parser.xml">
 <!ENTITY libgda-GdaMetaStore SYSTEM "xml/gda-meta-store.xml">
 <!ENTITY libgda-GdaMetaStruct SYSTEM "xml/gda-meta-struct.xml">
-<!ENTITY libgda-PRow SYSTEM "xml/gda-prow.xml">
 <!ENTITY libgda-PModel SYSTEM "xml/gda-pmodel.xml">
 <!ENTITY libgda-PStmt SYSTEM "xml/gda-pstmt.xml">
 <!ENTITY libgda-Enums SYSTEM "xml/gda-enums.xml">
@@ -576,6 +574,7 @@
       &libgda-GdaDataModelImport;
       &libgda-GdaDataAccessWrapper;
       &libgda-GdaDataModelArray;
+      &libgda-GdaRow;
       &libgda-GdaDataModelBdb;
       &libgda-GdaDataModelDir;
       &libgda-GdaDataProxy;
@@ -905,7 +904,6 @@ g_object_unref (store);
       &libgda-util;
       &libgda-log;
       &libgda-quark-list;
-      &libgda-GdaDataModelRow;
       &libgda-GdaMutex;
       &libgda-GdaLockable;
       &libgda-GdaThreader;
@@ -1280,7 +1278,6 @@ Description for type: DROP_COLUMN
       <title>Providers' support API</title>
       &libgda-GdaServerProvider;
       &libgda-PModel;
-      &libgda-PRow;
       &libgda-PStmt;
       &provider-support;
     </chapter>

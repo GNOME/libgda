@@ -1,3 +1,24 @@
+2008-07-28  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/sqlite/gda-sqlite-recordset.c:
+	* providers/firebird/gda-firebird-recordset.c:
+	* providers/mysql/gda-mysql-recordset.c:
+	* providers/postgres/gda-postgres-recordset.c:
+	* providers/skel-implementation/capi/gda-capi-recordset.c:
+	* libgda/providers-support/gda-pmodel.[ch]:
+	* libgda/providers-support/gda-prow.[ch]:
+	* libgda/gda-data-model-row.[ch]: overwrote the current GdaRow implementation
+	with the GdaPRow one, and removed GdaPRow
+	* libgda/gda-data-access-wrapper.c:
+	* libgda/gda-data-model-row.[ch]:
+	* libgda/gda-data-model-array.[ch]: reimplemented GdaDataModelArray without using
+	the GdaDataModelRow object (which has been removed)
+	* libgda/gda-data-model.h: new error code
+	* libgda/gda-config.c: added missing header
+	* tests/data-models/check_data_proxy.c: corrected test
+	* po/POTFILES.in: removed non existent files, and ran "make update-po"
+	* doc/C: doc updates
+
 2008-07-27  Vivien Malerba <malerba@gnome-db.org>
 
 	* WixInstaller/make-zip-exe.sh: new script to create a .ZIP file containing

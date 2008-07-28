@@ -25,7 +25,7 @@
 #define __GDA_DATA_MODEL_ARRAY_H__
 
 #include <libgda/gda-data-model.h>
-#include <libgda/gda-data-model-row.h>
+#include <libgda/gda-row.h>
 
 G_BEGIN_DECLS
 
@@ -40,18 +40,20 @@ typedef struct _GdaDataModelArrayClass   GdaDataModelArrayClass;
 typedef struct _GdaDataModelArrayPrivate GdaDataModelArrayPrivate;
 
 struct _GdaDataModelArray {
-	GdaDataModelRow           model;
+	GObject                   object;
 	GdaDataModelArrayPrivate *priv;
 };
 
 struct _GdaDataModelArrayClass {
-	GdaDataModelRowClass      parent_class;
+	GObjectClass              parent_class;
 };
 
 GType              gda_data_model_array_get_type          (void) G_GNUC_CONST;
 GdaDataModel      *gda_data_model_array_new_with_g_types  (gint cols, ...);
 GdaDataModel      *gda_data_model_array_new               (gint cols);
 GdaDataModelArray *gda_data_model_array_copy_model        (GdaDataModel *src, GError **error);
+
+GdaRow            *gda_data_model_array_get_row           (GdaDataModelArray *model, gint row, GError **error);
 void               gda_data_model_array_set_n_columns     (GdaDataModelArray *model, gint cols);
 void               gda_data_model_array_clear             (GdaDataModelArray *model);
 

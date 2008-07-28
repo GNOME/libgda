@@ -12,7 +12,6 @@ libgda/gda-data-model-dsn-list.c
 libgda/gda-data-model-import.c
 libgda/gda-data-model-iter.c
 libgda/gda-data-model-query.c
-libgda/gda-data-model-row.c
 libgda/gda-data-proxy.c
 libgda/gda-easy.c
 libgda/gda-init.c

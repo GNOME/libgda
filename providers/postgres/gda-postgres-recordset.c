@@ -52,18 +52,18 @@ static void gda_postgres_recordset_get_property (GObject *object,
 
 /* virtual methods */
 static gint     gda_postgres_recordset_fetch_nb_rows (GdaPModel *model);
-static gboolean gda_postgres_recordset_fetch_random (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error);
+static gboolean gda_postgres_recordset_fetch_random (GdaPModel *model, GdaRow **prow, gint rownum, GError **error);
 static gboolean gda_postgres_recordset_store_all (GdaPModel *model, GError **error);
-static gboolean gda_postgres_recordset_fetch_next (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error);
-static gboolean gda_postgres_recordset_fetch_prev (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error);
-static gboolean gda_postgres_recordset_fetch_at (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error);
+static gboolean gda_postgres_recordset_fetch_next (GdaPModel *model, GdaRow **prow, gint rownum, GError **error);
+static gboolean gda_postgres_recordset_fetch_prev (GdaPModel *model, GdaRow **prow, gint rownum, GError **error);
+static gboolean gda_postgres_recordset_fetch_at (GdaPModel *model, GdaRow **prow, gint rownum, GError **error);
 
 /* static helper functions */
 static void make_point (GdaGeometricPoint *point, const gchar *value);
 static void set_value (GdaConnection *cnc, GValue *value, GType type, const gchar *thevalue, gint length);
 
-static void     set_prow_with_pg_res (GdaPostgresRecordset *imodel, GdaPRow *prow, gint pg_res_rownum);
-static GdaPRow *new_row_from_pg_res (GdaPostgresRecordset *imodel, gint pg_res_rownum);
+static void     set_prow_with_pg_res (GdaPostgresRecordset *imodel, GdaRow *prow, gint pg_res_rownum);
+static GdaRow *new_row_from_pg_res (GdaPostgresRecordset *imodel, gint pg_res_rownum);
 static gboolean row_is_in_current_pg_res (GdaPostgresRecordset *model, gint row);
 static gboolean fetch_next_chunk (GdaPostgresRecordset *model, gboolean *fetch_error, GError **error);
 static gboolean fetch_prev_chunk (GdaPostgresRecordset *model, gboolean *fetch_error, GError **error);
@@ -75,7 +75,7 @@ struct _GdaPostgresRecordsetPrivate {
 	PGresult         *pg_res;
 
 	/* cursor access attributes */
-	GdaPRow          *tmp_row; /* used to store a reference to the last #GdaPRow returned */
+	GdaRow           *tmp_row; /* used to store a reference to the last #GdaRow returned */
 	gchar            *cursor_name;
 	PGconn           *pconn;
 	gint              chunk_size; /* Number of rows to fetch at a time when iterating forward or backwards. */
@@ -422,12 +422,12 @@ gda_postgres_recordset_fetch_nb_rows (GdaPModel *model)
 }
 
 /*
- * Create a new filled #GdaPRow object for the row at position @rownum.
+ * Create a new filled #GdaRow object for the row at position @rownum.
  *
- * Each new #GdaPRow created is "given" to the #GdaPModel implementation using gda_pmodel_take_row ().
+ * Each new #GdaRow created is "given" to the #GdaPModel implementation using gda_pmodel_take_row ().
  */
 static gboolean
-gda_postgres_recordset_fetch_random (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error)
+gda_postgres_recordset_fetch_random (GdaPModel *model, GdaRow **prow, gint rownum, GError **error)
 {
 	GdaPostgresRecordset *imodel = (GdaPostgresRecordset *) model;
 
@@ -444,7 +444,7 @@ gda_postgres_recordset_fetch_random (GdaPModel *model, GdaPRow **prow, gint rown
 	gda_pmodel_take_row (model, *prow, rownum);
 
 	if (model->nb_stored_rows == model->advertized_nrows) {
-		/* all the rows have been converted from PGresult to GdaPRow objects => we can
+		/* all the rows have been converted from PGresult to GdaRow objects => we can
 		 * discard the PGresult */
 		PQclear (imodel->priv->pg_res);
 		imodel->priv->pg_res = NULL;
@@ -454,7 +454,7 @@ gda_postgres_recordset_fetch_random (GdaPModel *model, GdaPRow **prow, gint rown
 }
 
 /*
- * Create and "give" filled #GdaPRow object for all the rows in the model
+ * Create and "give" filled #GdaRow object for all the rows in the model
  */
 static gboolean
 gda_postgres_recordset_store_all (GdaPModel *model, GError **error)
@@ -469,7 +469,7 @@ gda_postgres_recordset_store_all (GdaPModel *model, GError **error)
 	}
 
 	for (i = 0; i < model->advertized_nrows; i++) {
-		GdaPRow *prow;
+		GdaRow *prow;
 		if (! gda_postgres_recordset_fetch_random (model, &prow, i, error))
 			return FALSE;
 	}
@@ -477,13 +477,13 @@ gda_postgres_recordset_store_all (GdaPModel *model, GError **error)
 }
 
 /*
- * Create a new filled #GdaPRow object for the next cursor row
+ * Create a new filled #GdaRow object for the next cursor row
  *
- * Each new #GdaPRow created is referenced only by imodel->priv->tmp_row (the #GdaPModel implementation
- * never keeps a reference to it). Before a new #GdaPRow gets created, the previous one, if set, is discarded.
+ * Each new #GdaRow created is referenced only by imodel->priv->tmp_row (the #GdaPModel implementation
+ * never keeps a reference to it). Before a new #GdaRow gets created, the previous one, if set, is discarded.
  */
 static gboolean
-gda_postgres_recordset_fetch_next (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error)
+gda_postgres_recordset_fetch_next (GdaPModel *model, GdaRow **prow, gint rownum, GError **error)
 {
 	GdaPostgresRecordset *imodel = (GdaPostgresRecordset*) model;
 
@@ -514,13 +514,13 @@ gda_postgres_recordset_fetch_next (GdaPModel *model, GdaPRow **prow, gint rownum
 }
 
 /*
- * Create a new filled #GdaPRow object for the previous cursor row
+ * Create a new filled #GdaRow object for the previous cursor row
  *
- * Each new #GdaPRow created is referenced only by imodel->priv->tmp_row (the #GdaPModel implementation
- * never keeps a reference to it). Before a new #GdaPRow gets created, the previous one, if set, is discarded.
+ * Each new #GdaRow created is referenced only by imodel->priv->tmp_row (the #GdaPModel implementation
+ * never keeps a reference to it). Before a new #GdaRow gets created, the previous one, if set, is discarded.
  */
 static gboolean
-gda_postgres_recordset_fetch_prev (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error)
+gda_postgres_recordset_fetch_prev (GdaPModel *model, GdaRow **prow, gint rownum, GError **error)
 {
 	GdaPostgresRecordset *imodel = (GdaPostgresRecordset*) model;
 
@@ -551,13 +551,13 @@ gda_postgres_recordset_fetch_prev (GdaPModel *model, GdaPRow **prow, gint rownum
 }
 
 /*
- * Create a new filled #GdaPRow object for the cursor row at position @rownum
+ * Create a new filled #GdaRow object for the cursor row at position @rownum
  *
- * Each new #GdaPRow created is referenced only by imodel->priv->tmp_row (the #GdaPModel implementation
- * never keeps a reference to it). Before a new #GdaPRow gets created, the previous one, if set, is discarded.
+ * Each new #GdaRow created is referenced only by imodel->priv->tmp_row (the #GdaPModel implementation
+ * never keeps a reference to it). Before a new #GdaRow gets created, the previous one, if set, is discarded.
  */
 static gboolean
-gda_postgres_recordset_fetch_at (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error)
+gda_postgres_recordset_fetch_at (GdaPModel *model, GdaRow **prow, gint rownum, GError **error)
 {
 	GdaPostgresRecordset *imodel = (GdaPostgresRecordset*) model;
 
@@ -717,7 +717,7 @@ row_is_in_current_pg_res (GdaPostgresRecordset *model, gint row)
 }
 
 static void
-set_prow_with_pg_res (GdaPostgresRecordset *imodel, GdaPRow *prow, gint pg_res_rownum)
+set_prow_with_pg_res (GdaPostgresRecordset *imodel, GdaRow *prow, gint pg_res_rownum)
 {
 	gchar *thevalue;
 	gint col;
@@ -725,22 +725,22 @@ set_prow_with_pg_res (GdaPostgresRecordset *imodel, GdaPRow *prow, gint pg_res_r
 	for (col = 0; col < ((GdaPModel*) imodel)->prep_stmt->ncols; col++) {
 		thevalue = PQgetvalue (imodel->priv->pg_res, pg_res_rownum, col);
 		if (thevalue && (*thevalue != '\0' ? FALSE : PQgetisnull (imodel->priv->pg_res, pg_res_rownum, col)))
-			gda_value_set_null (gda_prow_get_value (prow, col));
+			gda_value_set_null (gda_row_get_value (prow, col));
 		else
 			set_value (((GdaPModel*) imodel)->cnc,
-				   gda_prow_get_value (prow, col), 
+				   gda_row_get_value (prow, col), 
 				   ((GdaPModel*) imodel)->prep_stmt->types [col], 
 				   thevalue, 
 				   PQgetlength (imodel->priv->pg_res, pg_res_rownum, col));
 	}
 }
 
-static GdaPRow *
+static GdaRow *
 new_row_from_pg_res (GdaPostgresRecordset *imodel, gint pg_res_rownum)
 {
-	GdaPRow *prow;
+	GdaRow *prow;
 
-	prow = gda_prow_new (((GdaPModel*) imodel)->prep_stmt->ncols);
+	prow = gda_row_new (((GdaPModel*) imodel)->prep_stmt->ncols);
 	set_prow_with_pg_res (imodel, prow, pg_res_rownum);
 	return prow;
 }

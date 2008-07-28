@@ -512,12 +512,12 @@ gboolean (*key_columns)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
     few virtual methods, and offering some services.
   </para>
   <para>
-    The data model represents each row in a separate <link linkend="GdaPRow">GdaPRow</link> object, and virtual
+    The data model represents each row in a separate <link linkend="GdaRow">GdaRow</link> object, and virtual
     methods to retreive rows have to return new (and correctly initialized) objects of that class. The referencing
     of these new objects is left up to the implementation which:
     <itemizedlist>
       <listitem>
-	<para>can rely on the <link linkend="GdaPRow">GdaPRow</link> implementation to keep them, using
+	<para>can rely on the <link linkend="GdaRow">GdaRow</link> implementation to keep them, using
 	  the <link linkend="gda-pmodel-take-row">gda_pmodel_take_row ()</link> method for each row object created which
 	  is the easiest, the fastest as once created, the rows are available for further usage, 
 	  but will consume more memory with each row read from the model.</para>
@@ -559,7 +559,7 @@ gboolean (*key_columns)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
     <title>store_all()</title>
     <para>
       This method is called when the user sets the "store-all-rows" to TRUE. It has the effect of forcing the creation
-      of a <link linkend="GdaPRow">GdaPRow</link> object for each row of the data model (thus increasing the memory consumption
+      of a <link linkend="GdaRow">GdaRow</link> object for each row of the data model (thus increasing the memory consumption
       but reducing further access times). It is available only when the data access mode for the data model is random 
       (that is not cursor based). When data access is cursor based, this method will not be called.
     </para>

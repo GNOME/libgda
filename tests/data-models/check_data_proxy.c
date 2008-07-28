@@ -524,7 +524,7 @@ do_test_proxied_model_modif (void)
 	/* 
 	 * delete a proxy row, in current proxy's chunk
 	 */
-	declare_expected_signals ("R5", "Delete a proxy row - 3");
+	declare_expected_signals ("R6", "Delete a proxy row - 3");
 	if (!check_data_model_remove_row (model, 25)) goto out;
 	clean_expected_signals (proxy);
 	gda_data_model_dump (proxy, stdout);

@@ -38,10 +38,10 @@ static void gda_capi_recordset_dispose   (GObject *object);
 
 /* virtual methods */
 static gint     gda_capi_recordset_fetch_nb_rows (GdaPModel *model);
-static gboolean gda_capi_recordset_fetch_random (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error);
-static gboolean gda_capi_recordset_fetch_next (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error);
-static gboolean gda_capi_recordset_fetch_prev (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error);
-static gboolean gda_capi_recordset_fetch_at (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error);
+static gboolean gda_capi_recordset_fetch_random (GdaPModel *model, GdaRow **prow, gint rownum, GError **error);
+static gboolean gda_capi_recordset_fetch_next (GdaPModel *model, GdaRow **prow, gint rownum, GError **error);
+static gboolean gda_capi_recordset_fetch_prev (GdaPModel *model, GdaRow **prow, gint rownum, GError **error);
+static gboolean gda_capi_recordset_fetch_at (GdaPModel *model, GdaRow **prow, gint rownum, GError **error);
 
 
 struct _GdaCapiRecordsetPrivate {
@@ -232,22 +232,22 @@ gda_capi_recordset_fetch_nb_rows (GdaPModel *model)
 }
 
 /*
- * Create a new filled #GdaPRow object for the row at position @rownum, and put it into *prow.
+ * Create a new filled #GdaRow object for the row at position @rownum, and put it into *prow.
  *
  * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
- *  -  If *prow is NULL then a new #GdaPRow object has to be created, 
- *  -  and otherwise *prow contains a #GdaPRow object which has already been created 
+ *  -  If *prow is NULL then a new #GdaRow object has to be created, 
+ *  -  and otherwise *prow contains a #GdaRow object which has already been created 
  *     (through a call to this very function), and in this case it should not be modified
  *     but the function may return FALSE if an error occurred.
  *
- * Memory management for that new GdaPRow object is left to the implementation, which
+ * Memory management for that new GdaRow object is left to the implementation, which
  * can use gda_pmodel_take_row(). If new row objects are "given" to the GdaPModel implemantation
  * using that method, then this method should detect when all the data model rows have been analysed
  * (when model->nb_stored_rows == model->advertized_nrows) and then possibly discard the API handle
  * as it won't be used anymore to fetch rows.
  */
 static gboolean 
-gda_capi_recordset_fetch_random (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error)
+gda_capi_recordset_fetch_random (GdaPModel *model, GdaRow **prow, gint rownum, GError **error)
 {
 	GdaCapiRecordset *imodel;
 
@@ -259,7 +259,7 @@ gda_capi_recordset_fetch_random (GdaPModel *model, GdaPRow **prow, gint rownum, 
 }
 
 /*
- * Create and "give" filled #GdaPRow object for all the rows in the model
+ * Create and "give" filled #GdaRow object for all the rows in the model
  */
 static gboolean
 gda_capi_recordset_store_all (GdaPModel *model, GError **error)
@@ -271,7 +271,7 @@ gda_capi_recordset_store_all (GdaPModel *model, GError **error)
 
 	/* default implementation */
 	for (i = 0; i < model->advertized_nrows; i++) {
-		GdaPRow *prow;
+		GdaRow *prow;
 		if (! gda_capi_recordset_fetch_random (model, &prow, i, error))
 			return FALSE;
 	}
@@ -279,19 +279,19 @@ gda_capi_recordset_store_all (GdaPModel *model, GError **error)
 }
 
 /*
- * Create a new filled #GdaPRow object for the next cursor row, and put it into *prow.
+ * Create a new filled #GdaRow object for the next cursor row, and put it into *prow.
  *
  * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
- *  -  If *prow is NULL then a new #GdaPRow object has to be created, 
- *  -  and otherwise *prow contains a #GdaPRow object which has already been created 
+ *  -  If *prow is NULL then a new #GdaRow object has to be created, 
+ *  -  and otherwise *prow contains a #GdaRow object which has already been created 
  *     (through a call to this very function), and in this case it should not be modified
  *     but the function may return FALSE if an error occurred.
  *
- * Memory management for that new GdaPRow object is left to the implementation, which
+ * Memory management for that new GdaRow object is left to the implementation, which
  * can use gda_pmodel_take_row().
  */
 static gboolean 
-gda_capi_recordset_fetch_next (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error)
+gda_capi_recordset_fetch_next (GdaPModel *model, GdaRow **prow, gint rownum, GError **error)
 {
 	GdaCapiRecordset *imodel = (GdaCapiRecordset*) model;
 
@@ -301,19 +301,19 @@ gda_capi_recordset_fetch_next (GdaPModel *model, GdaPRow **prow, gint rownum, GE
 }
 
 /*
- * Create a new filled #GdaPRow object for the previous cursor row, and put it into *prow.
+ * Create a new filled #GdaRow object for the previous cursor row, and put it into *prow.
  *
  * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
- *  -  If *prow is NULL then a new #GdaPRow object has to be created, 
- *  -  and otherwise *prow contains a #GdaPRow object which has already been created 
+ *  -  If *prow is NULL then a new #GdaRow object has to be created, 
+ *  -  and otherwise *prow contains a #GdaRow object which has already been created 
  *     (through a call to this very function), and in this case it should not be modified
  *     but the function may return FALSE if an error occurred.
  *
- * Memory management for that new GdaPRow object is left to the implementation, which
+ * Memory management for that new GdaRow object is left to the implementation, which
  * can use gda_pmodel_take_row().
  */
 static gboolean 
-gda_capi_recordset_fetch_prev (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error)
+gda_capi_recordset_fetch_prev (GdaPModel *model, GdaRow **prow, gint rownum, GError **error)
 {
 	GdaCapiRecordset *imodel = (GdaCapiRecordset*) model;
 
@@ -323,19 +323,19 @@ gda_capi_recordset_fetch_prev (GdaPModel *model, GdaPRow **prow, gint rownum, GE
 }
 
 /*
- * Create a new filled #GdaPRow object for the cursor row at position @rownum, and put it into *prow.
+ * Create a new filled #GdaRow object for the cursor row at position @rownum, and put it into *prow.
  *
  * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
- *  -  If *prow is NULL then a new #GdaPRow object has to be created, 
- *  -  and otherwise *prow contains a #GdaPRow object which has already been created 
+ *  -  If *prow is NULL then a new #GdaRow object has to be created, 
+ *  -  and otherwise *prow contains a #GdaRow object which has already been created 
  *     (through a call to this very function), and in this case it should not be modified
  *     but the function may return FALSE if an error occurred.
  *
- * Memory management for that new GdaPRow object is left to the implementation, which
+ * Memory management for that new GdaRow object is left to the implementation, which
  * can use gda_pmodel_take_row().
  */
 static gboolean 
-gda_capi_recordset_fetch_at (GdaPModel *model, GdaPRow **prow, gint rownum, GError **error)
+gda_capi_recordset_fetch_at (GdaPModel *model, GdaRow **prow, gint rownum, GError **error)
 {
 	GdaCapiRecordset *imodel = (GdaCapiRecordset*) model;
 	

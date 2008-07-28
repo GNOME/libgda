@@ -21,7 +21,7 @@ gda_handler_type_get_type
 gda_data_model_array_get_type
 @LIBGDA_BDB_TYPE@
 gda_data_model_dir_get_type
-gda_data_model_row_get_type
+gda_row_get_type
 gda_data_model_get_type
 gda_data_model_import_get_type
 gda_data_model_iter_get_type

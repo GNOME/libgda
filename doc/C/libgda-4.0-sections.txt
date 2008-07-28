@@ -180,6 +180,7 @@ GdaDataModelArrayPrivate
 gda_data_model_array_new
 gda_data_model_array_new_with_g_types
 gda_data_model_array_copy_model
+gda_data_model_array_get_row
 gda_data_model_array_set_n_columns
 gda_data_model_array_clear
 <SUBSECTION Standard>
@@ -246,21 +247,6 @@ GDA_IS_DATA_MODEL_QUERY
 GDA_IS_DATA_MODEL_QUERY_CLASS
 GDA_TYPE_DATA_MODEL_QUERY
 gda_data_model_query_get_type
-</SECTION>
-
-<SECTION>
-<FILE>gda-data-model-row</FILE>
-<TITLE>GdaDataModelRow</TITLE>
-GdaDataModelRow
-GdaDataModelRowClass
-GdaDataModelRowPrivate
-<SUBSECTION Standard>
-GDA_DATA_MODEL_ROW
-GDA_DATA_MODEL_ROW_CLASS
-GDA_IS_DATA_MODEL_ROW
-GDA_IS_DATA_MODEL_ROW_CLASS
-GDA_TYPE_DATA_MODEL_ROW
-gda_data_model_row_get_type
 </SECTION>
 
 <SECTION>
@@ -459,19 +445,8 @@ gda_quark_list_get_type
 <TITLE>GdaRow</TITLE>
 GdaRow
 gda_row_new
-gda_row_copy
-gda_row_new_from_list
-gda_row_set_model
-gda_row_get_model
-gda_row_get_number
-gda_row_set_number
-gda_row_get_id
-gda_row_set_id
-gda_row_get_value
-gda_row_set_value
 gda_row_get_length
-gda_row_set_is_default
-gda_row_get_is_default
+gda_row_get_value
 <SUBSECTION Standard>
 GDA_IS_ROW
 GDA_IS_ROW_CLASS
@@ -1397,22 +1372,6 @@ gda_meta_struct_get_db_object
 gda_meta_struct_get_table_column
 GdaMetaGraphInfo
 gda_meta_struct_dump_as_graph
-</SECTION>
-
-<SECTION>
-<FILE>gda-prow</FILE>
-<TITLE>GdaPRow</TITLE>
-<INCLUDE>providers-support/gda-prow.h</INCLUDE>
-GdaPRow
-gda_prow_new
-gda_prow_get_length
-gda_prow_get_value
-<SUBSECTION Standard>
-GDA_IS_PROW
-GDA_PROW
-GDA_PROW_CLASS
-GDA_TYPE_PROW
-gda_prow_get_type
 </SECTION>
 
 <SECTION>

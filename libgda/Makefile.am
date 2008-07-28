@@ -35,7 +35,6 @@ gda_headers = \
 	gda-data-comparator.h \
 	gda-data-handler.h \
 	gda-data-model-array.h \
-	gda-data-model-row.h \
 	gda-data-model.h \
 	$(GDA_BDB_H) \
 	gda-data-model-dir.h \
@@ -58,8 +57,8 @@ gda_headers = \
 	gda-meta-struct.h \
 	gda-mutex.h \
 	gda-quark-list.h \
-	gda-set.h \
 	gda-row.h \
+	gda-set.h \
 	gda-server-operation.h \
 	gda-server-provider.h \
 	gda-server-provider-extra.h \
@@ -90,7 +89,6 @@ libgda_sources =  \
 	gda-data-handler.c \
 	gda-data-model-array.c \
 	$(GDA_BDB_S) \
-	gda-data-model-row.c \
 	gda-data-model.c \
 	gda-data-model-dir.c \
 	gda-data-model-dsn-list.c \
@@ -113,8 +111,8 @@ libgda_sources =  \
 	gda-meta-struct-io.c \
 	gda-mutex.c \
 	gda-quark-list.c \
-	gda-set.c \
 	gda-row.c \
+	gda-set.c \
 	gda-server-operation.c \
 	gda-server-provider.c \
 	gda-server-provider-extra.c \

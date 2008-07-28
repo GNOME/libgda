@@ -1,12 +1,17 @@
 <!-- ##### SECTION Title ##### -->
-GdaDataModel rows
+GdaDataModelArray's rows
 
 <!-- ##### SECTION Short_Description ##### -->
-Row for a #GdaDataModel object
+Row for a #GdaDataModelArray object
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-Each #GdaDataModel uses #GdaRow to let the user access each row it contains.
+  The #GdaDataModelArray object uses #GdaRow to store each row of data. Each #GdaRow has the same
+  number of #GValue values (equal to the number of columns of the data model).
+</para>
+<para>
+  As a side note, the #GdaRow object is also used internally by the implementation of the data models returned
+  when executing a SELECT statement.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -22,110 +27,18 @@ Each #GdaDataModel uses #GdaRow to let the user access each row it contains.
 
 </para>
 
-@object: 
-@priv: 
+
+<!-- ##### ARG GdaRow:nb-values ##### -->
+<para>
+
+</para>
 
 <!-- ##### FUNCTION gda_row_new ##### -->
 <para>
 
 </para>
 
-@model: 
 @count: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_row_copy ##### -->
-<para>
-
-</para>
-
-@row: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_row_new_from_list ##### -->
-<para>
-
-</para>
-
-@model: 
-@values: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_row_set_model ##### -->
-<para>
-
-</para>
-
-@row: 
-@model: 
-
-
-<!-- ##### FUNCTION gda_row_get_model ##### -->
-<para>
-
-</para>
-
-@row: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_row_get_number ##### -->
-<para>
-
-</para>
-
-@row: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_row_set_number ##### -->
-<para>
-
-</para>
-
-@row: 
-@number: 
-
-
-<!-- ##### FUNCTION gda_row_get_id ##### -->
-<para>
-
-</para>
-
-@row: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_row_set_id ##### -->
-<para>
-
-</para>
-
-@row: 
-@id: 
-
-
-<!-- ##### FUNCTION gda_row_get_value ##### -->
-<para>
-
-</para>
-
-@row: 
-@num: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_row_set_value ##### -->
-<para>
-
-</para>
-
-@row: 
-@num: 
-@value: 
 @Returns: 
 
 
@@ -138,17 +51,7 @@ Each #GdaDataModel uses #GdaRow to let the user access each row it contains.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_row_set_is_default ##### -->
-<para>
-
-</para>
-
-@row: 
-@num: 
-@is_default: 
-
-
-<!-- ##### FUNCTION gda_row_get_is_default ##### -->
+<!-- ##### FUNCTION gda_row_get_value ##### -->
 <para>
 
 </para>

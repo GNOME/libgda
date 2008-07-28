@@ -24,6 +24,7 @@
 #include <gmodule.h>
 #include <libgda/gda-config.h>
 #include <glib/gi18n-lib.h>
+#include <glib/gstdio.h>
 #include "gda-marshal.h"
 #include <string.h>
 #include <libgda/binreloc/gda-binreloc.h>
@@ -1257,7 +1258,6 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 		GdaProviderInfo *info;
 		GModule *handle;
 		gchar *path;
-		gchar *ext;
 		void (*plugin_init) (const gchar *);
 		const gchar * (* plugin_get_name) (void);
 		const gchar * (* plugin_get_description) (void);

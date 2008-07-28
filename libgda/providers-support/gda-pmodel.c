@@ -26,7 +26,7 @@
 #include <libgda/gda-data-model-private.h>
 #include <string.h>
 #include "gda-pmodel.h"
-#include "gda-prow.h"
+#include "gda-row.h"
 #include "gda-pstmt.h"
 #include <libgda/gda-statement.h>
 #include <libgda/gda-holder.h>
@@ -44,12 +44,12 @@ enum
 };
 
 /*
- * Getting a GdaPRow from a model row:
- * model row ==(model->index)==> model->rows index ==(model->rows)==> GdaPRow
+ * Getting a GdaRow from a model row:
+ * model row ==(model->index)==> model->rows index ==(model->rows)==> GdaRow
  */
 struct _GdaPModelPrivate {
 	GSList                 *columns; /* list of GdaColumn objects */
-	GArray                 *rows; /* Array of GdaPRow */
+	GArray                 *rows; /* Array of GdaRow pointers */
 	GHashTable             *index; /* key = model row number + 1, value = index in @rows array + 1*/
 
 	/* Internal iterator's information, if GDA_DATA_MODEL_CURSOR_* based access */
@@ -227,7 +227,7 @@ gda_pmodel_init (GdaPModel *model, GdaPModelClass *klass)
 	g_return_if_fail (GDA_IS_PMODEL (model));
 	model->priv = g_new0 (GdaPModelPrivate, 1);
 	model->cnc = NULL;
-	model->priv->rows = g_array_new (FALSE, FALSE, sizeof (GdaPRow *));
+	model->priv->rows = g_array_new (FALSE, FALSE, sizeof (GdaRow *));
 	model->priv->index = g_hash_table_new (g_direct_hash, g_direct_equal);
 	model->prep_stmt = NULL;
 	model->priv->columns = NULL;
@@ -257,8 +257,8 @@ gda_pmodel_dispose (GObject *object)
 		}
 		if (model->priv->rows) {
 			for (i = 0; i < model->priv->rows->len; i++) {
-				GdaPRow *prow;
-				prow = g_array_index (model->priv->rows, GdaPRow *, i);
+				GdaRow *prow;
+				prow = g_array_index (model->priv->rows, GdaRow *, i);
 				g_object_unref (prow);
 			}
 			g_array_free (model->priv->rows, TRUE);
@@ -447,17 +447,17 @@ gda_pmodel_get_property (GObject *object,
 /**
  * gda_pmodel_take_row
  * @model: a #GdaPModel data model
- * @row: a #GdaPRow row
+ * @row: a #GdaRow row
  * @rownum: "external" advertized row number
  *
  * Stores @row into @model, externally advertized at row number @rownum. The reference to
  * @row is stolen.
  */
 void
-gda_pmodel_take_row (GdaPModel *model, GdaPRow *row, gint rownum)
+gda_pmodel_take_row (GdaPModel *model, GdaRow *row, gint rownum)
 {
 	g_return_if_fail (GDA_IS_PMODEL (model));
-	g_return_if_fail (GDA_IS_PROW (row));
+	g_return_if_fail (GDA_IS_ROW (row));
 
 	if (g_hash_table_lookup (model->priv->index, GINT_TO_POINTER (rownum + 1))) 
 		g_error ("INTERNAL error: row %d already exists, aborting", rownum);
@@ -472,11 +472,11 @@ gda_pmodel_take_row (GdaPModel *model, GdaPRow *row, gint rownum)
  * @model: a #GdaPModel data model
  * @rownum: "external" advertized row number
  *
- * Get the #GdaPRow object stored within @model at row @rownum
+ * Get the #GdaRow object stored within @model at row @rownum
  *
- * Returns: the requested #GdaPRow, or %NULL if not found
+ * Returns: the requested #GdaRow, or %NULL if not found
  */
-GdaPRow *
+GdaRow *
 gda_pmodel_get_stored_row (GdaPModel *model, gint rownum)
 {
 	gint irow;
@@ -487,7 +487,7 @@ gda_pmodel_get_stored_row (GdaPModel *model, gint rownum)
 	if (irow <= 0) 
 		return NULL;
 	else 
-		return g_array_index (model->priv->rows, GdaPRow *, irow - 1);
+		return g_array_index (model->priv->rows, GdaRow *, irow - 1);
 }
 
 /**
@@ -618,7 +618,7 @@ gda_pmodel_get_access_flags (GdaDataModel *model)
 static const GValue *
 gda_pmodel_get_value_at (GdaDataModel *model, gint col, gint row)
 {
-	GdaPRow *prow;
+	GdaRow *prow;
 	gint irow, nrows;
 	GdaPModel *imodel;
 
@@ -642,10 +642,10 @@ gda_pmodel_get_value_at (GdaDataModel *model, gint col, gint row)
 			CLASS (model)->fetch_random (imodel, &prow, row, NULL);
 	}
 	else 
-		prow = g_array_index (imodel->priv->rows, GdaPRow *, irow - 1);
+		prow = g_array_index (imodel->priv->rows, GdaRow *, irow - 1);
 	
 	if (prow) 
-		return gda_prow_get_value (prow, col);
+		return gda_row_get_value (prow, col);
 
 	return NULL;
 }
@@ -690,12 +690,12 @@ gda_pmodel_create_iter (GdaDataModel *model)
 	}
 }
 
-static void update_iter (GdaPModel *imodel, GdaPRow *prow);
+static void update_iter (GdaPModel *imodel, GdaRow *prow);
 static gboolean
 gda_pmodel_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 {
 	GdaPModel *imodel;
-	GdaPRow *prow = NULL;
+	GdaRow *prow = NULL;
 	gint target_iter_row;
 	gint irow;
 
@@ -719,7 +719,7 @@ gda_pmodel_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 
 	irow = GPOINTER_TO_INT (g_hash_table_lookup (imodel->priv->index, GINT_TO_POINTER (target_iter_row + 1)));
 	if (irow > 0)
-		prow = g_array_index (imodel->priv->rows, GdaPRow *, irow - 1);
+		prow = g_array_index (imodel->priv->rows, GdaRow *, irow - 1);
 	if (!CLASS (model)->fetch_next (imodel, &prow, target_iter_row, NULL))
 		TO_IMPLEMENT;
 	
@@ -740,7 +740,7 @@ static gboolean
 gda_pmodel_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 {
 	GdaPModel *imodel;
-	GdaPRow *prow = NULL;
+	GdaRow *prow = NULL;
 	gint target_iter_row;
 	gint irow;
 
@@ -767,7 +767,7 @@ gda_pmodel_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 
 	irow = GPOINTER_TO_INT (g_hash_table_lookup (imodel->priv->index, GINT_TO_POINTER (target_iter_row + 1)));
 	if (irow > 0)
-		prow = g_array_index (imodel->priv->rows, GdaPRow *, irow - 1);
+		prow = g_array_index (imodel->priv->rows, GdaRow *, irow - 1);
 	if (!CLASS (model)->fetch_prev (imodel, &prow, target_iter_row, NULL))
 		TO_IMPLEMENT;
 
@@ -787,7 +787,7 @@ static gboolean
 gda_pmodel_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint row)
 {
 	GdaPModel *imodel;
-	GdaPRow *prow = NULL;
+	GdaRow *prow = NULL;
 	gint irow;
 
 	g_return_val_if_fail (GDA_IS_PMODEL (model), FALSE);
@@ -802,7 +802,7 @@ gda_pmodel_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint row)
 
 	irow = GPOINTER_TO_INT (g_hash_table_lookup (imodel->priv->index, GINT_TO_POINTER (row + 1)));
 	if (irow > 0)
-		prow = g_array_index (imodel->priv->rows, GdaPRow *, irow - 1);
+		prow = g_array_index (imodel->priv->rows, GdaRow *, irow - 1);
 
 	if (CLASS (model)->fetch_at) {
 		if (!CLASS (model)->fetch_at (imodel, &prow, row, NULL))
@@ -833,7 +833,7 @@ gda_pmodel_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint row)
 }
 
 static void
-update_iter (GdaPModel *imodel, GdaPRow *prow)
+update_iter (GdaPModel *imodel, GdaRow *prow)
 {
         gint i;
 	GdaDataModelIter *iter = imodel->priv->iter;
@@ -848,7 +848,7 @@ update_iter (GdaPModel *imodel, GdaPRow *prow)
 	     plist;
 	     i++, plist = plist->next) {
 		const GValue *value;
-		value = gda_prow_get_value (prow, i);
+		value = gda_row_get_value (prow, i);
 		gda_holder_set_value ((GdaHolder*) plist->data, value);
         }
 

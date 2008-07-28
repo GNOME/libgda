@@ -454,13 +454,22 @@ create_new_row (GdaDataAccessWrapper *model)
 	gint i;
 	GdaRow *row;
 
-	row = gda_row_new ((GdaDataModel *) model, model->priv->nb_cols);
+	row = gda_row_new (model->priv->nb_cols);
 	for (i = 0; i < model->priv->nb_cols; i++) {
 		GdaHolder *holder;
 
 		holder = gda_data_model_iter_get_holder_for_field (model->priv->iter, i);
-		if (holder)
-			gda_row_set_value (row, i, gda_holder_get_value (holder));
+		if (holder) {
+			GValue *dest;
+			const GValue *cvalue = gda_holder_get_value (holder);
+			dest = gda_row_get_value (row, i);
+			if (cvalue) {
+				gda_value_reset_with_type (dest, G_VALUE_TYPE ((GValue *) cvalue));
+				gda_value_set_from_value (dest, cvalue);
+			}
+			else
+				gda_value_set_null (dest);
+		}
 	}
 
 	g_hash_table_insert (model->priv->rows, GINT_TO_POINTER (model->priv->iter_row), row);

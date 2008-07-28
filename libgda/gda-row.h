@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -26,8 +26,6 @@
 #define __GDA_ROW_H__
 
 #include <glib-object.h>
-#include <libgda/gda-column.h>
-#include <glib/gmacros.h>
 #include <libgda/gda-decl.h>
 
 G_BEGIN_DECLS
@@ -49,34 +47,13 @@ struct _GdaRow {
 
 struct _GdaRowClass {
 	GObjectClass   parent_class;
-	
-	/* signals */
-	gboolean (* value_to_change) (GdaRow *row, gint num, const GValue *current, const GValue *proposed);
-	void     (* value_changed)   (GdaRow *row, gint num, const GValue *old_value, const GValue *new_value);
 };
 
-GType         gda_row_get_type           (void) G_GNUC_CONST;
+GType         gda_row_get_type       (void) G_GNUC_CONST;
 
-GdaRow       *gda_row_new            (GdaDataModel *model, gint count);
-GdaRow       *gda_row_new_from_list  (GdaDataModel *model, const GList *values);
-GdaRow       *gda_row_copy           (GdaRow *row);
-
-void          gda_row_set_model      (GdaRow *row, GdaDataModel *model);
-GdaDataModel *gda_row_get_model      (GdaRow *row);
-
+GdaRow       *gda_row_new            (gint count);
 gint          gda_row_get_length     (GdaRow *row);
-
-gint          gda_row_get_number     (GdaRow *row);
-void          gda_row_set_number     (GdaRow *row, gint number);
-
-const gchar  *gda_row_get_id         (GdaRow *row);
-void          gda_row_set_id         (GdaRow *row, const gchar *id);
-
-GValue     *gda_row_get_value      (GdaRow *row, gint num);
-gboolean      gda_row_set_value      (GdaRow *row, gint num, const GValue *value);
-
-void          gda_row_set_is_default (GdaRow *row, gint num, gboolean is_default);
-gboolean      gda_row_get_is_default (GdaRow *row, gint num);
+GValue       *gda_row_get_value      (GdaRow *row, gint num);
 
 G_END_DECLS
 
