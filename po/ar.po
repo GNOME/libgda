@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Arabic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-28 21:03+0200\n"
+"POT-Creation-Date: 2008-07-31 11:08+0100\n"
 "PO-Revision-Date: 2007-04-14 18:49+0100\n"
 "Last-Translator: Djihed Afifi <djihed@gmail.com>\n"
 "Language-Team: Arabeyes <doc@arabeyes.org>\n"
@@ -22,7 +22,7 @@ msgstr ""
 #: ../libgda/gda-batch.c:434
 #, fuzzy, c-format
 msgid "Conflicting parameter '%s'"
-msgstr "معامل %s مفقود"
+msgstr "المتغيرات المدخلة خاطئة"
 
 #: ../libgda/gda-config.c:176
 msgid "File to use for per-user DSN list"
@@ -35,7 +35,7 @@ msgstr ""
 #: ../libgda/gda-config.c:431
 #, fuzzy, c-format
 msgid "Error creating user specific configuration directory '%s'"
-msgstr "خطأ أثناء إنشاء مجلد جديد."
+msgstr "خطأ عند إنشاء الدليل '%s' :  %s "
 
 #: ../libgda/gda-config.c:480
 #, c-format
@@ -194,9 +194,9 @@ msgid "No DSN or connection string specified"
 msgstr "لم يحدّد أي مُستلِم"
 
 #: ../libgda/gda-connection.c:765
-#, fuzzy, c-format
+#, c-format
 msgid "Provider does not allow usage from this thread"
-msgstr "لا يمكن الطباعة من خلال الطابعة %s لأنها لا تحتمل بوستسكريبت"
+msgstr ""
 
 #: ../libgda/gda-connection.c:772
 #, c-format
@@ -229,7 +229,7 @@ msgstr "المتغيرات المدخلة خاطئة"
 #: ../libgda/gda-connection.c:2132
 #, fuzzy, c-format
 msgid "Missing or wrong arguments for table '%s': %s"
-msgstr "الحرف الناقص"
+msgstr "معامل %s مفقود"
 
 #: ../libgda/gda-connection.c:2841
 #, c-format
@@ -278,7 +278,7 @@ msgstr "لا يوجد معلومات عن رقم الإصدارة"
 #: ../libgda/gda-data-comparator.c:435
 #, fuzzy, c-format
 msgid "Missing new data model"
-msgstr "الحرف الناقص"
+msgstr "لا يوجد معلومات عن رقم الإصدارة"
 
 #: ../libgda/gda-data-comparator.c:441
 #, c-format
@@ -301,9 +301,8 @@ msgid "Differences computation cancelled on signal handling"
 msgstr ""
 
 #: ../libgda/gda-data-model-array.c:169
-#, fuzzy
 msgid "Whether data model can be modified"
-msgstr "يمكن تفعيل زر التحول"
+msgstr ""
 
 #: ../libgda/gda-data-model-array.c:389 ../libgda/gda-data-model-array.c:529
 #: ../libgda/gda-data-model-dir.c:796 ../libgda/gda-data-model-dir.c:955
@@ -785,7 +784,7 @@ msgstr "اسم ملف جديد"
 #: ../libgda/gda-easy.c:301
 #, fuzzy, c-format
 msgid "Invalid type"
-msgstr "المتغيرات المدخلة خاطئة"
+msgstr "handler عنوان غير صالح"
 
 #: ../libgda/gda-easy.c:328
 #, c-format
@@ -945,9 +944,9 @@ msgid "Could not create DELETE statement"
 msgstr "لم يمكن قراءة جدول المحتويات"
 
 #: ../libgda/gda-meta-store.c:2628
-#, fuzzy, c-format
+#, c-format
 msgid "A transaction has already been started"
-msgstr "الملف '%s'  موجود."
+msgstr ""
 
 #: ../libgda/gda-meta-store.c:2945
 #, fuzzy, c-format
@@ -967,9 +966,9 @@ msgid "Attributes names starting with a '_' are reserved for internal usage"
 msgstr ""
 
 #: ../libgda/gda-meta-store.c:3005 ../libgda/gda-meta-store.c:3028
-#, fuzzy, c-format
+#, c-format
 msgid "Internal GdaMetaStore error"
-msgstr "إطار داخلي"
+msgstr ""
 
 #: ../libgda/gda-meta-store.c:3015
 msgid ""
@@ -995,14 +994,13 @@ msgid ""
 msgstr ""
 
 #: ../libgda/gda-meta-store.c:3197
-#, fuzzy, c-format
+#, c-format
 msgid "Another object with the same name already exists"
-msgstr "الملف '%s'  موجود."
+msgstr ""
 
 #: ../libgda/gda-meta-struct.c:126
-#, fuzzy
 msgid "GdaMetaStore object to fetch information from"
-msgstr "لوحة الألوان التي ستستخدم في منتقي الألوان"
+msgstr ""
 
 #. To translators: The GdaMetaStruct object computes lists of tables, views,
 #. * and some other information, the "Features to compute" allows one to avoid
@@ -1019,12 +1017,12 @@ msgstr "لا يمكن فتح الملف %s."
 #: ../libgda/gda-meta-struct.c:458
 #, fuzzy, c-format
 msgid "Could not find object named '%s'"
-msgstr "لا يمكن فتح الملف %s."
+msgstr "لا يمكن ايجاد المشغل %s"
 
 #: ../libgda/gda-meta-struct.c:472
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find object named '%s.%s.%s'"
-msgstr "لا يمكن فتح الملف %s."
+msgstr ""
 
 #: ../libgda/gda-meta-struct.c:520
 #, c-format
@@ -1069,7 +1067,7 @@ msgstr "الملف '%s'  موجود."
 #: ../libgda/gda-meta-struct-io.c:81
 #, fuzzy, c-format
 msgid "Could not load file '%s'"
-msgstr "لم يمكن فتح ملف"
+msgstr "لا يمكن حفظ الملف %s."
 
 #. FIXME
 #: ../libgda/gda-meta-struct-io.c:88
@@ -1081,7 +1079,7 @@ msgstr ""
 #: ../libgda/gda-meta-struct-io.c:240
 #, fuzzy, c-format
 msgid "Missing column name for table '%s'"
-msgstr "الملف المطلوب مفقود"
+msgstr "معامل %s مفقود"
 
 #. FIXME
 #: ../libgda/gda-meta-struct-io.c:283
@@ -1606,7 +1604,7 @@ msgstr ""
 #: ../libgda/gda-xa-transaction.c:308
 #, fuzzy, c-format
 msgid "Connection does not support distributed transaction"
-msgstr "لا يمكن الطباعة من خلال الطابعة %s لأنها لا تحتمل بوستسكريبت"
+msgstr "لم يمكن القيام بالعملية"
 
 #: ../libgda/gda-xa-transaction.c:342
 msgid ""
@@ -1618,9 +1616,9 @@ msgstr ""
 #: ../libgda/gda-xa-transaction.c:512 ../libgda/gda-xa-transaction.c:542
 #: ../libgda/gda-xa-transaction.c:600 ../libgda/gda-xa-transaction.c:646
 #: ../libgda/gda-xa-transaction.c:680
-#, c-format
+#, fuzzy, c-format
 msgid "Provider error: %s method not implemented for provider %s"
-msgstr ""
+msgstr "لا يمكن الطباعة من خلال الطابعة %s لأنها لا تحتمل بوستسكريبت"
 
 #: ../libgda/handlers/gda-handler-bin.c:121
 #, fuzzy
@@ -1701,9 +1699,9 @@ msgstr "تعريف الأمكنة"
 #: ../libgda/sqlite/gda-sqlite-meta.c:1871
 #: ../libgda/sqlite/gda-sqlite-meta.c:1891
 #: ../libgda/sqlite/gda-sqlite-meta.c:1929
-#, c-format
+#, fuzzy, c-format
 msgid "Can't read data"
-msgstr ""
+msgstr "لا يمكن ايجاد المشغل %s"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:523
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:264
@@ -1757,9 +1755,9 @@ msgid "Provider does not support asynchronous server operation"
 msgstr "لا يدعم هذا الخادم معلومات مخطّط LDAPv3."
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:982
-#, fuzzy, c-format
+#, c-format
 msgid "Missing database name or directory"
-msgstr "اسم الملف مفقود."
+msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1008
 #: ../providers/postgres/gda-postgres-provider.c:1144
@@ -1770,9 +1768,9 @@ msgstr "صفحات الكتيّبل غير مدعومة في هذا الإصدا
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1642
 #: ../providers/postgres/gda-postgres-provider.c:1681
-#, fuzzy, c-format
+#, c-format
 msgid "Unnamed parameter is not allowed in prepared statements"
-msgstr "جذر المخزن %s ليس دليلاً اعتياديّاً"
+msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1733
 #: ../providers/postgres/gda-postgres-provider.c:1819
@@ -1946,19 +1944,19 @@ msgstr ""
 #: ../libgda/sql-parser/gda-statement-struct.c:481
 #, fuzzy, c-format
 msgid "Missing table in statement"
-msgstr "الحرف الناقص"
+msgstr "معامل %s مفقود"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:501
 #: ../libgda/sql-parser/gda-statement-struct.c:726
 #, fuzzy, c-format
 msgid "Column '%s' not found"
-msgstr "قيمة خارج المدى.\n"
+msgstr "%s: الملف %s غير موجود"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:536
 #: ../libgda/sql-parser/gda-statement-struct.c:663
-#, fuzzy, c-format
+#, c-format
 msgid "GdaSqlSelectField is not part of a SELECT statement"
-msgstr "لم يمكن قراءة جدول المحتويات"
+msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct.c:595
 #, fuzzy, c-format
@@ -1976,7 +1974,7 @@ msgstr "%s: الملف %s غير موجود"
 #: ../libgda/sql-parser/gda-statement-struct.c:695
 #, fuzzy, c-format
 msgid "Could not identify table for field '%s'"
-msgstr "لم يمكن ايجاد النوع من \"%s\""
+msgstr "لا يوجد أيقونة باسم \"%s\" لطور الطرفيّة \"%s\"\n"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:877
 #, c-format
@@ -2044,9 +2042,9 @@ msgid "Empty FROM clause"
 msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1320
-#, fuzzy, c-format
+#, c-format
 msgid "Select field is not in a SELECT statement"
-msgstr "لم يمكن قراءة جدول المحتويات"
+msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:204
 #, c-format
@@ -2444,9 +2442,9 @@ msgstr ""
 
 #: ../providers/mysql/gda-mysql-recordset.c:394
 #: ../providers/mysql/gda-mysql-recordset.c:603
-#, c-format
+#, fuzzy, c-format
 msgid "Invalid column bind data type. %d\n"
-msgstr ""
+msgstr "لا يمكن ايجاد المشغل %s"
 
 #: ../providers/mysql/gda-mysql-recordset.c:501
 #, c-format
@@ -3629,9 +3627,9 @@ msgid "Could not set search_path to %s"
 msgstr "لم يمكن ايجاد النوع من \"%s\""
 
 #: ../providers/postgres/gda-postgres-provider.c:750
-#, fuzzy, c-format
+#, c-format
 msgid "Search path %s is invalid"
-msgstr "اسم النموذج"
+msgstr ""
 
 #: ../providers/postgres/gda-postgres-provider.c:1155
 #: ../providers/postgres/gda-postgres-provider.c:1157
@@ -4302,12 +4300,12 @@ msgstr ""
 #: ../tools/gda-sql.c:238
 #, fuzzy, c-format
 msgid "Opening connection '%s' for: %s\n"
-msgstr "تعذر فتح الموقع"
+msgstr "فشل فتح إتصال مع الناقل: %s\n"
 
 #: ../tools/gda-sql.c:242
 #, fuzzy, c-format
 msgid "Can't open connection %d: %s\n"
-msgstr "تعذر فتح الموقع"
+msgstr "فشل فتح إتصال مع الناقل: %s\n"
 
 #: ../tools/gda-sql.c:254
 #, c-format
@@ -4707,7 +4705,7 @@ msgstr "لم يمكن الكتابة في '%s': %s"
 #: ../tools/gda-sql.c:2474
 #, fuzzy, c-format
 msgid "No connection opened"
-msgstr "لم يحدّد أي مُستلِم"
+msgstr "_سرعة الاتصال:"
 
 #: ../tools/gda-sql.c:2233
 #, fuzzy, c-format
@@ -4790,619 +4788,6 @@ msgid "Could not save history file to '%s': %s"
 msgstr "لا يمكن حفظ الملف %s."
 
 #, fuzzy
-#~ msgid "Wrong number of values in values list"
-#~ msgstr "تلقي عدد العناصر في مفتاح قائمة."
-
-#, fuzzy
-#~ msgid "Could not parse date '%s', assuming 01/01/0001"
-#~ msgstr "تعذّر تشغيل الأمر"
-
-#, fuzzy
-#~ msgid "InternalBin"
-#~ msgstr "عالمي"
-
-#, fuzzy
-#~ msgid "InternalBoolean"
-#~ msgstr "الحشو الداخلي"
-
-#, fuzzy
-#~ msgid "InternalNumerical"
-#~ msgstr "اسم داخلي"
-
-#, fuzzy
-#~ msgid "InternalTime"
-#~ msgstr "إطار داخلي"
-
-#, fuzzy
-#~ msgid "InternalType"
-#~ msgstr "إطار داخلي"
-
-#, fuzzy
-#~ msgid "SqliteBin"
-#~ msgstr "خط الادخال"
-
-#, fuzzy
-#~ msgid "Could not find the 'xsltproc' program"
-#~ msgstr "لم يمكن ايجاد النوع من \"%s\""
-
-#, fuzzy
-#~ msgid "Could not find the 'trml2html.py' program"
-#~ msgstr "تعذّر العثور على التقويم"
-
-#, fuzzy
-#~ msgid "Expected tag <serv_op_data>, got <%s>"
-#~ msgstr "ترقبت عدد عشريا تلقيت %s"
-
-#, fuzzy
-#~ msgid "Could not save file %s"
-#~ msgstr "لا يمكن حفظ الملف %s."
-
-#, fuzzy
-#~ msgid "Cannot interpret string as a valid %s value"
-#~ msgstr "لا يمكن وضع السيمة كقيمة\n"
-
-#, fuzzy
-#~ msgid "Row %d not found in data model"
-#~ msgstr "المفتاح %s غير موجود في الإعدادات"
-
-#, fuzzy
-#~ msgid "Column out %d of range 0 - %d"
-#~ msgstr "قيمة خارج المدى.\n"
-
-#, fuzzy
-#~ msgid "Error while reading %s: %s"
-#~ msgstr "فشل في قراءة %s: %s"
-
-#, fuzzy
-#~ msgid "Could not create file %s"
-#~ msgstr "تعذّر إنشاء الأنبوب: %s"
-
-#, fuzzy
-#~ msgid "Can't get data model's column name for column %d"
-#~ msgstr "لا يمكن توزيع ذاكرة لبيانات السطر"
-
-#, fuzzy
-#~ msgid "Virtual providers base"
-#~ msgstr "ركِّب المجلد المشترك"
-
-#, fuzzy
-#~ msgid "Character Set"
-#~ msgstr "ال_محرف:"
-
-#~ msgid "Page Size"
-#~ msgstr "حجم الصفحة"
-
-#, fuzzy
-#~ msgid "Page size to use on the database"
-#~ msgstr "القطعة التي ستستخدم كشارة العنصر"
-
-#, fuzzy
-#~ msgid "SQL dialect to use during the connection"
-#~ msgstr "لوحة الألوان التي ستستخدم في منتقي الألوان"
-
-#, fuzzy
-#~ msgid "Invalid FirebirdQL handle"
-#~ msgstr "handler عنوان غير صالح"
-
-#~ msgid "UNKNOWN"
-#~ msgstr "مجهول"
-
-#, fuzzy
-#~ msgid "Invalid Firebird handle"
-#~ msgstr "handler عنوان غير صالح"
-
-#, fuzzy
-#~ msgid "No database specified"
-#~ msgstr "غير محدّد"
-
-#, fuzzy
-#~ msgid "Invalid transaction handle"
-#~ msgstr "وظيفة غير سليمة"
-
-#, fuzzy
-#~ msgid "Statement already prepared."
-#~ msgstr "المستند مفتوح مسبقا"
-
-#, fuzzy
-#~ msgid "Transaction not initialized."
-#~ msgstr "فشلت المعاملة"
-
-#, fuzzy
-#~ msgid "Database server IP address"
-#~ msgstr "خادم قاعدة بيانات"
-
-#, fuzzy
-#~ msgid "Dump Configuration File"
-#~ msgstr "ملفّات الإعدادات"
-
-#, fuzzy
-#~ msgid "Dump File"
-#~ msgstr "إستيراد ملف"
-
-#, fuzzy
-#~ msgid "Enable Sybase"
-#~ msgstr "فعّل ESD"
-
-#, fuzzy
-#~ msgid "File for TDS protocol dumps"
-#~ msgstr "مكن برتكول SHHالقديم "
-
-#, fuzzy
-#~ msgid "File for TDS protocol dumps configuration"
-#~ msgstr "فشل تصدير الإعدادات"
-
-#, fuzzy
-#~ msgid "IP address of the host on which the database server is running"
-#~ msgstr "منفذ:المضيف الذي يعمل عليه خادم الصوت الذي سيستخدم"
-
-#, fuzzy
-#~ msgid "Location of the FreeTDS config file"
-#~ msgstr "سجّل إجراءات المرشِّح على ملف السّجل المحدّد."
-
-#, fuzzy
-#~ msgid "TDS Major Version"
-#~ msgstr "نسخة الخادم"
-
-#, fuzzy
-#~ msgid "TDS Minor Version"
-#~ msgstr "نسخة الخادم"
-
-#, fuzzy
-#~ msgid "TDS protocol major version"
-#~ msgstr "%dاصدار البرتكول %d\n"
-
-#, fuzzy
-#~ msgid "TDS protocol minor version"
-#~ msgstr "%dاصدار البرتكول %d\n"
-
-#, fuzzy
-#~ msgid "Error creating error container."
-#~ msgstr "خطأ أثناء إنشاء مجلد جديد."
-
-#, fuzzy
-#~ msgid "Allocating tds context failed."
-#~ msgstr "تغيير الاختصار فشل"
-
-#, fuzzy
-#~ msgid "Allocating tds socket failed."
-#~ msgstr "فشل تحميل %s."
-
-#, fuzzy
-#~ msgid "Establishing connection failed."
-#~ msgstr "فشل اتصال VPN"
-
-#, fuzzy
-#~ msgid "Failed getting connection info."
-#~ msgstr "تعذر الحصول على معلومات حلقة المفاتيح."
-
-#, fuzzy
-#~ msgid "Unexpected return in execute_cmd()."
-#~ msgstr "خطأ غير متوقع في waitpid() (%s)"
-
-#, fuzzy
-#~ msgid "Error processing result rows.\n"
-#~ msgstr "خطأ أثناء قراءة الإعدادات: %s\n"
-
-#, fuzzy
-#~ msgid "Error processing results.\n"
-#~ msgstr "خطأ أثناء قراءة الإعدادات: %s\n"
-
-#, fuzzy
-#~ msgid "NO DESCRIPTION"
-#~ msgstr "وصف"
-
-#, fuzzy
-#~ msgid "Could not allocate environment handle.\n"
-#~ msgstr "لا يمكن توزيع ذاكرة للترويسة"
-
-#, fuzzy
-#~ msgid "Invalid IBM DB2 handle"
-#~ msgstr "handler عنوان غير صالح"
-
-#~ msgid "Function"
-#~ msgstr "الوظيفة"
-
-#, fuzzy
-#~ msgid "SQL Definition"
-#~ msgstr "التعريف الأ_خير"
-
-#, fuzzy
-#~ msgid "Triggers"
-#~ msgstr "مقطوعة اذاعية"
-
-#, fuzzy
-#~ msgid "Users"
-#~ msgstr "المستخدمون:"
-
-#, fuzzy
-#~ msgid "[BLOB unsupported]"
-#~ msgstr "غير مدعوم"
-
-#, fuzzy
-#~ msgid "[Unsupported data]"
-#~ msgstr "تهيئة غير مدعومة"
-
-#, fuzzy
-#~ msgid "Invalid LDAP handle"
-#~ msgstr "handler عنوان غير صالح"
-
-#, fuzzy
-#~ msgid "Attempt to insert a row with an invalid number of columns"
-#~ msgstr "ملف XPM له عدد غير صحيح من الألوان"
-
-#, fuzzy
-#~ msgid "Could not retrieve column's information"
-#~ msgstr "لا يمكن تلقي معلومات عن الملف"
-
-#, fuzzy
-#~ msgid "Could not retrieve column's value"
-#~ msgstr "لا يمكن تلقي معلومات عن الملف"
-
-#, fuzzy
-#~ msgid "Authentication Method"
-#~ msgstr "فشل التّوثيق"
-
-#, fuzzy
-#~ msgid "Authentication method to use when connecting"
-#~ msgstr "توثق من الاتصلات لخادم البروكسي"
-
-#, fuzzy
-#~ msgid "Bind Domain"
-#~ msgstr "النطاق"
-
-#~ msgid "Host Name"
-#~ msgstr "أسم المضيف"
-
-#, fuzzy
-#~ msgid "Host name of the LDAP server"
-#~ msgstr "اسم أو عنوان IP لخادم PPTP"
-
-#, fuzzy
-#~ msgid "LDAP Flags"
-#~ msgstr "شارات Popt"
-
-#, fuzzy
-#~ msgid "LDAP bind domain to use for authentication"
-#~ msgstr "استخدم ال_نطاق للتوثّق"
-
-#, fuzzy
-#~ msgid "Port to use when connecting to the LDAP server"
-#~ msgstr "إنشيء اتّصالٍ دائم بهذا الخادم"
-
-#, fuzzy
-#~ msgid "Provider for LDAP directory"
-#~ msgstr " للدليل"
-
-#, fuzzy
-#~ msgid "Invalid mSQL handle"
-#~ msgstr "handler عنوان غير صالح"
-
-#, fuzzy
-#~ msgid "Row number out of bounds"
-#~ msgstr "عدد النطاقات"
-
-#, fuzzy
-#~ msgid "Invalid MySQL handle"
-#~ msgstr "handler عنوان غير صالح"
-
-#, fuzzy
-#~ msgid "Row number out of range 0 - %d"
-#~ msgstr "قيمة خارج المدى.\n"
-
-#, fuzzy
-#~ msgid "Table name could not be guessed"
-#~ msgstr "تعذر حفظ الصورة."
-
-#, fuzzy
-#~ msgid "Model doesn't have at least one unique key."
-#~ msgstr "يجب أن يكون لك دائما شريط واحد على الأقل."
-
-#, fuzzy
-#~ msgid "Can not remove row from data model"
-#~ msgstr "اضبط عقدة الجذر من النموذج"
-
-#, fuzzy
-#~ msgid "Table name could not be guessed."
-#~ msgstr "تعذر حفظ الصورة."
-
-#, fuzzy
-#~ msgid "Connection String"
-#~ msgstr "فقد الاتصال "
-
-#, fuzzy
-#~ msgid "ODBC connection string"
-#~ msgstr "فقد الاتصال "
-
-#, fuzzy
-#~ msgid "Invalid Oracle handle"
-#~ msgstr "handler عنوان غير صالح"
-
-#, fuzzy
-#~ msgid "Could not get the length of LOB object"
-#~ msgstr "لم يمكن قراءة جدول المحتويات"
-
-#, fuzzy
-#~ msgid "Could not read from LOB object"
-#~ msgstr "لم يمكن قراءة المستند"
-
-#, fuzzy
-#~ msgid "Could not write to LOB object"
-#~ msgstr "لم يمكن تحديث الكائن"
-
-#, fuzzy
-#~ msgid "Could not truncate LOB object"
-#~ msgstr "لم يمكن تحديث الكائن"
-
-#, fuzzy
-#~ msgid "No TNS name supplied"
-#~ msgstr "لم يحدد أسم مضيف"
-
-#, fuzzy
-#~ msgid "Could not initialize Oracle"
-#~ msgstr "لم يمكن تهيئة بونوبو!\n"
-
-#, fuzzy
-#~ msgid "Could not initialize the Oracle environment"
-#~ msgstr "لم يمكن تشغيل المكتبات النظامية السليمة."
-
-#, fuzzy
-#~ msgid "Could not allocate the Oracle service handle"
-#~ msgstr "لم يمكن إنشاء مصنع خدمة تبليغ التنبيهات"
-
-#, fuzzy
-#~ msgid "Could not allocate the Oracle error handle"
-#~ msgstr "لا يمكن توزيع ذاكرة للترويسة"
-
-#, fuzzy
-#~ msgid "Could not allocate the Oracle server handle"
-#~ msgstr "غير قادر على تحديد موقع الخادم {0}."
-
-#, fuzzy
-#~ msgid "Could not allocate the Oracle session handle"
-#~ msgstr "لم يمكن الاتصال بمدير الجلسات"
-
-#, fuzzy
-#~ msgid "Could not attach to the Oracle server"
-#~ msgstr "غير قادر على التوثيق مع الخادم"
-
-#, fuzzy
-#~ msgid "Could not set the Oracle server attribute in the service context"
-#~ msgstr "لم يمكن حفظ الملف %s باستعمال ترميز المحارف %s."
-
-#, fuzzy
-#~ msgid "Could not set the Oracle username attribute"
-#~ msgstr "لم يمكن تحليل إسم الواجهة من '%s'"
-
-#, fuzzy
-#~ msgid "Could not set the Oracle password attribute"
-#~ msgstr "غير قادر على تغيير كلمة السر."
-
-#, fuzzy
-#~ msgid "Could not begin the Oracle session"
-#~ msgstr "لا يمكن فتح الملف %s."
-
-#, fuzzy
-#~ msgid "Could not set the Oracle session attribute in the service context"
-#~ msgstr "غير قادر على إرسال مذكرة بالإلغاء للمُفَوَّضْ"
-
-#, fuzzy
-#~ msgid "Could not allocate the Oracle statement handle"
-#~ msgstr "لم يمكن فتح القناة المحددة."
-
-#, fuzzy
-#~ msgid "Could not prepare the Oracle statement"
-#~ msgstr "لم يمكن قراءة جدول المحتويات"
-
-#, fuzzy
-#~ msgid "Could not bind the Oracle statement parameter"
-#~ msgstr "تعذّر العثور على التقويم"
-
-#, fuzzy
-#~ msgid "Could not get the Oracle statement type"
-#~ msgstr "لم أجد منتقى لحذفِه."
-
-#, fuzzy
-#~ msgid "Could not execute the Oracle statement"
-#~ msgstr "تعذّر تنفيذ %s: لم يُرْسَل البريد."
-
-#, fuzzy
-#~ msgid "Could not get the number of affected rows"
-#~ msgstr "غير قادر على تعيين مالك الجهاز."
-
-#, fuzzy
-#~ msgid "Could not get the attached transaction from the service context"
-#~ msgstr "لم يمكن إنشاء مصنع خدمة تبليغ التنبيهات"
-
-#, fuzzy
-#~ msgid "Could not get the number of columns in the result set"
-#~ msgstr "عدد الأعمدة في الجدول"
-
-#, fuzzy
-#~ msgid "Could not get the parameter descripter in the result set"
-#~ msgstr "تعذّر توليد بيانات التّشفير: %s"
-
-#, fuzzy
-#~ msgid "Could not get the column name in the result set"
-#~ msgstr "غير قادر على تعيين مالك الجهاز."
-
-#, fuzzy
-#~ msgid "Could not allocate the Oracle transaction handle"
-#~ msgstr "لا يمكن انشاء المجلّد المرسل اليه: %s."
-
-#, fuzzy
-#~ msgid "Could not attach the transaction to the service context"
-#~ msgstr "تعذّر إضافة هذه العملية للقائمة."
-
-#, fuzzy
-#~ msgid "Could not start the Oracle transaction"
-#~ msgstr "لم يمكن القيام بالعملية"
-
-#, fuzzy
-#~ msgid "Could not commit the Oracle transaction"
-#~ msgstr "لم يمكن القيام بالعملية"
-
-#, fuzzy
-#~ msgid "Could not de-attach the transaction to the service context"
-#~ msgstr "غير قادر على تعيين مالك الجهاز."
-
-#, fuzzy
-#~ msgid "Could not rollback the Oracle transaction"
-#~ msgstr "الغ العملية الأخيرة"
-
-#, fuzzy
-#~ msgid "Can't convert model for fields schema: %s"
-#~ msgstr "لا يمكن الكتابة على الملف `%s': %s"
-
-#, fuzzy
-#~ msgid "Indexes"
-#~ msgstr "مفهرس"
-
-#, fuzzy
-#~ msgid "Procedures"
-#~ msgstr "العمليّات"
-
-#, fuzzy
-#~ msgid "Sequences"
-#~ msgstr "<b>متتالية</b>"
-
-#, fuzzy
-#~ msgid "Could not get the Oracle parameter"
-#~ msgstr "لم يمكن ايجاد النوع من \"%s\""
-
-#, fuzzy
-#~ msgid "Could not get the parameter defined size"
-#~ msgstr "لايمكن إيجاد مدة الملف: %s"
-
-#, fuzzy
-#~ msgid "Could not get the parameter data type"
-#~ msgstr "تعذّر الحصول على بيانات الطقس"
-
-#, fuzzy
-#~ msgid "Could not allocate Lob locator"
-#~ msgstr "لم يمكن تحديد ذاكرة للواجهة"
-
-#, fuzzy
-#~ msgid "Could not define by position"
-#~ msgstr "تعذّر العثور على التّطبيق"
-
-#, fuzzy
-#~ msgid "Column out of range"
-#~ msgstr "قيمة خارج المدى.\n"
-
-#, fuzzy
-#~ msgid "Could not get the Oracle parameter information"
-#~ msgstr "لا يمكن تلقي موقع المقطوعة الحالية"
-
-#, fuzzy
-#~ msgid "Could not get the Oracle column name"
-#~ msgstr "لم يمكن ايجاد النوع من \"%s\""
-
-#, fuzzy
-#~ msgid "Could not get the Oracle column data type"
-#~ msgstr "لم أجد منتقى لحذفِه."
-
-#, fuzzy
-#~ msgid "Could not get the Oracle column scale"
-#~ msgstr "لم يمكن ايجاد النوع من \"%s\""
-
-#, fuzzy
-#~ msgid "Could not get the Oracle defined size"
-#~ msgstr "لايمكن إيجاد مدة الملف: %s"
-
-#, fuzzy
-#~ msgid "Could not fetch a row"
-#~ msgstr "غير قادر على طرد iPod"
-
-#, fuzzy
-#~ msgid "Release the space associated with the table. (PURGE)"
-#~ msgstr "يقرأ صفات الحرف الحالي."
-
-#, fuzzy
-#~ msgid "TNS Name"
-#~ msgstr "اسم الأغنية"
-
-#, fuzzy
-#~ msgid "Could not copy Lob locator"
-#~ msgstr "لم يمكن فتح المكان '%s'"
-
-#, fuzzy
-#~ msgid "The name of a database to use"
-#~ msgstr "قاعدة البيانات التي ستستخدم افتراضيا"
-
-#, fuzzy
-#~ msgid "Example provider for C API databases"
-#~ msgstr "موفّر الجسم"
-
-#, fuzzy
-#~ msgid "Could not add data model to connection: %s"
-#~ msgstr "لا يمكن توزيع ذاكرة لبيانات السطر"
-
-#, fuzzy
-#~ msgid "ct_cancel() failed."
-#~ msgstr "فشل الحفظ."
-
-#, fuzzy
-#~ msgid "Could not allocate structure for column metainformation."
-#~ msgstr "لم يمكن تحديد ذاكرة للواجهة"
-
-#, fuzzy
-#~ msgid "Could not call %s while processing row resultset."
-#~ msgstr "لم أجد منتقى لحذفِه."
-
-#, fuzzy
-#~ msgid "Could not run %s on column %d"
-#~ msgstr "تعذّر تشغيل الأمر"
-
-#, fuzzy
-#~ msgid "Could not allocate data placeholder for column %d"
-#~ msgstr "لا يمكن توزيع ذاكرة لبيانات السطر"
-
-#, fuzzy
-#~ msgid "Could not run %s to cancel processing row resultset."
-#~ msgstr "لم يمكن تشغيل العملية الفرعية: %s. "
-
-#, fuzzy
-#~ msgid "%s failed on row %d"
-#~ msgstr "عثر على ملفٍّ واحد"
-
-#, fuzzy
-#~ msgid ""
-#~ "An error occurred when attempting to retrieve a server message for "
-#~ "recordset"
-#~ msgstr "حدث خطأ عند إعادة تسمية دليل أو ملف"
-
-#, fuzzy
-#~ msgid "Enable Sybase operative mode"
-#~ msgstr "_فعِّل وضع التجوّل"
-
-#, fuzzy
-#~ msgid "Locale"
-#~ msgstr "اللغات"
-
-#, fuzzy
-#~ msgid "Locale to use during the connection"
-#~ msgstr "ال_اسم المستخدم للاتصال:"
-
-#, fuzzy
-#~ msgid "Invalid Xbase handle"
-#~ msgstr "handler عنوان غير صالح"
-
-#, fuzzy
-#~ msgid "Directory containing the xBase files"
-#~ msgstr "المجلد الذي يحتوي على الملحقات المثبتة من قبل النظام"
-
-#~ msgid "File Name"
-#~ msgstr "إسم الملف"
-
-#, fuzzy
-#~ msgid "Full path to the file containing the database"
-#~ msgstr "المنفذ الذي يشغل الخادم قاعدة البيانات عليه"
-
-#, fuzzy
-#~ msgid "DSN and connection string are exclusive\n"
-#~ msgstr "لم يحدّد أي مُستلِم"
-
-#, fuzzy
 #~ msgid "Could not find provider %s in the current setup"
 #~ msgstr "غير قادر على إيجاد المُفَوَّضْ %s في أكتيف دايركتوري"
 
@@ -5420,6 +4805,22 @@ msgstr "لا يمكن حفظ الملف %s."
 #, fuzzy
 #~ msgid "GdaClient to use"
 #~ msgstr "خيارات العميل"
+
+#, fuzzy
+#~ msgid "Column out %d of range 0 - %d"
+#~ msgstr "قيمة خارج المدى.\n"
+
+#, fuzzy
+#~ msgid "Wrong number of values in values list"
+#~ msgstr "تلقي عدد العناصر في مفتاح قائمة."
+
+#, fuzzy
+#~ msgid "Row %d not found in data model"
+#~ msgstr "المفتاح %s غير موجود في الإعدادات"
+
+#, fuzzy
+#~ msgid "Cannot interpret string as a valid %s value"
+#~ msgstr "لا يمكن وضع السيمة كقيمة\n"
 
 #, fuzzy
 #~ msgid "Can't find data type for aggregate '%s'"
@@ -5548,10 +4949,6 @@ msgstr "لا يمكن حفظ الملف %s."
 #~ msgstr "القيمة الإفتراضية: %s\n"
 
 #, fuzzy
-#~ msgid "Could not find GdaParameter in context for value field '%s'"
-#~ msgstr "لا يوجد أيقونة باسم \"%s\" لطور الطرفيّة \"%s\"\n"
-
-#, fuzzy
 #~ msgid "Invalid parameter '%s' (value: %s)"
 #~ msgstr "المتغيرات المدخلة خاطئة"
 
@@ -5562,10 +4959,6 @@ msgstr "لا يمكن حفظ الملف %s."
 #, fuzzy
 #~ msgid "Invalid ORDER BY clause"
 #~ msgstr "قيمة تاريخ غير صالحة"
-
-#, fuzzy
-#~ msgid "Missing target fields to update"
-#~ msgstr "معامل %s مفقود"
 
 #, fuzzy
 #~ msgid "Invalid field name: %s"
@@ -5665,6 +5058,26 @@ msgstr "لا يمكن حفظ الملف %s."
 #~ msgstr "(حاجز غير مسمى)"
 
 #, fuzzy
+#~ msgid "Expected tag <serv_op_data>, got <%s>"
+#~ msgstr "ترقبت عدد عشريا تلقيت %s"
+
+#, fuzzy
+#~ msgid "InternalBin"
+#~ msgstr "عالمي"
+
+#, fuzzy
+#~ msgid "InternalBoolean"
+#~ msgstr "الحشو الداخلي"
+
+#, fuzzy
+#~ msgid "InternalNumerical"
+#~ msgstr "اسم داخلي"
+
+#, fuzzy
+#~ msgid "InternalType"
+#~ msgstr "إطار داخلي"
+
+#, fuzzy
 #~ msgid "Parse error near `%s'"
 #~ msgstr "خطأ تحليل"
 
@@ -5677,6 +5090,10 @@ msgstr "لا يمكن حفظ الملف %s."
 #~ msgstr "handler عنوان غير صالح"
 
 #, fuzzy
+#~ msgid "Row number out of range 0 - %d"
+#~ msgstr "قيمة خارج المدى.\n"
+
+#, fuzzy
 #~ msgid "Database is empty"
 #~ msgstr "خادم قاعدة بيانات"
 
@@ -5685,8 +5102,204 @@ msgstr "لا يمكن حفظ الملف %s."
 #~ msgstr "غير موجود"
 
 #, fuzzy
+#~ msgid "Character Set"
+#~ msgstr "ال_محرف:"
+
+#~ msgid "Page Size"
+#~ msgstr "حجم الصفحة"
+
+#, fuzzy
+#~ msgid "Page size to use on the database"
+#~ msgstr "القطعة التي ستستخدم كشارة العنصر"
+
+#~ msgid "UNKNOWN"
+#~ msgstr "مجهول"
+
+#, fuzzy
 #~ msgid "ID"
 #~ msgstr "PID"
+
+#, fuzzy
+#~ msgid "Invalid Firebird handle"
+#~ msgstr "handler عنوان غير صالح"
+
+#, fuzzy
+#~ msgid "Invalid transaction handle"
+#~ msgstr "وظيفة غير سليمة"
+
+#, fuzzy
+#~ msgid "Statement already prepared."
+#~ msgstr "المستند مفتوح مسبقا"
+
+#, fuzzy
+#~ msgid "Transaction not initialized."
+#~ msgstr "فشلت المعاملة"
+
+#, fuzzy
+#~ msgid "Database server IP address"
+#~ msgstr "خادم قاعدة بيانات"
+
+#, fuzzy
+#~ msgid "Dump Configuration File"
+#~ msgstr "ملفّات الإعدادات"
+
+#, fuzzy
+#~ msgid "Dump File"
+#~ msgstr "إستيراد ملف"
+
+#, fuzzy
+#~ msgid "Enable Sybase"
+#~ msgstr "فعّل ESD"
+
+#, fuzzy
+#~ msgid "File for TDS protocol dumps"
+#~ msgstr "مكن برتكول SHHالقديم "
+
+#, fuzzy
+#~ msgid "File for TDS protocol dumps configuration"
+#~ msgstr "فشل تصدير الإعدادات"
+
+#, fuzzy
+#~ msgid "IP address of the host on which the database server is running"
+#~ msgstr "منفذ:المضيف الذي يعمل عليه خادم الصوت الذي سيستخدم"
+
+#, fuzzy
+#~ msgid "Location of the FreeTDS config file"
+#~ msgstr "سجّل إجراءات المرشِّح على ملف السّجل المحدّد."
+
+#, fuzzy
+#~ msgid "TDS Major Version"
+#~ msgstr "نسخة الخادم"
+
+#, fuzzy
+#~ msgid "TDS Minor Version"
+#~ msgstr "نسخة الخادم"
+
+#, fuzzy
+#~ msgid "TDS protocol major version"
+#~ msgstr "%dاصدار البرتكول %d\n"
+
+#, fuzzy
+#~ msgid "TDS protocol minor version"
+#~ msgstr "%dاصدار البرتكول %d\n"
+
+#, fuzzy
+#~ msgid "Error creating message container."
+#~ msgstr "خطأ أثناء إنشاء مجلد جديد."
+
+#, fuzzy
+#~ msgid "Error creating error container."
+#~ msgstr "خطأ أثناء إنشاء مجلد جديد."
+
+#, fuzzy
+#~ msgid "Allocating tds context failed."
+#~ msgstr "تغيير الاختصار فشل"
+
+#, fuzzy
+#~ msgid "Allocating tds socket failed."
+#~ msgstr "فشل تحميل %s."
+
+#, fuzzy
+#~ msgid "Establishing connection failed."
+#~ msgstr "فشل اتصال VPN"
+
+#, fuzzy
+#~ msgid "Failed getting connection info."
+#~ msgstr "تعذر الحصول على معلومات حلقة المفاتيح."
+
+#, fuzzy
+#~ msgid "Unexpected return in execute_cmd()."
+#~ msgstr "خطأ غير متوقع في waitpid() (%s)"
+
+#, fuzzy
+#~ msgid "Error processing result rows.\n"
+#~ msgstr "خطأ أثناء قراءة الإعدادات: %s\n"
+
+#, fuzzy
+#~ msgid "Error processing results.\n"
+#~ msgstr "خطأ أثناء قراءة الإعدادات: %s\n"
+
+#, fuzzy
+#~ msgid "NO DESCRIPTION"
+#~ msgstr "وصف"
+
+#, fuzzy
+#~ msgid "Could not allocate environment handle.\n"
+#~ msgstr "لا يمكن توزيع ذاكرة للترويسة"
+
+#, fuzzy
+#~ msgid "Invalid IBM DB2 handle"
+#~ msgstr "handler عنوان غير صالح"
+
+#~ msgid "Function"
+#~ msgstr "الوظيفة"
+
+#, fuzzy
+#~ msgid "SQL Definition"
+#~ msgstr "التعريف الأ_خير"
+
+#, fuzzy
+#~ msgid "Triggers"
+#~ msgstr "مقطوعة اذاعية"
+
+#, fuzzy
+#~ msgid "Users"
+#~ msgstr "المستخدمون:"
+
+#, fuzzy
+#~ msgid "[BLOB unsupported]"
+#~ msgstr "غير مدعوم"
+
+#, fuzzy
+#~ msgid "[Unsupported data]"
+#~ msgstr "تهيئة غير مدعومة"
+
+#, fuzzy
+#~ msgid "Invalid LDAP handle"
+#~ msgstr "handler عنوان غير صالح"
+
+#, fuzzy
+#~ msgid "Attempt to insert a row with an invalid number of columns"
+#~ msgstr "ملف XPM له عدد غير صحيح من الألوان"
+
+#, fuzzy
+#~ msgid "Could not retrieve column's information"
+#~ msgstr "لا يمكن تلقي معلومات عن الملف"
+
+#, fuzzy
+#~ msgid "Could not retrieve column's value"
+#~ msgstr "لا يمكن تلقي معلومات عن الملف"
+
+#, fuzzy
+#~ msgid "Authentication method to use when connecting"
+#~ msgstr "توثق من الاتصلات لخادم البروكسي"
+
+#, fuzzy
+#~ msgid "Bind Domain"
+#~ msgstr "النطاق"
+
+#~ msgid "Host Name"
+#~ msgstr "أسم المضيف"
+
+#, fuzzy
+#~ msgid "Host name of the LDAP server"
+#~ msgstr "اسم أو عنوان IP لخادم PPTP"
+
+#, fuzzy
+#~ msgid "LDAP Flags"
+#~ msgstr "شارات Popt"
+
+#, fuzzy
+#~ msgid "LDAP bind domain to use for authentication"
+#~ msgstr "استخدم ال_نطاق للتوثّق"
+
+#, fuzzy
+#~ msgid "Port to use when connecting to the LDAP server"
+#~ msgstr "إنشيء اتّصالٍ دائم بهذا الخادم"
+
+#, fuzzy
+#~ msgid "Provider for LDAP directory"
+#~ msgstr " للدليل"
 
 #, fuzzy
 #~ msgid "Invalid MDB handle"
@@ -5740,12 +5353,43 @@ msgstr "لا يمكن حفظ الملف %s."
 #~ msgstr "رقمي"
 
 #, fuzzy
+#~ msgid "Could not parse '%s' command"
+#~ msgstr "تعذّر تشغيل الأمر"
+
+#, fuzzy
 #~ msgid "Got no result for '%s' command"
 #~ msgstr "لا يمكن انتقاء المجلّد `%s': أمر رديء"
+
+#~ msgid "File Name"
+#~ msgstr "إسم الملف"
+
+#, fuzzy
+#~ msgid "Full path to the file containing the database"
+#~ msgstr "المنفذ الذي يشغل الخادم قاعدة البيانات عليه"
+
+#, fuzzy
+#~ msgid "Invalid mSQL handle"
+#~ msgstr "handler عنوان غير صالح"
 
 #, fuzzy
 #~ msgid "Invalid MYSQL handle"
 #~ msgstr "handler عنوان غير صالح"
+
+#, fuzzy
+#~ msgid "Table name could not be guessed"
+#~ msgstr "تعذر حفظ الصورة."
+
+#, fuzzy
+#~ msgid "Model doesn't have at least one unique key."
+#~ msgstr "يجب أن يكون لك دائما شريط واحد على الأقل."
+
+#, fuzzy
+#~ msgid "Can not remove row from data model"
+#~ msgstr "اضبط عقدة الجذر من النموذج"
+
+#, fuzzy
+#~ msgid "Table name could not be guessed."
+#~ msgstr "تعذر حفظ الصورة."
 
 #, fuzzy
 #~ msgid "Unable to SQLAllocEnv()..."
@@ -5756,12 +5400,204 @@ msgstr "لا يمكن حفظ الملف %s."
 #~ msgstr "handler عنوان غير صالح"
 
 #, fuzzy
+#~ msgid "Connection String"
+#~ msgstr "فقد الاتصال "
+
+#, fuzzy
+#~ msgid "Invalid Oracle handle"
+#~ msgstr "handler عنوان غير صالح"
+
+#, fuzzy
+#~ msgid "Could not get the length of LOB object"
+#~ msgstr "لم يمكن قراءة جدول المحتويات"
+
+#, fuzzy
+#~ msgid "Could not read from LOB object"
+#~ msgstr "لم يمكن قراءة المستند"
+
+#, fuzzy
+#~ msgid "Could not write to LOB object"
+#~ msgstr "لم يمكن تحديث الكائن"
+
+#, fuzzy
+#~ msgid "Could not truncate LOB object"
+#~ msgstr "لم يمكن تحديث الكائن"
+
+#, fuzzy
+#~ msgid "No TNS name supplied"
+#~ msgstr "لم يحدد أسم مضيف"
+
+#, fuzzy
+#~ msgid "Could not initialize Oracle"
+#~ msgstr "لم يمكن تهيئة بونوبو!\n"
+
+#, fuzzy
+#~ msgid "Could not initialize the Oracle environment"
+#~ msgstr "لم يمكن تشغيل المكتبات النظامية السليمة."
+
+#, fuzzy
+#~ msgid "Could not allocate the Oracle service handle"
+#~ msgstr "لم يمكن إنشاء مصنع خدمة تبليغ التنبيهات"
+
+#, fuzzy
+#~ msgid "Could not allocate the Oracle error handle"
+#~ msgstr "لا يمكن توزيع ذاكرة للترويسة"
+
+#, fuzzy
+#~ msgid "Could not allocate the Oracle server handle"
+#~ msgstr "غير قادر على تحديد موقع الخادم {0}."
+
+#, fuzzy
+#~ msgid "Could not allocate the Oracle session handle"
+#~ msgstr "لم يمكن الاتصال بمدير الجلسات"
+
+#, fuzzy
+#~ msgid "Could not attach to the Oracle server"
+#~ msgstr "غير قادر على التوثيق مع الخادم"
+
+#, fuzzy
+#~ msgid "Could not set the Oracle server attribute in the service context"
+#~ msgstr "لم يمكن حفظ الملف %s باستعمال ترميز المحارف %s."
+
+#, fuzzy
+#~ msgid "Could not set the Oracle username attribute"
+#~ msgstr "لم يمكن تحليل إسم الواجهة من '%s'"
+
+#, fuzzy
+#~ msgid "Could not set the Oracle password attribute"
+#~ msgstr "غير قادر على تغيير كلمة السر."
+
+#, fuzzy
+#~ msgid "Could not set the Oracle session attribute in the service context"
+#~ msgstr "غير قادر على إرسال مذكرة بالإلغاء للمُفَوَّضْ"
+
+#, fuzzy
+#~ msgid "Could not allocate the Oracle statement handle"
+#~ msgstr "لم يمكن فتح القناة المحددة."
+
+#, fuzzy
+#~ msgid "Could not bind the Oracle statement parameter"
+#~ msgstr "تعذّر العثور على التقويم"
+
+#, fuzzy
+#~ msgid "Could not get the Oracle statement type"
+#~ msgstr "لم أجد منتقى لحذفِه."
+
+#, fuzzy
+#~ msgid "Could not execute the Oracle statement"
+#~ msgstr "تعذّر تنفيذ %s: لم يُرْسَل البريد."
+
+#, fuzzy
+#~ msgid "Could not get the number of affected rows"
+#~ msgstr "غير قادر على تعيين مالك الجهاز."
+
+#, fuzzy
+#~ msgid "Could not get the attached transaction from the service context"
+#~ msgstr "لم يمكن إنشاء مصنع خدمة تبليغ التنبيهات"
+
+#, fuzzy
+#~ msgid "Could not get the number of columns in the result set"
+#~ msgstr "عدد الأعمدة في الجدول"
+
+#, fuzzy
+#~ msgid "Could not get the parameter descripter in the result set"
+#~ msgstr "تعذّر توليد بيانات التّشفير: %s"
+
+#, fuzzy
+#~ msgid "Could not get the column name in the result set"
+#~ msgstr "غير قادر على تعيين مالك الجهاز."
+
+#, fuzzy
+#~ msgid "Could not allocate the Oracle transaction handle"
+#~ msgstr "لا يمكن انشاء المجلّد المرسل اليه: %s."
+
+#, fuzzy
+#~ msgid "Could not attach the transaction to the service context"
+#~ msgstr "تعذّر إضافة هذه العملية للقائمة."
+
+#, fuzzy
+#~ msgid "Could not commit the Oracle transaction"
+#~ msgstr "لم يمكن القيام بالعملية"
+
+#, fuzzy
+#~ msgid "Could not de-attach the transaction to the service context"
+#~ msgstr "غير قادر على تعيين مالك الجهاز."
+
+#, fuzzy
+#~ msgid "Could not rollback the Oracle transaction"
+#~ msgstr "الغ العملية الأخيرة"
+
+#, fuzzy
+#~ msgid "Can't convert model for fields schema: %s"
+#~ msgstr "لا يمكن الكتابة على الملف `%s': %s"
+
+#, fuzzy
+#~ msgid "Indexes"
+#~ msgstr "مفهرس"
+
+#, fuzzy
+#~ msgid "Procedures"
+#~ msgstr "العمليّات"
+
+#, fuzzy
+#~ msgid "Sequences"
+#~ msgstr "<b>متتالية</b>"
+
+#, fuzzy
+#~ msgid "Could not get the parameter defined size"
+#~ msgstr "لايمكن إيجاد مدة الملف: %s"
+
+#, fuzzy
+#~ msgid "Could not get the parameter data type"
+#~ msgstr "تعذّر الحصول على بيانات الطقس"
+
+#, fuzzy
+#~ msgid "Could not allocate Lob locator"
+#~ msgstr "لم يمكن تحديد ذاكرة للواجهة"
+
+#, fuzzy
+#~ msgid "Could not get the Oracle parameter information"
+#~ msgstr "لا يمكن تلقي موقع المقطوعة الحالية"
+
+#, fuzzy
+#~ msgid "Could not get the Oracle column name"
+#~ msgstr "لم يمكن ايجاد النوع من \"%s\""
+
+#, fuzzy
+#~ msgid "Could not get the Oracle column data type"
+#~ msgstr "لم أجد منتقى لحذفِه."
+
+#, fuzzy
+#~ msgid "Could not get the Oracle column scale"
+#~ msgstr "لم يمكن ايجاد النوع من \"%s\""
+
+#, fuzzy
+#~ msgid "Could not get the Oracle defined size"
+#~ msgstr "لايمكن إيجاد مدة الملف: %s"
+
+#, fuzzy
+#~ msgid "Release the space associated with the table. (PURGE)"
+#~ msgstr "يقرأ صفات الحرف الحالي."
+
+#, fuzzy
+#~ msgid "TNS Name"
+#~ msgstr "اسم الأغنية"
+
+#, fuzzy
+#~ msgid "Could not copy Lob locator"
+#~ msgstr "لم يمكن فتح المكان '%s'"
+
+#, fuzzy
 #~ msgid "Invalid PostgreSQL handle"
 #~ msgstr "handler عنوان غير صالح"
 
 #, fuzzy
 #~ msgid "Tuples:\"%s\""
 #~ msgstr "النوع: %s\n"
+
+#, fuzzy
+#~ msgid "SqliteBin"
+#~ msgstr "خط الادخال"
 
 #, fuzzy
 #~ msgid "Invalid SQLite handle"
@@ -5838,6 +5674,48 @@ msgstr "لا يمكن حفظ الملف %s."
 #~ msgstr "تعذّر إضافة التّطبيق لقاعدة بيانات التّطبيقات"
 
 #, fuzzy
+#~ msgid "ct_cancel() failed."
+#~ msgstr "فشل الحفظ."
+
+#, fuzzy
+#~ msgid "Could not allocate structure for column metainformation."
+#~ msgstr "لم يمكن تحديد ذاكرة للواجهة"
+
+#, fuzzy
+#~ msgid "Could not call %s while processing row resultset."
+#~ msgstr "لم أجد منتقى لحذفِه."
+
+#, fuzzy
+#~ msgid "Could not run %s on column %d"
+#~ msgstr "تعذّر تشغيل الأمر"
+
+#, fuzzy
+#~ msgid "Could not run %s to cancel processing row resultset."
+#~ msgstr "لم يمكن تشغيل العملية الفرعية: %s. "
+
+#, fuzzy
+#~ msgid "%s failed on row %d"
+#~ msgstr "عثر على ملفٍّ واحد"
+
+#, fuzzy
+#~ msgid ""
+#~ "An error occurred when attempting to retrieve a server message for "
+#~ "recordset"
+#~ msgstr "حدث خطأ عند إعادة تسمية دليل أو ملف"
+
+#, fuzzy
+#~ msgid "Enable Sybase operative mode"
+#~ msgstr "_فعِّل وضع التجوّل"
+
+#, fuzzy
+#~ msgid "Locale"
+#~ msgstr "اللغات"
+
+#, fuzzy
+#~ msgid "Locale to use during the connection"
+#~ msgstr "ال_اسم المستخدم للاتصال:"
+
+#, fuzzy
 #~ msgid "OS error: %s"
 #~ msgstr "خطأ CORBA : %s"
 
@@ -5892,6 +5770,10 @@ msgstr "لا يمكن حفظ الملف %s."
 #, fuzzy
 #~ msgid "Message Number"
 #~ msgstr "مؤلّف الرّسائل"
+
+#, fuzzy
+#~ msgid "Directory containing the xBase files"
+#~ msgstr "المجلد الذي يحتوي على الملحقات المثبتة من قبل النظام"
 
 #, fuzzy
 #~ msgid "Could not parse XML document"
