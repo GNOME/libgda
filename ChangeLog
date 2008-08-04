@@ -1,3 +1,8 @@
+2008-08-04  Armin Burgmeier  <armin@openismus.com>
+
+	* libgda/gda-server-operation.c (load_xml_spec): Fix a crash on
+	Windows, don't leak this_lang (backported from trunk).
+
 2008-07-20  Armin Burgmeier  <armin@openismus.com>
 
 	* libgda/binreloc/gda-binreloc.c:
