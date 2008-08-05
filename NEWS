@@ -1,3 +1,9 @@
+libgda 3.1.5, 2008-07-22:
+
+* Applied the patches from bugs #510739 and #503321 to libgda 3.x. This fixes
+  the build on Windows, and allows to relocate the libgda binary on Windows.
+  (Armin Burgmeier)
+
 libgda 3.1.4, 2008-04-10:
 
 * GdaValue: Fixed memory leaks and potential crashes.
