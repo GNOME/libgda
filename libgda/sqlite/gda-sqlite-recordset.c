@@ -179,7 +179,8 @@ read_rows_to_init_col_types (GdaSqliteRecordset *model)
  * this function
  */
 GdaDataModel *
-gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaDataModelAccessFlags flags, GType *col_types)
+gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_params,
+			  GdaDataModelAccessFlags flags, GType *col_types)
 {
 	GdaSqliteRecordset *model;
         SqliteConnectionData *cdata;
@@ -288,7 +289,8 @@ gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaDataModelAc
 
 	/* create data model */
         model = g_object_new (GDA_TYPE_SQLITE_RECORDSET, "connection", cnc, 
-			      "prepared-stmt", ps, "model-usage", rflags, NULL);
+			      "prepared-stmt", ps, "model-usage", rflags, 
+			      "exec-params", exec_params, NULL);
 
         /* fill the data model */
         read_rows_to_init_col_types (model);

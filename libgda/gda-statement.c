@@ -477,8 +477,6 @@ get_params_foreach_func (GdaSqlAnyPart *node, GdaSet **params, GError **error)
 	    (pspec = ((GdaSqlExpr*) node)->param_spec)) {
 		GdaHolder *h;
 
-		if ((pspec->g_type == 0) && pspec->type)
-			pspec->g_type = gda_g_type_from_string (pspec->type);
 		if (pspec->g_type == 0) {
 			g_set_error (error, GDA_STATEMENT_ERROR, GDA_STATEMENT_PARAM_TYPE_ERROR,
 				     _("Could not determine GType for parameter '%s'"),
@@ -1246,13 +1244,13 @@ default_render_param_spec (GdaSqlParamSpec *pspec, GdaSqlExpr *expr, GdaSqlRende
 			
 			g_string_append (string, " /* ");
 			g_string_append_printf (string, "name:%s", quoted_pname);
-			if (pspec->type) {
-				str = _add_quotes (pspec->type);
+			if (pspec->g_type) {
+				str = _add_quotes (gda_g_type_to_string (pspec->g_type));
 				g_string_append_printf (string, " type:%s", str);
 				g_free (str);
 			}
 			if (pspec->descr) {
-				str = _add_quotes (pspec->type);
+				str = _add_quotes (pspec->descr);
 				g_string_append_printf (string, " descr:%s", str);
 				g_free (str);
 			}
@@ -1264,9 +1262,9 @@ default_render_param_spec (GdaSqlParamSpec *pspec, GdaSqlExpr *expr, GdaSqlRende
 		else {
 			g_string_append (string, "##");
 			g_string_append (string, pspec->name);
-			if (pspec->type) {
+			if (pspec->g_type != G_TYPE_INVALID) {
 				g_string_append (string, "::");
-				g_string_append (string, pspec->type);
+				g_string_append (string, gda_g_type_to_string (pspec->g_type));
 				if (pspec->nullok) 
 					g_string_append (string, "::NULL");
 			}

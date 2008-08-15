@@ -312,6 +312,7 @@ gda_set_copy (GdaSet *set)
 
 	copy = g_object_new (GDA_TYPE_SET, "holders", holders, NULL);
 	g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
+	g_slist_free (holders);
 
 	return copy;
 }

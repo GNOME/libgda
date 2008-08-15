@@ -264,6 +264,7 @@ gda_connection_dispose (GObject *object)
 
 	if (cnc->priv->events_list) {
 		g_list_foreach (cnc->priv->events_list, (GFunc) g_object_unref, NULL);
+		g_slist_free (cnc->priv->events_list);
 		cnc->priv->events_list = NULL;
 	}
 
@@ -1269,6 +1270,7 @@ gda_connection_clear_events_list (GdaConnection *cnc)
 	gda_connection_lock ((GdaLockable*) cnc);
 	if (cnc->priv->events_list != NULL) {
 		g_list_foreach (cnc->priv->events_list, (GFunc) g_object_unref, NULL);
+		g_list_free (cnc->priv->events_list);
 		cnc->priv->events_list =  NULL;
 	}
 	gda_connection_unlock ((GdaLockable*) cnc);
@@ -3694,11 +3696,25 @@ statement_weak_notify_cb (GdaConnection *cnc, GdaStatement *stmt)
 	gda_connection_unlock ((GdaLockable*) cnc);
 }
 
+
+/**
+ * gda_connection_add_prepared_statement
+ * @cnc: a #GdaConnection object
+ * @gda_stmt: a #GdaStatement object
+ * @prepared_stmt: a prepared statement object (as a #GdaPStmt object, or more likely a descendant)
+ *
+ * Declares that @prepared_stmt is a prepared statement object associated to @gda_stmt within the connection
+ * (meaning the connection increments the reference counter of @prepared_stmt).
+ *
+ * If @gda_stmt changes or is destroyed, the the association will be lost and the connection will lose the
+ * reference it has on @prepared_stmt.
+ */
 void 
-gda_connection_add_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stmt, gpointer prepared_stmt)
+gda_connection_add_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stmt, GdaPStmt *prepared_stmt)
 {
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (cnc->priv);
+	g_return_if_fail (GDA_IS_PSTMT (prepared_stmt));
 
 	gda_connection_lock ((GdaLockable*) cnc);
 
@@ -3714,10 +3730,20 @@ gda_connection_add_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stm
 	gda_connection_unlock ((GdaLockable*) cnc);
 }
 
-gpointer
+/**
+ * gda_connection_get_prepared_statement
+ * @cnc: a #GdaConnection object
+ * @gda_stmt: a #GdaStatement object
+ *
+ * Retreives a pointer to an object representing a prepared statement for @gda_stmt within @cnc. The
+ * association must have been done using gda_connection_add_prepared_statement().
+ *
+ * Returns: the prepared statement, or %NULL if no association exists
+ */
+GdaPStmt *
 gda_connection_get_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stmt)
 {
-	gpointer retval = NULL;
+	GdaPStmt *retval = NULL;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv, NULL);
@@ -3730,6 +3756,14 @@ gda_connection_get_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stm
 	return retval;
 }
 
+/**
+ * gda_connection_del_prepared_statement
+ * @cnc: a #GdaConnection object
+ * @gda_stmt: a #GdaStatement object
+ *
+ * Removes any prepared statement associated to @gda_stmt in @cnc: this undoes what
+ * gda_connection_add_prepared_statement() does.
+ */
 void
 gda_connection_del_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stmt)
 {
@@ -3738,7 +3772,8 @@ gda_connection_del_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stm
 
 	gda_connection_lock ((GdaLockable*) cnc);
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
-	prepared_stms_stmt_destroyed_cb (gda_stmt, cnc);
+	if (gda_connection_get_prepared_statement (cnc, gda_stmt))
+		prepared_stms_stmt_destroyed_cb (gda_stmt, cnc);
 	gda_connection_unlock ((GdaLockable*) cnc);
 }
 

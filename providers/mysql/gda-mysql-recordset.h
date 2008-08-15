@@ -53,8 +53,20 @@ gda_mysql_recordset_get_type  (void) G_GNUC_CONST;
 GdaDataModel *
 gda_mysql_recordset_new       (GdaConnection            *cnc,
 			       GdaMysqlPStmt            *ps,
+			       GdaSet                   *exec_params,
 			       GdaDataModelAccessFlags   flags, 
 			       GType                    *col_types);
+
+
+gint
+gda_mysql_recordset_get_chunk_size (GdaMysqlRecordset  *recset);
+
+void
+gda_mysql_recordset_set_chunk_size (GdaMysqlRecordset  *recset,
+				    gint                chunk_size);
+
+gint
+gda_mysql_recordset_get_chunks_read (GdaMysqlRecordset  *recset);
 
 G_END_DECLS
 

@@ -24,6 +24,7 @@
 #define __GDA_CONNECTION_PRIVATE_H_
 
 #include <libgda/gda-meta-store.h>
+#include <providers-support/gda-pstmt.h>
 
 G_BEGIN_DECLS
 
@@ -52,9 +53,9 @@ void gda_connection_internal_change_transaction_state (GdaConnection *cnc,
 /* 
  * prepared statements support
  */
-void     gda_connection_add_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stmt, gpointer prepared_stmt); 
-void     gda_connection_del_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stmt); 
-gpointer gda_connection_get_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stmt);
+void      gda_connection_add_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stmt, GdaPStmt *prepared_stmt); 
+void      gda_connection_del_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stmt); 
+GdaPStmt *gda_connection_get_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stmt);
 
 G_END_DECLS
 

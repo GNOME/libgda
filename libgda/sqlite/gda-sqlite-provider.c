@@ -1576,7 +1576,7 @@ gda_sqlite_provider_statement_prepare (GdaServerProvider *provider, GdaConnectio
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
 
 	/* fetch prepares stmt if already done */
-	ps = gda_connection_get_prepared_statement (cnc, stmt);
+	ps = (GdaSqlitePStmt *) gda_connection_get_prepared_statement (cnc, stmt);
 	if (ps)
 		return TRUE;
 
@@ -1584,7 +1584,7 @@ gda_sqlite_provider_statement_prepare (GdaServerProvider *provider, GdaConnectio
 	if (!ps)
 		return FALSE;
 	else {
-		gda_connection_add_prepared_statement (cnc, stmt, ps);
+		gda_connection_add_prepared_statement (cnc, stmt, (GdaPStmt *) ps);
 		return TRUE;
 	}
 }
@@ -1821,7 +1821,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 	/* get SQLite's private data */
 	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
-		return FALSE;
+		return NULL;
 
 	/* HACK: force SQLite to reparse the schema and thus discover new tables if necessary */
         {
@@ -1835,7 +1835,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
         }
 
 	/* get/create new prepared statement */
-	ps = gda_connection_get_prepared_statement (cnc, stmt);
+	ps = (GdaSqlitePStmt *) gda_connection_get_prepared_statement (cnc, stmt);
 	if (!ps) {
 		if (!gda_sqlite_provider_statement_prepare (provider, cnc, stmt, NULL)) {
 			/* try to use the SQL when parameters are rendered with their values */
@@ -1867,7 +1867,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			new_ps = TRUE;
 		}
 		else
-			ps = gda_connection_get_prepared_statement (cnc, stmt);
+			ps = (GdaSqlitePStmt *) gda_connection_get_prepared_statement (cnc, stmt);
 	}
 	else if (ps->stmt_used) {
 		/* Don't use @ps => prepare stmt again */
@@ -1950,7 +1950,16 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			g_free (str);
 			break;
 		}
-
+		if (!gda_holder_is_valid (h)) {
+			gchar *str;
+			str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
+			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+			gda_connection_event_set_description (event, str);
+			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
+			g_free (str);
+			break;
+		}
 		/*g_print ("BINDING param '%s' to %p\n", pname, h);*/
 		
 		const GValue *value = gda_holder_get_value (h);
@@ -2063,7 +2072,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		else
 			flags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD;
 
-                data_model = (GObject *) gda_sqlite_recordset_new (cnc, ps, flags, col_types);
+                data_model = (GObject *) gda_sqlite_recordset_new (cnc, ps, params, flags, col_types);
 		gda_connection_internal_statement_executed (cnc, stmt, params, NULL);
 		if (new_ps)
 			g_object_unref (ps);

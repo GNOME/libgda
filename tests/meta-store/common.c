@@ -107,9 +107,9 @@ suggest_update_cb (GdaMetaStore *store, GdaMetaContext *context, gpointer data)
 
 /*
  * Loading a CSV file
- * ... is a (-1 terminated) list of triplets composed of:
+ * ... is a (-1 terminated) list of pairs composed of:
  *   - a column number (gint)
- *   - the column (gchar *)
+ *   - the column type (gchar *)
  */
 GdaDataModel *
 common_load_csv_file (const gchar *data_file, ...)
@@ -511,15 +511,15 @@ test_routines (GdaMetaStore *store)
 	TEST_HEADER;
 
 	/* load CSV file */
-	import = common_load_csv_file ("data_routines.csv", 8, "boolean", 14, "boolean", 16, "boolean", -1);
+	import = common_load_csv_file ("data_routines.csv", 8, "boolean", 9, "gint", 15, "boolean", 17, "boolean", -1);
 	common_declare_expected_insertions_from_model (TNAME, import);
 	TEST_MODIFY (store, TNAME, import, NULL, &error, NULL);
 	TEST_END (import);
 
 	/* remove some lines */
-	DECL_CHANGE (TNAME, GDA_META_STORE_REMOVE, "-0", "meta", "-1", "information_schema", "-2", "_pg_numeric_precision_radix_10632", NULL);
+	DECL_CHANGE (TNAME, GDA_META_STORE_REMOVE, "-0", "meta", "-1", "information_schema", "-2", "_pg_numeric_precision_radix_11324", NULL);
 	TEST_MODIFY (store, TNAME, NULL, 
-		     "specific_name='_pg_numeric_precision_radix_10632'", &error, NULL);
+		     "specific_name='_pg_numeric_precision_radix_11324'", &error, NULL);
 	TEST_END (NULL);
 #undef TNAME
 }

@@ -1,3 +1,44 @@
+2008-08-15  Vivien Malerba <malerba@gnome-db.org>
+
+	* providers/mysql: updates to the MySQL provider (Carlos Savoretti)
+	* libgda/gda-set.c:
+	* libgda/gda-connection.c:
+	* libgda/sql-parser/gda-statement-struct.c: fixes memory leaks
+	for bug #545977
+	* libgda/gda-statement.c:
+	* libgda/gda-util.c:
+	* libgda/sql-parser/gda-statement-struct-pspec.[ch]: removed the "type" attribute from
+	the GdaSqlParamSpec structure as it was redundant with the "g_type" one
+	* providers/postgres/gda-postgres-provider.c:
+	* providers/mysql/gda-mysql-provider.c:
+	* providers/skel-implementation/capi/gda-capi-provider.c:
+	* libgda/sqlite/gda-sqlite-provider.c: check that parameters are valid when executing
+	a statement
+	* libgda/gda-data-model.h: added GdaDataModel error code
+	* libgda/gda-connection-private.h:
+	* libgda/gda-connection.c:
+	* libgda/sqlite/gda-sqlite-provider.c:
+	* providers/mysql/gda-mysql-provider.c:
+	* providers/postgres/gda-postgres-provider.c:
+	* providers/skel-implementation/capi/gda-capi-provider.c:
+	explicitely declare prepared statements as GdaPStmt objects
+	instead of generic gpointer
+	* tests/test-cnc-utils.[ch]: added a function to load data
+	from a file into a table
+	* tests/meta-store.c: test corrections due to meta store internal's schema changes
+	* libgda/providers-support/gda-pmodel.[ch]:
+	* libgda/sqlite/gda-sqlite-recordset.[ch]:
+	* providers/mysql/gda-mysql-recordset.[ch]:
+	* providers/postgres/gda-postgres-recordset.[ch]:
+	* providers/skel-implementation/capi/gda-capi-recordset.[ch]:
+	* tests/data-models/Makefile.am:
+	* tests/data-models/check_pmodel.c: new test for the GdaPModel
+	data model (the base class for all the data models returned
+	by providers after a SELECT) for the updatable property
+	* doc/C:
+	* misc files: doc updates
+
+
 2008-07-28  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/sqlite/gda-sqlite-recordset.c:

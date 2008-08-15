@@ -32,7 +32,6 @@ struct _GdaSqlParamSpec
 {
 	gchar    *name;
 	gchar    *descr;
-	gchar    *type;
 	gboolean  is_param;
 	gboolean  nullok;
 

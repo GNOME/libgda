@@ -49,8 +49,8 @@ struct _GdaPostgresRecordsetClass {
 };
 
 GType         gda_postgres_recordset_get_type   (void) G_GNUC_CONST;
-GdaDataModel *gda_postgres_recordset_new_random (GdaConnection *cnc, GdaPostgresPStmt *ps, PGresult *pg_res, GType *col_types);
-GdaDataModel *gda_postgres_recordset_new_cursor (GdaConnection *cnc, GdaPostgresPStmt *ps, gchar *cursor_name, GType *col_types);
+GdaDataModel *gda_postgres_recordset_new_random (GdaConnection *cnc, GdaPostgresPStmt *ps, GdaSet *exec_params, PGresult *pg_res, GType *col_types);
+GdaDataModel *gda_postgres_recordset_new_cursor (GdaConnection *cnc, GdaPostgresPStmt *ps, GdaSet *exec_params, gchar *cursor_name, GType *col_types);
 
 
 G_END_DECLS

@@ -10,4 +10,6 @@ gboolean       test_cnc_setup_db_structure (GdaConnection *cnc, const gchar *sch
 gboolean       test_cnc_setup_db_contents (GdaConnection *cnc, const gchar *data_file, GError **error);
 gboolean       test_cnc_clean_connection (GdaConnection *cnc, GError **error);
 
+gboolean       test_cnc_load_data_from_file (GdaConnection *cnc, const gchar *table, const gchar *full_file, GError **error);
+
 #endif

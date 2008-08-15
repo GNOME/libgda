@@ -35,12 +35,13 @@ G_BEGIN_DECLS
 #define GDA_IS_PSTMT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_PSTMT))
 
 typedef struct _GdaPStmt        GdaPStmt;
+typedef struct _GdaPStmtPrivate GdaPStmtPrivate;
 typedef struct _GdaPStmtClass   GdaPStmtClass;
 
 struct _GdaPStmt {
 	GObject       object;
 
-	GdaStatement *stmt; /* GdaPStmt object holds a reference on this stmt object, may be NULL */
+	GdaPStmtPrivate *priv;
 	gchar        *sql; /* actual SQL code used for this prepared statement, mem freed by GdaPStmt */
         GSList       *param_ids; /* list of parameters' IDs (as gchar *), mem freed by GdaPStmt */
 
@@ -55,9 +56,10 @@ struct _GdaPStmtClass {
 	GObjectClass  parent_class;
 };
 
-GType gda_pstmt_get_type          (void) G_GNUC_CONST;
-void  gda_pstmt_set_gda_statement (GdaPStmt *pstmt, GdaStatement *stmt);
-void  gda_pstmt_copy_contents     (GdaPStmt *src, GdaPStmt *dest);
+GType         gda_pstmt_get_type          (void) G_GNUC_CONST;
+void          gda_pstmt_set_gda_statement (GdaPStmt *pstmt, GdaStatement *stmt);
+void          gda_pstmt_copy_contents     (GdaPStmt *src, GdaPStmt *dest);
+GdaStatement *gda_pstmt_get_gda_statement (GdaPStmt *pstmt);
 
 G_END_DECLS
 

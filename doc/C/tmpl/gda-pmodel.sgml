@@ -41,7 +41,6 @@ Proposed base implementation for data models returned by the execution of a SELE
 @prep_stmt: SELECT prepared statement for which the execution gave this object
 @nb_stored_rows: 
 @advertized_nrows: initially set to -1, set to a value >= 0 when the number of rows in the data model is known
-@cnc: 
 
 <!-- ##### STRUCT GdaPModelClass ##### -->
 <para>
@@ -85,7 +84,7 @@ Proposed base implementation for data models returned by the execution of a SELE
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_pmodel_set_modification_query ##### -->
+<!-- ##### FUNCTION gda_pmodel_set_modification_statement ##### -->
 <para>
 
 </para>
@@ -96,14 +95,13 @@ Proposed base implementation for data models returned by the execution of a SELE
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_pmodel_compute_modification_queries ##### -->
+<!-- ##### FUNCTION gda_pmodel_compute_modification_statements ##### -->
 <para>
 
 </para>
 
 @model: 
-@target: 
-@use_all_fields_if_no_pk: 
+@require_pk: 
 @error: 
 @Returns: 
 

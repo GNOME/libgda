@@ -913,7 +913,7 @@ gda_capi_provider_statement_prepare (GdaServerProvider *provider, GdaConnection 
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
 
 	/* fetch prepares stmt if already done */
-	ps = gda_connection_get_prepared_statement (cnc, stmt);
+	ps = (GdaCapiPStmt *) gda_connection_get_prepared_statement (cnc, stmt);
 	if (ps)
 		return TRUE;
 
@@ -922,7 +922,7 @@ gda_capi_provider_statement_prepare (GdaServerProvider *provider, GdaConnection 
 	if (!ps)
 		return FALSE;
 	else {
-		gda_connection_add_prepared_statement (cnc, stmt, ps);
+		gda_connection_add_prepared_statement (cnc, stmt, (GdaPStmt *) ps);
 		return TRUE;
 	}
 }
@@ -968,7 +968,7 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 
 
 	/* get/create new prepared statement */
-	ps = gda_connection_get_prepared_statement (cnc, stmt);
+	ps = (GdaCapiPStmt *) gda_connection_get_prepared_statement (cnc, stmt);
 	if (!ps) {
 		if (!gda_capi_provider_statement_prepare (provider, cnc, stmt, NULL)) {
 			/* this case can appear for example if some variables are used in places
@@ -980,7 +980,7 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 			return NULL;
 		}
 		else
-			ps = gda_connection_get_prepared_statement (cnc, stmt);
+			ps = (GdaCapiPStmt *) gda_connection_get_prepared_statement (cnc, stmt);
 	}
 	g_assert (ps);
 
@@ -1023,6 +1023,16 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 			g_free (str);
 			break;
 		}
+		if (!gda_holder_is_valid (h)) {
+			gchar *str;
+			str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
+			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+			gda_connection_event_set_description (event, str);
+			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
+			g_free (str);
+			break;
+		}
 
 		/* actual binding using the C API, for parameter at position @i */
 		const GValue *value = gda_holder_get_value (h);
@@ -1050,7 +1060,7 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 		else
 			flags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD;
 
-                data_model = (GObject *) gda_capi_recordset_new (cnc, ps, flags, col_types);
+                data_model = (GObject *) gda_capi_recordset_new (cnc, ps, params, flags, col_types);
 		gda_connection_internal_statement_executed (cnc, stmt, params, NULL); /* required: help @cnc keep some stats */
 		return data_model;
         }

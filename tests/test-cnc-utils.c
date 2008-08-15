@@ -321,3 +321,129 @@ test_cnc_setup_db_contents (GdaConnection *cnc, const gchar *data_file, GError *
 	TO_IMPLEMENT;
 	return FALSE;
 }
+
+/*
+ * Load data from file @file into table @table
+ */
+gboolean
+test_cnc_load_data_from_file (GdaConnection *cnc, const gchar *table, const gchar *full_file, GError **error)
+{
+	GdaStatement *stmt;
+	GdaSet *params = NULL;
+	GdaDataModel *import;
+	gint nrows, ncols, i;
+	GdaMetaStruct *mstruct = NULL;
+	GSList *list;
+	gboolean retval = TRUE;
+
+	/* loading XML file */
+	import = gda_data_model_import_new_file (full_file, TRUE, NULL);
+	if (gda_data_model_import_get_errors (GDA_DATA_MODEL_IMPORT (import))) {
+		g_set_error (error, 0, 0, "Error loading '%s' file", full_file);
+		return FALSE;
+	}
+
+	/* retreiving meta data info */
+	GdaMetaDbObject *table_dbo;
+	GValue *name_value;
+	g_value_set_string ((name_value = gda_value_new (G_TYPE_STRING)), table);
+	mstruct = gda_meta_struct_new (gda_connection_get_meta_store (cnc), GDA_META_STRUCT_FEATURE_NONE);
+	table_dbo = gda_meta_struct_complement (mstruct, GDA_META_DB_TABLE,
+						NULL, NULL, name_value, error);
+	gda_value_free (name_value);
+	if (! table_dbo) {
+		retval = FALSE;
+		goto out;
+	}
+
+	/* creating INSERT statement */
+	GdaSqlStatement *st;
+	GdaSqlStatementInsert *ist;
+	GSList *insert_values_list = NULL;
+	
+	ist = g_new0 (GdaSqlStatementInsert, 1);
+        GDA_SQL_ANY_PART (ist)->type = GDA_SQL_ANY_STMT_INSERT;
+	ist->table = gda_sql_table_new (GDA_SQL_ANY_PART (ist));
+        ist->table->table_name = g_strdup (table);
+
+	GdaMetaTable *mtable = GDA_META_TABLE (table_dbo);
+	for (list = mtable->columns; list; list = list->next) {
+		GdaMetaTableColumn *tcol = GDA_META_TABLE_COLUMN (list->data);
+		GdaSqlField *field;
+
+		/* field */
+		field = gda_sql_field_new (GDA_SQL_ANY_PART (ist));
+		field->field_name = g_strdup (tcol->column_name);
+		ist->fields_list = g_slist_append (ist->fields_list, field);
+
+		/* value */
+		GdaSqlParamSpec *pspec = g_new0 (GdaSqlParamSpec, 1);
+		GdaSqlExpr *expr;
+		pspec->name = g_strdup (tcol->column_name);
+		pspec->g_type = tcol->gtype;
+		pspec->nullok = tcol->nullok;
+		expr = gda_sql_expr_new (GDA_SQL_ANY_PART (ist));
+		expr->param_spec = pspec;
+		insert_values_list = g_slist_append (insert_values_list, expr);
+	}
+
+        ist->values_list = g_slist_append (NULL, insert_values_list);
+        st = gda_sql_statement_new (GDA_SQL_STATEMENT_INSERT);
+        st->contents = ist;
+	stmt = g_object_new (GDA_TYPE_STATEMENT, "structure", st, NULL);
+        gda_sql_statement_free (st);
+	g_object_unref (mstruct);
+
+	if (! gda_statement_get_parameters (stmt, &params, error)) {
+		retval = FALSE;
+		goto out;
+	}
+
+	/* executing inserts */
+	nrows = gda_data_model_get_n_rows (import);
+	ncols = gda_data_model_get_n_columns (import);
+	if (!gda_connection_begin_transaction (cnc, NULL, GDA_TRANSACTION_ISOLATION_UNKNOWN, error)) {
+		retval = FALSE;
+		goto out;
+	}
+	for (i = 0; i < nrows; i++) {
+		gint j;
+		GSList *list;
+		for (list = params->holders, j = 0; list && (j < ncols); list = list->next, j++) {
+			const GValue *cvalue = gda_data_model_get_value_at (import, j, i);
+			if (! gda_holder_set_value (GDA_HOLDER (list->data), cvalue)) {
+				g_set_error (error, 0, 0, "Error using value at col=>%d and row=>%d", j, i);
+				gda_connection_rollback_transaction (cnc, NULL, NULL);
+				retval = FALSE;
+				goto out;
+			}
+		}
+
+		if (list || (j < ncols)) {
+			g_set_error (error, 0, 0,
+				     "Incoherent number of columns in table and imported data");
+			gda_connection_rollback_transaction (cnc, NULL, NULL);
+			retval = FALSE;
+			goto out;
+		}
+
+		if (gda_connection_statement_execute_non_select (cnc, stmt, params, NULL, error) == -1) {
+			gda_connection_rollback_transaction (cnc, NULL, NULL);
+			retval = FALSE;
+			goto out;
+		}
+	}
+
+	if (! gda_connection_commit_transaction (cnc, NULL, error))
+		retval = FALSE;
+
+ out:
+	if (import)
+		g_object_unref (import);
+	if (stmt)
+		g_object_unref (stmt);
+	if (params)
+		g_object_unref (params);
+
+	return retval;
+}

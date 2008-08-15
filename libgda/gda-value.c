@@ -1834,7 +1834,7 @@ gda_value_stringify (const GValue *value)
  * @value1: a #GValue to compare.
  * @value2: the other #GValue to be compared to @value1.
  *
- * Tells if two values are equal or not
+ * Tells if two values are equal or not, by comparing memory representations.
  *
  * Returns: 0 if @value1 and @value2 are equal, and something else otherwise
  */

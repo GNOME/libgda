@@ -1,6 +1,6 @@
-"meta","information_schema","_pg_truetypid_10627","meta","information_schema","_pg_truetypid","FUNCTION","pg_catalog.oid",FALSE,"SQL","SELECT CASE WHEN $2.typtype = 'd' THEN $2.typbasetype ELSE $1.atttypid END","NULL","SQL","GENERAL",TRUE,"MODIFIES",TRUE,"NULL","information_schema._pg_truetypid","information_schema._pg_truetypid","postgres"
-"meta","information_schema","_pg_truetypmod_10628","meta","information_schema","_pg_truetypmod","FUNCTION","pg_catalog.int4",FALSE,"SQL","SELECT CASE WHEN $2.typtype = 'd' THEN $2.typtypmod ELSE $1.atttypmod END","NULL","SQL","GENERAL",TRUE,"MODIFIES",TRUE,"NULL","information_schema._pg_truetypmod","information_schema._pg_truetypmod","postgres"
-"meta","information_schema","_pg_char_max_length_10629","meta","information_schema","_pg_char_max_length","FUNCTION","pg_catalog.int4",FALSE,"SQL","SELECT
+"meta","information_schema","_pg_truetypid_11319","meta","information_schema","_pg_truetypid","FUNCTION","pg_catalog.oid",FALSE,"2","SQL","SELECT CASE WHEN $2.typtype = 'd' THEN $2.typbasetype ELSE $1.atttypid END","NULL","SQL","GENERAL",TRUE,"MODIFIES",TRUE,"NULL","information_schema._pg_truetypid","information_schema._pg_truetypid","postgres"
+"meta","information_schema","_pg_truetypmod_11320","meta","information_schema","_pg_truetypmod","FUNCTION","pg_catalog.int4",FALSE,"2","SQL","SELECT CASE WHEN $2.typtype = 'd' THEN $2.typtypmod ELSE $1.atttypmod END","NULL","SQL","GENERAL",TRUE,"MODIFIES",TRUE,"NULL","information_schema._pg_truetypmod","information_schema._pg_truetypmod","postgres"
+"meta","information_schema","_pg_char_max_length_11321","meta","information_schema","_pg_char_max_length","FUNCTION","pg_catalog.int4",FALSE,"2","SQL","SELECT
   CASE WHEN $2 = -1 /* default typmod */
        THEN null
        WHEN $1 IN (1042, 1043) /* char, varchar */
@@ -9,12 +9,12 @@
        THEN $2
        ELSE null
   END","NULL","SQL","GENERAL",TRUE,"MODIFIES",TRUE,"NULL","information_schema._pg_char_max_length","information_schema._pg_char_max_length","postgres"
-"meta","information_schema","_pg_char_octet_length_10630","meta","information_schema","_pg_char_octet_length","FUNCTION","pg_catalog.int4",FALSE,"SQL","SELECT
+"meta","information_schema","_pg_char_octet_length_11322","meta","information_schema","_pg_char_octet_length","FUNCTION","pg_catalog.int4",FALSE,"2","SQL","SELECT
   CASE WHEN $1 IN (25, 1042, 1043) /* text, char, varchar */
        THEN CAST(2^30 AS integer)
        ELSE null
   END","NULL","SQL","GENERAL",TRUE,"MODIFIES",TRUE,"NULL","information_schema._pg_char_octet_length","information_schema._pg_char_octet_length","postgres"
-"meta","information_schema","_pg_numeric_precision_10631","meta","information_schema","_pg_numeric_precision","FUNCTION","pg_catalog.int4",FALSE,"SQL","SELECT
+"meta","information_schema","_pg_numeric_precision_11323","meta","information_schema","_pg_numeric_precision","FUNCTION","pg_catalog.int4",FALSE,"2","SQL","SELECT
   CASE $1
          WHEN 21 /*int2*/ THEN 16
          WHEN 23 /*int4*/ THEN 32
@@ -28,7 +28,7 @@
          WHEN 701 /*float8*/ THEN 53 /*DBL_MANT_DIG*/
          ELSE null
   END","NULL","SQL","GENERAL",TRUE,"MODIFIES",TRUE,"NULL","information_schema._pg_numeric_precision","information_schema._pg_numeric_precision","postgres"
-"meta","information_schema","_pg_numeric_precision_radix_10632","meta","information_schema","_pg_numeric_precision_radix","FUNCTION","pg_catalog.int4",FALSE,"SQL","SELECT
+"meta","information_schema","_pg_numeric_precision_radix_11324","meta","information_schema","_pg_numeric_precision_radix","FUNCTION","pg_catalog.int4",FALSE,"2","SQL","SELECT
   CASE WHEN $1 IN (21, 23, 20, 700, 701) THEN 2
        WHEN $1 IN (1700) THEN 10
        ELSE null

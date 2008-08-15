@@ -39,6 +39,10 @@ G_BEGIN_DECLS
 #define GDA_IS_DATA_MODEL(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_DATA_MODEL))
 #define GDA_DATA_MODEL_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_INTERFACE ((obj), GDA_TYPE_DATA_MODEL, GdaDataModelClass))
 
+/* error reporting */
+extern GQuark gda_data_model_error_quark (void);
+#define GDA_DATA_MODEL_ERROR gda_data_model_error_quark ()
+
 typedef enum {
 	GDA_DATA_MODEL_ACCESS_RANDOM = 1 << 0,
 	GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD = 1 << 1,

@@ -49,8 +49,8 @@ struct _GdaCapiRecordsetClass {
 };
 
 GType         gda_capi_recordset_get_type  (void) G_GNUC_CONST;
-GdaDataModel *gda_capi_recordset_new       (GdaConnection *cnc, GdaCapiPStmt *ps, GdaDataModelAccessFlags flags, 
-					    GType *col_types);
+GdaDataModel *gda_capi_recordset_new       (GdaConnection *cnc, GdaCapiPStmt *ps, GdaSet *exec_params,
+					    GdaDataModelAccessFlags flags, GType *col_types);
 
 G_END_DECLS
 

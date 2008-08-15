@@ -1629,7 +1629,7 @@ gda_postgres_provider_statement_prepare (GdaServerProvider *provider, GdaConnect
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
 
 	/* fetch prepares stmt if already done */
-	ps = gda_connection_get_prepared_statement (cnc, stmt);
+	ps = (GdaPostgresPStmt *) gda_connection_get_prepared_statement (cnc, stmt);
 	if (ps)
 		return TRUE;
 
@@ -1694,7 +1694,7 @@ gda_postgres_provider_statement_prepare (GdaServerProvider *provider, GdaConnect
         _GDA_PSTMT (ps)->param_ids = param_ids;
         _GDA_PSTMT (ps)->sql = sql;
 	
-	gda_connection_add_prepared_statement (cnc, stmt, ps);
+	gda_connection_add_prepared_statement (cnc, stmt, (GdaPStmt *) ps);
 	return TRUE;
 
  out_err:
@@ -1962,13 +1962,13 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 		PQclear (pg_res);
 		
 		/* create data model in CURSOR mode */
-		recset = gda_postgres_recordset_new_cursor (cnc, ps, cursor_name, col_types);
+		recset = gda_postgres_recordset_new_cursor (cnc, ps, params, cursor_name, col_types);
 		gda_connection_internal_statement_executed (cnc, stmt, params, NULL); /* required: help @cnc keep some stats */
 		return (GObject*) recset;
 	}
 
 	/* get/create new prepared statement */
-	ps = gda_connection_get_prepared_statement (cnc, stmt);
+	ps = (GdaPostgresPStmt *) gda_connection_get_prepared_statement (cnc, stmt);
 	if (!ps) {
 		if (!gda_postgres_provider_statement_prepare (provider, cnc, stmt, NULL)) {
 			/* this case can appear for example if some variables are used in places
@@ -1987,7 +1987,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 				return NULL;
 		}
 		else
-			ps = gda_connection_get_prepared_statement (cnc, stmt);
+			ps = (GdaPostgresPStmt *) gda_connection_get_prepared_statement (cnc, stmt);
 	}
 	g_assert (ps);
 
@@ -2030,6 +2030,16 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 		if (!h) {
 			gchar *str;
 			str = g_strdup_printf (_("Missing parameter '%s' to execute query"), pname);
+			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+			gda_connection_event_set_description (event, str);
+			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
+			g_free (str);
+			break;
+		}
+		if (!gda_holder_is_valid (h)) {
+			gchar *str;
+			str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
 			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 			gda_connection_event_set_description (event, str);
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
@@ -2144,7 +2154,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
                                 PQclear (pg_res);
                         }
                         else if (status == PGRES_TUPLES_OK) 
-				retval = (GObject*) gda_postgres_recordset_new_random (cnc, ps, pg_res, col_types);
+				retval = (GObject*) gda_postgres_recordset_new_random (cnc, ps, params, pg_res, col_types);
                         else {
                                 PQclear (pg_res);
                                 retval = (GObject *) gda_data_model_array_new (0);

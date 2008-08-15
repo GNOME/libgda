@@ -39,14 +39,25 @@ typedef struct _GdaPModel        GdaPModel;
 typedef struct _GdaPModelClass   GdaPModelClass;
 typedef struct _GdaPModelPrivate GdaPModelPrivate;
 
+/* error reporting */
+extern GQuark gda_pmodel_error_quark (void);
+#define GDA_PMODEL_ERROR gda_pmodel_error_quark ()
+
+enum {
+	GDA_PMODEL_MODIFICATION_STATEMENT_ERROR,
+	GDA_PMODEL_MISSING_MODIFICATION_STATEMENT_ERROR,
+	GDA_PMODEL_CONNECTION_ERROR,
+	GDA_PMODEL_VALUE_ERROR
+};
+
 struct _GdaPModel {
 	GObject           object;
 	GdaPModelPrivate *priv;
+
 	/* read only information */
 	GdaPStmt         *prep_stmt; /* use the "prepared-stmt" property to set this */
 	gint              nb_stored_rows; /* number of GdaRow objects currently stored */
 	gint              advertized_nrows; /* set when the number of rows becomes known */
-	GdaConnection    *cnc;
 };
 
 /*
@@ -80,9 +91,8 @@ void           gda_pmodel_take_row                     (GdaPModel *model, GdaRow
 GdaRow        *gda_pmodel_get_stored_row               (GdaPModel *model, gint rownum);
 
 GdaConnection *gda_pmodel_get_connection               (GdaPModel *model);
-gboolean       gda_pmodel_set_modification_query       (GdaPModel *model, GdaStatement *mod_stmt, GError **error);
-gboolean       gda_pmodel_compute_modification_queries (GdaPModel *model, const gchar *target, 
-							gboolean use_all_fields_if_no_pk, GError **error);
+gboolean       gda_pmodel_set_modification_statements   (GdaPModel *model, GdaStatement *mod_stmt, GError **error);
+gboolean       gda_pmodel_compute_modification_statements (GdaPModel *model, gboolean require_pk, GError **error);
 
 G_END_DECLS
 

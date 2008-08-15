@@ -2,16 +2,32 @@
 GdaPStmt
 
 <!-- ##### SECTION Short_Description ##### -->
-Prepared statement base class
+Prepared statement's base class
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+  The #GdaPStmt represents the association between a #GdaStatement statement and a <emphasis>prepared statement</emphasis>
+  which is database dependant and is an in-memory representation of a statement. Using prepared statement has the
+  following advantages:
+  <itemizedlist>
+    <listitem><para>the parsing of the SQL has to be done only once, which improves performances if the statement
+	has to be executed more than once</para></listitem>
+    <listitem><para>if a statement has been prepared, then it means it is syntaxically correct and has been
+	<emphasis>understood</emphasis> by the database's API</para></listitem>
+    <listitem><para>it is possible to use variables in prepared statement which eliminates the risk
+	of SQL code injection</para></listitem>
+  </itemizedlist>
+</para>
+<para>
+  The #GdaPStmt is not intended to be instanciated, but subclassed by database provider's implementation.
+  Once created, the database provider's implementation can decide to associate (for future lookup) to
+  a #GdaStatement object in a connection using 
+  <link linkend="gda-connection-add-prepared-statement">gda_connection_add_prepared_statement()</link>.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-
+  
 </para>
 
 <!-- ##### SECTION Stability_Level ##### -->
@@ -23,7 +39,7 @@ Prepared statement base class
 </para>
 
 @object: base object
-@stmt: 
+@priv: 
 @sql: actual SQL code used for this prepared statement, its memory is freed by the object itself
 @param_ids: list of parameters' IDs (as gchar *), the memory is freed by object itself
 @ncols: number of columns in the returned data model (if the prepared statement is a SELECT statement)
@@ -37,6 +53,15 @@ Prepared statement base class
 
 @pstmt: 
 @stmt: 
+
+
+<!-- ##### FUNCTION gda_pstmt_get_gda_statement ##### -->
+<para>
+
+</para>
+
+@pstmt: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_pstmt_copy_contents ##### -->

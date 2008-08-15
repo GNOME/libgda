@@ -75,16 +75,15 @@ gda_sql_param_spec_take_nullok (GdaSqlParamSpec *pspec, GValue *value)
 void
 gda_sql_param_spec_take_type (GdaSqlParamSpec *pspec, GValue *value)
 {
-	if (pspec->type) {
-		g_free (pspec->type);
-		pspec->type = NULL;
-	}
+	pspec->g_type = 0;
 	if (value) {
-		pspec->type = _remove_quotes (g_value_dup_string (value));
+		gchar *tmp;
+		tmp = _remove_quotes (g_value_dup_string (value));
 		g_value_unset (value);
 		g_free (value);
 
-		pspec->g_type = gda_g_type_from_string (pspec->type);
+		pspec->g_type = gda_g_type_from_string (tmp);
+		g_free (tmp);
 	}
 }
 
@@ -96,7 +95,6 @@ gda_sql_param_spec_new (GValue *value)
 	pspec =g_new0 (GdaSqlParamSpec, 1);
 	pspec->is_param = TRUE;
 	pspec->nullok = FALSE;
-	pspec->type = NULL;
 
 	if (value) {
 		gchar *str = (gchar *) g_value_get_string (value);
@@ -114,8 +112,7 @@ gda_sql_param_spec_new (GValue *value)
 				pspec->name = g_strdup (str);
 				break;
 			case 1:
-				g_free (pspec->type);
-				pspec->type = g_strdup (str);
+				pspec->g_type = gda_g_type_from_string (str);
 				break;
 			case 2:
 				pspec->nullok = (*str == 'n') || (*str == 'N') ? TRUE : FALSE;
@@ -145,8 +142,7 @@ gda_sql_param_spec_copy (GdaSqlParamSpec *pspec)
 		copy->name = g_strdup (pspec->name);
 	if (pspec->descr)
 		copy->descr = g_strdup (pspec->descr);
-	if (pspec->type)
-		copy->type = g_strdup (pspec->type);
+	copy->g_type = pspec->g_type;
 	copy->is_param = pspec->is_param;
 	copy->nullok = pspec->nullok;
 
@@ -160,7 +156,6 @@ gda_sql_param_spec_free (GdaSqlParamSpec *pspec)
 
 	g_free (pspec->name);
 	g_free (pspec->descr);
-	g_free (pspec->type);
 	g_free (pspec);
 }
 
@@ -183,9 +178,13 @@ gda_sql_param_spec_serialize (GdaSqlParamSpec *pspec)
 	g_string_append_printf (string, ",\"descr\":%s", str);
 	g_free (str);
 
-	str = _json_quote_string (pspec->type);
-	g_string_append_printf (string, ",\"type\":%s", str);
-	g_free (str);
+	if (pspec->g_type != G_TYPE_INVALID) {
+		str = _json_quote_string (gda_g_type_to_string (pspec->g_type));
+		g_string_append_printf (string, ",\"type\":%s", str);
+		g_free (str);
+	}
+	else
+		g_string_append_printf (string, ",\"type\":null");
 
 	g_string_append_printf (string, ",\"is_param\":%s", pspec->is_param ? "true" : "false");
 	g_string_append_printf (string, ",\"nullok\":%s", pspec->nullok ? "true" : "false");

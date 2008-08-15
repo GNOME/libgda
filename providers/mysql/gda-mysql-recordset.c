@@ -58,22 +58,22 @@ static gint
 gda_mysql_recordset_fetch_nb_rows (GdaPModel  *model);
 static gboolean
 gda_mysql_recordset_fetch_random (GdaPModel  *model,
-				  GdaRow    **prow,
+				  GdaRow    **row,
 				  gint        rownum,
 				  GError    **error);
 static gboolean
 gda_mysql_recordset_fetch_next (GdaPModel  *model,
-				GdaRow    **prow,
+				GdaRow    **row,
 				gint        rownum,
 				GError    **error);
 static gboolean
 gda_mysql_recordset_fetch_prev (GdaPModel  *model,
-				GdaRow    **prow,
+				GdaRow    **row,
 				gint        rownum,
 				GError    **error);
 static gboolean
 gda_mysql_recordset_fetch_at (GdaPModel  *model,
-			      GdaRow    **prow,
+			      GdaRow    **row,
 			      gint        rownum,
 			      GError    **error);
 
@@ -104,9 +104,49 @@ gda_mysql_recordset_init (GdaMysqlRecordset       *recset,
 	/* initialize specific information */
 	// TO_IMPLEMENT;
 	
-	recset->priv->chunk_size = 10;
+	recset->priv->chunk_size = 1;
 	recset->priv->chunks_read = 0;
 	
+}
+
+
+gint
+gda_mysql_recordset_get_chunk_size (GdaMysqlRecordset  *recset)
+{
+	g_return_if_fail (GDA_IS_MYSQL_RECORDSET (recset));
+	return recset->priv->chunk_size;
+}
+
+void
+gda_mysql_recordset_set_chunk_size (GdaMysqlRecordset  *recset,
+				    gint                chunk_size)
+{
+	g_return_if_fail (GDA_IS_MYSQL_RECORDSET (recset));
+
+	if (recset->priv->mysql_stmt == NULL)  // Creation is in progress so it's not set.
+		return;
+
+#if MYSQL_VERSION_ID >= 50002
+	const unsigned long prefetch_rows = chunk_size;
+	if (mysql_stmt_attr_set (recset->priv->mysql_stmt, STMT_ATTR_PREFETCH_ROWS,
+				 (void *) &prefetch_rows)) {
+		_gda_mysql_make_error (recset->priv->cnc, NULL, recset->priv->mysql_stmt, NULL);
+		return;
+	}
+	recset->priv->chunk_size = chunk_size;
+	g_object_notify (G_OBJECT(recset), "chunk-size");
+#else
+	g_warning (_("Could not use CURSOR. Mysql version 5.0 at least is required. "
+		     "Chunk size ignored."));
+#endif
+
+}
+
+gint
+gda_mysql_recordset_get_chunks_read (GdaMysqlRecordset  *recset)
+{
+	g_return_if_fail (GDA_IS_MYSQL_RECORDSET (recset));
+	return recset->priv->chunks_read;
 }
 
 
@@ -126,7 +166,8 @@ gda_mysql_recordset_set_property (GObject       *object,
 
 	switch (param_id) {
 	case PROP_CHUNK_SIZE:
-		record_set->priv->chunk_size = g_value_get_int (value);
+		gda_mysql_recordset_set_chunk_size (record_set,
+						    g_value_get_int (value));
 		break;
 	case PROP_CHUNKS_READ:
 		break;
@@ -187,7 +228,7 @@ gda_mysql_recordset_class_init (GdaMysqlRecordsetClass  *klass)
 		 PROP_CHUNK_SIZE,
 		 g_param_spec_int ("chunk-size", _("Number of rows fetched at a time"),
 				   NULL,
-				   1, G_MAXINT - 1, 10,
+				   1, G_MAXINT - 1, 1,
 				   (G_PARAM_CONSTRUCT | G_PARAM_WRITABLE | G_PARAM_READABLE)));
 
 	g_object_class_install_property
@@ -259,6 +300,7 @@ gda_mysql_recordset_get_type (void)
 GdaDataModel *
 gda_mysql_recordset_new (GdaConnection            *cnc,
 			 GdaMysqlPStmt            *ps,
+			 GdaSet                   *exec_params,
 			 GdaDataModelAccessFlags   flags,
 			 GType                    *col_types)
 {
@@ -417,6 +459,7 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
         model = g_object_new (GDA_TYPE_MYSQL_RECORDSET,
 			      "prepared-stmt", ps,
 			      "model-usage", rflags,
+			      "exec-params", exec_params, 
 			      NULL);
         model->priv->cnc = cnc;
 	g_object_ref (G_OBJECT(cnc));
@@ -459,18 +502,18 @@ static GdaRow *
 new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel,
 			 gint                rownum)
 {
-	g_print ("*** %s -- %d -- %d\n", __func__, ((GdaPModel *) imodel)->prep_stmt->ncols, rownum);
+	/* g_print ("*** %s -- %d -- %d\n", __func__, ((GdaPModel *) imodel)->prep_stmt->ncols, rownum); */
 	
 	MYSQL_BIND *mysql_bind_result = ((GdaMysqlPStmt *) ((GdaPModel *) imodel)->prep_stmt)->mysql_bind_result;
 	g_assert (mysql_bind_result);
 	
-	GdaRow *prow = gda_row_new (((GdaPModel *) imodel)->prep_stmt->ncols);
+	GdaRow *row = gda_row_new (((GdaPModel *) imodel)->prep_stmt->ncols);
 	gint col;
 	for (col = 0; col < ((GdaPModel *) imodel)->prep_stmt->ncols; ++col) {
 		
 		gint i = col;
 		
-		GValue *value = gda_row_get_value (prow, i);
+		GValue *value = gda_row_get_value (row, i);
 		GType type = ((GdaPModel *) imodel)->prep_stmt->types[i];
 		gda_value_reset_with_type (value, type);
 		
@@ -607,20 +650,20 @@ new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel,
 		g_free (strvalue);
 		
 		/* gchar *str = gda_value_stringify (value); */
-		/* g_print ("   V%d=%s\n", i, str); */
+		/* g_print ("***V%d=%s\n", i, str); */
 		/* g_free (str); */
-		//		
+
 	}
-	return prow;
+	return row;
 }
 
 
 /*
- * Create a new filled #GdaRow object for the row at position @rownum, and put it into *prow.
+ * Create a new filled #GdaRow object for the row at position @rownum, and put it into *row.
  *
- * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
- *  -  If *prow is NULL then a new #GdaRow object has to be created, 
- *  -  and otherwise *prow contains a #GdaRow object which has already been created 
+ * WARNING: @row will NOT be NULL, but *row may or may not be NULL:
+ *  -  If *row is NULL then a new #GdaRow object has to be created, 
+ *  -  and otherwise *row contains a #GdaRow object which has already been created 
  *     (through a call to this very function), and in this case it should not be modified
  *     but the function may return FALSE if an error occurred.
  *
@@ -632,7 +675,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel,
  */
 static gboolean 
 gda_mysql_recordset_fetch_random (GdaPModel  *model,
-				  GdaRow    **prow,
+				  GdaRow    **row,
 				  gint        rownum,
 				  GError    **error)
 {
@@ -642,7 +685,7 @@ gda_mysql_recordset_fetch_random (GdaPModel  *model,
 
 	// TO_IMPLEMENT;
 	
-	if (*prow)
+	if (*row)
 		return TRUE;
 
 	if (imodel->priv->mysql_stmt == NULL) {
@@ -655,13 +698,14 @@ gda_mysql_recordset_fetch_random (GdaPModel  *model,
 	if (mysql_stmt_fetch (imodel->priv->mysql_stmt))
 		return FALSE;
 	
-	*prow = new_row_from_mysql_stmt (imodel, rownum);
-	gda_pmodel_take_row (model, *prow, rownum);
+	*row = new_row_from_mysql_stmt (imodel, rownum);
+	gda_pmodel_take_row (model, *row, rownum);
 	
-	/* if (model->nb_stored_rows == model->advertized_nrows) { */
-	/* 	g_print ("  All the row have been converted..."); */
-	/* } */
-	
+	if (model->nb_stored_rows == model->advertized_nrows) {
+		/* All the row have been converted.  We could free result now */
+		/* but it was done before provided no field-based API functions */
+		/* that process result set meta data was needed in the middle. */
+	}
 
 	return TRUE;
 }
@@ -670,7 +714,8 @@ gda_mysql_recordset_fetch_random (GdaPModel  *model,
  * Create and "give" filled #GdaRow object for all the rows in the model
  */
 static gboolean
-gda_mysql_recordset_store_all (GdaPModel *model, GError **error)
+gda_mysql_recordset_store_all (GdaPModel  *model,
+			       GError    **error)
 {
 	GdaMysqlRecordset *imodel;
 	gint i;
@@ -679,19 +724,19 @@ gda_mysql_recordset_store_all (GdaPModel *model, GError **error)
 
 	/* default implementation */
 	for (i = 0; i < model->advertized_nrows; i++) {
-		GdaRow *prow;
-		if (! gda_mysql_recordset_fetch_random (model, &prow, i, error))
+		GdaRow *row;
+		if (! gda_mysql_recordset_fetch_random (model, &row, i, error))
 			return FALSE;
 	}
 	return TRUE;
 }
 
 /*
- * Create a new filled #GdaRow object for the next cursor row, and put it into *prow.
+ * Create a new filled #GdaRow object for the next cursor row, and put it into *row.
  *
- * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
- *  -  If *prow is NULL then a new #GdaRow object has to be created, 
- *  -  and otherwise *prow contains a #GdaRow object which has already been created 
+ * WARNING: @row will NOT be NULL, but *row may or may not be NULL:
+ *  -  If *row is NULL then a new #GdaRow object has to be created, 
+ *  -  and otherwise *row contains a #GdaRow object which has already been created 
  *     (through a call to this very function), and in this case it should not be modified
  *     but the function may return FALSE if an error occurred.
  *
@@ -699,7 +744,37 @@ gda_mysql_recordset_store_all (GdaPModel *model, GError **error)
  * can use gda_pmodel_take_row().
  */
 static gboolean 
-gda_mysql_recordset_fetch_next (GdaPModel *model, GdaRow **prow, gint rownum, GError **error)
+gda_mysql_recordset_fetch_next (GdaPModel  *model,
+				GdaRow    **row,
+				gint        rownum,
+				GError    **error)
+{
+	GdaMysqlRecordset *imodel = (GdaMysqlRecordset*) model;
+
+	// TO_IMPLEMENT;
+	//
+
+	// gda_pmodel_iter_next increments rownum
+	return /* TRUE */ gda_mysql_recordset_fetch_random (model, row, rownum, error);
+}
+
+/*
+ * Create a new filled #GdaRow object for the previous cursor row, and put it into *row.
+ *
+ * WARNING: @row will NOT be NULL, but *row may or may not be NULL:
+ *  -  If *row is NULL then a new #GdaRow object has to be created, 
+ *  -  and otherwise *row contains a #GdaRow object which has already been created 
+ *     (through a call to this very function), and in this case it should not be modified
+ *     but the function may return FALSE if an error occurred.
+ *
+ * Memory management for that new GdaRow object is left to the implementation, which
+ * can use gda_pmodel_take_row().
+ */
+static gboolean 
+gda_mysql_recordset_fetch_prev (GdaPModel  *model,
+				GdaRow    **row,
+				gint        rownum,
+				GError    **error)
 {
 	GdaMysqlRecordset *imodel = (GdaMysqlRecordset*) model;
 
@@ -709,11 +784,11 @@ gda_mysql_recordset_fetch_next (GdaPModel *model, GdaRow **prow, gint rownum, GE
 }
 
 /*
- * Create a new filled #GdaRow object for the previous cursor row, and put it into *prow.
+ * Create a new filled #GdaRow object for the cursor row at position @rownum, and put it into *row.
  *
- * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
- *  -  If *prow is NULL then a new #GdaRow object has to be created, 
- *  -  and otherwise *prow contains a #GdaRow object which has already been created 
+ * WARNING: @row will NOT be NULL, but *row may or may not be NULL:
+ *  -  If *row is NULL then a new #GdaRow object has to be created, 
+ *  -  and otherwise *row contains a #GdaRow object which has already been created 
  *     (through a call to this very function), and in this case it should not be modified
  *     but the function may return FALSE if an error occurred.
  *
@@ -721,29 +796,10 @@ gda_mysql_recordset_fetch_next (GdaPModel *model, GdaRow **prow, gint rownum, GE
  * can use gda_pmodel_take_row().
  */
 static gboolean 
-gda_mysql_recordset_fetch_prev (GdaPModel *model, GdaRow **prow, gint rownum, GError **error)
-{
-	GdaMysqlRecordset *imodel = (GdaMysqlRecordset*) model;
-
-	TO_IMPLEMENT;
-
-	return TRUE;
-}
-
-/*
- * Create a new filled #GdaRow object for the cursor row at position @rownum, and put it into *prow.
- *
- * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
- *  -  If *prow is NULL then a new #GdaRow object has to be created, 
- *  -  and otherwise *prow contains a #GdaRow object which has already been created 
- *     (through a call to this very function), and in this case it should not be modified
- *     but the function may return FALSE if an error occurred.
- *
- * Memory management for that new GdaRow object is left to the implementation, which
- * can use gda_pmodel_take_row().
- */
-static gboolean 
-gda_mysql_recordset_fetch_at (GdaPModel *model, GdaRow **prow, gint rownum, GError **error)
+gda_mysql_recordset_fetch_at (GdaPModel  *model,
+			      GdaRow    **row,
+			      gint        rownum,
+			      GError    **error)
 {
 	GdaMysqlRecordset *imodel = (GdaMysqlRecordset*) model;
 	

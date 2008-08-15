@@ -319,7 +319,8 @@ finish_prep_stmt_init (PostgresConnectionData *cdata, GdaPostgresPStmt *ps, PGre
 }
 
 GdaDataModel *
-gda_postgres_recordset_new_random (GdaConnection *cnc, GdaPostgresPStmt *ps, PGresult *pg_res, GType *col_types)
+gda_postgres_recordset_new_random (GdaConnection *cnc, GdaPostgresPStmt *ps, GdaSet *exec_params, 
+				   PGresult *pg_res, GType *col_types)
 {
 	GdaPostgresRecordset *model;
         PostgresConnectionData *cdata;
@@ -337,7 +338,8 @@ gda_postgres_recordset_new_random (GdaConnection *cnc, GdaPostgresPStmt *ps, PGr
 	/* create data model */
         model = g_object_new (GDA_TYPE_POSTGRES_RECORDSET, "connection", cnc, 
 			      "prepared-stmt", ps, 
-			      "model-usage", GDA_DATA_MODEL_ACCESS_RANDOM, NULL);
+			      "model-usage", GDA_DATA_MODEL_ACCESS_RANDOM, 
+			      "exec-params", exec_params, NULL);
 	model->priv->pg_res = pg_res;
 	((GdaPModel*) model)->advertized_nrows = PQntuples (model->priv->pg_res);
 
@@ -348,7 +350,8 @@ gda_postgres_recordset_new_random (GdaConnection *cnc, GdaPostgresPStmt *ps, PGr
  * Takes ownership of @cursor_name
  */
 GdaDataModel *
-gda_postgres_recordset_new_cursor (GdaConnection *cnc, GdaPostgresPStmt *ps, gchar *cursor_name, GType *col_types)
+gda_postgres_recordset_new_cursor (GdaConnection *cnc, GdaPostgresPStmt *ps, GdaSet *exec_params,
+				   gchar *cursor_name, GType *col_types)
 {
 	GdaPostgresRecordset *model;
         PostgresConnectionData *cdata;
@@ -393,7 +396,8 @@ gda_postgres_recordset_new_cursor (GdaConnection *cnc, GdaPostgresPStmt *ps, gch
 	/* create model */
 	model = g_object_new (GDA_TYPE_POSTGRES_RECORDSET, "connection", cnc, 
 			      "prepared-stmt", ps, "model-usage", 
-			      GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD | GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD, NULL);
+			      GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD | GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD, 
+			      "exec-params", exec_params, NULL);
 	model->priv->pconn = cdata->pconn;
 	model->priv->cursor_name = cursor_name;
 	gboolean fetch_error;
@@ -727,7 +731,7 @@ set_prow_with_pg_res (GdaPostgresRecordset *imodel, GdaRow *prow, gint pg_res_ro
 		if (thevalue && (*thevalue != '\0' ? FALSE : PQgetisnull (imodel->priv->pg_res, pg_res_rownum, col)))
 			gda_value_set_null (gda_row_get_value (prow, col));
 		else
-			set_value (((GdaPModel*) imodel)->cnc,
+			set_value (gda_pmodel_get_connection ((GdaPModel*) imodel),
 				   gda_row_get_value (prow, col), 
 				   ((GdaPModel*) imodel)->prep_stmt->types [col], 
 				   thevalue, 
@@ -771,7 +775,7 @@ fetch_next_chunk (GdaPostgresRecordset *model, gboolean *fetch_error, GError **e
         status = PQresultStatus (model->priv->pg_res);
 	model->priv->chunks_read ++;
         if (status != PGRES_TUPLES_OK) {
-		_gda_postgres_make_error (((GdaPModel*) model)->cnc, 
+		_gda_postgres_make_error (gda_pmodel_get_connection ((GdaPModel*) model), 
 					  model->priv->pconn, model->priv->pg_res, error);
                 PQclear (model->priv->pg_res);
                 model->priv->pg_res = NULL;
@@ -863,7 +867,7 @@ fetch_prev_chunk (GdaPostgresRecordset *model, gboolean *fetch_error, GError **e
         status = PQresultStatus (model->priv->pg_res);
 	model->priv->chunks_read ++;
         if (status != PGRES_TUPLES_OK) {
-		_gda_postgres_make_error (((GdaPModel*) model)->cnc,
+		_gda_postgres_make_error (gda_pmodel_get_connection ((GdaPModel*) model),
 					  model->priv->pconn, model->priv->pg_res, error);
                 PQclear (model->priv->pg_res);
                 model->priv->pg_res = NULL;
@@ -937,7 +941,7 @@ fetch_row_number_chunk (GdaPostgresRecordset *model, int row_index, gboolean *fe
         status = PQresultStatus (model->priv->pg_res);
         model->priv->chunks_read ++; /* Not really correct, because we are only fetching 1 row, not a whole chunk of rows. */
         if (status != PGRES_TUPLES_OK) {
-		_gda_postgres_make_error (((GdaPModel*) model)->cnc, 
+		_gda_postgres_make_error (gda_pmodel_get_connection ((GdaPModel*) model), 
 					  model->priv->pconn, model->priv->pg_res, error);
                 PQclear (model->priv->pg_res);
                 model->priv->pg_res = NULL;

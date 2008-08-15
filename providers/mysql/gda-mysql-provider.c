@@ -155,7 +155,7 @@ static GObject             *gda_mysql_provider_statement_execute (GdaServerProvi
 								  GType                           *col_types,
 								  GdaSet                         **last_inserted_row, 
 								  guint                           *task_id,
-								  GdaServerProviderAsyncCallback   async_cb, 
+								  GdaServerProviderExecCallback    async_cb, 
 								  gpointer                         cb_data,
 								  GError                         **error);
 
@@ -313,6 +313,7 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass  *klass)
 	}
 	else
 		provider_class->limiting_thread = NULL;
+	
 }
 
 static void
@@ -1166,7 +1167,7 @@ gda_mysql_provider_statement_prepare (GdaServerProvider  *provider,
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
 
 	/* fetch prepares stmt if already done */
-	ps = gda_connection_get_prepared_statement (cnc, stmt);
+	ps = (GdaMysqlPStmt*) gda_connection_get_prepared_statement (cnc, stmt);
 	if (ps)
 		return TRUE;
 
@@ -1228,7 +1229,7 @@ gda_mysql_provider_statement_prepare (GdaServerProvider  *provider,
 		_GDA_PSTMT(ps)->param_ids = param_ids;
 		_GDA_PSTMT(ps)->sql = sql;
 		
-		gda_connection_add_prepared_statement (cnc, stmt, ps);
+		gda_connection_add_prepared_statement (cnc, stmt, (GdaPStmt*) ps);
 		return TRUE;
 	}
 	
@@ -1288,7 +1289,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				      GType                           *col_types,
 				      GdaSet                         **last_inserted_row, 
 				      guint                           *task_id, 
-				      GdaServerProviderAsyncCallback   async_cb,
+				      GdaServerProviderExecCallback    async_cb,
 				      gpointer                         cb_data,
 				      GError                         **error)
 {
@@ -1312,7 +1313,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 
 
 	/* get/create new prepared statement */
-	ps = gda_connection_get_prepared_statement (cnc, stmt);
+	ps = (GdaMysqlPStmt *) gda_connection_get_prepared_statement (cnc, stmt);
 	if (!ps) {
 		if (!gda_mysql_provider_statement_prepare (provider, cnc, stmt, NULL)) {
 			/* this case can appear for example if some variables are used in places
@@ -1327,20 +1328,18 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			if (!sql)
 				return NULL;
 			ps = prepare_stmt_simple (cdata, sql, error);
+			g_free (sql);
 			if (!ps)
 				return NULL;
 			
 		}
 		else
-			ps = gda_connection_get_prepared_statement (cnc, stmt);
+			ps = (GdaMysqlPStmt *) gda_connection_get_prepared_statement (cnc, stmt);
 	}
 	g_assert (ps);
 
 	/* optionnally reset the prepared statement if required by the API */
 	// TO_IMPLEMENT;
-	
-	
-	g_print ("   %s: SQL=%s\n", __func__, _GDA_PSTMT(ps)->sql);
 	
 	/* bind statement's parameters */
 	GSList *list;
@@ -1351,7 +1350,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 	char **param_values = g_new0 (char *, nb_params + 1);
         int *param_lengths = g_new0 (int, nb_params + 1);
         int *param_formats = g_new0 (int, nb_params + 1);
-	g_print ("NB=%d, SQL=%s\n", nb_params, _GDA_PSTMT(ps)->sql);
+	/* g_print ("NB=%d, SQL=%s\n", nb_params, _GDA_PSTMT(ps)->sql); */
 
 	MYSQL_BIND *mysql_bind_param = g_new0 (MYSQL_BIND, nb_params);
 	
@@ -1386,6 +1385,16 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			g_free (str);
 			break;
 		}
+		if (!gda_holder_is_valid (h)) {
+			gchar *str;
+			str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
+			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+			gda_connection_event_set_description (event, str);
+			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
+			g_free (str);
+			break;
+		}
 
 		/* actual binding using the C API, for parameter at position @i */
 		const GValue *value = gda_holder_get_value (h);
@@ -1403,7 +1412,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			param_values[i] = gda_handler_time_get_no_locale_str_from_value (handler_time,
 											 value);
 			
-			g_print ("--- TIME=%s\n", param_values[i]);
+			/* g_print ("--- TIME=%s\n", param_values[i]); */
 		} else {
 			GdaDataHandler *data_handler = gda_server_provider_get_data_handler_gtype
 				(provider, cnc, G_VALUE_TYPE(value));
@@ -1412,7 +1421,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			else
 				param_values[i] = gda_data_handler_get_str_from_value (data_handler,
 										       value);
-			g_print ("--- PV=%s\n", param_values[i]);
+			/* g_print ("--- PV=%s\n", param_values[i]); */
 
 			mysql_bind_param[i].buffer_type = MYSQL_TYPE_STRING;
 			mysql_bind_param[i].buffer = g_strdup (param_values[i]);
@@ -1420,11 +1429,6 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			mysql_bind_param[i].length = g_malloc0 (sizeof(unsigned long));
 
 		}
-		
-		gchar *str = gda_value_stringify (value);
-		g_print ("   %s: %s=%s\n", __func__, pname, str);
-		g_free (str);
-		
 
 	}
 		
@@ -1443,6 +1447,24 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 
 		return NULL;
 	}
+
+
+	/* use cursor when retrieving result */
+	if ((model_usage & GDA_STATEMENT_MODEL_RANDOM_ACCESS) == 0 &&
+	    gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_SELECT) {
+#if MYSQL_VERSION_ID >= 50002
+		const unsigned long cursor_type = CURSOR_TYPE_READ_ONLY;
+		if (mysql_stmt_attr_set (cdata->mysql_stmt, STMT_ATTR_CURSOR_TYPE, (void *) &cursor_type)) {
+			_gda_mysql_make_error (cnc, NULL, cdata->mysql_stmt, NULL);
+			return NULL;
+		}
+#else
+		model_usage = GDA_STATEMENT_MODEL_RANDOM_ACCESS;
+		g_warning (_("Could not use CURSOR. Mysql version 5.0 at least is required. "
+			     "Using random access anyway."));
+#endif
+	}
+
 	
 	/* add a connection event for the execution */
 	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
@@ -1471,7 +1493,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				else
 					flags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD;
 
-				return_value = (GObject *) gda_mysql_recordset_new (cnc, ps, flags, col_types);
+				return_value = (GObject *) gda_mysql_recordset_new (cnc, ps, params, flags, col_types);
 				gda_connection_internal_statement_executed (cnc, stmt, params, NULL); /* required: help @cnc keep some stats */
 			}
 			

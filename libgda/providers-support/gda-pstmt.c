@@ -32,6 +32,10 @@ static void gda_pstmt_finalize   (GObject *object);
 
 static GObjectClass *parent_class = NULL;
 
+struct _GdaPStmtPrivate {
+	GdaStatement *gda_stmt; /* GdaPStmt object holds a weak reference on this stmt object, may be NULL */
+};
+
 /**
  * gda_pstmt_get_type
  *
@@ -58,7 +62,7 @@ gda_pstmt_get_type (void)
 
 		g_static_mutex_lock (&registering);
 		if (type == 0)
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaPStmt", &info, 0);
+			type = g_type_register_static (G_TYPE_OBJECT, "GdaPStmt", &info, G_TYPE_FLAG_ABSTRACT);
 		g_static_mutex_unlock (&registering);
 	}
 	return type;
@@ -79,6 +83,8 @@ static void
 gda_pstmt_init (GdaPStmt *pstmt, GdaPStmtClass *klass)
 {
 	g_return_if_fail (GDA_IS_PSTMT (pstmt));
+	pstmt->priv = g_new0 (GdaPStmtPrivate, 1);
+	pstmt->priv->gda_stmt = NULL;
 	pstmt->sql = NULL;
 	pstmt->param_ids = NULL;
 	pstmt->ncols = -1;
@@ -87,14 +93,21 @@ gda_pstmt_init (GdaPStmt *pstmt, GdaPStmtClass *klass)
 }
 
 static void
+gda_stmt_reset_cb (GdaStatement *stmt, GdaPStmt *pstmt)
+{
+	g_signal_handlers_disconnect_by_func (G_OBJECT (stmt), 
+					      G_CALLBACK (gda_stmt_reset_cb), pstmt);
+	g_object_remove_weak_pointer ((GObject*) pstmt->priv->gda_stmt, (gpointer*) &(pstmt->priv->gda_stmt));
+	pstmt->priv->gda_stmt = NULL;
+}
+
+static void
 gda_pstmt_dispose (GObject *object)
 {
 	GdaPStmt *pstmt = (GdaPStmt *) object;
 
-	if (pstmt->stmt) {
-		g_object_remove_weak_pointer ((GObject*) pstmt->stmt, (gpointer*) &(pstmt->stmt));
-		pstmt->stmt = NULL;
-	}
+	if (pstmt->priv->gda_stmt) 
+		gda_stmt_reset_cb (pstmt->priv->gda_stmt, pstmt);
 
 	/* chain to parent class */
 	parent_class->dispose (object);
@@ -106,6 +119,8 @@ gda_pstmt_finalize (GObject *object)
 	GdaPStmt *pstmt = (GdaPStmt *) object;
 
 	/* free memory */
+	g_free (pstmt->priv);
+
 	if (pstmt->sql) {
 		g_free (pstmt->sql);
 		pstmt->sql = NULL;
@@ -141,13 +156,16 @@ gda_pstmt_set_gda_statement (GdaPStmt *pstmt, GdaStatement *stmt)
 	g_return_if_fail (GDA_IS_PSTMT (pstmt));
 	g_return_if_fail (!stmt || GDA_IS_STATEMENT (stmt));
 
-	if (pstmt->stmt == stmt)
+	if (pstmt->priv->gda_stmt == stmt)
 		return;
-	if (pstmt->stmt)
-		g_object_unref (pstmt->stmt);
-	pstmt->stmt = stmt;
-	if (stmt)
-		g_object_add_weak_pointer ((GObject*) stmt, (gpointer*) &(pstmt->stmt));
+	if (pstmt->priv->gda_stmt) 
+		gda_stmt_reset_cb (pstmt->priv->gda_stmt, pstmt);
+
+	pstmt->priv->gda_stmt = stmt;
+	if (stmt) {
+		g_object_add_weak_pointer ((GObject*) stmt, (gpointer*) &(pstmt->priv->gda_stmt));
+		g_signal_connect (G_OBJECT (stmt), "reset", G_CALLBACK (gda_stmt_reset_cb), pstmt);
+	}
 }
 
 /**
@@ -189,4 +207,21 @@ gda_pstmt_copy_contents (GdaPStmt *src, GdaPStmt *dest)
 			dest->tmpl_columns = g_slist_append (dest->tmpl_columns, 
 							     gda_column_copy (GDA_COLUMN (list->data)));
 	}
+	if (src->priv->gda_stmt)
+		gda_pstmt_set_gda_statement (dest, src->priv->gda_stmt);
+}
+
+/**
+ * gda_pstmt_get_gda_statement
+ * @pstmt: a #GdaPStmt object
+ *
+ * Get a pointer to the #GdaStatement which led to the creation of this prepared statement
+ *
+ * Returns: the #GdaStatement
+ */
+GdaStatement *
+gda_pstmt_get_gda_statement (GdaPStmt *pstmt)
+{
+	g_return_val_if_fail (GDA_IS_PSTMT (pstmt), NULL);
+	return pstmt->priv->gda_stmt;
 }

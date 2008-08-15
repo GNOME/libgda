@@ -1316,7 +1316,6 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
                         ptype = ctype ? gda_g_type_from_string ((gchar *) ctype) : G_TYPE_STRING;
                         pspec->name = g_strdup_printf ("+%d", colindex);
                         pspec->g_type = ptype;
-                        pspec->type = g_strdup (ctype ? (gchar *) ctype : "string");
                         pspec->nullok = nullok;
                         expr = gda_sql_expr_new (GDA_SQL_ANY_PART (ist));
                         expr->param_spec = pspec;
@@ -1325,7 +1324,6 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
                         pspec = g_new0 (GdaSqlParamSpec, 1);
                         pspec->name = g_strdup_printf ("+%d", colindex);
                         pspec->g_type = ptype;
-                        pspec->type = g_strdup (ctype ? (gchar *) ctype : "string");
                         pspec->nullok = nullok;
                         expr = gda_sql_expr_new (GDA_SQL_ANY_PART (ust));
                         expr->param_spec = pspec;
@@ -1589,7 +1587,6 @@ make_expr_EQUAL (GdaSqlAnyPart *parent, xmlChar *cname, xmlChar *type, GType pty
 	pspec = g_new0 (GdaSqlParamSpec, 1);
 	pspec->name = g_strdup_printf ("-%d", index);
 	pspec->g_type = ptype;
-	pspec->type = g_strdup (type ? (gchar *) type : "string");
 	pspec->nullok = nullok;
 	expr = gda_sql_expr_new (GDA_SQL_ANY_PART (op));
 	expr->param_spec = pspec;

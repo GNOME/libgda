@@ -55,6 +55,15 @@ enum {
 
 static guint gda_data_model_signals[LAST_SIGNAL];
 
+/* module error */
+GQuark gda_data_model_error_quark (void)
+{
+        static GQuark quark;
+        if (!quark)
+                quark = g_quark_from_static_string ("gda_data_model_error");
+        return quark;
+}
+
 GType
 gda_data_model_get_type (void)
 {
@@ -552,7 +561,8 @@ gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *tit
  * occur if you do so). Also that value may become invalid as soon as any Libgda part is executed again,
  * which means if you want to keep the value, a copy must be made. 
  *
- * If you want to modify a value stored in a #GdaDataModel, use the gda_data_model_set_value() method.
+ * If you want to modify a value stored in a #GdaDataModel, use the gda_data_model_set_value_at() or 
+ * gda_data_model_set_values() methods.
  *
  * Returns: a #GValue containing the value stored in the given
  * position, or %NULL on error (out-of-bound position, etc).
@@ -939,7 +949,8 @@ gda_data_model_append_values (GdaDataModel *model, const GList *values, GError *
  * @model: a #GdaDataModel object.
  * @error: a place to store errors, or %NULL
  * 
- * Appends a row to the data model. 
+ * Appends a row to the data model (the new row will possibliy have NULL values for all columns,
+ * or some other values depending on the data model implementation)
  *
  * Returns: the number of the added row, or -1 if an error occurred
  */

@@ -1161,6 +1161,7 @@ gda_sql_parser_get_type
 <SECTION>
 <FILE>gda-sql-statement</FILE>
 <TITLE>GdaSqlStatement</TITLE>
+<INCLUDE>sql-parser/gda-sql-statement.h</INCLUDE>
 GdaSqlStatement
 GdaSqlStatementType
 gda_sql_statement_new
@@ -1383,8 +1384,8 @@ GdaPModelClass
 gda_pmodel_take_row
 gda_pmodel_get_stored_row
 gda_pmodel_get_connection
-gda_pmodel_set_modification_query
-gda_pmodel_compute_modification_queries
+gda_pmodel_set_modification_statement
+gda_pmodel_compute_modification_statements
 <SUBSECTION Standard>
 GDA_IS_PMODEL
 GDA_PMODEL
@@ -1399,6 +1400,7 @@ gda_pmodel_get_type
 <INCLUDE>providers-support/gda-pstmt.h</INCLUDE>
 GdaPStmt
 gda_pstmt_set_gda_statement
+gda_pstmt_get_gda_statement
 gda_pstmt_copy_contents
 <SUBSECTION Standard>
 GDA_IS_PSTMT

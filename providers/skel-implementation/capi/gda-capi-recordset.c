@@ -138,7 +138,8 @@ gda_capi_recordset_get_type (void)
  * this function
  */
 GdaDataModel *
-gda_capi_recordset_new (GdaConnection *cnc, GdaCapiPStmt *ps, GdaDataModelAccessFlags flags, GType *col_types)
+gda_capi_recordset_new (GdaConnection *cnc, GdaCapiPStmt *ps, GdaSet *exec_params,
+			GdaDataModelAccessFlags flags, GType *col_types)
 {
 	GdaCapiRecordset *model;
         CapiConnectionData *cdata;
@@ -202,7 +203,10 @@ gda_capi_recordset_new (GdaConnection *cnc, GdaCapiPStmt *ps, GdaDataModelAccess
 		rflags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD;
 
 	/* create data model */
-        model = g_object_new (GDA_TYPE_CAPI_RECORDSET, "prepared-stmt", ps, "model-usage", rflags, NULL);
+        model = g_object_new (GDA_TYPE_CAPI_RECORDSET, 
+			      "prepared-stmt", ps, 
+			      "model-usage", rflags, 
+			      "exec-params", exec_params, NULL);
         model->priv->cnc = cnc;
 	g_object_ref (cnc);
 
