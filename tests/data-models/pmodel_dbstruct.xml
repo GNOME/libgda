@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Tests databases schema
+  -->
+
+
+<schema>
+  <!-- provider specific information 
+       use <replace> to replace something with something else (context can only be "/FIELDS_A/@COLUMN_TYPE" at the moment)
+       use <ignore> to ignore some parts (context can only be "/FKEY_S" or "/FIELDS_A/@COLUMN_PKEY" at the moment)
+       use <symbol> to define a symbolic value
+    -->
+  <specifics>
+    <provider name="PostgreSQL">
+      <replace context="/FIELDS_A/@COLUMN_TYPE" expr="string" replace_with="varchar"/>
+      <replace context="/FIELDS_A/@COLUMN_TYPE" expr="gint" replace_with="int"/>
+      <symbol name="now">now()</symbol>
+    </provider>
+
+    <provider name="MySQL">
+      <replace context="/FIELDS_A/@COLUMN_TYPE" expr="string" replace_with="text"/>
+      <replace context="/FIELDS_A/@COLUMN_TYPE" expr="gint" replace_with="int"/>
+      <ignore context="/FKEY_S"/>
+      <ignore context="/FIELDS_A/@COLUMN_PKEY"/>
+      <symbol name="now">CURRENT_TIMESTAMP</symbol>
+    </provider>
+
+    <provider name="SQLite">
+      <replace context="/FIELDS_A/@COLUMN_TYPE" expr="gint" replace_with="int"/>
+      <symbol name="now">CURRENT_TIMESTAMP</symbol>
+    </provider>
+  </specifics>
+
+  <!-- customers table -->
+  <table name="customers">
+    <column name="id" type="gint" pkey="TRUE" autoinc="TRUE"/>
+    <column name="name"/>
+    <column name="default_served_by" type="gint" nullok="TRUE"/>
+    <column name="country" nullok="TRUE"/>
+    <column name="city" nullok="TRUE"/>
+    <fkey ref_table="locations">
+      <part column="country"/>
+      <part column="city"/>
+    </fkey>
+  </table>
+  
+  <table name="locations">
+    <column name="country" pkey="TRUE"/>
+    <column name="city" pkey="TRUE"/>
+    <column name="shortcut"/>
+  </table>
+</schema>
