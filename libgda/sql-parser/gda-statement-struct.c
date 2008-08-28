@@ -444,7 +444,7 @@ gda_sql_expr_check_validity (GdaSqlExpr *expr, GdaSqlStatementCheckValidityData 
 	 *    using @expr context, set expr->param_spec->validity_meta_dict.
 	 */
         TO_IMPLEMENT;
-        return FALSE;
+        return TRUE;
 }
 
 void

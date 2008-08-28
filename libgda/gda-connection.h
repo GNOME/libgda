@@ -156,10 +156,6 @@ gboolean             gda_connection_set_dsn              (GdaConnection *cnc, co
 const gchar         *gda_connection_get_cnc_string       (GdaConnection *cnc);
 const gchar         *gda_connection_get_authentication   (GdaConnection *cnc);
 
-void                 gda_connection_add_event            (GdaConnection *cnc, GdaConnectionEvent *event);
-GdaConnectionEvent  *gda_connection_add_event_string     (GdaConnection *cnc, const gchar *str, ...);
-void                 gda_connection_add_events_list      (GdaConnection *cnc, GList *events_list);
-void                 gda_connection_clear_events_list    (GdaConnection *cnc);
 const GList         *gda_connection_get_events           (GdaConnection *cnc);
 
 GdaSqlParser        *gda_connection_create_parser        (GdaConnection *cnc);

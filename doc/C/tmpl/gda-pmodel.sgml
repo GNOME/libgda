@@ -84,25 +84,3 @@ Proposed base implementation for data models returned by the execution of a SELE
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_pmodel_set_modification_statement ##### -->
-<para>
-
-</para>
-
-@model: 
-@mod_stmt: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_pmodel_compute_modification_statements ##### -->
-<para>
-
-</para>
-
-@model: 
-@require_pk: 
-@error: 
-@Returns: 
-
-

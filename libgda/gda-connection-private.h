@@ -35,6 +35,13 @@ void     gda_connection_internal_set_provider_data (GdaConnection *cnc, gpointer
 gpointer gda_connection_internal_get_provider_data (GdaConnection *cnc);
 
 /*
+ * Connection's events
+ */
+void                 gda_connection_add_event            (GdaConnection *cnc, GdaConnectionEvent *event);
+GdaConnectionEvent  *gda_connection_add_event_string     (GdaConnection *cnc, const gchar *str, ...);
+void                 gda_connection_clear_events_list    (GdaConnection *cnc);
+
+/*
  * Transaction related
  */
 void gda_connection_internal_transaction_started (GdaConnection *cnc, const gchar *parent_trans, const gchar *trans_name, 

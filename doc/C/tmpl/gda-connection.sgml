@@ -421,35 +421,6 @@ Management of connections to data sources
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_connection_add_event ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@event: 
-
-
-<!-- ##### FUNCTION gda_connection_add_event_string ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@str: 
-@Varargs: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_add_events_list ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@events_list: 
-
-
 <!-- ##### FUNCTION gda_connection_get_events ##### -->
 <para>
 
@@ -457,14 +428,6 @@ Management of connections to data sources
 
 @cnc: 
 @Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_clear_events_list ##### -->
-<para>
-
-</para>
-
-@cnc: 
 
 
 <!-- ##### FUNCTION gda_connection_create_operation ##### -->

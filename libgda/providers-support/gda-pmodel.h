@@ -26,6 +26,7 @@
 #include <glib-object.h>
 #include <libgda/gda-row.h>
 #include <libgda/providers-support/gda-pstmt.h>
+#include <sql-parser/gda-sql-statement.h>
 
 G_BEGIN_DECLS
 
@@ -47,7 +48,9 @@ enum {
 	GDA_PMODEL_MODIFICATION_STATEMENT_ERROR,
 	GDA_PMODEL_MISSING_MODIFICATION_STATEMENT_ERROR,
 	GDA_PMODEL_CONNECTION_ERROR,
-	GDA_PMODEL_VALUE_ERROR
+	GDA_PMODEL_VALUE_ERROR,
+	GDA_PMODEL_ACCESS_ERROR,
+	GDA_PMODEL_SQL_ERROR
 };
 
 struct _GdaPModel {
@@ -57,7 +60,7 @@ struct _GdaPModel {
 	/* read only information */
 	GdaPStmt         *prep_stmt; /* use the "prepared-stmt" property to set this */
 	gint              nb_stored_rows; /* number of GdaRow objects currently stored */
-	gint              advertized_nrows; /* set when the number of rows becomes known */
+	gint              advertized_nrows; /* set when the number of rows becomes known, -1 untill then */
 };
 
 /*
@@ -87,11 +90,19 @@ struct _GdaPModelClass {
 };
 
 GType          gda_pmodel_get_type                     (void) G_GNUC_CONST;
+
+/* API reserved to provider's implementations */
 void           gda_pmodel_take_row                     (GdaPModel *model, GdaRow *row, gint rownum);
 GdaRow        *gda_pmodel_get_stored_row               (GdaPModel *model, gint rownum);
-
 GdaConnection *gda_pmodel_get_connection               (GdaPModel *model);
-gboolean       gda_pmodel_set_modification_statements   (GdaPModel *model, GdaStatement *mod_stmt, GError **error);
+
+/* public API */
+gboolean       gda_pmodel_set_row_selection_condition     (GdaPModel *model, GdaSqlExpr *expr, GError **error);
+gboolean       gda_pmodel_set_row_selection_condition_sql (GdaPModel *model, const gchar *sql_where, GError **error);
+gboolean       gda_pmodel_compute_row_selection_condition (GdaPModel *model, GError **error);
+
+gboolean       gda_pmodel_set_modification_statement      (GdaPModel *model, GdaStatement *mod_stmt, GError **error);
+gboolean       gda_pmodel_set_modification_statement_sql  (GdaPModel *model, const gchar *sql, GError **error);
 gboolean       gda_pmodel_compute_modification_statements (GdaPModel *model, gboolean require_pk, GError **error);
 
 G_END_DECLS

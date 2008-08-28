@@ -729,11 +729,8 @@ gda_holder_set_value_str (GdaHolder *holder, GdaDataHandler *dh, const gchar *va
                 if (dh)
                         gdaval = gda_data_handler_get_value_from_str (dh, value, holder->priv->g_type);
 
-                if (gdaval) {
-                        gda_holder_set_value (holder, gdaval);
-                        gda_value_free (gdaval);
-                        return TRUE;
-                }
+                if (gdaval)
+			return real_gda_holder_set_value (holder, gdaval, FALSE);
                 else
                         return FALSE;
         }
@@ -836,7 +833,7 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy)
 		g_print ("Holder %p is alias of holder %p => propagating changes to holder %p\n",
 			 holder, holder->priv->full_bind, holder->priv->full_bind);
 #endif
-		gda_holder_set_value (holder->priv->full_bind, value);
+		retval = real_gda_holder_set_value (holder->priv->full_bind, value, do_copy);
 	}
 	else {
 		if (holder->priv->value) {

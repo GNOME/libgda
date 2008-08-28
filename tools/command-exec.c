@@ -782,11 +782,12 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 		GdaMetaTable *mt = GDA_META_TABLE (dbo);
 		GSList *list;
 
-		model = gda_data_model_array_new (4);
+		model = gda_data_model_array_new (5);
 		gda_data_model_set_column_title (model, 0, _("Column"));
 		gda_data_model_set_column_title (model, 1, _("Type"));
 		gda_data_model_set_column_title (model, 2, _("Nullable"));
 		gda_data_model_set_column_title (model, 3, _("Default"));
+		gda_data_model_set_column_title (model, 4, _("Extra"));
 		if (dbo->obj_type == GDA_META_DB_VIEW)
 			g_object_set_data_full (G_OBJECT (model), "name", 
 						g_strdup_printf (_("List of columns for view '%s'"), 
@@ -808,6 +809,35 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 			values = g_list_append (values, val);
 			g_value_set_string ((val = gda_value_new (G_TYPE_STRING)), tcol->default_value);
 			values = g_list_append (values, val);
+			if (tcol->extra) {
+				GString *string;
+				gint i;
+				gboolean first = TRUE;
+				string = g_string_new ("");
+				for (i = 0; i < tcol->extra->len; i++) {
+					const gchar *tmp = g_array_index (tcol->extra, gchar *, i);
+					const gchar *astmp = NULL;
+					if (!strcmp (tmp, GDA_EXTRA_AUTO_INCREMENT)) 
+						astmp = _("Auto increment");
+					else {
+						g_warning ("Unknown extra keyword '%s'", tmp);
+						TO_IMPLEMENT;
+					}
+					if (astmp) {
+						if (first)
+							first = FALSE;
+						else
+							g_string_append (string, ", ");
+						g_string_append (string, astmp);
+					}
+				}
+				g_value_take_string ((val = gda_value_new (G_TYPE_STRING)), string->str);
+				g_string_free (string, FALSE);
+			}
+			else
+				val = gda_value_new_null ();
+			values = g_list_append (values, val);
+
 			gda_data_model_append_values (model, values, NULL);
 			g_list_foreach (values, (GFunc) gda_value_free, NULL);
 			g_list_free (values);

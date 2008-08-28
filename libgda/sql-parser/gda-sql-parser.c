@@ -1564,8 +1564,10 @@ fetch_forward (GdaSqlParser *parser, gint *out_nb_pushed, ...)
 			v1 = v2;
 		}
 		if (ttype != exp_type) {
-			g_value_reset (v1);
-			g_free (v1);
+			if (v1) {
+				g_value_reset (v1);
+				g_free (v1);
+			}
 
 			/* not what was expected => pop all the contexts */
 			for (; npushed > nmatched ; npushed--)

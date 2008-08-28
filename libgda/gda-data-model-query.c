@@ -675,17 +675,16 @@ gda_data_model_query_refresh (GdaDataModelQuery *model, GError **error)
 
 	model->priv->data = gda_connection_statement_execute_select (model->priv->cnc, 
 								     model->priv->statements[SEL_QUERY], 
-								     model->priv->params [SEL_QUERY], error);
+								     model->priv->params [SEL_QUERY],
+								     &model->priv->refresh_error);
 	if (!model->priv->data) {
-		model->priv->data = NULL;
-		g_assert (model->priv->refresh_error);
-		if (error) 
+		if (model->priv->refresh_error && error)
 			*error = g_error_copy (model->priv->refresh_error);
 		return FALSE;
 	}
-
+	
 	gda_data_model_reset ((GdaDataModel *) model);
-	return model->priv->data ? TRUE : FALSE;
+	return TRUE;
 }
 
 /**
@@ -765,8 +764,10 @@ gda_data_model_query_get_n_columns (GdaDataModel *model)
 	selmodel = GDA_DATA_MODEL_QUERY (model);
 	g_return_val_if_fail (selmodel->priv, 0);
 	
-	if (!selmodel->priv->data && !selmodel->priv->refresh_error)
-		gda_data_model_query_refresh (selmodel, NULL);
+	if (!selmodel->priv->data && !selmodel->priv->refresh_error) {
+		if (!gda_data_model_query_refresh (selmodel, NULL))
+			return 0;
+	}
 	
 	create_columns (selmodel);
 
@@ -851,8 +852,10 @@ gda_data_model_query_describe_column (GdaDataModel *model, gint col)
 	selmodel = GDA_DATA_MODEL_QUERY (model);
 	g_return_val_if_fail (selmodel->priv, NULL);
 
-	if (!selmodel->priv->data  && !selmodel->priv->refresh_error)
-		gda_data_model_query_refresh (selmodel, NULL);
+	if (!selmodel->priv->data  && !selmodel->priv->refresh_error) {
+		if (!gda_data_model_query_refresh (selmodel, NULL))
+			return NULL;
+	}
 
 	create_columns (selmodel);
 	if (selmodel->priv->columns)

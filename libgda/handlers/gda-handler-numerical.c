@@ -22,6 +22,8 @@
 #include <locale.h>
 #include <glib/gi18n-lib.h>
 
+extern gchar *gda_numeric_locale;
+
 static void gda_handler_numerical_class_init (GdaHandlerNumericalClass * class);
 static void gda_handler_numerical_init (GdaHandlerNumerical * wid);
 static void gda_handler_numerical_dispose (GObject   * object);
@@ -189,7 +191,7 @@ gda_handler_numerical_get_sql_from_value (GdaDataHandler *iface, const GValue *v
 
 	setlocale (LC_NUMERIC, "C");
 	str = gda_value_stringify ((GValue *) value);
-	setlocale (LC_NUMERIC, "");
+	setlocale (LC_NUMERIC, gda_numeric_locale);
 	if (str) 
 		retval = str;
 	else
@@ -217,7 +219,7 @@ gda_handler_numerical_get_value_from_sql (GdaDataHandler *iface, const gchar *sq
 
 	setlocale (LC_NUMERIC, "C");
 	value = gda_handler_numerical_get_value_from_str (iface, sql, type);
-	setlocale (LC_NUMERIC, "");
+	setlocale (LC_NUMERIC, gda_numeric_locale);
 
 	return value;
 }

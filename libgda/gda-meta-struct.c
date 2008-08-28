@@ -590,7 +590,7 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 	}
 	case GDA_META_DB_TABLE: {
 		/* columns */
-		gchar *sql = "SELECT c.column_name, c.data_type, c.gtype, c.is_nullable, t.table_short_name, t.table_full_name, c.column_default, t.table_owner, c.array_spec FROM _columns as c NATURAL JOIN _tables as t WHERE table_catalog = ##tc::string AND table_schema = ##ts::string AND table_name = ##tname::string ORDER BY ordinal_position";
+		gchar *sql = "SELECT c.column_name, c.data_type, c.gtype, c.is_nullable, t.table_short_name, t.table_full_name, c.column_default, t.table_owner, c.array_spec, c.extra FROM _columns as c NATURAL JOIN _tables as t WHERE table_catalog = ##tc::string AND table_schema = ##ts::string AND table_name = ##tname::string ORDER BY ordinal_position";
 		GdaMetaTable *mt;
 		GdaDataModel *model;
 		gint i, nrows;
@@ -639,6 +639,22 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 			val = gda_data_model_get_value_at (model, 6, i);
 			if (val && !gda_value_is_null (val))
 				tcol->default_value = g_strdup (g_value_get_string (val));
+			val = gda_data_model_get_value_at (model, 9, i);
+			if (val && !gda_value_is_null (val)) {
+				gchar **array, *tmp;
+				gint ai;
+				GArray *extra_array = NULL;
+				cstr = g_value_get_string (val);
+				array = g_strsplit (cstr, ",", 0);
+				for (ai = 0; array [ai]; ai++) {
+					if (!extra_array)
+						extra_array = g_array_new (FALSE, FALSE, sizeof (gchar*));
+					tmp = g_strstrip (array [ai]);
+					g_array_append_val (extra_array, tmp);
+				}
+				g_free (array); /* don't use g_strfreev() here because we have stolen the string pointers */
+				tcol->extra = extra_array;
+			}
 
 			/* Note: tcol->pkey is not determined here */
 			mt->columns = g_slist_prepend (mt->columns, tcol);
@@ -1562,6 +1578,12 @@ gda_meta_table_column_free (GdaMetaTableColumn *tcol)
 	g_free (tcol->column_name);
 	g_free (tcol->column_type);
 	g_free (tcol->default_value);
+	if (tcol->extra) {
+		gint i;
+		for (i = 0; i < tcol->extra->len; i++)
+			g_free (g_array_index (tcol->extra, gchar *, i));
+		g_array_free (tcol->extra, TRUE);
+	}
 	g_free (tcol);
 }
 

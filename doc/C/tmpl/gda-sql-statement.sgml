@@ -652,7 +652,6 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 
 @name: 
 @descr: 
-@type: 
 @is_param: 
 @nullok: 
 @g_type: 

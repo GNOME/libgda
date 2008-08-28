@@ -1,3 +1,57 @@
+2008-08-28  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/handlers/gda-handler-numerical.c:
+	* libgda/gda-data-model.c:
+	* libgda/gda-data-model-import.c:
+	* libgda/gda-server-operation.c:
+	* libgda/gda-set.c:
+	* libgda/gda-util.c:
+	* libgda/gda-init.c: set the global variables gda_numeric_locale and gda_lang_locale
+	when calling gda_init() and use those variables whenever setlocale() was called to fetch
+	those locale values
+	* providers/mysql/gda-mysql-recordset.c:
+	* providers/postgres/gda-postgres-recordset.c: correctly restore
+	the user LC_NUMERIC locale after having altered it (thanks to Tim Lapawa)
+	* libgda/gda-util.c: understand the "time" and "timestamp" datatypes
+	as synonyms for "GdaTime" and and "GdaTimestamp"
+	* libgda/gda-value.c: reset a value before copying the other value's contents
+	* libgda/providers-support/gda-pmodel.[ch]: improvements to modifiable
+	data models (working now are gda_data_model_set_value_at(), gda_data_model_remove_row() and
+	gda_data_model_append_values())
+	* tests/data-models: updates to the check_pmodel test
+	* libgda/gda-holder.c: speed improvement in gda_holder_set_value_str(), and avoid mem leak in
+	some circumnstances
+	* libgda/sql-parser/gda-sql-parser.c: fix to remove a warning
+	* libgda/gda-connection.[ch]: removed gda_connection_add_events_list() as it was not used and
+	did not behave in an usual way regarding its input arguments, moved gda_connection_add_event(),
+	gda_connection_add_event_string() and gda_connection_clear_events_list() to the providers' API
+	* libgda/gda-connection.c: automatically clear the events list before executing any new
+	statement (see bug #545977)
+	* libgda/gda-connection.c: fix for bug #545979
+	* libgda/gda-data-model-query.c: applied patch for bug #546230 (thanks to Carl-Anton Ingmarsson)
+	* libgda/gda-data-model-array.c: fixed the set_values() method (ignore NULL values)
+	* providers/mysql/gda-mysql-provider.c: modified string to translate to make it easier to
+	understand (for bug #549498)
+	* libgda/gda-meta-struct.[ch]: added an "extra" attribute to the GdaMetaTableColumn structure
+	to hold extra column's info such as AUTO_INCREMENT
+	* libgda/gda-meta-struct-io.c: fill in the new GdaMetaTableColumn's "extra" attribute
+	* tools/command-exec.c: added an "Extra" column when listing the columns of a table
+	* libgda/gda-enums.h: #define possible values for extra attributes: EXTRA_AUTO_INCREMENT for now
+	* tests/gda-ddl-creator.c:
+	* tools/command-exec.c:
+	* providers/postgres/gda-postgres-meta.c:
+	* libgda/gda-meta-struct-io.c:
+	* libgda/sqlite/gda-sqlite-meta.c: use EXTRA_AUTO_INCREMENT
+	* libgda/gda-set.c: bug fixed in gda_set_get_spec()
+	* libgda/sqlite/gda-sqlite-provider.c:
+	* providers/postgres/gda-postgres-provider.c: set the "name" property of the individual GdaHolder
+	objects in the last_inserted_row set returned when an INSERT statement is executed
+	* providers/mysql/gda-mysql-provider.c: set last_inserted_row to NULL when a statement is executed
+	(the feature is not yet implemented)
+	* libgda/sqlite/sqlite-src: up to version 3.6.1
+	* po/: ran "make update-po"
+	* other files: documentation updates
+
 2008-08-15  Vivien Malerba <malerba@gnome-db.org>
 
 	* providers/mysql: updates to the MySQL provider (Carlos Savoretti)

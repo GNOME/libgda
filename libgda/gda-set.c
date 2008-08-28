@@ -37,6 +37,7 @@
 #include "gda-util.h"
 
 extern xmlDtdPtr gda_paramlist_dtd;
+extern gchar *gda_lang_locale;
 
 /* 
  * Main static functions 
@@ -641,17 +642,11 @@ gda_set_new_from_spec_node (xmlNodePtr xml_spec, GError **error)
 	GdaSet *set = NULL;
 	GSList *holders = NULL, *sources = NULL;
 	GSList *list;
-	const gchar *lang;
+	const gchar *lang = gda_lang_locale;
 
 	xmlNodePtr cur;
 	gboolean allok = TRUE;
 	gchar *str;
-
-#ifdef HAVE_LC_MESSAGES
-	lang = setlocale (LC_MESSAGES, NULL);
-#else
-	lang = setlocale (LC_CTYPE, NULL);
-#endif
 
 	if (strcmp ((gchar*)xml_spec->name, "parameters") != 0){
 		g_set_error (error, GDA_SET_ERROR, GDA_SET_XML_SPEC_ERROR,
@@ -830,7 +825,7 @@ gda_set_get_spec (GdaSet *set)
 
 		g_object_get (G_OBJECT (holder), "name", &str, NULL);
 		if (str)
-			xmlSetProp(node, (xmlChar*)"name", (xmlChar*)cstr);
+			xmlSetProp(node, (xmlChar*)"name", (xmlChar*)str);
 		g_free (str);
 
 		g_object_get (G_OBJECT (holder), "description", &str, NULL);

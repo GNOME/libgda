@@ -142,11 +142,7 @@ gda_connection_get_dsn
 gda_connection_get_cnc_string
 gda_connection_get_authentification
 <SUBSECTION>
-gda_connection_add_event
-gda_connection_add_event_string
-gda_connection_add_events_list
 gda_connection_get_events
-gda_connection_clear_events_list
 <SUBSECTION>
 gda_connection_create_operation
 gda_connection_perform_operation
@@ -1384,14 +1380,24 @@ GdaPModelClass
 gda_pmodel_take_row
 gda_pmodel_get_stored_row
 gda_pmodel_get_connection
-gda_pmodel_set_modification_statement
-gda_pmodel_compute_modification_statements
 <SUBSECTION Standard>
 GDA_IS_PMODEL
 GDA_PMODEL
 GDA_PMODEL_CLASS
 GDA_TYPE_PMODEL
 gda_pmodel_get_type
+</SECTION>
+
+<SECTION>
+<FILE>gda-pmodel-user</FILE>
+<TITLE>Modifying the result of a SELECT statement</TITLE>
+<INCLUDE>providers-support/gda-pmodel.h</INCLUDE>
+gda_pmodel_set_row_selection_condition_sql
+gda_pmodel_set_row_selection_condition
+gda_pmodel_compute_row_selection_condition
+gda_pmodel_set_modification_statement
+gda_pmodel_set_modification_statement_sql
+gda_pmodel_compute_modification_statements
 </SECTION>
 
 <SECTION>
@@ -1428,6 +1434,10 @@ gda_connection_internal_set_provider_data
 gda_connection_internal_get_provider_data
 gda_virtual_connection_internal_set_provider_data
 gda_virtual_connection_internal_get_provider_data
+<SUBSECTION>
+gda_connection_add_event
+gda_connection_add_event_string
+gda_connection_clear_events_list
 <SUBSECTION>
 gda_connection_add_prepared_statement
 gda_connection_del_prepared_statement

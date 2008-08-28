@@ -36,6 +36,8 @@
 #include <locale.h>
 #endif
 
+extern gchar *gda_lang_locale;
+
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-decl.h>
 #include <libgda/gda-enums.h>
@@ -1295,17 +1297,11 @@ xml_fetch_next_row (GdaDataModelImport *model)
 	const xmlChar *name;
 	gint ret;
 
-	const gchar *lang = NULL;
+	const gchar *lang = gda_lang_locale;
 
 	GSList *columns = model->priv->columns;
 	GdaColumn *last_column = NULL;
 	GSList *values = NULL;
-
-#ifdef HAVE_LC_MESSAGES
-	lang = setlocale (LC_MESSAGES, NULL);
-#else
-	lang = setlocale (LC_CTYPE, NULL);
-#endif
 
 	if (model->priv->cursor_values) {
 		g_slist_foreach (model->priv->cursor_values, (GFunc) gda_value_free, NULL);

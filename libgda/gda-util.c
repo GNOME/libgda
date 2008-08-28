@@ -43,6 +43,8 @@
 
 #include <libgda/binreloc/gda-binreloc.h>
 
+extern gchar *gda_lang_locale;
+
 /**
  * gda_g_type_to_string
  * @type: Type to convert from.
@@ -78,6 +80,10 @@ gda_g_type_from_string (const gchar *str)
 			type = G_TYPE_STRING;
 		else if (!g_ascii_strcasecmp (str, "date"))
 			type = G_TYPE_DATE;
+		else if (!g_ascii_strcasecmp (str, "time"))
+			type = GDA_TYPE_TIME;
+		else if (!g_ascii_strcasecmp (str, "timestamp"))
+			type = GDA_TYPE_TIMESTAMP;
 		else if (!strcmp (str, "boolean"))
                         type = G_TYPE_BOOLEAN;
 		else if (!strcmp (str, "null"))
@@ -459,15 +465,10 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 	vnode = node->children;
 	if (vnode) {
 		xmlChar *this_lang, *isnull;
-		const gchar *lang;
+		const gchar *lang = gda_lang_locale;
 		GType gdatype;
 
 		gdatype = gda_holder_get_g_type (holder);
-#ifdef HAVE_LC_MESSAGES
-		lang = setlocale (LC_MESSAGES, NULL);
-#else
-		lang = setlocale (LC_CTYPE, NULL);
-#endif
 		while (vnode) {
 			if (xmlNodeIsText (vnode)) {
 				vnode = vnode->next;
@@ -649,8 +650,8 @@ dml_statements_check_select_structure (GdaConnection *cnc, GdaSqlStatement *sel_
 /*
  * Builds the WHERE condition of the computed DML statement
  */
-static GdaSqlExpr*
-dml_statements_build_condition (GdaSqlStatementSelect *stsel, GdaMetaTable *mtable, gboolean require_pk, GError **error)
+GdaSqlExpr*
+gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTable *mtable, gboolean require_pk, GError **error)
 {
 	gint i;
 	GdaSqlExpr *expr;
@@ -720,6 +721,11 @@ dml_statements_build_condition (GdaSqlStatementSelect *stsel, GdaMetaTable *mtab
 			}
 		}
 	}
+	else {
+		TO_IMPLEMENT;
+		gda_sql_expr_free (expr);
+		expr = NULL;
+	}
 	return expr;
 	
  onerror:
@@ -786,9 +792,9 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 		GDA_SQL_ANY_PART (ust)->type = GDA_SQL_ANY_STMT_UPDATE;
 		ust->table = gda_sql_table_new (GDA_SQL_ANY_PART (ust));
 		ust->table->table_name = g_strdup ((gchar *) target->table_name);
-		ust->cond = dml_statements_build_condition (stsel, 
-							    GDA_META_TABLE (target->validity_meta_object),
-							    require_pk, error);
+		ust->cond = gda_compute_unique_table_row_condition (stsel, 
+								    GDA_META_TABLE (target->validity_meta_object),
+								    require_pk, error);
 		if (!ust->cond) {
 			retval = FALSE;
 			goto cleanup;
@@ -801,9 +807,9 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 		GDA_SQL_ANY_PART (dst)->type = GDA_SQL_ANY_STMT_DELETE;
 		dst->table = gda_sql_table_new (GDA_SQL_ANY_PART (dst));
 		dst->table->table_name = g_strdup ((gchar *) target->table_name);
-		dst->cond = dml_statements_build_condition (stsel, 
-							    GDA_META_TABLE (target->validity_meta_object),
-							    require_pk, error);
+		dst->cond = gda_compute_unique_table_row_condition (stsel, 
+								    GDA_META_TABLE (target->validity_meta_object),
+								    require_pk, error);
 		if (!dst->cond) {
 			retval = FALSE;
 			goto cleanup;

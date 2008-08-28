@@ -838,7 +838,7 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 		g_value_set_boolean ((v3 = gda_value_new (G_TYPE_BOOLEAN)), pNotNull ? FALSE : TRUE);
 		g_value_set_string ((v4 = gda_value_new (G_TYPE_STRING)), pzCollSeq);
 		if (pAutoinc)
-			g_value_set_string ((v5 = gda_value_new (G_TYPE_STRING)), "AUTO_INCREMENT");
+			g_value_set_string ((v5 = gda_value_new (G_TYPE_STRING)), GDA_EXTRA_AUTO_INCREMENT);
 		g_value_set_int (v1, g_value_get_int (v1) + 1);
 		
 		if (pzDataType) {

@@ -333,7 +333,7 @@
     <column name="collation_catalog" nullok="TRUE"/>
     <column name="collation_schema" nullok="TRUE"/>
     <column name="collation_name" nullok="TRUE"/>
-    <column name="extra" nullok="TRUE" descr="CSV string with: AUTO_INCREMENT"/>
+    <column name="extra" nullok="TRUE" descr="CSV string with: AUTO_INCREMENT"/> <!-- set the gda-enums.h file -->
     <column name="is_updatable" type="boolean" nullok="TRUE"/>
     <column name="column_comments" nullok="TRUE"/>
     <fkey ref_table="_tables">

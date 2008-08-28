@@ -40,6 +40,8 @@
 #endif
 #include "csv.h"
 
+extern gchar *gda_lang_locale;
+
 static GStaticRecMutex init_mutex = G_STATIC_REC_MUTEX_INIT;
 static void gda_data_model_class_init (gpointer g_class);
 
@@ -641,6 +643,8 @@ gda_data_model_get_attributes_at (GdaDataModel *model, gint col, gint row)
  * @value: a #GValue, or %NULL
  * @error: a place to store errors, or %NULL
  *
+ * Modifies a value in @model, at (@col, @row).
+ *
  * Returns: TRUE if the value in the data model has been updated and no error occurred
  */
 gboolean
@@ -660,11 +664,14 @@ gda_data_model_set_value_at (GdaDataModel *model, gint col, gint row, const GVal
  * gda_data_model_set_values
  * @model: a #GdaDataModel object.
  * @row: row number.
- * @values: a list of #GValue, one for each n (&lt;nb_cols) columns of @model
+ * @values: a list of #GValue, one for at most the number of columns of @model
  * @error: a place to store errors, or %NULL
  *
- * If any value in @values is actually %NULL, then 
- * it is considered as a default value.
+ * In a similar way to gda_data_model_set_value_at(), this method modifies a data model's contents
+ * by setting several values at once.
+ *
+ * If any value in @values is actually %NULL, then the value in the corresponding column is left
+ * unchanged.
  *
  * Returns: TRUE if the value in the data model has been updated and no error occurred
  */
@@ -1528,12 +1535,7 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 	gboolean retval = TRUE;
 	gint pos = 0;
 
-	const gchar *lang = NULL;
-#ifdef HAVE_LC_MESSAGES
-	lang = setlocale (LC_MESSAGES, NULL);
-#else
-	lang = setlocale (LC_CTYPE, NULL);
-#endif
+	const gchar *lang = gda_lang_locale;
 
 	values = g_ptr_array_new ();
 	g_ptr_array_set_size (values, gda_data_model_get_n_columns (model));

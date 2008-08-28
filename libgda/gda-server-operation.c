@@ -38,6 +38,8 @@
 #endif
 #include <glib/gi18n-lib.h>
 
+extern gchar *gda_lang_locale;
+
 #define CLASS(operation) (GDA_SERVER_OPERATION_CLASS (G_OBJECT_GET_CLASS (operation)))
 
 static void gda_server_operation_class_init (GdaServerOperationClass *klass);
@@ -690,18 +692,12 @@ static GSList *
 load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root)
 {
 	xmlNodePtr node;
-	const gchar *lang;
+	const gchar *lang = gda_lang_locale;
 	GSList *retlist = NULL;
 	Node *parent = NULL;
 
 	if (root) 
 		parent = node_find (op, root);
-
-#ifdef HAVE_LC_MESSAGES
-        lang = setlocale (LC_MESSAGES, NULL);
-#else
-        lang = setlocale (LC_CTYPE, NULL);
-#endif
 	
 	g_assert (specnode);
 

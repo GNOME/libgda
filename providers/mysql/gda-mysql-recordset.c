@@ -33,6 +33,7 @@
 #include <locale.h>
 #endif
 
+extern gchar *gda_numeric_locale;
 
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 
@@ -604,7 +605,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel,
 				g_warning (_("Type %s not mapped for value %f"),
 					   g_type_name (type), intvalue);
 			}
-			setlocale (LC_NUMERIC, "");
+			setlocale (LC_NUMERIC, gda_numeric_locale);
 			
 			break;
 		case MYSQL_TYPE_STRING:
@@ -635,7 +636,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel,
 			} else if (type == G_TYPE_DOUBLE) {
 				setlocale (LC_NUMERIC, "C");
 				g_value_set_double (value, atof (strvalue));
-				setlocale (LC_NUMERIC, "");
+				setlocale (LC_NUMERIC, gda_numeric_locale);
 			} else {
 				g_warning (_("Type %s not mapped for value %p"),
 					   g_type_name (type), strvalue);

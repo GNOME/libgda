@@ -146,6 +146,7 @@ typedef struct {
 	gboolean      pkey;
         gboolean      nullok;
 	gchar        *default_value;
+	GArray       *extra; /* array of strings such as "AUTO_INCREMENT", may be NULL */
 } GdaMetaTableColumn;
 #define GDA_META_TABLE_COLUMN(x) ((GdaMetaTableColumn*)(x))
 

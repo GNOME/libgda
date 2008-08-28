@@ -21,6 +21,9 @@
 #include <gmodule.h>
 #include <libgda/libgda.h>
 #include <glib/gi18n-lib.h>
+#ifdef HAVE_LOCALE_H
+#include <locale.h>
+#endif
 
 #include <libgda/binreloc/gda-binreloc.h>
 #include <sql-parser/gda-sql-parser.h>
@@ -30,6 +33,8 @@ xmlDtdPtr       gda_array_dtd = NULL;
 xmlDtdPtr       gda_paramlist_dtd = NULL;
 xmlDtdPtr       gda_server_op_dtd = NULL;
 
+gchar          *gda_numeric_locale = NULL;
+gchar          *gda_lang_locale = NULL;
 
 /**
  * gda_init
@@ -97,6 +102,22 @@ gda_init (void)
 	g_assert (type);
 	type = GDA_TYPE_TIMESTAMP;
 	g_assert (type);
+
+	/* acquire locale */
+	gda_numeric_locale = setlocale (LC_NUMERIC, NULL);
+	if (gda_numeric_locale)
+		gda_numeric_locale = g_strdup (gda_numeric_locale);
+	else
+		gda_numeric_locale = g_strdup ("");
+#ifdef HAVE_LC_MESSAGES
+        gda_lang_locale = setlocale (LC_MESSAGES, NULL);
+#else
+        gda_lang_locale = setlocale (LC_CTYPE, NULL);
+#endif
+	if (gda_lang_locale)
+		gda_lang_locale = g_strdup (gda_lang_locale);
+	else
+		gda_lang_locale = g_strdup ("");
 
 	/* binreloc */
 	gda_gbr_init ();

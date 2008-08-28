@@ -26,7 +26,7 @@
     </provider>
 
     <provider name="SQLite">
-      <replace context="/FIELDS_A/@COLUMN_TYPE" expr="gint" replace_with="int"/>
+      <replace context="/FIELDS_A/@COLUMN_TYPE" expr="gint" replace_with="integer"/>
       <symbol name="now">CURRENT_TIMESTAMP</symbol>
     </provider>
   </specifics>
@@ -35,6 +35,7 @@
   <table name="customers">
     <column name="id" type="gint" pkey="TRUE" autoinc="TRUE"/>
     <column name="name"/>
+    <column name="last_update" type="timestamp"/>
     <column name="default_served_by" type="gint" nullok="TRUE"/>
     <column name="country" nullok="TRUE"/>
     <column name="city" nullok="TRUE"/>

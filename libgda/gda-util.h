@@ -29,6 +29,7 @@
 #include "gda-holder.h"
 #include "gda-row.h"
 #include "gda-connection.h"
+#include <sql-parser/gda-sql-statement.h>
 
 G_BEGIN_DECLS
 
@@ -65,6 +66,8 @@ gchar       *gda_alphanum_to_text (gchar *text);
 /*
  * Statement computation from meta store 
  */
+GdaSqlExpr  *gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTable *mtable, 
+						     gboolean require_pk, GError **error);
 gboolean     gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gboolean require_pk, 
 					 GdaStatement **insert_stmt, GdaStatement **update_stmt, GdaStatement **delete_stmt, 
 					 GError **error);

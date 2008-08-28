@@ -56,6 +56,8 @@ struct _GdaConnectionPrivate {
 	gboolean              is_open;
 
 	GdaMetaStore         *meta_store;
+
+	gboolean              auto_clear_events_list; /* TRUE if events_list is cleared before any statement execution */
 	GList                *events_list; /* last event is stored as the first node */
 
 	GdaTransactionStatus *trans_status;
@@ -241,6 +243,7 @@ gda_connection_init (GdaConnection *cnc, GdaConnectionClass *klass)
 	cnc->priv->cnc_string = NULL;
 	cnc->priv->auth_string = NULL;
 	cnc->priv->is_open = FALSE;
+	cnc->priv->auto_clear_events_list = TRUE;
 	cnc->priv->events_list = NULL;
 	cnc->priv->trans_status = NULL; /* no transaction yet */
 }
@@ -257,6 +260,14 @@ gda_connection_dispose (GObject *object)
 	cnc->priv->unique_possible_thread = NULL;
 	gda_connection_close_no_warning (cnc);
 
+	/* get rid of prepared statements to avoid problems */
+	if (cnc->priv->prepared_stmts) {
+		g_hash_table_foreach (cnc->priv->prepared_stmts, 
+				      (GHFunc) prepared_stms_foreach_func, cnc);
+		g_hash_table_destroy (cnc->priv->prepared_stmts);
+		cnc->priv->prepared_stmts = NULL;
+	}
+
 	if (cnc->priv->provider_obj) {
 		g_object_unref (G_OBJECT (cnc->priv->provider_obj));
 		cnc->priv->provider_obj = NULL;
@@ -264,7 +275,7 @@ gda_connection_dispose (GObject *object)
 
 	if (cnc->priv->events_list) {
 		g_list_foreach (cnc->priv->events_list, (GFunc) g_object_unref, NULL);
-		g_slist_free (cnc->priv->events_list);
+		g_list_free (cnc->priv->events_list);
 		cnc->priv->events_list = NULL;
 	}
 
@@ -1217,41 +1228,16 @@ gda_connection_add_event_string (GdaConnection *cnc, const gchar *str, ...)
 	return error;
 }
 
-/** TODO: This actually frees the input GList. That's very very unusual. murrayc. */
-
-/**
- * gda_connection_add_events_list
- * @cnc: a #GdaConnection object.
- * @events_list: a list of #GdaConnectionEvent.
- *
- * This is just another convenience function which lets you add
- * a list of #GdaConnectionEvent's to the given connection.*
- * As with
- * #gda_connection_add_event and #gda_connection_add_event_string,
- * this function makes the connection object emit the "error"
- * signal for each error event.
- *
- * @events_list is copied to an internal list and freed.
- */
-void
-gda_connection_add_events_list (GdaConnection *cnc, GList *events_list)
+static void
+_clear_events_list (GdaConnection *cnc)
 {
-	GList *l;
-
-	g_return_if_fail (GDA_IS_CONNECTION (cnc));
-	g_return_if_fail (cnc->priv);
-	g_return_if_fail (events_list != NULL);
-
 	gda_connection_lock ((GdaLockable*) cnc);
-	for (l = events_list; l ; l = l->next) {
-		cnc->priv->events_list = g_list_prepend (cnc->priv->events_list, l->data);
-		if (gda_connection_event_get_event_type (GDA_CONNECTION_EVENT (l->data)) ==
-		    GDA_CONNECTION_EVENT_ERROR)
-			g_signal_emit (G_OBJECT (cnc), gda_connection_signals[ERROR], 0, l->data);
+	if (cnc->priv->events_list != NULL) {
+		g_list_foreach (cnc->priv->events_list, (GFunc) g_object_unref, NULL);
+		g_list_free (cnc->priv->events_list);
+		cnc->priv->events_list =  NULL;
 	}
 	gda_connection_unlock ((GdaLockable*) cnc);
-
-	g_list_free (events_list);
 }
 
 /**
@@ -1266,14 +1252,7 @@ gda_connection_clear_events_list (GdaConnection *cnc)
 {
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (cnc->priv);
-	
-	gda_connection_lock ((GdaLockable*) cnc);
-	if (cnc->priv->events_list != NULL) {
-		g_list_foreach (cnc->priv->events_list, (GFunc) g_object_unref, NULL);
-		g_list_free (cnc->priv->events_list);
-		cnc->priv->events_list =  NULL;
-	}
-	gda_connection_unlock ((GdaLockable*) cnc);
+	_clear_events_list (cnc);
 }
 
 /**
@@ -1316,12 +1295,17 @@ gda_connection_create_operation (GdaConnection *cnc, GdaServerOperationType type
 gboolean
 gda_connection_perform_operation (GdaConnection *cnc, GdaServerOperation *op, GError **error)
 {
+	gboolean auto_clear_events, retval;
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv, FALSE);
 	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
 
-	return gda_server_provider_perform_operation (cnc->priv->provider_obj, cnc, op, error);
+	auto_clear_events = cnc->priv->auto_clear_events_list;
+	cnc->priv->auto_clear_events_list = FALSE;
+	retval = gda_server_provider_perform_operation (cnc->priv->provider_obj, cnc, op, error);
+	cnc->priv->auto_clear_events_list = auto_clear_events;
+	return retval;
 }
 
 /**
@@ -1368,11 +1352,14 @@ gda_connection_batch_execute (GdaConnection *cnc, GdaBatch *batch, GdaSet *param
 			      GdaStatementModelUsage model_usage, GError **error)
 {
 	GSList *retlist = NULL, *stmt_list;
+	gboolean auto_clear_events;
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv, NULL);
 	g_return_val_if_fail (GDA_IS_BATCH (batch), NULL);
 
 	gda_connection_lock ((GdaLockable*) cnc);
+	auto_clear_events = cnc->priv->auto_clear_events_list;
+	cnc->priv->auto_clear_events_list = FALSE;
 	for (stmt_list = (GSList*) gda_batch_get_statements (batch); stmt_list; stmt_list = stmt_list->next) {
 		GObject *obj;
 		obj = gda_connection_statement_execute (cnc, GDA_STATEMENT (stmt_list->data), params,
@@ -1381,6 +1368,7 @@ gda_connection_batch_execute (GdaConnection *cnc, GdaBatch *batch, GdaSet *param
 			break;
 		retlist = g_slist_prepend (retlist, obj);
 	}
+	cnc->priv->auto_clear_events_list = auto_clear_events;
 	gda_connection_unlock ((GdaLockable*) cnc);
 	
 	return g_slist_reverse (retlist);
@@ -1493,6 +1481,8 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
 
 	if (last_inserted_row) 
 		*last_inserted_row = NULL;
+	if (cnc->priv->auto_clear_events_list)
+		_clear_events_list (cnc);
 	obj = PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, cnc, stmt, params, 
 								       model_usage, types, last_inserted_row, 
 								       NULL, NULL, NULL, error);
@@ -1516,8 +1506,8 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
  * <itemizedlist>
  *   <listitem><para>a #GdaDataModel if @stmt is a SELECT statement (a GDA_SQL_STATEMENT_SELECT, see #GdaSqlStatementType)
  *             containing the results of the SELECT. The resulting data model is by default read only, but
- *             modifications can be made possible using gda_pmodel_set_modification_query() and/or
- *             gda_pmodel_compute_modification_queries().</para></listitem>
+ *             modifications can be enabled, see the section about
+ *             <link linkend="libgda-40-Modifying-the-result-of-a-SELECT-statement">modifying the result of a SELECT statement</link>.</para></listitem> for more information.
  *   <listitem><para>a #GdaSet for any other SQL statement which correctly executed. In this case
  *        (if the provider supports it), then the #GdaSet may contain value holders named:
  *        <itemizedlist>
@@ -1532,8 +1522,8 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
  * which is auto incremented and a 'name' column then the execution of a "INSERT INTO mytable (name) VALUES ('joe')"
  * query will return a #GdaSet with two holders:
  * <itemizedlist>
- *   <listitem><para>one named '+0' which may for example contain 1</para></listitem>
- *   <listitem><para>one named '+1' which will contain 'joe'</para></listitem>
+ *   <listitem><para>one with the '+0' ID which may for example contain 1 (note that its "name" property should be "id")</para></listitem>
+ *   <listitem><para>one with the '+1' ID which will contain 'joe' (note that its "name" property should be "name")</para></listitem>
  * </itemizedlist>
  * See the <link linkend="limitations">provider's limitations</link> section for more details about this feature
  * depending on which database is accessed.
@@ -1717,6 +1707,9 @@ gda_connection_statement_execute_select_fullv (GdaConnection *cnc, GdaStatement 
 	va_start (ap, error);
 	types = make_col_types_array (10, ap);
 	va_end (ap);
+
+	if (cnc->priv->auto_clear_events_list)
+		_clear_events_list (cnc);
 	model = (GdaDataModel *) PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, 
 											  cnc, stmt, params, model_usage, 
 											  types, NULL, NULL, 
@@ -1769,6 +1762,8 @@ gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
 	g_return_val_if_fail (PROV_CLASS (cnc->priv->provider_obj)->statement_execute, NULL);
 
+	if (cnc->priv->auto_clear_events_list)
+		_clear_events_list (cnc);
 	model = (GdaDataModel *) PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, 
 											  cnc, stmt, params, 
 											  model_usage, col_types, NULL, 

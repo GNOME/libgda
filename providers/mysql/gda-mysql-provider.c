@@ -1209,7 +1209,7 @@ gda_mysql_provider_statement_prepare (GdaServerProvider  *provider,
 		} else {
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR,
-				     _("Unnamed holder is not allowed in prepared statement."));
+				     _("Unnamed statement parameter is not allowed in prepared statement."));
 			g_slist_foreach (param_ids, (GFunc) g_free, NULL);
 			g_slist_free (param_ids);
 			param_ids = NULL;
@@ -1311,6 +1311,8 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 	if (!cdata) 
 		return FALSE;
 
+	if (last_inserted_row)
+		*last_inserted_row = NULL;
 
 	/* get/create new prepared statement */
 	ps = (GdaMysqlPStmt *) gda_connection_get_prepared_statement (cnc, stmt);

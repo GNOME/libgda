@@ -1746,8 +1746,13 @@ gda_value_set_from_value (GValue *value, const GValue *from)
 	g_return_val_if_fail (from, FALSE);
 
 	if (G_IS_VALUE (from)) {
-		g_value_copy (from, value);
-		return g_value_type_compatible (G_VALUE_TYPE (from), G_VALUE_TYPE (value));
+		if (g_value_type_compatible (G_VALUE_TYPE (from), G_VALUE_TYPE (value))) {
+			g_value_reset (value);
+			g_value_copy (from, value);
+			return TRUE;
+		}
+		else
+			return FALSE;
 	}
 	else {
 		l_g_value_unset (value);

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-28 21:03+0200\n"
+"POT-Creation-Date: 2008-08-28 21:36+0200\n"
 "PO-Revision-Date: 2007-04-06 00:05+0530\n"
 "Last-Translator: translator <pemai_jurmey@hotmail.com>\n"
 "Language-Team: dzongkha <pgeyleg@dit.gov.bt>\n"
@@ -125,126 +125,126 @@ msgstr "ལག་ལེན་པའི་མིང་།"
 msgid "Password"
 msgstr "ཆོག་ཡིག"
 
-#: ../libgda/gda-connection.c:186
+#: ../libgda/gda-connection.c:188
 msgid "DSN to use"
 msgstr "ཌི་ཨེསི་ཨེན་ལག་ལེན་་འཐབ་ནི་ལུ།"
 
-#: ../libgda/gda-connection.c:189
+#: ../libgda/gda-connection.c:191
 msgid "Connection string to use"
 msgstr "མཐུད་ལམ་ཡིག་རྒྱུན་ལག་ལེན་འཐབ་ནི་ལུ།"
 
-#: ../libgda/gda-connection.c:192
+#: ../libgda/gda-connection.c:194
 msgid "Provider to use"
 msgstr "སྤེལ་མི་ལག་ལེན་འཐབ་ནི་ལུ།"
 
-#: ../libgda/gda-connection.c:197
+#: ../libgda/gda-connection.c:199
 #, fuzzy
 msgid "Authentication string to use"
 msgstr "མཐུད་ལམ་ཡིག་རྒྱུན་ལག་ལེན་འཐབ་ནི་ལུ།"
 
-#: ../libgda/gda-connection.c:201
+#: ../libgda/gda-connection.c:203
 msgid "Options (connection sharing)"
 msgstr "གདམ་ཁ་ཚུ(མཐུད་ལམ་རུབ་སྤྱོད་འབད་དོ།)"
 
 #. To translators: Don't translate "GdaMetaStore", it's a class name
-#: ../libgda/gda-connection.c:206
+#: ../libgda/gda-connection.c:208
 #, fuzzy
 msgid "GdaMetaStore used by the connection"
 msgstr "མཐུད་ལམ་སྐབས་ལག་ལེན་འཐབ་ནི་ཨེསི་ཀིའུ་ཨེལ་ཁ་སྐད།"
 
-#: ../libgda/gda-connection.c:212
+#: ../libgda/gda-connection.c:214
 msgid ""
 "Unique GThread from which the connection will be available.This should only "
 "be modified by the database providers' implementation"
 msgstr ""
 
-#: ../libgda/gda-connection.c:509
+#: ../libgda/gda-connection.c:521
 #, fuzzy, c-format
 msgid "Malformed data source specification '%s'"
 msgstr "ལས་འགན་དོན་ལུ་སླར་ལོག་དབྱེ་བ་གཅིག་ལས་མངམ་ '%s'"
 
-#: ../libgda/gda-connection.c:517 ../libgda/gda-connection.c:733
-#: ../libgda/gda-connection.c:735
+#: ../libgda/gda-connection.c:529 ../libgda/gda-connection.c:745
+#: ../libgda/gda-connection.c:747
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "རིམ་སྒྲིག་ནང་ %s གནས་སྡུད་འབྱུང་ཁུངས་འཚོལ་མ་ཐོབ།"
 
-#: ../libgda/gda-connection.c:568
+#: ../libgda/gda-connection.c:580
 #, c-format
 msgid "Datasource configuration error: no provider specified"
 msgstr "གནས་སྡུད་འབྱུང་ཁུངས་རིམ་སྒྲིག་འཛོལ་བ་ སྤེལ་མི་གསལ་བཀོད་འབད་མེད།"
 
-#: ../libgda/gda-connection.c:637 ../tools/gda-sql.c:902
+#: ../libgda/gda-connection.c:649 ../tools/gda-sql.c:902
 #, fuzzy, c-format
 msgid "Malformed connection string '%s'"
 msgstr "ཨོ་ཌི་བི་སི་མཐུད་ལམ་ཡིག་རྒྱུན།"
 
-#: ../libgda/gda-connection.c:643 ../libgda/gda-connection.c:757
+#: ../libgda/gda-connection.c:655 ../libgda/gda-connection.c:769
 #, c-format
 msgid "No provider specified"
 msgstr "སྤེལ་མི་གསལ་བཀོད་འབད་མེད།"
 
-#: ../libgda/gda-connection.c:745 ../libgda/gda-connection.c:747
+#: ../libgda/gda-connection.c:757 ../libgda/gda-connection.c:759
 #, c-format
 msgid "No DSN or connection string specified"
 msgstr "ཌི་ཨེསི་ཨེན་ཡང་ན་མཐུད་ལམ་ཡིག་རྒྱུན་གསལ་བཀོད་འབད་མེད༔"
 
-#: ../libgda/gda-connection.c:765
+#: ../libgda/gda-connection.c:777
 #, fuzzy, c-format
 msgid "Provider does not allow usage from this thread"
 msgstr "དཔེ་ %s (name=%s): གྲལ་ཐིག་ %d བཙུགས་ཡོདཔ!"
 
-#: ../libgda/gda-connection.c:772
+#: ../libgda/gda-connection.c:784
 #, c-format
 msgid ""
 "Internal error: provider does not implement the open_connection() virtual "
 "method"
 msgstr ""
 
-#: ../libgda/gda-connection.c:1450
+#: ../libgda/gda-connection.c:1440
 #, fuzzy, c-format
 msgid "Provider does not support statement preparation"
 msgstr "སྤེལ་མི་གིས་ %s ཐོ་འགོད་ལས་འགན་བསྟར་སྤྱོད་མ་འབད།"
 
-#: ../libgda/gda-connection.c:1595 ../libgda/gda-connection.c:1610
+#: ../libgda/gda-connection.c:1587 ../libgda/gda-connection.c:1602
 #, c-format
 msgid "Statement is a selection statement"
 msgstr ""
 
-#: ../libgda/gda-connection.c:1669 ../libgda/gda-connection.c:1725
-#: ../libgda/gda-connection.c:1776
+#: ../libgda/gda-connection.c:1661 ../libgda/gda-connection.c:1720
+#: ../libgda/gda-connection.c:1773
 #, fuzzy, c-format
 msgid "Statement is not a selection statement"
 msgstr "འདྲི་དཔྱད་ %s འདི་སེལ་འཐུ་འདྲི་དཔྱད་ཅིག་མེན།"
 
-#: ../libgda/gda-connection.c:2123
+#: ../libgda/gda-connection.c:2120
 #, fuzzy, c-format
 msgid "Invalid argument"
 msgstr "ནུས་མེད་ཚཐ་བཟུང་ '%s'"
 
-#: ../libgda/gda-connection.c:2132
+#: ../libgda/gda-connection.c:2129
 #, fuzzy, c-format
 msgid "Missing or wrong arguments for table '%s': %s"
 msgstr "ཚད་བཟུང་ཚུ་བརླག་སྟོར་ཞུགས་ཡོདཔ།"
 
-#: ../libgda/gda-connection.c:2841
+#: ../libgda/gda-connection.c:2838
 #, c-format
 msgid "Meta update error"
 msgstr ""
 
-#: ../libgda/gda-connection.c:3275
+#: ../libgda/gda-connection.c:3272
 #, c-format
 msgid "Wrong filter arguments"
 msgstr ""
 
-#: ../libgda/gda-connection.c:3406 ../libgda/gda-connection.c:3451
-#: ../libgda/gda-connection.c:3486 ../libgda/gda-connection.c:3522
-#: ../libgda/gda-connection.c:3558
+#: ../libgda/gda-connection.c:3403 ../libgda/gda-connection.c:3448
+#: ../libgda/gda-connection.c:3483 ../libgda/gda-connection.c:3519
+#: ../libgda/gda-connection.c:3555
 #, fuzzy, c-format
 msgid "Connection transaction status tracking: no transaction exists for %s"
 msgstr "མཐུད་ལམ་སྤྲོད་ལེན་གནས་ཚད་ཊེཀ་ཀིང་ ཁས་ལེན་ནི་དོན་ལུ་སྤྲོད་ལེན་མེདཔ།"
 
-#: ../libgda/gda-connection.c:3797
+#: ../libgda/gda-connection.c:3827
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:185
 #, fuzzy
 msgid "Internal error: invalid provider handle"
@@ -252,6 +252,8 @@ msgstr "ནང་འཁོད་འཛོལ་བ་ དམིགས་གཏ�
 
 #: ../libgda/gda-data-access-wrapper.c:493
 #: ../libgda/gda-data-model-array.c:535
+#: ../libgda/providers-support/gda-pmodel.c:992
+#: ../libgda/providers-support/gda-pmodel.c:2227
 #, fuzzy, c-format
 msgid "Column %d out of range (0-%d)"
 msgstr "ཀེར་ཐིག་ %d ཁྱབ་ཚད་ ༠ གི་ཕྱི་ཁ་ - %d"
@@ -304,6 +306,7 @@ msgstr "བར་ཆར་འདི་ཤུགས་ལྡན་བཟོ་མ
 #: ../libgda/gda-data-model-array.c:389 ../libgda/gda-data-model-array.c:529
 #: ../libgda/gda-data-model-dir.c:796 ../libgda/gda-data-model-dir.c:955
 #: ../libgda/gda-data-model-dir.c:1299
+#: ../libgda/providers-support/gda-pmodel.c:1416
 #, fuzzy, c-format
 msgid "Row %d out of range (0-%d)"
 msgstr "གྲལ་ཐིག་ %d ཁྱབ་ཚད་ ༠་ གི་ཕྱི་ཁ་ - %d"
@@ -313,7 +316,7 @@ msgid "No row in data model"
 msgstr "གནས་སྡུད་དཔེ་ནང་གྲལ་ཐིག་མེད།"
 
 #: ../libgda/gda-data-model-array.c:601 ../libgda/gda-data-model-array.c:641
-#: ../libgda/gda-data-model-array.c:682 ../libgda/gda-data-model-array.c:717
+#: ../libgda/gda-data-model-array.c:680 ../libgda/gda-data-model-array.c:715
 #, c-format
 msgid "Attempting to modify a read-only data model"
 msgstr ""
@@ -323,12 +326,12 @@ msgstr ""
 msgid "Row number out of range"
 msgstr "ཁྱབ་ཚད་ཀྱི་གྲལ་ཐིག་ཨང་ཕྱི་ཁ།"
 
-#: ../libgda/gda-data-model-array.c:647 ../libgda/gda-data-model-array.c:688
+#: ../libgda/gda-data-model-array.c:647 ../libgda/gda-data-model-array.c:686
 #, c-format
 msgid "Too many values in list"
 msgstr "ཐོ་ཡིག་ནང་གནས་གོང་གནམ་མེད་ས་མེད་ཡོདཔ།"
 
-#: ../libgda/gda-data-model-array.c:742
+#: ../libgda/gda-data-model-array.c:740
 #, c-format
 msgid "Row not found in data model"
 msgstr "གནས་སྡུད་དཔེ་ནང་གྲལ་ཐིག་འཚོལ་མ་ཐོབ།"
@@ -358,71 +361,71 @@ msgstr "རེ་བ་བསྐྱེད་ཡོད་མི་<gda_array> ན
 msgid "Key modification is not supported"
 msgstr "གནས་སྟངས་འདི་ཤུགས་ལྡན་མེདཔ།"
 
-#: ../libgda/gda-data-model.c:953
+#: ../libgda/gda-data-model.c:971
 #, fuzzy, c-format
 msgid "Model does not allow row insertion"
 msgstr "དཔེ་ %s (name=%s): གྲལ་ཐིག་ %d བཙུགས་ཡོདཔ!"
 
-#: ../libgda/gda-data-model.c:983
+#: ../libgda/gda-data-model.c:1001
 #, c-format
 msgid "Model does not allow row deletion"
 msgstr ""
 
-#: ../libgda/gda-data-model.c:1131 ../libgda/gda-data-model.c:1170
-#: ../libgda/gda-data-model.c:1184
+#: ../libgda/gda-data-model.c:1149 ../libgda/gda-data-model.c:1188
+#: ../libgda/gda-data-model.c:1202
 #, fuzzy, c-format
 msgid "The '%s' parameter must hold a string value, ignored."
 msgstr "ཚད་བཟུང་'NAME' འདི་ལུ་སྣང་མེད་ཡོད་མི་ཡིག་རྒྱུན་གནས་གོང་ཅིག་འཛིན་དགོཔ་ཨིན།"
 
-#: ../libgda/gda-data-model.c:1193 ../libgda/gda-data-model.c:1276
+#: ../libgda/gda-data-model.c:1211 ../libgda/gda-data-model.c:1294
 #, fuzzy, c-format
 msgid "The '%s' parameter must hold a boolean value, ignored."
 msgstr "ཚད་བཟུང་ 'OVERWRITE' འདི་སྣང་མེད་ཡོད་མི་བུ་ལིན་གནས་གོང་ཅིག་འཛིན་དགོཔ་ཨིན།"
 
-#: ../libgda/gda-data-model.c:1284
+#: ../libgda/gda-data-model.c:1302
 #, c-format
 msgid "File '%s' already exists"
 msgstr "ཡིག་སྣོད་ '%s' ཧེ་མ་ལས་ཡོདཔ།"
 
-#: ../libgda/gda-data-model.c:1407
+#: ../libgda/gda-data-model.c:1425
 msgid "Exported Data"
 msgstr "ཕྱིར་འདྲེན་འབད་ཡོད་མི་གནས་སྡུད།"
 
-#: ../libgda/gda-data-model.c:1541
+#: ../libgda/gda-data-model.c:1554
 #, c-format
 msgid "Expected tag <gda_value> or <gda_array_value>, got <%s>, ignoring"
 msgstr ""
 "རེ་བ་བསྐྱེད་ཡོད་མི་ངོ་རྟགས་ <gda_value> ཡང་ན་ <gda_array_value>་ཐོབ་ཡོདཔ <%s>, སྣང་མེད་"
 "བཞག་ཡོདཔ།"
 
-#: ../libgda/gda-data-model.c:1572
+#: ../libgda/gda-data-model.c:1585
 #, c-format
 msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
 msgstr "ཀེར་ཐིག་གནས་སྡུད་དབྱེ་བ་རྒྱབ་ལོག་མ་ཚུགསཔ(དབྱེ་བ་འདི་མ་ཤེསཔ་ཡང་ན་གསལ་བཀོད་འབད་མེདཔ་)"
 
-#: ../libgda/gda-data-model.c:1654
+#: ../libgda/gda-data-model.c:1667
 #, c-format
 msgid "Expected tag <gda_array_data>, got <%s>"
 msgstr "རེ་བ་བསྐྱེད་ཡོད་མི་ངོ་རྟགས་ <gda_array_data>, ཐོབ་ཡོདཔ <%s>"
 
-#: ../libgda/gda-data-model.c:1714
+#: ../libgda/gda-data-model.c:1727
 #, c-format
 msgid "Could not get an iterator for source data model"
 msgstr "འབྱུང་ཁུངས་གནས་སྡུད་དཔེ་གི་དོན་ལུ་ཁས་ལེན་བྱེདཔ་ཅིག་ཐོབ་མ་ཚུགསཔ།"
 
-#: ../libgda/gda-data-model.c:1731
+#: ../libgda/gda-data-model.c:1744
 #, c-format
 msgid "Inexistent column in source data model: %d"
 msgstr "འབྱུངས་ཁུངས་གནས་སྡུད་དཔེ་ནང་གནས་དེ་མེད་པའི་ཀེར་ཐིག %d"
 
-#: ../libgda/gda-data-model.c:1745
+#: ../libgda/gda-data-model.c:1758
 #, c-format
 msgid ""
 "Destination column %d can't be NULL but has no correspondence in the source "
 "data model"
 msgstr "འགྲོ་ཡུལ་ཀེར་ཐིག་་འདི་ %d སྟོང་ཆ་མི་འོང་ཨིན་རུང་འབྱུང་ཁུངས་གནས་སྡུད་དཔེ་ནང་ཡིག་འགྲུལ་མེད།"
 
-#: ../libgda/gda-data-model.c:1755
+#: ../libgda/gda-data-model.c:1768
 #, c-format
 msgid ""
 "Destination column %d has a gda type (%s) incompatible with source column %d "
@@ -431,24 +434,24 @@ msgstr ""
 "འགྲོ་ཡུལ་ཀེར་ཐིག་་ལུ་ %d ཇི་ཌི་ཨེ་དབྱེ་བ་ཅིག་ (%s) འབྱུང་ཁུངས་ཀེར་ཐིག་ %d དབྱེ་བ་དང་གཅིག་་ཁར་མཐུན་"
 "འགྱུར་ཅན་མེད་པར་ཡོདཔ་ཨིན། (%s)"
 
-#: ../libgda/gda-data-model.c:1845
+#: ../libgda/gda-data-model.c:1858
 #, c-format
 msgid "Can't transform '%s' from GDA type %s to GDA type %s"
 msgstr "ཇི་ཌི་ཨེ་དབྱེ་བ་ལས་ '%s' ཇི་ཌི་ཨེ་དབྱེ་བ་ལུ་ %s བཟོ་བསྒྱུར་འབད་མི་ཚུགས། %s"
 
-#: ../libgda/gda-data-model.c:2352
+#: ../libgda/gda-data-model.c:2365
 #, c-format
 msgid "(%d row)\n"
 msgid_plural "(%d rows)\n"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../libgda/gda-data-model.c:2355
+#: ../libgda/gda-data-model.c:2368
 msgid "Model does not support random access, not showing data\n"
 msgstr "དཔེ་ཚུ་གིས་གང་འབྱུང་འཛུལ་སྤྱོད་འབད་ནི་རྒྱབ་སྐྱོར་མི་འབད་ ད་ལྟོ་སྟོན་དོ\n"
 
-#: ../libgda/gda-data-model-dir.c:385 ../libgda/gda-data-model-import.c:1598
-#: ../libgda/gda-meta-store.c:519 ../libgda/gda-server-operation.c:800
+#: ../libgda/gda-data-model-dir.c:385 ../libgda/gda-data-model-import.c:1594
+#: ../libgda/gda-meta-store.c:519 ../libgda/gda-server-operation.c:796
 #: ../libgda/sqlite/gda-sqlite-provider.c:1734
 #: ../libgda/sqlite/gda-sqlite-provider.c:1749
 #: ../providers/mdb/gda-mdb-provider.c:352
@@ -541,107 +544,107 @@ msgstr "སྤྱི་ཁྱབ།"
 msgid "List of defined data sources"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:443
+#: ../libgda/gda-data-model-import.c:445
 #, fuzzy, c-format
 msgid "The '%s' option must hold a string value, ignored."
 msgstr "ཚད་བཟུང་གིས་ '%s' ཡིག་རྒྱུན་གནས་གོང་སྣང་མེད་འབད་ཡོད་མི་ཅིག་འཛུན་དགོཔ་ཨིན།"
 
-#: ../libgda/gda-data-model-import.c:459
+#: ../libgda/gda-data-model-import.c:461
 #, fuzzy, c-format
 msgid "The '%s' option must hold a boolean value, ignored."
 msgstr "ཚད་བཟུང་གིས་ '%s' བུ་ལིན་གནས་གོང་སྣང་མེད་འབད་ཡོད་མི་ཅིག་འཛིན་དགོཔ་ཨིན།"
 
-#: ../libgda/gda-data-model-import.c:568
+#: ../libgda/gda-data-model-import.c:570
 #, fuzzy
 msgid "\"options\" property is not a GdaSet object"
 msgstr "\"options\" རྒྱུ་དངོས་འདི་ཇི་ཌི་ཨེ་ཚད་བཟུང་ཐོ་ཡིག་དངོས་པོ་ཅིག་མེན།"
 
-#: ../libgda/gda-data-model-import.c:833
+#: ../libgda/gda-data-model-import.c:835
 #, c-format
 msgid "The '%s' parameter must hold a gda type value, ignored."
 msgstr "ཚད་བཟུང་གིས་ '%s' ཇི་ཌི་ཨེ་དབྱེ་བ་གནས་གོང་སྣང་མེད་འབད་ཡོད་མི་ཅིག་འཛིན་དགོཔ་ཨིན།"
 
-#: ../libgda/gda-data-model-import.c:905
+#: ../libgda/gda-data-model-import.c:907
 #, c-format
 msgid "Character conversion at line %d, error: %s"
 msgstr "ཡིག་འབྲུ་གཞི་བསྒྱུར་གྱལ་ %d,འཛོལ་བ་ལུ་ %s"
 
-#: ../libgda/gda-data-model-import.c:908
+#: ../libgda/gda-data-model-import.c:910
 #: ../providers/bdb/gda-bdb-provider.c:208
 msgid "no detail"
 msgstr "རྒྱས་བཤད་མེད།"
 
-#: ../libgda/gda-data-model-import.c:946
+#: ../libgda/gda-data-model-import.c:948
 #, fuzzy, c-format
 msgid "Could not convert string '%s' to a '%s' value"
 msgstr "གནས་གོང་གི་དབྱེ་བ་ཅིག་ལུ་ '%s'གཞི་བསྒྱུར་འབད་མ་ཚུགས %s"
 
-#: ../libgda/gda-data-model-import.c:1002
+#: ../libgda/gda-data-model-import.c:1004
 #, fuzzy, c-format
 msgid "Error while parsing CSV file: %s"
 msgstr "ལྷག་པའི་སྐབས་འཛོལ་བ་ %s: %s"
 
 #. error
-#: ../libgda/gda-data-model-import.c:1105
+#: ../libgda/gda-data-model-import.c:1107
 msgid "Failed to read node in XML file"
 msgstr "ཨེགསི་ཨེམ་ཨེལ་ཡིག་སྣོད་ནང་མཐུད་མཚམས་ལྷག་ནི་འཐུས་ཤོར་འབྱུང་ཡོདཔ།"
 
-#: ../libgda/gda-data-model-import.c:1124
+#: ../libgda/gda-data-model-import.c:1126
 #, c-format
 msgid "Expected <gda_array> node in XML file, got <%s>"
 msgstr "རེ་བ་བསྐྱེད་ཡོད་མི་ <gda_array> ནོཌི་ཨེགསི་ཨེམ་ཨེལ་ཡིག་སྣོད་ནང་ཡོད་མི་ཐོབ་ཅི་ <%s>"
 
-#: ../libgda/gda-data-model-import.c:1168
-#: ../libgda/gda-data-model-import.c:1500
+#: ../libgda/gda-data-model-import.c:1170
+#: ../libgda/gda-data-model-import.c:1496
 msgid "No \"gdatype\" attribute specified in <gda_array_field>"
 msgstr "ནང་ \"gdatype\" ཁྱད་ཆོས་གསལ་བཀོད་འབད་མེདཔ <gda_array_field>"
 
-#: ../libgda/gda-data-model-import.c:1215
+#: ../libgda/gda-data-model-import.c:1217
 msgid "Expected <gda_array_field> in <gda_array>"
 msgstr "རེ་བ་བསྐྱེད་ཡོད་མི་ <gda_array_field> ནང་ <gda_array>"
 
-#: ../libgda/gda-data-model-import.c:1256
+#: ../libgda/gda-data-model-import.c:1258
 #, c-format
 msgid "Expected <gda_array_data> in <gda_array>, got <%s>"
 msgstr "རེ་བ་བསྐྱེད་ཡོད་མི་ <gda_array_data> ནང་ <gda_array>, ཐོབ་ཡོདཔ་ <%s>"
 
-#: ../libgda/gda-data-model-import.c:1258
+#: ../libgda/gda-data-model-import.c:1260
 msgid "Expected <gda_array_data> in <gda_array>"
 msgstr "རེ་བ་བསྐྱེད་ཡོད་མི་ <gda_array_data> ནང་ <gda_array>"
 
-#: ../libgda/gda-data-model-import.c:1270
+#: ../libgda/gda-data-model-import.c:1272
 msgid "Can't read the contents of the <gda_array_data> node"
 msgstr "ནོཌི་གིས་ <gda_array_data> ནང་དོན་ལྷག་མི་ཚུགསཔ།"
 
-#: ../libgda/gda-data-model-import.c:1325
+#: ../libgda/gda-data-model-import.c:1321
 #, c-format
 msgid "Expected <gda_array_row> in <gda_array_data>, got <%s>"
 msgstr "རེ་བ་བསྐྱེད་ཡོད་མི་ <gda_array_row> ནང་ <gda_array_data>, ཐོབ་ཡོདཔ་ <%s>"
 
-#: ../libgda/gda-data-model-import.c:1349
+#: ../libgda/gda-data-model-import.c:1345
 msgid "Row has too many values (which are ignored)"
 msgstr "གྲལ་ཐིག་ལུ་གནས་གོང་གནམ་མེད་ས་མེད་ཡོདཔ(སྣང་མེད་བཞག་ཡོད་མི་)"
 
-#: ../libgda/gda-data-model-import.c:1396
+#: ../libgda/gda-data-model-import.c:1392
 #, c-format
 msgid "Could not convert '%s' to a value of type %s"
 msgstr "གནས་གོང་གི་དབྱེ་བ་ཅིག་ལུ་ '%s'གཞི་བསྒྱུར་འབད་མ་ཚུགས %s"
 
-#: ../libgda/gda-data-model-import.c:1469
+#: ../libgda/gda-data-model-import.c:1465
 #, c-format
 msgid "Expected <gda_array> node but got <%s>"
 msgstr "རེ་བ་བསྐྱེད་ཡོད་མི་<gda_array> ནོཌི་ཨིན་རུང་ཐོབ་ཡོདཔ <%s>"
 
-#: ../libgda/gda-data-model-import.c:1547
+#: ../libgda/gda-data-model-import.c:1543
 msgid "No <gda_array_field> specified in <gda_array>"
 msgstr "ནང་ <gda_array_field> གསལ་བཀོད་འབད་མེད <gda_array>"
 
-#: ../libgda/gda-data-model-import.c:1785
+#: ../libgda/gda-data-model-import.c:1781
 #, c-format
 msgid "Row at line %d does not have enough values, completed with NULL values"
 msgstr "གྱལ་ནང་གྲལ་ཐིག་%d ལུ་གནས་གོང་ལངམ་མེདཔ་ སྟོང་ཆ་གནས་གོང་ཚུ་གིས་མཇུག་བསྡུ་ཡོདཔ།"
 
-#: ../libgda/gda-data-model-import.c:1805
+#: ../libgda/gda-data-model-import.c:1801
 #, c-format
 msgid "Row at line %d does not have enough values (which are thus ignored)"
 msgstr "གྱལ་ནང་ལུ་གྲལ་ཐིག་ %d ལུ་གནས་གོང་ལངམ་མེདཔ་(དེ་བཟུམ་སྣང་མེད་བཞག་ཡོད་མི་)"
@@ -670,39 +673,39 @@ msgstr ""
 "སེལ་འཐུ་འབད་ནི་ འདྲི་དཔྱད་ཀྱི་ཚད་བཟུང་ཚུ་གི་ནང་འཁོད་ '%s' མིང་བཏགས་ཡོད་མི་ཚད་བཟུང་ཅིག་འཚོལ་མ་"
 "ཐོབ་ གསལ་བཀོད་འབད་ཡོད་མི་ལེགས་བཅོས་འབད་ཡོད་མི་འདྲི་དཔྱད་འདི་ལག་ལེན་འཐབ་མི་བཏུབ།"
 
-#: ../libgda/gda-data-model-query.c:667 ../libgda/gda-data-model-query.c:1079
+#: ../libgda/gda-data-model-query.c:667 ../libgda/gda-data-model-query.c:1082
 #: ../libgda-report/engine/gda-report-engine.c:584
 #: ../libgda-report/engine/gda-report-engine.c:611 ../tools/gda-sql.c:604
 #, fuzzy, c-format
 msgid "No connection specified"
 msgstr "ཌི་ཨེསི་ཨེན་ཡང་ན་མཐུད་ལམ་ཡིག་རྒྱུན་གསལ་བཀོད་འབད་མེད༔"
 
-#: ../libgda/gda-data-model-query.c:672 ../libgda/gda-data-model-query.c:1084
+#: ../libgda/gda-data-model-query.c:672 ../libgda/gda-data-model-query.c:1087
 #, fuzzy, c-format
 msgid "Specified connection is closed"
 msgstr "མཐུད་ལམ་འདི་ཁ་བསྡམས་ཡོདཔ།"
 
-#: ../libgda/gda-data-model-query.c:734
+#: ../libgda/gda-data-model-query.c:733
 #, c-format
 msgid "Wrong type of query"
 msgstr "འདྲི་དཔྱད་ཕྱི་འགྱུར་དབྱེ་བ།"
 
-#: ../libgda/gda-data-model-query.c:1139 ../libgda/gda-data-model-query.c:1186
+#: ../libgda/gda-data-model-query.c:1142 ../libgda/gda-data-model-query.c:1189
 #, c-format
 msgid "No UPDATE query specified, can't update row"
 msgstr "དུས་མཐུན་བཟོ་ནི་འདྲི་དཔྱད་གསལ་བཀོད་འབད་མེད་ ད་ལྟོ་དུས་མཐུན་བཟོ་མི་ཚུགས།"
 
-#: ../libgda/gda-data-model-query.c:1236 ../libgda/gda-data-model-query.c:1283
+#: ../libgda/gda-data-model-query.c:1239 ../libgda/gda-data-model-query.c:1286
 #, c-format
 msgid "No INSERT query specified, can't insert row"
 msgstr "བཙུགས་འདྲི་དཔྱད་གསལ་བཀོད་འབད་མེད ད་ལྟོ་བཙུགས་མི་ཚུགས།"
 
-#: ../libgda/gda-data-model-query.c:1324
+#: ../libgda/gda-data-model-query.c:1327
 #, c-format
 msgid "No DELETE query specified, can't delete row"
 msgstr "བཏོན་གཏང་འདྲི་དཔྱད་གསལ་བཀོད་འབད་མེད་ ད་ལྟོ་བཏོན་གཏང་མི་ཚུགས།"
 
-#: ../libgda/gda-data-model-query.c:1497
+#: ../libgda/gda-data-model-query.c:1500
 #, c-format
 msgid "No SELECT query specified"
 msgstr "སེལ་འཐུ་འདྲི་དཔྱད་གསལ་བཀོད་མེད།"
@@ -751,6 +754,7 @@ msgid "Error in filter expression"
 msgstr "ཟུར་ཐོ་བཀདོ་ཡོད་མི་ས་སྒོ་ཡང་ན་གསལ་བརྗོད།"
 
 #: ../libgda/gda-data-proxy.c:2994
+#: ../libgda/providers-support/gda-pmodel.c:1214
 #, fuzzy, c-format
 msgid "Incorrect filter expression"
 msgstr "ཟུར་ཐོ་བཀདོ་ཡོད་མི་ས་སྒོ་ཡང་ན་གསལ་བརྗོད།"
@@ -791,16 +795,16 @@ msgstr "ནུས་མེད་ཚཐ་བཟུང་ '%s'"
 msgid "CREATE TABLE operation is not supported by the database server"
 msgstr ""
 
-#: ../libgda/gda-init.c:53
+#: ../libgda/gda-init.c:58
 #, fuzzy
 msgid "Ignoring attempt to re-initialize GDA library."
 msgstr "ཇི་ཌི་ཨེ་དཔེར་མཛོད་བསྐྱར་ལོག་འགོ་འབྱེད་འབད་ནི་དཔའ་བཅམ། སྣང་མེད་བཞག་ཡོདཔ།"
 
-#: ../libgda/gda-init.c:75
+#: ../libgda/gda-init.c:80
 msgid "libgda needs GModule. Finishing..."
 msgstr "ཨེལ་ཨའི་བི་ཇི་ཌི་ཨེ་ ལུ་ཇི་ཚད་གཞི་དགོཔ་ མཇུག་བསྡུ་དོ་་་"
 
-#: ../libgda/gda-init.c:117 ../libgda/gda-init.c:138
+#: ../libgda/gda-init.c:138 ../libgda/gda-init.c:159
 #, fuzzy, c-format
 msgid ""
 "Could not parse '%s': XML data import validation will not be performed (some "
@@ -808,7 +812,7 @@ msgid ""
 msgstr ""
 "ཨེགསི་ཨེམ་ཨེལ་ གནས་སྡུད་ནང་འདྲེན་ནུས་ལྡན་བཟོ་བ་འདི་ལག་ལེན་མི་འབད་(ཝེརཌི་འཛོལ་བ་ཚུ་ལ་ལོ་འབྱུང་འོང་།)"
 
-#: ../libgda/gda-init.c:159
+#: ../libgda/gda-init.c:180
 #, fuzzy, c-format
 msgid ""
 "Could not parse '%s': Validation for XML files for server operations will "
@@ -870,134 +874,134 @@ msgstr ""
 msgid "Missing table name from <table> node"
 msgstr ""
 
-#: ../libgda/gda-meta-store.c:1407
+#: ../libgda/gda-meta-store.c:1405
 #, c-format
 msgid "Missing foreign key's referenced table name (for table '%s')"
 msgstr ""
 
-#: ../libgda/gda-meta-store.c:1460
+#: ../libgda/gda-meta-store.c:1458
 #, fuzzy, c-format
 msgid "Missing foreign key's column name (for table '%s')"
 msgstr "དོན་ལུ་དགོ་མཁོ་ཡོད་མི་གནས་གོང་བརླག་སྟོར་་ཞུགས་ཡོདཔ'%s'"
 
-#: ../libgda/gda-meta-store.c:1471
+#: ../libgda/gda-meta-store.c:1469
 #, fuzzy, c-format
 msgid "Column '%s' not found in table '%s'"
 msgstr "ས་སྒོ་ཨང་ %d འབྱུང་ཁུངས་མིང་བཏགས་ཡོད་མི་ནང་འཚོལ་མ་ཐོབ '%s'"
 
-#: ../libgda/gda-meta-store.c:1732 ../libgda/gda-meta-struct.c:849
+#: ../libgda/gda-meta-store.c:1729 ../libgda/gda-meta-struct.c:865
 #, fuzzy, c-format
 msgid "Foreign key column '%s' not found in table '%s'"
 msgstr "ས་སྒོ་ཨང་ %d འབྱུང་ཁུངས་མིང་བཏགས་ཡོད་མི་ནང་འཚོལ་མ་ཐོབ '%s'"
 
-#: ../libgda/gda-meta-store.c:1860 ../libgda/gda-meta-store.c:1868
-#: ../libgda/gda-meta-store.c:1887
+#: ../libgda/gda-meta-store.c:1857 ../libgda/gda-meta-store.c:1865
+#: ../libgda/gda-meta-store.c:1884
 #, fuzzy, c-format
 msgid "Could not get the internal schema's version"
 msgstr "ཨོ་རེ་ཀཱེལ་དབྱེ་ཚན་འགོ་བཙུགས་མ་ཚུགས།"
 
-#: ../libgda/gda-meta-store.c:1878
+#: ../libgda/gda-meta-store.c:1875
 #, c-format
 msgid "Unknown internal schema's version: %d"
 msgstr ""
 
-#: ../libgda/gda-meta-store.c:1969 ../tools/gda-sql.c:649
+#: ../libgda/gda-meta-store.c:1966 ../tools/gda-sql.c:649
 #, fuzzy, c-format
 msgid "More than one SQL statement"
 msgstr "ནང་མིང་དཔྱད་འབད་ནི་ས་སྒོ་གཅིག་ལས་མངམ '%s'"
 
-#: ../libgda/gda-meta-store.c:1996
+#: ../libgda/gda-meta-store.c:1993
 #, c-format
 msgid "Parameter '%s' is not present in statement"
 msgstr ""
 
-#: ../libgda/gda-meta-store.c:2000
+#: ../libgda/gda-meta-store.c:1997
 #, fuzzy, c-format
 msgid "Could not set value of parameter '%s'"
 msgstr "ཨོ་རེ་ཀཱེལ་ཚད་བཟུང་འདི་ཐོབ་མ་ཚུགས།"
 
-#: ../libgda/gda-meta-store.c:2014
+#: ../libgda/gda-meta-store.c:2011
 #, fuzzy, c-format
 msgid "No value set for parameter '%s'"
 msgstr "ནུས་མེད་ཚཐ་བཟུང་ '%s'"
 
-#: ../libgda/gda-meta-store.c:2476
+#: ../libgda/gda-meta-store.c:2473
 #, fuzzy, c-format
 msgid "Data models should have the same number of columns"
 msgstr "ལས་འཆར་དོན་ལུ་གནས་སྡུད་དཔེ་ལུ་ཀེར་ཐིག་ཚུ་གི་ཨང་ཕྱི་འགྱུར་ཡོདཔ།"
 
-#: ../libgda/gda-meta-store.c:2533 ../libgda/gda-meta-store.c:3289
-#: ../libgda/gda-meta-store.c:3377
+#: ../libgda/gda-meta-store.c:2530 ../libgda/gda-meta-store.c:3286
+#: ../libgda/gda-meta-store.c:3374
 #, fuzzy, c-format
 msgid "Unknown database object '%s'"
 msgstr "མ་ཤེས་པའི་ཇི་ཌི་ཨེ་གནས་སྡུད་དབྱེ་བ་ '%s'"
 
-#: ../libgda/gda-meta-store.c:2546
+#: ../libgda/gda-meta-store.c:2543
 #, fuzzy, c-format
 msgid "Could not set value for parameter '%s'"
 msgstr "ཨོ་རེ་ཀཱེལ་ཚད་བཟུང་འདི་ཐོབ་མ་ཚུགས།"
 
-#: ../libgda/gda-meta-store.c:2571
+#: ../libgda/gda-meta-store.c:2568
 #, fuzzy, c-format
 msgid "Could not create SELECT statement"
 msgstr "ཨོ་རེ་ཀཱེལ་གསལ་བཤད་གྲ་སྒྲིག་འབད་མ་ཚུགས།"
 
-#: ../libgda/gda-meta-store.c:2586
+#: ../libgda/gda-meta-store.c:2583
 #, fuzzy, c-format
 msgid "Could not create DELETE statement"
 msgstr "ཨོ་རེ་ཀཱེལ་གསལ་བཤད་གྲ་སྒྲིག་འབད་མ་ཚུགས།"
 
-#: ../libgda/gda-meta-store.c:2628
+#: ../libgda/gda-meta-store.c:2625
 #, fuzzy, c-format
 msgid "A transaction has already been started"
 msgstr "ཡིག་སྣོད་ '%s' ཧེ་མ་ལས་ཡོདཔ།"
 
-#: ../libgda/gda-meta-store.c:2945
+#: ../libgda/gda-meta-store.c:2942
 #, fuzzy, c-format
 msgid "Attribute '%s' not found"
 msgstr "ཐིག་ཁྲམ་ %s འཚོལ་མ་ཐོབ།"
 
-#: ../libgda/gda-meta-store.c:2948
+#: ../libgda/gda-meta-store.c:2945
 #, fuzzy, c-format
 msgid "Attribute '%s' has %d value"
 msgid_plural "Attribute '%s' has %d values"
 msgstr[0] "གནས་གོང་བཟུམ་སྦེ་ '%s' ཁ་བསྒྱུར་འབད་མི་ཚུགས།"
 msgstr[1] "གནས་གོང་བཟུམ་སྦེ་ '%s' ཁ་བསྒྱུར་འབད་མི་ཚུགས།"
 
-#: ../libgda/gda-meta-store.c:2989
+#: ../libgda/gda-meta-store.c:2986
 #, c-format
 msgid "Attributes names starting with a '_' are reserved for internal usage"
 msgstr ""
 
-#: ../libgda/gda-meta-store.c:3005 ../libgda/gda-meta-store.c:3028
+#: ../libgda/gda-meta-store.c:3002 ../libgda/gda-meta-store.c:3025
 #, fuzzy, c-format
 msgid "Internal GdaMetaStore error"
 msgstr "ནང་འཁོད་དུས་ཚོད།"
 
-#: ../libgda/gda-meta-store.c:3015
+#: ../libgda/gda-meta-store.c:3012
 msgid ""
 "Could not start a transaction because one already started, this could lead "
 "to GdaMetaStore attributes problems"
 msgstr ""
 
-#: ../libgda/gda-meta-store.c:3085
+#: ../libgda/gda-meta-store.c:3082
 #, c-format
 msgid "Could not parse XML description of custom database object to add"
 msgstr ""
 
-#: ../libgda/gda-meta-store.c:3097
+#: ../libgda/gda-meta-store.c:3094
 #, c-format
 msgid "Missing custom database object name"
 msgstr ""
 
-#: ../libgda/gda-meta-store.c:3102
+#: ../libgda/gda-meta-store.c:3099
 #, c-format
 msgid ""
 "Custom database object names starting with a '_' are reserved for internal "
 "usage"
 msgstr ""
 
-#: ../libgda/gda-meta-store.c:3197
+#: ../libgda/gda-meta-store.c:3194
 #, fuzzy, c-format
 msgid "Another object with the same name already exists"
 msgstr "ཡིག་སྣོད་ '%s' ཧེ་མ་ལས་ཡོདཔ།"
@@ -1046,24 +1050,24 @@ msgstr ""
 msgid "Table %s.%s.%s not found in meta store object"
 msgstr ""
 
-#: ../libgda/gda-meta-struct.c:678
+#: ../libgda/gda-meta-struct.c:694
 #, c-format
 msgid "Internal GdaMetaStore error: column %s not found"
 msgstr ""
 
-#: ../libgda/gda-meta-struct.c:777
+#: ../libgda/gda-meta-struct.c:793
 #, c-format
 msgid ""
 "Meta data incoherence in foreign key constraint for table %s.%s.%s "
 "referencing table %s.%s.%s"
 msgstr ""
 
-#: ../libgda/gda-meta-struct.c:1840
+#: ../libgda/gda-meta-struct.c:1862
 #, c-format
 msgid "Missing object name in GdaMetaDbObject structure"
 msgstr ""
 
-#: ../libgda/gda-meta-struct.c:1865
+#: ../libgda/gda-meta-struct.c:1887
 #, fuzzy, c-format
 msgid "Database object '%s' already exists"
 msgstr "ཡིག་སྣོད་ '%s' ཧེ་མ་ལས་ཡོདཔ།"
@@ -1081,36 +1085,36 @@ msgid "Root node of file '%s' should be <schema>."
 msgstr ""
 
 #. FIXME
-#: ../libgda/gda-meta-struct-io.c:240
+#: ../libgda/gda-meta-struct-io.c:241
 #, fuzzy, c-format
 msgid "Missing column name for table '%s'"
 msgstr "དོན་ལུ་དགོ་མཁོ་ཡོད་མི་གནས་གོང་བརླག་སྟོར་་ཞུགས་ཡོདཔ'%s'"
 
 #. FIXME
-#: ../libgda/gda-meta-struct-io.c:283
+#: ../libgda/gda-meta-struct-io.c:293
 #, fuzzy, c-format
 msgid "Missing foreign key's referenced table name for table '%s'"
 msgstr "དོན་ལུ་དགོ་མཁོ་ཡོད་མི་གནས་གོང་བརླག་སྟོར་་ཞུགས་ཡོདཔ'%s'"
 
 #. FIXME
-#: ../libgda/gda-meta-struct-io.c:294 ../libgda/gda-meta-struct-io.c:300
-#: ../libgda/gda-meta-struct-io.c:306
+#: ../libgda/gda-meta-struct-io.c:304 ../libgda/gda-meta-struct-io.c:310
+#: ../libgda/gda-meta-struct-io.c:316
 #, fuzzy, c-format
 msgid "Invalid referenced table name '%s'"
 msgstr "Iནུས་མེད་ས་སྒོའི་མིང་ '%s'"
 
 #. FIXME
-#: ../libgda/gda-meta-struct-io.c:345
+#: ../libgda/gda-meta-struct-io.c:355
 #, fuzzy, c-format
 msgid "Missing foreign key's column name for table '%s'"
 msgstr "དོན་ལུ་དགོ་མཁོ་ཡོད་མི་གནས་གོང་བརླག་སྟོར་་ཞུགས་ཡོདཔ'%s'"
 
-#: ../libgda/gda-server-operation.c:568
+#: ../libgda/gda-server-operation.c:570
 #, c-format
 msgid "GdaServerOperation: could not find file '%s'"
 msgstr "ཇི་ཌི་ཨེ་སར་བར་བཀོལ་སྤྱོད་ ཡིག་སྣོད་འཚོལ་མ་ཐོབ '%s'"
 
-#: ../libgda/gda-server-operation.c:601
+#: ../libgda/gda-server-operation.c:603
 #, c-format
 msgid ""
 "GdaServerOperation: file '%s' does not conform to DTD:\n"
@@ -1119,58 +1123,58 @@ msgstr ""
 "ཇི་ཌི་ཨེ་སར་བར་བཀོལ་སྤྱོད་ ཡིག་སྣོད་ '%s' ཌི་ཊི་ཌི་ལུ་འཁྲིལ་མི་ཚུགས\n"
 "%s"
 
-#: ../libgda/gda-server-operation.c:607
+#: ../libgda/gda-server-operation.c:609
 #, c-format
 msgid "GdaServerOperation: file '%s' does not conform to DTD"
 msgstr "ཇི་ཌི་ཨེ་སར་བར་བཀོལ་སྤྱོད་ ཡིག་སྣོད་  '%s' ཌི་ཊི་ཌི་ལུ་འཁྲིལ་མི་ཚུགས།"
 
-#: ../libgda/gda-server-operation.c:623
+#: ../libgda/gda-server-operation.c:625
 #, c-format
 msgid "GdaServerOperation: could not load file '%s'"
 msgstr "ཇི་ཌི་ཨེ་སར་བར་བཀོལ་སྤྱོད་ ཡིག་སྣོད་མངོན་གསལ་འབད་མ་ཚུགས། '%s'"
 
-#: ../libgda/gda-server-operation.c:799
+#: ../libgda/gda-server-operation.c:795
 #, fuzzy, c-format
 msgid "GdaServerOperation: error loading GdaSet spec %s: '%s'"
 msgstr ""
 "ཇི་ཌི་ཨེ་སར་བར་བཀོལ་སྤྱོད་ ཇི་ཌི་ཨེ་ཚཐ་བཟུང་ཐོ་ཡིག་ སི་པེཀ་མངོན་གསལ་འབད་ནི་འཛོལ་བ་ %s: '%s'"
 
-#: ../libgda/gda-server-operation.c:1130
+#: ../libgda/gda-server-operation.c:1126
 #, fuzzy
 msgid ""
 "Non handled GdaServerOperationType, please report error to http://bugzilla."
 "gnome.org/ for the \"libgda\" product"
 msgstr "ཇི་ཌི་ཨེ་སར་བར་བཀོལ་སྤྱོད་དབྱེ་བ་མེན་མི་ འཛོལ་བ་སྙན་ཞུ་འབད་གནང་།"
 
-#: ../libgda/gda-server-operation.c:1303 ../libgda/gda-server-operation.c:1317
+#: ../libgda/gda-server-operation.c:1299 ../libgda/gda-server-operation.c:1313
 #, fuzzy, c-format
 msgid "Expected tag <%s>, got <%s>"
 msgstr "རེ་བ་བསྐྱེད་ཡོད་མི་ངོ་རྟགས <op_data>, got <%s>"
 
-#: ../libgda/gda-server-operation.c:1348 ../libgda/gda-server-operation.c:1974
+#: ../libgda/gda-server-operation.c:1344 ../libgda/gda-server-operation.c:1970
 #, c-format
 msgid ""
 "Parameterlist values can only be set for individual parameters within it"
 msgstr ""
 "ཚད་བཟུང་ཚུ་ངོ་རྐྱང་ནང་འཁོད་དོན་ལུ་རྐྱངམ་ཅིག་ཚཐ་བཟུང་ཐོ་ཡིག་གནས་གོང་ཚུ་གཞི་སྒྲིག་འབད་བཏུབ་ཨིན།"
 
-#: ../libgda/gda-server-operation.c:1364 ../libgda/gda-server-operation.c:1389
-#: ../libgda/gda-server-operation.c:1989 ../libgda/gda-server-operation.c:2052
+#: ../libgda/gda-server-operation.c:1360 ../libgda/gda-server-operation.c:1385
+#: ../libgda/gda-server-operation.c:1985 ../libgda/gda-server-operation.c:2048
 #, c-format
 msgid "Could not set parameter '%s' to value '%s'"
 msgstr "གནས་གོང་ལུ་ '%s' ཚད་བཟུང་གཞི་སྒྲིག་འབད་མ་ཚུགས '%s'"
 
-#: ../libgda/gda-server-operation.c:1412
+#: ../libgda/gda-server-operation.c:1408
 #, c-format
 msgid "Missing attribute named 'path'"
 msgstr "མིང་བཏགས་ཡོད་མི་ 'path'ཁྱད་ཆོས་བརླག་སྟོར་ཞུགས་ཡོདཔ།"
 
-#: ../libgda/gda-server-operation.c:2112
+#: ../libgda/gda-server-operation.c:2108
 #, c-format
 msgid "Missing required value for '%s'"
 msgstr "དོན་ལུ་དགོ་མཁོ་ཡོད་མི་གནས་གོང་བརླག་སྟོར་་ཞུགས་ཡོདཔ'%s'"
 
-#: ../libgda/gda-server-operation.c:2123
+#: ../libgda/gda-server-operation.c:2119
 #, c-format
 msgid "Missing required value for list of parameters '%s'"
 msgstr "ཚད་བཟུང་ཚུ་གི་ཐོ་ཡིག་དོན་ལུ་དགོས་མཁོ་ཡོད་པའི་གནས་གོང་བརླག་སྟོར་ཞུགས་ཡོདཔ། '%s'"
@@ -1463,116 +1467,118 @@ msgstr "ལས་འཆར་དོན་ལུ་གནས་སྡུད་ད
 msgid "Data model for schema has a wrong gda type: %s instead of %s"
 msgstr "ལས་འཆར་དོན་ལུ་གནས་སྡུད་དཔེ་ལུ་ཇི་ཌི་ཨེ་དབྱེ་བ་ཕྱི་འགྱུར་ཡོདཔ་ %s གི་ཚབ་མ་ %s"
 
-#: ../libgda/gda-set.c:392 ../libgda/gda-set.c:477
+#: ../libgda/gda-set.c:394 ../libgda/gda-set.c:479
 #, c-format
 msgid "%s() does not handle values of type %s, value not assigned."
 msgstr ""
 
-#: ../libgda/gda-set.c:396 ../libgda/gda-set.c:482
+#: ../libgda/gda-set.c:398 ../libgda/gda-set.c:484
 #, fuzzy
 msgid "Could not set GdaHolder's value, value not assigned"
 msgstr "གནས་གོང་ལུ་ '%s' ཚད་བཟུང་གཞི་སྒྲིག་འབད་མ་ཚུགས '%s'"
 
-#: ../libgda/gda-set.c:434
+#: ../libgda/gda-set.c:436
 #, c-format
 msgid "GdaHolder with ID '%s' not found in set"
 msgstr ""
 
-#: ../libgda/gda-set.c:612
+#: ../libgda/gda-set.c:614
 #, c-format
 msgid "Spec's root node != 'data-set-spec': '%s'"
 msgstr "སུཔེཀ་གི་རྩ་བའི་ནོཌི != 'data-set-spec': '%s'"
 
-#: ../libgda/gda-set.c:657
+#: ../libgda/gda-set.c:653
 #, c-format
 msgid "Missing node <parameters>: '%s'"
 msgstr "ནོཌི་བརླག་སྟོར་ཞུགས་ཡོདཔ <parameters>: '%s'"
 
-#: ../libgda/gda-set.c:1249
+#: ../libgda/gda-set.c:1245
 msgid "GdaHolder needs to have an ID"
 msgstr ""
 
-#: ../libgda/gda-statement.c:484
+#: ../libgda/gda-statement.c:482
 #, fuzzy, c-format
 msgid "Could not determine GType for parameter '%s'"
 msgstr "ཚད་བཟུང་དོན་ལུ་གནས་སྡུད་དབྱེ་བ་ཅིག་འཚོལ་མ་ཐོབ'%s'"
 
-#: ../libgda/gda-statement.c:485
+#: ../libgda/gda-statement.c:483
 #, fuzzy
 msgid "Unnamed"
 msgstr "མིང་མ་བཏགས་མི།"
 
-#: ../libgda/gda-statement.c:671
+#: ../libgda/gda-statement.c:669
 #, fuzzy, c-format
 msgid "Missing SQL code"
 msgstr "གནས་གོང་ཚུ་བརླག་སྟོར་ཞུགས་ཡོདཔ།"
 
-#: ../libgda/gda-statement.c:688
+#: ../libgda/gda-statement.c:686
 #, fuzzy, c-format
 msgid "No data handler for type '%s'"
 msgstr "གནས་སྡུད་དབྱེ་བ་དོན་ལུ་གནས་སྡུད་ལེགས་སྐྱོང་པ་ཅིག་འཚོལ་མ་ཐོབ '%s'"
 
-#: ../libgda/gda-statement.c:1152
+#: ../libgda/gda-statement.c:1150
 #, c-format
 msgid "Wrong parameter type for '%s': expected type '%s' and got '%s'"
 msgstr ""
 
-#: ../libgda/gda-statement.c:1164
+#: ../libgda/gda-statement.c:1162
 #, fuzzy, c-format
 msgid "Missing parameter '%s'"
 msgstr "དོན་ལུ་ཚད་བཟུང་བརླག་སྟོར་ཞུགས་ཡོདཔ།'%s'"
 
-#: ../libgda/gda-statement.c:1176
+#: ../libgda/gda-statement.c:1174 ../libgda/sqlite/gda-sqlite-provider.c:1956
+#: ../providers/mysql/gda-mysql-provider.c:1392
+#: ../providers/postgres/gda-postgres-provider.c:2043
 #, fuzzy, c-format
 msgid "Parameter '%s' is invalid"
 msgstr "ཚད་བཟུང་མིང་།"
 
-#: ../libgda/gda-statement.c:1222
+#: ../libgda/gda-statement.c:1220
 #, fuzzy, c-format
 msgid "Unnamed parameter"
 msgstr "ནུས་མེད་ཚཐ་བཟུང་ '%s'"
 
-#: ../libgda/gda-statement.c:1788
+#: ../libgda/gda-statement.c:1786
 #, c-format
 msgid "Join is not in a FROM statement"
 msgstr ""
 
-#: ../libgda/gda-statement.c:1795
+#: ../libgda/gda-statement.c:1793
 #, fuzzy, c-format
 msgid "Could not find target the join is for"
 msgstr "གནས་ས་གིས་ངེས་འཛིན་འབད་མ་ཚུགས།"
 
-#: ../libgda/gda-util.c:443
+#: ../libgda/gda-util.c:449
 #, c-format
 msgid "Field number %d not found in source named '%s'"
 msgstr "ས་སྒོ་ཨང་ %d འབྱུང་ཁུངས་མིང་བཏགས་ཡོད་མི་ནང་འཚོལ་མ་ཐོབ '%s'"
 
-#: ../libgda/gda-util.c:620
+#: ../libgda/gda-util.c:621
 #, c-format
 msgid "SELECT statement has no FROM part"
 msgstr ""
 
-#: ../libgda/gda-util.c:625 ../libgda/gda-util.c:632
+#: ../libgda/gda-util.c:626 ../libgda/gda-util.c:633
 #, c-format
 msgid "SELECT statement involves more than one table or expression"
 msgstr ""
 
-#: ../libgda/gda-util.c:642
+#: ../libgda/gda-util.c:643
 #, c-format
 msgid "Can only build modification statement for tables"
 msgstr ""
 
-#: ../libgda/gda-util.c:661 ../libgda/gda-util.c:669
+#: ../libgda/gda-util.c:662 ../libgda/gda-util.c:670
 #, fuzzy, c-format
 msgid "Table does not have any primary key"
 msgstr "ལེགས་བཅོས་འབད་ནི་དམིགས་གཏད་ཐིག་ཁྲམ་ལུ་ངེས་འཛིན་འབད་ཡོད་མི་གཞི་རིམ་ལྡེ་མིག་གང་རུང་མེད།"
 
-#: ../libgda/gda-util.c:692
+#: ../libgda/gda-util.c:693
 #, c-format
 msgid "Table's primary key is not selected"
 msgstr ""
 
-#: ../libgda/gda-util.c:882
+#: ../libgda/gda-util.c:885
 #, fuzzy, c-format
 msgid "Could not compute any field to insert into"
 msgstr "ཡིག་སྣོད་ཁ་ཕྱེ་མ་ཚུགས %s"
@@ -1621,7 +1627,7 @@ msgstr "བུ་ལིན་གནས་གོང་ཚུ་ལེགས་ས
 msgid "Boolean representation"
 msgstr "བི་ལིན་ཁྱད་ཚབ།"
 
-#: ../libgda/handlers/gda-handler-numerical.c:136
+#: ../libgda/handlers/gda-handler-numerical.c:138
 msgid "Numerical representation"
 msgstr "ཨང་གྲངས་ཀྱི་ཁྱད་ཚབ།"
 
@@ -1653,6 +1659,170 @@ msgstr "ཇི་ཌི་ཨེ་དབྱེ་བ་ལེགས་སྐྱ
 msgid "Gda type representation"
 msgstr "ཇི་ཌི་ཨེ་དབྱེ་བ་ཁྱད་ཚབ།"
 
+#: ../libgda/providers-support/gda-pmodel.c:242
+msgid "GdaSet used when the SELECT statement was executed"
+msgstr ""
+
+#: ../libgda/providers-support/gda-pmodel.c:757
+#, fuzzy, c-format
+msgid "Incorrect SQL expression"
+msgstr "ཟུར་ཐོ་བཀདོ་ཡོད་མི་ས་སྒོ་ཡང་ན་གསལ་བརྗོད།"
+
+#: ../libgda/providers-support/gda-pmodel.c:778
+#: ../libgda/providers-support/gda-pmodel.c:1941
+#, c-format
+msgid "Internal error: the \"prepared-stmt\" property has not been set"
+msgstr ""
+
+#: ../libgda/providers-support/gda-pmodel.c:785
+#: ../libgda/providers-support/gda-pmodel.c:1948
+#, c-format
+msgid "Internal error: can't get the prepared statement's actual statement"
+msgstr ""
+
+#: ../libgda/providers-support/gda-pmodel.c:791
+#, fuzzy, c-format
+msgid "Unsupported type of SELECT statement"
+msgstr "ཨོ་རེ་ཀཱེལ་གསལ་བཤད་གྲ་སྒྲིག་འབད་མ་ཚུགས།"
+
+#: ../libgda/providers-support/gda-pmodel.c:859
+#, fuzzy, c-format
+msgid "INSERT statement must contain values to insert"
+msgstr "བཙུགས་ ལུ་གསལ་བརྗོད་གནས་གོང་ཚུ་ བཙུགས་ས་སྒོ་ཚུ་ལས་མངམ་ཡོད།"
+
+#: ../libgda/providers-support/gda-pmodel.c:865
+#, c-format
+msgid "INSERT statement must insert only one row"
+msgstr ""
+
+#: ../libgda/providers-support/gda-pmodel.c:892
+#, c-format
+msgid "DELETE statement must have a WHERE part"
+msgstr ""
+
+#: ../libgda/providers-support/gda-pmodel.c:932
+#, fuzzy, c-format
+msgid "UPDATE statement must have a WHERE part"
+msgstr "དཔེ་ལུ་དུས་མཐུན་བཟོ་ནི་མཐུན་མོང་མ་ཡིན་པའི་གནས་གོང་མེན་མི་གང་རུང་མེདཔ་ཨིན།"
+
+#: ../libgda/providers-support/gda-pmodel.c:985
+#, c-format
+msgid "Modification statement uses an unknown '%s' parameter"
+msgstr ""
+
+#: ../libgda/providers-support/gda-pmodel.c:1001
+#, c-format
+msgid "Modification statement's  '%s' parameter is a %s when it should be a %s"
+msgstr ""
+
+#: ../libgda/providers-support/gda-pmodel.c:1016
+#, c-format
+msgid "Modification statement must be an INSERT, UPDATE or DELETE statement"
+msgstr ""
+
+#: ../libgda/providers-support/gda-pmodel.c:1063
+#: ../libgda/providers-support/gda-pmodel.c:1269
+#, fuzzy, c-format
+msgid "No connection to use"
+msgstr "ཌི་ཨེསི་ཨེན་གྱི་མཐུད་ལམ་ལག་ལེན་འཐབ་ནི་ལུ།"
+
+#: ../libgda/providers-support/gda-pmodel.c:1109
+#, c-format
+msgid "Invalid unique row condition (ony equal operators are allowed)"
+msgstr ""
+
+#: ../libgda/providers-support/gda-pmodel.c:1141
+#: ../libgda/providers-support/gda-pmodel.c:1196
+#, fuzzy, c-format
+msgid "Unique row condition has already been specified"
+msgstr "ཡིག་སྣོད་ '%s' ཧེ་མ་ལས་ཡོདཔ།"
+
+#: ../libgda/providers-support/gda-pmodel.c:1278
+#: ../libgda/providers-support/gda-pmodel.c:1289
+#, fuzzy, c-format
+msgid "No table to select from in SELECT statement"
+msgstr "ཨོ་རེ་ཀཱེལ་གསལ་བཤད་གྲ་སྒྲིག་འབད་མ་ཚུགས།"
+
+#: ../libgda/providers-support/gda-pmodel.c:1283
+#, c-format
+msgid "SELECT statement uses more than one table to select from"
+msgstr ""
+
+#: ../libgda/providers-support/gda-pmodel.c:1795
+#: ../libgda/providers-support/gda-pmodel.c:1888
+#, fuzzy, c-format
+msgid "Some columns can't be modified"
+msgstr "བར་ཆར་འདི་ཤུགས་ལྡན་བཟོ་མི་ཚུགས!"
+
+#: ../libgda/providers-support/gda-pmodel.c:1988
+#, c-format
+msgid "Unable to identify a way to fetch a single row"
+msgstr ""
+
+#: ../libgda/providers-support/gda-pmodel.c:1995
+#, fuzzy, c-format
+msgid "Can only operate on non compound SELECT statements"
+msgstr "ཨོ་རེ་ཀཱེལ་གསལ་བཤད་གྲ་སྒྲིག་འབད་མ་ཚུགས།"
+
+#: ../libgda/providers-support/gda-pmodel.c:2091
+#: ../libgda/providers-support/gda-pmodel.c:2214
+#: ../libgda/providers-support/gda-pmodel.c:2284
+#: ../libgda/providers-support/gda-pmodel.c:2360
+#: ../libgda/providers-support/gda-pmodel.c:2540
+#, fuzzy, c-format
+msgid "Data model does not support random access"
+msgstr "དཔེ་ཚུ་གིས་གང་འབྱུང་འཛུལ་སྤྱོད་འབད་ནི་རྒྱབ་སྐྱོར་མི་འབད་ ད་ལྟོ་སྟོན་དོ\n"
+
+#: ../libgda/providers-support/gda-pmodel.c:2096
+#: ../libgda/providers-support/gda-pmodel.c:2219
+#: ../libgda/providers-support/gda-pmodel.c:2289
+#, c-format
+msgid "No UPDATE statement provided"
+msgstr ""
+
+#: ../libgda/providers-support/gda-pmodel.c:2131
+#: ../libgda/providers-support/gda-pmodel.c:2242
+#: ../libgda/providers-support/gda-pmodel.c:2336
+#: ../libgda/providers-support/gda-pmodel.c:2436
+#: ../libgda/providers-support/gda-pmodel.c:2562
+#, fuzzy, c-format
+msgid "Wrong value type"
+msgstr "ནུས་མེད་ཚཐ་བཟུང་ '%s'"
+
+#: ../libgda/providers-support/gda-pmodel.c:2237
+#: ../libgda/providers-support/gda-pmodel.c:2330
+#: ../libgda/providers-support/gda-pmodel.c:2430
+#, fuzzy, c-format
+msgid "Column %d can't be modified"
+msgstr "བར་ཆར་འདི་ཤུགས་ལྡན་བཟོ་མི་ཚུགས!"
+
+#: ../libgda/providers-support/gda-pmodel.c:2297
+#, fuzzy, c-format
+msgid "Too many values (%d as maximum)"
+msgstr "ཐོ་ཡིག་ནང་གནས་གོང་གནམ་མེད་ས་མེད་ཡོདཔ།"
+
+#: ../libgda/providers-support/gda-pmodel.c:2365
+#, c-format
+msgid "No INSERT statement provided"
+msgstr ""
+
+#: ../libgda/providers-support/gda-pmodel.c:2370
+#, c-format
+msgid "Cannot add a row because the number of rows in unknown"
+msgstr ""
+
+#: ../libgda/providers-support/gda-pmodel.c:2397
+#: ../libgda/sql-parser/gda-statement-struct-insert.c:336
+#: ../libgda/sql-parser/gda-statement-struct-insert.c:345
+#, c-format
+msgid "Missing values to insert in INSERT statement"
+msgstr ""
+
+#: ../libgda/providers-support/gda-pmodel.c:2545
+#, c-format
+msgid "No DELETE statement provided"
+msgstr ""
+
 #: ../libgda/sqlite/gda-sqlite-ddl.c:198
 #: ../providers/mysql/gda-mysql-ddl.c:311
 #: ../providers/postgres/gda-postgres-ddl.c:361
@@ -1679,7 +1849,7 @@ msgstr ""
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:264
 #: ../providers/bdb/gda-bdb-provider.c:155
 #: ../providers/mdb/gda-mdb-provider.c:229
-#: ../providers/mysql/gda-mysql-provider.c:500
+#: ../providers/mysql/gda-mysql-provider.c:501
 #: ../providers/postgres/gda-postgres-provider.c:587
 #, fuzzy
 msgid "Provider does not support asynchronous connection open"
@@ -1714,8 +1884,8 @@ msgstr "འགྲུབ་འབྲས་ཀཱལ་བེཀསི་ཨེས
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:825
 #: ../libgda/sqlite/gda-sqlite-provider.c:858
-#: ../providers/mysql/gda-mysql-provider.c:729
-#: ../providers/mysql/gda-mysql-provider.c:769
+#: ../providers/mysql/gda-mysql-provider.c:730
+#: ../providers/mysql/gda-mysql-provider.c:770
 #: ../providers/postgres/gda-postgres-provider.c:914
 #: ../providers/postgres/gda-postgres-provider.c:952
 #, c-format
@@ -1723,7 +1893,7 @@ msgid "Missing spec. file '%s'"
 msgstr "སི་པེཀ་ཡིག་སྣོད་བརླག་སྟོར་ཞུགས་ཡོདཔ '%s'"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:916
-#: ../providers/mysql/gda-mysql-provider.c:819
+#: ../providers/mysql/gda-mysql-provider.c:820
 #: ../providers/postgres/gda-postgres-provider.c:1015
 #, fuzzy, c-format
 msgid "Provider does not support asynchronous server operation"
@@ -1770,75 +1940,75 @@ msgstr ""
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1814
-#: ../providers/mysql/gda-mysql-provider.c:1305
-#: ../providers/postgres/gda-postgres-provider.c:1910
+#: ../libgda/sqlite/gda-sqlite-provider.c:1815
+#: ../providers/mysql/gda-mysql-provider.c:1306
+#: ../providers/postgres/gda-postgres-provider.c:1911
 #, fuzzy, c-format
 msgid "Provider does not support asynchronous statement execution"
 msgstr "སྤེལ་མི་གིས་ %s ཐོ་འགོད་ལས་འགན་བསྟར་སྤྱོད་མ་འབད།"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1888
+#: ../libgda/sqlite/gda-sqlite-provider.c:1889
 msgid "Empty statement"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1927
-#: ../libgda/sqlite/gda-sqlite-provider.c:1930
-#: ../providers/mysql/gda-mysql-provider.c:1364
-#: ../providers/mysql/gda-mysql-provider.c:1367
-#: ../providers/postgres/gda-postgres-provider.c:2015
-#: ../providers/postgres/gda-postgres-provider.c:2018
+#: ../libgda/sqlite/gda-sqlite-provider.c:1928
+#: ../libgda/sqlite/gda-sqlite-provider.c:1931
+#: ../providers/mysql/gda-mysql-provider.c:1365
+#: ../providers/mysql/gda-mysql-provider.c:1368
+#: ../providers/postgres/gda-postgres-provider.c:2016
+#: ../providers/postgres/gda-postgres-provider.c:2019
 #, fuzzy, c-format
 msgid "Missing parameter(s) to execute query"
 msgstr "ཚད་བཟུང་ཚུ་བརླག་སྟོར་ཞུགས་ཡོདཔ།"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1945
-#: ../providers/mysql/gda-mysql-provider.c:1381
-#: ../providers/postgres/gda-postgres-provider.c:2032
+#: ../libgda/sqlite/gda-sqlite-provider.c:1946
+#: ../providers/mysql/gda-mysql-provider.c:1382
+#: ../providers/postgres/gda-postgres-provider.c:2033
 #, fuzzy, c-format
 msgid "Missing parameter '%s' to execute query"
 msgstr "དོན་ལུ་ཚད་བཟུང་བརླག་སྟོར་ཞུགས་ཡོདཔ།'%s'"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2031
+#: ../libgda/sqlite/gda-sqlite-provider.c:2041
 #, fuzzy, c-format
 msgid "Non handled data type '%s'"
 msgstr "གནས་སྡུད་དབྱེ་བ་འཚོལ་མ་ཐོབ %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2163
+#: ../libgda/sqlite/gda-sqlite-provider.c:2173
 #, fuzzy
 msgid "Function requires one argument"
 msgstr "གནས་སྟངས་འདི་ལུ་ཉུང་མཐའ་སྒྲུབ་རྟགས་གཅིག་དགོཔ་ཨིན།"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:222
-#: ../providers/mysql/gda-mysql-recordset.c:303
-#: ../providers/postgres/gda-postgres-recordset.c:277
+#: ../libgda/sqlite/gda-sqlite-recordset.c:223
+#: ../providers/mysql/gda-mysql-recordset.c:346
+#: ../providers/postgres/gda-postgres-recordset.c:279
 #, fuzzy, c-format
 msgid "Column %d is out of range (0-%d), ignoring its specified type"
 msgstr "ཀེར་ཐིག་ %d ཁྱབ་ཚད་ ༠ གི་ཕྱི་ཁ་ - %d"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:395
-#: ../providers/postgres/gda-postgres-recordset.c:650
+#: ../libgda/sqlite/gda-sqlite-recordset.c:397
+#: ../providers/postgres/gda-postgres-recordset.c:656
 #, c-format
 msgid "Invalid date '%s' (date format should be YYYY-MM-DD)"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:409
-#: ../providers/postgres/gda-postgres-recordset.c:670
+#: ../libgda/sqlite/gda-sqlite-recordset.c:411
+#: ../providers/postgres/gda-postgres-recordset.c:676
 #, c-format
 msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms])"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:423
-#: ../providers/postgres/gda-postgres-recordset.c:662
+#: ../libgda/sqlite/gda-sqlite-recordset.c:425
+#: ../providers/postgres/gda-postgres-recordset.c:668
 #, c-format
 msgid "Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:463
+#: ../libgda/sqlite/gda-sqlite-recordset.c:465
 #, c-format
 msgid "SQLite provider fatal internal error"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:511
+#: ../libgda/sqlite/gda-sqlite-recordset.c:513
 #, fuzzy, c-format
 msgid "Row %d not found"
 msgstr "ཐིག་ཁྲམ་ %s འཚོལ་མ་ཐོབ།"
@@ -1911,112 +2081,112 @@ msgstr "ཚིག་སྦྱོར་འཛོལ་བ་སྦོ་ལོག
 msgid "Overflow error at line %d, column %d"
 msgstr ""
 
-#: ../libgda/sql-parser/gda-statement-struct.c:468
+#: ../libgda/sql-parser/gda-statement-struct.c:474
 #, c-format
 msgid "GdaSqlField is not part of an INSERT or UPDATE statement"
 msgstr ""
 
-#: ../libgda/sql-parser/gda-statement-struct.c:481
+#: ../libgda/sql-parser/gda-statement-struct.c:487
 #, fuzzy, c-format
 msgid "Missing table in statement"
 msgstr "བཙུགས་ དམིགས་གཏད་ངོ་བོ་བརླག་སྟོར་ཞུགས་ཡོདཔ།"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:501
-#: ../libgda/sql-parser/gda-statement-struct.c:726
+#: ../libgda/sql-parser/gda-statement-struct.c:507
+#: ../libgda/sql-parser/gda-statement-struct.c:732
 #, fuzzy, c-format
 msgid "Column '%s' not found"
 msgstr "ཁྱབ་ཚད་ཀྱི་ཀེར་ཐིག་ཕྱི་ཁ།"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:536
-#: ../libgda/sql-parser/gda-statement-struct.c:663
+#: ../libgda/sql-parser/gda-statement-struct.c:542
+#: ../libgda/sql-parser/gda-statement-struct.c:669
 #, fuzzy, c-format
 msgid "GdaSqlSelectField is not part of a SELECT statement"
 msgstr "ཨོ་རེ་ཀཱེལ་གསལ་བཤད་གྲ་སྒྲིག་འབད་མ་ཚུགས།"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:595
+#: ../libgda/sql-parser/gda-statement-struct.c:601
 #, fuzzy, c-format
 msgid "Missing table name in statement"
 msgstr "བཙུགས་ དམིགས་གཏད་ངོ་བོ་བརླག་སྟོར་ཞུགས་ཡོདཔ།"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:603
-#: ../libgda/sql-parser/gda-statement-struct.c:708
-#: ../libgda/sql-parser/gda-statement-struct.c:755
+#: ../libgda/sql-parser/gda-statement-struct.c:609
+#: ../libgda/sql-parser/gda-statement-struct.c:714
+#: ../libgda/sql-parser/gda-statement-struct.c:761
 #, fuzzy, c-format
 msgid "Table '%s' not found"
 msgstr "ཐིག་ཁྲམ་ %s འཚོལ་མ་ཐོབ།"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:682
-#: ../libgda/sql-parser/gda-statement-struct.c:695
+#: ../libgda/sql-parser/gda-statement-struct.c:688
+#: ../libgda/sql-parser/gda-statement-struct.c:701
 #, fuzzy, c-format
 msgid "Could not identify table for field '%s'"
 msgstr "ཨོ་རེ་ཀཱེལ་ཚད་བཟུང་འདི་ཐོབ་མ་ཚུགས།"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:877
+#: ../libgda/sql-parser/gda-statement-struct.c:883
 #, c-format
 msgid "Expression can't have both a type cast and a parameter specification"
 msgstr ""
 
-#: ../libgda/sql-parser/gda-statement-struct.c:887
-#: ../libgda/sql-parser/gda-statement-struct.c:900
-#: ../libgda/sql-parser/gda-statement-struct.c:913
+#: ../libgda/sql-parser/gda-statement-struct.c:893
+#: ../libgda/sql-parser/gda-statement-struct.c:906
+#: ../libgda/sql-parser/gda-statement-struct.c:919
 #, c-format
 msgid "'%s' is not a valid identifier"
 msgstr ""
 
-#: ../libgda/sql-parser/gda-statement-struct.c:890
-#: ../libgda/sql-parser/gda-statement-struct.c:903
-#: ../libgda/sql-parser/gda-statement-struct.c:916
+#: ../libgda/sql-parser/gda-statement-struct.c:896
+#: ../libgda/sql-parser/gda-statement-struct.c:909
+#: ../libgda/sql-parser/gda-statement-struct.c:922
 #, c-format
 msgid "Empty identifier"
 msgstr ""
 
-#: ../libgda/sql-parser/gda-statement-struct.c:925
+#: ../libgda/sql-parser/gda-statement-struct.c:931
 #, fuzzy, c-format
 msgid "Operation has no operand"
 msgstr "མཐུད་ལམ་ཁ་ཕྱེ་མེདཔ!"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:948
-#: ../libgda/sql-parser/gda-statement-struct.c:955
-#: ../libgda/sql-parser/gda-statement-struct.c:965
-#: ../libgda/sql-parser/gda-statement-struct.c:977
-#: ../libgda/sql-parser/gda-statement-struct.c:985
+#: ../libgda/sql-parser/gda-statement-struct.c:954
+#: ../libgda/sql-parser/gda-statement-struct.c:961
+#: ../libgda/sql-parser/gda-statement-struct.c:971
+#: ../libgda/sql-parser/gda-statement-struct.c:983
+#: ../libgda/sql-parser/gda-statement-struct.c:991
 #, fuzzy, c-format
 msgid "Wrong number of operands"
 msgstr "གྲལ་ཐིག་ཨང་བཅད་མཚམས་ཚུ་གི་ཕྱི་ཁ།"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:991
+#: ../libgda/sql-parser/gda-statement-struct.c:997
 #, fuzzy, c-format
 msgid "Unknown operator %d"
 msgstr "འཛོལ་བ་མ་ཤེསཔ།"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1014
+#: ../libgda/sql-parser/gda-statement-struct.c:1020
 #, fuzzy, c-format
 msgid "Missing expression in select field"
 msgstr "བཙུགས་ གསལ་བརྗོད་འདི་དམིགས་གཏད་ས་སྒོ་ཅིག་ཨིན།"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1023
+#: ../libgda/sql-parser/gda-statement-struct.c:1029
 #, fuzzy, c-format
 msgid "Missing expression in select target"
 msgstr "བཙུགས་ གསལ་བརྗོད་འདི་དམིགས་གཏད་ས་སྒོ་ཅིག་ཨིན།"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1032
+#: ../libgda/sql-parser/gda-statement-struct.c:1038
 #, c-format
 msgid ""
 "Join can't at the same time specify a join condition and a list of fields to "
 "join on"
 msgstr ""
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1037
+#: ../libgda/sql-parser/gda-statement-struct.c:1043
 #, c-format
 msgid "Cross join can't have a join condition or a list of fields to join on"
 msgstr ""
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1046
+#: ../libgda/sql-parser/gda-statement-struct.c:1052
 #, c-format
 msgid "Empty FROM clause"
 msgstr ""
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1320
+#: ../libgda/sql-parser/gda-statement-struct.c:1326
 #, fuzzy, c-format
 msgid "Select field is not in a SELECT statement"
 msgstr "ཨོ་རེ་ཀཱེལ་གསལ་བཤད་གྲ་སྒྲིག་འབད་མ་ཚུགས།"
@@ -2079,12 +2249,6 @@ msgstr ""
 msgid ""
 "INSERT statement does not have the same number of target columns and "
 "expressions"
-msgstr ""
-
-#: ../libgda/sql-parser/gda-statement-struct-insert.c:336
-#: ../libgda/sql-parser/gda-statement-struct-insert.c:345
-#, c-format
-msgid "Missing values to insert in INSERT statement"
 msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:356
@@ -2388,66 +2552,78 @@ msgstr "གསལ་བཀོད་འབད་ཡོད་མི་གནས་
 msgid "Mysql version 5.0 at least is required"
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-provider.c:404
+#: ../providers/mysql/gda-mysql-provider.c:405
 #, fuzzy, c-format
 msgid "Cannot give a UNIX SOCKET if you also provide either a HOST or a PORT"
 msgstr "ཁྱོད་ཀྱིས་ཧོསིཊི་ཡང་ན་འདྲེན་ལམ་ཅིག་བྱིན་པ་ཅིན་ ཁྱོད་ཀྱིས་ཡུ་ནིགསི་སོཀེཊི་ཅིག་བྱིན་མི་ཚུགས།"
 
-#: ../providers/mysql/gda-mysql-provider.c:453
+#: ../providers/mysql/gda-mysql-provider.c:454
 #, c-format
 msgid ""
 "Could not set client charset to UTF8. Using %s. It'll be problems with non "
 "UTF-8 characters"
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-provider.c:510
+#: ../providers/mysql/gda-mysql-provider.c:511
 #, fuzzy
 msgid "The connection string must contain the DB_NAME values"
 msgstr "མཐུད་ལམ་ཡིག་རྒྱུན་འདི་ནང་ ཌི་བི་ཨེན་ཨེམ་ཨི་ གནས་གོང་ཅིག་ཡོད་དགོཔ་ཨིན།(_N)"
 
-#: ../providers/mysql/gda-mysql-provider.c:1211
-#, c-format
-msgid "Unnamed holder is not allowed in prepared statement."
+#: ../providers/mysql/gda-mysql-provider.c:1212
+#, fuzzy, c-format
+msgid "Unnamed statement parameter is not allowed in prepared statement."
+msgstr "འདྲི་དཔྱད་ %s འདི་སེལ་འཐུ་འདྲི་དཔྱད་ཅིག་མེན།"
+
+#: ../providers/mysql/gda-mysql-provider.c:1465
+msgid ""
+"Could not use CURSOR. Mysql version 5.0 at least is required. Using random "
+"access anyway."
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-recordset.c:188
-#: ../providers/postgres/gda-postgres-recordset.c:137
+#: ../providers/mysql/gda-mysql-recordset.c:140
+msgid ""
+"Could not use CURSOR. Mysql version 5.0 at least is required. Chunk size "
+"ignored."
+msgstr ""
+
+#: ../providers/mysql/gda-mysql-recordset.c:230
+#: ../providers/postgres/gda-postgres-recordset.c:139
 msgid "Number of rows fetched at a time"
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-recordset.c:196
+#: ../providers/mysql/gda-mysql-recordset.c:238
 msgid "Number of row chunks read since the object creation"
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-recordset.c:394
-#: ../providers/mysql/gda-mysql-recordset.c:603
+#: ../providers/mysql/gda-mysql-recordset.c:437
+#: ../providers/mysql/gda-mysql-recordset.c:647
 #, fuzzy, c-format
 msgid "Invalid column bind data type. %d\n"
 msgstr "འབྱུངས་ཁུངས་གནས་སྡུད་དཔེ་ནང་གནས་དེ་མེད་པའི་ཀེར་ཐིག %d"
 
-#: ../providers/mysql/gda-mysql-recordset.c:501
+#: ../providers/mysql/gda-mysql-recordset.c:545
 #, c-format
 msgid "Type %s not mapped for value %d"
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-recordset.c:545
-#: ../providers/mysql/gda-mysql-recordset.c:597
+#: ../providers/mysql/gda-mysql-recordset.c:589
+#: ../providers/mysql/gda-mysql-recordset.c:641
 #, c-format
 msgid "Type %s not mapped for value %p"
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-recordset.c:561
+#: ../providers/mysql/gda-mysql-recordset.c:605
 #, c-format
 msgid "Type %s not mapped for value %f"
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-recordset.c:651
+#: ../providers/mysql/gda-mysql-recordset.c:695
 #: ../providers/postgres/gda-postgres-provider.c:1180
 #: ../providers/postgres/gda-postgres-provider.c:1281
 #: ../providers/postgres/gda-postgres-provider.c:1334
 #: ../providers/postgres/gda-postgres-provider.c:1387
-#: ../providers/postgres/gda-postgres-recordset.c:439
-#: ../providers/postgres/gda-postgres-recordset.c:467
+#: ../providers/postgres/gda-postgres-recordset.c:445
+#: ../providers/postgres/gda-postgres-recordset.c:473
 #, fuzzy, c-format
 msgid "Internal error"
 msgstr "ནང་འཁོད་དུས་ཚོད།"
@@ -2482,6 +2658,7 @@ msgstr "ཀེར་ཐིག་དང་པམ་བཟུམ་སྦེ།"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:10
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:2
+#: ../tools/command-exec.c:821
 msgid "Auto increment"
 msgstr "རང་བཞིན་ཡར་འཕར།"
 
@@ -2546,7 +2723,7 @@ msgstr "སྟོང་ཆ་མེདཔ།"
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:11
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:52
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:31
-#: ../tools/command-exec.c:857
+#: ../tools/command-exec.c:887
 msgid "Primary key"
 msgstr "གཞི་རིམ་ལྡེ་མིག"
 
@@ -2568,7 +2745,7 @@ msgstr "ཐིག་ཁྲམ་གྱི་མིང་།"
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:13
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:73
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:42
-#: ../tools/command-exec.c:935
+#: ../tools/command-exec.c:965
 msgid "Unique"
 msgstr "མཐུན་མོང་མ་ཡིད་པ།"
 
@@ -3109,7 +3286,7 @@ msgstr "གཏན་བཟོ་ཡོད་མི།"
 #. foreign key spec
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:83
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:29
-#: ../tools/command-exec.c:888
+#: ../tools/command-exec.c:918
 msgid "Foreign key"
 msgstr "ཕྱི་རྒྱལ་ལྡེ་མིག"
 
@@ -3514,20 +3691,20 @@ msgstr "ཟུར་གནས་གནས་རིམ་ཡང་བསྐྱར
 msgid "Wrong savepoint name '%s'"
 msgstr ""
 
-#: ../providers/postgres/gda-postgres-provider.c:2053
-#: ../providers/postgres/gda-postgres-provider.c:2055
+#: ../providers/postgres/gda-postgres-provider.c:2064
+#: ../providers/postgres/gda-postgres-provider.c:2066
 #, fuzzy, c-format
 msgid "Cannot start transaction"
 msgstr "ཨོ་རེ་ཀཱེལ་སྤྲོད་ལེན་འདི་འགོ་བཙུགས་མ་ཚུགས།"
 
-#: ../providers/postgres/gda-postgres-provider.c:2214
-#: ../providers/postgres/gda-postgres-provider.c:2250
-#: ../providers/postgres/gda-postgres-provider.c:2285
+#: ../providers/postgres/gda-postgres-provider.c:2225
+#: ../providers/postgres/gda-postgres-provider.c:2261
+#: ../providers/postgres/gda-postgres-provider.c:2296
 #, fuzzy, c-format
 msgid "Could not set the XA transaction ID parameter"
 msgstr "ཨོ་རེ་ཀཱེལ་སྤྲོད་ལེན་མིང་འདི་གཞི་སྒྲིག་འབད་མ་ཚུགས།"
 
-#: ../providers/postgres/gda-postgres-recordset.c:142
+#: ../providers/postgres/gda-postgres-recordset.c:144
 msgid "Number of rows chunks read since the object creation"
 msgstr ""
 
@@ -4043,26 +4220,30 @@ msgstr "བསམ་བཀོད།"
 msgid "Nullable"
 msgstr "ཐིག་ཁྲམ།"
 
-#: ../tools/command-exec.c:792
+#: ../tools/command-exec.c:790
+msgid "Extra"
+msgstr ""
+
+#: ../tools/command-exec.c:793
 #, c-format
 msgid "List of columns for view '%s'"
 msgstr ""
 
-#: ../tools/command-exec.c:796
+#: ../tools/command-exec.c:797
 #, c-format
 msgid "List of columns for table '%s'"
 msgstr ""
 
-#: ../tools/command-exec.c:807
+#: ../tools/command-exec.c:808
 #, fuzzy
 msgid "yes"
 msgstr "ཨིན།"
 
-#: ../tools/command-exec.c:807
+#: ../tools/command-exec.c:808
 msgid "no"
 msgstr ""
 
-#: ../tools/command-exec.c:828
+#: ../tools/command-exec.c:858
 #, fuzzy, c-format
 msgid "View definition: %s"
 msgstr "ངེས་ཚིག"
@@ -4625,6 +4806,10 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Could not save history file to '%s': %s"
 msgstr "ཡིག་སྣོད་སྲུངས་བཞག་འབད་མ་ཚུགསཔ %s"
+
+#, fuzzy
+#~ msgid "No SELECT statement to use"
+#~ msgstr "ཨོ་རེ་ཀཱེལ་གསལ་བཤད་གྲ་སྒྲིག་འབད་མ་ཚུགས།"
 
 #~ msgid "Wrong number of values in values list"
 #~ msgstr "གནས་གོང་ཐོ་ཡིག་ནང་གནས་གོང་ཚུ་གི་ཨང་ཕྱི་འགྱུར།"
@@ -5483,9 +5668,6 @@ msgstr "ཡིག་སྣོད་སྲུངས་བཞག་འབད་མ
 #~ msgid "Missing required attributes for <gda_dict_type>"
 #~ msgstr "དོན་ལུ་དགོས་མཁོ་ཡོད་པའི་ཁྱད་ཆོས་ཚུ་བརླག་སྟོར་ཞུགས་ཡོདཔ <gda_dict_type>"
 
-#~ msgid "DSN of the connection to use"
-#~ msgstr "ཌི་ཨེསི་ཨེན་གྱི་མཐུད་ལམ་ལག་ལེན་འཐབ་ནི་ལུ།"
-
 #~ msgid "Could not load XML data for %s (no registered load function)"
 #~ msgstr ""
 #~ "དོན་ལུ་ཨེགསི་ཨེམ་ཨེལ་གནས་སྡུད་མངོན་གསལ་འབད་མ་ཚུགས་ %s(མངོན་གསལ་ལས་འགན་ཐོ་འགོད་འབད་ཡོད་མི་"
@@ -5782,9 +5964,6 @@ msgstr "ཡིག་སྣོད་སྲུངས་བཞག་འབད་མ
 
 #~ msgid "INSERT field does not have a valid syntax"
 #~ msgstr "བཙུགས་ ས་སྒོ་ལུ་ནུས་ཅན་ཚིག་སྦྱོར་ཅིག་མེད།"
-
-#~ msgid "INSERT has more expression values than insert fields"
-#~ msgstr "བཙུགས་ ལུ་གསལ་བརྗོད་གནས་གོང་ཚུ་ བཙུགས་ས་སྒོ་ཚུ་ལས་མངམ་ཡོད།"
 
 #~ msgid "INSERT has more insert fields than expression values"
 #~ msgstr "བཙུགས་ ལུ་བཙུགས་ས་སྒོ་ཚུ་གསལ་བརྗོད་གནས་གོང་ཚུ་ལས་མངམ་ཡོད།"

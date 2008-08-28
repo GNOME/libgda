@@ -505,10 +505,10 @@ do_test_proxied_model_modif (void)
 	free_values_list (values);
 	clean_expected_signals (proxy);
 	if (!check_data_model_value (proxy, 1, 0, G_TYPE_STRING, "SmallCity2")) goto out;
-	if (!check_data_model_value (proxy, 1, 1, G_TYPE_STRING, NULL)) goto out;
+	if (!check_data_model_value (proxy, 1, 1, G_TYPE_STRING, "ARG")) goto out;
 	if (!check_data_model_value (proxy, 1, 2, G_TYPE_STRING, "4907")) goto out;
 	if (!check_data_model_value (proxy, 1, 3, G_TYPE_STRING, "SmallCity2")) goto out;
-	if (!check_data_model_value (proxy, 1, 4, G_TYPE_STRING, NULL)) goto out;
+	if (!check_data_model_value (proxy, 1, 4, G_TYPE_STRING, "ARG")) goto out;
 	if (!check_data_model_value (proxy, 1, 5, G_TYPE_STRING, "4907")) goto out;
 
 	/* 
@@ -1444,7 +1444,7 @@ check_data_model_set_values (GdaDataModel *model, gint row, GList *values)
 	gint col;
 	for (col = 0, list = values; list; col++, list = list->next) {
 		const GValue *cvalue = gda_data_model_get_value_at (model, col, row);
-		if (gda_value_compare_ext (cvalue, (GValue *) list->data)) {
+		if (list->data && gda_value_compare_ext (cvalue, (GValue *) list->data)) {
 #ifdef CHECK_EXTRA_INFO
 			g_print ("ERROR: Read value is not equal to set value: got '%s' and expected '%s'\n",
 				 gda_value_stringify (cvalue), gda_value_stringify ((GValue *) list->data));

@@ -58,6 +58,9 @@ typedef enum {
 	GDA_ENTITY_FIELD_ANY       = GDA_ENTITY_FIELD_VISIBLE | GDA_ENTITY_FIELD_INVISIBLE
 } GdaQueryFieldState;
 
+/* possible different keywords used when qualifying a table's column's extra attributes */
+#define GDA_EXTRA_AUTO_INCREMENT "AUTO_INCREMENT"
+
 #endif
 
 

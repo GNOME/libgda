@@ -1774,7 +1774,8 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, sqlite3_int64 la
 			col = gda_data_model_describe_column (model, i);
 			h = gda_holder_new (gda_column_get_g_type (col));
 			id = g_strdup_printf ("+%d", i);
-			g_object_set (G_OBJECT (h), "id", id, "not-null", FALSE, NULL);
+			g_object_set (G_OBJECT (h), "id", id, "not-null", FALSE, 
+				      "name", gda_column_get_name (col), NULL);
 			g_free (id);
 			gda_holder_set_value (h, gda_data_model_get_value_at (model, i, 0));
 			holders = g_slist_prepend (holders, h);
@@ -2089,12 +2090,12 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
                 if (status != SQLITE_DONE) {
                         if (sqlite3_errcode (handle) != SQLITE_OK) {
 				const char *errmsg = sqlite3_errmsg (handle);
-                                sqlite3_reset (ps->sqlite_stmt);
                                 event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
                                 gda_connection_event_set_description (event, errmsg);
-                                gda_connection_add_event (cnc, event);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR, errmsg);
+                                sqlite3_reset (ps->sqlite_stmt);
+                                gda_connection_add_event (cnc, event);
 				gda_connection_internal_statement_executed (cnc, stmt, params, event);
 				if (new_ps)
 					g_object_unref (ps);

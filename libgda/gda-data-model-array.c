@@ -385,7 +385,7 @@ gda_data_model_array_get_row (GdaDataModelArray *model, gint row, GError **error
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), NULL);
 
 	if (row >= model->priv->rows->len) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, GDA_DATA_MODEL_ERROR, 0,
 			     _("Row %d out of range (0-%d)"), row,
 			     model->priv->rows->len- 1);
 		return NULL;
@@ -597,13 +597,13 @@ gda_data_model_array_set_value_at (GdaDataModel *model, gint col, gint row,
         g_return_val_if_fail (row >= 0, FALSE);
 
 	if (amodel->priv->read_only) {
-		g_set_error (error, 0, GDA_DATA_MODEL_ACCESS_ERROR,
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
                              _("Attempting to modify a read-only data model"));
                 return FALSE;
         }
 
 	if (row > amodel->priv->rows->len) {
-		g_set_error (error, 0, GDA_DATA_MODEL_VALUES_LIST_ERROR,
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_VALUES_LIST_ERROR,
 			     _("Row number out of range"));
                 return FALSE;
         }
@@ -637,13 +637,13 @@ gda_data_model_array_set_values (GdaDataModel *model, gint row, GList *values, G
                 return TRUE;
 
 	if (amodel->priv->read_only) {
-		g_set_error (error, 0, GDA_DATA_MODEL_ACCESS_ERROR,
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
                              _("Attempting to modify a read-only data model"));
                 return FALSE;
         }
 
         if (g_list_length (values) > gda_data_model_get_n_columns (model)) {
-                g_set_error (error, 0, GDA_DATA_MODEL_VALUES_LIST_ERROR,
+                g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_VALUES_LIST_ERROR,
                              _("Too many values in list"));
                 return FALSE;
         }
@@ -659,8 +659,6 @@ gda_data_model_array_set_values (GdaDataModel *model, gint row, GList *values, G
 				gda_value_reset_with_type (dest, G_VALUE_TYPE ((GValue *) list->data));
 				gda_value_set_from_value (dest, (GValue *) list->data);
 			}
-			else
-				gda_value_set_null (dest);
 		}
 		gda_data_model_row_updated (model, row);
 		return TRUE;
@@ -678,13 +676,13 @@ gda_data_model_array_append_values (GdaDataModel *model, const GList *values, GE
 	GdaDataModelArray *amodel = (GdaDataModelArray *) model;
 	
         if (amodel->priv->read_only) {
-		g_set_error (error, 0, GDA_DATA_MODEL_ACCESS_ERROR,
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
                              _("Attempting to modify a read-only data model"));
                 return FALSE;
         }
 
 	if (g_list_length ((GList *) values) > amodel->priv->number_of_columns) {
-                g_set_error (error, 0, GDA_DATA_MODEL_VALUES_LIST_ERROR,
+                g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_VALUES_LIST_ERROR,
                              _("Too many values in list"));
                 return FALSE;
         }
@@ -713,7 +711,7 @@ gda_data_model_array_append_row (GdaDataModel *model, GError **error)
 	GdaDataModelArray *amodel = (GdaDataModelArray *) model;
 
 	if (amodel->priv->read_only) {
-		g_set_error (error, 0, GDA_DATA_MODEL_ACCESS_ERROR,
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
                              _("Attempting to modify a read-only data model"));
                 return FALSE;
         }
@@ -738,7 +736,7 @@ gda_data_model_array_remove_row (GdaDataModel *model, gint row, GError **error)
 		return TRUE;
 	}
 
-	g_set_error (error, 0, GDA_DATA_MODEL_ROW_NOT_FOUND_ERROR,
+	g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_NOT_FOUND_ERROR,
 		     _("Row not found in data model"));
 	return FALSE;
 }

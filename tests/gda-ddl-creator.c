@@ -548,6 +548,25 @@ create_server_operation_for_table (GdaDDLCreator *ddlc, GdaServerProvider *prov,
 		if (! gda_server_operation_set_value_at (op, "FALSE", error,
 							 "/FIELDS_A/@COLUMN_UNIQUE/%d", index))
 			goto onerror;
+		if (tcol->extra) {
+			gint i;
+			for (i = 0; i < tcol->extra->len; i++) {
+				const gchar *tmp;
+				tmp = g_array_index (tcol->extra, gchar *, i);
+				if (!strcmp (tmp, GDA_EXTRA_AUTO_INCREMENT)) {
+					if (! gda_server_operation_set_value_at (op, "TRUE", error,
+										 "/FIELDS_A/@COLUMN_AUTOINC/%d", index))
+						goto onerror;
+				}
+				else {
+					g_warning ("Unknown extra keyword '%s'", tmp);
+					TO_IMPLEMENT;
+					g_set_error (error, 0, 0,
+						     "Unknown extra keyword '%s'", tmp);
+					goto onerror;
+				}
+			}
+		}
 		repl = provider_specific_match (ddlc->priv->provider_specifics, prov, "dummy", "/FIELDS_A/@COLUMN_PKEY");
 		if (repl) {
 			if (! gda_server_operation_set_value_at (op, tcol->pkey ? "TRUE" : "FALSE", error,

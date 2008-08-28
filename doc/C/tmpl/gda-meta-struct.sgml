@@ -208,6 +208,7 @@ gda_meta_struct_free (mstruct);
 @pkey: 
 @nullok: 
 @default_value: 
+@extra: 
 
 <!-- ##### MACRO GDA_META_TABLE_COLUMN ##### -->
 <para>
