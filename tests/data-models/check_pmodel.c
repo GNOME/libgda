@@ -65,6 +65,9 @@ main (int argc, char **argv)
 	gint i, ntests = 0, number_failed = 0;
 	GdaConnection *cnc;
 
+	/* set up test environment */
+        g_setenv ("GDA_TOP_BUILD_DIR", TOP_BUILD_DIR, 0);
+	g_setenv ("GDA_TOP_SRC_DIR", TOP_SRC_DIR, TRUE);
 	gda_init ();
 
 	g_unlink ("pmodel.db");

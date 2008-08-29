@@ -3,7 +3,9 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
-	-DCHECK_FILES=\""$(top_srcdir)"\"
+	-DCHECK_FILES=\""$(top_srcdir)"\" \
+	-DTOP_SRC_DIR=\""$(top_srcdir)"\" \
+	-DTOP_BUILD_DIR=\""$(top_builddir)"\"
 
 check_PROGRAMS = check_model_import check_virtual check_data_proxy check_model_copy check_pmodel
 TESTS = check_model_import check_virtual check_data_proxy check_model_copy check_pmodel
@@ -46,4 +48,10 @@ EXTRA_DIST = \
 	check_virtual.csv \
 	city.csv \
 	country.csv \
-	data1.xml
+	data1.xml \
+	pmodel_dbstruct.xml \
+	pmodel_data_customers.xml \
+	pmodel_data_locations.xml
+
+CLEANFILES = \
+	pmodel.db

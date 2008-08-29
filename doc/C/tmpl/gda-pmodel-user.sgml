@@ -1,0 +1,98 @@
+<!-- ##### SECTION Title ##### -->
+Writable data model from a SELECT statement
+
+<!-- ##### SECTION Short_Description ##### -->
+Alter data in the database by writing to a data model resulting from a SELECT statement's execution.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+  This section deals with how to modify a table's data without directly issuing any INSERT, UPDATE or DELETE statement,
+  but by modifying a data model which has been returned when a SELECT statement has been executed.
+</para>
+
+<para>
+  As all Libgda's database providers should be implemented in the same way, any #GdaDataModel returned by a SELECT statement
+  should inherit the #GdaPModel class which implements all the mechanisms to make it possible that any modification
+  made to it lead to a modification made to a table in the database (using INSERT, UPDATE or DELETE statements).
+</para>
+
+<para>
+  The default behaviour is that #GdaDataModel returned by a SELECT statement be read-only, so if one whishes to write
+  to such a data model, he needs to explicitely enable it and at the same time provide information about how to do it
+  (detailling which table will be modified, which column can be modified, how to identify a unique row, etc).
+  The following functions all allow the programmer to provide this specification information.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### FUNCTION gda_pmodel_set_row_selection_condition_sql ##### -->
+<para>
+
+</para>
+
+@model: 
+@sql_where: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_pmodel_set_row_selection_condition ##### -->
+<para>
+
+</para>
+
+@model: 
+@expr: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_pmodel_compute_row_selection_condition ##### -->
+<para>
+
+</para>
+
+@model: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_pmodel_set_modification_statement ##### -->
+<para>
+
+</para>
+
+@model: 
+@mod_stmt: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_pmodel_set_modification_statement_sql ##### -->
+<para>
+
+</para>
+
+@model: 
+@sql: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_pmodel_compute_modification_statements ##### -->
+<para>
+
+</para>
+
+@model: 
+@require_pk: 
+@error: 
+@Returns: 
+
+
