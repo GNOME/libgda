@@ -56,24 +56,24 @@ gda_mysql_recordset_dispose (GObject  *object);
 
 /* virtual methods */
 static gint
-gda_mysql_recordset_fetch_nb_rows (GdaPModel  *model);
+gda_mysql_recordset_fetch_nb_rows (GdaDataSelect  *model);
 static gboolean
-gda_mysql_recordset_fetch_random (GdaPModel  *model,
+gda_mysql_recordset_fetch_random (GdaDataSelect  *model,
 				  GdaRow    **row,
 				  gint        rownum,
 				  GError    **error);
 static gboolean
-gda_mysql_recordset_fetch_next (GdaPModel  *model,
+gda_mysql_recordset_fetch_next (GdaDataSelect  *model,
 				GdaRow    **row,
 				gint        rownum,
 				GError    **error);
 static gboolean
-gda_mysql_recordset_fetch_prev (GdaPModel  *model,
+gda_mysql_recordset_fetch_prev (GdaDataSelect  *model,
 				GdaRow    **row,
 				gint        rownum,
 				GError    **error);
 static gboolean
-gda_mysql_recordset_fetch_at (GdaPModel  *model,
+gda_mysql_recordset_fetch_at (GdaDataSelect  *model,
 			      GdaRow    **row,
 			      gint        rownum,
 			      GError    **error);
@@ -208,7 +208,7 @@ static void
 gda_mysql_recordset_class_init (GdaMysqlRecordsetClass  *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaPModelClass *pmodel_class = GDA_PMODEL_CLASS (klass);
+	GdaDataSelectClass *pmodel_class = GDA_DATA_SELECT_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
@@ -287,7 +287,7 @@ gda_mysql_recordset_get_type (void)
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)
-			type = g_type_register_static (GDA_TYPE_PMODEL, "GdaMysqlRecordset", &info, 0);
+			type = g_type_register_static (GDA_TYPE_DATA_SELECT, "GdaMysqlRecordset", &info, 0);
 		g_static_mutex_unlock (&registering);
 	}
 
@@ -470,7 +470,7 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 	
 	model->priv->mysql_stmt = cdata->mysql_stmt;
 
-	((GdaPModel *) model)->advertized_nrows = mysql_stmt_affected_rows (cdata->mysql_stmt);
+	((GdaDataSelect *) model)->advertized_nrows = mysql_stmt_affected_rows (cdata->mysql_stmt);
 	
 
         return GDA_DATA_MODEL (model);
@@ -481,7 +481,7 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
  * Get the number of rows in @model, if possible
  */
 static gint
-gda_mysql_recordset_fetch_nb_rows (GdaPModel *model)
+gda_mysql_recordset_fetch_nb_rows (GdaDataSelect *model)
 {
 	GdaMysqlRecordset *imodel;
 
@@ -503,19 +503,19 @@ static GdaRow *
 new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel,
 			 gint                rownum)
 {
-	/* g_print ("*** %s -- %d -- %d\n", __func__, ((GdaPModel *) imodel)->prep_stmt->ncols, rownum); */
+	/* g_print ("*** %s -- %d -- %d\n", __func__, ((GdaDataSelect *) imodel)->prep_stmt->ncols, rownum); */
 	
-	MYSQL_BIND *mysql_bind_result = ((GdaMysqlPStmt *) ((GdaPModel *) imodel)->prep_stmt)->mysql_bind_result;
+	MYSQL_BIND *mysql_bind_result = ((GdaMysqlPStmt *) ((GdaDataSelect *) imodel)->prep_stmt)->mysql_bind_result;
 	g_assert (mysql_bind_result);
 	
-	GdaRow *row = gda_row_new (((GdaPModel *) imodel)->prep_stmt->ncols);
+	GdaRow *row = gda_row_new (((GdaDataSelect *) imodel)->prep_stmt->ncols);
 	gint col;
-	for (col = 0; col < ((GdaPModel *) imodel)->prep_stmt->ncols; ++col) {
+	for (col = 0; col < ((GdaDataSelect *) imodel)->prep_stmt->ncols; ++col) {
 		
 		gint i = col;
 		
 		GValue *value = gda_row_get_value (row, i);
-		GType type = ((GdaPModel *) imodel)->prep_stmt->types[i];
+		GType type = ((GdaDataSelect *) imodel)->prep_stmt->types[i];
 		gda_value_reset_with_type (value, type);
 		
 		int intvalue = 0;
@@ -669,13 +669,13 @@ new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel,
  *     but the function may return FALSE if an error occurred.
  *
  * Memory management for that new GdaRow object is left to the implementation, which
- * can use gda_pmodel_take_row(). If new row objects are "given" to the GdaPModel implemantation
+ * can use gda_data_select_take_row(). If new row objects are "given" to the GdaDataSelect implemantation
  * using that method, then this method should detect when all the data model rows have been analysed
  * (when model->nb_stored_rows == model->advertized_nrows) and then possibly discard the API handle
  * as it won't be used anymore to fetch rows.
  */
 static gboolean 
-gda_mysql_recordset_fetch_random (GdaPModel  *model,
+gda_mysql_recordset_fetch_random (GdaDataSelect  *model,
 				  GdaRow    **row,
 				  gint        rownum,
 				  GError    **error)
@@ -700,7 +700,7 @@ gda_mysql_recordset_fetch_random (GdaPModel  *model,
 		return FALSE;
 	
 	*row = new_row_from_mysql_stmt (imodel, rownum);
-	gda_pmodel_take_row (model, *row, rownum);
+	gda_data_select_take_row (model, *row, rownum);
 	
 	if (model->nb_stored_rows == model->advertized_nrows) {
 		/* All the row have been converted.  We could free result now */
@@ -715,7 +715,7 @@ gda_mysql_recordset_fetch_random (GdaPModel  *model,
  * Create and "give" filled #GdaRow object for all the rows in the model
  */
 static gboolean
-gda_mysql_recordset_store_all (GdaPModel  *model,
+gda_mysql_recordset_store_all (GdaDataSelect  *model,
 			       GError    **error)
 {
 	GdaMysqlRecordset *imodel;
@@ -742,10 +742,10 @@ gda_mysql_recordset_store_all (GdaPModel  *model,
  *     but the function may return FALSE if an error occurred.
  *
  * Memory management for that new GdaRow object is left to the implementation, which
- * can use gda_pmodel_take_row().
+ * can use gda_data_select_take_row().
  */
 static gboolean 
-gda_mysql_recordset_fetch_next (GdaPModel  *model,
+gda_mysql_recordset_fetch_next (GdaDataSelect  *model,
 				GdaRow    **row,
 				gint        rownum,
 				GError    **error)
@@ -755,7 +755,7 @@ gda_mysql_recordset_fetch_next (GdaPModel  *model,
 	// TO_IMPLEMENT;
 	//
 
-	// gda_pmodel_iter_next increments rownum
+	// gda_data_select_iter_next increments rownum
 	return /* TRUE */ gda_mysql_recordset_fetch_random (model, row, rownum, error);
 }
 
@@ -769,10 +769,10 @@ gda_mysql_recordset_fetch_next (GdaPModel  *model,
  *     but the function may return FALSE if an error occurred.
  *
  * Memory management for that new GdaRow object is left to the implementation, which
- * can use gda_pmodel_take_row().
+ * can use gda_data_select_take_row().
  */
 static gboolean 
-gda_mysql_recordset_fetch_prev (GdaPModel  *model,
+gda_mysql_recordset_fetch_prev (GdaDataSelect  *model,
 				GdaRow    **row,
 				gint        rownum,
 				GError    **error)
@@ -794,10 +794,10 @@ gda_mysql_recordset_fetch_prev (GdaPModel  *model,
  *     but the function may return FALSE if an error occurred.
  *
  * Memory management for that new GdaRow object is left to the implementation, which
- * can use gda_pmodel_take_row().
+ * can use gda_data_select_take_row().
  */
 static gboolean 
-gda_mysql_recordset_fetch_at (GdaPModel  *model,
+gda_mysql_recordset_fetch_at (GdaDataSelect  *model,
 			      GdaRow    **row,
 			      gint        rownum,
 			      GError    **error)

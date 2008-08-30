@@ -1,26 +1,26 @@
 <!-- ##### SECTION Title ##### -->
-GdaPModel
+Subclassing GdaDataSelect
 
 <!-- ##### SECTION Short_Description ##### -->
-Proposed base implementation for data models returned by the execution of a SELECT statement
+Base class for all the data models returned by DBMS providers when a SELECT statement is executed
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-  This data model implements the <link linkend="GdaDataModel">GdaDataModel</link> interface and is the proposed
-  base object when database providers implement a data model returned when a SELECT statement has been executed.
-</para>
-<para>
-  Specifically it offers the following features:
+  All database providers should subclass this class when returning a data model after the execution of a SELECT
+  statement. Specifically it has the following features:
   <itemizedlist>
     <listitem><para>Manages its list of <link linkend="GdaColumn">GdaColumn</link> using the list exported by the prepared statement object (<link linkend="GdaPStmt">GdaPStmt</link>)</para></listitem>
     <listitem><para>Allows random or cursor based access</para></listitem>
     <listitem><para>Allows for efficient memory usage allowing the subclass to finely tune its memory usage</para></listitem>
-    <listitem><para>Will provide a generic mechanism for writable data models</para></listitem>
+    <listitem><para>Provides a generic mechanism for writable data models</para></listitem>
   </itemizedlist>
 </para>
 <para>
   See the <link linkend="libgda-provider-recordset">Virtual methods for recordsets</link> section for more information
-  about how to implement the virtual methods.
+  about how to implement the virtual methods of the subclassed object.
+</para>
+<para>
+  This section documents the methods available for the database provider's implementations.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -31,18 +31,7 @@ Proposed base implementation for data models returned by the execution of a SELE
 <!-- ##### SECTION Stability_Level ##### -->
 
 
-<!-- ##### STRUCT GdaPModel ##### -->
-<para>
-
-</para>
-
-@object: base object
-@priv: private data
-@prep_stmt: SELECT prepared statement for which the execution gave this object
-@nb_stored_rows: 
-@advertized_nrows: initially set to -1, set to a value >= 0 when the number of rows in the data model is known
-
-<!-- ##### STRUCT GdaPModelClass ##### -->
+<!-- ##### STRUCT GdaDataSelectClass ##### -->
 <para>
 
 </para>
@@ -55,7 +44,7 @@ Proposed base implementation for data models returned by the execution of a SELE
 @fetch_prev: virtual method which must be implemented when access method is GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD
 @fetch_at: virtual method which can be implemented when access method is GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD or GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD
 
-<!-- ##### FUNCTION gda_pmodel_take_row ##### -->
+<!-- ##### FUNCTION gda_data_select_take_row ##### -->
 <para>
 
 </para>
@@ -65,7 +54,7 @@ Proposed base implementation for data models returned by the execution of a SELE
 @rownum: 
 
 
-<!-- ##### FUNCTION gda_pmodel_get_stored_row ##### -->
+<!-- ##### FUNCTION gda_data_select_get_stored_row ##### -->
 <para>
 
 </para>
@@ -75,7 +64,7 @@ Proposed base implementation for data models returned by the execution of a SELE
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_pmodel_get_connection ##### -->
+<!-- ##### FUNCTION gda_data_select_get_connection ##### -->
 <para>
 
 </para>

@@ -24,7 +24,7 @@
 #define __GDA_MYSQL_RECORDSET_H__
 
 #include <libgda/libgda.h>
-#include <providers-support/gda-pmodel.h>
+#include <providers-support/gda-data-select-priv.h>
 #include "gda-mysql-pstmt.h"
 
 G_BEGIN_DECLS
@@ -40,12 +40,12 @@ typedef struct _GdaMysqlRecordsetClass   GdaMysqlRecordsetClass;
 typedef struct _GdaMysqlRecordsetPrivate GdaMysqlRecordsetPrivate;
 
 struct _GdaMysqlRecordset {
-	GdaPModel                model;
+	GdaDataSelect                model;
 	GdaMysqlRecordsetPrivate *priv;
 };
 
 struct _GdaMysqlRecordsetClass {
-	GdaPModelClass             parent_class;
+	GdaDataSelectClass             parent_class;
 };
 
 GType

@@ -24,7 +24,7 @@
 #define __GDA_CAPI_RECORDSET_H__
 
 #include <libgda/libgda.h>
-#include <providers-support/gda-pmodel.h>
+#include <providers-support/gda-data-select-priv.h>
 #include "gda-capi-pstmt.h"
 
 G_BEGIN_DECLS
@@ -40,12 +40,12 @@ typedef struct _GdaCapiRecordsetClass   GdaCapiRecordsetClass;
 typedef struct _GdaCapiRecordsetPrivate GdaCapiRecordsetPrivate;
 
 struct _GdaCapiRecordset {
-	GdaPModel                model;
+	GdaDataSelect                model;
 	GdaCapiRecordsetPrivate *priv;
 };
 
 struct _GdaCapiRecordsetClass {
-	GdaPModelClass             parent_class;
+	GdaDataSelectClass             parent_class;
 };
 
 GType         gda_capi_recordset_get_type  (void) G_GNUC_CONST;

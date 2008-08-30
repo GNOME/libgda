@@ -4,7 +4,6 @@
 #include <libgda/libgda.h>
 #include <sql-parser/gda-sql-parser.h>
 #include <sql-parser/gda-sql-statement.h>
-#include <providers-support/gda-pmodel.h>
 #include <tests/gda-ddl-creator.h>
 #include <glib/gstdio.h>
 #include "../test-cnc-utils.h"
@@ -204,7 +203,7 @@ test1 (GdaConnection *cnc)
 	GdaStatement *stmt;
 	gint nfailed = 0;
 
-	/* create GdaPModel */
+	/* create GdaDataSelect */
 	stmt = stmt_from_string ("SELECT * FROM customers");
 	model = gda_connection_statement_execute_select (cnc, stmt, NULL, &error);
 	if (!model) {
@@ -214,18 +213,18 @@ test1 (GdaConnection *cnc)
 #endif
 		goto out;
 	}
-	if (!GDA_IS_PMODEL (model)) {
-		g_print ("Data model should be a GdaPModel!\n");
+	if (!GDA_IS_DATA_SELECT (model)) {
+		g_print ("Data model should be a GdaDataSelect!\n");
 		exit (EXIT_FAILURE);
 	}
 
 	/* test non INSERT, UPDATE or DELETE stmts */
 	GdaStatement *mod_stmt;
 	
-	if (gda_pmodel_set_modification_statement (GDA_PMODEL (model), stmt, &error)) {
+	if (gda_data_select_set_modification_statement (GDA_DATA_SELECT (model), stmt, &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-		g_print ("gda_pmodel_set_modification_statement() should have failed\n");
+		g_print ("gda_data_select_set_modification_statement() should have failed\n");
 #endif
 		goto out;
 	}
@@ -236,10 +235,10 @@ test1 (GdaConnection *cnc)
 	error = NULL;
 
 	mod_stmt = stmt_from_string ("BEGIN");
-	if (gda_pmodel_set_modification_statement (GDA_PMODEL (model), mod_stmt, &error)) {
+	if (gda_data_select_set_modification_statement (GDA_DATA_SELECT (model), mod_stmt, &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-		g_print ("gda_pmodel_set_modification_statement() should have failed\n");
+		g_print ("gda_data_select_set_modification_statement() should have failed\n");
 #endif
 		goto out;
 	}
@@ -252,10 +251,10 @@ test1 (GdaConnection *cnc)
 
 	/* test INSERT with undefined params */
 	mod_stmt = stmt_from_string ("INSERT INTO customers (name) VALUES (##aname::string)");
-	if (gda_pmodel_set_modification_statement (GDA_PMODEL (model), mod_stmt, &error)) {
+	if (gda_data_select_set_modification_statement (GDA_DATA_SELECT (model), mod_stmt, &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-		g_print ("gda_pmodel_set_modification_statement() should have failed\n");
+		g_print ("gda_data_select_set_modification_statement() should have failed\n");
 #endif
 		goto out;
 	}
@@ -288,7 +287,7 @@ test2 (GdaConnection *cnc)
 
 	clear_signals ();
 
-	/* create GdaPModel */
+	/* create GdaDataSelect */
 	stmt = stmt_from_string ("SELECT * FROM customers WHERE country = ##country::string");
 	if (!gda_statement_get_parameters (stmt, &params, &error)) {
 		nfailed++;
@@ -307,18 +306,18 @@ test2 (GdaConnection *cnc)
 #endif
 		goto out;
 	}
-	if (!GDA_IS_PMODEL (model)) {
-		g_print ("Data model should be a GdaPModel!\n");
+	if (!GDA_IS_DATA_SELECT (model)) {
+		g_print ("Data model should be a GdaDataSelect!\n");
 		exit (EXIT_FAILURE);
 	}
 
 
 	/* test INSERT with params of the wrong type */
 	mod_stmt = stmt_from_string ("INSERT INTO customers (name, country) VALUES (##+1::string, ##country::date)");
-	if (gda_pmodel_set_modification_statement (GDA_PMODEL (model), mod_stmt, &error)) {
+	if (gda_data_select_set_modification_statement (GDA_DATA_SELECT (model), mod_stmt, &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-		g_print ("gda_pmodel_set_modification_statement() should have failed\n");
+		g_print ("gda_data_select_set_modification_statement() should have failed\n");
 #endif
 		goto out;
 	}
@@ -331,10 +330,10 @@ test2 (GdaConnection *cnc)
 
 	/* test correct INSERT */
 	mod_stmt = stmt_from_string ("INSERT INTO customers (name, country) VALUES (##+1::string, ##country::string)");
-	if (!gda_pmodel_set_modification_statement (GDA_PMODEL (model), mod_stmt, &error)) {
+	if (!gda_data_select_set_modification_statement (GDA_DATA_SELECT (model), mod_stmt, &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-		g_print ("gda_pmodel_set_modification_statement() should have succedded, error: %s\n",
+		g_print ("gda_data_select_set_modification_statement() should have succedded, error: %s\n",
 			 error && error->message ? error->message : "No detail");
 #endif
 		goto out;
@@ -363,7 +362,7 @@ test3 (GdaConnection *cnc)
 
 	clear_signals ();
 
-	/* create GdaPModel */
+	/* create GdaDataSelect */
 	stmt = stmt_from_string ("SELECT * FROM customers");
 	model = gda_connection_statement_execute_select (cnc, stmt, NULL, &error);
 	if (!model) {
@@ -373,17 +372,17 @@ test3 (GdaConnection *cnc)
 #endif
 		goto out;
 	}
-	if (!GDA_IS_PMODEL (model)) {
-		g_print ("Data model should be a GdaPModel!\n");
+	if (!GDA_IS_DATA_SELECT (model)) {
+		g_print ("Data model should be a GdaDataSelect!\n");
 		exit (EXIT_FAILURE);
 	}
 
 	/* test INSERT with undefined params */
 	mod_stmt = stmt_from_string ("UPDATE customers SET name = ##+1::string, last_update = ##+2::timestamp WHERE id = ##-0::gint");
-	if (!gda_pmodel_set_modification_statement (GDA_PMODEL (model), mod_stmt, &error)) {
+	if (!gda_data_select_set_modification_statement (GDA_DATA_SELECT (model), mod_stmt, &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-		g_print ("gda_pmodel_set_modification_statement() should have succedded, error: %s\n",
+		g_print ("gda_data_select_set_modification_statement() should have succedded, error: %s\n",
 			 error && error->message ? error->message : "No detail");
 #endif
 		goto out;
@@ -455,7 +454,7 @@ test4 (GdaConnection *cnc)
 
 	clear_signals ();
 
-	/* create GdaPModel */
+	/* create GdaDataSelect */
 	stmt = stmt_from_string ("SELECT * FROM customers");
 	model = gda_connection_statement_execute_select (cnc, stmt, NULL, &error);
 	if (!model) {
@@ -465,17 +464,17 @@ test4 (GdaConnection *cnc)
 #endif
 		goto out;
 	}
-	if (!GDA_IS_PMODEL (model)) {
-		g_print ("Data model should be a GdaPModel!\n");
+	if (!GDA_IS_DATA_SELECT (model)) {
+		g_print ("Data model should be a GdaDataSelect!\n");
 		exit (EXIT_FAILURE);
 	}
 
 	/* test INSERT with undefined params */
 	mod_stmt = stmt_from_string ("DELETE FROM customers WHERE id = ##-0::gint");
-	if (!gda_pmodel_set_modification_statement (GDA_PMODEL (model), mod_stmt, &error)) {
+	if (!gda_data_select_set_modification_statement (GDA_DATA_SELECT (model), mod_stmt, &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-		g_print ("gda_pmodel_set_modification_statement() should have succedded, error: %s\n",
+		g_print ("gda_data_select_set_modification_statement() should have succedded, error: %s\n",
 			 error && error->message ? error->message : "No detail");
 #endif
 		goto out;
@@ -520,7 +519,7 @@ test5 (GdaConnection *cnc)
 
 	clear_signals ();
 
-	/* create GdaPModel */
+	/* create GdaDataSelect */
 	stmt = stmt_from_string ("SELECT * FROM customers");
 	model = gda_connection_statement_execute_select (cnc, stmt, NULL, &error);
 	if (!model) {
@@ -530,17 +529,17 @@ test5 (GdaConnection *cnc)
 #endif
 		goto out;
 	}
-	if (!GDA_IS_PMODEL (model)) {
-		g_print ("Data model should be a GdaPModel!\n");
+	if (!GDA_IS_DATA_SELECT (model)) {
+		g_print ("Data model should be a GdaDataSelect!\n");
 		exit (EXIT_FAILURE);
 	}
 
 	/* test INSERT with undefined params */
 	mod_stmt = stmt_from_string ("UPDATE customers SET name = ##+1::string, last_update = ##+2::timestamp, default_served_by = ##+3::gint WHERE id = ##-0::gint");
-	if (!gda_pmodel_set_modification_statement (GDA_PMODEL (model), mod_stmt, &error)) {
+	if (!gda_data_select_set_modification_statement (GDA_DATA_SELECT (model), mod_stmt, &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-		g_print ("gda_pmodel_set_modification_statement() should have succedded, error: %s\n",
+		g_print ("gda_data_select_set_modification_statement() should have succedded, error: %s\n",
 			 error && error->message ? error->message : "No detail");
 #endif
 		goto out;
@@ -629,7 +628,7 @@ test6 (GdaConnection *cnc)
 
 	clear_signals ();
 
-	/* create GdaPModel */
+	/* create GdaDataSelect */
 	stmt = stmt_from_string ("SELECT * FROM customers");
 	model = gda_connection_statement_execute_select (cnc, stmt, NULL, &error);
 	if (!model) {
@@ -639,16 +638,16 @@ test6 (GdaConnection *cnc)
 #endif
 		goto out;
 	}
-	if (!GDA_IS_PMODEL (model)) {
-		g_print ("Data model should be a GdaPModel!\n");
+	if (!GDA_IS_DATA_SELECT (model)) {
+		g_print ("Data model should be a GdaDataSelect!\n");
 		exit (EXIT_FAILURE);
 	}
 
 	/* set unique row select */
-	if (gda_pmodel_set_row_selection_condition_sql (GDA_PMODEL (model), "id > ##-0::gint", &error)) {
+	if (gda_data_select_set_row_selection_condition_sql (GDA_DATA_SELECT (model), "id > ##-0::gint", &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-		g_print ("gda_pmodel_set_row_selection_condition_sql() should have failed\n");
+		g_print ("gda_data_select_set_row_selection_condition_sql() should have failed\n");
 #endif
 		goto out;
 	}
@@ -660,19 +659,19 @@ test6 (GdaConnection *cnc)
 		error = NULL;
 	}
 
-	if (! gda_pmodel_set_row_selection_condition_sql (GDA_PMODEL (model), "id = ##-0::gint", &error)) {
+	if (! gda_data_select_set_row_selection_condition_sql (GDA_DATA_SELECT (model), "id = ##-0::gint", &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-		g_print ("gda_pmodel_set_row_selection_condition_sql() have succedded, error: %s\n",
+		g_print ("gda_data_select_set_row_selection_condition_sql() have succedded, error: %s\n",
 			 error && error->message ? error->message : "No detail");
 #endif
 		goto out;
 	}
 
-	if (gda_pmodel_set_row_selection_condition_sql (GDA_PMODEL (model), "id = ##-0::gint", &error)) {
+	if (gda_data_select_set_row_selection_condition_sql (GDA_DATA_SELECT (model), "id = ##-0::gint", &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-		g_print ("gda_pmodel_set_row_selection_condition_sql() should have failed\n");
+		g_print ("gda_data_select_set_row_selection_condition_sql() should have failed\n");
 #endif
 		goto out;
 	}
@@ -686,10 +685,10 @@ test6 (GdaConnection *cnc)
 
 	/* set INSERT statement */
 	mod_stmt = stmt_from_string ("INSERT INTO customers (name, last_update, default_served_by) VALUES (##+1::string, CURRENT_TIMESTAMP, ##+3::gint)");
-	if (!gda_pmodel_set_modification_statement (GDA_PMODEL (model), mod_stmt, &error)) {
+	if (!gda_data_select_set_modification_statement (GDA_DATA_SELECT (model), mod_stmt, &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-		g_print ("gda_pmodel_set_modification_statement() should have succedded, error: %s\n",
+		g_print ("gda_data_select_set_modification_statement() should have succedded, error: %s\n",
 			 error && error->message ? error->message : "No detail");
 #endif
 		goto out;
@@ -792,7 +791,7 @@ test7 (GdaConnection *cnc)
 
 	clear_signals ();
 
-	/* create GdaPModel */
+	/* create GdaDataSelect */
 	stmt = stmt_from_string ("SELECT * FROM customers WHERE country = ##country::string");
 	if (!gda_statement_get_parameters (stmt, &params, &error)) {
 		nfailed++;
@@ -810,17 +809,17 @@ test7 (GdaConnection *cnc)
 #endif
 		goto out;
 	}
-	if (!GDA_IS_PMODEL (model)) {
-		g_print ("Data model should be a GdaPModel!\n");
+	if (!GDA_IS_DATA_SELECT (model)) {
+		g_print ("Data model should be a GdaDataSelect!\n");
 		exit (EXIT_FAILURE);
 	}
 
 	
-	/* gda_pmodel_compute_modification_statements() */
-	if (!gda_pmodel_compute_modification_statements (GDA_PMODEL (model), TRUE, &error)) {
+	/* gda_data_select_compute_modification_statements() */
+	if (!gda_data_select_compute_modification_statements (GDA_DATA_SELECT (model), TRUE, &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-		g_print ("gda_pmodel_compute_modification_statements() should have succedded, error: %s\n",
+		g_print ("gda_data_select_compute_modification_statements() should have succedded, error: %s\n",
 			 error && error->message ? error->message : "No detail");
 #endif
 		goto out;

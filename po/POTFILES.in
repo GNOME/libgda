@@ -13,6 +13,7 @@ libgda/gda-data-model-import.c
 libgda/gda-data-model-iter.c
 libgda/gda-data-model-query.c
 libgda/gda-data-proxy.c
+libgda/gda-data-select.c
 libgda/gda-easy.c
 libgda/gda-init.c
 libgda/gda-log.c
@@ -33,7 +34,6 @@ libgda/handlers/gda-handler-numerical.c
 libgda/handlers/gda-handler-string.c
 libgda/handlers/gda-handler-time.c
 libgda/handlers/gda-handler-type.c
-libgda/providers-support/gda-pmodel.c
 libgda/providers-support/gda-pstmt.c
 libgda/sqlite/gda-sqlite-ddl.c
 libgda/sqlite/gda-sqlite-handler-bin.c

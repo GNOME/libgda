@@ -24,7 +24,7 @@
 #define __GDA_FIREBIRD_RECORDSET_H__
 
 #include <libgda/libgda.h>
-#include <providers-support/gda-pmodel.h>
+#include <providers-support/gda-data-select.h>
 #include "gda-firebird-pstmt.h"
 
 G_BEGIN_DECLS
@@ -40,12 +40,12 @@ typedef struct _GdaFirebirdRecordsetClass   GdaFirebirdRecordsetClass;
 typedef struct _GdaFirebirdRecordsetPrivate GdaFirebirdRecordsetPrivate;
 
 struct _GdaFirebirdRecordset {
-	GdaPModel                model;
+	GdaDataSelect                model;
 	GdaFirebirdRecordsetPrivate *priv;
 };
 
 struct _GdaFirebirdRecordsetClass {
-	GdaPModelClass             parent_class;
+	GdaDataSelectClass             parent_class;
 };
 
 GType         gda_firebird_recordset_get_type  (void) G_GNUC_CONST;

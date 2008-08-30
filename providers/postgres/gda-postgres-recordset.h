@@ -24,7 +24,7 @@
 #define __GDA_POSTGRES_RECORDSET_H__
 
 #include <libgda/libgda.h>
-#include <providers-support/gda-pmodel.h>
+#include <providers-support/gda-data-select-priv.h>
 #include "gda-postgres-pstmt.h"
 
 G_BEGIN_DECLS
@@ -40,12 +40,12 @@ typedef struct _GdaPostgresRecordsetClass   GdaPostgresRecordsetClass;
 typedef struct _GdaPostgresRecordsetPrivate GdaPostgresRecordsetPrivate;
 
 struct _GdaPostgresRecordset {
-	GdaPModel                    model;
+	GdaDataSelect                    model;
 	GdaPostgresRecordsetPrivate *priv;
 };
 
 struct _GdaPostgresRecordsetClass {
-	GdaPModelClass               parent_class;
+	GdaDataSelectClass               parent_class;
 };
 
 GType         gda_postgres_recordset_get_type   (void) G_GNUC_CONST;

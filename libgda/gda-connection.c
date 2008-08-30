@@ -1504,10 +1504,10 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
  * As @stmt can, by desing (and if not abused), contain only one SQL statement, the
  * return object will either be:
  * <itemizedlist>
- *   <listitem><para>a #GdaDataModel if @stmt is a SELECT statement (a GDA_SQL_STATEMENT_SELECT, see #GdaSqlStatementType)
+ *   <listitem><para>a #GdaDataSelect object (which is also a #GdaDataModel) if @stmt is a SELECT statement 
+ *             (usually a GDA_SQL_STATEMENT_SELECT, see #GdaSqlStatementType)
  *             containing the results of the SELECT. The resulting data model is by default read only, but
- *             modifications can be enabled, see the section about
- *             <link linkend="libgda-40-Modifying-the-result-of-a-SELECT-statement">modifying the result of a SELECT statement</link>.</para></listitem> for more information.
+ *             modifications can be enabled, see the #GdaDataSelect's documentation for more information.</para></listitem>
  *   <listitem><para>a #GdaSet for any other SQL statement which correctly executed. In this case
  *        (if the provider supports it), then the #GdaSet may contain value holders named:
  *        <itemizedlist>

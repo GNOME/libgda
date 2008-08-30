@@ -45,6 +45,7 @@ gda_headers = \
 	gda-data-model-query.h \
 	gda-data-access-wrapper.h \
 	gda-data-proxy.h \
+	gda-data-select.h \
 	gda-debug-macros.h \
 	gda-decl.h \
 	gda-easy.h \
@@ -98,6 +99,7 @@ libgda_sources =  \
 	gda-data-model-query.c \
 	gda-data-access-wrapper.c \
 	gda-data-proxy.c \
+	gda-data-select.c \
 	gda-easy.c \
 	gda-holder.c \
 	gda-init.c \

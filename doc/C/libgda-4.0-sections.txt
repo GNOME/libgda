@@ -1372,32 +1372,31 @@ gda_meta_struct_dump_as_graph
 </SECTION>
 
 <SECTION>
-<FILE>gda-pmodel</FILE>
-<TITLE>GdaPModel</TITLE>
-<INCLUDE>providers-support/gda-pmodel.h</INCLUDE>
-GdaPModel
-GdaPModelClass
-gda_pmodel_take_row
-gda_pmodel_get_stored_row
-gda_pmodel_get_connection
+<FILE>gda-data-select</FILE>
+<TITLE>GdaDataSelect</TITLE>
+GdaDataSelect
+gda_data_select_set_row_selection_condition_sql
+gda_data_select_set_row_selection_condition
+gda_data_select_compute_row_selection_condition
+gda_data_select_set_modification_statement
+gda_data_select_set_modification_statement_sql
+gda_data_select_compute_modification_statements
 <SUBSECTION Standard>
-GDA_IS_PMODEL
-GDA_PMODEL
-GDA_PMODEL_CLASS
-GDA_TYPE_PMODEL
-gda_pmodel_get_type
+GDA_IS_DATA_SELECT
+GDA_DATA_SELECT
+GDA_DATA_SELECT_CLASS
+GDA_TYPE_DATA_SELECT
+gda_data_select_get_type
 </SECTION>
 
 <SECTION>
-<FILE>gda-pmodel-user</FILE>
-<TITLE>Modifying the result of a SELECT statement</TITLE>
-<INCLUDE>providers-support/gda-pmodel.h</INCLUDE>
-gda_pmodel_set_row_selection_condition_sql
-gda_pmodel_set_row_selection_condition
-gda_pmodel_compute_row_selection_condition
-gda_pmodel_set_modification_statement
-gda_pmodel_set_modification_statement_sql
-gda_pmodel_compute_modification_statements
+<FILE>gda-data-select-priv</FILE>
+<TITLE>Subclassing GdaDataSelect</TITLE>
+<INCLUDE>providers-support/gda-data-select-priv.h</INCLUDE>
+GdaDataSelectClass
+gda_data_select_take_row
+gda_data_select_get_stored_row
+gda_data_select_get_connection
 </SECTION>
 
 <SECTION>

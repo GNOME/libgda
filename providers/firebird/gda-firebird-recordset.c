@@ -37,11 +37,11 @@ static void gda_firebird_recordset_init       (GdaFirebirdRecordset *recset,
 static void gda_firebird_recordset_dispose   (GObject *object);
 
 /* virtual methods */
-static gint     gda_firebird_recordset_fetch_nb_rows (GdaPModel *model);
-static gboolean gda_firebird_recordset_fetch_random (GdaPModel *model, GdaRow **prow, gint rownum, GError **error);
-static gboolean gda_firebird_recordset_fetch_next (GdaPModel *model, GdaRow **prow, gint rownum, GError **error);
-static gboolean gda_firebird_recordset_fetch_prev (GdaPModel *model, GdaRow **prow, gint rownum, GError **error);
-static gboolean gda_firebird_recordset_fetch_at (GdaPModel *model, GdaRow **prow, gint rownum, GError **error);
+static gint     gda_firebird_recordset_fetch_nb_rows (GdaDataSelect *model);
+static gboolean gda_firebird_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
+static gboolean gda_firebird_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
+static gboolean gda_firebird_recordset_fetch_prev (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
+static gboolean gda_firebird_recordset_fetch_at (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
 
 
 struct _GdaFirebirdRecordsetPrivate {
@@ -69,7 +69,7 @@ static void
 gda_firebird_recordset_class_init (GdaFirebirdRecordsetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaPModelClass *pmodel_class = GDA_PMODEL_CLASS (klass);
+	GdaDataSelectClass *pmodel_class = GDA_DATA_SELECT_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
@@ -126,7 +126,7 @@ gda_firebird_recordset_get_type (void)
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)
-			type = g_type_register_static (GDA_TYPE_PMODEL, "GdaFirebirdRecordset", &info, 0);
+			type = g_type_register_static (GDA_TYPE_DATA_SELECT, "GdaFirebirdRecordset", &info, 0);
 		g_static_mutex_unlock (&registering);
 	}
 
@@ -217,7 +217,7 @@ gda_firebird_recordset_new (GdaConnection *cnc, GdaFirebirdPStmt *ps, GdaDataMod
  * Get the number of rows in @model, if possible
  */
 static gint
-gda_firebird_recordset_fetch_nb_rows (GdaPModel *model)
+gda_firebird_recordset_fetch_nb_rows (GdaDataSelect *model)
 {
 	GdaFirebirdRecordset *imodel;
 
@@ -241,13 +241,13 @@ gda_firebird_recordset_fetch_nb_rows (GdaPModel *model)
  *     but the function may return FALSE if an error occurred.
  *
  * Memory management for that new GdaRow object is left to the implementation, which
- * can use gda_pmodel_take_row(). If new row objects are "given" to the GdaPModel implemantation
+ * can use gda_data_select_take_row(). If new row objects are "given" to the GdaDataSelect implemantation
  * using that method, then this method should detect when all the data model rows have been analysed
  * (when model->nb_stored_rows == model->advertized_nrows) and then possibly discard the API handle
  * as it won't be used anymore to fetch rows.
  */
 static gboolean 
-gda_firebird_recordset_fetch_random (GdaPModel *model, GdaRow **prow, gint rownum, GError **error)
+gda_firebird_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
 {
 	GdaFirebirdRecordset *imodel;
 
@@ -262,7 +262,7 @@ gda_firebird_recordset_fetch_random (GdaPModel *model, GdaRow **prow, gint rownu
  * Create and "give" filled #GdaRow object for all the rows in the model
  */
 static gboolean
-gda_firebird_recordset_store_all (GdaPModel *model, GError **error)
+gda_firebird_recordset_store_all (GdaDataSelect *model, GError **error)
 {
 	GdaFirebirdRecordset *imodel;
 	gint i;
@@ -288,10 +288,10 @@ gda_firebird_recordset_store_all (GdaPModel *model, GError **error)
  *     but the function may return FALSE if an error occurred.
  *
  * Memory management for that new GdaRow object is left to the implementation, which
- * can use gda_pmodel_take_row().
+ * can use gda_data_select_take_row().
  */
 static gboolean 
-gda_firebird_recordset_fetch_next (GdaPModel *model, GdaRow **prow, gint rownum, GError **error)
+gda_firebird_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
 {
 	GdaFirebirdRecordset *imodel = (GdaFirebirdRecordset*) model;
 
@@ -310,10 +310,10 @@ gda_firebird_recordset_fetch_next (GdaPModel *model, GdaRow **prow, gint rownum,
  *     but the function may return FALSE if an error occurred.
  *
  * Memory management for that new GdaRow object is left to the implementation, which
- * can use gda_pmodel_take_row().
+ * can use gda_data_select_take_row().
  */
 static gboolean 
-gda_firebird_recordset_fetch_prev (GdaPModel *model, GdaRow **prow, gint rownum, GError **error)
+gda_firebird_recordset_fetch_prev (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
 {
 	GdaFirebirdRecordset *imodel = (GdaFirebirdRecordset*) model;
 
@@ -332,10 +332,10 @@ gda_firebird_recordset_fetch_prev (GdaPModel *model, GdaRow **prow, gint rownum,
  *     but the function may return FALSE if an error occurred.
  *
  * Memory management for that new GdaRow object is left to the implementation, which
- * can use gda_pmodel_take_row().
+ * can use gda_data_select_take_row().
  */
 static gboolean 
-gda_firebird_recordset_fetch_at (GdaPModel *model, GdaRow **prow, gint rownum, GError **error)
+gda_firebird_recordset_fetch_at (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
 {
 	GdaFirebirdRecordset *imodel = (GdaFirebirdRecordset*) model;
 	

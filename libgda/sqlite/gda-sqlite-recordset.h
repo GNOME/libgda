@@ -27,7 +27,7 @@
 
 #include <libgda/gda-value.h>
 #include <libgda/gda-connection.h>
-#include <libgda/providers-support/gda-pmodel.h>
+#include <libgda/providers-support/gda-data-select-priv.h>
 #include "gda-sqlite-pstmt.h"
 
 G_BEGIN_DECLS
@@ -43,12 +43,12 @@ typedef struct _GdaSqliteRecordsetClass   GdaSqliteRecordsetClass;
 typedef struct _GdaSqliteRecordsetPrivate GdaSqliteRecordsetPrivate;
 
 struct _GdaSqliteRecordset {
-	GdaPModel                  model;
+	GdaDataSelect                  model;
 	GdaSqliteRecordsetPrivate *priv;
 };
 
 struct _GdaSqliteRecordsetClass {
-	GdaPModelClass             parent_class;
+	GdaDataSelectClass             parent_class;
 };
 
 GType         gda_sqlite_recordset_get_type  (void) G_GNUC_CONST;

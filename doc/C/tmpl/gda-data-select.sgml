@@ -1,0 +1,139 @@
+<!-- ##### SECTION Title ##### -->
+GdaDataSelect
+
+<!-- ##### SECTION Short_Description ##### -->
+Data models returned by the execution of a SELECT statement
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+  This data model implements the <link linkend="GdaDataModel">GdaDataModel</link> interface and is the required
+  base object when database providers implement a data model returned when a SELECT statement has been executed.
+  As the <link linkend="GdaDataModel">GdaDataModel</link> interface is implemented, consult the API
+  to access and modify the data held in a <link linkend="GdaDataSelect">GdaDataSelect</link> object.
+</para>
+<para>
+  The default behaviour however is to disallow modifications, and this section documents how to characterize
+  a <link linkend="GdaDataSelect">GdaDataSelect</link> to allow modifications. Once this is done, any modification
+  done to the data model whill be propagated to the modified table in the database using INSERT, UPDATE or DELETE
+  statements, while the data in the data model will always be kept up to date with the modifications done.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaDataSelect ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdaDataSelect:connection ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDataSelect:delete-query ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDataSelect:exec-params ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDataSelect:insert-query ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDataSelect:model-usage ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDataSelect:prepared-stmt ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDataSelect:store-all-rows ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDataSelect:update-query ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gda_data_select_set_row_selection_condition_sql ##### -->
+<para>
+
+</para>
+
+@model: 
+@sql_where: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_select_set_row_selection_condition ##### -->
+<para>
+
+</para>
+
+@model: 
+@expr: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_select_compute_row_selection_condition ##### -->
+<para>
+
+</para>
+
+@model: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_select_set_modification_statement ##### -->
+<para>
+
+</para>
+
+@model: 
+@mod_stmt: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_select_set_modification_statement_sql ##### -->
+<para>
+
+</para>
+
+@model: 
+@sql: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_select_compute_modification_statements ##### -->
+<para>
+
+</para>
+
+@model: 
+@require_pk: 
+@error: 
+@Returns: 
+
+

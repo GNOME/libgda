@@ -38,13 +38,6 @@ Prepared statement's base class
 
 </para>
 
-@object: base object
-@priv: 
-@sql: actual SQL code used for this prepared statement, its memory is freed by the object itself
-@param_ids: list of parameters' IDs (as gchar *), the memory is freed by object itself
-@ncols: number of columns in the returned data model (if the prepared statement is a SELECT statement)
-@types: array of ncols types (if the prepared statement is a SELECT statement)
-@tmpl_columns: list of <link linkend="GdaColumn">GdaColumn</link> objects which data models created from this prepared statement can copy
 
 <!-- ##### FUNCTION gda_pstmt_set_gda_statement ##### -->
 <para>

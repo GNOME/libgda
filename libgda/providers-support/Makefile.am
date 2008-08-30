@@ -7,12 +7,11 @@ AM_CPPFLAGS = \
 	$(LIBGDA_CFLAGS) 
 
 psupport_headers = \
-	gda-pmodel.h \
+	gda-data-select-priv.h \
 	gda-pstmt.h
 
 libgda_psupport_la_SOURCES = \
 	$(psupport_headers) \
-	gda-pmodel.c \
 	gda-pstmt.c
 
 libgda_psupport_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)

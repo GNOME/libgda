@@ -97,8 +97,8 @@
 <!ENTITY libgda-GdaSqlParser SYSTEM "xml/gda-sql-parser.xml">
 <!ENTITY libgda-GdaMetaStore SYSTEM "xml/gda-meta-store.xml">
 <!ENTITY libgda-GdaMetaStruct SYSTEM "xml/gda-meta-struct.xml">
-<!ENTITY libgda-PModel SYSTEM "xml/gda-pmodel.xml">
-<!ENTITY libgda-PModelUser SYSTEM "xml/gda-pmodel-user.xml">
+<!ENTITY libgda-GdaDataSelect SYSTEM "xml/gda-data-select.xml">
+<!ENTITY libgda-GdaDataSelectPriv SYSTEM "xml/gda-data-select-priv.xml">
 <!ENTITY libgda-PStmt SYSTEM "xml/gda-pstmt.xml">
 <!ENTITY libgda-Enums SYSTEM "xml/gda-enums.xml">
 <!ENTITY libgda-convenient SYSTEM "xml/gda-convenient.xml">
@@ -505,7 +505,7 @@
       &libgda-GdaSqlParser;
       &libgda-GdaStatement;
       &libgda-GdaBatch;
-      &libgda-PModelUser;
+      &libgda-GdaDataSelect;
       &libgda-GdaHolder;
       &libgda-GdaSet;
       &libgda-GdaSqlStatement;
@@ -1279,7 +1279,7 @@ Description for type: DROP_COLUMN
     <chapter id="psupport">
       <title>Providers' support API</title>
       &libgda-GdaServerProvider;
-      &libgda-PModel;
+      &libgda-GdaDataSelectPriv;
       &libgda-PStmt;
       &provider-support;
     </chapter>

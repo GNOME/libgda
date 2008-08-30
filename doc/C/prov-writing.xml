@@ -504,7 +504,7 @@ gboolean (*key_columns)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
 <chapter id="libgda-provider-recordset">
   <title>Virtual methods for recordsets</title>
   <para>
-    This section explains how to write virtual methods for the <link linkend="GdaPModel">GdaPModel</link> subclasses
+    This section explains how to write virtual methods for the <link linkend="GdaDataSelect">GdaDataSelect</link> subclasses
     implementations, which should be done when implementing a database provider.
   </para>
   <para>
@@ -518,7 +518,7 @@ gboolean (*key_columns)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
     <itemizedlist>
       <listitem>
 	<para>can rely on the <link linkend="GdaRow">GdaRow</link> implementation to keep them, using
-	  the <link linkend="gda-pmodel-take-row">gda_pmodel_take_row ()</link> method for each row object created which
+	  the <link linkend="gda-data-select-take-row">gda_data_select_take_row ()</link> method for each row object created which
 	  is the easiest, the fastest as once created, the rows are available for further usage, 
 	  but will consume more memory with each row read from the model.</para>
       </listitem>
@@ -542,7 +542,7 @@ gboolean (*key_columns)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
     <para>
       Note that the number of rows of the data model may not be known until the cursor has reached the
       Once known, the number of rows can be stored in the <structfield>advertized_nrows</structfield>'s member of the
-      <link linkend="GdaPModel">GdaPModel</link> object.
+      <link linkend="GdaDataSelect">GdaDataSelect</link> object.
     </para>
   </sect2>
 
@@ -649,7 +649,7 @@ gboolean (*key_columns)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
 	  inheriting the <link linkend="GdaServerProvider">GdaServerProvider</link> object. This object must implement its
 	  <link linkend="libgda-provider-class">virtual methods</link>.</para></listitem>
       <listitem><para><filename>gda-capi-recordset.[ch]</filename>: are the header and implementation files for the object
-	  inheriting the <link linkend="GdaPModel">GdaPModel</link> object. This object must implement its
+	  inheriting the <link linkend="GdaDataSelect">GdaDataSelect</link> object. This object must implement its
 	  <link linkend="libgda-provider-recordset">virtual methods</link>.</para></listitem>
       <listitem><para><filename>gda-capi-ddl.[ch]</filename>: are the files implementing the DDL queries</para></listitem>
       <listitem><para><filename>gda-capi-parser.[ch]</filename>: are the header and implementation files 
