@@ -1,3 +1,8 @@
+2008-08-31  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/sqlite/gda-sqlite-provider.c:
+	* libgda/sql-parser/gda-sql-parser.c: memory leaks fixes, for bug #549953
+
 2008-08-30  Vivien Malerba <malerba@gnome-db.org>
 
 	Renamed GdaPModel to GdaDataSelect (also changed the source files to libgda/) and

@@ -1645,7 +1645,10 @@ real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stm
 				goto out_err;
 			}
 		}
+		g_slist_free (used_params);
 	}
+	if (params)
+		g_object_unref (params);
 
 	/* create a prepared statement */
 	ps = gda_sqlite_pstmt_new (sqlite_stmt);

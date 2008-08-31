@@ -482,12 +482,15 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
 	     value = tokenizer_get_next_token (parser)) {
 		switch (parser->priv->context->token_type) {
 		case L_SQLCOMMENT:
+			gda_value_free (value);
 			break;
 		case L_SPACE:
 			if (parser->priv->context->in_param_spec || 
-			    (parser->priv->mode == GDA_SQL_PARSER_MODE_PARSE))
+			    (parser->priv->mode == GDA_SQL_PARSER_MODE_PARSE)) {
 				/* ignore space */
+				gda_value_free (value);
 				break;
+			}
 		default:
 			if (parser->priv->mode == GDA_SQL_PARSER_MODE_DELIMIT) {
 				if ((parser->priv->context->token_type == L_BEGIN) &&
