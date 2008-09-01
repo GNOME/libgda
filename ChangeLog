@@ -1,3 +1,8 @@
+2008-09-01  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-data-select.h: fixes compilation of programs using Libgda
+	* libgda/gda-connection.c: lock the connection before executing a statement
+
 2008-08-31  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/sqlite/gda-sqlite-provider.c:

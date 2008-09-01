@@ -1479,6 +1479,7 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
 	types = make_col_types_array (10, ap);
 	va_end (ap);
 
+	gda_connection_lock ((GdaLockable*) cnc);
 	if (last_inserted_row) 
 		*last_inserted_row = NULL;
 	if (cnc->priv->auto_clear_events_list)
@@ -1487,6 +1488,7 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
 								       model_usage, types, last_inserted_row, 
 								       NULL, NULL, NULL, error);
 	g_free (types);
+	gda_connection_unlock ((GdaLockable*) cnc);
 	return obj;
 }
 
@@ -1708,12 +1710,14 @@ gda_connection_statement_execute_select_fullv (GdaConnection *cnc, GdaStatement 
 	types = make_col_types_array (10, ap);
 	va_end (ap);
 
+	gda_connection_lock ((GdaLockable*) cnc);
 	if (cnc->priv->auto_clear_events_list)
 		_clear_events_list (cnc);
 	model = (GdaDataModel *) PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, 
 											  cnc, stmt, params, model_usage, 
 											  types, NULL, NULL, 
 											  NULL, NULL, error);
+	gda_connection_unlock ((GdaLockable*) cnc);
 	g_free (types);
 	if (model && !GDA_IS_DATA_MODEL (model)) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
@@ -1762,12 +1766,14 @@ gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
 	g_return_val_if_fail (PROV_CLASS (cnc->priv->provider_obj)->statement_execute, NULL);
 
+	gda_connection_lock ((GdaLockable*) cnc);
 	if (cnc->priv->auto_clear_events_list)
 		_clear_events_list (cnc);
 	model = (GdaDataModel *) PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, 
 											  cnc, stmt, params, 
 											  model_usage, col_types, NULL, 
 											  NULL, NULL, NULL, error);
+	gda_connection_unlock ((GdaLockable*) cnc);
 	if (model && !GDA_IS_DATA_MODEL (model)) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
 			     _("Statement is not a selection statement"));
