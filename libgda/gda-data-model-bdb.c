@@ -604,7 +604,10 @@ gda_data_model_bdb_get_value_at (GdaDataModel *model, gint col, gint row)
         g_return_val_if_fail (imodel->priv, NULL);
 
 	if ((col < 0) || (col > imodel->priv->n_columns)) {
-		add_error (imodel, _("Column number out of range"));
+		gchar *tmp;
+		tmp = g_strdup_printf (_("Column %d out of range (0-%d)"), col, imodel->priv->n_columns - 1);
+		add_error (imodel, tmp);
+		g_free (tmp);
 		return NULL;
 	}
 
@@ -701,7 +704,10 @@ gda_data_model_bdb_get_attributes_at (GdaDataModel *model, gint col, gint row)
         g_return_val_if_fail (imodel->priv, 0);
 
 	if ((col < 0) || (col > imodel->priv->n_columns)) {
-		add_error (imodel, _("Column number out of range"));
+		gchar *tmp;
+		tmp = g_strdup_printf (_("Column %d out of range (0-%d)"), col, imodel->priv->n_columns - 1);
+		add_error (imodel, tmp);
+		g_free (tmp);
 		return 0;
 	}
 
@@ -727,7 +733,10 @@ gda_data_model_bdb_set_value_at (GdaDataModel *model, gint col, gint row, const 
         g_return_val_if_fail (imodel->priv, FALSE);
 
 	if ((col < 0) || (col > imodel->priv->n_columns)) {
-		add_error (imodel, _("Column number out of range"));
+		gchar *tmp;
+		tmp = g_strdup_printf (_("Column %d out of range (0-%d)"), col, imodel->priv->n_columns - 1);
+		add_error (imodel, tmp);
+		g_free (tmp);
 		return FALSE;
 	}
 

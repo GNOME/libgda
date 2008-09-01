@@ -1,5 +1,16 @@
 2008-09-01  Vivien Malerba <malerba@gnome-db.org>
 
+	* providers/skel-implementation/capi/gda-capi-recordset.c:
+	* providers/firebird/gda-firebird-recordset.c:
+	* providers/mysql/gda-mysql-recordset.c:
+	* providers/postgres/gda-postgres-recordset.c:
+	* libgda/sqlite/gda-sqlite-recordset.c:
+	* libgda/gda-data-model-dir.c:
+	* libgda/gda-data-model-bdb.c:
+	* libgda/gda-data-model-array.c: harmonized error messages
+
+2008-09-01  Vivien Malerba <malerba@gnome-db.org>
+
 	* libgda/gda-data-select.h: fixes compilation of programs using Libgda
 	* libgda/gda-connection.c: lock the connection before executing a statement
 

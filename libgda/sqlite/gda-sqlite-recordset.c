@@ -220,7 +220,7 @@ gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_p
 					if (col_types [i] == G_TYPE_NONE)
 						break;
 					if (i >= _GDA_PSTMT (ps)->ncols)
-						g_warning (_("Column %d is out of range (0-%d), ignoring its specified type"), i,
+						g_warning (_("Column %d out of range (0-%d), ignoring its specified type"), i,
 							   _GDA_PSTMT (ps)->ncols - 1);
 					else
 						_GDA_PSTMT (ps)->types [i] = col_types [i];

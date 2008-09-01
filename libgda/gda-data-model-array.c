@@ -604,7 +604,7 @@ gda_data_model_array_set_value_at (GdaDataModel *model, gint col, gint row,
 
 	if (row > amodel->priv->rows->len) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_VALUES_LIST_ERROR,
-			     _("Row number out of range"));
+			     _("Row %d out of range (0-%d)"), row, amodel->priv->rows->len);
                 return FALSE;
         }
 
