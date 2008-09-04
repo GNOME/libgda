@@ -38,7 +38,7 @@ typedef struct _GdaVconnectionDataModelClass GdaVconnectionDataModelClass;
 typedef struct _GdaVconnectionDataModelPrivate GdaVconnectionDataModelPrivate;
 typedef struct _GdaVconnectionDataModelSpec  GdaVconnectionDataModelSpec;
 
-typedef GList        *(*GdaVconnectionDataModelCreateColumnsFunc) (GdaVconnectionDataModelSpec *);
+typedef GList        *(*GdaVconnectionDataModelCreateColumnsFunc) (GdaVconnectionDataModelSpec *, GError **);
 typedef GdaDataModel *(*GdaVconnectionDataModelCreateModelFunc)   (GdaVconnectionDataModelSpec *);
 
 struct _GdaVconnectionDataModelSpec {

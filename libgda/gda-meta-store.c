@@ -1859,7 +1859,10 @@ handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **e
 			return FALSE;
 		}
 		
-		version = gda_data_model_get_value_at (model, 0, 0);
+		version = gda_data_model_get_value_at (model, 0, 0, error);
+		if (!version)
+			return FALSE;
+
 		if (gda_value_is_null (version) || !gda_value_isa (version, G_TYPE_STRING)) {
 			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA_ERROR,
 				_ ("Could not get the internal schema's version"));
@@ -1992,9 +1995,7 @@ gda_meta_store_extract (GdaMetaStore *store, const gchar *select_sql, GError **e
 			if (!h)
 				g_warning (_("Parameter '%s' is not present in statement"), pname);
 			else {
-				if (!gda_holder_set_value (h, value)) {
-					g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_EXTRACT_SQL_ERROR,
-						     _("Could not set value of parameter '%s'"), pname);
+				if (!gda_holder_set_value (h, value, error)) {
 					g_object_unref (stmt);
 					g_object_unref (params);
 					va_end (ap);
@@ -2249,8 +2250,18 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 				h = gda_set_get_holder (schema_set->params, pid);
 				if (h) {
 					const GValue *value;
-					value = gda_data_model_get_value_at (new_data, j, i);
-					gda_holder_set_value (h, value);
+					value = gda_data_model_get_value_at (new_data, j, i, error);
+					if (!value) {
+						g_free (pid);
+						retval = FALSE;
+						goto out;
+					}
+						
+					if (! gda_holder_set_value (h, value, error)) {
+						g_free (pid);
+						retval = FALSE;
+						goto out;
+					}
 					if (change) {
 						g_hash_table_insert (change->keys, pid, gda_value_copy (value));
 						pid = NULL;
@@ -2282,8 +2293,17 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 					h = gda_set_get_holder (schema_set->params, pid);
 					if (h) {
 						const GValue *value;
-						value = gda_data_model_get_value_at (current, j, erow);
-						gda_holder_set_value (h, value);
+						value = gda_data_model_get_value_at (current, j, erow, error);
+						if (!value) {
+							g_free (pid);
+							retval = FALSE;
+							goto out;
+						}
+						if (!gda_holder_set_value (h, value, error)) {
+							g_free (pid);
+							retval = FALSE;
+							goto out;
+						}
 						if (change) {
 							g_hash_table_insert (change->keys, pid, gda_value_copy (value));
 							pid = NULL;
@@ -2322,9 +2342,15 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 					context.column_names = tfk->fk_names_array;
 					context.column_values = g_new (GValue *, context.size);
 					
-					for (k = 0; k < tfk->cols_nb; k++) 
+					for (k = 0; k < tfk->cols_nb; k++) {
 						context.column_values [k] = (GValue*) gda_data_model_get_value_at (new_data, 
-										      tfk->ref_pk_cols_array[k], i);
+									    tfk->ref_pk_cols_array[k], i, error);
+						if (!context.column_values [k]) {
+							g_free (context.column_values);
+							retval = FALSE;
+							goto out;
+						}
+					}
 #ifdef DEBUG_STORE_MODIFY
 					g_print ("Suggest update data into table '%s':", tfk->table_info->obj_name);
 					for (k = 0; k < tfk->cols_nb; k++) {
@@ -2374,8 +2400,17 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 					h = gda_set_get_holder (schema_set->params, pid);
 					if (h) {
 						const GValue *value;
-						value = gda_data_model_get_value_at (current, j, i);
-						gda_holder_set_value (h, value);
+						value = gda_data_model_get_value_at (current, j, i, error);
+						if (!value) {
+							g_free (pid);
+							retval = FALSE;
+							goto out;
+						}
+						if (! gda_holder_set_value (h, value, error)) {
+							g_free (pid);
+							retval = FALSE;
+							goto out;
+						}
 						if (change) {
 							g_hash_table_insert (change->keys, pid, gda_value_copy (value));
 							pid = NULL;
@@ -2395,8 +2430,14 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 					
 					/*g_print ("Also remove data from table '%s'...\n", tfk->table_info->obj_name);*/
 					values = g_new (const GValue *, tfk->cols_nb);
-					for (k = 0; k < tfk->cols_nb; k++) 
-						values [k] = gda_data_model_get_value_at (current, tfk->ref_pk_cols_array[k], i);
+					for (k = 0; k < tfk->cols_nb; k++) {
+						values [k] = gda_data_model_get_value_at (current, tfk->ref_pk_cols_array[k], i, error);
+						if (!values [k]) {
+							g_free (values);
+							retval = FALSE;
+							goto out;
+						}
+					}
 					if (!gda_meta_store_modify_v (store, tfk->table_info->obj_name, NULL,
 								      tfk->fk_fields_cond, error, 
 								      tfk->cols_nb, (const gchar **) tfk->fk_names_array, values)) {
@@ -2460,8 +2501,13 @@ find_row_in_model (GdaDataModel *find_in, GdaDataModel *data, gint row, gint *pk
 	gint i, erow;
 	GSList *values = NULL;
 	
-	for (i = 0; i < pk_cols_nb; i++) 
-		values = g_slist_append (values, (gpointer) gda_data_model_get_value_at (data, pk_cols[i], row));
+	for (i = 0; i < pk_cols_nb; i++) {
+		const GValue *cvalue;
+		cvalue = gda_data_model_get_value_at (data, pk_cols[i], row, error);
+		if (!cvalue)
+			return -2;
+		values = g_slist_append (values, (gpointer) cvalue);
+	}
 	erow = gda_data_model_get_row_from_values (find_in, values, pk_cols);
 	g_slist_free (values);
 	
@@ -2477,9 +2523,13 @@ find_row_in_model (GdaDataModel *find_in, GdaDataModel *data, gint row, gint *pk
 			gboolean changed = FALSE;
 			for (i = 0; i < ncols; i++) {
 				const GValue *v1, *v2;
-				v1 = gda_data_model_get_value_at (find_in, i, erow);
-				v2 = gda_data_model_get_value_at (data, i, row);
-				if (gda_value_compare_ext (v1, v2)) {
+				v1 = gda_data_model_get_value_at (find_in, i, erow, error);
+				if (!v1)
+					return -2;
+				v2 = gda_data_model_get_value_at (data, i, row, error);
+				if (!v2)
+					return -2;
+				if (gda_value_compare (v1, v2)) {
 					changed = TRUE;
 					break;
 				}
@@ -2538,7 +2588,7 @@ prepare_tables_infos (GdaMetaStore *store, TableInfo **out_table_infos, TableCon
 		GdaHolder *h;
 		
 		h = gda_set_get_holder ((*out_cond_infos)->params, value_names [i]);
-		if (!h || !gda_holder_set_value (h, values[i])) {
+		if (!h || !gda_holder_set_value (h, values[i], NULL)) {
 			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INTERNAL_ERROR,
 				_ ("Could not set value for parameter '%s'"), value_names [i]);
 			return FALSE;
@@ -2850,10 +2900,14 @@ gda_meta_store_schema_get_structure (GdaMetaStore *store, GError **error)
 	nrows = gda_data_model_get_n_rows (model);
 	for (i = 0; i < nrows; i++) {
 		/* FIXME: only take into account the database objects which have a corresponding DbObject */
-		if (!gda_meta_struct_complement (mstruct, GDA_META_DB_UNKNOWN,
-						 gda_data_model_get_value_at (model, 0, i),
-						 gda_data_model_get_value_at (model, 1, i),
-						 gda_data_model_get_value_at (model, 2, i), error)) {
+		const GValue *cv0, *cv1, *cv2;
+		cv0 = gda_data_model_get_value_at (model, 0, i, error);
+		if (!cv0) return NULL;
+		cv1 = gda_data_model_get_value_at (model, 1, i, error);
+		if (!cv1) return NULL;
+		cv2 = gda_data_model_get_value_at (model, 2, i, error);
+		if (!cv2) return NULL;
+		if (!gda_meta_struct_complement (mstruct, GDA_META_DB_UNKNOWN, cv0, cv1, cv2, error)) {
 			g_object_unref (mstruct);
 			g_object_unref (model);
 			return NULL;
@@ -2945,8 +2999,10 @@ gda_meta_store_get_attribute_value (GdaMetaStore *store, const gchar *att_name, 
 			     ngettext ("Attribute '%s' has %d value", "Attribute '%s' has %d values", nrows), 
 			     att_name, nrows);
 	else {
-		value = (GValue*) gda_data_model_get_value_at (model, 0, 0);
-		if (value && (G_VALUE_TYPE (value) == G_TYPE_STRING)) {
+		value = (GValue*) gda_data_model_get_value_at (model, 0, 0, error);
+		if (!value)
+			return FALSE;
+		if (G_VALUE_TYPE (value) == G_TYPE_STRING) {
 			const gchar *val;
 			val = g_value_get_string (value);
 			if (val) 
@@ -2997,11 +3053,8 @@ gda_meta_store_set_attribute_value (GdaMetaStore *store, const gchar *att_name,
 	}
 	g_static_mutex_unlock (&set_mutex);
 
-	if (!gda_set_set_holder_value (set, "name", att_name)) {
-		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_ATTRIBUTE_ERROR,
-			     _("Internal GdaMetaStore error"));
+	if (!gda_set_set_holder_value (set, error, "name", att_name)) 
 		return FALSE;
-	}
 	
 	/* start a transaction if possible */
 	if (! gda_connection_get_transaction_status (store->priv->cnc)) 
@@ -3020,11 +3073,9 @@ gda_meta_store_set_attribute_value (GdaMetaStore *store, const gchar *att_name,
 
 	if (att_value) {
 		/* set new attribute */
-		if (!gda_set_set_holder_value (set, "value", att_value)) {
-			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_ATTRIBUTE_ERROR,
-				     _("Internal GdaMetaStore error"));
+		if (!gda_set_set_holder_value (set, error, "value", att_value))
 			goto onerror;
-		}
+
 		if (gda_connection_statement_execute_non_select (store->priv->cnc, 
 								 klass->cpriv->prep_stmts [STMT_SET_ATT_VALUE], set,
 								 NULL, error) == -1)

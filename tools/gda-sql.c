@@ -683,7 +683,11 @@ execute_external_command (MainData *data, const gchar *command, GError **error)
 										 gda_holder_get_g_type (h));
 				value = gda_data_handler_get_value_from_str (dh, str, gda_holder_get_g_type (h));
 				g_free (str);
-				gda_holder_take_value (h, value);
+				if (! gda_holder_take_value (h, value, error)) {
+					g_free (res);
+					res = NULL;
+					goto cleanup;
+				}
 			}
 			else {
 				if (! gda_holder_is_valid (h)) {
@@ -1165,11 +1169,17 @@ output_data_model (MainData *data, GdaDataModel *model)
 			xmlSetProp (row_node, BAD_CAST "valign", BAD_CAST "top");
 			for (j = 0; j < ncols; j++) {
 				const GValue *value;
-				value = gda_data_model_get_value_at (model, j, i);
-				str = gda_value_stringify (value);
-				col_node = xmlNewChild (row_node, NULL, BAD_CAST "td", BAD_CAST str);
-				xmlSetProp (col_node, BAD_CAST "align", BAD_CAST "left");
-				g_free (str);
+				value = gda_data_model_get_value_at (model, j, i, NULL);
+				if (!value) {
+					col_node = xmlNewChild (row_node, NULL, BAD_CAST "td", BAD_CAST "ERROR");
+					xmlSetProp (col_node, BAD_CAST "align", BAD_CAST "left");
+				}
+				else {
+					str = gda_value_stringify (value);
+					col_node = xmlNewChild (row_node, NULL, BAD_CAST "td", BAD_CAST str);
+					xmlSetProp (col_node, BAD_CAST "align", BAD_CAST "left");
+					g_free (str);
+				}
 			}
 		}
 
@@ -2523,8 +2533,10 @@ extra_command_set (GdaConnection *cnc, const gchar **args,
 		if (param) {
 			if (value) {
 				/* set param's value */
-				if (!strcmp (value, "_null_"))
-					gda_holder_set_value (param, NULL);
+				if (!strcmp (value, "_null_")) {
+					if (! gda_holder_set_value (param, NULL, error))
+						return NULL;
+				}
 				else {
 					GdaServerProvider *prov;
 					GdaDataHandler *dh;
@@ -2534,7 +2546,8 @@ extra_command_set (GdaConnection *cnc, const gchar **args,
 					dh = gda_server_provider_get_data_handler_gtype (prov, data->current->cnc,
 											 gda_holder_get_g_type (param));
 					gvalue = gda_data_handler_get_value_from_str (dh, value, gda_holder_get_g_type (param));
-					gda_holder_take_value (param, gvalue);
+					if (! gda_holder_take_value (param, gvalue, error))
+						return NULL;
 				}
 
 				res = g_new0 (GdaInternalCommandResult, 1);

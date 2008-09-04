@@ -44,70 +44,6 @@ Single value stored in a #GdaDataModel
 <!-- ##### SECTION Stability_Level ##### -->
 
 
-<!-- ##### STRUCT GdaGeometricPoint ##### -->
-<para>
-
-</para>
-
-@x: 
-@y: 
-
-<!-- ##### STRUCT GdaNumeric ##### -->
-<para>
-
-</para>
-
-@number: 
-@precision: 
-@width: 
-
-<!-- ##### STRUCT GdaTime ##### -->
-<para>
-
-</para>
-
-@hour: 
-@minute: 
-@second: 
-@fraction: 
-@timezone: 
-
-<!-- ##### STRUCT GdaTimestamp ##### -->
-<para>
-
-</para>
-
-@year: 
-@month: 
-@day: 
-@hour: 
-@minute: 
-@second: 
-@fraction: 
-@timezone: 
-
-<!-- ##### STRUCT GdaBinary ##### -->
-<para>
-
-</para>
-
-@data: 
-@binary_length: 
-
-<!-- ##### STRUCT GdaBlob ##### -->
-<para>
-
-</para>
-
-@data: 
-@op: 
-
-<!-- ##### TYPEDEF GdaValueList ##### -->
-<para>
-
-</para>
-
-
 <!-- ##### FUNCTION gda_value_new ##### -->
 <para>
 
@@ -125,33 +61,21 @@ Single value stored in a #GdaDataModel
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_value_new_binary ##### -->
+<!-- ##### FUNCTION gda_value_copy ##### -->
 <para>
 
 </para>
 
-@val: 
-@size: 
+@value: 
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_value_new_blob ##### -->
+<!-- ##### FUNCTION gda_value_free ##### -->
 <para>
 
 </para>
 
-@val: 
-@size: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_new_timestamp_from_timet ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
+@value: 
 
 
 <!-- ##### FUNCTION gda_value_new_from_string ##### -->
@@ -164,6 +88,64 @@ Single value stored in a #GdaDataModel
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_value_set_from_string ##### -->
+<para>
+
+</para>
+
+@value: 
+@as_string: 
+@type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_set_from_value ##### -->
+<para>
+
+</para>
+
+@value: 
+@from: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_set_null ##### -->
+<para>
+
+</para>
+
+@value: 
+
+
+<!-- ##### FUNCTION gda_value_stringify ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_differ ##### -->
+<para>
+
+</para>
+
+@value1: 
+@value2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_compare ##### -->
+<para>
+
+</para>
+
+@value1: 
+@value2: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_value_new_from_xml ##### -->
 <para>
 
@@ -173,12 +155,13 @@ Single value stored in a #GdaDataModel
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_value_free ##### -->
+<!-- ##### FUNCTION gda_value_to_xml ##### -->
 <para>
 
 </para>
 
 @value: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_value_reset_with_type ##### -->
@@ -217,115 +200,22 @@ Single value stored in a #GdaDataModel
 @type: 
 
 
-<!-- ##### FUNCTION gda_value_copy ##### -->
+<!-- ##### STRUCT GdaBinary ##### -->
 <para>
 
 </para>
 
-@value: 
+@data: 
+@binary_length: 
+
+<!-- ##### FUNCTION gda_value_new_binary ##### -->
+<para>
+
+</para>
+
+@val: 
+@size: 
 @Returns: 
-
-
-<!-- ##### FUNCTION gda_binary_copy ##### -->
-<para>
-
-</para>
-
-@boxed: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_binary_free ##### -->
-<para>
-
-</para>
-
-@boxed: 
-
-
-<!-- ##### FUNCTION gda_blob_copy ##### -->
-<para>
-
-</para>
-
-@boxed: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_blob_free ##### -->
-<para>
-
-</para>
-
-@boxed: 
-
-
-<!-- ##### FUNCTION gda_geometricpoint_copy ##### -->
-<para>
-
-</para>
-
-@boxed: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_geometricpoint_free ##### -->
-<para>
-
-</para>
-
-@boxed: 
-
-
-<!-- ##### FUNCTION gda_numeric_copy ##### -->
-<para>
-
-</para>
-
-@boxed: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_numeric_free ##### -->
-<para>
-
-</para>
-
-@boxed: 
-
-
-<!-- ##### FUNCTION gda_time_copy ##### -->
-<para>
-
-</para>
-
-@boxed: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_time_free ##### -->
-<para>
-
-</para>
-
-@boxed: 
-
-
-<!-- ##### FUNCTION gda_timestamp_copy ##### -->
-<para>
-
-</para>
-
-@boxed: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_timestamp_free ##### -->
-<para>
-
-</para>
-
-@boxed: 
 
 
 <!-- ##### FUNCTION gda_value_get_binary ##### -->
@@ -355,6 +245,78 @@ Single value stored in a #GdaDataModel
 @binary: 
 
 
+<!-- ##### FUNCTION gda_binary_copy ##### -->
+<para>
+
+</para>
+
+@boxed: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_binary_free ##### -->
+<para>
+
+</para>
+
+@boxed: 
+
+
+<!-- ##### FUNCTION gda_binary_to_string ##### -->
+<para>
+
+</para>
+
+@bin: 
+@maxlen: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_string_to_binary ##### -->
+<para>
+
+</para>
+
+@str: 
+@bin: 
+@Returns: 
+
+
+<!-- ##### STRUCT GdaBlob ##### -->
+<para>
+
+</para>
+
+@data: 
+@op: 
+
+<!-- ##### FUNCTION gda_value_new_blob ##### -->
+<para>
+
+</para>
+
+@val: 
+@size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_blob_copy ##### -->
+<para>
+
+</para>
+
+@boxed: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_blob_free ##### -->
+<para>
+
+</para>
+
+@boxed: 
+
+
 <!-- ##### FUNCTION gda_value_get_blob ##### -->
 <para>
 
@@ -382,6 +344,31 @@ Single value stored in a #GdaDataModel
 @blob: 
 
 
+<!-- ##### STRUCT GdaGeometricPoint ##### -->
+<para>
+
+</para>
+
+@x: 
+@y: 
+
+<!-- ##### FUNCTION gda_geometricpoint_copy ##### -->
+<para>
+
+</para>
+
+@boxed: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_geometricpoint_free ##### -->
+<para>
+
+</para>
+
+@boxed: 
+
+
 <!-- ##### FUNCTION gda_value_get_geometric_point ##### -->
 <para>
 
@@ -398,6 +385,12 @@ Single value stored in a #GdaDataModel
 
 @value: 
 @val: 
+
+
+<!-- ##### TYPEDEF GdaValueList ##### -->
+<para>
+
+</para>
 
 
 <!-- ##### FUNCTION gda_value_get_list ##### -->
@@ -418,12 +411,30 @@ Single value stored in a #GdaDataModel
 @val: 
 
 
-<!-- ##### FUNCTION gda_value_set_null ##### -->
+<!-- ##### STRUCT GdaNumeric ##### -->
 <para>
 
 </para>
 
-@value: 
+@number: 
+@precision: 
+@width: 
+
+<!-- ##### FUNCTION gda_numeric_copy ##### -->
+<para>
+
+</para>
+
+@boxed: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_numeric_free ##### -->
+<para>
+
+</para>
+
+@boxed: 
 
 
 <!-- ##### FUNCTION gda_value_get_numeric ##### -->
@@ -442,6 +453,110 @@ Single value stored in a #GdaDataModel
 
 @value: 
 @val: 
+
+
+<!-- ##### STRUCT GdaTime ##### -->
+<para>
+
+</para>
+
+@hour: 
+@minute: 
+@second: 
+@fraction: 
+@timezone: 
+
+<!-- ##### FUNCTION gda_time_copy ##### -->
+<para>
+
+</para>
+
+@boxed: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_time_free ##### -->
+<para>
+
+</para>
+
+@boxed: 
+
+
+<!-- ##### FUNCTION gda_value_get_time ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_set_time ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+
+
+<!-- ##### STRUCT GdaTimestamp ##### -->
+<para>
+
+</para>
+
+@year: 
+@month: 
+@day: 
+@hour: 
+@minute: 
+@second: 
+@fraction: 
+@timezone: 
+
+<!-- ##### FUNCTION gda_timestamp_copy ##### -->
+<para>
+
+</para>
+
+@boxed: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_timestamp_free ##### -->
+<para>
+
+</para>
+
+@boxed: 
+
+
+<!-- ##### FUNCTION gda_value_get_timestamp ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_set_timestamp ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+
+
+<!-- ##### FUNCTION gda_value_new_timestamp_from_timet ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_value_get_short ##### -->
@@ -478,130 +593,5 @@ Single value stored in a #GdaDataModel
 
 @value: 
 @val: 
-
-
-<!-- ##### FUNCTION gda_value_get_time ##### -->
-<para>
-
-</para>
-
-@value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_set_time ##### -->
-<para>
-
-</para>
-
-@value: 
-@val: 
-
-
-<!-- ##### FUNCTION gda_value_get_timestamp ##### -->
-<para>
-
-</para>
-
-@value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_set_timestamp ##### -->
-<para>
-
-</para>
-
-@value: 
-@val: 
-
-
-<!-- ##### FUNCTION gda_value_set_from_string ##### -->
-<para>
-
-</para>
-
-@value: 
-@as_string: 
-@type: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_set_from_value ##### -->
-<para>
-
-</para>
-
-@value: 
-@from: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_stringify ##### -->
-<para>
-
-</para>
-
-@value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_bcompare ##### -->
-<para>
-
-</para>
-
-@value1: 
-@value2: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_compare ##### -->
-<para>
-
-</para>
-
-@value1: 
-@value2: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_compare_ext ##### -->
-<para>
-
-</para>
-
-@value1: 
-@value2: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_to_xml ##### -->
-<para>
-
-</para>
-
-@value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_binary_to_string ##### -->
-<para>
-
-</para>
-
-@bin: 
-@maxlen: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_string_to_binary ##### -->
-<para>
-
-</para>
-
-@str: 
-@bin: 
-@Returns: 
 
 

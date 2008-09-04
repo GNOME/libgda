@@ -154,7 +154,7 @@ static gint                 gda_data_select_get_n_rows      (GdaDataModel *model
 static gint                 gda_data_select_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_select_describe_column (GdaDataModel *model, gint col);
 static GdaDataModelAccessFlags gda_data_select_get_access_flags(GdaDataModel *model);
-static const GValue        *gda_data_select_get_value_at    (GdaDataModel *model, gint col, gint row);
+static const GValue        *gda_data_select_get_value_at    (GdaDataModel *model, gint col, gint row, GError **error);
 static GdaValueAttribute    gda_data_select_get_attributes_at (GdaDataModel *model, gint col, gint row);
 
 static GdaDataModelIter    *gda_data_select_create_iter     (GdaDataModel *model);
@@ -1036,7 +1036,6 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
 /**
  * gda_data_select_compute_modification_statements
  * @model: a #GdaDataSelect data model
- * @require_pk: FALSE if all fields can be used in the WHERE condition when no primary key exists
  * @error: a place to store errors, or %NULL
  *
  * Makes @model try to compute INSERT, UPDATE and DELETE statements to be used when modifying @model's contents.
@@ -1046,7 +1045,7 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
  * computed
  */
 gboolean
-gda_data_select_compute_modification_statements (GdaDataSelect *model, gboolean require_pk, GError **error)
+gda_data_select_compute_modification_statements (GdaDataSelect *model, GError **error)
 {
 	GdaStatement *stmt;
 	ModType mtype;
@@ -1070,7 +1069,7 @@ gda_data_select_compute_modification_statements (GdaDataSelect *model, gboolean 
 			model->priv->modif_stmts[mtype] = NULL;
 		}
 
-	retval = gda_compute_dml_statements (model->priv->cnc, stmt, require_pk,
+	retval = gda_compute_dml_statements (model->priv->cnc, stmt, TRUE,
 					     &(modif_stmts[INS_QUERY]),
 					     &(modif_stmts[UPD_QUERY]),
 					     &(modif_stmts[DEL_QUERY]), error);
@@ -1437,7 +1436,7 @@ static void dump_d (GdaDataSelect *model)
 #endif
 
 static const GValue *
-gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row)
+gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **error)
 {
 	GdaRow *prow;
 	gint int_row, irow;
@@ -1448,12 +1447,18 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row)
 	g_return_val_if_fail (imodel->priv, NULL);
 
 	/* available only if GDA_DATA_MODEL_ACCESS_RANDOM */
-	if (! (imodel->priv->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM))
+	if (! (imodel->priv->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)) {
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
+			     _("Data model does not support random access"));
 		return NULL;
+	}
 
 	int_row = external_to_internal_row (imodel, row, NULL);
-	if (int_row < 0)
+	if (int_row < 0) {
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
+			     _("Row %d out of range (0-%d)"), row, gda_data_select_get_n_rows (model) - 1);
 		return NULL;
+	}
 
 	DelayedSelectStmt *dstmt = NULL;
 #ifdef GDA_DEBUG_NO
@@ -1464,16 +1469,24 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row)
 	if (dstmt) {
 		if (! dstmt->row) {
 			GdaDataModel *tmpmodel;
-			if (!dstmt->select || !dstmt->params)
+			if (!dstmt->select || !dstmt->params) {
+				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
+					     _("Unable to retreive data after modifications"));
 				return NULL;
+			}
 			tmpmodel = gda_connection_statement_execute_select (imodel->priv->cnc, 
 									    dstmt->select,
 									    dstmt->params, NULL);
-			if (!tmpmodel)
+			if (!tmpmodel) {
+				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
+					     _("Unable to retreive data after modifications"));
 				return NULL;
+			}
 
 			if (gda_data_model_get_n_rows (tmpmodel) != 1) {
 				g_object_unref (tmpmodel);
+				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
+					     _("Unable to retreive data after modifications"));
 				return NULL;
 			}
 
@@ -1484,13 +1497,17 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row)
 				GValue *value;
 				const GValue *cvalue;
 				value = gda_row_get_value (prow, i);
-				cvalue = gda_data_model_get_value_at (tmpmodel, i, 0);
-
-				if (cvalue && !gda_value_is_null (cvalue)) {
+				cvalue = gda_data_model_get_value_at (tmpmodel, i, 0, error);
+				if (!cvalue)
+					return NULL;
+				
+				if (!gda_value_is_null (cvalue)) {
 					gda_value_reset_with_type (value, G_VALUE_TYPE (cvalue));
 					if (! gda_value_set_from_value (value, cvalue)) {
 						g_object_unref (tmpmodel);
 						g_object_unref (prow);
+						g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
+							     _("Unable to retreive data after modifications"));
 						return NULL;
 					}
 				}
@@ -1509,17 +1526,16 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row)
 							     GINT_TO_POINTER (int_row + 1)));
 		if (irow <= 0) {
 			prow = NULL;
-			if (CLASS (model)->fetch_random) 
-				CLASS (model)->fetch_random (imodel, &prow, int_row, NULL);
+			if (CLASS (model)->fetch_random && 
+			    !CLASS (model)->fetch_random (imodel, &prow, int_row, error))
+				return NULL;
 		}
 		else
 			prow = g_array_index (imodel->priv->rows, GdaRow *, irow - 1);
 	}
 	
-	if (prow) 
-		return gda_row_get_value (prow, col);
-
-	return NULL;
+	g_assert (prow);
+	return gda_row_get_value (prow, col);
 }
 
 static GdaValueAttribute
@@ -1562,7 +1578,7 @@ gda_data_select_create_iter (GdaDataModel *model)
 	}
 }
 
-static void update_iter (GdaDataSelect *imodel, GdaRow *prow);
+static gboolean update_iter (GdaDataSelect *imodel, GdaRow *prow);
 static gboolean
 gda_data_select_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 {
@@ -1598,8 +1614,7 @@ gda_data_select_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 	
 	if (prow) {
 		imodel->priv->iter_row = target_iter_row;
-                update_iter (imodel, prow);
-                return TRUE;
+                return update_iter (imodel, prow);
 	}
 	else {
 		g_signal_emit_by_name (iter, "end_of_data");
@@ -1647,8 +1662,7 @@ gda_data_select_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 
 	if (prow) {
 		imodel->priv->iter_row = target_iter_row;
-                update_iter (imodel, prow);
-                return TRUE;
+                return update_iter (imodel, prow);
 	}
 
  prev_error:
@@ -1685,8 +1699,7 @@ gda_data_select_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint r
 			TO_IMPLEMENT;
 		if (prow) {
 			imodel->priv->iter_row = row;
-			update_iter (imodel, prow);
-			return TRUE;
+			return update_iter (imodel, prow);
 		}
 		else {
 			g_object_set (G_OBJECT (iter), "current-row", -1, NULL);
@@ -1697,8 +1710,7 @@ gda_data_select_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint r
 	else {
 		if (prow) {
 			imodel->priv->iter_row = row;
-			update_iter (imodel, prow);
-			return TRUE;
+			return update_iter (imodel, prow);
 		}
 		else {
 			/* implementation of fetch_at() is optional */
@@ -1708,13 +1720,14 @@ gda_data_select_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint r
 	}
 }
 
-static void
+static gboolean
 update_iter (GdaDataSelect *imodel, GdaRow *prow)
 {
         gint i;
 	GdaDataModelIter *iter = imodel->priv->iter;
 	GSList *plist;
 	gboolean update_model;
+	gboolean retval = TRUE;
 	
 	g_object_get (G_OBJECT (iter), "update_model", &update_model, NULL);
 	if (update_model)
@@ -1725,12 +1738,15 @@ update_iter (GdaDataSelect *imodel, GdaRow *prow)
 	     i++, plist = plist->next) {
 		const GValue *value;
 		value = gda_row_get_value (prow, i);
-		gda_holder_set_value ((GdaHolder*) plist->data, value);
+		if (! gda_holder_set_value ((GdaHolder*) plist->data, value, NULL))
+			retval = FALSE;
         }
 
 	g_object_set (G_OBJECT (iter), "current-row", imodel->priv->iter_row, NULL);
 	if (update_model)
 		g_object_set (G_OBJECT (iter), "update_model", update_model, NULL);
+
+	return retval;
 }
 
 /*
@@ -2126,12 +2142,13 @@ vector_set_value_at (GdaDataSelect *imodel, BVector *bv, gint row, GError **erro
 		holder = gda_set_get_holder (imodel->priv->modif_set, str);
 		g_free (str);
 		if (holder) {
-			if (! gda_holder_set_value (holder,
-						    gda_data_model_get_value_at ((GdaDataModel*) imodel, i, int_row))) {
-				g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_VALUE_ERROR,
-					     _("Wrong value type"));
+			const GValue *cvalue;
+			cvalue = gda_data_model_get_value_at ((GdaDataModel*) imodel, i, int_row, error);
+			if (!cvalue)
 				return FALSE;
-			}
+
+			if (! gda_holder_set_value (holder, cvalue, error))
+				return FALSE;
 		}
 	}
 
@@ -2173,7 +2190,7 @@ vector_set_value_at (GdaDataSelect *imodel, BVector *bv, gint row, GError **erro
 				eholder = gda_set_get_holder (imodel->priv->modif_set, 
 							      gda_holder_get_id (holder));
 				if (!eholder || 
-				    ! gda_holder_set_value (holder, gda_holder_get_value (eholder))) {
+				    ! gda_holder_set_value (holder, gda_holder_get_value (eholder), error)) {
 					g_object_unref (dstmt->params);
 					dstmt->params = NULL;
 					break;
@@ -2238,11 +2255,8 @@ gda_data_select_set_value_at (GdaDataModel *model, gint col, gint row, const GVa
 			     _("Column %d can't be modified"), col);
 		return FALSE;
 	}
-	if (! gda_holder_set_value (holder, value)) {
-		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_VALUE_ERROR,
-			     _("Wrong value type"));
+	if (! gda_holder_set_value (holder, value, error)) 
 		return FALSE;
-	}
 
 	/* BVector */
 	BVector *bv;
@@ -2332,9 +2346,7 @@ gda_data_select_set_values (GdaDataModel *model, gint row, GList *values, GError
 			bvector_free (bv);
 			return FALSE;
 		}
-		if (! gda_holder_set_value (holder, (GValue *) list->data)) {
-			g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_VALUE_ERROR,
-				     _("Wrong value type"));
+		if (! gda_holder_set_value (holder, (GValue *) list->data, error)) {
 			bvector_free (bv);
 			return FALSE;
 		}
@@ -2432,9 +2444,7 @@ gda_data_select_append_values (GdaDataModel *model, const GList *values, GError 
 			bvector_free (bv);
 			return -1;
 		}
-		if (! gda_holder_set_value (holder, (GValue *) list->data)) {
-			g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_VALUE_ERROR,
-				     _("Wrong value type"));
+		if (! gda_holder_set_value (holder, (GValue *) list->data, error)) {
 			bvector_free (bv);
 			return -1;
 		}
@@ -2493,7 +2503,7 @@ gda_data_select_append_values (GdaDataModel *model, const GList *values, GError 
 					eholder = g_slist_nth_data (last_insert->holders, 
 								    imodel->priv->insert_to_select_mapping[pos]);
 					if (!eholder || 
-					    ! gda_holder_set_value (holder, gda_holder_get_value (eholder))) {
+					    ! gda_holder_set_value (holder, gda_holder_get_value (eholder), error)) {
 						g_object_unref (dstmt->params);
 						dstmt->params = NULL;
 						break;
@@ -2557,12 +2567,12 @@ gda_data_select_remove_row (GdaDataModel *model, gint row, GError **error)
 		holder = gda_set_get_holder (imodel->priv->modif_set, str);
 		g_free (str);
 		if (holder) {
-			if (! gda_holder_set_value (holder,
-						    gda_data_model_get_value_at (model, i, int_row))) {
-				g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_VALUE_ERROR,
-					     _("Wrong value type"));
+			const GValue *cvalue;
+			cvalue = gda_data_model_get_value_at (model, i, int_row, error);
+			if (!cvalue)
 				return FALSE;
-			}
+			if (! gda_holder_set_value (holder, cvalue, error))
+				return FALSE;
 		}
 	}
 

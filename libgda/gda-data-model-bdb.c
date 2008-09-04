@@ -81,7 +81,7 @@ static gint                 gda_data_model_bdb_get_n_rows      (GdaDataModel *mo
 static gint                 gda_data_model_bdb_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_model_bdb_describe_column (GdaDataModel *model, gint col);
 static GdaDataModelAccessFlags gda_data_model_bdb_get_access_flags(GdaDataModel *model);
-static const GValue      *gda_data_model_bdb_get_value_at    (GdaDataModel *model, gint col, gint row);
+static const GValue        *gda_data_model_bdb_get_value_at    (GdaDataModel *model, gint col, gint row, GError **error);
 static GdaValueAttribute    gda_data_model_bdb_get_attributes_at (GdaDataModel *model, gint col, gint row);
 
 static gboolean             gda_data_model_bdb_set_value_at (GdaDataModel *model, gint col, gint row, const GValue *value, GError **error);
@@ -591,7 +591,7 @@ move_cursor_at (GdaDataModelBdb *model, gint row)
 }
 
 static const GValue *
-gda_data_model_bdb_get_value_at (GdaDataModel *model, gint col, gint row)
+gda_data_model_bdb_get_value_at (GdaDataModel *model, gint col, gint row, GError **error)
 {
 	GdaDataModelBdb *imodel;
 	DBT key, data;
@@ -607,6 +607,8 @@ gda_data_model_bdb_get_value_at (GdaDataModel *model, gint col, gint row)
 		gchar *tmp;
 		tmp = g_strdup_printf (_("Column %d out of range (0-%d)"), col, imodel->priv->n_columns - 1);
 		add_error (imodel, tmp);
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_COLUMN_OUT_OF_RANGE_ERROR,
+			     tmp);
 		g_free (tmp);
 		return NULL;
 	}
@@ -619,6 +621,8 @@ gda_data_model_bdb_get_value_at (GdaDataModel *model, gint col, gint row)
 	ret = imodel->priv->dbpc->c_get (imodel->priv->dbpc, &key, &data, DB_CURRENT);
 	if (ret) {
 		add_error (imodel, db_strerror (ret));
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
+			     db_strerror (ret));
 		return NULL;
 	}
 
@@ -736,6 +740,8 @@ gda_data_model_bdb_set_value_at (GdaDataModel *model, gint col, gint row, const 
 		gchar *tmp;
 		tmp = g_strdup_printf (_("Column %d out of range (0-%d)"), col, imodel->priv->n_columns - 1);
 		add_error (imodel, tmp);
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_COLUMN_OUT_OF_RANGE_ERROR,
+			     tmp);
 		g_free (tmp);
 		return FALSE;
 	}
@@ -836,6 +842,8 @@ gda_data_model_bdb_set_values (GdaDataModel *model, gint row, GList *values, GEr
 	ret = imodel->priv->dbpc->c_get (imodel->priv->dbpc, &key, &data, DB_CURRENT);
 	if (ret) {
 		add_error (imodel, db_strerror (ret));
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
+			     db_strerror (ret));
 		return FALSE;
 	}
 
@@ -844,7 +852,7 @@ gda_data_model_bdb_set_values (GdaDataModel *model, gint row, GList *values, GEr
 		return FALSE;
 
 	if (key_modified) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR,
 			     _("Key modification is not supported"));
 		return FALSE;
 	}
@@ -897,6 +905,8 @@ gda_data_model_bdb_set_values (GdaDataModel *model, gint row, GList *values, GEr
 		ret = imodel->priv->dbpc->c_put (imodel->priv->dbpc, &key, &data, DB_CURRENT);
 		if (ret) {
 			add_error (imodel, db_strerror (ret));
+			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
+				     db_strerror (ret));
 			return FALSE;
 		}
 	}
@@ -938,7 +948,8 @@ gda_data_model_bdb_append_row (GdaDataModel *model, GError **error)
 	ret = imodel->priv->dbp->put (imodel->priv->dbp, NULL, &key, &data, 0);
 	if (ret) {
 		add_error (imodel, db_strerror (ret));
-		g_print ("ERR1\n");
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
+			     db_strerror (ret));
 		return -1;
 	}
 
@@ -964,6 +975,8 @@ gda_data_model_bdb_remove_row (GdaDataModel *model, gint row, GError **error)
 	ret = imodel->priv->dbpc->c_del (imodel->priv->dbpc, 0);
 	if (ret) {
 		add_error (imodel, db_strerror (ret));
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
+			     db_strerror (ret));
 		return FALSE;
 	}
 

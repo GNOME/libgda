@@ -37,7 +37,9 @@ extern GQuark gda_holder_error_quark (void);
 #define GDA_HOLDER_ERROR gda_holder_error_quark ()
 
 typedef enum {
-	GDA_HOLDER_QUERY_LIMIT_ERROR
+	GDA_HOLDER_STRING_CONVERSION_ERROR,
+	GDA_HOLDER_VALUE_TYPE_ERROR,
+	GDA_HOLDER_VALUE_NULL_ERROR
 } GdaHolderError;
 
 /* struct for the object's data */
@@ -70,9 +72,9 @@ const gchar        *gda_holder_get_id                  (GdaHolder *holder);
 
 const GValue       *gda_holder_get_value               (GdaHolder *holder);
 gchar              *gda_holder_get_value_str           (GdaHolder *holder, GdaDataHandler *dh);
-gboolean            gda_holder_set_value               (GdaHolder *holder, const GValue *value);
-gboolean            gda_holder_take_value              (GdaHolder *holder, GValue *value);
-gboolean            gda_holder_set_value_str           (GdaHolder *holder, GdaDataHandler *dh, const gchar *value);
+gboolean            gda_holder_set_value               (GdaHolder *holder, const GValue *value, GError **error);
+gboolean            gda_holder_take_value              (GdaHolder *holder, GValue *value, GError **error);
+gboolean            gda_holder_set_value_str           (GdaHolder *holder, GdaDataHandler *dh, const gchar *value, GError **error);
 
 const GValue       *gda_holder_get_default_value       (GdaHolder *holder);
 void                gda_holder_set_default_value       (GdaHolder *holder, const GValue *value);
@@ -90,7 +92,7 @@ gboolean            gda_holder_set_source_model         (GdaHolder *holder, GdaD
 							 gint col, GError **error);
 GdaDataModel       *gda_holder_get_source_model         (GdaHolder *holder, gint *col);
 
-void                gda_holder_set_bind                 (GdaHolder *holder, GdaHolder *bind_to);
+gboolean            gda_holder_set_bind                 (GdaHolder *holder, GdaHolder *bind_to, GError **error);
 GdaHolder          *gda_holder_get_bind                 (GdaHolder *holder);
 
 G_END_DECLS

@@ -31,12 +31,22 @@ main (int argc, char *argv [])
 		
 		g_print ("=============== ROW %d\n", i);
 
-		c_value= gda_data_model_get_value_at (model, 0, i);
+		c_value= gda_data_model_get_value_at (model, 0, i, &error);
+		if (!c_value) {
+			g_print ("Could not get value from data model: %s\n",
+				 error && error->message ? error->messag : "No detail");
+			exit (1);
+		}
 		bin = gda_value_get_binary (c_value);
 		key = (Key *)bin->data;
 		g_print ("color/type = %s/%d\n", key->color, key->type);
 
-		c_value= gda_data_model_get_value_at (model, 1, i);
+		c_value= gda_data_model_get_value_at (model, 1, i, &error);
+		if (!c_value) {
+			g_print ("Could not get value from data model: %s\n",
+				 error && error->message ? error->messag : "No detail");
+			exit (1);
+		}
 		bin = gda_value_get_binary (c_value);
 		value = (Value *)bin->data;
 		g_print ("size/name = %f/%s\n", value->size, value->name);

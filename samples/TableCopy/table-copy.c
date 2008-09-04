@@ -109,17 +109,18 @@ copy_products_1 (GdaConnection *s_cnc, GdaConnection *d_cnc)
 		GValue *value;
 		gint res;
 
+		/* REM: exit status for each function should be check but has been omitted for clarity */
 		p = gda_set_get_holder (params, "ref");
-		gda_holder_set_value (p, gda_data_model_get_value_at (source, 0, row));
+		gda_holder_set_value (p, gda_data_model_get_value_at (source, 0, row, NULL));
 		p = gda_set_get_holder (params, "name");
-		gda_holder_set_value (p, gda_data_model_get_value_at (source, 1, row));
+		gda_holder_set_value (p, gda_data_model_get_value_at (source, 1, row, NULL));
 		p = gda_set_get_holder (params, "price");
 		value = gda_value_new (G_TYPE_DOUBLE);
-		g_value_set_double (value, g_value_get_double (gda_data_model_get_value_at (source, 2, row)) * 1.05);
+		g_value_set_double (value, g_value_get_double (gda_data_model_get_value_at (source, 2, row, NULL)) * 1.05);
 		gda_holder_set_value (p, value);
 		gda_value_free (value);
 		p = gda_set_get_holder (params, "location");
-		gda_holder_set_value (p, gda_data_model_get_value_at (source, 3, row));
+		gda_holder_set_value (p, gda_data_model_get_value_at (source, 3, row, NULL));
 
 		res = gda_connection_statement_execute_non_select (d_cnc, stmt, params, NULL, &error);
 		if (res == -1) {

@@ -97,7 +97,7 @@ gboolean       gda_data_select_compute_row_selection_condition (GdaDataSelect *m
 
 gboolean       gda_data_select_set_modification_statement      (GdaDataSelect *model, GdaStatement *mod_stmt, GError **error);
 gboolean       gda_data_select_set_modification_statement_sql  (GdaDataSelect *model, const gchar *sql, GError **error);
-gboolean       gda_data_select_compute_modification_statements (GdaDataSelect *model, gboolean require_pk, GError **error);
+gboolean       gda_data_select_compute_modification_statements (GdaDataSelect *model, GError **error);
 
 G_END_DECLS
 

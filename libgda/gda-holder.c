@@ -18,6 +18,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <glib/gi18n-lib.h>
 #include <stdarg.h>
 #include <string.h>
 #include "gda-holder.h"
@@ -268,6 +269,7 @@ gda_holder_copy (GdaHolder *orig)
 {
 	GObject *obj;
 	GdaHolder *holder;
+	gboolean allok = TRUE;
 
 	g_return_val_if_fail (orig && GDA_IS_HOLDER (orig), NULL);
 	g_return_val_if_fail (orig->priv, NULL);
@@ -284,28 +286,34 @@ gda_holder_copy (GdaHolder *orig)
 
 	if (orig->priv->full_bind)
 		gda_holder_set_full_bind (holder, orig->priv->full_bind);
-	if (orig->priv->simple_bind)
-		gda_holder_set_bind (holder, orig->priv->simple_bind);
+	if (orig->priv->simple_bind) 
+		allok = gda_holder_set_bind (holder, orig->priv->simple_bind, NULL);
 	
-	if (orig->priv->source_model) {
+	if (allok && orig->priv->source_model) {
 		/*g_print ("Source holder %p\n", holder);*/
-		gda_holder_set_source_model (holder, orig->priv->source_model, orig->priv->source_col,
-					       NULL);
+		allok = gda_holder_set_source_model (holder, orig->priv->source_model, orig->priv->source_col,
+						     NULL);
 	}
 
-	/* direct settings */
-	holder->priv->invalid_forced = orig->priv->invalid_forced;
-	holder->priv->valid = orig->priv->valid;
-	holder->priv->default_forced = orig->priv->default_forced;	
-	if (orig->priv->value)
-		holder->priv->value = gda_value_copy (orig->priv->value);
-	if (orig->priv->default_value)
-		holder->priv->default_value = gda_value_copy (orig->priv->default_value);
-	holder->priv->not_null = orig->priv->not_null;
-	if (orig->priv->plugin)
-		holder->priv->plugin = g_strdup (orig->priv->plugin);
-
-	return holder;
+	if (allok) {
+		/* direct settings */
+		holder->priv->invalid_forced = orig->priv->invalid_forced;
+		holder->priv->valid = orig->priv->valid;
+		holder->priv->default_forced = orig->priv->default_forced;	
+		if (orig->priv->value)
+			holder->priv->value = gda_value_copy (orig->priv->value);
+		if (orig->priv->default_value)
+			holder->priv->default_value = gda_value_copy (orig->priv->default_value);
+		holder->priv->not_null = orig->priv->not_null;
+		if (orig->priv->plugin)
+			holder->priv->plugin = g_strdup (orig->priv->plugin);
+		return holder;
+	}
+	else {
+		g_warning ("Internal error: could not copy GdaHolder (please report a bug).");
+		g_object_unref (holder);
+		return NULL;
+	}
 }
 
 /**
@@ -335,6 +343,7 @@ gda_holder_new_inline (GType type, const gchar *id, ...)
 	if (holder) {
 		GValue *value;
 		va_list ap;
+		GError *lerror = NULL;
 
 		if (id)
 			holder->priv->id = g_strdup (id);
@@ -378,12 +387,22 @@ gda_holder_new_inline (GType type, const gchar *id, ...)
 			gda_value_set_numeric (value, va_arg (ap, GdaNumeric *));
 		else if (type == G_TYPE_DATE)
 			g_value_set_boxed (value, va_arg (ap, GDate *));
-		else
+		else {
 			g_warning ("%s() does not handle values of type %s, value will not be assigned.",
 				   __FUNCTION__, g_type_name (type));
+			g_object_unref (holder);
+			holder = NULL;
+		}
 		va_end (ap);
 
-		gda_holder_set_value (holder, value);
+		if (holder && !gda_holder_set_value (holder, value, &lerror)) {
+			g_warning (_("Unable to set holder's value: %s"),
+				   lerror && lerror->message ? lerror->message : _("No detail"));
+			if (lerror)
+				g_error_free (lerror);
+			g_object_unref (holder);
+			holder = NULL;
+		}
 		gda_value_free (value);
 	}
 
@@ -397,7 +416,7 @@ gda_holder_dispose (GObject *object)
 
 	holder = GDA_HOLDER (object);
 	if (holder->priv) {
-		gda_holder_set_bind (holder, NULL);
+		gda_holder_set_bind (holder, NULL, NULL);
 		gda_holder_set_full_bind (holder, NULL);
 
 		if (holder->priv->source_model) {
@@ -501,7 +520,8 @@ gda_holder_set_property (GObject *object,
 			break;
 		}
 		case PROP_SIMPLE_BIND:
-			gda_holder_set_bind (holder, GDA_HOLDER (g_value_get_object (value)));
+			if (!gda_holder_set_bind (holder, GDA_HOLDER (g_value_get_object (value)), NULL))
+				g_warning ("Could not set the 'simple-bind' property");
 			break;
 		case PROP_FULL_BIND:
 			gda_holder_set_full_bind (holder, GDA_HOLDER (g_value_get_object (value)));
@@ -509,7 +529,7 @@ gda_holder_set_property (GObject *object,
 		case PROP_SOURCE_MODEL: {
 			GdaDataModel* ptr = g_value_get_object (value);
 			g_return_if_fail (gda_holder_set_source_model (holder, 
-									 (GdaDataModel *)ptr, -1, NULL));
+								       (GdaDataModel *)ptr, -1, NULL));
 			break;
                 }
 		case PROP_SOURCE_COLUMN:
@@ -609,7 +629,7 @@ gda_holder_get_id (GdaHolder *holder)
  * Get the value held into the holder. If @holder is set to use its default value
  * and that default value is not of the same type as @holder, then %NULL is returned.
  *
- * If @holder is set to NULL, then the returned value is a GDA_TYPE_NULL GValue.
+ * If @holder is set to NULL, then the returned value is a #GDA_TYPE_NULL GValue.
  *
  * Returns: the value, or %NULL
  */
@@ -669,12 +689,13 @@ gda_holder_get_value_str (GdaHolder *holder, GdaDataHandler *dh)
         }
 }
 
-static gboolean real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy);
+static gboolean real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, GError **error);
 
 /**
  * gda_holder_set_value
  * @holder: a #GdaHolder object
- * @value: a value to set the holder to
+ * @value: a value to set the holder to, or %NULL
+ * @error: a place to store errors, or %NULL
  *
  * Sets the value within the holder. If @holder is an alias for another
  * holder, then the value is also set for that other holder.
@@ -683,17 +704,22 @@ static gboolean real_gda_holder_set_value (GdaHolder *holder, GValue *value, gbo
  * as soon as this method is called, even if @holder's value does not change.
  * 
  * If the value is not different from the one already contained within @holder,
- * then @holder is not chaged and no signal is emitted.
+ * then @holder is not changed and no signal is emitted.
+ *
+ * Note1: the @value argument is treated the same way if it is %NULL or if it is a #GDA_TYPE_NULL value
+ *
+ * Note2: if @holder can't accept the @value value, then this method returns FALSE, and @holder will be left
+ * in an invalid state.
  *
  * Returns: TRUE if value has been set
  */
 gboolean
-gda_holder_set_value (GdaHolder *holder, const GValue *value)
+gda_holder_set_value (GdaHolder *holder, const GValue *value, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), FALSE);
 	g_return_val_if_fail (holder->priv, FALSE);
 
-	return real_gda_holder_set_value (holder, (GValue*) value, TRUE);
+	return real_gda_holder_set_value (holder, (GValue*) value, TRUE, error);
 }
 
 /**
@@ -701,26 +727,27 @@ gda_holder_set_value (GdaHolder *holder, const GValue *value)
  * @holder: a #GdaHolder object
  * @dh: a #GdaDataHandler to use, or %NULL
  * @value: a value to set the holder to, as a string
+ * @error: a place to store errors, or %NULL
  *
  * Same functionality as gda_holder_set_value() except that it uses a string representation
  * of the value to set, which will be converted into a GValue first (using default data handler if
  * @dh is %NULL).
  *
- * Note that is @value is %NULL or is the "NULL" string, then @holder's value is set to %NULL.
+ * Note1: if @value is %NULL or is the "NULL" string, then @holder's value is set to %NULL.
+ * Note2: if @holder can't accept the @value value, then this method returns FALSE, and @holder will be left
+ * in an invalid state.
  *
  * Returns: TRUE if value has been set
  */
 gboolean
-gda_holder_set_value_str (GdaHolder *holder, GdaDataHandler *dh, const gchar *value)
+gda_holder_set_value_str (GdaHolder *holder, GdaDataHandler *dh, const gchar *value, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), FALSE);
 	g_return_val_if_fail (holder->priv, FALSE);
 	g_return_val_if_fail (!dh || GDA_IS_DATA_HANDLER (dh), FALSE);
 
-	if (!value || !g_ascii_strcasecmp (value, "NULL")) {
-                gda_holder_set_value (holder, NULL);
-                return TRUE;
-        }
+	if (!value || !g_ascii_strcasecmp (value, "NULL")) 
+                return gda_holder_set_value (holder, NULL, error);
         else {
                 GValue *gdaval = NULL;
 
@@ -730,9 +757,13 @@ gda_holder_set_value_str (GdaHolder *holder, GdaDataHandler *dh, const gchar *va
                         gdaval = gda_data_handler_get_value_from_str (dh, value, holder->priv->g_type);
 
                 if (gdaval)
-			return real_gda_holder_set_value (holder, gdaval, FALSE);
-                else
+			return real_gda_holder_set_value (holder, gdaval, FALSE, error);
+                else {
+			g_set_error (error, GDA_HOLDER_ERROR, GDA_HOLDER_STRING_CONVERSION_ERROR,
+				     _("Unable to convert string to '%s' type"), 
+				     gda_g_type_to_string (holder->priv->g_type));
                         return FALSE;
+		}
         }
 }
 
@@ -740,6 +771,7 @@ gda_holder_set_value_str (GdaHolder *holder, GdaDataHandler *dh, const gchar *va
  * gda_holder_take_value
  * @holder: a #GdaHolder object
  * @value: a value to set the holder to
+ * @error: a place to store errors, or %NULL
  *
  * Sets the value within the holder. If @holder is an alias for another
  * holder, then the value is also set for that other holder.
@@ -750,21 +782,23 @@ gda_holder_set_value_str (GdaHolder *holder, GdaDataHandler *dh, const gchar *va
  * If the value is not different from the one already contained within @holder,
  * then @holder is not chaged and no signal is emitted.
  *
+ * Note: if @holder can't accept the @value value, then this method returns FALSE, and @holder will be left
+ * in an invalid state.
+ *
  * Returns: TRUE if value has been set
  */
 gboolean
-gda_holder_take_value (GdaHolder *holder, GValue *value)
+gda_holder_take_value (GdaHolder *holder, GValue *value, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), FALSE);
 	g_return_val_if_fail (holder->priv, FALSE);
 
-	return real_gda_holder_set_value (holder, (GValue*) value, FALSE);
+	return real_gda_holder_set_value (holder, (GValue*) value, FALSE, error);
 }
 
 static gboolean
-real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy)
+real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, GError **error)
 {
-	gboolean retval = FALSE;
 	gboolean changed = TRUE;
 	gboolean newvalid;
 	const GValue *current_val;
@@ -787,16 +821,24 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy)
 		changed = FALSE;
 	else if (value && current_val &&
 		 (G_VALUE_TYPE (value) == G_VALUE_TYPE ((GValue *)current_val)))
-		changed = gda_value_bcompare (value, (GValue *)current_val);
+		changed = gda_value_differ (value, (GValue *)current_val);
 		
 	/* holder's validity */
 	newvalid = TRUE;
-	if (newnull)
-		if (holder->priv->not_null)
-			newvalid = FALSE;
-
-	if (!newnull && (G_VALUE_TYPE (value) != holder->priv->g_type)) 
+	if (newnull && holder->priv->not_null) {
+		g_set_error (error, GDA_HOLDER_ERROR, GDA_HOLDER_VALUE_NULL_ERROR,
+			     _("Holder does not allow NULL values"));
 		newvalid = FALSE;
+		changed = TRUE;
+	}
+	else if (!newnull && (G_VALUE_TYPE (value) != holder->priv->g_type)) {
+		g_set_error (error, GDA_HOLDER_ERROR, GDA_HOLDER_VALUE_TYPE_ERROR,
+			     _("Wrong value type: expected type '%s' when value's type is '%s'"),
+			     gda_g_type_to_string (holder->priv->g_type),
+			     gda_g_type_to_string (G_VALUE_TYPE (value)));
+		newvalid = FALSE;
+		changed = TRUE;
+	}
 
 #ifdef DEBUG_HOLDER
 	g_print ("Changed holder %p (%s): value %s --> %s \t(type %d -> %d) VALID: %d->%d CHANGED: %d\n", 
@@ -824,7 +866,7 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy)
 			holder->priv->default_forced = TRUE;
 		else if ((G_VALUE_TYPE (holder->priv->default_value) == holder->priv->g_type) &&
 			 value && (G_VALUE_TYPE (value) == holder->priv->g_type))
-			holder->priv->default_forced = !gda_value_compare_ext (holder->priv->default_value, value);
+			holder->priv->default_forced = !gda_value_compare (holder->priv->default_value, value);
 	}
 
 	/* real setting of the value */
@@ -833,7 +875,7 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy)
 		g_print ("Holder %p is alias of holder %p => propagating changes to holder %p\n",
 			 holder, holder->priv->full_bind, holder->priv->full_bind);
 #endif
-		retval = real_gda_holder_set_value (holder->priv->full_bind, value, do_copy);
+		return real_gda_holder_set_value (holder->priv->full_bind, value, do_copy, error);
 	}
 	else {
 		if (holder->priv->value) {
@@ -842,17 +884,20 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy)
 		}
 
 		if (value) {
-			retval = TRUE;
-			if (do_copy)
-				holder->priv->value = gda_value_copy (value);
-			else
-				holder->priv->value = value;
+			if (newvalid) {
+				if (do_copy)
+					holder->priv->value = gda_value_copy (value);
+				else
+					holder->priv->value = value;
+			}
+			else if (!do_copy) 
+				gda_value_free (value);
 		}
 
 		g_signal_emit (holder, gda_holder_signals[CHANGED], 0);
 	}
 
-	return retval;
+	return newvalid;
 }
 
 /**
@@ -995,7 +1040,7 @@ gda_holder_get_default_value (GdaHolder *holder)
  * @value: a value to set the holder's default value, or %NULL
  *
  * Sets the default value within the holder. If @value is %NULL then @holder won't have a
- * default value anymore. To set a default value to %NULL, then pass GValue created using
+ * default value anymore. To set a default value to %NULL, then pass a #GValue created using
  * gda_value_new_null().
  *
  * NOTE: the default value does not need to be of the same type as the one required by @holder.
@@ -1008,7 +1053,7 @@ gda_holder_set_default_value (GdaHolder *holder, const GValue *value)
 
 	if (holder->priv->default_value) {
 		if (holder->priv->default_forced) {
-			gda_holder_take_value (holder, holder->priv->default_value);
+			gda_holder_take_value (holder, holder->priv->default_value, NULL);
 			holder->priv->default_forced = FALSE;
 			holder->priv->default_value = NULL;
 		}
@@ -1027,7 +1072,7 @@ gda_holder_set_default_value (GdaHolder *holder, const GValue *value)
 		    (!current || gda_value_is_null (current)))
 			holder->priv->default_forced = TRUE;
 		else if ((G_VALUE_TYPE (value) == holder->priv->g_type) &&
-			 current && !gda_value_compare_ext (value, current))
+			 current && !gda_value_compare (value, current))
 			holder->priv->default_forced = TRUE;
 
 		holder->priv->default_value = gda_value_copy ((GValue *)value);
@@ -1152,25 +1197,29 @@ gda_holder_get_source_model (GdaHolder *holder, gint *col)
  *
  * If @bind_to is %NULL, then @holder will not be bound anymore.
  */
-void
-gda_holder_set_bind (GdaHolder *holder, GdaHolder *bind_to)
+gboolean
+gda_holder_set_bind (GdaHolder *holder, GdaHolder *bind_to, GError **error)
 {
 	const GValue *cvalue;
 	GValue *value1 = NULL;
 	const GValue *value2 = NULL;
 
-	g_return_if_fail (GDA_IS_HOLDER (holder));
-	g_return_if_fail (holder->priv);
-	g_return_if_fail (holder != bind_to);
+	g_return_val_if_fail (GDA_IS_HOLDER (holder), FALSE);
+	g_return_val_if_fail (holder->priv, FALSE);
+	g_return_val_if_fail (holder != bind_to, FALSE);
 
 	if (holder->priv->simple_bind == bind_to)
-		return;
+		return TRUE;
 
 	/* get a copy of the current values of @holder and @bind_to */
 	if (bind_to) {
-		g_return_if_fail (GDA_IS_HOLDER (bind_to));
-		g_return_if_fail (bind_to->priv);
-		g_return_if_fail (holder->priv->g_type == bind_to->priv->g_type);
+		g_return_val_if_fail (GDA_IS_HOLDER (bind_to), FALSE);
+		g_return_val_if_fail (bind_to->priv, FALSE);
+		if (holder->priv->g_type != bind_to->priv->g_type) {
+			g_set_error (error, GDA_HOLDER_ERROR, GDA_HOLDER_VALUE_TYPE_ERROR,
+				     _("Cannot bind holders if their type is not the same"));
+			return FALSE;
+		}
 		value2 = gda_holder_get_value (bind_to);
 	}
 
@@ -1194,12 +1243,12 @@ gda_holder_set_bind (GdaHolder *holder, GdaHolder *bind_to)
 				  G_CALLBACK (full_bind_changed_cb), holder);
 
 		/* if bind_to has a different value than holder, then we set holder to the new value */
-		gda_holder_set_value (holder, value2);
 		if (value1)
 			gda_value_free (value1);
+		return gda_holder_set_value (holder, value2, error);
 	}
 	else
-		gda_holder_take_value (holder, value1);
+		return gda_holder_take_value (holder, value1, error);
 }
 
 /*

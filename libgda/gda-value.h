@@ -155,9 +155,8 @@ gboolean                          gda_value_set_from_string (GValue *value,
 						             GType type);
 gboolean                          gda_value_set_from_value (GValue *value, const GValue *from);
 
-gint                              gda_value_bcompare (const GValue *value1, const GValue *value2);
+gint                              gda_value_differ (const GValue *value1, const GValue *value2);
 gint                              gda_value_compare (const GValue *value1, const GValue *value2);
-gint                              gda_value_compare_ext (const GValue *value1, const GValue *value2);
 gchar                            *gda_value_stringify (const GValue *value);
 xmlNodePtr                        gda_value_to_xml (const GValue *value);
 

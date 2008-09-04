@@ -1015,10 +1015,10 @@ gda_sqlite_provider_begin_transaction (GdaServerProvider *provider, GdaConnectio
 		g_static_mutex_lock (&mutex);
 		if (!params_set)
 			params_set = gda_set_new_inline (1, "name", G_TYPE_STRING, name);
-		else 
-			gda_set_set_holder_value (params_set, "name", name);
-		if (gda_connection_statement_execute_non_select (cnc, internal_stmt[INTERNAL_BEGIN_NAMED], 
-								 params_set, NULL, NULL) == -1) 
+		else if (! gda_set_set_holder_value (params_set, error, "name", name))
+			status = FALSE;
+		if (status && gda_connection_statement_execute_non_select (cnc, internal_stmt[INTERNAL_BEGIN_NAMED], 
+									   params_set, NULL, NULL) == -1) 
 			status = FALSE;
 		g_static_mutex_unlock (&mutex);
 	}
@@ -1049,10 +1049,10 @@ gda_sqlite_provider_commit_transaction (GdaServerProvider *provider, GdaConnecti
 		g_static_mutex_lock (&mutex);
 		if (!params_set)
 			params_set = gda_set_new_inline (1, "name", G_TYPE_STRING, name);
-		else 
-			gda_set_set_holder_value (params_set, "name", name);
-		if (gda_connection_statement_execute_non_select (cnc, internal_stmt[INTERNAL_COMMIT_NAMED], 
-								 params_set, NULL, NULL) == -1) 
+		else if (!gda_set_set_holder_value (params_set, error, "name", name))
+			status = FALSE;
+		if (status && gda_connection_statement_execute_non_select (cnc, internal_stmt[INTERNAL_COMMIT_NAMED], 
+									   params_set, NULL, NULL) == -1) 
 			status = FALSE;
 		g_static_mutex_unlock (&mutex);
 	}
@@ -1084,10 +1084,10 @@ gda_sqlite_provider_rollback_transaction (GdaServerProvider *provider,
 		g_static_mutex_lock (&mutex);
 		if (!params_set)
 			params_set = gda_set_new_inline (1, "name", G_TYPE_STRING, name);
-		else 
-			gda_set_set_holder_value (params_set, "name", name);
-		if (gda_connection_statement_execute_non_select (cnc, internal_stmt[INTERNAL_ROLLBACK_NAMED], 
-								 params_set, NULL, NULL) == -1) 
+		else if (! gda_set_set_holder_value (params_set, error, "name", name))
+			status = FALSE;
+		if (status && gda_connection_statement_execute_non_select (cnc, internal_stmt[INTERNAL_ROLLBACK_NAMED], 
+									   params_set, NULL, NULL) == -1) 
 			status = FALSE;
 		g_static_mutex_unlock (&mutex);
 	}
@@ -1755,7 +1755,7 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, sqlite3_int64 la
 		return NULL;
         }
 	else {
-		GdaSet *set;
+		GdaSet *set = NULL;
 		GSList *holders = NULL;
 		gint nrows, ncols, i;
 
@@ -1774,21 +1774,32 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, sqlite3_int64 la
 			GdaHolder *h;
 			GdaColumn *col;
 			gchar *id;
+			const GValue *cvalue;
 			col = gda_data_model_describe_column (model, i);
 			h = gda_holder_new (gda_column_get_g_type (col));
 			id = g_strdup_printf ("+%d", i);
 			g_object_set (G_OBJECT (h), "id", id, "not-null", FALSE, 
 				      "name", gda_column_get_name (col), NULL);
 			g_free (id);
-			gda_holder_set_value (h, gda_data_model_get_value_at (model, i, 0));
+			cvalue = gda_data_model_get_value_at (model, i, 0, NULL);
+			if (!cvalue || !gda_holder_set_value (h, cvalue, NULL)) {
+				if (holders) {
+					g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
+					g_slist_free (holders);
+					holders = NULL;
+				}
+				break;
+			}
 			holders = g_slist_prepend (holders, h);
 		}
 		g_object_unref (model);
 
-		holders = g_slist_reverse (holders);
-		set = gda_set_new (holders);
-		g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
-		g_slist_free (holders);
+		if (holders) {
+			holders = g_slist_reverse (holders);
+			set = gda_set_new (holders);
+			g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
+			g_slist_free (holders);
+		}
 
 		return set;
 	}

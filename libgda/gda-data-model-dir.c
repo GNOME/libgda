@@ -128,7 +128,7 @@ static gint                 gda_data_model_dir_get_n_rows      (GdaDataModel *mo
 static gint                 gda_data_model_dir_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_model_dir_describe_column (GdaDataModel *model, gint col);
 static GdaDataModelAccessFlags gda_data_model_dir_get_access_flags(GdaDataModel *model);
-static const GValue      *gda_data_model_dir_get_value_at    (GdaDataModel *model, gint col, gint row);
+static const GValue        *gda_data_model_dir_get_value_at    (GdaDataModel *model, gint col, gint row, GError **error);
 static GdaValueAttribute    gda_data_model_dir_get_attributes_at (GdaDataModel *model, gint col, gint row);
 
 static gboolean             gda_data_model_dir_set_value_at (GdaDataModel *model, gint col, gint row, const GValue *value, GError **error);
@@ -553,7 +553,7 @@ update_file_md5sum (FileRow *row, const gchar *complete_filename)
  md5end:
 	if (value) {
 		if (row->md5sum_value && (G_VALUE_TYPE (row->md5sum_value) == G_TYPE_STRING)
-		    && !gda_value_compare_ext (row->md5sum_value, value))
+		    && !gda_value_compare (row->md5sum_value, value))
 			changed = FALSE;
 		else {
 			if (row->md5sum_value)
@@ -613,7 +613,7 @@ update_file_mime (FileRow *row, const gchar *complete_filename)
 
 	if (value) {
 		if (row->mime_value && (G_VALUE_TYPE (row->mime_value) == G_TYPE_STRING)
-		    && !gda_value_compare_ext (row->mime_value, value))
+		    && !gda_value_compare (row->mime_value, value))
 			changed = FALSE;
 		else {
 			if (row->mime_value)
@@ -776,7 +776,7 @@ gda_data_model_dir_get_access_flags (GdaDataModel *model)
 }
 
 static const GValue *
-gda_data_model_dir_get_value_at (GdaDataModel *model, gint col, gint row)
+gda_data_model_dir_get_value_at (GdaDataModel *model, gint col, gint row, GError **error)
 {
 	GdaDataModelDir *imodel;
 	GValue *value = NULL;
@@ -790,6 +790,8 @@ gda_data_model_dir_get_value_at (GdaDataModel *model, gint col, gint row)
 		gchar *tmp;
 		tmp = g_strdup_printf (_("Column %d out of range (0-%d)"), col, COL_LAST-1);
 		add_error (imodel, tmp);
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_COLUMN_OUT_OF_RANGE_ERROR,
+			     tmp);
 		g_free (tmp);
 		return NULL;
 	}
@@ -799,6 +801,8 @@ gda_data_model_dir_get_value_at (GdaDataModel *model, gint col, gint row)
                 str = g_strdup_printf (_("Row %d out of range (0-%d)"), row,
 				       imodel->priv->rows->len - 1);
 		add_error (imodel, str);
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
+			     str);
 		g_free (str);
                 return NULL;
         }
@@ -862,6 +866,9 @@ gda_data_model_dir_get_value_at (GdaDataModel *model, gint col, gint row)
 			break;
 		}
 	}
+	else
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_NOT_FOUND_ERROR,
+			     _("Row not found"));
 
 	return value;
 }
@@ -972,7 +979,10 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 
 	for (col = 0, list = values; list; list = list->next, col++) {
 		GValue *value = (GValue *) list->data;
-		if (!value || !gda_value_compare_ext (value, gda_data_model_get_value_at (model, col, row))) 
+		const GValue *cvalue = gda_data_model_get_value_at (model, col, row, error);
+		if (!cvalue)
+			return FALSE;
+		if (!value || !gda_value_compare (value, cvalue)) 
 			continue;
 
 		switch (col) {

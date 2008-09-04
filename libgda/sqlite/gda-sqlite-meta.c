@@ -371,7 +371,11 @@ _gda_sqlite_meta__udt (GdaServerProvider *prov, GdaConnection *cnc,
 	nrows = gda_data_model_get_n_rows (tmpmodel);
         for (i = 0; i < nrows; i++) {
 		/* iterate through the schemas */
-                const GValue *cvalue = gda_data_model_get_value_at (tmpmodel, 1, i);
+                const GValue *cvalue = gda_data_model_get_value_at (tmpmodel, 1, i, error);
+		if (!cvalue) {
+			retval = FALSE;
+                        break;
+		}
                 if (!strcmp (g_value_get_string (cvalue), TMP_DATABASE_NAME))
 			continue; /* nothing to do */
 		if (! fill_udt_model (cdata, added_hash, mod_model, cvalue, error)) {
@@ -578,9 +582,13 @@ _gda_sqlite_meta_schemata (GdaServerProvider *prov, GdaConnection *cnc,
 	for (i = 0; (i < nrows) && retval; i++) {
 		const GValue *cvalue;
 		
-		cvalue = gda_data_model_get_value_at (tmpmodel, 1, i);
+		cvalue = gda_data_model_get_value_at (tmpmodel, 1, i, error);
+		if (!cvalue) {
+			retval = FALSE;
+                        break;
+		}
 		if (!schema_name_n || 
-		    !gda_value_compare_ext (schema_name_n, cvalue)) {
+		    !gda_value_compare (schema_name_n, cvalue)) {
 			const gchar *cstr;
 			GValue *v1;
 
@@ -643,9 +651,13 @@ fill_tables_views_model (GdaConnection *cnc,
         for (i = 0; (i < nrows) && retval; i++) {
                 const GValue *cvalue;
 
-                cvalue = gda_data_model_get_value_at (tmpmodel, 0, i);
+                cvalue = gda_data_model_get_value_at (tmpmodel, 0, i, error);
+		if (!cvalue) {
+			retval = FALSE;
+                        break;
+		}
                 if (!p_table_name ||
-                    !gda_value_compare_ext (p_table_name, cvalue)) {
+                    !gda_value_compare (p_table_name, cvalue)) {
                         GValue *v1, *v2 = NULL;
                         const GValue *tvalue;
                         const GValue *dvalue;
@@ -657,8 +669,16 @@ fill_tables_views_model (GdaConnection *cnc,
 			if (!strcmp (this_table_name, "sqlite_sequence"))
                                 continue; /* ignore that table */
 
-                        tvalue = gda_data_model_get_value_at (tmpmodel, 1, i);
-                        dvalue = gda_data_model_get_value_at (tmpmodel, 2, i);
+                        tvalue = gda_data_model_get_value_at (tmpmodel, 1, i, error);
+			if (!tvalue) {
+				retval = FALSE;
+				break;
+			}
+                        dvalue = gda_data_model_get_value_at (tmpmodel, 2, i, error);
+			if (!dvalue) {
+				retval = FALSE;
+				break;
+			}
                         if (*(g_value_get_string (tvalue)) == 'v')
                                 is_view = TRUE;
                         g_value_set_boolean ((v1 = gda_value_new (G_TYPE_BOOLEAN)), TRUE);
@@ -712,7 +732,11 @@ _gda_sqlite_meta__tables_views (GdaServerProvider *prov, GdaConnection *cnc,
 	nrows = gda_data_model_get_n_rows (tmpmodel);
 	for (i = 0; i < nrows; i++) {
 		/* iterate through the schemas */
-		const GValue *cvalue = gda_data_model_get_value_at (tmpmodel, 1, i);
+		const GValue *cvalue = gda_data_model_get_value_at (tmpmodel, 1, i, error);
+		if (!cvalue) {
+			retval = FALSE;
+			break;
+		}
 		if (!strcmp (g_value_get_string (cvalue), TMP_DATABASE_NAME))
 			 continue; /* nothing to do */
 
@@ -789,11 +813,16 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 	if (strcmp (schema_name, "main")) {
 		gchar *str;
 		str = g_strdup_printf ("%s.%s", schema_name, g_value_get_string (p_table_name));
-		gda_set_set_holder_value (pragma_set, "tblname", str);
+		if (! gda_set_set_holder_value (pragma_set, error, "tblname", str)) {
+			g_free (str);
+			return FALSE;
+		}
 		g_free (str);
 	}
-	else
-		gda_set_set_holder_value (pragma_set, "tblname", g_value_get_string (p_table_name));
+	else {
+		if (! gda_set_set_holder_value (pragma_set, error, "tblname", g_value_get_string (p_table_name)))
+			return FALSE;
+	}
 
 	tmpmodel = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_PRAGMA_TABLE_INFO], pragma_set, 
 								 GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
@@ -813,8 +842,13 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 		const gchar *this_col_name;
 		const GValue *this_col_pname;
 		GType gtype = 0;
+		const GValue *cvalue;
 		
-		this_col_pname = gda_data_model_get_value_at (tmpmodel, 1, i);
+		this_col_pname = gda_data_model_get_value_at (tmpmodel, 1, i, error);
+		if (!this_col_pname) {
+			retval = FALSE;
+			break;
+		}
 		this_table_name = g_value_get_string (p_table_name);
 		g_assert (this_table_name);
 		if (!strcmp (this_table_name, "sqlite_sequence"))
@@ -826,14 +860,34 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 						   &pzDataType, &pzCollSeq, &pNotNull, &pPrimaryKey, &pAutoinc)
 		    != SQLITE_OK) {
 			/* may fail because we have a view and not a table => use @tmpmodel to fetch info. */
-			pzDataType = g_value_get_string (gda_data_model_get_value_at (tmpmodel, 2, i));
+			cvalue = gda_data_model_get_value_at (tmpmodel, 2, i, error);
+			if (!cvalue) {
+				retval = FALSE;
+				break;
+			}	
+			pzDataType = g_value_get_string (cvalue);
 			pzCollSeq = NULL;
-			pNotNull = g_value_get_int (gda_data_model_get_value_at (tmpmodel, 3, i));
-			pPrimaryKey = g_value_get_boolean (gda_data_model_get_value_at (tmpmodel, 5, i));
+			cvalue = gda_data_model_get_value_at (tmpmodel, 3, i, error);
+			if (!cvalue) {
+				retval = FALSE;
+				break;
+			}
+			pNotNull = g_value_get_int (cvalue);
+			cvalue = gda_data_model_get_value_at (tmpmodel, 5, i, error);
+			if (!cvalue) {
+				retval = FALSE;
+				break;
+			}
+			pPrimaryKey = g_value_get_boolean (cvalue);
 			pAutoinc = 0;
 		}
 		
-		v1 = gda_value_copy (gda_data_model_get_value_at (tmpmodel, 0, i));
+		cvalue = gda_data_model_get_value_at (tmpmodel, 0, i, error);
+		if (!cvalue) {
+			retval = FALSE;
+			break;
+		}
+		v1 = gda_value_copy (cvalue);
 		g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), pzDataType);
 		g_value_set_boolean ((v3 = gda_value_new (G_TYPE_BOOLEAN)), pNotNull ? FALSE : TRUE);
 		g_value_set_string ((v4 = gda_value_new (G_TYPE_STRING)), pzCollSeq);
@@ -855,13 +909,18 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 			g_value_set_string ((v6 = gda_value_new (G_TYPE_STRING)), "string");
 		else
 			g_value_set_string ((v6 = gda_value_new (G_TYPE_STRING)), g_type_name (gtype));
+		cvalue = gda_data_model_get_value_at (tmpmodel, 4, i, error);
+		if (!cvalue) {
+			retval = FALSE;
+			break;
+		}
 		if (! append_a_row (mod_model, error, 24, 
 				    FALSE, catalog_value, /* table_catalog */
 				    FALSE, p_table_schema, /* table_schema */
 				    FALSE, p_table_name, /* table_name */
 				    FALSE, this_col_pname, /* column name */
 				    TRUE, v1, /* ordinal_position */
-				    FALSE, gda_data_model_get_value_at (tmpmodel, 4, i), /* column default */
+				    FALSE, cvalue, /* column default */
 				    TRUE, v3, /* is_nullable */
 				    TRUE, v2, /* data_type */
 				    FALSE, NULL, /* array_spec */
@@ -913,8 +972,11 @@ _gda_sqlite_meta__columns (GdaServerProvider *prov, GdaConnection *cnc,
 		/* iterate through the schemas */
 		GdaDataModel *tables_model;
 		const gchar *schema_name;
-		const GValue *cvalue = gda_data_model_get_value_at (tmpmodel, 1, i);
-
+		const GValue *cvalue = gda_data_model_get_value_at (tmpmodel, 1, i, error);
+		if (!cvalue) {
+			retval = FALSE;
+			break;
+		}
 		schema_name = g_value_get_string (cvalue); 
 		if (!strcmp (schema_name, TMP_DATABASE_NAME))
 			 continue; /* nothing to do */
@@ -940,9 +1002,13 @@ _gda_sqlite_meta__columns (GdaServerProvider *prov, GdaConnection *cnc,
 		tnrows = gda_data_model_get_n_rows (tables_model);
 		for (ti = 0; ti < tnrows; ti++) {
 			/* iterate through the tables */
-			if (!fill_columns_model (cnc, cdata, mod_model, cvalue, 
-						 gda_data_model_get_value_at (tables_model, 0, ti), 
-						 error)) {
+			const GValue *cv;
+			cv = gda_data_model_get_value_at (tables_model, 0, ti, error);
+			if (!cv) {
+				retval = FALSE;
+				break;
+			}
+			if (!fill_columns_model (cnc, cdata, mod_model, cvalue, cv, error)) {
 				retval = FALSE;
 				break;
 			}
@@ -1020,12 +1086,17 @@ fill_constraints_tab_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 	if (strcmp (schema_name, "main")) {
 		gchar *str;
 		str = g_strdup_printf ("%s.%s", schema_name, g_value_get_string (p_table_name));
-		gda_set_set_holder_value (pragma_set, "tblname", str);
+		if (! gda_set_set_holder_value (pragma_set, error, "tblname", str)) {
+			g_free (str);
+			return FALSE;
+		}
 		g_free (str);
 	}
-	else
-		gda_set_set_holder_value (pragma_set, "tblname", g_value_get_string (p_table_name));
-	
+	else {
+		if (!gda_set_set_holder_value (pragma_set, error, "tblname", g_value_get_string (p_table_name)))
+			return FALSE;
+	}	
+
 	/* 
 	 * PRIMARY KEY
 	 *
@@ -1050,9 +1121,13 @@ fill_constraints_tab_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 		int pAutoinc; /* True if column is auto-increment */
 		const gchar *this_table_name;
 		const gchar *this_col_name;
-		const GValue *this_col_pname;
+		const GValue *this_col_pname, *cvalue;
 		
-		this_col_pname = gda_data_model_get_value_at (tmpmodel, 1, i);
+		this_col_pname = gda_data_model_get_value_at (tmpmodel, 1, i, error);
+		if (!this_col_pname) {
+			retval = FALSE;
+			break;
+		}
 		this_table_name = g_value_get_string (p_table_name);
 		g_assert (this_table_name);
 		if (!strcmp (this_table_name, "sqlite_sequence"))
@@ -1062,9 +1137,15 @@ fill_constraints_tab_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 		if (sqlite3_table_column_metadata (cdata->connection, g_value_get_string (p_table_schema), 
 						   this_table_name, this_col_name,
 						   &pzDataType, &pzCollSeq, &pNotNull, &pPrimaryKey, &pAutoinc)
-		    != SQLITE_OK) 
+		    != SQLITE_OK) {
 			/* may fail because we have a view and not a table => use @tmpmodel to fetch info. */
-			pPrimaryKey = g_value_get_boolean (gda_data_model_get_value_at (tmpmodel, 5, i));
+			cvalue = gda_data_model_get_value_at (tmpmodel, 5, i, error);
+			if (!cvalue) {
+				retval = FALSE;
+				break;
+			}
+			pPrimaryKey = g_value_get_boolean (cvalue);
+		}
 		
 		if (pPrimaryKey) {
 			has_pk = TRUE;
@@ -1072,7 +1153,7 @@ fill_constraints_tab_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 		}
 	}
 
-	if (has_pk) {
+	if (retval && has_pk) {
 		if (!constraint_name_n || ! strcmp (g_value_get_string (constraint_name_n), "primary_key")) {
 			GValue *v1, *v2;
 			g_value_set_string ((v1 = gda_value_new (G_TYPE_STRING)), "primary_key");
@@ -1113,11 +1194,19 @@ fill_constraints_tab_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 		const GValue *cvalue;
 		GValue *v2;
 
-		cvalue = gda_data_model_get_value_at (tmpmodel, 2, i);
+		cvalue = gda_data_model_get_value_at (tmpmodel, 2, i, error);
+		if (!cvalue) {
+			retval = FALSE;
+			break;
+		}
 		if (!g_value_get_int (cvalue))
 			continue;
 		
-		cvalue = gda_data_model_get_value_at (tmpmodel, 1, i);
+		cvalue = gda_data_model_get_value_at (tmpmodel, 1, i, error);
+		if (!cvalue) {
+			retval = FALSE;
+			break;
+		}
 		if (constraint_name_n && strcmp (g_value_get_string (constraint_name_n), g_value_get_string (cvalue)))
 			continue;
 
@@ -1155,7 +1244,11 @@ fill_constraints_tab_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 	for (i = 0; i < nrows; i++) {
 		const GValue *cvalue;
 
-		cvalue = gda_data_model_get_value_at (tmpmodel, 2, i);
+		cvalue = gda_data_model_get_value_at (tmpmodel, 2, i, error);
+		if (!cvalue) {
+			retval = FALSE;
+			break;
+		}
 		if (! ref_table || strcmp (ref_table, g_value_get_string (cvalue))) {
 			gchar *constname;
 			GValue *v1, *v2;
@@ -1222,8 +1315,11 @@ _gda_sqlite_meta__constraints_tab (GdaServerProvider *prov, GdaConnection *cnc,
 		/* iterate through the schemas */
 		GdaDataModel *tables_model;
 		const gchar *schema_name;
-		const GValue *cvalue = gda_data_model_get_value_at (tmpmodel, 1, i);
-
+		const GValue *cvalue = gda_data_model_get_value_at (tmpmodel, 1, i, error);
+		if (!cvalue) {
+			retval = FALSE;
+			break;
+		}
 		schema_name = g_value_get_string (cvalue); 
 		if (!strcmp (schema_name, TMP_DATABASE_NAME))
 			 continue; /* nothing to do */
@@ -1249,9 +1345,12 @@ _gda_sqlite_meta__constraints_tab (GdaServerProvider *prov, GdaConnection *cnc,
 		tnrows = gda_data_model_get_n_rows (tables_model);
 		for (ti = 0; ti < tnrows; ti++) {
 			/* iterate through the tables */
-			if (!fill_constraints_tab_model (cnc, cdata, mod_model, cvalue, 
-							 gda_data_model_get_value_at (tables_model, 0, ti),
-							 NULL, error)) {
+			const GValue *cv = gda_data_model_get_value_at (tables_model, 0, ti, error);
+			if (!cv) {
+				retval = FALSE;
+				break;
+			}
+			if (!fill_constraints_tab_model (cnc, cdata, mod_model, cvalue, cv, NULL, error)) {
 				retval = FALSE;
 				break;
 			}
@@ -1312,11 +1411,16 @@ fill_constraints_ref_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 	if (strcmp (schema_name, "main")) {
 		gchar *str;
 		str = g_strdup_printf ("%s.%s", schema_name, g_value_get_string (p_table_name));
-		gda_set_set_holder_value (pragma_set, "tblname", str);
+		if (! gda_set_set_holder_value (pragma_set, error, "tblname", str)) {
+			g_free (str);
+			return FALSE;
+		}
 		g_free (str);
 	}
-	else
-		gda_set_set_holder_value (pragma_set, "tblname", g_value_get_string (p_table_name));	
+	else {
+		if (! gda_set_set_holder_value (pragma_set, error, "tblname", g_value_get_string (p_table_name)))
+			return FALSE;
+	}
 
 	GType fk_col_types[] = {G_TYPE_INT, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_NONE};
 	gchar *ref_table = NULL;
@@ -1330,7 +1434,11 @@ fill_constraints_ref_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 	for (i = 0; i < nrows; i++) {
 		const GValue *cvalue;
 
-		cvalue = gda_data_model_get_value_at (tmpmodel, 2, i);
+		cvalue = gda_data_model_get_value_at (tmpmodel, 2, i, error);
+		if (!cvalue) {
+			retval = FALSE;
+			break;
+		}
 		if (! ref_table || strcmp (ref_table, g_value_get_string (cvalue))) {
 			gchar *constname;
 			GValue *v2, *v3, *v4, *v5;
@@ -1399,8 +1507,11 @@ _gda_sqlite_meta__constraints_ref (GdaServerProvider *prov, GdaConnection *cnc,
 		/* iterate through the schemas */
 		GdaDataModel *tables_model;
 		const gchar *schema_name;
-		const GValue *cvalue = gda_data_model_get_value_at (tmpmodel, 1, i);
-
+		const GValue *cvalue = gda_data_model_get_value_at (tmpmodel, 1, i, error);
+		if (!cvalue) {
+			retval = FALSE;
+			break;
+		}
 		schema_name = g_value_get_string (cvalue); 
 		if (!strcmp (schema_name, TMP_DATABASE_NAME))
 			 continue; /* nothing to do */
@@ -1426,9 +1537,12 @@ _gda_sqlite_meta__constraints_ref (GdaServerProvider *prov, GdaConnection *cnc,
 		tnrows = gda_data_model_get_n_rows (tables_model);
 		for (ti = 0; ti < tnrows; ti++) {
 			/* iterate through the tables */
-			if (!fill_constraints_ref_model (cnc, cdata, mod_model, cvalue,
-							 gda_data_model_get_value_at (tables_model, 0, ti),
-							 NULL, error)) {
+			const GValue *cv = gda_data_model_get_value_at (tables_model, 0, ti, error);
+			if (!cv) {
+				retval = FALSE;
+				break;
+			}
+			if (!fill_constraints_ref_model (cnc, cdata, mod_model, cvalue, cv, NULL, error)) {
 				retval = FALSE;
 				break;
 			}
@@ -1489,11 +1603,16 @@ fill_key_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaData
 	if (strcmp (schema_name, "main")) {
 		gchar *str;
 		str = g_strdup_printf ("%s.%s", schema_name, g_value_get_string (p_table_name));
-		gda_set_set_holder_value (pragma_set, "tblname", str);
+		if (! gda_set_set_holder_value (pragma_set, error, "tblname", str)) {
+			g_free (str);
+			return FALSE;
+		}
 		g_free (str);
 	}
-	else
-		gda_set_set_holder_value (pragma_set, "tblname", g_value_get_string (p_table_name));
+	else {
+		if (! gda_set_set_holder_value (pragma_set, error, "tblname", g_value_get_string (p_table_name)))
+			return FALSE;
+	}
 
 	const_name = g_value_get_string (constraint_name);
 	if (!strcmp (const_name, "primary_key")) {
@@ -1518,10 +1637,14 @@ fill_key_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaData
 			int pAutoinc; /* True if column is auto-increment */
 			const gchar *this_table_name;
 			const gchar *this_col_name;
-			const GValue *this_col_pname;
+			const GValue *this_col_pname, *cvalue;
 			GValue *v1;
 			
-			this_col_pname = gda_data_model_get_value_at (tmpmodel, 1, i);
+			this_col_pname = gda_data_model_get_value_at (tmpmodel, 1, i, error);
+			if (!this_col_pname) {
+				retval = FALSE;
+				break;
+			}
 			this_table_name = g_value_get_string (p_table_name);
 			g_assert (this_table_name);
 			if (!strcmp (this_table_name, "sqlite_sequence"))
@@ -1531,17 +1654,28 @@ fill_key_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaData
 			if (sqlite3_table_column_metadata (cdata->connection, g_value_get_string (p_table_schema), 
 							   this_table_name, this_col_name,
 							   &pzDataType, &pzCollSeq, &pNotNull, &pPrimaryKey, &pAutoinc)
-			    != SQLITE_OK) 
+			    != SQLITE_OK) {
 				/* may fail because we have a view and not a table => use @tmpmodel to fetch info. */
-				pPrimaryKey = g_value_get_boolean (gda_data_model_get_value_at (tmpmodel, 5, i));
+				cvalue = gda_data_model_get_value_at (tmpmodel, 5, i, error);
+				if (!cvalue) {
+					retval = FALSE;
+					break;
+				}
+				pPrimaryKey = g_value_get_boolean (cvalue);
+			}
 			if (pPrimaryKey) {
+				cvalue = gda_data_model_get_value_at (tmpmodel, 1, i, error);
+				if (!cvalue) {
+					retval = FALSE;
+					break;
+				}
 				g_value_set_int ((v1 = gda_value_new (G_TYPE_INT)), ord_pos++);
 				if (! append_a_row (mod_model, error, 6, 
 						    FALSE, catalog_value, /* table_catalog */
 						    FALSE, p_table_schema, /* table_schema */
 						    FALSE, p_table_name, /* table_name */
 						    FALSE, constraint_name, /* constraint_name */
-						    FALSE, gda_data_model_get_value_at (tmpmodel, 1, i), /* column_name */
+						    FALSE, cvalue, /* column_name */
 						    TRUE, v1 /* ordinal_position */)) {
 					retval = FALSE;
 					break;
@@ -1568,7 +1702,11 @@ fill_key_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaData
 			const GValue *cvalue;
 			GValue *v1;
 			
-			cvalue = gda_data_model_get_value_at (tmpmodel, 2, i);
+			cvalue = gda_data_model_get_value_at (tmpmodel, 2, i, error);
+			if (!cvalue) {
+				retval = FALSE;
+				break;
+			}
 			if (! ref_table || strcmp (ref_table, g_value_get_string (cvalue))) {
 				gchar *constname;
 				
@@ -1585,12 +1723,17 @@ fill_key_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaData
 			}
 			
 			g_value_set_int ((v1 = gda_value_new (G_TYPE_INT)), ord_pos++);
+			cvalue = gda_data_model_get_value_at (tmpmodel, 3, i, error);
+			if (!cvalue) {
+				retval = FALSE;
+				break;
+			}
 			if (! append_a_row (mod_model, error, 6, 
 					    FALSE, catalog_value, /* table_catalog */
 					    FALSE, p_table_schema, /* table_schema */
 					    FALSE, p_table_name, /* table_name */
 					    FALSE, constraint_name, /* constraint_name */
-					    FALSE, gda_data_model_get_value_at (tmpmodel, 3, i), /* column_name */
+					    FALSE, cvalue, /* column_name */
 					    TRUE, v1 /* ordinal_position */))
 				retval = FALSE;
 		}
@@ -1604,7 +1747,8 @@ fill_key_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaData
 		 */
 		GType unique_col_types[] = {G_TYPE_INT, G_TYPE_INT, G_TYPE_STRING, G_TYPE_NONE};
 		
-		gda_set_set_holder_value (pragma_set, "idxname", g_value_get_string (constraint_name));
+		if (! gda_set_set_holder_value (pragma_set, error, "idxname", g_value_get_string (constraint_name)))
+			return FALSE;
 		tmpmodel = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_PRAGMA_INDEX_INFO], pragma_set, 
 									 GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
 									 unique_col_types, error);
@@ -1614,15 +1758,24 @@ fill_key_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaData
 		nrows = gda_data_model_get_n_rows (tmpmodel);
 		for (i = 0; i < nrows; i++) {
 			GValue *v1;
-			
-			g_value_set_int ((v1 = gda_value_new (G_TYPE_INT)), 
-					 g_value_get_int (gda_data_model_get_value_at (tmpmodel, 1, i)) + 1);
+			const GValue *cvalue;
+			cvalue = gda_data_model_get_value_at (tmpmodel, 1, i, error);
+			if (!cvalue) {
+				retval = FALSE;
+				break;
+			}
+			g_value_set_int ((v1 = gda_value_new (G_TYPE_INT)), g_value_get_int (cvalue) + 1);
+			cvalue = gda_data_model_get_value_at (tmpmodel, 2, i, error);
+			if (!cvalue) {
+				retval = FALSE;
+				break;
+			}
 			if (! append_a_row (mod_model, error, 6, 
 					    FALSE, catalog_value, /* table_catalog */
 					    FALSE, p_table_schema, /* table_schema */
 					    FALSE, p_table_name, /* table_name */
 					    FALSE, constraint_name, /* constraint_name */
-					    FALSE, gda_data_model_get_value_at (tmpmodel, 2, i), /* column_name */
+					    FALSE, cvalue, /* column_name */
 					    TRUE, v1 /* ordinal_position */))
 				retval = FALSE;
 		}
@@ -1663,8 +1816,12 @@ _gda_sqlite_meta__key_columns (GdaServerProvider *prov, GdaConnection *cnc,
 		/* iterate through the schemas */
 		GdaDataModel *tables_model;
 		const gchar *schema_name;
-		const GValue *cvalue = gda_data_model_get_value_at (tmpmodel, 1, i);
+		const GValue *cvalue = gda_data_model_get_value_at (tmpmodel, 1, i, error);
 
+		if (!cvalue) {
+			retval = FALSE;
+			break;
+		}
 		schema_name = g_value_get_string (cvalue); 
 		if (!strcmp (schema_name, TMP_DATABASE_NAME))
 			 continue; /* nothing to do */
@@ -1690,9 +1847,12 @@ _gda_sqlite_meta__key_columns (GdaServerProvider *prov, GdaConnection *cnc,
 		tnrows = gda_data_model_get_n_rows (tables_model);
 		for (ti = 0; ti < tnrows; ti++) {
 			/* iterate through the tables */
-			if (!fill_constraints_tab_model (cnc, cdata, const_model, cvalue,
-							 gda_data_model_get_value_at (tables_model, 0, ti),
-							 NULL, error)) {
+			const GValue *cv = gda_data_model_get_value_at (tables_model, 0, ti, error);
+			if (!cv) {
+				retval = FALSE;
+				break;
+			}
+			if (!fill_constraints_tab_model (cnc, cdata, const_model, cvalue, cv, NULL, error)) {
 				retval = FALSE;
 				break;
 			}
@@ -1713,11 +1873,23 @@ _gda_sqlite_meta__key_columns (GdaServerProvider *prov, GdaConnection *cnc,
 
 	nrows = gda_data_model_get_n_rows (const_model);
 	for (i = 0; i < nrows; i++) {
-		if (!fill_key_columns_model (cnc, cdata, mod_model, 
-					     gda_data_model_get_value_at (const_model, 4, i), 
-					     gda_data_model_get_value_at (const_model, 5, i), 
-					     gda_data_model_get_value_at (const_model, 2, i), 
-					     error)) {
+		const GValue *v2, *v4, *v5;
+		v2 = gda_data_model_get_value_at (const_model, 2, i, error);
+		if (!v2) {
+			retval = FALSE;
+			break;
+		}
+		v4 = gda_data_model_get_value_at (const_model, 4, i, error);
+		if (!v4) {
+			retval = FALSE;
+			break;
+		}
+		v5 = gda_data_model_get_value_at (const_model, 5, i, error);
+		if (!v5) {
+			retval = FALSE;
+			break;
+		}
+		if (!fill_key_columns_model (cnc, cdata, mod_model, v4, v5, v2, error)) {
 			retval = FALSE;
 			break;
 		}
@@ -1863,12 +2035,18 @@ _gda_sqlite_meta_routines (GdaServerProvider *prov, GdaConnection *cnc,
 			gint i, nrows;
 			for (i = 0; i < nrows; i++) {
 				const GValue *cv0, *cv2, *cv3;
-				cv0 = gda_data_model_get_value_at (cdata->functions_model, 0, i);
-				cv2 = gda_data_model_get_value_at (cdata->functions_model, 1, i);
-				cv3 = gda_data_model_get_value_at (cdata->functions_model, 2, i);
-				if (!cv0 || !cv2 ||!cv3) {
-					g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_DATA_ERROR,
-						     _("Can't read data"));
+				cv0 = gda_data_model_get_value_at (cdata->functions_model, 0, i, error);
+				if (!cv0) {
+					retval = FALSE;
+					break;
+				}
+				cv2 = gda_data_model_get_value_at (cdata->functions_model, 1, i, error);
+				if (!cv2) {
+					retval = FALSE;
+					break;
+				}
+				cv3 = gda_data_model_get_value_at (cdata->functions_model, 2, i, error);
+				if (!cv3) {
 					retval = FALSE;
 					break;
 				}
@@ -1883,12 +2061,18 @@ _gda_sqlite_meta_routines (GdaServerProvider *prov, GdaConnection *cnc,
 			gint i, nrows;
 			for (i = 0; i < nrows; i++) {
 				const GValue *cv0, *cv2, *cv3;
-				cv0 = gda_data_model_get_value_at (cdata->aggregates_model, 0, i);
-				cv2 = gda_data_model_get_value_at (cdata->aggregates_model, 1, i);
-				cv3 = gda_data_model_get_value_at (cdata->aggregates_model, 2, i);
-				if (!cv0 || !cv2 ||!cv3) {
-					g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_DATA_ERROR,
-						     _("Can't read data"));
+				cv0 = gda_data_model_get_value_at (cdata->aggregates_model, 0, i, error);
+				if (!cv0) {
+					retval = FALSE;
+					break;
+				}
+				cv2 = gda_data_model_get_value_at (cdata->aggregates_model, 1, i, error);
+				if (!cv2) {
+					retval = FALSE;
+					break;
+				}
+				cv3 = gda_data_model_get_value_at (cdata->aggregates_model, 2, i, error);
+				if (!cv3) {
 					retval = FALSE;
 					break;
 				}
@@ -1920,13 +2104,23 @@ _gda_sqlite_meta_routines (GdaServerProvider *prov, GdaConnection *cnc,
 		nrows = gda_data_model_get_n_rows (tmpmodel);
 		for (i = 0; i < nrows; i++) {
 			const GValue *cv0, *cv1, *cv2, *cv3;
-			cv0 = gda_data_model_get_value_at (tmpmodel, 0, i);
-			cv1 = gda_data_model_get_value_at (tmpmodel, 1, i);
-			cv2 = gda_data_model_get_value_at (tmpmodel, 2, i);
-			cv3 = gda_data_model_get_value_at (tmpmodel, 3, i);
-			if (!cv0 || !cv1 || !cv2 ||!cv3) {
-				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_DATA_ERROR,
-					     _("Can't read data"));
+			cv0 = gda_data_model_get_value_at (tmpmodel, 0, i, error);
+			if (!cv0) {
+				retval = FALSE;
+				break;
+			}
+			cv1 = gda_data_model_get_value_at (tmpmodel, 1, i, error);
+			if (!cv1) {
+				retval = FALSE;
+				break;
+			}
+			cv2 = gda_data_model_get_value_at (tmpmodel, 2, i, error);
+			if (!cv2) {
+				retval = FALSE;
+				break;
+			}
+			cv3 = gda_data_model_get_value_at (tmpmodel, 3, i, error);
+			if (!cv3) {
 				retval = FALSE;
 				break;
 			}

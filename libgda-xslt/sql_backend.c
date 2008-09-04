@@ -92,11 +92,13 @@ gda_xslt_holder_set_value (GdaHolder *param, xsltTransformContextPtr ctxt)
 		return -1;
 	}
 	else {
-		gda_holder_set_value (param, value);
+		gint retval = 0;
+		if (! gda_holder_set_value (param, value, NULL))
+			retval = -1;
 		g_free (xvalue);
 		gda_value_free (value);
+		return retval;
 	}
-	return 0;
 }
 
 int
@@ -305,7 +307,7 @@ get_resultset_col_value (GdaXsltIntCont * pdata, const char *resultset_name,
 		return -1;
 	}
 	gint col_index;
-	col_index = gda_data_model_get_column_index_by_name (GDA_DATA_MODEL (result), colname);
+	col_index = gda_data_model_get_column_index (GDA_DATA_MODEL (result), colname);
 	if (col_index < 0) {
 #ifdef GDA_DEBUG_NO
 		g_print ("no column found by name [%s]", colname);
@@ -314,7 +316,7 @@ get_resultset_col_value (GdaXsltIntCont * pdata, const char *resultset_name,
 		return -1;
 	}
 	const GValue *db_value;
-	db_value = gda_data_model_get_value_at (GDA_DATA_MODEL (result), col_index, 0);
+	db_value = gda_data_model_get_value_at (GDA_DATA_MODEL (result), col_index, 0, error);
 	if (db_value == NULL) {
 #ifdef GDA_DEBUG_NO
 		g_print ("no value found on col_index [%d]", col_index);
@@ -428,24 +430,21 @@ _utility_data_model_to_nodeset (GdaDataModel * model,
 				xmlChar *str = NULL;
 				gboolean isnull = FALSE;
 
-				value = (GValue *)
-					gda_data_model_get_value_at
-					(model, rcols[c], r);
-				if (!value || gda_value_is_null ((GValue *)
-								 value))
-					isnull = TRUE;
-				else {
-					str = value_to_xmlchar (value);
+				value = (GValue *) gda_data_model_get_value_at (model, rcols[c], r, error);
+				if (!value) {
+					for (c = 0; c < rnb_cols; c++)
+						g_free (col_ids[c]);
+					g_free (col_ids);
+					return -1;
 				}
-				field = xmlNewChild (row, NULL, (xmlChar *)
-						     "column",
-						     (xmlChar *) str);
-				xmlSetProp (field, (xmlChar *) "name",
-					    (xmlChar *) col_ids[c]);
+				if (gda_value_is_null ((GValue *) value))
+					isnull = TRUE;
+				else 
+					str = value_to_xmlchar (value);
+				field = xmlNewChild (row, NULL, (xmlChar *) "column", (xmlChar *) str);
+				xmlSetProp (field, (xmlChar *) "name", (xmlChar *) col_ids[c]);
 				if (isnull)
-					xmlSetProp (field, (xmlChar *)
-						    "isnull",
-						    (xmlChar *) "true");
+					xmlSetProp (field, (xmlChar *) "isnull", (xmlChar *) "true");
 				g_free (str);
 			}
 		}

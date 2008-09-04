@@ -104,7 +104,13 @@ main (int argc, char *argv[])
 			for (i = 0; i < nb; i++) {
 				GdaServerProvider *prov = NULL;
 				const gchar *pname;
-				pname = g_value_get_string (gda_data_model_get_value_at (providers, 0, i));
+				const GValue *cvalue;
+
+				cvalue = gda_data_model_get_value_at (providers, 0, i, error);
+				if (!cvalue) 
+					g_error ("Can't load the '%s' provider: %s\n", pname,
+						 error && error->message ? error->message : "No detail");
+				pname = g_value_get_string (cvalue);
 				prov = gda_config_get_provider_object (pname, &error);
 				if (!prov) 
 					g_error ("Can't load the '%s' provider: %s\n", pname,

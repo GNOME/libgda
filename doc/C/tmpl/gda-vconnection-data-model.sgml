@@ -40,6 +40,7 @@ The #GdaVproviderDataModel provider to use to create such connection objects.
 </para>
 
 @Param1: 
+@Param2: 
 @Returns: 
 
 

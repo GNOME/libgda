@@ -70,8 +70,10 @@ enum {
 	GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
 	GDA_DATA_MODEL_COLUMN_OUT_OF_RANGE_ERROR,
 	GDA_DATA_MODEL_VALUES_LIST_ERROR,
+	GDA_DATA_MODEL_VALUE_TYPE_ERROR,
 	GDA_DATA_MODEL_ROW_NOT_FOUND_ERROR,
-	GDA_DATA_MODEL_ACCESS_ERROR
+	GDA_DATA_MODEL_ACCESS_ERROR,
+	GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR
 };
 
 /* struct for the interface */
@@ -85,7 +87,7 @@ struct _GdaDataModelClass {
 	GdaColumn           *(* i_describe_column)  (GdaDataModel *model, gint col);
 	GdaDataModelAccessFlags (* i_get_access_flags) (GdaDataModel *model);
 
-	const GValue        *(* i_get_value_at)     (GdaDataModel *model, gint col, gint row);
+	const GValue        *(* i_get_value_at)     (GdaDataModel *model, gint col, gint row, GError **error);
 	GdaValueAttribute    (* i_get_attributes_at)(GdaDataModel *model, gint col, gint row);
 	GdaDataModelIter    *(* i_create_iter)      (GdaDataModel *model);
 	gboolean             (* i_iter_at_row)      (GdaDataModel *model, GdaDataModelIter *iter, gint row);
@@ -122,15 +124,17 @@ gint                gda_data_model_get_n_rows             (GdaDataModel *model);
 gint                gda_data_model_get_n_columns          (GdaDataModel *model);
 
 GdaColumn          *gda_data_model_describe_column        (GdaDataModel *model, gint col);
-gint                gda_data_model_get_column_index_by_name(GdaDataModel *model, const gchar *name);
+gint                gda_data_model_get_column_index       (GdaDataModel *model, const gchar *name);
 const gchar        *gda_data_model_get_column_name       (GdaDataModel *model, gint col);
 void                gda_data_model_set_column_name       (GdaDataModel *model, gint col, const gchar *name);
 const gchar        *gda_data_model_get_column_title       (GdaDataModel *model, gint col);
 void                gda_data_model_set_column_title       (GdaDataModel *model, gint col, const gchar *title);
 
-const GValue       *gda_data_model_get_value_at           (GdaDataModel *model, gint col, gint row);
-const GValue       *gda_data_model_get_value_at_col_name  (GdaDataModel *model, 
-							   const gchar *column_name, gint row);
+const GValue       *gda_data_model_get_value_at           (GdaDataModel *model, gint col, gint row, GError **error);
+const GValue       *gda_data_model_get_typed_value_at     (GdaDataModel *model, gint col, gint row, 
+							   GType expected_type, gboolean nullok, GError **error);
+const GValue       *gda_data_model_get_value_at_column    (GdaDataModel *model, 
+							   const gchar *column_name, gint row, GError **error);
 GdaValueAttribute   gda_data_model_get_attributes_at      (GdaDataModel *model, gint col, gint row);
 GdaDataModelIter   *gda_data_model_create_iter            (GdaDataModel *model);
 void                gda_data_model_freeze                 (GdaDataModel *model);

@@ -73,7 +73,7 @@ static gint                 gda_data_access_wrapper_get_n_rows      (GdaDataMode
 static gint                 gda_data_access_wrapper_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_access_wrapper_describe_column (GdaDataModel *model, gint col);
 static GdaDataModelAccessFlags gda_data_access_wrapper_get_access_flags(GdaDataModel *model);
-static const GValue      *gda_data_access_wrapper_get_value_at    (GdaDataModel *model, gint col, gint row);
+static const GValue        *gda_data_access_wrapper_get_value_at    (GdaDataModel *model, gint col, gint row, GError **error);
 static GdaValueAttribute    gda_data_access_wrapper_get_attributes_at (GdaDataModel *model, gint col, gint row);
 
 static void iter_row_changed_cb (GdaDataModelIter *iter, gint row, GdaDataAccessWrapper *model);
@@ -358,29 +358,6 @@ gda_data_access_wrapper_new (GdaDataModel *model)
 	return GDA_DATA_MODEL (retmodel);
 }
 
-/**
- * gda_data_access_wrapper_row_exists
- * @wrapper: a #GdaDataAccessWrapper objects
- * @row: a row number to test existance
- *
- * Tests if the wrapper model of @wrapper has a row number @row
- *
- * Returns: TRUE if row number @row exists
- */
-gboolean
-gda_data_access_wrapper_row_exists (GdaDataAccessWrapper *wrapper, gint row)
-{
-	g_return_val_if_fail (GDA_IS_DATA_ACCESS_WRAPPER (wrapper), FALSE);
-	
-	if (wrapper->priv->nb_cols == 0)
-		return FALSE;
-
-	if (gda_data_model_get_value_at ((GdaDataModel*) wrapper, 0, row))
-		return TRUE;
-	else
-		return FALSE;
-}
-
 /*
  * GdaDataModel interface implementation
  */
@@ -479,7 +456,7 @@ create_new_row (GdaDataAccessWrapper *model)
 }
 
 static const GValue *
-gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row)
+gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row, GError **error)
 {
 	GdaDataAccessWrapper *imodel;
 
@@ -490,13 +467,14 @@ gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row)
 	g_return_val_if_fail (row >= 0, NULL);
 
 	if (col >= imodel->priv->nb_cols) {
-		g_warning (_("Column %d out of range (0-%d)"), col, imodel->priv->nb_cols);
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_COLUMN_OUT_OF_RANGE_ERROR,
+			     _("Column %d out of range (0-%d)"), col, imodel->priv->nb_cols);
 		return NULL;
 	}
 
 	if (!imodel->priv->rows)
 		/* imodel->priv->model is a random access model, use it */
-		return gda_data_model_get_value_at (imodel->priv->model, col, row);
+		return gda_data_model_get_value_at (imodel->priv->model, col, row, error);
 	else {
 		GdaRow *gda_row;
 
@@ -511,8 +489,11 @@ gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row)
 					if (row == imodel->priv->iter_row)
 						return gda_row_get_value (gda_row, col);
 				}
-				else
+				else {
+					g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
+						     _("Can't set iterator's position"));
 					return NULL;
+				}
 			}
 				
 			gda_row = NULL;
@@ -537,6 +518,8 @@ gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row)
 		}
 	}
 
+	g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
+		     _("Can't access data"));
 	return NULL;
 }
 
@@ -582,7 +565,7 @@ gda_data_access_wrapper_get_attributes_at (GdaDataModel *model, gint col, gint r
 	imodel = (GdaDataAccessWrapper *) model;
 	g_return_val_if_fail (imodel->priv, 0);
 
-	if (!imodel->priv->rows)
+	if (imodel->priv->model)
 		flags = gda_data_model_get_attributes_at (imodel->priv->model, col, row);
 	flags |= GDA_VALUE_ATTR_NO_MODIF;
 	

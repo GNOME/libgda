@@ -1835,25 +1835,49 @@ gda_value_stringify (const GValue *value)
 }
 	
 /**
- * gda_value_bcompare
+ * gda_value_differ
  * @value1: a #GValue to compare.
  * @value2: the other #GValue to be compared to @value1.
  *
- * Tells if two values are equal or not, by comparing memory representations.
+ * Tells if two values are equal or not, by comparing memory representations. Unlike gda_value_compare(),
+ * the returned value is boolean, and gives no idea about ordering.
  *
- * Returns: 0 if @value1 and @value2 are equal, and something else otherwise
+ * The two values must be of the same type, with the exception that a value of any type can be
+ * compared to a GDA_TYPE_NULL value, specifically:
+ * <itemizedlist>
+ *   <listitem><para>if @value1 and @value2 are both GDA_TYPE_NULL values then the returned value is 0</para></listitem>
+ *   <listitem><para>if @value1 is a GDA_TYPE_NULL value and @value2 is of another type then the returned value is 1</para></listitem>
+ *   <listitem><para>if @value1 is of another type and @value2 is a GDA_TYPE_NULL value then the returned value is 1</para></listitem>
+ *   <listitem><para>in all other cases, @value1 and @value2 must be of the same type and their values are compared</para></listitem>
+ * </itemizedlist>
+ *
+ * Returns: a non 0 value if @value1 and @value2 differ, and 0 if they are equal
  */
 gint
-gda_value_bcompare (const GValue *value1, const GValue *value2)
+gda_value_differ (const GValue *value1, const GValue *value2)
 {
 	GType type;
 	g_return_val_if_fail (value1 && value2, FALSE);
 
 	/* blind value comparison */
+	type = G_VALUE_TYPE (value1);
 	if (!bcmp (value1, value2, sizeof (GValue)))
 		return 0;
 
-	type = G_VALUE_TYPE (value1);
+	/* handle GDA_TYPE_NULL comparisons with other types */
+	else if (type == GDA_TYPE_NULL) {
+		if (G_VALUE_TYPE (value2) == GDA_TYPE_NULL)
+			return 0;
+		else
+			return 1;
+	}
+
+	else if (G_VALUE_TYPE (value2) == GDA_TYPE_NULL)
+		return 1;
+
+	g_return_val_if_fail (G_VALUE_TYPE (value1) == G_VALUE_TYPE (value2), 1);
+
+	/* general case */
 	if (type == GDA_TYPE_BINARY) {
 		const GdaBinary *binary1 = gda_value_get_binary (value1);
 		const GdaBinary *binary2 = gda_value_get_binary (value2);
@@ -1899,7 +1923,7 @@ gda_value_bcompare (const GValue *value1, const GValue *value2)
 		GList *l1, *l2;
 		for (l1 = (GList*) gda_value_get_list (value1), l2 = (GList*) gda_value_get_list (value2); 
 		     l1 != NULL && l2 != NULL; l1 = l1->next, l2 = l2->next){
-			if (gda_value_bcompare ((GValue *) l1->data, (GValue *) l2->data))
+			if (gda_value_differ ((GValue *) l1->data, (GValue *) l2->data))
 				return 1;
 		}
 		return 0;
@@ -1911,18 +1935,6 @@ gda_value_bcompare (const GValue *value1, const GValue *value2)
 		num2 = gda_value_get_numeric (value2);
                 if (num1 && num2)
 			return strcmp (num1->number, num2->number);
-	}
-
-	else if (type == GDA_TYPE_SHORT) {
-		gshort i1 = gda_value_get_short (value1);
-		gshort i2 = gda_value_get_short (value2);
-		return (i1 == i2) ? 0 : 1;
-	}
-	
-	else if (type == GDA_TYPE_USHORT) {
-		gushort i1 = gda_value_get_ushort (value1);
-		gushort i2 = gda_value_get_ushort (value2);
-		return (i1 == i2) ? 0 : 1;
 	}
 	
 	else if (type == G_TYPE_STRING)	{
@@ -1949,15 +1961,41 @@ gda_value_bcompare (const GValue *value1, const GValue *value2)
 			return bcmp (ts1, ts2, sizeof (GdaTimestamp));
 	}
 
+	else if ((type == G_TYPE_INT) ||
+		 (type == G_TYPE_UINT) ||
+		 (type == G_TYPE_INT64) ||
+		 (type == G_TYPE_UINT64) ||
+		 (type == GDA_TYPE_SHORT) ||
+		 (type == GDA_TYPE_USHORT) ||
+		 (type == G_TYPE_FLOAT) ||
+		 (type == G_TYPE_DOUBLE) ||
+		 (type == G_TYPE_BOOLEAN) ||
+		 (type == G_TYPE_CHAR) ||
+		 (type == G_TYPE_UCHAR) ||
+		 (type == G_TYPE_LONG) ||
+		 (type == G_TYPE_ULONG))
+		/* values here ARE different because otherwise the bcmp() at the beginning would
+		 * already have retruned */
+		return 1;
+
+	g_warning ("%s() cannot handle values of type %s", __FUNCTION__, g_type_name (G_VALUE_TYPE (value1)));
+
 	return 1;
 }
 
 /**
  * gda_value_compare
- * @value1: a #GValue to compare.
- * @value2: the other #GValue to be compared to @value1.
+ * @value1: a #GValue to compare (not %NULL)
+ * @value2: the other #GValue to be compared to @value1 (not %NULL)
  *
- * Compares two values of the same type.
+ * Compares two values of the same type, with the exception that a value of any type can be
+ * compared to a GDA_TYPE_NULL value, specifically:
+ * <itemizedlist>
+ *   <listitem><para>if @value1 and @value2 are both GDA_TYPE_NULL values then the returned value is 0</para></listitem>
+ *   <listitem><para>if @value1 is a GDA_TYPE_NULL value and @value2 is of another type then the returned value is -1</para></listitem>
+ *   <listitem><para>if @value1 is of another type and @value2 is a GDA_TYPE_NULL value then the returned value is 1</para></listitem>
+ *   <listitem><para>in all other cases, @value1 and @value2 must be of the same type and their values are compared</para></listitem>
+ * </itemizedlist>
  *
  * Returns: if both values have the same type, returns 0 if both contain
  * the same value, an integer less than 0 if @value1 is less than @value2 or
@@ -1971,14 +2009,27 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 	GType type;
 
 	g_return_val_if_fail (value1 && value2, -1);
-	g_return_val_if_fail (G_VALUE_TYPE (value1) == G_VALUE_TYPE (value2), -1);
 
 	type = G_VALUE_TYPE (value1);
 	
 	if (value1 == value2)
 		return 0;
 
-	else if (type == G_TYPE_INT64) {
+	/* handle GDA_TYPE_NULL comparisons with other types */
+	else if (type == GDA_TYPE_NULL) {
+		if (G_VALUE_TYPE (value2) == GDA_TYPE_NULL)
+			return 0;
+		else
+			return -1;
+	}
+
+	else if (G_VALUE_TYPE (value2) == GDA_TYPE_NULL)
+		return 1;
+
+	/* general case */
+	g_return_val_if_fail (G_VALUE_TYPE (value1) == G_VALUE_TYPE (value2), -1);
+
+	if (type == G_TYPE_INT64) {
 		gint64 i1 = g_value_get_int64 (value1);
 		gint64 i2 = g_value_get_int64 (value2);
 		return (i1 > i2) ? 1 : ((i1 == i2) ? 0 : -1);
@@ -2204,42 +2255,6 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 	g_warning ("%s() cannot handle values of type %s", __FUNCTION__, g_type_name (G_VALUE_TYPE (value1)));
 
 	return 0;
-}
-
-#define _value_is_null(x) (!(x) || (G_VALUE_TYPE (x) == GDA_TYPE_NULL) || \
-			   ((G_VALUE_TYPE (x) == G_TYPE_STRING) && !g_value_get_string (x)))
-
-/**
- * gda_value_compare_ext
- * @value1: a #GValue to compare.
- * @value2: the other #GValue to be compared to @value1.
- *
- * Like gda_value_compare(), compares two values of the same type, except that NULL values and values
- * of type GDA_TYPE_NULL are considered equals
- *
- * Returns: 0 if both contain the same value, an integer less than 0 if @value1 is less than @value2 or
- * an integer greater than 0 if @value1 is greater than @value2.
- */
-gint
-gda_value_compare_ext (const GValue *value1, const GValue *value2)
-{
-	if (value1 == value2)
-		return 0;
-
-	if (_value_is_null (value1)) {
-		/* value1 represents a NULL value */
-		if (_value_is_null (value2))
-			return 0;
-		else
-			return 1;
-	}
-	else {
-		/* value1 does not represents a NULL value */
-		if (_value_is_null (value2))
-			return -1;
-		else
-			return gda_value_compare (value1, value2);
-	}
 }
 
 /*

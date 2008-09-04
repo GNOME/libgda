@@ -1,3 +1,26 @@
+2008-09-04  Vivien Malerba <malerba@gnome-db.org>
+
+	API improvements and cleanups:
+
+	* Utility functions changes:
+	  removed gda_value_compare_ext() as it has no real use and is confusing
+	  renamed gda_value_bcompare() gda_value_differ()
+	* GdaDataModel interface changes:
+	  added a "GError **error" as last argument of gda_data_model_get_value_at () because it's
+	     the only way of reporting and correctly handling data access errors, and added
+	     gda_data_model_get_typed_value_at() which gives more control of the returned value
+	  renamed gda_data_model_get_column_index_by_name() to gda_data_model_get_column_index()
+	  renamed gda_data_model_get_value_at_col_name() to gda_data_model_get_value_at_column()
+	* GdaHolder object changes: added a GError argument to:
+	  gda_holder_set_value()
+	  gda_holder_take_value()
+	  gda_holder_set_value_str()
+	  gda_holder_set_bind()
+	* GdaSet object changes: added a GError argument to gda_set_set_holder_value()
+	* GdaDataAccessWrapper changes: removed gda_data_access_wrapper_row_exists() as it was useless
+
+	Misc doc improvements.
+
 2008-09-01  Vivien Malerba <malerba@gnome-db.org>
 
 	* providers/skel-implementation/capi/gda-capi-recordset.c:

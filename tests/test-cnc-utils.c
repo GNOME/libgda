@@ -410,9 +410,13 @@ test_cnc_load_data_from_file (GdaConnection *cnc, const gchar *table, const gcha
 		gint j;
 		GSList *list;
 		for (list = params->holders, j = 0; list && (j < ncols); list = list->next, j++) {
-			const GValue *cvalue = gda_data_model_get_value_at (import, j, i);
-			if (! gda_holder_set_value (GDA_HOLDER (list->data), cvalue)) {
-				g_set_error (error, 0, 0, "Error using value at col=>%d and row=>%d", j, i);
+			const GValue *cvalue = gda_data_model_get_value_at (import, j, i, error);
+			if (!cvalue) {
+				gda_connection_rollback_transaction (cnc, NULL, NULL);
+				retval = FALSE;
+				goto out;
+			}
+			if (! gda_holder_set_value (GDA_HOLDER (list->data), cvalue, error)) {
 				gda_connection_rollback_transaction (cnc, NULL, NULL);
 				retval = FALSE;
 				goto out;

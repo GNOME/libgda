@@ -135,7 +135,12 @@ common_load_csv_file (const gchar *data_file, ...)
 		
 		v = gda_value_new (G_TYPE_ULONG);
 		g_value_set_ulong (v, gda_g_type_from_string (va_arg (args, gchar*)));
-		gda_holder_take_value (holder, v);
+		if (! gda_holder_take_value (holder, v, NULL)) {
+			va_end (args);
+			g_object_unref (holder);
+			g_object_unref (options);
+			return NULL;
+		}
 		
 		gda_set_add_holder (options, holder);
 		g_object_unref (holder);
@@ -226,8 +231,14 @@ common_declare_expected_insertions_from_model (const gchar *table_name, GdaDataM
 		for (j = 0; j < ncols; j++) {
 			gchar *str;
 			const GValue *value;
+			GError *lerror = NULL;
 			str = g_strdup_printf ("+%d", j);
-			value = gda_data_model_get_value_at (model, j, i);
+			value = gda_data_model_get_value_at (model, j, i, &lerror);
+			if (!value) {
+				g_print ("Can't get data model's value: %s",
+					 lerror && lerror->message ? lerror->message : "No detail");
+				exit (1);
+			}
 			g_hash_table_insert (ac->keys, str, gda_value_copy (value));
 		}
 

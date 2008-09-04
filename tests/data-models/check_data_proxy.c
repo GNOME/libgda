@@ -1212,8 +1212,16 @@ clean_expected_signals (GdaDataModel *model)
 		}
 		ncols = gda_data_model_get_n_columns (model);
 		for (col = 0; col < ncols; col++) {
-			const GValue *value = gda_data_model_get_value_at (model, col, 0);
-			if (value) {
+			GError *lerror = NULL;
+			const GValue *value = gda_data_model_get_value_at (model, col, 0, &lerror);
+			if (!value) {
+#ifdef CHECK_EXTRA_INFO
+				g_print ("Can't get data model's value: %s\n",
+					 lerror && lerror->message ? lerror->message : "No detail");
+#endif
+				exit (1);
+			}
+			else if (! gda_value_is_null (value)) {
 #ifdef CHECK_EXTRA_INFO
 				g_print ("ERROR: As the \"prepend-null-entry\" property is set, there should always be a first "
 					 "all-NULL entry, got '%s' at column %d\n", gda_value_stringify (value), col);
@@ -1322,6 +1330,7 @@ check_data_model_value (GdaDataModel *model, gint row, gint col, GType type, con
 	GValue *gvalue;
 	const GValue *mvalue;
 	gboolean retval;
+	GError *lerror = NULL;
 
 	row = ADJUST_ROW_FOR_MODEL (model, row);
 
@@ -1335,8 +1344,15 @@ check_data_model_value (GdaDataModel *model, gint row, gint col, GType type, con
 	else
 		gvalue = gda_value_new_null ();	
 
-	mvalue = gda_data_model_get_value_at (model, col, row); 
-	retval = !gda_value_compare_ext (gvalue, mvalue);
+	mvalue = gda_data_model_get_value_at (model, col, row, &lerror);
+	if (!mvalue) {
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Can't get data model's value: %s\n",
+			 lerror && lerror->message ? lerror->message : "No detail");
+#endif
+		return FALSE;
+	}
+	retval = !gda_value_compare (gvalue, mvalue);
 	gda_value_free (gvalue);
 
 #ifdef CHECK_EXTRA_INFO
@@ -1366,7 +1382,7 @@ check_data_model_n_rows (GdaDataModel *model, gint nrows)
 		return FALSE;
 	}
 
-	value = gda_data_model_get_value_at (model, 0, nrows);
+	value = gda_data_model_get_value_at (model, 0, nrows, NULL);
 	if (value) {
 #ifdef CHECK_EXTRA_INFO
 		g_print ("ERROR: Got a value at row %d, should not get any as it is out of bounds\n", nrows);
@@ -1443,8 +1459,16 @@ check_data_model_set_values (GdaDataModel *model, gint row, GList *values)
 	GList *list;
 	gint col;
 	for (col = 0, list = values; list; col++, list = list->next) {
-		const GValue *cvalue = gda_data_model_get_value_at (model, col, row);
-		if (list->data && gda_value_compare_ext (cvalue, (GValue *) list->data)) {
+		GError *lerror = NULL;
+		const GValue *cvalue = gda_data_model_get_value_at (model, col, row, &lerror);
+		if (!cvalue) {
+#ifdef CHECK_EXTRA_INFO
+			g_print ("Can't get data model's value: %s\n",
+				 lerror && lerror->message ? lerror->message : "No detail");
+#endif
+			return FALSE;
+		}
+		if (list->data && gda_value_compare (cvalue, (GValue *) list->data)) {
 #ifdef CHECK_EXTRA_INFO
 			g_print ("ERROR: Read value is not equal to set value: got '%s' and expected '%s'\n",
 				 gda_value_stringify (cvalue), gda_value_stringify ((GValue *) list->data));

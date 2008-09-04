@@ -114,6 +114,96 @@ g_object_unref (stmt);
     </para>
   </sect1>
 
+  <sect1 id="howto-modify-select">
+    <title>Modify the result of a SELECT command</title>
+    <para>
+      The <link linkend="GdaDataSelect">GdaDataSelect</link> data model (which is the data model returned
+      after the successfull execution of a SELECT statement) is by default read-only, but can be made writable
+      after giving it information about:
+      <itemizedlist>
+	<listitem><para>how to identify a single row in the modified table
+	    (the columns composing the primary key)</para></listitem>
+	<listitem><para>which statements to execute when the data model's values are modified or some rows
+	    are inserted or removed</para></listitem>
+      </itemizedlist>
+    </para>
+    <para>
+      The following example illustrates this using a table created as (SQLite syntax):
+      <![CDATA[CREATE TABLE customers (id integer NOT NULL PRIMARY KEY AUTOINCREMENT, name string NOT NULL, last_update timestamp NOT NULL, country string);]]>, where we select all the rows where the "country" column is "SP" and we modify
+      only one row:
+      <programlisting>
+GError *error = NULL;
+GdaDataModel *model;
+GdaStatement *stmt, *mod_stmt;
+GdaSet *params;
+GValue *value;
+
+/* create GdaDataSelect */
+stmt = stmt_from_string ("SELECT * FROM customers WHERE country = ##country::string");
+if (!gda_statement_get_parameters (stmt, &amp;params, &amp;error)) {
+   /* treat error */
+}
+if (! gda_set_set_holder_value (params, &amp;error, "country", "SP")) {
+   /* treat error */
+}
+model = gda_connection_statement_execute_select (cnc, stmt, params, &amp;error);
+g_object_unref (params);
+
+/* specify an UPDATE query */
+mod_stmt = stmt_from_string ("UPDATE customers SET name = ##+1::string, last_update = ##+2::timestamp WHERE id = ##-0::gint");
+if (!gda_data_select_set_modification_statement (GDA_DATA_SELECT (model), mod_stmt, &amp;error)) {
+   /* treat error */
+}
+
+/* Now modify the data model */
+g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), "Jack");
+if (! check_set_value_at (model, 1, 0, value, cnc, stmt, NULL)) {
+   /* treat error */
+}
+gda_value_free (value);
+      </programlisting>
+    </para>
+    <para>
+      Note that in the code sample above, it would not have been possible to add or remove a row as no
+      INSERT or DELETE statement have been specified.
+    </para>
+    <para>
+      Now, if the meta data associated to the connection is up to date (after having called
+      <link linkend="gda-connection-update-meta-store">gda_connection_update_meta_store()</link>), then the code
+      above can be simplified as (and as a side benefit, it would also be possible to add or remove rows):
+      <programlisting>
+GError *error = NULL;
+GdaDataModel *model;
+GdaStatement *stmt;
+GdaSet *params;
+GValue *value;
+
+/* create GdaDataSelect */
+stmt = stmt_from_string ("SELECT * FROM customers WHERE country = ##country::string");
+if (!gda_statement_get_parameters (stmt, &amp;params, &amp;error)) {
+   /* treat error */
+}
+if (! gda_set_set_holder_value (params, &amp;error, "country", "SP")) {
+   /* treat error */
+}
+model = gda_connection_statement_execute_select (cnc, stmt, params, &amp;error);
+g_object_unref (params);
+
+/* specify that the data model can be writable */
+if (! gda_data_select_compute_modification_statements (GDA_DATA_SELECT (model), &amp;error)) {
+   /* treat error */
+}
+
+/* Now modify the data model */
+g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), "Jack");
+if (! check_set_value_at (model, 1, 0, value, cnc, stmt, NULL)) {
+   /* treat error */
+}
+gda_value_free (value);
+      </programlisting>
+    </para>
+  </sect1>
+
   <sect1 id="howto-exec-non-select">
     <title>Execute an INSERT, UPDATE or DELETE command</title>
     <para>

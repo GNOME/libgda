@@ -143,6 +143,8 @@ do_test_load_file (const gchar *filename)
 	if (gda_data_comparator_get_n_diffs (cmp) > 0) {
 #ifdef CHECK_EXTRA_INFO
 		g_print ("There are %d difference(s)\n", gda_data_comparator_get_n_diffs (cmp));
+		gda_data_model_dump (import, stdout);
+		gda_data_model_dump (copy, stdout);
 #endif
 		retval = FALSE;
 	}

@@ -65,9 +65,38 @@
       to a GdaDict object; this is not the case as now each <link linkend="GdaConnection">GdaConnection</link> object builts
       a <link linkend="GdaMetaStore">GdaMetaStore</link> when it needs it (providers implementations may benefit from it) and
       the user can provide his own <link linkend="GdaMetaStore">GdaMetaStore</link> object when needed.</para>
+  </sect1>
+
+  <sect1 id="migration-2-exec"><title>Statement execution</title>
+    <para>
+      &LIBGDA; still offers several methods to execute a statement, depending on the type of statement to execute
+      (there is still of course the <link linkend="gda-connection-statement-execute">gda_connection_statement_execute()</link>
+      method which works for any type of statement), but the methods have been improved:
+      <itemizedlist>
+	<listitem><para>For SELECT statements, it is now possible to specify the way the resulting data model will
+	    be accessed (random access or using a cursor) which enables applications to better manage memory
+	    consumption.</para></listitem>
+	<listitem><para>For INSERT statements, it is possible to obtain a list of all the values inserted in the
+	    table (not only the columns for which a value was specified)</para></listitem>
+	<listitem><para>The execution of a SELECT statement returns a <link linkend="GdaDataSelect">GdaDataSelect</link>
+	    data model which can (after having provided some information) be modified using the traditional
+	    <link linkend="GdaDataModel">GdaDataModel</link>'s data modification methods (modifications are
+	    translated into INSERT, UPDATE or DELETE statements).</para></listitem>
+      </itemizedlist>
+    </para>
   </sect1>  
 
   <sect1><title>Other changes</title>
+    <sect2><title>Multi threading environment</title>
+      <para>
+	Previous versions of &LIBGDA; only supported being used in a single thread at a time; this new version
+	still keeps this limitation except for objects which implement the <link linkend="GdaLockable">GdaLockable</link>
+	interface which can be used from any thread at the same time: the 
+	<link linkend="GdaConnection">GdaConnection</link> and <link linkend="GdaSqlParser">GdaSqlParser</link>
+	objects implement that interface.
+      </para>
+    </sect2>
+
     <sect2><title>Configuration management</title>
       <para>
 	<itemizedlist>
@@ -101,6 +130,12 @@
 	  gda_server_provider_get_info() has been replaced by a 
 	      <link linkend="gda-server-provider-get-name">gda_server_provider_get_name ()</link> method to access the
 	  provider's name.</para></listitem>
+	  <listitem><para><link linkend="gda-data-model-get-value-at">gda_data_model_get_value_at ()</link> now has an extra
+	      <link linkend="GError">GError</link> argument to return an error if getting the value has failed</para></listitem>
+	  <listitem><para>gda_data_model_get_column_index_by_name() has been replaced by 
+	      <link linkend="gda-data-model-get-column-index">gda_data_model_get_column_index()</link></para></listitem>
+	  <listitem><para>gda_data_model_get_value_at_col_name() has been replaced by 
+	      <link linkend="gda-data-model-get-value-at-column">gda_data_model_get_value_at_column()</link></para></listitem>
 	</itemizedlist>
       </para>
     </sect2>
@@ -133,6 +168,8 @@
  	  <listitem><para>gda_sql_transaction_parse*()</para></listitem>
  	  <listitem><para>sql_*() (from the libsql library)</para></listitem>
 	  <listitem><para>gda_server_provider_change_database()</para></listitem>
+	  <listitem><para>gda_value_compare_ext()</para></listitem>
+	  <listitem><para>gda_data_access_wrapper_row_exists()</para></listitem>
 	</itemizedlist>
       </para>
     </sect2>

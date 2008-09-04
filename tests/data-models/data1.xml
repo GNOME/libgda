@@ -2,8 +2,8 @@
 <gda_array id="FIELDS_A" name="Table's columns">
   <gda_array_field id="COLUMN_NAME" name="Field name" title="Field name" gdatype="gchararray"/>
   <gda_array_field id="COLUMN_TYPE" name="Data type" title="Data type" gdatype="gchararray"/>
-  <gda_array_field id="COLUMN_SIZE" name="Size" title="Size" gdatype="guint"/>
-  <gda_array_field id="COLUMN_SCALE" name="Scale" title="Scale" gdatype="guint"/>
+  <gda_array_field id="COLUMN_SIZE" name="Size" title="Size" gdatype="guint" nullok="TRUE"/>
+  <gda_array_field id="COLUMN_SCALE" name="Scale" title="Scale" gdatype="guint" nullok="TRUE"/>
   <gda_array_field id="COLUMN_NNUL" name="Not NULL" title="Not NULL" gdatype="gboolean"/>
   <gda_array_field id="COLUMN_AUTOINC" name="Auto increment" title="Auto increment" gdatype="gboolean"/>
   <gda_array_field id="COLUMN_UNIQUE" name="Unique" title="Unique" gdatype="gboolean"/>

@@ -276,16 +276,20 @@ gda_utility_check_data_model (GdaDataModel *model, gint nbcols, ...)
  * @use_col_ids:
  *
  * Dump the data in a #GdaDataModel into a xmlNodePtr (as used in libxml).
+ *
+ * Returns: TRUE if no error occurred
  */
-void
+gboolean
 gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent, 
 					 const gint *cols, gint nb_cols, 
 					 const gint *rows, gint nb_rows,
 					 gboolean use_col_ids)
 {
+	gboolean retval = TRUE;
 	gint nrows, i;
 	gint *rcols, rnb_cols;
 	gchar **col_ids = NULL;
+	xmlNodePtr data = NULL;
 
 	/* compute columns if not provided */
 	if (!cols) {
@@ -324,19 +328,22 @@ gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent,
 	else
 		nrows = nb_rows;
 	if (nrows > 0) {
-		xmlNodePtr row, data;
+		xmlNodePtr row;
 		gint r, c;
 
 		data = xmlNewChild (parent, NULL, (xmlChar*)"gda_array_data", NULL);
-		for (r = 0; r < nrows; r++) {
+		for (r = 0; (r < nrows) && retval; r++) {
 			row = xmlNewChild (data, NULL,  (xmlChar*)"gda_array_row", NULL);
 			for (c = 0; c < rnb_cols; c++) {
 				GValue *value;
 				gchar *str = NULL;
 				xmlNodePtr field = NULL;
 
-				value = (GValue *) gda_data_model_get_value_at (model, rcols [c], rows ? rows [r] : r);
-				
+				value = (GValue *) gda_data_model_get_value_at (model, rcols [c], rows ? rows [r] : r, NULL);
+				if (!value) {
+					retval = FALSE;
+					break;
+				}
 				if (value && !gda_value_is_null ((GValue *) value)) { 
 					if (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN)
 						str = g_strdup (g_value_get_boolean (value) ? "TRUE" : "FALSE");
@@ -372,6 +379,13 @@ gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent,
 			g_free (col_ids [c]);
 		g_free (col_ids);
 	}
+
+	if (!retval) {
+		xmlUnlinkNode (data);
+		xmlFreeNode (data);
+	}
+
+	return retval;
 }
 
 /**
@@ -379,14 +393,18 @@ gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent,
  * @holder:
  * @node: an xmlNodePtr with a &lt;parameter&gt; tag
  * @sources: a list of #GdaDataModel
+ * @error: a place to store errors, or %NULL
  *
- * WARNING: may set the "source" custom string property 
+ * Note: this method may set the "source" custom string property
+ *
+ * Returns: TRUE if no error occurred
  */
-void
-gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *sources)
+gboolean
+gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *sources, GError **error)
 {
 	xmlChar *str;
 	xmlNodePtr vnode;
+	gboolean retval = TRUE;
 
 	/* set properties from the XML spec */
 	str = xmlGetProp (node, BAD_CAST "id");
@@ -418,7 +436,7 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 	
 	str = xmlGetProp (node, BAD_CAST "source");
 	if (str) 
-		g_object_set_data_full (G_OBJECT (holder), "source", (gchar*)str, g_free);
+		g_object_set_data_full (G_OBJECT (holder), "source", str, xmlFree);
 
 	/* set restricting source if specified */
 	if (str && sources) {
@@ -448,7 +466,7 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 				    (fno >= gda_data_model_get_n_columns (model))) 
 					g_warning (_("Field number %d not found in source named '%s'"), fno, ptr1); 
 				else {
-					if (gda_holder_set_source_model (holder, model, fno, NULL)) {
+					if (gda_holder_set_source_model (holder, model, fno, error)) {
 						gchar *str;
 						/* rename the wrapper with the current holder's name */
 						g_object_get (G_OBJECT (holder), "name", &str, NULL);
@@ -456,6 +474,8 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 						g_object_get (G_OBJECT (holder), "description", &str, NULL);
 						g_object_set_data_full (G_OBJECT (model), "newdescr", str, g_free);
 					}
+					else
+						retval = FALSE;
 				}
 			}
 		}
@@ -481,9 +501,9 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 			}
 
 			/* don't care about entries for the wrong locale */
-			this_lang = xmlGetProp(vnode, (xmlChar*)"lang");
+			this_lang = xmlGetProp (vnode, (xmlChar*)"lang");
 			if (this_lang && strncmp ((gchar*)this_lang, lang, strlen ((gchar*)this_lang))) {
-				g_free (this_lang);
+				xmlFree (this_lang);
 				vnode = vnode->next;
 				continue;
 			}
@@ -497,27 +517,23 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 			}
 			
 			if (!isnull) {
-				GValue *value;
 				gchar* nodeval = (gchar*)xmlNodeGetContent (vnode);
 
-				value = g_new0 (GValue, 1);
-				if (! gda_value_set_from_string (value, nodeval, gdatype)) {
-					/* error */
-					g_free (value);
-				}
-				else 
-					gda_holder_take_value (holder, value);
-
+				if (! gda_holder_set_value_str (holder, NULL, nodeval, error))
+					retval = FALSE;
  				xmlFree(nodeval);
 			}
 			else {
-				gda_holder_set_value (holder, NULL);
 				xmlFree (isnull);
+				if (! gda_holder_set_value (holder, NULL, error))
+					retval = FALSE;
 			}
 			
 			vnode = vnode->next;
 		}
 	}
+
+	return retval;
 }
 
 
@@ -1075,6 +1091,7 @@ gda_completion_list_get (GdaConnection *cnc, const gchar *sql, gint start, gint 
 {
 	GArray *compl = NULL;
 	gchar *text;
+	const GValue *cvalue;
 
 	if (!cnc) 
 		return NULL;
@@ -1152,15 +1169,18 @@ gda_completion_list_get (GdaConnection *cnc, const gchar *sql, gint start, gint 
 		
 		nrows = gda_data_model_get_n_rows (model);
 		for (i = 0; i < nrows; i++) {
-			const gchar *tname;
-			tname = g_value_get_string (gda_data_model_get_value_at (model, 0, i));
-			if (!strncmp (tname, obj_name, len)) {
-				gchar *str;
-				if (schema_value) 
-					str = concat_ident (obj_schema, tname);
-				else
-					str = copy_ident (tname);
-				g_array_append_val (compl, str);
+			cvalue = gda_data_model_get_value_at (model, 0, i, NULL);
+			if (cvalue) {
+				const gchar *tname;
+				tname = g_value_get_string (cvalue);
+				if (!strncmp (tname, obj_name, len)) {
+					gchar *str;
+					if (schema_value) 
+						str = concat_ident (obj_schema, tname);
+					else
+						str = copy_ident (tname);
+					g_array_append_val (compl, str);
+				}
 			}
 		}
 		g_object_unref (model);
@@ -1179,12 +1199,15 @@ gda_completion_list_get (GdaConnection *cnc, const gchar *sql, gint start, gint 
 		
 		nrows = gda_data_model_get_n_rows (model);
 		for (i = 0; i < nrows; i++) {
-			const gchar *cname;
-			cname = g_value_get_string (gda_data_model_get_value_at (model, 0, i));
-			if (!strncmp (cname, obj_name, len)) {
-				gchar *str;
-				str = copy_ident (cname);
-				g_array_append_val (compl, str);
+			cvalue = gda_data_model_get_value_at (model, 0, i, NULL);
+			if (cvalue) {
+				const gchar *cname;
+				cname = g_value_get_string (cvalue);
+				if (!strncmp (cname, obj_name, len)) {
+					gchar *str;
+					str = copy_ident (cname);
+					g_array_append_val (compl, str);
+				}
 			}
 		}
 		g_object_unref (model);
@@ -1202,30 +1225,35 @@ gda_completion_list_get (GdaConnection *cnc, const gchar *sql, gint start, gint 
 		
 		nrows = gda_data_model_get_n_rows (model);
 		for (i = 0; i < nrows; i++) {
-			const gchar *tname;
-			tname = g_value_get_string (gda_data_model_get_value_at (model, 0, i));
-			if (!strncmp (tname, obj_name, len)) {
-				char *str;
-				GdaDataModel *m2;
-				str = copy_ident (tname);
+			cvalue = gda_data_model_get_value_at (model, 0, i, NULL);
+			if (cvalue) {
+				const gchar *tname;
+				tname = g_value_get_string (cvalue);
+				if (!strncmp (tname, obj_name, len)) {
+					char *str;
+					GdaDataModel *m2;
+					str = copy_ident (tname);
 				
-				m2 = gda_meta_store_extract (store, 
-							     "SELECT table_name FROM _tables WHERE table_schema = ##schema::string", 
-							     NULL, "schema", gda_data_model_get_value_at (model, 0, i), 
-							     NULL);
-				if (m2) {
-					gint i2, nrows2;
-					nrows2 = gda_data_model_get_n_rows (m2);
-					for (i2 = 0; i2 < nrows2; i2++) {
-						gchar *str2;
-						tname = g_value_get_string (gda_data_model_get_value_at (m2, 0, i2));
-						str2 = concat_ident (str, tname);
-						g_array_append_val (compl, str2);
+					m2 = gda_meta_store_extract (store, 
+								     "SELECT table_name FROM _tables WHERE table_schema = ##schema::string", 
+								     NULL, "schema", cvalue, NULL);
+					if (m2) {
+						gint i2, nrows2;
+						nrows2 = gda_data_model_get_n_rows (m2);
+						for (i2 = 0; i2 < nrows2; i2++) {
+							cvalue = gda_data_model_get_value_at (m2, 0, i2, NULL);
+							if (cvalue) {
+								gchar *str2;
+								tname = g_value_get_string (cvalue);
+								str2 = concat_ident (str, tname);
+								g_array_append_val (compl, str2);
+							}
+						}
+						
+						g_object_unref (m2);
 					}
-					
-					g_object_unref (m2);
+					free (str);
 				}
-				free (str);
 			}
 		}
 		g_object_unref (model);

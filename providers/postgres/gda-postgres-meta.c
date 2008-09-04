@@ -319,7 +319,11 @@ _gda_postgres_meta__btypes (GdaServerProvider *prov, GdaConnection *cnc,
 	for (i = 0; i < nrows; i++) {
 		const GValue *value;
 		GType type;
-		value = gda_data_model_get_value_at (model, 6, i);
+		value = gda_data_model_get_value_at (model, 6, i, error);
+		if (!value) {
+			retval = FALSE;
+			break;
+		}
 		
 		type = _gda_postgres_type_oid_to_gda (cdata, g_value_get_int64 (value));
 		if (type != G_TYPE_STRING) {
@@ -366,8 +370,10 @@ _gda_postgres_meta_udt (GdaServerProvider *prov, GdaConnection *cnc,
 	GdaDataModel *model;
 	gboolean retval = TRUE;
 
-	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), udt_catalog);
-	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), udt_schema);
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), udt_catalog, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), udt_schema, error))
+		return FALSE;
 	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_UDT], i_set, error);
 	if (!model)
 		return FALSE;
@@ -402,9 +408,12 @@ _gda_postgres_meta_udt_cols (GdaServerProvider *prov, GdaConnection *cnc,
 	GdaDataModel *model;
 	gboolean retval = TRUE;
 
-	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), udt_catalog);
-	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), udt_schema);
-	gda_holder_set_value (gda_set_get_holder (i_set, "name"), udt_name);
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "cat"), udt_catalog, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), udt_schema, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), udt_name, error))
+		return FALSE;
 	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_UDT_COLUMNS], i_set, error);
 	if (!model)
 		return FALSE;
@@ -456,8 +465,10 @@ _gda_postgres_meta_domains (GdaServerProvider *prov, GdaConnection *cnc,
 	GdaDataModel *model;
 	gboolean retval = TRUE;
 
-	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), domain_catalog);
-	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), domain_schema);
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), domain_catalog, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), domain_schema, error))
+		return FALSE;
 	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_DOMAINS], i_set, error);
 	if (!model)
 		return FALSE;
@@ -493,9 +504,12 @@ _gda_postgres_meta_constraints_dom (GdaServerProvider *prov, GdaConnection *cnc,
 	GdaDataModel *model;
 	gboolean retval = TRUE;
 
-	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), domain_catalog);
-	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), domain_schema);
-	gda_holder_set_value (gda_set_get_holder (i_set, "name"), domain_name);
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), domain_catalog, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), domain_schema, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), domain_name, error))
+		return FALSE;
 	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_DOMAINS_CONSTRAINTS], i_set, error);
 	if (!model)
 		return FALSE;
@@ -542,7 +556,8 @@ _gda_postgres_meta_el_types (GdaServerProvider *prov, GdaConnection *cnc,
 	GdaDataModel *model;
 	gboolean retval;
 
-	gda_holder_set_value (gda_set_get_holder (i_set, "name"), specific_name);
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), specific_name, error))
+		return FALSE;
 	cstr = g_value_get_string (specific_name);
 	if (*cstr == 'C') {
 		/* check correct postgres server version */
@@ -641,7 +656,8 @@ _gda_postgres_meta_schemata (GdaServerProvider *prov, GdaConnection *cnc,
 	GdaDataModel *model;
 	gboolean retval;
 
-	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), catalog_name);
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), catalog_name, error))
+		return FALSE;
 	if (!schema_name_n) {
 		model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_SCHEMAS], i_set, error);
 		if (!model)
@@ -649,7 +665,8 @@ _gda_postgres_meta_schemata (GdaServerProvider *prov, GdaConnection *cnc,
 		retval = gda_meta_store_modify (store, context->table_name, model, NULL, error, NULL);
 	}
 	else {
-		gda_holder_set_value (gda_set_get_holder (i_set, "name"), schema_name_n);
+		if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), schema_name_n, error))
+			return FALSE;
 		model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_SCHEMA_NAMED], i_set, error);
 		if (!model)
 			return FALSE;
@@ -725,8 +742,10 @@ _gda_postgres_meta_tables_views (GdaServerProvider *prov, GdaConnection *cnc,
 		return FALSE;
 	}
 
-	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog);
-	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema);
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
+		return FALSE;
 	if (!table_name_n) {
 		tables_model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_TABLES], i_set, error);
 		if (!tables_model)
@@ -738,7 +757,8 @@ _gda_postgres_meta_tables_views (GdaServerProvider *prov, GdaConnection *cnc,
 		}
 	}
 	else {
-		gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name_n);
+		if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name_n, error))
+			return FALSE;
 		tables_model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_TABLE_NAMED], i_set, error);
 		if (!tables_model)
 			return FALSE;
@@ -794,7 +814,11 @@ gboolean _gda_postgres_meta__columns (GdaServerProvider *prov, GdaConnection *cn
 	for (i = 0; i < nrows; i++) {
 		const GValue *value;
 		GType type;
-		value = gda_data_model_get_value_at (model, 24, i);
+		value = gda_data_model_get_value_at (model, 24, i, error);
+		if (!value) {
+			retval = FALSE;
+			break;
+		}
 		
 		type = _gda_postgres_type_oid_to_gda (cdata, g_value_get_int64 (value));
 		if (type != G_TYPE_STRING) {
@@ -841,9 +865,12 @@ _gda_postgres_meta_columns (GdaServerProvider *prov, GdaConnection *cnc,
 	}
 
 	/* use a prepared statement for the "base" model */
-	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog);
-	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema);
-	gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name);
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
+		return FALSE;
 	model = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_COLUMNS_OF_TABLE], i_set, 
 							      GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types, error);
 	if (!model)
@@ -856,8 +883,12 @@ _gda_postgres_meta_columns (GdaServerProvider *prov, GdaConnection *cnc,
 	for (i = 0; i < nrows; i++) {
 		const GValue *value;
 		GType type;
-		value = gda_data_model_get_value_at (model, 25, i);
-		
+		value = gda_data_model_get_value_at (model, 25, i, error);
+		if (!value) {
+			retval = FALSE;
+			break;
+		}
+
 		type = _gda_postgres_type_oid_to_gda (cdata, g_value_get_int64 (value));
 		if (type != G_TYPE_STRING) {
 			GValue *v;
@@ -916,9 +947,12 @@ _gda_postgres_meta_view_cols (GdaServerProvider *prov, GdaConnection *cnc,
 	GdaDataModel *model;
 	gboolean retval = TRUE;
 
-	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), view_catalog);
-	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), view_schema);
-	gda_holder_set_value (gda_set_get_holder (i_set, "name"), view_name);
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), view_catalog, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), view_schema, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), view_name, error))
+		return FALSE;
 	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_VIEWS_COLUMNS], i_set, error);
 	if (!model)
 		return FALSE;
@@ -954,9 +988,12 @@ _gda_postgres_meta_constraints_tab (GdaServerProvider *prov, GdaConnection *cnc,
 	GdaDataModel *model;
 	gboolean retval = TRUE;
 
-	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog);
-	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema);
-	gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name);
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
+		return FALSE;
 
 	if (!constraint_name_n) {
 		model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_TABLES_CONSTRAINTS], i_set, 
@@ -971,7 +1008,8 @@ _gda_postgres_meta_constraints_tab (GdaServerProvider *prov, GdaConnection *cnc,
 
 	}
 	else {
-		gda_holder_set_value (gda_set_get_holder (i_set, "name2"), constraint_name_n);
+		if (! gda_holder_set_value (gda_set_get_holder (i_set, "name2"), constraint_name_n, error))
+			return FALSE;
 		model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_TABLES_CONSTRAINT_NAMED], i_set, 
 								 error);
 		if (!model)
@@ -1013,10 +1051,14 @@ _gda_postgres_meta_constraints_ref (GdaServerProvider *prov, GdaConnection *cnc,
 	GdaDataModel *model;
 	gboolean retval = TRUE;
 
-	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog);
-	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema);
-	gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name);
-	gda_holder_set_value (gda_set_get_holder (i_set, "name2"), constraint_name);
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name2"), constraint_name, error))
+		return FALSE;
 	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_REF_CONSTRAINTS], i_set, 
 							 error);
 	if (!model)
@@ -1060,10 +1102,14 @@ _gda_postgres_meta_key_columns (GdaServerProvider *prov, GdaConnection *cnc,
 	GdaDataModel *model;
 	gboolean retval = TRUE;
 
-	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog);
-	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema);
-	gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name);
-	gda_holder_set_value (gda_set_get_holder (i_set, "name2"), constraint_name);
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name2"), constraint_name, error))
+		return FALSE;
 	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_KEY_COLUMN_USAGE], i_set, 
 							 error);
 	if (!model)
@@ -1107,10 +1153,14 @@ _gda_postgres_meta_check_columns (GdaServerProvider *prov, GdaConnection *cnc,
 	GdaDataModel *model;
 	gboolean retval = TRUE;
 
-	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog);
-	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema);
-	gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name);
-	gda_holder_set_value (gda_set_get_holder (i_set, "name2"), constraint_name);
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name2"), constraint_name, error))
+		return FALSE;
 	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_CHECK_COLUMN_USAGE], i_set, 
 							 error);
 	if (!model)
@@ -1176,9 +1226,12 @@ _gda_postgres_meta_triggers (GdaServerProvider *prov, GdaConnection *cnc,
 		return FALSE;
 	}
 
-	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog);
-	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema);
-	gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name);
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
+		return FALSE;
 
 	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_TRIGGERS], i_set, 
 							 error);
@@ -1238,10 +1291,13 @@ _gda_postgres_meta_routines (GdaServerProvider *prov, GdaConnection *cnc,
 		return FALSE;
 	}
 
-	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), routine_catalog);
-	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), routine_schema);
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), routine_catalog, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), routine_schema, error))
+		return FALSE;
 	if (routine_name_n) {
-		gda_holder_set_value (gda_set_get_holder (i_set, "name"), routine_name_n);
+		if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), routine_name_n, error))
+			return FALSE;
 		model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_ROUTINES_ONE], i_set, 
 								 error);
 	}
@@ -1290,7 +1346,11 @@ _gda_postgres_meta__routine_col (GdaServerProvider *prov, GdaConnection *cnc,
 		const GValue *cvalue;
 		GValue *v;
 
-		cvalue = gda_data_model_get_value_at (model, 2, i);
+		cvalue = gda_data_model_get_value_at (model, 2, i, error);
+		if (!cvalue) {
+			retval = FALSE;
+			break;
+		}
 		if (!spname || gda_value_compare (spname, cvalue))
 			/* reinit ordinal position */
 			ordinal_pos = 1;
@@ -1333,9 +1393,12 @@ GdaDataModel *model, *proxy;
 		return FALSE;
 	}
 
-	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), rout_catalog);
-	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), rout_schema);
-	gda_holder_set_value (gda_set_get_holder (i_set, "name"), rout_name);
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), rout_catalog, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), rout_schema, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), rout_name, error))
+		return FALSE;
 
 	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_ROUTINE_COL], i_set, 
 							 error);
@@ -1350,7 +1413,12 @@ GdaDataModel *model, *proxy;
 		const GValue *cvalue;
 		GValue *v;
 
-		cvalue = gda_data_model_get_value_at (model, 2, i);
+		cvalue = gda_data_model_get_value_at (model, 2, i, error);
+		if (!cvalue) {
+			retval = FALSE;
+			break;
+		}
+
 		if (!spname || gda_value_compare (spname, cvalue))
 			/* reinit ordinal position */
 			ordinal_pos = 1;
@@ -1419,9 +1487,12 @@ _gda_postgres_meta_routine_par (GdaServerProvider *prov, GdaConnection *cnc,
 		return FALSE;
 	}
 
-	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), rout_catalog);
-	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), rout_schema);
-	gda_holder_set_value (gda_set_get_holder (i_set, "name"), rout_name);
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), rout_catalog, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), rout_schema, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), rout_name, error))
+		return FALSE;
 
 	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_ROUTINE_PAR], i_set, 
 							 error);

@@ -2803,8 +2803,7 @@ suggest_update_cb_downstream (GdaMetaStore *store, GdaMetaContext *suggest, Down
 							   g_type_name (G_VALUE_TYPE (suggest->column_values[j])));
 						return NULL;
 					}
-					if (gda_value_compare_ext (templ_context->column_values[i], 
-								   (suggest->column_values[j])))
+					if (gda_value_compare (templ_context->column_values[i], suggest->column_values[j]))
 						/* different values */
 						return NULL;
 					break;
@@ -3264,7 +3263,11 @@ gda_connection_get_meta_store_data (GdaConnection *cnc,
 			if (!set)
 				set = gda_set_new (NULL);
 			h = g_object_new (GDA_TYPE_HOLDER, "g-type", G_VALUE_TYPE (v), "id", fname, NULL);
-			gda_holder_set_value (h, v);
+			if (! gda_holder_set_value (h, v, error)) {
+				g_free (key.filters);
+				g_object_unref (set);
+				return NULL;
+			}
 			gda_set_add_holder (set, h);
 			g_object_unref (h);
 			key.filters[i] = fname;

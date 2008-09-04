@@ -186,6 +186,7 @@ different classifications of the group of #GdaHolder values.
 </para>
 
 @set: 
+@error: 
 @holder_id: 
 @Varargs: 
 @Returns: 

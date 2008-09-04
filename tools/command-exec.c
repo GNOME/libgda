@@ -876,14 +876,24 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 			for (i = 0; i < nrows; i++) {
 				GString *string = NULL;
 				const GValue *cvalue;
-				const gchar *str;
+				const gchar *str = NULL;
 
-				cvalue = gda_data_model_get_value_at (model, 0, i);
+				cvalue = gda_data_model_get_value_at (model, 0, i, error);
+				if (!cvalue) {
+					gda_internal_command_exec_result_free (res);
+					res = NULL;
+					goto out;
+				}
 				str = g_value_get_string (cvalue);
 				if (*str == 'P') {
 					/* primary key */
 					GdaDataModel *cols;
-					cvalue = gda_data_model_get_value_at (model, 1, i);
+					cvalue = gda_data_model_get_value_at (model, 1, i, error);
+					if (!cvalue) {
+						gda_internal_command_exec_result_free (res);
+						res = NULL;
+						goto out;
+					}
 					string = g_string_new (_("Primary key"));
 					g_string_append_printf (string, " '%s'", g_value_get_string (cvalue));
 					str = "SELECT column_name, ordinal_position "
@@ -903,8 +913,15 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 							for (j = 0; j < cnrows; j++) {
 								if (j > 0)
 									g_string_append (string, ", ");
-								g_string_append (string, 
-										 g_value_get_string (gda_data_model_get_value_at (cols, 0, j)));
+								cvalue = gda_data_model_get_value_at (cols, 0, j, error);
+								if (!cvalue) {
+									gda_internal_command_exec_result_free (res);
+									res = NULL;
+									g_object_unref (cols);
+									g_string_free (string, TRUE);
+									goto out;
+								}
+								g_string_append (string, g_value_get_string (cvalue));
 							}
 							g_string_append_c (string, ')');
 						}
@@ -914,7 +931,12 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 				else if (*str == 'F') {
 					/* foreign key */
 					GdaDataModel *cols;
-					cvalue = gda_data_model_get_value_at (model, 1, i);
+					cvalue = gda_data_model_get_value_at (model, 1, i, error);
+					if (!cvalue) {
+						gda_internal_command_exec_result_free (res);
+						res = NULL;
+						goto out;
+					}
 					string = g_string_new (_("Foreign key"));
 					g_string_append_printf (string, " '%s'", g_value_get_string (cvalue));
 
@@ -935,23 +957,51 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 							for (j = 0; j < cnrows; j++) {
 								if (j > 0)
 									g_string_append (string, ", ");
-								g_string_append (string, 
-										 g_value_get_string (gda_data_model_get_value_at (cols, 2, j)));
+								cvalue = gda_data_model_get_value_at (cols, 2, j, error);
+								if (!cvalue) {
+									gda_internal_command_exec_result_free (res);
+									res = NULL;
+									g_object_unref (cols);
+									g_string_free (string, TRUE);
+									goto out;
+								}
+								g_string_append (string, g_value_get_string (cvalue));
 							}
 							g_string_append (string, ") references ");
 
 							const GValue *v1, *v2;
 							
-							v1 = gda_data_model_get_value_at (cols, 0, 0);
-							v2 = gda_data_model_get_value_at (cols, 1, 0);
+							v1 = gda_data_model_get_value_at (cols, 0, 0, error);
+							if (!v1) {
+								gda_internal_command_exec_result_free (res);
+								res = NULL;
+								g_object_unref (cols);
+								g_string_free (string, TRUE);
+								goto out;
+							}
+							v2 = gda_data_model_get_value_at (cols, 1, 0, error);
+							if (!v2) {
+								gda_internal_command_exec_result_free (res);
+								res = NULL;
+								g_object_unref (cols);
+								g_string_free (string, TRUE);
+								goto out;
+							}
 							g_string_append_printf (string, " %s.%s (", 
 										g_value_get_string (v1),
 										g_value_get_string (v2));
 							for (j = 0; j < cnrows; j++) {
 								if (j > 0)
 									g_string_append (string, ", ");
-								g_string_append (string, 
-										 g_value_get_string (gda_data_model_get_value_at (cols, 2, j)));
+								cvalue = gda_data_model_get_value_at (cols, 2, j, error);
+								if (!cvalue) {
+									gda_internal_command_exec_result_free (res);
+									res = NULL;
+									g_object_unref (cols);
+									g_string_free (string, TRUE);
+									goto out;
+								}
+								g_string_append (string, g_value_get_string (cvalue));
 							}
 							g_string_append_c (string, ')');
 						}
@@ -961,7 +1011,12 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 				else if (*str == 'U') {
 					/* Unique constraint */
 					GdaDataModel *cols;
-					cvalue = gda_data_model_get_value_at (model, 1, i);
+					cvalue = gda_data_model_get_value_at (model, 1, i, error);
+					if (!cvalue) {
+						gda_internal_command_exec_result_free (res);
+						res = NULL;
+						goto out;
+					}
 					string = g_string_new (_("Unique"));
 					g_string_append_printf (string, " '%s'", g_value_get_string (cvalue));
 					str = "SELECT column_name, ordinal_position "
@@ -981,8 +1036,15 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 							for (j = 0; j < cnrows; j++) {
 								if (j > 0)
 									g_string_append (string, ", ");
-								g_string_append (string, 
-										 g_value_get_string (gda_data_model_get_value_at (cols, 0, j)));
+								cvalue = gda_data_model_get_value_at (cols, 0, j, error);
+								if (!cvalue) {
+									gda_internal_command_exec_result_free (res);
+									res = NULL;
+									g_object_unref (cols);
+									g_string_free (string, TRUE);
+									goto out;
+								}
+								g_string_append (string, g_value_get_string (cvalue));
 							}
 							g_string_append_c (string, ')');
 						}
@@ -1009,6 +1071,7 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 	else 
 		TO_IMPLEMENT;
 
+ out:
 	g_object_unref (mstruct);
 	return res;
 }

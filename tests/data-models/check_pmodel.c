@@ -296,7 +296,13 @@ test2 (GdaConnection *cnc)
 #endif
 		goto out;
 	}
-	gda_set_set_holder_value (params, "country", "SP");
+	if (! gda_set_set_holder_value (params, &error, "country", "SP")) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Could not set SELECT's parameters!\n");
+#endif
+		goto out;
+	}
 	model = gda_connection_statement_execute_select (cnc, stmt, params, &error);
 	g_object_unref (params);
 	if (!model) {
@@ -800,7 +806,13 @@ test7 (GdaConnection *cnc)
 #endif
 		goto out;
 	}
-	gda_set_set_holder_value (params, "country", "SP");
+	if (! gda_set_set_holder_value (params, &error, "country", "SP")) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Could not get SELECT's parameters!\n");
+#endif
+		goto out;
+	}
 	model = gda_connection_statement_execute_select (cnc, stmt, params, &error);
 	if (!model) {
 		nfailed++;
@@ -816,7 +828,7 @@ test7 (GdaConnection *cnc)
 
 	
 	/* gda_data_select_compute_modification_statements() */
-	if (!gda_data_select_compute_modification_statements (GDA_DATA_SELECT (model), TRUE, &error)) {
+	if (!gda_data_select_compute_modification_statements (GDA_DATA_SELECT (model), &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
 		g_print ("gda_data_select_compute_modification_statements() should have succedded, error: %s\n",
@@ -862,8 +874,15 @@ check_set_value_at (GdaDataModel *model, gint col, gint row, const GValue *set_v
 #endif
 		return FALSE;
 	}
-	get_value = gda_data_model_get_value_at (model, col, row);
-	if (gda_value_compare_ext (get_value, set_value)) {
+	get_value = gda_data_model_get_value_at (model, col, row, &error);
+	if (!get_value) {
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Can't get data model's value: %s",
+			 error && error->message ? error->message : "No detail");
+#endif
+		return FALSE;
+	}
+	if (gda_value_compare (get_value, set_value)) {
 #ifdef CHECK_EXTRA_INFO
 		gchar *s1, *s2;
 		s1 = gda_value_stringify (get_value);
@@ -939,8 +958,15 @@ check_set_values (GdaDataModel *model, gint row, GList *set_values, GdaConnectio
 		if (!list->data)
 			continue;
 		
-		get_value = gda_data_model_get_value_at (model, i, row);
-		if (gda_value_compare_ext (get_value, (GValue*) list->data)) {
+		get_value = gda_data_model_get_value_at (model, i, row, &error);
+		if (!get_value) {
+#ifdef CHECK_EXTRA_INFO
+			g_print ("Can't get data model's value: %s",
+				 error && error->message ? error->message : "No detail");
+#endif
+			return FALSE;
+		}
+		if (gda_value_compare (get_value, (GValue*) list->data)) {
 #ifdef CHECK_EXTRA_INFO
 			gchar *s1, *s2;
 			s1 = gda_value_stringify (get_value);
@@ -1021,8 +1047,15 @@ check_append_values (GdaDataModel *model, GList *set_values, GdaConnection *cnc,
 		if (!list->data)
 			continue;
 		
-		get_value = gda_data_model_get_value_at (model, i, newrow);
-		if (gda_value_compare_ext (get_value, (GValue*) list->data)) {
+		get_value = gda_data_model_get_value_at (model, i, newrow, &error);
+		if (!get_value) {
+#ifdef CHECK_EXTRA_INFO
+			g_print ("Can't get data model's value: %s",
+				 error && error->message ? error->message : "No detail");
+#endif
+			return FALSE;
+		}
+		if (gda_value_compare (get_value, (GValue*) list->data)) {
 #ifdef CHECK_EXTRA_INFO
 			gchar *s1, *s2;
 			s1 = gda_value_stringify (get_value);

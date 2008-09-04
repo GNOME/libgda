@@ -514,32 +514,6 @@ gda_server_provider_handler_declare (GdaServerProvider *prov, GdaDataHandler *dh
 	g_object_ref (dh);
 }
 
-
-/*
- * Find the GType of a DBMS type using the TYPES schema array
- */
-static GType
-find_gtype (GdaDataModel *types, const gchar *name)
-{
-	GType gtype = G_TYPE_INVALID;
-	gint row, nrows;
-	nrows = gda_data_model_get_n_rows (types);
-	for (row = 0; (row < nrows) && (gtype == G_TYPE_INVALID); row++) {
-		const GValue *value;
-		value = gda_data_model_get_value_at (types, 0, row);
-		if (value && gda_value_isa (value, G_TYPE_STRING)) {
-			const gchar *t = g_value_get_string ((GValue*) value);
-			if (!strcmp (t, name)) {
-				value = gda_data_model_get_value_at (types, 3, row);
-				if (value && gda_value_isa (value, G_TYPE_ULONG))
-					gtype = g_value_get_ulong (value);
-			}
-		}
-	}
-	
-	return gtype;
-}
-
 /*
  * Tries to create a list of Key fields for table @table_name using @dict (and if @dict does not know about
  * that table, get the FIELDS schema from the provider)

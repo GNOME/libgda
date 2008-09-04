@@ -62,7 +62,7 @@ static void                 gda_data_model_array_data_model_init (GdaDataModelCl
 static gint                 gda_data_model_array_get_n_rows      (GdaDataModel *model);
 static gint                 gda_data_model_array_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_model_array_describe_column (GdaDataModel *model, gint col);
-static const GValue        *gda_data_model_array_get_value_at    (GdaDataModel *model, gint col, gint row);
+static const GValue        *gda_data_model_array_get_value_at    (GdaDataModel *model, gint col, gint row, GError **error);
 static GdaValueAttribute    gda_data_model_array_get_attributes_at (GdaDataModel *model, gint col, gint row);
 static GdaDataModelAccessFlags gda_data_model_array_get_access_flags(GdaDataModel *model);
 
@@ -491,10 +491,12 @@ column_g_type_changed_cb (GdaColumn *column, GType old, GType new, GdaDataModelA
         for (i = 0; (i < nrows) && (nb_warnings < max_warnings); i++) {
                 GType vtype;
 
-                value = gda_data_model_array_get_value_at (GDA_DATA_MODEL (model), col, i);
-                if (value)
-                        vtype = G_VALUE_TYPE ((GValue *) value);
-                if (value && (vtype != GDA_TYPE_NULL) && (vtype != new)) {
+                value = gda_data_model_get_value_at ((GdaDataModel *) model, col, i, NULL);
+                if (!value)
+			continue;
+
+		vtype = G_VALUE_TYPE ((GValue *) value);
+                if ((vtype != GDA_TYPE_NULL) && (vtype != new)) {
                         nb_warnings ++;
                         if (nb_warnings < max_warnings) {
                                 if (nb_warnings == max_warnings)
@@ -510,42 +512,45 @@ column_g_type_changed_cb (GdaColumn *column, GType old, GType new, GdaDataModelA
                                 }
                         }
                 }
-
         }
 }
 
 static const GValue *
-gda_data_model_array_get_value_at (GdaDataModel *model, gint col, gint row)
+gda_data_model_array_get_value_at (GdaDataModel *model, gint col, gint row, GError **error)
 {
 	GdaRow *fields;
 	GdaDataModelArray *amodel = (GdaDataModelArray*) model;
 
 	if (amodel->priv->rows->len == 0) {
-		g_warning (_("No row in data model"));
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_NOT_FOUND_ERROR,
+			     _("No row in data model"));
 		return NULL;
 	}
 
 	if (row >= amodel->priv->rows->len) {
-		g_warning (_("Row %d out of range (0-%d)"), row, 
-			   amodel->priv->rows->len - 1);
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
+			     _("Row %d out of range (0-%d)"), row, amodel->priv->rows->len - 1);
 		return NULL;
 	}
 
 	if (col >= amodel->priv->number_of_columns) {
-		g_warning (_("Column %d out of range (0-%d)"), col, 
-			   amodel->priv->number_of_columns - 1);
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_COLUMN_OUT_OF_RANGE_ERROR,
+			     _("Column %d out of range (0-%d)"), col, amodel->priv->number_of_columns - 1);
 		return NULL;
 	}
 
 	fields = g_array_index (amodel->priv->rows, GdaRow*, row);
-	if (fields != NULL) {
+	if (fields) {
 		GValue *field;
 
 		field = gda_row_get_value (fields, col);
 		return (const GValue *) field;
 	}
-
-	return NULL;
+	else {
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_NOT_FOUND_ERROR,
+			     _("Data model has no data"));
+		return NULL;
+	}
 }
 
 static GdaValueAttribute
@@ -562,7 +567,7 @@ gda_data_model_array_get_attributes_at (GdaDataModel *model, gint col, gint row)
                 flags |= GDA_VALUE_ATTR_CAN_BE_DEFAULT;
 
         if (row >= 0) {
-                gdavalue = gda_data_model_get_value_at (model, col, row);
+                gdavalue = gda_data_model_get_value_at (model, col, row, NULL);
                 if (!gdavalue || gda_value_is_null ((GValue *) gdavalue))
                         flags |= GDA_VALUE_ATTR_IS_NULL;
         }

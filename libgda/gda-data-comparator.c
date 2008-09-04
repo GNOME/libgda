@@ -355,6 +355,7 @@ gda_data_comparator_set_key_columns (GdaDataComparator *comp, gint *col_numbers,
  * It is assumed that both data model have the same number of columns and of "compatible" types.
  *
  * Returns: 
+ *          -2 if an error occurred
  *          -1 if not found, 
  *          >=0 if found (if changes need to be made, then @out_has_changed is set to TRUE).
  */
@@ -374,10 +375,16 @@ find_row_in_model (GdaDataComparator *comp, gint row, gboolean *out_has_changed,
 			comp->priv->key_columns [i] = i;
 	}
 
-	for (i = 0; i < comp->priv->nb_key_columns; i++) 
-		values = g_slist_append (values, 
-					 (gpointer) gda_data_model_get_value_at (comp->priv->new_model, 
-										 comp->priv->key_columns[i], row));
+	for (i = 0; i < comp->priv->nb_key_columns; i++) {
+		const GValue *cvalue;
+		cvalue = gda_data_model_get_value_at (comp->priv->new_model, comp->priv->key_columns[i], row, error);
+		if (!cvalue) {
+			if (values)
+				g_slist_free (values);
+			return -2;
+		}
+		values = g_slist_append (values, (gpointer) cvalue);
+	}
 
 	erow = gda_data_model_get_row_from_values (comp->priv->old_model, values, comp->priv->key_columns);
 	g_slist_free (values);
@@ -386,9 +393,13 @@ find_row_in_model (GdaDataComparator *comp, gint row, gboolean *out_has_changed,
 		gboolean changed = FALSE;
 		for (i = 0; i < ncols; i++) {
 			const GValue *v1, *v2;
-			v1 = gda_data_model_get_value_at (comp->priv->old_model, i, erow);
-			v2 = gda_data_model_get_value_at (comp->priv->new_model, i, row);
-			if (gda_value_compare_ext (v1, v2)) {
+			v1 = gda_data_model_get_value_at (comp->priv->old_model, i, erow, error);
+			if (!v1)
+				return -2;
+			v2 = gda_data_model_get_value_at (comp->priv->new_model, i, row, error);
+			if (!v2) 
+				return -2;
+			if (gda_value_compare (v1, v2)) {
 				changed = TRUE;
 				break;
 			}
@@ -410,7 +421,7 @@ find_row_in_model (GdaDataComparator *comp, gint row, gboolean *out_has_changed,
  * If one connects to this signal and returns FALSE in the signal handler, then computing differences will be
  * stopped and an error will be returned.
  *
- * Returns: TRUE if all the differences have been sucessfully computed
+ * Returns: TRUE if all the differences have been sucessfully computed, and FALSE if an error occurred
  */
 gboolean
 gda_data_comparator_compute_diff (GdaDataComparator *comp, GError **error)
@@ -482,7 +493,7 @@ gda_data_comparator_compute_diff (GdaDataComparator *comp, GError **error)
 		g_print ("FIND row %d returned row %d (%s)\n", i, erow, 
 			 has_changed ? "CHANGED" : "unchanged");
 #endif
-		if (erow < 0) {
+		if (erow == -1) {
 			gint j;
 			diff = g_new0 (GdaDiff, 1);
 			diff->type = GDA_DIFF_ADD_ROW;
@@ -490,10 +501,23 @@ gda_data_comparator_compute_diff (GdaDataComparator *comp, GError **error)
 			diff->new_row = i;
 			diff->values = g_hash_table_new_full (g_str_hash, g_str_equal, (GDestroyNotify) g_free,
 							      (GDestroyNotify) gda_value_free);
-			for (j = 0; j < oncols; j++) 
+			for (j = 0; j < oncols; j++) {
+				const GValue *cvalue;
+				cvalue = gda_data_model_get_value_at (comp->priv->new_model, j, i, error);
+				if (!cvalue) {
+					/* an error occurred */
+					g_free (rows_to_del);
+					gda_diff_free (diff);
+					return FALSE;
+				}
 				g_hash_table_insert (diff->values, g_strdup_printf ("+%d", j),
-						     gda_value_copy (gda_data_model_get_value_at (comp->priv->new_model,
-												  j, i)));
+						     gda_value_copy (cvalue));
+			}
+		}
+		else if (erow < -1) {
+			/* an error occurred */
+			g_free (rows_to_del);
+			return FALSE;
 		}
 		else if (has_changed) {
 			gint j;
@@ -504,12 +528,25 @@ gda_data_comparator_compute_diff (GdaDataComparator *comp, GError **error)
 			diff->values = g_hash_table_new_full (g_str_hash, g_str_equal, (GDestroyNotify) g_free,
 							      (GDestroyNotify) gda_value_free);
 			for (j = 0; j < oncols; j++) {
+				const GValue *cvalue;
+				cvalue = gda_data_model_get_value_at (comp->priv->new_model, j, i, error);
+				if (!cvalue) {
+					/* an error occurred */
+					g_free (rows_to_del);
+					gda_diff_free (diff);
+					return FALSE;
+				}
 				g_hash_table_insert (diff->values, g_strdup_printf ("+%d", j),
-						     gda_value_copy (gda_data_model_get_value_at (comp->priv->new_model,
-												  j, i)));
+						     gda_value_copy (cvalue));
+				cvalue = gda_data_model_get_value_at (comp->priv->old_model, j, i, error);
+				if (!cvalue) {
+					/* an error occurred */
+					g_free (rows_to_del);
+					gda_diff_free (diff);
+					return FALSE;
+				}
 				g_hash_table_insert (diff->values, g_strdup_printf ("-%d", j),
-						     gda_value_copy (gda_data_model_get_value_at (comp->priv->old_model,
-												  j, i)));
+						     gda_value_copy (cvalue));
 			}
 		}
 		rows_to_del [i] = FALSE;
@@ -538,10 +575,18 @@ gda_data_comparator_compute_diff (GdaDataComparator *comp, GError **error)
 			diff->new_row = -1;
 			diff->values = g_hash_table_new_full (g_str_hash, g_str_equal, (GDestroyNotify) g_free,
 							      (GDestroyNotify) gda_value_free);
-			for (j = 0; j < oncols; j++) 
+			for (j = 0; j < oncols; j++)  {
+				const GValue *cvalue;
+				cvalue = gda_data_model_get_value_at (comp->priv->old_model, j, i, error);
+				if (!cvalue) {
+					/* an error occurred */
+					g_free (rows_to_del);
+					gda_diff_free (diff);
+					return FALSE;
+				}
 				g_hash_table_insert (diff->values, g_strdup_printf ("-%d", j),
-						     gda_value_copy (gda_data_model_get_value_at (comp->priv->old_model,
-												  j, i)));
+						     gda_value_copy (cvalue));
+			}
 			g_array_append_val (comp->priv->diffs, diff);
 			g_signal_emit (comp, gda_data_comparator_signals [DIFF_COMPUTED], 0, diff, &stop);
 			if (stop) {

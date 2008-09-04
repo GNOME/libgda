@@ -336,11 +336,12 @@ gda_set_copy (GdaSet *set)
 GdaSet *
 gda_set_new_inline (gint nb, ...)
 {
-	GdaSet *set;
+	GdaSet *set = NULL;
 	GSList *holders = NULL;
 	va_list ap;
 	gchar *id;
 	gint i;
+	gboolean allok = TRUE;
 
 	/* build the list of holders */
 	va_start (ap, nb);
@@ -348,6 +349,7 @@ gda_set_new_inline (gint nb, ...)
 		GType type;
 		GdaHolder *holder;
 		GValue *value;
+		GError *lerror = NULL;
 
 		id = va_arg (ap, char *);
 		type = va_arg (ap, GType);
@@ -390,29 +392,41 @@ gda_set_new_inline (gint nb, ...)
 			g_value_set_long (value, va_arg (ap, glong));
 		else if (type == G_TYPE_ULONG)
 			g_value_set_ulong (value, va_arg (ap, gulong));
-		else
-			g_warning (_("%s() does not handle values of type %s, value not assigned."),
+		else {
+			g_warning (_("%s() does not handle values of type '%s'."),
 				   __FUNCTION__, g_type_name (type));
+			g_object_unref (holder);
+			allok = FALSE;
+			break;
+		}
 
-		if (!gda_holder_take_value (holder, value))
-			g_warning (_("Could not set GdaHolder's value, value not assigned"));
+		if (!gda_holder_take_value (holder, value, &lerror)) {
+			g_warning (_("Unable to set holder's value: %s"),
+				   lerror && lerror->message ? lerror->message : _("No detail"));
+			if (lerror)
+				g_error_free (lerror);
+			g_object_unref (holder);
+			allok = FALSE;
+			break;
+		}
 		holders = g_slist_append (holders, holder);
         }
 	va_end (ap);
 
 	/* create the set */
-	set = gda_set_new (holders);
+	if (allok) 
+		set = gda_set_new (holders);
 	if (holders) {
 		g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
 		g_slist_free (holders);
 	}
-
 	return set;
 }
 
 /**
  * gda_set_set_holder_value
  * @set: a #GdaSet object
+ * @error: a place to store errors, or %NULL
  * @holder_id: the ID of the holder to set the value
  * @...: value, of the correct type, depending on the requested holder's type
  *
@@ -421,7 +435,7 @@ gda_set_new_inline (gint nb, ...)
  * Returns: TRUE if no error occurred and the value was set correctly
  */
 gboolean
-gda_set_set_holder_value (GdaSet *set, const gchar *holder_id, ...)
+gda_set_set_holder_value (GdaSet *set, GError **error, const gchar *holder_id, ...)
 {
 	GdaHolder *holder;
 	va_list ap;
@@ -475,16 +489,16 @@ gda_set_set_holder_value (GdaSet *set, const gchar *holder_id, ...)
 		g_value_set_long (value, va_arg (ap, glong));
 	else if (type == G_TYPE_ULONG)
 		g_value_set_ulong (value, va_arg (ap, gulong));
-	else
-		g_warning (_("%s() does not handle values of type %s, value not assigned."),
-			   __FUNCTION__, g_type_name (type));
-	
-	va_end (ap);
-	if (!gda_holder_take_value (holder, value)) {
-		g_warning (_("Could not set GdaHolder's value, value not assigned"));
+	else {
+		g_set_error (error, 0, 0,
+			     _("%s() does not handle values of type '%s'."),
+			     __FUNCTION__, g_type_name (type));
+		va_end (ap);
 		return FALSE;
 	}
-	return TRUE;
+
+	va_end (ap);
+	return gda_holder_take_value (holder, value, error);
 }
 
 /**
@@ -731,10 +745,12 @@ gda_set_new_from_spec_node (xmlNodePtr xml_spec, GError **error)
 								     NULL));
 				holders = g_slist_append (holders, holder);
 			}
-			if (gdatype) xmlFree (gdatype);
+			if (gdatype)
+				xmlFree (gdatype);
 			
 			/* set holder's attributes */
-			gda_utility_holder_load_attributes (holder, cur, sources);
+			if (! gda_utility_holder_load_attributes (holder, cur, sources, error))
+				allok = FALSE;
 		}
 	}
 
@@ -815,7 +831,6 @@ gda_set_get_spec (GdaSet *set)
 		xmlNodePtr node;
 		GdaHolder *holder = GDA_HOLDER (list->data);
 		gchar *str;
-		const gchar *cstr;
 
 		node = xmlNewTextChild (root, NULL, (xmlChar*)"parameter", NULL);
 		g_object_get (G_OBJECT (holder), "id", &str, NULL);

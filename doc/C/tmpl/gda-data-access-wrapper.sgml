@@ -51,13 +51,3 @@ and allows data to be accessed in a random way while remaining memory efficient 
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_data_access_wrapper_row_exists ##### -->
-<para>
-
-</para>
-
-@wrapper: 
-@row: 
-@Returns: 
-
-

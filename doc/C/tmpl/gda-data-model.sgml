@@ -101,97 +101,6 @@ values are accessible at the provided row).
 @gdadatamodel: the object which received the signal.
 @arg1: 
 
-<!-- ##### ENUM GdaDataModelAccessFlags ##### -->
-<para>
-
-</para>
-
-@GDA_DATA_MODEL_ACCESS_RANDOM: 
-@GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD: 
-@GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD: 
-@GDA_DATA_MODEL_ACCESS_CURSOR: 
-@GDA_DATA_MODEL_ACCESS_INSERT: 
-@GDA_DATA_MODEL_ACCESS_UPDATE: 
-@GDA_DATA_MODEL_ACCESS_DELETE: 
-@GDA_DATA_MODEL_ACCESS_WRITE: 
-
-<!-- ##### ENUM GdaDataModelHint ##### -->
-<para>
-
-</para>
-
-@GDA_DATA_MODEL_HINT_START_BATCH_UPDATE: 
-@GDA_DATA_MODEL_HINT_END_BATCH_UPDATE: 
-@GDA_DATA_MODEL_HINT_REFRESH: 
-
-<!-- ##### ENUM GdaDataModelIOFormat ##### -->
-<para>
-
-</para>
-
-@GDA_DATA_MODEL_IO_DATA_ARRAY_XML: 
-@GDA_DATA_MODEL_IO_TEXT_SEPARATED: 
-
-<!-- ##### FUNCTION gda_data_model_row_inserted ##### -->
-<para>
-
-</para>
-
-@model: 
-@row: 
-
-
-<!-- ##### FUNCTION gda_data_model_row_updated ##### -->
-<para>
-
-</para>
-
-@model: 
-@row: 
-
-
-<!-- ##### FUNCTION gda_data_model_row_removed ##### -->
-<para>
-
-</para>
-
-@model: 
-@row: 
-
-
-<!-- ##### FUNCTION gda_data_model_reset ##### -->
-<para>
-
-</para>
-
-@model: 
-
-
-<!-- ##### FUNCTION gda_data_model_freeze ##### -->
-<para>
-
-</para>
-
-@model: 
-
-
-<!-- ##### FUNCTION gda_data_model_thaw ##### -->
-<para>
-
-</para>
-
-@model: 
-
-
-<!-- ##### FUNCTION gda_data_model_get_access_flags ##### -->
-<para>
-
-</para>
-
-@model: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_data_model_get_n_rows ##### -->
 <para>
 
@@ -220,7 +129,7 @@ values are accessible at the provided row).
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_data_model_get_column_index_by_name ##### -->
+<!-- ##### FUNCTION gda_data_model_get_column_index ##### -->
 <para>
 
 </para>
@@ -240,16 +149,6 @@ values are accessible at the provided row).
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_data_model_set_column_name ##### -->
-<para>
-
-</para>
-
-@model: 
-@col: 
-@name: 
-
-
 <!-- ##### FUNCTION gda_data_model_get_column_title ##### -->
 <para>
 
@@ -260,24 +159,35 @@ values are accessible at the provided row).
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_data_model_set_column_title ##### -->
+<!-- ##### ENUM GdaDataModelAccessFlags ##### -->
+<para>
+
+</para>
+
+@GDA_DATA_MODEL_ACCESS_RANDOM: 
+@GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD: 
+@GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD: 
+@GDA_DATA_MODEL_ACCESS_CURSOR: 
+@GDA_DATA_MODEL_ACCESS_INSERT: 
+@GDA_DATA_MODEL_ACCESS_UPDATE: 
+@GDA_DATA_MODEL_ACCESS_DELETE: 
+@GDA_DATA_MODEL_ACCESS_WRITE: 
+
+<!-- ##### FUNCTION gda_data_model_get_access_flags ##### -->
 <para>
 
 </para>
 
 @model: 
-@col: 
-@title: 
+@Returns: 
 
 
-<!-- ##### FUNCTION gda_data_model_get_attributes_at ##### -->
+<!-- ##### FUNCTION gda_data_model_create_iter ##### -->
 <para>
 
 </para>
 
 @model: 
-@col: 
-@row: 
 @Returns: 
 
 
@@ -289,10 +199,25 @@ values are accessible at the provided row).
 @model: 
 @col: 
 @row: 
+@error: 
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_data_model_get_value_at_col_name ##### -->
+<!-- ##### FUNCTION gda_data_model_get_typed_value_at ##### -->
+<para>
+
+</para>
+
+@model: 
+@col: 
+@row: 
+@expected_type: 
+@nullok: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_get_value_at_column ##### -->
 <para>
 
 </para>
@@ -300,6 +225,7 @@ values are accessible at the provided row).
 @model: 
 @column_name: 
 @row: 
+@error: 
 @Returns: 
 
 
@@ -328,12 +254,14 @@ values are accessible at the provided row).
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_data_model_create_iter ##### -->
+<!-- ##### FUNCTION gda_data_model_get_attributes_at ##### -->
 <para>
 
 </para>
 
 @model: 
+@col: 
+@row: 
 @Returns: 
 
 
@@ -380,6 +308,15 @@ values are accessible at the provided row).
 @Returns: 
 
 
+<!-- ##### ENUM GdaDataModelHint ##### -->
+<para>
+
+</para>
+
+@GDA_DATA_MODEL_HINT_START_BATCH_UPDATE: 
+@GDA_DATA_MODEL_HINT_END_BATCH_UPDATE: 
+@GDA_DATA_MODEL_HINT_REFRESH: 
+
 <!-- ##### FUNCTION gda_data_model_send_hint ##### -->
 <para>
 
@@ -389,6 +326,14 @@ values are accessible at the provided row).
 @hint: 
 @hint_value: 
 
+
+<!-- ##### ENUM GdaDataModelIOFormat ##### -->
+<para>
+
+</para>
+
+@GDA_DATA_MODEL_IO_DATA_ARRAY_XML: 
+@GDA_DATA_MODEL_IO_TEXT_SEPARATED: 
 
 <!-- ##### FUNCTION gda_data_model_export_to_string ##### -->
 <para>
@@ -488,5 +433,76 @@ values are accessible at the provided row).
 
 @model: 
 @Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_set_column_name ##### -->
+<para>
+
+</para>
+
+@model: 
+@col: 
+@name: 
+
+
+<!-- ##### FUNCTION gda_data_model_set_column_title ##### -->
+<para>
+
+</para>
+
+@model: 
+@col: 
+@title: 
+
+
+<!-- ##### FUNCTION gda_data_model_row_inserted ##### -->
+<para>
+
+</para>
+
+@model: 
+@row: 
+
+
+<!-- ##### FUNCTION gda_data_model_row_updated ##### -->
+<para>
+
+</para>
+
+@model: 
+@row: 
+
+
+<!-- ##### FUNCTION gda_data_model_row_removed ##### -->
+<para>
+
+</para>
+
+@model: 
+@row: 
+
+
+<!-- ##### FUNCTION gda_data_model_reset ##### -->
+<para>
+
+</para>
+
+@model: 
+
+
+<!-- ##### FUNCTION gda_data_model_freeze ##### -->
+<para>
+
+</para>
+
+@model: 
+
+
+<!-- ##### FUNCTION gda_data_model_thaw ##### -->
+<para>
+
+</para>
+
+@model: 
 
 

@@ -52,10 +52,10 @@ gchar      **gda_completion_list_get (GdaConnection *cnc, const gchar *text, gin
  * Param & model utilities
  */
 gboolean     gda_utility_check_data_model (GdaDataModel *model, gint nbcols, ...);
-void         gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent, 
+gboolean     gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent, 
 					      const gint *cols, gint nb_cols, const gint *rows, gint nb_rows,
 					      gboolean use_col_ids);
-void         gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *sources);
+gboolean     gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *sources, GError **error);
 
 /* 
  * translate any text to an alphanumerical text 

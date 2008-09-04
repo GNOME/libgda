@@ -160,7 +160,7 @@ static gint                 gda_data_model_import_get_n_rows      (GdaDataModel 
 static gint                 gda_data_model_import_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_model_import_describe_column (GdaDataModel *model, gint col);
 static GdaDataModelAccessFlags gda_data_model_import_get_access_flags(GdaDataModel *model);
-static const GValue      *gda_data_model_import_get_value_at    (GdaDataModel *model, gint col, gint row);
+static const GValue        *gda_data_model_import_get_value_at    (GdaDataModel *model, gint col, gint row, GError **error);
 static GdaValueAttribute    gda_data_model_import_get_attributes_at (GdaDataModel *model, gint col, gint row);
 static GdaDataModelIter    *gda_data_model_import_create_iter      (GdaDataModel *model);
 static gboolean             gda_data_model_import_iter_next       (GdaDataModel *model, GdaDataModelIter *iter); 
@@ -1712,7 +1712,7 @@ gda_data_model_import_get_access_flags (GdaDataModel *model)
 }
 
 static const GValue *
-gda_data_model_import_get_value_at (GdaDataModel *model, gint col, gint row)
+gda_data_model_import_get_value_at (GdaDataModel *model, gint col, gint row, GError **error)
 {
 	GdaDataModelImport *imodel;
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_IMPORT (model), NULL);
@@ -1721,10 +1721,13 @@ gda_data_model_import_get_value_at (GdaDataModel *model, gint col, gint row)
 
 	if (imodel->priv->random_access_model)
 		/* if there is a random access model, then use it */
-		return gda_data_model_get_value_at (imodel->priv->random_access_model, col, row);
-	else
+		return gda_data_model_get_value_at (imodel->priv->random_access_model, col, row, error);
+	else {
 		/* otherwise, bail out */
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
+			     _("Data model does not support random access"));
 		return NULL;
+	}
 }
 
 static GdaValueAttribute
@@ -1859,24 +1862,30 @@ gda_data_model_import_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 		GSList *plist;
 		GSList *vlist;
 		gboolean update_model;
+		gboolean allok = TRUE;
 		
 		g_object_get (G_OBJECT (iter), "update_model", &update_model, NULL);
 		g_object_set (G_OBJECT (iter), "update_model", FALSE, NULL);
-		plist = ((GdaSet *) iter)->holders;
-		vlist = next_values;
-		while (plist && vlist) {
-			gda_holder_set_value (GDA_HOLDER (plist->data), 
-					      (GValue *) vlist->data);
-			plist = g_slist_next (plist);
-			vlist = g_slist_next (vlist);
+		for (plist = ((GdaSet *) iter)->holders, vlist = next_values;
+		     plist && vlist;
+		     plist = plist->next, vlist = vlist->next) {
+			GError *lerror = NULL;
+			if (! gda_holder_set_value (GDA_HOLDER (plist->data), 
+						    (GValue *) vlist->data, &lerror)) {
+				gchar *tmp;
+				tmp = g_strdup_printf (_("Could not set iterator's value: %s"),
+						       lerror && lerror->message ? lerror->message : _("No detail"));
+				add_error (imodel, tmp);
+				g_free (tmp);
+				allok = FALSE;
+			}
 		}
 		if (plist || vlist) {
+			allok = FALSE;
 			if (plist) {
 				add_error_too_few_values (imodel);
-				while (plist) {
-					gda_holder_set_value (GDA_HOLDER (plist->data), NULL);
-					plist = g_slist_next (plist);
-				}
+				for (; plist; plist = plist->next)
+					gda_holder_force_invalid (GDA_HOLDER (plist->data));
 			}
 			else
 				add_error_too_many_values (imodel);
@@ -1889,7 +1898,7 @@ gda_data_model_import_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 		g_object_set (G_OBJECT (iter), "current-row", imodel->priv->iter_row, 
 			      "update_model", update_model, NULL);
 
-		return TRUE;
+		return allok;
 	}
 	else {
 		g_signal_emit_by_name (iter, "end_of_data");
@@ -1926,24 +1935,30 @@ gda_data_model_import_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 		GSList *plist;
 		GSList *vlist;
 		gboolean update_model;
-		
+		gboolean allok = TRUE;
+
 		g_object_get (G_OBJECT (iter), "update_model", &update_model, NULL);
 		g_object_set (G_OBJECT (iter), "update_model", FALSE, NULL);
-		plist = ((GdaSet *) iter)->holders;
-		vlist = imodel->priv->cursor_values;
-		while (plist && vlist) {
-			gda_holder_set_value (GDA_HOLDER (plist->data), 
-					      (GValue *) vlist->data);
-			plist = g_slist_next (plist);
-			vlist = g_slist_next (vlist);
+		for (plist = ((GdaSet *) iter)->holders, vlist = imodel->priv->cursor_values;
+		     plist && vlist;
+		     plist = plist->next, vlist = vlist->next) {
+			GError *lerror = NULL;
+			if (! gda_holder_set_value (GDA_HOLDER (plist->data), 
+						    (GValue *) vlist->data, &lerror)) {
+				gchar *tmp;
+				tmp = g_strdup_printf (_("Could not set iterator's value: %s"),
+						       lerror && lerror->message ? lerror->message : _("No detail"));
+				add_error (imodel, tmp);
+				g_free (tmp);
+				allok = FALSE;
+			}
 		}
 		if (plist || vlist) {
+			allok = FALSE;
 			if (plist) {
 				add_error_too_few_values (imodel);
-				while (plist) {
-					gda_holder_set_value (GDA_HOLDER (plist->data), NULL);
-					plist = g_slist_next (plist);
-				}				
+				for (; plist; plist = plist->next)
+					gda_holder_force_invalid (GDA_HOLDER (plist->data));
 			}
 			else 
 				add_error_too_many_values (imodel);
@@ -1955,7 +1970,7 @@ gda_data_model_import_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 		g_assert (imodel->priv->iter_row >= 0);
 		g_object_set (G_OBJECT (iter), "current-row", imodel->priv->iter_row, 
 			      "update_model", update_model, NULL);
-		return TRUE;
+		return allok;
 	}
 	else {
 		g_object_set (G_OBJECT (iter), "current-row", -1, NULL);

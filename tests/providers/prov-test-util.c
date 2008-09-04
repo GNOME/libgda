@@ -79,13 +79,28 @@ compare_data_model_with_expected (GdaDataModel *model, const gchar *expected_fil
 				continue;
 			const GValue *m_val, *e_val;
 			GdaColumn *column;
+			GError *lerror = NULL;
 
 			column = gda_data_model_describe_column (model, col);
 			if (!strcmp (gda_column_get_name (column), "Owner"))
 				continue;
-			m_val = gda_data_model_get_value_at (model, col, row);
-			e_val =  gda_data_model_get_value_at (compare_m, col, row);
-			if (gda_value_compare_ext (m_val, e_val)) {
+			m_val = gda_data_model_get_value_at (model, col, row, &lerror);
+			if (! m_val) {
+#ifdef CHECK_EXTRA_INFO
+				g_warning ("Can't get data model's value: %s",
+					   lerror && lerror->message ? lerror->message : "No detail");
+#endif
+				retval = FALSE;
+			}
+			e_val =  gda_data_model_get_value_at (compare_m, col, row, &lerror);
+			if (! e_val) {
+#ifdef CHECK_EXTRA_INFO
+				g_warning ("Can't get data model's value: %s",
+					   lerror && lerror->message ? lerror->message : "No detail");
+#endif
+				retval = FALSE;
+			}
+			if (retval && gda_value_compare (m_val, e_val)) {
 #ifdef CHECK_EXTRA_INFO
 				g_warning ("Reported schema error line %d, col %d: expected '%s' and got '%s'",
 					   row, col, 
@@ -264,9 +279,23 @@ iter_is_correct (GdaDataModelIter *iter, GdaDataModel *ref_model)
         }
         for (i = 0, list = GDA_SET (iter)->holders; i < cols; i++, list = list->next) {
                 const GValue *v1, *v2;
+		GError *lerror = NULL;
                 v1 = gda_holder_get_value (GDA_HOLDER (list->data));
-                v2 = gda_data_model_get_value_at (ref_model, i, rownum);
-                if (gda_value_compare_ext (v1, v2)) {
+		if (!v1) {
+#ifdef CHECK_EXTRA_INFO
+			g_warning ("GdaHolder is set to default (unspecified) value");
+#endif
+			return FALSE;
+		}
+                v2 = gda_data_model_get_value_at (ref_model, i, rownum, &lerror);
+		if (!v2) {
+#ifdef CHECK_EXTRA_INFO
+			g_warning ("Can't get data model's value: %s",
+				   lerror && lerror->message ? lerror->message : "No detail");
+#endif
+			return FALSE;
+		}
+                if (gda_value_compare (v1, v2)) {
 #ifdef CHECK_EXTRA_INFO
                         g_print ("Wrong value:\n\tgot: %s\n\texp: %s\n",
                                  gda_value_stringify (v1),
@@ -395,13 +424,22 @@ prov_test_load_data (GdaConnection *cnc, const gchar *table)
 			tmp = g_strdup_printf ("+%d", i);
 			const GValue *value;
 			GdaHolder *h;
-			value = gda_data_model_get_value_at (imodel, i, row);
+			GError *lerror = NULL;
+			value = gda_data_model_get_value_at (imodel, i, row, &lerror);
+			if (!value) {
+#ifdef CHECK_EXTRA_INFO
+				g_warning ("Can't get data model's value: %s",
+					   lerror && lerror->message ? lerror->message : "No detail");
+#endif
+				g_object_unref (imodel);
+				return FALSE;
+			}
 			h = gda_set_get_holder (set, tmp);
-			if (! gda_holder_set_value (h, value)) {
+			if (! gda_holder_set_value (h, value, &lerror)) {
 #ifdef CHECK_EXTRA_INFO
 				g_warning ("Could not set INSERT statement's parameter '%s': %s",
 					   tmp,
-					   error && error->message ? error->message : "No detail");
+					   lerror && lerror->message ? lerror->message : "No detail");
 #endif
 				g_object_unref (imodel);
 				return FALSE;

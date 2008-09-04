@@ -188,6 +188,7 @@ of the contained value (default value, ...)
 
 @holder: 
 @value: 
+@error: 
 @Returns: 
 
 
@@ -199,6 +200,7 @@ of the contained value (default value, ...)
 @holder: 
 @dh: 
 @value: 
+@error: 
 @Returns: 
 
 
@@ -209,6 +211,7 @@ of the contained value (default value, ...)
 
 @holder: 
 @value: 
+@error: 
 @Returns: 
 
 
@@ -312,6 +315,8 @@ of the contained value (default value, ...)
 
 @holder: 
 @bind_to: 
+@error: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_holder_get_bind ##### -->

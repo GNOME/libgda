@@ -353,7 +353,7 @@ static void local_spec_free (LocalSpec *spec)
 }
 
 static GList *
-dict_table_create_columns_func (GdaVconnectionDataModelSpec *spec)
+dict_table_create_columns_func (GdaVconnectionDataModelSpec *spec, GError **error)
 {
 	LocalSpec *lspec = (LocalSpec *) spec;
 	gint i, nrows;
@@ -367,11 +367,25 @@ dict_table_create_columns_func (GdaVconnectionDataModelSpec *spec)
 	nrows = gda_data_model_get_n_rows (model);
 	for (i = 0; i < nrows; i++) {
 		GdaColumn *col;
+		const GValue *v0, *v1, *v2;
+
+		v0 = gda_data_model_get_value_at (model, 0, i, error);
+		v1 = gda_data_model_get_value_at (model, 1, i, error);
+		v2 = gda_data_model_get_value_at (model, 2, i, error);
+
+		if (!v0 || !v1 || !v2) {
+			if (columns) {
+				g_list_foreach (columns, (GFunc) g_object_unref, NULL);
+				g_list_free (columns);
+				columns = NULL;
+			}
+			break;
+		}
+
 		col = gda_column_new ();
-		gda_column_set_name (col, g_value_get_string (gda_data_model_get_value_at (model, 0, i)));
-		gda_column_set_g_type (col, 
-			   gda_g_type_from_string (g_value_get_string (gda_data_model_get_value_at (model, 2, i))));
-		gda_column_set_dbms_type (col, g_value_get_string (gda_data_model_get_value_at (model, 1, i)));
+		gda_column_set_name (col, g_value_get_string (v0));
+		gda_column_set_g_type (col, gda_g_type_from_string (g_value_get_string (v2)));
+		gda_column_set_dbms_type (col, g_value_get_string (v1));
 		columns = g_list_prepend (columns, col);
 	}
 	g_object_unref (model);
@@ -440,7 +454,8 @@ attach_hub_connection (GdaVconnectionHub *hub, HubConnection *hc, GError **error
 		return FALSE;
 	nrows = gda_data_model_get_n_rows (model);
 	for (i = 0; i < nrows; i++) {
-		if (!table_add (hc, gda_data_model_get_value_at (model, 0, i), error)) {
+		const GValue *cv = gda_data_model_get_value_at (model, 0, i, error);
+		if (!cv || !table_add (hc, cv, error)) {
 			g_object_unref (model);
 			return FALSE;
 		}
@@ -478,7 +493,7 @@ meta_changed_cb (GdaMetaStore *store, GSList *changes, HubConnection *hc)
 				/* we only want tables where table_short_name = table_name */
 				tsn = g_hash_table_lookup (ch->keys, "+6");
 				tn = g_hash_table_lookup (ch->keys, "+2");
-				if (! gda_value_compare_ext (tsn, tn))
+				if (tn && tsn && !gda_value_compare (tsn, tn))
 					table_add (hc, tn, NULL);
 				break;
 			}
@@ -486,7 +501,7 @@ meta_changed_cb (GdaMetaStore *store, GSList *changes, HubConnection *hc)
 				/* we only want tables where table_short_name = table_name */
 				tsn = g_hash_table_lookup (ch->keys, "-6");
 				tn = g_hash_table_lookup (ch->keys, "-2");
-				if (! gda_value_compare_ext (tsn, tn))
+				if (tn && tsn && !gda_value_compare (tsn, tn))
 					table_remove (hc, tn);
 				break;
 			}
@@ -494,11 +509,11 @@ meta_changed_cb (GdaMetaStore *store, GSList *changes, HubConnection *hc)
 				/* we only want tables where table_short_name = table_name */
 				tsn = g_hash_table_lookup (ch->keys, "-6");
 				tn = g_hash_table_lookup (ch->keys, "-2");
-				if (! gda_value_compare_ext (tsn, tn))
+				if (tn && tsn && !gda_value_compare (tsn, tn))
 					table_remove (hc, tn);
 				tsn = g_hash_table_lookup (ch->keys, "+6");
 				tn = g_hash_table_lookup (ch->keys, "+2");
-				if (! gda_value_compare_ext (tsn, tn))
+				if (tn && tsn && !gda_value_compare (tsn, tn))
 					table_add (hc, tn, NULL);
 				break;
 			}
@@ -559,8 +574,11 @@ detach_hub_connection (GdaVconnectionHub *hub, HubConnection *hc)
 	if (!model)
 		return;
 	nrows = gda_data_model_get_n_rows (model);
-	for (i = 0; i < nrows; i++) 
-		table_remove (hc, gda_data_model_get_value_at (model, 0, i));
+	for (i = 0; i < nrows; i++) {
+		const GValue *cv = gda_data_model_get_value_at (model, 0, i, NULL);
+		if (cv)
+			table_remove (hc, cv);
+	}
 	g_object_unref (model);
 
 	/* remove the :memory: database */

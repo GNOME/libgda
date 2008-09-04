@@ -133,8 +133,10 @@ _gda_capi_meta_udt (GdaServerProvider *prov, GdaConnection *cnc,
 	gboolean retval = TRUE;
 
 	/* set internal holder's values from the arguments */
-	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), udt_catalog);
-	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), udt_schema);
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), udt_catalog, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), udt_schema, error))
+		return FALSE;
 
 	TO_IMPLEMENT;
 	/* fill in @model, with something like:

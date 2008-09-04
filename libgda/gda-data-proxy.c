@@ -61,7 +61,7 @@ static void                 gda_data_proxy_data_model_init (GdaDataModelClass *i
 static gint                 gda_data_proxy_get_n_rows      (GdaDataModel *model);
 static gint                 gda_data_proxy_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_proxy_describe_column (GdaDataModel *model, gint col);
-static const GValue        *gda_data_proxy_get_value_at    (GdaDataModel *model, gint col, gint row);
+static const GValue        *gda_data_proxy_get_value_at    (GdaDataModel *model, gint col, gint row, GError **error);
 static GdaValueAttribute    gda_data_proxy_get_attributes_at (GdaDataModel *model, gint col, gint row);
 static GdaDataModelIter    *gda_data_proxy_create_iter     (GdaDataModel *model);
 
@@ -458,7 +458,7 @@ row_modifs_new (GdaDataProxy *proxy, gint proxy_row)
 			for (i=0; i<proxy->priv->model_nb_cols; i++) {
 				const GValue *oval;
 				
-				oval = gda_data_model_get_value_at (proxy->priv->model, i, model_row);
+				oval = gda_data_model_get_value_at (proxy->priv->model, i, model_row, NULL);
 				if (oval)
 					rm->orig_values [i] = gda_value_copy ((GValue *) oval);
 			}
@@ -1191,8 +1191,7 @@ gda_data_proxy_get_values (GdaDataProxy *proxy, gint proxy_row, gint *cols_index
 	g_return_val_if_fail (proxy_row >= 0, NULL);
 
 	for (i = 0; i < n_cols; i++) {
-		value = gda_data_proxy_get_value_at ((GdaDataModel *) proxy,
-						     cols_index[i], proxy_row);
+		value = gda_data_proxy_get_value_at ((GdaDataModel *) proxy, cols_index[i], proxy_row, NULL);
 		if (value)
 			retval = g_slist_prepend (retval, (GValue *) value);
 		else {
@@ -1552,8 +1551,7 @@ gda_data_proxy_row_is_inserted (GdaDataProxy *proxy, gint proxy_row)
  * Returns: proxy row number if the row has been identified, or -1 otherwise
  */
 gint
-gda_data_proxy_find_row_from_values (GdaDataProxy *proxy, GSList *values,
-				     gint *cols_index)
+gda_data_proxy_find_row_from_values (GdaDataProxy *proxy, GSList *values, gint *cols_index)
 {
 	gboolean found = FALSE;
 	gint proxy_row;
@@ -1594,8 +1592,10 @@ gda_data_proxy_find_row_from_values (GdaDataProxy *proxy, GSList *values,
 				g_return_val_if_fail (cols_index [index] < proxy->priv->model_nb_cols, FALSE);
 			value = gda_data_proxy_get_value_at ((GdaDataModel *) proxy, 
 							     cols_index ? cols_index [index] : 
-							     index, proxy_row);
-			if (gda_value_compare_ext ((GValue *) (list->data), (GValue *) value))
+							     index, proxy_row, NULL);
+			if (!value)
+				return -1;
+			if (gda_value_compare ((GValue *) (list->data), (GValue *) value))
 				allequal = FALSE;
 
 			list = g_slist_next (list);
@@ -2494,7 +2494,7 @@ compute_display_chunk (GdaDataProxy *proxy)
 
 			g_assert (i + proxy->priv->sample_first_row < nb_rows);
 			value = gda_data_model_get_value_at (proxy->priv->filtered_rows, 
-							     0, i + proxy->priv->sample_first_row);
+							     0, i + proxy->priv->sample_first_row, NULL);
 			g_assert (value);
 			g_assert (G_VALUE_TYPE (value) == G_TYPE_INT);
 			val = g_value_get_int (value);
@@ -3238,19 +3238,23 @@ gda_data_proxy_describe_column (GdaDataModel *model, gint col)
 }
 
 static const GValue *
-gda_data_proxy_get_value_at (GdaDataModel *model, gint column, gint proxy_row)
+gda_data_proxy_get_value_at (GdaDataModel *model, gint column, gint proxy_row, GError **error)
 {
 	gint model_row;
 	GValue *retval = NULL;
 	GdaDataProxy *proxy;
+	static GValue *null_value = NULL;
 
 	g_return_val_if_fail (GDA_IS_DATA_PROXY (model), NULL);
 	proxy = GDA_DATA_PROXY (model);
 	g_return_val_if_fail (proxy->priv, NULL);
 	g_return_val_if_fail (proxy_row >= 0, NULL);
 
-	if ((proxy_row == 0) && proxy->priv->add_null_entry) 
-		return NULL;
+	if ((proxy_row == 0) && proxy->priv->add_null_entry) {
+		if (!null_value)
+			null_value = gda_value_new_null ();
+		return null_value;
+	}
 
 	model_row = proxy_row_to_model_row (proxy, proxy_row);
 
@@ -3275,6 +3279,11 @@ gda_data_proxy_get_value_at (GdaDataModel *model, gint column, gint proxy_row)
 			if (rv) {
 				value_has_modifs = TRUE;
 				retval = rv->value;
+				if (!retval) {
+					if (!null_value)
+						null_value = gda_value_new_null ();
+					retval = null_value;
+				}
 			}
 		}
 
@@ -3282,12 +3291,14 @@ gda_data_proxy_get_value_at (GdaDataModel *model, gint column, gint proxy_row)
 			/* value has not been modified */
 			if (model_row >= 0) {
 				/* existing row */
-				retval = (GValue *) gda_data_model_get_value_at (proxy->priv->model, 
-										   column, model_row);
+				retval = (GValue *) gda_data_model_get_value_at (proxy->priv->model, column, model_row, error);
 			}
-			else 
-				/* empty row, return NULL */
+			else {
+				/* non existing row, return NULL */
+				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
+					     _("Row %d out of range (0-%d)"), proxy_row, gda_data_model_get_n_rows (model));
 				retval = NULL;
+			}
 		}
 
 		return retval;
@@ -3302,20 +3313,29 @@ gda_data_proxy_get_value_at (GdaDataModel *model, gint column, gint proxy_row)
 		if (rm) {
 			if (rm->orig_values)
 				retval = rm->orig_values [model_col];
-			else
-				retval = NULL;
+			else {
+				if (!null_value)
+					null_value = gda_value_new_null ();
+				retval = null_value;
+			}
 		}
 		else {
-			if (model_row >= 0)
-				retval = (GValue *) gda_data_model_get_value_at (proxy->priv->model, 
-										   model_col, model_row);
-			else
+			if (model_row >= 0) {
+				/* existing row */
+				retval = (GValue *) gda_data_model_get_value_at (proxy->priv->model, model_col, model_row, error);
+			}
+			else {
+				/* non existing row, return NULL */
+				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
+					     _("Row %d out of range (0-%d)"), proxy_row, gda_data_model_get_n_rows (model));
 				retval = NULL;
+			}
 		}
 		return retval;
 	}
 	
-	g_warning (_("Unknown GdaDataProxy column: %d"), column);
+	g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_COLUMN_OUT_OF_RANGE_ERROR,
+		     _("Column %d out of range (0-%d)"), column, 2 *proxy->priv->model_nb_cols - 1);
 	return NULL;
 }
 
@@ -3388,6 +3408,7 @@ gda_data_proxy_set_value_at (GdaDataModel *model, gint col, gint proxy_row, cons
 	proxy = GDA_DATA_PROXY (model);
 	g_return_val_if_fail (proxy->priv, FALSE);
 	g_return_val_if_fail (proxy_row >= 0, FALSE);
+	g_return_val_if_fail (value, FALSE);
 
 	/* ensure that there is no sync to be done */
 	ensure_chunk_sync (proxy);
@@ -3406,8 +3427,10 @@ gda_data_proxy_set_value_at (GdaDataModel *model, gint col, gint proxy_row, cons
 		const GValue *cmp_value;
 
 		/* compare with the current stored value */
-		cmp_value = gda_data_proxy_get_value_at ((GdaDataModel *) proxy, col, proxy_row);
-		if (! gda_value_compare_ext ((GValue *) value, (GValue *) cmp_value)) {
+		cmp_value = gda_data_proxy_get_value_at ((GdaDataModel *) proxy, col, proxy_row, error);
+		if (!cmp_value)
+			return FALSE;
+		if (! gda_value_compare ((GValue *) value, (GValue *) cmp_value)) {
 			/* nothing to do: values are equal */
 			return TRUE;
 		}
@@ -3424,7 +3447,8 @@ gda_data_proxy_set_value_at (GdaDataModel *model, gint col, gint proxy_row, cons
 			}
 
 			if (rm->orig_values && (col < rm->orig_values_size) && 
-			    ! gda_value_compare_ext ((GValue *) value, rm->orig_values [col])) {
+			    rm->orig_values [col] &&
+			    ! gda_value_compare ((GValue *) value, rm->orig_values [col])) {
 				/* remove the RowValue */
 				rm->modify_values = g_slist_remove (rm->modify_values, rv);
 				g_free (rv);
@@ -3543,15 +3567,12 @@ gda_data_proxy_set_values (GdaDataModel *model, gint row, GList *values, GError 
 	notify_changes = proxy->priv->notify_changes;
 	proxy->priv->notify_changes = FALSE;
 
-	col = 0;
-	list = values;
-	while (list && !err) {
-		if (gda_data_proxy_set_value_at (model, col, row, (GValue *)(list->data), error)) {
-			col++;
-			list = g_list_next (list);
-		}
-		else
+	for (col = 0, list = values; list; col ++, list = list->next) {
+		if (list->data && 
+		    !gda_data_proxy_set_value_at (model, col, row, (GValue *)(list->data), error)) {
 			err = TRUE;
+			break;
+		}
 	}
 
 	proxy->priv->notify_changes = notify_changes;

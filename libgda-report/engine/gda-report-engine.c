@@ -739,7 +739,24 @@ run_context_push_with_stmt (GdaReportEngine *engine, RunContext *context, GdaCon
 	if (!model) 
 		return NULL;
 	g_object_set_data_full (G_OBJECT (model), "name", g_strdup (stmt_name), g_free);
-	
+		
+	/* add a parameter for the number of rows, attached to model */
+	GdaHolder *param;
+	GValue *value;
+	gchar *name;
+	param = gda_holder_new (G_TYPE_INT);
+	value = gda_value_new (G_TYPE_INT);
+	g_value_set_int (value, gda_data_model_get_n_rows  (model));
+	if (! gda_holder_set_value (param, value, error)) {
+		g_object_unref (param);
+		gda_value_free (value);
+		return NULL;
+	}
+	gda_value_free (value);
+	name = g_strdup_printf ("%s/%%nrows", stmt_name);
+	g_object_set_data_full (G_OBJECT (model), name, param, g_object_unref);
+	g_free (name);
+
 	/* create a new RunContext */
 	RunContext *ctx;
 	ctx = g_new0 (RunContext, 1);
@@ -748,19 +765,6 @@ run_context_push_with_stmt (GdaReportEngine *engine, RunContext *context, GdaCon
 	ctx->parent = context;
 	ctx->model = model;
 	ctx->iter = gda_data_model_create_iter (model);
-	
-	/* add a parameter for the number of rows, attached to ctx->model */
-	GdaHolder *param;
-	GValue *value;
-	gchar *name;
-	param = gda_holder_new (G_TYPE_INT);
-	value = gda_value_new (G_TYPE_INT);
-	g_value_set_int (value, gda_data_model_get_n_rows  (ctx->model));
-	gda_holder_set_value (param, value);
-	gda_value_free (value);
-	name = g_strdup_printf ("%s/%%nrows", stmt_name);
-	g_object_set_data_full (G_OBJECT (ctx->model), name, param, g_object_unref);
-	g_free (name);
 
 	/*g_print (">>>> PUSH CONTEXT %p\n", ctx);*/
 	return ctx;
@@ -949,8 +953,10 @@ assign_parameters_values (GdaReportEngine *engine, RunContext *context, GdaSet *
 			GType ptype, source_ptype;
 			ptype = gda_holder_get_g_type (GDA_HOLDER (list->data));
 			source_ptype = gda_holder_get_g_type (source_param);
-			if (ptype == source_ptype)
-				gda_holder_set_bind (GDA_HOLDER (list->data), source_param);
+			if (ptype == source_ptype) {
+				if (! gda_holder_set_bind (GDA_HOLDER (list->data), source_param, error))
+					return FALSE;
+			}
 			else {
 				const GValue *source_value;
 				source_value = gda_holder_get_value (source_param);
@@ -958,7 +964,10 @@ assign_parameters_values (GdaReportEngine *engine, RunContext *context, GdaSet *
 					GValue *trans;
 					trans = gda_value_new (ptype);
 					if (g_value_transform (source_value, trans)) {
-						gda_holder_set_value (GDA_HOLDER (list->data), trans);
+						if (! gda_holder_set_value (GDA_HOLDER (list->data), trans, error)) {
+							gda_value_free (trans);
+							return FALSE;
+						}
 						gda_value_free (trans);
 					}
 					else {
@@ -970,7 +979,8 @@ assign_parameters_values (GdaReportEngine *engine, RunContext *context, GdaSet *
 					}
 				}
 				else
-					gda_holder_set_value (GDA_HOLDER (list->data), NULL);
+					if (! gda_holder_set_value (GDA_HOLDER (list->data), NULL, error))
+						return FALSE;
 			}
 		}
 	}
@@ -1052,7 +1062,7 @@ evaluate_expression (GdaReportEngine *engine, RunContext *context, const gchar *
 			     _("Expression '%s' should return exactly one value"), expr);
 		return NULL;
 	}
-	retval = (GValue *) gda_data_model_get_value_at (model, 0, 0);
+	retval = (GValue *) gda_data_model_get_value_at (model, 0, 0, error);
 	if (retval)
 		retval = gda_value_copy (retval);
 	g_object_unref (model);

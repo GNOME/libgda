@@ -132,7 +132,6 @@ Data models returned by the execution of a SELECT statement
 </para>
 
 @model: 
-@require_pk: 
 @error: 
 @Returns: 
 

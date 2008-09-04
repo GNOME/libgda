@@ -271,9 +271,11 @@ holder_changed_cb (GdaSet *paramlist, GdaHolder *param)
 		if (! gda_data_model_set_value_at ((GdaDataModel *) iter->priv->data_model, 
 						   col, iter->priv->row, gda_holder_get_value (param), NULL)) {
 			/* writing to the model failed, revert back the change to parameter */
+			const GValue *cvalue = gda_data_model_get_value_at (GDA_DATA_MODEL (iter->priv->data_model), 
+									    col, iter->priv->row, NULL);
 			iter->priv->keep_param_changes = TRUE;
-			gda_holder_set_value (param, gda_data_model_get_value_at (GDA_DATA_MODEL (iter->priv->data_model), 
-										     col, iter->priv->row)); 
+			if (!cvalue || !gda_holder_set_value (param, cvalue, NULL))
+				gda_holder_force_invalid (param);
 			iter->priv->keep_param_changes = FALSE;
 		}
 		

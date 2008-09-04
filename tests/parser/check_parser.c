@@ -42,7 +42,13 @@ main (int argc, char** argv)
 	providers_model = gda_config_list_providers ();
 	for (i = 0; i < gda_data_model_get_n_rows (providers_model); i++) {
 		const GValue *pname;
-		pname = gda_data_model_get_value_at (providers_model, 0, i);
+		GError *lerror = NULL;
+		pname = gda_data_model_get_value_at (providers_model, 0, i, &lerror);
+		if (!pname) {
+			g_print ("Can't get data model's value: %s",
+				 lerror && lerror->message ? lerror->message : "No detail");
+			exit (1);
+		}
 		parser = create_parser_for_provider (g_value_get_string (pname));
 		g_hash_table_insert (parsers_hash, g_strdup (g_value_get_string (pname)), parser);
 		g_print ("Created parser for provider %s\n", g_value_get_string (pname));

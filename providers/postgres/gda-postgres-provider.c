@@ -1838,7 +1838,7 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, Oid last_id)
 		return NULL;
         }
 	else {
-		GdaSet *set;
+		GdaSet *set = NULL;
 		GSList *holders = NULL;
 		gint nrows, ncols, i;
 
@@ -1857,21 +1857,33 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, Oid last_id)
 			GdaHolder *h;
 			GdaColumn *col;
 			gchar *id;
+			const GValue *cvalue;
+
 			col = gda_data_model_describe_column (model, i);
 			h = gda_holder_new (gda_column_get_g_type (col));
 			id = g_strdup_printf ("+%d", i);
 			g_object_set (G_OBJECT (h), "id", id, "not-null", FALSE,
 				      "name", gda_column_get_name (col), NULL);
 			g_free (id);
-			gda_holder_set_value (h, gda_data_model_get_value_at (model, i, 0));
+			cvalue = gda_data_model_get_value_at (model, i, 0, NULL);
+			if (!cvalue || !gda_holder_set_value (h, cvalue, NULL)) {
+				if (holders) {
+					g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
+					g_slist_free (holders);
+					holders = NULL;
+				}
+				break;
+			}
 			holders = g_slist_prepend (holders, h);
 		}
 		g_object_unref (model);
 
-		holders = g_slist_reverse (holders);
-		set = gda_set_new (holders);
-		g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
-		g_slist_free (holders);
+		if (holders) {
+			holders = g_slist_reverse (holders);
+			set = gda_set_new (holders);
+			g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
+			g_slist_free (holders);
+		}
 
 		return set;
 	}
@@ -2218,7 +2230,7 @@ gda_postgres_provider_xa_prepare (GdaServerProvider *provider, GdaConnection *cn
 	if (!gda_statement_get_parameters (internal_stmt [I_STMT_XA_PREPARE], &params, error))
 		return FALSE;
 	str = gda_xa_transaction_id_to_string (xid);
-	if (!gda_set_set_holder_value (params, "xid", str)) {
+	if (!gda_set_set_holder_value (params, NULL, "xid", str)) {
 		g_free (str);
 		g_object_unref (params);
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
@@ -2254,7 +2266,7 @@ gda_postgres_provider_xa_commit (GdaServerProvider *provider, GdaConnection *cnc
 	if (!gda_statement_get_parameters (internal_stmt [I_STMT_XA_PREPARE], &params, error))
 		return FALSE;
 	str = gda_xa_transaction_id_to_string (xid);
-	if (!gda_set_set_holder_value (params, "xid", str)) {
+	if (!gda_set_set_holder_value (params, NULL, "xid", str)) {
 		g_free (str);
 		g_object_unref (params);
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
@@ -2289,7 +2301,7 @@ gda_postgres_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *c
 	if (!gda_statement_get_parameters (internal_stmt [I_STMT_XA_PREPARE], &params, error))
 		return FALSE;
 	str = gda_xa_transaction_id_to_string (xid);
-	if (!gda_set_set_holder_value (params, "xid", str)) {
+	if (!gda_set_set_holder_value (params, NULL, "xid", str)) {
 		g_free (str);
 		g_object_unref (params);
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
@@ -2329,7 +2341,7 @@ gda_postgres_provider_xa_recover (GdaServerProvider *provider, GdaConnection *cn
 		
 		nrows = gda_data_model_get_n_rows (model);
 		for (i = 0; i < nrows; i++) {
-			const GValue *cvalue = gda_data_model_get_value_at (model, 0, i);
+			const GValue *cvalue = gda_data_model_get_value_at (model, 0, i, NULL);
 			if (cvalue && !gda_value_is_null (cvalue))
 				list = g_list_prepend (list, 
 						       gda_xa_transaction_string_to_id (g_value_get_string (cvalue)));

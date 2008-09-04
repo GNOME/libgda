@@ -401,7 +401,18 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 		g_object_ref (td->real_model);
 	}
 	else  {
-		columns = td->spec->create_columns_func (td->spec);
+		GError *error = NULL;
+		columns = td->spec->create_columns_func (td->spec, &error);
+		if (! columns) {
+			if (error && error->message) {
+				int len = strlen (error->message) + 1;
+				*pzErr = sqlite3_malloc (sizeof (gchar) * len);
+				memcpy (*pzErr, error->message, len);
+			}
+			else 
+				*pzErr = sqlite3_mprintf (_("Could not compute virtual table's columns"));
+			return SQLITE_ERROR;
+		}
 		ncols = g_list_length (columns);
 	}
 

@@ -98,7 +98,7 @@ static gint                 gda_data_model_query_get_n_rows      (GdaDataModel *
 static gint                 gda_data_model_query_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_model_query_describe_column (GdaDataModel *model, gint col);
 static GdaDataModelAccessFlags gda_data_model_query_get_access_flags(GdaDataModel *model);
-static const GValue        *gda_data_model_query_get_value_at    (GdaDataModel *model, gint col, gint row);
+static const GValue        *gda_data_model_query_get_value_at    (GdaDataModel *model, gint col, gint row, GError **error);
 static GdaValueAttribute    gda_data_model_query_get_attributes_at (GdaDataModel *model, gint col, gint row);
 
 static GdaDataModelIter    *gda_data_model_query_create_iter     (GdaDataModel *model);
@@ -488,7 +488,8 @@ gda_data_model_query_set_property (GObject *object,
 									if (bind_to) {
 										check_param_type (holder,
 												  gda_holder_get_g_type (bind_to));
-										gda_holder_set_bind (holder, bind_to);
+										if (! gda_holder_set_bind (holder, bind_to, NULL))
+											TO_IMPLEMENT;
 									}
 									else
 										g_warning (_("Could not find a parameter named "
@@ -563,6 +564,7 @@ static void
 holder_changed_cb (GdaSet *paramlist, GdaHolder *param, GdaDataModelQuery *model)
 {
 	/* first: sync the parameters which are bound */
+	gboolean allok = TRUE;
 	if (model->priv->params [SEL_QUERY]) {
 		gint i;
 		for (i = INS_QUERY; i <= DEL_QUERY; i++) {
@@ -572,15 +574,16 @@ holder_changed_cb (GdaSet *paramlist, GdaHolder *param, GdaDataModelQuery *model
 					GdaHolder *bind_to;
 					bind_to = gda_holder_get_bind (GDA_HOLDER (params->data));
 					if (bind_to == param)
-						gda_holder_set_value (GDA_HOLDER (params->data),
-								      gda_holder_get_value (bind_to));
+						if (!gda_holder_set_value (GDA_HOLDER (params->data),
+									   gda_holder_get_value (bind_to), NULL))
+							allok = FALSE;
 				}
 			}
 		}
 	}
 
 	/* second: do a refresh */
-	if (gda_set_is_valid (paramlist))
+	if (allok && gda_set_is_valid (paramlist))
 		gda_data_model_query_refresh (model, NULL);
 	else {
 		if (model->priv->data) {
@@ -929,7 +932,7 @@ gda_data_model_query_get_access_flags (GdaDataModel *model)
 }
 
 static const GValue *
-gda_data_model_query_get_value_at (GdaDataModel *model, gint col, gint row)
+gda_data_model_query_get_value_at (GdaDataModel *model, gint col, gint row, GError **error)
 {
 	GdaDataModelQuery *selmodel;
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_QUERY (model), NULL);
@@ -940,9 +943,12 @@ gda_data_model_query_get_value_at (GdaDataModel *model, gint col, gint row)
 		gda_data_model_query_refresh (selmodel, NULL);
 	
 	if (selmodel->priv->data)
-		return gda_data_model_get_value_at (selmodel->priv->data, col, row);
-	else
+		return gda_data_model_get_value_at (selmodel->priv->data, col, row, error);
+	else {
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_NOT_FOUND_ERROR,
+			     _("Data model has no data"));
 		return NULL;
+	}
 }
 
 static GdaValueAttribute
@@ -1153,18 +1159,24 @@ gda_data_model_query_set_value_at (GdaDataModel *model, gint col, gint row, cons
 			num = GPOINTER_TO_INT (g_object_get_data ((GObject*) params->data, "+num")) - 1;
 			if (num >= 0) {
 				/* new values */
-				if (num == col)
-					gda_holder_set_value (GDA_HOLDER (params->data), value);
-				else
-					gda_holder_set_value (GDA_HOLDER (params->data), NULL);
+				if (num == col) {
+					if (!gda_holder_set_value (GDA_HOLDER (params->data), value, error))
+						return FALSE;
+				}
+				else {
+					if (! gda_holder_set_value (GDA_HOLDER (params->data), NULL, error))
+						return FALSE;
+				}
 			}
 			else {
 				num = GPOINTER_TO_INT (g_object_get_data ((GObject*) params->data, "-num")) - 1;	
-				if (num >= 0)
+				if (num >= 0) {
 					/* old values */
-					gda_holder_set_value (GDA_HOLDER (params->data),
-							      gda_data_model_get_value_at ((GdaDataModel*) selmodel, 
-											   num, row));
+					const GValue *cvalue;
+					cvalue = gda_data_model_get_value_at ((GdaDataModel*) selmodel, num, row, error);
+					if (!cvalue || gda_holder_set_value (GDA_HOLDER (params->data), cvalue, error)) 
+						return FALSE;
+				}
 			}
 		}
 	}
@@ -1202,18 +1214,24 @@ gda_data_model_query_set_values (GdaDataModel *model, gint row, GList *values, G
 				/* new values */
 				GValue *value;
 				value = g_list_nth_data ((GList *) values, num);
-				if (value)
-					gda_holder_set_value (GDA_HOLDER (params->data), value);
-				else
-					gda_holder_set_value (GDA_HOLDER (params->data), NULL);
+				if (value) {
+					if (!gda_holder_set_value (GDA_HOLDER (params->data), value, error))
+						return FALSE;
+				}
+				else {
+					if (! gda_holder_set_value (GDA_HOLDER (params->data), NULL, error))
+						return FALSE;
+				}
 			}
 			else {
 				num = GPOINTER_TO_INT (g_object_get_data ((GObject*) params->data, "-num")) - 1;
-				if (num >= 0)
+				if (num >= 0) {
 					/* old values */
-					gda_holder_set_value (GDA_HOLDER (params->data),
-							      gda_data_model_get_value_at ((GdaDataModel*) selmodel, 
-											   num, row));
+					const GValue *cvalue;
+					cvalue = gda_data_model_get_value_at ((GdaDataModel*) selmodel, num, row, error);
+					if (!cvalue || gda_holder_set_value (GDA_HOLDER (params->data), cvalue, error)) 
+						return FALSE;
+				}
 			}
 		}
 	}
@@ -1252,9 +1270,11 @@ gda_data_model_query_append_values (GdaDataModel *model, const GList *values, GE
 				/* new values only */
 				GValue *value;
 				value = g_list_nth_data ((GList *) values, num);
-				if (value)
-					gda_holder_set_value (GDA_HOLDER (params->data), value);
-				else
+				if (value) {
+					if (! gda_holder_set_value (GDA_HOLDER (params->data), value, error))
+						return -1;
+				}
+				else 
 					g_object_set (G_OBJECT (params->data), "use-default-value", TRUE, NULL);
 			}
 		}
@@ -1298,7 +1318,8 @@ gda_data_model_query_append_row (GdaDataModel *model, GError **error)
 
 			if (num >= 0) 
 				/* new values only */
-				gda_holder_set_value (GDA_HOLDER (params->data), NULL);
+				if (! gda_holder_set_value (GDA_HOLDER (params->data), NULL, error))
+					return -1;
 		}
 	}
 
@@ -1336,10 +1357,13 @@ gda_data_model_query_remove_row (GdaDataModel *model, gint row, GError **error)
 			gint num;
 
 			num = GPOINTER_TO_INT (g_object_get_data ((GObject*) params->data, "-num")) - 1;
-			if (num >= 0) 
+			if (num >= 0) {
 				/* old values only */
-				gda_holder_set_value (GDA_HOLDER (params->data),
-						      gda_data_model_get_value_at ((GdaDataModel*) selmodel, num, row));
+				const GValue *cvalue;
+				cvalue = gda_data_model_get_value_at ((GdaDataModel*) selmodel, num, row, error);
+				if (!cvalue || gda_holder_set_value (GDA_HOLDER (params->data), cvalue, error)) 
+					return FALSE;
+			}
 		}
 	}
 

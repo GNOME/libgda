@@ -213,19 +213,22 @@ insert_blob (GdaConnection *cnc, gint id, const gchar *data, glong binary_length
 	/* blob id */
 	param = gda_set_get_holder (plist, "id");
 	str = g_strdup_printf ("%d", id);
-	gda_holder_set_value_str (param, NULL, str);
+	if (! gda_holder_set_value_str (param, NULL, str, error))
+		return FALSE;
 	g_free (str);
 
 	/* blob name */
 	param = gda_set_get_holder (plist, "name");
 	str = g_strdup_printf ("BLOB_%d", id);
-	gda_holder_set_value_str (param, NULL, str);
+	if (! gda_holder_set_value_str (param, NULL, str, error))
+		return FALSE;
 	g_free (str);
 
 	/* blob data */
 	param = gda_set_get_holder (plist, "theblob");
 	value = gda_value_new_blob (data, binary_length);
-	gda_holder_set_value (param, value);
+	if (! gda_holder_set_value (param, value, error))
+		return FALSE;
 	gda_value_free (value);
 
 	gda_connection_clear_events_list (cnc);
@@ -257,19 +260,22 @@ update_blob (GdaConnection *cnc, gint id, const gchar *data, glong binary_length
 	/* blob id */
 	param = gda_set_get_holder (plist, "id");
 	str = g_strdup_printf ("%d", id);
-	gda_holder_set_value_str (param, NULL, str);
+	if (! gda_holder_set_value_str (param, NULL, str, error))
+		return FALSE;
 	g_free (str);
 
 	/* blob name */
 	param = gda_set_get_holder (plist, "name");
 	str = g_strdup_printf ("BLOB_%d", id);
-	gda_holder_set_value_str (param, NULL, str);
+	if (! gda_holder_set_value_str (param, NULL, str, error))
+		return FALSE;
 	g_free (str);
 
 	/* blob data */
 	param = gda_set_get_holder (plist, "theblob");
 	value = gda_value_new_blob (data, binary_length);
-	gda_holder_set_value (param, value);
+	if (! gda_holder_set_value (param, value, error))
+		return FALSE;
 	gda_value_free (value);
 
 	gda_connection_clear_events_list (cnc);
@@ -299,12 +305,14 @@ update_multiple_blobs (GdaConnection *cnc, const gchar *data, glong binary_lengt
 
 	/* blob name */
 	param = gda_set_get_holder (plist, "name");
-	gda_holder_set_value_str (param, NULL, "---");
+	if (! gda_holder_set_value_str (param, NULL, "---", error))
+		return FALSE;
 
 	/* blob data */
 	param = gda_set_get_holder (plist, "theblob");
 	value = gda_value_new_blob (data, binary_length);
-	gda_holder_set_value (param, value);
+	if (! gda_holder_set_value (param, value, error))
+		return FALSE;
 	gda_value_free (value);
 
 	gda_connection_clear_events_list (cnc);

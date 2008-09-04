@@ -340,8 +340,14 @@ html_render_data_model (xmlNodePtr parent, GdaDataModel *model)
                                 GValue *value;
                                 gchar *str;
 
-                                value = (GValue *) gda_data_model_get_value_at (model, c, r);
-				if (!value || gda_value_is_null (value)) {
+                                value = (GValue *) gda_data_model_get_value_at (model, c, r, NULL);
+				if (!value) {
+					xmlNodePtr p;
+					td = xmlNewChild (tr, NULL, "td", NULL);
+					p = xmlNewChild (td, NULL, "p", "ERROR");
+					xmlSetProp(p, "class", (xmlChar*)"null");
+				}
+				else if (gda_value_is_null (value)) {
 					xmlNodePtr p;
 					td = xmlNewChild (tr, NULL, "td", NULL);
 					p = xmlNewChild (td, NULL, "p", "NULL");

@@ -15,6 +15,7 @@ libgda/gda-data-model-query.c
 libgda/gda-data-proxy.c
 libgda/gda-data-select.c
 libgda/gda-easy.c
+libgda/gda-holder.c
 libgda/gda-init.c
 libgda/gda-log.c
 libgda/gda-meta-store.c
