@@ -1317,7 +1317,7 @@ sqlite_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, G
 	sql_list = g_slist_reverse (sql_list);
 
 	str = NULL;
-	switch (op->operator) {
+	switch (op->operator_type) {
 	case GDA_SQL_OPERATOR_TYPE_EQ:
 		if (SQL_OPERAND (sql_list->next->data)->is_null) 
 			str = g_strdup_printf ("%s IS NULL", SQL_OPERAND (sql_list->data)->sql);
@@ -1393,7 +1393,7 @@ sqlite_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, G
 			add_p = FALSE;
 
 		string = g_string_new (SQL_OPERAND (sql_list->data)->sql);
-		if (op->operator == GDA_SQL_OPERATOR_TYPE_IN)
+		if (op->operator_type == GDA_SQL_OPERATOR_TYPE_IN)
 			g_string_append (string, " IN ");
 		else
 			g_string_append (string, " NOT IN ");
@@ -1718,7 +1718,7 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, sqlite3_int64 la
 	where = gda_sql_expr_new (GDA_SQL_ANY_PART (select));
 	cond = gda_sql_operation_new (GDA_SQL_ANY_PART (where));
 	where->cond = cond;
-	cond->operator = GDA_SQL_OPERATOR_TYPE_EQ;
+	cond->operator_type = GDA_SQL_OPERATOR_TYPE_EQ;
 	expr = gda_sql_expr_new (GDA_SQL_ANY_PART (cond));
 	g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), "_rowid_");
 	expr->value = value;

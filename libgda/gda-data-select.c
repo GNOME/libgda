@@ -1104,7 +1104,7 @@ row_selection_condition_foreach_func (GdaSqlAnyPart *part, gpointer data, GError
 		return TRUE;
 
 	GdaSqlOperation *op = (GdaSqlOperation*) part;
-	if (op->operator != GDA_SQL_OPERATOR_TYPE_EQ) {
+	if (op->operator_type != GDA_SQL_OPERATOR_TYPE_EQ) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
 			     _("Invalid unique row condition (ony equal operators are allowed)"));
 		return FALSE;
@@ -2027,7 +2027,7 @@ compute_single_select_stmt (GdaDataSelect *model, GError **error)
 		and_expr = gda_sql_expr_new (GDA_SQL_ANY_PART (sel));
 		and_cond = gda_sql_operation_new (GDA_SQL_ANY_PART (and_expr));
 		and_expr->cond = and_cond;
-		and_cond->operator = GDA_SQL_OPERATOR_TYPE_AND;
+		and_cond->operator_type = GDA_SQL_OPERATOR_TYPE_AND;
 		and_cond->operands = g_slist_append (NULL, sel->where_cond);
 		GDA_SQL_ANY_PART (sel->where_cond)->parent = GDA_SQL_ANY_PART (and_cond);
 		sel->where_cond = and_expr;
@@ -2704,7 +2704,7 @@ compute_insert_select_params_mapping_foreach_func (GdaSqlAnyPart *part, CorrespD
 		return TRUE;
 
 	GdaSqlOperation *op = (GdaSqlOperation*) part;
-	if (op->operator != GDA_SQL_OPERATOR_TYPE_EQ)
+	if (op->operator_type != GDA_SQL_OPERATOR_TYPE_EQ)
 		return TRUE;
 	
 	if (!op->operands || !op->operands->data || !op->operands->next || !op->operands->next->data ||

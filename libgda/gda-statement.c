@@ -1462,7 +1462,7 @@ default_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, 
 	sql_list = g_slist_reverse (sql_list);
 
 	str = NULL;
-	switch (op->operator) {
+	switch (op->operator_type) {
 	case GDA_SQL_OPERATOR_TYPE_EQ:
 		if (SQL_OPERAND (sql_list->next->data)->is_null) 
 			str = g_strdup_printf ("%s IS NULL", SQL_OPERAND (sql_list->data)->sql);
@@ -1542,7 +1542,7 @@ default_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, 
 			add_p = FALSE;
 
 		string = g_string_new (SQL_OPERAND (sql_list->data)->sql);
-		if (op->operator == GDA_SQL_OPERATOR_TYPE_IN)
+		if (op->operator_type == GDA_SQL_OPERATOR_TYPE_IN)
 			g_string_append (string, " IN ");
 		else
 			g_string_append (string, " NOT IN ");
@@ -1751,8 +1751,8 @@ default_render_select_join (GdaSqlSelectJoin *join, GdaSqlRenderingContext *cont
 	g_return_val_if_fail (GDA_SQL_ANY_PART (join)->type == GDA_SQL_ANY_SQL_SELECT_JOIN, NULL);
 
 	/* can't have: 
-	 *  - join->expr && join->using 
-	 *  - (join->type == GDA_SQL_SELECT_JOIN_CROSS) && (join->expr || join->using)
+	 *  - join->expr && join->use 
+	 *  - (join->type == GDA_SQL_SELECT_JOIN_CROSS) && (join->expr || join->use)
 	 */
 	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (join), error)) return NULL;
 
@@ -1807,11 +1807,11 @@ default_render_select_join (GdaSqlSelectJoin *join, GdaSqlRenderingContext *cont
 		g_free (str);
 		g_string_append_c (string, ')');
 	}
-	else if (join->using) {
+	else if (join->use) {
 		GSList *list;
 		g_string_append (string, " USING (");
-		for (list = join->using; list; list = list->next) {
-			if (list != join->using)
+		for (list = join->use; list; list = list->next) {
+			if (list != join->use)
 				g_string_append (string, ", ");
 			str = context->render_field (GDA_SQL_ANY_PART (list->data), context, error);
 			if (!str) goto err;

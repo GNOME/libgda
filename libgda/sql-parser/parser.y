@@ -162,7 +162,7 @@ string_to_op_type (GValue *value)
 static GdaSqlExpr *
 compose_multiple_expr (GdaSqlOperatorType op, GdaSqlExpr *left, GdaSqlExpr *right) {
 	GdaSqlExpr *ret;
-	if (left->cond && (left->cond->operator == op)) {
+	if (left->cond && (left->cond->operator_type == op)) {
 		ret = left;
 		ret->cond->operands = g_slist_append (ret->cond->operands, right);
 	}
@@ -171,7 +171,7 @@ compose_multiple_expr (GdaSqlOperatorType op, GdaSqlExpr *left, GdaSqlExpr *righ
 		ret = gda_sql_expr_new (NULL);
 		cond = gda_sql_operation_new (GDA_SQL_ANY_PART (ret));
 		ret->cond = cond;
-		cond->operator = op;
+		cond->operator_type = op;
 		cond->operands = g_slist_prepend (NULL, right);
 		GDA_SQL_ANY_PART (right)->parent = GDA_SQL_ANY_PART (cond);
 		cond->operands = g_slist_prepend (cond->operands, left);
@@ -187,7 +187,7 @@ create_two_expr (GdaSqlOperatorType op, GdaSqlExpr *left, GdaSqlExpr *right) {
 	ret = gda_sql_expr_new (NULL);
 	cond = gda_sql_operation_new (GDA_SQL_ANY_PART (ret));
 	ret->cond = cond;
-	cond->operator = op;
+	cond->operator_type = op;
 	cond->operands = g_slist_prepend (NULL, right);
 	GDA_SQL_ANY_PART (right)->parent = GDA_SQL_ANY_PART (cond);
 	cond->operands = g_slist_prepend (cond->operands, left);
@@ -202,7 +202,7 @@ create_uni_expr (GdaSqlOperatorType op, GdaSqlExpr *expr) {
 	ret = gda_sql_expr_new (NULL);
 	cond = gda_sql_operation_new (GDA_SQL_ANY_PART (ret));
 	ret->cond = cond;
-	cond->operator = op;
+	cond->operator_type = op;
 	cond->operands = g_slist_prepend (NULL, expr);
 	GDA_SQL_ANY_PART (expr)->parent = GDA_SQL_ANY_PART (cond);
 	return ret;
@@ -654,7 +654,7 @@ seltablist(L) ::= stl_prefix(P) seltarget(T) on_cond(C) using_opt(U). {
 		GdaSqlSelectJoin *join = (GdaSqlSelectJoin *) (last->data);
 		join->expr = C;
 		join->position = g_slist_length (L->targets) - 1;
-		join->using = U;
+		join->use = U;
 	}
 }
 
@@ -829,7 +829,7 @@ expr(C) ::= expr(L) BETWEEN expr(R) AND expr(E). {GdaSqlOperation *cond;
 						  C = gda_sql_expr_new (NULL);
 						  cond = gda_sql_operation_new (GDA_SQL_ANY_PART (C));
 						  C->cond = cond;
-						  cond->operator = GDA_SQL_OPERATOR_TYPE_BETWEEN;
+						  cond->operator_type = GDA_SQL_OPERATOR_TYPE_BETWEEN;
 						  cond->operands = g_slist_append (NULL, L);
 						  GDA_SQL_ANY_PART (L)->parent = GDA_SQL_ANY_PART (cond);
 						  cond->operands = g_slist_append (cond->operands, R);
@@ -843,7 +843,7 @@ expr(C) ::= expr(L) NOT BETWEEN expr(R) AND expr(E). {GdaSqlOperation *cond;
 						      expr = gda_sql_expr_new (NULL);
 						      cond = gda_sql_operation_new (GDA_SQL_ANY_PART (expr));
 						      expr->cond = cond;
-						      cond->operator = GDA_SQL_OPERATOR_TYPE_BETWEEN;
+						      cond->operator_type = GDA_SQL_OPERATOR_TYPE_BETWEEN;
 						      cond->operands = g_slist_append (NULL, L);
 						      GDA_SQL_ANY_PART (L)->parent = GDA_SQL_ANY_PART (cond);
 						      cond->operands = g_slist_append (cond->operands, R);
@@ -854,7 +854,7 @@ expr(C) ::= expr(L) NOT BETWEEN expr(R) AND expr(E). {GdaSqlOperation *cond;
 						      C = gda_sql_expr_new (NULL);
 						      cond = gda_sql_operation_new (GDA_SQL_ANY_PART (C));
 						      C->cond = cond;
-						      cond->operator = GDA_SQL_OPERATOR_TYPE_NOT;
+						      cond->operator_type = GDA_SQL_OPERATOR_TYPE_NOT;
 						      cond->operands = g_slist_prepend (NULL, expr);
 						      GDA_SQL_ANY_PART (expr)->parent = GDA_SQL_ANY_PART (cond);
 }
@@ -870,7 +870,7 @@ expr(E) ::= expr(R) IN LP exprlist(L) RP. {GdaSqlOperation *cond;
 					   E = gda_sql_expr_new (NULL);
 					   cond = gda_sql_operation_new (GDA_SQL_ANY_PART (E));
 					   E->cond = cond;
-					   cond->operator = GDA_SQL_OPERATOR_TYPE_IN;
+					   cond->operator_type = GDA_SQL_OPERATOR_TYPE_IN;
 					   cond->operands = g_slist_prepend (L, R);
 					   for (list = cond->operands; list; list = list->next)
 						   GDA_SQL_ANY_PART (list->data)->parent = GDA_SQL_ANY_PART (cond);
@@ -880,7 +880,7 @@ expr(E) ::= expr(R) IN LP compound(S) RP. {GdaSqlOperation *cond;
 					    E = gda_sql_expr_new (NULL);
 					    cond = gda_sql_operation_new (GDA_SQL_ANY_PART (E));
 					    E->cond = cond;
-					    cond->operator = GDA_SQL_OPERATOR_TYPE_IN;
+					    cond->operator_type = GDA_SQL_OPERATOR_TYPE_IN;
 					    
 					    expr = gda_sql_expr_new (GDA_SQL_ANY_PART (cond));
 					    gda_sql_expr_take_select (expr, S);
@@ -893,7 +893,7 @@ expr(E) ::= expr(R) NOT IN LP exprlist(L) RP. {GdaSqlOperation *cond;
 					       E = gda_sql_expr_new (NULL);
 					       cond = gda_sql_operation_new (GDA_SQL_ANY_PART (E));
 					       E->cond = cond;
-					       cond->operator = GDA_SQL_OPERATOR_TYPE_NOTIN;
+					       cond->operator_type = GDA_SQL_OPERATOR_TYPE_NOTIN;
 					       cond->operands = g_slist_prepend (L, R);
 					       for (list = cond->operands; list; list = list->next)
 						       GDA_SQL_ANY_PART (list->data)->parent = GDA_SQL_ANY_PART (cond);
@@ -903,7 +903,7 @@ expr(E) ::= expr(R) NOT IN LP compound(S) RP. {GdaSqlOperation *cond;
 					       E = gda_sql_expr_new (NULL);
 					       cond = gda_sql_operation_new (GDA_SQL_ANY_PART (E));
 					       E->cond = cond;
-					       cond->operator = GDA_SQL_OPERATOR_TYPE_NOTIN;
+					       cond->operator_type = GDA_SQL_OPERATOR_TYPE_NOTIN;
 					       
 					       expr = gda_sql_expr_new (GDA_SQL_ANY_PART (cond));
 					       gda_sql_expr_take_select (expr, S);

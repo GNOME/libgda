@@ -931,7 +931,7 @@ gda_sql_any_part_check_structure (GdaSqlAnyPart *node, GError **error)
 				     _("Operation has no operand"));
 			return FALSE;
 		}
-		switch (operation->operator) {
+		switch (operation->operator_type) {
 		case GDA_SQL_OPERATOR_TYPE_EQ:
 		case GDA_SQL_OPERATOR_TYPE_IS:
 		case GDA_SQL_OPERATOR_TYPE_LIKE:
@@ -994,7 +994,7 @@ gda_sql_any_part_check_structure (GdaSqlAnyPart *node, GError **error)
 			break;
 		default:
 			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-				     _("Unknown operator %d"), operation->operator);
+				     _("Unknown operator %d"), operation->operator_type);
 			return FALSE;
 		}
 		break;
@@ -1033,12 +1033,12 @@ gda_sql_any_part_check_structure (GdaSqlAnyPart *node, GError **error)
 	}
 	case GDA_SQL_ANY_SQL_SELECT_JOIN: {
 		GdaSqlSelectJoin *join = (GdaSqlSelectJoin*) node;
-		if (join->expr && join->using) {
+		if (join->expr && join->use) {
 			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
 				     _("Join can't at the same time specify a join condition and a list of fields to join on"));
 			return FALSE;
 		}
-		if ((join->type == GDA_SQL_SELECT_JOIN_CROSS) && (join->expr || join->using)) {
+		if ((join->type == GDA_SQL_SELECT_JOIN_CROSS) && (join->expr || join->use)) {
 			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
 				     _("Cross join can't have a join condition or a list of fields to join on"));
 			return FALSE;
@@ -1239,7 +1239,7 @@ gda_sql_any_part_foreach (GdaSqlAnyPart *node, GdaSqlForeachFunc func, gpointer 
 		GdaSqlSelectJoin *join = (GdaSqlSelectJoin *) node;
 		if (!gda_sql_any_part_foreach (GDA_SQL_ANY_PART (join->expr), func, data, error))
 			return FALSE;
-		for (l = join->using; l; l = l->next)
+		for (l = join->use; l; l = l->next)
 			if (!gda_sql_any_part_foreach (GDA_SQL_ANY_PART (l->data), func, data, error))
 				return FALSE;
 		break;

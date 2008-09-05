@@ -1801,7 +1801,7 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, Oid last_id)
 	where = gda_sql_expr_new (GDA_SQL_ANY_PART (select));
 	cond = gda_sql_operation_new (GDA_SQL_ANY_PART (where));
 	where->cond = cond;
-	cond->operator = GDA_SQL_OPERATOR_TYPE_EQ;
+	cond->operator_type = GDA_SQL_OPERATOR_TYPE_EQ;
 	expr = gda_sql_expr_new (GDA_SQL_ANY_PART (cond));
 	g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), "oid");
 	expr->value = value;

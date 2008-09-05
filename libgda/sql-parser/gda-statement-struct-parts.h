@@ -160,7 +160,7 @@ typedef enum {
 
 struct _GdaSqlOperation {
 	GdaSqlAnyPart       any;
-	GdaSqlOperatorType  operator;
+	GdaSqlOperatorType  operator_type;
 	GSList             *operands;
 };
 
@@ -255,7 +255,7 @@ struct _GdaSqlSelectJoin
 	GdaSqlSelectJoinType  type;
 	gint                  position; /* between a target at (pos < @position) and the one @position */
 	GdaSqlExpr           *expr;
-	GSList               *using;
+	GSList               *use;
 };
 
 GdaSqlSelectJoin  *gda_sql_select_join_new            (GdaSqlAnyPart *parent);

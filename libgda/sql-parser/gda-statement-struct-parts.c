@@ -621,7 +621,7 @@ gda_sql_operation_copy (GdaSqlOperation *operation)
 	if (!operation) return NULL;
 
 	copy = gda_sql_operation_new (NULL);
-	copy->operator = operation->operator;
+	copy->operator_type = operation->operator_type;
 	
 	for (list = operation->operands; list; list = list->next) {
 		copy->operands = g_slist_prepend (copy->operands, 
@@ -656,7 +656,7 @@ gda_sql_operation_serialize (GdaSqlOperation *operation)
 		string = g_string_new ("{");
 
 		g_string_append (string, "\"operator\":");
-		str = _json_quote_string (gda_sql_operation_operator_to_string (operation->operator));
+		str = _json_quote_string (gda_sql_operation_operator_to_string (operation->operator_type));
 		g_string_append (string, str);
 		g_free (str);
 
@@ -1347,8 +1347,8 @@ gda_sql_select_join_free (GdaSqlSelectJoin *join)
 	if (!join) return;
 
 	gda_sql_expr_free (join->expr);
-	g_slist_foreach (join->using, (GFunc) gda_sql_field_free, NULL);
-	g_slist_free (join->using);
+	g_slist_foreach (join->use, (GFunc) gda_sql_field_free, NULL);
+	g_slist_free (join->use);
 
 	g_free (join);
 }
@@ -1376,12 +1376,12 @@ gda_sql_select_join_copy (GdaSqlSelectJoin *join)
 	copy->expr = gda_sql_expr_copy (join->expr);
 	gda_sql_any_part_set_parent (copy->expr, copy);
 
-	for (list = join->using; list; list = list->next) {
-		copy->using = g_slist_prepend (copy->using,
+	for (list = join->use; list; list = list->next) {
+		copy->use = g_slist_prepend (copy->use,
 					       gda_sql_field_copy ((GdaSqlField*) list->data));
-		gda_sql_any_part_set_parent (copy->using->data, copy);
+		gda_sql_any_part_set_parent (copy->use->data, copy);
 	}
-	copy->using = g_slist_reverse (copy->using);
+	copy->use = g_slist_reverse (copy->use);
 
 	return copy;
 }
@@ -1452,12 +1452,12 @@ gda_sql_select_join_serialize (GdaSqlSelectJoin *join)
 			g_free (str);
 		}
 
-		if (join->using) {
+		if (join->use) {
 			GSList *list;
 			g_string_append (string, ",\"using\":");
 			g_string_append_c (string, '[');
-			for (list = join->using; list; list = list->next) {
-				if (list != join->using)
+			for (list = join->use; list; list = list->next) {
+				if (list != join->use)
 					g_string_append_c (string, ',');
 				str = gda_sql_field_serialize ((GdaSqlField*) list->data);
 				g_string_append (string, str);

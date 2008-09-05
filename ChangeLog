@@ -1,3 +1,21 @@
+2008-09-05  Bas Driessen <bas.driessen@xobas.com>
+
+	* providers/skel-implementation/capi/parser.y:
+	* providers/firebird/parser.y:
+	* providers/mysql/parser.y:
+	* providers/postgres/parser.y:
+	* providers/postgres/gda-postgres-provider.c:
+	* libgda/gda-meta-store.c:
+	* libgda/sqlite/gda-sqlite-provider.c:
+	* libgda/sql-parser/gda-statement-struct.c:
+	* libgda/sql-parser/parser.y:
+	* libgda/sql-parser/gda-statement-struct-parts.c:
+	* libgda/sql-parser/gda-statement-struct-parts.h:
+	* libgda/gda-data-select.c:
+	* libgda/gda-util.c:
+	* libgda/gda-statement.c: Do not use the C++ reserved words 'using'
+	and 'operator' as object names.
+
 2008-09-04  Vivien Malerba <malerba@gnome-db.org>
 
 	API improvements and cleanups:

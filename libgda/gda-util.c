@@ -688,7 +688,7 @@ gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTab
 		}
 		else if (mtable->pk_cols_nb > 1) {
 			and_cond = gda_sql_operation_new (GDA_SQL_ANY_PART (expr));
-			and_cond->operator = GDA_SQL_OPERATOR_TYPE_AND;
+			and_cond->operator_type = GDA_SQL_OPERATOR_TYPE_AND;
 			expr->cond = and_cond;
 		}
 		for (i = 0; i < mtable->pk_cols_nb; i++) {
@@ -716,7 +716,7 @@ gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTab
 
 				/* equal condition */
 				op = gda_sql_operation_new (GDA_SQL_ANY_PART (and_cond ? (gpointer)and_cond : (gpointer)expr));
-				op->operator = GDA_SQL_OPERATOR_TYPE_EQ;
+				op->operator_type = GDA_SQL_OPERATOR_TYPE_EQ;
 				if (and_cond) 
 					and_cond->operands = g_slist_append (and_cond->operands, op);
 				else
