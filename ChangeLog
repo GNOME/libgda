@@ -1,3 +1,25 @@
+2008-09-07  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-data-select.[ch]:
+	* tests/data-models/check_pmodel.c: correctly handle the situation where the value
+	of the primary key (or the column which composes the unique row condition) is modified,
+	and added a "safety lock" feature which prevents further modification to the data model
+	if the unique row condition is incorrect
+	* doc/C: documentation improvements, and now the generated file when running "make PDF"
+	is libgda-4.0-doc.pdf (for the V4 ABI).
+	* libgda/sqlite/virtual/gda-vconnection-hub.c: no need anymore to use a GdaDataModelQuery
+	object
+	* libgda/Makefile.am:
+	* libgda/gda-data-select-extra.h:
+	* libgda/gda-data-select.[ch]: enable "exporting" all the statements and other information
+	computed while the object was being used to be used by the new GdaDataModelQuery
+	implementation
+	* libgda/gda-data-model-query.[ch]: re-wrote the object to use the GdaDataSelect's features
+	instead or re-implementing them in the object
+	* libgda/tests/data-models/Makefile.am:
+	* libgda/tests/data-models/check_model_query.c: new GdaDataModelQuery test
+	* libgda/tests/data-models/check_pmodel.c: new tests
+
 2008-09-05  Bas Driessen <bas.driessen@xobas.com>
 
 	* providers/skel-implementation/capi/parser.y:

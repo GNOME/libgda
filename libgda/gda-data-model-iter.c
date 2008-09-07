@@ -527,9 +527,13 @@ gda_data_model_iter_can_be_moved (GdaDataModelIter *iter)
  * @iter: a #GdaDataModelIter object
  * @row: the row to set @iter to
  *
- * Synchronizes the values of the parameters in @iter with the values at the @row row
+ * Synchronizes the values of the parameters in @iter with the values at the @row row.
  *
- * If @row < 0 then @iter is not bound to any row of the data model it iters through.
+ * If @row is not a valid row, then the returned value is FALSE, and the "current-row"
+ * property is set to -1.
+ *
+ * If any other error occurred then the returned value is FALSE, but the "current-row"
+ * property is set to the @row row.
  *
  * Returns: TRUE if no error occurred
  */
@@ -556,10 +560,17 @@ gda_data_model_iter_set_at_row (GdaDataModelIter *iter, gint row)
  * gda_data_model_iter_move_next
  * @iter: a #GdaDataModelIter object
  *
- * Moves @iter one row further than where it already is (synchronizes the values of the parameters in @iter 
- * with the values at the new row).
+ * Moves @iter one row further than where it already is 
+ * (synchronizes the values of the parameters in @iter with the values at the new row).
  *
- * Returns: TRUE if no error occurred
+ * If the iterator was on the data model's last row, then it can't be moved forward
+ * anymore, and the returned value is FALSE (nore also that the "current-row" property
+ * is set to -1).
+ *
+ * If any other error occurred then the returned value is FALSE, but the "current-row"
+ * property is set to the new current row (one row more than it was before the call).
+ *
+ * Returns: TRUE if the iterator is now at the next row
  */
 gboolean
 gda_data_model_iter_move_next (GdaDataModelIter *iter)
@@ -577,7 +588,14 @@ gda_data_model_iter_move_next (GdaDataModelIter *iter)
  * Moves @iter one row before where it already is (synchronizes the values of the parameters in @iter 
  * with the values at the new row).
  *
- * Returns: TRUE if no error occurred
+ * If the iterator was on the data model's first row, then it can't be moved backwards
+ * anymore, and the returned value is FALSE (nore also that the "current-row" property
+ * is set to -1).
+ *
+ * If any other error occurred then the returned value is FALSE, but the "current-row"
+ * property is set to the new current row (one row less than it was before the call).
+ *
+ * Returns: TRUE if the iterator is now at the previous row
  */
 gboolean
 gda_data_model_iter_move_prev (GdaDataModelIter *iter)

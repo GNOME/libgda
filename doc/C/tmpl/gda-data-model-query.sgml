@@ -30,37 +30,15 @@ one provided th the #GdaDict object to which the query relates.
 
 </para>
 
-<!-- ##### ARG GdaDataModelQuery:delete-query ##### -->
+<!-- ##### ARG GdaDataModelQuery:exec-params ##### -->
 <para>
 
 </para>
 
-<!-- ##### ARG GdaDataModelQuery:insert-query ##### -->
+<!-- ##### ARG GdaDataModelQuery:statement ##### -->
 <para>
 
 </para>
-
-<!-- ##### ARG GdaDataModelQuery:query ##### -->
-<para>
-
-</para>
-
-<!-- ##### ARG GdaDataModelQuery:update-query ##### -->
-<para>
-
-</para>
-
-<!-- ##### ARG GdaDataModelQuery:use-transaction ##### -->
-<para>
-
-</para>
-
-<!-- ##### ENUM GdaDataModelQueryOptions ##### -->
-<para>
-
-</para>
-
-@GDA_DATA_MODEL_QUERY_OPTION_USE_ALL_FIELDS_IF_NO_PK: 
 
 <!-- ##### STRUCT GdaDataModelQueryClass ##### -->
 <para>
@@ -82,15 +60,7 @@ one provided th the #GdaDict object to which the query relates.
 
 @cnc: 
 @select_stmt: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_data_model_query_get_parameter_list ##### -->
-<para>
-
-</para>
-
-@model: 
+@params: 
 @Returns: 
 
 
@@ -100,29 +70,6 @@ one provided th the #GdaDict object to which the query relates.
 </para>
 
 @model: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_data_model_query_set_modification_query ##### -->
-<para>
-
-</para>
-
-@model: 
-@mod_stmt: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_data_model_query_compute_modification_queries ##### -->
-<para>
-
-</para>
-
-@model: 
-@target: 
-@options: 
 @error: 
 @Returns: 
 

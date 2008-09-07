@@ -15,7 +15,23 @@ Data models returned by the execution of a SELECT statement
   The default behaviour however is to disallow modifications, and this section documents how to characterize
   a <link linkend="GdaDataSelect">GdaDataSelect</link> to allow modifications. Once this is done, any modification
   done to the data model whill be propagated to the modified table in the database using INSERT, UPDATE or DELETE
-  statements, while the data in the data model will always be kept up to date with the modifications done.
+  statements.
+</para>
+<para>
+  After any modification, it is still possible to read values from the data model (even values for rows which have
+  been modified or inserted). The data model might then execute some SELECT statement to fetch some actualized values.
+  Note: there is a corner case where a modification made to a row would make the row not selected at first in the data model
+  (for example is the original SELECT statement included a clause <![CDATA["WHERE id < 100"]]> and the modification sets the 
+  <![CDATA["id"]]> value to 110), then the row will still be in the data model even though it would not be if the SELECT statement
+  which execution created the data model in the first place was re-run. This is illustrated in the schema below:
+  <mediaobject>
+    <imageobject role="html">
+      <imagedata fileref="writable_data_model.png" format="PNG" contentwidth="100mm"/>
+    </imageobject>
+    <textobject>
+      <phrase>GdaDataSelect data model's contents after some modifications</phrase>
+    </textobject>
+  </mediaobject>
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

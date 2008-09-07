@@ -27,7 +27,7 @@
 #include "gda-virtual-provider.h"
 #include <sql-parser/gda-sql-parser.h>
 #include <libgda/gda-util.h>
-#include <libgda/gda-data-model-query.h>
+#include <libgda/gda-data-select.h>
 
 typedef struct {
 	GdaVconnectionHub *hub;
@@ -404,11 +404,10 @@ dict_table_create_model_func (GdaVconnectionDataModelSpec *spec)
 	tmp = g_strdup_printf ("SELECT * FROM %s", g_value_get_string (lspec->table_name));
 	stmt = gda_sql_parser_parse_string (internal_parser, tmp, NULL, NULL);
 	g_free (tmp);
-	model = gda_data_model_query_new (lspec->hc->cnc, stmt);
+	model = gda_connection_statement_execute_select (lspec->hc->cnc, stmt, NULL, NULL);
 	g_object_unref (stmt);
-	gda_data_model_query_compute_modification_queries (GDA_DATA_MODEL_QUERY (model), 
-							   g_value_get_string (lspec->table_name), 
-							   GDA_DATA_MODEL_QUERY_OPTION_USE_ALL_FIELDS_IF_NO_PK, NULL);
+	if (model) 
+		gda_data_select_compute_modification_statements (GDA_DATA_SELECT (model), NULL);
 
 	return model;
 }

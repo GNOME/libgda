@@ -100,6 +100,7 @@ libgda_sources =  \
 	gda-data-access-wrapper.c \
 	gda-data-proxy.c \
 	gda-data-select.c \
+	gda-data-select-extra.h \
 	gda-easy.c \
 	gda-holder.c \
 	gda-init.c \

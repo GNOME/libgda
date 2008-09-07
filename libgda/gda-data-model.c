@@ -812,8 +812,11 @@ gda_data_model_move_iter_at_row_default (GdaDataModel *model, GdaDataModelIter *
 		return FALSE;
 
 	/* validity tests */
-	if (row >= gda_data_model_get_n_rows (model)) 
-		goto onerror;
+	if ((row < 0) || (row >= gda_data_model_get_n_rows (model))) {
+		gda_data_model_iter_invalidate_contents (iter);
+		g_object_set (G_OBJECT (iter), "current_row", -1, NULL);
+		return FALSE;
+	}
 		
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
 	
@@ -827,18 +830,18 @@ gda_data_model_move_iter_at_row_default (GdaDataModel *model, GdaDataModelIter *
 	for (col = 0, list = ((GdaSet *) iter)->holders; list; col++, list = list->next) {
 		const GValue *cvalue;
 		cvalue = gda_data_model_get_value_at (model, col, row, NULL);
-		if (!cvalue || !gda_holder_set_value ((GdaHolder*) list->data, cvalue, NULL))
-			goto onerror;
+		if (!cvalue || 
+		    !gda_holder_set_value ((GdaHolder*) list->data, cvalue, NULL)) {
+			g_object_set (G_OBJECT (iter), "current_row", row, 
+				      "update_model", update_model, NULL);
+			gda_data_model_iter_invalidate_contents (iter);
+			return FALSE;
+		}
 		set_param_attributes ((GdaHolder*) list->data, 
 				      gda_data_model_get_attributes_at (model, col, row));
 	}
 	g_object_set (G_OBJECT (iter), "current_row", row, "update_model", update_model, NULL);
 	return TRUE;
-
- onerror:
-	gda_data_model_iter_invalidate_contents (iter);
-	g_object_set (G_OBJECT (iter), "current_row", -1, NULL);
-	return FALSE;
 }
 
 static void
@@ -900,8 +903,11 @@ gda_data_model_move_iter_next_default (GdaDataModel *model, GdaDataModelIter *it
 
 	g_object_get (G_OBJECT (iter), "current_row", &row, NULL);
 	row++;
-	if (row >= gda_data_model_get_n_rows (model)) 
-		goto onerror;
+	if (row >= gda_data_model_get_n_rows (model)) {
+		gda_data_model_iter_invalidate_contents (iter);
+		g_object_set (G_OBJECT (iter), "current_row", -1, NULL);
+		return FALSE;
+	}
 	
 	/* actual sync. */
 	g_object_get (G_OBJECT (iter), "update_model", &update_model, NULL);
@@ -909,19 +915,19 @@ gda_data_model_move_iter_next_default (GdaDataModel *model, GdaDataModelIter *it
 	for (col = 0, list = ((GdaSet *) iter)->holders; list; col++, list = list->next) {
 		const GValue *cvalue;
 		cvalue = gda_data_model_get_value_at (model, col, row, NULL);
-		if (!cvalue || !gda_holder_set_value ((GdaHolder *) list->data, cvalue, NULL)) 
-			goto onerror;
+		if (!cvalue || 
+		    !gda_holder_set_value ((GdaHolder *) list->data, cvalue, NULL)) {
+			g_object_set (G_OBJECT (iter), "current_row", row, 
+				      "update_model", update_model, NULL);
+			gda_data_model_iter_invalidate_contents (iter);
+			return FALSE;
+		}
 		set_param_attributes ((GdaHolder *) list->data, 
 				      gda_data_model_get_attributes_at (model, col, row));
 	}
 	g_object_set (G_OBJECT (iter), "current_row", row, 
 		      "update_model", update_model, NULL);
 	return TRUE;
-	
- onerror:
-	gda_data_model_iter_invalidate_contents (iter);
-	g_object_set (G_OBJECT (iter), "current_row", -1, NULL);
-	return FALSE;
 }
 
 /**
@@ -970,8 +976,11 @@ gda_data_model_move_iter_prev_default (GdaDataModel *model, GdaDataModelIter *it
 
 	g_object_get (G_OBJECT (iter), "current_row", &row, NULL);
 	row--;
-	if (row < 0)
-		goto onerror;
+	if (row < 0) {
+		gda_data_model_iter_invalidate_contents (iter);
+		g_object_set (G_OBJECT (iter), "current_row", -1, NULL);
+		return FALSE;
+	}
 	
 	/* actual sync. */
 	g_object_get (G_OBJECT (iter), "update_model", &update_model, NULL);
@@ -979,19 +988,19 @@ gda_data_model_move_iter_prev_default (GdaDataModel *model, GdaDataModelIter *it
 	for (col = 0, list = ((GdaSet *) iter)->holders; list; col++, list = list->next) {
 		const GValue *cvalue;
 		cvalue = gda_data_model_get_value_at (model, col, row, NULL);
-		if (!cvalue || !gda_holder_set_value ((GdaHolder*) list->data, cvalue, NULL))
-			goto onerror;
+		if (!cvalue || 
+		    !gda_holder_set_value ((GdaHolder*) list->data, cvalue, NULL)) {
+			g_object_set (G_OBJECT (iter), "current_row", row, 
+				      "update_model", update_model, NULL);
+			gda_data_model_iter_invalidate_contents (iter);
+			return FALSE;
+		}
 		set_param_attributes ((GdaHolder*) list->data,
 				      gda_data_model_get_attributes_at (model, col, row));
 	}
 	g_object_set (G_OBJECT (iter), "current_row", row, 
 		      "update_model", update_model, NULL);
 	return TRUE;
-
- onerror:
-	gda_data_model_iter_invalidate_contents (iter);
-	g_object_set (G_OBJECT (iter), "current_row", -1, NULL);
-	return FALSE;
 }
 
 
@@ -1906,7 +1915,14 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 		to_nb_rows = gda_data_model_get_n_rows (to);
 	}
 
-	gda_data_model_iter_move_next (from_iter); /* move to first row */
+	gboolean mstatus;
+	mstatus = gda_data_model_iter_move_next (from_iter); /* move to first row */
+	if (!mstatus) {
+		gint crow;
+		g_object_get (from_iter, "current-row", &crow, NULL);
+		if (crow >= 0)
+			retval = FALSE;
+	}
 	while (retval && gda_data_model_iter_is_valid (from_iter)) {
 		GList *values = NULL;
 		GList *avlist = append_values;
@@ -1965,7 +1981,13 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 		}
 		
 		g_list_free (values);
-		gda_data_model_iter_move_next (from_iter);
+		mstatus = gda_data_model_iter_move_next (from_iter);
+		if (!mstatus) {
+			gint crow;
+			g_object_get (from_iter, "current-row", &crow, NULL);
+			if (crow >= 0)
+				retval = FALSE;
+		}
 	}
 	
 	/* free memory */

@@ -25,6 +25,7 @@
 
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-connection.h>
+#include <sql-parser/gda-sql-statement.h>
 
 G_BEGIN_DECLS
 
@@ -43,15 +44,9 @@ extern GQuark gda_data_model_query_error_quark (void);
 #define GDA_DATA_MODEL_QUERY_ERROR gda_data_model_query_error_quark ()
 
 typedef enum {
-        GDA_DATA_MODEL_QUERY_XML_LOAD_ERROR,
-	GDA_DATA_MODEL_QUERY_COMPUTE_MODIF_STATEMENTS_ERROR,
-	GDA_DATA_MODEL_QUERY_MODIF_STATEMENT_ERROR,
+	GDA_DATA_MODEL_QUERY_SELECT_STATEMENT_ERROR,
 	GDA_DATA_MODEL_QUERY_CONNECTION_ERROR
 } GdaDataModelQueryError;
-
-typedef enum {
-	GDA_DATA_MODEL_QUERY_OPTION_USE_ALL_FIELDS_IF_NO_PK = 1 << 0
-} GdaDataModelQueryOptions;
 
 struct _GdaDataModelQuery {
 	GObject                    object;
@@ -62,16 +57,17 @@ struct _GdaDataModelQueryClass {
 	GObjectClass               parent_class;
 };
 
-GType             gda_data_model_query_get_type                     (void) G_GNUC_CONST;
-GdaDataModel     *gda_data_model_query_new                          (GdaConnection *cnc, GdaStatement *select_stmt);
+GType              gda_data_model_query_get_type                        (void) G_GNUC_CONST;
+GdaDataModelQuery *gda_data_model_query_new                             (GdaConnection *cnc, GdaStatement *select_stmt, GdaSet *params);
+gboolean           gda_data_model_query_refresh                         (GdaDataModelQuery *model, GError **error);
 
-GdaSet           *gda_data_model_query_get_parameter_list           (GdaDataModelQuery *model);
-gboolean          gda_data_model_query_refresh                      (GdaDataModelQuery *model, GError **error);
-gboolean          gda_data_model_query_set_modification_query       (GdaDataModelQuery *model, 
-								     GdaStatement *mod_stmt, GError **error);
-gboolean          gda_data_model_query_compute_modification_queries (GdaDataModelQuery *model, const gchar *target,
-								     GdaDataModelQueryOptions options, GError **error);
+gboolean           gda_data_model_query_set_row_selection_condition     (GdaDataModelQuery *model, GdaSqlExpr *expr, GError **error);
+gboolean           gda_data_model_query_set_row_selection_condition_sql (GdaDataModelQuery *model, const gchar *sql_where, GError **error);
+gboolean           gda_data_model_query_compute_row_selection_condition (GdaDataModelQuery *model, GError **error);
 
+gboolean           gda_data_model_query_set_modification_statement      (GdaDataModelQuery *model, GdaStatement *mod_stmt, GError **error);
+gboolean           gda_data_model_query_set_modification_statement_sql  (GdaDataModelQuery *model, const gchar *sql, GError **error);
+gboolean           gda_data_model_query_compute_modification_statements (GdaDataModelQuery *model, GError **error);
 
 G_END_DECLS
 

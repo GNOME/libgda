@@ -7,8 +7,8 @@ AM_CPPFLAGS = \
 	-DTOP_SRC_DIR=\""$(top_srcdir)"\" \
 	-DTOP_BUILD_DIR=\""$(top_builddir)"\"
 
-check_PROGRAMS = check_model_import check_virtual check_data_proxy check_model_copy check_pmodel
-TESTS = check_model_import check_virtual check_data_proxy check_model_copy check_pmodel
+check_PROGRAMS = check_model_import check_virtual check_data_proxy check_model_copy check_pmodel check_model_query
+TESTS = check_model_import check_virtual check_data_proxy check_model_copy check_pmodel check_model_query
 
 common_sources = 
 
@@ -37,9 +37,16 @@ check_model_copy_LDADD = \
 
 check_pmodel_SOURCES = $(common_sources) check_pmodel.c
 check_pmodel_CFLAGS = \
-	-I$(top_srcdir)/libgda/sqlite \
-	-I$(top_srcdir)/libgda/sqlite/pmodel
+	-I$(top_srcdir)/libgda/sqlite
 check_pmodel_LDADD = \
+	$(top_builddir)/libgda/libgda-4.0.la \
+	$(top_builddir)/tests/libgda-test-4.0.la \
+	$(LIBGDA_LIBS)
+
+check_model_query_SOURCES = $(common_sources) check_model_query.c
+check_model_query_CFLAGS = \
+	-I$(top_srcdir)/libgda/sqlite
+check_model_query_LDADD = \
 	$(top_builddir)/libgda/libgda-4.0.la \
 	$(top_builddir)/tests/libgda-test-4.0.la \
 	$(LIBGDA_LIBS)
@@ -54,4 +61,4 @@ EXTRA_DIST = \
 	pmodel_data_locations.xml
 
 CLEANFILES = \
-	pmodel.db
+	pmodel.db modelquery.db

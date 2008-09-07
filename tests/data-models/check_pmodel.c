@@ -34,6 +34,9 @@ static void load_data_from_file (GdaConnection *cnc, const gchar *table, const g
 static gboolean check_set_value_at (GdaDataModel *model, gint col, gint row, 
 				    const GValue *set_value, 
 				    GdaConnection *cnc, GdaStatement *stmt, GdaSet *stmt_params);
+static gboolean check_set_value_at_ext (GdaDataModel *model, gint col, gint row, 
+					const GValue *set_value, 
+					GdaConnection *cnc, GdaStatement *stmt, GdaSet *stmt_params, GError **error);
 static gboolean check_set_values (GdaDataModel *model, gint row, GList *set_values,
 				  GdaConnection *cnc, GdaStatement *stmt, GdaSet *stmt_params);
 static gint check_append_values (GdaDataModel *model, GList *set_values,
@@ -47,6 +50,9 @@ static gint test4 (GdaConnection *cnc);
 static gint test5 (GdaConnection *cnc);
 static gint test6 (GdaConnection *cnc);
 static gint test7 (GdaConnection *cnc);
+static gint test8 (GdaConnection *cnc);
+static gint test9 (GdaConnection *cnc);
+static gint test10 (GdaConnection *cnc);
 
 TestFunc tests[] = {
         test1,
@@ -55,7 +61,10 @@ TestFunc tests[] = {
 	test4,
 	test5,
 	test6,
-	test7
+	test7,
+	test8,
+	test9,
+	test10
 };
 
 int
@@ -353,7 +362,7 @@ test2 (GdaConnection *cnc)
 }
 
 /*
- * check gda_data_model_set_at()
+ * check gda_data_model_set_value_at()
  * 
  * Returns the number of failures 
  */
@@ -853,6 +862,240 @@ test7 (GdaConnection *cnc)
 	return nfailed;
 }
 
+/*
+ * check gda_data_model_set_value_at(), modifies the PK
+ * 
+ * Returns the number of failures 
+ */
+static gint
+test8 (GdaConnection *cnc)
+{
+	GError *error = NULL;
+	GdaDataModel *model;
+	GdaStatement *stmt;
+	gint nfailed = 0;
+	GValue *value;
+
+	clear_signals ();
+
+	/* create GdaDataSelect */
+	stmt = stmt_from_string ("SELECT * FROM customers");
+	model = gda_connection_statement_execute_select (cnc, stmt, NULL, &error);
+	if (!model) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Could not execute SELECT!\n");
+#endif
+		goto out;
+	}
+	if (!GDA_IS_DATA_SELECT (model)) {
+		g_print ("Data model should be a GdaDataSelect!\n");
+		exit (EXIT_FAILURE);
+	}
+
+	/* test INSERT with undefined params */
+	if (!gda_data_select_compute_modification_statements (GDA_DATA_SELECT (model), &error)) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+		g_print ("gda_data_select_set_modification_statement() should have succedded, error: %s\n",
+			 error && error->message ? error->message : "No detail");
+#endif
+		goto out;
+	}
+
+	/****/
+	monitor_model_signals (model);
+	g_value_set_int ((value = gda_value_new (G_TYPE_INT)), 102);
+	if (! check_set_value_at (model, 0, 4, value, cnc, stmt, NULL)) {
+		nfailed ++;
+		goto out;
+	}
+	if (! check_expected_signal (model, 'U', 4)) {
+		nfailed++;
+		goto out;
+	}
+	gda_value_free (value);
+	clear_signals ();
+
+ out:
+	g_object_unref (model);
+	g_object_unref (stmt);
+
+	return nfailed;
+}
+
+/*
+ * check modifications statements' setting, with external parameter
+ * the modification makes the row 'disappear' from the data model
+ * 
+ * Returns the number of failures 
+ */
+static gint
+test9 (GdaConnection *cnc)
+{
+	GError *error = NULL;
+	GdaDataModel *model;
+	GdaStatement *stmt;
+	gint nfailed = 0;
+	GdaSet *params;
+	GValue *value;
+
+	clear_signals ();
+
+	/* create GdaDataSelect */
+	stmt = stmt_from_string ("SELECT * FROM customers WHERE country = ##country::string");
+	if (!gda_statement_get_parameters (stmt, &params, &error)) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Could not get SELECT's parameters!\n");
+#endif
+		goto out;
+	}
+	if (! gda_set_set_holder_value (params, &error, "country", "SP")) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Could not get SELECT's parameters!\n");
+#endif
+		goto out;
+	}
+	model = gda_connection_statement_execute_select (cnc, stmt, params, &error);
+	if (!model) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Could not execute SELECT!\n");
+#endif
+		goto out;
+	}
+	if (!GDA_IS_DATA_SELECT (model)) {
+		g_print ("Data model should be a GdaDataSelect!\n");
+		exit (EXIT_FAILURE);
+	}
+
+	
+	/* gda_data_select_compute_modification_statements() */
+	if (!gda_data_select_compute_modification_statements (GDA_DATA_SELECT (model), &error)) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+		g_print ("gda_data_select_compute_modification_statements() should have succedded, error: %s\n",
+			 error && error->message ? error->message : "No detail");
+#endif
+		goto out;
+	}
+
+	monitor_model_signals (model);
+	g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), "UK");
+	if (! check_set_value_at_ext (model, 4, 1, value, cnc, stmt, params, &error)) {
+		if (error && (error->domain == 0) && (error->code == -1)) {
+#ifdef CHECK_EXTRA_INFO
+			g_print ("This error was expected (modified row would not have been in the SELECT)\n");
+#endif	
+		}
+		else {
+			nfailed ++;
+			goto out;
+		}
+	}
+	if (! check_expected_signal (model, 'U', 1)) {
+		nfailed++;
+		goto out;
+	}
+	gda_value_free (value);
+	clear_signals ();
+
+ out:	
+	g_object_unref (model);
+	g_object_unref (stmt);
+	g_object_unref (params);
+	
+	return nfailed;
+}
+
+
+/*
+ * Simple data model copy
+ * 
+ * Returns the number of failures 
+ */
+static gint
+test10 (GdaConnection *cnc)
+{
+	GError *error = NULL;
+	GdaDataModel *model, *copy;
+	GdaStatement *stmt;
+	gint nfailed = 0;
+	GdaSet *params;
+
+	clear_signals ();
+
+	/* create GdaDataSelect */
+	stmt = stmt_from_string ("SELECT * FROM customers WHERE country = ##country::string");
+	if (!gda_statement_get_parameters (stmt, &params, &error)) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Could not get SELECT's parameters!\n");
+#endif
+		goto out;
+	}
+	if (! gda_set_set_holder_value (params, &error, "country", "SP")) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Could not get SELECT's parameters!\n");
+#endif
+		goto out;
+	}
+	model = gda_connection_statement_execute_select (cnc, stmt, params, &error);
+	if (!model) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Could not execute SELECT!\n");
+#endif
+		goto out;
+	}
+	if (!GDA_IS_DATA_SELECT (model)) {
+		g_print ("Data model should be a GdaDataSelect!\n");
+		exit (EXIT_FAILURE);
+	}
+
+	copy = (GdaDataModel*) gda_data_model_array_copy_model (model, &error);
+	if (!copy) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Could not copy GdaDataSelect, error: %s\n",
+			 error && error->message ? error->message : "No detail");
+#endif
+		goto out;
+	}
+
+	GdaDataComparator *cmp;
+	cmp = (GdaDataComparator*) gda_data_comparator_new (model, copy);
+	if (! gda_data_comparator_compute_diff (cmp, &error)) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Could not compute the data model differences: %s\n",
+			 error && error->message ? error->message : "No detail");
+#endif
+		goto out;
+	}
+	if (gda_data_comparator_get_n_diffs (cmp) != 0) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+		g_print ("There are some differences whith the copied data model ...\n");
+#endif
+		gda_data_model_dump (model, stdout);
+		gda_data_model_dump (copy, stdout);
+		goto out;
+	}
+	g_object_unref (cmp);
+	g_object_unref (copy);
+
+ out:	
+	g_object_unref (model);
+	g_object_unref (stmt);
+	g_object_unref (params);
+	
+	return nfailed;
+}
+
 
 /*
  * Checking value function:
@@ -863,22 +1106,34 @@ static gboolean
 check_set_value_at (GdaDataModel *model, gint col, gint row, const GValue *set_value, 
 		    GdaConnection *cnc, GdaStatement *stmt, GdaSet *stmt_params)
 {
-	const GValue *get_value;
 	GError *error = NULL;
+	gboolean retval;
+	retval = check_set_value_at_ext (model, col, row, set_value, cnc, stmt, stmt_params, &error);
+	if (error)
+		g_error_free (error);
+	return retval;
+}
 
-	if (! gda_data_model_set_value_at (model, col, row, set_value, &error)) {
+static gboolean
+check_set_value_at_ext (GdaDataModel *model, gint col, gint row, 
+			const GValue *set_value, 
+			GdaConnection *cnc, GdaStatement *stmt, GdaSet *stmt_params, GError **error)
+{
+	const GValue *get_value;
+
+	if (! gda_data_model_set_value_at (model, col, row, set_value, error)) {
 #ifdef CHECK_EXTRA_INFO
 		g_print ("gda_data_model_set_value_at(%d,%d) failed: %s\n",
 			 col, row, 
-			 error && error->message ? error->message : "No detail");
+			 error && *error && (*error)->message ? (*error)->message : "No detail");
 #endif
 		return FALSE;
 	}
-	get_value = gda_data_model_get_value_at (model, col, row, &error);
+	get_value = gda_data_model_get_value_at (model, col, row, error);
 	if (!get_value) {
 #ifdef CHECK_EXTRA_INFO
-		g_print ("Can't get data model's value: %s",
-			 error && error->message ? error->message : "No detail");
+		g_print ("Can't get data model's value: %s\n",
+			 error && *error && (*error)->message ? (*error)->message : "No detail");
 #endif
 		return FALSE;
 	}
@@ -898,22 +1153,21 @@ check_set_value_at (GdaDataModel *model, gint col, gint row, const GValue *set_v
 		/* run the statement and compare it with @model */
 		GdaDataModel *rerun;
 		GdaDataComparator *cmp;
-		GError *error = NULL;
 		gboolean cmpres = TRUE;
-		rerun = gda_connection_statement_execute_select (cnc, stmt, stmt_params, &error);
+		rerun = gda_connection_statement_execute_select (cnc, stmt, stmt_params, error);
 		if (!rerun) {
 #ifdef CHECK_EXTRA_INFO
 			g_print ("Could not re-run the SELECT statement: %s\n",
-				 error && error->message ? error->message : "No detail");
+				 error && *error && (*error)->message ? (*error)->message : "No detail");
 #endif
 			return FALSE;
 		}
 
 		cmp = (GdaDataComparator*) gda_data_comparator_new (model, rerun);
-		if (! gda_data_comparator_compute_diff (cmp, &error)) {
+		if (! gda_data_comparator_compute_diff (cmp, error)) {
 #ifdef CHECK_EXTRA_INFO
 			g_print ("Could not compute the data model differences: %s\n",
-				 error && error->message ? error->message : "No detail");
+				 error && *error && (*error)->message ? (*error)->message : "No detail");
 #endif
 			cmpres = FALSE;
 		}
@@ -922,6 +1176,12 @@ check_set_value_at (GdaDataModel *model, gint col, gint row, const GValue *set_v
 			g_print ("There are some differences when re-running the SELECT statement...\n");
 #endif
 			cmpres = FALSE;
+			gda_data_model_dump (model, stdout);
+			gda_data_model_dump (rerun, stdout);
+			if (error) {
+				g_set_error (error, 0, -1,
+					     "There are some differences when re-running the SELECT statement...");
+			}
 		}
 		g_object_unref (cmp);
 		g_object_unref (rerun);

@@ -49,7 +49,8 @@ content_files = fdl-appendix.sgml
 HTML_IMAGES = DataModels.png \
 	architecture.png parts.png stmt-unknown.png stmt-select.png stmt-insert1.png stmt-insert2.png \
 	stmt-update.png stmt-compound.png information_schema.png \
-	MetaStore1.png MetaStore2.png i_s_data_types.png
+	MetaStore1.png MetaStore2.png i_s_data_types.png \
+	writable_data_model.png
 
 # Extra options to supply to gtkdoc-fixref
 FIXXREF_OPTIONS=
@@ -67,7 +68,7 @@ EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration
 # Files not to distribute
 # for --rebuild-types in $(SCAN_OPTIONS), e.g. $(DOC_MODULE).types
 # for --rebuild-sections in $(SCAN_OPTIONS) e.g. $(DOC_MODULE)-sections.txt
-DISTCLEANFILES = $(DOC_MODULE)-docs.sgml.pdf
+DISTCLEANFILES = $(DOC_MODULE)-doc.pdf
 
 DOC_STAMPS += pdf-build.stamp
 CLEANFILES += $(DOC_STAMPS)
@@ -76,6 +77,6 @@ CLEANFILES += $(DOC_STAMPS)
 PDF: pdf-build.stamp
 pdf-build.stamp:
 	if test -f $(srcdir)/$(DOC_MAIN_SGML_FILE); then \
-		dblatex $(srcdir)/$(DOC_MAIN_SGML_FILE); \
+		dblatex $(srcdir)/$(DOC_MAIN_SGML_FILE) -o $(DOC_MODULE)-doc.pdf ; \
 	fi
 	touch pdf-build.stamp
