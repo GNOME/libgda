@@ -80,12 +80,12 @@ g_object_new (GDA_TYPE_CONFIG, "user-file", "my_file", NULL);
 @gdaconfig: the object which received the signal.
 @arg1: 
 
-<!-- ##### ARG GdaConfig:system-file ##### -->
+<!-- ##### ARG GdaConfig:system-filename ##### -->
 <para>
 
 </para>
 
-<!-- ##### ARG GdaConfig:user-file ##### -->
+<!-- ##### ARG GdaConfig:user-filename ##### -->
 <para>
 
 </para>

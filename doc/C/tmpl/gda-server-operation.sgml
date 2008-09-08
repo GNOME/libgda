@@ -59,12 +59,12 @@ See the <link linkend="DDLIntro">global introduction about DDL</link> for more i
 
 </para>
 
-<!-- ##### ARG GdaServerOperation:provider-obj ##### -->
+<!-- ##### ARG GdaServerOperation:provider ##### -->
 <para>
 
 </para>
 
-<!-- ##### ARG GdaServerOperation:spec-file ##### -->
+<!-- ##### ARG GdaServerOperation:spec-filename ##### -->
 <para>
 
 </para>

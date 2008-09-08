@@ -53,7 +53,7 @@ Data models returned by the execution of a SELECT statement
 
 </para>
 
-<!-- ##### ARG GdaDataSelect:delete-query ##### -->
+<!-- ##### ARG GdaDataSelect:delete-stmt ##### -->
 <para>
 
 </para>
@@ -63,7 +63,7 @@ Data models returned by the execution of a SELECT statement
 
 </para>
 
-<!-- ##### ARG GdaDataSelect:insert-query ##### -->
+<!-- ##### ARG GdaDataSelect:insert-stmt ##### -->
 <para>
 
 </para>
@@ -83,7 +83,7 @@ Data models returned by the execution of a SELECT statement
 
 </para>
 
-<!-- ##### ARG GdaDataSelect:update-query ##### -->
+<!-- ##### ARG GdaDataSelect:update-stmt ##### -->
 <para>
 
 </para>

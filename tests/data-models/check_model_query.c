@@ -41,14 +41,17 @@ static gboolean check_set_values (GdaDataModel *model, gint row, GList *set_valu
 				  GdaConnection *cnc, GdaStatement *stmt, GdaSet *stmt_params);
 static gint check_append_values (GdaDataModel *model, GList *set_values,
 				 GdaConnection *cnc, GdaStatement *stmt, GdaSet *stmt_params);
+static gboolean compare_data_models (GdaDataModel *model1, GdaDataModel *model2, GError **error);
 
 typedef gboolean (*TestFunc) (GdaConnection *);
 static gint test1 (GdaConnection *cnc);
 static gint test2 (GdaConnection *cnc);
+static gint test3 (GdaConnection *cnc);
 
 TestFunc tests[] = {
         test1,
-        test2
+        test2,
+	test3
 };
 
 int
@@ -291,6 +294,14 @@ test2 (GdaConnection *cnc)
 	gda_value_free (value);
 
 	/****/
+	g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), "Jack");
+	if (! check_set_value_at (model, 1, 0, value, cnc, stmt, NULL)) {
+		nfailed ++;
+		goto out;
+	}
+	gda_value_free (value);
+
+	/****/
 	if (gda_data_model_set_value_at (model, 0, 0, value, &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
@@ -314,8 +325,6 @@ test2 (GdaConnection *cnc)
 #endif
 		goto out;
 	}
-	gda_data_model_dump (model, stdout);
-	gda_data_model_dump (copy, stdout);
 	if (! gda_data_model_query_refresh (GDA_DATA_MODEL_QUERY (model), &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
@@ -324,7 +333,14 @@ test2 (GdaConnection *cnc)
 #endif
 		goto out;
 	}
-	gda_data_model_dump (model, stdout);
+	if (! compare_data_models (model, copy, NULL)) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Data model differs after a refresh\n");
+#endif
+		goto out;
+	}
+	g_object_unref (copy);
 
  out:
 	g_object_unref (model);
@@ -333,7 +349,71 @@ test2 (GdaConnection *cnc)
 	return nfailed;
 }
 
+/*
+ * - Create a GdaDataModelQuery with a missing parameter
+ * - Set modification statements
+ * - Refresh data model and compare with direct SELECT.
+ * 
+ * Returns the number of failures 
+ */
+static gint
+test3 (GdaConnection *cnc)
+{
+	GError *error = NULL;
+	GdaDataModel *model;
+	GdaStatement *stmt;
+	GdaSet *params;
+	gint nfailed = 0;
 
+	/* create GdaDataModelQuery */
+	stmt = stmt_from_string ("SELECT * FROM customers WHERE id <= ##theid::gint");
+	g_assert (gda_statement_get_parameters (stmt, &params, NULL));
+	model = (GdaDataModel*) gda_data_model_query_new (cnc, stmt, params);
+	g_assert (model);
+	if (gda_data_model_get_n_rows (model) >= 0) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Returned n_rows should be -1\n");
+#endif
+		goto out;
+	}
+
+	gda_data_model_dump (model, stdout);
+	if (! gda_set_set_holder_value (params, &error, "theid", 9)) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Can't set 'theid' value: %s \n",
+			 error && error->message ? error->message : "No detail");
+#endif
+		goto out;
+	}
+	gda_data_model_dump (model, stdout);
+
+	if (! gda_set_set_holder_value (params, &error, "theid", 4)) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Can't set 'theid' value: %s \n",
+			 error && error->message ? error->message : "No detail");
+#endif
+		goto out;
+	}
+	gda_data_model_dump (model, stdout);
+
+	if (! gda_data_model_query_compute_modification_statements (GDA_DATA_MODEL_QUERY (model), &error)) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+		g_print ("gda_data_model_query_compute_modification_statements() failed: %s\n",
+			 error && error->message ? error->message : "No detail");
+#endif
+		goto out;
+	}
+
+ out:
+	g_object_unref (model);
+	g_object_unref (stmt);
+	
+	return nfailed;
+}
 
 /*
  * Checking value function:
@@ -693,4 +773,36 @@ check_no_expected_signal (GdaDataModel *model)
 	}
 
 	return TRUE;
+}
+
+static gboolean
+compare_data_models (GdaDataModel *model1, GdaDataModel *model2, GError **error)
+{
+	GdaDataComparator *cmp;
+	GError *lerror = NULL;
+	cmp = (GdaDataComparator*) gda_data_comparator_new (model1, model2);
+	if (! gda_data_comparator_compute_diff (cmp, &lerror)) {
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Could not compute the data model differences: %s\n",
+			 lerror && lerror->message ? lerror->message : "No detail");
+#endif
+		goto onerror;
+	}
+	if (gda_data_comparator_get_n_diffs (cmp) != 0) {
+#ifdef CHECK_EXTRA_INFO
+		g_print ("There are some differences when comparing data models...\n");
+		g_print ("Model1 is:\n");
+		gda_data_model_dump (model1, stdout);
+		g_print ("Model2 is:\n");
+		gda_data_model_dump (model2, stdout);
+#endif
+		goto onerror;
+	}
+	g_object_unref (cmp);
+
+	return TRUE;
+
+ onerror:
+	g_propagate_error (error, lerror);
+	return FALSE;
 }

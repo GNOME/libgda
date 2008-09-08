@@ -73,7 +73,7 @@ gda_row_class_init (GdaRowClass *klass)
         object_class->get_property = gda_row_get_property;
 
 	g_object_class_install_property (object_class, PROP_NB_VALUES,
-                                         g_param_spec_int ("nb_values", NULL, NULL,
+                                         g_param_spec_int ("nb-values", NULL, NULL,
 							   1, G_MAXINT, 1, 
 							   G_PARAM_WRITABLE));
 }
@@ -210,7 +210,7 @@ gda_row_new (gint count)
 {
         g_return_val_if_fail (count > 0, NULL);
 	
-	return (GdaRow*) g_object_new (GDA_TYPE_ROW, "nb_values", count, NULL);
+	return (GdaRow*) g_object_new (GDA_TYPE_ROW, "nb-values", count, NULL);
 }
 
 /**

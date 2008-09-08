@@ -766,7 +766,7 @@ gda_data_model_create_iter (GdaDataModel *model)
 	else 
 		/* default method */
 		return  g_object_new (GDA_TYPE_DATA_MODEL_ITER, 
-				      "data_model", model, NULL);
+				      "data-model", model, NULL);
 }
 
 /**
@@ -814,33 +814,33 @@ gda_data_model_move_iter_at_row_default (GdaDataModel *model, GdaDataModelIter *
 	/* validity tests */
 	if ((row < 0) || (row >= gda_data_model_get_n_rows (model))) {
 		gda_data_model_iter_invalidate_contents (iter);
-		g_object_set (G_OBJECT (iter), "current_row", -1, NULL);
+		g_object_set (G_OBJECT (iter), "current-row", -1, NULL);
 		return FALSE;
 	}
 		
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
 	
-	g_object_get (G_OBJECT (iter), "data_model", &test, NULL);
+	g_object_get (G_OBJECT (iter), "data-model", &test, NULL);
 	g_return_val_if_fail (test == model, FALSE);
 	g_object_unref (test);
 	
 	/* actual sync. */
-	g_object_get (G_OBJECT (iter), "update_model", &update_model, NULL);
-	g_object_set (G_OBJECT (iter), "update_model", FALSE, NULL);
+	g_object_get (G_OBJECT (iter), "update-model", &update_model, NULL);
+	g_object_set (G_OBJECT (iter), "update-model", FALSE, NULL);
 	for (col = 0, list = ((GdaSet *) iter)->holders; list; col++, list = list->next) {
 		const GValue *cvalue;
 		cvalue = gda_data_model_get_value_at (model, col, row, NULL);
 		if (!cvalue || 
 		    !gda_holder_set_value ((GdaHolder*) list->data, cvalue, NULL)) {
-			g_object_set (G_OBJECT (iter), "current_row", row, 
-				      "update_model", update_model, NULL);
+			g_object_set (G_OBJECT (iter), "current-row", row, 
+				      "update-model", update_model, NULL);
 			gda_data_model_iter_invalidate_contents (iter);
 			return FALSE;
 		}
 		set_param_attributes ((GdaHolder*) list->data, 
 				      gda_data_model_get_attributes_at (model, col, row));
 	}
-	g_object_set (G_OBJECT (iter), "current_row", row, "update_model", update_model, NULL);
+	g_object_set (G_OBJECT (iter), "current-row", row, "update-model", update_model, NULL);
 	return TRUE;
 }
 
@@ -850,7 +850,6 @@ set_param_attributes (GdaHolder *holder, GdaValueAttribute flags)
 	if (flags & GDA_VALUE_ATTR_IS_DEFAULT)
 		gda_holder_set_value_to_default (holder);
 
-	gda_holder_set_not_null (holder, ! (flags & GDA_VALUE_ATTR_CAN_BE_NULL));
 	if (flags & GDA_VALUE_ATTR_IS_NULL)
 		gda_holder_set_value (holder, NULL, NULL);
 	if (flags & GDA_VALUE_ATTR_DATA_NON_VALID)
@@ -897,36 +896,36 @@ gda_data_model_move_iter_next_default (GdaDataModel *model, GdaDataModelIter *it
 	
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
 	
-	g_object_get (G_OBJECT (iter), "data_model", &test, NULL);
+	g_object_get (G_OBJECT (iter), "data-model", &test, NULL);
 	g_return_val_if_fail (test == model, FALSE);
 	g_object_unref (test);
 
-	g_object_get (G_OBJECT (iter), "current_row", &row, NULL);
+	g_object_get (G_OBJECT (iter), "current-row", &row, NULL);
 	row++;
 	if (row >= gda_data_model_get_n_rows (model)) {
 		gda_data_model_iter_invalidate_contents (iter);
-		g_object_set (G_OBJECT (iter), "current_row", -1, NULL);
+		g_object_set (G_OBJECT (iter), "current-row", -1, NULL);
 		return FALSE;
 	}
 	
 	/* actual sync. */
-	g_object_get (G_OBJECT (iter), "update_model", &update_model, NULL);
-	g_object_set (G_OBJECT (iter), "update_model", FALSE, NULL);
+	g_object_get (G_OBJECT (iter), "update-model", &update_model, NULL);
+	g_object_set (G_OBJECT (iter), "update-model", FALSE, NULL);
 	for (col = 0, list = ((GdaSet *) iter)->holders; list; col++, list = list->next) {
 		const GValue *cvalue;
 		cvalue = gda_data_model_get_value_at (model, col, row, NULL);
 		if (!cvalue || 
 		    !gda_holder_set_value ((GdaHolder *) list->data, cvalue, NULL)) {
-			g_object_set (G_OBJECT (iter), "current_row", row, 
-				      "update_model", update_model, NULL);
+			g_object_set (G_OBJECT (iter), "current-row", row, 
+				      "update-model", update_model, NULL);
 			gda_data_model_iter_invalidate_contents (iter);
 			return FALSE;
 		}
 		set_param_attributes ((GdaHolder *) list->data, 
 				      gda_data_model_get_attributes_at (model, col, row));
 	}
-	g_object_set (G_OBJECT (iter), "current_row", row, 
-		      "update_model", update_model, NULL);
+	g_object_set (G_OBJECT (iter), "current-row", row, 
+		      "update-model", update_model, NULL);
 	return TRUE;
 }
 
@@ -970,36 +969,36 @@ gda_data_model_move_iter_prev_default (GdaDataModel *model, GdaDataModelIter *it
 	
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
 	
-	g_object_get (G_OBJECT (iter), "data_model", &test, NULL);
+	g_object_get (G_OBJECT (iter), "data-model", &test, NULL);
 	g_return_val_if_fail (test == model, FALSE);
 	g_object_unref (test);
 
-	g_object_get (G_OBJECT (iter), "current_row", &row, NULL);
+	g_object_get (G_OBJECT (iter), "current-row", &row, NULL);
 	row--;
 	if (row < 0) {
 		gda_data_model_iter_invalidate_contents (iter);
-		g_object_set (G_OBJECT (iter), "current_row", -1, NULL);
+		g_object_set (G_OBJECT (iter), "current-row", -1, NULL);
 		return FALSE;
 	}
 	
 	/* actual sync. */
-	g_object_get (G_OBJECT (iter), "update_model", &update_model, NULL);
-	g_object_set (G_OBJECT (iter), "update_model", FALSE, NULL);
+	g_object_get (G_OBJECT (iter), "update-model", &update_model, NULL);
+	g_object_set (G_OBJECT (iter), "update-model", FALSE, NULL);
 	for (col = 0, list = ((GdaSet *) iter)->holders; list; col++, list = list->next) {
 		const GValue *cvalue;
 		cvalue = gda_data_model_get_value_at (model, col, row, NULL);
 		if (!cvalue || 
 		    !gda_holder_set_value ((GdaHolder*) list->data, cvalue, NULL)) {
-			g_object_set (G_OBJECT (iter), "current_row", row, 
-				      "update_model", update_model, NULL);
+			g_object_set (G_OBJECT (iter), "current-row", row, 
+				      "update-model", update_model, NULL);
 			gda_data_model_iter_invalidate_contents (iter);
 			return FALSE;
 		}
 		set_param_attributes ((GdaHolder*) list->data,
 				      gda_data_model_get_attributes_at (model, col, row));
 	}
-	g_object_set (G_OBJECT (iter), "current_row", row, 
-		      "update_model", update_model, NULL);
+	g_object_set (G_OBJECT (iter), "current-row", row, 
+		      "update-model", update_model, NULL);
 	return TRUE;
 }
 

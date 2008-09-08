@@ -853,7 +853,7 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 </para>
 
 @any: inheritance structure
-@operator: type of operation
+@operator_type: 
 @operands: list of #GdaSqlExpr operands
 
 <!-- ##### ENUM GdaSqlOperatorType ##### -->
@@ -1154,7 +1154,7 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 @type: type of join
 @position: represents a join between a target at (pos &lt; @position) and the one at @position
 @expr: joining expression
-@using: list of #GdaSqlField identifying the columns the join is on
+@use: 
 
 <!-- ##### FUNCTION gda_sql_select_join_new ##### -->
 <para>

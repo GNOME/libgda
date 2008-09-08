@@ -158,7 +158,7 @@ gda_data_model_bdb_class_init (GdaDataModelBdbClass *klass)
                                                               G_PARAM_READABLE | G_PARAM_WRITABLE |
                                                               G_PARAM_CONSTRUCT_ONLY));
         g_object_class_install_property (object_class, PROP_DB_NAME,
-                                         g_param_spec_string ("db_name", "Name of the database", NULL, NULL,
+                                         g_param_spec_string ("db-name", "Name of the database", NULL, NULL,
                                                               G_PARAM_READABLE | G_PARAM_WRITABLE |
                                                               G_PARAM_CONSTRUCT_ONLY));
 
@@ -431,7 +431,7 @@ gda_data_model_bdb_new (const gchar *filename, const gchar *db_name)
 
 	g_return_val_if_fail (filename && *filename, NULL);
 
-	model = (GdaDataModel *) g_object_new (GDA_TYPE_DATA_MODEL_BDB, "db_name", db_name, 
+	model = (GdaDataModel *) g_object_new (GDA_TYPE_DATA_MODEL_BDB, "db-name", db_name, 
 					       "filename", filename, NULL);
 
 	return model;

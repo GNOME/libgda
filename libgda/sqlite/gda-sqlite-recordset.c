@@ -253,8 +253,9 @@ gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_p
 			gda_column_set_defined_size (column, -1);
 			gda_column_set_primary_key (column, pkey);
 			gda_column_set_unique_key (column, pkey);
-			gda_column_set_allow_null (column, !notnull);
+			gda_column_set_allow_null (column, !(pkey || notnull)); /* PK fields can't be NULL */
 			gda_column_set_auto_increment (column, autoinc);
+			/*g_print (".. %d pkey=>%d autoinc=>%d notnull=>%d\n", i, pkey, autoinc, notnull);*/
 			
 			ctype = sqlite3_column_decltype (ps->sqlite_stmt, i);
 			if (ctype) {

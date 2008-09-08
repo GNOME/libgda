@@ -138,7 +138,7 @@ gda_virtual_connection_open (GdaVirtualProvider *virtual_provider, GError **erro
 	if (PROV_CLASS (virtual_provider)->create_connection) {
 		cnc = PROV_CLASS (virtual_provider)->create_connection ((GdaServerProvider*) virtual_provider);
 		if (cnc) {
-			g_object_set (G_OBJECT (cnc), "provider_obj", virtual_provider, NULL);
+			g_object_set (G_OBJECT (cnc), "provider", virtual_provider, NULL);
 			if (!gda_connection_open (cnc, error)) {
 				g_object_unref (cnc);
 				cnc = NULL;

@@ -274,7 +274,7 @@ gda_report_engine_new_from_string (const gchar *spec_string)
 GdaReportEngine *
 gda_report_engine_new_from_file (const gchar *spec_file_name)
 {
-	return (GdaReportEngine *) g_object_new (GDA_TYPE_REPORT_ENGINE, "spec_file", spec_file_name, NULL);
+	return (GdaReportEngine *) g_object_new (GDA_TYPE_REPORT_ENGINE, "spec-filename", spec_file_name, NULL);
 }
 
 /**

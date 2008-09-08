@@ -50,7 +50,7 @@ HTML_IMAGES = DataModels.png \
 	architecture.png parts.png stmt-unknown.png stmt-select.png stmt-insert1.png stmt-insert2.png \
 	stmt-update.png stmt-compound.png information_schema.png \
 	MetaStore1.png MetaStore2.png i_s_data_types.png \
-	writable_data_model.png
+	writable_data_model.png GdaDataModelIter.png
 
 # Extra options to supply to gtkdoc-fixref
 FIXXREF_OPTIONS=

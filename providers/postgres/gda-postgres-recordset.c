@@ -136,11 +136,11 @@ gda_postgres_recordset_class_init (GdaPostgresRecordsetClass *klass)
         object_class->set_property = gda_postgres_recordset_set_property;
         object_class->get_property = gda_postgres_recordset_get_property;
         g_object_class_install_property (object_class, PROP_CHUNCK_SIZE,
-                                         g_param_spec_int ("chunk_size", _("Number of rows fetched at a time"), NULL,
+                                         g_param_spec_int ("chunk-size", _("Number of rows fetched at a time"), NULL,
                                                            1, G_MAXINT - 1, 10,
                                                            G_PARAM_CONSTRUCT | G_PARAM_READABLE | G_PARAM_WRITABLE));
         g_object_class_install_property (object_class, PROP_CHUNCKS_READ,
-                                         g_param_spec_int ("chunks_read",
+                                         g_param_spec_int ("chunks-read",
                                                            _("Number of rows chunks read since the object creation"), NULL,
                                                            0, G_MAXINT - 1, 0,
                                                            G_PARAM_READABLE));

@@ -173,12 +173,12 @@ gda_config_class_init (GdaConfigClass *klass)
 
 	/* To translators: DSN stands for Data Source Name, it's a named connection string defined in ~/.libgda/config */
 	g_object_class_install_property (object_class, PROP_USER_FILE,
-                                         g_param_spec_string ("user_file", _("File to use for per-user DSN list"), 
+                                         g_param_spec_string ("user-filename", _("File to use for per-user DSN list"), 
 							      NULL, NULL,
 							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	/* To translators: DSN stands for Data Source Name, it's a named connection string defined in $PREFIX/etc/libgda-4.0/config */
 	g_object_class_install_property (object_class, PROP_USER_FILE,
-                                         g_param_spec_string ("system_file", _("File to use for system-wide DSN list"), 
+                                         g_param_spec_string ("system-filename", _("File to use for system-wide DSN list"), 
 							      NULL, NULL,
 							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	
@@ -403,11 +403,11 @@ gda_config_constructor (GType type,
 								     construct_properties);
 		for (i = 0; i< n_construct_properties; i++) {
 			GObjectConstructParam *prop = &(construct_properties[i]);
-			if (!strcmp (g_param_spec_get_name (prop->pspec), "user_file")) {
+			if (!strcmp (g_param_spec_get_name (prop->pspec), "user-filename")) {
 				user_file_set = TRUE;
 				/*g_print ("GdaConfig user dir set\n");*/
 			}
-			else if (!strcmp (g_param_spec_get_name (prop->pspec), "system_file")) {
+			else if (!strcmp (g_param_spec_get_name (prop->pspec), "system-filename")) {
 				system_file_set = TRUE;
 				/*g_print ("GdaConfig system dir set\n");*/
 			}

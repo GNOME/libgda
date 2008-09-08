@@ -223,7 +223,7 @@ gda_data_model_import_class_init (GdaDataModelImportClass *klass)
 	object_class->set_property = gda_data_model_import_set_property;
         object_class->get_property = gda_data_model_import_get_property;
 	g_object_class_install_property (object_class, PROP_RANDOM_ACCESS,
-                                         g_param_spec_boolean ("random_access", "Features random access", NULL,
+                                         g_param_spec_boolean ("random-access", "Features random access", NULL,
 							       FALSE,
 							       G_PARAM_READABLE | G_PARAM_WRITABLE |
 							       G_PARAM_CONSTRUCT_ONLY));
@@ -232,11 +232,11 @@ gda_data_model_import_class_init (GdaDataModelImportClass *klass)
 							      G_PARAM_READABLE | G_PARAM_WRITABLE |
 							      G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_DATA_STRING,
-                                         g_param_spec_string ("data_string", "String to import", NULL, NULL,
+                                         g_param_spec_string ("data-string", "String to import", NULL, NULL,
 							      G_PARAM_READABLE | G_PARAM_WRITABLE |
 							      G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_XML_NODE,
-                                         g_param_spec_pointer ("xml_node", "XML node to import from", NULL,
+                                         g_param_spec_pointer ("xml-node", "XML node to import from", NULL,
 							      G_PARAM_READABLE | G_PARAM_WRITABLE |
 							      G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_OPTIONS,
@@ -696,7 +696,7 @@ gda_data_model_import_new_file   (const gchar *filename, gboolean random_access,
 	g_return_val_if_fail (filename, NULL);
 	
 	model = g_object_new (GDA_TYPE_DATA_MODEL_IMPORT,
-			      "random_access", random_access,
+			      "random-access", random_access,
 			      "options", options,
 			      "filename", filename, NULL);
 
@@ -722,9 +722,9 @@ gda_data_model_import_new_mem (const gchar *data, gboolean random_access, GdaSet
 	GdaDataModelImport *model;
 
 	model = g_object_new (GDA_TYPE_DATA_MODEL_IMPORT,
-			      "random_access", random_access,
+			      "random-access", random_access,
 			      "options", options,
-			      "data_string", data, NULL);
+			      "data-string", data, NULL);
 
 	return GDA_DATA_MODEL (model);
 }
@@ -744,7 +744,7 @@ gda_data_model_import_new_xml_node (xmlNodePtr node)
 	GdaDataModelImport *model;
 
 	model = g_object_new (GDA_TYPE_DATA_MODEL_IMPORT,
-			      "xml_node", node, NULL);
+			      "xml-node", node, NULL);
 
 	return GDA_DATA_MODEL (model);
 }
@@ -1770,7 +1770,7 @@ gda_data_model_import_create_iter (GdaDataModel *model)
 	}
 	else
 		iter = (GdaDataModelIter *) g_object_new (GDA_TYPE_DATA_MODEL_ITER, 
-							  "data_model", model, NULL);
+							  "data-model", model, NULL);
 	return iter;
 }
 
@@ -1864,8 +1864,8 @@ gda_data_model_import_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 		gboolean update_model;
 		gboolean allok = TRUE;
 		
-		g_object_get (G_OBJECT (iter), "update_model", &update_model, NULL);
-		g_object_set (G_OBJECT (iter), "update_model", FALSE, NULL);
+		g_object_get (G_OBJECT (iter), "update-model", &update_model, NULL);
+		g_object_set (G_OBJECT (iter), "update-model", FALSE, NULL);
 		for (plist = ((GdaSet *) iter)->holders, vlist = next_values;
 		     plist && vlist;
 		     plist = plist->next, vlist = vlist->next) {
@@ -1896,7 +1896,7 @@ gda_data_model_import_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 			imodel->priv->iter_row = 0;
 
 		g_object_set (G_OBJECT (iter), "current-row", imodel->priv->iter_row, 
-			      "update_model", update_model, NULL);
+			      "update-model", update_model, NULL);
 
 		return allok;
 	}
@@ -1937,8 +1937,8 @@ gda_data_model_import_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 		gboolean update_model;
 		gboolean allok = TRUE;
 
-		g_object_get (G_OBJECT (iter), "update_model", &update_model, NULL);
-		g_object_set (G_OBJECT (iter), "update_model", FALSE, NULL);
+		g_object_get (G_OBJECT (iter), "update-model", &update_model, NULL);
+		g_object_set (G_OBJECT (iter), "update-model", FALSE, NULL);
 		for (plist = ((GdaSet *) iter)->holders, vlist = imodel->priv->cursor_values;
 		     plist && vlist;
 		     plist = plist->next, vlist = vlist->next) {
@@ -1969,7 +1969,7 @@ gda_data_model_import_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 
 		g_assert (imodel->priv->iter_row >= 0);
 		g_object_set (G_OBJECT (iter), "current-row", imodel->priv->iter_row, 
-			      "update_model", update_model, NULL);
+			      "update-model", update_model, NULL);
 		return allok;
 	}
 	else {

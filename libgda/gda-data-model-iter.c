@@ -186,20 +186,20 @@ gda_data_model_iter_class_init (GdaDataModelIterClass *class)
 	object_class->set_property = gda_data_model_iter_set_property;
 	object_class->get_property = gda_data_model_iter_get_property;
 	g_object_class_install_property (object_class, PROP_DATA_MODEL,
-					 g_param_spec_object ("data_model", "Data model for which the iter is for", NULL,
+					 g_param_spec_object ("data-model", "Data model for which the iter is for", NULL,
                                                                GDA_TYPE_DATA_MODEL, 
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE |
 								G_PARAM_CONSTRUCT_ONLY)));
 	g_object_class_install_property (object_class, PROP_FORCED_MODEL,
-					 g_param_spec_object ("forced_model", NULL, NULL, 
+					 g_param_spec_object ("forced-model", NULL, NULL, 
                                                                GDA_TYPE_DATA_MODEL,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_CURRENT_ROW,
-					 g_param_spec_int ("current_row", "Current represented row in the data model", 
+					 g_param_spec_int ("current-row", "Current represented row in the data model", 
 							   NULL, -1, G_MAXINT, -1,
 							   (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_UPDATE_MODEL,
-					 g_param_spec_boolean ("update_model", "Tells if parameters changes are forwarded "
+					 g_param_spec_boolean ("update-model", "Tells if parameters changes are forwarded "
 							       "to the GdaDataModel", NULL, TRUE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 }
@@ -398,9 +398,10 @@ gda_data_model_iter_set_property (GObject *object,
 				gchar *str;
 				column = gda_data_model_describe_column (model, col);
 				param = (GdaHolder *) g_object_new (GDA_TYPE_HOLDER, 
-								    "g_type", 
+								    "g-type", 
 								    gda_column_get_g_type (column), NULL);
 
+				/*g_print ("COL %d allow null=%d\n", col, gda_column_get_allow_null (column));*/
 				gda_holder_set_not_null (param, !gda_column_get_allow_null (column));
 				g_object_get (G_OBJECT (column), "id", &str, NULL);
 				if (str) {
@@ -530,7 +531,7 @@ gda_data_model_iter_can_be_moved (GdaDataModelIter *iter)
  * Synchronizes the values of the parameters in @iter with the values at the @row row.
  *
  * If @row is not a valid row, then the returned value is FALSE, and the "current-row"
- * property is set to -1.
+ * property is set to -1 (which means that gda_data_model_iter_is_valid() would return FALSE)
  *
  * If any other error occurred then the returned value is FALSE, but the "current-row"
  * property is set to the @row row.
@@ -564,8 +565,8 @@ gda_data_model_iter_set_at_row (GdaDataModelIter *iter, gint row)
  * (synchronizes the values of the parameters in @iter with the values at the new row).
  *
  * If the iterator was on the data model's last row, then it can't be moved forward
- * anymore, and the returned value is FALSE (nore also that the "current-row" property
- * is set to -1).
+ * anymore, and the returned value is FALSE; nore also that the "current-row" property
+ * is set to -1 (which means that gda_data_model_iter_is_valid() would return FALSE)
  *
  * If any other error occurred then the returned value is FALSE, but the "current-row"
  * property is set to the new current row (one row more than it was before the call).
@@ -589,8 +590,8 @@ gda_data_model_iter_move_next (GdaDataModelIter *iter)
  * with the values at the new row).
  *
  * If the iterator was on the data model's first row, then it can't be moved backwards
- * anymore, and the returned value is FALSE (nore also that the "current-row" property
- * is set to -1).
+ * anymore, and the returned value is FALSE; note also that the "current-row" property
+ * is set to -1 (which means that gda_data_model_iter_is_valid() would return FALSE).
  *
  * If any other error occurred then the returned value is FALSE, but the "current-row"
  * property is set to the new current row (one row less than it was before the call).
@@ -612,7 +613,7 @@ gda_data_model_iter_move_prev (GdaDataModelIter *iter)
  *
  * Get the row which @iter represents in the data model
  *
- * Returns: the row number, or -1 if not available
+ * Returns: the row number, or -1 if @iter is invalid
  */
 gint
 gda_data_model_iter_get_row (GdaDataModelIter *iter)
@@ -709,9 +710,9 @@ gda_data_model_iter_get_holder_for_field (GdaDataModelIter *iter, gint col)
  * @iter: a #GdaDataModelIter object
  * @col: the requested column
  *
- * Get the value stored at the column @col in @iter
+ * Get the value stored at the column @col in @iter. The returned value must not be modified.
  *
- * Returns: the #GValue, or %NULL
+ * Returns: the #GValue, or %NULL if the value could not be fetched
  */
 const GValue *
 gda_data_model_iter_get_value_at (GdaDataModelIter *iter, gint col)

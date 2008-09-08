@@ -1,3 +1,40 @@
+2008-09-08  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-data-model-query.c: re-run the SELECT statement when any parameter
+	required to execute it changes
+	* libgda/gda-data-select.c: iterator related fixes, and don't change the GdaHolder's
+	not NULL attribute when moving an iterator (it's not needed as this is set when the
+	iterator was first created)
+	* libgda/gda-data-select.h:
+	* libgda/gda-set.h: removed unused error codes
+	* tests/data-models: more testing
+	* providers/postgres/gda-postgres-recordset.c:
+	* tests/data-models/check_data_proxy.c:
+	* samples/SqlParserConsole/graph.c:
+	* libgda-report/engine/gda-report-engine.c:
+	* libgda-report/DocBook/gda-report-docbook-document.c:
+	* libgda/sqlite/virtual/gda-virtual-connection.c:
+	* libgda/sqlite/virtual/gda-vprovider-data-model.c:
+	* libgda/sqlite/virtual/gda-vconnection-data-model.c:
+	* libgda/gda-data-model-import.c:
+	* libgda/gda-data-model.c:
+	* libgda/gda-data-proxy.c:
+	* libgda/gda-data-model-array.c:
+	* libgda/gda-data-select.c:
+	* libgda/gda-set.c:
+	* libgda/gda-config.c:
+	* libgda/gda-connection.c:
+	* libgda/gda-data-model-bdb.c:
+	* libgda/gda-meta-store.c:
+	* libgda/gda-holder.c:
+	* libgda/gda-row.c:
+	* libgda/gda-server-operation.c:
+	* libgda/gda-data-model-iter.c: all signal names now only use the '-' and not '_', and
+	renamed the "provider_obj" to "provider", "user-file" to "user-filename",
+	"system-file" to "system-filename" and "spec-file" to "spec-filename"
+	* libgda/gda-data-model-iter.c:
+	* doc/C: documentation updates
+
 2008-09-07  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-data-select.[ch]:

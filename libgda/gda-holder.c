@@ -183,7 +183,7 @@ gda_holder_class_init (GdaHolderClass *class)
 					 g_param_spec_string ("description", NULL, NULL, NULL, 
 							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
         g_object_class_install_property (object_class, PROP_GDA_TYPE,
-                                         g_param_spec_ulong ("g_type", NULL, NULL,
+                                         g_param_spec_ulong ("g-type", NULL, NULL,
 							   0, G_MAXULONG, GDA_TYPE_NULL,
 							   (G_PARAM_READABLE | 
 							    G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
@@ -191,22 +191,22 @@ gda_holder_class_init (GdaHolderClass *class)
 					 g_param_spec_string ("plugin", NULL, NULL, NULL, 
 							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_NOT_NULL,
-					 g_param_spec_boolean ("not_null", NULL, NULL, FALSE,
+					 g_param_spec_boolean ("not-null", NULL, NULL, FALSE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_SIMPLE_BIND,
-					 g_param_spec_object ("simple_bind", NULL, NULL, 
+					 g_param_spec_object ("simple-bind", NULL, NULL, 
                                                                GDA_TYPE_HOLDER,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_FULL_BIND,
-					 g_param_spec_object ("full_bind", NULL, NULL, 
+					 g_param_spec_object ("full-bind", NULL, NULL, 
                                                                GDA_TYPE_HOLDER,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_SOURCE_MODEL,
-                                         g_param_spec_object ("source_model", NULL, NULL,
+                                         g_param_spec_object ("source-model", NULL, NULL,
                                                                GDA_TYPE_DATA_MODEL,
                                                                (G_PARAM_READABLE | G_PARAM_WRITABLE)));
         g_object_class_install_property (object_class, PROP_SOURCE_COLUMN,
-                                         g_param_spec_int ("source_column", NULL, NULL,
+                                         g_param_spec_int ("source-column", NULL, NULL,
 							   0, G_MAXINT, 0,
 							   (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 }
@@ -251,7 +251,7 @@ gda_holder_new (GType type)
 
 	g_return_val_if_fail (type != G_TYPE_INVALID, NULL);
 
-        obj = g_object_new (GDA_TYPE_HOLDER, "g_type", type, NULL);
+        obj = g_object_new (GDA_TYPE_HOLDER, "g-type", type, NULL);
 
         return (GdaHolder *) obj;
 }
@@ -274,7 +274,7 @@ gda_holder_copy (GdaHolder *orig)
 	g_return_val_if_fail (orig && GDA_IS_HOLDER (orig), NULL);
 	g_return_val_if_fail (orig->priv, NULL);
 
-	obj = g_object_new (GDA_TYPE_HOLDER, "g_type", orig->priv->g_type, NULL);
+	obj = g_object_new (GDA_TYPE_HOLDER, "g-type", orig->priv->g_type, NULL);
 	holder = GDA_HOLDER (obj);
 
 	if (orig->priv->id)
@@ -1094,7 +1094,7 @@ gda_holder_set_not_null (GdaHolder *holder, gboolean not_null)
 	g_return_if_fail (GDA_IS_HOLDER (holder));
 	g_return_if_fail (holder->priv);
 
-	g_object_set (G_OBJECT (holder), "not_null", not_null, NULL);
+	g_object_set (G_OBJECT (holder), "not-null", not_null, NULL);
 }
 
 /**

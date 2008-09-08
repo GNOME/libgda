@@ -245,7 +245,7 @@ gda_vprovider_data_model_create_connection (GdaServerProvider *provider)
 	GdaConnection *cnc;
 	g_return_val_if_fail (GDA_IS_VPROVIDER_DATA_MODEL (provider), NULL);
 
-	cnc = g_object_new (GDA_TYPE_VCONNECTION_DATA_MODEL, "provider-obj", provider, NULL);
+	cnc = g_object_new (GDA_TYPE_VCONNECTION_DATA_MODEL, "provider", provider, NULL);
 
 	return cnc;
 }
@@ -377,7 +377,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 			if (gda_data_model_get_access_flags (td->spec->data_model) & GDA_DATA_MODEL_ACCESS_RANDOM)
 				proxy = g_object_new (GDA_TYPE_DATA_PROXY, 
 						      "model", td->spec->data_model, 
-						      "sample_size", 0, NULL);
+						      "sample-size", 0, NULL);
 			else {
 				/* no random access => use a wrapper */
 				GdaDataModel *wrapper;

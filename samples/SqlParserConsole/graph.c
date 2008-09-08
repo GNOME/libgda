@@ -337,7 +337,7 @@ parts_foreach_func (GdaSqlAnyPart *part, GString *string, GError **error)
 				  "descr", G_TYPE_STRING, expr->param_spec->descr,
 				  "is_param", G_TYPE_BOOLEAN, expr->param_spec->is_param,
 				  "nullok", G_TYPE_BOOLEAN, expr->param_spec->nullok,
-				  "g_type", G_TYPE_STRING, g_type_name (expr->param_spec->g_type),
+				  "g-type", G_TYPE_STRING, g_type_name (expr->param_spec->g_type),
 				  NULL);
 			link_a_node (string, part, expr->param_spec, "param_spec");
 		}

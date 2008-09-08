@@ -95,7 +95,7 @@ gda_report_docbook_document_class_init (GdaReportDocbookDocumentClass *klass)
                                          g_param_spec_string ("java-home", NULL, NULL, NULL, 
 							      G_PARAM_WRITABLE | G_PARAM_READABLE));
 	g_object_class_install_property (object_class, PROP_FOP_PATH,
-                                         g_param_spec_string ("fop_path", NULL, NULL, NULL, 
+                                         g_param_spec_string ("fop-path", NULL, NULL, NULL, 
 							      G_PARAM_WRITABLE | G_PARAM_READABLE));
 
 	/* virtual methods */

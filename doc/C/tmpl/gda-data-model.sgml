@@ -6,7 +6,7 @@ Basic data model class
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-A #GdaDataMode represents an array of values organized in rows and columns. All the data in the same 
+A #GdaDataModel represents an array of values organized in rows and columns. All the data in the same 
 column have the same type, and all the data in each row have the same semantic meaning. The #GdaDataModel is
 actually an interface implemented by other objects to support various kinds of data storage and operations.
 </para>

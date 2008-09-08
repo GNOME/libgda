@@ -6,14 +6,13 @@ Management of connections to data sources
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-  The #GdaConnection class offers access to all operations involving an
-  opened connection to a database. #GdaConnection objects are not instiated directly
-  but by #GdaClient objects using gda_client_open_connection() and gda_client_open_connection_from_string()
+  Each connection to a database is represented by a #GdaConnection object. A connection is created (and opened)
+  using gda_connection_open_from_dsn() if a data source has been defined, or gda_connection_open_from_string() otherwise.
+  It is not recommended to create a #GdaConnection object using g_object_new() as the results are unpredictable (some
+  parts won't correctly be initialized).
 </para>
 <para>
-  Applications can then use #GdaConnection objects to execute commands,
-  run transactions, and get information about all objects stored in the
-  underlying database.
+  Use the connection object to execute statements, use transactions, get meta data information, ...
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -98,7 +97,7 @@ Management of connections to data sources
 
 </para>
 
-<!-- ##### ARG GdaConnection:provider-obj ##### -->
+<!-- ##### ARG GdaConnection:provider ##### -->
 <para>
 
 </para>

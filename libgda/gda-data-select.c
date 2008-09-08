@@ -227,19 +227,19 @@ gda_data_select_class_init (GdaDataSelectClass *klass)
 							      GDA_TYPE_SET,
 							      G_PARAM_WRITABLE | G_PARAM_READABLE | G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_INS_QUERY,
-                                         g_param_spec_object ("insert_query", "INSERT query", 
+                                         g_param_spec_object ("insert-stmt", "INSERT query", 
 							      "INSERT Query to be executed to add data",
 							      GDA_TYPE_STATEMENT,
 							      G_PARAM_READABLE | G_PARAM_WRITABLE));
 
 	g_object_class_install_property (object_class, PROP_UPD_QUERY,
-                                         g_param_spec_object ("update_query", "UPDATE query", 
+                                         g_param_spec_object ("update-stmt", "UPDATE query", 
 							      "UPDATE Query to be executed to update data",
 							      GDA_TYPE_STATEMENT,
 							      G_PARAM_READABLE | G_PARAM_WRITABLE));
 
 	g_object_class_install_property (object_class, PROP_DEL_QUERY,
-                                         g_param_spec_object ("delete_query", "DELETE query", 
+                                         g_param_spec_object ("delete-stmt", "DELETE query", 
 							      "DELETE Query to be executed to remove data",
 							      GDA_TYPE_STATEMENT,
 							      G_PARAM_READABLE | G_PARAM_WRITABLE));
@@ -473,7 +473,7 @@ create_columns (GdaDataSelect *model)
 			model->priv->columns = g_slist_append (model->priv->columns, 
 							       gda_column_copy (GDA_COLUMN (list->data)));
 	}
-	else 
+	else {
 		/* create columns */
 		for (i = 0; i < model->prep_stmt->ncols; i++) {
 			GdaColumn *gda_col;
@@ -482,6 +482,7 @@ create_columns (GdaDataSelect *model)
 				gda_column_set_g_type (gda_col, model->prep_stmt->types [i]);
 			model->priv->columns = g_slist_append (model->priv->columns, gda_col);
 		}
+	}
 }
 
 static void
@@ -1596,12 +1597,12 @@ gda_data_select_create_iter (GdaDataModel *model)
 
 	if (imodel->priv->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM) 
 		return (GdaDataModelIter *) g_object_new (GDA_TYPE_DATA_MODEL_ITER,
-							  "data_model", model, NULL);
+							  "data-model", model, NULL);
 	else {
 		/* Create the iter if necessary, or just return the existing iter: */
 		if (! imodel->priv->iter) {
 			imodel->priv->iter = (GdaDataModelIter *) g_object_new (GDA_TYPE_DATA_MODEL_ITER,
-										"data_model", model, NULL);
+										"data-model", model, NULL);
 			imodel->priv->iter_row = -1;
 		}
 		g_object_ref (imodel->priv->iter);
@@ -1640,8 +1641,12 @@ gda_data_select_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 	irow = GPOINTER_TO_INT (g_hash_table_lookup (imodel->priv->index, GINT_TO_POINTER (int_row + 1)));
 	if (irow > 0)
 		prow = g_array_index (imodel->priv->rows, GdaRow *, irow - 1);
-	if (!CLASS (model)->fetch_next (imodel, &prow, int_row, NULL))
-		TO_IMPLEMENT;
+	if (!CLASS (model)->fetch_next (imodel, &prow, int_row, NULL)) {
+		/* an error occurred */
+		g_object_set (G_OBJECT (iter), "current-row", target_iter_row, NULL);
+		gda_data_model_iter_invalidate_contents (iter);
+		return FALSE;
+	}
 	
 	if (prow) {
 		imodel->priv->iter_row = target_iter_row;
@@ -1688,8 +1693,12 @@ gda_data_select_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 	irow = GPOINTER_TO_INT (g_hash_table_lookup (imodel->priv->index, GINT_TO_POINTER (int_row + 1)));
 	if (irow > 0)
 		prow = g_array_index (imodel->priv->rows, GdaRow *, irow - 1);
-	if (!CLASS (model)->fetch_prev (imodel, &prow, int_row, NULL))
-		TO_IMPLEMENT;
+	if (!CLASS (model)->fetch_prev (imodel, &prow, int_row, NULL)) {
+		/* an error occurred */
+		g_object_set (G_OBJECT (iter), "current-row", target_iter_row, NULL);
+		gda_data_model_iter_invalidate_contents (iter);
+		return FALSE;
+	}
 
 	if (prow) {
 		imodel->priv->iter_row = target_iter_row;
@@ -1715,7 +1724,7 @@ gda_data_select_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint r
 
 	int_row = external_to_internal_row (imodel, row, NULL);
 	if (imodel->priv->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM) 
-		return gda_data_model_move_iter_at_row_default (model, iter, int_row);
+		return gda_data_model_move_iter_at_row_default (model, iter, row);
 
         g_return_val_if_fail (iter, FALSE);
         g_return_val_if_fail (imodel->priv->iter == iter, FALSE);
@@ -1726,8 +1735,13 @@ gda_data_select_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint r
 		prow = g_array_index (imodel->priv->rows, GdaRow *, irow - 1);
 
 	if (CLASS (model)->fetch_at) {
-		if (!CLASS (model)->fetch_at (imodel, &prow, int_row, NULL))
-			TO_IMPLEMENT;
+		if (!CLASS (model)->fetch_at (imodel, &prow, int_row, NULL)) {
+			/* an error occurred */
+			g_object_set (G_OBJECT (iter), "current-row", row, NULL);
+			gda_data_model_iter_invalidate_contents (iter);
+			return FALSE;
+		}
+
 		if (prow) {
 			imodel->priv->iter_row = row;
 			return update_iter (imodel, prow);
@@ -1746,6 +1760,8 @@ gda_data_select_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint r
 		else {
 			/* implementation of fetch_at() is optional */
 			TO_IMPLEMENT; /* iter back or forward the right number of times */
+			g_object_set (G_OBJECT (iter), "current-row", row, NULL);
+			gda_data_model_iter_invalidate_contents (iter);
 			return FALSE;
 		}
 	}
@@ -1760,9 +1776,9 @@ update_iter (GdaDataSelect *imodel, GdaRow *prow)
 	gboolean update_model;
 	gboolean retval = TRUE;
 	
-	g_object_get (G_OBJECT (iter), "update_model", &update_model, NULL);
+	g_object_get (G_OBJECT (iter), "update-model", &update_model, NULL);
 	if (update_model)
-		g_object_set (G_OBJECT (iter), "update_model", FALSE, NULL);
+		g_object_set (G_OBJECT (iter), "update-model", FALSE, NULL);
 	
 	for (i = 0, plist = GDA_SET (iter)->holders; 
 	     plist;
@@ -1775,7 +1791,7 @@ update_iter (GdaDataSelect *imodel, GdaRow *prow)
 
 	g_object_set (G_OBJECT (iter), "current-row", imodel->priv->iter_row, NULL);
 	if (update_model)
-		g_object_set (G_OBJECT (iter), "update_model", update_model, NULL);
+		g_object_set (G_OBJECT (iter), "update-model", update_model, NULL);
 
 	return retval;
 }

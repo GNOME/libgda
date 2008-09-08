@@ -188,15 +188,15 @@ gda_connection_class_init (GdaConnectionClass *klass)
                                          g_param_spec_string ("dsn", NULL, _("DSN to use"), NULL,
 							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_CNC_STRING,
-                                         g_param_spec_string ("cnc_string", NULL, _("Connection string to use"), NULL,
+                                         g_param_spec_string ("cnc-string", NULL, _("Connection string to use"), NULL,
 							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_PROVIDER_OBJ,
-                                         g_param_spec_object ("provider_obj", NULL, _("Provider to use"),
+                                         g_param_spec_object ("provider", NULL, _("Provider to use"),
                                                                GDA_TYPE_SERVER_PROVIDER,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 
         g_object_class_install_property (object_class, PROP_AUTH_STRING,
-                                         g_param_spec_string ("auth_string", NULL,_("Authentication string to use"),
+                                         g_param_spec_string ("auth-string", NULL,_("Authentication string to use"),
                                                               NULL,
                                                               (G_PARAM_READABLE | G_PARAM_WRITABLE)));
         g_object_class_install_property (object_class, PROP_OPTIONS,
@@ -556,16 +556,16 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
 				cnc = PROV_CLASS (prov)->create_connection (prov);
 				if (cnc) 
 					g_object_set (G_OBJECT (cnc), 
-						      "provider_obj", prov,
+						      "provider", prov,
 						      "dsn", real_dsn,
-						      "auth_string", auth_string ? auth_string : real_auth_string, 
+						      "auth-string", auth_string ? auth_string : real_auth_string, 
 						      "options", options, NULL);
 			}
 			else
 				cnc = g_object_new (GDA_TYPE_CONNECTION, 
-						    "provider_obj", prov, 
+						    "provider", prov, 
 						    "dsn", real_dsn, 
-						    "auth_string", auth_string ? auth_string : real_auth_string, 
+						    "auth-string", auth_string ? auth_string : real_auth_string, 
 						    "options", options, NULL);
 			
 			/* open connection */
@@ -683,16 +683,16 @@ gda_connection_open_from_string (const gchar *provider_name, const gchar *cnc_st
 				cnc = PROV_CLASS (prov)->create_connection (prov);
 				if (cnc) 
 					g_object_set (G_OBJECT (cnc), 
-						      "provider_obj", prov,
-						      "cnc_string", real_cnc,
-						      "auth_string", auth_string ? auth_string : real_auth_string, 
+						      "provider", prov,
+						      "cnc-string", real_cnc,
+						      "auth-string", auth_string ? auth_string : real_auth_string, 
 						      "options", options, NULL);
 			}
 			else 
 				cnc = (GdaConnection *) g_object_new (GDA_TYPE_CONNECTION, 
-								      "provider_obj", prov,
+								      "provider", prov,
 								      "cnc-string", real_cnc, 
-								      "auth_string", auth_string ? auth_string : real_auth_string, 
+								      "auth-string", auth_string ? auth_string : real_auth_string, 
 								      "options", options, NULL);
 			
 			/* open the connection */

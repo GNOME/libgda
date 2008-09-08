@@ -186,7 +186,7 @@ gda_vprovider_hub_create_connection (GdaServerProvider *provider)
 	GdaConnection *cnc;
 	g_return_val_if_fail (GDA_IS_VPROVIDER_HUB (provider), NULL);
 
-	cnc = g_object_new (GDA_TYPE_VCONNECTION_HUB, "provider-obj", provider, NULL);
+	cnc = g_object_new (GDA_TYPE_VCONNECTION_HUB, "provider", provider, NULL);
 
 	return cnc;
 }

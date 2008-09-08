@@ -602,13 +602,13 @@ gda_data_proxy_class_init (GdaDataProxyClass *class)
                                                                GDA_TYPE_DATA_MODEL,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT)));
 	g_object_class_install_property (object_class, PROP_ADD_NULL_ENTRY,
-					 g_param_spec_boolean ("prepend_null_entry", NULL, NULL, FALSE,
+					 g_param_spec_boolean ("prepend-null-entry", NULL, NULL, FALSE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_DEFER_SYNC,
-					 g_param_spec_boolean ("defer_sync", NULL, NULL, TRUE,
+					 g_param_spec_boolean ("defer-sync", NULL, NULL, TRUE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_SAMPLE_SIZE,
-					 g_param_spec_int ("sample_size", NULL, NULL, 0, G_MAXINT - 1, 300,
+					 g_param_spec_int ("sample-size", NULL, NULL, 0, G_MAXINT - 1, 300,
 							   (G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT)));
 
 	g_static_mutex_lock (&parser_mutex);
@@ -1054,7 +1054,7 @@ proxied_model_reset_cb (GdaDataModel *model, GdaDataProxy *proxy)
 	g_object_ref (G_OBJECT (model));
 	clean_proxy (proxy);
 	gda_data_proxy_init (proxy);
-	g_object_set (G_OBJECT (proxy), "model", model, "prepend_null_entry", add_null_entry, NULL);
+	g_object_set (G_OBJECT (proxy), "model", model, "prepend-null-entry", add_null_entry, NULL);
 	g_object_unref (G_OBJECT (model));
 	gda_data_model_reset (GDA_DATA_MODEL (proxy));
 }
@@ -3359,7 +3359,7 @@ gda_data_proxy_create_iter (GdaDataModel *model)
 	g_return_val_if_fail (proxy->priv, FALSE);
 
 	iter = gda_data_model_create_iter (proxy->priv->model);
-	g_object_set (G_OBJECT (iter), "forced_model", proxy, NULL);
+	g_object_set (G_OBJECT (iter), "forced-model", proxy, NULL);
 
 	iter2 = gda_data_model_create_iter (proxy->priv->model);
 	if (iter2) {

@@ -75,7 +75,7 @@ gda_vconnection_data_model_init (GdaVconnectionDataModel *cnc, GdaVconnectionDat
 	cnc->priv = g_new (GdaVconnectionDataModelPrivate, 1);
 	cnc->priv->table_data_list = NULL;
 
-	g_object_set (G_OBJECT (cnc), "cnc_string", "_IS_VIRTUAL=TRUE", NULL);
+	g_object_set (G_OBJECT (cnc), "cnc-string", "_IS_VIRTUAL=TRUE", NULL);
 }
 
 static void

@@ -228,14 +228,17 @@ gda_data_model_dir_get_type
 <FILE>gda-data-model-query</FILE>
 <TITLE>GdaDataModelQuery</TITLE>
 GdaDataModelQuery
-GdaDataModelQueryOptions
+GdaDataModelQueryError
 GdaDataModelQueryClass
 GdaDataModelQueryPrivate
 gda_data_model_query_new
-gda_data_model_query_get_parameter_list
 gda_data_model_query_refresh
-gda_data_model_query_set_modification_query
-gda_data_model_query_compute_modification_queries
+gda_data_model_query_set_row_selection_condition
+gda_data_model_query_set_row_selection_condition_sql
+gda_data_model_query_compute_row_selection_condition
+gda_data_model_query_set_modification_statement
+gda_data_model_query_set_modification_statement_sql
+gda_data_model_query_compute_modification_statements
 <SUBSECTION Standard>
 GDA_DATA_MODEL_QUERY
 GDA_DATA_MODEL_QUERY_CLASS
@@ -285,6 +288,7 @@ gda_data_access_wrapper_get_type
 <FILE>gda-data-model</FILE>
 <TITLE>GdaDataModel</TITLE>
 GdaDataModel
+GdaDataModelError
 gda_data_model_get_n_rows
 gda_data_model_get_n_columns
 gda_data_model_describe_column

@@ -353,7 +353,7 @@ gda_set_new_inline (gint nb, ...)
 
 		id = va_arg (ap, char *);
 		type = va_arg (ap, GType);
-		holder = (GdaHolder *) g_object_new (GDA_TYPE_HOLDER, "g_type", type, "id", id, NULL);
+		holder = (GdaHolder *) g_object_new (GDA_TYPE_HOLDER, "g-type", type, "id", id, NULL);
 
 		value = gda_value_new (type);
 		if (type == G_TYPE_BOOLEAN) 
@@ -740,7 +740,7 @@ gda_set_new_from_spec_node (xmlNodePtr xml_spec, GError **error)
 
 			if (!holder) {
 				holder = (GdaHolder*) (g_object_new (GDA_TYPE_HOLDER,
-								     "g_type", 
+								     "g-type", 
 								     gdatype ? gda_g_type_from_string ((gchar *) gdatype) : G_TYPE_STRING,
 								     NULL));
 				holders = g_slist_append (holders, holder);

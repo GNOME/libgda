@@ -326,8 +326,11 @@ gda_data_model_query_set_property (GObject *object,
 			break;
 		case PROP_PARAMS:
 			model->priv->params = g_value_get_object (value);
-			if (model->priv->params)
+			if (model->priv->params) {
 				g_object_ref (model->priv->params);
+				g_signal_connect (model->priv->params, "holder-changed",
+						  G_CALLBACK (holder_changed_cb), model);
+			}
 			break;
 		default:
 			g_assert_not_reached ();
@@ -367,6 +370,7 @@ gda_data_model_query_get_property (GObject *object,
 static void
 holder_changed_cb (GdaSet *paramlist, GdaHolder *param, GdaDataModelQuery *model)
 {
+	gda_data_model_query_refresh (model, NULL);
 }
 
 /**
@@ -377,6 +381,10 @@ holder_changed_cb (GdaSet *paramlist, GdaHolder *param, GdaDataModelQuery *model
  *
  * Creates a new #GdaDataModel object using the data returned by the execution of the
  * @select_stmt SELECT statement.
+ *
+ * Note: if @select_stmt contains one or more parameters, then @params should not be %NULL otherwise
+ * the resulting object will never contain anything and will be unuseable as the SELECT statement
+ * will never be successfully be executed.
  *
  * Returns: a pointer to the newly created #GdaDataModel.
  */
@@ -502,6 +510,7 @@ gda_data_model_query_refresh (GdaDataModelQuery *model, GError **error)
 	g_signal_connect (model->priv->data, "row-updated",
 			  G_CALLBACK (data_select_row_updated_cb), model);
 
+	/* emit the "reset" signal */
 	gda_data_model_reset ((GdaDataModel *) model);
 	return TRUE;
 }
@@ -737,10 +746,10 @@ gda_data_model_query_get_n_columns (GdaDataModel *model)
 	selmodel = (GdaDataModelQuery*) model;
 	g_return_val_if_fail (selmodel->priv, 0);
 	
-	if (selmodel->priv->data)
-		return gda_data_model_get_n_columns (selmodel->priv->data);
-	else
+	if (!selmodel->priv->data)
 		return 0;
+	else
+		return gda_data_model_get_n_columns (selmodel->priv->data);
 }
 
 static GdaColumn *

@@ -165,7 +165,7 @@ gda_data_model_array_class_init (GdaDataModelArrayClass *klass)
 	                                                    0,
 	                                                    G_PARAM_READWRITE));
 	g_object_class_install_property (object_class, PROP_READ_ONLY,
-                                         g_param_spec_boolean ("read_only", NULL, 
+                                         g_param_spec_boolean ("read-only", NULL, 
 							       _("Whether data model can be modified"),
                                                                FALSE,
                                                                G_PARAM_READABLE | G_PARAM_WRITABLE));

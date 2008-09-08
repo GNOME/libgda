@@ -154,7 +154,7 @@ do_test_read_direct_1 ()
 		return FALSE;
 	}
 
-	proxy = g_object_new (GDA_TYPE_DATA_PROXY, "model", import, "sample_size", 0, NULL);
+	proxy = g_object_new (GDA_TYPE_DATA_PROXY, "model", import, "sample-size", 0, NULL);
 	g_object_unref (import);
 	if (!proxy) {
 #ifdef CHECK_EXTRA_INFO
@@ -162,7 +162,7 @@ do_test_read_direct_1 ()
 #endif
 		return FALSE;
 	}
-	g_object_set (G_OBJECT (proxy), "defer_sync", FALSE, NULL);
+	g_object_set (G_OBJECT (proxy), "defer-sync", FALSE, NULL);
 	return do_test_common_read (proxy);
 }
 
@@ -197,7 +197,7 @@ do_test_read_direct_2 ()
 #endif
 		return FALSE;
 	}
-	g_object_set (G_OBJECT (proxy), "defer_sync", FALSE, NULL);
+	g_object_set (G_OBJECT (proxy), "defer-sync", FALSE, NULL);
 	return do_test_common_read (proxy);
 }
 
@@ -244,7 +244,7 @@ do_test_array ()
 #endif
 		return FALSE;
 	}
-	g_object_set (G_OBJECT (proxy), "defer_sync", FALSE, NULL);
+	g_object_set (G_OBJECT (proxy), "defer-sync", FALSE, NULL);
 	return do_test_common_write (proxy);
 }
 
@@ -291,9 +291,9 @@ do_test_prop_change (void)
 #endif
 		return FALSE;
 	}
-	g_object_set (G_OBJECT (proxy), "defer_sync", FALSE, NULL);
+	g_object_set (G_OBJECT (proxy), "defer-sync", FALSE, NULL);
 	gda_data_proxy_set_sample_size (GDA_DATA_PROXY (proxy), 0);
-	g_object_set (G_OBJECT (proxy), "defer_sync", defer_sync, NULL);
+	g_object_set (G_OBJECT (proxy), "defer-sync", defer_sync, NULL);
 
 	gboolean retval = FALSE;
 
@@ -389,9 +389,9 @@ do_test_proxied_model_modif (void)
 #endif
 		return FALSE;
 	}
-	g_object_set (G_OBJECT (proxy), "defer_sync", FALSE, NULL);
+	g_object_set (G_OBJECT (proxy), "defer-sync", FALSE, NULL);
 	gda_data_proxy_set_sample_size (GDA_DATA_PROXY (proxy), 0);
-	g_object_set (G_OBJECT (proxy), "defer_sync", defer_sync, 
+	g_object_set (G_OBJECT (proxy), "defer-sync", defer_sync, 
 		      "prepend-null-entry", prepend_null_row, NULL);
 
 	gboolean retval = FALSE;
@@ -543,8 +543,8 @@ do_test_common_read (GdaDataModel *proxy)
 	gboolean retval = FALSE;
 
 	gda_data_proxy_set_sample_size (GDA_DATA_PROXY (proxy), 10);
-	g_object_set (G_OBJECT (proxy), "defer_sync", FALSE, NULL);
-	g_object_set (G_OBJECT (proxy), "defer_sync", defer_sync, 
+	g_object_set (G_OBJECT (proxy), "defer-sync", FALSE, NULL);
+	g_object_set (G_OBJECT (proxy), "defer-sync", defer_sync, 
 		      "prepend-null-entry", prepend_null_row, NULL);
 	g_signal_connect (G_OBJECT (proxy), "reset",
 			  G_CALLBACK (proxy_reset_cb), NULL);
@@ -665,7 +665,7 @@ do_test_common_write (GdaDataModel *proxy)
 	pmodel = gda_data_proxy_get_proxied_model (GDA_DATA_PROXY (proxy));
 
 	gda_data_proxy_set_sample_size (GDA_DATA_PROXY (proxy), 10);
-	g_object_set (G_OBJECT (proxy), "defer_sync", defer_sync, 
+	g_object_set (G_OBJECT (proxy), "defer-sync", defer_sync, 
 		      "prepend-null-entry", prepend_null_row, NULL);
 
 	g_signal_connect (G_OBJECT (proxy), "reset",

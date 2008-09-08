@@ -501,7 +501,7 @@ gda_meta_store_constructor (GType type,
 			if (g_value_get_string (prop->value))
 				been_specified = TRUE;
 		}
-		else if (!strcmp (g_param_spec_get_name (prop->pspec), "system_file")) {
+		else if (!strcmp (g_param_spec_get_name (prop->pspec), "system-filename")) {
 			if (g_value_get_pointer (prop->value))
 				been_specified = TRUE;
 		}

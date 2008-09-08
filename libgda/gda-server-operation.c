@@ -169,14 +169,14 @@ gda_server_operation_class_init (GdaServerOperationClass *klass)
 							      GDA_TYPE_CONNECTION,
 							      G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_PROV,
-					 g_param_spec_object ("provider_obj", NULL, NULL, 
+					 g_param_spec_object ("provider", NULL, NULL, 
 							      GDA_TYPE_SERVER_PROVIDER,
 							      G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_SPEC_FILE,
-					 g_param_spec_string ("spec_file", NULL, NULL, 
+					 g_param_spec_string ("spec-filename", NULL, NULL, 
 							      NULL, G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_OP_TYPE,
-					 g_param_spec_int ("op_type", NULL, NULL, 
+					 g_param_spec_int ("op-type", NULL, NULL, 
 							   0, GDA_SERVER_OPERATION_LAST - 1, 
 							   0, G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 }
@@ -881,7 +881,7 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root, G
 			/* find data type and create GdaHolder */
 			gdatype = xmlGetProp (node, BAD_CAST "gdatype");
 			param = GDA_HOLDER (g_object_new (GDA_TYPE_HOLDER,
-							  "g_type", 
+							  "g-type", 
 							  gdatype ? gda_g_type_from_string ((gchar*) gdatype) : G_TYPE_STRING,
 							  NULL));
 			if (gdatype)
@@ -958,7 +958,7 @@ gda_server_operation_new (GdaServerOperationType op_type, const gchar *xml_file)
 {
 	GObject *obj;
 
-	obj = g_object_new (GDA_TYPE_SERVER_OPERATION, "op_type", op_type, "spec_file", xml_file, NULL);
+	obj = g_object_new (GDA_TYPE_SERVER_OPERATION, "op-type", op_type, "spec-filename", xml_file, NULL);
 #ifdef GDA_DEBUG_NO
 	{
 		g_print ("New GdaServerOperation:\n");
