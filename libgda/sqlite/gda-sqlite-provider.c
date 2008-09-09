@@ -2084,6 +2084,8 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 
 		if (model_usage & GDA_STATEMENT_MODEL_RANDOM_ACCESS)
 			flags = GDA_DATA_MODEL_ACCESS_RANDOM;
+		else if (model_usage & GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD)
+			flags = GDA_DATA_MODEL_ACCESS_RANDOM;
 		else
 			flags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD;
 

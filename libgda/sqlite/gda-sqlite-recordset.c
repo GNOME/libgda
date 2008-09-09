@@ -233,57 +233,19 @@ gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_p
 		     i < GDA_PSTMT (ps)->ncols; 
 		     i++, list = list->next) {
 			GdaColumn *column;
-			const char *tablename, *colname, *ctype;
-			int notnull, autoinc, pkey;
 			
 			column = GDA_COLUMN (list->data);
 			gda_column_set_title (column, sqlite3_column_name (ps->sqlite_stmt, i));
 			gda_column_set_name (column, sqlite3_column_name (ps->sqlite_stmt, i));
-
-			tablename = sqlite3_column_table_name (ps->sqlite_stmt, i);
-			colname = sqlite3_column_origin_name (ps->sqlite_stmt, i);
-			if (!tablename || !colname ||
-			    (sqlite3_table_column_metadata (cdata->connection, NULL, tablename, colname, NULL, NULL,
-							    &notnull, &pkey, &autoinc) != SQLITE_OK)) {
-				notnull = FALSE;
-				autoinc = FALSE;
-				pkey = FALSE;
-			}
-			gda_column_set_scale (column, -1);
-			gda_column_set_defined_size (column, -1);
-			gda_column_set_primary_key (column, pkey);
-			gda_column_set_unique_key (column, pkey);
-			gda_column_set_allow_null (column, !(pkey || notnull)); /* PK fields can't be NULL */
-			gda_column_set_auto_increment (column, autoinc);
-			/*g_print (".. %d pkey=>%d autoinc=>%d notnull=>%d\n", i, pkey, autoinc, notnull);*/
-			
-			ctype = sqlite3_column_decltype (ps->sqlite_stmt, i);
-			if (ctype) {
-				gchar *start, *end;
-				for (start = (gchar *) ctype; *start && (*start != '('); start++);
-				if (*start == '(') {
-					for (end = start+1; *end && (*end != ')'); end++);
-					if (*end == ')') {
-						gchar *copy = g_strdup (start + 1);
-						copy[end - start] = 0;
-						for (start = copy; *start && (*start != ','); start++);
-						if (*start != 0) {
-							*start = 0;
-							gda_column_set_defined_size (column, atoi (copy));
-							gda_column_set_scale (column, atoi (start+1));
-						}
-						else
-							gda_column_set_defined_size (column, atoi (copy));
-						
-						g_free (copy);
-					}
-				}
-			}
+			gda_column_set_dbms_type (column, sqlite3_column_decltype (ps->sqlite_stmt, i));
 		}
         }
 
-	/* determine access mode: RANDOM or CURSOR FORWARD are the only supported */
+	/* determine access mode: RANDOM or CURSOR FORWARD are the only supported; if CURSOR BACKWARD
+	 * is requested, then we need RANDOM mode */
 	if (flags & GDA_DATA_MODEL_ACCESS_RANDOM)
+		rflags = GDA_DATA_MODEL_ACCESS_RANDOM;
+	else if (flags & GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD)
 		rflags = GDA_DATA_MODEL_ACCESS_RANDOM;
 	else
 		rflags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD;

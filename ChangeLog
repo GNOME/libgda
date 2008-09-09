@@ -1,3 +1,39 @@
+2008-09-09  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/sqlite/virtual/gda-virtual-connection.c:
+	* libgda/sqlite/gda-sqlite-recordset.c:
+	* libgda/gda-column.[ch]:
+	* libgda/gda-data-model.c:
+	* libgda/gda-data-model-import.c:
+	* libgda/gda-data-model-array.c: removed gda_column_[gs]et_table(), gda_column_[gs]et_caption(),
+	gda_column_[gs]et_scale(), gda_column_[gs]et_primary_key(), gda_column_[gs]et_unique_key(),
+	gda_column_[gs]et_references() and gda_column_[gs]et_defined_size() as they were useless
+	* libgda-report/engine/gda-report-engine.c: forgot to rename "spec-file" to "spec-filename"
+	property
+	* libgda/gda-data-select.c: added a "select-stmt" property to retreive (if available), the
+	GdaStatement object which was executed in order to created the GdaDataSelect data model.
+	* libgda/gda-data-model-iter.c: when the data model the iterator will be for is a GdaDataSelect,
+	then use the SELECT statement to set some holder's properties (such as NOT NULL and default value),
+	contributes to fixing bug #551058
+	* libgda/sqlite/gda-sqlite-recordset.c: don't set GdaColumn's properties as we can't determine them
+	correctly at this point, contributes to fixing bug #551058
+	* libgda/sqlite/virtual/gda-virtual-connection.c: added missing header file
+	* libgda/gda-data-select.c:
+	* libgda/gda-data-model-dsn-list.c: correctly implement the get_value_at() virtual method
+	* libgda/gda-util.c: bug fixed in gda_compute_unique_table_row_condition()
+	* tests/: tests update
+	* doc/C: doc. update
+	* libgda/gda-data-model.h:
+	* all GdaDataModel's implementations: added a new virtual method "i_iter_set_value" to
+	allow data modifications from a GdaDataModelIter
+	* libgda/gda-holder.[ch]:
+	* libgda/gda-set.[ch]: added GdaHoler "before-change" and GdaSet "before-holder-change" signals
+	to enable control over the values a GdaHolder can have
+	* libgda/gda-data-model-iter.c: use the new GdaDataModel's "i_iter_set_value" virtual method and
+	GdaSet's new signal
+	* Altered all the signal's names to use the '-' instead of '_'
+	* tools/gda-list-server-op.c: compilation warnings fixes
+
 2008-09-08  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-data-model-query.c: re-run the SELECT statement when any parameter

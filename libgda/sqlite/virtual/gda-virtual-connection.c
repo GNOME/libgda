@@ -25,6 +25,7 @@
 #include <string.h>
 #include <sqlite3.h>
 #include "gda-virtual-connection.h"
+#include <gda-connection-private.h>
 
 #define PARENT_TYPE GDA_TYPE_CONNECTION
 #define CLASS(obj) (GDA_VIRTUAL_CONNECTION_CLASS (G_OBJECT_GET_CLASS (obj)))

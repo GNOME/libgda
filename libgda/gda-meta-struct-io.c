@@ -298,7 +298,7 @@ create_table_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar 
 			/* referenced GdaMetaDbObject */
 			GdaMetaDbObject *ref_obj;
 			gchar *name_part, *schema_part, *catalog_part = NULL;
-			gchar *tmp = g_strdup (ref_table);
+			gchar *tmp = g_strdup ((gchar *) ref_table);
 			if (!_split_identifier_string (tmp, &schema_part, &name_part)) {
 				g_set_error (error, GDA_META_STRUCT_ERROR, 0, /* FIXME */
 					     _("Invalid referenced table name '%s'"), ref_table);

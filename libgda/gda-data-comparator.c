@@ -139,7 +139,7 @@ gda_data_comparator_class_init (GdaDataComparatorClass *class)
 	/* signals */
 
 	gda_data_comparator_signals [DIFF_COMPUTED] =
-		g_signal_new ("diff_computed",
+		g_signal_new ("diff-computed",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_LAST,
                               G_STRUCT_OFFSET (GdaDataComparatorClass, diff_computed),

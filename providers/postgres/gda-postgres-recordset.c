@@ -302,20 +302,6 @@ finish_prep_stmt_init (PostgresConnectionData *cdata, GdaPostgresPStmt *ps, PGre
 			gda_column_set_g_type (column, gtype);
 			gda_column_set_name (column, PQfname (pg_res, i));
 			gda_column_set_title (column, PQfname (pg_res, i));
-			gda_column_set_scale (column, (gtype == G_TYPE_DOUBLE) ? DBL_DIG :
-					      (gtype == G_TYPE_FLOAT) ? FLT_DIG : 0);
-			gda_column_set_defined_size (column, PQfsize (pg_res, i));
-			gda_column_set_references (column, "");
-
-			/*
-			  FIXME: Use @cnc's associated GdaMetaStore to get the following information:
-			  gda_column_set_references (column, "");
-			  gda_column_set_table (column, ...);
-			  gda_column_set_primary_key (column, ...);
-			  gda_column_set_unique_key (column, ...);
-			  gda_column_set_allow_null (column, ...);
-			  gda_column_set_auto_increment (column, ...);
-			*/
 		}
         }
 }

@@ -151,7 +151,7 @@ XML file may then need to be processed using other post-processor tools dependin
 
 </para>
 
-<!-- ##### ARG GdaReportEngine:spec-file ##### -->
+<!-- ##### ARG GdaReportEngine:spec-filename ##### -->
 <para>
 
 </para>

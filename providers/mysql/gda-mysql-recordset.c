@@ -378,20 +378,6 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 			gda_column_set_g_type (column, gtype);
 			gda_column_set_name (column, field->name);
 			gda_column_set_title (column, field->name);
-			gda_column_set_scale (column, (gtype == G_TYPE_DOUBLE) ? DBL_DIG :
-					      (gtype == G_TYPE_FLOAT) ? FLT_DIG : 0);
-			gda_column_set_defined_size (column, field->length);
-			gda_column_set_references (column, "");
-
-			/* Use @cnc's associate GdaMetaStore to get the following information:
-			gda_column_set_references (column, ...);
-			gda_column_set_table (column, ...);
-			gda_column_set_primary_key (column, ...);
-			gda_column_set_unique_key (column, ...);
-			gda_column_set_allow_null (column, ...);
-			gda_column_set_auto_increment (column, ...);
-			*/
-
 			
 			mysql_bind_result[i].buffer_type = field->type;
 			switch (mysql_bind_result[i].buffer_type) {

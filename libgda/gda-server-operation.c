@@ -139,7 +139,7 @@ gda_server_operation_class_init (GdaServerOperationClass *klass)
 
 	/* signals */
 	gda_server_operation_signals[SEQUENCE_ITEM_ADDED] =
-		g_signal_new ("sequence_item_added",
+		g_signal_new ("sequence-item-added",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaServerOperationClass, seq_item_added),
@@ -147,7 +147,7 @@ gda_server_operation_class_init (GdaServerOperationClass *klass)
 			      gda_marshal_VOID__STRING_INT, G_TYPE_NONE,
 			      2, G_TYPE_STRING, G_TYPE_INT);
 	gda_server_operation_signals[SEQUENCE_ITEM_REMOVE] =
-		g_signal_new ("sequence_item_remove",
+		g_signal_new ("sequence-item-remove",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaServerOperationClass, seq_item_remove),

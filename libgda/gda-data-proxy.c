@@ -541,42 +541,42 @@ gda_data_proxy_class_init (GdaDataProxyClass *class)
 
 	/* signals */
 	gda_data_proxy_signals [ROW_DELETE_CHANGED] =
-		g_signal_new ("row_delete_changed",
+		g_signal_new ("row-delete-changed",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaDataProxyClass, row_delete_changed),
                               NULL, NULL,
 			      gda_marshal_VOID__INT_BOOLEAN, G_TYPE_NONE, 2, G_TYPE_INT, G_TYPE_BOOLEAN);
 	gda_data_proxy_signals [SAMPLE_SIZE_CHANGED] =
-		g_signal_new ("sample_size_changed",
+		g_signal_new ("sample-size-changed",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaDataProxyClass, sample_size_changed),
                               NULL, NULL,
 			      g_cclosure_marshal_VOID__INT, G_TYPE_NONE, 1, G_TYPE_INT);
 	gda_data_proxy_signals [SAMPLE_CHANGED] =
-		g_signal_new ("sample_changed",
+		g_signal_new ("sample-changed",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaDataProxyClass, sample_changed),
                               NULL, NULL,
 			      gda_marshal_VOID__INT_INT, G_TYPE_NONE, 2, G_TYPE_INT, G_TYPE_INT);
 	gda_data_proxy_signals [PRE_CHANGES_APPLIED] =
-		g_signal_new ("pre_changes_applied",
+		g_signal_new ("pre-changes-applied",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_LAST,
                               G_STRUCT_OFFSET (GdaDataProxyClass, pre_changes_applied),
                               pre_changes_accumulator, NULL,
                               gda_marshal_BOOLEAN__INT_INT, G_TYPE_BOOLEAN, 2, G_TYPE_INT, G_TYPE_INT);
 	gda_data_proxy_signals [POST_CHANGES_APPLIED] =
-		g_signal_new ("post_changes_applied",
+		g_signal_new ("post-changes-applied",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaDataProxyClass, post_changes_applied),
                               NULL, NULL,
 			      gda_marshal_VOID__INT_INT, G_TYPE_NONE, 2, G_TYPE_INT, G_TYPE_INT);
 	gda_data_proxy_signals [FILTER_CHANGED] = 
-		g_signal_new ("filter_changed",
+		g_signal_new ("filter-changed",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
 			      0, /* no associated a class method */
@@ -632,6 +632,7 @@ gda_data_proxy_data_model_init (GdaDataModelClass *iface)
 	iface->i_iter_prev = NULL;
 
 	iface->i_set_value_at = gda_data_proxy_set_value_at;
+	iface->i_iter_set_value = NULL;
 	iface->i_set_values = gda_data_proxy_set_values;
         iface->i_append_values = gda_data_proxy_append_values;
 	iface->i_append_row = gda_data_proxy_append_row;
@@ -852,11 +853,11 @@ gda_data_proxy_set_property (GObject *object,
 				g_value_set_flags (proxy->priv->columns_attrs[col], flags);
 			}
 			
-			g_signal_connect (G_OBJECT (model), "row_inserted",
+			g_signal_connect (G_OBJECT (model), "row-inserted",
 					  G_CALLBACK (proxied_model_row_inserted_cb), proxy);
-			g_signal_connect (G_OBJECT (model), "row_updated",
+			g_signal_connect (G_OBJECT (model), "row-updated",
 					  G_CALLBACK (proxied_model_row_updated_cb), proxy);
-			g_signal_connect (G_OBJECT (model), "row_removed",
+			g_signal_connect (G_OBJECT (model), "row-removed",
 					  G_CALLBACK (proxied_model_row_removed_cb), proxy);
 			g_signal_connect (G_OBJECT (model), "reset",
 					  G_CALLBACK (proxied_model_reset_cb), proxy);
@@ -1987,7 +1988,7 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, gboolean adjust_display, GE
 			}
 			else if ((proxy->priv->catched_inserted_row < 0) &&
 				 !GDA_IS_DATA_MODEL_QUERY (proxy->priv->model)) {
-				/* REM: the GdaDataModelQuery object does not emit any "row_inserted", "row_updated"
+				/* REM: the GdaDataModelQuery object does not emit any "row-inserted", "row-updated"
 				 * or "row_dremoved" signals but that is Ok as an exception: all the other data
 				 * model should be implemented correctly
 				 */
@@ -2013,7 +2014,7 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, gboolean adjust_display, GE
 		 * should habe emitted the "row_{inserted,removed,updated}" signals */
 		if (rm && g_slist_find (proxy->priv->all_modifs, rm)) {
 			if (!GDA_IS_DATA_MODEL_QUERY (proxy->priv->model)) {
-				/* REM: the GdaDataModelQuery object does not emit any "row_inserted", "row_updated"
+				/* REM: the GdaDataModelQuery object does not emit any "row-inserted", "row-updated"
 				 * or "row_dremoved" signals but that is Ok as an exception: all the other data
 				 * model should be implemented correctly
 				 */
@@ -2376,7 +2377,7 @@ chunk_sync_idle (GdaDataProxy *proxy)
 		g_print ("INDEX=%d step=%d max_steps=%d cur_row=%d repl_row=%d\n", index, step, max_steps, cur_row, repl_row);
 #endif
 		if ((cur_row >= 0) && (repl_row >= 0)) {
-			/* emit the GdaDataModel::"row_updated" signal */
+			/* emit the GdaDataModel::"row-updated" signal */
 			if (proxy->priv->chunk) {
 				g_array_insert_val (proxy->priv->chunk->mapping, index, repl_row);
 				g_array_remove_index (proxy->priv->chunk->mapping, index + 1);
@@ -2393,7 +2394,7 @@ chunk_sync_idle (GdaDataProxy *proxy)
 			index++;
 		}
 		else if ((cur_row >= 0) && (repl_row < 0)) {
-			/* emit the GdaDataModel::"row_removed" signal */
+			/* emit the GdaDataModel::"row-removed" signal */
 			if (proxy->priv->chunk) 
 				g_array_remove_index (proxy->priv->chunk->mapping, index);
 			proxy->priv->chunk_proxy_nb_rows--;
@@ -2405,7 +2406,7 @@ chunk_sync_idle (GdaDataProxy *proxy)
 			}
 		}
 		else if ((cur_row < 0) && (repl_row >= 0)) {
-			/* emit GdaDataModel::"row_inserted" insert signal */			
+			/* emit GdaDataModel::"row-inserted" insert signal */			
 			if (proxy->priv->chunk) 
 				g_array_insert_val (proxy->priv->chunk->mapping, index, repl_row);
 			proxy->priv->chunk_sep++;
@@ -3296,7 +3297,7 @@ gda_data_proxy_get_value_at (GdaDataModel *model, gint column, gint proxy_row, G
 			else {
 				/* non existing row, return NULL */
 				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
-					     _("Row %d out of range (0-%d)"), proxy_row, gda_data_model_get_n_rows (model));
+					     _("Row %d out of range (0-%d)"), proxy_row, gda_data_model_get_n_rows (model) - 1);
 				retval = NULL;
 			}
 		}
@@ -3327,7 +3328,7 @@ gda_data_proxy_get_value_at (GdaDataModel *model, gint column, gint proxy_row, G
 			else {
 				/* non existing row, return NULL */
 				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
-					     _("Row %d out of range (0-%d)"), proxy_row, gda_data_model_get_n_rows (model));
+					     _("Row %d out of range (0-%d)"), proxy_row, gda_data_model_get_n_rows (model) - 1);
 				retval = NULL;
 			}
 		}

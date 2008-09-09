@@ -57,10 +57,11 @@ enum
 {
 	CHANGED,
         SOURCE_CHANGED,
+	BEFORE_CHANGE,
         LAST_SIGNAL
 };
 
-static gint gda_holder_signals[LAST_SIGNAL] = { 0, 0 };
+static gint gda_holder_signals[LAST_SIGNAL] = { 0, 0, 0 };
 
 
 /* properties */
@@ -141,6 +142,26 @@ gda_holder_get_type (void)
 	return type;
 }
 
+static gboolean
+before_change_accumulator (GSignalInvocationHint *ihint,
+			   GValue *return_accu,
+			   const GValue *handler_return,
+			   gpointer data)
+{
+	GError *error;
+
+	error = g_value_get_pointer (handler_return);
+	g_value_set_pointer (return_accu, error);
+
+	return error ? FALSE : TRUE; /* stop signal if 'thisvalue' is FALSE */
+}
+
+static GError *
+m_before_change (GdaHolder *holder, const GValue *new_value)
+{
+	return NULL;
+}
+
 static void
 gda_holder_class_init (GdaHolderClass *class)
 {
@@ -149,7 +170,7 @@ gda_holder_class_init (GdaHolderClass *class)
 	parent_class = g_type_class_peek_parent (class);
 
 	gda_holder_signals[SOURCE_CHANGED] =
-                g_signal_new ("source_changed",
+                g_signal_new ("source-changed",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaHolderClass, source_changed),
@@ -162,9 +183,28 @@ gda_holder_class_init (GdaHolderClass *class)
                               G_STRUCT_OFFSET (GdaHolderClass, changed),
                               NULL, NULL,
                               gda_marshal_VOID__VOID, G_TYPE_NONE, 0);
+	/**
+	 * GdaHolder::before-change:
+	 * @holder: the object which received the signal
+	 * @new_value: the proposed new value for @holder
+	 * 
+	 * Gets emitted when @holder is going to change its value. One can connect to
+	 * this signal to control which values @holder can have (for example to implement some business rules)
+	 *
+	 * Return value: NULL if @holder is allowed to change its value to @new_value, or a #GError
+	 * otherwise.
+	 */
+	gda_holder_signals[BEFORE_CHANGE] =
+		g_signal_new ("before-change",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_LAST,
+                              G_STRUCT_OFFSET (GdaHolderClass, before_change),
+                              before_change_accumulator, NULL,
+                              gda_marshal_POINTER__POINTER, G_TYPE_POINTER, 1, G_TYPE_POINTER);
 
         class->changed = NULL;
         class->source_changed = NULL;
+        class->before_change = m_before_change;
 
 	/* virtual functions */
 	object_class->dispose = gda_holder_dispose;
@@ -700,8 +740,8 @@ static gboolean real_gda_holder_set_value (GdaHolder *holder, GValue *value, gbo
  * Sets the value within the holder. If @holder is an alias for another
  * holder, then the value is also set for that other holder.
  *
- * The action of any call to gda_holder_force_invalid() is cancelled
- * as soon as this method is called, even if @holder's value does not change.
+ * On success, the action of any call to gda_holder_force_invalid() is cancelled
+ * as soon as this method is called (even if @holder's value does not actually change)
  * 
  * If the value is not different from the one already contained within @holder,
  * then @holder is not changed and no signal is emitted.
@@ -710,6 +750,10 @@ static gboolean real_gda_holder_set_value (GdaHolder *holder, GValue *value, gbo
  *
  * Note2: if @holder can't accept the @value value, then this method returns FALSE, and @holder will be left
  * in an invalid state.
+ *
+ * Note3: before the change is accepted by @holder, the "before-change" signal will be emitted (the value
+ * of which can prevent the change from happening) which can be connected to to have a greater control
+ * of which values @holder can have, or implement some business rules.
  *
  * Returns: TRUE if value has been set
  */
@@ -776,14 +820,18 @@ gda_holder_set_value_str (GdaHolder *holder, GdaDataHandler *dh, const gchar *va
  * Sets the value within the holder. If @holder is an alias for another
  * holder, then the value is also set for that other holder.
  *
- * The action of any call to gda_holder_force_invalid() is cancelled
- * as soon as this method is called, even if @holder's value does not change.
+ * On success, the action of any call to gda_holder_force_invalid() is cancelled
+ * as soon as this method is called (even if @holder's value does not actually change).
  * 
  * If the value is not different from the one already contained within @holder,
  * then @holder is not chaged and no signal is emitted.
  *
- * Note: if @holder can't accept the @value value, then this method returns FALSE, and @holder will be left
+ * Note1: if @holder can't accept the @value value, then this method returns FALSE, and @holder will be left
  * in an invalid state.
+ *
+ * Note2: before the change is accepted by @holder, the "before-change" signal will be emitted (the value
+ * of which can prevent the change from happening) which can be connected to to have a greater control
+ * of which values @holder can have, or implement some business rules.
  *
  * Returns: TRUE if value has been set
  */
@@ -809,8 +857,6 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 #ifdef DEBUG_HOLDER
 	gboolean was_valid = gda_holder_is_valid (holder);
 #endif
-
-	holder->priv->invalid_forced = FALSE;
 
 	/* holder will be changed? */
 	newnull = !value || gda_value_is_null (value);
@@ -854,9 +900,23 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 	if (!changed) {
 		if (!do_copy && value)
 			gda_value_free (value);
+		holder->priv->invalid_forced = FALSE;
 		return TRUE;
 	}
 
+	/* check if we are allowed to change value */
+	GError *lerror = NULL;
+	g_signal_emit (holder, gda_holder_signals[BEFORE_CHANGE], 0, value, &lerror);
+	if (lerror) {
+		/* change refused by signal callback */
+		g_propagate_error (error, lerror);
+		if (!do_copy) 
+			gda_value_free (value);
+		return FALSE;
+	}
+
+	/* new valid status */
+	holder->priv->invalid_forced = FALSE;
 	holder->priv->valid = newvalid;
 
 	/* check is the new value is the default one */

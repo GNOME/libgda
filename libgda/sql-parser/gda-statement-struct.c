@@ -266,7 +266,7 @@ static gboolean gda_sql_select_target_check_validity (GdaSqlSelectTarget *target
  * If @cnc is %NULL, then remove any information from a previous call to this method stored in @stmt. In this case,
  * the @stmt-&gt;validity_meta_struct attribute is cleared.
  *
- * Also note that some parts of @stmt may be modified: for example leading ad trailing spaces in aliases or
+ * Also note that some parts of @stmt may be modified: for example leading and trailing spaces in aliases or
  * objects names will be removed.
  *
  * Returns: TRUE if no error occurred

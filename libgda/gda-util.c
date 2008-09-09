@@ -695,9 +695,12 @@ gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTab
 			GdaSqlSelectField *sfield = NULL;
 			GdaMetaTableColumn *tcol;
 			GSList *list;
+			gint index;
 			
 			tcol = (GdaMetaTableColumn *) g_slist_nth_data (mtable->columns, mtable->pk_cols_array[i]);
-			for (list = stsel->expr_list; list; list = list->next) {
+			for (index = 0, list = stsel->expr_list; 
+			     list; 
+			     index++, list = list->next) {
 				sfield = (GdaSqlSelectField *) list->data;
 				if (sfield->validity_meta_table_column == tcol)
 					break;
@@ -729,7 +732,7 @@ gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTab
 				/* right operand */
 				opexpr = gda_sql_expr_new (GDA_SQL_ANY_PART (op));
 				pspec = g_new0 (GdaSqlParamSpec, 1);
-				pspec->name = g_strdup_printf ("-%d", mtable->pk_cols_array[i]);
+				pspec->name = g_strdup_printf ("-%d", index);
 				pspec->g_type = tcol->gtype != G_TYPE_INVALID ? tcol->gtype: G_TYPE_STRING;
 				pspec->nullok = tcol->nullok;
 				opexpr->param_spec = pspec;

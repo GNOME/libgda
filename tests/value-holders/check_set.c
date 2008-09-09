@@ -24,11 +24,13 @@ static void     emitted_signals_monitor_set (GdaSet *set);
 typedef gboolean (*TestFunc) (GError **);
 static gboolean test1 (GError **error);
 static gboolean test2 (GError **error);
+static gboolean test3 (GError **error);
 
 GHashTable *data;
 TestFunc tests[] = {
 	test1,
-	test2
+	test2,
+	test3
 };
 
 int 
@@ -118,9 +120,9 @@ test2 (GError **error)
 		return FALSE;
 	if (!tests_common_check_set (data, "T2.1", set, error)) return FALSE;
 
-	if (!emitted_signals_find (set, "public_data_changed", error))
+	if (!emitted_signals_find (set, "public-data-changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (set, "public_data_changed", error))
+	if (!emitted_signals_chech_empty (set, "public-data-changed", error))
 		return FALSE;
 
 	if (!tests_common_check_set (data, "T2.1", set, error)) return FALSE;
@@ -131,9 +133,9 @@ test2 (GError **error)
 		return FALSE;
 	if (!tests_common_check_set (data, "T2.2", set, error)) return FALSE;
 
-	if (!emitted_signals_find (set, "public_data_changed", error))
+	if (!emitted_signals_find (set, "public-data-changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (set, "public_data_changed", error))
+	if (!emitted_signals_chech_empty (set, "public-data-changed", error))
 		return FALSE;
 
 	/***/
@@ -142,10 +144,91 @@ test2 (GError **error)
 		return FALSE;
 	if (!tests_common_check_set (data, "T2.3", set, error)) return FALSE;
 
-	if (!emitted_signals_find (set, "public_data_changed", error))
+	if (!emitted_signals_find (set, "public-data-changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (set, "public_data_changed", error))
+	if (!emitted_signals_chech_empty (set, "public-data-changed", error))
 		return FALSE;
+
+	return TRUE;
+}
+
+/*
+ * "before_holder_change" signal
+ */
+static GError *
+t3_before_holder_change (GdaSet *set, GdaHolder *h, const GValue *value, gchar *token)
+{
+	/* only accept GDA_VALUE_NULL or 444 value */
+	g_assert (!strcmp (token, "MyToken"));
+
+	if (!strcmp (gda_holder_get_id (h), "H2")) {
+		if (gda_value_is_null (value) || (g_value_get_int (value) == 444)) {
+			g_print ("GdaHolder change accepted\n");
+			return NULL;
+		}
+		else {
+			GError *error = NULL;
+			g_print ("GdaHolder change refused\n");
+			g_set_error (&error, 0, 0,
+				     "GdaHolder change refused!");
+			return error;
+		}
+	}
+	else
+		/* change accepted */
+		return NULL;
+}
+
+static gboolean
+test3 (GError **error)
+{
+	GdaSet *set;
+	GdaHolder *h;
+	GValue *value;
+	const GValue *cvalue;
+
+	set = gda_set_new_inline (3, 
+				  "H1", G_TYPE_STRING, "A string",
+				  "H2", G_TYPE_INT, 1234,
+				  "H3", G_TYPE_CHAR, 'r');
+
+	g_signal_connect (G_OBJECT (set), "before-holder-change",
+			  G_CALLBACK (t3_before_holder_change), "MyToken");
+
+	h = gda_set_get_holder (set, "H2");
+	g_value_set_int ((value = gda_value_new (G_TYPE_INT)), 333);
+	if (gda_holder_set_value (h, value, NULL)) {
+		g_set_error (error, 0, 0,
+			     "gda_holder_set_value() should have been refused and failed");
+		return FALSE;
+	}
+	gda_value_free (value);
+
+	/***/
+	g_value_set_int ((value = gda_value_new (G_TYPE_INT)), 1234);
+	cvalue = gda_set_get_holder_value (set, "H2");
+	if (!cvalue || gda_value_differ (value, cvalue)) {
+		g_set_error (error, 0, 0,
+			     "GdaHolder's value is incorrect");
+		return FALSE;
+	}
+	gda_value_free (value);
+
+	/***/
+	g_value_set_int ((value = gda_value_new (G_TYPE_INT)), 444);
+	if (!gda_holder_set_value (h, value, error)) 
+		return FALSE;
+	
+	/***/cvalue = gda_set_get_holder_value (set, "H2");
+	if (!cvalue || gda_value_differ (value, cvalue)) {
+		g_set_error (error, 0, 0,
+			     "GdaHolder's value is incorrect");
+		return FALSE;
+	}
+	gda_value_free (value);
+	
+
+	g_object_unref (set);
 
 	return TRUE;
 }
@@ -244,12 +327,12 @@ set_0_cb (GObject *obj, gchar *sig_name)
 static void 
 emitted_signals_monitor_set (GdaSet *set)
 {
-	g_signal_connect (G_OBJECT (set), "holder_changed",
-			  G_CALLBACK (set_1_cb), "holder_changed");
-	g_signal_connect (G_OBJECT (set), "holder_plugin_changed",
-			  G_CALLBACK (set_1_cb), "holder_plugin_changed");
-	g_signal_connect (G_OBJECT (set), "holder_attr_changed",
-			  G_CALLBACK (set_1_cb), "holder_attr_changed");
-	g_signal_connect (G_OBJECT (set), "public_data_changed",
-			  G_CALLBACK (set_0_cb), "public_data_changed");
+	g_signal_connect (G_OBJECT (set), "holder-changed",
+			  G_CALLBACK (set_1_cb), "holder-changed");
+	g_signal_connect (G_OBJECT (set), "holder-plugin-changed",
+			  G_CALLBACK (set_1_cb), "holder-plugin-changed");
+	g_signal_connect (G_OBJECT (set), "holder-attr-changed",
+			  G_CALLBACK (set_1_cb), "holder-attr-changed");
+	g_signal_connect (G_OBJECT (set), "public-data-changed",
+			  G_CALLBACK (set_0_cb), "public-data-changed");
 }

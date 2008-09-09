@@ -103,7 +103,7 @@ remove_all_extra (xmlNodePtr node)
 	xmlNodePtr child;
 	for (child = node->last; child; ) {
 		xmlChar *lang = xmlGetProp (child, (xmlChar*)"lang");
-		if (lang || !strcmp (child->name, "sources")) {
+		if (lang || !strcmp ((gchar *) child->name, "sources")) {
 			/* remove this node */
 			xmlNodePtr prev = child->prev;
 			if (lang)
@@ -152,15 +152,15 @@ make_paths (xmlNodePtr node, const gchar *parent_path, GSList *exist_list)
 		path->path = pstr;
 		retlist = g_slist_append (retlist, path);
 
-		if (!strcmp (node->name, "parameters"))
+		if (!strcmp ((gchar*) node->name, "parameters"))
 			path->node_type = GDA_SERVER_OPERATION_NODE_PARAMLIST;
-		else if (!strcmp (node->name, "parameter"))
+		else if (!strcmp ((gchar*) node->name, "parameter"))
 			path->node_type = GDA_SERVER_OPERATION_NODE_PARAM;
-		else if (!strcmp (node->name, "sequence"))
+		else if (!strcmp ((gchar*) node->name, "sequence"))
 			path->node_type = GDA_SERVER_OPERATION_NODE_SEQUENCE;
-		else if (!strcmp (node->name, "gda_array"))
+		else if (!strcmp ((gchar*) node->name, "gda_array"))
 			path->node_type = GDA_SERVER_OPERATION_NODE_DATA_MODEL;
-		else if (!strcmp (node->name, "gda_array_field")) {
+		else if (!strcmp ((gchar*) node->name, "gda_array_field")) {
 			path->node_type = GDA_SERVER_OPERATION_NODE_DATA_MODEL_COLUMN;
 			g_free (path->path);
 			pstr = g_strdup_printf ("%s/@%s", parent_path, id);
@@ -172,17 +172,17 @@ make_paths (xmlNodePtr node, const gchar *parent_path, GSList *exist_list)
 		xmlChar *prop;
 		prop = xmlGetProp (node, BAD_CAST "name");
 		if (prop) {
-			path->name = g_strdup (prop);
+			path->name = g_strdup ((gchar*) prop);
 			xmlFree (prop);
 		}
 		prop = xmlGetProp (node, BAD_CAST "descr");
 		if (prop) {
-			path->descr = g_strdup (prop);
+			path->descr = g_strdup ((gchar*) prop);
 			xmlFree (prop);
 		}
 		prop = xmlGetProp (node, BAD_CAST "gdatype");
 		if (prop) {
-			path->type = g_strdup (prop);
+			path->type = g_strdup ((gchar*) prop);
 			xmlFree (prop);
 		}
 
@@ -237,11 +237,11 @@ merge_spec_from_root (xmlNodePtr root, const gchar *provider, xmlDocPtr pdoc)
 		/* find node for this path ID, and create it if not yet present */
 		xmlNodePtr node = NULL;
 		for (node = root->children; node; node = node->next) {
-			if (!strcmp (node->name, "path")) {
+			if (!strcmp ((gchar*) node->name, "path")) {
 				xmlChar *pid;
-				pid = xmlGetProp (node, "id");
+				pid = xmlGetProp (node, BAD_CAST "id");
 				if (pid) {
-					if (!strcmp (pid, path->path)) {
+					if (!strcmp ((gchar*) pid, path->path)) {
 						xmlFree (pid);
 						break;
 					}
@@ -275,16 +275,19 @@ merge_spec_from_root (xmlNodePtr root, const gchar *provider, xmlDocPtr pdoc)
 			xmlChar *node_type;
 			node_type = xmlGetProp (node, BAD_CAST "node_type");
 			g_assert (node_type);
-			if (strcmp (node_type, node_type_to_string (path->node_type)))
-				xmlSetProp (pnode, BAD_CAST "node_type", node_type_to_string (path->node_type));
+			if (strcmp ((gchar*) node_type, 
+				    node_type_to_string (path->node_type)))
+				xmlSetProp (pnode, BAD_CAST "node_type", 
+					    BAD_CAST node_type_to_string (path->node_type));
 			xmlFree (node_type);
 			
 			/* check gdatype is similar to "node->gdatype" */
 			node_type = xmlGetProp (node, BAD_CAST "gdatype");
-			if ((node_type && path->type && strcmp (node_type, path->type)) ||
+			if ((node_type && path->type && 
+			     strcmp ((gchar*) node_type, path->type)) ||
 			    (!node_type && path->type) ||
 			    (node_type && *node_type && !path->type))
-				xmlSetProp (pnode, BAD_CAST "gdatype", path->type);
+				xmlSetProp (pnode, BAD_CAST "gdatype", BAD_CAST path->type);
 			if (node_type) 
 				xmlFree (node_type);
 		}
@@ -341,7 +344,7 @@ merge_specs (const gchar *xml_dir, GdaServerOperationType type, gboolean *op_sup
 			remove_all_extra (xmlDocGetRootElement (pdoc));
 
 			if (!doc) {
-				doc = xmlNewDoc ("1.0");
+				doc = xmlNewDoc (BAD_CAST "1.0");
 				root = xmlNewNode (NULL, BAD_CAST "server_op");
 				xmlDocSetRootElement (doc, root);
 			}

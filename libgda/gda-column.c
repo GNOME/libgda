@@ -37,17 +37,10 @@ struct _GdaColumnPrivate {
 	gchar       *name;
 	gchar       *title;
 
-	gchar       *table;
-	gchar       *caption;
-	gint         scale;
-
 	gchar       *dbms_type;
 	GType        g_type;
 
 	gboolean     allow_null;
-	gboolean     primary_key;
-	gboolean     unique_key;
-	gchar       *references;
 
 	gboolean     auto_increment;
 	glong        auto_increment_start;
@@ -96,7 +89,7 @@ gda_column_class_init (GdaColumnClass *klass)
 	
 	/* signals */
 	gda_column_signals[NAME_CHANGED] =
-		g_signal_new ("name_changed",
+		g_signal_new ("name-changed",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (GdaColumnClass, name_changed),
@@ -105,7 +98,7 @@ gda_column_class_init (GdaColumnClass *klass)
 			      G_TYPE_NONE,
 			      1, G_TYPE_STRING);
 	gda_column_signals[GDA_TYPE_CHANGED] =
-		g_signal_new ("g_type_changed",
+		g_signal_new ("g-type-changed",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (GdaColumnClass, g_type_changed),
@@ -134,15 +127,9 @@ gda_column_init (GdaColumn *column, GdaColumnClass *klass)
 	column->priv->defined_size = 0;
 	column->priv->id = NULL;
 	column->priv->name = NULL;
-	column->priv->table = NULL;
 	column->priv->title = NULL;
-	column->priv->caption = NULL;
-	column->priv->scale = 0;
 	column->priv->g_type = G_TYPE_INVALID;
 	column->priv->allow_null = TRUE;
-	column->priv->primary_key = FALSE;
-	column->priv->unique_key = FALSE;
-	column->priv->references = NULL;
 	column->priv->auto_increment = FALSE;
 	column->priv->auto_increment_start = 0;
 	column->priv->auto_increment_step = 0;
@@ -161,12 +148,9 @@ gda_column_finalize (GObject *object)
 		if (column->priv->default_value) 
 			gda_value_free (column->priv->default_value);
 	
-		g_free (column->priv->table);
 		g_free (column->priv->id);
 		g_free (column->priv->name);
 		g_free (column->priv->title);
-		g_free (column->priv->caption);
-		g_free (column->priv->references);
 
 		g_free (column->priv);
 		column->priv = NULL;
@@ -284,17 +268,8 @@ gda_column_copy (GdaColumn *column)
 		column_copy->priv->name = g_strdup (column->priv->name);
 	if (column->priv->title)
 		column_copy->priv->title = g_strdup (column->priv->title);
-	if (column->priv->table)
-		column_copy->priv->table = g_strdup (column->priv->table);
-	if (column->priv->caption)
-		column_copy->priv->caption = g_strdup (column->priv->caption);
-	column_copy->priv->scale = column->priv->scale;
 	column_copy->priv->g_type = column->priv->g_type;
 	column_copy->priv->allow_null = column->priv->allow_null;
-	column_copy->priv->primary_key = column->priv->primary_key;
-	column_copy->priv->unique_key = column->priv->unique_key;
-	if (column->priv->references)
-		column_copy->priv->references = g_strdup (column->priv->references);
 	column_copy->priv->auto_increment = column->priv->auto_increment;
 	column_copy->priv->auto_increment_start = column->priv->auto_increment_start;
 	column_copy->priv->auto_increment_step = column->priv->auto_increment_step;
@@ -303,33 +278,6 @@ gda_column_copy (GdaColumn *column)
 		column_copy->priv->default_value = gda_value_copy (column->priv->default_value);
 	
 	return column_copy; 	 
-}
-
-/**
- * gda_column_get_defined_size
- * @column: a @GdaColumn.
- *
- * Returns: the defined size of @column.
- */
-glong
-gda_column_get_defined_size (GdaColumn *column)
-{
-	g_return_val_if_fail (GDA_IS_COLUMN (column), 0);
-	return column->priv->defined_size;
-}
-
-/**
- * gda_column_set_defined_size
- * @column: a #GdaColumn.
- * @size: the defined size we want to set.
- *
- * Sets the defined size of a #GdaColumn.
- */
-void
-gda_column_set_defined_size (GdaColumn *column, glong size)
-{
-	g_return_if_fail (GDA_IS_COLUMN (column));
-	column->priv->defined_size = size;
 }
 
 /**
@@ -403,94 +351,6 @@ gda_column_set_title (GdaColumn *column, const gchar *title)
 	if (column->priv->title != NULL)
 		g_free (column->priv->title);
 	column->priv->title = g_strdup (title);
-}
-
-
-/**
- * gda_column_get_table
- * @column: a #GdaColumn.
- *
- * Returns: the name of the table to which this column belongs.
- */
-const gchar *
-gda_column_get_table (GdaColumn *column)
-{
-	g_return_val_if_fail (GDA_IS_COLUMN (column), NULL);
-	return column->priv->table;;
-}
-
-/**
- * gda_column_set_table
- * @column: a #GdaColumn.
- * @table: table name.
- *
- * Sets the name of the table to which the given column belongs.
- */
-void
-gda_column_set_table (GdaColumn *column, const gchar *table)
-{
-	g_return_if_fail (GDA_IS_COLUMN (column));
-
-	if (column->priv->table != NULL)
-		g_free (column->priv->table);
-	column->priv->table = g_strdup (table);
-}
-
-/**
- * gda_column_get_caption
- * @column: a #GdaColumn.
- *
- * Returns: @column's caption.
- */
-const gchar *
-gda_column_get_caption (GdaColumn *column)
-{
-	g_return_val_if_fail (GDA_IS_COLUMN (column), NULL);
-	return (const gchar *) column->priv->caption;
-}
-
-/**
- * gda_column_set_caption
- * @column: a #GdaColumn.
- * @caption: caption.
- *
- * Sets @column's @caption.
- */
-void
-gda_column_set_caption (GdaColumn *column, const gchar *caption)
-{
-	g_return_if_fail (GDA_IS_COLUMN (column));
-
-	if (column->priv->caption)
-		g_free (column->priv->caption);
-	column->priv->caption = g_strdup (caption);
-}
-
-/**
- * gda_column_get_scale
- * @column: a #GdaColumn.
- *
- * Returns: the number of decimals of @column.
- */
-glong
-gda_column_get_scale (GdaColumn *column)
-{
-	g_return_val_if_fail (GDA_IS_COLUMN (column), 0);
-	return column->priv->scale;
-}
-
-/**
- * gda_column_set_scale
- * @column: a #GdaColumn.
- * @scale: number of decimals.
- *
- * Sets the scale of @column to @scale.
- */
-void
-gda_column_set_scale (GdaColumn *column, glong scale)
-{
-	g_return_if_fail (GDA_IS_COLUMN (column));
-	column->priv->scale = scale;
 }
 
 /**
@@ -582,97 +442,6 @@ gda_column_set_allow_null (GdaColumn *column, gboolean allow)
 {
 	g_return_if_fail (GDA_IS_COLUMN (column));
 	column->priv->allow_null = allow;
-}
-
-/**
- * gda_column_get_primary_key
- * @column: a #GdaColumn.
- *
- * Returns: whether if the given column is a primary key (%TRUE or %FALSE).
- */
-gboolean
-gda_column_get_primary_key (GdaColumn *column)
-{
-	g_return_val_if_fail (GDA_IS_COLUMN (column), FALSE);
-	return column->priv->primary_key;
-}
-
-/**
- * gda_column_set_primary_key
- * @column: a #GdaColumn.
- * @pk: whether if the given column should be a primary key.
- *
- * Sets the 'primary key' flag of the given column.
- */
-void
-gda_column_set_primary_key (GdaColumn *column, gboolean pk)
-{
-	g_return_if_fail (GDA_IS_COLUMN (column));
-	column->priv->primary_key = pk;
-}
-
-/**
- * gda_column_get_unique_key
- * @column: a #GdaColumn.
- *
- * Returns: whether if the given column is an unique key (%TRUE or %FALSE).
- */
-gboolean
-gda_column_get_unique_key (GdaColumn *column)
-{
-	g_return_val_if_fail (GDA_IS_COLUMN (column), FALSE);
-	return column->priv->unique_key;
-}
-
-/**
- * gda_column_set_unique_key
- * @column: a #GdaColumn.
- * @uk: whether if the given column should be an unique key.
- *
- * Sets the 'unique key' flag of the given column.
- */
-void
-gda_column_set_unique_key (GdaColumn *column, gboolean uk)
-{
-	g_return_if_fail (GDA_IS_COLUMN (column));
-	column->priv->unique_key = uk;
-}
-
-/**
- * gda_column_get_references
- * @column: a #GdaColumn.
- *
- * Reference is returned in tablename.fieldname format. Do not free
- * this variable, it is used internally within GdaColumn.
- *
- * Returns: @column's references.
- */
-const gchar *
-gda_column_get_references (GdaColumn *column)
-{
-	g_return_val_if_fail (GDA_IS_COLUMN (column), NULL);
-	return (const gchar *) column->priv->references;
-}
-
-/**
- * gda_column_set_references
- * @column: a #GdaColumn.
- * @ref: references.
- *
- * Sets @column's @references.
- */
-void
-gda_column_set_references (GdaColumn *column, const gchar *ref)
-{
-	g_return_if_fail (GDA_IS_COLUMN (column));
-
-	if (column->priv->references != NULL) {
-		g_free (column->priv->references);
-		column->priv->references = NULL;
-	}
-
-	if (ref)
-		column->priv->references = g_strdup (ref);
 }
 
 /**

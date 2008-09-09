@@ -30,6 +30,7 @@ static gboolean test6 (GError **error);
 static gboolean test7 (GError **error);
 static gboolean test8 (GError **error);
 static gboolean test9 (GError **error);
+static gboolean test10 (GError **error);
 
 TestFunc tests[] = {
 	test1,
@@ -40,7 +41,8 @@ TestFunc tests[] = {
 	test6,
 	test7,
 	test8,
-	test9
+	test9,
+	test10
 };
 
 int 
@@ -737,9 +739,9 @@ test9 (GError **error)
 	
 	if (!gda_holder_set_source_model (h, model, 1, error)) 
 		return FALSE;
-	if (!emitted_signals_find (h, "source_changed", error))
+	if (!emitted_signals_find (h, "source-changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (NULL, "source_changed", error))
+	if (!emitted_signals_chech_empty (NULL, "source-changed", error))
 		return FALSE;
 
 	if ((gda_holder_get_source_model (h, &col) != model) || (col != 1)) {
@@ -751,9 +753,9 @@ test9 (GError **error)
 	/***/
 	if (!gda_holder_set_source_model (h, model, 0, error))
 		return FALSE;
-	if (!emitted_signals_find (h, "source_changed", error))
+	if (!emitted_signals_find (h, "source-changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (NULL, "source_changed", error))
+	if (!emitted_signals_chech_empty (NULL, "source-changed", error))
 		return FALSE;
 	if ((gda_holder_get_source_model (h, &col) != model) || (col != 0)) {
 		g_set_error (error, 0, 0,
@@ -764,9 +766,9 @@ test9 (GError **error)
 	/***/
 	if (!gda_holder_set_source_model (h, NULL, 0, error))
 		return FALSE;
-	if (!emitted_signals_find (h, "source_changed", error))
+	if (!emitted_signals_find (h, "source-changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (NULL, "source_changed", error))
+	if (!emitted_signals_chech_empty (NULL, "source-changed", error))
 		return FALSE;
 
 	if (gda_holder_get_source_model (h, NULL)) {
@@ -778,6 +780,101 @@ test9 (GError **error)
 
 	g_object_unref (model);
 	g_object_unref (h);
+	return TRUE;
+}
+
+/*
+ * "before_change" signal
+ */
+
+static GError *
+t10_before_change_cb (GdaHolder *h, const GValue *value, gchar *token)
+{
+	/* only accept GDA_VALUE_NULL or the "hi!" G_TYPE_STRING value */
+	g_assert (!strcmp (token, "AToken"));
+
+	if (gda_value_is_null (value) || !strcmp (g_value_get_string (value), "hi!")) {
+		g_print ("GdaHolder change accepted\n");
+		return NULL;
+	}
+	else {
+		GError *error = NULL;
+		g_print ("GdaHolder change refused\n");
+		g_set_error (&error, 0, 0,
+			     "GdaHolder change refused!");
+		return error;
+	}
+}
+
+static gboolean
+test10 (GError **error)
+{
+	GdaHolder *h;
+	const GValue *cvalue;
+	GValue *value;
+
+	h = gda_holder_new (G_TYPE_STRING);
+	emitted_signals_monitor_holder (h);
+
+	/***/
+	value = gda_value_new_from_string ("my string", G_TYPE_STRING);
+	emitted_signals_reset ();
+	if (!gda_holder_set_value (h, value, error))
+		return FALSE;
+	if (!emitted_signals_find (h, "changed", error))
+		return FALSE;
+	if (!emitted_signals_chech_empty (NULL, "changed", error))
+		return FALSE;
+	gda_value_free (value);
+	
+	/***/
+	g_signal_connect (G_OBJECT (h), "before-change",
+			  G_CALLBACK (t10_before_change_cb), "AToken");
+
+	/***/
+	value = gda_value_new_from_string ("my other string", G_TYPE_STRING);
+	emitted_signals_reset ();
+	if (gda_holder_set_value (h, value, error)) {
+		g_set_error (error, 0, 0,
+			     "GdaHolder's change should have failed");
+		return FALSE;
+	}
+	if (!emitted_signals_chech_empty (NULL, "changed", error))
+		return FALSE;
+	gda_value_free (value);
+
+	/***/
+	value = gda_value_new_from_string ("my string", G_TYPE_STRING);
+	cvalue = gda_holder_get_value (h);
+	if (!cvalue || gda_value_differ (value, cvalue)) {
+		g_set_error (error, 0, 0,
+			     "GdaHolder's value is incorrect");
+		return FALSE;
+	}
+	gda_value_free (value);
+
+	
+	/***/
+	value = gda_value_new_from_string ("hi!", G_TYPE_STRING);
+	emitted_signals_reset ();
+	if (!gda_holder_set_value (h, value, error)) 
+		return FALSE;
+	if (!emitted_signals_find (h, "changed", error))
+		return FALSE;
+	if (!emitted_signals_chech_empty (NULL, "changed", error))
+		return FALSE;
+
+	/***/
+	cvalue = gda_holder_get_value (h);
+	if (!cvalue || gda_value_differ (value, cvalue)) {
+		g_set_error (error, 0, 0,
+			     "GdaHolder's value is incorrect");
+		return FALSE;
+	}
+	gda_value_free (value);
+
+	g_object_unref (h);
+
 	return TRUE;
 }
 
@@ -867,7 +964,7 @@ source_changed_cb (GObject *obj)
 	EmittedSignal *es;
 	es = g_new0 (EmittedSignal, 1);
 	es->obj = obj;
-	es->signal_name = "source_changed";
+	es->signal_name = "source-changed";
 	emitted_signal_add (es);
 }
 
@@ -876,6 +973,6 @@ emitted_signals_monitor_holder (GdaHolder *h)
 {
 	g_signal_connect (G_OBJECT (h), "changed",
 			  G_CALLBACK (changed_cb), NULL);
-	g_signal_connect (G_OBJECT (h), "source_changed",
+	g_signal_connect (G_OBJECT (h), "source-changed",
 			  G_CALLBACK (source_changed_cb), NULL);
 }

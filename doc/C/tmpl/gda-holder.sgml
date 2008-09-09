@@ -24,6 +24,15 @@ of the contained value (default value, ...)
 </para>
 
 
+<!-- ##### SIGNAL GdaHolder::before-change ##### -->
+<para>
+
+</para>
+
+@gdaholder: the object which received the signal.
+@arg1: 
+@Returns: 
+
 <!-- ##### SIGNAL GdaHolder::changed ##### -->
 <para>
 

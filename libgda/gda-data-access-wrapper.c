@@ -160,6 +160,7 @@ gda_data_access_wrapper_data_model_init (GdaDataModelClass *iface)
 	iface->i_iter_prev = NULL;
 
 	iface->i_set_value_at = NULL;
+	iface->i_iter_set_value = NULL;
 	iface->i_set_values = NULL;
         iface->i_append_values = NULL;
 	iface->i_append_row = NULL;
@@ -282,20 +283,20 @@ gda_data_access_wrapper_set_property (GObject *object,
 				if (! (model->priv->model_access_flags & GDA_DATA_MODEL_ACCESS_RANDOM)) {
 					model->priv->iter = gda_data_model_create_iter (mod);
 					g_return_if_fail (model->priv->iter);
-					g_signal_connect (G_OBJECT (model->priv->iter), "row_changed",
+					g_signal_connect (G_OBJECT (model->priv->iter), "row-changed",
 							  G_CALLBACK (iter_row_changed_cb), model);
-					g_signal_connect (G_OBJECT (model->priv->iter), "end_of_data",
+					g_signal_connect (G_OBJECT (model->priv->iter), "end-of-data",
 							  G_CALLBACK (iter_end_of_data_cb), model);
 					model->priv->iter_row = -1; /* because model->priv->iter is invalid */
 					model->priv->rows = g_hash_table_new_full (g_direct_hash, g_direct_equal,
 										   NULL, (GDestroyNotify) g_object_unref);
 				}
 				else {
-					g_signal_connect (G_OBJECT (mod), "row_inserted",
+					g_signal_connect (G_OBJECT (mod), "row-inserted",
 							  G_CALLBACK (model_row_inserted_cb), model);
-					g_signal_connect (G_OBJECT (mod), "row_updated",
+					g_signal_connect (G_OBJECT (mod), "row-updated",
 							  G_CALLBACK (model_row_updated_cb), model);
-					g_signal_connect (G_OBJECT (mod), "row_removed",
+					g_signal_connect (G_OBJECT (mod), "row-removed",
 							  G_CALLBACK (model_row_removed_cb), model);
 				}
   
@@ -468,7 +469,7 @@ gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row, G
 
 	if (col >= imodel->priv->nb_cols) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_COLUMN_OUT_OF_RANGE_ERROR,
-			     _("Column %d out of range (0-%d)"), col, imodel->priv->nb_cols);
+			     _("Column %d out of range (0-%d)"), col, imodel->priv->nb_cols - 1);
 		return NULL;
 	}
 

@@ -93,7 +93,8 @@ enum
 	PROP_PARAMS,
 	PROP_INS_QUERY,
 	PROP_UPD_QUERY,
-	PROP_DEL_QUERY
+	PROP_DEL_QUERY,
+	PROP_SEL_STMT
 };
 
 /* module error */
@@ -146,9 +147,11 @@ static gboolean             gda_data_select_iter_prev       (GdaDataModel *model
 static gboolean             gda_data_select_iter_at_row     (GdaDataModel *model, GdaDataModelIter *iter, gint row);
 
 static gboolean             gda_data_select_set_value_at    (GdaDataModel *model, gint col, gint row, 
-							const GValue *value, GError **error);
+							     const GValue *value, GError **error);
+static gboolean             gda_data_select_iter_set_value  (GdaDataModel *model, GdaDataModelIter *iter, gint col,
+							     const GValue *value, GError **error);
 static gboolean             gda_data_select_set_values      (GdaDataModel *model, gint row, GList *values,
-							GError **error);
+							     GError **error);
 static gint                 gda_data_select_append_values   (GdaDataModel *model, const GList *values, GError **error);
 static gboolean             gda_data_select_remove_row      (GdaDataModel *model, gint row, GError **error);
 
@@ -227,22 +230,27 @@ gda_data_select_class_init (GdaDataSelectClass *klass)
 							      GDA_TYPE_SET,
 							      G_PARAM_WRITABLE | G_PARAM_READABLE | G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_INS_QUERY,
-                                         g_param_spec_object ("insert-stmt", "INSERT query", 
-							      "INSERT Query to be executed to add data",
+                                         g_param_spec_object ("insert-stmt", "INSERT statement", 
+							      "INSERT Statement to be executed to add data",
 							      GDA_TYPE_STATEMENT,
 							      G_PARAM_READABLE | G_PARAM_WRITABLE));
 
 	g_object_class_install_property (object_class, PROP_UPD_QUERY,
-                                         g_param_spec_object ("update-stmt", "UPDATE query", 
-							      "UPDATE Query to be executed to update data",
+                                         g_param_spec_object ("update-stmt", "UPDATE statement", 
+							      "UPDATE Statement to be executed to update data",
 							      GDA_TYPE_STATEMENT,
 							      G_PARAM_READABLE | G_PARAM_WRITABLE));
 
 	g_object_class_install_property (object_class, PROP_DEL_QUERY,
-                                         g_param_spec_object ("delete-stmt", "DELETE query", 
-							      "DELETE Query to be executed to remove data",
+                                         g_param_spec_object ("delete-stmt", "DELETE statement", 
+							      "DELETE Statement to be executed to remove data",
 							      GDA_TYPE_STATEMENT,
 							      G_PARAM_READABLE | G_PARAM_WRITABLE));
+
+	g_object_class_install_property (object_class, PROP_SEL_STMT,
+					 g_param_spec_object ("select-stmt", "SELECT statement",
+							      "SELECT statement which was executed to yield to the data model",
+							      GDA_TYPE_STATEMENT, G_PARAM_READABLE));
 
 	/* virtual functions */
 	object_class->dispose = gda_data_select_dispose;
@@ -265,6 +273,7 @@ gda_data_select_data_model_init (GdaDataModelClass *iface)
         iface->i_iter_prev = gda_data_select_iter_prev;
 
 	iface->i_set_value_at = gda_data_select_set_value_at;
+	iface->i_iter_set_value = gda_data_select_iter_set_value;
 	iface->i_set_values = gda_data_select_set_values;
         iface->i_append_values = gda_data_select_append_values;
 	iface->i_append_row = NULL;
@@ -598,6 +607,9 @@ gda_data_select_get_property (GObject *object,
 			break;
 		case PROP_UPD_QUERY:
 			g_value_set_object (value, model->priv->modif_internals->modif_stmts [UPD_QUERY]);
+			break;
+		case PROP_SEL_STMT: 
+			g_value_set_object (value, check_acceptable_statement (model, NULL));
 			break;
 		default:
 			break;
@@ -1472,8 +1484,15 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 	/* available only if GDA_DATA_MODEL_ACCESS_RANDOM */
 	if (! (imodel->priv->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-			     _("Data model does not support random access"));
+			     _("Data model does only support random access"));
 		return NULL;
+	}
+
+	if ((col >= gda_data_select_get_n_columns (model)) ||
+	    (col < 0)) {
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_COLUMN_OUT_OF_RANGE_ERROR,
+                             _("Column %d out of range (0-%d)"), col, gda_data_select_get_n_columns (model) - 1);
+                return NULL;
 	}
 
 	int_row = external_to_internal_row (imodel, row, NULL);
@@ -1653,7 +1672,7 @@ gda_data_select_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
                 return update_iter (imodel, prow);
 	}
 	else {
-		g_signal_emit_by_name (iter, "end_of_data");
+		g_signal_emit_by_name (iter, "end-of-data");
                 g_object_set (G_OBJECT (iter), "current-row", -1, NULL);
                 imodel->priv->iter_row = G_MAXINT;
                 return FALSE;
@@ -2124,7 +2143,7 @@ bvector_free (BVector *key)
  * REM: @bv is stolen here
  */
 static gboolean
-vector_set_value_at (GdaDataSelect *imodel, BVector *bv, gint row, GError **error)
+vector_set_value_at (GdaDataSelect *imodel, BVector *bv, GdaDataModelIter *iter, gint row, GError **error)
 {
 	gint int_row, i, ncols;
 	GdaHolder *holder;
@@ -2140,9 +2159,9 @@ vector_set_value_at (GdaDataSelect *imodel, BVector *bv, gint row, GError **erro
 			     _("Modifications are not allowed anymore"));
 		return FALSE;
 	}
-	if (! (imodel->priv->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)) {
+	if (!iter && ! (imodel->priv->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-			     _("Data model does not support random access"));
+			     _("Data model does only support random access"));
 		return FALSE;
 	}
 	if (! imodel->priv->modif_internals->modif_stmts [UPD_QUERY]) {
@@ -2150,6 +2169,9 @@ vector_set_value_at (GdaDataSelect *imodel, BVector *bv, gint row, GError **erro
 			     _("No UPDATE statement provided"));
 		return FALSE;
 	}
+
+	if (iter)
+		row = gda_data_model_iter_get_row (iter);
 
 	int_row = external_to_internal_row (imodel, row, error);
 	if (int_row < 0)
@@ -2180,9 +2202,19 @@ vector_set_value_at (GdaDataSelect *imodel, BVector *bv, gint row, GError **erro
 		g_free (str);
 		if (holder) {
 			const GValue *cvalue;
-			cvalue = gda_data_model_get_value_at ((GdaDataModel*) imodel, i, int_row, error);
-			if (!cvalue)
-				return FALSE;
+			if (iter) {
+				cvalue = gda_data_model_iter_get_value_at (iter, i);
+				if (!cvalue) {
+					g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
+						     _("Could not get iterator's value"));
+					return FALSE;
+				}
+			}
+			else {
+				cvalue = gda_data_model_get_value_at ((GdaDataModel*) imodel, i, int_row, error);
+				if (!cvalue)
+					return FALSE;
+			}
 
 			if (! gda_holder_set_value (holder, cvalue, error))
 				return FALSE;
@@ -2296,7 +2328,7 @@ gda_data_select_set_value_at (GdaDataModel *model, gint col, gint row, const GVa
 	}
 	if (! (imodel->priv->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-			     _("Data model does not support random access"));
+			     _("Data model does only support random access"));
 		return FALSE;
 	}
 	if (! imodel->priv->modif_internals->modif_stmts [UPD_QUERY]) {
@@ -2340,7 +2372,68 @@ gda_data_select_set_value_at (GdaDataModel *model, gint col, gint row, const GVa
 	bv->data = g_new0 (guchar, bv->size);
 	bv->data[col] = 1;
 
-	return vector_set_value_at (imodel, bv, row, error);
+	return vector_set_value_at (imodel, bv, NULL, row, error);
+}
+
+static gboolean
+gda_data_select_iter_set_value  (GdaDataModel *model, GdaDataModelIter *iter, gint col,
+				 const GValue *value, GError **error)
+{
+	GdaDataSelect *imodel;
+	gint ncols;
+	GdaHolder *holder;
+	gchar *str;
+
+	imodel = (GdaDataSelect *) model;
+	g_return_val_if_fail (imodel->priv, FALSE);
+
+	if (imodel->priv->modif_internals->safely_locked) {
+		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_SAFETY_LOCKED_ERROR,
+			     _("Modifications are not allowed anymore"));
+		return FALSE;
+	}
+	if (! imodel->priv->modif_internals->modif_stmts [UPD_QUERY]) {
+		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
+			     _("No UPDATE statement provided"));
+		return FALSE;
+	}
+
+	/* arguments check */
+	ncols = gda_data_select_get_n_columns (model);
+	if (col >= ncols) {
+		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
+			     _("Column %d out of range (0-%d)"), col, ncols-1);
+		return FALSE;
+	}
+	
+	/* invalidate all the imodel->priv->modif_internals->modif_set's value holders */
+	GSList *list;
+	for (list = imodel->priv->modif_internals->modif_set->holders; list; list = list->next) {
+		GdaHolder *h = (GdaHolder*) list->data;
+		if (param_name_to_int (gda_holder_get_id (h), NULL, NULL))
+			gda_holder_force_invalid ((GdaHolder*) list->data);
+	}
+
+	/* give values to params for new value */
+	str = g_strdup_printf ("+%d", col);
+	holder = gda_set_get_holder (imodel->priv->modif_internals->modif_set, str);
+	g_free (str);
+	if (! holder) {
+		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
+			     _("Column %d can't be modified"), col);
+		return FALSE;
+	}
+	if (! gda_holder_set_value (holder, value, error)) 
+		return FALSE;
+
+	/* BVector */
+	BVector *bv;
+	bv = g_new (BVector, 1);
+	bv->size = col + 1;
+	bv->data = g_new0 (guchar, bv->size);
+	bv->data[col] = 1;
+
+	return vector_set_value_at (imodel, bv, iter, G_MININT, error);
 }
 
 static void
@@ -2376,7 +2469,7 @@ gda_data_select_set_values (GdaDataModel *model, gint row, GList *values, GError
 	}
 	if (! (imodel->priv->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-			     _("Data model does not support random access"));
+			     _("Data model does only support random access"));
 		return FALSE;
 	}
 	if (! imodel->priv->modif_internals->modif_stmts [UPD_QUERY]) {
@@ -2440,7 +2533,7 @@ gda_data_select_set_values (GdaDataModel *model, gint row, GList *values, GError
 		}
 	}
 
-	return vector_set_value_at (imodel, bv, row, error);
+	return vector_set_value_at (imodel, bv, NULL, row, error);
 }
 
 static gint
@@ -2463,7 +2556,7 @@ gda_data_select_append_values (GdaDataModel *model, const GList *values, GError 
 	}
 	if (! (imodel->priv->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-			     _("Data model does not support random access"));
+			     _("Data model does only support random access"));
 		return -1;
 	}
 	if (! imodel->priv->modif_internals->modif_stmts [INS_QUERY]) {
@@ -2646,7 +2739,7 @@ gda_data_select_remove_row (GdaDataModel *model, gint row, GError **error)
 	}
 	if (! (imodel->priv->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-			     _("Data model does not support random access"));
+			     _("Data model does only support random access"));
 		return FALSE;
 	}
 	if (! imodel->priv->modif_internals->modif_stmts [DEL_QUERY]) {

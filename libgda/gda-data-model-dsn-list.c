@@ -47,7 +47,7 @@ static gint                 gda_data_model_dsn_list_get_n_rows      (GdaDataMode
 static gint                 gda_data_model_dsn_list_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_model_dsn_list_describe_column (GdaDataModel *model, gint col);
 static GdaDataModelAccessFlags gda_data_model_dsn_list_get_access_flags(GdaDataModel *model);
-static const GValue      *gda_data_model_dsn_list_get_value_at    (GdaDataModel *model, gint col, gint row);
+static const GValue        *gda_data_model_dsn_list_get_value_at    (GdaDataModel *model, gint col, gint row, GError **error);
 static GdaValueAttribute    gda_data_model_dsn_list_get_attributes_at (GdaDataModel *model, gint col, gint row);
 
 static GObjectClass *parent_class = NULL;
@@ -76,6 +76,7 @@ gda_data_model_dsn_list_data_model_init (GdaDataModelClass *iface)
         iface->i_iter_prev = NULL;
 
         iface->i_set_value_at = NULL;
+	iface->i_iter_set_value = NULL;
         iface->i_set_values = NULL;
         iface->i_append_values = NULL;
         iface->i_append_row = NULL;
@@ -141,13 +142,13 @@ gda_data_model_dsn_list_init (GdaDataModelDsnList *model,
 	g_object_set_data (G_OBJECT (model), "name", _("List of defined data sources"));
 
 	config = gda_config_get ();
-	g_signal_connect (G_OBJECT (config), "dsn_added",
+	g_signal_connect (G_OBJECT (config), "dsn-added",
 			  G_CALLBACK (dsn_added_cb), model);
-	g_signal_connect (G_OBJECT (config), "dsn_to_be_removed",
+	g_signal_connect (G_OBJECT (config), "dsn-to-be-removed",
 			  G_CALLBACK (dsn_to_be_removed_cb), model);
-	g_signal_connect (G_OBJECT (config), "dsn_removed",
+	g_signal_connect (G_OBJECT (config), "dsn-removed",
 			  G_CALLBACK (dsn_removed_cb), model);
-	g_signal_connect (G_OBJECT (config), "dsn_changed",
+	g_signal_connect (G_OBJECT (config), "dsn-changed",
 			  G_CALLBACK (dsn_changed_cb), model);
 
 	model->priv->tmp_value = NULL;
@@ -295,7 +296,7 @@ gda_data_model_dsn_list_get_access_flags (GdaDataModel *model)
 }
 
 static const GValue *
-gda_data_model_dsn_list_get_value_at (GdaDataModel *model, gint col, gint row)
+gda_data_model_dsn_list_get_value_at (GdaDataModel *model, gint col, gint row, GError **error)
 {
 	GdaDataModelDsnList *dmodel = GDA_DATA_MODEL_DSN_LIST (model);
 
@@ -304,44 +305,54 @@ gda_data_model_dsn_list_get_value_at (GdaDataModel *model, gint col, gint row)
 		dmodel->priv->tmp_value = NULL;
 	}
 		
-	if ((col < gda_data_model_dsn_list_get_n_columns (model)) && 
-	    (col >= 0) && (row >=0) && (row < gda_data_model_dsn_list_get_n_rows (model))) {
-		GdaDataSourceInfo *info = gda_config_get_dsn_at_index (row);
-		g_assert (info);
-		if (col != 5)
-			dmodel->priv->tmp_value = gda_value_new (G_TYPE_STRING);
-		else
-			dmodel->priv->tmp_value = gda_value_new (G_TYPE_BOOLEAN);
-		switch (col) {
-		case 0:
-			g_value_set_string (dmodel->priv->tmp_value, info->name);
-			break;
-		case 1:
-			g_value_set_string (dmodel->priv->tmp_value, info->provider);
-			break;
-		case 2:
-			g_value_set_string (dmodel->priv->tmp_value, info->description);
-			break;
-		case 3:
-			g_value_set_string (dmodel->priv->tmp_value, info->cnc_string);
-			break;
-		case 4: 
-			if (info->auth_string) {
-				GdaQuarkList* ql;
-				ql = gda_quark_list_new_from_string (info->auth_string);
-				
-				g_value_set_string (dmodel->priv->tmp_value, gda_quark_list_find (ql, "USERNAME"));
-				gda_quark_list_free (ql);
-			}
-			else
-				g_value_set_string (dmodel->priv->tmp_value, "");
-			break;
-		case 5:
-			g_value_set_boolean (dmodel->priv->tmp_value, info->is_system);
-			break;
-		default:
-			g_assert_not_reached ();
+	if ((col >= gda_data_model_dsn_list_get_n_columns (model)) ||
+	    (col < 0)) {
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_COLUMN_OUT_OF_RANGE_ERROR,
+                             _("Column %d out of range (0-%d)"), col, gda_data_model_dsn_list_get_n_columns (model) - 1);
+                return NULL;
+	}
+	if ((row < 0) || (row >= gda_data_model_dsn_list_get_n_rows (model))) {
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
+                             _("Row %d out of range (0-%d)"), row,
+                             gda_data_model_dsn_list_get_n_rows (model) - 1);
+		return NULL;
+	}
+
+	GdaDataSourceInfo *info = gda_config_get_dsn_at_index (row);
+	g_assert (info);
+	if (col != 5)
+		dmodel->priv->tmp_value = gda_value_new (G_TYPE_STRING);
+	else
+		dmodel->priv->tmp_value = gda_value_new (G_TYPE_BOOLEAN);
+	switch (col) {
+	case 0:
+		g_value_set_string (dmodel->priv->tmp_value, info->name);
+		break;
+	case 1:
+		g_value_set_string (dmodel->priv->tmp_value, info->provider);
+		break;
+	case 2:
+		g_value_set_string (dmodel->priv->tmp_value, info->description);
+		break;
+	case 3:
+		g_value_set_string (dmodel->priv->tmp_value, info->cnc_string);
+		break;
+	case 4: 
+		if (info->auth_string) {
+			GdaQuarkList* ql;
+			ql = gda_quark_list_new_from_string (info->auth_string);
+			
+			g_value_set_string (dmodel->priv->tmp_value, gda_quark_list_find (ql, "USERNAME"));
+			gda_quark_list_free (ql);
 		}
+		else
+			g_value_set_string (dmodel->priv->tmp_value, "");
+		break;
+	case 5:
+		g_value_set_boolean (dmodel->priv->tmp_value, info->is_system);
+		break;
+	default:
+		g_assert_not_reached ();
 	}
 	
 	return dmodel->priv->tmp_value;

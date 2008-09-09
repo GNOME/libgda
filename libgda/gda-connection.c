@@ -140,7 +140,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
 			      g_cclosure_marshal_VOID__OBJECT,
 			      G_TYPE_NONE, 1, GDA_TYPE_CONNECTION_EVENT);
 	gda_connection_signals[CONN_OPENED] =
-                g_signal_new ("conn_opened",
+                g_signal_new ("conn-opened",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaConnectionClass, conn_opened),
@@ -148,7 +148,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
                               gda_marshal_VOID__VOID,
                               G_TYPE_NONE, 0);
         gda_connection_signals[CONN_TO_CLOSE] =
-                g_signal_new ("conn_to_close",
+                g_signal_new ("conn-to-close",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaConnectionClass, conn_to_close),
@@ -156,7 +156,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
                               gda_marshal_VOID__VOID,
                               G_TYPE_NONE, 0);
         gda_connection_signals[CONN_CLOSED] =    /* runs after user handlers */
-                g_signal_new ("conn_closed",
+                g_signal_new ("conn-closed",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_LAST,
                               G_STRUCT_OFFSET (GdaConnectionClass, conn_closed),
@@ -164,7 +164,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
                               gda_marshal_VOID__VOID,
                               G_TYPE_NONE, 0);
 	gda_connection_signals[DSN_CHANGED] =
-		g_signal_new ("dsn_changed",
+		g_signal_new ("dsn-changed",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (GdaConnectionClass, dsn_changed),
@@ -172,7 +172,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
 			      g_cclosure_marshal_VOID__VOID,
 			      G_TYPE_NONE, 0);
 	gda_connection_signals[TRANSACTION_STATUS_CHANGED] =
-		g_signal_new ("transaction_status_changed",
+		g_signal_new ("transaction-status-changed",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (GdaConnectionClass, transaction_status_changed),
@@ -858,7 +858,7 @@ gda_connection_open (GdaConnection *cnc, GError **error)
  * @cnc: a #GdaConnection object.
  *
  * Closes the connection to the underlying data source, but first emits the 
- * "conn_to_close" signal.
+ * "conn-to-close" signal.
  */
 void
 gda_connection_close (GdaConnection *cnc)
@@ -2934,7 +2934,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 			g_hash_table_insert (cbd.context_templates_hash, ((GdaMetaContext*)list->data)->table_name,
 					     list->data);
 		
-		signal_id = g_signal_connect (store, "suggest_update",
+		signal_id = g_signal_connect (store, "suggest-update",
 					      G_CALLBACK (suggest_update_cb_downstream), &cbd);
 		
 		retval = local_meta_update (cnc->priv->provider_obj, cnc, 

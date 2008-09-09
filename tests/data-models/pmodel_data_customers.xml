@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <gda_array id="EXPORT" name="Exported Data">
-  <gda_array_field id="FI0" name="id" title="id" gdatype="gint" size="-1" scale="-1" pkey="TRUE" unique="TRUE"/>
-  <gda_array_field id="FI1" name="name" title="name" gdatype="gchararray" size="-1" scale="-1"/>
-  <gda_array_field id="FI2" name="last_update" title="last_update" gdatype="GdaTimestamp" size="-1" scale="-1"/>
-  <gda_array_field id="FI3" name="default_served_by" title="default_served_by" gdatype="gint" size="-1" scale="-1" nullok="TRUE"/>
-  <gda_array_field id="FI4" name="country" title="country" gdatype="gchararray" size="-1" scale="-1" nullok="TRUE"/>
-  <gda_array_field id="FI5" name="city" title="city" gdatype="gchararray" size="-1" scale="-1" nullok="TRUE"/>
+  <gda_array_field id="FI0" name="id" title="id" gdatype="gint"/>
+  <gda_array_field id="FI1" name="name" title="name" gdatype="gchararray"/>
+  <gda_array_field id="FI2" name="last_update" title="last_update" gdatype="GdaTimestamp"/>
+  <gda_array_field id="FI3" name="default_served_by" title="default_served_by" gdatype="gint" nullok="TRUE"/>
+  <gda_array_field id="FI4" name="country" title="country" gdatype="gchararray" nullok="TRUE"/>
+  <gda_array_field id="FI5" name="city" title="city" gdatype="gchararray" nullok="TRUE"/>
   <gda_array_data>
     <gda_array_row>
       <gda_value>2</gda_value>

@@ -39,7 +39,8 @@ extern GQuark gda_set_error_quark (void);
 
 typedef enum
 {
-	GDA_SET_XML_SPEC_ERROR
+	GDA_SET_XML_SPEC_ERROR,
+	GDA_SET_HOLDER_NOT_FOUND_ERROR
 } GdaSetError;
 
 typedef enum {
@@ -116,6 +117,7 @@ struct _GdaSetClass
 {
 	GObjectClass            parent_class;
 
+	GError               *(*before_holder_change)  (GdaSet *set, GdaHolder *holder, const GValue *new_value);
 	void                  (*holder_changed)        (GdaSet *set, GdaHolder *holder);
 	void                  (*holder_plugin_changed) (GdaSet *set, GdaHolder *holder);
 	void                  (*holder_attr_changed)   (GdaSet *set, GdaHolder *holder);

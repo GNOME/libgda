@@ -97,6 +97,7 @@ gda_data_model_array_data_model_init (GdaDataModelClass *iface)
         iface->i_iter_prev = NULL;
 
         iface->i_set_value_at = gda_data_model_array_set_value_at;
+	iface->i_iter_set_value = NULL;
         iface->i_set_values = gda_data_model_array_set_values;
         iface->i_append_values = gda_data_model_array_append_values;
         iface->i_append_row = gda_data_model_array_append_row;
@@ -349,10 +350,7 @@ gda_data_model_array_copy_model (GdaDataModel *src, GError **error)
 		g_object_set (G_OBJECT (copycol), "id", colid, NULL);
 		g_free (colid);
 		gda_column_set_title (copycol, gda_column_get_title (srccol));
-		gda_column_set_defined_size (copycol, gda_column_get_defined_size (srccol));
 		gda_column_set_name (copycol, gda_column_get_name (srccol));
-		gda_column_set_caption (copycol, gda_column_get_caption (srccol));
-		gda_column_set_scale (copycol, gda_column_get_scale (srccol));
 		gda_column_set_dbms_type (copycol, gda_column_get_dbms_type (srccol));
 		gda_column_set_g_type (copycol, gda_column_get_g_type (srccol));
 		gda_column_set_position (copycol, gda_column_get_position (srccol));
@@ -385,7 +383,7 @@ gda_data_model_array_get_row (GdaDataModelArray *model, gint row, GError **error
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), NULL);
 
 	if (row >= model->priv->rows->len) {
-		g_set_error (error, GDA_DATA_MODEL_ERROR, 0,
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
 			     _("Row %d out of range (0-%d)"), row,
 			     model->priv->rows->len- 1);
 		return NULL;
@@ -462,7 +460,7 @@ gda_data_model_array_describe_column (GdaDataModel *model, gint col)
                                       GINT_TO_POINTER (col));
         if (!column) {
                 column = gda_column_new ();
-                g_signal_connect (G_OBJECT (column), "g_type_changed",
+                g_signal_connect (G_OBJECT (column), "g-type-changed",
                                   G_CALLBACK (column_g_type_changed_cb), model);
                 gda_column_set_position (column, col);
                 g_hash_table_insert (((GdaDataModelArray*) model)->priv->column_spec,

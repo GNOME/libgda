@@ -266,6 +266,7 @@ gda_data_model_import_data_model_init (GdaDataModelClass *iface)
 	iface->i_iter_prev = gda_data_model_import_iter_prev;
 
 	iface->i_set_value_at = NULL;
+	iface->i_iter_set_value = NULL;
 	iface->i_set_values = NULL;
         iface->i_append_values = NULL;
 	iface->i_append_row = NULL;
@@ -819,7 +820,6 @@ init_csv_import (GdaDataModelImport *model)
 			str = g_strdup_printf ("column_%d", col);
 		gda_column_set_name (column, str);
 		gda_column_set_title (column, str);
-		gda_column_set_caption (column, str);
 		g_free (str);			
 		
 		gda_column_set_g_type (column, G_TYPE_STRING);
@@ -1233,16 +1233,9 @@ init_xml_import (GdaDataModelImport *model)
 			g_object_set (G_OBJECT (column), "id", spec->id, NULL);
 			gda_column_set_title (column, (gchar*)spec->title);
 			gda_column_set_name (column, (gchar*)spec->name);
-			gda_column_set_defined_size (column, spec->size);
-			gda_column_set_caption (column, (gchar*)spec->caption);
 			gda_column_set_dbms_type (column, (gchar*)spec->dbms_type);
-			gda_column_set_scale (column, spec->scale);
 			gda_column_set_g_type (column, spec->gdatype);
 			gda_column_set_allow_null (column, spec->nullok);
-			gda_column_set_primary_key (column, spec->pkey);
-			gda_column_set_unique_key (column, spec->unique);
-			gda_column_set_table (column, (gchar*)spec->table);
-			gda_column_set_references (column, (gchar*)spec->ref);
 			
 			list = g_slist_next (list);
 			pos++;
@@ -1571,16 +1564,9 @@ init_node_import (GdaDataModelImport *model)
 		g_object_set (G_OBJECT (column), "id", spec->id, NULL);
 		gda_column_set_title (column, (gchar*)spec->title);
 		gda_column_set_name (column, (gchar*)spec->name);
-		gda_column_set_defined_size (column, spec->size);
-		gda_column_set_caption (column, (gchar*)spec->caption);
 		gda_column_set_dbms_type (column, (gchar*)spec->dbms_type);
-		gda_column_set_scale (column, spec->scale);
 		gda_column_set_g_type (column, spec->gdatype);
 		gda_column_set_allow_null (column, spec->nullok);
-		gda_column_set_primary_key (column, spec->pkey);
-		gda_column_set_unique_key (column, spec->unique);
-		gda_column_set_table (column, (gchar*)spec->table);
-		gda_column_set_references (column, (gchar*)spec->ref);
 
 		model->priv->columns = g_slist_prepend (model->priv->columns, gda_column_copy (column));
 
@@ -1901,7 +1887,7 @@ gda_data_model_import_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 		return allok;
 	}
 	else {
-		g_signal_emit_by_name (iter, "end_of_data");
+		g_signal_emit_by_name (iter, "end-of-data");
 		g_object_set (G_OBJECT (iter), "current-row", -1, NULL);
 		return FALSE;
 	}

@@ -90,7 +90,7 @@ gda_report_engine_class_init (GdaReportEngineClass *klass)
 	g_object_class_install_property (object_class, PROP_SPEC_STRING,
 					 g_param_spec_string ("spec-string", NULL, NULL, NULL, G_PARAM_WRITABLE));
 	g_object_class_install_property (object_class, PROP_SPEC_FILE,
-					 g_param_spec_string ("spec-file", NULL, NULL, NULL, G_PARAM_WRITABLE));
+					 g_param_spec_string ("spec-filename", NULL, NULL, NULL, G_PARAM_WRITABLE));
 }
 
 static void

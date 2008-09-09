@@ -115,6 +115,7 @@ gda_data_model_bdb_data_model_init (GdaDataModelClass *iface)
         iface->i_iter_prev = NULL;
 
         iface->i_set_value_at = gda_data_model_bdb_set_value_at;
+	iface->i_iter_set_value = NULL;
         iface->i_set_values = gda_data_model_bdb_set_values;
         iface->i_append_values = gda_data_model_bdb_append_values;
         iface->i_append_row = gda_data_model_bdb_append_row;

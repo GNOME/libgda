@@ -62,24 +62,6 @@ Management of #GdaDataModel column attributes
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_column_get_defined_size ##### -->
-<para>
-
-</para>
-
-@column: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_column_set_defined_size ##### -->
-<para>
-
-</para>
-
-@column: 
-@size: 
-
-
 <!-- ##### FUNCTION gda_column_get_name ##### -->
 <para>
 
@@ -114,60 +96,6 @@ Management of #GdaDataModel column attributes
 
 @column: 
 @title: 
-
-
-<!-- ##### FUNCTION gda_column_get_table ##### -->
-<para>
-
-</para>
-
-@column: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_column_set_table ##### -->
-<para>
-
-</para>
-
-@column: 
-@table: 
-
-
-<!-- ##### FUNCTION gda_column_get_caption ##### -->
-<para>
-
-</para>
-
-@column: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_column_set_caption ##### -->
-<para>
-
-</para>
-
-@column: 
-@caption: 
-
-
-<!-- ##### FUNCTION gda_column_get_scale ##### -->
-<para>
-
-</para>
-
-@column: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_column_set_scale ##### -->
-<para>
-
-</para>
-
-@column: 
-@scale: 
 
 
 <!-- ##### FUNCTION gda_column_get_dbms_type ##### -->
@@ -222,60 +150,6 @@ Management of #GdaDataModel column attributes
 
 @column: 
 @allow: 
-
-
-<!-- ##### FUNCTION gda_column_get_primary_key ##### -->
-<para>
-
-</para>
-
-@column: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_column_set_primary_key ##### -->
-<para>
-
-</para>
-
-@column: 
-@pk: 
-
-
-<!-- ##### FUNCTION gda_column_get_unique_key ##### -->
-<para>
-
-</para>
-
-@column: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_column_set_unique_key ##### -->
-<para>
-
-</para>
-
-@column: 
-@uk: 
-
-
-<!-- ##### FUNCTION gda_column_get_references ##### -->
-<para>
-
-</para>
-
-@column: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_column_set_references ##### -->
-<para>
-
-</para>
-
-@column: 
-@ref: 
 
 
 <!-- ##### FUNCTION gda_column_get_auto_increment ##### -->

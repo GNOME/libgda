@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <glib/gbacktrace.h>
 #include <virtual/gda-vconnection-data-model.h>
+#include <libgda/gda-connection-private.h>
 #include <libgda/gda-server-provider-extra.h>
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-data-model-private.h>
@@ -409,7 +410,6 @@ table_create_columns_func (LocalSpec *spec)
 								       mdb_col->col_type)));
 		gda_column_set_dbms_type (gda_col, tmp);
 		g_free (tmp);
-                gda_column_set_defined_size (gda_col, mdb_col->col_size);
 		columns = g_list_prepend (columns, gda_col);
 	}
 
@@ -463,7 +463,6 @@ table_create_model_func (LocalSpec *spec)
 		tmp = sanitize_name (g_strdup (mdb_col->name));
 		gda_column_set_name (gda_col, tmp);
 		gda_column_set_title (gda_col, tmp);
-		gda_column_set_caption (gda_col, tmp);
 		g_free (tmp);
 		tmp = sanitize_name (g_strdup (mdb_get_coltype_string (spec->cdata->mdb->default_backend, mdb_col->col_type)));
 		gda_column_set_dbms_type (gda_col, tmp);

@@ -462,7 +462,7 @@ attach_hub_connection (GdaVconnectionHub *hub, HubConnection *hc, GError **error
 	g_object_unref (model);
 
 	/* monitor changes */
-	g_signal_connect (store, "meta_changed", G_CALLBACK (meta_changed_cb), hc);
+	g_signal_connect (store, "meta-changed", G_CALLBACK (meta_changed_cb), hc);
 
 	hub->priv->hub_connections = g_slist_append (hub->priv->hub_connections, hc);
 	return TRUE;

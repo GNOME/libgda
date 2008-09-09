@@ -299,11 +299,11 @@ do_test_prop_change (void)
 
 	g_signal_connect (G_OBJECT (proxy), "reset",
 			  G_CALLBACK (proxy_reset_cb), NULL);
-	g_signal_connect (G_OBJECT (proxy), "row_inserted",
+	g_signal_connect (G_OBJECT (proxy), "row-inserted",
 			  G_CALLBACK (proxy_row_cb), "I");
-	g_signal_connect (G_OBJECT (proxy), "row_updated",
+	g_signal_connect (G_OBJECT (proxy), "row-updated",
 			  G_CALLBACK (proxy_row_cb), "U");
-	g_signal_connect (G_OBJECT (proxy), "row_removed",
+	g_signal_connect (G_OBJECT (proxy), "row-removed",
 			  G_CALLBACK (proxy_row_cb), "R");
 
 	/*
@@ -398,11 +398,11 @@ do_test_proxied_model_modif (void)
 
 	g_signal_connect (G_OBJECT (proxy), "reset",
 			  G_CALLBACK (proxy_reset_cb), NULL);
-	g_signal_connect (G_OBJECT (proxy), "row_inserted",
+	g_signal_connect (G_OBJECT (proxy), "row-inserted",
 			  G_CALLBACK (proxy_row_cb), "I");
-	g_signal_connect (G_OBJECT (proxy), "row_updated",
+	g_signal_connect (G_OBJECT (proxy), "row-updated",
 			  G_CALLBACK (proxy_row_cb), "U");
-	g_signal_connect (G_OBJECT (proxy), "row_removed",
+	g_signal_connect (G_OBJECT (proxy), "row-removed",
 			  G_CALLBACK (proxy_row_cb), "R");
 
 	
@@ -548,11 +548,11 @@ do_test_common_read (GdaDataModel *proxy)
 		      "prepend-null-entry", prepend_null_row, NULL);
 	g_signal_connect (G_OBJECT (proxy), "reset",
 			  G_CALLBACK (proxy_reset_cb), NULL);
-	g_signal_connect (G_OBJECT (proxy), "row_inserted",
+	g_signal_connect (G_OBJECT (proxy), "row-inserted",
 			  G_CALLBACK (proxy_row_cb), "I");
-	g_signal_connect (G_OBJECT (proxy), "row_updated",
+	g_signal_connect (G_OBJECT (proxy), "row-updated",
 			  G_CALLBACK (proxy_row_cb), "U");
-	g_signal_connect (G_OBJECT (proxy), "row_removed",
+	g_signal_connect (G_OBJECT (proxy), "row-removed",
 			  G_CALLBACK (proxy_row_cb), "R");
 
 	/* 
@@ -670,11 +670,11 @@ do_test_common_write (GdaDataModel *proxy)
 
 	g_signal_connect (G_OBJECT (proxy), "reset",
 			  G_CALLBACK (proxy_reset_cb), NULL);
-	g_signal_connect (G_OBJECT (proxy), "row_inserted",
+	g_signal_connect (G_OBJECT (proxy), "row-inserted",
 			  G_CALLBACK (proxy_row_cb), "I");
-	g_signal_connect (G_OBJECT (proxy), "row_updated",
+	g_signal_connect (G_OBJECT (proxy), "row-updated",
 			  G_CALLBACK (proxy_row_cb), "U");
-	g_signal_connect (G_OBJECT (proxy), "row_removed",
+	g_signal_connect (G_OBJECT (proxy), "row-removed",
 			  G_CALLBACK (proxy_row_cb), "R");
 
 	/*

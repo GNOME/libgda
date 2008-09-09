@@ -24,7 +24,7 @@ void
 common_declare_meta_store (GdaMetaStore *store)
 {
 	g_signal_connect (store, "meta-changed", G_CALLBACK (meta_changed_cb), NULL);
-	g_signal_connect (store, "suggest_update", G_CALLBACK (suggest_update_cb), NULL);
+	g_signal_connect (store, "suggest-update", G_CALLBACK (suggest_update_cb), NULL);
 }
 
 static void

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <gda_array id="EXPORT" name="Exported Data">
-  <gda_array_field id="FI0" name="country" title="country" gdatype="gchararray" size="-1" scale="-1" pkey="TRUE" unique="TRUE"/>
-  <gda_array_field id="FI1" name="city" title="city" gdatype="gchararray" size="-1" scale="-1" pkey="TRUE" unique="TRUE"/>
-  <gda_array_field id="FI2" name="shortcut" title="shortcut" gdatype="gchararray" size="-1" scale="-1"/>
+  <gda_array_field id="FI0" name="country" title="country" gdatype="gchararray"/>
+  <gda_array_field id="FI1" name="city" title="city" gdatype="gchararray"/>
+  <gda_array_field id="FI2" name="shortcut" title="shortcut" gdatype="gchararray"/>
   <gda_array_data>
     <gda_array_row>
       <gda_value>FR</gda_value>

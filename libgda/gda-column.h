@@ -59,20 +59,8 @@ GdaColumn      *gda_column_copy               (GdaColumn *column);
 const gchar    *gda_column_get_title          (GdaColumn *column);
 void            gda_column_set_title          (GdaColumn *column, const gchar *title);
 
-glong           gda_column_get_defined_size   (GdaColumn *column);
-void            gda_column_set_defined_size   (GdaColumn *column, glong size);
-
 const gchar    *gda_column_get_name           (GdaColumn *column);
 void            gda_column_set_name           (GdaColumn *column, const gchar *name);
-
-const gchar    *gda_column_get_table          (GdaColumn *column);
-void            gda_column_set_table          (GdaColumn *column, const gchar *table);
-
-const gchar    *gda_column_get_caption        (GdaColumn *column);
-void            gda_column_set_caption        (GdaColumn *column, const gchar *caption);
-
-glong           gda_column_get_scale          (GdaColumn *column);
-void            gda_column_set_scale          (GdaColumn *column, glong scale);
 
 const gchar*    gda_column_get_dbms_type      (GdaColumn *column);
 void            gda_column_set_dbms_type      (GdaColumn *column, const gchar *dbms_type);
@@ -82,15 +70,6 @@ void            gda_column_set_g_type         (GdaColumn *column, GType type);
 
 gboolean        gda_column_get_allow_null     (GdaColumn *column);
 void            gda_column_set_allow_null     (GdaColumn *column, gboolean allow);
-
-gboolean        gda_column_get_primary_key    (GdaColumn *column);
-void            gda_column_set_primary_key    (GdaColumn *column, gboolean pk);
-
-gboolean        gda_column_get_unique_key     (GdaColumn *column);
-void            gda_column_set_unique_key     (GdaColumn *column, gboolean uk);
-
-const gchar    *gda_column_get_references     (GdaColumn *column);
-void            gda_column_set_references     (GdaColumn *column, const gchar *ref);
 
 gboolean        gda_column_get_auto_increment (GdaColumn *column);
 void            gda_column_set_auto_increment (GdaColumn *column, gboolean is_auto);

@@ -96,6 +96,8 @@ struct _GdaDataModelClass {
 
 	gboolean             (* i_set_value_at)     (GdaDataModel *model, gint col, gint row, 
 						     const GValue *value, GError **error);
+	gboolean             (* i_iter_set_value)   (GdaDataModel *model, GdaDataModelIter *iter, gint col,
+						     const GValue *value, GError **error);
 	gboolean             (* i_set_values)       (GdaDataModel *model, gint row, GList *values,
 						     GError **error);
 	gint                 (* i_append_values)    (GdaDataModel *model, const GList *values, GError **error);

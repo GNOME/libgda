@@ -6,8 +6,13 @@ Container for several values
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-The #GdaSet object is a container for several values (as #GdaHolder objects), which also offers
-different classifications of the group of #GdaHolder values.
+  The #GdaSet object is a container for several values (as #GdaHolder objects), which also offers
+  different classifications of the group of #GdaHolder values (see gda_set_get_node(), gda_set_get_source() or
+  gda_set_get_group()).
+</para>
+<para>
+  It is possible to control the values a #GdaHolder can have in the #GdaSet by connecting to the 
+  <link linkend="GdaSet-before-holder-change">"before-holder-change"</link> signal.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -23,6 +28,16 @@ different classifications of the group of #GdaHolder values.
 
 </para>
 
+
+<!-- ##### SIGNAL GdaSet::before-holder-change ##### -->
+<para>
+  
+</para>
+
+@gdaset: the object which received the signal.
+@arg1: 
+@arg2: 
+@Returns: 
 
 <!-- ##### SIGNAL GdaSet::holder-attr-changed ##### -->
 <para>
@@ -75,44 +90,6 @@ different classifications of the group of #GdaHolder values.
 
 </para>
 
-<!-- ##### ENUM GdaSetHint ##### -->
-<para>
-
-</para>
-
-@GDA_SET_HOLDER_READ_ONLY: 
-@GDA_SET_HOLDER_HIDE: 
-
-<!-- ##### STRUCT GdaSetNode ##### -->
-<para>
-
-</para>
-
-@holder: 
-@source_model: 
-@source_column: 
-@hint: 
-
-<!-- ##### STRUCT GdaSetGroup ##### -->
-<para>
-
-</para>
-
-@nodes: 
-@nodes_source: 
-
-<!-- ##### STRUCT GdaSetSource ##### -->
-<para>
-
-</para>
-
-@data_model: 
-@nodes: 
-@shown_n_cols: 
-@shown_cols_index: 
-@ref_n_cols: 
-@ref_cols_index: 
-
 <!-- ##### FUNCTION gda_set_new ##### -->
 <para>
 
@@ -161,7 +138,7 @@ different classifications of the group of #GdaHolder values.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_set_get_spec ##### -->
+<!-- ##### FUNCTION gda_set_is_valid ##### -->
 <para>
 
 </para>
@@ -230,7 +207,7 @@ different classifications of the group of #GdaHolder values.
 @set_to_merge: 
 
 
-<!-- ##### FUNCTION gda_set_is_valid ##### -->
+<!-- ##### FUNCTION gda_set_get_spec ##### -->
 <para>
 
 </para>
@@ -238,6 +215,24 @@ different classifications of the group of #GdaHolder values.
 @set: 
 @Returns: 
 
+
+<!-- ##### STRUCT GdaSetNode ##### -->
+<para>
+
+</para>
+
+@holder: 
+@source_model: 
+@source_column: 
+@hint: 
+
+<!-- ##### ENUM GdaSetHint ##### -->
+<para>
+
+</para>
+
+@GDA_SET_HOLDER_READ_ONLY: 
+@GDA_SET_HOLDER_HIDE: 
 
 <!-- ##### FUNCTION gda_set_get_node ##### -->
 <para>
@@ -248,6 +243,18 @@ different classifications of the group of #GdaHolder values.
 @param: 
 @Returns: 
 
+
+<!-- ##### STRUCT GdaSetSource ##### -->
+<para>
+
+</para>
+
+@data_model: 
+@nodes: 
+@shown_n_cols: 
+@shown_cols_index: 
+@ref_n_cols: 
+@ref_cols_index: 
 
 <!-- ##### FUNCTION gda_set_get_source_for_model ##### -->
 <para>
@@ -268,6 +275,14 @@ different classifications of the group of #GdaHolder values.
 @param: 
 @Returns: 
 
+
+<!-- ##### STRUCT GdaSetGroup ##### -->
+<para>
+
+</para>
+
+@nodes: 
+@nodes_source: 
 
 <!-- ##### FUNCTION gda_set_get_group ##### -->
 <para>

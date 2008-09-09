@@ -225,9 +225,9 @@ gda_meta_struct_set_property (GObject *object,
 			mstruct->priv->store = g_value_get_object (value);
 			if (mstruct->priv->store) {
 				g_object_ref (mstruct->priv->store);
-				g_signal_connect (G_OBJECT (mstruct->priv->store), "meta_changed",
+				g_signal_connect (G_OBJECT (mstruct->priv->store), "meta-changed",
 						  G_CALLBACK (meta_store_changed_cb), mstruct);
-				g_signal_connect (G_OBJECT (mstruct->priv->store), "meta_reset",
+				g_signal_connect (G_OBJECT (mstruct->priv->store), "meta-reset",
 						  G_CALLBACK (meta_store_reset_cb), mstruct);
 			}
 			break;

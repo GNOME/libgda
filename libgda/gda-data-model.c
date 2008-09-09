@@ -110,7 +110,7 @@ gda_data_model_class_init (gpointer g_class)
 				      g_cclosure_marshal_VOID__VOID,
 				      G_TYPE_NONE, 0);
 		gda_data_model_signals[ROW_INSERTED] =
-			g_signal_new ("row_inserted",
+			g_signal_new ("row-inserted",
 				      GDA_TYPE_DATA_MODEL,
 				      G_SIGNAL_RUN_LAST,
 				      G_STRUCT_OFFSET (GdaDataModelClass, row_inserted),
@@ -118,7 +118,7 @@ gda_data_model_class_init (gpointer g_class)
 				      g_cclosure_marshal_VOID__INT,
 				      G_TYPE_NONE, 1, G_TYPE_INT);
 		gda_data_model_signals[ROW_UPDATED] =
-			g_signal_new ("row_updated",
+			g_signal_new ("row-updated",
 				      GDA_TYPE_DATA_MODEL,
 				      G_SIGNAL_RUN_LAST,
 				      G_STRUCT_OFFSET (GdaDataModelClass, row_updated),
@@ -126,7 +126,7 @@ gda_data_model_class_init (gpointer g_class)
 				      g_cclosure_marshal_VOID__INT,
 				      G_TYPE_NONE, 1, G_TYPE_INT);
 		gda_data_model_signals[ROW_REMOVED] =
-			g_signal_new ("row_removed",
+			g_signal_new ("row-removed",
 				      GDA_TYPE_DATA_MODEL,
 				      G_SIGNAL_RUN_LAST,
 				      G_STRUCT_OFFSET (GdaDataModelClass, row_removed),
@@ -1453,15 +1453,6 @@ xml_set_boolean (xmlNodePtr node, const gchar *name, gboolean value)
 	xmlSetProp (node, (xmlChar*)name, value ? (xmlChar*)"TRUE" : (xmlChar*)"FALSE");
 }
 
-static void
-xml_set_int (xmlNodePtr node, const gchar *name, gint value)
-{
-	char s[80];
-
-	sprintf (s, "%d", value);
-	xmlSetProp (node, (xmlChar*)name, (xmlChar*)s);
-}
-
 /**
  * gda_data_model_to_xml_node
  * @model: a #GdaDataModel object.
@@ -1538,31 +1529,14 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 		cstr = gda_column_get_title (column);
 		if (cstr && *cstr)
 			xmlSetProp (field, BAD_CAST "title", BAD_CAST cstr);
-		cstr = gda_column_get_caption (column);
-		if (cstr && *cstr)
-			xmlSetProp (field, BAD_CAST "caption", BAD_CAST cstr);
 		cstr = gda_column_get_dbms_type (column);
 		if (cstr && *cstr)
 			xmlSetProp (field, BAD_CAST "dbms_type", BAD_CAST cstr);
 		xmlSetProp (field, BAD_CAST "gdatype", BAD_CAST gda_g_type_to_string (gda_column_get_g_type (column)));
-		if (gda_column_get_defined_size (column) != 0)
-			xml_set_int (field, "size", gda_column_get_defined_size (column));
-		if (gda_column_get_scale (column) != 0)
-			xml_set_int (field, "scale", gda_column_get_scale (column));
-		if (gda_column_get_primary_key (column))
-			xml_set_boolean (field, "pkey", gda_column_get_primary_key (column));
-		if (gda_column_get_unique_key (column))
-			xml_set_boolean (field, "unique", gda_column_get_unique_key (column));
 		if (gda_column_get_allow_null (column))
 			xml_set_boolean (field, "nullok", gda_column_get_allow_null (column));
 		if (gda_column_get_auto_increment (column))
 			xml_set_boolean (field, "auto_increment", gda_column_get_auto_increment (column));
-		cstr = gda_column_get_references (column);
-		if (cstr && *cstr)
-			xmlSetProp (field, BAD_CAST "ref", BAD_CAST cstr);
-		cstr = gda_column_get_table (column);
-		if (cstr && *cstr)
-			xmlSetProp (field, BAD_CAST "table", BAD_CAST cstr);
 	}
 	
 	/* add the model data to the XML output */

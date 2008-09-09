@@ -27,6 +27,7 @@
 #include "gda-marshal.h"
 #include "gda-data-proxy.h"
 #include "gda-enums.h"
+#include "gda-data-select.h"
 
 /* 
  * Main static functions 
@@ -49,7 +50,7 @@ static void gda_data_model_iter_get_property (GObject *object,
 static void model_row_updated_cb (GdaDataModel *model, gint row, GdaDataModelIter *iter);
 static void model_row_removed_cb (GdaDataModel *model, gint row, GdaDataModelIter *iter);
 
-static void holder_changed_cb (GdaSet *paramlist, GdaHolder *param);
+static GError *before_holder_change_cb (GdaSet *paramlist, GdaHolder *param, const GValue *new_value);
 static void holder_attr_changed_cb (GdaSet *paramlist, GdaHolder *param);
 
 /* get a pointer to the parents to be able to cvalue their destructor */
@@ -152,21 +153,21 @@ gda_data_model_iter_class_init (GdaDataModelIterClass *class)
 	parent_class = g_type_class_peek_parent (class);
 
 	gda_data_model_iter_signals [ROW_TO_CHANGE] =
-                g_signal_new ("row_to_change",
+                g_signal_new ("row-to-change",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_LAST,
                               G_STRUCT_OFFSET (GdaDataModelIterClass, row_to_change),
                               row_to_change_accumulator, NULL,
                               gda_marshal_BOOLEAN__INT, G_TYPE_BOOLEAN, 1, G_TYPE_INT);
 	gda_data_model_iter_signals [ROW_CHANGED] =
-                g_signal_new ("row_changed",
+                g_signal_new ("row-changed",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaDataModelIterClass, row_changed),
                               NULL, NULL,
                               g_cclosure_marshal_VOID__INT, G_TYPE_NONE, 1, G_TYPE_INT);
 	gda_data_model_iter_signals [END_OF_DATA] =
-                g_signal_new ("end_of_data",
+                g_signal_new ("end-of-data",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaDataModelIterClass, end_of_data),
@@ -179,7 +180,7 @@ gda_data_model_iter_class_init (GdaDataModelIterClass *class)
 
 	object_class->dispose = gda_data_model_iter_dispose;
 	object_class->finalize = gda_data_model_iter_finalize;
-	paramlist_class->holder_changed = holder_changed_cb;
+	paramlist_class->before_holder_change = before_holder_change_cb;
 	paramlist_class->holder_attr_changed = holder_attr_changed_cb;
 
 	/* Properties */
@@ -251,13 +252,14 @@ model_row_removed_cb (GdaDataModel *model, gint row, GdaDataModelIter *iter)
 /*
  * This function is called when a parameter in @paramlist is changed
  * to make sure the change is propagated to the GdaDataModel
- * paramlist is an iter for
+ * paramlist is an iter for, return an error if the data model could not be modified
  */
-static void
-holder_changed_cb (GdaSet *paramlist, GdaHolder *param)
+static GError *
+before_holder_change_cb (GdaSet *paramlist, GdaHolder *param, const GValue *new_value)
 {
 	GdaDataModelIter *iter;
 	gint col;
+	GError *error = NULL;
 
 	iter = (GdaDataModelIter *) paramlist;
 	if (!iter->priv->keep_param_changes && (iter->priv->row >= 0)) {
@@ -266,26 +268,33 @@ holder_changed_cb (GdaSet *paramlist, GdaHolder *param)
 		
 		/* propagate the value update to the data model */
 		col = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (param), "model_col")) - 1;
-		g_return_if_fail (col >= 0);
-		
-		if (! gda_data_model_set_value_at ((GdaDataModel *) iter->priv->data_model, 
-						   col, iter->priv->row, gda_holder_get_value (param), NULL)) {
-			/* writing to the model failed, revert back the change to parameter */
-			const GValue *cvalue = gda_data_model_get_value_at (GDA_DATA_MODEL (iter->priv->data_model), 
-									    col, iter->priv->row, NULL);
-			iter->priv->keep_param_changes = TRUE;
-			if (!cvalue || !gda_holder_set_value (param, cvalue, NULL))
-				gda_holder_force_invalid (param);
-			iter->priv->keep_param_changes = FALSE;
+		if (col < 0) 
+			g_set_error (&error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_COLUMN_OUT_OF_RANGE_ERROR,
+				     _("Column %d out of range (0-%d)"), col, g_slist_length (paramlist->holders) - 1);
+		else if (GDA_DATA_MODEL_GET_CLASS ((GdaDataModel *) iter->priv->data_model)->i_iter_set_value) {
+			if (! (GDA_DATA_MODEL_GET_CLASS ((GdaDataModel *) iter->priv->data_model)->i_iter_set_value) 
+			    ((GdaDataModel *) iter->priv->data_model, iter, col, new_value, &error)) {
+				if (!error)
+					g_set_error (&error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
+						     _("GdaDataModel refused value change"));
+			}
+		}
+		else if (! gda_data_model_set_value_at ((GdaDataModel *) iter->priv->data_model, 
+							col, iter->priv->row, gda_holder_get_value (param), &error)) {
+			if (!error)
+				g_set_error (&error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
+					     _("GdaDataModel refused value change"));
 		}
 		
 		g_signal_handler_unblock (iter->priv->data_model, iter->priv->model_changes_signals [0]);
 		g_signal_handler_unblock (iter->priv->data_model, iter->priv->model_changes_signals [1]);
 	}
 
-	/* for the parent class */
-	if (((GdaSetClass *) parent_class)->holder_changed)
-		((GdaSetClass *) parent_class)->holder_changed (paramlist, param);
+	if (!error && ((GdaSetClass *) parent_class)->before_holder_change)
+		/* for the parent class */
+		return ((GdaSetClass *) parent_class)->before_holder_change (paramlist, param, new_value);
+
+	return error;
 }
 
 /*
@@ -368,6 +377,79 @@ gda_data_model_iter_finalize (GObject   * object)
 	parent_class->finalize (object);
 }
 
+static void
+set_holders_properties_from_select_stmt (GdaDataModelIter *iter, GdaConnection *cnc, GdaStatement *sel_stmt)
+{
+	GdaSqlStatement *sqlst = NULL;
+	GdaSqlStatementSelect *select;
+	GdaSqlSelectTarget *target;
+
+	g_object_get (G_OBJECT (sel_stmt), "structure", &sqlst, NULL);
+	g_assert (sqlst->stmt_type == GDA_SQL_STATEMENT_SELECT);
+	select = (GdaSqlStatementSelect*) sqlst->contents;
+
+	/* we only want a single target */
+	if (!select->from || !select->from->targets || select->from->targets->next)
+		goto out;
+	
+	target = (GdaSqlSelectTarget *) select->from->targets->data;
+	if (!target || !target->table_name)
+		goto out;
+
+	if (! gda_sql_statement_check_validity (sqlst, cnc, NULL))
+		goto out;
+
+	if (!target->validity_meta_object) {
+		g_warning ("Internal gda_sql_statement_check_validity() error: target->validity_meta_object is not set");
+		goto out;
+	}
+
+	GSList *fields, *holders;
+	for (fields = select->expr_list, holders = GDA_SET (iter)->holders; 
+	     fields && holders; 
+	     fields = fields->next, holders = holders->next) {
+		GdaSqlSelectField *selfield = (GdaSqlSelectField*) fields->data;
+		if (selfield->validity_meta_table_column) {
+			GdaMetaTableColumn *tcol = selfield->validity_meta_table_column;
+
+			/*g_print ("==> %s\n", tcol->column_name);*/
+			gda_holder_set_not_null (GDA_HOLDER (holders->data), ! tcol->nullok);
+			if (tcol->default_value) {
+				GValue *dvalue;
+				g_value_set_string ((dvalue = gda_value_new (G_TYPE_STRING)), tcol->default_value);
+				gda_holder_set_default_value (GDA_HOLDER (holders->data), dvalue);
+				gda_value_free (dvalue);
+			}
+		}
+		else if (selfield->validity_meta_object && (selfield->validity_meta_object->obj_type == GDA_META_DB_TABLE) &&
+			 selfield->expr && selfield->expr->value && !selfield->expr->param_spec && 
+			 (G_VALUE_TYPE (selfield->expr->value) == G_TYPE_STRING) &&
+			 !strcmp (g_value_get_string (selfield->expr->value), "*")) {
+			/* expand all the fields */
+			GdaMetaTable *mtable = GDA_META_TABLE (selfield->validity_meta_object);
+			GSList *tmplist;
+			for (tmplist = mtable->columns; tmplist; tmplist = tmplist->next) {
+				GdaMetaTableColumn *tcol = (GdaMetaTableColumn*) tmplist->data;
+				/*g_print ("*==> %s\n", tcol->column_name);*/
+				gda_holder_set_not_null (GDA_HOLDER (holders->data), ! tcol->nullok);
+				if (tcol->default_value) {
+					GValue *dvalue;
+					g_value_set_string ((dvalue = gda_value_new (G_TYPE_STRING)), tcol->default_value);
+					gda_holder_set_default_value (GDA_HOLDER (holders->data), dvalue);
+					gda_value_free (dvalue);
+				}
+				if (tmplist != mtable->columns)
+					holders = holders->next;
+			}
+		}
+	}
+	if (fields || holders)
+		g_warning ("Internal error: GdaDataModelIter has %d GdaHolders, and SELECT statement has %d expressions",
+			   g_slist_length (GDA_SET (iter)->holders), g_slist_length (select->expr_list));
+
+ out:
+	gda_sql_statement_free (sqlst);
+}
 
 static void 
 gda_data_model_iter_set_property (GObject *object,
@@ -390,7 +472,7 @@ gda_data_model_iter_set_property (GObject *object,
 			g_return_if_fail (ptr && GDA_IS_DATA_MODEL (ptr));
 			model = GDA_DATA_MODEL (ptr);
 			
-			/* REM: model is actually set using the next property */
+			/* REM: model is actually set in the next property's code (there is no break statement) */
 
 			/* compute parameters */
 			ncols = gda_data_model_get_n_columns (model);
@@ -449,10 +531,23 @@ gda_data_model_iter_set_property (GObject *object,
 			iter->priv->data_model = GDA_DATA_MODEL (ptr);
 			g_object_add_weak_pointer (G_OBJECT (iter->priv->data_model),
 						   (gpointer*) &(iter->priv->data_model));
-			iter->priv->model_changes_signals [0] = g_signal_connect (G_OBJECT (ptr), "row_updated",
+			iter->priv->model_changes_signals [0] = g_signal_connect (G_OBJECT (ptr), "row-updated",
 										  G_CALLBACK (model_row_updated_cb), iter);
-			iter->priv->model_changes_signals [1] = g_signal_connect (G_OBJECT (ptr), "row_removed",
+			iter->priv->model_changes_signals [1] = g_signal_connect (G_OBJECT (ptr), "row-removed",
 										  G_CALLBACK (model_row_removed_cb), iter);
+
+			if (GDA_IS_DATA_SELECT (iter->priv->data_model)) {
+				GdaStatement *sel_stmt;
+				GdaConnection *cnc;
+				g_object_get (G_OBJECT (iter->priv->data_model), "connection", &cnc, 
+					      "select-stmt", &sel_stmt, NULL);
+				if (sel_stmt && cnc) 
+					set_holders_properties_from_select_stmt (iter, cnc, sel_stmt);
+				if (sel_stmt)
+					g_object_unref (sel_stmt);
+				if (cnc)
+					g_object_unref (cnc);
+			}
 			break;
                 }
 		case PROP_CURRENT_ROW:

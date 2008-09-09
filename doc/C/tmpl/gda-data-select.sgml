@@ -78,6 +78,11 @@ Data models returned by the execution of a SELECT statement
 
 </para>
 
+<!-- ##### ARG GdaDataSelect:select-stmt ##### -->
+<para>
+
+</para>
+
 <!-- ##### ARG GdaDataSelect:store-all-rows ##### -->
 <para>
 
