@@ -1,8 +1,8 @@
 <!-- ##### SECTION Title ##### -->
-Gda Value
+A single Value
 
 <!-- ##### SECTION Short_Description ##### -->
-Single value stored in a #GdaDataModel
+Assorted functions for dealing with #GValue values.
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>

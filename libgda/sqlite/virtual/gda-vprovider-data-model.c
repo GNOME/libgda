@@ -619,10 +619,12 @@ virtualNext (sqlite3_vtab_cursor *cur)
 
 	TRACE ();
 
-	gda_data_model_iter_move_next (cursor->iter);
-	while (gda_data_model_iter_is_valid (cursor->iter) &&
-	       gda_data_proxy_row_is_deleted (vtable->proxy, gda_data_model_iter_get_row (cursor->iter)))
-		gda_data_model_iter_move_next (cursor->iter);
+	if (!gda_data_model_iter_move_next (cursor->iter)) {
+		if (gda_data_model_iter_is_valid (cursor->iter))
+			return SQLITE_IOERR;
+		else
+			return SQLITE_OK;
+	}
 	return SQLITE_OK;
 }
 

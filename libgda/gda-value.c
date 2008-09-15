@@ -1882,7 +1882,9 @@ gda_value_differ (const GValue *value1, const GValue *value2)
 		const GdaBinary *binary1 = gda_value_get_binary (value1);
 		const GdaBinary *binary2 = gda_value_get_binary (value2);
 		if (binary1 && binary2 && (binary1->binary_length == binary2->binary_length))
-			return bcmp (binary1->data, binary2->data, binary1->binary_length) ;
+			return bcmp (binary1->data, binary2->data, binary1->binary_length);
+		else
+			return 1;
 	}
 
 	else if (type == GDA_TYPE_BLOB) {
@@ -1893,6 +1895,7 @@ gda_value_differ (const GValue *value1, const GValue *value2)
 				return bcmp (((GdaBinary *)blob1)->data, ((GdaBinary *)blob2)->data, 
 					     ((GdaBinary *)blob1)->binary_length);
 		}
+		return 1;
 	}
 
 	else if (type == G_TYPE_DATE) {
@@ -1902,6 +1905,7 @@ gda_value_differ (const GValue *value1, const GValue *value2)
 		d2 = (GDate *) g_value_get_boxed (value2);
 		if (d1 && d2)
 			return g_date_compare (d1, d2);
+		return 1;
 	}
 
 	else if (type == GDA_TYPE_GEOMETRIC_POINT) {
@@ -1910,6 +1914,7 @@ gda_value_differ (const GValue *value1, const GValue *value2)
 		p2 = gda_value_get_geometric_point (value2);
 		if (p1 && p2)
 			return bcmp (p1, p2, sizeof (GdaGeometricPoint));
+		return 1;
 	}
 
 	else if (type == G_TYPE_OBJECT) {
@@ -1935,6 +1940,7 @@ gda_value_differ (const GValue *value1, const GValue *value2)
 		num2 = gda_value_get_numeric (value2);
                 if (num1 && num2)
 			return strcmp (num1->number, num2->number);
+		return 1;
 	}
 	
 	else if (type == G_TYPE_STRING)	{
@@ -1943,6 +1949,7 @@ gda_value_differ (const GValue *value1, const GValue *value2)
 		str2 = g_value_get_string (value2);
 		if (str1 && str2)
 			return strcmp (str1, str2);
+		return 1;
 	}
 	
 	else if (type == GDA_TYPE_TIME) {
@@ -1951,6 +1958,7 @@ gda_value_differ (const GValue *value1, const GValue *value2)
 		t2 = gda_value_get_time (value2);
 		if (t1 && t2)
 			return bcmp (t1, t2, sizeof (GdaTime));
+		return 1;
 	}
 
 	else if (type == GDA_TYPE_TIMESTAMP) {
@@ -1959,6 +1967,7 @@ gda_value_differ (const GValue *value1, const GValue *value2)
 		ts2 = gda_value_get_timestamp (value2);
 		if (ts1 && ts2)
 			return bcmp (ts1, ts2, sizeof (GdaTimestamp));
+		return 1;
 	}
 
 	else if ((type == G_TYPE_INT) ||

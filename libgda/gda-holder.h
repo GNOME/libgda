@@ -56,7 +56,7 @@ struct _GdaHolderClass
 	GObjectClass               parent_class;
 	void                     (*changed)          (GdaHolder *holder);
 	void                     (*source_changed)   (GdaHolder *holder);
-	GError                  *(*before_change)    (GdaHolder *holder, const GValue *new_value);
+	GError                  *(*validate_change)  (GdaHolder *holder, const GValue *new_value);
 };
 
 GType               gda_holder_get_type                (void) G_GNUC_CONST;

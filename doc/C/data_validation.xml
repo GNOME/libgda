@@ -1,0 +1,128 @@
+<sect1 id="data-validation">
+  <title>Custom data validation</title>
+  <para>
+    &LIBGDA; allows the programmer to specify some rules of his own to control data changes (for example
+    business rules). This section details the various control points, how to implement them, and how or when
+    they are invoked.
+  </para>
+
+  <sect2 id="data-validation-GdaHolder">
+    <title>GdaHolder controls</title>
+    <para>
+      The <link linkend="GdaHolder">GdaHolder</link> object holds a single value 
+      (as a <link linkend="GValue">GValue</link>). When that value is to be modified, using for example
+      <link linkend="gda-holder-set-value">gda_holder_set_value()</link>, 
+      then the proposed new value's validation process is executed:
+      <orderedlist>
+	<listitem><para>it is determined if the proposed new value is of the correct type and
+	    if it respects the holder's policy (for example a NULL value won't be accepted if 
+	    the holder can't be NULL). If the proposed value does not respect the policy, then
+	    the value change will be rejected</para></listitem>
+	<listitem><para>the <link linkend="GdaHolder-validate-change">"validate-change"</link> signal is
+	    emitted. If any handler for this signal returns a pointer to a filled <link linkend="GError">GError</link>
+	    structure, then the signal's propagation is stopped and the value change will be rejected.</para></listitem>
+      </orderedlist>
+    </para>
+    <para>
+      An example illustrating how to use the <link linkend="GdaHolder-validate-change">"validate-change"</link> signal
+      is:
+      <programlisting>
+static GError *
+my_validate_change_cb (GdaHolder *h, const GValue *value, gpointer data)
+{
+        GError *error = NULL;
+
+        /* for example check that value is inferior to 5 and not NULL */
+        if (gda_value_is_null (value)) 
+                g_set_error (&amp;error, 0, 0, "NULL values are not allowed!");
+        else if (g_value_get_int (value) &gt;= 5)
+                g_set_error (&amp;error, 0, 0, "Value sould be inferior to 5");
+
+        return error;
+}
+
+{
+        GdaHolder *holder;
+        GError *error = NULL;
+        [...]
+        g_signal_connect (G_OBJECT (holder), "validate-change",
+                G_CALLBACK (my_validate_change_cb), NULL);
+        if (! gda_holder_set_value (holder, value, &amp;error)) {
+                g_print ("Error: %s\n", error->message);
+                g_error_free (error);
+		[...]
+	}
+}
+      </programlisting>
+    </para>
+    <para>
+      <mediaobject>
+	<imageobject role="html">
+          <imagedata fileref="data_validation_holder.png" format="PNG" contentwidth="100mm"/>
+	</imageobject>
+	<textobject>
+          <phrase>GdaHolder's value change control</phrase>
+	</textobject>
+      </mediaobject>
+    </para>
+  </sect2>
+
+  <sect2 id="data-validation-GdaSet">
+    <title>GdaSet controls</title>
+    <para>
+      The <link linkend="GdaSet">GdaSet</link> object is an ordered list (or vector) of values,
+      each represented by a <link linkend="GdaHolder">GdaHolder</link> object. One can place controls
+      at two key events:
+      <itemizedlist>
+	<listitem><para>
+	    When any value of a <link linkend="GdaHolder">GdaHolder</link> changes, where
+	    the <link linkend="GdaSet-validate-holder-change">"validate-holder-change"</link> signal is
+	    emitted. If any handler for this signal returns a pointer to a filled <link linkend="GError">GError</link>
+	    structure, then the signal's propagation is stopped and the value change will be rejected. This
+	    key event allows one to control each holder's value change as they occur.
+	</para></listitem>
+	<listitem><para>
+	    When the <link linkend="gda-set-is-valid">gda_set_is_valid()</link> method is called, where
+	    the <link linkend="GdaSet-validate-set">"validate-set"</link> signal is
+	    emitted. If any handler for this signal returns a pointer to a filled <link linkend="GError">GError</link>
+	    structure, then the signal's propagation is stopped and the calling method will return the generated
+	    error. This key event allows one to control the validity of a set of values altogether (for example
+	    before writing to a table).
+	</para></listitem>
+      </itemizedlist>
+    </para>
+    <para>
+      <mediaobject>
+	<imageobject role="html">
+          <imagedata fileref="data_validation_set.png" format="PNG" contentwidth="180mm"/>
+	</imageobject>
+	<textobject>
+          <phrase>GdaSet's changes controls</phrase>
+	</textobject>
+      </mediaobject>
+    </para>
+  </sect2>
+
+  <sect2 id="data-validation-GdaDataProxy">
+    <title>GdaDataProxy controls</title>
+    <para>
+      The <link linkend="GdaDataProxy">GdaDataProxy</link> data model allows one to store temporary modifications
+      to a data model, and then apply (write to the proxied data model) those modifications row by row. Before
+      applying any row modification, the <link linkend="GdaDataProxy">GdaDataProxy</link> data model emits
+      the <link linkend="GdaDataProxy::validate-row-changes">"validate-row-changes"</link> signal, and
+      if handler for this signal returns a pointer to a filled <link linkend="GError">GError</link>
+      structure, then the signal's propagation is stopped and the row's modifications are not applied.
+    </para>
+    <para>
+      <mediaobject>
+	<imageobject role="html">
+          <imagedata fileref="data_validation_proxy.png" format="PNG" contentwidth="100mm"/>
+	</imageobject>
+	<textobject>
+          <phrase>GdaDataProxy's changes controls</phrase>
+	</textobject>
+      </mediaobject>
+    </para>
+  </sect2>
+  
+</sect1>

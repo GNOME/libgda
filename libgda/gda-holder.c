@@ -57,7 +57,7 @@ enum
 {
 	CHANGED,
         SOURCE_CHANGED,
-	BEFORE_CHANGE,
+	VALIDATE_CHANGE,
         LAST_SIGNAL
 };
 
@@ -143,7 +143,7 @@ gda_holder_get_type (void)
 }
 
 static gboolean
-before_change_accumulator (GSignalInvocationHint *ihint,
+validate_change_accumulator (GSignalInvocationHint *ihint,
 			   GValue *return_accu,
 			   const GValue *handler_return,
 			   gpointer data)
@@ -157,7 +157,7 @@ before_change_accumulator (GSignalInvocationHint *ihint,
 }
 
 static GError *
-m_before_change (GdaHolder *holder, const GValue *new_value)
+m_validate_change (GdaHolder *holder, const GValue *new_value)
 {
 	return NULL;
 }
@@ -194,17 +194,17 @@ gda_holder_class_init (GdaHolderClass *class)
 	 * Return value: NULL if @holder is allowed to change its value to @new_value, or a #GError
 	 * otherwise.
 	 */
-	gda_holder_signals[BEFORE_CHANGE] =
-		g_signal_new ("before-change",
+	gda_holder_signals[VALIDATE_CHANGE] =
+		g_signal_new ("validate-change",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_LAST,
-                              G_STRUCT_OFFSET (GdaHolderClass, before_change),
-                              before_change_accumulator, NULL,
+                              G_STRUCT_OFFSET (GdaHolderClass, validate_change),
+                              validate_change_accumulator, NULL,
                               gda_marshal_POINTER__POINTER, G_TYPE_POINTER, 1, G_TYPE_POINTER);
 
         class->changed = NULL;
         class->source_changed = NULL;
-        class->before_change = m_before_change;
+        class->validate_change = m_validate_change;
 
 	/* virtual functions */
 	object_class->dispose = gda_holder_dispose;
@@ -751,7 +751,7 @@ static gboolean real_gda_holder_set_value (GdaHolder *holder, GValue *value, gbo
  * Note2: if @holder can't accept the @value value, then this method returns FALSE, and @holder will be left
  * in an invalid state.
  *
- * Note3: before the change is accepted by @holder, the "before-change" signal will be emitted (the value
+ * Note3: before the change is accepted by @holder, the "validate-change" signal will be emitted (the value
  * of which can prevent the change from happening) which can be connected to to have a greater control
  * of which values @holder can have, or implement some business rules.
  *
@@ -829,7 +829,7 @@ gda_holder_set_value_str (GdaHolder *holder, GdaDataHandler *dh, const gchar *va
  * Note1: if @holder can't accept the @value value, then this method returns FALSE, and @holder will be left
  * in an invalid state.
  *
- * Note2: before the change is accepted by @holder, the "before-change" signal will be emitted (the value
+ * Note2: before the change is accepted by @holder, the "validate-change" signal will be emitted (the value
  * of which can prevent the change from happening) which can be connected to to have a greater control
  * of which values @holder can have, or implement some business rules.
  *
@@ -906,7 +906,7 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 
 	/* check if we are allowed to change value */
 	GError *lerror = NULL;
-	g_signal_emit (holder, gda_holder_signals[BEFORE_CHANGE], 0, value, &lerror);
+	g_signal_emit (holder, gda_holder_signals[VALIDATE_CHANGE], 0, value, &lerror);
 	if (lerror) {
 		/* change refused by signal callback */
 		g_propagate_error (error, lerror);

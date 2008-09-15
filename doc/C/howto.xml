@@ -431,5 +431,16 @@ else
     </para>
   </sect1>
 
+  <sect1>
+    <title>Control value's assignment to various objects</title>
+    <para>
+      &LIBGDA; has builtin support to allow the programmer to control what values are acceptable 
+      for some objects which hold values (namely the <link linkend="GdaHolder">GdaHolder</link>,
+      <link linkend="GdaSet">GdaSet</link> and <link linkend="GdaDataProxy">GdaDataProxy</link> objects).
+      For more information about this topic, see the <link linkend="data-validation">custom data validation</link>
+      section.
+    </para>
+  </sect1>
+
 </chapter>
 

@@ -46,6 +46,7 @@ extern gchar *gda_lang_locale;
 #include <libgda/gda-data-model-extra.h>
 #include <libgda/gda-data-access-wrapper.h>
 #include <libgda/gda-data-model-iter.h>
+#include <libgda/gda-data-model-iter-extra.h>
 #include <libgda/gda-holder.h>
 #include <libgda/gda-set.h>
 #include <libgda/gda-data-model-private.h> /* For gda_data_model_add_data_from_xml_node() */
@@ -1811,7 +1812,7 @@ gda_data_model_import_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 
 	/* if there is a random access model, then use it */
 	if (imodel->priv->format == FORMAT_XML_NODE)
-		return gda_data_model_move_iter_next_default (model, iter);
+		return gda_data_model_iter_move_next_default (model, iter);
 
 	/* fetch the next row if necessary */
 	switch (imodel->priv->format) {
@@ -1907,7 +1908,7 @@ gda_data_model_import_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 
 	/* if there is a random access model, then use it */
 	if (imodel->priv->format == FORMAT_XML_NODE)
-		return gda_data_model_move_iter_prev_default (model, iter);
+		return gda_data_model_iter_move_prev_default (model, iter);
 
 	/* fetch the previous row if necessary */
 	switch (imodel->priv->format) {

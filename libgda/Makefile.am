@@ -41,6 +41,7 @@ gda_headers = \
 	gda-data-model-extra.h \
 	gda-data-model-import.h \
 	gda-data-model-iter.h \
+	gda-data-model-iter-extra.h \
 	gda-data-model-private.h \
 	gda-data-model-query.h \
 	gda-data-access-wrapper.h \

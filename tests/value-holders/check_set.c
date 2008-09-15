@@ -153,10 +153,10 @@ test2 (GError **error)
 }
 
 /*
- * "before_holder_change" signal
+ * "validate-holder-change" signal
  */
 static GError *
-t3_before_holder_change (GdaSet *set, GdaHolder *h, const GValue *value, gchar *token)
+t3_validate_holder_change (GdaSet *set, GdaHolder *h, const GValue *value, gchar *token)
 {
 	/* only accept GDA_VALUE_NULL or 444 value */
 	g_assert (!strcmp (token, "MyToken"));
@@ -192,8 +192,8 @@ test3 (GError **error)
 				  "H2", G_TYPE_INT, 1234,
 				  "H3", G_TYPE_CHAR, 'r');
 
-	g_signal_connect (G_OBJECT (set), "before-holder-change",
-			  G_CALLBACK (t3_before_holder_change), "MyToken");
+	g_signal_connect (G_OBJECT (set), "validate-holder-change",
+			  G_CALLBACK (t3_validate_holder_change), "MyToken");
 
 	h = gda_set_get_holder (set, "H2");
 	g_value_set_int ((value = gda_value_new (G_TYPE_INT)), 333);

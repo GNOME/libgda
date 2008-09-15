@@ -40,7 +40,8 @@ extern GQuark gda_set_error_quark (void);
 typedef enum
 {
 	GDA_SET_XML_SPEC_ERROR,
-	GDA_SET_HOLDER_NOT_FOUND_ERROR
+	GDA_SET_HOLDER_NOT_FOUND_ERROR,
+	GDA_SET_INVALID_ERROR
 } GdaSetError;
 
 typedef enum {
@@ -117,7 +118,8 @@ struct _GdaSetClass
 {
 	GObjectClass            parent_class;
 
-	GError               *(*before_holder_change)  (GdaSet *set, GdaHolder *holder, const GValue *new_value);
+	GError               *(*validate_holder_change)(GdaSet *set, GdaHolder *holder, const GValue *new_value);
+	GError               *(*validate_set)          (GdaSet *set);
 	void                  (*holder_changed)        (GdaSet *set, GdaHolder *holder);
 	void                  (*holder_plugin_changed) (GdaSet *set, GdaHolder *holder);
 	void                  (*holder_attr_changed)   (GdaSet *set, GdaHolder *holder);
@@ -139,7 +141,7 @@ GdaHolder    *gda_set_get_holder               (GdaSet *set, const gchar *holder
 gboolean      gda_set_add_holder               (GdaSet *set, GdaHolder *holder);
 void          gda_set_remove_holder            (GdaSet *set, GdaHolder *holder);
 void          gda_set_merge_with_set           (GdaSet *set, GdaSet *set_to_merge);
-gboolean      gda_set_is_valid                 (GdaSet *set);
+gboolean      gda_set_is_valid                 (GdaSet *set, GError **error);
 
 /* public data lookup functions */
 GdaSetNode   *gda_set_get_node                 (GdaSet *set, GdaHolder *param);

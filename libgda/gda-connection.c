@@ -246,9 +246,10 @@ gda_connection_init (GdaConnection *cnc, GdaConnectionClass *klass)
 	cnc->priv->auto_clear_events_list = TRUE;
 	cnc->priv->events_list = NULL;
 	cnc->priv->trans_status = NULL; /* no transaction yet */
+	cnc->priv->prepared_stmts = NULL;
 }
 
-static void prepared_stms_foreach_func (GdaStatement *gda_stmt, GdaStatement *prepared_stmt, GdaConnection *cnc);
+static void prepared_stms_foreach_func (GdaStatement *gda_stmt, GdaPStmt *prepared_stmt, GdaConnection *cnc);
 static void
 gda_connection_dispose (GObject *object)
 {
@@ -894,10 +895,11 @@ gda_connection_close_no_warning (GdaConnection *cnc)
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (cnc->priv);
 
-	if (! cnc->priv->is_open)
-		return;
-
 	gda_connection_lock ((GdaLockable*) cnc);
+	if (! cnc->priv->is_open) {
+		gda_connection_unlock ((GdaLockable*) cnc);
+		return;
+	}
 
 	/* get rid of prepared statements to avoid problems */
 	if (cnc->priv->prepared_stmts) {
@@ -3673,20 +3675,27 @@ gda_connection_internal_change_transaction_state (GdaConnection *cnc,
  * Prepared statements handling
  */
 
-static void prepared_stms_stmt_destroyed_cb (GdaStatement *gda_stmt, GdaConnection *cnc);
+static void prepared_stmts_stmt_reset_cb (GdaStatement *gda_stmt, GdaConnection *cnc);
 static void statement_weak_notify_cb (GdaConnection *cnc, GdaStatement *stmt);
 
 static void 
-prepared_stms_stmt_destroyed_cb (GdaStatement *gda_stmt, GdaConnection *cnc)
+prepared_stmts_stmt_reset_cb (GdaStatement *gda_stmt, GdaConnection *cnc)
 {
 	gda_connection_lock ((GdaLockable*) cnc);
 
-	g_signal_handlers_disconnect_by_func (gda_stmt, G_CALLBACK (prepared_stms_stmt_destroyed_cb), cnc);
+	g_signal_handlers_disconnect_by_func (gda_stmt, G_CALLBACK (prepared_stmts_stmt_reset_cb), cnc);
 	g_object_weak_unref (G_OBJECT (gda_stmt), (GWeakNotify) statement_weak_notify_cb, cnc);
 	g_assert (cnc->priv->prepared_stmts);
 	g_hash_table_remove (cnc->priv->prepared_stmts, gda_stmt);
 
 	gda_connection_unlock ((GdaLockable*) cnc);
+}
+
+static void
+prepared_stms_foreach_func (GdaStatement *gda_stmt, GdaPStmt *prepared_stmt, GdaConnection *cnc)
+{
+	g_signal_handlers_disconnect_by_func (gda_stmt, G_CALLBACK (prepared_stmts_stmt_reset_cb), cnc);
+	g_object_weak_unref (G_OBJECT (gda_stmt), (GWeakNotify) statement_weak_notify_cb, cnc);
 }
 
 static void
@@ -3718,6 +3727,7 @@ gda_connection_add_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stm
 {
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (cnc->priv);
+	g_return_if_fail (GDA_IS_STATEMENT (gda_stmt));
 	g_return_if_fail (GDA_IS_PSTMT (prepared_stmt));
 
 	gda_connection_lock ((GdaLockable*) cnc);
@@ -3726,10 +3736,11 @@ gda_connection_add_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stm
 		cnc->priv->prepared_stmts = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, g_object_unref);
 	g_hash_table_remove (cnc->priv->prepared_stmts, gda_stmt);
 	g_hash_table_insert (cnc->priv->prepared_stmts, gda_stmt, prepared_stmt);
+	g_object_ref (prepared_stmt);
 	
 	/* destroy the prepared statement if gda_stmt is destroyed, or changes */
 	g_object_weak_ref (G_OBJECT (gda_stmt), (GWeakNotify) statement_weak_notify_cb, cnc);
-	g_signal_connect (G_OBJECT (gda_stmt), "reset", G_CALLBACK (prepared_stms_stmt_destroyed_cb), cnc);
+	g_signal_connect (G_OBJECT (gda_stmt), "reset", G_CALLBACK (prepared_stmts_stmt_reset_cb), cnc);
 
 	gda_connection_unlock ((GdaLockable*) cnc);
 }
@@ -3777,16 +3788,9 @@ gda_connection_del_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stm
 	gda_connection_lock ((GdaLockable*) cnc);
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	if (gda_connection_get_prepared_statement (cnc, gda_stmt))
-		prepared_stms_stmt_destroyed_cb (gda_stmt, cnc);
+		prepared_stmts_stmt_reset_cb (gda_stmt, cnc);
 	gda_connection_unlock ((GdaLockable*) cnc);
 }
-
-static void
-prepared_stms_foreach_func (GdaStatement *gda_stmt, GdaStatement *prepared_stmt, GdaConnection *cnc)
-{
-	prepared_stms_stmt_destroyed_cb (gda_stmt, cnc);
-}
-
 
 /*
  * Provider's specific connection data management

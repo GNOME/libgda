@@ -478,7 +478,9 @@ gda_data_comparator_compute_diff (GdaDataComparator *comp, GError **error)
 
 	/* actual differences computations : rows to insert / update */
 	onrows = gda_data_model_get_n_rows (comp->priv->old_model);
+	g_assert (onrows >= 0);
 	nnrows = gda_data_model_get_n_rows (comp->priv->new_model);
+	g_assert (nnrows >= 0);
 	rows_to_del = g_new (gboolean, onrows);
 	memset (rows_to_del, TRUE, sizeof (gboolean) * onrows);
 	for (i = 0; i < nnrows; i++) {

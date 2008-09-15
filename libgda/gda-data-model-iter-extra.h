@@ -1,8 +1,6 @@
-/* GDA common library
- * Copyright (C) 2006 - 2007 The GNOME Foundation.
+/* gda-data-model-iter-extra.h
  *
- * AUTHORS:
- *      Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -20,20 +18,17 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __GDA_DATA_MODEL_EXTRA_H__
-#define __GDA_DATA_MODEL_EXTRA_H__
 
-#include <glib-object.h>
-#include <libgda/gda-decl.h>
+#ifndef __GDA_DATA_MODEL_ITER_EXTRA_H_
+#define __GDA_DATA_MODEL_ITER_EXTRA_H_
+
+#include "gda-data-model-iter.h"
 
 G_BEGIN_DECLS
 
-void     gda_data_model_signal_emit_changed             (GdaDataModel *model);
-
-void     gda_data_model_row_inserted        (GdaDataModel *model, gint row);
-void     gda_data_model_row_updated         (GdaDataModel *model, gint row);
-void     gda_data_model_row_removed         (GdaDataModel *model, gint row);
-void     gda_data_model_reset               (GdaDataModel *model);
+gboolean gda_data_model_iter_move_at_row_default (GdaDataModel *model, GdaDataModelIter *iter, gint row);
+gboolean gda_data_model_iter_move_next_default   (GdaDataModel *model, GdaDataModelIter *iter);
+gboolean gda_data_model_iter_move_prev_default   (GdaDataModel *model, GdaDataModelIter *iter);
 
 G_END_DECLS
 

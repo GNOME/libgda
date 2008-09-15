@@ -23,6 +23,7 @@
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-data-model-iter.h>
+#include <libgda/gda-data-model-iter-extra.h>
 #include <libgda/gda-data-model-private.h>
 #include <string.h>
 #include "gda-data-select.h"
@@ -1644,7 +1645,7 @@ gda_data_select_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 	g_return_val_if_fail (CLASS (model)->fetch_next, FALSE);
 
 	if (imodel->priv->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM) 
-		return gda_data_model_move_iter_next_default (model, iter);
+		return gda_data_model_iter_move_next_default (model, iter);
 
 	g_return_val_if_fail (iter, FALSE);
         g_return_val_if_fail (imodel->priv->iter == iter, FALSE);
@@ -1693,7 +1694,7 @@ gda_data_select_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 	g_return_val_if_fail (CLASS (model)->fetch_prev, FALSE);
 
 	if (imodel->priv->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM) 
-		return gda_data_model_move_iter_prev_default (model, iter);
+		return gda_data_model_iter_move_prev_default (model, iter);
 
         g_return_val_if_fail (iter, FALSE);
         g_return_val_if_fail (imodel->priv->iter == iter, FALSE);
@@ -1743,7 +1744,7 @@ gda_data_select_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint r
 
 	int_row = external_to_internal_row (imodel, row, NULL);
 	if (imodel->priv->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM) 
-		return gda_data_model_move_iter_at_row_default (model, iter, row);
+		return gda_data_model_iter_move_at_row_default (model, iter, row);
 
         g_return_val_if_fail (iter, FALSE);
         g_return_val_if_fail (imodel->priv->iter == iter, FALSE);

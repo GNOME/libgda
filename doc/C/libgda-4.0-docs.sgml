@@ -38,6 +38,7 @@
 <!ENTITY examples SYSTEM "gettingstarted.xml">
 <!ENTITY migration SYSTEM "migration.xml">
 <!ENTITY migration2 SYSTEM "migration2.xml">
+<!ENTITY data-validation SYSTEM "data_validation.xml">
 <!ENTITY limitations SYSTEM "limitations.xml">
 <!ENTITY libgda-GdaCommand SYSTEM "xml/gda-command.xml">
 <!ENTITY libgda-config SYSTEM "xml/gda-config.xml">
@@ -569,6 +570,7 @@
 	</itemizedlist>
       </para>
       &libgda-GValue;
+      &data-validation;
       &libgda-GdaBlobOp;
       &libgda-GdaDataModel;
       &libgda-GdaColumn;

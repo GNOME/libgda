@@ -1,3 +1,50 @@
+2008-09-15  Vivien Malerba <malerba@gnome-db.org>
+
+	* doc/C: documentation improvements regarding data validation and programmer's control
+	* libgda/gda-holder.[ch]: renamed the "before-change" signal to "validate-change" (and changed
+	its return value)
+	* libgda/gda-set.[ch]:
+	  - changed the "before-holder-change" to "validate_holder_change"(and changed
+	    its return value)
+	  - added a "validate-set" signal
+	  - the gda_set_is_valid() method has been changed to emit the "validate-set" signal
+	    before it returns a value.
+	* libgda/gda-data-model-iter.[ch]: removed the "row-to-change" signal (it now uses the
+	GdaSet::validate-set signal), and the gda_data_model_iter_can_be_moved() method
+	* libgda/gda-server-operation.c:
+	* libgda/gda-data-model.c: adaptations to the API Changes
+	* libgda/gda-data-proxy.[ch]:
+	  - adaptations to the API Changes,
+	  - renamed the	"pre-changes-applied" signal to "validate-row-changes" (and changed
+	    its return value)
+	  - renamed the "post-changes-applied" signal to "row-changes-applied"
+	  - bug correction in gda_data_proxy_get_n_rows()
+	* libgda/gda-marshal.list: new signals' signatures
+	* libgda/gda-data-comparator.c: added assertions
+	* libgda/gda-connection.c: don't remove items from a GHashTable while in g_hash_table_foreach(),
+	this is probably the reason for bug #545979
+	* libgda/gda-value.c: corrected the gda_value_differ() function
+	* libgda/sqlite/virtual/gda-vprovider-data-model.c: corrected the virtualNext() method which
+	moves SQLite's internal cursor forward
+	* libgda/gda-data-model-iter.[ch]: renamed gda_data_model_iter_set_at_row() to
+	gda_data_model_iter_move_at_row()
+	* libgda/Makefile.am:
+	* libgda/gda-data-model-iter-extra.h: new file
+	* libgda/gda-data-model-extra.h:
+	* libgda/gda-data-model-private.h:
+	* libgda/gda-data-model-import.c:
+	* libgda/gda-data-model.c:
+	* libgda/gda-data-proxy.c:
+	* libgda/gda-data-select.c:
+	* libgda/sqlite/virtual/virtual-test.c:
+	  - moved the code which implements the GdaDataModelIter
+	    movements (forward, backward and to a row) to the gda-data-model-iter.c file
+	  - renamed gda_data_model_move_iter_at_row_default() to gda_data_model_iter_move_at_row_default()
+	  - renamed gda_data_model_move_iter_next_default() to gda_data_model_iter_move_next_default()
+	  - renamed gda_data_model_move_iter_prev_default() to gda_data_model_iter_move_prev_default()
+	* libgda/sqlite/sqlite-src/: up to version 3.6.2
+	* tests/value-holders/: adaptations to the API Changes
+
 2008-09-09  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/sqlite/virtual/gda-virtual-connection.c:

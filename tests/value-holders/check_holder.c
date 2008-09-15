@@ -784,11 +784,11 @@ test9 (GError **error)
 }
 
 /*
- * "before_change" signal
+ * "validate-change" signal
  */
 
 static GError *
-t10_before_change_cb (GdaHolder *h, const GValue *value, gchar *token)
+t10_validate_change_cb (GdaHolder *h, const GValue *value, gchar *token)
 {
 	/* only accept GDA_VALUE_NULL or the "hi!" G_TYPE_STRING value */
 	g_assert (!strcmp (token, "AToken"));
@@ -828,8 +828,8 @@ test10 (GError **error)
 	gda_value_free (value);
 	
 	/***/
-	g_signal_connect (G_OBJECT (h), "before-change",
-			  G_CALLBACK (t10_before_change_cb), "AToken");
+	g_signal_connect (G_OBJECT (h), "validate-change",
+			  G_CALLBACK (t10_validate_change_cb), "AToken");
 
 	/***/
 	value = gda_value_new_from_string ("my other string", G_TYPE_STRING);

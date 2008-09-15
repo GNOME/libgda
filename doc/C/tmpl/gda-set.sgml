@@ -29,16 +29,6 @@ Container for several values
 </para>
 
 
-<!-- ##### SIGNAL GdaSet::before-holder-change ##### -->
-<para>
-  
-</para>
-
-@gdaset: the object which received the signal.
-@arg1: 
-@arg2: 
-@Returns: 
-
 <!-- ##### SIGNAL GdaSet::holder-attr-changed ##### -->
 <para>
 
@@ -69,6 +59,24 @@ Container for several values
 </para>
 
 @gdaset: the object which received the signal.
+
+<!-- ##### SIGNAL GdaSet::validate-holder-change ##### -->
+<para>
+
+</para>
+
+@gdaset: the object which received the signal.
+@arg1: 
+@arg2: 
+@Returns: 
+
+<!-- ##### SIGNAL GdaSet::validate-set ##### -->
+<para>
+
+</para>
+
+@gdaset: the object which received the signal.
+@Returns: 
 
 <!-- ##### ARG GdaSet:description ##### -->
 <para>
@@ -144,6 +152,7 @@ Container for several values
 </para>
 
 @set: 
+@error: 
 @Returns: 
 
 

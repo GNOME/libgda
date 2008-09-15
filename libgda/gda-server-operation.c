@@ -2106,8 +2106,7 @@ gda_server_operation_is_valid (GdaServerOperation *op, const gchar *xml_file, GE
 
 	if (!xml_file) {
 		/* basic validity test */
-		list = op->priv->allnodes;
-		while (list && valid) {
+		for (list = op->priv->allnodes; list; list = list->next) {
 			Node *node;
 			
 			node = NODE (list->data);
@@ -2122,22 +2121,16 @@ gda_server_operation_is_valid (GdaServerOperation *op, const gchar *xml_file, GE
 						valid = FALSE;
 						g_set_error (error, 0, 0,
 							     _("Missing required value for '%s'"), path);
+						break;
 					}
 					g_free (path);
 				}
 				else if (node->type == GDA_SERVER_OPERATION_NODE_PARAMLIST) {
-					valid = gda_set_is_valid (node->d.plist);
-					if (!valid) {
-						gchar *path;
-
-						path = node_get_complete_path (op, node);
-						g_set_error (error, 0, 0,
-							     _("Missing required value for list of parameters '%s'"), path);
-						g_free (path);
-					}
+					valid = gda_set_is_valid (node->d.plist, error);
+					if (!valid)
+						break;
 				}
 			}
-			list = list->next;
 		}
 	}
 	else {

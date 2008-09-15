@@ -51,7 +51,7 @@ static void set_remove_node (GdaSet *set, GdaSetNode *node);
 static void set_remove_source (GdaSet *set, GdaSetSource *source);
 
 static void changed_holder_cb (GdaHolder *holder, GdaSet *dataset);
-static GError *before_change_holder_cb (GdaHolder *holder, const GValue *value, GdaSet *dataset);
+static GError *validate_change_holder_cb (GdaHolder *holder, const GValue *value, GdaSet *dataset);
 static void source_changed_holder_cb (GdaHolder *holder, GdaSet *dataset);
 static void notify_holder_cb (GdaHolder *holder, GParamSpec *pspec, GdaSet *dataset);
 
@@ -78,11 +78,12 @@ enum
 	PUBLIC_DATA_CHANGED,
 	HOLDER_PLUGIN_CHANGED,
 	HOLDER_ATTR_CHANGED,
-	BEFORE_HOLDER_CHANGE,
+	VALIDATE_HOLDER_CHANGE,
+	VALIDATE_SET,
 	LAST_SIGNAL
 };
 
-static gint gda_set_signals[LAST_SIGNAL] = { 0, 0, 0, 0, 0 };
+static gint gda_set_signals[LAST_SIGNAL] = { 0, 0, 0, 0, 0, 0};
 
 
 /* private structure */
@@ -197,7 +198,7 @@ gda_set_get_type (void)
 }
 
 static gboolean
-before_holder_change_accumulator (GSignalInvocationHint *ihint,
+validate_accumulator (GSignalInvocationHint *ihint,
 				  GValue *return_accu,
 				  const GValue *handler_return,
 				  gpointer data)
@@ -211,7 +212,13 @@ before_holder_change_accumulator (GSignalInvocationHint *ihint,
 }
 
 static GError *
-m_before_holder_change (GdaSet *set, GdaHolder *holder, const GValue *new_value)
+m_validate_holder_change (GdaSet *set, GdaHolder *holder, const GValue *new_value)
+{
+	return NULL;
+}
+
+static GError *
+m_validate_set (GdaSet *set)
 {
 	return NULL;
 }
@@ -233,7 +240,7 @@ gda_set_class_init (GdaSetClass *class)
 			      GDA_TYPE_HOLDER);
 
 	/**
-	 * GdaSet::before-holder-change:
+	 * GdaSet::validate-holder-change:
 	 * @set: the object which received the signal
 	 * @holder: the #GdaHolder which is going to change
 	 * @new_value: the proposed new value for @holder
@@ -244,14 +251,31 @@ gda_set_class_init (GdaSetClass *class)
 	 * Return value: NULL if @holder is allowed to change its value to @new_value, or a #GError
 	 * otherwise.
 	 */
-	gda_set_signals[BEFORE_HOLDER_CHANGE] =
-		g_signal_new ("before-holder-change",
+	gda_set_signals[VALIDATE_HOLDER_CHANGE] =
+		g_signal_new ("validate-holder-change",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (GdaSetClass, before_holder_change),
-			      before_holder_change_accumulator, NULL,
+			      G_STRUCT_OFFSET (GdaSetClass, validate_holder_change),
+			      validate_accumulator, NULL,
 			      gda_marshal_POINTER__OBJECT_POINTER, G_TYPE_POINTER, 2,
 			      GDA_TYPE_HOLDER, G_TYPE_POINTER);
+	/**
+	 * GdaSet::validate-set:
+	 * @set: the object which received the signal
+	 * 
+	 * Gets emitted when gda_set_is_valid() is called, use
+	 * this signal to control which combination of values @set's holder can have (for example to implement some business rules)
+	 *
+	 * Return value: NULL if @set's contents has been validated, or a #GError
+	 * otherwise.
+	 */
+	gda_set_signals[VALIDATE_SET] =
+		g_signal_new ("validate-set",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaSetClass, validate_set),
+			      validate_accumulator, NULL,
+			      gda_marshal_POINTER__VOID, G_TYPE_POINTER, 0);
 	gda_set_signals[HOLDER_PLUGIN_CHANGED] =
 		g_signal_new ("holder-plugin-changed",
 			      G_TYPE_FROM_CLASS (object_class),
@@ -277,7 +301,8 @@ gda_set_class_init (GdaSetClass *class)
 			      gda_marshal_VOID__VOID, G_TYPE_NONE, 0);
 
 	class->holder_changed = NULL;
-	class->before_holder_change = m_before_holder_change;
+	class->validate_holder_change = m_validate_holder_change;
+	class->validate_set = m_validate_set;
 	class->holder_plugin_changed = NULL;
 	class->holder_attr_changed = NULL;
 	class->public_data_changed = NULL;
@@ -925,7 +950,7 @@ gda_set_remove_holder (GdaSet *set, GdaHolder *holder)
 	g_signal_handlers_disconnect_by_func (G_OBJECT (holder),
 					      G_CALLBACK (changed_holder_cb), set);
 	g_signal_handlers_disconnect_by_func (G_OBJECT (holder),
-					      G_CALLBACK (before_change_holder_cb), set);
+					      G_CALLBACK (validate_change_holder_cb), set);
 	g_signal_handlers_disconnect_by_func (G_OBJECT (holder),
 					      G_CALLBACK (source_changed_holder_cb), set);
 	g_signal_handlers_disconnect_by_func (G_OBJECT (holder),
@@ -980,16 +1005,16 @@ notify_holder_cb (GdaHolder *holder, GParamSpec *pspec, GdaSet *set)
 }
 
 static GError *
-before_change_holder_cb (GdaHolder *holder, const GValue *value, GdaSet *set)
+validate_change_holder_cb (GdaHolder *holder, const GValue *value, GdaSet *set)
 {
-	/* signal the holder before-change */
+	/* signal the holder validate-change */
 	GError *error = NULL;
 #ifdef GDA_DEBUG_signal
-	g_print (">> 'BEFORE_HOLDER_CHANGE' from %s\n", __FUNCTION__);
+	g_print (">> 'VALIDATE_HOLDER_CHANGE' from %s\n", __FUNCTION__);
 #endif
-	g_signal_emit (G_OBJECT (set), gda_set_signals[BEFORE_HOLDER_CHANGE], 0, holder, value, &error);
+	g_signal_emit (G_OBJECT (set), gda_set_signals[VALIDATE_HOLDER_CHANGE], 0, holder, value, &error);
 #ifdef GDA_DEBUG_signal
-	g_print ("<< 'BEFORE_HOLDER_CHANGED' from %s\n", __FUNCTION__);
+	g_print ("<< 'VALIDATE_HOLDER_CHANGED' from %s\n", __FUNCTION__);
 #endif
 	return error;
 }
@@ -1030,7 +1055,7 @@ gda_set_dispose (GObject *object)
 			g_signal_handlers_disconnect_by_func (G_OBJECT (list->data),
 				G_CALLBACK (changed_holder_cb), set);
 			g_signal_handlers_disconnect_by_func (G_OBJECT (list->data),
-				G_CALLBACK (before_change_holder_cb), set);
+				G_CALLBACK (validate_change_holder_cb), set);
 			g_signal_handlers_disconnect_by_func (G_OBJECT (list->data),
 				G_CALLBACK (source_changed_holder_cb), set);
 			g_signal_handlers_disconnect_by_func (G_OBJECT (list->data),
@@ -1332,8 +1357,8 @@ gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
 		g_object_ref (holder);
 		g_signal_connect (G_OBJECT (holder), "changed",
 				  G_CALLBACK (changed_holder_cb), set);
-		g_signal_connect (G_OBJECT (holder), "before-change",
-				  G_CALLBACK (before_change_holder_cb), set);
+		g_signal_connect (G_OBJECT (holder), "validate-change",
+				  G_CALLBACK (validate_change_holder_cb), set);
 		g_signal_connect (G_OBJECT (holder), "source-changed",
 				  G_CALLBACK (source_changed_holder_cb), set);
 		g_signal_connect (G_OBJECT (holder), "notify",
@@ -1399,13 +1424,18 @@ set_remove_source (GdaSet *set, GdaSetSource *source)
 /**
  * gda_set_is_valid
  * @set: a #GdaSet object
+ * @error: a place to store validation errors, or %NULL
  *
- * Tells if all the set's holders have valid data
+ * This method tells if all @set's #GdaHolder objects are valid, and if
+ * they represent a valid combination of values, as defined by rules
+ * external to Libgda: the "validate-set" signal is emitted and if none of the signal handlers return an
+ * error, then the returned value is TRUE, otherwise the return value is FALSE as soon as a signal handler
+ * returns an error.
  *
  * Returns: TRUE if the set is valid
  */
 gboolean
-gda_set_is_valid (GdaSet *set)
+gda_set_is_valid (GdaSet *set, GError **error)
 {
 	GSList *holders;
 	gboolean retval = TRUE;
@@ -1414,9 +1444,28 @@ gda_set_is_valid (GdaSet *set)
 	g_return_val_if_fail (set->priv, FALSE);
 
 	for (holders = set->holders; holders && retval; holders = g_slist_next (holders)) {
-		if (!gda_holder_is_valid ((GdaHolder*) holders->data)) 
+		if (!gda_holder_is_valid ((GdaHolder*) holders->data)) {
+			g_set_error (error, GDA_SET_ERROR, GDA_SET_INVALID_ERROR,
+			     _("One or more values are invalid"));
 			retval = FALSE;
+		}
 		
+	if (retval) {
+		/* signal the holder validate-set */
+		GError *lerror = NULL;
+#ifdef GDA_DEBUG_signal
+		g_print (">> 'VALIDATE_SET' from %s\n", __FUNCTION__);
+#endif
+		g_signal_emit (G_OBJECT (set), gda_set_signals[VALIDATE_SET], 0, &lerror);
+#ifdef GDA_DEBUG_signal
+		g_print ("<< 'VALIDATE_SET' from %s\n", __FUNCTION__);
+#endif
+		if (lerror) {
+			g_propagate_error (error, lerror);
+			retval = FALSE;
+		}
+	}
+
 #ifdef GDA_DEBUG_NO
 		g_print ("== HOLDER %p: valid= %d, value=%s\n", holders->data, gda_holder_is_valid (GDA_HOLDER (holders->data)),
 			 gda_holder_get_value (GDA_HOLDER (holders->data)) ?
