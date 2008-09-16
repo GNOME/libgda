@@ -33,23 +33,24 @@ gda_column_get_type
 <FILE>gda-config</FILE>
 <TITLE>Configuration</TITLE>
 GdaConfig
-gda_config_get
 <SUBSECTION>
-GdaDataSourceInfo
-gda_config_get_dsn
+GdaDsnInfo
+gda_config_get_dsn_info
 gda_config_define_dsn
 gda_config_remove_dsn
 gda_config_dsn_needs_authentication
 gda_config_list_dsn
 gda_config_get_nb_dsn
-gda_config_get_dsn_index
-gda_config_get_dsn_at_index
+gda_config_get_dsn_info_index
+gda_config_get_dsn_info_at_index
 gda_config_can_modify_system_config
 <SUBSECTION>
 GdaProviderInfo
 gda_config_get_provider_info
-gda_config_get_provider_object
+gda_config_get_provider
 gda_config_list_providers
+<SUBSECTION>
+gda_config_get
 <SUBSECTION Standard>
 GDA_CONFIG
 GDA_CONFIG_CLASS
@@ -63,25 +64,14 @@ gda_config_get_type
 <FILE>gda-connection-event</FILE>
 <TITLE>GdaConnectionEvent</TITLE>
 GdaConnectionEvent
-GdaConnectionEventPrivate
 GdaConnectionEventType
 GdaConnectionEventCode
-gda_connection_event_new
-gda_connection_event_free
-gda_connection_event_list_copy
-gda_connection_event_list_free
-gda_connection_event_set_event_type
 gda_connection_event_get_event_type
 gda_connection_event_get_description
-gda_connection_event_set_description
 gda_connection_event_get_code
-gda_connection_event_set_code
 gda_connection_event_get_gda_code
-gda_connection_event_set_gda_code
 gda_connection_event_get_source
-gda_connection_event_set_source
 gda_connection_event_get_sqlstate
-gda_connection_event_set_sqlstate
 <SUBSECTION Standard>
 GDA_CONNECTION_EVENT
 GDA_CONNECTION_EVENT_CLASS
@@ -104,6 +94,7 @@ gda_connection_close_no_warning
 gda_connection_is_opened
 <SUBSECTION>
 gda_connection_create_parser
+gda_connection_value_to_sql_string
 gda_connection_statement_to_sql
 gda_connection_statement_prepare
 gda_connection_statement_execute
@@ -121,9 +112,8 @@ gda_connection_delete_savepoint
 <SUBSECTION>
 gda_connection_get_transaction_status
 gda_connection_get_options
-gda_connection_get_provider_obj
+gda_connection_get_provider
 gda_connection_get_provider_name
-gda_connection_set_dsn
 gda_connection_get_dsn
 gda_connection_get_cnc_string
 gda_connection_get_authentification
@@ -139,7 +129,6 @@ gda_connection_get_meta_store
 gda_connection_update_meta_store
 GdaConnectionMetaType
 gda_connection_get_meta_store_data
-gda_connection_value_to_sql_string
 <SUBSECTION>
 gda_connection_lock
 gda_connection_trylock
@@ -287,7 +276,6 @@ gda_data_model_get_access_flags
 gda_data_model_create_iter
 gda_data_model_get_value_at
 gda_data_model_get_typed_value_at
-gda_data_model_get_value_at_column
 gda_data_model_set_value_at
 gda_data_model_set_values
 gda_data_model_get_attributes_at
@@ -343,7 +331,6 @@ gda_data_proxy_delete
 gda_data_proxy_undelete
 gda_data_proxy_row_is_deleted
 gda_data_proxy_row_is_inserted
-gda_data_proxy_find_row_from_values
 gda_data_proxy_get_model
 gda_data_proxy_append
 gda_data_proxy_cancel_row_changes
@@ -376,6 +363,7 @@ gda_data_proxy_get_type
 GdaDataModelIter
 gda_data_model_iter_get_value_at
 gda_data_model_iter_get_value_for_field
+gda_data_model_iter_set_value_at
 gda_data_model_iter_is_valid
 gda_data_model_iter_move_at_row
 gda_data_model_iter_move_next
@@ -396,6 +384,7 @@ gda_data_model_iter_get_type
 <FILE>libgda</FILE>
 <TITLE>Libgda Initialization</TITLE>
 gda_init
+gda_get_application_exec_path
 <SUBSECTION Standard>
 </SECTION>
 
@@ -1439,6 +1428,16 @@ gda_virtual_connection_internal_get_provider_data
 gda_connection_add_event
 gda_connection_add_event_string
 gda_connection_clear_events_list
+gda_connection_event_new
+gda_connection_event_free
+gda_connection_event_list_copy
+gda_connection_event_list_free
+gda_connection_event_set_event_type
+gda_connection_event_set_description
+gda_connection_event_set_code
+gda_connection_event_set_gda_code
+gda_connection_event_set_source
+gda_connection_event_set_sqlstate
 <SUBSECTION>
 gda_connection_add_prepared_statement
 gda_connection_del_prepared_statement

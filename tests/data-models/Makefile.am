@@ -61,4 +61,4 @@ EXTRA_DIST = \
 	pmodel_data_locations.xml
 
 CLEANFILES = \
-	pmodel.db modelquery.db
+	pmodel.db modelquery.db pmodel.db-journal modelquery.db-journal

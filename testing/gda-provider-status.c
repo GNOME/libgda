@@ -111,7 +111,7 @@ main (int argc, char *argv[])
 					g_error ("Can't load the '%s' provider: %s\n", pname,
 						 error && error->message ? error->message : "No detail");
 				pname = g_value_get_string (cvalue);
-				prov = gda_config_get_provider_object (pname, &error);
+				prov = gda_config_get_provider (pname, &error);
 				if (!prov) 
 					g_error ("Can't load the '%s' provider: %s\n", pname,
 						 error && error->message ? error->message : "No detail");
@@ -152,7 +152,7 @@ open_connection (const gchar *cnc_string, GError **error)
 {
 	GdaConnection *cnc = NULL;
 
-	GdaDataSourceInfo *info;
+	GdaDsnInfo *info;
 	gchar *user, *pass, *real_cnc, *real_provider, *real_auth_string = NULL;
 	gda_connection_string_split (cnc_string, &real_cnc, &real_provider, &user, &pass);
 	if (!real_cnc) {
@@ -210,7 +210,7 @@ open_connection (const gchar *cnc_string, GError **error)
 		}
 	}
 	
-	info = gda_config_get_dsn (real_cnc);
+	info = gda_config_get_dsn_info (real_cnc);
 	if (info && !real_provider)
 		cnc = gda_connection_open_from_dsn (cnc_string, real_auth_string, 0, error);
 	else 
@@ -240,7 +240,7 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 	} ProvFunc;
 	GdaServerProviderClass *pclass;
 
-	if (prov && cnc && (prov != gda_connection_get_provider_obj (cnc)))
+	if (prov && cnc && (prov != gda_connection_get_provider (cnc)))
 		/* ignoring connection as it has a different provider */
 		return TRUE;
 	g_assert (prov || cnc);
@@ -253,7 +253,7 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 
 	/* provider info */
 	if (!prov)
-		prov = gda_connection_get_provider_obj (cnc);
+		prov = gda_connection_get_provider (cnc);
 	is_virt = GDA_IS_VIRTUAL_PROVIDER (prov);
 	pclass = (GdaServerProviderClass*) G_OBJECT_GET_CLASS (prov);
 	ProvFunc fa[] = {

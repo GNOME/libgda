@@ -530,10 +530,10 @@ gda_server_operation_set_property (GObject *object,
 			if (op->priv->cnc) {
 				g_object_ref (op->priv->cnc);
 
-				if (gda_connection_get_provider_obj (op->priv->cnc)) {
+				if (gda_connection_get_provider (op->priv->cnc)) {
 					if (op->priv->prov)
 						g_object_unref (op->priv->prov);
-					op->priv->prov = gda_connection_get_provider_obj (op->priv->cnc);
+					op->priv->prov = gda_connection_get_provider (op->priv->cnc);
 					g_object_ref (op->priv->prov);
 					op->priv->prov_set = TRUE;
 				}

@@ -53,7 +53,7 @@ create_table (GdaConnection *cnc)
 	gint i;
 
 	/* create a new GdaServerOperation object */
-	provider = gda_connection_get_provider_obj (cnc);
+	provider = gda_connection_get_provider (cnc);
 	op = gda_server_provider_create_operation (provider, cnc, GDA_SERVER_OPERATION_CREATE_TABLE, NULL, &error);
 	if (!op) {
 		g_print ("CREATE TABLE operation is not supported by the provider: %s\n",

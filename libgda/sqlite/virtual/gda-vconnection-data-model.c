@@ -248,7 +248,7 @@ gda_vconnection_data_model_add (GdaVconnectionDataModel *cnc, GdaVconnectionData
 	cnc->priv->table_data_list = g_slist_append (cnc->priv->table_data_list, td);
 
 	/* actually create the virtual table in @cnc */
-	prov = (GdaVirtualProvider *) gda_connection_get_provider_obj (GDA_CONNECTION (cnc));
+	prov = (GdaVirtualProvider *) gda_connection_get_provider (GDA_CONNECTION (cnc));
 	str = g_strdup_printf ("CREATE VIRTUAL TABLE %s USING %s ('%s')", table_name, G_OBJECT_TYPE_NAME (prov), td->unique_name);
 	rc = sqlite3_exec (scnc->connection, str, NULL, 0, &zErrMsg);
 	g_free (str);
@@ -306,7 +306,7 @@ gda_vconnection_data_model_remove (GdaVconnectionDataModel *cnc, const gchar *ta
 		return FALSE;
 	}
 	
-	prov = (GdaVirtualProvider *) gda_connection_get_provider_obj (GDA_CONNECTION (cnc));
+	prov = (GdaVirtualProvider *) gda_connection_get_provider (GDA_CONNECTION (cnc));
 	str = g_strdup_printf ("DROP TABLE %s", td->table_name);
 	rc = sqlite3_exec (scnc->connection, str, NULL, 0, &zErrMsg);
 	g_free (str);

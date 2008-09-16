@@ -90,15 +90,7 @@ g_object_new (GDA_TYPE_CONFIG, "user-file", "my_file", NULL);
 
 </para>
 
-<!-- ##### FUNCTION gda_config_get ##### -->
-<para>
-
-</para>
-
-@Returns: 
-
-
-<!-- ##### STRUCT GdaDataSourceInfo ##### -->
+<!-- ##### STRUCT GdaDsnInfo ##### -->
 <para>
 
 </para>
@@ -110,7 +102,7 @@ g_object_new (GDA_TYPE_CONFIG, "user-file", "my_file", NULL);
 @auth_string: 
 @is_system: 
 
-<!-- ##### FUNCTION gda_config_get_dsn ##### -->
+<!-- ##### FUNCTION gda_config_get_dsn_info ##### -->
 <para>
 
 </para>
@@ -164,7 +156,7 @@ g_object_new (GDA_TYPE_CONFIG, "user-file", "my_file", NULL);
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_config_get_dsn_index ##### -->
+<!-- ##### FUNCTION gda_config_get_dsn_info_index ##### -->
 <para>
 
 </para>
@@ -173,7 +165,7 @@ g_object_new (GDA_TYPE_CONFIG, "user-file", "my_file", NULL);
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_config_get_dsn_at_index ##### -->
+<!-- ##### FUNCTION gda_config_get_dsn_info_at_index ##### -->
 <para>
 
 </para>
@@ -210,7 +202,7 @@ g_object_new (GDA_TYPE_CONFIG, "user-file", "my_file", NULL);
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_config_get_provider_object ##### -->
+<!-- ##### FUNCTION gda_config_get_provider ##### -->
 <para>
 
 </para>
@@ -221,6 +213,14 @@ g_object_new (GDA_TYPE_CONFIG, "user-file", "my_file", NULL);
 
 
 <!-- ##### FUNCTION gda_config_list_providers ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_get ##### -->
 <para>
 
 </para>

@@ -163,6 +163,69 @@ Methods dedicated to implementing providers
 @cnc: 
 
 
+<!-- ##### FUNCTION gda_connection_event_new ##### -->
+<para>
+
+</para>
+
+@type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_event_set_event_type ##### -->
+<para>
+
+</para>
+
+@event: 
+@type: 
+
+
+<!-- ##### FUNCTION gda_connection_event_set_description ##### -->
+<para>
+
+</para>
+
+@event: 
+@description: 
+
+
+<!-- ##### FUNCTION gda_connection_event_set_code ##### -->
+<para>
+
+</para>
+
+@event: 
+@code: 
+
+
+<!-- ##### FUNCTION gda_connection_event_set_gda_code ##### -->
+<para>
+
+</para>
+
+@event: 
+@code: 
+
+
+<!-- ##### FUNCTION gda_connection_event_set_source ##### -->
+<para>
+
+</para>
+
+@event: 
+@source: 
+
+
+<!-- ##### FUNCTION gda_connection_event_set_sqlstate ##### -->
+<para>
+
+</para>
+
+@event: 
+@sqlstate: 
+
+
 <!-- ##### FUNCTION gda_connection_add_prepared_statement ##### -->
 <para>
 

@@ -267,17 +267,6 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_data_proxy_find_row_from_values ##### -->
-<para>
-
-</para>
-
-@proxy: 
-@values: 
-@cols_index: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_data_proxy_cancel_row_changes ##### -->
 <para>
 

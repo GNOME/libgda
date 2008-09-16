@@ -34,12 +34,6 @@ Any event which has occurred on a #GdaConnection
 
 </para>
 
-<!-- ##### STRUCT GdaConnectionEventPrivate ##### -->
-<para>
-
-</para>
-
-
 <!-- ##### ENUM GdaConnectionEventType ##### -->
 <para>
 
@@ -75,24 +69,6 @@ Any event which has occurred on a #GdaConnection
 @GDA_CONNECTION_EVENT_CODE_SYNTAX_ERROR: 
 @GDA_CONNECTION_EVENT_CODE_UNKNOWN: 
 
-<!-- ##### FUNCTION gda_connection_event_new ##### -->
-<para>
-
-</para>
-
-@type: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_event_set_event_type ##### -->
-<para>
-
-</para>
-
-@event: 
-@type: 
-
-
 <!-- ##### FUNCTION gda_connection_event_get_event_type ##### -->
 <para>
 
@@ -111,15 +87,6 @@ Any event which has occurred on a #GdaConnection
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_connection_event_set_description ##### -->
-<para>
-
-</para>
-
-@event: 
-@description: 
-
-
 <!-- ##### FUNCTION gda_connection_event_get_code ##### -->
 <para>
 
@@ -127,15 +94,6 @@ Any event which has occurred on a #GdaConnection
 
 @event: 
 @Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_event_set_code ##### -->
-<para>
-
-</para>
-
-@event: 
-@code: 
 
 
 <!-- ##### FUNCTION gda_connection_event_get_gda_code ##### -->
@@ -147,15 +105,6 @@ Any event which has occurred on a #GdaConnection
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_connection_event_set_gda_code ##### -->
-<para>
-
-</para>
-
-@event: 
-@code: 
-
-
 <!-- ##### FUNCTION gda_connection_event_get_source ##### -->
 <para>
 
@@ -165,15 +114,6 @@ Any event which has occurred on a #GdaConnection
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_connection_event_set_source ##### -->
-<para>
-
-</para>
-
-@event: 
-@source: 
-
-
 <!-- ##### FUNCTION gda_connection_event_get_sqlstate ##### -->
 <para>
 
@@ -181,14 +121,5 @@ Any event which has occurred on a #GdaConnection
 
 @event: 
 @Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_event_set_sqlstate ##### -->
-<para>
-
-</para>
-
-@event: 
-@sqlstate: 
 
 

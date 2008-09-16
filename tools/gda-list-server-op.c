@@ -41,7 +41,7 @@ main (int argc, char **argv) {
 		g_print ("For provider %s\n", prov);
 
 	if (prov) {
-		prov_obj = gda_config_get_provider_object (prov, &error);
+		prov_obj = gda_config_get_provider (prov, &error);
 		if (!prov_obj) {
 			g_print (_("Could not create provider object: %s\n"), 
 				 error && error->message ? error->message : _("No detail"));

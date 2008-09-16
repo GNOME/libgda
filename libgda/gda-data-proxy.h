@@ -87,8 +87,6 @@ void              gda_data_proxy_undelete                 (GdaDataProxy *proxy, 
 gboolean          gda_data_proxy_row_is_deleted           (GdaDataProxy *proxy, gint proxy_row);
 gboolean          gda_data_proxy_row_is_inserted          (GdaDataProxy *proxy, gint proxy_row);
 
-gint              gda_data_proxy_find_row_from_values     (GdaDataProxy *proxy, GSList *values, 
-						           gint *cols_index);
 gboolean          gda_data_proxy_row_has_changed          (GdaDataProxy *proxy, gint proxy_row);
 gboolean          gda_data_proxy_has_changed              (GdaDataProxy *proxy);
 gint              gda_data_proxy_get_n_new_rows           (GdaDataProxy *proxy);

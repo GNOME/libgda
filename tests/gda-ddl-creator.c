@@ -677,7 +677,7 @@ gda_ddl_creator_get_sql (GdaDDLCreator *ddlc, GError **error)
 	}
 
 	/* render operations to SQL */
-	GdaServerProvider *prov = gda_connection_get_provider_obj (ddlc->priv->cnc);
+	GdaServerProvider *prov = gda_connection_get_provider (ddlc->priv->cnc);
 	GSList *objlist, *list;
 	objlist = gda_meta_struct_get_all_db_objects (ddlc->priv->d_mstruct);
 
@@ -740,7 +740,7 @@ gda_ddl_creator_execute (GdaDDLCreator *ddlc, GError **error)
 		return FALSE;
 
 	/* execute operations */
-	GdaServerProvider *prov = gda_connection_get_provider_obj (ddlc->priv->cnc);
+	GdaServerProvider *prov = gda_connection_get_provider (ddlc->priv->cnc);
 	GSList *objlist, *list;
 	objlist = gda_meta_struct_get_all_db_objects (ddlc->priv->d_mstruct);
 	for (list = objlist; list; list = list->next) {

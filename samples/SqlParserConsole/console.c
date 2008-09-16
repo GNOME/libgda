@@ -196,13 +196,13 @@ create_parser_for_provider (const gchar *prov_name)
 	GdaSqlParser *parser;
 	GError *error = NULL;
 
-	prov = gda_config_get_provider_object (prov_name ? prov_name : "SQLite", &error);
+	prov = gda_config_get_provider (prov_name ? prov_name : "SQLite", &error);
 	if (!prov) {
 		g_print ("Could not instanciate provider for '%s': %s\n", prov_name,
 			 error && error->message ? error->message : "No detail");
 		if (error)
 			g_error_free (error);
-		prov = gda_config_get_provider_object ("SQLite", NULL);
+		prov = gda_config_get_provider ("SQLite", NULL);
 		g_assert (prov);
 	}
 	parser = gda_server_provider_create_parser (prov, NULL);

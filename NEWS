@@ -1,5 +1,25 @@
+libgda 3.99.4, 2008-09-16
 
- - bug fixes: #549953, #535633, #551058
+ This version includes:
+
+ - Lots of code cleanups and API review
+ - now internally use SQLite 3.6.2
+ - Resultsets returned after the execution of a SELECT can now be writable
+ - more NR tests
+ - Basic multi threading support (for some objects like connections)
+ - MySQL support improved (Carlos Savoretti)
+ - SQL console tool improvements
+ - MS-Windows support improvements
+ - Lots of small bug fixes (Bas Driessen, Vivien Malerba)
+ - Lots of documentation improvements
+ - bug fixes: #549953, #535633, #551058, #541991, #545977, #549498, #546230, #545979 (Carl-Anton Ingmarsson)
+ - Translations:
+	- nb (Kjartan Maraas)
+	- es (Jorge Gonzalez)
+	- it (Marco Ciampa)
+	- ar (Djihed Afifi)
+	- eu (Inaki Larranaga Murgoitio)
+
 
 libgda 3.99.3, 2008-07-06
 

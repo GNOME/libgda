@@ -184,6 +184,16 @@ Management of connections to data sources
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_connection_value_to_sql_string ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@from: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_connection_statement_to_sql ##### -->
 <para>
 
@@ -374,7 +384,7 @@ Management of connections to data sources
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_connection_get_provider_obj ##### -->
+<!-- ##### FUNCTION gda_connection_get_provider ##### -->
 <para>
 
 </para>
@@ -389,16 +399,6 @@ Management of connections to data sources
 </para>
 
 @cnc: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_set_dsn ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@datasource: 
 @Returns: 
 
 
@@ -526,16 +526,6 @@ Management of connections to data sources
 @error: 
 @nb_filters: 
 @Varargs: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_value_to_sql_string ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@from: 
 @Returns: 
 
 

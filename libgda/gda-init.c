@@ -189,3 +189,33 @@ gda_init (void)
 	initialized = TRUE;
 	g_static_mutex_unlock (&init_mutex);
 }
+
+/**
+ * gda_get_application_exec_path
+ * @app_name: the name of the application to find
+ *
+ * Find the path to the application identified by @app_name. For example if the application
+ * is "gda-sql", then calling this function will return
+ * "/your/prefix/bin/gda-sql-4.0" if Libgda is installed in
+ * the "/your/prefix" prefix (which would usually be "/usr"), and for the ABI version 4.0.
+ *
+ * Returns: the path as a new string, or %NULL if the application cannot be found
+ */
+gchar *
+gda_get_application_exec_path (const gchar *app_name)
+{
+        gchar *str;
+        gchar *fname;
+        g_return_val_if_fail (app_name, NULL);
+
+        gda_gbr_init ();
+        fname = g_strdup_printf ("%s-%s", app_name, ABI_VERSION);
+        str = gda_gbr_get_file_path (GDA_BIN_DIR, fname, NULL);
+        g_free (fname);
+        if (!g_file_test (str, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_EXECUTABLE)) {
+                g_free (str);
+                str = NULL;
+        }
+
+        return str;
+}

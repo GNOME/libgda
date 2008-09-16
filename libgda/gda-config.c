@@ -55,7 +55,7 @@ struct _GdaConfigPrivate {
 	gchar *user_file;
 	gchar *system_file;
 	gboolean system_config_allowed;
-	GSList *dsn_list; /* list of GdaDataSourceInfo structures */
+	GSList *dsn_list; /* list of GdaDsnInfo structures */
 	GSList *prov_list; /* list of InternalProvider structures */
 };
 
@@ -75,8 +75,8 @@ static void gda_config_get_property (GObject *object,
 				     GParamSpec *pspec);
 static GdaConfig *unique_instance = NULL;
 
-static gint data_source_info_compare (GdaDataSourceInfo *infoa, GdaDataSourceInfo *infob);
-static void data_source_info_free (GdaDataSourceInfo *info);
+static gint data_source_info_compare (GdaDsnInfo *infoa, GdaDsnInfo *infob);
+static void data_source_info_free (GdaDsnInfo *info);
 static void internal_provider_free (InternalProvider *ip);
 static void load_config_file (const gchar *file, gboolean is_system);
 static void save_config_file (gboolean is_system);
@@ -218,7 +218,7 @@ load_config_file (const gchar *file, gboolean is_system)
 
 			xmlChar *prop;
 			gchar *ptr;
-			GdaDataSourceInfo *info;
+			GdaDsnInfo *info;
 			gboolean is_new = FALSE;
 			xmlNodePtr entry;
 			
@@ -231,9 +231,9 @@ load_config_file (const gchar *file, gboolean is_system)
 					break;
 				}
 			}
-			info = gda_config_get_dsn (ptr);
+			info = gda_config_get_dsn_info (ptr);
 			if (!info) {
-				info = g_new0 (GdaDataSourceInfo, 1);
+				info = g_new0 (GdaDsnInfo, 1);
 				info->name = g_strdup (ptr);
 				is_new = TRUE;
 			}
@@ -333,7 +333,7 @@ save_config_file (gboolean is_system)
 	root = xmlNewDocNode (doc, NULL, BAD_CAST "libgda-config", NULL);
         xmlDocSetRootElement (doc, root);
 	for (list = unique_instance->priv->dsn_list; list; list = list->next) {
-		GdaDataSourceInfo *info = (GdaDataSourceInfo*) list->data;
+		GdaDsnInfo *info = (GdaDsnInfo*) list->data;
 		if (info->is_system != is_system)
 			continue;
 
@@ -698,7 +698,7 @@ gda_config_get (void)
 }
 
 /**
- * gda_config_get_dsn
+ * gda_config_get_dsn_info
  * @dsn_name: the name of the DSN to look for
  *
  * Get information about the DSN named @dsn_name. 
@@ -707,10 +707,10 @@ gda_config_get (void)
  * and optionaly &lt;password&gt; are provided, they are ignored). Also see the gda_dsn_split() utility
  * function.
  *
- * Returns: a a pointer to read-only #GdaDataSourceInfo structure, or %NULL if not found
+ * Returns: a a pointer to read-only #GdaDsnInfo structure, or %NULL if not found
  */
-GdaDataSourceInfo *
-gda_config_get_dsn (const gchar *dsn_name)
+GdaDsnInfo *
+gda_config_get_dsn_info (const gchar *dsn_name)
 {
 	GSList *list;
 
@@ -730,10 +730,10 @@ gda_config_get_dsn (const gchar *dsn_name)
 		gda_config_get ();
 
 	for (list = unique_instance->priv->dsn_list; list; list = list->next)
-		if (!strcmp (((GdaDataSourceInfo*) list->data)->name, real_dsn)) {
+		if (!strcmp (((GdaDsnInfo*) list->data)->name, real_dsn)) {
 			GDA_CONFIG_UNLOCK ();
 			g_free (real_dsn);
-			return (GdaDataSourceInfo*) list->data;
+			return (GdaDsnInfo*) list->data;
 		}
 	GDA_CONFIG_UNLOCK ();
 	g_free (real_dsn);
@@ -742,7 +742,7 @@ gda_config_get_dsn (const gchar *dsn_name)
 
 /**
  * gda_config_define_dsn
- * @info: a pointer to a filled GdaDataSourceInfo structure
+ * @info: a pointer to a filled GdaDsnInfo structure
  * @error: a place to store errors, or %NULL
  *
  * Add or update a DSN from the definition in @info
@@ -750,9 +750,9 @@ gda_config_get_dsn (const gchar *dsn_name)
  * Returns: TRUE if no error occurred
  */
 gboolean
-gda_config_define_dsn (const GdaDataSourceInfo *info, GError **error)
+gda_config_define_dsn (const GdaDsnInfo *info, GError **error)
 {
-	GdaDataSourceInfo *einfo;
+	GdaDsnInfo *einfo;
 	gboolean save_user = FALSE;
 	gboolean save_system = FALSE;
 
@@ -774,7 +774,7 @@ gda_config_define_dsn (const GdaDataSourceInfo *info, GError **error)
 		save_system = TRUE;
 	else
 		save_user = TRUE;
-	einfo = gda_config_get_dsn (info->name);
+	einfo = gda_config_get_dsn_info (info->name);
 	if (einfo) {
 		g_free (einfo->provider); einfo->provider = NULL;
 		g_free (einfo->cnc_string); einfo->cnc_string = NULL;
@@ -797,7 +797,7 @@ gda_config_define_dsn (const GdaDataSourceInfo *info, GError **error)
 		g_signal_emit (unique_instance, gda_config_signals[DSN_CHANGED], 0, einfo);
 	}
 	else {
-		einfo = g_new0 (GdaDataSourceInfo, 1);
+		einfo = g_new0 (GdaDsnInfo, 1);
 		einfo->name = g_strdup (info->name);
 		if (info->provider)
 			einfo->provider = g_strdup (info->provider);
@@ -835,7 +835,7 @@ gda_config_define_dsn (const GdaDataSourceInfo *info, GError **error)
 gboolean
 gda_config_remove_dsn (const gchar *dsn_name, GError **error)
 {
-	GdaDataSourceInfo *info;
+	GdaDsnInfo *info;
 	gboolean save_user = FALSE;
 	gboolean save_system = FALSE;
 
@@ -845,7 +845,7 @@ gda_config_remove_dsn (const gchar *dsn_name, GError **error)
 	if (!unique_instance)
 		gda_config_get ();
 
-	info = gda_config_get_dsn (dsn_name);
+	info = gda_config_get_dsn_info (dsn_name);
 	if (!info) {
 		g_set_error (error, GDA_CONFIG_ERROR, GDA_CONFIG_DSN_NOT_FOUND_ERROR,
 			     _("Unknown DSN '%s'"), dsn_name);
@@ -890,10 +890,10 @@ gda_config_remove_dsn (const gchar *dsn_name, GError **error)
 gboolean
 gda_config_dsn_needs_authentication (const gchar *dsn_name)
 {
-	GdaDataSourceInfo *info;
+	GdaDsnInfo *info;
 	GdaProviderInfo *pinfo;
 
-	info = gda_config_get_dsn (dsn_name);
+	info = gda_config_get_dsn_info (dsn_name);
 	if (!info)
 		return FALSE;
 	pinfo = gda_config_get_provider_info (info->provider);
@@ -958,7 +958,7 @@ gda_config_get_nb_dsn (void)
 }
 
 /**
- * gda_config_get_dsn_index
+ * gda_config_get_dsn_info_index
  * @dsn_name:
  * 
  * Get the index (starting at 0) of the DSN named @dsn_name
@@ -966,9 +966,9 @@ gda_config_get_nb_dsn (void)
  * Returns: the index or -1 if not found
  */
 gint
-gda_config_get_dsn_index (const gchar *dsn_name)
+gda_config_get_dsn_info_index (const gchar *dsn_name)
 {
-	GdaDataSourceInfo *info;
+	GdaDsnInfo *info;
 	gint ret = -1;
 
 	g_return_val_if_fail (dsn_name, -1);
@@ -976,7 +976,7 @@ gda_config_get_dsn_index (const gchar *dsn_name)
 	if (!unique_instance)
 		gda_config_get ();
 
-	info = gda_config_get_dsn (dsn_name);
+	info = gda_config_get_dsn_info (dsn_name);
 	if (info)
 		ret = g_slist_index (unique_instance->priv->dsn_list, info);
 
@@ -985,17 +985,17 @@ gda_config_get_dsn_index (const gchar *dsn_name)
 }
 
 /**
- * gda_config_get_dsn_at_index
+ * gda_config_get_dsn_info_at_index
  * @index:
  *
- * Get a pointer to a read-only #GdaDataSourceInfo at the @index position
+ * Get a pointer to a read-only #GdaDsnInfo at the @index position
  *
  * Returns: the pointer or %NULL if no DSN exists at position @index
  */
-GdaDataSourceInfo *
-gda_config_get_dsn_at_index (gint index)
+GdaDsnInfo *
+gda_config_get_dsn_info_at_index (gint index)
 {
-	GdaDataSourceInfo *ret;
+	GdaDsnInfo *ret;
 	GDA_CONFIG_LOCK ();
 	if (!unique_instance)
 		gda_config_get ();
@@ -1060,7 +1060,7 @@ gda_config_get_provider_info (const gchar *provider_name)
 }
 
 /**
- * gda_config_get_provider_object
+ * gda_config_get_provider
  * @provider_name:
  * @error: a place to store errors, or %NULL
  *
@@ -1071,7 +1071,7 @@ gda_config_get_provider_info (const gchar *provider_name)
  * Returns: a pointer to the #GdaServerProvider, or %NULL if an error occurred
  */
 GdaServerProvider *
-gda_config_get_provider_object (const gchar *provider_name, GError **error)
+gda_config_get_provider (const gchar *provider_name, GError **error)
 {
 	InternalProvider *ip;
 	GdaServerProvider  *(*plugin_create_provider) (void);
@@ -1122,7 +1122,7 @@ gda_config_get_provider_object (const gchar *provider_name, GError **error)
  *  <listitem><para>Description</para></listitem>
  *  <listitem><para>DSN parameters</para></listitem>
  *  <listitem><para>Authentication parameters</para></listitem>
- *  <listitem><para>File</para></listitem>
+ *  <listitem><para>File name of the plugin</para></listitem>
  * </itemizedlist>
  *
  * Returns: a new #GdaDataModel
@@ -1392,7 +1392,7 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 
 /* sorting function */
 static gint
-data_source_info_compare (GdaDataSourceInfo *infoa, GdaDataSourceInfo *infob)
+data_source_info_compare (GdaDsnInfo *infoa, GdaDsnInfo *infob)
 {
 	if (!infoa && !infob)
 		return 0;
@@ -1415,7 +1415,7 @@ data_source_info_compare (GdaDataSourceInfo *infoa, GdaDataSourceInfo *infob)
 }
 
 static void 
-data_source_info_free (GdaDataSourceInfo *info)
+data_source_info_free (GdaDsnInfo *info)
 {
 	g_free (info->provider); 
 	g_free (info->cnc_string); 
@@ -1493,12 +1493,12 @@ fam_callback (GIOChannel *source, GIOCondition condition, gpointer data)
                         g_print ("Reloading config files (%s config has changed)\n", is_system ? "global" : "user");
 			GSList *list;
 			for (list = unique_instance->priv->dsn_list; list; list = list->next) {
-				GdaDataSourceInfo *info = (GdaDataSourceInfo *) list->data;
+				GdaDsnInfo *info = (GdaDsnInfo *) list->data;
 				g_print ("[info %p]: %s/%s\n", info, info->provider, info->name);
 			}
 #endif
 			while (unique_instance->priv->dsn_list) {
-				GdaDataSourceInfo *info = (GdaDataSourceInfo *) unique_instance->priv->dsn_list->data;
+				GdaDsnInfo *info = (GdaDsnInfo *) unique_instance->priv->dsn_list->data;
 				g_signal_emit (unique_instance, gda_config_signals[DSN_TO_BE_REMOVED], 0, info);
 				unique_instance->priv->dsn_list = g_slist_remove (unique_instance->priv->dsn_list, info);
 				g_signal_emit (unique_instance, gda_config_signals[DSN_REMOVED], 0, info);

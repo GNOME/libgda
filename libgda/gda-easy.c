@@ -58,7 +58,7 @@ gda_prepare_create_database (const gchar *provider, const gchar *db_name, GError
 
 	g_return_val_if_fail (provider && *provider, NULL);
 
-	prov = gda_config_get_provider_object (provider, error);
+	prov = gda_config_get_provider (provider, error);
 	if (prov) {
 		GdaServerOperation *op;
 		op = gda_server_provider_create_operation (prov, NULL, GDA_SERVER_OPERATION_CREATE_DB, 
@@ -124,7 +124,7 @@ gda_prepare_drop_database (const gchar *provider, const gchar *db_name, GError *
 	
 	g_return_val_if_fail (provider && *provider, NULL);
 
-	prov = gda_config_get_provider_object (provider, error);
+	prov = gda_config_get_provider (provider, error);
 	if (prov) {
 		GdaServerOperation *op;
 		op = gda_server_provider_create_operation (prov, NULL, GDA_SERVER_OPERATION_DROP_DB, 
@@ -265,7 +265,7 @@ gda_prepare_create_table (GdaConnection *cnc, const gchar *table_name, GError **
 		
 	g_return_val_if_fail (gda_connection_is_opened (cnc), FALSE);	
 	
-	server = gda_connection_get_provider_obj (cnc);
+	server = gda_connection_get_provider (cnc);
 	
 	if (!table_name) {
 		g_set_error (error, GDA_EASY_ERROR, GDA_EASY_OBJECT_NAME_ERROR, 
@@ -351,7 +351,7 @@ gda_perform_create_table (GdaServerOperation *op, GError **error)
 	
 	cnc = g_object_get_data (G_OBJECT (op), "_gda_connection");
 	if (cnc) 
-		return gda_server_provider_perform_operation (gda_connection_get_provider_obj (cnc), cnc, op, error);
+		return gda_server_provider_perform_operation (gda_connection_get_provider (cnc), cnc, op, error);
 	else {
 		g_warning ("Could not find operation's associated connection, "
 			   "did you use gda_prepare_create_table() ?"); 
@@ -376,7 +376,7 @@ gda_prepare_drop_table (GdaConnection *cnc, const gchar *table_name, GError **er
 	GdaServerOperation *op;
 	GdaServerProvider *server;
 
-	server = gda_connection_get_provider_obj (cnc);
+	server = gda_connection_get_provider (cnc);
 	
 	op = gda_server_provider_create_operation (server, cnc, 
 						   GDA_SERVER_OPERATION_DROP_TABLE, NULL, error);
@@ -417,7 +417,7 @@ gda_perform_drop_table (GdaServerOperation *op, GError **error)
 	
 	cnc = g_object_get_data (G_OBJECT (op), "_gda_connection");
 	if (cnc) 
-		return gda_server_provider_perform_operation (gda_connection_get_provider_obj (cnc), cnc, op, error);
+		return gda_server_provider_perform_operation (gda_connection_get_provider (cnc), cnc, op, error);
 	else {
 		g_warning ("Could not find operation's associated connection, "
 			   "did you use gda_prepare_drop_table() ?"); 

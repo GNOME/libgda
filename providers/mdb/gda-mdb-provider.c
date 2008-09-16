@@ -530,7 +530,7 @@ gda_mdb_provider_get_server_version (GdaServerProvider *provider,
 	MdbConnectionData *cdata;
 	
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-        g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, NULL);
+        g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 
 	cdata = gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (cnc));
 	if (!cdata)
@@ -551,7 +551,7 @@ gda_mdb_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc)
 	MdbConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-        g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, NULL);
+        g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 
 	cdata = gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (cnc));
 	if (!cdata)

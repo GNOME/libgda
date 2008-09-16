@@ -72,6 +72,9 @@ static gboolean             gda_data_proxy_set_value_at    (GdaDataModel *model,
 							    const GValue *value, GError **error);
 static gboolean             gda_data_proxy_set_values      (GdaDataModel *model, gint row, 
 							    GList *values, GError **error);
+static gint                 gda_data_proxy_find_row_from_values (GdaDataModel *model, GSList *values, 
+						           gint *cols_index);
+
 static gint                 gda_data_proxy_append_values   (GdaDataModel *model, const GList *values, GError **error);
 static gint                 gda_data_proxy_append_row      (GdaDataModel *model, GError **error);
 static gboolean             gda_data_proxy_remove_row      (GdaDataModel *model, gint row, GError **error);
@@ -637,7 +640,7 @@ gda_data_proxy_data_model_init (GdaDataModelClass *iface)
         iface->i_append_values = gda_data_proxy_append_values;
 	iface->i_append_row = gda_data_proxy_append_row;
 	iface->i_remove_row = gda_data_proxy_remove_row;
-	iface->i_find_row = NULL;
+	iface->i_find_row = gda_data_proxy_find_row_from_values;
 
 	iface->i_set_notify = gda_data_proxy_set_notify;
 	iface->i_get_notify = gda_data_proxy_get_notify;
@@ -1124,10 +1127,13 @@ gda_data_proxy_get_proxied_model_n_rows (GdaDataProxy *proxy)
 gboolean
 gda_data_proxy_is_read_only (GdaDataProxy *proxy)
 {
+	GdaDataModelAccessFlags flags;
+
 	g_return_val_if_fail (GDA_IS_DATA_PROXY (proxy), TRUE);
 	g_return_val_if_fail (proxy->priv, TRUE);
-
-	return ! gda_data_model_is_updatable (proxy->priv->model);
+	
+	flags = gda_data_model_get_access_flags (proxy->priv->model);
+	return ! (flags & GDA_DATA_MODEL_ACCESS_WRITE);
 }
 
 
@@ -1541,80 +1547,6 @@ gda_data_proxy_row_is_inserted (GdaDataProxy *proxy, gint proxy_row)
 	else
 		return FALSE;
 }
-
-/**
- * gda_data_proxy_find_row_from_values
- * @proxy: a #GdaDataProxy object
- * @values: a list of #GValue values
- * @cols_index: an array of #gint containing the column number to match each value of @values
- *
- * Find the first row where all the values in @values at the columns identified at
- * @cols_index match.
- *
- * NOTE: the @cols_index array MUST contain a column index for each value in @values
- *
- * Returns: proxy row number if the row has been identified, or -1 otherwise
- */
-gint
-gda_data_proxy_find_row_from_values (GdaDataProxy *proxy, GSList *values, gint *cols_index)
-{
-	gboolean found = FALSE;
-	gint proxy_row;
-	gint current_nb_rows;
-
-	g_return_val_if_fail (GDA_IS_DATA_PROXY (proxy), FALSE);
-	g_return_val_if_fail (proxy->priv, FALSE);
-	g_return_val_if_fail (values, FALSE);
-
-	/* ensure that there is no sync to be done */
-	ensure_chunk_sync (proxy);
-
-	/* FIXME: use a virtual connection here with some SQL, it'll be much easier and will avoid
-	 * much code
-	 */
-	TO_IMPLEMENT;
-
-	/* if there are still some rows waiting to be added in the idle loop, then force them to be added
-	 * first, otherwise we might not find what we are looking for!
-	 */
-	if (proxy->priv->chunk_sync_idle_id) {
-		g_idle_remove_by_data (proxy);
-		proxy->priv->chunk_sync_idle_id = 0;
-		while (chunk_sync_idle (proxy)) ;
-	}
-
-	current_nb_rows = gda_data_proxy_get_n_rows ((GdaDataModel*) proxy);
-	for (proxy_row = 0; proxy_row < current_nb_rows; proxy_row++) {
-		gboolean allequal = TRUE;
-		GSList *list;
-		gint index;
-		const GValue *value;
-		
-		list = values;
-		index = 0;
-		while (list && allequal) {
-			if (cols_index)
-				g_return_val_if_fail (cols_index [index] < proxy->priv->model_nb_cols, FALSE);
-			value = gda_data_proxy_get_value_at ((GdaDataModel *) proxy, 
-							     cols_index ? cols_index [index] : 
-							     index, proxy_row, NULL);
-			if (!value)
-				return -1;
-			if (gda_value_compare ((GValue *) (list->data), (GValue *) value))
-				allequal = FALSE;
-
-			list = g_slist_next (list);
-			index++;
-		}
-		if (allequal) {
-			found = TRUE;
-			break;
-		}
-	}
-	
-	return found ? proxy_row : -1;
-}
-
 
 /**
  * gda_data_proxy_get_model
@@ -2827,8 +2759,12 @@ apply_filter_statement (GdaDataProxy *proxy, GError **error)
 
 	vcnc = proxy->priv->filter_vcnc;
 	if (!vcnc) {
-		vcnc = gda_virtual_connection_open (virtual_provider, NULL);
+		GError *lerror = NULL;
+		vcnc = gda_virtual_connection_open (virtual_provider, &lerror);
 		if (! vcnc) {
+			g_print ("Virtual ERROR: %s\n", lerror && lerror->message ? lerror->message : "No detail");
+			if (lerror)
+				g_error_free (lerror);
 			g_set_error (error, GDA_DATA_PROXY_ERROR, GDA_DATA_PROXY_FILTER_ERROR,
 				     _("Could not create virtual connection"));
 			proxy->priv->force_direct_mapping = FALSE;
@@ -3352,6 +3288,69 @@ gda_data_proxy_get_attributes_at (GdaDataModel *model, gint col, gint row)
 
 	return gda_data_proxy_get_value_attributes ((GdaDataProxy *) model, row, col);
 }
+
+static gint
+gda_data_proxy_find_row_from_values (GdaDataModel *model, GSList *values, gint *cols_index)
+{
+	gboolean found = FALSE;
+	gint proxy_row;
+	gint current_nb_rows;
+	GdaDataProxy *proxy;
+
+	g_return_val_if_fail (GDA_IS_DATA_PROXY (proxy), FALSE);
+	proxy = (GdaDataProxy*) model;
+	g_return_val_if_fail (proxy->priv, FALSE);
+	g_return_val_if_fail (values, FALSE);
+
+	/* ensure that there is no sync to be done */
+	ensure_chunk_sync (proxy);
+
+	/* FIXME: use a virtual connection here with some SQL, it'll be much easier and will avoid
+	 * much code
+	 */
+	TO_IMPLEMENT;
+
+	/* if there are still some rows waiting to be added in the idle loop, then force them to be added
+	 * first, otherwise we might not find what we are looking for!
+	 */
+	if (proxy->priv->chunk_sync_idle_id) {
+		g_idle_remove_by_data (proxy);
+		proxy->priv->chunk_sync_idle_id = 0;
+		while (chunk_sync_idle (proxy)) ;
+	}
+
+	current_nb_rows = gda_data_proxy_get_n_rows ((GdaDataModel*) proxy);
+	for (proxy_row = 0; proxy_row < current_nb_rows; proxy_row++) {
+		gboolean allequal = TRUE;
+		GSList *list;
+		gint index;
+		const GValue *value;
+		
+		list = values;
+		index = 0;
+		while (list && allequal) {
+			if (cols_index)
+				g_return_val_if_fail (cols_index [index] < proxy->priv->model_nb_cols, FALSE);
+			value = gda_data_proxy_get_value_at ((GdaDataModel *) proxy, 
+							     cols_index ? cols_index [index] : 
+							     index, proxy_row, NULL);
+			if (!value)
+				return -1;
+			if (gda_value_compare ((GValue *) (list->data), (GValue *) value))
+				allequal = FALSE;
+
+			list = g_slist_next (list);
+			index++;
+		}
+		if (allequal) {
+			found = TRUE;
+			break;
+		}
+	}
+	
+	return found ? proxy_row : -1;
+}
+
 
 static GdaDataModelIter *
 gda_data_proxy_create_iter (GdaDataModel *model)

@@ -317,24 +317,6 @@ gda_data_model_thaw (GdaDataModel *model)
 }
 
 /**
- * gda_data_model_is_updatable
- * @model: a #GdaDataModel object.
- *
- * Tells if @model can be modified
- *
- * Returns: TRUE if @model can be modified
- */
-gboolean
-gda_data_model_is_updatable (GdaDataModel *model)
-{
-	GdaDataModelAccessFlags flags;
-
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	flags = gda_data_model_get_access_flags (model);
-	return (flags & GDA_DATA_MODEL_ACCESS_WRITE);
-}
-
-/**
  * gda_data_model_get_access_flags
  * @model: a #GdaDataModel object.
  *
@@ -633,35 +615,6 @@ gda_data_model_get_typed_value_at (GdaDataModel *model, gint col, gint row, GTyp
 		}
 	}
 	return cvalue;
-}
-
-/**
- * gda_data_model_get_value_at_column
- * @model: a #GdaDataModel object.
- * @column_name: a valid column name.
- * @row: a valid row number.
- * @error: a place to store errors, or %NULL
- *
- * Retrieves the data stored in the given position (identified by
- * the first column named @column_name and the @row row) in a data model.
- *
- * See also gda_data_model_get_value_at().
- *
- * Returns: a #GValue containing the value stored in the given
- * position, or %NULL on error (out-of-bound position, etc).
- */
-const GValue *
-gda_data_model_get_value_at_column (GdaDataModel *model, const gchar *column_name, gint row, GError **error)
-{
-	gint ncol;
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
-	g_return_val_if_fail (column_name, NULL);
-
-	ncol = gda_data_model_get_column_index (model, column_name);
-	if (ncol == -1)
-		return NULL;
-	else
-		return gda_data_model_get_value_at (model, ncol, row, error);
 }
 
 /**

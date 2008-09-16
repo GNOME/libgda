@@ -968,6 +968,36 @@ gda_data_model_iter_get_value_at (GdaDataModelIter *iter, gint col)
 }
 
 /**
+ * gda_data_model_iter_set_value_at
+ * @iter: a #GdaDataModelIter object
+ * @col: the column number
+ * @value: a #GValue (not %NULL)
+ * @error: a place to store errors, or %NULL
+ * 
+ * Sets a value in @iter, at the column specified by @col
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_data_model_iter_set_value_at (GdaDataModelIter *iter, gint col, const GValue *value, GError **error)
+{
+	GdaHolder *holder;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
+	g_return_val_if_fail (iter->priv, FALSE);
+	g_return_val_if_fail (value, FALSE);
+
+	holder = gda_data_model_iter_get_holder_for_field (iter, col);
+	if (!holder) {
+		g_set_error (error, GDA_DATA_MODEL_ITER_ERROR, GDA_DATA_MODEL_ITER_COLUMN_OUT_OF_RANGE_ERROR,
+			     _("Column %d out of range (0-%d)"), col, 
+			     g_slist_length (((GdaSet *) iter)->holders) - 1);
+		return FALSE;
+	}
+	return gda_holder_set_value (holder, value, error);
+}
+
+/**
  * gda_data_model_iter_get_value_for_field
  * @iter: a #GdaDataModelIter object
  * @field_name: the requested column name

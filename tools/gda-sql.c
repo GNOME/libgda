@@ -226,10 +226,10 @@ main (int argc, char *argv[])
 	for (i = 1; i < argc; i++) {
 		/* open connection */
 		ConnectionSetting *cs;
-		GdaDataSourceInfo *info = NULL;
+		GdaDsnInfo *info = NULL;
 		gchar *str;
 
-                info = gda_config_get_dsn (argv[i]);
+                info = gda_config_get_dsn_info (argv[i]);
 		if (info)
 			str = g_strdup (info->name);
 		else
@@ -673,7 +673,7 @@ execute_external_command (MainData *data, const gchar *command, GError **error)
 				GdaDataHandler *dh;
 				GdaServerProvider *prov;
 
-				prov = gda_connection_get_provider_obj (data->current->cnc);
+				prov = gda_connection_get_provider (data->current->cnc);
 				cvalue = gda_holder_get_value (h_in_data);
 				dh = gda_server_provider_get_data_handler_gtype (prov, data->current->cnc,
 										 gda_holder_get_g_type (h_in_data));
@@ -895,7 +895,7 @@ open_connection (MainData *data, const gchar *cnc_name, const gchar *cnc_string,
 		return NULL;
 	}
 
-	GdaDataSourceInfo *info;
+	GdaDsnInfo *info;
 	gchar *user, *pass, *real_cnc, *real_provider, *real_auth_string = NULL;
 	gda_connection_string_split (cnc_string, &real_cnc, &real_provider, &user, &pass);
 	if (!real_cnc) {
@@ -953,7 +953,7 @@ open_connection (MainData *data, const gchar *cnc_name, const gchar *cnc_string,
 		}
 	}
 	
-	info = gda_config_get_dsn (real_cnc);
+	info = gda_config_get_dsn_info (real_cnc);
 	if (info && !real_provider)
 		newcnc = gda_connection_open_from_dsn (cnc_string, real_auth_string, 0, error);
 	else 
@@ -1962,7 +1962,7 @@ extra_command_manage_cnc (GdaConnection *cnc, const gchar **args, GError **error
 			gda_data_model_set_value_at (model, 0, row, value, NULL);
 			gda_value_free (value);
 			
-			prov = gda_connection_get_provider_obj (cs->cnc);
+			prov = gda_connection_get_provider (cs->cnc);
 			if (GDA_IS_VPROVIDER_HUB (prov))
 				value = gda_value_new_from_string ("", G_TYPE_STRING);
 			else
@@ -2542,7 +2542,7 @@ extra_command_set (GdaConnection *cnc, const gchar **args,
 					GdaDataHandler *dh;
 					GValue *gvalue;
 
-					prov = gda_connection_get_provider_obj (data->current->cnc);
+					prov = gda_connection_get_provider (data->current->cnc);
 					dh = gda_server_provider_get_data_handler_gtype (prov, data->current->cnc,
 											 gda_holder_get_g_type (param));
 					gvalue = gda_data_handler_get_value_from_str (dh, value, gda_holder_get_g_type (param));

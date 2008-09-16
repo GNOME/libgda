@@ -723,7 +723,7 @@ gda_statement_to_sql_extended (GdaStatement *stmt, GdaConnection *cnc, GdaSet *p
 	context.flags = flags;
 	if (cnc) {
 		context.cnc = cnc;
-		context.provider = gda_connection_get_provider_obj (cnc);
+		context.provider = gda_connection_get_provider (cnc);
 	}
 
 	str = gda_statement_to_sql_real (stmt, &context, error);

@@ -728,7 +728,7 @@ static gboolean
 gda_sqlite_provider_close_connection (GdaServerProvider *provider, GdaConnection *cnc)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
 	/* nothing specific to do: sqlite3_close() is called when SqliteConnectionData is destroyed */
 	return TRUE;
@@ -744,7 +744,7 @@ gda_sqlite_provider_get_server_version (GdaServerProvider *provider, GdaConnecti
 	static gchar *version_string = NULL;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, NULL);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 
 	g_static_mutex_lock (&mutex);
 	if (!version_string)
@@ -763,7 +763,7 @@ gda_sqlite_provider_get_database (GdaServerProvider *provider, GdaConnection *cn
 	SqliteConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, NULL);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 
 	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
@@ -1002,7 +1002,7 @@ gda_sqlite_provider_begin_transaction (GdaServerProvider *provider, GdaConnectio
 	gboolean status = TRUE;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
 	if (gda_connection_get_options (cnc) & GDA_CONNECTION_OPTIONS_READ_ONLY) {
 		gda_connection_add_event_string (cnc, _("Transactions are not supported in read-only mode"));
@@ -1041,7 +1041,7 @@ gda_sqlite_provider_commit_transaction (GdaServerProvider *provider, GdaConnecti
 	gboolean status = TRUE;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
 	if (name) {
 		static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
@@ -1076,7 +1076,7 @@ gda_sqlite_provider_rollback_transaction (GdaServerProvider *provider,
 	gboolean status = TRUE;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
 	if (name) {
 		static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
@@ -1110,7 +1110,7 @@ gda_sqlite_provider_supports (GdaServerProvider *provider,
 {
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-		g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	}
 
 	switch (feature) {
@@ -1138,7 +1138,7 @@ gda_sqlite_provider_get_data_handler (GdaServerProvider *provider, GdaConnection
 
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-		g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	}
 
 	if (type == G_TYPE_INVALID) {
@@ -1249,7 +1249,7 @@ gda_sqlite_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-		g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, NULL);
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 	}
 
 	memset (&context, 0, sizeof (context));
@@ -1572,7 +1572,7 @@ gda_sqlite_provider_statement_prepare (GdaServerProvider *provider, GdaConnectio
 	GdaSqlitePStmt *ps;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
 
 	/* fetch prepares stmt if already done */
@@ -1821,7 +1821,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 	gboolean new_ps = FALSE;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, NULL);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
 
 	if (async_cb) {

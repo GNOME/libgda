@@ -418,7 +418,7 @@ gda_firebird_provider_close_connection (GdaServerProvider *provider, GdaConnecti
 	FirebirdConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
 	/* Close the connection using the C API */
 	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data (cnc);
@@ -446,7 +446,7 @@ gda_firebird_provider_get_server_version (GdaServerProvider *provider, GdaConnec
 	FirebirdConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, NULL);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 
 	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
@@ -466,7 +466,7 @@ gda_firebird_provider_get_database (GdaServerProvider *provider, GdaConnection *
 	FirebirdConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, NULL);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 
 	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
@@ -491,7 +491,7 @@ gda_firebird_provider_supports_operation (GdaServerProvider *provider, GdaConnec
 {
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-		g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	}
 
 	return FALSE;
@@ -535,7 +535,7 @@ gda_firebird_provider_create_operation (GdaServerProvider *provider, GdaConnecti
 
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-		g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	}
 
         file = g_utf8_strdown (gda_server_operation_op_type_to_string (type), -1);
@@ -572,7 +572,7 @@ gda_firebird_provider_render_operation (GdaServerProvider *provider, GdaConnecti
 
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-		g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	}
 
 	/* test @op's validity */
@@ -638,7 +638,7 @@ gda_firebird_provider_perform_operation (GdaServerProvider *provider, GdaConnect
 
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-		g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	}
         optype = gda_server_operation_get_op_type (op);
 	switch (optype) {
@@ -668,7 +668,7 @@ gda_firebird_provider_begin_transaction (GdaServerProvider *provider, GdaConnect
         };
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	if (level != GDA_TRANSACTION_ISOLATION_UNKNOWN) {
 		gda_connection_add_event_string (cnc, "Provider does not handle that kind of transaction");
 		return FALSE;
@@ -710,7 +710,7 @@ gda_firebird_provider_commit_transaction (GdaServerProvider *provider, GdaConnec
         gboolean result;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
 	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
@@ -746,7 +746,7 @@ gda_firebird_provider_rollback_transaction (GdaServerProvider *provider, GdaConn
 	FirebirdConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
 	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
@@ -767,7 +767,7 @@ gda_firebird_provider_add_savepoint (GdaServerProvider *provider, GdaConnection 
 	FirebirdConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
 	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
@@ -788,7 +788,7 @@ gda_firebird_provider_rollback_savepoint (GdaServerProvider *provider, GdaConnec
 	FirebirdConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
 	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
@@ -809,7 +809,7 @@ gda_firebird_provider_delete_savepoint (GdaServerProvider *provider, GdaConnecti
 	FirebirdConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
 	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
@@ -828,7 +828,7 @@ gda_firebird_provider_supports_feature (GdaServerProvider *provider, GdaConnecti
 {
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-		g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	}
 
 	switch (feature) {
@@ -861,7 +861,7 @@ gda_firebird_provider_get_data_handler (GdaServerProvider *provider, GdaConnecti
 	GdaDataHandler *dh;
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-		g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	}
 
 	if (type == G_TYPE_INVALID) {
@@ -895,7 +895,7 @@ gda_firebird_provider_get_default_dbms_type (GdaServerProvider *provider, GdaCon
 {
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-		g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	}
 
 	TO_IMPLEMENT;
@@ -973,7 +973,7 @@ gda_firebird_provider_statement_to_sql (GdaServerProvider *provider, GdaConnecti
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-		g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, NULL);
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 	}
 
 	return gda_statement_to_sql_extended (stmt, cnc, params, flags, params_used, error);
@@ -993,7 +993,7 @@ gda_firebird_provider_statement_prepare (GdaServerProvider *provider, GdaConnect
 	GdaFirebirdPStmt *ps;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
 
 	/* fetch prepares stmt if already done */
@@ -1036,7 +1036,7 @@ gda_firebird_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 	FirebirdConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, NULL);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
 
 	/* If asynchronous connection opening is not supported, then exit now */
@@ -1160,7 +1160,7 @@ gda_firebird_provider_xa_start (GdaServerProvider *provider, GdaConnection *cnc,
 	FirebirdConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (xid, FALSE);
 
 	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data (cnc);
@@ -1182,7 +1182,7 @@ gda_firebird_provider_xa_end (GdaServerProvider *provider, GdaConnection *cnc,
 	FirebirdConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (xid, FALSE);
 
 	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data (cnc);
@@ -1203,7 +1203,7 @@ gda_firebird_provider_xa_prepare (GdaServerProvider *provider, GdaConnection *cn
 	FirebirdConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (xid, FALSE);
 
 	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data (cnc);
@@ -1225,7 +1225,7 @@ gda_firebird_provider_xa_commit (GdaServerProvider *provider, GdaConnection *cnc
 	FirebirdConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (xid, FALSE);
 
 	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data (cnc);
@@ -1246,7 +1246,7 @@ gda_firebird_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *c
 	FirebirdConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (xid, FALSE);
 
 	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data (cnc);
@@ -1269,7 +1269,7 @@ gda_firebird_provider_xa_recover (GdaServerProvider *provider, GdaConnection *cn
 	FirebirdConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, NULL);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 
 	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 

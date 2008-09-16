@@ -217,18 +217,6 @@ values are accessible at the provided row).
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_data_model_get_value_at_column ##### -->
-<para>
-
-</para>
-
-@model: 
-@column_name: 
-@row: 
-@error: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_data_model_set_value_at ##### -->
 <para>
 

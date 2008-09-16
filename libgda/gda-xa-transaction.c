@@ -299,7 +299,7 @@ gda_xa_transaction_register_connection  (GdaXaTransaction *xa_trans, GdaConnecti
 	/* check that connection supports distributed transaction, only ONE connection in @xa_trans is allowed
 	 * to not support them */
 	GdaServerProvider *prov;
-	prov = gda_connection_get_provider_obj (cnc);
+	prov = gda_connection_get_provider (cnc);
 	if (! PROV_CLASS (prov)->xa_funcs) {
 		/* if another connection does not support distributed transaction, then there is an error */
 		if (xa_trans->priv->non_xa_cnc) {
@@ -371,7 +371,7 @@ gda_xa_transaction_begin  (GdaXaTransaction *xa_trans, GError **error)
 		GdaServerProvider *prov;
 		
 		cnc = GDA_CONNECTION (list->data);
-		prov = gda_connection_get_provider_obj (cnc);
+		prov = gda_connection_get_provider (cnc);
 		if (cnc != xa_trans->priv->non_xa_cnc) {
 		       
 			if (!PROV_CLASS (prov)->xa_funcs->xa_start) {
@@ -403,7 +403,7 @@ gda_xa_transaction_begin  (GdaXaTransaction *xa_trans, GError **error)
 			GdaServerProvider *prov;
 			
 			cnc = GDA_CONNECTION (list->data);
-			prov = gda_connection_get_provider_obj (cnc);
+			prov = gda_connection_get_provider (cnc);
 			if (cnc != xa_trans->priv->non_xa_cnc) {
 				if (!PROV_CLASS (prov)->xa_funcs->xa_rollback) 
 					g_warning (_("Provider error: %s method not implemented for provider %s"),
@@ -466,7 +466,7 @@ gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 			continue;
 
 		cnc = GDA_CONNECTION (list->data);
-		prov = gda_connection_get_provider_obj (cnc);
+		prov = gda_connection_get_provider (cnc);
 
 		branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
 		memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length,
@@ -501,7 +501,7 @@ gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 			else {
 				const GdaBinary *branch;
 				cnc = GDA_CONNECTION (list->data);
-				prov = gda_connection_get_provider_obj (cnc);
+				prov = gda_connection_get_provider (cnc);
 				branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
 				memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length,
 					branch->data, branch->binary_length);
@@ -531,7 +531,7 @@ gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 			else {
 				const GdaBinary *branch;
 				cnc = GDA_CONNECTION (list->data);
-				prov = gda_connection_get_provider_obj (cnc);
+				prov = gda_connection_get_provider (cnc);
 				branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
 				memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length,
 					branch->data, branch->binary_length);
@@ -555,7 +555,7 @@ gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 			continue;
 
 		cnc = GDA_CONNECTION (list->data);
-		prov = gda_connection_get_provider_obj (cnc);
+		prov = gda_connection_get_provider (cnc);
 		branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
 		memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length,
 			branch->data, branch->binary_length);
@@ -587,7 +587,7 @@ gda_xa_transaction_rollback (GdaXaTransaction *xa_trans, GError **error)
 		GdaServerProvider *prov;
 
 		cnc = GDA_CONNECTION (list->data);
-		prov = gda_connection_get_provider_obj (cnc);
+		prov = gda_connection_get_provider (cnc);
 		
 		if (cnc == xa_trans->priv->non_xa_cnc) 
 			gda_connection_rollback_transaction (cnc, NULL, NULL);
@@ -634,7 +634,7 @@ gda_xa_transaction_commit_recovered (GdaXaTransaction *xa_trans, GSList **cnc_to
 		GdaServerProvider *prov;
 
 		cnc = GDA_CONNECTION (list->data);
-		prov = gda_connection_get_provider_obj (cnc);
+		prov = gda_connection_get_provider (cnc);
 		
 		if (cnc == xa_trans->priv->non_xa_cnc) 
 			continue;

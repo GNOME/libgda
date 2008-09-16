@@ -38,14 +38,14 @@ else {
     <para>
       The <link linkend="libgda-40-Configuration">Configuration section</link> details how to manage data sources
       definitions. To define a data source, one needs to create and fill a 
-      <link linkend="GdaDataSourceInfo">GdaDataSourceInfo</link> structure, and use the
+      <link linkend="GdaDsnInfo">GdaDsnInfo</link> structure, and use the
       <link linkend="gda-config-define-dsn">gda_config_define_dsn()</link> function.
     </para>
     <para>
       For example the following code defines a data source:
       <programlisting>
 GError *error = NULL;
-GdaDataSourceInfo dsn_info = {
+GdaDsnInfo dsn_info = {
     "My DSN",
     "MySQL",
     "Sample MySQL data source",

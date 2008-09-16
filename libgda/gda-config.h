@@ -35,7 +35,7 @@ G_BEGIN_DECLS
 #define GDA_IS_CONFIG_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONFIG))
 
 typedef struct _GdaConfigPrivate GdaConfigPrivate;
-typedef struct _GdaDataSourceInfo GdaDataSourceInfo;
+typedef struct _GdaDsnInfo GdaDsnInfo;
 typedef struct _GdaProviderInfo GdaProviderInfo;
 
 /* error reporting */
@@ -49,7 +49,7 @@ typedef enum {
 	GDA_CONFIG_PROVIDER_CREATION_ERROR
 } GdaConfigError;
 
-struct _GdaDataSourceInfo {
+struct _GdaDsnInfo {
         gchar    *name;        /* plain text, not RFC 1738 encoded */
         gchar    *provider;    /* plain text, not RFC 1738 encoded */
         gchar    *description; /* plain text, not RFC 1738 encoded */
@@ -75,29 +75,29 @@ struct _GdaConfigClass {
 	GObjectClass      object_class;
 
 	/* signals */
-	void   (*dsn_added)                 (GdaConfig *conf, GdaDataSourceInfo *new_dsn);
-	void   (*dsn_to_be_removed)         (GdaConfig *conf, GdaDataSourceInfo *old_dsn);
-	void   (*dsn_removed)               (GdaConfig *conf, GdaDataSourceInfo *old_dsn);
-	void   (*dsn_changed)               (GdaConfig *conf, GdaDataSourceInfo *dsn);
+	void   (*dsn_added)                 (GdaConfig *conf, GdaDsnInfo *new_dsn);
+	void   (*dsn_to_be_removed)         (GdaConfig *conf, GdaDsnInfo *old_dsn);
+	void   (*dsn_removed)               (GdaConfig *conf, GdaDsnInfo *old_dsn);
+	void   (*dsn_changed)               (GdaConfig *conf, GdaDsnInfo *dsn);
 };
 
-GType              gda_config_get_type            (void) G_GNUC_CONST;
-GdaConfig*         gda_config_get                 (void);
+GType              gda_config_get_type                 (void) G_GNUC_CONST;
+GdaConfig*         gda_config_get                      (void);
 
-GdaDataSourceInfo *gda_config_get_dsn             (const gchar *dsn_name);
-gboolean           gda_config_define_dsn          (const GdaDataSourceInfo *info, GError **error);
-gboolean           gda_config_remove_dsn          (const gchar *dsn_name, GError **error);
+GdaDsnInfo        *gda_config_get_dsn_info             (const gchar *dsn_name);
+gboolean           gda_config_define_dsn               (const GdaDsnInfo *info, GError **error);
+gboolean           gda_config_remove_dsn               (const gchar *dsn_name, GError **error);
 gboolean           gda_config_dsn_needs_authentication (const gchar *dsn_name);
-GdaDataModel      *gda_config_list_dsn            (void);
+GdaDataModel      *gda_config_list_dsn                 (void);
 gboolean           gda_config_can_modify_system_config (void);
 
-gint               gda_config_get_nb_dsn          (void);
-gint               gda_config_get_dsn_index       (const gchar *dsn_name);
-GdaDataSourceInfo *gda_config_get_dsn_at_index    (gint index);
+gint               gda_config_get_nb_dsn               (void);
+gint               gda_config_get_dsn_info_index       (const gchar *dsn_name);
+GdaDsnInfo        *gda_config_get_dsn_info_at_index    (gint index);
 
-GdaProviderInfo   *gda_config_get_provider_info   (const gchar *provider_name);
-GdaServerProvider *gda_config_get_provider_object (const gchar *provider_name, GError **error);
-GdaDataModel      *gda_config_list_providers      (void);
+GdaProviderInfo   *gda_config_get_provider_info        (const gchar *provider_name);
+GdaServerProvider *gda_config_get_provider             (const gchar *provider_name, GError **error);
+GdaDataModel      *gda_config_list_providers           (void);
 
 G_END_DECLS
 

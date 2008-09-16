@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-28 21:36+0200\n"
+"POT-Creation-Date: 2008-09-16 16:49+0200\n"
 "PO-Revision-Date: 2006-03-15 14:27-0300\n"
 "Last-Translator: Alexandre Folle de Menezes <afmenez@terra.com.br>\n"
 "Language-Team: Brazilian Portuguese <gnome-l10n-br@listas.cipsga.org.br>\n"
@@ -74,13 +74,13 @@ msgstr "Detalhes do provedor '%s'"
 msgid "Can't instantiate provider '%s'"
 msgstr "Impossível encontrar campo '%s'"
 
-#: ../libgda/gda-config.c:1149 ../libgda/gda-data-model-dsn-list.c:110
-#: ../libgda/gda-data-model-dsn-list.c:111 ../tools/gda-sql.c:1937
+#: ../libgda/gda-config.c:1149 ../libgda/gda-data-model-dsn-list.c:111
+#: ../libgda/gda-data-model-dsn-list.c:112 ../tools/gda-sql.c:1947
 msgid "Provider"
 msgstr "Provedor"
 
-#: ../libgda/gda-config.c:1150 ../libgda/gda-data-model-dsn-list.c:116
-#: ../libgda/gda-data-model-dsn-list.c:117
+#: ../libgda/gda-config.c:1150 ../libgda/gda-data-model-dsn-list.c:117
+#: ../libgda/gda-data-model-dsn-list.c:118
 #: ../libgda/gda-server-provider-extra.c:302
 #: ../libgda/gda-server-provider-extra.c:325 ../tools/command-exec.c:580
 msgid "Description"
@@ -111,8 +111,8 @@ msgstr "Provedores instalados"
 msgid "Error: %s"
 msgstr "Erro: %s"
 
-#: ../libgda/gda-config.c:1376 ../libgda/gda-data-model-dsn-list.c:130
-#: ../libgda/gda-data-model-dsn-list.c:131 ../tools/gda-sql.c:1939
+#: ../libgda/gda-config.c:1376 ../libgda/gda-data-model-dsn-list.c:131
+#: ../libgda/gda-data-model-dsn-list.c:132 ../tools/gda-sql.c:1949
 msgid "Username"
 msgstr "Usuário"
 
@@ -158,104 +158,131 @@ msgid ""
 "be modified by the database providers' implementation"
 msgstr ""
 
-#: ../libgda/gda-connection.c:521
+#: ../libgda/gda-connection.c:397 ../libgda/gda-connection.c:425
+#: ../libgda/gda-connection.c:439 ../libgda/gda-connection.c:454
+#: ../libgda/gda-connection.c:471
+#, c-format
+msgid "Could not set the '%s' property when the connection is opened"
+msgstr ""
+
+#: ../libgda/gda-connection.c:405
+#, fuzzy, c-format
+msgid "No DSN named '%s' defined"
+msgstr "Nenhuma conexão especificada"
+
+#: ../libgda/gda-connection.c:572
 #, c-format
 msgid "Malformed data source specification '%s'"
 msgstr ""
 
-#: ../libgda/gda-connection.c:529 ../libgda/gda-connection.c:745
-#: ../libgda/gda-connection.c:747
+#: ../libgda/gda-connection.c:580 ../libgda/gda-connection.c:796
+#: ../libgda/gda-connection.c:798
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Fonte de dados %s não encontrada na configuração"
 
-#: ../libgda/gda-connection.c:580
+#: ../libgda/gda-connection.c:631
 #, c-format
 msgid "Datasource configuration error: no provider specified"
 msgstr "Erro de configuração de fonte de dados: nenhum provedor especificado"
 
-#: ../libgda/gda-connection.c:649 ../tools/gda-sql.c:902
+#: ../libgda/gda-connection.c:700 ../tools/gda-sql.c:906
 #, fuzzy, c-format
 msgid "Malformed connection string '%s'"
 msgstr "String de conexão ODBC"
 
-#: ../libgda/gda-connection.c:655 ../libgda/gda-connection.c:769
+#: ../libgda/gda-connection.c:706 ../libgda/gda-connection.c:820
 #, fuzzy, c-format
 msgid "No provider specified"
 msgstr "Nenhum banco de dados especificado"
 
-#: ../libgda/gda-connection.c:757 ../libgda/gda-connection.c:759
+#: ../libgda/gda-connection.c:808 ../libgda/gda-connection.c:810
 #, fuzzy, c-format
 msgid "No DSN or connection string specified"
 msgstr "Nenhuma conexão especificada"
 
-#: ../libgda/gda-connection.c:777
+#: ../libgda/gda-connection.c:828
 #, fuzzy, c-format
 msgid "Provider does not allow usage from this thread"
 msgstr "Modelo %s (nome=%s): linha %d inserida!"
 
-#: ../libgda/gda-connection.c:784
+#: ../libgda/gda-connection.c:835
 #, c-format
 msgid ""
 "Internal error: provider does not implement the open_connection() virtual "
 "method"
 msgstr ""
 
-#: ../libgda/gda-connection.c:1440
+#: ../libgda/gda-connection.c:1447
 #, fuzzy, c-format
 msgid "Provider does not support statement preparation"
 msgstr "O provedor %s não implementa a função de entrada"
 
-#: ../libgda/gda-connection.c:1587 ../libgda/gda-connection.c:1602
+#: ../libgda/gda-connection.c:1596 ../libgda/gda-connection.c:1611
 #, c-format
 msgid "Statement is a selection statement"
 msgstr ""
 
-#: ../libgda/gda-connection.c:1661 ../libgda/gda-connection.c:1720
-#: ../libgda/gda-connection.c:1773
+#: ../libgda/gda-connection.c:1670 ../libgda/gda-connection.c:1731
+#: ../libgda/gda-connection.c:1786
 #, c-format
 msgid "Statement is not a selection statement"
 msgstr ""
 
-#: ../libgda/gda-connection.c:2120
+#: ../libgda/gda-connection.c:2133
 #, fuzzy, c-format
 msgid "Invalid argument"
 msgstr "Argumento inválido '%s'"
 
-#: ../libgda/gda-connection.c:2129
+#: ../libgda/gda-connection.c:2142
 #, fuzzy, c-format
 msgid "Missing or wrong arguments for table '%s': %s"
 msgstr "Argumentos faltando"
 
-#: ../libgda/gda-connection.c:2838
+#: ../libgda/gda-connection.c:2850
 #, c-format
 msgid "Meta update error"
 msgstr ""
 
-#: ../libgda/gda-connection.c:3272
+#: ../libgda/gda-connection.c:3288
 #, c-format
 msgid "Wrong filter arguments"
 msgstr ""
 
-#: ../libgda/gda-connection.c:3403 ../libgda/gda-connection.c:3448
-#: ../libgda/gda-connection.c:3483 ../libgda/gda-connection.c:3519
-#: ../libgda/gda-connection.c:3555
+#: ../libgda/gda-connection.c:3419 ../libgda/gda-connection.c:3464
+#: ../libgda/gda-connection.c:3499 ../libgda/gda-connection.c:3535
+#: ../libgda/gda-connection.c:3571
 #, c-format
 msgid "Connection transaction status tracking: no transaction exists for %s"
 msgstr ""
 
-#: ../libgda/gda-connection.c:3827
-#: ../libgda/sqlite/virtual/gda-virtual-connection.c:185
+#: ../libgda/gda-connection.c:3845
+#: ../libgda/sqlite/virtual/gda-virtual-connection.c:186
 msgid "Internal error: invalid provider handle"
 msgstr ""
 
-#: ../libgda/gda-data-access-wrapper.c:493
-#: ../libgda/gda-data-model-array.c:535
-#: ../libgda/providers-support/gda-pmodel.c:992
-#: ../libgda/providers-support/gda-pmodel.c:2227
+#: ../libgda/gda-data-access-wrapper.c:472
+#: ../libgda/gda-data-model-array.c:536 ../libgda/gda-data-model-bdb.c:609
+#: ../libgda/gda-data-model-bdb.c:713 ../libgda/gda-data-model-bdb.c:742
+#: ../libgda/gda-data-model-dir.c:792 ../libgda/gda-data-model-dir.c:888
+#: ../libgda/gda-data-model-dir.c:930 ../libgda/gda-data-model-dsn-list.c:311
+#: ../libgda/gda-data-model-iter.c:245 ../libgda/gda-data-model-iter.c:993
+#: ../libgda/gda-data-proxy.c:3279 ../libgda/gda-data-select.c:1027
+#: ../libgda/gda-data-select.c:1495 ../libgda/gda-data-select.c:2345
+#: ../libgda/gda-data-select.c:2406
 #, fuzzy, c-format
 msgid "Column %d out of range (0-%d)"
 msgstr "Coluna fora %d da faixa 0 - %d"
+
+#: ../libgda/gda-data-access-wrapper.c:495
+#, fuzzy, c-format
+msgid "Can't set iterator's position"
+msgstr "Impossível iniciar a transação"
+
+#: ../libgda/gda-data-access-wrapper.c:523
+#, fuzzy, c-format
+msgid "Can't access data"
+msgstr "Impossível ler um Blob fechado"
 
 #: ../libgda/gda-data-comparator.c:160
 #, fuzzy
@@ -267,191 +294,202 @@ msgstr "Modelo de dados"
 msgid "New data model"
 msgstr "Linha não encontrada no modelo de dados"
 
-#: ../libgda/gda-data-comparator.c:430
+#: ../libgda/gda-data-comparator.c:441
 #, fuzzy, c-format
 msgid "Missing original data model"
 msgstr "Linha não encontrada no modelo de dados"
 
-#: ../libgda/gda-data-comparator.c:435
+#: ../libgda/gda-data-comparator.c:446
 #, fuzzy, c-format
 msgid "Missing new data model"
 msgstr "Argumentos faltando"
 
-#: ../libgda/gda-data-comparator.c:441
+#: ../libgda/gda-data-comparator.c:452
 #, c-format
 msgid "Data models must support random access model"
 msgstr ""
 
-#: ../libgda/gda-data-comparator.c:450
+#: ../libgda/gda-data-comparator.c:461
 #, fuzzy, c-format
 msgid "Data models to compare don't have the same number of columns"
 msgstr "Condicional deve ter pelo menos um argumento"
 
-#: ../libgda/gda-data-comparator.c:461
+#: ../libgda/gda-data-comparator.c:472
 #, c-format
 msgid "Type mismatch for column %d: '%s' and '%s'"
 msgstr ""
 
-#: ../libgda/gda-data-comparator.c:522 ../libgda/gda-data-comparator.c:550
+#: ../libgda/gda-data-comparator.c:561 ../libgda/gda-data-comparator.c:597
 #, c-format
 msgid "Differences computation cancelled on signal handling"
 msgstr ""
 
-#: ../libgda/gda-data-model-array.c:169
+#: ../libgda/gda-data-model-array.c:170
 #, fuzzy
 msgid "Whether data model can be modified"
 msgstr "Restrição não pode ser ativada!"
 
-#: ../libgda/gda-data-model-array.c:389 ../libgda/gda-data-model-array.c:529
-#: ../libgda/gda-data-model-dir.c:796 ../libgda/gda-data-model-dir.c:955
-#: ../libgda/gda-data-model-dir.c:1299
-#: ../libgda/providers-support/gda-pmodel.c:1416
+#: ../libgda/gda-data-model-array.c:387 ../libgda/gda-data-model-array.c:530
+#: ../libgda/gda-data-model-array.c:610 ../libgda/gda-data-model-dir.c:802
+#: ../libgda/gda-data-model-dir.c:971 ../libgda/gda-data-model-dir.c:1318
+#: ../libgda/gda-data-model-dsn-list.c:316 ../libgda/gda-data-proxy.c:3238
+#: ../libgda/gda-data-proxy.c:3270 ../libgda/gda-data-select.c:1452
+#: ../libgda/gda-data-select.c:1502
 #, fuzzy, c-format
 msgid "Row %d out of range (0-%d)"
 msgstr "Linha %d fora do limite 0 - %d"
 
 #: ../libgda/gda-data-model-array.c:524
-#, fuzzy
+#, fuzzy, c-format
 msgid "No row in data model"
 msgstr "Linha não encontrada no modelo de dados"
 
-#: ../libgda/gda-data-model-array.c:601 ../libgda/gda-data-model-array.c:641
-#: ../libgda/gda-data-model-array.c:680 ../libgda/gda-data-model-array.c:715
+#: ../libgda/gda-data-model-array.c:549
+#, fuzzy, c-format
+msgid "Data model has no data"
+msgstr "Modelo de dados"
+
+#: ../libgda/gda-data-model-array.c:604 ../libgda/gda-data-model-array.c:644
+#: ../libgda/gda-data-model-array.c:683 ../libgda/gda-data-model-array.c:718
 #, c-format
 msgid "Attempting to modify a read-only data model"
 msgstr ""
 
-#: ../libgda/gda-data-model-array.c:607
-#, c-format
-msgid "Row number out of range"
-msgstr "Número de linha fora do limite"
-
-#: ../libgda/gda-data-model-array.c:647 ../libgda/gda-data-model-array.c:686
+#: ../libgda/gda-data-model-array.c:650 ../libgda/gda-data-model-array.c:689
 #, c-format
 msgid "Too many values in list"
 msgstr "Muitos valores na lista"
 
-#: ../libgda/gda-data-model-array.c:740
+#: ../libgda/gda-data-model-array.c:743
 #, c-format
 msgid "Row not found in data model"
 msgstr "Linha não encontrada no modelo de dados"
 
-#: ../libgda/gda-data-model-bdb.c:607 ../libgda/gda-data-model-bdb.c:704
-#: ../libgda/gda-data-model-bdb.c:730 ../libgda/gda-data-model-dir.c:790
-#: ../libgda/gda-data-model-dir.c:876 ../libgda/gda-data-model-dir.c:915
-#: ../libgda/gda-data-model-dir.c:917
-#, c-format
-msgid "Column number out of range"
-msgstr "Número de coluna fora do limite"
-
-#: ../libgda/gda-data-model-bdb.c:639 ../libgda/gda-data-model-bdb.c:672
-#: ../libgda/gda-data-model-bdb.c:768 ../libgda/gda-data-model-bdb.c:854
+#: ../libgda/gda-data-model-bdb.c:647 ../libgda/gda-data-model-bdb.c:680
+#: ../libgda/gda-data-model-bdb.c:784 ../libgda/gda-data-model-bdb.c:872
 #, c-format
 msgid ""
 "Custom BDB model implementation is not complete: the '%s' method is missing"
 msgstr ""
 
-#: ../libgda/gda-data-model-bdb.c:795 ../libgda/gda-data-model-bdb.c:879
+#: ../libgda/gda-data-model-bdb.c:811 ../libgda/gda-data-model-bdb.c:897
 #, fuzzy, c-format
 msgid "Expected GdaBinary value, got %s"
 msgstr "Esperava tag <gda_array_data>, obteve <%s>"
 
-#: ../libgda/gda-data-model-bdb.c:839
+#: ../libgda/gda-data-model-bdb.c:857
 #, c-format
 msgid "Key modification is not supported"
 msgstr ""
 
-#: ../libgda/gda-data-model.c:971
+#: ../libgda/gda-data-model.c:568
+#, fuzzy, c-format
+msgid "Data model does not support getting individual value"
+msgstr "O modelo de dados %p não é atualizável"
+
+#: ../libgda/gda-data-model.c:604 ../libgda/gda-data-model.c:613
+#, c-format
+msgid "Data model returned value of invalid '%s' type"
+msgstr ""
+
+#: ../libgda/gda-data-model.c:610
+#, c-format
+msgid "Data model returned invalid NULL value"
+msgstr ""
+
+#: ../libgda/gda-data-model.c:666
+#, fuzzy, c-format
+msgid "Data model does not support setting individual value"
+msgstr "O modelo de dados %p não é atualizável"
+
+#: ../libgda/gda-data-model.c:768
 #, fuzzy, c-format
 msgid "Model does not allow row insertion"
 msgstr "Modelo %s (nome=%s): linha %d inserida!"
 
-#: ../libgda/gda-data-model.c:1001
+#: ../libgda/gda-data-model.c:798
 #, c-format
 msgid "Model does not allow row deletion"
 msgstr ""
 
-#: ../libgda/gda-data-model.c:1149 ../libgda/gda-data-model.c:1188
-#: ../libgda/gda-data-model.c:1202
+#: ../libgda/gda-data-model.c:946 ../libgda/gda-data-model.c:985
+#: ../libgda/gda-data-model.c:999
 #, c-format
 msgid "The '%s' parameter must hold a string value, ignored."
 msgstr ""
 
-#: ../libgda/gda-data-model.c:1211 ../libgda/gda-data-model.c:1294
+#: ../libgda/gda-data-model.c:1008 ../libgda/gda-data-model.c:1091
 #, c-format
 msgid "The '%s' parameter must hold a boolean value, ignored."
 msgstr ""
 
-#: ../libgda/gda-data-model.c:1302
+#: ../libgda/gda-data-model.c:1099
 #, fuzzy, c-format
 msgid "File '%s' already exists"
 msgstr "Tabela %s já existe"
 
-#: ../libgda/gda-data-model.c:1425
+#: ../libgda/gda-data-model.c:1213
 msgid "Exported Data"
 msgstr "Dado Exportado"
 
-#: ../libgda/gda-data-model.c:1554
+#: ../libgda/gda-data-model.c:1328
 #, fuzzy, c-format
 msgid "Expected tag <gda_value> or <gda_array_value>, got <%s>, ignoring"
 msgstr "Esperava tag <gda_value>, obteve <%s>, ignorando"
 
-#: ../libgda/gda-data-model.c:1585
+#: ../libgda/gda-data-model.c:1359
 #, c-format
 msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
 msgstr ""
 "Impossível obter tipo de dado de coluna (tipo é UNKNOWN ou não especificado)"
 
-#: ../libgda/gda-data-model.c:1667
+#: ../libgda/gda-data-model.c:1441
 #, c-format
 msgid "Expected tag <gda_array_data>, got <%s>"
 msgstr "Esperava tag <gda_array_data>, obteve <%s>"
 
-#: ../libgda/gda-data-model.c:1727
+#: ../libgda/gda-data-model.c:1501
 #, fuzzy, c-format
 msgid "Could not get an iterator for source data model"
 msgstr "Impossível obter tipo de dados do campo Oracle"
 
-#: ../libgda/gda-data-model.c:1744
+#: ../libgda/gda-data-model.c:1518
 #, c-format
 msgid "Inexistent column in source data model: %d"
 msgstr ""
 
-#: ../libgda/gda-data-model.c:1758
+#: ../libgda/gda-data-model.c:1532
 #, c-format
 msgid ""
 "Destination column %d can't be NULL but has no correspondence in the source "
 "data model"
 msgstr ""
 
-#: ../libgda/gda-data-model.c:1768
+#: ../libgda/gda-data-model.c:1542
 #, c-format
 msgid ""
 "Destination column %d has a gda type (%s) incompatible with source column %d "
 "type (%s)"
 msgstr ""
 
-#: ../libgda/gda-data-model.c:1858
+#: ../libgda/gda-data-model.c:1639
 #, c-format
 msgid "Can't transform '%s' from GDA type %s to GDA type %s"
 msgstr ""
 
-#: ../libgda/gda-data-model.c:2365
-#, c-format
-msgid "(%d row)\n"
-msgid_plural "(%d rows)\n"
-msgstr[0] ""
-msgstr[1] ""
+#: ../libgda/gda-data-model.c:1826
+#, fuzzy, c-format
+msgid "Could not dump data model's attributes: %s"
+msgstr "Impossível alocar reserva de espaço para coluna %d"
 
-#: ../libgda/gda-data-model.c:2368
-msgid "Model does not support random access, not showing data\n"
-msgstr ""
-
-#: ../libgda/gda-data-model-dir.c:385 ../libgda/gda-data-model-import.c:1594
-#: ../libgda/gda-meta-store.c:519 ../libgda/gda-server-operation.c:796
-#: ../libgda/sqlite/gda-sqlite-provider.c:1734
-#: ../libgda/sqlite/gda-sqlite-provider.c:1749
-#: ../providers/mdb/gda-mdb-provider.c:352
+#: ../libgda/gda-data-model.c:1827 ../libgda/gda-data-model.c:1835
+#: ../libgda/gda-data-model-dir.c:386 ../libgda/gda-data-model-import.c:1581
+#: ../libgda/gda-data-model-import.c:1864
+#: ../libgda/gda-data-model-import.c:1937 ../libgda/gda-holder.c:440
+#: ../libgda/gda-meta-store.c:519 ../libgda/gda-server-operation.c:647
+#: ../libgda/gda-set.c:473 ../libgda/sqlite/gda-sqlite-provider.c:1737
+#: ../libgda/sqlite/gda-sqlite-provider.c:1752
+#: ../providers/mdb/gda-mdb-provider.c:353
 #: ../providers/mysql/gda-mysql-util.c:137
 #: ../providers/postgres/gda-postgres-provider.c:1820
 #: ../providers/postgres/gda-postgres-provider.c:1835
@@ -459,275 +497,262 @@ msgstr ""
 #: ../providers/postgres/gda-postgres-util.c:89
 #: ../tools/gda-list-server-op.c:47 ../tools/gda-list-server-op.c:90
 #: ../tools/gda-sql.c:243 ../tools/gda-sql.c:260 ../tools/gda-sql.c:321
-#: ../tools/gda-sql.c:1018 ../tools/gda-sql.c:1058 ../tools/gda-sql.c:1899
+#: ../tools/gda-sql.c:1022 ../tools/gda-sql.c:1062 ../tools/gda-sql.c:1909
 #, c-format
 msgid "No detail"
 msgstr ""
 
-#: ../libgda/gda-data-model-dir.c:975 ../libgda/gda-data-model-dir.c:977
+#: ../libgda/gda-data-model.c:1834
+#, fuzzy, c-format
+msgid "Could not dump data model's contents: %s"
+msgstr "Impossível alocar reserva de espaço para coluna %d"
+
+#: ../libgda/gda-data-model.c:2183
+#, c-format
+msgid "(%d row)\n"
+msgid_plural "(%d rows)\n"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../libgda/gda-data-model.c:2186
+msgid "Model does not support random access, not showing data\n"
+msgstr ""
+
+#: ../libgda/gda-data-model-dir.c:872
+#, fuzzy, c-format
+msgid "Row not found"
+msgstr "A tabela %s não foi encontrada"
+
+#: ../libgda/gda-data-model-dir.c:994 ../libgda/gda-data-model-dir.c:996
 #, fuzzy, c-format
 msgid "Column cannot be modified"
 msgstr "Restrição não pode ser ativada!"
 
-#: ../libgda/gda-data-model-dir.c:990 ../libgda/gda-data-model-dir.c:992
-#: ../libgda/gda-data-model-dir.c:1197 ../libgda/gda-data-model-dir.c:1199
+#: ../libgda/gda-data-model-dir.c:1009 ../libgda/gda-data-model-dir.c:1011
+#: ../libgda/gda-data-model-dir.c:1216 ../libgda/gda-data-model-dir.c:1218
 #, c-format
 msgid "New path must be a subpath of the base directory"
 msgstr ""
 
-#: ../libgda/gda-data-model-dir.c:1032 ../libgda/gda-data-model-dir.c:1076
+#: ../libgda/gda-data-model-dir.c:1051 ../libgda/gda-data-model-dir.c:1095
 #, fuzzy, c-format
 msgid "Could not rename file '%s' to '%s'"
 msgstr "Impossível criar arquivo %s"
 
-#: ../libgda/gda-data-model-dir.c:1056
+#: ../libgda/gda-data-model-dir.c:1075
 #, fuzzy, c-format
 msgid "Could not create directory '%s'"
 msgstr "Impossível criar arquivo %s"
 
-#: ../libgda/gda-data-model-dir.c:1125
+#: ../libgda/gda-data-model-dir.c:1144
 #, fuzzy, c-format
 msgid "Could not overwrite contents of file '%s'"
 msgstr "Impossível criar arquivo %s"
 
-#: ../libgda/gda-data-model-dir.c:1143 ../libgda/gda-data-model-dir.c:1144
+#: ../libgda/gda-data-model-dir.c:1162 ../libgda/gda-data-model-dir.c:1163
 #, fuzzy, c-format
 msgid "Wrong type of data"
 msgstr "Tipo de consulta errado"
 
-#: ../libgda/gda-data-model-dir.c:1185 ../libgda/gda-data-model-dir.c:1187
+#: ../libgda/gda-data-model-dir.c:1204 ../libgda/gda-data-model-dir.c:1206
 #, fuzzy, c-format
 msgid "Column cannot be set"
 msgstr "Coluna fora da faixa"
 
-#: ../libgda/gda-data-model-dir.c:1258
+#: ../libgda/gda-data-model-dir.c:1277
 #, c-format
 msgid "Cannot set contents of filename '%s'"
 msgstr ""
 
-#: ../libgda/gda-data-model-dir.c:1269
+#: ../libgda/gda-data-model-dir.c:1288
 #, fuzzy, c-format
 msgid "Cannot create directory '%s'"
 msgstr "Erro ao criar diretório %s"
 
-#: ../libgda/gda-data-model-dir.c:1277 ../libgda/gda-data-model-dir.c:1279
+#: ../libgda/gda-data-model-dir.c:1296 ../libgda/gda-data-model-dir.c:1298
 #, c-format
 msgid "Cannot add row: filename missing"
 msgstr ""
 
-#: ../libgda/gda-data-model-dir.c:1316
+#: ../libgda/gda-data-model-dir.c:1335
 #, fuzzy, c-format
 msgid "Cannot remove file '%s'"
 msgstr "Impossível carregar arquivo '%s'"
 
-#: ../libgda/gda-data-model-dsn-list.c:104
 #: ../libgda/gda-data-model-dsn-list.c:105
+#: ../libgda/gda-data-model-dsn-list.c:106
 msgid "DSN"
 msgstr ""
 
 #. To translators: a "Connection string" is a semi-colon delimited list of key=value pairs which
 #. * define the parameters for a connection, such as "DB_NAME=thedb;HOSTNAME=moon
-#: ../libgda/gda-data-model-dsn-list.c:124
 #: ../libgda/gda-data-model-dsn-list.c:125
+#: ../libgda/gda-data-model-dsn-list.c:126
 msgid "Connection string"
 msgstr "String de conexão"
 
-#: ../libgda/gda-data-model-dsn-list.c:136
 #: ../libgda/gda-data-model-dsn-list.c:137
+#: ../libgda/gda-data-model-dsn-list.c:138
 msgid "Global"
 msgstr "Global"
 
-#: ../libgda/gda-data-model-dsn-list.c:141
+#: ../libgda/gda-data-model-dsn-list.c:142
 msgid "List of defined data sources"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:445
+#: ../libgda/gda-data-model-import.c:447
 #, c-format
 msgid "The '%s' option must hold a string value, ignored."
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:461
+#: ../libgda/gda-data-model-import.c:463
 #, c-format
 msgid "The '%s' option must hold a boolean value, ignored."
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:570
+#: ../libgda/gda-data-model-import.c:572
 msgid "\"options\" property is not a GdaSet object"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:835
+#: ../libgda/gda-data-model-import.c:836
 #, c-format
 msgid "The '%s' parameter must hold a gda type value, ignored."
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:907
+#: ../libgda/gda-data-model-import.c:908
 #, fuzzy, c-format
 msgid "Character conversion at line %d, error: %s"
 msgstr "conversão de dados falhou para o tipo %d"
 
-#: ../libgda/gda-data-model-import.c:910
+#: ../libgda/gda-data-model-import.c:911
 #: ../providers/bdb/gda-bdb-provider.c:208
 msgid "no detail"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:948
+#: ../libgda/gda-data-model-import.c:949
 #, fuzzy, c-format
 msgid "Could not convert string '%s' to a '%s' value"
 msgstr "Impossível interpretar string como um valor %s válido"
 
-#: ../libgda/gda-data-model-import.c:1004
+#: ../libgda/gda-data-model-import.c:1005
 #, fuzzy, c-format
 msgid "Error while parsing CSV file: %s"
 msgstr "Erro ao ler %s: %s"
 
 #. error
-#: ../libgda/gda-data-model-import.c:1107
+#: ../libgda/gda-data-model-import.c:1108
 msgid "Failed to read node in XML file"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1126
+#: ../libgda/gda-data-model-import.c:1127
 #, fuzzy, c-format
 msgid "Expected <gda_array> node in XML file, got <%s>"
 msgstr "Esperava tag <gda_array_data>, obteve <%s>"
 
-#: ../libgda/gda-data-model-import.c:1170
-#: ../libgda/gda-data-model-import.c:1496
+#: ../libgda/gda-data-model-import.c:1171
+#: ../libgda/gda-data-model-import.c:1490
 msgid "No \"gdatype\" attribute specified in <gda_array_field>"
 msgstr "Nenhum atributo \"gdatype\" especificado em <gda_array_field>"
 
-#: ../libgda/gda-data-model-import.c:1217
+#: ../libgda/gda-data-model-import.c:1218
 #, fuzzy
 msgid "Expected <gda_array_field> in <gda_array>"
 msgstr "Nenhum <gda_array_field> especificado em <gda_array>"
 
-#: ../libgda/gda-data-model-import.c:1258
+#: ../libgda/gda-data-model-import.c:1252
 #, fuzzy, c-format
 msgid "Expected <gda_array_data> in <gda_array>, got <%s>"
 msgstr "Esperava tag <gda_array_data>, obteve <%s>"
 
-#: ../libgda/gda-data-model-import.c:1260
+#: ../libgda/gda-data-model-import.c:1254
 #, fuzzy
 msgid "Expected <gda_array_data> in <gda_array>"
 msgstr "Esperava tag <gda_array_data>, obteve <%s>"
 
-#: ../libgda/gda-data-model-import.c:1272
+#: ../libgda/gda-data-model-import.c:1266
 msgid "Can't read the contents of the <gda_array_data> node"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1321
+#: ../libgda/gda-data-model-import.c:1315
 #, fuzzy, c-format
 msgid "Expected <gda_array_row> in <gda_array_data>, got <%s>"
 msgstr "Esperava tag <gda_array_data>, obteve <%s>"
 
-#: ../libgda/gda-data-model-import.c:1345
+#: ../libgda/gda-data-model-import.c:1339
 msgid "Row has too many values (which are ignored)"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1392
+#: ../libgda/gda-data-model-import.c:1386
 #, fuzzy, c-format
 msgid "Could not convert '%s' to a value of type %s"
 msgstr "conversão de dados falhou para o tipo %d"
 
-#: ../libgda/gda-data-model-import.c:1465
+#: ../libgda/gda-data-model-import.c:1459
 #, fuzzy, c-format
 msgid "Expected <gda_array> node but got <%s>"
 msgstr "Esperava tag <gda_array_data>, obteve <%s>"
 
-#: ../libgda/gda-data-model-import.c:1543
+#: ../libgda/gda-data-model-import.c:1537
 msgid "No <gda_array_field> specified in <gda_array>"
 msgstr "Nenhum <gda_array_field> especificado em <gda_array>"
 
-#: ../libgda/gda-data-model-import.c:1781
+#: ../libgda/gda-data-model-import.c:1715
+#, fuzzy, c-format
+msgid "Data model does not support random access"
+msgstr "O modelo de dados %p não é atualizável"
+
+#: ../libgda/gda-data-model-import.c:1771
 #, c-format
 msgid "Row at line %d does not have enough values, completed with NULL values"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1801
+#: ../libgda/gda-data-model-import.c:1791
 #, c-format
 msgid "Row at line %d does not have enough values (which are thus ignored)"
 msgstr ""
 
-#: ../libgda/gda-data-model-query.c:382
-#, c-format
-msgid ""
-"Type of parameter '%s' is '%s' when it should be '%s', GdaDataModelQuery "
-"object will not work correctly"
-msgstr ""
+#: ../libgda/gda-data-model-import.c:1863
+#: ../libgda/gda-data-model-import.c:1936
+#, fuzzy, c-format
+msgid "Could not set iterator's value: %s"
+msgstr "Impossível obter o tipo de dados do parâmetro"
 
-#: ../libgda/gda-data-model-query.c:431
-msgid ""
-"Could not get statement's parameters, expect some problems with the "
-"GdaDataModelQuery"
-msgstr ""
+#: ../libgda/gda-data-model-iter.c:251 ../libgda/gda-data-model-iter.c:258
+#, fuzzy, c-format
+msgid "GdaDataModel refused value change"
+msgstr "GdaDataModel requerido para esta ação"
 
-#: ../libgda/gda-data-model-query.c:494
-#, c-format
-msgid ""
-"Could not find a parameter named '%s' among the SELECT query's parameters, "
-"the specified modification query will not be executable"
-msgstr ""
-
-#: ../libgda/gda-data-model-query.c:667 ../libgda/gda-data-model-query.c:1082
+#: ../libgda/gda-data-model-query.c:477
 #: ../libgda-report/engine/gda-report-engine.c:584
 #: ../libgda-report/engine/gda-report-engine.c:611 ../tools/gda-sql.c:604
 #, c-format
 msgid "No connection specified"
 msgstr "Nenhuma conexão especificada"
 
-#: ../libgda/gda-data-model-query.c:672 ../libgda/gda-data-model-query.c:1087
+#: ../libgda/gda-data-model-query.c:483
 #, fuzzy, c-format
 msgid "Specified connection is closed"
 msgstr "Conexão está fechada"
 
-#: ../libgda/gda-data-model-query.c:733
-#, c-format
-msgid "Wrong type of query"
-msgstr "Tipo de consulta errado"
-
-#: ../libgda/gda-data-model-query.c:1142 ../libgda/gda-data-model-query.c:1189
-#, c-format
-msgid "No UPDATE query specified, can't update row"
-msgstr "Nenhuma consulta UPDATE especificada, impossível atualizar linha"
-
-#: ../libgda/gda-data-model-query.c:1239 ../libgda/gda-data-model-query.c:1286
-#, c-format
-msgid "No INSERT query specified, can't insert row"
-msgstr "Nenhuma consulta INSERT especificada, impossível inserir linha"
-
-#: ../libgda/gda-data-model-query.c:1327
-#, c-format
-msgid "No DELETE query specified, can't delete row"
-msgstr "Nenhuma consulta DELETE especificada, impossível remover linha"
-
-#: ../libgda/gda-data-model-query.c:1500
-#, fuzzy, c-format
-msgid "No SELECT query specified"
-msgstr "Nenhuma consulta DELETE especificada, impossível remover linha"
-
-#: ../libgda/gda-data-proxy.c:601
+#: ../libgda/gda-data-proxy.c:604
 msgid "Data model"
 msgstr "Modelo de dados"
 
-#: ../libgda/gda-data-proxy.c:831
+#: ../libgda/gda-data-proxy.c:839
 msgid "GdaDataProxy can't handle non random access data models"
 msgstr ""
 
-#: ../libgda/gda-data-proxy.c:1392 ../libgda/gda-data-proxy.c:3618
+#: ../libgda/gda-data-proxy.c:1402 ../libgda/gda-data-proxy.c:3643
 #, c-format
 msgid ""
 "The first row is an empty row artificially prepended and cannot be removed"
 msgstr ""
 
-#: ../libgda/gda-data-proxy.c:1869
-#, c-format
-msgid "Modifications cancelled"
-msgstr ""
-
-#. REM: the GdaDataModelQuery object does not emit any "row_inserted", "row_updated"
+#. REM: the GdaDataModelQuery object does not emit any "row-inserted", "row-updated"
 #. * or "row_dremoved" signals but that is Ok as an exception: all the other data
 #. * model should be implemented correctly
 #.
-#: ../libgda/gda-data-proxy.c:1994 ../libgda/gda-data-proxy.c:2020
+#: ../libgda/gda-data-proxy.c:1930 ../libgda/gda-data-proxy.c:1956
 #, c-format
 msgid ""
 "Proxied data model reports the modifications as accepted, yet did not emit "
@@ -735,41 +760,200 @@ msgid ""
 "signal. This is a bug of the %s's implementation (please report a bug)."
 msgstr ""
 
-#: ../libgda/gda-data-proxy.c:2829 ../tools/gda-sql.c:2080
+#: ../libgda/gda-data-proxy.c:2769 ../tools/gda-sql.c:2090
 #, fuzzy, c-format
 msgid "Could not create virtual connection"
 msgstr "Impossível criar arquivo %s"
 
-#: ../libgda/gda-data-proxy.c:2871 ../libgda/gda-data-proxy.c:2884
+#: ../libgda/gda-data-proxy.c:2810 ../libgda/gda-data-proxy.c:2823
 #, c-format
 msgid "Error in filter expression"
 msgstr ""
 
-#: ../libgda/gda-data-proxy.c:2994
-#: ../libgda/providers-support/gda-pmodel.c:1214
+#: ../libgda/gda-data-proxy.c:2933 ../libgda/gda-data-select.c:1248
 #, c-format
 msgid "Incorrect filter expression"
 msgstr ""
 
-#: ../libgda/gda-data-proxy.c:3318
-#, c-format
-msgid "Unknown GdaDataProxy column: %d"
-msgstr "Coluna GdaDataProxy desconhecida: %d"
-
-#: ../libgda/gda-data-proxy.c:3397
+#: ../libgda/gda-data-proxy.c:3422
 #, c-format
 msgid ""
 "The first row is an empty row artificially prepended and cannot be altered"
 msgstr ""
 
-#: ../libgda/gda-data-proxy.c:3489
+#: ../libgda/gda-data-proxy.c:3517
 #, c-format
 msgid "Trying to change read-only column: %d"
 msgstr "Tentando alterar coluna apenas de leitura: %d"
 
-#: ../libgda/gda-data-proxy.c:3528
+#: ../libgda/gda-data-proxy.c:3556
 #, c-format
 msgid "Value type mismatch %s instead of %s"
+msgstr ""
+
+#: ../libgda/gda-data-select.c:230
+msgid "GdaSet used when the SELECT statement was executed"
+msgstr ""
+
+#: ../libgda/gda-data-select.c:792
+#, c-format
+msgid "Incorrect SQL expression"
+msgstr ""
+
+#: ../libgda/gda-data-select.c:813 ../libgda/gda-data-select.c:2025
+#, c-format
+msgid "Internal error: the \"prepared-stmt\" property has not been set"
+msgstr ""
+
+#: ../libgda/gda-data-select.c:820 ../libgda/gda-data-select.c:2032
+#, c-format
+msgid "Internal error: can't get the prepared statement's actual statement"
+msgstr ""
+
+#: ../libgda/gda-data-select.c:826
+#, fuzzy, c-format
+msgid "Unsupported type of SELECT statement"
+msgstr "Impossível preparar a instrução do Oracle"
+
+#: ../libgda/gda-data-select.c:894
+#, c-format
+msgid "INSERT statement must contain values to insert"
+msgstr ""
+
+#: ../libgda/gda-data-select.c:900
+#, c-format
+msgid "INSERT statement must insert only one row"
+msgstr ""
+
+#: ../libgda/gda-data-select.c:927
+#, c-format
+msgid "DELETE statement must have a WHERE part"
+msgstr ""
+
+#: ../libgda/gda-data-select.c:967
+#, fuzzy, c-format
+msgid "UPDATE statement must have a WHERE part"
+msgstr "O modelo não possui nenhum valor não único para atualizar."
+
+#: ../libgda/gda-data-select.c:1020
+#, c-format
+msgid "Modification statement uses an unknown '%s' parameter"
+msgstr ""
+
+#: ../libgda/gda-data-select.c:1036
+#, c-format
+msgid "Modification statement's  '%s' parameter is a %s when it should be a %s"
+msgstr ""
+
+#: ../libgda/gda-data-select.c:1051
+#, c-format
+msgid "Modification statement must be an INSERT, UPDATE or DELETE statement"
+msgstr ""
+
+#: ../libgda/gda-data-select.c:1097 ../libgda/gda-data-select.c:1303
+#, fuzzy, c-format
+msgid "No connection to use"
+msgstr "Nenhuma conexão especificada"
+
+#: ../libgda/gda-data-select.c:1143
+#, c-format
+msgid "Invalid unique row condition (ony equal operators are allowed)"
+msgstr ""
+
+#: ../libgda/gda-data-select.c:1175 ../libgda/gda-data-select.c:1230
+#, fuzzy, c-format
+msgid "Unique row condition has already been specified"
+msgstr "Tabela %s já existe"
+
+#: ../libgda/gda-data-select.c:1312 ../libgda/gda-data-select.c:1323
+#, fuzzy, c-format
+msgid "No table to select from in SELECT statement"
+msgstr "Impossível preparar a instrução do Oracle"
+
+#: ../libgda/gda-data-select.c:1317
+#, c-format
+msgid "SELECT statement uses more than one table to select from"
+msgstr ""
+
+#: ../libgda/gda-data-select.c:1488 ../libgda/gda-data-select.c:2165
+#: ../libgda/gda-data-select.c:2332 ../libgda/gda-data-select.c:2473
+#: ../libgda/gda-data-select.c:2560 ../libgda/gda-data-select.c:2743
+#, fuzzy, c-format
+msgid "Data model does only support random access"
+msgstr "O modelo de dados %p não é atualizável"
+
+#: ../libgda/gda-data-select.c:1517 ../libgda/gda-data-select.c:1526
+#: ../libgda/gda-data-select.c:1534 ../libgda/gda-data-select.c:1556
+#, c-format
+msgid ""
+"Unable to retreive data after modifications, no further modification will be "
+"allowed"
+msgstr ""
+
+#: ../libgda/gda-data-select.c:1879 ../libgda/gda-data-select.c:1972
+#, fuzzy, c-format
+msgid "Some columns can't be modified"
+msgstr "Restrição não pode ser ativada!"
+
+#: ../libgda/gda-data-select.c:2072
+#, c-format
+msgid "Unable to identify a way to fetch a single row"
+msgstr ""
+
+#: ../libgda/gda-data-select.c:2079
+#, fuzzy, c-format
+msgid "Can only operate on non compound SELECT statements"
+msgstr "Impossível preparar a instrução do Oracle"
+
+#: ../libgda/gda-data-select.c:2160 ../libgda/gda-data-select.c:2327
+#: ../libgda/gda-data-select.c:2393 ../libgda/gda-data-select.c:2468
+#: ../libgda/gda-data-select.c:2555 ../libgda/gda-data-select.c:2738
+#, c-format
+msgid "Modifications are not allowed anymore"
+msgstr ""
+
+#: ../libgda/gda-data-select.c:2170 ../libgda/gda-data-select.c:2337
+#: ../libgda/gda-data-select.c:2398 ../libgda/gda-data-select.c:2478
+#, c-format
+msgid "No UPDATE statement provided"
+msgstr ""
+
+#: ../libgda/gda-data-select.c:2210
+#, fuzzy, c-format
+msgid "Could not get iterator's value"
+msgstr "Impossível obter valor da coluna"
+
+#: ../libgda/gda-data-select.c:2363 ../libgda/gda-data-select.c:2424
+#: ../libgda/gda-data-select.c:2527 ../libgda/gda-data-select.c:2630
+#, fuzzy, c-format
+msgid "Column %d can't be modified"
+msgstr "Restrição não pode ser ativada!"
+
+#: ../libgda/gda-data-select.c:2486
+#, fuzzy, c-format
+msgid "Too many values (%d as maximum)"
+msgstr "Muitos valores na lista"
+
+#: ../libgda/gda-data-select.c:2565
+#, c-format
+msgid "No INSERT statement provided"
+msgstr ""
+
+#: ../libgda/gda-data-select.c:2570
+#, c-format
+msgid "Cannot add a row because the number of rows in unknown"
+msgstr ""
+
+#: ../libgda/gda-data-select.c:2597
+#: ../libgda/sql-parser/gda-statement-struct-insert.c:336
+#: ../libgda/sql-parser/gda-statement-struct-insert.c:345
+#, c-format
+msgid "Missing values to insert in INSERT statement"
+msgstr ""
+
+#: ../libgda/gda-data-select.c:2748
+#, c-format
+msgid "No DELETE statement provided"
 msgstr ""
 
 #: ../libgda/gda-easy.c:272
@@ -785,6 +969,31 @@ msgstr "Nó inválido"
 #: ../libgda/gda-easy.c:328
 #, c-format
 msgid "CREATE TABLE operation is not supported by the database server"
+msgstr ""
+
+#: ../libgda/gda-holder.c:439 ../libgda/gda-set.c:472
+#, c-format
+msgid "Unable to set holder's value: %s"
+msgstr ""
+
+#: ../libgda/gda-holder.c:807
+#, fuzzy, c-format
+msgid "Unable to convert string to '%s' type"
+msgstr "Impossível interpretar string como um valor %s válido"
+
+#: ../libgda/gda-holder.c:876
+#, fuzzy, c-format
+msgid "Holder does not allow NULL values"
+msgstr "Modelo %s (nome=%s): linha %d inserida!"
+
+#: ../libgda/gda-holder.c:882
+#, c-format
+msgid "Wrong value type: expected type '%s' when value's type is '%s'"
+msgstr ""
+
+#: ../libgda/gda-holder.c:1280
+#, c-format
+msgid "Cannot bind holders if their type is not the same"
 msgstr ""
 
 #: ../libgda/gda-init.c:58
@@ -878,119 +1087,109 @@ msgstr ""
 msgid "Column '%s' not found in table '%s'"
 msgstr "Impossível encontrar tabela %s"
 
-#: ../libgda/gda-meta-store.c:1729 ../libgda/gda-meta-struct.c:865
+#: ../libgda/gda-meta-store.c:1729 ../libgda/gda-meta-struct.c:935
 #, c-format
 msgid "Foreign key column '%s' not found in table '%s'"
 msgstr ""
 
-#: ../libgda/gda-meta-store.c:1857 ../libgda/gda-meta-store.c:1865
-#: ../libgda/gda-meta-store.c:1884
+#: ../libgda/gda-meta-store.c:1857 ../libgda/gda-meta-store.c:1868
+#: ../libgda/gda-meta-store.c:1887
 #, fuzzy, c-format
 msgid "Could not get the internal schema's version"
 msgstr "Impossível inicializar sessão Oracle"
 
-#: ../libgda/gda-meta-store.c:1875
+#: ../libgda/gda-meta-store.c:1878
 #, c-format
 msgid "Unknown internal schema's version: %d"
 msgstr ""
 
-#: ../libgda/gda-meta-store.c:1966 ../tools/gda-sql.c:649
+#: ../libgda/gda-meta-store.c:1969 ../tools/gda-sql.c:649
 #, c-format
 msgid "More than one SQL statement"
 msgstr ""
 
-#: ../libgda/gda-meta-store.c:1993
+#: ../libgda/gda-meta-store.c:1996
 #, c-format
 msgid "Parameter '%s' is not present in statement"
 msgstr ""
 
-#: ../libgda/gda-meta-store.c:1997
-#, fuzzy, c-format
-msgid "Could not set value of parameter '%s'"
-msgstr "Impossível obter o parâmetro Oracle"
-
-#: ../libgda/gda-meta-store.c:2011
+#: ../libgda/gda-meta-store.c:2012
 #, fuzzy, c-format
 msgid "No value set for parameter '%s'"
 msgstr "Argumento inválido '%s'"
 
-#: ../libgda/gda-meta-store.c:2473
+#: ../libgda/gda-meta-store.c:2519
 #, c-format
 msgid "Data models should have the same number of columns"
 msgstr ""
 
-#: ../libgda/gda-meta-store.c:2530 ../libgda/gda-meta-store.c:3286
-#: ../libgda/gda-meta-store.c:3374
+#: ../libgda/gda-meta-store.c:2580 ../libgda/gda-meta-store.c:3337
+#: ../libgda/gda-meta-store.c:3425
 #, fuzzy, c-format
 msgid "Unknown database object '%s'"
 msgstr "Argumento inválido '%s'"
 
-#: ../libgda/gda-meta-store.c:2543
+#: ../libgda/gda-meta-store.c:2593
 #, fuzzy, c-format
 msgid "Could not set value for parameter '%s'"
 msgstr "Impossível obter o parâmetro Oracle"
 
-#: ../libgda/gda-meta-store.c:2568
+#: ../libgda/gda-meta-store.c:2618
 #, fuzzy, c-format
 msgid "Could not create SELECT statement"
 msgstr "Impossível preparar a instrução do Oracle"
 
-#: ../libgda/gda-meta-store.c:2583
+#: ../libgda/gda-meta-store.c:2633
 #, fuzzy, c-format
 msgid "Could not create DELETE statement"
 msgstr "Impossível preparar a instrução do Oracle"
 
-#: ../libgda/gda-meta-store.c:2625
+#: ../libgda/gda-meta-store.c:2675
 #, fuzzy, c-format
 msgid "A transaction has already been started"
 msgstr "Tabela %s já existe"
 
-#: ../libgda/gda-meta-store.c:2942
+#: ../libgda/gda-meta-store.c:2996
 #, fuzzy, c-format
 msgid "Attribute '%s' not found"
 msgstr "A tabela %s não foi encontrada"
 
-#: ../libgda/gda-meta-store.c:2945
+#: ../libgda/gda-meta-store.c:2999
 #, fuzzy, c-format
 msgid "Attribute '%s' has %d value"
 msgid_plural "Attribute '%s' has %d values"
 msgstr[0] "A tabela %s não foi encontrada"
 msgstr[1] "A tabela %s não foi encontrada"
 
-#: ../libgda/gda-meta-store.c:2986
+#: ../libgda/gda-meta-store.c:3042
 #, c-format
 msgid "Attributes names starting with a '_' are reserved for internal usage"
 msgstr ""
 
-#: ../libgda/gda-meta-store.c:3002 ../libgda/gda-meta-store.c:3025
-#, fuzzy, c-format
-msgid "Internal GdaMetaStore error"
-msgstr "HoraInterna"
-
-#: ../libgda/gda-meta-store.c:3012
+#: ../libgda/gda-meta-store.c:3065
 msgid ""
 "Could not start a transaction because one already started, this could lead "
 "to GdaMetaStore attributes problems"
 msgstr ""
 
-#: ../libgda/gda-meta-store.c:3082
+#: ../libgda/gda-meta-store.c:3133
 #, c-format
 msgid "Could not parse XML description of custom database object to add"
 msgstr ""
 
-#: ../libgda/gda-meta-store.c:3094
+#: ../libgda/gda-meta-store.c:3145
 #, c-format
 msgid "Missing custom database object name"
 msgstr ""
 
-#: ../libgda/gda-meta-store.c:3099
+#: ../libgda/gda-meta-store.c:3150
 #, c-format
 msgid ""
 "Custom database object names starting with a '_' are reserved for internal "
 "usage"
 msgstr ""
 
-#: ../libgda/gda-meta-store.c:3194
+#: ../libgda/gda-meta-store.c:3245
 #, fuzzy, c-format
 msgid "Another object with the same name already exists"
 msgstr "Tabela %s já existe"
@@ -1022,41 +1221,41 @@ msgstr "Impossível obter arquivo a partir de %s"
 msgid "Could not find object named '%s.%s.%s'"
 msgstr "Impossível obter arquivo a partir de %s"
 
-#: ../libgda/gda-meta-struct.c:520
+#: ../libgda/gda-meta-struct.c:521
 #, c-format
 msgid ""
 "Object %s.%s.%s already exists in GdaMetaStruct and has a different object "
 "type"
 msgstr ""
 
-#: ../libgda/gda-meta-struct.c:546
+#: ../libgda/gda-meta-struct.c:547
 #, c-format
 msgid "View %s.%s.%s not found in meta store object"
 msgstr ""
 
-#: ../libgda/gda-meta-struct.c:607
+#: ../libgda/gda-meta-struct.c:622
 #, c-format
 msgid "Table %s.%s.%s not found in meta store object"
 msgstr ""
 
-#: ../libgda/gda-meta-struct.c:694
+#: ../libgda/gda-meta-struct.c:736
 #, c-format
 msgid "Internal GdaMetaStore error: column %s not found"
 msgstr ""
 
-#: ../libgda/gda-meta-struct.c:793
+#: ../libgda/gda-meta-struct.c:852
 #, c-format
 msgid ""
 "Meta data incoherence in foreign key constraint for table %s.%s.%s "
 "referencing table %s.%s.%s"
 msgstr ""
 
-#: ../libgda/gda-meta-struct.c:1862
+#: ../libgda/gda-meta-struct.c:2119
 #, c-format
 msgid "Missing object name in GdaMetaDbObject structure"
 msgstr ""
 
-#: ../libgda/gda-meta-struct.c:1887
+#: ../libgda/gda-meta-struct.c:2144
 #, fuzzy, c-format
 msgid "Database object '%s' already exists"
 msgstr "Tabela %s já existe"
@@ -1098,71 +1297,60 @@ msgstr "Nome de campo inválido '%s'"
 msgid "Missing foreign key's column name for table '%s'"
 msgstr "Argumentos faltando"
 
-#: ../libgda/gda-server-operation.c:570
+#: ../libgda/gda-server-operation.c:576
 #, fuzzy, c-format
 msgid "GdaServerOperation: could not find file '%s'"
 msgstr ""
 "Erro de configuração de fonte de dados: impossível encontrar provedor '%s'"
 
-#: ../libgda/gda-server-operation.c:603
+#: ../libgda/gda-server-operation.c:609
 #, c-format
 msgid ""
 "GdaServerOperation: file '%s' does not conform to DTD:\n"
 "%s"
 msgstr ""
 
-#: ../libgda/gda-server-operation.c:609
+#: ../libgda/gda-server-operation.c:615
 #, c-format
 msgid "GdaServerOperation: file '%s' does not conform to DTD"
 msgstr ""
 
-#: ../libgda/gda-server-operation.c:625
+#: ../libgda/gda-server-operation.c:631
 #, c-format
 msgid "GdaServerOperation: could not load file '%s'"
 msgstr ""
 
-#: ../libgda/gda-server-operation.c:795
-#, c-format
-msgid "GdaServerOperation: error loading GdaSet spec %s: '%s'"
-msgstr ""
+#: ../libgda/gda-server-operation.c:646
+#, fuzzy, c-format
+msgid "Could not load XML specifications: %s"
+msgstr "Impossível abrir arquivo %s"
 
-#: ../libgda/gda-server-operation.c:1126
+#: ../libgda/gda-server-operation.c:1146
 msgid ""
 "Non handled GdaServerOperationType, please report error to http://bugzilla."
 "gnome.org/ for the \"libgda\" product"
 msgstr ""
 
-#: ../libgda/gda-server-operation.c:1299 ../libgda/gda-server-operation.c:1313
+#: ../libgda/gda-server-operation.c:1330 ../libgda/gda-server-operation.c:1344
 #, fuzzy, c-format
 msgid "Expected tag <%s>, got <%s>"
 msgstr "Esperava tag <gda_array_data>, obteve <%s>"
 
-#: ../libgda/gda-server-operation.c:1344 ../libgda/gda-server-operation.c:1970
+#: ../libgda/gda-server-operation.c:1375 ../libgda/gda-server-operation.c:1994
 #, c-format
 msgid ""
 "Parameterlist values can only be set for individual parameters within it"
 msgstr ""
 
-#: ../libgda/gda-server-operation.c:1360 ../libgda/gda-server-operation.c:1385
-#: ../libgda/gda-server-operation.c:1985 ../libgda/gda-server-operation.c:2048
-#, fuzzy, c-format
-msgid "Could not set parameter '%s' to value '%s'"
-msgstr "Impossível obter o tipo de dados do parâmetro"
-
-#: ../libgda/gda-server-operation.c:1408
+#: ../libgda/gda-server-operation.c:1432
 #, fuzzy, c-format
 msgid "Missing attribute named 'path'"
 msgstr "Atributo 'arquivo' faltando"
 
-#: ../libgda/gda-server-operation.c:2108
+#: ../libgda/gda-server-operation.c:2123
 #, fuzzy, c-format
 msgid "Missing required value for '%s'"
 msgstr "Valores faltando"
-
-#: ../libgda/gda-server-operation.c:2119
-#, c-format
-msgid "Missing required value for list of parameters '%s'"
-msgstr ""
 
 #: ../libgda/gda-server-provider.c:479
 #, c-format
@@ -1413,7 +1601,7 @@ msgstr "Vista"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:26
 #: ../providers/sqlite/sqlite_specs_create_view.xml.in.h:3
 #: ../tools/command-exec.c:578 ../tools/command-exec.c:712
-#: ../tools/gda-sql.c:1936 ../tools/gda-sql.c:2571
+#: ../tools/gda-sql.c:1946 ../tools/gda-sql.c:2584
 msgid "Name"
 msgstr "Nome"
 
@@ -1453,32 +1641,33 @@ msgstr ""
 msgid "Data model for schema has a wrong gda type: %s instead of %s"
 msgstr ""
 
-#: ../libgda/gda-set.c:394 ../libgda/gda-set.c:479
-#, c-format
-msgid "%s() does not handle values of type %s, value not assigned."
-msgstr ""
+#: ../libgda/gda-set.c:464 ../libgda/gda-set.c:563
+#, fuzzy, c-format
+msgid "%s() does not handle values of type '%s'."
+msgstr "conversão de dados falhou para o tipo %d"
 
-#: ../libgda/gda-set.c:398 ../libgda/gda-set.c:484
-msgid "Could not set GdaHolder's value, value not assigned"
-msgstr ""
-
-#: ../libgda/gda-set.c:436
+#: ../libgda/gda-set.c:519
 #, c-format
 msgid "GdaHolder with ID '%s' not found in set"
 msgstr ""
 
-#: ../libgda/gda-set.c:614
+#: ../libgda/gda-set.c:697
 #, c-format
 msgid "Spec's root node != 'data-set-spec': '%s'"
 msgstr ""
 
-#: ../libgda/gda-set.c:653
+#: ../libgda/gda-set.c:736
 #, c-format
 msgid "Missing node <parameters>: '%s'"
 msgstr ""
 
-#: ../libgda/gda-set.c:1245
+#: ../libgda/gda-set.c:1348
 msgid "GdaHolder needs to have an ID"
+msgstr ""
+
+#: ../libgda/gda-set.c:1449
+#, c-format
+msgid "One or more values are invalid"
 msgstr ""
 
 #: ../libgda/gda-statement.c:482
@@ -1511,9 +1700,9 @@ msgstr ""
 msgid "Missing parameter '%s'"
 msgstr "Argumentos faltando"
 
-#: ../libgda/gda-statement.c:1174 ../libgda/sqlite/gda-sqlite-provider.c:1956
+#: ../libgda/gda-statement.c:1174 ../libgda/sqlite/gda-sqlite-provider.c:1970
 #: ../providers/mysql/gda-mysql-provider.c:1392
-#: ../providers/postgres/gda-postgres-provider.c:2043
+#: ../providers/postgres/gda-postgres-provider.c:2055
 #, fuzzy, c-format
 msgid "Parameter '%s' is invalid"
 msgstr "Nome do parâmentro"
@@ -1533,37 +1722,37 @@ msgstr ""
 msgid "Could not find target the join is for"
 msgstr "Impossível obter lista de colunas"
 
-#: ../libgda/gda-util.c:449
+#: ../libgda/gda-util.c:467
 #, c-format
 msgid "Field number %d not found in source named '%s'"
 msgstr ""
 
-#: ../libgda/gda-util.c:621
+#: ../libgda/gda-util.c:637
 #, c-format
 msgid "SELECT statement has no FROM part"
 msgstr ""
 
-#: ../libgda/gda-util.c:626 ../libgda/gda-util.c:633
+#: ../libgda/gda-util.c:642 ../libgda/gda-util.c:649
 #, c-format
 msgid "SELECT statement involves more than one table or expression"
 msgstr ""
 
-#: ../libgda/gda-util.c:643
+#: ../libgda/gda-util.c:659
 #, c-format
 msgid "Can only build modification statement for tables"
 msgstr ""
 
-#: ../libgda/gda-util.c:662 ../libgda/gda-util.c:670
+#: ../libgda/gda-util.c:678 ../libgda/gda-util.c:686
 #, c-format
 msgid "Table does not have any primary key"
 msgstr ""
 
-#: ../libgda/gda-util.c:693
+#: ../libgda/gda-util.c:712
 #, c-format
 msgid "Table's primary key is not selected"
 msgstr ""
 
-#: ../libgda/gda-util.c:885
+#: ../libgda/gda-util.c:904
 #, fuzzy, c-format
 msgid "Could not compute any field to insert into"
 msgstr "Impossível abrir arquivo %s"
@@ -1644,170 +1833,6 @@ msgstr "Handler de tipo Gda"
 msgid "Gda type representation"
 msgstr "Representação de tipo Gda"
 
-#: ../libgda/providers-support/gda-pmodel.c:242
-msgid "GdaSet used when the SELECT statement was executed"
-msgstr ""
-
-#: ../libgda/providers-support/gda-pmodel.c:757
-#, c-format
-msgid "Incorrect SQL expression"
-msgstr ""
-
-#: ../libgda/providers-support/gda-pmodel.c:778
-#: ../libgda/providers-support/gda-pmodel.c:1941
-#, c-format
-msgid "Internal error: the \"prepared-stmt\" property has not been set"
-msgstr ""
-
-#: ../libgda/providers-support/gda-pmodel.c:785
-#: ../libgda/providers-support/gda-pmodel.c:1948
-#, c-format
-msgid "Internal error: can't get the prepared statement's actual statement"
-msgstr ""
-
-#: ../libgda/providers-support/gda-pmodel.c:791
-#, fuzzy, c-format
-msgid "Unsupported type of SELECT statement"
-msgstr "Impossível preparar a instrução do Oracle"
-
-#: ../libgda/providers-support/gda-pmodel.c:859
-#, c-format
-msgid "INSERT statement must contain values to insert"
-msgstr ""
-
-#: ../libgda/providers-support/gda-pmodel.c:865
-#, c-format
-msgid "INSERT statement must insert only one row"
-msgstr ""
-
-#: ../libgda/providers-support/gda-pmodel.c:892
-#, c-format
-msgid "DELETE statement must have a WHERE part"
-msgstr ""
-
-#: ../libgda/providers-support/gda-pmodel.c:932
-#, fuzzy, c-format
-msgid "UPDATE statement must have a WHERE part"
-msgstr "O modelo não possui nenhum valor não único para atualizar."
-
-#: ../libgda/providers-support/gda-pmodel.c:985
-#, c-format
-msgid "Modification statement uses an unknown '%s' parameter"
-msgstr ""
-
-#: ../libgda/providers-support/gda-pmodel.c:1001
-#, c-format
-msgid "Modification statement's  '%s' parameter is a %s when it should be a %s"
-msgstr ""
-
-#: ../libgda/providers-support/gda-pmodel.c:1016
-#, c-format
-msgid "Modification statement must be an INSERT, UPDATE or DELETE statement"
-msgstr ""
-
-#: ../libgda/providers-support/gda-pmodel.c:1063
-#: ../libgda/providers-support/gda-pmodel.c:1269
-#, fuzzy, c-format
-msgid "No connection to use"
-msgstr "Nenhuma conexão especificada"
-
-#: ../libgda/providers-support/gda-pmodel.c:1109
-#, c-format
-msgid "Invalid unique row condition (ony equal operators are allowed)"
-msgstr ""
-
-#: ../libgda/providers-support/gda-pmodel.c:1141
-#: ../libgda/providers-support/gda-pmodel.c:1196
-#, fuzzy, c-format
-msgid "Unique row condition has already been specified"
-msgstr "Tabela %s já existe"
-
-#: ../libgda/providers-support/gda-pmodel.c:1278
-#: ../libgda/providers-support/gda-pmodel.c:1289
-#, fuzzy, c-format
-msgid "No table to select from in SELECT statement"
-msgstr "Impossível preparar a instrução do Oracle"
-
-#: ../libgda/providers-support/gda-pmodel.c:1283
-#, c-format
-msgid "SELECT statement uses more than one table to select from"
-msgstr ""
-
-#: ../libgda/providers-support/gda-pmodel.c:1795
-#: ../libgda/providers-support/gda-pmodel.c:1888
-#, fuzzy, c-format
-msgid "Some columns can't be modified"
-msgstr "Restrição não pode ser ativada!"
-
-#: ../libgda/providers-support/gda-pmodel.c:1988
-#, c-format
-msgid "Unable to identify a way to fetch a single row"
-msgstr ""
-
-#: ../libgda/providers-support/gda-pmodel.c:1995
-#, fuzzy, c-format
-msgid "Can only operate on non compound SELECT statements"
-msgstr "Impossível preparar a instrução do Oracle"
-
-#: ../libgda/providers-support/gda-pmodel.c:2091
-#: ../libgda/providers-support/gda-pmodel.c:2214
-#: ../libgda/providers-support/gda-pmodel.c:2284
-#: ../libgda/providers-support/gda-pmodel.c:2360
-#: ../libgda/providers-support/gda-pmodel.c:2540
-#, fuzzy, c-format
-msgid "Data model does not support random access"
-msgstr "O modelo de dados %p não é atualizável"
-
-#: ../libgda/providers-support/gda-pmodel.c:2096
-#: ../libgda/providers-support/gda-pmodel.c:2219
-#: ../libgda/providers-support/gda-pmodel.c:2289
-#, c-format
-msgid "No UPDATE statement provided"
-msgstr ""
-
-#: ../libgda/providers-support/gda-pmodel.c:2131
-#: ../libgda/providers-support/gda-pmodel.c:2242
-#: ../libgda/providers-support/gda-pmodel.c:2336
-#: ../libgda/providers-support/gda-pmodel.c:2436
-#: ../libgda/providers-support/gda-pmodel.c:2562
-#, fuzzy, c-format
-msgid "Wrong value type"
-msgstr "Nó inválido"
-
-#: ../libgda/providers-support/gda-pmodel.c:2237
-#: ../libgda/providers-support/gda-pmodel.c:2330
-#: ../libgda/providers-support/gda-pmodel.c:2430
-#, fuzzy, c-format
-msgid "Column %d can't be modified"
-msgstr "Restrição não pode ser ativada!"
-
-#: ../libgda/providers-support/gda-pmodel.c:2297
-#, fuzzy, c-format
-msgid "Too many values (%d as maximum)"
-msgstr "Muitos valores na lista"
-
-#: ../libgda/providers-support/gda-pmodel.c:2365
-#, c-format
-msgid "No INSERT statement provided"
-msgstr ""
-
-#: ../libgda/providers-support/gda-pmodel.c:2370
-#, c-format
-msgid "Cannot add a row because the number of rows in unknown"
-msgstr ""
-
-#: ../libgda/providers-support/gda-pmodel.c:2397
-#: ../libgda/sql-parser/gda-statement-struct-insert.c:336
-#: ../libgda/sql-parser/gda-statement-struct-insert.c:345
-#, c-format
-msgid "Missing values to insert in INSERT statement"
-msgstr ""
-
-#: ../libgda/providers-support/gda-pmodel.c:2545
-#, c-format
-msgid "No DELETE statement provided"
-msgstr ""
-
 #: ../libgda/sqlite/gda-sqlite-ddl.c:198
 #: ../providers/mysql/gda-mysql-ddl.c:311
 #: ../providers/postgres/gda-postgres-ddl.c:361
@@ -1825,17 +1850,10 @@ msgstr "Handler binário"
 msgid "SQlite binary representation"
 msgstr "Representação binária"
 
-#: ../libgda/sqlite/gda-sqlite-meta.c:1871
-#: ../libgda/sqlite/gda-sqlite-meta.c:1891
-#: ../libgda/sqlite/gda-sqlite-meta.c:1929
-#, fuzzy, c-format
-msgid "Can't read data"
-msgstr "Impossível ler um Blob fechado"
-
 #: ../libgda/sqlite/gda-sqlite-provider.c:523
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:264
 #: ../providers/bdb/gda-bdb-provider.c:155
-#: ../providers/mdb/gda-mdb-provider.c:229
+#: ../providers/mdb/gda-mdb-provider.c:230
 #: ../providers/mysql/gda-mysql-provider.c:501
 #: ../providers/postgres/gda-postgres-provider.c:587
 #, fuzzy
@@ -1843,7 +1861,7 @@ msgid "Provider does not support asynchronous connection open"
 msgstr "O provedor %s não implementa a função de entrada"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:544
-#: ../providers/mdb/gda-mdb-provider.c:245
+#: ../providers/mdb/gda-mdb-provider.c:246
 msgid "The connection string must contain DB_DIR and DB_NAME values"
 msgstr ""
 
@@ -1857,7 +1875,7 @@ msgid ""
 msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:594
-#: ../providers/mdb/gda-mdb-provider.c:287
+#: ../providers/mdb/gda-mdb-provider.c:288
 msgid ""
 "The DB_DIR part of the connection string must point to a valid directory"
 msgstr ""
@@ -1901,63 +1919,63 @@ msgstr "Transações não são suportadas no modo de apenas leitura"
 msgid "Unnamed parameter is not allowed in prepared statements"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1733
+#: ../libgda/sqlite/gda-sqlite-provider.c:1736
 #: ../providers/postgres/gda-postgres-provider.c:1819
 #, c-format
 msgid "Can't build SELECT statement to get last inserted row: %s)"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1748
+#: ../libgda/sqlite/gda-sqlite-provider.c:1751
 #: ../providers/postgres/gda-postgres-provider.c:1834
 #, c-format
 msgid "Can't execute SELECT statement to get last inserted row: %s"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1761
+#: ../libgda/sqlite/gda-sqlite-provider.c:1764
 #: ../providers/postgres/gda-postgres-provider.c:1847
 msgid "SELECT statement to get last inserted row did not return any row"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1765
+#: ../libgda/sqlite/gda-sqlite-provider.c:1768
 #: ../providers/postgres/gda-postgres-provider.c:1851
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1815
+#: ../libgda/sqlite/gda-sqlite-provider.c:1829
 #: ../providers/mysql/gda-mysql-provider.c:1306
-#: ../providers/postgres/gda-postgres-provider.c:1911
+#: ../providers/postgres/gda-postgres-provider.c:1923
 #, fuzzy, c-format
 msgid "Provider does not support asynchronous statement execution"
 msgstr "O provedor %s não implementa a função de entrada"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1889
+#: ../libgda/sqlite/gda-sqlite-provider.c:1903
 msgid "Empty statement"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1928
-#: ../libgda/sqlite/gda-sqlite-provider.c:1931
+#: ../libgda/sqlite/gda-sqlite-provider.c:1942
+#: ../libgda/sqlite/gda-sqlite-provider.c:1945
 #: ../providers/mysql/gda-mysql-provider.c:1365
 #: ../providers/mysql/gda-mysql-provider.c:1368
-#: ../providers/postgres/gda-postgres-provider.c:2016
-#: ../providers/postgres/gda-postgres-provider.c:2019
+#: ../providers/postgres/gda-postgres-provider.c:2028
+#: ../providers/postgres/gda-postgres-provider.c:2031
 #, fuzzy, c-format
 msgid "Missing parameter(s) to execute query"
 msgstr "Argumentos faltando"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1946
+#: ../libgda/sqlite/gda-sqlite-provider.c:1960
 #: ../providers/mysql/gda-mysql-provider.c:1382
-#: ../providers/postgres/gda-postgres-provider.c:2033
+#: ../providers/postgres/gda-postgres-provider.c:2045
 #, fuzzy, c-format
 msgid "Missing parameter '%s' to execute query"
 msgstr "Parâmetro 'URI' faltando"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2041
+#: ../libgda/sqlite/gda-sqlite-provider.c:2055
 #, c-format
 msgid "Non handled data type '%s'"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2173
+#: ../libgda/sqlite/gda-sqlite-provider.c:2189
 #, fuzzy
 msgid "Function requires one argument"
 msgstr "Condicional deve ter pelo menos um argumento"
@@ -1965,34 +1983,34 @@ msgstr "Condicional deve ter pelo menos um argumento"
 #: ../libgda/sqlite/gda-sqlite-recordset.c:223
 #: ../providers/mysql/gda-mysql-recordset.c:346
 #: ../providers/postgres/gda-postgres-recordset.c:279
-#, c-format
-msgid "Column %d is out of range (0-%d), ignoring its specified type"
-msgstr ""
+#, fuzzy, c-format
+msgid "Column %d out of range (0-%d), ignoring its specified type"
+msgstr "Coluna fora %d da faixa 0 - %d"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:397
-#: ../providers/postgres/gda-postgres-recordset.c:656
+#: ../libgda/sqlite/gda-sqlite-recordset.c:360
+#: ../providers/postgres/gda-postgres-recordset.c:642
 #, c-format
 msgid "Invalid date '%s' (date format should be YYYY-MM-DD)"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:411
-#: ../providers/postgres/gda-postgres-recordset.c:676
+#: ../libgda/sqlite/gda-sqlite-recordset.c:374
+#: ../providers/postgres/gda-postgres-recordset.c:662
 #, c-format
 msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms])"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:425
-#: ../providers/postgres/gda-postgres-recordset.c:668
+#: ../libgda/sqlite/gda-sqlite-recordset.c:388
+#: ../providers/postgres/gda-postgres-recordset.c:654
 #, c-format
 msgid "Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:465
+#: ../libgda/sqlite/gda-sqlite-recordset.c:428
 #, c-format
 msgid "SQLite provider fatal internal error"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:513
+#: ../libgda/sqlite/gda-sqlite-recordset.c:476
 #, fuzzy, c-format
 msgid "Row %d not found"
 msgstr "A tabela %s não foi encontrada"
@@ -2017,7 +2035,7 @@ msgstr "Conexão está fechada"
 msgid "Connection was not represented in hub"
 msgstr "Conexão não está aberta"
 
-#: ../libgda/sqlite/virtual/gda-virtual-connection.c:150
+#: ../libgda/sqlite/virtual/gda-virtual-connection.c:151
 #, c-format
 msgid ""
 "Internal error: virtual provider does not implement the create_operation() "
@@ -2029,38 +2047,43 @@ msgstr ""
 msgid "Data model must have at least one column"
 msgstr "Condicional deve ter pelo menos um argumento"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:425
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:413
+#, fuzzy
+msgid "Could not compute virtual table's columns"
+msgstr "Impossível criar arquivo %s"
+
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:436
 #, fuzzy, c-format
 msgid "Can't get data model description for column %d"
 msgstr "Impossível obter descrição para coluna"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:441
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:452
 #, c-format
 msgid "Can't get data model's column type or type for column %d"
 msgstr ""
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:493
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:504
 #, fuzzy, c-format
 msgid "Can't declare virtual table (%s)"
 msgstr "Impossível encontrar tabela %s"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:635
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:648
 #, fuzzy
 msgid "Column not found"
 msgstr "Coluna fora da faixa"
 
-#: ../libgda/sql-parser/gda-sql-parser.c:626
-#: ../libgda/sql-parser/gda-sql-parser.c:714
+#: ../libgda/sql-parser/gda-sql-parser.c:629
+#: ../libgda/sql-parser/gda-sql-parser.c:717
 #, c-format
 msgid "SQL code does not contain any statement"
 msgstr ""
 
-#: ../libgda/sql-parser/gda-sql-parser.c:797
+#: ../libgda/sql-parser/gda-sql-parser.c:800
 #, fuzzy, c-format
 msgid "Syntax error at line %d, column %d"
 msgstr "Erro de sintaxe próximo a `%s'"
 
-#: ../libgda/sql-parser/gda-sql-parser.c:810
+#: ../libgda/sql-parser/gda-sql-parser.c:813
 #, c-format
 msgid "Overflow error at line %d, column %d"
 msgstr ""
@@ -2322,8 +2345,8 @@ msgid "Unknown query '%s'"
 msgstr "Erro desconhecido"
 
 #: ../libgda-report/engine/gda-report-engine.c:579
-#: ../libgda-report/engine/gda-report-engine.c:606 ../tools/gda-sql.c:1844
-#: ../tools/gda-sql.c:1913 ../tools/gda-sql.c:2007 ../tools/gda-sql.c:2068
+#: ../libgda-report/engine/gda-report-engine.c:606 ../tools/gda-sql.c:1854
+#: ../tools/gda-sql.c:1923 ../tools/gda-sql.c:2017 ../tools/gda-sql.c:2078
 #, fuzzy, c-format
 msgid "No connection named '%s' found"
 msgstr "Nenhuma conexão especificada"
@@ -2333,38 +2356,38 @@ msgstr "Nenhuma conexão especificada"
 msgid "Query is not specified (not named and not defined)"
 msgstr ""
 
-#: ../libgda-report/engine/gda-report-engine.c:803
-#: ../libgda-report/engine/gda-report-engine.c:943
+#: ../libgda-report/engine/gda-report-engine.c:807
+#: ../libgda-report/engine/gda-report-engine.c:947
 #, fuzzy, c-format
 msgid "Unknown parameter '%s'"
 msgstr "Argumento inválido '%s'"
 
-#: ../libgda-report/engine/gda-report-engine.c:820
+#: ../libgda-report/engine/gda-report-engine.c:824
 #, fuzzy, c-format
 msgid "Parameter name not specified"
 msgstr "Nome do parâmentro"
 
-#: ../libgda-report/engine/gda-report-engine.c:870
+#: ../libgda-report/engine/gda-report-engine.c:874
 #, fuzzy, c-format
 msgid "No expression specified"
 msgstr "Nenhuma conexão especificada"
 
-#: ../libgda-report/engine/gda-report-engine.c:893
+#: ../libgda-report/engine/gda-report-engine.c:897
 #, c-format
 msgid "Cannot cast value from type '%s' to type '%s'"
 msgstr ""
 
-#: ../libgda-report/engine/gda-report-engine.c:967
+#: ../libgda-report/engine/gda-report-engine.c:976
 #, c-format
 msgid "Cannot cast parameter from type '%s' to type '%s'"
 msgstr ""
 
-#: ../libgda-report/engine/gda-report-engine.c:1052
+#: ../libgda-report/engine/gda-report-engine.c:1062
 #, c-format
 msgid "Expression '%s' should return exactly one value"
 msgstr ""
 
-#: ../libgda-report/engine/gda-report-engine.c:1089
+#: ../libgda-report/engine/gda-report-engine.c:1099
 #, fuzzy
 msgid "Binary data"
 msgstr "Handler binário"
@@ -2446,7 +2469,7 @@ msgid "An error occurred while accessing the BDB database"
 msgstr "Ocorreu um erro ao tentar obter uma mensagem de cliente"
 
 #: ../providers/bdb/gda-bdb-provider.c:200
-#: ../providers/mdb/gda-mdb-provider.c:314
+#: ../providers/mdb/gda-mdb-provider.c:315
 #, fuzzy
 msgid "Can't open virtual connection"
 msgstr "Impossível abrir conexão"
@@ -2464,8 +2487,8 @@ msgstr "-"
 msgid "Provider for Berkeley databases"
 msgstr "Provedor para bancos de dados Berkeley"
 
-#: ../providers/mdb/gda-mdb-provider.c:272
-#: ../providers/mdb/gda-mdb-provider.c:279
+#: ../providers/mdb/gda-mdb-provider.c:273
+#: ../providers/mdb/gda-mdb-provider.c:280
 #, c-format
 msgid ""
 "The connection string format has changed: replace FILENAME with DB_DIR (the "
@@ -2473,12 +2496,12 @@ msgid ""
 "at the end)."
 msgstr ""
 
-#: ../providers/mdb/gda-mdb-provider.c:306
+#: ../providers/mdb/gda-mdb-provider.c:307
 #, c-format
 msgid "Could not open file %s"
 msgstr "Impossível abrir arquivo %s"
 
-#: ../providers/mdb/gda-mdb-provider.c:350
+#: ../providers/mdb/gda-mdb-provider.c:351
 #, fuzzy, c-format
 msgid "Could not map table '%s': %s"
 msgstr ""
@@ -2523,14 +2546,14 @@ msgstr ""
 msgid "Incorrect specified column name"
 msgstr "Nenhum valor especificado"
 
-#: ../providers/mysql/gda-mysql-meta.c:611
-#: ../providers/mysql/gda-mysql-meta.c:660
-#: ../providers/mysql/gda-mysql-meta.c:860
-#: ../providers/mysql/gda-mysql-meta.c:921
-#: ../providers/mysql/gda-mysql-meta.c:981
-#: ../providers/mysql/gda-mysql-meta.c:1204
-#: ../providers/mysql/gda-mysql-meta.c:1272
-#: ../providers/mysql/gda-mysql-meta.c:1308
+#: ../providers/mysql/gda-mysql-meta.c:613
+#: ../providers/mysql/gda-mysql-meta.c:662
+#: ../providers/mysql/gda-mysql-meta.c:865
+#: ../providers/mysql/gda-mysql-meta.c:930
+#: ../providers/mysql/gda-mysql-meta.c:997
+#: ../providers/mysql/gda-mysql-meta.c:1231
+#: ../providers/mysql/gda-mysql-meta.c:1303
+#: ../providers/mysql/gda-mysql-meta.c:1339
 #, c-format
 msgid "Mysql version 5.0 at least is required"
 msgstr ""
@@ -2579,35 +2602,35 @@ msgstr ""
 msgid "Number of row chunks read since the object creation"
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-recordset.c:437
-#: ../providers/mysql/gda-mysql-recordset.c:647
+#: ../providers/mysql/gda-mysql-recordset.c:423
+#: ../providers/mysql/gda-mysql-recordset.c:633
 #, c-format
 msgid "Invalid column bind data type. %d\n"
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-recordset.c:545
+#: ../providers/mysql/gda-mysql-recordset.c:531
 #, c-format
 msgid "Type %s not mapped for value %d"
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-recordset.c:589
-#: ../providers/mysql/gda-mysql-recordset.c:641
+#: ../providers/mysql/gda-mysql-recordset.c:575
+#: ../providers/mysql/gda-mysql-recordset.c:627
 #, c-format
 msgid "Type %s not mapped for value %p"
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-recordset.c:605
+#: ../providers/mysql/gda-mysql-recordset.c:591
 #, c-format
 msgid "Type %s not mapped for value %f"
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-recordset.c:695
+#: ../providers/mysql/gda-mysql-recordset.c:681
 #: ../providers/postgres/gda-postgres-provider.c:1180
 #: ../providers/postgres/gda-postgres-provider.c:1281
 #: ../providers/postgres/gda-postgres-provider.c:1334
 #: ../providers/postgres/gda-postgres-provider.c:1387
-#: ../providers/postgres/gda-postgres-recordset.c:445
-#: ../providers/postgres/gda-postgres-recordset.c:473
+#: ../providers/postgres/gda-postgres-recordset.c:431
+#: ../providers/postgres/gda-postgres-recordset.c:459
 #, fuzzy, c-format
 msgid "Internal error"
 msgstr "HoraInterna"
@@ -2712,7 +2735,7 @@ msgstr ""
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:11
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:52
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:31
-#: ../tools/command-exec.c:887
+#: ../tools/command-exec.c:897
 #, fuzzy
 msgid "Primary key"
 msgstr "Chave primária?"
@@ -2736,7 +2759,7 @@ msgstr "Nome do banco de dados"
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:13
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:73
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:42
-#: ../tools/command-exec.c:965
+#: ../tools/command-exec.c:1020
 #, fuzzy
 msgid "Unique"
 msgstr "Índice único?"
@@ -3303,7 +3326,7 @@ msgstr "Campos"
 #. foreign key spec
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:83
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:29
-#: ../tools/command-exec.c:918
+#: ../tools/command-exec.c:940
 msgid "Foreign key"
 msgstr ""
 
@@ -3668,20 +3691,20 @@ msgstr ""
 msgid "Insufficient memory to convert string to binary buffer"
 msgstr ""
 
-#: ../providers/postgres/gda-postgres-meta.c:522
-#: ../providers/postgres/gda-postgres-meta.c:555
-#: ../providers/postgres/gda-postgres-meta.c:679
-#: ../providers/postgres/gda-postgres-meta.c:724
-#: ../providers/postgres/gda-postgres-meta.c:839
-#: ../providers/postgres/gda-postgres-meta.c:897
-#: ../providers/postgres/gda-postgres-meta.c:1145
-#: ../providers/postgres/gda-postgres-meta.c:1175
-#: ../providers/postgres/gda-postgres-meta.c:1207
-#: ../providers/postgres/gda-postgres-meta.c:1237
-#: ../providers/postgres/gda-postgres-meta.c:1276
+#: ../providers/postgres/gda-postgres-meta.c:536
+#: ../providers/postgres/gda-postgres-meta.c:570
+#: ../providers/postgres/gda-postgres-meta.c:696
+#: ../providers/postgres/gda-postgres-meta.c:741
+#: ../providers/postgres/gda-postgres-meta.c:863
+#: ../providers/postgres/gda-postgres-meta.c:928
+#: ../providers/postgres/gda-postgres-meta.c:1195
+#: ../providers/postgres/gda-postgres-meta.c:1225
+#: ../providers/postgres/gda-postgres-meta.c:1260
+#: ../providers/postgres/gda-postgres-meta.c:1290
 #: ../providers/postgres/gda-postgres-meta.c:1332
-#: ../providers/postgres/gda-postgres-meta.c:1388
-#: ../providers/postgres/gda-postgres-meta.c:1418
+#: ../providers/postgres/gda-postgres-meta.c:1392
+#: ../providers/postgres/gda-postgres-meta.c:1456
+#: ../providers/postgres/gda-postgres-meta.c:1486
 #, c-format
 msgid "PostgreSQL version 8.2.0 at least is required"
 msgstr ""
@@ -3725,15 +3748,15 @@ msgstr "Transações não são suportadas no modo de apenas leitura repetida"
 msgid "Wrong savepoint name '%s'"
 msgstr ""
 
-#: ../providers/postgres/gda-postgres-provider.c:2064
-#: ../providers/postgres/gda-postgres-provider.c:2066
+#: ../providers/postgres/gda-postgres-provider.c:2076
+#: ../providers/postgres/gda-postgres-provider.c:2078
 #, fuzzy, c-format
 msgid "Cannot start transaction"
 msgstr "Impossível iniciar a transação"
 
-#: ../providers/postgres/gda-postgres-provider.c:2225
-#: ../providers/postgres/gda-postgres-provider.c:2261
-#: ../providers/postgres/gda-postgres-provider.c:2296
+#: ../providers/postgres/gda-postgres-provider.c:2237
+#: ../providers/postgres/gda-postgres-provider.c:2273
+#: ../providers/postgres/gda-postgres-provider.c:2308
 #, fuzzy, c-format
 msgid "Could not set the XA transaction ID parameter"
 msgstr "Impossível definir o nome de transação do Oracle"
@@ -4198,7 +4221,7 @@ msgstr "Não suportado"
 #: ../tools/command-exec.c:402 ../tools/command-exec.c:424
 #: ../tools/command-exec.c:466 ../tools/command-exec.c:508
 #: ../tools/command-exec.c:551 ../tools/command-exec.c:676
-#: ../tools/gda-sql.c:1850 ../tools/gda-sql.c:2717
+#: ../tools/gda-sql.c:1860 ../tools/gda-sql.c:2730
 #, fuzzy, c-format
 msgid "No current connection"
 msgstr "Utilizar Conexão Segura"
@@ -4315,7 +4338,7 @@ msgstr "Não suportado"
 msgid "Error: %s\n"
 msgstr "Erro: %s"
 
-#: ../tools/gda-list-server-op.c:337
+#: ../tools/gda-list-server-op.c:340
 #, fuzzy, c-format
 msgid "Can't parse file '%s', ignoring it"
 msgstr "Impossível carregar arquivo '%s'"
@@ -4366,460 +4389,460 @@ msgstr "Impossível abrir conexão para DSN %s: %s\n"
 msgid "Connection closed"
 msgstr "Conexão está fechada"
 
-#: ../tools/gda-sql.c:691
+#: ../tools/gda-sql.c:695
 #, c-format
 msgid "No internal parameter named '%s' required by query"
 msgstr ""
 
-#: ../tools/gda-sql.c:783
+#: ../tools/gda-sql.c:787
 #, c-format
 msgid "Can't open file '%s' for writing: %s\n"
 msgstr ""
 
-#: ../tools/gda-sql.c:796
+#: ../tools/gda-sql.c:800
 #, fuzzy, c-format
 msgid "Can't open pipe '%s': %s\n"
 msgstr "Impossível carregar arquivo '%s'"
 
-#: ../tools/gda-sql.c:828
+#: ../tools/gda-sql.c:832
 #, c-format
 msgid "Can't open file '%s' for reading: %s\n"
 msgstr ""
 
-#: ../tools/gda-sql.c:890 ../tools/gda-sql.c:2061
+#: ../tools/gda-sql.c:894 ../tools/gda-sql.c:2071
 #, fuzzy, c-format
 msgid "Connection name '%s' is invalid"
 msgstr "Conexão está fechada"
 
-#: ../tools/gda-sql.c:909
+#: ../tools/gda-sql.c:913
 #, fuzzy, c-format
 msgid "\tUsername for '%s': "
 msgstr "Restrições para '%s'"
 
-#: ../tools/gda-sql.c:916
+#: ../tools/gda-sql.c:920
 #, fuzzy, c-format
 msgid "No username for '%s'"
 msgstr "Restrições para '%s'"
 
-#: ../tools/gda-sql.c:924
+#: ../tools/gda-sql.c:928
 #, c-format
 msgid "\tPassword for '%s': "
 msgstr ""
 
-#: ../tools/gda-sql.c:931
+#: ../tools/gda-sql.c:935
 #, fuzzy, c-format
 msgid "No password for '%s'"
 msgstr "Restrições para '%s'"
 
-#: ../tools/gda-sql.c:1017
+#: ../tools/gda-sql.c:1021
 #, c-format
 msgid "Error getting meta data in background: %s\n"
 msgstr ""
 
-#: ../tools/gda-sql.c:1052
+#: ../tools/gda-sql.c:1056
 #, c-format
 msgid ""
 "Getting database schema information for connection '%s', this may take some "
 "time... "
 msgstr ""
 
-#: ../tools/gda-sql.c:1057 ../tools/gda-sql.c:1898
+#: ../tools/gda-sql.c:1061 ../tools/gda-sql.c:1908
 #, fuzzy, c-format
 msgid "error: %s\n"
 msgstr "Erro: %s"
 
-#: ../tools/gda-sql.c:1064 ../tools/gda-sql.c:1905
+#: ../tools/gda-sql.c:1068 ../tools/gda-sql.c:1915
 #, c-format
 msgid "Done.\n"
 msgstr ""
 
-#: ../tools/gda-sql.c:1177
+#: ../tools/gda-sql.c:1187
 #, c-format
 msgid "(%d row)"
 msgid_plural "(%d rows)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../tools/gda-sql.c:1333 ../tools/gda-sql.c:1414 ../tools/gda-sql.c:1424
-#: ../tools/gda-sql.c:1434 ../tools/gda-sql.c:1444 ../tools/gda-sql.c:1454
-#: ../tools/gda-sql.c:1504 ../tools/gda-sql.c:1514 ../tools/gda-sql.c:1524
-#: ../tools/gda-sql.c:1635
+#: ../tools/gda-sql.c:1343 ../tools/gda-sql.c:1424 ../tools/gda-sql.c:1434
+#: ../tools/gda-sql.c:1444 ../tools/gda-sql.c:1454 ../tools/gda-sql.c:1464
+#: ../tools/gda-sql.c:1514 ../tools/gda-sql.c:1524 ../tools/gda-sql.c:1534
+#: ../tools/gda-sql.c:1645
 msgid "General"
 msgstr ""
 
-#: ../tools/gda-sql.c:1334 ../tools/gda-sql.c:1475 ../tools/gda-sql.c:1535
-#: ../tools/gda-sql.c:1545
+#: ../tools/gda-sql.c:1344 ../tools/gda-sql.c:1485 ../tools/gda-sql.c:1545
+#: ../tools/gda-sql.c:1555
 #, c-format
 msgid "%s [FILE]"
 msgstr ""
 
-#: ../tools/gda-sql.c:1335
+#: ../tools/gda-sql.c:1345
 msgid "Show commands history, or save it to file"
 msgstr ""
 
-#: ../tools/gda-sql.c:1343 ../tools/gda-sql.c:1353 ../tools/gda-sql.c:1363
-#: ../tools/gda-sql.c:1373 ../tools/gda-sql.c:1383 ../tools/gda-sql.c:1393
-#: ../tools/gda-sql.c:1403
+#: ../tools/gda-sql.c:1353 ../tools/gda-sql.c:1363 ../tools/gda-sql.c:1373
+#: ../tools/gda-sql.c:1383 ../tools/gda-sql.c:1393 ../tools/gda-sql.c:1403
+#: ../tools/gda-sql.c:1413
 #, fuzzy
 msgid "Information"
 msgstr "## informação:\n"
 
-#: ../tools/gda-sql.c:1345
-msgid "Force reading the database meta data"
-msgstr ""
-
-#: ../tools/gda-sql.c:1354
-#, c-format
-msgid "%s [TABLE]"
-msgstr ""
-
 #: ../tools/gda-sql.c:1355
-msgid "List all tables (or named table)"
+msgid "Force reading the database meta data"
 msgstr ""
 
 #: ../tools/gda-sql.c:1364
 #, c-format
-msgid "%s [VIEW]"
+msgid "%s [TABLE]"
 msgstr ""
 
 #: ../tools/gda-sql.c:1365
-msgid "List all views (or named view)"
+msgid "List all tables (or named table)"
 msgstr ""
 
 #: ../tools/gda-sql.c:1374
 #, c-format
-msgid "%s [SCHEMA]"
+msgid "%s [VIEW]"
 msgstr ""
 
 #: ../tools/gda-sql.c:1375
-msgid "List all schemas (or named schema)"
+msgid "List all views (or named view)"
 msgstr ""
 
 #: ../tools/gda-sql.c:1384
 #, c-format
-msgid "%s [OBJ_NAME|SCHEMA.*]"
+msgid "%s [SCHEMA]"
 msgstr ""
 
 #: ../tools/gda-sql.c:1385
-msgid "Describe object or full list of objects"
+msgid "List all schemas (or named schema)"
 msgstr ""
 
 #: ../tools/gda-sql.c:1394
 #, c-format
-msgid "%s [TABLE1 [TABLE2...]]"
+msgid "%s [OBJ_NAME|SCHEMA.*]"
 msgstr ""
 
 #: ../tools/gda-sql.c:1395
-msgid "Create a graph of all or the listed tables"
+msgid "Describe object or full list of objects"
 msgstr ""
 
 #: ../tools/gda-sql.c:1404
 #, c-format
-msgid "%s [QUERY] [+]"
+msgid "%s [TABLE1 [TABLE2...]]"
 msgstr ""
 
 #: ../tools/gda-sql.c:1405
-msgid "List all queries (or named query) in dictionary"
+msgid "Create a graph of all or the listed tables"
+msgstr ""
+
+#: ../tools/gda-sql.c:1414
+#, c-format
+msgid "%s [QUERY] [+]"
 msgstr ""
 
 #: ../tools/gda-sql.c:1415
-#, c-format
-msgid "%s [CNC_NAME [DSN [USER [PASSWORD]]]]"
-msgstr ""
-
-#: ../tools/gda-sql.c:1416
-msgid "Connect to another defined data source (DSN, see \\l)"
+msgid "List all queries (or named query) in dictionary"
 msgstr ""
 
 #: ../tools/gda-sql.c:1425
 #, c-format
-msgid "%s [CNC_NAME]"
+msgid "%s [CNC_NAME [DSN [USER [PASSWORD]]]]"
 msgstr ""
 
 #: ../tools/gda-sql.c:1426
+msgid "Connect to another defined data source (DSN, see \\l)"
+msgstr ""
+
+#: ../tools/gda-sql.c:1435
+#, c-format
+msgid "%s [CNC_NAME]"
+msgstr ""
+
+#: ../tools/gda-sql.c:1436
 #, fuzzy
 msgid "Close a connection"
 msgstr "Impossível abrir conexão"
 
-#: ../tools/gda-sql.c:1435
+#: ../tools/gda-sql.c:1445
 #, c-format
 msgid "%s CNC_NAME CNC_NAME1 CNC_NAME2 [CNC_NAME ...]"
 msgstr ""
 
-#: ../tools/gda-sql.c:1436
+#: ../tools/gda-sql.c:1446
 msgid "Bind several connections together into the CNC_NAME virtual connection"
 msgstr ""
 
-#: ../tools/gda-sql.c:1446
+#: ../tools/gda-sql.c:1456
 msgid "List configured data sources (DSN)"
 msgstr ""
 
-#: ../tools/gda-sql.c:1456
+#: ../tools/gda-sql.c:1466
 #, fuzzy
 msgid "List installed database providers"
 msgstr "Provedores instalados"
 
-#: ../tools/gda-sql.c:1464 ../tools/gda-sql.c:1474 ../tools/gda-sql.c:1484
-#: ../tools/gda-sql.c:1494
+#: ../tools/gda-sql.c:1474 ../tools/gda-sql.c:1484 ../tools/gda-sql.c:1494
+#: ../tools/gda-sql.c:1504
 msgid "Input/Output"
 msgstr ""
 
-#: ../tools/gda-sql.c:1465 ../tools/gda-sql.c:1575
+#: ../tools/gda-sql.c:1475 ../tools/gda-sql.c:1585
 #, c-format
 msgid "%s FILE"
 msgstr ""
 
-#: ../tools/gda-sql.c:1466
+#: ../tools/gda-sql.c:1476
 msgid "Execute commands from file"
 msgstr ""
 
-#: ../tools/gda-sql.c:1476
+#: ../tools/gda-sql.c:1486
 msgid "Send output to a file or |pipe"
 msgstr ""
 
-#: ../tools/gda-sql.c:1485 ../tools/gda-sql.c:1495
+#: ../tools/gda-sql.c:1495 ../tools/gda-sql.c:1505
 #, c-format
 msgid "%s [TEXT]"
 msgstr ""
 
-#: ../tools/gda-sql.c:1486
+#: ../tools/gda-sql.c:1496
 msgid "Send output to stdout"
 msgstr ""
 
-#: ../tools/gda-sql.c:1496
+#: ../tools/gda-sql.c:1506
 msgid "Send output to output stream"
 msgstr ""
 
-#: ../tools/gda-sql.c:1506
+#: ../tools/gda-sql.c:1516
 msgid "Quit"
 msgstr ""
 
-#: ../tools/gda-sql.c:1515
+#: ../tools/gda-sql.c:1525
 #, c-format
 msgid "%s [DIR]"
 msgstr ""
 
-#: ../tools/gda-sql.c:1516
+#: ../tools/gda-sql.c:1526
 msgid "Change the current working directory"
 msgstr ""
 
-#: ../tools/gda-sql.c:1526
+#: ../tools/gda-sql.c:1536
 msgid "Show usage and distribution terms"
 msgstr ""
 
-#: ../tools/gda-sql.c:1534 ../tools/gda-sql.c:1544 ../tools/gda-sql.c:1554
-#: ../tools/gda-sql.c:1564 ../tools/gda-sql.c:1574 ../tools/gda-sql.c:1584
-#: ../tools/gda-sql.c:1594 ../tools/gda-sql.c:1604 ../tools/gda-sql.c:1614
+#: ../tools/gda-sql.c:1544 ../tools/gda-sql.c:1554 ../tools/gda-sql.c:1564
+#: ../tools/gda-sql.c:1574 ../tools/gda-sql.c:1584 ../tools/gda-sql.c:1594
+#: ../tools/gda-sql.c:1604 ../tools/gda-sql.c:1614 ../tools/gda-sql.c:1624
 #, fuzzy
 msgid "Query buffer"
 msgstr "Nome da Consulta"
 
-#: ../tools/gda-sql.c:1536
+#: ../tools/gda-sql.c:1546
 msgid "Edit the query buffer (or file) with external editor"
 msgstr ""
 
-#: ../tools/gda-sql.c:1546
+#: ../tools/gda-sql.c:1556
 msgid "Reset the query buffer (fill buffer with contents of file)"
 msgstr ""
 
-#: ../tools/gda-sql.c:1556
+#: ../tools/gda-sql.c:1566
 msgid "Show the contents of the query buffer"
 msgstr ""
 
-#: ../tools/gda-sql.c:1566
+#: ../tools/gda-sql.c:1576
 msgid "Execute contents of query buffer"
 msgstr ""
 
-#: ../tools/gda-sql.c:1576
-msgid "Write query buffer to file"
-msgstr ""
-
-#: ../tools/gda-sql.c:1585
-#, c-format
-msgid "%s [QUERY_NAME]"
-msgstr ""
-
 #: ../tools/gda-sql.c:1586
-msgid "Save query buffer to dictionary"
+msgid "Write query buffer to file"
 msgstr ""
 
 #: ../tools/gda-sql.c:1595
 #, c-format
-msgid "%s QUERY_NAME"
+msgid "%s [QUERY_NAME]"
 msgstr ""
 
 #: ../tools/gda-sql.c:1596
-msgid "Set named query from dictionary into query buffer"
+msgid "Save query buffer to dictionary"
 msgstr ""
 
 #: ../tools/gda-sql.c:1605
 #, c-format
-msgid "%s [NAME [VALUE|_null_]]"
+msgid "%s QUERY_NAME"
 msgstr ""
 
 #: ../tools/gda-sql.c:1606
-msgid "Set or show internal parameter, or list all if no parameters"
+msgid "Set named query from dictionary into query buffer"
 msgstr ""
 
 #: ../tools/gda-sql.c:1615
 #, c-format
-msgid "%s NAME"
+msgid "%s [NAME [VALUE|_null_]]"
 msgstr ""
 
 #: ../tools/gda-sql.c:1616
+msgid "Set or show internal parameter, or list all if no parameters"
+msgstr ""
+
+#: ../tools/gda-sql.c:1625
+#, c-format
+msgid "%s NAME"
+msgstr ""
+
+#: ../tools/gda-sql.c:1626
 #, fuzzy
 msgid "Unset (delete) internal parameter"
 msgstr "Impossível obter o parâmetro Oracle"
 
-#: ../tools/gda-sql.c:1624
+#: ../tools/gda-sql.c:1634
 msgid "Formatting"
 msgstr ""
 
-#: ../tools/gda-sql.c:1626
+#: ../tools/gda-sql.c:1636
 msgid "Set output format"
 msgstr ""
 
-#: ../tools/gda-sql.c:1637
+#: ../tools/gda-sql.c:1647
 msgid "List all available commands"
 msgstr ""
 
-#: ../tools/gda-sql.c:1684
+#: ../tools/gda-sql.c:1694
 #, c-format
 msgid "Unknown output format: '%s', reset to default"
 msgstr ""
 
-#: ../tools/gda-sql.c:1805 ../tools/gda-sql.c:2056
+#: ../tools/gda-sql.c:1815 ../tools/gda-sql.c:2066
 #, fuzzy, c-format
 msgid "A connection named '%s' already exists"
 msgstr "Tabela %s já existe"
 
-#: ../tools/gda-sql.c:1892
+#: ../tools/gda-sql.c:1902
 #, c-format
 msgid "Getting database schema information, this may take some time... "
 msgstr ""
 
-#: ../tools/gda-sql.c:1927
+#: ../tools/gda-sql.c:1937
 #, fuzzy
 msgid "No opened connection"
 msgstr "Impossível abrir conexão"
 
-#: ../tools/gda-sql.c:1938
+#: ../tools/gda-sql.c:1948
 #, fuzzy
 msgid "DSN or connection string"
 msgstr "String de conexão ODBC"
 
-#: ../tools/gda-sql.c:1940
+#: ../tools/gda-sql.c:1950
 #, fuzzy
 msgid "List of opened connections"
 msgstr "Impossível abrir conexão"
 
-#: ../tools/gda-sql.c:2015
+#: ../tools/gda-sql.c:2025
 #, fuzzy, c-format
 msgid "No currently opened connection"
 msgstr "Impossível abrir conexão"
 
-#: ../tools/gda-sql.c:2048
+#: ../tools/gda-sql.c:2058
 #, c-format
 msgid "Missing required connection names"
 msgstr ""
 
 #. add existing connections to virtual connection
-#: ../tools/gda-sql.c:2085
+#: ../tools/gda-sql.c:2095
 msgid "Bound connections are as:"
 msgstr ""
 
-#: ../tools/gda-sql.c:2167
+#: ../tools/gda-sql.c:2177
 #, fuzzy, c-format
 msgid "Could not get home directory: %s"
 msgstr "Impossível obter arquivo a partir de %s"
 
-#: ../tools/gda-sql.c:2193
+#: ../tools/gda-sql.c:2203
 #, fuzzy, c-format
 msgid "Working directory is now: %s"
 msgstr "Erro ao criar diretório %s"
 
-#: ../tools/gda-sql.c:2197
+#: ../tools/gda-sql.c:2207
 #, fuzzy, c-format
 msgid "Could not change working directory to '%s': %s"
 msgstr ""
 "Impossível escrever grafo em '%s' (%s)\n"
 "\n"
 
-#: ../tools/gda-sql.c:2215 ../tools/gda-sql.c:2309 ../tools/gda-sql.c:2343
-#: ../tools/gda-sql.c:2363 ../tools/gda-sql.c:2386 ../tools/gda-sql.c:2420
-#: ../tools/gda-sql.c:2474
+#: ../tools/gda-sql.c:2225 ../tools/gda-sql.c:2319 ../tools/gda-sql.c:2353
+#: ../tools/gda-sql.c:2373 ../tools/gda-sql.c:2396 ../tools/gda-sql.c:2430
+#: ../tools/gda-sql.c:2484
 #, fuzzy, c-format
 msgid "No connection opened"
 msgstr "Nenhuma conexão especificada"
 
-#: ../tools/gda-sql.c:2233
+#: ../tools/gda-sql.c:2243
 #, fuzzy, c-format
 msgid "Could not write to temporary file '%s': %s"
 msgstr ""
 "Impossível escrever grafo em '%s' (%s)\n"
 "\n"
 
-#: ../tools/gda-sql.c:2269
+#: ../tools/gda-sql.c:2279
 #, fuzzy, c-format
 msgid "could not start editor '%s'"
 msgstr "Impossível analisar a string SQL '%s'"
 
-#: ../tools/gda-sql.c:2274
+#: ../tools/gda-sql.c:2284
 #, fuzzy, c-format
 msgid "Could not start /bin/sh"
 msgstr "Impossível criar arquivo %s"
 
-#: ../tools/gda-sql.c:2394
+#: ../tools/gda-sql.c:2404
 #, c-format
 msgid "Missing FILE to write to"
 msgstr ""
 
-#: ../tools/gda-sql.c:2438
+#: ../tools/gda-sql.c:2448
 #, c-format
 msgid "Query buffer contains more than one SQL statement"
 msgstr ""
 
-#: ../tools/gda-sql.c:2462
+#: ../tools/gda-sql.c:2472
 #, c-format
 msgid "Query buffer is empty"
 msgstr ""
 
-#: ../tools/gda-sql.c:2497
+#: ../tools/gda-sql.c:2507
 #, fuzzy, c-format
 msgid "Could not find query named '%s'"
 msgstr "Impossível obter arquivo a partir de %s"
 
-#: ../tools/gda-sql.c:2501
+#: ../tools/gda-sql.c:2511
 #, fuzzy, c-format
 msgid "Missing query name"
 msgstr "Argumentos faltando"
 
-#: ../tools/gda-sql.c:2562 ../tools/gda-sql.c:2620
+#: ../tools/gda-sql.c:2575 ../tools/gda-sql.c:2633
 #, c-format
 msgid "No parameter named '%s' defined"
 msgstr ""
 
-#: ../tools/gda-sql.c:2572
+#: ../tools/gda-sql.c:2585
 #, fuzzy
 msgid "Value"
 msgstr "Escala"
 
-#: ../tools/gda-sql.c:2573
+#: ../tools/gda-sql.c:2586
 #, fuzzy
 msgid "List of defined parameters"
 msgstr "Argumentos faltando"
 
-#: ../tools/gda-sql.c:2624
+#: ../tools/gda-sql.c:2637
 #, fuzzy, c-format
 msgid "Missing parameter's name"
 msgstr "Argumentos faltando"
 
-#: ../tools/gda-sql.c:2696
+#: ../tools/gda-sql.c:2709
 #, fuzzy, c-format
 msgid "Graph written to '%s'\n"
 msgstr "Grafo escrito em '%s'\n"
 
-#: ../tools/gda-sql.c:2699
+#: ../tools/gda-sql.c:2712
 #, c-format
 msgid ""
 "Graph written to '%s'\n"
@@ -4833,6 +4856,43 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Could not save history file to '%s': %s"
 msgstr "Impossível obter arquivo a partir de %s"
+
+#~ msgid "Row number out of range"
+#~ msgstr "Número de linha fora do limite"
+
+#~ msgid "Column number out of range"
+#~ msgstr "Número de coluna fora do limite"
+
+#~ msgid "Wrong type of query"
+#~ msgstr "Tipo de consulta errado"
+
+#~ msgid "No UPDATE query specified, can't update row"
+#~ msgstr "Nenhuma consulta UPDATE especificada, impossível atualizar linha"
+
+#~ msgid "No INSERT query specified, can't insert row"
+#~ msgstr "Nenhuma consulta INSERT especificada, impossível inserir linha"
+
+#~ msgid "No DELETE query specified, can't delete row"
+#~ msgstr "Nenhuma consulta DELETE especificada, impossível remover linha"
+
+#, fuzzy
+#~ msgid "No SELECT query specified"
+#~ msgstr "Nenhuma consulta DELETE especificada, impossível remover linha"
+
+#~ msgid "Unknown GdaDataProxy column: %d"
+#~ msgstr "Coluna GdaDataProxy desconhecida: %d"
+
+#, fuzzy
+#~ msgid "Could not set value of parameter '%s'"
+#~ msgstr "Impossível obter o parâmetro Oracle"
+
+#, fuzzy
+#~ msgid "Internal GdaMetaStore error"
+#~ msgstr "HoraInterna"
+
+#, fuzzy
+#~ msgid "Wrong value type"
+#~ msgstr "Nó inválido"
 
 #, fuzzy
 #~ msgid "No SELECT statement to use"
@@ -5084,9 +5144,6 @@ msgstr "Impossível obter arquivo a partir de %s"
 
 #~ msgid "Could not retrieve column's information"
 #~ msgstr "Impossível obter informação da coluna"
-
-#~ msgid "Could not retrieve column's value"
-#~ msgstr "Impossível obter valor da coluna"
 
 #~ msgid "Authentication Method"
 #~ msgstr "Método de Autenticação"
@@ -5353,10 +5410,6 @@ msgstr "Impossível obter arquivo a partir de %s"
 #, fuzzy
 #~ msgid "Example provider for C API databases"
 #~ msgstr "Provedor para bancos de dados IBMDB2"
-
-#, fuzzy
-#~ msgid "Could not add data model to connection: %s"
-#~ msgstr "Impossível alocar reserva de espaço para coluna %d"
 
 #~ msgid "Could not allocate datamodel. No results will be returned."
 #~ msgstr ""
@@ -6139,9 +6192,6 @@ msgstr "Impossível obter arquivo a partir de %s"
 
 #~ msgid "None provided"
 #~ msgstr "Nenhum infromado"
-
-#~ msgid "GdaDataModel required for this action"
-#~ msgstr "GdaDataModel requerido para esta ação"
 
 #~ msgid "Model %s (name=%s) has changed!"
 #~ msgstr "Modelo %s (nome=%s) foi alterado!"

@@ -119,8 +119,7 @@ struct _GdaDataModelClass {
 
 GType               gda_data_model_get_type               (void) G_GNUC_CONST;
 
-gboolean            gda_data_model_is_updatable           (GdaDataModel *model);
-GdaDataModelAccessFlags gda_data_model_get_access_flags       (GdaDataModel *model);
+GdaDataModelAccessFlags gda_data_model_get_access_flags   (GdaDataModel *model);
 
 gint                gda_data_model_get_n_rows             (GdaDataModel *model);
 gint                gda_data_model_get_n_columns          (GdaDataModel *model);
@@ -135,8 +134,6 @@ void                gda_data_model_set_column_title       (GdaDataModel *model, 
 const GValue       *gda_data_model_get_value_at           (GdaDataModel *model, gint col, gint row, GError **error);
 const GValue       *gda_data_model_get_typed_value_at     (GdaDataModel *model, gint col, gint row, 
 							   GType expected_type, gboolean nullok, GError **error);
-const GValue       *gda_data_model_get_value_at_column    (GdaDataModel *model, 
-							   const gchar *column_name, gint row, GError **error);
 GdaValueAttribute   gda_data_model_get_attributes_at      (GdaDataModel *model, gint col, gint row);
 GdaDataModelIter   *gda_data_model_create_iter            (GdaDataModel *model);
 void                gda_data_model_freeze                 (GdaDataModel *model);

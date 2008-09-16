@@ -1,3 +1,23 @@
+2008-09-16  Vivien Malerba <malerba@gnome-db.org>
+
+	* NEWS: news for version 3.99.4
+	* libgda/libgda.h.in:
+	* libgda/gda-init.c: added gda_get_application_exec_path()
+	* libgda/gda-connection.[ch]: removed gda_connection_set_dsn()
+	* libgda/gda-data-model.[ch]:
+	  - removed gda_data_model_get_value_at_column()
+	  - removed gda_data_model_is_updatable()
+	* libgda/gda-data-model-iter.[ch]: added gda_data_model_iter_set_value_at()
+	* libgda/gda-data-proxy.[ch]: removed gda_data_proxy_find_row_from_values() as there
+	is already gda_data_model_get_row_from_values() for the same feature
+	* API changes (more consistant naming):
+	  - GdaDataSourceInfo => GdaDsnInfo
+	  - gda_connection_get_provider_obj() => gda_connection_get_provider()
+	  - gda_config_get_dsn() => gda_config_get_dsn_info()
+	  - gda_config_get_provider_object() => gda_config_get_provider()
+	  - gda_connection_get_provider_obj() => gda_connection_get_provider()
+	* po/: ran "make update-po"
+
 2008-09-15  Vivien Malerba <malerba@gnome-db.org>
 
 	* doc/C: documentation improvements regarding data validation and programmer's control

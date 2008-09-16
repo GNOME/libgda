@@ -338,7 +338,7 @@ create_parser_for_provider (const gchar *prov_name)
 	GdaSqlParser *parser;
 	GError *error = NULL;
 
-	prov = gda_config_get_provider_object (prov_name, &error);
+	prov = gda_config_get_provider (prov_name, &error);
 	if (!prov) 
 		g_error ("Could not create provider for '%s': %s\n", prov_name,
 			 error && error->message ? error->message : "No detail");

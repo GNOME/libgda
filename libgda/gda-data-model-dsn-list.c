@@ -52,10 +52,10 @@ static GdaValueAttribute    gda_data_model_dsn_list_get_attributes_at (GdaDataMo
 
 static GObjectClass *parent_class = NULL;
 
-static void dsn_added_cb (GdaConfig *conf, GdaDataSourceInfo *info, GdaDataModelDsnList *model);
-static void dsn_to_be_removed_cb (GdaConfig *conf, GdaDataSourceInfo *info, GdaDataModelDsnList *model);
-static void dsn_removed_cb (GdaConfig *conf, GdaDataSourceInfo *info, GdaDataModelDsnList *model);
-static void dsn_changed_cb (GdaConfig *conf, GdaDataSourceInfo *info, GdaDataModelDsnList *model);
+static void dsn_added_cb (GdaConfig *conf, GdaDsnInfo *info, GdaDataModelDsnList *model);
+static void dsn_to_be_removed_cb (GdaConfig *conf, GdaDsnInfo *info, GdaDataModelDsnList *model);
+static void dsn_removed_cb (GdaConfig *conf, GdaDsnInfo *info, GdaDataModelDsnList *model);
+static void dsn_changed_cb (GdaConfig *conf, GdaDsnInfo *info, GdaDataModelDsnList *model);
 
 /*
  * Object init and finalize
@@ -195,20 +195,20 @@ gda_data_model_dsn_list_dispose (GObject *object)
 }
 
 static void 
-dsn_added_cb (GdaConfig *conf, GdaDataSourceInfo *info, GdaDataModelDsnList *model)
+dsn_added_cb (GdaConfig *conf, GdaDsnInfo *info, GdaDataModelDsnList *model)
 {
 	model->priv->nb_dsn++;
-	gda_data_model_row_inserted ((GdaDataModel *) model, gda_config_get_dsn_index (info->name));
+	gda_data_model_row_inserted ((GdaDataModel *) model, gda_config_get_dsn_info_index (info->name));
 }
 
 static void
-dsn_to_be_removed_cb (GdaConfig *conf, GdaDataSourceInfo *info, GdaDataModelDsnList *model)
+dsn_to_be_removed_cb (GdaConfig *conf, GdaDsnInfo *info, GdaDataModelDsnList *model)
 {
-	model->priv->row_to_remove = gda_config_get_dsn_index (info->name);
+	model->priv->row_to_remove = gda_config_get_dsn_info_index (info->name);
 }
 
 static void
-dsn_removed_cb (GdaConfig *conf, GdaDataSourceInfo *info, GdaDataModelDsnList *model)
+dsn_removed_cb (GdaConfig *conf, GdaDsnInfo *info, GdaDataModelDsnList *model)
 {
 	model->priv->nb_dsn--;
 	gda_data_model_row_removed ((GdaDataModel *) model, model->priv->row_to_remove);
@@ -216,9 +216,9 @@ dsn_removed_cb (GdaConfig *conf, GdaDataSourceInfo *info, GdaDataModelDsnList *m
 }
 
 static void 
-dsn_changed_cb (GdaConfig *conf, GdaDataSourceInfo *info, GdaDataModelDsnList *model)
+dsn_changed_cb (GdaConfig *conf, GdaDsnInfo *info, GdaDataModelDsnList *model)
 {
-	gda_data_model_row_updated ((GdaDataModel *) model, gda_config_get_dsn_index (info->name));
+	gda_data_model_row_updated ((GdaDataModel *) model, gda_config_get_dsn_info_index (info->name));
 }
 
 
@@ -318,7 +318,7 @@ gda_data_model_dsn_list_get_value_at (GdaDataModel *model, gint col, gint row, G
 		return NULL;
 	}
 
-	GdaDataSourceInfo *info = gda_config_get_dsn_at_index (row);
+	GdaDsnInfo *info = gda_config_get_dsn_info_at_index (row);
 	g_assert (info);
 	if (col != 5)
 		dmodel->priv->tmp_value = gda_value_new (G_TYPE_STRING);

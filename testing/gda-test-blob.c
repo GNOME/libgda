@@ -72,8 +72,8 @@ main (int argc, char **argv)
 			auth_string = g_strdup_printf ("USERNAME=%s", user);
 	}
 	if (dsn) {
-		GdaDataSourceInfo *info = NULL;
-		info = gda_config_get_dsn (dsn);
+		GdaDsnInfo *info = NULL;
+		info = gda_config_get_dsn_info (dsn);
 		if (!info)
 			g_error (_("DSN '%s' is not declared"), dsn);
 		else {

@@ -137,7 +137,7 @@ if (!cnc || !gda_connection_is_opened (cnc)) {
 	GError *error = NULL;
 	gchar *str;
 	
-	prov = gda_connection_get_provider_obj (cnc);
+	prov = gda_connection_get_provider (cnc);
 	schema_m = gda_connection_get_meta_store_data (cnc, GDA_CONNECTION_META_TYPES, &error, 0);
 	if (!schema_m) {
 #ifdef CHECK_EXTRA_INFO

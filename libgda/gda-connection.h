@@ -144,7 +144,7 @@ gboolean             gda_connection_is_opened            (GdaConnection *cnc);
 
 GdaConnectionOptions gda_connection_get_options          (GdaConnection *cnc);
 
-GdaServerProvider   *gda_connection_get_provider_obj     (GdaConnection *cnc);
+GdaServerProvider   *gda_connection_get_provider         (GdaConnection *cnc);
 const gchar         *gda_connection_get_provider_name    (GdaConnection *cnc);
 
 GdaServerOperation  *gda_connection_create_operation     (GdaConnection *cnc, GdaServerOperationType type,
@@ -152,7 +152,6 @@ GdaServerOperation  *gda_connection_create_operation     (GdaConnection *cnc, Gd
 gboolean             gda_connection_perform_operation    (GdaConnection *cnc, GdaServerOperation *op, GError **error);
                                                           
 const gchar         *gda_connection_get_dsn              (GdaConnection *cnc);
-gboolean             gda_connection_set_dsn              (GdaConnection *cnc, const gchar *datasource);
 const gchar         *gda_connection_get_cnc_string       (GdaConnection *cnc);
 const gchar         *gda_connection_get_authentication   (GdaConnection *cnc);
 

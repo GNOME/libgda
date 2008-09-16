@@ -39,7 +39,7 @@ extern GQuark gda_data_model_iter_error_quark (void);
 
 typedef enum
 {
-	GDA_DATA_MODEL_ITER_WHAT_ERROR
+	GDA_DATA_MODEL_ITER_COLUMN_OUT_OF_RANGE_ERROR
 } GdaDataModelIterError;
 
 
@@ -63,6 +63,8 @@ GType             gda_data_model_iter_get_type             (void) G_GNUC_CONST;
 
 const GValue     *gda_data_model_iter_get_value_at         (GdaDataModelIter *iter, gint col);
 const GValue     *gda_data_model_iter_get_value_for_field  (GdaDataModelIter *iter, const gchar *field_name);
+gboolean          gda_data_model_iter_set_value_at         (GdaDataModelIter *iter, gint col, 
+							    const GValue *value, GError **error);
 
 gboolean          gda_data_model_iter_move_at_row          (GdaDataModelIter *iter, gint row);
 gboolean          gda_data_model_iter_move_next            (GdaDataModelIter *iter);

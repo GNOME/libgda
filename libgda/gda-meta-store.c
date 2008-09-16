@@ -765,7 +765,7 @@ initialize_cnc_struct (GdaMetaStore *store, GError **error)
 	if (!prepare_server_operations (store, error))
 		return FALSE;
 
-	prov = gda_connection_get_provider_obj (store->priv->cnc);
+	prov = gda_connection_get_provider (store->priv->cnc);
 	for (list = klass->cpriv->db_objects; list; list = list->next) {
 		DbObject *dbo = DB_OBJECT (list->data);
 		/*g_print ("Creating object: %s\n", dbo->obj_name);*/
@@ -812,7 +812,7 @@ prepare_server_operations (GdaMetaStore *store, GError **error)
 
 	for (objects = klass->cpriv->db_objects; objects; objects = objects->next) {
 		DbObject *dbo = DB_OBJECT (objects->data);
-		if (! prepare_dbo_server_operation (klass, store, gda_connection_get_provider_obj (store->priv->cnc), 
+		if (! prepare_dbo_server_operation (klass, store, gda_connection_get_provider (store->priv->cnc), 
 						    dbo, error))
 			return FALSE;
 	}
@@ -3253,7 +3253,7 @@ gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_d
 	if (needs_creation) {
 		/* prepare the create operation */
 		GdaServerProvider *prov;
-		prov = gda_connection_get_provider_obj (store->priv->cnc);
+		prov = gda_connection_get_provider (store->priv->cnc);
 		if (! prepare_dbo_server_operation (klass, store, prov, dbo, error))
 			goto onerror;
 		

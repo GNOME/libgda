@@ -117,6 +117,18 @@ Data model iterator
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_data_model_iter_set_value_at ##### -->
+<para>
+
+</para>
+
+@iter: 
+@col: 
+@value: 
+@error: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_data_model_iter_is_valid ##### -->
 <para>
 

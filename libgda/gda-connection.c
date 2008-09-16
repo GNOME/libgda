@@ -388,13 +388,45 @@ gda_connection_set_property (GObject *object,
 				g_cond_signal (cnc->priv->unique_possible_cond);
 			gda_mutex_unlock (cnc->priv->mutex);
 			break;
-                case PROP_DSN:
+                case PROP_DSN: {
+			const gchar *datasource = g_value_get_string (value);
+			GdaDsnInfo *dsn;
+
 			gda_connection_lock ((GdaLockable*) cnc);
-			gda_connection_set_dsn (cnc, g_value_get_string (value));
+			if (cnc->priv->is_open) {
+				g_warning (_("Could not set the '%s' property when the connection is opened"),
+					   pspec->name);
+				gda_connection_unlock ((GdaLockable*) cnc);
+				return;
+			}
+			
+			dsn = gda_config_get_dsn_info (datasource);
+			if (!dsn) {
+				g_warning (_("No DSN named '%s' defined"), datasource);
+				gda_connection_unlock ((GdaLockable*) cnc);
+				return;
+			}
+			
+			g_free (cnc->priv->dsn);
+			cnc->priv->dsn = g_strdup (datasource);
+#ifdef GDA_DEBUG_signal
+			g_print (">> 'DSN_CHANGED' from %s\n", __FUNCTION__);
+#endif
+			g_signal_emit (G_OBJECT (cnc), gda_connection_signals[DSN_CHANGED], 0);
+#ifdef GDA_DEBUG_signal
+			g_print ("<< 'DSN_CHANGED' from %s\n", __FUNCTION__);
+#endif
 			gda_connection_unlock ((GdaLockable*) cnc);
                         break;
+		}
                 case PROP_CNC_STRING:
 			gda_connection_lock ((GdaLockable*) cnc);
+			if (cnc->priv->is_open) {
+				g_warning (_("Could not set the '%s' property when the connection is opened"),
+					   pspec->name);
+				gda_connection_unlock ((GdaLockable*) cnc);
+				return;
+			}
 			g_free (cnc->priv->cnc_string);
 			cnc->priv->cnc_string = NULL;
 			if (g_value_get_string (value)) 
@@ -403,8 +435,14 @@ gda_connection_set_property (GObject *object,
                         break;
                 case PROP_PROVIDER_OBJ:
 			gda_connection_lock ((GdaLockable*) cnc);
+			if (cnc->priv->is_open) {
+				g_warning (_("Could not set the '%s' property when the connection is opened"),
+					   pspec->name);
+				gda_connection_unlock ((GdaLockable*) cnc);
+				return;
+			}
                         if (cnc->priv->provider_obj)
-				g_object_unref(cnc->priv->provider_obj);
+				g_object_unref (cnc->priv->provider_obj);
 
 			cnc->priv->provider_obj = g_value_get_object (value);
 			g_object_ref (G_OBJECT (cnc->priv->provider_obj));
@@ -412,7 +450,13 @@ gda_connection_set_property (GObject *object,
                         break;
                 case PROP_AUTH_STRING:
 			gda_connection_lock ((GdaLockable*) cnc);
-			if (! cnc->priv->is_open) {
+			if (cnc->priv->is_open) {
+				g_warning (_("Could not set the '%s' property when the connection is opened"),
+					   pspec->name);
+				gda_connection_unlock ((GdaLockable*) cnc);
+				return;
+			}
+			else {
 				const gchar *str = g_value_get_string (value);
 				g_free (cnc->priv->auth_string);
 				cnc->priv->auth_string = NULL;
@@ -423,6 +467,12 @@ gda_connection_set_property (GObject *object,
                         break;
                 case PROP_OPTIONS:
 			gda_mutex_lock (cnc->priv->mutex);
+			if (cnc->priv->is_open) {
+				g_warning (_("Could not set the '%s' property when the connection is opened"),
+					   pspec->name);
+				gda_connection_unlock ((GdaLockable*) cnc);
+				return;
+			}
 			cnc->priv->options = g_value_get_flags (value);
 			gda_mutex_unlock (cnc->priv->mutex);
 			break;
@@ -509,7 +559,7 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
 			      GdaConnectionOptions options, GError **error)
 {
 	GdaConnection *cnc = NULL;
-	GdaDataSourceInfo *dsn_info;
+	GdaDsnInfo *dsn_info;
 	gchar *user, *pass, *real_dsn;
 	gchar *real_auth_string = NULL;
 
@@ -524,7 +574,7 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
 	}
 
 	/* get the data source info */
-	dsn_info = gda_config_get_dsn (real_dsn);
+	dsn_info = gda_config_get_dsn_info (real_dsn);
 	if (!dsn_info) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_DSN_NOT_FOUND_ERROR, 
 			     _("Data source %s not found in configuration"), real_dsn);
@@ -551,7 +601,7 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
 	if (dsn_info->provider != NULL) {
 		GdaServerProvider *prov;
 
-		prov = gda_config_get_provider_object (dsn_info->provider, error);
+		prov = gda_config_get_provider (dsn_info->provider, error);
 		if (prov) {
 			if (PROV_CLASS (prov)->create_connection) {
 				cnc = PROV_CLASS (prov)->create_connection (prov);
@@ -678,7 +728,7 @@ gda_connection_open_from_string (const gchar *provider_name, const gchar *cnc_st
 	if (provider_name || real_provider) {
 		GdaServerProvider *prov;
 
-		prov = gda_config_get_provider_object (provider_name ? provider_name : real_provider, error);
+		prov = gda_config_get_provider (provider_name ? provider_name : real_provider, error);
 		if (prov) {
 			if (PROV_CLASS (prov)->create_connection) {
 				cnc = PROV_CLASS (prov)->create_connection (prov);
@@ -725,7 +775,7 @@ gda_connection_open_from_string (const gchar *provider_name, const gchar *cnc_st
 gboolean
 gda_connection_open (GdaConnection *cnc, GError **error)
 {
-	GdaDataSourceInfo *dsn_info = NULL;
+	GdaDsnInfo *dsn_info = NULL;
 	GdaQuarkList *params, *auth;
 	char *real_auth_string = NULL;
 
@@ -741,7 +791,7 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 	/* connection string */
 	if (cnc->priv->dsn) {
 		/* get the data source info */
-		dsn_info = gda_config_get_dsn (cnc->priv->dsn);
+		dsn_info = gda_config_get_dsn_info (cnc->priv->dsn);
 		if (!dsn_info) {
 			gda_log_error (_("Data source %s not found in configuration"), cnc->priv->dsn);
 			g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_NONEXIST_DSN_ERROR,
@@ -970,7 +1020,7 @@ gda_connection_get_options (GdaConnection *cnc)
 }
 
 /**
- * gda_connection_get_provider_obj
+ * gda_connection_get_provider
  * @cnc: a #GdaConnection object
  *
  * Get a pointer to the #GdaServerProvider object used to access the database
@@ -978,7 +1028,7 @@ gda_connection_get_options (GdaConnection *cnc)
  * Returns: the #GdaServerProvider (NEVER NULL)
  */
 GdaServerProvider *
-gda_connection_get_provider_obj (GdaConnection *cnc)
+gda_connection_get_provider (GdaConnection *cnc)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv, NULL);
@@ -1003,51 +1053,6 @@ gda_connection_get_provider_name (GdaConnection *cnc)
 		return NULL;
 
 	return gda_server_provider_get_name (cnc->priv->provider_obj);
-}
-
-/**
- * gda_connection_set_dsn
- * @cnc: a #GdaConnection object
- * @datasource: a gda datasource
- *
- * Sets the data source of the connection. If the connection is already opened,
- * then no action is performed at all and FALSE is returned.
- *
- * If the requested datasource does not exist, then nothing is done and FALSE
- * is returned.
- *
- * Returns: TRUE on success
- */
-gboolean
-gda_connection_set_dsn (GdaConnection *cnc, const gchar *datasource)
-{
-	GdaDataSourceInfo *dsn;
-
-        g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-        g_return_val_if_fail (cnc->priv, FALSE);
-        g_return_val_if_fail (datasource && *datasource, FALSE);
-
-        if (cnc->priv->is_open)
-                return FALSE;
-
-        dsn = gda_config_get_dsn (datasource);
-        if (!dsn)
-                return FALSE;
-
-	gda_connection_lock ((GdaLockable*) cnc);
-
-	g_free (cnc->priv->dsn);
-	cnc->priv->dsn = g_strdup (datasource);
-#ifdef GDA_DEBUG_signal
-        g_print (">> 'DSN_CHANGED' from %s\n", __FUNCTION__);
-#endif
-        g_signal_emit (G_OBJECT (cnc), gda_connection_signals[DSN_CHANGED], 0);
-#ifdef GDA_DEBUG_signal
-        g_print ("<< 'DSN_CHANGED' from %s\n", __FUNCTION__);
-#endif
-
-	gda_connection_unlock ((GdaLockable*) cnc);
-	return TRUE;
 }
 
 /**
@@ -3035,7 +3040,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 				lcontext.table_name = rmeta [i].table_name;
 				if (!rmeta [i].func (provider, cnc, store, &lcontext, error)) {
 					g_print ("TH %p CNC %p ERROR, prov=%p (%s)\n", g_thread_self(), cnc,
-						 gda_connection_get_provider_obj (cnc),
+						 gda_connection_get_provider (cnc),
 						 gda_connection_get_provider_name (cnc));
 					g_warning ("//");
 
