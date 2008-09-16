@@ -1,5 +1,11 @@
 2008-09-16  Vivien Malerba <malerba@gnome-db.org>
 
+	* configure.in: set version to 3.99.5
+
+Released 3.99.4
+
+2008-09-16  Vivien Malerba <malerba@gnome-db.org>
+
 	* NEWS: news for version 3.99.4
 	* libgda/libgda.h.in:
 	* libgda/gda-init.c: added gda_get_application_exec_path()
