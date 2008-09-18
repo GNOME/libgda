@@ -584,17 +584,6 @@
       &libgda-GdaDataProxy;
       &libgda-GdaDataComparator;
       &libgda-GdaDataModelQuery;
-      <para>
-	The following UML diagram shows the various implementations of the GdaDataModel interface and their usage:
-	<mediaobject>
-	  <imageobject role="html">
-            <imagedata fileref="DataModels.png" format="PNG"/>
-	  </imageobject>
-	  <textobject>
-            <phrase>Various implementations of the GdaDataModel interface</phrase>
-	  </textobject>
-	</mediaobject>
-      </para>
     </chapter>
 
     <chapter id="data_conv">

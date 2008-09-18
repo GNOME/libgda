@@ -1243,9 +1243,15 @@ test12 (GdaConnection *cnc)
 	clear_signals ();
 
 	/* create GdaDataSelect */
-	stmt = stmt_from_string ("SELECT * FROM customers WHERE id <= ##id::int");
+	stmt = stmt_from_string ("SELECT * FROM customers WHERE id <= ##id::int ORDER BY name");
 	g_assert (gda_statement_get_parameters (stmt, &params, NULL));
-	g_assert (gda_set_set_holder_value (params, &error, "id", "9"));
+	g_assert (gda_set_set_holder_value (params, &error, "id", 9));
+
+	model = gda_connection_statement_execute_select (cnc, stmt, params, &error);
+	g_assert (model);
+	gda_data_model_dump (model, stdout);
+	g_object_unref (model);
+
 	model = gda_connection_statement_execute_select_full (cnc, stmt, params, 
 							      GDA_STATEMENT_MODEL_CURSOR_FORWARD, 
 							      NULL, &error);
@@ -1308,6 +1314,47 @@ test12 (GdaConnection *cnc)
 #endif
 		goto out;
 	}
+	gda_value_free (value);
+
+	/**/
+	g_value_set_int ((value = gda_value_new (G_TYPE_INT)), 1);
+	if (! gda_data_model_iter_set_value_at (iter, 0, value, &error)) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+		g_print ("GdaDataModelIter value set failed: %s\n",
+			 error && error->message ? error->message : "No detail");
+#endif
+		goto out;
+	}
+	if (! check_expected_signal (model, 'U', 1)) {
+		nfailed++;
+		goto out;
+	}
+	cvalue = gda_data_model_iter_get_value_at (iter, 0);
+	if (!cvalue) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+		g_print ("gda_data_model_iter_get_value_at() failed after modification\n");
+#endif
+		goto out;
+	}
+	if (gda_value_differ (cvalue, value)) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+		g_print ("gda_data_model_iter_get_value_at() and modified value differ\n");
+#endif
+		goto out;
+	}
+
+	GdaDataModel *rerun;
+	rerun = gda_connection_statement_execute_select (cnc, stmt, params, &error);
+	g_assert (rerun);
+	gda_data_model_dump (rerun, stdout);
+	
+	gda_value_free (value);
+	
+	
+
 	g_object_unref (iter);
 
 

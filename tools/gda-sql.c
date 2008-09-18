@@ -888,22 +888,50 @@ open_connection (MainData *data, const gchar *cnc_name, const gchar *cnc_string,
 	GdaConnection *newcnc = NULL;
 	ConnectionSetting *cs = NULL;
 	static gint cncindex = 0;
+	gchar *real_cnc_string;
 
 	if (cnc_name && ! connection_name_is_valid (cnc_name)) {
 		g_set_error (error, 0, 0,
 			     _("Connection name '%s' is invalid"), cnc_name);
 		return NULL;
 	}
-
+	
 	GdaDsnInfo *info;
 	gchar *user, *pass, *real_cnc, *real_provider, *real_auth_string = NULL;
-	gda_connection_string_split (cnc_string, &real_cnc, &real_provider, &user, &pass);
+
+	/* if cnc string is a regular file, then use it with SQLite */
+	if (g_file_test (cnc_string, G_FILE_TEST_IS_REGULAR)) {
+		gchar *path, *file, *e1, *e2;
+		const gchar *pname = "SQLite";
+		
+		path = g_path_get_dirname (cnc_string);
+		file = g_path_get_basename (cnc_string);
+		if (g_str_has_suffix (file, ".mdb")) {
+			pname = "MSAccess";
+			file [strlen (file) - 4] = 0;
+		}
+		else if (g_str_has_suffix (file, ".db"))
+			file [strlen (file) - 3] = 0;
+		e1 = gda_rfc1738_encode (path);
+		e2 = gda_rfc1738_encode (file);
+		g_free (path);
+		g_free (file);
+		real_cnc_string = g_strdup_printf ("%s://DB_DIR=%s;DB_NAME=%s", pname, e1, e2);
+		g_free (e1);
+		g_free (e2);
+		gda_connection_string_split (real_cnc_string, &real_cnc, &real_provider, &user, &pass);
+	}
+	else {
+		gda_connection_string_split (cnc_string, &real_cnc, &real_provider, &user, &pass);
+		real_cnc_string = g_strdup (cnc_string);
+	}
 	if (!real_cnc) {
 		g_free (user);
 		g_free (pass);
 		g_free (real_provider);
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_DSN_NOT_FOUND_ERROR, 
 			     _("Malformed connection string '%s'"), cnc_string);
+		g_free (real_cnc_string);
 		return NULL;
 	}
 
@@ -918,6 +946,7 @@ open_connection (MainData *data, const gchar *cnc_name, const gchar *cnc_string,
 				g_free (real_provider);
 				g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_DSN_NOT_FOUND_ERROR, 
 					     _("No username for '%s'"), cnc_string);
+				g_free (real_cnc_string);
 				return NULL;
 			}
 			g_free (user);
@@ -933,6 +962,7 @@ open_connection (MainData *data, const gchar *cnc_name, const gchar *cnc_string,
 				g_free (real_provider);
 				g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_DSN_NOT_FOUND_ERROR, 
 					     _("No password for '%s'"), cnc_string);
+				g_free (real_cnc_string);
 				return NULL;
 			}
 			g_free (pass);
@@ -955,10 +985,11 @@ open_connection (MainData *data, const gchar *cnc_name, const gchar *cnc_string,
 	
 	info = gda_config_get_dsn_info (real_cnc);
 	if (info && !real_provider)
-		newcnc = gda_connection_open_from_dsn (cnc_string, real_auth_string, 0, error);
+		newcnc = gda_connection_open_from_dsn (real_cnc_string, real_auth_string, 0, error);
 	else 
-		newcnc = gda_connection_open_from_string (NULL, cnc_string, real_auth_string, 0, error);
+		newcnc = gda_connection_open_from_string (NULL, real_cnc_string, real_auth_string, 0, error);
 	
+	g_free (real_cnc_string);
 	g_free (real_cnc);
 	g_free (user);
 	g_free (pass);
@@ -1324,6 +1355,10 @@ static GdaInternalCommandResult *extra_command_query_buffer_to_dict (GdaConnecti
 								     GError **error, MainData *data);
 static GdaInternalCommandResult *extra_command_query_buffer_from_dict (GdaConnection *cnc, const gchar **args,
 								       GError **error, MainData *data);
+static GdaInternalCommandResult *extra_command_query_buffer_list_dict (GdaConnection *cnc, const gchar **args,
+								       GError **error, MainData *data);
+static GdaInternalCommandResult *extra_command_query_buffer_delete_dict (GdaConnection *cnc, const gchar **args,
+									 GError **error, MainData *data);
 
 static GdaInternalCommandResult *extra_command_set (GdaConnection *cnc, const gchar **args,
 						    GError **error, MainData *data);
@@ -1552,7 +1587,7 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer");
-	c->name = g_strdup_printf (_("%s [FILE]"), "r");
+	c->name = g_strdup_printf (_("%s [FILE]"), "qr");
 	c->description = _("Reset the query buffer (fill buffer with contents of file)");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_reset_buffer;
@@ -1562,7 +1597,7 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer");
-	c->name = "p";
+	c->name = "qp";
 	c->description = _("Show the contents of the query buffer");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_show_buffer;
@@ -1572,8 +1607,8 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer");
-	c->name = "g";
-	c->description = _("Execute contents of query buffer");
+	c->name = g_strdup_printf (_("%s [QUERY_BUFFER_NAME]"), "g");
+	c->description = _("Execute contents of query buffer, or named query buffer");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_exec_buffer;
 	c->user_data = data;
@@ -1582,7 +1617,7 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer");
-	c->name = g_strdup_printf (_("%s FILE"), "w");
+	c->name = g_strdup_printf (_("%s FILE"), "qw");
 	c->description = _("Write query buffer to file");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_write_buffer;
@@ -1592,7 +1627,7 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer");
-	c->name = g_strdup_printf (_("%s [QUERY_NAME]"), "w_dict");
+	c->name = g_strdup_printf (_("%s QUERY_BUFFER_NAME"), "qs");
 	c->description = _("Save query buffer to dictionary");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_query_buffer_to_dict;
@@ -1602,10 +1637,30 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer");
-	c->name = g_strdup_printf (_("%s QUERY_NAME"), "r_dict");
-	c->description = _("Set named query from dictionary into query buffer");
+	c->name = g_strdup_printf (_("%s QUERY_BUFFER_NAME"), "ql");
+	c->description = _("Load query buffer from dictionary");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_query_buffer_from_dict;
+	c->user_data = data;
+	c->arguments_delimiter_func = NULL;
+	commands->commands = g_slist_prepend (commands->commands, c);
+
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("Query buffer");
+	c->name = g_strdup_printf (_("%s QUERY_BUFFER_NAME"), "qd");
+	c->description = _("Delete query buffer from dictionary");
+	c->args = NULL;
+	c->command_func = (GdaInternalCommandFunc) extra_command_query_buffer_delete_dict;
+	c->user_data = data;
+	c->arguments_delimiter_func = NULL;
+	commands->commands = g_slist_prepend (commands->commands, c);
+
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("Query buffer");
+	c->name = g_strdup_printf (_("%s"), "qa");
+	c->description = _("List all saved query buffers in dictionary");
+	c->args = NULL;
+	c->command_func = (GdaInternalCommandFunc) extra_command_query_buffer_list_dict;
 	c->user_data = data;
 	c->arguments_delimiter_func = NULL;
 	commands->commands = g_slist_prepend (commands->commands, c);
@@ -2374,6 +2429,15 @@ extra_command_exec_buffer (GdaConnection *cnc, const gchar **args,
 		return NULL;
 	}
 
+	if (args[0] && *args[0]) {
+		/* load named query buffer first */
+		res = extra_command_query_buffer_from_dict (cnc, args, error, data);
+		if (!res)
+			return NULL;
+		gda_internal_command_exec_result_free (res);
+		res = NULL;
+	}
+
 	if (!data->current->query_buffer) 
 		data->current->query_buffer = g_string_new ("");
 	if (*data->current->query_buffer->str != 0)
@@ -2412,12 +2476,64 @@ extra_command_write_buffer (GdaConnection *cnc, const gchar **args,
 	return res;
 }
 
-static GdaStatement *
-find_statement_in_connection_meta_store (GdaConnection *cnc, const gchar *query_name)
+#define QUERY_BUFFERS_TABLE_NAME "gda_sql_query_buffers"
+#define QUERY_BUFFERS_TABLE_DESC \
+	"<table name=\"" QUERY_BUFFERS_TABLE_NAME "\"> "			    \
+	"   <column name=\"id\" type=\"gint\" pkey=\"TRUE\" autoinc=\"TRUE\"/>"	    \
+	"   <column name=\"name\"/>"				    \
+	"   <column name=\"sql\"/>"				    \
+	"</table>"
+#define QUERY_BUFFERS_TABLE_INSERT \
+	"INSERT INTO " QUERY_BUFFERS_TABLE_NAME " (name, sql) VALUES (##name::string, ##sql::string)"
+#define QUERY_BUFFERS_TABLE_SELECT \
+	"SELECT name, sql FROM " QUERY_BUFFERS_TABLE_NAME " ORDER BY name"
+#define QUERY_BUFFERS_TABLE_SELECT_ONE \
+	"SELECT sql FROM " QUERY_BUFFERS_TABLE_NAME " WHERE name = ##name::string"
+#define QUERY_BUFFERS_TABLE_DELETE \
+	"DELETE FROM " QUERY_BUFFERS_TABLE_NAME " WHERE name = ##name::string"
+
+static GdaInternalCommandResult *
+extra_command_query_buffer_list_dict (GdaConnection *cnc, const gchar **args,
+				      GError **error, MainData *data)
 {
-	GdaStatement *stmt = NULL;
-	TO_IMPLEMENT;
-	return stmt;
+	GdaInternalCommandResult *res = NULL;
+
+	if (!data->current) {
+		g_set_error (error, 0, 0, _("No connection opened"));
+		return NULL;
+	}
+
+	/* Meta store's init */
+	GdaMetaStore *mstore;
+	mstore = gda_connection_get_meta_store (data->current->cnc);
+	if (!gda_meta_store_schema_add_custom_object (mstore, QUERY_BUFFERS_TABLE_DESC, NULL)) {
+		g_set_error (error, 0, 0,
+			     _("Can't initialize dictionary to store query buffers"));
+		return NULL;
+	}
+		
+	/* actual list retreival */
+	static GdaStatement *sel_stmt = NULL;
+	GdaDataModel *model;
+	if (!sel_stmt) {
+		sel_stmt = gda_sql_parser_parse_string (data->current->parser, 
+							QUERY_BUFFERS_TABLE_SELECT, NULL, NULL);
+		g_assert (sel_stmt);
+	}
+
+	GdaConnection *store_cnc;
+	store_cnc = gda_meta_store_get_internal_connection (mstore);
+	model = gda_connection_statement_execute_select (store_cnc, sel_stmt, NULL, error);
+	if (!model)
+		return NULL;
+
+	gda_data_model_set_column_title (model, 0, _("Query buffer name"));
+	gda_data_model_set_column_title (model, 1, _("SQL"));
+	res = g_new0 (GdaInternalCommandResult, 1);
+	res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+	res->u.model = model;
+
+	return res;
 }
 
 static GdaInternalCommandResult *
@@ -2434,36 +2550,48 @@ extra_command_query_buffer_to_dict (GdaConnection *cnc, const gchar **args,
 	if (!data->current->query_buffer) 
 		data->current->query_buffer = g_string_new ("");
 	if (*data->current->query_buffer->str != 0) {
-		GdaStatement *stmt;
-		gchar *qname;
-
-		/* check SQL validity */
-		const gchar *remain = NULL;
-		stmt = gda_sql_parser_parse_string (data->current->parser, data->current->query_buffer->str, &remain, error);
-		if (!stmt)
-			return NULL;
-		g_object_unref (stmt);
-		if (remain) {
-			g_set_error (error, 0, 0,
-				     _("Query buffer contains more than one SQL statement"));
-			return NULL;
-		}
-
 		/* find a suitable name */
+		gchar *qname;
 		if (args[0] && *args[0]) 
 			qname = g_strdup ((gchar *) args[0]);
 		else {
-			gint i;
-			for (i = 0; ; i++) {
-				qname = g_strdup_printf ("saved_stmt_%d", i);
-				stmt = find_statement_in_connection_meta_store (data->current->cnc, qname);
-				if (!stmt)
-					break;
-			}
+			g_set_error (error, 0, 0,
+				     _("Missing query buffer name"));
+			return NULL;
 		}
 
-		TO_IMPLEMENT; /* add data->current->query_buffer->str as a new query in data->current->cnc's meta store */
+		/* Meta store's init */
+		GdaMetaStore *mstore;
+		mstore = gda_connection_get_meta_store (data->current->cnc);
+		if (!gda_meta_store_schema_add_custom_object (mstore, QUERY_BUFFERS_TABLE_DESC, NULL)) {
+			g_set_error (error, 0, 0,
+				     _("Can't initialize dictionary to store query buffers"));
+			g_free (qname);
+			return NULL;
+		}
+		
+		/* actual store of the statement */
+		static GdaStatement *ins_stmt = NULL;
+		static GdaSet *ins_params = NULL;
+		if (!ins_stmt) {
+			ins_stmt = gda_sql_parser_parse_string (data->current->parser, 
+								QUERY_BUFFERS_TABLE_INSERT, NULL, NULL);
+			g_assert (ins_stmt);
+			g_assert (gda_statement_get_parameters (ins_stmt, &ins_params, NULL));
+		}
+
+		if (! gda_set_set_holder_value (ins_params, error, "name", qname) ||
+		    ! gda_set_set_holder_value (ins_params, error, "sql", data->current->query_buffer->str)) {
+			g_free (qname);
+			return NULL;
+		}
 		g_free (qname);
+		
+		GdaConnection *store_cnc;
+		store_cnc = gda_meta_store_get_internal_connection (mstore);
+		if (gda_connection_statement_execute_non_select (store_cnc, ins_stmt, ins_params,
+								 NULL, error) == -1)
+			return NULL;
 		res = g_new0 (GdaInternalCommandResult, 1);
 		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
 	}
@@ -2489,26 +2617,102 @@ extra_command_query_buffer_from_dict (GdaConnection *cnc, const gchar **args,
 		data->current->query_buffer = g_string_new ("");
 
 	if (args[0] && *args[0]) {
-		GdaStatement *stmt = find_statement_in_connection_meta_store (data->current->cnc, args[0]);
-		if (stmt) {
-			gchar *str;
-			str = gda_statement_to_sql_extended (stmt, data->current->cnc, NULL, 
-							     GDA_STATEMENT_SQL_PARAMS_SHORT, NULL, error);
-			if (!str)
-				return NULL;
+		/* Meta store's init */
+		GdaMetaStore *mstore;
+		mstore = gda_connection_get_meta_store (data->current->cnc);
+		if (!gda_meta_store_schema_add_custom_object (mstore, QUERY_BUFFERS_TABLE_DESC, NULL)) {
+			g_set_error (error, 0, 0,
+				     _("Can't initialize dictionary to store query buffers"));
+			return NULL;
+		}
+		
+		/* query retreival */
+		static GdaStatement *sel_stmt = NULL;
+		static GdaSet *sel_params = NULL;
+		GdaDataModel *model;
+		const GValue *cvalue;
+		if (!sel_stmt) {
+			sel_stmt = gda_sql_parser_parse_string (data->current->parser, 
+								QUERY_BUFFERS_TABLE_SELECT_ONE, NULL, NULL);
+			g_assert (sel_stmt);
+			g_assert (gda_statement_get_parameters (sel_stmt, &sel_params, NULL));
+		}
 
-			g_string_assign (data->current->query_buffer, str);
-			g_free (str);
+		if (! gda_set_set_holder_value (sel_params, error, "name", args[0]))
+			return NULL;
+
+		GdaConnection *store_cnc;
+		store_cnc = gda_meta_store_get_internal_connection (mstore);
+		model = gda_connection_statement_execute_select (store_cnc, sel_stmt, sel_params, error);
+		if (!model)
+			return NULL;
+		
+		if ((gda_data_model_get_n_rows (model) == 1) &&
+		    (cvalue = gda_data_model_get_value_at (model, 0, 0, NULL))) {
+			g_string_assign (data->current->query_buffer, g_value_get_string (cvalue));
 			res = g_new0 (GdaInternalCommandResult, 1);
 			res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
 		}
-		else
+		else 
 			g_set_error (error, 0, 0,
-				     _("Could not find query named '%s'"), args[0]);
+				     _("Could not find query buffer named '%s'"), args[0]);
+		g_object_unref (model);
 	}
 	else
 		g_set_error (error, 0, 0,
-			     _("Missing query name"));
+			     _("Missing query buffer name"));
+		
+	return res;
+}
+
+static GdaInternalCommandResult *
+extra_command_query_buffer_delete_dict (GdaConnection *cnc, const gchar **args,
+					GError **error, MainData *data)
+{
+	GdaInternalCommandResult *res = NULL;
+
+	if (!data->current) {
+		g_set_error (error, 0, 0, _("No connection opened"));
+		return NULL;
+	}
+
+	if (!data->current->query_buffer) 
+		data->current->query_buffer = g_string_new ("");
+
+	if (args[0] && *args[0]) {
+		/* Meta store's init */
+		GdaMetaStore *mstore;
+		mstore = gda_connection_get_meta_store (data->current->cnc);
+		if (!gda_meta_store_schema_add_custom_object (mstore, QUERY_BUFFERS_TABLE_DESC, NULL)) {
+			g_set_error (error, 0, 0,
+				     _("Can't initialize dictionary to store query buffers"));
+			return NULL;
+		}
+		
+		/* query retreival */
+		static GdaStatement *del_stmt = NULL;
+		static GdaSet *del_params = NULL;
+		if (!del_stmt) {
+			del_stmt = gda_sql_parser_parse_string (data->current->parser, 
+								QUERY_BUFFERS_TABLE_DELETE, NULL, NULL);
+			g_assert (del_stmt);
+			g_assert (gda_statement_get_parameters (del_stmt, &del_params, NULL));
+		}
+
+		if (! gda_set_set_holder_value (del_params, error, "name", args[0]))
+			return NULL;
+
+		GdaConnection *store_cnc;
+		store_cnc = gda_meta_store_get_internal_connection (mstore);
+		if (gda_connection_statement_execute_non_select (store_cnc, del_stmt, del_params,
+								 NULL, error) == -1)
+			return NULL;
+		res = g_new0 (GdaInternalCommandResult, 1);
+		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
+	}
+	else
+		g_set_error (error, 0, 0,
+			     _("Missing query buffer name"));
 		
 	return res;
 }

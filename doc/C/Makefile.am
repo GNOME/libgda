@@ -51,7 +51,9 @@ HTML_IMAGES = DataModels.png \
 	stmt-update.png stmt-compound.png information_schema.png \
 	MetaStore1.png MetaStore2.png i_s_data_types.png \
 	writable_data_model.png GdaDataModelIter.png \
-	data_validation_holder.png data_validation_proxy.png data_validation_set.png
+	data_validation_holder.png data_validation_proxy.png data_validation_set.png \
+	data_proxy1.png data_proxy2.png data_proxy3.png data_proxy4.png data_proxy5.png \
+	gda-sql-graph.png
 
 # Extra options to supply to gtkdoc-fixref
 FIXXREF_OPTIONS=

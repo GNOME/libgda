@@ -1,3 +1,24 @@
+2008-09-18  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-data-model.c: make gda_data_model_dump() work whith data models which
+	can only be accessed with a cursor
+	* libgda/gda-meta-store.c: handle the 'autoinc' column attribute, and bug fixes
+	* libgda/sqlite/gda-sqlite-ddl.c: correctly handle the "INTEGER PRIMARY KEY AUTOINCREMENT"
+	* doc/C: better documentation for GdaDataProxy
+	* tools/gda-sql.c:
+	  - allow to pass a file name on the command line to open as an SQLite or MDB file
+	  - reorganized "query buffer" commands:
+	    - \e [FILE]: Edit the query buffer (or file) with external editor
+	    - \g [QUERY_BUFFER_NAME]: Execute contents of query buffer, or named query buffer
+	    - \qa: List all saved query buffers in dictionary
+	    - \qd QUERY_BUFFER_NAME: Delete query buffer from dictionary
+	    - \ql QUERY_BUFFER_NAME: Load query buffer from dictionary
+	    - \qp: Show the contents of the query buffer
+	    - \qr [FILE]: Reset the query buffer (fill buffer with contents of file)
+	    - \qs QUERY_BUFFER_NAME: Save query buffer to dictionary
+	    - \qw FILE: Write query buffer to file
+	* tests/data-models/check_pmodel.c: more testing
+
 2008-09-18  Bas Driessen <bas.driessen@xobas.com>
 
 	* doc/C/gettingstarted.xml: correction example code.

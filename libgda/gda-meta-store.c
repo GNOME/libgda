@@ -140,7 +140,8 @@ typedef struct {
 	gchar        *column_type;
 	GType         gtype;
 	gboolean      pkey;
-        gboolean      nullok; 
+        gboolean      nullok;
+	gboolean      autoinc;
 } TableColumn;
 static void table_column_free (TableColumn *tcol);
 #define TABLE_COLUMN(x) ((TableColumn*)(x))
@@ -897,7 +898,7 @@ create_server_operation_for_table (GHashTable *specific_hash,
 		if (! gda_server_operation_set_value_at (op, tcol->nullok ? "FALSE" : "TRUE", error,
 							 "/FIELDS_A/@COLUMN_NNUL/%d", index))
 			goto onerror;
-		if (! gda_server_operation_set_value_at (op, "FALSE", error,
+		if (! gda_server_operation_set_value_at (op, tcol->autoinc ? "TRUE" : "FALSE", error,
 							 "/FIELDS_A/@COLUMN_AUTOINC/%d", index))
 			goto onerror;
 		repl = provider_specific_match (specific_hash, prov, "dummy", "/FIELDS_A/@COLUMN_PKEY");
@@ -1279,6 +1280,7 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
 			xmlChar *cname, *ctype, *xstr;
                         gboolean pkey = FALSE;
                         gboolean nullok = FALSE; 
+			gboolean autoinc = FALSE;
  
                         if (strcmp ((gchar *) cnode->name, "column"))
                                 continue;
@@ -1295,6 +1297,12 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
                         if (xstr) {
                                 if ((*xstr == 't') || (*xstr == 'T'))
                                         nullok = TRUE;
+                                xmlFree (xstr);
+                        }
+                        xstr = xmlGetProp (cnode, BAD_CAST "autoinc");
+                        if (xstr) {
+                                if ((*xstr == 't') || (*xstr == 'T'))
+                                        autoinc = TRUE;
                                 xmlFree (xstr);
                         }
                         ctype = xmlGetProp (cnode, BAD_CAST "type");
@@ -1381,13 +1389,40 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
                         TABLE_INFO (dbobj)->type_cols_array [colindex+1] = G_TYPE_NONE;
 
 			/* TableColumn */
-			TableColumn *tcol = g_new0 (TableColumn, 1);
-			TABLE_INFO (dbobj)->columns = g_slist_append (TABLE_INFO (dbobj)->columns, tcol);
-			tcol->column_name = g_strdup ((gchar *) cname);
-			tcol->column_type = ctype ? g_strdup ((gchar *) ctype) : NULL;
-			tcol->gtype = ptype;
-			tcol->pkey = pkey;
-			tcol->nullok = nullok;
+			TableColumn *tcol = NULL;
+			GSList *tlist;
+			for (tlist = TABLE_INFO (dbobj)->columns; tlist; tlist = tlist->next) {
+				if (((TableColumn*) tlist->data)->column_name && 
+				    !strcmp (((TableColumn*) tlist->data)->column_name, cname)) {
+					tcol = (TableColumn*) tlist->data;
+					if ((tcol->gtype != ptype) ||
+					    (tcol->pkey != pkey) ||
+					    (tcol->nullok != nullok) ||
+					    (tcol->autoinc != autoinc) ||
+					    (! tcol->column_type && ctype) ||
+					    (tcol->column_type && !ctype) ||
+					    (tcol->column_type && strcmp (tcol->column_type, (gchar *) ctype))) {
+						g_set_error (error, 0, 0,
+							     _("Column '%s' already exists and has different characteristics"), 
+							     tcol->column_name);
+						xmlFree (cname);
+						if (ctype)
+							xmlFree (ctype);
+						goto onerror;
+					}
+					break;
+				}
+			}
+			if (!tcol) {
+				tcol = g_new0 (TableColumn, 1);
+				TABLE_INFO (dbobj)->columns = g_slist_append (TABLE_INFO (dbobj)->columns, tcol);
+				tcol->column_name = g_strdup ((gchar *) cname);
+				tcol->column_type = ctype ? g_strdup ((gchar *) ctype) : NULL;
+				tcol->gtype = ptype;
+				tcol->pkey = pkey;
+				tcol->nullok = nullok;
+				tcol->autoinc = autoinc;
+			}
 
 			/* free mem */
 			xmlFree (cname);
@@ -3107,6 +3142,46 @@ gda_meta_store_set_attribute_value (GdaMetaStore *store, const gchar *att_name,
  *      with the GDA_META_STORE_SCHEMA_OBJECT_CONFLICT_ERROR error code</para></listitem>
  * </itemizedlist>
  *
+ * The @xml_description defines the table of view's definition, for example:
+ * <programlisting><![CDATA[<table name="mytable">
+    <column name="id" pkey="TRUE"/>
+    <column name="value"/>
+</table>]]></programlisting>
+ *
+ * The partial DTD for this XML description of the object to add is the following (the top node must be
+ * a &lt;table&gt; or a &lt;view&gt;):
+ * <programlisting><![CDATA[<!ELEMENT table (column*,check*,fkey*,unique*)>
+<!ATTLIST table
+          name NMTOKEN #REQUIRED>
+
+<!ELEMENT column EMPTY>
+<!ATTLIST column
+          name NMTOKEN #REQUIRED
+          type CDATA #IMPLIED
+          pkey (TRUE|FALSE) #IMPLIED
+          autoinc (TRUE|FALSE) #IMPLIED
+          nullok (TRUE|FALSE) #IMPLIED>
+
+<!ELEMENT check (#PCDATA)>
+
+<!ELEMENT fkey (part+)>
+<!ATTLIST fkey
+          ref_table NMTOKEN #REQUIRED>
+
+<!ELEMENT part EMPTY>
+<!ATTLIST part
+          column NMTOKEN #IMPLIED
+          ref_column NMTOKEN #IMPLIED>
+
+<!ELEMENT unique (column*)>
+
+<!ELEMENT view (definition)>
+<!ATTLIST view
+          name NMTOKEN #REQUIRED
+          descr CDATA #IMPLIED>
+
+<!ELEMENT definition (#PCDATA)>]]></programlisting>
+ *
  * Returns: TRUE if the new object has sucessfully been added
  */
 gboolean
@@ -3121,7 +3196,7 @@ gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_d
 	GdaMetaStruct *mstruct = NULL;
 	GError *lerror = NULL;
 
-	GSList *pre_p_db_objects;
+	GSList *pre_p_db_objects = NULL;
 
 	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
 	g_return_val_if_fail (xml_description && *xml_description, FALSE);
@@ -3154,7 +3229,7 @@ gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_d
 	/* keep a list of custom DB objects _before_ adding the new one(s) (more than
 	 * one if there are dependencies) */
 	pre_p_db_objects = g_slist_copy (store->priv->p_db_objects);
-
+	
 	/* create DbObject structure from XML description, stored in @store's custom db objects */
 	if (!strcmp ((gchar *) node->name, "table")) 
 		dbo = create_table_object (klass, store, node, error);
@@ -3167,7 +3242,7 @@ gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_d
 	doc = NULL;
 
 	/* check for an already existing database object with the same name */
-	g_print ("Obj name: %s\n", dbo->obj_name);
+	/*g_print ("Obj name: %s\n", dbo->obj_name);*/
 
 	/* make sure the private connection's meta store is up to date about the requested object */
 	switch (dbo->obj_type) {
@@ -3212,7 +3287,7 @@ gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_d
 	if (eobj) {
 		gboolean conflict = FALSE;
 
-		g_print ("Check Existing object's conformance...\n");
+		/*g_print ("Check Existing object's conformance...\n");*/
 		switch (eobj->obj_type) {
 		case GDA_META_DB_TABLE:
 			if (dbo->obj_type != GDA_SERVER_OPERATION_CREATE_TABLE)
@@ -3258,7 +3333,7 @@ gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_d
 			goto onerror;
 		
 		/* actually create the object in database */
-		g_print ("Creating object: %s\n", dbo->obj_name);
+		/*g_print ("Creating object: %s\n", dbo->obj_name);*/
 		if (dbo->create_op) {
 			if (!gda_server_provider_perform_operation (prov, store->priv->cnc, dbo->create_op, error))
 				goto onerror;

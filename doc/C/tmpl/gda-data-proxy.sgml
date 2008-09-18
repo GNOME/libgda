@@ -33,7 +33,74 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
 	</itemizedlist>
     </para></listitem>
   </itemizedlist>
+  This situation is illustrated in the following schema, where there is a direct mapping between the proxy's
+  rows and the proxied data model's rows:
+  <mediaobject>
+    <imageobject role="html">
+      <imagedata fileref="data_proxy1.png" format="PNG" contentwidth="170mm"/>
+    </imageobject>
+    <textobject>
+      <phrase>GdaDataProxy's values mapping regarding the proxied data model</phrase>
+    </textobject>
+  </mediaobject>
+
   Note that unless explicitely mentionned, the columns are read-only.
+</para>
+<para>
+  The following figures illustrate row mappings bewteen the data proxy and the proxied data model in 
+  several situations (which can be combined, but are shown alone for simplicity):
+  <itemizedlist>
+    <listitem><para>situation where rows 1 and 5 have been marked as deleted from the data proxy, using
+	<link linkend="gda-data-proxy-delete">gda_data_proxy_delete()</link> method, the data
+	proxy has 2 rows less than the proxied data model:
+	<mediaobject>
+	  <imageobject role="html">
+	    <imagedata fileref="data_proxy2.png" format="PNG" contentwidth="100mm"/>
+	  </imageobject>
+	  <textobject>
+	    <phrase>GdaDataProxy with 2 rows marked as deleted</phrase>
+	  </textobject>
+	</mediaobject>
+    </para></listitem>
+
+    <listitem><para>situation where the data proxy only shows a sample of the proxied data model
+	at any given time, using the 
+	<link linkend="gda-data-proxy-set-sample-size">gda_data_proxy_set_sample_size()</link> method
+	(the sample here is 4 rows wide, and starts at row 3):
+	<mediaobject>
+	  <imageobject role="html">
+	    <imagedata fileref="data_proxy3.png" format="PNG" contentwidth="100mm"/>
+	  </imageobject>
+	  <textobject>
+	    <phrase>GdaDataProxy with a sample size of 4</phrase>
+	  </textobject>
+	</mediaobject>
+    </para></listitem>
+
+    <listitem><para>situation where the data proxy shows a row of NULL values, using the
+	<link linkend="GdaDataproxy--prepend-null-entry">"prepend-null-entry"</link> property:
+	<mediaobject>
+	  <imageobject role="html">
+	    <imagedata fileref="data_proxy4.png" format="PNG" contentwidth="100mm"/>
+	  </imageobject>
+	  <textobject>
+	    <phrase>GdaDataProxy with an extra row of NULL values</phrase>
+	  </textobject>
+	</mediaobject>
+    </para></listitem>
+
+    <listitem><para>situation where a row has been added to the data proxy, using for example the
+	<link linkend="gda_data_model_append_row">gda_data_model_append_row()</link> method:
+	<mediaobject>
+	  <imageobject role="html">
+	    <imagedata fileref="data_proxy5.png" format="PNG" contentwidth="100mm"/>
+	  </imageobject>
+	  <textobject>
+	    <phrase>GdaDataProxy where a row has been added</phrase>
+	  </textobject>
+	</mediaobject>
+    </para></listitem>
+  </itemizedlist>
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

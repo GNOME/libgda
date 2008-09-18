@@ -96,9 +96,14 @@ MSAccess    | Provider for Microsoft Access files | DB_NAME,           |        
       </itemizedlist>
     </para>
     <para>
-      Connections to be opened can be specified on the command line using either defined data 
-      sources (the ones listed using the <option>-l</option> option), or using connection strings
-      which have the following format: "[&lt;provider&gt;://][&lt;username&gt;[:&lt;password&gt;]@]&lt;connection_params&gt;". Note that if provided, &lt;username&gt;, &lt;password&gt; and &lt;provider&gt; must be encoded as per RFC 1738.
+      Connections to be opened can be specified on the command line using either:
+      <itemizedlist>
+	<listitem><para>defined data sources (the ones listed using the <option>-l</option> option)</para></listitem>
+	<listitem><para>connection strings which have the following format: 
+	    "[&lt;provider&gt;://][&lt;username&gt;[:&lt;password&gt;]@]&lt;connection_params&gt;". 
+	    Note that if provided, &lt;username&gt;, &lt;password&gt; and &lt;provider&gt; must be encoded as per RFC 1738</para></listitem>
+	<listitem><para>for SQLite and MS Access files: the file name</para></listitem>
+      </itemizedlist>
     </para>
     <para>
       Connections can also be opened while the tool is running using the <command>.c</command> 
@@ -108,7 +113,8 @@ MSAccess    | Provider for Microsoft Access files | DB_NAME,           |        
       Examples:
       <programlisting>
 [prompt]> gda-sql-4.0 Sales
-[prompt]> gda-sql-4.0 Postgresql://username@DB_NAME=mydb SQLite://DB_NAME=fspot Sales	
+[prompt]> gda-sql-4.0 Postgresql://username@DB_NAME=mydb SQLite://DB_NAME=fspot Sales
+[prompt]> gda-sql-4.0 path/to/dbfile.db
       </programlisting>
     </para>
   </sect1>
@@ -118,15 +124,197 @@ MSAccess    | Provider for Microsoft Access files | DB_NAME,           |        
 <chapter id="gda-sql-manual-open">
   <title>Connections management</title>
   <para>
-    Blah.
+    The console tool is able to handle several connections at the same time, they can dynamically be opened and
+    closed during a session. The current connection in use is indicated by the prompt.
+    Use the <command>.c</command> command to open a connection with the connection name (the name by which
+    the connection is identified within the tool) and a connection string; for example:
+    <programlisting>
+gda> .c cnc1 SalesTest
+cnc1>
+    </programlisting>
+  </para>
+  <para>
+    The list of connection can be listed using the same <command>.c</command> command without any argument, for example:
+    <programlisting>
+ia32> .c
+          List of opened connections
+Name | Provider | DSN or connection string | Username
+-----+----------+--------------------------+---------
+cnc1 | SQLite   | SalesTest                |         
+ia32 | SQLite   | IA32Instructions         |         
+(2 rows)
+
+ia32>
+    </programlisting>
+  </para>
+  <para>
+    To switch from one connection to the other, use the <command>.c</command> command with the connection name to use
+    as single argument, for example to switch from using the "ia32" to the "cnc1" connection: 
+    <programlisting>
+ia32> .c cnc1
+cnc1>
+    </programlisting>
   </para>
 
   <sect1>
-    <title>Connection string's format</title>
-  </sect1>
-
-  <sect1>
     <title>Meta data</title>
+    <para>
+      When a connection is opened for the first time, the tool get all the possible meta data associated to that connection (list of
+      tables, table's columns and their constraints, views, etc). The meta data are refered to when the user wants for example
+      to list a table's attributes, or for command line completion.
+    </para>
+    <para>
+      If some modifications to the database structure have been made (either from the SQL console or from another tool), then
+      the meta data must be updated using the <command>.meta</command> command, which does not output anything unless an error
+      occurred.
+    </para>
+    <para>
+      As the meta data are also stored in a database, the console tool allows one to directly execute SQL commands in the
+      meta data database associated to a connection. The meta data connection associated to a connection is by convention named
+      as the tilde character concatenated with the connection name (for example if the connection is named "cnc1", then the connection
+      to its meta data will be named "~cnc1"). To open a meta data connection, make sure the current connection is the one for which
+      you want to access the meta data, and then use the <command>.c ~</command> command:
+      <programlisting>
+cnc1> .c ~
+Getting database schema information, this may take some time... Done.
+~cnc1> .dt
+                           List of tables
+Schema | Name                             | Type       | Owner | Description
+-------+----------------------------------+------------+-------+------------
+main   | _attributes                      | BASE TABLE |       |            
+main   | _builtin_data_types              | BASE TABLE |       |            
+main   | _character_sets                  | BASE TABLE |       |            
+main   | _check_column_usage              | BASE TABLE |       |            
+main   | _collations                      | BASE TABLE |       |            
+main   | _columns                         | BASE TABLE |       |            
+main   | _domain_constraints              | BASE TABLE |       |            
+main   | _domains                         | BASE TABLE |       |            
+main   | _element_types                   | BASE TABLE |       |            
+main   | _enums                           | BASE TABLE |       |            
+main   | _information_schema_catalog_name | BASE TABLE |       |            
+main   | _key_column_usage                | BASE TABLE |       |            
+main   | _parameters                      | BASE TABLE |       |            
+main   | _referential_constraints         | BASE TABLE |       |            
+main   | _routine_columns                 | BASE TABLE |       |            
+main   | _routines                        | BASE TABLE |       |            
+main   | _schemata                        | BASE TABLE |       |            
+main   | _table_constraints               | BASE TABLE |       |            
+main   | _tables                          | BASE TABLE |       |            
+main   | _triggers                        | BASE TABLE |       |            
+main   | _udt                             | BASE TABLE |       |            
+main   | _udt_columns                     | BASE TABLE |       |            
+main   | _view_column_usage               | BASE TABLE |       |            
+main   | _views                           | BASE TABLE |       |            
+main   | gda_sql_query_buffers            | BASE TABLE |       |            
+(25 rows)
+
+~cnc1> SELECT table_name FROM _tables;
+table_name     
+---------------
+customers      
+locations      
+orders         
+order_contents 
+roles          
+salesrep       
+sales_orga     
+warehouses     
+categories     
+products       
+products_copied
+(11 rows)
+
+~cnc1>
+      </programlisting>
+    </para>
+    
+    <sect2>
+      <title>Information about tables</title>
+      <para>
+	Use the <command>.dt</command> command to list all the tables (or list only one table if the table name is specified as
+	an argument to the command):
+	<programlisting>
+cnc1> .dt
+                  List of tables
+Schema | Name            | Type       | Owner | Description
+-------+-----------------+------------+-------+------------
+main   | categories      | BASE TABLE |       |            
+main   | customers       | BASE TABLE |       |            
+main   | locations       | BASE TABLE |       |            
+main   | order_contents  | BASE TABLE |       |            
+main   | orders          | BASE TABLE |       |            
+main   | products        | BASE TABLE |       |            
+main   | products_copied | BASE TABLE |       |            
+main   | roles           | BASE TABLE |       |            
+main   | sales_orga      | BASE TABLE |       |            
+main   | salesrep        | BASE TABLE |       |            
+main   | warehouses      | BASE TABLE |       |            
+(11 rows)
+
+cnc1> .dt customers
+               List of tables
+Schema | Name      | Type       | Owner | Description
+-------+-----------+------------+-------+------------
+main   | customers | BASE TABLE |       |            
+(1 row)
+
+cnc1>
+	</programlisting>
+      </para>
+      <para>
+	To display the details about a single table, use the <command>.d &lt;table_name&gt;</command> command:
+	<programlisting>
+cnc1> .d customers
+          List of columns for table 'customers'
+Column            | Type    | Nullable | Default | Extra         
+------------------+---------+----------+---------+---------------
+id                | integer | no       |         | Auto increment
+name              | string  | no       | ''      |               
+default_served_by | integer | yes      |         |               
+country           | string  | yes      |         |               
+city              | string  | yes      |         |               
+(5 rows)
+
+Primary key 'primary_key' (id)
+Foreign key 'fk_locations' (country, city) references  main.locations (country, city)
+Foreign key 'fk_salesrep' (default_served_by) references  main.salesrep (default_served_by)
+cnc1>
+	</programlisting>
+      </para>
+
+      <para>
+	Finally, the <command>.graph [TABLE1 [TABLE2...]]</command> will create a graph of all the tables (or
+	only the tables mentionned as arguments). The graph creates a <application>GraphViz</application> file
+	named "graph.dot" which can then be processed with the GraphViz'<command>dot</command> command to
+	produce an image or a PDF file for example.
+      </para>
+      <para>
+	If the <envar>GDA_SQL_VIEWER_PNG</envar> or <envar>GDA_SQL_VIEWER_PDF</envar> environment variables are set
+	(for example to <application>eog</application> or <application>evince</application>) and if the <command>dot</command> command
+	is installed, then the console tool will perform the transformation and display the graph (if under a graphical session).
+	The following figure shows an example of graph:
+	<mediaobject>
+          <imageobject role="html">
+            <imagedata fileref="gda-sql-graph.png" format="PNG" contentwidth="140mm"/>
+          </imageobject>
+          <textobject>
+            <phrase>Sample output from the ".graph" command</phrase>
+          </textobject>
+	</mediaobject>
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>Information about views</title>
+      <para>
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>Information about other objects</title>
+      <para>
+      </para>
+    </sect2>
   </sect1>
 
 </chapter>

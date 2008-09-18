@@ -78,6 +78,7 @@ gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 		/* manually defined fields */
 		first = TRUE;
 		for (i = 0; i < nrows; i++) {
+			gboolean pkautoinc = FALSE;
 			hasfields = TRUE;
 			if (first) 
 				first = FALSE;
@@ -88,84 +89,101 @@ gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 			g_string_append (string, g_value_get_string (value));
 			g_string_append_c (string, ' ');
 				
-			value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_TYPE/%d", i);
-			g_string_append (string, g_value_get_string (value));
-				
-			value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_SIZE/%d", i);
-			if (value && G_VALUE_HOLDS (value, G_TYPE_UINT)) {
-				g_string_append_printf (string, "(%d", g_value_get_uint (value));
-
-				value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_SCALE/%d", i);
-				if (value && G_VALUE_HOLDS (value, G_TYPE_UINT))
-					g_string_append_printf (string, ",%d)", g_value_get_uint (value));
-				else
-					g_string_append (string, ")");
-			}
-
-			value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_DEFAULT/%d", i);
-			if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
-				const gchar *str = g_value_get_string (value);
-				if (str && *str) {
-					g_string_append (string, " DEFAULT ");
-					g_string_append (string, str);
-				}
-			}
-				
-			value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_NNUL/%d", i);
-			if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
-				g_string_append (string, " NOT NULL");
-
-			value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_UNIQUE/%d", i);
-			if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
-				g_string_append (string, " UNIQUE");
-				
 			if (nbpkfields == 1) {
-				value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_PKEY/%d", i);
+				value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_AUTOINC/%d", i);
 				if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value)) {
-					g_string_append (string, " PRIMARY KEY");
-					
-					value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_CONFLICT/%d", i);
-					if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
-						const gchar *str = g_value_get_string (value);
-						if (str && *str) {
-							g_string_append (string, " ON CONFLICT ");
-							g_string_append (string, str);
-						}
-						
-					} 
-					value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_AUTOINC/%d", i);
-					if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
-						g_string_append (string, " AUTOINCREMENT");
+					const gchar *tmp;
+					value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_TYPE/%d", i);
+					tmp = g_value_get_string (value);
+					if (!g_ascii_strcasecmp (tmp, "gint") ||
+					    !g_ascii_strcasecmp (tmp, "int")) {
+						g_string_append (string, "INTEGER PRIMARY KEY AUTOINCREMENT");
+						pkautoinc = TRUE;
+					}
 				}
+			}
 
-			}
-			else {
-				if (!conflict_algo) {
-					value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_CONFLICT/%d", i);
-					if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
-						const gchar *str = g_value_get_string (value);
-						if (str && *str) 
-							conflict_algo = g_strdup (str);
-					} 
-				}
-			}
+			if (!pkautoinc) {
+				value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_TYPE/%d", i);
+				g_string_append (string, g_value_get_string (value));
 				
-			value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_CHECK/%d", i);
-			if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
-				const gchar *str = g_value_get_string (value);
-				if (str && *str) {
-					g_string_append (string, " CHECK (");
-					g_string_append (string, str);
-					g_string_append_c (string, ')');
+				value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_SIZE/%d", i);
+				if (value && G_VALUE_HOLDS (value, G_TYPE_UINT)) {
+					g_string_append_printf (string, "(%d", g_value_get_uint (value));
+					
+					value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_SCALE/%d", i);
+					if (value && G_VALUE_HOLDS (value, G_TYPE_UINT))
+						g_string_append_printf (string, ",%d)", g_value_get_uint (value));
+					else
+						g_string_append (string, ")");
 				}
-			}
+				
+				value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_DEFAULT/%d", i);
+				if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
+					const gchar *str = g_value_get_string (value);
+					if (str && *str) {
+						g_string_append (string, " DEFAULT ");
+						g_string_append (string, str);
+					}
+				}
+				
+				value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_NNUL/%d", i);
+				if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
+					g_string_append (string, " NOT NULL");
+				
+				value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_UNIQUE/%d", i);
+				if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
+					g_string_append (string, " UNIQUE");
 
-			value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_COLLATE/%d", i);
-			if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
-				const gchar *str = g_value_get_string (value);
-				if (str && *str) {
-					g_string_append (string, " COLLATE ");
-					g_string_append (string, str);
+				if (nbpkfields == 1) {
+					value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_PKEY/%d", i);
+					if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value)) {
+						g_string_append (string, " PRIMARY KEY");
+						
+						value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_CONFLICT/%d", i);
+						if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
+							const gchar *str = g_value_get_string (value);
+							if (str && *str) {
+								g_string_append (string, " ON CONFLICT ");
+								g_string_append (string, str);
+							}
+							
+						} 
+						value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_AUTOINC/%d", i);
+						if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value)) {
+							g_string_append (string, " AUTOINCREMENT");
+						}
+					}
+					
+				}
+				else {
+					if (!conflict_algo) {
+						value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_CONFLICT/%d", i);
+						if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
+							const gchar *str = g_value_get_string (value);
+							if (str && *str) 
+								conflict_algo = g_strdup (str);
+						} 
+					}
+				}
+				
+				value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_CHECK/%d", i);
+				if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
+					const gchar *str = g_value_get_string (value);
+					if (str && *str) {
+						g_string_append (string, " CHECK (");
+						g_string_append (string, str);
+						g_string_append_c (string, ')');
+					}
+				}
+				
+				value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_COLLATE/%d", i);
+				if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
+					const gchar *str = g_value_get_string (value);
+					if (str && *str) {
+						g_string_append (string, " COLLATE ");
+						g_string_append (string, str);
+					}
 				}
 			}
 		}

@@ -30,6 +30,7 @@
 #include <libgda/gda-data-model-extra.h>
 #include <libgda/gda-data-model-iter.h>
 #include <libgda/gda-data-model-import.h>
+#include <libgda/gda-data-access-wrapper.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-util.h>
 #include <libgda/gda-row.h>
@@ -2065,7 +2066,18 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 	g_string_append_c (string, '\n');
 
 	/* ... and data */
-	if (allok && gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM) {
+	GdaDataModel *ramodel;
+	if (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM)
+		ramodel = g_object_ref (model);
+	else {
+		if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD)) {
+			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
+				     _("Data model does not support backward cursor move, not displaying data"));
+			allok = FALSE;
+		}
+		ramodel = gda_data_access_wrapper_new (model);
+	}
+	if (allok) {
 		for (j = 0; j < n_rows; j++) {
 			/* determine height for each column in that row */
 			gint *cols_height = g_new (gint, n_cols + col_offset);
@@ -2081,7 +2093,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 
 			for (i = 0; i < n_cols; i++) {
 				if (!dump_attributes) {
-					value = gda_data_model_get_value_at (model, i, j, error);
+					value = gda_data_model_get_value_at (ramodel, i, j, error);
 					if (!value) {
 						allok = FALSE;
 						break;
@@ -2096,7 +2108,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 				}
 				else {
 					GdaValueAttribute attrs;
-					attrs = gda_data_model_get_attributes_at (model, i, j);
+					attrs = gda_data_model_get_attributes_at (ramodel, i, j);
 					str = g_strdup_printf ("%u", attrs);
 				}
 				if (str) {
@@ -2182,9 +2194,8 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 		}
 		g_string_append_printf (string, ngettext("(%d row)\n", "(%d rows)\n", n_rows), n_rows);
 	}
-	else 
-		g_string_append (string, _("Model does not support random access, not showing data\n"));
 
+	g_object_unref (ramodel);
 	g_free (cols_size);
 	g_free (cols_is_num);
 
