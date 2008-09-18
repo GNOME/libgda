@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-16 16:49+0200\n"
-"PO-Revision-Date: 2008-08-30 13:28+0200\n"
+"POT-Creation-Date: 2008-09-18 17:06+0200\n"
+"PO-Revision-Date: 2008-09-18 17:22+0200\n"
 "Last-Translator: Iñaki Larrañaga Murgoitio <dooteo@euskalgnu.org>\n"
 "Language-Team: Basque <itzulpena@euskalgnu.org>\n"
 "MIME-Version: 1.0\n"
@@ -44,8 +44,7 @@ msgstr "Errorea erabiltzailearen '%s' konfigurazio-direktorio zehatza sortzean"
 
 #: ../libgda/gda-config.c:480
 #, c-format
-msgid ""
-"User specific configuration directory '%s' exists and is not a directory"
+msgid "User specific configuration directory '%s' exists and is not a directory"
 msgstr ""
 "Erabiltzailearen '%s' konfigurazio-direktorio zehatza badago lehendik ere, "
 "eta ez da direktorio bat"
@@ -162,12 +161,12 @@ msgstr ""
 #: ../libgda/gda-connection.c:471
 #, c-format
 msgid "Could not set the '%s' property when the connection is opened"
-msgstr ""
+msgstr "Ezin izan da '%s' propietatea ezarri konexioa ireki denean"
 
 #: ../libgda/gda-connection.c:405
-#, fuzzy, c-format
+#, c-format
 msgid "No DSN named '%s' defined"
-msgstr "Ez dago '%s' izeneko parametrorik definituta"
+msgstr "Ez dago '%s' DSN izenekorik definituta"
 
 #: ../libgda/gda-connection.c:572
 #, c-format
@@ -210,8 +209,7 @@ msgstr "Hornitzaileak ez du hari hau erabiltzea uzten"
 msgid ""
 "Internal error: provider does not implement the open_connection() virtual "
 "method"
-msgstr ""
-"Barneko errorea: hornitzaileak ez du open_connection() metodo birtuala garatu"
+msgstr "Barneko errorea: hornitzaileak ez du open_connection() metodo birtuala garatu"
 
 #: ../libgda/gda-connection.c:1447
 #, c-format
@@ -277,14 +275,14 @@ msgid "Column %d out of range (0-%d)"
 msgstr "%d. zutabea barrutitik kanpo (0 - %d)"
 
 #: ../libgda/gda-data-access-wrapper.c:495
-#, fuzzy, c-format
+#, c-format
 msgid "Can't set iterator's position"
-msgstr "Ezin da transakzioa hasi"
+msgstr "Ezin da iteratzailearen posizioa ezarri"
 
 #: ../libgda/gda-data-access-wrapper.c:523
-#, fuzzy, c-format
+#, c-format
 msgid "Can't access data"
-msgstr "Ezin da daturik irakurri"
+msgstr "Ezin da daturik atzitu"
 
 #: ../libgda/gda-data-comparator.c:160
 msgid "Old data model"
@@ -344,9 +342,9 @@ msgid "No row in data model"
 msgstr "Ez dago errenkadarik datu-ereduan"
 
 #: ../libgda/gda-data-model-array.c:549
-#, fuzzy, c-format
+#, c-format
 msgid "Data model has no data"
-msgstr "Datu-eredua"
+msgstr "Datu-ereduak ez du daturik"
 
 #: ../libgda/gda-data-model-array.c:604 ../libgda/gda-data-model-array.c:644
 #: ../libgda/gda-data-model-array.c:683 ../libgda/gda-data-model-array.c:718
@@ -367,10 +365,8 @@ msgstr "Ez da errenkada datu-ereduan aurkitu"
 #: ../libgda/gda-data-model-bdb.c:647 ../libgda/gda-data-model-bdb.c:680
 #: ../libgda/gda-data-model-bdb.c:784 ../libgda/gda-data-model-bdb.c:872
 #, c-format
-msgid ""
-"Custom BDB model implementation is not complete: the '%s' method is missing"
-msgstr ""
-"BDB eredu pertsonalizatua erabat garatu gabe dago:  '%s' metodoa falta da."
+msgid "Custom BDB model implementation is not complete: the '%s' method is missing"
+msgstr "BDB eredu pertsonalizatua erabat garatu gabe dago:  '%s' metodoa falta da."
 
 #: ../libgda/gda-data-model-bdb.c:811 ../libgda/gda-data-model-bdb.c:897
 #, c-format
@@ -383,24 +379,24 @@ msgid "Key modification is not supported"
 msgstr "Gakoak aldatzea ez dago onartuta"
 
 #: ../libgda/gda-data-model.c:568
-#, fuzzy, c-format
+#, c-format
 msgid "Data model does not support getting individual value"
-msgstr "Datu-ereduak ez du ausazko atzipena onartzen"
+msgstr "Datu-ereduak ez du banakako balioak eskuratzea onartzen"
 
 #: ../libgda/gda-data-model.c:604 ../libgda/gda-data-model.c:613
 #, c-format
 msgid "Data model returned value of invalid '%s' type"
-msgstr ""
+msgstr "Datu-ereduak '%s' mota baliogabeko balioa itzuli du"
 
 #: ../libgda/gda-data-model.c:610
 #, c-format
 msgid "Data model returned invalid NULL value"
-msgstr ""
+msgstr "Datu-eremuak baliogabeko NULL balioa itzuli du"
 
 #: ../libgda/gda-data-model.c:666
-#, fuzzy, c-format
+#, c-format
 msgid "Data model does not support setting individual value"
-msgstr "Datu-ereduak ez du ausazko atzipena onartzen"
+msgstr "Datu-ereduak ez du banakako balioa ezartzea onartzen"
 
 #: ../libgda/gda-data-model.c:768
 #, c-format
@@ -442,8 +438,7 @@ msgstr ""
 #: ../libgda/gda-data-model.c:1359
 #, c-format
 msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
-msgstr ""
-"Ezin da datu motaren zutabea lortu (mota EZEZAGUNA da edo ez da zehaztu)"
+msgstr "Ezin da datu motaren zutabea lortu (mota EZEZAGUNA da edo ez da zehaztu)"
 
 #: ../libgda/gda-data-model.c:1441
 #, c-format
@@ -484,9 +479,9 @@ msgid "Can't transform '%s' from GDA type %s to GDA type %s"
 msgstr "Ezin da '%s' bihurtu %s GDA motatik %s GDA motara"
 
 #: ../libgda/gda-data-model.c:1826
-#, fuzzy, c-format
+#, c-format
 msgid "Could not dump data model's attributes: %s"
-msgstr "Ezin izan da BDB datu eredua gehitu konexioari: %s"
+msgstr "Ezin izan da datu-ereduaren atributuak irauli: %s"
 
 #: ../libgda/gda-data-model.c:1827 ../libgda/gda-data-model.c:1835
 #: ../libgda/gda-data-model-dir.c:386 ../libgda/gda-data-model-import.c:1581
@@ -509,9 +504,9 @@ msgid "No detail"
 msgstr "Xehetasunik ez"
 
 #: ../libgda/gda-data-model.c:1834
-#, fuzzy, c-format
+#, c-format
 msgid "Could not dump data model's contents: %s"
-msgstr "Ezin izan da BDB datu eredua gehitu konexioari: %s"
+msgstr "Ezin izan da datu-ereduaren edukia irauli: %s"
 
 #: ../libgda/gda-data-model.c:2183
 #, c-format
@@ -525,9 +520,9 @@ msgid "Model does not support random access, not showing data\n"
 msgstr "Ereduak ez du ausazko sarbidetza onartzen, ez da daturik erakutsiko.\n"
 
 #: ../libgda/gda-data-model-dir.c:872
-#, fuzzy, c-format
+#, c-format
 msgid "Row not found"
-msgstr "%d. errenkada ez da aurkitu"
+msgstr "Errenkada ez da aurkitu"
 
 #: ../libgda/gda-data-model-dir.c:994 ../libgda/gda-data-model-dir.c:996
 #, c-format
@@ -717,14 +712,14 @@ msgstr "%d. lerroko errenkadak ez du nahikoa balio (ez ikusi egiten zaienak)"
 
 #: ../libgda/gda-data-model-import.c:1863
 #: ../libgda/gda-data-model-import.c:1936
-#, fuzzy, c-format
+#, c-format
 msgid "Could not set iterator's value: %s"
-msgstr "Ezin izan da '%s' parametroa '%s' balioarekin ezarri"
+msgstr "Ezin izan da iteratzailearen balioa ezarri: %s"
 
 #: ../libgda/gda-data-model-iter.c:251 ../libgda/gda-data-model-iter.c:258
 #, c-format
 msgid "GdaDataModel refused value change"
-msgstr ""
+msgstr "GdaDataModel-ek ukatu egin du balio aldaketa"
 
 #: ../libgda/gda-data-model-query.c:477
 #: ../libgda-report/engine/gda-report-engine.c:584
@@ -748,8 +743,7 @@ msgstr "GdaDataProxy ezin du kudeatu datu-ereduen ausazko sarbideak ez direnak"
 
 #: ../libgda/gda-data-proxy.c:1402 ../libgda/gda-data-proxy.c:3643
 #, c-format
-msgid ""
-"The first row is an empty row artificially prepended and cannot be removed"
+msgid "The first row is an empty row artificially prepended and cannot be removed"
 msgstr ""
 "Aurreneko errenkada artifizialki hasieran jarritako errenkada hutsa da eta "
 "ezin da kendu"
@@ -788,8 +782,7 @@ msgstr "Iragazkiaren adierazpena ez da zuzena"
 
 #: ../libgda/gda-data-proxy.c:3422
 #, c-format
-msgid ""
-"The first row is an empty row artificially prepended and cannot be altered"
+msgid "The first row is an empty row artificially prepended and cannot be altered"
 msgstr ""
 "Aurreneko errenkada artifizialki hasieran jarritako errenkada hutsa da eta "
 "ezin da aldatu"
@@ -821,8 +814,7 @@ msgstr "Barneko errorea: \"prepared-stmt\" propietatea ez da ezarri"
 #: ../libgda/gda-data-select.c:820 ../libgda/gda-data-select.c:2032
 #, c-format
 msgid "Internal error: can't get the prepared statement's actual statement"
-msgstr ""
-"Barneko errorea: ezin da prestatutako instrukzioaren uneko instrukzioa lortu"
+msgstr "Barneko errorea: ezin da prestatutako instrukzioaren uneko instrukzioa lortu"
 
 #: ../libgda/gda-data-select.c:826
 #, c-format
@@ -864,8 +856,7 @@ msgstr ""
 #: ../libgda/gda-data-select.c:1051
 #, c-format
 msgid "Modification statement must be an INSERT, UPDATE or DELETE statement"
-msgstr ""
-"Eraldatzeko instrukzioa INSERT, UPDATE edo DELETE instrukzioa izan behar du"
+msgstr "Eraldatzeko instrukzioa INSERT, UPDATE edo DELETE instrukzioa izan behar du"
 
 #: ../libgda/gda-data-select.c:1097 ../libgda/gda-data-select.c:1303
 #, c-format
@@ -897,9 +888,9 @@ msgstr "SELECT instrukzioak taula bat baino gehiago dauka hautapena egiteko"
 #: ../libgda/gda-data-select.c:1488 ../libgda/gda-data-select.c:2165
 #: ../libgda/gda-data-select.c:2332 ../libgda/gda-data-select.c:2473
 #: ../libgda/gda-data-select.c:2560 ../libgda/gda-data-select.c:2743
-#, fuzzy, c-format
+#, c-format
 msgid "Data model does only support random access"
-msgstr "Datu-ereduak ez du ausazko atzipena onartzen"
+msgstr "Datu-ereduak ausazko atzipena soilik onartzen du"
 
 #: ../libgda/gda-data-select.c:1517 ../libgda/gda-data-select.c:1526
 #: ../libgda/gda-data-select.c:1534 ../libgda/gda-data-select.c:1556
@@ -908,6 +899,8 @@ msgid ""
 "Unable to retreive data after modifications, no further modification will be "
 "allowed"
 msgstr ""
+"Ezin da daturik eskuratu aldaketen ondoren, ez dira aldaketa gehiago "
+"onartuko"
 
 #: ../libgda/gda-data-select.c:1879 ../libgda/gda-data-select.c:1972
 #, c-format
@@ -922,15 +915,14 @@ msgstr "Ezin da biderik identifikatu errenkada bat soilik lortzeko"
 #: ../libgda/gda-data-select.c:2079
 #, c-format
 msgid "Can only operate on non compound SELECT statements"
-msgstr ""
-"Konposatuak ez diren SELECT instrukzioetan soilik landu daiteke eragiketa"
+msgstr "Konposatuak ez diren SELECT instrukzioetan soilik landu daiteke eragiketa"
 
 #: ../libgda/gda-data-select.c:2160 ../libgda/gda-data-select.c:2327
 #: ../libgda/gda-data-select.c:2393 ../libgda/gda-data-select.c:2468
 #: ../libgda/gda-data-select.c:2555 ../libgda/gda-data-select.c:2738
-#, fuzzy, c-format
+#, c-format
 msgid "Modifications are not allowed anymore"
-msgstr "Aldaketak bertan behera utzita"
+msgstr "Aldaketak ez dira gehiago onartuko"
 
 #: ../libgda/gda-data-select.c:2170 ../libgda/gda-data-select.c:2337
 #: ../libgda/gda-data-select.c:2398 ../libgda/gda-data-select.c:2478
@@ -939,9 +931,9 @@ msgid "No UPDATE statement provided"
 msgstr "Ez da UPDATE instrukziorik eman"
 
 #: ../libgda/gda-data-select.c:2210
-#, fuzzy, c-format
+#, c-format
 msgid "Could not get iterator's value"
-msgstr "Ezin izan da '%s' parametroa '%s' balioarekin ezarri"
+msgstr "Ezin izan da iteratzailearen balioa lortu"
 
 #: ../libgda/gda-data-select.c:2363 ../libgda/gda-data-select.c:2424
 #: ../libgda/gda-data-select.c:2527 ../libgda/gda-data-select.c:2630
@@ -994,29 +986,29 @@ msgstr "Datu-basearen zerbitzariak ez du CREATE TABLE eragiketa onartzen"
 #: ../libgda/gda-holder.c:439 ../libgda/gda-set.c:472
 #, c-format
 msgid "Unable to set holder's value: %s"
-msgstr ""
+msgstr "Ezin da edukitzailearen balioa ezarri: %s"
 
 #: ../libgda/gda-holder.c:807
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to convert string to '%s' type"
-msgstr "Ezin izan da '%s' katea '%s' baliora bihurtu"
+msgstr "Ezin da katea '%s' motara bihurtu"
 
 #: ../libgda/gda-holder.c:876
-#, fuzzy, c-format
+#, c-format
 msgid "Holder does not allow NULL values"
-msgstr "Ereduak ez du errenkada ezabatzea uzten"
+msgstr "Edukitzaileak ez ditu NULL balioak onartzen"
 
 #: ../libgda/gda-holder.c:882
-#, fuzzy, c-format
+#, c-format
 msgid "Wrong value type: expected type '%s' when value's type is '%s'"
 msgstr ""
-"'%s'(r)en okerrreko parametro mota: '%s' mota espero zen, baina '%s' "
+"Okerrreko balio mota: '%s' mota espero zen, baina '%s' "
 "eskuratu da"
 
 #: ../libgda/gda-holder.c:1280
 #, c-format
 msgid "Cannot bind holders if their type is not the same"
-msgstr ""
+msgstr "Ezin dira edukitzaileak bateratu ez badira mota berdinekoak"
 
 #: ../libgda/gda-init.c:58
 msgid "Ignoring attempt to re-initialize GDA library."
@@ -1062,8 +1054,7 @@ msgstr "Eskema (datu-baseko objektuak bertan sortzeko)"
 
 #: ../libgda/gda-meta-store.c:527
 msgid "Catalog specified but no schema specified, store will not be useable"
-msgstr ""
-"Katalogoa zehaztu da, baina ez eskema. Biltegia ez da erabilgarri egongo"
+msgstr "Katalogoa zehaztu da, baina ez eskema. Biltegia ez da erabilgarri egongo"
 
 #: ../libgda/gda-meta-store.c:789
 #, c-format
@@ -1083,14 +1074,12 @@ msgstr "<view> nodoan ikuspegiaren definizioa falta da"
 #: ../libgda/gda-meta-store.c:1147
 #, c-format
 msgid "View definition contains more than one statement (for view '%s')"
-msgstr ""
-"Ikuspegiaren definizioak instrukzio bat baino gehiago ditu ('%s' ikuspegian)"
+msgstr "Ikuspegiaren definizioak instrukzio bat baino gehiago ditu ('%s' ikuspegian)"
 
 #: ../libgda/gda-meta-store.c:1174
 #, c-format
 msgid "View definition is not a selection statement (for view '%s')"
-msgstr ""
-"Ikuspegiaren definizioa ez da hautapen-instrukzio bat ('%s' ikuspegian)"
+msgstr "Ikuspegiaren definizioa ez da hautapen-instrukzio bat ('%s' ikuspegian)"
 
 #. FIXME
 #: ../libgda/gda-meta-store.c:1199 ../libgda/gda-meta-struct-io.c:174
@@ -1101,8 +1090,7 @@ msgstr "<table> nodoan taularen izena falta da"
 #: ../libgda/gda-meta-store.c:1405
 #, c-format
 msgid "Missing foreign key's referenced table name (for table '%s')"
-msgstr ""
-"Kanpoko gakoaren erreferentziatutako taularen izena falta da ('%s' taulan)"
+msgstr "Kanpoko gakoaren erreferentziatutako taularen izena falta da ('%s' taulan)"
 
 #: ../libgda/gda-meta-store.c:1458
 #, c-format
@@ -1191,8 +1179,7 @@ msgstr[1] "'%s' atributuak %d balio ditu"
 #: ../libgda/gda-meta-store.c:3042
 #, c-format
 msgid "Attributes names starting with a '_' are reserved for internal usage"
-msgstr ""
-"'_'-rekin hasten diren atributuen izenak barneko erabilerarako gordeta daude"
+msgstr "'_'-rekin hasten diren atributuen izenak barneko erabilerarako gordeta daude"
 
 #: ../libgda/gda-meta-store.c:3065
 msgid ""
@@ -1361,9 +1348,9 @@ msgid "GdaServerOperation: could not load file '%s'"
 msgstr "GdaServerOperation: ezin izan da '%s' fitxategia kargatu"
 
 #: ../libgda/gda-server-operation.c:646
-#, fuzzy, c-format
+#, c-format
 msgid "Could not load XML specifications: %s"
-msgstr "Ezin izan da '%s' fitxategia kargatu"
+msgstr "Ezin izan da XML zehaztapenak kargatu: %s"
 
 #: ../libgda/gda-server-operation.c:1146
 msgid ""
@@ -1380,8 +1367,7 @@ msgstr "<%s> etiketa espero zen, baina <%s> lortu da"
 
 #: ../libgda/gda-server-operation.c:1375 ../libgda/gda-server-operation.c:1994
 #, c-format
-msgid ""
-"Parameterlist values can only be set for individual parameters within it"
+msgid "Parameterlist values can only be set for individual parameters within it"
 msgstr ""
 "Parametroen zerrendako balioak bertako parametro bakoitzari ezar daiteke "
 "soilik"
@@ -1399,8 +1385,7 @@ msgstr "'%s'(r)en beharrezko atributua falta da"
 #: ../libgda/gda-server-provider.c:479
 #, c-format
 msgid "Provider %s created a GdaServerOperation without node for '%s'"
-msgstr ""
-"'%2$s'(r)en %1$s hornitzaileak GdaServerOperation sortu du nodorik gabe"
+msgstr "'%2$s'(r)en %1$s hornitzaileak GdaServerOperation sortu du nodorik gabe"
 
 #: ../libgda/gda-server-provider.c:483
 #, c-format
@@ -1688,9 +1673,9 @@ msgid "Data model for schema has a wrong gda type: %s instead of %s"
 msgstr "Eskemako datu-ereduak okerreko gda mota du: '%s' '%s'(r)en ordez"
 
 #: ../libgda/gda-set.c:464 ../libgda/gda-set.c:563
-#, fuzzy, c-format
+#, c-format
 msgid "%s() does not handle values of type '%s'."
-msgstr "%s()-ek ez du %s motako baliorik kudeatzen. Balioa ez da esleitu."
+msgstr "%s()-ek ez du '%s' motako baliorik kudeatzen."
 
 #: ../libgda/gda-set.c:519
 #, c-format
@@ -1714,7 +1699,7 @@ msgstr "GdaHolder-ek ID bat eduki behar du"
 #: ../libgda/gda-set.c:1449
 #, c-format
 msgid "One or more values are invalid"
-msgstr ""
+msgstr "Balio bat edo gehiago baliogabeak dira"
 
 #: ../libgda/gda-statement.c:482
 #, c-format
@@ -1811,8 +1796,7 @@ msgstr "Transakzio globalaren IDak ezin ditu 64 byte baino gehiago eduki"
 #: ../libgda/gda-xa-transaction.c:295
 #, c-format
 msgid "Connection aleardy registered with another GdaXaTransaction object"
-msgstr ""
-"Konexioa jadanik erregistratuta dago beste GdaXaTransaction objektu batekin"
+msgstr "Konexioa jadanik erregistratuta dago beste GdaXaTransaction objektu batekin"
 
 #: ../libgda/gda-xa-transaction.c:308
 #, c-format
@@ -1820,8 +1804,7 @@ msgid "Connection does not support distributed transaction"
 msgstr "Konexioak ez du banatutako transakziorik onartzen"
 
 #: ../libgda/gda-xa-transaction.c:342
-msgid ""
-"Cannot unregister connection not registered with GdaXaTransaction object"
+msgid "Cannot unregister connection not registered with GdaXaTransaction object"
 msgstr ""
 "GdaXaTransaction objektuarekin erregistratu ez diren konexioen erregistroa "
 "ezin da ezabatu"
@@ -1833,8 +1816,7 @@ msgstr ""
 #: ../libgda/gda-xa-transaction.c:680
 #, c-format
 msgid "Provider error: %s method not implemented for provider %s"
-msgstr ""
-"Hornitzailearen errorea: %2$s hornitzaileak ez dauka %1$s metodoa garatuta"
+msgstr "Hornitzailearen errorea: %2$s hornitzaileak ez dauka %1$s metodoa garatuta"
 
 #: ../libgda/handlers/gda-handler-bin.c:121
 msgid "Binary handler"
@@ -1927,8 +1909,7 @@ msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:594
 #: ../providers/mdb/gda-mdb-provider.c:288
-msgid ""
-"The DB_DIR part of the connection string must point to a valid directory"
+msgid "The DB_DIR part of the connection string must point to a valid directory"
 msgstr "Konexioko katearen DB_DIR zatiak baliozko direktorioa eduki behar du"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:655
@@ -2041,7 +2022,7 @@ msgstr "Funtzioak argumentu bat eduki behar du"
 #: ../libgda/sqlite/gda-sqlite-recordset.c:223
 #: ../providers/mysql/gda-mysql-recordset.c:346
 #: ../providers/postgres/gda-postgres-recordset.c:279
-#, fuzzy, c-format
+#, c-format
 msgid "Column %d out of range (0-%d), ignoring its specified type"
 msgstr ""
 "%d. zutabea barrutitik kanpo (0 - %d). Bere zehaztutako motari ez ikusi "
@@ -2111,9 +2092,8 @@ msgid "Data model must have at least one column"
 msgstr "Datuen ereduak gutxienez zutabe bat eduki behar du"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:413
-#, fuzzy
 msgid "Could not compute virtual table's columns"
-msgstr "Ezin izan da konexio birtuala sortu"
+msgstr "Ezin izan da taula birtualaren zutabeak zenbatu"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:436
 #, c-format
@@ -2326,8 +2306,7 @@ msgstr ""
 msgid ""
 "INSERT statement does not have the same number of target columns and "
 "expressions"
-msgstr ""
-"INSERT instrukzioak ez du helburuko zutabe eta adierazpen kopuru berdinak"
+msgstr "INSERT instrukzioak ez du helburuko zutabe eta adierazpen kopuru berdinak"
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:356
 #, c-format
@@ -2344,8 +2323,7 @@ msgstr "SELECT-ek ez dauka inolako adierazpenik"
 #: ../libgda/sql-parser/gda-statement-struct-select.c:323
 #, c-format
 msgid "SELECT can't have a DISTINCT expression if DISTINCT is not set"
-msgstr ""
-"SELECT-ek ezin du DISTINCT adierazpena eduki DISTINCT ez badago ezarrita"
+msgstr "SELECT-ek ezin du DISTINCT adierazpena eduki DISTINCT ez badago ezarrita"
 
 #: ../libgda/sql-parser/gda-statement-struct-select.c:329
 #, c-format
@@ -2373,8 +2351,7 @@ msgstr "UPDATE instrukzioak taula bat behar du datuak eguneratzeko"
 msgid ""
 "UPDATE statement does not have the same number of target columns and "
 "expressions"
-msgstr ""
-"UPDATE instrukzioak ez du helburuko zutabe eta adierazpen kopuru berdinak"
+msgstr "UPDATE instrukzioak ez du helburuko zutabe eta adierazpen kopuru berdinak"
 
 #: ../libgda/sql-parser/gda-statement-struct-update.c:249
 #, c-format
@@ -2397,8 +2374,7 @@ msgstr "Ezin izan da DocBook-aren XSL estilo-orria aurkitu HTMLrako"
 #: ../libgda-report/DocBook/gda-report-docbook-document.c:367
 #, c-format
 msgid "Could not find the DocBook XSL stylesheet for Formatting Objects"
-msgstr ""
-"Ezin izan da DocBook-aren XSL estilo-orria aurkitu objektuak formateatzeko"
+msgstr "Ezin izan da DocBook-aren XSL estilo-orria aurkitu objektuak formateatzeko"
 
 #: ../libgda-report/engine/gda-report-engine.c:307
 #, c-format
@@ -3243,8 +3219,7 @@ msgstr "Ordenatu mota"
 
 #. Index fields
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:16
-msgid ""
-"The number of characters the index is on for columns of type CHAR or VARCHAR"
+msgid "The number of characters the index is on for columns of type CHAR or VARCHAR"
 msgstr ""
 "CHAR edo VARCHAR motako zutabetan aktibatuta dagoen indizearen karaktere-"
 "kopurua"
@@ -3978,12 +3953,10 @@ msgstr "Txantiloia"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:68
 msgid "The name of the database user who will own the new database"
-msgstr ""
-"Datu-baseko erabiltzailearen izena, datu-base berriaren jabea izango dena"
+msgstr "Datu-baseko erabiltzailearen izena, datu-base berriaren jabea izango dena"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:69
-msgid ""
-"The name of the tablespace that will be associated with the new database"
+msgid "The name of the tablespace that will be associated with the new database"
 msgstr "Taula-lekuaren izena, datu-base berriarekin elkartuko dena"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:70
@@ -4137,8 +4110,7 @@ msgstr "Bilaketaren bide-izena"
 
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:10
 msgid "Search path among database's schemas ('search_path' variable)"
-msgstr ""
-"Bilaketarako bide-izena datu-baseko eskemetan zehar ('search_path' aldagaia)"
+msgstr "Bilaketarako bide-izena datu-baseko eskemetan zehar ('search_path' aldagaia)"
 
 #: ../providers/sqlite/libmain.c:52
 msgid "Provider for SQLite databases"
@@ -4401,8 +4373,7 @@ msgstr "Ezin da %d. konexioa ireki: %s\n"
 #: ../tools/gda-sql.c:254
 #, c-format
 msgid "Opening connection '%s' for: %s (GDA_SQL_CNC environment variable)\n"
-msgstr ""
-"'%s' konexioa irekitzen honentzako: %s (GDA_SQL_CNC inguruneko aldagaia)\n"
+msgstr "'%s' konexioa irekitzen honentzako: %s (GDA_SQL_CNC inguruneko aldagaia)\n"
 
 #: ../tools/gda-sql.c:259
 #, c-format
@@ -4666,8 +4637,7 @@ msgstr "Editatu kontsularen bufferra (edo fitxategia) kanpoko editorearekin"
 
 #: ../tools/gda-sql.c:1556
 msgid "Reset the query buffer (fill buffer with contents of file)"
-msgstr ""
-"Berrezarri kontsultaren bufferra (bete bufferra fitxategiaren edukiarekin)"
+msgstr "Berrezarri kontsultaren bufferra (bete bufferra fitxategiaren edukiarekin)"
 
 #: ../tools/gda-sql.c:1566
 msgid "Show the contents of the query buffer"
@@ -4878,66 +4848,3 @@ msgstr ""
 msgid "Could not save history file to '%s': %s"
 msgstr "Ezin izan da historia '%s' fitxategian gorde: %s"
 
-#~ msgid "Row number out of range"
-#~ msgstr "Errenkada-zenbakia barrutitik kanpo"
-
-#~ msgid "Column number out of range"
-#~ msgstr "Zutabe-zenbakia barrutitik kanpo"
-
-#~ msgid ""
-#~ "Type of parameter '%s' is '%s' when it should be '%s', GdaDataModelQuery "
-#~ "object will not work correctly"
-#~ msgstr ""
-#~ "'%s' parametroaren mota '%s' da, baina '%s' izan behar zuen, "
-#~ "GdaDataModelQuery objektuak ez du ongi funzionatuko"
-
-#~ msgid ""
-#~ "Could not get statement's parameters, expect some problems with the "
-#~ "GdaDataModelQuery"
-#~ msgstr ""
-#~ "Ezin izan dira instrukzioaren parametroak eskuratu. Arazo batzuk gerta "
-#~ "daitezke GdaDataModelQuery-rekin"
-
-#~ msgid ""
-#~ "Could not find a parameter named '%s' among the SELECT query's "
-#~ "parameters, the specified modification query will not be executable"
-#~ msgstr ""
-#~ "Ezin izan da '%s' izeneko parametroa aurkitu SELECT kontsultako "
-#~ "parametroen artean, zehaztutako aldaketaren kontsulta ez da exekutatuko"
-
-#~ msgid "Wrong type of query"
-#~ msgstr "Okerreko kontsulta mota"
-
-#~ msgid "No UPDATE query specified, can't update row"
-#~ msgstr "Ez da UPDATE kontsultarik zehaztu, ezin da errenkada eguneratu"
-
-#~ msgid "No INSERT query specified, can't insert row"
-#~ msgstr "Ez da INSERT kontsultarik zehaztu, ezin da errenkada txertatu"
-
-#~ msgid "No DELETE query specified, can't delete row"
-#~ msgstr "Ez da DELETE kontsultarik zehaztu, ezin da errenkada ezabatu"
-
-#~ msgid "No SELECT query specified"
-#~ msgstr "Ez da SELECT kontsultarik zehaztu"
-
-#~ msgid "Unknown GdaDataProxy column: %d"
-#~ msgstr "GdaDataProxy zutabe ezezaguna: %d"
-
-#~ msgid "Could not set value of parameter '%s'"
-#~ msgstr "Ezin izan da '%s' parametroaren balioa ezarri"
-
-#~ msgid "Internal GdaMetaStore error"
-#~ msgstr "GdaMetaStore barneko errorea"
-
-#~ msgid "GdaServerOperation: error loading GdaSet spec %s: '%s'"
-#~ msgstr ""
-#~ "GdaServerOperation: errorea GdaSet-en %s  zehaztapenak kargatzean: '%s'"
-
-#~ msgid "Missing required value for list of parameters '%s'"
-#~ msgstr "'%s' parametroen zerrendaren beharrezko balioa falta da"
-
-#~ msgid "Could not set GdaHolder's value, value not assigned"
-#~ msgstr "Ezin izan da GdaHolder-ren balioa ezarri. Balioa ez da esleitu"
-
-#~ msgid "Wrong value type"
-#~ msgstr "Okerreko balio mota"
