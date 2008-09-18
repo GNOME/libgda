@@ -1,3 +1,7 @@
+2008-09-18  Bas Driessen <bas.driessen@xobas.com>
+
+	* doc/C/gettingstarted.xml: correction example code.
+
 2008-09-16  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in: set version to 3.99.5

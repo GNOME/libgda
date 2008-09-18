@@ -209,7 +209,7 @@ show_data_model (GdaDataModel *dm)
                          column_id++) {
                               char *str;
 
-                              value = gda_data_model_get_value_at (dm, column_id, row_id);
+                              value = gda_data_model_get_value_at (dm, column_id, row_id, NULL);
                               str = gda_value_stringify (value);
                               g_print ("%s\t", str);
                               g_free (str);
