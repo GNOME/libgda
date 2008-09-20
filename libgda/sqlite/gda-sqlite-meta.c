@@ -137,6 +137,56 @@ _gda_sqlite_provider_meta_init (GdaServerProvider *provider)
 	g_static_mutex_unlock (&init_mutex);
 }
 
+static GdaStatement *
+get_statement (InternalStatementItem type, const gchar *schema_name, const gchar *obj_name, GError **error)
+{
+	GdaStatement *stmt;
+	if (strcmp (schema_name, "main")) {
+		gchar *str;
+		
+		switch (type) {
+		case I_PRAGMA_TABLE_INFO:
+			str = g_strdup_printf ("PRAGMA %s.table_info (%s)", schema_name, obj_name);
+			break;
+		case I_PRAGMA_INDEX_LIST:
+			str = g_strdup_printf ("PRAGMA %s.index_list (%s)", schema_name, obj_name);
+			break;
+		case I_PRAGMA_INDEX_INFO:
+			str = g_strdup_printf ("PRAGMA %s.index_info (%s)", schema_name, obj_name);
+			break;
+		case I_PRAGMA_FK_LIST:
+			str = g_strdup_printf ("PRAGMA %s.foreign_key_list (%s)", schema_name, obj_name);
+			break;
+		default:
+			g_assert_not_reached ();
+		}
+		
+		stmt = gda_sql_parser_parse_string (internal_parser, str, NULL, NULL);
+		g_free (str);
+		g_assert (stmt);
+	}
+	else {
+		switch (type) {
+		case I_PRAGMA_TABLE_INFO:
+		case I_PRAGMA_INDEX_LIST:
+		case I_PRAGMA_FK_LIST:
+			if (! gda_set_set_holder_value (pragma_set, error, "tblname", obj_name))
+				return NULL;
+			break;
+		case I_PRAGMA_INDEX_INFO:
+			if (! gda_set_set_holder_value (pragma_set, error, "idxname", obj_name))
+				return NULL;
+			break;
+		default:
+			g_assert_not_reached ();
+		}
+
+		stmt = g_object_ref (internal_stmt [type]);
+	}
+
+	return stmt;
+}
+
 gboolean
 _gda_sqlite_meta__info (GdaServerProvider *prov, GdaConnection *cnc, 
 			GdaMetaStore *store, GdaMetaContext *context, GError **error)
@@ -278,7 +328,7 @@ fill_udt_model (SqliteConnectionData *cdata, GHashTable *added_hash,
 		gint fields_status;
 
 		if (strcmp (cstr, "main")) 
-			sql = g_strdup_printf ("PRAGMA table_info('%s.%s');", cstr, sqlite3_column_text (tables_stmt, 0));
+			sql = g_strdup_printf ("PRAGMA %s.table_info(%s);", cstr, sqlite3_column_text (tables_stmt, 0));
 		else
 			sql = g_strdup_printf ("PRAGMA table_info('%s');", sqlite3_column_text (tables_stmt, 0));
 		fields_status = sqlite3_prepare_v2 (cdata->connection, sql, -1, &fields_stmt, NULL);
@@ -808,25 +858,14 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 	gint i;
 	GType col_types[] = {G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT, 
 			     G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_NONE};
+	GdaStatement *stmt;
 	
 	schema_name = g_value_get_string (p_table_schema);
-	if (strcmp (schema_name, "main")) {
-		gchar *str;
-		str = g_strdup_printf ("%s.%s", schema_name, g_value_get_string (p_table_name));
-		if (! gda_set_set_holder_value (pragma_set, error, "tblname", str)) {
-			g_free (str);
-			return FALSE;
-		}
-		g_free (str);
-	}
-	else {
-		if (! gda_set_set_holder_value (pragma_set, error, "tblname", g_value_get_string (p_table_name)))
-			return FALSE;
-	}
-
-	tmpmodel = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_PRAGMA_TABLE_INFO], pragma_set, 
+	stmt = get_statement (I_PRAGMA_TABLE_INFO, schema_name, g_value_get_string (p_table_name), error);
+	tmpmodel = gda_connection_statement_execute_select_full (cnc, stmt, pragma_set, 
 								 GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
 								 col_types, error);
+	g_object_unref (stmt);
 	if (!tmpmodel)
 		return FALSE;
 		
@@ -1078,24 +1117,9 @@ fill_constraints_tab_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 	gint nrows;
 	const gchar *schema_name;
 	gint i;
+	GdaStatement *stmt;
 
-	/*
-	 * Setup pragma_set
-	 */
 	schema_name = g_value_get_string (p_table_schema);
-	if (strcmp (schema_name, "main")) {
-		gchar *str;
-		str = g_strdup_printf ("%s.%s", schema_name, g_value_get_string (p_table_name));
-		if (! gda_set_set_holder_value (pragma_set, error, "tblname", str)) {
-			g_free (str);
-			return FALSE;
-		}
-		g_free (str);
-	}
-	else {
-		if (!gda_set_set_holder_value (pragma_set, error, "tblname", g_value_get_string (p_table_name)))
-			return FALSE;
-	}	
 
 	/* 
 	 * PRIMARY KEY
@@ -1106,9 +1130,11 @@ fill_constraints_tab_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 				G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_NONE};
 	gboolean has_pk = FALSE;
 
-	tmpmodel = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_PRAGMA_TABLE_INFO], pragma_set, 
+	stmt = get_statement (I_PRAGMA_TABLE_INFO, schema_name, g_value_get_string (p_table_name), error);
+	tmpmodel = gda_connection_statement_execute_select_full (cnc, stmt, pragma_set, 
 								 GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
 								 pk_col_types, error);
+	g_object_unref (stmt);
 	if (!tmpmodel)
 		return FALSE;
 		
@@ -1183,9 +1209,11 @@ fill_constraints_tab_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 	 */
 	GType unique_col_types[] = {G_TYPE_INT, G_TYPE_STRING, G_TYPE_INT, G_TYPE_NONE};
 	
-	tmpmodel = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_PRAGMA_INDEX_LIST], pragma_set, 
+	stmt = get_statement (I_PRAGMA_INDEX_LIST, schema_name, g_value_get_string (p_table_name), error);
+	tmpmodel = gda_connection_statement_execute_select_full (cnc, stmt, pragma_set, 
 								 GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
 								 unique_col_types, error);
+	g_object_unref (stmt);
 	if (!tmpmodel)
 		return FALSE;
 		
@@ -1234,9 +1262,11 @@ fill_constraints_tab_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 	 */
 	GType fk_col_types[] = {G_TYPE_INT, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_NONE};
 	gchar *ref_table = NULL;
-	tmpmodel = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_PRAGMA_FK_LIST], pragma_set, 
+	stmt = get_statement (I_PRAGMA_FK_LIST, schema_name, g_value_get_string (p_table_name), error);
+	tmpmodel = gda_connection_statement_execute_select_full (cnc, stmt, pragma_set, 
 								 GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
 								 fk_col_types, error);
+	g_object_unref (stmt);
 	if (!tmpmodel)
 		return FALSE;
 		
@@ -1403,30 +1433,20 @@ fill_constraints_ref_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 	gint nrows;
 	const gchar *schema_name;
 	gint i;
+	GdaStatement *stmt;
 
 	/*
-	 * Setup pragma_set
+	 * Setup stmt to execute
 	 */
 	schema_name = g_value_get_string (p_table_schema);
-	if (strcmp (schema_name, "main")) {
-		gchar *str;
-		str = g_strdup_printf ("%s.%s", schema_name, g_value_get_string (p_table_name));
-		if (! gda_set_set_holder_value (pragma_set, error, "tblname", str)) {
-			g_free (str);
-			return FALSE;
-		}
-		g_free (str);
-	}
-	else {
-		if (! gda_set_set_holder_value (pragma_set, error, "tblname", g_value_get_string (p_table_name)))
-			return FALSE;
-	}
 
 	GType fk_col_types[] = {G_TYPE_INT, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_NONE};
 	gchar *ref_table = NULL;
-	tmpmodel = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_PRAGMA_FK_LIST], pragma_set, 
+	stmt = get_statement (I_PRAGMA_FK_LIST, schema_name, g_value_get_string (p_table_name), error);
+	tmpmodel = gda_connection_statement_execute_select_full (cnc, stmt, pragma_set, 
 								 GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
 								 fk_col_types, error);
+	g_object_unref (stmt);
 	if (!tmpmodel)
 		return FALSE;
 		
@@ -1595,25 +1615,9 @@ fill_key_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaData
 	gint nrows;
 	const gchar *schema_name, *const_name;
 	gint i;
+	GdaStatement *stmt;
 
-	/*
-	 * Setup pragma_set
-	 */
 	schema_name = g_value_get_string (p_table_schema);
-	if (strcmp (schema_name, "main")) {
-		gchar *str;
-		str = g_strdup_printf ("%s.%s", schema_name, g_value_get_string (p_table_name));
-		if (! gda_set_set_holder_value (pragma_set, error, "tblname", str)) {
-			g_free (str);
-			return FALSE;
-		}
-		g_free (str);
-	}
-	else {
-		if (! gda_set_set_holder_value (pragma_set, error, "tblname", g_value_get_string (p_table_name)))
-			return FALSE;
-	}
-
 	const_name = g_value_get_string (constraint_name);
 	if (!strcmp (const_name, "primary_key")) {
 		/* 
@@ -1622,9 +1626,11 @@ fill_key_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaData
 		GType pk_col_types[] = {G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT, 
 					G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_NONE};
 		gint ord_pos = 1;
-		tmpmodel = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_PRAGMA_TABLE_INFO], pragma_set, 
+		stmt = get_statement (I_PRAGMA_TABLE_INFO, schema_name, g_value_get_string (p_table_name), error);
+		tmpmodel = gda_connection_statement_execute_select_full (cnc, stmt, pragma_set, 
 									 GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
 									 pk_col_types, error);
+		g_object_unref (stmt);
 		if (!tmpmodel)
 			return FALSE;
 		
@@ -1691,9 +1697,11 @@ fill_key_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaData
 		GType fk_col_types[] = {G_TYPE_INT, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_NONE};
 		gchar *ref_table = NULL;
 		gint ord_pos;
-		tmpmodel = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_PRAGMA_FK_LIST], pragma_set, 
+		stmt = get_statement (I_PRAGMA_FK_LIST, schema_name, g_value_get_string (p_table_name), error);
+		tmpmodel = gda_connection_statement_execute_select_full (cnc, stmt, pragma_set, 
 									 GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
 									 fk_col_types, error);
+		g_object_unref (stmt);
 		if (!tmpmodel)
 			return FALSE;
 		
@@ -1747,11 +1755,12 @@ fill_key_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaData
 		 */
 		GType unique_col_types[] = {G_TYPE_INT, G_TYPE_INT, G_TYPE_STRING, G_TYPE_NONE};
 		
-		if (! gda_set_set_holder_value (pragma_set, error, "idxname", g_value_get_string (constraint_name)))
-			return FALSE;
-		tmpmodel = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_PRAGMA_INDEX_INFO], pragma_set, 
+		stmt = get_statement (I_PRAGMA_INDEX_INFO, schema_name, g_value_get_string (constraint_name),
+				      error);
+		tmpmodel = gda_connection_statement_execute_select_full (cnc, stmt, pragma_set, 
 									 GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
 									 unique_col_types, error);
+		g_object_unref (stmt);
 		if (!tmpmodel)
 			return FALSE;
 		

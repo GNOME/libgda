@@ -538,67 +538,6 @@ gda_internal_command_list_schemas (GdaConnection *cnc, const gchar **args, GErro
 	return res;
 }
 
-GdaInternalCommandResult *
-gda_internal_command_list_queries (GdaConnection *cnc, const gchar **args,
-				   GError **error, gpointer data)
-{
-	GdaInternalCommandResult *res = NULL;
-	GdaDataModel *model;
-	const gchar *qname = NULL;
-	gboolean with_sql_def = FALSE;
-
-	if (!cnc) {
-		g_set_error (error, 0, 0, _("No current connection"));
-		return NULL;
-	}
-
-	if (args[0] && *args[0]) {
-		if (!strcmp (args[0], "+"))
-			with_sql_def = TRUE;
-		else {
-			qname = args[0];
-			if (args[1] && (*args[1] == '+'))
-				with_sql_def = TRUE;
-		}
-	}
-
-	if (with_sql_def)
-		model = gda_data_model_array_new_with_g_types (5,
-							       G_TYPE_STRING,
-							       G_TYPE_STRING,
-							       G_TYPE_STRING,
-							       G_TYPE_STRING,
-							       G_TYPE_STRING);
-	else
-		model = gda_data_model_array_new_with_g_types (4,
-							       G_TYPE_STRING,
-							       G_TYPE_STRING,
-							       G_TYPE_STRING,
-							       G_TYPE_STRING);
-	gda_data_model_set_column_title (model, 0, _("Name"));
-	gda_data_model_set_column_title (model, 1, _("Type"));
-	gda_data_model_set_column_title (model, 2, _("Description"));
-	gda_data_model_set_column_title (model, 3, _("Parameters"));
-	if (with_sql_def)
-		gda_data_model_set_column_title (model, 4, _("SQL"));
-	g_object_set_data (G_OBJECT (model), "name", _("List of queries"));
-
-	if (qname) {
-		TO_IMPLEMENT;
-	}
-	else {
-		
-
-		TO_IMPLEMENT;
-	}
-
-	res = g_new0 (GdaInternalCommandResult, 1);
-	res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
-	res->u.model = model;
-
-	return res;
-}
-
 GdaMetaStruct *
 gda_internal_command_build_meta_struct (GdaConnection *cnc, const gchar **args, GError **error)
 {

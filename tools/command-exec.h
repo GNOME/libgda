@@ -95,8 +95,6 @@ GdaInternalCommandResult *gda_internal_command_list_views (GdaConnection *cnc, c
 							   GError **error, gpointer data);
 GdaInternalCommandResult *gda_internal_command_list_schemas (GdaConnection *cnc, const gchar **args,
 							     GError **error, gpointer data);
-GdaInternalCommandResult *gda_internal_command_list_queries (GdaConnection *cnc, const gchar **args,
-							     GError **error, gpointer data);
 GdaInternalCommandResult *gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 						       GError **error, gpointer data);
 

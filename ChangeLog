@@ -1,3 +1,22 @@
+2008-09-20  Vivien Malerba <malerba@gnome-db.org>
+
+	* providers/postgres/gda-postgres-meta.c:
+	* libgda/gda-meta-struct.c: bugs fixed
+	* tools/Makefile.am: also distribute the gda-sql.ico file
+	* tools/gda-sql.c:
+	* tools/command-exec.[ch]:
+	  - correctly handle non threading environment
+	  - removed the non implemented "dq" internal command (use "qa" instead)
+	  - correctly handle the "-C" command line flag
+	  - when commands are executed from a file ("-f" argument), then don't quit when finished
+	    executing the commands.
+	* libgda/sqlite/gda-sqlite-meta.c: corrected a bug in the way "PRAGMA table_info" was used
+	to list all the columns of a table when the schema was not "main".
+	* libgda/sqlite/sqlite-src/sqlite3.c:
+	* libgda/sqlite/sqlite-src/PragmasPatch: reimplemented the "proc_list" PRAGMA to make it
+	work with the current version of SQLite
+	* doc/C: vastly improved the "gda-sql" console tool manual
+
 2008-09-18  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-data-model.c: make gda_data_model_dump() work whith data models which

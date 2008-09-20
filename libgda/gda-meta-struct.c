@@ -563,7 +563,8 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 		if (!dbo->obj_owner) {
 			cvalue = gda_data_model_get_value_at (model, 4, 0, error);
 			if (!cvalue) goto onerror;
-			dbo->obj_owner = g_value_dup_string (cvalue);
+			if (!gda_value_is_null (cvalue))
+				dbo->obj_owner = g_value_dup_string (cvalue);
 		}
 
 		mv = GDA_META_VIEW (dbo);

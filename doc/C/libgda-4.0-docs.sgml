@@ -451,8 +451,9 @@
 	      files are shared libraries)</para>
 	    </listitem>
 	    <listitem>
-              <para>LIBGDA_NO_THREADS: if set, then multi threading will be disabled (note that &LIBGDA; is not thread safe,
-	      but usually internally uses threads when possible to perform actions in a non blocking way)</para>
+              <para>LIBGDA_NO_THREADS: if set, then multi threading will be disabled (see the 
+		<link linkend="threads">section about multi threading</link> for more information about
+		&LIBGDA; threads' support).</para>
 	    </listitem>
 	    <listitem>
               <para>GDA_DATA_MODEL_DUMP_TITLE: if set, then <link linkend="gda-data-model-dump">gda_data_model_dump()</link>

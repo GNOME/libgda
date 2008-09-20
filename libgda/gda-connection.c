@@ -3042,7 +3042,8 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 					g_print ("TH %p CNC %p ERROR, prov=%p (%s)\n", g_thread_self(), cnc,
 						 gda_connection_get_provider (cnc),
 						 gda_connection_get_provider_name (cnc));
-					g_warning ("//");
+					if (error && *error)
+						g_warning ("// %s\n", (*error)->message);
 
 					WARN_META_UPDATE_FAILURE (FALSE, rmeta [i].func_name);
 					goto onerror;

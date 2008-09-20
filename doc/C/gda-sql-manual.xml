@@ -119,6 +119,56 @@ MSAccess    | Provider for Microsoft Access files | DB_NAME,           |        
     </para>
   </sect1>
 
+  <sect1>
+    <title>Commands</title>
+    <para>
+      The console tool allows the user to enter SQL commands (which can span several lines and must be terminated with
+      a semi colon). The commands are executed synchronously and the results displayed right after execution, for example:
+      <programlisting>
+cnc1> select *
+    > from customers order by name;
+id | name            | last_update           | default_served_by | country | city
+---+-----------------+-----------------------+-------------------+---------+-----
+ 2 | Ed Lamton       | 2008-08-12 00:00:00+0 |                 4 | SP      | MDR 
+ 9 | Greg Popoff     | 2007-12-25 00:00:00+0 |                 2 | SP      | MDR 
+ 3 | Lew Bonito      | 2008-08-13 00:00:00+0 |                 1 | FR      | TLS 
+ 4 | Mark Lawrencep  | 2007-12-25 00:00:00+0 |                   | SP      | MDR 
+10 | Vladimir Zirkov | 2001-01-31 00:00:00+0 |                 4 |         |     
+(5 rows)
+
+cnc1>
+      </programlisting>
+      The SQL dialect to be used must be understood by the database to which the connection is opened, so
+      it is possible to use database's specific commands, for example with a PostgreSQL database:
+      <programlisting>
+cnc2> show search_path;
+search_path   
+--------------
+"$user",public
+(1 row)
+
+cnc2>
+      </programlisting>
+    </para>
+    <para>
+      There are also some internal commands which all start either with a dot or backslash and perform some
+      actions such as changing the default output mode (to HTML for example) or getting meta information
+      about the database structure. For example, use the <command>.?</command> to display a help message
+      about all internal commands (with truncated output here):
+      <programlisting>
+gda> .?
+Formatting
+  \H [HTML|XML|CSV|DEFAULT]
+                     Set output format
+
+General
+  \?                 List all available commands
+  \bind CNC_NAME CNC_NAME1 CNC_NAME2 [CNC_NAME ...]
+                     Bind several connections together into the CNC_NAME virtual connection
+      </programlisting>
+    </para>
+  </sect1>
+
 </chapter>
 
 <chapter id="gda-sql-manual-open">
@@ -157,6 +207,80 @@ cnc1>
   </para>
 
   <sect1>
+    <title>Virtual connections</title>
+    <para>
+      Multiple connections can be <emphasis>bound together</emphasis> into a single connection in which it is possible
+      to runs SQL statements. This effectively allows one to run SQL statements across multiple databases.
+    </para>
+    <para>
+      Binding connections together is done using the <command>.bind CNC_NAME CNC_NAME1 CNC_NAME2 [CNC_NAME ...]</command>
+      command which creates new connection named "CNC_NAME" which binds the connections names "CNC_NAME1" and "CNC_NAME2"
+      together (more connections can be bound); each connection to be bound into a virtual connection must of course
+      already have been opened. The tables of each bound connection will appear into the new virtual connection as named
+      "&lt;cnc name&gt;.&lt;table name&gt;".
+    </para>
+    <para>
+      In the following example, there are the "cnc1" and "cnc2" connections opened, and the "cnc3" connection is
+      a virtual connection binding "cnc1" and "cnc2":
+      <programlisting>
+cnc2> .bind cnc3 cnc1 cnc2
+Bound connections are as:
+   cnc1 in the 'cnc1' namespace
+   cnc2 in the 'cnc2' namespace
+cnc3> .c
+          List of opened connections
+Name | Provider | DSN or connection string | Username
+-----+----------+--------------------------+---------
+cnc1 | SQLite   | DB_DIR=.;DB_NAME=pmodel  |         
+cnc2 | SQLite   | SalesTest                |         
+cnc3 |          | namespace cnc1           |         
+                  namespace cnc2                     
+(3 rows)
+
+cnc3> 
+      </programlisting>
+      The contents of each "customers" table in each of the bound connection is accessible:
+      <programlisting>
+cnc3> select * from cnc1.customers;
+id | name            | last_update           | default_served_by | country | city
+---+-----------------+-----------------------+-------------------+---------+-----
+ 2 | Ed Lamton       | 2008-08-12 00:00:00+0 |                 4 | SP      | MDR 
+ 3 | Lew Bonito      | 2008-08-13 00:00:00+0 |                 1 | FR      | TLS 
+ 4 | Mark Lawrencep  | 2007-12-25 00:00:00+0 |                   | SP      | MDR 
+ 9 | Greg Popoff     | 2007-12-25 00:00:00+0 |                 2 | SP      | MDR 
+10 | Vladimir Zirkov | 2001-01-31 00:00:00+0 |                 4 |         |     
+(5 rows)
+
+cnc3>  select * from cnc2.customers;
+id | name            | default_served_by | country | city
+---+-----------------+-------------------+---------+-----
+ 2 | Ed Lamton       |                 4 | SP      | MDR 
+ 3 | Lew Bonito      |                 1 | FR      | TLS 
+ 4 | Mark Lawrencep  |                   | SP      | MDR 
+ 9 | Greg Popoff     |                 2 | SP      | MDR 
+10 | Vladimir Zirkov |                 4 |         |     
+(5 rows)
+
+cnc3> 
+      </programlisting>
+      The list of customers present in both tables are available as:
+      <programlisting>
+cnc3> SELECT * FROM cnc1.customers WHERE name IN (SELECT name FROM cnc2.customers);
+id | name            | last_update           | default_served_by | country | city
+---+-----------------+-----------------------+-------------------+---------+-----
+ 2 | Ed Lamton       | 2008-08-12 00:00:00+0 |                 4 | SP      | MDR 
+ 3 | Lew Bonito      | 2008-08-13 00:00:00+0 |                 1 | FR      | TLS 
+ 4 | Mark Lawrencep  | 2007-12-25 00:00:00+0 |                   | SP      | MDR 
+ 9 | Greg Popoff     | 2007-12-25 00:00:00+0 |                 2 | SP      | MDR 
+10 | Vladimir Zirkov | 2001-01-31 00:00:00+0 |                 4 |         |     
+(5 rows)
+
+cnc3>
+      </programlisting>
+    </para>
+  </sect1>
+
+  <sect1>
     <title>Meta data</title>
     <para>
       When a connection is opened for the first time, the tool get all the possible meta data associated to that connection (list of
@@ -173,7 +297,8 @@ cnc1>
       meta data database associated to a connection. The meta data connection associated to a connection is by convention named
       as the tilde character concatenated with the connection name (for example if the connection is named "cnc1", then the connection
       to its meta data will be named "~cnc1"). To open a meta data connection, make sure the current connection is the one for which
-      you want to access the meta data, and then use the <command>.c ~</command> command:
+      you want to access the meta data, and then use the <command>.c ~</command> command (note that the same command will
+      return to the "cnc1" connection):
       <programlisting>
 cnc1> .c ~
 Getting database schema information, this may take some time... Done.
@@ -224,7 +349,20 @@ products
 products_copied
 (11 rows)
 
-~cnc1>
+~cnc1> .c ~
+cnc1>
+      </programlisting>
+      Also note that the meta data's connections are listed among the opened connections, as shown:
+      <programlisting>
+cnc1> .c
+                       List of opened connections
+Name  | Provider | DSN or connection string                              | Username
+------+----------+-------------------------------------------------------+---------
+cnc1  | SQLite   | SalesTest                                             |         
+~cnc1 | SQLite   | DB_DIR=/home/vivien/.libgda;DB_NAME=gda-sql-SalesTest |         
+(2 rows)
+
+cnc1>
       </programlisting>
     </para>
     
@@ -307,30 +445,217 @@ cnc1>
     <sect2>
       <title>Information about views</title>
       <para>
+	The console tool can report information about views. Use the <command>.dv</command> command to list all the views
+	(or list only one view if the view name is specified as	an argument to the command):
+	<programlisting>
+cnc1> .dv
+              List of views
+Schema | Name         | Type | Owner | Description
+-------+--------------+------+-------+------------
+main   | cust_summary | VIEW |       |            
+(1 row)
+
+cnc1>
+	</programlisting>
+      </para>
+      <para>
+	One can also get more information for a single view using the <command>.d &lt;view name&gt;</command> command, 
+	for example:
+	<programlisting>
+cnc1> .d cust_summary 
+List of columns for view 'cust_summary'
+Column   | Type   | Nullable | Default | Extra
+---------+--------+----------+---------+------
+name     | string | yes      |         |      
+shortcut | string | yes      |         |      
+(2 rows)
+
+View definition: CREATE VIEW cust_summary as SELECT c.name, l.shortcut FROM customers c LEFT JOIN locations l ON (c.country=l.country AND c.city=l.city)
+cnc1>
+	</programlisting>
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>Information about schemas</title>
+      <para>
+	Some databases feature the notion of <emphasis>schema</emphasis> which is a container for database objects such as
+	tables, views, etc. Use the <command>.dn</command> command to get a list of all the schemas in a database. For
+	example with a PostgreSQL database:
+	<programlisting>
+          List of schemas
+Schema             | Owner    | Internal
+-------------------+----------+---------
+information_schema | postgres | yes     
+pg_catalog         | postgres | yes     
+pg_temp_1          | postgres | yes     
+pg_toast           | postgres | yes     
+pg_toast_temp_1    | postgres | yes     
+public             | postgres | no      
+(6 rows)
+
+cnc1>
+	</programlisting>
       </para>
     </sect2>
 
     <sect2>
       <title>Information about other objects</title>
       <para>
+	The meta data database holds a lot of information about the many objects which exist in a database, but the
+	console tool does not provide internal commands to display all of them. The solution is to run SELECT commands
+	in the meta data connection associated to a connection. For example to get a list of triggers where the "cnc2"
+	is a connection opened to a PostgreSQL's database, one first needs to connection to the meta data connection
+	and lookup into the "_triggers" table:
+	<programlisting>
+cnc2> .c ~
+~cnc2> select trigger_name, event_manipulation, event_object_table from _triggers;
+trigger_name            | event_manipulation | event_object_table
+------------------------+--------------------+-------------------
+pg_sync_pg_database     | INSERT             | pg_database       
+pg_sync_pg_database     | DELETE             | pg_database       
+pg_sync_pg_database     | UPDATE             | pg_database       
+pg_sync_pg_authid       | INSERT             | pg_authid         
+pg_sync_pg_authid       | DELETE             | pg_authid         
+pg_sync_pg_authid       | UPDATE             | pg_authid         
+pg_sync_pg_auth_members | INSERT             | pg_auth_members   
+pg_sync_pg_auth_members | DELETE             | pg_auth_members   
+pg_sync_pg_auth_members | UPDATE             | pg_auth_members   
+(9 rows)
+
+~cnc2>
+	</programlisting>
+      </para>
+      <para>
+	The meta data's database structure is described in the <link linkend="information_schema">related section</link>.
       </para>
     </sect2>
   </sect1>
-
 </chapter>
 
-<chapter id="gda-sql-manual-commands">
-  <title>Executing commands</title>
+<chapter id="gda-sql-manual-icommands">
+  <title>Detailled features</title>
   <para>
-    Blah.
+    This section explains in depth various aspects of the console tool.
   </para>
 
   <sect1>
-    <title>SQL comands</title>
+    <title>Query buffer</title>
+    <para>
+      Everytime an SQL command is entered, it is stored in the query buffer associated to the current connection. 
+      The query buffer can be edited using an external editor (which can be usefull for multi line SQL statements) using
+      the <command>.e</command> command. The query buffer can also be saved to a file and loaded back later using the
+      <command>.qw</command> and <command>.qr</command> commands. To execute the SQL held in the current query byffer,
+      use the <command>.g</command> command.
+    </para>
+    <para>
+      Query buffers can be saved to the dictionary (along with the connection's meta data) for future usage using the
+      <command>.qs buffer_name</command> command, and loaded back later with the <command>.ql buffer_name</command>.
+      To list all the saved query buffers in the dictionary, use the <command>.qa</command> command. The following example
+      shows an example output of the <command>.qa</command> command where one query buffer has been saved:
+      <programlisting>
+SalesTest> .qa
+Query buffer name | SQL                                                                                   
+------------------+---------------------------------------------------------------------------------------
+orders_status     | select c.name, o.creation_date ,                                                      
+                    (select count (product_ref) from order_contents oc where oc.order_id=o.id) as '#items'
+                    from customers c                                                                      
+                    	inner join orders o on (o.customer = c.id)                                           
+                    order by o.creation_date;                                                             
+                                                                                                          
+(1 row)
+
+SalesTest>
+      </programlisting>
+    </para>
+    <para>
+      The <command>.g</command> command can also be used to load a query buffer and execute its contents simply
+      by passing the name of the query buffer to use as argument:
+      <programlisting>
+SalesTest> .g orders_status
+name           | creation_date | #items
+---------------+---------------+-------
+Lew Bonito     | 2003-06-28    |      1
+Lew Bonito     | 2004-02-02    |      2
+Mark Lawrencep | 2004-02-02    |      2
+Mark Lawrencep | 2004-02-02    |      0
+Greg Popoff    | 2004-02-02    |      1
+Ed Lamton      | 2006-02-04    |      0
+Ed Lamton      | 2006-02-05    |      0
+Ed Lamton      | 2006-02-05    |      0
+Ed Lamton      | 2006-03-29    |      0
+(9 rows)
+
+SalesTest>
+      </programlisting>
+    </para>
   </sect1>
 
   <sect1>
-    <title>Internal commands</title>
+    <title>Internal parameters</title>
+    <para>
+      Variables can be defined using the <command>.set</command> command. Variables are then automatically looked for
+      when executing SQL statements for which a variable is required; they are not typed and are converted to 
+      the correct type when needed. Note that variables are shared by all the opened connections.
+    </para>
+    <para>
+      Use the <command>.set &lt;variablename&gt; &lt;variable value&gt;</command> command to define a variable,
+      and the <command>.set</command> command to list all defined variables. The following example illustrates
+      variables usage:
+      <programlisting>
+SalesTest> select * from customers where id = ##theid::int;
+ERROR: No internal parameter named 'theid' required by query
+SalesTest> .set theid 3
+SalesTest> select * from customers where id = ##theid::int;
+id | name       | default_served_by | country | city
+---+------------+-------------------+---------+-----
+ 3 | Lew Bonito |                 1 | FR      | TLS 
+(1 row)
+
+SalesTest> .set theid 5
+SalesTest> select * from customers where id = ##theid::int;
+id | name | default_served_by | country | city
+---+------+-------------------+---------+-----
+(0 rows)
+
+SalesTest> .set
+List of defined parameters
+Name  | Value
+------+------
+theid | 5    
+(1 row)
+
+SalesTest>
+    </programlisting>
+    </para>
+  </sect1>
+
+  <sect1>
+    <title>Environment variables</title>
+    <para>
+      Several environment variables can be used to customize the behaviour of the console tool (added
+      to the <link linkend="libgda_env_variables">general &LIBGDA;'s environment variables</link>):
+      <itemizedlist>
+	<listitem><para>Upon starting, if the <envar>GDA_SQL_CNC</envar> environment variable is defined,
+	    the console tool will try to open a connection using its contents as connection string.
+	</para></listitem>
+	<listitem><para>The external editor used by the <command>.e</command> command is determined by the first value
+	    present in the <envar>GDA_SQL_EDITOR</envar>, <envar>EDITOR</envar> or <envar>VISUAL</envar>
+	    environment variables (in that order), and defaults to "vi" undex Unix and "notepad.exe" under Windows.
+	</para></listitem>
+	<listitem><para>The pager used when the data to display is more than one screen is determined by
+	    the value of the <envar>PAGER</envar> environment variable and defaults to "more" if none is defined.
+	    The paging feature can be completely disabled if the <envar>GDA_NO_PAGER</envar> is defined.</para></listitem>
+	<listitem><para>When the <command>.graph</command> is run, and if the GraphViz's <command>dot</command> is found,
+	    the console tool will convert the graph to a PNG file and display it using the external viewer 
+	    identified by the contents of the <envar>GDA_SQL_VIEWER_PNG</envar> variable if defined (or convert it to a PDF
+	    and display it using the external viewer 
+	    identified by the contents of the <envar>GDA_SQL_VIEWER_PDF</envar> variable if defined).
+	</para></listitem>
+	<listitem><para>The command line history file is defined by the contents of the <envar>GDA_SQL_HISTFILE</envar>
+	    environment variable. If its contents is set to "NO_HISTORY" then no history will be kept.</para></listitem>
+      </itemizedlist>
+    </para>
   </sect1>
 
 </chapter>

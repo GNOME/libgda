@@ -66778,22 +66778,38 @@ SQLITE_PRIVATE void sqlite3Pragma(
     sqlite3VdbeSetColName(v, 1, COLNAME_NAME, "is_aggregate", P4_STATIC);
     sqlite3VdbeSetColName(v, 2, COLNAME_NAME, "nargs", P4_STATIC);
     sqlite3VdbeSetColName(v, 3, COLNAME_NAME, "spe_name", P4_STATIC);
-
-    for (func_elem = sqliteHashFirst (func_hash); func_elem ; func_elem = sqliteHashNext (func_elem)) {
+    int j;
+    for(j=0; j<ArraySize(db->aFunc.a); j++){
       FuncDef *func;
-      char *sname;
-      int size;
-      func = sqliteHashData (func_elem);
-
-      size = strlen (func->zName) + 25;
-      sname = sqlite3_malloc (sizeof (char) * size);
-      snprintf (sname, size-1, "%s_%d_%d", func->zName, func->nArg, func->iPrefEnc);
-      sqlite3VdbeAddOp4(v, OP_String8, 0, 1, 0, func->zName, 0);
-      sqlite3VdbeAddOp2(v, OP_Integer, func->xFinalize ? 1 : 0, 2);
-      sqlite3VdbeAddOp2(v, OP_Integer, func->nArg, 3);
-      sqlite3VdbeAddOp4(v, OP_String8, 0, 4, 0, sname, 0);
-      sqlite3VdbeAddOp2(v, OP_ResultRow, 1, 4);
-      sqlite3_free (sname);
+      for (func =db->aFunc.a[j]; func; func = func->pNext) {
+	char *sname;
+	int size;
+	size = strlen (func->zName) + 25;
+	sname = sqlite3_malloc (sizeof (char) * size);
+	snprintf (sname, size-1, "%s_%d_%d", func->zName, func->nArg, func->iPrefEnc);
+	sqlite3VdbeAddOp4(v, OP_String8, 0, 1, 0, func->zName, 0);
+	sqlite3VdbeAddOp2(v, OP_Integer, func->xFinalize ? 1 : 0, 2);
+	sqlite3VdbeAddOp2(v, OP_Integer, func->nArg, 3);
+	sqlite3VdbeAddOp4(v, OP_String8, 0, 4, 0, sname, 0);
+	sqlite3VdbeAddOp2(v, OP_ResultRow, 1, 4);
+	sqlite3_free (sname);
+      }
+    }
+    for(j=0; j<ArraySize(sqlite3GlobalFunctions.a); j++){
+      FuncDef *func;
+      for (func =sqlite3GlobalFunctions.a[j]; func; func = func->pNext) {
+	char *sname;
+	int size;
+	size = strlen (func->zName) + 25;
+	sname = sqlite3_malloc (sizeof (char) * size);
+	snprintf (sname, size-1, "%s_%d_%d", func->zName, func->nArg, func->iPrefEnc);
+	sqlite3VdbeAddOp4(v, OP_String8, 0, 1, 0, func->zName, 0);
+	sqlite3VdbeAddOp2(v, OP_Integer, func->xFinalize ? 1 : 0, 2);
+	sqlite3VdbeAddOp2(v, OP_Integer, func->nArg, 3);
+	sqlite3VdbeAddOp4(v, OP_String8, 0, 4, 0, sname, 0);
+	sqlite3VdbeAddOp2(v, OP_ResultRow, 1, 4);
+	sqlite3_free (sname);
+      }
     }
   }else
 

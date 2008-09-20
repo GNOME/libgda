@@ -58,6 +58,7 @@ gboolean list_configs = FALSE;
 gboolean list_providers = FALSE;
 
 gchar *outfile = NULL;
+gboolean has_threads;
 
 static GOptionEntry entries[] = {
         { "no-password-ask", 'p', 0, G_OPTION_ARG_NONE, &ask_pass, "Don't ask for a password when it is empty", NULL },
@@ -151,12 +152,12 @@ main (int argc, char *argv[])
 	context = g_option_context_new (_("[DSN|connection string]..."));        
 	g_option_context_add_main_entries (context, entries, GETTEXT_PACKAGE);
         if (!g_option_context_parse (context, &argc, &argv, &error)) {
-                g_print ("Can't parse arguments: %s\n", error->message);
-		exit_status = EXIT_FAILURE;
-		goto cleanup;
+                g_fprintf  (stderr, "Can't parse arguments: %s\n", error->message);
+		return EXIT_FAILURE;
         }
         g_option_context_free (context);
         gda_init ();
+	has_threads = g_thread_supported ();
 	data = g_new0 (MainData, 1);
 	data->parameters = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
 	main_data = data;
@@ -544,10 +545,19 @@ static gchar *read_a_line (MainData *data)
 {
 	gchar *cmde;
 
+	if (single_command) {
+		if (*single_command) {
+			cmde = single_command;
+			single_command = "";
+			return cmde;
+		}
+		else
+			return NULL;
+	}
 	compute_prompt (data, prompt, data->partial_command == NULL ? FALSE : TRUE);
 	if (data->input_stream) {
 		cmde = input_from_stream (data->input_stream);
-		if (!cmde && !commandsfile && isatty (fileno (stdin))) {
+		if (!cmde && isatty (fileno (stdin))) {
 			/* go back to console after file is over */
 			set_input_file (data, NULL, NULL);
 			cmde = input_from_console (prompt->str);
@@ -1034,28 +1044,47 @@ open_connection (MainData *data, const gchar *cnc_name, const gchar *cnc_string,
 		g_object_set (G_OBJECT (cs->cnc), "meta-store", store, NULL);
 		if (update_store) {
 			GError *lerror = NULL;
-			MetaUpdateData *thdata;
 			
-			cs->threader = (GdaThreader*) gda_threader_new ();
-			thdata = g_new0 (MetaUpdateData, 1);
-			thdata->data = data;
-			thdata->cs = cs;
-			thdata->cannot_lock = FALSE;
-			cs->meta_job_id = gda_threader_start_thread (cs->threader, 
-								     (GThreadFunc) thread_start_update_meta_store,
-								     thdata,
-								     (GdaThreaderFunc) thread_ok_cb_update_meta_store,
-								     (GdaThreaderFunc) thread_cancelled_cb_update_meta_store, 
-								     &lerror);
-			if (cs->meta_job_id == 0) {
-				if (!data->output_stream) 
-					g_print (_("Error getting meta data in background: %s\n"), 
-						 lerror && lerror->message ? lerror->message : _("No detail"));
-				if (lerror)
-					g_error_free (lerror);
+			if (has_threads) {
+				MetaUpdateData *thdata;
+				cs->threader = (GdaThreader*) gda_threader_new ();
+				thdata = g_new0 (MetaUpdateData, 1);
+				thdata->data = data;
+				thdata->cs = cs;
+				thdata->cannot_lock = FALSE;
+				cs->meta_job_id = gda_threader_start_thread (cs->threader, 
+									     (GThreadFunc) thread_start_update_meta_store,
+									     thdata,
+									     (GdaThreaderFunc) thread_ok_cb_update_meta_store,
+									     (GdaThreaderFunc) thread_cancelled_cb_update_meta_store, 
+									     &lerror);
+				if (cs->meta_job_id == 0) {
+					if (!data->output_stream) 
+						g_print (_("Error getting meta data in background: %s\n"), 
+							 lerror && lerror->message ? lerror->message : _("No detail"));
+					if (lerror)
+						g_error_free (lerror);
+				}
+			}
+			else {
+				if (!data->output_stream) {
+					g_print (_("Getting database schema information for connection '%s', this may take some time... "),
+						 cs->name);
+					fflush (stdout);
+				}
+				
+				if (!gda_connection_update_meta_store (cs->cnc, NULL, &lerror)) {
+					if (!data->output_stream) 
+						g_print (_("error: %s\n"), 
+							 lerror && lerror->message ? lerror->message : _("No detail"));
+					if (lerror)
+						g_error_free (lerror);
+				}
+				else
+					if (!data->output_stream) 
+						g_print (_("Done.\n"));
 			}
 		}
-
 		g_object_unref (store);
 	}
 
@@ -1082,22 +1111,23 @@ thread_ok_cb_update_meta_store (GdaThreader *threader, guint job, MetaUpdateData
 {
 	data->cs->meta_job_id = 0;
 	if (data->cannot_lock) {
+		GError *lerror = NULL;
 		if (!data->data->output_stream) {
-			GError *lerror = NULL;
 			g_print (_("Getting database schema information for connection '%s', this may take some time... "),
 				 data->cs->name);
 			fflush (stdout);
-			if (!gda_connection_update_meta_store (data->cs->cnc, NULL, &lerror)) {
-				if (!data->data->output_stream) 
-					g_print (_("error: %s\n"), 
-						 lerror && lerror->message ? lerror->message : _("No detail"));
-				if (lerror)
-					g_error_free (lerror);
-			}
-			else
-				if (!data->data->output_stream) 
-					g_print (_("Done.\n"));
 		}
+
+		if (!gda_connection_update_meta_store (data->cs->cnc, NULL, &lerror)) {
+			if (!data->data->output_stream) 
+				g_print (_("error: %s\n"), 
+					 lerror && lerror->message ? lerror->message : _("No detail"));
+			if (lerror)
+				g_error_free (lerror);
+		}
+		else
+			if (!data->data->output_stream) 
+				g_print (_("Done.\n"));
 	}
 	if (data->error)
 		g_error_free (data->error);
@@ -1440,16 +1470,6 @@ build_internal_commands_list (MainData *data)
 	c->description = _("Create a graph of all or the listed tables");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_graph;
-	c->user_data = NULL;
-	c->arguments_delimiter_func = NULL;
-	commands->commands = g_slist_prepend (commands->commands, c);
-
-	c = g_new0 (GdaInternalCommand, 1);
-	c->group = _("Information");
-	c->name = g_strdup_printf (_("%s [QUERY] [+]"), "dq");
-	c->description = _("List all queries (or named query) in dictionary");
-	c->args = NULL;
-	c->command_func = gda_internal_command_list_queries;
 	c->user_data = NULL;
 	c->arguments_delimiter_func = NULL;
 	commands->commands = g_slist_prepend (commands->commands, c);
