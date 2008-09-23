@@ -442,5 +442,24 @@ else
     </para>
   </sect1>
 
+  <sect1>
+    <title>Add your own data to a GdaMetaStore</title>
+    <para>
+      Adding your own data in the <link linkend="GdaMetaStore">GdaMetaStore</link> associated to a connection
+      is a possibility to avoid for example to have another file to store your program-specific data (which 
+      you obviously don't want to store in a connection).
+    </para>
+    <para>
+      Doing so is as easy as getting a pointer to the internal connection used by the 
+      <link linkend="GdaMetaStore">GdaMetaStore</link> associated the connection, and then use
+      that connection directly as any other connection object.
+    </para>
+    <para>
+      However &LIBGDA; has some specific API to make this easier, described in the
+      <link linkend="GdaMetaStoreCustomData">section about adding custom data</link> to
+      a GdaMetaStore.
+    </para>
+  </sect1>
+
 </chapter>
 

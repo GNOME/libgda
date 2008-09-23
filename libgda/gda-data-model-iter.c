@@ -50,6 +50,7 @@ static void gda_data_model_iter_get_property (GObject *object,
 /* follow model changes */
 static void model_row_updated_cb (GdaDataModel *model, gint row, GdaDataModelIter *iter);
 static void model_row_removed_cb (GdaDataModel *model, gint row, GdaDataModelIter *iter);
+static void model_reset_cb (GdaDataModel *model, GdaDataModelIter *iter);
 
 static GError *validate_holder_change_cb (GdaSet *paramlist, GdaHolder *param, const GValue *new_value);
 static void holder_attr_changed_cb (GdaSet *paramlist, GdaHolder *param);
@@ -81,7 +82,7 @@ enum
 struct _GdaDataModelIterPrivate
 {
 	GdaDataModel          *data_model;
-	gulong                 model_changes_signals[2];
+	gulong                 model_changes_signals[3];
 	gboolean               keep_param_changes;
 	gint                   row; /* -1 if row is unknown */
 };
@@ -185,6 +186,7 @@ gda_data_model_iter_init (GdaDataModelIter *iter)
 	iter->priv->row = -1;
 	iter->priv->model_changes_signals[0] = 0;
 	iter->priv->model_changes_signals[1] = 0;
+	iter->priv->model_changes_signals[2] = 0;
 	iter->priv->keep_param_changes = FALSE;
 }
 
@@ -221,6 +223,14 @@ model_row_removed_cb (GdaDataModel *model, gint row, GdaDataModelIter *iter)
 	}
 }
 
+static void
+model_reset_cb (GdaDataModel *model, GdaDataModelIter *iter)
+{
+	/* reset the iter to before the 1st row */
+	gda_data_model_iter_invalidate_contents (iter);
+	gda_data_model_iter_move_at_row (iter, -1);
+}
+
 /*
  * This function is called when a parameter in @paramlist is changed
  * to make sure the change is propagated to the GdaDataModel
@@ -252,7 +262,7 @@ validate_holder_change_cb (GdaSet *paramlist, GdaHolder *param, const GValue *ne
 			}
 		}
 		else if (! gda_data_model_set_value_at ((GdaDataModel *) iter->priv->data_model, 
-							col, iter->priv->row, gda_holder_get_value (param), &error)) {
+							col, iter->priv->row, new_value, &error)) {
 			if (!error)
 				g_set_error (&error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
 					     _("GdaDataModel refused value change"));
@@ -321,6 +331,7 @@ gda_data_model_iter_dispose (GObject *object)
 		if (iter->priv->data_model) { 
 			g_signal_handler_disconnect (iter->priv->data_model, iter->priv->model_changes_signals [0]);
 			g_signal_handler_disconnect (iter->priv->data_model, iter->priv->model_changes_signals [1]);
+			g_signal_handler_disconnect (iter->priv->data_model, iter->priv->model_changes_signals [2]);
 			g_object_remove_weak_pointer (G_OBJECT (iter->priv->data_model), 
 						      (gpointer*) &(iter->priv->data_model));
 			iter->priv->data_model = NULL;
@@ -496,6 +507,7 @@ gda_data_model_iter_set_property (GObject *object,
 					return;
 				g_signal_handler_disconnect (iter->priv->data_model, iter->priv->model_changes_signals [0]);
 				g_signal_handler_disconnect (iter->priv->data_model, iter->priv->model_changes_signals [1]);
+				g_signal_handler_disconnect (iter->priv->data_model, iter->priv->model_changes_signals [2]);
 				g_object_remove_weak_pointer (G_OBJECT (iter->priv->data_model), 
 							      (gpointer*) &(iter->priv->data_model)); 	
 			}
@@ -507,6 +519,8 @@ gda_data_model_iter_set_property (GObject *object,
 										  G_CALLBACK (model_row_updated_cb), iter);
 			iter->priv->model_changes_signals [1] = g_signal_connect (G_OBJECT (ptr), "row-removed",
 										  G_CALLBACK (model_row_removed_cb), iter);
+			iter->priv->model_changes_signals [2] = g_signal_connect (G_OBJECT (ptr), "reset",
+										  G_CALLBACK (model_reset_cb), iter);
 
 			if (GDA_IS_DATA_SELECT (iter->priv->data_model)) {
 				GdaStatement *sel_stmt;

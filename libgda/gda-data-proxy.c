@@ -25,7 +25,7 @@
 #include "gda-data-model-array.h"
 #include "gda-data-model-extra.h"
 #include "gda-data-model-iter.h"
-#include "gda-data-model-query.h"
+#include "gda-data-select.h"
 #include "gda-holder.h"
 #include "gda-set.h"
 #include "gda-marshal.h"
@@ -1777,11 +1777,12 @@ static gboolean
 commit_row_modif (GdaDataProxy *proxy, RowModif *rm, gboolean adjust_display, GError **error)
 {
 	gboolean err = FALSE;
-	gint proxy_row;
+	gint proxy_row, model_row;
 	GError *lerror = NULL;
 
 	if (!rm)
 		return TRUE;
+	model_row = rm->model_row;
 
 	/* ensure that there is no sync to be done */
 	ensure_chunk_sync (proxy);
@@ -1921,12 +1922,7 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, gboolean adjust_display, GE
 					       gda_data_proxy_signals[ROW_CHANGES_APPLIED],
 					       0, proxy_row, -1);
 			}
-			else if ((proxy->priv->catched_inserted_row < 0) &&
-				 !GDA_IS_DATA_MODEL_QUERY (proxy->priv->model)) {
-				/* REM: the GdaDataModelQuery object does not emit any "row-inserted", "row-updated"
-				 * or "row_dremoved" signals but that is Ok as an exception: all the other data
-				 * model should be implemented correctly
-				 */
+			else if (proxy->priv->catched_inserted_row < 0) {
 				g_warning (_("Proxied data model reports the modifications as accepted, yet did not emit the "
 					     "corresponding \"row-inserted\", \"row-updated\" or \"row-removed\" signal. This "
 					     "is a bug of the %s's implementation (please report a bug)."),
@@ -1942,22 +1938,16 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, gboolean adjust_display, GE
 		/* signal row actually changed */
 		g_signal_emit (G_OBJECT (proxy),
 			       gda_data_proxy_signals[ROW_CHANGES_APPLIED],
-			       0, proxy_row, rm->model_row);
+			       0, proxy_row, model_row);
 		
 		/* get rid of the commited change; if the changes have been applied correctly, @rm should
 		 * have been removed from the proxy->priv->all_modifs list because the proxied model
 		 * should habe emitted the "row_{inserted,removed,updated}" signals */
 		if (rm && g_slist_find (proxy->priv->all_modifs, rm)) {
-			if (!GDA_IS_DATA_MODEL_QUERY (proxy->priv->model)) {
-				/* REM: the GdaDataModelQuery object does not emit any "row-inserted", "row-updated"
-				 * or "row_dremoved" signals but that is Ok as an exception: all the other data
-				 * model should be implemented correctly
-				 */
-				g_warning (_("Proxied data model reports the modifications as accepted, yet did not emit the "
-					     "corresponding \"row-inserted\", \"row-updated\" or \"row-removed\" signal. This "
-					     "is a bug of the %s's implementation (please report a bug)."),
-					   G_OBJECT_TYPE_NAME (proxy->priv->model));
-			}
+			g_warning (_("Proxied data model reports the modifications as accepted, yet did not emit the "
+				     "corresponding \"row-inserted\", \"row-updated\" or \"row-removed\" signal. This "
+				     "is a bug of the %s's implementation (please report a bug)."),
+				   G_OBJECT_TYPE_NAME (proxy->priv->model));
 			proxy->priv->new_rows = g_slist_remove (proxy->priv->new_rows, rm);
 			proxy->priv->all_modifs = g_slist_remove (proxy->priv->all_modifs, rm);
 			g_hash_table_remove (proxy->priv->modify_rows, GINT_TO_POINTER (rm->model_row));
@@ -3517,10 +3507,6 @@ gda_data_proxy_set_value_at (GdaDataModel *model, gint col, gint proxy_row, cons
 			     _("Trying to change read-only column: %d"), col);
 		return FALSE;
 	}
-
-#ifdef GDA_DEBUG_NO
-	gda_object_dump (proxy, 5);
-#endif
 
 	return TRUE;
 }

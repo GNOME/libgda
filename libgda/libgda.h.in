@@ -35,7 +35,6 @@
 #include <libgda/gda-data-comparator.h>
 #include <libgda/gda-data-model-array.h>
 @LIBGDA_BDB_INC@
-#include <libgda/gda-data-model-query.h>
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-data-model-iter.h>
 #include <libgda/gda-data-model-import.h>

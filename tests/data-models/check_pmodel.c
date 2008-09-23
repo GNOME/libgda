@@ -22,10 +22,10 @@ typedef struct {
 } SigEvent;
 static GSList *signals = NULL;
 static void     monitor_model_signals (GdaDataModel *model);
-static void     signal_callback (GdaDataModel *model, gint row, gchar *type);
 static void     clear_signals (void);
 static gboolean check_expected_signal (GdaDataModel *model, gchar type, gint row);
 static gboolean check_no_expected_signal (GdaDataModel *model);
+static gboolean compare_data_models (GdaDataModel *model1, GdaDataModel *model2, GError **error);
 
 /* utility functions */
 static GdaConnection *setup_connection (void);
@@ -57,9 +57,10 @@ static gint test11 (GdaConnection *cnc);
 static gint test12 (GdaConnection *cnc);
 static gint test13 (GdaConnection *cnc);
 static gint test14 (GdaConnection *cnc);
+static gint test15 (GdaConnection *cnc);
 
 TestFunc tests[] = {
-        test1,
+	test1,
         test2,
         test3,
 	test4,
@@ -72,7 +73,8 @@ TestFunc tests[] = {
 	test11,
 	test12,
 	test13,
-	test14
+	test14,
+	test15
 };
 
 int
@@ -1554,6 +1556,84 @@ test14 (GdaConnection *cnc)
 }
 
 /*
+ * - Create a GdaDataSelect with a missing parameter
+ * - Set modification statements
+ * - Refresh data model and compare with direct SELECT.
+ *
+ * Returns the number of failures 
+ */
+static gint
+test15 (GdaConnection *cnc)
+{
+	GError *error = NULL;
+        GdaDataModel *model, *rerun;
+        GdaStatement *stmt;
+        GdaSet *params;
+        gint nfailed = 0;
+
+	clear_signals ();
+
+        /* create GdaDataModelQuery */
+        stmt = stmt_from_string ("SELECT * FROM customers WHERE id <= ##theid::gint");
+        g_assert (gda_statement_get_parameters (stmt, &params, NULL));
+
+	if (! gda_set_set_holder_value (params, &error, "theid", 9)) {
+                nfailed++;
+#ifdef CHECK_EXTRA_INFO
+                g_print ("Can't set 'theid' value: %s \n",
+                         error && error->message ? error->message : "No detail");
+#endif
+                goto out;
+        }
+        model = gda_connection_statement_execute_select (cnc, stmt, params, &error);
+        g_assert (model);
+
+	monitor_model_signals (model);
+
+	/**/
+	g_object_set_data (G_OBJECT (model), "mydata", "hey");
+
+	/**/
+	g_object_set (G_OBJECT (model), "auto-reset", TRUE, NULL);
+	if (! gda_set_set_holder_value (params, &error, "theid", 3)) {
+                nfailed++;
+#ifdef CHECK_EXTRA_INFO
+                g_print ("Can't set 'theid' value: %s \n",
+                         error && error->message ? error->message : "No detail");
+#endif
+                goto out;
+        }
+	check_expected_signal (model, 'R', -1);
+
+	const gchar *dstr = g_object_get_data (G_OBJECT (model), "mydata");
+	if (!dstr || strcmp (dstr, "hey")) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+                g_print ("Data model lost custom added data: expected 'hey' and got '%s'\n",
+			 dstr);
+#endif
+                goto out;
+	}
+
+	rerun = gda_connection_statement_execute_select (cnc, stmt, params, &error);
+	g_assert (rerun);
+	if (! compare_data_models (model, rerun, NULL)) {
+                nfailed++;
+#ifdef CHECK_EXTRA_INFO
+                g_print ("Data model differs after a refresh\n");
+#endif
+                goto out;
+        }
+        g_object_unref (rerun);
+
+ out:
+        g_object_unref (model);
+        g_object_unref (stmt);
+
+        return nfailed;
+}
+
+/*
  * Checking value function:
  *  - reads the value of @model at the provided column and row and compares with the expected @set_value
  *  - if @stmt is not NULL, then re-run the statement and compares with @model
@@ -1826,14 +1906,6 @@ check_append_values (GdaDataModel *model, GList *set_values, GdaConnection *cnc,
  * signals checking 
  */
 static void
-monitor_model_signals (GdaDataModel *model)
-{
-	g_signal_connect (model, "row-updated", G_CALLBACK (signal_callback), "U");
-	g_signal_connect (model, "row-removed", G_CALLBACK (signal_callback), "D");
-	g_signal_connect (model, "row-inserted", G_CALLBACK (signal_callback), "I");
-}
-
-static void
 signal_callback (GdaDataModel *model, gint row, gchar *type)
 {
 	SigEvent *se;
@@ -1848,6 +1920,32 @@ signal_callback (GdaDataModel *model, gint row, gchar *type)
 		 row, model);
 #endif
 }
+
+static void
+signal_callback_1 (GdaDataModel *model, gchar *type)
+{
+	SigEvent *se;
+	se = g_new0 (SigEvent, 1);
+	se->model = model;
+	se->type = *type;
+	se->row = -1;
+	signals = g_slist_append (signals, se);
+#ifdef CHECK_EXTRA_INFO
+	g_print ("Received '%s' signal from model %p\n",
+		 *type == 'R' ? "reset" : "???",
+		 model);
+#endif
+}
+
+static void
+monitor_model_signals (GdaDataModel *model)
+{
+	g_signal_connect (model, "row-updated", G_CALLBACK (signal_callback), "U");
+	g_signal_connect (model, "row-removed", G_CALLBACK (signal_callback), "D");
+	g_signal_connect (model, "row-inserted", G_CALLBACK (signal_callback), "I");
+	g_signal_connect (model, "reset", G_CALLBACK (signal_callback_1), "R");
+}
+
 
 static void
 clear_signals (void)
@@ -1876,13 +1974,48 @@ check_expected_signal (GdaDataModel *model, gchar type, gint row)
 	}
 #ifdef CHECK_EXTRA_INFO
 	else {
-		g_print ("Expected signal '%s' for row %d from model %p and got ",
-			 (type == 'I') ? "row-inserted" : ((type == 'D') ? "row-removed" : "row-updated"),
+		gchar *exp;
+		switch (type) {
+		case 'I':
+			exp = "row-inserted";
+			break;
+		case 'U':
+			exp = "row-updated";
+			break;
+		case 'D':
+			exp = "row-removed";
+			break;
+		case 'R':
+			exp = "reset";
+			break;
+		default:
+			exp = "???";
+			break;
+		}
+		g_print ("Expected signal '%s' for row %d from model %p and got ", exp,
 			 row, model);
-		if (se)
+		if (se) {
+			switch (se->type) {
+			case 'I':
+				exp = "row-inserted";
+				break;
+			case 'U':
+				exp = "row-updated";
+				break;
+			case 'D':
+				exp = "row-removed";
+				break;
+			case 'R':
+				exp = "reset";
+				break;
+			default:
+				exp = "???";
+				break;
+			}
 			g_print ("signal '%s' for row %d from model %p\n",
-				 (se->type == 'I') ? "row-inserted" : ((se->type == 'D') ? "row-removed" : "row-updated"),
+				 exp,
 				 se->row, se->model);
+		}
 		else
 			g_print ("no signal\n");
 	}
@@ -1911,4 +2044,42 @@ check_no_expected_signal (GdaDataModel *model)
 	}
 
 	return TRUE;
+}
+
+static gboolean
+compare_data_models (GdaDataModel *model1, GdaDataModel *model2, GError **error)
+{
+        GdaDataComparator *cmp;
+        GError *lerror = NULL;
+        cmp = (GdaDataComparator*) gda_data_comparator_new (model1, model2);
+        if (! gda_data_comparator_compute_diff (cmp, &lerror)) {
+#ifdef CHECK_EXTRA_INFO
+                g_print ("Could not compute the data model differences: %s\n",
+                         lerror && lerror->message ? lerror->message : "No detail");
+		g_print ("Model1 is:\n");
+                gda_data_model_dump (model1, stdout);
+                g_print ("Model2 is:\n");
+                gda_data_model_dump (model2, stdout);
+#endif
+                goto onerror;
+        }
+        if (gda_data_comparator_get_n_diffs (cmp) != 0) {
+#ifdef CHECK_EXTRA_INFO
+                g_print ("There are some differences when comparing data models...\n");
+                g_print ("Model1 is:\n");
+                gda_data_model_dump (model1, stdout);
+                g_print ("Model2 is:\n");
+                gda_data_model_dump (model2, stdout);
+#endif
+		g_set_error (&lerror, 0, 0,
+			     "There are some differences when comparing data models...");
+                goto onerror;
+        }
+        g_object_unref (cmp);
+
+        return TRUE;
+
+ onerror:
+        g_propagate_error (error, lerror);
+        return FALSE;
 }

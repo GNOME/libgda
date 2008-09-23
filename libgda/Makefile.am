@@ -44,7 +44,6 @@ gda_headers = \
 	gda-data-model-iter.h \
 	gda-data-model-iter-extra.h \
 	gda-data-model-private.h \
-	gda-data-model-query.h \
 	gda-data-access-wrapper.h \
 	gda-data-proxy.h \
 	gda-data-select.h \
@@ -98,7 +97,6 @@ libgda_sources =  \
 	gda-data-model-dsn-list.h \
 	gda-data-model-import.c \
 	gda-data-model-iter.c \
-	gda-data-model-query.c \
 	gda-data-access-wrapper.c \
 	gda-data-proxy.c \
 	gda-data-select.c \

@@ -222,7 +222,7 @@ gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_p
 					if (i >= _GDA_PSTMT (ps)->ncols)
 						g_warning (_("Column %d out of range (0-%d), ignoring its specified type"), i,
 							   _GDA_PSTMT (ps)->ncols - 1);
-					else
+					else 
 						_GDA_PSTMT (ps)->types [i] = col_types [i];
 				}
 			}
@@ -238,6 +238,8 @@ gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_p
 			gda_column_set_title (column, sqlite3_column_name (ps->sqlite_stmt, i));
 			gda_column_set_name (column, sqlite3_column_name (ps->sqlite_stmt, i));
 			gda_column_set_dbms_type (column, sqlite3_column_decltype (ps->sqlite_stmt, i));
+			if (_GDA_PSTMT (ps)->types [i] != GDA_TYPE_NULL)
+				gda_column_set_g_type (column, _GDA_PSTMT (ps)->types [i]);
 		}
         }
 

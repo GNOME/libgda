@@ -50,7 +50,6 @@
 <!ENTITY libgda-GdaDataModelArray SYSTEM "xml/gda-data-model-array.xml">
 <!ENTITY libgda-GdaDataModelBdb SYSTEM "xml/gda-data-model-bdb.xml">
 <!ENTITY libgda-GdaDataModelDir SYSTEM "xml/gda-data-model-dir.xml">
-<!ENTITY libgda-GdaDataModelQuery SYSTEM "xml/gda-data-model-query.xml">
 <!ENTITY libgda-GdaDataModel SYSTEM "xml/gda-data-model.xml">
 <!ENTITY libgda-GdaDataModelIter SYSTEM "xml/gda-data-model-iter.xml">
 <!ENTITY libgda-GdaDataModelImport SYSTEM "xml/gda-data-model-import.xml">
@@ -584,7 +583,6 @@
       &libgda-GdaDataModelDir;
       &libgda-GdaDataProxy;
       &libgda-GdaDataComparator;
-      &libgda-GdaDataModelQuery;
     </chapter>
 
     <chapter id="data_conv">
@@ -742,7 +740,8 @@ g_object_unref (store);
       <sect1 id="GdaMetaStoreCustomData">
 	<title>Adding custom data</title>
 	<para>
-	  This section explains how to add application specific data (custom data) to a #GdaMetaStore object.
+	  This section explains how to add application specific data (custom data) to a 
+	  <link linked="GdaMetaStore">GdaMetaStore</link> object.
 	</para>
 	<para>
 	  Applications of course don't need to use that feature to manage their own data but it makes sense to use
@@ -760,16 +759,29 @@ g_object_unref (store);
 	<sect3>
 	  <title>Declaring the new custom database objects</title>
 	  <para>
+	    The <link linkend="gda-meta-store-schema-add-custom-object">gda_meta_store_schema_add_custom_object()</link>
+	    method canbe used to add custom objects, which have to be described using an XML syntax. The advantages
+	    of using that method are:
+	    <itemizedlist>
+	      <listitem><para>The object's definition will be the same for all database types</para></listitem>
+	      <listitem><para>If another object with a different definition already exists, then a error is returned</para></listitem>
+	    </itemizedlist>
 	  </para>
 	</sect3>
 	<sect3>
 	  <title>Adding and removing data</title>
 	  <para>
+	    For the moment adding and removing data must be done as for any other database connection,
+	    using the <link linkend="GdaMetaStore's">GdaMetaStore</link>'s internal connection obtained 
+	    with <link linkend="gda_meta_store_get_internal_connection">gda_meta_store_get_internal_connection()</link>.
 	  </para>
 	</sect3>
 	<sect3>
 	  <title>Removing custom database objects</title>
 	  <para>
+	    For the moment adding and removing data must be done as for any other database connection,
+	    using the <link linkend="GdaMetaStore's">GdaMetaStore</link>'s internal connection obtained 
+	    with <link linkend="gda_meta_store_get_internal_connection">gda_meta_store_get_internal_connection()</link>.
 	  </para>
 	</sect3>
 	<para>
@@ -1025,16 +1037,7 @@ c0> ]]>
 	</programlisting>
       </para>
       <para>
-	The &gda-sql; tool uses the following environment variables, when set:
-	<itemizedlist>
-	  <listitem><para>GDA_SQL_CNC: may contain an all-in-one connection string to open upon startup</para></listitem>
-	  <listitem><para>GDA_NO_PAGER: if set, then no pager will be used</para></listitem>
-	  <listitem><para>PAGER: if set, indicates which pager program to use (the "more" program is used if not set)</para></listitem>
-	  <listitem><para>GDA_SQL_EDITOR, EDITOR, VISUAL (by precedence order): if set specifies which editor is used (the "notepad.exe" editor is used on Windows
-	      platforms or the "vi" on others if not set)</para></listitem>
-	  <listitem><para>GDA_SQL_VIEWER_PNG: specifies the viewer to use to display graphs (as PNG files)</para></listitem>
-	  <listitem><para>GDA_SQL_VIEWER_PDF: specifies the viewer to use to display graphs (as PDF files)</para></listitem>
-	</itemizedlist>
+	See the <link linkend="gda-sql">Gda SQL console tool manual section</link> for more information.
       </para>
     </chapter>
 

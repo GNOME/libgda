@@ -25,7 +25,6 @@ gda_row_get_type
 gda_data_model_get_type
 gda_data_model_import_get_type
 gda_data_model_iter_get_type
-gda_data_model_query_get_type
 gda_data_access_wrapper_get_type
 gda_data_proxy_get_type
 gda_quark_list_get_type

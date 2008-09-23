@@ -72,6 +72,9 @@ struct _GdaDataSelectPrivate {
         gint                    iter_row; /* G_MININT if at start, G_MAXINT if at end, "external" row number */
         GdaDataModelIter       *iter;
 
+	GdaStatement           *sel_stmt;
+	GdaSet                 *ext_params;
+	gboolean                reset_with_ext_params_change;
 	GdaDataModelAccessFlags usage_flags;
 	
 	/* attributes specific to data model modifications */
@@ -95,7 +98,8 @@ enum
 	PROP_INS_QUERY,
 	PROP_UPD_QUERY,
 	PROP_DEL_QUERY,
-	PROP_SEL_STMT
+	PROP_SEL_STMT,
+	PROP_RESET_WITH_EXT_PARAM
 };
 
 /* module error */
@@ -131,6 +135,8 @@ static GdaStatement *compute_single_update_stmt (GdaDataSelect *model, BVector *
 static GdaStatement *compute_single_insert_stmt (GdaDataSelect *model, BVector *bv, GError **error);
 static GdaStatement *compute_single_select_stmt (GdaDataSelect *model, GError **error);
 static gint *compute_insert_select_params_mapping (GdaSet *sel_params, GdaSet *ins_values, GdaSqlExpr *row_cond);
+
+static void ext_params_holder_changed_cb (GdaSet *paramlist, GdaHolder *param, GdaDataSelect *model);
 
 
 /* GdaDataModel interface */
@@ -253,6 +259,12 @@ gda_data_select_class_init (GdaDataSelectClass *klass)
 							      "SELECT statement which was executed to yield to the data model",
 							      GDA_TYPE_STATEMENT, G_PARAM_READABLE));
 
+	g_object_class_install_property (object_class, PROP_RESET_WITH_EXT_PARAM,
+					 g_param_spec_boolean ("auto-reset", "Automatically reset itself",
+							       "Automatically re-run the SELECT statement if any parameter "
+							       "has chanegd since it was first executed", FALSE,
+							       G_PARAM_READABLE | G_PARAM_WRITABLE));
+
 	/* virtual functions */
 	object_class->dispose = gda_data_select_dispose;
 	object_class->finalize = gda_data_select_finalize;
@@ -297,7 +309,12 @@ gda_data_select_init (GdaDataSelect *model, GdaDataSelectClass *klass)
 	model->priv->index = g_hash_table_new (g_direct_hash, g_direct_equal);
 	model->prep_stmt = NULL;
 	model->priv->columns = NULL;
+	model->nb_stored_rows = 0;
 	model->advertized_nrows = -1; /* unknown number of rows */
+
+	model->priv->sel_stmt = NULL;
+	model->priv->ext_params = NULL;
+	model->priv->reset_with_ext_params_change = FALSE;
 
 	model->priv->iter_row = G_MININT;
         model->priv->iter = NULL;
@@ -319,6 +336,94 @@ gda_data_select_init (GdaDataSelect *model, GdaDataSelectClass *klass)
 }
 
 static void
+ext_params_holder_changed_cb (GdaSet *paramlist, GdaHolder *param, GdaDataSelect *model)
+{
+	if (model->priv->reset_with_ext_params_change) {
+		GdaDataSelect *new_model;
+		GdaStatement *select;
+		GError *error = NULL;
+
+		select = check_acceptable_statement (model, &error);
+		if (!select) {
+			g_warning (_("Could not re-run SELECT statement: %s"),
+				   error && error->message ? error->message : _("No detail"));
+			if (error)
+				g_error_free (error);
+			return;
+		}
+		g_assert (model->prep_stmt);
+		GType *types = NULL;
+		if (model->prep_stmt->types) {
+			types = g_new (GType, model->prep_stmt->ncols + 1);
+			memcpy (types, model->prep_stmt->types, sizeof (GType) * model->prep_stmt->ncols);
+			types [model->prep_stmt->ncols] = G_TYPE_NONE;
+		}
+		new_model = (GdaDataSelect*) gda_connection_statement_execute_select_full (model->priv->cnc, select, 
+											   model->priv->ext_params, 
+											   model->priv->usage_flags,
+											   types, 
+											   &error);
+		g_free (types);
+		if (!new_model) {
+			g_warning (_("Could not re-run SELECT statement: %s"),
+				   error && error->message ? error->message : _("No detail"));
+			if (error)
+				g_error_free (error);
+			return;
+		}
+
+		g_assert (G_OBJECT_TYPE (model) == G_OBJECT_TYPE (new_model));
+
+		/* Raw model and new_model contents swap (except for the GObject part) */
+		GTypeQuery tq;
+		gpointer copy;
+		gint offset = sizeof (GObject);
+		gint size;
+		g_type_query (G_OBJECT_TYPE (model), &tq);
+		size = tq.instance_size - offset;
+		copy = g_malloc (size);
+		memcpy (copy, (gint8*) new_model + offset, size);
+		memcpy ((gint8*) new_model + offset, (gint8*) model + offset, size);
+		memcpy ((gint8*) model + offset, copy, size);
+		
+		/* we need to keep some data from the old model */
+		GdaDataSelect *old_model = new_model; /* renamed for code's readability */
+		GdaDataSelectInternals *mi;
+	      
+		model->priv->reset_with_ext_params_change = old_model->priv->reset_with_ext_params_change;
+		mi = old_model->priv->modif_internals;
+		old_model->priv->modif_internals = model->priv->modif_internals;
+		model->priv->modif_internals = mi;
+
+		copy = old_model->priv->sel_stmt;
+		old_model->priv->sel_stmt = model->priv->sel_stmt;
+		model->priv->sel_stmt = (GdaStatement*) copy;
+
+		g_object_unref (old_model);
+
+		/* copy all the param's holders' values from model->priv->ext_params to 
+		   to model->priv->modif_internals->exec_set */
+		GSList *list;
+		for (list = model->priv->ext_params->holders; list; list = list->next) {
+			GdaHolder *h;
+			h = gda_set_get_holder (model->priv->modif_internals->exec_set,
+						gda_holder_get_id (list->data));
+			if (h) 
+				if (! gda_holder_set_value (h, gda_holder_get_value (GDA_HOLDER (list->data)), &error)) {
+					g_warning (_("An error has occurred, the value returned by the \"exec-params\" "
+						     "property will be wrong: %s"),
+						   error && error->message ? error->message : _("No detail"));
+					if (error)
+						g_error_free (error);
+				}
+		}
+
+		/* signal a reset */
+		gda_data_model_reset ((GdaDataModel*) model);
+	}
+}
+
+static void
 gda_data_select_dispose (GObject *object)
 {
 	GdaDataSelect *model = (GdaDataSelect *) object;
@@ -328,6 +433,18 @@ gda_data_select_dispose (GObject *object)
 	/* free memory */
 	if (model->priv) {
 		gint i;
+
+		if (model->priv->sel_stmt) {
+			g_object_unref (model->priv->sel_stmt);
+			model->priv->sel_stmt = NULL;
+		}
+
+		if (model->priv->ext_params) {
+			g_signal_handlers_disconnect_by_func (model->priv->ext_params,
+							      G_CALLBACK (ext_params_holder_changed_cb), model);
+			g_object_unref (model->priv->ext_params);
+			model->priv->ext_params = NULL;
+		}
 
 		if (model->priv->modif_internals) {
 			_gda_data_select_internals_free (model->priv->modif_internals);
@@ -513,8 +630,14 @@ gda_data_select_set_property (GObject *object,
 			if (model->prep_stmt)
 				g_object_unref (model->prep_stmt);
 			model->prep_stmt = g_value_get_object (value);
-			if (model->prep_stmt)
+			if (model->prep_stmt) {
+				GdaStatement *sel_stmt;
 				g_object_ref (model->prep_stmt);
+				sel_stmt = gda_pstmt_get_gda_statement (model->prep_stmt);
+				if (sel_stmt &&
+				    gda_statement_get_statement_type (sel_stmt) == GDA_SQL_STATEMENT_SELECT) 
+					model->priv->sel_stmt = gda_statement_copy (sel_stmt);
+			}
 			create_columns (model);
 			break;
 		case PROP_FLAGS: {
@@ -539,8 +662,12 @@ gda_data_select_set_property (GObject *object,
 		case PROP_PARAMS: {
 			GdaSet *set;
 			set = g_value_get_object (value);
-			if (set) 
+			if (set) {
+				model->priv->ext_params = g_object_ref (set);
+				g_signal_connect (model->priv->ext_params, "holder-changed",
+						  G_CALLBACK (ext_params_holder_changed_cb), model);
 				model->priv->modif_internals->exec_set = gda_set_copy (set);
+			}
 			break;
 		}
 		case PROP_INS_QUERY:
@@ -563,6 +690,9 @@ gda_data_select_set_property (GObject *object,
 			model->priv->modif_internals->modif_stmts [UPD_QUERY] = g_value_get_object (value);
 			if (model->priv->modif_internals->modif_stmts [UPD_QUERY])
 				g_object_ref (model->priv->modif_internals->modif_stmts [UPD_QUERY]);
+			break;
+		case PROP_RESET_WITH_EXT_PARAM:
+			model->priv->reset_with_ext_params_change = g_value_get_boolean (value);
 			break;
 		default:
 			break;
@@ -611,6 +741,9 @@ gda_data_select_get_property (GObject *object,
 			break;
 		case PROP_SEL_STMT: 
 			g_value_set_object (value, check_acceptable_statement (model, NULL));
+			break;
+		case PROP_RESET_WITH_EXT_PARAM:
+			g_value_set_boolean (value, model->priv->reset_with_ext_params_change);
 			break;
 		default:
 			break;
@@ -808,6 +941,10 @@ static GdaStatement *
 check_acceptable_statement (GdaDataSelect *model, GError **error)
 {
 	GdaStatement *sel_stmt;
+
+	if (model->priv->sel_stmt)
+		return model->priv->sel_stmt;
+
 	if (! model->prep_stmt) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
 			     _("Internal error: the \"prepared-stmt\" property has not been set"));
@@ -817,7 +954,7 @@ check_acceptable_statement (GdaDataSelect *model, GError **error)
 	sel_stmt = gda_pstmt_get_gda_statement (model->prep_stmt);
 	if (! sel_stmt) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
-			     _("Internal error: can't get the prepared statement's actual statement"));
+			     _("Can't get the prepared statement's actual statement"));
 		return NULL;
 	}
 
@@ -827,7 +964,8 @@ check_acceptable_statement (GdaDataSelect *model, GError **error)
 		return NULL;
 	}
 
-	return sel_stmt;
+	model->priv->sel_stmt = gda_statement_copy (sel_stmt);
+	return model->priv->sel_stmt;
 }
 
 /**
@@ -2020,13 +2158,7 @@ compute_single_select_stmt (GdaDataSelect *model, GError **error)
 	GdaSqlStatement *sel_sqlst;
 	GdaSqlExpr *row_cond = NULL;
 
-	if (! model->prep_stmt) {
-		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
-			     _("Internal error: the \"prepared-stmt\" property has not been set"));
-		return NULL;
-	}
-
-	sel_stmt = gda_pstmt_get_gda_statement (model->prep_stmt);
+	sel_stmt = model->priv->sel_stmt;
 	if (! sel_stmt) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
 			     _("Internal error: can't get the prepared statement's actual statement"));
@@ -2481,9 +2613,9 @@ gda_data_select_set_values (GdaDataModel *model, gint row, GList *values, GError
  
 	ncols = gda_data_select_get_n_columns (model);
 	nvalues = g_list_length (values);
-	if (nvalues >= ncols) {
+	if (nvalues > ncols) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
-			     _("Too many values (%d as maximum)"), ncols-1);
+			     _("Too many values (%d as maximum)"), ncols);
 		return FALSE;
 	}
 

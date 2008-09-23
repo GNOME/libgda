@@ -48,6 +48,11 @@ Data models returned by the execution of a SELECT statement
 </para>
 
 
+<!-- ##### ARG GdaDataSelect:auto-reset ##### -->
+<para>
+
+</para>
+
 <!-- ##### ARG GdaDataSelect:connection ##### -->
 <para>
 

@@ -44,7 +44,7 @@ typedef struct _GdaSqliteRecordsetPrivate GdaSqliteRecordsetPrivate;
 
 struct _GdaSqliteRecordset {
 	GdaDataSelect                  model;
-	GdaSqliteRecordsetPrivate *priv;
+	GdaSqliteRecordsetPrivate     *priv;
 };
 
 struct _GdaSqliteRecordsetClass {

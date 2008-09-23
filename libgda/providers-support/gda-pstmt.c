@@ -215,7 +215,10 @@ gda_pstmt_copy_contents (GdaPStmt *src, GdaPStmt *dest)
  * gda_pstmt_get_gda_statement
  * @pstmt: a #GdaPStmt object
  *
- * Get a pointer to the #GdaStatement which led to the creation of this prepared statement
+ * Get a pointer to the #GdaStatement which led to the creation of this prepared statement.
+ * 
+ * Note: if that statement has been modified since the creation of @pstmt, then this method
+ * will return %NULL
  *
  * Returns: the #GdaStatement
  */

@@ -24,6 +24,12 @@ Prepared statement's base class
   a #GdaStatement object in a connection using 
   <link linkend="gda-connection-add-prepared-statement">gda_connection_add_prepared_statement()</link>.
 </para>
+<para>
+  The #GdaPStmt object can keep a reference to the #GdaStatement object (which can be set and get using
+  the <link linkend="gda-pstmt-set-gda-statement">gda_pstmt_set_gda_statement()</link> and
+  <link linkend="gda-pstmt-get-gda-statement">gda_pstmt_get_gda_statement()</link>), however that reference
+  if a weak one (which means it will be lost if the #GdaStatement object is destroyed).
+</para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>

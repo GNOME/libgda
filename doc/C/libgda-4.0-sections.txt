@@ -200,30 +200,6 @@ gda_data_model_dir_get_type
 </SECTION>
 
 <SECTION>
-<FILE>gda-data-model-query</FILE>
-<TITLE>GdaDataModelQuery</TITLE>
-GdaDataModelQuery
-GdaDataModelQueryError
-GdaDataModelQueryClass
-GdaDataModelQueryPrivate
-gda_data_model_query_new
-gda_data_model_query_refresh
-gda_data_model_query_set_row_selection_condition
-gda_data_model_query_set_row_selection_condition_sql
-gda_data_model_query_compute_row_selection_condition
-gda_data_model_query_set_modification_statement
-gda_data_model_query_set_modification_statement_sql
-gda_data_model_query_compute_modification_statements
-<SUBSECTION Standard>
-GDA_DATA_MODEL_QUERY
-GDA_DATA_MODEL_QUERY_CLASS
-GDA_IS_DATA_MODEL_QUERY
-GDA_IS_DATA_MODEL_QUERY_CLASS
-GDA_TYPE_DATA_MODEL_QUERY
-gda_data_model_query_get_type
-</SECTION>
-
-<SECTION>
 <FILE>gda-data-model-import</FILE>
 <TITLE>GdaDataModelImport</TITLE>
 GdaDataModelImport

@@ -17,7 +17,7 @@
 cross_path=/fillme
 depend_path=/local/Win32
 prefix=/fillme
-version=3.99.4
+version=3.99.5
 
 
 
@@ -25,7 +25,7 @@ version=3.99.4
 # no modification below
 #
 current_dir=`pwd`
-archive=${current_dir}/gda-exe-${version}.zip
+archive=${current_dir}/gda-sql-${version}.zip
 
 
 # remove current archive if it exists

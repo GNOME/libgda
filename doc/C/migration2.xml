@@ -157,6 +157,8 @@
  	  <listitem><para>GdaDataModelFilterSQL</para></listitem>
  	  <listitem><para>GdaGraph, GdaGraphItem, GdaGraphQuery</para></listitem>
  	  <listitem><para>GdaGraphviz</para></listitem>
+ 	  <listitem><para>GdaDataModelQuery (features redundant with the 
+	      <link linkend="GdaDataSelect">GdaDataSelect</link> object) </para></listitem>
 	</itemizedlist>
       </para>
     </sect2>

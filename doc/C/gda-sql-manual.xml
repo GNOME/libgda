@@ -365,6 +365,12 @@ cnc1  | SQLite   | SalesTest                                             |
 cnc1>
       </programlisting>
     </para>
+    <para>
+      It is possible for any application to create some extra objects in that database for its own purposes, with the
+      constraint that it <emphasis>should not</emphasis> create objects with names starting with an underscore (these
+      names are reserved for &LIBGDA;'s own purposes). In the previous example, the table named "gda_sql_query_buffers"
+      is the table internally used by the console tool to store the contents of named query buffers.
+    </para>
     
     <sect2>
       <title>Information about tables</title>

@@ -1,3 +1,22 @@
+2008-09-23  Vivien Malerba <malerba@gnome-db.org>
+
+	* sqlite/gda-sqlite-recordset.c: correctly handle the situation when the object
+	is created with col_types specified
+	* libgda/gda-data-model-iter.c: behave correctly when the data model emits the "reset" signal
+	* libgda/gda-data-select.[ch]:
+	  - implemented in place re-running the SELECT statement
+	    when on of the SELECT's parameters changes (this feature is optional, use the "auto-reset"
+	    property to activate it), for bug #552708
+	  - other corrections
+	* libgda/gda-data-model-query.[ch]: removed now redundant object
+	* tests/data-models/: removed the check_model_query test and added test to check_pmodel
+	* libgda/gda-data-proxy.c:
+	* libgda/libgda.h.in: updates due to the removal of the GdaDataModelQuery object
+	* libgda/gda-data-proxy.c: free'd memory access bug corrected in commit_row_modif()
+	* WixInstaller/make-zip-exe.sh: updated the generated archive's name
+	* libgda/providers-support/gda-pstmt.c
+	* doc/C: documentation updates and improvements
+
 2008-09-20  Vivien Malerba <malerba@gnome-db.org>
 
 	* providers/postgres/gda-postgres-meta.c:
