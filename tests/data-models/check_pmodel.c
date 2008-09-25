@@ -41,6 +41,7 @@ static gboolean check_set_values (GdaDataModel *model, gint row, GList *set_valu
 				  GdaConnection *cnc, GdaStatement *stmt, GdaSet *stmt_params);
 static gint check_append_values (GdaDataModel *model, GList *set_values,
 				 GdaConnection *cnc, GdaStatement *stmt, GdaSet *stmt_params);
+static void dump_data_model (GdaDataModel *model);
 
 typedef gboolean (*TestFunc) (GdaConnection *);
 static gint test1 (GdaConnection *cnc);
@@ -58,6 +59,7 @@ static gint test12 (GdaConnection *cnc);
 static gint test13 (GdaConnection *cnc);
 static gint test14 (GdaConnection *cnc);
 static gint test15 (GdaConnection *cnc);
+static gint test16 (GdaConnection *cnc);
 
 TestFunc tests[] = {
 	test1,
@@ -74,7 +76,8 @@ TestFunc tests[] = {
 	test12,
 	test13,
 	test14,
-	test15
+	test15,
+	test16
 };
 
 int
@@ -1556,7 +1559,7 @@ test14 (GdaConnection *cnc)
 }
 
 /*
- * - Create a GdaDataSelect with a missing parameter
+ * - Create a GdaDataSelect with a parameter
  * - Set modification statements
  * - Refresh data model and compare with direct SELECT.
  *
@@ -1631,6 +1634,140 @@ test15 (GdaConnection *cnc)
         g_object_unref (stmt);
 
         return nfailed;
+}
+
+/*
+ * - Create a GdaDataSelect with a missing parameter
+ * - Set modification statements
+ * - Refresh data model and compare with direct SELECT.
+ *
+ * Returns the number of failures 
+ */
+static gint
+test16 (GdaConnection *cnc)
+{
+	GError *error = NULL;
+        GdaDataModel *model, *rerun;
+        GdaStatement *stmt;
+        GdaSet *params;
+        gint nfailed = 0;
+
+	clear_signals ();
+
+        /* create GdaDataModelQuery */
+        stmt = stmt_from_string ("SELECT * FROM customers WHERE id <= ##theid::gint");
+        g_assert (gda_statement_get_parameters (stmt, &params, NULL));
+
+        model = gda_connection_statement_execute_select_full (cnc, stmt, params, GDA_STATEMENT_MODEL_ALLOW_NOPARAM,
+							      NULL, &error);
+	if (!model) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+                g_print ("Can't run a SELECT with invalid parameters and the "
+			 "GDA_STATEMENT_MODEL_ALLOW_NOPARAM flag: %s\n",
+                         error && error->message ? error->message : "No detail");
+#endif
+                goto out;
+	}
+
+	if (gda_data_model_get_n_rows (model) != 0) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+                g_print ("Data model should report 0 row and reports: %d",
+			 gda_data_model_get_n_rows (model));
+#endif
+                goto out;
+	}
+
+	dump_data_model (model);
+
+	/* set a custom data */
+	g_object_set_data (G_OBJECT (model), "mydata", "hey");
+	monitor_model_signals (model);
+
+	/**/
+	if (! gda_set_set_holder_value (params, &error, "theid", 9)) {
+                nfailed++;
+#ifdef CHECK_EXTRA_INFO
+                g_print ("Can't set 'theid' value: %s \n",
+                         error && error->message ? error->message : "No detail");
+#endif
+                goto out;
+        }
+	check_expected_signal (model, 'R', -1);
+
+	const gchar *dstr = g_object_get_data (G_OBJECT (model), "mydata");
+	if (!dstr || strcmp (dstr, "hey")) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+                g_print ("Data model lost custom added data: expected 'hey' and got '%s'\n",
+			 dstr);
+#endif
+                goto out;
+	}
+
+	dump_data_model (model);
+
+	/**/
+	if (! gda_set_set_holder_value (params, &error, "theid", 120)) {
+                nfailed++;
+#ifdef CHECK_EXTRA_INFO
+                g_print ("Can't set 'theid' value: %s \n",
+                         error && error->message ? error->message : "No detail");
+#endif
+                goto out;
+        }
+	check_expected_signal (model, 'R', -1);
+
+	dstr = g_object_get_data (G_OBJECT (model), "mydata");
+	if (!dstr || strcmp (dstr, "hey")) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+                g_print ("Data model lost custom added data: expected 'hey' and got '%s'\n",
+			 dstr);
+#endif
+                goto out;
+	}
+
+	dump_data_model (model);
+
+	rerun = gda_connection_statement_execute_select (cnc, stmt, params, &error);
+	g_assert (rerun);
+	if (! compare_data_models (model, rerun, NULL)) {
+                nfailed++;
+#ifdef CHECK_EXTRA_INFO
+                g_print ("Data model differs after a refresh\n");
+#endif
+                goto out;
+        }
+        g_object_unref (rerun);
+
+	/**/
+	gda_holder_force_invalid (GDA_HOLDER (params->holders->data));
+	check_expected_signal (model, 'R', -1);
+	dump_data_model (model);
+
+ out:
+        g_object_unref (model);
+        g_object_unref (stmt);
+
+        return nfailed;
+}
+
+static void
+dump_data_model (GdaDataModel *model)
+{
+	gint i, ncols;
+	g_print ("=== Data Model Dump ===\n");
+	ncols = gda_data_model_get_n_columns (model);
+	for (i = 0; i < ncols; i++) {
+		GdaColumn *col;
+		col = gda_data_model_describe_column (model, i);
+		if (!col)
+			g_print ("Missing column %d\n", i);
+		g_print ("Column %d: ptr=>%p type=>%s\n", i, col, g_type_name (gda_column_get_g_type (col)));
+	}
+	gda_data_model_dump (model, stdout);
 }
 
 /*

@@ -1912,6 +1912,9 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 {
 	GdaPostgresPStmt *ps;
 	PostgresConnectionData *cdata;
+	gboolean allow_noparam;
+	gboolean empty_rs = FALSE; /* TRUE when @allow_noparam is TRUE and there is a problem with @params
+				      => resulting data model will be empty (0 row) */
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
@@ -1923,6 +1926,13 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 			     _("Provider does not support asynchronous statement execution"));
                 return NULL;
 	}
+
+	if (! (model_usage & GDA_STATEMENT_MODEL_RANDOM_ACCESS) &&
+	    ! (model_usage & GDA_STATEMENT_MODEL_CURSOR_FORWARD))
+		model_usage |= GDA_STATEMENT_MODEL_RANDOM_ACCESS;
+
+	allow_noparam = (model_usage & GDA_STATEMENT_MODEL_ALLOW_NOPARAM) &&
+		(gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_SELECT);
 
 	if (last_inserted_row)
 		*last_inserted_row = NULL;
@@ -2020,7 +2030,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 
 	for (i = 0, list = _GDA_PSTMT (ps)->param_ids; list; list = list->next, i++) {
 		const gchar *pname = (gchar *) list->data;
-		GdaHolder *h;
+		GdaHolder *h = NULL;
 		
 		/* find requested parameter */
 		if (!params) {
@@ -2032,33 +2042,51 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 			break;
 		}
 
-		h = gda_set_get_holder (params, pname);
-		if (!h) {
-			gchar *tmp = gda_alphanum_to_text (g_strdup (pname + 1));
-			if (tmp) {
-				h = gda_set_get_holder (params, tmp);
-				g_free (tmp);
+		if (params) {
+			h = gda_set_get_holder (params, pname);
+			if (!h) {
+				gchar *tmp = gda_alphanum_to_text (g_strdup (pname + 1));
+				if (tmp) {
+					h = gda_set_get_holder (params, tmp);
+					g_free (tmp);
+				}
 			}
 		}
 		if (!h) {
-			gchar *str;
-			str = g_strdup_printf (_("Missing parameter '%s' to execute query"), pname);
-			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
-			gda_connection_event_set_description (event, str);
-			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
-			g_free (str);
-			break;
+			if (! allow_noparam) {
+				gchar *str;
+				str = g_strdup_printf (_("Missing parameter '%s' to execute query"), pname);
+				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				gda_connection_event_set_description (event, str);
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
+				g_free (str);
+				break;
+			}
+			else {
+				/* bind param to NULL */
+				param_values [i] = NULL;
+				empty_rs = TRUE;
+				continue;
+			}
 		}
 		if (!gda_holder_is_valid (h)) {
-			gchar *str;
-			str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
-			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
-			gda_connection_event_set_description (event, str);
-			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
-			g_free (str);
-			break;
+			if (! allow_noparam) {
+				gchar *str;
+				str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
+				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				gda_connection_event_set_description (event, str);
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
+				g_free (str);
+				break;
+			}
+			else {
+				/* bind param to NULL */
+				param_values [i] = NULL;
+				empty_rs = TRUE;
+				continue;
+			}
 		}
 
 		/* actual binding using the C API, for parameter at position @i */
@@ -2134,8 +2162,24 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 	/* execute prepared statement using C API: random access based */
 	PGresult *pg_res;
 	GObject *retval = NULL;
-	pg_res = PQexecPrepared (cdata->pconn, ps->prep_name, nb_params, (const char * const *) param_values,
-				 param_lengths, param_formats, 0);
+
+	if (empty_rs) {
+		GdaStatement *estmt;
+		gchar *esql;
+		estmt = gda_select_alter_select_for_empty (stmt, error);
+		if (!estmt)
+			return NULL;
+		esql = gda_statement_to_sql (estmt, NULL, error);
+		g_object_unref (estmt);
+		if (!esql) 
+			return NULL;
+
+		pg_res = PQexec (cdata->pconn, esql);
+		g_free (esql);
+	}
+	else
+		pg_res = PQexecPrepared (cdata->pconn, ps->prep_name, nb_params, (const char * const *) param_values,
+					 param_lengths, param_formats, 0);
 
 	g_strfreev (param_values);
 	g_free (param_lengths);
@@ -2166,8 +2210,11 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 
                                 PQclear (pg_res);
                         }
-                        else if (status == PGRES_TUPLES_OK) 
+                        else if (status == PGRES_TUPLES_OK) {
 				retval = (GObject*) gda_postgres_recordset_new_random (cnc, ps, params, pg_res, col_types);
+				if (allow_noparam)
+					g_object_set (retval, "auto-reset", TRUE, NULL);
+			}
                         else {
                                 PQclear (pg_res);
                                 retval = (GObject *) gda_data_model_array_new (0);

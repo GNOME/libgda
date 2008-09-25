@@ -356,12 +356,12 @@ gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent,
 				}
 				if (!use_col_ids) {
 					if (str && *str) 
-						field = xmlNewChild (row, NULL,  (xmlChar*)"gda_value", (xmlChar*)str);
+						field = xmlNewTextChild (row, NULL,  (xmlChar*)"gda_value", (xmlChar*)str);
 					else
 						field = xmlNewChild (row, NULL,  (xmlChar*)"gda_value", NULL);
 				}
 				else {
-					field = xmlNewChild (row, NULL,  (xmlChar*)"gda_array_value", (xmlChar*)str);
+					field = xmlNewTextChild (row, NULL,  (xmlChar*)"gda_array_value", (xmlChar*)str);
 					xmlSetProp(field, (xmlChar*)"colid",  (xmlChar*)col_ids [c]);
 				}
 

@@ -1505,6 +1505,7 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
  * @cnc: a #GdaConnection
  * @stmt: a #GdaStatement object
  * @params: a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
+ * @model_usage: in the case where @stmt is a SELECT statement, specifies how the returned data model will be used
  * @last_insert_row: a place to store a new #GdaSet object which contains the values of the last inserted row, or %NULL
  * @error: a place to store errors, or %NULL
  *
@@ -1534,8 +1535,22 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
  *   <listitem><para>one with the '+0' ID which may for example contain 1 (note that its "name" property should be "id")</para></listitem>
  *   <listitem><para>one with the '+1' ID which will contain 'joe' (note that its "name" property should be "name")</para></listitem>
  * </itemizedlist>
- * See the <link linkend="limitations">provider's limitations</link> section for more details about this feature
- * depending on which database is accessed.
+ *
+ * Note1: If @stmt is a SELECT statement which has some parameters and  if @params is %NULL, then the statement can't
+ * be executed and this method will return %NULL.
+ *
+ * Note2: If @stmt is a SELECT statement which has some parameters and  if @params is not %NULL but contains some
+ * invalid parameters, then the statement can't be executed and this method will return %NULL, unless the
+ * @model_usage has the GDA_STATEMENT_MODEL_ALLOW_NOPARAM flag.
+ *
+ * Note3: If @stmt is a SELECT statement which has some parameters and  if @params is not %NULL but contains some
+ * invalid parameters and if @model_usage has the GDA_STATEMENT_MODEL_ALLOW_NOPARAM flag, then the returned
+ * data model will contain no row but will have all the correct columns (even though some of the columns might
+ * report as GDA_TYPE_NULL). In this case, if (after this method call) any of @params' parameters change
+ * then the resulting data model will re-run itself, see the GdaDataSelect's 
+ * <link linkend="GdaDataSelect--auto-reset">auto-reset</link> property for more information.
+ *
+ * Also see the <link linkend="limitations">provider's limitations</link> section.
  *
  * Returns: a #GObject, or %NULL if an error occurred 
  */

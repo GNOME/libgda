@@ -390,7 +390,7 @@ set_holders_properties_from_select_stmt (GdaDataModelIter *iter, GdaConnection *
 	GSList *fields, *holders;
 	for (fields = select->expr_list, holders = GDA_SET (iter)->holders; 
 	     fields && holders; 
-	     fields = fields->next, holders = holders->next) {
+	     fields = fields->next) {
 		GdaSqlSelectField *selfield = (GdaSqlSelectField*) fields->data;
 		if (selfield->validity_meta_table_column) {
 			GdaMetaTableColumn *tcol = selfield->validity_meta_table_column;
@@ -403,8 +403,10 @@ set_holders_properties_from_select_stmt (GdaDataModelIter *iter, GdaConnection *
 				gda_holder_set_default_value (GDA_HOLDER (holders->data), dvalue);
 				gda_value_free (dvalue);
 			}
+			holders = holders->next;
 		}
-		else if (selfield->validity_meta_object && (selfield->validity_meta_object->obj_type == GDA_META_DB_TABLE) &&
+		else if (selfield->validity_meta_object && 
+			 (selfield->validity_meta_object->obj_type == GDA_META_DB_TABLE) &&
 			 selfield->expr && selfield->expr->value && !selfield->expr->param_spec && 
 			 (G_VALUE_TYPE (selfield->expr->value) == G_TYPE_STRING) &&
 			 !strcmp (g_value_get_string (selfield->expr->value), "*")) {
@@ -421,10 +423,12 @@ set_holders_properties_from_select_stmt (GdaDataModelIter *iter, GdaConnection *
 					gda_holder_set_default_value (GDA_HOLDER (holders->data), dvalue);
 					gda_value_free (dvalue);
 				}
-				if (tmplist != mtable->columns)
+				if (tmplist)
 					holders = holders->next;
 			}
 		}
+		else
+			holders = holders->next;
 	}
 	if (fields || holders)
 		g_warning ("Internal error: GdaDataModelIter has %d GdaHolders, and SELECT statement has %d expressions",

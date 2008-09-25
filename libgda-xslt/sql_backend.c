@@ -423,8 +423,7 @@ _utility_data_model_to_nodeset (GdaDataModel * model,
 		xmlNodePtr row, field;
 		gint r, c;
 		for (r = 0; r < nrows; r++) {
-			row = xmlNewChild (mainnode, NULL,
-					   (xmlChar *) "row", NULL);
+			row = xmlNewChild (mainnode, NULL, (xmlChar *) "row", NULL);
 			for (c = 0; c < rnb_cols; c++) {
 				GValue *value;
 				xmlChar *str = NULL;
@@ -441,7 +440,7 @@ _utility_data_model_to_nodeset (GdaDataModel * model,
 					isnull = TRUE;
 				else 
 					str = value_to_xmlchar (value);
-				field = xmlNewChild (row, NULL, (xmlChar *) "column", (xmlChar *) str);
+				field = xmlNewTextChild (row, NULL, (xmlChar *) "column", (xmlChar *) str);
 				xmlSetProp (field, (xmlChar *) "name", (xmlChar *) col_ids[c]);
 				if (isnull)
 					xmlSetProp (field, (xmlChar *) "isnull", (xmlChar *) "true");

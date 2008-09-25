@@ -442,8 +442,7 @@ node_get_complete_path (GdaServerOperation *op, Node *node)
 		return NULL;
 
 	string = g_string_new ("");
-	lnode = node;
-	while (lnode) {
+	for (lnode = node; lnode; lnode = lnode->parent) {
 		if (lnode->type == GDA_SERVER_OPERATION_NODE_SEQUENCE_ITEM) {
 			gchar *str;
 
@@ -456,7 +455,6 @@ node_get_complete_path (GdaServerOperation *op, Node *node)
 		else 
 			g_string_prepend (string, lnode->path_name);
 		g_string_prepend_c (string, '/');
-		lnode = lnode->parent;
 	}
 
 	retval = string->str;
@@ -474,7 +472,7 @@ sequence_add_item (GdaServerOperation *op, Node *node)
 {
 	gchar *path, *seq_path;
 	Node *new_node;
-	GSList *seq_item_nodes;
+	GSList *seq_item_nodes, *list;
 
 	g_assert (node);
 	g_assert (node->type == GDA_SERVER_OPERATION_NODE_SEQUENCE);
@@ -492,6 +490,8 @@ sequence_add_item (GdaServerOperation *op, Node *node)
 	node->d.seq.seq_items = g_slist_append (node->d.seq.seq_items, new_node);
 
 	new_node->d.seq_item_nodes = seq_item_nodes;
+	for (list = seq_item_nodes; list; list = list->next)
+		((Node*) list->data)->parent = new_node;
 
 	clean_nodes_info_cache (op);
 #ifdef GDA_DEBUG_signal
@@ -702,6 +702,9 @@ xml_validity_error_func (void *ctx, const char *msg, ...)
         g_object_set_data (G_OBJECT (op), "xmlerror", newerr);
 }
 
+/*
+ * Warning: the new nodes' parent is not set!
+ */
 static GSList *
 load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root, GError **error)
 {
@@ -1213,7 +1216,7 @@ node_save (GdaServerOperation *op, Node *opnode, xmlNodePtr parent)
 				else
 					str = gda_value_stringify (value);
 			}
-			node = xmlNewChild (parent, NULL, BAD_CAST "op_data", (xmlChar*)str);
+			node = xmlNewTextChild (parent, NULL, BAD_CAST "op_data", (xmlChar*)str);
 			g_free (str);
 
 			path = g_strdup_printf ("%s/%s", complete_path, gda_holder_get_id (GDA_HOLDER (list->data)));
@@ -1242,7 +1245,7 @@ node_save (GdaServerOperation *op, Node *opnode, xmlNodePtr parent)
 			else
 				str = gda_value_stringify (value);
 		}
-		node = xmlNewChild (parent, NULL, BAD_CAST "op_data", (xmlChar*)str);
+		node = xmlNewTextChild (parent, NULL, BAD_CAST "op_data", (xmlChar*)str);
 		g_free (str);
 		xmlSetProp(node, (xmlChar*)"path", (xmlChar*)complete_path);
 		break;

@@ -53,7 +53,8 @@ struct _GdaSqliteRecordsetClass {
 
 GType         gda_sqlite_recordset_get_type  (void) G_GNUC_CONST;
 GdaDataModel *gda_sqlite_recordset_new       (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_params,
-					      GdaDataModelAccessFlags flags, GType *col_types);
+					      GdaDataModelAccessFlags flags, GType *col_types, 
+					      gboolean force_empty);
 
 G_END_DECLS
 

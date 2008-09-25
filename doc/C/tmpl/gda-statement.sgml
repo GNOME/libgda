@@ -82,7 +82,8 @@ These flags specify how the #GdaDataModel returned when executing a #GdaStatemen
 @GDA_STATEMENT_MODEL_RANDOM_ACCESS: access to the data model will be random (usually this will result in a data model completely stored in memory)
 @GDA_STATEMENT_MODEL_CURSOR_FORWARD: access to the data model will be done using a cursor moving forward
 @GDA_STATEMENT_MODEL_CURSOR_BACKWARD: access to the data model will be done using a cursor moving backward
-@GDA_STATEMENT_MODEL_CURSOR: 
+@GDA_STATEMENT_MODEL_CURSOR: access to the data model will be done using a cursor (moving both forward and backward)
+@GDA_STATEMENT_MODEL_ALLOW_NOPARAM: specifies that the data model should be executed even if some parameters required to execute it are invalid (in this case the data model will have no row, and will automatically be re-run when the missing parameters are once again valid)
 
 <!-- ##### ENUM GdaStatementError ##### -->
 <para>

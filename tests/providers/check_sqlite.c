@@ -32,6 +32,7 @@ main (int argc, char **argv)
 		number_failed += prov_test_common_check_meta ();
 		number_failed += prov_test_common_load_data ();
 		number_failed += prov_test_common_check_cursor_models ();
+		number_failed += prov_test_common_check_data_select ();
 		number_failed += prov_test_common_clean ();
 	}
 

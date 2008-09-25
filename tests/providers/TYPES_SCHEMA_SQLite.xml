@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <gda_array id="EXPORT" name="Exported Data">
-  <gda_array_field id="FI0" name="short_type_name" title="short_type_name" gdatype="gchararray"/>
-  <gda_array_field id="FI1" name="gtype" title="gtype" gdatype="gchararray"/>
+  <gda_array_field id="FI0" name="short_type_name" title="short_type_name" gdatype="gchararray" nullok="TRUE"/>
+  <gda_array_field id="FI1" name="gtype" title="gtype" gdatype="gchararray" nullok="TRUE"/>
   <gda_array_field id="FI2" name="comments" title="comments" gdatype="gchararray" nullok="TRUE"/>
   <gda_array_field id="FI3" name="synonyms" title="synonyms" gdatype="gchararray" nullok="TRUE"/>
   <gda_array_data>
@@ -30,9 +30,27 @@
       <gda_value>int</gda_value>
     </gda_array_row>
     <gda_array_row>
+      <gda_value>numeric(4,2)</gda_value>
+      <gda_value>gchararray</gda_value>
+      <gda_value isnull="t"/>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>numeric(5,2)</gda_value>
+      <gda_value>gchararray</gda_value>
+      <gda_value isnull="t"/>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
       <gda_value>real</gda_value>
       <gda_value>gdouble</gda_value>
       <gda_value>Floating point value, stored as an 8-byte IEEE floating point number</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>smallint</gda_value>
+      <gda_value>gint</gda_value>
+      <gda_value isnull="t"/>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>

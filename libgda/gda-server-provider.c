@@ -500,7 +500,7 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
 					value = gda_holder_get_value (GDA_HOLDER (list->data));
 					if (value)
 						str = gda_value_stringify (value);
-					node = xmlNewChild (top, NULL, BAD_CAST "op_data", BAD_CAST str);
+					node = xmlNewTextChild (top, NULL, BAD_CAST "op_data", BAD_CAST str);
 					g_free (str);
 					xmlSetProp (node, BAD_CAST "path", BAD_CAST id);
 				}

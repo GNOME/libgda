@@ -360,7 +360,7 @@ ext_params_holder_changed_cb (GdaSet *paramlist, GdaHolder *param, GdaDataSelect
 		}
 		new_model = (GdaDataSelect*) gda_connection_statement_execute_select_full (model->priv->cnc, select, 
 											   model->priv->ext_params, 
-											   model->priv->usage_flags,
+											   model->priv->usage_flags | GDA_STATEMENT_MODEL_ALLOW_NOPARAM,
 											   types, 
 											   &error);
 		g_free (types);
@@ -369,6 +369,7 @@ ext_params_holder_changed_cb (GdaSet *paramlist, GdaHolder *param, GdaDataSelect
 				   error && error->message ? error->message : _("No detail"));
 			if (error)
 				g_error_free (error);
+			/* FIXME: clear all the rows in @model, and emit the "reset" signal */
 			return;
 		}
 
@@ -399,6 +400,20 @@ ext_params_holder_changed_cb (GdaSet *paramlist, GdaHolder *param, GdaDataSelect
 		old_model->priv->sel_stmt = model->priv->sel_stmt;
 		model->priv->sel_stmt = (GdaStatement*) copy;
 
+		/* keep the same GdaColumn pointers */
+		GSList *l1, *l2;
+		l1 = old_model->priv->columns;
+		old_model->priv->columns = model->priv->columns;
+		model->priv->columns = l1;
+		for (l1 = model->priv->columns, l2 = old_model->priv->columns;
+		     l1 && l2;
+		     l1 = l1->next, l2 = l2->next) {
+			if ((gda_column_get_g_type ((GdaColumn*) l1->data) == GDA_TYPE_NULL) &&
+			    (gda_column_get_g_type ((GdaColumn*) l2->data) != GDA_TYPE_NULL))
+				gda_column_set_g_type ((GdaColumn*) l1->data, 
+						       gda_column_get_g_type ((GdaColumn*) l2->data));
+		}
+
 		g_object_unref (old_model);
 
 		/* copy all the param's holders' values from model->priv->ext_params to 
@@ -408,14 +423,18 @@ ext_params_holder_changed_cb (GdaSet *paramlist, GdaHolder *param, GdaDataSelect
 			GdaHolder *h;
 			h = gda_set_get_holder (model->priv->modif_internals->exec_set,
 						gda_holder_get_id (list->data));
-			if (h) 
-				if (! gda_holder_set_value (h, gda_holder_get_value (GDA_HOLDER (list->data)), &error)) {
+			if (h) {
+				if (!gda_holder_is_valid (GDA_HOLDER (list->data))) 
+					gda_holder_set_value (h, gda_holder_get_value (GDA_HOLDER (list->data)), NULL);
+				else if (! gda_holder_set_value (h, gda_holder_get_value (GDA_HOLDER (list->data)),
+								 &error)) {
 					g_warning (_("An error has occurred, the value returned by the \"exec-params\" "
 						     "property will be wrong: %s"),
 						   error && error->message ? error->message : _("No detail"));
 					if (error)
 						g_error_free (error);
 				}
+			}
 		}
 
 		/* signal a reset */
@@ -1942,9 +1961,30 @@ update_iter (GdaDataSelect *imodel, GdaRow *prow)
 	     plist;
 	     i++, plist = plist->next) {
 		const GValue *value;
+		GError *error = NULL;
 		value = gda_row_get_value (prow, i);
-		if (! gda_holder_set_value ((GdaHolder*) plist->data, value, NULL))
-			retval = FALSE;
+		if (! gda_holder_set_value ((GdaHolder*) plist->data, value, &error)) {
+			if (gda_holder_get_not_null ((GdaHolder*) plist->data) &&
+			    gda_value_is_null (value)) {
+				gda_holder_set_not_null ((GdaHolder*) plist->data, FALSE);
+				if (! gda_holder_set_value ((GdaHolder*) plist->data, value, NULL)) {
+					retval = FALSE;
+					g_warning (_("Could not change iter's value for column %d: %s"), i,
+						   error && error->message ? error->message : _("No detail"));
+					gda_holder_set_not_null ((GdaHolder*) plist->data, TRUE);
+				}
+				else 
+					g_warning (_("Allowed GdaHolder's value to be NULL for the iterator "
+						     "to be updated"));
+			}
+			else {
+				retval = FALSE;
+				g_warning (_("Could not change iter's value for column %d: %s"), i,
+					   error && error->message ? error->message : _("No detail"));
+			}
+			if (error)
+				g_error_free (error);
+		}
         }
 
 	g_object_set (G_OBJECT (iter), "current-row", imodel->priv->iter_row, NULL);

@@ -50,6 +50,11 @@ gboolean gda_server_provider_perform_operation_default (GdaServerProvider *provi
 GdaDataHandler *gda_server_provider_get_data_handler_default (GdaServerProvider *provider, GdaConnection *cnc,
 							      GType type, const gchar *dbms_type);
 
+/* Convert a SELECT statement with potentially some parameters to another SELECT statement
+ * where all the parameters are removed and where the WHERE condition is set to "0 = 1"
+ * to make sure no row will ever be returned
+ */
+GdaStatement *gda_select_alter_select_for_empty (GdaStatement *stmt, GError **error);
 
 /*
  * Help to implement the GdaDataHandler retreiving for the providers

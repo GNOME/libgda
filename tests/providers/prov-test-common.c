@@ -2,6 +2,7 @@
 #include <string.h>
 #include "prov-test-common.h"
 #include "prov-test-util.h"
+#include <sql-parser/gda-sql-parser.h>
 #include <sql-parser/gda-sql-statement.h>
 #include "../test-cnc-utils.h"
 
@@ -247,4 +248,119 @@ prov_test_common_check_cursor_models ()
 		number_failed++;
 
 	return number_failed;	
+}
+
+/*
+ *
+ * Check for the GdaDataModel returned from a SELECT combined with the GDA_STATEMENT_MODEL_ALLOW_NOPARAM
+ * flag
+ *
+ */
+int 
+prov_test_common_check_data_select ()
+{
+	GdaSqlParser *parser = NULL;
+	GdaStatement *stmt = NULL;
+	GdaSet *params = NULL;
+	GError *error = NULL;
+	int number_failed = 0;
+	GdaDataModel *model = NULL;
+	const gchar *remain;
+	GSList *columns;
+	gint i, ncols;
+
+	parser = gda_connection_create_parser (cnc);
+	if (!parser)
+		parser = gda_sql_parser_new ();
+
+	/* create statement */
+	stmt = gda_sql_parser_parse_string (parser, "SELECT * FROM actor WHERE actor_id <= ##theid::gint", 
+					    &remain, &error);
+	if (!stmt) {
+		number_failed ++;
+		goto out;
+	}
+	if (remain) {
+		g_set_error (&error, 0, 0,
+			     "Parsing error, remains: %s", remain);
+		number_failed ++;
+		goto out;
+	}
+	
+	/* get model */
+	if (! (gda_statement_get_parameters (stmt, &params, &error))) {
+		number_failed ++;
+		goto out;
+	}
+
+	model = gda_connection_statement_execute_select_full (cnc, stmt, params, GDA_STATEMENT_MODEL_ALLOW_NOPARAM,
+                                                              NULL, &error);
+	if (!model) {
+		number_failed ++;
+		goto out;
+	}
+
+	if (gda_data_model_get_n_rows (model) != 0) {
+		g_set_error (&error, 0, 0,
+			     "Data model reports %d rows when 0 expected", gda_data_model_get_n_rows (model));
+		number_failed ++;
+		goto out;
+	}
+
+	ncols = gda_data_model_get_n_columns (model);
+	for (columns = NULL, i = 0;
+	     i < ncols; i++) 
+		columns = g_slist_append (columns, gda_data_model_describe_column (model, i));
+
+	/* change param */
+	if (! gda_set_set_holder_value (params, &error, "theid", 9)) {
+                number_failed++;
+                goto out;
+        }
+
+	if (gda_data_model_get_n_rows (model) != 9) {
+		g_set_error (&error, 0, 0,
+			     "Data model reports %d rows when 9 expected", gda_data_model_get_n_rows (model));
+		number_failed ++;
+		goto out;
+	}
+
+	/* chech the columns haven't changed */
+	ncols = gda_data_model_get_n_columns (model);
+	if (i != ncols) {
+		g_set_error (&error, 0, 0,
+			     "Number of columns has changed from %d to %d\n", i, ncols);
+		number_failed ++;
+		goto out;
+	}
+
+	for (i = 0; i < ncols; i++) {
+		if (gda_data_model_describe_column (model, i) != g_slist_nth_data (columns, i)) {
+			g_set_error (&error, 0, 0,
+				     "GdaColumn %d has changed from %p to %p\n", i, 
+				     g_slist_nth_data (columns, i),
+				     gda_data_model_describe_column (model, i));
+			number_failed ++;
+			goto out;
+		}
+	}
+
+ out:
+	if (stmt)
+		g_object_unref (stmt);
+	if (params)
+		g_object_unref (params);
+	if (model)
+		g_object_unref (model);
+	g_object_unref (parser);
+
+#ifdef CHECK_EXTRA_INFO
+	g_print ("GdaDataSelect test resulted in %d error(s)\n", number_failed);
+	if (number_failed != 0) 
+		g_print ("error: %s\n", error && error->message ? error->message : "No detail");
+	if (error)
+		g_error_free (error);
+#endif
+
+	return number_failed;
 }

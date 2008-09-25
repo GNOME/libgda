@@ -1211,7 +1211,7 @@ output_data_model (MainData *data, GdaDataModel *model)
 		
 		if (g_object_get_data (G_OBJECT (model), "name")) {
 			node = xmlNewChild (table, NULL, BAD_CAST "caption", NULL);
-			xmlNewChild (node, NULL, BAD_CAST "big", g_object_get_data (G_OBJECT (model), "name"));
+			xmlNewTextChild (node, NULL, BAD_CAST "big", g_object_get_data (G_OBJECT (model), "name"));
 		}
 
 		ncols = gda_data_model_get_n_columns (model);
@@ -1221,7 +1221,7 @@ output_data_model (MainData *data, GdaDataModel *model)
 		for (j = 0; j < ncols; j++) {
 			const gchar *cstr;
 			cstr = gda_data_model_get_column_title (model, j);
-			col_node = xmlNewChild (row_node, NULL, BAD_CAST "th", BAD_CAST cstr);
+			col_node = xmlNewTextChild (row_node, NULL, BAD_CAST "th", BAD_CAST cstr);
 			xmlSetProp (col_node, BAD_CAST "align", BAD_CAST "center");
 		}
 
@@ -1237,7 +1237,7 @@ output_data_model (MainData *data, GdaDataModel *model)
 				}
 				else {
 					str = gda_value_stringify (value);
-					col_node = xmlNewChild (row_node, NULL, BAD_CAST "td", BAD_CAST str);
+					col_node = xmlNewTextChild (row_node, NULL, BAD_CAST "td", BAD_CAST str);
 					xmlSetProp (col_node, BAD_CAST "align", BAD_CAST "left");
 					g_free (str);
 				}

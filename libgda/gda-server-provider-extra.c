@@ -180,6 +180,75 @@ gda_server_provider_get_data_handler_default (GdaServerProvider *provider, GdaCo
 	return dh;
 }
 
+static gboolean
+param_to_null_foreach (GdaSqlAnyPart *part, gpointer data, GError **error)
+{
+	if (part->type == GDA_SQL_ANY_EXPR) {
+		GdaSqlExpr *expr = (GdaSqlExpr*) part;
+		if (expr->param_spec) {
+			GType type = expr->param_spec->g_type;
+			gda_sql_param_spec_free (expr->param_spec);
+			expr->param_spec = NULL;
+
+			if (!expr->value) {
+				if (type != GDA_TYPE_NULL)
+					expr->value = gda_value_new_from_string ("0", type);
+				else
+					g_value_set_int ((expr->value = gda_value_new (G_TYPE_INT)), 0);
+			}
+		}
+	}
+	return TRUE;
+}
+
+/**
+ * gda_select_alter_select_for_empty
+ *
+ * Returns: a new #GdaStatement
+ */
+GdaStatement *
+gda_select_alter_select_for_empty (GdaStatement *stmt, GError **error)
+{
+	GdaStatement *estmt;
+	GdaSqlStatement *sqlst;
+	GdaSqlStatementSelect *stsel;
+
+	g_assert (gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_SELECT);
+	g_object_get (G_OBJECT (stmt), "structure", &sqlst, NULL);
+	g_assert (sqlst);
+
+	if (sqlst->sql) {
+		g_free (sqlst->sql);
+		sqlst->sql = NULL;
+	}
+	stsel = (GdaSqlStatementSelect*) sqlst->contents;
+
+	/* set the WHERE condition to "1 = 0" */
+	GdaSqlExpr *expr, *cond = stsel->where_cond;
+	GdaSqlOperation *op;
+	if (cond)
+		gda_sql_expr_free (cond);
+	cond = gda_sql_expr_new (GDA_SQL_ANY_PART (stsel));
+	stsel->where_cond = cond;
+	op = gda_sql_operation_new (GDA_SQL_ANY_PART (cond));
+	cond->cond = op;
+	op->operator_type = GDA_SQL_OPERATOR_TYPE_EQ;
+	expr = gda_sql_expr_new (GDA_SQL_ANY_PART (op));
+	op->operands = g_slist_prepend (NULL, expr);
+	g_value_set_int ((expr->value = gda_value_new (G_TYPE_INT)), 1);
+	expr = gda_sql_expr_new (GDA_SQL_ANY_PART (op));
+	op->operands = g_slist_prepend (op->operands, expr);
+	g_value_set_int ((expr->value = gda_value_new (G_TYPE_INT)), 0);
+
+	/* replace any selected field which has a parameter with NULL */
+	gda_sql_any_part_foreach (GDA_SQL_ANY_PART (stsel), (GdaSqlForeachFunc) param_to_null_foreach,
+				  NULL, NULL);
+
+	/* create new statement */
+	estmt = g_object_new (GDA_TYPE_STATEMENT, "structure", sqlst, NULL);
+	gda_sql_statement_free (sqlst);
+	return estmt;
+}
 
 /**
  * gda_server_provider_get_schema_nb_columns

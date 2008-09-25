@@ -82,7 +82,7 @@ main (int argc, char** argv)
 				g_free (str);
 
 				str = g_strdup_printf ("%s table", (gchar *) prop);
-				xmlNewChild (snode, NULL, BAD_CAST "title", BAD_CAST str);
+				xmlNewTextChild (snode, NULL, BAD_CAST "title", BAD_CAST str);
 				g_free (str);
 				xmlFree (prop);
 			}
@@ -91,7 +91,7 @@ main (int argc, char** argv)
 
 			prop = xmlGetProp (node, BAD_CAST "descr");
 			if (prop) {
-				xmlNewChild (snode, NULL, BAD_CAST "para", prop);
+				xmlNewTextChild (snode, NULL, BAD_CAST "para", prop);
 				xmlFree (prop);
 			}
 			table = xmlNewChild (snode, NULL, BAD_CAST "para", BAD_CAST "The following table describes the columns:");
@@ -136,7 +136,7 @@ main (int argc, char** argv)
 					if (prop) xmlFree (prop);
 
 					prop = xmlGetProp (child, BAD_CAST "descr");
-					xmlNewChild (row, NULL, BAD_CAST "entry", prop ? prop : BAD_CAST "");
+					xmlNewTextChild (row, NULL, BAD_CAST "entry", prop ? prop : BAD_CAST "");
 					if (prop) xmlFree (prop);
 				}
 				else if (!strcmp ((gchar *) child->name, "fkey")) {
@@ -190,7 +190,7 @@ main (int argc, char** argv)
 							g_string_free (fk_str, TRUE);
 						}
 						xmlNodeAddContent (fkey, BAD_CAST "references ");
-						link = xmlNewChild (fkey, NULL, BAD_CAST "link", prop);
+						link = xmlNewTextChild (fkey, NULL, BAD_CAST "link", prop);
 						str = g_strdup_printf ("is:%s", prop);
 						xmlSetProp (link, BAD_CAST "linkend", BAD_CAST str);
 						g_free (str);
@@ -219,7 +219,7 @@ main (int argc, char** argv)
 				g_free (str);
 
 				str = g_strdup_printf ("%s view", (gchar *) prop);
-				xmlNewChild (snode, NULL, BAD_CAST "title", BAD_CAST str);
+				xmlNewTextChild (snode, NULL, BAD_CAST "title", BAD_CAST str);
 				g_free (str);
 				xmlFree (prop);
 			}
@@ -228,7 +228,7 @@ main (int argc, char** argv)
 
 			prop = xmlGetProp (node, BAD_CAST "descr");
 			if (prop) {
-				xmlNewChild (snode, NULL, BAD_CAST "para", prop);
+				xmlNewTextChild (snode, NULL, BAD_CAST "para", prop);
 				xmlFree (prop);
 			}
 			for (child = node->children; child; child = child->next) {
@@ -237,7 +237,7 @@ main (int argc, char** argv)
 
 					def = xmlNodeGetContent (child);
 					para = xmlNewChild (snode, NULL, BAD_CAST "para", BAD_CAST "Definition is:");
-					para = xmlNewChild (para, NULL, BAD_CAST "programlisting", def);
+					para = xmlNewTextChild (para, NULL, BAD_CAST "programlisting", def);
 					xmlSetProp (para, BAD_CAST "width", BAD_CAST "80");
 					xmlFree (def);
 					break;

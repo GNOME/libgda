@@ -1819,6 +1819,9 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 	GdaSqlitePStmt *ps;
 	SqliteConnectionData *cdata;
 	gboolean new_ps = FALSE;
+	gboolean allow_noparam;
+	gboolean empty_rs = FALSE; /* TRUE when @allow_noparam is TRUE and there is a problem with @params
+				      => resulting data model will be empty (0 row) */
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
@@ -1829,6 +1832,13 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			     _("Provider does not support asynchronous statement execution"));
                 return NULL;
 	}
+
+	if (! (model_usage & GDA_STATEMENT_MODEL_RANDOM_ACCESS) &&
+	    ! (model_usage & GDA_STATEMENT_MODEL_CURSOR_FORWARD))
+		model_usage |= GDA_STATEMENT_MODEL_RANDOM_ACCESS;
+	
+	allow_noparam = (model_usage & GDA_STATEMENT_MODEL_ALLOW_NOPARAM) &&
+		(gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_SELECT);
 
 	if (last_inserted_row)
 		*last_inserted_row = NULL;
@@ -1936,7 +1946,8 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 	int i;
 	for (i = 1, list = _GDA_PSTMT (ps)->param_ids; list; list = list->next, i++) {
 		const gchar *pname = (gchar *) list->data;
-		
+		GdaHolder *h = NULL;		
+
 		if (!params) {
 			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 			gda_connection_event_set_description (event, _("Missing parameter(s) to execute query"));
@@ -1946,34 +1957,52 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			break;
 		}
 
-		GdaHolder *h;
-		h = gda_set_get_holder (params, pname);
-		if (!h) {
-			gchar *tmp = gda_alphanum_to_text (g_strdup (pname + 1));
-			if (tmp) {
-				h = gda_set_get_holder (params, tmp);
-				g_free (tmp);
+		if (params) {
+			h = gda_set_get_holder (params, pname);
+			if (!h) {
+				gchar *tmp = gda_alphanum_to_text (g_strdup (pname + 1));
+				if (tmp) {
+					h = gda_set_get_holder (params, tmp);
+					g_free (tmp);
+				}
 			}
 		}
 		if (!h) {
-			gchar *str;
-			str = g_strdup_printf (_("Missing parameter '%s' to execute query"), pname);
-			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
-			gda_connection_event_set_description (event, str);
-			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
-			g_free (str);
-			break;
+			if (! allow_noparam) {
+				gchar *str;
+				str = g_strdup_printf (_("Missing parameter '%s' to execute query"), pname);
+				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				gda_connection_event_set_description (event, str);
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
+				g_free (str);
+				break;
+			}
+			else {
+				/* bind param to NULL */
+				sqlite3_bind_null (ps->sqlite_stmt, i);
+				empty_rs = TRUE;
+				continue;
+			}
 		}
+
 		if (!gda_holder_is_valid (h)) {
-			gchar *str;
-			str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
-			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
-			gda_connection_event_set_description (event, str);
-			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
-			g_free (str);
-			break;
+			if (! allow_noparam) {
+				gchar *str;
+				str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
+				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				gda_connection_event_set_description (event, str);
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
+				g_free (str);
+				break;
+			}
+			else {
+				/* bind param to NULL */
+				sqlite3_bind_null (ps->sqlite_stmt, i);
+				empty_rs = TRUE;
+				continue;
+			}
 		}
 		/*g_print ("BINDING param '%s' to %p\n", pname, h);*/
 		
@@ -2089,7 +2118,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		else
 			flags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD;
 
-                data_model = (GObject *) gda_sqlite_recordset_new (cnc, ps, params, flags, col_types);
+                data_model = (GObject *) gda_sqlite_recordset_new (cnc, ps, params, flags, col_types, empty_rs);
 		gda_connection_internal_statement_executed (cnc, stmt, params, NULL);
 		if (new_ps)
 			g_object_unref (ps);

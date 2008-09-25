@@ -344,13 +344,13 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 	table = xmlNewChild (file->body, NULL, "table", NULL);
 	xmlSetProp (table, "width", (xmlChar*)"100%");
 	tr = xmlNewChild (table, NULL, "tr", NULL);
-	td = xmlNewChild (tr, NULL, "th", header_str);
+	td = xmlNewTextChild (tr, NULL, "th", header_str);
 	xmlSetProp (td, "colspan", (xmlChar*)"4");
 
 	/* line 1 */
 	tr = xmlNewChild (table, NULL, "tr", NULL);
 	xmlNewChild (tr, NULL, "td", "Provider's name:");
-	td = xmlNewChild (tr, NULL, "td", gda_server_provider_get_name (prov));
+	td = xmlNewTextChild (tr, NULL, "td", gda_server_provider_get_name (prov));
 	xmlSetProp (td, "width", (xmlChar*)"35%");
 	xmlNewChild (tr, NULL, "td", "Provider is virtual:");
 	td = xmlNewChild (tr, NULL, "td", is_virt ? "Yes (uses the SQLite engine)" : "No");
@@ -359,16 +359,16 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 	/* line 2 */
 	tr = xmlNewChild (table, NULL, "tr", NULL);
 	xmlNewChild (tr, NULL, "td", "Provider's version:");
-	xmlNewChild (tr, NULL, "td", gda_server_provider_get_version (prov));
+	xmlNewTextChild (tr, NULL, "td", gda_server_provider_get_version (prov));
 	xmlNewChild (tr, NULL, "td", "Provider's server version:");
-	xmlNewChild (tr, NULL, "td", cnc ? gda_server_provider_get_server_version (prov, cnc) : "(non connected)");
+	xmlNewTextChild (tr, NULL, "td", cnc ? gda_server_provider_get_server_version (prov, cnc) : "(non connected)");
 
 	/* line 3 */
 	tr = xmlNewChild (table, NULL, "tr", NULL);
 	xmlNewChild (tr, NULL, "td", "Provider's description:");
-	xmlNewChild (tr, NULL, "td", pinfo->description);
+	xmlNewTextChild (tr, NULL, "td", pinfo->description);
 	xmlNewChild (tr, NULL, "td", "Filename:");
-	xmlNewChild (tr, NULL, "td", pinfo->location);
+	xmlNewTextChild (tr, NULL, "td", pinfo->location);
 
 	/* line 4 */
 	parser = gda_server_provider_create_parser (prov, cnc);
@@ -391,7 +391,7 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 			str = g_strdup_printf (", %s()", pf->name);
 		else
 			str = g_strdup_printf ("%s()", pf->name);
-		span = xmlNewChild (td, NULL, "span", str);
+		span = xmlNewTextChild (td, NULL, "span", str);
 		g_free (str);
 		if (pf->should_be)
 			xmlSetProp (span, "class", (xmlChar*)"error");
@@ -415,7 +415,7 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 			str = g_strdup_printf (", %s()", pf->name);
 		else
 			str = g_strdup_printf ("%s()", pf->name);
-		span = xmlNewChild (td, NULL, "span", str);
+		span = xmlNewTextChild (td, NULL, "span", str);
 		g_free (str);
 		if (pf->should_be)
 			xmlSetProp (span, "class", (xmlChar*)"error");
@@ -454,7 +454,7 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 					str = g_strdup_printf (", %s()", pf->name);
 				else
 					str = g_strdup_printf ("%s()", pf->name);
-				span = xmlNewChild (td, NULL, "span", str);
+				span = xmlNewTextChild (td, NULL, "span", str);
 				g_free (str);
 				if (pf->should_be)
 					xmlSetProp (span, "class", (xmlChar*)"error");
@@ -465,7 +465,7 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 	}
 	else {
 		if (has_xa) {
-			td = xmlNewChild (tr, NULL, "td", 
+			td = xmlNewTextChild (tr, NULL, "td", 
 					  (xmlChar*) "The provider does not have the 'xa_funcs' part but "
 					  "reports that distributed transactions are "
 					  "supported.");
@@ -491,7 +491,7 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 			else
 				str = g_strdup (gda_holder_get_id (holder));
 			g_free (descr);
-			div = xmlNewChild (td, NULL, "div", str);
+			div = xmlNewTextChild (td, NULL, "div", str);
 			g_free (str);
 		}
 	}
@@ -514,7 +514,7 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 				else
 					str = g_strdup (gda_holder_get_id (holder));
 				g_free (descr);
-				div = xmlNewChild (td, NULL, "div", str);
+				div = xmlNewTextChild (td, NULL, "div", str);
 				g_free (str);
 			}
 		}
@@ -543,7 +543,7 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 		}
 	}
 	if (string) {
-		xmlNewChild (tr, NULL, "td", string->str);
+		xmlNewTextChild (tr, NULL, "td", string->str);
 		g_string_free (string, TRUE);
 	}
 	else
@@ -563,7 +563,7 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 		}
 	}
 	if (string) {
-		xmlNewChild (tr, NULL, "td", string->str);
+		xmlNewTextChild (tr, NULL, "td", string->str);
 		g_string_free (string, TRUE);
 	}
 	else

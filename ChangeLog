@@ -1,3 +1,26 @@
+2008-09-25  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-server-provider-extra.[ch]: new gda_select_alter_select_for_empty()
+	functions
+	* tools/gda-sql.c:
+	* tools/information-schema-doc.c:
+	* testing/gda-provider-status.c:
+	* libgda-xslt/sql_backend.c:
+	* libgda/gda-util.c:
+	* libgda/gda-server-provider.c: use xmlNewTextChild instead of xmlNewChild when necessary
+	* libgda/gda-statement.h: new GDA_STATEMENT_MODEL_ALLOW_NOPARAM flag
+	* libgda/sqlite/gda-sqlite-provider.c:
+	* libgda/sqlite/gda-sqlite-recordset.[ch]:
+	* providers/postgres/gda-postgres-provider.c:
+	* libgda/gda-data-select.c: allow SELECT statement execution with invalid parameters
+	to return an empty data model (if GDA_STATEMENT_MODEL_ALLOW_NOPARAM is set), in which
+	case changing a parameter will re-run the SELECT, for bug #552708
+	* libgda/gda-server-operation.c: bug fixed
+	* libgda/gda-data-model-iter.c: bug fixed in GdaHolder's properties
+	* tests/: tests updates
+	* libgda/gda-connection.c:
+	* doc/C: doc. updates
+
 2008-09-23  Vivien Malerba <malerba@gnome-db.org>
 
 	* sqlite/gda-sqlite-recordset.c: correctly handle the situation when the object

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <gda_array id="EXPORT" name="Exported Data">
-  <gda_array_field id="FI0" name="short_type_name" title="short_type_name" gdatype="gchararray"/>
-  <gda_array_field id="FI1" name="gtype" title="gtype" gdatype="gchararray"/>
+  <gda_array_field id="FI0" name="short_type_name" title="short_type_name" gdatype="gchararray" nullok="TRUE"/>
+  <gda_array_field id="FI1" name="gtype" title="gtype" gdatype="gchararray" nullok="TRUE"/>
   <gda_array_field id="FI2" name="comments" title="comments" gdatype="gchararray" nullok="TRUE"/>
   <gda_array_field id="FI3" name="synonyms" title="synonyms" gdatype="null" nullok="TRUE"/>
   <gda_array_data>
@@ -69,6 +69,12 @@
       <gda_value>float8</gda_value>
       <gda_value>gdouble</gda_value>
       <gda_value>double-precision floating point number, 8-byte storage</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>gtsvector</gda_value>
+      <gda_value>gchararray</gda_value>
+      <gda_value>GiST index internal text representation for text search</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
@@ -156,6 +162,18 @@
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
+      <gda_value>regconfig</gda_value>
+      <gda_value>gchararray</gda_value>
+      <gda_value>registered text search configuration</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>regdictionary</gda_value>
+      <gda_value>gchararray</gda_value>
+      <gda_value>registered text search dictionary</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
       <gda_value>reltime</gda_value>
       <gda_value>gchararray</gda_value>
       <gda_value>relative, limited-range time interval (Unix delta time)</gda_value>
@@ -198,6 +216,30 @@
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
+      <gda_value>tsquery</gda_value>
+      <gda_value>gchararray</gda_value>
+      <gda_value>query representation for text search</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>tsvector</gda_value>
+      <gda_value>gchararray</gda_value>
+      <gda_value>text representation for text search</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>txid_snapshot</gda_value>
+      <gda_value>gchararray</gda_value>
+      <gda_value>txid snapshot</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>uuid</gda_value>
+      <gda_value>gchararray</gda_value>
+      <gda_value>UUID datatype</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
       <gda_value>varbit</gda_value>
       <gda_value>gchararray</gda_value>
       <gda_value>variable-length bit string</gda_value>
@@ -207,6 +249,12 @@
       <gda_value>varchar</gda_value>
       <gda_value>gchararray</gda_value>
       <gda_value>varchar(length), non-blank-padded string, variable storage length</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>xml</gda_value>
+      <gda_value>gchararray</gda_value>
+      <gda_value>XML content</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
   </gda_array_data>
