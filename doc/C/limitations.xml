@@ -37,6 +37,16 @@
       </para>
     </sect2>
 
+    <sect2><title>Statements execution</title>
+      <para>
+	<itemizedlist>
+	  <listitem><para>It is not possible to execute a SELECT statement with invalid parameters and
+	      with the GDA_STATEMENT_MODEL_ALLOW_NOPARAM flag as this feature is currently not implemented.
+	      </para></listitem>
+	</itemizedlist>
+      </para>
+    </sect2>
+
   </sect1>
 
   <sect1 id="limitations_oracle"><title>For Oracle</title>
@@ -82,6 +92,16 @@
 	If PostgreSQL was not compiled with the <option>--enable-thread-safety</option> flag, 
 	then the database provider will only allow
 	connections to be opened from the thread which initializes &LIBGDA;. Otherwise there is no limitation.
+      </para>
+    </sect2>
+
+    <sect2><title>Statements execution</title>
+      <para>
+	<itemizedlist>
+	  <listitem><para>It is not possible to execute a SELECT statement with invalid parameters and
+	      with the GDA_STATEMENT_MODEL_ALLOW_NOPARAM flag if the GDA_STATEMENT_MODEL_CURSOR_FORWARD
+	      flag is also specified</para></listitem>
+	</itemizedlist>
       </para>
     </sect2>
   </sect1>

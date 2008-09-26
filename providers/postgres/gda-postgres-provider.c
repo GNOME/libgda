@@ -2042,14 +2042,12 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 			break;
 		}
 
-		if (params) {
-			h = gda_set_get_holder (params, pname);
-			if (!h) {
-				gchar *tmp = gda_alphanum_to_text (g_strdup (pname + 1));
-				if (tmp) {
-					h = gda_set_get_holder (params, tmp);
-					g_free (tmp);
-				}
+		h = gda_set_get_holder (params, pname);
+		if (!h) {
+			gchar *tmp = gda_alphanum_to_text (g_strdup (pname + 1));
+			if (tmp) {
+				h = gda_set_get_holder (params, tmp);
+				g_free (tmp);
 			}
 		}
 		if (!h) {

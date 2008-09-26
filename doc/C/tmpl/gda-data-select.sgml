@@ -36,7 +36,7 @@ Data models returned by the execution of a SELECT statement
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-
+  The <link linkend="data-select">Advanced GdaDataSelect usage</link> section.
 </para>
 
 <!-- ##### SECTION Stability_Level ##### -->

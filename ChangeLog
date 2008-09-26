@@ -1,3 +1,25 @@
+2008-09-26  Vivien Malerba <malerba@gnome-db.org>
+
+	* providers/postgres/gda-postgres-provider.c:
+	* libgda/sqlite/gda-sqlite-provider.c: code cleanup
+	* providers/skel-implementation/capi/gda-capi-provider.c: adapted skeleton implementation
+	to support the GDA_STATEMENT_MODEL_ALLOW_NOPARAM flag
+	* libgda/gda-holder.c:
+	  - the "g-type" property can now be set after construction, but only if it initially was
+	    GDA_TYPE_NULL
+	  - fixed a bug when the GdaHolder remained invalid even though it was not anymore
+	* libgda/gda-set.c: indentation correction
+	* libgda/gda-data-model-iter.c: adjust the GdaHolder's type when the data model
+	is reset (in case it was GDA_TYPE_NULL)
+	* tests/: new test cases
+	* doc/C:
+	* libgda/gda-connection.c: doc. updates
+	* libgda/gda-data-proxy.c: made find_or_create_row_modif() static
+	* libgda/gda-connection.c: made build_downstream_context_templates() and
+	build_upstream_context_templates() static
+	* README: point to the COPYING and COPYING.LIB files for the actual GPL and
+	LGPL text
+
 2008-09-25  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-server-provider-extra.[ch]: new gda_select_alter_select_for_empty()

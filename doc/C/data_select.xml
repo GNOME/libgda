@@ -1,0 +1,107 @@
+<sect1 id="data-select">
+  <title>Advanced GdaDataSelect usage</title>
+  <para>
+    Whenever a SELECT statement is successfully executed (using the <link linkend="GdaConnection">GdaConnection</link>'s methods),
+    a new <link linkend="GdaDataSelect">GdaDataSelect</link> object is created, which can be used as any other
+    <link linkend="GdaDataModel">GdaDataModel</link> object. However this object has some extra features which are
+    described in this section.
+  </para>
+
+  <sect2 id="data-select-rerun">
+    <title>Automatic re-run of the SELECT statement</title>
+    <para>
+      If the SELECT statement which has been executed contained some parameters, then the 
+      <link linkend="GdaDataSelect--auto-reset">auto-reset</link> property controls whether the
+      <link linkend="GdaDataSelect">GdaDataSelect</link> object should re-run the SELECT statement
+      to have an up-to-date contents. This feature is disabled by default but can be enabled anytime.
+    </para>
+    <para>
+      For example the following code (errors checking omitted for readability):
+      <programlisting>
+GdaStatement *stmt;
+GdaSqlParser *parser = ...;
+GdaDataModel *model;
+
+stmt = gda_sql_parser_parse_from_string (parser,
+       "SELECT * FROM customers WHERE id &lt;= ##theid::gint",
+       NULL, NULL);
+gda_statement_get_parameters (stmt, &amp;params, NULL);
+gda_set_set_holder_value (params, NULL, "theid", 9);
+model = gda_connection_statement_execute_select (cnc, stmt, params, NULL);
+g_object_set (G_OBJECT (model), "auto-reset", TRUE, NULL);
+g_object_unref (stmt);
+      </programlisting>
+      would create a <link linkend="GdaDataSelect">GdaDataSelect</link> object (the 'model' variable) with the
+      following contents:
+      <programlisting>
+id | name           | default_served_by | country | city
+---+----------------+-------------------+---------+-----
+ 2 | Ed Lamton      |                 4 | SP      | MDR 
+ 3 | Lew Bonito     |                 1 | FR      | TLS 
+ 4 | Mark Lawrencep |                   | SP      | MDR 
+ 9 | Greg Popoff    |                 2 | SP      | MDR 
+      </programlisting>
+      and with the following changes:
+      <programlisting>
+gda_set_set_holder_value (params, NULL, "theid", 4);
+      </programlisting>
+      the contents of the data model will automatically be set to:
+      <programlisting>
+id | name           | default_served_by | country | city
+---+----------------+-------------------+---------+-----
+ 2 | Ed Lamton      |                 4 | SP      | MDR 
+ 3 | Lew Bonito     |                 1 | FR      | TLS 
+ 4 | Mark Lawrencep |                   | SP      | MDR
+      </programlisting>
+    </para>
+    <para>
+      Important note: with some database providers (such as SQLite), the column's types (if not specified when the statement
+      is run) cannot be determined untill there is a value in the column. This means that a column's type may change
+      over time from the GDA_TYPE_NULL type to its correct type.
+    </para>
+  </sect2>
+
+  <sect2 id="data-select-empty-rs">
+    <title>Invalid parameters</title>
+    <para>
+      If the SELECT statement which has been executed contained some parameters, and if it is not possible to
+      give correct values to the parameters when the data model resulting from the execution of the SELECT must be
+      created, then the execution should fail and no data model should be created (see the
+      <link linkend="gda-connection-statement-execute">gda_connection_statement_execute()</link>'s documentation).
+      However that default behaviour can be changed using the GDA_STATEMENT_MODEL_ALLOW_NOPARAM flag: the returned
+      data model will have no row and will automatically update its contents (re-run the SELECT statement)
+      when parameters are changed.
+    </para>
+    <para>
+      The example above can be modified as follows, note that the value of the 'theid' parameter is not set
+      which makes it invalid:
+      <programlisting>
+	GdaStatement *stmt;
+GdaSqlParser *parser = ...;
+GdaDataModel *model;
+
+stmt = gda_sql_parser_parse_from_string (parser, 
+       "SELECT * FROM customers WHERE id &lt;= ##theid::gint",
+        NULL, NULL);
+gda_statement_get_parameters (stmt, &amp;params, NULL);
+model = gda_connection_statement_execute_select_full (cnc, stmt, params,
+                                                      GDA_STATEMENT_MODEL_ALLOW_NOPARAM,
+                                                      NULL, NULL);
+g_object_unref (stmt);
+      </programlisting>
+      The created data model contains no row, and with the following changes:
+      <programlisting>
+gda_set_set_holder_value (params, NULL, "theid", 4);
+      </programlisting>
+      the contents of the data model will automatically be set to:
+      <programlisting>
+id | name           | default_served_by | country | city
+---+----------------+-------------------+---------+-----
+ 2 | Ed Lamton      |                 4 | SP      | MDR 
+ 3 | Lew Bonito     |                 1 | FR      | TLS 
+ 4 | Mark Lawrencep |                   | SP      | MDR
+      </programlisting>
+    </para>
+  </sect2>
+  
+</sect1>

@@ -39,6 +39,7 @@
 <!ENTITY migration SYSTEM "migration.xml">
 <!ENTITY migration2 SYSTEM "migration2.xml">
 <!ENTITY data-validation SYSTEM "data_validation.xml">
+<!ENTITY data-select SYSTEM "data_select.xml">
 <!ENTITY limitations SYSTEM "limitations.xml">
 <!ENTITY libgda-GdaCommand SYSTEM "xml/gda-command.xml">
 <!ENTITY libgda-config SYSTEM "xml/gda-config.xml">
@@ -506,7 +507,6 @@
       &libgda-GdaSqlParser;
       &libgda-GdaStatement;
       &libgda-GdaBatch;
-      &libgda-GdaDataSelect;
       &libgda-GdaHolder;
       &libgda-GdaSet;
       &libgda-GdaSqlStatement;
@@ -571,8 +571,10 @@
       </para>
       &libgda-GValue;
       &data-validation;
+      &data-select;
       &libgda-GdaBlobOp;
       &libgda-GdaDataModel;
+      &libgda-GdaDataSelect;
       &libgda-GdaColumn;
       &libgda-GdaDataModelIter;
       &libgda-GdaDataModelImport;

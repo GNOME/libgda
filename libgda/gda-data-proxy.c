@@ -1137,13 +1137,13 @@ gda_data_proxy_is_read_only (GdaDataProxy *proxy)
 }
 
 
-RowModif *find_or_create_row_modif (GdaDataProxy *proxy, gint proxy_row, gint col, RowValue **ret_rv);
+static RowModif *find_or_create_row_modif (GdaDataProxy *proxy, gint proxy_row, gint col, RowValue **ret_rv);
 
 
 /*
  * Stores the new RowValue in @rv
  */
-RowModif *
+static RowModif *
 find_or_create_row_modif (GdaDataProxy *proxy, gint proxy_row, gint col, RowValue **ret_rv)
 {
 	RowModif *rm = NULL;

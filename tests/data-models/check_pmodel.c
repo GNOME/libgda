@@ -60,6 +60,7 @@ static gint test13 (GdaConnection *cnc);
 static gint test14 (GdaConnection *cnc);
 static gint test15 (GdaConnection *cnc);
 static gint test16 (GdaConnection *cnc);
+static gint test17 (GdaConnection *cnc);
 
 TestFunc tests[] = {
 	test1,
@@ -77,7 +78,8 @@ TestFunc tests[] = {
 	test13,
 	test14,
 	test15,
-	test16
+	test16,
+	test17
 };
 
 int
@@ -104,10 +106,9 @@ main (int argc, char **argv)
 	}
 
 	g_object_unref (cnc);
-	if (number_failed == 0)
-		g_print ("Ok.\n");
-	else
-		g_print ("%d failed\n", number_failed);
+	
+	g_print ("TESTS COUNT: %d\n", i);
+	g_print ("FAILURES: %d\n", number_failed);
 
 	return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
@@ -1753,6 +1754,114 @@ test16 (GdaConnection *cnc)
 
         return nfailed;
 }
+
+/*
+ * - Create a GdaDataSelect with a missing parameter
+ * - run it to be empty and create an iterator
+ * - set param's value so it refreshes
+ * - make sure the iterator's types are up to date with the data model ones.
+ *
+ * Returns the number of failures 
+ */
+static gint
+test17 (GdaConnection *cnc)
+{
+	GError *error = NULL;
+        GdaDataModel *model;
+        GdaStatement *stmt;
+	GdaDataModelIter *iter;
+        GdaSet *params;
+        gint nfailed = 0;
+
+        /* create GdaDataModelQuery */
+        stmt = stmt_from_string ("SELECT * FROM customers WHERE id <= ##theid::gint");
+        g_assert (gda_statement_get_parameters (stmt, &params, NULL));
+
+        model = gda_connection_statement_execute_select_full (cnc, stmt, params, GDA_STATEMENT_MODEL_ALLOW_NOPARAM,
+							      NULL, &error);
+	g_assert (model);
+	iter = gda_data_model_create_iter (model);
+	
+	gint i, nullcol = -1;
+	GdaColumn *column;
+	GSList *list;
+	for (i = 0, list = ((GdaSet*) iter)->holders;
+	     list;
+	     i++, list = list->next) {
+		if (gda_holder_get_g_type ((GdaHolder *) list->data) == GDA_TYPE_NULL) 
+			nullcol = i;
+		column = gda_data_model_describe_column (model, i);
+		if (gda_holder_get_g_type ((GdaHolder *) list->data) != 
+		    gda_column_get_g_type (column)) {
+			nfailed++;
+#ifdef CHECK_EXTRA_INFO
+			g_print ("Iter's GdaHolder for column %d reports the '%s' type when it should be '%s'",
+				 nullcol, 
+				 g_type_name (gda_holder_get_g_type ((GdaHolder *) list->data)),
+				 g_type_name (gda_column_get_g_type (column)));
+#endif
+			goto out;
+		}
+	}
+	if (nullcol == -1) {
+#ifdef CHECK_EXTRA_INFO
+                g_print ("Could not find a GDA_TYPE_NULL column, test will be invalid");
+#endif
+		goto out;
+	}
+
+	/**/
+	if (! gda_set_set_holder_value (params, &error, "theid", 9)) {
+                nfailed++;
+#ifdef CHECK_EXTRA_INFO
+                g_print ("Can't set 'theid' value: %s \n",
+                         error && error->message ? error->message : "No detail");
+#endif
+                goto out;
+        }
+
+	column = gda_data_model_describe_column (model, nullcol);
+	if (gda_holder_get_g_type ((GdaHolder *) g_slist_nth_data (((GdaSet*) iter)->holders, nullcol)) !=
+	    gda_column_get_g_type (column)) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+                g_print ("Iter's GdaHolder for column %d reports the '%s' type when it should be '%s'",
+			 nullcol, 
+			 g_type_name (gda_holder_get_g_type ((GdaHolder *) g_slist_nth_data (((GdaSet*) iter)->holders, 
+											     nullcol))),
+			 g_type_name (gda_column_get_g_type (column)));
+#endif
+                goto out;
+	}
+
+	/**/
+	if (gda_data_model_iter_is_valid (iter)) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+                g_print ("Iter should be invalid, and it is at row %d\n",
+			 gda_data_model_iter_get_row (iter));
+#endif
+                goto out;
+	}
+	dump_data_model (model);
+	while (gda_data_model_iter_move_next (iter));
+	if (gda_data_model_iter_is_valid (iter)) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+                g_print ("Iter could not be moved up to the end, and remained 'locked' at row %d\n",
+			 gda_data_model_iter_get_row (iter));
+#endif
+                goto out;
+	}
+
+
+ out:
+        g_object_unref (model);
+        g_object_unref (stmt);
+
+        return nfailed;
+}
+
 
 static void
 dump_data_model (GdaDataModel *model)

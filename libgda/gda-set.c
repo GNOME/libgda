@@ -1450,21 +1450,21 @@ gda_set_is_valid (GdaSet *set, GError **error)
 			retval = FALSE;
 		}
 		
-	if (retval) {
+		if (retval) {
 		/* signal the holder validate-set */
-		GError *lerror = NULL;
+			GError *lerror = NULL;
 #ifdef GDA_DEBUG_signal
-		g_print (">> 'VALIDATE_SET' from %s\n", __FUNCTION__);
+			g_print (">> 'VALIDATE_SET' from %s\n", __FUNCTION__);
 #endif
-		g_signal_emit (G_OBJECT (set), gda_set_signals[VALIDATE_SET], 0, &lerror);
+			g_signal_emit (G_OBJECT (set), gda_set_signals[VALIDATE_SET], 0, &lerror);
 #ifdef GDA_DEBUG_signal
-		g_print ("<< 'VALIDATE_SET' from %s\n", __FUNCTION__);
+			g_print ("<< 'VALIDATE_SET' from %s\n", __FUNCTION__);
 #endif
-		if (lerror) {
-			g_propagate_error (error, lerror);
-			retval = FALSE;
+			if (lerror) {
+				g_propagate_error (error, lerror);
+				retval = FALSE;
+			}
 		}
-	}
 
 #ifdef GDA_DEBUG_NO
 		g_print ("== HOLDER %p: valid= %d, value=%s\n", holders->data, gda_holder_is_valid (GDA_HOLDER (holders->data)),

@@ -1550,7 +1550,11 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
  * then the resulting data model will re-run itself, see the GdaDataSelect's 
  * <link linkend="GdaDataSelect--auto-reset">auto-reset</link> property for more information.
  *
- * Also see the <link linkend="limitations">provider's limitations</link> section.
+ * Note4: if @model_usage does not contain the GDA_STATEMENT_MODEL_RANDOM_ACCESS or GDA_STATEMENT_MODEL_CURSOR_FORWARD
+ * flags, then the default will be to return a random access data model
+ *
+ * Also see the <link linkend="limitations">provider's limitations</link>, and the
+ * <link linkend="data-select">Advanced GdaDataSelect usage</link> sections.
  *
  * Returns: a #GObject, or %NULL if an error occurred 
  */
@@ -1997,7 +2001,7 @@ gda_connection_supports_feature (GdaConnection *cnc, GdaConnectionFeature featur
 
 /* builds a list of #GdaMetaContext contexts templates: contexts which have a non NULL table_name,
  * and empty or partially filled column names and values specifications */
-GSList *
+static GSList *
 build_upstream_context_templates (GdaMetaStore *store, GdaMetaContext *context, GSList *elist, GError **error)
 {
 	GSList *depend_on_contexts;
@@ -2027,7 +2031,7 @@ build_upstream_context_templates (GdaMetaStore *store, GdaMetaContext *context, 
 
 /* builds a list of #GdaMetaContext contexts templates: contexts which have a non NULL table_name,
  * and empty or partially filled column names and values specifications */
-GSList *
+static GSList *
 build_downstream_context_templates (GdaMetaStore *store, GdaMetaContext *context, GSList *elist, GError **error)
 {
 	GSList *depending_contexts;

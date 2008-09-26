@@ -226,7 +226,7 @@ gda_holder_class_init (GdaHolderClass *class)
                                          g_param_spec_ulong ("g-type", NULL, NULL,
 							   0, G_MAXULONG, GDA_TYPE_NULL,
 							   (G_PARAM_READABLE | 
-							    G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
+							    G_PARAM_WRITABLE | G_PARAM_CONSTRUCT)));
 	g_object_class_install_property (object_class, PROP_PLUGIN,
 					 g_param_spec_string ("plugin", NULL, NULL, NULL, 
 							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
@@ -288,8 +288,6 @@ GdaHolder *
 gda_holder_new (GType type)
 {
 	GObject   *obj;
-
-	g_return_val_if_fail (type != G_TYPE_INVALID, NULL);
 
         obj = g_object_new (GDA_TYPE_HOLDER, "g-type", type, NULL);
 
@@ -530,7 +528,10 @@ gda_holder_set_property (GObject *object,
 			holder->priv->descr = g_value_dup_string (value);
 			break;
 		case PROP_GDA_TYPE:
-			holder->priv->g_type = g_value_get_ulong (value);
+			if (holder->priv->g_type == GDA_TYPE_NULL)
+				holder->priv->g_type = g_value_get_ulong (value);
+			else
+				g_warning (_("The 'g-type' property cannot be changed"));
 			break;
 		case PROP_PLUGIN:
 			ptr = g_value_get_string (value);
@@ -901,6 +902,7 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 		if (!do_copy && value)
 			gda_value_free (value);
 		holder->priv->invalid_forced = FALSE;
+		holder->priv->valid = newvalid;
 		return TRUE;
 	}
 

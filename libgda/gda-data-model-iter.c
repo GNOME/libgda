@@ -229,6 +229,22 @@ model_reset_cb (GdaDataModel *model, GdaDataModelIter *iter)
 	/* reset the iter to before the 1st row */
 	gda_data_model_iter_invalidate_contents (iter);
 	gda_data_model_iter_move_at_row (iter, -1);
+	
+	/* adjust GdaHolder's type if a column's type has changed from GDA_TYPE_NULL
+	 * to something else */
+	gint i;
+	GSList *list;
+	for (i = 0, list = ((GdaSet*) iter)->holders;
+	     list;
+	     i++, list = list->next) {
+		if (gda_holder_get_g_type ((GdaHolder *) list->data) == GDA_TYPE_NULL) {
+			GdaColumn *col;
+			col = gda_data_model_describe_column (model, i);
+			if (gda_column_get_g_type (col) != GDA_TYPE_NULL)
+				g_object_set (G_OBJECT (list->data), "g-type",
+					      gda_column_get_g_type (col), NULL);
+		}
+	}
 }
 
 /*

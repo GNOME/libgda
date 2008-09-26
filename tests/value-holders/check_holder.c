@@ -31,6 +31,7 @@ static gboolean test7 (GError **error);
 static gboolean test8 (GError **error);
 static gboolean test9 (GError **error);
 static gboolean test10 (GError **error);
+static gboolean test11 (GError **error);
 
 TestFunc tests[] = {
 	test1,
@@ -42,7 +43,8 @@ TestFunc tests[] = {
 	test7,
 	test8,
 	test9,
-	test10
+	test10,
+	test11
 };
 
 int 
@@ -858,6 +860,59 @@ test10 (GError **error)
 	value = gda_value_new_from_string ("hi!", G_TYPE_STRING);
 	emitted_signals_reset ();
 	if (!gda_holder_set_value (h, value, error)) 
+		return FALSE;
+	if (!emitted_signals_find (h, "changed", error))
+		return FALSE;
+	if (!emitted_signals_chech_empty (NULL, "changed", error))
+		return FALSE;
+
+	/***/
+	cvalue = gda_holder_get_value (h);
+	if (!cvalue || gda_value_differ (value, cvalue)) {
+		g_set_error (error, 0, 0,
+			     "GdaHolder's value is incorrect");
+		return FALSE;
+	}
+	gda_value_free (value);
+
+	g_object_unref (h);
+
+	return TRUE;
+}
+
+static gboolean
+test11 (GError **error)
+{
+	GdaHolder *h;
+	const GValue *cvalue;
+	GValue *value;
+
+	h = gda_holder_new (GDA_TYPE_NULL);
+	emitted_signals_monitor_holder (h);
+
+	/***/
+	value = gda_value_new_from_string ("my string", G_TYPE_STRING);
+	emitted_signals_reset ();
+	if (gda_holder_set_value (h, value, NULL)) {
+		g_set_error (error, 0, 0,
+			     "GdaHolder's change should have failed");
+		return FALSE;
+	}
+	gda_value_free (value);
+
+	/***/
+	if (!gda_holder_set_value (h, NULL, error))
+		return FALSE;
+	if (!emitted_signals_find (h, "changed", error))
+		return FALSE;
+	if (!emitted_signals_chech_empty (NULL, "changed", error))
+		return FALSE;
+	
+	/***/
+	g_object_set (G_OBJECT (h), "g-type", G_TYPE_STRING, NULL);
+	value = gda_value_new_from_string ("my other string", G_TYPE_STRING);
+	emitted_signals_reset ();
+	if (!gda_holder_set_value (h, value, error))
 		return FALSE;
 	if (!emitted_signals_find (h, "changed", error))
 		return FALSE;
