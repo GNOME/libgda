@@ -2704,7 +2704,7 @@ sql_where_foreach (GdaSqlAnyPart *part, GdaDataModel *model, GError **error)
 						GdaColumn *col = gda_data_model_describe_column (model, colnum);
 						const gchar *cname = gda_column_get_name (col);
 						if (cname && *cname) {
-							if (_identifier_needs_quotes (cname))
+							if (gda_sql_identifier_needs_quotes (cname))
 								g_value_take_string (expr->value, 
 										     g_strdup_printf ("\"%s\"", cname));
 							else
@@ -2962,7 +2962,7 @@ gda_data_proxy_set_ordering_column (GdaDataProxy *proxy, gint col, GError **erro
 
 		cname = gda_column_get_name (gda_data_model_describe_column ((GdaDataModel*) proxy, col));
 		if (cname && *cname) {
-			if (_identifier_needs_quotes (cname))
+			if (gda_sql_identifier_needs_quotes (cname))
 				colname = g_strdup_printf ("\"%s\"", cname);
 			else
 				colname = g_strdup (cname);

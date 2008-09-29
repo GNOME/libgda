@@ -1309,7 +1309,7 @@ copy_ident (const gchar *ident)
 {
 	char *str;
 	gint tlen = strlen (ident);
-	if (_identifier_needs_quotes (ident)) {
+	if (gda_sql_identifier_needs_quotes (ident)) {
 		str = malloc (sizeof (char) * (tlen + 3));
 		*str = '"';
 		strcpy (str+1, ident);
@@ -1333,7 +1333,7 @@ concat_ident (const char *prefix, const gchar *ident)
 	if (prefix)
 		plen = strlen (prefix) + 1;
 
-	if (_identifier_needs_quotes (ident)) {
+	if (gda_sql_identifier_needs_quotes (ident)) {
 		str = malloc (sizeof (char) * (plen + tlen + 3));
 		if (prefix) {
 			strcpy (str, prefix);

@@ -1295,6 +1295,9 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 {
 	GdaMysqlPStmt *ps;
 	MysqlConnectionData *cdata;
+	gboolean allow_noparam;
+        gboolean empty_rs = FALSE; /* TRUE when @allow_noparam is TRUE and there is a problem with @params
+                                      => resulting data model will be empty (0 row) */
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
@@ -1307,12 +1310,19 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
                 return FALSE;
 	}
 
-	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata) 
-		return FALSE;
+	if (! (model_usage & GDA_STATEMENT_MODEL_RANDOM_ACCESS) &&
+	    ! (model_usage & GDA_STATEMENT_MODEL_CURSOR_FORWARD))
+		model_usage |= GDA_STATEMENT_MODEL_RANDOM_ACCESS;
+
+	allow_noparam = (model_usage & GDA_STATEMENT_MODEL_ALLOW_NOPARAM) &&
+		(gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_SELECT);
 
 	if (last_inserted_row)
 		*last_inserted_row = NULL;
+
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata) 
+		return FALSE;
 
 	/* get/create new prepared statement */
 	ps = (GdaMysqlPStmt *) gda_connection_get_prepared_statement (cnc, stmt);
@@ -1378,24 +1388,42 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			}
 		}
 		if (!h) {
-			gchar *str;
-			str = g_strdup_printf (_("Missing parameter '%s' to execute query"), pname);
-			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
-			gda_connection_event_set_description (event, str);
-			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
-			g_free (str);
-			break;
+
+			if (!allow_noparam) {
+				gchar *str;
+				str = g_strdup_printf (_("Missing parameter '%s' to execute query"), pname);
+				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				gda_connection_event_set_description (event, str);
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
+				g_free (str);
+				break;
+			} else {
+                                /* bind param to NULL */
+                                TO_IMPLEMENT;
+                                empty_rs = TRUE;
+                                continue;
+			}
+
 		}
 		if (!gda_holder_is_valid (h)) {
-			gchar *str;
-			str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
-			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
-			gda_connection_event_set_description (event, str);
-			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
-			g_free (str);
-			break;
+
+			if (!allow_noparam) {
+				gchar *str;
+				str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
+				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				gda_connection_event_set_description (event, str);
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
+				g_free (str);
+				break;
+			} else {
+                                /* bind param to NULL */
+				TO_IMPLEMENT;
+                                empty_rs = TRUE;
+                                continue;
+                        }
+
 		}
 
 		/* actual binding using the C API, for parameter at position @i */
@@ -1450,7 +1478,6 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 		return NULL;
 	}
 
-
 	/* use cursor when retrieving result */
 	if ((model_usage & GDA_STATEMENT_MODEL_RANDOM_ACCESS) == 0 &&
 	    gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_SELECT) {
@@ -1467,11 +1494,35 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 #endif
 	}
 
-	
 	/* add a connection event for the execution */
 	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
         gda_connection_event_set_description (event, _GDA_PSTMT (ps)->sql);
         gda_connection_add_event (cnc, event);
+
+	if (empty_rs) {
+		/* There are some missing parameters, so the SQL can't be executed but we still want
+		 * to execute something to get the columns correctly. A possibility is to actually
+		 * execute another SQL which is the code shown here.
+		 *
+		 * To adapt depending on the C API and its features */
+		GdaStatement *estmt;
+                gchar *esql;
+                estmt = gda_select_alter_select_for_empty (stmt, error);
+                if (!estmt)
+                        return NULL;
+                esql = gda_statement_to_sql (estmt, NULL, error);
+                g_object_unref (estmt);
+                if (!esql)
+                        return NULL;
+
+		/* Execute the 'esql' SQL code */
+                g_free (esql);
+
+		TO_IMPLEMENT;
+	} else {
+		/* Execute the _GDA_PSTMT (ps)->sql SQL code */
+		TO_IMPLEMENT;
+	}
 
 	
 	GObject *return_value = NULL;

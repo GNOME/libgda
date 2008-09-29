@@ -153,3 +153,21 @@ Modifies the behaviour of the tokenizer, reserved for #GdaServerProvider impleme
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_sql_identifier_needs_quotes ##### -->
+<para>
+
+</para>
+
+@str: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_identifier_add_quotes ##### -->
+<para>
+
+</para>
+
+@str: 
+@Returns: 
+
+

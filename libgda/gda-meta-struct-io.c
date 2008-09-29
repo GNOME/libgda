@@ -61,15 +61,15 @@ gda_meta_struct_load_from_xml_file (GdaMetaStruct *mstruct, const gchar *catalog
 
 	if (catalog) {
 		g_value_set_string ((catalog_value = gda_value_new (G_TYPE_STRING)), catalog);
-		if (_identifier_needs_quotes (catalog)) 
-			quoted_catalog = _add_quotes (catalog);
+		if (gda_sql_identifier_needs_quotes (catalog)) 
+			quoted_catalog = gda_sql_identifier_add_quotes (catalog);
 		else
 			quoted_catalog = g_strdup (catalog);
 	}
 	if (schema) {
 		g_value_set_string ((schema_value = gda_value_new (G_TYPE_STRING)), schema);
-		if (_identifier_needs_quotes (schema)) 
-			quoted_schema = _add_quotes (schema);
+		if (gda_sql_identifier_needs_quotes (schema)) 
+			quoted_schema = gda_sql_identifier_add_quotes (schema);
 		else
 			quoted_schema = g_strdup (schema);
 	}
@@ -185,8 +185,8 @@ create_table_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar 
 	}
 	if (table_schema) {
 		g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), (gchar *) table_schema);
-		if (_identifier_needs_quotes ((gchar *) table_schema)) {
-			gchar *tmp = _add_quotes ((gchar *) table_schema);
+		if (gda_sql_identifier_needs_quotes ((gchar *) table_schema)) {
+			gchar *tmp = gda_sql_identifier_add_quotes ((gchar *) table_schema);
 			g_string_append (full_table_name, tmp);
 			g_free (tmp);
 		}
@@ -200,8 +200,8 @@ create_table_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar 
 		g_string_append_c (full_table_name, '.');
 	}
 	g_value_set_string ((v3 = gda_value_new (G_TYPE_STRING)), (gchar *) table_name);
-	if (_identifier_needs_quotes ((gchar *) table_name)) {
-		gchar *tmp = _add_quotes ((gchar *) table_name);
+	if (gda_sql_identifier_needs_quotes ((gchar *) table_name)) {
+		gchar *tmp = gda_sql_identifier_add_quotes ((gchar *) table_name);
 		g_string_append (full_table_name, tmp);
 		g_free (tmp);
 	}

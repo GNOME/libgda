@@ -836,7 +836,14 @@ set_input_file (MainData *data, const gchar *file, GError **error)
 	}
 
 	if (file) {
-		data->input_stream = g_fopen (file, "r");
+		if (*file == '~') {
+			gchar *tmp;
+			tmp = g_strdup_printf ("%s%s", g_get_home_dir (), file+1);
+			data->input_stream = g_fopen (tmp, "r");
+			g_free (tmp);
+		}
+		else
+			data->input_stream = g_fopen (file, "r");
 		if (!data->input_stream) {
 			g_set_error (error, 0, 0,
 				     _("Can't open file '%s' for reading: %s\n"), 
@@ -1360,6 +1367,10 @@ static GdaInternalCommandResult *extra_command_qecho (GdaConnection *cnc, const 
 						      GError **error, MainData *data);
 static GdaInternalCommandResult *extra_command_list_dsn (GdaConnection *cnc, const gchar **args,
 							 GError **error, MainData *data);
+static GdaInternalCommandResult *extra_command_create_dsn (GdaConnection *cnc, const gchar **args,
+							   GError **error, MainData *data);
+static GdaInternalCommandResult *extra_command_remove_dsn (GdaConnection *cnc, const gchar **args,
+							   GError **error, MainData *data);
 static GdaInternalCommandResult *extra_command_list_providers (GdaConnection *cnc, const gchar **args,
 							       GError **error, MainData *data);
 static GdaInternalCommandResult *extra_command_manage_cnc (GdaConnection *cnc, const gchar **args,
@@ -1506,9 +1517,9 @@ build_internal_commands_list (MainData *data)
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
-	c->group = _("General");
-	c->name = "l";
-	c->description = _("List configured data sources (DSN)");
+	c->group = _("DSN (data sources) management");
+	c->name = g_strdup_printf (_("%s [DSN]"), "l");
+	c->description = _("List all DSN (or named DSN's attributes)");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_list_dsn;
 	c->user_data = data;
@@ -1516,9 +1527,29 @@ build_internal_commands_list (MainData *data)
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
-	c->group = _("General");
-	c->name = "providers_list";
-	c->description = _("List installed database providers");
+	c->group = _("DSN (data sources) management");
+	c->name = g_strdup_printf (_("%s DSN_NAME DSN_DEFINITION [DESCRIPTION]"), "lc");
+	c->description = _("Create (or modify) a DSN");
+	c->args = NULL;
+	c->command_func = (GdaInternalCommandFunc) extra_command_create_dsn;
+	c->user_data = data;
+	c->arguments_delimiter_func = NULL;
+	commands->commands = g_slist_prepend (commands->commands, c);
+
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("DSN (data sources) management");
+	c->name = g_strdup_printf (_("%s DSN_NAME [DSN_NAME...]"), "lr");
+	c->description = _("Remove a DSN");
+	c->args = NULL;
+	c->command_func = (GdaInternalCommandFunc) extra_command_remove_dsn;
+	c->user_data = data;
+	c->arguments_delimiter_func = NULL;
+	commands->commands = g_slist_prepend (commands->commands, c);
+
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("DSN (data sources) management");
+	c->name = g_strdup_printf (_("%s [PROVIDER]"), "lp");
+	c->description = _("List all installed database providers (or named one's attributes)");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_list_providers;
 	c->user_data = data;
@@ -1842,22 +1873,285 @@ static GdaInternalCommandResult *
 extra_command_list_dsn (GdaConnection *cnc, const gchar **args, GError **error, MainData *data)
 {
 	GdaInternalCommandResult *res;
+	GdaDataModel *dsn_list, *model = NULL;
+	gint i, nrows;
+	GList *list = NULL;
+
+	dsn_list = gda_config_list_dsn ();
+	nrows = gda_data_model_get_n_rows (dsn_list);
+
+	if (args[0]) {
+		/* details about a DSN */
+		for (i = 0; i < nrows; i++) {
+			const GValue *value;
+			value = gda_data_model_get_value_at (dsn_list, 0, i, error);
+			if (!value)
+				goto onerror;
+
+			if (!strcmp (g_value_get_string (value), args[0])) {
+				gint j;
+				model = gda_data_model_array_new_with_g_types (2,
+									       G_TYPE_STRING,
+									       G_TYPE_STRING);
+				gda_data_model_set_column_title (model, 0, _("Attribute"));
+				gda_data_model_set_column_title (model, 1, _("Value"));
+				g_object_set_data_full (G_OBJECT (model), "name", 
+							g_strdup_printf (_("DSN '%s' description"), args[0]),
+							g_free);
+				
+				for (j = 0; j < 6; j++) {
+					GValue *tmpvalue;
+					if (gda_data_model_append_row (model, error) == -1) 
+						goto onerror;
+					
+					g_value_set_string ((tmpvalue = gda_value_new (G_TYPE_STRING)),
+							    gda_data_model_get_column_title (dsn_list, j));
+					if (! gda_data_model_set_value_at (model, 0, j, tmpvalue, error))
+						goto onerror;
+					gda_value_free (tmpvalue);
+									 
+					value = gda_data_model_get_value_at (dsn_list, j, i, error);
+					if (!value ||
+					    ! gda_data_model_set_value_at (model, 1, j, value, error))
+						goto onerror;
+				}
+				res = g_new0 (GdaInternalCommandResult, 1);
+				res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+				res->u.model = model;
+				g_object_unref (dsn_list);
+				return res;
+			}
+		}
+		g_object_unref (dsn_list);
+		g_set_error (error, 0, 0,
+			     _("Could not find any DSN named '%s'"), args[0]);
+		return NULL;
+	}
+	else {
+		model = gda_data_model_array_new_with_g_types (3,
+							       G_TYPE_STRING,
+							       G_TYPE_STRING,
+							       G_TYPE_STRING);
+		gda_data_model_set_column_title (model, 0, _("DSN"));
+		gda_data_model_set_column_title (model, 1, _("Description"));
+		gda_data_model_set_column_title (model, 2, _("Provider"));
+		g_object_set_data (G_OBJECT (model), "name", _("DSN list"));
+		
+		for (i =0; i < nrows; i++) {
+			const GValue *value;
+			list = NULL;
+			value = gda_data_model_get_value_at (dsn_list, 0, i, error);
+			if (!value)
+				goto onerror;
+			list = g_list_append (NULL, gda_value_copy (value));
+			value = gda_data_model_get_value_at (dsn_list, 2, i, error);
+			if (!value) 
+				goto onerror;
+			list = g_list_append (list, gda_value_copy (value));
+			value = gda_data_model_get_value_at (dsn_list, 1, i, error);
+			if (!value)
+				goto onerror;
+			list = g_list_append (list, gda_value_copy (value));
+			
+			if (gda_data_model_append_values (model, list, error) == -1)
+				goto onerror;
+			
+			g_list_foreach (list, (GFunc) gda_value_free, NULL);
+			g_list_free (list);
+		}
+		
+		res = g_new0 (GdaInternalCommandResult, 1);
+		res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+		res->u.model = model;
+		g_object_unref (dsn_list);
+		
+		return res;
+	}
+
+ onerror:
+	if (list) {
+		g_list_foreach (list, (GFunc) gda_value_free, NULL);
+		g_list_free (list);
+	}
+	g_object_unref (dsn_list);
+	g_object_unref (model);
+	return NULL;
+}
+
+static GdaInternalCommandResult *
+extra_command_create_dsn (GdaConnection *cnc, const gchar **args, GError **error, MainData *data)
+{
+	GdaInternalCommandResult *res = NULL;
+	GdaDsnInfo newdsn;
+	gchar *real_cnc, *real_provider, *user, *pass;
+
+	if (!args[0] || !args[1]) {
+		g_set_error (error, 0, 0,
+			     _("Missing arguments"));
+		return NULL;
+	}
+
+	newdsn.name = (gchar *) args [0];
+	gda_connection_string_split ((gchar *) args[1], &real_cnc, &real_provider, &user, &pass);
+	newdsn.provider = real_provider;
+	newdsn.description = NULL;
+	if (args[2]) {
+		if ((*args[2] == '"') && (args[2][strlen (args[2]) - 1] == '"'))
+			newdsn.description = g_strndup (args[2] + 1, strlen (args[2]) - 2);
+		else
+			newdsn.description = g_strdup (args[2]);
+	}
 	
-	res = g_new0 (GdaInternalCommandResult, 1);
-	res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
-	res->u.model = list_all_dsn (data);
+	newdsn.cnc_string = real_cnc;
+	newdsn.auth_string = NULL;
+	if (user) {
+		gchar *tmp;
+		tmp = gda_rfc1738_encode (user);
+		newdsn.auth_string = g_strdup_printf ("USERNAME=%s", tmp);
+		g_free (tmp);
+	}
+	newdsn.is_system = FALSE;
+
+	if (!newdsn.provider) {
+		g_set_error (error, 0, 0,
+			     _("Missing provider name"));
+	}
+	else if (gda_config_define_dsn (&newdsn, error)) {
+		res = g_new0 (GdaInternalCommandResult, 1);
+		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
+	}
+
+	g_free (real_cnc);
+	g_free (real_provider);
+	g_free (user);
+	g_free (pass);
+	g_free (newdsn.description);
+
 	return res;
+}
+
+static GdaInternalCommandResult *
+extra_command_remove_dsn (GdaConnection *cnc, const gchar **args, GError **error, MainData *data)
+{
+	GdaInternalCommandResult *res;
+	gint i;
+
+	if (!args[0]) {
+		g_set_error (error, 0, 0,
+			     _("Missing DSN name"));
+		return NULL;
+	}
+	for (i = 0; args [i]; i++) {
+		if (! gda_config_remove_dsn (args[i], error))
+			return NULL;
+	}
+
+	res = g_new0 (GdaInternalCommandResult, 1);
+	res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
+	return res;	
 }
 
 static GdaInternalCommandResult *
 extra_command_list_providers (GdaConnection *cnc, const gchar **args, GError **error, MainData *data)
 {
 	GdaInternalCommandResult *res;
-	
-	res = g_new0 (GdaInternalCommandResult, 1);
-	res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
-	res->u.model = list_all_providers (data);
-	return res;
+	GdaDataModel *prov_list, *model = NULL;
+	gint i, nrows;
+	GList *list = NULL;
+
+	prov_list = gda_config_list_providers ();
+	nrows = gda_data_model_get_n_rows (prov_list);
+
+	if (args[0]) {
+		/* details about a provider */
+		for (i = 0; i < nrows; i++) {
+			const GValue *value;
+			value = gda_data_model_get_value_at (prov_list, 0, i, error);
+			if (!value)
+				goto onerror;
+
+			if (!strcmp (g_value_get_string (value), args[0])) {
+				gint j;
+				model = gda_data_model_array_new_with_g_types (2,
+									       G_TYPE_STRING,
+									       G_TYPE_STRING);
+				gda_data_model_set_column_title (model, 0, _("Attribute"));
+				gda_data_model_set_column_title (model, 1, _("Value"));
+				g_object_set_data_full (G_OBJECT (model), "name", 
+							g_strdup_printf (_("Provider '%s' description"), args[0]),
+							g_free);
+				
+				for (j = 0; j < 5; j++) {
+					GValue *tmpvalue;
+					if (gda_data_model_append_row (model, error) == -1) 
+						goto onerror;
+					
+					g_value_set_string ((tmpvalue = gda_value_new (G_TYPE_STRING)),
+							    gda_data_model_get_column_title (prov_list, j));
+					if (! gda_data_model_set_value_at (model, 0, j, tmpvalue, error))
+						goto onerror;
+					gda_value_free (tmpvalue);
+									 
+					value = gda_data_model_get_value_at (prov_list, j, i, error);
+					if (!value ||
+					    ! gda_data_model_set_value_at (model, 1, j, value, error))
+						goto onerror;
+				}
+				res = g_new0 (GdaInternalCommandResult, 1);
+				res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+				res->u.model = model;
+				g_object_unref (prov_list);
+				return res;
+			}
+		}
+		g_object_unref (prov_list);
+		g_set_error (error, 0, 0,
+			     _("Could not find any provider named '%s'"), args[0]);
+		return NULL;
+	}
+	else {
+		model = gda_data_model_array_new_with_g_types (2,
+							       G_TYPE_STRING,
+							       G_TYPE_STRING);
+		gda_data_model_set_column_title (model, 0, _("Provider"));
+		gda_data_model_set_column_title (model, 1, _("Description"));
+		g_object_set_data (G_OBJECT (model), "name", _("Installed providers list"));
+		
+		for (i =0; i < nrows; i++) {
+			const GValue *value;
+			list = NULL;
+			value = gda_data_model_get_value_at (prov_list, 0, i, error);
+			if (!value)
+				goto onerror;
+			list = g_list_append (list, gda_value_copy (value));
+			value = gda_data_model_get_value_at (prov_list, 1, i, error);
+			if (!value)
+				goto onerror;
+			list = g_list_append (list, gda_value_copy (value));
+			
+			if (gda_data_model_append_values (model, list, error) == -1)
+				goto onerror;
+			
+			g_list_foreach (list, (GFunc) gda_value_free, NULL);
+			g_list_free (list);
+		}
+		
+		res = g_new0 (GdaInternalCommandResult, 1);
+		res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+		res->u.model = model;
+		g_object_unref (prov_list);
+		
+		return res;
+	}
+
+ onerror:
+	if (list) {
+		g_list_foreach (list, (GFunc) gda_value_free, NULL);
+		g_list_free (list);
+	}
+	g_object_unref (prov_list);
+	g_object_unref (model);
+	return NULL;
 }
 
 static void

@@ -289,8 +289,8 @@ gda_ddl_creator_set_property (GObject *object,
 			creator->priv->quoted_catalog = NULL;
 			if (g_value_get_string (value) && *g_value_get_string (value)) {
 				creator->priv->catalog = gda_value_copy (value);
-				if (_identifier_needs_quotes (g_value_get_string (value))) 
-					creator->priv->quoted_catalog = _add_quotes (g_value_get_string (value));
+				if (gda_sql_identifier_needs_quotes (g_value_get_string (value))) 
+					creator->priv->quoted_catalog = gda_sql_identifier_add_quotes (g_value_get_string (value));
 				else
 					creator->priv->quoted_catalog = g_value_dup_string (value);
 			}
@@ -303,8 +303,8 @@ gda_ddl_creator_set_property (GObject *object,
 			creator->priv->quoted_schema = NULL;
 			if (g_value_get_string (value) && *g_value_get_string (value)) {
 				creator->priv->schema = gda_value_copy (value);
-				if (_identifier_needs_quotes (g_value_get_string (value))) 
-					creator->priv->quoted_schema = _add_quotes (g_value_get_string (value));
+				if (gda_sql_identifier_needs_quotes (g_value_get_string (value))) 
+					creator->priv->quoted_schema = gda_sql_identifier_add_quotes (g_value_get_string (value));
 				else
 					creator->priv->quoted_schema = g_value_dup_string (value);
 			}

@@ -75,6 +75,7 @@ const GValue       *gda_holder_get_value               (GdaHolder *holder);
 gchar              *gda_holder_get_value_str           (GdaHolder *holder, GdaDataHandler *dh);
 gboolean            gda_holder_set_value               (GdaHolder *holder, const GValue *value, GError **error);
 gboolean            gda_holder_take_value              (GdaHolder *holder, GValue *value, GError **error);
+GValue             *gda_holder_take_static_value       (GdaHolder *holder, const GValue *value, GError **error);
 gboolean            gda_holder_set_value_str           (GdaHolder *holder, GdaDataHandler *dh, const gchar *value, GError **error);
 
 const GValue       *gda_holder_get_default_value       (GdaHolder *holder);

@@ -433,7 +433,8 @@ gda_internal_command_list_tables (GdaConnection *cnc, const gchar **args, GError
 			"table_type LIKE '%TABLE%' AND table_short_name = table_name "
 			"ORDER BY table_schema, table_name";
 
-		g_value_set_string (v = gda_value_new (G_TYPE_STRING), args[0]);
+		gchar *tmp = gda_sql_identifier_remove_quotes (g_strdup (args[0]));
+		g_value_take_string (v = gda_value_new (G_TYPE_STRING), tmp);
 		model = gda_meta_store_extract (gda_connection_get_meta_store (cnc), sql, error, "tname", v, NULL);
 		gda_value_free (v);
 	}
@@ -573,19 +574,21 @@ gda_internal_command_build_meta_struct (GdaConnection *cnc, const gchar **args, 
 		}
 		else {
 			/* try to find it as a table or view */
-			if (!gda_meta_struct_complement (mstruct, GDA_META_DB_UNKNOWN, NULL, NULL, v, NULL)) {
-				if (g_str_has_suffix (arg, "=") && (*arg != '=')) {
-					GdaMetaDbObject *dbo;
-					gchar *str;
-					str = g_strdup (arg);
-					str[strlen (str) - 1] = 0;
-					g_value_take_string (v, str);
-					dbo = gda_meta_struct_complement (mstruct, GDA_META_DB_UNKNOWN, 
-									  NULL, NULL, v, NULL);
-					if (dbo)
-						gda_meta_struct_complement_depend (mstruct, dbo, NULL);
-				}
+			if (g_str_has_suffix (arg, "=") && (*arg != '=')) {
+				GdaMetaDbObject *dbo;
+				gchar *str;
+				str = g_strdup (arg);
+				str[strlen (str) - 1] = 0;
+				g_value_take_string (v, str);
+				dbo = gda_meta_struct_complement (mstruct, GDA_META_DB_UNKNOWN, 
+								  NULL, NULL, v, error);
+				if (dbo)
+					gda_meta_struct_complement_depend (mstruct, dbo, error);
+				else
+					goto onerror;
 			}
+			else if (!gda_meta_struct_complement (mstruct, GDA_META_DB_UNKNOWN, NULL, NULL, v, error))
+				goto onerror;
 		}
 	}
 
@@ -932,7 +935,7 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 							for (j = 0; j < cnrows; j++) {
 								if (j > 0)
 									g_string_append (string, ", ");
-								cvalue = gda_data_model_get_value_at (cols, 2, j, error);
+								cvalue = gda_data_model_get_value_at (cols, 3, j, error);
 								if (!cvalue) {
 									gda_internal_command_exec_result_free (res);
 									res = NULL;

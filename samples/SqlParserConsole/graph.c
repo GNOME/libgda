@@ -333,7 +333,6 @@ parts_foreach_func (GdaSqlAnyPart *part, GString *string, GError **error)
 		if (expr->param_spec) {
 			add_node (string, expr->param_spec , "GdaSqlParamSpec", 
 				  "name", G_TYPE_STRING, expr->param_spec->name, 
-				  "type", G_TYPE_STRING, expr->param_spec->type,
 				  "descr", G_TYPE_STRING, expr->param_spec->descr,
 				  "is_param", G_TYPE_BOOLEAN, expr->param_spec->is_param,
 				  "nullok", G_TYPE_BOOLEAN, expr->param_spec->nullok,
@@ -368,7 +367,7 @@ parts_foreach_func (GdaSqlAnyPart *part, GString *string, GError **error)
         case GDA_SQL_ANY_SQL_OPERATION: {
 		GdaSqlOperation *op = (GdaSqlOperation*) part;
 		add_node (string, part , "GdaSqlOperation", 
-			  "operator", G_TYPE_STRING, gda_sql_operation_operator_to_string (op->operator),
+			  "operator", G_TYPE_STRING, gda_sql_operation_operator_to_string (op->operator_type),
 			  NULL);
 		link_a_list (string, part, op->operands, "operands");
 		break;
@@ -408,7 +407,7 @@ parts_foreach_func (GdaSqlAnyPart *part, GString *string, GError **error)
 			  "position", G_TYPE_INT, join->position,
 			  NULL);
 		link_a_node (string, part, join->expr, "expr");
-		link_a_list (string, part, join->using, "using");
+		link_a_list (string, part, join->use, "using");
 		break;
 	}
         case GDA_SQL_ANY_SQL_SELECT_FROM: {

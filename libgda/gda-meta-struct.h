@@ -116,7 +116,7 @@ typedef struct {
  * Struture to hold information about each database object (tables, views, triggers, ...)
  *
  * Note: @obj_catalog, @obj_schema, @obj_name, @obj_short_name and @obj_full_name are case sensitive:
- *       one must call _identifier_needs_quotes() to know if is it is necessary to surround by double quotes
+ *       one must call gda_sql_identifier_needs_quotes() to know if is it is necessary to surround by double quotes
  *       before using in an SQL statement
  */
 typedef struct {

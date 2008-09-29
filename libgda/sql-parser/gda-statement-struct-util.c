@@ -134,8 +134,17 @@ _remove_quotes (gchar *str)
         return str;
 }
 
+/**
+ * gda_sql_identifier_add_quotes
+ * @str: an SQL identifier
+ *
+ * Add double quotes around the @str identifier. Use the gda_sql_identifier_needs_quotes()
+ * function to tell if an identifier needs to be quoted.
+ *
+ * Returns: a new string
+ */
 gchar *
-_add_quotes (const gchar *str)
+gda_sql_identifier_add_quotes (const gchar *str)
 {
 	gchar *retval, *rptr;
 	const gchar *sptr;
@@ -273,10 +282,16 @@ _string_is_identifier (const gchar *str)
 }
 
 /**
- * identifier_needs_quotes
+ * gda_sql_identifier_needs_quotes
+ * @str: an SQL identifier
+ *
+ * Tells if @str needs to be quoted before using it in an SQL statement. To actually add quotes,
+ * use gda_sql_identifier_add_quotes().
+ *
+ * Returns: TRUE if @str needs some quotes
  */
 gboolean
-_identifier_needs_quotes (const gchar *str)
+gda_sql_identifier_needs_quotes (const gchar *str)
 {
 	const gchar *ptr;
 
@@ -288,7 +303,10 @@ _identifier_needs_quotes (const gchar *str)
 	return FALSE;
 }
 
-/*
+/**
+ * gda_sql_identifier_remove_quotes
+ * @str: a quoted string
+ *
  * Prepares @str to be compared:
  * - if surrounded by double quotes, then just remove the quotes
  * - otherwise convert to lower case
@@ -298,7 +316,7 @@ _identifier_needs_quotes (const gchar *str)
  * Returns: @str
  */
 gchar *
-_identifier_unquote (gchar *str)
+gda_sql_identifier_remove_quotes (gchar *str)
 {
 	if (!str)
 		return NULL;

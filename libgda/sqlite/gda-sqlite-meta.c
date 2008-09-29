@@ -788,7 +788,7 @@ _gda_sqlite_meta__tables_views (GdaServerProvider *prov, GdaConnection *cnc,
 			break;
 		}
 		if (!strcmp (g_value_get_string (cvalue), TMP_DATABASE_NAME))
-			 continue; /* nothing to do */
+			continue; /* nothing to do */
 
 		if (! fill_tables_views_model (cnc, tables_model, views_model, 
 					       cvalue, NULL, error)) {
@@ -1018,7 +1018,7 @@ _gda_sqlite_meta__columns (GdaServerProvider *prov, GdaConnection *cnc,
 		}
 		schema_name = g_value_get_string (cvalue); 
 		if (!strcmp (schema_name, TMP_DATABASE_NAME))
-			 continue; /* nothing to do */
+			continue; /* nothing to do */
 		
 		gchar *str;
 		GType col_types[] = {G_TYPE_STRING, G_TYPE_STRING, G_TYPE_NONE};
@@ -1261,7 +1261,7 @@ fill_constraints_tab_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 	 * FOREIGN KEYS
 	 */
 	GType fk_col_types[] = {G_TYPE_INT, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_NONE};
-	gchar *ref_table = NULL;
+	gint fkid = -1;
 	stmt = get_statement (I_PRAGMA_FK_LIST, schema_name, g_value_get_string (p_table_name), error);
 	tmpmodel = gda_connection_statement_execute_select_full (cnc, stmt, pragma_set, 
 								 GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
@@ -1270,22 +1270,29 @@ fill_constraints_tab_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 	if (!tmpmodel)
 		return FALSE;
 		
+	if (!strcmp (g_value_get_string (p_table_name), "baseFieldMappings"))
+		g_print ("AAA\n");
 	nrows = gda_data_model_get_n_rows (tmpmodel);
 	for (i = 0; i < nrows; i++) {
 		const GValue *cvalue;
 
-		cvalue = gda_data_model_get_value_at (tmpmodel, 2, i, error);
+		cvalue = gda_data_model_get_value_at (tmpmodel, 0, i, error);
 		if (!cvalue) {
 			retval = FALSE;
 			break;
 		}
-		if (! ref_table || strcmp (ref_table, g_value_get_string (cvalue))) {
+		if ((fkid == -1) || (fkid != g_value_get_int (cvalue))) {
 			gchar *constname;
 			GValue *v1, *v2;
 
-			g_free (ref_table);
-			ref_table = g_strdup (g_value_get_string (cvalue));
-			constname = g_strdup_printf ("fk_%s", ref_table);
+			fkid = g_value_get_int (cvalue);
+
+			cvalue = gda_data_model_get_value_at (tmpmodel, 2, i, error);
+			if (!cvalue) {
+				retval = FALSE;
+				break;
+			}
+			constname = g_strdup_printf ("fk%d_%s", fkid, g_value_get_string (cvalue));
 			if (constraint_name_n && strcmp (g_value_get_string (constraint_name_n), constname)) {
 				g_free (constname);
 				continue;
@@ -1308,7 +1315,6 @@ fill_constraints_tab_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 				retval = FALSE;
 		}
 	}
-	g_free (ref_table);
 	g_object_unref (tmpmodel);
 
 	/*
@@ -1441,7 +1447,7 @@ fill_constraints_ref_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 	schema_name = g_value_get_string (p_table_schema);
 
 	GType fk_col_types[] = {G_TYPE_INT, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_NONE};
-	gchar *ref_table = NULL;
+	gint fkid = -1;
 	stmt = get_statement (I_PRAGMA_FK_LIST, schema_name, g_value_get_string (p_table_name), error);
 	tmpmodel = gda_connection_statement_execute_select_full (cnc, stmt, pragma_set, 
 								 GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
@@ -1454,25 +1460,31 @@ fill_constraints_ref_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 	for (i = 0; i < nrows; i++) {
 		const GValue *cvalue;
 
-		cvalue = gda_data_model_get_value_at (tmpmodel, 2, i, error);
+		cvalue = gda_data_model_get_value_at (tmpmodel, 0, i, error);
 		if (!cvalue) {
 			retval = FALSE;
 			break;
 		}
-		if (! ref_table || strcmp (ref_table, g_value_get_string (cvalue))) {
+		if ((fkid  == -1) || (fkid != g_value_get_int (cvalue))) {
 			gchar *constname;
 			GValue *v2, *v3, *v4, *v5;
 
-			g_free (ref_table);
-			ref_table = g_strdup (g_value_get_string (cvalue));
-			constname = g_strdup_printf ("fk_%s", ref_table);
+			fkid = g_value_get_int (cvalue);
+
+			cvalue = gda_data_model_get_value_at (tmpmodel, 2, i, error);
+			if (!cvalue) {
+				retval = FALSE;
+				break;
+			}
+
+			constname = g_strdup_printf ("fk%d_%s", fkid, g_value_get_string (cvalue));
 			if (constraint_name_n && strcmp (g_value_get_string (constraint_name_n), constname)) {
 				g_free (constname);
 				continue;
 			}
 		
 			g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), "FOREIGN KEY");
-			g_value_set_string ((v3 = gda_value_new (G_TYPE_STRING)), ref_table);
+			g_value_set_string ((v3 = gda_value_new (G_TYPE_STRING)), g_value_get_string (cvalue));
 			g_value_set_string ((v4 = gda_value_new (G_TYPE_STRING)), "primary_key");
 			if (!constraint_name_n)
 				g_value_take_string ((v5 = gda_value_new (G_TYPE_STRING)), constname);
@@ -1495,7 +1507,6 @@ fill_constraints_ref_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 				g_free (constname);
 		}
 	}
-	g_free (ref_table);
 	g_object_unref (tmpmodel);
 
 	return retval;
@@ -1690,12 +1701,12 @@ fill_key_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaData
 		}
 		g_object_unref (tmpmodel);
 	}
-	else if ((*const_name == 'f')  && (const_name[1] == 'k') && (const_name[2] == '_')) {
+	else if ((*const_name == 'f')  && (const_name[1] == 'k')) {
 		/*
 		 * FOREIGN key columns
 		 */
 		GType fk_col_types[] = {G_TYPE_INT, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_NONE};
-		gchar *ref_table = NULL;
+		gint fkid = -1;
 		gint ord_pos;
 		stmt = get_statement (I_PRAGMA_FK_LIST, schema_name, g_value_get_string (p_table_name), error);
 		tmpmodel = gda_connection_statement_execute_select_full (cnc, stmt, pragma_set, 
@@ -1710,21 +1721,24 @@ fill_key_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaData
 			const GValue *cvalue;
 			GValue *v1;
 			
-			cvalue = gda_data_model_get_value_at (tmpmodel, 2, i, error);
+			cvalue = gda_data_model_get_value_at (tmpmodel, 0, i, error);
 			if (!cvalue) {
 				retval = FALSE;
 				break;
 			}
-			if (! ref_table || strcmp (ref_table, g_value_get_string (cvalue))) {
+			if ((fkid == -1) || (fkid != g_value_get_int (cvalue))) {
 				gchar *constname;
 				
-				g_free (ref_table);
-				ref_table = g_strdup (g_value_get_string (cvalue));
-				constname = g_strdup_printf ("fk_%s", ref_table);
+				fkid = g_value_get_int (cvalue);
+
+				cvalue = gda_data_model_get_value_at (tmpmodel, 2, i, error);
+				if (!cvalue) {
+					retval = FALSE;
+					break;
+				}
+				constname = g_strdup_printf ("fk%d_%s", fkid, g_value_get_string (cvalue));
 				if (strcmp (g_value_get_string (constraint_name), constname)) {
 					g_free (constname);
-					g_free (ref_table);
-					ref_table = NULL;
 					continue;
 				}
 				ord_pos = 1;
@@ -1746,7 +1760,6 @@ fill_key_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaData
 				retval = FALSE;
 		}
 
-		g_free (ref_table);
 		g_object_unref (tmpmodel);
 	}
 	else {

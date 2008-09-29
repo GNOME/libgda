@@ -792,7 +792,7 @@ gda_config_define_dsn (const GdaDsnInfo *info, GError **error)
 		if (info->is_system != einfo->is_system) {
 			save_system = TRUE;
 			save_user = TRUE;
-			einfo->is_system = info->is_system;
+			einfo->is_system = info->is_system ? TRUE : FALSE;
 		}
 		g_signal_emit (unique_instance, gda_config_signals[DSN_CHANGED], 0, einfo);
 	}
@@ -807,7 +807,7 @@ gda_config_define_dsn (const GdaDsnInfo *info, GError **error)
 			einfo->description = g_strdup (info->description);
 		if (info->auth_string)
 			einfo->auth_string = g_strdup (info->auth_string);
-		einfo->is_system = info->is_system;
+		einfo->is_system = info->is_system ? TRUE : FALSE;
 
 		unique_instance->priv->dsn_list = g_slist_insert_sorted (unique_instance->priv->dsn_list, einfo,
 									 (GCompareFunc) data_source_info_compare);
