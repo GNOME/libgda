@@ -37,17 +37,17 @@ open_destination_connection (void)
         /* table "products_copied1" */
 	run_sql_non_select (cnc, "DROP table IF EXISTS products_copied1");
 	run_sql_non_select (cnc, "CREATE table products_copied1 (ref string not null primary key, "
-			    "name string not null, price real, wh_stored integer REFERENCES warehouses(id))");
+			    "name string not null, price real, wh_stored integer)");
 
         /* table "products_copied2" */
 	run_sql_non_select (cnc, "DROP table IF EXISTS products_copied2");
 	run_sql_non_select (cnc, "CREATE table products_copied2 (ref string not null primary key, "
-			    "name string not null, price real, wh_stored integer REFERENCES warehouses(id))");
+			    "name string not null, price real, wh_stored integer)");
 
         /* table "products_copied3" */
 	run_sql_non_select (cnc, "DROP table IF EXISTS products_copied3");
 	run_sql_non_select (cnc, "CREATE table products_copied3 (ref string not null primary key, "
-			    "name string not null, price real, wh_stored integer REFERENCES warehouses(id))");
+			    "name string not null, price real, wh_stored integer)");
 
 	return cnc;
 }

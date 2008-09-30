@@ -1270,8 +1270,6 @@ fill_constraints_tab_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 	if (!tmpmodel)
 		return FALSE;
 		
-	if (!strcmp (g_value_get_string (p_table_name), "baseFieldMappings"))
-		g_print ("AAA\n");
 	nrows = gda_data_model_get_n_rows (tmpmodel);
 	for (i = 0; i < nrows; i++) {
 		const GValue *cvalue;
@@ -1943,7 +1941,7 @@ _gda_sqlite_meta_key_columns (GdaServerProvider *prov, GdaConnection *cnc,
 	g_assert (mod_model);
 
 	retval = fill_key_columns_model (cnc, cdata, mod_model, table_schema, table_name, constraint_name, error);
-	if (retval)
+	if (retval) 
 		retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
 	g_object_unref (mod_model);
 

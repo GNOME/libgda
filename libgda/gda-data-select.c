@@ -2725,7 +2725,7 @@ gda_data_select_append_values (GdaDataModel *model, const GList *values, GError 
 	if (imodel->priv->modif_internals->safely_locked) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_SAFETY_LOCKED_ERROR,
 			     _("Modifications are not allowed anymore"));
-		return FALSE;
+		return -1;
 	}
 	if (! (imodel->priv->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
@@ -2774,8 +2774,10 @@ gda_data_select_append_values (GdaDataModel *model, const GList *values, GError 
 	/* compute INSERT statement */
 	GdaStatement *stmt;
 	if (! imodel->priv->modif_internals->ins_stmts)
-		imodel->priv->modif_internals->ins_stmts = g_hash_table_new_full ((GHashFunc) bvector_hash, (GEqualFunc) bvector_equal, 
-								 (GDestroyNotify) bvector_free, g_object_unref);
+		imodel->priv->modif_internals->ins_stmts = g_hash_table_new_full ((GHashFunc) bvector_hash, 
+										  (GEqualFunc) bvector_equal, 
+										  (GDestroyNotify) bvector_free, 
+										  g_object_unref);
 	stmt = g_hash_table_lookup (imodel->priv->modif_internals->ins_stmts, bv);
 	if (! stmt) {
 		stmt = compute_single_insert_stmt (imodel, bv, error);
@@ -2800,11 +2802,13 @@ gda_data_select_append_values (GdaDataModel *model, const GList *values, GError 
 		if (! holder) {
 			g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
 				     _("Column %d can't be modified"), i);
-			bvector_free (bv);
+			if (free_bv)
+				bvector_free (bv);
 			return -1;
 		}
 		if (! gda_holder_set_value (holder, (GValue *) list->data, error)) {
-			bvector_free (bv);
+			if (free_bv)
+				bvector_free (bv);
 			return -1;
 		}
 	}
@@ -2832,6 +2836,12 @@ gda_data_select_append_values (GdaDataModel *model, const GList *values, GError 
 	g_free (sql);
 #endif
 
+	if (! imodel->priv->modif_internals->one_row_select_stmt) {
+		imodel->priv->modif_internals->one_row_select_stmt = compute_single_select_stmt (imodel, error);
+		if (!imodel->priv->modif_internals->one_row_select_stmt)
+			return -1;
+	}
+
 	GdaSet *last_insert;
 	if (gda_connection_statement_execute_non_select (imodel->priv->cnc, stmt,
 							 imodel->priv->modif_internals->modif_set, &last_insert, error) == -1)
@@ -2840,8 +2850,6 @@ gda_data_select_append_values (GdaDataModel *model, const GList *values, GError 
 	/* mark that this row has been modified */
 	DelayedSelectStmt *dstmt;
 	dstmt = g_new0 (DelayedSelectStmt, 1);
-	if (! imodel->priv->modif_internals->one_row_select_stmt)
-		imodel->priv->modif_internals->one_row_select_stmt = compute_single_select_stmt (imodel, error);
 	if (last_insert && imodel->priv->modif_internals->one_row_select_stmt) {
 		dstmt->select = g_object_ref (imodel->priv->modif_internals->one_row_select_stmt);
 		gda_statement_get_parameters (dstmt->select, &(dstmt->params), NULL);
@@ -3017,7 +3025,7 @@ compute_insert_select_params_mapping (GdaSet *sel_params, GdaSet *ins_values, Gd
 			goto onerror;
 		}
 		g_assert (cdata.colid);
-		g_print ("SEL param '%s' <=> column named '%s'\n", cdata.hid, cdata.colid);
+		/*g_print ("SEL param '%s' <=> column named '%s'\n", cdata.hid, cdata.colid);*/
 		
 		GSList *ins_list;
 		cdata.hid = NULL;
@@ -3041,7 +3049,7 @@ compute_insert_select_params_mapping (GdaSet *sel_params, GdaSet *ins_values, Gd
 			goto onerror;
 		}
 
-		g_print ("column named '%s' <=> INS param '%s'\n", cdata.colid, cdata.hid);
+		/*g_print ("column named '%s' <=> INS param '%s'\n", cdata.colid, cdata.hid);*/
 
 		if (! param_name_to_int (cdata.hid, &ipnum, &ipold) || ipold) {
 			g_warning ("Provider reported a malformed parameter named '%s'", cdata.hid);
@@ -3049,7 +3057,6 @@ compute_insert_select_params_mapping (GdaSet *sel_params, GdaSet *ins_values, Gd
 		}
 
 		g_array_insert_val (array, spnum, ipnum);
-		g_print ("    array[%d] = %d\n", spnum, ipnum);
 	}
 
 	retval = (gint *) array->data;

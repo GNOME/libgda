@@ -111,16 +111,16 @@ copy_products_1 (GdaConnection *s_cnc, GdaConnection *d_cnc)
 
 		/* REM: exit status for each function should be check but has been omitted for clarity */
 		p = gda_set_get_holder (params, "ref");
-		gda_holder_set_value (p, gda_data_model_get_value_at (source, 0, row, NULL));
+		gda_holder_set_value (p, gda_data_model_get_value_at (source, 0, row, NULL), NULL);
 		p = gda_set_get_holder (params, "name");
-		gda_holder_set_value (p, gda_data_model_get_value_at (source, 1, row, NULL));
+		gda_holder_set_value (p, gda_data_model_get_value_at (source, 1, row, NULL), NULL);
 		p = gda_set_get_holder (params, "price");
 		value = gda_value_new (G_TYPE_DOUBLE);
 		g_value_set_double (value, g_value_get_double (gda_data_model_get_value_at (source, 2, row, NULL)) * 1.05);
-		gda_holder_set_value (p, value);
+		gda_holder_set_value (p, value, NULL);
 		gda_value_free (value);
 		p = gda_set_get_holder (params, "location");
-		gda_holder_set_value (p, gda_data_model_get_value_at (source, 3, row, NULL));
+		gda_holder_set_value (p, gda_data_model_get_value_at (source, 3, row, NULL), NULL);
 
 		res = gda_connection_statement_execute_non_select (d_cnc, stmt, params, NULL, &error);
 		if (res == -1) {
@@ -161,31 +161,32 @@ copy_products_2 (GdaConnection *s_cnc, GdaConnection *d_cnc)
 	
 	source = get_products_contents (s_cnc);
 
-	/* create GdaDataModelQuery and set it up */
+	/* create GdaDataSelect and set it up */
 	parser = gda_connection_create_parser (d_cnc);
 	sql = "SELECT ref, name, price, wh_stored FROM products_copied2";
 	stmt = gda_sql_parser_parse_string (parser, sql, NULL, &error);
 	g_assert (stmt);
-	dest = gda_data_model_query_new (s_cnc, stmt);
+	dest = gda_connection_statement_execute_select (d_cnc, stmt, NULL, NULL);
 	g_object_unref (stmt);
-
-	sql = "INSERT INTO products_copied2 (ref, name, price, wh_stored) VALUES ("
-		"## /* name:+0 type:gchararray */, "
-		"## /* name:+1 type:gchararray */, "
-		"## /* name:+2 type:gdouble */, "
-		"## /* name:+3 type:gint */)";
-	stmt = gda_sql_parser_parse_string (parser, sql, NULL, &error);
-	g_assert (stmt);
 	g_object_unref (parser);
 
-	if (!gda_data_model_query_set_modification_query (GDA_DATA_MODEL_QUERY (dest), stmt, &error)) {
+	if (!gda_data_select_set_row_selection_condition_sql (GDA_DATA_SELECT (dest), "ref = ##-0::string", &error)) {
+		g_print ("Error setting the GdaDataSelect's condition: %s\n",
+                         error && error->message ? error->message : "No detail");
+		g_error_free (error);
+		retval = FALSE;
+		goto end;
+	}
+
+	sql = "INSERT INTO products_copied2 (ref, name, price, wh_stored) VALUES (##+0::string, ##+1::string, ##+2::gdouble, ##+3::gint)";
+
+	if (!gda_data_select_set_modification_statement_sql (GDA_DATA_SELECT (dest), sql, &error)) {
 		g_print ("Error setting the INSERT query: %s\n",
                          error && error->message ? error->message : "No detail");
 		g_error_free (error);
 		retval = FALSE;
 		goto end;
 	}
-	g_object_unref (stmt);
 
 	if (! gda_data_model_import_from_model (dest, source, TRUE, NULL, &error)) {
 		g_print ("Error importing data: %s\n",

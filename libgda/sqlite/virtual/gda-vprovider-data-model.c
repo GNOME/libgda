@@ -349,7 +349,6 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 	GString *sql;
 	gint i, ncols;
 	gchar *spec_name;
-	GList *columns = NULL;
 	GdaVConnectionTableData *td;
 
 	TRACE ();
@@ -402,8 +401,9 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 	}
 	else  {
 		GError *error = NULL;
-		columns = td->spec->create_columns_func (td->spec, &error);
-		if (! columns) {
+		if (!td->columns)
+			td->columns = td->spec->create_columns_func (td->spec, &error);
+		if (! td->columns) {
 			if (error && error->message) {
 				int len = strlen (error->message) + 1;
 				*pzErr = sqlite3_malloc (sizeof (gchar) * len);
@@ -413,7 +413,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 				*pzErr = sqlite3_mprintf (_("Could not compute virtual table's columns"));
 			return SQLITE_ERROR;
 		}
-		ncols = g_list_length (columns);
+		ncols = g_list_length (td->columns);
 	}
 
 	/* create the CREATE TABLE statement */
@@ -428,8 +428,8 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 
 		if (i != 0)
 			g_string_append (sql, ", ");
-		if (columns)
-			column = g_list_nth_data (columns, i);
+		if (td->columns)
+			column = g_list_nth_data (td->columns, i);
 		else
 			column = gda_data_model_describe_column ((GdaDataModel*) proxy, i);
 		if (!column) {
@@ -487,10 +487,6 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 	g_string_append (sql, "__gda_row_nb hidden integer");
 
 	g_string_append_c (sql, ')');
-	if (columns) {
-		g_list_foreach (columns, (GFunc) g_object_unref, NULL);
-		g_list_free (columns);
-	}
 
 	/* VirtualTable structure */
 	VirtualTable *vtable;
@@ -553,6 +549,24 @@ virtual_table_manage_real_data_model (VirtualTable *vtable)
 			g_object_unref (vtable->proxy);
 
 		vtable->td->real_model = vtable->td->spec->create_model_func (vtable->td->spec);
+		if (! vtable->td->columns && vtable->td->spec->create_columns_func)
+			vtable->td->columns = vtable->td->spec->create_columns_func (vtable->td->spec, NULL);
+		if (vtable->td->columns) {
+			/* columns */
+			GList *list;
+			gint i, ncols;
+			ncols = gda_data_model_get_n_columns (vtable->td->real_model);
+			g_assert (ncols == g_list_length (vtable->td->columns));
+			for (i = 0, list = vtable->td->columns;
+			     i < ncols;
+			     i++, list = list->next) {
+				GdaColumn *mcol = gda_data_model_describe_column (vtable->td->real_model, i);
+				GdaColumn *ccol = (GdaColumn*) list->data;
+				if (gda_column_get_g_type (mcol) == GDA_TYPE_NULL)
+					gda_column_set_g_type (mcol, gda_column_get_g_type (ccol));
+			}
+		}
+
 		/*g_print ("Created real model %p for table %s\n", vtable->td->real_model, vtable->td->table_name);*/
 		
 		if (GDA_IS_DATA_PROXY (vtable->td->real_model)) {
@@ -777,7 +791,7 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 			GType type;
 			GValue *value;
 			type = gda_column_get_g_type (gda_data_model_describe_column ((GdaDataModel*) vtable->proxy, i - 2));
-			if (sqlite3_value_text (apData [i]))
+			if ((type != GDA_TYPE_NULL) && sqlite3_value_text (apData [i]))
 				value = gda_value_new_from_string ((const gchar*) sqlite3_value_text (apData [i]), type);
 			else
 				value = gda_value_new_null ();
@@ -826,10 +840,22 @@ virtualCommit (sqlite3_vtab *tab)
 	
 	TRACE ();
 
-	if (vtable->proxy)
-		return gda_data_proxy_apply_all_changes (vtable->proxy, NULL) ? SQLITE_OK : SQLITE_READONLY;
+	if (vtable->proxy) {
+		GError *lerror = NULL;
+		if (!gda_data_proxy_apply_all_changes (vtable->proxy, &lerror)) {
+			g_warning ("VirtualCommit error: %s\n", 
+				   lerror && lerror->message ? lerror->message : "No detail");
+			if (lerror)
+				g_error_free (lerror);
+			TO_IMPLEMENT; /* FIXME: the error code does not seem to be taken into account by SQLite
+				       * => maybe the xCommit is not used in the correct context! */
+			return SQLITE_ERROR;
+		}
+		else
+			return SQLITE_OK;
+	}
 	else
-		return TRUE;
+		return SQLITE_OK;
 }
 
 static int

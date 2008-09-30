@@ -451,6 +451,10 @@ gda_vconnection_data_model_table_data_free (GdaVConnectionTableData *td)
 {
 	if (td->real_model)
 		g_object_unref (td->real_model);
+	if (td->columns) {
+		g_list_foreach (td->columns, (GFunc) g_object_unref, NULL);
+		g_list_free (td->columns);
+	}
 	g_free (td->table_name);
 	g_free (td->unique_name);
 	if (td->spec_free_func)

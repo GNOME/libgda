@@ -5,8 +5,8 @@
       <itemizedlist>
 	<listitem><para>easier to understand and to use API, with less strange path usage (which were inherited
 	from modifications above modifications where no global coherence was adressed)</para></listitem>
-	<listitem><para>reduce the size of the library (now 1.1M compared to 1.7M once stripped) and the number of symbols 
-	    (880 compared to 1420) and have less complicated and thus more maintanable code (180 files compared to 250).
+	<listitem><para>reduce the size of the library (now 1.3M compared to 1.7M once stripped) and the number of symbols 
+	    (860 compared to 1420) and have less complicated and thus more maintanable code (190 files compared to 250).
 	</para></listitem>
 	<listitem><para>removal of the GdaClient object from which connections were created: this object did not offer
 	    any significant features and made the API more difficult to use</para></listitem>

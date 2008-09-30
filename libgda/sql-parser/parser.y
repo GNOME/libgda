@@ -965,7 +965,7 @@ value(V) ::= FLOAT(F). {V = F;}
 // pvalue: values which are parameters (GdaSqlExpr)
 %type pvalue {GdaSqlExpr *}
 %destructor pvalue {gda_sql_expr_free ($$);}
-	pvalue(E) ::= UNSPECVAL LSBRACKET paramspec(P) RSBRACKET. {E = gda_sql_expr_new (NULL); E->param_spec = P;}
+pvalue(E) ::= UNSPECVAL LSBRACKET paramspec(P) RSBRACKET. {E = gda_sql_expr_new (NULL); E->param_spec = P;}
 pvalue(E) ::= value(V) LSBRACKET paramspec(P) RSBRACKET. {E = gda_sql_expr_new (NULL); E->value = V; E->param_spec = P;}
 pvalue(E) ::= SIMPLEPARAM(S). {E = gda_sql_expr_new (NULL); E->param_spec = gda_sql_param_spec_new (S);}
 

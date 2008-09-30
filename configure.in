@@ -125,7 +125,7 @@ PKG_CHECK_MODULES(LIBGDA, [
 	glib-2.0	>= req_ver_glib
 	gobject-2.0	>= req_ver_glib
 	gthread-2.0	>= req_ver_glib
-	gmodule-2.0	>= req_ver_glib
+	gmodule-no-export-2.0	>= req_ver_glib
 	libxml-2.0
 ])
 TST_CFLAGS="$LIBGDA_CFLAGS"
@@ -136,6 +136,7 @@ dnl Check for Win32
 dnl ******************************
 dnl linklibext is the shared link library extension, which varies by platform
 
+EXPORT_SYM_REGEX='-export-symbols-regex "^[[^(_|sqlite3|pcache|csv|MD5)]].*"'
 AC_MSG_CHECKING([for platform])
 platform_win32=no
 platform_carbon=no
@@ -145,7 +146,7 @@ case "$host" in
     AC_MSG_RESULT([Win32 - cygwin])
     NO_UNDEFINED='-no-undefined'
     SOPREFIX='cyg'
-    LIBTOOL_EXPORT_OPTIONS='-export-symbols-regex "^[[^_]].*"'
+    LIBTOOL_EXPORT_OPTIONS=$EXPORT_SYM_REGEX
     linklibext=".dll.a"
     AC_MSG_RESULT([Win32])
     ;;
@@ -165,7 +166,7 @@ case "$host" in
     platform_carbon=yes
     SOPREFIX='lib'
     AM_BINRELOC
-    LIBTOOL_EXPORT_OPTIONS='-export-symbols-regex "^[[^_]].*"'
+    LIBTOOL_EXPORT_OPTIONS=$EXPORT_SYM_REGEX
     AC_DEFINE(HAVE_CARBON)
     dnl SO_SUFFIX=dylib
   ;;
@@ -174,7 +175,7 @@ case "$host" in
     NO_UNDEFINED=''
     SOPREFIX='lib'
     AM_BINRELOC
-    LIBTOOL_EXPORT_OPTIONS='-export-symbols-regex "^[[^_]].*"'
+    LIBTOOL_EXPORT_OPTIONS=$EXPORT_SYM_REGEX
     ;;
 esac
 

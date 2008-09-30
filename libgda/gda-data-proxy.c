@@ -1064,6 +1064,22 @@ proxied_model_reset_cb (GdaDataModel *model, GdaDataProxy *proxy)
 	gda_data_proxy_init (proxy);
 	g_object_set (G_OBJECT (proxy), "model", model, "prepend-null-entry", add_null_entry, NULL);
 	g_object_unref (G_OBJECT (model));
+
+	if (proxy->priv->columns) {
+		/* adjust column's types */
+		gint i;
+		GdaColumn *orig;
+		for (i = 0; i < proxy->priv->model_nb_cols; i++) {
+			orig = gda_data_model_describe_column (proxy->priv->model, i);
+			gda_column_set_g_type (proxy->priv->columns[i], gda_column_get_g_type (orig));
+		}
+		for (; i < 2 * proxy->priv->model_nb_cols; i++) {
+			orig = gda_data_model_describe_column (proxy->priv->model, 
+							       i -  proxy->priv->model_nb_cols);
+			gda_column_set_g_type (proxy->priv->columns[i], gda_column_get_g_type (orig));
+		}
+	}
+
 	gda_data_model_reset (GDA_DATA_MODEL (proxy));
 }
 
@@ -1908,6 +1924,13 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, gboolean adjust_display, GE
 					gda_value_free (free_val [i]);
 			g_free (free_val);
 			if (!err) {
+				if (proxy->priv->catched_inserted_row < 0) {
+					g_warning (_("Proxied data model reports the modifications as accepted, yet did not emit the "
+						     "corresponding \"row-inserted\", \"row-updated\" or \"row-removed\" signal. This "
+						     "is a bug of the %s's implementation (please report a bug)."),
+						   G_OBJECT_TYPE_NAME (proxy->priv->model));
+				}
+
 				proxy->priv->new_rows = g_slist_remove (proxy->priv->new_rows, rm);
 				proxy->priv->all_modifs = g_slist_remove (proxy->priv->all_modifs, rm);
 				g_hash_table_remove (proxy->priv->modify_rows, GINT_TO_POINTER (rm->model_row));
@@ -1921,12 +1944,6 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, gboolean adjust_display, GE
 				g_signal_emit (G_OBJECT (proxy),
 					       gda_data_proxy_signals[ROW_CHANGES_APPLIED],
 					       0, proxy_row, -1);
-			}
-			else if (proxy->priv->catched_inserted_row < 0) {
-				g_warning (_("Proxied data model reports the modifications as accepted, yet did not emit the "
-					     "corresponding \"row-inserted\", \"row-updated\" or \"row-removed\" signal. This "
-					     "is a bug of the %s's implementation (please report a bug)."),
-					   G_OBJECT_TYPE_NAME (proxy->priv->model));
 			}
 
 			proxy->priv->catched_inserted_row = -1;
@@ -3125,7 +3142,7 @@ static void create_columns (GdaDataProxy *proxy)
 	/* current proxy's values */
 	for (i = 0; i < proxy->priv->model_nb_cols; i++) {
 		GdaColumn *orig;
-
+		
 		orig = gda_data_model_describe_column (proxy->priv->model, i);
 		proxy->priv->columns[i] = gda_column_copy (orig);
 		gda_column_set_position (proxy->priv->columns[i], i);
@@ -3162,7 +3179,6 @@ gda_data_proxy_describe_column (GdaDataModel *model, gint col)
 
 	if (!proxy->priv->columns)
 		create_columns (proxy);
-
 	return proxy->priv->columns [col];
 }
 

@@ -1,3 +1,27 @@
+2008-09-30  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in:
+	* libgda/Makefile.am: make sure only the correct symbols are exported:
+	  - by requiring gmodule-no-export-2.0 instead of gmodule-2.0
+	  - by excluding csv and sqlite3 symbols
+	* libgda/sql-parser/gda-statement-struct-util.c: fixed comment so documentation
+	can be built
+	* libgda/sql-parser/parser.y: indentation correction
+	* libgda/gda-data-model-array.c: added an assertion
+	* libgda/gda-data-proxy.c: when the proxied data model is reset, make sure the column types
+	are synced
+	* libgda/gda-data-select.c: double free memory error corrected,a nd other minor corrections
+	* libgda/sqlite/gda-sqlite-meta.c: removed useless debug code
+	* libgda/sqlite/virtual/gda-vconnection-data-model-private.h:
+	* libgda/sqlite/virtual/gda-vconnection-data-model.c:
+	* libgda/sqlite/virtual/gda-vconnection-hub.c:
+	* libgda/sqlite/virtual/gda-vprovider-data-model.c:
+	  - don't compute several times the columns of each virtual table
+	  - corrected case when the connection does not have any associated GdaMetaStore object
+	* samples/TableCopy/common.c:
+	* samples/TableCopy/table-copy.c: make this example work again
+	* doc/C: doc updates
+
 2008-09-29  Vivien Malerba <malerba@gnome-db.org>
 
 	* tools/gda-sql.c:

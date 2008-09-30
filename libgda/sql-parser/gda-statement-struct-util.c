@@ -311,7 +311,7 @@ gda_sql_identifier_needs_quotes (const gchar *str)
  * - if surrounded by double quotes, then just remove the quotes
  * - otherwise convert to lower case
  *
- * WARNING: @str must NOT be a composed identifier (<part1>."<part2>" for example)
+ * WARNING: @str must NOT be a composed identifier (&lt;part1&gt;."&lt;part2&gt;" for example)
  * 
  * Returns: @str
  */

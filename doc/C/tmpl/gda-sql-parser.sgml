@@ -54,9 +54,20 @@ but for portability reasons it's better to avoid them):
   <listitem><para><![CDATA[## /* name:NAME [type:TYPE] [nullok:[TRUE|FALSE]] [descr:DESCR] */]]>
       for a variable named NAME with the optional type TYPE (which can be a GType
       name or a custom database type name), with the optional "nullok" attribute and an optional
-      description DESCR.
+      description DESCR. Note that the NAME, TYPE and DESCR literals here must be quoted (simple or double quotes) if
+      they include non alphanumeric characters, and that there must always be at least a space between the 
+      <![CDATA[##]]> and the <![CDATA[/* ... */]]>.
   </para></listitem>
 </itemizedlist>
+Examples of correct place holders definitions are:
+<programlisting>
+## /* name:"+0" type:gchararray */
+## /* name:'-5' type:string */
+## /*name:myvar type:gint descr:ToBeDefined nullok:FALSE*/
+## /*name:myvar type:gint descr:"A long description"*/
+##+0::gcharaccar
+##-5::string
+</programlisting>
 </para>
 
 <para>
@@ -163,6 +174,15 @@ Modifies the behaviour of the tokenizer, reserved for #GdaServerProvider impleme
 
 
 <!-- ##### FUNCTION gda_sql_identifier_add_quotes ##### -->
+<para>
+
+</para>
+
+@str: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_identifier_remove_quotes ##### -->
 <para>
 
 </para>

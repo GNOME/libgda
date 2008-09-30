@@ -422,7 +422,7 @@ attach_hub_connection (GdaVconnectionHub *hub, HubConnection *hc, GError **error
 	GdaMetaStore *store;
 	GdaMetaContext context;
 	
-	g_object_get (G_OBJECT (hc->cnc), "meta-store", &store, NULL);
+	store = gda_connection_get_meta_store (hc->cnc);
 	g_assert (store);
 
 	/* make sure the meta store is up to date */

@@ -174,8 +174,7 @@ libgda_4_0_la_SOURCES = \
 
 libgda_4_0_la_LDFLAGS = \
 	-version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) \
-	$(NO_UNDEFINED) \
-	-export-dynamic $(no_undefined) $(LIBTOOL_EXPORT_OPTIONS)
+	-export-dynamic $(NO_UNDEFINED) $(LIBTOOL_EXPORT_OPTIONS)
 
 libgda_4_0_la_LIBADD = \
 	sql-parser/libgda_sql_parser-4.0.la \

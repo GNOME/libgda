@@ -696,7 +696,7 @@ gda_data_model_array_append_values (GdaDataModel *model, const GList *values, GE
 		dest = gda_row_get_value (row, i);
 		if (list->data) {
 			gda_value_reset_with_type (dest, G_VALUE_TYPE ((GValue *) list->data));
-			gda_value_set_from_value (dest, (GValue *) list->data);
+			g_assert (gda_value_set_from_value (dest, (GValue *) list->data));
 		}
 		else
 			gda_value_set_null (dest);
