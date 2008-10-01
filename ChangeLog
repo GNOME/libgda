@@ -1,3 +1,11 @@
+2008-10-01  Johannes Schmid  <johannes.schmid@openismus.com>
+
+	reviewed by: Murray Cumming <murrayc@murrayc.com>
+
+	* libgda/gda-column.c (gda_marshal_VOID__GTYPE_GTYPE),
+	(gda_column_class_init):
+	Use correct marshaller for GTypes
+
 2008-09-30  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in:

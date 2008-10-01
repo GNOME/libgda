@@ -69,6 +69,47 @@ enum {
 	LAST_SIGNAL
 };
 
+/* marshaller */
+/* This marshaller is hardcoded here because glib-genmarshal does not support
+ * GTYPE
+ */
+/* VOID:GTYPE,GTYPE */
+static void
+gda_marshal_VOID__GTYPE_GTYPE (GClosure     *closure,
+                               GValue       *return_value G_GNUC_UNUSED,
+                               guint         n_param_values,
+                               const GValue *param_values,
+                               gpointer      invocation_hint G_GNUC_UNUSED,
+                               gpointer      marshal_data)
+{
+  typedef void (*GMarshalFunc_VOID__GTYPE_GTYPE) (gpointer     data1,
+                                              GType         arg_1,
+                                              GType         arg_2,
+                                              gpointer     data2);
+  register GMarshalFunc_VOID__GTYPE_GTYPE callback;
+  register GCClosure *cc = (GCClosure*) closure;
+  register gpointer data1, data2; 
+
+  g_return_if_fail (n_param_values == 3);
+
+  if (G_CCLOSURE_SWAP_DATA (closure))
+    {
+      data1 = closure->data;
+      data2 = g_value_peek_pointer (param_values + 0);
+    }
+  else
+    {
+      data1 = g_value_peek_pointer (param_values + 0);
+      data2 = closure->data;
+    }
+  callback = (GMarshalFunc_VOID__GTYPE_GTYPE) (marshal_data ? marshal_data : cc->callback);
+
+  callback (data1,
+            g_value_get_gtype (param_values + 1),
+            g_value_get_gtype (param_values + 2),
+            data2);
+}
+
 static guint gda_column_signals[LAST_SIGNAL] = {0 , 0};
 
 /* properties */
@@ -103,9 +144,9 @@ gda_column_class_init (GdaColumnClass *klass)
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (GdaColumnClass, g_type_changed),
 			      NULL, NULL,
-			      gda_marshal_VOID__INT_INT,
+			      gda_marshal_VOID__GTYPE_GTYPE,
 			      G_TYPE_NONE,
-			      2, G_TYPE_INT, G_TYPE_INT);
+			      2, G_TYPE_GTYPE, G_TYPE_GTYPE);
 
 	/* properties */
         object_class->set_property = gda_column_set_property;
