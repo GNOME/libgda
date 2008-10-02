@@ -6,8 +6,8 @@ gda_column_new
 gda_column_copy
 gda_column_get_name
 gda_column_set_name
-gda_column_get_title
-gda_column_set_title
+gda_column_get_description
+gda_column_set_description
 gda_column_get_dbms_type
 gda_column_set_dbms_type
 gda_column_get_g_type
@@ -20,6 +20,8 @@ gda_column_get_position
 gda_column_set_position
 gda_column_get_default_value
 gda_column_set_default_value
+gda_column_get_attribute
+gda_column_set_attribute
 <SUBSECTION Standard>
 GDA_COLUMN
 GDA_COLUMN_CLASS
@@ -27,6 +29,24 @@ GDA_IS_COLUMN
 GDA_IS_COLUMN_CLASS
 GDA_TYPE_COLUMN
 gda_column_get_type
+</SECTION>
+
+<SECTION>
+<FILE>gda-attributes-manager</FILE>
+<TITLE>Attributes manager</TITLE>
+GDA_ATTRIBUTE_NAME
+GDA_ATTRIBUTE_DESCRIPTION
+GDA_ATTRIBUTE_AUTO_INCREMENT
+GDA_ATTRIBUTE_NUMERIC_PRECISION
+GDA_ATTRIBUTE_NUMERIC_SCALE
+<SUBSECTION>
+GdaAttributesManager
+gda_attributes_manager_new
+gda_attributes_manager_free
+gda_attributes_manager_set
+gda_attributes_manager_get
+gda_attributes_manager_copy
+gda_attributes_manager_clear
 </SECTION>
 
 <SECTION>
@@ -129,6 +149,7 @@ gda_connection_get_meta_store
 gda_connection_update_meta_store
 GdaConnectionMetaType
 gda_connection_get_meta_store_data
+gda_connection_get_meta_store_data_v
 <SUBSECTION>
 gda_connection_lock
 gda_connection_trylock
@@ -1005,6 +1026,8 @@ gda_holder_set_source_model
 gda_holder_get_source_model
 gda_holder_set_bind
 gda_holder_get_bind
+gda_holder_get_attribute
+gda_holder_set_attribute
 <SUBSECTION Standard>
 GDA_IS_HOLDER
 GDA_HOLDER
@@ -1326,6 +1349,9 @@ GdaMetaTable
 GdaMetaView
 GdaMetaTableColumn
 GDA_META_TABLE_COLUMN
+gda_meta_table_column_get_attribute
+gda_meta_table_column_set_attribute
+gda_meta_table_column_foreach_attribute
 GdaMetaTableForeignKey
 GDA_META_TABLE_FOREIGN_KEY
 GDA_META_STRUCT_ERROR

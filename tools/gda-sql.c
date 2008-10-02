@@ -1291,7 +1291,7 @@ output_string (MainData *data, const gchar *str)
 	}
 
 	length = strlen (str);
-	if (str[length] != '\n')
+	if (str[length - 1] != '\n')
 		append_nl = TRUE;
 
 	if (data && data->output_stream)
@@ -1423,6 +1423,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = gda_internal_command_history;
 	c->user_data = NULL;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1433,6 +1434,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = gda_internal_command_dict_sync;
 	c->user_data = NULL;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1443,6 +1445,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = gda_internal_command_list_tables;
 	c->user_data = NULL;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = FALSE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1453,6 +1456,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = gda_internal_command_list_views;
 	c->user_data = NULL;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = FALSE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1463,6 +1467,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = gda_internal_command_list_schemas;
 	c->user_data = NULL;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = FALSE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1473,6 +1478,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = gda_internal_command_detail;
 	c->user_data = NULL;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = FALSE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1483,6 +1489,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = (GdaInternalCommandFunc) extra_command_graph;
 	c->user_data = NULL;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = FALSE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	/* specific commands */
@@ -1494,6 +1501,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = (GdaInternalCommandFunc) extra_command_manage_cnc;
 	c->user_data = data;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1504,6 +1512,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = (GdaInternalCommandFunc) extra_command_close_cnc;
 	c->user_data = data;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1514,6 +1523,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = (GdaInternalCommandFunc)extra_command_bind_cnc;
 	c->user_data = data;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1524,6 +1534,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = (GdaInternalCommandFunc) extra_command_list_dsn;
 	c->user_data = data;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1534,6 +1545,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = (GdaInternalCommandFunc) extra_command_create_dsn;
 	c->user_data = data;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1544,6 +1556,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = (GdaInternalCommandFunc) extra_command_remove_dsn;
 	c->user_data = data;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1554,6 +1567,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = (GdaInternalCommandFunc) extra_command_list_providers;
 	c->user_data = data;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1564,6 +1578,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = (GdaInternalCommandFunc) extra_command_set_input;
 	c->user_data = data;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1574,6 +1589,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = (GdaInternalCommandFunc) extra_command_set_output;
 	c->user_data = data;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1584,6 +1600,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = (GdaInternalCommandFunc) extra_command_echo;
 	c->user_data = data;
 	c->arguments_delimiter_func = args_as_string_func;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1594,6 +1611,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = (GdaInternalCommandFunc) extra_command_qecho;
 	c->user_data = data;
 	c->arguments_delimiter_func = args_as_string_func;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1604,6 +1622,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = (GdaInternalCommandFunc) extra_command_quit;
 	c->user_data = NULL;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1614,6 +1633,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = (GdaInternalCommandFunc) extra_command_cd;
 	c->user_data = NULL;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1624,6 +1644,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = (GdaInternalCommandFunc) extra_command_copyright;
 	c->user_data = NULL;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1634,6 +1655,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = (GdaInternalCommandFunc) extra_command_edit_buffer;
 	c->user_data = data;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1644,6 +1666,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = (GdaInternalCommandFunc) extra_command_reset_buffer;
 	c->user_data = data;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1654,6 +1677,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = (GdaInternalCommandFunc) extra_command_show_buffer;
 	c->user_data = data;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1664,6 +1688,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = (GdaInternalCommandFunc) extra_command_exec_buffer;
 	c->user_data = data;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1674,6 +1699,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = (GdaInternalCommandFunc) extra_command_write_buffer;
 	c->user_data = data;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1684,6 +1710,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = (GdaInternalCommandFunc) extra_command_query_buffer_to_dict;
 	c->user_data = data;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1694,6 +1721,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = (GdaInternalCommandFunc) extra_command_query_buffer_from_dict;
 	c->user_data = data;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1704,6 +1732,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = (GdaInternalCommandFunc) extra_command_query_buffer_delete_dict;
 	c->user_data = data;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1714,6 +1743,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = (GdaInternalCommandFunc) extra_command_query_buffer_list_dict;
 	c->user_data = data;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1724,6 +1754,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = (GdaInternalCommandFunc) extra_command_set;
 	c->user_data = data;
 	c->arguments_delimiter_func = args_as_string_set;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1734,6 +1765,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = (GdaInternalCommandFunc) extra_command_unset;
 	c->user_data = data;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -1744,6 +1776,7 @@ build_internal_commands_list (MainData *data)
 	c->command_func = (GdaInternalCommandFunc) extra_command_set_output_format;
 	c->user_data = data;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	/* comes last */
@@ -1761,7 +1794,7 @@ build_internal_commands_list (MainData *data)
 }
 
 static GdaInternalCommandResult *
-extra_command_set_output (GdaConnection *cnc,const gchar **args,
+extra_command_set_output (GdaConnection *cnc, const gchar **args,
 			  GError **error, MainData *data)
 {
 	if (set_output_file (data, args[0], error)) {
@@ -1776,7 +1809,7 @@ extra_command_set_output (GdaConnection *cnc,const gchar **args,
 }
 
 static GdaInternalCommandResult *
-extra_command_set_output_format (GdaConnection *cnc,const gchar **args,
+extra_command_set_output_format (GdaConnection *cnc, const gchar **args,
 				 GError **error, MainData *data)
 {
 	GdaInternalCommandResult *res;
@@ -1994,13 +2027,7 @@ extra_command_create_dsn (GdaConnection *cnc, const gchar **args, GError **error
 	newdsn.name = (gchar *) args [0];
 	gda_connection_string_split ((gchar *) args[1], &real_cnc, &real_provider, &user, &pass);
 	newdsn.provider = real_provider;
-	newdsn.description = NULL;
-	if (args[2]) {
-		if ((*args[2] == '"') && (args[2][strlen (args[2]) - 1] == '"'))
-			newdsn.description = g_strndup (args[2] + 1, strlen (args[2]) - 2);
-		else
-			newdsn.description = g_strdup (args[2]);
-	}
+	newdsn.description = (gchar*) args[2];
 	
 	newdsn.cnc_string = real_cnc;
 	newdsn.auth_string = NULL;
@@ -2025,7 +2052,6 @@ extra_command_create_dsn (GdaConnection *cnc, const gchar **args, GError **error
 	g_free (real_provider);
 	g_free (user);
 	g_free (pass);
-	g_free (newdsn.description);
 
 	return res;
 }

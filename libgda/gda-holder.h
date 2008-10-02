@@ -97,6 +97,9 @@ GdaDataModel       *gda_holder_get_source_model         (GdaHolder *holder, gint
 gboolean            gda_holder_set_bind                 (GdaHolder *holder, GdaHolder *bind_to, GError **error);
 GdaHolder          *gda_holder_get_bind                 (GdaHolder *holder);
 
+const GValue       *gda_holder_get_attribute            (GdaHolder *holder, const gchar *attribute);
+void                gda_holder_set_attribute            (GdaHolder *holder, const gchar *attribute, const GValue *value);
+
 G_END_DECLS
 
 #endif

@@ -199,6 +199,8 @@ GdaMetaStore        *gda_connection_get_meta_store       (GdaConnection *cnc);
 gboolean             gda_connection_update_meta_store    (GdaConnection *cnc, GdaMetaContext *context, GError **error);
 GdaDataModel        *gda_connection_get_meta_store_data  (GdaConnection *cnc, GdaConnectionMetaType meta_type,
 							  GError **error, gint nb_filters, ...);
+GdaDataModel        *gda_connection_get_meta_store_data_v(GdaConnection *cnc, GdaConnectionMetaType meta_type,
+							  GList* filters, GError **error);
 G_END_DECLS
 
 #endif

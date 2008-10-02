@@ -405,13 +405,13 @@ int sqlite3CreateFunc (sqlite3 *db, const char *name, int nArg, int eTextRep, vo
 		recset = (GdaDataModelArray *) cdata->functions_model;
 		if (!recset) {
 			recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new, 3);
-			gda_column_set_title (0, "name");
+			gda_column_set_description (0, "name");
 			gda_column_set_name (0, "name");
 			gda_column_set_g_type (0, G_TYPE_STRING);
-			gda_column_set_title (1, "nargs");
+			gda_column_set_description (1, "nargs");
 			gda_column_set_name (1, "nargs");
 			gda_column_set_g_type (1, G_TYPE_INT);
-			gda_column_set_title (2, "specificname");
+			gda_column_set_description (2, "specificname");
 			gda_column_set_name (2, "specificname");
 			gda_column_set_g_type (2, G_TYPE_STRING);
 			cdata->functions_model = (GdaDataModel *) recset;
@@ -423,13 +423,13 @@ int sqlite3CreateFunc (sqlite3 *db, const char *name, int nArg, int eTextRep, vo
 		recset = (GdaDataModelArray *) cdata->aggregates_model;
 		if (!recset) {
 			recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new, 3);
-			gda_column_set_title (0, "name");
+			gda_column_set_description (0, "name");
 			gda_column_set_name (0, "name");
 			gda_column_set_g_type (0, G_TYPE_STRING);
-			gda_column_set_title (1, "nargs");
+			gda_column_set_description (1, "nargs");
 			gda_column_set_name (1, "nargs");
 			gda_column_set_g_type (1, G_TYPE_INT);
-			gda_column_set_title (2, "specificname");
+			gda_column_set_description (2, "specificname");
 			gda_column_set_name (2, "specificname");
 			gda_column_set_g_type (2, G_TYPE_STRING);
 			cdata->functions_model = (GdaDataModel *) recset;

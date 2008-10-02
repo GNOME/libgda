@@ -103,19 +103,19 @@ gda_data_model_dsn_list_init (GdaDataModelDsnList *model,
 	
 	col = gda_column_new ();
 	gda_column_set_name (col, _("DSN"));
-	gda_column_set_title (col, _("DSN"));
+	gda_column_set_description (col, _("DSN"));
 	gda_column_set_g_type (col, G_TYPE_STRING);
 	model->priv->columns = g_slist_append (NULL, col);
 
 	col = gda_column_new ();
 	gda_column_set_name (col, _("Provider"));
-	gda_column_set_title (col, _("Provider"));
+	gda_column_set_description (col, _("Provider"));
 	gda_column_set_g_type (col, G_TYPE_STRING);
 	model->priv->columns = g_slist_append (model->priv->columns, col);
 
 	col = gda_column_new ();
 	gda_column_set_name (col, _("Description"));
-	gda_column_set_title (col, _("Description"));
+	gda_column_set_description (col, _("Description"));
 	gda_column_set_g_type (col, G_TYPE_STRING);
 	model->priv->columns = g_slist_append (model->priv->columns, col);
 
@@ -123,19 +123,19 @@ gda_data_model_dsn_list_init (GdaDataModelDsnList *model,
 	/* To translators: a "Connection string" is a semi-colon delimited list of key=value pairs which
 	 * define the parameters for a connection, such as "DB_NAME=thedb;HOSTNAME=moon */
 	gda_column_set_name (col, _("Connection string"));
-	gda_column_set_title (col, _("Connection string"));
+	gda_column_set_description (col, _("Connection string"));
 	gda_column_set_g_type (col, G_TYPE_STRING);
 	model->priv->columns = g_slist_append (model->priv->columns, col);
 
 	col = gda_column_new ();
 	gda_column_set_name (col, _("Username"));
-	gda_column_set_title (col, _("Username"));
+	gda_column_set_description (col, _("Username"));
 	gda_column_set_g_type (col, G_TYPE_STRING);
 	model->priv->columns = g_slist_append (model->priv->columns, col);
 
 	col = gda_column_new ();
 	gda_column_set_name (col, _("Global"));
-	gda_column_set_title (col, _("Global"));
+	gda_column_set_description (col, _("Global"));
 	gda_column_set_g_type (col, G_TYPE_BOOLEAN);
 	model->priv->columns = g_slist_append (model->priv->columns, col);
 

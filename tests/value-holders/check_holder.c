@@ -32,6 +32,7 @@ static gboolean test8 (GError **error);
 static gboolean test9 (GError **error);
 static gboolean test10 (GError **error);
 static gboolean test11 (GError **error);
+static gboolean test12 (GError **error);
 
 TestFunc tests[] = {
 	test1,
@@ -44,7 +45,8 @@ TestFunc tests[] = {
 	test8,
 	test9,
 	test10,
-	test11
+	test11,
+	test12
 };
 
 int 
@@ -928,6 +930,70 @@ test11 (GError **error)
 	}
 	gda_value_free (value);
 
+	g_object_unref (h);
+
+	return TRUE;
+}
+
+static gboolean
+test12 (GError **error)
+{
+	GdaHolder *h;
+	const GValue *cvalue;
+	GValue *value;
+
+	h = gda_holder_new (GDA_TYPE_NULL);
+
+	/***/
+	value = gda_value_new_from_string ("my string", G_TYPE_STRING);
+	if (gda_holder_get_attribute (h, "attname1")) {
+		g_set_error (error, 0, 0,
+			     "gda_holder_get_attribute() should have retunred NULL");
+		return FALSE;
+	}
+	gda_holder_set_attribute (h, "attname1", value);
+	gda_value_free (value);
+	cvalue = gda_holder_get_attribute (h, "attname1");
+	if (!cvalue) {
+		g_set_error (error, 0, 0,
+			     "gda_holder_get_attribute() should have retunred a value");
+		return FALSE;
+	}
+	value = gda_value_new_from_string ("my string", G_TYPE_STRING);
+	if (gda_value_differ (cvalue, value)) {
+		g_set_error (error, 0, 0,
+			     "gda_holder_get_attribute() retunred a wrong value");
+		return FALSE;
+	}
+
+	/***/
+	GdaHolder *copy;
+	gchar *name;
+
+	g_object_set (G_OBJECT (h), "name", "thename", NULL);
+	copy = gda_holder_copy (h);
+	cvalue = gda_holder_get_attribute (copy, "attname1");
+	if (!cvalue) {
+		g_set_error (error, 0, 0,
+			     "gda_holder_get_attribute() should have retunred a value");
+		return FALSE;
+	}
+	if (gda_value_differ (cvalue, value)) {
+		g_set_error (error, 0, 0,
+			     "gda_holder_get_attribute() retunred a wrong value");
+		return FALSE;
+	}
+	gda_value_free (value);
+
+	g_object_get (G_OBJECT (copy), "name", &name, NULL);
+	if (strcmp (name, "thename")) {
+		g_set_error (error, 0, 0,
+			     "gda_holder_copy() did not copy the name");
+		return FALSE;
+	}
+	g_free (name);
+
+	g_object_unref (copy);
 	g_object_unref (h);
 
 	return TRUE;

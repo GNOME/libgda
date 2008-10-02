@@ -26,6 +26,7 @@ gda-marshal.c: gda-marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --body --prefix=gda_marshal > $@
 
 gda_headers = \
+	gda-attributes-manager.h \
 	gda-batch.h \
 	gda-blob-op.h \
 	gda-column.h \
@@ -78,6 +79,7 @@ gda_headers = \
 libgda_sources =  \
 	csv.h \
 	libcsv.c \
+	gda-attributes-manager.c \
 	gda-batch.c \
 	dir-blob-op.h \
 	dir-blob-op.c \

@@ -1,3 +1,49 @@
+2008-10-02  Vivien Malerba <malerba@gnome-db.org>
+
+	* tools/command-exec.[ch]:
+	* tools/gda-sql.c:
+	  - command arguments can be surrounded with simple or double quotes (quotes
+	    can also be escaped in the string)
+	  - don't output empty lines after results
+	* libgda/gda-connection.[ch]: applied (modified) patch for bug #539754
+	* libgda/gda-attributes-manager.[ch]: new attributes manager
+	* gda-holder.[ch]:
+	  - new gda_holder_get_attribute() and gda_holder_set_attribute() which use the new
+	    attributes manager
+	  - internally use the attributes manager to store name and desctiption
+	  - removed the "plugin" property which was a left-over from V3
+	* gda-column.[ch]:
+	  - new gda_column_get_attribute() and gda_column_set_attribute() which use the new
+	    attributes manager
+	  - internally use the attributes manager to store name and desctiption
+	* libgda/gda-meta-struct-io.c:
+	* tools/command-exec.c:
+	* libgda/gda-meta-struct.[ch]: new gda_meta_table_column_get_attribute(),
+	gda_meta_table_column_set_attribute() and gda_meta_table_column_foreach_attribute() which
+	replace the GdaMetaTableColumn::extra attribute (more flexibility)
+	* providers/postgres/gda-postgres-recordset.c:
+	* providers/mdb/gda-mdb-provider.c:
+	* providers/ibmdb2/gda-ibmdb2-recordset.c:
+	* providers/mysql/gda-mysql-recordset.c:
+	* providers/freetds/gda-freetds-recordset.c:
+	* providers/sybase/gda-sybase-recordset.c:
+	* providers/msql/gda-msql-recordset.c:
+	* samples/BDB/custom-bdb-model.c:
+	* libgda/sqlite/gda-sqlite-recordset.c:
+	* libgda/sqlite/gda-sqlite-provider.c:
+	* libgda/gda-data-model-dsn-list.c:
+	* libgda/gda-data-model-import.c:
+	* libgda/gda-data-model.c:
+	* libgda/gda-data-proxy.c:
+	* libgda/gda-data-model-array.c:
+	* libgda/gda-server-provider-extra.c:
+	* libgda/gda-data-model-bdb.c:
+	* libgda/gda-data-model-dir.c:
+	* libgda/gda-data-model-iter.c:
+	* gda-column.[ch]: renamed gda_column_[gs]et_title() to gda_column_[gs]et_description()
+	* libgda/sqlite/gda-sqlite-meta.c: fixed a bug in the fill_key_columns_model() function
+	* doc/C: doc updates
+
 2008-10-01  Johannes Schmid  <johannes.schmid@openismus.com>
 
 	reviewed by: Murray Cumming <murrayc@murrayc.com>

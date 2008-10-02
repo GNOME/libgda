@@ -1,0 +1,132 @@
+<!-- ##### SECTION Title ##### -->
+Attributes manager
+
+<!-- ##### SECTION Short_Description ##### -->
+Manager for lists of attributes
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+  The #GdaAttributesManager manages lists of named values (attibutes) for the benefit of 
+  others (objects or ressources for which only a pointer is known). It is used internally by &LIBGDA;
+  whenever an object or a simple structure may have several attributes.
+</para>
+<para>
+  The features are similar to those of the <link linkend="g-object-set-data">g_object_set_data()</link> and similar
+  but with the following major differences:
+  <itemizedlist>
+    <listitem><para>it works with GObject objects and also with simple pointers to data</para></listitem>
+    <listitem><para>attributes names are considered static (they are not copied) and so they must either be static strings
+	or allocated strings which exist (unchanged) while an attribute uses it as name</para></listitem>
+    <listitem><para>it is possible to iterate through the attributes</para></listitem>
+    <listitem><para>the associated values are expected to be #GValue values</para></listitem>
+  </itemizedlist>
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO GDA_ATTRIBUTE_NAME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_ATTRIBUTE_DESCRIPTION ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_ATTRIBUTE_AUTO_INCREMENT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_ATTRIBUTE_NUMERIC_PRECISION ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_ATTRIBUTE_NUMERIC_SCALE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### STRUCT GdaAttributesManager ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_attributes_manager_new ##### -->
+<para>
+
+</para>
+
+@for_objects: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_attributes_manager_free ##### -->
+<para>
+
+</para>
+
+@mgr: 
+
+
+<!-- ##### FUNCTION gda_attributes_manager_set ##### -->
+<para>
+
+</para>
+
+@mgr: 
+@ptr: 
+@att_name: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_attributes_manager_get ##### -->
+<para>
+
+</para>
+
+@mgr: 
+@ptr: 
+@att_name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_attributes_manager_copy ##### -->
+<para>
+
+</para>
+
+@from_mgr: 
+@from: 
+@to_mgr: 
+@to: 
+
+
+<!-- ##### FUNCTION gda_attributes_manager_clear ##### -->
+<para>
+
+</para>
+
+@mgr: 
+@ptr: 
+
+

@@ -25,6 +25,7 @@
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-meta-store.h>
 #include <libgda/gda-decl.h>
+#include <libgda/gda-attributes-manager.h>
 
 G_BEGIN_DECLS
 
@@ -144,11 +145,13 @@ typedef struct {
 	gchar        *column_type;
 	GType         gtype;
 	gboolean      pkey;
-        gboolean      nullok;
+	gboolean      nullok;
 	gchar        *default_value;
-	GArray       *extra; /* array of strings such as "AUTO_INCREMENT", may be NULL */
 } GdaMetaTableColumn;
 #define GDA_META_TABLE_COLUMN(x) ((GdaMetaTableColumn*)(x))
+const GValue *gda_meta_table_column_get_attribute (GdaMetaTableColumn *tcol, const gchar *att_name);
+void          gda_meta_table_column_set_attribute (GdaMetaTableColumn *tcol, const gchar *att_name, const GValue *value);
+void          gda_meta_table_column_foreach_attribute (GdaMetaTableColumn *tcol, GdaAttributesManagerFunc func, gpointer data);
 
 typedef struct {
 	GdaMetaDbObject  *meta_table;

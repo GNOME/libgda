@@ -30,6 +30,9 @@
 #include "gda-enums.h"
 #include "gda-data-select.h"
 
+extern GdaAttributesManager *gda_column_attributes_manager;
+extern GdaAttributesManager *gda_holder_attributes_manager;
+
 /* 
  * Main static functions 
  */
@@ -403,6 +406,8 @@ set_holders_properties_from_select_stmt (GdaDataModelIter *iter, GdaConnection *
 		goto out;
 	}
 
+	/* FIXME: also set some column attributes using gda_column_set_attribute() */
+
 	GSList *fields, *holders;
 	for (fields = select->expr_list, holders = GDA_SET (iter)->holders; 
 	     fields && holders; 
@@ -495,7 +500,7 @@ gda_data_model_iter_set_property (GObject *object,
 				}
 				else {
 					const gchar *cstr;
-					cstr = gda_column_get_title (column);
+					cstr = gda_column_get_description (column);
 					if (!cstr)
 						cstr = gda_column_get_name (column);
 					if (cstr)
@@ -513,6 +518,9 @@ gda_data_model_iter_set_property (GObject *object,
 					gda_holder_set_default_value (param, v);
 					gda_value_free (v);
 				}
+				/* copy extra attributes */
+				gda_attributes_manager_copy (gda_column_attributes_manager, (gpointer) column,
+							     gda_holder_attributes_manager, (gpointer) param);
 				gda_set_add_holder ((GdaSet *) iter, param);
 				g_object_set_data (G_OBJECT (param), "model_col", GINT_TO_POINTER (col + 1));
 				g_object_unref (param);

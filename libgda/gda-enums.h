@@ -45,19 +45,6 @@ typedef enum  {
 	GDA_VALUE_ATTR_UNUSED         = 1 << 9
 } GdaValueAttribute;
 
-/* different possible types for a GdaGraph object */
-typedef enum {
-        GDA_GRAPH_DB_RELATIONS,
-	GDA_GRAPH_QUERY_JOINS,
-        GDA_GRAPH_MODELLING /* for future extensions */
-} GdaGraphType;
-
-typedef enum {
-	GDA_ENTITY_FIELD_VISIBLE   = 1 << 0,
-	GDA_ENTITY_FIELD_INVISIBLE = 1 << 1,
-	GDA_ENTITY_FIELD_ANY       = GDA_ENTITY_FIELD_VISIBLE | GDA_ENTITY_FIELD_INVISIBLE
-} GdaQueryFieldState;
-
 /* possible different keywords used when qualifying a table's column's extra attributes */
 #define GDA_EXTRA_AUTO_INCREMENT "AUTO_INCREMENT"
 

@@ -111,13 +111,13 @@ custom_create_key_columns (GdaDataModelBdb *model)
 	column = gda_column_new ();
 	list = g_slist_append (list , column);
 	gda_column_set_name (column, "color");
-	gda_column_set_title (column, "color");
+	gda_column_set_description (column, "color");
 	gda_column_set_g_type (column, G_TYPE_STRING);
 
 	column = gda_column_new ();
 	list = g_slist_append (list , column);
 	gda_column_set_name (column, "type");
-	gda_column_set_title (column, "type");
+	gda_column_set_description (column, "type");
 	gda_column_set_g_type (column, G_TYPE_INT);
 
 	return list;
@@ -132,13 +132,13 @@ custom_create_data_columns (GdaDataModelBdb *model)
 	column = gda_column_new ();
 	list = g_slist_append (list , column);
 	gda_column_set_name (column, "size");
-	gda_column_set_title (column, "size");
+	gda_column_set_description (column, "size");
 	gda_column_set_g_type (column, G_TYPE_FLOAT);
 
 	column = gda_column_new ();
 	list = g_slist_append (list , column);
 	gda_column_set_name (column, "name");
-	gda_column_set_title (column, "name");
+	gda_column_set_description (column, "name");
 	gda_column_set_g_type (column, G_TYPE_STRING);
 
 	return list;

@@ -24,6 +24,7 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <libgda/gda-meta-struct-private.h>
+#include <libgda/gda-attributes-manager.h>
 
 #include <libgda/sql-parser/gda-statement-struct-util.h>
 
@@ -231,7 +232,6 @@ create_table_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar 
 			xmlChar *cname, *ctype, *xstr, *extra;
                         gboolean pkey = FALSE;
                         gboolean nullok = FALSE;
-			GArray *extra_array = NULL;
  
                         if (strcmp ((gchar *) cnode->name, "column"))
                                 continue;
@@ -254,14 +254,6 @@ create_table_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar 
                                 xmlFree (xstr);
                         }
                         ctype = xmlGetProp (cnode, BAD_CAST "type");
-			extra = xmlGetProp (cnode, BAD_CAST "autoinc");
-			if (extra) {
-				gchar *tmp = g_strdup (GDA_EXTRA_AUTO_INCREMENT); /* see gda-enums.h */
-				if (!extra_array)
-					extra_array = g_array_new (FALSE, FALSE, sizeof (gchar*));
-				g_array_append_val (extra_array, tmp);
-				xmlFree (extra);
-			}
 
                         /* a field */
 			GdaMetaTableColumn *tcol;
@@ -277,10 +269,18 @@ create_table_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar 
 			tcol->nullok = nullok;
 			if (pkey) 
 				g_array_append_val (pk_cols_array, colsindex);
-			tcol->extra = extra_array;
 			colsindex++;
 				
 			/* FIXME: handle default value */
+			extra = xmlGetProp (cnode, BAD_CAST "autoinc");
+			if (extra) {
+				GValue *true_value;
+				g_value_set_boolean ((true_value = gda_value_new (G_TYPE_BOOLEAN)), TRUE);
+				gda_meta_table_column_set_attribute (tcol, GDA_ATTRIBUTE_AUTO_INCREMENT, true_value);
+				gda_value_free (true_value);
+				xmlFree (extra);
+			}
+
 			mtable->columns = g_slist_append (mtable->columns, tcol);
 		}
 		else if (!strcmp ((gchar *) cnode->name, "fkey")) {

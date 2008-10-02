@@ -3163,7 +3163,7 @@ static void create_columns (GdaDataProxy *proxy)
 		else
 			newname = g_strdup_printf ("pre%d", i);
 		gda_column_set_name (proxy->priv->columns[i], newname);
-		gda_column_set_title (proxy->priv->columns[i], newname);
+		gda_column_set_description (proxy->priv->columns[i], newname);
 		g_free (newname);
 		gda_column_set_position (proxy->priv->columns[i], i);
 	}

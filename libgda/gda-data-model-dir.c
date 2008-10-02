@@ -328,42 +328,42 @@ gda_data_model_dir_set_property (GObject *object,
 			column = gda_column_new ();
 			model->priv->columns = g_slist_append (model->priv->columns , column);
 			gda_column_set_name (column, "dir_name");
-			gda_column_set_title (column, "dir_name");
+			gda_column_set_description (column, "dir_name");
 			gda_column_set_g_type (column, G_TYPE_STRING);
 
 			/* COL_FILENAME */
 			column = gda_column_new ();
 			model->priv->columns = g_slist_append (model->priv->columns , column);
 			gda_column_set_name (column, "file_name");
-			gda_column_set_title (column, "file_name");
+			gda_column_set_description (column, "file_name");
 			gda_column_set_g_type (column, G_TYPE_STRING);
 
 			/* COL_SIZE */
 			column = gda_column_new ();
 			model->priv->columns = g_slist_append (model->priv->columns , column);
 			gda_column_set_name (column, "size");
-			gda_column_set_title (column, "size");
+			gda_column_set_description (column, "size");
 			gda_column_set_g_type (column, G_TYPE_UINT);
 
 			/* COL_MIME */
 			column = gda_column_new ();
 			model->priv->columns = g_slist_append (model->priv->columns , column);
 			gda_column_set_name (column, "mime_type");
-			gda_column_set_title (column, "mime_type");
+			gda_column_set_description (column, "mime_type");
 			gda_column_set_g_type (column, G_TYPE_STRING);
 
 			/* COL_MD5SUM */
 			column = gda_column_new ();
 			model->priv->columns = g_slist_append (model->priv->columns , column);
 			gda_column_set_name (column, "md5sum");
-			gda_column_set_title (column, "md5sum");
+			gda_column_set_description (column, "md5sum");
 			gda_column_set_g_type (column, G_TYPE_STRING);
 
 			/* COL_DATA */
 			column = gda_column_new ();
 			model->priv->columns = g_slist_append (model->priv->columns , column);
 			gda_column_set_name (column, "data");
-			gda_column_set_title (column, "data");
+			gda_column_set_description (column, "data");
 			gda_column_set_g_type (column, GDA_TYPE_BLOB);
 
 			/* number of rows */

@@ -77,11 +77,6 @@ of the contained value (default value, ...)
 
 </para>
 
-<!-- ##### ARG GdaHolder:plugin ##### -->
-<para>
-
-</para>
-
 <!-- ##### ARG GdaHolder:simple-bind ##### -->
 <para>
 
@@ -335,5 +330,25 @@ of the contained value (default value, ...)
 
 @holder: 
 @Returns: 
+
+
+<!-- ##### FUNCTION gda_holder_get_attribute ##### -->
+<para>
+
+</para>
+
+@holder: 
+@attribute: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_holder_set_attribute ##### -->
+<para>
+
+</para>
+
+@holder: 
+@attribute: 
+@value: 
 
 

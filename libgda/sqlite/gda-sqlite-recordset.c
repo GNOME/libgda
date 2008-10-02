@@ -237,7 +237,7 @@ gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_p
 			GdaColumn *column;
 			
 			column = GDA_COLUMN (list->data);
-			gda_column_set_title (column, sqlite3_column_name (ps->sqlite_stmt, i));
+			gda_column_set_description (column, sqlite3_column_name (ps->sqlite_stmt, i));
 			gda_column_set_name (column, sqlite3_column_name (ps->sqlite_stmt, i));
 			gda_column_set_dbms_type (column, sqlite3_column_decltype (ps->sqlite_stmt, i));
 			if (_GDA_PSTMT (ps)->types [i] != GDA_TYPE_NULL)

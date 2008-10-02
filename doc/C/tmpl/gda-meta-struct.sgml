@@ -208,7 +208,6 @@ gda_meta_struct_free (mstruct);
 @pkey: 
 @nullok: 
 @default_value: 
-@extra: 
 
 <!-- ##### MACRO GDA_META_TABLE_COLUMN ##### -->
 <para>
@@ -216,6 +215,36 @@ gda_meta_struct_free (mstruct);
 </para>
 
 @x: 
+
+
+<!-- ##### FUNCTION gda_meta_table_column_get_attribute ##### -->
+<para>
+
+</para>
+
+@tcol: 
+@att_name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_meta_table_column_set_attribute ##### -->
+<para>
+
+</para>
+
+@tcol: 
+@att_name: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_meta_table_column_foreach_attribute ##### -->
+<para>
+
+</para>
+
+@tcol: 
+@func: 
+@data: 
 
 
 <!-- ##### STRUCT GdaMetaTableForeignKey ##### -->

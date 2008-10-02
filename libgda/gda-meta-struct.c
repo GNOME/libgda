@@ -25,6 +25,7 @@
 #include <sql-parser/gda-sql-parser.h>
 #include <sql-parser/gda-sql-statement.h>
 #include <sql-parser/gda-statement-struct-util.h>
+#include <libgda/gda-attributes-manager.h>
 
 /*
  * Main static functions
@@ -67,6 +68,7 @@ static void gda_meta_table_foreign_key_free (GdaMetaTableForeignKey *tfk);
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
+static GdaAttributesManager *att_mgr;
 
 /* properties */
 enum {
@@ -140,6 +142,9 @@ gda_meta_struct_class_init (GdaMetaStructClass *klass) {
 	/* virtual methods */
 	object_class->dispose = gda_meta_struct_dispose;
 	object_class->finalize = gda_meta_struct_finalize;
+
+	/* extra */
+	att_mgr = gda_attributes_manager_new (FALSE);
 }
 
 
@@ -685,17 +690,22 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 			if (!gda_value_is_null (cvalue)) {
 				gchar **array, *tmp;
 				gint ai;
-				GArray *extra_array = NULL;
+				GValue *true_value;
+
+				g_value_set_boolean ((true_value = gda_value_new (G_TYPE_BOOLEAN)), TRUE);
 				cstr = g_value_get_string (cvalue);
 				array = g_strsplit (cstr, ",", 0);
 				for (ai = 0; array [ai]; ai++) {
-					if (!extra_array)
-						extra_array = g_array_new (FALSE, FALSE, sizeof (gchar*));
 					tmp = g_strstrip (array [ai]);
-					g_array_append_val (extra_array, tmp);
+					if (!strcmp (tmp, GDA_EXTRA_AUTO_INCREMENT))
+						gda_attributes_manager_set (att_mgr, tcol, GDA_ATTRIBUTE_AUTO_INCREMENT, 
+									    true_value);
+					else
+						g_message ("Unknown EXTRA attribute '%s', please report this bug to "
+							   "http://bugzilla.gnome.org/ for the \"libgda\" product.", tmp);
 				}
-				g_free (array); /* don't use g_strfreev() here because we have stolen the string pointers */
-				tcol->extra = extra_array;
+				gda_value_free (true_value);
+				g_strfreev (array);
 			}
 		}
 		mt->columns = g_slist_reverse (mt->columns);
@@ -804,6 +814,8 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 								  "ts", ischema, 
 								  "tname", iname, 
 								  "cname", cvalue, NULL);
+				g_print ("tname=%s cvalue=%s\n", gda_value_stringify (iname),
+					 gda_value_stringify (cvalue));
 
 				cvalue = gda_data_model_get_value_at (model, 4, i, error);
 				if (!cvalue) goto onfkerror;
@@ -812,12 +824,18 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 								      "ts", fk_schema,
 								      "tname", fk_name,
 								      "cname", cvalue, NULL);
+				g_print ("tname=%s cvalue=%s\n", gda_value_stringify (fk_name),
+					 gda_value_stringify (cvalue));
+				
 				if (fk_cols && ref_pk_cols) {
 					gint fk_nrows, ref_pk_nrows;
 					fk_nrows = gda_data_model_get_n_rows (fk_cols);
 					ref_pk_nrows = gda_data_model_get_n_rows (ref_pk_cols);
-					if (fk_nrows != ref_pk_nrows)
+					if (fk_nrows != ref_pk_nrows) {
+						/*gda_data_model_dump (fk_cols, stdout);
+						  gda_data_model_dump (ref_pk_cols, stdout);*/
 						fkerror = TRUE;
+					}
 					else {
 						gint n;
 						tfk->cols_nb = fk_nrows;
@@ -1682,12 +1700,7 @@ gda_meta_table_column_free (GdaMetaTableColumn *tcol)
 	g_free (tcol->column_name);
 	g_free (tcol->column_type);
 	g_free (tcol->default_value);
-	if (tcol->extra) {
-		gint i;
-		for (i = 0; i < tcol->extra->len; i++)
-			g_free (g_array_index (tcol->extra, gchar *, i));
-		g_array_free (tcol->extra, TRUE);
-	}
+	gda_attributes_manager_clear (att_mgr, tcol);
 	g_free (tcol);
 }
 
@@ -2152,4 +2165,56 @@ gda_meta_struct_add_db_object (GdaMetaStruct *mstruct, GdaMetaDbObject *dbo, GEr
 		g_hash_table_insert (mstruct->priv->index, g_strdup (dbo->obj_full_name), dbo);
 		return dbo;
 	}
+}
+
+/**
+ * gda_meta_table_column_get_attribute
+ * @tcol: a #GdaMetaTableColumn
+ * @attribute: attribute name as a string
+ *
+ * Get the value associated to a named attribute.
+ *
+ * Attributes can have any name, but Libgda proposes some default names, see <link linkend="libgda-40-Attributes-manager.synopsis">this section</link>.
+ *
+ * Returns: a read-only #GValue, or %NULL if not attribute named @attribute has been set for @column
+ */
+const GValue *
+gda_meta_table_column_get_attribute (GdaMetaTableColumn *tcol, const gchar *attribute)
+{
+	return gda_attributes_manager_get (att_mgr, tcol, attribute);
+}
+
+/**
+ * gda_meta_table_column_set_attribute
+ * @tcol: a #GdaMetaTableColumn
+ * @attribute: attribute name as a static string
+ * @value: a #GValue, or %NULL
+ *
+ * Set the value associated to a named attribute.
+ *
+ * Attributes can have any name, but Libgda proposes some default names, see <link linkend="libgda-40-Attributes-manager.synopsis">this section</link>.
+ * If there is already an attribute named @attribute set, then its value is replaced with the new @value, 
+ * except if @value is %NULL, in which case the attribute is removed.
+ *
+ * Warning: @sttribute should be a static string (no copy of it is made), so the string should exist as long as the @column
+ * object exists.
+ */
+void
+gda_meta_table_column_set_attribute (GdaMetaTableColumn *tcol, const gchar *attribute, const GValue *value)
+{
+	gda_attributes_manager_set (att_mgr, tcol, attribute, value);
+}
+
+/**
+ * gda_meta_table_column_foreach_attribute
+ * @column: a #GdaMetaTableColumn
+ * @func: a #GdaAttributesManagerFunc function
+ * @data: user data to be passed as last argument of @func each time it is called
+ *
+ * Calls @func for each attribute set to tcol
+ */
+void
+gda_meta_table_column_foreach_attribute (GdaMetaTableColumn *tcol, GdaAttributesManagerFunc func, gpointer data)
+{
+	gda_attributes_manager_foreach (att_mgr, tcol, func, data);
 }

@@ -477,8 +477,8 @@ gda_data_model_set_column_name (GdaDataModel *model, gint col, const gchar *name
 	column = gda_data_model_describe_column (model, col);
 	if (column) {
 		gda_column_set_name (column, name);
-		if (!gda_column_get_title (column))
-			gda_column_set_title (column, name);
+		if (!gda_column_get_description (column))
+			gda_column_set_description (column, name);
 	}
 	else 
 		g_warning ("%s(): can't get GdaColumn object for column %d\n", __FUNCTION__, col);
@@ -500,7 +500,7 @@ gda_data_model_get_column_title (GdaDataModel *model, gint col)
 
 	column = gda_data_model_describe_column (model, col);
 	if (column)
-		return gda_column_get_title (column);
+		return gda_column_get_description (column);
 	else {
 		g_warning ("%s(): can't get GdaColumn object for column %d\n", __FUNCTION__, col);
 		return NULL;
@@ -523,7 +523,7 @@ gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *tit
 
 	column = gda_data_model_describe_column (model, col);
 	if (column)
-		gda_column_set_title (column, title);
+		gda_column_set_description (column, title);
 	else 
 		g_warning ("%s(): can't get GdaColumn object for column %d\n", __FUNCTION__, col);
 }
@@ -1246,7 +1246,7 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 		xmlSetProp (field, BAD_CAST "id", BAD_CAST str);
 		g_free (str);
 		xmlSetProp (field, BAD_CAST "name", BAD_CAST gda_column_get_name (column));
-		cstr = gda_column_get_title (column);
+		cstr = gda_column_get_description (column);
 		if (cstr && *cstr)
 			xmlSetProp (field, BAD_CAST "title", BAD_CAST cstr);
 		cstr = gda_column_get_dbms_type (column);

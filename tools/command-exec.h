@@ -67,6 +67,7 @@ typedef struct {
 	GdaInternalCommandFunc     command_func;
 	gpointer                   user_data;
 	GdaInternalCommandArgsFunc arguments_delimiter_func;
+	gboolean                   unquote_args;
 } GdaInternalCommand;
 
 typedef struct {
@@ -76,6 +77,8 @@ typedef struct {
 	GSList    *name_ordered;
 	GSList    *group_ordered;
 } GdaInternalCommandsList;
+
+gchar                    *gda_internal_command_arg_remove_quotes (gchar *str);
 
 /* Commands execution */
 GdaInternalCommandResult *gda_internal_command_execute (GdaInternalCommandsList *commands_list,

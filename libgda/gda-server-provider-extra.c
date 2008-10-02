@@ -487,7 +487,7 @@ gda_server_provider_init_schema_model (GdaDataModel *model, GdaConnectionSchema 
 	for (i = 0; i < nbcols; i++) {
                 column = gda_data_model_describe_column (GDA_DATA_MODEL (model), i);
 
-                gda_column_set_title (column, spec[i].col_name);
+                gda_column_set_description (column, spec[i].col_name);
                 gda_column_set_name (column, spec[i].col_name);
                 gda_column_set_g_type (column, spec[i].data_type);
         }
@@ -526,10 +526,10 @@ gda_server_provider_test_schema_model (GdaDataModel *model, GdaConnectionSchema 
 
                 column = gda_data_model_describe_column (GDA_DATA_MODEL (model), i);
 
-		if (strcmp (gda_column_get_title (column), spec[i].col_name)) {
+		if (strcmp (gda_column_get_description (column), spec[i].col_name)) {
 			g_set_error (error, 0, 0,
 				     _("Data model for schema has a wrong column title: '%s' instead of '%s'"),
-				     gda_column_get_title (column), spec[i].col_name);
+				     gda_column_get_description (column), spec[i].col_name);
 			return FALSE;
 		}
 

@@ -33,6 +33,7 @@
 	<listitem><para>Easy command line editing and output using the Readline library and a
 	    (parametrable) pager</para></listitem>
 	<listitem><para>Works on any platform on which &LIBGDA; has been ported to.</para></listitem>
+	<listitem><para>Can list, define or remove named data sources (DSN)</para></listitem>
       </itemizedlist>
     </para>
   </sect1>
@@ -135,7 +136,6 @@ id | name            | last_update           | default_served_by | country | cit
  4 | Mark Lawrencep  | 2007-12-25 00:00:00+0 |                   | SP      | MDR 
 10 | Vladimir Zirkov | 2001-01-31 00:00:00+0 |                 4 |         |     
 (5 rows)
-
 cnc1>
       </programlisting>
       The SQL dialect to be used must be understood by the database to which the connection is opened, so
@@ -146,7 +146,6 @@ search_path
 --------------
 "$user",public
 (1 row)
-
 cnc2>
       </programlisting>
     </para>
@@ -171,6 +170,61 @@ General
 
 </chapter>
 
+<chapter id="gda-sql-manual-dsn">
+  <title>DSN management</title>
+  <para>
+    Named data sources (DSN) can be used (like in ODBC) to name some connections and define their connection parameters,
+    it becomes easier to use them (one just has to remember the DSN name), and it becomes possible to change the 
+    connection parameters without changing any code.
+  </para>
+  <para>
+    They can be listed using the <command>.l</command> command, and details about a DSN can be listed using the same command
+    with the DSN name as argument:
+    <programlisting>
+gda> .l
+                              DSN list
+DSN                  | Description                          | Provider  
+---------------------+--------------------------------------+-----------
+Bugzilla             | Bugzilla data source                 | MySQL     
+koha                 |                                      | PostgreSQL
+SalesTest            | Test database for a sales department | SQLite    
+(3 rows)
+gda> .l SalesTest
+                              DSN 'SalesTest' description
+Attribute         | Value                                                                 
+------------------+-----------------------------------------------------------------------
+DSN               | SalesTest                                                             
+Provider          | SQLite                                                                
+Description       | Test database for a sales department                                  
+Connection string | DB_DIR=/home/user/name/.libgda;DB_NAME=sales_test
+Username          |                                                                       
+Global            | FALSE                                                                 
+(6 rows)
+gda>
+    </programlisting>
+  </para>
+  <para>
+    The <command>.lr DSN_NAME [DSN_NAME...]</command> command removes the DSN listed as arguments, and the
+    The <command>.lc</command> command creates (or modifies an existing) DSN, such as show:
+    <programlisting>
+gda> .lc my_dsn PostgreSQL://DB_NAME=my_db;HOST=moon
+gda> .l my_dsn
+        DSN 'my_dsn' description
+Attribute         | Value                  
+------------------+------------------------
+DSN               | my_dsn                 
+Provider          | PostgreSQL             
+Description       |                        
+Connection string | DB_NAME=my_db;HOST=moon
+Username          |                        
+Global            | FALSE                  
+(6 rows)
+gda>
+    </programlisting>
+  </para>
+</chapter>
+
+
 <chapter id="gda-sql-manual-open">
   <title>Connections management</title>
   <para>
@@ -193,7 +247,6 @@ Name | Provider | DSN or connection string | Username
 cnc1 | SQLite   | SalesTest                |         
 ia32 | SQLite   | IA32Instructions         |         
 (2 rows)
-
 ia32>
     </programlisting>
   </para>
@@ -236,7 +289,6 @@ cnc2 | SQLite   | SalesTest                |
 cnc3 |          | namespace cnc1           |         
                   namespace cnc2                     
 (3 rows)
-
 cnc3> 
       </programlisting>
       The contents of each "customers" table in each of the bound connection is accessible:
@@ -250,7 +302,6 @@ id | name            | last_update           | default_served_by | country | cit
  9 | Greg Popoff     | 2007-12-25 00:00:00+0 |                 2 | SP      | MDR 
 10 | Vladimir Zirkov | 2001-01-31 00:00:00+0 |                 4 |         |     
 (5 rows)
-
 cnc3>  select * from cnc2.customers;
 id | name            | default_served_by | country | city
 ---+-----------------+-------------------+---------+-----
@@ -260,7 +311,6 @@ id | name            | default_served_by | country | city
  9 | Greg Popoff     |                 2 | SP      | MDR 
 10 | Vladimir Zirkov |                 4 |         |     
 (5 rows)
-
 cnc3> 
       </programlisting>
       The list of customers present in both tables are available as:
@@ -274,7 +324,6 @@ id | name            | last_update           | default_served_by | country | cit
  9 | Greg Popoff     | 2007-12-25 00:00:00+0 |                 2 | SP      | MDR 
 10 | Vladimir Zirkov | 2001-01-31 00:00:00+0 |                 4 |         |     
 (5 rows)
-
 cnc3>
       </programlisting>
     </para>
@@ -332,7 +381,6 @@ main   | _view_column_usage               | BASE TABLE |       |
 main   | _views                           | BASE TABLE |       |            
 main   | gda_sql_query_buffers            | BASE TABLE |       |            
 (25 rows)
-
 ~cnc1> SELECT table_name FROM _tables;
 table_name     
 ---------------
@@ -348,7 +396,6 @@ categories
 products       
 products_copied
 (11 rows)
-
 ~cnc1> .c ~
 cnc1>
       </programlisting>
@@ -361,7 +408,6 @@ Name  | Provider | DSN or connection string                              | Usern
 cnc1  | SQLite   | SalesTest                                             |         
 ~cnc1 | SQLite   | DB_DIR=/home/vivien/.libgda;DB_NAME=gda-sql-SalesTest |         
 (2 rows)
-
 cnc1>
       </programlisting>
     </para>
@@ -394,14 +440,12 @@ main   | sales_orga      | BASE TABLE |       |
 main   | salesrep        | BASE TABLE |       |            
 main   | warehouses      | BASE TABLE |       |            
 (11 rows)
-
 cnc1> .dt customers
                List of tables
 Schema | Name      | Type       | Owner | Description
 -------+-----------+------------+-------+------------
 main   | customers | BASE TABLE |       |            
 (1 row)
-
 cnc1>
 	</programlisting>
       </para>
@@ -460,7 +504,6 @@ Schema | Name         | Type | Owner | Description
 -------+--------------+------+-------+------------
 main   | cust_summary | VIEW |       |            
 (1 row)
-
 cnc1>
 	</programlisting>
       </para>
@@ -475,7 +518,6 @@ Column   | Type   | Nullable | Default | Extra
 name     | string | yes      |         |      
 shortcut | string | yes      |         |      
 (2 rows)
-
 View definition: CREATE VIEW cust_summary as SELECT c.name, l.shortcut FROM customers c LEFT JOIN locations l ON (c.country=l.country AND c.city=l.city)
 cnc1>
 	</programlisting>
@@ -499,7 +541,6 @@ pg_toast           | postgres | yes
 pg_toast_temp_1    | postgres | yes     
 public             | postgres | no      
 (6 rows)
-
 cnc1>
 	</programlisting>
       </para>
@@ -528,7 +569,6 @@ pg_sync_pg_auth_members | INSERT             | pg_auth_members
 pg_sync_pg_auth_members | DELETE             | pg_auth_members   
 pg_sync_pg_auth_members | UPDATE             | pg_auth_members   
 (9 rows)
-
 ~cnc2>
 	</programlisting>
       </para>
@@ -570,7 +610,6 @@ orders_status     | select c.name, o.creation_date ,
                     order by o.creation_date;                                                             
                                                                                                           
 (1 row)
-
 SalesTest>
       </programlisting>
     </para>
@@ -591,7 +630,6 @@ Ed Lamton      | 2006-02-05    |      0
 Ed Lamton      | 2006-02-05    |      0
 Ed Lamton      | 2006-03-29    |      0
 (9 rows)
-
 SalesTest>
       </programlisting>
     </para>
@@ -617,20 +655,17 @@ id | name       | default_served_by | country | city
 ---+------------+-------------------+---------+-----
  3 | Lew Bonito |                 1 | FR      | TLS 
 (1 row)
-
 SalesTest> .set theid 5
 SalesTest> select * from customers where id = ##theid::int;
 id | name | default_served_by | country | city
 ---+------+-------------------+---------+-----
 (0 rows)
-
 SalesTest> .set
 List of defined parameters
 Name  | Value
 ------+------
 theid | 5    
 (1 row)
-
 SalesTest>
     </programlisting>
     </para>

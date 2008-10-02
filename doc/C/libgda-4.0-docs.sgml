@@ -111,6 +111,7 @@
 <!ENTITY howto SYSTEM "howto.xml">
 <!ENTITY libgda-TreeIndex SYSTEM "xml/tree_index.sgml">
 <!ENTITY GdaSqlManual SYSTEM "gda-sql-manual.xml">
+<!ENTITY GdaAttributesManager SYSTEM "xml/gda-attributes-manager.xml">
 ]>
 
 <book id="index">
@@ -915,6 +916,7 @@ g_object_unref (store);
       &libgda-GdaMutex;
       &libgda-GdaLockable;
       &libgda-GdaThreader;
+      &GdaAttributesManager;
     </chapter>
   </part>
 

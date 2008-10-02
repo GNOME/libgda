@@ -349,7 +349,7 @@ gda_data_model_array_copy_model (GdaDataModel *src, GError **error)
 		g_object_get (G_OBJECT (srccol), "id", &colid, NULL);
 		g_object_set (G_OBJECT (copycol), "id", colid, NULL);
 		g_free (colid);
-		gda_column_set_title (copycol, gda_column_get_title (srccol));
+		gda_column_set_description (copycol, gda_column_get_description (srccol));
 		gda_column_set_name (copycol, gda_column_get_name (srccol));
 		gda_column_set_dbms_type (copycol, gda_column_get_dbms_type (srccol));
 		gda_column_set_g_type (copycol, gda_column_get_g_type (srccol));

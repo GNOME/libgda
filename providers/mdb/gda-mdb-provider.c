@@ -462,7 +462,7 @@ table_create_model_func (LocalSpec *spec)
 		gda_col = gda_data_model_describe_column (model, c);
 		tmp = sanitize_name (g_strdup (mdb_col->name));
 		gda_column_set_name (gda_col, tmp);
-		gda_column_set_title (gda_col, tmp);
+		gda_column_set_description (gda_col, tmp);
 		g_free (tmp);
 		tmp = sanitize_name (g_strdup (mdb_get_coltype_string (spec->cdata->mdb->default_backend, mdb_col->col_type)));
 		gda_column_set_dbms_type (gda_col, tmp);

@@ -28,7 +28,8 @@
 #include "gda-marshal.h"
 #include "gda-util.h"
 #include <libgda.h>
-	
+#include <libgda/gda-attributes-manager.h>
+
 /* 
  * Main static functions 
  */
@@ -51,6 +52,7 @@ static void gda_holder_set_full_bind (GdaHolder *holder, GdaHolder *alias_of);
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
+GdaAttributesManager *gda_holder_attributes_manager;
 
 /* signals */
 enum
@@ -71,7 +73,6 @@ enum
 	PROP_ID,
 	PROP_NAME,
 	PROP_DESCR,
-	PROP_PLUGIN,
 	PROP_SIMPLE_BIND,
 	PROP_FULL_BIND,
 	PROP_SOURCE_MODEL,
@@ -84,8 +85,6 @@ enum
 struct _GdaHolderPrivate
 {
 	gchar           *id;
-	gchar           *name;
-	gchar           *descr;
 
 	GType            g_type;
 	GdaHolder       *full_bind;     /* FULL bind to holder */
@@ -102,8 +101,6 @@ struct _GdaHolderPrivate
 
 	GdaDataModel    *source_model;
 	gint             source_col;
-
-	gchar           *plugin;        /* plugin to be used for user interaction */
 };
 
 /* module error */
@@ -228,9 +225,6 @@ gda_holder_class_init (GdaHolderClass *class)
 							   0, G_MAXULONG, GDA_TYPE_NULL,
 							   (G_PARAM_READABLE | 
 							    G_PARAM_WRITABLE | G_PARAM_CONSTRUCT)));
-	g_object_class_install_property (object_class, PROP_PLUGIN,
-					 g_param_spec_string ("plugin", NULL, NULL, NULL, 
-							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_NOT_NULL,
 					 g_param_spec_boolean ("not-null", NULL, NULL, FALSE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
@@ -250,6 +244,9 @@ gda_holder_class_init (GdaHolderClass *class)
                                          g_param_spec_int ("source-column", NULL, NULL,
 							   0, G_MAXINT, 0,
 							   (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+	
+	/* extra */
+	gda_holder_attributes_manager = gda_attributes_manager_new (TRUE);
 }
 
 static void
@@ -258,8 +255,6 @@ gda_holder_init (GdaHolder *holder)
 	holder->priv = g_new0 (GdaHolderPrivate, 1);
 
 	holder->priv->id = NULL;
-	holder->priv->name = NULL;
-	holder->priv->descr = NULL;
 
 	holder->priv->g_type = G_TYPE_INVALID;
 	holder->priv->full_bind = NULL;
@@ -275,7 +270,6 @@ gda_holder_init (GdaHolder *holder)
 	holder->priv->not_null = FALSE;
 	holder->priv->source_model = NULL;
 	holder->priv->source_col = 0;
-	holder->priv->plugin = NULL;
 }
 
 /**
@@ -319,10 +313,6 @@ gda_holder_copy (GdaHolder *orig)
 
 	if (orig->priv->id)
 		holder->priv->id = g_strdup (orig->priv->id);
-	if (orig->priv->name)
-		holder->priv->name = g_strdup (orig->priv->name);
-	if (orig->priv->descr)
-		holder->priv->descr = g_strdup (orig->priv->descr);
 
 	if (orig->priv->full_bind)
 		gda_holder_set_full_bind (holder, orig->priv->full_bind);
@@ -346,8 +336,8 @@ gda_holder_copy (GdaHolder *orig)
 		if (orig->priv->default_value)
 			holder->priv->default_value = gda_value_copy (orig->priv->default_value);
 		holder->priv->not_null = orig->priv->not_null;
-		if (orig->priv->plugin)
-			holder->priv->plugin = g_strdup (orig->priv->plugin);
+		gda_attributes_manager_copy (gda_holder_attributes_manager, (gpointer) orig, gda_holder_attributes_manager, (gpointer) holder);
+
 		return holder;
 	}
 	else {
@@ -494,9 +484,6 @@ gda_holder_finalize (GObject   * object)
 	holder = GDA_HOLDER (object);
 	if (holder->priv) {
 		g_free (holder->priv->id);
-		g_free (holder->priv->name);
-		g_free (holder->priv->descr);
-		g_free (holder->priv->plugin);
 
 		g_free (holder->priv);
 		holder->priv = NULL;
@@ -513,7 +500,6 @@ gda_holder_set_property (GObject *object,
 			 const GValue *value,
 			 GParamSpec *pspec)
 {
-	const gchar *ptr;
 	GdaHolder *holder;
 
 	holder = GDA_HOLDER (object);
@@ -524,27 +510,16 @@ gda_holder_set_property (GObject *object,
 			holder->priv->id = g_value_dup_string (value);
 			break;
 		case PROP_NAME:
-			g_free (holder->priv->name);
-			holder->priv->name = g_value_dup_string (value);
+			gda_holder_set_attribute (holder, GDA_ATTRIBUTE_NAME, value);
 			break;
 		case PROP_DESCR:
-			g_free (holder->priv->descr);
-			holder->priv->descr = g_value_dup_string (value);
+			gda_holder_set_attribute (holder, GDA_ATTRIBUTE_DESCRIPTION, value);
 			break;
 		case PROP_GDA_TYPE:
 			if (holder->priv->g_type == GDA_TYPE_NULL)
 				holder->priv->g_type = g_value_get_ulong (value);
 			else
 				g_warning (_("The 'g-type' property cannot be changed"));
-			break;
-		case PROP_PLUGIN:
-			ptr = g_value_get_string (value);
-			if (holder->priv->plugin) {
-				g_free (holder->priv->plugin);
-				holder->priv->plugin = NULL;
-			}
-			if (ptr)
-				holder->priv->plugin = g_strdup (ptr);
 			break;
 		case PROP_NOT_NULL: {
 			gboolean not_null = g_value_get_boolean (value);
@@ -591,6 +566,7 @@ gda_holder_get_property (GObject *object,
 			 GParamSpec *pspec)
 {
 	GdaHolder *holder;
+	const GValue *cvalue;
 
 	holder = GDA_HOLDER (object);
 	if (holder->priv) {
@@ -599,19 +575,21 @@ gda_holder_get_property (GObject *object,
 			g_value_set_string (value, holder->priv->id);
 			break;
 		case PROP_NAME:
-			if (holder->priv->name)
-				g_value_set_string (value, holder->priv->name);
+			cvalue = gda_holder_get_attribute (holder, GDA_ATTRIBUTE_NAME);
+			if (cvalue)
+				g_value_set_string (value, g_value_get_string (cvalue));
 			else
 				g_value_set_string (value, holder->priv->id);
 			break;
 		case PROP_DESCR:
-			g_value_set_string (value, holder->priv->descr);
+			cvalue = gda_holder_get_attribute (holder, GDA_ATTRIBUTE_DESCRIPTION);
+			if (cvalue)
+				g_value_set_string (value, g_value_get_string (cvalue));
+			else
+				g_value_set_string (value, NULL);
 			break;
 		case PROP_GDA_TYPE:
 			g_value_set_ulong (value, holder->priv->g_type);
-			break;
-		case PROP_PLUGIN:
-			g_value_set_string (value, holder->priv->plugin);
 			break;
 		case PROP_NOT_NULL:
 			g_value_set_boolean (value, gda_holder_get_not_null (holder));
@@ -1598,3 +1576,42 @@ gda_holder_get_alphanum_id (GdaHolder *holder)
 	return gda_text_to_alphanum (holder->priv->id);
 }
 
+/**
+ * gda_holder_get_attribute
+ * @holder: a #GdaHolder
+ * @attribute: attribute name as a string
+ *
+ * Get the value associated to a named attribute.
+ *
+ * Attributes can have any name, but Libgda proposes some default names, see <link linkend="libgda-40-Attributes-manager.synopsis">this section</link>.
+ *
+ * Returns: a read-only #GValue, or %NULL if not attribute named @attribute has been set for @holder
+ */
+const GValue *
+gda_holder_get_attribute (GdaHolder *holder, const gchar *attribute)
+{
+	g_return_val_if_fail (GDA_IS_HOLDER (holder), NULL);
+	return gda_attributes_manager_get (gda_holder_attributes_manager, holder, attribute);
+}
+
+/**
+ * gda_holder_set_attribute
+ * @holder: a #GdaHolder
+ * @attribute: attribute name as a static string
+ * @value: a #GValue, or %NULL
+ *
+ * Set the value associated to a named attribute.
+ *
+ * Attributes can have any name, but Libgda proposes some default names, see <link linkend="libgda-40-Attributes-manager.synopsis">this section</link>.
+ * If there is already an attribute named @attribute set, then its value is replaced with the new @value, 
+ * except if @value is %NULL, in which case the attribute is removed.
+ *
+ * Warning: @sttribute should be a static string (no copy of it is made), so the string should exist as long as the @holder
+ * object exists.
+ */
+void
+gda_holder_set_attribute (GdaHolder *holder, const gchar *attribute, const GValue *value)
+{
+	g_return_if_fail (GDA_IS_HOLDER (holder));
+	gda_attributes_manager_set (gda_holder_attributes_manager, holder, attribute, value);
+}

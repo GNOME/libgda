@@ -377,7 +377,7 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 			}
 			gda_column_set_g_type (column, gtype);
 			gda_column_set_name (column, field->name);
-			gda_column_set_title (column, field->name);
+			gda_column_set_description (column, field->name);
 			
 			mysql_bind_result[i].buffer_type = field->type;
 			switch (mysql_bind_result[i].buffer_type) {

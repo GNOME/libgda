@@ -45,10 +45,10 @@ struct _GdaColumn {
 };
 
 struct _GdaColumnClass {
-	GObjectClass parent_class;
+	GObjectClass          parent_class;
 	
 	/* signals */
-	void (* name_changed)     (GdaColumn *column, const gchar *old_name);
+	void (* name_changed)   (GdaColumn *column, const gchar *old_name);
 	void (* g_type_changed) (GdaColumn *column, GType old_type, GType new_type);
 };
 
@@ -56,8 +56,8 @@ GType           gda_column_get_type           (void) G_GNUC_CONST;
 GdaColumn      *gda_column_new                (void);
 GdaColumn      *gda_column_copy               (GdaColumn *column);
 
-const gchar    *gda_column_get_title          (GdaColumn *column);
-void            gda_column_set_title          (GdaColumn *column, const gchar *title);
+const gchar    *gda_column_get_description          (GdaColumn *column);
+void            gda_column_set_description          (GdaColumn *column, const gchar *title);
 
 const gchar    *gda_column_get_name           (GdaColumn *column);
 void            gda_column_set_name           (GdaColumn *column, const gchar *name);
@@ -79,6 +79,9 @@ void            gda_column_set_position       (GdaColumn *column, gint position)
 
 const GValue   *gda_column_get_default_value  (GdaColumn *column);
 void            gda_column_set_default_value  (GdaColumn *column, const GValue *default_value);
+
+const GValue   *gda_column_get_attribute      (GdaColumn *column, const gchar *attribute);
+void            gda_column_set_attribute      (GdaColumn *column, const gchar *attribute, const GValue *value);
 
 G_END_DECLS
 

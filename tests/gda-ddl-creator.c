@@ -510,6 +510,26 @@ provider_specific_match (GHashTable *specific_hash, GdaServerProvider *prov, con
 		return expr;
 }
 
+typedef struct {
+	GdaServerOperation *op;
+	gint index;
+	GError **error;
+	gboolean allok;
+} FData;
+static void
+meta_table_column_foreach_attribute_func (const gchar *att_name, const GValue *value, FData *fdata)
+{
+	if (!fdata->allok)
+		return;
+	if (!strcmp (att_name, GDA_ATTRIBUTE_AUTO_INCREMENT) && 
+	    (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN) && 
+	    g_value_get_boolean (value)) {
+		fdata->allok = gda_server_operation_set_value_at (fdata->op, "TRUE", fdata->error,
+								  "/FIELDS_A/@COLUMN_AUTOINC/%d", 
+								  fdata->index);
+	}
+}
+
 static GdaServerOperation *
 create_server_operation_for_table (GdaDDLCreator *ddlc, GdaServerProvider *prov, GdaConnection *cnc, 
 				   GdaMetaDbObject *dbobj, GError **error)
@@ -548,25 +568,16 @@ create_server_operation_for_table (GdaDDLCreator *ddlc, GdaServerProvider *prov,
 		if (! gda_server_operation_set_value_at (op, "FALSE", error,
 							 "/FIELDS_A/@COLUMN_UNIQUE/%d", index))
 			goto onerror;
-		if (tcol->extra) {
-			gint i;
-			for (i = 0; i < tcol->extra->len; i++) {
-				const gchar *tmp;
-				tmp = g_array_index (tcol->extra, gchar *, i);
-				if (!strcmp (tmp, GDA_EXTRA_AUTO_INCREMENT)) {
-					if (! gda_server_operation_set_value_at (op, "TRUE", error,
-										 "/FIELDS_A/@COLUMN_AUTOINC/%d", index))
-						goto onerror;
-				}
-				else {
-					g_warning ("Unknown extra keyword '%s'", tmp);
-					TO_IMPLEMENT;
-					g_set_error (error, 0, 0,
-						     "Unknown extra keyword '%s'", tmp);
-					goto onerror;
-				}
-			}
-		}
+		FData fdata;
+		fdata.op = op;
+		fdata.index = index;
+		fdata.error = error;
+		fdata.allok = TRUE;
+		gda_meta_table_column_foreach_attribute (tcol, (GdaAttributesManagerFunc) meta_table_column_foreach_attribute_func,
+							 &fdata);
+		if (!fdata.allok)
+			goto onerror;
+
 		repl = provider_specific_match (ddlc->priv->provider_specifics, prov, "dummy", "/FIELDS_A/@COLUMN_PKEY");
 		if (repl) {
 			if (! gda_server_operation_set_value_at (op, tcol->pkey ? "TRUE" : "FALSE", error,

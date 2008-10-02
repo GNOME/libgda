@@ -80,7 +80,7 @@ Management of #GdaDataModel column attributes
 @name: 
 
 
-<!-- ##### FUNCTION gda_column_get_title ##### -->
+<!-- ##### FUNCTION gda_column_get_description ##### -->
 <para>
 
 </para>
@@ -89,7 +89,7 @@ Management of #GdaDataModel column attributes
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_column_set_title ##### -->
+<!-- ##### FUNCTION gda_column_set_description ##### -->
 <para>
 
 </para>
@@ -204,5 +204,25 @@ Management of #GdaDataModel column attributes
 
 @column: 
 @default_value: 
+
+
+<!-- ##### FUNCTION gda_column_get_attribute ##### -->
+<para>
+
+</para>
+
+@column: 
+@attribute: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_column_set_attribute ##### -->
+<para>
+
+</para>
+
+@column: 
+@attribute: 
+@value: 
 
 

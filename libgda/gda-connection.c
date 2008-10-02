@@ -3062,7 +3062,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 						 gda_connection_get_provider (cnc),
 						 gda_connection_get_provider_name (cnc));
 					if (error && *error)
-						g_warning ("// %s\n", (*error)->message);
+						g_warning ("\t==> %s\n", (*error)->message);
 
 					WARN_META_UPDATE_FAILURE (FALSE, rmeta [i].func_name);
 					goto onerror;
@@ -3246,12 +3246,64 @@ gda_connection_get_meta_store_data (GdaConnection *cnc,
 				    GdaConnectionMetaType meta_type,
 				    GError **error, gint nb_filters, ...)
 {
+	GList* filters = NULL;
+	GdaDataModel* model = NULL;
+	gint i;
+  
+	if (nb_filters > 0) {
+		va_list ap;
+		va_start (ap, nb_filters);
+		for (i = 0; (i < nb_filters); i++) {
+			GdaHolder *h;
+			GValue *v;
+			gchar* fname;
+      
+			fname = va_arg (ap, gchar*);
+			if (!fname)
+				break;
+			v = va_arg (ap, GValue*);
+			if (!v || gda_value_is_null (v))
+				continue;
+			h = g_object_new (GDA_TYPE_HOLDER, "g-type", G_VALUE_TYPE (v), "id", fname, NULL);
+			filters = g_list_append (filters, h);
+			if (!gda_holder_set_value (h, v, error)) {
+				va_end (ap);
+				goto onerror;
+			}
+		}
+		va_end (ap);
+	}
+	model = gda_connection_get_meta_store_data_v (cnc, meta_type, filters, error);
+
+ onerror:
+	g_list_foreach (filters, (GFunc) g_object_unref, NULL);
+	g_list_free (filters);
+
+	return model;
+}
+
+/**
+ * gda_connection_get_meta_store_data_v
+ * @cnc: a #GdaConnection object.
+ * @meta_type: describes which data to get.
+ * @error: a place to store errors, or %NULL
+ * @filters: a GList of GdaHolders
+ *
+ * see #gda_connection_get_meta_store_data
+ * 
+ * Returns: a #GdaDataModel containing the data required. The caller is responsible
+ * for freeing the returned model using g_object_unref().
+ */
+GdaDataModel *
+gda_connection_get_meta_store_data_v (GdaConnection *cnc, GdaConnectionMetaType meta_type,
+				      GList* filters, GError **error)
+{
 	GdaMetaStore *store;
 	GdaDataModel *model = NULL;
-	static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
 	static GHashTable *stmt_hash = NULL;
 	GdaStatement *stmt;
 	GdaSet *set = NULL;
+	GList* node;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv->provider_obj, NULL);
@@ -3263,49 +3315,26 @@ gda_connection_get_meta_store_data (GdaConnection *cnc,
 	/* fetch the statement */
 	MetaKey key;
 	gint i;
-	gchar *fname;
-
-	g_static_mutex_lock (&mutex);
 	if (!stmt_hash)
 		stmt_hash = prepare_meta_statements_hash ();
-	g_static_mutex_unlock (&mutex);
-
 	key.meta_type = meta_type;
-	key.nb_filters = nb_filters;
+	key.nb_filters = g_list_length (filters);
 	key.filters = NULL;
-	if (nb_filters > 0) {
-		va_list ap;
-		key.filters = g_new (gchar *, nb_filters);
-		va_start (ap, nb_filters);
-		for (i = 0; (i < nb_filters); i++) {
-			GdaHolder *h;
-			GValue *v;
-			
-			fname = va_arg (ap, gchar*);
-			if (!fname)
-				break;
-			v = va_arg (ap, GValue*);
-			if (!v || gda_value_is_null (v))
-				continue;
-			if (!set)
-				set = gda_set_new (NULL);
-			h = g_object_new (GDA_TYPE_HOLDER, "g-type", G_VALUE_TYPE (v), "id", fname, NULL);
-			if (! gda_holder_set_value (h, v, error)) {
-				g_free (key.filters);
-				g_object_unref (set);
-				return NULL;
-			}
-			gda_set_add_holder (set, h);
-			g_object_unref (h);
-			key.filters[i] = fname;
-		}
-		va_end (ap);
+	if (key.nb_filters > 0)
+		key.filters = g_new (gchar *, key.nb_filters);
+	for (node = filters; filters != NULL; node = g_list_next (node)) {
+		if (!set)
+			set = g_object_new (GDA_TYPE_SET, NULL);
+		gda_set_add_holder (set, GDA_HOLDER (node->data));
+		key.filters[i] = (gchar*) gda_holder_get_id (GDA_HOLDER (node->data));
 	}
 	stmt = g_hash_table_lookup (stmt_hash, &key);
 	g_free (key.filters);
 	if (!stmt) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
 			     _("Wrong filter arguments"));
+		if (set)
+			g_object_unref (set);
 		return NULL;
 	}
 
@@ -3320,6 +3349,7 @@ gda_connection_get_meta_store_data (GdaConnection *cnc,
 	
 	return model;
 }
+
 
 /**
  * gda_connection_get_events

@@ -261,7 +261,7 @@ gda_ibmdb2_recordset_describe (GdaDataModelRow *model, gint col)
         attribs = gda_data_model_describe_column ((GdaDataModel*) model, col);
 
 	tmp = g_strndup (field->column_name, field->column_name_len);
-	gda_column_set_title (attribs, tmp);
+	gda_column_set_description (attribs, tmp);
 	g_free (tmp);
 	
 	gda_column_set_name (attribs, field->column_name);

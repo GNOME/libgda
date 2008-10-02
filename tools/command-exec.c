@@ -26,10 +26,84 @@
 #ifdef HAVE_HISTORY
 #include <readline/history.h>
 #endif
-
+#include <sql-parser/gda-statement-struct-util.h>
 
 /*
- * command_exec_result_free
+ *  gda_internal_command_arg_remove_quotes
+ *
+ * If @str has simple or double quotes, remove those quotes, otherwise does nothing.
+ *
+ * Returns: @str
+ */
+gchar *
+gda_internal_command_arg_remove_quotes (gchar *str)
+{
+	glong total;
+        gchar *ptr;
+        glong offset = 0;
+        char delim;
+
+        if (!str)
+                return NULL;
+        delim = *str;
+        if ((delim != '\'') && (delim != '"'))
+                return str;
+
+
+        total = strlen (str);
+        if (str[total-1] == delim) {
+                /* string is correclty terminated by a double quote */
+                g_memmove (str, str+1, total-2);
+                total -=2;
+        }
+        else {
+                /* string is _not_ correclty terminated by a double quote */
+                g_memmove (str, str+1, total-1);
+                total -=1;
+        }
+        str[total] = 0;
+
+        ptr = (gchar *) str;
+        while (offset < total) {
+                /* we accept the "''" as a synonym of "\'" */
+                if (*ptr == delim) {
+                        if (*(ptr+1) == delim) {
+                                g_memmove (ptr+1, ptr+2, total - offset);
+                                offset += 2;
+                        }
+                        else {
+                                *str = 0;
+                                return str;
+                        }
+                }
+                if (*ptr == '\\') {
+                        if (*(ptr+1) == '\\') {
+                                g_memmove (ptr+1, ptr+2, total - offset);
+                                offset += 2;
+                        }
+                        else {
+                                if (*(ptr+1) == delim) {
+                                        *ptr = delim;
+                                        g_memmove (ptr+1, ptr+2, total - offset);
+                                        offset += 2;
+                                }
+                                else {
+                                        *str = 0;
+                                        return str;
+                                }
+			}
+                }
+                else
+                        offset ++;
+
+                ptr++;
+        }
+
+        return str;
+}
+
+/*
+ * gda_internal_command_exec_result_free
  *
  * Clears the memory associated with @res
  */
@@ -303,6 +377,11 @@ gda_internal_command_execute (GdaInternalCommandsList *commands_list,
 		args = command->arguments_delimiter_func (command_str);
 	else
 		args = default_gda_internal_commandargs_func (command_str);
+	if (command->unquote_args) {
+		gint i;
+		for (i = 1; args[i]; i++) 
+			gda_internal_command_arg_remove_quotes (args[i]);
+	}
 	res = command->command_func (cnc, (const gchar **) &(args[1]), 
 				     error, command->user_data);
 	
@@ -607,6 +686,21 @@ gda_internal_command_build_meta_struct (GdaConnection *cnc, const gchar **args, 
 	return NULL;
 }
 
+static void
+meta_table_column_foreach_attribute_func (const gchar *att_name, const GValue *value, GString **string)
+{
+	if (!strcmp (att_name, GDA_ATTRIBUTE_AUTO_INCREMENT) && 
+	    (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN) && 
+	    g_value_get_boolean (value)) {
+		if (*string) {
+			g_string_append (*string, ", ");
+			g_string_append (*string, _("Auto increment"));
+		}
+		else
+			*string = g_string_new (_("Auto increment"));
+	}
+}
+
 GdaInternalCommandResult *
 gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 			     GError **error, gpointer data)
@@ -742,7 +836,8 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 			GdaMetaTableColumn *tcol = GDA_META_TABLE_COLUMN (list->data);
 			GList *values = NULL;
 			GValue *val;
-			
+			GString *string = NULL;
+
 			g_value_set_string ((val = gda_value_new (G_TYPE_STRING)), tcol->column_name);
 			values = g_list_append (values, val);
 			g_value_set_string ((val = gda_value_new (G_TYPE_STRING)), tcol->column_type);
@@ -751,28 +846,10 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 			values = g_list_append (values, val);
 			g_value_set_string ((val = gda_value_new (G_TYPE_STRING)), tcol->default_value);
 			values = g_list_append (values, val);
-			if (tcol->extra) {
-				GString *string;
-				gint i;
-				gboolean first = TRUE;
-				string = g_string_new ("");
-				for (i = 0; i < tcol->extra->len; i++) {
-					const gchar *tmp = g_array_index (tcol->extra, gchar *, i);
-					const gchar *astmp = NULL;
-					if (!strcmp (tmp, GDA_EXTRA_AUTO_INCREMENT)) 
-						astmp = _("Auto increment");
-					else {
-						g_warning ("Unknown extra keyword '%s'", tmp);
-						TO_IMPLEMENT;
-					}
-					if (astmp) {
-						if (first)
-							first = FALSE;
-						else
-							g_string_append (string, ", ");
-						g_string_append (string, astmp);
-					}
-				}
+
+			gda_meta_table_column_foreach_attribute (tcol, 
+					      (GdaAttributesManagerFunc) meta_table_column_foreach_attribute_func, &string);
+			if (string) {
 				g_value_take_string ((val = gda_value_new (G_TYPE_STRING)), string->str);
 				g_string_free (string, FALSE);
 			}

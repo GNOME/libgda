@@ -820,7 +820,7 @@ init_csv_import (GdaDataModelImport *model)
 		if (!str) 
 			str = g_strdup_printf ("column_%d", col);
 		gda_column_set_name (column, str);
-		gda_column_set_title (column, str);
+		gda_column_set_description (column, str);
 		g_free (str);			
 		
 		gda_column_set_g_type (column, G_TYPE_STRING);
@@ -1232,7 +1232,7 @@ init_xml_import (GdaDataModelImport *model)
 			column = gda_column_new ();
 			model->priv->columns = g_slist_append (model->priv->columns, column);
 			g_object_set (G_OBJECT (column), "id", spec->id, NULL);
-			gda_column_set_title (column, (gchar*)spec->title);
+			gda_column_set_description (column, (gchar*)spec->title);
 			gda_column_set_name (column, (gchar*)spec->name);
 			gda_column_set_dbms_type (column, (gchar*)spec->dbms_type);
 			gda_column_set_g_type (column, spec->gdatype);
@@ -1563,7 +1563,7 @@ init_node_import (GdaDataModelImport *model)
 		spec = (XmlColumnSpec *)(list->data);
 		column = gda_data_model_describe_column (ramodel, pos);
 		g_object_set (G_OBJECT (column), "id", spec->id, NULL);
-		gda_column_set_title (column, (gchar*)spec->title);
+		gda_column_set_description (column, (gchar*)spec->title);
 		gda_column_set_name (column, (gchar*)spec->name);
 		gda_column_set_dbms_type (column, (gchar*)spec->dbms_type);
 		gda_column_set_g_type (column, spec->gdatype);

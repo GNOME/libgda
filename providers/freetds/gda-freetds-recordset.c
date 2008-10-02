@@ -286,7 +286,7 @@ gda_freetds_recordset_describe_column (GdaDataModel *model, gint col)
 	
 	attribs = gda_data_model_describe_column (model, col);
 
-	gda_column_set_title (attribs, colinfo->column_name);
+	gda_column_set_description (attribs, colinfo->column_name);
 
 	memcpy (name, colinfo->column_name,
 	        colinfo->column_namelen);

@@ -28,14 +28,13 @@
 #include <libgda/gda-column.h>
 #include <string.h>
 #include "gda-marshal.h"
+#include <libgda/gda-attributes-manager.h>
 
 #define PARENT_TYPE G_TYPE_OBJECT
 
 struct _GdaColumnPrivate {
 	gint         defined_size;
 	gchar       *id;
-	gchar       *name;
-	gchar       *title;
 
 	gchar       *dbms_type;
 	GType        g_type;
@@ -120,6 +119,7 @@ enum
 };
 
 static GObjectClass *parent_class = NULL;
+GdaAttributesManager *gda_column_attributes_manager;
 
 static void
 gda_column_class_init (GdaColumnClass *klass)
@@ -157,6 +157,9 @@ gda_column_class_init (GdaColumnClass *klass)
                                                               NULL, G_PARAM_WRITABLE | G_PARAM_READABLE));
 
 	object_class->finalize = gda_column_finalize;
+
+	/* extra */
+	gda_column_attributes_manager = gda_attributes_manager_new (TRUE);
 }
 
 static void
@@ -167,8 +170,6 @@ gda_column_init (GdaColumn *column, GdaColumnClass *klass)
 	column->priv = g_new0 (GdaColumnPrivate, 1);
 	column->priv->defined_size = 0;
 	column->priv->id = NULL;
-	column->priv->name = NULL;
-	column->priv->title = NULL;
 	column->priv->g_type = G_TYPE_INVALID;
 	column->priv->allow_null = TRUE;
 	column->priv->auto_increment = FALSE;
@@ -190,8 +191,6 @@ gda_column_finalize (GObject *object)
 			gda_value_free (column->priv->default_value);
 	
 		g_free (column->priv->id);
-		g_free (column->priv->name);
-		g_free (column->priv->title);
 
 		g_free (column->priv);
 		column->priv = NULL;
@@ -305,10 +304,6 @@ gda_column_copy (GdaColumn *column)
 	column_copy->priv->defined_size = column->priv->defined_size;
 	if (column->priv->id)
 		column_copy->priv->id = g_strdup (column->priv->id);
-	if (column->priv->name)
-		column_copy->priv->name = g_strdup (column->priv->name);
-	if (column->priv->title)
-		column_copy->priv->title = g_strdup (column->priv->title);
 	column_copy->priv->g_type = column->priv->g_type;
 	column_copy->priv->allow_null = column->priv->allow_null;
 	column_copy->priv->auto_increment = column->priv->auto_increment;
@@ -317,7 +312,8 @@ gda_column_copy (GdaColumn *column)
 	column_copy->priv->position = column->priv->position;
 	if (column->priv->default_value)
 		column_copy->priv->default_value = gda_value_copy (column->priv->default_value);
-	
+	gda_attributes_manager_copy (gda_column_attributes_manager, (gpointer) column, gda_column_attributes_manager, (gpointer) column_copy);
+
 	return column_copy; 	 
 }
 
@@ -330,8 +326,13 @@ gda_column_copy (GdaColumn *column)
 const gchar *
 gda_column_get_name (GdaColumn *column)
 {
+	const GValue *cvalue;
 	g_return_val_if_fail (GDA_IS_COLUMN (column), NULL);
-	return (const gchar *) column->priv->name;
+	cvalue = gda_column_get_attribute (column, GDA_ATTRIBUTE_NAME);
+	if (cvalue)
+		return g_value_get_string (cvalue);
+	else
+		return NULL;
 }
 
 /**
@@ -345,53 +346,64 @@ void
 gda_column_set_name (GdaColumn *column, const gchar *name)
 {
 	gchar *old_name = NULL;
+	GValue *value = NULL;
 
 	g_return_if_fail (GDA_IS_COLUMN (column));
 
-	if (column->priv->name) {
-		old_name = column->priv->name;
-		column->priv->name = NULL;
-	}
+	old_name = (gchar *) gda_column_get_name (column);
+	if (old_name)
+		old_name = g_strdup (old_name);
 
 	if (name)
-		column->priv->name = g_strdup (name);
+		g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), name);
+	gda_column_set_attribute (column, GDA_ATTRIBUTE_NAME, value);
+	if (value)
+		gda_value_free (value);
 
 	g_signal_emit (G_OBJECT (column),
 		       gda_column_signals[NAME_CHANGED],
 		       0, old_name);
 
-	if (old_name)
-		g_free (old_name);
+	g_free (old_name);
 }
 
 /**
- * gda_column_get_title
+ * gda_column_get_description
  * @column: a #GdaColumn.
  *
- * Returns: the column's title
+ * Returns: the column's description, in any
  */
 const gchar *
-gda_column_get_title (GdaColumn *column)
+gda_column_get_description (GdaColumn *column)
 {
+	const GValue *cvalue;
 	g_return_val_if_fail (GDA_IS_COLUMN (column), NULL);
-	return column->priv->title;;
+	cvalue = gda_column_get_attribute (column, GDA_ATTRIBUTE_DESCRIPTION);
+	if (cvalue)
+		return g_value_get_string (cvalue);
+	else
+		return NULL;
 }
 
 /**
- * gda_column_set_title
+ * gda_column_set_description
  * @column: a #GdaColumn.
  * @title: title name.
  *
- * Sets the column's title
+ * Sets the column's description
  */
 void
-gda_column_set_title (GdaColumn *column, const gchar *title)
+gda_column_set_description (GdaColumn *column, const gchar *descr)
 {
+	GValue *value = NULL;
+
 	g_return_if_fail (GDA_IS_COLUMN (column));
 
-	if (column->priv->title != NULL)
-		g_free (column->priv->title);
-	column->priv->title = g_strdup (title);
+	if (descr)
+		g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), descr);
+	gda_column_set_attribute (column, GDA_ATTRIBUTE_DESCRIPTION, value);
+	if (value)
+		gda_value_free (value);
 }
 
 /**
@@ -572,4 +584,44 @@ gda_column_set_default_value (GdaColumn *column, const GValue *default_value)
 	if (column->priv->default_value)
 		gda_value_free (column->priv->default_value);
 	column->priv->default_value = gda_value_copy ( (GValue*)default_value);
+}
+
+/**
+ * gda_column_get_attribute
+ * @column: a #GdaColumn
+ * @attribute: attribute name as a string
+ *
+ * Get the value associated to a named attribute.
+ *
+ * Attributes can have any name, but Libgda proposes some default names, see <link linkend="libgda-40-Attributes-manager.synopsis">this section</link>.
+ *
+ * Returns: a read-only #GValue, or %NULL if not attribute named @attribute has been set for @column
+ */
+const GValue *
+gda_column_get_attribute (GdaColumn *column, const gchar *attribute)
+{
+	g_return_val_if_fail (GDA_IS_COLUMN (column), NULL);
+	return gda_attributes_manager_get (gda_column_attributes_manager, column, attribute);
+}
+
+/**
+ * gda_column_set_attribute
+ * @column: a #GdaColumn
+ * @attribute: attribute name as a static string
+ * @value: a #GValue, or %NULL
+ *
+ * Set the value associated to a named attribute.
+ *
+ * Attributes can have any name, but Libgda proposes some default names, see <link linkend="libgda-40-Attributes-manager.synopsis">this section</link>.
+ * If there is already an attribute named @attribute set, then its value is replaced with the new @value, 
+ * except if @value is %NULL, in which case the attribute is removed.
+ *
+ * Warning: @sttribute should be a static string (no copy of it is made), so the string should exist as long as the @column
+ * object exists.
+ */
+void
+gda_column_set_attribute (GdaColumn *column, const gchar *attribute, const GValue *value)
+{
+	g_return_if_fail (GDA_IS_COLUMN (column));
+	gda_attributes_manager_set (gda_column_attributes_manager, column, attribute, value);
 }

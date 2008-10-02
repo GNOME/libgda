@@ -363,7 +363,7 @@ gda_data_model_bdb_set_property (GObject *object,
                         column = gda_column_new ();
                         model->priv->columns = g_slist_append (model->priv->columns , column);
 			gda_column_set_name (column, "key");
-			gda_column_set_title (column, "key");
+			gda_column_set_description (column, "key");
 			gda_column_set_g_type (column, GDA_TYPE_BINARY);
 		}
 
@@ -380,7 +380,7 @@ gda_data_model_bdb_set_property (GObject *object,
                         column = gda_column_new ();
                         model->priv->columns = g_slist_append (model->priv->columns , column);
 			gda_column_set_name (column, "data");
-			gda_column_set_title (column, "data");
+			gda_column_set_description (column, "data");
 			gda_column_set_g_type (column, GDA_TYPE_BINARY);
 		}
 		model->priv->n_columns = g_slist_length (model->priv->columns);

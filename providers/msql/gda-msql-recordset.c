@@ -364,7 +364,7 @@ gda_msql_recordset_describe_column (GdaDataModel *model, gint col)
 	g_return_if_fail (msql_field);
 
 	if (msql_field->name) {
-		gda_column_set_title (attrs, msql_field->name);
+		gda_column_set_description (attrs, msql_field->name);
 		gda_column_set_name (attrs, msql_field->name);
 	}
 	gda_column_set_defined_size (attrs, msql_field->length);

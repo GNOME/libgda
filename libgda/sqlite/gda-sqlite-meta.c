@@ -1735,7 +1735,8 @@ fill_key_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaData
 					break;
 				}
 				constname = g_strdup_printf ("fk%d_%s", fkid, g_value_get_string (cvalue));
-				if (strcmp (g_value_get_string (constraint_name), constname)) {
+				if (strcmp (const_name, constname)) {
+					fkid = -1;
 					g_free (constname);
 					continue;
 				}
@@ -1757,7 +1758,6 @@ fill_key_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaData
 					    TRUE, v1 /* ordinal_position */))
 				retval = FALSE;
 		}
-
 		g_object_unref (tmpmodel);
 	}
 	else {

@@ -301,7 +301,7 @@ finish_prep_stmt_init (PostgresConnectionData *cdata, GdaPostgresPStmt *ps, PGre
 			_GDA_PSTMT (ps)->types [i] = gtype;
 			gda_column_set_g_type (column, gtype);
 			gda_column_set_name (column, PQfname (pg_res, i));
-			gda_column_set_title (column, PQfname (pg_res, i));
+			gda_column_set_description (column, PQfname (pg_res, i));
 		}
         }
 }
