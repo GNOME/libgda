@@ -295,6 +295,9 @@ gda_holder_new (GType type)
  * @orig: a #GdaHolder object to copy
  *
  * Copy constructor.
+ * 
+ * Note1: if @orig is set with a static value (see #gda_holder_take_static_value ()) 
+ * its copy will have a fresh new allocated GValue, so that user should free it when done.
  *
  * Returns: a new #GdaHolder object
  */
@@ -329,7 +332,7 @@ gda_holder_copy (GdaHolder *orig)
 		/* direct settings */
 		holder->priv->invalid_forced = orig->priv->invalid_forced;
 		holder->priv->valid = orig->priv->valid;
-		holder->priv->is_freeable = orig->priv->is_freeable;
+		holder->priv->is_freeable = TRUE;
 		holder->priv->default_forced = orig->priv->default_forced;	
 		if (orig->priv->value)
 			holder->priv->value = gda_value_copy (orig->priv->value);
@@ -1001,7 +1004,7 @@ real_gda_holder_set_const_value (GdaHolder *holder, const GValue *value,
 		newvalid = FALSE;
 		changed = TRUE;
 	}
-/*
+
 #ifdef DEBUG_HOLDER
 	g_print ("Changed holder %p (%s): value %s --> %s \t(type %d -> %d) VALID: %d->%d CHANGED: %d\n", 
 		 holder, holder->priv->id,
@@ -1011,7 +1014,6 @@ real_gda_holder_set_const_value (GdaHolder *holder, const GValue *value,
 		 value ? G_VALUE_TYPE (value) : 0, 
 		 was_valid, newvalid, changed);
 #endif
-*/
 	
 
 	/* end of procedure if the value has not been changed, after calculating the holder's validity */
@@ -1019,7 +1021,7 @@ real_gda_holder_set_const_value (GdaHolder *holder, const GValue *value,
 		holder->priv->invalid_forced = FALSE;
 		holder->priv->valid = newvalid;
 #ifdef DEBUG_HOLDER		
-		g_print ("Holder is not changed, returning NULL\n");
+		g_print ("Holder is not changed, returning %p\n", holder->priv->value);
 #endif		
 
 		/* set the changed status */
