@@ -36,6 +36,8 @@ void                  gda_attributes_manager_free        (GdaAttributesManager *
 
 void                  gda_attributes_manager_set         (GdaAttributesManager *mgr, gpointer ptr,
 							  const gchar *att_name, const GValue *value);
+void                  gda_attributes_manager_set_full    (GdaAttributesManager *mgr, gpointer ptr,
+							  const gchar *att_name, const GValue *value, GDestroyNotify destroy);
 const GValue         *gda_attributes_manager_get         (GdaAttributesManager *mgr, gpointer ptr, const gchar *att_name);
 void                  gda_attributes_manager_copy        (GdaAttributesManager *from_mgr, gpointer *from, 
 							  GdaAttributesManager *to_mgr, gpointer *to);
@@ -50,7 +52,7 @@ void                  gda_attributes_manager_foreach     (GdaAttributesManager *
 #define GDA_ATTRIBUTE_NUMERIC_PRECISION "__gda_attr_numeric_precision"
 #define GDA_ATTRIBUTE_NUMERIC_SCALE "__gda_attr_numeric_scale"
 #define GDA_ATTRIBUTE_AUTO_INCREMENT "__gda_attr_autoinc"
-
+#define GDA_ATTRIBUTE_IS_DEFAULT "__gda_attr_is_default"
 
 G_END_DECLS
 

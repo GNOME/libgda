@@ -121,8 +121,8 @@ struct _GdaSetClass
 	GError               *(*validate_holder_change)(GdaSet *set, GdaHolder *holder, const GValue *new_value);
 	GError               *(*validate_set)          (GdaSet *set);
 	void                  (*holder_changed)        (GdaSet *set, GdaHolder *holder);
-	void                  (*holder_plugin_changed) (GdaSet *set, GdaHolder *holder);
-	void                  (*holder_attr_changed)   (GdaSet *set, GdaHolder *holder);
+	void                  (*holder_attr_changed)   (GdaSet *set, GdaHolder *holder, 
+							const gchar *attr_name, const GValue *value);
 	void                  (*public_data_changed)   (GdaSet *set);
 };
 
@@ -133,7 +133,6 @@ GdaSet       *gda_set_new_inline               (gint nb, ...);
 
 GdaSet       *gda_set_new_from_spec_string     (const gchar *xml_spec, GError **error);
 GdaSet       *gda_set_new_from_spec_node       (xmlNodePtr xml_spec, GError **error);
-gchar        *gda_set_get_spec                 (GdaSet *set);
 
 gboolean      gda_set_set_holder_value         (GdaSet *set, GError **error, const gchar *holder_id, ...);
 const GValue *gda_set_get_holder_value         (GdaSet *set, const gchar *holder_id);

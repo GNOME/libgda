@@ -1,3 +1,21 @@
+2008-10-06  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-attributes-manager.[ch]: added gda_attributes_manager_set_full()
+	and the GDA_ATTRIBUTE_IS_DEFAULT define
+	* libgda/gda-holder.[ch]:
+	  - added an "attribute-changed" signal
+	  - use the GDA_ATTRIBUTE_IS_DEFAULT when there is a default value
+	* libgda/gda-set.[ch]:
+	  - removed the "holder-plugin-changed" signal
+	  - changed the signature of the "holder-attr-changed" signal
+	  - use the GdaHolder's "attribute-changed" signal
+	  - removed gda_set_get_spec()
+	* libgda/gda-data-model-iter.c: update for the "holder-attr-changed" signal'
+	signature change
+	* libgda/libgda-paramlist.dtd: allow some <attribute> children nodes to the
+	<parameter> node
+	* libgda/gda-util.c: adaptations to the DTD changes
+
 2008-10-04  Massimo Cora'  <maxcvs@email.it>
 
 	* libgda/gda-holder.c (gda_holder_copy),

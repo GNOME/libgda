@@ -28,7 +28,8 @@
 typedef struct {
 	GdaAttributesManager *mgr;
 	gpointer              ptr;
-	const gchar          *att_name;
+	gchar                *att_name;
+	GDestroyNotify        att_name_destroy;
 } Key;
 
 static guint hash_func (gconstpointer key);
@@ -63,7 +64,9 @@ key_free (Key *key)
 {
 	if (key->ptr && key->mgr->for_objects)
 		g_object_weak_unref (G_OBJECT (key->ptr), (GWeakNotify) obj_destroyed_cb, key);
-	/* DON'T g_free (key->att_name) as it is static data */
+	if (key->att_name_destroy)
+		key->att_name_destroy (key->att_name);
+
 	g_free (key);
 }
 
@@ -108,6 +111,38 @@ obj_destroyed_cb (Key *key, GObject *where_the_object_was)
 	g_hash_table_remove (key->mgr->hash, key);
 }
 
+static void
+manager_real_set (GdaAttributesManager *mgr, gpointer ptr, 
+		  const gchar *att_name, GDestroyNotify destroy, 
+		  const GValue *value, gboolean steal_value)
+{
+	g_return_if_fail (att_name);
+	if (mgr->for_objects) 
+		g_return_if_fail (G_IS_OBJECT (ptr));
+
+	if (value) {
+		Key *key;
+
+		key = g_new (Key, 1);
+		key->mgr = mgr;
+		key->ptr = ptr;
+		key->att_name = att_name; /* NOT duplicated */
+		key->att_name_destroy = destroy;
+		if (mgr->for_objects) 
+			g_object_weak_ref (G_OBJECT (key->ptr), (GWeakNotify) obj_destroyed_cb, key);
+		if (steal_value)
+			g_hash_table_insert (mgr->hash, key, value);
+		else
+			g_hash_table_insert (mgr->hash, key, gda_value_copy (value));
+	}
+	else {
+		Key key;
+		key.ptr = ptr;
+		key.att_name = att_name;
+		g_hash_table_remove (mgr->hash, &key);
+	}
+}
+
 /**
  * gda_attributes_manager_set
  * @mgr: a #GdaAttributesManager
@@ -125,28 +160,27 @@ obj_destroyed_cb (Key *key, GObject *where_the_object_was)
 void
 gda_attributes_manager_set (GdaAttributesManager *mgr, gpointer ptr, const gchar *att_name, const GValue *value)
 {
-	g_return_if_fail (att_name);
-	if (mgr->for_objects) 
-		g_return_if_fail (G_IS_OBJECT (ptr));
-
-	if (value) {
-		Key *key;
-
-		key = g_new (Key, 1);
-		key->mgr = mgr;
-		key->ptr = ptr;
-		key->att_name = att_name; /* NOT duplicated */
-		if (mgr->for_objects) 
-			g_object_weak_ref (G_OBJECT (key->ptr), (GWeakNotify) obj_destroyed_cb, key);
-		g_hash_table_insert (mgr->hash, key, gda_value_copy (value));
-	}
-	else {
-		Key key;
-		key.ptr = ptr;
-		key.att_name = att_name;
-		g_hash_table_remove (mgr->hash, &key);
-	}
+	manager_real_set (mgr, ptr, att_name, NULL, value, FALSE);
 }
+
+/**
+ * gda_attributes_manager_set_full
+ * @mgr: a #GdaAttributesManager
+ * @ptr: a pointer to the ressources to which the attribute will apply
+ * @att_name: an attribute's name, as a *static* string
+ * @value: a #GValue, or %NULL
+ * @destroy: function called when @att_name is destroyed
+ *
+ * Does the same as gda_attributes_manager_set() except that @destroy is called when @att_name needs
+ * to be freed
+ */
+void
+gda_attributes_manager_set_full (GdaAttributesManager *mgr, gpointer ptr,
+				 const gchar *att_name, const GValue *value, GDestroyNotify destroy)
+{
+	manager_real_set (mgr, ptr, att_name, destroy, value, FALSE);
+}
+
 
 /**
  * gda_attributes_manager_get
@@ -170,7 +204,7 @@ gda_attributes_manager_get (GdaAttributesManager *mgr, gpointer ptr, const gchar
 typedef struct {
 	gpointer   *from;
 	gpointer   *to;
-	GSList     *names;
+	GSList     *keys;
 	GSList     *values;
 } CopyData;
 static void foreach_copy_func (Key *key, const GValue *value, CopyData *cdata);
@@ -193,14 +227,15 @@ gda_attributes_manager_copy (GdaAttributesManager *from_mgr, gpointer *from,
 	GSList *nlist, *vlist;
 	cdata.from = from;
 	cdata.to = to;
-	cdata.names = NULL;
+	cdata.keys = NULL;
 	cdata.values = NULL;
 	g_hash_table_foreach (from_mgr->hash, (GHFunc) foreach_copy_func, &cdata);
-	for (nlist = cdata.names, vlist = cdata.values;
+	for (nlist = cdata.keys, vlist = cdata.values;
 	     nlist && vlist;
 	     nlist = nlist->next, vlist = vlist->next)
-		gda_attributes_manager_set (to_mgr, to, (gchar*) nlist->data, (GValue*) vlist->data);
-	g_slist_free (cdata.names);
+		gda_attributes_manager_set_full (to_mgr, to, ((Key*) nlist->data)->att_name, (GValue*) vlist->data,
+						 ((Key*) nlist->data)->att_name_destroy);
+	g_slist_free (cdata.keys);
 	g_slist_free (cdata.values);
 }
 
@@ -208,7 +243,7 @@ static void
 foreach_copy_func (Key *key, const GValue *value, CopyData *cdata)
 {
 	if (key->ptr == cdata->from) {
-		cdata->names = g_slist_prepend (cdata->names, (gpointer) key->att_name);
+		cdata->keys = g_slist_prepend (cdata->keys, key);
 		cdata->values = g_slist_prepend (cdata->values, (gpointer) value);
 	}
 }
@@ -229,19 +264,19 @@ gda_attributes_manager_clear (GdaAttributesManager *mgr, gpointer ptr)
 	GSList *nlist;
 	cdata.from = ptr;
 	cdata.to = NULL;
-	cdata.names = NULL;
+	cdata.keys = NULL;
 	cdata.values = NULL;
 	g_hash_table_foreach (mgr->hash, (GHFunc) foreach_clear_func, &cdata);
-	for (nlist = cdata.names;  nlist; nlist = nlist->next)
+	for (nlist = cdata.keys;  nlist; nlist = nlist->next)
 		gda_attributes_manager_set (mgr, ptr, (gchar*) nlist->data, NULL);
-	g_slist_free (cdata.names);
+	g_slist_free (cdata.keys);
 }
 
 static void
 foreach_clear_func (Key *key, const GValue *value, CopyData *cdata)
 {
 	if (key->ptr == cdata->from) 
-		cdata->names = g_slist_prepend (cdata->names, (gpointer) key->att_name);
+		cdata->keys = g_slist_prepend (cdata->keys, (gpointer) key->att_name);
 }
 
 

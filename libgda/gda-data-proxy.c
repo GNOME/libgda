@@ -88,6 +88,7 @@ static void                 gda_data_proxy_send_hint       (GdaDataModel *model,
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
+extern GdaAttributesManager *gda_holder_attributes_manager;
 
 static GStaticMutex parser_mutex = G_STATIC_MUTEX_INIT;
 static GdaSqlParser *internal_parser;
@@ -3377,13 +3378,9 @@ gda_data_proxy_create_iter (GdaDataModel *model)
 
 		plist1 = GDA_SET (iter)->holders;
 		plist2 = GDA_SET (iter2)->holders;
-		for (; plist1 && plist2; plist1 = plist1->next, plist2 = plist2->next) {
-			const gchar *plugin;
-
-			plugin = g_object_get_data (G_OBJECT (plist2->data), "__gda_entry_plugin");
-			if (plugin) 
-				g_object_set_data_full (G_OBJECT (plist1->data), "__gda_entry_plugin", g_strdup (plugin), g_free);
-		}
+		for (; plist1 && plist2; plist1 = plist1->next, plist2 = plist2->next)
+			gda_attributes_manager_copy (gda_holder_attributes_manager, (gpointer) plist2->data,
+						     gda_holder_attributes_manager, (gpointer) plist1->data);
 		if (plist1 || plist2) 
 			g_warning ("Proxy iterator does not have the same length as proxied model's iterator: %d/%d",
 				   g_slist_length (GDA_SET (iter)->holders),

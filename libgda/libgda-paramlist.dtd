@@ -17,7 +17,7 @@
 	  descr CDATA #IMPLIED
 	  status (OPT|REQ) #IMPLIED>
 
-<!ELEMENT parameter (gda_value*)>
+<!ELEMENT parameter (gda_value*, attribute*)>
 <!ATTLIST parameter
 	  id NMTOKEN #REQUIRED
 	  dbmstype NMTOKEN #IMPLIED
@@ -30,6 +30,10 @@
 	  source CDATA #IMPLIED
 	  hint CDATA #IMPLIED
 	  status (OPT|REQ) #IMPLIED>
+
+<!ELEMENT attribute (#PCDATA)>
+<!ATTLIST attribute
+	  name CDATA #REQUIRED>
 
 <!ELEMENT sources (gda_array*)>
 	  

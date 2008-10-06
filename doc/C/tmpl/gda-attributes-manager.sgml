@@ -99,6 +99,18 @@ Manager for lists of attributes
 @value: 
 
 
+<!-- ##### FUNCTION gda_attributes_manager_set_full ##### -->
+<para>
+
+</para>
+
+@mgr: 
+@ptr: 
+@att_name: 
+@value: 
+@destroy: 
+
+
 <!-- ##### FUNCTION gda_attributes_manager_get ##### -->
 <para>
 
@@ -128,5 +140,16 @@ Manager for lists of attributes
 
 @mgr: 
 @ptr: 
+
+
+<!-- ##### FUNCTION gda_attributes_manager_foreach ##### -->
+<para>
+
+</para>
+
+@mgr: 
+@ptr: 
+@func: 
+@data: 
 
 

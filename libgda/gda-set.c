@@ -53,13 +53,14 @@ static void set_remove_source (GdaSet *set, GdaSetSource *source);
 static void changed_holder_cb (GdaHolder *holder, GdaSet *dataset);
 static GError *validate_change_holder_cb (GdaHolder *holder, const GValue *value, GdaSet *dataset);
 static void source_changed_holder_cb (GdaHolder *holder, GdaSet *dataset);
-static void notify_holder_cb (GdaHolder *holder, GParamSpec *pspec, GdaSet *dataset);
+static void att_holder_changed_cb (GdaHolder *holder, const gchar *att_name, const GValue *att_value, GdaSet *dataset);
 
 static void compute_public_data (GdaSet *set);
 static gboolean gda_set_real_add_holder (GdaSet *set, GdaHolder *holder);
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
+extern GdaAttributesManager *gda_holder_attributes_manager;
 
 /* properties */
 enum
@@ -76,14 +77,13 @@ enum
 {
 	HOLDER_CHANGED,
 	PUBLIC_DATA_CHANGED,
-	HOLDER_PLUGIN_CHANGED,
 	HOLDER_ATTR_CHANGED,
 	VALIDATE_HOLDER_CHANGE,
 	VALIDATE_SET,
 	LAST_SIGNAL
 };
 
-static gint gda_set_signals[LAST_SIGNAL] = { 0, 0, 0, 0, 0, 0};
+static gint gda_set_signals[LAST_SIGNAL] = { 0, 0, 0, 0, 0 };
 
 
 /* private structure */
@@ -276,22 +276,14 @@ gda_set_class_init (GdaSetClass *class)
 			      G_STRUCT_OFFSET (GdaSetClass, validate_set),
 			      validate_accumulator, NULL,
 			      gda_marshal_POINTER__VOID, G_TYPE_POINTER, 0);
-	gda_set_signals[HOLDER_PLUGIN_CHANGED] =
-		g_signal_new ("holder-plugin-changed",
-			      G_TYPE_FROM_CLASS (object_class),
-			      G_SIGNAL_RUN_FIRST,
-			      G_STRUCT_OFFSET (GdaSetClass, holder_plugin_changed),
-			      NULL, NULL,
-			      gda_marshal_VOID__OBJECT, G_TYPE_NONE, 1,
-			      GDA_TYPE_HOLDER);
 	gda_set_signals[HOLDER_ATTR_CHANGED] =
 		g_signal_new ("holder-attr-changed",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaSetClass, holder_attr_changed),
 			      NULL, NULL,
-			      gda_marshal_VOID__OBJECT, G_TYPE_NONE, 1,
-			      GDA_TYPE_HOLDER);
+			      gda_marshal_VOID__OBJECT_STRING_POINTER, G_TYPE_NONE, 3,
+			      GDA_TYPE_HOLDER, G_TYPE_STRING, G_TYPE_POINTER);
 	gda_set_signals[PUBLIC_DATA_CHANGED] =
 		g_signal_new ("public-data-changed",
 			      G_TYPE_FROM_CLASS (object_class),
@@ -303,7 +295,6 @@ gda_set_class_init (GdaSetClass *class)
 	class->holder_changed = NULL;
 	class->validate_holder_change = m_validate_holder_change;
 	class->validate_set = m_validate_set;
-	class->holder_plugin_changed = NULL;
 	class->holder_attr_changed = NULL;
 	class->public_data_changed = NULL;
 
@@ -869,70 +860,6 @@ gda_set_new_from_spec_node (xmlNodePtr xml_spec, GError **error)
 	return set;
 }
 
-
-/**
- * gda_set_get_spec
- * @set: a #GdaSet object
- *
- * Get the specification as an XML string. See the gda_set_new_from_spec_string()
- * form more information about the XML specification string format.
- *
- * Returns: a new string
- */
-gchar *
-gda_set_get_spec (GdaSet *set)
-{
-	xmlDocPtr doc;
-	xmlNodePtr root;
-	xmlChar *xmlbuff;
-	int buffersize;
-	GSList *list;
-
-	g_return_val_if_fail (GDA_IS_SET (set), NULL);
-
-	doc = xmlNewDoc ((xmlChar*)"1.0");
-	g_return_val_if_fail (doc, NULL);
-	root = xmlNewDocNode (doc, NULL, (xmlChar*)"data-set-spec", NULL);
-	xmlDocSetRootElement (doc, root);
-
-	/* holders list */
-	for (list = set->holders; list; list = list->next) {
-		xmlNodePtr node;
-		GdaHolder *holder = GDA_HOLDER (list->data);
-		gchar *str;
-
-		node = xmlNewTextChild (root, NULL, (xmlChar*)"parameter", NULL);
-		g_object_get (G_OBJECT (holder), "id", &str, NULL);
-		if (str) 
-			xmlSetProp(node, (xmlChar*)"id", (xmlChar*)str);
-		g_free (str);
-
-		g_object_get (G_OBJECT (holder), "name", &str, NULL);
-		if (str)
-			xmlSetProp(node, (xmlChar*)"name", (xmlChar*)str);
-		g_free (str);
-
-		g_object_get (G_OBJECT (holder), "description", &str, NULL);
-		if (str)
-			xmlSetProp(node, (xmlChar*)"descr", (xmlChar*)str);
-		g_free (str);
-
-		xmlSetProp(node, (xmlChar*)"gdatype", (xmlChar*)gda_g_type_to_string (gda_holder_get_g_type (holder)));
-
-		xmlSetProp(node, (xmlChar*)"nullok", (xmlChar*)(gda_holder_get_not_null (holder) ? "FALSE" : "TRUE"));
-		str = g_object_get_data (G_OBJECT (holder), "__gda_entry_plugin");
-		if (str) 
-			xmlSetProp(node, (xmlChar*)"plugin", (xmlChar*)str);
-	}
-
-	/* holders' values, sources, constraints: TODO */
-
-	xmlDocDumpFormatMemory (doc, &xmlbuff, &buffersize, 1);
-	
-	xmlFreeDoc(doc);
-	return (gchar *) xmlbuff;
-}
-
 /**
  * gda_set_remove_holder
  * @set:
@@ -954,7 +881,7 @@ gda_set_remove_holder (GdaSet *set, GdaHolder *holder)
 	g_signal_handlers_disconnect_by_func (G_OBJECT (holder),
 					      G_CALLBACK (source_changed_holder_cb), set);
 	g_signal_handlers_disconnect_by_func (G_OBJECT (holder),
-					      G_CALLBACK (notify_holder_cb), set);
+					      G_CALLBACK (att_holder_changed_cb), set);
 
 	/* now destroy the GdaSetNode and the GdaSetSource if necessary */
 	node = gda_set_get_node (set, holder);
@@ -982,26 +909,15 @@ source_changed_holder_cb (GdaHolder *holder, GdaSet *set)
 }
 
 static void
-notify_holder_cb (GdaHolder *holder, GParamSpec *pspec, GdaSet *set)
+att_holder_changed_cb (GdaHolder *holder, const gchar *att_name, const GValue *att_value, GdaSet *set)
 {
-	if (!strcmp (pspec->name, "plugin")) {
 #ifdef GDA_DEBUG_signal
-		g_print (">> 'HOLDER_PLUGIN_CHANGED' from %s\n", __FUNCTION__);
+	g_print (">> 'HOLDER_ATTR_CHANGED' from %s\n", __FUNCTION__);
 #endif
-		g_signal_emit (G_OBJECT (set), gda_set_signals[HOLDER_PLUGIN_CHANGED], 0, holder);
+	g_signal_emit (G_OBJECT (set), gda_set_signals[HOLDER_ATTR_CHANGED], 0, holder, att_name, att_value);
 #ifdef GDA_DEBUG_signal
-		g_print ("<< 'HOLDER_PLUGIN_CHANGED' from %s\n", __FUNCTION__);
+	g_print ("<< 'HOLDER_ATTR_CHANGED' from %s\n", __FUNCTION__);
 #endif
-	}
-	if (!strcmp (pspec->name, "use-default-value")) {
-#ifdef GDA_DEBUG_signal
-		g_print (">> 'HOLDER_ATTR_CHANGED' from %s\n", __FUNCTION__);
-#endif
-		g_signal_emit (G_OBJECT (set), gda_set_signals[HOLDER_ATTR_CHANGED], 0, holder);
-#ifdef GDA_DEBUG_signal
-		g_print ("<< 'HOLDER_ATTR_CHANGED' from %s\n", __FUNCTION__);
-#endif
-	}
 }
 
 static GError *
@@ -1053,13 +969,13 @@ gda_set_dispose (GObject *object)
 	if (set->holders) {
 		for (list = set->holders; list; list = list->next) {
 			g_signal_handlers_disconnect_by_func (G_OBJECT (list->data),
-				G_CALLBACK (changed_holder_cb), set);
+							      G_CALLBACK (changed_holder_cb), set);
 			g_signal_handlers_disconnect_by_func (G_OBJECT (list->data),
-				G_CALLBACK (validate_change_holder_cb), set);
+							      G_CALLBACK (validate_change_holder_cb), set);
 			g_signal_handlers_disconnect_by_func (G_OBJECT (list->data),
-				G_CALLBACK (source_changed_holder_cb), set);
+							      G_CALLBACK (source_changed_holder_cb), set);
 			g_signal_handlers_disconnect_by_func (G_OBJECT (list->data),
-				G_CALLBACK (notify_holder_cb), set);
+							      G_CALLBACK (att_holder_changed_cb), set);
 			g_object_unref (G_OBJECT (list->data));
 		}
 		g_slist_free (set->holders);
@@ -1361,8 +1277,8 @@ gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
 				  G_CALLBACK (validate_change_holder_cb), set);
 		g_signal_connect (G_OBJECT (holder), "source-changed",
 				  G_CALLBACK (source_changed_holder_cb), set);
-		g_signal_connect (G_OBJECT (holder), "notify",
-				  G_CALLBACK (notify_holder_cb), set);
+		g_signal_connect (G_OBJECT (holder), "attribute-changed",
+				  G_CALLBACK (att_holder_changed_cb), set);
 		return TRUE;
 	}
 	else {

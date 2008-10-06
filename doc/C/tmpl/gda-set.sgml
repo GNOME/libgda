@@ -36,16 +36,10 @@ Container for several values
 
 @gdaset: the object which received the signal.
 @arg1: 
+@Param3: 
+@Param4: 
 
 <!-- ##### SIGNAL GdaSet::holder-changed ##### -->
-<para>
-
-</para>
-
-@gdaset: the object which received the signal.
-@arg1: 
-
-<!-- ##### SIGNAL GdaSet::holder-plugin-changed ##### -->
 <para>
 
 </para>
@@ -214,15 +208,6 @@ Container for several values
 
 @set: 
 @set_to_merge: 
-
-
-<!-- ##### FUNCTION gda_set_get_spec ##### -->
-<para>
-
-</para>
-
-@set: 
-@Returns: 
 
 
 <!-- ##### STRUCT GdaSetNode ##### -->

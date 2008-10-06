@@ -60,10 +60,11 @@ enum
 	CHANGED,
         SOURCE_CHANGED,
 	VALIDATE_CHANGE,
+	ATT_CHANGED,
         LAST_SIGNAL
 };
 
-static gint gda_holder_signals[LAST_SIGNAL] = { 0, 0, 0 };
+static gint gda_holder_signals[LAST_SIGNAL] = { 0, 0, 0, 0 };
 
 
 /* properties */
@@ -181,6 +182,15 @@ gda_holder_class_init (GdaHolderClass *class)
                               G_STRUCT_OFFSET (GdaHolderClass, changed),
                               NULL, NULL,
                               gda_marshal_VOID__VOID, G_TYPE_NONE, 0);
+	gda_holder_signals[ATT_CHANGED] =
+                g_signal_new ("attribute-changed",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_FIRST,
+                              G_STRUCT_OFFSET (GdaHolderClass, att_changed),
+                              NULL, NULL,
+                              gda_marshal_VOID__STRING_POINTER, G_TYPE_NONE, 2, 
+			      G_TYPE_STRING, G_TYPE_POINTER);
+
 	/**
 	 * GdaHolder::before-change:
 	 * @holder: the object which received the signal
@@ -203,6 +213,7 @@ gda_holder_class_init (GdaHolderClass *class)
         class->changed = NULL;
         class->source_changed = NULL;
         class->validate_change = m_validate_change;
+	class->att_changed = NULL;
 
 	/* virtual functions */
 	object_class->dispose = gda_holder_dispose;
@@ -340,6 +351,12 @@ gda_holder_copy (GdaHolder *orig)
 			holder->priv->default_value = gda_value_copy (orig->priv->default_value);
 		holder->priv->not_null = orig->priv->not_null;
 		gda_attributes_manager_copy (gda_holder_attributes_manager, (gpointer) orig, gda_holder_attributes_manager, (gpointer) holder);
+
+		GValue *att_value;
+		g_value_set_boolean ((att_value = gda_value_new (G_TYPE_BOOLEAN)), holder->priv->default_forced);
+		gda_holder_set_attribute (holder, GDA_ATTRIBUTE_IS_DEFAULT, att_value);
+		gda_value_free (att_value);
+
 
 		return holder;
 	}
@@ -929,6 +946,10 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 			 value && (G_VALUE_TYPE (value) == holder->priv->g_type))
 			holder->priv->default_forced = !gda_value_compare (holder->priv->default_value, value);
 	}
+	GValue *att_value;
+	g_value_set_boolean ((att_value = gda_value_new (G_TYPE_BOOLEAN)), holder->priv->default_forced);
+	gda_holder_set_attribute (holder, GDA_ATTRIBUTE_IS_DEFAULT, att_value);
+	gda_value_free (att_value);
 
 	/* real setting of the value */
 	if (holder->priv->full_bind) {
@@ -1056,6 +1077,10 @@ real_gda_holder_set_const_value (GdaHolder *holder, const GValue *value,
 			 value && (G_VALUE_TYPE (value) == holder->priv->g_type))
 			holder->priv->default_forced = !gda_value_compare (holder->priv->default_value, value);
 	}
+	GValue *att_value;
+	g_value_set_boolean ((att_value = gda_value_new (G_TYPE_BOOLEAN)), holder->priv->default_forced);
+	gda_holder_set_attribute (holder, GDA_ATTRIBUTE_IS_DEFAULT, att_value);
+	gda_value_free (att_value);
 
 	/* real setting of the value */
 	if (holder->priv->full_bind) {
@@ -1216,7 +1241,12 @@ gda_holder_set_value_to_default (GdaHolder *holder)
 		}
 	}
 
+	GValue *att_value;
+	g_value_set_boolean ((att_value = gda_value_new (G_TYPE_BOOLEAN)), TRUE);
+	gda_holder_set_attribute (holder, GDA_ATTRIBUTE_IS_DEFAULT, att_value);
+	gda_value_free (att_value);
 	g_signal_emit (holder, gda_holder_signals[CHANGED], 0);
+
 	return TRUE;
 }
 
@@ -1301,6 +1331,11 @@ gda_holder_set_default_value (GdaHolder *holder, const GValue *value)
 		holder->priv->default_value = gda_value_copy ((GValue *)value);
 	}
 	
+	GValue *att_value;
+	g_value_set_boolean ((att_value = gda_value_new (G_TYPE_BOOLEAN)), holder->priv->default_forced);
+	gda_holder_set_attribute (holder, GDA_ATTRIBUTE_IS_DEFAULT, att_value);
+	gda_value_free (att_value);
+
 	/* don't emit the "changed" signal */
 }
 
@@ -1638,6 +1673,13 @@ gda_holder_get_attribute (GdaHolder *holder, const gchar *attribute)
 void
 gda_holder_set_attribute (GdaHolder *holder, const gchar *attribute, const GValue *value)
 {
+	const GValue *cvalue;
 	g_return_if_fail (GDA_IS_HOLDER (holder));
+
+	cvalue = gda_attributes_manager_get (gda_holder_attributes_manager, holder, attribute);
+	if (cvalue && !gda_value_differ (cvalue, value))
+		return;
+
 	gda_attributes_manager_set (gda_holder_attributes_manager, holder, attribute, value);
+	g_signal_emit (holder, gda_holder_signals[ATT_CHANGED], 0, attribute, value);
 }

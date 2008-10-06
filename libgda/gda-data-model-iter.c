@@ -56,7 +56,7 @@ static void model_row_removed_cb (GdaDataModel *model, gint row, GdaDataModelIte
 static void model_reset_cb (GdaDataModel *model, GdaDataModelIter *iter);
 
 static GError *validate_holder_change_cb (GdaSet *paramlist, GdaHolder *param, const GValue *new_value);
-static void holder_attr_changed_cb (GdaSet *paramlist, GdaHolder *param);
+static void holder_attr_changed_cb (GdaSet *paramlist, GdaHolder *param, const gchar *att_name, const GValue *att_value);
 
 /* get a pointer to the parents to be able to cvalue their destructor */
 static GObjectClass  *parent_class = NULL;
@@ -304,17 +304,18 @@ validate_holder_change_cb (GdaSet *paramlist, GdaHolder *param, const GValue *ne
  * paramlist is an iter for
  */
 static void
-holder_attr_changed_cb (GdaSet *paramlist, GdaHolder *param)
+holder_attr_changed_cb (GdaSet *paramlist, GdaHolder *param, const gchar *att_name, const GValue *att_value)
 {
 	GdaDataModelIter *iter;
 	gint col;
-	gboolean toset;
+	gboolean toset = FALSE;
 
 	iter = GDA_DATA_MODEL_ITER (paramlist);
 	if (!GDA_IS_DATA_PROXY (iter->priv->data_model))
 		return;
 
-	if (!iter->priv->keep_param_changes && (iter->priv->row >= 0)) {
+	if (!strcmp (att_name, GDA_ATTRIBUTE_IS_DEFAULT) &&
+	    !iter->priv->keep_param_changes && (iter->priv->row >= 0)) {
 		g_signal_handler_block (iter->priv->data_model, iter->priv->model_changes_signals [0]);
 		g_signal_handler_block (iter->priv->data_model, iter->priv->model_changes_signals [1]);
 		
@@ -322,7 +323,8 @@ holder_attr_changed_cb (GdaSet *paramlist, GdaHolder *param)
 		col = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (param), "model_col")) - 1;
 		g_return_if_fail (col >= 0);
 		
-		g_object_get (G_OBJECT (param), "use-default-value", &toset, NULL);
+		if (att_value && g_value_get_boolean (att_value))
+			toset = TRUE;
 		if (toset && gda_holder_get_default_value (param))
 			gda_data_proxy_alter_value_attributes (GDA_DATA_PROXY (iter->priv->data_model), 
 							       iter->priv->row, col, 
@@ -334,7 +336,7 @@ holder_attr_changed_cb (GdaSet *paramlist, GdaHolder *param)
 
 	/* for the parent class */
 	if (((GdaSetClass *) parent_class)->holder_attr_changed)
-		((GdaSetClass *) parent_class)->holder_attr_changed (paramlist, param);
+		((GdaSetClass *) parent_class)->holder_attr_changed (paramlist, param, att_name, att_value);
 }
 
 static void

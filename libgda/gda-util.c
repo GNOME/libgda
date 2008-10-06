@@ -44,6 +44,7 @@
 #include <libgda/binreloc/gda-binreloc.h>
 
 extern gchar *gda_lang_locale;
+extern GdaAttributesManager *gda_holder_attributes_manager;
 
 /**
  * gda_g_type_to_string
@@ -430,9 +431,6 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 	}
 	else
 		gda_holder_set_not_null (holder, FALSE);
-	str = xmlGetProp (node, BAD_CAST "plugin");
-	if (str) 
-		g_object_set_data_full (G_OBJECT (holder), "__gda_entry_plugin", str, xmlFree);
 	
 	str = xmlGetProp (node, BAD_CAST "source");
 	if (str) 
@@ -495,6 +493,20 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 				continue;
 			}
 
+			if (!strcmp ((gchar*)vnode->name, "attribute")) {
+				xmlChar *att_name;
+				att_name = xmlGetProp (vnode, (xmlChar*) "name");
+				if (att_name) {
+					GValue *value;
+					g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), 
+							    (gchar*) xmlNodeGetContent (vnode));
+					gda_attributes_manager_set_full (gda_holder_attributes_manager, (gpointer) holder,
+									 att_name, value, (GDestroyNotify) xmlFree);
+					gda_value_free (value);
+				}
+				vnode = vnode->next;
+				continue;
+			}
 			if (strcmp ((gchar*)vnode->name, "gda_value")) {
 				vnode = vnode->next;
 				continue;
