@@ -8,6 +8,8 @@
 	called whenever an attribute is changed
 	* libgda/gda-data-model-import.c: renamed the GDA_TYPE_<col nb> option to
 	G_TYPE_<col nb>
+	* libgda/binreloc/Makefile.am:
+	* libgda/binreloc/gda-binreloc.c: possible fix for bug #541991 (comment 2)
 
 2008-10-07  Johannes Schmid  <johannes.schmid@openismus.com>
 
