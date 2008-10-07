@@ -10,7 +10,7 @@ This version includes:
  - Lots of improvements to the SQL console (gda-sql-4.0)
  - Lots of small bug fixes (Johannes Schmid, Vivien Malerba)
  - Lots of documentation improvements
- - bug fixes: #508407, #552708, #90751
+ - bug fixes: #508407, #552708, #90751, #401442
 
 libgda 3.99.4, 2008-09-16
 

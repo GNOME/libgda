@@ -120,8 +120,8 @@ gda_handler_numerical_init (GdaHandlerNumerical * hdl)
 	/* Private structure */
 	hdl->priv = g_new0 (GdaHandlerNumericalPriv, 1);
 	hdl->priv->detailled_descr = "";
-	hdl->priv->nb_g_types = 11;
-	hdl->priv->valid_g_types = g_new0 (GType, 11);
+	hdl->priv->nb_g_types = 13;
+	hdl->priv->valid_g_types = g_new0 (GType, hdl->priv->nb_g_types);
 	hdl->priv->valid_g_types[0] = G_TYPE_INT64;
 	hdl->priv->valid_g_types[1] = G_TYPE_DOUBLE;
 	hdl->priv->valid_g_types[2] = G_TYPE_INT;
@@ -133,6 +133,8 @@ gda_handler_numerical_init (GdaHandlerNumerical * hdl)
         hdl->priv->valid_g_types[8] = GDA_TYPE_USHORT;
         hdl->priv->valid_g_types[9] = G_TYPE_UCHAR;
 	hdl->priv->valid_g_types[10] = G_TYPE_UINT;
+	hdl->priv->valid_g_types[11] = G_TYPE_ULONG;
+	hdl->priv->valid_g_types[12] = G_TYPE_LONG;
 
 	g_object_set_data (G_OBJECT (hdl), "name", "InternalNumerical");
 	g_object_set_data (G_OBJECT (hdl), "descr", _("Numerical representation"));
@@ -305,6 +307,14 @@ gda_handler_numerical_get_value_from_str (GdaDataHandler *iface, const gchar *st
 	else if (type == G_TYPE_UINT) {
 		value = g_value_init (g_new0 (GValue, 1), G_TYPE_UINT);
 		g_value_set_uint (value, strtoul (str, NULL, 10));
+	}
+	else if (type == G_TYPE_ULONG) {
+		value = g_value_init (g_new0 (GValue, 1), G_TYPE_ULONG);
+		g_value_set_ulong (value, strtoul (str, NULL, 10));
+	}
+	else if (type == G_TYPE_LONG) {
+		value = g_value_init (g_new0 (GValue, 1), G_TYPE_LONG);
+		g_value_set_long (value, strtol (str, NULL, 10));
 	}
 	else
 		g_assert_not_reached ();

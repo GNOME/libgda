@@ -824,7 +824,7 @@ gda_capi_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConnect
 	    (type == G_TYPE_UCHAR) ||
 	    (type == G_TYPE_ULONG) ||
 	    (type == G_TYPE_UINT) ||
-	    (type == G_TYPE_UINT64)) 
+	    (type == G_TYPE_UINT64))
 		return "integer";
 
 	if ((type == GDA_TYPE_BINARY) ||
@@ -841,7 +841,8 @@ gda_capi_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConnect
 	    (type == G_TYPE_STRING) ||
 	    (type == GDA_TYPE_TIME) ||
 	    (type == GDA_TYPE_TIMESTAMP) ||
-	    (type == G_TYPE_INVALID))
+	    (type == G_TYPE_INVALID) ||
+	    (type == G_TYPE_GTYPE))
 		return "string";
 
 	if ((type == G_TYPE_DOUBLE) ||

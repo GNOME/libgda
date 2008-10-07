@@ -159,7 +159,7 @@ gda_column_class_init (GdaColumnClass *klass)
 	object_class->finalize = gda_column_finalize;
 
 	/* extra */
-	gda_column_attributes_manager = gda_attributes_manager_new (TRUE);
+	gda_column_attributes_manager = gda_attributes_manager_new (TRUE, NULL, NULL);
 }
 
 static void

@@ -128,13 +128,13 @@ common_load_csv_file (const gchar *data_file, ...)
 		GValue *v;
 		gchar *id;
 		
-		holder = gda_holder_new (G_TYPE_ULONG);
-		id = g_strdup_printf ("GDA_TYPE_%d", cnum);
+		holder = gda_holder_new (G_TYPE_GTYPE);
+		id = g_strdup_printf ("G_TYPE_%d", cnum);
 		g_object_set (G_OBJECT (holder), "id", id, NULL);
 		g_free (id);
 		
-		v = gda_value_new (G_TYPE_ULONG);
-		g_value_set_ulong (v, gda_g_type_from_string (va_arg (args, gchar*)));
+		v = gda_value_new (G_TYPE_GTYPE);
+		g_value_set_gtype (v, gda_g_type_from_string (va_arg (args, gchar*)));
 		if (! gda_holder_take_value (holder, v, NULL)) {
 			va_end (args);
 			g_object_unref (holder);

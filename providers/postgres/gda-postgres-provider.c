@@ -1566,6 +1566,8 @@ gda_postgres_provider_get_default_dbms_type (GdaServerProvider *provider, GdaCon
                 return "smallint";
         if (type == G_TYPE_ULONG)
                 return "int8";
+        if (type == G_TYPE_GTYPE)
+                return "varchar";
         if (type == G_TYPE_UINT)
                 return "int4";
         if (type == G_TYPE_INVALID)

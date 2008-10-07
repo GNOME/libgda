@@ -5,7 +5,8 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
 	$(BINRELOC_CFLAGS) \
-	-DLIBGDAPREFIX=\""$(prefix)"\"
+	-DLIBGDAPREFIX=\""$(prefix)"\" \
+	-DLIBGDASYSCONF=\""$(sysconfdir)"\"
 
 noinst_LTLIBRARIES = libgda_binreloc-4.0.la
 

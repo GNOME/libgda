@@ -298,19 +298,14 @@ node_destroy (GdaServerOperation *op, Node *node)
 	case GDA_SERVER_OPERATION_NODE_SEQUENCE: {
 		GSList *list;
 
-		list = node->d.seq.seq_tmpl;
-		while (list) {
+		for (list = node->d.seq.seq_tmpl; list; list = list->next)
 			node_destroy (op, NODE (list->data));
-			list = g_slist_next (list);
-		}
 		g_slist_free (node->d.seq.seq_tmpl);
 
-		list = node->d.seq.seq_items;
-		while (list) {
+		for (list = node->d.seq.seq_items; list; list = list->next)
 			node_destroy (op, NODE (list->data));
-			list = g_slist_next (list);
-		}
 		g_slist_free (node->d.seq.seq_items);
+
 		g_free (node->d.seq.name);
 		g_free (node->d.seq.descr);
 		break;
@@ -318,11 +313,8 @@ node_destroy (GdaServerOperation *op, Node *node)
 	case GDA_SERVER_OPERATION_NODE_SEQUENCE_ITEM: {
 		GSList *list;
 
-		list = node->d.seq_item_nodes;
-		while (list) {
+		for (list = node->d.seq_item_nodes; list; list = list->next)
 			node_destroy (op, NODE (list->data));
-			list = g_slist_next (list);
-		}
 		g_slist_free (node->d.seq_item_nodes);
 		break;
 	}
@@ -352,14 +344,15 @@ node_find (GdaServerOperation *op, const gchar *path)
 	if (!path || !*path || (*path != '/'))
 		return NULL;
 
-	list = op->priv->allnodes;
-	while (list && !node) {
+	for (list = op->priv->allnodes; list; list = list->next) {
 		gchar *str;
 		str = node_get_complete_path (op, NODE (list->data));
-		if (!strcmp (str, path))
+		if (!strcmp (str, path)) {
 			node = NODE (list->data);
+			g_free (str);
+			break;
+		}
 		g_free (str);
-		list = list->next;
 	}
 	/*g_print ("%s(%s) => %p\n", __FUNCTION__, path, node);*/
 	return node;
@@ -638,7 +631,7 @@ gda_server_operation_set_property (GObject *object,
 		}
 	}
 
-	if (op->priv->xml_spec_doc && op->priv->cnc_set && op->priv->prov_set) {
+	if (!op->priv->topnodes && op->priv->xml_spec_doc && op->priv->cnc_set && op->priv->prov_set) {
 		/* load XML file */
 		GError *lerror = NULL;
 		op->priv->topnodes = load_xml_spec (op, xmlDocGetRootElement (op->priv->xml_spec_doc), NULL, &lerror);
@@ -1201,8 +1194,7 @@ node_save (GdaServerOperation *op, Node *opnode, xmlNodePtr parent)
 	complete_path = node_get_complete_path (op, opnode);
 	switch (opnode->type) {
 	case GDA_SERVER_OPERATION_NODE_PARAMLIST:
-		list = opnode->d.plist->holders;
-		while (list) {
+		for (list = opnode->d.plist->holders; list; list = list->next) {
 			gchar *path;
 			const GValue *value;
 			gchar *str;
@@ -1222,8 +1214,6 @@ node_save (GdaServerOperation *op, Node *opnode, xmlNodePtr parent)
 			path = g_strdup_printf ("%s/%s", complete_path, gda_holder_get_id (GDA_HOLDER (list->data)));
 			xmlSetProp(node, (xmlChar*)"path", (xmlChar*)path);
 			g_free (path);
-
-			list = g_slist_next (list);
 		}
 		break;
 	case GDA_SERVER_OPERATION_NODE_DATA_MODEL:
@@ -1460,12 +1450,9 @@ gda_server_operation_get_root_nodes (GdaServerOperation *op)
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), NULL);
 	g_return_val_if_fail (op->priv, NULL);	
 
-	list = op->priv->topnodes;
-	retval = g_new0 (gchar *, g_slist_length (list) + 1);
-	while (list) {
+	retval = g_new0 (gchar *, g_slist_length (op->priv->topnodes) + 1);
+	for (list = op->priv->topnodes; list; list = list->next)
 		retval [i++] = node_get_complete_path (op, NODE (list->data));
-		list = g_slist_next (list);
-	}
 
 	return retval;
 }
@@ -1612,11 +1599,8 @@ gda_server_operation_get_sequence_item_names (GdaServerOperation *op, const gcha
 		list = node->d.seq_item_nodes;
 	i = 0;
 	retval = g_new0 (gchar *, g_slist_length (list) + 1);
-	while (list) {
+	for (; list; list = list->next, i++)
 		retval [i] = node_get_complete_path (op, NODE (list->data));
-		i++;
-		list = g_slist_next (list);
-	}
 
 	return retval;
 }

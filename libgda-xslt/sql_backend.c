@@ -650,6 +650,10 @@ value_to_xmlchar (const GValue * value)
 		g_hash_table_insert (data_handlers, (gpointer) G_TYPE_UCHAR,
 				     gda_handler_numerical_new ());
 		g_hash_table_insert (data_handlers, (gpointer) G_TYPE_ULONG,
+				     gda_handler_numerical_new ());
+		g_hash_table_insert (data_handlers, (gpointer) G_TYPE_LONG,
+				     gda_handler_numerical_new ());
+		g_hash_table_insert (data_handlers, (gpointer) G_TYPE_GTYPE,
 				     gda_handler_type_new ());
 		g_hash_table_insert (data_handlers, (gpointer) G_TYPE_UINT,
 				     gda_handler_numerical_new ());

@@ -1189,8 +1189,9 @@ gda_sqlite_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConne
 	    (type == G_TYPE_CHAR) ||
 	    (type == G_TYPE_UCHAR) ||
 	    (type == G_TYPE_ULONG) ||
+	    (type == G_TYPE_LONG) ||
 	    (type == G_TYPE_UINT) ||
-	    (type == G_TYPE_UINT64)) 
+	    (type == G_TYPE_UINT64))
 		return "integer";
 
 	if (type == GDA_TYPE_BINARY)
@@ -1203,7 +1204,8 @@ gda_sqlite_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConne
 	    (type == G_TYPE_OBJECT) ||
 	    (type == GDA_TYPE_LIST) ||
 	    (type == G_TYPE_STRING) ||
-	    (type == G_TYPE_INVALID))
+	    (type == G_TYPE_INVALID) ||
+	    (type == G_TYPE_GTYPE))
 		return "string";
 
 	if ((type == G_TYPE_DOUBLE) ||

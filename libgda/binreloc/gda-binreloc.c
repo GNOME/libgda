@@ -100,13 +100,15 @@ gda_gbr_get_file_path (GdaPrefixDir where, ...)
 		prefix_dir_name = "libexec";
 		break;
 	case GDA_ETC_DIR:
-		prefix_dir_name = "etc";
+		prefix_dir_name = NULL;
 		break;
 	}
 
 #ifdef GDA_DEBUG_NO
 	g_print ("%s ()\n", __FUNCTION__);
 #endif
+
+
 	/* prefix part */
 #ifdef G_OS_WIN32
 	/* Get from location of libgda DLL */
@@ -135,7 +137,10 @@ gda_gbr_get_file_path (GdaPrefixDir where, ...)
 	else
 		g_warning ("Could not get PREFIX (using Mac OS X Carbon)");
 #else
-	prefix = _gda_gbr_find_prefix (LIBGDAPREFIX);
+	if (where == GDA_ETC_DIR)
+		prefix = _gda_gbr_find_prefix (LIBGDASYSCONF);
+	else
+		prefix = _gda_gbr_find_prefix (LIBGDAPREFIX);
 #endif
 	if (!prefix || !*prefix)
 		return NULL;

@@ -39,8 +39,10 @@ static void key_free (Key *key);
 static void obj_destroyed_cb (Key *key, GObject *where_the_object_was);
 
 struct _GdaAttributesManager {
-	gboolean    for_objects; /* TRUE if key->data are GObjects */
-	GHashTable *hash; /* key = a Key pointer, value = a GValue */
+	gboolean                    for_objects; /* TRUE if key->data are GObjects */
+	GdaAttributesManagerSignal  signal_func;
+	gpointer                    signal_data;
+	GHashTable                 *hash; /* key = a Key pointer, value = a GValue */
 };
 
 static guint
@@ -73,6 +75,8 @@ key_free (Key *key)
 /**
  * gda_attributes_manager_new
  * @for_objects: set to TRUE if attributes will be set on objects.
+ * @signal_func: a function to be called whenever an attribute changes on an object (if @for_objects is TRUE), or %NULL
+ * @signal_data: user data passed as last argument of @signal_func when it is called
  *
  * Creates a new #GdaAttributesManager, which can store (name, value) attributes for pointers or GObject objects
  * (in the latter case, the attibutes are destroyed when objects are also destroyed).
@@ -80,13 +84,15 @@ key_free (Key *key)
  * Returns: the new #GdaAttributesManager
  */
 GdaAttributesManager *
-gda_attributes_manager_new (gboolean for_objects)
+gda_attributes_manager_new (gboolean for_objects, GdaAttributesManagerSignal signal_func, gpointer signal_data)
 {
 	GdaAttributesManager *mgr;
 
 	mgr = g_new0 (GdaAttributesManager, 1);
 	mgr->hash = g_hash_table_new_full (hash_func, equal_func, (GDestroyNotify) key_free, (GDestroyNotify) gda_value_free);
 	mgr->for_objects = for_objects;
+	mgr->signal_func = signal_func;
+	mgr->signal_data = signal_data;
 
 	return mgr;
 }
@@ -126,21 +132,23 @@ manager_real_set (GdaAttributesManager *mgr, gpointer ptr,
 		key = g_new (Key, 1);
 		key->mgr = mgr;
 		key->ptr = ptr;
-		key->att_name = att_name; /* NOT duplicated */
+		key->att_name = (gchar*) att_name; /* NOT duplicated */
 		key->att_name_destroy = destroy;
 		if (mgr->for_objects) 
 			g_object_weak_ref (G_OBJECT (key->ptr), (GWeakNotify) obj_destroyed_cb, key);
 		if (steal_value)
-			g_hash_table_insert (mgr->hash, key, value);
+			g_hash_table_insert (mgr->hash, key, (GValue*) value);
 		else
 			g_hash_table_insert (mgr->hash, key, gda_value_copy (value));
 	}
 	else {
 		Key key;
 		key.ptr = ptr;
-		key.att_name = att_name;
+		key.att_name = (gchar*) att_name;
 		g_hash_table_remove (mgr->hash, &key);
 	}
+	if (mgr->signal_func && mgr->for_objects)
+		mgr->signal_func ((GObject*) ptr, att_name, value, mgr->signal_data);
 }
 
 /**

@@ -606,16 +606,30 @@ set_value (GdaConnection *cnc, GValue *value, GType type,
 
 	if (type == G_TYPE_BOOLEAN)
 		g_value_set_boolean (value, (*thevalue == 't') ? TRUE : FALSE);
-	else if (type == G_TYPE_STRING)
+	else if (type == G_TYPE_STRING) 
 		g_value_set_string (value, thevalue);
+	else if (type == G_TYPE_INT)
+		g_value_set_int (value, atol (thevalue));
+	else if (type == G_TYPE_DATE) {
+		GDate date;
+		if (!gda_parse_iso8601_date (&date, thevalue)) 
+			g_warning (_("Invalid date '%s' (date format should be YYYY-MM-DD)"), thevalue);
+		else
+			g_value_set_boxed (value, &date);
+	}
+	else if (type == GDA_TYPE_TIME) {
+		GdaTime timegda;
+		if (!gda_parse_iso8601_time (&timegda, thevalue)) 
+			g_warning (_("Invalid time '%s' (time format should be HH:MM:SS[.ms])"), thevalue);
+		else
+			gda_value_set_time (value, &timegda);
+	}
 	else if (type == G_TYPE_INT64)
 		g_value_set_int64 (value, atoll (thevalue));
 	else if (type == G_TYPE_ULONG)
 		g_value_set_ulong (value, atoll (thevalue));
 	else if (type == G_TYPE_LONG)
 		g_value_set_ulong (value, atoll (thevalue));
-	else if (type == G_TYPE_INT)
-		g_value_set_int (value, atol (thevalue));
 	else if (type == GDA_TYPE_SHORT)
 		gda_value_set_short (value, atoi (thevalue));
 	else if (type == G_TYPE_FLOAT) {
@@ -636,13 +650,6 @@ set_value (GdaConnection *cnc, GValue *value, GType type,
 		gda_value_set_numeric (value, &numeric);
 		g_free (numeric.number);
 	}
-	else if (type == G_TYPE_DATE) {
-		GDate date;
-		if (!gda_parse_iso8601_date (&date, thevalue)) 
-			g_warning (_("Invalid date '%s' (date format should be YYYY-MM-DD)"), thevalue);
-		else
-			g_value_set_boxed (value, &date);
-	}
 	else if (type == GDA_TYPE_GEOMETRIC_POINT) {
 		GdaGeometricPoint point;
 		make_point (&point, thevalue);
@@ -655,13 +662,6 @@ set_value (GdaConnection *cnc, GValue *value, GType type,
 				   thevalue);
 		else
 			gda_value_set_timestamp (value, &timestamp);
-	}
-	else if (type == GDA_TYPE_TIME) {
-		GdaTime timegda;
-		if (!gda_parse_iso8601_time (&timegda, thevalue)) 
-			g_warning (_("Invalid time '%s' (time format should be HH:MM:SS[.ms])"), thevalue);
-		else
-			gda_value_set_time (value, &timegda);
 	}
 	else if (type == GDA_TYPE_BINARY) {
 		/*
@@ -689,8 +689,8 @@ set_value (GdaConnection *cnc, GValue *value, GType type,
 
 		gda_value_take_blob (value, blob);
 	}
-	else if (type == G_TYPE_STRING) 
-		g_value_set_string (value, thevalue);
+	else if (type == G_TYPE_GTYPE)
+		g_value_set_gtype (value, atoul (thevalue));
 	else {
 		g_warning ("Type %s not translated for value '%s' => set as string", g_type_name (type), thevalue);
 		gda_value_reset_with_type (value, G_TYPE_STRING);

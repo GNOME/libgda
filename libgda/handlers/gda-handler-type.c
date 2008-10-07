@@ -119,7 +119,7 @@ gda_handler_type_init (GdaHandlerType * hdl)
 	hdl->priv->detailled_descr = _("Gda type handler");
 	hdl->priv->nb_g_types = 1;
 	hdl->priv->valid_g_types = g_new0 (GType, 1);
-	hdl->priv->valid_g_types[0] = G_TYPE_ULONG;
+	hdl->priv->valid_g_types[0] = G_TYPE_GTYPE;
 
 	g_object_set_data (G_OBJECT (hdl), "descr", "InternalType");
 	g_object_set_data (G_OBJECT (hdl), "descr", _("Gda type representation"));
@@ -234,7 +234,7 @@ gda_handler_type_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, GT
 			str[i-1] = 0;
 			type = gda_g_type_from_string (str+1);
 			g_free (str);
-			value = g_value_init (g_new0 (GValue, 1), G_TYPE_ULONG);
+			value = g_value_init (g_new0 (GValue, 1), G_TYPE_GTYPE);
 			g_value_set_ulong (value, type);
 		}
 	}
@@ -255,7 +255,7 @@ gda_handler_type_get_value_from_str (GdaDataHandler *iface, const gchar *str, GT
 	g_return_val_if_fail (hdl->priv, NULL);
 
 	vtype = gda_g_type_from_string (str);
-	value = g_value_init (g_new0 (GValue, 1), G_TYPE_ULONG);
+	value = g_value_init (g_new0 (GValue, 1), G_TYPE_GTYPE);
 	g_value_set_ulong (value, vtype);
 
 	return value;

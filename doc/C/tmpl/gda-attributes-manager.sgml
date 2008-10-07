@@ -77,6 +77,8 @@ Manager for lists of attributes
 </para>
 
 @for_objects: 
+@signal_func: 
+@signal_data: 
 @Returns: 
 
 

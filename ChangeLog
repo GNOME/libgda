@@ -1,3 +1,44 @@
+2008-10-07  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-server-operation.c: code cleanup
+	* libgda/gda-column.c:
+	* libgda/gda-holder.c:
+	* libgda/gda-meta-struct.c:
+	* libgda/gda-attributes-manager.[ch]: optionnally specify a callback function
+	called whenever an attribute is changed
+	* libgda/gda-data-model-import.c: renamed the GDA_TYPE_<col nb> option to
+	G_TYPE_<col nb>
+
+2008-10-07  Johannes Schmid  <johannes.schmid@openismus.com>
+
+	* libgda-report/engine/gda-report-engine.c (value_to_node):
+	* libgda-xslt/sql_backend.c (value_to_xmlchar):
+	* libgda/gda-data-model-import.c (init_csv_import):
+	* libgda/gda-easy.c (gda_get_default_handler):
+	* libgda/gda-holder.c (gda_holder_class_init),
+	(gda_holder_new_inline), (gda_holder_set_property),
+	(gda_holder_get_property):
+	* libgda/gda-server-provider-extra.c
+	(gda_server_provider_get_data_handler_default):
+	* libgda/gda-set.c (gda_set_new_inline),
+	(gda_set_set_holder_value):
+	* libgda/gda-value.c (set_from_string), (gda_value_differ),
+	(gda_value_compare):
+	* libgda/handlers/gda-handler-type.c (gda_handler_type_init),
+	(gda_handler_type_get_value_from_sql),
+	(gda_handler_type_get_value_from_str):
+	* libgda/sqlite/gda-sqlite-provider.c
+	(gda_sqlite_provider_get_default_dbms_type):
+	* libgda/sqlite/virtual/gda-vprovider-data-model.c (virtualCreate):
+	* providers/mysql/gda-mysql-provider.c
+	(gda_mysql_provider_get_default_dbms_type):
+	* providers/postgres/gda-postgres-provider.c
+	(gda_postgres_provider_get_default_dbms_type):
+	* providers/postgres/gda-postgres-recordset.c (set_value):
+	* providers/skel-implementation/capi/gda-capi-provider.c
+	(gda_capi_provider_get_default_dbms_type):
+	#537159: Use GType instead of ulong/gint to represent GTypes
+
 2008-10-06  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-attributes-manager.[ch]: added gda_attributes_manager_set_full()

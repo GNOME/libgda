@@ -193,17 +193,30 @@ set_from_string (GValue *value, const gchar *as_string)
 		gda_value_set_null (value);
 		retval = TRUE;
 	}
-	else if (type == G_TYPE_ULONG) {
-		if (gda_g_type_from_string (as_string) != 0) 
-			g_value_set_ulong (value, gda_g_type_from_string (as_string));
-		else {
-			gulong ulvalue;
-
-			ulvalue = strtoul (as_string, endptr, 10);
-			if (*as_string!=0 && **endptr==0) {
-				g_value_set_ulong (value, ulvalue);
-				retval = TRUE;
-			}
+	else if (type == G_TYPE_GTYPE) {
+		if (gda_g_type_from_string (as_string) != 0) {
+			g_value_set_gtype (value, gda_g_type_from_string (as_string));
+			retval = TRUE;
+		}
+	}
+	else if (type == G_TYPE_ULONG)
+	{
+		gulong ulvalue;
+		
+		ulvalue = strtoul (as_string, endptr, 10);
+		if (*as_string!=0 && **endptr==0) {
+			g_value_set_ulong (value, ulvalue);
+			retval = TRUE;
+		}
+	}
+	else if (type == G_TYPE_LONG)
+	{
+		glong lvalue;
+		
+		lvalue = strtol (as_string, endptr, 10);
+		if (*as_string!=0 && **endptr==0) {
+			g_value_set_long (value, lvalue);
+			retval = TRUE;
 		}
 	}
 	else if (type == GDA_TYPE_BINARY) {
@@ -1982,7 +1995,8 @@ gda_value_differ (const GValue *value1, const GValue *value2)
 		 (type == G_TYPE_CHAR) ||
 		 (type == G_TYPE_UCHAR) ||
 		 (type == G_TYPE_LONG) ||
-		 (type == G_TYPE_ULONG))
+		 (type == G_TYPE_ULONG) ||
+		 (type == G_TYPE_GTYPE))
 		/* values here ARE different because otherwise the bcmp() at the beginning would
 		 * already have retruned */
 		return 1;
@@ -2259,6 +2273,12 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 		guint i1 = g_value_get_uint (value1);
 		guint i2 = g_value_get_uint (value2);
 		return (i1 > i2) ? 1 : ((i1 == i2) ? 0 : -1);
+	}
+
+	else if (type == G_TYPE_GTYPE) {
+		GType t1 = g_value_get_gtype (value1);
+		GType t2 = g_value_get_gtype (value2);
+		return (t1 > t2) ? 1 : ((t1 == t2) ? 0: -1);
 	}
 
 	g_warning ("%s() cannot handle values of type %s", __FUNCTION__, g_type_name (G_VALUE_TYPE (value1)));

@@ -451,6 +451,8 @@ gda_set_new_inline (gint nb, ...)
 			g_value_set_long (value, va_arg (ap, glong));
 		else if (type == G_TYPE_ULONG)
 			g_value_set_ulong (value, va_arg (ap, gulong));
+		else if (type == G_TYPE_GTYPE)
+			g_value_set_gtype (value, va_arg(ap, GType));
 		else {
 			g_warning (_("%s() does not handle values of type '%s'."),
 				   __FUNCTION__, g_type_name (type));
@@ -549,6 +551,8 @@ gda_set_set_holder_value (GdaSet *set, GError **error, const gchar *holder_id, .
 		g_value_set_long (value, va_arg (ap, glong));
 	else if (type == G_TYPE_ULONG)
 		g_value_set_ulong (value, va_arg (ap, gulong));
+	else if (type == G_TYPE_GTYPE)
+		g_value_set_gtype (value, va_arg (ap, GType));	
 	else {
 		g_set_error (error, 0, 0,
 			     _("%s() does not handle values of type '%s'."),

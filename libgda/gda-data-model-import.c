@@ -682,7 +682,7 @@ gda_data_model_import_get_property (GObject *object,
  *         <listitem><para>SEPARATOR (string): specifies the CSV separator (comma as default)</para></listitem>
  *         <listitem><para>QUOTE (string): specifies the character used to as quote park (double quote as default)</para></listitem>
  *         <listitem><para>TITLE_AS_FIRST_LINE (boolean): consider that the first line of the file contains columns' titles</para></listitem>
- *         <listitem><para>DBMS_TYPE_&lt;column number&gt; (string): specifies the type of value expected in column &lt;column number&gt;</para></listitem>
+ *         <listitem><para>G_TYPE_&lt;column number&gt; (GType): specifies the type of value expected in column &lt;column number&gt;</para></listitem>
  *      </itemizedlist>
  *   </para></listitem>
  *   <listitem><para>Other formats: no option</para></listitem>
@@ -826,28 +826,21 @@ init_csv_import (GdaDataModelImport *model)
 		gda_column_set_g_type (column, G_TYPE_STRING);
 		if (model->priv->options) {
 			gchar *pname;
-			const gchar *dbms_t;
 			const GValue *value;
 			
-			pname = g_strdup_printf ("GDA_TYPE_%d", col);
+			pname = g_strdup_printf ("G_TYPE_%d", col);
 			value = gda_set_get_holder_value (model->priv->options, pname);
 			if (value && !gda_value_is_null ((GValue *) value)) {
-				if (!gda_value_isa ((GValue *) value, G_TYPE_ULONG))
-					g_warning (_("The '%s' parameter must hold a "
-						     "gda type value, ignored."), pname);
+				if (!gda_value_isa ((GValue *) value, G_TYPE_GTYPE))
+					g_warning (_("The '%s' option must hold a "
+						     "GType value, ignored."), pname);
 				else {
 					GType gtype;
 					
-					gtype = g_value_get_ulong ((GValue *) value);
+					gtype = g_value_get_gtype ((GValue *) value);
 					gda_column_set_g_type (column, gtype);
 				}
 			}
-			g_free (pname);
-			
-			pname = g_strdup_printf ("DBMS_TYPE_%d", col);
-			dbms_t = find_option_as_string (model, pname);
-			if (dbms_t) 
-				gda_column_set_dbms_type (column, dbms_t);
 			g_free (pname);
 		}
 	}

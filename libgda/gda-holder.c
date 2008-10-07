@@ -162,6 +162,12 @@ m_validate_change (GdaHolder *holder, const GValue *new_value)
 }
 
 static void
+holder_attribute_set_cb (GObject *obj, const gchar *att_name, const GValue *value, gpointer data)
+{
+	g_signal_emit (obj, gda_holder_signals[ATT_CHANGED], 0, att_name, value);
+}
+
+static void
 gda_holder_class_init (GdaHolderClass *class)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
@@ -231,11 +237,9 @@ gda_holder_class_init (GdaHolderClass *class)
 	g_object_class_install_property (object_class, PROP_DESCR,
 					 g_param_spec_string ("description", NULL, NULL, NULL, 
 							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
-        g_object_class_install_property (object_class, PROP_GDA_TYPE,
-                                         g_param_spec_ulong ("g-type", NULL, NULL,
-							   0, G_MAXULONG, GDA_TYPE_NULL,
-							   (G_PARAM_READABLE | 
-							    G_PARAM_WRITABLE | G_PARAM_CONSTRUCT)));
+	g_object_class_install_property (object_class, PROP_GDA_TYPE,
+					 g_param_spec_gtype ("g-type", NULL, NULL, G_TYPE_NONE, 
+							     (G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT)));
 	g_object_class_install_property (object_class, PROP_NOT_NULL,
 					 g_param_spec_boolean ("not-null", NULL, NULL, FALSE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
@@ -257,7 +261,7 @@ gda_holder_class_init (GdaHolderClass *class)
 							   (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	
 	/* extra */
-	gda_holder_attributes_manager = gda_attributes_manager_new (TRUE);
+	gda_holder_attributes_manager = gda_attributes_manager_new (TRUE, holder_attribute_set_cb, NULL);
 }
 
 static void
@@ -294,11 +298,7 @@ gda_holder_init (GdaHolder *holder)
 GdaHolder *
 gda_holder_new (GType type)
 {
-	GObject   *obj;
-
-        obj = g_object_new (GDA_TYPE_HOLDER, "g-type", type, NULL);
-
-        return (GdaHolder *) obj;
+	return (GdaHolder*) g_object_new (GDA_TYPE_HOLDER, "g-type", type, NULL);
 }
 
 /**
@@ -434,6 +434,12 @@ gda_holder_new_inline (GType type, const gchar *id, ...)
 			g_value_set_float (value, va_arg (ap, double));
 		else if (type == G_TYPE_DOUBLE)
 			g_value_set_double (value, va_arg (ap, gdouble));
+		else if (type == G_TYPE_GTYPE)
+			g_value_set_gtype (value, va_arg (ap, GType));
+		else if (type == G_TYPE_LONG)
+			g_value_set_long (value, va_arg (ap, glong));
+		else if (type == G_TYPE_ULONG)
+			g_value_set_ulong (value, va_arg (ap, gulong));
 		else if (type == GDA_TYPE_NUMERIC)
 			gda_value_set_numeric (value, va_arg (ap, GdaNumeric *));
 		else if (type == G_TYPE_DATE)
@@ -537,7 +543,7 @@ gda_holder_set_property (GObject *object,
 			break;
 		case PROP_GDA_TYPE:
 			if (holder->priv->g_type == GDA_TYPE_NULL)
-				holder->priv->g_type = g_value_get_ulong (value);
+				holder->priv->g_type = g_value_get_gtype (value);
 			else
 				g_warning (_("The 'g-type' property cannot be changed"));
 			break;
@@ -609,7 +615,7 @@ gda_holder_get_property (GObject *object,
 				g_value_set_string (value, NULL);
 			break;
 		case PROP_GDA_TYPE:
-			g_value_set_ulong (value, holder->priv->g_type);
+			g_value_set_gtype (value, holder->priv->g_type);
 			break;
 		case PROP_NOT_NULL:
 			g_value_set_boolean (value, gda_holder_get_not_null (holder));
@@ -1681,5 +1687,4 @@ gda_holder_set_attribute (GdaHolder *holder, const gchar *attribute, const GValu
 		return;
 
 	gda_attributes_manager_set (gda_holder_attributes_manager, holder, attribute, value);
-	g_signal_emit (holder, gda_holder_signals[ATT_CHANGED], 0, attribute, value);
 }

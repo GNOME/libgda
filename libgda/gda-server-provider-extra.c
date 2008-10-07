@@ -123,7 +123,9 @@ gda_server_provider_get_data_handler_default (GdaServerProvider *provider, GdaCo
 	    (type == GDA_TYPE_USHORT) ||
 	    (type == G_TYPE_CHAR) ||
 	    (type == G_TYPE_UCHAR) ||
-	    (type == G_TYPE_UINT)) {
+	    (type == G_TYPE_UINT) ||
+	    (type == G_TYPE_LONG) ||
+	    (type == G_TYPE_ULONG)) {
 		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
 		if (!dh) {
 			dh = gda_handler_numerical_new ();
@@ -138,6 +140,8 @@ gda_server_provider_get_data_handler_default (GdaServerProvider *provider, GdaCo
 			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_CHAR, NULL);
 			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_UCHAR, NULL);
 			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_UINT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_ULONG, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_LONG, NULL);
 			g_object_unref (dh);
 		}
 	}
@@ -168,11 +172,11 @@ gda_server_provider_get_data_handler_default (GdaServerProvider *provider, GdaCo
 			g_object_unref (dh);
 		}
 	}
-	else if (type == G_TYPE_ULONG) {
+	else if (type == G_TYPE_GTYPE) {
 		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
 		if (!dh) {
 			dh = gda_handler_type_new ();
-			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_ULONG, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_GTYPE, NULL);
 			g_object_unref (dh);
 		}
 	}

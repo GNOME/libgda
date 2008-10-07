@@ -144,7 +144,7 @@ gda_meta_struct_class_init (GdaMetaStructClass *klass) {
 	object_class->finalize = gda_meta_struct_finalize;
 
 	/* extra */
-	att_mgr = gda_attributes_manager_new (FALSE);
+	att_mgr = gda_attributes_manager_new (FALSE, NULL, NULL);
 }
 
 

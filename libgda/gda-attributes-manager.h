@@ -30,8 +30,10 @@ G_BEGIN_DECLS
 /* main struct */
 typedef struct _GdaAttributesManager GdaAttributesManager;
 typedef void (*GdaAttributesManagerFunc) (const gchar *att_name, const GValue *value, gpointer data);
+typedef void (*GdaAttributesManagerSignal) (GObject *obj, const gchar *att_name, const GValue *value, gpointer data);
 
-GdaAttributesManager *gda_attributes_manager_new         (gboolean for_objects);
+GdaAttributesManager *gda_attributes_manager_new         (gboolean for_objects, 
+							  GdaAttributesManagerSignal signal_func, gpointer signal_data);
 void                  gda_attributes_manager_free        (GdaAttributesManager *mgr);
 
 void                  gda_attributes_manager_set         (GdaAttributesManager *mgr, gpointer ptr,

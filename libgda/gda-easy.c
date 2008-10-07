@@ -476,7 +476,9 @@ gda_get_default_handler (GType for_type)
                 g_hash_table_insert (hash, (gpointer) GDA_TYPE_TIMESTAMP, gda_handler_time_new_no_locale ());
                 g_hash_table_insert (hash, (gpointer) G_TYPE_CHAR, gda_handler_numerical_new ());
                 g_hash_table_insert (hash, (gpointer) G_TYPE_UCHAR, gda_handler_numerical_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_ULONG, gda_handler_type_new ());
+                g_hash_table_insert (hash, (gpointer) G_TYPE_ULONG, gda_handler_numerical_new ());
+                g_hash_table_insert (hash, (gpointer) G_TYPE_LONG, gda_handler_numerical_new ());
+                g_hash_table_insert (hash, (gpointer) G_TYPE_GTYPE, gda_handler_type_new ());
                 g_hash_table_insert (hash, (gpointer) G_TYPE_UINT, gda_handler_numerical_new ());
 	}
 	g_static_mutex_unlock (&mutex);
