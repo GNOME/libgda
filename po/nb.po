@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda 4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-10-06 21:07+0200\n"
+"POT-Creation-Date: 2008-10-08 14:13+0200\n"
 "PO-Revision-Date: 2008-10-06 21:28+0200\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian <i18n-nb@lister.ping.uio.no>\n"
@@ -80,8 +80,8 @@ msgstr "Tilbyder"
 
 #: ../libgda/gda-config.c:1150 ../libgda/gda-data-model-dsn-list.c:117
 #: ../libgda/gda-data-model-dsn-list.c:118
-#: ../libgda/gda-server-provider-extra.c:371
-#: ../libgda/gda-server-provider-extra.c:394 ../tools/gda-sql.c:1969
+#: ../libgda/gda-server-provider-extra.c:375
+#: ../libgda/gda-server-provider-extra.c:398 ../tools/gda-sql.c:1969
 #: ../tools/gda-sql.c:2143
 msgid "Description"
 msgstr "Beskrivelse"
@@ -479,19 +479,19 @@ msgid "Could not dump data model's attributes: %s"
 msgstr "Kunne ikke tolke fil ved %s"
 
 #: ../libgda/gda-data-model.c:1828 ../libgda/gda-data-model.c:1836
-#: ../libgda/gda-data-model-dir.c:386 ../libgda/gda-data-model-import.c:1581
-#: ../libgda/gda-data-model-import.c:1864
-#: ../libgda/gda-data-model-import.c:1937 ../libgda/gda-data-select.c:349
+#: ../libgda/gda-data-model-dir.c:386 ../libgda/gda-data-model-import.c:1574
+#: ../libgda/gda-data-model-import.c:1857
+#: ../libgda/gda-data-model-import.c:1930 ../libgda/gda-data-select.c:349
 #: ../libgda/gda-data-select.c:369 ../libgda/gda-data-select.c:433
 #: ../libgda/gda-data-select.c:1973 ../libgda/gda-data-select.c:1983
-#: ../libgda/gda-holder.c:451 ../libgda/gda-meta-store.c:520
-#: ../libgda/gda-server-operation.c:647 ../libgda/gda-set.c:464
-#: ../libgda/sqlite/gda-sqlite-provider.c:1737
-#: ../libgda/sqlite/gda-sqlite-provider.c:1752
+#: ../libgda/gda-holder.c:457 ../libgda/gda-meta-store.c:520
+#: ../libgda/gda-server-operation.c:640 ../libgda/gda-set.c:466
+#: ../libgda/sqlite/gda-sqlite-provider.c:1739
+#: ../libgda/sqlite/gda-sqlite-provider.c:1754
 #: ../providers/mdb/gda-mdb-provider.c:353
 #: ../providers/mysql/gda-mysql-util.c:137
-#: ../providers/postgres/gda-postgres-provider.c:1820
-#: ../providers/postgres/gda-postgres-provider.c:1835
+#: ../providers/postgres/gda-postgres-provider.c:1822
+#: ../providers/postgres/gda-postgres-provider.c:1837
 #: ../providers/postgres/gda-postgres-util.c:86
 #: ../providers/postgres/gda-postgres-util.c:89
 #: ../tools/gda-list-server-op.c:47 ../tools/gda-list-server-op.c:90
@@ -615,103 +615,103 @@ msgstr ""
 msgid "\"options\" property is not a GdaSet object"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:836
+#: ../libgda/gda-data-model-import.c:835
 #, c-format
-msgid "The '%s' parameter must hold a gda type value, ignored."
+msgid "The '%s' option must hold a GType value, ignored."
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:908
+#: ../libgda/gda-data-model-import.c:901
 #, fuzzy, c-format
 msgid "Character conversion at line %d, error: %s"
 msgstr "datakonvertering feilet for type %d"
 
-#: ../libgda/gda-data-model-import.c:911
+#: ../libgda/gda-data-model-import.c:904
 #: ../providers/bdb/gda-bdb-provider.c:208
 msgid "no detail"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:949
+#: ../libgda/gda-data-model-import.c:942
 #, fuzzy, c-format
 msgid "Could not convert string '%s' to a '%s' value"
 msgstr "datakonvertering feilet for type %d"
 
-#: ../libgda/gda-data-model-import.c:1005
+#: ../libgda/gda-data-model-import.c:998
 #, fuzzy, c-format
 msgid "Error while parsing CSV file: %s"
 msgstr "Feil under lesing av %s: %s"
 
 #. error
-#: ../libgda/gda-data-model-import.c:1108
+#: ../libgda/gda-data-model-import.c:1101
 msgid "Failed to read node in XML file"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1127
+#: ../libgda/gda-data-model-import.c:1120
 #, c-format
 msgid "Expected <gda_array> node in XML file, got <%s>"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1171
-#: ../libgda/gda-data-model-import.c:1490
+#: ../libgda/gda-data-model-import.c:1164
+#: ../libgda/gda-data-model-import.c:1483
 msgid "No \"gdatype\" attribute specified in <gda_array_field>"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1218
+#: ../libgda/gda-data-model-import.c:1211
 msgid "Expected <gda_array_field> in <gda_array>"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1252
+#: ../libgda/gda-data-model-import.c:1245
 #, c-format
 msgid "Expected <gda_array_data> in <gda_array>, got <%s>"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1254
+#: ../libgda/gda-data-model-import.c:1247
 msgid "Expected <gda_array_data> in <gda_array>"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1266
+#: ../libgda/gda-data-model-import.c:1259
 msgid "Can't read the contents of the <gda_array_data> node"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1315
+#: ../libgda/gda-data-model-import.c:1308
 #, c-format
 msgid "Expected <gda_array_row> in <gda_array_data>, got <%s>"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1339
+#: ../libgda/gda-data-model-import.c:1332
 msgid "Row has too many values (which are ignored)"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1386
+#: ../libgda/gda-data-model-import.c:1379
 #, fuzzy, c-format
 msgid "Could not convert '%s' to a value of type %s"
 msgstr "datakonvertering feilet for type %d"
 
-#: ../libgda/gda-data-model-import.c:1459
+#: ../libgda/gda-data-model-import.c:1452
 #, fuzzy, c-format
 msgid "Expected <gda_array> node but got <%s>"
 msgstr "Duplisert <data>-node for tabell %s"
 
-#: ../libgda/gda-data-model-import.c:1537
+#: ../libgda/gda-data-model-import.c:1530
 msgid "No <gda_array_field> specified in <gda_array>"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1715
+#: ../libgda/gda-data-model-import.c:1708
 #, c-format
 msgid "Data model does not support random access"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1771
+#: ../libgda/gda-data-model-import.c:1764
 #, c-format
 msgid "Row at line %d does not have enough values, completed with NULL values"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1791
+#: ../libgda/gda-data-model-import.c:1784
 #, c-format
 msgid "Row at line %d does not have enough values (which are thus ignored)"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1863
-#: ../libgda/gda-data-model-import.c:1936
+#: ../libgda/gda-data-model-import.c:1856
+#: ../libgda/gda-data-model-import.c:1929
 #, fuzzy, c-format
 msgid "Could not set iterator's value: %s"
 msgstr "Kunne ikke hente datatype for parameter"
@@ -980,36 +980,36 @@ msgstr "Ugyldig argument"
 msgid "CREATE TABLE operation is not supported by the database server"
 msgstr ""
 
-#: ../libgda/gda-holder.c:450 ../libgda/gda-set.c:463
+#: ../libgda/gda-holder.c:456 ../libgda/gda-set.c:465
 #, c-format
 msgid "Unable to set holder's value: %s"
 msgstr ""
 
-#: ../libgda/gda-holder.c:542
+#: ../libgda/gda-holder.c:548
 msgid "The 'g-type' property cannot be changed"
 msgstr ""
 
-#: ../libgda/gda-holder.c:810
+#: ../libgda/gda-holder.c:816
 #, fuzzy, c-format
 msgid "Unable to convert string to '%s' type"
 msgstr "datakonvertering feilet for type %d"
 
-#: ../libgda/gda-holder.c:872
+#: ../libgda/gda-holder.c:878
 msgid ""
 "Can't use this method to set value because there is already a static value"
 msgstr ""
 
-#: ../libgda/gda-holder.c:891 ../libgda/gda-holder.c:1016
+#: ../libgda/gda-holder.c:897 ../libgda/gda-holder.c:1022
 #, c-format
 msgid "Holder does not allow NULL values"
 msgstr ""
 
-#: ../libgda/gda-holder.c:897 ../libgda/gda-holder.c:1022
+#: ../libgda/gda-holder.c:903 ../libgda/gda-holder.c:1028
 #, c-format
 msgid "Wrong value type: expected type '%s' when value's type is '%s'"
 msgstr ""
 
-#: ../libgda/gda-holder.c:1478
+#: ../libgda/gda-holder.c:1484
 #, c-format
 msgid "Cannot bind holders if their type is not the same"
 msgstr ""
@@ -1320,56 +1320,56 @@ msgstr "Referert tabell"
 msgid "Missing foreign key's column name for table '%s'"
 msgstr ""
 
-#: ../libgda/gda-server-operation.c:576
+#: ../libgda/gda-server-operation.c:569
 #, c-format
 msgid "GdaServerOperation: could not find file '%s'"
 msgstr ""
 
-#: ../libgda/gda-server-operation.c:609
+#: ../libgda/gda-server-operation.c:602
 #, c-format
 msgid ""
 "GdaServerOperation: file '%s' does not conform to DTD:\n"
 "%s"
 msgstr ""
 
-#: ../libgda/gda-server-operation.c:615
+#: ../libgda/gda-server-operation.c:608
 #, c-format
 msgid "GdaServerOperation: file '%s' does not conform to DTD"
 msgstr ""
 
-#: ../libgda/gda-server-operation.c:631
+#: ../libgda/gda-server-operation.c:624
 #, fuzzy, c-format
 msgid "GdaServerOperation: could not load file '%s'"
 msgstr "Kunne ikke laste fil ved %s"
 
-#: ../libgda/gda-server-operation.c:646
+#: ../libgda/gda-server-operation.c:639
 #, fuzzy, c-format
 msgid "Could not load XML specifications: %s"
 msgstr "Kunne ikke åpne fil %s"
 
-#: ../libgda/gda-server-operation.c:1149
+#: ../libgda/gda-server-operation.c:1142
 msgid ""
 "Non handled GdaServerOperationType, please report error to http://bugzilla."
 "gnome.org/ for the \"libgda\" product"
 msgstr ""
 
-#: ../libgda/gda-server-operation.c:1333 ../libgda/gda-server-operation.c:1347
+#: ../libgda/gda-server-operation.c:1323 ../libgda/gda-server-operation.c:1337
 #, fuzzy, c-format
 msgid "Expected tag <%s>, got <%s>"
 msgstr "Duplisert <data>-node for tabell %s"
 
-#: ../libgda/gda-server-operation.c:1378 ../libgda/gda-server-operation.c:1997
+#: ../libgda/gda-server-operation.c:1368 ../libgda/gda-server-operation.c:1981
 #, c-format
 msgid ""
 "Parameterlist values can only be set for individual parameters within it"
 msgstr ""
 
-#: ../libgda/gda-server-operation.c:1435
+#: ../libgda/gda-server-operation.c:1425
 #, c-format
 msgid "Missing attribute named 'path'"
 msgstr ""
 
-#: ../libgda/gda-server-operation.c:2126
+#: ../libgda/gda-server-operation.c:2110
 #, c-format
 msgid "Missing required value for '%s'"
 msgstr ""
@@ -1393,59 +1393,59 @@ msgid ""
 msgstr ""
 
 #. To translators: "Aggregate": the noun
-#: ../libgda/gda-server-provider-extra.c:306
+#: ../libgda/gda-server-provider-extra.c:310
 msgid "Aggregate"
 msgstr "Aggregater"
 
-#: ../libgda/gda-server-provider-extra.c:307
-#: ../libgda/gda-server-provider-extra.c:351
+#: ../libgda/gda-server-provider-extra.c:311
+#: ../libgda/gda-server-provider-extra.c:355
 msgid "Id"
 msgstr "ID"
 
-#: ../libgda/gda-server-provider-extra.c:308
-#: ../libgda/gda-server-provider-extra.c:352
-#: ../libgda/gda-server-provider-extra.c:363
-#: ../libgda/gda-server-provider-extra.c:370
-#: ../libgda/gda-server-provider-extra.c:381
-#: ../libgda/gda-server-provider-extra.c:393
+#: ../libgda/gda-server-provider-extra.c:312
+#: ../libgda/gda-server-provider-extra.c:356
+#: ../libgda/gda-server-provider-extra.c:367
+#: ../libgda/gda-server-provider-extra.c:374
+#: ../libgda/gda-server-provider-extra.c:385
+#: ../libgda/gda-server-provider-extra.c:397
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:56
 #: ../tools/command-exec.c:750
 msgid "Owner"
 msgstr "Eier"
 
-#: ../libgda/gda-server-provider-extra.c:309
-#: ../libgda/gda-server-provider-extra.c:353
-#: ../libgda/gda-server-provider-extra.c:364
-#: ../libgda/gda-server-provider-extra.c:382
+#: ../libgda/gda-server-provider-extra.c:313
+#: ../libgda/gda-server-provider-extra.c:357
+#: ../libgda/gda-server-provider-extra.c:368
+#: ../libgda/gda-server-provider-extra.c:386
 msgid "Comments"
 msgstr "Kommentarer"
 
-#: ../libgda/gda-server-provider-extra.c:310
+#: ../libgda/gda-server-provider-extra.c:314
 msgid "OutType"
 msgstr "Ut-type"
 
-#: ../libgda/gda-server-provider-extra.c:311
+#: ../libgda/gda-server-provider-extra.c:315
 msgid "InType"
 msgstr "Inntype"
 
-#: ../libgda/gda-server-provider-extra.c:312
-#: ../libgda/gda-server-provider-extra.c:358
-#: ../libgda/gda-server-provider-extra.c:365
-#: ../libgda/gda-server-provider-extra.c:372
-#: ../libgda/gda-server-provider-extra.c:395
-#: ../libgda/gda-server-provider-extra.c:402
+#: ../libgda/gda-server-provider-extra.c:316
+#: ../libgda/gda-server-provider-extra.c:362
+#: ../libgda/gda-server-provider-extra.c:369
+#: ../libgda/gda-server-provider-extra.c:376
+#: ../libgda/gda-server-provider-extra.c:399
+#: ../libgda/gda-server-provider-extra.c:406
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:2
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_create_view.xml.in.h:2
 msgid "Definition"
 msgstr "Definisjon"
 
-#: ../libgda/gda-server-provider-extra.c:316
+#: ../libgda/gda-server-provider-extra.c:320
 msgid "Database"
 msgstr "Database"
 
 #. list of fields
-#: ../libgda/gda-server-provider-extra.c:320
+#: ../libgda/gda-server-provider-extra.c:324
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:13
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:75
 #: ../providers/mysql/mysql_specs_drop_column.xml.in.h:2
@@ -1458,7 +1458,7 @@ msgid "Field name"
 msgstr "Feltnavn"
 
 #. list of fields
-#: ../libgda/gda-server-provider-extra.c:321
+#: ../libgda/gda-server-provider-extra.c:325
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:10
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:53
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:4
@@ -1469,7 +1469,7 @@ msgid "Data type"
 msgstr "Datatype"
 
 #. list of fields
-#: ../libgda/gda-server-provider-extra.c:322
+#: ../libgda/gda-server-provider-extra.c:326
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:17
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:167
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:13
@@ -1480,7 +1480,7 @@ msgid "Size"
 msgstr "Størrelse"
 
 #. list of fields
-#: ../libgda/gda-server-provider-extra.c:323
+#: ../libgda/gda-server-provider-extra.c:327
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:16
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:161
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:12
@@ -1490,19 +1490,19 @@ msgstr "Størrelse"
 msgid "Scale"
 msgstr "Skala"
 
-#: ../libgda/gda-server-provider-extra.c:324
+#: ../libgda/gda-server-provider-extra.c:328
 msgid "Not null?"
 msgstr "Ikke null"
 
-#: ../libgda/gda-server-provider-extra.c:325
+#: ../libgda/gda-server-provider-extra.c:329
 msgid "Primary key?"
 msgstr "Primærnøkkel"
 
-#: ../libgda/gda-server-provider-extra.c:326
+#: ../libgda/gda-server-provider-extra.c:330
 msgid "Unique index?"
 msgstr "Unik indeks"
 
-#: ../libgda/gda-server-provider-extra.c:327
+#: ../libgda/gda-server-provider-extra.c:331
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:5
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:4
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:4
@@ -1512,7 +1512,7 @@ msgid "References"
 msgstr "Referanser"
 
 #. list of fields
-#: ../libgda/gda-server-provider-extra.c:328
+#: ../libgda/gda-server-provider-extra.c:332
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:12
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:57
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:6
@@ -1521,27 +1521,27 @@ msgstr "Referanser"
 msgid "Default value"
 msgstr "Forvalgt verdi"
 
-#: ../libgda/gda-server-provider-extra.c:329
+#: ../libgda/gda-server-provider-extra.c:333
 msgid "Extra attributes"
 msgstr "Ekstra attributter"
 
-#: ../libgda/gda-server-provider-extra.c:333
+#: ../libgda/gda-server-provider-extra.c:337
 #: ../providers/mysql/mysql_specs_drop_index.xml.in.h:1
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:3
 msgid "Index"
 msgstr "Indeks"
 
-#: ../libgda/gda-server-provider-extra.c:337
+#: ../libgda/gda-server-provider-extra.c:341
 msgid "Language"
 msgstr "Språk"
 
-#: ../libgda/gda-server-provider-extra.c:341
+#: ../libgda/gda-server-provider-extra.c:345
 msgid "Namespace"
 msgstr "Navneområde"
 
-#: ../libgda/gda-server-provider-extra.c:345
-#: ../libgda/gda-server-provider-extra.c:369
+#: ../libgda/gda-server-provider-extra.c:349
+#: ../libgda/gda-server-provider-extra.c:373
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:18
 #: ../providers/mysql/mysql_specs_drop_column.xml.in.h:3
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:7
@@ -1556,60 +1556,60 @@ msgstr "Navneområde"
 msgid "Table"
 msgstr "Tabell"
 
-#: ../libgda/gda-server-provider-extra.c:346
-#: ../libgda/gda-server-provider-extra.c:362
+#: ../libgda/gda-server-provider-extra.c:350
+#: ../libgda/gda-server-provider-extra.c:366
 msgid "Sequence"
 msgstr "Sekvens"
 
-#: ../libgda/gda-server-provider-extra.c:350
+#: ../libgda/gda-server-provider-extra.c:354
 msgid "Procedure"
 msgstr "Prosedyre"
 
-#: ../libgda/gda-server-provider-extra.c:354
+#: ../libgda/gda-server-provider-extra.c:358
 msgid "Return type"
 msgstr "Returtype"
 
 #. To translators: "Nb args": the procedure's number of arguments
-#: ../libgda/gda-server-provider-extra.c:356
+#: ../libgda/gda-server-provider-extra.c:360
 msgid "Nb args"
 msgstr ""
 
-#: ../libgda/gda-server-provider-extra.c:357
+#: ../libgda/gda-server-provider-extra.c:361
 msgid "Args types"
 msgstr "Args-type"
 
-#: ../libgda/gda-server-provider-extra.c:376
+#: ../libgda/gda-server-provider-extra.c:380
 msgid "Trigger"
 msgstr "Utløser"
 
-#: ../libgda/gda-server-provider-extra.c:380
-#: ../libgda/gda-server-provider-extra.c:400
+#: ../libgda/gda-server-provider-extra.c:384
+#: ../libgda/gda-server-provider-extra.c:404
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:17
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:17
 #: ../tools/command-exec.c:749 ../tools/command-exec.c:823
 msgid "Type"
 msgstr "Type"
 
-#: ../libgda/gda-server-provider-extra.c:383
+#: ../libgda/gda-server-provider-extra.c:387
 msgid "GDA type"
 msgstr "GDA-type"
 
-#: ../libgda/gda-server-provider-extra.c:384
+#: ../libgda/gda-server-provider-extra.c:388
 msgid "Synonyms"
 msgstr "Synonymer"
 
-#: ../libgda/gda-server-provider-extra.c:388
+#: ../libgda/gda-server-provider-extra.c:392
 msgid "User"
 msgstr "Bruker"
 
-#: ../libgda/gda-server-provider-extra.c:392
+#: ../libgda/gda-server-provider-extra.c:396
 #: ../providers/mysql/mysql_specs_drop_view.xml.in.h:3
 #: ../providers/postgres/postgres_specs_drop_view.xml.in.h:6
 #: ../providers/sqlite/sqlite_specs_drop_view.xml.in.h:3
 msgid "View"
 msgstr "Visning"
 
-#: ../libgda/gda-server-provider-extra.c:399
+#: ../libgda/gda-server-provider-extra.c:403
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:11
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:134
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:3
@@ -1624,64 +1624,64 @@ msgid "Name"
 msgstr "Navn"
 
 #. foreign key spec
-#: ../libgda/gda-server-provider-extra.c:401
+#: ../libgda/gda-server-provider-extra.c:405
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:77
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:25
 msgid "Fields"
 msgstr "Felt"
 
-#: ../libgda/gda-server-provider-extra.c:403
+#: ../libgda/gda-server-provider-extra.c:407
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:55
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:33
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:6
 msgid "Options"
 msgstr "Alternativer"
 
-#: ../libgda/gda-server-provider-extra.c:519
+#: ../libgda/gda-server-provider-extra.c:523
 #, c-format
 msgid "Data model for schema has a wrong number of columns"
 msgstr ""
 
-#: ../libgda/gda-server-provider-extra.c:531
+#: ../libgda/gda-server-provider-extra.c:535
 #, c-format
 msgid "Data model for schema has a wrong column title: '%s' instead of '%s'"
 msgstr ""
 
-#: ../libgda/gda-server-provider-extra.c:538
+#: ../libgda/gda-server-provider-extra.c:542
 #, c-format
 msgid "Data model for schema has a wrong column name: '%s' instead of '%s'"
 msgstr ""
 
-#: ../libgda/gda-server-provider-extra.c:545
+#: ../libgda/gda-server-provider-extra.c:549
 #, c-format
 msgid "Data model for schema has a wrong gda type: %s instead of %s"
 msgstr ""
 
-#: ../libgda/gda-set.c:455 ../libgda/gda-set.c:554
+#: ../libgda/gda-set.c:457 ../libgda/gda-set.c:558
 #, fuzzy, c-format
 msgid "%s() does not handle values of type '%s'."
 msgstr "Kunne ikke hente datatype for felt for Oracle"
 
-#: ../libgda/gda-set.c:510
+#: ../libgda/gda-set.c:512
 #, c-format
 msgid "GdaHolder with ID '%s' not found in set"
 msgstr ""
 
-#: ../libgda/gda-set.c:688
+#: ../libgda/gda-set.c:692
 #, c-format
 msgid "Spec's root node != 'data-set-spec': '%s'"
 msgstr ""
 
-#: ../libgda/gda-set.c:727
+#: ../libgda/gda-set.c:731
 #, c-format
 msgid "Missing node <parameters>: '%s'"
 msgstr ""
 
-#: ../libgda/gda-set.c:1264
+#: ../libgda/gda-set.c:1268
 msgid "GdaHolder needs to have an ID"
 msgstr ""
 
-#: ../libgda/gda-set.c:1365
+#: ../libgda/gda-set.c:1369
 #, c-format
 msgid "One or more values are invalid"
 msgstr ""
@@ -1715,9 +1715,9 @@ msgstr ""
 msgid "Missing parameter '%s'"
 msgstr "Mangler parameter «%s»"
 
-#: ../libgda/gda-statement.c:1174 ../libgda/sqlite/gda-sqlite-provider.c:1990
-#: ../providers/mysql/gda-mysql-provider.c:1413
-#: ../providers/postgres/gda-postgres-provider.c:2074
+#: ../libgda/gda-statement.c:1174 ../libgda/sqlite/gda-sqlite-provider.c:1992
+#: ../providers/mysql/gda-mysql-provider.c:1414
+#: ../providers/postgres/gda-postgres-provider.c:2076
 #, c-format
 msgid "Parameter '%s' is invalid"
 msgstr "Parameter «%s» er ugyldig"
@@ -1816,7 +1816,7 @@ msgstr ""
 msgid "Boolean representation"
 msgstr ""
 
-#: ../libgda/handlers/gda-handler-numerical.c:138
+#: ../libgda/handlers/gda-handler-numerical.c:140
 msgid "Numerical representation"
 msgstr ""
 
@@ -1928,69 +1928,69 @@ msgstr "Navn på parameter"
 msgid "Transactions are not supported in read-only mode"
 msgstr "Transaksjoner støttes ikke i skrivebeskyttet modus"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1642
-#: ../providers/postgres/gda-postgres-provider.c:1681
+#: ../libgda/sqlite/gda-sqlite-provider.c:1644
+#: ../providers/postgres/gda-postgres-provider.c:1683
 #, c-format
 msgid "Unnamed parameter is not allowed in prepared statements"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1736
-#: ../providers/postgres/gda-postgres-provider.c:1819
+#: ../libgda/sqlite/gda-sqlite-provider.c:1738
+#: ../providers/postgres/gda-postgres-provider.c:1821
 #, c-format
 msgid "Can't build SELECT statement to get last inserted row: %s)"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1751
-#: ../providers/postgres/gda-postgres-provider.c:1834
+#: ../libgda/sqlite/gda-sqlite-provider.c:1753
+#: ../providers/postgres/gda-postgres-provider.c:1836
 #, c-format
 msgid "Can't execute SELECT statement to get last inserted row: %s"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1764
-#: ../providers/postgres/gda-postgres-provider.c:1847
+#: ../libgda/sqlite/gda-sqlite-provider.c:1766
+#: ../providers/postgres/gda-postgres-provider.c:1849
 msgid "SELECT statement to get last inserted row did not return any row"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1768
-#: ../providers/postgres/gda-postgres-provider.c:1851
+#: ../libgda/sqlite/gda-sqlite-provider.c:1770
+#: ../providers/postgres/gda-postgres-provider.c:1853
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1832
-#: ../providers/mysql/gda-mysql-provider.c:1309
-#: ../providers/postgres/gda-postgres-provider.c:1926
+#: ../libgda/sqlite/gda-sqlite-provider.c:1834
+#: ../providers/mysql/gda-mysql-provider.c:1310
+#: ../providers/postgres/gda-postgres-provider.c:1928
 #, fuzzy, c-format
 msgid "Provider does not support asynchronous statement execution"
 msgstr "Tilbyder %s implementerer ikke inngangsfunksjonen"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1913
+#: ../libgda/sqlite/gda-sqlite-provider.c:1915
 msgid "Empty statement"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1953
-#: ../libgda/sqlite/gda-sqlite-provider.c:1956
-#: ../providers/mysql/gda-mysql-provider.c:1375
-#: ../providers/mysql/gda-mysql-provider.c:1378
-#: ../providers/postgres/gda-postgres-provider.c:2038
-#: ../providers/postgres/gda-postgres-provider.c:2041
+#: ../libgda/sqlite/gda-sqlite-provider.c:1955
+#: ../libgda/sqlite/gda-sqlite-provider.c:1958
+#: ../providers/mysql/gda-mysql-provider.c:1376
+#: ../providers/mysql/gda-mysql-provider.c:1379
+#: ../providers/postgres/gda-postgres-provider.c:2040
+#: ../providers/postgres/gda-postgres-provider.c:2043
 #, c-format
 msgid "Missing parameter(s) to execute query"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1971
-#: ../providers/mysql/gda-mysql-provider.c:1394
-#: ../providers/postgres/gda-postgres-provider.c:2056
+#: ../libgda/sqlite/gda-sqlite-provider.c:1973
+#: ../providers/mysql/gda-mysql-provider.c:1395
+#: ../providers/postgres/gda-postgres-provider.c:2058
 #, c-format
 msgid "Missing parameter '%s' to execute query"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2082
+#: ../libgda/sqlite/gda-sqlite-provider.c:2084
 #, fuzzy, c-format
 msgid "Non handled data type '%s'"
 msgstr "Kunne ikke hente datatype for felt for Oracle"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2216
+#: ../libgda/sqlite/gda-sqlite-provider.c:2218
 #, fuzzy
 msgid "Function requires one argument"
 msgstr "Modellen har ikke minst en unik nøkkel som ikke er endret."
@@ -2003,19 +2003,19 @@ msgid "Column %d out of range (0-%d), ignoring its specified type"
 msgstr "Kolonne %d utenfor område 0 - %d"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:368
-#: ../providers/postgres/gda-postgres-recordset.c:642
+#: ../providers/postgres/gda-postgres-recordset.c:616
 #, c-format
 msgid "Invalid date '%s' (date format should be YYYY-MM-DD)"
 msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:382
-#: ../providers/postgres/gda-postgres-recordset.c:662
+#: ../providers/postgres/gda-postgres-recordset.c:623
 #, c-format
 msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms])"
 msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:396
-#: ../providers/postgres/gda-postgres-recordset.c:654
+#: ../providers/postgres/gda-postgres-recordset.c:661
 #, c-format
 msgid "Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"
 msgstr ""
@@ -2028,7 +2028,7 @@ msgstr ""
 #: ../libgda/sqlite/gda-sqlite-recordset.c:484
 #, c-format
 msgid "Row %d not found"
-msgstr "Rad %s ikke funnet"
+msgstr "Rad %d ikke funnet"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-data-model.c:305
 #, c-format
@@ -2590,12 +2590,12 @@ msgstr ""
 msgid "The connection string must contain the DB_NAME values"
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-provider.c:1212
+#: ../providers/mysql/gda-mysql-provider.c:1213
 #, c-format
 msgid "Unnamed statement parameter is not allowed in prepared statement."
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-provider.c:1492
+#: ../providers/mysql/gda-mysql-provider.c:1493
 msgid ""
 "Could not use CURSOR. Mysql version 5.0 at least is required. Using random "
 "access anyway."
@@ -3714,15 +3714,15 @@ msgstr "Transaksjoner støttes ikke i skrivebeskyttet modus"
 msgid "Wrong savepoint name '%s'"
 msgstr ""
 
-#: ../providers/postgres/gda-postgres-provider.c:2102
 #: ../providers/postgres/gda-postgres-provider.c:2104
+#: ../providers/postgres/gda-postgres-provider.c:2106
 #, fuzzy, c-format
 msgid "Cannot start transaction"
 msgstr "Kunne ikke starte Oracle-transaksjon"
 
-#: ../providers/postgres/gda-postgres-provider.c:2282
-#: ../providers/postgres/gda-postgres-provider.c:2318
-#: ../providers/postgres/gda-postgres-provider.c:2353
+#: ../providers/postgres/gda-postgres-provider.c:2284
+#: ../providers/postgres/gda-postgres-provider.c:2320
+#: ../providers/postgres/gda-postgres-provider.c:2355
 #, fuzzy, c-format
 msgid "Could not set the XA transaction ID parameter"
 msgstr "Kunne ikke sette Oracle-transaksjonsnavn"
