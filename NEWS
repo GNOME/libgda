@@ -12,6 +12,11 @@ This version includes:
  - Lots of small bug fixes (Johannes Schmid, Vivien Malerba)
  - Lots of documentation improvements
  - bug fixes: #508407, #552708, #90751, #401442, #537159, #527002, #539754, #537105
+ - Translations:
+	- eu (Inaki Larranaga Murgoitio)
+	- it (Marco Ciampa)
+	- fi (Ilkka Tuohela)
+	- nb (Kjartan Maraas)
 
 libgda 3.99.4, 2008-09-16
 
