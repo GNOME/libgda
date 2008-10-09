@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-10-09 20:33+0200\n"
-"PO-Revision-Date: 2008-09-21 03:24+0200\n"
+"POT-Creation-Date: 2008-10-09 22:45+0200\n"
+"PO-Revision-Date: 2008-10-09 23:01+0200\n"
 "Last-Translator: Marco Ciampa <ciampix@libero.it>\n"
 "Language-Team: italiano <tp@lists.linux.it>\n"
 "MIME-Version: 1.0\n"
@@ -621,21 +621,21 @@ msgstr "Elenco delle sorgenti dati definite"
 #: ../libgda/gda-data-model-import.c:447
 #, c-format
 msgid "The '%s' option must hold a string value, ignored."
-msgstr "L'opzione \"%s\" doveva contenere un valore stringa e sarà ignorato."
+msgstr "L'opzione \"%s\" doveva contenere un valore stringa e sarà ignorata."
 
 #: ../libgda/gda-data-model-import.c:463
 #, c-format
 msgid "The '%s' option must hold a boolean value, ignored."
-msgstr "L'opzione \"%s\" doveva contenere un valore booleano e sarà ignorato."
+msgstr "L'opzione \"%s\" doveva contenere un valore booleano e sarà ignorata."
 
 #: ../libgda/gda-data-model-import.c:572
 msgid "\"options\" property is not a GdaSet object"
 msgstr "La proprietà \"options\" non è un oggetto GdaSet"
 
 #: ../libgda/gda-data-model-import.c:835
-#, fuzzy, c-format
+#, c-format
 msgid "The '%s' option must hold a GType value, ignored."
-msgstr "L'opzione \"%s\" doveva contenere un valore booleano e sarà ignorato."
+msgstr "L'opzione \"%s\" doveva contenere un valore GType e sarà ignorata."
 
 #: ../libgda/gda-data-model-import.c:901
 #, c-format
@@ -805,16 +805,16 @@ msgid "GdaSet used when the SELECT statement was executed"
 msgstr "GdaSet usato mentre il comando SELECT era in esecuzione"
 
 #: ../libgda/gda-data-select.c:348 ../libgda/gda-data-select.c:368
-#, fuzzy, c-format
+#, c-format
 msgid "Could not re-run SELECT statement: %s"
-msgstr "Impossibile creare il comando SELECT"
+msgstr "Impossibile ri-eseguire il comando SELECT: %s"
 
 #: ../libgda/gda-data-select.c:431
 #, c-format
 msgid ""
 "An error has occurred, the value returned by the \"exec-params\" property "
 "will be wrong: %s"
-msgstr ""
+msgstr "Si è verificato un errore, il valore restituito dalla proprietà \"exec-params\" sarà errato: %s"
 
 #: ../libgda/gda-data-select.c:944
 #, c-format
@@ -827,11 +827,9 @@ msgid "Internal error: the \"prepared-stmt\" property has not been set"
 msgstr "Errore interno: la proprietà \"prepared-stmt\" non è stata impostata"
 
 #: ../libgda/gda-data-select.c:976
-#, fuzzy, c-format
+#, c-format
 msgid "Can't get the prepared statement's actual statement"
-msgstr ""
-"Errore interno: impossibile ottenere il comando corrente del comando "
-"preparato"
+msgstr "Impossibile ottenere il comando corrente del comando preparato"
 
 #: ../libgda/gda-data-select.c:982
 #, c-format
@@ -921,13 +919,13 @@ msgstr ""
 "consentita"
 
 #: ../libgda/gda-data-select.c:1972 ../libgda/gda-data-select.c:1982
-#, fuzzy, c-format
+#, c-format
 msgid "Could not change iter's value for column %d: %s"
-msgstr "Impossibile impostare il valore dell'iteratore: %s"
+msgstr "Impossibile caricare il valore dell'iteratore per la colonna %d: %s"
 
 #: ../libgda/gda-data-select.c:1977
 msgid "Allowed GdaHolder's value to be NULL for the iterator to be updated"
-msgstr ""
+msgstr "Il valore GdaHolder permesso per valori NULL per l'iteratore da aggiornare "
 
 #: ../libgda/gda-data-select.c:2057 ../libgda/gda-data-select.c:2150
 #, c-format
@@ -1025,7 +1023,7 @@ msgstr "Impossibile impostare il valore del detentore: %s"
 
 #: ../libgda/gda-holder.c:548
 msgid "The 'g-type' property cannot be changed"
-msgstr ""
+msgstr "La proprietà 'g-type' non può essere cambiata"
 
 #: ../libgda/gda-holder.c:816
 #, c-format
@@ -1035,7 +1033,7 @@ msgstr "Fallita la conversione da stringa a tipo \"%s\""
 #: ../libgda/gda-holder.c:878
 msgid ""
 "Can't use this method to set value because there is already a static value"
-msgstr ""
+msgstr "Impossibile usare questo metodo per impostare valori dato che c'è già un valore statico"
 
 #: ../libgda/gda-holder.c:897 ../libgda/gda-holder.c:1022
 #, c-format
@@ -1055,7 +1053,7 @@ msgstr "Impossibile collegare detentori se il loro tipo non è lo stesso"
 
 #: ../libgda/gda-init.c:58
 msgid "Ignoring attempt to re-initialize GDA library."
-msgstr "Tentativo di re-inizializzare la libreria GDA ignorato."
+msgstr "Ingnorato tentativo di re-inizializzare la libreria GDA."
 
 #: ../libgda/gda-init.c:80
 msgid "libgda needs GModule. Finishing..."
@@ -4635,45 +4633,43 @@ msgstr ""
 #: ../tools/gda-sql.c:1530 ../tools/gda-sql.c:1541 ../tools/gda-sql.c:1552
 #: ../tools/gda-sql.c:1563
 msgid "DSN (data sources) management"
-msgstr ""
+msgstr "Gestione DSN (sorgenti dati)"
 
 #: ../tools/gda-sql.c:1531
-#, fuzzy, c-format
+#, c-format
 msgid "%s [DSN]"
-msgstr "%s [DIR]"
+msgstr "%s [DSN]"
 
 #: ../tools/gda-sql.c:1532
-#, fuzzy
 msgid "List all DSN (or named DSN's attributes)"
-msgstr "Elenca tutte le tabelle (o le tabelle con nome)"
+msgstr "Elenca tutti i DSN (o gli attributi di DSN con nome)"
 
 #: ../tools/gda-sql.c:1542
 #, c-format
 msgid "%s DSN_NAME DSN_DEFINITION [DESCRIPTION]"
-msgstr ""
+msgstr "%s NOME_DSN DEFINIZIONE_DSN [DESCRIZIONE]"
 
 #: ../tools/gda-sql.c:1543
 msgid "Create (or modify) a DSN"
-msgstr ""
+msgstr "Crea (o modifica) un DSN"
 
 #: ../tools/gda-sql.c:1553
 #, c-format
 msgid "%s DSN_NAME [DSN_NAME...]"
-msgstr ""
+msgstr "%s NOME_DSN [NOME_DSN...]"
 
 #: ../tools/gda-sql.c:1554
 msgid "Remove a DSN"
-msgstr ""
+msgstr "Elimina un DSN"
 
 #: ../tools/gda-sql.c:1564
-#, fuzzy, c-format
+#, c-format
 msgid "%s [PROVIDER]"
-msgstr "%s [VISTA]"
+msgstr "%s [FORNITORE]"
 
 #: ../tools/gda-sql.c:1565
-#, fuzzy
 msgid "List all installed database providers (or named one's attributes)"
-msgstr "Elenca i fornitori di database installati"
+msgstr "Elenca tutti i fornitori di database installati (o gli attributi di quelli con nome)"
 
 #: ../tools/gda-sql.c:1574 ../tools/gda-sql.c:1585 ../tools/gda-sql.c:1596
 #: ../tools/gda-sql.c:1607
@@ -4822,55 +4818,53 @@ msgstr ""
 "Formato di uscita sconosciuto: \"%s\", reimpostato al valore predefinito"
 
 #: ../tools/gda-sql.c:1929 ../tools/gda-sql.c:2104
-#, fuzzy
 msgid "Attribute"
-msgstr "Attributi extra"
+msgstr "Attributo"
 
 #: ../tools/gda-sql.c:1930 ../tools/gda-sql.c:2105 ../tools/gda-sql.c:3129
 msgid "Value"
 msgstr "Valore"
 
 #: ../tools/gda-sql.c:1932
-#, fuzzy, c-format
+#, c-format
 msgid "DSN '%s' description"
-msgstr "Nessuna descrizione"
+msgstr "Descrizione DSN \"%s\""
 
 #: ../tools/gda-sql.c:1960
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find any DSN named '%s'"
-msgstr "Impossibile trovare un oggetto di nome \"%s\""
+msgstr "Impossibile trovare un DSN di nome \"%s\""
 
 #: ../tools/gda-sql.c:1971
 msgid "DSN list"
-msgstr ""
+msgstr "Elenco DSN"
 
 #: ../tools/gda-sql.c:2023
-#, fuzzy, c-format
+#, c-format
 msgid "Missing arguments"
-msgstr "Parametro mancante \"%s\""
+msgstr "Argomenti mancanti"
 
 #: ../tools/gda-sql.c:2044
-#, fuzzy, c-format
+#, c-format
 msgid "Missing provider name"
-msgstr "Nome parametro mancante"
+msgstr "Nome fornitore mancante"
 
 #: ../tools/gda-sql.c:2067
-#, fuzzy, c-format
+#, c-format
 msgid "Missing DSN name"
-msgstr "Codice SQL mancante"
+msgstr "Nome DSN mancante"
 
 #: ../tools/gda-sql.c:2107
-#, fuzzy, c-format
+#, c-format
 msgid "Provider '%s' description"
-msgstr "Descrizione della vista"
+msgstr "Descrizione del fornitore \"%s\""
 
 #: ../tools/gda-sql.c:2135
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find any provider named '%s'"
-msgstr "Impossibile trovare un oggetto di nome \"%s\""
+msgstr "Impossibile trovare un fornitore di nome \"%s\""
 
 #: ../tools/gda-sql.c:2144
-#, fuzzy
 msgid "Installed providers list"
 msgstr "Elenco dei fornitori installati"
 
@@ -5024,27 +5018,3 @@ msgstr ""
 #, c-format
 msgid "Could not save history file to '%s': %s"
 msgstr "Impossibile salvare il file della cronologia su \"%s\": %s"
-
-#~ msgid "The '%s' parameter must hold a gda type value, ignored."
-#~ msgstr ""
-#~ "Il parametro \"%s\" doveva contenere un valore di tipo gda e quindi sarà "
-#~ "ignorato."
-
-#~ msgid "Specified connection is closed"
-#~ msgstr "La connessione specificata è chiusa"
-
-#~ msgid "List configured data sources (DSN)"
-#~ msgstr "Elenca le sorgenti di dati configurate (DSN)"
-
-#~ msgid "Parameters"
-#~ msgstr "Parametri"
-
-#~ msgid "List of queries"
-#~ msgstr "Elenco interrogazioni"
-
-#~ msgid "%s [QUERY] [+]"
-#~ msgstr "%s [QUERY] [+]"
-
-#~ msgid "List all queries (or named query) in dictionary"
-#~ msgstr ""
-#~ "Elenca tutte le interrogazioni (o interrogazioni con nome) nel dizionario"
