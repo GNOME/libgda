@@ -64,7 +64,6 @@ main (int argc, char **argv)
 	gchar *export, *expected;
 	export = gda_data_model_export_to_string (rw_model, GDA_DATA_MODEL_IO_TEXT_SEPARATED,
 						  NULL, 0, NULL, 0, NULL);
-	g_file_set_contents ("toto.csv", export, -1, NULL);
 	file = g_build_filename (CHECK_FILES, "tests", "data-models", "check_virtual.csv", NULL);
 	if (!g_file_get_contents (file, &expected, NULL, NULL))
 		return EXIT_FAILURE;

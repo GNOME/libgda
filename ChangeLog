@@ -1,3 +1,5 @@
+Released 3.99.5
+
 2008-10-09  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/binreloc/Makefile.am: install gda-binreloc.h in the $prefix/libgda-4.0/libgda/
