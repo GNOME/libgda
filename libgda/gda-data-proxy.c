@@ -537,11 +537,11 @@ m_validate_row_changes (GdaDataProxy *proxy, gint row, gint proxied_row)
 }
 
 static void
-gda_data_proxy_class_init (GdaDataProxyClass *class)
+gda_data_proxy_class_init (GdaDataProxyClass *klass)
 {
-	GObjectClass   *object_class = G_OBJECT_CLASS (class);
+	GObjectClass   *object_class = G_OBJECT_CLASS (klass);
 
-	parent_class = g_type_class_peek_parent (class);
+	parent_class = g_type_class_peek_parent (klass);
 
 	/* signals */
 	gda_data_proxy_signals [ROW_DELETE_CHANGED] =
@@ -583,15 +583,16 @@ gda_data_proxy_class_init (GdaDataProxyClass *class)
 		g_signal_new ("filter-changed",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
-			      0, /* no associated a class method */
+			      G_STRUCT_OFFSET (GdaDataProxyClass, filter_changed),
                               NULL, NULL,
 			      gda_marshal_VOID__VOID, G_TYPE_NONE, 0);
 
-	class->row_delete_changed = NULL;
-	class->sample_size_changed = NULL;
-	class->sample_changed = NULL;
-	class->validate_row_changes = m_validate_row_changes;
-	class->row_changes_applied = NULL;
+	klass->row_delete_changed = NULL;
+	klass->sample_size_changed = NULL;
+	klass->sample_changed = NULL;
+	klass->validate_row_changes = m_validate_row_changes;
+	klass->row_changes_applied = NULL;
+	klass->filter_changed = NULL;
 
 	/* virtual functions */
 	object_class->dispose = gda_data_proxy_dispose;

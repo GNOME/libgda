@@ -1,3 +1,23 @@
+2008-10-09  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/binreloc/Makefile.am: install gda-binreloc.h in the $prefix/libgda-4.0/libgda/
+	directory ao applications can use it
+	* libgda/binreloc/gda-binreloc.c: correctly handle specific install dir passed to the
+	configure script (correct fix for bug #541991, comment 2)
+	* libgda/sqlite/sqlite-src/: up to version 3.6.3
+	* libgda/information_schema.xml: added some descriptions
+	* libgda/gda-attributes-manager.h: added expected types description
+	* libgda/sqlite/virtual/gda-vprovider-data-model.c: don't use a GdaDataProxy, as it can bring some
+	problems when modifying the data model (errors are not reported at the correct moment)
+	* doc/C: doc. updates
+	* tests/data-models/check_virtual.c: order the expected result to avoid test failure when
+	comparing with expected data model
+	* po/: ran 'make update-po'
+
+2008-10-09  Johannes Schmid <jhs@gnome.org>
+
+	* libgda/gda-data-proxy.[ch]: added class method for "filter-changed" signal, for bug #537105
+
 2008-10-07  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-server-operation.c: code cleanup

@@ -67,6 +67,8 @@ struct _GdaDataProxyClass
 
 	GError              *(* validate_row_changes) (GdaDataProxy *proxy, gint row, gint proxied_row);
 	void                 (* row_changes_applied)  (GdaDataProxy *proxy, gint row, gint proxied_row);
+
+	void                 (* filter_changed)       (GdaDataProxy *proxy);
 };
 
 GType             gda_data_proxy_get_type                 (void) G_GNUC_CONST;

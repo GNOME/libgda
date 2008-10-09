@@ -324,8 +324,8 @@
     <column name="gtype"/>
     <column name="character_maximum_length" type="gint" nullok="TRUE"/>
     <column name="character_octet_length" type="gint" nullok="TRUE"/>
-    <column name="numeric_precision" type="gint" nullok="TRUE"/>
-    <column name="numeric_scale" type="gint" nullok="TRUE"/>
+    <column name="numeric_precision" type="gint" nullok="TRUE" descr="If data_type identifies a numeric type, this column contains the precision of the type for this column (the number of significant digits)"/>
+    <column name="numeric_scale" type="gint" nullok="TRUE" descr="If data_type identifies an exact numeric type, this column contains the scale of the type for this column (the number of significant digits to the right of the decimal point)"/>
     <column name="datetime_precision" type="gint" nullok="TRUE"/>
     <column name="character_set_catalog" nullok="TRUE"/>
     <column name="character_set_schema" nullok="TRUE"/>

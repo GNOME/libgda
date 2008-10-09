@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda 4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-10-08 14:13+0200\n"
+"POT-Creation-Date: 2008-10-09 20:33+0200\n"
 "PO-Revision-Date: 2008-10-06 21:28+0200\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian <i18n-nb@lister.ping.uio.no>\n"
@@ -264,7 +264,7 @@ msgstr ""
 #: ../libgda/gda-data-model-dir.c:792 ../libgda/gda-data-model-dir.c:888
 #: ../libgda/gda-data-model-dir.c:930 ../libgda/gda-data-model-dsn-list.c:311
 #: ../libgda/gda-data-model-iter.c:274 ../libgda/gda-data-model-iter.c:1037
-#: ../libgda/gda-data-proxy.c:3286 ../libgda/gda-data-select.c:1184
+#: ../libgda/gda-data-proxy.c:3287 ../libgda/gda-data-select.c:1184
 #: ../libgda/gda-data-select.c:1652 ../libgda/gda-data-select.c:2517
 #: ../libgda/gda-data-select.c:2578
 #, fuzzy, c-format
@@ -329,8 +329,8 @@ msgstr "Begrensning kan ikke aktiveres!"
 #: ../libgda/gda-data-model-array.c:387 ../libgda/gda-data-model-array.c:530
 #: ../libgda/gda-data-model-array.c:610 ../libgda/gda-data-model-dir.c:802
 #: ../libgda/gda-data-model-dir.c:971 ../libgda/gda-data-model-dir.c:1318
-#: ../libgda/gda-data-model-dsn-list.c:316 ../libgda/gda-data-proxy.c:3245
-#: ../libgda/gda-data-proxy.c:3277 ../libgda/gda-data-select.c:1609
+#: ../libgda/gda-data-model-dsn-list.c:316 ../libgda/gda-data-proxy.c:3246
+#: ../libgda/gda-data-proxy.c:3278 ../libgda/gda-data-select.c:1609
 #: ../libgda/gda-data-select.c:1659
 #, fuzzy, c-format
 msgid "Row %d out of range (0-%d)"
@@ -721,21 +721,21 @@ msgstr "Kunne ikke hente datatype for parameter"
 msgid "GdaDataModel refused value change"
 msgstr ""
 
-#: ../libgda/gda-data-proxy.c:605
+#: ../libgda/gda-data-proxy.c:606
 msgid "Data model"
 msgstr "Datamodell"
 
-#: ../libgda/gda-data-proxy.c:840
+#: ../libgda/gda-data-proxy.c:841
 msgid "GdaDataProxy can't handle non random access data models"
 msgstr ""
 
-#: ../libgda/gda-data-proxy.c:1419 ../libgda/gda-data-proxy.c:3642
+#: ../libgda/gda-data-proxy.c:1420 ../libgda/gda-data-proxy.c:3643
 #, c-format
 msgid ""
 "The first row is an empty row artificially prepended and cannot be removed"
 msgstr ""
 
-#: ../libgda/gda-data-proxy.c:1929 ../libgda/gda-data-proxy.c:1965
+#: ../libgda/gda-data-proxy.c:1930 ../libgda/gda-data-proxy.c:1966
 #, c-format
 msgid ""
 "Proxied data model reports the modifications as accepted, yet did not emit "
@@ -743,33 +743,33 @@ msgid ""
 "signal. This is a bug of the %s's implementation (please report a bug)."
 msgstr ""
 
-#: ../libgda/gda-data-proxy.c:2777 ../tools/gda-sql.c:2485
+#: ../libgda/gda-data-proxy.c:2778 ../tools/gda-sql.c:2485
 #, fuzzy, c-format
 msgid "Could not create virtual connection"
 msgstr "Kunne ikke opprette fil %s"
 
-#: ../libgda/gda-data-proxy.c:2818 ../libgda/gda-data-proxy.c:2831
+#: ../libgda/gda-data-proxy.c:2819 ../libgda/gda-data-proxy.c:2832
 #, c-format
 msgid "Error in filter expression"
 msgstr ""
 
-#: ../libgda/gda-data-proxy.c:2941 ../libgda/gda-data-select.c:1405
+#: ../libgda/gda-data-proxy.c:2942 ../libgda/gda-data-select.c:1405
 #, c-format
 msgid "Incorrect filter expression"
 msgstr ""
 
-#: ../libgda/gda-data-proxy.c:3425
+#: ../libgda/gda-data-proxy.c:3426
 #, c-format
 msgid ""
 "The first row is an empty row artificially prepended and cannot be altered"
 msgstr ""
 
-#: ../libgda/gda-data-proxy.c:3520
+#: ../libgda/gda-data-proxy.c:3521
 #, c-format
 msgid "Trying to change read-only column: %d"
 msgstr ""
 
-#: ../libgda/gda-data-proxy.c:3555
+#: ../libgda/gda-data-proxy.c:3556
 #, c-format
 msgid "Value type mismatch %s instead of %s"
 msgstr ""
@@ -2057,32 +2057,32 @@ msgid ""
 "virtual method"
 msgstr ""
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:395
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:383
 #, fuzzy
 msgid "Data model must have at least one column"
 msgstr "Modellen har ikke minst en unik nøkkel som ikke er endret."
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:413
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:401
 #, fuzzy
 msgid "Could not compute virtual table's columns"
 msgstr "Kunne ikke opprette fil %s"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:436
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:424
 #, fuzzy, c-format
 msgid "Can't get data model description for column %d"
 msgstr "Kunne ikke allokere dataplassholder for kolonne %d"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:452
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:440
 #, c-format
 msgid "Can't get data model's column type or type for column %d"
 msgstr ""
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:500
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:488
 #, fuzzy, c-format
 msgid "Can't declare virtual table (%s)"
 msgstr "Tilkoblingstabeller"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:662
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:649
 msgid "Column not found"
 msgstr "Kolonne ikke funnet"
 

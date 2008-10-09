@@ -49,12 +49,12 @@ void                  gda_attributes_manager_foreach     (GdaAttributesManager *
 
 
 /* possible predefined attribute names for gda_holder_get_attribute() or gda_column_get_attribute() */
-#define GDA_ATTRIBUTE_DESCRIPTION "__gda_attr_descr"
-#define GDA_ATTRIBUTE_NAME "__gda_attr_name"
-#define GDA_ATTRIBUTE_NUMERIC_PRECISION "__gda_attr_numeric_precision"
-#define GDA_ATTRIBUTE_NUMERIC_SCALE "__gda_attr_numeric_scale"
-#define GDA_ATTRIBUTE_AUTO_INCREMENT "__gda_attr_autoinc"
-#define GDA_ATTRIBUTE_IS_DEFAULT "__gda_attr_is_default"
+#define GDA_ATTRIBUTE_DESCRIPTION "__gda_attr_descr" /* G_TYPE_STRING */
+#define GDA_ATTRIBUTE_NAME "__gda_attr_name" /* G_TYPE_STRING */
+#define GDA_ATTRIBUTE_NUMERIC_PRECISION "__gda_attr_numeric_precision" /* G_TYPE_INT */
+#define GDA_ATTRIBUTE_NUMERIC_SCALE "__gda_attr_numeric_scale" /* G_TYPE_INT */
+#define GDA_ATTRIBUTE_AUTO_INCREMENT "__gda_attr_autoinc" /* G_TYPE_BOOLEAN */
+#define GDA_ATTRIBUTE_IS_DEFAULT "__gda_attr_is_default" /* G_TYPE_BOOLEAN */
 
 G_END_DECLS
 

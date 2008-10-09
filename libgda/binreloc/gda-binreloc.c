@@ -70,7 +70,7 @@ gda_gbr_get_file_path (GdaPrefixDir where, ...)
 	va_list ap;
 	gchar **parts;
 	gint size, i;
-	const gchar *prefix_dir_name;
+	const gchar *prefix_dir_name = NULL;
 
 #ifdef G_OS_WIN32
 	wchar_t path[MAX_PATH];
@@ -79,28 +79,50 @@ gda_gbr_get_file_path (GdaPrefixDir where, ...)
 	switch (where) {
 	default:
 	case GDA_NO_DIR:
-		prefix_dir_name = NULL;
 		break;
 	case GDA_BIN_DIR:
-		prefix_dir_name = "bin";
+		if (! g_str_has_prefix (LIBGDABIN, LIBGDAPREFIX)) 
+			prefix = g_strdup (LIBGDABIN);
+		else
+			prefix_dir_name = "bin";
 		break;
 	case GDA_SBIN_DIR:
-		prefix_dir_name = "sbin";
+		if (! g_str_has_prefix (LIBGDASBIN, LIBGDAPREFIX)) 
+			prefix = g_strdup (LIBGDASBIN);
+		else
+			prefix_dir_name = "sbin";
 		break;
 	case GDA_DATA_DIR:
-		prefix_dir_name = "share";
+		if (! g_str_has_prefix (LIBGDADATA, LIBGDAPREFIX)) 
+			prefix = g_strdup (LIBGDADATA);
+		else
+			prefix_dir_name = "share";
 		break;
 	case GDA_LOCALE_DIR:
-		prefix_dir_name = "share" G_DIR_SEPARATOR_S "locale";
+		if (! g_str_has_prefix (LIBGDADATA, LIBGDAPREFIX)) {
+			prefix = g_strdup (LIBGDADATA);
+			prefix_dir_name = "locale";
+		}
+		else
+			prefix_dir_name = "share" G_DIR_SEPARATOR_S "locale";
 		break;
 	case GDA_LIB_DIR:
-		prefix_dir_name = "lib";		
+		if (! g_str_has_prefix (LIBGDALIB, LIBGDAPREFIX)) 
+			prefix = g_strdup (LIBGDALIB);
+		else
+			prefix_dir_name = "lib";		
 		break;
 	case GDA_LIBEXEC_DIR:
-		prefix_dir_name = "libexec";
+		if (! g_str_has_prefix (LIBGDALIBEXEC, LIBGDAPREFIX)) 
+			prefix = g_strdup (LIBGDALIBEXEC);
+		else
+			prefix_dir_name = "libexec";
 		break;
 	case GDA_ETC_DIR:
-		prefix_dir_name = NULL;
+		if (! g_str_has_prefix (LIBGDASYSCONF, LIBGDAPREFIX)) 
+			prefix = g_strdup (LIBGDASYSCONF);
+		else
+			prefix_dir_name = "etc";
 		break;
 	}
 
@@ -109,39 +131,40 @@ gda_gbr_get_file_path (GdaPrefixDir where, ...)
 #endif
 
 
-	/* prefix part */
+	if (!prefix) {
+		/* prefix part for each OS */
 #ifdef G_OS_WIN32
-	/* Get from location of libgda DLL */
-	GetModuleFileNameW (hdllmodule, path, MAX_PATH);
-	prefix = g_utf16_to_utf8 (path, -1, NULL, NULL, NULL);
-	if ((p = strrchr (prefix, G_DIR_SEPARATOR)) != NULL)
-		*p = '\0';
-	
-	p = strrchr (prefix, G_DIR_SEPARATOR);
-	if (p && (g_ascii_strcasecmp (p + 1, "bin") == 0 ||
-		  g_ascii_strcasecmp (p + 1, "lib") == 0))
-		*p = '\0';	
+		/* Get from location of libgda DLL */
+		GetModuleFileNameW (hdllmodule, path, MAX_PATH);
+		prefix = g_utf16_to_utf8 (path, -1, NULL, NULL, NULL);
+		if ((p = strrchr (prefix, G_DIR_SEPARATOR)) != NULL)
+			*p = '\0';
+		
+		p = strrchr (prefix, G_DIR_SEPARATOR);
+		if (p && (g_ascii_strcasecmp (p + 1, "bin") == 0 ||
+			  g_ascii_strcasecmp (p + 1, "lib") == 0))
+			*p = '\0';	
 #elif HAVE_CARBON
 #define MAXLEN 500
-	ProcessSerialNumber myProcess;
-	FSRef bundleLocation;
-	unsigned char bundlePath[MAXLEN];
-
-	if ((GetCurrentProcess (&myProcess) == noErr) &&
-	    (GetProcessBundleLocation (&myProcess, &bundleLocation) == noErr) &&
-	    (FSRefMakePath (&bundleLocation, bundlePath, MAXLEN) == noErr)) {
-		prefix = g_path_get_dirname ((const char*) bundlePath);
-		if (g_str_has_suffix (prefix, "bin"))
-			prefix [strlen (prefix) - 3] = 0;
-	}
-	else
-		g_warning ("Could not get PREFIX (using Mac OS X Carbon)");
+		ProcessSerialNumber myProcess;
+		FSRef bundleLocation;
+		unsigned char bundlePath[MAXLEN];
+		
+		if ((GetCurrentProcess (&myProcess) == noErr) &&
+		    (GetProcessBundleLocation (&myProcess, &bundleLocation) == noErr) &&
+		    (FSRefMakePath (&bundleLocation, bundlePath, MAXLEN) == noErr)) {
+			prefix = g_path_get_dirname ((const char*) bundlePath);
+			if (g_str_has_suffix (prefix, "bin"))
+				prefix [strlen (prefix) - 3] = 0;
+		}
+		else
+			g_warning ("Could not get PREFIX (using Mac OS X Carbon)");
 #else
-	if (where == GDA_ETC_DIR)
-		prefix = _gda_gbr_find_prefix (LIBGDASYSCONF);
-	else
-		prefix = _gda_gbr_find_prefix (LIBGDAPREFIX);
+		if (!prefix)
+			prefix = _gda_gbr_find_prefix (LIBGDAPREFIX);
 #endif
+	}
+
 	if (!prefix || !*prefix)
 		return NULL;
        

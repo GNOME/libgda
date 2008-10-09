@@ -21,6 +21,9 @@ Manager for lists of attributes
     <listitem><para>the associated values are expected to be #GValue values</para></listitem>
   </itemizedlist>
 </para>
+<para>
+  Attibute names can be any string, but &LIBGDA; reserves some for its own usage, see below.
+</para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
@@ -32,35 +35,42 @@ Manager for lists of attributes
 
 <!-- ##### MACRO GDA_ATTRIBUTE_NAME ##### -->
 <para>
-
+  The corresponding attribute is the name of the object it refers to (value has a G_TYPE_STRING type).
 </para>
 
 
 
 <!-- ##### MACRO GDA_ATTRIBUTE_DESCRIPTION ##### -->
 <para>
-
+  The corresponding attribute is the description of the object it refers to (value has a G_TYPE_STRING type).
 </para>
 
 
 
 <!-- ##### MACRO GDA_ATTRIBUTE_AUTO_INCREMENT ##### -->
 <para>
-
+  The corresponding attribute specifies if the object it refers to is auto incremented (value has a G_TYPE_BOOLEAN type).
 </para>
 
 
 
 <!-- ##### MACRO GDA_ATTRIBUTE_NUMERIC_PRECISION ##### -->
 <para>
-
+  The corresponding attribute is the number of significant digits of the object it refers to (value has a G_TYPE_INT type).
 </para>
 
 
 
 <!-- ##### MACRO GDA_ATTRIBUTE_NUMERIC_SCALE ##### -->
 <para>
+  The corresponding attribute is the number of significant digits to the right of the decimal point of the object it refers to (value has a G_TYPE_INT type).
+</para>
 
+
+
+<!-- ##### MACRO GDA_ATTRIBUTE_IS_DEFAULT ##### -->
+<para>
+  The corresponding attribute specifies if the object it refers to has its value to default (value has a G_TYPE_BOOLEAN type).
 </para>
 
 

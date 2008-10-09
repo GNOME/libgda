@@ -1,6 +1,6 @@
---- sqlite3.c.orig	2008-08-30 18:23:34.000000000 +0200
-+++ sqlite3.c	2008-09-19 21:52:35.000000000 +0200
-@@ -66756,6 +66756,64 @@
+--- sqlite3.c.orig	2008-09-22 12:45:12.000000000 +0200
++++ sqlite3.c	2008-10-09 17:14:46.000000000 +0200
+@@ -67125,6 +67125,60 @@
  
  #ifndef SQLITE_OMIT_SCHEMA_PRAGMAS
    /*
@@ -14,11 +14,7 @@
 +  ** spe_name:     Specific name (unique procedure name)
 +  */
 +  if( sqlite3StrICmp(zLeft, "proc_list")==0 ){
-+    Hash *func_hash;
-+    HashElem *func_elem;
-+
 +    if( sqlite3ReadSchema(pParse) ) goto pragma_out;
-+    func_hash = &(db->aFunc);
 +
 +    sqlite3VdbeSetNumCols(v, 4);
 +    pParse->nMem = 4;

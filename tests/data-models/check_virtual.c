@@ -57,13 +57,14 @@ main (int argc, char **argv)
 	
 
 	/* compute list of countries where population >= 1M */
-	if (! run_sql_non_select (cnc, "INSERT INTO results SELECT co.name, sum (ci.population) as pop FROM country co INNER JOIN city ci ON (co.code=ci.countrycode) GROUP BY co.name HAVING sum (ci.population) > 10000000;"))
+	if (! run_sql_non_select (cnc, "INSERT INTO results SELECT co.name, sum (ci.population) as pop FROM country co INNER JOIN city ci ON (co.code=ci.countrycode) GROUP BY co.name HAVING sum (ci.population) > 10000000 ORDER BY co.name DESC"))
 		g_error ("Could not run computation query");
 
 	/* save resulting data model to CSV */
 	gchar *export, *expected;
 	export = gda_data_model_export_to_string (rw_model, GDA_DATA_MODEL_IO_TEXT_SEPARATED,
 						  NULL, 0, NULL, 0, NULL);
+	g_file_set_contents ("toto.csv", export, -1, NULL);
 	file = g_build_filename (CHECK_FILES, "tests", "data-models", "check_virtual.csv", NULL);
 	if (!g_file_get_contents (file, &expected, NULL, NULL))
 		return EXIT_FAILURE;

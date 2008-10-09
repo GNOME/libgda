@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-10-04 20:34+0300\n"
+"POT-Creation-Date: 2008-10-09 20:33+0200\n"
 "PO-Revision-Date: 2008-10-08 20:30+0300\n"
 "Last-Translator: Ilkka Tuohela <hile@iki.fi>\n"
 "Language-Team: Finnish <gnome-fi-laatu@lists.sourceforge.net>\n"
@@ -57,6 +57,7 @@ msgid "Can't manage system-wide configuration"
 msgstr ""
 
 #: ../libgda/gda-config.c:851
+#, c-format
 msgid "Unknown DSN '%s'"
 msgstr "Tuntematon DSN \"%s\""
 
@@ -83,8 +84,8 @@ msgstr "Tuottaja"
 
 #: ../libgda/gda-config.c:1150 ../libgda/gda-data-model-dsn-list.c:117
 #: ../libgda/gda-data-model-dsn-list.c:118
-#: ../libgda/gda-server-provider-extra.c:371
-#: ../libgda/gda-server-provider-extra.c:394 ../tools/gda-sql.c:1969
+#: ../libgda/gda-server-provider-extra.c:375
+#: ../libgda/gda-server-provider-extra.c:398 ../tools/gda-sql.c:1969
 #: ../tools/gda-sql.c:2143
 msgid "Description"
 msgstr "Kuvaus"
@@ -262,8 +263,8 @@ msgstr "Sisäinen virhe: virheellinen tarjoajan kahva"
 #: ../libgda/gda-data-model-bdb.c:713 ../libgda/gda-data-model-bdb.c:742
 #: ../libgda/gda-data-model-dir.c:792 ../libgda/gda-data-model-dir.c:888
 #: ../libgda/gda-data-model-dir.c:930 ../libgda/gda-data-model-dsn-list.c:311
-#: ../libgda/gda-data-model-iter.c:274 ../libgda/gda-data-model-iter.c:1035
-#: ../libgda/gda-data-proxy.c:3285 ../libgda/gda-data-select.c:1184
+#: ../libgda/gda-data-model-iter.c:274 ../libgda/gda-data-model-iter.c:1037
+#: ../libgda/gda-data-proxy.c:3287 ../libgda/gda-data-select.c:1184
 #: ../libgda/gda-data-select.c:1652 ../libgda/gda-data-select.c:2517
 #: ../libgda/gda-data-select.c:2578
 #, c-format
@@ -326,8 +327,8 @@ msgstr "Saraketta ei voi muuttaa"
 #: ../libgda/gda-data-model-array.c:387 ../libgda/gda-data-model-array.c:530
 #: ../libgda/gda-data-model-array.c:610 ../libgda/gda-data-model-dir.c:802
 #: ../libgda/gda-data-model-dir.c:971 ../libgda/gda-data-model-dir.c:1318
-#: ../libgda/gda-data-model-dsn-list.c:316 ../libgda/gda-data-proxy.c:3244
-#: ../libgda/gda-data-proxy.c:3276 ../libgda/gda-data-select.c:1609
+#: ../libgda/gda-data-model-dsn-list.c:316 ../libgda/gda-data-proxy.c:3246
+#: ../libgda/gda-data-proxy.c:3278 ../libgda/gda-data-select.c:1609
 #: ../libgda/gda-data-select.c:1659
 #, c-format
 msgid "Row %d out of range (0-%d)"
@@ -485,19 +486,19 @@ msgid "Could not dump data model's attributes: %s"
 msgstr "Yhteyteen ei voitu lisätä BDB-tietomallia: %s"
 
 #: ../libgda/gda-data-model.c:1828 ../libgda/gda-data-model.c:1836
-#: ../libgda/gda-data-model-dir.c:386 ../libgda/gda-data-model-import.c:1581
-#: ../libgda/gda-data-model-import.c:1864
-#: ../libgda/gda-data-model-import.c:1937 ../libgda/gda-data-select.c:349
+#: ../libgda/gda-data-model-dir.c:386 ../libgda/gda-data-model-import.c:1574
+#: ../libgda/gda-data-model-import.c:1857
+#: ../libgda/gda-data-model-import.c:1930 ../libgda/gda-data-select.c:349
 #: ../libgda/gda-data-select.c:369 ../libgda/gda-data-select.c:433
 #: ../libgda/gda-data-select.c:1973 ../libgda/gda-data-select.c:1983
-#: ../libgda/gda-holder.c:434 ../libgda/gda-meta-store.c:520
-#: ../libgda/gda-server-operation.c:647 ../libgda/gda-set.c:473
-#: ../libgda/sqlite/gda-sqlite-provider.c:1737
-#: ../libgda/sqlite/gda-sqlite-provider.c:1752
+#: ../libgda/gda-holder.c:457 ../libgda/gda-meta-store.c:520
+#: ../libgda/gda-server-operation.c:640 ../libgda/gda-set.c:466
+#: ../libgda/sqlite/gda-sqlite-provider.c:1739
+#: ../libgda/sqlite/gda-sqlite-provider.c:1754
 #: ../providers/mdb/gda-mdb-provider.c:353
 #: ../providers/mysql/gda-mysql-util.c:137
-#: ../providers/postgres/gda-postgres-provider.c:1820
-#: ../providers/postgres/gda-postgres-provider.c:1835
+#: ../providers/postgres/gda-postgres-provider.c:1822
+#: ../providers/postgres/gda-postgres-provider.c:1837
 #: ../providers/postgres/gda-postgres-util.c:86
 #: ../providers/postgres/gda-postgres-util.c:89
 #: ../tools/gda-list-server-op.c:47 ../tools/gda-list-server-op.c:90
@@ -622,104 +623,104 @@ msgstr "Parametrin \"%s\" täytyy sisältää totuusarvo, ei huomioida."
 msgid "\"options\" property is not a GdaSet object"
 msgstr "Ominaisuus \"options\" ei ole GdaParameterList-olio"
 
-#: ../libgda/gda-data-model-import.c:836
-#, c-format
-msgid "The '%s' parameter must hold a gda type value, ignored."
-msgstr "Parametrin \"%s\" täytyy sisältää gda:n tyyppiarvo, ei huomioida."
+#: ../libgda/gda-data-model-import.c:835
+#, fuzzy, c-format
+msgid "The '%s' option must hold a GType value, ignored."
+msgstr "Parametrin \"%s\" täytyy sisältää totuusarvo, ei huomioida."
 
-#: ../libgda/gda-data-model-import.c:908
+#: ../libgda/gda-data-model-import.c:901
 #, c-format
 msgid "Character conversion at line %d, error: %s"
 msgstr "Merkkimuunnos rivillä %d, virhe: %s"
 
-#: ../libgda/gda-data-model-import.c:911
+#: ../libgda/gda-data-model-import.c:904
 #: ../providers/bdb/gda-bdb-provider.c:208
 msgid "no detail"
 msgstr "ei yksityiskohtia"
 
-#: ../libgda/gda-data-model-import.c:949
+#: ../libgda/gda-data-model-import.c:942
 #, c-format
 msgid "Could not convert string '%s' to a '%s' value"
 msgstr "Merkkijonoa \"%s\" ei voitu muuntaa tyypin \"%s\" arvoksi"
 
-#: ../libgda/gda-data-model-import.c:1005
+#: ../libgda/gda-data-model-import.c:998
 #, c-format
 msgid "Error while parsing CSV file: %s"
 msgstr "Virhe tulkittaessa CSV-tiedostoa: %s"
 
 #. error
-#: ../libgda/gda-data-model-import.c:1108
+#: ../libgda/gda-data-model-import.c:1101
 msgid "Failed to read node in XML file"
 msgstr "Solmun luku XML-tiedostosta epäonnistui"
 
-#: ../libgda/gda-data-model-import.c:1127
+#: ../libgda/gda-data-model-import.c:1120
 #, c-format
 msgid "Expected <gda_array> node in XML file, got <%s>"
 msgstr "Oletettiin merkintää <gda_array_data> XML-tiedostossa, saatiin <%s>"
 
-#: ../libgda/gda-data-model-import.c:1171
-#: ../libgda/gda-data-model-import.c:1490
+#: ../libgda/gda-data-model-import.c:1164
+#: ../libgda/gda-data-model-import.c:1483
 msgid "No \"gdatype\" attribute specified in <gda_array_field>"
 msgstr "Attribuuttia \"gdatype\" ei ole määritelty kentässä <gda_array_field>"
 
-#: ../libgda/gda-data-model-import.c:1218
+#: ../libgda/gda-data-model-import.c:1211
 msgid "Expected <gda_array_field> in <gda_array>"
 msgstr "Oletettiin <gda_array_field> kohdassa <gda_array>"
 
-#: ../libgda/gda-data-model-import.c:1252
+#: ../libgda/gda-data-model-import.c:1245
 #, c-format
 msgid "Expected <gda_array_data> in <gda_array>, got <%s>"
 msgstr "Oletettiin <gda_array_data> kohdassa <gda_array>, saatiin <%s>"
 
-#: ../libgda/gda-data-model-import.c:1254
+#: ../libgda/gda-data-model-import.c:1247
 msgid "Expected <gda_array_data> in <gda_array>"
 msgstr "Oletettiin <gda_array_data> kohdassa <gda_array>"
 
-#: ../libgda/gda-data-model-import.c:1266
+#: ../libgda/gda-data-model-import.c:1259
 msgid "Can't read the contents of the <gda_array_data> node"
 msgstr "Solmun <gda_array_data> sisältöä ei voi lukea"
 
-#: ../libgda/gda-data-model-import.c:1315
+#: ../libgda/gda-data-model-import.c:1308
 #, c-format
 msgid "Expected <gda_array_row> in <gda_array_data>, got <%s>"
 msgstr ""
 "Oletettiin merkintää <gda_array_row> kohdassa <gda_array_data>, saatiin <%s>"
 
-#: ../libgda/gda-data-model-import.c:1339
+#: ../libgda/gda-data-model-import.c:1332
 msgid "Row has too many values (which are ignored)"
 msgstr "Rivillä on liian monta arvoa (jotka ohitetaan)"
 
-#: ../libgda/gda-data-model-import.c:1386
+#: ../libgda/gda-data-model-import.c:1379
 #, c-format
 msgid "Could not convert '%s' to a value of type %s"
 msgstr "Ei voitu muuntaa \"%s\" tyypin \"%s\" arvoksi"
 
-#: ../libgda/gda-data-model-import.c:1459
+#: ../libgda/gda-data-model-import.c:1452
 #, c-format
 msgid "Expected <gda_array> node but got <%s>"
 msgstr "Oletettiin merkintää <gda_array>, saatiin <%s>"
 
-#: ../libgda/gda-data-model-import.c:1537
+#: ../libgda/gda-data-model-import.c:1530
 msgid "No <gda_array_field> specified in <gda_array>"
 msgstr "Kenttää <gda_array_field> ei ole määritelty listassa <gda_array>"
 
-#: ../libgda/gda-data-model-import.c:1715
+#: ../libgda/gda-data-model-import.c:1708
 #, fuzzy, c-format
 msgid "Data model does not support random access"
 msgstr "Malli ei tunne satunnaishakua, tietoja ei näytetä\n"
 
-#: ../libgda/gda-data-model-import.c:1771
+#: ../libgda/gda-data-model-import.c:1764
 #, c-format
 msgid "Row at line %d does not have enough values, completed with NULL values"
 msgstr "Rivillä %d ei ole tarpeeksi arvoja, täytetään NULL-arvoilla"
 
-#: ../libgda/gda-data-model-import.c:1791
+#: ../libgda/gda-data-model-import.c:1784
 #, c-format
 msgid "Row at line %d does not have enough values (which are thus ignored)"
 msgstr "Rivillä %d ei ole tarpeeksi arvoja (jotka jätetään huomioimatta)"
 
-#: ../libgda/gda-data-model-import.c:1863
-#: ../libgda/gda-data-model-import.c:1936
+#: ../libgda/gda-data-model-import.c:1856
+#: ../libgda/gda-data-model-import.c:1929
 #, fuzzy, c-format
 msgid "Could not set iterator's value: %s"
 msgstr "Parametria \"%s\" ei voi asettaa arvoon \"%s\""
@@ -729,24 +730,24 @@ msgstr "Parametria \"%s\" ei voi asettaa arvoon \"%s\""
 msgid "GdaDataModel refused value change"
 msgstr "GdaDataModel vaaditaan tälle toiminnolle"
 
-#: ../libgda/gda-data-proxy.c:604
+#: ../libgda/gda-data-proxy.c:606
 msgid "Data model"
 msgstr "Tietomalli"
 
-#: ../libgda/gda-data-proxy.c:839
+#: ../libgda/gda-data-proxy.c:841
 msgid "GdaDataProxy can't handle non random access data models"
 msgstr ""
 "GdaDataProxy ei voi käsitellä tietomalleja, joita ei voi käsitellä "
 "satunnaisessa järjestyksessä"
 
-#: ../libgda/gda-data-proxy.c:1418 ../libgda/gda-data-proxy.c:3645
+#: ../libgda/gda-data-proxy.c:1420 ../libgda/gda-data-proxy.c:3643
 #, c-format
 msgid ""
 "The first row is an empty row artificially prepended and cannot be removed"
 msgstr ""
 "Ensimmäinen rivi on tarkoituksella lisätty tyhjä rivi eikä sitä voi poistaa"
 
-#: ../libgda/gda-data-proxy.c:1928 ../libgda/gda-data-proxy.c:1964
+#: ../libgda/gda-data-proxy.c:1930 ../libgda/gda-data-proxy.c:1966
 #, c-format
 msgid ""
 "Proxied data model reports the modifications as accepted, yet did not emit "
@@ -754,33 +755,33 @@ msgid ""
 "signal. This is a bug of the %s's implementation (please report a bug)."
 msgstr ""
 
-#: ../libgda/gda-data-proxy.c:2776 ../tools/gda-sql.c:2485
+#: ../libgda/gda-data-proxy.c:2778 ../tools/gda-sql.c:2485
 #, c-format
 msgid "Could not create virtual connection"
 msgstr "Virtuaaliyhteyttä ei voitu luoda"
 
-#: ../libgda/gda-data-proxy.c:2817 ../libgda/gda-data-proxy.c:2830
+#: ../libgda/gda-data-proxy.c:2819 ../libgda/gda-data-proxy.c:2832
 #, c-format
 msgid "Error in filter expression"
 msgstr "Virhe suodatinlausekkeessa"
 
-#: ../libgda/gda-data-proxy.c:2940 ../libgda/gda-data-select.c:1405
+#: ../libgda/gda-data-proxy.c:2942 ../libgda/gda-data-select.c:1405
 #, c-format
 msgid "Incorrect filter expression"
 msgstr "Virheellinen suodatinlauseke"
 
-#: ../libgda/gda-data-proxy.c:3428
+#: ../libgda/gda-data-proxy.c:3426
 #, c-format
 msgid ""
 "The first row is an empty row artificially prepended and cannot be altered"
 msgstr ""
 
-#: ../libgda/gda-data-proxy.c:3523
+#: ../libgda/gda-data-proxy.c:3521
 #, c-format
 msgid "Trying to change read-only column: %d"
 msgstr "Yritettiin muuttaa vain luettavissa olevaa saraketta: %d"
 
-#: ../libgda/gda-data-proxy.c:3558
+#: ../libgda/gda-data-proxy.c:3556
 #, c-format
 msgid "Value type mismatch %s instead of %s"
 msgstr "Arvotyypit %s ja %s eivät täsmää"
@@ -802,6 +803,7 @@ msgid ""
 msgstr ""
 
 #: ../libgda/gda-data-select.c:944
+#, c-format
 msgid "Incorrect SQL expression"
 msgstr "Virheellinen SQL-lauseke"
 
@@ -990,36 +992,36 @@ msgstr "Virheellinen tyyppi"
 msgid "CREATE TABLE operation is not supported by the database server"
 msgstr ""
 
-#: ../libgda/gda-holder.c:433 ../libgda/gda-set.c:472
+#: ../libgda/gda-holder.c:456 ../libgda/gda-set.c:465
 #, fuzzy, c-format
 msgid "Unable to set holder's value: %s"
 msgstr "Virheellinen parametri \"%s\" (arvo: %s)"
 
-#: ../libgda/gda-holder.c:525
+#: ../libgda/gda-holder.c:548
 msgid "The 'g-type' property cannot be changed"
 msgstr ""
 
-#: ../libgda/gda-holder.c:793
+#: ../libgda/gda-holder.c:816
 #, fuzzy, c-format
 msgid "Unable to convert string to '%s' type"
 msgstr "Merkkijonoa \"%s\" ei voitu muuntaa tyypin \"%s\" arvoksi"
 
-#: ../libgda/gda-holder.c:855
+#: ../libgda/gda-holder.c:878
 msgid ""
 "Can't use this method to set value because there is already a static value"
 msgstr ""
 
-#: ../libgda/gda-holder.c:874 ../libgda/gda-holder.c:995
+#: ../libgda/gda-holder.c:897 ../libgda/gda-holder.c:1022
 #, fuzzy, c-format
 msgid "Holder does not allow NULL values"
 msgstr "Malli ei salli rivin poistoa"
 
-#: ../libgda/gda-holder.c:880 ../libgda/gda-holder.c:1001
+#: ../libgda/gda-holder.c:903 ../libgda/gda-holder.c:1028
 #, c-format
 msgid "Wrong value type: expected type '%s' when value's type is '%s'"
 msgstr ""
 
-#: ../libgda/gda-holder.c:1443
+#: ../libgda/gda-holder.c:1484
 #, c-format
 msgid "Cannot bind holders if their type is not the same"
 msgstr ""
@@ -1334,12 +1336,12 @@ msgstr "Virheellinen kentän nimi \"%s\""
 msgid "Missing foreign key's column name for table '%s'"
 msgstr "Vaadittu arvo kohteelle \"%s\" puuttuu"
 
-#: ../libgda/gda-server-operation.c:576
+#: ../libgda/gda-server-operation.c:569
 #, c-format
 msgid "GdaServerOperation: could not find file '%s'"
 msgstr "GdaSererOperation: tiedostoa \"%s\" ei löydy"
 
-#: ../libgda/gda-server-operation.c:609
+#: ../libgda/gda-server-operation.c:602
 #, c-format
 msgid ""
 "GdaServerOperation: file '%s' does not conform to DTD:\n"
@@ -1348,34 +1350,34 @@ msgstr ""
 "GdaServerOperation: tiedosto \"%s\" ei vastaa DTD-määrittelyä:\n"
 "%s"
 
-#: ../libgda/gda-server-operation.c:615
+#: ../libgda/gda-server-operation.c:608
 #, c-format
 msgid "GdaServerOperation: file '%s' does not conform to DTD"
 msgstr "GdaServerOperation: tiedosto \"%s\" ei vastaa DTD:tä"
 
-#: ../libgda/gda-server-operation.c:631
+#: ../libgda/gda-server-operation.c:624
 #, c-format
 msgid "GdaServerOperation: could not load file '%s'"
 msgstr "GdaServerOperation: tiedostoa \"%s\" ei voi ladata"
 
-#: ../libgda/gda-server-operation.c:646
+#: ../libgda/gda-server-operation.c:639
 #, fuzzy, c-format
 msgid "Could not load XML specifications: %s"
 msgstr "Tiedostoa %s ei voi avata"
 
-#: ../libgda/gda-server-operation.c:1149
+#: ../libgda/gda-server-operation.c:1142
 #, fuzzy
 msgid ""
 "Non handled GdaServerOperationType, please report error to http://bugzilla."
 "gnome.org/ for the \"libgda\" product"
 msgstr "Käsittelemätön GdaServerOperationType, ole hyvä ja tee vikailmoitus"
 
-#: ../libgda/gda-server-operation.c:1333 ../libgda/gda-server-operation.c:1347
+#: ../libgda/gda-server-operation.c:1323 ../libgda/gda-server-operation.c:1337
 #, fuzzy, c-format
 msgid "Expected tag <%s>, got <%s>"
 msgstr "Oletettiin merkintää <op_data>, saatiin <%s>"
 
-#: ../libgda/gda-server-operation.c:1378 ../libgda/gda-server-operation.c:1997
+#: ../libgda/gda-server-operation.c:1368 ../libgda/gda-server-operation.c:1981
 #, c-format
 msgid ""
 "Parameterlist values can only be set for individual parameters within it"
@@ -1383,12 +1385,12 @@ msgstr ""
 "Parameterlist-arvoja voidaan asettaa vain sen sisällä oleville itsenäisille "
 "arvoille"
 
-#: ../libgda/gda-server-operation.c:1435
+#: ../libgda/gda-server-operation.c:1425
 #, c-format
 msgid "Missing attribute named 'path'"
 msgstr "Puuttuva attribuutti \"path\""
 
-#: ../libgda/gda-server-operation.c:2126
+#: ../libgda/gda-server-operation.c:2110
 #, c-format
 msgid "Missing required value for '%s'"
 msgstr "Vaadittu arvo kohteelle \"%s\" puuttuu"
@@ -1415,59 +1417,59 @@ msgstr ""
 "toteuta virtuaalimetodia unescape_string(). Tee vikaraportti, ole hyvä."
 
 #. To translators: "Aggregate": the noun
-#: ../libgda/gda-server-provider-extra.c:306
+#: ../libgda/gda-server-provider-extra.c:310
 msgid "Aggregate"
 msgstr "Kooste"
 
-#: ../libgda/gda-server-provider-extra.c:307
-#: ../libgda/gda-server-provider-extra.c:351
+#: ../libgda/gda-server-provider-extra.c:311
+#: ../libgda/gda-server-provider-extra.c:355
 msgid "Id"
 msgstr "Tunniste"
 
-#: ../libgda/gda-server-provider-extra.c:308
-#: ../libgda/gda-server-provider-extra.c:352
-#: ../libgda/gda-server-provider-extra.c:363
-#: ../libgda/gda-server-provider-extra.c:370
-#: ../libgda/gda-server-provider-extra.c:381
-#: ../libgda/gda-server-provider-extra.c:393
+#: ../libgda/gda-server-provider-extra.c:312
+#: ../libgda/gda-server-provider-extra.c:356
+#: ../libgda/gda-server-provider-extra.c:367
+#: ../libgda/gda-server-provider-extra.c:374
+#: ../libgda/gda-server-provider-extra.c:385
+#: ../libgda/gda-server-provider-extra.c:397
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:56
 #: ../tools/command-exec.c:750
 msgid "Owner"
 msgstr "Omistaja"
 
-#: ../libgda/gda-server-provider-extra.c:309
-#: ../libgda/gda-server-provider-extra.c:353
-#: ../libgda/gda-server-provider-extra.c:364
-#: ../libgda/gda-server-provider-extra.c:382
+#: ../libgda/gda-server-provider-extra.c:313
+#: ../libgda/gda-server-provider-extra.c:357
+#: ../libgda/gda-server-provider-extra.c:368
+#: ../libgda/gda-server-provider-extra.c:386
 msgid "Comments"
 msgstr "Kommentit"
 
-#: ../libgda/gda-server-provider-extra.c:310
+#: ../libgda/gda-server-provider-extra.c:314
 msgid "OutType"
 msgstr "UlosTyyppi"
 
-#: ../libgda/gda-server-provider-extra.c:311
+#: ../libgda/gda-server-provider-extra.c:315
 msgid "InType"
 msgstr "SisäänTyyppi"
 
-#: ../libgda/gda-server-provider-extra.c:312
-#: ../libgda/gda-server-provider-extra.c:358
-#: ../libgda/gda-server-provider-extra.c:365
-#: ../libgda/gda-server-provider-extra.c:372
-#: ../libgda/gda-server-provider-extra.c:395
-#: ../libgda/gda-server-provider-extra.c:402
+#: ../libgda/gda-server-provider-extra.c:316
+#: ../libgda/gda-server-provider-extra.c:362
+#: ../libgda/gda-server-provider-extra.c:369
+#: ../libgda/gda-server-provider-extra.c:376
+#: ../libgda/gda-server-provider-extra.c:399
+#: ../libgda/gda-server-provider-extra.c:406
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:2
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_create_view.xml.in.h:2
 msgid "Definition"
 msgstr "Määritelmä"
 
-#: ../libgda/gda-server-provider-extra.c:316
+#: ../libgda/gda-server-provider-extra.c:320
 msgid "Database"
 msgstr "Tietokanta"
 
 #. list of fields
-#: ../libgda/gda-server-provider-extra.c:320
+#: ../libgda/gda-server-provider-extra.c:324
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:13
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:75
 #: ../providers/mysql/mysql_specs_drop_column.xml.in.h:2
@@ -1480,7 +1482,7 @@ msgid "Field name"
 msgstr "Kentän nimi"
 
 #. list of fields
-#: ../libgda/gda-server-provider-extra.c:321
+#: ../libgda/gda-server-provider-extra.c:325
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:10
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:53
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:4
@@ -1491,7 +1493,7 @@ msgid "Data type"
 msgstr "Tietotyyppi"
 
 #. list of fields
-#: ../libgda/gda-server-provider-extra.c:322
+#: ../libgda/gda-server-provider-extra.c:326
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:17
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:167
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:13
@@ -1502,7 +1504,7 @@ msgid "Size"
 msgstr "Koko"
 
 #. list of fields
-#: ../libgda/gda-server-provider-extra.c:323
+#: ../libgda/gda-server-provider-extra.c:327
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:16
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:161
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:12
@@ -1512,19 +1514,19 @@ msgstr "Koko"
 msgid "Scale"
 msgstr "Asteikko"
 
-#: ../libgda/gda-server-provider-extra.c:324
+#: ../libgda/gda-server-provider-extra.c:328
 msgid "Not null?"
 msgstr "Ei tyhjä?"
 
-#: ../libgda/gda-server-provider-extra.c:325
+#: ../libgda/gda-server-provider-extra.c:329
 msgid "Primary key?"
 msgstr "Pääavain?"
 
-#: ../libgda/gda-server-provider-extra.c:326
+#: ../libgda/gda-server-provider-extra.c:330
 msgid "Unique index?"
 msgstr "Uniikkihakemisto?"
 
-#: ../libgda/gda-server-provider-extra.c:327
+#: ../libgda/gda-server-provider-extra.c:331
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:5
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:4
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:4
@@ -1534,7 +1536,7 @@ msgid "References"
 msgstr "Viittaukset"
 
 #. list of fields
-#: ../libgda/gda-server-provider-extra.c:328
+#: ../libgda/gda-server-provider-extra.c:332
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:12
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:57
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:6
@@ -1543,27 +1545,27 @@ msgstr "Viittaukset"
 msgid "Default value"
 msgstr "Oletusarvo"
 
-#: ../libgda/gda-server-provider-extra.c:329
+#: ../libgda/gda-server-provider-extra.c:333
 msgid "Extra attributes"
 msgstr "Lisäattribuutit"
 
-#: ../libgda/gda-server-provider-extra.c:333
+#: ../libgda/gda-server-provider-extra.c:337
 #: ../providers/mysql/mysql_specs_drop_index.xml.in.h:1
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:3
 msgid "Index"
 msgstr "Hakemisto"
 
-#: ../libgda/gda-server-provider-extra.c:337
+#: ../libgda/gda-server-provider-extra.c:341
 msgid "Language"
 msgstr "Kieli"
 
-#: ../libgda/gda-server-provider-extra.c:341
+#: ../libgda/gda-server-provider-extra.c:345
 msgid "Namespace"
 msgstr "Nimiavaruus"
 
-#: ../libgda/gda-server-provider-extra.c:345
-#: ../libgda/gda-server-provider-extra.c:369
+#: ../libgda/gda-server-provider-extra.c:349
+#: ../libgda/gda-server-provider-extra.c:373
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:18
 #: ../providers/mysql/mysql_specs_drop_column.xml.in.h:3
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:7
@@ -1578,60 +1580,60 @@ msgstr "Nimiavaruus"
 msgid "Table"
 msgstr "Taulu"
 
-#: ../libgda/gda-server-provider-extra.c:346
-#: ../libgda/gda-server-provider-extra.c:362
+#: ../libgda/gda-server-provider-extra.c:350
+#: ../libgda/gda-server-provider-extra.c:366
 msgid "Sequence"
 msgstr "Sekvenssi"
 
-#: ../libgda/gda-server-provider-extra.c:350
+#: ../libgda/gda-server-provider-extra.c:354
 msgid "Procedure"
 msgstr "Toimintosarja"
 
-#: ../libgda/gda-server-provider-extra.c:354
+#: ../libgda/gda-server-provider-extra.c:358
 msgid "Return type"
 msgstr "Paluutyyppi"
 
 #. To translators: "Nb args": the procedure's number of arguments
-#: ../libgda/gda-server-provider-extra.c:356
+#: ../libgda/gda-server-provider-extra.c:360
 msgid "Nb args"
 msgstr "Arg-määrä"
 
-#: ../libgda/gda-server-provider-extra.c:357
+#: ../libgda/gda-server-provider-extra.c:361
 msgid "Args types"
 msgstr "Arg-tyypit"
 
-#: ../libgda/gda-server-provider-extra.c:376
+#: ../libgda/gda-server-provider-extra.c:380
 msgid "Trigger"
 msgstr "Liipaisin"
 
-#: ../libgda/gda-server-provider-extra.c:380
-#: ../libgda/gda-server-provider-extra.c:400
+#: ../libgda/gda-server-provider-extra.c:384
+#: ../libgda/gda-server-provider-extra.c:404
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:17
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:17
 #: ../tools/command-exec.c:749 ../tools/command-exec.c:823
 msgid "Type"
 msgstr "Tyyppi"
 
-#: ../libgda/gda-server-provider-extra.c:383
+#: ../libgda/gda-server-provider-extra.c:387
 msgid "GDA type"
 msgstr "GDA-tyyppi"
 
-#: ../libgda/gda-server-provider-extra.c:384
+#: ../libgda/gda-server-provider-extra.c:388
 msgid "Synonyms"
 msgstr "Synonyymit"
 
-#: ../libgda/gda-server-provider-extra.c:388
+#: ../libgda/gda-server-provider-extra.c:392
 msgid "User"
 msgstr "Käyttäjä"
 
-#: ../libgda/gda-server-provider-extra.c:392
+#: ../libgda/gda-server-provider-extra.c:396
 #: ../providers/mysql/mysql_specs_drop_view.xml.in.h:3
 #: ../providers/postgres/postgres_specs_drop_view.xml.in.h:6
 #: ../providers/sqlite/sqlite_specs_drop_view.xml.in.h:3
 msgid "View"
 msgstr "Näkymä"
 
-#: ../libgda/gda-server-provider-extra.c:399
+#: ../libgda/gda-server-provider-extra.c:403
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:11
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:134
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:3
@@ -1646,65 +1648,65 @@ msgid "Name"
 msgstr "Nimi"
 
 #. foreign key spec
-#: ../libgda/gda-server-provider-extra.c:401
+#: ../libgda/gda-server-provider-extra.c:405
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:77
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:25
 msgid "Fields"
 msgstr "Kentät"
 
-#: ../libgda/gda-server-provider-extra.c:403
+#: ../libgda/gda-server-provider-extra.c:407
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:55
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:33
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:6
 msgid "Options"
 msgstr "Valinnat"
 
-#: ../libgda/gda-server-provider-extra.c:519
+#: ../libgda/gda-server-provider-extra.c:523
 #, c-format
 msgid "Data model for schema has a wrong number of columns"
 msgstr "Skeeman tietomallissa on väärä määrä sarakkeita"
 
-#: ../libgda/gda-server-provider-extra.c:531
+#: ../libgda/gda-server-provider-extra.c:535
 #, c-format
 msgid "Data model for schema has a wrong column title: '%s' instead of '%s'"
 msgstr ""
 "Skeeman tietomallissa on väärä sarakkeen otsikko: \"%s\" \"%s\" sijasta"
 
-#: ../libgda/gda-server-provider-extra.c:538
+#: ../libgda/gda-server-provider-extra.c:542
 #, c-format
 msgid "Data model for schema has a wrong column name: '%s' instead of '%s'"
 msgstr "Skeeman tietomallissa on väärä sarakkeen nimi: \"%s\" \"%s\" sijasta"
 
-#: ../libgda/gda-server-provider-extra.c:545
+#: ../libgda/gda-server-provider-extra.c:549
 #, c-format
 msgid "Data model for schema has a wrong gda type: %s instead of %s"
 msgstr "Skeeman tietomallissa on väärä gda-tyyppi: \"%s\" \"%s\" sijasta"
 
-#: ../libgda/gda-set.c:464 ../libgda/gda-set.c:563
+#: ../libgda/gda-set.c:457 ../libgda/gda-set.c:558
 #, fuzzy, c-format
 msgid "%s() does not handle values of type '%s'."
 msgstr "Tietotyypille \"%s\" ei löydy käsittelijää"
 
-#: ../libgda/gda-set.c:519
+#: ../libgda/gda-set.c:512
 #, c-format
 msgid "GdaHolder with ID '%s' not found in set"
 msgstr ""
 
-#: ../libgda/gda-set.c:697
+#: ../libgda/gda-set.c:692
 #, c-format
 msgid "Spec's root node != 'data-set-spec': '%s'"
 msgstr "Määrittelyn juurisolmu != \"data-set-spec\": %s"
 
-#: ../libgda/gda-set.c:736
+#: ../libgda/gda-set.c:731
 #, c-format
 msgid "Missing node <parameters>: '%s'"
 msgstr "Puuttuva solmu <parameters>: \"%s\""
 
-#: ../libgda/gda-set.c:1348
+#: ../libgda/gda-set.c:1268
 msgid "GdaHolder needs to have an ID"
 msgstr ""
 
-#: ../libgda/gda-set.c:1449
+#: ../libgda/gda-set.c:1369
 #, c-format
 msgid "One or more values are invalid"
 msgstr ""
@@ -1739,9 +1741,9 @@ msgstr ""
 msgid "Missing parameter '%s'"
 msgstr "Parametreja puuttuu kohteelta \"%s\""
 
-#: ../libgda/gda-statement.c:1174 ../libgda/sqlite/gda-sqlite-provider.c:1990
-#: ../providers/mysql/gda-mysql-provider.c:1413
-#: ../providers/postgres/gda-postgres-provider.c:2074
+#: ../libgda/gda-statement.c:1174 ../libgda/sqlite/gda-sqlite-provider.c:1992
+#: ../providers/mysql/gda-mysql-provider.c:1414
+#: ../providers/postgres/gda-postgres-provider.c:2076
 #, fuzzy, c-format
 msgid "Parameter '%s' is invalid"
 msgstr "Yhteys on suljettu"
@@ -1761,37 +1763,37 @@ msgstr "Kysely %s ei ole valintakysely"
 msgid "Could not find target the join is for"
 msgstr "Riviä ei voi noutaa"
 
-#: ../libgda/gda-util.c:467
+#: ../libgda/gda-util.c:465
 #, c-format
 msgid "Field number %d not found in source named '%s'"
 msgstr "Kentän numeroa %d ei löydy lähteestä nimeltä \"%s\""
 
-#: ../libgda/gda-util.c:637
+#: ../libgda/gda-util.c:649
 #, c-format
 msgid "SELECT statement has no FROM part"
 msgstr ""
 
-#: ../libgda/gda-util.c:642 ../libgda/gda-util.c:649
+#: ../libgda/gda-util.c:654 ../libgda/gda-util.c:661
 #, c-format
 msgid "SELECT statement involves more than one table or expression"
 msgstr ""
 
-#: ../libgda/gda-util.c:659
+#: ../libgda/gda-util.c:671
 #, c-format
 msgid "Can only build modification statement for tables"
 msgstr ""
 
-#: ../libgda/gda-util.c:678 ../libgda/gda-util.c:686
+#: ../libgda/gda-util.c:690 ../libgda/gda-util.c:698
 #, fuzzy, c-format
 msgid "Table does not have any primary key"
 msgstr "Muokattavassa kohdetaulussa ei ole määritelty pääavainta"
 
-#: ../libgda/gda-util.c:712
+#: ../libgda/gda-util.c:724
 #, c-format
 msgid "Table's primary key is not selected"
 msgstr ""
 
-#: ../libgda/gda-util.c:904
+#: ../libgda/gda-util.c:916
 #, fuzzy, c-format
 msgid "Could not compute any field to insert into"
 msgstr "Tiedostoa %s ei voi avata"
@@ -1840,7 +1842,7 @@ msgstr "Totuusarvojen käsittelijä"
 msgid "Boolean representation"
 msgstr "Totuusarvojen esitys"
 
-#: ../libgda/handlers/gda-handler-numerical.c:138
+#: ../libgda/handlers/gda-handler-numerical.c:140
 msgid "Numerical representation"
 msgstr "Numeroiden esitys"
 
@@ -1953,69 +1955,69 @@ msgstr "INSERT-lausekkeen kohdekokonaisuudet puuttuvat"
 msgid "Transactions are not supported in read-only mode"
 msgstr "Pelkkä luku -tilassa ei tueta transaktioita"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1642
-#: ../providers/postgres/gda-postgres-provider.c:1681
+#: ../libgda/sqlite/gda-sqlite-provider.c:1644
+#: ../providers/postgres/gda-postgres-provider.c:1683
 #, fuzzy, c-format
 msgid "Unnamed parameter is not allowed in prepared statements"
 msgstr "Kysely %s ei ole valintakysely"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1736
-#: ../providers/postgres/gda-postgres-provider.c:1819
+#: ../libgda/sqlite/gda-sqlite-provider.c:1738
+#: ../providers/postgres/gda-postgres-provider.c:1821
 #, c-format
 msgid "Can't build SELECT statement to get last inserted row: %s)"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1751
-#: ../providers/postgres/gda-postgres-provider.c:1834
+#: ../libgda/sqlite/gda-sqlite-provider.c:1753
+#: ../providers/postgres/gda-postgres-provider.c:1836
 #, c-format
 msgid "Can't execute SELECT statement to get last inserted row: %s"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1764
-#: ../providers/postgres/gda-postgres-provider.c:1847
+#: ../libgda/sqlite/gda-sqlite-provider.c:1766
+#: ../providers/postgres/gda-postgres-provider.c:1849
 msgid "SELECT statement to get last inserted row did not return any row"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1768
-#: ../providers/postgres/gda-postgres-provider.c:1851
+#: ../libgda/sqlite/gda-sqlite-provider.c:1770
+#: ../providers/postgres/gda-postgres-provider.c:1853
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1832
-#: ../providers/mysql/gda-mysql-provider.c:1309
-#: ../providers/postgres/gda-postgres-provider.c:1926
+#: ../libgda/sqlite/gda-sqlite-provider.c:1834
+#: ../providers/mysql/gda-mysql-provider.c:1310
+#: ../providers/postgres/gda-postgres-provider.c:1928
 #, fuzzy, c-format
 msgid "Provider does not support asynchronous statement execution"
 msgstr "Tarjoaja ei tue menetelmää '%s()'"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1913
+#: ../libgda/sqlite/gda-sqlite-provider.c:1915
 msgid "Empty statement"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1953
-#: ../libgda/sqlite/gda-sqlite-provider.c:1956
-#: ../providers/mysql/gda-mysql-provider.c:1375
-#: ../providers/mysql/gda-mysql-provider.c:1378
-#: ../providers/postgres/gda-postgres-provider.c:2038
-#: ../providers/postgres/gda-postgres-provider.c:2041
+#: ../libgda/sqlite/gda-sqlite-provider.c:1955
+#: ../libgda/sqlite/gda-sqlite-provider.c:1958
+#: ../providers/mysql/gda-mysql-provider.c:1376
+#: ../providers/mysql/gda-mysql-provider.c:1379
+#: ../providers/postgres/gda-postgres-provider.c:2040
+#: ../providers/postgres/gda-postgres-provider.c:2043
 #, c-format
 msgid "Missing parameter(s) to execute query"
 msgstr "Suoritettavasta kyselystä puuttuu parametreja"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1971
-#: ../providers/mysql/gda-mysql-provider.c:1394
-#: ../providers/postgres/gda-postgres-provider.c:2056
+#: ../libgda/sqlite/gda-sqlite-provider.c:1973
+#: ../providers/mysql/gda-mysql-provider.c:1395
+#: ../providers/postgres/gda-postgres-provider.c:2058
 #, c-format
 msgid "Missing parameter '%s' to execute query"
 msgstr "Suoritettavasta kyselystä puuttuu parametri \"%s\""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2082
+#: ../libgda/sqlite/gda-sqlite-provider.c:2084
 #, c-format
 msgid "Non handled data type '%s'"
 msgstr "Ei käsitelty tietotyyppi \"%s\""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2216
+#: ../libgda/sqlite/gda-sqlite-provider.c:2218
 msgid "Function requires one argument"
 msgstr "Funktio vaatii yhden argumentin"
 
@@ -2027,19 +2029,19 @@ msgid "Column %d out of range (0-%d), ignoring its specified type"
 msgstr "Sarake %d on alueen 0 - %d ulkopuolella"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:368
-#: ../providers/postgres/gda-postgres-recordset.c:642
+#: ../providers/postgres/gda-postgres-recordset.c:616
 #, c-format
 msgid "Invalid date '%s' (date format should be YYYY-MM-DD)"
 msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:382
-#: ../providers/postgres/gda-postgres-recordset.c:662
+#: ../providers/postgres/gda-postgres-recordset.c:623
 #, c-format
 msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms])"
 msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:396
-#: ../providers/postgres/gda-postgres-recordset.c:654
+#: ../providers/postgres/gda-postgres-recordset.c:661
 #, c-format
 msgid "Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"
 msgstr ""
@@ -2081,31 +2083,31 @@ msgid ""
 "virtual method"
 msgstr ""
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:395
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:383
 msgid "Data model must have at least one column"
 msgstr "Tietomallissa täytyy olla ainakin yksi sarake"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:413
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:401
 #, fuzzy
 msgid "Could not compute virtual table's columns"
 msgstr "Virtuaalitaulua %s ei voi lisätä: %s"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:436
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:424
 #, c-format
 msgid "Can't get data model description for column %d"
 msgstr "Tietomallin kuvausta sarakkeelle %d ei löydy"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:452
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:440
 #, c-format
 msgid "Can't get data model's column type or type for column %d"
 msgstr "Tietomallin saraketyyppin tai sarakkeen %d tyyppiä ei voitu selvittää"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:500
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:488
 #, c-format
 msgid "Can't declare virtual table (%s)"
 msgstr "Virtuaalista taulua ei voi määritellä (%s)"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:662
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:649
 msgid "Column not found"
 msgstr "Saraketta ei löydy"
 
@@ -2617,12 +2619,12 @@ msgstr ""
 msgid "The connection string must contain the DB_NAME values"
 msgstr "Yhteysmerkkijonon täytyy sisältää arvo DB_NAME"
 
-#: ../providers/mysql/gda-mysql-provider.c:1212
+#: ../providers/mysql/gda-mysql-provider.c:1213
 #, fuzzy, c-format
 msgid "Unnamed statement parameter is not allowed in prepared statement."
 msgstr "Kysely %s ei ole valintakysely"
 
-#: ../providers/mysql/gda-mysql-provider.c:1492
+#: ../providers/mysql/gda-mysql-provider.c:1493
 msgid ""
 "Could not use CURSOR. Mysql version 5.0 at least is required. Using random "
 "access anyway."
@@ -3740,15 +3742,15 @@ msgstr "Transaktioita ei tueta toistokelpoinen luku -eristystasolla"
 msgid "Wrong savepoint name '%s'"
 msgstr ""
 
-#: ../providers/postgres/gda-postgres-provider.c:2102
 #: ../providers/postgres/gda-postgres-provider.c:2104
+#: ../providers/postgres/gda-postgres-provider.c:2106
 #, fuzzy, c-format
 msgid "Cannot start transaction"
 msgstr "Oracle-transaktiota ei voi käynnistää"
 
-#: ../providers/postgres/gda-postgres-provider.c:2282
-#: ../providers/postgres/gda-postgres-provider.c:2318
-#: ../providers/postgres/gda-postgres-provider.c:2353
+#: ../providers/postgres/gda-postgres-provider.c:2284
+#: ../providers/postgres/gda-postgres-provider.c:2320
+#: ../providers/postgres/gda-postgres-provider.c:2355
 #, fuzzy, c-format
 msgid "Could not set the XA transaction ID parameter"
 msgstr "Oracle-transaktionimeä ei voi asettaa"
@@ -4770,10 +4772,12 @@ msgid "Missing arguments"
 msgstr "Parametreja puuttuu"
 
 #: ../tools/gda-sql.c:2044
+#, c-format
 msgid "Missing provider name"
 msgstr "Tarjoajan nimi puuttuu"
 
 #: ../tools/gda-sql.c:2067
+#, c-format
 msgid "Missing DSN name"
 msgstr "DSN:n nimi puuttuu"
 
@@ -4934,3 +4938,5 @@ msgstr ""
 msgid "Could not save history file to '%s': %s"
 msgstr "Historiatiedostoa \"%s\" ei voi tallentaa: %s"
 
+#~ msgid "The '%s' parameter must hold a gda type value, ignored."
+#~ msgstr "Parametrin \"%s\" täytyy sisältää gda:n tyyppiarvo, ei huomioida."
