@@ -1,3 +1,21 @@
+2008-10-10  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/handlers/gda-handler-type.c: use g_value_[sg]et_gtype() instead of
+	g_value_[sg]et_ulong()
+	* providers/postgres/gda-postgres-recordset.c: correclty handle the G_TYPE_GTYPE
+	values as the string representation must be converted to a GType (the type
+	is not stored as a string representation of its numerical value)
+	* libgda/gda-statement.[ch]: removed gda_statement_deserialize() as it's not
+	implemented
+	* libgda/gda-value.h: added a reserved pointer to GdaNumeric be able to maniuplate
+	GdaNumeric structures using the GMP library
+	* libgda/gda-data-model.c:
+	* libgda/gda-data-model-extra.h: made gda_data_model_signal_emit_changed()
+	static as it's not used outside
+	* configure.in:
+	  - really only export the needed symbols, 
+	  - proposed fixed for MinGW building on Windows
+
 2008-10-09  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in: set version to 3.99.6

@@ -900,7 +900,6 @@ gda_handler_bin_get_type
 <FILE>gda-handler-type</FILE>
 <TITLE>GdaHandlerType</TITLE>
 GdaHandlerType
-GdaHandlerType
 GdaHandlerTypeClass
 GdaHandlerTypePriv
 gda_handler_type_new
@@ -1085,7 +1084,6 @@ GdaStatementError
 gda_statement_new
 gda_statement_copy
 gda_statement_serialize
-gda_statement_deserialize
 gda_statement_get_parameters
 gda_statement_to_sql
 gda_statement_to_sql_extended

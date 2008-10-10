@@ -449,24 +449,6 @@ gda_statement_serialize (GdaStatement *stmt)
 	return str;
 }
 
-/**
- * gda_statement_deserialize
- * @str: a string containing a serialized version of a #GdaStatement
- * @error: a place to store errors, or %NULL
- *
- * Creates a new #GdaStatement from a string
- *
- * Returns: a new #GdaStatement object, or %NULL if an error occurred
- */
-GdaStatement *
-gda_statement_deserialize (const gchar *str, GError **error)
-{
-	g_return_val_if_fail (str || *str, NULL);
-	TO_IMPLEMENT;
-
-	return NULL;
-}
-
 static gboolean
 get_params_foreach_func (GdaSqlAnyPart *node, GdaSet **params, GError **error)
 {

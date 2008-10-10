@@ -136,7 +136,7 @@ dnl Check for Win32
 dnl ******************************
 dnl linklibext is the shared link library extension, which varies by platform
 
-EXPORT_SYM_REGEX='-export-symbols-regex "^[[^(_|sqlite3|pcache|csv|MD5)]].*"'
+EXPORT_SYM_REGEX='-export-symbols-regex "^(gda_|fnYM49765777344607__gda).*"'
 AC_MSG_CHECKING([for platform])
 platform_win32=no
 platform_carbon=no
@@ -158,6 +158,7 @@ case "$host" in
     SOPREFIX='lib'
     LIBTOOL_EXPORT_OPTIONS=
     linklibext=".dll.a"
+    AC_CHECK_TOOL(WINDRES, windres, windres)
     AC_SUBST(WINDRES)
     ;;
 *-*-darwin*)
@@ -1119,7 +1120,11 @@ dnl **************************
 dnl Check for readline/history
 dnl **************************
 if test x"$platform_win32" = "xyes"; then
-	AC_CHECK_LIB(readline, readline, READLINE_LIB='-lreadline', [])
+	if test $cross_compiling = yes; then
+  		AC_CHECK_LIB(readline, readline, READLINE_LIB='-lreadline', [])
+	else
+  		AC_CHECK_LIB(readline, readline, READLINE_LIB='-lreadline -lcurses', [], -lcurses)
+	fi
 else
 	AC_CHECK_LIB(readline, readline, READLINE_LIB='-lreadline -lcurses', [], -lcurses)
 fi

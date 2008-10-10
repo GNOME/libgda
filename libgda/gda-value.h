@@ -67,28 +67,29 @@ typedef struct {
 } GdaGeometricPoint;
 
 typedef struct {
-	gchar *number;
-	glong precision;
-	glong width;
+	gchar   *number;
+	glong    precision;
+	glong    width;
+	gpointer reserved; /* reserved for future usage with GMP (http://gmplib.org/) */
 } GdaNumeric;
 
 typedef struct {
 	gushort hour;
 	gushort minute;
 	gushort second;
-	gulong fraction;
-	glong timezone;	/* # of seconds to the east UTC */
+	gulong  fraction;
+	glong   timezone;	/* # of seconds to the east UTC */
 } GdaTime;
 
 typedef struct {
-	gshort year;
+	gshort  year;
 	gushort month;
 	gushort day;
 	gushort hour;
 	gushort minute;
 	gushort second;
-	gulong fraction;
-	glong timezone;	/* # of seconds to the east UTC */
+	gulong  fraction;
+	glong   timezone;	/* # of seconds to the east UTC */
 } GdaTimestamp;
 
 typedef struct {

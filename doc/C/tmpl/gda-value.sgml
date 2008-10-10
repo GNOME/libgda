@@ -419,6 +419,7 @@ Assorted functions for dealing with #GValue values.
 @number: 
 @precision: 
 @width: 
+@reserved: 
 
 <!-- ##### FUNCTION gda_numeric_copy ##### -->
 <para>

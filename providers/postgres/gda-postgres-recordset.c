@@ -690,7 +690,7 @@ set_value (GdaConnection *cnc, GValue *value, GType type,
 		gda_value_take_blob (value, blob);
 	}
 	else if (type == G_TYPE_GTYPE)
-		g_value_set_gtype (value, atoul (thevalue));
+		g_value_set_gtype (value, gda_g_type_from_string (thevalue));
 	else {
 		g_warning ("Type %s not translated for value '%s' => set as string", g_type_name (type), thevalue);
 		gda_value_reset_with_type (value, G_TYPE_STRING);

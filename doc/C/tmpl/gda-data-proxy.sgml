@@ -200,6 +200,7 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
 @sample_changed: 
 @validate_row_changes: 
 @row_changes_applied: 
+@filter_changed: 
 
 <!-- ##### STRUCT GdaDataProxyPrivate ##### -->
 <para>

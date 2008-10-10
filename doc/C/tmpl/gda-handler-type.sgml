@@ -6,7 +6,9 @@ Default handler for GType values
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+  This data handler converts GValue of type G_TYPE_GTYPE to SQL and string where
+  the GType is stored as its type name. For example a G_TYPE_GTYPE GValue containing
+  G_TYPE_INT will be converted to SQL as 'gint'.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -15,12 +17,6 @@ Default handler for GType values
 </para>
 
 <!-- ##### SECTION Stability_Level ##### -->
-
-
-<!-- ##### STRUCT GdaHandlerType ##### -->
-<para>
-
-</para>
 
 
 <!-- ##### STRUCT GdaHandlerType ##### -->
