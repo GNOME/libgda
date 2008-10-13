@@ -10,6 +10,7 @@
 
 #define CHECK_EXTRA_INFO
 /*#undef CHECK_EXTRA_INFO*/
+static gboolean do_test_signal (void);
 static gboolean do_test_common_read (GdaDataModel *proxy);
 static gboolean do_test_read_direct_1 (void);
 static gboolean do_test_read_direct_2 (void);
@@ -56,6 +57,9 @@ main (int argc, char **argv)
         g_setenv ("GDA_TOP_BUILD_DIR", TOP_BUILD_DIR, 0);
         g_setenv ("GDA_TOP_SRC_DIR", TOP_SRC_DIR, TRUE);
 	gda_init ();
+
+	if (!do_test_signal ())
+		number_failed ++;
 
 	prepend_null_row = FALSE;
 	defer_sync  = FALSE;
@@ -133,6 +137,117 @@ main (int argc, char **argv)
 	return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
+static GError *
+validate_row_changes (GdaDataProxy *proxy, gint row, gint proxied_row, gchar *token)
+{
+	const GValue *cvalue;
+	/* refuse if population < 100 */
+	
+	cvalue = gda_data_model_get_value_at ((GdaDataModel*) proxy, 2, row, NULL);
+	g_assert (cvalue);
+	if (G_VALUE_TYPE (cvalue) == GDA_TYPE_NULL)
+		return NULL;
+	else {
+		gint pop;
+		pop = g_value_get_int (cvalue);
+		if (pop < 100) {
+			GError *error = NULL;
+			g_set_error (&error, 0, 0,
+				     "Population is too small");
+			return error;
+		}
+		else
+			return NULL;
+	}
+}
+
+static gboolean
+do_test_signal (void)
+{
+#define FILE "city.csv"
+	gchar *file;
+	GdaDataModel *import, *proxy, *rw_model;
+	GSList *errors;
+	GdaSet *options;
+	GValue *value;
+	GError *lerror = NULL;
+
+	file = g_build_filename (CHECK_FILES, "tests", "data-models", FILE, NULL);
+	options = gda_set_new_inline (2, 
+				      "TITLE_AS_FIRST_LINE", G_TYPE_BOOLEAN, TRUE,
+				      "G_TYPE_2", G_TYPE_GTYPE, G_TYPE_INT);
+	import = gda_data_model_import_new_file (file, TRUE, options);
+	g_free (file);
+	g_object_unref (options);
+
+	if ((errors = gda_data_model_import_get_errors (GDA_DATA_MODEL_IMPORT (import)))) {
+#ifdef CHECK_EXTRA_INFO
+		g_print ("ERROR: Could not load file '%s'\n", FILE);
+#endif
+		g_object_unref (import);
+		return FALSE;
+	}
+
+	rw_model = (GdaDataModel*) gda_data_model_array_copy_model (import, NULL);
+	g_assert (rw_model);
+	g_object_unref (import);
+	proxy = g_object_new (GDA_TYPE_DATA_PROXY, "model", rw_model, "sample-size", 0, NULL);
+	if (!proxy) {
+#ifdef CHECK_EXTRA_INFO
+		g_print ("ERROR: Could not create GdaDataProxy\n");
+#endif
+		return FALSE;
+	}
+
+	g_signal_connect (G_OBJECT (proxy), "validate_row_changes",
+			  G_CALLBACK (validate_row_changes), "Token");
+
+	/**/
+	g_value_set_int ((value = gda_value_new (G_TYPE_INT)), 23);
+	g_assert (gda_data_model_set_value_at (proxy, 2, 5, value, NULL));
+	g_value_set_int (value, 100);
+	g_assert (gda_data_model_set_value_at (proxy, 2, 3, value, NULL));
+	gda_value_free (value);
+
+	if (gda_data_proxy_apply_all_changes (GDA_DATA_PROXY (proxy), &lerror)) {
+#ifdef CHECK_EXTRA_INFO
+		g_print ("ERROR: gda_data_proxy_apply_all_changes() should have failed\n");
+#endif
+		return FALSE; 
+	}
+	if (!lerror) {
+#ifdef CHECK_EXTRA_INFO
+		g_print ("ERROR: returned error should not be NULL\n");
+#endif
+		return FALSE; 
+	}
+	if (strcmp (lerror->message, "Population is too small")) {
+#ifdef CHECK_EXTRA_INFO
+		g_print ("ERROR: returned error message should be 'Population is too small', and got '%s'\n", 
+			 lerror->message);
+#endif
+		return FALSE; 
+	}
+	g_error_free (lerror);
+
+	/**/
+	g_assert (gda_data_proxy_cancel_all_changes (GDA_DATA_PROXY (proxy)));
+	g_value_set_int ((value = gda_value_new (G_TYPE_INT)), 123);
+	g_assert (gda_data_model_set_value_at (proxy, 2, 5, value, NULL));
+	gda_value_free (value);
+	if (!gda_data_proxy_apply_all_changes (GDA_DATA_PROXY (proxy), &lerror)) {
+#ifdef CHECK_EXTRA_INFO
+		g_print ("ERROR: gda_data_proxy_apply_all_changes() should not have failed, error: %s\n",
+			 lerror && lerror->message ? lerror->message : "No detail");
+#endif
+		return FALSE; 
+	}
+
+	g_object_unref (proxy);
+	g_object_unref (rw_model);
+
+	return TRUE;
+}
 
 static gboolean
 do_test_read_direct_1 ()

@@ -29,11 +29,8 @@ depend on the format of the imported data listed here:
   <listitem><para>"ENCODING" (string, CVS import only): specifies the character set used in the imported data</para></listitem>
   <listitem><para>"TITLE_AS_FIRST_LINE" (boolean, CVS import only): TRUE to specify that the first line of the 
       imported data contains the column names</para></listitem>
-  <listitem><para>"GDA_TYPE_&lt;col number&gt;" (gda type, CVS import only): specifies the requested GDA type for the column
+  <listitem><para>"G_TYPE_&lt;col number&gt;" (GType, CVS import only): specifies the requested GType type for the column
 	numbered "col number"</para></listitem>
-  <listitem><para>"DBMS_TYPE_&lt;col number&gt;" (string, CVS import only): specifies the requested DBMS type for the column
-	numbered "col number"; if the DBMS type is listed in the dictionary used by the created model, then
-	the GDA type is set in accordance</para></listitem>
 </itemizedlist>
 </para>
 

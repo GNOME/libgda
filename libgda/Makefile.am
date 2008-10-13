@@ -18,12 +18,12 @@ AM_CPPFLAGS = \
 	$(BDB_CFLAGS) \
 	$(GIO_CFLAGS) $(GNOMEVFS_CFLAGS)
 
-gda_marshal_built_files = gda-marshal.h gda-marshal.c
+_gda_marshal_built_files = gda-marshal.h gda-marshal.c
 
 gda-marshal.h: gda-marshal.list $(GLIB_GENMARSHAL)
-	$(GLIB_GENMARSHAL) $< --header --prefix=gda_marshal > $@
+	$(GLIB_GENMARSHAL) $< --header --prefix=_gda_marshal > $@
 gda-marshal.c: gda-marshal.list $(GLIB_GENMARSHAL)
-	$(GLIB_GENMARSHAL) $< --body --prefix=gda_marshal > $@
+	$(GLIB_GENMARSHAL) $< --body --prefix=_gda_marshal > $@
 
 gda_headers = \
 	gda-attributes-manager.h \
@@ -89,6 +89,8 @@ libgda_sources =  \
 	gda-config.c \
 	gda-connection.c \
 	gda-connection-event.c \
+	gda-custom-marshal.c \
+	gda-custom-marshal.h \
 	gda-data-comparator.c \
 	gda-data-handler.c \
 	gda-data-model-array.c \
@@ -104,6 +106,8 @@ libgda_sources =  \
 	gda-data-select.c \
 	gda-data-select-extra.h \
 	gda-easy.c \
+	gda-error.c \
+	gda-error.h \
 	gda-holder.c \
 	gda-init.c \
 	gda-lockable.c \

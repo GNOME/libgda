@@ -25,12 +25,16 @@ typedef gboolean (*TestFunc) (GError **);
 static gboolean test1 (GError **error);
 static gboolean test2 (GError **error);
 static gboolean test3 (GError **error);
+static gboolean test4 (GError **error);
+static gboolean test5 (GError **error);
 
 GHashTable *data;
 TestFunc tests[] = {
 	test1,
 	test2,
-	test3
+	test3,
+	test4,
+	test5
 };
 
 int 
@@ -186,6 +190,7 @@ test3 (GError **error)
 	GdaHolder *h;
 	GValue *value;
 	const GValue *cvalue;
+	GError *lerror = NULL;
 
 	set = gda_set_new_inline (3, 
 				  "H1", G_TYPE_STRING, "A string",
@@ -197,12 +202,25 @@ test3 (GError **error)
 
 	h = gda_set_get_holder (set, "H2");
 	g_value_set_int ((value = gda_value_new (G_TYPE_INT)), 333);
-	if (gda_holder_set_value (h, value, NULL)) {
+	if (gda_holder_set_value (h, value, &lerror)) {
 		g_set_error (error, 0, 0,
 			     "gda_holder_set_value() should have been refused and failed");
 		return FALSE;
 	}
 	gda_value_free (value);
+	if (!lerror) {
+		g_set_error (error, 0, 0,
+			     "Returned GError should not be NULL");
+		return FALSE;
+	}
+	if (strcmp (lerror->message, "GdaHolder change refused!")) {
+		g_set_error (error, 0, 0,
+			     "Returned GError's message is wrong, should be 'GdaHolder change refused!' and is '%s'",
+			     lerror->message);
+		return FALSE;
+	}
+	g_error_free (lerror);
+	lerror = NULL;
 
 	/***/
 	g_value_set_int ((value = gda_value_new (G_TYPE_INT)), 1234);
@@ -232,6 +250,137 @@ test3 (GError **error)
 
 	return TRUE;
 }
+
+/*
+ * "holder-attr-changed" signal test
+ */
+static gboolean
+test4 (GError **error)
+{
+	GdaSet *set;
+	GdaHolder *h;
+	GValue *value;
+	
+	set = gda_set_new_inline (3, 
+				  "H1", G_TYPE_STRING, "A string",
+				  "H2", G_TYPE_STRING, "1234",
+				  "H3", G_TYPE_CHAR, 'r');
+	emitted_signals_monitor_set (set);
+	emitted_signals_reset ();
+
+	h = gda_set_get_holder (set, "H1");
+	if (!h) {
+		g_set_error (error, 0, 0,
+			     "Could not find GdaHolder H1");
+		return FALSE;
+	}
+	g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), "Hello!");
+	gda_holder_set_attribute (h, "MyAttr", value);
+	gda_value_free (value);
+
+	if (!emitted_signals_find (set, "holder-attr-changed", error))
+		return FALSE;
+
+	return TRUE;
+}
+
+/*
+ * "validate-change" signal
+ */
+static GError *
+t5_validate_change (GdaSet *set, gchar *token)
+{
+	GdaHolder *h3, *h2;
+	const GValue *v2, *v3;
+	g_assert (!strcmp (token, "MyToken2"));
+
+	/* validate only if h2==125 and h3=='d' */
+	h2 = gda_set_get_holder (set, "H2");
+	h3 = gda_set_get_holder (set, "H3");
+	g_assert (h2 && h3);
+
+	v2 = gda_holder_get_value (h2);
+	v3 = gda_holder_get_value (h3);
+
+	if (v2 && (G_VALUE_TYPE (v2) == G_TYPE_INT) &&
+	    v3 && (G_VALUE_TYPE (v3) == G_TYPE_CHAR) &&
+	    (g_value_get_int (v2) == 125) &&
+	    (g_value_get_char (v3) == 'd')) {
+		g_print ("GdaSet change accepted\n");
+		return NULL;
+	}
+	else {
+		GError *error = NULL;
+		g_print ("GdaSet change refused\n");
+		g_set_error (&error, 0, 0,
+			     "GdaSet change refused!");
+		return error;
+	}
+}
+
+static gboolean
+test5 (GError **error)
+{
+	GdaSet *set;
+	GdaHolder *h;
+	GValue *value;
+	GError *lerror = NULL;
+
+	set = gda_set_new_inline (3, 
+				  "H1", G_TYPE_STRING, "A string",
+				  "H2", G_TYPE_INT, 1234,
+				  "H3", G_TYPE_CHAR, 'r');
+
+	g_signal_connect (G_OBJECT (set), "validate-set",
+			  G_CALLBACK (t5_validate_change), "MyToken2");
+
+	if (gda_set_is_valid (set, &lerror)) {
+		g_set_error (error, 0, 0,
+			     "gda_set_is_valid() should have returned FALSE");
+		return FALSE;
+	}
+
+	if (!lerror) {
+		g_set_error (error, 0, 0,
+			     "Returned GError should not be NULL");
+		return FALSE;
+	}
+	if (strcmp (lerror->message, "GdaSet change refused!")) {
+		g_set_error (error, 0, 0,
+			     "Returned GError's message is wrong, should be 'GdaHolder change refused!' and is '%s'",
+			     lerror->message);
+		return FALSE;
+	}
+	g_error_free (lerror);
+	lerror = NULL;
+
+	/**/
+	h = gda_set_get_holder (set, "H2");
+	g_value_set_int ((value = gda_value_new (G_TYPE_INT)), 125);
+	if (!gda_holder_set_value (h, value, NULL)) {
+		g_set_error (error, 0, 0,
+			     "gda_holder_set_value() should not have failed");
+		return FALSE;
+	}
+	gda_value_free (value);
+
+	h = gda_set_get_holder (set, "H3");
+	g_value_set_char ((value = gda_value_new (G_TYPE_CHAR)), 'd');
+	if (!gda_holder_set_value (h, value, NULL)) {
+		g_set_error (error, 0, 0,
+			     "gda_holder_set_value() should not have failed");
+		return FALSE;
+	}
+	gda_value_free (value);
+
+	if (!gda_set_is_valid (set, error)) 
+		return FALSE;
+
+	g_object_unref (set);
+
+	return TRUE;
+}
+
 
 /*
  * Signals testing
@@ -303,6 +452,17 @@ emitted_signals_chech_empty (gpointer obj, const gchar *signal_name, GError **er
 }
 
 static void
+set_3_cb (GObject *obj, GdaHolder *holder, const gchar *attr_name, const GValue *value, gchar *sig_name)
+{
+	EmittedSignal *es;
+	es = g_new0 (EmittedSignal, 1);
+	es->obj = obj;
+	es->signal_name = sig_name;
+	es->holder = holder;
+	emitted_signal_add (es);
+}
+
+static void
 set_1_cb (GObject *obj, GdaHolder *holder, gchar *sig_name)
 {
 	EmittedSignal *es;
@@ -329,10 +489,8 @@ emitted_signals_monitor_set (GdaSet *set)
 {
 	g_signal_connect (G_OBJECT (set), "holder-changed",
 			  G_CALLBACK (set_1_cb), "holder-changed");
-	g_signal_connect (G_OBJECT (set), "holder-plugin-changed",
-			  G_CALLBACK (set_1_cb), "holder-plugin-changed");
 	g_signal_connect (G_OBJECT (set), "holder-attr-changed",
-			  G_CALLBACK (set_1_cb), "holder-attr-changed");
+			  G_CALLBACK (set_3_cb), "holder-attr-changed");
 	g_signal_connect (G_OBJECT (set), "public-data-changed",
 			  G_CALLBACK (set_0_cb), "public-data-changed");
 }

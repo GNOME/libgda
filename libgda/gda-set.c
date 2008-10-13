@@ -35,6 +35,8 @@
 #include "gda-connection.h"
 #include "gda-server-provider.h"
 #include "gda-util.h"
+#include <libgda/gda-custom-marshal.h>
+#include <libgda/gda-error.h>
 
 extern xmlDtdPtr gda_paramlist_dtd;
 extern gchar *gda_lang_locale;
@@ -199,16 +201,16 @@ gda_set_get_type (void)
 
 static gboolean
 validate_accumulator (GSignalInvocationHint *ihint,
-				  GValue *return_accu,
-				  const GValue *handler_return,
-				  gpointer data)
+		      GValue *return_accu,
+		      const GValue *handler_return,
+		      gpointer data)
 {
 	GError *error;
 
-	error = g_value_get_pointer (handler_return);
-	g_value_set_pointer (return_accu, error);
+	error = g_value_get_boxed (handler_return);
+	g_value_set_boxed (return_accu, error);
 
-	return error ? FALSE : TRUE; /* stop signal if 'thisvalue' is FALSE */
+	return error ? FALSE : TRUE; /* stop signal if an error has been set */
 }
 
 static GError *
@@ -236,7 +238,7 @@ gda_set_class_init (GdaSetClass *class)
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaSetClass, holder_changed),
 			      NULL, NULL,
-			      gda_marshal_VOID__OBJECT, G_TYPE_NONE, 1,
+			      _gda_marshal_VOID__OBJECT, G_TYPE_NONE, 1,
 			      GDA_TYPE_HOLDER);
 
 	/**
@@ -257,8 +259,8 @@ gda_set_class_init (GdaSetClass *class)
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (GdaSetClass, validate_holder_change),
 			      validate_accumulator, NULL,
-			      gda_marshal_POINTER__OBJECT_POINTER, G_TYPE_POINTER, 2,
-			      GDA_TYPE_HOLDER, G_TYPE_POINTER);
+			      _gda_marshal_ERROR__OBJECT_VALUE, GDA_TYPE_ERROR, 2,
+			      GDA_TYPE_HOLDER, G_TYPE_VALUE);
 	/**
 	 * GdaSet::validate-set:
 	 * @set: the object which received the signal
@@ -275,22 +277,22 @@ gda_set_class_init (GdaSetClass *class)
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (GdaSetClass, validate_set),
 			      validate_accumulator, NULL,
-			      gda_marshal_POINTER__VOID, G_TYPE_POINTER, 0);
+			      _gda_marshal_ERROR__VOID, GDA_TYPE_ERROR, 0);
 	gda_set_signals[HOLDER_ATTR_CHANGED] =
 		g_signal_new ("holder-attr-changed",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaSetClass, holder_attr_changed),
 			      NULL, NULL,
-			      gda_marshal_VOID__OBJECT_STRING_POINTER, G_TYPE_NONE, 3,
-			      GDA_TYPE_HOLDER, G_TYPE_STRING, G_TYPE_POINTER);
+			      _gda_marshal_VOID__OBJECT_STRING_VALUE, G_TYPE_NONE, 3,
+			      GDA_TYPE_HOLDER, G_TYPE_STRING, G_TYPE_VALUE);
 	gda_set_signals[PUBLIC_DATA_CHANGED] =
 		g_signal_new ("public-data-changed",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaSetClass, public_data_changed),
 			      NULL, NULL,
-			      gda_marshal_VOID__VOID, G_TYPE_NONE, 0);
+			      _gda_marshal_VOID__VOID, G_TYPE_NONE, 0);
 
 	class->holder_changed = NULL;
 	class->validate_holder_change = m_validate_holder_change;
@@ -1358,42 +1360,32 @@ gboolean
 gda_set_is_valid (GdaSet *set, GError **error)
 {
 	GSList *holders;
-	gboolean retval = TRUE;
 
 	g_return_val_if_fail (GDA_IS_SET (set), FALSE);
 	g_return_val_if_fail (set->priv, FALSE);
 
-	for (holders = set->holders; holders && retval; holders = g_slist_next (holders)) {
+	for (holders = set->holders; holders; holders = holders->next) {
 		if (!gda_holder_is_valid ((GdaHolder*) holders->data)) {
 			g_set_error (error, GDA_SET_ERROR, GDA_SET_INVALID_ERROR,
-			     _("One or more values are invalid"));
-			retval = FALSE;
+				     _("One or more values are invalid"));
+			return FALSE;
 		}
-		
-		if (retval) {
-		/* signal the holder validate-set */
-			GError *lerror = NULL;
-#ifdef GDA_DEBUG_signal
-			g_print (">> 'VALIDATE_SET' from %s\n", __FUNCTION__);
-#endif
-			g_signal_emit (G_OBJECT (set), gda_set_signals[VALIDATE_SET], 0, &lerror);
-#ifdef GDA_DEBUG_signal
-			g_print ("<< 'VALIDATE_SET' from %s\n", __FUNCTION__);
-#endif
-			if (lerror) {
-				g_propagate_error (error, lerror);
-				retval = FALSE;
-			}
-		}
-
-#ifdef GDA_DEBUG_NO
-		g_print ("== HOLDER %p: valid= %d, value=%s\n", holders->data, gda_holder_is_valid (GDA_HOLDER (holders->data)),
-			 gda_holder_get_value (GDA_HOLDER (holders->data)) ?
-			 gda_value_stringify (gda_holder_get_value (GDA_HOLDER (holders->data))) : "Null");
-#endif
 	}
 
-	return retval;
+	/* signal the holder validate-set */
+	GError *lerror = NULL;
+#ifdef GDA_DEBUG_signal
+	g_print (">> 'VALIDATE_SET' from %s\n", __FUNCTION__);
+#endif
+	g_signal_emit (G_OBJECT (set), gda_set_signals[VALIDATE_SET], 0, &lerror);
+#ifdef GDA_DEBUG_signal
+	g_print ("<< 'VALIDATE_SET' from %s\n", __FUNCTION__);
+#endif
+	if (lerror) {
+		g_propagate_error (error, lerror);
+		return FALSE;
+	}
+	return TRUE;
 }
 
 /**

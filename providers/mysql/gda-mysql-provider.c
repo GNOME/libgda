@@ -516,8 +516,12 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 	host = gda_quark_list_find (params, "HOST");
 
 	const gchar *user, *password;
-	user = gda_quark_list_find (params, "USER");
-	password = gda_quark_list_find (params, "PASSWORD");
+	user = gda_quark_list_find (auth, "USERNAME");
+	if (!user)
+		user = gda_quark_list_find (params, "USERNAME");
+	password = gda_quark_list_find (auth, "PASSWORD");
+	if (!password)
+		password = gda_quark_list_find (params, "PASSWORD");
 
 	const gchar *port, *unix_socket, *use_ssl, *compress;
 	port = gda_quark_list_find (params, "PORT");

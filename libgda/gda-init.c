@@ -27,6 +27,7 @@
 
 #include <libgda/binreloc/gda-binreloc.h>
 #include <sql-parser/gda-sql-parser.h>
+#include <libgda/gda-error.h>
 
 /* global variables */
 xmlDtdPtr       gda_array_dtd = NULL;
@@ -101,6 +102,8 @@ gda_init (void)
 	type = G_TYPE_DATE;
 	g_assert (type);
 	type = GDA_TYPE_TIMESTAMP;
+	g_assert (type);
+	type = GDA_TYPE_ERROR;
 	g_assert (type);
 
 	/* acquire locale */

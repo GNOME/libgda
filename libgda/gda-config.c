@@ -140,7 +140,7 @@ gda_config_class_init (GdaConfigClass *klass)
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaConfigClass, dsn_added),
                               NULL, NULL,
-                              gda_marshal_VOID__POINTER,
+                              _gda_marshal_VOID__POINTER,
                               G_TYPE_NONE, 1, G_TYPE_POINTER);
 	gda_config_signals[DSN_TO_BE_REMOVED] =
                 g_signal_new ("dsn-to-be-removed",
@@ -148,7 +148,7 @@ gda_config_class_init (GdaConfigClass *klass)
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaConfigClass, dsn_to_be_removed),
                               NULL, NULL,
-                              gda_marshal_VOID__POINTER,
+                              _gda_marshal_VOID__POINTER,
                               G_TYPE_NONE, 1, G_TYPE_POINTER);
 	gda_config_signals[DSN_REMOVED] =
                 g_signal_new ("dsn-removed",
@@ -156,7 +156,7 @@ gda_config_class_init (GdaConfigClass *klass)
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaConfigClass, dsn_removed),
                               NULL, NULL,
-                              gda_marshal_VOID__POINTER,
+                              _gda_marshal_VOID__POINTER,
                               G_TYPE_NONE, 1, G_TYPE_POINTER);
 	gda_config_signals[DSN_CHANGED] =
                 g_signal_new ("dsn-changed",
@@ -164,7 +164,7 @@ gda_config_class_init (GdaConfigClass *klass)
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaConfigClass, dsn_changed),
                               NULL, NULL,
-                              gda_marshal_VOID__POINTER,
+                              _gda_marshal_VOID__POINTER,
                               G_TYPE_NONE, 1, G_TYPE_POINTER);
 
 	/* Properties */

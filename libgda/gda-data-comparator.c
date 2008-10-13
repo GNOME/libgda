@@ -144,7 +144,7 @@ gda_data_comparator_class_init (GdaDataComparatorClass *class)
                               G_SIGNAL_RUN_LAST,
                               G_STRUCT_OFFSET (GdaDataComparatorClass, diff_computed),
                               diff_computed_accumulator, NULL,
-                              gda_marshal_BOOLEAN__POINTER, G_TYPE_BOOLEAN, 1, G_TYPE_POINTER);
+                              _gda_marshal_BOOLEAN__POINTER, G_TYPE_BOOLEAN, 1, G_TYPE_POINTER);
 
 	class->diff_computed = m_diff_computed;
 

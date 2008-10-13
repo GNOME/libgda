@@ -106,7 +106,7 @@ gda_threader_class_init (GdaThreaderClass * class)
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaThreaderClass, finished),
 			      NULL, NULL,
-			      gda_marshal_VOID__UINT_POINTER, G_TYPE_NONE,
+			      _gda_marshal_VOID__UINT_POINTER, G_TYPE_NONE,
 			      2, G_TYPE_UINT, G_TYPE_POINTER);
 	gda_threader_signals[CANCELLED] =
 		g_signal_new ("cancelled",
@@ -114,7 +114,7 @@ gda_threader_class_init (GdaThreaderClass * class)
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaThreaderClass, cancelled),
 			      NULL, NULL,
-			      gda_marshal_VOID__UINT_POINTER, G_TYPE_NONE,
+			      _gda_marshal_VOID__UINT_POINTER, G_TYPE_NONE,
 			      2, G_TYPE_UINT, G_TYPE_POINTER);
 	class->finished = NULL;
 	class->cancelled = NULL;

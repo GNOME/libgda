@@ -145,7 +145,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaConnectionClass, conn_opened),
                               NULL, NULL,
-                              gda_marshal_VOID__VOID,
+                              _gda_marshal_VOID__VOID,
                               G_TYPE_NONE, 0);
         gda_connection_signals[CONN_TO_CLOSE] =
                 g_signal_new ("conn-to-close",
@@ -153,7 +153,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaConnectionClass, conn_to_close),
                               NULL, NULL,
-                              gda_marshal_VOID__VOID,
+                              _gda_marshal_VOID__VOID,
                               G_TYPE_NONE, 0);
         gda_connection_signals[CONN_CLOSED] =    /* runs after user handlers */
                 g_signal_new ("conn-closed",
@@ -161,7 +161,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
                               G_SIGNAL_RUN_LAST,
                               G_STRUCT_OFFSET (GdaConnectionClass, conn_closed),
                               NULL, NULL,
-                              gda_marshal_VOID__VOID,
+                              _gda_marshal_VOID__VOID,
                               G_TYPE_NONE, 0);
 	gda_connection_signals[DSN_CHANGED] =
 		g_signal_new ("dsn-changed",

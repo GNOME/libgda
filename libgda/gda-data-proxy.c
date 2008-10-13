@@ -38,6 +38,8 @@
 #include <sql-parser/gda-sql-parser.h>
 #include <sql-parser/gda-sql-statement.h>
 #include <sql-parser/gda-statement-struct-util.h>
+#include <libgda/gda-custom-marshal.h>
+#include <libgda/gda-error.h>
 
 /* 
  * Main static functions 
@@ -524,8 +526,8 @@ validate_row_changes_accumulator (GSignalInvocationHint *ihint,
 {
 	GError *error;
 
-        error = g_value_get_pointer (handler_return); 
-        g_value_set_pointer (return_accu, error);
+        error = g_value_get_boxed (handler_return); 
+        g_value_set_boxed (return_accu, error);
 
         return error ? FALSE : TRUE; /* stop signal if 'thisvalue' is FALSE */
 }
@@ -550,7 +552,7 @@ gda_data_proxy_class_init (GdaDataProxyClass *klass)
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaDataProxyClass, row_delete_changed),
                               NULL, NULL,
-			      gda_marshal_VOID__INT_BOOLEAN, G_TYPE_NONE, 2, G_TYPE_INT, G_TYPE_BOOLEAN);
+			      _gda_marshal_VOID__INT_BOOLEAN, G_TYPE_NONE, 2, G_TYPE_INT, G_TYPE_BOOLEAN);
 	gda_data_proxy_signals [SAMPLE_SIZE_CHANGED] =
 		g_signal_new ("sample-size-changed",
                               G_TYPE_FROM_CLASS (object_class),
@@ -564,28 +566,28 @@ gda_data_proxy_class_init (GdaDataProxyClass *klass)
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaDataProxyClass, sample_changed),
                               NULL, NULL,
-			      gda_marshal_VOID__INT_INT, G_TYPE_NONE, 2, G_TYPE_INT, G_TYPE_INT);
+			      _gda_marshal_VOID__INT_INT, G_TYPE_NONE, 2, G_TYPE_INT, G_TYPE_INT);
 	gda_data_proxy_signals [VALIDATE_ROW_CHANGES] =
 		g_signal_new ("validate-row-changes",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_LAST,
                               G_STRUCT_OFFSET (GdaDataProxyClass, validate_row_changes),
                               validate_row_changes_accumulator, NULL,
-                              gda_marshal_POINTER__INT_INT, G_TYPE_POINTER, 2, G_TYPE_INT, G_TYPE_INT);
+                              _gda_marshal_ERROR__INT_INT, GDA_TYPE_ERROR, 2, G_TYPE_INT, G_TYPE_INT);
 	gda_data_proxy_signals [ROW_CHANGES_APPLIED] =
 		g_signal_new ("row-changes-applied",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaDataProxyClass, row_changes_applied),
                               NULL, NULL,
-			      gda_marshal_VOID__INT_INT, G_TYPE_NONE, 2, G_TYPE_INT, G_TYPE_INT);
+			      _gda_marshal_VOID__INT_INT, G_TYPE_NONE, 2, G_TYPE_INT, G_TYPE_INT);
 	gda_data_proxy_signals [FILTER_CHANGED] = 
 		g_signal_new ("filter-changed",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaDataProxyClass, filter_changed),
                               NULL, NULL,
-			      gda_marshal_VOID__VOID, G_TYPE_NONE, 0);
+			      _gda_marshal_VOID__VOID, G_TYPE_NONE, 0);
 
 	klass->row_delete_changed = NULL;
 	klass->sample_size_changed = NULL;

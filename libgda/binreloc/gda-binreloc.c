@@ -71,6 +71,7 @@ gda_gbr_get_file_path (GdaPrefixDir where, ...)
 	gchar **parts;
 	gint size, i;
 	const gchar *prefix_dir_name = NULL;
+	gint prefix_len = strlen (LIBGDAPREFIX);
 
 #ifdef G_OS_WIN32
 	wchar_t path[MAX_PATH];
@@ -81,48 +82,55 @@ gda_gbr_get_file_path (GdaPrefixDir where, ...)
 	case GDA_NO_DIR:
 		break;
 	case GDA_BIN_DIR:
-		if (! g_str_has_prefix (LIBGDABIN, LIBGDAPREFIX)) 
-			prefix = g_strdup (LIBGDABIN);
+		tmp = LIBGDABIN;
+		if (! g_str_has_prefix (tmp, LIBGDAPREFIX) || (tmp [prefix_len] != G_DIR_SEPARATOR)) 
+			prefix = g_strdup (tmp);
 		else
 			prefix_dir_name = "bin";
 		break;
 	case GDA_SBIN_DIR:
-		if (! g_str_has_prefix (LIBGDASBIN, LIBGDAPREFIX)) 
-			prefix = g_strdup (LIBGDASBIN);
+		tmp = LIBGDASBIN;
+		if (! g_str_has_prefix (tmp, LIBGDAPREFIX) || (tmp [prefix_len] != G_DIR_SEPARATOR)) 
+			prefix = g_strdup (tmp);
 		else
-			prefix_dir_name = "sbin";
+			prefix_dir_name = tmp + prefix_len + 1;
 		break;
 	case GDA_DATA_DIR:
-		if (! g_str_has_prefix (LIBGDADATA, LIBGDAPREFIX)) 
-			prefix = g_strdup (LIBGDADATA);
+		tmp = LIBGDADATA;
+		if (! g_str_has_prefix (tmp, LIBGDAPREFIX) || (tmp [prefix_len] != G_DIR_SEPARATOR)) 
+			prefix = g_strdup (tmp);
 		else
-			prefix_dir_name = "share";
+			prefix_dir_name = tmp + prefix_len + 1;
 		break;
 	case GDA_LOCALE_DIR:
-		if (! g_str_has_prefix (LIBGDADATA, LIBGDAPREFIX)) {
-			prefix = g_strdup (LIBGDADATA);
+		tmp = LIBGDADATA;
+		if (! g_str_has_prefix (tmp, LIBGDAPREFIX) || (tmp [prefix_len] != G_DIR_SEPARATOR)) {
+			prefix = g_strdup (tmp);
 			prefix_dir_name = "locale";
 		}
 		else
 			prefix_dir_name = "share" G_DIR_SEPARATOR_S "locale";
 		break;
 	case GDA_LIB_DIR:
-		if (! g_str_has_prefix (LIBGDALIB, LIBGDAPREFIX)) 
-			prefix = g_strdup (LIBGDALIB);
-		else
-			prefix_dir_name = "lib";		
+		tmp = LIBGDALIB;
+		if (! g_str_has_prefix (tmp, LIBGDAPREFIX) || (tmp [prefix_len] != G_DIR_SEPARATOR)) 
+			prefix = g_strdup (tmp);
+		else 
+			prefix_dir_name = tmp + prefix_len + 1;
 		break;
 	case GDA_LIBEXEC_DIR:
-		if (! g_str_has_prefix (LIBGDALIBEXEC, LIBGDAPREFIX)) 
-			prefix = g_strdup (LIBGDALIBEXEC);
+		tmp = LIBGDALIBEXEC;
+		if (! g_str_has_prefix (tmp, LIBGDAPREFIX) || (tmp [prefix_len] != G_DIR_SEPARATOR)) 
+			prefix = g_strdup (tmp);
 		else
-			prefix_dir_name = "libexec";
+			prefix_dir_name = tmp + prefix_len + 1;
 		break;
 	case GDA_ETC_DIR:
-		if (! g_str_has_prefix (LIBGDASYSCONF, LIBGDAPREFIX)) 
-			prefix = g_strdup (LIBGDASYSCONF);
+		tmp = LIBGDASYSCONF;
+		if (! g_str_has_prefix (tmp, LIBGDAPREFIX) || (tmp [prefix_len] != G_DIR_SEPARATOR)) 
+			prefix = g_strdup (tmp);
 		else
-			prefix_dir_name = "etc";
+			prefix_dir_name = tmp + prefix_len + 1;
 		break;
 	}
 

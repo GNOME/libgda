@@ -29,6 +29,8 @@
 #include "gda-util.h"
 #include <libgda.h>
 #include <libgda/gda-attributes-manager.h>
+#include <libgda/gda-custom-marshal.h>
+#include <libgda/gda-error.h>
 
 /* 
  * Main static functions 
@@ -149,10 +151,10 @@ validate_change_accumulator (GSignalInvocationHint *ihint,
 {
 	GError *error;
 
-	error = g_value_get_pointer (handler_return);
-	g_value_set_pointer (return_accu, error);
+	error = g_value_get_boxed (handler_return);
+	g_value_set_boxed (return_accu, error);
 
-	return error ? FALSE : TRUE; /* stop signal if 'thisvalue' is FALSE */
+	return error ? FALSE : TRUE; /* stop signal if error has been set */
 }
 
 static GError *
@@ -180,22 +182,22 @@ gda_holder_class_init (GdaHolderClass *class)
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaHolderClass, source_changed),
                               NULL, NULL,
-                              gda_marshal_VOID__VOID, G_TYPE_NONE, 0);
+                              _gda_marshal_VOID__VOID, G_TYPE_NONE, 0);
 	gda_holder_signals[CHANGED] =
                 g_signal_new ("changed",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaHolderClass, changed),
                               NULL, NULL,
-                              gda_marshal_VOID__VOID, G_TYPE_NONE, 0);
+                              _gda_marshal_VOID__VOID, G_TYPE_NONE, 0);
 	gda_holder_signals[ATT_CHANGED] =
                 g_signal_new ("attribute-changed",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaHolderClass, att_changed),
                               NULL, NULL,
-                              gda_marshal_VOID__STRING_POINTER, G_TYPE_NONE, 2, 
-			      G_TYPE_STRING, G_TYPE_POINTER);
+                              _gda_marshal_VOID__STRING_VALUE, G_TYPE_NONE, 2, 
+			      G_TYPE_STRING, G_TYPE_VALUE);
 
 	/**
 	 * GdaHolder::before-change:
@@ -214,7 +216,7 @@ gda_holder_class_init (GdaHolderClass *class)
                               G_SIGNAL_RUN_LAST,
                               G_STRUCT_OFFSET (GdaHolderClass, validate_change),
                               validate_change_accumulator, NULL,
-                              gda_marshal_POINTER__POINTER, G_TYPE_POINTER, 1, G_TYPE_POINTER);
+                              _gda_marshal_ERROR__VALUE, GDA_TYPE_ERROR, 1, G_TYPE_VALUE);
 
         class->changed = NULL;
         class->source_changed = NULL;

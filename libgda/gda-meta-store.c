@@ -352,7 +352,7 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 		G_SIGNAL_RUN_LAST,
 		G_STRUCT_OFFSET (GdaMetaStoreClass, suggest_update),
 		suggest_update_accumulator, NULL,
-		gda_marshal_POINTER__POINTER, G_TYPE_POINTER,
+		_gda_marshal_POINTER__POINTER, G_TYPE_POINTER,
 		1, G_TYPE_POINTER);
 	gda_meta_store_signals[META_CHANGED] =
 		g_signal_new ("meta-changed",
@@ -360,7 +360,7 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 		G_SIGNAL_RUN_FIRST,
 		G_STRUCT_OFFSET (GdaMetaStoreClass, meta_changed),
 		NULL, NULL,
-		gda_marshal_VOID__POINTER, G_TYPE_NONE,
+		_gda_marshal_VOID__POINTER, G_TYPE_NONE,
 		1, G_TYPE_POINTER);
 	gda_meta_store_signals[META_RESET] =
 		g_signal_new ("meta-reset",
@@ -368,7 +368,7 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 		G_SIGNAL_RUN_FIRST,
 		G_STRUCT_OFFSET (GdaMetaStoreClass, meta_reset),
 		NULL, NULL,
-		gda_marshal_VOID__VOID, G_TYPE_NONE, 0);
+		_gda_marshal_VOID__VOID, G_TYPE_NONE, 0);
 	
 	klass->suggest_update = m_suggest_update;
 	klass->meta_changed = NULL;

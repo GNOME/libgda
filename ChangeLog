@@ -1,3 +1,45 @@
+2008-10-13  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-error.[ch]: declare a GDA_TYPE_ERROR by registering a boxed type
+	for GError
+	* libgda/gda-custom-marshal.[ch]: implement custom marshallers where needed
+	* libgda/gda-column.c: moved custom marshaller to libgda/gda-custom-marshal.[ch]
+	* libgda/gda-data-proxy.c:
+	* libgda/gda-holder.c:
+	* libgda/gda-set.c: implemented custom marshallers for the following signals:
+	  - GdaSet::validate-set
+	  - GdaSet::validate-holder-changed
+	  - GdaSet::holder-attr-changed
+	  - GdaHolder::attribute-changed
+	  - GdaHolder::validate-change
+	  - GdaDataProxy::validate-row-changes
+	for bug #555905
+	* tests/data-models/check_data_proxy.c:
+	* tests/value-holders/check_set.c: updated test to check new marshallers
+	* libgda/gda-data-model.c: either display a warning or set error when a requested
+	method is not implemented
+	* libgda/binreloc/gda-binreloc.c: correctly handle the case where the libdir is lib64
+	* libgda/gda-statement.c:
+	* libgda/gda-data-comparator.c:
+	* libgda/gda-data-proxy.c:
+	* libgda/gda-custom-marshal.h:
+	* libgda/gda-marshal.c:
+	* libgda/gda-custom-marshal.c:
+	* libgda/gda-set.c:
+	* libgda/gda-marshal.h:
+	* libgda/gda-threader.c:
+	* libgda/Makefile.am:
+	* libgda/gda-config.c:
+	* libgda/gda-connection.c:
+	* libgda/gda-meta-store.c:
+	* libgda/gda-holder.c:
+	* libgda/gda-column.c:
+	* libgda/gda-server-operation.c: renamed gda_marshal* to _gda_marshal* so that these symbols
+	are not exported in the final library anymore (now only 853 symbols exported!)
+	* providers/mysql/gda-mysql-provider.c: honor the "USERNAME" and "PASSWORD" in
+	the auth_string
+	* doc/C: doc. update
+
 2008-10-10  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/handlers/gda-handler-type.c: use g_value_[sg]et_gtype() instead of
@@ -13,7 +55,7 @@
 	* libgda/gda-data-model-extra.h: made gda_data_model_signal_emit_changed()
 	static as it's not used outside
 	* configure.in:
-	  - really only export the needed symbols, 
+	  - really only export the needed symbols,
 	  - proposed fixed for MinGW building on Windows
 
 2008-10-09  Vivien Malerba <malerba@gnome-db.org>

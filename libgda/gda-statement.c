@@ -138,7 +138,7 @@ gda_statement_class_init (GdaStatementClass * klass)
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaStatementClass, checked),
 			      NULL, NULL,
-			      gda_marshal_VOID__OBJECT_BOOLEAN, G_TYPE_NONE,
+			      _gda_marshal_VOID__OBJECT_BOOLEAN, G_TYPE_NONE,
 			      2, GDA_TYPE_CONNECTION, G_TYPE_BOOLEAN);
 
 	klass->reset = NULL;

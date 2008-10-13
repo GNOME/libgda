@@ -371,6 +371,7 @@ gda_data_model_get_n_columns (GdaDataModel *model)
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_get_n_columns) (model);
 	else {
 		/* method not supported */
+		g_warning ("%s() method not supported\n", __FUNCTION__);
 		return -1;
 	}
 }
@@ -399,6 +400,7 @@ gda_data_model_describe_column (GdaDataModel *model, gint col)
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_describe_column) (model, col);
 	else {
 		/* method not supported */
+		g_warning ("%s() method not supported\n", __FUNCTION__);
 		return NULL;
 	}
 }
@@ -693,6 +695,8 @@ gda_data_model_set_values (GdaDataModel *model, gint row, GList *values, GError 
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_set_values) (model, row, values, error);
 	else {
 		/* method not supported */
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR,
+			     _("Data model does not support setting values"));
 		return FALSE;
 	}
 }
@@ -745,6 +749,8 @@ gda_data_model_append_values (GdaDataModel *model, const GList *values, GError *
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_append_values) (model, values, error);
 	else {
 		/* method not supported */
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR,
+			     _("Data model does not support row append"));
 		return -1;
 	}
 }
@@ -774,6 +780,8 @@ gda_data_model_append_row (GdaDataModel *model, GError **error)
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_append_row) (model, error);
 	else {
 		/* method not supported */
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR,
+			     _("Data model does not support row append"));
 		return -1;
 	}
 }
@@ -804,6 +812,8 @@ gda_data_model_remove_row (GdaDataModel *model, gint row, GError **error)
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_remove_row) (model, row, error);
 	else {
 		/* method not supported */
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR,
+			     _("Data model does not support row removal"));
 		return FALSE;
 	}
 }
