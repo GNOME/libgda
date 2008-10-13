@@ -86,7 +86,7 @@ gda_gbr_get_file_path (GdaPrefixDir where, ...)
 		if (! g_str_has_prefix (tmp, LIBGDAPREFIX) || (tmp [prefix_len] != G_DIR_SEPARATOR)) 
 			prefix = g_strdup (tmp);
 		else
-			prefix_dir_name = "bin";
+			prefix_dir_name = tmp + prefix_len + 1;
 		break;
 	case GDA_SBIN_DIR:
 		tmp = LIBGDASBIN;
