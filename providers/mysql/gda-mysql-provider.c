@@ -420,7 +420,6 @@ real_open_connection (const gchar  *host,
 	if (compress)
 		flags |= CLIENT_COMPRESS;
 	
-	
 	MYSQL *mysql = g_new0 (MYSQL, 1);
 	mysql_init (mysql);
 
@@ -529,7 +528,6 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 	use_ssl = gda_quark_list_find (params, "USE_SSL");
 	compress = gda_quark_list_find (params, "COMPRESS");
 	
-	
 	/* open the real connection to the database */
 	/* TO_ADD: C API specific function calls;
 	 * if it fails, add a connection event and return FALSE */
@@ -558,7 +556,6 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 		_gda_mysql_make_error (cnc, NULL, mysql_stmt, NULL);
 		return FALSE;
 	}
-	
 
 	/* Create a new instance of the provider specific data associated to a connection (MysqlConnectionData),
 	 * and set its contents */
@@ -574,7 +571,6 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 	cdata->version_long = mysql_get_server_version (mysql);
 	cdata->version = get_mysql_version (mysql);
 	
-
 	/* Optionnally set some attributes for the newly opened connection (encoding to UTF-8 for example )*/
 	// TO_IMPLEMENT;
 
@@ -1178,7 +1174,6 @@ gda_mysql_provider_statement_prepare (GdaServerProvider  *provider,
 
 	/* prepare @stmt using the C API, creates @ps */
 	// TO_IMPLEMENT;
-	
 
 	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
@@ -1193,7 +1188,6 @@ gda_mysql_provider_statement_prepare (GdaServerProvider  *provider,
 		(provider, cnc, stmt, set,
 		 GDA_STATEMENT_SQL_PARAMS_AS_UQMARK, &used_set, error);
 
-	
 	if (!sql)
 		goto cleanup;
 
@@ -1229,7 +1223,6 @@ gda_mysql_provider_statement_prepare (GdaServerProvider  *provider,
 	if (!ps)
 		return FALSE;
 	else {
-		
 		gda_pstmt_set_gda_statement (_GDA_PSTMT(ps), stmt);
 		_GDA_PSTMT(ps)->param_ids = param_ids;
 		_GDA_PSTMT(ps)->sql = sql;
@@ -1348,7 +1341,6 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			g_free (sql);
 			if (!ps)
 				return NULL;
-			
 		}
 		else
 			ps = (GdaMysqlPStmt *) gda_connection_get_prepared_statement (cnc, stmt);
@@ -1367,10 +1359,10 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 	char **param_values = g_new0 (char *, nb_params + 1);
         int *param_lengths = g_new0 (int, nb_params + 1);
         int *param_formats = g_new0 (int, nb_params + 1);
-	/* g_print ("NB=%d, SQL=%s\n", nb_params, _GDA_PSTMT(ps)->sql); */
+	//g_print ("NB=%d, SQL=%s\n", nb_params, _GDA_PSTMT(ps)->sql);
 
 	MYSQL_BIND *mysql_bind_param = g_new0 (MYSQL_BIND, nb_params);
-	
+
 	for (i = 0, list = _GDA_PSTMT (ps)->param_ids; list; list = list->next, i++) {
 		const gchar *pname = (gchar *) list->data;
 
@@ -1405,12 +1397,13 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				break;
 			} else {
                                 /* bind param to NULL */
-                                TO_IMPLEMENT;
+                                //TO_IMPLEMENT;
+				param_values[i] = NULL;
                                 empty_rs = TRUE;
                                 continue;
 			}
-
 		}
+
 		if (!gda_holder_is_valid (h)) {
 
 			if (!allow_noparam) {
@@ -1424,11 +1417,11 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				break;
 			} else {
                                 /* bind param to NULL */
-				TO_IMPLEMENT;
+				//TO_IMPLEMENT;
+				param_values[i] = NULL;
                                 empty_rs = TRUE;
                                 continue;
                         }
-
 		}
 
 		/* actual binding using the C API, for parameter at position @i */
@@ -1440,14 +1433,12 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 		} else if ((G_VALUE_TYPE(value) == G_TYPE_DATE) ||
 			   (G_VALUE_TYPE(value) == GDA_TYPE_TIME) ||
 			   (G_VALUE_TYPE(value) == GDA_TYPE_TIMESTAMP)) {
-			
 			GdaHandlerTime *handler_time = (GdaHandlerTime *) gda_server_provider_get_data_handler_gtype
 				(provider, cnc, G_VALUE_TYPE(value));
 			g_assert (handler_time);
 			param_values[i] = gda_handler_time_get_no_locale_str_from_value (handler_time,
 											 value);
-			
-			/* g_print ("--- TIME=%s\n", param_values[i]); */
+			//g_print ("--- TIME=%s\n", param_values[i]);
 		} else {
 			GdaDataHandler *data_handler = gda_server_provider_get_data_handler_gtype
 				(provider, cnc, G_VALUE_TYPE(value));
@@ -1456,15 +1447,13 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			else
 				param_values[i] = gda_data_handler_get_str_from_value (data_handler,
 										       value);
-			/* g_print ("--- PV=%s\n", param_values[i]); */
+			//g_print ("--- PV=%s\n", param_values[i]);
 
 			mysql_bind_param[i].buffer_type = MYSQL_TYPE_STRING;
 			mysql_bind_param[i].buffer = g_strdup (param_values[i]);
 			mysql_bind_param[i].buffer_length = strlen (param_values[i]);
 			mysql_bind_param[i].length = g_malloc0 (sizeof(unsigned long));
-
 		}
-
 	}
 		
 	if (mysql_stmt_bind_param (cdata->mysql_stmt, mysql_bind_param)) {
@@ -1510,23 +1499,28 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 		 * execute another SQL which is the code shown here.
 		 *
 		 * To adapt depending on the C API and its features */
-		GdaStatement *estmt;
-                gchar *esql;
-                estmt = gda_select_alter_select_for_empty (stmt, error);
-                if (!estmt)
+		GdaStatement *stmt_for_empty;
+                gchar *sql_for_empty;
+                stmt_for_empty = gda_select_alter_select_for_empty (stmt, error);
+                if (!stmt_for_empty)
                         return NULL;
-                esql = gda_statement_to_sql (estmt, NULL, error);
-                g_object_unref (estmt);
-                if (!esql)
+                sql_for_empty = gda_statement_to_sql (stmt_for_empty, NULL, error);
+                g_object_unref (stmt_for_empty);
+                if (!sql_for_empty)
                         return NULL;
 
-		/* Execute the 'esql' SQL code */
-                g_free (esql);
+		/* This is a re-prepare of the statement.  The function mysql_stmt_prepare
+		 * will handle this on the server side. */
+		if (mysql_stmt_prepare (cdata->mysql_stmt, sql_for_empty, strlen (sql_for_empty))) {
+			GdaConnectionEvent *event = _gda_mysql_make_error
+				(cdata->cnc, NULL, cdata->mysql_stmt, NULL);
+			return NULL;
+		}
 
-		TO_IMPLEMENT;
-	} else {
-		/* Execute the _GDA_PSTMT (ps)->sql SQL code */
-		TO_IMPLEMENT;
+		/* Execute the 'sql_for_empty' SQL code */
+                g_free (sql_for_empty);
+
+		//TO_IMPLEMENT;
 	}
 
 	
@@ -1561,7 +1555,6 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			// TO_IMPLEMENT;
 			/* Create a #GdaSet containing "IMPACTED_ROWS" */
 			/* Create GdaConnectionEvent notice with the type of command and impacted rows */
-
 			
 			affected_rows = mysql_stmt_affected_rows (cdata->mysql_stmt);
 			if (affected_rows >= 0) {
@@ -1579,12 +1572,9 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			} else {
 				return_value = (GObject *) gda_data_model_array_new (0);
 			}
-			
 		}
-		
 	}
 	return return_value;
-	
 }
 
 /*

@@ -371,6 +371,7 @@ gda_data_model_iter_move_prev
 gda_data_model_iter_get_row
 gda_data_model_iter_get_holder_for_field
 gda_data_model_iter_invalidate_contents
+gda_data_model_iter_compute_attributes
 <SUBSECTION Standard>
 GDA_DATA_MODEL_ITER
 GDA_DATA_MODEL_ITER_CLASS

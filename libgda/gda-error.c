@@ -29,7 +29,7 @@ gda_error_get_type (void)
 		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
 		g_static_mutex_lock (&registering);
                 if (type == 0)
-			type = g_boxed_type_register_static ("GDaError",
+			type = g_boxed_type_register_static ("GdaError",
 							     (GBoxedCopyFunc) g_error_copy,
 							     (GBoxedFreeFunc) g_error_free);
 		g_static_mutex_unlock (&registering);

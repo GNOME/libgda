@@ -193,3 +193,13 @@ Data model iterator
 @iter: 
 
 
+<!-- ##### FUNCTION gda_data_model_iter_compute_attributes ##### -->
+<para>
+
+</para>
+
+@iter: 
+@error: 
+@Returns: 
+
+

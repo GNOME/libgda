@@ -381,86 +381,6 @@ gda_data_model_iter_finalize (GObject   * object)
 	parent_class->finalize (object);
 }
 
-static void
-set_holders_properties_from_select_stmt (GdaDataModelIter *iter, GdaConnection *cnc, GdaStatement *sel_stmt)
-{
-	GdaSqlStatement *sqlst = NULL;
-	GdaSqlStatementSelect *select;
-	GdaSqlSelectTarget *target;
-
-	g_object_get (G_OBJECT (sel_stmt), "structure", &sqlst, NULL);
-	g_assert (sqlst->stmt_type == GDA_SQL_STATEMENT_SELECT);
-	select = (GdaSqlStatementSelect*) sqlst->contents;
-
-	/* we only want a single target */
-	if (!select->from || !select->from->targets || select->from->targets->next)
-		goto out;
-	
-	target = (GdaSqlSelectTarget *) select->from->targets->data;
-	if (!target || !target->table_name)
-		goto out;
-
-	if (! gda_sql_statement_check_validity (sqlst, cnc, NULL))
-		goto out;
-
-	if (!target->validity_meta_object) {
-		g_warning ("Internal gda_sql_statement_check_validity() error: target->validity_meta_object is not set");
-		goto out;
-	}
-
-	/* FIXME: also set some column attributes using gda_column_set_attribute() */
-
-	GSList *fields, *holders;
-	for (fields = select->expr_list, holders = GDA_SET (iter)->holders; 
-	     fields && holders; 
-	     fields = fields->next) {
-		GdaSqlSelectField *selfield = (GdaSqlSelectField*) fields->data;
-		if (selfield->validity_meta_table_column) {
-			GdaMetaTableColumn *tcol = selfield->validity_meta_table_column;
-
-			/*g_print ("==> %s\n", tcol->column_name);*/
-			gda_holder_set_not_null (GDA_HOLDER (holders->data), ! tcol->nullok);
-			if (tcol->default_value) {
-				GValue *dvalue;
-				g_value_set_string ((dvalue = gda_value_new (G_TYPE_STRING)), tcol->default_value);
-				gda_holder_set_default_value (GDA_HOLDER (holders->data), dvalue);
-				gda_value_free (dvalue);
-			}
-			holders = holders->next;
-		}
-		else if (selfield->validity_meta_object && 
-			 (selfield->validity_meta_object->obj_type == GDA_META_DB_TABLE) &&
-			 selfield->expr && selfield->expr->value && !selfield->expr->param_spec && 
-			 (G_VALUE_TYPE (selfield->expr->value) == G_TYPE_STRING) &&
-			 !strcmp (g_value_get_string (selfield->expr->value), "*")) {
-			/* expand all the fields */
-			GdaMetaTable *mtable = GDA_META_TABLE (selfield->validity_meta_object);
-			GSList *tmplist;
-			for (tmplist = mtable->columns; tmplist; tmplist = tmplist->next) {
-				GdaMetaTableColumn *tcol = (GdaMetaTableColumn*) tmplist->data;
-				/*g_print ("*==> %s\n", tcol->column_name);*/
-				gda_holder_set_not_null (GDA_HOLDER (holders->data), ! tcol->nullok);
-				if (tcol->default_value) {
-					GValue *dvalue;
-					g_value_set_string ((dvalue = gda_value_new (G_TYPE_STRING)), tcol->default_value);
-					gda_holder_set_default_value (GDA_HOLDER (holders->data), dvalue);
-					gda_value_free (dvalue);
-				}
-				if (tmplist)
-					holders = holders->next;
-			}
-		}
-		else
-			holders = holders->next;
-	}
-	if (fields || holders)
-		g_warning ("Internal error: GdaDataModelIter has %d GdaHolders, and SELECT statement has %d expressions",
-			   g_slist_length (GDA_SET (iter)->holders), g_slist_length (select->expr_list));
-
- out:
-	gda_sql_statement_free (sqlst);
-}
-
 static void 
 gda_data_model_iter_set_property (GObject *object,
 				  guint param_id,
@@ -551,19 +471,6 @@ gda_data_model_iter_set_property (GObject *object,
 										  G_CALLBACK (model_row_removed_cb), iter);
 			iter->priv->model_changes_signals [2] = g_signal_connect (G_OBJECT (ptr), "reset",
 										  G_CALLBACK (model_reset_cb), iter);
-
-			if (GDA_IS_DATA_SELECT (iter->priv->data_model)) {
-				GdaStatement *sel_stmt;
-				GdaConnection *cnc;
-				g_object_get (G_OBJECT (iter->priv->data_model), "connection", &cnc, 
-					      "select-stmt", &sel_stmt, NULL);
-				if (sel_stmt && cnc) 
-					set_holders_properties_from_select_stmt (iter, cnc, sel_stmt);
-				if (sel_stmt)
-					g_object_unref (sel_stmt);
-				if (cnc)
-					g_object_unref (cnc);
-			}
 			break;
                 }
 		case PROP_CURRENT_ROW:
@@ -1063,4 +970,114 @@ gda_data_model_iter_get_value_for_field (GdaDataModelIter *iter, const gchar *fi
 		return gda_holder_get_value (param);
 	else
 		return NULL;
+}
+
+static void
+set_holders_properties_from_select_stmt (GdaDataModelIter *iter, GdaConnection *cnc, GdaStatement *sel_stmt)
+{
+	GdaSqlStatement *sqlst = NULL;
+	GdaSqlStatementSelect *select;
+	GdaSqlSelectTarget *target;
+	GSList *fields, *holders;
+
+	g_object_get (G_OBJECT (sel_stmt), "structure", &sqlst, NULL);
+	g_assert (sqlst->stmt_type == GDA_SQL_STATEMENT_SELECT);
+	select = (GdaSqlStatementSelect*) sqlst->contents;
+
+	/* we only want a single target */
+	if (!select->from || !select->from->targets || select->from->targets->next)
+		goto out;
+	
+	target = (GdaSqlSelectTarget *) select->from->targets->data;
+	if (!target || !target->table_name)
+		goto out;
+
+	if (! gda_sql_statement_check_validity (sqlst, cnc, NULL))
+		goto out;
+
+	if (!target->validity_meta_object) {
+		g_warning ("Internal gda_sql_statement_check_validity() error: target->validity_meta_object is not set");
+		goto out;
+	}
+
+	/* FIXME: also set some column attributes using gda_column_set_attribute() */
+
+	for (fields = select->expr_list, holders = GDA_SET (iter)->holders; 
+	     fields && holders; 
+	     fields = fields->next) {
+		GdaSqlSelectField *selfield = (GdaSqlSelectField*) fields->data;
+		if (selfield->validity_meta_table_column) {
+			GdaMetaTableColumn *tcol = selfield->validity_meta_table_column;
+
+			/*g_print ("==> %s\n", tcol->column_name);*/
+			gda_holder_set_not_null (GDA_HOLDER (holders->data), ! tcol->nullok);
+			if (tcol->default_value) {
+				GValue *dvalue;
+				g_value_set_string ((dvalue = gda_value_new (G_TYPE_STRING)), tcol->default_value);
+				gda_holder_set_default_value (GDA_HOLDER (holders->data), dvalue);
+				gda_value_free (dvalue);
+			}
+			holders = holders->next;
+		}
+		else if (selfield->validity_meta_object && 
+			 (selfield->validity_meta_object->obj_type == GDA_META_DB_TABLE) &&
+			 selfield->expr && selfield->expr->value && !selfield->expr->param_spec && 
+			 (G_VALUE_TYPE (selfield->expr->value) == G_TYPE_STRING) &&
+			 !strcmp (g_value_get_string (selfield->expr->value), "*")) {
+			/* expand all the fields */
+			GdaMetaTable *mtable = GDA_META_TABLE (selfield->validity_meta_object);
+			GSList *tmplist;
+			for (tmplist = mtable->columns; tmplist; tmplist = tmplist->next) {
+				GdaMetaTableColumn *tcol = (GdaMetaTableColumn*) tmplist->data;
+				/*g_print ("*==> %s\n", tcol->column_name);*/
+				gda_holder_set_not_null (GDA_HOLDER (holders->data), ! tcol->nullok);
+				if (tcol->default_value) {
+					GValue *dvalue;
+					g_value_set_string ((dvalue = gda_value_new (G_TYPE_STRING)), tcol->default_value);
+					gda_holder_set_default_value (GDA_HOLDER (holders->data), dvalue);
+					gda_value_free (dvalue);
+				}
+				if (tmplist)
+					holders = holders->next;
+			}
+		}
+		else
+			holders = holders->next;
+	}
+	if (fields || holders)
+		g_warning ("Internal error: GdaDataModelIter has %d GdaHolders, and SELECT statement has %d expressions",
+			   g_slist_length (GDA_SET (iter)->holders), g_slist_length (select->expr_list));
+
+ out:
+	gda_sql_statement_free (sqlst);
+}
+
+/**
+ * gda_data_model_iter_compute_attributes
+ * @iter: a #GdaDataModelIter object
+ * @error: a place to store errors, or %NULL
+ *
+ * Requests that @iter compute the attributes of each of its #GdaHolder value holders.
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_data_model_iter_compute_attributes (GdaDataModelIter *iter, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
+	g_return_val_if_fail (iter->priv, FALSE);
+
+	if (GDA_IS_DATA_SELECT (iter->priv->data_model)) {
+		GdaStatement *sel_stmt;
+		GdaConnection *cnc;
+		g_object_get (G_OBJECT (iter->priv->data_model), "connection", &cnc, 
+			      "select-stmt", &sel_stmt, NULL);
+		if (sel_stmt && cnc) 
+			set_holders_properties_from_select_stmt (iter, cnc, sel_stmt);
+		if (sel_stmt)
+			g_object_unref (sel_stmt);
+		if (cnc)
+			g_object_unref (cnc);
+	}
+	return TRUE;
 }

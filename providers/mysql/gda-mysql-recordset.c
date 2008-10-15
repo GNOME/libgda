@@ -37,14 +37,12 @@ extern gchar *gda_numeric_locale;
 
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 
-
 enum
 {
 	PROP_0,
 	PROP_CHUNK_SIZE,
 	PROP_CHUNKS_READ
 };
-
 
 static void
 gda_mysql_recordset_class_init (GdaMysqlRecordsetClass  *klass);
@@ -59,35 +57,36 @@ static gint
 gda_mysql_recordset_fetch_nb_rows (GdaDataSelect  *model);
 static gboolean
 gda_mysql_recordset_fetch_random (GdaDataSelect  *model,
-				  GdaRow    **row,
-				  gint        rownum,
-				  GError    **error);
+				  GdaRow        **row,
+				  gint            rownum,
+				  GError        **error);
 static gboolean
 gda_mysql_recordset_fetch_next (GdaDataSelect  *model,
-				GdaRow    **row,
-				gint        rownum,
-				GError    **error);
+				GdaRow        **row,
+				gint            rownum,
+				GError        **error);
 static gboolean
 gda_mysql_recordset_fetch_prev (GdaDataSelect  *model,
-				GdaRow    **row,
-				gint        rownum,
-				GError    **error);
+				GdaRow        **row,
+				gint            rownum,
+				GError        **error);
 static gboolean
 gda_mysql_recordset_fetch_at (GdaDataSelect  *model,
-			      GdaRow    **row,
-			      gint        rownum,
-			      GError    **error);
-
+			      GdaRow        **row,
+			      gint            rownum,
+			      GError        **error);
 
 struct _GdaMysqlRecordsetPrivate {
-	GdaConnection *cnc;
+	GdaConnection  *cnc;
 	/* TO_ADD: specific information */
 	
-	MYSQL_STMT  *mysql_stmt;
+	MYSQL_STMT     *mysql_stmt;
 
-	gint  chunk_size;    /* Number of rows to fetch at a time when iterating forward/backward. */
-	gint  chunks_read;   /* Number of times that we've iterated forward/backward. */
-	
+	gint            chunk_size;    /* Number of rows to fetch at a time when iterating forward/backward. */
+	gint            chunks_read;   /* Number of times that we've iterated forward/backward. */
+	//
+	GdaRow         *tmp_row;       /* Used in cursor mode to store a reference to the latest #GdaRow. */
+	//
 };
 static GObjectClass *parent_class = NULL;
 
@@ -104,10 +103,8 @@ gda_mysql_recordset_init (GdaMysqlRecordset       *recset,
 
 	/* initialize specific information */
 	// TO_IMPLEMENT;
-	
 	recset->priv->chunk_size = 1;
 	recset->priv->chunks_read = 0;
-	
 }
 
 
@@ -140,7 +137,6 @@ gda_mysql_recordset_set_chunk_size (GdaMysqlRecordset  *recset,
 	g_warning (_("Could not use CURSOR. Mysql version 5.0 at least is required. "
 		     "Chunk size ignored."));
 #endif
-
 }
 
 gint
@@ -157,17 +153,17 @@ gda_mysql_recordset_set_property (GObject       *object,
 				  const GValue  *value,
 				  GParamSpec    *pspec)
 {
-	GdaMysqlRecordset *record_set;
+	GdaMysqlRecordset *recordset;
 
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (GDA_IS_MYSQL_RECORDSET(object));
 	g_return_if_fail (GDA_MYSQL_RECORDSET(object)->priv != NULL);
 
-	record_set = GDA_MYSQL_RECORDSET(object);
+	recordset = GDA_MYSQL_RECORDSET(object);
 
 	switch (param_id) {
 	case PROP_CHUNK_SIZE:
-		gda_mysql_recordset_set_chunk_size (record_set,
+		gda_mysql_recordset_set_chunk_size (recordset,
 						    g_value_get_int (value));
 		break;
 	case PROP_CHUNKS_READ:
@@ -183,20 +179,20 @@ gda_mysql_recordset_get_property (GObject     *object,
 				  GValue      *value,
 				  GParamSpec  *pspec)
 {
-	GdaMysqlRecordset *record_set;
+	GdaMysqlRecordset *recordset;
 
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (GDA_IS_MYSQL_RECORDSET(object));
 	g_return_if_fail (GDA_MYSQL_RECORDSET(object)->priv != NULL);
 
-	record_set = GDA_MYSQL_RECORDSET(object);
+	recordset = GDA_MYSQL_RECORDSET(object);
 
 	switch (param_id) {
 	case PROP_CHUNK_SIZE:
-		g_value_set_int (value, record_set->priv->chunk_size);
+		g_value_set_int (value, recordset->priv->chunk_size);
 		break;
 	case PROP_CHUNKS_READ:
-		g_value_set_int (value, record_set->priv->chunks_read);
+		g_value_set_int (value, recordset->priv->chunks_read);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -250,12 +246,17 @@ gda_mysql_recordset_dispose (GObject  *object)
 	g_return_if_fail (GDA_IS_MYSQL_RECORDSET (recset));
 
 	if (recset->priv) {
-		if (recset->priv->cnc) 
-			g_object_unref (recset->priv->cnc);
+		if (recset->priv->cnc) {
+			g_object_unref (G_OBJECT(recset->priv->cnc));
+			recset->priv->cnc = NULL;
+		}
+		if (recset->priv->tmp_row) {
+			g_object_unref (G_OBJECT(recset->priv->tmp_row));
+			recset->priv->tmp_row = NULL;
+		}
 
 		/* free specific information */
 		// TO_IMPLEMENT;
-		
 		g_free (recset->priv);
 		recset->priv = NULL;
 	}
@@ -323,7 +324,6 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 		// TO_IMPLEMENT;
 		
 		_GDA_PSTMT(ps)->ncols = mysql_stmt_field_count (cdata->mysql_stmt);
-		
 	}
 
         /* completing @ps if not yet done */
@@ -356,7 +356,7 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 		MYSQL_FIELD *mysql_fields = mysql_fetch_fields (mysql_res);
 		
 		MYSQL_BIND *mysql_bind_result = g_new0 (MYSQL_BIND, GDA_PSTMT (ps)->ncols);
-		//		
+
 		/* fill GdaColumn's data */
 		for (i=0, list = _GDA_PSTMT (ps)->tmpl_columns; 
 		     i < GDA_PSTMT (ps)->ncols; 
@@ -423,17 +423,16 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 				g_warning (_("Invalid column bind data type. %d\n"),
 					   mysql_bind_result[i].buffer_type);
 			}
-			
 		}
 		
                 if (mysql_stmt_bind_result (cdata->mysql_stmt, mysql_bind_result)) {
-                        g_warning ("mysql_stmt_bind_result failed: %s\n", mysql_stmt_error (cdata->mysql_stmt));
+                        g_warning ("mysql_stmt_bind_result failed: %s\n",
+				   mysql_stmt_error (cdata->mysql_stmt));
                 }
 		
 		mysql_free_result (mysql_res);
 
 		ps->mysql_bind_result = mysql_bind_result;
-
         }
 
 	/* determine access mode: RANDOM or CURSOR FORWARD are the only supported */
@@ -458,7 +457,6 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 
 	((GdaDataSelect *) model)->advertized_nrows = mysql_stmt_affected_rows (cdata->mysql_stmt);
 	
-
         return GDA_DATA_MODEL (model);
 }
 
@@ -480,7 +478,6 @@ gda_mysql_recordset_fetch_nb_rows (GdaDataSelect *model)
 	
 	model->advertized_nrows = mysql_stmt_affected_rows (imodel->priv->mysql_stmt);
 	
-
 	return model->advertized_nrows;
 }
 
@@ -489,7 +486,13 @@ static GdaRow *
 new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel,
 			 gint                rownum)
 {
-	/* g_print ("*** %s -- %d -- %d\n", __func__, ((GdaDataSelect *) imodel)->prep_stmt->ncols, rownum); */
+	/* g_print ("%s(): NCOLS=%d  ROWNUM=%d\n", __func__, */
+	/* 	 ((GdaDataSelect *) imodel)->prep_stmt->ncols, rownum); */
+
+	g_return_val_if_fail (imodel->priv->mysql_stmt != NULL, NULL);
+
+	if (mysql_stmt_fetch (imodel->priv->mysql_stmt))
+		return NULL;
 	
 	MYSQL_BIND *mysql_bind_result = ((GdaMysqlPStmt *) ((GdaDataSelect *) imodel)->prep_stmt)->mysql_bind_result;
 	g_assert (mysql_bind_result);
@@ -497,7 +500,6 @@ new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel,
 	GdaRow *row = gda_row_new (((GdaDataSelect *) imodel)->prep_stmt->ncols);
 	gint col;
 	for (col = 0; col < ((GdaDataSelect *) imodel)->prep_stmt->ncols; ++col) {
-		
 		gint i = col;
 		
 		GValue *value = gda_row_get_value (row, i);
@@ -635,11 +637,6 @@ new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel,
 		}
 
 		g_free (strvalue);
-		
-		/* gchar *str = gda_value_stringify (value); */
-		/* g_print ("***V%d=%s\n", i, str); */
-		/* g_free (str); */
-
 	}
 	return row;
 }
@@ -662,28 +659,17 @@ new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel,
  */
 static gboolean 
 gda_mysql_recordset_fetch_random (GdaDataSelect  *model,
-				  GdaRow    **row,
-				  gint        rownum,
-				  GError    **error)
+				  GdaRow        **row,
+				  gint            rownum,
+				  GError        **error)
 {
 	GdaMysqlRecordset *imodel;
 
 	imodel = GDA_MYSQL_RECORDSET (model);
 
 	// TO_IMPLEMENT;
-	
 	if (*row)
 		return TRUE;
-
-	if (imodel->priv->mysql_stmt == NULL) {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-			     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
-			     _("Internal error"));
-		return FALSE;
-	}
-	
-	if (mysql_stmt_fetch (imodel->priv->mysql_stmt))
-		return FALSE;
 	
 	*row = new_row_from_mysql_stmt (imodel, rownum);
 	gda_data_select_take_row (model, *row, rownum);
@@ -702,7 +688,7 @@ gda_mysql_recordset_fetch_random (GdaDataSelect  *model,
  */
 static gboolean
 gda_mysql_recordset_store_all (GdaDataSelect  *model,
-			       GError    **error)
+			       GError        **error)
 {
 	GdaMysqlRecordset *imodel;
 	gint i;
@@ -732,17 +718,26 @@ gda_mysql_recordset_store_all (GdaDataSelect  *model,
  */
 static gboolean 
 gda_mysql_recordset_fetch_next (GdaDataSelect  *model,
-				GdaRow    **row,
-				gint        rownum,
-				GError    **error)
+				GdaRow        **row,
+				gint            rownum,
+				GError        **error)
 {
 	GdaMysqlRecordset *imodel = (GdaMysqlRecordset*) model;
 
 	// TO_IMPLEMENT;
-	//
 
-	// gda_data_select_iter_next increments rownum
-	return /* TRUE */ gda_mysql_recordset_fetch_random (model, row, rownum, error);
+	// gda_data_select_iter_next () increments rownum
+
+	if (imodel->priv->tmp_row != NULL) {
+		g_object_unref (G_OBJECT(imodel->priv->tmp_row));
+		imodel->priv->tmp_row = NULL;
+	}
+	
+	*row = new_row_from_mysql_stmt (imodel, rownum);
+
+	imodel->priv->tmp_row = *row;
+
+	return TRUE;
 }
 
 /*
@@ -759,9 +754,9 @@ gda_mysql_recordset_fetch_next (GdaDataSelect  *model,
  */
 static gboolean 
 gda_mysql_recordset_fetch_prev (GdaDataSelect  *model,
-				GdaRow    **row,
-				gint        rownum,
-				GError    **error)
+				GdaRow        **row,
+				gint            rownum,
+				GError        **error)
 {
 	GdaMysqlRecordset *imodel = (GdaMysqlRecordset*) model;
 
@@ -784,9 +779,9 @@ gda_mysql_recordset_fetch_prev (GdaDataSelect  *model,
  */
 static gboolean 
 gda_mysql_recordset_fetch_at (GdaDataSelect  *model,
-			      GdaRow    **row,
-			      gint        rownum,
-			      GError    **error)
+			      GdaRow        **row,
+			      gint            rownum,
+			      GError        **error)
 {
 	GdaMysqlRecordset *imodel = (GdaMysqlRecordset*) model;
 	

@@ -2,7 +2,7 @@
  * Copyright (C) 2008 The GNOME Foundation
  *
  * AUTHORS:
- *      TO_ADD: your name and email
+ *      Carlos Savoretti <csavoretti@gmail.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -27,7 +27,7 @@
 #include "gda-mysql-blob-op.h"
 
 struct _GdaMysqlBlobOpPrivate {
-	GdaConnection *cnc;
+	GdaConnection  *cnc;
 	/* TO_ADD: specific information describing a Blob in the C API */
 };
 
@@ -72,8 +72,8 @@ gda_mysql_blob_op_get_type (void)
 }
 
 static void
-gda_mysql_blob_op_init (GdaMysqlBlobOp *op,
-			   GdaMysqlBlobOpClass *klass)
+gda_mysql_blob_op_init (GdaMysqlBlobOp       *op,
+			GdaMysqlBlobOpClass  *klass)
 {
 	g_return_if_fail (GDA_IS_MYSQL_BLOB_OP (op));
 
@@ -84,7 +84,7 @@ gda_mysql_blob_op_init (GdaMysqlBlobOp *op,
 }
 
 static void
-gda_mysql_blob_op_class_init (GdaMysqlBlobOpClass *klass)
+gda_mysql_blob_op_class_init (GdaMysqlBlobOpClass  *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GdaBlobOpClass *blob_class = GDA_BLOB_OP_CLASS (klass);
@@ -98,7 +98,7 @@ gda_mysql_blob_op_class_init (GdaMysqlBlobOpClass *klass)
 }
 
 static void
-gda_mysql_blob_op_finalize (GObject * object)
+gda_mysql_blob_op_finalize (GObject  *object)
 {
 	GdaMysqlBlobOp *pgop = (GdaMysqlBlobOp *) object;
 
@@ -114,7 +114,7 @@ gda_mysql_blob_op_finalize (GObject * object)
 }
 
 GdaBlobOp *
-gda_mysql_blob_op_new (GdaConnection *cnc)
+gda_mysql_blob_op_new (GdaConnection  *cnc)
 {
 	GdaMysqlBlobOp *pgop;
 
@@ -130,7 +130,7 @@ gda_mysql_blob_op_new (GdaConnection *cnc)
  * Get length request
  */
 static glong
-gda_mysql_blob_op_get_length (GdaBlobOp *op)
+gda_mysql_blob_op_get_length (GdaBlobOp  *op)
 {
 	GdaMysqlBlobOp *pgop;
 
@@ -147,7 +147,10 @@ gda_mysql_blob_op_get_length (GdaBlobOp *op)
  * Blob read request
  */
 static glong
-gda_mysql_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
+gda_mysql_blob_op_read (GdaBlobOp  *op,
+			GdaBlob    *blob,
+			glong       offset,
+			glong       size)
 {
 	GdaMysqlBlobOp *pgop;
 	GdaBinary *bin;
@@ -176,7 +179,9 @@ gda_mysql_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
  * Blob write request
  */
 static glong
-gda_mysql_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
+gda_mysql_blob_op_write (GdaBlobOp  *op,
+			 GdaBlob    *blob,
+			 glong       offset)
 {
 	GdaMysqlBlobOp *pgop;
 	GdaBinary *bin;

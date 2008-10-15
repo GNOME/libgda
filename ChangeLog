@@ -1,3 +1,22 @@
+2008-10-15  Vivien Malerba <malerba@gnome-db.org>
+
+	* providers/mysql/gda-mysql-pstmt.[ch]:
+	* providers/mysql/gda-mysql-blob-op.[ch]:
+	* providers/mysql/gda-mysql-provider.c:
+	* providers/mysql/gda-mysql-recordset.[ch]: corrections for cursor based access SELECT
+	statements, thanks to Carlos Savoretti
+	* libgda/gda-data-model-iter.[ch]: added the gda_data_model_iter_compute_attributes()
+	method to force the iterator to compute and set the correct attributes for
+	each of its GdaHolder; a separate method is required because computing them
+	all the time consumes too much ressources, see bug #556327
+
+
+2008-10-15  Johannes Schmid  <jschmid@openismus.com>
+
+	* libgda/Makefile.am: Install gda-error.h header
+	* libgda/gda-error.c (gda_error_get_type):
+	Fixed a typo (GDaError <-> GdaError), for bug #556258
+
 2008-10-13  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-error.[ch]: declare a GDA_TYPE_ERROR by registering a boxed type

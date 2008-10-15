@@ -84,10 +84,8 @@ gda_mysql_pstmt_init (GdaMysqlPStmt       *pstmt,
 	
 	/* initialize specific parts of @pstmt */
 	// TO_IMPLEMENT;
-	
 	pstmt->mysql_bind_param = NULL;
 	pstmt->mysql_bind_result = NULL;
-	
 }
 
 static void
@@ -99,7 +97,6 @@ gda_mysql_pstmt_finalize (GObject  *object)
 
 	/* free memory */
 	// TO_IMPLEMENT; /* free some specific parts of @pstmt */
-	
 	gint i;
 	for (i = 0; i < g_slist_length (((GdaPStmt *) pstmt)->param_ids); ++i) {
 		g_free (pstmt->mysql_bind_param[i].buffer);
@@ -115,7 +112,6 @@ gda_mysql_pstmt_finalize (GObject  *object)
 	}
 	g_free (pstmt->mysql_bind_result);
 	pstmt->mysql_bind_result = NULL;
-	
 
 	/* chain to parent class */
 	parent_class->finalize (object);

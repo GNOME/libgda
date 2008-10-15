@@ -40,12 +40,12 @@ typedef struct _GdaMysqlRecordsetClass   GdaMysqlRecordsetClass;
 typedef struct _GdaMysqlRecordsetPrivate GdaMysqlRecordsetPrivate;
 
 struct _GdaMysqlRecordset {
-	GdaDataSelect                model;
-	GdaMysqlRecordsetPrivate *priv;
+	GdaDataSelect              model;
+	GdaMysqlRecordsetPrivate  *priv;
 };
 
 struct _GdaMysqlRecordsetClass {
-	GdaDataSelectClass             parent_class;
+	GdaDataSelectClass         parent_class;
 };
 
 GType

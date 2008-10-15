@@ -2,7 +2,7 @@
  * Copyright (C) 2008 The GNOME Foundation
  *
  * AUTHORS:
- *      TO_ADD: your name and email
+ *      Carlos Savoretti <csavoretti@gmail.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -38,16 +38,16 @@ typedef struct _GdaMysqlBlobOpClass   GdaMysqlBlobOpClass;
 typedef struct _GdaMysqlBlobOpPrivate GdaMysqlBlobOpPrivate;
 
 struct _GdaMysqlBlobOp {
-	GdaBlobOp             parent;
-	GdaMysqlBlobOpPrivate *priv;
+	GdaBlobOp               parent;
+	GdaMysqlBlobOpPrivate  *priv;
 };
 
 struct _GdaMysqlBlobOpClass {
-	GdaBlobOpClass        parent_class;
+	GdaBlobOpClass          parent_class;
 };
 
 GType         gda_mysql_blob_op_get_type     (void) G_GNUC_CONST;
-GdaBlobOp    *gda_mysql_blob_op_new          (GdaConnection *cnc);
+GdaBlobOp    *gda_mysql_blob_op_new          (GdaConnection  *cnc);
 
 /* TO_ADD: more convenient API to create a GdaBlobOp with some specific information as argument */
 
