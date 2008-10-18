@@ -1,3 +1,17 @@
+2008-10-18  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-data-select.[ch]: added gda_data_select_compute_columns_attributes()
+	which implements what was in gda_data_model_iter_compute_attributes(), better to
+	make it there since it was specific to the GdaDataSelect object
+	* libgda/gda-data-model-iter.[ch]: removed gda_data_model_iter_compute_attributes()
+	* libgda/sqlite/gda-sqlite-provider.c:
+	* providers/mysql/gda-mysql-provider.c:
+	* libgda/gda-data-proxy.c:
+	* libgda/gda-holder.c:
+	* tests/value-holders/check_holder.c:
+	* libgda/gda-easy.c: minor bug fixes
+	* libgda/gda-set.[ch]: removed dead code and declarations
+
 2008-10-15  Vivien Malerba <malerba@gnome-db.org>
 
 	* providers/mysql/gda-mysql-pstmt.[ch]:

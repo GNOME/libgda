@@ -491,7 +491,7 @@ gda_set_new_inline (gint nb, ...)
  * @set: a #GdaSet object
  * @error: a place to store errors, or %NULL
  * @holder_id: the ID of the holder to set the value
- * @...: value, of the correct type, depending on the requested holder's type
+ * @...: value, of the correct type, depending on the requested holder's type (not NULL)
  *
  * Set the value of the #GdaHolder which ID is @holder_id to a specified value
  *

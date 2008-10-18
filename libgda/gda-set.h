@@ -44,12 +44,6 @@ typedef enum
 	GDA_SET_INVALID_ERROR
 } GdaSetError;
 
-typedef enum {
-	GDA_SET_HOLDER_READ_ONLY = 1 << 0, /* holder should not be affected by user modifications */
-	GDA_SET_HOLDER_HIDE      = 1 << 1  /* holder should not be shown to the user */
-} GdaSetHint;
-
-
 /**
  * GdaSetNode:
  *
@@ -58,10 +52,9 @@ typedef enum {
  * each GdaHolder.
  */
 struct _GdaSetNode {
-	GdaHolder    *holder;         /* Can't be NULL */
+	GdaHolder    *holder;        /* Can't be NULL */
 	GdaDataModel *source_model;  /* may be NULL if @holder does not have any source */
 	gint          source_column; /* unused is @source_model is NULL */
-	GdaSetHint    hint;
 };
 
 /**

@@ -441,7 +441,9 @@ gtype_equal (gconstpointer a, gconstpointer b)
  * gda_get_default_handler
  * @for_type: a #GType type
  * 
- * Obtain a pointer to a #GdaDataHandler which can manage #GValue values of type @for_type
+ * Obtain a pointer to a #GdaDataHandler which can manage #GValue values of type @for_type. The returned
+ * data handler will be adapted to use the current locale information (for example dates will be formatted
+ * taking into accoutn the locale).
  *
  * The returned pointer is %NULL if there is no default data handler available for the @for_type data type
  *
@@ -464,7 +466,7 @@ gda_get_default_handler (GType for_type)
                 g_hash_table_insert (hash, (gpointer) GDA_TYPE_BINARY, gda_handler_bin_new ());
                 g_hash_table_insert (hash, (gpointer) GDA_TYPE_BLOB, gda_handler_bin_new ());
                 g_hash_table_insert (hash, (gpointer) G_TYPE_BOOLEAN, gda_handler_boolean_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_DATE, gda_handler_time_new_no_locale ());
+                g_hash_table_insert (hash, (gpointer) G_TYPE_DATE, gda_handler_time_new ());
                 g_hash_table_insert (hash, (gpointer) G_TYPE_DOUBLE, gda_handler_numerical_new ());
                 g_hash_table_insert (hash, (gpointer) G_TYPE_INT, gda_handler_numerical_new ());
                 g_hash_table_insert (hash, (gpointer) GDA_TYPE_NUMERIC, gda_handler_numerical_new ());
@@ -472,8 +474,8 @@ gda_get_default_handler (GType for_type)
                 g_hash_table_insert (hash, (gpointer) GDA_TYPE_SHORT, gda_handler_numerical_new ());
                 g_hash_table_insert (hash, (gpointer) GDA_TYPE_USHORT, gda_handler_numerical_new ());
                 g_hash_table_insert (hash, (gpointer) G_TYPE_STRING, gda_handler_string_new ());
-                g_hash_table_insert (hash, (gpointer) GDA_TYPE_TIME, gda_handler_time_new_no_locale ());
-                g_hash_table_insert (hash, (gpointer) GDA_TYPE_TIMESTAMP, gda_handler_time_new_no_locale ());
+                g_hash_table_insert (hash, (gpointer) GDA_TYPE_TIME, gda_handler_time_new ());
+                g_hash_table_insert (hash, (gpointer) GDA_TYPE_TIMESTAMP, gda_handler_time_new ());
                 g_hash_table_insert (hash, (gpointer) G_TYPE_CHAR, gda_handler_numerical_new ());
                 g_hash_table_insert (hash, (gpointer) G_TYPE_UCHAR, gda_handler_numerical_new ());
                 g_hash_table_insert (hash, (gpointer) G_TYPE_ULONG, gda_handler_numerical_new ());

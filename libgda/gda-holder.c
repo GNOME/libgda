@@ -691,7 +691,7 @@ gda_holder_get_value (GdaHolder *holder)
 	g_return_val_if_fail (holder->priv, NULL);
 
 	if (!holder->priv->full_bind) {
-		/* return default value is possible */
+		/* return default value if possible */
 		if (holder->priv->default_forced) {
 			g_assert (holder->priv->default_value);
 			if (G_VALUE_TYPE (holder->priv->default_value) == holder->priv->g_type) 
@@ -730,10 +730,9 @@ gda_holder_get_value_str (GdaHolder *holder, GdaDataHandler *dh)
         if (!current_val || gda_value_is_null (current_val))
                 return NULL;
         else {
-                GdaDataHandler *dh;
-
-                dh = gda_get_default_handler (holder->priv->g_type);
-                if (dh)
+                if (!dh)
+			dh = gda_get_default_handler (holder->priv->g_type);
+		if (dh)
                         return gda_data_handler_get_str_from_value (dh, current_val);
                 else
                         return NULL;
@@ -809,7 +808,7 @@ gda_holder_set_value_str (GdaHolder *holder, GdaDataHandler *dh, const gchar *va
 		if (!dh)
 			dh = gda_get_default_handler (holder->priv->g_type);
 		if (dh)
-        	gdaval = gda_data_handler_get_value_from_str (dh, value, holder->priv->g_type);
+			gdaval = gda_data_handler_get_value_from_str (dh, value, holder->priv->g_type);
 
 		if (gdaval)
 			return real_gda_holder_set_value (holder, gdaval, FALSE, error);
@@ -1605,7 +1604,19 @@ gda_holder_set_full_bind (GdaHolder *holder, GdaHolder *alias_of)
 static void
 full_bind_changed_cb (GdaHolder *alias_of, GdaHolder *holder)
 {
-	g_signal_emit (holder, gda_holder_signals[CHANGED], 0);
+	if (alias_of == holder->priv->simple_bind) {
+		const GValue *cvalue;
+		GError *error = NULL;
+		cvalue = gda_holder_get_value (alias_of);
+		if (! gda_holder_set_value (holder, cvalue, &error)) {
+			g_warning (_("Could not change GdaHolder to match value change in bound GdaHolder: %s"),
+				   error && error->message ? error->message : _("No detail"));
+			if (error)
+				g_error_free (error);
+		}
+	}
+	else
+		g_signal_emit (holder, gda_holder_signals[CHANGED], 0);
 }
 
 /**
@@ -1660,6 +1671,8 @@ const GValue *
 gda_holder_get_attribute (GdaHolder *holder, const gchar *attribute)
 {
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), NULL);
+	/*g_print ("GdaHolder %p ATTR '%s' get => '%s'\n", holder, attribute, 
+	  gda_value_stringify (gda_attributes_manager_get (gda_holder_attributes_manager, holder, attribute))); */
 	return gda_attributes_manager_get (gda_holder_attributes_manager, holder, attribute);
 }
 
@@ -1689,4 +1702,5 @@ gda_holder_set_attribute (GdaHolder *holder, const gchar *attribute, const GValu
 		return;
 
 	gda_attributes_manager_set (gda_holder_attributes_manager, holder, attribute, value);
+	//g_print ("GdaHolder %p ATTR '%s' set to '%s'\n", holder, attribute, gda_value_stringify (value)); 
 }

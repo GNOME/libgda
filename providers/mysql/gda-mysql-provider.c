@@ -1546,6 +1546,9 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 					flags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD;
 
 				return_value = (GObject *) gda_mysql_recordset_new (cnc, ps, params, flags, col_types);
+				if (allow_noparam)
+					g_object_set (return_value, "auto-reset", TRUE, NULL);
+
 				gda_connection_internal_statement_executed (cnc, stmt, params, NULL); /* required: help @cnc keep some stats */
 			}
 			

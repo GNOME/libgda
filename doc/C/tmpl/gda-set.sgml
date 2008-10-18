@@ -218,15 +218,6 @@ Container for several values
 @holder: 
 @source_model: 
 @source_column: 
-@hint: 
-
-<!-- ##### ENUM GdaSetHint ##### -->
-<para>
-
-</para>
-
-@GDA_SET_HOLDER_READ_ONLY: 
-@GDA_SET_HOLDER_HIDE: 
 
 <!-- ##### FUNCTION gda_set_get_node ##### -->
 <para>

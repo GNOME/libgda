@@ -3106,3 +3106,117 @@ compute_insert_select_params_mapping_foreach_func (GdaSqlAnyPart *part, CorrespD
 	}
 	return TRUE;
 }
+
+static void
+set_column_properties_from_select_stmt (GdaDataSelect *model, GdaConnection *cnc, GdaStatement *sel_stmt)
+{
+	GdaSqlStatement *sqlst = NULL;
+	GdaSqlStatementSelect *select;
+	GdaSqlSelectTarget *target;
+	GSList *fields, *columns;
+
+	g_object_get (G_OBJECT (sel_stmt), "structure", &sqlst, NULL);
+	g_assert (sqlst->stmt_type == GDA_SQL_STATEMENT_SELECT);
+	select = (GdaSqlStatementSelect*) sqlst->contents;
+
+	/* we only want a single target */
+	if (!select->from || !select->from->targets || select->from->targets->next)
+		goto out;
+	
+	target = (GdaSqlSelectTarget *) select->from->targets->data;
+	if (!target || !target->table_name)
+		goto out;
+
+	if (! gda_sql_statement_check_validity (sqlst, cnc, NULL))
+		goto out;
+
+	if (!target->validity_meta_object) {
+		g_warning ("Internal gda_sql_statement_check_validity() error: target->validity_meta_object is not set");
+		goto out;
+	}
+
+	/* FIXME: also set some column attributes using gda_column_set_attribute() */
+
+	for (fields = select->expr_list, columns = model->priv->columns; 
+	     fields && columns; 
+	     fields = fields->next) {
+		GdaSqlSelectField *selfield = (GdaSqlSelectField*) fields->data;
+		if (selfield->validity_meta_table_column) {
+			GdaMetaTableColumn *tcol = selfield->validity_meta_table_column;
+
+			/*g_print ("==> %s\n", tcol->column_name);*/
+			gda_column_set_allow_null (GDA_COLUMN (columns->data), tcol->nullok);
+			if (tcol->default_value) {
+				GValue *dvalue;
+				g_value_set_string ((dvalue = gda_value_new (G_TYPE_STRING)), tcol->default_value);
+				gda_column_set_default_value (GDA_COLUMN (columns->data), dvalue);
+				gda_value_free (dvalue);
+			}
+			columns = columns->next;
+		}
+		else if (selfield->validity_meta_object && 
+			 (selfield->validity_meta_object->obj_type == GDA_META_DB_TABLE) &&
+			 selfield->expr && selfield->expr->value && !selfield->expr->param_spec && 
+			 (G_VALUE_TYPE (selfield->expr->value) == G_TYPE_STRING) &&
+			 !strcmp (g_value_get_string (selfield->expr->value), "*")) {
+			/* expand all the fields */
+			GdaMetaTable *mtable = GDA_META_TABLE (selfield->validity_meta_object);
+			GSList *tmplist;
+			for (tmplist = mtable->columns; tmplist; tmplist = tmplist->next) {
+				GdaMetaTableColumn *tcol = (GdaMetaTableColumn*) tmplist->data;
+				/*g_print ("*==> %s\n", tcol->column_name);*/
+				gda_column_set_allow_null (GDA_COLUMN (columns->data), tcol->nullok);
+				if (tcol->default_value) {
+					GValue *dvalue;
+					g_value_set_string ((dvalue = gda_value_new (G_TYPE_STRING)), tcol->default_value);
+					gda_column_set_default_value (GDA_COLUMN (columns->data), dvalue);
+					gda_value_free (dvalue);
+				}
+				if (tmplist)
+					columns = columns->next;
+			}
+		}
+		else
+			columns = columns->next;
+	}
+	if (fields || columns)
+		g_warning ("Internal error: GdaDataSelect has %d GdaColumns, and SELECT statement has %d expressions",
+			   g_slist_length (model->priv->columns), g_slist_length (select->expr_list));
+
+ out:
+	gda_sql_statement_free (sqlst);
+}
+
+
+/**
+ * gda_data_select_compute_columns_attributes
+ * @model: a #GdaDataSelect data model
+ * @error: a place to store errors, or %NULL
+ *
+ * Computes correct attributes for each of @model's columns, which includes the "NOT NULL" attribute, the
+ * default value, the precision and scale for numeric values.
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_data_select_compute_columns_attributes (GdaDataSelect *model, GError **error)
+{
+	GdaStatement *sel_stmt;
+
+	g_return_val_if_fail (GDA_IS_DATA_SELECT (model), FALSE);
+	g_return_val_if_fail (model->priv, FALSE);
+
+	sel_stmt = check_acceptable_statement (model, error);
+	if (! sel_stmt)
+		return FALSE;
+
+	if (!model->priv->cnc) {
+		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_CONNECTION_ERROR,
+			     _("No connection to use"));
+		return FALSE;
+	}
+
+	set_column_properties_from_select_stmt (model, model->priv->cnc, sel_stmt);
+
+	return TRUE;
+}

@@ -622,7 +622,7 @@ test7 (GError **error)
 	gda_value_free (value);
 
 	/***/
-	value = gda_value_new_from_string ("A string", G_TYPE_STRING);
+	value = gda_value_new_from_string ("A string 2", G_TYPE_STRING);
 	if (!gda_holder_set_value (h2, value, error))
 		return FALSE;
 	if (!emitted_signals_find (h1, "changed", error))

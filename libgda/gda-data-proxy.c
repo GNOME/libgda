@@ -3307,8 +3307,8 @@ gda_data_proxy_find_row_from_values (GdaDataModel *model, GSList *values, gint *
 	gint current_nb_rows;
 	GdaDataProxy *proxy;
 
-	g_return_val_if_fail (GDA_IS_DATA_PROXY (proxy), FALSE);
 	proxy = (GdaDataProxy*) model;
+	g_return_val_if_fail (GDA_IS_DATA_PROXY (proxy), FALSE);
 	g_return_val_if_fail (proxy->priv, FALSE);
 	g_return_val_if_fail (values, FALSE);
 
