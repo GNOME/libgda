@@ -616,8 +616,7 @@ create_columns (GdaDataSelect *model)
 		/* copy template columns */
 		GSList *list;
 		for (list = model->prep_stmt->tmpl_columns; list; list = list->next)
-			model->priv->columns = g_slist_append (model->priv->columns, 
-							       gda_column_copy (GDA_COLUMN (list->data)));
+			model->priv->columns = g_slist_append (model->priv->columns, g_object_ref (list->data));
 	}
 	else {
 		/* create columns */

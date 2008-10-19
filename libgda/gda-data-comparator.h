@@ -78,7 +78,7 @@ struct _GdaDataComparatorClass
 
 GType             gda_data_comparator_get_type        (void) G_GNUC_CONST;
 GObject          *gda_data_comparator_new             (GdaDataModel *old_model, GdaDataModel *new_model);
-void              gda_data_comparator_set_key_columns (GdaDataComparator *comp, gint *col_numbers, gint nb_cols);
+void              gda_data_comparator_set_key_columns (GdaDataComparator *comp, const gint *col_numbers, gint nb_cols);
 gboolean          gda_data_comparator_compute_diff    (GdaDataComparator *comp, GError **error);
 gint              gda_data_comparator_get_n_diffs     (GdaDataComparator *comp);
 const GdaDiff    *gda_data_comparator_get_diff        (GdaDataComparator *comp, gint pos);

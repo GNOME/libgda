@@ -336,7 +336,7 @@ gda_diff_free (GdaDiff *diff)
  * will speed things up as less data will be processed.
  */
 void
-gda_data_comparator_set_key_columns (GdaDataComparator *comp, gint *col_numbers, gint nb_cols)
+gda_data_comparator_set_key_columns (GdaDataComparator *comp, const gint *col_numbers, gint nb_cols)
 {
 	g_return_if_fail (GDA_IS_DATA_COMPARATOR (comp));
 	g_return_if_fail (comp->priv);

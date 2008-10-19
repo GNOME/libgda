@@ -1,3 +1,10 @@
+2008-10-19  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-data-select.c: don't copy GdaColumn objects from the prepared statement,
+	but simmply g_object_ref() them
+	* libgda/gda-data-comparator.[ch]: fix for bug #556960
+	* libgda/gda-attributes-manager.c: performances improvements, for bug #556327
+
 2008-10-18  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-data-select.[ch]: added gda_data_select_compute_columns_attributes()

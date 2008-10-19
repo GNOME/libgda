@@ -25,51 +25,67 @@
 #include <gda-attributes-manager.h>
 #include <gda-value.h>
 
+/*
+ * Structure for the attribute names
+ */
 typedef struct {
 	GdaAttributesManager *mgr;
-	gpointer              ptr;
 	gchar                *att_name;
 	GDestroyNotify        att_name_destroy;
-} Key;
+} AttName;
+static guint attname_hash (gconstpointer key);
+static gboolean attname_equal (gconstpointer key1, gconstpointer key2);
+static void attname_free (AttName *key);
 
-static guint hash_func (gconstpointer key);
-static gboolean equal_func (gconstpointer key1, gconstpointer key2);
-static void key_free (Key *key);
+/*
+ * Structure which contains a GHashTable for each object/pointer the attributes apply to
+ */
+typedef struct {
+	GdaAttributesManager *mgr;
+	GSList               *objects; /* list of GPointers/Gobjects to which attributes apply */
+	GHashTable           *values_hash; /* key = a AttName ptr, value = a GValue */
+} ObjAttrs;
+static void objattrs_unref (ObjAttrs *attrs);
 
-static void obj_destroyed_cb (Key *key, GObject *where_the_object_was);
 
 struct _GdaAttributesManager {
 	gboolean                    for_objects; /* TRUE if key->data are GObjects */
 	GdaAttributesManagerSignal  signal_func;
 	gpointer                    signal_data;
-	GHashTable                 *hash; /* key = a Key pointer, value = a GValue */
+	GHashTable                 *obj_hash; /* key = a gpointer to which attributes apply, value = a ObjAttrs ptr */
 };
 
 static guint
-hash_func (gconstpointer key)
+attname_hash (gconstpointer key)
 {
-	return GPOINTER_TO_UINT (((Key*) key)->ptr) + g_str_hash (((Key*) key)->att_name);
+	return g_str_hash (((AttName*) key)->att_name);
 }
 
 static gboolean
-equal_func (gconstpointer key1, gconstpointer key2)
+attname_equal (gconstpointer key1, gconstpointer key2)
 {
-	if ((((Key*) key1)->ptr == ((Key*) key2)->ptr) &&
-	    !strcmp (((Key*) key1)->att_name, ((Key*) key2)->att_name))
+	if (!strcmp (((AttName*) key1)->att_name, ((AttName*) key2)->att_name))
 		return TRUE;
 	else
 		return FALSE;
 }
 
 static void
-key_free (Key *key)
+attname_free (AttName *key)
 {
-	if (key->ptr && key->mgr->for_objects)
-		g_object_weak_unref (G_OBJECT (key->ptr), (GWeakNotify) obj_destroyed_cb, key);
 	if (key->att_name_destroy)
 		key->att_name_destroy (key->att_name);
 
 	g_free (key);
+}
+
+static void
+objattrs_unref (ObjAttrs *attrs)
+{
+	if (!attrs->objects) {
+		g_hash_table_destroy (attrs->values_hash);
+		g_free (attrs);
+	}
 }
 
 /**
@@ -89,12 +105,19 @@ gda_attributes_manager_new (gboolean for_objects, GdaAttributesManagerSignal sig
 	GdaAttributesManager *mgr;
 
 	mgr = g_new0 (GdaAttributesManager, 1);
-	mgr->hash = g_hash_table_new_full (hash_func, equal_func, (GDestroyNotify) key_free, (GDestroyNotify) gda_value_free);
+	mgr->obj_hash = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL,
+					       (GDestroyNotify) objattrs_unref);
 	mgr->for_objects = for_objects;
 	mgr->signal_func = signal_func;
 	mgr->signal_data = signal_data;
 
 	return mgr;
+}
+
+static void
+foreach_destroy_func (gpointer ptr, ObjAttrs *attrs, gpointer data)
+{
+	attrs->objects = g_slist_remove (attrs->objects, ptr);
 }
 
 /**
@@ -106,46 +129,94 @@ gda_attributes_manager_new (gboolean for_objects, GdaAttributesManagerSignal sig
 void
 gda_attributes_manager_free (GdaAttributesManager *mgr)
 {
-	g_hash_table_destroy (mgr->hash);
+	g_hash_table_foreach (mgr->obj_hash, (GHFunc) foreach_destroy_func, NULL);
+	g_hash_table_destroy (mgr->obj_hash);
 	g_free (mgr);
 }
 
 static void
-obj_destroyed_cb (Key *key, GObject *where_the_object_was)
+obj_destroyed_cb (ObjAttrs *attrs, GObject *where_the_object_was)
 {
-	key->ptr = NULL;
-	g_hash_table_remove (key->mgr->hash, key);
+	attrs->objects = g_slist_remove (attrs->objects, where_the_object_was);
+	g_hash_table_remove (attrs->mgr->obj_hash, where_the_object_was);
 }
+
+typedef struct {
+	GdaAttributesManager *to_mgr;
+	gpointer              ptr;
+	
+} CopyData;
+static void foreach_copy_func (AttName *attname, const GValue *value, CopyData *cdata);
 
 static void
 manager_real_set (GdaAttributesManager *mgr, gpointer ptr, 
 		  const gchar *att_name, GDestroyNotify destroy, 
 		  const GValue *value, gboolean steal_value)
 {
+	ObjAttrs *objattrs;
+
 	g_return_if_fail (att_name);
 	if (mgr->for_objects) 
 		g_return_if_fail (G_IS_OBJECT (ptr));
 
-	if (value) {
-		Key *key;
-
-		key = g_new (Key, 1);
-		key->mgr = mgr;
-		key->ptr = ptr;
-		key->att_name = (gchar*) att_name; /* NOT duplicated */
-		key->att_name_destroy = destroy;
+	/* pick up the correct ObjAttrs */
+	objattrs = g_hash_table_lookup (mgr->obj_hash, ptr);
+	if (!objattrs) {
+		objattrs = g_new0 (ObjAttrs, 1);
+		objattrs->mgr = mgr;
+		objattrs->objects = g_slist_prepend (NULL, ptr);
+		objattrs->values_hash = g_hash_table_new_full (attname_hash, attname_equal, 
+							       (GDestroyNotify) attname_free,
+							       (GDestroyNotify) gda_value_free);
+		g_hash_table_insert (mgr->obj_hash, ptr, objattrs);
 		if (mgr->for_objects) 
-			g_object_weak_ref (G_OBJECT (key->ptr), (GWeakNotify) obj_destroyed_cb, key);
+			g_object_weak_ref (G_OBJECT (ptr), (GWeakNotify) obj_destroyed_cb, objattrs);
+	}
+
+	if (objattrs->objects->next) {
+		/* create another ObjAttrs specifically for @ptr */
+		ObjAttrs *objattrs2;
+		objattrs2 = g_new0 (ObjAttrs, 1);
+		objattrs2->mgr = mgr;
+		objattrs2->objects = g_slist_prepend (NULL, ptr);;
+		objattrs2->values_hash = g_hash_table_new_full (attname_hash, attname_equal, 
+							       (GDestroyNotify) attname_free, 
+								(GDestroyNotify) gda_value_free);
+
+		objattrs->objects = g_slist_remove (objattrs->objects, ptr);
+		g_hash_table_remove (mgr->obj_hash, ptr);
+		g_hash_table_insert (mgr->obj_hash, ptr, objattrs2);
+
+		if (mgr->for_objects) {
+			g_object_weak_unref (G_OBJECT (ptr), (GWeakNotify) obj_destroyed_cb, objattrs);
+			g_object_weak_ref (G_OBJECT (ptr), (GWeakNotify) obj_destroyed_cb, objattrs2);
+		}
+
+		CopyData cdata;
+		cdata.to_mgr = mgr;
+		cdata.ptr = ptr;
+		g_hash_table_foreach (objattrs->values_hash, (GHFunc) foreach_copy_func, &cdata);
+
+		objattrs = objattrs2;
+	}
+
+	/* Acutally add the attribute */
+	if (value) {
+		AttName *attname;
+
+		attname = g_new (AttName, 1);
+		attname->mgr = mgr;
+		attname->att_name = (gchar*) att_name; /* NOT duplicated */
+		attname->att_name_destroy = destroy;
 		if (steal_value)
-			g_hash_table_insert (mgr->hash, key, (GValue*) value);
+			g_hash_table_insert (objattrs->values_hash, attname, (GValue*) value);
 		else
-			g_hash_table_insert (mgr->hash, key, gda_value_copy (value));
+			g_hash_table_insert (objattrs->values_hash, attname, gda_value_copy (value));
 	}
 	else {
-		Key key;
-		key.ptr = ptr;
-		key.att_name = (gchar*) att_name;
-		g_hash_table_remove (mgr->hash, &key);
+		AttName attname;
+		attname.att_name = (gchar*) att_name;
+		g_hash_table_remove (objattrs->values_hash, &attname);
 	}
 	if (mgr->signal_func && mgr->for_objects)
 		mgr->signal_func ((GObject*) ptr, att_name, value, mgr->signal_data);
@@ -203,19 +274,16 @@ gda_attributes_manager_set_full (GdaAttributesManager *mgr, gpointer ptr,
 const GValue *
 gda_attributes_manager_get (GdaAttributesManager *mgr, gpointer ptr, const gchar *att_name)
 {
-	Key key;
-	key.ptr = ptr;
-	key.att_name = (gchar*) att_name;
-	return g_hash_table_lookup (mgr->hash, &key);
-}
+	ObjAttrs *objattrs;
 
-typedef struct {
-	gpointer   *from;
-	gpointer   *to;
-	GSList     *keys;
-	GSList     *values;
-} CopyData;
-static void foreach_copy_func (Key *key, const GValue *value, CopyData *cdata);
+	objattrs = g_hash_table_lookup (mgr->obj_hash, ptr);
+	if (objattrs) {
+		AttName attname;
+		attname.att_name = (gchar*) att_name;
+		return g_hash_table_lookup (objattrs->values_hash, &attname);
+	}
+	return NULL;
+}
 
 /**
  * gda_attributes_manager_copy
@@ -231,32 +299,36 @@ void
 gda_attributes_manager_copy (GdaAttributesManager *from_mgr, gpointer *from, 
 			     GdaAttributesManager *to_mgr, gpointer *to)
 {
+	ObjAttrs *from_objattrs, *to_objattrs;
+	from_objattrs = g_hash_table_lookup (from_mgr->obj_hash, from);
+	if (!from_objattrs)
+		return;
+	to_objattrs = g_hash_table_lookup (to_mgr->obj_hash, to);
+
+	if ((from_mgr == to_mgr) && !to_objattrs) {
+		from_objattrs->objects = g_slist_prepend (from_objattrs->objects, to);
+		g_hash_table_insert (from_mgr->obj_hash, to, from_objattrs);
+
+		if (from_mgr->for_objects) 
+			g_object_weak_ref (G_OBJECT (to), (GWeakNotify) obj_destroyed_cb, from_objattrs);
+		return;
+	}
+
+	/* copy attributes */
 	CopyData cdata;
-	GSList *nlist, *vlist;
-	cdata.from = from;
-	cdata.to = to;
-	cdata.keys = NULL;
-	cdata.values = NULL;
-	g_hash_table_foreach (from_mgr->hash, (GHFunc) foreach_copy_func, &cdata);
-	for (nlist = cdata.keys, vlist = cdata.values;
-	     nlist && vlist;
-	     nlist = nlist->next, vlist = vlist->next)
-		gda_attributes_manager_set_full (to_mgr, to, ((Key*) nlist->data)->att_name, (GValue*) vlist->data,
-						 ((Key*) nlist->data)->att_name_destroy);
-	g_slist_free (cdata.keys);
-	g_slist_free (cdata.values);
+	cdata.to_mgr = to_mgr;
+	cdata.ptr = to;
+	g_hash_table_foreach (from_objattrs->values_hash, (GHFunc) foreach_copy_func, &cdata);
 }
 
 static void
-foreach_copy_func (Key *key, const GValue *value, CopyData *cdata)
+foreach_copy_func (AttName *attname, const GValue *value, CopyData *cdata)
 {
-	if (key->ptr == cdata->from) {
-		cdata->keys = g_slist_prepend (cdata->keys, key);
-		cdata->values = g_slist_prepend (cdata->values, (gpointer) value);
-	}
+	if (attname->att_name_destroy)
+		manager_real_set (cdata->to_mgr, cdata->ptr, g_strdup (attname->att_name), g_free, value, FALSE);
+	else
+		manager_real_set (cdata->to_mgr, cdata->ptr, attname->att_name, NULL, value, FALSE);
 }
-
-static void foreach_clear_func (Key *key, const GValue *value, CopyData *cdata);
 
 /**
  * gda_attributes_manager_clear
@@ -268,32 +340,19 @@ static void foreach_clear_func (Key *key, const GValue *value, CopyData *cdata);
 void
 gda_attributes_manager_clear (GdaAttributesManager *mgr, gpointer ptr)
 {
-	CopyData cdata;
-	GSList *nlist;
-	cdata.from = ptr;
-	cdata.to = NULL;
-	cdata.keys = NULL;
-	cdata.values = NULL;
-	g_hash_table_foreach (mgr->hash, (GHFunc) foreach_clear_func, &cdata);
-	for (nlist = cdata.keys;  nlist; nlist = nlist->next)
-		gda_attributes_manager_set (mgr, ptr, (gchar*) nlist->data, NULL);
-	g_slist_free (cdata.keys);
+	ObjAttrs *objattrs;
+	objattrs = g_hash_table_lookup (mgr->obj_hash, ptr);
+	if (objattrs) {
+		objattrs->objects = g_slist_remove (objattrs->objects, ptr);
+		g_hash_table_remove (mgr->obj_hash, ptr);
+	}
 }
-
-static void
-foreach_clear_func (Key *key, const GValue *value, CopyData *cdata)
-{
-	if (key->ptr == cdata->from) 
-		cdata->keys = g_slist_prepend (cdata->keys, (gpointer) key->att_name);
-}
-
 
 typedef struct {
-	gpointer ptr;
 	GdaAttributesManagerFunc func;
 	gpointer data;
 } FData;
-static void foreach_foreach_func (Key *key, const GValue *value, FData *fdata);
+static void foreach_foreach_func (AttName *attname, const GValue *value, FData *fdata);
 
 /**
  * gda_attributes_manager_foreach
@@ -308,19 +367,23 @@ void
 gda_attributes_manager_foreach (GdaAttributesManager *mgr, gpointer ptr, 
 				GdaAttributesManagerFunc func, gpointer data)
 {
-	FData fdata;
+	ObjAttrs *objattrs;
+
 	g_return_if_fail (func);
 	g_return_if_fail (ptr);
 
-	fdata.ptr = ptr;
-	fdata.func = func;
-	fdata.data = data;
-	g_hash_table_foreach (mgr->hash, (GHFunc) foreach_foreach_func, &fdata);
+	objattrs = g_hash_table_lookup (mgr->obj_hash, ptr);
+	if (objattrs) {
+		FData fdata;
+		
+		fdata.func = func;
+		fdata.data = data;
+		g_hash_table_foreach (objattrs->values_hash, (GHFunc) foreach_foreach_func, &fdata);
+	}
 }
 
 static void
-foreach_foreach_func (Key *key, const GValue *value, FData *fdata)
+foreach_foreach_func (AttName *attname, const GValue *value, FData *fdata)
 {
-	if (key->ptr == fdata->ptr)
-		fdata->func (key->att_name, value, fdata->data);
+	fdata->func (attname->att_name, value, fdata->data);
 }
