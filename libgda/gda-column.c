@@ -151,6 +151,7 @@ gda_column_finalize (GObject *object)
 			gda_value_free (column->priv->default_value);
 	
 		g_free (column->priv->id);
+		g_free (column->priv->dbms_type);
 
 		g_free (column->priv);
 		column->priv = NULL;

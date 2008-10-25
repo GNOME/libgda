@@ -1228,6 +1228,7 @@ gda_mysql_provider_statement_prepare (GdaServerProvider  *provider,
 		_GDA_PSTMT(ps)->sql = sql;
 		
 		gda_connection_add_prepared_statement (cnc, stmt, (GdaPStmt*) ps);
+		g_object_unref (ps);
 		return TRUE;
 	}
 	
@@ -1253,7 +1254,7 @@ prepare_stmt_simple (MysqlConnectionData  *cdata,
 	
 	if (mysql_stmt_prepare (cdata->mysql_stmt, sql, strlen (sql))) {
 		GdaConnectionEvent *event = _gda_mysql_make_error
-			(cdata->cnc, NULL, cdata->mysql_stmt, NULL);
+			(cdata->cnc, NULL, cdata->mysql_stmt, error);
 		ps = NULL;
 	} else {
 		ps = gda_mysql_pstmt_new (cdata->cnc, cdata->mysql, cdata->mysql_stmt);
@@ -1546,9 +1547,6 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 					flags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD;
 
 				return_value = (GObject *) gda_mysql_recordset_new (cnc, ps, params, flags, col_types);
-				if (allow_noparam)
-					g_object_set (return_value, "auto-reset", TRUE, NULL);
-
 				gda_connection_internal_statement_executed (cnc, stmt, params, NULL); /* required: help @cnc keep some stats */
 			}
 			

@@ -924,6 +924,7 @@ gda_capi_provider_statement_prepare (GdaServerProvider *provider, GdaConnection 
 		return FALSE;
 	else {
 		gda_connection_add_prepared_statement (cnc, stmt, (GdaPStmt *) ps);
+		g_object_unref (ps);
 		return TRUE;
 	}
 }

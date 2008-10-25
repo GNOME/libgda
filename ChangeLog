@@ -1,3 +1,19 @@
+2008-10-25  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-column.c:
+	* libgda/sql-parser/gda-statement-struct-insert.c:
+	* libgda/sqlite/gda-sqlite-provider.c:
+	* providers/firebird/gda-firebird-provider.c:
+	* providers/mysql/gda-mysql-provider.c:
+	* providers/postgres/gda-postgres-provider.c:
+	* providers/skel-implementation/capi/gda-capi-provider.c: memory leaks corretions,
+	for bug #546339
+	* libgda/gda-holder.c: improved error messages (Carlos Savoretti)
+	* providers/mysql/gda-mysql-meta.c:
+	* providers/mysql/gda-mysql-provider.c:
+	* providers/mysql/gda-mysql-recordset.c:
+	* providers/mysql/gda-mysql-util.c: improvements to the MySQL provider (Carlos Savoretti)
+
 2008-10-19  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-data-select.c: don't copy GdaColumn objects from the prepared statement,

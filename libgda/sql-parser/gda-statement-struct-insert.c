@@ -72,6 +72,8 @@ gda_sql_statement_insert_free (gpointer stmt)
 			g_slist_free ((GSList *) list->data);
 		}
 	}
+	g_slist_free (insert->values_list);
+
 	g_slist_foreach (insert->fields_list, (GFunc) gda_sql_field_free, NULL);
 	g_slist_free (insert->fields_list);
 	if (insert->select) {
@@ -258,7 +260,7 @@ gda_sql_statement_insert_take_1_values_list (GdaSqlStatement *stmt, GSList *list
 
 	for (l = list; l; l = l->next)
 		gda_sql_any_part_set_parent (l->data, insert);
-	insert->values_list = g_slist_prepend (NULL, list);
+	insert->values_list = g_slist_prepend (insert->values_list, list);
 }
 
 /*

@@ -128,7 +128,7 @@ gda_mysql_recordset_set_chunk_size (GdaMysqlRecordset  *recset,
 	const unsigned long prefetch_rows = chunk_size;
 	if (mysql_stmt_attr_set (recset->priv->mysql_stmt, STMT_ATTR_PREFETCH_ROWS,
 				 (void *) &prefetch_rows)) {
-		_gda_mysql_make_error (recset->priv->cnc, NULL, recset->priv->mysql_stmt, NULL);
+		g_warning ("%s: %s\n", __func__, mysql_stmt_error (recset->priv->mysql_stmt));
 		return;
 	}
 	recset->priv->chunk_size = chunk_size;
@@ -361,15 +361,13 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 		for (i=0, list = _GDA_PSTMT (ps)->tmpl_columns; 
 		     i < GDA_PSTMT (ps)->ncols; 
 		     i++, list = list->next) {
-			GdaColumn *column;
-			
-			column = GDA_COLUMN (list->data);
+			GdaColumn *column = GDA_COLUMN (list->data);
 
 			/* use C API to set columns' information using gda_column_set_*() */
 			// TO_IMPLEMENT;
 			
 			MYSQL_FIELD *field = &mysql_fields[i];
-			/* 	 field->name, field->type); */
+
 			GType gtype = _GDA_PSTMT(ps)->types[i];
 			if (gtype == 0) {
 				gtype = _gda_mysql_type_to_gda (cdata, field->type);
@@ -423,6 +421,7 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 				g_warning (_("Invalid column bind data type. %d\n"),
 					   mysql_bind_result[i].buffer_type);
 			}
+			//g_print ("%s: NAME=%s, TYPE=%d, GTYPE=%s\n", __func__, field->name, field->type, g_type_name (gtype));
 		}
 		
                 if (mysql_stmt_bind_result (cdata->mysql_stmt, mysql_bind_result)) {
@@ -505,6 +504,9 @@ new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel,
 		GValue *value = gda_row_get_value (row, i);
 		GType type = ((GdaDataSelect *) imodel)->prep_stmt->types[i];
 		gda_value_reset_with_type (value, type);
+		//
+		//g_print ("%s: #%d : TYPE=%d, GTYPE=%s\n", __func__, i, mysql_bind_result[i].buffer_type, g_type_name (type));
+		//
 		
 		int intvalue = 0;
 		long long longlongvalue = 0;
@@ -528,7 +530,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel,
 			else if (type == G_TYPE_LONG)
 				g_value_set_long (value, (long) intvalue);
 			else if (type == G_TYPE_BOOLEAN)
-				g_value_set_boolean (value, (gboolean) intvalue ? TRUE : FALSE);
+				g_value_set_boolean (value, intvalue ? TRUE : FALSE);
 			else {
 				g_warning (_("Type %s not mapped for value %d"),
 					   g_type_name (type), intvalue);
@@ -559,7 +561,9 @@ new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel,
 				gda_value_set_time (value, &time);
 			} else if (type == G_TYPE_DATE) {
 				GDate *date = g_date_new_dmy
-					(timevalue.day, timevalue.month, timevalue.year);
+					((timevalue.day != 0) ? timevalue.day : 1,
+					 (timevalue.month != 0) ? timevalue.month : 1,
+					 (timevalue.year != 0) ? timevalue.year : 1970);
 				g_value_take_boxed (value, date);
 				g_date_free (date);
 			} else if (type == GDA_TYPE_TIMESTAMP) {
@@ -591,7 +595,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel,
 				g_value_set_double (value, doublevalue);
 			else {
 				g_warning (_("Type %s not mapped for value %f"),
-					   g_type_name (type), intvalue);
+					   g_type_name (type), doublevalue);
 			}
 			setlocale (LC_NUMERIC, gda_numeric_locale);
 			
@@ -626,7 +630,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel,
 				g_value_set_double (value, atof (strvalue));
 				setlocale (LC_NUMERIC, gda_numeric_locale);
 			} else {
-				g_warning (_("Type %s not mapped for value %p"),
+				g_warning (_("Type %s not mapped for value %s"),
 					   g_type_name (type), strvalue);
 			}
 			

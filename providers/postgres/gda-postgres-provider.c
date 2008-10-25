@@ -1697,6 +1697,7 @@ gda_postgres_provider_statement_prepare (GdaServerProvider *provider, GdaConnect
         _GDA_PSTMT (ps)->sql = sql;
 	
 	gda_connection_add_prepared_statement (cnc, stmt, (GdaPStmt *) ps);
+	g_object_unref (ps);
 	return TRUE;
 
  out_err:

@@ -1587,6 +1587,7 @@ gda_sqlite_provider_statement_prepare (GdaServerProvider *provider, GdaConnectio
 		return FALSE;
 	else {
 		gda_connection_add_prepared_statement (cnc, stmt, (GdaPStmt *) ps);
+		g_object_unref (ps);
 		return TRUE;
 	}
 }
@@ -1688,9 +1689,7 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, sqlite3_int64 la
         GdaSqlSelectTarget *target;
         GdaSqlStatement *sql_statement = gda_sql_statement_new (GDA_SQL_STATEMENT_SELECT);
 
-	select = g_new0 (GdaSqlStatementSelect, 1);
-        GDA_SQL_ANY_PART (select)->type = GDA_SQL_ANY_STMT_SELECT;
-        sql_statement->contents = select;
+	select = (GdaSqlStatementSelect*) sql_statement->contents;
 
 	/* FROM */
         select->from = gda_sql_select_from_new (GDA_SQL_ANY_PART (select));

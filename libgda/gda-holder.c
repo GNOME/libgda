@@ -895,13 +895,15 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 	newvalid = TRUE;
 	if (newnull && holder->priv->not_null) {
 		g_set_error (error, GDA_HOLDER_ERROR, GDA_HOLDER_VALUE_NULL_ERROR,
-			     _("Holder does not allow NULL values"));
+			     _("(%s): Holder does not allow NULL values"),
+			     holder->priv->id);
 		newvalid = FALSE;
 		changed = TRUE;
 	}
 	else if (!newnull && (G_VALUE_TYPE (value) != holder->priv->g_type)) {
 		g_set_error (error, GDA_HOLDER_ERROR, GDA_HOLDER_VALUE_TYPE_ERROR,
-			     _("Wrong value type: expected type '%s' when value's type is '%s'"),
+			     _("(%s): Wrong Holder value type, expected type '%s' when value's type is '%s'"),
+			     holder->priv->id,
 			     gda_g_type_to_string (holder->priv->g_type),
 			     gda_g_type_to_string (G_VALUE_TYPE (value)));
 		newvalid = FALSE;
@@ -1020,13 +1022,15 @@ real_gda_holder_set_const_value (GdaHolder *holder, const GValue *value,
 	newvalid = TRUE;
 	if (newnull && holder->priv->not_null) {
 		g_set_error (error, GDA_HOLDER_ERROR, GDA_HOLDER_VALUE_NULL_ERROR,
-			     _("Holder does not allow NULL values"));
+			     _("(%s): Holder does not allow NULL values"),
+			     holder->priv->id);
 		newvalid = FALSE;
 		changed = TRUE;
 	}
 	else if (!newnull && (G_VALUE_TYPE (value) != holder->priv->g_type)) {
 		g_set_error (error, GDA_HOLDER_ERROR, GDA_HOLDER_VALUE_TYPE_ERROR,
-			     _("Wrong value type: expected type '%s' when value's type is '%s'"),
+			     _("(%s): Wrong value type: expected type '%s' when value's type is '%s'"),
+			     holder->priv->id,
 			     gda_g_type_to_string (holder->priv->g_type),
 			     gda_g_type_to_string (G_VALUE_TYPE (value)));
 		newvalid = FALSE;

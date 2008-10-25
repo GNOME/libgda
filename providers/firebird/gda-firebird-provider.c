@@ -1007,6 +1007,7 @@ gda_firebird_provider_statement_prepare (GdaServerProvider *provider, GdaConnect
 		return FALSE;
 	else {
 		gda_connection_add_prepared_statement (cnc, stmt, ps);
+		g_object_unref (ps);
 		return TRUE;
 	}
 }

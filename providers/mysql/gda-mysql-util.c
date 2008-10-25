@@ -25,23 +25,6 @@
 #include <glib/gi18n-lib.h>
 #include "gda-mysql-util.h"
 
-/* static GdaConnectionEventCode */
-/* gda_mysql_sqlsate_to_gda_code (const gchar  *sqlstate) */
-/* { */
-/*         guint64 gda_code = g_ascii_strtoull (sqlstate, NULL, 0); */
-
-/*         switch (gda_code) { */
-/*                 case 42501: */
-/*                         return GDA_CONNECTION_EVENT_CODE_INSUFFICIENT_PRIVILEGES; */
-/*                 case 23505: */
-/*                         return GDA_CONNECTION_EVENT_CODE_UNIQUE_VIOLATION; */
-/*                 case 23502: */
-/*                         return GDA_CONNECTION_EVENT_CODE_NOT_NULL_VIOLATION; */
-/*                 default: */
-/*                         return GDA_CONNECTION_EVENT_CODE_UNKNOWN; */
-/*         } */
-/* } */
-
 /*
  * Create a new #GdaConnectionEvent object and "adds" it to @cnc
  *
@@ -53,90 +36,42 @@ _gda_mysql_make_error (GdaConnection  *cnc,
 		       MYSQL_STMT     *mysql_stmt,
 		       GError        **error)
 {
-	/* GdaConnectionEvent *error_ev; */
-        /* GdaConnectionEventCode gda_code = GDA_CONNECTION_EVENT_CODE_UNKNOWN; */
-        /* GdaTransactionStatus *trans; */
-
-        /* error_ev = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR); */
-        /* if (mysql != NULL) { */
-        /*         gchar *message; */
-
-        /*         if (pg_res != NULL) { */
-        /*                 gchar *sqlstate; */
-
-        /*                 message = g_strdup (PQresultErrorMessage (pg_res)); */
-        /*                 // sqlstate = PQresultErrorField (pg_res, PG_DIAG_SQLSTATE); */
-        /*                 gda_connection_event_set_sqlstate (error_ev, sqlstate); */
-        /*                 gda_code = gda_mysql_sqlsate_to_gda_code (sqlstate); */
-        /*         } */
-        /*         else { */
-        /*                 message = g_strdup (PQerrorMessage (mysql)); */
-        /*                 gda_code = GDA_CONNECTION_EVENT_CODE_UNKNOWN; */
-        /*         } */
-
-		
-	/* 	gchar *ptr = message; */
-	/* 	if (g_str_has_prefix (message, "ERROR:")) */
-	/* 		ptr += 6; */
-	/* 	g_strstrip (ptr); */
-
-        /*         gda_connection_event_set_description (error_ev, ptr); */
-        /*         gda_connection_event_set_gda_code (error_ev, gda_code); */
-	/* 	g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR, ptr); */
-	/* 	g_free (message); */
-        /* } */
-        /* else { */
-        /*         gda_connection_event_set_description (error_ev, _("No detail")); */
-        /*         gda_connection_event_set_gda_code (error_ev, gda_code); */
-	/* 	g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR, */
-	/* 		     _("No detail")); */
-        /* } */
-
-        /* gda_connection_event_set_code (error_ev, -1); */
-        /* gda_connection_event_set_source (error_ev, "gda-mysql"); */
-        /* gda_connection_add_event (cnc, error_ev); */
-
-        /* /\* change the transaction status if there is a problem *\/ */
-        /* trans = gda_connection_get_transaction_status (cnc); */
-        /* if (trans) { */
-        /*         if ((PQtransactionStatus (mysql) == PQTRANS_INERROR) && */
-        /*             (trans->state != GDA_TRANSACTION_STATUS_STATE_FAILED)) */
-        /*                 gda_connection_internal_change_transaction_state (cnc, */
-        /*                                                                   GDA_TRANSACTION_STATUS_STATE_FAILED); */
-        /* } */
-        /* return error_ev; */
-	
 	GdaConnectionEvent *event_error =
 		gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 	if (mysql) {
+		gda_connection_event_set_sqlstate
+			(event_error, mysql_sqlstate (mysql));
 		gda_connection_event_set_description
 			(event_error, mysql_error (mysql));
 		gda_connection_event_set_code
-			(event_error, mysql_errno (mysql));
+			(event_error, GDA_CONNECTION_EVENT_CODE_UNKNOWN);
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR,
-			     mysql_sqlstate (mysql));
+			     mysql_error (mysql));
 		
-		g_print ("%s: %s\n", __func__, mysql_error (mysql));
+		//g_print ("%s: %s\n", __func__, mysql_error (mysql));
 		
 	} else if (mysql_stmt) {
+		gda_connection_event_set_sqlstate
+			(event_error, mysql_stmt_sqlstate (mysql_stmt));
 		gda_connection_event_set_description
 			(event_error, mysql_stmt_error (mysql_stmt));
 		gda_connection_event_set_code
-			(event_error, mysql_stmt_errno (mysql_stmt));
+			(event_error, GDA_CONNECTION_EVENT_CODE_UNKNOWN);
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR,
-			     mysql_stmt_sqlstate (mysql_stmt));
+			     mysql_stmt_error (mysql_stmt));
 		
-		g_print ("%s: %s\n", __func__, mysql_stmt_error (mysql_stmt));
+		//g_print ("%s : %s\n", __func__, mysql_stmt_error (mysql_stmt));
 		
 	} else {
+		gda_connection_event_set_sqlstate
+			(event_error, _("Unknown"));
 		gda_connection_event_set_description
 			(event_error, _("No description"));
 		gda_connection_event_set_code
-			(event_error, -1);
+			(event_error, GDA_CONNECTION_EVENT_CODE_UNKNOWN);
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR,
 			     _("No detail"));
 	}
-	gda_connection_event_set_code (event_error, -1);
 	gda_connection_event_set_source (event_error, "gda-mysql");
 
 	gda_connection_add_event (cnc, event_error);
@@ -144,39 +79,10 @@ _gda_mysql_make_error (GdaConnection  *cnc,
 	return event_error;
 }
 
-/* /\* to be used only while initializing a connection *\/ */
-/* int */
-/* _gda_mysql_real_query_wrap (GdaConnection  *cnc, */
-/* 			    MYSQL          *mysql, */
-/* 			    const char     *query, */
-/* 			    unsigned long   length) */
-/* { */
-/* 	GdaConnectionEvent *event; */
-
-/*         if (cnc) { */
-/*                 event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND); */
-/*                 gda_connection_event_set_description (event, query); */
-/*                 gda_connection_add_event (cnc, event); */
-/*         } */
-
-/*         return mysql_real_query (mysql, query, length); */
-/* } */
-
 GType
 _gda_mysql_type_to_gda (MysqlConnectionData    *cdata,
 			enum enum_field_types   mysql_type)
 {
-	/* 	gint i; */
-
-	/* 	for (i = 0; i < cdata->ntypes; i++) */
-	/* 		if (cdata->type_data[i].oid == mysql_type) */
-	/* 			break; */
-
-	/*   	if (cdata->type_data[i].oid != mysql_type) */
-	/* 		return G_TYPE_STRING; */
-
-	/* 	return cdata->type_data[i].type; */
-	
 	GType gtype = 0;
 	switch (mysql_type) {
 	case MYSQL_TYPE_TINY:
@@ -222,6 +128,34 @@ _gda_mysql_type_to_gda (MysqlConnectionData    *cdata,
 	default:
 		gtype = G_TYPE_STRING;
 	}
+
+	/* g_print ("%s: ", __func__); */
+	/* switch (mysql_type) { */
+	/* case MYSQL_TYPE_TINY:  g_print ("MYSQL_TYPE_TINY");  break; */
+	/* case MYSQL_TYPE_SHORT:  g_print ("MYSQL_TYPE_SHORT");  break; */
+	/* case MYSQL_TYPE_LONG:  g_print ("MYSQL_TYPE_LONG");  break; */
+	/* case MYSQL_TYPE_INT24:  g_print ("MYSQL_TYPE_INT24");  break; */
+	/* case MYSQL_TYPE_YEAR:  g_print ("MYSQL_TYPE_YEAR");  break; */
+	/* case MYSQL_TYPE_LONGLONG:  g_print ("MYSQL_TYPE_LONGLONG");  break; */
+	/* case MYSQL_TYPE_FLOAT:  g_print ("MYSQL_TYPE_FLOAT");  break; */
+	/* case MYSQL_TYPE_DECIMAL:  g_print ("MYSQL_TYPE_DECIMAL");  break; */
+	/* case MYSQL_TYPE_NEWDECIMAL:  g_print ("MYSQL_TYPE_NEWDECIMAL");  break; */
+	/* case MYSQL_TYPE_DOUBLE:  g_print ("MYSQL_TYPE_DOUBLE");  break; */
+	/* case MYSQL_TYPE_BIT:  g_print ("MYSQL_TYPE_BIT");  break; */
+	/* case MYSQL_TYPE_BLOB:  g_print ("MYSQL_TYPE_BLOB");  break; */
+	/* case MYSQL_TYPE_TIMESTAMP:  g_print ("MYSQL_TYPE_TIMESTAMP");  break; */
+	/* case MYSQL_TYPE_DATETIME:  g_print ("MYSQL_TYPE_DATETIME");  break; */
+	/* case MYSQL_TYPE_DATE:  g_print ("MYSQL_TYPE_DATE");  break; */
+	/* case MYSQL_TYPE_TIME:  g_print ("MYSQL_TYPE_TIME");  break; */
+	/* case MYSQL_TYPE_NULL:  g_print ("MYSQL_TYPE_NULL");  break; */
+	/* case MYSQL_TYPE_STRING:  g_print ("MYSQL_TYPE_STRING");  break; */
+	/* case MYSQL_TYPE_VAR_STRING:  g_print ("MYSQL_TYPE_VAR_STRING");  break; */
+	/* case MYSQL_TYPE_SET:  g_print ("MYSQL_TYPE_SET");  break; */
+	/* case MYSQL_TYPE_ENUM:  g_print ("MYSQL_TYPE_ENUM");  break; */
+	/* case MYSQL_TYPE_GEOMETRY:  g_print ("MYSQL_TYPE_GEOMETRY");  break; */
+	/* default:  g_print ("UNKNOWN %d: MYSQL_TYPE_STRING", mysql_type);  break; */
+	/* } */
+	/* g_print ("\n"); */
+
 	return gtype;
-	
 }
