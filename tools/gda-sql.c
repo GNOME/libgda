@@ -685,11 +685,11 @@ execute_external_command (MainData *data, const gchar *command, GError **error)
 
 				prov = gda_connection_get_provider (data->current->cnc);
 				cvalue = gda_holder_get_value (h_in_data);
-				dh = gda_server_provider_get_data_handler_gtype (prov, data->current->cnc,
+				dh = gda_server_provider_get_data_handler_g_type (prov, data->current->cnc,
 										 gda_holder_get_g_type (h_in_data));
 				str = gda_data_handler_get_str_from_value (dh, cvalue);
 
-				dh = gda_server_provider_get_data_handler_gtype (prov, data->current->cnc,
+				dh = gda_server_provider_get_data_handler_g_type (prov, data->current->cnc,
 										 gda_holder_get_g_type (h));
 				value = gda_data_handler_get_value_from_str (dh, str, gda_holder_get_g_type (h));
 				g_free (str);
@@ -3087,7 +3087,7 @@ extra_command_set (GdaConnection *cnc, const gchar **args,
 					GValue *gvalue;
 
 					prov = gda_connection_get_provider (data->current->cnc);
-					dh = gda_server_provider_get_data_handler_gtype (prov, data->current->cnc,
+					dh = gda_server_provider_get_data_handler_g_type (prov, data->current->cnc,
 											 gda_holder_get_g_type (param));
 					gvalue = gda_data_handler_get_value_from_str (dh, value, gda_holder_get_g_type (param));
 					if (! gda_holder_take_value (param, gvalue, error))

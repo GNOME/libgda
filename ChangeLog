@@ -1,5 +1,22 @@
 2008-10-25  Vivien Malerba <malerba@gnome-db.org>
 
+	* tools/gda-sql.c:
+	* doc/C/libgda-4.0-sections.txt:
+	* doc/C/prov-writing.xml:
+	* doc/C/libgda-4.0-docs.sgml:
+	* doc/C/tmpl/gda-server-provider.sgml:
+	* doc/C/tmpl/gda-data-handler.sgml:
+	* providers/mysql/gda-mysql-ddl.c:
+	* providers/mysql/gda-mysql-provider.c:
+	* providers/postgres/gda-postgres-ddl.c:
+	* providers/postgres/gda-postgres-provider.c:
+	* libgda/gda-server-provider.c:
+	* libgda/gda-server-provider.h:
+	* libgda/gda-statement.c: s/gda_server_provider_get_data_handler_gtype/
+	gda_server_provider_get_data_handler_g_type
+
+2008-10-25  Vivien Malerba <malerba@gnome-db.org>
+
 	* libgda/gda-column.c:
 	* libgda/sql-parser/gda-statement-struct-insert.c:
 	* libgda/sqlite/gda-sqlite-provider.c:

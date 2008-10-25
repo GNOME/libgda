@@ -659,7 +659,7 @@ default_render_value (const GValue *value, GdaSqlRenderingContext *context, GErr
 	if (value && !gda_value_is_null (value)) {
 		GdaDataHandler *dh;
 		if (context->provider)
-			dh = gda_server_provider_get_data_handler_gtype (context->provider, context->cnc, G_VALUE_TYPE (value));
+			dh = gda_server_provider_get_data_handler_g_type (context->provider, context->cnc, G_VALUE_TYPE (value));
 		else  			
 			dh = gda_get_default_handler (G_VALUE_TYPE (value));
 

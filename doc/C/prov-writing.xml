@@ -283,7 +283,7 @@
       </para>
       <para>
 	This method is called by both
-	<link linkend="gda-server-provider-get-data-handler-gtype">gda_server_provider_get_data_handler_gtype()</link> and
+	<link linkend="gda-server-provider-get-data-handler-g-type">gda_server_provider_get_data_handler_g_type()</link> and
 	<link linkend="gda-server-provider-get-data-handler-dbms">gda_server_provider_get_data_handler_dbms()</link> methods.
       </para>
     </sect2>

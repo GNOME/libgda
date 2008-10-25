@@ -2131,7 +2131,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 			 (G_VALUE_TYPE (value) == GDA_TYPE_TIME)) {
 			GdaHandlerTime *timdh;
 			
-			timdh = GDA_HANDLER_TIME (gda_server_provider_get_data_handler_gtype (provider, cnc, 
+			timdh = GDA_HANDLER_TIME (gda_server_provider_get_data_handler_g_type (provider, cnc, 
 											      G_VALUE_TYPE (value)));
 			g_assert (timdh);
 			param_values [i] = gda_handler_time_get_no_locale_str_from_value (timdh, value);
@@ -2139,7 +2139,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 		else {
 			GdaDataHandler *dh;
 
-			dh = gda_server_provider_get_data_handler_gtype (provider, cnc, G_VALUE_TYPE (value));
+			dh = gda_server_provider_get_data_handler_g_type (provider, cnc, G_VALUE_TYPE (value));
 			if (dh)
 				param_values [i] = gda_data_handler_get_str_from_value (dh, value);
 			else

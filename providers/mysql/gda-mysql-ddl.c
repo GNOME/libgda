@@ -198,7 +198,7 @@ gda_mysql_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 				GdaDataHandler *dh;
 				gchar *str;
 				
-				dh = gda_server_provider_get_data_handler_gtype (provider, cnc, G_TYPE_STRING);
+				dh = gda_server_provider_get_data_handler_g_type (provider, cnc, G_TYPE_STRING);
 				str = gda_data_handler_get_sql_from_value (dh, value);
 				if (str) {
 					if (*str) {
@@ -352,7 +352,7 @@ gda_mysql_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 			GdaDataHandler *dh;
 			gchar *str;
 
-			dh = gda_server_provider_get_data_handler_gtype (provider, cnc, G_TYPE_STRING);
+			dh = gda_server_provider_get_data_handler_g_type (provider, cnc, G_TYPE_STRING);
 			str = gda_data_handler_get_sql_from_value (dh, value);
 			g_string_append (string, " COMMENT = ");
 			g_string_append (string, str);
@@ -380,7 +380,7 @@ gda_mysql_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 			GdaDataHandler *dh;
 			gchar *str;
 
-			dh = gda_server_provider_get_data_handler_gtype (provider, cnc, G_TYPE_STRING);
+			dh = gda_server_provider_get_data_handler_g_type (provider, cnc, G_TYPE_STRING);
 			str = gda_data_handler_get_sql_from_value (dh, value);
 			g_string_append (string, " PASSWORD = ");
 			g_string_append (string, str);
@@ -418,7 +418,7 @@ gda_mysql_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 			GdaDataHandler *dh;
 			gchar *str;
 
-			dh = gda_server_provider_get_data_handler_gtype (provider, cnc, G_TYPE_STRING);
+			dh = gda_server_provider_get_data_handler_g_type (provider, cnc, G_TYPE_STRING);
 			str = gda_data_handler_get_sql_from_value (dh, value);
 			g_string_append (string, " DATA_DIRECTORY = ");
 			g_string_append (string, str);
@@ -431,7 +431,7 @@ gda_mysql_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 			GdaDataHandler *dh;
 			gchar *str;
 
-			dh = gda_server_provider_get_data_handler_gtype (provider, cnc, G_TYPE_STRING);
+			dh = gda_server_provider_get_data_handler_g_type (provider, cnc, G_TYPE_STRING);
 			str = gda_data_handler_get_sql_from_value (dh, value);
 			g_string_append (string, " INDEX_DIRECTORY = ");
 			g_string_append (string, str);
@@ -576,7 +576,7 @@ gda_mysql_render_ADD_COLUMN (GdaServerProvider *provider, GdaConnection *cnc,
 		GdaDataHandler *dh;
 		gchar *str;
 		
-		dh = gda_server_provider_get_data_handler_gtype (provider, cnc, G_TYPE_STRING);
+		dh = gda_server_provider_get_data_handler_g_type (provider, cnc, G_TYPE_STRING);
 		str = gda_data_handler_get_sql_from_value (dh, value);
 		if (str) {
 			if (*str) {

@@ -295,7 +295,7 @@ gboolean               gda_server_provider_supports_feature   (GdaServerProvider
 							       GdaConnectionFeature feature);
 
 /* types and values manipulation */
-GdaDataHandler        *gda_server_provider_get_data_handler_gtype(GdaServerProvider *provider,
+GdaDataHandler        *gda_server_provider_get_data_handler_g_type(GdaServerProvider *provider,
 								  GdaConnection *cnc,
 								  GType for_type);
 GdaDataHandler        *gda_server_provider_get_data_handler_dbms (GdaServerProvider *provider,

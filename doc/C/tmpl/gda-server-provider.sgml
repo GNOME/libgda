@@ -263,7 +263,7 @@ for more information.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_server_provider_get_data_handler_gtype ##### -->
+<!-- ##### FUNCTION gda_server_provider_get_data_handler_g_type ##### -->
 <para>
 
 </para>

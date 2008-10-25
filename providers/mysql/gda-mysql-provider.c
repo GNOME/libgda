@@ -1434,14 +1434,14 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 		} else if ((G_VALUE_TYPE(value) == G_TYPE_DATE) ||
 			   (G_VALUE_TYPE(value) == GDA_TYPE_TIME) ||
 			   (G_VALUE_TYPE(value) == GDA_TYPE_TIMESTAMP)) {
-			GdaHandlerTime *handler_time = (GdaHandlerTime *) gda_server_provider_get_data_handler_gtype
+			GdaHandlerTime *handler_time = (GdaHandlerTime *) gda_server_provider_get_data_handler_g_type
 				(provider, cnc, G_VALUE_TYPE(value));
 			g_assert (handler_time);
 			param_values[i] = gda_handler_time_get_no_locale_str_from_value (handler_time,
 											 value);
 			//g_print ("--- TIME=%s\n", param_values[i]);
 		} else {
-			GdaDataHandler *data_handler = gda_server_provider_get_data_handler_gtype
+			GdaDataHandler *data_handler = gda_server_provider_get_data_handler_g_type
 				(provider, cnc, G_VALUE_TYPE(value));
 			if (data_handler == NULL)
 				param_values[i] = NULL;

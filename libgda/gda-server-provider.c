@@ -647,7 +647,7 @@ gda_server_provider_supports_feature (GdaServerProvider *provider, GdaConnection
 }
 
 /**
- * gda_server_provider_get_data_handler_gtype
+ * gda_server_provider_get_data_handler_g_type
  * @provider: a server provider.
  * @cnc: a #GdaConnection object, or %NULL
  * @for_type: a #GType
@@ -657,7 +657,7 @@ gda_server_provider_supports_feature (GdaServerProvider *provider, GdaConnection
  * Returns: a #GdaDataHandler, or %NULL if the provider does not support the requested @for_type data type 
  */
 GdaDataHandler *
-gda_server_provider_get_data_handler_gtype (GdaServerProvider *provider, GdaConnection *cnc, GType for_type)
+gda_server_provider_get_data_handler_g_type (GdaServerProvider *provider, GdaConnection *cnc, GType for_type)
 {
 	GdaDataHandler *retval;
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
@@ -770,7 +770,7 @@ gda_server_provider_string_to_value (GdaServerProvider *provider,  GdaConnection
 	if (cnc)
 		gda_lockable_lock ((GdaLockable*) cnc);
 	if (prefered_type != G_TYPE_INVALID) {
-		dh = gda_server_provider_get_data_handler_gtype (provider, cnc, prefered_type);
+		dh = gda_server_provider_get_data_handler_g_type (provider, cnc, prefered_type);
 		if (dh) {
 			retval = gda_data_handler_get_value_from_sql (dh, string, prefered_type);
 			if (retval) {
@@ -816,7 +816,7 @@ gda_server_provider_string_to_value (GdaServerProvider *provider,  GdaConnection
 				 GDA_TYPE_BINARY};
 		
 		for (i = 0; !retval && (i <= (sizeof(types)/sizeof (GType)) - 1); i++) {
-			dh = gda_server_provider_get_data_handler_gtype (provider, cnc, types [i]);
+			dh = gda_server_provider_get_data_handler_g_type (provider, cnc, types [i]);
 			if (dh) {
 				retval = gda_data_handler_get_value_from_sql (dh, string, types [i]);
 				if (retval) {
@@ -868,7 +868,7 @@ gda_server_provider_value_to_sql_string (GdaServerProvider *provider,
 
 	if (cnc)
 		gda_lockable_lock ((GdaLockable*) cnc);
-	dh = gda_server_provider_get_data_handler_gtype (provider, cnc, G_VALUE_TYPE (from));
+	dh = gda_server_provider_get_data_handler_g_type (provider, cnc, G_VALUE_TYPE (from));
 	if (dh)
 		return gda_data_handler_get_sql_from_value (dh, from);
 	if (cnc)

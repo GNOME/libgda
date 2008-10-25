@@ -25,7 +25,7 @@ Interface which provides data handling capabilities
 </para>
 <para>
   #GdaDataHandler objects specific for each database provider and for each data type can be obtained using 
-  <link linkend="gda-server-provider-get-data-handler-gtype">gda_server_provider_get_data_handler_gtype()</link> or
+  <link linkend="gda-server-provider-get-data-handler-g-type">gda_server_provider_get_data_handler_g_type()</link> or
   <link linkend="gda-server-provider-get-data-handler-dbms">gda_server_provider_get_data_handler_dbms()</link>, and
   generic data handlers (for each type) can be obtained using
   <link linkend="gda-get-default-handler">gda_get_default_handler()</link>.
