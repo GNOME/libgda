@@ -44,7 +44,7 @@ libgda_capi_la_SOURCES = \
         parser.c \
         capi_token_types.h
 
-libgda_capi_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
+libgda_capi_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
 libgda_capi_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-4.0.la \
 	$(LIBGDA_LIBS) #$(CAPI_LIBS)

@@ -45,7 +45,7 @@ libgda_mysql_la_SOURCES = \
         parser.c \
         mysql_token_types.h
 
-libgda_mysql_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
+libgda_mysql_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
 libgda_mysql_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-4.0.la \
 	$(LIBGDA_LIBS) $(MYSQL_LIBS)

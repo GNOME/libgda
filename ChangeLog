@@ -1,3 +1,24 @@
+2008-10-26  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in:
+	* providers/skel-implementation/models/Makefile.am:
+	* providers/skel-implementation/capi/Makefile.am:
+	* providers/firebird/Makefile.am:
+	* providers/bdb/Makefile.am:
+	* providers/sqlite/Makefile.am:
+	* providers/mdb/Makefile.am:
+	* providers/mysql/Makefile.am:
+	* providers/postgres/Makefile.am: limit the providers' list of exported symbols
+	* providers/skel-implementation/capi/parser.y:
+	* providers/firebird/parser.y:
+	* providers/mysql/parser.y:
+	* providers/postgres/parser.y:
+	* libgda/sql-parser/parser.y:
+	* libgda/sql-parser/delimiter.y:
+	  - don't compute debug string if not debugging,
+	  - reported modifications from the PostgreSQL and SQlite's providers's
+	    parsers to other providers
+
 2008-10-25  Vivien Malerba <malerba@gnome-db.org>
 
 	* tools/gda-sql.c:

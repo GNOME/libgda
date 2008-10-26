@@ -15,7 +15,7 @@ libgda_bdb_la_SOURCES = \
 	gda-bdb-provider.h \
 	libmain.c
 
-libgda_bdb_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
+libgda_bdb_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
 libgda_bdb_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-4.0.la \
 	$(LIBGDA_LIBS) 

@@ -7,9 +7,11 @@
 %token_type {GValue *}
 %default_type {GValue *}
 %token_destructor {if ($$) {
+#ifdef GDA_DEBUG_NO
 		 gchar *str = gda_sql_value_stringify ($$);
-		 DEBUG ("token destructor /%s/", str);
+		 g_print ("___ token destructor /%s/\n", str)
 		 g_free (str);
+#endif
 		 g_value_unset ($$); g_free ($$);}}
 
 // The generated parser function takes a 4th argument as follows:
@@ -46,12 +48,6 @@
 #include <libgda/sql-parser/gda-statement-struct-compound.h>
 #include <libgda/sql-parser/gda-statement-struct-parts.h>
 #include <assert.h>
-
-#ifdef GDA_DEBUG_NO
-#define DEBUG(format, ...) g_print ("___" format "\n", __VA_ARGS__)
-#else
-#define DEBUG(format, ...)
-#endif
 
 typedef struct {
 	GValue *fname;
@@ -104,6 +100,8 @@ sql_operation_string_to_operator (const gchar *op)
 	case '<':
 		if (op[1] == '=')
 			return GDA_SQL_OPERATOR_TYPE_LEQ;
+		else if (op[1] == '>')
+			return GDA_SQL_OPERATOR_TYPE_DIFF;
 		else if (op[1] == 0)
 			return GDA_SQL_OPERATOR_TYPE_LT;
 		break;
@@ -888,43 +886,27 @@ expr(E) ::= expr(R) IN LP compound(S) RP. {GdaSqlOperation *cond;
 					    GDA_SQL_ANY_PART (R)->parent = GDA_SQL_ANY_PART (cond);
 }
 expr(E) ::= expr(R) NOT IN LP exprlist(L) RP. {GdaSqlOperation *cond;
-					       GdaSqlExpr *expr;
 					       GSList *list;
-					       expr = gda_sql_expr_new (NULL);
-					       cond = gda_sql_operation_new (GDA_SQL_ANY_PART (expr));
-					       expr->cond = cond;
-					       cond->operator_type = GDA_SQL_OPERATOR_TYPE_IN;
-					       cond->operands = g_slist_prepend (L, R);
-					       for (list = cond->operands; list; list = list->next)
-						       GDA_SQL_ANY_PART (list->data)->parent = GDA_SQL_ANY_PART (cond);
-					       
 					       E = gda_sql_expr_new (NULL);
 					       cond = gda_sql_operation_new (GDA_SQL_ANY_PART (E));
 					       E->cond = cond;
-					       cond->operator_type = GDA_SQL_OPERATOR_TYPE_NOT;
-					       cond->operands = g_slist_prepend (NULL, expr);
-					       GDA_SQL_ANY_PART (expr)->parent = GDA_SQL_ANY_PART (cond);
+					       cond->operator_type = GDA_SQL_OPERATOR_TYPE_NOTIN;
+					       cond->operands = g_slist_prepend (L, R);
+					       for (list = cond->operands; list; list = list->next)
+						       GDA_SQL_ANY_PART (list->data)->parent = GDA_SQL_ANY_PART (cond);
 }
 expr(E) ::= expr(R) NOT IN LP compound(S) RP. {GdaSqlOperation *cond;
-						GdaSqlExpr *expr1, *expr2;
-						expr1 = gda_sql_expr_new (NULL);
-						cond = gda_sql_operation_new (GDA_SQL_ANY_PART (expr1));
-						expr1->cond = cond;
-						cond->operator_type = GDA_SQL_OPERATOR_TYPE_IN;
-						
-						expr2 = gda_sql_expr_new (NULL);
-						gda_sql_expr_take_select (expr2, S);
-						cond->operands = g_slist_prepend (NULL, expr2);
-						GDA_SQL_ANY_PART (expr2)->parent = GDA_SQL_ANY_PART (cond);
-						cond->operands = g_slist_prepend (cond->operands, R);
-						GDA_SQL_ANY_PART (R)->parent = GDA_SQL_ANY_PART (cond);
-						
-						E = gda_sql_expr_new (NULL);
-						cond = gda_sql_operation_new (GDA_SQL_ANY_PART (E));
-						E->cond = cond;
-						cond->operator_type = GDA_SQL_OPERATOR_TYPE_NOT;
-						cond->operands = g_slist_prepend (NULL, expr1);
-						GDA_SQL_ANY_PART (expr1)->parent = GDA_SQL_ANY_PART (cond);
+					       GdaSqlExpr *expr;
+					       E = gda_sql_expr_new (NULL);
+					       cond = gda_sql_operation_new (GDA_SQL_ANY_PART (E));
+					       E->cond = cond;
+					       cond->operator_type = GDA_SQL_OPERATOR_TYPE_NOTIN;
+					       
+					       expr = gda_sql_expr_new (GDA_SQL_ANY_PART (cond));
+					       gda_sql_expr_take_select (expr, S);
+					       cond->operands = g_slist_prepend (NULL, expr);
+					       cond->operands = g_slist_prepend (cond->operands, R);
+					       GDA_SQL_ANY_PART (R)->parent = GDA_SQL_ANY_PART (cond);
 }
 expr(A) ::= CASE case_operand(X) case_exprlist(Y) case_else(Z) END. {
 	GdaSqlCase *sc;
@@ -973,14 +955,14 @@ uni_op(O) ::= IS NOTNULL. {O = GDA_SQL_OPERATOR_TYPE_ISNOTNULL;}
 // Values: for all constants (G_TYPE_STRING GValue)
 value(V) ::= NULL. {V = NULL;}
 value(V) ::= STRING(S). {V = S;}
-value(V) ::= TEXTUAL(T). {V = T;}
+//value(V) ::= TEXTUAL(T). {V = T;}
 value(V) ::= INTEGER(I). {V = I;}
 value(V) ::= FLOAT(F). {V = F;}
 
 // pvalue: values which are parameters (GdaSqlExpr)
 %type pvalue {GdaSqlExpr *}
 %destructor pvalue {gda_sql_expr_free ($$);}
-	pvalue(E) ::= UNSPECVAL LSBRACKET paramspec(P) RSBRACKET. {E = gda_sql_expr_new (NULL); E->param_spec = P;}
+pvalue(E) ::= UNSPECVAL LSBRACKET paramspec(P) RSBRACKET. {E = gda_sql_expr_new (NULL); E->param_spec = P;}
 pvalue(E) ::= value(V) LSBRACKET paramspec(P) RSBRACKET. {E = gda_sql_expr_new (NULL); E->value = V; E->param_spec = P;}
 pvalue(E) ::= SIMPLEPARAM(S). {E = gda_sql_expr_new (NULL); E->param_spec = gda_sql_param_spec_new (S);}
 
@@ -1001,6 +983,7 @@ paramspec(P) ::= paramspec(E) PNULLOK(N). {if (!E) P = gda_sql_param_spec_new (N
 //
 nm(A) ::= JOIN(X).       {A = X;}
 nm(A) ::= ID(X).       {A = X;}
+nm(A) ::= TEXTUAL(X). {A = X;}
 
 // Fully qualified name
 fullname(A) ::= nm(X). {A = X;}

@@ -137,6 +137,7 @@ dnl ******************************
 dnl linklibext is the shared link library extension, which varies by platform
 
 EXPORT_SYM_REGEX='-export-symbols-regex "^(gda_|fnYM49765777344607__gda).*"'
+EXPORT_PROV_SYM_REGEX='-export-symbols-regex "^(plugin_).*"'
 AC_MSG_CHECKING([for platform])
 platform_win32=no
 platform_carbon=no
@@ -147,6 +148,7 @@ case "$host" in
     NO_UNDEFINED='-no-undefined'
     SOPREFIX='cyg'
     LIBTOOL_EXPORT_OPTIONS=$EXPORT_SYM_REGEX
+    LIBTOOL_PROV_EXPORT_OPTIONS=$EXPORT_PROV_SYM_REGEX
     linklibext=".dll.a"
     AC_MSG_RESULT([Win32])
     ;;
@@ -157,6 +159,7 @@ case "$host" in
     NO_UNDEFINED='-no-undefined'
     SOPREFIX='lib'
     LIBTOOL_EXPORT_OPTIONS=
+    LIBTOOL_PROV_EXPORT_OPTIONS=
     linklibext=".dll.a"
     AC_CHECK_TOOL(WINDRES, windres, windres)
     AC_SUBST(WINDRES)
@@ -168,6 +171,7 @@ case "$host" in
     SOPREFIX='lib'
     AM_BINRELOC
     LIBTOOL_EXPORT_OPTIONS=$EXPORT_SYM_REGEX
+    LIBTOOL_PROV_EXPORT_OPTIONS=$EXPORT_PROV_SYM_REGEX
     AC_DEFINE(HAVE_CARBON)
     dnl SO_SUFFIX=dylib
   ;;
@@ -177,12 +181,14 @@ case "$host" in
     SOPREFIX='lib'
     AM_BINRELOC
     LIBTOOL_EXPORT_OPTIONS=$EXPORT_SYM_REGEX
+    LIBTOOL_PROV_EXPORT_OPTIONS=$EXPORT_PROV_SYM_REGEX
     ;;
 esac
 
 AM_CONDITIONAL(PLATFORM_WIN32, [test $platform_win32 = yes])
 AM_CONDITIONAL(PLATFORM_CARBON, [test $platform_carbon = yes])
 AC_SUBST(LIBTOOL_EXPORT_OPTIONS)
+AC_SUBST(LIBTOOL_PROV_EXPORT_OPTIONS)
 AC_SUBST(NO_UNDEFINED)
 AC_SUBST(SOPREFIX)
 

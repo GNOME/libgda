@@ -7,9 +7,11 @@
 %token_type {GValue *}
 %default_type {GValue *}
 %token_destructor {if ($$) {
-		 gchar *str = gda_sql_value_stringify ($$);
-		 DEBUG ("token destructor /%s/", str);
-		 g_free (str);
+#ifdef GDA_DEBUG_NO
+                 gchar *str = gda_sql_value_stringify ($$);
+                 g_print ("___ token destructor /%s/\n", str)
+                 g_free (str);
+#endif
 		 g_value_unset ($$); g_free ($$);}}
 
 // The generated parser function takes a 4th argument as follows:
@@ -41,12 +43,6 @@
 #include <libgda/sql-parser/gda-statement-struct-unknown.h>
 #include <libgda/sql-parser/gda-statement-struct-parts.h>
 #include <assert.h>
-
-#ifdef GDA_DEBUG_NO
-#define DEBUG(format, ...) g_print ("___" format "\n", __VA_ARGS__)
-#else
-#define DEBUG(format, ...)
-#endif
 }
 
 // The following directive causes tokens to

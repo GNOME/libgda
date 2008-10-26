@@ -7,9 +7,11 @@
 %token_type {GValue *}
 %default_type {GValue *}
 %token_destructor {if ($$) {
+#ifdef GDA_DEBUG_NO
 		 gchar *str = gda_sql_value_stringify ($$);
-		 DEBUG ("token destructor /%s/", str);
+		 g_print ("___ token destructor /%s/\n", str)
 		 g_free (str);
+#endif
 		 g_value_unset ($$); g_free ($$);}}
 
 // The generated parser function takes a 4th argument as follows:
@@ -46,12 +48,6 @@
 #include <libgda/sql-parser/gda-statement-struct-compound.h>
 #include <libgda/sql-parser/gda-statement-struct-parts.h>
 #include <assert.h>
-
-#ifdef GDA_DEBUG_NO
-#define DEBUG(format, ...) g_print ("___" format "\n", __VA_ARGS__)
-#else
-#define DEBUG(format, ...)
-#endif
 
 typedef struct {
 	GValue *fname;
@@ -966,7 +962,7 @@ value(V) ::= FLOAT(F). {V = F;}
 // pvalue: values which are parameters (GdaSqlExpr)
 %type pvalue {GdaSqlExpr *}
 %destructor pvalue {gda_sql_expr_free ($$);}
-	pvalue(E) ::= UNSPECVAL LSBRACKET paramspec(P) RSBRACKET. {E = gda_sql_expr_new (NULL); E->param_spec = P;}
+pvalue(E) ::= UNSPECVAL LSBRACKET paramspec(P) RSBRACKET. {E = gda_sql_expr_new (NULL); E->param_spec = P;}
 pvalue(E) ::= value(V) LSBRACKET paramspec(P) RSBRACKET. {E = gda_sql_expr_new (NULL); E->value = V; E->param_spec = P;}
 pvalue(E) ::= SIMPLEPARAM(S). {E = gda_sql_expr_new (NULL); E->param_spec = gda_sql_param_spec_new (S);}
 

@@ -44,7 +44,7 @@ libgda_postgres_la_SOURCES = \
         parser.c \
         postgres_token_types.h
 
-libgda_postgres_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
+libgda_postgres_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
 libgda_postgres_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-4.0.la \
 	$(LIBGDA_LIBS) $(POSTGRES_LIBS)
