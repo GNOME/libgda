@@ -1,3 +1,15 @@
+2008-11-05  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-config.c: don't try to load a shared library if
+	it does not have the "plugin_init" symbol
+	* providers/skel-implementation/capi/libgda-capi-4.0.pc.in: typo error
+	* testing/gda-provider-status.c: small pointer error correction (Daniel Espinosa)
+
+2008-11-05  Massimo Cora'  <maxcvs@email.it>
+
+	* libgda/gda-holder.c (real_gda_holder_set_const_value):
+	fixed a bug in returning wrong static values.
+
 2008-10-26  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in:

@@ -1292,6 +1292,10 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 
 		if (g_module_symbol (handle, "plugin_init", (gpointer *) &plugin_init))
 			plugin_init (dirname);
+		else {
+			g_module_close (handle);
+			continue;
+		}
 		g_module_symbol (handle, "plugin_get_name", (gpointer *) &plugin_get_name);
 		g_module_symbol (handle, "plugin_get_description", (gpointer *) &plugin_get_description);
 		g_module_symbol (handle, "plugin_get_dsn_spec", (gpointer *) &plugin_get_dsn_spec);
@@ -1335,6 +1339,7 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 				   forget about that provider... */
 				internal_provider_free (ip);
 				ip = NULL;
+				g_module_close (handle);
 				continue;
 			}
 		}
@@ -1364,6 +1369,7 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 				   forget about that provider... */
 				internal_provider_free (ip);
 				ip = NULL;
+				g_module_close (handle);
 				continue;
 			}
 		}

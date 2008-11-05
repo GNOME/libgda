@@ -106,7 +106,7 @@ main (int argc, char *argv[])
 				const gchar *pname;
 				const GValue *cvalue;
 
-				cvalue = gda_data_model_get_value_at (providers, 0, i, error);
+				cvalue = gda_data_model_get_value_at (providers, 0, i, &error);
 				if (!cvalue) 
 					g_error ("Can't load the '%s' provider: %s\n", pname,
 						 error && error->message ? error->message : "No detail");

@@ -1053,12 +1053,10 @@ real_gda_holder_set_const_value (GdaHolder *holder, const GValue *value,
 		holder->priv->invalid_forced = FALSE;
 		holder->priv->valid = newvalid;
 #ifdef DEBUG_HOLDER		
-		g_print ("Holder is not changed, returning %p\n", holder->priv->value);
+		g_print ("Holder is not changed");
 #endif		
-
 		/* set the changed status */
 		*value_changed = FALSE;
-		return holder->priv->value;
 	}
 	else {
 		*value_changed = TRUE;
@@ -1104,8 +1102,11 @@ real_gda_holder_set_const_value (GdaHolder *holder, const GValue *value,
 	}
 	else {
 		if (holder->priv->value) {
-			value_to_return = holder->priv->value;
-			holder->priv->value = NULL;
+			if (G_IS_VALUE (holder->priv->value))
+				value_to_return = holder->priv->value;
+			else
+				value_to_return = NULL;
+			holder->priv->value = NULL;			
 		}
 
 		if (value) {
@@ -1117,6 +1118,11 @@ real_gda_holder_set_const_value (GdaHolder *holder, const GValue *value,
 		g_signal_emit (holder, gda_holder_signals[CHANGED], 0);
 	}
 
+#ifdef DEBUG_HOLDER	
+	g_print ("returning %p, wannabe was %p\n", value_to_return,
+			 value);
+#endif	
+	
 	return value_to_return;
 }
 
