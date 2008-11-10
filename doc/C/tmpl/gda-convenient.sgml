@@ -33,6 +33,7 @@ Do quickly some actions
 
 </para>
 
+@provider: 
 @op: 
 @error: 
 @Returns: 
@@ -54,6 +55,7 @@ Do quickly some actions
 
 </para>
 
+@provider: 
 @op: 
 @error: 
 @Returns: 

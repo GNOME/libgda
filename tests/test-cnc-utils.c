@@ -116,12 +116,12 @@ test_cnc_setup_connection (const gchar *provider, const gchar *dbname, GError **
 		db_quark_list = gda_quark_list_new_from_string (db_params);
 		op = gda_prepare_drop_database (prov_info->id, dbname, NULL);
 		gda_quark_list_foreach (db_quark_list, (GHFunc) db_create_quark_foreach_func, op);
-		gda_perform_create_database (op, NULL);
+		gda_perform_create_database (NULL, op, NULL);
 		g_object_unref (op);
 
 		op = gda_prepare_create_database (prov_info->id, dbname, NULL);
 		gda_quark_list_foreach (db_quark_list, (GHFunc) db_create_quark_foreach_func, op);
-		if (!gda_perform_create_database (op, error)) 
+		if (!gda_perform_create_database (NULL, op, error)) 
 			goto out;
 		db_created = TRUE;
 	}
@@ -300,7 +300,7 @@ test_cnc_clean_connection (GdaConnection *cnc, GError **error)
 		gda_quark_list_foreach (db_quark_list, (GHFunc) db_drop_quark_foreach_func, op);
 		gda_quark_list_free (db_quark_list);
 
-		if (!gda_perform_drop_database (op, error)) 
+		if (!gda_perform_drop_database (NULL, op, error)) 
 			retval = FALSE;
 		g_object_unref (op);
 	}

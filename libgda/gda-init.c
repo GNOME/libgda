@@ -34,8 +34,8 @@ xmlDtdPtr       gda_array_dtd = NULL;
 xmlDtdPtr       gda_paramlist_dtd = NULL;
 xmlDtdPtr       gda_server_op_dtd = NULL;
 
-gchar          *gda_numeric_locale = NULL;
-gchar          *gda_lang_locale = NULL;
+gchar          *gda_numeric_locale = "";
+gchar          *gda_lang_locale = "";
 
 /**
  * gda_init

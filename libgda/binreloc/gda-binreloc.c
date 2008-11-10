@@ -73,71 +73,109 @@ gda_gbr_get_file_path (GdaPrefixDir where, ...)
 	const gchar *prefix_dir_name = NULL;
 	gint prefix_len = strlen (LIBGDAPREFIX);
 
+	/*
+	g_print ("LIBGDAPREFIX = %s\n", LIBGDAPREFIX);
+	g_print ("LIBGDABIN = %s\n", LIBGDABIN);
+	g_print ("LIBGDASBIN = %s\n", LIBGDASBIN);
+	g_print ("LIBGDADATA = %s\n",LIBGDADATA );
+	g_print ("LIBGDALIB = %s\n", LIBGDALIB);
+	g_print ("LIBGDALIBEXEC = %s\n",LIBGDALIBEXEC );
+	g_print ("LIBGDASYSCONF = %s\n", LIBGDASYSCONF);
+	*/
+
 #ifdef G_OS_WIN32
 	wchar_t path[MAX_PATH];
 	gchar* p;
 #endif
+
 	switch (where) {
 	default:
 	case GDA_NO_DIR:
 		break;
 	case GDA_BIN_DIR:
 		tmp = LIBGDABIN;
+#ifndef G_OS_WIN32
 		if (! g_str_has_prefix (tmp, LIBGDAPREFIX) || (tmp [prefix_len] != G_DIR_SEPARATOR)) 
 			prefix = g_strdup (tmp);
 		else
 			prefix_dir_name = tmp + prefix_len + 1;
+#else
+		prefix_dir_name = "bin";
+#endif
 		break;
 	case GDA_SBIN_DIR:
 		tmp = LIBGDASBIN;
+#ifndef G_OS_WIN32
 		if (! g_str_has_prefix (tmp, LIBGDAPREFIX) || (tmp [prefix_len] != G_DIR_SEPARATOR)) 
 			prefix = g_strdup (tmp);
 		else
 			prefix_dir_name = tmp + prefix_len + 1;
+#else
+		prefix_dir_name = "sbin";
+#endif
 		break;
 	case GDA_DATA_DIR:
 		tmp = LIBGDADATA;
+#ifndef G_OS_WIN32
 		if (! g_str_has_prefix (tmp, LIBGDAPREFIX) || (tmp [prefix_len] != G_DIR_SEPARATOR)) 
 			prefix = g_strdup (tmp);
 		else
 			prefix_dir_name = tmp + prefix_len + 1;
+#else
+		prefix_dir_name = "share";
+#endif		
 		break;
 	case GDA_LOCALE_DIR:
 		tmp = LIBGDADATA;
+#ifndef G_OS_WIN32
 		if (! g_str_has_prefix (tmp, LIBGDAPREFIX) || (tmp [prefix_len] != G_DIR_SEPARATOR)) {
 			prefix = g_strdup (tmp);
 			prefix_dir_name = "locale";
 		}
 		else
 			prefix_dir_name = "share" G_DIR_SEPARATOR_S "locale";
+#else
+		prefix_dir_name = "share" G_DIR_SEPARATOR_S "locale";
+#endif
 		break;
 	case GDA_LIB_DIR:
 		tmp = LIBGDALIB;
+#ifndef G_OS_WIN32
 		if (! g_str_has_prefix (tmp, LIBGDAPREFIX) || (tmp [prefix_len] != G_DIR_SEPARATOR)) 
 			prefix = g_strdup (tmp);
 		else 
 			prefix_dir_name = tmp + prefix_len + 1;
+#else
+		prefix_dir_name = "lib";
+#endif
 		break;
 	case GDA_LIBEXEC_DIR:
 		tmp = LIBGDALIBEXEC;
+#ifndef G_OS_WIN32
 		if (! g_str_has_prefix (tmp, LIBGDAPREFIX) || (tmp [prefix_len] != G_DIR_SEPARATOR)) 
 			prefix = g_strdup (tmp);
 		else
 			prefix_dir_name = tmp + prefix_len + 1;
+#else
+		prefix_dir_name = "libexec";
+#endif
 		break;
 	case GDA_ETC_DIR:
 		tmp = LIBGDASYSCONF;
+#ifndef G_OS_WIN32
 		if (! g_str_has_prefix (tmp, LIBGDAPREFIX) || (tmp [prefix_len] != G_DIR_SEPARATOR)) 
 			prefix = g_strdup (tmp);
 		else
 			prefix_dir_name = tmp + prefix_len + 1;
+#else
+		prefix_dir_name = "etc";
+#endif
 		break;
 	}
 
 #ifdef GDA_DEBUG_NO
 	g_print ("%s ()\n", __FUNCTION__);
 #endif
-
 
 	if (!prefix) {
 		/* prefix part for each OS */
@@ -151,7 +189,7 @@ gda_gbr_get_file_path (GdaPrefixDir where, ...)
 		p = strrchr (prefix, G_DIR_SEPARATOR);
 		if (p && (g_ascii_strcasecmp (p + 1, "bin") == 0 ||
 			  g_ascii_strcasecmp (p + 1, "lib") == 0))
-			*p = '\0';	
+			*p = '\0';
 #elif HAVE_CARBON
 #define MAXLEN 500
 		ProcessSerialNumber myProcess;

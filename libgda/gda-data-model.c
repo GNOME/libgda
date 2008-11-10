@@ -771,7 +771,7 @@ gda_data_model_append_row (GdaDataModel *model, GError **error)
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 
 	if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_INSERT)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
 			     _("Model does not allow row insertion"));
 		return -1;
 	}
@@ -803,7 +803,7 @@ gda_data_model_remove_row (GdaDataModel *model, gint row, GError **error)
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 
 	if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_DELETE)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
 			     _("Model does not allow row deletion"));
 		return FALSE;
 	}
@@ -1106,7 +1106,7 @@ gda_data_model_export_to_file (GdaDataModel *model, GdaDataModelIOFormat format,
 	if (g_file_test (file, G_FILE_TEST_EXISTS)) {
 		if (! overwrite) {
 			g_free (body);
-			g_set_error (error, 0, 0,
+			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_FILE_EXIST_ERROR,
 				     _("File '%s' already exists"), file);
 			return FALSE;
 		}
@@ -1335,9 +1335,11 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 		if (xmlNodeIsText (xml_field))
 			continue;
 
-		if (strcmp ((gchar*)xml_field->name, "gda_value") && strcmp ((gchar*)xml_field->name, "gda_array_value")) {
-			g_set_error (error, 0, 0, _("Expected tag <gda_value> or <gda_array_value>, "
-						    "got <%s>, ignoring"), (gchar*)xml_field->name);
+		if (strcmp ((gchar*)xml_field->name, "gda_value") && 
+		    strcmp ((gchar*)xml_field->name, "gda_array_value")) {
+			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_XML_FORMAT_ERROR,
+				     _("Expected tag <gda_value> or <gda_array_value>, "
+				       "got <%s>, ignoring"), (gchar*)xml_field->name);
 			continue;
 		}
 		
@@ -1366,7 +1368,7 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 		gdatype = gda_column_get_g_type (column);
 		if ((gdatype == G_TYPE_INVALID) ||
 		    (gdatype == GDA_TYPE_NULL)) {
-			g_set_error (error, 0, 0,
+			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_XML_FORMAT_ERROR,
 				     _("Cannot retrieve column data type (type is UNKNOWN or not specified)"));
 			retval = FALSE;
 			break;
@@ -1448,7 +1450,7 @@ gda_data_model_add_data_from_xml_node (GdaDataModel *model, xmlNodePtr node, GEr
 		node = node->next;
 
 	if (strcmp ((gchar*)node->name, "gda_array_data")) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_XML_FORMAT_ERROR,
 			     _("Expected tag <gda_array_data>, got <%s>"), node->name);
 		return FALSE;
 	}
@@ -1508,7 +1510,7 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 	/* obtain an iterator */
 	from_iter = gda_data_model_create_iter (from);
 	if (!from_iter) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
 			     _("Could not get an iterator for source data model"));
 		return FALSE;
 	}
@@ -1525,7 +1527,7 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 			col = GPOINTER_TO_INT (g_hash_table_lookup (cols_trans, GINT_TO_POINTER (i)));
 			if (col >= from_nb_cols) {
 				g_slist_free (copy_params);
-				g_set_error (error, 0, 0,
+				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_COLUMN_OUT_OF_RANGE_ERROR,
 					     _("Inexistent column in source data model: %d"), col);
 				return FALSE;
 			}
@@ -1539,7 +1541,7 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 		column = gda_data_model_describe_column (to, i);
 		if (! gda_column_get_allow_null (column) && !param) {
 			g_slist_free (copy_params);
-			g_set_error (error, 0, 0,
+			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_VALUE_TYPE_ERROR,
 				     _("Destination column %d can't be NULL but has no correspondence in the "
 				       "source data model"), i);
 			return FALSE;
@@ -1549,7 +1551,7 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 			    (gda_holder_get_g_type (param) != G_TYPE_INVALID) &&
 			    !g_value_type_transformable (gda_holder_get_g_type (param), 
 							 gda_column_get_g_type (column))) {
-				g_set_error (error, 0, 0,
+				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_VALUE_TYPE_ERROR,
 					     _("Destination column %d has a gda type (%s) incompatible with "
 					       "source column %d type (%s)"), i,
 					     gda_g_type_to_string (gda_column_get_g_type (column)),
@@ -1646,7 +1648,7 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 						gchar *str;
 
 						str = gda_value_stringify (value);
-						g_set_error (error, 0, 0,
+						g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_VALUE_TYPE_ERROR,
 							     _("Can't transform '%s' from GDA type %s to GDA type %s"),
 							     str, 
 							     gda_g_type_to_string (G_VALUE_TYPE (value)),

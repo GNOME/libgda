@@ -76,24 +76,27 @@ gda_prepare_create_database (const gchar *provider, const gchar *db_name, GError
 
 /**
  * gda_perform_create_database
+ * @provider: the database provider to use, or %NULL if @op has been created using gda_prepare_create_database()
  * @op: a #GdaServerOperation object obtained using gda_prepare_create_database()
  * @error: a place to store en error, or %NULL
  *
- * Creates a new database using the specifications in @op, which must have been obtained using
- * gda_prepare_create_database ()
+ * Creates a new database using the specifications in @op. @op can be obtained using
+ * gda_server_provider_create_operation(), or gda_prepare_create_database().
  *
  * Returns: TRUE if no error occurred and the database has been created
  */
 gboolean
-gda_perform_create_database (GdaServerOperation *op, GError **error)
+gda_perform_create_database (const gchar *provider, GdaServerOperation *op, GError **error)
 {
-	GdaServerProvider *provider;
+	GdaServerProvider *prov;
 
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
-
-	provider = g_object_get_data (G_OBJECT (op), "_gda_provider_obj");
-	if (provider) 
-		return gda_server_provider_perform_operation (provider, NULL, op, error);
+	if (provider)
+		prov = gda_config_get_provider (provider, error);
+	else
+		prov = g_object_get_data (G_OBJECT (op), "_gda_provider_obj");
+	if (prov) 
+		return gda_server_provider_perform_operation (prov, NULL, op, error);
 	else {
 		g_warning ("Could not find operation's associated provider, "
 			   "did you use gda_prepare_create_database() ?");
@@ -142,24 +145,27 @@ gda_prepare_drop_database (const gchar *provider, const gchar *db_name, GError *
 
 /**
  * gda_perform_drop_database
+ * @provider: the database provider to use, or %NULL if @op has been created using gda_prepare_drop_database()
  * @op: a #GdaServerOperation object obtained using gda_prepare_drop_database()
  * @error: a place to store en error, or %NULL
  *
- * Destroys an existing database using the specifications in @op,  which must have been obtained using
- * gda_prepare_drop_database ()
+ * Destroys an existing database using the specifications in @op.  @op can be obtained using
+ * gda_server_provider_create_operation(), or gda_prepare_drop_database().
  *
  * Returns: TRUE if no error occurred and the database has been destroyed
  */
 gboolean
-gda_perform_drop_database (GdaServerOperation *op, GError **error)
+gda_perform_drop_database (const gchar *provider, GdaServerOperation *op, GError **error)
 {
-	GdaServerProvider *provider;
+	GdaServerProvider *prov;
 
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
-
-	provider = g_object_get_data (G_OBJECT (op), "_gda_provider_obj");
-	if (provider) 
-		return gda_server_provider_perform_operation (provider, NULL, op, error);
+	if (provider)
+		prov = gda_config_get_provider (provider, error);
+	else
+		prov = g_object_get_data (G_OBJECT (op), "_gda_provider_obj");
+	if (prov) 
+		return gda_server_provider_perform_operation (prov, NULL, op, error);
 	else {
 		g_warning ("Could not find operation's associated provider, "
 			   "did you use gda_prepare_drop_database() ?"); 

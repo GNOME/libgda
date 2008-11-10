@@ -1,7 +1,17 @@
-libgda 3.99.6, 
+libgda 3.99.6, 2008-11-10
 
- - bug fixes: #541991, #546339
+ - A few API improvements
+ - MySQL provider improvements (Carlos Savoretti)
+ - Performances improvements, and memory leaks removal
+ - use the G_TYPE_GTYPE type instead of ulong
+ - better control of exported symbols in the final library and providers
+ - better binreloc behaviour in 64 bits
+ - use custom marshallers for GError, GType and GValue in signals (bug #555905)
+ - bug fixes: #541991, #546339, #555905, #556258, #556327, #556960, #529794 (Johannes Schmid, 
+   Massimo Cora', Vivien Malerba)
  - Translations:
+	- es (Jorge Gonzalez)
+	- sv (Daniel Nylander)
 
 libgda 3.99.5, 2008-10-09
 

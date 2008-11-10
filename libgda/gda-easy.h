@@ -70,9 +70,9 @@ gint                gda_execute_non_select_command    (GdaConnection *cnc, const
  * Database creation and destruction
  */
 GdaServerOperation *gda_prepare_create_database       (const gchar *provider, const gchar *db_name, GError **error);
-gboolean            gda_perform_create_database       (GdaServerOperation *op, GError **error);
+gboolean            gda_perform_create_database       (const gchar *provider, GdaServerOperation *op, GError **error);
 GdaServerOperation *gda_prepare_drop_database         (const gchar *provider, const gchar *db_name, GError **error);
-gboolean            gda_perform_drop_database         (GdaServerOperation *op, GError **error);
+gboolean            gda_perform_drop_database         (const gchar *provider, GdaServerOperation *op, GError **error);
 
 /*
  * Tables creation and destruction
