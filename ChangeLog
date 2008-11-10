@@ -1,3 +1,7 @@
+2008-11-10  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in: set version to 3.99.7
+
 Released 3.99.6
 
 2008-11-10  Vivien Malerba <malerba@gnome-db.org>
