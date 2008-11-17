@@ -54,7 +54,7 @@ Known types of statements
 @GDA_SQL_STATEMENT_INSERT: an INSERT statement
 @GDA_SQL_STATEMENT_UPDATE: an UPDATE statement
 @GDA_SQL_STATEMENT_DELETE: a DELETE statement
-@GDA_SQL_STATEMENT_COMPOUND: a compound statement: multiple SELECT statements groupped together using an operator
+@GDA_SQL_STATEMENT_COMPOUND: a compound statement: multiple SELECT statements grouped together using an operator
 @GDA_SQL_STATEMENT_BEGIN: start of transaction statement
 @GDA_SQL_STATEMENT_ROLLBACK: transaction abort statement
 @GDA_SQL_STATEMENT_COMMIT: transaction commit statement
@@ -322,7 +322,7 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 @from: target(s) of the SELECT statement
 @where_cond: condition expression filtering the resulting data set (WHERE condition)
 @group_by: grouping expressions (as #GdaSqlExpr pointers)
-@having_cond: condition expression filtering the groupped expressions (HAVING condition)
+@having_cond: condition expression filtering the grouped expressions (HAVING condition)
 @order_by: ordering expressions (as #GdaSqlSelectOrder pointers)
 @limit_count: size limiting expression (LIMIT clause)
 @limit_offset: when @limit_count is defined, the start offset for the limit

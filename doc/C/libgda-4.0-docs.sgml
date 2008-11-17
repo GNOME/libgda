@@ -489,7 +489,7 @@
       </para>
       <para>
 	Each <link linkend="GdaStatement">GdaStatement</link> can only hold one SQL statement (such as SELECT, INSERT,
-	CREATE TABLE, BEGIN, etc) (tatements can be groupped together into  <link linkend="GdaBAtch">GdaBatch</link> batches
+	CREATE TABLE, BEGIN, etc) (tatements can be grouped together into  <link linkend="GdaBAtch">GdaBatch</link> batches
 	objects). There are two ways for creating a <link linkend="GdaStatement">GdaStatement</link> object:
 	<itemizedlist>
 	   <listitem><para>either by passing an SQL string to a parser (a <link linkend="GdaSqlParser">GdaSqlParser</link>), or

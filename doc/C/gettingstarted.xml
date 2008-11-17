@@ -100,7 +100,7 @@ do_stuff () {
     <para>
       Any query within &LIBGDA; is represented as a <link linkend="GdaStatement">GdaStatement</link> object. Each 
       <link linkend="GdaStatement">GdaStatement</link> object can store exactly one SQL statement (SQL statements
-      are generally separated by semi-colons). Several statements can be groupped into a 
+      are generally separated by semi-colons). Several statements can be grouped into a 
       <link linkend="GdaBatch">GdaBatch</link> object.
     </para>
 

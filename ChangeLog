@@ -1,3 +1,12 @@
+2008-11-17  Murray Cumming  <murrayc@murrayc.com>
+
+	* doc/C/gettingstarted.xml:
+	* doc/C/libgda-4.0-docs.sgml:
+	* doc/C/tmpl/gda-batch.sgml:
+	* doc/C/tmpl/gda-sql-statement.sgml:
+	* doc/C/tmpl/gda-statement.sgml: Correct the spelling of grouped in 
+	the documentation.
+
 2008-11-10  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in: set version to 3.99.7

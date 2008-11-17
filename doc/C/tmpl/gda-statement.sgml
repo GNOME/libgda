@@ -6,7 +6,7 @@ Single SQL statement
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-  The #GdaStatement represents a single SQL statement (multiple statements can be groupped in a #GdaBatch object).
+  The #GdaStatement represents a single SQL statement (multiple statements can be grouped in a #GdaBatch object).
 </para>
 <para>
   A #GdaStatement can either be built "manually" by building a #GdaSqlStatement structure, or from an SQL statement using
