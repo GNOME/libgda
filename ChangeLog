@@ -1,3 +1,35 @@
+2008-11-  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/dir-blob-op.c: fixed the "write" virtual method
+	* tools/gda-sql.c:
+	  - added the "setex" command which sets a parameter either from a table's
+	    value or from the contents of a file (as a blob)
+	  - added the "export" command to export a parameter or a table's value to
+	    a file
+	  - lines starting with a # are considered as a comment and ignored
+	  - added the '-i' option to keep the console after a script has been executed
+	* libgda/gda-value.[ch]: added gda_value_new_blob_from_file() as a convenience
+	function
+	* libgda/gda-column: doc. improvements
+	* libgda/gda-blob-op.c:
+	* doc/C:
+	  - improved documentation for provider's developpers about blob operations
+	  - moved the gda_column_set*() to the provider's developpers section
+	  - updated the gda-sql console commands description (.setex end .export commands)
+	* providers/postgres/gda-postgres-provider.c:
+	  - fixed prepared statement names using static counters to avoid naming collisions
+	  - remove savepoint correction
+	  - better transaction control when using blobs
+	* providers/postgres/gda-postgres-blob-op.c:
+	  - don't keep the blob "opened" at all times
+	  - correctly handle transaction states when accesing the blob
+	* providers/postgres/gda-postgres-recordset.h: fixed indentation
+	* libgda/sqlite/gda-sqlite-provider.c: note for future implementation of
+	BLOBS
+	* providers/skel-implementation/capi/gda-capi-blob-op.c:
+	* providers/skel-implementation/capi/gda-capi-provider.c: corrections to the
+	default provider's skeleton implementation
+
 2008-11-17  Murray Cumming  <murrayc@murrayc.com>
 
 	* doc/C/gettingstarted.xml:

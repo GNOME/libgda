@@ -100,15 +100,15 @@ gda_capi_blob_op_class_init (GdaCapiBlobOpClass *klass)
 static void
 gda_capi_blob_op_finalize (GObject * object)
 {
-	GdaCapiBlobOp *pgop = (GdaCapiBlobOp *) object;
+	GdaCapiBlobOp *bop = (GdaCapiBlobOp *) object;
 
-	g_return_if_fail (GDA_IS_CAPI_BLOB_OP (pgop));
+	g_return_if_fail (GDA_IS_CAPI_BLOB_OP (bop));
 
 	/* free specific information */
 	TO_IMPLEMENT;
 
-	g_free (pgop->priv);
-	pgop->priv = NULL;
+	g_free (bop->priv);
+	bop->priv = NULL;
 
 	parent_class->finalize (object);
 }
@@ -116,14 +116,14 @@ gda_capi_blob_op_finalize (GObject * object)
 GdaBlobOp *
 gda_capi_blob_op_new (GdaConnection *cnc)
 {
-	GdaCapiBlobOp *pgop;
+	GdaCapiBlobOp *bop;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	pgop = g_object_new (GDA_TYPE_CAPI_BLOB_OP, NULL);
-	pgop->priv->cnc = cnc;
+	bop = g_object_new (GDA_TYPE_CAPI_BLOB_OP, NULL);
+	bop->priv->cnc = cnc;
 	
-	return GDA_BLOB_OP (pgop);
+	return GDA_BLOB_OP (bop);
 }
 
 /*
@@ -132,12 +132,12 @@ gda_capi_blob_op_new (GdaConnection *cnc)
 static glong
 gda_capi_blob_op_get_length (GdaBlobOp *op)
 {
-	GdaCapiBlobOp *pgop;
+	GdaCapiBlobOp *bop;
 
 	g_return_val_if_fail (GDA_IS_CAPI_BLOB_OP (op), -1);
-	pgop = GDA_CAPI_BLOB_OP (op);
-	g_return_val_if_fail (pgop->priv, -1);
-	g_return_val_if_fail (GDA_IS_CONNECTION (pgop->priv->cnc), -1);
+	bop = GDA_CAPI_BLOB_OP (op);
+	g_return_val_if_fail (bop->priv, -1);
+	g_return_val_if_fail (GDA_IS_CONNECTION (bop->priv->cnc), -1);
 
 	TO_IMPLEMENT;
 	return -1;
@@ -149,13 +149,13 @@ gda_capi_blob_op_get_length (GdaBlobOp *op)
 static glong
 gda_capi_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 {
-	GdaCapiBlobOp *pgop;
+	GdaCapiBlobOp *bop;
 	GdaBinary *bin;
 
 	g_return_val_if_fail (GDA_IS_CAPI_BLOB_OP (op), -1);
-	pgop = GDA_CAPI_BLOB_OP (op);
-	g_return_val_if_fail (pgop->priv, -1);
-	g_return_val_if_fail (GDA_IS_CONNECTION (pgop->priv->cnc), -1);
+	bop = GDA_CAPI_BLOB_OP (op);
+	g_return_val_if_fail (bop->priv, -1);
+	g_return_val_if_fail (GDA_IS_CONNECTION (bop->priv->cnc), -1);
 	if (offset >= G_MAXINT)
 		return -1;
 	g_return_val_if_fail (blob, -1);
@@ -178,18 +178,49 @@ gda_capi_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 static glong
 gda_capi_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 {
-	GdaCapiBlobOp *pgop;
+	GdaCapiBlobOp *bop;
 	GdaBinary *bin;
+	glong nbwritten = -1;
 
 	g_return_val_if_fail (GDA_IS_CAPI_BLOB_OP (op), -1);
-	pgop = GDA_CAPI_BLOB_OP (op);
-	g_return_val_if_fail (pgop->priv, -1);
-	g_return_val_if_fail (GDA_IS_CONNECTION (pgop->priv->cnc), -1);
+	bop = GDA_CAPI_BLOB_OP (op);
+	g_return_val_if_fail (bop->priv, -1);
+	g_return_val_if_fail (GDA_IS_CONNECTION (bop->priv->cnc), -1);
 	g_return_val_if_fail (blob, -1);
 
-	/* write blob using bin->data and bin->binary_length */
-	bin = (GdaBinary *) blob;
-	TO_IMPLEMENT;
+	if (blob->op && (blob->op != op)) {
+		/* use data through blob->op */
+		#define buf_size 16384
+		gint nread = 0;
+		GdaBlob *tmpblob = g_new0 (GdaBlob, 1);
+		tmpblob->op = blob->op;
 
-	return -1;
+		nbwritten = 0;
+
+		for (nread = gda_blob_op_read (tmpblob->op, tmpblob, nbwritten, buf_size);
+		     nread > 0;
+		     nread = gda_blob_op_read (tmpblob->op, tmpblob, nbwritten, buf_size)) {
+			glong tmp_written;
+
+			tmp_written = -1; TO_IMPLEMENT;
+			
+			if (tmp_written < 0) {
+				/* treat error */
+				gda_blob_free ((gpointer) tmpblob);
+				return -1;
+			}
+			nbwritten += tmp_written;
+			if (nread < buf_size)
+				/* nothing more to read */
+				break;
+		}
+		gda_blob_free ((gpointer) tmpblob);
+	}
+	else {
+		/* write blob using bin->data and bin->binary_length */
+		bin = (GdaBinary *) blob;
+		nbwritten = -1; TO_IMPLEMENT;
+	}
+
+	return nbwritten;
 }

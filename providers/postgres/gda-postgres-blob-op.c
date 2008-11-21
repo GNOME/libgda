@@ -124,10 +124,11 @@ blob_op_open (GdaPostgresBlobOp *pgop)
 		use_svp = TRUE;
 
 	if (use_svp)
-		gda_connection_add_savepoint (pgop->priv->cnc, "__gda_blob_read_svp", NULL);
+		use_svp = gda_connection_add_savepoint (pgop->priv->cnc, "__gda_blob_read_svp", NULL);
 	
 	pgop->priv->fd = lo_open (get_pconn (pgop->priv->cnc), pgop->priv->blobid, INV_READ | INV_WRITE);
 	if (pgop->priv->fd < 0) {
+		_gda_postgres_make_error (pgop->priv->cnc, get_pconn (pgop->priv->cnc), NULL, NULL);
 		if (use_svp)
 			gda_connection_rollback_savepoint (pgop->priv->cnc, "__gda_blob_read_svp", NULL);
 		return FALSE;
@@ -135,6 +136,13 @@ blob_op_open (GdaPostgresBlobOp *pgop)
 	if (use_svp)
 		gda_connection_delete_savepoint (pgop->priv->cnc, "__gda_blob_read_svp", NULL);
 	return TRUE;
+}
+
+static void
+blob_op_close (GdaPostgresBlobOp *pgop)
+{
+	lo_close (get_pconn (pgop->priv->cnc), pgop->priv->fd);
+	pgop->priv->fd = -1;
 }
 
 static void
@@ -178,7 +186,6 @@ gda_postgres_blob_op_new_with_id (GdaConnection *cnc, const gchar *sql_id)
 	pconn = get_pconn (cnc);
 	pgop->priv->blobid = atoi (sql_id);
 	pgop->priv->cnc = cnc;
-	blob_op_open (pgop);
 
 	return GDA_BLOB_OP (pgop);
 }
@@ -203,8 +210,6 @@ gda_postgres_blob_op_declare_blob (GdaPostgresBlobOp *pgop)
 		}
 	}
 	
-	if (!blob_op_open (pgop))
-		return FALSE;
 	return TRUE;
 }
 
@@ -235,12 +240,25 @@ gda_postgres_blob_op_set_id (GdaPostgresBlobOp *pgop, const gchar *sql_id)
 	g_return_if_fail (pgop->priv);
 	g_return_if_fail (sql_id);
 
-	if (pgop->priv->fd >= 0) {
-		lo_close (get_pconn (pgop->priv->cnc), pgop->priv->fd);
-		pgop->priv->fd = 0;
-	}
+	if (pgop->priv->fd >= 0)
+		blob_op_close (pgop);
 	pgop->priv->blobid = atoi (sql_id);
-	blob_op_open (pgop);
+}
+
+static gboolean
+check_transaction_started (GdaConnection *cnc, gboolean *out_started)
+{
+        GdaTransactionStatus *trans;
+
+        trans = gda_connection_get_transaction_status (cnc);
+        if (!trans) {
+		if (!gda_connection_begin_transaction (cnc, NULL,
+						       GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL))
+			return FALSE;
+		else
+			*out_started = TRUE;
+	}
+	return TRUE;
 }
 
 /*
@@ -252,20 +270,39 @@ gda_postgres_blob_op_get_length (GdaBlobOp *op)
 	GdaPostgresBlobOp *pgop;
 	PGconn *pconn;
 	int pos;
+	gboolean transaction_started = FALSE;
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_BLOB_OP (op), -1);
 	pgop = GDA_POSTGRES_BLOB_OP (op);
 	g_return_val_if_fail (pgop->priv, -1);
 	g_return_val_if_fail (GDA_IS_CONNECTION (pgop->priv->cnc), -1);
+
+	if (! check_transaction_started (pgop->priv->cnc, &transaction_started))
+		return -1;
 	
 	if (!blob_op_open (pgop))
-		return -1;
+		goto out_error;
+
 	pconn = get_pconn (pgop->priv->cnc);
 	pos = lo_lseek (pconn, pgop->priv->fd, 0, SEEK_END);
-        if (pos < 0)
-                return -1;
-        else
-                return pos;
+
+	if (pos < 0) {
+		_gda_postgres_make_error (pgop->priv->cnc, pconn, NULL, NULL);
+		goto out_error;
+	}
+
+	blob_op_close (pgop);
+	if (transaction_started)
+		gda_connection_rollback_transaction (pgop->priv->cnc, NULL, NULL);
+
+	return pos;
+
+ out_error:
+	blob_op_close (pgop);
+	if (transaction_started)
+		gda_connection_rollback_transaction (pgop->priv->cnc, NULL, NULL);
+
+	return -1;
 }
 
 static glong
@@ -274,6 +311,7 @@ gda_postgres_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong siz
 	GdaPostgresBlobOp *pgop;
 	PGconn *pconn;
 	GdaBinary *bin;
+	gboolean transaction_started = FALSE;
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_BLOB_OP (op), -1);
 	pgop = GDA_POSTGRES_BLOB_OP (op);
@@ -283,13 +321,16 @@ gda_postgres_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong siz
 		return -1;
 	g_return_val_if_fail (blob, -1);
 
-	if (!blob_op_open (pgop))
+	if (! check_transaction_started (pgop->priv->cnc, &transaction_started))
 		return -1;
+
+	if (!blob_op_open (pgop))
+		goto out_error;
 
 	pconn = get_pconn (pgop->priv->cnc);
 	if (lo_lseek (pconn, pgop->priv->fd, offset, SEEK_SET) < 0) {
 		_gda_postgres_make_error (pgop->priv->cnc, pconn, NULL, NULL);
-		return -1;
+		goto out_error;
 	}
 
 	bin = (GdaBinary *) blob;
@@ -297,7 +338,19 @@ gda_postgres_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong siz
 		g_free (bin->data);
 	bin->data = g_new0 (guchar, size);
 	bin->binary_length = lo_read (pconn, pgop->priv->fd, (char *) (bin->data), size);
+
+	blob_op_close (pgop);
+	if (transaction_started)
+		gda_connection_rollback_transaction (pgop->priv->cnc, NULL, NULL);
+
 	return bin->binary_length;
+
+ out_error:
+	blob_op_close (pgop);
+	if (transaction_started)
+		gda_connection_rollback_transaction (pgop->priv->cnc, NULL, NULL);
+
+	return -1;
 }
 
 static glong
@@ -305,8 +358,8 @@ gda_postgres_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 {
 	GdaPostgresBlobOp *pgop;
 	PGconn *pconn;
-	GdaBinary *bin;
 	glong nbwritten;
+	gboolean transaction_started = FALSE;
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_BLOB_OP (op), -1);
 	pgop = GDA_POSTGRES_BLOB_OP (op);
@@ -314,21 +367,66 @@ gda_postgres_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 	g_return_val_if_fail (GDA_IS_CONNECTION (pgop->priv->cnc), -1);
 	g_return_val_if_fail (blob, -1);
 
-	if (!blob_op_open (pgop))
+	if (! check_transaction_started (pgop->priv->cnc, &transaction_started))
 		return -1;
+
+	if (!blob_op_open (pgop))
+		goto out_error;
 
 	pconn = get_pconn (pgop->priv->cnc);
 	if (lo_lseek (pconn, pgop->priv->fd, offset, SEEK_SET) < 0) {
 		_gda_postgres_make_error (pgop->priv->cnc, pconn, NULL, NULL);
-		return -1;
+		goto out_error;
 	}
 
-	bin = (GdaBinary *) blob;
-	nbwritten = lo_write (pconn, pgop->priv->fd, (char*) bin->data, bin->binary_length);
-	if (nbwritten == -1) {
-		_gda_postgres_make_error (pgop->priv->cnc, pconn, NULL, NULL);
-		return -1;
+	if (blob->op && (blob->op != op)) {
+		/* use data through blob->op */
+		#define buf_size 16384
+		gint nread = 0;
+		GdaBlob *tmpblob = g_new0 (GdaBlob, 1);
+		tmpblob->op = blob->op;
+
+		nbwritten = 0;
+
+		for (nread = gda_blob_op_read (tmpblob->op, tmpblob, nbwritten, buf_size);
+		     nread > 0;
+		     nread = gda_blob_op_read (tmpblob->op, tmpblob, nbwritten, buf_size)) {
+			GdaBinary *bin = (GdaBinary *) tmpblob;
+			glong tmp_written;
+			tmp_written = lo_write (pconn, pgop->priv->fd, (char*) bin->data, 
+						bin->binary_length);
+			if (tmp_written < 0) {
+				_gda_postgres_make_error (pgop->priv->cnc, pconn, NULL, NULL);
+				gda_blob_free ((gpointer) tmpblob);
+				goto out_error;
+			}
+			nbwritten += tmp_written;
+			if (nread < buf_size)
+				/* nothing more to read */
+				break;
+		}
+		gda_blob_free ((gpointer) tmpblob);
 	}
+	else {
+		/* use data in (GdaBinary *) blob */
+		GdaBinary *bin = (GdaBinary *) blob;
+		nbwritten = lo_write (pconn, pgop->priv->fd, (char*) bin->data, bin->binary_length);
+		if (nbwritten == -1) {
+			_gda_postgres_make_error (pgop->priv->cnc, pconn, NULL, NULL);
+			goto out_error;
+		}
+	}
+
+	blob_op_close (pgop);
+	if (transaction_started)
+		if (!gda_connection_commit_transaction (pgop->priv->cnc, NULL, NULL))
+			return -1;
 
 	return nbwritten;
+
+ out_error:
+	blob_op_close (pgop);
+	if (transaction_started)
+		gda_connection_rollback_transaction (pgop->priv->cnc, NULL, NULL);
+	return -1;
 }

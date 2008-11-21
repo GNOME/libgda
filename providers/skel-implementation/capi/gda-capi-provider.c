@@ -418,7 +418,7 @@ gda_capi_provider_get_server_version (GdaServerProvider *provider, GdaConnection
 /*
  * Get database request
  *
- * Returns the server version as a string, which should be stored in @cnc's associated CapiConnectionData structure
+ * Returns the database name as a string, which should be stored in @cnc's associated CapiConnectionData structure
  */
 static const gchar *
 gda_capi_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc)
@@ -908,6 +908,7 @@ gda_capi_provider_statement_prepare (GdaServerProvider *provider, GdaConnection 
 				     GdaStatement *stmt, GError **error)
 {
 	GdaCapiPStmt *ps;
+	gboolean retval = FALSE;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
@@ -918,15 +919,58 @@ gda_capi_provider_statement_prepare (GdaServerProvider *provider, GdaConnection 
 	if (ps)
 		return TRUE;
 
+	/* render as SQL understood by the provider */
+	GdaSet *params = NULL;
+	gchar *sql;
+	GSList *used_params = NULL;
+	if (! gda_statement_get_parameters (stmt, &params, error))
+                return FALSE;
+        sql = gda_capi_provider_statement_to_sql (provider, cnc, stmt, params, GDA_STATEMENT_SQL_PARAMS_AS_UQMARK,
+						  &used_params, error);
+        if (!sql) 
+		goto out;
+
 	/* prepare @stmt using the C API, creates @ps */
 	TO_IMPLEMENT;
-	if (!ps)
-		return FALSE;
-	else {
-		gda_connection_add_prepared_statement (cnc, stmt, (GdaPStmt *) ps);
-		g_object_unref (ps);
-		return TRUE;
-	}
+
+	/* make a list of the parameter names used in the statement */
+	GSList *param_ids = NULL;
+        if (used_params) {
+                GSList *list;
+                for (list = used_params; list; list = list->next) {
+                        const gchar *cid;
+                        cid = gda_holder_get_id (GDA_HOLDER (list->data));
+                        if (cid) {
+                                param_ids = g_slist_append (param_ids, g_strdup (cid));
+                                /*g_print ("PREPARATION: param ID: %s\n", cid);*/
+                        }
+                        else {
+                                g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR,
+                                             _("Unnamed parameter is not allowed in prepared statements"));
+                                g_slist_foreach (param_ids, (GFunc) g_free, NULL);
+                                g_slist_free (param_ids);
+                                goto out;
+                        }
+                }
+        }
+	
+	/* create a prepared statement object */
+	/*ps = gda_capi_pstmt_new (...);*/
+	gda_pstmt_set_gda_statement (_GDA_PSTMT (ps), stmt);
+        _GDA_PSTMT (ps)->param_ids = param_ids;
+        _GDA_PSTMT (ps)->sql = sql;
+
+	gda_connection_add_prepared_statement (cnc, stmt, (GdaPStmt *) ps);
+	g_object_unref (ps);
+
+	retval = TRUE;
+
+ out:
+	if (used_params)
+                g_slist_free (used_params);
+        if (params)
+                g_object_unref (params);
+	return retval;
 }
 
 /*
@@ -964,7 +1008,7 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 	if (async_cb) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
 			     _("Provider does not support asynchronous statement execution"));
-                return FALSE;
+                return NULL;
 	}
 
 	if (! (model_usage & GDA_STATEMENT_MODEL_RANDOM_ACCESS) &&
@@ -991,13 +1035,20 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 			 * where the C API cannot allow them (for example if the variable is the table name
 			 * in a SELECT statement). The action here is to get the actual SQL code for @stmt,
 			 * and use that SQL instead of @stmt to create another GdaCapiPStmt object.
+			 *
+			 * Don't call gda_connection_add_prepared_statement() with this new prepared statement
+			 * as it will be destroyed once used.
 			 */
 			TO_IMPLEMENT;
 			return NULL;
 		}
-		else
+		else {
 			ps = (GdaCapiPStmt *) gda_connection_get_prepared_statement (cnc, stmt);
+			g_object_ref (ps);
+		}
 	}
+	else
+		g_object_ref (ps);
 	g_assert (ps);
 
 	/* optionnally reset the prepared statement if required by the API */
@@ -1074,6 +1125,7 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 		
 	if (event) {
 		gda_connection_add_event (cnc, event);
+		g_object_unref (ps);
 		return NULL;
 	}
 	
@@ -1091,12 +1143,16 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 		GdaStatement *estmt;
                 gchar *esql;
                 estmt = gda_select_alter_select_for_empty (stmt, error);
-                if (!estmt)
+                if (!estmt) {
+			g_object_unref (ps);
                         return NULL;
+		}
                 esql = gda_statement_to_sql (estmt, NULL, error);
                 g_object_unref (estmt);
-                if (!esql)
+                if (!esql) {
+			g_object_unref (ps);
                         return NULL;
+		}
 
 		/* Execute the 'esql' SQL code */
                 g_free (esql);
@@ -1121,6 +1177,7 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 
                 data_model = (GObject *) gda_capi_recordset_new (cnc, ps, params, flags, col_types);
 		gda_connection_internal_statement_executed (cnc, stmt, params, NULL); /* required: help @cnc keep some stats */
+		g_object_unref (ps);
 		return data_model;
         }
 	else {
@@ -1131,6 +1188,7 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 		/* Create GdaConnectionEvent notice with the type of command and impacted rows */
 
 		gda_connection_internal_statement_executed (cnc, stmt, params, event); /* required: help @cnc keep some stats */
+		g_object_unref (ps);
 		return (GObject*) set;
 	}
 }

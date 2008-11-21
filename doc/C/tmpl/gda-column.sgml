@@ -71,15 +71,6 @@ Management of #GdaDataModel column attributes
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_column_set_name ##### -->
-<para>
-
-</para>
-
-@column: 
-@name: 
-
-
 <!-- ##### FUNCTION gda_column_get_description ##### -->
 <para>
 
@@ -87,15 +78,6 @@ Management of #GdaDataModel column attributes
 
 @column: 
 @Returns: 
-
-
-<!-- ##### FUNCTION gda_column_set_description ##### -->
-<para>
-
-</para>
-
-@column: 
-@title: 
 
 
 <!-- ##### FUNCTION gda_column_get_dbms_type ##### -->
@@ -107,15 +89,6 @@ Management of #GdaDataModel column attributes
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_column_set_dbms_type ##### -->
-<para>
-
-</para>
-
-@column: 
-@dbms_type: 
-
-
 <!-- ##### FUNCTION gda_column_get_g_type ##### -->
 <para>
 
@@ -123,15 +96,6 @@ Management of #GdaDataModel column attributes
 
 @column: 
 @Returns: 
-
-
-<!-- ##### FUNCTION gda_column_set_g_type ##### -->
-<para>
-
-</para>
-
-@column: 
-@type: 
 
 
 <!-- ##### FUNCTION gda_column_get_allow_null ##### -->
@@ -143,15 +107,6 @@ Management of #GdaDataModel column attributes
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_column_set_allow_null ##### -->
-<para>
-
-</para>
-
-@column: 
-@allow: 
-
-
 <!-- ##### FUNCTION gda_column_get_auto_increment ##### -->
 <para>
 
@@ -159,15 +114,6 @@ Management of #GdaDataModel column attributes
 
 @column: 
 @Returns: 
-
-
-<!-- ##### FUNCTION gda_column_set_auto_increment ##### -->
-<para>
-
-</para>
-
-@column: 
-@is_auto: 
 
 
 <!-- ##### FUNCTION gda_column_get_position ##### -->
@@ -179,15 +125,6 @@ Management of #GdaDataModel column attributes
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_column_set_position ##### -->
-<para>
-
-</para>
-
-@column: 
-@position: 
-
-
 <!-- ##### FUNCTION gda_column_get_default_value ##### -->
 <para>
 
@@ -195,15 +132,6 @@ Management of #GdaDataModel column attributes
 
 @column: 
 @Returns: 
-
-
-<!-- ##### FUNCTION gda_column_set_default_value ##### -->
-<para>
-
-</para>
-
-@column: 
-@default_value: 
 
 
 <!-- ##### FUNCTION gda_column_get_attribute ##### -->

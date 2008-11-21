@@ -20,20 +20,21 @@
     <para>
       The &LIBGDA;'s console tool' main features are:
       <itemizedlist>
-	<listitem><para>Can handle more than one connection at the same time</para></listitem>
-	<listitem><para>Reports meta data in a similar way, whatever the real type of database
+	<listitem><para>Handle more than one connection at the same time</para></listitem>
+	<listitem><para>Report meta data in a similar way, whatever the real type of database
 	    accessed</para></listitem>
-	<listitem><para>Can create <emphasis>virtual</emphasis> connections binding 
+	<listitem><para>Create <emphasis>virtual</emphasis> connections binding 
 	    several already opened connections (to run SQL commands across multiple 
 	    connections)</para></listitem>
-	<listitem><para>Allows one to define variables which can be referenced in any
+	<listitem><para>Allow one to define variables which can be referenced in any
 	    SQL statement (using a common syntax)</para></listitem>
-	<listitem><para>Has one query buffer per connection to edit complex queries (uses a
+	<listitem><para>One query buffer per connection to edit complex queries (uses a
 	    parametrable external editor)</para></listitem>
 	<listitem><para>Easy command line editing and output using the Readline library and a
 	    (parametrable) pager</para></listitem>
-	<listitem><para>Works on any platform on which &LIBGDA; has been ported to.</para></listitem>
-	<listitem><para>Can list, define or remove named data sources (DSN)</para></listitem>
+	<listitem><para>Work on any platform on which &LIBGDA; has been ported to.</para></listitem>
+	<listitem><para>List, define or remove named data sources (DSN)</para></listitem>
+	<listitem><para>Import and export BLOBS (binary large objects) from and to local files</para></listitem>
       </itemizedlist>
     </para>
   </sect1>
@@ -638,9 +639,19 @@ SalesTest>
   <sect1>
     <title>Internal parameters</title>
     <para>
-      Variables can be defined using the <command>.set</command> command. Variables are then automatically looked for
+      Variables can be defined using the <command>.set</command> and <command>.setex</command> commands.
+      Variables are then automatically looked for
       when executing SQL statements for which a variable is required; they are not typed and are converted to 
       the correct type when needed. Note that variables are shared by all the opened connections.
+    </para>
+    <para>
+      When setting values, the textual representation must respect the following format:
+      <itemizedlist>
+	<listitem><para>for booleans: "true" or "false" (case insensitive)</para></listitem>
+	<listitem><para>for numerical types: the dot as a fraction separator</para></listitem>
+	<listitem><para>for dates, time and timestamp: the ISO 8601 format (dates as "YYYY-MM-DD", time as "HH:MM:SS")
+	</para></listitem>
+      </itemizedlist>
     </para>
     <para>
       Use the <command>.set &lt;variablename&gt; &lt;variable value&gt;</command> command to define a variable,
@@ -668,6 +679,38 @@ theid | 5
 (1 row)
 SalesTest>
     </programlisting>
+    </para>
+    <para>
+      The <command>.setex</command> command also sets an internal parameter, it has two usages:
+      <itemizedlist>
+	<listitem><para>The <command>.set &lt;variablename&gt; &lt;filename&gt;</command> usage loads the contents
+	    of the named filename into the named variable (usually to be used as a BLOB)</para></listitem>
+	<listitem><para>The <command>.set &lt;variablename&gt; &lt;table&gt; &lt;column&gt; &lt;row condition&gt;</command>
+	    usage creates a named variable which contents is the value of the &lt;table&gt; table and
+	  &lt;column&gt; column for the row identified by &lt;row condition&gt;. Note that this command will fail
+	  if the &lt;row condition&gt; condition does not return exactly one value.</para>
+	  <para>
+	    The following example defined a "bl10" variable containing the value of the "blob" column in the "blobs" table
+	    for the "id=10" condition:
+	    <programlisting>
+.setex bl10 blobs blob "id=10"
+	    </programlisting>
+	  </para>
+	</listitem>
+      </itemizedlist>
+    </para>
+    <para>
+      The <command>.export</command> command exports to a file the contents of an internal variable or the
+      the contents of a table's value:
+      <itemizedlist>
+	<listitem><para>The <command>.export &lt;variablename&gt; &lt;filename&gt;</command> usage exports the contents
+	    of the named variable into the named filename</para></listitem>
+	<listitem><para>The <command>.set &lt;table&gt; &lt;column&gt; &lt;row condition&gt; &lt;filename&gt;</command>
+	    usage exports the value of the &lt;table&gt; table and
+	  &lt;column&gt; column for the row identified by &lt;row condition&gt;. Note that this command will fail
+	  if the &lt;row condition&gt; condition does not return exactly one value.</para>
+	</listitem>
+      </itemizedlist>
     </para>
   </sect1>
 

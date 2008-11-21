@@ -1653,7 +1653,7 @@ real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stm
 	if (params)
 		g_object_unref (params);
 
-	/* create a prepared statement */
+	/* create a prepared statement object */
 	ps = gda_sqlite_pstmt_new (sqlite_stmt);
 	gda_pstmt_set_gda_statement (_GDA_PSTMT (ps), stmt);
 	_GDA_PSTMT (ps)->param_ids = param_ids;
@@ -2036,6 +2036,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		else if (G_VALUE_TYPE (value) == G_TYPE_UCHAR)
 			sqlite3_bind_int (ps->sqlite_stmt, i, g_value_get_uchar (value));
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_BLOB) {
+			TO_IMPLEMENT; /* use sqlite3_bind_zeroblob () */
 			GdaBinary *bin = (GdaBinary *) gda_value_get_blob (value);
 			sqlite3_bind_blob (ps->sqlite_stmt, i, 
 					   bin->data, bin->binary_length, SQLITE_TRANSIENT);

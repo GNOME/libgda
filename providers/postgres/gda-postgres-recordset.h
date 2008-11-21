@@ -41,7 +41,7 @@ typedef struct _GdaPostgresRecordsetPrivate GdaPostgresRecordsetPrivate;
 
 struct _GdaPostgresRecordset {
 	GdaDataSelect                    model;
-	GdaPostgresRecordsetPrivate *priv;
+	GdaPostgresRecordsetPrivate     *priv;
 };
 
 struct _GdaPostgresRecordsetClass {

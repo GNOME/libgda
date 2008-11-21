@@ -73,3 +73,75 @@ Base class for all the data models returned by DBMS providers when a SELECT stat
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_column_set_name ##### -->
+<para>
+
+</para>
+
+@column: 
+@name: 
+
+
+<!-- ##### FUNCTION gda_column_set_description ##### -->
+<para>
+
+</para>
+
+@column: 
+@title: 
+
+
+<!-- ##### FUNCTION gda_column_set_dbms_type ##### -->
+<para>
+
+</para>
+
+@column: 
+@dbms_type: 
+
+
+<!-- ##### FUNCTION gda_column_set_g_type ##### -->
+<para>
+
+</para>
+
+@column: 
+@type: 
+
+
+<!-- ##### FUNCTION gda_column_set_allow_null ##### -->
+<para>
+
+</para>
+
+@column: 
+@allow: 
+
+
+<!-- ##### FUNCTION gda_column_set_auto_increment ##### -->
+<para>
+
+</para>
+
+@column: 
+@is_auto: 
+
+
+<!-- ##### FUNCTION gda_column_set_position ##### -->
+<para>
+
+</para>
+
+@column: 
+@position: 
+
+
+<!-- ##### FUNCTION gda_column_set_default_value ##### -->
+<para>
+
+</para>
+
+@column: 
+@default_value: 
+
+

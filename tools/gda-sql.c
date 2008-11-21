@@ -35,6 +35,7 @@
 #include <sys/types.h>
 #include <libgda/gda-quark-list.h>
 #include <libgda/gda-meta-struct.h>
+#include <libgda/gda-blob-op.h>
 
 #ifndef G_OS_WIN32
 #include <signal.h>
@@ -53,6 +54,7 @@ gboolean ask_pass = FALSE;
 
 gchar *single_command = NULL;
 gchar *commandsfile = NULL;
+gboolean interractive = FALSE;
 
 gboolean list_configs = FALSE;
 gboolean list_providers = FALSE;
@@ -65,7 +67,8 @@ static GOptionEntry entries[] = {
 
         { "output-file", 'o', 0, G_OPTION_ARG_STRING, &outfile, "Output file", "output file"},
         { "command", 'C', 0, G_OPTION_ARG_STRING, &single_command, "Run only single command (SQL or internal) and exit", "command" },
-        { "commands-file", 'f', 0, G_OPTION_ARG_STRING, &commandsfile, "Execute commands from file, then exit", "filename" },
+        { "commands-file", 'f', 0, G_OPTION_ARG_STRING, &commandsfile, "Execute commands from file, then exit (except if -i specified)", "filename" },
+	{ "interractive", 'i', 0, G_OPTION_ARG_NONE, &interractive, "Keep the console opened after executing a file (-f option)", NULL },
         { "list-dsn", 'l', 0, G_OPTION_ARG_NONE, &list_configs, "List configured data sources and exit", NULL },
         { "list-providers", 'L', 0, G_OPTION_ARG_NONE, &list_providers, "List installed database providers and exit", NULL },
         { NULL }
@@ -137,7 +140,7 @@ static GdaDataModel *list_all_providers (MainData *data);
 /* commands manipulation */
 static GdaInternalCommandsList  *build_internal_commands_list (MainData *data);
 static gboolean                  command_is_complete (const gchar *command);
-static GdaInternalCommandResult *command_execute (MainData *data, gchar *command, GError **error);
+static GdaInternalCommandResult *command_execute (MainData *data, const gchar *command, GError **error);
 static void                      display_result (MainData *data, GdaInternalCommandResult *res);
 
 int
@@ -557,7 +560,7 @@ static gchar *read_a_line (MainData *data)
 	compute_prompt (data, prompt, data->partial_command == NULL ? FALSE : TRUE);
 	if (data->input_stream) {
 		cmde = input_from_stream (data->input_stream);
-		if (!cmde && isatty (fileno (stdin))) {
+		if (interractive && !cmde && isatty (fileno (stdin))) {
 			/* go back to console after file is over */
 			set_input_file (data, NULL, NULL);
 			cmde = input_from_console (prompt->str);
@@ -579,8 +582,14 @@ command_is_complete (const gchar *command)
 {
 	if (!command || !(*command))
 		return FALSE;
+	if (single_command)
+		return TRUE;
 	if ((*command == '\\') || (*command == '.')) {
 		/* internal command */
+		return TRUE;
+	}
+	else if (*command == '#') {
+		/* comment, to be ignored */
 		return TRUE;
 	}
 	else {
@@ -597,31 +606,38 @@ command_is_complete (const gchar *command)
  */
 static GdaInternalCommandResult *execute_external_command (MainData *data, const gchar *command, GError **error);
 static GdaInternalCommandResult *
-command_execute (MainData *data, gchar *command, GError **error)
+command_execute (MainData *data, const gchar *command, GError **error)
 {
 	if (!command || !(*command))
-		return NULL;
-	if ((*command == '\\') || (*command == '.')) {
-		if (data->current)
-			return gda_internal_command_execute (data->internal_commands, 
-							     data->current->cnc, command, error);
-		else
-			return gda_internal_command_execute (data->internal_commands, NULL, command, error);
+                return NULL;
+        if ((*command == '\\') || (*command == '.')) {
+                if (data->current)
+                        return gda_internal_command_execute (data->internal_commands,
+                                                             data->current->cnc, command, error);
+                else
+                        return gda_internal_command_execute (data->internal_commands, NULL, command, error);
+        }
+	else if (*command == '#') {
+		/* nothing to do */
+		GdaInternalCommandResult *res;
+		res = g_new0 (GdaInternalCommandResult, 1);
+		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
+		return res;
 	}
-	else {
-		if (!data->current) {
-			g_set_error (error, 0, 0, 
-				     _("No connection specified"));
-			return NULL;
-		}
-		if (!gda_connection_is_opened (data->current->cnc)) {
-			g_set_error (error, 0, 0, 
-				     _("Connection closed"));
-			return NULL;
-		}
-			
-		return execute_external_command (data, command, error);
-	}
+        else {
+                if (!data->current) {
+                        g_set_error (error, 0, 0,
+                                     _("No connection specified"));
+                        return NULL;
+                }
+                if (!gda_connection_is_opened (data->current->cnc)) {
+                        g_set_error (error, 0, 0,
+                                     _("Connection closed"));
+                        return NULL;
+                }
+
+                return execute_external_command (data, command, error);
+        }
 }
 
 /*
@@ -677,26 +693,44 @@ execute_external_command (MainData *data, const gchar *command, GError **error)
 			GdaHolder *h = GDA_HOLDER (list->data);
 			GdaHolder *h_in_data = g_hash_table_lookup (data->parameters, gda_holder_get_id (h));
 			if (h_in_data) {
-				gchar *str;
 				const GValue *cvalue;
 				GValue *value;
-				GdaDataHandler *dh;
-				GdaServerProvider *prov;
 
-				prov = gda_connection_get_provider (data->current->cnc);
 				cvalue = gda_holder_get_value (h_in_data);
-				dh = gda_server_provider_get_data_handler_g_type (prov, data->current->cnc,
-										 gda_holder_get_g_type (h_in_data));
-				str = gda_data_handler_get_str_from_value (dh, cvalue);
-
-				dh = gda_server_provider_get_data_handler_g_type (prov, data->current->cnc,
-										 gda_holder_get_g_type (h));
-				value = gda_data_handler_get_value_from_str (dh, str, gda_holder_get_g_type (h));
-				g_free (str);
-				if (! gda_holder_take_value (h, value, error)) {
-					g_free (res);
-					res = NULL;
-					goto cleanup;
+				if (cvalue && (G_VALUE_TYPE (cvalue) == gda_holder_get_g_type (h))) {
+					if (!gda_holder_set_value (h, cvalue, error)) {
+						g_free (res);
+						res = NULL;
+						goto cleanup;
+					}
+				}
+				else if (cvalue && (G_VALUE_TYPE (cvalue) == GDA_TYPE_NULL)) {
+					if (!gda_holder_set_value (h, cvalue, error)) {
+						g_free (res);
+						res = NULL;
+						goto cleanup;
+					}
+				}
+				else {
+					gchar *str;
+					str = gda_value_stringify (cvalue);
+					value = gda_value_new_from_string (str, gda_holder_get_g_type (h));
+					g_free (str);
+					if (! value) {
+						g_set_error (error, 0, 0,
+							     _("Could not interpret the '%s' parameter's value"), 
+							     gda_holder_get_id (h));
+						g_free (res);
+						res = NULL;
+						goto cleanup;
+					}
+					else if (! gda_holder_take_value (h, value, error)) {
+						gda_value_free (value);
+						g_free (res);
+						res = NULL;
+						goto cleanup;
+					}
+					g_free (str);
 				}
 			}
 			else {
@@ -1021,6 +1055,8 @@ open_connection (MainData *data, const gchar *cnc_name, const gchar *cnc_string,
 			cs->name = g_strdup_printf ("c%d", cncindex);
 		cncindex++;
 		cs->parser = gda_connection_create_parser (newcnc);
+		if (!cs->parser)
+			cs->parser = gda_sql_parser_new ();
 		cs->cnc = newcnc;
 		cs->query_buffer = NULL;
 		cs->threader = NULL;
@@ -1409,6 +1445,13 @@ static GdaInternalCommandResult *extra_command_unset (GdaConnection *cnc, const 
 static GdaInternalCommandResult *extra_command_graph (GdaConnection *cnc, const gchar **args,
 						      GError **error, MainData *data);
 
+static GdaInternalCommandResult *extra_command_lo_update (GdaConnection *cnc, const gchar **args,
+							  GError **error, MainData *data);
+static GdaInternalCommandResult *extra_command_export (GdaConnection *cnc, const gchar **args,
+						       GError **error, MainData *data);
+static GdaInternalCommandResult *extra_command_set2 (GdaConnection *cnc, const gchar **args,
+						     GError **error, MainData *data);
+
 static GdaInternalCommandsList *
 build_internal_commands_list (MainData *data)
 {
@@ -1759,8 +1802,8 @@ build_internal_commands_list (MainData *data)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer");
-	c->name = g_strdup_printf (_("%s NAME"), "unset");
-	c->description = _("Unset (delete) internal parameter");
+	c->name = g_strdup_printf (_("%s [NAME]"), "unset");
+	c->description = _("Unset (delete) internal named parameter (or all parameters)");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_unset;
 	c->user_data = data;
@@ -1774,6 +1817,41 @@ build_internal_commands_list (MainData *data)
 	c->description = _("Set output format");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_set_output_format;
+	c->user_data = data;
+	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
+	commands->commands = g_slist_prepend (commands->commands, c);
+
+	/*
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("Query buffer");
+	c->name = g_strdup_printf (_("%s FILE TABLE BLOB_COLUMN ROW_CONDITION"), "lo_update");
+	c->description = _("Import a blob into the database");
+	c->args = NULL;
+	c->command_func = (GdaInternalCommandFunc) extra_command_lo_update;
+	c->user_data = data;
+	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
+	commands->commands = g_slist_prepend (commands->commands, c);
+	*/
+
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("Query buffer");
+	c->name = g_strdup_printf (_("%s [NAME|TABLE COLUMN ROW_CONDITION] FILE"), "export");
+	c->description = _("Export internal parameter or table's value to the FILE file");
+	c->args = NULL;
+	c->command_func = (GdaInternalCommandFunc) extra_command_export;
+	c->user_data = data;
+	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
+	commands->commands = g_slist_prepend (commands->commands, c);
+
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("Query buffer");
+	c->name = g_strdup_printf (_("%s NAME [FILE|TABLE COLUMN ROW_CONDITION]"), "setex");
+	c->description = _("Set internal parameter as the contents of the FILE file or from an existing table's value");
+	c->args = NULL;
+	c->command_func = (GdaInternalCommandFunc) extra_command_set2;
 	c->user_data = data;
 	c->arguments_delimiter_func = NULL;
 	c->unquote_args = TRUE;
@@ -2285,6 +2363,8 @@ extra_command_manage_cnc (GdaConnection *cnc, const gchar **args, GError **error
 					ncs->cnc = gda_meta_store_get_internal_connection (store);
 					g_object_ref (ncs->cnc);
 					ncs->parser = gda_connection_create_parser (ncs->cnc);
+					if (!cs->parser)
+						cs->parser = gda_sql_parser_new ();
 					ncs->query_buffer = NULL;
 					ncs->threader = NULL;
 					ncs->meta_job_id = 0;
@@ -3155,6 +3235,264 @@ foreach_param_set (const gchar *pname, GdaHolder *param, GdaDataModel *model)
 	gda_value_free (value);
 }
 
+static const GValue *
+get_table_value_at_cell (GdaConnection *cnc, GError **error, MainData *data,
+			 const gchar *table, const gchar *column, const gchar *row_cond,
+			 GdaDataModel **out_model_of_value)
+{
+	const GValue *retval = NULL;
+
+	*out_model_of_value = NULL;
+
+	/* prepare executed statement */
+	gchar *sql;
+	gchar *rtable, *rcolumn;
+	
+	if (gda_sql_identifier_needs_quotes (table))
+		rtable = gda_sql_identifier_add_quotes (table);
+	else
+		rtable = g_strdup (table);
+	if (gda_sql_identifier_needs_quotes (column))
+		rcolumn = gda_sql_identifier_add_quotes (column);
+	else
+		rcolumn = g_strdup (column);
+	sql = g_strdup_printf ("SELECT %s FROM %s WHERE %s", rcolumn, rtable, row_cond);
+	g_free (rtable);
+	g_free (rcolumn);
+
+	GdaStatement *stmt;
+	const gchar *remain;
+	stmt = gda_sql_parser_parse_string (data->current->parser, sql, &remain, error);
+	if (!stmt) {
+		g_free (sql);
+		return NULL;
+	}
+	if (remain) {
+		g_set_error (error, 0, 0,
+			     _("Wrong row condition"));
+		g_free (sql);
+		return NULL;
+	}
+	g_object_unref (stmt);
+
+	/* execute statement */
+	GdaInternalCommandResult *tmpres;
+	tmpres = execute_external_command (data, sql, error);
+	g_free (sql);
+	if (!tmpres)
+		return NULL;
+	gboolean errorset = FALSE;
+	if (tmpres->type == GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL) {
+		GdaDataModel *model;
+		model = tmpres->u.model;
+		if (gda_data_model_get_n_rows (model) == 1) {
+			retval = gda_data_model_get_value_at (model, 0, 0, error);
+			if (!retval)
+				errorset = TRUE;
+			else
+				*out_model_of_value = g_object_ref (model);
+		}
+	}
+	gda_internal_command_exec_result_free (tmpres);
+
+	if (!retval && !errorset)
+		g_set_error (error, 0, 0,
+			     _("No unique row identified"));
+
+	return retval;
+}
+
+static GdaInternalCommandResult *
+extra_command_set2 (GdaConnection *cnc, const gchar **args,
+		    GError **error, MainData *data)
+{
+	GdaInternalCommandResult *res = NULL;
+	const gchar *pname = NULL;
+	const gchar *filename = NULL;
+	const gchar *table = NULL;
+        const gchar *column = NULL;
+        const gchar *row_cond = NULL;
+	gint whichargs = 0;
+
+	if (!cnc) {
+                g_set_error (error, 0, 0, _("No current connection"));
+                return NULL;
+        }
+
+        if (args[0] && *args[0]) {
+                pname = args[0];
+                if (args[1] && *args[1]) {
+			if (args[2] && *args[2]) {
+				table = args[1];
+				column = args[2];
+				if (args[3] && *args[3]) {
+					row_cond = args[3];
+					if (args [4]) {
+						g_set_error (error, 0, 0,
+							     _("Too many arguments"));
+						return NULL;
+					}
+					whichargs = 1;
+				}
+			}
+			else {
+				filename = args[1];
+				whichargs = 2;
+			}
+		}
+        }
+
+	if (whichargs == 1) {
+		/* param from an existing blob */
+		const GValue *value;
+		GdaDataModel *model = NULL;
+		value = get_table_value_at_cell (cnc, error, data, table, column, row_cond, &model);
+		if (value) {
+			GdaHolder *param = g_hash_table_lookup (data->parameters, pname);
+			if (param) 
+				g_hash_table_remove (data->parameters, pname);
+		
+			param = gda_holder_new (G_VALUE_TYPE (value));
+			g_assert (gda_holder_set_value (param, value, NULL));
+			g_hash_table_insert (data->parameters, g_strdup (pname), param);
+			res = g_new0 (GdaInternalCommandResult, 1);
+			res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
+		}
+		if (model)
+			g_object_unref (model);
+	}
+	else if (whichargs == 2) {
+		/* param from filename */
+		GdaHolder *param = g_hash_table_lookup (data->parameters, pname);
+		GValue *bvalue;
+		if (param) 
+			g_hash_table_remove (data->parameters, pname);
+		
+		param = gda_holder_new (GDA_TYPE_BLOB);
+		bvalue = gda_value_new_blob_from_file (filename);
+		g_assert (gda_holder_take_value (param, bvalue, NULL));
+		g_hash_table_insert (data->parameters, g_strdup (pname), param);
+		res = g_new0 (GdaInternalCommandResult, 1);
+		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
+	}
+	else 
+		g_set_error (error, 0, 0,
+                             _("Wrong number of arguments"));
+
+	return res;
+}
+
+static GdaInternalCommandResult *
+extra_command_export (GdaConnection *cnc, const gchar **args,
+		      GError **error, MainData *data)
+{
+	GdaInternalCommandResult *res = NULL;
+
+	const gchar *pname = NULL;
+	const gchar *table = NULL;
+        const gchar *column = NULL;
+        const gchar *filename = NULL;
+        const gchar *row_cond = NULL;
+	gint whichargs = 0;
+
+	if (!cnc) {
+                g_set_error (error, 0, 0, _("No current connection"));
+                return NULL;
+        }
+
+        if (args[0] && *args[0]) {
+                table = args[0];
+                pname = args[0];
+                if (args[1] && *args[1]) {
+                        column = args[1];
+			filename = args[1];
+			if (args[2] && *args[2]) {
+				row_cond = args[2];
+				if (args[3] && *args[3]) {
+					filename = args[3];
+					if (args [4]) {
+						g_set_error (error, 0, 0,
+							     _("Too many arguments"));
+						return NULL;
+					}
+					else
+						whichargs = 1;
+				}
+			}
+			else {
+				whichargs = 2;
+			}
+		}
+        }
+
+	const GValue *value = NULL;
+	GdaDataModel *model = NULL;
+
+	if (whichargs == 1) 
+		value = get_table_value_at_cell (cnc, error, data, table, column, row_cond, &model);
+	else if (whichargs == 2) {
+		GdaHolder *param = g_hash_table_lookup (data->parameters, pname);
+		if (!pname) 
+			g_set_error (error, 0, 0,
+				     _("No parameter named '%s' defined"), pname);
+		else
+			value = gda_holder_get_value (param);
+	}
+	else 
+		g_set_error (error, 0, 0,
+                             _("Wrong number of arguments"));
+
+	if (value) {
+		/* to file through this blob */
+		gboolean done = FALSE;
+
+		if (G_VALUE_TYPE (value) == GDA_TYPE_BLOB) {
+			GValue *vblob = gda_value_new_blob_from_file (filename);
+			GdaBlob *tblob = (GdaBlob*) gda_value_get_blob (vblob);
+			const GdaBlob *fblob = gda_value_get_blob (value);
+			if (gda_blob_op_write (tblob->op, (GdaBlob*) fblob, 0) < 0)
+				g_set_error (error, 0, 0,
+					     _("Could not write file"));
+			else
+				done = TRUE;
+			gda_value_free (vblob);
+		}
+		else if (G_VALUE_TYPE (value) == GDA_TYPE_BINARY) {
+			GValue *vblob = gda_value_new_blob_from_file (filename);
+			GdaBlob *tblob = (GdaBlob*) gda_value_get_blob (vblob);
+			GdaBlob *fblob = g_new0 (GdaBlob, 1);
+			const GdaBinary *fbin = gda_value_get_binary (value);
+			((GdaBinary *) fblob)->data = fbin->data;
+			((GdaBinary *) fblob)->binary_length = fbin->binary_length;
+			if (gda_blob_op_write (tblob->op, (GdaBlob*) fblob, 0) < 0)
+				g_set_error (error, 0, 0,
+					     _("Could not write file"));
+			else
+				done = TRUE;
+			g_free (fblob);
+			gda_value_free (vblob);
+		}
+		else {
+			gchar *str;
+			str = gda_value_stringify (value);
+			if (g_file_set_contents (filename, str, -1, error))
+				done = TRUE;
+			g_free (str);
+		}
+		
+		if (done) {
+			res = g_new0 (GdaInternalCommandResult, 1);
+			res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
+		}
+	}
+	if (model)
+		g_object_unref (model);
+
+				
+	return res;
+}
+
+
 static GdaInternalCommandResult *
 extra_command_unset (GdaConnection *cnc, const gchar **args,
 		     GError **error, MainData *data)
@@ -3176,9 +3514,12 @@ extra_command_unset (GdaConnection *cnc, const gchar **args,
 			g_set_error (error, 0, 0,
 				     _("No parameter named '%s' defined"), pname);
 	}
-	else 
-		g_set_error (error, 0, 0,
-			     _("Missing parameter's name"));
+	else {
+		g_hash_table_destroy (data->parameters);
+		data->parameters = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
+		res = g_new0 (GdaInternalCommandResult, 1);
+		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
+	}
 		
 	return res;
 }
@@ -3292,6 +3633,114 @@ extra_command_graph (GdaConnection *cnc, const gchar **args,
 	else 
 		return NULL;
 }
+
+#ifdef NONE
+static GdaInternalCommandResult *
+extra_command_lo_update (GdaConnection *cnc, const gchar **args,
+			 GError **error, MainData *data)
+{
+	GdaInternalCommandResult *res;
+
+	const gchar *table = NULL;
+        const gchar *blob_col = NULL;
+        const gchar *filename = NULL;
+        const gchar *row_cond = NULL;
+
+	if (!cnc) {
+                g_set_error (error, 0, 0, _("No current connection"));
+                return NULL;
+        }
+
+        if (args[0] && *args[0]) {
+                filename = args[0];
+                if (args[1] && *args[1]) {
+                        table = args[1];
+			if (args[2] && *args[2]) {
+				blob_col = args[2];
+				if (args[3] && *args[3]) {
+					row_cond = args[3];
+					if (args [4]) {
+						g_set_error (error, 0, 0,
+							     _("Too many arguments"));
+						return NULL;
+					}
+				}
+			}
+		}
+        }
+	if (!row_cond) {
+		g_set_error (error, 0, 0,
+                             _("Missing arguments"));
+		return NULL;
+	}
+
+	g_print ("file: #%s#\n", filename);
+	g_print ("table: #%s#\n", table);
+	g_print ("col: #%s#\n", blob_col);
+	g_print ("cond: #%s#\n", row_cond);
+	TO_IMPLEMENT;
+
+	/* prepare executed statement */
+	gchar *sql;
+	gchar *rtable, *rblob_col;
+	
+	if (gda_sql_identifier_needs_quotes (table))
+		rtable = gda_sql_identifier_add_quotes (table);
+	else
+		rtable = g_strdup (table);
+	if (gda_sql_identifier_needs_quotes (blob_col))
+		rblob_col = gda_sql_identifier_add_quotes (blob_col);
+	else
+		rblob_col = g_strdup (blob_col);
+	sql = g_strdup_printf ("UPDATE %s SET %s = ##blob::GdaBlob WHERE %s", rtable, rblob_col, row_cond);
+	g_free (rtable);
+	g_free (rblob_col);
+
+	GdaStatement *stmt;
+	const gchar *remain;
+	stmt = gda_sql_parser_parse_string (data->current->parser, sql, &remain, error);
+	g_free (sql);
+	if (!stmt)
+		return NULL;
+	if (remain) {
+		g_set_error (error, 0, 0,
+			     _("Wrong row condition"));
+		return NULL;
+	}
+
+	/* prepare execution environment */
+	GdaSet *params;
+	GdaHolder *h;
+	GValue *blob;
+
+	if (!gda_statement_get_parameters (stmt, &params, error)) {
+		g_object_unref (stmt);
+		return NULL;
+	}
+
+	h = gda_set_get_holder (params, "blob");
+	g_assert (h);
+	blob = gda_value_new_blob_from_file (filename);
+	if (!gda_holder_take_value (h, blob, error)) {
+		gda_value_free (blob);
+		g_object_unref (params);
+		g_object_unref (stmt);
+		return NULL;
+	}
+
+	/* execute statement */
+	gint nrows;
+	nrows = gda_connection_statement_execute_non_select (cnc, stmt, params, NULL, error);
+	g_object_unref (params);
+	g_object_unref (stmt);
+	if (nrows == -1)
+		return NULL;
+
+	res = g_new0 (GdaInternalCommandResult, 1);
+	res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
+	return res;
+}
+#endif
 
 
 static gchar **

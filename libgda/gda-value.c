@@ -38,6 +38,8 @@
 #include <libgda/gda-util.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
+#define __GDA_INTERNAL__
+#include "dir-blob-op.h"
 
 #define l_g_value_unset(val) G_STMT_START{ if (G_IS_VALUE (val)) g_value_unset (val); }G_STMT_END
 #ifdef G_OS_WIN32
@@ -1114,7 +1116,7 @@ gda_value_new_binary (const guchar *val, glong size)
  * @val: value to set for the new #GValue.
  * @size: the size of the memory pool pointer to by @val.
  *
- * Makes a new #GValue of type #GDA_TYPE_BLOB with value @val.
+ * Makes a new #GValue of type #GDA_TYPE_BLOB with the data contained by @val.
  *
  * Returns: the newly created #GValue.
  */
@@ -1122,20 +1124,44 @@ GValue *
 gda_value_new_blob (const guchar *val, glong size)
 {
 	GValue *value;
-	GdaBlob blob;
+	GdaBlob *blob;
 	GdaBinary *bin;
 
+	blob = g_new0 (GdaBlob, 1);
 	bin = (GdaBinary*)(&blob);
-
-        /* We use the const on the function parameter to make this clearer, 
-	 * but it would be awkward to keep the const in the struct.
-         */
-        bin->data = (guchar*)val;
+	bin->data = g_new (guchar, size);
+        memcpy ((gpointer) bin->data, (gpointer) val, size);
         bin->binary_length = size;
-	blob.op = NULL;
+	blob->op = NULL;
 
         value = g_new0 (GValue, 1);
-        gda_value_set_blob (value, &blob);
+	g_value_init (value, GDA_TYPE_BLOB);
+        g_value_take_boxed (value, blob);
+
+        return value;
+}
+
+/**
+ * gda_value_new_blob
+ * @val: value to set for the new #GValue.
+ * @size: the size of the memory pool pointer to by @val.
+ *
+ * Makes a new #GValue of type #GDA_TYPE_BLOB with the data contained by @val.
+ *
+ * Returns: the newly created #GValue.
+ */
+GValue *
+gda_value_new_blob_from_file (const gchar *filename)
+{
+	GValue *value;
+	GdaBlob *blob;
+
+	blob = g_new0 (GdaBlob, 1);
+	blob->op = gda_dir_blob_op_new (filename);
+
+        value = g_new0 (GValue, 1);
+	g_value_init (value, GDA_TYPE_BLOB);
+        g_value_take_boxed (value, blob);
 
         return value;
 }

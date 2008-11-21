@@ -111,6 +111,7 @@ GValue                           *gda_value_new (GType type);
 
 GValue                           *gda_value_new_binary (const guchar *val, glong size);
 GValue                           *gda_value_new_blob (const guchar *val, glong size);
+GValue                           *gda_value_new_blob_from_file (const gchar *filename);
 GValue                           *gda_value_new_timestamp_from_timet (time_t val);
 
 GValue                           *gda_value_new_from_string (const gchar *as_string, GType type);

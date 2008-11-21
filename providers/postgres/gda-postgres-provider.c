@@ -822,7 +822,7 @@ gda_postgres_provider_get_server_version (GdaServerProvider *provider, GdaConnec
 /*
  * Get database request
  *
- * Returns the server version as a string, which should be stored in @cnc's associated PostgresConnectionData structure
+ * Returns the database name as a string
  */
 static const gchar *
 gda_postgres_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc)
@@ -1084,7 +1084,7 @@ gda_postgres_provider_perform_operation (GdaServerProvider *provider, GdaConnect
                 g_string_free (string, TRUE);
 
 		if (PQstatus (pconn) != CONNECTION_OK) {
-                        g_set_error (error, 0, 0, PQerrorMessage (pconn));
+                        g_set_error (error, 0, 0, "%s", PQerrorMessage (pconn));
                         PQfinish(pconn);
 
                         return FALSE;
@@ -1098,7 +1098,7 @@ gda_postgres_provider_perform_operation (GdaServerProvider *provider, GdaConnect
 			pg_res = _gda_postgres_PQexec_wrap (cnc, pconn, sql);
 			g_free (sql);
 			if (!pg_res || PQresultStatus (pg_res) != PGRES_COMMAND_OK) {
-				g_set_error (error, 0, 0, PQresultErrorMessage (pg_res));
+				g_set_error (error, 0, 0, "%s", PQresultErrorMessage (pg_res));
 				PQfinish (pconn);
 				return FALSE;
 			}
@@ -1256,6 +1256,7 @@ gda_postgres_provider_add_savepoint (GdaServerProvider *provider, GdaConnection 
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
+	g_return_val_if_fail (name && *name, FALSE);
 
 	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
@@ -1268,13 +1269,9 @@ gda_postgres_provider_add_savepoint (GdaServerProvider *provider, GdaConnection 
 	const gchar *remain;
 
 	parser = gda_server_provider_internal_get_parser (provider);
-	if (name)
-		str = g_strdup_printf ("SAVEPOINT %s", name);
-	else
-		str = (gchar *) name;
+	str = g_strdup_printf ("SAVEPOINT %s", name);
 	stmt = gda_sql_parser_parse_string (parser, str, &remain, NULL);
-	if (name)
-		g_free (str);
+	g_free (str);
 
 	if (!stmt) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
@@ -1309,6 +1306,7 @@ gda_postgres_provider_rollback_savepoint (GdaServerProvider *provider, GdaConnec
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
+	g_return_val_if_fail (name && *name, FALSE);
 
 	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
@@ -1321,13 +1319,9 @@ gda_postgres_provider_rollback_savepoint (GdaServerProvider *provider, GdaConnec
 	const gchar *remain;
 
 	parser = gda_server_provider_internal_get_parser (provider);
-	if (name)
-		str = g_strdup_printf ("ROLLBACK TO SAVEPOINT %s", name);
-	else
-		str = (gchar *) name;
+	str = g_strdup_printf ("ROLLBACK TO SAVEPOINT %s", name);
 	stmt = gda_sql_parser_parse_string (parser, str, &remain, NULL);
-	if (name)
-		g_free (str);
+	g_free (str);
 
 	if (!stmt) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
@@ -1362,6 +1356,7 @@ gda_postgres_provider_delete_savepoint (GdaServerProvider *provider, GdaConnecti
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
+	g_return_val_if_fail (name && *name, FALSE);
 
 	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
@@ -1374,13 +1369,9 @@ gda_postgres_provider_delete_savepoint (GdaServerProvider *provider, GdaConnecti
 	const gchar *remain;
 
 	parser = gda_server_provider_internal_get_parser (provider);
-	if (name)
-		str = g_strdup_printf ("DELETE SAVEPOINT %s", name);
-	else
-		str = (gchar *) name;
+	str = g_strdup_printf ("RELEASE SAVEPOINT %s", name);
 	stmt = gda_sql_parser_parse_string (parser, str, &remain, NULL);
-	if (name)
-		g_free (str);
+	g_free (str);
 
 	if (!stmt) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
@@ -1497,8 +1488,8 @@ gda_postgres_provider_get_data_handler (GdaServerProvider *provider, GdaConnecti
 		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
                 if (!dh) {
                         dh = gda_handler_time_new ();
-                        gda_handler_time_set_sql_spec   ((GdaHandlerTime *) dh, G_DATE_YEAR,
-                                                         G_DATE_MONTH, G_DATE_DAY, '-', FALSE);
+                        gda_handler_time_set_sql_spec ((GdaHandlerTime *) dh, G_DATE_YEAR,
+                                                       G_DATE_MONTH, G_DATE_DAY, '-', FALSE);
                         gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_DATE, NULL);
                         gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIME, NULL);
                         gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIMESTAMP, NULL);
@@ -1625,6 +1616,7 @@ gda_postgres_provider_statement_prepare (GdaServerProvider *provider, GdaConnect
 {
 	GdaPostgresPStmt *ps;
 	PostgresConnectionData *cdata;
+	static guint counter = 0; /* each prepared statement MUST have a unique name, ensured with this counter */
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
@@ -1656,7 +1648,7 @@ gda_postgres_provider_statement_prepare (GdaServerProvider *provider, GdaConnect
 	gchar *prep_stm_name;
 	GdaConnectionEvent *event = NULL;
 
-	prep_stm_name = g_strdup_printf ("ps%p", stmt);
+	prep_stm_name = g_strdup_printf ("psc%d", counter ++);
 	pg_res = PQprepare (cdata->pconn, prep_stm_name, sql, 0, NULL);
 	if (!pg_res || (PQresultStatus (pg_res) != PGRES_COMMAND_OK)) {
 		event = _gda_postgres_make_error (cnc, cdata->pconn, pg_res, error);
@@ -1698,6 +1690,7 @@ gda_postgres_provider_statement_prepare (GdaServerProvider *provider, GdaConnect
 	
 	gda_connection_add_prepared_statement (cnc, stmt, (GdaPStmt *) ps);
 	g_object_unref (ps);
+
 	return TRUE;
 
  out_err:
@@ -1710,15 +1703,19 @@ gda_postgres_provider_statement_prepare (GdaServerProvider *provider, GdaConnect
 }
 
 static gboolean
-check_transaction_started (GdaConnection *cnc)
+check_transaction_started (GdaConnection *cnc, gboolean *out_started)
 {
         GdaTransactionStatus *trans;
+
         trans = gda_connection_get_transaction_status (cnc);
-        if (!trans && !gda_connection_begin_transaction (cnc, NULL,
-							 GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL))
-                return FALSE;
-        else
-                return TRUE;
+        if (!trans) {
+		if (!gda_connection_begin_transaction (cnc, NULL,
+						       GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL))
+			return FALSE;
+		else
+			*out_started = TRUE;
+	}
+	return TRUE;
 }
 
 /*
@@ -1733,7 +1730,7 @@ prepare_stmt_simple (PostgresConnectionData *cdata, const gchar *sql, GError **e
 	gchar *prep_stm_name;
 	GdaConnectionEvent *event = NULL;
 
-	prep_stm_name = g_strdup_printf ("ps%d", counter++);
+	prep_stm_name = g_strdup_printf ("pss%d", counter++);
 	pg_res = PQprepare (cdata->pconn, prep_stm_name, sql, 0, NULL);
 	if (!pg_res || (PQresultStatus (pg_res) != PGRES_COMMAND_OK)) {
 		event = _gda_postgres_make_error (cdata->cnc, cdata->pconn, pg_res, error);
@@ -2007,7 +2004,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 			sql = gda_postgres_provider_statement_to_sql (provider, cnc, stmt, params, 0, NULL, error);
 			if (!sql)
 				return NULL;
-			ps = prepare_stmt_simple (cdata, sql, error);
+			ps = prepare_stmt_simple (cdata, sql, error); // FIXME: this @ps is leaked!
 			g_free (sql);
 			if (!ps)
 				return NULL;
@@ -2025,6 +2022,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
         int *param_lengths = NULL;
         int *param_formats = NULL;
 	gint nb_params;
+	gboolean transaction_started = FALSE;
 	
 	nb_params = g_slist_length (_GDA_PSTMT (ps)->param_ids);
 	param_values = g_new0 (char *, nb_params + 1);
@@ -2060,7 +2058,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
+					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
 				g_free (str);
 				break;
 			}
@@ -2078,7 +2076,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
+					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
 				g_free (str);
 				break;
 			}
@@ -2100,7 +2098,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 			GdaPostgresBlobOp *op;
 			
 			/* Postgres requires that a transaction be started for LOB operations */
-			if (!check_transaction_started (cnc)) {
+			if (!check_transaction_started (cnc, &transaction_started)) {
 				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, _("Cannot start transaction"));
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
@@ -2152,6 +2150,8 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 		g_strfreev (param_values);
                 g_free (param_lengths);
                 g_free (param_formats);
+		if (transaction_started)
+			gda_connection_rollback_transaction (cnc, NULL, NULL);
 		return NULL;
 	}
 	
@@ -2168,12 +2168,18 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 		GdaStatement *estmt;
 		gchar *esql;
 		estmt = gda_select_alter_select_for_empty (stmt, error);
-		if (!estmt)
+		if (!estmt) {
+			if (transaction_started)
+				gda_connection_rollback_transaction (cnc, NULL, NULL);
 			return NULL;
+		}
 		esql = gda_statement_to_sql (estmt, NULL, error);
 		g_object_unref (estmt);
-		if (!esql) 
+		if (!esql) {
+			if (transaction_started)
+				gda_connection_rollback_transaction (cnc, NULL, NULL);
 			return NULL;
+		}
 
 		pg_res = PQexec (cdata->pconn, esql);
 		g_free (esql);
@@ -2226,6 +2232,9 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 	}
 
 	gda_connection_internal_statement_executed (cnc, stmt, params, NULL); /* required: help @cnc keep some stats */
+	if (transaction_started) 
+		gda_connection_commit_transaction (cnc, NULL, NULL);
+
 	return retval;
 }
 

@@ -92,10 +92,6 @@ gda_blob_op_finalize (GObject *object)
 /**
  * gda_blob_op_get_length
  * @op: an existing #GdaBlobOp
- *
- * Opens an existing BLOB. The BLOB must be initialized by
- * #gda_connection_create_blob or obtained from a #GValue.
- * FIXME: gda_connection_create_blob() no longer exists.
  * 
  * Returns: the length of the blob in bytes. In case of error, -1 is returned and the
  * provider should have added an error (a #GdaConnectionEvent) to the connection.
@@ -118,7 +114,7 @@ gda_blob_op_get_length (GdaBlobOp *op)
  * @offset: offset to read from the start of the blob (starts at 0)
  * @size: maximum number of bytes to read.
  *
- * Reads a chunk of bytes from the BLOB into @blob.
+ * Reads a chunk of bytes from the BLOB accessible through @op into @blob.
  *
  * Returns: the number of bytes actually read. In case of error, -1 is returned and the
  * provider should have added an error to the connection.
@@ -151,7 +147,10 @@ gda_blob_op_read_all (GdaBlobOp *op, GdaBlob *blob)
 	g_return_val_if_fail (blob, FALSE);
 
 	len = gda_blob_op_get_length (blob->op);
-	return (gda_blob_op_read (blob->op, blob, 0, len) < 0) ? FALSE : TRUE;
+	if (len >= 0)
+		return (gda_blob_op_read (blob->op, blob, 0, len) < 0) ? FALSE : TRUE;
+	else
+		return FALSE;
 }
 
 /**

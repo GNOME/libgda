@@ -577,7 +577,11 @@ gda_column_get_attribute (GdaColumn *column, const gchar *attribute)
  * If there is already an attribute named @attribute set, then its value is replaced with the new @value, 
  * except if @value is %NULL, in which case the attribute is removed.
  *
- * Warning: @sttribute should be a static string (no copy of it is made), so the string should exist as long as the @column
+ * Note: this method does not modify in any way the contents of the data model for which @column is a column (nor
+ * does it modify the table definition of the tables used by a SELECT statement is the model was created from a
+ * SELECT statement).
+ *
+ * Warning: @attribute should be a static string (no copy of it is made), so the string should exist as long as the @column
  * object exists.
  */
 void

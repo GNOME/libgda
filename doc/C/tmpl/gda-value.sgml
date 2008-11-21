@@ -300,6 +300,15 @@ Assorted functions for dealing with #GValue values.
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_value_new_blob_from_file ##### -->
+<para>
+
+</para>
+
+@filename: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_blob_copy ##### -->
 <para>
 
