@@ -1,4 +1,4 @@
-2008-11-  Vivien Malerba <malerba@gnome-db.org>
+2008-11-21  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/dir-blob-op.c: fixed the "write" virtual method
 	* tools/gda-sql.c:
