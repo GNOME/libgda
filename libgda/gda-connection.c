@@ -3322,7 +3322,7 @@ gda_connection_get_meta_store_data_v (GdaConnection *cnc, GdaConnectionMetaType 
 	key.filters = NULL;
 	if (key.nb_filters > 0)
 		key.filters = g_new (gchar *, key.nb_filters);
-	for (node = filters; filters != NULL; node = g_list_next (node)) {
+	for (node = filters; node != NULL; node = g_list_next (node)) {
 		if (!set)
 			set = g_object_new (GDA_TYPE_SET, NULL);
 		gda_set_add_holder (set, GDA_HOLDER (node->data));

@@ -1,3 +1,8 @@
+2008-11-27  Johannes Schmid  <jschmid@openismus.com>
+
+	* libgda/gda-connection.c (gda_connection_get_meta_store_data_v):
+	Fixed crasher caused by wrong condition in for loop
+
 2008-11-21  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/dir-blob-op.c: fixed the "write" virtual method
