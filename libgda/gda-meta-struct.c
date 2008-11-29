@@ -611,7 +611,7 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 	}
 	case GDA_META_DB_TABLE: {
 		/* columns */
-		gchar *sql = "SELECT c.column_name, c.data_type, c.gtype, c.is_nullable, t.table_short_name, t.table_full_name, c.column_default, t.table_owner, c.array_spec, c.extra FROM _columns as c NATURAL JOIN _tables as t WHERE table_catalog = ##tc::string AND table_schema = ##ts::string AND table_name = ##tname::string ORDER BY ordinal_position";
+		gchar *sql = "SELECT c.column_name, c.data_type, c.gtype, c.is_nullable, t.table_short_name, t.table_full_name, c.column_default, t.table_owner, c.array_spec, c.extra, c.column_comments FROM _columns as c NATURAL JOIN _tables as t WHERE table_catalog = ##tc::string AND table_schema = ##ts::string AND table_name = ##tname::string ORDER BY ordinal_position";
 		GdaMetaTable *mt;
 		GdaDataModel *model;
 		gint i, nrows;
@@ -625,7 +625,7 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 		if (nrows < 1) {
 			g_object_unref (model);
 			g_set_error (error, GDA_META_STRUCT_ERROR, GDA_META_STRUCT_UNKNOWN_OBJECT_ERROR,
-				     _("Table %s.%s.%s not found in meta store object"), 
+				     _("Table %s.%s.%s not found (or missing columns information)"), 
 				     g_value_get_string (icatalog), g_value_get_string (ischema), 
 				     g_value_get_string (iname));
 			goto onerror;
@@ -707,6 +707,13 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 				gda_value_free (true_value);
 				g_strfreev (array);
 			}
+
+			cvalue = gda_data_model_get_value_at (model, 10, i, error);
+			if (!cvalue) goto onerror;
+			if (!gda_value_is_null (cvalue))
+				gda_attributes_manager_set (att_mgr, tcol, GDA_ATTRIBUTE_DESCRIPTION, 
+							    cvalue);
+
 		}
 		mt->columns = g_slist_reverse (mt->columns);
 		g_object_unref (model);
@@ -1963,6 +1970,7 @@ determine_db_object_from_short_name (GdaMetaStruct *mstruct,
 	}
 
  next:
+	model = NULL;
 	{
 		/* treat the case where name is in fact <schema>.<name> */
 		gchar *obj_schema;

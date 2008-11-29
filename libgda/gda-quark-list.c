@@ -48,13 +48,6 @@ GType gda_quark_list_get_type (void)
  */
 
 static void
-free_hash_pair (gpointer key, gpointer value, gpointer user_data)
-{
-	g_free (key);
-	g_free (value);
-}
-
-static void
 copy_hash_pair (gpointer key, gpointer value, gpointer user_data)
 {
 	g_hash_table_insert ((GHashTable *) user_data,
@@ -78,7 +71,7 @@ gda_quark_list_new (void)
 	GdaQuarkList *qlist;
 
 	qlist = g_new0 (GdaQuarkList, 1);
-	qlist->hash_table = g_hash_table_new (g_str_hash, g_str_equal);
+	qlist->hash_table = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
 
 	return qlist;
 }
@@ -121,7 +114,7 @@ gda_quark_list_clear (GdaQuarkList *qlist)
 {
 	g_return_if_fail (qlist != NULL);
 	
-	g_hash_table_foreach_remove (qlist->hash_table, (GHRFunc) free_hash_pair, NULL);
+	g_hash_table_remove_all (qlist->hash_table);
 }
 
 /**
@@ -135,7 +128,6 @@ gda_quark_list_free (GdaQuarkList *qlist)
 {
 	g_return_if_fail (qlist != NULL);
 
-	gda_quark_list_clear (qlist);
 	g_hash_table_destroy (qlist->hash_table);
 
 	g_free (qlist);
@@ -206,9 +198,12 @@ gda_quark_list_add_from_string (GdaQuarkList *qlist, const gchar *string, gboole
 				gchar *value = pair[1];
 				gda_rfc1738_decode (name);
 				gda_rfc1738_decode (value);
-				g_hash_table_insert (qlist->hash_table, (gpointer) name, (gpointer) value);
+				g_hash_table_insert (qlist->hash_table, 
+						     (gpointer) name, (gpointer) value);
 				g_free (pair);
 			}
+			else
+				g_strfreev (pair);
 			n++;
 		}
 		g_strfreev (arr);
@@ -253,12 +248,7 @@ gda_quark_list_remove (GdaQuarkList *qlist, const gchar *name)
 	g_return_if_fail (qlist != NULL);
 	g_return_if_fail (name != NULL);
 
-	if (g_hash_table_lookup_extended (qlist->hash_table, name,
-					  &orig_key, &orig_value)) {
-		g_hash_table_remove (qlist->hash_table, name);
-		g_free (orig_key);
-		g_free (orig_value);
-	}
+	g_hash_table_remove (qlist->hash_table, name);
 }
 
 /**

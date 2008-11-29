@@ -867,7 +867,7 @@ g_object_unref (store);
 	    SQL identifiers (database object's names) are case insitive, but it is still possible to specify
 	    that an SQL identifier be case sensitive by putting it between double quotes. &LIBGDA; has chosen
 	    the convention that case insitive SQL identifiers should all be in lower case in the meta data's tables
-	    whereas case sensitive SQL identifiers can soncain some upper case ASCII characters.
+	    whereas case sensitive SQL identifiers can contain some upper case ASCII characters.
 	  </para>
 	  <para>
 	    This convention must be respected by database providers' implementations or the 

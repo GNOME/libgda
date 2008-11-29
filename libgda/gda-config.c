@@ -1075,6 +1075,7 @@ gda_config_get_provider (const gchar *provider_name, GError **error)
 {
 	InternalProvider *ip;
 	GdaServerProvider  *(*plugin_create_provider) (void);
+	GdaServerProvider  *(*plugin_create_sub_provider) (const gchar *provider_name);
 
 	g_return_val_if_fail (provider_name, NULL);
 	GDA_CONFIG_LOCK ();
@@ -1093,13 +1094,14 @@ gda_config_get_provider (const gchar *provider_name, GError **error)
 	/* need to actually create the provider object */
 	g_assert (ip->handle);
 	g_module_symbol (ip->handle, "plugin_create_provider", (gpointer) &plugin_create_provider);
-	if (!plugin_create_provider) {
-		g_set_error (error, GDA_CONFIG_ERROR, GDA_CONFIG_PROVIDER_CREATION_ERROR,
-			     _("Can't instantiate provider '%s'"), provider_name);
-		GDA_CONFIG_UNLOCK ();
-		return NULL;
+	if (plugin_create_provider)
+		ip->instance = plugin_create_provider ();
+	else {
+		g_module_symbol (ip->handle, "plugin_create_sub_provider", (gpointer) &plugin_create_sub_provider);
+		if (plugin_create_sub_provider)
+			ip->instance = plugin_create_sub_provider (provider_name);
 	}
-	ip->instance = plugin_create_provider ();
+	
 	if (!ip->instance) {
 		g_set_error (error, GDA_CONFIG_ERROR, GDA_CONFIG_PROVIDER_CREATION_ERROR,
 			     _("Can't instantiate provider '%s'"), provider_name);
@@ -1164,7 +1166,10 @@ gda_config_list_providers (void)
 		gda_data_model_set_value_at (model, 0, row, value, NULL);
 		gda_value_free (value);
 
-		value = gda_value_new_from_string (info->description, G_TYPE_STRING);
+		if (info->description) 
+			value = gda_value_new_from_string (info->description, G_TYPE_STRING);
+		else
+			value = gda_value_new_null ();
 		gda_data_model_set_value_at (model, 1, row, value, NULL);
 		gda_value_free (value);
 
@@ -1235,6 +1240,78 @@ load_all_providers (void)
 	}
 }
 
+static InternalProvider *
+create_internal_provider (GModule *handle, const gchar *path,
+			  const gchar *prov_name, const gchar *prov_descr,
+			  const gchar *dsn_spec, const gchar *auth_spec)
+{
+	InternalProvider *ip;
+	GdaProviderInfo *info;
+
+	ip = g_new0 (InternalProvider, 1);
+	ip->handle = handle;
+	info = (GdaProviderInfo*) ip;
+	info->location = g_strdup (path);
+
+	info->id = g_strdup (prov_name);
+	info->description = g_strdup (prov_descr);
+
+	/* DSN parameters */
+	info->dsn_params = NULL;
+	if (dsn_spec) {
+		GError *error = NULL;
+		info->dsn_params = gda_set_new_from_spec_string (dsn_spec, &error);
+		if (!info->dsn_params) {
+			g_warning ("Invalid format for provider '%s' DSN spec : %s",
+				   info->id,
+				   error ? error->message : "Unknown error");
+			if (error)
+				g_error_free (error);
+		}
+		if (!info->dsn_params) {
+			/* there may be traces of the provider installed but some parts are missing,
+			   forget about that provider... */
+			internal_provider_free (ip);
+			return NULL;
+		}
+	}
+	else
+		g_warning ("Provider '%s' does not provide a DSN spec", info->id);
+
+	/* Authentication parameters */
+	info->auth_params = NULL;
+	if (auth_spec) {
+		GError *error = NULL;
+
+		info->auth_params = gda_set_new_from_spec_string (auth_spec, &error);
+		if (!info->auth_params) {
+			g_warning ("Invalid format for provider '%s' AUTH spec : %s",
+				   info->id,
+				   error ? error->message : "Unknown error");
+			if (error)
+				g_error_free (error);
+		}
+
+		if (!info->auth_params) {
+			/* there may be traces of the provider installed but some parts are missing,
+			   forget about that provider... */
+			internal_provider_free (ip);
+			return NULL;
+		}
+	}
+	else {
+		/* default to username/password */
+		GdaHolder *h;
+		info->auth_params = gda_set_new_inline (2, "USERNAME", G_TYPE_STRING, NULL,
+							"PASSWORD", G_TYPE_STRING, NULL);
+		h = gda_set_get_holder (info->auth_params, "USERNAME");
+		g_object_set (G_OBJECT (h), "name", _("Username"), NULL);
+		h = gda_set_get_holder (info->auth_params, "PASSWORD");
+		g_object_set (G_OBJECT (h), "name", _("Password"), NULL);
+	}
+	return ip;
+}
+
 static void 
 load_providers_from_dir (const gchar *dirname, gboolean recurs)
 {
@@ -1252,17 +1329,25 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 		g_error_free (err);
 		return;
 	}
-
+	
 	while ((name = g_dir_read_name (dir))) {
-		InternalProvider *ip;
-		GdaProviderInfo *info;
 		GModule *handle;
 		gchar *path;
+
+		/* initialization method */
 		void (*plugin_init) (const gchar *);
+
+		/* methods for shared libraries which provide only one type of provider */
 		const gchar * (* plugin_get_name) (void);
 		const gchar * (* plugin_get_description) (void);
 		gchar * (* plugin_get_dsn_spec) (void);
 		gchar * (* plugin_get_auth_spec) (void);
+		
+		/* methods for shared libraries which provide several types of providers (ODBC, JDBC, ...) */
+		const gchar ** (* plugin_get_sub_names) (void);
+		const gchar * (* plugin_get_sub_description) (const gchar *name);
+		gchar * (* plugin_get_sub_dsn_spec) (const gchar *name);
+		gchar * (* plugin_get_sub_auth_spec) (const gchar *name);
 
 		if (recurs) {
 			gchar *cname;
@@ -1290,111 +1375,80 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 			continue;
 		}
 
-		if (g_module_symbol (handle, "plugin_init", (gpointer *) &plugin_init))
+		if (g_module_symbol (handle, "plugin_init", (gpointer *) &plugin_init)) {
 			plugin_init (dirname);
+		}
 		else {
 			g_module_close (handle);
 			continue;
 		}
-		g_module_symbol (handle, "plugin_get_name", (gpointer *) &plugin_get_name);
-		g_module_symbol (handle, "plugin_get_description", (gpointer *) &plugin_get_description);
-		g_module_symbol (handle, "plugin_get_dsn_spec", (gpointer *) &plugin_get_dsn_spec);
-		g_module_symbol (handle, "plugin_get_auth_spec", (gpointer *) &plugin_get_auth_spec);
+		g_module_symbol (handle, "plugin_get_name",
+				 (gpointer *) &plugin_get_name);
+		g_module_symbol (handle, "plugin_get_description",
+				 (gpointer *) &plugin_get_description);
+		g_module_symbol (handle, "plugin_get_dsn_spec",
+				 (gpointer *) &plugin_get_dsn_spec);
+		g_module_symbol (handle, "plugin_get_auth_spec",
+				 (gpointer *) &plugin_get_auth_spec);
+		g_module_symbol (handle, "plugin_get_sub_names",
+				 (gpointer *) &plugin_get_sub_names);
+		g_module_symbol (handle, "plugin_get_sub_description",
+				 (gpointer *) &plugin_get_sub_description);
+		g_module_symbol (handle, "plugin_get_sub_dsn_spec",
+				 (gpointer *) &plugin_get_sub_dsn_spec);
+		g_module_symbol (handle, "plugin_get_sub_auth_spec",
+				 (gpointer *) &plugin_get_sub_auth_spec);
 
-		ip = g_new0 (InternalProvider, 1);
-		ip->handle = handle;
-		info = (GdaProviderInfo*) ip;
-		info->location = path;
-
-		if (plugin_get_name != NULL)
-			info->id = g_strdup (plugin_get_name ());
-		else
-			info->id = g_strdup (name);
-
-		if (plugin_get_description != NULL)
-			info->description = g_strdup (plugin_get_description ());
-		else
-			info->description = NULL;
-
-		/* DSN parameters */
-		info->dsn_params = NULL;
-		if (plugin_get_dsn_spec) {
-			GError *error = NULL;
-			gchar *dsn_spec;
-
-			dsn_spec = plugin_get_dsn_spec ();
-			if (dsn_spec) {
-				info->dsn_params = gda_set_new_from_spec_string (dsn_spec, &error);
-				if (!info->dsn_params) {
-					g_warning ("Invalid format for provider '%s' DSN spec : %s",
-						   info->id,
-						   error ? error->message : "Unknown error");
-					if (error)
-						g_error_free (error);
+		if (plugin_get_sub_names) {
+			const gchar **subnames = plugin_get_sub_names ();
+			const gchar **ptr;
+			gboolean module_used = FALSE;
+			for (ptr = subnames; ptr && *ptr; ptr++) {
+				InternalProvider *ip;
+								
+				ip = create_internal_provider (handle, path, *ptr,
+							       plugin_get_sub_description ? 
+							       plugin_get_sub_description (*ptr) : NULL,
+							       plugin_get_sub_dsn_spec ? 
+							       plugin_get_sub_dsn_spec (*ptr) : NULL,
+							       plugin_get_sub_auth_spec ?
+							       plugin_get_sub_auth_spec (*ptr) : NULL);
+				if (ip) {
+					unique_instance->priv->prov_list =
+						g_slist_prepend (unique_instance->priv->prov_list, ip);
+					module_used = TRUE;
+#ifdef GDA_DEBUG_NO
+					g_print ("Loaded '%s' sub-provider\n", ((GdaProviderInfo*) ip)->id);
+#endif
 				}
-				g_free (dsn_spec);
 			}
-			if (!info->dsn_params) {
-				/* there may be traces of the provider installed but some parts are missing,
-				   forget about that provider... */
-				internal_provider_free (ip);
-				ip = NULL;
+			if (!module_used)
 				g_module_close (handle);
-				continue;
-			}
-		}
-		else
-			g_warning ("Provider '%s' does not provide a DSN spec", info->id);
-
-		/* Authentication parameters */
-		info->auth_params = NULL;
-		if (plugin_get_auth_spec) {
-			GError *error = NULL;
-			gchar *auth_spec;
-
-			auth_spec = plugin_get_auth_spec ();
-			if (auth_spec) {
-				info->auth_params = gda_set_new_from_spec_string (auth_spec, &error);
-				if (!info->auth_params) {
-					g_warning ("Invalid format for provider '%s' AUTH spec : %s",
-						   info->id,
-						   error ? error->message : "Unknown error");
-					if (error)
-						g_error_free (error);
-				}
-				g_free (auth_spec);
-			}
-			if (!info->auth_params) {
-				/* there may be traces of the provider installed but some parts are missing,
-				   forget about that provider... */
-				internal_provider_free (ip);
-				ip = NULL;
-				g_module_close (handle);
-				continue;
-			}
 		}
 		else {
-			/* default to username/password */
-			GdaHolder *h;
-			info->auth_params = gda_set_new_inline (2, "USERNAME", G_TYPE_STRING, NULL,
-								"PASSWORD", G_TYPE_STRING, NULL);
-			h = gda_set_get_holder (info->auth_params, "USERNAME");
-			g_object_set (G_OBJECT (h), "name", _("Username"), NULL);
-			h = gda_set_get_holder (info->auth_params, "PASSWORD");
-			g_object_set (G_OBJECT (h), "name", _("Password"), NULL);
-		}
-
-		if (ip) {
-			unique_instance->priv->prov_list = g_slist_prepend (unique_instance->priv->prov_list, ip);
+			InternalProvider *ip;
+			ip = create_internal_provider (handle, path,
+						       plugin_get_name ? plugin_get_name () : name,
+						       plugin_get_description ? plugin_get_description () : NULL,
+						       plugin_get_dsn_spec ? plugin_get_dsn_spec () : NULL,
+						       plugin_get_auth_spec ? plugin_get_auth_spec () : NULL);
+			if (ip) {
+				unique_instance->priv->prov_list =
+					g_slist_prepend (unique_instance->priv->prov_list, ip);
 #ifdef GDA_DEBUG_NO
-			g_print ("Loaded '%s' provider\n", info->id);
+				g_print ("Loaded '%s' provider\n", ((GdaProviderInfo*) ip)->id);
 #endif
+			}
+			else
+				g_module_close (handle);
 		}
 	}
 
 	/* free memory */
 	g_dir_close (dir);
 }
+
+
 
 /* sorting function */
 static gint

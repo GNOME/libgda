@@ -16,6 +16,9 @@ main (int argc, char **argv)
 	GdaDataModel *rw_model;
 	gchar *file;
 	
+	/* set up test environment */
+        g_setenv ("GDA_TOP_BUILD_DIR", TOP_BUILD_DIR, 0);
+        g_setenv ("GDA_TOP_SRC_DIR", TOP_SRC_DIR, TRUE);
 	gda_init ();
 
 	provider = gda_vprovider_data_model_new ();

@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<data-set-spec>
+  <parameters>
+    <parameter id="URL" _name="Connection URL" _descr="" gdatype="gchararray" nullok="FALSE"/>
+  </parameters>
+</data-set-spec>

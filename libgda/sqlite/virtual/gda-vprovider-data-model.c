@@ -270,7 +270,7 @@ gda_vprovider_data_model_open_connection (GdaServerProvider *provider, GdaConnec
 		gda_quark_list_add_from_string (m_params, "_IS_VIRTUAL=TRUE;LOAD_GDA_FUNCTIONS=TRUE", TRUE);
 	}
 	else
-		params = gda_quark_list_new_from_string ("_IS_VIRTUAL=TRUE;LOAD_GDA_FUNCTIONS=TRUE");
+		m_params = gda_quark_list_new_from_string ("_IS_VIRTUAL=TRUE;LOAD_GDA_FUNCTIONS=TRUE");
 
 	if (! GDA_SERVER_PROVIDER_CLASS (parent_class)->open_connection (GDA_SERVER_PROVIDER (provider), cnc, m_params,
 									 auth, NULL, NULL, NULL)) {
@@ -376,6 +376,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 			/* no random access => use a wrapper */
 			GdaDataModel *wrapper;
 			wrapper = gda_data_access_wrapper_new (td->spec->data_model);
+			g_assert (wrapper);
 		}
 
 		ncols = gda_data_model_get_n_columns (wrapper);

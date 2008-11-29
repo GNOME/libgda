@@ -469,7 +469,7 @@ gda_postgres_recordset_store_all (GdaDataSelect *model, GError **error)
 }
 
 /*
- * Create a new filled #GdaRow object for the next cursor row
+ * Create a new filled #GdaRow object for the next cursor row, and put it into *prow.
  *
  * Each new #GdaRow created is referenced only by imodel->priv->tmp_row (the #GdaDataSelect implementation
  * never keeps a reference to it). Before a new #GdaRow gets created, the previous one, if set, is discarded.
@@ -506,7 +506,7 @@ gda_postgres_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint row
 }
 
 /*
- * Create a new filled #GdaRow object for the previous cursor row
+ * Create a new filled #GdaRow object for the previous cursor row, and put it into *prow.
  *
  * Each new #GdaRow created is referenced only by imodel->priv->tmp_row (the #GdaDataSelect implementation
  * never keeps a reference to it). Before a new #GdaRow gets created, the previous one, if set, is discarded.
@@ -543,7 +543,7 @@ gda_postgres_recordset_fetch_prev (GdaDataSelect *model, GdaRow **prow, gint row
 }
 
 /*
- * Create a new filled #GdaRow object for the cursor row at position @rownum
+ * Create a new filled #GdaRow object for the cursor row at position @rownum, and put it into *prow.
  *
  * Each new #GdaRow created is referenced only by imodel->priv->tmp_row (the #GdaDataSelect implementation
  * never keeps a reference to it). Before a new #GdaRow gets created, the previous one, if set, is discarded.

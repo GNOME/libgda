@@ -63,6 +63,15 @@ libgda-report/RML/gda-report-rml-document.c
 providers/bdb/bdb_specs_dsn.xml.in
 providers/bdb/gda-bdb-provider.c
 providers/bdb/libmain.c
+providers/jdbc/GdaInputStream.c
+providers/jdbc/GdaJValue.c
+providers/jdbc/gda-jdbc-ddl.c
+providers/jdbc/gda-jdbc-provider.c
+providers/jdbc/gda-jdbc-recordset.c
+providers/jdbc/gda-jdbc-util.c
+providers/jdbc/jdbc_specs_create_table.xml.in
+providers/jdbc/jdbc_specs_dsn.xml.in
+providers/jdbc/libmain.c
 providers/mdb/gda-mdb-provider.c
 providers/mdb/libmain.c
 providers/mdb/mdb_specs_dsn.xml.in

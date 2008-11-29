@@ -2658,5 +2658,8 @@ gda_blob_to_string (GdaBlob *blob, guint maxlen)
 gboolean
 gda_string_to_blob (const gchar *str, GdaBlob *blob)
 {
-	return gda_string_to_binary (str, (GdaBinary*) blob);
+	gboolean retval;
+	retval = gda_string_to_binary (str, (GdaBinary*) blob);
+	blob->op = NULL;
+	return retval;
 }

@@ -1,0 +1,262 @@
+import java.sql.*;
+import java.util.*;
+import java.io.*;
+
+/*
+ * This class is the central point for meta data extraction. It is a default implementation for all JDBC providers
+ * and can be sub-classed for database specific adaptations
+ */
+class GdaJMeta {
+	private static native void initIDs();
+	public Connection cnc;
+	public DatabaseMetaData md;
+	private HashMap<String, Boolean> current_schemas = new HashMap<String, Boolean> ();
+
+	public GdaJMeta (Connection cnc) throws Exception {
+		this.cnc = cnc;
+		this.md = cnc.getMetaData ();
+	}
+
+	public void schemaAddCurrent (String schema) {
+		current_schemas.put (GdaJValue.toLower (schema), true);
+	}
+
+	public boolean schemaIsCurrent (String schema) throws Exception {
+		return current_schemas.containsKey (GdaJValue.toLower (schema));
+	}
+
+	// The returned String must _never_ be NULL, but set to "" if it was NULL
+	public String getCatalog () throws Exception {
+		String s = cnc.getCatalog ();
+		if (s == null)
+			return "";
+		else
+			return s;
+	}
+
+	public GdaJResultSet getSchemas (String catalog, String schema) throws Exception {
+		return new GdaJMetaSchemas (this, catalog, schema);
+	}
+
+	public GdaJResultSet getTables (String catalog, String schema, String name) throws Exception {
+		return new GdaJMetaTables (this, catalog, schema, name);
+	}
+
+	public GdaJResultSet getViews (String catalog, String schema, String name) throws Exception {
+		return new GdaJMetaViews (this, catalog, schema, name);
+	}
+
+	// class initializer
+	static {
+		initIDs ();
+	}
+}
+
+/*
+ * Meta data retreival is returned as instances of the class which allows a degree of
+ * customization depending on the type of database being accessed.
+ */
+abstract class GdaJMetaResultSet extends GdaJResultSet {
+	public Vector<GdaJColumnInfos> meta_col_infos;
+	protected ResultSet rs;
+	protected DatabaseMetaData md;
+	protected GdaJMeta jm;
+
+	protected GdaJMetaResultSet (int ncols, GdaJMeta jm) {
+		super (ncols);
+		this.jm = jm;
+		md = jm.md;
+		rs = null;
+		meta_col_infos = new Vector<GdaJColumnInfos> (0);
+	}
+
+	// get result set's meta data
+	public GdaJResultSetInfos getInfos () throws Exception {
+		return new GdaJMetaInfos (this);
+	}
+
+	abstract public boolean fillNextRow (long c_pointer) throws Exception;
+}
+
+/*
+ * Extends GdaJResultSetInfos for GdaJMetaResultSet
+ */
+class GdaJMetaInfos extends GdaJResultSetInfos {
+	private GdaJMetaResultSet meta;
+
+	// Constructor
+	public GdaJMetaInfos (GdaJMetaResultSet meta) {
+		super (meta.meta_col_infos);
+		this.meta = meta;
+	}
+
+	// describe a column, index starting at 0
+        public GdaJColumnInfos describeColumn (int col) throws Exception {
+                return meta.meta_col_infos.elementAt (col);
+        }
+}
+
+
+
+/*
+ * Meta data for schemas
+ */
+class GdaJMetaSchemas extends GdaJMetaResultSet {
+	ResultSet rs;
+	String catalog = null;
+	String schema = null;
+
+	public GdaJMetaSchemas (GdaJMeta jm, String catalog, String schema) throws Exception {
+		super (4, jm);
+		meta_col_infos.add (new GdaJColumnInfos ("catalog_name", "catalog_name", java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("schema_name", "schema_name", java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("schema_owner", "owner", java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("schema_internal", "is internal", java.sql.Types.BOOLEAN));
+		rs = jm.md.getSchemas ();
+		this.catalog = catalog;
+		this.schema = schema;
+	}
+
+	protected void columnTypesDeclared () {
+		// the catalog part cannot be NULL, but "" instead
+		GdaJValue cv = (GdaJValue) col_values.elementAt (0);
+		cv.no_null = true;
+		cv.convert_lc = true;
+		((GdaJValue) col_values.elementAt (1)).convert_lc = true;
+	}
+
+	public boolean fillNextRow (long c_pointer) throws Exception {
+		if (! rs.next ())
+			return false;
+
+		GdaJValue cv;
+		
+		if (catalog != null) {
+			String s = rs.getString (2);
+			if (s != catalog)
+				return fillNextRow (c_pointer);
+		}
+		if (schema != null) {
+			String s = rs.getString (1);
+			if (s != schema)
+				return fillNextRow (c_pointer);
+		}
+
+		cv = (GdaJValue) col_values.elementAt (0);
+		cv.setCValue (rs, 1, c_pointer);
+		cv = (GdaJValue) col_values.elementAt (1);
+		cv.setCValue (rs, 0, c_pointer);
+		cv = (GdaJValue) col_values.elementAt (3);
+		cv.setCBoolean (c_pointer, 3, false);
+
+		return true;
+	}
+}
+
+/*
+ * Meta data for tables
+ */
+class GdaJMetaTables extends GdaJMetaResultSet {
+	protected GdaJMetaTables (GdaJMeta jm) {
+		super (9, jm);
+		meta_col_infos.add (new GdaJColumnInfos ("table_catalog", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("table_schema", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("table_name", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("table_type", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("is_insertable_into", null, java.sql.Types.BOOLEAN));
+		meta_col_infos.add (new GdaJColumnInfos ("table_comments", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("table_short_name", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("table_full_name", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("table_owner", null, java.sql.Types.VARCHAR));
+		md = jm.md;
+	}
+
+	public GdaJMetaTables (GdaJMeta jm, String catalog, String schema, String name) throws Exception {
+		this (jm);
+		rs = md.getTables (catalog, schema, name, null);
+	}
+
+	protected void columnTypesDeclared () {
+		// the catalog part cannot be NULL, but "" instead
+		GdaJValue cv = (GdaJValue) col_values.elementAt (0);
+		cv.no_null = true;
+		((GdaJValue) col_values.elementAt (1)).convert_lc = true;
+		((GdaJValue) col_values.elementAt (2)).convert_lc = true;
+		((GdaJValue) col_values.elementAt (6)).convert_lc = true;
+		((GdaJValue) col_values.elementAt (7)).convert_lc = true;
+	}
+
+	public boolean fillNextRow (long c_pointer) throws Exception {
+		if (! rs.next ())
+			return false;
+
+		GdaJValue cv;
+		
+		cv = (GdaJValue) col_values.elementAt (0);
+		cv.setCValue (rs, 0, c_pointer);
+		cv = (GdaJValue) col_values.elementAt (1);
+		cv.setCValue (rs, 1, c_pointer);
+		cv = (GdaJValue) col_values.elementAt (2);
+		cv.setCValue (rs, 2, c_pointer);
+		cv = (GdaJValue) col_values.elementAt (3);
+		cv.setCValue (rs, 3, c_pointer);
+		
+		cv = (GdaJValue) col_values.elementAt (5);
+		cv.setCValue (rs, 4, c_pointer);
+
+		String ln = GdaJValue.toLower (rs.getString (2) + "." + rs.getString (3));
+		if (jm.schemaIsCurrent (rs.getString (2)))
+			cv.setCString (c_pointer, 6, GdaJValue.toLower (rs.getString (3)));
+		else
+			cv.setCString (c_pointer, 6, ln);
+		cv = (GdaJValue) col_values.elementAt (7);
+		cv.setCString (c_pointer, 7, ln);
+
+		return true;
+	}
+}
+
+/*
+ * Meta data for views
+ */
+class GdaJMetaViews extends GdaJMetaResultSet {
+	protected GdaJMetaViews (GdaJMeta jm) {
+		super (6, jm);
+		meta_col_infos.add (new GdaJColumnInfos ("table_catalog", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("table_schema", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("table_name", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("view_definition", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("check_option", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("is_updatable", null, java.sql.Types.BOOLEAN));
+		md = jm.md;
+	}
+
+	public GdaJMetaViews (GdaJMeta jm, String catalog, String schema, String name) throws Exception {
+		this (jm);
+		rs = jm.md.getTables (catalog, schema, name, new String[]{"VIEW"});
+	}
+
+	protected void columnTypesDeclared () {
+		// the catalog part cannot be NULL, but "" instead
+		GdaJValue cv = (GdaJValue) col_values.elementAt (0);
+		cv.no_null = true;
+		((GdaJValue) col_values.elementAt (1)).convert_lc = true;
+		((GdaJValue) col_values.elementAt (2)).convert_lc = true;
+	}
+
+	public boolean fillNextRow (long c_pointer) throws Exception {
+		if (! rs.next ())
+			return false;
+
+		GdaJValue cv;
+		
+		cv = (GdaJValue) col_values.elementAt (0);
+		cv.setCValue (rs, 0, c_pointer);
+		cv = (GdaJValue) col_values.elementAt (1);
+		cv.setCValue (rs, 1, c_pointer);
+		cv = (GdaJValue) col_values.elementAt (2);
+		cv.setCValue (rs, 2, c_pointer);
+
+		return true;
+	}
+}

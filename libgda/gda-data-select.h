@@ -100,6 +100,7 @@ gboolean       gda_data_select_set_modification_statement_sql  (GdaDataSelect *m
 gboolean       gda_data_select_compute_modification_statements (GdaDataSelect *model, GError **error);
 
 gboolean       gda_data_select_compute_columns_attributes      (GdaDataSelect *model, GError **error);
+GdaConnection *gda_data_select_get_connection                  (GdaDataSelect *model);
 
 G_END_DECLS
 

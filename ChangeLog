@@ -1,3 +1,35 @@
+2008-11-29  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-config.c: shared libraries corresponding to providers' implementations
+	can now implement more than one provider type (used by the JDBC provider which
+	implements a provider per JDBC driver found)
+	* providers/postgres/gda-postgres-recordset.c: comments corrections
+	* libgda/gda-data-select.c: code indentation
+	* libgda/gda-quark-list.c: shorter code which corrects potentially double free
+	problem
+	* tools/gda-sql.c:
+	* providers/postgres/gda-postgres-blob-op.c:
+	* libgda/dir-blob-op.c:
+	* libgda/gda-value.c:
+	* libgda/sqlite/virtual/gda-vprovider-data-model.c: minor corrections
+	* configure.in:
+	* getsp.class: new JAVA detection
+	* po/POTFILES.in:
+	* providers/Makefile.am
+	* providers/jdbc: new provider which wraps JDBC, giving access to many
+	databases: pure JAVA databases such as H2, Derby, HSQLDB (used by
+	OpenOffice.org's Base component) or any other database with a JDBC driver,
+	see the providers/jdbc/doc/index.html file for more information
+	* tests/data-models/check_virtual.c: set up test environment
+	* libgda/gda-data-select.h: added gda_data_select_get_connection() which
+	is already implemented and documented (Carlos Savoretti)
+	* libgda/gda-meta-struct.c: set the GDA_ATTRIBUTE_DESCRIPTION attribute for
+	table's columns (Carlos Savoretti)
+	* providers/mdb/libmain.c: correctly use binreloc to detect provider's ressources
+	location
+	* doc/C: doc. update
+	* po/: ran "make update-po"
+
 2008-11-27  Johannes Schmid  <jschmid@openismus.com>
 
 	* libgda/gda-connection.c (gda_connection_get_meta_store_data_v):

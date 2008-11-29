@@ -194,11 +194,9 @@ gda_dir_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 		return -1;
 	
 	/* go to offset */
-	if (offset > 0) {
-		if (fseek (file, offset, SEEK_SET) != 0) {
-			fclose (file);
-			return -1;
-		}
+	if (fseek (file, offset, SEEK_SET) != 0) {
+		fclose (file);
+		return -1;
 	}
 	
 	bin = (GdaBinary *) blob;
@@ -244,20 +242,22 @@ gda_dir_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 
 	if (blob->op && (blob->op != op)) {
 		/* use data through blob->op */
-		#define buf_size 16384
+		//#define buf_size 262144
+                #define buf_size 16000
 		gint nread = 0;
 		GdaBlob *tmpblob = g_new0 (GdaBlob, 1);
 		tmpblob->op = blob->op;
 
 		nbwritten = 0;
 
-		for (nread = gda_blob_op_read (tmpblob->op, tmpblob, nbwritten, buf_size);
+		for (nread = gda_blob_op_read (tmpblob->op, tmpblob, 0, buf_size);
 		     nread > 0;
 		     nread = gda_blob_op_read (tmpblob->op, tmpblob, nbwritten, buf_size)) {
 			GdaBinary *bin = (GdaBinary *) tmpblob;
 			glong tmp_written;
-			tmp_written = fwrite ((char *) (bin->data), 1, bin->binary_length, file);
-			if (tmp_written <= 0) {
+			tmp_written = fwrite ((char *) (bin->data), sizeof (guchar), bin->binary_length, file);
+			if (tmp_written < bin->binary_length) {
+				/* error writing stream */
 				gda_blob_free ((gpointer) tmpblob);
 				return -1;
 			}

@@ -384,18 +384,18 @@ gda_postgres_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 		#define buf_size 16384
 		gint nread = 0;
 		GdaBlob *tmpblob = g_new0 (GdaBlob, 1);
-		tmpblob->op = blob->op;
+		gda_blob_set_op (tmpblob, blob->op);
 
 		nbwritten = 0;
 
-		for (nread = gda_blob_op_read (tmpblob->op, tmpblob, nbwritten, buf_size);
+		for (nread = gda_blob_op_read (tmpblob->op, tmpblob, 0, buf_size);
 		     nread > 0;
 		     nread = gda_blob_op_read (tmpblob->op, tmpblob, nbwritten, buf_size)) {
 			GdaBinary *bin = (GdaBinary *) tmpblob;
 			glong tmp_written;
 			tmp_written = lo_write (pconn, pgop->priv->fd, (char*) bin->data, 
 						bin->binary_length);
-			if (tmp_written < 0) {
+			if (tmp_written < bin->binary_length) {
 				_gda_postgres_make_error (pgop->priv->cnc, pconn, NULL, NULL);
 				gda_blob_free ((gpointer) tmpblob);
 				goto out_error;

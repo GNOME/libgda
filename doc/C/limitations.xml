@@ -132,5 +132,37 @@
       </para>
     </sect2>
   </sect1>
+
+
+  <sect1 id="limitations_jdbc"><title>For JDBC based providers</title>
+    <para>
+      The following limitations apply to databases accessed via Libgda through a JDBC driver. When loading
+      the database providers, &LIBGDA; creates a JDBC provider per JDBC driver found (to work at all it
+      needs to load the Java Virtual Machine (JVM) runtime first).
+    </para>
+
+    <sect2><title>JDBC drivers' location</title>
+      <para>
+	JDBC drivers (".jar" files) are searched for in the following locations:
+	<orderedlist>
+	  <listitem><para>in each directory or JAR file in the <envar>CLASSPATH</envar> environment variable
+	      (if set)</para></listitem>
+	  <listitem><para>in the <filename class="directory">$HOME/.libgda</filename> directory</para></listitem>
+	</orderedlist>
+      </para>
+    </sect2>
+
+    <sect2><title>Last inserted row's values</title>
+      <para>
+	TODO.
+      </para>
+    </sect2>
+
+    <sect2><title>Multi threaded environment</title>
+      <para>
+	No specific limitation.
+      </para>
+    </sect2>
+  </sect1>
   
 </chapter>

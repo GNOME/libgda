@@ -50,13 +50,18 @@ if LDAP
 GDA_LDAP_SERVER=ldap
 endif
 
+if JAVA
+GDA_JAVA_SERVER=jdbc
+endif
+
 SUBDIRS = \
 	sqlite \
 	skel-implementation \
 	$(GDA_BDB_SERVER) \
 	$(GDA_MDB_SERVER) \
 	$(GDA_POSTGRES_SERVER) \
-	$(GDA_MYSQL_SERVER)
+	$(GDA_MYSQL_SERVER) \
+	$(GDA_JAVA_SERVER)
 #	$(GDA_FREETDS_SERVER) \
 #	$(GDA_IBMDB2_SERVER) \
 #	$(GDA_FIREBIRD_SERVER) \

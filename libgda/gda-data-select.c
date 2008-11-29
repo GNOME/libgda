@@ -787,7 +787,8 @@ gda_data_select_take_row (GdaDataSelect *model, GdaRow *row, gint rownum)
 	if (g_hash_table_lookup (model->priv->index, GINT_TO_POINTER (rownum + 1))) 
 		g_error ("INTERNAL error: row %d already exists, aborting", rownum);
 
-	g_hash_table_insert (model->priv->index, GINT_TO_POINTER (rownum + 1), GINT_TO_POINTER (model->priv->rows->len + 1));
+	g_hash_table_insert (model->priv->index, GINT_TO_POINTER (rownum + 1),
+			     GINT_TO_POINTER (model->priv->rows->len + 1));
 	g_array_append_val (model->priv->rows, row);
 	model->nb_stored_rows = model->priv->rows->len;
 }

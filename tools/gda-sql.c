@@ -730,7 +730,6 @@ execute_external_command (MainData *data, const gchar *command, GError **error)
 						res = NULL;
 						goto cleanup;
 					}
-					g_free (str);
 				}
 			}
 			else {
@@ -1965,6 +1964,8 @@ extra_command_echo (GdaConnection *cnc, const gchar **args,
 	res = g_new0 (GdaInternalCommandResult, 1);
 	res->type = GDA_INTERNAL_COMMAND_RESULT_TXT_STDOUT;
 	res->u.txt = g_string_new (args[0]);
+	if (args[0][strlen (args[0]) - 1] != '\n')
+		g_string_append_c (res->u.txt, '\n');
 	return res;
 }
 

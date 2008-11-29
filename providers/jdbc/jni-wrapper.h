@@ -1,0 +1,77 @@
+#include <glib.h>
+#include <glib-object.h>
+#include <stdlib.h>
+#include <string.h>
+#include <jni.h>
+#include <glib/gstdio.h>
+
+#ifndef __JNI_WRAPPER__
+#define __JNI_WRAPPER__
+
+/*
+ * general functions
+ */
+typedef jint (*CreateJavaVMFunc) (JavaVM **, void **, void *);
+
+JNIEnv           *jni_wrapper_create_vm (JavaVM **out_jvm, CreateJavaVMFunc create_func,
+					 const gchar *lib_path, 
+					 const gchar *class_path, GError **error);
+void              jni_wrapper_destroy_vm (JavaVM *jvm);
+gboolean          jni_wrapper_handle_exception (JNIEnv *jvm, gint *out_error_code, 
+						gchar **out_sql_state, GError **error);
+
+jclass            jni_wrapper_class_get (JNIEnv *jvm, const gchar *class_name, GError **error);
+GValue           *jni_wrapper_instantiate_object (JNIEnv *jenv, jclass klass,
+						  const gchar *signature, GError **error, ...);
+
+/*
+ * methods
+ */
+typedef struct {
+	jclass    klass; /* JNI global reference */
+	gchar    *ret_type;
+	gboolean  is_static;
+	jmethodID mid;
+} JniWrapperMethod;
+JniWrapperMethod *jni_wrapper_method_create (JNIEnv *jenv, jclass jklass, 
+					     const gchar *method_name, const gchar *signature,
+					     gboolean is_static, GError **error);
+GValue           *jni_wrapper_method_call (JNIEnv *jenv, JniWrapperMethod *method, GValue *object, 
+					   gint *out_error_code, gchar **out_sql_state, GError **error, ...);
+void              jni_wrapper_method_free (JNIEnv *jenv, JniWrapperMethod *method);
+
+/*
+ * fields access
+ */
+typedef struct {
+	jclass    klass; /* JNI global reference */
+	gchar    *type;
+	gboolean  is_static;
+	jfieldID  fid;
+} JniWrapperField;
+JniWrapperField  *jni_wrapper_field_create (JNIEnv *jenv, jclass jklass, 
+					     const gchar *field_name, const gchar *signature,
+					     gboolean is_static, GError **error);
+GValue           *jni_wrapper_field_get (JNIEnv *jenv, JniWrapperField *field, 
+					 GValue *object, GError **error);
+gboolean          jni_wrapper_field_set (JNIEnv *jenv, JniWrapperField *field, 
+					 GValue *object, const GValue *value, GError **error);
+void              jni_wrapper_field_free (JNIEnv *jenv, JniWrapperField *field);
+
+
+/*
+ * jobject wrapper in a GValue
+ */
+#define GDA_TYPE_JNI_OBJECT (gda_jni_object_get_type())
+typedef struct {
+	JavaVM  *jvm;
+	jobject  jobj;
+} GdaJniObject;
+jobject  gda_value_get_jni_object (const GValue *value);
+GValue  *gda_value_new_jni_object (JavaVM *jvm, JNIEnv *env, jobject jni_object);
+void     gda_value_set_jni_object (GValue *value, JavaVM *jvm, JNIEnv *env, jobject jni_object);
+GType    gda_jni_object_get_type (void) G_GNUC_CONST;
+gpointer gda_jni_object_copy (gpointer boxed) G_GNUC_CONST;
+void     gda_jni_object_free (gpointer boxed) G_GNUC_CONST;
+
+#endif
