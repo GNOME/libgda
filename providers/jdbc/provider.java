@@ -37,7 +37,7 @@ class GdaJProvider {
 		catch (Exception e) {
 			// ignore exceptions, they mean some drivers are not available
 		}
-
+		
 		java.util.Enumeration e = DriverManager.getDrivers();
 		String res = null;
 		while (e.hasMoreElements ()) {
@@ -228,14 +228,26 @@ class GdaJConnection {
 			String name= driver.replace (".", "_") + "Meta";
 			try {
 				Class<?> r = Class.forName (name);
-				java.lang.reflect.Constructor c = r.getConstructor (new Class [] {Class.forName ("java.sql.Connection")});
+				java.lang.reflect.Constructor c = 
+					r.getConstructor (new Class [] {Class.forName ("java.sql.Connection")});
 				jmeta = (GdaJMeta) c.newInstance (new Object [] {cnc});
 			}
 			catch (Exception e) {
-				System.out.println ("Could not load Class " + name);
-				e.printStackTrace ();
-				jmeta = new GdaJMeta (cnc);
+				if (driver.contains ("org.apache.derby.jdbc")) {
+					try {
+						name = "org_apache_derbyMeta";
+						Class<?> r = Class.forName (name);
+						java.lang.reflect.Constructor c = 
+							r.getConstructor (new Class [] {Class.forName ("java.sql.Connection")});
+						jmeta = (GdaJMeta) c.newInstance (new Object [] {cnc});
+					}
+					catch (Exception e1) {
+						// nothing
+					}
+				}			       
 			}
+			if (jmeta == null)
+				jmeta = new GdaJMeta (cnc);
 		}
 		return jmeta;
 	}
@@ -586,6 +598,71 @@ abstract class GdaJValue {
 			throw new Exception ("Unhandled protocol type " + type);
 		}
 		return cv;
+	}
+
+	// Same as gda-jdbc-recordset.c::jdbc_type_to_g_type
+	public static String jdbc_type_to_g_type (int type) {
+		switch (type) {
+		case java.sql.Types.VARCHAR:
+			return "gchararray";
+		case java.sql.Types.ARRAY:
+			return "GdaBinary";
+		case java.sql.Types.BIGINT:
+			return "int64";
+		case java.sql.Types.BINARY:
+			return "GdaBinary";
+		case java.sql.Types.BIT:
+			return "gboolean";
+		case java.sql.Types.BLOB:
+			return "GdaBlob";
+		case java.sql.Types.BOOLEAN:
+			return "gboolean";
+		case java.sql.Types.CHAR:
+			return "gchararray";
+		case java.sql.Types.CLOB:
+		case java.sql.Types.DATALINK:
+			return "GdaBinary";
+		case java.sql.Types.DATE:
+			return "GDate";
+		case java.sql.Types.DECIMAL:
+			return "GdaNumeric";
+		case java.sql.Types.DISTINCT:
+			return "GdaBinary";
+		case java.sql.Types.DOUBLE:
+			return "double";
+		case java.sql.Types.FLOAT:
+			return "float";
+		case java.sql.Types.INTEGER:
+			return "int";
+		case java.sql.Types.JAVA_OBJECT:
+		case java.sql.Types.LONGVARBINARY:
+			return "GdaBinary";
+		case java.sql.Types.LONGVARCHAR:
+			return "gchararray";
+		case java.sql.Types.NULL:
+			return null;
+		case java.sql.Types.NUMERIC:
+			return "GdaNumeric";
+		case java.sql.Types.OTHER:
+			return "GdaBinary";
+		case java.sql.Types.REAL:
+			return "float";
+		case java.sql.Types.REF:
+			return "GdaBinary";
+		case java.sql.Types.SMALLINT:
+			return "GdaStort";
+		case java.sql.Types.STRUCT:
+			return "GdaBinary";
+		case java.sql.Types.TIME:
+			return "GdaTime";
+		case java.sql.Types.TIMESTAMP:
+			return "GdaTimestamp";
+		case java.sql.Types.TINYINT:
+			return "gchar";
+		case java.sql.Types.VARBINARY:
+		default:
+			return "GdaBinary";
+		}
 	}
 
 	public static String toLower (String string) {

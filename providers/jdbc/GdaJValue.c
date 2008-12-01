@@ -46,11 +46,22 @@ JNICALL Java_GdaJValue_setCString (JNIEnv *jenv, jobject obj, jlong c_pointer, j
 {
 	GValue *value = gda_row_get_value (GDA_ROW ((gpointer) c_pointer), col);
 	gchar *tmp;
-	gint len;
+	gint len, ulen;
 
 	len = (*jenv)->GetStringUTFLength (jenv, str);
+	if ((*jenv)->ExceptionCheck (jenv))
+		return;
+	ulen = (*jenv)->GetStringLength (jenv, str);
+	if ((*jenv)->ExceptionCheck (jenv))
+		return;
 	tmp = g_new (gchar, len + 1);
-	(*jenv)->GetStringUTFRegion (jenv, str, 0, len, tmp);
+	tmp [len] = 0;
+	if (ulen > 0)
+		(*jenv)->GetStringUTFRegion (jenv, str, 0, ulen, tmp);
+	if ((*jenv)->ExceptionCheck (jenv)) {
+		g_free (tmp);
+		return;
+	}
 	g_value_init (value, G_TYPE_STRING);
 	g_value_take_string (value, tmp);
 }
@@ -440,11 +451,22 @@ JNICALL Java_GdaJValue_setCNumeric (JNIEnv *jenv, jobject obj, jlong c_pointer, 
 	GdaNumeric *num;
 	GValue *value = gda_row_get_value (GDA_ROW ((gpointer) c_pointer), col);
 	gchar *tmp;
-	gint len;
+	gint len, ulen;
 
 	len = (*jenv)->GetStringUTFLength (jenv, str);
+	if ((*jenv)->ExceptionCheck (jenv))
+		return;
+	ulen = (*jenv)->GetStringLength (jenv, str);
+	if ((*jenv)->ExceptionCheck (jenv))
+		return;
 	tmp = g_new (gchar, len + 1);
-	(*jenv)->GetStringUTFRegion (jenv, str, 0, len, tmp);
+	tmp [len] = 0;
+	if (ulen > 0)
+		(*jenv)->GetStringUTFRegion (jenv, str, 0, ulen, tmp);
+	if ((*jenv)->ExceptionCheck (jenv)) {
+		g_free (tmp);
+		return;
+	}
 	num = g_new0 (GdaNumeric, 1);
 	num->number = tmp;
 	num->precision = precision;

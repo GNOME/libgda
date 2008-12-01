@@ -18,10 +18,6 @@ class org_h2_DriverMeta extends GdaJMeta {
 		return cnc.getCatalog ();
 	}
 
-	public GdaJResultSet getSchemas (String catalog, String schema) throws Exception {
-		return new org_h2_DriverMetaSchemas (this, catalog, schema);
-	}
-
 	public GdaJResultSet getTables (String catalog, String schema, String name) throws Exception {
 		return new org_h2_DriverMetaTables (this, catalog, schema, name);
 	}
@@ -50,85 +46,12 @@ class org_h2_DriverMeta extends GdaJMeta {
 }
 
 /*
- * Meta data for schemas
- */
-class org_h2_DriverMetaSchemas extends GdaJMetaResultSet {
-	ResultSet rs;
-	String catalog = null;
-	String schema = null;
-
-	public org_h2_DriverMetaSchemas (GdaJMeta jm, String catalog, String schema) throws Exception {
-		super (4, jm);
-		meta_col_infos.add (new GdaJColumnInfos ("catalog_name", "catalog_name", java.sql.Types.VARCHAR));
-		meta_col_infos.add (new GdaJColumnInfos ("schema_name", "schema_name", java.sql.Types.VARCHAR));
-		meta_col_infos.add (new GdaJColumnInfos ("schema_owner", "owner", java.sql.Types.VARCHAR));
-		meta_col_infos.add (new GdaJColumnInfos ("schema_internal", "is internal", java.sql.Types.BOOLEAN));
-		rs = jm.md.getSchemas ();
-		this.catalog = catalog;
-		this.schema = schema;
-	}
-
-	protected void columnTypesDeclared () {
-		GdaJValue cv = (GdaJValue) col_values.elementAt (0);
-		cv.convert_lc = true;
-		cv = (GdaJValue) col_values.elementAt (1);
-		cv.convert_lc = true;
-		cv = (GdaJValue) col_values.elementAt (3);
-		cv.convert_lc = true;
-	}
-
-	public boolean fillNextRow (long c_pointer) throws Exception {
-		if (! rs.next ())
-			return false;
-
-		GdaJValue cv;
-		
-		if (catalog != null) {
-			String s = rs.getString (2);
-			if (s != catalog)
-				return fillNextRow (c_pointer);
-		}
-		if (schema != null) {
-			String s = rs.getString (1);
-			if (s != schema)
-				return fillNextRow (c_pointer);
-		}
-
-		cv = (GdaJValue) col_values.elementAt (0);
-		cv.setCValue (rs, 1, c_pointer);
-		cv = (GdaJValue) col_values.elementAt (1);
-		cv.setCValue (rs, 0, c_pointer);
-		cv = (GdaJValue) col_values.elementAt (3);
-		cv.setCBoolean (c_pointer, 3, false);
-
-		return true;
-	}
-}
-
-/*
  * Meta data for tables
  */
 class org_h2_DriverMetaTables extends GdaJMetaTables {
 	public org_h2_DriverMetaTables (GdaJMeta jm, String catalog, String schema, String name) throws Exception {
 		super (jm);
 		rs = md.getTables (catalog, schema, name, null);
-	}
-
-	protected void columnTypesDeclared () {
-		GdaJValue cv = (GdaJValue) col_values.elementAt (0);
-		cv.convert_lc = true;
-		cv = (GdaJValue) col_values.elementAt (1);
-		cv.convert_lc = true;
-		cv = (GdaJValue) col_values.elementAt (2);
-		cv.convert_lc = true;
-		cv = (GdaJValue) col_values.elementAt (3);
-		cv.convert_lc = true;
-		cv = (GdaJValue) col_values.elementAt (5);
-		cv.convert_lc = true;
-		cv = (GdaJValue) col_values.elementAt (6);
-		cv.convert_lc = true;
-		cv = (GdaJValue) col_values.elementAt (7);
-		cv.convert_lc = true;
 	}
 
 	public boolean fillNextRow (long c_pointer) throws Exception {
@@ -172,10 +95,9 @@ class org_h2_DriverMetaViews extends GdaJResultSet {
 
 	protected void columnTypesDeclared () {
 		GdaJValue cv = (GdaJValue) col_values.elementAt (0);
+		cv.no_null = true;
 		cv.convert_lc = true;
-		cv = (GdaJValue) col_values.elementAt (1);
-		cv.convert_lc = true;
-		cv = (GdaJValue) col_values.elementAt (2);
-		cv.convert_lc = true;
+		((GdaJValue) col_values.elementAt (1)).convert_lc = true;
+		((GdaJValue) col_values.elementAt (2)).convert_lc = true;
 	}
 }

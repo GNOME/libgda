@@ -11,6 +11,7 @@ JniWrapperMethod *GdaJMeta__getCatalog = NULL;
 JniWrapperMethod *GdaJMeta__getSchemas = NULL;
 JniWrapperMethod *GdaJMeta__getTables = NULL;
 JniWrapperMethod *GdaJMeta__getViews = NULL;
+JniWrapperMethod *GdaJMeta__getColumns = NULL;
 
 JNIEXPORT void
 JNICALL Java_GdaJMeta_initIDs (JNIEnv *env, jclass klass)
@@ -28,6 +29,7 @@ JNICALL Java_GdaJMeta_initIDs (JNIEnv *env, jclass klass)
 		{"getSchemas", "(Ljava/lang/String;Ljava/lang/String;)LGdaJResultSet;", FALSE, &GdaJMeta__getSchemas},
 		{"getTables", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)LGdaJResultSet;", FALSE, &GdaJMeta__getTables},
 		{"getViews", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)LGdaJResultSet;", FALSE, &GdaJMeta__getViews},
+		{"getColumns", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)LGdaJResultSet;", FALSE, &GdaJMeta__getColumns},
 	};
 
 	for (i = 0; i < sizeof (methods) / sizeof (MethodSignature); i++) {

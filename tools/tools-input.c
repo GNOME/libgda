@@ -197,7 +197,7 @@ add_to_history (const gchar *txt)
 
 	HIST_ENTRY *current;
 
-	current = current_history ();
+	current = history_get (history_length);
 	if (current && current->line && !strcmp (current->line, txt))
 		return;
 	add_history (txt);

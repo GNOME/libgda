@@ -3167,7 +3167,7 @@ prepare_meta_statements_hash (void)
 	/* GDA_CONNECTION_META_TABLES */
 	key = g_new0 (MetaKey, 1);
 	key->meta_type = GDA_CONNECTION_META_TABLES;
-	sql = "SELECT table_short_name, table_schema, table_full_name, table_owner, table_comments FROM _tables WHERE table_type='BASE TABLE'";
+	sql = "SELECT table_short_name, table_schema, table_full_name, table_owner, table_comments FROM _tables WHERE table_type LIKE '%TABLE%'";
 	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
 	if (!stmt)
 		g_error ("Could not parse internal statement: %s\n", sql);
@@ -3177,7 +3177,7 @@ prepare_meta_statements_hash (void)
 	key->meta_type = GDA_CONNECTION_META_TABLES;
 	key->nb_filters = 1;
 	key->filters = name_array;
-	sql = "SELECT table_short_name, table_schema, table_full_name, table_owner, table_comments FROM _tables WHERE table_type='BASE TABLE' AND table_short_name=##name::string";
+	sql = "SELECT table_short_name, table_schema, table_full_name, table_owner, table_comments FROM _tables WHERE table_type LIKE '%TABLE%' AND table_short_name=##name::string";
 	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
 	if (!stmt)
 		g_error ("Could not parse internal statement: %s\n", sql);

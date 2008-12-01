@@ -57,6 +57,7 @@ extern JniWrapperMethod *GdaJMeta__getCatalog;
 extern JniWrapperMethod *GdaJMeta__getSchemas;
 extern JniWrapperMethod *GdaJMeta__getTables;
 extern JniWrapperMethod *GdaJMeta__getViews;
+extern JniWrapperMethod *GdaJMeta__getColumns;
 
 
 /* debug features */

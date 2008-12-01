@@ -372,6 +372,33 @@ static gboolean determine_db_object_from_missing_type (GdaMetaStruct *mstruct,
 						       GValue **out_full_name, GValue **out_owner, const GValue *catalog, 
 						       const GValue *schema, const GValue *name);
 static gchar *array_type_to_sql (GdaMetaStore *store, const GValue *specific_name);
+static gchar *
+get_user_obj_name (const GValue *catalog, const GValue *schema, const GValue *name)
+{
+	GString *string = NULL;
+	gchar *ret;
+	if (catalog && (G_VALUE_TYPE (catalog) != GDA_TYPE_NULL))
+		string = g_string_new (g_value_get_string (catalog));
+	if (schema && (G_VALUE_TYPE (schema) != GDA_TYPE_NULL)) {
+		if (string) {
+			g_string_append_c (string, '.');
+			g_string_append (string, g_value_get_string (schema));
+		}
+		else
+			string = g_string_new (g_value_get_string (schema));
+	}
+	if (name && (G_VALUE_TYPE (name) != GDA_TYPE_NULL)) {
+		if (string) {
+			g_string_append_c (string, '.');
+			g_string_append (string, g_value_get_string (name));
+		}
+		else
+			string = g_string_new (g_value_get_string (name));
+	}
+	ret = string->str;
+	g_string_free (string, FALSE);
+	return ret;
+}
 
 /**
  * gda_meta_struct_complement
@@ -440,15 +467,17 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 		g_value_take_string ((ischema = gda_value_new (G_TYPE_STRING)), 
 				     gda_sql_identifier_remove_quotes (g_value_dup_string (schema)));
 
-	if (!catalog) {
-		if (schema) {
-			g_return_val_if_fail (schema && (G_VALUE_TYPE (schema) == G_TYPE_STRING), NULL);
+	if (!icatalog) {
+		if (ischema) {
+			g_return_val_if_fail (ischema && (G_VALUE_TYPE (ischema) == G_TYPE_STRING), NULL);
 			if (! determine_db_object_from_schema_and_name (mstruct, &real_type, &icatalog, 
 									&short_name, &full_name, &owner,
 									ischema, iname)) {
+				gchar *tmp;
+				tmp = get_user_obj_name (catalog, schema, name);
 				g_set_error (error, GDA_META_STRUCT_ERROR, GDA_META_STRUCT_UNKNOWN_OBJECT_ERROR,
-					     _("Could not find object named '%s.%s'"), 
-					     g_value_get_string (schema), g_value_get_string (name));
+					     _("Could not find object named '%s'"), tmp);
+				g_free (tmp);
 				gda_value_free (ischema);
 				gda_value_free (iname);
 				return NULL;
@@ -459,8 +488,11 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 			if (! determine_db_object_from_short_name (mstruct, &real_type, &icatalog, 
 								   &ischema, &real_name, 
 								   &short_name, &full_name, &owner, iname)) {
+				gchar *tmp;
+				tmp = get_user_obj_name (catalog, schema, name);
 				g_set_error (error, GDA_META_STRUCT_ERROR, GDA_META_STRUCT_UNKNOWN_OBJECT_ERROR,
-					     _("Could not find object named '%s'"), g_value_get_string (name));
+					     _("Could not find object named '%s'"), tmp);
+				g_free (tmp);
 				gda_value_free (iname);
 				return NULL;
 			}
@@ -473,9 +505,11 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 	else if (type == GDA_META_DB_UNKNOWN) {
 		if (! determine_db_object_from_missing_type (mstruct, &real_type, &short_name, &full_name, &owner,
 							     icatalog, ischema, iname)) {
+			gchar *tmp;
+			tmp = get_user_obj_name (catalog, schema, name);
 			g_set_error (error, GDA_META_STRUCT_ERROR, GDA_META_STRUCT_UNKNOWN_OBJECT_ERROR,
-				     _("Could not find object named '%s.%s.%s'"), g_value_get_string (catalog),
-				     g_value_get_string (schema), g_value_get_string (name));
+				     _("Could not find object named '%s'"), tmp);
+			g_free (tmp);
 			gda_value_free (icatalog);
 			gda_value_free (ischema);
 			gda_value_free (iname);
@@ -575,11 +609,17 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 		mv = GDA_META_VIEW (dbo);
 		cvalue = gda_data_model_get_value_at (model, 0, 0, error);
 		if (!cvalue) goto onerror;
-		mv->view_def = g_value_dup_string (cvalue);
+		if (G_VALUE_TYPE (cvalue) != GDA_TYPE_NULL)
+			mv->view_def = g_value_dup_string (cvalue);
+		else
+			mv->view_def = g_strdup ("");
 
 		cvalue = gda_data_model_get_value_at (model, 1, 0, error);
 		if (!cvalue) goto onerror;
-		mv->is_updatable = g_value_get_boolean (cvalue);
+		if (G_VALUE_TYPE (cvalue) != GDA_TYPE_NULL)
+			mv->is_updatable = g_value_get_boolean (cvalue);
+		else
+			mv->is_updatable = FALSE;
 
 		/* view's dependencies, from its definition */
 		if ((mstruct->priv->features & GDA_META_STRUCT_FEATURE_VIEW_DEPENDENCIES) && 
@@ -1050,7 +1090,7 @@ gda_meta_struct_complement_schema (GdaMetaStruct *mstruct, const GValue *catalog
 	/* schema and catalog are known */
 	const gchar *sql1 = "SELECT table_name "
 		"FROM _tables WHERE table_short_name, table_full_name, table_owner, table_catalog = ##cat::string AND table_schema = ##schema::string "
-		"AND table_type='BASE TABLE' "
+		"AND table_type LIKE '%TABLE%' "
 		"ORDER BY table_schema, table_name";
 	const gchar *sql2 = "SELECT table_short_name, table_full_name, table_owner, table_name "
 		"FROM _tables WHERE table_catalog = ##cat::string AND table_schema = ##schema::string "
@@ -1059,7 +1099,7 @@ gda_meta_struct_complement_schema (GdaMetaStruct *mstruct, const GValue *catalog
 	
 	/* schema is known, catalog unknown */
 	const gchar *sql3 = "SELECT table_short_name, table_full_name, table_owner, table_name, table_catalog, table_schema "
-		"FROM _tables WHERE table_schema = ##schema::string AND table_type='BASE TABLE' "
+		"FROM _tables WHERE table_schema = ##schema::string AND table_type LIKE '%TABLE%' "
 		"ORDER BY table_schema, table_name";
 	const gchar *sql4 = "SELECT table_short_name, table_full_name, table_owner, table_name, table_catalog, table_schema "
 		"FROM _tables WHERE table_schema = ##schema::string AND table_type='VIEW' "
@@ -1067,7 +1107,7 @@ gda_meta_struct_complement_schema (GdaMetaStruct *mstruct, const GValue *catalog
 
 	/* schema and catalog are unknown */
 	const gchar *sql5 = "SELECT table_short_name, table_full_name, table_owner, table_name, table_catalog, table_schema "
-		"FROM _tables WHERE table_type='BASE TABLE' "
+		"FROM _tables WHERE table_type LIKE '%TABLE%' "
 		"ORDER BY table_schema, table_name";
 	const gchar *sql6 = "SELECT table_short_name, table_full_name, table_owner, table_name, table_catalog, table_schema "
 		"FROM _tables WHERE table_type='VIEW' "
@@ -1155,25 +1195,14 @@ gda_meta_struct_complement_schema (GdaMetaStruct *mstruct, const GValue *catalog
 	return TRUE;
 }
 
-/**
- * gda_meta_struct_complement_default
- * @mstruct: a #GdaMetaStruct object
- * @error: a place to store errors, or %NULL
- *
- * This method is similar to gda_meta_struct_complement() but creates #GdaMetaDbObject for all the
- * database object which are useable using only their short name (that is which do not need to be prefixed by 
- * the schema in which they are to be used).
- *
- * Returns: TRUE if no error occurred
- */
-gboolean
-gda_meta_struct_complement_default (GdaMetaStruct *mstruct, GError **error)
+static gboolean
+real_gda_meta_struct_complement_all (GdaMetaStruct *mstruct, gboolean default_only, GError **error)
 {
 	GdaDataModel *model;
 	gint i, nrows, k;
 	const GValue *cvalues[6];
 	const gchar *sql1 = "SELECT table_catalog, table_schema, table_name, table_short_name, table_full_name, table_owner "
-		"FROM _tables WHERE table_short_name = table_name AND table_type='BASE TABLE' "
+		"FROM _tables WHERE table_short_name = table_name AND table_type LIKE '%TABLE%' "
 		"ORDER BY table_schema, table_name";
 	const gchar *sql2 = "SELECT table_catalog, table_schema, table_name, table_short_name, table_full_name, table_owner "
 		"FROM _tables WHERE table_short_name = table_name AND table_type='VIEW' "
@@ -1228,6 +1257,40 @@ gda_meta_struct_complement_default (GdaMetaStruct *mstruct, GError **error)
 	}
 	g_object_unref (model);
 	return TRUE;
+}
+
+/**
+ * gda_meta_struct_complement_default
+ * @mstruct: a #GdaMetaStruct object
+ * @error: a place to store errors, or %NULL
+ *
+ * This method is similar to gda_meta_struct_complement() and gda_meta_struct_complement_all()
+ * but creates #GdaMetaDbObject for all the
+ * database object which are useable using only their short name (that is which do not need to be prefixed by 
+ * the schema in which they are to be used).
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_meta_struct_complement_default (GdaMetaStruct *mstruct, GError **error)
+{
+	return real_gda_meta_struct_complement_all (mstruct, TRUE, error);
+}
+
+/**
+ * gda_meta_struct_complement_all
+ * @mstruct: a #GdaMetaStruct object
+ * @error: a place to store errors, or %NULL
+ *
+ * This method is similar to gda_meta_struct_complement() and gda_meta_struct_complement_default()
+ * but creates #GdaMetaDbObject for all the database object.
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_meta_struct_complement_all (GdaMetaStruct *mstruct, GError **error)
+{
+	return real_gda_meta_struct_complement_all (mstruct, FALSE, error);
 }
 
 /**
@@ -1761,7 +1824,7 @@ determine_db_object_from_schema_and_name (GdaMetaStruct *mstruct,
 	}
 
 	case GDA_META_DB_TABLE: {
-		const gchar *sql = "SELECT table_catalog, table_short_name, table_full_name, table_owner FROM _tables as t WHERE table_schema = ##ts::string AND table_short_name = ##tname::string AND table_name NOT IN (SELECT v.table_name FROM _views as v WHERE v.table_catalog=t.table_catalog AND v.table_schema=t.table_schema)";
+		const gchar *sql = "SELECT table_catalog, table_short_name, table_full_name, table_owner FROM _tables as t WHERE table_schema = ##ts::string AND table_name = ##tname::string AND table_name NOT IN (SELECT v.table_name FROM _views as v WHERE v.table_catalog=t.table_catalog AND v.table_schema=t.table_schema)";
 		gint nrows;
 		model = gda_meta_store_extract (mstruct->priv->store, sql, NULL, "ts", schema, "tname", name, NULL);
 		if (!model) 
@@ -1793,7 +1856,7 @@ determine_db_object_from_schema_and_name (GdaMetaStruct *mstruct,
 	}
 
 	case GDA_META_DB_VIEW:{
-		const gchar *sql = "SELECT table_catalog, table_short_name, table_full_name, table_owner FROM _tables NATURAL JOIN _views WHERE table_schema = ##ts::string AND table_short_name = ##tname::string";
+		const gchar *sql = "SELECT table_catalog, table_short_name, table_full_name, table_owner FROM _tables NATURAL JOIN _views WHERE table_schema = ##ts::string AND table_name = ##tname::string";
 		gint nrows;
 		model = gda_meta_store_extract (mstruct->priv->store, sql, NULL, "ts", schema, "tname", name, NULL);
 		if (!model) 

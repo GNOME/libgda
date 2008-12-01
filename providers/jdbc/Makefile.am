@@ -76,6 +76,7 @@ jdbcprov_jar = gdaprovider-4.0.jar
 jdbcprov_sources = \
 	provider.java \
 	meta.java \
+	derby.java \
 	h2.java
 jdbcprov_classes = GdaJConnection.class
 

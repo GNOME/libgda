@@ -46,6 +46,10 @@ class GdaJMeta {
 		return new GdaJMetaViews (this, catalog, schema, name);
 	}
 
+	public GdaJResultSet getColumns (String catalog, String schema, String tab_name) throws Exception {
+		return new GdaJMetaColumns (this, catalog, schema, tab_name);
+	}
+
 	// class initializer
 	static {
 		initIDs ();
@@ -102,16 +106,15 @@ class GdaJMetaInfos extends GdaJResultSetInfos {
  * Meta data for schemas
  */
 class GdaJMetaSchemas extends GdaJMetaResultSet {
-	ResultSet rs;
 	String catalog = null;
 	String schema = null;
 
 	public GdaJMetaSchemas (GdaJMeta jm, String catalog, String schema) throws Exception {
 		super (4, jm);
-		meta_col_infos.add (new GdaJColumnInfos ("catalog_name", "catalog_name", java.sql.Types.VARCHAR));
-		meta_col_infos.add (new GdaJColumnInfos ("schema_name", "schema_name", java.sql.Types.VARCHAR));
-		meta_col_infos.add (new GdaJColumnInfos ("schema_owner", "owner", java.sql.Types.VARCHAR));
-		meta_col_infos.add (new GdaJColumnInfos ("schema_internal", "is internal", java.sql.Types.BOOLEAN));
+		meta_col_infos.add (new GdaJColumnInfos ("catalog_name", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("schema_name", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("schema_owner", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("schema_internal", null, java.sql.Types.BOOLEAN));
 		rs = jm.md.getSchemas ();
 		this.catalog = catalog;
 		this.schema = schema;
@@ -180,6 +183,7 @@ class GdaJMetaTables extends GdaJMetaResultSet {
 		// the catalog part cannot be NULL, but "" instead
 		GdaJValue cv = (GdaJValue) col_values.elementAt (0);
 		cv.no_null = true;
+		cv.convert_lc = true;
 		((GdaJValue) col_values.elementAt (1)).convert_lc = true;
 		((GdaJValue) col_values.elementAt (2)).convert_lc = true;
 		((GdaJValue) col_values.elementAt (6)).convert_lc = true;
@@ -240,6 +244,7 @@ class GdaJMetaViews extends GdaJMetaResultSet {
 		// the catalog part cannot be NULL, but "" instead
 		GdaJValue cv = (GdaJValue) col_values.elementAt (0);
 		cv.no_null = true;
+		cv.convert_lc = true;
 		((GdaJValue) col_values.elementAt (1)).convert_lc = true;
 		((GdaJValue) col_values.elementAt (2)).convert_lc = true;
 	}
@@ -256,6 +261,95 @@ class GdaJMetaViews extends GdaJMetaResultSet {
 		cv.setCValue (rs, 1, c_pointer);
 		cv = (GdaJValue) col_values.elementAt (2);
 		cv.setCValue (rs, 2, c_pointer);
+
+		return true;
+	}
+}
+
+/*
+ * Meta data for table's columns
+ */
+class GdaJMetaColumns extends GdaJMetaResultSet {
+	protected GdaJMetaColumns (GdaJMeta jm) {
+		super (24, jm);
+		meta_col_infos.add (new GdaJColumnInfos ("table_catalog", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("table_schema", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("table_name", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("column_name", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("ordinal_position", null, java.sql.Types.INTEGER));
+		meta_col_infos.add (new GdaJColumnInfos ("column_default", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("is_nullable", null, java.sql.Types.BOOLEAN));
+		meta_col_infos.add (new GdaJColumnInfos ("data_type", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("array_spec", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("gtype", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("character_maximum_length", null, java.sql.Types.INTEGER));
+		meta_col_infos.add (new GdaJColumnInfos ("character_octet_length", null, java.sql.Types.INTEGER));
+		meta_col_infos.add (new GdaJColumnInfos ("numeric_precision", null, java.sql.Types.INTEGER));
+		meta_col_infos.add (new GdaJColumnInfos ("numeric_scale", null, java.sql.Types.INTEGER));
+ 		meta_col_infos.add (new GdaJColumnInfos ("datetime_precision", null, java.sql.Types.INTEGER));
+		meta_col_infos.add (new GdaJColumnInfos ("character_set_catalog", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("character_set_schema", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("character_set_name", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("collation_catalog", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("collation_schema", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("collation_name", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("extra", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("is_updatable", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("column_comments", null, java.sql.Types.VARCHAR));
+
+		md = jm.md;
+	}
+
+	public GdaJMetaColumns (GdaJMeta jm, String catalog, String schema, String tab_name) throws Exception {
+		this (jm);
+		rs = jm.md.getColumns (catalog, schema, tab_name, null);
+	}
+
+	protected void columnTypesDeclared () {
+		// the catalog part cannot be NULL, but "" instead
+		GdaJValue cv = (GdaJValue) col_values.elementAt (0);
+		cv.no_null = true;
+		cv.convert_lc = true;
+		((GdaJValue) col_values.elementAt (1)).convert_lc = true;
+		((GdaJValue) col_values.elementAt (2)).convert_lc = true;
+		((GdaJValue) col_values.elementAt (3)).convert_lc = true;
+		((GdaJValue) col_values.elementAt (7)).convert_lc = true;
+		((GdaJValue) col_values.elementAt (15)).convert_lc = true;
+		((GdaJValue) col_values.elementAt (16)).convert_lc = true;
+		((GdaJValue) col_values.elementAt (17)).convert_lc = true;
+		((GdaJValue) col_values.elementAt (18)).convert_lc = true;
+		((GdaJValue) col_values.elementAt (19)).convert_lc = true;
+		((GdaJValue) col_values.elementAt (20)).convert_lc = true;
+	}
+
+	public boolean fillNextRow (long c_pointer) throws Exception {
+		if (! rs.next ())
+			return false;
+
+		GdaJValue cv;
+		int i, r;
+
+		((GdaJValue) col_values.elementAt (0)).setCValue (rs, 0, c_pointer);
+		((GdaJValue) col_values.elementAt (1)).setCValue (rs, 1, c_pointer);
+		((GdaJValue) col_values.elementAt (2)).setCValue (rs, 2, c_pointer);
+		((GdaJValue) col_values.elementAt (3)).setCValue (rs, 3, c_pointer);
+		((GdaJValue) col_values.elementAt (4)).setCValue (rs, 16, c_pointer);
+		((GdaJValue) col_values.elementAt (5)).setCValue (rs, 12, c_pointer);
+		cv = (GdaJValue) col_values.elementAt (6);
+		i = rs.getInt (10);
+		if (i == DatabaseMetaData.columnNoNulls)
+			cv.setCBoolean (c_pointer, 6, false);
+		else
+			cv.setCBoolean (c_pointer, 6, true);
+		((GdaJValue) col_values.elementAt (7)).setCValue (rs, 5, c_pointer);
+
+		((GdaJValue) col_values.elementAt (9)).setCString (c_pointer, 9, 
+								   GdaJValue.jdbc_type_to_g_type (rs.getInt (5))); // gtype
+
+		((GdaJValue) col_values.elementAt (11)).setCValue (rs, 15, c_pointer);
+		((GdaJValue) col_values.elementAt (12)).setCValue (rs, 8, c_pointer); // numeric_precision
+
+		((GdaJValue) col_values.elementAt (23)).setCValue (rs, 11, c_pointer); // comments
 
 		return true;
 	}

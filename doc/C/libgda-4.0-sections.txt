@@ -1353,6 +1353,7 @@ gda_meta_struct_new
 gda_meta_struct_complement
 gda_meta_struct_complement_schema
 gda_meta_struct_complement_default
+gda_meta_struct_complement_all
 gda_meta_struct_complement_depend
 GdaMetaSortType
 gda_meta_struct_sort_db_objects

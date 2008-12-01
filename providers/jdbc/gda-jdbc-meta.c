@@ -349,7 +349,6 @@ _gda_jdbc_meta_schemata (GdaServerProvider *prov, GdaConnection *cnc,
 	if (!model)
 		goto out;
 
-	gda_data_model_dump (model, stdout);
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
 
  out:
@@ -484,8 +483,7 @@ gboolean
 _gda_jdbc_meta__columns (GdaServerProvider *prov, GdaConnection *cnc, 
 			 GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
-	TO_IMPLEMENT;
-	return TRUE;
+	return _gda_jdbc_meta_columns (prov, cnc, store, context, error, NULL, NULL, NULL);
 }
 
 gboolean
@@ -494,8 +492,80 @@ _gda_jdbc_meta_columns (GdaServerProvider *prov, GdaConnection *cnc,
 			const GValue *table_catalog, const GValue *table_schema, 
 			const GValue *table_name)
 {
-	TO_IMPLEMENT;
-	return TRUE;
+	JdbcConnectionData *cdata;
+	GdaDataModel *model = NULL;
+	gboolean retval = FALSE;
+	gint error_code;
+	gchar *sql_state;
+	GValue *jexec_res;
+	GError *lerror = NULL;
+
+	JNIEnv *jenv = NULL;
+	gboolean jni_detach;
+
+	jstring catalog = NULL, schema = NULL, table = NULL;
+
+	/* Get private data */
+	cdata = (JdbcConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return FALSE;
+
+	jenv = _gda_jdbc_get_jenv (&jni_detach, error);
+	if (!jenv) 
+		return FALSE;
+
+	if (! cdata->jmeta_obj && !init_meta_obj (cnc, jenv, cdata, error))
+		goto out;
+
+	if (table_catalog) {
+		catalog = (*jenv)->NewStringUTF (jenv, g_value_get_string (table_catalog));
+		if ((*jenv)->ExceptionCheck (jenv))
+			goto out;
+	}
+
+	if (table_schema) {
+		schema = (*jenv)->NewStringUTF (jenv, g_value_get_string (table_schema));
+		if ((*jenv)->ExceptionCheck (jenv))
+			goto out;
+	}
+
+	if (table_name) {
+		table = (*jenv)->NewStringUTF (jenv, g_value_get_string (table_name));
+		if ((*jenv)->ExceptionCheck (jenv))
+			goto out;
+	}
+
+	/* get data from JDBC */
+	jexec_res = jni_wrapper_method_call (jenv, GdaJMeta__getColumns,
+					     cdata->jmeta_obj, &error_code, &sql_state, &lerror,
+					     catalog, schema, table);
+	if (!jexec_res) {
+		if (error && lerror)
+			*error = g_error_copy (lerror);
+		_gda_jdbc_make_error (cnc, error_code, sql_state, lerror);
+		_gda_jdbc_release_jenv (jni_detach);
+		return FALSE;
+	}
+
+	model = (GdaDataModel *) gda_jdbc_recordset_new (cnc, NULL, NULL, jenv,
+							 jexec_res, GDA_DATA_MODEL_ACCESS_RANDOM, NULL);
+	if (!model)
+		goto out;
+
+	retval = gda_meta_store_modify_with_context (store, context, model, error);
+
+ out:
+	if (catalog)
+		(*jenv)-> DeleteLocalRef (jenv, catalog);
+	if (schema)
+		(*jenv)-> DeleteLocalRef (jenv, schema);
+	if (table)
+		(*jenv)-> DeleteLocalRef (jenv, table);
+	if (model)
+		g_object_unref (model);
+	_gda_jdbc_release_jenv (jni_detach);
+		
+	return retval;
 }
 
 gboolean

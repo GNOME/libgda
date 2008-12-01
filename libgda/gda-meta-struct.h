@@ -174,6 +174,7 @@ GdaMetaDbObject    *gda_meta_struct_complement         (GdaMetaStruct *mstruct, 
 gboolean            gda_meta_struct_complement_schema  (GdaMetaStruct *mstruct,
 							const GValue *catalog, const GValue *schema, GError **error);
 gboolean            gda_meta_struct_complement_default (GdaMetaStruct *mstruct, GError **error);
+gboolean            gda_meta_struct_complement_all     (GdaMetaStruct *mstruct, GError **error);
 gboolean            gda_meta_struct_complement_depend  (GdaMetaStruct *mstruct, GdaMetaDbObject *dbo,
 							GError **error);
 

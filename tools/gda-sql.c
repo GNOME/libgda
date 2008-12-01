@@ -1378,7 +1378,44 @@ list_all_dsn (MainData *data)
 static GdaDataModel *
 list_all_providers (MainData *data)
 {
-	return gda_config_list_providers ();
+	GdaDataModel *prov_list, *model;
+	gint i, nrows;
+
+	prov_list = gda_config_list_providers ();
+	
+	model = gda_data_model_array_new_with_g_types (2,
+						       G_TYPE_STRING,
+						       G_TYPE_STRING);
+	gda_data_model_set_column_title (model, 0, _("Provider"));
+	gda_data_model_set_column_title (model, 1, _("Description"));
+	g_object_set_data (G_OBJECT (model), "name", _("Installed providers list"));
+	
+	nrows = gda_data_model_get_n_rows (prov_list);
+	for (i =0; i < nrows; i++) {
+		const GValue *value;
+		GList *list = NULL;
+		value = gda_data_model_get_value_at (prov_list, 0, i, NULL);
+		if (!value)
+			goto onerror;
+		list = g_list_append (list, gda_value_copy (value));
+		value = gda_data_model_get_value_at (prov_list, 1, i, NULL);
+		if (!value)
+			goto onerror;
+		list = g_list_append (list, gda_value_copy (value));
+		
+		if (gda_data_model_append_values (model, list, NULL) == -1)
+			goto onerror;
+		
+		g_list_foreach (list, (GFunc) gda_value_free, NULL);
+		g_list_free (list);
+	}
+	g_object_unref (prov_list);
+	return model;
+ onerror:
+	g_warning ("Could not obtain the list of database providers");
+	g_object_unref (prov_list);
+	g_object_unref (model);
+	return NULL;
 }
 
 static gchar **args_as_string_func (const gchar *str);

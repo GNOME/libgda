@@ -508,8 +508,8 @@ gda_internal_command_list_tables (GdaConnection *cnc, const gchar **args, GError
 		GValue *v;
 		const gchar *sql = "SELECT table_schema AS Schema, table_name AS Name, table_type as Type, "
 			"table_owner as Owner, table_comments as Description "
-			"FROM _tables WHERE table_name=##tname::string AND "
-			"table_type LIKE '%TABLE%' AND table_short_name = table_name "
+			"FROM _tables WHERE table_short_name=##tname::string AND "
+			"table_type LIKE '%TABLE%' "
 			"ORDER BY table_schema, table_name";
 
 		gchar *tmp = gda_sql_identifier_remove_quotes (g_strdup (args[0]));
@@ -520,7 +520,7 @@ gda_internal_command_list_tables (GdaConnection *cnc, const gchar **args, GError
 	else {
 		const gchar *sql = "SELECT table_schema AS Schema, table_name AS Name, table_type as Type, "
 			"table_owner as Owner, table_comments as Description "
-			"FROM _tables WHERE table_type LIKE '%TABLE%' AND table_short_name = table_name "
+			"FROM _tables WHERE table_type LIKE '%TABLE%' "
 			"ORDER BY table_schema, table_name";
 		model = gda_meta_store_extract (gda_connection_get_meta_store (cnc), sql, error);
 	}
@@ -551,8 +551,8 @@ gda_internal_command_list_views (GdaConnection *cnc, const gchar **args, GError 
 		GValue *v;
 		const gchar *sql = "SELECT table_schema AS Schema, table_name AS Name, table_type as Type, "
 			"table_owner as Owner, table_comments as Description "
-			"FROM _tables WHERE table_name=##tname::string AND "
-			"table_type = 'VIEW' AND table_short_name = table_name "
+			"FROM _tables WHERE table_short_name=##tname::string AND "
+			"table_type = 'VIEW' "
 			"ORDER BY table_schema, table_name";
 
 		g_value_set_string (v = gda_value_new (G_TYPE_STRING), args[0]);
@@ -562,7 +562,7 @@ gda_internal_command_list_views (GdaConnection *cnc, const gchar **args, GError 
 	else {
 		const gchar *sql = "SELECT table_schema AS Schema, table_name AS Name, table_type as Type, "
 			"table_owner as Owner, table_comments as Description "
-			"FROM _tables WHERE table_type='VIEW' AND table_short_name = table_name "
+			"FROM _tables WHERE table_type='VIEW' "
 			"ORDER BY table_schema, table_name";
 		model = gda_meta_store_extract (gda_connection_get_meta_store (cnc), sql, error);
 	}
@@ -631,9 +631,18 @@ gda_internal_command_build_meta_struct (GdaConnection *cnc, const gchar **args, 
 	mstruct = gda_meta_struct_new (store, GDA_META_STRUCT_FEATURE_ALL);
 
 	if (!args[0]) {
-		/* use all tables or views */
+		GSList *list;
+		/* use all tables or views visible by default */
 		if (!gda_meta_struct_complement_default (mstruct, error))
 			goto onerror;
+		list = gda_meta_struct_get_all_db_objects (mstruct);
+		if (!list) {
+			/* use all tables or views visible or not by default */
+			if (!gda_meta_struct_complement_all (mstruct, error))
+				goto onerror;
+		}
+		else
+			g_slist_free (list);
 	}
 
 	for (index = 0, arg = args[0]; arg; index++, arg = args[index]) {
@@ -714,12 +723,21 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 	}
 
 	if (!args[0] || !*args[0]) {
+		/* FIXME: include indexes and sequences when they are present in the information schema */
 		/* displays all tables, views, indexes and sequences which are "directly visible" */
 		const gchar *sql = "SELECT table_schema AS Schema, table_name AS Name, table_type as Type, "
 			"table_owner as Owner FROM _tables WHERE table_short_name = table_name "
 			"ORDER BY table_schema, table_name";
-		/* FIXME: include indexes and sequences when they are present in the information schema */
 		model = gda_meta_store_extract (gda_connection_get_meta_store (cnc), sql, error, NULL);
+
+		/* if no row, then return all the objects from all the schemas */
+		if (model && (gda_data_model_get_n_rows (model) == 0)) {
+			g_object_unref (model);
+			sql = "SELECT table_schema AS Schema, table_name AS Name, table_type as Type, "
+			"table_owner as Owner FROM _tables "
+			"ORDER BY table_schema, table_name";
+			model = gda_meta_store_extract (gda_connection_get_meta_store (cnc), sql, error, NULL);
+		}
 		res = g_new0 (GdaInternalCommandResult, 1);
 		res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
 		res->u.model = model;
@@ -764,7 +782,7 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 			val = gda_value_new (G_TYPE_STRING);
 			switch (dbo->obj_type) {
 			case GDA_META_DB_TABLE:
-				g_value_set_string (val, "BASE TABLE");
+				g_value_set_string (val, "TABLE");
 				break;
 			case GDA_META_DB_VIEW:
 				g_value_set_string (val, "VIEW");

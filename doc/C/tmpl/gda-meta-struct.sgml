@@ -321,6 +321,16 @@ gda_meta_struct_free (mstruct);
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_meta_struct_complement_all ##### -->
+<para>
+
+</para>
+
+@mstruct: 
+@error: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_meta_struct_complement_depend ##### -->
 <para>
 

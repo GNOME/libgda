@@ -122,7 +122,7 @@ jni_wrapper_create_vm (JavaVM **out_jvm, CreateJavaVMFunc create_func,
 
 	if (g_getenv ("GDA_JAVA_OPTION")) {
 		const gchar *opt = g_getenv ("GDA_JAVA_OPTION");
-		options[vm_args.nOptions].optionString = opt;
+		options[vm_args.nOptions].optionString = (gchar*) opt;
 		vm_args.nOptions++;
 	}
 	vm_args.version = JNI_VERSION_1_2;
@@ -361,7 +361,8 @@ jni_wrapper_handle_exception (JNIEnv *jenv, gint *out_error_code, gchar **out_sq
 					g_free (res);
 				}
 				else {
-					g_value_unset (res);
+					if (G_VALUE_TYPE (res) != 0) /* GDA_TYPE_NULL */
+						g_value_unset (res);
 					g_free (res);
 					goto fallback;
 				}
@@ -483,17 +484,28 @@ jni_wrapper_method_call (JNIEnv *jenv, JniWrapperMethod *method, GValue *object,
 		if (!strcmp (method->ret_type, "Ljava/lang/String;")) {
 			jstring string;
 			gchar *str;
-			gint len;
 			if (method->is_static)
 				string = (*jenv)->CallStaticObjectMethodV (jenv, method->klass, 
 									   method->mid, args);
 			else
 				string = (*jenv)->CallObjectMethodV (jenv, jobj, method->mid, args);
 			if (string) {
+				gint len, ulen;
 				g_value_init (retval, G_TYPE_STRING);
 				len = (*jenv)->GetStringUTFLength (jenv, string);
+				if ((*jenv)->ExceptionCheck (jenv))
+					break;
+				ulen = (*jenv)->GetStringLength (jenv, string);
+				if ((*jenv)->ExceptionCheck (jenv))
+					break;
 				str = g_new (gchar, len + 1);
-				(*jenv)->GetStringUTFRegion (jenv, string, 0, len, str);
+				str [len] = 0;
+				if (ulen > 0)
+					(*jenv)->GetStringUTFRegion (jenv, string, 0, ulen, str);
+				if ((*jenv)->ExceptionCheck (jenv)) {
+					g_free (str);
+					break;
+				}
 				g_value_take_string (retval, str);
 
 				(*jenv)-> DeleteLocalRef (jenv, string);
@@ -688,16 +700,28 @@ jni_wrapper_field_get (JNIEnv *jenv, JniWrapperField *field, GValue *object, GEr
 		if (!strcmp (field->type, "Ljava/lang/String;")) {
 			jstring string;
 			gchar *str;
-			gint len;
 			if (field->is_static)
 				string = (*jenv)->GetStaticObjectField (jenv, field->klass, field->fid);
 			else
 				string = (*jenv)->GetObjectField (jenv, jobj, field->fid);
 			if (string) {
+				gint len, ulen;
 				g_value_init (retval, G_TYPE_STRING);
 				len = (*jenv)->GetStringUTFLength (jenv, string);
+				if ((*jenv)->ExceptionCheck (jenv))
+					break;
+				ulen = (*jenv)->GetStringLength (jenv, string);
+				if ((*jenv)->ExceptionCheck (jenv))
+					break;
+				
 				str = g_new (gchar, len + 1);
-				(*jenv)->GetStringUTFRegion (jenv, string, 0, len, str);
+				str [len] = 0;
+				if (ulen > 0)
+					(*jenv)->GetStringUTFRegion (jenv, string, 0, ulen, str);
+				if ((*jenv)->ExceptionCheck (jenv)) {
+					g_free (str);
+					break;
+				}
 				g_value_take_string (retval, str);
 
 				(*jenv)-> DeleteLocalRef (jenv, string);

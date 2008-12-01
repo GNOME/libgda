@@ -139,6 +139,7 @@ gda_jdbc_recordset_get_type (void)
 	return type;
 }
 
+/* Same as GdaJValue::jdbc_type_to_g_type */
 static GType
 jdbc_type_to_g_type (gint jdbc_type)
 {
@@ -409,7 +410,7 @@ fetch_next_jdbc_row (GdaJdbcRecordset *model, JNIEnv *jenv, gboolean do_store, G
 	jexec_res = jni_wrapper_method_call (jenv, GdaJResultSet__fillNextRow,
 					     model->priv->rs_value, &error_code, &sql_state, &lerror, (jlong) prow);
 	if (!jexec_res) {
-		if (lerror)
+		if (error && lerror)
 			*error = g_error_copy (lerror);
 		_gda_jdbc_make_error (model->priv->cnc, error_code, sql_state, lerror);
 		return NULL;

@@ -1,3 +1,20 @@
+2008-12-01  Vivien Malerba <malerba@gnome-db.org>
+
+	* tools/gda-sql.c: simplified the result of the -L option (now only returns the
+	provider name and its description for each installed provider)
+	* tools/command-exec.c:
+	  - corrections when listing tables or views
+	  - if no object is found in the default "search path", then it is also
+	    looked up in all the schemas
+	* tools/tools-input.c: correclty handle history
+	* providers/jdbc/*:
+	  - JNI related bug fixes
+	  - meta data now also retreives table's columns information
+	  - added some code specific to Apache Derby
+	* libgda/gda-connection.c:
+	* libgda/gda-meta-struct.c: replace "='BASE TABLE'" with "LIKE '%TABLE%'"
+	* libgda/gda-meta-struct.[ch]: added gda_meta_struct_complement_all()
+
 2008-11-29  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-config.c: shared libraries corresponding to providers' implementations
