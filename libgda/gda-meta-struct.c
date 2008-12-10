@@ -414,10 +414,10 @@ get_user_obj_name (const GValue *catalog, const GValue *schema, const GValue *na
  *
  * If @catalog is not %NULL, then @schema should not be %NULL.
  *
- * If @catalog is %NULL and @schema is not %NULL, then the database object will be the one which is
+ * If both @catalog and @schema are %NULL, then the database object will be the one which is
  * "visible" by default (that is which can be accessed only by its short @name name).
  *
- * If both @catalog and @schema are %NULL, then the database object will be the one which 
+ * If @catalog is %NULL and @schema is not %NULL, then the database object will be the one which 
  * can be accessed by its @schema.@name name.
  *
  * Important note: @catalog, @schema and @name must respect the following convention:
@@ -861,8 +861,8 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 								  "ts", ischema, 
 								  "tname", iname, 
 								  "cname", cvalue, NULL);
-				g_print ("tname=%s cvalue=%s\n", gda_value_stringify (iname),
-					 gda_value_stringify (cvalue));
+				/*g_print ("tname=%s cvalue=%s\n", gda_value_stringify (iname),
+				  gda_value_stringify (cvalue));*/
 
 				cvalue = gda_data_model_get_value_at (model, 4, i, error);
 				if (!cvalue) goto onfkerror;
@@ -871,8 +871,8 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 								      "ts", fk_schema,
 								      "tname", fk_name,
 								      "cname", cvalue, NULL);
-				g_print ("tname=%s cvalue=%s\n", gda_value_stringify (fk_name),
-					 gda_value_stringify (cvalue));
+				/*g_print ("tname=%s cvalue=%s\n", gda_value_stringify (fk_name),
+				  gda_value_stringify (cvalue));*/
 				
 				if (fk_cols && ref_pk_cols) {
 					gint fk_nrows, ref_pk_nrows;

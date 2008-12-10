@@ -23,6 +23,7 @@ gda_list_config_4_0_LDADD = \
 
 gda_sql_4_0_SOURCES = \
         gda-sql.c \
+	gda-sql.h \
 	tools-input.h \
 	tools-input.c \
 	command-exec.h \
@@ -33,6 +34,12 @@ gda_sql_4_0_LDADD = \
         $(LIBGDA_LIBS) \
 	$(READLINE_LIB) \
         $(HISTORY_LIB)
+
+if LIBSOUP
+gda_sql_4_0_SOURCES += web-server.h web-server.c html-doc.h html-doc.c
+AM_CPPFLAGS += $(LIBSOUP_CFLAGS)
+gda_sql_4_0_LDADD += $(LIBSOUP_LIBS)
+endif
 
 
 

@@ -28,6 +28,7 @@
 #ifndef G_OS_WIN32
 #include <sys/ioctl.h>
 #endif
+#include <libgda/gda-debug-macros.h>
 
 #ifdef HAVE_READLINE
 #include <readline/readline.h>
@@ -38,8 +39,10 @@
 
 #define HISTORY_ENV_NAME "GDA_SQL_HISTFILE"
 #define HISTORY_FILE ".gdasql_history"
+#ifdef HAVE_HISTORY
 static gboolean history_init_done = FALSE;
 const gchar *history_file = NULL;
+#endif
 
 /**
  * input_from_console
@@ -95,18 +98,99 @@ input_from_stream  (FILE *stream)
 	}
 }
 
+static TreatLineFunc line_cb_func = NULL;
+static gpointer      line_cb_func_data = NULL;
+static ComputePromptFunc line_prompt_func = NULL;
+static GIOChannel *ioc = NULL;
+
+static gboolean
+chars_for_readline_cb (GIOChannel *ioc, GIOCondition condition, gpointer data)
+{
+#ifdef HAVE_READLINE
+        rl_callback_read_char ();
+#else
+	gchar *line; 
+	gsize tpos;
+	GError *error = NULL;
+	GIOStatus st;
+	st = g_io_channel_read_line (ioc, &line, NULL, &tpos, &error);
+	switch (st) {
+	case G_IO_STATUS_NORMAL:
+		line [tpos] = 0;
+		if (line_cb_func (line, line_cb_func_data) == TRUE) {
+			/* print prompt for next line */
+			g_print ("%s", line_prompt_func ());
+		}
+		g_free (line);
+		break;
+	case G_IO_STATUS_ERROR:
+		g_warning ("Error reading from STDIN: %s\n",
+			   error && error->message ? error->message : _("No detail"));
+		if (error)
+			g_error_free (error);
+		break;
+	case G_IO_STATUS_EOF:
+		/* send the Quit command */
+		line_cb_func (".q", line_cb_func_data);
+		return FALSE;
+		break;
+	default:
+		break;
+	}
+#endif
+        return TRUE;
+}
+
+#ifdef HAVE_READLINE
+static void
+line_read_handler (char *line)
+{
+	line_cb_func (line, line_cb_func_data); /* we don't care about the return status */
+        free (line);
+	rl_set_prompt (line_prompt_func ());
+}
+#endif
+
 /**
  * init_input
  *
  * Initializes input
  */
 void
-init_input ()
+init_input (TreatLineFunc treat_line_func, ComputePromptFunc prompt_func, gpointer data)
 {
-#ifdef HAVE_READLINE	
+	line_cb_func = treat_line_func;
+	line_cb_func_data = data;
+	line_prompt_func = prompt_func;
+
+#ifdef HAVE_READLINE
 	rl_set_signals ();
 	rl_readline_name = "gda-sql";
+	rl_callback_handler_install (prompt_func () ,  line_read_handler);
+#else
+	g_print ("%s", line_prompt_func ());
 #endif
+	if (!ioc) {
+		ioc = g_io_channel_unix_new (STDIN_FILENO);
+		g_io_add_watch (ioc, G_IO_IN | G_IO_ERR | G_IO_HUP | G_IO_NVAL, (GIOFunc) chars_for_readline_cb, NULL);
+	}
+}
+
+/**
+ * end_input
+ *
+ * Releases any data related to the input and allocated during init_input()
+ */
+void
+end_input (void)
+{
+#ifdef HAVE_READLINE
+	rl_callback_handler_remove ();
+#endif
+	if (ioc) {
+		g_io_channel_shutdown (ioc, TRUE, NULL);
+		g_io_channel_unref (ioc);
+	}
 }
 
 /**

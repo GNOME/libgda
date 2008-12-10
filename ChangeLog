@@ -1,3 +1,27 @@
+2008-12-10  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/libgda.symbols:
+	* libgda/Makefile.am:
+	* libgda-report/libgda-report.symbols:
+	* libgda-report/Makefile.am:
+	  - use a DEF file on Windows to only export the
+	    correct symbols (in the initialized data and the text (code) sections)
+	  - create import libraries (.lib) files
+	* tools-input.[ch]:
+	* tools/gda-sql.c: use a main loop for characters input notification instead of
+	locking on a readline function
+	* configure.in
+	* tools/Makefile.am
+	* tools/html-doc.[ch]
+	* tools/web-server.[ch]: optionnally run a small embedded web server (if
+	libsoup is installed) to display meta data information in a browser
+	* libgda/gda-easy.[ch]: applied patch from Daniel Espinosa for bug #529794
+	* libgda/gda-data-model.c: calling gda_data_model_dump() with a NULL FILE*
+	now prints to stdout
+	* libgda/gda-meta-struct.c:
+	  - removed debug messages
+	  - better API documentation
+
 2008-12-01  Vivien Malerba <malerba@gnome-db.org>
 
 	* tools/gda-sql.c: simplified the result of the -L option (now only returns the

@@ -163,6 +163,8 @@ case "$host" in
     linklibext=".dll.a"
     AC_CHECK_TOOL(WINDRES, windres, windres)
     AC_SUBST(WINDRES)
+    AC_CHECK_TOOL(DLLTOOL, dlltool, dlltool)
+    AC_SUBST(DLLTOOL)
     ;;
 *-*-darwin*)
     dnl Darwin based distributions (including Mac OS X)
@@ -1323,6 +1325,19 @@ AM_CONDITIONAL(JAVA, test x$have_java = xyes)
 CFLAGS="$save_CFLAGS"
 LIBS="$save_LIBS"
 export LD_LIBRARY_PATH="$save_LD_LIBRARY_PATH"
+
+dnl ************************
+dnl Check for libsoup
+dnl ************************
+PKG_CHECK_MODULES(LIBSOUP, libsoup-2.4, have_libsoup=yes, have_libsoup=no)
+AM_CONDITIONAL(LIBSOUP, test x"$have_libsoup" = "xyes")
+if test x"$have_libsoup" = "xyes"
+then
+        LIBSOUP_CFLAGS="$LIBSOUP_CFLAGS -DHAVE_LIBSOUP"
+fi
+AC_SUBST(LIBSOUP_CFLAGS)
+AC_SUBST(LIBSOUP_LIBS)
+
 
 dnl **************************
 dnl Check for readline/history

@@ -252,6 +252,20 @@ gda_execute_non_select_command (GdaConnection *cnc, const gchar *sql, GError **e
  * @...: group of three arguments for column's name, column's #GType 
  * and a #GdaEasyCreateTableFlag flag, finished with NULL
  * 
+ * Add more arguments if the flag needs then: 
+ *
+ * GDA_EASY_CREATE_TABLE_FKEY_FLAG:
+ * <itemizedlist>
+ *   <listitem><para>string with the table's name referenced</para></listitem>
+ *   <listitem><para>an integer with the number pairs "local_field", "referenced_field" 
+ *   used in the reference</para></listitem>
+ *   <listitem><para>Pairs of "local_field", "referenced_field" to use, must match
+ *    the number specified above.</para></listitem>
+ *   <listitem><para>a string with the action for ON DELETE; can be: "RESTRICT", "CASCADE", 
+ *    "NO ACTION", "SET NULL" and "SET DEFAULT". Example: "ON UPDATE CASCADE".</para></listitem>
+ *   <listitem><para>a string with the action for ON UPDATE (see above).</para></listitem>
+ * </itemizedlist> 
+ * 
  * Create a #GdaServerOperation object using an opened connection, taking three 
  * arguments, a colum's name the column's GType and #GdaEasyCreateTableFlag 
  * flag, you need to finish the list using NULL.
@@ -286,7 +300,8 @@ gda_prepare_create_table (GdaConnection *cnc, const gchar *table_name, GError **
 		gchar   *dbms_type;
 		GdaEasyCreateTableFlag flag;
 		gint i;
-	
+		gint refs;
+
 		op = gda_server_provider_create_operation (server, cnc, 
 							   GDA_SERVER_OPERATION_CREATE_TABLE, NULL, error);
 		gda_server_operation_set_value_at (op, table_name, error, "/TABLE_DEF_P/TABLE_NAME");
@@ -295,6 +310,7 @@ gda_prepare_create_table (GdaConnection *cnc, const gchar *table_name, GError **
 		type = 0;
 		arg = NULL;
 		i = 0;
+		refs = -1;
 		
 		while ((arg = va_arg (args, gchar*))) {
 			/* First argument for Column's name */			
@@ -320,6 +336,42 @@ gda_prepare_create_table (GdaConnection *cnc, const gchar *table_name, GError **
 				gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_NNUL/%d", i);
 			if (flag & GDA_EASY_CREATE_TABLE_AUTOINC_FLAG)
 				gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_AUTOINC/%d", i);
+			if (flag & GDA_EASY_CREATE_TABLE_FKEY_FLAG) {
+				gint j;
+				gint fields;
+				gchar *fkey_table;
+				gchar *fkey_ondelete;
+				gchar *fkey_onupdate;
+				
+				refs++;
+				
+				fkey_table = va_arg (args, gchar*);				
+				gda_server_operation_set_value_at (op, fkey_table, error, 
+								   "/FKEY_S/%d/FKEY_REF_TABLE", refs);
+				
+				fields = va_arg (args, gint);
+				
+				for (j = 0; j < fields; j++) {
+					gchar *field, *rfield;
+					
+					field = va_arg (args, gchar*);				
+					gda_server_operation_set_value_at (op, field, error, 
+									   "/FKEY_S/%d/FKEY_FIELDS_A/@FK_FIELD/%d", refs, j);
+					
+					rfield = va_arg (args, gchar*);
+					gda_server_operation_set_value_at (op, rfield, error, 
+									   "/FKEY_S/%d/FKEY_FIELDS_A/@FK_REF_PK_FIELD/%d", refs, j);
+					
+				}
+				
+				fkey_ondelete = va_arg (args, gchar*);
+				gda_server_operation_set_value_at (op, fkey_ondelete, error, 
+								   "/FKEY_S/%d/FKEY_ONDELETE", refs);
+				fkey_onupdate = va_arg (args, gchar*);
+				gda_server_operation_set_value_at (op, fkey_onupdate, error, 
+								   "/FKEY_S/%d/FKEY_ONUPDATE", refs);
+			}
+			
 			i++;
 		}
 	

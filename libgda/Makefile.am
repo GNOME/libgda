@@ -5,6 +5,7 @@ SUBDIRS = sqlite handlers binreloc sql-parser providers-support
 if BDB 
 GDA_BDB_H=gda-data-model-bdb.h
 GDA_BDB_S=gda-data-model-bdb.c
+DEF_FLAGS=-DHAVE_BDB
 endif
 
 AM_CPPFLAGS = \
@@ -191,6 +192,28 @@ libgda_4_0_la_LIBADD = \
 	$(LIBGDA_LIBS) $(FAM_LIBS) \
 	$(BDB_LIBS) $(GIO_LIBS) $(GNOMEVFS_LIBS) 
 
+if PLATFORM_WIN32
+libgda_4_0_la_LDFLAGS += -export-symbols $(srcdir)/libgda.def
+libgda_4_0_la_DEPENDENCIES = libgda.def
+
+libgda.def: libgda.symbols
+	(echo -e EXPORTS; $(CPP) -P $(DEF_FLAGS) - <$(srcdir)/libgda.symbols | sed -e '/^$$/d' -e 's/^/ /' -e 's/G_GNUC_[^ ]*//g' | sort) > libgda.def.tmp && mv libgda.def.tmp libgda.def
+
+libgda-$(GDA_ABI_VERSION).lib: libgda.def
+	$(DLLTOOL) --dllname libgda-$(GDA_ABI_VERSION)-$(GDA_CURRENT).dll --def libgda.def --output-lib libgda-$(GDA_ABI_VERSION).lib
+
+install-data-local: install-def-files
+uninstall-local: uninstall-def-files
+
+install-def-files: libgda.def libgda-$(GDA_ABI_VERSION).lib
+	$(INSTALL) $(srcdir)/libgda.def $(DESTDIR)$(libdir)/libgda-$(GDA_ABI_VERSION).def
+	$(INSTALL) $(srcdir)/libgda-$(GDA_ABI_VERSION).lib $(DESTDIR)$(libdir)/
+
+uninstall-def-files:
+	-rm $(DESTDIR)$(libdir)/libgda-$(GDA_ABI_VERSION).def
+	-rm $(DESTDIR)$(libdir)/libgda-$(GDA_ABI_VERSION).lib
+endif
+
 gdaincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda
 gdainclude_HEADERS=$(libgda_built_headers) $(gda_headers)
 
@@ -199,7 +222,9 @@ CLEANFILES = $(libgda_built_headers) $(libgda_built_cfiles) \
 	gda-enum-types.h \
 	s-enum-types-h \
 	gda-enum-types.c \
-	s-enum-types-c
+	s-enum-types-c \
+	libgda.def \
+	libgda-$(GDA_ABI_VERSION).lib
 
 dist-hook:
 	cd $(distdir); rm -f $(libgda_built_headers) $(libgda_built_cfiles)
@@ -213,6 +238,7 @@ dtd_DATA=$(DTD_FILES)
 EXTRA_DIST = \
 	$(DTD_FILES) \
 	$(xml_DATA) \
-	gda-marshal.list
+	gda-marshal.list \
+	libgda.symbols
 
 DISTCLEANFILES  = .deps/*.P

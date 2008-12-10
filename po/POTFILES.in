@@ -132,4 +132,6 @@ tools/command-exec.c
 tools/gda-list-config.c
 tools/gda-list-server-op.c
 tools/gda-sql.c
+tools/html-doc.c
 tools/tools-input.c
+tools/web-server.c

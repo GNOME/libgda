@@ -1814,7 +1814,8 @@ gda_data_model_dump (GdaDataModel *model, FILE *to_stream)
 	GError *error = NULL;
 
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
-	g_return_if_fail (to_stream);
+	if (!to_stream)
+		to_stream = stdout;
 
 	if (getenv ("GDA_DATA_MODEL_DUMP_ATTRIBUTES")) 
 		dump_attrs = TRUE;

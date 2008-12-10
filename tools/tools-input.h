@@ -25,13 +25,16 @@
 #include <stdio.h>
 #include <glib.h>
 
-typedef char **(*CompletionFunc) (const char *, int, int);
+typedef char       **(*CompletionFunc) (const char *, int, int);
+typedef gboolean     (*TreatLineFunc) (const gchar *, gpointer);
+typedef const  char *(*ComputePromptFunc) (void);
 
 gchar   *input_from_console (const gchar *prompt);
 gchar   *input_from_stream  (FILE *stream);
 
-void     init_input ();
+void     init_input (TreatLineFunc treat_line_func, ComputePromptFunc prompt_func, gpointer data);
 void     input_get_size (gint *width, gint *height);
+void     end_input (void);
 
 void     init_history ();
 void     add_to_history (const gchar *txt);

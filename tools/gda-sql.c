@@ -19,8 +19,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <libgda/libgda.h>
-#include <sql-parser/gda-sql-parser.h>
+#include "gda-sql.h"
 #include <virtual/libgda-virtual.h>
 #include <glib/gi18n-lib.h>
 #include <glib/gprintf.h>
@@ -49,6 +48,10 @@
 #include <readline/readline.h>
 #endif
 
+#ifdef HAVE_LIBSOUP
+#include "web-server.h"
+#endif
+
 /* options */
 gboolean ask_pass = FALSE;
 
@@ -62,6 +65,10 @@ gboolean list_providers = FALSE;
 gchar *outfile = NULL;
 gboolean has_threads;
 
+#ifdef HAVE_LIBSOUP
+gint http_port = -1;
+#endif
+
 static GOptionEntry entries[] = {
         { "no-password-ask", 'p', 0, G_OPTION_ARG_NONE, &ask_pass, "Don't ask for a password when it is empty", NULL },
 
@@ -71,6 +78,9 @@ static GOptionEntry entries[] = {
 	{ "interractive", 'i', 0, G_OPTION_ARG_NONE, &interractive, "Keep the console opened after executing a file (-f option)", NULL },
         { "list-dsn", 'l', 0, G_OPTION_ARG_NONE, &list_configs, "List configured data sources and exit", NULL },
         { "list-providers", 'L', 0, G_OPTION_ARG_NONE, &list_providers, "List installed database providers and exit", NULL },
+#ifdef HAVE_LIBSOUP
+	{ "http-port", 's', 0, G_OPTION_ARG_INT, &http_port, "Run embedded HTTP server on specified port", "port" },
+#endif
         { NULL }
 };
 
@@ -93,19 +103,6 @@ typedef enum {
 	OUTPUT_FORMAT_CSV
 } OutputFormat;
 
-/*
- * structure representing an opened connection
- */
-typedef struct {
-	gchar         *name;
-	GdaConnection *cnc;
-	GdaSqlParser  *parser;
-	GString       *query_buffer;
-
-	GdaThreader   *threader;
-	guint          meta_job_id;
-} ConnectionSetting;
-
 /* structure to hold program's data */
 typedef struct {
 	GSList *settings; /* list all the CncSetting */
@@ -120,11 +117,15 @@ typedef struct {
 	GString *partial_command;
 
 	GHashTable *parameters; /* key = name, value = G_TYPE_STRING GdaParameter */
+
+#ifdef HAVE_LIBSOUP
+	WebServer *server;
+#endif
 } MainData;
 MainData *main_data;
 GString *prompt = NULL;
+GMainLoop *main_loop = NULL;
 
-static gchar   *read_a_line (MainData *data);
 static char   **completion_func (const char *text, int start, int end);
 static void     compute_prompt (MainData *data, GString *string, gboolean in_command);
 static gboolean set_output_file (MainData *data, const gchar *file, GError **error);
@@ -136,6 +137,10 @@ static ConnectionSetting *open_connection (MainData *data, const gchar *cnc_name
 static void connection_settings_free (ConnectionSetting *cs);
 static GdaDataModel *list_all_dsn (MainData *data);
 static GdaDataModel *list_all_providers (MainData *data);
+
+static gboolean treat_line_func (const gchar *cmde, MainData *data);
+static const char *prompt_func (void);
+
 
 /* commands manipulation */
 static GdaInternalCommandsList  *build_internal_commands_list (MainData *data);
@@ -270,91 +275,154 @@ main (int argc, char *argv[])
 	/* build internal command s list */
 	data->internal_commands = build_internal_commands_list (data);
 
-	/* loop over commands */
-	setup_sigint_handler ();
-	init_input ();
-	set_completion_func (completion_func);
-	init_history ();
-	for (;;) {
+#ifdef HAVE_LIBSOUP
+	/* start HTTP server if requested */
+	if (http_port > 0) {
+		main_data->server = web_server_new (http_port);
+		if (!main_data->server) {
+			g_print (_("Can't run HTTP server on port %d\n"), http_port);
+			exit_status = EXIT_FAILURE;
+			goto cleanup;
+		}
+	}
+#endif
+
+	/* process commands which need to be executed as specified by the command line args */
+	if (single_command) {
+		treat_line_func (single_command, data);
+		if (!data->output_stream)
+			g_print ("\n");
+		goto cleanup;
+	}
+
+	if (data->input_stream) {
 		gchar *cmde;
-
-		/* run any pending iterations */
-		while (g_main_context_iteration (NULL, FALSE));
-
-		cmde = read_a_line (data);
-		if (!cmde) {
-			save_history (NULL, NULL);
+		for (;;) {
+			cmde = input_from_stream (data->input_stream);
+			if (cmde) {
+				treat_line_func (cmde, data);
+				g_free (cmde);
+			}
+			else
+				break;
+		}
+		if (interractive && !cmde && isatty (fileno (stdin)))
+			set_input_file (data, NULL, NULL);
+		else {
 			if (!data->output_stream)
 				g_print ("\n");
 			goto cleanup;
 		}
-
-		g_strchug (cmde);
-		if (*cmde) {
-			if (!data->partial_command) {
-				/* enable SIGINT handling */
-				sigint_handler_status = SIGINT_HANDLER_PARTIAL_COMMAND;
-				data->partial_command = g_string_new (cmde);
-			}
-			else {
-				g_string_append_c (data->partial_command, ' ');
-				g_string_append (data->partial_command, cmde);
-			}
-			if (command_is_complete (data->partial_command->str)) {
-				/* execute command */
-				GdaInternalCommandResult *res;
-				FILE *to_stream;
-
-				if ((*data->partial_command->str != '\\') && (*data->partial_command->str != '.')) {
-					if (data->current) {
-						if (!data->current->query_buffer)
-							data->current->query_buffer = g_string_new ("");
-						g_string_assign (data->current->query_buffer, data->partial_command->str);
-					}
-				}
-
-				if (data && data->output_stream)
-					to_stream = data->output_stream;
-				else
-					to_stream = stdout;
-				res = command_execute (data, data->partial_command->str, &error);
-				
-				if (!res) {
-					g_fprintf (to_stream,
-						   "ERROR: %s\n", 
-						   error && error->message ? error->message : _("No detail"));
-					if (error) {
-						g_error_free (error);
-						error = NULL;
-					}
-				}
-				else {
-					display_result (data, res);
-					if (res->type == GDA_INTERNAL_COMMAND_RESULT_EXIT) {
-						gda_internal_command_exec_result_free (res);
-						goto cleanup;
-					}
-					gda_internal_command_exec_result_free (res);
-				}
-				g_string_free (data->partial_command, TRUE);
-				data->partial_command = NULL;
-				
-				/* disable SIGINT handling */
-				sigint_handler_status = SIGINT_HANDLER_DISABLED;
-			}
-		}
-		g_free (cmde);
 	}
-	
-	/* cleanups */
+
+	/* set up interractive commands */
+	setup_sigint_handler ();
+	init_input ((TreatLineFunc) treat_line_func, prompt_func, data);
+	set_completion_func (completion_func);
+	init_history ();
+
+	/* run main loop */
+	main_loop = g_main_loop_new (NULL, TRUE);
+	g_main_loop_run (main_loop);		
+	g_main_loop_unref (main_loop);
+
+
  cleanup:
+	/* cleanups */
 	g_slist_foreach (data->settings, (GFunc) connection_settings_free, NULL);
 	set_input_file (data, NULL, NULL); 
 	set_output_file (data, NULL, NULL); 
+	end_input ();
 
 	g_free (data);
 
 	return EXIT_SUCCESS;
+}
+
+static const char *
+prompt_func (void)
+{
+	/* compute a new prompt */
+	compute_prompt (main_data, prompt, main_data->partial_command == NULL ? FALSE : TRUE);
+	return (char*) prompt->str;
+}
+
+/* @cmde is stolen here */
+static gboolean
+treat_line_func (const gchar *cmde, MainData *data)
+{
+	gchar *loc_cmde = NULL;
+	if (!cmde) {
+		save_history (NULL, NULL);
+		if (!data->output_stream)
+			g_print ("\n");
+		goto exit;
+	}
+	
+	loc_cmde = g_strdup (cmde);
+	g_strchug (loc_cmde);
+	if (*loc_cmde) {
+		add_to_history (loc_cmde);
+		if (!data->partial_command) {
+			/* enable SIGINT handling */
+			sigint_handler_status = SIGINT_HANDLER_PARTIAL_COMMAND;
+			data->partial_command = g_string_new (loc_cmde);
+		}
+		else {
+			g_string_append_c (data->partial_command, ' ');
+			g_string_append (data->partial_command, loc_cmde);
+		}
+		if (command_is_complete (data->partial_command->str)) {
+			/* execute command */
+			GdaInternalCommandResult *res;
+			FILE *to_stream;
+			GError *error = NULL;
+			
+			if ((*data->partial_command->str != '\\') && (*data->partial_command->str != '.')) {
+				if (data->current) {
+					if (!data->current->query_buffer)
+						data->current->query_buffer = g_string_new ("");
+					g_string_assign (data->current->query_buffer, data->partial_command->str);
+				}
+			}
+			
+			if (data && data->output_stream)
+				to_stream = data->output_stream;
+			else
+				to_stream = stdout;
+			res = command_execute (data, data->partial_command->str, &error);
+			
+			if (!res) {
+				g_fprintf (to_stream,
+					   "ERROR: %s\n", 
+					   error && error->message ? error->message : _("No detail"));
+				if (error) {
+					g_error_free (error);
+					error = NULL;
+				}
+			}
+			else {
+				display_result (data, res);
+				if (res->type == GDA_INTERNAL_COMMAND_RESULT_EXIT) {
+					gda_internal_command_exec_result_free (res);
+					goto exit;
+				}
+				gda_internal_command_exec_result_free (res);
+			}
+			g_string_free (data->partial_command, TRUE);
+			data->partial_command = NULL;
+			
+			/* disable SIGINT handling */
+			sigint_handler_status = SIGINT_HANDLER_DISABLED;
+		}
+	}
+	g_free (loc_cmde);
+	return TRUE;
+
+ exit:
+	g_free (loc_cmde);
+	g_main_loop_quit (main_loop);
+	return FALSE;
 }
 
 static void
@@ -480,6 +548,8 @@ display_result (MainData *data, GdaInternalCommandResult *res)
 	}
 	case GDA_INTERNAL_COMMAND_RESULT_TXT_STDOUT: 
 		g_print ("%s", res->u.txt->str);
+		if (res->u.txt->str [strlen (res->u.txt->str) - 1] != '\n')
+			g_print ("\n");
 		fflush (NULL);
 		break;
 	case GDA_INTERNAL_COMMAND_RESULT_EMPTY:
@@ -538,39 +608,6 @@ sigint_handler (int sig_num)
 		old_sigint_handler.sa_handler (sig_num);
 }
 #endif
-
-/*
- * read_a_line
- *
- * Read a line to be processed
- */
-static gchar *read_a_line (MainData *data)
-{
-	gchar *cmde;
-
-	if (single_command) {
-		if (*single_command) {
-			cmde = single_command;
-			single_command = "";
-			return cmde;
-		}
-		else
-			return NULL;
-	}
-	compute_prompt (data, prompt, data->partial_command == NULL ? FALSE : TRUE);
-	if (data->input_stream) {
-		cmde = input_from_stream (data->input_stream);
-		if (interractive && !cmde && isatty (fileno (stdin))) {
-			/* go back to console after file is over */
-			set_input_file (data, NULL, NULL);
-			cmde = input_from_console (prompt->str);
-		}
-	}
-	else
-		cmde = input_from_console (prompt->str);
-
-	return cmde;
-}
 
 /*
  * command_is_complete
@@ -772,8 +809,6 @@ execute_external_command (MainData *data, const gchar *command, GError **error)
 
 	return res;
 }
-
-
 
 static void
 compute_prompt (MainData *data, GString *string, gboolean in_command)
@@ -1480,6 +1515,10 @@ static GdaInternalCommandResult *extra_command_unset (GdaConnection *cnc, const 
 
 static GdaInternalCommandResult *extra_command_graph (GdaConnection *cnc, const gchar **args,
 						      GError **error, MainData *data);
+#ifdef HAVE_LIBSOUP
+static GdaInternalCommandResult *extra_command_httpd (GdaConnection *cnc, const gchar **args,
+						      GError **error, MainData *data);
+#endif
 
 static GdaInternalCommandResult *extra_command_lo_update (GdaConnection *cnc, const gchar **args,
 							  GError **error, MainData *data);
@@ -1570,6 +1609,19 @@ build_internal_commands_list (MainData *data)
 	c->arguments_delimiter_func = NULL;
 	c->unquote_args = FALSE;
 	commands->commands = g_slist_prepend (commands->commands, c);
+
+#ifdef HAVE_LIBSOUP
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("Information");
+	c->name = g_strdup_printf (_("%s [port]"), "http");
+	c->description = _("Start/stop embedded HTTP server (on given port or on 12345 by default)");
+	c->args = NULL;
+	c->command_func = (GdaInternalCommandFunc) extra_command_httpd;
+	c->user_data = data;
+	c->arguments_delimiter_func = NULL;
+	c->unquote_args = FALSE;
+	commands->commands = g_slist_prepend (commands->commands, c);
+#endif
 
 	/* specific commands */
 	c = g_new0 (GdaInternalCommand, 1);
@@ -3672,6 +3724,49 @@ extra_command_graph (GdaConnection *cnc, const gchar **args,
 		return NULL;
 }
 
+#ifdef HAVE_LIBSOUP
+static GdaInternalCommandResult *
+extra_command_httpd (GdaConnection *cnc, const gchar **args,
+		     GError **error, MainData *data)
+{
+	GdaInternalCommandResult *res = NULL;
+	if (data->server) {
+		/* stop server */
+		g_object_unref (data->server);
+		data->server = NULL;
+		res = g_new0 (GdaInternalCommandResult, 1);
+		res->type = GDA_INTERNAL_COMMAND_RESULT_TXT_STDOUT;
+		res->u.txt = g_string_new (_("HTTPD server stopped"));
+	}
+	else {
+		/* start new server */
+		gint port = 12345;
+		if (args[0] && *args[0]) {
+			gchar *ptr;
+			port = (gint) strtol (args[0], &ptr, 10);
+			if (ptr && *ptr)
+				port = -1;
+		}
+		if (port > 0) {
+			data->server = web_server_new (port);
+			if (!data->server) 
+				g_set_error (error, 0, 0,
+					     _("Could not start HTTPD server"));
+			else {
+				res = g_new0 (GdaInternalCommandResult, 1);
+				res->type = GDA_INTERNAL_COMMAND_RESULT_TXT_STDOUT;
+				res->u.txt = g_string_new (_("HTTPD server started"));
+			}
+		}
+		else
+			g_set_error (error, 0, 0,
+				     _("Invalid port specification"));
+	}
+
+	return res;
+}
+#endif
+
 #ifdef NONE
 static GdaInternalCommandResult *
 extra_command_lo_update (GdaConnection *cnc, const gchar **args,
@@ -3830,4 +3925,23 @@ completion_func (const char *text, int start, int end)
 #else
 	return NULL;
 #endif
+}
+
+
+const GSList *
+gda_sql_get_all_connections (void)
+{
+	return main_data->settings;
+}
+
+const ConnectionSetting *
+gda_sql_get_connection (const gchar *name)
+{
+	return find_connection_from_name (main_data, name);
+}
+
+const ConnectionSetting *
+gda_sql_get_current_connection (void)
+{
+	return main_data->current;
 }
