@@ -289,7 +289,7 @@ gda_prepare_create_table (GdaConnection *cnc, const gchar *table_name, GError **
 	
 	if (!table_name) {
 		g_set_error (error, GDA_EASY_ERROR, GDA_EASY_OBJECT_NAME_ERROR, 
-			     _("Unspecified table name"));
+			     "%s", _("Unspecified table name"));
 		return NULL;
 	}
 	
@@ -320,7 +320,7 @@ gda_prepare_create_table (GdaConnection *cnc, const gchar *table_name, GError **
 			type = va_arg (args, GType);
 			if (type == 0) {
 				g_set_error (error, GDA_EASY_ERROR, GDA_EASY_INCORRECT_VALUE_ERROR, 
-					     _("Invalid type"));
+					     "%s", _("Invalid type"));
 				g_object_unref (op);
 				return NULL;
 			}
@@ -383,7 +383,7 @@ gda_prepare_create_table (GdaConnection *cnc, const gchar *table_name, GError **
 	}
 	else {
 		g_set_error (error, GDA_EASY_ERROR, GDA_EASY_OBJECT_NAME_ERROR, 
-			     _("CREATE TABLE operation is not supported by the database server"));
+			     "%s", _("CREATE TABLE operation is not supported by the database server"));
 		return NULL;
 	}
 }

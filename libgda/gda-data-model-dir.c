@@ -254,7 +254,7 @@ add_error (GdaDataModelDir *model, const gchar *err)
 {
 	GError *error = NULL;
 
-        g_set_error (&error, 0, 0, err);
+        g_set_error (&error, 0, 0, "%s", err);
         model->priv->errors = g_slist_append (model->priv->errors, error);
 }
 
@@ -792,7 +792,7 @@ gda_data_model_dir_get_value_at (GdaDataModel *model, gint col, gint row, GError
 		tmp = g_strdup_printf (_("Column %d out of range (0-%d)"), col, COL_LAST-1);
 		add_error (imodel, tmp);
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_COLUMN_OUT_OF_RANGE_ERROR,
-			     tmp);
+			      "%s", tmp);
 		g_free (tmp);
 		return NULL;
 	}
@@ -803,7 +803,7 @@ gda_data_model_dir_get_value_at (GdaDataModel *model, gint col, gint row, GError
 				       imodel->priv->rows->len - 1);
 		add_error (imodel, str);
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
-			     str);
+			      "%s", str);
 		g_free (str);
                 return NULL;
         }
@@ -869,7 +869,7 @@ gda_data_model_dir_get_value_at (GdaDataModel *model, gint col, gint row, GError
 	}
 	else
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_NOT_FOUND_ERROR,
-			     _("Row not found"));
+			      "%s", _("Row not found"));
 
 	return value;
 }
@@ -929,7 +929,7 @@ gda_data_model_dir_set_value_at (GdaDataModel *model, gint col, gint row, const 
 		gchar *tmp;
 		tmp = g_strdup_printf (_("Column %d out of range (0-%d)"), col, COL_LAST-1);
 		add_error (imodel, tmp);
-		g_set_error (error, 0, 0, tmp);
+		g_set_error (error, 0, 0, "%s", tmp);
 		g_free (tmp);
 		return FALSE;
 	}
@@ -971,7 +971,7 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
                 str = g_strdup_printf (_("Row %d out of range (0-%d)"), row,
 				       imodel->priv->rows->len - 1);
 		add_error (imodel, str);
-		g_set_error (error, 0, 0, str);
+		g_set_error (error, 0, 0, "%s", str);
 		g_free (str);
                 return FALSE;
         }
@@ -992,7 +992,7 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 		case COL_MD5SUM:
 		default:
 			add_error (imodel, _("Column cannot be modified"));
-			g_set_error (error, 0, 0,
+			g_set_error (error, 0, 0, "%s", 
 				     _("Column cannot be modified"));
 			return FALSE;
 		case COL_DIRNAME: {
@@ -1007,7 +1007,7 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 			if ((len < base_len) ||
 			    (strncmp (new_path, imodel->priv->basedir, base_len))) {
 				add_error (imodel, _("New path must be a subpath of the base directory"));
-				g_set_error (error, 0, 0,
+				g_set_error (error, 0, 0, "%s", 
 					     _("New path must be a subpath of the base directory"));
 				return FALSE;
 			}
@@ -1051,7 +1051,7 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 					str = g_strdup_printf (_("Could not rename file '%s' to '%s'"), 
 							       filename, new_filename);
 					add_error (imodel, str);
-					g_set_error (error, 0, 0, str);
+					g_set_error (error, 0, 0, "%s", str);
 					g_free (str);
 					g_free (new_filename);
 					g_free (filename);
@@ -1074,7 +1074,7 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 				gchar *str;
 				str = g_strdup_printf (_("Could not create directory '%s'"), new_path);
 				add_error (imodel, str);
-				g_set_error (error, 0, 0, str);
+				g_set_error (error, 0, 0, "%s", str);
 				g_free (str);
 				g_free (old_path);
 				return FALSE;
@@ -1094,7 +1094,7 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 				gchar *str;
 				str = g_strdup_printf (_("Could not rename file '%s' to '%s'"), filename, new_filename);
 				add_error (imodel, str);
-				g_set_error (error, 0, 0, str);
+				g_set_error (error, 0, 0, "%s", str);
 				g_free (str);
 				g_free (new_filename);
 				g_free (filename);
@@ -1143,7 +1143,7 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 					gchar *str;
 					str = g_strdup_printf (_("Could not overwrite contents of file '%s'"), filename);
 					add_error (imodel, str);
-					g_set_error (error, 0, 0, str);
+					g_set_error (error, 0, 0, "%s", str);
 					g_free (str);
 					g_object_unref (op);
 					g_free (filename);
@@ -1160,7 +1160,7 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 			}
 			else {
 				add_error (imodel, _("Wrong type of data"));
-				g_set_error (error, 0, 0, _("Wrong type of data"));
+				g_set_error (error, 0, 0, "%s", _("Wrong type of data"));
 				return FALSE;
 			}
 			break;
@@ -1202,7 +1202,7 @@ gda_data_model_dir_append_values (GdaDataModel *model, const GList *values, GErr
 		case COL_MD5SUM:
 		default:
 			add_error (imodel, _("Column cannot be set"));
-			g_set_error (error, 0, 0,
+			g_set_error (error, 0, 0, "%s", 
 				     _("Column cannot be set"));
 			return -1;
 		case COL_DIRNAME:
@@ -1214,7 +1214,7 @@ gda_data_model_dir_append_values (GdaDataModel *model, const GList *values, GErr
 				if ((len < base_len) ||
 				    (strncmp (dirname, imodel->priv->basedir, base_len))) {
 					add_error (imodel, _("New path must be a subpath of the base directory"));
-					g_set_error (error, 0, 0,
+					g_set_error (error, 0, 0, "%s", 
 						     _("New path must be a subpath of the base directory"));
 					return -1;
 				}
@@ -1276,7 +1276,7 @@ gda_data_model_dir_append_values (GdaDataModel *model, const GList *values, GErr
 				gchar *str;
 				str = g_strdup_printf (_("Cannot set contents of filename '%s'"), complete_filename);
 				add_error (imodel, str);
-				g_set_error (error, 0, 0, str);
+				g_set_error (error, 0, 0, "%s", str);
 				g_free (str);
 				if (bin_to_free)
 					g_free (bin_data);
@@ -1287,14 +1287,14 @@ gda_data_model_dir_append_values (GdaDataModel *model, const GList *values, GErr
 			gchar *str;
 			str = g_strdup_printf (_("Cannot create directory '%s'"), dirname);
 			add_error (imodel, str);
-			g_set_error (error, 0, 0, str);
+			g_set_error (error, 0, 0, "%s", str);
 			g_free (str);
 			return -1;
 		}
 	}
 	else {
 		add_error (imodel, _("Cannot add row: filename missing"));
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     _("Cannot add row: filename missing"));
 		return -1;
 	}
@@ -1318,7 +1318,7 @@ gda_data_model_dir_remove_row (GdaDataModel *model, gint row, GError **error)
                 str = g_strdup_printf (_("Row %d out of range (0-%d)"), row,
 				       imodel->priv->rows->len - 1);
 		add_error (imodel, str);
-		g_set_error (error, 0, 0, str);
+		g_set_error (error, 0, 0, "%s", str);
 		g_free (str);
                 return FALSE;
         }
@@ -1334,7 +1334,7 @@ gda_data_model_dir_remove_row (GdaDataModel *model, gint row, GError **error)
 		gchar *str;
 		str = g_strdup_printf (_("Cannot remove file '%s'"), filename);
 		add_error (imodel, str);
-		g_set_error (error, 0, 0, str);
+		g_set_error (error, 0, 0, "%s", str);
 		g_free (str);
 		g_free (filename);
 		return FALSE;

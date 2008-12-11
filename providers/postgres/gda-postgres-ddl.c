@@ -266,7 +266,7 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 				node = gda_server_operation_get_node_info (op, "/FKEY_S/%d/FKEY_FIELDS_A", i);
 				if (!node || ((nbfields = gda_data_model_get_n_rows (node->model)) == 0)) {
 					allok = FALSE;
-					g_set_error (error, 0, 0, _("No field specified in foreign key constraint"));
+					g_set_error (error, 0, 0, "%s", _("No field specified in foreign key constraint"));
 				}
 				else {
 					for (j = 0; j < nbfields; j++) {
@@ -282,7 +282,7 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 						}
 						else {
 							allok = FALSE;
-							g_set_error (error, 0, 0, 
+							g_set_error (error, 0, 0, "%s",  
 								     _("Empty field specified in foreign key constraint"));
 						}
 					}
@@ -293,7 +293,7 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 					g_string_append (string, g_value_get_string (value));
 				else {
 					allok = FALSE;
-					g_set_error (error, 0, 0, _("No referenced table specified in foreign key constraint"));
+					g_set_error (error, 0, 0, "%s", _("No referenced table specified in foreign key constraint"));
 				}
 
 				g_string_append (string, " (");
@@ -310,7 +310,7 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 					}
 					else {
 						allok = FALSE;
-						g_set_error (error, 0, 0, 
+						g_set_error (error, 0, 0, "%s",  
 							     _("Empty referenced field specified in foreign key constraint"));
 					}
 				}
@@ -358,7 +358,7 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 
 	if (!hasfields) {
 		allok = FALSE;
-		g_set_error (error, 0, 0, _("Table to create must have at least one row"));
+		g_set_error (error, 0, 0, "%s", _("Table to create must have at least one row"));
 	}
 
 	if (allok) {

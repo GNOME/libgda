@@ -663,12 +663,12 @@ command_execute (MainData *data, const gchar *command, GError **error)
 	}
         else {
                 if (!data->current) {
-                        g_set_error (error, 0, 0,
+                        g_set_error (error, 0, 0, "%s", 
                                      _("No connection specified"));
                         return NULL;
                 }
                 if (!gda_connection_is_opened (data->current->cnc)) {
-                        g_set_error (error, 0, 0,
+                        g_set_error (error, 0, 0, "%s", 
                                      _("Connection closed"));
                         return NULL;
                 }
@@ -708,7 +708,7 @@ execute_external_command (MainData *data, const gchar *command, GError **error)
 	}
 
 	if (stmt_list->next) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     _("More than one SQL statement"));
 		g_object_unref (batch);
 		return NULL;
@@ -2187,7 +2187,7 @@ extra_command_create_dsn (GdaConnection *cnc, const gchar **args, GError **error
 	gchar *real_cnc, *real_provider, *user, *pass;
 
 	if (!args[0] || !args[1]) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     _("Missing arguments"));
 		return NULL;
 	}
@@ -2208,7 +2208,7 @@ extra_command_create_dsn (GdaConnection *cnc, const gchar **args, GError **error
 	newdsn.is_system = FALSE;
 
 	if (!newdsn.provider) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     _("Missing provider name"));
 	}
 	else if (gda_config_define_dsn (&newdsn, error)) {
@@ -2231,7 +2231,7 @@ extra_command_remove_dsn (GdaConnection *cnc, const gchar **args, GError **error
 	gint i;
 
 	if (!args[0]) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     _("Missing DSN name"));
 		return NULL;
 	}
@@ -2419,7 +2419,7 @@ extra_command_manage_cnc (GdaConnection *cnc, const gchar **args, GError **error
 						}
 					}
 					else if (!data->current) {
-						g_set_error (error, 0, 0,
+						g_set_error (error, 0, 0, "%s", 
 							     _("No current connection"));
 						return NULL;
 					}
@@ -2586,7 +2586,7 @@ extra_command_close_cnc (GdaConnection *cnc, const gchar **args, GError **error,
 	else {
 		/* close current connection */
 		if (! data->current) {
-			g_set_error (error, 0, 0,
+			g_set_error (error, 0, 0, "%s", 
 				     _("No currently opened connection"));
 			return NULL;
 		}
@@ -2619,7 +2619,7 @@ extra_command_bind_cnc (GdaConnection *cnc, const gchar **args, GError **error, 
 	GString *string;
 
 	if (nargs < 3) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 				     _("Missing required connection names"));
 		return NULL;
 	}
@@ -2652,7 +2652,7 @@ extra_command_bind_cnc (GdaConnection *cnc, const gchar **args, GError **error, 
 
 	virtual = gda_virtual_connection_open (vprovider, NULL);
 	if (!virtual) {
-		g_set_error (error, 0, 0, _("Could not create virtual connection"));
+		g_set_error (error, 0, 0, "%s", _("Could not create virtual connection"));
 		return NULL;
 	}
 
@@ -2787,7 +2787,7 @@ extra_command_edit_buffer (GdaConnection *cnc, const gchar **args,
 	GdaInternalCommandResult *res = NULL;
 
 	if (!data->current) {
-		g_set_error (error, 0, 0, _("No connection opened"));
+		g_set_error (error, 0, 0, "%s", _("No connection opened"));
 		goto end_of_command;
 	}
 
@@ -2881,7 +2881,7 @@ extra_command_reset_buffer (GdaConnection *cnc, const gchar **args,
 	GdaInternalCommandResult *res = NULL;
 
 	if (!data->current) {
-		g_set_error (error, 0, 0, _("No connection opened"));
+		g_set_error (error, 0, 0, "%s", _("No connection opened"));
 		return NULL;
 	}
 
@@ -2915,7 +2915,7 @@ extra_command_show_buffer (GdaConnection *cnc, const gchar **args,
 	GdaInternalCommandResult *res = NULL;
 
 	if (!data->current) {
-		g_set_error (error, 0, 0, _("No connection opened"));
+		g_set_error (error, 0, 0, "%s", _("No connection opened"));
 		return NULL;
 	}
 
@@ -2935,7 +2935,7 @@ extra_command_exec_buffer (GdaConnection *cnc, const gchar **args,
 	GdaInternalCommandResult *res = NULL;
 
 	if (!data->current) {
-		g_set_error (error, 0, 0, _("No connection opened"));
+		g_set_error (error, 0, 0, "%s", _("No connection opened"));
 		return NULL;
 	}
 
@@ -2967,14 +2967,14 @@ extra_command_write_buffer (GdaConnection *cnc, const gchar **args,
 	GdaInternalCommandResult *res = NULL;
 
 	if (!data->current) {
-		g_set_error (error, 0, 0, _("No connection opened"));
+		g_set_error (error, 0, 0, "%s", _("No connection opened"));
 		return NULL;
 	}
 
 	if (!data->current->query_buffer) 
 		data->current->query_buffer = g_string_new ("");
 	if (!args[0]) 
-		g_set_error (error, 0, 0, 
+		g_set_error (error, 0, 0, "%s",  
 			     _("Missing FILE to write to"));
 	else {
 		if (g_file_set_contents (args[0], data->current->query_buffer->str, -1, error)) {
@@ -3009,7 +3009,7 @@ extra_command_query_buffer_list_dict (GdaConnection *cnc, const gchar **args,
 	GdaInternalCommandResult *res = NULL;
 
 	if (!data->current) {
-		g_set_error (error, 0, 0, _("No connection opened"));
+		g_set_error (error, 0, 0, "%s", _("No connection opened"));
 		return NULL;
 	}
 
@@ -3017,7 +3017,7 @@ extra_command_query_buffer_list_dict (GdaConnection *cnc, const gchar **args,
 	GdaMetaStore *mstore;
 	mstore = gda_connection_get_meta_store (data->current->cnc);
 	if (!gda_meta_store_schema_add_custom_object (mstore, QUERY_BUFFERS_TABLE_DESC, NULL)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     _("Can't initialize dictionary to store query buffers"));
 		return NULL;
 	}
@@ -3053,7 +3053,7 @@ extra_command_query_buffer_to_dict (GdaConnection *cnc, const gchar **args,
 	GdaInternalCommandResult *res = NULL;
 
 	if (!data->current) {
-		g_set_error (error, 0, 0, _("No connection opened"));
+		g_set_error (error, 0, 0, "%s", _("No connection opened"));
 		return NULL;
 	}
 
@@ -3065,7 +3065,7 @@ extra_command_query_buffer_to_dict (GdaConnection *cnc, const gchar **args,
 		if (args[0] && *args[0]) 
 			qname = g_strdup ((gchar *) args[0]);
 		else {
-			g_set_error (error, 0, 0,
+			g_set_error (error, 0, 0, "%s", 
 				     _("Missing query buffer name"));
 			return NULL;
 		}
@@ -3074,7 +3074,7 @@ extra_command_query_buffer_to_dict (GdaConnection *cnc, const gchar **args,
 		GdaMetaStore *mstore;
 		mstore = gda_connection_get_meta_store (data->current->cnc);
 		if (!gda_meta_store_schema_add_custom_object (mstore, QUERY_BUFFERS_TABLE_DESC, NULL)) {
-			g_set_error (error, 0, 0,
+			g_set_error (error, 0, 0, "%s", 
 				     _("Can't initialize dictionary to store query buffers"));
 			g_free (qname);
 			return NULL;
@@ -3106,7 +3106,7 @@ extra_command_query_buffer_to_dict (GdaConnection *cnc, const gchar **args,
 		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
 	}
 	else
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     _("Query buffer is empty"));
 
 	return res;
@@ -3119,7 +3119,7 @@ extra_command_query_buffer_from_dict (GdaConnection *cnc, const gchar **args,
 	GdaInternalCommandResult *res = NULL;
 
 	if (!data->current) {
-		g_set_error (error, 0, 0, _("No connection opened"));
+		g_set_error (error, 0, 0, "%s", _("No connection opened"));
 		return NULL;
 	}
 
@@ -3131,7 +3131,7 @@ extra_command_query_buffer_from_dict (GdaConnection *cnc, const gchar **args,
 		GdaMetaStore *mstore;
 		mstore = gda_connection_get_meta_store (data->current->cnc);
 		if (!gda_meta_store_schema_add_custom_object (mstore, QUERY_BUFFERS_TABLE_DESC, NULL)) {
-			g_set_error (error, 0, 0,
+			g_set_error (error, 0, 0, "%s", 
 				     _("Can't initialize dictionary to store query buffers"));
 			return NULL;
 		}
@@ -3169,7 +3169,7 @@ extra_command_query_buffer_from_dict (GdaConnection *cnc, const gchar **args,
 		g_object_unref (model);
 	}
 	else
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     _("Missing query buffer name"));
 		
 	return res;
@@ -3182,7 +3182,7 @@ extra_command_query_buffer_delete_dict (GdaConnection *cnc, const gchar **args,
 	GdaInternalCommandResult *res = NULL;
 
 	if (!data->current) {
-		g_set_error (error, 0, 0, _("No connection opened"));
+		g_set_error (error, 0, 0, "%s", _("No connection opened"));
 		return NULL;
 	}
 
@@ -3194,7 +3194,7 @@ extra_command_query_buffer_delete_dict (GdaConnection *cnc, const gchar **args,
 		GdaMetaStore *mstore;
 		mstore = gda_connection_get_meta_store (data->current->cnc);
 		if (!gda_meta_store_schema_add_custom_object (mstore, QUERY_BUFFERS_TABLE_DESC, NULL)) {
-			g_set_error (error, 0, 0,
+			g_set_error (error, 0, 0, "%s", 
 				     _("Can't initialize dictionary to store query buffers"));
 			return NULL;
 		}
@@ -3221,7 +3221,7 @@ extra_command_query_buffer_delete_dict (GdaConnection *cnc, const gchar **args,
 		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
 	}
 	else
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     _("Missing query buffer name"));
 		
 	return res;
@@ -3358,7 +3358,7 @@ get_table_value_at_cell (GdaConnection *cnc, GError **error, MainData *data,
 		return NULL;
 	}
 	if (remain) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     _("Wrong row condition"));
 		g_free (sql);
 		return NULL;
@@ -3386,7 +3386,7 @@ get_table_value_at_cell (GdaConnection *cnc, GError **error, MainData *data,
 	gda_internal_command_exec_result_free (tmpres);
 
 	if (!retval && !errorset)
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     _("No unique row identified"));
 
 	return retval;
@@ -3405,7 +3405,7 @@ extra_command_set2 (GdaConnection *cnc, const gchar **args,
 	gint whichargs = 0;
 
 	if (!cnc) {
-                g_set_error (error, 0, 0, _("No current connection"));
+                g_set_error (error, 0, 0, "%s", _("No current connection"));
                 return NULL;
         }
 
@@ -3418,7 +3418,7 @@ extra_command_set2 (GdaConnection *cnc, const gchar **args,
 				if (args[3] && *args[3]) {
 					row_cond = args[3];
 					if (args [4]) {
-						g_set_error (error, 0, 0,
+						g_set_error (error, 0, 0, "%s", 
 							     _("Too many arguments"));
 						return NULL;
 					}
@@ -3466,7 +3466,7 @@ extra_command_set2 (GdaConnection *cnc, const gchar **args,
 		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
 	}
 	else 
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
                              _("Wrong number of arguments"));
 
 	return res;
@@ -3486,7 +3486,7 @@ extra_command_export (GdaConnection *cnc, const gchar **args,
 	gint whichargs = 0;
 
 	if (!cnc) {
-                g_set_error (error, 0, 0, _("No current connection"));
+                g_set_error (error, 0, 0, "%s", _("No current connection"));
                 return NULL;
         }
 
@@ -3501,7 +3501,7 @@ extra_command_export (GdaConnection *cnc, const gchar **args,
 				if (args[3] && *args[3]) {
 					filename = args[3];
 					if (args [4]) {
-						g_set_error (error, 0, 0,
+						g_set_error (error, 0, 0, "%s", 
 							     _("Too many arguments"));
 						return NULL;
 					}
@@ -3529,7 +3529,7 @@ extra_command_export (GdaConnection *cnc, const gchar **args,
 			value = gda_holder_get_value (param);
 	}
 	else 
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
                              _("Wrong number of arguments"));
 
 	if (value) {
@@ -3541,7 +3541,7 @@ extra_command_export (GdaConnection *cnc, const gchar **args,
 			GdaBlob *tblob = (GdaBlob*) gda_value_get_blob (vblob);
 			const GdaBlob *fblob = gda_value_get_blob (value);
 			if (gda_blob_op_write (tblob->op, (GdaBlob*) fblob, 0) < 0)
-				g_set_error (error, 0, 0,
+				g_set_error (error, 0, 0, "%s", 
 					     _("Could not write file"));
 			else
 				done = TRUE;
@@ -3555,7 +3555,7 @@ extra_command_export (GdaConnection *cnc, const gchar **args,
 			((GdaBinary *) fblob)->data = fbin->data;
 			((GdaBinary *) fblob)->binary_length = fbin->binary_length;
 			if (gda_blob_op_write (tblob->op, (GdaBlob*) fblob, 0) < 0)
-				g_set_error (error, 0, 0,
+				g_set_error (error, 0, 0, "%s", 
 					     _("Could not write file"));
 			else
 				done = TRUE;
@@ -3702,7 +3702,7 @@ extra_command_graph (GdaConnection *cnc, const gchar **args,
 	GdaMetaStruct *mstruct;
 
 	if (!cnc) {
-		g_set_error (error, 0, 0, _("No current connection"));
+		g_set_error (error, 0, 0, "%s", _("No current connection"));
 		return NULL;
 	}
 
@@ -3750,7 +3750,7 @@ extra_command_httpd (GdaConnection *cnc, const gchar **args,
 		if (port > 0) {
 			data->server = web_server_new (port);
 			if (!data->server) 
-				g_set_error (error, 0, 0,
+				g_set_error (error, 0, 0, "%s", 
 					     _("Could not start HTTPD server"));
 			else {
 				res = g_new0 (GdaInternalCommandResult, 1);
@@ -3759,7 +3759,7 @@ extra_command_httpd (GdaConnection *cnc, const gchar **args,
 			}
 		}
 		else
-			g_set_error (error, 0, 0,
+			g_set_error (error, 0, 0, "%s", 
 				     _("Invalid port specification"));
 	}
 
@@ -3780,7 +3780,7 @@ extra_command_lo_update (GdaConnection *cnc, const gchar **args,
         const gchar *row_cond = NULL;
 
 	if (!cnc) {
-                g_set_error (error, 0, 0, _("No current connection"));
+                g_set_error (error, 0, 0, "%s", _("No current connection"));
                 return NULL;
         }
 
@@ -3802,7 +3802,7 @@ extra_command_lo_update (GdaConnection *cnc, const gchar **args,
 		}
         }
 	if (!row_cond) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
                              _("Missing arguments"));
 		return NULL;
 	}
@@ -3836,7 +3836,7 @@ extra_command_lo_update (GdaConnection *cnc, const gchar **args,
 	if (!stmt)
 		return NULL;
 	if (remain) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     _("Wrong row condition"));
 		return NULL;
 	}

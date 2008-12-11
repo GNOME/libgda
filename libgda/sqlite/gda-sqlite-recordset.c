@@ -425,7 +425,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 		break;
 	case SQLITE_ERROR:
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-			     GDA_SERVER_PROVIDER_INTERNAL_ERROR, sqlite3_errmsg (cdata->connection));
+			     GDA_SERVER_PROVIDER_INTERNAL_ERROR,  "%s", sqlite3_errmsg (cdata->connection));
 		break;
 	case SQLITE_DONE:
 		GDA_DATA_SELECT (model)->advertized_nrows = model->priv->next_row_num;
@@ -433,7 +433,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 	case SQLITE_MISUSE:
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 			     GDA_SERVER_PROVIDER_INTERNAL_ERROR, 
-			     _("SQLite provider fatal internal error"));
+			      "%s", _("SQLite provider fatal internal error"));
 		break;
 	}
 	return prow;

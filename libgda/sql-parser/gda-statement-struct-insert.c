@@ -301,13 +301,13 @@ gda_sql_statement_insert_check_structure (GdaSqlAnyPart *stmt, gpointer data, GE
 	nb_values = g_slist_length (insert->fields_list); /* may be 0 */
 	if (!insert->table) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("INSERT statement needs a table to insert into"));
+			      "%s", _("INSERT statement needs a table to insert into"));
 		return FALSE;
 	}
 	if (insert->select) {
 		if (insert->values_list) {
 			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-				     _("Can't specify values to insert and SELECT statement in INSERT statement"));
+				      "%s", _("Can't specify values to insert and SELECT statement in INSERT statement"));
 			return FALSE;
 		}
 		if (nb_values > 0) {
@@ -326,7 +326,7 @@ gda_sql_statement_insert_check_structure (GdaSqlAnyPart *stmt, gpointer data, GE
 				g_assert_not_reached ();
 			if (len != nb_values) {
 				g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-					     _("INSERT statement does not have the same number of target columns and expressions"));
+					      "%s", _("INSERT statement does not have the same number of target columns and expressions"));
 				return FALSE;
 			}
 		}
@@ -335,7 +335,7 @@ gda_sql_statement_insert_check_structure (GdaSqlAnyPart *stmt, gpointer data, GE
 		/* using values list */
 		if (!insert->values_list) {
 			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-				     _("Missing values to insert in INSERT statement"));
+				      "%s", _("Missing values to insert in INSERT statement"));
 			return FALSE;
 		}
 		
@@ -344,7 +344,7 @@ gda_sql_statement_insert_check_structure (GdaSqlAnyPart *stmt, gpointer data, GE
 				nb_values = g_slist_length ((GSList *) list->data);
 				if (nb_values == 0) {
 					g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-						     _("Missing values to insert in INSERT statement"));
+						      "%s", _("Missing values to insert in INSERT statement"));
 					return FALSE;
 				}
 			}
@@ -352,10 +352,10 @@ gda_sql_statement_insert_check_structure (GdaSqlAnyPart *stmt, gpointer data, GE
 				if (g_slist_length ((GSList *) list->data) != nb_values) {
 					if (insert->fields_list) 
 						g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-							     _("INSERT statement does not have the same number of target columns and expressions"));
+							      "%s", _("INSERT statement does not have the same number of target columns and expressions"));
 					else
 						g_set_error (error, GDA_SQL_ERROR, 0,
-							     _("VALUES lists must all be the same length in INSERT statement"));
+							      "%s", _("VALUES lists must all be the same length in INSERT statement"));
 					return FALSE;
 				}
 		}

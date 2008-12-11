@@ -1492,7 +1492,7 @@ gda_holder_set_bind (GdaHolder *holder, GdaHolder *bind_to, GError **error)
 		g_return_val_if_fail (bind_to->priv, FALSE);
 		if (holder->priv->g_type != bind_to->priv->g_type) {
 			g_set_error (error, GDA_HOLDER_ERROR, GDA_HOLDER_VALUE_TYPE_ERROR,
-				     _("Cannot bind holders if their type is not the same"));
+				     "%s", _("Cannot bind holders if their type is not the same"));
 			return FALSE;
 		}
 		value2 = gda_holder_get_value (bind_to);

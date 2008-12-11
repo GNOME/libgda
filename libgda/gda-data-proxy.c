@@ -2777,7 +2777,7 @@ apply_filter_statement (GdaDataProxy *proxy, GError **error)
 			if (lerror)
 				g_error_free (lerror);
 			g_set_error (error, GDA_DATA_PROXY_ERROR, GDA_DATA_PROXY_FILTER_ERROR,
-				     _("Could not create virtual connection"));
+				      "%s", _("Could not create virtual connection"));
 			proxy->priv->force_direct_mapping = FALSE;
 			goto clean_previous_filter;
 		}
@@ -2818,7 +2818,7 @@ apply_filter_statement (GdaDataProxy *proxy, GError **error)
 	filtered_rows = gda_connection_statement_execute_select (vcnc, stmt, NULL, NULL);
      	if (!filtered_rows) {
 		g_set_error (error, GDA_DATA_PROXY_ERROR, GDA_DATA_PROXY_FILTER_ERROR,
-			     _("Error in filter expression"));
+			      "%s", _("Error in filter expression"));
 		proxy->priv->force_direct_mapping = FALSE;
 		gda_vconnection_data_model_remove (GDA_VCONNECTION_DATA_MODEL (vcnc), "proxy", NULL);
 		goto clean_previous_filter;
@@ -2831,7 +2831,7 @@ apply_filter_statement (GdaDataProxy *proxy, GError **error)
 	gda_vconnection_data_model_remove (GDA_VCONNECTION_DATA_MODEL (vcnc), "proxy", NULL);
 	if (!copy) {
 		g_set_error (error, GDA_DATA_PROXY_ERROR, GDA_DATA_PROXY_FILTER_ERROR,
-			     _("Error in filter expression"));
+			      "%s", _("Error in filter expression"));
 		proxy->priv->force_direct_mapping = FALSE;
 		filtered_rows = NULL;
 		goto clean_previous_filter;
@@ -2941,7 +2941,7 @@ gda_data_proxy_set_filter_expr (GdaDataProxy *proxy, const gchar *filter_expr, G
 	if (ptr || !stmt || (gda_statement_get_statement_type (stmt) != GDA_SQL_STATEMENT_SELECT)) {
 		/* also catches problems with multiple statements in @filter_expr, such as SQL code injection */
 		g_set_error (error, GDA_DATA_PROXY_ERROR, GDA_DATA_PROXY_FILTER_ERROR,
-			     _("Incorrect filter expression"));
+			      "%s", _("Incorrect filter expression"));
 		if (stmt)
 			g_object_unref (stmt);
 		proxy->priv->force_direct_mapping = FALSE;
@@ -3425,7 +3425,7 @@ gda_data_proxy_set_value_at (GdaDataModel *model, gint col, gint proxy_row, cons
 
 	if ((proxy_row == 0) && proxy->priv->add_null_entry) {
 		g_set_error (error, GDA_DATA_PROXY_ERROR, GDA_DATA_PROXY_READ_ONLY_ROW,
-			     _("The first row is an empty row artificially prepended and cannot be altered"));
+			      "%s", _("The first row is an empty row artificially prepended and cannot be altered"));
 		return FALSE;
 	}
 
@@ -3642,7 +3642,7 @@ gda_data_proxy_remove_row (GdaDataModel *model, gint row, GError **error)
 
 	if (proxy->priv->add_null_entry && row == 0) {
 		g_set_error (error, GDA_DATA_PROXY_ERROR, GDA_DATA_PROXY_READ_ONLY_ROW,
-			     _("The first row is an empty row artificially prepended and cannot be removed"));
+			      "%s", _("The first row is an empty row artificially prepended and cannot be removed"));
 		return FALSE;
 	}
 

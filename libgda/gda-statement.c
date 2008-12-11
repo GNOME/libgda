@@ -648,7 +648,7 @@ gda_statement_to_sql_real (GdaStatement *stmt, GdaSqlRenderingContext *context, 
 		return g_strdup (stmt->priv->internal_struct->sql);
 	else {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("Missing SQL code"));
+			     "%s", _("Missing SQL code"));
 		return NULL;
 	}
 }
@@ -1199,7 +1199,7 @@ default_render_param_spec (GdaSqlParamSpec *pspec, GdaSqlExpr *expr, GdaSqlRende
 
 		if (! pspec->name) {
 			g_set_error (error, GDA_STATEMENT_ERROR, GDA_STATEMENT_PARAM_ERROR,
-				     _("Unnamed parameter"));
+				     "%s", _("Unnamed parameter"));
 			goto err;
 		}
 		quoted_pname = gda_sql_identifier_add_quotes (pspec->name);
@@ -1765,14 +1765,14 @@ default_render_select_join (GdaSqlSelectJoin *join, GdaSqlRenderingContext *cont
 	GdaSqlSelectFrom *from = (GdaSqlSelectFrom *) GDA_SQL_ANY_PART (join)->parent;
 	if (!from || (GDA_SQL_ANY_PART (from)->type != GDA_SQL_ANY_SQL_SELECT_FROM)) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("Join is not in a FROM statement"));
+			     "%s", _("Join is not in a FROM statement"));
 		goto err;
 	}
 	GdaSqlSelectTarget *target;
 	target = g_slist_nth_data (from->targets, join->position);
 	if (!target || (GDA_SQL_ANY_PART (target)->type != GDA_SQL_ANY_SQL_SELECT_TARGET)) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("Could not find target the join is for"));
+			     "%s", _("Could not find target the join is for"));
 		goto err;
 	}
 	str = context->render_select_target (GDA_SQL_ANY_PART (target), context, error);

@@ -626,10 +626,10 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
 		else if (error) {
 			if ((ntokens <= 1) && (parser->priv->context->token_type != L_ILLEGAL))
 				g_set_error (error, GDA_SQL_PARSER_ERROR, GDA_SQL_PARSER_EMPTY_SQL_ERROR,
-					_ ("SQL code does not contain any statement"));
+					 "%s", _("SQL code does not contain any statement"));
 			else
 				g_set_error (error, GDA_SQL_PARSER_ERROR, parser->priv->error_type,
-					parser->priv->error_msg);
+					 "%s", parser->priv->error_msg);
 		}
 	}
 
@@ -714,7 +714,7 @@ gda_sql_parser_parse_string_as_batch (GdaSqlParser *parser, const gchar *sql, co
 
 	if ((n_stmt == 0) && (n_empty != 0))
 		g_set_error (error, GDA_SQL_PARSER_ERROR, GDA_SQL_PARSER_EMPTY_SQL_ERROR,
-			     _("SQL code does not contain any statement"));
+			      "%s", _("SQL code does not contain any statement"));
 
 	if (!allok || (n_stmt == 0)) {
 		if (remain)

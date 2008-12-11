@@ -1012,7 +1012,7 @@ gda_postgres_provider_perform_operation (GdaServerProvider *provider, GdaConnect
 	/* If asynchronous connection opening is not supported, then exit now */
 	if (async_cb) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     _("Provider does not support asynchronous server operation"));
+			     "%s", _("Provider does not support asynchronous server operation"));
                 return FALSE;
 	}
 
@@ -1141,7 +1141,7 @@ gda_postgres_provider_begin_transaction (GdaServerProvider *provider, GdaConnect
                                 write_option = "READ ONLY";
                         else {
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_NON_SUPPORTED_ERROR,
-					     _("Transactions are not supported in read-only mode"));
+					     "%s", _("Transactions are not supported in read-only mode"));
                                 gda_connection_add_event_string (cnc, _("Transactions are not supported in read-only mode"));
                                 return FALSE;
                         }
@@ -1152,13 +1152,13 @@ gda_postgres_provider_begin_transaction (GdaServerProvider *provider, GdaConnect
                         break;
                 case GDA_TRANSACTION_ISOLATION_READ_UNCOMMITTED:
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_NON_SUPPORTED_ERROR,
-				     _("Transactions are not supported in read uncommitted isolation level"));
+				     "%s", _("Transactions are not supported in read uncommitted isolation level"));
                         gda_connection_add_event_string (cnc, 
 							 _("Transactions are not supported in read uncommitted isolation level"));
                         return FALSE;
                 case GDA_TRANSACTION_ISOLATION_REPEATABLE_READ:
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_NON_SUPPORTED_ERROR,
-				     _("Transactions are not supported in repeatable read isolation level"));
+				     "%s", _("Transactions are not supported in repeatable read isolation level"));
                         gda_connection_add_event_string (cnc, 
 							 _("Transactions are not supported in repeatable read isolation level"));
                         return FALSE;
@@ -1177,7 +1177,7 @@ gda_postgres_provider_begin_transaction (GdaServerProvider *provider, GdaConnect
 		g_free (isolation_level);
 		if (!stmt) {
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
-				     _("Internal error"));
+				     "%s", _("Internal error"));
 			return FALSE;
 		}
 	}
@@ -1275,7 +1275,7 @@ gda_postgres_provider_add_savepoint (GdaServerProvider *provider, GdaConnection 
 
 	if (!stmt) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
-			     _("Internal error"));
+			     "%s", _("Internal error"));
 		return FALSE;
 	}
 
@@ -1325,7 +1325,7 @@ gda_postgres_provider_rollback_savepoint (GdaServerProvider *provider, GdaConnec
 
 	if (!stmt) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
-			     _("Internal error"));
+			     "%s", _("Internal error"));
 		return FALSE;
 	}
 
@@ -1375,7 +1375,7 @@ gda_postgres_provider_delete_savepoint (GdaServerProvider *provider, GdaConnecti
 
 	if (!stmt) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
-			     _("Internal error"));
+			     "%s", _("Internal error"));
 		return FALSE;
 	}
 
@@ -1672,7 +1672,7 @@ gda_postgres_provider_statement_prepare (GdaServerProvider *provider, GdaConnect
                         }
                         else {
                                 g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR,
-                                             _("Unnamed parameter is not allowed in prepared statements"));
+                                             "%s", _("Unnamed parameter is not allowed in prepared statements"));
                                 g_slist_foreach (param_ids, (GFunc) g_free, NULL);
                                 g_slist_free (param_ids);
 				g_free (prep_stm_name);
@@ -1923,7 +1923,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 	/* If asynchronous connection opening is not supported, then exit now */
 	if (async_cb) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     _("Provider does not support asynchronous statement execution"));
+			     "%s", _("Provider does not support asynchronous statement execution"));
                 return NULL;
 	}
 
@@ -2102,7 +2102,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, _("Cannot start transaction"));
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
-					     _("Cannot start transaction"));
+					     "%s", _("Cannot start transaction"));
 				break;
 			}
 			
@@ -2291,7 +2291,7 @@ gda_postgres_provider_xa_prepare (GdaServerProvider *provider, GdaConnection *cn
 		g_free (str);
 		g_object_unref (params);
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
-			     _("Could not set the XA transaction ID parameter"));
+			     "%s", _("Could not set the XA transaction ID parameter"));
 		return FALSE;
 	}
 	g_free (str);
@@ -2327,7 +2327,7 @@ gda_postgres_provider_xa_commit (GdaServerProvider *provider, GdaConnection *cnc
 		g_free (str);
 		g_object_unref (params);
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
-			     _("Could not set the XA transaction ID parameter"));
+			     "%s", _("Could not set the XA transaction ID parameter"));
 		return FALSE;
 	}
 	g_free (str);
@@ -2362,7 +2362,7 @@ gda_postgres_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *c
 		g_free (str);
 		g_object_unref (params);
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
-			     _("Could not set the XA transaction ID parameter"));
+			     "%s", _("Could not set the XA transaction ID parameter"));
 		return FALSE;
 	}
 	g_free (str);

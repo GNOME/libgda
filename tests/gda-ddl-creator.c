@@ -683,7 +683,7 @@ gda_ddl_creator_get_sql (GdaDDLCreator *ddlc, GError **error)
 	g_return_val_if_fail (ddlc->priv, NULL);
 	if (!ddlc->priv->cnc) {
 		g_set_error (error, GDA_DDL_CREATOR_ERROR, GDA_DDL_CREATOR_NO_CONNECTION_ERROR,
-			     _("No connection specified"));
+			     "%s", _("No connection specified"));
 		return NULL;
 	}
 
@@ -736,12 +736,12 @@ gda_ddl_creator_execute (GdaDDLCreator *ddlc, GError **error)
 	g_return_val_if_fail (ddlc->priv, FALSE);
 	if (!ddlc->priv->cnc) {
 		g_set_error (error, GDA_DDL_CREATOR_ERROR, GDA_DDL_CREATOR_NO_CONNECTION_ERROR,
-			     _("No connection specified"));
+			     "%s", _("No connection specified"));
 		return FALSE;
 	}
 	if (!ddlc->priv->d_mstruct) {
 		g_set_error (error, GDA_DDL_CREATOR_ERROR, GDA_DDL_CREATOR_NO_CONNECTION_ERROR,
-			     _("No destination database objects specified"));
+			     "%s", _("No destination database objects specified"));
 		return FALSE;
 	}
 

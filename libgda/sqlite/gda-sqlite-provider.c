@@ -913,7 +913,7 @@ gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 
 	if (async_cb) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     _("Provider does not support asynchronous server operation"));
+			      "%s", _("Provider does not support asynchronous server operation"));
                 return FALSE;
 	}
 
@@ -944,7 +944,7 @@ gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 		g_free (filename);
 
 		if (errmsg != SQLITE_OK) {
-			g_set_error (error, 0, 0, sqlite3_errmsg (cdata->connection)); 
+			g_set_error (error, 0, 0, "%s", sqlite3_errmsg (cdata->connection)); 
 			retval = FALSE;
 		}
 		gda_sqlite_free_cnc_data (cdata);
@@ -972,14 +972,14 @@ gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 
 			if (g_unlink (filename)) {
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_OPERATION_ERROR,
-					     sys_errlist [errno]);
+					      "%s", sys_errlist [errno]);
 				retval = FALSE;
 			}
 			g_free (filename);
 		}
 		else {
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_OPERATION_ERROR,
-				     _("Missing database name or directory"));
+				      "%s", _("Missing database name or directory"));
 			retval = FALSE;
 		}
 		
@@ -1622,7 +1622,7 @@ real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stm
 	status = sqlite3_prepare_v2 (cdata->connection, sql, -1, &sqlite_stmt, &left);
 	if (status != SQLITE_OK) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR,
-			     sqlite3_errmsg (cdata->connection));
+			      "%s", sqlite3_errmsg (cdata->connection));
 		goto out_err;
 	}
 
@@ -1642,7 +1642,7 @@ real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stm
 			}
 			else {
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR,
-					     _("Unnamed parameter is not allowed in prepared statements"));
+					      "%s", _("Unnamed parameter is not allowed in prepared statements"));
 				g_slist_foreach (param_ids, (GFunc) g_free, NULL);
 				g_slist_free (param_ids);
 				goto out_err;
@@ -1830,7 +1830,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 
 	if (async_cb) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     _("Provider does not support asynchronous statement execution"));
+			      "%s", _("Provider does not support asynchronous statement execution"));
                 return NULL;
 	}
 
@@ -1877,7 +1877,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			status = sqlite3_prepare_v2 (cdata->connection, sql, -1, &sqlite_stmt, (const char**) &left);
 			if (status != SQLITE_OK) {
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR,
-					     sqlite3_errmsg (cdata->connection));
+					      "%s", sqlite3_errmsg (cdata->connection));
 				g_free (sql);
 				return NULL;
 			}
@@ -1917,7 +1917,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		gda_connection_add_event (cnc, event);
 		gda_connection_del_prepared_statement (cnc, stmt);
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_EMPTY_STMT_ERROR,
-			     errmsg);
+			      "%s", errmsg);
 		if (new_ps)
 			g_object_unref (ps);
 		return NULL;
@@ -1935,7 +1935,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		gda_connection_add_event (cnc, event);
 		gda_connection_del_prepared_statement (cnc, stmt);
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR,
-			     errmsg);
+			      "%s", errmsg);
 		if (new_ps)
 			g_object_unref (ps);
 		return NULL;
@@ -1954,7 +1954,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			gda_connection_event_set_description (event, _("Missing parameter(s) to execute query"));
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
-				     _("Missing parameter(s) to execute query"));
+				      "%s", _("Missing parameter(s) to execute query"));
 			break;
 		}
 
@@ -1973,7 +1973,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
+					      "%s", GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
 				g_free (str);
 				break;
 			}
@@ -1992,7 +1992,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
+					      "%s", GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
 				g_free (str);
 				break;
 			}
@@ -2086,7 +2086,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 			gda_connection_event_set_description (event, str);
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
+				      "%s", GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
 			g_free (str);
 			break;
 		}
@@ -2140,7 +2140,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
                                 event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
                                 gda_connection_event_set_description (event, errmsg);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-					     GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR, errmsg);
+					      "%s", GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR, errmsg);
                                 sqlite3_reset (ps->sqlite_stmt);
                                 gda_connection_add_event (cnc, event);
 				gda_connection_internal_statement_executed (cnc, stmt, params, event);

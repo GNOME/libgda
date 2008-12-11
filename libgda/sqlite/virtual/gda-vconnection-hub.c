@@ -204,7 +204,7 @@ gda_vconnection_hub_add (GdaVconnectionHub *hub,
 	/* check for constraints */
 	hc = get_hub_cnc_by_ns (hub, ns);
 	if (hc && (hc->cnc != cnc)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     _("Namespace must be specified"));
 		return FALSE;
 	}
@@ -213,7 +213,7 @@ gda_vconnection_hub_add (GdaVconnectionHub *hub,
 		return TRUE;
 
 	if (!gda_connection_is_opened (cnc)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     _("Connection is closed"));
 		return FALSE;
 	}
@@ -254,7 +254,7 @@ gda_vconnection_hub_remove (GdaVconnectionHub *hub, GdaConnection *cnc, GError *
 	hc = get_hub_cnc_by_cnc (hub, cnc);
 
 	if (!hc) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     _("Connection was not represented in hub"));
 		return FALSE;
 	}

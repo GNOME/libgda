@@ -765,7 +765,7 @@ gda_config_define_dsn (const GdaDsnInfo *info, GError **error)
 
 	if (info->is_system && !unique_instance->priv->system_config_allowed) {
 		g_set_error (error, GDA_CONFIG_ERROR, GDA_CONFIG_PERMISSION_ERROR,
-			     _("Can't manage system-wide configuration"));
+			      "%s", _("Can't manage system-wide configuration"));
 		GDA_CONFIG_UNLOCK ();
 		return FALSE;
 	}
@@ -854,7 +854,7 @@ gda_config_remove_dsn (const gchar *dsn_name, GError **error)
 	}
 	if (info->is_system && !unique_instance->priv->system_config_allowed) {
 		g_set_error (error, GDA_CONFIG_ERROR, GDA_CONFIG_PERMISSION_ERROR,
-			     _("Can't manage system-wide configuration"));
+			      "%s", _("Can't manage system-wide configuration"));
 		GDA_CONFIG_UNLOCK ();
 		return FALSE;
 	}

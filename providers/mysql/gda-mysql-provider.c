@@ -401,7 +401,7 @@ real_open_connection (const gchar  *host,
 
 	/* Exclusive: host/pair otherwise unix socket. */
 	if ((host || port >= 0) && socket) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     _("Cannot give a UNIX SOCKET if you also provide "
 			       "either a HOST or a PORT"));
 		return NULL;
@@ -431,7 +431,7 @@ real_open_connection (const gchar  *host,
 						  (port > 0) ? port : 0,
 						  socket, flags);
 	if (!return_mysql || mysql != return_mysql) {
-		g_set_error (error, 0, 0, mysql_error (mysql));
+		g_set_error (error, 0, 0, "%s", mysql_error (mysql));
 		g_free (mysql);
 		mysql = NULL;
 	}
@@ -441,7 +441,7 @@ real_open_connection (const gchar  *host,
 #if MYSQL_VERSION_ID < 32200
 	if (mysql &&
 	    mysql_select_db (mysql, db) != 0) {
-		g_set_error (error, 0, 0, mysql_error (mysql));
+		g_set_error (error, 0, 0, "%s", mysql_error (mysql));
 		g_free (mysql);
 		mysql = NULL;
 	}
@@ -817,7 +817,7 @@ gda_mysql_provider_perform_operation (GdaServerProvider               *provider,
 	/* If asynchronous connection opening is not supported, then exit now */
 	if (async_cb) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     _("Provider does not support asynchronous server operation"));
+			     "%s", _("Provider does not support asynchronous server operation"));
                 return FALSE;
 	}
 
@@ -1208,7 +1208,7 @@ gda_mysql_provider_statement_prepare (GdaServerProvider  *provider,
 		} else {
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR,
-				     _("Unnamed statement parameter is not allowed in prepared statement."));
+				     "%s", _("Unnamed statement parameter is not allowed in prepared statement."));
 			g_slist_foreach (param_ids, (GFunc) g_free, NULL);
 			g_slist_free (param_ids);
 			param_ids = NULL;
@@ -1305,7 +1305,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 	/* If asynchronous connection opening is not supported, then exit now */
 	if (async_cb) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     _("Provider does not support asynchronous statement execution"));
+			     "%s", _("Provider does not support asynchronous statement execution"));
                 return FALSE;
 	}
 
@@ -1373,7 +1373,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			gda_connection_event_set_description (event, _("Missing parameter(s) to execute query"));
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
-				     _("Missing parameter(s) to execute query"));
+				     "%s", _("Missing parameter(s) to execute query"));
 			break;
 		}
 
@@ -1393,7 +1393,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
+					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
 				g_free (str);
 				break;
 			} else {
@@ -1413,7 +1413,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
+					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
 				g_free (str);
 				break;
 			} else {

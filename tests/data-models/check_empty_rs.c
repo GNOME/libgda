@@ -74,7 +74,7 @@ run_test (const gchar *sql, const gchar *empty_rs_serial, GError **error)
 		g_print ("Missing test data!\n  SQL: %s\n  SER: %s\n", sql, tsql);
 	else if (strcmp (tsql, empty_rs_serial)) {
 		g_print ("Test failed!\n  SQL: %s\n  EXP: %s\n  GOT: %s\n", sql, empty_rs_serial, tsql);
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "Failed serialized comparison");
 		g_free (tsql);
 		goto out;

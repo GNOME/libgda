@@ -628,7 +628,7 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
 	}
 	else 
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_PROVIDER_NOT_FOUND_ERROR, 
-			     _("Datasource configuration error: no provider specified"));
+			      "%s", _("Datasource configuration error: no provider specified"));
 
 	g_free (real_auth_string);
 	g_free (real_dsn);
@@ -703,7 +703,7 @@ gda_connection_open_from_string (const gchar *provider_name, const gchar *cnc_st
 
 	if (!provider_name && !real_provider) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_PROVIDER_NOT_FOUND_ERROR, 
-			     _("No provider specified"));
+			      "%s", _("No provider specified"));
 		g_free (user);
 		g_free (pass);
 		g_free (real_cnc);
@@ -807,7 +807,7 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 		if (!cnc->priv->cnc_string) {
 			gda_log_error (_("No DSN or connection string specified"));
 			g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_NO_CNC_SPEC_ERROR,
-				     _("No DSN or connection string specified"));
+				      "%s", _("No DSN or connection string specified"));
 			gda_connection_unlock ((GdaLockable*) cnc);
 			return FALSE;
 		}
@@ -817,7 +817,7 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 	/* provider test */
 	if (!cnc->priv->provider_obj) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_NO_PROVIDER_SPEC_ERROR,
-			     _("No provider specified"));
+			      "%s", _("No provider specified"));
 		gda_connection_unlock ((GdaLockable*) cnc);
 		return FALSE;
 	}
@@ -825,14 +825,14 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 	if (PROV_CLASS (cnc->priv->provider_obj)->limiting_thread &&
 	    (PROV_CLASS (cnc->priv->provider_obj)->limiting_thread != g_thread_self ())) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_PROVIDER_ERROR,
-			     _("Provider does not allow usage from this thread"));
+			      "%s", _("Provider does not allow usage from this thread"));
 		gda_connection_unlock ((GdaLockable*) cnc);
 		return FALSE;
 	}
 
 	if (!PROV_CLASS (cnc->priv->provider_obj)->open_connection) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_PROVIDER_ERROR,
-			     _("Internal error: provider does not implement the open_connection() virtual method"));
+			      "%s", _("Internal error: provider does not implement the open_connection() virtual method"));
 		gda_connection_unlock ((GdaLockable*) cnc);
 		return FALSE;
 	}
@@ -1444,7 +1444,7 @@ gda_connection_statement_prepare (GdaConnection *cnc, GdaStatement *stmt, GError
 										 cnc, stmt, error);
 	else {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     _("Provider does not support statement preparation"));
+			      "%s", _("Provider does not support statement preparation"));
 		return FALSE;
 	}
 }
@@ -1612,7 +1612,7 @@ gda_connection_statement_execute_non_select (GdaConnection *cnc, GdaStatement *s
 	if ((gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_SELECT) ||
 	    (gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_COMPOUND)) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
-			     _("Statement is a selection statement"));
+			      "%s", _("Statement is a selection statement"));
 		return -1;
 	}
 	
@@ -1627,7 +1627,7 @@ gda_connection_statement_execute_non_select (GdaConnection *cnc, GdaStatement *s
 	
 	if (!GDA_IS_SET (set)) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
-			     _("Statement is a selection statement"));
+			      "%s", _("Statement is a selection statement"));
 		g_object_unref (set);
 		return -1;
 	}
@@ -1686,7 +1686,7 @@ gda_connection_statement_execute_select (GdaConnection *cnc, GdaStatement *stmt,
 								     error, -1);
 	if (model && !GDA_IS_DATA_MODEL (model)) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
-			     _("Statement is not a selection statement"));
+			      "%s", _("Statement is not a selection statement"));
 		g_object_unref (model);
 		model = NULL;
 	}
@@ -1747,7 +1747,7 @@ gda_connection_statement_execute_select_fullv (GdaConnection *cnc, GdaStatement 
 	g_free (types);
 	if (model && !GDA_IS_DATA_MODEL (model)) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
-			     _("Statement is not a selection statement"));
+			      "%s", _("Statement is not a selection statement"));
 		g_object_unref (model);
 		model = NULL;
 	}
@@ -1802,7 +1802,7 @@ gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *
 	gda_connection_unlock ((GdaLockable*) cnc);
 	if (model && !GDA_IS_DATA_MODEL (model)) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
-			     _("Statement is not a selection statement"));
+			      "%s", _("Statement is not a selection statement"));
 		g_object_unref (model);
 		model = NULL;
 	}
@@ -2148,7 +2148,7 @@ check_parameters (GdaMetaContext *context, GError **error, gint nb, ...)
 		for (j = 0; j < nb_params; j++) {
 			GValue *v = *(spec_array[j].pvalue);
 			if (v && (gda_value_is_null (v) || (G_VALUE_TYPE (v) != spec_array[j].type))) {
-				g_set_error (error, 0, 0,
+				g_set_error (error, 0, 0, "%s", 
 					     _("Invalid argument"));
 				retval = -1;
 			}
@@ -2866,7 +2866,7 @@ suggest_update_cb_downstream (GdaMetaStore *store, GdaMetaContext *suggest, Down
 			data->error = lerror;
 		else {
 			g_set_error (&lerror, 0, 0,
-				     _("Meta update error"));
+				      "%s", _("Meta update error"));
 			data->error = lerror;
 		}
 
@@ -3334,7 +3334,7 @@ gda_connection_get_meta_store_data_v (GdaConnection *cnc, GdaConnectionMetaType 
 	g_free (key.filters);
 	if (!stmt) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
-			     _("Wrong filter arguments"));
+			      "%s", _("Wrong filter arguments"));
 		if (set)
 			g_object_unref (set);
 		return NULL;

@@ -492,7 +492,7 @@ gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row, G
 				}
 				else {
 					g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-						     _("Can't set iterator's position"));
+						      "%s", _("Can't set iterator's position"));
 					return NULL;
 				}
 			}
@@ -520,7 +520,7 @@ gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row, G
 	}
 
 	g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-		     _("Can't access data"));
+		      "%s", _("Can't access data"));
 	return NULL;
 }
 

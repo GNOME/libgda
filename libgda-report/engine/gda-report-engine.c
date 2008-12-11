@@ -580,7 +580,7 @@ command_gda_report_section_run (GdaReportEngine *engine, xmlNodePtr node, GSList
 				xmlFree (prop);
 			}
 			else
-				g_set_error (error, 0, 0,
+				g_set_error (error, 0, 0, "%s", 
 					     _("No connection specified"));
 			return FALSE;
 		}
@@ -607,7 +607,7 @@ command_gda_report_section_run (GdaReportEngine *engine, xmlNodePtr node, GSList
 						xmlFree (prop);
 					}
 					else
-						g_set_error (error, 0, 0,
+						g_set_error (error, 0, 0, "%s", 
 							     _("No connection specified"));
 					return FALSE;
 				}
@@ -647,7 +647,7 @@ command_gda_report_section_run (GdaReportEngine *engine, xmlNodePtr node, GSList
 	}
 
 	if (!ctx) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     _("Query is not specified (not named and not defined)"));
 		return FALSE;
 	}
@@ -820,7 +820,7 @@ command_gda_report_param_value (GdaReportEngine *engine, xmlNodePtr node, GSList
 		return TRUE;
 	}
 	else {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     _("Parameter name not specified"));
 		return FALSE;
 	}
@@ -870,7 +870,7 @@ command_gda_report_if (GdaReportEngine *engine, xmlNodePtr node, GSList **create
 
 	prop = xmlGetProp (node, BAD_CAST "expr");
 	if (!prop) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     _("No expression specified")); 
 		return FALSE;
 	}

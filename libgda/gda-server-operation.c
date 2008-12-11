@@ -1364,7 +1364,7 @@ gda_server_operation_load_data_from_xml (GdaServerOperation *op, xmlNodePtr node
 				switch (opnode->type) {
 				case GDA_SERVER_OPERATION_NODE_PARAMLIST:
 					if (!extension) {
-						g_set_error (error, 0, 0,
+						g_set_error (error, 0, 0, "%s", 
 							     _("Parameterlist values can only be set for individual parameters within it"));
 						allok = FALSE;
 					}
@@ -1421,7 +1421,7 @@ gda_server_operation_load_data_from_xml (GdaServerOperation *op, xmlNodePtr node
 				return FALSE;
 		}
 		else {
-			g_set_error (error, 0, 0,
+			g_set_error (error, 0, 0, "%s", 
 				     _("Missing attribute named 'path'"));
 			return FALSE;
 		}
@@ -1977,7 +1977,7 @@ gda_server_operation_set_value_at (GdaServerOperation *op, const gchar *value, G
 		switch (opnode->type) {
 		case GDA_SERVER_OPERATION_NODE_PARAMLIST:
 			if (!extension) {
-				g_set_error (error, 0, 0,
+				g_set_error (error, 0, 0, "%s", 
 					     _("Parameterlist values can only be set for individual parameters within it"));
 				allok = FALSE;
 			}

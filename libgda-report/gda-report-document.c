@@ -250,7 +250,7 @@ gda_report_document_run_converter_argv (GdaReportDocument *doc, const gchar *fil
 	xmlNodePtr node, res;
 	xmlDocPtr res_doc;
 	if (!doc->priv->doc || !(node = xmlDocGetRootElement (doc->priv->doc))) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     _("Document not specified"));
 		return FALSE;
 	}
@@ -277,7 +277,7 @@ gda_report_document_run_converter_argv (GdaReportDocument *doc, const gchar *fil
 	FILE *file;
 	file = fdopen (fd, "w");
 	if (xmlDocDump (file, res_doc) < 0) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     _("Cannot create temporary file"));
 		DO_UNLINK (tmp_filename);
 		g_free (tmp_filename);

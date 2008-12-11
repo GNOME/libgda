@@ -17,7 +17,7 @@ create_sqlite_db (const gchar *dir, const gchar *dbname, const gchar *sqlfile, G
 	/* create batch */
 	prov = gda_config_get_provider ("SQLite", NULL);
 	if (!prov) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "Cannot find the SQLite provider");
 		return FALSE;
 	}

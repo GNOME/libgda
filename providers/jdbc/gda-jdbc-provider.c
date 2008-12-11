@@ -563,7 +563,7 @@ gda_jdbc_provider_perform_operation (GdaServerProvider *provider, GdaConnection 
 	/* If asynchronous connection opening is not supported, then exit now */
 	if (async_cb) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     _("Provider does not support asynchronous server operation"));
+			     "%s", _("Provider does not support asynchronous server operation"));
                 return FALSE;
 	}
 
@@ -1100,7 +1100,7 @@ gda_jdbc_provider_statement_prepare (GdaServerProvider *provider, GdaConnection 
                         }
                         else {
                                 g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR,
-                                             _("Unnamed parameter is not allowed in prepared statements"));
+                                             "%s", _("Unnamed parameter is not allowed in prepared statements"));
                                 g_slist_foreach (param_ids, (GFunc) g_free, NULL);
                                 g_slist_free (param_ids);
 				g_free (ctypes);
@@ -1198,7 +1198,7 @@ gda_jdbc_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 	/* If asynchronous connection opening is not supported, then exit now */
 	if (async_cb) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     _("Provider does not support asynchronous statement execution"));
+			     "%s", _("Provider does not support asynchronous statement execution"));
                 return NULL;
 	}
 
@@ -1288,7 +1288,7 @@ gda_jdbc_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 			gda_connection_event_set_description (event, _("Missing parameter(s) to execute query"));
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
-				     _("Missing parameter(s) to execute query"));
+				     "%s", _("Missing parameter(s) to execute query"));
 			break;
 		}
 
@@ -1697,7 +1697,7 @@ gda_jdbc_provider_new (const gchar *jdbc_driver, GError **error)
 	g_return_val_if_fail (jdbc_driver, NULL);
 
 	if (!_jdbc_provider_java_vm) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "No JVM runtime identified (this should not happen at this point)!");
 		return NULL;
 	}

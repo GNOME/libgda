@@ -277,14 +277,14 @@ validate_holder_change_cb (GdaSet *paramlist, GdaHolder *param, const GValue *ne
 			    ((GdaDataModel *) iter->priv->data_model, iter, col, new_value, &error)) {
 				if (!error)
 					g_set_error (&error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-						     _("GdaDataModel refused value change"));
+						      "%s", _("GdaDataModel refused value change"));
 			}
 		}
 		else if (! gda_data_model_set_value_at ((GdaDataModel *) iter->priv->data_model, 
 							col, iter->priv->row, new_value, &error)) {
 			if (!error)
 				g_set_error (&error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-					     _("GdaDataModel refused value change"));
+					      "%s", _("GdaDataModel refused value change"));
 		}
 		
 		g_signal_handler_unblock (iter->priv->data_model, iter->priv->model_changes_signals [0]);

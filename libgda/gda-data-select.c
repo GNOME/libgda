@@ -941,7 +941,7 @@ gda_data_select_set_modification_statement_sql (GdaDataSelect *model, const gcha
 	if (remain) {
 		g_object_unref (stmt);
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_SQL_ERROR,
-			     _("Incorrect SQL expression"));
+			      "%s", _("Incorrect SQL expression"));
 		return FALSE;
 	}
 	
@@ -966,20 +966,20 @@ check_acceptable_statement (GdaDataSelect *model, GError **error)
 
 	if (! model->prep_stmt) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
-			     _("Internal error: the \"prepared-stmt\" property has not been set"));
+			     "%s", _("Internal error: the \"prepared-stmt\" property has not been set"));
 		return NULL;
 	}
 
 	sel_stmt = gda_pstmt_get_gda_statement (model->prep_stmt);
 	if (! sel_stmt) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
-			     _("Can't get the prepared statement's actual statement"));
+			      "%s", _("Can't get the prepared statement's actual statement"));
 		return NULL;
 	}
 
 	if (gda_statement_get_statement_type (sel_stmt) != GDA_SQL_STATEMENT_SELECT) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
-			     _("Unsupported type of SELECT statement"));
+			      "%s", _("Unsupported type of SELECT statement"));
 		return NULL;
 	}
 
@@ -1048,13 +1048,13 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
 		ins = (GdaSqlStatementInsert*) sqlst->contents;
 		if (!ins->values_list || ! ins->values_list->data) {
 			g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
-				     _("INSERT statement must contain values to insert"));
+				      "%s", _("INSERT statement must contain values to insert"));
 			gda_sql_statement_free (sqlst);
 			return FALSE;
 		}
 		if (ins->values_list->next) {
 			g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
-				     _("INSERT statement must insert only one row"));
+				      "%s", _("INSERT statement must insert only one row"));
 			gda_sql_statement_free (sqlst);
 			return FALSE;
 		}
@@ -1081,7 +1081,7 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
 			}
 			else  {
 				g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
-				     _("DELETE statement must have a WHERE part"));
+				      "%s", _("DELETE statement must have a WHERE part"));
 				gda_sql_statement_free (sqlst);
 				return FALSE;
 			}
@@ -1121,7 +1121,7 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
 			}
 			else  {
 				g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
-				     _("UPDATE statement must have a WHERE part"));
+				      "%s", _("UPDATE statement must have a WHERE part"));
 				gda_sql_statement_free (sqlst);
 				return FALSE;
 			}
@@ -1205,7 +1205,7 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
 	}
 	else {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
-			     _("Modification statement must be an INSERT, UPDATE or DELETE statement"));
+			      "%s", _("Modification statement must be an INSERT, UPDATE or DELETE statement"));
 		return FALSE;
 	}
 
@@ -1251,7 +1251,7 @@ gda_data_select_compute_modification_statements (GdaDataSelect *model, GError **
 
 	if (!model->priv->cnc) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_CONNECTION_ERROR,
-			     _("No connection to use"));
+			      "%s", _("No connection to use"));
 		return FALSE;
 	}
 	for (mtype = FIRST_QUERY; mtype < NB_QUERIES; mtype++)
@@ -1297,7 +1297,7 @@ row_selection_condition_foreach_func (GdaSqlAnyPart *part, gpointer data, GError
 	GdaSqlOperation *op = (GdaSqlOperation*) part;
 	if (op->operator_type != GDA_SQL_OPERATOR_TYPE_EQ) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
-			     _("Invalid unique row condition (ony equal operators are allowed)"));
+			      "%s", _("Invalid unique row condition (ony equal operators are allowed)"));
 		return FALSE;
 	}
 
@@ -1329,7 +1329,7 @@ gda_data_select_set_row_selection_condition  (GdaDataSelect *model, GdaSqlExpr *
 
 	if (model->priv->modif_internals->unique_row_condition) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
-			     _("Unique row condition has already been specified"));
+			      "%s", _("Unique row condition has already been specified"));
 		return FALSE;
 	}
 
@@ -1384,7 +1384,7 @@ gda_data_select_set_row_selection_condition_sql (GdaDataSelect *model, const gch
 
 	if (model->priv->modif_internals->unique_row_condition) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
-			     _("Unique row condition has already been specified"));
+			      "%s", _("Unique row condition has already been specified"));
 		return FALSE;
 	}
 
@@ -1402,7 +1402,7 @@ gda_data_select_set_row_selection_condition_sql (GdaDataSelect *model, const gch
 	if (remain) {
 		g_object_unref (stmt);
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_SQL_ERROR,
-			     _("Incorrect filter expression"));
+			      "%s", _("Incorrect filter expression"));
 		g_free (sql);
 		return FALSE;
 	}
@@ -1457,7 +1457,7 @@ gda_data_select_compute_row_selection_condition (GdaDataSelect *model, GError **
 
 	if (!model->priv->cnc) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_CONNECTION_ERROR,
-			     _("No connection to use"));
+			      "%s", _("No connection to use"));
 		return FALSE;
 	}
 
@@ -1466,18 +1466,18 @@ gda_data_select_compute_row_selection_condition (GdaDataSelect *model, GError **
 	select = (GdaSqlStatementSelect*) sqlst->contents;
 	if (!select->from || ! select->from->targets || ! select->from->targets->data) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_SQL_ERROR,
-			     _("No table to select from in SELECT statement"));
+			      "%s", _("No table to select from in SELECT statement"));
 		goto out;
 	}
 	if (select->from->targets->next) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_SQL_ERROR,
-			     _("SELECT statement uses more than one table to select from"));
+			      "%s", _("SELECT statement uses more than one table to select from"));
 		goto out;
 	}
 	target = (GdaSqlSelectTarget *) select->from->targets->data;
 	if (!target->table_name) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_SQL_ERROR,
-			     _("No table to select from in SELECT statement"));
+			      "%s", _("No table to select from in SELECT statement"));
 		goto out;
 	}
 	g_value_set_string ((nvalue = gda_value_new (G_TYPE_STRING)), target->table_name);
@@ -1642,7 +1642,7 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 	/* available only if GDA_DATA_MODEL_ACCESS_RANDOM */
 	if (! (imodel->priv->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-			     _("Data model does only support random access"));
+			      "%s", _("Data model does only support random access"));
 		return NULL;
 	}
 
@@ -1671,7 +1671,7 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 			GdaDataModel *tmpmodel;
 			if (!dstmt->select || !dstmt->params) {
 				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-					     _("Unable to retreive data after modifications, no further modification will be allowed"));
+					      "%s", _("Unable to retreive data after modifications, no further modification will be allowed"));
 				imodel->priv->modif_internals->safely_locked = TRUE;
 				return NULL;
 			}
@@ -1680,7 +1680,7 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 									    dstmt->params, NULL);
 			if (!tmpmodel) {
 				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-					     _("Unable to retreive data after modifications, no further modification will be allowed"));
+					      "%s", _("Unable to retreive data after modifications, no further modification will be allowed"));
 				imodel->priv->modif_internals->safely_locked = TRUE;
 				return NULL;
 			}
@@ -1688,7 +1688,7 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 			if (gda_data_model_get_n_rows (tmpmodel) != 1) {
 				g_object_unref (tmpmodel);
 				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-					     _("Unable to retreive data after modifications, no further modification will be allowed"));
+					     "%s", _("Unable to retreive data after modifications, no further modification will be allowed"));
 				imodel->priv->modif_internals->safely_locked = TRUE;
 				return NULL;
 			}
@@ -1710,7 +1710,7 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 						g_object_unref (tmpmodel);
 						g_object_unref (prow);
 						g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-							     _("Unable to retreive data after modifications, no further modification will be allowed"));
+							      "%s", _("Unable to retreive data after modifications, no further modification will be allowed"));
 						imodel->priv->modif_internals->safely_locked = TRUE;
 						return NULL;
 					}
@@ -2054,7 +2054,7 @@ compute_single_update_stmt (GdaDataSelect *model, BVector *bv, GError **error)
 		updstmt = (GdaStatement *) g_object_new (GDA_TYPE_STATEMENT, "structure", sqlst, NULL);
 	else 
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
-			     _("Some columns can't be modified"));
+			     "%s", _("Some columns can't be modified"));
 	gda_sql_statement_free (sqlst);
 
 #ifdef GDA_DEBUG_NO
@@ -2147,7 +2147,7 @@ compute_single_insert_stmt (GdaDataSelect *model, BVector *bv, GError **error)
 		insstmt = (GdaStatement *) g_object_new (GDA_TYPE_STATEMENT, "structure", sqlst, NULL);
 	else 
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
-			     _("Some columns can't be modified"));
+			      "%s", _("Some columns can't be modified"));
 	gda_sql_statement_free (sqlst);
 
 #ifdef GDA_DEBUG_NO
@@ -2201,7 +2201,7 @@ compute_single_select_stmt (GdaDataSelect *model, GError **error)
 	sel_stmt = model->priv->sel_stmt;
 	if (! sel_stmt) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
-			     _("Internal error: can't get the prepared statement's actual statement"));
+			      "%s", _("Internal error: can't get the prepared statement's actual statement"));
 		return NULL;
 	}
 	
@@ -2241,14 +2241,14 @@ compute_single_select_stmt (GdaDataSelect *model, GError **error)
 	}
 	if (!row_cond) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
-			     _("Unable to identify a way to fetch a single row"));
+			      "%s", _("Unable to identify a way to fetch a single row"));
 		return NULL;
 	}
 		
 	g_object_get (G_OBJECT (sel_stmt), "structure", &sel_sqlst, NULL);
 	if (sel_sqlst->stmt_type != GDA_SQL_STATEMENT_SELECT) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
-			     _("Can only operate on non compound SELECT statements"));
+			      "%s", _("Can only operate on non compound SELECT statements"));
 		gda_sql_statement_free (sel_sqlst);
 		gda_sql_expr_free (row_cond);
 		return NULL;
@@ -2329,17 +2329,17 @@ vector_set_value_at (GdaDataSelect *imodel, BVector *bv, GdaDataModelIter *iter,
 
 	if (imodel->priv->modif_internals->safely_locked) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_SAFETY_LOCKED_ERROR,
-			     _("Modifications are not allowed anymore"));
+			      "%s", _("Modifications are not allowed anymore"));
 		return FALSE;
 	}
 	if (!iter && ! (imodel->priv->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-			     _("Data model does only support random access"));
+			     "%s", _("Data model does only support random access"));
 		return FALSE;
 	}
 	if (! imodel->priv->modif_internals->modif_stmts [UPD_QUERY]) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
-			     _("No UPDATE statement provided"));
+			     "%s", _("No UPDATE statement provided"));
 		return FALSE;
 	}
 
@@ -2379,7 +2379,7 @@ vector_set_value_at (GdaDataSelect *imodel, BVector *bv, GdaDataModelIter *iter,
 				cvalue = gda_data_model_iter_get_value_at (iter, i);
 				if (!cvalue) {
 					g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-						     _("Could not get iterator's value"));
+						     "%s", _("Could not get iterator's value"));
 					return FALSE;
 				}
 			}
@@ -2496,17 +2496,17 @@ gda_data_select_set_value_at (GdaDataModel *model, gint col, gint row, const GVa
 
 	if (imodel->priv->modif_internals->safely_locked) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_SAFETY_LOCKED_ERROR,
-			     _("Modifications are not allowed anymore"));
+			     "%s", _("Modifications are not allowed anymore"));
 		return FALSE;
 	}
 	if (! (imodel->priv->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-			     _("Data model does only support random access"));
+			     "%s", _("Data model does only support random access"));
 		return FALSE;
 	}
 	if (! imodel->priv->modif_internals->modif_stmts [UPD_QUERY]) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
-			     _("No UPDATE statement provided"));
+			     "%s", _("No UPDATE statement provided"));
 		return FALSE;
 	}
 
@@ -2562,12 +2562,12 @@ gda_data_select_iter_set_value  (GdaDataModel *model, GdaDataModelIter *iter, gi
 
 	if (imodel->priv->modif_internals->safely_locked) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_SAFETY_LOCKED_ERROR,
-			     _("Modifications are not allowed anymore"));
+			     "%s", _("Modifications are not allowed anymore"));
 		return FALSE;
 	}
 	if (! imodel->priv->modif_internals->modif_stmts [UPD_QUERY]) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
-			     _("No UPDATE statement provided"));
+			     "%s", _("No UPDATE statement provided"));
 		return FALSE;
 	}
 
@@ -2637,17 +2637,17 @@ gda_data_select_set_values (GdaDataModel *model, gint row, GList *values, GError
 
 	if (imodel->priv->modif_internals->safely_locked) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_SAFETY_LOCKED_ERROR,
-			     _("Modifications are not allowed anymore"));
+			     "%s", _("Modifications are not allowed anymore"));
 		return FALSE;
 	}
 	if (! (imodel->priv->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-			     _("Data model does only support random access"));
+			     "%s", _("Data model does only support random access"));
 		return FALSE;
 	}
 	if (! imodel->priv->modif_internals->modif_stmts [UPD_QUERY]) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
-			     _("No UPDATE statement provided"));
+			     "%s", _("No UPDATE statement provided"));
 		return FALSE;
 	}
  
@@ -2724,22 +2724,22 @@ gda_data_select_append_values (GdaDataModel *model, const GList *values, GError 
 
 	if (imodel->priv->modif_internals->safely_locked) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_SAFETY_LOCKED_ERROR,
-			     _("Modifications are not allowed anymore"));
+			     "%s", _("Modifications are not allowed anymore"));
 		return -1;
 	}
 	if (! (imodel->priv->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-			     _("Data model does only support random access"));
+			     "%s", _("Data model does only support random access"));
 		return -1;
 	}
 	if (! imodel->priv->modif_internals->modif_stmts [INS_QUERY]) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
-			     _("No INSERT statement provided"));
+			     "%s", _("No INSERT statement provided"));
 		return -1;
 	}
 	if (gda_data_select_get_n_rows (model) < 0) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_ACCESS_ERROR,
-			     _("Cannot add a row because the number of rows in unknown"));
+			     "%s", _("Cannot add a row because the number of rows in unknown"));
 		return -1;
 	}
 
@@ -2766,7 +2766,7 @@ gda_data_select_append_values (GdaDataModel *model, const GList *values, GError 
 		/* no actual modification to do */
 		bvector_free (bv);
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
-			     _("Missing values to insert in INSERT statement"));
+			     "%s", _("Missing values to insert in INSERT statement"));
 		
 		return -1;
 	}
@@ -2915,17 +2915,17 @@ gda_data_select_remove_row (GdaDataModel *model, gint row, GError **error)
 
 	if (imodel->priv->modif_internals->safely_locked) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_SAFETY_LOCKED_ERROR,
-			     _("Modifications are not allowed anymore"));
+			     "%s", _("Modifications are not allowed anymore"));
 		return FALSE;
 	}
 	if (! (imodel->priv->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-			     _("Data model does only support random access"));
+			     "%s", _("Data model does only support random access"));
 		return FALSE;
 	}
 	if (! imodel->priv->modif_internals->modif_stmts [DEL_QUERY]) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
-			     _("No DELETE statement provided"));
+			     "%s", _("No DELETE statement provided"));
 		return FALSE;
 	}
 
@@ -3212,7 +3212,7 @@ gda_data_select_compute_columns_attributes (GdaDataSelect *model, GError **error
 
 	if (!model->priv->cnc) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_CONNECTION_ERROR,
-			     _("No connection to use"));
+			     "%s", _("No connection to use"));
 		return FALSE;
 	}
 

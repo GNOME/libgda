@@ -153,7 +153,7 @@ validate_row_changes (GdaDataProxy *proxy, gint row, gint proxied_row, gchar *to
 		if (pop < 100) {
 			GError *error = NULL;
 			g_set_error (&error, 0, 0,
-				     "Population is too small");
+				     "%s", "Population is too small");
 			return error;
 		}
 		else

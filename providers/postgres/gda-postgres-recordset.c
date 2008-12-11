@@ -428,7 +428,7 @@ gda_postgres_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint r
 
 	if (!imodel->priv->pg_res) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
-			     _("Internal error"));
+			     "%s", _("Internal error"));
 		return FALSE;
 	}
 
@@ -456,7 +456,7 @@ gda_postgres_recordset_store_all (GdaDataSelect *model, GError **error)
 	
 	if (!imodel->priv->pg_res) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
-			     _("Internal error"));
+			     "%s", _("Internal error"));
 		return FALSE;
 	}
 

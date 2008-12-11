@@ -141,7 +141,7 @@ gda_sql_statement_delete_check_structure (GdaSqlAnyPart *stmt, gpointer data, GE
 	GdaSqlStatementDelete *delete = (GdaSqlStatementDelete *) stmt;
 	if (!delete->table) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("DELETE statement needs a table to delete from"));
+			      "%s", _("DELETE statement needs a table to delete from"));
 		return FALSE;
 	}        
 

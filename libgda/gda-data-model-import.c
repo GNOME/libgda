@@ -1581,7 +1581,7 @@ add_error (GdaDataModelImport *model, const gchar *err)
 {
 	GError *error = NULL;
 
-	g_set_error (&error, 0, 0, err);
+	g_set_error (&error, 0, 0, "%s", err);
 	model->priv->errors = g_slist_append (model->priv->errors, error);
 }
 
@@ -1705,7 +1705,7 @@ gda_data_model_import_get_value_at (GdaDataModel *model, gint col, gint row, GEr
 	else {
 		/* otherwise, bail out */
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-			     _("Data model does not support random access"));
+			      "%s", _("Data model does not support random access"));
 		return NULL;
 	}
 }

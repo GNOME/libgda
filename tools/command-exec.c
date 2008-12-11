@@ -356,19 +356,19 @@ gda_internal_command_execute (GdaInternalCommandsList *commands_list,
 	g_strfreev (args);
 	args = NULL;
 	if (!command) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     _("Unknown internal command"));
 		goto cleanup;
 	}
 
 	if (!command->command_func) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     _("Internal command not correctly defined"));
 		goto cleanup;
 	}
 
 	if (!command_complete) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     _("Incomplete internal command"));
 		goto cleanup;
 	}
@@ -478,7 +478,7 @@ gda_internal_command_dict_sync (GdaConnection *cnc, const gchar **args, GError *
 	GdaInternalCommandResult *res;
 
 	if (!cnc) {
-		g_set_error (error, 0, 0, _("No current connection"));
+		g_set_error (error, 0, 0, "%s", _("No current connection"));
 		return NULL;
 	}
 
@@ -500,7 +500,7 @@ gda_internal_command_list_tables (GdaConnection *cnc, const gchar **args, GError
 	GdaDataModel *model;
 
 	if (!cnc) {
-		g_set_error (error, 0, 0, _("No current connection"));
+		g_set_error (error, 0, 0, "%s", _("No current connection"));
 		return NULL;
 	}
 
@@ -543,7 +543,7 @@ gda_internal_command_list_views (GdaConnection *cnc, const gchar **args, GError 
 	GdaDataModel *model;
 
 	if (!cnc) {
-		g_set_error (error, 0, 0, _("No current connection"));
+		g_set_error (error, 0, 0, "%s", _("No current connection"));
 		return NULL;
 	}
 
@@ -585,7 +585,7 @@ gda_internal_command_list_schemas (GdaConnection *cnc, const gchar **args, GErro
 	GdaDataModel *model;
 
 	if (!cnc) {
-		g_set_error (error, 0, 0, _("No current connection"));
+		g_set_error (error, 0, 0, "%s", _("No current connection"));
 		return NULL;
 	}
 
@@ -682,7 +682,7 @@ gda_internal_command_build_meta_struct (GdaConnection *cnc, const gchar **args, 
 
 	objlist = gda_meta_struct_get_all_db_objects (mstruct);
 	if (!objlist) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     _("No object found"));
 		goto onerror;
 	}
@@ -718,7 +718,7 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 	GdaDataModel *model;
 
 	if (!cnc) {
-		g_set_error (error, 0, 0, _("No current connection"));
+		g_set_error (error, 0, 0, "%s", _("No current connection"));
 		return NULL;
 	}
 
@@ -808,7 +808,7 @@ gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
 		return res;
 	}
 	else if (nb_objects == 0) {
-		g_set_error (error, 0, 0, _("No object found"));
+		g_set_error (error, 0, 0, "%s", _("No object found"));
 		g_slist_free (tmplist);
 		return NULL;
 	}

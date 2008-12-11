@@ -172,7 +172,7 @@ create_table_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar 
 	table_name = xmlGetProp (node, BAD_CAST "name");
 	if (!table_name) {
 		g_set_error (error, GDA_META_STRUCT_ERROR, 0, /* FIXME */
-			     _("Missing table name from <table> node"));
+			     "%s", _("Missing table name from <table> node"));
 		return NULL;
 	}
 	table_schema = xmlGetProp (node, BAD_CAST "schema");

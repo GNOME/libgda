@@ -711,7 +711,7 @@ _gda_mysql_meta__tables_views (GdaServerProvider  *prov,
 		return FALSE;
 	if (cdata->version_long < 50000) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
-			     _("Mysql version 5.0 at least is required"));
+			     "%s", _("Mysql version 5.0 at least is required"));
 		return FALSE;
 	}
 
@@ -761,7 +761,7 @@ _gda_mysql_meta_tables_views (GdaServerProvider  *prov,
 		return FALSE;
 	if (cdata->version_long < 50000) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
-			     _("Mysql version 5.0 at least is required"));
+			     "%s", _("Mysql version 5.0 at least is required"));
 		return FALSE;
 	}
 
@@ -967,7 +967,7 @@ _gda_mysql_meta__columns (GdaServerProvider  *prov,
 		return FALSE;
 	if (cdata->version_long < 50000) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
-			     _("Mysql version 5.0 at least is required"));
+			     "%s", _("Mysql version 5.0 at least is required"));
 		return FALSE;
 	}
 
@@ -1034,7 +1034,7 @@ _gda_mysql_meta_columns (GdaServerProvider  *prov,
 		return FALSE;
 	if (cdata->version_long < 50000) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
-			     _("Mysql version 5.0 at least is required"));
+			     "%s", _("Mysql version 5.0 at least is required"));
 		return FALSE;
 	}
 
@@ -1099,7 +1099,7 @@ _gda_mysql_meta__view_cols (GdaServerProvider  *prov,
 		return FALSE;
 	if (cdata->version_long < 50000) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
-			     _("Mysql version 5.0 at least is required"));
+			     "%s", _("Mysql version 5.0 at least is required"));
 		return FALSE;
 	}
 
@@ -1343,7 +1343,7 @@ _gda_mysql_meta_key_columns (GdaServerProvider  *prov,
 		return FALSE;
 	if (cdata->version_long < 50000) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
-			     _("Mysql version 5.0 at least is required"));
+			     "%s", _("Mysql version 5.0 at least is required"));
 		return FALSE;
 	}
 
@@ -1415,7 +1415,7 @@ _gda_mysql_meta__triggers (GdaServerProvider  *prov,
 		return FALSE;
 	if (cdata->version_long < 50000) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
-			     _("Mysql version 5.0 at least is required"));
+			     "%s", _("Mysql version 5.0 at least is required"));
 		return FALSE;
 	}
 
@@ -1451,7 +1451,7 @@ _gda_mysql_meta_triggers (GdaServerProvider  *prov,
 		return FALSE;
 	if (cdata->version_long < 50000) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
-			     _("Mysql version 5.0 at least is required"));
+			     "%s", _("Mysql version 5.0 at least is required"));
 		return FALSE;
 	}
 
@@ -1517,7 +1517,7 @@ _gda_mysql_meta_routines (GdaServerProvider  *prov,
 		return FALSE;
 	if (cdata->version_long < 50000) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
-			     _("Mysql version 5.0 at least is required"));
+			     "%s", _("Mysql version 5.0 at least is required"));
 		return FALSE;
 	}
 

@@ -568,7 +568,7 @@ gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row, GError **e
 	else {
 		/* method not supported */
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR,
-			     _("Data model does not support getting individual value"));
+			      "%s", _("Data model does not support getting individual value"));
 		return NULL;
 	}
 }
@@ -610,7 +610,7 @@ gda_data_model_get_typed_value_at (GdaDataModel *model, gint col, gint row, GTyp
 			cvalue = NULL;
 			if (G_VALUE_TYPE (cvalue) != GDA_TYPE_NULL)
 				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_VALUE_TYPE_ERROR,
-					     _("Data model returned invalid NULL value"));
+					      "%s", _("Data model returned invalid NULL value"));
 			else
 				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_VALUE_TYPE_ERROR,
 					     _("Data model returned value of invalid '%s' type"), 
@@ -666,7 +666,7 @@ gda_data_model_set_value_at (GdaDataModel *model, gint col, gint row, const GVal
 	else {
 		/* method not supported */
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR,
-			     _("Data model does not support setting individual value"));
+			      "%s", _("Data model does not support setting individual value"));
 		return FALSE;
 	}
 }
@@ -696,7 +696,7 @@ gda_data_model_set_values (GdaDataModel *model, gint row, GList *values, GError 
 	else {
 		/* method not supported */
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR,
-			     _("Data model does not support setting values"));
+			      "%s", _("Data model does not support setting values"));
 		return FALSE;
 	}
 }
@@ -750,7 +750,7 @@ gda_data_model_append_values (GdaDataModel *model, const GList *values, GError *
 	else {
 		/* method not supported */
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR,
-			     _("Data model does not support row append"));
+			      "%s", _("Data model does not support row append"));
 		return -1;
 	}
 }
@@ -772,7 +772,7 @@ gda_data_model_append_row (GdaDataModel *model, GError **error)
 
 	if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_INSERT)) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-			     _("Model does not allow row insertion"));
+			      "%s", _("Model does not allow row insertion"));
 		return -1;
 	}
 
@@ -781,7 +781,7 @@ gda_data_model_append_row (GdaDataModel *model, GError **error)
 	else {
 		/* method not supported */
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR,
-			     _("Data model does not support row append"));
+			      "%s", _("Data model does not support row append"));
 		return -1;
 	}
 }
@@ -804,7 +804,7 @@ gda_data_model_remove_row (GdaDataModel *model, gint row, GError **error)
 
 	if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_DELETE)) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-			     _("Model does not allow row deletion"));
+			      "%s", _("Model does not allow row deletion"));
 		return FALSE;
 	}
 
@@ -813,7 +813,7 @@ gda_data_model_remove_row (GdaDataModel *model, gint row, GError **error)
 	else {
 		/* method not supported */
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR,
-			     _("Data model does not support row removal"));
+			      "%s", _("Data model does not support row removal"));
 		return FALSE;
 	}
 }
@@ -1369,7 +1369,7 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 		if ((gdatype == G_TYPE_INVALID) ||
 		    (gdatype == GDA_TYPE_NULL)) {
 			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_XML_FORMAT_ERROR,
-				     _("Cannot retrieve column data type (type is UNKNOWN or not specified)"));
+				      "%s", _("Cannot retrieve column data type (type is UNKNOWN or not specified)"));
 			retval = FALSE;
 			break;
 		}
@@ -1511,7 +1511,7 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 	from_iter = gda_data_model_create_iter (from);
 	if (!from_iter) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-			     _("Could not get an iterator for source data model"));
+			      "%s", _("Could not get an iterator for source data model"));
 		return FALSE;
 	}
 
@@ -2085,7 +2085,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 	else {
 		if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD)) {
 			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-				     _("Data model does not support backward cursor move, not displaying data"));
+				      "%s", _("Data model does not support backward cursor move, not displaying data"));
 			allok = FALSE;
 		}
 		ramodel = gda_data_access_wrapper_new (model);

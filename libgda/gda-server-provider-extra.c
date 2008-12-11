@@ -519,7 +519,7 @@ gda_server_provider_test_schema_model (GdaDataModel *model, GdaConnectionSchema 
 
 	nbcols = gda_data_model_get_n_columns (model);
 	if (nbcols < gda_server_provider_get_schema_nb_columns (schema)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     _("Data model for schema has a wrong number of columns"));
 		return FALSE;
 	}

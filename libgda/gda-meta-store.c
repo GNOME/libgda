@@ -787,7 +787,7 @@ initialize_cnc_struct (GdaMetaStore *store, GError **error)
 							 klass->cpriv->prep_stmts[STMT_SET_VERSION],
 							 NULL, NULL, NULL) == -1) {
 		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA_ERROR,
-			_ ("Could not set the internal schema's version"));
+			"%s", _ ("Could not set the internal schema's version"));
 		return FALSE;
 	}
 	
@@ -1090,7 +1090,7 @@ create_view_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr no
 
 	view_name = xmlGetProp (node, BAD_CAST "name");
 	if (!view_name) {
-		g_set_error (error, 0, 0, 
+		g_set_error (error, 0, 0, "%s",  
 			     _("Missing view name from <view> node"));
 		goto onerror;
 	}
@@ -1130,7 +1130,7 @@ create_view_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr no
 			continue;
 		def = xmlNodeGetContent (cnode);
 		if (!def) {
-			g_set_error (error, 0, 0, 
+			g_set_error (error, 0, 0, "%s",  
 				     _("Missing view definition from <view> node"));
 			goto onerror;
 		}
@@ -1196,7 +1196,7 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
 
 	table_name = xmlGetProp (node, BAD_CAST "name");
 	if (!table_name) {
-		g_set_error (error, 0, 0, 
+		g_set_error (error, 0, 0, "%s",  
 			     _("Missing table name from <table> node"));
 		return NULL;
 	}
@@ -1889,7 +1889,7 @@ handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **e
 		const GValue *version;
 		if (gda_data_model_get_n_rows (model) != 1) {
 			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA_ERROR,
-				_ ("Could not get the internal schema's version"));
+				"%s", _("Could not get the internal schema's version"));
 			g_object_unref (model);
 			return FALSE;
 		}
@@ -1900,7 +1900,7 @@ handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **e
 
 		if (gda_value_is_null (version) || !gda_value_isa (version, G_TYPE_STRING)) {
 			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA_ERROR,
-				_ ("Could not get the internal schema's version"));
+				"%s", _("Could not get the internal schema's version"));
 			g_object_unref (model);
 			return FALSE;
 		}
@@ -1919,7 +1919,7 @@ handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **e
 	}
 	else {
 		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA_ERROR,
-			_ ("Could not get the internal schema's version"));
+			"%s", _("Could not get the internal schema's version"));
 		return FALSE;
 	}
 }
@@ -2001,7 +2001,7 @@ gda_meta_store_extract (GdaMetaStore *store, const gchar *select_sql, GError **e
 			return NULL;
 		if (remain) {
 			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_EXTRACT_SQL_ERROR,
-				     _("More than one SQL statement"));
+				     "%s", _("More than one SQL statement"));
 			g_object_unref (stmt);
 			return NULL;
 		}
@@ -2551,7 +2551,7 @@ find_row_in_model (GdaDataModel *find_in, GdaDataModel *data, gint row, gint *pk
 		ncols = gda_data_model_get_n_columns (find_in);
 		if (ncols > gda_data_model_get_n_columns (data)) {
 			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_MODIFY_CONTENTS_ERROR,
-				_("Data models should have the same number of columns"));
+				"%s", _("Data models should have the same number of columns"));
 			erow = -2;
 		}
 		else {
@@ -2650,7 +2650,7 @@ create_custom_set (GdaMetaStore *store, const gchar *table_name, const gchar *co
 	if (!set->select ||
 		(gda_statement_get_statement_type (set->select) != GDA_SQL_STATEMENT_SELECT)) {
 		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_MODIFY_CONTENTS_ERROR,
-			_("Could not create SELECT statement"));
+			"%s", _("Could not create SELECT statement"));
 		goto out;
 	}
 	
@@ -2665,7 +2665,7 @@ create_custom_set (GdaMetaStore *store, const gchar *table_name, const gchar *co
 	if (!set->delete||
 		(gda_statement_get_statement_type (set->delete) != GDA_SQL_STATEMENT_DELETE)) {
 		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_MODIFY_CONTENTS_ERROR,
-			_("Could not create DELETE statement"));
+			"%s", _("Could not create DELETE statement"));
 		goto out;
 	}
 	return set;
@@ -2707,7 +2707,7 @@ _gda_meta_store_begin_data_reset (GdaMetaStore *store, GError **error)
 	}
 	else {
 		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_TRANSACTION_ALREADY_STARTED_ERROR,
-			     _("A transaction has already been started"));
+			     "%s", _("A transaction has already been started"));
 		return FALSE;
 
 	}
@@ -3074,7 +3074,7 @@ gda_meta_store_set_attribute_value (GdaMetaStore *store, const gchar *att_name,
 
 	if (*att_name == '_') {
 		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_ATTRIBUTE_ERROR,
-			     _("Attributes names starting with a '_' are reserved for internal usage"));
+			     "%s", _("Attributes names starting with a '_' are reserved for internal usage"));
 		return FALSE;
 	}
 
@@ -3205,7 +3205,7 @@ gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_d
 	doc = xmlParseDoc (BAD_CAST xml_description);
 	if (!doc) {
 		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_SCHEMA_OBJECT_DESCR_ERROR,
-			     _("Could not parse XML description of custom database object to add"));
+			     "%s", _("Could not parse XML description of custom database object to add"));
 		return FALSE;
 	}
 	node = xmlDocGetRootElement (doc);
@@ -3217,12 +3217,12 @@ gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_d
 	prop = xmlGetProp (node, BAD_CAST "name");
 	if (!prop) {
 		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_SCHEMA_OBJECT_DESCR_ERROR,
-			     _("Missing custom database object name"));
+			     "%s", _("Missing custom database object name"));
 		goto onerror;
 	}
 	else if (*prop == '_') { 
 		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_SCHEMA_OBJECT_DESCR_ERROR,
-			     _("Custom database object names starting with a '_' are reserved for internal usage"));
+			     "%s", _("Custom database object names starting with a '_' are reserved for internal usage"));
 		goto onerror;
 	}
 
@@ -3317,7 +3317,7 @@ gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_d
 
 		if (conflict) {
 			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_SCHEMA_OBJECT_CONFLICT_ERROR,
-				     _("Another object with the same name already exists"));
+				     "%s", _("Another object with the same name already exists"));
 			goto onerror;
 		}
 		needs_creation = FALSE;

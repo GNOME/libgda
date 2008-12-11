@@ -213,7 +213,7 @@ add_error (GdaDataModelBdb *model, const gchar *err)
 {
 	GError *error = NULL;
 
-        g_set_error (&error, 0, 0, err);
+        g_set_error (&error, 0, 0, "%s", err);
         model->priv->errors = g_slist_append (model->priv->errors, error);
 }
 
@@ -609,7 +609,7 @@ gda_data_model_bdb_get_value_at (GdaDataModel *model, gint col, gint row, GError
 		tmp = g_strdup_printf (_("Column %d out of range (0-%d)"), col, imodel->priv->n_columns - 1);
 		add_error (imodel, tmp);
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_COLUMN_OUT_OF_RANGE_ERROR,
-			     tmp);
+			      "%s", tmp);
 		g_free (tmp);
 		return NULL;
 	}
@@ -623,7 +623,7 @@ gda_data_model_bdb_get_value_at (GdaDataModel *model, gint col, gint row, GError
 	if (ret) {
 		add_error (imodel, db_strerror (ret));
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-			     db_strerror (ret));
+			      "%s", db_strerror (ret));
 		return NULL;
 	}
 
@@ -742,7 +742,7 @@ gda_data_model_bdb_set_value_at (GdaDataModel *model, gint col, gint row, const 
 		tmp = g_strdup_printf (_("Column %d out of range (0-%d)"), col, imodel->priv->n_columns - 1);
 		add_error (imodel, tmp);
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_COLUMN_OUT_OF_RANGE_ERROR,
-			     tmp);
+			      "%s", tmp);
 		g_free (tmp);
 		return FALSE;
 	}
@@ -844,7 +844,7 @@ gda_data_model_bdb_set_values (GdaDataModel *model, gint row, GList *values, GEr
 	if (ret) {
 		add_error (imodel, db_strerror (ret));
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-			     db_strerror (ret));
+			      "%s", db_strerror (ret));
 		return FALSE;
 	}
 
@@ -854,7 +854,7 @@ gda_data_model_bdb_set_values (GdaDataModel *model, gint row, GList *values, GEr
 
 	if (key_modified) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR,
-			     _("Key modification is not supported"));
+			      "%s", _("Key modification is not supported"));
 		return FALSE;
 	}
 
@@ -907,7 +907,7 @@ gda_data_model_bdb_set_values (GdaDataModel *model, gint row, GList *values, GEr
 		if (ret) {
 			add_error (imodel, db_strerror (ret));
 			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-				     db_strerror (ret));
+				      "%s", db_strerror (ret));
 			return FALSE;
 		}
 	}
@@ -950,7 +950,7 @@ gda_data_model_bdb_append_row (GdaDataModel *model, GError **error)
 	if (ret) {
 		add_error (imodel, db_strerror (ret));
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-			     db_strerror (ret));
+			      "%s", db_strerror (ret));
 		return -1;
 	}
 
@@ -977,7 +977,7 @@ gda_data_model_bdb_remove_row (GdaDataModel *model, gint row, GError **error)
 	if (ret) {
 		add_error (imodel, db_strerror (ret));
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-			     db_strerror (ret));
+			      "%s", db_strerror (ret));
 		return FALSE;
 	}
 

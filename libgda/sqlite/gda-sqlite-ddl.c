@@ -213,7 +213,7 @@ gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 
 	if (!hasfields) {
 		allok = FALSE;
-		g_set_error (error, 0, 0, _("Table to create must have at least one row"));
+		g_set_error (error, 0, 0, "%s", _("Table to create must have at least one row"));
 	}
 	g_slist_free (pkfields);
 

@@ -675,7 +675,7 @@ gda_set_new_from_spec_string (const gchar *xml_spec, GError **error)
                                 g_set_error (error,
                                              GDA_SET_ERROR,
                                              GDA_SET_XML_SPEC_ERROR,
-                                             "XML spec. does not conform to DTD");
+                                             "%s", "XML spec. does not conform to DTD");
 
                         xmlDoValidityCheckingDefaultValue = xmlcheck;
                         return NULL;
@@ -1367,7 +1367,7 @@ gda_set_is_valid (GdaSet *set, GError **error)
 	for (holders = set->holders; holders; holders = holders->next) {
 		if (!gda_holder_is_valid ((GdaHolder*) holders->data)) {
 			g_set_error (error, GDA_SET_ERROR, GDA_SET_INVALID_ERROR,
-				     _("One or more values are invalid"));
+				     "%s", _("One or more values are invalid"));
 			return FALSE;
 		}
 	}

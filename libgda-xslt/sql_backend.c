@@ -131,7 +131,7 @@ gda_xslt_bk_section (GdaXsltExCont * exec, GdaXsltIntCont * pdata,
 	}
 	if (query_node == NULL) {
 		g_set_error (&(exec->error), 0, 0,
-			     "no query node in section node");
+			     "%s", "no query node in section node");
 		return -1;
 	}
 	/* set the query context */
@@ -396,7 +396,7 @@ _utility_data_model_to_nodeset (GdaDataModel * model,
 #ifdef GDA_DEBUG_NO
 		g_print ("xmlNewNode return NULL\n");
 #endif
-		g_set_error (error, 0, 0, "xmlNewNode return NULL\n");
+		g_set_error (error, 0, 0, "%s", "xmlNewNode return NULL\n");
 		return -1;
 	}
 	/* compute columns */
@@ -503,7 +503,7 @@ gda_xslt_bk_internal_query (GdaXsltExCont * exec, GdaXsltIntCont * pdata,
 	query_name = xmlGetProp (query_node, (const xmlChar *) "name");
 	if (query_name == NULL) {
 		g_set_error (&(exec->error), 0, 0,
-			     "the query element is not correct, no 'name' attribute\n");
+			     "%s", "the query element is not correct, no 'name' attribute\n");
 		return -1;
 	}
 
@@ -514,7 +514,7 @@ gda_xslt_bk_internal_query (GdaXsltExCont * exec, GdaXsltIntCont * pdata,
 		sqltxt_node = query_node->children;
 		if (sqltxt_node == NULL || sqltxt_node->type != XML_TEXT_NODE) {
 			g_set_error (&(exec->error), 0, 0,
-				     "the query element is not correct, it have not a first text children\n");
+				     "%s", "the query element is not correct, it have not a first text children\n");
 			return -1;
 		}
 #ifdef GDA_DEBUG_NO

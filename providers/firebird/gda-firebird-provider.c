@@ -632,7 +632,7 @@ gda_firebird_provider_perform_operation (GdaServerProvider *provider, GdaConnect
 	/* If asynchronous connection opening is not supported, then exit now */
 	if (async_cb) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     _("Provider does not support asynchronous server operation"));
+			     "%s", _("Provider does not support asynchronous server operation"));
                 return FALSE;
 	}
 
@@ -1043,7 +1043,7 @@ gda_firebird_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 	/* If asynchronous connection opening is not supported, then exit now */
 	if (async_cb) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     _("Provider does not support asynchronous statement execution"));
+			     "%s", _("Provider does not support asynchronous statement execution"));
                 return FALSE;
 	}
 
@@ -1086,7 +1086,7 @@ gda_firebird_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 			gda_connection_event_set_description (event, _("Missing parameter(s) to execute query"));
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
-				     _("Missing parameter(s) to execute query"));
+				     "%s", _("Missing parameter(s) to execute query"));
 			break;
 		}
 
@@ -1104,7 +1104,7 @@ gda_firebird_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 			gda_connection_event_set_description (event, str);
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
+				     "%s", GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
 			g_free (str);
 			break;
 		}

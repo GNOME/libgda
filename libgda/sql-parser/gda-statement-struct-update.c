@@ -234,19 +234,19 @@ gda_sql_statement_update_check_structure (GdaSqlAnyPart *stmt, gpointer data, GE
 
 	if (!update->table) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("UPDATE statement needs a table to update data"));
+			      "%s", _("UPDATE statement needs a table to update data"));
 		return FALSE;
 	}
 
 	if (g_slist_length (update->fields_list) != g_slist_length (update->expr_list)) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("UPDATE statement does not have the same number of target columns and expressions"));
+			      "%s", _("UPDATE statement does not have the same number of target columns and expressions"));
 		return FALSE;
 	}
 
 	if (!update->fields_list) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("UPDATE statement does not have any target columns to update"));
+			      "%s", _("UPDATE statement does not have any target columns to update"));
 		return FALSE;
 	}
 

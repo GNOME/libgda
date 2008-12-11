@@ -79,14 +79,14 @@ _gda_postgres_make_error (GdaConnection *cnc, PGconn *pconn, PGresult *pg_res, G
 
                 gda_connection_event_set_description (error_ev, ptr);
                 gda_connection_event_set_gda_code (error_ev, gda_code);
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR, ptr);
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR, "%s", ptr);
 		g_free (message);
         }
         else {
                 gda_connection_event_set_description (error_ev, _("No detail"));
                 gda_connection_event_set_gda_code (error_ev, gda_code);
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR,
-			     _("No detail"));
+			     "%s", _("No detail"));
         }
 
         gda_connection_event_set_code (error_ev, -1);

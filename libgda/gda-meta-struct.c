@@ -2201,7 +2201,7 @@ gda_meta_struct_add_db_object (GdaMetaStruct *mstruct, GdaMetaDbObject *dbo, GEr
 
 	if (!dbo->obj_name) {
 		g_set_error (error, GDA_META_STRUCT_ERROR, GDA_META_STRUCT_INCOHERENCE_ERROR,
-			     _("Missing object name in GdaMetaDbObject structure"));
+			     "%s", _("Missing object name in GdaMetaDbObject structure"));
 		gda_meta_db_object_free (dbo);
 		return NULL;
 	}

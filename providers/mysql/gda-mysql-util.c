@@ -46,7 +46,7 @@ _gda_mysql_make_error (GdaConnection  *cnc,
 		gda_connection_event_set_code
 			(event_error, GDA_CONNECTION_EVENT_CODE_UNKNOWN);
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR,
-			     mysql_error (mysql));
+			     "%s", mysql_error (mysql));
 		
 		//g_print ("%s: %s\n", __func__, mysql_error (mysql));
 		
@@ -58,7 +58,7 @@ _gda_mysql_make_error (GdaConnection  *cnc,
 		gda_connection_event_set_code
 			(event_error, GDA_CONNECTION_EVENT_CODE_UNKNOWN);
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR,
-			     mysql_stmt_error (mysql_stmt));
+			     "%s", mysql_stmt_error (mysql_stmt));
 		
 		//g_print ("%s : %s\n", __func__, mysql_stmt_error (mysql_stmt));
 		
@@ -70,7 +70,7 @@ _gda_mysql_make_error (GdaConnection  *cnc,
 		gda_connection_event_set_code
 			(event_error, GDA_CONNECTION_EVENT_CODE_UNKNOWN);
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR,
-			     _("No detail"));
+			     "%s", _("No detail"));
 	}
 	gda_connection_event_set_source (event_error, "gda-mysql");
 

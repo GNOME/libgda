@@ -646,19 +646,19 @@ dml_statements_check_select_structure (GdaConnection *cnc, GdaSqlStatement *sel_
 	stsel = (GdaSqlStatementSelect*) sel_struct->contents;
 	if (!stsel->from) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("SELECT statement has no FROM part"));
+			     "%s", _("SELECT statement has no FROM part"));
 		return FALSE;
 	}
 	if (stsel->from->targets && stsel->from->targets->next) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("SELECT statement involves more than one table or expression"));
+			     "%s", _("SELECT statement involves more than one table or expression"));
 		return FALSE;
 	}
 	GdaSqlSelectTarget *target;
 	target = (GdaSqlSelectTarget*) stsel->from->targets->data;
 	if (!target->table_name) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("SELECT statement involves more than one table or expression"));
+			     "%s", _("SELECT statement involves more than one table or expression"));
 		return FALSE;
 	}
 	if (!gda_sql_statement_check_validity (sel_struct, cnc, error)) 
@@ -668,7 +668,7 @@ dml_statements_check_select_structure (GdaConnection *cnc, GdaSqlStatement *sel_
 	g_assert (target->validity_meta_object); /* because gda_sql_statement_check_validity() returned TRUE */
 	if (target->validity_meta_object->obj_type != GDA_META_DB_TABLE) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("Can only build modification statement for tables"));
+			     "%s", _("Can only build modification statement for tables"));
 		return FALSE;
 	}
 
@@ -687,7 +687,7 @@ gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTab
 
 	if (mtable->pk_cols_nb == 0) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("Table does not have any primary key"));
+			     "%s", _("Table does not have any primary key"));
 		return NULL;
 	}
 	
@@ -695,7 +695,7 @@ gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTab
 	if (require_pk) {
 		if (mtable->pk_cols_nb == 0) {
 			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-					     _("Table does not have any primary key"));
+					     "%s", _("Table does not have any primary key"));
 			goto onerror;
 		}
 		else if (mtable->pk_cols_nb > 1) {
@@ -721,7 +721,7 @@ gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTab
 			}
 			if (!sfield) {
 				g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-					     _("Table's primary key is not selected"));
+					     "%s", _("Table's primary key is not selected"));
 				goto onerror;
 			}
 			else {
@@ -913,7 +913,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 			/* To translators: this error message occurs when no "INSERT INTO <table> (field1, ...)..." 
 			 * SQL statement can be computed because no table field can be used */
 			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-				     _("Could not compute any field to insert into"));
+				     "%s", _("Could not compute any field to insert into"));
 			retval = FALSE;
 			goto cleanup;
 		}

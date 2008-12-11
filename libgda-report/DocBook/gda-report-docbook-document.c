@@ -295,7 +295,7 @@ gda_report_docbook_document_run_as_html (GdaReportDocument *doc, const gchar *fi
 			fdoc->priv->html_stylesheet = NULL;
 		}
 		if (!fdoc->priv->html_stylesheet) {
-			g_set_error (error, 0, 0,
+			g_set_error (error, 0, 0, "%s", 
 				     _("Could not find the DocBook XSL stylesheet for HTML"));
 			g_static_mutex_unlock (&init_mutex);
 			return FALSE;
@@ -363,7 +363,7 @@ gda_report_docbook_document_run_as_pdf (GdaReportDocument *doc, const gchar *fil
 			fdoc->priv->fo_stylesheet = NULL;
 		}
 		if (!fdoc->priv->fo_stylesheet) {
-			g_set_error (error, 0, 0,
+			g_set_error (error, 0, 0, "%s", 
 				     _("Could not find the DocBook XSL stylesheet for Formatting Objects"));
 			return FALSE;
 		}

@@ -314,25 +314,25 @@ gda_sql_statement_select_check_structure (GdaSqlAnyPart *stmt, gpointer data, GE
 	GdaSqlStatementSelect *select = (GdaSqlStatementSelect *) stmt;
 	if (!select->expr_list) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("SELECT does not contain any expression"));
+			      "%s", _("SELECT does not contain any expression"));
 		return FALSE;
 	}
 
 	if (select->distinct_expr && !select->distinct) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("SELECT can't have a DISTINCT expression if DISTINCT is not set"));
+			      "%s", _("SELECT can't have a DISTINCT expression if DISTINCT is not set"));
 		return FALSE;
 	}
 
 	if (select->having_cond && !select->group_by) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("SELECT can't have a HAVING without GROUP BY"));
+			      "%s", _("SELECT can't have a HAVING without GROUP BY"));
 		return FALSE;
 	}
 
 	if (select->limit_offset && !select->limit_count) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("SELECT can't have a limit offset without a limit"));
+			      "%s", _("SELECT can't have a limit offset without a limit"));
 		return FALSE;
 	}
 	return TRUE;

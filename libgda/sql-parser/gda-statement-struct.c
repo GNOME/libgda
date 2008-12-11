@@ -471,7 +471,7 @@ gda_sql_field_check_validity (GdaSqlField *field, GdaSqlStatementCheckValidityDa
 	     any = any->parent);
 	if (!any) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("GdaSqlField is not part of an INSERT or UPDATE statement"));
+			      "%s", _("GdaSqlField is not part of an INSERT or UPDATE statement"));
 		return FALSE;
 	}
 	
@@ -484,7 +484,7 @@ gda_sql_field_check_validity (GdaSqlField *field, GdaSqlStatementCheckValidityDa
 
 	if (!stable) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_VALIDATION_ERROR,
-			     _("Missing table in statement"));
+			      "%s", _("Missing table in statement"));
 		return FALSE;
 	}
 	if (!stable->validity_meta_object) {
@@ -539,7 +539,7 @@ find_table_or_view (GdaSqlAnyPart *part, GdaSqlStatementCheckValidityData *data,
 		for (any = part->parent; any && any->parent; any = any->parent);
 		if (!any) 
 			g_set_error (&lerror, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-				     _("GdaSqlSelectField is not part of a SELECT statement"));
+				      "%s", _("GdaSqlSelectField is not part of a SELECT statement"));
 		else {
 			switch (any->type) {
 			case GDA_SQL_ANY_STMT_SELECT: {
@@ -598,7 +598,7 @@ gda_sql_table_check_validity (GdaSqlTable *table, GdaSqlStatementCheckValidityDa
 
 	if (!table->table_name) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_VALIDATION_ERROR,
-			     _("Missing table name in statement"));
+			      "%s", _("Missing table name in statement"));
 		return FALSE;
 	}
 
@@ -666,7 +666,7 @@ gda_sql_select_field_check_validity (GdaSqlSelectField *field, GdaSqlStatementCh
 		     any = any->parent);
 		if (!any) {
 			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-				     _("GdaSqlSelectField is not part of a SELECT statement"));
+				      "%s", _("GdaSqlSelectField is not part of a SELECT statement"));
 			return FALSE;
 		}
 
@@ -880,7 +880,7 @@ gda_sql_any_part_check_structure (GdaSqlAnyPart *node, GError **error)
 		GdaSqlExpr *expr = (GdaSqlExpr*) node;
 		if (expr->cast_as && expr->param_spec) {
 			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-				     _("Expression can't have both a type cast and a parameter specification"));
+				      "%s", _("Expression can't have both a type cast and a parameter specification"));
 			return FALSE;
 		}
 		break;
@@ -893,7 +893,7 @@ gda_sql_any_part_check_structure (GdaSqlAnyPart *node, GError **error)
 					     _("'%s' is not a valid identifier"), field->field_name);
 			else
 				g_set_error (error, GDA_SQL_ERROR, GDA_SQL_MALFORMED_IDENTIFIER_ERROR,
-					     _("Empty identifier"));
+					      "%s", _("Empty identifier"));
 			return FALSE;
 		}
 		break;
@@ -906,7 +906,7 @@ gda_sql_any_part_check_structure (GdaSqlAnyPart *node, GError **error)
 					     _("'%s' is not a valid identifier"), table->table_name);
 			else
 				g_set_error (error, GDA_SQL_ERROR, GDA_SQL_MALFORMED_IDENTIFIER_ERROR,
-					     _("Empty identifier"));
+					      "%s", _("Empty identifier"));
 			return FALSE;
 		}
 		break;
@@ -919,7 +919,7 @@ gda_sql_any_part_check_structure (GdaSqlAnyPart *node, GError **error)
 					     _("'%s' is not a valid identifier"), function->function_name);
 			else
 				g_set_error (error, GDA_SQL_ERROR, GDA_SQL_MALFORMED_IDENTIFIER_ERROR,
-					     _("Empty identifier"));
+					      "%s", _("Empty identifier"));
 			return FALSE;
 		}
 		break;
@@ -928,7 +928,7 @@ gda_sql_any_part_check_structure (GdaSqlAnyPart *node, GError **error)
 		GdaSqlOperation *operation = (GdaSqlOperation*) node;
 		if (!operation->operands) {
 			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-				     _("Operation has no operand"));
+				      "%s", _("Operation has no operand"));
 			return FALSE;
 		}
 		switch (operation->operator_type) {
@@ -951,14 +951,14 @@ gda_sql_any_part_check_structure (GdaSqlAnyPart *node, GError **error)
 		case GDA_SQL_OPERATOR_TYPE_BITOR:
 			if (g_slist_length (operation->operands) != 2) {
 				g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-					     _("Wrong number of operands"));
+					      "%s", _("Wrong number of operands"));
 				return FALSE;
 			}
 			break;
 		case GDA_SQL_OPERATOR_TYPE_BETWEEN:
 			if (g_slist_length (operation->operands) != 3) {
 				g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-					     _("Wrong number of operands"));
+					      "%s", _("Wrong number of operands"));
 				return FALSE;
 			}
 			break;
@@ -968,7 +968,7 @@ gda_sql_any_part_check_structure (GdaSqlAnyPart *node, GError **error)
 		case GDA_SQL_OPERATOR_TYPE_NOT:
 			if (g_slist_length (operation->operands) != 1) {
 				g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-					     _("Wrong number of operands"));
+					      "%s", _("Wrong number of operands"));
 				return FALSE;
 			}
 			break;
@@ -980,7 +980,7 @@ gda_sql_any_part_check_structure (GdaSqlAnyPart *node, GError **error)
 		case GDA_SQL_OPERATOR_TYPE_STAR:
 			if (g_slist_length (operation->operands) < 2) {
 				g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-					     _("Wrong number of operands"));
+					      "%s", _("Wrong number of operands"));
 				return FALSE;
 			}
 			break;
@@ -988,7 +988,7 @@ gda_sql_any_part_check_structure (GdaSqlAnyPart *node, GError **error)
 		case GDA_SQL_OPERATOR_TYPE_PLUS:
 			if (g_slist_length (operation->operands) == 0) {
 				g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-					     _("Wrong number of operands"));
+					      "%s", _("Wrong number of operands"));
 				return FALSE;
 			}
 			break;
@@ -1003,12 +1003,12 @@ gda_sql_any_part_check_structure (GdaSqlAnyPart *node, GError **error)
 		GdaSqlCase *sc = (GdaSqlCase*) node;
 		if (g_slist_length (sc->when_expr_list) != g_slist_length (sc->then_expr_list)) {
 			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-				     "Number of WHEN is not the same as number of THEN in CASE expression");
+				      "%s", "Number of WHEN is not the same as number of THEN in CASE expression");
 			return FALSE;
 		}
 		if (!sc->when_expr_list) {
 			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-					     "CASE expression must have at least one WHEN ... THEN element");
+					      "%s", "CASE expression must have at least one WHEN ... THEN element");
 			return FALSE;
 		}
 		break;
@@ -1017,7 +1017,7 @@ gda_sql_any_part_check_structure (GdaSqlAnyPart *node, GError **error)
 		GdaSqlSelectField *field = (GdaSqlSelectField*) node;
 		if (!field->expr) {
 			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-				     _("Missing expression in select field"));
+				      "%s", _("Missing expression in select field"));
 			return FALSE;
 		}
 		break;
@@ -1026,7 +1026,7 @@ gda_sql_any_part_check_structure (GdaSqlAnyPart *node, GError **error)
 		GdaSqlSelectTarget *target = (GdaSqlSelectTarget*) node;
 		if (!target->expr) {
 			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-				     _("Missing expression in select target"));
+				      "%s", _("Missing expression in select target"));
 			return FALSE;
 		}
 		break;
@@ -1035,12 +1035,12 @@ gda_sql_any_part_check_structure (GdaSqlAnyPart *node, GError **error)
 		GdaSqlSelectJoin *join = (GdaSqlSelectJoin*) node;
 		if (join->expr && join->use) {
 			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-				     _("Join can't at the same time specify a join condition and a list of fields to join on"));
+				      "%s", _("Join can't at the same time specify a join condition and a list of fields to join on"));
 			return FALSE;
 		}
 		if ((join->type == GDA_SQL_SELECT_JOIN_CROSS) && (join->expr || join->use)) {
 			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-				     _("Cross join can't have a join condition or a list of fields to join on"));
+				      "%s", _("Cross join can't have a join condition or a list of fields to join on"));
 			return FALSE;
 		}
 		break;
@@ -1049,7 +1049,7 @@ gda_sql_any_part_check_structure (GdaSqlAnyPart *node, GError **error)
 		GdaSqlSelectFrom *from = (GdaSqlSelectFrom*) node;
 		if (!from->targets) {
 			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-				     _("Empty FROM clause"));
+				      "%s", _("Empty FROM clause"));
 			return FALSE;
 		}
 		break;
@@ -1058,7 +1058,7 @@ gda_sql_any_part_check_structure (GdaSqlAnyPart *node, GError **error)
 		GdaSqlSelectOrder *order = (GdaSqlSelectOrder*) node;
 		if (!order->expr) {
 			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-				     "ORDER BY expression must have an expression");
+				      "%s", "ORDER BY expression must have an expression");
 			return FALSE;
 		}
 		break;
@@ -1323,7 +1323,7 @@ foreach_normalize (GdaSqlAnyPart *node, GdaConnection *cnc, GError **error)
 			gint nodepos = g_slist_index (((GdaSqlStatementSelect*) parent_node)->expr_list, node);
 			if (parent_node->type != GDA_SQL_ANY_STMT_SELECT) {
 				g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-					     _("Select field is not in a SELECT statement"));
+					      "%s", _("Select field is not in a SELECT statement"));
 				return FALSE;
 			}
 			for (list = mtable->columns; list; list = list->next) {

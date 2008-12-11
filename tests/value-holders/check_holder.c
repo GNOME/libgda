@@ -90,7 +90,7 @@ test1 (GError **error)
 	emitted_signals_monitor_holder (h);
 	cvalue = gda_holder_get_value (h);
 	if (!gda_value_is_null (cvalue)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "Expecting NULL value from new GdaHolder");
 		return FALSE;
 	}
@@ -107,7 +107,7 @@ test1 (GError **error)
 
 	cvalue = gda_holder_get_value (h);
 	if (!cvalue || gda_value_compare (value, cvalue)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's value is incorrect");
 		return FALSE;
 	}
@@ -126,7 +126,7 @@ test1 (GError **error)
 
 	cvalue = gda_holder_get_value (h);
 	if (!cvalue || gda_value_compare (copy, cvalue)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's value is incorrect");
 		return FALSE;
 	}
@@ -150,13 +150,13 @@ test2 (GError **error)
 	value = gda_value_new_from_string ("TRUE", G_TYPE_BOOLEAN);
 	cvalue = gda_holder_get_value (h);
 	if (!cvalue || gda_value_compare (value, cvalue)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's value is incorrect");
 		return FALSE;
 	}
 	gda_value_free (value);
 	if (strcmp (gda_holder_get_id (h), "ABOOL")) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's ID is incorrect");
 		return FALSE;
 	}
@@ -167,13 +167,13 @@ test2 (GError **error)
 	value = gda_value_new_from_string ("A string value", G_TYPE_STRING);
 	cvalue = gda_holder_get_value (h);
 	if (!cvalue || gda_value_compare (value, cvalue)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's value is incorrect");
 		return FALSE;
 	}
 	gda_value_free (value);
 	if (strcmp (gda_holder_get_id (h), "Astring")) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's ID is incorrect");
 		return FALSE;
 	}
@@ -183,13 +183,13 @@ test2 (GError **error)
 	value = gda_value_new_from_string ("15", G_TYPE_INT);
 	cvalue = gda_holder_get_value (h);
 	if (!cvalue || gda_value_compare (value, cvalue)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's value is incorrect");
 		return FALSE;
 	}
 	gda_value_free (value);
 	if (strcmp (gda_holder_get_id (h), "AnInt")) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's ID is incorrect");
 		return FALSE;
 	}
@@ -212,7 +212,7 @@ test3 (GError **error)
 	h = gda_holder_new_boolean ("ABOOL", TRUE);
 	emitted_signals_monitor_holder (h);
 	if (!gda_holder_is_valid (h)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder is invalid");
 		return FALSE;
 	}
@@ -220,13 +220,13 @@ test3 (GError **error)
 	/***/
 	gda_holder_force_invalid (h);
 	if (gda_holder_is_valid (h)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder is valid");
 		return FALSE;
 	}
 	cvalue = gda_holder_get_value (h);
 	if (!gda_value_is_null (cvalue)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's value is incorrect");
 		return FALSE;
 	}
@@ -237,7 +237,7 @@ test3 (GError **error)
 	if (! gda_holder_take_value (h, value, error))
 		return FALSE;
 	if (!gda_holder_is_valid (h)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder is invalid");
 		return FALSE;
 	}
@@ -267,14 +267,14 @@ test4 (GError **error)
 	
 	cvalue = gda_holder_get_default_value (h);
 	if (cvalue) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder should not have a default value");
 		return FALSE;
 	}
 
 	/***/
 	if (gda_holder_set_value_to_default (h)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "Should not set GdaHolder's value to default");
 		return FALSE;
 	}
@@ -289,7 +289,7 @@ test4 (GError **error)
 
 	cvalue = gda_holder_get_default_value (h);
 	if (!cvalue || gda_value_compare (value, cvalue)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's default value is invalid");
 		return FALSE;
 	}
@@ -297,14 +297,14 @@ test4 (GError **error)
 
 	/***/
 	if (gda_holder_value_is_default (h)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's value should not be default");
 		return FALSE;
 	}
 
 	/** Check value */
 	if (! gda_holder_set_value_to_default (h)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "Could not set GdaHolder's value to default");
 		return FALSE;
 	}
@@ -316,7 +316,7 @@ test4 (GError **error)
 	cvalue = gda_holder_get_value (h);
 	if (cvalue) {
 		tests_common_display_value ("cvalue", cvalue);
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's value is invalid");
 		return FALSE;
 	}
@@ -333,7 +333,7 @@ test4 (GError **error)
 	cvalue = gda_holder_get_value (h);
 	if (!cvalue || gda_value_compare (value, cvalue)) {
 		tests_common_display_value ("cvalue", cvalue);
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's value is invalid");
 		return FALSE;
 	}
@@ -347,7 +347,7 @@ test4 (GError **error)
 
 	cvalue = gda_holder_get_default_value (h);
 	if (!cvalue || gda_value_compare (value, cvalue)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's default value is invalid");
 		return FALSE;
 	}
@@ -355,7 +355,7 @@ test4 (GError **error)
 
 	/***/
 	if (gda_holder_value_is_default (h)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's value should not be default");
 		return FALSE;
 	}
@@ -381,7 +381,7 @@ test5 (GError **error)
 
 	cvalue = gda_holder_get_default_value (h);
 	if (cvalue) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder should not have a default value");
 		return FALSE;
 	}
@@ -394,21 +394,21 @@ test5 (GError **error)
 
 	cvalue = gda_holder_get_default_value (h);
 	if (!cvalue || gda_value_compare (defvalue, cvalue)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's default value is invalid");
 		return FALSE;
 	}
 
 	/***/
 	if (gda_holder_value_is_default (h)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's value should not be default");
 		return FALSE;
 	}
 
 	/** Check value */
 	if (! gda_holder_set_value_to_default (h)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "Could not set GdaHolder's value to default");
 		return FALSE;
 	}
@@ -420,7 +420,7 @@ test5 (GError **error)
 	cvalue = gda_holder_get_value (h);
 	if (!cvalue || gda_value_compare (defvalue, cvalue)) {
 		tests_common_display_value ("cvalue", cvalue);
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's value is invalid");
 		return FALSE;
 	}
@@ -437,7 +437,7 @@ test5 (GError **error)
 	cvalue = gda_holder_get_value (h);
 	if (!cvalue || gda_value_compare (value, cvalue)) {
 		tests_common_display_value ("cvalue", cvalue);
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's value is invalid");
 		return FALSE;
 	}
@@ -445,7 +445,7 @@ test5 (GError **error)
 	
 	/***/
 	if (gda_holder_value_is_default (h)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's value should not be default");
 		return FALSE;
 	}
@@ -462,7 +462,7 @@ test5 (GError **error)
 	cvalue = gda_holder_get_value (h);
 	if (!cvalue || gda_value_compare (value, cvalue)) {
 		tests_common_display_value ("cvalue", cvalue);
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's value is invalid");
 		return FALSE;
 	}
@@ -470,7 +470,7 @@ test5 (GError **error)
 
 	/***/
 	if (!gda_holder_value_is_default (h)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's value should be default");
 		return FALSE;
 	}
@@ -496,7 +496,7 @@ test6 (GError **error)
 	emitted_signals_monitor_holder (h);
 	emitted_signals_reset ();
 	if (cvalue) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder should not have a default value");
 		return FALSE;
 	}
@@ -509,21 +509,21 @@ test6 (GError **error)
 
 	cvalue = gda_holder_get_default_value (h);
 	if (!cvalue || gda_value_compare (defvalue, cvalue)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's default value is invalid");
 		return FALSE;
 	}
 
 	/***/
 	if (gda_holder_value_is_default (h)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's value should not be default");
 		return FALSE;
 	}
 
 	/** Check value */
 	if (! gda_holder_set_value_to_default (h)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "Could not set GdaHolder's value to default");
 		return FALSE;
 	}
@@ -535,7 +535,7 @@ test6 (GError **error)
 	cvalue = gda_holder_get_value (h);
 	if (cvalue) {
 		tests_common_display_value ("cvalue", cvalue);
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's value is invalid");
 		return FALSE;
 	}
@@ -547,7 +547,7 @@ test6 (GError **error)
 	cvalue = gda_holder_get_value (h);
 	if (!cvalue || gda_value_compare (value, cvalue)) {
 		tests_common_display_value ("cvalue", cvalue);
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's value is invalid");
 		return FALSE;
 	}
@@ -555,7 +555,7 @@ test6 (GError **error)
 	
 	/***/
 	if (gda_holder_value_is_default (h)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's value should not be default");
 		return FALSE;
 	}
@@ -595,7 +595,7 @@ test7 (GError **error)
 	cvalue = gda_holder_get_value (h1);
 	if (!cvalue || gda_value_compare (value, cvalue)) {
 		tests_common_display_value ("Slave", cvalue);
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "Slave GdaHolder's value is wrong");
 		return FALSE;
 	}
@@ -615,7 +615,7 @@ test7 (GError **error)
 	cvalue = gda_holder_get_value (h1);
 	if (!cvalue || gda_value_compare (value, cvalue)) {
 		tests_common_display_value ("Slave", cvalue);
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "Slave GdaHolder's value is wrong");
 		return FALSE;
 	}
@@ -634,13 +634,13 @@ test7 (GError **error)
 
 	cvalue = gda_holder_get_value (h2);
 	if (!cvalue || gda_value_compare (value, cvalue)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "Master GdaHolder's value is wrong");
 		return FALSE;
 	}
 	cvalue = gda_holder_get_value (h1);
 	if (!cvalue || gda_value_compare (value, cvalue)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "Slave GdaHolder's value is wrong");
 		return FALSE;
 	}
@@ -653,7 +653,7 @@ test7 (GError **error)
 
 	cvalue = gda_holder_get_value (h1);
 	if (!cvalue || gda_value_compare (value, cvalue)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "Slave GdaHolder's value is wrong");
 		return FALSE;
 	}
@@ -671,14 +671,14 @@ test7 (GError **error)
 
 	cvalue = gda_holder_get_value (h1);
 	if (!cvalue || gda_value_compare (value, cvalue)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "Slave GdaHolder's value is wrong");
 		return FALSE;
 	}
 
 	cvalue = gda_holder_get_value (h2);
 	if (!cvalue || !gda_value_compare (value, cvalue)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "Master GdaHolder's value is wrong");
 		return FALSE;
 	}
@@ -715,7 +715,7 @@ test8 (GError **error)
 
 	/***/
 	if (!gda_holder_value_is_default (h)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's value should be default");
 		return FALSE;
 	}
@@ -749,7 +749,7 @@ test9 (GError **error)
 		return FALSE;
 
 	if ((gda_holder_get_source_model (h, &col) != model) || (col != 1)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's source is wrong");
 		return FALSE;
 	}
@@ -762,7 +762,7 @@ test9 (GError **error)
 	if (!emitted_signals_chech_empty (NULL, "source-changed", error))
 		return FALSE;
 	if ((gda_holder_get_source_model (h, &col) != model) || (col != 0)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's source is wrong");
 		return FALSE;
 	}
@@ -776,7 +776,7 @@ test9 (GError **error)
 		return FALSE;
 
 	if (gda_holder_get_source_model (h, NULL)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's source should be NULL");
 		return FALSE;
 	}
@@ -805,7 +805,7 @@ t10_validate_change_cb (GdaHolder *h, const GValue *value, gchar *token)
 		GError *error = NULL;
 		g_print ("GdaHolder change refused\n");
 		g_set_error (&error, 0, 0,
-			     "GdaHolder change refused!");
+			     "%s", "GdaHolder change refused!");
 		return error;
 	}
 }
@@ -839,7 +839,7 @@ test10 (GError **error)
 	value = gda_value_new_from_string ("my other string", G_TYPE_STRING);
 	emitted_signals_reset ();
 	if (gda_holder_set_value (h, value, error)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's change should have failed");
 		return FALSE;
 	}
@@ -851,7 +851,7 @@ test10 (GError **error)
 	value = gda_value_new_from_string ("my string", G_TYPE_STRING);
 	cvalue = gda_holder_get_value (h);
 	if (!cvalue || gda_value_differ (value, cvalue)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's value is incorrect");
 		return FALSE;
 	}
@@ -871,7 +871,7 @@ test10 (GError **error)
 	/***/
 	cvalue = gda_holder_get_value (h);
 	if (!cvalue || gda_value_differ (value, cvalue)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's value is incorrect");
 		return FALSE;
 	}
@@ -896,7 +896,7 @@ test11 (GError **error)
 	value = gda_value_new_from_string ("my string", G_TYPE_STRING);
 	emitted_signals_reset ();
 	if (gda_holder_set_value (h, value, NULL)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's change should have failed");
 		return FALSE;
 	}
@@ -924,7 +924,7 @@ test11 (GError **error)
 	/***/
 	cvalue = gda_holder_get_value (h);
 	if (!cvalue || gda_value_differ (value, cvalue)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's value is incorrect");
 		return FALSE;
 	}
@@ -947,7 +947,7 @@ test12 (GError **error)
 	/***/
 	value = gda_value_new_from_string ("my string", G_TYPE_STRING);
 	if (gda_holder_get_attribute (h, "attname1")) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "gda_holder_get_attribute() should have retunred NULL");
 		return FALSE;
 	}
@@ -955,13 +955,13 @@ test12 (GError **error)
 	gda_value_free (value);
 	cvalue = gda_holder_get_attribute (h, "attname1");
 	if (!cvalue) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "gda_holder_get_attribute() should have retunred a value");
 		return FALSE;
 	}
 	value = gda_value_new_from_string ("my string", G_TYPE_STRING);
 	if (gda_value_differ (cvalue, value)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "gda_holder_get_attribute() retunred a wrong value");
 		return FALSE;
 	}
@@ -974,12 +974,12 @@ test12 (GError **error)
 	copy = gda_holder_copy (h);
 	cvalue = gda_holder_get_attribute (copy, "attname1");
 	if (!cvalue) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "gda_holder_get_attribute() should have retunred a value");
 		return FALSE;
 	}
 	if (gda_value_differ (cvalue, value)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "gda_holder_get_attribute() retunred a wrong value");
 		return FALSE;
 	}
@@ -987,7 +987,7 @@ test12 (GError **error)
 
 	g_object_get (G_OBJECT (copy), "name", &name, NULL);
 	if (strcmp (name, "thename")) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, 0, 0, "%s", 
 			     "gda_holder_copy() did not copy the name");
 		return FALSE;
 	}

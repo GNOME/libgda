@@ -201,7 +201,7 @@ gda_sql_statement_compound_get_n_cols (GdaSqlStatementCompound *compound, GError
 {
 	if (!compound || !compound->stmt_list) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("COMPOUND statement contains an undefined COMPOUND statement"));
+			      "%s", _("COMPOUND statement contains an undefined COMPOUND statement"));
 		return -1;
 	}
 	
@@ -210,7 +210,7 @@ gda_sql_statement_compound_get_n_cols (GdaSqlStatementCompound *compound, GError
 	if (sqlstmt->stmt_type == GDA_SQL_STATEMENT_SELECT) {
 		if (!sqlstmt->contents) {
 			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-				     _("COMPOUND statement contains an undefined SELECT statement"));
+				      "%s", _("COMPOUND statement contains an undefined SELECT statement"));
 			return -1;
 		}
 		return g_slist_length (((GdaSqlStatementSelect*) sqlstmt->contents)->expr_list);
@@ -219,7 +219,7 @@ gda_sql_statement_compound_get_n_cols (GdaSqlStatementCompound *compound, GError
 		return gda_sql_statement_compound_get_n_cols ((GdaSqlStatementCompound*) sqlstmt->contents, error);
 	else {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("COMPOUND statement contains a non SELECT statement"));
+			      "%s", _("COMPOUND statement contains a non SELECT statement"));
 		return -1;
 	}
 }
@@ -233,13 +233,13 @@ gda_sql_statement_compound_check_structure (GdaSqlAnyPart *stmt, gpointer data, 
 
 	if (!compound->stmt_list) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("COMPOUND statement does not contain any SELECT statement"));
+			      "%s", _("COMPOUND statement does not contain any SELECT statement"));
 		return FALSE;
 	}
 
 	if (!compound->stmt_list->next) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("COMPOUND statement only contains one SELECT statement"));
+			      "%s", _("COMPOUND statement only contains one SELECT statement"));
 		return FALSE;
 	}
 	
@@ -249,7 +249,7 @@ gda_sql_statement_compound_check_structure (GdaSqlAnyPart *stmt, gpointer data, 
 		if (sqlstmt->stmt_type == GDA_SQL_STATEMENT_SELECT) {
 			if (!sqlstmt->contents) {
 				g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-					     _("COMPOUND statement contains an undefined SELECT statement"));
+					      "%s", _("COMPOUND statement contains an undefined SELECT statement"));
 				return FALSE;
 			}
 			nb = g_slist_length (((GdaSqlStatementSelect*) sqlstmt->contents)->expr_list);
@@ -261,7 +261,7 @@ gda_sql_statement_compound_check_structure (GdaSqlAnyPart *stmt, gpointer data, 
 		}
 		else {
 			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     _("COMPOUND statement contains a non SELECT statement"));
+			      "%s", _("COMPOUND statement contains a non SELECT statement"));
 			return FALSE;
 		}
 
@@ -269,13 +269,13 @@ gda_sql_statement_compound_check_structure (GdaSqlAnyPart *stmt, gpointer data, 
 			nb_cols = nb;
 			if (nb == 0) {
 				g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-					     _("COMPOUND statement contains an empty SELECT statement"));
+					      "%s", _("COMPOUND statement contains an empty SELECT statement"));
 				return FALSE;
 			}
 		}
 		else if (nb != nb_cols) {
 			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-				     _("All statements in a COMPOUND must have the same number of columns"));
+				      "%s", _("All statements in a COMPOUND must have the same number of columns"));
 			return FALSE;
 		}
 	}

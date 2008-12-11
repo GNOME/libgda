@@ -591,7 +591,7 @@ gda_capi_provider_perform_operation (GdaServerProvider *provider, GdaConnection 
 	/* If asynchronous connection opening is not supported, then exit now */
 	if (async_cb) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     _("Provider does not support asynchronous server operation"));
+			     "%s", _("Provider does not support asynchronous server operation"));
                 return FALSE;
 	}
 
@@ -946,7 +946,7 @@ gda_capi_provider_statement_prepare (GdaServerProvider *provider, GdaConnection 
                         }
                         else {
                                 g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR,
-                                             _("Unnamed parameter is not allowed in prepared statements"));
+                                             "%s", _("Unnamed parameter is not allowed in prepared statements"));
                                 g_slist_foreach (param_ids, (GFunc) g_free, NULL);
                                 g_slist_free (param_ids);
                                 goto out;
@@ -1007,7 +1007,7 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 	/* If asynchronous connection opening is not supported, then exit now */
 	if (async_cb) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     _("Provider does not support asynchronous statement execution"));
+			     "%s", _("Provider does not support asynchronous statement execution"));
                 return NULL;
 	}
 
@@ -1068,7 +1068,7 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 			gda_connection_event_set_description (event, _("Missing parameter(s) to execute query"));
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
-				     _("Missing parameter(s) to execute query"));
+				     "%s", _("Missing parameter(s) to execute query"));
 			break;
 		}
 
@@ -1087,7 +1087,7 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
+					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
 				g_free (str);
 				break;
 			}
@@ -1106,7 +1106,7 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
+					     "%s", GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
 				g_free (str);
 				break;
 			}

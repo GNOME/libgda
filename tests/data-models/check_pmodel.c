@@ -1962,7 +1962,7 @@ check_set_value_at_ext (GdaDataModel *model, gint col, gint row,
 			gda_data_model_dump (rerun, stdout);
 			if (error) {
 				g_set_error (error, 0, -1,
-					     "There are some differences when re-running the SELECT statement...");
+					     "%s", "There are some differences when re-running the SELECT statement...");
 			}
 		}
 		g_object_unref (cmp);
@@ -2318,7 +2318,7 @@ compare_data_models (GdaDataModel *model1, GdaDataModel *model2, GError **error)
                 gda_data_model_dump (model2, stdout);
 #endif
 		g_set_error (&lerror, 0, 0,
-			     "There are some differences when comparing data models...");
+			     "%s", "There are some differences when comparing data models...");
                 goto onerror;
         }
         g_object_unref (cmp);

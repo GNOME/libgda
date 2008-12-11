@@ -424,7 +424,7 @@ test_cnc_load_data_from_file (GdaConnection *cnc, const gchar *table, const gcha
 		}
 
 		if (list || (j < ncols)) {
-			g_set_error (error, 0, 0,
+			g_set_error (error, 0, 0, "%s", 
 				     "Incoherent number of columns in table and imported data");
 			gda_connection_rollback_transaction (cnc, NULL, NULL);
 			retval = FALSE;

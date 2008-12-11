@@ -438,18 +438,18 @@ gda_data_comparator_compute_diff (GdaDataComparator *comp, GError **error)
 	/* check setup */
 	if (!comp->priv->old_model) {
 		g_set_error (error, GDA_DATA_COMPARATOR_ERROR, GDA_DATA_COMPARATOR_MISSING_DATA_MODEL_ERROR,
-			     _("Missing original data model"));
+			      "%s", _("Missing original data model"));
 		return FALSE;
 	}
 	if (!comp->priv->new_model) {
 		g_set_error (error, GDA_DATA_COMPARATOR_ERROR, GDA_DATA_COMPARATOR_MISSING_DATA_MODEL_ERROR,
-			     _("Missing new data model"));
+			      "%s", _("Missing new data model"));
 		return FALSE;
 	}
 	if (! (gda_data_model_get_access_flags (comp->priv->old_model) & GDA_DATA_MODEL_ACCESS_RANDOM) ||
 	    ! (gda_data_model_get_access_flags (comp->priv->new_model) & GDA_DATA_MODEL_ACCESS_RANDOM)) {
 		g_set_error (error, GDA_DATA_COMPARATOR_ERROR, GDA_DATA_COMPARATOR_MODEL_ACCESS_ERROR,
-			     _("Data models must support random access model"));
+			      "%s", _("Data models must support random access model"));
 		return FALSE;
 	}
 
@@ -458,7 +458,7 @@ gda_data_comparator_compute_diff (GdaDataComparator *comp, GError **error)
 	nncols = gda_data_model_get_n_columns (comp->priv->new_model);
 	if (oncols != nncols) {
 		g_set_error (error, GDA_DATA_COMPARATOR_ERROR, GDA_DATA_COMPARATOR_MISSING_DATA_MODEL_ERROR,
-			     _("Data models to compare don't have the same number of columns"));
+			      "%s", _("Data models to compare don't have the same number of columns"));
 		return FALSE;
 	}
 
@@ -558,7 +558,7 @@ gda_data_comparator_compute_diff (GdaDataComparator *comp, GError **error)
 			if (stop) {
 				g_set_error (error, GDA_DATA_COMPARATOR_ERROR,
 					     GDA_DATA_COMPARATOR_USER_CANCELLED_ERROR,
-					     _("Differences computation cancelled on signal handling"));
+					      "%s", _("Differences computation cancelled on signal handling"));
 				g_free (rows_to_del);
 				return FALSE;
 			}
@@ -594,7 +594,7 @@ gda_data_comparator_compute_diff (GdaDataComparator *comp, GError **error)
 			if (stop) {
 				g_set_error (error, GDA_DATA_COMPARATOR_ERROR,
 					     GDA_DATA_COMPARATOR_USER_CANCELLED_ERROR,
-					     _("Differences computation cancelled on signal handling"));
+					      "%s", _("Differences computation cancelled on signal handling"));
 				g_free (rows_to_del);
 				return FALSE;
 			}
