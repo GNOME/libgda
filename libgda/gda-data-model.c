@@ -540,7 +540,7 @@ gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *tit
  * Retrieves the data stored in the given position (identified by
  * the @col and @row parameters) on a data model.
  *
- * This is the main function for accessing data in a model which allow random access to its data.
+ * This is the main function for accessing data in a model which allows random access to its data.
  * To access data in a data model using a cursor, use a #GdaDataModelIter object, obtained using
  * gda_data_model_create_iter().
  *
@@ -709,7 +709,7 @@ gda_data_model_set_values (GdaDataModel *model, gint row, GList *values, GError 
  * rows in @model.
  *
  * The row the returned #GdaDataModelIter represents is undefined. For models which can be accessed 
- * randomly the correspoding row can be set using gda_data_model_iter_move_at_row(), 
+ * randomly the corresponding row can be set using gda_data_model_iter_move_at_row(), 
  * and for models which are accessible sequentially only then the first row will be
  * fetched using gda_data_model_iter_move_next().
  *

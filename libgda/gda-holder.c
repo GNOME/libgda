@@ -1698,7 +1698,7 @@ gda_holder_get_attribute (GdaHolder *holder, const gchar *attribute)
  * If there is already an attribute named @attribute set, then its value is replaced with the new @value, 
  * except if @value is %NULL, in which case the attribute is removed.
  *
- * Warning: @sttribute should be a static string (no copy of it is made), so the string should exist as long as the @holder
+ * Warning: @attribute should be a static string (no copy of it is made), so the string should exist as long as the @holder
  * object exists.
  */
 void

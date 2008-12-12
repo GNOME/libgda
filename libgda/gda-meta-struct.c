@@ -2267,7 +2267,7 @@ gda_meta_table_column_get_attribute (GdaMetaTableColumn *tcol, const gchar *attr
  * If there is already an attribute named @attribute set, then its value is replaced with the new @value, 
  * except if @value is %NULL, in which case the attribute is removed.
  *
- * Warning: @sttribute should be a static string (no copy of it is made), so the string should exist as long as the @column
+ * Warning: @attribute should be a static string (no copy of it is made), so the string should exist as long as the @column
  * object exists.
  */
 void
