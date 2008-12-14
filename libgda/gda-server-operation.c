@@ -21,7 +21,7 @@
  */
 
 #include <stdlib.h>
-#include <glib/gmessages.h>
+#include <glib.h>
 #include <libgda/gda-marshal.h>
 #include <libgda/gda-server-provider.h>
 #include <libgda/gda-server-operation.h>

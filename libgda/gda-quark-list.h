@@ -24,8 +24,7 @@
 #ifndef __GDA_QUARK_LIST_H__
 #define __GDA_QUARK_LIST_H__
 
-#include <glib/gmacros.h>
-#include <glib/gtypes.h>
+#include <glib.h>
 #include <glib-object.h>
 
 G_BEGIN_DECLS

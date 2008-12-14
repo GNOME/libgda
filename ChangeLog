@@ -1,3 +1,24 @@
+2008-12-14  Przemysław Grzegorczyk  <pgrzegorczyk@gmail.com>
+
+	* libgda/gda-init.c:
+	* libgda/gda-config.c:
+	* libgda/sqlite/gda-sqlite.h:
+	* libgda/gda-value.c:
+	* libgda/gda-value.h:
+	* libgda/gda-util.c:
+	* libgda/gda-util.h:
+	* libgda/gda-server-provider.c:
+	* libgda/gda-server-operation.c:
+	* libgda/gda-quark-list.c:
+	* libgda/gda-quark-list.h:
+	* libgda/gda-log.c:
+	* libgda/gda-log.h:
+	* libgda/gda-data-model.c:
+	* libgda/gda-data-model-array.c:
+	* libgda/gda-column.c:
+	* libgda/gda-column.h: Cleared up glib includes
+	to use only toplevel headers. Bug #564274.
+
 2008-12-11  Murray Cumming  <murrayc@murrayc.com>
 
 	* Many files: Add an extra "%s" arguement to g_set_error() calls, 

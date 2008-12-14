@@ -27,10 +27,6 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <string.h>
-#include <glib/gfileutils.h>
-#include <glib/gmessages.h>
-#include <glib/gstrfuncs.h>
-#include <glib/gprintf.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-util.h>

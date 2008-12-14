@@ -27,8 +27,7 @@
 #define __GDA_VALUE_H__
 
 #include <time.h>
-#include <glib/glist.h>
-#include <glib/gmacros.h>
+#include <glib.h>
 #include <glib-object.h>
 #include <libxml/tree.h>
 #include <libgda/gda-decl.h>

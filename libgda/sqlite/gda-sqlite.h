@@ -25,8 +25,7 @@
 #ifndef __GDA_SQLITE_H__
 #define __GDA_SQLITE_H__
 
-#include <glib/gmacros.h>
-#include <glib/gtypes.h>
+#include <glib.h>
 #include <libgda/libgda.h>
 
 #ifdef HAVE_SQLITE

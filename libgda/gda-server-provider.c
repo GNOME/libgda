@@ -22,7 +22,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <glib/gmessages.h>
+#include <glib.h>
 #include <libgda/gda-server-provider.h>
 #include <libgda/gda-server-provider-extra.h>
 #include <libgda/gda-server-provider-private.h>

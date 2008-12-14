@@ -28,7 +28,7 @@
 
 #include <glib-object.h>
 #include <libgda/gda-value.h>
-#include <glib/gmacros.h>
+#include <glib.h>
 #include <libgda/gda-decl.h>
 
 G_BEGIN_DECLS

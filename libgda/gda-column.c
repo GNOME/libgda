@@ -23,8 +23,6 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <glib/gmessages.h>
-#include <glib/gstrfuncs.h>
 #include <libgda/gda-column.h>
 #include <string.h>
 #include "gda-marshal.h"

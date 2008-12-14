@@ -20,8 +20,7 @@
 #if !defined(__gda_log_h__)
 #  define __gda_log_h__
 
-#include <glib/gmacros.h>
-#include <glib/gtypes.h>
+#include <glib.h>
 #include <time.h>
 
 G_BEGIN_DECLS

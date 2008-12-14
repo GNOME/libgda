@@ -28,11 +28,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
-#include <glib/gdate.h>
-#include <glib/gmessages.h>
-#include <glib/gstrfuncs.h>
-#include <glib/gstring.h>
-#include <glib/gi18n-lib.h>
 #include <libgda/gda-value.h>
 #include <libgda/gda-blob-op.h>
 #include <libgda/gda-util.h>

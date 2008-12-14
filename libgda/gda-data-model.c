@@ -24,7 +24,7 @@
  */
 
 #include <glib/gi18n-lib.h>
-#include <glib/gprintf.h>
+#include <glib.h>
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-data-model-private.h>
 #include <libgda/gda-data-model-extra.h>

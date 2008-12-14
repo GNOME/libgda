@@ -22,7 +22,7 @@
  */
 
 #include <string.h>
-#include <glib/garray.h>
+#include <glib.h>
 #include <libgda/gda-data-model-array.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-data-model.h>

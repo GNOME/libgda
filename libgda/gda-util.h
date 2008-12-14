@@ -24,8 +24,7 @@
 #ifndef __GDA_UTIL_H__
 #define __GDA_UTIL_H__
 
-#include <glib/ghash.h>
-#include <glib/glist.h>
+#include <glib.h>
 #include "gda-holder.h"
 #include "gda-row.h"
 #include "gda-connection.h"

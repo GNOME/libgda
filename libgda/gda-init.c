@@ -17,7 +17,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <glib/gmain.h>
+#include <glib.h>
 #include <gmodule.h>
 #include <libgda/libgda.h>
 #include <glib/gi18n-lib.h>

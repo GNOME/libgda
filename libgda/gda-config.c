@@ -36,7 +36,7 @@
 #include <libgda/gda-util.h>
 #ifdef HAVE_FAM
 #include <fam.h>
-#include <glib/giochannel.h>
+#include <glib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>

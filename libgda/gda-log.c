@@ -24,10 +24,6 @@
 #include <syslog.h>
 #endif
 #include <time.h>
-#include <glib/gmem.h>
-#include <glib/gmessages.h>
-#include <glib/gstrfuncs.h>
-#include <glib/gutils.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-log.h>
 
