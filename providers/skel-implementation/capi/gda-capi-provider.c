@@ -1106,7 +1106,7 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-					     "%s", GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
+					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
 				g_free (str);
 				break;
 			}

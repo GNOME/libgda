@@ -1,3 +1,15 @@
+2008-12-15  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-connection.h:
+	* libgda/gda-data-comparator.h:
+	* libgda/gda-meta-store.h: Removed trailing , in enums to avoid 
+	warnings.
+	* libgda/gda-connection.c:
+	* libgda/sqlite/gda-sqlite-provider.c:
+	* providers/skel-implementation/capi/gda-capi-provider.c: Corrected 
+	g_set_error() calls to avoid warnings because I had the parameters in 
+	the wrong order. 
+
 2008-12-14  Przemysław Grzegorczyk  <pgrzegorczyk@gmail.com>
 
 	* libgda/gda-init.c:

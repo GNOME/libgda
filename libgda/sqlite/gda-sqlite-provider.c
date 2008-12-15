@@ -1973,7 +1973,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-					      "%s", GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
+					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
 				g_free (str);
 				break;
 			}
@@ -1992,7 +1992,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-					      "%s", GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
+					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
 				g_free (str);
 				break;
 			}
@@ -2086,7 +2086,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 			gda_connection_event_set_description (event, str);
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-				      "%s", GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
+				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
 			g_free (str);
 			break;
 		}
@@ -2140,7 +2140,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
                                 event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
                                 gda_connection_event_set_description (event, errmsg);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-					      "%s", GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR, errmsg);
+					     GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR, "%s", errmsg);
                                 sqlite3_reset (ps->sqlite_stmt);
                                 gda_connection_add_event (cnc, event);
 				gda_connection_internal_statement_executed (cnc, stmt, params, event);

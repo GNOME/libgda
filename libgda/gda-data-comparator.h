@@ -51,7 +51,7 @@ typedef enum {
 typedef enum {
 	GDA_DIFF_ADD_ROW,
 	GDA_DIFF_REMOVE_ROW,
-	GDA_DIFF_MODIFY_ROW,
+	GDA_DIFF_MODIFY_ROW
 } GdaDiffType;
 
 typedef struct {

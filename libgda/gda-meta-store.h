@@ -58,8 +58,9 @@ typedef enum {
 typedef enum {
 	GDA_META_STORE_ADD,
 	GDA_META_STORE_REMOVE,
-	GDA_META_STORE_MODIFY,
+	GDA_META_STORE_MODIFY
 } GdaMetaStoreChangeType;
+
 typedef struct {
 	/* change general information */
 	GdaMetaStoreChangeType  c_type;

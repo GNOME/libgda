@@ -79,7 +79,7 @@ struct _GdaConnectionClass {
 
 typedef enum {
         GDA_CONNECTION_OPTIONS_NONE = 0,
-	GDA_CONNECTION_OPTIONS_READ_ONLY = 1 << 0,
+	GDA_CONNECTION_OPTIONS_READ_ONLY = 1 << 0
 } GdaConnectionOptions;
 
 typedef enum {
