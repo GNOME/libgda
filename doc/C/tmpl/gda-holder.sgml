@@ -351,6 +351,16 @@ of the contained value (default value, ...)
 @Returns: 
 
 
+<!-- ##### MACRO gda_holder_set_attribute_static ##### -->
+<para>
+
+</para>
+
+@holder: 
+@attribute: 
+@value: 
+
+
 <!-- ##### FUNCTION gda_holder_set_attribute ##### -->
 <para>
 
@@ -359,5 +369,6 @@ of the contained value (default value, ...)
 @holder: 
 @attribute: 
 @value: 
+@destroy: 
 
 

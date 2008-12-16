@@ -1,3 +1,34 @@
+2008-12-16  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-meta-struct.[ch]:
+	* libgda/gda-column.[ch]:
+	* libgda/gda-holder.[ch]: added a GDestroyNotify argument to gda_*_set_attribute()
+	because this API design was not correct, this breaks the API, see bug #564402
+
+	The gda_*_set_attribute_static() has been defined to reproduce the previous behaviour
+
+	* libgda/gda-meta-struct-io.c: use gda_meta_table_column_set_attribute_static()
+	* libgda/gda-attributes-manager.c: documentation corrections
+	* providers/postgres/gda-postgres-meta.c: fixed a bug the SQL code
+	* configure.in: detect size of C types used by MD5 implementation
+	* libgda/global.h: fixed MD5 computation error (make sure a four byte word is used)
+	* tests/value-holders/check_holder.c:
+	* tests/value-holders/check_set.c: use gda_holder_set_attribute_static()
+	* other misc files: minor corrections to remove compilation warnings.
+
+2008-12-16  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-data-model-iter-extra.h: Rename  
+	gda_data_model_iter_move_at_row_default() to 
+	gda_data_model_iter_move_to_row_default().
+	* libgda/gda-data-model-iter.[h|c]: Rename 
+	gda_data_model_iter_move_at_row() to 
+	gda_data_model_iter_move_to_row().
+	* libgda/gda-data-model.c:
+	* libgda/gda-data-proxy.c:
+	* libgda/gda-data-select.c:
+	* libgda/sqlite/virtual/virtual-test.c: Adapt.
+
 2008-12-15  Murray Cumming  <murrayc@murrayc.com>
 
 	* libgda/gda-connection.h:

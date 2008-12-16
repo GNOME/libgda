@@ -148,7 +148,7 @@ gda_virtual_connection_open (GdaVirtualProvider *virtual_provider, GError **erro
 	}
 	else
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_PROVIDER_ERROR, "%s", 
-			      "%s", _("Internal error: virtual provider does not implement the create_operation() virtual method"));
+			     _("Internal error: virtual provider does not implement the create_operation() virtual method"));
 	return cnc;
 }
 

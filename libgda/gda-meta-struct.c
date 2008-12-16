@@ -2271,9 +2271,16 @@ gda_meta_table_column_get_attribute (GdaMetaTableColumn *tcol, const gchar *attr
  * object exists.
  */
 void
-gda_meta_table_column_set_attribute (GdaMetaTableColumn *tcol, const gchar *attribute, const GValue *value)
+gda_meta_table_column_set_attribute (GdaMetaTableColumn *tcol, const gchar *attribute, const GValue *value,
+				     GDestroyNotify destroy)
 {
-	gda_attributes_manager_set (att_mgr, tcol, attribute, value);
+	const GValue *cvalue;
+	cvalue = gda_attributes_manager_get (att_mgr, tcol, attribute);
+	if ((value && cvalue && !gda_value_differ (cvalue, value)) ||
+	    (!value && !cvalue))
+		return;
+
+	gda_attributes_manager_set_full (att_mgr, tcol, attribute, value, destroy);
 }
 
 /**

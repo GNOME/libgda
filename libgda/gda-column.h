@@ -81,7 +81,15 @@ const GValue   *gda_column_get_default_value  (GdaColumn *column);
 void            gda_column_set_default_value  (GdaColumn *column, const GValue *default_value);
 
 const GValue   *gda_column_get_attribute      (GdaColumn *column, const gchar *attribute);
-void            gda_column_set_attribute      (GdaColumn *column, const gchar *attribute, const GValue *value);
+void            gda_column_set_attribute      (GdaColumn *column, const gchar *attribute, const GValue *value,
+					       GDestroyNotify destroy);
+
+/**
+ * gda_column_set_attribute_static
+ *
+ * This function is similar to gda_column_set_attribute() but for static strings
+ */
+#define gda_column_set_attribute_static(holder,attribute,value) gda_column_set_attribute((holder),(attribute),(value),NULL)
 
 G_END_DECLS
 

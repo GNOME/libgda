@@ -301,7 +301,7 @@ gda_vconnection_data_model_remove (GdaVconnectionDataModel *cnc, const gchar *ta
 
 	td = gda_vconnection_get_table_data_by_name (cnc, table_name);
 	if (!td) {
-		g_set_error (error, 0, 0, "%s",  "%s", 
+		g_set_error (error, 0, 0, "%s",
 			     _("Table to remove not found"));
 		return FALSE;
 	}

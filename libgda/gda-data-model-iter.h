@@ -66,7 +66,7 @@ const GValue     *gda_data_model_iter_get_value_for_field  (GdaDataModelIter *it
 gboolean          gda_data_model_iter_set_value_at         (GdaDataModelIter *iter, gint col, 
 							    const GValue *value, GError **error);
 
-gboolean          gda_data_model_iter_move_at_row          (GdaDataModelIter *iter, gint row);
+gboolean          gda_data_model_iter_move_to_row          (GdaDataModelIter *iter, gint row);
 gboolean          gda_data_model_iter_move_next            (GdaDataModelIter *iter);
 gboolean          gda_data_model_iter_move_prev            (GdaDataModelIter *iter);
 gint              gda_data_model_iter_get_row              (GdaDataModelIter *iter);

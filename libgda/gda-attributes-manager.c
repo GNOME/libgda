@@ -178,7 +178,7 @@ manager_real_set (GdaAttributesManager *mgr, gpointer ptr,
 		ObjAttrs *objattrs2;
 		objattrs2 = g_new0 (ObjAttrs, 1);
 		objattrs2->mgr = mgr;
-		objattrs2->objects = g_slist_prepend (NULL, ptr);;
+		objattrs2->objects = g_slist_prepend (NULL, ptr);
 		objattrs2->values_hash = g_hash_table_new_full (attname_hash, attname_equal, 
 							       (GDestroyNotify) attname_free, 
 								(GDestroyNotify) gda_value_free);
@@ -200,7 +200,7 @@ manager_real_set (GdaAttributesManager *mgr, gpointer ptr,
 		objattrs = objattrs2;
 	}
 
-	/* Acutally add the attribute */
+	/* Actually add the attribute */
 	if (value) {
 		AttName *attname;
 
@@ -226,15 +226,17 @@ manager_real_set (GdaAttributesManager *mgr, gpointer ptr,
  * gda_attributes_manager_set
  * @mgr: a #GdaAttributesManager
  * @ptr: a pointer to the ressources to which the attribute will apply
- * @att_name: an attribute's name, as a *static* string
+ * @att_name: an attribute's name
  * @value: a #GValue, or %NULL
  *
  * Associates an attribute named @att_name to @ptr, with the value @value. Any previous association is replaced by
  * this one, and if @value is %NULL then the association is removed.
  *
- * Note: @att_name is *not* copied, so it should be a static string, or a string which exists as long as @mgr exists (or,
- * in case @ptr is an object, as long as that object exists). Libgda provides several predefined names for common attributes,
+ * Note: @att_name is *not* copied, so it should be a string which exists as long as @mgr exists.
+ * Libgda provides several predefined names for common attributes,
  * see <link linkend="libgda-40-Attributes-manager.synopsis">this section</link>.
+ *
+ * If @att_name needs to be freed when not used anymore, then use gda_attributes_manager_set_full().
  */
 void
 gda_attributes_manager_set (GdaAttributesManager *mgr, gpointer ptr, const gchar *att_name, const GValue *value)
@@ -246,12 +248,12 @@ gda_attributes_manager_set (GdaAttributesManager *mgr, gpointer ptr, const gchar
  * gda_attributes_manager_set_full
  * @mgr: a #GdaAttributesManager
  * @ptr: a pointer to the ressources to which the attribute will apply
- * @att_name: an attribute's name, as a *static* string
+ * @att_name: an attribute's name
  * @value: a #GValue, or %NULL
  * @destroy: function called when @att_name is destroyed
  *
  * Does the same as gda_attributes_manager_set() except that @destroy is called when @att_name needs
- * to be freed
+ * to be freed.
  */
 void
 gda_attributes_manager_set_full (GdaAttributesManager *mgr, gpointer ptr,

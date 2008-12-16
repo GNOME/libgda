@@ -275,7 +275,7 @@ test4 (GError **error)
 		return FALSE;
 	}
 	g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), "Hello!");
-	gda_holder_set_attribute (h, "MyAttr", value);
+	gda_holder_set_attribute_static (h, "MyAttr", value);
 	gda_value_free (value);
 
 	if (!emitted_signals_find (set, "holder-attr-changed", error))

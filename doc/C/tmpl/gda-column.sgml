@@ -152,5 +152,16 @@ Management of #GdaDataModel column attributes
 @column: 
 @attribute: 
 @value: 
+@destroy: 
+
+
+<!-- ##### MACRO gda_column_set_attribute_static ##### -->
+<para>
+
+</para>
+
+@holder: 
+@attribute: 
+@value: 
 
 

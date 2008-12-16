@@ -99,7 +99,15 @@ gboolean            gda_holder_set_bind                 (GdaHolder *holder, GdaH
 GdaHolder          *gda_holder_get_bind                 (GdaHolder *holder);
 
 const GValue       *gda_holder_get_attribute            (GdaHolder *holder, const gchar *attribute);
-void                gda_holder_set_attribute            (GdaHolder *holder, const gchar *attribute, const GValue *value);
+void                gda_holder_set_attribute            (GdaHolder *holder, const gchar *attribute, const GValue *value,
+							 GDestroyNotify destroy);
+
+/**
+ * gda_holder_set_attribute_static
+ *
+ * This function is similar to gda_holder_set_attribute() but for static strings
+ */
+#define gda_holder_set_attribute_static(holder,attribute,value) gda_holder_set_attribute((holder),(attribute),(value),NULL)
 
 G_END_DECLS
 

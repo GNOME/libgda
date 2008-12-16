@@ -25,6 +25,7 @@
 
 #include <glib/gi18n-lib.h>
 #include <glib.h>
+#include <glib/gprintf.h>
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-data-model-private.h>
 #include <libgda/gda-data-model-extra.h>
@@ -709,7 +710,7 @@ gda_data_model_set_values (GdaDataModel *model, gint row, GList *values, GError 
  * rows in @model.
  *
  * The row the returned #GdaDataModelIter represents is undefined. For models which can be accessed 
- * randomly the corresponding row can be set using gda_data_model_iter_move_at_row(), 
+ * randomly the corresponding row can be set using gda_data_model_iter_move_to_row(), 
  * and for models which are accessible sequentially only then the first row will be
  * fetched using gda_data_model_iter_move_next().
  *

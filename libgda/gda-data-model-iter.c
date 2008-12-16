@@ -201,7 +201,7 @@ model_row_updated_cb (GdaDataModel *model, gint row, GdaDataModelIter *iter)
 	/* sync parameters with the new values in row */
 	if (iter->priv->row == row) {
 		iter->priv->keep_param_changes = TRUE;
-		gda_data_model_iter_move_at_row (iter, row);
+		gda_data_model_iter_move_to_row (iter, row);
 		iter->priv->keep_param_changes = FALSE;
 	}
 }
@@ -217,7 +217,7 @@ model_row_removed_cb (GdaDataModel *model, gint row, GdaDataModelIter *iter)
 	 * then make all the parameters invalid */
 	if (iter->priv->row == row) {
 		gda_data_model_iter_invalidate_contents (iter);
-		gda_data_model_iter_move_at_row (iter, -1);
+		gda_data_model_iter_move_to_row (iter, -1);
 	}
 	else {
 		/* shift iter's row by one to keep good numbers */
@@ -231,7 +231,7 @@ model_reset_cb (GdaDataModel *model, GdaDataModelIter *iter)
 {
 	/* reset the iter to before the 1st row */
 	gda_data_model_iter_invalidate_contents (iter);
-	gda_data_model_iter_move_at_row (iter, -1);
+	gda_data_model_iter_move_to_row (iter, -1);
 	
 	/* adjust GdaHolder's type if a column's type has changed from GDA_TYPE_NULL
 	 * to something else */
@@ -513,7 +513,7 @@ gda_data_model_iter_get_property (GObject *object,
 }
 
 /**
- * gda_data_model_iter_move_at_row
+ * gda_data_model_iter_move_to_row
  * @iter: a #GdaDataModelIter object
  * @row: the row to set @iter to
  *
@@ -528,7 +528,7 @@ gda_data_model_iter_get_property (GObject *object,
  * Returns: TRUE if no error occurred
  */
 gboolean
-gda_data_model_iter_move_at_row (GdaDataModelIter *iter, gint row)
+gda_data_model_iter_move_to_row (GdaDataModelIter *iter, gint row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
 	g_return_val_if_fail (iter->priv, FALSE);
@@ -554,7 +554,7 @@ gda_data_model_iter_move_at_row (GdaDataModelIter *iter, gint row)
 			return (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row) (model, iter, row);
 		else {
 			/* default method */
-			return gda_data_model_iter_move_at_row_default (model, iter, row);
+			return gda_data_model_iter_move_to_row_default (model, iter, row);
 		}
 	}
 }
@@ -572,10 +572,10 @@ set_param_attributes (GdaHolder *holder, GdaValueAttribute flags)
 }
 
 /**
- * gda_data_model_iter_move_at_row_default
+ * gda_data_model_iter_move_to_row_default
  */
 gboolean
-gda_data_model_iter_move_at_row_default (GdaDataModel *model, GdaDataModelIter *iter, gint row)
+gda_data_model_iter_move_to_row_default (GdaDataModel *model, GdaDataModelIter *iter, gint row)
 {
 	/* default method */
 	GSList *list;

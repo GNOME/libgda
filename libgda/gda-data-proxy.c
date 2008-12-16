@@ -2315,7 +2315,7 @@ chunk_sync_idle (GdaDataProxy *proxy)
 			repl_row = index;
 			if (!iter) 
 				iter = gda_data_model_create_iter (proxy->priv->model);
-			if (!gda_data_model_iter_move_at_row (iter, repl_row))
+			if (!gda_data_model_iter_move_to_row (iter, repl_row))
 				repl_row = -1;
 		}
 

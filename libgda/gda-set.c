@@ -751,7 +751,7 @@ gda_set_new_from_spec_node (xmlNodePtr xml_spec, GError **error)
 				errors = gda_data_model_import_get_errors (GDA_DATA_MODEL_IMPORT (model));
 				if (errors) {
 					GError *err = (GError *) errors->data;
-					g_set_error (error, 0, 0, err->message);
+					g_set_error (error, 0, 0, "%s", err->message);
 					g_object_unref (model);
 					model = NULL;
 					allok = FALSE;

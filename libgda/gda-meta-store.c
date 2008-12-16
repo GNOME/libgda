@@ -1393,7 +1393,7 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
 			GSList *tlist;
 			for (tlist = TABLE_INFO (dbobj)->columns; tlist; tlist = tlist->next) {
 				if (((TableColumn*) tlist->data)->column_name && 
-				    !strcmp (((TableColumn*) tlist->data)->column_name, cname)) {
+				    !strcmp (((TableColumn*) tlist->data)->column_name, (gchar*) cname)) {
 					tcol = (TableColumn*) tlist->data;
 					if ((tcol->gtype != ptype) ||
 					    (tcol->pkey != pkey) ||

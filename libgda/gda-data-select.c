@@ -1901,7 +1901,7 @@ gda_data_select_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint r
 
 	int_row = external_to_internal_row (imodel, row, NULL);
 	if (imodel->priv->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM) 
-		return gda_data_model_iter_move_at_row_default (model, iter, row);
+		return gda_data_model_iter_move_to_row_default (model, iter, row);
 
         g_return_val_if_fail (iter, FALSE);
         g_return_val_if_fail (imodel->priv->iter == iter, FALSE);

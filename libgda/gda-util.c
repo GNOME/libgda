@@ -496,8 +496,10 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 					GValue *value;
 					g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), 
 							    (gchar*) xmlNodeGetContent (vnode));
-					gda_attributes_manager_set_full (gda_holder_attributes_manager, (gpointer) holder,
-									 att_name, value, (GDestroyNotify) xmlFree);
+					gda_attributes_manager_set_full (gda_holder_attributes_manager,
+									 (gpointer) holder,
+									 (gchar*) att_name, value,
+									 (GDestroyNotify) xmlFree);
 					gda_value_free (value);
 				}
 				vnode = vnode->next;

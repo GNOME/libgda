@@ -26,7 +26,7 @@
 
 G_BEGIN_DECLS
 
-gboolean gda_data_model_iter_move_at_row_default (GdaDataModel *model, GdaDataModelIter *iter, gint row);
+gboolean gda_data_model_iter_move_to_row_default (GdaDataModel *model, GdaDataModelIter *iter, gint row);
 gboolean gda_data_model_iter_move_next_default   (GdaDataModel *model, GdaDataModelIter *iter);
 gboolean gda_data_model_iter_move_prev_default   (GdaDataModel *model, GdaDataModelIter *iter);
 

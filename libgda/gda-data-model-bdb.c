@@ -646,7 +646,7 @@ gda_data_model_bdb_get_value_at (GdaDataModel *model, gint col, gint row, GError
 					gchar *str;
 					str = g_strdup_printf (_("Custom BDB model implementation is not complete: "
 								 "the '%s' method is missing"), "get_key_part");
-					g_warning (str);
+					g_warning ("%s", str);
 					g_free (str);
 				}
 				value = gda_value_new_null ();
@@ -679,7 +679,7 @@ gda_data_model_bdb_get_value_at (GdaDataModel *model, gint col, gint row, GError
 					gchar *str;
 					str = g_strdup_printf (_("Custom BDB model implementation is not complete: "
 								 "the '%s' method is missing"), "get_data_part");
-					g_warning (str);
+					g_warning ("%s", str);
 					g_free (str);
 				}
 				value = gda_value_new_null ();

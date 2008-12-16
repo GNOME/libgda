@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+ * Copyright (C) 1998 - 2008 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -315,7 +315,7 @@ gda_column_set_name (GdaColumn *column, const gchar *name)
 
 	if (name)
 		g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), name);
-	gda_column_set_attribute (column, GDA_ATTRIBUTE_NAME, value);
+	gda_column_set_attribute_static (column, GDA_ATTRIBUTE_NAME, value);
 	if (value)
 		gda_value_free (value);
 
@@ -360,7 +360,7 @@ gda_column_set_description (GdaColumn *column, const gchar *descr)
 
 	if (descr)
 		g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), descr);
-	gda_column_set_attribute (column, GDA_ATTRIBUTE_DESCRIPTION, value);
+	gda_column_set_attribute_static (column, GDA_ATTRIBUTE_DESCRIPTION, value);
 	if (value)
 		gda_value_free (value);
 }
@@ -568,23 +568,39 @@ gda_column_get_attribute (GdaColumn *column, const gchar *attribute)
  * @column: a #GdaColumn
  * @attribute: attribute name as a static string
  * @value: a #GValue, or %NULL
+ * @destroy: a function to be called when @attribute is not needed anymore, or %NULL
  *
- * Set the value associated to a named attribute.
+ * Set the value associated to a named attribute. The @attribute string is 'stolen' by this method, and
+ * the memory it uses will be freed using the @destroy function when no longer needed (if @destroy is %NULL,
+ * then the string will not be freed at all).
  *
- * Attributes can have any name, but Libgda proposes some default names, see <link linkend="libgda-40-Attributes-manager.synopsis">this section</link>.
- * If there is already an attribute named @attribute set, then its value is replaced with the new @value, 
- * except if @value is %NULL, in which case the attribute is removed.
+ * Attributes can have any name, but Libgda proposes some default names, 
+ * see <link linkend="libgda-40-Attributes-manager.synopsis">this section</link>.
+ *
+ * If there is already an attribute named @attribute set, then its value is replaced with the new value (@value is
+ * copied), except if @value is %NULL, in which case the attribute is removed.
+ *
+ * For example one would use it as:
+ *
+ * <code>
+ * gda_column_set_attribute (holder, g_strdup (my_attribute), g_free, my_value);
+ * gda_column_set_attribute (holder, GDA_ATTRIBUTE_NAME, NULL, my_value);
+ * </code>
  *
  * Note: this method does not modify in any way the contents of the data model for which @column is a column (nor
  * does it modify the table definition of the tables used by a SELECT statement is the model was created from a
  * SELECT statement).
- *
- * Warning: @attribute should be a static string (no copy of it is made), so the string should exist as long as the @column
- * object exists.
  */
 void
-gda_column_set_attribute (GdaColumn *column, const gchar *attribute, const GValue *value)
+gda_column_set_attribute (GdaColumn *column, const gchar *attribute, const GValue *value, GDestroyNotify destroy)
 {
+	const GValue *cvalue;
 	g_return_if_fail (GDA_IS_COLUMN (column));
-	gda_attributes_manager_set (gda_column_attributes_manager, column, attribute, value);
+
+	cvalue = gda_attributes_manager_get (gda_column_attributes_manager, column, attribute);
+	if ((value && cvalue && !gda_value_differ (cvalue, value)) ||
+	    (!value && !cvalue))
+		return;
+
+	gda_attributes_manager_set_full (gda_column_attributes_manager, column, attribute, value, destroy);
 }

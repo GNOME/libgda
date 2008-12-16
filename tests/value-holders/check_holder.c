@@ -951,7 +951,7 @@ test12 (GError **error)
 			     "gda_holder_get_attribute() should have retunred NULL");
 		return FALSE;
 	}
-	gda_holder_set_attribute (h, "attname1", value);
+	gda_holder_set_attribute_static (h, "attname1", value);
 	gda_value_free (value);
 	cvalue = gda_holder_get_attribute (h, "attname1");
 	if (!cvalue) {

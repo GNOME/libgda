@@ -356,7 +356,7 @@ gda_holder_copy (GdaHolder *orig)
 
 		GValue *att_value;
 		g_value_set_boolean ((att_value = gda_value_new (G_TYPE_BOOLEAN)), holder->priv->default_forced);
-		gda_holder_set_attribute (holder, GDA_ATTRIBUTE_IS_DEFAULT, att_value);
+		gda_holder_set_attribute_static (holder, GDA_ATTRIBUTE_IS_DEFAULT, att_value);
 		gda_value_free (att_value);
 
 
@@ -538,10 +538,10 @@ gda_holder_set_property (GObject *object,
 			holder->priv->id = g_value_dup_string (value);
 			break;
 		case PROP_NAME:
-			gda_holder_set_attribute (holder, GDA_ATTRIBUTE_NAME, value);
+			gda_holder_set_attribute_static (holder, GDA_ATTRIBUTE_NAME, value);
 			break;
 		case PROP_DESCR:
-			gda_holder_set_attribute (holder, GDA_ATTRIBUTE_DESCRIPTION, value);
+			gda_holder_set_attribute_static (holder, GDA_ATTRIBUTE_DESCRIPTION, value);
 			break;
 		case PROP_GDA_TYPE:
 			if (holder->priv->g_type == GDA_TYPE_NULL)
@@ -957,7 +957,7 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 	}
 	GValue *att_value;
 	g_value_set_boolean ((att_value = gda_value_new (G_TYPE_BOOLEAN)), holder->priv->default_forced);
-	gda_holder_set_attribute (holder, GDA_ATTRIBUTE_IS_DEFAULT, att_value);
+	gda_holder_set_attribute_static (holder, GDA_ATTRIBUTE_IS_DEFAULT, att_value);
 	gda_value_free (att_value);
 
 	/* real setting of the value */
@@ -1088,7 +1088,7 @@ real_gda_holder_set_const_value (GdaHolder *holder, const GValue *value,
 	}
 	GValue *att_value;
 	g_value_set_boolean ((att_value = gda_value_new (G_TYPE_BOOLEAN)), holder->priv->default_forced);
-	gda_holder_set_attribute (holder, GDA_ATTRIBUTE_IS_DEFAULT, att_value);
+	gda_holder_set_attribute_static (holder, GDA_ATTRIBUTE_IS_DEFAULT, att_value);
 	gda_value_free (att_value);
 
 	/* real setting of the value */
@@ -1260,7 +1260,7 @@ gda_holder_set_value_to_default (GdaHolder *holder)
 
 	GValue *att_value;
 	g_value_set_boolean ((att_value = gda_value_new (G_TYPE_BOOLEAN)), TRUE);
-	gda_holder_set_attribute (holder, GDA_ATTRIBUTE_IS_DEFAULT, att_value);
+	gda_holder_set_attribute_static (holder, GDA_ATTRIBUTE_IS_DEFAULT, att_value);
 	gda_value_free (att_value);
 	g_signal_emit (holder, gda_holder_signals[CHANGED], 0);
 
@@ -1350,7 +1350,7 @@ gda_holder_set_default_value (GdaHolder *holder, const GValue *value)
 	
 	GValue *att_value;
 	g_value_set_boolean ((att_value = gda_value_new (G_TYPE_BOOLEAN)), holder->priv->default_forced);
-	gda_holder_set_attribute (holder, GDA_ATTRIBUTE_IS_DEFAULT, att_value);
+	gda_holder_set_attribute_static (holder, GDA_ATTRIBUTE_IS_DEFAULT, att_value);
 	gda_value_free (att_value);
 
 	/* don't emit the "changed" signal */
@@ -1689,28 +1689,38 @@ gda_holder_get_attribute (GdaHolder *holder, const gchar *attribute)
 /**
  * gda_holder_set_attribute
  * @holder: a #GdaHolder
- * @attribute: attribute name as a static string
+ * @attribute: attribute name
  * @value: a #GValue, or %NULL
+ * @destroy: a function to be called when @attribute is not needed anymore, or %NULL
  *
- * Set the value associated to a named attribute.
+ * Set the value associated to a named attribute. The @attribute string is 'stolen' by this method, and
+ * the memory it uses will be freed using the @destroy function when no longer needed (if @destroy is %NULL,
+ * then the string will not be freed at all).
  *
- * Attributes can have any name, but Libgda proposes some default names, see <link linkend="libgda-40-Attributes-manager.synopsis">this section</link>.
- * If there is already an attribute named @attribute set, then its value is replaced with the new @value, 
- * except if @value is %NULL, in which case the attribute is removed.
+ * Attributes can have any name, but Libgda proposes some default names, 
+ * see <link linkend="libgda-40-Attributes-manager.synopsis">this section</link>.
  *
- * Warning: @attribute should be a static string (no copy of it is made), so the string should exist as long as the @holder
- * object exists.
+ * For example one would use it as:
+ *
+ * <code>
+ * gda_holder_set_attribute (holder, g_strdup (my_attribute), g_free, my_value);
+ * gda_holder_set_attribute (holder, GDA_ATTRIBUTE_NAME, NULL, my_value);
+ * </code>
+ *
+ * If there is already an attribute named @attribute set, then its value is replaced with the new value (@value is
+ * copied), except if @value is %NULL, in which case the attribute is removed.
  */
 void
-gda_holder_set_attribute (GdaHolder *holder, const gchar *attribute, const GValue *value)
+gda_holder_set_attribute (GdaHolder *holder, const gchar *attribute, const GValue *value, GDestroyNotify destroy)
 {
 	const GValue *cvalue;
 	g_return_if_fail (GDA_IS_HOLDER (holder));
 
 	cvalue = gda_attributes_manager_get (gda_holder_attributes_manager, holder, attribute);
-	if (cvalue && !gda_value_differ (cvalue, value))
+	if ((value && cvalue && !gda_value_differ (cvalue, value)) ||
+	    (!value && !cvalue))
 		return;
 
-	gda_attributes_manager_set (gda_holder_attributes_manager, holder, attribute, value);
+	gda_attributes_manager_set_full (gda_holder_attributes_manager, holder, attribute, value, destroy);
 	//g_print ("GdaHolder %p ATTR '%s' set to '%s'\n", holder, attribute, gda_value_stringify (value)); 
 }

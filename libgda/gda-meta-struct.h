@@ -150,7 +150,15 @@ typedef struct {
 } GdaMetaTableColumn;
 #define GDA_META_TABLE_COLUMN(x) ((GdaMetaTableColumn*)(x))
 const GValue *gda_meta_table_column_get_attribute (GdaMetaTableColumn *tcol, const gchar *att_name);
-void          gda_meta_table_column_set_attribute (GdaMetaTableColumn *tcol, const gchar *att_name, const GValue *value);
+void          gda_meta_table_column_set_attribute (GdaMetaTableColumn *tcol, const gchar *att_name, const GValue *value,
+						   GDestroyNotify destroy);
+/**
+ * gda_meta_table_column_set_attribute_static
+ *
+ * This function is similar to gda_meta_table_column_set_attribute() but for static strings
+ */
+#define gda_meta_table_column_set_attribute_static(holder,attribute,value) gda_meta_table_column_set_attribute((holder),(attribute),(value),NULL)
+
 void          gda_meta_table_column_foreach_attribute (GdaMetaTableColumn *tcol, GdaAttributesManagerFunc func, gpointer data);
 
 typedef struct {
