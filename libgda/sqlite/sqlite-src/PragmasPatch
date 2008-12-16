@@ -1,6 +1,6 @@
---- sqlite3.c.orig	2008-09-22 12:45:12.000000000 +0200
-+++ sqlite3.c	2008-10-09 17:14:46.000000000 +0200
-@@ -67125,6 +67125,60 @@
+--- sqlite3.c.orig	2008-12-16 19:00:20.000000000 +0100
++++ sqlite3.c	2008-12-16 21:55:45.000000000 +0100
+@@ -70218,6 +70218,60 @@
  
  #ifndef SQLITE_OMIT_SCHEMA_PRAGMAS
    /*
@@ -18,10 +18,10 @@
 +
 +    sqlite3VdbeSetNumCols(v, 4);
 +    pParse->nMem = 4;
-+    sqlite3VdbeSetColName(v, 0, COLNAME_NAME, "name", P4_STATIC);
-+    sqlite3VdbeSetColName(v, 1, COLNAME_NAME, "is_aggregate", P4_STATIC);
-+    sqlite3VdbeSetColName(v, 2, COLNAME_NAME, "nargs", P4_STATIC);
-+    sqlite3VdbeSetColName(v, 3, COLNAME_NAME, "spe_name", P4_STATIC);
++    sqlite3VdbeSetColName(v, 0, COLNAME_NAME, "name", SQLITE_STATIC);
++    sqlite3VdbeSetColName(v, 1, COLNAME_NAME, "is_aggregate", SQLITE_STATIC);
++    sqlite3VdbeSetColName(v, 2, COLNAME_NAME, "nargs", SQLITE_STATIC);
++    sqlite3VdbeSetColName(v, 3, COLNAME_NAME, "spe_name", SQLITE_STATIC);
 +    int j;
 +    for(j=0; j<ArraySize(db->aFunc.a); j++){
 +      FuncDef *func;
