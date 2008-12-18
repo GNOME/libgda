@@ -741,24 +741,24 @@ gda_server_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConne
  * @provider: a server provider.
  * @cnc: a #GdaConnection object, or %NULL
  * @string: the SQL string to convert to a value
- * @prefered_type: a #GType, or G_TYPE_INVALID
+ * @preferred_type: a #GType, or G_TYPE_INVALID
  *
  * Use @provider to create a new #GValue from a single string representation. 
  *
- * The @prefered_type can optionally ask @provider to return a #GValue of the requested type 
+ * The @preferred_type can optionally ask @provider to return a #GValue of the requested type 
  * (but if such a value can't be created from @string, then %NULL is returned); 
  * pass G_TYPE_INVALID if any returned type is acceptable.
  *
  * The returned value is either a new #GValue or %NULL in the following cases:
- * - @string cannot be converted to @prefered_type type
- * - the provider does not handle @prefered_type
+ * - @string cannot be converted to @preferred_type type
+ * - the provider does not handle @preferred_type
  * - the provider could not make a #GValue from @string
  *
  * Returns: a new #GValue, or %NULL
  */
 GValue *
 gda_server_provider_string_to_value (GdaServerProvider *provider,  GdaConnection *cnc, const gchar *string, 
-				     GType prefered_type, gchar **dbms_type)
+				     GType preferred_type, gchar **dbms_type)
 {
 	GValue *retval = NULL;
 	GdaDataHandler *dh;
@@ -769,10 +769,10 @@ gda_server_provider_string_to_value (GdaServerProvider *provider,  GdaConnection
 
 	if (cnc)
 		gda_lockable_lock ((GdaLockable*) cnc);
-	if (prefered_type != G_TYPE_INVALID) {
-		dh = gda_server_provider_get_data_handler_g_type (provider, cnc, prefered_type);
+	if (preferred_type != G_TYPE_INVALID) {
+		dh = gda_server_provider_get_data_handler_g_type (provider, cnc, preferred_type);
 		if (dh) {
-			retval = gda_data_handler_get_value_from_sql (dh, string, prefered_type);
+			retval = gda_data_handler_get_value_from_sql (dh, string, preferred_type);
 			if (retval) {
 				gchar *tmp;
 				
@@ -784,7 +784,7 @@ gda_server_provider_string_to_value (GdaServerProvider *provider,  GdaConnection
 				else {
 					if (dbms_type)
 						*dbms_type = (gchar *) gda_server_provider_get_default_dbms_type (provider, 
-														  cnc, prefered_type);
+														  cnc, preferred_type);
 				}
 				
 				g_free (tmp);

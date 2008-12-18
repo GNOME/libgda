@@ -304,7 +304,7 @@ GdaDataHandler        *gda_server_provider_get_data_handler_dbms (GdaServerProvi
 GValue                *gda_server_provider_string_to_value       (GdaServerProvider *provider,
 								  GdaConnection *cnc,
 								  const gchar *string, 
-								  GType prefered_type,
+								  GType preferred_type,
 								  gchar **dbms_type);
 gchar                 *gda_server_provider_value_to_sql_string   (GdaServerProvider *provider,
 								  GdaConnection *cnc,
