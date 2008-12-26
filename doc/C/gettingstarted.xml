@@ -374,7 +374,7 @@ create_table (GdaConnection *cnc)
 	/* Set parameter's values */
 	/* table name */
 	if (!gda_server_operation_set_value_at (op, "products", &error, "/TABLE_DEF_P/TABLE_NAME")) goto on_set_error;
-        if (!gda_server_operation_set_value_at (op, "InnoDB", &error, "/TABLE_OPTIONS_P/TABLE_ENGINE")) goto on_set_error;
+	if (!gda_server_operation_set_value_at (op, "InnoDB", &error, "/TABLE_OPTIONS_P/TABLE_ENGINE")) goto on_set_error;
 
 	/* "id' field */
 	i = 0;

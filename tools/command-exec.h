@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <glib.h>
 #include <libgda/libgda.h>
+#include "gda-sql.h"
 
 /*
  * Command exec result
@@ -52,7 +53,8 @@ typedef struct {
 /*
  * Command definition
  */
-typedef GdaInternalCommandResult *(*GdaInternalCommandFunc) (GdaConnection *, const gchar **, GError **, gpointer);
+typedef GdaInternalCommandResult *(*GdaInternalCommandFunc) (SqlConsole *, GdaConnection *cnc,
+							     const gchar **, GError **, gpointer);
 typedef gchar                   **(*GdaInternalCommandArgsFunc) (const gchar *);
 typedef struct {
 	gchar    *name;
@@ -68,6 +70,7 @@ typedef struct {
 	gpointer                   user_data;
 	GdaInternalCommandArgsFunc arguments_delimiter_func;
 	gboolean                   unquote_args;
+	gboolean                   limit_to_main;
 } GdaInternalCommand;
 
 typedef struct {
@@ -81,24 +84,23 @@ typedef struct {
 gchar                    *gda_internal_command_arg_remove_quotes (gchar *str);
 
 /* Commands execution */
-GdaInternalCommandResult *gda_internal_command_execute (GdaInternalCommandsList *commands_list,
-							GdaConnection *cnc, const gchar *command_str, GError **error);
+gchar                   **default_gda_internal_commandargs_func (const gchar *string);
 void                      gda_internal_command_exec_result_free (GdaInternalCommandResult *res);
 
 /* Available commands */
-GdaInternalCommandResult *gda_internal_command_help (GdaConnection *cnc, const gchar **args,
+GdaInternalCommandResult *gda_internal_command_help (SqlConsole *console, GdaConnection *cnc, const gchar **args,
 						     GError **error, GdaInternalCommandsList *clist);
-GdaInternalCommandResult *gda_internal_command_history (GdaConnection *cnc, const gchar **args,
+GdaInternalCommandResult *gda_internal_command_history (SqlConsole *console, GdaConnection *cnc, const gchar **args,
 							GError **error, gpointer data);
-GdaInternalCommandResult *gda_internal_command_dict_sync (GdaConnection *cnc, const gchar **args,
+GdaInternalCommandResult *gda_internal_command_dict_sync (SqlConsole *console, GdaConnection *cnc, const gchar **args,
 							  GError **error, gpointer data);
-GdaInternalCommandResult *gda_internal_command_list_tables (GdaConnection *cnc, const gchar **args,
+GdaInternalCommandResult *gda_internal_command_list_tables (SqlConsole *console, GdaConnection *cnc, const gchar **args,
 							    GError **error, gpointer data);
-GdaInternalCommandResult *gda_internal_command_list_views (GdaConnection *cnc, const gchar **args,
+GdaInternalCommandResult *gda_internal_command_list_views (SqlConsole *console, GdaConnection *cnc, const gchar **args,
 							   GError **error, gpointer data);
-GdaInternalCommandResult *gda_internal_command_list_schemas (GdaConnection *cnc, const gchar **args,
+GdaInternalCommandResult *gda_internal_command_list_schemas (SqlConsole *console, GdaConnection *cnc, const gchar **args,
 							     GError **error, gpointer data);
-GdaInternalCommandResult *gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
+GdaInternalCommandResult *gda_internal_command_detail (SqlConsole *console, GdaConnection *cnc, const gchar **args,
 						       GError **error, gpointer data);
 
 /* Misc */

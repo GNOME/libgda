@@ -176,10 +176,11 @@ gda_quark_list_add_from_string (GdaQuarkList *qlist, const gchar *string, gboole
 	gchar **arr;
 
 	g_return_if_fail (qlist != NULL);
-	g_return_if_fail (string != NULL);
+	if (!string || !*string)
+		return;
 
-	if (cleanup != FALSE)
-		gda_quark_list_clear(qlist);
+	if (cleanup)
+		gda_quark_list_clear (qlist);
 
 	arr = (gchar **) g_strsplit (string, ";", 0);
 	if (arr) {
@@ -192,7 +193,9 @@ gda_quark_list_add_from_string (GdaQuarkList *qlist, const gchar *string, gboole
 			if (pair && pair[0]) {
 				gchar *name = pair[0];
 				gchar *value = pair[1];
+				g_strstrip (name);
 				gda_rfc1738_decode (name);
+				g_strstrip (value);
 				gda_rfc1738_decode (value);
 				g_hash_table_insert (qlist->hash_table, 
 						     (gpointer) name, (gpointer) value);
@@ -238,9 +241,6 @@ gda_quark_list_find (GdaQuarkList *qlist, const gchar *name)
 void
 gda_quark_list_remove (GdaQuarkList *qlist, const gchar *name)
 {
-	gpointer orig_key;
-	gpointer orig_value;
-
 	g_return_if_fail (qlist != NULL);
 	g_return_if_fail (name != NULL);
 

@@ -1,0 +1,65 @@
+input.keyboard-selector-input {
+    position: fixed;
+    top: 0;
+    _position: absolute;
+    _top: expression(eval(document.body.scrollTop));
+    left: -300px;
+}
+
+/* irb terminal */
+#terminal {
+    background-color: #f2f2f0;
+    width: 100%;
+    height: 78%;
+    overflow: auto; 
+}
+#irb {
+    visibility: hidden;
+    padding: 4px; margin: 0;
+    font-family: monospace;
+    font-size: 14px;
+    line-height: 16px;
+    color: #204a87;
+    text-align: left;
+}
+#irb div {
+    margin: 0; padding: 0;
+}
+#irb div b {
+    background-color: #874a20;
+    color: #fedeac;
+}
+
+/* terminal escape colors */
+span.fore_black { color: #2e3436; }
+span.fore_dark_gray { color: #888a85; }
+span.fore_gray { color: #babdb6; }
+span.fore_white { color: #eeeeec; }
+span.fore_blue { color: #204a87; }
+span.fore_lt_blue { color: #729fcf; }
+span.fore_green { color: #788600; font-weight: bold; }
+span.fore_lt_green { color: #cbe134; }
+span.fore_cyan { color: #c4a000; } /* using cyan for yellows */
+span.fore_lt_cyan { color: #fc994f; }
+span.fore_red { color: #a40000; }
+span.fore_lt_red { color: #ef2929; font-weight: bold; }
+span.fore_purple { color: #5c3566; }
+span.fore_lt_purple { color: #ad7fa8; }
+span.fore_brown { color: #8f5972; }
+span.fore_lt_brown { color: #b9b9de; }
+span.back_black { background-color: #2e3436; }
+span.back_dark_gray { background-color: #888a85; }
+span.back_gray { background-color: #babdb6; }
+span.back_white { background-color: #eeeeec; }
+span.back_blue { background-color: #204a87; }
+span.back_lt_blue { background-color: #729fcf; }
+span.back_green { background-color: #788600; }
+span.back_lt_green { background-color: #cbe134; }
+span.back_cyan { background-color: #c4a000; } /* using cyan for yellows */
+span.back_lt_cyan { background-color: #fce94f; }
+span.back_red { background-color: #a40000; }
+span.back_lt_red { background-color: #ef2929; }
+span.back_purple { background-color: #5c3566; }
+span.back_lt_purple { background-color: #ad7fa8; }
+span.back_brown { background-color: #8f5902; }
+span.back_lt_brown { background-color: #b9b96e; }

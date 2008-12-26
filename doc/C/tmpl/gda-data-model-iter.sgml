@@ -138,7 +138,7 @@ Data model iterator
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_data_model_iter_move_at_row ##### -->
+<!-- ##### FUNCTION gda_data_model_iter_move_to_row ##### -->
 <para>
 
 </para>

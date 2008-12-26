@@ -1,3 +1,5 @@
+SUBDIRS = binreloc
+
 bin_PROGRAMS = \
 	gda-list-config-4.0 \
 	gda-sql-4.0 \
@@ -27,10 +29,14 @@ gda_sql_4_0_SOURCES = \
 	tools-input.h \
 	tools-input.c \
 	command-exec.h \
-	command-exec.c 
+	command-exec.c \
+	$(top_srcdir)/libgda/global.h \
+	$(top_srcdir)/libgda/md5.h \
+	$(top_srcdir)/libgda/md5c.c
 
 gda_sql_4_0_LDADD = \
         $(top_builddir)/libgda/libgda-4.0.la \
+	binreloc/libgdasql_binreloc-4.0.la \
         $(LIBGDA_LIBS) \
 	$(READLINE_LIB) \
         $(HISTORY_LIB)
@@ -69,5 +75,17 @@ information_schema_doc_SOURCES = \
 information_schema_doc_LDADD = \
         $(top_builddir)/libgda/libgda-4.0.la \
         $(LIBGDA_LIBS)
+
+webdatadir = $(datadir)/libgda-4.0/web
+webdata_DATA = \
+	cnc.js \
+	md5.js \
+	jquery.js \
+	mouseapp_2.js \
+	mouseirb_2.js \
+	irb.js \
+	gda.css \
+	gda-print.css \
+	irb.css
 
 EXTRA_DIST = gda-sql.ico

@@ -1,3 +1,26 @@
+2008-12-26  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-quark-list.c: remove leading and trailing white spaces in both
+	key and value for each (<key>=<value>) pair (if a key or a value needs white
+	spaces, they need to encode them as "%20")
+	* tools/: improvements to the GDA SQL console's web server part:
+	  - added authentication, based on a token (a string) the client must enter upon
+	    request (then uses a cookie)
+	  - added a terminal emulator to enter commands as one would do on a normal xterm
+	  - reworked the CSS
+	  - added binreloc feature
+	* libgda/gda-data-model.c: applied patch to correct a bug in
+	gda_data_model_get_typed_value_at(), thanks to Tim Lapawa
+	* providers/skel-implementation/capi/capi_specs_create_table.xml.in:
+	* providers/firebird/firebird_specs_create_table.xml.in:
+	* providers/sqlite/sqlite_specs_create_table.xml.in:
+	* providers/jdbc/jdbc_specs_create_table.xml.in:
+	* providers/mysql/mysql_specs_create_table.xml.in
+	* providers/postgres/postgres_specs_create_table.xml.in: don't define any column
+	when creating a GdaServerOperation for table creation, fixes bug #565618
+	* doc/C:
+	* libgda/gda-connection.c: doc. update
+
 2008-12-18  Murray Cumming  <murrayc@murrayc.com>
 
 	* libgda/gda-server-provider.[h|c]: Correct spelling of prefered_type 

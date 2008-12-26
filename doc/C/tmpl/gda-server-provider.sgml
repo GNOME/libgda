@@ -293,7 +293,7 @@ for more information.
 @provider: 
 @cnc: 
 @string: 
-@prefered_type: 
+@preferred_type: 
 @dbms_type: 
 @Returns: 
 

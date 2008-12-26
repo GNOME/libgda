@@ -40,9 +40,29 @@ typedef struct {
 	guint          meta_job_id;
 } ConnectionSetting;
 
+typedef enum {
+	OUTPUT_FORMAT_DEFAULT = 0,
+	OUTPUT_FORMAT_HTML,
+	OUTPUT_FORMAT_XML,
+	OUTPUT_FORMAT_CSV
+} OutputFormat;
+
+typedef struct {
+	gchar *id;
+	ConnectionSetting *current;
+	OutputFormat output_format;
+	GTimeVal  last_time_used;
+} SqlConsole;
+
 const GSList            *gda_sql_get_all_connections (void);
 const ConnectionSetting *gda_sql_get_connection (const gchar *name);
 const ConnectionSetting *gda_sql_get_current_connection (void);
+
+SqlConsole              *gda_sql_console_new (const gchar *id);
+void                     gda_sql_console_free (SqlConsole *console);
+gchar                   *gda_sql_console_execute (SqlConsole *console, const gchar *command, GError **error);
+
+gchar                   *gda_sql_console_compute_prompt (SqlConsole *console);
 
 G_END_DECLS
 

@@ -23,9 +23,19 @@
 #include <glib/gstdio.h>
 #include <stdarg.h>
 #include <string.h>
+#include <stdlib.h>
+#include <stdarg.h>
 #include "web-server.h"
 #include <libsoup/soup.h>
 #include "html-doc.h"
+#include "binreloc/sql-binreloc.h"
+
+/* Use the RSA reference implementation included in the RFC-1321, http://www.freesoft.org/CIE/RFC/1321/ */
+#include "global.h"
+#include "md5.h"
+
+#define MAX_CHALLENGES 10
+#define MAX_AUTH_COOKIES 10
 
 /* 
  * Main static functions 
@@ -38,19 +48,43 @@ static void web_server_finalize (GObject *object);
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
 
-
 struct _WebServerPrivate
 {
 	SoupServer  *server;
-	GHashTable  *tmpdata_hash; /* key = a path without the starting '/', value = a TmpData pointer */
-	GSList      *tmpdata_list; /* list of the TmpData pointers in @tmpdata_hash, memory not managed here */
-	guint        timer;
+	GHashTable  *ressources_hash; /* key = a path without the starting '/', value = a TmpRessource pointer */
+	GSList      *ressources_list; /* list of the TmpRessource pointers in @ressources_hash, memory not managed here */
+	guint        ressources_timer;
+
+	/* authentication */
+	gchar       *token; /* FIXME: protect it! */
+	GArray      *challenges; /* array of TimedString representing the currently valid challenges */
+	GArray      *cookies; /* array of TimedString representing the currently valid authentication cookie values */
+	guint        auth_timer;
+
+	GSList      *terminals_list; /* list of SqlConsole */
+	guint        term_timer;
 };
+
+
+typedef struct {
+	gchar    *string;
+	GTimeVal  validity;
+} TimedString;
+
+static TimedString *timed_string_new (guint duration);
+static void         timed_string_free (TimedString *ts);
+
+static TimedString *challenge_add (WebServer *server);
+static void         challenges_manage (WebServer *server);
+
+static TimedString *auth_cookie_add (WebServer *server);
+static void         auth_cookies_manage (WebServer *server);
+
 
 /*
  * Temporary available data
  *
- * Each TmpData structure represents a ressource which will be available for some time (until it has
+ * Each TmpRessource structure represents a ressource which will be available for some time (until it has
  * expired).
  *
  * If the expiration_date attribute is set to 0, then there is no expiration at all.
@@ -60,336 +94,12 @@ typedef struct {
 	gchar *data;
 	gsize  size;
 	int    expiration_date; /* 0 to avoid expiration */
-} TmpData;
+} TmpRessource;
 
-static gboolean
-delete_tmp_data (WebServer *server)
-{
-	GSList *list;
-	GTimeVal tv;
-	gint n_timed = 0;
-
-	g_get_current_time (&tv);
-	for (list = server->priv->tmpdata_list; list; ) {
-		TmpData *td = (TmpData *) list->data;
-		if ((td->expiration_date > 0) && (td->expiration_date < tv.tv_sec)) {
-			GSList *n = list->next;
-			g_hash_table_remove (server->priv->tmpdata_hash, td->path);
-			server->priv->tmpdata_list = g_slist_delete_link (server->priv->tmpdata_list, list);
-			list = n;
-		}
-		else {
-			if (td->expiration_date > 0)
-				n_timed ++;
-			list = list->next;
-		}
-	}
-	if (n_timed == 0) {
-		server->priv->timer = 0;
-		return FALSE;
-	}
-	else
-		return TRUE;
-}
-
-/*
- * @data is stolen!
- */
-static TmpData *
-tmp_data_add (WebServer *server, const gchar *path, gchar *data, gsize data_length)
-{
-	TmpData *td;
-	GTimeVal tv;
-
-	g_get_current_time (&tv);
-	td = g_new0 (TmpData, 1);
-	td->path = g_strdup (path);
-	td->data = data;
-	td->size = data_length;
-	td->expiration_date = tv.tv_sec + 30;
-	g_hash_table_insert (server->priv->tmpdata_hash, g_strdup (path), td);
-	server->priv->tmpdata_list = g_slist_prepend (server->priv->tmpdata_list, td);
-	if (!server->priv->timer)
-		server->priv->timer = g_timeout_add_seconds (5, (GSourceFunc) delete_tmp_data, server);
-	return td;
-}
-
-/*
- * @data is static
- */
-static TmpData *
-tmp_static_data_add (WebServer *server, const gchar *path, gchar *data, gsize data_length)
-{
-	TmpData *td;
-
-	td = g_new0 (TmpData, 1);
-	td->path = g_strdup (path);
-	td->data = data;
-	td->size = data_length;
-	td->expiration_date = 0;
-	g_hash_table_insert (server->priv->tmpdata_hash, g_strdup (path), td);
-	server->priv->tmpdata_list = g_slist_prepend (server->priv->tmpdata_list, td);
-	return td;
-}
-
-static void
-tmp_data_free (TmpData *data)
-{
-	g_free (data->data);
-	g_free (data);
-}
-
-#define GDA_CSS \
-"body {" \
-"        margin: 0px;" \
-"        background-color: white;" \
-"        font-family: sans-serif;" \
-"        color: black;" \
-"}" \
-"" \
-"a {" \
-"    color: #0000ff;" \
-"    border: 0px;" \
-"}" \
-"" \
-"a:active {" \
-"        color: #ff0000;" \
-"}" \
-"" \
-"a:visited {" \
-"        color: #551a8b;" \
-"}" \
-"" \
-"" \
-"#container" \
-"{" \
-"    width: 97%;" \
-"    margin: 1%;" \
-"    background-color: #fff;" \
-"    color: #333;" \
-"}" \
-"" \
-"" \
-"" \
-"#top" \
-"{" \
-"    background: #729FCF;" \
-"    float: left;" \
-"    width: 100%;" \
-"    font-size: 75%;" \
-"}" \
-"" \
-"#top h1" \
-"{" \
-"    margin: 0;" \
-"    margin-left: 85px;" \
-"    padding-top: 20px;" \
-"    padding-bottom: 20px;" \
-"    color: #eeeeec;" \
-"}" \
-"" \
-"#top ul {" \
-"    list-style: none;" \
-"    text-align: right;" \
-"    padding: 0 1ex;" \
-"    margin: 0;" \
-"    font-size: 85%;" \
-"}" \
-"" \
-"#top li a {" \
-"    font-weight: bold;" \
-"    color: #FFFFFF;" \
-"    margin: 0 2ex;" \
-"    text-decoration: none;" \
-"    line-height: 30px;" \
-"" \
-"}" \
-"" \
-"" \
-"/*" \
-" * Left naivgation pane" \
-" */" \
-"#leftnav" \
-"{" \
-"    float: left;" \
-"    width: 140px;" \
-"    margin: 0;" \
-"    padding-top: 5;" \
-"" \
-"    background: #2E3436;" \
-"    color: #FFFFFF;" \
-"}" \
-"" \
-"#leftnav ul {" \
-"    font-weight: bold;" \
-"    list-style: none;" \
-"    padding: 0 10px 10px;;" \
-"    margin: 0 0 0 0;" \
-"    font-size: 90%;" \
-"}" \
-"" \
-"#leftnav li a {" \
-"    font-weight: normal;" \
-"    color: #FFFFFF;" \
-"    margin: 0 0 0 0;" \
-"    padding: 0 10px;" \
-"    text-decoration: none;" \
-"    font-size: 80%;" \
-"}" \
-"" \
-"#leftnav p { margin: 0 0 1em 0; }" \
-"" \
-"/* " \
-" * Content" \
-" */" \
-"#content" \
-"{" \
-"    /*background: red;*/" \
-"    margin-left: 140px;" \
-"    padding: 5em 1em;" \
-"}" \
-"" \
-"#content h1" \
-"{ " \
-"    /*background: green;*/" \
-"    margin: 5em 0 .5em 0 0;" \
-"    font-size: 100%;" \
-"}" \
-"" \
-"#content h2" \
-"{ " \
- "    /*background: green;*/"			\
-"    padding-left: 5;" \
-"    font-size: 80%;" \
-"}" \
-"" \
-"#content ul {" \
-"    font-weight: bold;" \
-"    list-style: none;" \
-"    padding: 0 10px 10px;;" \
-"    margin: 0 0 0 0;" \
-"    font-size: 90%;" \
-"}" \
-"" \
-"#content li {" \
-"    font-weight: normal;" \
-"    margin: 0 0 0 0;" \
-"    padding: 0 10px;" \
-"    text-decoration: none;" \
-"    font-size: 80%;" \
-"}" \
-"" \
-"div.clist" \
-"{" \
-"    /*background: blue;*/" \
-"    padding: 0;" \
-"    overflow: hidden;" \
-"}" \
-"" \
-".clist ul" \
-"{" \
-"    /*background: lightgray;*/" \
-"    margin-bottom: 0;" \
-"" \
-"    float: left;" \
-"    width: 100%;" \
-"    margin: 0;" \
-"    margin-left: 10px;" \
-"    padding: 0;" \
-"    list-style: none;" \
-"}" \
-"" \
-".clist li" \
-"{" \
-"    /*background: lightblue;*/" \
-"    float: left;" \
-"    width: 33%;" \
-"    margin: 0;" \
-"    padding: 0;" \
-"    font-size: 90%;" \
-"    /*word-wrap: break-word;*/" \
-"}" \
-"" \
-".clist a" \
-"{" \
-"    font-weight: normal;" \
-"    color: #050505;" \
-"    margin: 0 0 0 0;" \
-"    padding: 0 0 0 0;" \
-"    text-decoration: none;" \
-"}" \
-"" \
-".clist br" \
-"{" \
-"    clear: both;" \
-"}" \
-"" \
-"table.ctable" \
-"{" \
-"    font-weight: normal;" \
-"    font-size: 90%;" \
-"    width: 100%;" \
-"    background-color: #fafafa;" \
-"    border: 1px #6699CC solid;" \
-"    border-collapse: collapse;" \
-"    border-spacing: 0px;" \
-"    margin-top: 0px;" \
-"    margin-bottom: 5px;" \
-"}" \
-"" \
-".ctable th" \
-"{" \
-"    border-bottom: 2px solid #6699CC;" \
-"    background-color: #729FCF;" \
-"    text-align: center;" \
-"    font-weight: bold;" \
-"    color: #eeeeec;" \
-"}" \
-"" \
-".ctable td" \
-"{" \
-"    padding-left: 2px;" \
-"    border-left: 1px dotted #729FCF;" \
-"}" \
-"" \
-".graph" \
-"{" \
-"    /*background: lightblue;*/" \
-"    padding: 0;" \
-"}" \
-"" \
-".graph img" \
-"{" \
-"    max-width: 100%;" \
-"    height: auto;" \
-"    border: 0;" \
-"}" \
-"" \
-".pkey" \
-"{" \
-"    /*background: lightblue;*/" \
-"    color: blue;" \
-"    font-weight: bold;" \
-"}" \
-"" \
-".ccode" \
-"{" \
-"    /*background: lightblue;*/" \
-"    padding-left: 5px;" \
-"}" \
-"" \
-"/*" \
-" * Footer" \
-" */" \
-"#footer" \
-"{" \
-"    clear: both;" \
-"    margin: 0;" \
-"    padding: 2;" \
-"    color: #eeeeec;" \
-"    background: #729FCF;" \
-"}"
-
+static TmpRessource  *tmp_ressource_add (WebServer *server, const gchar *path, gchar *data, gsize data_length);
+static TmpRessource  *tmp_static_data_add (WebServer *server, const gchar *path, gchar *data, gsize data_length);
+static gboolean       delete_tmp_ressource (WebServer *server);
+static void           tmp_ressource_free (TmpRessource *data);
 
 /* module error */
 GQuark web_server_error_quark (void)
@@ -445,83 +155,167 @@ static void
 web_server_init (WebServer *server)
 {
 	server->priv = g_new0 (WebServerPrivate, 1);
-	server->priv->timer = 0;
-	server->priv->tmpdata_hash = g_hash_table_new_full (g_str_hash, g_str_equal,
-							    g_free, (GDestroyNotify) tmp_data_free);
-	server->priv->tmpdata_list = NULL;
+	server->priv->ressources_timer = 0;
+	server->priv->ressources_hash = g_hash_table_new_full (g_str_hash, g_str_equal,
+							    g_free, (GDestroyNotify) tmp_ressource_free);
+	server->priv->ressources_list = NULL;
 
-	tmp_static_data_add (server, "gda.css", GDA_CSS, strlen (GDA_CSS));
+	server->priv->token = g_strdup ("");
+	server->priv->challenges = g_array_new (FALSE, FALSE, sizeof (TimedString*));
+	server->priv->cookies = g_array_new (FALSE, FALSE, sizeof (TimedString*));
+	server->priv->auth_timer = 0;
+
+	server->priv->terminals_list = NULL;
+	server->priv->term_timer = 0;
 }
 
-
-static gboolean get_file (SoupServer *server, SoupMessage *msg, const char *path, GError **error);
-static void     get_root (SoupServer *server, SoupMessage *msg);
+static void     get_cookies (SoupMessage *msg, ...);
+static gboolean get_file (WebServer *server, SoupMessage *msg, const char *path, GError **error);
+static void     get_root (WebServer *server, SoupMessage *msg);
+static void     get_for_console (WebServer *server, SoupMessage *msg);
 static gboolean get_for_cnc (WebServer *webserver, SoupMessage *msg, 
 			     const ConnectionSetting *cs, gchar **extra, GError **error);
+static gboolean get_auth (WebServer *server, SoupMessage *msg, GHashTable *query);
+static gboolean get_post_for_irb (WebServer *webserver, SoupMessage *msg, 
+				  const ConnectionSetting *cs, GHashTable *query, GError **error);
+static void     get_for_cnclist (WebServer *webserver, SoupMessage *msg);
 
+
+/*#define DEBUG_SERVER*/
+#ifdef DEBUG_SERVER
+static void
+debug_display_query (gchar *key, gchar *value, gpointer data)
+{
+	g_print ("\t%s => %s\n", key, value);
+}
+#endif
 
 static void
 server_callback (SoupServer *server, SoupMessage *msg,
                  const char *path, GHashTable *query,
                  SoupClientContext *context, WebServer *webserver)
 {
-	/*#define DEBUG_SERVER*/
 #ifdef DEBUG_SERVER
         printf ("%s %s HTTP/1.%d\n", msg->method, path, soup_message_get_http_version (msg));
+	/*
         SoupMessageHeadersIter iter;
         const char *name, *value;
         soup_message_headers_iter_init (&iter, msg->request_headers);
         while (soup_message_headers_iter_next (&iter, &name, &value))
                 printf ("%s: %s\n", name, value);
+	*/
         if (msg->request_body->length)
                 printf ("Request body: %s\n", msg->request_body->data);
+	if (query) {
+		printf ("Query parts:\n");
+		g_hash_table_foreach (query, (GHFunc) debug_display_query, NULL);
+	}
 #endif
 	
-        if (msg->method == SOUP_METHOD_GET) {
-		GError *error = NULL;
-		gboolean ok = TRUE;
-		TmpData *tmpdata;
-		if (*path != '/') {
-			soup_message_set_status_full (msg, SOUP_STATUS_UNAUTHORIZED, "Wrong path name");
-			return;
-		}
-		path++;
+	GError *error = NULL;
+	gboolean ok = TRUE;
+	gboolean done = FALSE;
+	TmpRessource *tmpdata;
+	if ((*path != '/') || (*path && (path[1] == '/'))) {
+		soup_message_set_status_full (msg, SOUP_STATUS_UNAUTHORIZED, "Wrong path name");
+		return;
+	}
+	path++;
 
-		if (*path == 0)
-			get_root (server, msg);
-		else if ((tmpdata = g_hash_table_lookup (webserver->priv->tmpdata_hash, path))) {
+	/* check for authentication */
+	gboolean auth_needed = TRUE;
+	if (g_str_has_suffix (path, ".js") ||
+	    g_str_has_suffix (path, ".css"))
+		auth_needed = FALSE;
+	if (auth_needed) {
+		/* check cookie named "coa" */
+		gchar *cookie;
+		get_cookies (msg, "coa", &cookie, NULL);
+
+		if (cookie) {
+			gint n;
+			for (n = 0; n < webserver->priv->cookies->len; n++) {
+				TimedString *ts = g_array_index (webserver->priv->cookies, TimedString *, n);
+#ifdef DEBUG_SERVER
+				g_print ("CMP Cookie %s with msg's cookie %s\n",
+					 ts->string, cookie);
+#endif
+				if (!strcmp (ts->string, cookie)) {
+					/* cookie exists => we are authenticated */
+					auth_needed = FALSE;
+					break;
+				}
+			}
+			g_free (cookie);
+		}
+
+		if (auth_needed) {
+			if (!get_auth (webserver, msg, query))
+				return;
+		}
+	}
+	
+	if (*path == 0) {
+		if (msg->method == SOUP_METHOD_GET)  {
+			get_root (webserver, msg);
+			done = TRUE;
+		}
+	}
+	else if ((tmpdata = g_hash_table_lookup (webserver->priv->ressources_hash, path))) {
+		if (msg->method == SOUP_METHOD_GET) {
 			soup_message_body_append (msg->response_body, SOUP_MEMORY_STATIC,
 						  tmpdata->data, tmpdata->size);
 			soup_message_set_status (msg, SOUP_STATUS_OK);
-		}
-		else {
-			gchar **array = NULL;
-			array = g_strsplit (path, "/", 0);
-
-			const ConnectionSetting *cs;
-			cs = gda_sql_get_connection (array[0]);
-
-			if (cs) 
-				ok = get_for_cnc (webserver, msg, cs, array[1] ? &(array[1]) : NULL, &error);
-			else {
-				/*ok = get_file (webserver, msg, path, &error);*/
-				ok = FALSE;
-			}
-			if (array)
-				g_strfreev (array);
-		}
-
-		if (!ok) {
-			if (error) {
-				soup_message_set_status_full (msg, error->code, error->message);
-				g_error_free (error);
-			}
-			else
-				soup_message_set_status (msg, SOUP_STATUS_INTERNAL_SERVER_ERROR);
+			done = TRUE;
 		}
 	}
-        else
+	else {
+		gchar **array = NULL;
+		array = g_strsplit (path, "/", 0);
+		
+		const ConnectionSetting *cs;
+		cs = gda_sql_get_connection (array[0]);
+		
+		if (cs) {
+			if (msg->method == SOUP_METHOD_GET) {
+				ok = get_for_cnc (webserver, msg, cs, array[1] ? &(array[1]) : NULL, &error);
+				done = TRUE;
+			}
+		}
+		else if (!strcmp (path, "~console")) {
+			get_for_console (webserver, msg);
+			done = TRUE;
+		}
+		else if (!strcmp (path, "~irb")) {
+			ok = get_post_for_irb (webserver, msg, cs, query, &error);
+			done = TRUE;
+		}
+		else if (!strcmp (path, "~cnclist")) {
+			get_for_cnclist (webserver, msg);
+			done = TRUE;
+		}
+		else {
+			if (msg->method == SOUP_METHOD_GET) {
+				ok = get_file (webserver, msg, path, &error);
+				done = TRUE;
+			}
+		}
+		if (array)
+			g_strfreev (array);
+	}
+	
+	if (!ok) {
+		if (error) {
+			soup_message_set_status_full (msg, error->code, error->message);
+			g_error_free (error);
+		}
+		else
+			soup_message_set_status (msg, SOUP_STATUS_INTERNAL_SERVER_ERROR);
+	}
+        
+	if (!done)
                 soup_message_set_status (msg, SOUP_STATUS_NOT_IMPLEMENTED);
+
 #ifdef DEBUG_SERVER
         printf ("  -> %d %s\n\n", msg->status_code, msg->reason_phrase);
 #endif
@@ -530,13 +324,14 @@ server_callback (SoupServer *server, SoupMessage *msg,
 /**
  * web_server_new
  * @type: the #GType requested
+ * @auth_token: the authentication token, or %NULL
  *
  * Creates a new server of type @type
  *
  * Returns: a new #WebServer object
  */
 WebServer *
-web_server_new (gint port)
+web_server_new (gint port, const gchar *auth_token)
 {
 	WebServer *server;
 
@@ -546,7 +341,12 @@ web_server_new (gint port)
 						NULL);
 	soup_server_add_handler (server->priv->server, NULL,
                                  (SoupServerCallback) server_callback, server, NULL);
-	
+
+	if (auth_token) {
+		g_free (server->priv->token);
+		server->priv->token = g_strdup (auth_token);
+	}
+
 	soup_server_run_async (server->priv->server);
 
 	return server;
@@ -560,22 +360,30 @@ web_server_dispose (GObject *object)
 
 	server = WEB_SERVER (object);
 	if (server->priv) {
-		if (server->priv->tmpdata_hash) {
-			g_hash_table_destroy (server->priv->tmpdata_hash);
-			server->priv->tmpdata_hash = NULL;
+		if (server->priv->ressources_hash) {
+			g_hash_table_destroy (server->priv->ressources_hash);
+			server->priv->ressources_hash = NULL;
 		}
-		if (server->priv->tmpdata_list) {
-			g_slist_free (server->priv->tmpdata_list);
-			server->priv->tmpdata_list = NULL;
+		if (server->priv->ressources_list) {
+			g_slist_free (server->priv->ressources_list);
+			server->priv->ressources_list = NULL;
 		}
 		if (server->priv->server) {
 			g_object_unref (server->priv->server);
 			server->priv->server = NULL;
 		}
-		if (server->priv->timer) {
-			g_source_remove (server->priv->timer);
-			server->priv->timer = 0;
-		}		
+		if (server->priv->ressources_timer) {
+			g_source_remove (server->priv->ressources_timer);
+			server->priv->ressources_timer = 0;
+		}
+		if (server->priv->auth_timer) {
+			g_source_remove (server->priv->auth_timer);
+			server->priv->auth_timer = 0;
+		}
+		if (server->priv->term_timer) {
+			g_source_remove (server->priv->term_timer);
+			server->priv->term_timer = 0;
+		}
 	}
 
 	/* parent class */
@@ -592,6 +400,23 @@ web_server_finalize (GObject   * object)
 
 	server = WEB_SERVER (object);
 	if (server->priv) {
+		gint i;
+		for (i = 0; i < server->priv->challenges->len; i++) {
+			TimedString *ts = g_array_index (server->priv->challenges, TimedString *, i);
+			timed_string_free (ts);
+		}
+		g_array_free (server->priv->challenges, TRUE);
+
+		for (i = 0; i < server->priv->cookies->len; i++) {
+			TimedString *ts = g_array_index (server->priv->cookies, TimedString *, i);
+			timed_string_free (ts);
+		}
+		g_array_free (server->priv->cookies, TRUE);
+
+		if (server->priv->terminals_list) {
+			g_slist_foreach (server->priv->terminals_list, (GFunc) gda_sql_console_free, NULL);
+			g_slist_free (server->priv->terminals_list);
+		}
 		g_free (server->priv);
 	}
 
@@ -600,13 +425,44 @@ web_server_finalize (GObject   * object)
 }
 
 /*
+ *
+ * Server GET/POST methods
+ *
+ */
+static HtmlDoc *create_new_htmldoc (WebServer *webserver, const ConnectionSetting *cs);
+static void get_variables (SoupMessage *msg, GHashTable *query, ...);
+
+/*
  * GET for a file
  */
 static gboolean
-get_file (SoupServer *server, SoupMessage *msg, const char *path, GError **error)
+get_file (WebServer *server, SoupMessage *msg, const char *path, GError **error)
 {
 	GMappedFile *mfile;
-        mfile = g_mapped_file_new (path, FALSE, error);
+	gchar *real_path;
+
+	real_path = sql_gbr_get_file_path (SQL_DATA_DIR, "libgda-4.0", "web", path, NULL);
+	if (!real_path)
+		return FALSE;
+
+	/*g_print ("get_file () => %s\n", real_path);*/
+	if (!g_file_test (real_path, G_FILE_TEST_EXISTS)) {
+		/* test if we are in the compilation directory */
+		gchar *cwd, *tmp;
+		cwd = g_get_current_dir ();
+		tmp = g_build_filename (cwd, "gda-sql.c", NULL);
+		if (g_file_test (tmp, G_FILE_TEST_EXISTS)) {
+			g_free (real_path);
+			real_path = g_build_filename (cwd, path, NULL);
+		}
+		else {
+			g_free (cwd);
+			return FALSE;
+		}
+		g_free (cwd);
+	}
+        mfile = g_mapped_file_new (real_path, FALSE, error);
+	g_free (real_path);
 	if (!mfile)
 		return FALSE;
 
@@ -620,11 +476,180 @@ get_file (SoupServer *server, SoupMessage *msg, const char *path, GError **error
 	return TRUE;
 }
 
+#define PAD_LEN 64  /* PAD length */
+#define SIG_LEN 16  /* MD5 digest length */
+/*
+ * From RFC 2104
+ */
+static void
+hmac_md5 (uint8_t*  text,            /* pointer to data stream */
+	  int   text_len,            /* length of data stream */
+	  uint8_t*  key,             /* pointer to authentication key */
+	  int   key_len,             /* length of authentication key */
+	  uint8_t  *hmac)            /* returned hmac-md5 */
+{
+	MD5_CTX md5c;
+	uint8_t k_ipad[PAD_LEN];    /* inner padding - key XORd with ipad */
+	uint8_t k_opad[PAD_LEN];    /* outer padding - key XORd with opad */
+	uint8_t keysig[SIG_LEN];
+	int i;
+
+	/* if key is longer than PAD length, reset it to key=MD5(key) */
+	if (key_len > PAD_LEN) {
+		MD5_CTX md5key;
+
+		MD5Init (&md5key);
+		MD5Update (&md5key, key, key_len);
+		MD5Final (keysig, &md5key);
+
+		key = keysig;
+		key_len = SIG_LEN;
+	}
+
+	/*
+	 * the HMAC_MD5 transform looks like:
+	 *
+	 * MD5(Key XOR opad, MD5(Key XOR ipad, text))
+	 *
+	 * where Key is an n byte key
+	 * ipad is the byte 0x36 repeated 64 times
+
+	 * opad is the byte 0x5c repeated 64 times
+	 * and text is the data being protected
+	 */
+
+	/* Zero pads and store key */
+	memset (k_ipad, 0, PAD_LEN);
+	memcpy (k_ipad, key, key_len);
+	memcpy (k_opad, k_ipad, PAD_LEN);
+
+	/* XOR key with ipad and opad values */
+	for (i=0; i<PAD_LEN; i++) {
+		k_ipad[i] ^= 0x36;
+		k_opad[i] ^= 0x5c;
+	}
+
+	/* perform inner MD5 */
+	MD5Init (&md5c);                    /* start inner hash */
+	MD5Update (&md5c, k_ipad, PAD_LEN); /* hash inner pad */
+	MD5Update (&md5c, text, text_len);  /* hash text */
+	MD5Final (hmac, &md5c);             /* store inner hash */
+
+	/* perform outer MD5 */
+	MD5Init (&md5c);                    /* start outer hash */
+	MD5Update (&md5c, k_opad, PAD_LEN); /* hash outer pad */
+	MD5Update (&md5c, hmac, SIG_LEN);   /* hash inner hash */
+	MD5Final (hmac, &md5c);             /* store results */
+}
+
+
+
+/*
+ * Creates a login form
+ *
+ * Returns: TRUE if the user is now authenticated, or FALSE if the user needs to authenticate
+ */
+static gboolean
+get_auth (WebServer *server, SoupMessage *msg, GHashTable *query)
+{
+	HtmlDoc *hdoc;
+	xmlChar *xstr;
+	SoupBuffer *buffer;
+	gsize size;
+
+	hdoc = html_doc_new (_("Authentication required"));
+	xmlNewChild (hdoc->content, NULL, BAD_CAST "h1", BAD_CAST _("Authentication required"));
+	soup_message_headers_replace (msg->response_headers,
+				      "Content-Type", "text/html");
+
+	/* check to see if this page is called as an answer to authentication */
+	gchar *token = NULL;
+	get_variables (msg, query, "etoken", &token, NULL);
+
+	if (token) {
+		gint n;
+		for (n = 0; n < server->priv->challenges->len; n++) {
+			TimedString *ts = g_array_index (server->priv->challenges, TimedString *, n);
+			uint8_t hmac[16];
+			GString *md5str;
+			gint i;
+			
+			hmac_md5 ((uint8_t *) ts->string, strlen (ts->string),
+				  (uint8_t *) server->priv->token, strlen (server->priv->token), hmac);
+			md5str = g_string_new ("");
+			for (i = 0; i < 16; i++)
+				g_string_append_printf (md5str, "%02x", hmac[i]);
+			
+			if (!strcmp (md5str->str, token)) {
+				/* forge a new location change message */
+				GString *cook;
+				gchar *tmp;
+				TimedString *new_cookie;
+				
+				new_cookie = auth_cookie_add (server);
+				cook = g_string_new ("");
+				tmp = gda_rfc1738_encode (new_cookie->string);
+				g_string_append_printf (cook, "coa=%s; path=/", tmp);
+				g_free (tmp);
+				soup_message_headers_append (msg->response_headers, "Set-Cookie", cook->str);
+				g_string_free (cook, TRUE);
+				
+				/*soup_message_set_status (msg, SOUP_STATUS_TEMPORARY_REDIRECT);
+				  soup_message_headers_append (msg->response_headers, "Location", "/");*/
+				
+				g_string_free (md5str, TRUE);
+				g_free (token);
+				
+				return TRUE;
+			}
+			g_string_free (md5str, TRUE);
+		}
+		
+		g_free (token);
+	}
+	
+
+	/* Add javascript */
+	xmlNodePtr form, node;
+	node = xmlNewChild (hdoc->head, NULL, BAD_CAST "script", BAD_CAST "");
+	xmlSetProp (node, BAD_CAST "type", BAD_CAST "text/javascript");
+	xmlSetProp (node, BAD_CAST "src", BAD_CAST "/md5.js");
+
+	/* login form */
+	TimedString *new_challenge = challenge_add (server);
+	form = xmlNewChild (hdoc->content, NULL, BAD_CAST "form", NULL);
+	gchar *str = g_strdup_printf ("javascript:etoken.value=hex_hmac_md5(token.value, '%s'); javascript:token.value=''", new_challenge->string);
+	xmlSetProp (form, BAD_CAST "onsubmit", BAD_CAST str);
+	g_free (str);
+	
+	node = xmlNewChild (form, NULL, BAD_CAST "input", BAD_CAST _("Token:"));
+	xmlSetProp (node, BAD_CAST "type", BAD_CAST "hidden");
+	xmlSetProp (node, BAD_CAST "name", BAD_CAST "etoken");
+
+	node = xmlNewChild (form, NULL, BAD_CAST "input", NULL);
+	xmlSetProp (node, BAD_CAST "type", BAD_CAST "password");
+	xmlSetProp (node, BAD_CAST "name", BAD_CAST "token");
+
+	node = xmlNewChild (form, NULL, BAD_CAST "input", NULL);
+	xmlSetProp (node, BAD_CAST "type", BAD_CAST "submit");
+	xmlSetProp (node, BAD_CAST "value", BAD_CAST "login");
+	xmlSetProp (node, BAD_CAST "colspan", BAD_CAST "2");
+
+	xstr = html_doc_to_string (hdoc, &size);
+	buffer = soup_buffer_new_with_owner (xstr, size, xstr, (GDestroyNotify)xmlFree);
+	soup_message_body_append_buffer (msg->response_body, buffer);
+	soup_buffer_free (buffer);
+	html_doc_free (hdoc);
+
+	soup_message_set_status (msg, SOUP_STATUS_OK);
+	return FALSE;
+}
+
 /*
  * GET for the / path
  */
 static void
-get_root (SoupServer *server, SoupMessage *msg)
+get_root (WebServer *server, SoupMessage *msg)
 {
 	HtmlDoc *hdoc;
 	xmlChar *xstr;
@@ -633,28 +658,153 @@ get_root (SoupServer *server, SoupMessage *msg)
 
 	const GSList *list;
 	list = gda_sql_get_all_connections ();
-	if (0 && list && !list->next) {
+	if (list && !list->next) {
 		/* only 1 connection => go to this one */
 		ConnectionSetting *cs = (ConnectionSetting*) list->data;
 		soup_message_set_status (msg, SOUP_STATUS_TEMPORARY_REDIRECT);
 		soup_message_headers_append (msg->response_headers, "Location", cs->name);
 		return;
 	}
-	hdoc = html_doc_new (_("Database information"));
-	if (!list) {
-		/* no connection at all */
-		xmlNodePtr node;
-
-		node = xmlNewChild (hdoc->content, NULL, "h1", _("No connection opened."));
-		node = xmlNewChild (hdoc->content, NULL, "p", _("Open a connection from the console and reload this page"));
-	}
-	else {
+	else if (list) {
 		/* more than one connection, redirect to the current one */
 		const ConnectionSetting *cs = gda_sql_get_current_connection ();
 		soup_message_set_status (msg, SOUP_STATUS_TEMPORARY_REDIRECT);
 		soup_message_headers_append (msg->response_headers, "Location", cs->name);
 		return;
 	}
+
+	hdoc = create_new_htmldoc (server, NULL);
+	soup_message_headers_replace (msg->response_headers,
+				      "Content-Type", "text/html");
+	xstr = html_doc_to_string (hdoc, &size);
+	buffer = soup_buffer_new_with_owner (xstr, size, xstr, (GDestroyNotify)xmlFree);
+	soup_message_body_append_buffer (msg->response_body, buffer);
+	soup_buffer_free (buffer);
+	html_doc_free (hdoc);
+
+	soup_message_set_status (msg, SOUP_STATUS_OK);
+}
+
+static xmlNodePtr
+cnc_ul ()
+{
+	xmlNodePtr ul, li, a;
+	const GSList *clist, *list;
+	gchar *str;
+
+	/* other connections in the sidebar */
+	list = gda_sql_get_all_connections ();
+	ul = xmlNewNode (NULL, BAD_CAST "ul");
+	xmlNodeSetContent(ul, BAD_CAST _("Connections"));
+	xmlSetProp (ul, BAD_CAST "id", BAD_CAST "cnclist");
+
+	if (!list) {
+		/* no connection at all */
+		str = g_strdup_printf ("(%s)",  _("None"));
+		li = xmlNewChild (ul, NULL, BAD_CAST "li", NULL);
+		xmlNewChild (li, NULL, BAD_CAST "a", BAD_CAST str);
+		g_free (str);
+	}
+	else {
+		/*
+		li = xmlNewChild (ul, NULL, BAD_CAST "li", NULL);
+		str = g_strdup_printf ("(%s)",  _("From console"));
+		a = xmlNewChild (li, NULL, BAD_CAST "a", BAD_CAST str);
+		g_free (str);
+		xmlSetProp (a, BAD_CAST "href", BAD_CAST "/");
+		*/
+		for (clist = list; clist; clist = clist->next) {
+			gchar *tmp;
+			ConnectionSetting *cs2 = (ConnectionSetting*) clist->data;
+			
+			li = xmlNewChild (ul, NULL, BAD_CAST "li", NULL);
+			a = xmlNewChild (li, NULL, BAD_CAST "a", BAD_CAST cs2->name);
+			tmp = gda_rfc1738_encode (cs2->name);
+			str = g_strdup_printf ("/%s", tmp);
+			g_free (tmp);
+			xmlSetProp (a, BAD_CAST "href", BAD_CAST  str);
+			g_free (str);
+		}
+	}
+	return ul;
+}
+
+static void
+get_for_cnclist (WebServer *webserver, SoupMessage *msg)
+{
+	xmlNodePtr ul;
+	SoupBuffer *buffer;
+
+	ul = cnc_ul ();
+	soup_message_headers_replace (msg->response_headers,
+				      "Content-Type", "text/html");
+
+	xmlBufferPtr buf;
+	buf = xmlBufferCreate ();
+	xmlNodeDump (buf, NULL, ul, 1, 1);
+	xmlFreeNode (ul);
+	
+	buffer = soup_buffer_new (SOUP_MEMORY_TEMPORARY, (gchar *) xmlBufferContent (buf),
+				  strlen ((gchar *) xmlBufferContent (buf)));
+	soup_message_body_append_buffer (msg->response_body, buffer);
+	soup_buffer_free (buffer);
+	xmlBufferFree (buf);
+
+	soup_message_set_status (msg, SOUP_STATUS_OK);
+}
+
+/*
+ * GET for the /~console path
+ */
+static void
+get_for_console (WebServer *server, SoupMessage *msg)
+{
+	HtmlDoc *hdoc;
+	xmlChar *xstr;
+	SoupBuffer *buffer;
+	gsize size;
+
+	xmlNodePtr div = NULL, node;
+
+	hdoc = create_new_htmldoc (server, NULL);
+	xmlNewChild (hdoc->content, NULL, BAD_CAST "h1", BAD_CAST _("SQL console:"));
+
+	div = xmlNewChild (hdoc->content, NULL, BAD_CAST "div", NULL);
+	xmlSetProp (div, BAD_CAST "id", BAD_CAST "terminal");
+
+	div = xmlNewChild (div, NULL, BAD_CAST "div", BAD_CAST "");
+	xmlSetProp (div, BAD_CAST "id", BAD_CAST "irb");
+
+	div = xmlNewChild (hdoc->footer, NULL, BAD_CAST "input", NULL);
+	xmlSetProp (div, BAD_CAST "class", BAD_CAST "keyboard-selector-input");
+	xmlSetProp (div, BAD_CAST "type", BAD_CAST "text");
+	xmlSetProp (div, BAD_CAST "id", BAD_CAST "irb_input");
+	xmlSetProp (div, BAD_CAST "autocomplete", BAD_CAST "off");
+	
+	node = xmlNewChild (hdoc->head, NULL, BAD_CAST "script", BAD_CAST "");
+	xmlSetProp (node, BAD_CAST "type", BAD_CAST "text/javascript");
+	xmlSetProp (node, BAD_CAST "src", BAD_CAST "/jquery.js");
+
+	node = xmlNewChild (hdoc->head, NULL, BAD_CAST "script", BAD_CAST "");
+	xmlSetProp (node, BAD_CAST "type", BAD_CAST "text/javascript");
+	xmlSetProp (node, BAD_CAST "src", BAD_CAST "/mouseapp_2.js");
+
+	node = xmlNewChild (hdoc->head, NULL, BAD_CAST "script", BAD_CAST "");
+	xmlSetProp (node, BAD_CAST "type", BAD_CAST "text/javascript");
+	xmlSetProp (node, BAD_CAST "src", BAD_CAST "/mouseirb_2.js");
+
+	node = xmlNewChild (hdoc->head, NULL, BAD_CAST "script", BAD_CAST "");
+	xmlSetProp (node, BAD_CAST "type", BAD_CAST "text/javascript");
+	xmlSetProp (node, BAD_CAST "src", BAD_CAST "/irb.js");
+
+	node = xmlNewChild (hdoc->head, NULL, BAD_CAST "script", BAD_CAST "");
+	xmlSetProp (node, BAD_CAST "type", BAD_CAST "text/javascript");
+	xmlSetProp (node, BAD_CAST "src", BAD_CAST "/cnc.js");
+
+	node = xmlNewChild (hdoc->head, NULL, BAD_CAST "link", BAD_CAST "");
+	xmlSetProp(node, BAD_CAST "href", (xmlChar*)"/irb.css");
+	xmlSetProp(node, BAD_CAST "rel", (xmlChar*)"stylesheet");
+	xmlSetProp(node, BAD_CAST "type", (xmlChar*)"text/css");
 
 	soup_message_headers_replace (msg->response_headers,
 				      "Content-Type", "text/html");
@@ -688,80 +838,22 @@ get_for_cnc (WebServer *webserver, SoupMessage *msg, const ConnectionSetting *cs
 	xmlChar *xstr;
 	SoupBuffer *buffer;
 	gsize size;
-	gchar *str;
 
-	gchar *rfc_cnc_name;
-
-	xmlNodePtr ul, li, a;
-
-	const GSList *clist;
-
-
-	str = g_strdup_printf (_("Database information for '%s'"), cs->name);
-	hdoc = html_doc_new (str);
-	g_free (str);
-
-	/* other connections in the sidebar */
-	ul = xmlNewChild (hdoc->sidebar, NULL, "ul", _("Connections"));
-	li = xmlNewChild (ul, NULL, "li", NULL);
-	str = g_strdup_printf ("(%s)",  _("From console"));
-	a = xmlNewChild (li, NULL, "a", str);
-	g_free (str);
-	xmlSetProp (a, "href", (xmlChar*) "/");
-
-	for (clist = gda_sql_get_all_connections (); clist; clist = clist->next) {
-		gchar *tmp;
-		ConnectionSetting *cs = (ConnectionSetting*) clist->data;
-			
-		li = xmlNewChild (ul, NULL, "li", NULL);
-		a = xmlNewChild (li, NULL, "a", cs->name);
-		tmp = gda_rfc1738_encode (cs->name);
-		str = g_strdup_printf ("/%s", tmp);
-		g_free (tmp);
-		xmlSetProp (a, "href", (xmlChar*) str);
-		g_free (str);
-	}
-
-	/* list all database object's types for which information can be obtained */
-	rfc_cnc_name = gda_rfc1738_encode (cs->name);
-	ul = xmlNewChild (hdoc->sidebar, NULL, "ul", _("Objects"));
-	li = xmlNewChild (ul, NULL, "li", NULL);
-	a = xmlNewChild (li, NULL, "a", _("Tables"));
-	str = g_strdup_printf ("/%s/___tables", rfc_cnc_name);
-	xmlSetProp (a, "href", (xmlChar*) str);
-	g_free (str);
-	li = xmlNewChild (ul, NULL, "li", NULL);
-	a = xmlNewChild (li, NULL, "a", _("Views"));
-	str = g_strdup_printf ("/%s/___views", rfc_cnc_name);
-	xmlSetProp (a, "href", (xmlChar*) str);
-	g_free (str);
-	li = xmlNewChild (ul, NULL, "li", NULL);
-	a = xmlNewChild (li, NULL, "a", _("Triggers"));
-	str = g_strdup_printf ("/%s/___triggers", rfc_cnc_name);
-	xmlSetProp (a, "href", (xmlChar*) str);
-	g_free (str);
-	g_free (rfc_cnc_name);
+	hdoc = create_new_htmldoc (webserver, cs);
 	
-#ifdef GDA_DEBUG_NO
-	if (extra) {
-		gint i;
-		for (i = 0; extra[i]; i++) 
-			g_print ("EXTRA %d: #%s#\n", i, extra[i]);
-	}
-#endif
-	if (!extra || !strcmp (extra[0], "___tables")) {
+	if (!extra || !strcmp (extra[0], "~tables")) {
 		if (! compute_all_objects_content (hdoc, cs, 
 						   _("Tables"), _("Tables in the '%s' schema"), 
 						   "_tables", "table", "table_type LIKE \"%TABLE%\"", error))
 			goto onerror;
 	}
-	else if (!strcmp (extra[0], "___views")) {
+	else if (!strcmp (extra[0], "~views")) {
 		if (! compute_all_objects_content (hdoc, cs, 
 						   _("Views"), _("Views in the '%s' schema"), 
 						   "_tables", "table", "table_type LIKE \"%VIEW%\"", error))
 			goto onerror;
 	}
-	else if (!strcmp (extra[0], "___triggers")) {
+	else if (!strcmp (extra[0], "~triggers")) {
 		if (! compute_all_triggers_content (hdoc, cs, error))
 			goto onerror;
 	}
@@ -772,7 +864,7 @@ get_for_cnc (WebServer *webserver, SoupMessage *msg, const ConnectionSetting *cs
 				goto onerror;
 		}
 		else
-			xmlNewChild (hdoc->content, NULL, "h1", "Not yet implemented");
+			xmlNewChild (hdoc->content, NULL, BAD_CAST "h1", BAD_CAST "Not yet implemented");
 	}
 
 	soup_message_headers_replace (msg->response_headers,
@@ -817,39 +909,39 @@ compute_table_details (const ConnectionSetting *cs, HtmlDoc *hdoc, WebServer *we
 	GdaMetaStore *store;
 
 	tmp = g_strdup_printf (_("Columns for the '%s' table:"), dbo->obj_short_name);
-	xmlNewChild (hdoc->content, NULL, "h1", tmp);
+	xmlNewChild (hdoc->content, NULL, BAD_CAST "h1", BAD_CAST tmp);
 	g_free (tmp);
 
-	div = xmlNewChild (hdoc->content, NULL, "div", NULL);
-	table = xmlNewChild (div, NULL, "table", NULL);
-	xmlSetProp (table, "class", (xmlChar*) "ctable");
-	tr = xmlNewChild (table, NULL, "tr", NULL);
-	td = xmlNewChild (tr, NULL, "th", _("Column"));
-	td = xmlNewChild (tr, NULL, "th", _("Type"));
-	td = xmlNewChild (tr, NULL, "th", _("Nullable"));
-	td = xmlNewChild (tr, NULL, "th", _("Default"));
-	td = xmlNewChild (tr, NULL, "th", _("Extra"));
+	div = xmlNewChild (hdoc->content, NULL, BAD_CAST "div", NULL);
+	table = xmlNewChild (div, NULL, BAD_CAST "table", NULL);
+	xmlSetProp (table, BAD_CAST "class", (xmlChar*) BAD_CAST "ctable");
+	tr = xmlNewChild (table, NULL, BAD_CAST "tr", NULL);
+	td = xmlNewChild (tr, NULL, BAD_CAST "th", BAD_CAST _("Column"));
+	td = xmlNewChild (tr, NULL, BAD_CAST "th", BAD_CAST _("Type"));
+	td = xmlNewChild (tr, NULL, BAD_CAST "th", BAD_CAST _("Nullable"));
+	td = xmlNewChild (tr, NULL, BAD_CAST "th", BAD_CAST _("Default"));
+	td = xmlNewChild (tr, NULL, BAD_CAST "th", BAD_CAST _("Extra"));
 
 	for (list = mt->columns; list; list = list->next) {
 		GdaMetaTableColumn *tcol = GDA_META_TABLE_COLUMN (list->data);
 		GString *string = NULL;
 		
-		tr = xmlNewChild (table, NULL, "tr", NULL);
-		td = xmlNewChild (tr, NULL, "td", tcol->column_name);
+		tr = xmlNewChild (table, NULL, BAD_CAST "tr", NULL);
+		td = xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST tcol->column_name);
 		if (tcol->pkey)
-			xmlSetProp (td, "class", "pkey");
-		td = xmlNewChild (tr, NULL, "td", tcol->column_type);
-		td = xmlNewChild (tr, NULL, "td", tcol->nullok ? _("yes") : _("no"));
-		td = xmlNewChild (tr, NULL, "td", tcol->default_value);
+			xmlSetProp (td, BAD_CAST "class", BAD_CAST "pkey");
+		td = xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST tcol->column_type);
+		td = xmlNewChild (tr, NULL, BAD_CAST "td", tcol->nullok ? BAD_CAST _("yes") : BAD_CAST _("no"));
+		td = xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST tcol->default_value);
 
 		gda_meta_table_column_foreach_attribute (tcol, 
 				    (GdaAttributesManagerFunc) meta_table_column_foreach_attribute_func, &string);
 		if (string) {
-			td = xmlNewChild (tr, NULL, "td", string->str);
+			td = xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST string->str);
 			g_string_free (string, TRUE);
 		}
 		else
-			td = xmlNewChild (tr, NULL, "td", NULL);
+			td = xmlNewChild (tr, NULL, BAD_CAST "td", NULL);
 	}
 
 	/* finished if we don't have a table */
@@ -862,15 +954,15 @@ compute_table_details (const ConnectionSetting *cs, HtmlDoc *hdoc, WebServer *we
 	if (dbo_table->pk_cols_nb > 0) {
 		gint ipk;
 		xmlNodePtr ul = NULL;
-		xmlNewChild (hdoc->content, NULL, "h1", _("Primary key:"));
-		div = xmlNewChild (hdoc->content, NULL, "div", NULL);
+		xmlNewChild (hdoc->content, NULL, BAD_CAST "h1", BAD_CAST _("Primary key:"));
+		div = xmlNewChild (hdoc->content, NULL, BAD_CAST "div", NULL);
 		for (ipk = 0; ipk < dbo_table->pk_cols_nb; ipk++) {
 			GdaMetaTableColumn *tcol;
 			if (!ul)
-				ul = xmlNewChild (div, NULL, "ul", NULL);
+				ul = xmlNewChild (div, NULL, BAD_CAST "ul", NULL);
 
 			tcol = g_slist_nth_data (dbo_table->columns, ipk);
-			xmlNewChild (ul, NULL, "li", tcol->column_name);
+			xmlNewChild (ul, NULL, BAD_CAST "li", tcol->column_name);
 		}
 	}
 #endif
@@ -951,8 +1043,8 @@ compute_table_details (const ConnectionSetting *cs, HtmlDoc *hdoc, WebServer *we
 				gchar *file_data;
 				gsize file_data_len;
 				if (g_file_get_contents (pngname, &file_data, &file_data_len, NULL)) {
-					tmp_filename = g_strdup_printf ("___tmp/g%d", counter);
-					tmp_data_add (webserver, tmp_filename, file_data, file_data_len);
+					tmp_filename = g_strdup_printf ("~tmp/g%d", counter);
+					tmp_ressource_add (webserver, tmp_filename, file_data, file_data_len);
 				}
 			}
 			g_unlink(pngname);
@@ -967,24 +1059,24 @@ compute_table_details (const ConnectionSetting *cs, HtmlDoc *hdoc, WebServer *we
 	if (tmp_filename) {
 		xmlNodePtr obj;
 		gchar *tmp;
-		xmlNewChild (hdoc->content, NULL, "h1", _("Relations:"));
-		div = xmlNewChild (hdoc->content, NULL, "div", NULL);
+		xmlNewChild (hdoc->content, NULL, BAD_CAST "h1", BAD_CAST _("Relations:"));
+		div = xmlNewChild (hdoc->content, NULL, BAD_CAST "div", NULL);
 
 		if (map_node)
 			xmlAddChild (div, map_node);
 
-		xmlSetProp (div, "class", (xmlChar*) "graph");
-		obj = xmlNewChild (div, NULL, "img", NULL);
+		xmlSetProp (div, BAD_CAST "class", BAD_CAST  "graph");
+		obj = xmlNewChild (div, NULL, BAD_CAST "img", NULL);
 		tmp = g_strdup_printf ("/%s", tmp_filename);
-		xmlSetProp (obj, "src", (xmlChar*) tmp);
-		xmlSetProp (obj, "usemap", (xmlChar*) "#G");
+		xmlSetProp (obj, BAD_CAST "src", BAD_CAST tmp);
+		xmlSetProp (obj, BAD_CAST "usemap", BAD_CAST  "#G");
 		g_free (tmp);
 		g_free (tmp_filename);
 	}
 	else {
 		/* list foreign keys as we don't have a graph */
 		if (dbo_table->fk_list) {
-			xmlNewChild (hdoc->content, NULL, "h1", _("Foreign keys:"));
+			xmlNewChild (hdoc->content, NULL, BAD_CAST "h1", BAD_CAST _("Foreign keys:"));
 			GSList *list;
 			for (list = dbo_table->fk_list; list; list = list->next) {
 				GdaMetaTableForeignKey *tfk = GDA_META_TABLE_FOREIGN_KEY (list->data);
@@ -992,18 +1084,18 @@ compute_table_details (const ConnectionSetting *cs, HtmlDoc *hdoc, WebServer *we
 				xmlNodePtr ul = NULL;
 				gint ifk;
 				
-				div = xmlNewChild (hdoc->content, NULL, "div", NULL);
+				div = xmlNewChild (hdoc->content, NULL, BAD_CAST "div", NULL);
 				for (ifk = 0; ifk < tfk->cols_nb; ifk++) {
 					gchar *tmp;
 					if (!ul) {
 						tmp = g_strdup_printf (_("To '%s':"), fkdbo->obj_short_name);
-						ul = xmlNewChild (div, NULL, "ul", tmp);
+						ul = xmlNewChild (div, NULL, BAD_CAST "ul", BAD_CAST tmp);
 						g_free (tmp);
 					}
 					tmp = g_strdup_printf ("%s --> %s.%s", 
 							       tfk->fk_names_array[ifk], 
 							       fkdbo->obj_short_name, tfk->ref_pk_names_array[ifk]);
-					xmlNewChild (ul, NULL, "li", tmp);
+					xmlNewChild (ul, NULL, BAD_CAST "li", BAD_CAST tmp);
 					g_free (tmp);
 				}
 			}
@@ -1170,10 +1262,10 @@ compute_view_details (const ConnectionSetting *cs, HtmlDoc *hdoc, GdaMetaStruct 
 	GdaMetaView *view = GDA_META_VIEW (dbo);
 	if (view->view_def) {
 		xmlNodePtr div, code;
-		xmlNewChild (hdoc->content, NULL, "h1", _("View definition:"));
-		div = xmlNewChild (hdoc->content, NULL, "div", NULL);
-		code = xmlNewChild (div, NULL, "code", view->view_def);
-		xmlSetProp (code, "class", (xmlChar*) "ccode");
+		xmlNewChild (hdoc->content, NULL, BAD_CAST "h1", BAD_CAST _("View definition:"));
+		div = xmlNewChild (hdoc->content, NULL, BAD_CAST "div", NULL);
+		code = xmlNewChild (div, NULL, BAD_CAST "code", BAD_CAST view->view_def);
+		xmlSetProp (code, BAD_CAST "class", BAD_CAST "ccode");
 	}
 	return TRUE;
 }
@@ -1237,7 +1329,7 @@ compute_trigger_content (HtmlDoc *hdoc, WebServer *webserver, const ConnectionSe
 		if ((!tschema || gda_value_differ (tschema, cv3)) ||
 		    (!tname || gda_value_differ (tname, cv4))) {
 			if (tschema) 
-				xmlNewChild (div, NULL, "br", NULL);
+				xmlNewChild (div, NULL, BAD_CAST "br", NULL);
 			if (tschema) 
 				gda_value_free (tschema);
 			if (tname)
@@ -1249,33 +1341,33 @@ compute_trigger_content (HtmlDoc *hdoc, WebServer *webserver, const ConnectionSe
 					       g_value_get_string (cv0),
 					       g_value_get_string (tschema),
 					       g_value_get_string (tname));
-			xmlNewChild (hdoc->content, NULL, "h1", tmp);
+			xmlNewChild (hdoc->content, NULL, BAD_CAST "h1", BAD_CAST tmp);
 			g_free (tmp);
 
-			div = xmlNewChild (hdoc->content, NULL, "div", NULL);
+			div = xmlNewChild (hdoc->content, NULL, BAD_CAST "div", NULL);
 		}
 
 		if (G_VALUE_TYPE (cv5) != GDA_TYPE_NULL)
 			tmp = g_strdup_printf ("On %s (%s):", g_value_get_string (cv2), g_value_get_string (cv5));
 		else
 			tmp = g_strdup_printf ("On %s:", g_value_get_string (cv2));
-		xmlNewChild (div, NULL, "h2", tmp);
+		xmlNewChild (div, NULL, BAD_CAST "h2", BAD_CAST tmp);
 		g_free (tmp);
 
-		sdiv = xmlNewChild (div, NULL, "div", NULL);
-		ul = xmlNewChild (sdiv, NULL, "ul", NULL);
+		sdiv = xmlNewChild (div, NULL, BAD_CAST "div", NULL);
+		ul = xmlNewChild (sdiv, NULL, BAD_CAST "ul", NULL);
 
 		tmp = g_strdup_printf (_("Trigger fired for: %s"), g_value_get_string (cv6));
-		li = xmlNewChild (ul, NULL, "li", tmp);
+		li = xmlNewChild (ul, NULL, BAD_CAST "li", BAD_CAST tmp);
 		g_free (tmp);
 
 		tmp = g_strdup_printf (_("Time at which the trigger is fired: %s"), g_value_get_string (cv7));
-		li = xmlNewChild (ul, NULL, "li", tmp);
+		li = xmlNewChild (ul, NULL, BAD_CAST "li", BAD_CAST tmp);
 		g_free (tmp);
 
-		li = xmlNewChild (ul, NULL, "li", _("Action:"));
-		code = xmlNewChild (li, NULL, "code", g_value_get_string (cv1));
-		xmlSetProp (code, "class", (xmlChar*) "ccode");
+		li = xmlNewChild (ul, NULL, BAD_CAST "li", BAD_CAST _("Action:"));
+		code = xmlNewChild (li, NULL, BAD_CAST "code", BAD_CAST g_value_get_string (cv1));
+		xmlSetProp (code, BAD_CAST "class", BAD_CAST "ccode");
 	}
 	
 	
@@ -1379,10 +1471,10 @@ compute_all_objects_content (HtmlDoc *hdoc, const ConnectionSetting *cs,
 		goto out;
 	nrows = gda_data_model_get_n_rows (model);
 	if (nrows > 0) {
-		xmlNewChild (hdoc->content, NULL, "h1", human_obj_type);
-		div = xmlNewChild (hdoc->content, NULL, "div", NULL);
-		xmlSetProp (div, "class", "clist");
-		ul = xmlNewChild (div, NULL, "ul", NULL);
+		xmlNewChild (hdoc->content, NULL, BAD_CAST "h1", BAD_CAST human_obj_type);
+		div = xmlNewChild (hdoc->content, NULL, BAD_CAST "div", NULL);
+		xmlSetProp (div, BAD_CAST "class", BAD_CAST "clist");
+		ul = xmlNewChild (div, NULL, BAD_CAST "ul", NULL);
 		content_added = TRUE;
 	}
 	for (i = 0; i < nrows; i++) {
@@ -1394,21 +1486,21 @@ compute_all_objects_content (HtmlDoc *hdoc, const ConnectionSetting *cs,
 		cv1 = gda_data_model_get_value_at (model, 1, i, error);
 		if (!cv1)
 			goto out;
-		li = xmlNewChild (ul, NULL, "li", NULL);
-		a = xmlNewChild (li, NULL, "a", g_value_get_string (cv1));
+		li = xmlNewChild (ul, NULL, BAD_CAST "li", NULL);
+		a = xmlNewChild (li, NULL, BAD_CAST "a", BAD_CAST g_value_get_string (cv1));
 		e0 = gda_rfc1738_encode (g_value_get_string (cv0));
 		e1 = gda_rfc1738_encode (g_value_get_string (cv1));
 		tmp = g_strdup_printf ("/%s/%s/%s", rfc_cnc_name, e0, e1);
 		g_free (e0);
 		g_free (e1);
-		xmlSetProp (a, "href", tmp);
+		xmlSetProp (a, BAD_CAST "href", BAD_CAST tmp);
 		g_free (tmp);
 		tmp = g_strdup_printf ("%s.%s", g_value_get_string (cv0), g_value_get_string (cv1));
-		xmlSetProp (a, "title", tmp);
+		xmlSetProp (a, BAD_CAST "title", BAD_CAST tmp);
 		g_free (tmp);
 	}
 	if (nrows > 0)
-		xmlNewChild (div, NULL, "br", NULL);
+		xmlNewChild (div, NULL, BAD_CAST "br", NULL);
 	g_object_unref (model);
 
 	/* objects listed by schema */
@@ -1440,35 +1532,35 @@ compute_all_objects_content (HtmlDoc *hdoc, const ConnectionSetting *cs,
 			xmlNodePtr header;
 			gchar *tmp;
 			if (schema) {
-				xmlNewChild (div, NULL, "br", NULL);
+				xmlNewChild (div, NULL, BAD_CAST "br", NULL);
 				gda_value_free (schema);
 			}
 			schema = gda_value_copy (cv0);
 			tmp = g_strdup_printf (human_obj_type_in_schema, g_value_get_string (schema));
-			header = xmlNewChild (hdoc->content, NULL, "h1", tmp);
+			header = xmlNewChild (hdoc->content, NULL, BAD_CAST "h1", BAD_CAST tmp);
 			g_free (tmp);
 			content_added = TRUE;
-			div = xmlNewChild (hdoc->content, NULL, "div", NULL);
-			xmlSetProp (div, "class", "clist");
-			ul = xmlNewChild (div, NULL, "ul", NULL);
+			div = xmlNewChild (hdoc->content, NULL, BAD_CAST "div", NULL);
+			xmlSetProp (div, BAD_CAST "class", BAD_CAST "clist");
+			ul = xmlNewChild (div, NULL, BAD_CAST "ul", NULL);
 		}
 
-		li = xmlNewChild (ul, NULL, "li", NULL);
-		a = xmlNewChild (li, NULL, "a", g_value_get_string (cv1));
+		li = xmlNewChild (ul, NULL, BAD_CAST "li", NULL);
+		a = xmlNewChild (li, NULL, BAD_CAST "a", BAD_CAST g_value_get_string (cv1));
 		e0 = gda_rfc1738_encode (g_value_get_string (cv0));
 		e1 = gda_rfc1738_encode (g_value_get_string (cv1));
 		tmp = g_strdup_printf ("/%s/%s/%s", rfc_cnc_name, e0, e1);
 		g_free (e0);
 		g_free (e1);
-		xmlSetProp (a, "href", tmp);
+		xmlSetProp (a, BAD_CAST "href", BAD_CAST tmp);
 		g_free (tmp);
 	}
 	if (nrows != 0)
-		xmlNewChild (div, NULL, "br", NULL);
+		xmlNewChild (div, NULL, BAD_CAST "br", NULL);
 	retval = TRUE;
 
 	if (! content_added) 
-		xmlNewChild (hdoc->content, NULL, "br", NULL);
+		xmlNewChild (hdoc->content, NULL, BAD_CAST "br", NULL);
 
  out:
 	if (schema)
@@ -1492,7 +1584,7 @@ compute_all_triggers_content (HtmlDoc *hdoc, const ConnectionSetting *cs, GError
 	GdaDataModel *model;
 	gint i, nrows;
 	GValue *schema = NULL, *tschema = NULL, *tname = NULL;
-	xmlNodePtr ul, sul, li, a, div = NULL, sdiv = NULL;
+	xmlNodePtr sul, li, a, div = NULL, sdiv = NULL;
 	gboolean content_added = FALSE;
 
 	rfc_cnc_name = gda_rfc1738_encode (cs->name);
@@ -1509,9 +1601,9 @@ compute_all_triggers_content (HtmlDoc *hdoc, const ConnectionSetting *cs, GError
 		goto out;
 	nrows = gda_data_model_get_n_rows (model);
 	if (nrows > 0) {
-		xmlNewChild (hdoc->content, NULL, "h1", _("Triggers:"));
-		div = xmlNewChild (hdoc->content, NULL, "div", NULL);
-		xmlSetProp (div, "class", "clist");
+		xmlNewChild (hdoc->content, NULL, BAD_CAST "h1", BAD_CAST _("Triggers:"));
+		div = xmlNewChild (hdoc->content, NULL, BAD_CAST "div", NULL);
+		xmlSetProp (div, BAD_CAST "class", BAD_CAST "clist");
 		content_added = TRUE;
 	}
 	for (i = 0; i < nrows; i++) {
@@ -1533,7 +1625,7 @@ compute_all_triggers_content (HtmlDoc *hdoc, const ConnectionSetting *cs, GError
 		    (!tname || gda_value_differ (tname, cv4))) {
 			gchar *tmp;
 			if (tschema) 
-				xmlNewChild (sdiv, NULL, "br", NULL);
+				xmlNewChild (sdiv, NULL, BAD_CAST "br", NULL);
 			if (tschema) 
 				gda_value_free (tschema);
 			if (tname)
@@ -1543,17 +1635,17 @@ compute_all_triggers_content (HtmlDoc *hdoc, const ConnectionSetting *cs, GError
 
 			tmp = g_strdup_printf (_("For the '%s.%s' table:"), g_value_get_string (tschema),
 					       g_value_get_string (tname));
-			xmlNewChild (div, NULL, "h2", tmp);
+			xmlNewChild (div, NULL, BAD_CAST "h2", BAD_CAST tmp);
 			g_free (tmp);
 
-			sdiv = xmlNewChild (div, NULL, "div", NULL);
-			xmlSetProp (sdiv, "class", "clist");
-			sul = xmlNewChild (sdiv, NULL, "ul", NULL);
+			sdiv = xmlNewChild (div, NULL, BAD_CAST "div", NULL);
+			xmlSetProp (sdiv, BAD_CAST "class", BAD_CAST "clist");
+			sul = xmlNewChild (sdiv, NULL, BAD_CAST "ul", NULL);
 		}
 
-		li = xmlNewChild (sul, NULL, "li", NULL);
+		li = xmlNewChild (sul, NULL, BAD_CAST "li", NULL);
 		tmp = g_strdup_printf ("%s (%s)", g_value_get_string (cv1), g_value_get_string (cv2));
-		a = xmlNewChild (li, NULL, "a", tmp);
+		a = xmlNewChild (li, NULL, BAD_CAST "a", BAD_CAST tmp);
 		g_free (tmp);
 
 		e0 = gda_rfc1738_encode (g_value_get_string (cv0));
@@ -1561,11 +1653,11 @@ compute_all_triggers_content (HtmlDoc *hdoc, const ConnectionSetting *cs, GError
 		tmp = g_strdup_printf ("/%s/%s/%s", rfc_cnc_name, e0, e1);
 		g_free (e0);
 		g_free (e1);
-		xmlSetProp (a, "href", tmp);
+		xmlSetProp (a, BAD_CAST "href", BAD_CAST tmp);
 		g_free (tmp);
 	}
 	if (nrows > 0)
-		xmlNewChild (sdiv, NULL, "br", NULL);
+		xmlNewChild (sdiv, NULL, BAD_CAST "br", NULL);
 	g_object_unref (model);
 	if (tschema) {
 		gda_value_free (tschema);
@@ -1603,16 +1695,16 @@ compute_all_triggers_content (HtmlDoc *hdoc, const ConnectionSetting *cs, GError
 		if (!schema || gda_value_differ (schema, cv0)) {
 			gchar *tmp;
 			if (schema) {
-				xmlNewChild (sdiv, NULL, "br", NULL);
+				xmlNewChild (sdiv, NULL, BAD_CAST "br", NULL);
 				gda_value_free (schema);
 			}
 			schema = gda_value_copy (cv0);
 			tmp = g_strdup_printf (_("Triggers in the '%s' schema:"), g_value_get_string (schema));
-			xmlNewChild (hdoc->content, NULL, "h1", tmp);
+			xmlNewChild (hdoc->content, NULL, BAD_CAST "h1", BAD_CAST tmp);
 			g_free (tmp);
 			content_added = TRUE;
-			div = xmlNewChild (hdoc->content, NULL, "div", NULL);
-			xmlSetProp (div, "class", "clist");
+			div = xmlNewChild (hdoc->content, NULL, BAD_CAST "div", NULL);
+			xmlSetProp (div, BAD_CAST "class", BAD_CAST "clist");
 
 			if (tschema) {
 				gda_value_free (tschema);
@@ -1627,7 +1719,7 @@ compute_all_triggers_content (HtmlDoc *hdoc, const ConnectionSetting *cs, GError
 		    (!tname || gda_value_differ (tname, cv4))) {
 			gchar *tmp;
 			if (tschema) 
-				xmlNewChild (sdiv, NULL, "br", NULL);
+				xmlNewChild (sdiv, NULL, BAD_CAST "br", NULL);
 			if (tschema) 
 				gda_value_free (tschema);
 			if (tname)
@@ -1637,17 +1729,17 @@ compute_all_triggers_content (HtmlDoc *hdoc, const ConnectionSetting *cs, GError
 
 			tmp = g_strdup_printf (_("For the '%s.%s' table:"), g_value_get_string (tschema),
 					       g_value_get_string (tname));
-			xmlNewChild (div, NULL, "h2", tmp);
+			xmlNewChild (div, NULL, BAD_CAST "h2", BAD_CAST tmp);
 			g_free (tmp);
 
-			sdiv = xmlNewChild (div, NULL, "div", NULL);
-			xmlSetProp (sdiv, "class", "clist");
-			sul = xmlNewChild (sdiv, NULL, "ul", NULL);
+			sdiv = xmlNewChild (div, NULL, BAD_CAST "div", NULL);
+			xmlSetProp (sdiv, BAD_CAST "class", BAD_CAST "clist");
+			sul = xmlNewChild (sdiv, NULL, BAD_CAST "ul", NULL);
 		}
 
-		li = xmlNewChild (sul, NULL, "li", NULL);
+		li = xmlNewChild (sul, NULL, BAD_CAST "li", NULL);
 		tmp = g_strdup_printf ("%s (%s)", g_value_get_string (cv1), g_value_get_string (cv2));
-		a = xmlNewChild (li, NULL, "a", tmp);
+		a = xmlNewChild (li, NULL, BAD_CAST "a", BAD_CAST tmp);
 		g_free (tmp);
 
 		e0 = gda_rfc1738_encode (g_value_get_string (cv0));
@@ -1655,15 +1747,15 @@ compute_all_triggers_content (HtmlDoc *hdoc, const ConnectionSetting *cs, GError
 		tmp = g_strdup_printf ("/%s/%s/%s", rfc_cnc_name, e0, e1);
 		g_free (e0);
 		g_free (e1);
-		xmlSetProp (a, "href", tmp);
+		xmlSetProp (a, BAD_CAST "href", BAD_CAST tmp);
 		g_free (tmp);
 	}
 	if (nrows != 0)
-		xmlNewChild (sdiv, NULL, "br", NULL);
+		xmlNewChild (sdiv, NULL, BAD_CAST "br", NULL);
 	retval = TRUE;
 
 	if (! content_added) 
-		xmlNewChild (hdoc->content, NULL, "br", NULL);
+		xmlNewChild (hdoc->content, NULL, BAD_CAST "br", NULL);
 
  out:
 	if (schema)
@@ -1678,4 +1770,497 @@ compute_all_triggers_content (HtmlDoc *hdoc, const ConnectionSetting *cs, GError
 	g_free (rfc_cnc_name);
 
 	return retval;
+}
+
+/*
+ * Get variables
+ *
+ * ...: a NULL terminated list of:
+ *      - variable name: const gchar*  
+ *      - place holder for tha variable's contents: gchar **
+ */
+static void
+get_variables (SoupMessage *msg, GHashTable *query, ...)
+{
+	va_list ap;
+	gchar *name;
+	GHashTable *rquery;
+
+	if (query)
+		rquery = query;
+	else if (msg->request_body->length)
+		rquery = soup_form_decode (msg->request_body->data);
+	else
+		return;
+
+	va_start (ap, query);
+	for (name = va_arg (ap, gchar*); name; name = va_arg (ap, gchar*)) {
+		gchar **stringadr = va_arg (ap, gchar**);
+		const gchar *tmp;
+		tmp = g_hash_table_lookup (rquery, name);
+		if (tmp)
+			*stringadr = g_strdup (tmp);
+		else
+			*stringadr = NULL;
+	}
+	va_end (ap);
+
+	if (!query)
+		g_hash_table_destroy (rquery);
+}
+
+/*
+ * Get variables
+ *
+ * ...: a NULL terminated list of:
+ *      - variable name: const gchar*  
+ *      - place holder for tha variable's contents: gchar **
+ */
+static void
+get_cookies (SoupMessage *msg, ...)
+{
+	const gchar *cookies;
+	GdaQuarkList *ql;
+	va_list ap;
+	gchar *name;
+
+	cookies = soup_message_headers_get (msg->request_headers, "Cookie");
+	ql = gda_quark_list_new_from_string (cookies);
+
+	va_start (ap, msg);
+	for (name = va_arg (ap, gchar*); name; name = va_arg (ap, gchar*)) {
+		gchar **stringadr = va_arg (ap, gchar**);
+		const gchar *tmp;
+		tmp = gda_quark_list_find (ql, name);
+		if (tmp)
+			*stringadr = g_strdup (tmp);
+		else
+			*stringadr = NULL;
+	}
+	va_end (ap);
+	
+	gda_quark_list_free (ql);
+}
+
+static HtmlDoc*
+create_new_htmldoc (WebServer *webserver, const ConnectionSetting *cs)
+{
+	HtmlDoc *hdoc;
+	gchar *str;
+
+	gchar *rfc_cnc_name;
+
+	xmlNodePtr ul, li, a;
+
+	if (cs) {
+		str = g_strdup_printf (_("Database information for '%s'"), cs->name);
+		hdoc = html_doc_new (str);
+		g_free (str);
+	}
+	else
+		hdoc = html_doc_new (_("Database information"));
+
+	/* other connections in the sidebar */
+	ul = cnc_ul ();
+	xmlAddChild (hdoc->sidebar, ul);
+
+	/* list all database object's types for which information can be obtained */
+	if (cs) {
+		rfc_cnc_name = gda_rfc1738_encode (cs->name);
+		ul = xmlNewChild (hdoc->sidebar, NULL, BAD_CAST "ul", BAD_CAST _("Objects"));
+		li = xmlNewChild (ul, NULL, BAD_CAST "li", NULL);
+		a = xmlNewChild (li, NULL, BAD_CAST "a", BAD_CAST _("Tables"));
+		str = g_strdup_printf ("/%s/~tables", rfc_cnc_name);
+		xmlSetProp (a, BAD_CAST "href", BAD_CAST str);
+		g_free (str);
+		li = xmlNewChild (ul, NULL, BAD_CAST "li", NULL);
+		a = xmlNewChild (li, NULL, BAD_CAST "a", BAD_CAST _("Views"));
+		str = g_strdup_printf ("/%s/~views", rfc_cnc_name);
+		xmlSetProp (a, BAD_CAST "href", BAD_CAST str);
+		g_free (str);
+		li = xmlNewChild (ul, NULL, BAD_CAST "li", NULL);
+		a = xmlNewChild (li, NULL, BAD_CAST "a", BAD_CAST _("Triggers"));
+		str = g_strdup_printf ("/%s/~triggers", rfc_cnc_name);
+		xmlSetProp (a, BAD_CAST "href", BAD_CAST str);
+		g_free (str);
+		g_free (rfc_cnc_name);
+	}
+	return hdoc;
+}
+
+
+/*
+ *
+ * IRB
+ *
+ */
+
+static gboolean
+delete_consoles (WebServer *server)
+{
+	GSList *list;
+	GTimeVal tv;
+
+	g_get_current_time (&tv);
+	for (list = server->priv->terminals_list; list; ) {
+		SqlConsole *con = (SqlConsole *) list->data;
+		if (con->last_time_used.tv_sec + 600 > tv.tv_sec) {
+			GSList *n = list->next;
+			server->priv->terminals_list = g_slist_delete_link (server->priv->terminals_list, list);
+			list = n;
+			gda_sql_console_free (con);
+		}
+		else
+			list = list->next;
+	}
+	if (! server->priv->terminals_list) {
+		server->priv->term_timer = 0;
+		return FALSE;
+	}
+	else
+		return TRUE;
+}
+
+
+/*
+ * GET/POST  method for IRB
+ */
+static gboolean
+get_post_for_irb (WebServer *webserver, SoupMessage *msg, const ConnectionSetting *cs,
+		  GHashTable *query, GError **error)
+{
+	gboolean retval = FALSE;
+	SoupBuffer *buffer;
+	xmlChar *contents = NULL;
+	static gint counter = 0;
+	
+	gchar *cmd;
+	gchar *cid;
+
+	SqlConsole *console = NULL;
+
+	/* fetch variables */
+	get_variables (msg, query, "cmd", &cmd, "cid", &cid, NULL);
+	if (!cmd)
+		return FALSE;
+
+	if (cid) {
+		GSList *list;
+		for (list = webserver->priv->terminals_list; list; list = list->next) {
+			if (((SqlConsole*) list->data)->id && !strcmp (((SqlConsole*) list->data)->id, cid)) {
+				console = (SqlConsole*) list->data;
+				break;
+			}
+		}
+	}
+
+	if (!console) {
+		if (!cid || !strcmp (cid, "none")) {
+			gchar *str;
+			str = g_strdup_printf ("console%d", counter++);
+			console = gda_sql_console_new (str);
+			g_free (str);
+		}
+		else {
+			console = gda_sql_console_new (cid);
+		}
+			
+		webserver->priv->terminals_list = g_slist_prepend (webserver->priv->terminals_list,
+								   console);
+		g_get_current_time (&(console->last_time_used));
+		if (!webserver->priv->term_timer)
+			webserver->priv->term_timer = g_timeout_add_seconds (5, (GSourceFunc) delete_consoles,
+									     webserver);
+
+		if (!cid || !strcmp (cid, "none")) {
+			soup_message_headers_replace (msg->response_headers,
+						      "Content-Type", "text/xml");
+			soup_message_set_status (msg, SOUP_STATUS_OK);
+			g_free (cmd);
+			
+			/* send console's ID */
+			xmlDocPtr doc;
+			xmlNodePtr topnode;
+			gchar *tmp;
+			
+			doc = xmlNewDoc (BAD_CAST "1.0");
+			topnode = xmlNewDocNode (doc, NULL, BAD_CAST "result", NULL);
+			xmlDocSetRootElement (doc, topnode);
+			
+			xmlNewChild (topnode, NULL, BAD_CAST "cid", BAD_CAST (console->id));
+			tmp = gda_sql_console_compute_prompt (console);
+			xmlNewChild (topnode, NULL, BAD_CAST "prompt", BAD_CAST tmp);
+			g_free (tmp);
+			
+			int size;
+			xmlDocDumpFormatMemory (doc, &contents, &size, 1);
+			xmlFreeDoc (doc);
+			goto resp;
+		}
+	}
+
+	/* create response */
+	g_get_current_time (&(console->last_time_used));
+	cmd = g_strstrip (cmd);
+	if (*cmd) {
+		xmlDocPtr doc;
+		GError *lerror = NULL;
+		xmlNodePtr topnode;
+		gchar *tmp;
+
+		doc = xmlNewDoc (BAD_CAST "1.0");
+		topnode = xmlNewDocNode (doc, NULL, BAD_CAST "result", NULL);
+		xmlDocSetRootElement (doc, topnode);
+
+		tmp = gda_sql_console_execute (console, cmd, &lerror);
+		if (!tmp) 
+			tmp = g_strdup_printf (_("Error: %s"), 
+						    lerror && lerror->message ? lerror->message : _("No detail"));
+		if (lerror)
+			g_error_free (lerror);
+
+		xmlNewChild (topnode, NULL, BAD_CAST "cmde", BAD_CAST tmp);
+		g_free (tmp);
+
+		tmp = gda_sql_console_compute_prompt (console);
+		xmlNewChild (topnode, NULL, BAD_CAST "prompt", BAD_CAST tmp);
+		g_free (tmp);
+
+		int size;
+		xmlDocDumpFormatMemory (doc, &contents, &size, 1);
+		xmlFreeDoc (doc);
+	}
+	g_free (cmd);
+
+	/* send response */
+ resp:
+	soup_message_headers_replace (msg->response_headers,
+				      "Content-Type", "text/xml");
+	if (contents) {
+		buffer = soup_buffer_new_with_owner (contents, strlen ((gchar*)contents), contents, 
+						     (GDestroyNotify) xmlFree);
+		soup_message_body_append_buffer (msg->response_body, buffer);
+		soup_buffer_free (buffer);
+	}
+	soup_message_set_status (msg, SOUP_STATUS_OK);
+	retval = TRUE;
+
+	return retval;
+}
+
+
+
+/*
+ *
+ * Temporary data management
+ *
+ */
+
+/*
+ * @data is stolen!
+ */
+static TmpRessource *
+tmp_ressource_add (WebServer *server, const gchar *path, gchar *data, gsize data_length)
+{
+	TmpRessource *td;
+	GTimeVal tv;
+
+	g_get_current_time (&tv);
+	td = g_new0 (TmpRessource, 1);
+	td->path = g_strdup (path);
+	td->data = data;
+	td->size = data_length;
+	td->expiration_date = tv.tv_sec + 30;
+	g_hash_table_insert (server->priv->ressources_hash, g_strdup (path), td);
+	server->priv->ressources_list = g_slist_prepend (server->priv->ressources_list, td);
+	if (!server->priv->ressources_timer)
+		server->priv->ressources_timer = g_timeout_add_seconds (5, (GSourceFunc) delete_tmp_ressource, server);
+	return td;
+}
+
+/*
+ * @data is static
+ */
+static TmpRessource *
+tmp_static_data_add (WebServer *server, const gchar *path, gchar *data, gsize data_length)
+{
+	TmpRessource *td;
+
+	td = g_new0 (TmpRessource, 1);
+	td->path = g_strdup (path);
+	td->data = data;
+	td->size = data_length;
+	td->expiration_date = 0;
+	g_hash_table_insert (server->priv->ressources_hash, g_strdup (path), td);
+	server->priv->ressources_list = g_slist_prepend (server->priv->ressources_list, td);
+	return td;
+}
+
+static gboolean
+delete_tmp_ressource (WebServer *server)
+{
+	GSList *list;
+	GTimeVal tv;
+	gint n_timed = 0;
+
+	g_get_current_time (&tv);
+	for (list = server->priv->ressources_list; list; ) {
+		TmpRessource *td = (TmpRessource *) list->data;
+		if ((td->expiration_date > 0) && (td->expiration_date < tv.tv_sec)) {
+			GSList *n = list->next;
+			g_hash_table_remove (server->priv->ressources_hash, td->path);
+			server->priv->ressources_list = g_slist_delete_link (server->priv->ressources_list, list);
+			list = n;
+		}
+		else {
+			if (td->expiration_date > 0)
+				n_timed ++;
+			list = list->next;
+		}
+	}
+	if (n_timed == 0) {
+		server->priv->ressources_timer = 0;
+		return FALSE;
+	}
+	else
+		return TRUE;
+}
+
+static void
+tmp_ressource_free (TmpRessource *data)
+{
+	g_free (data->data);
+	g_free (data);
+}
+
+/*
+ *
+ * Misc functions
+ *
+ */
+static TimedString *
+timed_string_new (guint duration)
+{
+#define STRING_SIZE 16
+
+	TimedString *ts;
+	gint i;
+	GString *string;
+
+	ts = g_new0 (TimedString, 1);
+	string = g_string_new ("");
+	for (i = 0; i < STRING_SIZE; i++) {
+		gushort r = (((gfloat) rand ()) / (gfloat)RAND_MAX) * 255;
+		g_string_append_printf (string, "%0x", r);
+	}
+	ts->string = string->str;
+	
+	g_string_free (string, FALSE);
+	g_get_current_time (& (ts->validity));
+	ts->validity.tv_sec += duration;
+	return ts;
+}
+
+static void
+timed_string_free (TimedString *ts)
+{
+	g_free (ts->string);
+	g_free (ts);
+}
+
+static gboolean
+auth_timer_manage (WebServer *server)
+{
+	challenges_manage (server);
+	auth_cookies_manage (server);
+	
+	if ((server->priv->challenges->len == 0) &&
+	    (server->priv->cookies->len == 0)) {
+		/* remove timer */
+		server->priv->auth_timer = 0;
+		return FALSE;
+	}
+	else
+		return TRUE;
+}
+
+static TimedString *
+challenge_add (WebServer *server)
+{
+	TimedString *ts = timed_string_new (180);
+	g_array_append_val (server->priv->challenges, ts);
+	if (!server->priv->auth_timer)
+		server->priv->auth_timer = g_timeout_add_seconds (5, (GSourceFunc) auth_timer_manage, server);
+	else
+		challenges_manage (server);
+	return ts;
+}
+
+static void
+challenges_manage (WebServer *server)
+{
+	gint i;
+	GTimeVal current_ts;
+	
+	if (server->priv->challenges->len > MAX_CHALLENGES) {
+		/* remove the oldest challenge */
+		TimedString *ts = g_array_index (server->priv->challenges, TimedString *, 0);
+		timed_string_free (ts);
+		g_array_remove_index (server->priv->challenges, 0);
+	}
+
+	g_get_current_time (&current_ts);
+	for (i = 0; i < server->priv->challenges->len; ) {
+		TimedString *ts = g_array_index (server->priv->challenges, TimedString *, 0);
+		if (ts->validity.tv_sec < current_ts.tv_sec) {
+			timed_string_free (ts);
+			g_array_remove_index (server->priv->challenges, i);
+		}
+		else
+			i++;
+	}
+}
+
+static TimedString *
+auth_cookie_add (WebServer *server)
+{
+	TimedString *ts = timed_string_new (1800); /* half hour availability */
+	g_array_append_val (server->priv->cookies, ts);
+	if (!server->priv->auth_timer)
+		server->priv->auth_timer = g_timeout_add_seconds (5, (GSourceFunc) auth_timer_manage,
+								  server);
+	else
+		auth_cookies_manage (server);
+#ifdef DEBUG_SERVER
+	g_print ("Added cookie %s\n", ts->string);
+#endif
+	return ts;
+}
+
+static void
+auth_cookies_manage (WebServer *server)
+{
+	gint i;
+	GTimeVal current_ts;
+	
+	if (server->priv->cookies->len > MAX_AUTH_COOKIES) {
+		/* remove the oldest auth_cookie */
+		TimedString *ts = g_array_index (server->priv->cookies, TimedString *, 0);
+		timed_string_free (ts);
+		g_array_remove_index (server->priv->cookies, 0);
+	}
+
+	g_get_current_time (&current_ts);
+	for (i = 0; i < server->priv->cookies->len; ) {
+		TimedString *ts = g_array_index (server->priv->cookies, TimedString *, 0);
+		if (ts->validity.tv_sec < current_ts.tv_sec) {
+#ifdef DEBUG_SERVER
+			g_print ("Removed cookie %s\n", ts->string);
+#endif
+			timed_string_free (ts);
+			g_array_remove_index (server->priv->cookies, i);
+		}
+		else
+			i++;
+	}
 }

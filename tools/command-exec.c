@@ -140,86 +140,6 @@ gda_internal_command_exec_result_free (GdaInternalCommandResult *res)
 	g_free (res);
 }
 
-static GdaInternalCommand *
-find_command (GdaInternalCommandsList *commands_list, const gchar *command_str, gboolean *command_complete)
-{
-	GdaInternalCommand *command = NULL;
-	GSList *list;
-	gint length;
-
-	if (!command_str || ((*command_str != '\\') && (*command_str != '.')))
-		return NULL;
-
-	length = strlen (command_str + 1);
-	for (list = commands_list->name_ordered; list; list = list->next) {
-		command = (GdaInternalCommand*) list->data;
-		if (!strncmp (command->name, command_str + 1, MIN (length, strlen (command->name)))) {
-			gint l;
-			gchar *ptr;
-			for (ptr = command->name, l = 0; *ptr && (*ptr != ' '); ptr++, l++);
-				
-			if (length == l)
-				break;
-			else
-				command = NULL;
-		}
-		else
-			command = NULL;
-	}
-
-	/* FIXME */
-	if (command_complete)
-		*command_complete = TRUE;
-
-	return command;
-}
-
-static gint
-commands_compare_name (GdaInternalCommand *a, GdaInternalCommand *b)
-{
-	gint cmp, alength, blength;
-	if (!a->name || !b->name) {
-		g_warning (_("Invalid unnamed command"));
-		if (!a->name) {
-			if (b->name)
-				return 1;
-			else
-				return 0;
-		}
-		else
-			return -1;
-	}
-	alength = strlen (a->name);
-	blength = strlen (b->name);
-	cmp = strncmp (a->name, b->name, MIN (alength, blength));
-	if (cmp == 0) 
-		return blength - alength;
-	else
-		return cmp;
-}
-
-static gint
-commands_compare_group (GdaInternalCommand *a, GdaInternalCommand *b)
-{
-	if (!a->group) {
-		if (b->group)
-			return 1;
-		else
-			return 0;
-	}
-	else {
-		if (b->group) {
-			gint cmp = strcmp (a->group, b->group);
-			if (cmp)
-				return cmp;
-			else 
-				return commands_compare_name (a, b);
-		}
-		else
-			return -1;
-	}
-}
-
 /*
  * Small tokenizer
  */
@@ -276,7 +196,7 @@ getToken (const char *z, gint *tok_type)
 }
 
 /* default function to split arguments */
-static gchar **
+gchar **
 default_gda_internal_commandargs_func (const gchar *string)
 {
 	gchar **array = NULL;
@@ -322,78 +242,8 @@ default_gda_internal_commandargs_func (const gchar *string)
 	return array;
 }
 
-
-/*
- * gda_internal_command_execute
- *
- * Executes a command starting by \ such as:
- */
 GdaInternalCommandResult *
-gda_internal_command_execute (GdaInternalCommandsList *commands_list,
-			      GdaConnection *cnc, const gchar *command_str, GError **error)
-{
-	GdaInternalCommand *command;
-	gboolean command_complete;
-	gchar **args;
-	GdaInternalCommandResult *res = NULL;
-
-	g_return_val_if_fail (commands_list, NULL);
-	if (!commands_list->name_ordered) {
-		GSList *list;
-
-		for (list = commands_list->commands; list; list = list->next) {
-			commands_list->name_ordered = 
-				g_slist_insert_sorted (commands_list->name_ordered, list->data,
-						       (GCompareFunc) commands_compare_name);
-			commands_list->group_ordered = 
-				g_slist_insert_sorted (commands_list->group_ordered, list->data,
-						       (GCompareFunc) commands_compare_group);
-		}
-	}
-
-	args = g_strsplit (command_str, " ", 2);
-	command = find_command (commands_list, args[0], &command_complete);
-	g_strfreev (args);
-	args = NULL;
-	if (!command) {
-		g_set_error (error, 0, 0, "%s", 
-			     _("Unknown internal command"));
-		goto cleanup;
-	}
-
-	if (!command->command_func) {
-		g_set_error (error, 0, 0, "%s", 
-			     _("Internal command not correctly defined"));
-		goto cleanup;
-	}
-
-	if (!command_complete) {
-		g_set_error (error, 0, 0, "%s", 
-			     _("Incomplete internal command"));
-		goto cleanup;
-	}
-
-	if (command->arguments_delimiter_func)
-		args = command->arguments_delimiter_func (command_str);
-	else
-		args = default_gda_internal_commandargs_func (command_str);
-	if (command->unquote_args) {
-		gint i;
-		for (i = 1; args[i]; i++) 
-			gda_internal_command_arg_remove_quotes (args[i]);
-	}
-	res = command->command_func (cnc, (const gchar **) &(args[1]), 
-				     error, command->user_data);
-	
- cleanup:
-	if (args)
-		g_strfreev (args);
-
-	return res;
-}
-
-GdaInternalCommandResult *
-gda_internal_command_help (GdaConnection *cnc, const gchar **args, 
+gda_internal_command_help (SqlConsole *console, GdaConnection *cnc, const gchar **args, 
 			   GError **error,
 			   GdaInternalCommandsList *clist)
 {
@@ -408,6 +258,10 @@ gda_internal_command_help (GdaConnection *cnc, const gchar **args,
 
 	for (list = clist->group_ordered; list; list = list->next) {
 		GdaInternalCommand *command = (GdaInternalCommand*) list->data;
+
+		if (console && command->limit_to_main)
+			continue;
+
 		if (!current_group || strcmp (current_group, command->group)) {
 			current_group = command->group;
 			if (list != clist->group_ordered)
@@ -434,12 +288,18 @@ gda_internal_command_help (GdaConnection *cnc, const gchar **args,
 }
 
 GdaInternalCommandResult *
-gda_internal_command_history (GdaConnection *cnc, const gchar **args, GError **error, gpointer data)
+gda_internal_command_history (SqlConsole *console, GdaConnection *cnc, const gchar **args, GError **error, gpointer data)
 {
 	GdaInternalCommandResult *res;
 
 	res = g_new0 (GdaInternalCommandResult, 1);
 	res->type = GDA_INTERNAL_COMMAND_RESULT_TXT;
+
+	if (console) {
+		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
+		TO_IMPLEMENT;
+		return res;
+	}
 
 	GString *string;
 #ifdef HAVE_HISTORY
@@ -473,7 +333,7 @@ gda_internal_command_history (GdaConnection *cnc, const gchar **args, GError **e
 }
 
 GdaInternalCommandResult *
-gda_internal_command_dict_sync (GdaConnection *cnc, const gchar **args, GError **error, gpointer data)
+gda_internal_command_dict_sync (SqlConsole *console, GdaConnection *cnc, const gchar **args, GError **error, gpointer data)
 {
 	GdaInternalCommandResult *res;
 
@@ -494,7 +354,7 @@ gda_internal_command_dict_sync (GdaConnection *cnc, const gchar **args, GError *
 }
 
 GdaInternalCommandResult *
-gda_internal_command_list_tables (GdaConnection *cnc, const gchar **args, GError **error, gpointer data)
+gda_internal_command_list_tables (SqlConsole *console, GdaConnection *cnc, const gchar **args, GError **error, gpointer data)
 {
 	GdaInternalCommandResult *res;
 	GdaDataModel *model;
@@ -537,7 +397,7 @@ gda_internal_command_list_tables (GdaConnection *cnc, const gchar **args, GError
 }
 
 GdaInternalCommandResult *
-gda_internal_command_list_views (GdaConnection *cnc, const gchar **args, GError **error, gpointer data)
+gda_internal_command_list_views (SqlConsole *console, GdaConnection *cnc, const gchar **args, GError **error, gpointer data)
 {
 	GdaInternalCommandResult *res;
 	GdaDataModel *model;
@@ -579,7 +439,7 @@ gda_internal_command_list_views (GdaConnection *cnc, const gchar **args, GError 
 }
 
 GdaInternalCommandResult *
-gda_internal_command_list_schemas (GdaConnection *cnc, const gchar **args, GError **error, gpointer data)
+gda_internal_command_list_schemas (SqlConsole *console, GdaConnection *cnc, const gchar **args, GError **error, gpointer data)
 {
 	GdaInternalCommandResult *res;
 	GdaDataModel *model;
@@ -711,7 +571,7 @@ meta_table_column_foreach_attribute_func (const gchar *att_name, const GValue *v
 }
 
 GdaInternalCommandResult *
-gda_internal_command_detail (GdaConnection *cnc, const gchar **args,
+gda_internal_command_detail (SqlConsole *console, GdaConnection *cnc, const gchar **args,
 			     GError **error, gpointer data)
 {
 	GdaInternalCommandResult *res;

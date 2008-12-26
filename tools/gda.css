@@ -1,0 +1,287 @@
+/* General styles */
+body {
+    margin:0px;
+    padding:0px;
+    border:0px;
+    width:100%;
+    background-color: white;
+    font-family: sans-serif;
+    color: black;
+}
+
+a {
+    color:#0000ff;
+    border: 0px;
+}
+
+a:active {
+    color: #ff0000;
+}
+
+a:visited {
+    color: #551a8b;
+}
+
+h1, h2, h3 {
+    margin:.8em 0 .2em 0;
+    padding:0;
+}
+
+p {
+    margin:.4em 0 .8em 0;
+    padding:0;
+}
+
+img {
+    margin:10px 0 5px;
+}
+/* Header styles */
+#header {
+    background: #729FCF;
+    clear:both;
+    float:left;
+    width:100%;
+    font-size: 75%;
+    border-bottom:3px;
+}
+
+#header p,
+#header h1,
+#header h2 {
+    padding-top: 0px;
+    padding-bottom: 10px;
+    color: #eeeeec;
+    margin-left: 85px;
+}
+#header ul {
+    clear:left;
+    float:left;
+    width:100%;
+    list-style:none;
+    margin:10px 0 0 0;
+    padding:0;
+    font-size: 85%;
+}
+#header ul li {
+    display:inline;
+    list-style:none;
+    margin:0;
+    padding:0;
+}
+#header ul li a {
+    font-weight: bold;
+    display:block;
+    float:left;
+    margin:0 0 0 1px;
+    padding:3px 10px;
+    text-align:center;
+    background:#eee;
+    color: #FFFFFF;
+    text-decoration:none;
+    position:relative;
+    left:15px;
+    line-height:1.3em;
+}
+#header ul li a:hover {
+    background:#369;
+    color:#fff;
+}
+#header ul li a.active,
+#header ul li a.active:hover {
+    color:#fff;
+    background:#000;
+    font-weight:bold;
+}
+#header ul li a span {
+    display:block;
+}
+
+/* column container */
+.colmask {
+    position:relative;
+    clear:both;
+    float:left;
+    width:100%;			/* width of whole page */
+    overflow:hidden;
+}
+
+/* common column settings */
+.colright,
+.colmid,
+.colleft {
+    float:left;
+    width:100%;
+    position:relative;
+}
+.col1,
+.col2,
+.col3 {
+    float:left;
+    position:relative;
+    padding:0 0 1em 0;
+    overflow:hidden;
+}
+
+.col1 {
+    background-color: #fff;
+    color: #333;
+}
+
+.leftmenu .colleft {
+    right:86%;			/* right column width */
+    background: #2E3436;
+    color: #FFFFFF;
+}
+.leftmenu .col1 {
+    width:84%;			/* right column content width */
+    left:101%;			/* 100% plus left column left padding */
+}
+.leftmenu .col2 {
+    width:12%;			/* left column content width (column width minus left and right padding) */
+    left:2%;			/* (right column left and right padding) plus (left column left padding) */
+}
+
+.col2 ul {
+    font-weight: bold;
+    list-style: none;
+    padding: 0 10px 10px;
+    margin: 0 0 0 0;
+    font-size: 90%;
+}
+
+.col2 li a {
+    font-weight: normal;
+    color: #FFFFFF;
+    margin: 0 0 0 0;
+    padding: 0 10px;
+    text-decoration: none;
+    font-size: 80%;
+}
+
+.col1 h1 {
+    /*margin: 5em 0px .5em 0px;*/
+    font-size: 100%;
+    color: black;
+}
+
+.col1 h2 {
+    padding-left: 5px;
+    font-size: 80%;
+}
+
+.col1 ul {
+    font-weight: bold;
+    list-style: none;
+    padding: 0px 10px 10px;
+    margin: 0px 0px 0px 0px;
+    font-size: 90%;
+}
+
+.col1 li {
+    font-weight: normal;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 10px;
+    text-decoration: none;
+    font-size: 80%;
+}
+
+div.clist {
+    padding: 0px;
+    overflow: hidden;
+}
+
+.clist ul {
+    float: left;
+    width: 100%;
+    margin: 0px;
+    margin-left: 10px;
+    padding: 0px;
+    list-style: none;
+}
+
+.clist li {
+    float: left;
+    width: 33%;
+    margin: 0px;
+    padding: 0px;
+    font-size: 90%;
+}
+
+.clist a {
+    font-weight: normal;
+    color: #050505;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    text-decoration: none;
+}
+
+.clist br {
+    clear: both;
+}
+
+table.ctable
+{
+    font-weight: normal;
+    font-size: 90%;
+    width: 100%;
+    background-color: #fafafa;
+    border: 1px #6699CC solid;
+    border-collapse: collapse;
+    border-spacing: 0px;
+    margin-top: 0px;
+    margin-bottom: 5px;
+}
+
+.ctable th
+{
+    border-bottom: 2px solid #6699CC;
+    background-color: #729FCF;
+    text-align: center;
+    font-weight: bold;
+    color: #eeeeec;
+}
+
+.ctable td
+{
+    padding-left: 2px;
+    border-left: 1px dotted #729FCF;
+}
+
+.graph
+{
+    /*background: lightblue;*/
+    padding: 0px;
+}
+
+.graph img
+{
+    max-width: 100%;
+    height: auto;
+    border: 0px;
+}
+
+.pkey
+{
+    /*background: lightblue;*/
+    color: blue;
+    font-weight: bold;
+}
+.ccode
+{
+    /*background: lightblue;*/
+    padding-left: 5px;
+}
+
+
+/* Footer styles */
+#footer {
+    clear:both;
+    float:left;
+    width:100%;
+    border-top:1px solid #000;
+    font-size:60%;
+}
+#footer p {
+    padding:10px;
+    margin:0;
+}

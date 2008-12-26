@@ -59,7 +59,7 @@ struct _WebServerClass
 };
 
 GType               web_server_get_type                (void) G_GNUC_CONST;
-WebServer          *web_server_new                     (gint port);
+WebServer          *web_server_new                     (gint port, const gchar *auth_token);
 
 G_END_DECLS
 

@@ -3,10 +3,12 @@
 
 typedef struct {
 	xmlDocPtr   doc;
+	xmlNodePtr  head;
 	xmlNodePtr  body;
 
 	xmlNodePtr  sidebar;
 	xmlNodePtr  content;
+	xmlNodePtr  footer;
 } HtmlDoc;
 
 HtmlDoc  *html_doc_new       (const gchar *title);

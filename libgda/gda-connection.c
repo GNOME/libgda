@@ -3233,7 +3233,7 @@ prepare_meta_statements_hash (void)
  *
  * Note: it's up to the caller to make sure the information contained within @cnc's associated #GdaMetaStore
  * is up to date using gda_connection_update_meta_store() (it can become outdated if the database's schema
- * is accessed from outside of Libgda).
+ * is modified).
  *
  * For more information about the returned data model's attributes, or about the @meta_type and @... filter arguments,
  * see <link linkend="GdaConnectionMetaTypeHead">this description</link>.

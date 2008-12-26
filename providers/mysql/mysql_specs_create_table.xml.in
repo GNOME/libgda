@@ -26,21 +26,6 @@
     <gda_array_field id="COLUMN_DEFAULT" _name="Default" _descr="Default value" gdatype="gchararray"/>
     <gda_array_field id="COLUMN_CHECK" _name="Check" _descr="Check constraint" gdatype="gchararray"/>
     <gda_array_field id="COLUMN_COMMENT" _name="Comment" _descr="Check constraint" gdatype="gchararray"/>
-    <gda_array_data>
-        <gda_array_row>
-            <gda_value>id</gda_value>
-            <gda_value>int</gda_value>
-            <gda_value isnull="t"></gda_value>
-            <gda_value isnull="t"></gda_value>
-            <gda_value>FALSE</gda_value>
-            <gda_value>TRUE</gda_value>
-            <gda_value>FALSE</gda_value>
-            <gda_value>TRUE</gda_value>
-            <gda_value isnull="t"></gda_value>
-            <gda_value isnull="t"></gda_value>
-            <gda_value>Primary key</gda_value>
-        </gda_array_row>
-    </gda_array_data>
   </gda_array>
 
   <!-- foreign key spec -->

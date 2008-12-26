@@ -602,20 +602,23 @@ gda_data_model_get_typed_value_at (GdaDataModel *model, gint col, gint row, GTyp
 		cvalue = (GDA_DATA_MODEL_GET_CLASS (model)->i_get_value_at) (model, col, row, error);
 
 	if (cvalue) {
-		if (nullok && (G_VALUE_TYPE (cvalue) != GDA_TYPE_NULL) && (G_VALUE_TYPE (cvalue) != expected_type)) {
-			cvalue = NULL;
+		if (nullok && 
+		    (G_VALUE_TYPE (cvalue) != GDA_TYPE_NULL) && 
+		    (G_VALUE_TYPE (cvalue) != expected_type)) {
 			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_VALUE_TYPE_ERROR,
-				     _("Data model returned value of invalid '%s' type"), gda_g_type_to_string (G_VALUE_TYPE (cvalue)));
+				     _("Data model returned value of invalid '%s' type"), 
+				     gda_g_type_to_string (G_VALUE_TYPE (cvalue)));
+			cvalue = NULL;
 		}
 		else if (!nullok && (G_VALUE_TYPE (cvalue) != expected_type)) {
-			cvalue = NULL;
-			if (G_VALUE_TYPE (cvalue) != GDA_TYPE_NULL)
+			if (G_VALUE_TYPE (cvalue) == GDA_TYPE_NULL)
 				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_VALUE_TYPE_ERROR,
 					      "%s", _("Data model returned invalid NULL value"));
 			else
 				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_VALUE_TYPE_ERROR,
 					     _("Data model returned value of invalid '%s' type"), 
 					     gda_g_type_to_string (G_VALUE_TYPE (cvalue)));
+			cvalue = NULL;
 		}
 	}
 	return cvalue;
