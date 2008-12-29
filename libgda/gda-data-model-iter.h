@@ -76,6 +76,8 @@ gboolean          gda_data_model_iter_is_valid             (GdaDataModelIter *it
 
 GdaHolder        *gda_data_model_iter_get_holder_for_field (GdaDataModelIter *iter, gint col);
 
+#define gda_data_model_iter_move_at_row gda_data_model_iter_move_to_row
+
 G_END_DECLS
 
 #endif

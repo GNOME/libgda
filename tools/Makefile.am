@@ -88,4 +88,5 @@ webdata_DATA = \
 	gda-print.css \
 	irb.css
 
-EXTRA_DIST = gda-sql.ico
+EXTRA_DIST = gda-sql.ico \
+	$(webdata_DATA)
