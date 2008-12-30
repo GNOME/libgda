@@ -115,6 +115,26 @@ Management of connections to data sources
 @GDA_CONNECTION_OPTIONS_NONE: 
 @GDA_CONNECTION_OPTIONS_READ_ONLY: 
 
+<!-- ##### ENUM GdaConnectionError ##### -->
+<para>
+
+</para>
+
+@GDA_CONNECTION_DSN_NOT_FOUND_ERROR: 
+@GDA_CONNECTION_PROVIDER_NOT_FOUND_ERROR: 
+@GDA_CONNECTION_PROVIDER_ERROR: 
+@GDA_CONNECTION_NO_CNC_SPEC_ERROR: 
+@GDA_CONNECTION_NO_PROVIDER_SPEC_ERROR: 
+@GDA_CONNECTION_OPEN_ERROR: 
+@GDA_CONNECTION_STATEMENT_TYPE_ERROR: 
+
+<!-- ##### MACRO GDA_CONNECTION_ERROR ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### FUNCTION gda_connection_open_from_dsn ##### -->
 <para>
 

@@ -794,7 +794,7 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 		dsn_info = gda_config_get_dsn_info (cnc->priv->dsn);
 		if (!dsn_info) {
 			gda_log_error (_("Data source %s not found in configuration"), cnc->priv->dsn);
-			g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_NONEXIST_DSN_ERROR,
+			g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_DSN_NOT_FOUND_ERROR,
 				     _("Data source %s not found in configuration"), cnc->priv->dsn);
 			gda_connection_unlock ((GdaLockable*) cnc);
 			return FALSE;
@@ -1535,6 +1535,8 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
  *   <listitem><para>one with the '+0' ID which may for example contain 1 (note that its "name" property should be "id")</para></listitem>
  *   <listitem><para>one with the '+1' ID which will contain 'joe' (note that its "name" property should be "name")</para></listitem>
  * </itemizedlist>
+ *
+ * This method may fail with a %GDA_SERVER_PROVIDER_ERROR domain error (see the #GdaServerProviderError error codes).
  *
  * Note1: If @stmt is a SELECT statement which has some parameters and  if @params is %NULL, then the statement can't
  * be executed and this method will return %NULL.

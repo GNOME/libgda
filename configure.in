@@ -139,7 +139,7 @@ dnl ******************************
 dnl linklibext is the shared link library extension, which varies by platform
 
 EXPORT_SYM_REGEX='-export-symbols-regex "^(gda_|fnYM49765777344607__gda).*"'
-EXPORT_PROV_SYM_REGEX='-export-symbols-regex "^(plugin_|Java_).*"'
+EXPORT_PROV_SYM_REGEX='-export-symbols-regex "^(plugin_|Java_|g_module).*"'
 AC_MSG_CHECKING([for platform])
 platform_win32=no
 platform_carbon=no

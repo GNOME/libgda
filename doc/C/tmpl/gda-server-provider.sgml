@@ -89,6 +89,13 @@ Base class for all the DBMS providers
 @GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR: 
 @GDA_SERVER_PROVIDER_DATA_ERROR: 
 
+<!-- ##### MACRO GDA_SERVER_PROVIDER_ERROR ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### STRUCT GdaServerProviderMeta ##### -->
 <para>
 These methods must be implemented by providers to update a connection's associated metadata (in a 

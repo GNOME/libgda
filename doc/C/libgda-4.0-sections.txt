@@ -102,6 +102,8 @@ gda_connection_event_get_type
 <TITLE>GdaConnection</TITLE>
 GdaConnection
 GdaConnectionOptions
+GdaConnectionError
+GDA_CONNECTION_ERROR
 gda_connection_open_from_dsn
 gda_connection_open_from_string
 gda_connection_open
@@ -469,6 +471,7 @@ gda_server_operation_get_type
 GdaServerProvider
 GdaServerProviderClass
 GdaServerProviderError
+GDA_SERVER_PROVIDER_ERROR
 GdaServerProviderMeta
 GdaServerProviderAsyncCallback
 GdaServerProviderExecCallback

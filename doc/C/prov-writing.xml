@@ -728,7 +728,14 @@ gboolean (*key_columns)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
     </para>
     <sect2>
       <title>plugin_init()</title>
-      <para>This function initializes the plugin; it has a single argument which is the path where the provider is.</para>
+      <para>This function initializes the plugin; it has a single argument which is the path where the provider is.
+	As the module can be unloaded, any static data allocated here must be freed when the module is unloaded,
+	in a <link linkend="GModuleUnload">g_module_unload()</link> function. If the module must not be
+	unloaded, it must be made resident using <link linkend="g-module-make-resident">g_module_make_resident()</link>, 
+	in a <link linkend="GModuleCheckInit">g_module_check_init()</link> function</para>
+      <para>Note that after a <link linkend="GdaServerProvider">GdaServerProvider</link> object has been 
+	created (ie after plugin_create_provider() has
+	been called once), the module will not be unloaded anymore.</para>
     </sect2>
     <sect2>
       <title>plugin_get_name()</title>

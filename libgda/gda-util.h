@@ -29,6 +29,7 @@
 #include "gda-row.h"
 #include "gda-connection.h"
 #include <sql-parser/gda-sql-statement.h>
+#include <libgda/gda-data-select.h>
 
 G_BEGIN_DECLS
 
@@ -54,6 +55,7 @@ gboolean     gda_utility_check_data_model (GdaDataModel *model, gint nbcols, ...
 gboolean     gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent, 
 					      const gint *cols, gint nb_cols, const gint *rows, gint nb_rows,
 					      gboolean use_col_ids);
+const gchar *gda_utility_data_model_find_column_description (GdaDataSelect *model, const gchar *field_name);
 gboolean     gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *sources, GError **error);
 
 /* 

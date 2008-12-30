@@ -385,6 +385,61 @@ gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent,
 	return retval;
 }
 
+
+/**
+ * gda_utility_data_model_find_column_description
+ * @model: a #GdaDataSelect data model
+ * @field_name: field name
+ *
+ * Finds the description of a field into Metadata from a #GdaDataModel.
+ *
+ * Returns: The field's description, or NULL if description is not set
+ */
+const gchar *
+gda_utility_data_model_find_column_description (GdaDataSelect *model, const gchar *field_name)
+{
+	g_return_val_if_fail (GDA_IS_DATA_SELECT (model), NULL);
+	g_return_val_if_fail (field_name, NULL);
+
+	GdaConnection *connection = gda_data_select_get_connection ((GdaDataSelect *) model);
+
+	GdaStatement *statement;
+	g_object_get (G_OBJECT (model), "select-stmt", &statement, NULL);
+	if (!statement)
+		return NULL;
+
+	GdaSqlStatement *sql_statement;
+	g_object_get (G_OBJECT (statement), "structure", &sql_statement, NULL);
+	g_object_unref (statement);
+
+	if (!gda_sql_statement_check_validity (sql_statement, connection, NULL)) {
+		gda_sql_statement_free (sql_statement);
+		return NULL;
+	}
+
+	GSList *fields;
+	for (fields = ((GdaSqlStatementSelect *) sql_statement->contents)->expr_list;
+	     fields;
+	     fields = fields->next) {
+
+		GdaSqlSelectField *select_field = fields->data;
+		if (select_field->validity_meta_table_column) {
+			GdaMetaTableColumn *meta_table_column = select_field->validity_meta_table_column;
+
+			if (! strcmp (meta_table_column->column_name, field_name)) {
+				const GValue *gvalue = gda_meta_table_column_get_attribute
+					(meta_table_column, GDA_ATTRIBUTE_DESCRIPTION);
+
+				gda_sql_statement_free (sql_statement);
+				return g_value_get_string (gvalue);
+			}
+		}
+	}
+
+	gda_sql_statement_free (sql_statement);
+	return NULL;
+}
+
 /**
  * gda_utility_holder_load_attributes
  * @holder:

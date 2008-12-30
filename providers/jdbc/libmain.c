@@ -39,6 +39,7 @@
 #define EXPORT
 #endif
 
+static GModule *jvm_handle = NULL;
 
 /* JVM's symbols */
 static GStaticMutex vm_create = G_STATIC_MUTEX_INIT;
@@ -70,11 +71,47 @@ static GHashTable *jdbc_drivers_hash = NULL; /* key = name, value = JdbcDriver p
 static gchar **sub_names = NULL;
 static gint    sub_nb; /* size of sub_names */
 
+/* Functions executed when calling g_module_open() and g_module_close()
+ *
+ * The GModule is made resident here because I haven't found a way to completely unload the JVM, maybe
+ *    http://forums.sun.com/thread.jspa?threadID=5321076
+ * would be the solution...
+ */
+EXPORT const gchar *
+g_module_check_init (GModule *module)
+{
+	g_module_make_resident (module);
+	return NULL;
+}
+
+EXPORT void
+g_module_unload (GModule *module)
+{
+	g_assert_not_reached ();
+
+	g_free (module_path);
+	module_path = NULL;
+
+	/*
+	__CreateJavaVM = NULL;
+	jni_wrapper_destroy_vm (_jdbc_provider_java_vm);
+	_jdbc_provider_java_vm = NULL;
+	if (jvm_handle) {
+		g_module_close (jvm_handle);
+		jvm_handle = NULL;
+	}
+	*/
+}
+
+/*
+ * Normal plugin functions 
+ */
 EXPORT void
 plugin_init (const gchar *real_path)
 {
         if (real_path)
                 module_path = g_strdup (real_path);
+	load_jvm ();
 }
 
 EXPORT const gchar **
@@ -102,6 +139,8 @@ plugin_get_sub_names (void)
 			   error && error->message ? error->message : _("No detail"));
 		if (error)
 			g_error_free (error);
+
+		(*_jdbc_provider_java_vm)->DetachCurrentThread (_jdbc_provider_java_vm);
 		return NULL;		
 	}
 	if (!gda_value_is_null (lvalue)) {
@@ -124,10 +163,12 @@ plugin_get_sub_names (void)
 			g_hash_table_insert (jdbc_drivers_hash, (gchar*) dr->name, dr);
 		}
 		
+		(*_jdbc_provider_java_vm)->DetachCurrentThread (_jdbc_provider_java_vm);
 		return (const gchar **) sub_names;
 	}
 	else {
 		g_free (lvalue);
+		(*_jdbc_provider_java_vm)->DetachCurrentThread (_jdbc_provider_java_vm);
 		return NULL;
 	}
 }
@@ -314,7 +355,11 @@ find_jvm_in_dir (const gchar *dir_name)
 	GDir *dir;
 	GError *err = NULL;
 	const gchar *name;
-	gboolean jvm_found = FALSE;
+
+	if (jvm_handle) {
+		g_module_close (jvm_handle);
+		jvm_handle = NULL;
+	}
 
 	/* read the plugin directory */
 #ifdef GDA_DEBUG_NO
@@ -333,34 +378,34 @@ find_jvm_in_dir (const gchar *dir_name)
 		if (!g_strrstr (name, "jvm"))
 			continue;
 
-		GModule *handle;
 		gchar *path;
 
 		path = g_build_path (G_DIR_SEPARATOR_S, dir_name, name, NULL);
-		handle = g_module_open (path, G_MODULE_BIND_LAZY);
+		jvm_handle = g_module_open (path, G_MODULE_BIND_LAZY);
 		g_free (path);
-		if (!handle) {
+		if (!jvm_handle) {
 			/*g_warning (_("Error: %s"), g_module_error ());*/
 			continue;
 		}
 
-		if (g_module_symbol (handle, "JNI_CreateJavaVM", (gpointer *) &__CreateJavaVM)) {
+		if (g_module_symbol (jvm_handle, "JNI_CreateJavaVM", (gpointer *) &__CreateJavaVM)) {
 			/* JVM found */
 #ifdef GDA_DEBUG_NO
 			path = g_build_path (G_DIR_SEPARATOR_S, dir_name, name, NULL);
 			g_print ("JVM found as: '%s'\n", path);
 			g_free (path);
 #endif
-			jvm_found = TRUE;
 			break;
 		}
-		else
-			g_module_close (handle);
+		else {
+			g_module_close (jvm_handle);
+			jvm_handle = NULL;
+		}
 
 	}
 	/* free memory */
 	g_dir_close (dir);
-	return jvm_found;
+	return jvm_handle ? TRUE : FALSE;
 }
 
 static const gchar *
