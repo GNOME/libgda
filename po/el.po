@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db 0.0.91\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-29 15:45+0100\n"
+"POT-Creation-Date: 2008-12-31 11:27+0100\n"
 "PO-Revision-Date: 2005-10-31 00:59+0200\n"
 "Last-Translator: Simos Xenitellis <simos@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -49,7 +49,6 @@ msgid "Malformed data source name '%s'"
 msgstr ""
 
 #: ../libgda/gda-config.c:768 ../libgda/gda-config.c:857
-#, c-format
 msgid "Can't manage system-wide configuration"
 msgstr ""
 
@@ -72,61 +71,67 @@ msgid "No provider '%s' installed"
 msgstr "Αποθήκευση σχεδίασης βάσης σε αρχείο"
 
 #
-#: ../libgda/gda-config.c:1107
+#: ../libgda/gda-config.c:1100
+#, fuzzy, c-format
+msgid "Can't load provider: %s"
+msgstr "Ρυθμίσεις Σύνδεσης"
+
+#
+#: ../libgda/gda-config.c:1123
 #, fuzzy, c-format
 msgid "Can't instantiate provider '%s'"
 msgstr "Ρυθμίσεις Σύνδεσης"
 
 #
-#: ../libgda/gda-config.c:1151 ../libgda/gda-data-model-dsn-list.c:111
-#: ../libgda/gda-data-model-dsn-list.c:112 ../tools/gda-sql.c:2049
-#: ../tools/gda-sql.c:2221 ../tools/gda-sql.c:2423
+#: ../libgda/gda-config.c:1167 ../libgda/gda-data-model-dsn-list.c:111
+#: ../libgda/gda-data-model-dsn-list.c:112 ../tools/gda-sql.c:1676
+#: ../tools/gda-sql.c:2493 ../tools/gda-sql.c:2665 ../tools/gda-sql.c:2882
 msgid "Provider"
 msgstr "Παροχεύς"
 
 #
-#: ../libgda/gda-config.c:1152 ../libgda/gda-data-model-dsn-list.c:117
+#: ../libgda/gda-config.c:1168 ../libgda/gda-data-model-dsn-list.c:117
 #: ../libgda/gda-data-model-dsn-list.c:118
 #: ../libgda/gda-server-provider-extra.c:375
-#: ../libgda/gda-server-provider-extra.c:398 ../tools/gda-sql.c:2048
-#: ../tools/gda-sql.c:2222
+#: ../libgda/gda-server-provider-extra.c:398 ../tools/gda-sql.c:1677
+#: ../tools/gda-sql.c:2492 ../tools/gda-sql.c:2666
 msgid "Description"
 msgstr "Περιγραφή"
 
-#: ../libgda/gda-config.c:1153
+#: ../libgda/gda-config.c:1169
 msgid "DSN parameters"
 msgstr ""
 
 #
-#: ../libgda/gda-config.c:1154
+#: ../libgda/gda-config.c:1170
 #, fuzzy
 msgid "Authentication"
 msgstr "Ρυθμίσεις Σύνδεσης"
 
 #
-#: ../libgda/gda-config.c:1155
+#: ../libgda/gda-config.c:1171
 #, fuzzy
 msgid "File"
 msgstr "Εύρεση"
 
-#: ../libgda/gda-config.c:1156
+#: ../libgda/gda-config.c:1172
 msgid "List of installed providers"
 msgstr ""
 
 #
-#: ../libgda/gda-config.c:1308 ../libgda/gda-data-model-dsn-list.c:131
-#: ../libgda/gda-data-model-dsn-list.c:132 ../tools/gda-sql.c:2425
+#: ../libgda/gda-config.c:1328 ../libgda/gda-data-model-dsn-list.c:131
+#: ../libgda/gda-data-model-dsn-list.c:132 ../tools/gda-sql.c:2884
 msgid "Username"
 msgstr "Όνομα χρήστη"
 
 #. other table options
-#: ../libgda/gda-config.c:1310
+#: ../libgda/gda-config.c:1330
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:147
 msgid "Password"
 msgstr "Κωδικός"
 
 #
-#: ../libgda/gda-config.c:1373
+#: ../libgda/gda-config.c:1393 ../tools/web-server.c:2017
 #, c-format
 msgid "Error: %s"
 msgstr "Σφάλμα: %s"
@@ -197,84 +202,75 @@ msgid "Data source %s not found in configuration"
 msgstr "Πηγές Δεδομένων"
 
 #: ../libgda/gda-connection.c:631
-#, c-format
 msgid "Datasource configuration error: no provider specified"
 msgstr ""
 
 #
-#: ../libgda/gda-connection.c:700 ../tools/gda-sql.c:983
+#: ../libgda/gda-connection.c:700 ../tools/gda-sql.c:1259
 #, fuzzy, c-format
 msgid "Malformed connection string '%s'"
 msgstr "Ρυθμίσεις Σύνδεσης"
 
 #
 #: ../libgda/gda-connection.c:706 ../libgda/gda-connection.c:820
-#, fuzzy, c-format
+#, fuzzy
 msgid "No provider specified"
 msgstr "Αποθήκευση σχεδίασης βάσης σε αρχείο"
 
 #
 #: ../libgda/gda-connection.c:808 ../libgda/gda-connection.c:810
-#, fuzzy, c-format
+#, fuzzy
 msgid "No DSN or connection string specified"
 msgstr "Ρυθμίσεις Σύνδεσης"
 
 #: ../libgda/gda-connection.c:828
-#, c-format
 msgid "Provider does not allow usage from this thread"
 msgstr ""
 
 #: ../libgda/gda-connection.c:835
-#, c-format
 msgid ""
 "Internal error: provider does not implement the open_connection() virtual "
 "method"
 msgstr ""
 
 #: ../libgda/gda-connection.c:1447
-#, c-format
 msgid "Provider does not support statement preparation"
 msgstr ""
 
-#: ../libgda/gda-connection.c:1615 ../libgda/gda-connection.c:1630
-#, c-format
+#: ../libgda/gda-connection.c:1617 ../libgda/gda-connection.c:1632
 msgid "Statement is a selection statement"
 msgstr ""
 
-#: ../libgda/gda-connection.c:1689 ../libgda/gda-connection.c:1750
-#: ../libgda/gda-connection.c:1805
-#, c-format
+#: ../libgda/gda-connection.c:1691 ../libgda/gda-connection.c:1752
+#: ../libgda/gda-connection.c:1807
 msgid "Statement is not a selection statement"
 msgstr ""
 
-#: ../libgda/gda-connection.c:2152
-#, c-format
+#: ../libgda/gda-connection.c:2154
 msgid "Invalid argument"
 msgstr ""
 
-#: ../libgda/gda-connection.c:2161
+#: ../libgda/gda-connection.c:2163
 #, c-format
 msgid "Missing or wrong arguments for table '%s': %s"
 msgstr ""
 
-#: ../libgda/gda-connection.c:2869
-#, c-format
+#: ../libgda/gda-connection.c:2871
 msgid "Meta update error"
 msgstr ""
 
-#: ../libgda/gda-connection.c:3335
-#, c-format
+#: ../libgda/gda-connection.c:3339
 msgid "Wrong filter arguments"
 msgstr ""
 
-#: ../libgda/gda-connection.c:3469 ../libgda/gda-connection.c:3514
-#: ../libgda/gda-connection.c:3549 ../libgda/gda-connection.c:3585
-#: ../libgda/gda-connection.c:3621
+#: ../libgda/gda-connection.c:3472 ../libgda/gda-connection.c:3514
+#: ../libgda/gda-connection.c:3546 ../libgda/gda-connection.c:3579
+#: ../libgda/gda-connection.c:3612
 #, c-format
 msgid "Connection transaction status tracking: no transaction exists for %s"
 msgstr ""
 
-#: ../libgda/gda-connection.c:3895
+#: ../libgda/gda-connection.c:3884
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:186
 msgid "Internal error: invalid provider handle"
 msgstr ""
@@ -295,12 +291,11 @@ msgstr "Πηγές Δεδομένων"
 
 #
 #: ../libgda/gda-data-access-wrapper.c:495
-#, fuzzy, c-format
+#, fuzzy
 msgid "Can't set iterator's position"
 msgstr "Εισαγωγή αρχείου στην τρέχουσα θέση"
 
 #: ../libgda/gda-data-access-wrapper.c:523
-#, c-format
 msgid "Can't access data"
 msgstr ""
 
@@ -317,22 +312,18 @@ msgid "New data model"
 msgstr "Δεδομένα"
 
 #: ../libgda/gda-data-comparator.c:441
-#, c-format
 msgid "Missing original data model"
 msgstr ""
 
 #: ../libgda/gda-data-comparator.c:446
-#, c-format
 msgid "Missing new data model"
 msgstr ""
 
 #: ../libgda/gda-data-comparator.c:452
-#, c-format
 msgid "Data models must support random access model"
 msgstr ""
 
 #: ../libgda/gda-data-comparator.c:461
-#, c-format
 msgid "Data models to compare don't have the same number of columns"
 msgstr ""
 
@@ -342,7 +333,6 @@ msgid "Type mismatch for column %d: '%s' and '%s'"
 msgstr ""
 
 #: ../libgda/gda-data-comparator.c:561 ../libgda/gda-data-comparator.c:597
-#, c-format
 msgid "Differences computation cancelled on signal handling"
 msgstr ""
 
@@ -362,29 +352,25 @@ msgid "Row %d out of range (0-%d)"
 msgstr "Πηγές Δεδομένων"
 
 #: ../libgda/gda-data-model-array.c:524
-#, c-format
 msgid "No row in data model"
 msgstr ""
 
 #
 #: ../libgda/gda-data-model-array.c:549
-#, fuzzy, c-format
+#, fuzzy
 msgid "Data model has no data"
 msgstr "Δεδομένα"
 
 #: ../libgda/gda-data-model-array.c:604 ../libgda/gda-data-model-array.c:644
 #: ../libgda/gda-data-model-array.c:683 ../libgda/gda-data-model-array.c:718
-#, c-format
 msgid "Attempting to modify a read-only data model"
 msgstr ""
 
 #: ../libgda/gda-data-model-array.c:650 ../libgda/gda-data-model-array.c:689
-#, c-format
 msgid "Too many values in list"
 msgstr ""
 
 #: ../libgda/gda-data-model-array.c:743
-#, c-format
 msgid "Row not found in data model"
 msgstr ""
 
@@ -401,133 +387,124 @@ msgid "Expected GdaBinary value, got %s"
 msgstr ""
 
 #: ../libgda/gda-data-model-bdb.c:857
-#, c-format
 msgid "Key modification is not supported"
 msgstr ""
 
-#: ../libgda/gda-data-model.c:571
-#, c-format
+#: ../libgda/gda-data-model.c:572
 msgid "Data model does not support getting individual value"
 msgstr ""
 
-#: ../libgda/gda-data-model.c:607 ../libgda/gda-data-model.c:616
+#: ../libgda/gda-data-model.c:609 ../libgda/gda-data-model.c:619
 #, c-format
 msgid "Data model returned value of invalid '%s' type"
 msgstr ""
 
-#: ../libgda/gda-data-model.c:613
-#, c-format
+#: ../libgda/gda-data-model.c:616
 msgid "Data model returned invalid NULL value"
 msgstr ""
 
-#: ../libgda/gda-data-model.c:669
-#, c-format
+#: ../libgda/gda-data-model.c:673
 msgid "Data model does not support setting individual value"
 msgstr ""
 
-#: ../libgda/gda-data-model.c:699
-#, c-format
+#: ../libgda/gda-data-model.c:703
 msgid "Data model does not support setting values"
 msgstr ""
 
 #
-#: ../libgda/gda-data-model.c:753 ../libgda/gda-data-model.c:784
-#, fuzzy, c-format
+#: ../libgda/gda-data-model.c:757 ../libgda/gda-data-model.c:788
+#, fuzzy
 msgid "Data model does not support row append"
 msgstr "Δεδομένα"
 
-#: ../libgda/gda-data-model.c:775
-#, c-format
+#: ../libgda/gda-data-model.c:779
 msgid "Model does not allow row insertion"
 msgstr ""
 
-#: ../libgda/gda-data-model.c:807
-#, c-format
+#: ../libgda/gda-data-model.c:811
 msgid "Model does not allow row deletion"
 msgstr ""
 
-#: ../libgda/gda-data-model.c:816
-#, c-format
+#: ../libgda/gda-data-model.c:820
 msgid "Data model does not support row removal"
 msgstr ""
 
-#: ../libgda/gda-data-model.c:957 ../libgda/gda-data-model.c:996
-#: ../libgda/gda-data-model.c:1010
+#: ../libgda/gda-data-model.c:961 ../libgda/gda-data-model.c:1000
+#: ../libgda/gda-data-model.c:1014
 #, c-format
 msgid "The '%s' parameter must hold a string value, ignored."
 msgstr ""
 
-#: ../libgda/gda-data-model.c:1019 ../libgda/gda-data-model.c:1102
+#: ../libgda/gda-data-model.c:1023 ../libgda/gda-data-model.c:1106
 #, c-format
 msgid "The '%s' parameter must hold a boolean value, ignored."
 msgstr ""
 
 #
-#: ../libgda/gda-data-model.c:1110
+#: ../libgda/gda-data-model.c:1114
 #, fuzzy, c-format
 msgid "File '%s' already exists"
 msgstr "Το αρχείο %s φορτώθηκε"
 
 #
-#: ../libgda/gda-data-model.c:1224
+#: ../libgda/gda-data-model.c:1228
 #, fuzzy
 msgid "Exported Data"
 msgstr "Εξαγωγή δεδομένων"
 
-#: ../libgda/gda-data-model.c:1341
+#: ../libgda/gda-data-model.c:1345
 #, c-format
 msgid "Expected tag <gda_value> or <gda_array_value>, got <%s>, ignoring"
 msgstr ""
 
-#: ../libgda/gda-data-model.c:1372
-#, c-format
+#: ../libgda/gda-data-model.c:1376
 msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
 msgstr ""
 
-#: ../libgda/gda-data-model.c:1454
+#: ../libgda/gda-data-model.c:1458
 #, c-format
 msgid "Expected tag <gda_array_data>, got <%s>"
 msgstr ""
 
 #
-#: ../libgda/gda-data-model.c:1514
-#, fuzzy, c-format
+#: ../libgda/gda-data-model.c:1518
+#, fuzzy
 msgid "Could not get an iterator for source data model"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
-#: ../libgda/gda-data-model.c:1531
+#: ../libgda/gda-data-model.c:1535
 #, c-format
 msgid "Inexistent column in source data model: %d"
 msgstr ""
 
-#: ../libgda/gda-data-model.c:1545
+#: ../libgda/gda-data-model.c:1549
 #, c-format
 msgid ""
 "Destination column %d can't be NULL but has no correspondence in the source "
 "data model"
 msgstr ""
 
-#: ../libgda/gda-data-model.c:1555
+#: ../libgda/gda-data-model.c:1559
 #, c-format
 msgid ""
 "Destination column %d has a gda type (%s) incompatible with source column %d "
 "type (%s)"
 msgstr ""
 
-#: ../libgda/gda-data-model.c:1652
+#: ../libgda/gda-data-model.c:1656
 #, c-format
 msgid "Can't transform '%s' from GDA type %s to GDA type %s"
 msgstr ""
 
 #
-#: ../libgda/gda-data-model.c:1839
+#: ../libgda/gda-data-model.c:1844
 #, fuzzy, c-format
 msgid "Could not dump data model's attributes: %s"
 msgstr ""
 "Αδυναμία φόρτωσης αρχείου\n"
 " %s"
 
-#: ../libgda/gda-data-model.c:1840 ../libgda/gda-data-model.c:1848
+#: ../libgda/gda-data-model.c:1845 ../libgda/gda-data-model.c:1853
 #: ../libgda/gda-data-model-dir.c:386 ../libgda/gda-data-model-import.c:1574
 #: ../libgda/gda-data-model-import.c:1857
 #: ../libgda/gda-data-model-import.c:1930 ../libgda/gda-data-select.c:349
@@ -541,36 +518,35 @@ msgstr ""
 #: ../providers/jdbc/gda-jdbc-provider.c:1322
 #: ../providers/jdbc/gda-jdbc-provider.c:1351
 #: ../providers/jdbc/gda-jdbc-provider.c:1370
-#: ../providers/jdbc/gda-jdbc-util.c:46 ../providers/jdbc/libmain.c:102
-#: ../providers/jdbc/libmain.c:300 ../providers/mdb/gda-mdb-provider.c:353
+#: ../providers/jdbc/gda-jdbc-util.c:46 ../providers/jdbc/libmain.c:139
+#: ../providers/jdbc/libmain.c:341 ../providers/mdb/gda-mdb-provider.c:353
 #: ../providers/mysql/gda-mysql-util.c:73
 #: ../providers/postgres/gda-postgres-provider.c:1820
 #: ../providers/postgres/gda-postgres-provider.c:1835
 #: ../providers/postgres/gda-postgres-util.c:86
 #: ../providers/postgres/gda-postgres-util.c:89
 #: ../tools/gda-list-server-op.c:47 ../tools/gda-list-server-op.c:90
-#: ../tools/gda-sql.c:247 ../tools/gda-sql.c:264 ../tools/gda-sql.c:325
-#: ../tools/gda-sql.c:1106 ../tools/gda-sql.c:1121 ../tools/gda-sql.c:1166
-#: ../tools/gda-sql.c:2385
-#, c-format
+#: ../tools/gda-sql.c:256 ../tools/gda-sql.c:273 ../tools/gda-sql.c:402
+#: ../tools/gda-sql.c:1384 ../tools/gda-sql.c:1399 ../tools/gda-sql.c:1444
+#: ../tools/gda-sql.c:2844 ../tools/tools-input.c:128
+#: ../tools/web-server.c:2018
 msgid "No detail"
 msgstr ""
 
 #
-#: ../libgda/gda-data-model.c:1847
+#: ../libgda/gda-data-model.c:1852
 #, fuzzy, c-format
 msgid "Could not dump data model's contents: %s"
 msgstr ""
 "Αδυναμία φόρτωσης αρχείου\n"
 " %s"
 
-#: ../libgda/gda-data-model.c:2087
-#, c-format
+#: ../libgda/gda-data-model.c:2092
 msgid "Data model does not support backward cursor move, not displaying data"
 msgstr ""
 
 #
-#: ../libgda/gda-data-model.c:2207
+#: ../libgda/gda-data-model.c:2212
 #, fuzzy, c-format
 msgid "(%d row)\n"
 msgid_plural "(%d rows)\n"
@@ -579,18 +555,16 @@ msgstr[1] "%d γραμμές"
 
 #
 #: ../libgda/gda-data-model-dir.c:872
-#, fuzzy, c-format
+#, fuzzy
 msgid "Row not found"
 msgstr "Πηγές Δεδομένων"
 
 #: ../libgda/gda-data-model-dir.c:994 ../libgda/gda-data-model-dir.c:996
-#, c-format
 msgid "Column cannot be modified"
 msgstr ""
 
 #: ../libgda/gda-data-model-dir.c:1009 ../libgda/gda-data-model-dir.c:1011
 #: ../libgda/gda-data-model-dir.c:1216 ../libgda/gda-data-model-dir.c:1218
-#, c-format
 msgid "New path must be a subpath of the base directory"
 msgstr ""
 
@@ -619,12 +593,10 @@ msgstr ""
 " %s"
 
 #: ../libgda/gda-data-model-dir.c:1162 ../libgda/gda-data-model-dir.c:1163
-#, c-format
 msgid "Wrong type of data"
 msgstr ""
 
 #: ../libgda/gda-data-model-dir.c:1204 ../libgda/gda-data-model-dir.c:1206
-#, c-format
 msgid "Column cannot be set"
 msgstr ""
 
@@ -643,7 +615,6 @@ msgstr ""
 " %s"
 
 #: ../libgda/gda-data-model-dir.c:1296 ../libgda/gda-data-model-dir.c:1298
-#, c-format
 msgid "Cannot add row: filename missing"
 msgstr ""
 
@@ -657,7 +628,7 @@ msgstr ""
 
 #
 #: ../libgda/gda-data-model-dsn-list.c:105
-#: ../libgda/gda-data-model-dsn-list.c:106 ../tools/gda-sql.c:2047
+#: ../libgda/gda-data-model-dsn-list.c:106 ../tools/gda-sql.c:2491
 msgid "DSN"
 msgstr "DSN"
 
@@ -783,7 +754,6 @@ msgid "No <gda_array_field> specified in <gda_array>"
 msgstr "Αποθήκευση σχεδίασης βάσης σε αρχείο"
 
 #: ../libgda/gda-data-model-import.c:1708
-#, c-format
 msgid "Data model does not support random access"
 msgstr ""
 
@@ -807,7 +777,6 @@ msgstr ""
 " %s"
 
 #: ../libgda/gda-data-model-iter.c:280 ../libgda/gda-data-model-iter.c:287
-#, c-format
 msgid "GdaDataModel refused value change"
 msgstr ""
 
@@ -822,7 +791,6 @@ msgid "GdaDataProxy can't handle non random access data models"
 msgstr ""
 
 #: ../libgda/gda-data-proxy.c:1422 ../libgda/gda-data-proxy.c:3645
-#, c-format
 msgid ""
 "The first row is an empty row artificially prepended and cannot be removed"
 msgstr ""
@@ -836,25 +804,22 @@ msgid ""
 msgstr ""
 
 #
-#: ../libgda/gda-data-proxy.c:2780 ../tools/gda-sql.c:2566
-#, fuzzy, c-format
+#: ../libgda/gda-data-proxy.c:2780 ../tools/gda-sql.c:3040
+#, fuzzy
 msgid "Could not create virtual connection"
 msgstr ""
 "Αδυναμία φόρτωσης αρχείου\n"
 " %s"
 
 #: ../libgda/gda-data-proxy.c:2821 ../libgda/gda-data-proxy.c:2834
-#, c-format
 msgid "Error in filter expression"
 msgstr ""
 
 #: ../libgda/gda-data-proxy.c:2944 ../libgda/gda-data-select.c:1405
-#, c-format
 msgid "Incorrect filter expression"
 msgstr ""
 
 #: ../libgda/gda-data-proxy.c:3428
-#, c-format
 msgid ""
 "The first row is an empty row artificially prepended and cannot be altered"
 msgstr ""
@@ -887,44 +852,38 @@ msgid ""
 msgstr ""
 
 #: ../libgda/gda-data-select.c:944
-#, c-format
 msgid "Incorrect SQL expression"
 msgstr ""
 
 #: ../libgda/gda-data-select.c:969
-#, c-format
 msgid "Internal error: the \"prepared-stmt\" property has not been set"
 msgstr ""
 
 #
 #: ../libgda/gda-data-select.c:976
-#, fuzzy, c-format
+#, fuzzy
 msgid "Can't get the prepared statement's actual statement"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
 #
 #: ../libgda/gda-data-select.c:982
-#, fuzzy, c-format
+#, fuzzy
 msgid "Unsupported type of SELECT statement"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
 #: ../libgda/gda-data-select.c:1051
-#, c-format
 msgid "INSERT statement must contain values to insert"
 msgstr ""
 
 #: ../libgda/gda-data-select.c:1057
-#, c-format
 msgid "INSERT statement must insert only one row"
 msgstr ""
 
 #: ../libgda/gda-data-select.c:1084
-#, c-format
 msgid "DELETE statement must have a WHERE part"
 msgstr ""
 
 #: ../libgda/gda-data-select.c:1124
-#, c-format
 msgid "UPDATE statement must have a WHERE part"
 msgstr ""
 
@@ -939,49 +898,44 @@ msgid "Modification statement's  '%s' parameter is a %s when it should be a %s"
 msgstr ""
 
 #: ../libgda/gda-data-select.c:1208
-#, c-format
 msgid "Modification statement must be an INSERT, UPDATE or DELETE statement"
 msgstr ""
 
 #
 #: ../libgda/gda-data-select.c:1254 ../libgda/gda-data-select.c:1460
 #: ../libgda/gda-data-select.c:3215
-#, fuzzy, c-format
+#, fuzzy
 msgid "No connection to use"
 msgstr "Δεν υπάρχει ανοιχτή σύνδεση"
 
 #: ../libgda/gda-data-select.c:1300
-#, c-format
 msgid "Invalid unique row condition (ony equal operators are allowed)"
 msgstr ""
 
 #
 #: ../libgda/gda-data-select.c:1332 ../libgda/gda-data-select.c:1387
-#, fuzzy, c-format
+#, fuzzy
 msgid "Unique row condition has already been specified"
 msgstr "Το αρχείο %s φορτώθηκε"
 
 #
 #: ../libgda/gda-data-select.c:1469 ../libgda/gda-data-select.c:1480
-#, fuzzy, c-format
+#, fuzzy
 msgid "No table to select from in SELECT statement"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
 #: ../libgda/gda-data-select.c:1474
-#, c-format
 msgid "SELECT statement uses more than one table to select from"
 msgstr ""
 
 #: ../libgda/gda-data-select.c:1645 ../libgda/gda-data-select.c:2337
 #: ../libgda/gda-data-select.c:2504 ../libgda/gda-data-select.c:2645
 #: ../libgda/gda-data-select.c:2732 ../libgda/gda-data-select.c:2923
-#, c-format
 msgid "Data model does only support random access"
 msgstr ""
 
 #: ../libgda/gda-data-select.c:1674 ../libgda/gda-data-select.c:1683
 #: ../libgda/gda-data-select.c:1691 ../libgda/gda-data-select.c:1713
-#, c-format
 msgid ""
 "Unable to retreive data after modifications, no further modification will be "
 "allowed"
@@ -1000,42 +954,37 @@ msgid "Allowed GdaHolder's value to be NULL for the iterator to be updated"
 msgstr ""
 
 #: ../libgda/gda-data-select.c:2057 ../libgda/gda-data-select.c:2150
-#, c-format
 msgid "Some columns can't be modified"
 msgstr ""
 
 #: ../libgda/gda-data-select.c:2204
-#, c-format
 msgid "Internal error: can't get the prepared statement's actual statement"
 msgstr ""
 
 #: ../libgda/gda-data-select.c:2244
-#, c-format
 msgid "Unable to identify a way to fetch a single row"
 msgstr ""
 
 #
 #: ../libgda/gda-data-select.c:2251
-#, fuzzy, c-format
+#, fuzzy
 msgid "Can only operate on non compound SELECT statements"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
 #: ../libgda/gda-data-select.c:2332 ../libgda/gda-data-select.c:2499
 #: ../libgda/gda-data-select.c:2565 ../libgda/gda-data-select.c:2640
 #: ../libgda/gda-data-select.c:2727 ../libgda/gda-data-select.c:2918
-#, c-format
 msgid "Modifications are not allowed anymore"
 msgstr ""
 
 #: ../libgda/gda-data-select.c:2342 ../libgda/gda-data-select.c:2509
 #: ../libgda/gda-data-select.c:2570 ../libgda/gda-data-select.c:2650
-#, c-format
 msgid "No UPDATE statement provided"
 msgstr ""
 
 #
 #: ../libgda/gda-data-select.c:2382
-#, fuzzy, c-format
+#, fuzzy
 msgid "Could not get iterator's value"
 msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
 
@@ -1051,40 +1000,34 @@ msgid "Too many values (%d as maximum)"
 msgstr ""
 
 #: ../libgda/gda-data-select.c:2737
-#, c-format
 msgid "No INSERT statement provided"
 msgstr ""
 
 #: ../libgda/gda-data-select.c:2742
-#, c-format
 msgid "Cannot add a row because the number of rows in unknown"
 msgstr ""
 
 #: ../libgda/gda-data-select.c:2769
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:338
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:347
-#, c-format
 msgid "Missing values to insert in INSERT statement"
 msgstr ""
 
 #: ../libgda/gda-data-select.c:2928
-#, c-format
 msgid "No DELETE statement provided"
 msgstr ""
 
 #
-#: ../libgda/gda-easy.c:278
-#, fuzzy, c-format
+#: ../libgda/gda-easy.c:292
+#, fuzzy
 msgid "Unspecified table name"
 msgstr "Όνομα Αντικειμένου"
 
-#: ../libgda/gda-easy.c:307
-#, c-format
+#: ../libgda/gda-easy.c:323
 msgid "Invalid type"
 msgstr ""
 
-#: ../libgda/gda-easy.c:334
-#, c-format
+#: ../libgda/gda-easy.c:386
 msgid "CREATE TABLE operation is not supported by the database server"
 msgstr ""
 
@@ -1125,7 +1068,6 @@ msgid "(%s): Wrong value type: expected type '%s' when value's type is '%s'"
 msgstr ""
 
 #: ../libgda/gda-holder.c:1495
-#, c-format
 msgid "Cannot bind holders if their type is not the same"
 msgstr ""
 
@@ -1185,17 +1127,15 @@ msgstr ""
 
 #
 #: ../libgda/gda-meta-store.c:790
-#, fuzzy, c-format
+#, fuzzy
 msgid "Could not set the internal schema's version"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
 #: ../libgda/gda-meta-store.c:1094
-#, c-format
 msgid "Missing view name from <view> node"
 msgstr ""
 
 #: ../libgda/gda-meta-store.c:1134
-#, c-format
 msgid "Missing view definition from <view> node"
 msgstr ""
 
@@ -1211,7 +1151,6 @@ msgstr ""
 
 #. FIXME
 #: ../libgda/gda-meta-store.c:1200 ../libgda/gda-meta-struct-io.c:175
-#, c-format
 msgid "Missing table name from <table> node"
 msgstr ""
 
@@ -1236,7 +1175,7 @@ msgstr ""
 msgid "Column '%s' not found in table '%s'"
 msgstr "Ρυθμίσεις Σύνδεσης"
 
-#: ../libgda/gda-meta-store.c:1764 ../libgda/gda-meta-struct.c:961
+#: ../libgda/gda-meta-store.c:1764 ../libgda/gda-meta-struct.c:1001
 #, c-format
 msgid "Foreign key column '%s' not found in table '%s'"
 msgstr ""
@@ -1244,7 +1183,7 @@ msgstr ""
 #
 #: ../libgda/gda-meta-store.c:1892 ../libgda/gda-meta-store.c:1903
 #: ../libgda/gda-meta-store.c:1922
-#, fuzzy, c-format
+#, fuzzy
 msgid "Could not get the internal schema's version"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
@@ -1254,8 +1193,8 @@ msgid "Unknown internal schema's version: %d"
 msgstr ""
 
 #
-#: ../libgda/gda-meta-store.c:2004 ../tools/gda-sql.c:675
-#, fuzzy, c-format
+#: ../libgda/gda-meta-store.c:2004 ../tools/gda-sql.c:935
+#, fuzzy
 msgid "More than one SQL statement"
 msgstr "Δόμηση εντολών SQL"
 
@@ -1273,7 +1212,6 @@ msgstr ""
 " %s"
 
 #: ../libgda/gda-meta-store.c:2554
-#, c-format
 msgid "Data models should have the same number of columns"
 msgstr ""
 
@@ -1292,19 +1230,19 @@ msgstr "Αδυναμία περικοπής αρχείου %s"
 
 #
 #: ../libgda/gda-meta-store.c:2653
-#, fuzzy, c-format
+#, fuzzy
 msgid "Could not create SELECT statement"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
 #
 #: ../libgda/gda-meta-store.c:2668
-#, fuzzy, c-format
+#, fuzzy
 msgid "Could not create DELETE statement"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
 #
 #: ../libgda/gda-meta-store.c:2710
-#, fuzzy, c-format
+#, fuzzy
 msgid "A transaction has already been started"
 msgstr "Το αρχείο %s φορτώθηκε"
 
@@ -1323,7 +1261,6 @@ msgstr[0] "Πηγές Δεδομένων"
 msgstr[1] "Πηγές Δεδομένων"
 
 #: ../libgda/gda-meta-store.c:3077
-#, c-format
 msgid "Attributes names starting with a '_' are reserved for internal usage"
 msgstr ""
 
@@ -1334,17 +1271,14 @@ msgid ""
 msgstr ""
 
 #: ../libgda/gda-meta-store.c:3208
-#, c-format
 msgid "Could not parse XML description of custom database object to add"
 msgstr ""
 
 #: ../libgda/gda-meta-store.c:3220
-#, c-format
 msgid "Missing custom database object name"
 msgstr ""
 
 #: ../libgda/gda-meta-store.c:3225
-#, c-format
 msgid ""
 "Custom database object names starting with a '_' are reserved for internal "
 "usage"
@@ -1352,7 +1286,7 @@ msgstr ""
 
 #
 #: ../libgda/gda-meta-store.c:3320
-#, fuzzy, c-format
+#, fuzzy
 msgid "Another object with the same name already exists"
 msgstr "Το αρχείο %s φορτώθηκε"
 
@@ -1370,59 +1304,47 @@ msgid "Features to compute"
 msgstr ""
 
 #
-#: ../libgda/gda-meta-struct.c:450
-#, fuzzy, c-format
-msgid "Could not find object named '%s.%s'"
-msgstr "Αδυναμία περικοπής αρχείου %s"
-
-#
-#: ../libgda/gda-meta-struct.c:463
+#: ../libgda/gda-meta-struct.c:479 ../libgda/gda-meta-struct.c:494
+#: ../libgda/gda-meta-struct.c:511
 #, fuzzy, c-format
 msgid "Could not find object named '%s'"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
-#
-#: ../libgda/gda-meta-struct.c:477
-#, fuzzy, c-format
-msgid "Could not find object named '%s.%s.%s'"
-msgstr "Αδυναμία περικοπής αρχείου %s"
-
-#: ../libgda/gda-meta-struct.c:526
+#: ../libgda/gda-meta-struct.c:560
 #, c-format
 msgid ""
 "Object %s.%s.%s already exists in GdaMetaStruct and has a different object "
 "type"
 msgstr ""
 
-#: ../libgda/gda-meta-struct.c:552
+#: ../libgda/gda-meta-struct.c:586
 #, c-format
 msgid "View %s.%s.%s not found in meta store object"
 msgstr ""
 
-#: ../libgda/gda-meta-struct.c:628
+#: ../libgda/gda-meta-struct.c:668
 #, c-format
 msgid "Table %s.%s.%s not found (or missing columns information)"
 msgstr ""
 
-#: ../libgda/gda-meta-struct.c:754
+#: ../libgda/gda-meta-struct.c:794
 #, c-format
 msgid "Internal GdaMetaStore error: column %s not found"
 msgstr ""
 
-#: ../libgda/gda-meta-struct.c:878
+#: ../libgda/gda-meta-struct.c:918
 #, c-format
 msgid ""
 "Meta data incoherence in foreign key constraint for table %s.%s.%s "
 "referencing table %s.%s.%s"
 msgstr ""
 
-#: ../libgda/gda-meta-struct.c:2141
-#, c-format
+#: ../libgda/gda-meta-struct.c:2204
 msgid "Missing object name in GdaMetaDbObject structure"
 msgstr ""
 
 #
-#: ../libgda/gda-meta-struct.c:2166
+#: ../libgda/gda-meta-struct.c:2229
 #, fuzzy, c-format
 msgid "Database object '%s' already exists"
 msgstr "Το αρχείο %s φορτώθηκε"
@@ -1514,13 +1436,11 @@ msgid "Expected tag <%s>, got <%s>"
 msgstr ""
 
 #: ../libgda/gda-server-operation.c:1368 ../libgda/gda-server-operation.c:1981
-#, c-format
 msgid ""
 "Parameterlist values can only be set for individual parameters within it"
 msgstr ""
 
 #: ../libgda/gda-server-operation.c:1425
-#, c-format
 msgid "Missing attribute named 'path'"
 msgstr ""
 
@@ -1566,7 +1486,7 @@ msgstr ""
 #: ../libgda/gda-server-provider-extra.c:385
 #: ../libgda/gda-server-provider-extra.c:397
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:56
-#: ../tools/command-exec.c:750
+#: ../tools/command-exec.c:628
 msgid "Owner"
 msgstr "Ιδιοκτήτης"
 
@@ -1774,7 +1694,8 @@ msgstr "Διενέργειες"
 #: ../libgda/gda-server-provider-extra.c:404
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:17
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:17
-#: ../tools/command-exec.c:749 ../tools/command-exec.c:823
+#: ../tools/command-exec.c:627 ../tools/command-exec.c:701
+#: ../tools/web-server.c:920
 msgid "Type"
 msgstr "Τύπος"
 
@@ -1812,7 +1733,7 @@ msgstr "Όψη"
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:12
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:26
 #: ../providers/sqlite/sqlite_specs_create_view.xml.in.h:3
-#: ../tools/command-exec.c:748 ../tools/gda-sql.c:2422 ../tools/gda-sql.c:3209
+#: ../tools/command-exec.c:626 ../tools/gda-sql.c:2881 ../tools/gda-sql.c:3785
 msgid "Name"
 msgstr "Όνομα"
 
@@ -1834,7 +1755,6 @@ msgid "Options"
 msgstr "Επιλογές"
 
 #: ../libgda/gda-server-provider-extra.c:523
-#, c-format
 msgid "Data model for schema has a wrong number of columns"
 msgstr ""
 
@@ -1879,7 +1799,6 @@ msgid "GdaHolder needs to have an ID"
 msgstr ""
 
 #: ../libgda/gda-set.c:1370
-#, c-format
 msgid "One or more values are invalid"
 msgstr ""
 
@@ -1896,7 +1815,6 @@ msgid "Unnamed"
 msgstr "Όνομα χρήστη"
 
 #: ../libgda/gda-statement.c:651
-#, c-format
 msgid "Missing SQL code"
 msgstr ""
 
@@ -1925,56 +1843,49 @@ msgid "Parameter '%s' is invalid"
 msgstr ""
 
 #: ../libgda/gda-statement.c:1202
-#, c-format
 msgid "Unnamed parameter"
 msgstr ""
 
 #: ../libgda/gda-statement.c:1768
-#, c-format
 msgid "Join is not in a FROM statement"
 msgstr ""
 
 #
 #: ../libgda/gda-statement.c:1775
-#, fuzzy, c-format
+#, fuzzy
 msgid "Could not find target the join is for"
 msgstr ""
 "Αδυναμία φόρτωσης αρχείου\n"
 " %s"
 
-#: ../libgda/gda-util.c:465
+#: ../libgda/gda-util.c:516
 #, c-format
 msgid "Field number %d not found in source named '%s'"
 msgstr ""
 
-#: ../libgda/gda-util.c:649
-#, c-format
+#: ../libgda/gda-util.c:702
 msgid "SELECT statement has no FROM part"
 msgstr ""
 
-#: ../libgda/gda-util.c:654 ../libgda/gda-util.c:661
-#, c-format
+#: ../libgda/gda-util.c:707 ../libgda/gda-util.c:714
 msgid "SELECT statement involves more than one table or expression"
 msgstr ""
 
-#: ../libgda/gda-util.c:671
-#, c-format
+#: ../libgda/gda-util.c:724
 msgid "Can only build modification statement for tables"
 msgstr ""
 
-#: ../libgda/gda-util.c:690 ../libgda/gda-util.c:698
-#, c-format
+#: ../libgda/gda-util.c:743 ../libgda/gda-util.c:751
 msgid "Table does not have any primary key"
 msgstr ""
 
-#: ../libgda/gda-util.c:724
-#, c-format
+#: ../libgda/gda-util.c:777
 msgid "Table's primary key is not selected"
 msgstr ""
 
 #
-#: ../libgda/gda-util.c:916
-#, fuzzy, c-format
+#: ../libgda/gda-util.c:969
+#, fuzzy
 msgid "Could not compute any field to insert into"
 msgstr ""
 "Αδυναμία φόρτωσης αρχείου\n"
@@ -1985,13 +1896,12 @@ msgid "Global transaction ID can not have more than 64 bytes"
 msgstr ""
 
 #: ../libgda/gda-xa-transaction.c:295
-#, c-format
 msgid "Connection aleardy registered with another GdaXaTransaction object"
 msgstr ""
 
 #
 #: ../libgda/gda-xa-transaction.c:308
-#, fuzzy, c-format
+#, fuzzy
 msgid "Connection does not support distributed transaction"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
@@ -2062,7 +1972,6 @@ msgstr ""
 #: ../libgda/sqlite/gda-sqlite-ddl.c:216 ../providers/jdbc/gda-jdbc-ddl.c:136
 #: ../providers/mysql/gda-mysql-ddl.c:311
 #: ../providers/postgres/gda-postgres-ddl.c:361
-#, c-format
 msgid "Table to create must have at least one row"
 msgstr ""
 
@@ -2124,27 +2033,24 @@ msgstr ""
 #: ../providers/jdbc/gda-jdbc-provider.c:566
 #: ../providers/mysql/gda-mysql-provider.c:820
 #: ../providers/postgres/gda-postgres-provider.c:1015
-#, c-format
 msgid "Provider does not support asynchronous server operation"
 msgstr ""
 
 #
 #: ../libgda/sqlite/gda-sqlite-provider.c:982
-#, fuzzy, c-format
+#, fuzzy
 msgid "Missing database name or directory"
 msgstr "Δόμηση εντολών SQL"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1008
 #: ../providers/postgres/gda-postgres-provider.c:1144
 #: ../providers/postgres/gda-postgres-provider.c:1145
-#, c-format
 msgid "Transactions are not supported in read-only mode"
 msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1645
 #: ../providers/jdbc/gda-jdbc-provider.c:1103
 #: ../providers/postgres/gda-postgres-provider.c:1675
-#, c-format
 msgid "Unnamed parameter is not allowed in prepared statements"
 msgstr ""
 
@@ -2175,7 +2081,6 @@ msgstr ""
 #: ../providers/jdbc/gda-jdbc-provider.c:1201
 #: ../providers/mysql/gda-mysql-provider.c:1308
 #: ../providers/postgres/gda-postgres-provider.c:1926
-#, c-format
 msgid "Provider does not support asynchronous statement execution"
 msgstr ""
 
@@ -2215,7 +2120,7 @@ msgstr ""
 
 #
 #: ../libgda/sqlite/gda-sqlite-recordset.c:225
-#: ../providers/jdbc/gda-jdbc-recordset.c:277
+#: ../providers/jdbc/gda-jdbc-recordset.c:278
 #: ../providers/mysql/gda-mysql-recordset.c:346
 #: ../providers/postgres/gda-postgres-recordset.c:279
 #, fuzzy, c-format
@@ -2241,43 +2146,41 @@ msgid "Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"
 msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:436
-#, c-format
 msgid "SQLite provider fatal internal error"
 msgstr ""
 
 #
 #: ../libgda/sqlite/gda-sqlite-recordset.c:484
-#: ../providers/jdbc/gda-jdbc-recordset.c:487
+#: ../providers/jdbc/gda-jdbc-recordset.c:488
 #, fuzzy, c-format
 msgid "Row %d not found"
 msgstr "Πηγές Δεδομένων"
 
 #
 #: ../libgda/sqlite/virtual/gda-vconnection-data-model.c:305
-#, fuzzy, c-format
+#, fuzzy
 msgid "Table to remove not found"
 msgstr "Πηγές Δεδομένων"
 
 #
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:208
-#, fuzzy, c-format
+#, fuzzy
 msgid "Namespace must be specified"
 msgstr "Αποθήκευση σχεδίασης βάσης σε αρχείο"
 
 #
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:217
-#, fuzzy, c-format
+#, fuzzy
 msgid "Connection is closed"
 msgstr "Ρυθμίσεις Σύνδεσης"
 
 #
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:258
-#, fuzzy, c-format
+#, fuzzy
 msgid "Connection was not represented in hub"
 msgstr "Ρυθμίσεις Σύνδεσης"
 
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:151
-#, c-format
 msgid ""
 "Internal error: virtual provider does not implement the create_operation() "
 "virtual method"
@@ -2320,7 +2223,6 @@ msgstr "Πηγές Δεδομένων"
 
 #: ../libgda/sql-parser/gda-sql-parser.c:629
 #: ../libgda/sql-parser/gda-sql-parser.c:717
-#, c-format
 msgid "SQL code does not contain any statement"
 msgstr ""
 
@@ -2335,13 +2237,12 @@ msgid "Overflow error at line %d, column %d"
 msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct.c:474
-#, c-format
 msgid "GdaSqlField is not part of an INSERT or UPDATE statement"
 msgstr ""
 
 #
 #: ../libgda/sql-parser/gda-statement-struct.c:487
-#, fuzzy, c-format
+#, fuzzy
 msgid "Missing table in statement"
 msgstr "Δόμηση εντολών SQL"
 
@@ -2355,13 +2256,13 @@ msgstr "Πηγές Δεδομένων"
 #
 #: ../libgda/sql-parser/gda-statement-struct.c:542
 #: ../libgda/sql-parser/gda-statement-struct.c:669
-#, fuzzy, c-format
+#, fuzzy
 msgid "GdaSqlSelectField is not part of a SELECT statement"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
 #
 #: ../libgda/sql-parser/gda-statement-struct.c:601
-#, fuzzy, c-format
+#, fuzzy
 msgid "Missing table name in statement"
 msgstr "Δόμηση εντολών SQL"
 
@@ -2381,7 +2282,6 @@ msgid "Could not identify table for field '%s'"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:883
-#, c-format
 msgid "Expression can't have both a type cast and a parameter specification"
 msgstr ""
 
@@ -2396,13 +2296,13 @@ msgstr ""
 #: ../libgda/sql-parser/gda-statement-struct.c:896
 #: ../libgda/sql-parser/gda-statement-struct.c:909
 #: ../libgda/sql-parser/gda-statement-struct.c:922
-#, fuzzy, c-format
+#, fuzzy
 msgid "Empty identifier"
 msgstr "Ταυτότητες Αντικειμένου"
 
 #
 #: ../libgda/sql-parser/gda-statement-struct.c:931
-#, fuzzy, c-format
+#, fuzzy
 msgid "Operation has no operand"
 msgstr "Ρυθμίσεις Σύνδεσης"
 
@@ -2412,7 +2312,7 @@ msgstr "Ρυθμίσεις Σύνδεσης"
 #: ../libgda/sql-parser/gda-statement-struct.c:971
 #: ../libgda/sql-parser/gda-statement-struct.c:983
 #: ../libgda/sql-parser/gda-statement-struct.c:991
-#, fuzzy, c-format
+#, fuzzy
 msgid "Wrong number of operands"
 msgstr "Η παρακολούθηση εξυπηρετητή είναι ανενεργή για αυτήν τη σύνδεση"
 
@@ -2423,120 +2323,99 @@ msgid "Unknown operator %d"
 msgstr "«Άγνωστος Τύπος GDA(ΚΕΝΟ)»"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1020
-#, c-format
 msgid "Missing expression in select field"
 msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1029
-#, c-format
 msgid "Missing expression in select target"
 msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1038
-#, c-format
 msgid ""
 "Join can't at the same time specify a join condition and a list of fields to "
 "join on"
 msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1043
-#, c-format
 msgid "Cross join can't have a join condition or a list of fields to join on"
 msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1052
-#, c-format
 msgid "Empty FROM clause"
 msgstr ""
 
 #
 #: ../libgda/sql-parser/gda-statement-struct.c:1326
-#, fuzzy, c-format
+#, fuzzy
 msgid "Select field is not in a SELECT statement"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:204
-#, c-format
 msgid "COMPOUND statement contains an undefined COMPOUND statement"
 msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:213
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:252
-#, c-format
 msgid "COMPOUND statement contains an undefined SELECT statement"
 msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:222
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:264
-#, c-format
 msgid "COMPOUND statement contains a non SELECT statement"
 msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:236
-#, c-format
 msgid "COMPOUND statement does not contain any SELECT statement"
 msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:242
-#, c-format
 msgid "COMPOUND statement only contains one SELECT statement"
 msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:272
-#, c-format
 msgid "COMPOUND statement contains an empty SELECT statement"
 msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:278
-#, c-format
 msgid "All statements in a COMPOUND must have the same number of columns"
 msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-delete.c:144
-#, c-format
 msgid "DELETE statement needs a table to delete from"
 msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:304
-#, c-format
 msgid "INSERT statement needs a table to insert into"
 msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:310
-#, c-format
 msgid "Can't specify values to insert and SELECT statement in INSERT statement"
 msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:329
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:355
-#, c-format
 msgid ""
 "INSERT statement does not have the same number of target columns and "
 "expressions"
 msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:358
-#, c-format
 msgid "VALUES lists must all be the same length in INSERT statement"
 msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-select.c:317
-#, c-format
 msgid "SELECT does not contain any expression"
 msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-select.c:323
-#, c-format
 msgid "SELECT can't have a DISTINCT expression if DISTINCT is not set"
 msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-select.c:329
-#, c-format
 msgid "SELECT can't have a HAVING without GROUP BY"
 msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-select.c:335
-#, c-format
 msgid "SELECT can't have a limit offset without a limit"
 msgstr ""
 
@@ -2547,19 +2426,16 @@ msgid "Multiple targets named or aliased '%s'"
 msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-update.c:237
-#, c-format
 msgid "UPDATE statement needs a table to update data"
 msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-update.c:243
-#, c-format
 msgid ""
 "UPDATE statement does not have the same number of target columns and "
 "expressions"
 msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-update.c:249
-#, c-format
 msgid "UPDATE statement does not have any target columns to update"
 msgstr ""
 
@@ -2575,12 +2451,10 @@ msgstr ""
 " %s"
 
 #: ../libgda-report/DocBook/gda-report-docbook-document.c:299
-#, c-format
 msgid "Could not find the DocBook XSL stylesheet for HTML"
 msgstr ""
 
 #: ../libgda-report/DocBook/gda-report-docbook-document.c:367
-#, c-format
 msgid "Could not find the DocBook XSL stylesheet for Formatting Objects"
 msgstr ""
 
@@ -2606,21 +2480,21 @@ msgid "Unknown query '%s'"
 msgstr "«Άγνωστος Τύπος GDA(ΚΕΝΟ)»"
 
 #: ../libgda-report/engine/gda-report-engine.c:579
-#: ../libgda-report/engine/gda-report-engine.c:606 ../tools/gda-sql.c:2328
-#: ../tools/gda-sql.c:2399 ../tools/gda-sql.c:2493 ../tools/gda-sql.c:2554
+#: ../libgda-report/engine/gda-report-engine.c:606 ../tools/gda-sql.c:2776
+#: ../tools/gda-sql.c:2858 ../tools/gda-sql.c:2952 ../tools/gda-sql.c:3028
 #, c-format
 msgid "No connection named '%s' found"
 msgstr ""
 
 #
 #: ../libgda-report/engine/gda-report-engine.c:584
-#: ../libgda-report/engine/gda-report-engine.c:611 ../tools/gda-sql.c:630
-#, fuzzy, c-format
+#: ../libgda-report/engine/gda-report-engine.c:611 ../tools/gda-sql.c:730
+#: ../tools/gda-sql.c:915
+#, fuzzy
 msgid "No connection specified"
 msgstr "Ρυθμίσεις Σύνδεσης"
 
 #: ../libgda-report/engine/gda-report-engine.c:651
-#, c-format
 msgid "Query is not specified (not named and not defined)"
 msgstr ""
 
@@ -2632,13 +2506,12 @@ msgid "Unknown parameter '%s'"
 msgstr "«Άγνωστος Τύπος GDA(ΚΕΝΟ)»"
 
 #: ../libgda-report/engine/gda-report-engine.c:824
-#, c-format
 msgid "Parameter name not specified"
 msgstr ""
 
 #
 #: ../libgda-report/engine/gda-report-engine.c:874
-#, fuzzy, c-format
+#, fuzzy
 msgid "No expression specified"
 msgstr "Αποθήκευση σχεδίασης βάσης σε αρχείο"
 
@@ -2669,13 +2542,13 @@ msgstr ""
 
 #
 #: ../libgda-report/gda-report-document.c:254
-#, fuzzy, c-format
+#, fuzzy
 msgid "Document not specified"
 msgstr "Αποθήκευση σχεδίασης βάσης σε αρχείο"
 
 #
 #: ../libgda-report/gda-report-document.c:281
-#, fuzzy, c-format
+#, fuzzy
 msgid "Cannot create temporary file"
 msgstr "Δημιουργία νέου κενού αρχείου"
 
@@ -2764,15 +2637,15 @@ msgstr "Αδυναμία φόρτωσης γραμματοσειράς κειμ�
 msgid "-"
 msgstr ""
 
-#: ../providers/bdb/libmain.c:51
+#: ../providers/bdb/libmain.c:72
 msgid "Provider for Berkeley databases"
 msgstr ""
 
 #: ../providers/jdbc/GdaInputStream.c:34
-#: ../providers/jdbc/GdaInputStream.c:108 ../providers/jdbc/GdaJValue.c:176
-#: ../providers/jdbc/GdaJValue.c:218 ../providers/jdbc/GdaJValue.c:265
-#: ../providers/jdbc/GdaJValue.c:311 ../providers/jdbc/GdaJValue.c:353
-#: ../providers/jdbc/GdaJValue.c:468
+#: ../providers/jdbc/GdaInputStream.c:108 ../providers/jdbc/GdaJValue.c:187
+#: ../providers/jdbc/GdaJValue.c:229 ../providers/jdbc/GdaJValue.c:276
+#: ../providers/jdbc/GdaJValue.c:322 ../providers/jdbc/GdaJValue.c:364
+#: ../providers/jdbc/GdaJValue.c:490
 msgid "Invalid argument: NULL"
 msgstr ""
 
@@ -2781,12 +2654,12 @@ msgstr ""
 msgid "Can't read BLOB"
 msgstr ""
 
-#: ../providers/jdbc/GdaJValue.c:156
+#: ../providers/jdbc/GdaJValue.c:167
 #, c-format
 msgid "Invalid date: year %d, month %d and day %d"
 msgstr ""
 
-#: ../providers/jdbc/GdaJValue.c:374
+#: ../providers/jdbc/GdaJValue.c:385
 msgid "Can't get BLOB's size"
 msgstr ""
 
@@ -2829,7 +2702,7 @@ msgstr "Ρυθμίσεις Σύνδεσης"
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:13
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:5
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:19
-#: ../tools/command-exec.c:825
+#: ../tools/command-exec.c:703 ../tools/web-server.c:922
 #, fuzzy
 msgid "Default"
 msgstr "Διαγραφή"
@@ -2864,7 +2737,7 @@ msgstr "«ΚΕΝΟ»"
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:11
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:52
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:31
-#: ../tools/command-exec.c:916
+#: ../tools/command-exec.c:794
 #, fuzzy
 msgid "Primary key"
 msgstr "Πρωτεύων κλειδί;"
@@ -2910,7 +2783,7 @@ msgstr "Όνομα Αντικειμένου"
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:13
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:73
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:42
-#: ../tools/command-exec.c:1039
+#: ../tools/command-exec.c:917
 msgid "Unique"
 msgstr ""
 
@@ -2921,18 +2794,18 @@ msgid "Connection URL"
 msgstr "Ρυθμίσεις Σύνδεσης"
 
 #
-#: ../providers/jdbc/libmain.c:101
+#: ../providers/jdbc/libmain.c:138
 #, fuzzy, c-format
 msgid "Can't get list of installed JDBC drivers: %s"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
 #
-#: ../providers/jdbc/libmain.c:299
+#: ../providers/jdbc/libmain.c:340
 #, fuzzy, c-format
 msgid "Can't create JAVA virtual machine: %s"
 msgstr "Ρυθμίσεις Σύνδεσης"
 
-#: ../providers/jdbc/libmain.c:304
+#: ../providers/jdbc/libmain.c:345
 msgid "Could not the JVM runtime (libjvm.so), JDBC provider is unavailable."
 msgstr ""
 
@@ -2961,7 +2834,7 @@ msgstr ""
 "Αδυναμία φόρτωσης αρχείου\n"
 " %s"
 
-#: ../providers/mdb/libmain.c:52
+#: ../providers/mdb/libmain.c:73
 msgid "Provider for Microsoft Access files"
 msgstr ""
 
@@ -2973,31 +2846,27 @@ msgstr "Πρέπει να παράσχετε ένα όνομα για την ε�
 
 #: ../providers/mysql/gda-mysql-ddl.c:253
 #: ../providers/postgres/gda-postgres-ddl.c:269
-#, c-format
 msgid "No field specified in foreign key constraint"
 msgstr ""
 
 #: ../providers/mysql/gda-mysql-ddl.c:266
 #: ../providers/postgres/gda-postgres-ddl.c:286
-#, c-format
 msgid "Empty field specified in foreign key constraint"
 msgstr ""
 
 #: ../providers/mysql/gda-mysql-ddl.c:276
 #: ../providers/postgres/gda-postgres-ddl.c:296
-#, c-format
 msgid "No referenced table specified in foreign key constraint"
 msgstr ""
 
 #: ../providers/mysql/gda-mysql-ddl.c:290
 #: ../providers/postgres/gda-postgres-ddl.c:314
-#, c-format
 msgid "Empty referenced field specified in foreign key constraint"
 msgstr ""
 
 #
 #: ../providers/mysql/gda-mysql-ddl.c:781
-#, fuzzy, c-format
+#, fuzzy
 msgid "Incorrect specified column name"
 msgstr "Αποθήκευση σχεδίασης βάσης σε αρχείο"
 
@@ -3010,12 +2879,10 @@ msgstr "Αποθήκευση σχεδίασης βάσης σε αρχείο"
 #: ../providers/mysql/gda-mysql-meta.c:1418
 #: ../providers/mysql/gda-mysql-meta.c:1454
 #: ../providers/mysql/gda-mysql-meta.c:1520
-#, c-format
 msgid "Mysql version 5.0 at least is required"
 msgstr ""
 
 #: ../providers/mysql/gda-mysql-provider.c:405
-#, c-format
 msgid "Cannot give a UNIX SOCKET if you also provide either a HOST or a PORT"
 msgstr ""
 
@@ -3031,7 +2898,6 @@ msgid "The connection string must contain the DB_NAME values"
 msgstr ""
 
 #: ../providers/mysql/gda-mysql-provider.c:1211
-#, c-format
 msgid "Unnamed statement parameter is not allowed in prepared statement."
 msgstr ""
 
@@ -3095,7 +2961,7 @@ msgstr "Ερώτηση"
 msgid "No description"
 msgstr "Περιγραφή"
 
-#: ../providers/mysql/libmain.c:50
+#: ../providers/mysql/libmain.c:71
 msgid "Provider for MySQL databases"
 msgstr ""
 
@@ -3122,7 +2988,8 @@ msgstr ""
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:10
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:2
-#: ../tools/command-exec.c:697 ../tools/command-exec.c:700
+#: ../tools/command-exec.c:566 ../tools/command-exec.c:569
+#: ../tools/web-server.c:892 ../tools/web-server.c:895
 msgid "Auto increment"
 msgstr ""
 
@@ -3715,7 +3582,7 @@ msgstr "Εύρεση"
 #. foreign key spec
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:83
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:29
-#: ../tools/command-exec.c:959
+#: ../tools/command-exec.c:837
 msgid "Foreign key"
 msgstr ""
 
@@ -4091,7 +3958,6 @@ msgstr ""
 #: ../providers/postgres/gda-postgres-meta.c:1392
 #: ../providers/postgres/gda-postgres-meta.c:1456
 #: ../providers/postgres/gda-postgres-meta.c:1486
-#, c-format
 msgid "PostgreSQL version 8.2.0 at least is required"
 msgstr ""
 
@@ -4121,13 +3987,11 @@ msgstr "Ρυθμίσεις Σύνδεσης"
 
 #: ../providers/postgres/gda-postgres-provider.c:1155
 #: ../providers/postgres/gda-postgres-provider.c:1157
-#, c-format
 msgid "Transactions are not supported in read uncommitted isolation level"
 msgstr ""
 
 #: ../providers/postgres/gda-postgres-provider.c:1161
 #: ../providers/postgres/gda-postgres-provider.c:1163
-#, c-format
 msgid "Transactions are not supported in repeatable read isolation level"
 msgstr ""
 
@@ -4138,7 +4002,7 @@ msgstr ""
 #: ../providers/postgres/gda-postgres-provider.c:1378
 #: ../providers/postgres/gda-postgres-recordset.c:431
 #: ../providers/postgres/gda-postgres-recordset.c:459
-#, fuzzy, c-format
+#, fuzzy
 msgid "Internal error"
 msgstr "Όνομα χρήστη"
 
@@ -4153,7 +4017,7 @@ msgstr "Εξαγωγή αντικειμένου με όνομα '%s'"
 #
 #: ../providers/postgres/gda-postgres-provider.c:2103
 #: ../providers/postgres/gda-postgres-provider.c:2105
-#, fuzzy, c-format
+#, fuzzy
 msgid "Cannot start transaction"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
@@ -4161,7 +4025,7 @@ msgstr "Αδυναμία περικοπής αρχείου %s"
 #: ../providers/postgres/gda-postgres-provider.c:2294
 #: ../providers/postgres/gda-postgres-provider.c:2330
 #: ../providers/postgres/gda-postgres-provider.c:2365
-#, fuzzy, c-format
+#, fuzzy
 msgid "Could not set the XA transaction ID parameter"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
@@ -4169,7 +4033,7 @@ msgstr "Αδυναμία περικοπής αρχείου %s"
 msgid "Number of rows chunks read since the object creation"
 msgstr ""
 
-#: ../providers/postgres/libmain.c:58
+#: ../providers/postgres/libmain.c:79
 msgid "Provider for PostgreSQL databases"
 msgstr ""
 
@@ -4527,7 +4391,7 @@ msgstr ""
 msgid "Search path among database's schemas ('search_path' variable)"
 msgstr ""
 
-#: ../providers/sqlite/libmain.c:52
+#: ../providers/sqlite/libmain.c:73
 msgid "Provider for SQLite databases"
 msgstr ""
 
@@ -4614,103 +4478,83 @@ msgstr ""
 msgid "Connection successfully opened!\n"
 msgstr "Ρυθμίσεις Σύνδεσης"
 
-#: ../tools/command-exec.c:182
-msgid "Invalid unnamed command"
-msgstr ""
-
-#: ../tools/command-exec.c:360
-#, c-format
-msgid "Unknown internal command"
-msgstr ""
-
-#: ../tools/command-exec.c:366
-#, c-format
-msgid "Internal command not correctly defined"
-msgstr ""
-
-#: ../tools/command-exec.c:372
-#, c-format
-msgid "Incomplete internal command"
-msgstr ""
-
 #
-#: ../tools/command-exec.c:468
+#: ../tools/command-exec.c:328
 #, fuzzy
 msgid "History is not supported"
 msgstr "Δεν υποστηρίζεται"
 
 #
-#: ../tools/command-exec.c:481 ../tools/command-exec.c:503
-#: ../tools/command-exec.c:546 ../tools/command-exec.c:588
-#: ../tools/command-exec.c:712 ../tools/gda-sql.c:2334 ../tools/gda-sql.c:3319
-#: ../tools/gda-sql.c:3400 ../tools/gda-sql.c:3616 ../tools/gda-sql.c:3651
-#, fuzzy, c-format
+#: ../tools/command-exec.c:341 ../tools/command-exec.c:363
+#: ../tools/command-exec.c:406 ../tools/command-exec.c:448
+#: ../tools/command-exec.c:581 ../tools/gda-sql.c:2787 ../tools/gda-sql.c:3904
+#: ../tools/gda-sql.c:3994 ../tools/gda-sql.c:4219 ../tools/gda-sql.c:4320
+#, fuzzy
 msgid "No current connection"
 msgstr "Χρήση ασφαλούς σύνδεσης"
 
 #
-#: ../tools/command-exec.c:530
+#: ../tools/command-exec.c:390
 #, fuzzy
 msgid "List of tables"
 msgstr "Ρυθμίσεις Σύνδεσης"
 
-#: ../tools/command-exec.c:572
+#: ../tools/command-exec.c:432
 msgid "List of views"
 msgstr ""
 
-#: ../tools/command-exec.c:612
+#: ../tools/command-exec.c:472
 msgid "List of schemas"
 msgstr ""
 
-#: ../tools/command-exec.c:677 ../tools/command-exec.c:793
-#, c-format
+#: ../tools/command-exec.c:546 ../tools/command-exec.c:671
 msgid "No object found"
 msgstr ""
 
-#: ../tools/command-exec.c:747
+#: ../tools/command-exec.c:625
 msgid "Schema"
 msgstr ""
 
 #
-#: ../tools/command-exec.c:822
+#: ../tools/command-exec.c:700 ../tools/web-server.c:919
 #, fuzzy
 msgid "Column"
 msgstr "Σχόλια"
 
 #
-#: ../tools/command-exec.c:824
+#: ../tools/command-exec.c:702 ../tools/web-server.c:921
 #, fuzzy
 msgid "Nullable"
 msgstr "Πίνακας"
 
 #
-#: ../tools/command-exec.c:826
+#: ../tools/command-exec.c:704 ../tools/web-server.c:923
 #, fuzzy
 msgid "Extra"
 msgstr "Επιπλέον Πληροφορίες"
 
-#: ../tools/command-exec.c:829
+#: ../tools/command-exec.c:707
 #, c-format
 msgid "List of columns for view '%s'"
 msgstr ""
 
-#: ../tools/command-exec.c:833
+#: ../tools/command-exec.c:711
 #, c-format
 msgid "List of columns for table '%s'"
 msgstr ""
 
 #
-#: ../tools/command-exec.c:845
+#: ../tools/command-exec.c:723 ../tools/web-server.c:934
 #, fuzzy
 msgid "yes"
 msgstr "Τύποι"
 
-#: ../tools/command-exec.c:845
+#: ../tools/command-exec.c:723 ../tools/web-server.c:934
 msgid "no"
 msgstr ""
 
 #
-#: ../tools/command-exec.c:877
+#: ../tools/command-exec.c:755
 #, fuzzy, c-format
 msgid "View definition: %s"
 msgstr "Περιγραφή"
@@ -4769,17 +4613,17 @@ msgid "Can't parse file '%s', ignoring it"
 msgstr ""
 
 #
-#: ../tools/gda-sql.c:155
+#: ../tools/gda-sql.c:161
 #, fuzzy
 msgid "[DSN|connection string]..."
 msgstr "Ρυθμίσεις Σύνδεσης"
 
-#: ../tools/gda-sql.c:219
+#: ../tools/gda-sql.c:228
 #, c-format
 msgid "Welcome to the GDA SQL console, version "
 msgstr ""
 
-#: ../tools/gda-sql.c:221
+#: ../tools/gda-sql.c:230
 #, c-format
 msgid ""
 "Type: .copyright to show usage and distribution terms\n"
@@ -4791,95 +4635,116 @@ msgid ""
 msgstr ""
 
 #
-#: ../tools/gda-sql.c:242
+#: ../tools/gda-sql.c:251
 #, fuzzy, c-format
 msgid "Opening connection '%s' for: %s\n"
 msgstr "Κλείσιμο σύνδεσης"
 
 #
-#: ../tools/gda-sql.c:246
+#: ../tools/gda-sql.c:255
 #, fuzzy, c-format
 msgid "Can't open connection %d: %s\n"
 msgstr "Κλείσιμο σύνδεσης"
 
-#: ../tools/gda-sql.c:258
+#: ../tools/gda-sql.c:267
 #, c-format
 msgid "Opening connection '%s' for: %s (GDA_SQL_CNC environment variable)\n"
 msgstr ""
 
 #
-#: ../tools/gda-sql.c:263
+#: ../tools/gda-sql.c:272
 #, fuzzy, c-format
 msgid "Can't open connection defined by GDA_SQL_CNC: %s\n"
 msgstr "Κλείσιμο σύνδεσης"
 
+#: ../tools/gda-sql.c:287
+#, c-format
+msgid "Can't run HTTP server on port %d\n"
+msgstr ""
+
 #
-#: ../tools/gda-sql.c:635
-#, fuzzy, c-format
+#: ../tools/gda-sql.c:735
+#, fuzzy
 msgid "Connection closed"
 msgstr "Ρυθμίσεις Σύνδεσης"
 
+#: ../tools/gda-sql.c:748
+msgid "Invalid unnamed command"
+msgstr ""
+
+#: ../tools/gda-sql.c:859
+msgid "Unknown internal command"
+msgstr ""
+
+#: ../tools/gda-sql.c:865
+msgid "Internal command not correctly defined"
+msgstr ""
+
+#: ../tools/gda-sql.c:871
+msgid "Incomplete internal command"
+msgstr ""
+
 #
-#: ../tools/gda-sql.c:721
+#: ../tools/gda-sql.c:981
 #, fuzzy, c-format
 msgid "Could not interpret the '%s' parameter's value"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
-#: ../tools/gda-sql.c:738
+#: ../tools/gda-sql.c:998
 #, c-format
 msgid "No internal parameter named '%s' required by query"
 msgstr ""
 
-#: ../tools/gda-sql.c:830
+#: ../tools/gda-sql.c:1107
 #, c-format
 msgid "Can't open file '%s' for writing: %s\n"
 msgstr ""
 
 #
-#: ../tools/gda-sql.c:843
+#: ../tools/gda-sql.c:1120
 #, fuzzy, c-format
 msgid "Can't open pipe '%s': %s\n"
 msgstr "Εκτέλεση του '%s'"
 
-#: ../tools/gda-sql.c:882
+#: ../tools/gda-sql.c:1159
 #, c-format
 msgid "Can't open file '%s' for reading: %s\n"
 msgstr ""
 
 #
-#: ../tools/gda-sql.c:945 ../tools/gda-sql.c:2547
+#: ../tools/gda-sql.c:1221 ../tools/gda-sql.c:3021
 #, fuzzy, c-format
 msgid "Connection name '%s' is invalid"
 msgstr "Ρυθμίσεις Σύνδεσης"
 
 #
-#: ../tools/gda-sql.c:991
+#: ../tools/gda-sql.c:1267
 #, fuzzy, c-format
 msgid "\tUsername for '%s': "
 msgstr "Όνομα χρήστη"
 
 #
-#: ../tools/gda-sql.c:998
+#: ../tools/gda-sql.c:1274
 #, fuzzy, c-format
 msgid "No username for '%s'"
 msgstr "Εκτέλεση του '%s'"
 
-#: ../tools/gda-sql.c:1007
+#: ../tools/gda-sql.c:1283
 #, fuzzy, c-format
 msgid "\tPassword for '%s': "
 msgstr "Κωδικός"
 
-#: ../tools/gda-sql.c:1014
+#: ../tools/gda-sql.c:1290
 #, fuzzy, c-format
 msgid "No password for '%s'"
 msgstr "Κωδικός"
 
-#: ../tools/gda-sql.c:1105
+#: ../tools/gda-sql.c:1383
 #, c-format
 msgid "Error getting meta data in background: %s\n"
 msgstr ""
 
-#: ../tools/gda-sql.c:1113 ../tools/gda-sql.c:1158
+#: ../tools/gda-sql.c:1391 ../tools/gda-sql.c:1436
 #, c-format
 msgid ""
 "Getting database schema information for connection '%s', this may take some "
@@ -4887,449 +4752,457 @@ msgid ""
 msgstr ""
 
 #
-#: ../tools/gda-sql.c:1120 ../tools/gda-sql.c:1165 ../tools/gda-sql.c:2384
+#: ../tools/gda-sql.c:1398 ../tools/gda-sql.c:1443 ../tools/gda-sql.c:2843
 #, fuzzy, c-format
 msgid "error: %s\n"
 msgstr "Σφάλμα: %s"
 
-#: ../tools/gda-sql.c:1127 ../tools/gda-sql.c:1172 ../tools/gda-sql.c:2391
+#: ../tools/gda-sql.c:1405 ../tools/gda-sql.c:1450 ../tools/gda-sql.c:2850
 #, c-format
 msgid "Done.\n"
 msgstr ""
 
 #
-#: ../tools/gda-sql.c:1290
+#: ../tools/gda-sql.c:1576
 #, fuzzy, c-format
 msgid "(%d row)"
 msgid_plural "(%d rows)"
 msgstr[0] "%d γραμμές"
 msgstr[1] "%d γραμμές"
 
+#: ../tools/gda-sql.c:1678 ../tools/gda-sql.c:2667
+msgid "Installed providers list"
+msgstr ""
+
 #
-#: ../tools/gda-sql.c:1461 ../tools/gda-sql.c:1539 ../tools/gda-sql.c:1550
-#: ../tools/gda-sql.c:1561 ../tools/gda-sql.c:1660 ../tools/gda-sql.c:1671
-#: ../tools/gda-sql.c:1682 ../tools/gda-sql.c:1861
+#: ../tools/gda-sql.c:1820 ../tools/gda-sql.c:1919 ../tools/gda-sql.c:1931
+#: ../tools/gda-sql.c:1943 ../tools/gda-sql.c:2051 ../tools/gda-sql.c:2063
+#: ../tools/gda-sql.c:2075 ../tools/gda-sql.c:2269
 msgid "General"
 msgstr "Γενικά"
 
-#: ../tools/gda-sql.c:1462 ../tools/gda-sql.c:1628 ../tools/gda-sql.c:1694
-#: ../tools/gda-sql.c:1705
+#: ../tools/gda-sql.c:1821 ../tools/gda-sql.c:2016 ../tools/gda-sql.c:2088
+#: ../tools/gda-sql.c:2100
 #, c-format
 msgid "%s [FILE]"
 msgstr ""
 
-#: ../tools/gda-sql.c:1463
+#: ../tools/gda-sql.c:1822
 msgid "Show commands history, or save it to file"
 msgstr ""
 
 #
-#: ../tools/gda-sql.c:1472 ../tools/gda-sql.c:1483 ../tools/gda-sql.c:1494
-#: ../tools/gda-sql.c:1505 ../tools/gda-sql.c:1516 ../tools/gda-sql.c:1527
+#: ../tools/gda-sql.c:1832 ../tools/gda-sql.c:1844 ../tools/gda-sql.c:1856
+#: ../tools/gda-sql.c:1868 ../tools/gda-sql.c:1880 ../tools/gda-sql.c:1892
+#: ../tools/gda-sql.c:1905
 #, fuzzy
 msgid "Information"
 msgstr "Τοποθεσία"
 
-#: ../tools/gda-sql.c:1474
+#: ../tools/gda-sql.c:1834
 msgid "Force reading the database meta data"
 msgstr ""
 
 #
-#: ../tools/gda-sql.c:1484
+#: ../tools/gda-sql.c:1845
 #, fuzzy, c-format
 msgid "%s [TABLE]"
 msgstr "ΠΙΝΑΚΕΣ"
 
-#: ../tools/gda-sql.c:1485
+#: ../tools/gda-sql.c:1846
 msgid "List all tables (or named table)"
 msgstr ""
 
-#: ../tools/gda-sql.c:1495
+#: ../tools/gda-sql.c:1857
 #, c-format
 msgid "%s [VIEW]"
 msgstr ""
 
-#: ../tools/gda-sql.c:1496
+#: ../tools/gda-sql.c:1858
 msgid "List all views (or named view)"
 msgstr ""
 
-#: ../tools/gda-sql.c:1506
+#: ../tools/gda-sql.c:1869
 #, c-format
 msgid "%s [SCHEMA]"
 msgstr ""
 
-#: ../tools/gda-sql.c:1507
+#: ../tools/gda-sql.c:1870
 msgid "List all schemas (or named schema)"
 msgstr ""
 
-#: ../tools/gda-sql.c:1517
+#: ../tools/gda-sql.c:1881
 #, c-format
 msgid "%s [OBJ_NAME|SCHEMA.*]"
 msgstr ""
 
-#: ../tools/gda-sql.c:1518
+#: ../tools/gda-sql.c:1882
 msgid "Describe object or full list of objects"
 msgstr ""
 
-#: ../tools/gda-sql.c:1528
+#: ../tools/gda-sql.c:1893
 #, c-format
 msgid "%s [TABLE1 [TABLE2...]]"
 msgstr ""
 
-#: ../tools/gda-sql.c:1529
+#: ../tools/gda-sql.c:1894
 msgid "Create a graph of all or the listed tables"
 msgstr ""
 
-#: ../tools/gda-sql.c:1540
+#: ../tools/gda-sql.c:1906
+#, c-format
+msgid "%s [port [authentication token]]"
+msgstr ""
+
+#: ../tools/gda-sql.c:1907
+msgid "Start/stop embedded HTTP server (on given port or on 12345 by default)"
+msgstr ""
+
+#: ../tools/gda-sql.c:1920
 #, c-format
 msgid "%s [CNC_NAME [DSN [USER [PASSWORD]]]]"
 msgstr ""
 
-#: ../tools/gda-sql.c:1541
+#: ../tools/gda-sql.c:1921
 msgid "Connect to another defined data source (DSN, see \\l)"
 msgstr ""
 
-#: ../tools/gda-sql.c:1551
+#: ../tools/gda-sql.c:1932
 #, c-format
 msgid "%s [CNC_NAME]"
 msgstr ""
 
 #
-#: ../tools/gda-sql.c:1552
+#: ../tools/gda-sql.c:1933
 #, fuzzy
 msgid "Close a connection"
 msgstr "Κλείσιμο σύνδεσης"
 
-#: ../tools/gda-sql.c:1562
+#: ../tools/gda-sql.c:1944
 #, c-format
 msgid "%s CNC_NAME CNC_NAME1 CNC_NAME2 [CNC_NAME ...]"
 msgstr ""
 
-#: ../tools/gda-sql.c:1563
+#: ../tools/gda-sql.c:1945
 msgid "Bind several connections together into the CNC_NAME virtual connection"
 msgstr ""
 
-#: ../tools/gda-sql.c:1572 ../tools/gda-sql.c:1583 ../tools/gda-sql.c:1594
-#: ../tools/gda-sql.c:1605
+#: ../tools/gda-sql.c:1955 ../tools/gda-sql.c:1967 ../tools/gda-sql.c:1979
+#: ../tools/gda-sql.c:1991
 msgid "DSN (data sources) management"
 msgstr ""
 
-#: ../tools/gda-sql.c:1573
+#: ../tools/gda-sql.c:1956
 #, c-format
 msgid "%s [DSN]"
 msgstr ""
 
-#: ../tools/gda-sql.c:1574
+#: ../tools/gda-sql.c:1957
 msgid "List all DSN (or named DSN's attributes)"
 msgstr ""
 
-#: ../tools/gda-sql.c:1584
+#: ../tools/gda-sql.c:1968
 #, c-format
 msgid "%s DSN_NAME DSN_DEFINITION [DESCRIPTION]"
 msgstr ""
 
-#: ../tools/gda-sql.c:1585
+#: ../tools/gda-sql.c:1969
 msgid "Create (or modify) a DSN"
 msgstr ""
 
-#: ../tools/gda-sql.c:1595
+#: ../tools/gda-sql.c:1980
 #, c-format
 msgid "%s DSN_NAME [DSN_NAME...]"
 msgstr ""
 
 #
-#: ../tools/gda-sql.c:1596
+#: ../tools/gda-sql.c:1981
 #, fuzzy
 msgid "Remove a DSN"
 msgstr "Διαγραφή"
 
-#: ../tools/gda-sql.c:1606
+#: ../tools/gda-sql.c:1992
 #, c-format
 msgid "%s [PROVIDER]"
 msgstr ""
 
-#: ../tools/gda-sql.c:1607
+#: ../tools/gda-sql.c:1993
 msgid "List all installed database providers (or named one's attributes)"
 msgstr ""
 
-#: ../tools/gda-sql.c:1616 ../tools/gda-sql.c:1627 ../tools/gda-sql.c:1638
-#: ../tools/gda-sql.c:1649
+#: ../tools/gda-sql.c:2003 ../tools/gda-sql.c:2015 ../tools/gda-sql.c:2027
+#: ../tools/gda-sql.c:2039
 msgid "Input/Output"
 msgstr ""
 
-#: ../tools/gda-sql.c:1617 ../tools/gda-sql.c:1738
+#: ../tools/gda-sql.c:2004 ../tools/gda-sql.c:2136
 #, c-format
 msgid "%s FILE"
 msgstr ""
 
 #
-#: ../tools/gda-sql.c:1618
+#: ../tools/gda-sql.c:2005
 #, fuzzy
 msgid "Execute commands from file"
 msgstr "Εκτέλεση εντολής SQL"
 
-#: ../tools/gda-sql.c:1629
+#: ../tools/gda-sql.c:2017
 msgid "Send output to a file or |pipe"
 msgstr ""
 
-#: ../tools/gda-sql.c:1639 ../tools/gda-sql.c:1650
+#: ../tools/gda-sql.c:2028 ../tools/gda-sql.c:2040
 #, c-format
 msgid "%s [TEXT]"
 msgstr ""
 
-#: ../tools/gda-sql.c:1640
+#: ../tools/gda-sql.c:2029
 msgid "Send output to stdout"
 msgstr ""
 
-#: ../tools/gda-sql.c:1651
+#: ../tools/gda-sql.c:2041
 msgid "Send output to output stream"
 msgstr ""
 
 #
-#: ../tools/gda-sql.c:1662
+#: ../tools/gda-sql.c:2053
 msgid "Quit"
 msgstr "Τερματισμός"
 
-#: ../tools/gda-sql.c:1672
+#: ../tools/gda-sql.c:2064
 #, c-format
 msgid "%s [DIR]"
 msgstr ""
 
-#: ../tools/gda-sql.c:1673
+#: ../tools/gda-sql.c:2065
 msgid "Change the current working directory"
 msgstr ""
 
-#: ../tools/gda-sql.c:1684
+#: ../tools/gda-sql.c:2077
 msgid "Show usage and distribution terms"
 msgstr ""
 
 #
-#: ../tools/gda-sql.c:1693 ../tools/gda-sql.c:1704 ../tools/gda-sql.c:1715
-#: ../tools/gda-sql.c:1726 ../tools/gda-sql.c:1737 ../tools/gda-sql.c:1748
-#: ../tools/gda-sql.c:1759 ../tools/gda-sql.c:1770 ../tools/gda-sql.c:1781
-#: ../tools/gda-sql.c:1792 ../tools/gda-sql.c:1803 ../tools/gda-sql.c:1838
-#: ../tools/gda-sql.c:1849
+#: ../tools/gda-sql.c:2087 ../tools/gda-sql.c:2099 ../tools/gda-sql.c:2111
+#: ../tools/gda-sql.c:2123 ../tools/gda-sql.c:2135 ../tools/gda-sql.c:2147
+#: ../tools/gda-sql.c:2159 ../tools/gda-sql.c:2171 ../tools/gda-sql.c:2183
+#: ../tools/gda-sql.c:2195 ../tools/gda-sql.c:2207 ../tools/gda-sql.c:2244
+#: ../tools/gda-sql.c:2256
 #, fuzzy
 msgid "Query buffer"
 msgstr "Εκτύπωση ενταμιευτή"
 
-#: ../tools/gda-sql.c:1695
+#: ../tools/gda-sql.c:2089
 msgid "Edit the query buffer (or file) with external editor"
 msgstr ""
 
-#: ../tools/gda-sql.c:1706
+#: ../tools/gda-sql.c:2101
 msgid "Reset the query buffer (fill buffer with contents of file)"
 msgstr ""
 
-#: ../tools/gda-sql.c:1717
+#: ../tools/gda-sql.c:2113
 msgid "Show the contents of the query buffer"
 msgstr ""
 
-#: ../tools/gda-sql.c:1727
+#: ../tools/gda-sql.c:2124
 #, c-format
 msgid "%s [QUERY_BUFFER_NAME]"
 msgstr ""
 
-#: ../tools/gda-sql.c:1728
+#: ../tools/gda-sql.c:2125
 msgid "Execute contents of query buffer, or named query buffer"
 msgstr ""
 
-#: ../tools/gda-sql.c:1739
+#: ../tools/gda-sql.c:2137
 msgid "Write query buffer to file"
 msgstr ""
 
-#: ../tools/gda-sql.c:1749 ../tools/gda-sql.c:1760 ../tools/gda-sql.c:1771
+#: ../tools/gda-sql.c:2148 ../tools/gda-sql.c:2160 ../tools/gda-sql.c:2172
 #, c-format
 msgid "%s QUERY_BUFFER_NAME"
 msgstr ""
 
-#: ../tools/gda-sql.c:1750
+#: ../tools/gda-sql.c:2149
 msgid "Save query buffer to dictionary"
 msgstr ""
 
-#: ../tools/gda-sql.c:1761
+#: ../tools/gda-sql.c:2161
 msgid "Load query buffer from dictionary"
 msgstr ""
 
-#: ../tools/gda-sql.c:1772
+#: ../tools/gda-sql.c:2173
 msgid "Delete query buffer from dictionary"
 msgstr ""
 
-#: ../tools/gda-sql.c:1782
+#: ../tools/gda-sql.c:2184
 #, c-format
 msgid "%s"
 msgstr ""
 
-#: ../tools/gda-sql.c:1783
+#: ../tools/gda-sql.c:2185
 msgid "List all saved query buffers in dictionary"
 msgstr ""
 
-#: ../tools/gda-sql.c:1793
+#: ../tools/gda-sql.c:2196
 #, c-format
 msgid "%s [NAME [VALUE|_null_]]"
 msgstr ""
 
-#: ../tools/gda-sql.c:1794
+#: ../tools/gda-sql.c:2197
 msgid "Set or show internal parameter, or list all if no parameters"
 msgstr ""
 
 #
-#: ../tools/gda-sql.c:1804
+#: ../tools/gda-sql.c:2208
 #, fuzzy, c-format
 msgid "%s [NAME]"
 msgstr "ΠΙΝΑΚΕΣ"
 
 #
-#: ../tools/gda-sql.c:1805
+#: ../tools/gda-sql.c:2209
 #, fuzzy
 msgid "Unset (delete) internal named parameter (or all parameters)"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
-#: ../tools/gda-sql.c:1814
+#: ../tools/gda-sql.c:2219
 msgid "Formatting"
 msgstr ""
 
-#: ../tools/gda-sql.c:1816
+#: ../tools/gda-sql.c:2221
 msgid "Set output format"
 msgstr ""
 
-#: ../tools/gda-sql.c:1839
+#: ../tools/gda-sql.c:2245
 #, c-format
 msgid "%s [NAME|TABLE COLUMN ROW_CONDITION] FILE"
 msgstr ""
 
-#: ../tools/gda-sql.c:1840
+#: ../tools/gda-sql.c:2246
 msgid "Export internal parameter or table's value to the FILE file"
 msgstr ""
 
-#: ../tools/gda-sql.c:1850
+#: ../tools/gda-sql.c:2257
 #, c-format
 msgid "%s NAME [FILE|TABLE COLUMN ROW_CONDITION]"
 msgstr ""
 
-#: ../tools/gda-sql.c:1851
+#: ../tools/gda-sql.c:2258
 msgid ""
 "Set internal parameter as the contents of the FILE file or from an existing "
 "table's value"
 msgstr ""
 
-#: ../tools/gda-sql.c:1863
+#: ../tools/gda-sql.c:2271
 msgid "List all available commands"
 msgstr ""
 
-#: ../tools/gda-sql.c:1910
+#: ../tools/gda-sql.c:2336
 #, c-format
 msgid "Unknown output format: '%s', reset to default"
 msgstr ""
 
 #
-#: ../tools/gda-sql.c:2008 ../tools/gda-sql.c:2183
+#: ../tools/gda-sql.c:2452 ../tools/gda-sql.c:2627
 #, fuzzy
 msgid "Attribute"
 msgstr "Αποθήκευση Επιλογών"
 
 #
-#: ../tools/gda-sql.c:2009 ../tools/gda-sql.c:2184 ../tools/gda-sql.c:3210
+#: ../tools/gda-sql.c:2453 ../tools/gda-sql.c:2628 ../tools/gda-sql.c:3786
 msgid "Value"
 msgstr "Τιμή"
 
 #
-#: ../tools/gda-sql.c:2011
+#: ../tools/gda-sql.c:2455
 #, fuzzy, c-format
 msgid "DSN '%s' description"
 msgstr "Περιγραφή"
 
 #
-#: ../tools/gda-sql.c:2039
+#: ../tools/gda-sql.c:2483
 #, fuzzy, c-format
 msgid "Could not find any DSN named '%s'"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
-#: ../tools/gda-sql.c:2050
+#: ../tools/gda-sql.c:2494
 msgid "DSN list"
 msgstr ""
 
 #
-#: ../tools/gda-sql.c:2102 ../tools/gda-sql.c:3674
-#, fuzzy, c-format
+#: ../tools/gda-sql.c:2546 ../tools/gda-sql.c:4343
+#, fuzzy
 msgid "Missing arguments"
 msgstr "Δόμηση εντολών SQL"
 
-#: ../tools/gda-sql.c:2123
-#, c-format
+#: ../tools/gda-sql.c:2567
 msgid "Missing provider name"
 msgstr ""
 
 #
-#: ../tools/gda-sql.c:2146
-#, fuzzy, c-format
+#: ../tools/gda-sql.c:2590
+#, fuzzy
 msgid "Missing DSN name"
 msgstr "Δόμηση εντολών SQL"
 
 #
-#: ../tools/gda-sql.c:2186
+#: ../tools/gda-sql.c:2630
 #, fuzzy, c-format
 msgid "Provider '%s' description"
 msgstr "Παροχεύς"
 
 #
-#: ../tools/gda-sql.c:2214
+#: ../tools/gda-sql.c:2658
 #, fuzzy, c-format
 msgid "Could not find any provider named '%s'"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
-#: ../tools/gda-sql.c:2223
-msgid "Installed providers list"
-msgstr ""
-
 #
-#: ../tools/gda-sql.c:2289 ../tools/gda-sql.c:2542
+#: ../tools/gda-sql.c:2733 ../tools/gda-sql.c:3016
 #, fuzzy, c-format
 msgid "A connection named '%s' already exists"
 msgstr "Το αρχείο %s φορτώθηκε"
 
-#: ../tools/gda-sql.c:2378
+#: ../tools/gda-sql.c:2837
 #, c-format
 msgid "Getting database schema information, this may take some time... "
 msgstr ""
 
 #
-#: ../tools/gda-sql.c:2413
+#: ../tools/gda-sql.c:2872
 #, fuzzy
 msgid "No opened connection"
 msgstr "Κλείσιμο σύνδεσης"
 
 #
-#: ../tools/gda-sql.c:2424
+#: ../tools/gda-sql.c:2883
 #, fuzzy
 msgid "DSN or connection string"
 msgstr "Ρυθμίσεις Σύνδεσης"
 
 #
-#: ../tools/gda-sql.c:2426
+#: ../tools/gda-sql.c:2885
 #, fuzzy
 msgid "List of opened connections"
 msgstr "Κλείσιμο σύνδεσης"
 
 #
-#: ../tools/gda-sql.c:2501
-#, fuzzy, c-format
-msgid "No currently opened connection"
-msgstr "Κλείσιμο σύνδεσης"
+#: ../tools/gda-sql.c:2968
+#, fuzzy
+msgid "No connection currently opened"
+msgstr "Ρυθμίσεις Σύνδεσης"
 
-#: ../tools/gda-sql.c:2534
-#, c-format
+#: ../tools/gda-sql.c:3008
 msgid "Missing required connection names"
 msgstr ""
 
 #
 #. add existing connections to virtual connection
-#: ../tools/gda-sql.c:2571
+#: ../tools/gda-sql.c:3045
 #, fuzzy
 msgid "Bound connections are as:"
 msgstr "Ρυθμίσεις Σύνδεσης"
 
 #
-#: ../tools/gda-sql.c:2653
+#: ../tools/gda-sql.c:3148
 #, fuzzy, c-format
 msgid "Could not get home directory: %s"
 msgstr ""
@@ -5337,7 +5210,7 @@ msgstr ""
 " %s"
 
 #
-#: ../tools/gda-sql.c:2679
+#: ../tools/gda-sql.c:3174
 #, fuzzy, c-format
 msgid "Working directory is now: %s"
 msgstr ""
@@ -5345,7 +5218,7 @@ msgstr ""
 " %s"
 
 #
-#: ../tools/gda-sql.c:2683
+#: ../tools/gda-sql.c:3178
 #, fuzzy, c-format
 msgid "Could not change working directory to '%s': %s"
 msgstr ""
@@ -5353,15 +5226,15 @@ msgstr ""
 " %s"
 
 #
-#: ../tools/gda-sql.c:2701 ../tools/gda-sql.c:2795 ../tools/gda-sql.c:2829
-#: ../tools/gda-sql.c:2849 ../tools/gda-sql.c:2881 ../tools/gda-sql.c:2923
-#: ../tools/gda-sql.c:2967 ../tools/gda-sql.c:3033 ../tools/gda-sql.c:3096
-#, fuzzy, c-format
+#: ../tools/gda-sql.c:3205 ../tools/gda-sql.c:3308 ../tools/gda-sql.c:3351
+#: ../tools/gda-sql.c:3380 ../tools/gda-sql.c:3421 ../tools/gda-sql.c:3472
+#: ../tools/gda-sql.c:3525 ../tools/gda-sql.c:3600 ../tools/gda-sql.c:3672
+#, fuzzy
 msgid "No connection opened"
 msgstr "Ρυθμίσεις Σύνδεσης"
 
 #
-#: ../tools/gda-sql.c:2719
+#: ../tools/gda-sql.c:3223
 #, fuzzy, c-format
 msgid "Could not write to temporary file '%s': %s"
 msgstr ""
@@ -5369,7 +5242,7 @@ msgstr ""
 " %s"
 
 #
-#: ../tools/gda-sql.c:2755
+#: ../tools/gda-sql.c:3259
 #, fuzzy, c-format
 msgid "could not start editor '%s'"
 msgstr ""
@@ -5377,96 +5250,90 @@ msgstr ""
 " %s"
 
 #
-#: ../tools/gda-sql.c:2760
+#: ../tools/gda-sql.c:3264
 #, fuzzy, c-format
 msgid "Could not start /bin/sh"
 msgstr ""
 "Αδυναμία φόρτωσης αρχείου\n"
 " %s"
 
-#: ../tools/gda-sql.c:2889
-#, c-format
+#: ../tools/gda-sql.c:3429
 msgid "Missing FILE to write to"
 msgstr ""
 
-#: ../tools/gda-sql.c:2932 ../tools/gda-sql.c:2989 ../tools/gda-sql.c:3046
-#: ../tools/gda-sql.c:3109
-#, c-format
+#: ../tools/gda-sql.c:3481 ../tools/gda-sql.c:3547 ../tools/gda-sql.c:3613
+#: ../tools/gda-sql.c:3685
 msgid "Can't initialize dictionary to store query buffers"
 msgstr ""
 
 #
-#: ../tools/gda-sql.c:2951
+#: ../tools/gda-sql.c:3500
 #, fuzzy
 msgid "Query buffer name"
 msgstr "Εκτύπωση ενταμιευτή"
 
 #
-#: ../tools/gda-sql.c:2952
+#: ../tools/gda-sql.c:3501
 msgid "SQL"
 msgstr "SQL"
 
-#: ../tools/gda-sql.c:2980 ../tools/gda-sql.c:3084 ../tools/gda-sql.c:3136
-#, c-format
+#: ../tools/gda-sql.c:3538 ../tools/gda-sql.c:3651 ../tools/gda-sql.c:3712
 msgid "Missing query buffer name"
 msgstr ""
 
-#: ../tools/gda-sql.c:3021
-#, c-format
+#: ../tools/gda-sql.c:3579
 msgid "Query buffer is empty"
 msgstr ""
 
 #
-#: ../tools/gda-sql.c:3079
+#: ../tools/gda-sql.c:3646
 #, fuzzy, c-format
 msgid "Could not find query buffer named '%s'"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
-#: ../tools/gda-sql.c:3200 ../tools/gda-sql.c:3438 ../tools/gda-sql.c:3516
+#: ../tools/gda-sql.c:3776 ../tools/gda-sql.c:4032 ../tools/gda-sql.c:4110
 #, c-format
 msgid "No parameter named '%s' defined"
 msgstr ""
 
-#: ../tools/gda-sql.c:3211
+#: ../tools/gda-sql.c:3787
 msgid "List of defined parameters"
 msgstr ""
 
-#: ../tools/gda-sql.c:3273 ../tools/gda-sql.c:3708
-#, c-format
+#: ../tools/gda-sql.c:3849 ../tools/gda-sql.c:4377
 msgid "Wrong row condition"
 msgstr ""
 
-#: ../tools/gda-sql.c:3301
-#, c-format
+#: ../tools/gda-sql.c:3877
 msgid "No unique row identified"
 msgstr ""
 
 #
-#: ../tools/gda-sql.c:3333 ../tools/gda-sql.c:3416 ../tools/gda-sql.c:3665
+#: ../tools/gda-sql.c:3918 ../tools/gda-sql.c:4010 ../tools/gda-sql.c:4334
 #, fuzzy, c-format
 msgid "Too many arguments"
 msgstr "Δόμηση εντολών SQL"
 
 #
-#: ../tools/gda-sql.c:3381 ../tools/gda-sql.c:3444
-#, fuzzy, c-format
+#: ../tools/gda-sql.c:3966 ../tools/gda-sql.c:4038
+#, fuzzy
 msgid "Wrong number of arguments"
 msgstr "Η παρακολούθηση εξυπηρετητή είναι ανενεργή για αυτήν τη σύνδεση"
 
 #
-#: ../tools/gda-sql.c:3456 ../tools/gda-sql.c:3470
-#, fuzzy, c-format
+#: ../tools/gda-sql.c:4050 ../tools/gda-sql.c:4064
+#, fuzzy
 msgid "Could not write file"
 msgstr ""
 "Αδυναμία φόρτωσης αρχείου\n"
 " %s"
 
-#: ../tools/gda-sql.c:3595
+#: ../tools/gda-sql.c:4189
 #, c-format
 msgid "Graph written to '%s'\n"
 msgstr ""
 
-#: ../tools/gda-sql.c:3598
+#: ../tools/gda-sql.c:4192
 #, c-format
 msgid ""
 "Graph written to '%s'\n"
@@ -5477,12 +5344,209 @@ msgid ""
 msgstr ""
 
 #
-#: ../tools/tools-input.c:222
+#: ../tools/gda-sql.c:4263
+#, fuzzy
+msgid "HTTPD server stopped"
+msgstr "Η παρακολούθηση εξυπηρετητή διακόπηκε"
+
+#
+#: ../tools/gda-sql.c:4282
+#, fuzzy
+msgid "Could not start HTTPD server"
+msgstr ""
+"Αδυναμία φόρτωσης αρχείου\n"
+" %s"
+
+#: ../tools/gda-sql.c:4286
+msgid "HTTPD server started"
+msgstr ""
+
+#
+#: ../tools/gda-sql.c:4291
+#, fuzzy
+msgid "Invalid port specification"
+msgstr ""
+"Αδυναμία φόρτωσης αρχείου\n"
+" %s"
+
+#
+#: ../tools/gda-sql.c:4506
+#, fuzzy, c-format
+msgid "Command is incomplete"
+msgstr "Η εντολή '%s' εκτελέστηκε"
+
+#: ../tools/html-doc.c:69
+msgid "Generated by the GDA SQL console"
+msgstr ""
+
+#
+#: ../tools/html-doc.c:91
+#, fuzzy
+msgid "Console"
+msgstr "Κλείσιμο"
+
+#
+#: ../tools/html-doc.c:95
+msgid "Help"
+msgstr "Βοήθεια"
+
+#
+#: ../tools/tools-input.c:306
 #, fuzzy, c-format
 msgid "Could not save history file to '%s': %s"
 msgstr ""
 "Αδυναμία φόρτωσης αρχείου\n"
 " %s"
+
+#
+#: ../tools/web-server.c:560 ../tools/web-server.c:561
+#, fuzzy
+msgid "Authentication required"
+msgstr "Ρυθμίσεις Σύνδεσης"
+
+#: ../tools/web-server.c:625
+msgid "Token:"
+msgstr ""
+
+#
+#: ../tools/web-server.c:698
+#, fuzzy
+msgid "Connections"
+msgstr "Ρυθμίσεις Σύνδεσης"
+
+#. no connection at all
+#: ../tools/web-server.c:703
+msgid "None"
+msgstr ""
+
+#: ../tools/web-server.c:770
+msgid "SQL console:"
+msgstr ""
+
+#
+#: ../tools/web-server.c:846 ../tools/web-server.c:1872
+#, fuzzy
+msgid "Tables"
+msgstr "Πίνακας"
+
+#: ../tools/web-server.c:846
+#, c-format
+msgid "Tables in the '%s' schema"
+msgstr ""
+
+#
+#: ../tools/web-server.c:852 ../tools/web-server.c:1877
+msgid "Views"
+msgstr "Προβολές"
+
+#: ../tools/web-server.c:852
+#, c-format
+msgid "Views in the '%s' schema"
+msgstr ""
+
+#: ../tools/web-server.c:911
+#, c-format
+msgid "Columns for the '%s' table:"
+msgstr ""
+
+#: ../tools/web-server.c:957
+#, fuzzy
+msgid "Primary key:"
+msgstr "Πρωτεύων κλειδί;"
+
+#
+#: ../tools/web-server.c:1062
+#, fuzzy
+msgid "Relations:"
+msgstr "Έξοδος από εφαρμογή"
+
+#: ../tools/web-server.c:1079
+msgid "Foreign keys:"
+msgstr ""
+
+#: ../tools/web-server.c:1091
+#, c-format
+msgid "To '%s':"
+msgstr ""
+
+#
+#: ../tools/web-server.c:1265
+#, fuzzy
+msgid "View definition:"
+msgstr "Περιγραφή"
+
+#: ../tools/web-server.c:1340
+#, c-format
+msgid "Trigger '%s' for the '%s.%s' table:"
+msgstr ""
+
+#: ../tools/web-server.c:1360
+#, fuzzy, c-format
+msgid "Trigger fired for: %s"
+msgstr "Διενέργειες"
+
+#: ../tools/web-server.c:1364
+#, c-format
+msgid "Time at which the trigger is fired: %s"
+msgstr ""
+
+#
+#: ../tools/web-server.c:1368
+#, fuzzy
+msgid "Action:"
+msgstr "Τοποθεσία"
+
+#: ../tools/web-server.c:1604
+#, fuzzy
+msgid "Triggers:"
+msgstr "Διενέργειες"
+
+#: ../tools/web-server.c:1636 ../tools/web-server.c:1730
+#, c-format
+msgid "For the '%s.%s' table:"
+msgstr ""
+
+#: ../tools/web-server.c:1702
+#, c-format
+msgid "Triggers in the '%s' schema:"
+msgstr ""
+
+#
+#: ../tools/web-server.c:1856
+#, fuzzy, c-format
+msgid "Database information for '%s'"
+msgstr "Πηγές Δεδομένων"
+
+#
+#: ../tools/web-server.c:1861
+#, fuzzy
+msgid "Database information"
+msgstr "Πηγές Δεδομένων"
+
+#: ../tools/web-server.c:1870
+#, fuzzy
+msgid "Objects"
+msgstr "Αντικείμενο OLE"
+
+#: ../tools/web-server.c:1882
+#, fuzzy
+msgid "Triggers"
+msgstr "Διενέργειες"
+
+#
+#, fuzzy
+#~ msgid "Could not find object named '%s.%s'"
+#~ msgstr "Αδυναμία περικοπής αρχείου %s"
+
+#
+#, fuzzy
+#~ msgid "Could not find object named '%s.%s.%s'"
+#~ msgstr "Αδυναμία περικοπής αρχείου %s"
+
+#
+#, fuzzy
+#~ msgid "No currently opened connection"
+#~ msgstr "Κλείσιμο σύνδεσης"
 
 #
 #, fuzzy
@@ -6170,15 +6234,6 @@ msgstr ""
 #~ msgid "Character strings"
 #~ msgstr "Δημιουργία γραφής"
 
-#, fuzzy
-#~ msgid "OLE object"
-#~ msgstr "Αντικείμενο OLE"
-
-#
-#, fuzzy
-#~ msgid "Replication ID"
-#~ msgstr "Έξοδος από εφαρμογή"
-
 #
 #, fuzzy
 #~ msgid "Numeric"
@@ -6199,10 +6254,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Could not prepare the transaction to commit"
 #~ msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
-
-#
-#~ msgid "Views"
-#~ msgstr "Προβολές"
 
 #
 #, fuzzy
@@ -6390,11 +6441,6 @@ msgstr ""
 
 #
 #, fuzzy
-#~ msgid "Datasource's information"
-#~ msgstr "Πηγές Δεδομένων"
-
-#
-#, fuzzy
 #~ msgid ""
 #~ "Error loading dictionary file '%s':\n"
 #~ "%s\n"
@@ -6424,11 +6470,6 @@ msgstr ""
 #
 #, fuzzy
 #~ msgid "Location: %s\n"
-#~ msgstr "Τοποθεσία"
-
-#
-#, fuzzy
-#~ msgid "Action"
 #~ msgstr "Τοποθεσία"
 
 #
@@ -6564,10 +6605,6 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "\t\tTransactions: %s\n"
-#~ msgstr "Διενέργειες"
-
-#, fuzzy
-#~ msgid "\t\tTriggers: %s\n"
 #~ msgstr "Διενέργειες"
 
 #
@@ -6835,10 +6872,6 @@ msgstr ""
 #~ msgstr "Ανανέωση όλων των λιστών"
 
 #
-#~ msgid "Close"
-#~ msgstr "Κλείσιμο"
-
-#
 #~ msgid "Close this window"
 #~ msgstr "Κλείσιμο του παραθύρου"
 
@@ -7006,10 +7039,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Έξοδος από το '%s'\n"
 #~ "Στον κατάλογο '%s'\n"
-
-#
-#~ msgid "Command '%s' completed"
-#~ msgstr "Η εντολή '%s' εκτελέστηκε"
 
 #
 #~ msgid ""
@@ -7277,10 +7306,6 @@ msgstr ""
 #~ msgstr "Εργαλεία"
 
 #
-#~ msgid "Help"
-#~ msgstr "Βοήθεια"
-
-#
 #~ msgid "Disconnect"
 #~ msgstr "Αποσύνδεση"
 
@@ -7351,10 +7376,6 @@ msgstr ""
 #
 #~ msgid "Row %d - %d rows selected"
 #~ msgstr "Γραμμή %d - %d γραμμές επιλέχθηκαν"
-
-#
-#~ msgid "Server trace stopped"
-#~ msgstr "Η παρακολούθηση εξυπηρετητή διακόπηκε"
 
 #
 #~ msgid "Select Trace File"

@@ -1,3 +1,18 @@
+libgda 3.99.7, 2008-12-31
+
+ - API corrections
+ - now internally use SQLite 3.6.7
+ - blobs handling corrections
+ - SQL console improvements (new export command, optional integrated web server
+   to display information)
+ - new JDBC provider (allows access to any database through a JDBC driver)
+ - Win32 improvements (control list of exported symbols, create import libraries)
+ - Cleared up glib includes (Przemys≈Çaw Grzegorczyk)
+ - misc corrections (Murray Cumming, Johannes Schmid, Carlos Savoretti, Vivien Malerba)
+ - bug fixes: #565942, #564402, #529794, #564159, #564274, #565618, #565019
+ - Translations:
+	- it (Marco Ciampa)
+
 libgda 3.99.6, 2008-11-10
 
  - A few API improvements
@@ -134,7 +149,7 @@ libgda 3.1.2, 2007-10-24
    (Vivien Malerba)
  - MS Access database provider reworked to support all the SQLite's SQL (don't depend on libmdbsql.so anymore for
    SQL processing) (Vivien Malerba)
- - LDAP provider has seen a first draft rework (Exell Enrique Franklin JimÈnez)
+ - LDAP provider has seen a first draft rework (Exell Enrique Franklin Jim√©nez)
  - Use of environment variables to specify debug ourput of commands and connection events (Vivien Malerba)
  - "LIMIT" and "OFFSET" keywords recognized, for bug #488860 (Vivien Malerba)
  - Enhanced the SQL console tool (allow multiple connections and virtual connections) (Vivien Malerba)
@@ -393,10 +408,10 @@ libgda 1.9.103, 2006-09-03
 	- vi (Clytie)
 	- fi (Ilkka)
 	- zh_HK, zh_TW (Chao-Hsiung Liao)
-	- eu (IÒaki)
+	- eu (I√±aki)
 	- nb (Kjartan Maraas)
 	- es (Francisco Javier)
-	- fr (Marc-AndrÈ Lureau)
+	- fr (Marc-Andr√© Lureau)
 	- ru (Valek Filippov)
 	- de (Hendrik Richter)
 	- nl (Vincent van Adrighem)
@@ -429,7 +444,7 @@ libgda 1.9.102, 2006-03-24
 	- en_CA (Adam)
 	- vi (Clytie)
 	- es (Francisco Javier)
-	- eu (IÒaki)
+	- eu (I√±aki)
 	- zh_TW (Chao-Hsiung)
 	- pt_BR (Raphael)
 
@@ -457,7 +472,7 @@ libgda 1.9.99, 2005-09-26
  - Improved test to locate MDB libraries (Vivien)
  - Added "gda_type_changed" signal to GdaColumn (Vivien)
  - Updated translations:
-        - eu (IÒaki)
+        - eu (I√±aki)
         - ne (Pawan)
 	- vi (Clytie)
 
@@ -553,14 +568,14 @@ libgda 1.3.1, 2005-03-21
 
  - Improved GdaRow API (Vivien)
  - Fixed #167573 (Rodrigo)
- - Added gda_xml_database_remove_table function (¡lvaro)
+ - Added gda_xml_database_remove_table function (√Ålvaro)
  - Fixed libsql build (Rodrigo)
  - Upgraded SQLite provider to SQLite3 (Denis)
  - Install providers in versioned directories for parallel installation (Rodrigo)
  - Use libgda*-3 as library names (Rodrigo)
  - Fixed #129153 (Rodrigo)
- - Renamed GdaDataModelColumnAttributes to GdaColumn (¡lvaro)
- - Renamed GdaDataModelColumnIndexAttributes to GdaColumnAttributes (¡lvaro)
+ - Renamed GdaDataModelColumnAttributes to GdaColumn (√Ålvaro)
+ - Renamed GdaDataModelColumnIndexAttributes to GdaColumnAttributes (√Ålvaro)
  - Code cleanup for data model classes (Bas)
  - Cleanup auto* build noise (Bas)
  - Replace gda_connection_escape_string with more generic
@@ -580,7 +595,7 @@ libgda 1.3.0, 2005-02-07
  - Fixed spec includedir (Aaron)
  - Set missing row number on gda_data_model_hash_append_row (Bas)
  - Changed GdaDataModel class to be an interface (Vivien)
- - Data model improvements (Vivien, Bas, ¡lvaro)
+ - Data model improvements (Vivien, Bas, √Ålvaro)
  - Renamed GdaField to GdaColumn (Vivien)
  - Improved documentation (Vivien, Bas)
  - Added full update/remove for MySQL and PostgreSQL data models (Bas)
@@ -616,9 +631,9 @@ libgda 1.2.1, 2005-03-03
  - Fixed deletion of rows in GdaDataModelHash (Bas)
  - Improve table name guessing in PostgreSQL updates (Bas)
  - Allow USER and PASSWORD parameters in MySQL connection string (Bas)
- - Removed extra emission of signals in data model base class (¡lvaro)
- - Renumber rows after deletion in GdaDataModelHash (¡lvaro)
- - Added "name_changed" signal in GdaTable class (¡lvaro)
+ - Removed extra emission of signals in data model base class (√Ålvaro)
+ - Renumber rows after deletion in GdaDataModelHash (√Ålvaro)
+ - Added "name_changed" signal in GdaTable class (√Ålvaro)
  - Fixed #167700 (Caolan)
  - Fixed #160666 (Rodrigo)
  - Fixed #162856 (Jorge)
@@ -626,7 +641,7 @@ libgda 1.2.1, 2005-03-03
  - Fixed #166288 (Caolan)
  - Fixed #129153 (Rodrigo)
  - Fixed #167500 (Denis)
- - Fixed #168641 (LoÔc)
+ - Fixed #168641 (Lo√Øc)
 
 libgda 1.2.0, 2004-12-28
 ------------------------

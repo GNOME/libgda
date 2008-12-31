@@ -35,6 +35,7 @@
 	<listitem><para>Work on any platform on which &LIBGDA; has been ported to.</para></listitem>
 	<listitem><para>List, define or remove named data sources (DSN)</para></listitem>
 	<listitem><para>Import and export BLOBS (binary large objects) from and to local files</para></listitem>
+	<listitem><para>On command embedded HTTP server</para></listitem>
       </itemizedlist>
     </para>
   </sect1>
@@ -53,6 +54,8 @@
 	<arg>-f <replaceable>commands file</replaceable></arg>
 	<arg>-o <replaceable>output file</replaceable></arg>
 	<arg>-p</arg>
+	<arg>-s<replaceable>port to use to run embedded HTTP server</replaceable></arg>
+	<arg>-t<replaceable>authentication token required to authenticate clients when running the embedded HTTP server</replaceable></arg>
 	<arg rep="repeat"><replaceable>connection specification</replaceable></arg>
       </cmdsynopsis>
       The options are the following ones:
@@ -95,6 +98,10 @@ MSAccess    | Provider for Microsoft Access files | DB_NAME,           |        
 	<listitem><para>the <option>-p</option> speficies that the tool should not ask for
 	    passwords when a username has been specified for a connection but no password has
 	    been specified.</para></listitem>
+	<listitem><para>the <option>-s</option> requests the embedded HTTP server to be executed, listening on
+	    the port specified.</para></listitem>
+	<listitem><para>the <option>-t</option> specifies a token string which clients will have to
+	    supply to authenticate themselves to the HTTP server, if running.</para></listitem>
       </itemizedlist>
     </para>
     <para>
@@ -711,6 +718,28 @@ SalesTest>
 	  if the &lt;row condition&gt; condition does not return exactly one value.</para>
 	</listitem>
       </itemizedlist>
+    </para>
+  </sect1>
+
+  <sect1>
+    <title>Embedded HTTP server</title>
+    <para>
+      An embedded HTTP server can be executed using the <command>.http [&lt;port&gt; [&lt;authentication token&gt;]]</command> 
+      command, or the <option>-s</option> command line option. If no port is specified the 12345 port is used.
+    </para>
+    <para>
+      The web browser's features are:
+      <itemizedlist>
+	<listitem><para>display meta information such as the lists of tables, views or triggers and their details 
+	    for a connection</para></listitem>
+	<listitem><para>open an emulated console where SQL commands (and some internal commands) can be run</para></listitem>
+      </itemizedlist>
+    </para>
+    <para>
+      Clients must first authenticate before they can use the features mentionned above; authentication is kept simple
+      as it consists of a string. By default the requested string is empty (eg. no real authentication is required), but
+      an authentication string can be specified when running the web server either with the <command>.http</command> command, 
+      or the <option>-t</option> command line option.
     </para>
   </sect1>
 

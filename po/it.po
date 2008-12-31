@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-29 15:29+0100\n"
+"POT-Creation-Date: 2008-12-31 11:27+0100\n"
 "PO-Revision-Date: 2008-12-29 15:27+0100\n"
 "Last-Translator: Marco Ciampa <ciampix@libero.it>\n"
 "Language-Team: italiano <tp@lists.linux.it>\n"
@@ -73,18 +73,23 @@ msgstr "Fornitore \"%s\" non trovato"
 msgid "No provider '%s' installed"
 msgstr "Nessun fornitore \"%s\" installato"
 
-#: ../libgda/gda-config.c:1107
+#: ../libgda/gda-config.c:1100
+#, fuzzy, c-format
+msgid "Can't load provider: %s"
+msgstr "Impossibile instanziare il fornitore \"%s\""
+
+#: ../libgda/gda-config.c:1123
 #, c-format
 msgid "Can't instantiate provider '%s'"
 msgstr "Impossibile instanziare il fornitore \"%s\""
 
-#: ../libgda/gda-config.c:1151 ../libgda/gda-data-model-dsn-list.c:111
+#: ../libgda/gda-config.c:1167 ../libgda/gda-data-model-dsn-list.c:111
 #: ../libgda/gda-data-model-dsn-list.c:112 ../tools/gda-sql.c:1676
 #: ../tools/gda-sql.c:2493 ../tools/gda-sql.c:2665 ../tools/gda-sql.c:2882
 msgid "Provider"
 msgstr "Fornitore"
 
-#: ../libgda/gda-config.c:1152 ../libgda/gda-data-model-dsn-list.c:117
+#: ../libgda/gda-config.c:1168 ../libgda/gda-data-model-dsn-list.c:117
 #: ../libgda/gda-data-model-dsn-list.c:118
 #: ../libgda/gda-server-provider-extra.c:375
 #: ../libgda/gda-server-provider-extra.c:398 ../tools/gda-sql.c:1677
@@ -92,34 +97,34 @@ msgstr "Fornitore"
 msgid "Description"
 msgstr "Descrizione"
 
-#: ../libgda/gda-config.c:1153
+#: ../libgda/gda-config.c:1169
 msgid "DSN parameters"
 msgstr "Parametri DSN"
 
-#: ../libgda/gda-config.c:1154
+#: ../libgda/gda-config.c:1170
 msgid "Authentication"
 msgstr "Autenticazione"
 
-#: ../libgda/gda-config.c:1155
+#: ../libgda/gda-config.c:1171
 msgid "File"
 msgstr "File"
 
-#: ../libgda/gda-config.c:1156
+#: ../libgda/gda-config.c:1172
 msgid "List of installed providers"
 msgstr "Elenco dei fornitori installati"
 
-#: ../libgda/gda-config.c:1308 ../libgda/gda-data-model-dsn-list.c:131
+#: ../libgda/gda-config.c:1328 ../libgda/gda-data-model-dsn-list.c:131
 #: ../libgda/gda-data-model-dsn-list.c:132 ../tools/gda-sql.c:2884
 msgid "Username"
 msgstr "Nome utente"
 
 #. other table options
-#: ../libgda/gda-config.c:1310
+#: ../libgda/gda-config.c:1330
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:147
 msgid "Password"
 msgstr "Password"
 
-#: ../libgda/gda-config.c:1373 ../tools/web-server.c:2017
+#: ../libgda/gda-config.c:1393 ../tools/web-server.c:2017
 #, c-format
 msgid "Error: %s"
 msgstr "Errore: %s"
@@ -214,42 +219,42 @@ msgstr ""
 msgid "Provider does not support statement preparation"
 msgstr "Il fornitore non supporta la preparazione dei comandi"
 
-#: ../libgda/gda-connection.c:1615 ../libgda/gda-connection.c:1630
+#: ../libgda/gda-connection.c:1617 ../libgda/gda-connection.c:1632
 msgid "Statement is a selection statement"
 msgstr "Il comando è un comando di selezione"
 
-#: ../libgda/gda-connection.c:1689 ../libgda/gda-connection.c:1750
-#: ../libgda/gda-connection.c:1805
+#: ../libgda/gda-connection.c:1691 ../libgda/gda-connection.c:1752
+#: ../libgda/gda-connection.c:1807
 msgid "Statement is not a selection statement"
 msgstr "Il comando non è un comando di selezione"
 
-#: ../libgda/gda-connection.c:2152
+#: ../libgda/gda-connection.c:2154
 msgid "Invalid argument"
 msgstr "Argomento non valido"
 
-#: ../libgda/gda-connection.c:2161
+#: ../libgda/gda-connection.c:2163
 #, c-format
 msgid "Missing or wrong arguments for table '%s': %s"
 msgstr "Mancano o sono sbagliati gli argomanti per la tabella \"%s\": %s"
 
-#: ../libgda/gda-connection.c:2869
+#: ../libgda/gda-connection.c:2871
 msgid "Meta update error"
 msgstr "Errore di aggiornamento meta"
 
-#: ../libgda/gda-connection.c:3337
+#: ../libgda/gda-connection.c:3339
 msgid "Wrong filter arguments"
 msgstr "Argomenti del filtro incorretti"
 
-#: ../libgda/gda-connection.c:3470 ../libgda/gda-connection.c:3512
-#: ../libgda/gda-connection.c:3544 ../libgda/gda-connection.c:3577
-#: ../libgda/gda-connection.c:3610
+#: ../libgda/gda-connection.c:3472 ../libgda/gda-connection.c:3514
+#: ../libgda/gda-connection.c:3546 ../libgda/gda-connection.c:3579
+#: ../libgda/gda-connection.c:3612
 #, c-format
 msgid "Connection transaction status tracking: no transaction exists for %s"
 msgstr ""
 "Tracciato dello stato della transazione di connessione: non esiste nessuna "
 "transazione per %s"
 
-#: ../libgda/gda-connection.c:3882
+#: ../libgda/gda-connection.c:3884
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:186
 msgid "Internal error: invalid provider handle"
 msgstr "Errore interno: gestore del fornitore non valido"
@@ -487,8 +492,8 @@ msgstr "Impossibile fare il dump degli attributi del modello dati: %s"
 #: ../providers/jdbc/gda-jdbc-provider.c:1322
 #: ../providers/jdbc/gda-jdbc-provider.c:1351
 #: ../providers/jdbc/gda-jdbc-provider.c:1370
-#: ../providers/jdbc/gda-jdbc-util.c:46 ../providers/jdbc/libmain.c:102
-#: ../providers/jdbc/libmain.c:300 ../providers/mdb/gda-mdb-provider.c:353
+#: ../providers/jdbc/gda-jdbc-util.c:46 ../providers/jdbc/libmain.c:139
+#: ../providers/jdbc/libmain.c:341 ../providers/mdb/gda-mdb-provider.c:353
 #: ../providers/mysql/gda-mysql-util.c:73
 #: ../providers/postgres/gda-postgres-provider.c:1820
 #: ../providers/postgres/gda-postgres-provider.c:1835
@@ -1743,32 +1748,32 @@ msgstr "Join non è in un comando FROM"
 msgid "Could not find target the join is for"
 msgstr "Impossibile trovare il destinatario del join"
 
-#: ../libgda/gda-util.c:461
+#: ../libgda/gda-util.c:516
 #, c-format
 msgid "Field number %d not found in source named '%s'"
 msgstr "Campo numero %d non trovato nella sorgente di nome \"%s\""
 
-#: ../libgda/gda-util.c:647
+#: ../libgda/gda-util.c:702
 msgid "SELECT statement has no FROM part"
 msgstr "Il comando SELECT non ha la parte FROM"
 
-#: ../libgda/gda-util.c:652 ../libgda/gda-util.c:659
+#: ../libgda/gda-util.c:707 ../libgda/gda-util.c:714
 msgid "SELECT statement involves more than one table or expression"
 msgstr "Il comando SELECT richiede più di una tabella o espressione"
 
-#: ../libgda/gda-util.c:669
+#: ../libgda/gda-util.c:724
 msgid "Can only build modification statement for tables"
 msgstr "È possibile creare solo comandi di modifica per tabelle"
 
-#: ../libgda/gda-util.c:688 ../libgda/gda-util.c:696
+#: ../libgda/gda-util.c:743 ../libgda/gda-util.c:751
 msgid "Table does not have any primary key"
 msgstr "La tabella non ha nessuna chiave primaria"
 
-#: ../libgda/gda-util.c:722
+#: ../libgda/gda-util.c:777
 msgid "Table's primary key is not selected"
 msgstr "La chiave primaria della tabella non è selezionata"
 
-#: ../libgda/gda-util.c:914
+#: ../libgda/gda-util.c:969
 msgid "Could not compute any field to insert into"
 msgstr "Impossibile computare qualsiasi campo da inserire"
 
@@ -2490,7 +2495,7 @@ msgstr "Impossibile aggiungere un modello dati BDB alla connessione: %s"
 msgid "-"
 msgstr "-"
 
-#: ../providers/bdb/libmain.c:51
+#: ../providers/bdb/libmain.c:72
 msgid "Provider for Berkeley databases"
 msgstr "Fornitore per database Berkeley"
 
@@ -2627,17 +2632,17 @@ msgstr "Univoco"
 msgid "Connection URL"
 msgstr "URL di connessione"
 
-#: ../providers/jdbc/libmain.c:101
+#: ../providers/jdbc/libmain.c:138
 #, c-format
 msgid "Can't get list of installed JDBC drivers: %s"
 msgstr "Impossibile ottenere l'elenco dei driver JDBC installati: %s"
 
-#: ../providers/jdbc/libmain.c:299
+#: ../providers/jdbc/libmain.c:340
 #, c-format
 msgid "Can't create JAVA virtual machine: %s"
 msgstr "Impossibile creare la macchina virtuale JAVA: %s"
 
-#: ../providers/jdbc/libmain.c:304
+#: ../providers/jdbc/libmain.c:345
 msgid "Could not the JVM runtime (libjvm.so), JDBC provider is unavailable."
 msgstr ""
 "Impossibile ottenere il runtime JVM (libjvm.so), il fornitore JDBC non è "
@@ -2665,7 +2670,7 @@ msgstr "Impossibile aprire il file %s"
 msgid "Could not map table '%s': %s"
 msgstr "Impossibile mappare la tabella \"%s\": %s"
 
-#: ../providers/mdb/libmain.c:52
+#: ../providers/mdb/libmain.c:73
 msgid "Provider for Microsoft Access files"
 msgstr "Fornitore per file Microsoft Access"
 
@@ -2791,7 +2796,7 @@ msgstr "Sconosciuto"
 msgid "No description"
 msgstr "Nessuna descrizione"
 
-#: ../providers/mysql/libmain.c:50
+#: ../providers/mysql/libmain.c:71
 msgid "Provider for MySQL databases"
 msgstr "Fornitore per database MySQL"
 
@@ -3775,7 +3780,7 @@ msgstr "Impossibile impostare il parametro ID di transazione XA"
 msgid "Number of rows chunks read since the object creation"
 msgstr "Numero di blocchi di righe letti dalla creazione dell'oggetto"
 
-#: ../providers/postgres/libmain.c:58
+#: ../providers/postgres/libmain.c:79
 msgid "Provider for PostgreSQL databases"
 msgstr "Fornitore per database PostgreSQL"
 
@@ -4127,7 +4132,7 @@ msgid "Search path among database's schemas ('search_path' variable)"
 msgstr ""
 "Percorso di ricerca negli schemi del database (variabile \"search_path\")"
 
-#: ../providers/sqlite/libmain.c:52
+#: ../providers/sqlite/libmain.c:73
 msgid "Provider for SQLite databases"
 msgstr "Fornitore per database SQLite"
 
