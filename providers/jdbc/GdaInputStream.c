@@ -110,7 +110,6 @@ Java_GdaInputStream_readByteData (JNIEnv *jenv, jobject obj,
 	}
 
 	guchar *raw_data;
-	jint *data;
 	GdaBlob *nblob = NULL;
 	gint real_size;
 	if (blob->op) {

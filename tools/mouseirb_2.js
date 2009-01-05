@@ -91,7 +91,19 @@ $.extend(MouseApp.Irb.prototype, MouseApp.Terminal.prototype, {
             } else {
               str = str.replace(new RegExp("(^|\\n)= (.+?) ="), "$1\033[1;33m$2\033[m");
             }
-            this.write(str);
+	    if (str.search(/^</) != -1) {
+		    var irbdiv = $("#irb");
+		    this.cursorOff();
+		    var table = $("<div class=\"tcontents\">"+str+"</div>");
+		    irbdiv.append(table);
+		    table.resizable({"autoHide":true, "knobHandles":true});
+		    table.dblclick(function() {table.hide("slide");});
+			       
+		    this.advanceLine();
+		    this.cursorOn();
+	    }
+            else
+	      this.write(str);
 	    if (prompt) {
 		    var trimmed = prompt.replace(/^\s+|\s+$/g, '') ;
 		    this.options.ps = "\033[1;31m" + trimmed + "\033[m";
@@ -140,4 +152,3 @@ $.extend(MouseApp.Irb.prototype, MouseApp.Terminal.prototype, {
         }
     }
 });
-

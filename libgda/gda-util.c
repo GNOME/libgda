@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 1998 - 2008 The GNOME Foundation.
+ * Copyright (C) 1998 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -46,14 +46,27 @@ extern GdaAttributesManager *gda_holder_attributes_manager;
  * gda_g_type_to_string
  * @type: Type to convert from.
  *
- * Returns: the string representing the given #GType.
+ * Returns: the GDA's string representing the given #GType or the name
+ * returned by #g_type_name.
  */
 const gchar *
 gda_g_type_to_string (GType type)
 {
 	if (type == GDA_TYPE_NULL)
 		return "null";
-	else
+	else if (type == G_TYPE_INT)
+		return "int";
+	else if (type == G_TYPE_STRING)
+		return "string";
+	else if (type == G_TYPE_DATE)
+		return "date";			
+	else if (type == GDA_TYPE_TIME)
+		return "time";
+	else if (type == GDA_TYPE_TIMESTAMP)
+		return "timestamp";
+	else if (type == G_TYPE_BOOLEAN)
+		return "boolean";
+	else 
 		return g_type_name (type);
 }
 
@@ -431,7 +444,7 @@ gda_utility_data_model_find_column_description (GdaDataSelect *model, const gcha
 					(meta_table_column, GDA_ATTRIBUTE_DESCRIPTION);
 
 				gda_sql_statement_free (sql_statement);
-				return g_value_get_string (gvalue);
+				return gvalue ? g_value_get_string (gvalue) : NULL;
 			}
 		}
 	}

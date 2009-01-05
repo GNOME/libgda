@@ -1,5 +1,5 @@
 /* GDA - SQL console
- * Copyright (C) 2007 - 2008 The GNOME Foundation.
+ * Copyright (C) 2007 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  * 	Vivien Malerba <malerba@gnome-db.org>
@@ -4497,7 +4497,12 @@ gda_sql_console_execute (SqlConsole *console, const gchar *command, GError **err
 			res = command_execute (console, loc_cmde, error);
 			
 			if (res) {
+				OutputFormat of = console->output_format;
+				if (res->type == GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL)
+					console->output_format = OUTPUT_FORMAT_HTML;
+
 				retstr = result_to_string (console, res);
+				console->output_format = of;
 				gda_internal_command_exec_result_free (res);
 			}
 		}

@@ -1,7 +1,6 @@
-
 /* web-server.c
  *
- * Copyright (C) 2008 Vivien Malerba
+ * Copyright (C) 2008 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -784,6 +783,10 @@ get_for_console (WebServer *server, SoupMessage *msg)
 	node = xmlNewChild (hdoc->head, NULL, BAD_CAST "script", BAD_CAST "");
 	xmlSetProp (node, BAD_CAST "type", BAD_CAST "text/javascript");
 	xmlSetProp (node, BAD_CAST "src", BAD_CAST "/jquery.js");
+
+	node = xmlNewChild (hdoc->head, NULL, BAD_CAST "script", BAD_CAST "");
+	xmlSetProp (node, BAD_CAST "type", BAD_CAST "text/javascript");
+	xmlSetProp (node, BAD_CAST "src", BAD_CAST "/jquery-ui.js");
 
 	node = xmlNewChild (hdoc->head, NULL, BAD_CAST "script", BAD_CAST "");
 	xmlSetProp (node, BAD_CAST "type", BAD_CAST "text/javascript");

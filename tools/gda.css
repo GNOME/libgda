@@ -285,3 +285,7 @@ table.ctable
     padding:10px;
     margin:0;
 }
+
+.tcontents {
+    overflow: hidden;
+}

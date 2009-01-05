@@ -1,3 +1,12 @@
+2009-01-05  Vivien Malerba <malerba@gnome-db.org>
+
+	* tools/: now display result sets as an HTML table which can be resized
+	* providers/jdbc/GdaInputStream.c: removed unused variable
+	* libgda/gda-util.c:
+	  - gda_g_type_to_string(): be more coherent
+	  - gda_utility_data_model_find_column_description(): test GValue
+	    existence before getting its value
+
 2008-12-31  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in: set version to 3.99.8
