@@ -177,7 +177,7 @@ static gboolean get_for_cnc (WebServer *webserver, SoupMessage *msg,
 static gboolean get_auth (WebServer *server, SoupMessage *msg, GHashTable *query);
 static gboolean get_post_for_irb (WebServer *webserver, SoupMessage *msg, 
 				  const ConnectionSetting *cs, GHashTable *query, GError **error);
-static void     get_for_cnclist (WebServer *webserver, SoupMessage *msg);
+static void     get_for_cnclist (WebServer *webserver, SoupMessage *msg, gboolean is_authenticated);
 
 
 /*#define DEBUG_SERVER*/
@@ -248,7 +248,7 @@ server_callback (SoupServer *server, SoupMessage *msg,
 			g_free (cookie);
 		}
 
-		if (auth_needed) {
+		if (auth_needed && !g_str_has_suffix (path, "~cnclist")) {
 			if (!get_auth (webserver, msg, query))
 				return;
 		}
@@ -290,7 +290,7 @@ server_callback (SoupServer *server, SoupMessage *msg,
 			done = TRUE;
 		}
 		else if (!strcmp (path, "~cnclist")) {
-			get_for_cnclist (webserver, msg);
+			get_for_cnclist (webserver, msg, !auth_needed);
 			done = TRUE;
 		}
 		else {
@@ -685,33 +685,29 @@ get_root (WebServer *server, SoupMessage *msg)
 }
 
 static xmlNodePtr
-cnc_ul ()
+cnc_ul (gboolean is_authenticated)
 {
 	xmlNodePtr ul, li, a;
 	const GSList *clist, *list;
 	gchar *str;
 
 	/* other connections in the sidebar */
-	list = gda_sql_get_all_connections ();
+	if (is_authenticated)
+		list = gda_sql_get_all_connections ();
+	else
+		list = NULL;
 	ul = xmlNewNode (NULL, BAD_CAST "ul");
 	xmlNodeSetContent(ul, BAD_CAST _("Connections"));
 	xmlSetProp (ul, BAD_CAST "id", BAD_CAST "cnclist");
 
 	if (!list) {
-		/* no connection at all */
+		/* no connection at all or not authenticated */
 		str = g_strdup_printf ("(%s)",  _("None"));
 		li = xmlNewChild (ul, NULL, BAD_CAST "li", NULL);
 		xmlNewChild (li, NULL, BAD_CAST "a", BAD_CAST str);
 		g_free (str);
 	}
 	else {
-		/*
-		li = xmlNewChild (ul, NULL, BAD_CAST "li", NULL);
-		str = g_strdup_printf ("(%s)",  _("From console"));
-		a = xmlNewChild (li, NULL, BAD_CAST "a", BAD_CAST str);
-		g_free (str);
-		xmlSetProp (a, BAD_CAST "href", BAD_CAST "/");
-		*/
 		for (clist = list; clist; clist = clist->next) {
 			gchar *tmp;
 			ConnectionSetting *cs2 = (ConnectionSetting*) clist->data;
@@ -729,12 +725,12 @@ cnc_ul ()
 }
 
 static void
-get_for_cnclist (WebServer *webserver, SoupMessage *msg)
+get_for_cnclist (WebServer *webserver, SoupMessage *msg, gboolean is_authenticated)
 {
 	xmlNodePtr ul;
 	SoupBuffer *buffer;
 
-	ul = cnc_ul ();
+	ul = cnc_ul (is_authenticated);
 	soup_message_headers_replace (msg->response_headers,
 				      "Content-Type", "text/html");
 
@@ -1864,7 +1860,7 @@ create_new_htmldoc (WebServer *webserver, const ConnectionSetting *cs)
 		hdoc = html_doc_new (_("Database information"));
 
 	/* other connections in the sidebar */
-	ul = cnc_ul ();
+	ul = cnc_ul (TRUE);
 	xmlAddChild (hdoc->sidebar, ul);
 
 	/* list all database object's types for which information can be obtained */
@@ -1907,7 +1903,7 @@ delete_consoles (WebServer *server)
 	g_get_current_time (&tv);
 	for (list = server->priv->terminals_list; list; ) {
 		SqlConsole *con = (SqlConsole *) list->data;
-		if (con->last_time_used.tv_sec + 600 > tv.tv_sec) {
+		if (con->last_time_used.tv_sec + 600 < tv.tv_sec) {
 			GSList *n = list->next;
 			server->priv->terminals_list = g_slist_delete_link (server->priv->terminals_list, list);
 			list = n;

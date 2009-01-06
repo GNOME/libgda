@@ -451,10 +451,21 @@ attach_hub_connection (GdaVconnectionHub *hub, HubConnection *hc, GError **error
 	model = gda_connection_get_meta_store_data (hc->cnc, GDA_CONNECTION_META_TABLES, error, 0);
 	if (!model)
 		return FALSE;
+
 	nrows = gda_data_model_get_n_rows (model);
 	for (i = 0; i < nrows; i++) {
 		const GValue *cv = gda_data_model_get_value_at (model, 0, i, error);
-		if (!cv || !table_add (hc, cv, error)) {
+		const GValue *cv1 = gda_data_model_get_value_at (model, 2, i, error);
+		if (!cv || !cv1) {
+			g_object_unref (model);
+			return FALSE;
+		}
+
+		/* ignore tables which require a complete name <schema>.<name> */
+		if (!gda_value_differ (cv, cv1))
+			continue;
+
+		if (!table_add (hc, cv, error)) {
 			g_object_unref (model);
 			return FALSE;
 		}

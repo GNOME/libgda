@@ -8,7 +8,7 @@ input.keyboard-selector-input {
 
 /* irb terminal */
 #terminal {
-    background-color: #f2f2f0;
+    /*background-color: #f2f2f0;*/
     width: 100%;
     height: 78%;
     overflow: auto; 

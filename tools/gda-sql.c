@@ -1537,10 +1537,8 @@ data_model_to_string (SqlConsole *console, GdaDataModel *model)
 		table = xmlNewChild (html, NULL, BAD_CAST "table", NULL);
 		xmlSetProp (table, BAD_CAST "border", BAD_CAST "1");
 		
-		if (g_object_get_data (G_OBJECT (model), "name")) {
-			node = xmlNewChild (table, NULL, BAD_CAST "caption", NULL);
-			xmlNewTextChild (node, NULL, BAD_CAST "big", g_object_get_data (G_OBJECT (model), "name"));
-		}
+		if (g_object_get_data (G_OBJECT (model), "name"))
+			xmlNewTextChild (table, NULL, BAD_CAST "caption", g_object_get_data (G_OBJECT (model), "name"));
 
 		ncols = gda_data_model_get_n_columns (model);
 		nrows = gda_data_model_get_n_rows (model);
@@ -1576,8 +1574,6 @@ data_model_to_string (SqlConsole *console, GdaDataModel *model)
 		str = g_strdup_printf (ngettext ("(%d row)", "(%d rows)", nrows), nrows);
 		xmlNodeSetContent (node, BAD_CAST str);
 		g_free (str);
-
-	        xmlNewChild (html, NULL, BAD_CAST "br", NULL);
 
 		buffer = xmlBufferCreate ();
 		xmlNodeDump (buffer, NULL, html, 0, 1);
@@ -2704,7 +2700,7 @@ extra_command_list_providers (SqlConsole *console, GdaConnection *cnc, const gch
 }
 
 static void
-vconnection_hub_foreach_cb (SqlConsole *console, GdaConnection *cnc, const gchar *ns, GString *string)
+vconnection_hub_foreach_cb (GdaConnection *cnc, const gchar *ns, GString *string)
 {
 	if (string->len > 0)
 		g_string_append_c (string, '\n');

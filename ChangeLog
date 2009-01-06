@@ -1,3 +1,12 @@
+2009-01-06  Vivien Malerba <malerba@gnome-db.org>
+
+	* tools/: embedded web server improvements:
+	 - fix a bug where big data models were truncated
+	 - UI corrections
+	 - multiple simultaneous consoles now works
+	* libgda/sqlite/virtual/gda-vconnection-hub.c: only bind the tables
+	which require a complete name (<schema>.<name>)
+
 2009-01-05  Vivien Malerba <malerba@gnome-db.org>
 
 	* tools/: now display result sets as an HTML table which can be resized

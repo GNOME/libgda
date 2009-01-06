@@ -33,14 +33,6 @@ MouseApp.Irb = function(element, options) {
   this.initWindow();
   this.setup();
   this.irbInit = false;
-  this.fireOffCmd(".c", (function(r) {
-                                        /*alert (r.responseText);*/
-                                        var xmlDoc=r.responseXML.documentElement;
-                                        var txt;
-                                        if (xmlDoc.getElementsByTagName("cmde")[0].childNodes[0])
-                                            txt = xmlDoc.getElementsByTagName("cmde")[0].childNodes[0].nodeValue;
-                                        var pt = xmlDoc.getElementsByTagName("prompt")[0].childNodes[0].nodeValue;
-                                }));
 };
 
 $.extend(MouseApp.Irb.prototype, MouseApp.Terminal.prototype, {
@@ -52,23 +44,8 @@ $.extend(MouseApp.Irb.prototype, MouseApp.Terminal.prototype, {
 
     fireOffCmd: function(cmd, func) {
       var irb = this;
-        if (!this.irbInit)
-        {
-          $.ajax({url: this.options.irbUrl + "?" + this.cmdToQuery("!INIT!IRB!"), type: "GET",
-				  complete: (function(r) { 
-						  irb.irbInit = true; 
-						  var xmlDoc=r.responseXML.documentElement;
-						  var cid = xmlDoc.getElementsByTagName("cid")[0].childNodes[0].nodeValue;
-						  irb.options.gdaid = cid;
-						  irb.fireOffCmd(cmd, func); 
-					  }), 
-				  type:"xml"});
-        }
-        else
-        {
           $.ajax({url: this.options.irbUrl + "?" + this.cmdToQuery(cmd), type: "GET", 
             complete: func});
-        }
     },
 
     reply: function(str,prompt) {
@@ -85,20 +62,36 @@ $.extend(MouseApp.Irb.prototype, MouseApp.Terminal.prototype, {
                 } catch (e) {}
                 str = str.replace(js_payload, '');
             }
+
             var pr_re = new RegExp("(^|\\n)=>");
             if ( str.match( pr_re ) ) {
               str = str.replace(new RegExp("(^|\\n)=>"), "$1\033[1;34m=>\033[m");
             } else {
               str = str.replace(new RegExp("(^|\\n)= (.+?) ="), "$1\033[1;33m$2\033[m");
             }
+
 	    if (str.search(/^</) != -1) {
 		    var irbdiv = $("#irb");
-		    this.cursorOff();
+
+		    $("#irb div:last-child").hide();
+
 		    var table = $("<div class=\"tcontents\">"+str+"</div>");
+		    table.children(":first").children(":first").attr("class","ctable");
+		    var folded = $("<div></div>");
+		    var nbrows = table.children(":first").children(":last");
+		    nbrows.appendTo(folded);
+		    nbrows.css("margin","0");
+
 		    irbdiv.append(table);
-		    table.resizable({"autoHide":true, "knobHandles":true});
-		    table.dblclick(function() {table.hide("slide");});
-			       
+		    table.resizable({"autoHide":true});
+		    table.dblclick(function() {table.hide(); folded.show();});
+		    
+		    irbdiv.append(folded);
+		    folded.hide();
+		    folded.dblclick(function() {table.show(); folded.hide();});
+
+
+		    this.cursorOff();
 		    this.advanceLine();
 		    this.cursorOn();
 	    }
@@ -138,11 +131,15 @@ $.extend(MouseApp.Irb.prototype, MouseApp.Terminal.prototype, {
             } else {
                 var term = this;
                 this.fireOffCmd(cmd, (function(r) {
-					/*alert (r.responseText);*/
 					var xmlDoc=r.responseXML.documentElement;
 					var txt;
-					if (xmlDoc.getElementsByTagName("cmde")[0].childNodes[0])
-					    txt = xmlDoc.getElementsByTagName("cmde")[0].childNodes[0].nodeValue;
+					if (xmlDoc.getElementsByTagName("cmde")[0].childNodes[0]) {
+						// it appears Firefox and some others split long text nodes into several
+						// smaller chunks of 4kb, so we need to get all of them.
+						txt="";
+						for (i = 0; i < xmlDoc.getElementsByTagName("cmde")[0].childNodes.length; i++)
+							txt += xmlDoc.getElementsByTagName("cmde")[0].childNodes[i].nodeValue
+					}
 					var pt = xmlDoc.getElementsByTagName("prompt")[0].childNodes[0].nodeValue;
 					term.reply(txt ? txt: '', pt ? pt : null);
 				}));
