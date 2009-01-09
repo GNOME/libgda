@@ -54,6 +54,7 @@
 #endif
 
 /* options */
+gboolean show_version = FALSE;
 gboolean ask_pass = FALSE;
 
 gchar *single_command = NULL;
@@ -72,6 +73,7 @@ gchar *auth_token = NULL;
 #endif
 
 static GOptionEntry entries[] = {
+	{ "version", 'v', 0, G_OPTION_ARG_NONE, &show_version, "Show version information and exit", NULL },	
         { "no-password-ask", 'p', 0, G_OPTION_ARG_NONE, &ask_pass, "Don't ask for a password when it is empty", NULL },
 
         { "output-file", 'o', 0, G_OPTION_ARG_STRING, &outfile, "Output file", "output file"},
@@ -82,7 +84,7 @@ static GOptionEntry entries[] = {
         { "list-providers", 'L', 0, G_OPTION_ARG_NONE, &list_providers, "List installed database providers and exit", NULL },
 #ifdef HAVE_LIBSOUP
 	{ "http-port", 's', 0, G_OPTION_ARG_INT, &http_port, "Run embedded HTTP server on specified port", "port" },
-	{ "http-token", 't', 0, G_OPTION_ARG_STRING, &auth_token, "Authentication token (required to authenticate clients)", "token" },
+	{ "http-token", 't', 0, G_OPTION_ARG_STRING, &auth_token, "Authentication token (required to authenticate clients)", "token phrase" },
 #endif
         { NULL }
 };
@@ -165,6 +167,11 @@ main (int argc, char *argv[])
 		return EXIT_FAILURE;
         }
         g_option_context_free (context);
+
+	if (show_version) {
+		g_print (_("GDA SQL console version " PACKAGE_VERSION "\n"));
+		return 0;
+	}
 
         gda_init ();
 	sql_gbr_init ();

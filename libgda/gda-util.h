@@ -67,11 +67,12 @@ gchar       *gda_alphanum_to_text (gchar *text);
 /*
  * Statement computation from meta store 
  */
-GdaSqlExpr  *gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTable *mtable, 
-						     gboolean require_pk, GError **error);
-gboolean     gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gboolean require_pk, 
-					 GdaStatement **insert_stmt, GdaStatement **update_stmt, GdaStatement **delete_stmt, 
-					 GError **error);
+GdaSqlExpr      *gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTable *mtable, 
+							 gboolean require_pk, GError **error);
+gboolean         gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gboolean require_pk, 
+					     GdaStatement **insert_stmt, GdaStatement **update_stmt, GdaStatement **delete_stmt, 
+					     GError **error);
+GdaSqlStatement *gda_compute_select_statement_from_update (GdaStatement *update_stmt, GError **error);
 
 /*
  * DSN and connection string manipulations

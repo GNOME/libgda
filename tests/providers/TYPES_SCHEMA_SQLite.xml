@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <gda_array id="EXPORT" name="Exported Data">
-  <gda_array_field id="FI0" name="short_type_name" title="short_type_name" gdatype="gchararray" nullok="TRUE"/>
-  <gda_array_field id="FI1" name="gtype" title="gtype" gdatype="gchararray" nullok="TRUE"/>
-  <gda_array_field id="FI2" name="comments" title="comments" gdatype="gchararray" nullok="TRUE"/>
-  <gda_array_field id="FI3" name="synonyms" title="synonyms" gdatype="gchararray" nullok="TRUE"/>
+  <gda_array_field id="FI0" name="short_type_name" title="short_type_name" gdatype="string" nullok="TRUE"/>
+  <gda_array_field id="FI1" name="gtype" title="gtype" gdatype="string" nullok="TRUE"/>
+  <gda_array_field id="FI2" name="comments" title="comments" gdatype="string" nullok="TRUE"/>
+  <gda_array_field id="FI3" name="synonyms" title="synonyms" gdatype="string" nullok="TRUE"/>
   <gda_array_data>
     <gda_array_row>
       <gda_value>blob</gda_value>

@@ -90,3 +90,51 @@ webdata_DATA = \
 
 EXTRA_DIST = gda-sql.ico \
 	$(webdata_DATA)
+
+mans = \
+	gda-sql-4.0.1
+
+man_MANS = \
+	$(mans)
+
+install-data-hook:
+if DEFAULT_BINARY
+	@list='$(mans)'; \
+	for i in $$list; do \
+	  s=`echo $$i | sed -e 's/.*\\(.\\)$$/\1/'`; \
+	  n=`echo $$i | sed -e 's/-[^-]*$$//'`; \
+	  f="$$n.$$s"; \
+	  echo "cd $(DESTDIR)$(mandir)/man$$s"; \
+	  cd $(DESTDIR)$(mandir)/man$$s; \
+	  echo "rm -f $$f"; \
+	  rm -f $$f; \
+	  echo "ln -s $$i $$f"; \
+	  ln -s $$i $$f; \
+	done
+endif
+
+uninstall-local:
+if DEFAULT_BINARY
+	@list='$(mans)'; \
+	for i in $$list; do \
+	  s=`echo $$i | sed -e 's/.*\\(.\\)$$/\1/'`; \
+	  n=`echo $$i | sed -e 's/-[^-]*$$//'`; \
+	  f="$$n.$$s"; \
+	  echo " rm -f $(DESTDIR)$(mandir)/man$$s/$$f"; \
+	  rm -f $(DESTDIR)$(mandir)/man$$s/$$f; \
+	done
+endif
+
+install-exec-hook:
+if DEFAULT_BINARY
+	cd $(DESTDIR)$(bindir) \
+	&& rm -f gda-list-config$(EXEEXT) gda-sql$(EXEEXT) gda-list-server-op$(EXEEXT) \
+	&& $(LN_S) gda-list-config-4.0$(EXEEXT) gda-list-config$(EXEEXT) \
+	&& $(LN_S) gda-sql-4.0$(EXEEXT) gda-sql$(EXEEXT) \
+	&& $(LN_S) gda-list-server-op-4.0$(EXEEXT) gda-list-server-op$(EXEEXT)
+endif
+
+uninstall-local:
+if DEFAULT_BINARY
+	rm -f $(DESTDIR)$(bindir)/gda-list-config$(EXEEXT) $(DESTDIR)$(bindir)/gda-sql$(EXEEXT) $(DESTDIR)$(bindir)/gda-list-server-op$(EXEEXT)
+endif

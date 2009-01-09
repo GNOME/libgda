@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <gda_array id="FIELDS_A" name="Table's columns">
-  <gda_array_field id="COLUMN_NAME" name="Field name" title="Field name" gdatype="gchararray"/>
-  <gda_array_field id="COLUMN_TYPE" name="Data type" title="Data type" gdatype="gchararray"/>
+  <gda_array_field id="COLUMN_NAME" name="Field name" title="Field name" gdatype="string"/>
+  <gda_array_field id="COLUMN_TYPE" name="Data type" title="Data type" gdatype="string"/>
   <gda_array_field id="COLUMN_SIZE" name="Size" title="Size" gdatype="guint" nullok="TRUE"/>
   <gda_array_field id="COLUMN_SCALE" name="Scale" title="Scale" gdatype="guint" nullok="TRUE"/>
-  <gda_array_field id="COLUMN_NNUL" name="Not NULL" title="Not NULL" gdatype="gboolean"/>
-  <gda_array_field id="COLUMN_AUTOINC" name="Auto increment" title="Auto increment" gdatype="gboolean"/>
-  <gda_array_field id="COLUMN_UNIQUE" name="Unique" title="Unique" gdatype="gboolean"/>
-  <gda_array_field id="COLUMN_PKEY" name="Primary key" title="Primary key" gdatype="gboolean"/>
-  <gda_array_field id="COLUMN_DEFAULT" name="Default" title="Default" gdatype="gchararray"/>
-  <gda_array_field id="COLUMN_CHECK" name="Check" title="Check" gdatype="gchararray"/>
+  <gda_array_field id="COLUMN_NNUL" name="Not NULL" title="Not NULL" gdatype="boolean"/>
+  <gda_array_field id="COLUMN_AUTOINC" name="Auto increment" title="Auto increment" gdatype="boolean"/>
+  <gda_array_field id="COLUMN_UNIQUE" name="Unique" title="Unique" gdatype="boolean"/>
+  <gda_array_field id="COLUMN_PKEY" name="Primary key" title="Primary key" gdatype="boolean"/>
+  <gda_array_field id="COLUMN_DEFAULT" name="Default" title="Default" gdatype="string"/>
+  <gda_array_field id="COLUMN_CHECK" name="Check" title="Check" gdatype="string"/>
   <gda_array_data>
     <gda_array_row>
       <gda_value>id</gda_value>

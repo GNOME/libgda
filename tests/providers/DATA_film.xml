@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 <gda_array id="EXPORT" name="Exported Data">
-  <gda_array_field id="FI0" name="film_id" title="film_id" gdatype="gint" nullok="TRUE"/>
-  <gda_array_field id="FI1" name="title" title="title" gdatype="gchararray" nullok="TRUE"/>
-  <gda_array_field id="FI2" name="description" title="description" gdatype="gchararray" nullok="TRUE"/>
-  <gda_array_field id="FI3" name="release_year" title="release_year" gdatype="gint" nullok="TRUE"/>
+  <gda_array_field id="FI0" name="film_id" title="film_id" gdatype="int" nullok="TRUE"/>
+  <gda_array_field id="FI1" name="title" title="title" gdatype="string" nullok="TRUE"/>
+  <gda_array_field id="FI2" name="description" title="description" gdatype="string" nullok="TRUE"/>
+  <gda_array_field id="FI3" name="release_year" title="release_year" gdatype="int" nullok="TRUE"/>
   <gda_array_field id="FI4" name="language_id" title="language_id" gdatype="GdaShort" nullok="TRUE"/>
   <gda_array_field id="FI5" name="original_language_id" title="original_language_id" gdatype="GdaShort" nullok="TRUE"/>
   <gda_array_field id="FI6" name="rental_duration" title="rental_duration" gdatype="GdaShort" nullok="TRUE"/>
   <gda_array_field id="FI7" name="rental_rate" title="rental_rate" gdatype="GdaNumeric" nullok="TRUE"/>
   <gda_array_field id="FI8" name="length" title="length" gdatype="GdaShort" nullok="TRUE"/>
   <gda_array_field id="FI9" name="replacement_cost" title="replacement_cost" gdatype="GdaNumeric" nullok="TRUE"/>
-  <gda_array_field id="FI10" name="rating" title="rating" gdatype="gchararray" nullok="TRUE"/>
-  <gda_array_field id="FI11" name="last_update" title="last_update" gdatype="GdaTimestamp" nullok="TRUE"/>
-  <gda_array_field id="FI12" name="special_features" title="special_features" gdatype="gchararray" nullok="TRUE"/>
+  <gda_array_field id="FI10" name="rating" title="rating" gdatype="string" nullok="TRUE"/>
+  <gda_array_field id="FI11" name="last_update" title="last_update" gdatype="timestamp" nullok="TRUE"/>
+  <gda_array_field id="FI12" name="special_features" title="special_features" gdatype="string" nullok="TRUE"/>
   <gda_array_data>
     <gda_array_row>
       <gda_value>1</gda_value>

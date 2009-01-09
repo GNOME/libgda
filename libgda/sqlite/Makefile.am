@@ -24,6 +24,8 @@ AM_CPPFLAGS = \
 sqliteheaders = gda-sqlite-provider.h
 libgda_sqlite_la_SOURCES = \
 	$(sqliteheaders) \
+	gda-sqlite-blob-op.c \
+	gda-sqlite-blob-op.h \
 	gda-sqlite-ddl.c \
 	gda-sqlite-ddl.h \
 	gda-sqlite-handler-bin.c \

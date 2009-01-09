@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <gda_array id="EXPORT" name="Exported Data">
-  <gda_array_field id="FI0" name="actor_id" title="actor_id" gdatype="gint" nullok="TRUE"/>
-  <gda_array_field id="FI1" name="first_name" title="first_name" gdatype="gchararray" nullok="TRUE"/>
-  <gda_array_field id="FI2" name="last_name" title="last_name" gdatype="gchararray" nullok="TRUE"/>
-  <gda_array_field id="FI3" name="last_update" title="last_update" gdatype="GdaTimestamp" nullok="TRUE"/>
+  <gda_array_field id="FI0" name="actor_id" title="actor_id" gdatype="int" nullok="TRUE"/>
+  <gda_array_field id="FI1" name="first_name" title="first_name" gdatype="string" nullok="TRUE"/>
+  <gda_array_field id="FI2" name="last_name" title="last_name" gdatype="string" nullok="TRUE"/>
+  <gda_array_field id="FI3" name="last_update" title="last_update" gdatype="timestamp" nullok="TRUE"/>
   <gda_array_data>
     <gda_array_row>
       <gda_value>1</gda_value>

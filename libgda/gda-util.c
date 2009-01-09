@@ -1035,6 +1035,57 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 }
 
 /**
+ * gda_compute_select_statement_from_update
+ * @update_stmt: an UPDATE statement
+ * @error: a place to store errors, or %NULL
+ *
+ * Computes a SELECT statement which selects all the rows the @update_stmt would update. Beware
+ * however that this GdaSqlStatement does not select anything (ie it would be rendered as "SELECT FROM ... WHERE ...")
+ * and before being useable, one needs to add some fields to actually select.
+ */
+GdaSqlStatement *
+gda_compute_select_statement_from_update (GdaStatement *update_stmt, GError **error)
+{
+	GdaSqlStatement *upd_stmt;
+	GdaSqlStatement *sel_stmt;
+	GdaSqlStatementUpdate *ust;
+	GdaSqlStatementSelect *sst;
+
+	g_return_val_if_fail (update_stmt, NULL);
+	g_object_get (G_OBJECT (update_stmt), "structure", &upd_stmt, NULL);
+	g_return_val_if_fail (upd_stmt, NULL);
+	g_return_val_if_fail (upd_stmt->stmt_type == GDA_SQL_STATEMENT_UPDATE, NULL);
+	
+	ust = (GdaSqlStatementUpdate*) upd_stmt->contents;
+	sst = g_new0 (GdaSqlStatementSelect, 1);
+
+	if (!ust->table || !ust->table->table_name) {
+		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+			     "%s", _("Missing table name in UPDATE statement"));
+		return NULL;
+	}
+
+	/* FROM */
+	GdaSqlSelectTarget *target;
+	sst->from = gda_sql_select_from_new (GDA_SQL_ANY_PART (sst));
+	target = gda_sql_select_target_new (GDA_SQL_ANY_PART (sst->from));
+	sst->from->targets = g_slist_prepend (NULL, target);
+	target->expr = gda_sql_expr_new (GDA_SQL_ANY_PART (target));
+	g_value_set_string ((target->expr->value = gda_value_new (G_TYPE_STRING)), ust->table->table_name);
+
+	/* WHERE */
+	sst->where_cond = gda_sql_expr_copy (ust->cond);
+	GDA_SQL_ANY_PART (sst->where_cond)->parent = GDA_SQL_ANY_PART (sst);
+
+	gda_sql_statement_free (upd_stmt);
+
+	sel_stmt = gda_sql_statement_new (GDA_SQL_STATEMENT_SELECT);
+	sel_stmt->contents = sst;
+
+	return sel_stmt;
+}
+
+/**
  * gda_identifier_hash
  * @id: an identifier string
  *

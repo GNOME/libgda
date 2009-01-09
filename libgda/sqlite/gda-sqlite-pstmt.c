@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2008 The GNOME Foundation.
+ * Copyright (C) 2008 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -78,6 +78,8 @@ gda_sqlite_pstmt_init (GdaSqlitePStmt *pstmt, GdaSqlitePStmtClass *klass)
 	g_return_if_fail (GDA_IS_PSTMT (pstmt));
 	pstmt->sqlite_stmt = NULL;
 	pstmt->stmt_used = FALSE;
+	pstmt->rowid_hash = NULL;
+	pstmt->nb_rowid_columns = 0;
 }
 
 static void
@@ -90,6 +92,9 @@ gda_sqlite_pstmt_finalize (GObject *object)
 	/* free memory */
 	if (pstmt->sqlite_stmt) 
 		sqlite3_finalize (pstmt->sqlite_stmt);
+
+	if (pstmt->rowid_hash)
+		g_hash_table_destroy (pstmt->rowid_hash);
 
 	/* chain to parent class */
 	parent_class->finalize (object);

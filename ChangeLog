@@ -1,3 +1,16 @@
+2009-01-09  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-util.[ch]: added gda_compute_select_statement_from_update()
+	* libgda/sqlite/:
+	  - added BLOB support for the SQLite provider
+	  - report an error when getting a gint from a too big gint64 value
+	* tests/: updated test data related to the gda_g_type_to_string() changes
+	* configure.in
+	* tools/:
+	  - added a '-v' command line option to display version
+	  - added a man page for gda-sql
+	  - optionnally create symlink from "<prog>" to the "<prog>-4.0" program names
+
 2009-01-06  Vivien Malerba <malerba@gnome-db.org>
 
 	* tools/: embedded web server improvements:

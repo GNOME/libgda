@@ -1,5 +1,5 @@
 /* GDA SQLite provider
- * Copyright (C) 1998 - 2008 The GNOME Foundation.
+ * Copyright (C) 1998 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *	   Rodrigo Moya <rodrigo@gnome-db.org>
@@ -28,6 +28,7 @@
 #include "gda-sqlite.h"
 #include "gda-sqlite-recordset.h"
 #include "gda-sqlite-provider.h"
+#include "gda-sqlite-blob-op.h"
 #include <libgda/gda-util.h>
 #include <libgda/gda-connection-private.h>
 
@@ -200,8 +201,8 @@ gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_p
                 _gda_sqlite_compute_types_hash (cdata);
 
         /* make sure @ps reports the correct number of columns */
-	if (_GDA_PSTMT (ps)->ncols < 0) 
-		_GDA_PSTMT (ps)->ncols = sqlite3_column_count (ps->sqlite_stmt);
+	if (_GDA_PSTMT (ps)->ncols < 0)
+		_GDA_PSTMT (ps)->ncols = sqlite3_column_count (ps->sqlite_stmt) - ps->nb_rowid_columns;
 
         /* completing ps */
 	g_assert (! ps->stmt_used);
@@ -275,11 +276,17 @@ fuzzy_get_gtype (SqliteConnectionData *cdata, GdaSqlitePStmt *ps, gint colnum)
 	if (_GDA_PSTMT (ps)->types [colnum] != GDA_TYPE_NULL)
 		return _GDA_PSTMT (ps)->types [colnum];
 	
-	ctype = sqlite3_column_decltype (ps->sqlite_stmt, colnum);
-	if (ctype)
-		gtype = GPOINTER_TO_INT (g_hash_table_lookup (cdata->types, ctype));
-	if (gtype == GDA_TYPE_NULL) 
-		gtype = _gda_sqlite_compute_g_type (sqlite3_column_type (ps->sqlite_stmt, colnum));
+	ctype = sqlite3_column_origin_name (ps->sqlite_stmt, colnum);
+	if (ctype && !strcmp (ctype, "rowid"))
+		gtype = G_TYPE_INT64;
+	else {
+		ctype = sqlite3_column_decltype (ps->sqlite_stmt, colnum);
+		
+		if (ctype)
+			gtype = GPOINTER_TO_INT (g_hash_table_lookup (cdata->types, ctype));
+		if (gtype == GDA_TYPE_NULL) 
+			gtype = _gda_sqlite_compute_g_type (sqlite3_column_type (ps->sqlite_stmt, colnum));
+	}
 
 	return gtype;
 }
@@ -337,8 +344,20 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 				
 				if (type == GDA_TYPE_NULL)
 					;
-				else if (type == G_TYPE_INT)
-					g_value_set_int (value, sqlite3_column_int (ps->sqlite_stmt, col));
+				else if (type == G_TYPE_INT) {
+					gint64 i;
+					i = sqlite3_column_int (ps->sqlite_stmt, col);
+					if ((i > G_MAXINT) || (i < G_MININT)) {
+						g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+							     GDA_SERVER_PROVIDER_DATA_ERROR,
+							     "%s", _("Integer value is too big"));
+						has_error = TRUE;
+						break;
+					}
+					g_value_set_int (value, (gint) i);
+				}
+				else if (type == G_TYPE_INT64)
+					g_value_set_int64 (value, sqlite3_column_int64 (ps->sqlite_stmt, col));
 				else if (type == G_TYPE_DOUBLE)
 					g_value_set_double (value, sqlite3_column_double (ps->sqlite_stmt, col));
 				else if (type == G_TYPE_STRING)
@@ -356,6 +375,46 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					else
 						bin->binary_length = 0;
 					gda_value_take_binary (value, bin);
+				}
+				else if (type == GDA_TYPE_BLOB) {
+					GdaBlobOp *bop = NULL;
+					gint oidcol = 0;
+
+					if (ps->rowid_hash) {
+						const char *ctable;
+						ctable = sqlite3_column_name (ps->sqlite_stmt, col);
+						if (ctable)
+							oidcol = GPOINTER_TO_INT (g_hash_table_lookup (ps->rowid_hash,
+												       ctable));
+						if (oidcol == 0) {
+							ctable = sqlite3_column_table_name (ps->sqlite_stmt, col);
+							if (ctable)
+								oidcol = GPOINTER_TO_INT (g_hash_table_lookup (ps->rowid_hash, 
+													       ctable));
+						}
+					}
+					if (oidcol != 0) {
+						gint64 rowid;
+						rowid = sqlite3_column_int64 (ps->sqlite_stmt, oidcol);
+						bop = gda_sqlite_blob_op_new (cdata,
+									      sqlite3_column_database_name (ps->sqlite_stmt, col),
+									      sqlite3_column_table_name (ps->sqlite_stmt, col),
+									      sqlite3_column_origin_name (ps->sqlite_stmt, col),
+									      rowid);
+					}
+					if (!bop) {
+						g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+							     GDA_SERVER_PROVIDER_DATA_ERROR,
+							     "%s", _("Unable to open BLOB"));
+						has_error = TRUE;
+						break;
+					}
+					else {
+						GdaBlob *blob;
+						blob = g_new0 (GdaBlob, 1);
+						blob->op = bop;
+						gda_value_take_blob (value, blob);
+					}
 				}
 				else if (type == G_TYPE_BOOLEAN)
 					g_value_set_boolean (value, sqlite3_column_int (ps->sqlite_stmt, col) == 0 ? FALSE : TRUE);

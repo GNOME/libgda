@@ -1,5 +1,5 @@
 /* GNOME DB Postgres Provider
- * Copyright (C) 1998 - 2006 The GNOME Foundation
+ * Copyright (C) 1998 - 2009 The GNOME Foundation
  *
  * AUTHORS:
  *         Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
@@ -65,7 +65,8 @@ _gda_sqlite_compute_types_hash (SqliteConnectionData *cdata)
 	g_hash_table_insert (types, g_strdup ("real"), GINT_TO_POINTER (G_TYPE_DOUBLE));
 	g_hash_table_insert (types, g_strdup ("text"), GINT_TO_POINTER (G_TYPE_STRING));
 	g_hash_table_insert (types, g_strdup ("string"), GINT_TO_POINTER (G_TYPE_STRING));
-	g_hash_table_insert (types, g_strdup ("blob"), GINT_TO_POINTER (GDA_TYPE_BINARY));
+	g_hash_table_insert (types, g_strdup ("binary"), GINT_TO_POINTER (GDA_TYPE_BINARY));
+	g_hash_table_insert (types, g_strdup ("blob"), GINT_TO_POINTER (GDA_TYPE_BLOB));
 }
 
 GType
@@ -80,7 +81,7 @@ _gda_sqlite_compute_g_type (int sqlite_type)
 	case SQLITE_TEXT:
 		return G_TYPE_STRING;
 	case SQLITE_BLOB:
-		return GDA_TYPE_BINARY;
+		return GDA_TYPE_BLOB;
 	case SQLITE_NULL:
 		return GDA_TYPE_NULL;
 	default:

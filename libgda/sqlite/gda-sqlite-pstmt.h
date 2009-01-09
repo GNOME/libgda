@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 2008 The GNOME Foundation.
+ * Copyright (C) 2008 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -46,7 +46,9 @@ struct _GdaSqlitePStmt {
 
 	sqlite3_stmt   *sqlite_stmt;
 	gboolean        stmt_used; /* TRUE if a recorset already uses this prepared statement,
-				    necessary because only one recordset can use sqlite_stmt at a time */
+				    * necessary because only one recordset can use sqlite_stmt at a time */
+	GHashTable      *rowid_hash;
+	gint             nb_rowid_columns;
 };
 
 struct _GdaSqlitePStmtClass {

@@ -24,12 +24,12 @@
 
   <test id="3">
     <sql>##pname::gint</sql>
-    <expected>{"statements":[{"statement":{"sql":"##pname::gint","stmt_type":"UNKNOWN","contents":[{"value":null,"param_spec":{"name":"pname","descr":null,"type":"gint","is_param":true,"nullok":false}}]}}]}</expected>
+    <expected>{"statements":[{"statement":{"sql":"##pname::gint","stmt_type":"UNKNOWN","contents":[{"value":null,"param_spec":{"name":"pname","descr":null,"type":"int","is_param":true,"nullok":false}}]}}]}</expected>
   </test>
 
   <test id="4">
     <sql>##pname::gint::null</sql>
-    <expected>{"statements":[{"statement":{"sql":"##pname::gint::null","stmt_type":"UNKNOWN","contents":[{"value":null,"param_spec":{"name":"pname","descr":null,"type":"gint","is_param":true,"nullok":true}}]}}]}</expected>
+    <expected>{"statements":[{"statement":{"sql":"##pname::gint::null","stmt_type":"UNKNOWN","contents":[{"value":null,"param_spec":{"name":"pname","descr":null,"type":"int","is_param":true,"nullok":true}}]}}]}</expected>
   </test>
 
   <!-- Extendend param notation, unspec value -->
@@ -45,7 +45,7 @@
 
   <test id="7">
     <sql>## /* type:gint */</sql>
-    <expected>{"statements":[{"statement":{"sql":"## \/* type:gint *\/","stmt_type":"UNKNOWN","contents":[{"value":null,"param_spec":{"name":null,"descr":null,"type":"gint","is_param":true,"nullok":false}}]}}]}</expected>
+    <expected>{"statements":[{"statement":{"sql":"## \/* type:gint *\/","stmt_type":"UNKNOWN","contents":[{"value":null,"param_spec":{"name":null,"descr":null,"type":"int","is_param":true,"nullok":false}}]}}]}</expected>
   </test>
 
   <test id="8">
@@ -97,13 +97,13 @@
   <!-- Extendend param notation, with value -->
   <test id="17">
     <sql>12 /* type:gint name:myparam */</sql>
-    <expected>{"statements":[{"statement":{"sql":"12 \/* type:gint name:myparam *\/","stmt_type":"UNKNOWN","contents":[{"value":"12","param_spec":{"name":"myparam","descr":null,"type":"gint","is_param":true,"nullok":false}}]}}]}</expected>
+    <expected>{"statements":[{"statement":{"sql":"12 \/* type:gint name:myparam *\/","stmt_type":"UNKNOWN","contents":[{"value":"12","param_spec":{"name":"myparam","descr":null,"type":"int","is_param":true,"nullok":false}}]}}]}</expected>
   </test>
 
 
   <test id="18">
     <sql>'A string' /* name:'A string param' type:'gchararray' */</sql>
-    <expected>{"statements":[{"statement":{"sql":"'A string' \/* name:'A string param' type:'gchararray' *\/","stmt_type":"UNKNOWN","contents":[{"value":"'A string'","param_spec":{"name":"A string param","descr":null,"type":"gchararray","is_param":true,"nullok":false}}]}}]}</expected>
+    <expected>{"statements":[{"statement":{"sql":"'A string' \/* name:'A string param' type:'gchararray' *\/","stmt_type":"UNKNOWN","contents":[{"value":"'A string'","param_spec":{"name":"A string param","descr":null,"type":"string","is_param":true,"nullok":false}}]}}]}</expected>
   </test>
 
   <!-- multiple parts in single statement -->
@@ -860,7 +860,7 @@
 
   <test id="2229">
     <sql>select * from table limit ##limval::gint</sql>
-    <expected>{"statements":[{"statement":{"sql":"select * from table limit ##limval::gint","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"table"},"table_name":"table"}]},"limit":{"value":null,"param_spec":{"name":"limval","descr":null,"type":"gint","is_param":true,"nullok":false}}}}}]}</expected>
+    <expected>{"statements":[{"statement":{"sql":"select * from table limit ##limval::gint","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"table"},"table_name":"table"}]},"limit":{"value":null,"param_spec":{"name":"limval","descr":null,"type":"int","is_param":true,"nullok":false}}}}}]}</expected>
   </test>
 
   <test id="2230">

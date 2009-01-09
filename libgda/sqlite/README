@@ -1,3 +1,6 @@
+Which version of SQLite is used:
+================================
+
 When embedded SQLITE is used:
 * HAVE_SQLITE is *not* defined
 * patch it to add the PRAGMA command
@@ -13,3 +16,34 @@ Possible solutions in the future:
 1 - make SQLite implement the required PRAGMA (patch proposed)
 2 - don't use the required PRAGMA at all, and manage to intercept the sqlite3CreateFunc call
     when statically linked (=> modify the source code of SQLite) 
+
+
+
+
+BLOB handling in SQLite:
+========================
+
+SQLite now supports incremental I/O for BLOBS. Any data in any column can be accessed
+with this API.
+
+When writing a blob to the database:
+------------------------------------
+Opening a blob requires the following information:
+* the database name
+* the table name
+* the column name
+* the ROWID
+
+The first 3 pieces of information can be obtained from the INSERT or UPDATE statement
+itself.
+
+The ROWID can be obtained using sqlite3_last_insert_rowid() for an INSERT or must be queried
+for an UPDATE.
+
+When reading a blob from the database:
+--------------------------------------
+Opening a blob requires the following information:
+* the database name: use sqlite3_column_database_name()
+* the table name: use sqlite3_column_table_name()
+* the column name: use sqlite3_column_origin_name()
+* the ROWID: get it from the SELECT as the last row.
