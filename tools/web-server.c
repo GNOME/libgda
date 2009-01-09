@@ -475,6 +475,10 @@ get_file (WebServer *server, SoupMessage *msg, const char *path, GError **error)
 	return TRUE;
 }
 
+#ifdef G_OS_WIN32
+typedef guint8 uint8_t;
+#endif
+
 #define PAD_LEN 64  /* PAD length */
 #define SIG_LEN 16  /* MD5 digest length */
 /*

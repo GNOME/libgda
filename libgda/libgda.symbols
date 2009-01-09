@@ -240,8 +240,8 @@
 	gda_data_model_iter_get_value_for_field
 	gda_data_model_iter_invalidate_contents
 	gda_data_model_iter_is_valid
-	gda_data_model_iter_move_at_row
-	gda_data_model_iter_move_at_row_default
+	gda_data_model_iter_move_to_row
+	gda_data_model_iter_move_to_row_default
 	gda_data_model_iter_move_next
 	gda_data_model_iter_move_next_default
 	gda_data_model_iter_move_prev
