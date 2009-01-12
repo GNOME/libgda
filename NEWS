@@ -1,3 +1,10 @@
+libgda 3.99.8, 2009-01-12
+
+ - misc corrections
+ - SQL console: better useability in the web console
+ - SQL console: man page added
+ - Win32 build fixes
+
 libgda 3.99.7, 2008-12-31
 
  - API corrections

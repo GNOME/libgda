@@ -1,3 +1,14 @@
+2009-01-12  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/sql-parser/gda-statement-struct-parts.c:
+	* doc/C: doc. improvements
+	* libgda/libgda.symbols:
+	* libgda/gda-easy.[ch]: implementation of INSERT/UPDATE/DELETE convenience
+	functions (with some API Corrections!)
+	* samples/SimpleExample/example.c: use the convenience API
+	* libgda/gda-util.c: bug fixed
+	* providers/postgres/gda-postgres-meta.c: bug fixed (on partial meta data update)
+
 2009-01-09  Vivien Malerba <malerba@gnome-db.org>
 
 	* tools/web-server.c:

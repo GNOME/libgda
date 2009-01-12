@@ -53,7 +53,7 @@ HTML_IMAGES = DataModels.png \
 	writable_data_model.png GdaDataModelIter.png \
 	data_validation_holder.png data_validation_proxy.png data_validation_set.png \
 	data_proxy1.png data_proxy2.png data_proxy3.png data_proxy4.png data_proxy5.png \
-	gda-sql-graph.png
+	gda-sql-graph.png howto-exec.png
 
 # Extra options to supply to gtkdoc-fixref
 FIXXREF_OPTIONS=
@@ -66,7 +66,7 @@ EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration
 	prov-writing.xml i_s_doc.xml howto.xml gda-sql-manual.xml data_validation.xml data_select.xml \
 	DataModels.svg \
 	architecture.svg parts.svg stmt-unknown.svg stmt-select.svg stmt-insert1.svg stmt-insert2.svg \
-	stmt-update.svg stmt-compound.svg information_schema.svg
+	stmt-update.svg stmt-compound.svg information_schema.svg howto-exec.svg
 
 # Files not to distribute
 # for --rebuild-types in $(SCAN_OPTIONS), e.g. $(DOC_MODULE).types

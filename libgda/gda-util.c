@@ -1058,6 +1058,7 @@ gda_compute_select_statement_from_update (GdaStatement *update_stmt, GError **er
 	
 	ust = (GdaSqlStatementUpdate*) upd_stmt->contents;
 	sst = g_new0 (GdaSqlStatementSelect, 1);
+	GDA_SQL_ANY_PART (sst)->type = GDA_SQL_ANY_STMT_SELECT;
 
 	if (!ust->table || !ust->table->table_name) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,

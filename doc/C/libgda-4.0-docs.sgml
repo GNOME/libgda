@@ -191,9 +191,9 @@
         </contrib>
       </author>
     </authorgroup>
-    <date>2008</date>
+    <date>January 2009</date>
     <copyright>
-      <year>1999 - 2008</year>
+      <year>1999 - 2009</year>
       <holder>The GNOME Foundation</holder>
     </copyright>
     <abstract>
@@ -503,6 +503,17 @@
 	&LIBGDA; library allows one to use either a generic SQL parser, or a parser provided by each database adaptator (database
 	provider), through the <link linkend="gda-connection-create-parser">gda_connection_create_parser()</link> method.
       </para>
+      <para>
+	The following schema illustrates how a statement is executed:
+	<mediaobject>
+	  <imageobject role="html">
+	    <imagedata fileref="howto-exec.png" format="PNG"/>
+	  </imageobject>
+	  <textobject>
+	    <phrase>Statement execution illustrated</phrase>
+	  </textobject>
+	</mediaobject>
+      </para>
       &libgda-convenient;
       &libgda-GdaConnection;
       &libgda-GdaSqlParser;
@@ -803,7 +814,7 @@ g_object_unref (store);
 	      <imagedata fileref="information_schema.png" format="PNG"/>
 	    </imageobject>
 	    <textobject>
-	      <phrase>Dictioanry's tables and views initially defined by &LIBGDA;</phrase>
+	      <phrase>Dictionary's tables and views initially defined by &LIBGDA;</phrase>
 	    </textobject>
 	  </mediaobject>
 	</para>

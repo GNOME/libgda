@@ -4,6 +4,10 @@
 GdaConnection *open_connection (void);
 void display_products_contents (GdaConnection *cnc);
 void create_table (GdaConnection *cnc);
+void insert_data (GdaConnection *cnc);
+void update_data (GdaConnection *cnc);
+void delete_data (GdaConnection *cnc);
+
 void run_sql_non_select (GdaConnection *cnc, const gchar *sql);
 
 int
@@ -16,7 +20,16 @@ main (int argc, char *argv[])
 	/* open connections */
 	cnc = open_connection ();
 	create_table (cnc);
+
+	insert_data (cnc);
 	display_products_contents (cnc);
+
+	update_data (cnc);
+	display_products_contents (cnc);
+
+	delete_data (cnc);
+	display_products_contents (cnc);
+
         gda_connection_close (cnc);
 
         return 0;
@@ -26,7 +39,7 @@ main (int argc, char *argv[])
  * Open a connection to the example.db file
  */
 GdaConnection *
-open_connection (void)
+open_connection ()
 {
         GdaConnection *cnc;
         GError *error = NULL;
@@ -34,7 +47,8 @@ open_connection (void)
 
 	/* open connection */
         cnc = gda_connection_open_from_string ("SQLite", "DB_DIR=.;DB_NAME=example_db", NULL,
-					       GDA_CONNECTION_OPTIONS_NONE, &error);
+					       GDA_CONNECTION_OPTIONS_NONE,
+					       &error);
         if (!cnc) {
                 g_print ("Could not open connection to SQLite database in example_db.db file: %s\n",
                          error && error->message ? error->message : "No detail");
@@ -60,11 +74,114 @@ create_table (GdaConnection *cnc)
 	run_sql_non_select (cnc, "DROP table IF EXISTS products");
         run_sql_non_select (cnc, "CREATE table products (ref string not null primary key, "
                             "name string not null, price real)");
-	run_sql_non_select (cnc, "INSERT INTO products VALUES ('p1', 'chair', 2.0)");
-	run_sql_non_select (cnc, "INSERT INTO products VALUES ('p2', 'table', 5.0)");
-	run_sql_non_select (cnc, "INSERT INTO products VALUES ('p3', 'glass', 1.1)");
 }
 
+/*
+ * Insert some data
+ *
+ * Even though it is possible to use SQL text which includes the values to insert into the
+ * table, it's better to use variables (place holders), or as is done here, convenience functions
+ * to avoid SQL injection problems.
+ */
+void
+insert_data (GdaConnection *cnc)
+{
+	typedef struct {
+		gchar *ref;
+		gchar *name;
+
+		gboolean price_is_null;
+		gfloat price;
+	} RowData;
+	RowData data [] = {
+		{"p1", "chair", FALSE, 2.0},
+		{"p2", "table", FALSE, 5.0},
+		{"p3", "glass", FALSE, 1.1},
+		{"p1000", "???", TRUE, 0.},
+		{"p1001", "???", TRUE, 0.},
+	};
+	gint i;
+
+	gboolean res;
+	GError *error = NULL;
+	GValue *v1, *v2, *v3;
+
+	for (i = 0; i < sizeof (data) / sizeof (RowData); i++) {
+		v1 = gda_value_new_from_string (data[i].ref, G_TYPE_STRING);
+		v2 = gda_value_new_from_string (data[i].name, G_TYPE_STRING);
+		if (data[i].price_is_null)
+			v3 = NULL;
+		else {
+			v3 = gda_value_new (G_TYPE_FLOAT);
+			g_value_set_float (v3, data[i].price);
+		}
+		
+		res = gda_insert_row_into_table (cnc, "products", &error, "ref", v1, "name", v2, "price", v3, NULL);
+
+		if (!res) {
+			g_error ("Could not INSERT data into the 'products' table: %s\n",
+				 error && error->message ? error->message : "No detail");
+		}
+		gda_value_free (v1);
+		gda_value_free (v2);
+		if (v3)
+			gda_value_free (v3);
+	}
+}
+
+/*
+ * Update some data
+ */
+void
+update_data (GdaConnection *cnc)
+{
+	gboolean res;
+	GError *error = NULL;
+	GValue *v1, *v2, *v3;
+
+	/* update data where ref is 'p1000' */
+	v1 = gda_value_new_from_string ("p1000", G_TYPE_STRING);
+	v2 = gda_value_new_from_string ("flowers", G_TYPE_STRING);
+	v3 = gda_value_new (G_TYPE_FLOAT);
+	g_value_set_float (v3, 1.99);
+		
+	res = gda_update_row_in_table (cnc, "products", "ref", v1, &error, "name", v2, "price", v3, NULL);
+
+	if (!res) {
+		g_error ("Could not UPDATE data in the 'products' table: %s\n",
+			 error && error->message ? error->message : "No detail");
+	}
+	gda_value_free (v1);
+	gda_value_free (v2);
+	gda_value_free (v3);
+}
+
+/*
+ * Delete some data
+ */
+void
+delete_data (GdaConnection *cnc)
+{
+	gboolean res;
+	GError *error = NULL;
+	GValue *v;
+
+	/* delete data where name is 'table' */
+	v = gda_value_new_from_string ("table", G_TYPE_STRING);
+	res = gda_delete_row_from_table (cnc, "products", "name", v, &error);
+	if (!res) {
+		g_error ("Could not DELETE data from the 'products' table: %s\n",
+			 error && error->message ? error->message : "No detail");
+	}
+	gda_value_free (v);
+
+	/* delete data where price is NULL */
+	res = gda_delete_row_from_table (cnc, "products", "price", NULL, &error);
+	if (!res) {
+		g_error ("Could not DELETE data from the 'products' table: %s\n",
+			 error && error->message ? error->message : "No detail");
+	}
+}
 
 /* 
  * display the contents of the 'products' table 

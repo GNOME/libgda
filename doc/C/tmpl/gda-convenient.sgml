@@ -132,48 +132,21 @@ Do quickly some actions
 </para>
 
 @cnc: 
-@table_name: 
+@table: 
 @error: 
 @Varargs: 
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_insert_row_into_table_from_string ##### -->
+<!-- ##### FUNCTION gda_update_row_in_table ##### -->
 <para>
 
 </para>
 
 @cnc: 
-@table_name: 
-@error: 
-@Varargs: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_update_value_in_table ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@table_name: 
-@search_for_column: 
-@condition: 
-@column_name: 
-@new_value: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_update_values_in_table ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@table_name: 
+@table: 
 @condition_column_name: 
-@condition: 
+@condition_value: 
 @error: 
 @Varargs: 
 @Returns: 
@@ -185,9 +158,9 @@ Do quickly some actions
 </para>
 
 @cnc: 
-@table_name: 
+@table: 
 @condition_column_name: 
-@condition: 
+@condition_value: 
 @error: 
 @Returns: 
 

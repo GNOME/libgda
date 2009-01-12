@@ -243,6 +243,13 @@ else {
 g_object_unref (stmt);
       </programlisting>
     </para>
+    <para>
+      Note that the example above includes in the SQL statement the values of the data to use in the UPDATE
+      (namely 'Joe' and '123'). Even though it's simple, a better practice is to use variables, as it
+      prevents SQL injection and avoids formatting problems. For more intormation, see the 
+      <link linkend="GdaSqlParser.description">GdaSqlParser</link> object's documentation; or the section
+      about <link linkend="libgda-40-Convenience-functions">convenience functions</link>
+    </para>
   </sect1>
 
   <sect1>
@@ -345,8 +352,8 @@ else {
       </programlisting>
     </para>
     <para>
-      Please also note that &LIBGDA; provides some convenient functions to wrap this process, see the
-      <link linkend="libgda-40-Convenient-functions">Convenient functions</link> section for more
+      Please also note that &LIBGDA; provides some convenience functions to wrap this process, see the
+      <link linkend="libgda-40-Convenience-functions">Convenience functions</link> section for more
       information.
     </para>
   </sect1>

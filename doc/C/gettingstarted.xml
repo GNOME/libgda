@@ -321,11 +321,27 @@ cc -o example example.c `pkg-config --cflags --libs libgda-3.0`
       </programlisting>
       and executing should output something like:
       <programlisting>> ./example 
-ref | name  | price   
-----+-------+---------
-p1  | chair | 2.000000
-p2  | table | 5.000000
-p3  | glass | 1.100000
+ref   | name  | price   
+------+-------+---------
+p1    | chair | 2.000000
+p2    | table | 5.000000
+p3    | glass | 1.100000
+p1000 | ???   | NULL    
+p1001 | ???   | NULL    
+(5 rows)
+ref   | name    | price   
+------+---------+---------
+p1    | chair   | 2.000000
+p2    | table   | 5.000000
+p3    | glass   | 1.100000
+p1000 | flowers | 1.990000
+p1001 | ???     | NULL    
+(5 rows)
+ref   | name    | price   
+------+---------+---------
+p1    | chair   | 2.000000
+p3    | glass   | 1.100000
+p1000 | flowers | 1.990000
 (3 rows)
       </programlisting>
     </para>
@@ -418,6 +434,7 @@ create_table (GdaConnection *cnc)
 	<listitem><para>in the <filename>tools/</filename> directory where &LIBGDA;'s tools exist and are
 	    also a good starting point</para></listitem>
       </itemizedlist>
+      Finally this documentation includes a <link linkend="howto">HOWTO for common tasks</link> with more code.
     </para>
   </sect1>
 </chapter>

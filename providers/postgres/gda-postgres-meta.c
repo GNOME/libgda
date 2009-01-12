@@ -893,7 +893,7 @@ _gda_postgres_meta_columns (GdaServerProvider *prov, GdaConnection *cnc,
 		if (type != G_TYPE_STRING) {
 			GValue *v;
 			g_value_set_string (v = gda_value_new (G_TYPE_STRING), g_type_name (type));
-			retval = gda_data_model_set_value_at (proxy, 7, i, v, error);
+			retval = gda_data_model_set_value_at (proxy, 9, i, v, error);
 			gda_value_free (v);
 			if (!retval)
 				break;

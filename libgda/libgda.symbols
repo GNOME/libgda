@@ -380,7 +380,6 @@
 	gda_identifier_hash
 	gda_init
 	gda_insert_row_into_table
-	gda_insert_row_into_table_from_string
 	gda_lang_locale
 	gda_lockable_get_type
 	gda_lockable_lock
@@ -771,8 +770,7 @@
 	gda_transaction_status_get_type
 	gda_transaction_status_new
 	gda_transaction_status_state_get_type
-	gda_update_value_in_table
-	gda_update_values_in_table
+	gda_update_row_in_table
 	gda_ushort_get_type
 	gda_utility_check_data_model
 	gda_utility_data_model_dump_data_to_xml

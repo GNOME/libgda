@@ -402,7 +402,7 @@ gda_sql_table_serialize (GdaSqlTable *table)
  * @value: a #GValue holding a string to take from
  * 
  * Sets the table's name using the string holded by @value. When call, @value is freed using
- * #gda_value_free().
+ * gda_value_free().
  *
  */
 void
