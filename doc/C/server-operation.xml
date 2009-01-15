@@ -1,21 +1,20 @@
 <sect2 id="DDLIntro">
   <title>General words about DDL queries</title>
   <para>
-    On the contrary to data manipulation (DML) queries, data definition queries are not very well standardized (the SQL veries a 
+    On the contrary to data manipulation (DML) queries, data definition queries are not very well standardized (the SQL varies a 
     lot from one DBMS to the other), and &LIBGDA; proposes to bypass the SQL usage and uses a different approach based on the 
     information required to perform a task (or operation, thus the <link linkend="GdaServerOperation">GdaServerOperation</link>
     object).
   </para>
   <para>
-    To be able to perform an operation, using the connection's associated <link linkend="GdaServerProvider">GdaServerProvider</link> 
-    object, the &LIBGDA;'s user has to:
+    Here is an overview the steps involved:
     <itemizedlist>
       <listitem>
-        <para>Make sure the provider supports the requested operation using the 
+        <para>Make sure the database provider (associated to the connection)  supports the requested operation using the 
 	  <link linkend="gda-server-provider-supports-operation">gda_server_provider_supports_operation()</link> method</para>
       </listitem>
       <listitem>
-        <para>Ask the provider for a <link linkend="GdaServerOperation">GdaServerOperation</link> object
+        <para>Ask the provider to create a <link linkend="GdaServerOperation">GdaServerOperation</link> object
 	  using the <link linkend="gda-server-provider-create-operation">gda_server_provider_create_operation()</link> method. 
 	  The resulting new object will hold all the information required (and some optional) to perform the requested
 	  operation. For example to create a table, the required information will be the table name and the description of its
@@ -45,16 +44,18 @@
     <para>
       The required information to perform an operation is stored entirely in a 
       <link linkend="GdaServerOperation">GdaServerOperation</link> object using named paths which are strings like 
-      "/TABLE_DEF_P/TABLE_NAME" or "/TABLE_CONSTRAINTS_S/0/CONSTRAINT_STRING". Each path is similar to a Unix file path
+      "/TABLE_DEF_P/TABLE_NAME" or "/TABLE_CONSTRAINTS_S/0/CONSTRAINT_STRING" (for details about the path format, refer to the
+      <link linkend="gda-server-operation-set-value-at">gda_server_operation_set_value_at()</link> method). 
+      Each path is similar to a Unix file path
       (names separated by a '/'). Each part of the path corresponds to a node (represented as a 
       <link linkend="GdaServerOperationNode">GdaServerOperationNode</link> structure) which has a type listed as 
       a <link linkend="GdaServerOperationNodeType">GdaServerOperationNodeType</link>; basically the types of node are:
       <itemizedlist>
 	<listitem>
-          <para>a node containing a <link linkend="GdaParameter">GdaParameter</link> object which just contains one value</para>
+          <para>a node containing a <link linkend="GdaHolder">GdaHolder</link> object which just contains one value</para>
 	</listitem>
 	<listitem>
-          <para>a node containing a <link linkend="GdaParameterList">GdaParameterList</link> object which is just a list
+          <para>a node containing a <link linkend="GdaSet">GdaSet</link> object which is just a list
 	    of named parameters (for example all the attributes of the table to create such as the table's name and 
 	    storage type for a MySQL provider)</para>
 	</listitem>

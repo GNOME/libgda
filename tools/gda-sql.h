@@ -23,6 +23,7 @@
 #define __GDA_SQL_H_
 
 #include <libgda/libgda.h>
+#include <tools/gda-threader.h>
 #include <sql-parser/gda-sql-parser.h>
 
 G_BEGIN_DECLS

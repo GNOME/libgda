@@ -73,6 +73,7 @@ GDA_CONFIG_CLASS
 GDA_IS_CONFIG
 GDA_IS_CONFIG_CLASS
 GDA_TYPE_CONFIG
+GDA_CONFIG_ERROR
 gda_config_get_type
 </SECTION>
 
@@ -134,7 +135,7 @@ gda_connection_get_provider
 gda_connection_get_provider_name
 gda_connection_get_dsn
 gda_connection_get_cnc_string
-gda_connection_get_authentification
+gda_connection_get_authentication
 <SUBSECTION>
 gda_connection_get_events
 <SUBSECTION>
@@ -148,10 +149,6 @@ gda_connection_update_meta_store
 GdaConnectionMetaType
 gda_connection_get_meta_store_data
 gda_connection_get_meta_store_data_v
-<SUBSECTION>
-gda_connection_lock
-gda_connection_trylock
-gda_connection_unlock
 <SUBSECTION Standard>
 GDA_CONNECTION
 GDA_CONNECTION_CLASS
@@ -326,8 +323,6 @@ gda_data_proxy_delete
 gda_data_proxy_undelete
 gda_data_proxy_row_is_deleted
 gda_data_proxy_row_is_inserted
-gda_data_proxy_get_model
-gda_data_proxy_append
 gda_data_proxy_cancel_row_changes
 gda_data_proxy_apply_row_changes
 gda_data_proxy_has_changed
@@ -400,9 +395,9 @@ gda_log_error
 GdaQuarkList
 gda_quark_list_new
 gda_quark_list_new_from_string
-gda_quark_list_clear
-gda_quark_list_free
 gda_quark_list_copy
+gda_quark_list_free
+gda_quark_list_clear
 gda_quark_list_add_from_string
 gda_quark_list_find
 gda_quark_list_remove
@@ -433,28 +428,13 @@ gda_row_get_type
 <TITLE>GdaServerOperation</TITLE>
 GdaServerOperation
 GdaServerOperationType
-GdaServerOperationNodeType
-GdaServerOperationNodeStatus
-GdaServerOperationNode
-gda_server_operation_new
 gda_server_operation_get_op_type
 gda_server_operation_op_type_to_string
-gda_server_operation_get_node_info
+<SUBSECTION>
 gda_server_operation_get_value_at
 gda_server_operation_set_value_at
 gda_server_operation_save_data_to_xml
 gda_server_operation_load_data_from_xml
-gda_server_operation_get_root_nodes
-gda_server_operation_get_node_type
-gda_server_operation_get_node_parent
-gda_server_operation_get_node_path_portion
-gda_server_operation_get_sequence_name
-gda_server_operation_get_sequence_size
-gda_server_operation_get_sequence_max_size
-gda_server_operation_get_sequence_min_size
-gda_server_operation_get_sequence_item_names
-gda_server_operation_add_item_to_sequence
-gda_server_operation_del_item_from_sequence
 gda_server_operation_is_valid
 <SUBSECTION Standard>
 GDA_IS_SERVER_OPERATION
@@ -463,6 +443,31 @@ GDA_SERVER_OPERATION
 GDA_SERVER_OPERATION_CLASS
 GDA_TYPE_SERVER_OPERATION
 gda_server_operation_get_type
+</SECTION>
+
+<SECTION>
+<FILE>gda-server-operation-nodes</FILE>
+<TITLE>GdaServerOperation's individual nodes</TITLE>
+GdaServerOperationNodeType
+GdaServerOperationNodeStatus
+GdaServerOperationNode
+gda_server_operation_get_node_info
+gda_server_operation_get_root_nodes
+gda_server_operation_get_node_type
+gda_server_operation_get_node_parent
+gda_server_operation_get_node_path_portion
+</SECTION>
+
+<SECTION>
+<FILE>gda-server-operation-sequences</FILE>
+<TITLE>GdaServerOperation's sequences</TITLE>
+gda_server_operation_get_sequence_name
+gda_server_operation_get_sequence_size
+gda_server_operation_get_sequence_max_size
+gda_server_operation_get_sequence_min_size
+gda_server_operation_get_sequence_item_names
+gda_server_operation_add_item_to_sequence
+gda_server_operation_del_item_from_sequence
 </SECTION>
 
 <SECTION>
@@ -478,7 +483,6 @@ GdaServerProviderExecCallback
 gda_server_provider_get_name
 gda_server_provider_get_version
 gda_server_provider_get_server_version
-gda_server_provider_get_database
 gda_server_provider_supports_operation
 gda_server_provider_create_operation
 gda_server_provider_render_operation
@@ -612,21 +616,6 @@ gda_mutex_free
 </SECTION>
 
 <SECTION>
-<FILE>gda-threader</FILE>
-<TITLE>GdaThreader</TITLE>
-GdaThreader
-GdaThreaderFunc
-gda_threader_new
-gda_threader_start_thread
-gda_threader_cancel
-<SUBSECTION Standard>
-GDA_THREADER
-GDA_THREADER_CLASS
-GDA_THREADER_TYPE
-gda_threader_get_type
-</SECTION>
-
-<SECTION>
 <FILE>gda-xa-transaction</FILE>
 <TITLE>GdaXaTransaction</TITLE>
 GdaXaTransaction
@@ -712,7 +701,6 @@ gda_blob_op_get_type
 <SECTION>
 <FILE>gda-value</FILE>
 <TITLE>Gda Value</TITLE>
-GValueAttribute
 gda_value_new
 gda_value_new_null
 gda_value_copy
@@ -749,6 +737,8 @@ gda_blob_free
 gda_value_get_blob
 gda_value_set_blob
 gda_value_take_blob
+gda_blob_set_op
+gda_blob_to_string
 <SUBSECTION>
 GdaGeometricPoint
 gda_geometricpoint_copy
@@ -757,8 +747,6 @@ gda_value_get_geometric_point
 gda_value_set_geometric_point
 <SUBSECTION>
 GdaValueList
-gda_value_list_copy
-gda_value_list_free
 gda_value_get_list
 gda_value_set_list
 <SUBSECTION>
@@ -856,7 +844,6 @@ GdaHandlerTimePriv
 gda_handler_time_new
 gda_handler_time_new_no_locale
 gda_handler_time_set_sql_spec
-gda_handler_time_get_no_locate_str_from_value
 gda_handler_time_get_format
 <SUBSECTION Standard>
 GDA_HANDLER_TIME
@@ -1055,7 +1042,6 @@ gda_set_remove_holder
 gda_set_merge_with_set
 <SUBSECTION>
 GdaSetNode
-GdaSetHint
 gda_set_get_node
 GdaSetSource
 gda_set_get_source_for_model
@@ -1128,10 +1114,6 @@ gda_sql_parser_new
 gda_sql_parser_parse_string
 gda_sql_parser_parse_string_as_batch
 gda_sql_parser_parse_file_as_batch
-<SUBSECTION>
-gda_sql_parser_lock
-gda_sql_parser_trylock
-gda_sql_parser_unlock
 <SUBSECTION>
 gda_sql_identifier_needs_quotes
 gda_sql_identifier_add_quotes
@@ -1404,6 +1386,12 @@ gda_column_set_allow_null
 gda_column_set_auto_increment
 gda_column_set_position
 gda_column_set_default_value
+<SUBSECTION>
+gda_alphanum_to_text
+gda_text_to_alphanum
+<SUBSECTION>
+gda_data_model_iter_move_next_default
+gda_data_model_iter_move_prev_default
 </SECTION>
 
 <SECTION>
@@ -1425,6 +1413,7 @@ gda_pstmt_get_type
 <SECTION>
 <FILE>provider-support</FILE>
 <TITLE>Misc API</TITLE>
+gda_server_operation_new
 gda_server_provider_internal_get_parser
 <SUBSECTION>
 gda_server_provider_perform_operation_default
@@ -1445,9 +1434,6 @@ gda_connection_add_event
 gda_connection_add_event_string
 gda_connection_clear_events_list
 gda_connection_event_new
-gda_connection_event_free
-gda_connection_event_list_copy
-gda_connection_event_list_free
 gda_connection_event_set_event_type
 gda_connection_event_set_description
 gda_connection_event_set_code
@@ -1467,6 +1453,10 @@ gda_connection_internal_savepoint_added
 gda_connection_internal_savepoint_rolledback
 gda_connection_internal_savepoint_removed
 gda_connection_internal_change_transaction_state
+<SUBSECTION>
+gda_compute_dml_statements
+gda_compute_select_statement_from_update
+gda_compute_unique_table_row_condition
 </SECTION>
 
 <SECTION>

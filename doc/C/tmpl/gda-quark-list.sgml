@@ -2,12 +2,12 @@
 Quark lists
 
 <!-- ##### SECTION Short_Description ##### -->
-Quark lists (lists of KEY=VALUE's)
+Manages lists of KEY=VALUE pairs
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-  Parameter lists are used primarily in the parsing and creation
-  of connection strings.
+  This object is used mainly by database provider's implementation to parse connection
+  strings into lists of KEY=VALUE pairs.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -41,12 +41,13 @@ Quark lists (lists of KEY=VALUE's)
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_quark_list_clear ##### -->
+<!-- ##### FUNCTION gda_quark_list_copy ##### -->
 <para>
 
 </para>
 
 @qlist: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_quark_list_free ##### -->
@@ -57,13 +58,12 @@ Quark lists (lists of KEY=VALUE's)
 @qlist: 
 
 
-<!-- ##### FUNCTION gda_quark_list_copy ##### -->
+<!-- ##### FUNCTION gda_quark_list_clear ##### -->
 <para>
 
 </para>
 
 @qlist: 
-@Returns: 
 
 
 <!-- ##### FUNCTION gda_quark_list_add_from_string ##### -->

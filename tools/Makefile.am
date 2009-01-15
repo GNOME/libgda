@@ -26,6 +26,8 @@ gda_list_config_4_0_LDADD = \
 gda_sql_4_0_SOURCES = \
         gda-sql.c \
 	gda-sql.h \
+	gda-threader.h \
+	gda-threader.c \
 	tools-input.h \
 	tools-input.c \
 	command-exec.h \

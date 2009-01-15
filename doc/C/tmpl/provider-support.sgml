@@ -18,6 +18,16 @@ Methods dedicated to implementing providers
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### FUNCTION gda_server_operation_new ##### -->
+<para>
+
+</para>
+
+@op_type: 
+@xml_file: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_server_provider_internal_get_parser ##### -->
 <para>
 
@@ -330,5 +340,42 @@ Methods dedicated to implementing providers
 
 @cnc: 
 @newstate: 
+
+
+<!-- ##### FUNCTION gda_compute_dml_statements ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@select_stmt: 
+@require_pk: 
+@insert_stmt: 
+@update_stmt: 
+@delete_stmt: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_compute_select_statement_from_update ##### -->
+<para>
+
+</para>
+
+@update_stmt: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_compute_unique_table_row_condition ##### -->
+<para>
+
+</para>
+
+@stsel: 
+@mtable: 
+@require_pk: 
+@error: 
+@Returns: 
 
 

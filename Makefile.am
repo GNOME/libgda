@@ -71,7 +71,9 @@ EXTRA_DIST = \
 	intltool-merge.in \
 	intltool-update.in \
 	mkinstalldirs \
-	$(example_files)
+	$(example_files) \
+	getsp.class \
+	getsp.java
 
 pkgconfigdir=$(libdir)/pkgconfig
 pkgconfig_DATA = libgda-$(GDA_ABI_VERSION).pc libgda-report-$(GDA_ABI_VERSION).pc libgda-xslt-$(GDA_ABI_VERSION).pc

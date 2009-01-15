@@ -353,6 +353,25 @@ Assorted functions for dealing with #GValue values.
 @blob: 
 
 
+<!-- ##### FUNCTION gda_blob_set_op ##### -->
+<para>
+
+</para>
+
+@blob: 
+@op: 
+
+
+<!-- ##### FUNCTION gda_blob_to_string ##### -->
+<para>
+
+</para>
+
+@blob: 
+@maxlen: 
+@Returns: 
+
+
 <!-- ##### STRUCT GdaGeometricPoint ##### -->
 <para>
 

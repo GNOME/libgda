@@ -6,15 +6,29 @@ Handles any DDL query in an abstract way
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-Basically this object is just a named data store: it can store named values, the values being
-organized hirarchically. A value can be read from its path (similar to a Unix file path) using the
-gda_server_operation_get_value_at() method.
+  This object is basically just a data store: it can store named values, the values being
+  organized hirarchically by their name which are similar to a Unix file path. For example a value can be read from its path
+  using the gda_server_operation_get_value_at() method, or set using the gda_server_operation_set_value_at() method.
 </para>
 <para>
-<emphasis>Important note:</emphasis> #GdaServerOperation objects are usually not created 
-manually using gda_server_operation_new(), but
-through the #GdaServerProvider object using gda_server_provider_create_operation().
-See the <link linkend="DDLIntro">global introduction about DDL</link> for more information.
+  Each #GdaServerOperation contains some structure which is usually defined by a database provider to implement
+  a specific operation. The structure is composed of the following building blocks:
+  <itemizedlist>
+    <listitem><para>Named values (internally represented as a #GdaHolder object)</para></listitem>
+    <listitem><para>Named values in a vector (internally represented as a #GdaSet object)</para></listitem>
+    <listitem><para>Values in an array (internally represented as a #GdaDataModel object)</para></listitem>
+    <listitem><para>Sequences of one or more of the previous blocks. A sequence can contain any number of
+    instances of the template block (there may be lower and upper boundaries to the number of instances)</para></listitem>
+  </itemizedlist>
+</para>
+
+<para>
+  <emphasis>Important note:</emphasis> #GdaServerOperation objects are usually not created 
+  manually using gda_server_operation_new(), but
+  using a #GdaServerProvider object with gda_server_provider_create_operation().
+  See the <link linkend="DDLIntro">global introduction about DDL</link> for more information.
+  Alternatively one can use the <link linkend="libgda-40-Convenience-functions">Convenience functions</link>
+  which internally manipulate #GdaServerOperation objects.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -87,51 +101,6 @@ See the <link linkend="DDLIntro">global introduction about DDL</link> for more i
 @GDA_SERVER_OPERATION_DROP_VIEW: 
 @GDA_SERVER_OPERATION_LAST: 
 
-<!-- ##### ENUM GdaServerOperationNodeType ##### -->
-<para>
-
-</para>
-
-@GDA_SERVER_OPERATION_NODE_PARAMLIST: 
-@GDA_SERVER_OPERATION_NODE_DATA_MODEL: 
-@GDA_SERVER_OPERATION_NODE_PARAM: 
-@GDA_SERVER_OPERATION_NODE_SEQUENCE: 
-@GDA_SERVER_OPERATION_NODE_SEQUENCE_ITEM: 
-@GDA_SERVER_OPERATION_NODE_DATA_MODEL_COLUMN: 
-@GDA_SERVER_OPERATION_NODE_UNKNOWN: 
-
-<!-- ##### ENUM GdaServerOperationNodeStatus ##### -->
-<para>
-
-</para>
-
-@GDA_SERVER_OPERATION_STATUS_OPTIONAL: 
-@GDA_SERVER_OPERATION_STATUS_REQUIRED: 
-@GDA_SERVER_OPERATION_STATUS_UNKNOWN: 
-
-<!-- ##### STRUCT GdaServerOperationNode ##### -->
-<para>
-
-</para>
-
-@type: 
-@status: 
-@plist: 
-@model: 
-@column: 
-@param: 
-@priv: 
-
-<!-- ##### FUNCTION gda_server_operation_new ##### -->
-<para>
-
-</para>
-
-@op_type: 
-@xml_file: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_server_operation_get_op_type ##### -->
 <para>
 
@@ -147,17 +116,6 @@ See the <link linkend="DDLIntro">global introduction about DDL</link> for more i
 </para>
 
 @type: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_operation_get_node_info ##### -->
-<para>
-
-</para>
-
-@op: 
-@path_format: 
-@Varargs: 
 @Returns: 
 
 
@@ -203,116 +161,6 @@ See the <link linkend="DDLIntro">global introduction about DDL</link> for more i
 @op: 
 @node: 
 @error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_operation_get_root_nodes ##### -->
-<para>
-
-</para>
-
-@op: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_operation_get_node_type ##### -->
-<para>
-
-</para>
-
-@op: 
-@path: 
-@status: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_operation_get_node_parent ##### -->
-<para>
-
-</para>
-
-@op: 
-@path: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_operation_get_node_path_portion ##### -->
-<para>
-
-</para>
-
-@op: 
-@path: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_operation_get_sequence_name ##### -->
-<para>
-
-</para>
-
-@op: 
-@path: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_operation_get_sequence_size ##### -->
-<para>
-
-</para>
-
-@op: 
-@path: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_operation_get_sequence_max_size ##### -->
-<para>
-
-</para>
-
-@op: 
-@path: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_operation_get_sequence_min_size ##### -->
-<para>
-
-</para>
-
-@op: 
-@path: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_operation_get_sequence_item_names ##### -->
-<para>
-
-</para>
-
-@op: 
-@path: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_operation_add_item_to_sequence ##### -->
-<para>
-
-</para>
-
-@op: 
-@path: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_operation_del_item_from_sequence ##### -->
-<para>
-
-</para>
-
-@op: 
-@item_path: 
 @Returns: 
 
 

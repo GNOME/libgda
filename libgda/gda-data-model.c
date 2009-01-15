@@ -47,6 +47,10 @@ extern gchar *gda_lang_locale;
 static GStaticRecMutex init_mutex = G_STATIC_REC_MUTEX_INIT;
 static void gda_data_model_class_init (gpointer g_class);
 
+static xmlNodePtr gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols, 
+					      const gint *rows, gint nb_rows, const gchar *name);
+
+
 /* signals */
 enum {
 	CHANGED,
@@ -1187,7 +1191,7 @@ xml_set_boolean (xmlNodePtr node, const gchar *name, gboolean value)
 	xmlSetProp (node, (xmlChar*)name, value ? (xmlChar*)"TRUE" : (xmlChar*)"FALSE");
 }
 
-/**
+/*
  * gda_data_model_to_xml_node
  * @model: a #GdaDataModel object.
  * @cols: an array containing which columns of @model will be exported, or %NULL for all columns
@@ -1200,7 +1204,7 @@ xml_set_boolean (xmlNodePtr node, const gchar *name, gboolean value)
  *
  * Returns: a xmlNodePtr representing the whole data model, or %NULL if an error occurred
  */
-xmlNodePtr
+static xmlNodePtr
 gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols, 
 			    const gint *rows, gint nb_rows, const gchar *name)
 {

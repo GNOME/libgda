@@ -1568,24 +1568,7 @@ gda_data_proxy_row_is_inserted (GdaDataProxy *proxy, gint proxy_row)
 		return FALSE;
 }
 
-/**
- * gda_data_proxy_get_model
- * @proxy: a #GdaDataProxy object
- *
- * Get the #GdaDataModel which holds the unmodified (reference) data of @proxy
- *
- * Returns: the #GdaDataModel
- */
-GdaDataModel *
-gda_data_proxy_get_model (GdaDataProxy *proxy)
-{
-	g_return_val_if_fail (GDA_IS_DATA_PROXY (proxy), NULL);
-	g_return_val_if_fail (proxy->priv, NULL);
-
-	return proxy->priv->model;
-}
-
-/**
+/*
  * gda_data_proxy_append
  * @proxy: a #GdaDataProxy object
  *
@@ -1597,7 +1580,7 @@ gda_data_proxy_get_model (GdaDataProxy *proxy)
  *
  * Returns: the proxy row number of the new row, or -1 if the row could not be appended
  */
-gint
+static gint
 gda_data_proxy_append (GdaDataProxy *proxy)
 {
 	RowModif *rm;

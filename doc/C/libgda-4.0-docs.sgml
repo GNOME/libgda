@@ -31,7 +31,7 @@
 <!ENTITY GDADATAMODELHASH "<link linkend='GdaDataModelHash'>GdaDataModelHash</link>">
 <!ENTITY gda-list-server-op "<command>gda-list-server-op-4.0</command>">
 <!ENTITY gda-list-config "<command>gda-list-config-4.0</command>">
-<!ENTITY gda-sql "<command>gda-sql-4.0</command>">
+<!ENTITY gda-sql "<command>gda-sql</command>">
 <!ENTITY gda-test-connection "<command>gda-test-connection-4.0</command>">
 <!ENTITY fullexample SYSTEM "examples/full_example.c">
 <!ENTITY install SYSTEM "installation.xml">
@@ -46,7 +46,6 @@
 <!ENTITY libgda-GdaConnection SYSTEM "xml/gda-connection.xml">
 <!ENTITY libgda-GdaMutex SYSTEM "xml/gda-mutex.xml">
 <!ENTITY libgda-GdaLockable SYSTEM "xml/gda-lockable.xml">
-<!ENTITY libgda-GdaThreader SYSTEM "xml/gda-threader.xml">
 <!ENTITY libgda-GdaRow SYSTEM "xml/gda-row.xml">
 <!ENTITY libgda-GdaDataModelArray SYSTEM "xml/gda-data-model-array.xml">
 <!ENTITY libgda-GdaDataModelBdb SYSTEM "xml/gda-data-model-bdb.xml">
@@ -69,6 +68,8 @@
 <!ENTITY libgda-GdaVconnectionDataModel SYSTEM "xml/gda-vconnection-data-model.xml">
 <!ENTITY libgda-GdaVconnectionHub SYSTEM "xml/gda-vconnection-hub.xml">
 <!ENTITY libgda-GdaServerOperation SYSTEM "xml/gda-server-operation.xml">
+<!ENTITY libgda-GdaServerOperationNodes SYSTEM "xml/gda-server-operation-nodes.xml">
+<!ENTITY libgda-GdaServerOperationSequences SYSTEM "xml/gda-server-operation-sequences.xml">
 <!ENTITY libgda-serverop-intro SYSTEM "server-operation.xml">
 <!ENTITY libgda-virtual SYSTEM "virtual.xml">
 <!ENTITY libgda-virtual-notice SYSTEM "virtual-notice.xml">
@@ -489,11 +490,19 @@
       </para>
       <para>
 	Each <link linkend="GdaStatement">GdaStatement</link> can only hold one SQL statement (such as SELECT, INSERT,
-	CREATE TABLE, BEGIN, etc) (tatements can be grouped together into  <link linkend="GdaBAtch">GdaBatch</link> batches
-	objects). There are two ways for creating a <link linkend="GdaStatement">GdaStatement</link> object:
+	CREATE TABLE, BEGIN, etc); statements can be grouped together into  <link linkend="GdaBAtch">GdaBatch</link> batches
+	objects. There are two ways for creating a <link linkend="GdaStatement">GdaStatement</link> object:
 	<itemizedlist>
-	   <listitem><para>either by passing an SQL string to a parser (a <link linkend="GdaSqlParser">GdaSqlParser</link>), or
-	       </para></listitem>
+	   <listitem>
+	     <para>
+	       either by passing an SQL string to a parser (a <link linkend="GdaSqlParser">GdaSqlParser</link>).
+	     </para>
+	     <para>
+	       &LIBGDA; unifies the way variables (also known as "placeholders") are defined (because each database type
+	       has its own syntax for doing so); consult the <link linkend="GdaSqlParser">GdaSqlParser</link> object's
+	       documentation for a description of this syntax.
+	     </para>
+	   </listitem>
 	   <listitem><para>by building it from its structure (see the <link linkend="GdaSqlStatement">GdaSqlStatement</link>).
 	   </para></listitem>
 	</itemizedlist>
@@ -917,16 +926,16 @@ g_object_unref (store);
       <title>Data definition (DDL) queries</title>
       &libgda-serverop-intro;
       &libgda-GdaServerOperation;
+      &libgda-GdaServerOperationNodes;
+      &libgda-GdaServerOperationSequences;
     </chapter>
 
     <chapter id="misc">
       <title>Miscellaneous</title>
       &libgda-util;
       &libgda-log;
-      &libgda-quark-list;
       &libgda-GdaMutex;
       &libgda-GdaLockable;
-      &libgda-GdaThreader;
       &GdaAttributesManager;
     </chapter>
   </part>
@@ -949,7 +958,7 @@ g_object_unref (store);
       <para>
 	The &gda-sql; tool is an interactive command line tool to run SQL commands and work
 	with dictionaries. This tool has got several options, use the <option>--help</option> option
-	to list them all.
+	to list them all, or consult the man page (<command>man gda-sql</command>)
       </para>
       <para>
 	For example to list the installed providers, do:
@@ -1291,6 +1300,7 @@ Description for type: DROP_COLUMN
       &libgda-GdaServerProvider;
       &libgda-GdaDataSelectPriv;
       &libgda-PStmt;
+      &libgda-quark-list;
       &provider-support;
     </chapter>
     &provider-writing;

@@ -145,3 +145,41 @@ Base class for all the data models returned by DBMS providers when a SELECT stat
 @default_value: 
 
 
+<!-- ##### FUNCTION gda_alphanum_to_text ##### -->
+<para>
+
+</para>
+
+@text: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_text_to_alphanum ##### -->
+<para>
+
+</para>
+
+@text: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_iter_move_next_default ##### -->
+<para>
+
+</para>
+
+@model: 
+@iter: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_iter_move_prev_default ##### -->
+<para>
+
+</para>
+
+@model: 
+@iter: 
+@Returns: 
+
+

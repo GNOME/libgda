@@ -66,7 +66,7 @@ typedef enum {
 	GDA_DATA_MODEL_IO_TEXT_SEPARATED
 } GdaDataModelIOFormat;
 
-enum {
+typedef enum {
 	GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
 	GDA_DATA_MODEL_COLUMN_OUT_OF_RANGE_ERROR,
 	GDA_DATA_MODEL_VALUES_LIST_ERROR,
@@ -76,7 +76,7 @@ enum {
 	GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR,
 	GDA_DATA_MODEL_FILE_EXIST_ERROR,
 	GDA_DATA_MODEL_XML_FORMAT_ERROR
-};
+} GdaDataModelError;
 
 /* struct for the interface */
 struct _GdaDataModelClass {

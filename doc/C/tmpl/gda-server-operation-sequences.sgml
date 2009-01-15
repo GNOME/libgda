@@ -1,0 +1,93 @@
+<!-- ##### SECTION Title ##### -->
+GdaServerOperation: sequences
+
+<!-- ##### SECTION Short_Description ##### -->
+Manipulating sequences
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+  The #GdaServerOperation object can contain sequences of templates. For example when creating a table,
+  one can specify several foreign keys where for each foreign key, one must define the column(s) on which the
+  foreign key applies, the referenced table and the corresponding columns of the referenced table (plus some
+  additionnal information). In this case the foreign keys are defined as a sequence of templates (the foreign key
+  definition): there can be zero or more foreign keys.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+  The #GdaServerOperation object.
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### FUNCTION gda_server_operation_get_sequence_name ##### -->
+<para>
+
+</para>
+
+@op: 
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_get_sequence_size ##### -->
+<para>
+
+</para>
+
+@op: 
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_get_sequence_max_size ##### -->
+<para>
+
+</para>
+
+@op: 
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_get_sequence_min_size ##### -->
+<para>
+
+</para>
+
+@op: 
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_get_sequence_item_names ##### -->
+<para>
+
+</para>
+
+@op: 
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_add_item_to_sequence ##### -->
+<para>
+
+</para>
+
+@op: 
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_del_item_from_sequence ##### -->
+<para>
+
+</para>
+
+@op: 
+@item_path: 
+@Returns: 
+
+

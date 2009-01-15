@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2006 - 2008 The GNOME Foundation.
+ * Copyright (C) 2006 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -940,7 +940,8 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root, G
  * @xml_file: a file which has the specifications for the GdaServerOperation object to create
  *
  * IMPORTANT NOTE: Using this funtion is not the recommended way of creating a #GdaServerOperation object, the
- * correct way is to use gda_server_provider_create_operation(); this method is reserved for internal implementation.
+ * correct way is to use gda_server_provider_create_operation(); this method is reserved for the database provider's
+ * implementation.
  *
  * Creates a new #GdaServerOperation object from the @xml_file specifications
  *
@@ -973,7 +974,8 @@ gda_server_operation_new (GdaServerOperationType op_type, const gchar *xml_file)
 /**
  * gda_server_operation_get_node_info
  * @op: a #GdaServerOperation object
- * @path_format: a complete path to a node (starting with "/")
+ * @path_format: a complete path to a node (starting with "/") as a format string, similar to g_strdup_printf()'s argument
+ * @...: the arguments to insert into the format string
  *
  * Get information about the node identified by @path. The returned #GdaServerOperationNode structure can be 
  * copied but not modified; it may change or cease to exist if @op changes
@@ -1093,7 +1095,7 @@ gda_server_operation_get_node_info (GdaServerOperation *op, const gchar *path_fo
  * 
  * Get the type of operation @op is for
  *
- * Returns:
+ * Returns: a #GdaServerOperationType enum
  */
 GdaServerOperationType
 gda_server_operation_get_op_type (GdaServerOperation *op)
@@ -1106,7 +1108,7 @@ gda_server_operation_get_op_type (GdaServerOperation *op)
 
 /**
  * gda_server_operation_op_type_to_string
- * @type:
+ * @type: a #GdaServerOperationType value
  * 
  * Get a string version of @type
  *
@@ -1719,7 +1721,7 @@ dump (GdaServerOperation *op)
 #endif
 
 /**
- * gda_server_operation_add_node_to_sequence
+ * gda_server_operation_add_item_to_sequence
  * @op: a #GdaServerOperation object
  * @seq_path: the path to the sequence to which an item must be added (like "/SEQ_NAME" for instance)
  *
@@ -1751,7 +1753,7 @@ gda_server_operation_add_item_to_sequence (GdaServerOperation *op, const gchar *
 }
 
 /**
- * gda_server_operation_del_node_from_sequence
+ * gda_server_operation_del_item_from_sequence
  * @op: a #GdaServerOperation object
  * @item_path: the path to the sequence's item to remove (like "/SEQ_NAME/5" for instance)
  *
@@ -1890,16 +1892,17 @@ gda_server_operation_get_value_at (GdaServerOperation *op, const gchar *path_for
  * @path_format: a complete path to a node (starting with "/")
  * @...: arguments to use with @path_format to make a complete path
  *
- * Set the value for the node at the path formed using @path_format and @... the rules are the same as
+ * Set the value for the node at the path formed using @path_format and the ... ellipse (the rules are the same as
  * for g_strdup_printf()). 
  *
  * Note that trying to set a value for a path which is not used by the current
- * provider (such as "/TABLE_OPTIONS_P/TABLE_ENGINE" for a PostgreSQL connection), will <emphasis>not</emphasis> generate
- * any error; this allows one to set all the possible parameters and use the same code for several providers.
+ * provider, such as "/TABLE_OPTIONS_P/TABLE_ENGINE" for a PostgreSQL connection (this option is only supported for MySQL), 
+ * will <emphasis>not</emphasis> generate
+ * any error; this allows one to give values to a superset of the parameters and thus use the same code for several providers.
  *
  * Here are the possible formats of @path_format:
  * <itemizedlist>
- *  <listitem><para>If the path corresponds to a #GdaHolder, then the parameter is set to @value</para></listitem>
+ *  <listitem><para>If the path corresponds to a #GdaHolder, then the parameter is set to <![CDATA["@value"]]></para></listitem>
  *  <listitem><para>If the path corresponds to a sequence item like for example "/SEQUENCE_NAME/5/NAME" for
  *     the "NAME" value of the 6th item of the "SEQUENCE_NAME" sequence then:
  *     <itemizedlist>

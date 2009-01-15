@@ -49,7 +49,6 @@
 #include <libgda/gda-row.h>
 #include <libgda/gda-server-operation.h>
 #include <libgda/gda-server-provider.h>
-#include <libgda/gda-threader.h>
 #include <libgda/gda-xa-transaction.h>
 #include <libgda/gda-transaction-status.h>
 #include <libgda/gda-transaction-status-private.h>

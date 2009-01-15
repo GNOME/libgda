@@ -9,6 +9,7 @@
 <para>
   However, contrary to the programmed mentionned above, The &LIBGDA;'s console tool
   offers the same features and usage for any of the databases supported by &LIBGDA;.
+  For more information, consult the man page (<command>man gda-sql</command>).
 </para>
 
 
@@ -44,9 +45,9 @@
     <title>Execution</title>
     <para>
       The &LIBGDA;'s SQL console tool runs is a terminal emulator, and can be launched using
-      the <command>gda-sql-4.0</command>:
+      the <command>gda-sql</command> (or <command>gda-sql-&lt;version&gt;</command> for a specific version):
       <cmdsynopsis>
-	<command>gda-sql-4.0</command>
+	<command>gda-sql</command>
 	<arg>--help</arg>
 	<arg>-l</arg>
 	<arg>-L</arg>
@@ -65,7 +66,7 @@
 	output a list of the defined data sources (DSN) and of the installed database adaptaters
 	(database providers):
 	    <programlisting>
-[prompt]> gda-sql-4.0 -l
+[prompt]> gda-sql -l
 List of defined data sources
 DSN       | Provider | Description                          | Connection string     | Username | Global
 ----------+----------+--------------------------------------+-----------------------+----------+-------
@@ -73,7 +74,7 @@ SalesTest | SQLite   | Test database for a sales department | DB_NAME=sales_test
 (1 row)
 	    </programlisting>
 	    <programlisting>
-[prompt]> gda-sql-4.0 -L
+[prompt]> gda-sql -L
                                                         List of installed providers
 Provider    | Description                         | DSN parameters     | Authentication | File 
                                      
@@ -121,9 +122,9 @@ MSAccess    | Provider for Microsoft Access files | DB_NAME,           |        
     <para>
       Examples:
       <programlisting>
-[prompt]> gda-sql-4.0 Sales
-[prompt]> gda-sql-4.0 Postgresql://username@DB_NAME=mydb SQLite://DB_NAME=fspot Sales
-[prompt]> gda-sql-4.0 path/to/dbfile.db
+[prompt]> gda-sql Sales
+[prompt]> gda-sql Postgresql://username@DB_NAME=mydb SQLite://DB_NAME=fspot Sales
+[prompt]> gda-sql path/to/dbfile.db
       </programlisting>
     </para>
   </sect1>

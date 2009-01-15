@@ -1,0 +1,113 @@
+<!-- ##### SECTION Title ##### -->
+GdaServerOperation: individual nodes
+
+<!-- ##### SECTION Short_Description ##### -->
+Getting information about parts (nodes) composing a path
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+  To each part of a path is associated a node (as a #GdaServerOperationNode structure). For example the
+  "/TABLE_DEF_P/TABLE_NAME" path has two nodes, one associated to "/TABLE_DEF_P" and one to
+  "/TABLE_DEF_P/TABLE_NAME". For more information about the path's format, see the
+  gda_server_operation_set_value_at()'s documentation.
+</para>
+<para>
+  This API is designed to get information about all the nodes present in a #GdaServerOperation object (the
+  gda_server_operation_get_root_nodes() function) and about each node of a path, and allows inspection
+  of its contents.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+  The #GdaServerOperation object.
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### ENUM GdaServerOperationNodeType ##### -->
+<para>
+
+</para>
+
+@GDA_SERVER_OPERATION_NODE_PARAMLIST: 
+@GDA_SERVER_OPERATION_NODE_DATA_MODEL: 
+@GDA_SERVER_OPERATION_NODE_PARAM: 
+@GDA_SERVER_OPERATION_NODE_SEQUENCE: 
+@GDA_SERVER_OPERATION_NODE_SEQUENCE_ITEM: 
+@GDA_SERVER_OPERATION_NODE_DATA_MODEL_COLUMN: 
+@GDA_SERVER_OPERATION_NODE_UNKNOWN: 
+
+<!-- ##### ENUM GdaServerOperationNodeStatus ##### -->
+<para>
+
+</para>
+
+@GDA_SERVER_OPERATION_STATUS_OPTIONAL: 
+@GDA_SERVER_OPERATION_STATUS_REQUIRED: 
+@GDA_SERVER_OPERATION_STATUS_UNKNOWN: 
+
+<!-- ##### STRUCT GdaServerOperationNode ##### -->
+<para>
+
+</para>
+
+@type: 
+@status: 
+@plist: 
+@model: 
+@column: 
+@param: 
+@priv: 
+
+<!-- ##### FUNCTION gda_server_operation_get_node_info ##### -->
+<para>
+
+</para>
+
+@op: 
+@path_format: 
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_get_root_nodes ##### -->
+<para>
+
+</para>
+
+@op: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_get_node_type ##### -->
+<para>
+
+</para>
+
+@op: 
+@path: 
+@status: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_get_node_parent ##### -->
+<para>
+
+</para>
+
+@op: 
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_get_node_path_portion ##### -->
+<para>
+
+</para>
+
+@op: 
+@path: 
+@Returns: 
+
+

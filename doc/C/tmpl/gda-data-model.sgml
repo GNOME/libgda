@@ -101,6 +101,21 @@ values are accessible at the provided row).
 @gdadatamodel: the object which received the signal.
 @arg1: 
 
+<!-- ##### ENUM GdaDataModelError ##### -->
+<para>
+
+</para>
+
+@GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR: 
+@GDA_DATA_MODEL_COLUMN_OUT_OF_RANGE_ERROR: 
+@GDA_DATA_MODEL_VALUES_LIST_ERROR: 
+@GDA_DATA_MODEL_VALUE_TYPE_ERROR: 
+@GDA_DATA_MODEL_ROW_NOT_FOUND_ERROR: 
+@GDA_DATA_MODEL_ACCESS_ERROR: 
+@GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR: 
+@GDA_DATA_MODEL_FILE_EXIST_ERROR: 
+@GDA_DATA_MODEL_XML_FORMAT_ERROR: 
+
 <!-- ##### FUNCTION gda_data_model_get_n_rows ##### -->
 <para>
 

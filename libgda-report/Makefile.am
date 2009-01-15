@@ -52,3 +52,5 @@ gdareportinclude_HEADERS= libgda-report.h $(report_headers)
 
 CLEANFILES = libgda-report.def \
 	libgda-report-$(GDA_ABI_VERSION).lib
+
+EXTRA_DIST = libgda-report.symbols

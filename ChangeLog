@@ -1,3 +1,27 @@
+2009-01-15  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/Makefile.am:
+	* libgda/gda-threader.[ch]:
+	* libgda/libgda.symbols:
+	* tools/Makefile.am:
+	* tools/gda-threader.[ch]: removed GdaThreader from Libgda and moved it
+	to the gda-sql console which uses it, as this API is not well thought enough
+	(fixes bug #561175)
+	* libgda/gda-data-model.h: typedef enum GdaDataModelError
+	* libgda/gda-data-proxy.c: removed unused gda_data_proxy_get_model(), and
+	made gda_data_proxy_append() static
+	* libgda/gda-server-operation.c: improved documentation, for bug #561178
+	* Makefile.am: also distribute getsp.java and getsp.class
+	* libgda-report/Makefile.am: also distribute libgda-report.symbols
+	* doc/C:
+	  - fix for bug #561173
+	  - updated documentation
+	  - cleanups
+	* libgda/sqlite/sqlite-src: now uses SQLite 3.6.10
+	* libgda/gda-value.c: made gda_value_list_copy() and gda_value_list_free() static
+	* libgda/gda-data-model.c:
+	* libgda/gda-data-model-private.h: made gda_data_model_to_xml_node() static
+
 2009-01-12  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in: set version to 3.99.9

@@ -70,7 +70,6 @@ gda_headers = \
 	gda-server-provider-private.h \
 	gda-statement.h \
 	gda-statement-extra.h \
-	gda-threader.h \
 	gda-transaction-status.h \
 	gda-transaction-status-private.h \
 	gda-util.h \
@@ -127,7 +126,6 @@ libgda_sources =  \
 	gda-server-provider.c \
 	gda-server-provider-extra.c \
 	gda-statement.c \
-	gda-threader.c \
 	gda-transaction-status.c \
 	gda-util.c \
 	gda-value.c \

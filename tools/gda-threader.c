@@ -19,8 +19,7 @@
  */
 
 #include <string.h>
-#include "gda-threader.h"
-#include "gda-marshal.h"
+#include <tools/gda-threader.h>
 #include <stdlib.h>
 
 /* 
@@ -106,7 +105,7 @@ gda_threader_class_init (GdaThreaderClass * class)
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaThreaderClass, finished),
 			      NULL, NULL,
-			      _gda_marshal_VOID__UINT_POINTER, G_TYPE_NONE,
+			      g_cclosure_marshal_VOID__UINT_POINTER, G_TYPE_NONE,
 			      2, G_TYPE_UINT, G_TYPE_POINTER);
 	gda_threader_signals[CANCELLED] =
 		g_signal_new ("cancelled",
@@ -114,7 +113,7 @@ gda_threader_class_init (GdaThreaderClass * class)
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaThreaderClass, cancelled),
 			      NULL, NULL,
-			      _gda_marshal_VOID__UINT_POINTER, G_TYPE_NONE,
+			      g_cclosure_marshal_VOID__UINT_POINTER, G_TYPE_NONE,
 			      2, G_TYPE_UINT, G_TYPE_POINTER);
 	class->finished = NULL;
 	class->cancelled = NULL;
@@ -143,13 +142,12 @@ gda_threader_init (GdaThreader * thread)
 /**
  * gda_threader_new
  *
- * Creates a new GdaThreader object. This object class is normally not instantiated
- * directly but through child classes objects' intantiation
+ * Creates a new GdaThreader object.
  * 
  * Returns: the newly created object
  */
 GObject *
-gda_threader_new ()
+gda_threader_new (void)
 {
 	GObject   *obj;
 
@@ -221,7 +219,8 @@ static gpointer spawn_new_thread (ThreadJob *job);
  * @cancel_callback: callback called when @func terminates and the job has been cancelled
  * @error: place to store an error when creating the thread or %NULL
  *
- * 
+ * Starts a new worker thread, executing the @func function with the @func_arg argument. It is possible
+ * to request the worker thread to terminates using gda_threader_cancel().
  * 
  * Returns: the id of the new job executed in another thread.
  */

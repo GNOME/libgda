@@ -561,8 +561,8 @@ gda_geometricpoint_free (gpointer boxed)
 /* 
  * Register the GdaValueList type in the GType system 
  */
-gpointer gda_value_list_copy (gpointer boxed);
-void gda_value_list_free (gpointer boxed);
+static gpointer gda_value_list_copy (gpointer boxed);
+static void gda_value_list_free (gpointer boxed);
 
 static void 
 list_to_string (const GValue *src, GValue *dest) 
@@ -620,7 +620,7 @@ gda_value_list_get_type(void)
 	return type;
 }
 
-gpointer 
+static gpointer 
 gda_value_list_copy (gpointer boxed)
 {
 	GList *list = NULL;
@@ -636,7 +636,7 @@ gda_value_list_copy (gpointer boxed)
 	return list;
 }
 
-void
+static void
 gda_value_list_free (gpointer boxed)
 {
 	GList *l = (GList*) boxed;

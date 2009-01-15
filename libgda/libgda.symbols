@@ -748,10 +748,6 @@
 	gda_string_to_binary
 	gda_string_to_blob
 	gda_text_to_alphanum
-	gda_threader_cancel
-	gda_threader_get_type
-	gda_threader_new
-	gda_threader_start_thread
 	gda_time_copy
 	gda_time_free
 	gda_time_get_type
