@@ -33,6 +33,7 @@
 #include <libgda/binreloc/gda-binreloc.h>
 
 struct _GdaReportRmlDocumentPrivate {
+	int foo;
 };
 
 /* properties */

@@ -30,7 +30,7 @@
 #define CLASS(obj) (GDA_VIRTUAL_PROVIDER_CLASS (G_OBJECT_GET_CLASS (obj)))
 
 struct _GdaVirtualProviderPrivate {
-	
+	int foo;
 };
 
 /* properties */

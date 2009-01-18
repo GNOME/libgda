@@ -37,6 +37,7 @@ typedef struct {
 	/* TO_ADD: this structure holds any information necessary to specialize the GdaConnection, usually a connection
 	 * handle from the C or C++ API
 	 */
+	int foo;
 } CapiConnectionData;
 
 #endif

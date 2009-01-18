@@ -27,7 +27,7 @@
 #include "gda-vconnection-hub.h"
 
 struct _GdaVproviderHubPrivate {
-	
+	int foo;
 };
 
 /* properties */

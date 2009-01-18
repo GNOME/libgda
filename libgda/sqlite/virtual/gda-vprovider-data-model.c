@@ -35,7 +35,7 @@
 #include <sql-parser/gda-statement-struct-util.h>
 
 struct _GdaVproviderDataModelPrivate {
-	
+	int foo;
 };
 
 /* properties */

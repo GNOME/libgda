@@ -1108,7 +1108,7 @@ gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 
 			if (g_unlink (filename)) {
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_OPERATION_ERROR,
-					      "%s", sys_errlist [errno]);
+					      "%s", g_strerror (errno));
 				retval = FALSE;
 			}
 			g_free (filename);
