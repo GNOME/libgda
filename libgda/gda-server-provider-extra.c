@@ -101,7 +101,7 @@ gda_server_provider_perform_operation_default (GdaServerProvider *provider, GdaC
  * gda_server_provider_get_data_handler_default
  * @provider: a server provider.
  * @cnc: a #GdaConnection object, or %NULL
- * @for_type: a #GType
+ * @type: a #GType
  * @dbms_type: a DBMS type definition
  *
  * Provides the implementation when the default Libgda's data handlers must be used

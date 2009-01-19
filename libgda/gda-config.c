@@ -879,7 +879,7 @@ gda_config_remove_dsn (const gchar *dsn_name, GError **error)
 }
 
 /**
- * gda_config_dsn_needs_auth
+ * gda_config_dsn_needs_authentication
  * @dsn_name: the name of a DSN, in the "[&lt;username&gt;[:&lt;password&gt;]@]&lt;DSN&gt;" format
  * 
  * Tells if the data source identified as @dsn_name needs any authentication. If a &lt;username&gt;
@@ -942,7 +942,7 @@ gda_config_list_dsn (void)
  *
  * Get the number of defined DSN
  *
- * Return: the number of defined DSN
+ * Returns: the number of defined DSN
  */
 gint
 gda_config_get_nb_dsn (void)
@@ -959,7 +959,7 @@ gda_config_get_nb_dsn (void)
 
 /**
  * gda_config_get_dsn_info_index
- * @dsn_name:
+ * @dsn_name: a DSN
  * 
  * Get the index (starting at 0) of the DSN named @dsn_name
  * 
@@ -986,7 +986,7 @@ gda_config_get_dsn_info_index (const gchar *dsn_name)
 
 /**
  * gda_config_get_dsn_info_at_index
- * @index:
+ * @index: an index
  *
  * Get a pointer to a read-only #GdaDsnInfo at the @index position
  *
@@ -1026,10 +1026,9 @@ gda_config_can_modify_system_config (void)
 
 /**
  * gda_config_get_provider_info
- * @provider_name:
+ * @provider_name: a database provider
  *
  * Get some information about the a database provider (adaptator) named 
- * @provider_name
  *
  * Returns: a pointer to read-only #GdaProviderInfo structure, or %NULL if not found
  */
@@ -1061,7 +1060,7 @@ gda_config_get_provider_info (const gchar *provider_name)
 
 /**
  * gda_config_get_provider
- * @provider_name:
+ * @provider_name: a database provider
  * @error: a place to store errors, or %NULL
  *
  * Get a pointer to the session-wide #GdaServerProvider for the

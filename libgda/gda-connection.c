@@ -1059,7 +1059,7 @@ gda_connection_get_provider_name (GdaConnection *cnc)
  * gda_connection_get_dsn
  * @cnc: a #GdaConnection object
  *
- * Returns the data source name the connection object is connected
+ * Returns: the data source name the connection object is connected
  * to.
  */
 const gchar *
@@ -1815,7 +1815,7 @@ gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *
  * gda_connection_begin_transaction
  * @cnc: a #GdaConnection object.
  * @name: the name of the transation to start, or %NULL
- * @level:
+ * @level: the requested transaction level (%GDA_TRANSACTION_ISOLATION_UNKNOWN if not specified)
  * @error: a place to store errors, or %NULL
  *
  * Starts a transaction on the data source, identified by the
@@ -3396,9 +3396,19 @@ gda_connection_value_to_sql_string (GdaConnection *cnc, GValue *from)
 	return gda_server_provider_value_to_sql_string (cnc->priv->provider_obj, cnc, from);
 }
 
-/*
- * Internal functions to keep track
- * of the transactional status of the connection
+/**
+ * gda_connection_internal_transaction_started
+ * @cnc: a #GdaConnection
+ * @parent_trans: name of the parent transaction, or %NULL
+ * @trans_name: transaction's name, or %NULL
+ * @isol_level: isolation level.
+ *
+ * Internal functions to be called by database providers when a transaction has been started
+ * to keep track of the transactional status of the connection.
+ *
+ * Note: this function should not be called if gda_connection_internal_statement_executed()
+ * has already been called because a statement's execution was necessary to perform
+ * the action.
  */
 void
 gda_connection_internal_transaction_started (GdaConnection *cnc, const gchar *parent_trans, const gchar *trans_name, 
@@ -3437,6 +3447,18 @@ gda_connection_internal_transaction_started (GdaConnection *cnc, const gchar *pa
 	gda_connection_unlock ((GdaLockable*) cnc);
 }
 
+/**
+ * gda_connection_internal_transaction_rolledback
+ * @cnc: a #GdaConnection
+ * @trans_name: transaction's name, or %NULL
+ *
+ * Internal functions to be called by database providers when a transaction has been rolled
+ * back to keep track of the transactional status of the connection
+ *
+ * Note: this function should not be called if gda_connection_internal_statement_executed()
+ * has already been called because a statement's execution was necessary to perform
+ * the action.
+ */
 void 
 gda_connection_internal_transaction_rolledback (GdaConnection *cnc, const gchar *trans_name)
 {
@@ -3479,6 +3501,18 @@ gda_connection_internal_transaction_rolledback (GdaConnection *cnc, const gchar 
 	gda_connection_unlock ((GdaLockable*) cnc);
 }
 
+/**
+ * gda_connection_internal_transaction_committed
+ * @cnc: a #GdaConnection
+ * @trans_name: transaction's name, or %NULL
+ *
+ * Internal functions to be called by database providers when a transaction has been committed
+ * to keep track of the transactional status of the connection
+ *
+ * Note: this function should not be called if gda_connection_internal_statement_executed()
+ * has already been called because a statement's execution was necessary to perform
+ * the action.
+ */
 void 
 gda_connection_internal_transaction_committed (GdaConnection *cnc, const gchar *trans_name)
 {
@@ -3521,6 +3555,19 @@ gda_connection_internal_transaction_committed (GdaConnection *cnc, const gchar *
 	gda_connection_unlock ((GdaLockable*) cnc);
 }
 
+/**
+ * gda_connection_internal_savepoint_added
+ * @cnc: a #GdaConnection
+ * @parent_trans: name of the parent transaction, or %NULL
+ * @svp_name: savepoint's name, or %NULL
+ *
+ * Internal functions to be called by database providers when a savepoint has been added
+ * to keep track of the transactional status of the connection
+ *
+ * Note: this function should not be called if gda_connection_internal_statement_executed()
+ * has already been called because a statement's execution was necessary to perform
+ * the action.
+ */
 void
 gda_connection_internal_savepoint_added (GdaConnection *cnc, const gchar *parent_trans, const gchar *svp_name)
 {
@@ -3553,6 +3600,18 @@ gda_connection_internal_savepoint_added (GdaConnection *cnc, const gchar *parent
 	gda_connection_unlock ((GdaLockable*) cnc);
 }
 
+/**
+ * gda_connection_internal_savepoint_rolledback
+ * @cnc: a #GdaConnection
+ * @svp_name: savepoint's name, or %NULL
+ *
+ * Internal functions to be called by database providers when a savepoint has been rolled back
+ * to keep track of the transactional status of the connection
+ *
+ * Note: this function should not be called if gda_connection_internal_statement_executed()
+ * has already been called because a statement's execution was necessary to perform
+ * the action.
+ */
 void
 gda_connection_internal_savepoint_rolledback (GdaConnection *cnc, const gchar *svp_name)
 {
@@ -3586,6 +3645,18 @@ gda_connection_internal_savepoint_rolledback (GdaConnection *cnc, const gchar *s
 	gda_connection_unlock ((GdaLockable*) cnc);
 }
 
+/**
+ * gda_connection_internal_savepoint_removed
+ * @cnc: a #GdaConnection
+ * @svp_name: savepoint's name, or %NULL
+ *
+ * Internal functions to be called by database providers when a savepoint has been removed
+ * to keep track of the transactional status of the connection
+ *
+ * Note: this function should not be called if gda_connection_internal_statement_executed()
+ * has already been called because a statement's execution was necessary to perform
+ * the action.
+ */
 void
 gda_connection_internal_savepoint_removed (GdaConnection *cnc, const gchar *svp_name)
 {
@@ -3619,6 +3690,16 @@ gda_connection_internal_savepoint_removed (GdaConnection *cnc, const gchar *svp_
 	gda_connection_unlock ((GdaLockable*) cnc);
 }
 
+/**
+ * gda_connection_internal_statement_executed
+ * @cnc: a #GdaConnection
+ * @stmt: a #GdaStatement which has been executed
+ * @params: execution's parameters
+ * @error: a #GdaConnectionEvent if the execution failed, or %NULL
+ *
+ * Internal functions to be called by database providers when a statement has been executed
+ * to keep track of the transactional status of the connection
+ */
 void 
 gda_connection_internal_statement_executed (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params, GdaConnectionEvent *error)
 {
@@ -3690,6 +3771,14 @@ gda_connection_internal_statement_executed (GdaConnection *cnc, GdaStatement *st
 	}
 }
 
+/**
+ * gda_connection_internal_change_transaction_state
+ * @cnc: a #GdaConnection
+ * @newstate: the new state
+ *
+ * Internal functions to be called by database providers to force a transaction status
+ * change.
+ */
 void
 gda_connection_internal_change_transaction_state (GdaConnection *cnc,
 						  GdaTransactionStatusState newstate)

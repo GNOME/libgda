@@ -109,8 +109,9 @@ gda_connection_event_init (GdaConnectionEvent *event, GdaConnectionEventClass *k
 	event->priv->gda_code = GDA_CONNECTION_EVENT_CODE_UNKNOWN;
 }
 
-/*
+/**
  * gda_connection_event_new:
+ * @type: the type of event
  *
  * Creates a new unitialized event object. This class is used for communicating
  * events from the different providers to the clients.

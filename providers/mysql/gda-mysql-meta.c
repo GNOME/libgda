@@ -816,7 +816,7 @@ _gda_mysql_meta_tables_views (GdaServerProvider  *prov,
 	return retval;
 }
 
-/**
+/*
  * map_mysql_type_to_gda:
  * @value: a #GValue string.
  *

@@ -184,7 +184,7 @@ gda_perform_drop_database (const gchar *provider, GdaServerOperation *op, GError
  * 
  * Execute a SQL SELECT command over an opened connection.
  *
- * Return: a new #GdaDataModel if succesfull, NULL otherwise
+ * Returns: a new #GdaDataModel if succesfull, NULL otherwise
  */
 GdaDataModel *          
 gda_execute_select_command (GdaConnection *cnc, const gchar *sql, GError **error)

@@ -369,7 +369,7 @@ gda_column_set_description (GdaColumn *column, const gchar *descr)
  * gda_column_get_dbms_type
  * @column: a #GdaColumn.
  *
- * Returns: the dbms_type of @column.
+ * Returns: the database type of @column.
  */
 const gchar*
 gda_column_get_dbms_type (GdaColumn *column)
@@ -378,6 +378,13 @@ gda_column_get_dbms_type (GdaColumn *column)
 	return (const gchar *) column->priv->dbms_type;
 }
 
+/**
+ * gda_column_set_dbms_type
+ * @column: a #GdaColumn
+ * @dbms_type: a string
+ *
+ * Defines @column's database type
+ */
 void
 gda_column_set_dbms_type (GdaColumn *column, const gchar *dbms_type)
 {

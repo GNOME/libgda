@@ -194,14 +194,9 @@ gda_row_get_type (void)
 
 /**
  * gda_row_new
- * @model: the #GdaDataModel this row belongs to, or %NULL if the row is outside any data model
  * @count: number of #GValue in the new #GdaRow.
  *
  * Creates a #GdaRow which can hold @count #GValue values.
- *
- * The caller of this function is the only owner of a reference to the newly created #GdaRow
- * object, even if @model is not %NULL (it is recommended to pass %NULL as the @model argument
- * if this function is not called from within a #GdaDataModel implementation).
  *
  * Returns: a newly allocated #GdaRow object.
  */

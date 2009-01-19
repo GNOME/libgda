@@ -2260,6 +2260,7 @@ gda_meta_table_column_get_attribute (GdaMetaTableColumn *tcol, const gchar *attr
  * @tcol: a #GdaMetaTableColumn
  * @attribute: attribute name as a static string
  * @value: a #GValue, or %NULL
+ * @destroy: function called when @attribute has to be freed, or %NULL
  *
  * Set the value associated to a named attribute.
  *
@@ -2267,8 +2268,8 @@ gda_meta_table_column_get_attribute (GdaMetaTableColumn *tcol, const gchar *attr
  * If there is already an attribute named @attribute set, then its value is replaced with the new @value, 
  * except if @value is %NULL, in which case the attribute is removed.
  *
- * Warning: @attribute should be a static string (no copy of it is made), so the string should exist as long as the @column
- * object exists.
+ * Warning: @attribute is not copied, if it needs to be freed when not used anymore, then @destroy should point to
+ * the functions which will free it (typically g_free()). If @attribute does not need to be freed, then @destroy can be %NULL.
  */
 void
 gda_meta_table_column_set_attribute (GdaMetaTableColumn *tcol, const gchar *attribute, const GValue *value,
@@ -2285,7 +2286,7 @@ gda_meta_table_column_set_attribute (GdaMetaTableColumn *tcol, const gchar *attr
 
 /**
  * gda_meta_table_column_foreach_attribute
- * @column: a #GdaMetaTableColumn
+ * @tcol: a #GdaMetaTableColumn
  * @func: a #GdaAttributesManagerFunc function
  * @data: user data to be passed as last argument of @func each time it is called
  *

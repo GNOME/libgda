@@ -250,7 +250,7 @@ gda_attributes_manager_set (GdaAttributesManager *mgr, gpointer ptr, const gchar
  * @ptr: a pointer to the ressources to which the attribute will apply
  * @att_name: an attribute's name
  * @value: a #GValue, or %NULL
- * @destroy: function called when @att_name is destroyed
+ * @destroy: function called when @att_name has to be freed
  *
  * Does the same as gda_attributes_manager_set() except that @destroy is called when @att_name needs
  * to be freed.
@@ -290,9 +290,9 @@ gda_attributes_manager_get (GdaAttributesManager *mgr, gpointer ptr, const gchar
 /**
  * gda_attributes_manager_copy
  * @from_mgr: a #GdaAttributesManager
- * @from:
+ * @from: a pointer from which attributes are copied
  * @to_mgr: a #GdaAttributesManager
- * @to:
+ * @to: a pointer to which attributes are copied
  *
  * For each attribute set for @from (in @from_mgr), set the same attribute to @to (in @to_mgr). @from_mgr and
  * @to_mgr can be equal.

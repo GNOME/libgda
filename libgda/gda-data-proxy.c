@@ -1989,7 +1989,7 @@ gda_data_proxy_has_changed (GdaDataProxy *proxy)
  *
  * Tells if the row number @proxy_row has changed
  *
- * Returns:
+ * Returns: TRUE if the row has changed
  */
 gboolean
 gda_data_proxy_row_has_changed (GdaDataProxy *proxy, gint proxy_row)

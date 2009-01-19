@@ -807,7 +807,6 @@ gda_data_handler_get_type
 <FILE>gda-handler-string</FILE>
 <TITLE>GdaHandlerString</TITLE>
 GdaHandlerString
-GdaHandlerString
 GdaHandlerStringClass
 GdaHandlerStringPriv
 gda_handler_string_new
@@ -823,7 +822,6 @@ gda_handler_string_get_type
 <FILE>gda-handler-numerical</FILE>
 <TITLE>GdaHandlerNumerical</TITLE>
 GdaHandlerNumerical
-GdaHandlerNumerical
 GdaHandlerNumericalClass
 GdaHandlerNumericalPriv
 gda_handler_numerical_new
@@ -837,7 +835,6 @@ gda_handler_numerical_get_type
 <SECTION>
 <FILE>gda-handler-time</FILE>
 <TITLE>GdaHandlerTime</TITLE>
-GdaHandlerTime
 GdaHandlerTime
 GdaHandlerTimeClass
 GdaHandlerTimePriv
@@ -855,7 +852,6 @@ gda_handler_time_get_type
 <SECTION>
 <FILE>gda-handler-boolean</FILE>
 <TITLE>GdaHandlerBoolean</TITLE>
-GdaHandlerBoolean
 GdaHandlerBoolean
 GdaHandlerBooleanClass
 GdaHandlerBooleanPriv
@@ -1427,8 +1423,6 @@ gda_server_provider_load_file_contents
 <SUBSECTION>
 gda_connection_internal_set_provider_data
 gda_connection_internal_get_provider_data
-gda_virtual_connection_internal_set_provider_data
-gda_virtual_connection_internal_get_provider_data
 <SUBSECTION>
 gda_connection_add_event
 gda_connection_add_event_string

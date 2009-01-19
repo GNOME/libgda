@@ -134,7 +134,7 @@ gda_mutex_lock (GdaMutex *m)
  * gda_mutex_trylock
  * @m: a #GdaMutex
  * 
- * Returns: Tries to lock @m. If @m is already locked by another thread, it immediately returns FALSE.
+ * Tries to lock @m. If @m is already locked by another thread, it immediately returns FALSE.
  * Otherwise it locks @m and returns TRUE
  *
  * This function can be used even if g_thread_init() has not yet been called, and, in that case, will immediately return TRUE.

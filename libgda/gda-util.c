@@ -112,6 +112,8 @@ gda_g_type_from_string (const gchar *str)
  *
  * Escapes @string to make it understandable by a DBMS. The escape method is very common and replaces any
  * occurence of "'" with "''" and "\" with "\\"
+ *
+ * Returns: a new string
  */
 gchar *
 gda_default_escape_string (const gchar *string)
@@ -653,7 +655,7 @@ gda_text_to_alphanum (const gchar *text)
 
 /**
  * gda_alphanum_to_text
- * @text:
+ * @text: a string
  *
  * Does the opposite of gda_text_to_alphanum(), in the same string 
  *
@@ -741,8 +743,17 @@ dml_statements_check_select_structure (GdaConnection *cnc, GdaSqlStatement *sel_
 	return TRUE;
 }
 
-/*
- * Builds the WHERE condition of the computed DML statement
+/**
+ * gda_compute_unique_table_row_condition
+ * @stsel: a #GdaSqlSelectStatement
+ * @mtable: a #GdaMetaTable
+ * @require_pk: set to TRUE if a primary key ir required
+ * @error: a place to store errors, or %NULL
+ * 
+ * Computes a #GdaSqlExpr expression which can be used in the WHERE clause of an UPDATE
+ * or DELETE statement when a row from the result of the @stsel statement has to be modified.
+ *
+ * Returns: a new #GdaSqlExpr, or %NULL if an error occurred.
  */
 GdaSqlExpr*
 gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTable *mtable, gboolean require_pk, GError **error)
@@ -830,9 +841,20 @@ gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTab
 	return NULL;
 }
 
-/*
- * Statement computation from meta store 
- * @select_stmt: must be a SELECT statement (compound statements not handled)
+/**
+ * gda_compute_dml_statements
+ * @cnc: a #GdaConnection
+ * @select_stmt: a SELECT #GdaStatement (compound statements not handled)
+ * @require_pk: TRUE if the created statement have to use a primary key
+ * @insert_stmt: a place to store the created INSERT statement, or %NULL
+ * @update_stmt: a place to store the created UPDATE statement, or %NULL
+ * @delete_stmt: a place to store the created DELETE statement, or %NULL
+ * @error: a place to store errors, or %NULL
+ *
+ * Creates an INSERT, an UPDATE and a DELETE statement from a SELECT statement
+ * using the database metadata available in @cnc's meta store.
+ * 
+ * returns: TRUE if no error occurred
  */
 gboolean
 gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gboolean require_pk, 
@@ -1042,6 +1064,8 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
  * Computes a SELECT statement which selects all the rows the @update_stmt would update. Beware
  * however that this GdaSqlStatement does not select anything (ie it would be rendered as "SELECT FROM ... WHERE ...")
  * and before being useable, one needs to add some fields to actually select.
+ *
+ * Returns; a new #GdaStatement if no error occurred, or %NULL otherwise
  */
 GdaSqlStatement *
 gda_compute_select_statement_from_update (GdaStatement *update_stmt, GError **error)
@@ -1670,7 +1694,6 @@ gda_rfc1738_decode (gchar *string)
  * @out_dsn: a place to store the new string containing the &lt;DSN&gt; part
  * @out_username: a place to store the new string containing the &lt;username&gt; part
  * @out_password: a place to store the new string containing the &lt;password&gt; part
- * @error: a place to store errors, or %NULL
  *
  * Extract the DSN, username and password from @string. in @string, the various parts are strings
  * which are expected to be encoded using an RFC 1738 compliant encoding. If they are specified, 
@@ -1720,7 +1743,6 @@ gda_dsn_split (const gchar *string, gchar **out_dsn, gchar **out_username, gchar
  * @out_provider: a place to store the new string containing the &lt;provider&gt; part
  * @out_username: a place to store the new string containing the &lt;username&gt; part
  * @out_password: a place to store the new string containing the &lt;password&gt; part
- * @error: a place to store errors, or %NULL
  *
  * Extract the provider, connection parameters, username and password from @string. 
  * in @string, the various parts are strings

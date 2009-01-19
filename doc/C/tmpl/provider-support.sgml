@@ -126,25 +126,6 @@ Methods dedicated to implementing providers
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_virtual_connection_internal_set_provider_data ##### -->
-<para>
-
-</para>
-
-@vcnc: 
-@data: 
-@destroy_func: 
-
-
-<!-- ##### FUNCTION gda_virtual_connection_internal_get_provider_data ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_connection_add_event ##### -->
 <para>
 
