@@ -1,3 +1,9 @@
+2009-01-21  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/sqlite/gda-sqlite-meta.c: fix for bug #568570
+	* libgda/gda-value.c: corrected gda_value_new_timestamp_from_timet()
+	to correclty handle the results of localtime() (thanks to Tim Lapawa)
+
 2009-01-19  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in: set version to 3.99.10

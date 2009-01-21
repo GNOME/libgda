@@ -1181,8 +1181,8 @@ gda_value_new_timestamp_from_timet (time_t val)
         ltm = localtime ((const time_t *) &val);
         if (ltm) {
                 GdaTimestamp tstamp;
-                tstamp.year = ltm->tm_year;
-                tstamp.month = ltm->tm_mon;
+                tstamp.year = ltm->tm_year + 1900;
+                tstamp.month = ltm->tm_mon + 1;
                 tstamp.day = ltm->tm_mday;
                 tstamp.hour = ltm->tm_hour;
                 tstamp.minute = ltm->tm_min;
