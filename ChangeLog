@@ -1,5 +1,9 @@
 2009-01-23  Vivien Malerba <malerba@gnome-db.org>
 
+	* sqlite/gda-sqlite-provider.c: partial fix for bug #568844
+
+2009-01-23  Vivien Malerba <malerba@gnome-db.org>
+
 	* documentation fixes, see bugs #568731 and #561178.
 
 2009-01-21  Vivien Malerba <malerba@gnome-db.org>

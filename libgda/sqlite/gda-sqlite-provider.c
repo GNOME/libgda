@@ -1792,6 +1792,7 @@ add_oid_columns (GdaStatement *stmt, GHashTable **out_hash, gint *out_nb_cols_ad
 			name = target->as;
 		else
 			name = target->table_name;
+		
 		if (gda_sql_identifier_needs_quotes (name)) {
 			gchar *tmp;
 			tmp = gda_sql_identifier_add_quotes (target->table_name);
@@ -1803,7 +1804,8 @@ add_oid_columns (GdaStatement *stmt, GHashTable **out_hash, gint *out_nb_cols_ad
 		g_value_take_string ((field->expr->value = gda_value_new (G_TYPE_STRING)), str);
 		
 		/* add to hash table */
-		g_hash_table_insert (hash, g_strdup (name), GINT_TO_POINTER (add_index));
+		g_hash_table_insert (hash, gda_sql_identifier_remove_quotes (g_strdup (name)),
+				     GINT_TO_POINTER (add_index));
 		nb_cols_added ++;
 	}
 	
@@ -1845,6 +1847,7 @@ real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stm
 	real_stmt = add_oid_columns (stmt, &hash, &nb_rows_added);
 	sql = gda_sqlite_provider_statement_to_sql (provider, cnc, real_stmt, params, GDA_STATEMENT_SQL_PARAMS_AS_QMARK,
 						    &used_params, error);
+	g_print ("SQL: %s\n", sql);
 	if (!sql) 
 		goto out_err;
 
