@@ -1847,7 +1847,6 @@ real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stm
 	real_stmt = add_oid_columns (stmt, &hash, &nb_rows_added);
 	sql = gda_sqlite_provider_statement_to_sql (provider, cnc, real_stmt, params, GDA_STATEMENT_SQL_PARAMS_AS_QMARK,
 						    &used_params, error);
-	g_print ("SQL: %s\n", sql);
 	if (!sql) 
 		goto out_err;
 
