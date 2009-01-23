@@ -155,11 +155,11 @@ gda_data_model_bdb_class_init (GdaDataModelBdbClass *klass)
         object_class->set_property = gda_data_model_bdb_set_property;
         object_class->get_property = gda_data_model_bdb_get_property;
         g_object_class_install_property (object_class, PROP_FILENAME,
-                                         g_param_spec_string ("filename", "DB file", NULL, NULL,
+                                         g_param_spec_string ("filename", NULL, "DB file", NULL,
                                                               G_PARAM_READABLE | G_PARAM_WRITABLE |
                                                               G_PARAM_CONSTRUCT_ONLY));
         g_object_class_install_property (object_class, PROP_DB_NAME,
-                                         g_param_spec_string ("db-name", "Name of the database", NULL, NULL,
+                                         g_param_spec_string ("db-name", NULL, "Name of the database", NULL,
                                                               G_PARAM_READABLE | G_PARAM_WRITABLE |
                                                               G_PARAM_CONSTRUCT_ONLY));
 

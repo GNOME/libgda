@@ -107,6 +107,12 @@ gda_data_model_class_init (gpointer g_class)
 
 	g_static_rec_mutex_lock (&init_mutex);
 	if (! initialized) {
+		/**
+		 * GdaDataModel::changed
+		 * @model: the #GdaDataModel
+		 *
+		 * Gets emitted when any value in @model has been changed
+		 */
 		gda_data_model_signals[CHANGED] =
 			g_signal_new ("changed",
 				      GDA_TYPE_DATA_MODEL,
@@ -115,6 +121,13 @@ gda_data_model_class_init (gpointer g_class)
 				      NULL, NULL,
 				      g_cclosure_marshal_VOID__VOID,
 				      G_TYPE_NONE, 0);
+		/**
+		 * GdaDataModel::row-inserted
+		 * @model: the #GdaDataModel
+		 * @row: the row number
+		 *
+		 * Gets emitted when a row has been inserted in @model
+		 */
 		gda_data_model_signals[ROW_INSERTED] =
 			g_signal_new ("row-inserted",
 				      GDA_TYPE_DATA_MODEL,
@@ -123,6 +136,13 @@ gda_data_model_class_init (gpointer g_class)
 				      NULL, NULL,
 				      g_cclosure_marshal_VOID__INT,
 				      G_TYPE_NONE, 1, G_TYPE_INT);
+		/**
+		 * GdaDataModel::row-updated
+		 * @model: the #GdaDataModel
+		 * @row: the row number
+		 *
+		 * Gets emitted when a row has been modified in @model
+		 */
 		gda_data_model_signals[ROW_UPDATED] =
 			g_signal_new ("row-updated",
 				      GDA_TYPE_DATA_MODEL,
@@ -131,6 +151,13 @@ gda_data_model_class_init (gpointer g_class)
 				      NULL, NULL,
 				      g_cclosure_marshal_VOID__INT,
 				      G_TYPE_NONE, 1, G_TYPE_INT);
+		/**
+		 * GdaDataModel::row-removed
+		 * @model: the #GdaDataModel
+		 * @row: the row number
+		 *
+		 * Gets emitted when a row has been removed from @model
+		 */
 		gda_data_model_signals[ROW_REMOVED] =
 			g_signal_new ("row-removed",
 				      GDA_TYPE_DATA_MODEL,
@@ -139,6 +166,13 @@ gda_data_model_class_init (gpointer g_class)
 				      NULL, NULL,
 				      g_cclosure_marshal_VOID__INT,
 				      G_TYPE_NONE, 1, G_TYPE_INT);
+		/**
+		 * GdaDataModel::reset
+		 * @model: the #GdaDataModel
+		 *
+		 * Gets emitted when @model's contents has been completely reset (the number and
+		 * type of columns may also have changed)
+		 */
 		gda_data_model_signals[RESET] =
 			g_signal_new ("reset",
 				      GDA_TYPE_DATA_MODEL,

@@ -46,7 +46,7 @@ gchar       *gda_default_escape_string (const gchar *string);
 gchar       *gda_default_unescape_string (const gchar *string);
 guint        gda_identifier_hash (const gchar *id);
 gboolean     gda_identifier_equal (const gchar *id1, const gchar *id2);
-gchar      **gda_completion_list_get (GdaConnection *cnc, const gchar *text, gint start, gint end);
+gchar      **gda_completion_list_get (GdaConnection *cnc, const gchar *sql, gint start, gint end);
 
 /*
  * Param & model utilities

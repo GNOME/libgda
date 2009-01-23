@@ -124,6 +124,12 @@ gda_statement_class_init (GdaStatementClass * klass)
 	GObjectClass   *object_class = G_OBJECT_CLASS (klass);
 	parent_class = g_type_class_peek_parent (klass);
 
+	/**
+	 * GdaStatement::reset
+	 * @stmt: the #GdaStatement object
+	 *
+	 * Gets emitted whenever the @stmt has changed
+	 */
 	gda_statement_signals[RESET] =
 		g_signal_new ("reset",
 			      G_TYPE_FROM_CLASS (object_class),
@@ -132,6 +138,13 @@ gda_statement_class_init (GdaStatementClass * klass)
 			      NULL, NULL,
 			      g_cclosure_marshal_VOID__VOID, G_TYPE_NONE,
 			      0);
+	/**
+	 * GdaStatement::checked
+	 * @stmt: the #GdaStatement object
+	 *
+	 * Gets emitted whenever the structure and contents
+	 * of @stmt have been verified (emitted after gda_statement_check_validity()).
+	 */
 	gda_statement_signals[CHECKED] =
 		g_signal_new ("checked",
 			      G_TYPE_FROM_CLASS (object_class),

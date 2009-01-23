@@ -536,8 +536,8 @@ Assorted functions for dealing with #GValue values.
 </para>
 
 @year: representation of the date
-@month: month representation of the date, as a number between 1 and 12 
-@day: day representation of the date, as a number between 1 and 31 
+@month: month representation of the date, as a number between 1 and 12
+@day: day representation of the date, as a number between 1 and 31
 @hour: 
 @minute: 
 @second: 

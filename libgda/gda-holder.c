@@ -176,6 +176,12 @@ gda_holder_class_init (GdaHolderClass *class)
 
 	parent_class = g_type_class_peek_parent (class);
 
+	/**
+	 * GdaHolder::source-changed
+	 * @holder: the #GdaHolder
+	 * 
+	 * Gets emitted when the data model in which @holder's values should be has changed
+	 */
 	gda_holder_signals[SOURCE_CHANGED] =
                 g_signal_new ("source-changed",
                               G_TYPE_FROM_CLASS (object_class),
@@ -183,6 +189,12 @@ gda_holder_class_init (GdaHolderClass *class)
                               G_STRUCT_OFFSET (GdaHolderClass, source_changed),
                               NULL, NULL,
                               _gda_marshal_VOID__VOID, G_TYPE_NONE, 0);
+	/**
+	 * GdaHolder::changed
+	 * @holder: the #GdaHolder
+	 * 
+	 * Gets emitted when @holder's value has changed
+	 */
 	gda_holder_signals[CHANGED] =
                 g_signal_new ("changed",
                               G_TYPE_FROM_CLASS (object_class),
@@ -190,6 +202,14 @@ gda_holder_class_init (GdaHolderClass *class)
                               G_STRUCT_OFFSET (GdaHolderClass, changed),
                               NULL, NULL,
                               _gda_marshal_VOID__VOID, G_TYPE_NONE, 0);
+	/**
+	 * GdaHolder::attribute-changed
+	 * @holder: the #GdaHolder
+	 * @att_name: attribute's name
+	 * @att_value: attribute's value
+	 * 
+	 * Gets emitted when any @holder's attribute has changed
+	 */
 	gda_holder_signals[ATT_CHANGED] =
                 g_signal_new ("attribute-changed",
                               G_TYPE_FROM_CLASS (object_class),
@@ -200,7 +220,7 @@ gda_holder_class_init (GdaHolderClass *class)
 			      G_TYPE_STRING, G_TYPE_VALUE);
 
 	/**
-	 * GdaHolder::before-change:
+	 * GdaHolder::validate-change
 	 * @holder: the object which received the signal
 	 * @new_value: the proposed new value for @holder
 	 * 
@@ -231,34 +251,39 @@ gda_holder_class_init (GdaHolderClass *class)
 	object_class->set_property = gda_holder_set_property;
 	object_class->get_property = gda_holder_get_property;
 	g_object_class_install_property (object_class, PROP_ID,
-					 g_param_spec_string ("id", NULL, NULL, NULL, 
+					 g_param_spec_string ("id", NULL, "Holder's ID", NULL, 
 							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_NAME,
-					 g_param_spec_string ("name", NULL, NULL, NULL, 
+					 g_param_spec_string ("name", NULL, "Holder's name", NULL, 
 							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_DESCR,
-					 g_param_spec_string ("description", NULL, NULL, NULL, 
+					 g_param_spec_string ("description", NULL, "Holder's description", NULL, 
 							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_GDA_TYPE,
-					 g_param_spec_gtype ("g-type", NULL, NULL, G_TYPE_NONE, 
+					 g_param_spec_gtype ("g-type", NULL, "Holder's GType", G_TYPE_NONE, 
 							     (G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT)));
 	g_object_class_install_property (object_class, PROP_NOT_NULL,
-					 g_param_spec_boolean ("not-null", NULL, NULL, FALSE,
+					 g_param_spec_boolean ("not-null", NULL, "Can the value holder be NULL?", FALSE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_SIMPLE_BIND,
-					 g_param_spec_object ("simple-bind", NULL, NULL, 
+					 g_param_spec_object ("simple-bind", NULL, 
+							      "Make value holder follow other GdaHolder's changes", 
                                                                GDA_TYPE_HOLDER,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_FULL_BIND,
-					 g_param_spec_object ("full-bind", NULL, NULL, 
+					 g_param_spec_object ("full-bind", NULL,
+							      "Make value holder follow other GdaHolder's changes "
+							      "and the other way around", 
                                                                GDA_TYPE_HOLDER,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_SOURCE_MODEL,
-                                         g_param_spec_object ("source-model", NULL, NULL,
-                                                               GDA_TYPE_DATA_MODEL,
+                                         g_param_spec_object ("source-model", NULL, "Data model among which the holder's "
+							      "value should be",
+							      GDA_TYPE_DATA_MODEL,
                                                                (G_PARAM_READABLE | G_PARAM_WRITABLE)));
         g_object_class_install_property (object_class, PROP_SOURCE_COLUMN,
-                                         g_param_spec_int ("source-column", NULL, NULL,
+                                         g_param_spec_int ("source-column", NULL, "Column number to use in coordination "
+							   "with the source-model property",
 							   0, G_MAXINT, 0,
 							   (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	

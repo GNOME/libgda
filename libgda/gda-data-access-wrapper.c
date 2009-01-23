@@ -134,7 +134,7 @@ gda_data_access_wrapper_class_init (GdaDataAccessWrapperClass *klass)
 	object_class->set_property = gda_data_access_wrapper_set_property;
         object_class->get_property = gda_data_access_wrapper_get_property;
 	g_object_class_install_property (object_class, PROP_MODEL,
-                                         g_param_spec_object ("model", "Data model being worked on", NULL,
+                                         g_param_spec_object ("model", NULL, "Data model being wrapped",
                                                               GDA_TYPE_DATA_MODEL,
 							      G_PARAM_READABLE | G_PARAM_WRITABLE |
 							      G_PARAM_CONSTRUCT_ONLY));

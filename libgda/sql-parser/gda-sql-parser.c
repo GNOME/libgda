@@ -425,6 +425,9 @@ gda_sql_parser_get_property (GObject *object,
  * contains more than one statement, then the remaining part of the string is not parsed at all, and @remain (if
  * not %NULL) will point at the first non parsed character.
  *
+ * To include variables in the @sql string, see the
+ * <link linkend="GdaSqlParser.description">GdaSqlParser's object description</link>.
+ *
  * Returns: a new #GdaStatement object, or %NULL if an error occurred
  */
 GdaStatement *
@@ -655,6 +658,9 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
  * is returned.
  *
  * if @sql is %NULL, then the returned #GdaBatch object will contain no statement.
+ *
+ * To include variables in the @sql string, see the
+ * <link linkend="GdaSqlParser.description">GdaSqlParser's object description</link>.
  *
  * Returns: a new #GdaBatch object, or %NULL if an error occurred
  */

@@ -115,7 +115,7 @@ struct _GdaSetClass
 	GError               *(*validate_set)          (GdaSet *set);
 	void                  (*holder_changed)        (GdaSet *set, GdaHolder *holder);
 	void                  (*holder_attr_changed)   (GdaSet *set, GdaHolder *holder, 
-							const gchar *attr_name, const GValue *value);
+							const gchar *attr_name, const GValue *attr_value);
 	void                  (*public_data_changed)   (GdaSet *set);
 };
 

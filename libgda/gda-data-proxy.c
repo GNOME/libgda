@@ -546,6 +546,14 @@ gda_data_proxy_class_init (GdaDataProxyClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	/* signals */
+	/**
+	 * GdaDataProxy::row-delete-changed
+	 * @proxy: the #GdaDataProxy
+	 * @row: the concerned @proxy's row
+	 * @to_be_deleted: tells if the @row is marked to be deleted
+	 *
+	 * Gets emitted whenever a row has been marked to be deleted, or has been unmarked to be deleted
+	 */
 	gda_data_proxy_signals [ROW_DELETE_CHANGED] =
 		g_signal_new ("row-delete-changed",
                               G_TYPE_FROM_CLASS (object_class),
@@ -553,6 +561,13 @@ gda_data_proxy_class_init (GdaDataProxyClass *klass)
                               G_STRUCT_OFFSET (GdaDataProxyClass, row_delete_changed),
                               NULL, NULL,
 			      _gda_marshal_VOID__INT_BOOLEAN, G_TYPE_NONE, 2, G_TYPE_INT, G_TYPE_BOOLEAN);
+	/**
+	 * GdaDataProxy::sample-size-changed
+	 * @proxy: the #GdaDataProxy
+	 * @sample_size: the new sample size
+	 *
+	 * Gets emitted whenever @proxy's sample size has been changed
+	 */
 	gda_data_proxy_signals [SAMPLE_SIZE_CHANGED] =
 		g_signal_new ("sample-size-changed",
                               G_TYPE_FROM_CLASS (object_class),
@@ -560,6 +575,15 @@ gda_data_proxy_class_init (GdaDataProxyClass *klass)
                               G_STRUCT_OFFSET (GdaDataProxyClass, sample_size_changed),
                               NULL, NULL,
 			      g_cclosure_marshal_VOID__INT, G_TYPE_NONE, 1, G_TYPE_INT);
+	/**
+	 * GdaDataProxy::sample-changed
+	 * @proxy: the #GdaDataProxy
+	 * @sample_start: the first row of the sample
+	 * @sample_end: the last row of the sample
+	 *
+	 * Gets emitted whenever @proxy's sample size has been changed. @sample_start and @sample_end are
+	 * in reference to the proxied data model.
+	 */
 	gda_data_proxy_signals [SAMPLE_CHANGED] =
 		g_signal_new ("sample-changed",
                               G_TYPE_FROM_CLASS (object_class),
@@ -567,6 +591,17 @@ gda_data_proxy_class_init (GdaDataProxyClass *klass)
                               G_STRUCT_OFFSET (GdaDataProxyClass, sample_changed),
                               NULL, NULL,
 			      _gda_marshal_VOID__INT_INT, G_TYPE_NONE, 2, G_TYPE_INT, G_TYPE_INT);
+	/**
+	 * GdaDataProxy::validate-row-changes
+	 * @proxy: the #GdaDataProxy
+	 * @row: the proxy's row
+	 * @proxied_row: the proxied data model's row
+	 *
+	 * Gets emitted when @proxy is about to commit a row change to the proxied data model. If any
+	 * callback returns a non %NULL value, then the change commit fails with the returned #GError
+	 * 
+	 * Returns: a new #GError if validation failed, or %NULL
+	 */
 	gda_data_proxy_signals [VALIDATE_ROW_CHANGES] =
 		g_signal_new ("validate-row-changes",
                               G_TYPE_FROM_CLASS (object_class),
@@ -574,6 +609,14 @@ gda_data_proxy_class_init (GdaDataProxyClass *klass)
                               G_STRUCT_OFFSET (GdaDataProxyClass, validate_row_changes),
                               validate_row_changes_accumulator, NULL,
                               _gda_marshal_ERROR__INT_INT, GDA_TYPE_ERROR, 2, G_TYPE_INT, G_TYPE_INT);
+	/**
+	 * GdaDataProxy::row-changes-applied
+	 * @proxy: the #GdaDataProxy
+	 * @row: the proxy's row
+	 * @proxied_row: the proxied data model's row
+	 *
+	 * Gets emitted when @proxy has committed a row change to the proxied data model.
+	 */
 	gda_data_proxy_signals [ROW_CHANGES_APPLIED] =
 		g_signal_new ("row-changes-applied",
                               G_TYPE_FROM_CLASS (object_class),
@@ -581,6 +624,12 @@ gda_data_proxy_class_init (GdaDataProxyClass *klass)
                               G_STRUCT_OFFSET (GdaDataProxyClass, row_changes_applied),
                               NULL, NULL,
 			      _gda_marshal_VOID__INT_INT, G_TYPE_NONE, 2, G_TYPE_INT, G_TYPE_INT);
+	/**
+	 * GdaDataProxy::filter-changed
+	 * @proxy: the #GdaDataProxy
+	 *
+	 * Gets emitted when @proxy's filter has been changed
+	 */
 	gda_data_proxy_signals [FILTER_CHANGED] = 
 		g_signal_new ("filter-changed",
                               G_TYPE_FROM_CLASS (object_class),
@@ -605,17 +654,25 @@ gda_data_proxy_class_init (GdaDataProxyClass *klass)
 	object_class->get_property = gda_data_proxy_get_property;
 
 	g_object_class_install_property (object_class, PROP_MODEL,
-					 g_param_spec_object ("model", _("Data model"), NULL,
+					 g_param_spec_object ("model", NULL, "Proxied data model",
                                                                GDA_TYPE_DATA_MODEL,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT)));
 	g_object_class_install_property (object_class, PROP_ADD_NULL_ENTRY,
-					 g_param_spec_boolean ("prepend-null-entry", NULL, NULL, FALSE,
+					 g_param_spec_boolean ("prepend-null-entry", NULL, 
+							       "Tells if a row composed of NULL values is inserted "
+							       "as the proxy's first row", FALSE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_DEFER_SYNC,
-					 g_param_spec_boolean ("defer-sync", NULL, NULL, TRUE,
+					 g_param_spec_boolean ("defer-sync", NULL, 
+							       "Tells if changes to the sample of rows displayed "
+							       "is done in background in several steps or if it's "
+							       "done in one step.", TRUE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_SAMPLE_SIZE,
-					 g_param_spec_int ("sample-size", NULL, NULL, 0, G_MAXINT - 1, 300,
+					 g_param_spec_int ("sample-size", NULL, 
+							   "Number of rows which the proxy will contain at any time, "
+							   "like a sliding window on the proxied data model", 
+							   0, G_MAXINT - 1, 300,
 							   (G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT)));
 
 	g_static_mutex_lock (&parser_mutex);
@@ -2098,7 +2155,7 @@ gda_data_proxy_get_sample_size (GdaDataProxy *proxy)
  * @proxy: a #GdaDataProxy object
  * @sample_start: the number of the first row to be displayed
  *
- * Sets the number of the first row to be displayed.
+ * Sets the number of the first row to be available in @proxy (in reference to the proxied data model)
  */
 void
 gda_data_proxy_set_sample_start (GdaDataProxy *proxy, gint sample_start)
@@ -2120,9 +2177,9 @@ gda_data_proxy_set_sample_start (GdaDataProxy *proxy, gint sample_start)
  * gda_data_proxy_get_sample_start
  * @proxy: a #GdaDataProxy object
  *
- * Get the row number of the first row to be displayed.
+ * Get the number of the first row to be available in @proxy (in reference to the proxied data model)
  *
- * Returns: the number of the first row being displayed.
+ * Returns: the number of the first proxied model's row.
  */
 gint
 gda_data_proxy_get_sample_start (GdaDataProxy *proxy)
@@ -2137,9 +2194,9 @@ gda_data_proxy_get_sample_start (GdaDataProxy *proxy)
  * gda_data_proxy_get_sample_end
  * @proxy: a #GdaDataProxy object
  *
- * Get the row number of the last row to be displayed.
+ * Get the number of the last row to be available in @proxy (in reference to the proxied data model)
  *
- * Returns: the number of the last row being displayed.
+ * Returns: the number of the last proxied model's row.
  */
 gint
 gda_data_proxy_get_sample_end (GdaDataProxy *proxy)

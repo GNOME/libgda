@@ -242,8 +242,8 @@ gda_set_class_init (GdaSetClass *class)
 			      GDA_TYPE_HOLDER);
 
 	/**
-	 * GdaSet::validate-holder-change:
-	 * @set: the object which received the signal
+	 * GdaSet::validate-holder-change
+	 * @set: the #GdaSet
 	 * @holder: the #GdaHolder which is going to change
 	 * @new_value: the proposed new value for @holder
 	 * 
@@ -262,8 +262,8 @@ gda_set_class_init (GdaSetClass *class)
 			      _gda_marshal_ERROR__OBJECT_VALUE, GDA_TYPE_ERROR, 2,
 			      GDA_TYPE_HOLDER, G_TYPE_VALUE);
 	/**
-	 * GdaSet::validate-set:
-	 * @set: the object which received the signal
+	 * GdaSet::validate-set
+	 * @set: the #GdaSet
 	 * 
 	 * Gets emitted when gda_set_is_valid() is called, use
 	 * this signal to control which combination of values @set's holder can have (for example to implement some business rules)
@@ -278,6 +278,15 @@ gda_set_class_init (GdaSetClass *class)
 			      G_STRUCT_OFFSET (GdaSetClass, validate_set),
 			      validate_accumulator, NULL,
 			      _gda_marshal_ERROR__VOID, GDA_TYPE_ERROR, 0);
+	/**
+	 * GdaSet::holder-attr-changed
+	 * @set: the #GdaSet
+	 * @holder: the GdaHolder for which an attribute changed
+	 * @attr_name: attribute's name
+	 * @attr_value: attribute's value
+	 * 
+	 * Gets emitted when an attribute for any of the #GdaHolder objects managed by @set has changed
+	 */
 	gda_set_signals[HOLDER_ATTR_CHANGED] =
 		g_signal_new ("holder-attr-changed",
 			      G_TYPE_FROM_CLASS (object_class),
@@ -286,6 +295,12 @@ gda_set_class_init (GdaSetClass *class)
 			      NULL, NULL,
 			      _gda_marshal_VOID__OBJECT_STRING_VALUE, G_TYPE_NONE, 3,
 			      GDA_TYPE_HOLDER, G_TYPE_STRING, G_TYPE_VALUE);
+	/**
+	 * GdaSet::public-data-changed
+	 * @set: the #GdaSet
+	 * 
+	 * Gets emitted when @set's public data (#GdaSetNode, #GdaSetGroup or #GdaSetSource values) have changed
+	 */
 	gda_set_signals[PUBLIC_DATA_CHANGED] =
 		g_signal_new ("public-data-changed",
 			      G_TYPE_FROM_CLASS (object_class),
@@ -304,17 +319,17 @@ gda_set_class_init (GdaSetClass *class)
 	object_class->set_property = gda_set_set_property;
 	object_class->get_property = gda_set_get_property;
 	g_object_class_install_property (object_class, PROP_ID,
-					 g_param_spec_string ("id", NULL, NULL, NULL, 
+					 g_param_spec_string ("id", NULL, "Id", NULL, 
 							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_NAME,
-					 g_param_spec_string ("name", NULL, NULL, NULL, 
+					 g_param_spec_string ("name", NULL, "Name", NULL, 
 							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_DESCR,
-					 g_param_spec_string ("description", NULL, NULL, NULL, 
+					 g_param_spec_string ("description", NULL, "Description", NULL, 
 							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_HOLDERS,
 					 g_param_spec_pointer ("holders", "GSList of GdaHolders", 
-							       "Holders the set should contain", (
+							       "GdaHolder objects the set should contain", (
 								G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
   
 	object_class->dispose = gda_set_dispose;

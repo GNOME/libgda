@@ -46,6 +46,13 @@ extern GdaAttributesManager *gda_holder_attributes_manager;
  * gda_g_type_to_string
  * @type: Type to convert from.
  *
+ * Converts a GType to its string representation (use gda_g_type_from_string() for the
+ * operation in the other direction).
+ *
+ * This function wraps g_type_name() but for common types it provides an easier to
+ * understand and remember name. For Example the G_TYPE_STRING is converted to "string"
+ * whereas g_type_name() converts it to "gchararray".
+ *
  * Returns: the GDA's string representing the given #GType or the name
  * returned by #g_type_name.
  */
@@ -73,6 +80,20 @@ gda_g_type_to_string (GType type)
 /**
  * gda_g_type_from_string
  * @str: the name of a #GType, as returned by gda_g_type_to_string().
+ *
+ * Converts a named type to ts GType type (also see the gda_g_type_to_string() function).
+ *
+ * This function is a wrapper around the g_type_from_name() function, but also recognizes
+ * some type synonyms such as:
+ * <itemizedlist>
+ *   <listitem><para>"int" for G_TYPE_INT</para></listitem>
+ *   <listitem><para>"string" for G_TYPE_STRING</para></listitem>
+ *   <listitem><para>"date" for G_TYPE_DATE</para></listitem>
+ *   <listitem><para>"time" for GDA_TYPE_TIME</para></listitem>
+ *   <listitem><para>"timestamp" for GDA_TYPE_TIMESTAMP</para></listitem>
+ *   <listitem><para>"boolean" for G_TYPE_BOOLEAN</para></listitem>
+ *   <listitem><para>"null" for GDA_TYPE_NULL</para></listitem>
+ * </itemizedlist>
  *
  * Returns: the #GType represented by the given @str.
  */

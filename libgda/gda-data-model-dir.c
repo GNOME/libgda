@@ -197,7 +197,7 @@ gda_data_model_dir_class_init (GdaDataModelDirClass *klass)
         object_class->set_property = gda_data_model_dir_set_property;
         object_class->get_property = gda_data_model_dir_get_property;
         g_object_class_install_property (object_class, PROP_BASEDIR,
-                                         g_param_spec_string ("basedir", "Base directory", NULL, NULL,
+                                         g_param_spec_string ("basedir", NULL, "Base directory", NULL,
                                                               G_PARAM_READABLE | G_PARAM_WRITABLE |
                                                               G_PARAM_CONSTRUCT_ONLY));
 

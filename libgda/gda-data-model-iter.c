@@ -136,6 +136,13 @@ gda_data_model_iter_class_init (GdaDataModelIterClass *class)
 
 	parent_class = g_type_class_peek_parent (class);
 
+	/**
+	 * GdaDataModelIter::row-changed
+	 * @iter: the #GdaDataModelIter
+	 * @row: the new iter's row
+	 *
+	 * Gets emitted when the row @iter is currently pointing has changed
+	 */
 	gda_data_model_iter_signals [ROW_CHANGED] =
                 g_signal_new ("row-changed",
                               G_TYPE_FROM_CLASS (object_class),
@@ -143,6 +150,13 @@ gda_data_model_iter_class_init (GdaDataModelIterClass *class)
                               G_STRUCT_OFFSET (GdaDataModelIterClass, row_changed),
                               NULL, NULL,
                               g_cclosure_marshal_VOID__INT, G_TYPE_NONE, 1, G_TYPE_INT);
+	/**
+	 * GdaDataModelIter::end-of-data
+	 * @iter: the #GdaDataModelIter
+	 *
+	 * Gets emitted when @iter has reached the end of available data (which means the previous
+	 * row it was on was the last one).
+	 */
 	gda_data_model_iter_signals [END_OF_DATA] =
                 g_signal_new ("end-of-data",
                               G_TYPE_FROM_CLASS (object_class),
@@ -163,17 +177,18 @@ gda_data_model_iter_class_init (GdaDataModelIterClass *class)
 	object_class->set_property = gda_data_model_iter_set_property;
 	object_class->get_property = gda_data_model_iter_get_property;
 	g_object_class_install_property (object_class, PROP_DATA_MODEL,
-					 g_param_spec_object ("data-model", "Data model for which the iter is for", NULL,
+					 g_param_spec_object ("data-model", NULL, "Data model for which the iter is for", 
                                                                GDA_TYPE_DATA_MODEL, 
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE |
 								G_PARAM_CONSTRUCT_ONLY)));
 	g_object_class_install_property (object_class, PROP_FORCED_MODEL,
-					 g_param_spec_object ("forced-model", NULL, NULL, 
+					 g_param_spec_object ("forced-model", NULL, "Overrides the data model the iter "
+							      "is attached to (reserved for internal usage)", 
                                                                GDA_TYPE_DATA_MODEL,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_CURRENT_ROW,
-					 g_param_spec_int ("current-row", "Current represented row in the data model", 
-							   NULL, -1, G_MAXINT, -1,
+					 g_param_spec_int ("current-row", NULL, "Current represented row in the data model", 
+							   -1, G_MAXINT, -1,
 							   (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_UPDATE_MODEL,
 					 g_param_spec_boolean ("update-model", "Tells if parameters changes are forwarded "
@@ -450,7 +465,7 @@ gda_data_model_iter_set_property (GObject *object,
 		}
 		case PROP_FORCED_MODEL: {
 			GdaDataModel* ptr = g_value_get_object (value);
-			g_return_if_fail (ptr && GDA_IS_DATA_MODEL (ptr));
+			g_return_if_fail (GDA_IS_DATA_MODEL (ptr));
 
 			if (iter->priv->data_model) {
 				if (iter->priv->data_model == GDA_DATA_MODEL (ptr))

@@ -131,6 +131,14 @@ gda_connection_class_init (GdaConnectionClass *klass)
 
 	parent_class = g_type_class_peek_parent (klass);
 
+	/**
+	 * GdaConnection::error
+	 * @cnc: the #GdaConnection
+	 * @event: a #GdaConnectionEvent object
+	 *
+	 * Gets emitted whenever a connection event occurs. Chech the nature of @event to
+	 * see if it's an error or a simple notification
+	 */
 	gda_connection_signals[ERROR] =
 		g_signal_new ("error",
 			      G_TYPE_FROM_CLASS (object_class),
@@ -139,6 +147,12 @@ gda_connection_class_init (GdaConnectionClass *klass)
 			      NULL, NULL,
 			      g_cclosure_marshal_VOID__OBJECT,
 			      G_TYPE_NONE, 1, GDA_TYPE_CONNECTION_EVENT);
+	/**
+	 * GdaConnection::conn-opened
+	 * @cnc: the #GdaConnection
+	 *
+	 * Gets emitted when the connection has been opened to the database
+	 */
 	gda_connection_signals[CONN_OPENED] =
                 g_signal_new ("conn-opened",
                               G_TYPE_FROM_CLASS (object_class),
@@ -147,6 +161,12 @@ gda_connection_class_init (GdaConnectionClass *klass)
                               NULL, NULL,
                               _gda_marshal_VOID__VOID,
                               G_TYPE_NONE, 0);
+	/**
+	 * GdaConnection::conn-to-close
+	 * @cnc: the #GdaConnection
+	 *
+	 * Gets emitted when the connection to the database is about to be closed
+	 */
         gda_connection_signals[CONN_TO_CLOSE] =
                 g_signal_new ("conn-to-close",
                               G_TYPE_FROM_CLASS (object_class),
@@ -155,6 +175,12 @@ gda_connection_class_init (GdaConnectionClass *klass)
                               NULL, NULL,
                               _gda_marshal_VOID__VOID,
                               G_TYPE_NONE, 0);
+	/**
+	 * GdaConnection::conn-closed
+	 * @cnc: the #GdaConnection
+	 *
+	 * Gets emitted when the connection to the database has been closed
+	 */
         gda_connection_signals[CONN_CLOSED] =    /* runs after user handlers */
                 g_signal_new ("conn-closed",
                               G_TYPE_FROM_CLASS (object_class),
@@ -163,6 +189,12 @@ gda_connection_class_init (GdaConnectionClass *klass)
                               NULL, NULL,
                               _gda_marshal_VOID__VOID,
                               G_TYPE_NONE, 0);
+	/**
+	 * GdaConnection::dsn-changed
+	 * @cnc: the #GdaConnection
+	 *
+	 * Gets emitted when the DSN used by @cnc has been changed
+	 */
 	gda_connection_signals[DSN_CHANGED] =
 		g_signal_new ("dsn-changed",
 			      G_TYPE_FROM_CLASS (object_class),
@@ -171,6 +203,13 @@ gda_connection_class_init (GdaConnectionClass *klass)
 			      NULL, NULL,
 			      g_cclosure_marshal_VOID__VOID,
 			      G_TYPE_NONE, 0);
+	/**
+	 * GdaConnection::transaction-status-changed
+	 * @cnc: the #GdaConnection
+	 *
+	 * Gets emitted when the transactional status of @cnc has changed (a transaction has been 
+	 * started, rolled back, a savepoint added,...)
+	 */
 	gda_connection_signals[TRANSACTION_STATUS_CHANGED] =
 		g_signal_new ("transaction-status-changed",
 			      G_TYPE_FROM_CLASS (object_class),

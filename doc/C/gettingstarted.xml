@@ -105,9 +105,35 @@ do_stuff () {
     </para>
 
     <para>
-      A <link linkend="GdaStatement">GdaStatement</link> object can contain variables, and a value needs to be assigned to
-      each one before the query can be run; the same query object can then be run as a prepared statement, only binding
-      variables each time.
+      &LIBGDA; can execute any SQL understood by the database to which a connection is opened, even SQL code containing
+      extensions specific to a database.
+    </para>
+    <para>
+      When creating an SQL string which contains values (literals), one can be tempted (as it is the easiest solution) to
+      create a string containing the values themselves, execute that statement and apply the same process the next time the same
+      statement needs to be executed with different values. This approach has two major flaws outlined below which is why &LIBGDA;
+      recommends using variables in statements (also known as parameters or place holders) and reusing the same
+      <link linkend="GdaStatement">GdaStatement</link> object when only the variable's values change. The flaws are:
+      <itemizedlist>
+	<listitem>
+	  <para>The performances of the resulting application are not optimized because the database needs to parse the SQL
+	    string each time and build its own internal representation of the statement, execute the statement using its 
+	    internal representation, then discard that internal representation. Using variables and reusing the same statement,
+	    the database only parses once the SQL statement, builds its internal representation, and reuses it everytime
+	    the statement is executed.
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>Literals in SQL strings are an open invitation to SQL injection problems. Using variables prevents SQL injection.
+	  </para>
+	</listitem>
+      </itemizedlist>
+    </para>
+    <para>
+      Because each database has its own way of representing variables in an SQL string, and because those ways of representing
+      variables don't contain enough information (it is usually impossible to specify the expected type for a variable for example)
+      &LIBGDA; has defined a standard way of defining them, and translates it into the syntax understood by the database when
+      needed. For more information about that syntax, see the <link linkend="GdaSqlParser.description">GdaSqlParser's object description</link>.
     </para>
     <para>
       GdaStatement objects can be created by:

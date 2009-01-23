@@ -138,6 +138,14 @@ gda_server_operation_class_init (GdaServerOperationClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	/* signals */
+	/**
+	 * GdaServerOperation::sequence-item-added
+	 * @op: the #GdaServerOperation
+	 * @seq_path: the path to the new sequence item
+	 * @item_index: the index (starting from 0) of the new sequence item in the sequence
+	 *
+	 * Gets emitted whenever a new sequence item (from a sequence template) has been added
+	 */
 	gda_server_operation_signals[SEQUENCE_ITEM_ADDED] =
 		g_signal_new ("sequence-item-added",
 			      G_TYPE_FROM_CLASS (object_class),
@@ -146,6 +154,14 @@ gda_server_operation_class_init (GdaServerOperationClass *klass)
 			      NULL, NULL,
 			      _gda_marshal_VOID__STRING_INT, G_TYPE_NONE,
 			      2, G_TYPE_STRING, G_TYPE_INT);
+	/**
+	 * GdaServerOperation::sequence-item-remove
+	 * @op: the #GdaServerOperation
+	 * @seq_path: the path to the sequence item to be removed
+	 * @item_index: the index (starting from 0) of the sequence item in the sequence
+	 *
+	 * Gets emitted whenever a sequence item is about to be removed
+	 */
 	gda_server_operation_signals[SEQUENCE_ITEM_REMOVE] =
 		g_signal_new ("sequence-item-remove",
 			      G_TYPE_FROM_CLASS (object_class),
@@ -165,18 +181,20 @@ gda_server_operation_class_init (GdaServerOperationClass *klass)
 	object_class->get_property = gda_server_operation_get_property;
 
 	g_object_class_install_property (object_class, PROP_CNC,
-					 g_param_spec_object ("connection", NULL, NULL, 
+					 g_param_spec_object ("connection", NULL, "Connection to use", 
 							      GDA_TYPE_CONNECTION,
 							      G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_PROV,
-					 g_param_spec_object ("provider", NULL, NULL, 
+					 g_param_spec_object ("provider", NULL,
+							      "Database provider which created the object", 
 							      GDA_TYPE_SERVER_PROVIDER,
 							      G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_SPEC_FILE,
-					 g_param_spec_string ("spec-filename", NULL, NULL, 
+					 g_param_spec_string ("spec-filename", NULL,
+							      "XML file which contains the object's data structure", 
 							      NULL, G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_OP_TYPE,
-					 g_param_spec_int ("op-type", NULL, NULL, 
+					 g_param_spec_int ("op-type", NULL, "Type of operation to be done", 
 							   0, GDA_SERVER_OPERATION_LAST - 1, 
 							   0, G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 }

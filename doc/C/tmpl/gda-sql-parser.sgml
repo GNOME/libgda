@@ -59,14 +59,16 @@ but for portability reasons it's better to avoid them):
       <![CDATA[##]]> and the <![CDATA[/* ... */]]>.
   </para></listitem>
 </itemizedlist>
-Examples of correct place holders definitions are:
+Note that the type string must be a type recognized by the
+<link linkend="gda-g-type-from-string">gda_g_type_from_string()</link> function (all valid GType names
+plus a few synonyms). Examples of correct place holders definitions are:
 <programlisting>
 ## /* name:"+0" type:gchararray */
 ## /* name:'-5' type:string */
 ## /*name:myvar type:gint descr:ToBeDefined nullok:FALSE*/
-## /*name:myvar type:gint descr:"A long description"*/
-##+0::gcharaccar
-##-5::string
+## /*name:myvar type:int descr:"A long description"*/
+##+0::gchararray
+##-5::timestamp
 </programlisting>
 </para>
 

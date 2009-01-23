@@ -107,13 +107,13 @@ gda_meta_struct_free (mstruct);
 
 <!-- ##### ENUM GdaMetaStructFeature ##### -->
 <para>
-
+  Controls which features are computed about database objects.
 </para>
 
-@GDA_META_STRUCT_FEATURE_NONE: 
-@GDA_META_STRUCT_FEATURE_FOREIGN_KEYS: 
-@GDA_META_STRUCT_FEATURE_VIEW_DEPENDENCIES: 
-@GDA_META_STRUCT_FEATURE_ALL: 
+@GDA_META_STRUCT_FEATURE_NONE: database objects only have their own attributes
+@GDA_META_STRUCT_FEATURE_FOREIGN_KEYS: foreign keys are computed for tables
+@GDA_META_STRUCT_FEATURE_VIEW_DEPENDENCIES: for views, the tables they use are also computed
+@GDA_META_STRUCT_FEATURE_ALL: all the features are computed
 
 <!-- ##### ENUM GdaMetaStructError ##### -->
 <para>
@@ -126,12 +126,12 @@ gda_meta_struct_free (mstruct);
 
 <!-- ##### ENUM GdaMetaDbObjectType ##### -->
 <para>
-
+  Type of database object represented by a #GdaMetaDbObject structure
 </para>
 
-@GDA_META_DB_UNKNOWN: 
-@GDA_META_DB_TABLE: 
-@GDA_META_DB_VIEW: 
+@GDA_META_DB_UNKNOWN: unknown type, we only know the object exists
+@GDA_META_DB_TABLE: the object is a table
+@GDA_META_DB_VIEW: the object is a view
 
 <!-- ##### STRUCT GdaMetaDbObject ##### -->
 <para>

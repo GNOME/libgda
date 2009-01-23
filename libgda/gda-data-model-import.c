@@ -224,24 +224,25 @@ gda_data_model_import_class_init (GdaDataModelImportClass *klass)
 	object_class->set_property = gda_data_model_import_set_property;
         object_class->get_property = gda_data_model_import_get_property;
 	g_object_class_install_property (object_class, PROP_RANDOM_ACCESS,
-                                         g_param_spec_boolean ("random-access", "Features random access", NULL,
+                                         g_param_spec_boolean ("random-access", NULL, "Random access to the data model "
+							       "is possible",
 							       FALSE,
 							       G_PARAM_READABLE | G_PARAM_WRITABLE |
 							       G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_FILENAME,
-                                         g_param_spec_string ("filename", "File to import", NULL, NULL,
+                                         g_param_spec_string ("filename", NULL, "File to import", NULL,
 							      G_PARAM_READABLE | G_PARAM_WRITABLE |
 							      G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_DATA_STRING,
-                                         g_param_spec_string ("data-string", "String to import", NULL, NULL,
+                                         g_param_spec_string ("data-string", NULL, "String to import", NULL,
 							      G_PARAM_READABLE | G_PARAM_WRITABLE |
 							      G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_XML_NODE,
-                                         g_param_spec_pointer ("xml-node", "XML node to import from", NULL,
+                                         g_param_spec_pointer ("xml-node", NULL, "XML node to import from",
 							      G_PARAM_READABLE | G_PARAM_WRITABLE |
 							      G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_OPTIONS,
-                                         g_param_spec_object ("options", "Options to configure the import", NULL,
+                                         g_param_spec_object ("options", NULL, "Options to configure the import",
                                                                GDA_TYPE_SET,
 							       G_PARAM_READABLE | G_PARAM_WRITABLE |
 							       G_PARAM_CONSTRUCT_ONLY));

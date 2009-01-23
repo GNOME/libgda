@@ -134,6 +134,13 @@ gda_config_class_init (GdaConfigClass *klass)
 
 	parent_class = g_type_class_peek_parent (klass);
 
+	/**
+	 * GdaConfig::dsn-added
+	 * @conf: the #GdaConfig object
+	 * @new_dsn: a #GdaDsnInfo
+	 *
+	 * Gets emitted whenever a new DSN has been defined
+	 */
 	gda_config_signals[DSN_ADDED] =
                 g_signal_new ("dsn-added",
                               G_TYPE_FROM_CLASS (object_class),
@@ -142,6 +149,13 @@ gda_config_class_init (GdaConfigClass *klass)
                               NULL, NULL,
                               _gda_marshal_VOID__POINTER,
                               G_TYPE_NONE, 1, G_TYPE_POINTER);
+	/**
+	 * GdaConfig::dsn-to-be-removed
+	 * @conf: the #GdaConfig object
+	 * @old_dsn: a #GdaDsnInfo
+	 *
+	 * Gets emitted whenever a DSN is about to be removed
+	 */
 	gda_config_signals[DSN_TO_BE_REMOVED] =
                 g_signal_new ("dsn-to-be-removed",
                               G_TYPE_FROM_CLASS (object_class),
@@ -150,6 +164,13 @@ gda_config_class_init (GdaConfigClass *klass)
                               NULL, NULL,
                               _gda_marshal_VOID__POINTER,
                               G_TYPE_NONE, 1, G_TYPE_POINTER);
+	/**
+	 * GdaConfig::dsn-removed
+	 * @conf: the #GdaConfig object
+	 * @old_dsn: a #GdaDsnInfo
+	 *
+	 * Gets emitted whenever a DSN has been removed
+	 */
 	gda_config_signals[DSN_REMOVED] =
                 g_signal_new ("dsn-removed",
                               G_TYPE_FROM_CLASS (object_class),
@@ -158,6 +179,13 @@ gda_config_class_init (GdaConfigClass *klass)
                               NULL, NULL,
                               _gda_marshal_VOID__POINTER,
                               G_TYPE_NONE, 1, G_TYPE_POINTER);
+	/**
+	 * GdaConfig::dsn-changed
+	 * @conf: the #GdaConfig object
+	 * @dsn: a #GdaDsnInfo
+	 *
+	 * Gets emitted whenever a DSN's definition has been changed
+	 */
 	gda_config_signals[DSN_CHANGED] =
                 g_signal_new ("dsn-changed",
                               G_TYPE_FROM_CLASS (object_class),
@@ -173,13 +201,15 @@ gda_config_class_init (GdaConfigClass *klass)
 
 	/* To translators: DSN stands for Data Source Name, it's a named connection string defined in ~/.libgda/config */
 	g_object_class_install_property (object_class, PROP_USER_FILE,
-                                         g_param_spec_string ("user-filename", _("File to use for per-user DSN list"), 
-							      NULL, NULL,
+                                         g_param_spec_string ("user-filename", NULL, 
+							      "File to use for per-user DSN list", 
+							      NULL, 
 							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	/* To translators: DSN stands for Data Source Name, it's a named connection string defined in $PREFIX/etc/libgda-4.0/config */
 	g_object_class_install_property (object_class, PROP_USER_FILE,
-                                         g_param_spec_string ("system-filename", _("File to use for system-wide DSN list"), 
-							      NULL, NULL,
+                                         g_param_spec_string ("system-filename", NULL,
+							      "File to use for system-wide DSN list", 
+							      NULL,
 							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	
 	object_class->constructor = gda_config_constructor;

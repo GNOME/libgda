@@ -215,15 +215,18 @@ gda_data_select_class_init (GdaDataSelectClass *klass)
 	object_class->set_property = gda_data_select_set_property;
         object_class->get_property = gda_data_select_get_property;
 	g_object_class_install_property (object_class, PROP_CNC,
-                                         g_param_spec_object ("connection", 
+                                         g_param_spec_object ("connection", NULL,
 							      "Connection from which this data model is created", 
-							      NULL, GDA_TYPE_CONNECTION,
+							      GDA_TYPE_CONNECTION,
 							      G_PARAM_WRITABLE | G_PARAM_READABLE | G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_PREP_STMT,
-                                         g_param_spec_object ("prepared-stmt", NULL, NULL, GDA_TYPE_PSTMT,
+                                         g_param_spec_object ("prepared-stmt", NULL, 
+							      "Associated prepared statement (for internal usage)", 
+							      GDA_TYPE_PSTMT,
 							      G_PARAM_WRITABLE | G_PARAM_READABLE));
 	g_object_class_install_property (object_class, PROP_FLAGS,
-					 g_param_spec_uint ("model-usage", NULL, NULL, 
+					 g_param_spec_uint ("model-usage", NULL, 
+							    "Determines how the data model may be used", 
 							    GDA_DATA_MODEL_ACCESS_RANDOM, G_MAXUINT,
 							    GDA_DATA_MODEL_ACCESS_RANDOM,
 							    G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
@@ -233,7 +236,7 @@ gda_data_select_class_init (GdaDataSelectClass *klass)
 							       G_PARAM_READABLE | G_PARAM_WRITABLE));
 	g_object_class_install_property (object_class, PROP_PARAMS,
 					 g_param_spec_object ("exec-params", NULL, 
-							      _("GdaSet used when the SELECT statement was executed"), 
+							      "GdaSet used when the SELECT statement was executed", 
 							      GDA_TYPE_SET,
 							      G_PARAM_WRITABLE | G_PARAM_READABLE | G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_INS_QUERY,

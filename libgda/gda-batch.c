@@ -105,6 +105,13 @@ gda_batch_class_init (GdaBatchClass * klass)
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	parent_class = g_type_class_peek_parent (klass);
 
+	/**
+	 * GdaBatch::changed
+	 * @batch: the #GdaBatch object
+	 * @changed_stmt: the statement which has been changed
+	 *
+	 * Gets emitted whenever a #GdaStatement in the @batch object changes
+	 */
 	gda_batch_signals[CHANGED] =
 		g_signal_new ("changed",
 			      G_TYPE_FROM_CLASS (object_class),

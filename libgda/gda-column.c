@@ -87,6 +87,13 @@ gda_column_class_init (GdaColumnClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 	
 	/* signals */
+	/**
+	 * GdaColumn::name-changed
+	 * @column: the #GdaColumn object
+	 * @old_name: the column's previous name
+	 *
+	 * Gets emitted whenever @column's name has been changed
+	 */
 	gda_column_signals[NAME_CHANGED] =
 		g_signal_new ("name-changed",
 			      G_TYPE_FROM_CLASS (object_class),
@@ -96,6 +103,14 @@ gda_column_class_init (GdaColumnClass *klass)
 			      g_cclosure_marshal_VOID__STRING,
 			      G_TYPE_NONE,
 			      1, G_TYPE_STRING);
+	/**
+	 * GdaColumn::g-type-changed
+	 * @column: the #GdaColumn object
+	 * @old_type: the column's previous type
+	 * @new_type: the column's new type
+	 *
+	 * Gets emitted whenever @column's type has been changed
+	 */
 	gda_column_signals[GDA_TYPE_CHANGED] =
 		g_signal_new ("g-type-changed",
 			      G_TYPE_FROM_CLASS (object_class),
@@ -111,7 +126,9 @@ gda_column_class_init (GdaColumnClass *klass)
         object_class->get_property = gda_column_get_property;
 
         g_object_class_install_property (object_class, PROP_ID,
-                                         g_param_spec_string ("id", NULL, NULL,
+                                         g_param_spec_string ("id", NULL, 
+							      "Column's Id (warning: the column's ID is not "
+							      "guaranteed to be unique in a GdaDataModel)",
                                                               NULL, G_PARAM_WRITABLE | G_PARAM_READABLE));
 
 	object_class->finalize = gda_column_finalize;
