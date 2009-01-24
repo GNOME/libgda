@@ -1,3 +1,23 @@
+2009-01-24  Vivien Malerba <malerba@gnome-db.org>
+
+	* providers/skel-implementation/capi/gen_def.c:
+	* providers/skel-implementation/capi/Makefile.am:
+	* providers/firebird/gen_def.c:
+	* providers/firebird/Makefile.am:
+	* providers/mysql/gen_def.c:
+	* providers/mysql/Makefile.am:
+	* providers/postgres/gen_def.c:
+	* providers/postgres/Makefile.am: corrected parser's symbols translations
+	* libgda/sql-parser/parser.y: allow identifiers to be enclosed between
+	single quotes
+	* libgda/sql-parser/gda-statement-struct-util.c:
+	gda_sql_identifier_remove_quotes() also accepts single quotes around
+	identifiers
+	* libgda/sql-parser/gda-sql-parser.c: added debug information
+	* tests/parser/testdata.xml: added more test cases
+
+	This fixes bug #568844
+
 2009-01-23  Vivien Malerba <malerba@gnome-db.org>
 
 	* sqlite/gda-sqlite-provider.c: partial fix for bug #568844

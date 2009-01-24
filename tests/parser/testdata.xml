@@ -1002,4 +1002,25 @@
     <expected>{"statements":[{"statement":{"sql":"(select A union select B) intersect select C;","stmt_type":"COMPOUND","contents":{"compount_type":"INTERSECT","select_stmts":[{"sql":null,"stmt_type":"COMPOUND","contents":{"compount_type":"UNION","select_stmts":[{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"A"},"field_name":"A"}]}},{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"B"},"field_name":"B"}]}}]}},{"sql":null,"stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"C"},"field_name":"C"}]}}]}}}]}</expected>
   </test>
 
+  <!-- Single quoting table name, does not work for PostgreSQL -->
+  <test id="singlequotes">
+    <sql>SELECT * FROM 'table'</sql>
+    <expected>{"statements":[{"statement":{"sql":"SELECT * FROM 'table'","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"'table'"},"table_name":"'table'"}]}}}}]}</expected>
+  </test>
+
+  <test id="Pgsinglequotes" provider="PostgreSQL">
+  <sql>SELECT * FROM 'table'</sql>
+    <expected>{"statements":[{"statement":{"sql":"SELECT * FROM 'table'","stmt_type":"UNKNOWN","contents":[{"value":"SELECT"},{"value":" "},{"value":"*"},{"value":" "},{"value":"FROM"},{"value":" "},{"value":"'table'"}]}}]}</expected>
+  </test>
+
+  <!-- Double quoting table name, works for PostgreSQL as well -->
+  <test id="dblequotes">
+    <sql>SELECT * FROM "table"</sql>
+    <expected>{"statements":[{"statement":{"sql":"SELECT * FROM \"table\"","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"\"table\""},"table_name":"\"table\""}]}}}}]}</expected>
+  </test>
+
+  <test id="Pgdblequotes" provider="PostgreSQL">
+  <sql>SELECT * FROM "table"</sql>
+    <expected>{"statements":[{"statement":{"sql":"SELECT * FROM \"table\"","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"\"table\""},"table_name":"\"table\""}]}}}}]}</expected>
+  </test>
 </testdata>

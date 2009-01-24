@@ -243,6 +243,7 @@ compose_multiple_compounds (GdaSqlStatementCompoundType ctype, GdaSqlStatement *
   REINDEX RENAME CTIME_KW IF
   DELIMITER COMMIT ROLLBACK ISOLATION LEVEL SERIALIZABLE READ COMMITTED 
   UNCOMMITTED REPEATABLE WRITE ONLY SAVEPOINT RELEASE COMMENT FORCE WAIT NOWAIT BATCH.
+%fallback TEXTUAL STRING.
 
 // Define operator precedence early so that this is the first occurance
 // of the operator tokens in the grammer.  Keeping the operators together

@@ -59,11 +59,13 @@ main (int argc,char** argv)
 	HashEntry *rawstring_entry;
 
 	memset (entries, 0, sizeof (entries));
+	/* printf ("Imposed header: %s\n", IMPOSED_HEADER); */
 	fd_imposed = fopen (IMPOSED_HEADER, "r");
 	if (!fd_imposed) {
 		printf ("Can't open '%s':%s\n", IMPOSED_HEADER, strerror (errno));
 		return 1;
 	}
+	/* printf ("Parser header: %s\n", PARSER_HEADER); */
 	fd_parser = fopen (PARSER_HEADER, "r");
 	if (!fd_parser) {
 		printf ("Can't open '%s':%s\n", PARSER_HEADER, strerror (errno));
@@ -93,11 +95,11 @@ main (int argc,char** argv)
 	for (i = 0; i < nb_entries; i++) {
 		HashEntry *entry = &(entries[i]);
 		if (i!= 0)
-			printf (",");
+			printf (",\n");
 		if (entry->parser_value >= 0)
-			printf ("%d", entry->parser_value);
+			printf ("/* %03d */ %d", i, entry->parser_value);
 		else
-			printf ("%d", illegal_entry->parser_value);
+			printf ("/* %03d */ %d", i, illegal_entry->parser_value);
 	}
 	printf ("};\n");
 
@@ -127,10 +129,8 @@ parse_line (char *line, SourceType type)
 	HashEntry *entry;
 	
 	z = line;
-	if (strncmp (z, "#define ", 8)) {
-		printf ("Expected '#define', not found");
-		exit (1);
-	}
+	if (strncmp (z, "#define ", 8))
+		return;
 	z += 8;
 	token = z + 2;
 	for (; *z && *z != ' '; z++);
@@ -138,7 +138,7 @@ parse_line (char *line, SourceType type)
 	z++;
 	for (; *z == ' '; z++);
 	value = atoi (z);
-	/*printf ("%d Token: /%s/, value=%d\n", type, token, value);*/
+	/* printf ("%d Token: /%s/, value=%d\n", type, token, value); */
 
 	entry = find_entry_for_token (token);
 	if (!entry) {

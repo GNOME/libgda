@@ -566,6 +566,8 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
 			
 			switch (parser->priv->mode) {
 			case GDA_SQL_PARSER_MODE_PARSE:
+				/*g_print ("TRANS %d => %d\n", parser->priv->context->token_type,
+				  parser_trans [parser->priv->context->token_type]);*/
 				_parse (parser->priv->lemon_parser, 
 					parser_trans [parser->priv->context->token_type], value, &piface);
 				break;
