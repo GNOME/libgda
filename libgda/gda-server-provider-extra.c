@@ -587,146 +587,16 @@ gda_server_provider_handler_declare (GdaServerProvider *prov, GdaDataHandler *dh
 	g_object_ref (dh);
 }
 
-/*
- * Tries to create a list of Key fields for table @table_name using @dict (and if @dict does not know about
- * that table, get the FIELDS schema from the provider)
- *
- * if @types_list is not %NULL, then it will contain a list of GType types of the same length as the returned list.
- */
-static GSList *
-get_key_field_names (GdaConnection *cnc, const gchar *table_name, GSList **types_list, GError **error)
-{
-	GSList *retfields = NULL;
-	if (!table_name || !(*table_name))
-		return NULL;
-
-	TO_IMPLEMENT; /* using @cnc's GdaMetaStore */
-	return retfields;
-}
-
-/*
- * Tries to create a list of blob fields for table @table_name using @dict (and if @dict does not know about
- * that table, get the FIELDS schema from the provider)
- */
-static GSList *
-get_blob_field_names (GdaConnection *cnc, const gchar *table_name, GError **error)
-{
-	GSList *retfields = NULL;
-	if (!table_name || !(*table_name))
-		return NULL;
-
-	TO_IMPLEMENT; /* using @cnc's GdaMetaStore */
-	return retfields;
-}
-
 /**
- * gda_server_provider_blob_list_for_update
+ * gda_server_provider_find_file
+ * @prov: a #GdaServerProvider
+ * @inst_dir: directory where @prov is installed
+ * @filename: name of the file to find
  *
- * Create a SELECT query from an UPDATE query which lists all the BLOB fields in the
- * query which will be updated. This function is used by GdaServerProvider implementations
- * when dealing with BLOB updates.
+ * Finds the location of a @filename. This function should only be used by database provider's
+ * implementations
  *
- * After execution, @out_select contains a new GdaQuery, or %NULL if the update query does not have any
- * BLOB to update.
- *
- * For example UPDATE blobs set name = ##/ *name:'name' type:gchararray* /, data = ##/ *name:'theblob' type:'GdaBlob'* / WHERE id= ##/ *name:'id' type:gint* /
- * will create:
- * SELECT t1.data FROM blobs AS t1 WHERE id= ##/ *name:'id' type:gint* /
- *
- * Returns: TRUE if no error occurred.
- */
-gboolean
-gda_server_provider_blob_list_for_update (GdaConnection *cnc, GdaStatement *query, 
-					  GdaStatement **out_select, GError **error)
-{
-	gboolean retval = TRUE;
-	
-	g_return_val_if_fail (out_select, FALSE);
-	g_return_val_if_fail (GDA_IS_STATEMENT (query), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-
-	TO_IMPLEMENT; /* using @cnc's GdaMetaStore */
-	return retval;
-}
-
-/**
- * gda_server_provider_blob_list_for_delete
- *
- * Create a SELECT query from a DELETE query which lists all the BLOB fields in the
- * query which will be deleted. This function is used by GdaServerProvider implementations
- * when dealing with BLOB deletions.
- *
- * After execution, @out_select contains a new GdaQuery, or %NULL if the delete query does not have any
- * BLOB to delete.
- *
- * For example DELETE FROM blobs WHERE id= ##/ *name:'id' type:gint* /
- * will create:
- * SELECT t1.data FROM blobs AS t1 WHERE id= ##/ *name:'id' type:gint* /
- *
- * Returns: TRUE if no error occurred.
- */
-gboolean
-gda_server_provider_blob_list_for_delete (GdaConnection *cnc, GdaStatement *query, 
-					  GdaStatement **out_stmt, GError **error)
-{
-	gboolean retval = TRUE;
-
-	g_return_val_if_fail (out_stmt, FALSE);
-	g_return_val_if_fail (GDA_IS_STATEMENT (query), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-
-	TO_IMPLEMENT; /* using @cnc's GdaMetaStore */
-	return retval;
-}
-
-/**
- * gda_server_provider_split_update_query
- *
- * When an update query will affect N>1 rows, it can be refined into a new update query which can be executed N times wich
- * will affect one row at a time. This is usefull for providers implementations when dealing with BLOBs where updating
- * rows with a blob can be done only one row at a time.
- *
- * After execution, @out_select contains a new GdaQuery, or %NULL if it is not possible to create the update query.
- *
- * For example UPDATE blobs set name = ##/ *name:'name' type:gchararray* /, data = ##/ *name:'theblob' type:'GdaBlob'* / WHERE name= ##/ *name:'oname' type:gchararray* /
- * will create (if 'id' is a PK of the table to update):
- * UPDATE blobs set name = ##/ *name:'name' type:gchararray* /, data = ##/ *name:'theblob' type:'GdaBlob'* / WHERE id= ##/ *name:'oid' type:gint* /
- *
- * Returns: TRUE if no error occurred.
- */
-gboolean
-gda_server_provider_split_update_query (GdaConnection *cnc, GdaStatement *query, 
-					GdaStatement **out_stmt, GError **error)
-{
-	gboolean retval = TRUE;
-
-	g_return_val_if_fail (out_stmt, FALSE);
-	g_return_val_if_fail (GDA_IS_STATEMENT (query), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-
-	TO_IMPLEMENT; /* using @cnc's GdaMetaStore */
-	return retval;
-}
-
-/**
- * gda_server_provider_select_query_has_blobs
- * 
- * Determines if @query (which must be a SELECT query) returns a data model with some BLOB data
- */
-gboolean
-gda_server_provider_select_query_has_blobs (GdaConnection *cnc, GdaStatement *stmt, GError **error)
-{
-	gboolean has_blobs = FALSE;
-
-	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-
-	TO_IMPLEMENT; /* using @cnc's GdaMetaStore */
-	return has_blobs;
-}
-
-/*
- * finds the location of a @filename
+ * Returns: the complete path to @filename, or %NULL if not found
  */
 gchar *
 gda_server_provider_find_file (GdaServerProvider *prov, const gchar *inst_dir, const gchar *filename)
@@ -759,9 +629,17 @@ gda_server_provider_find_file (GdaServerProvider *prov, const gchar *inst_dir, c
 	return file;
 }
 
-/*
- * Loads and returns the contents of @filename.
- * @filename is searched in several places
+/**
+ * gda_server_provider_load_file_contents
+ * @inst_dir: directory where the database provider has been installed
+ * @data_dir: DATA directory to look for ($prefix/share)
+ * @filename: name of the file to load
+ *
+ * Loads and returns the contents of @filename, which is searched in several places
+ * This function should only be used by database provider's
+ * implementations
+ *
+ * Returns: a new string containing @filename's contents, or %NULL if not found or if an error occurred
  */
 gchar *
 gda_server_provider_load_file_contents (const gchar *inst_dir, const gchar *data_dir, const gchar *filename)
@@ -784,7 +662,7 @@ gda_server_provider_load_file_contents (const gchar *inst_dir, const gchar *data
 		goto theend;
 	
 	g_free (file);
-	file = g_build_filename (inst_dir, "..", "..", "..", "share", "libgda-3.0", filename, NULL);
+	file = g_build_filename (inst_dir, "..", "..", "..", "share", "libgda-4.0", filename, NULL);
 	if (g_file_get_contents (file, &contents, NULL, NULL))
 		goto theend;
 	contents = NULL;

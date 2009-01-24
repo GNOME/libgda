@@ -74,14 +74,6 @@ void            gda_server_provider_handler_declare         (GdaServerProvider *
 /*
  * misc
  */
-gboolean       gda_server_provider_blob_list_for_update     (GdaConnection *cnc, GdaStatement *query, 
-							     GdaStatement **out_select, GError **error);
-gboolean       gda_server_provider_blob_list_for_delete     (GdaConnection *cnc, GdaStatement *query, 
-							     GdaStatement **out_stmt, GError **error);
-gboolean       gda_server_provider_split_update_query       (GdaConnection *cnc, GdaStatement *query, 
-							     GdaStatement **out_stmt, GError **error);
-gboolean       gda_server_provider_select_query_has_blobs   (GdaConnection *cnc, GdaStatement *stmt, GError **error);
-
 gchar         *gda_server_provider_find_file                (GdaServerProvider *prov, const gchar *inst_dir, const gchar *filename);
 gchar         *gda_server_provider_load_file_contents       (const gchar *inst_dir, const gchar *data_dir, const gchar *filename);
 

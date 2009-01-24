@@ -1,16 +1,3 @@
 #define L_ILLEGAL                          0
 #define L_SQLCOMMENT                       1
 #define L_SPACE                            2
-#define L_BEGIN                            3
-#define L_LOOP                             4
-#define L_END                              5
-#define L_ENDLOOP                          6
-#define L_DECLARE                          7
-#define L_AS                               8
-#define L_IS                               9
-#define L_CREATE                          10
-#define L_DELIMITER                       11
-#define L_END_OF_FILE                     12
-#define L_SEMI                            13
-#define L_BLOB                            14
-#define L_RAWSTRING                       15

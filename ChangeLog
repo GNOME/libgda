@@ -1,5 +1,11 @@
 2009-01-24  Vivien Malerba <malerba@gnome-db.org>
 
+	* libgda/sql-parser/parser_tokens.h: removed unnecessary token names
+	* libgda/gda-server-provider-extra.[ch]: code cleanup, improved
+	documentation
+
+2009-01-24  Vivien Malerba <malerba@gnome-db.org>
+
 	* providers/skel-implementation/capi/gen_def.c:
 	* providers/skel-implementation/capi/Makefile.am:
 	* providers/firebird/gen_def.c:
