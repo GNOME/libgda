@@ -2025,7 +2025,7 @@ msgstr "Fecha «%s» no válida (el formato debe ser AAAA-MM-DD)"
 #: ../providers/postgres/gda-postgres-recordset.c:623
 #, c-format
 msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms])"
-msgstr "Hora «%s» no válida'%s' (el formato debe ser HH:MM:SS[.ms])"
+msgstr "Hora «%s» no válida (el formato debe ser HH:MM:SS[.ms])"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:396
 #: ../providers/postgres/gda-postgres-recordset.c:661
