@@ -1890,6 +1890,26 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, Oid last_id)
 }
 
 /*
+ * Free:
+ *  - all the *param_values
+ *  - param_values
+ *  - param_mem
+ * 
+ */
+static void
+params_freev (gchar **param_values, gboolean *param_mem, gint size)
+{
+	gint i;
+
+	for (i = 0; i < size; i++) {
+		if (param_values [i] && ! param_mem [i])
+			g_free (param_values [i]);
+	}
+	g_free (param_values);
+	g_free (param_mem);
+}
+
+/*
  * Execute statement request
  *
  * Executes a statement. This method should do the following:
@@ -2021,13 +2041,15 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 	char **param_values = NULL;
         int *param_lengths = NULL;
         int *param_formats = NULL;
+	gboolean *param_mem = NULL;
 	gint nb_params;
 	gboolean transaction_started = FALSE;
 	
 	nb_params = g_slist_length (_GDA_PSTMT (ps)->param_ids);
-	param_values = g_new0 (char *, nb_params + 1);
-	param_lengths = g_new0 (int, nb_params + 1);
-	param_formats = g_new0 (int, nb_params + 1);
+	param_values = g_new0 (char *, nb_params);
+	param_lengths = g_new0 (int, nb_params);
+	param_formats = g_new0 (int, nb_params);
+	param_mem = g_new0 (gboolean, nb_params);
 
 	for (i = 0, list = _GDA_PSTMT (ps)->param_ids; list; list = list->next, i++) {
 		const gchar *pname = (gchar *) list->data;
@@ -2123,6 +2145,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 			param_values [i] = (gchar*) bin->data;
 			param_lengths [i] = bin->binary_length;
 			param_formats [i] = 1; /* binary format */
+			param_mem [i] = TRUE; /* don't free later */
 		}
 		else if ((G_VALUE_TYPE (value) == G_TYPE_DATE) || 
 			 (G_VALUE_TYPE (value) == GDA_TYPE_TIMESTAMP) ||
@@ -2147,7 +2170,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 		
 	if (event) {
 		gda_connection_add_event (cnc, event);
-		g_strfreev (param_values);
+		params_freev (param_values, param_mem, nb_params);
                 g_free (param_lengths);
                 g_free (param_formats);
 		if (transaction_started)
@@ -2188,7 +2211,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 		pg_res = PQexecPrepared (cdata->pconn, ps->prep_name, nb_params, (const char * const *) param_values,
 					 param_lengths, param_formats, 0);
 
-	g_strfreev (param_values);
+	params_freev (param_values, param_mem, nb_params);
 	g_free (param_lengths);
 	g_free (param_formats);
 
