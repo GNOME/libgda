@@ -56,7 +56,6 @@ main (int argc,char** argv)
 	FILE *fd_imposed;
 	FILE *fd_parser;
 	HashEntry *illegal_entry;
-	HashEntry *rawstring_entry;
 
 	memset (entries, 0, sizeof (entries));
 	/* printf ("Imposed header: %s\n", IMPOSED_HEADER); */
@@ -85,12 +84,7 @@ main (int argc,char** argv)
 		" * DO NOT EDIT MANUALLY\n */\n\n\n");
 
 	/* output */
-	for (i = 0; i < nb_entries; i++) {
-		HashEntry *entry = &(entries[i]);
-		printf ("#define L_%s \t\t %d\n", entry->key, i);
-	}
 	illegal_entry = find_entry_for_token ("ILLEGAL");
-	rawstring_entry = find_entry_for_token ("RAWSTRING");
 	printf ("gint mysql_parser_tokens[] = {\n");
 	for (i = 0; i < nb_entries; i++) {
 		HashEntry *entry = &(entries[i]);

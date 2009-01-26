@@ -111,7 +111,7 @@ gda_mysql_recordset_init (GdaMysqlRecordset       *recset,
 gint
 gda_mysql_recordset_get_chunk_size (GdaMysqlRecordset  *recset)
 {
-	g_return_if_fail (GDA_IS_MYSQL_RECORDSET (recset));
+	g_return_val_if_fail (GDA_IS_MYSQL_RECORDSET (recset), -1);
 	return recset->priv->chunk_size;
 }
 
@@ -142,7 +142,7 @@ gda_mysql_recordset_set_chunk_size (GdaMysqlRecordset  *recset,
 gint
 gda_mysql_recordset_get_chunks_read (GdaMysqlRecordset  *recset)
 {
-	g_return_if_fail (GDA_IS_MYSQL_RECORDSET (recset));
+	g_return_val_if_fail (GDA_IS_MYSQL_RECORDSET (recset), -1);
 	return recset->priv->chunks_read;
 }
 
@@ -320,9 +320,6 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 
 	/* make sure @ps reports the correct number of columns using the API*/
         if (_GDA_PSTMT (ps)->ncols < 0) {
-                /*_GDA_PSTMT (ps)->ncols = ...;*/
-		// TO_IMPLEMENT;
-		
 		_GDA_PSTMT(ps)->ncols = mysql_stmt_field_count (cdata->mysql_stmt);
 	}
 
@@ -364,8 +361,6 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 			GdaColumn *column = GDA_COLUMN (list->data);
 
 			/* use C API to set columns' information using gda_column_set_*() */
-			// TO_IMPLEMENT;
-			
 			MYSQL_FIELD *field = &mysql_fields[i];
 
 			GType gtype = _GDA_PSTMT(ps)->types[i];
@@ -377,7 +372,9 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 			gda_column_set_name (column, field->name);
 			gda_column_set_description (column, field->name);
 			
+			/* binding results with types */
 			mysql_bind_result[i].buffer_type = field->type;
+			mysql_bind_result[i].is_unsigned = field->flags & UNSIGNED_FLAG ? TRUE : FALSE;
 			switch (mysql_bind_result[i].buffer_type) {
 			case MYSQL_TYPE_TINY:
 			case MYSQL_TYPE_SHORT:
@@ -421,7 +418,8 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 				g_warning (_("Invalid column bind data type. %d\n"),
 					   mysql_bind_result[i].buffer_type);
 			}
-			//g_print ("%s: NAME=%s, TYPE=%d, GTYPE=%s\n", __func__, field->name, field->type, g_type_name (gtype));
+			/* g_print ("%s(): NAME=%s, TYPE=%d, GTYPE=%s\n", 
+			   __FUNCTION__, field->name, field->type, g_type_name (gtype)); */
 		}
 		
                 if (mysql_stmt_bind_result (cdata->mysql_stmt, mysql_bind_result)) {
@@ -482,16 +480,17 @@ gda_mysql_recordset_fetch_nb_rows (GdaDataSelect *model)
 
 
 static GdaRow *
-new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel,
-			 gint                rownum)
+new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel, gint rownum, GError **error)
 {
-	/* g_print ("%s(): NCOLS=%d  ROWNUM=%d\n", __func__, */
-	/* 	 ((GdaDataSelect *) imodel)->prep_stmt->ncols, rownum); */
+	//g_print ("%s(): NCOLS=%d  ROWNUM=%d\n", __func__, ((GdaDataSelect *) imodel)->prep_stmt->ncols, rownum);
 
 	g_return_val_if_fail (imodel->priv->mysql_stmt != NULL, NULL);
 
-	if (mysql_stmt_fetch (imodel->priv->mysql_stmt))
+	if (mysql_stmt_fetch (imodel->priv->mysql_stmt)) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_DATA_ERROR,
+			     _("Can't fetch data from server"));
 		return NULL;
+	}
 	
 	MYSQL_BIND *mysql_bind_result = ((GdaMysqlPStmt *) ((GdaDataSelect *) imodel)->prep_stmt)->mysql_bind_result;
 	g_assert (mysql_bind_result);
@@ -504,9 +503,9 @@ new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel,
 		GValue *value = gda_row_get_value (row, i);
 		GType type = ((GdaDataSelect *) imodel)->prep_stmt->types[i];
 		gda_value_reset_with_type (value, type);
-		//
+		
 		//g_print ("%s: #%d : TYPE=%d, GTYPE=%s\n", __func__, i, mysql_bind_result[i].buffer_type, g_type_name (type));
-		//
+		
 		
 		int intvalue = 0;
 		long long longlongvalue = 0;
@@ -578,8 +577,10 @@ new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel,
 				};
 				gda_value_set_timestamp (value, &timestamp);
 			} else {
-				g_warning (_("Type %s not mapped for value %p"),
-					   g_type_name (type), timevalue);
+				g_warning (_("Type %s not mapped for value %d/%d/%d %d:%d:%d.%d"),
+					   g_type_name (type), timevalue.year, timevalue.month, 
+					   timevalue.day, timevalue.hour, timevalue.minute, 
+					   timevalue.second, timevalue.second_part);
 			}
 
 			break;
@@ -675,7 +676,10 @@ gda_mysql_recordset_fetch_random (GdaDataSelect  *model,
 	if (*row)
 		return TRUE;
 	
-	*row = new_row_from_mysql_stmt (imodel, rownum);
+	*row = new_row_from_mysql_stmt (imodel, rownum, error);
+	if (!*row)
+		return FALSE;
+
 	gda_data_select_take_row (model, *row, rownum);
 	
 	if (model->nb_stored_rows == model->advertized_nrows) {
@@ -737,11 +741,11 @@ gda_mysql_recordset_fetch_next (GdaDataSelect  *model,
 		imodel->priv->tmp_row = NULL;
 	}
 	
-	*row = new_row_from_mysql_stmt (imodel, rownum);
+	*row = new_row_from_mysql_stmt (imodel, rownum, error);
 
 	imodel->priv->tmp_row = *row;
 
-	return TRUE;
+	return *row ? TRUE : FALSE;
 }
 
 /*

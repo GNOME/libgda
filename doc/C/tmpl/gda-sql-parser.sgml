@@ -71,6 +71,15 @@ plus a few synonyms). Examples of correct place holders definitions are:
 ##-5::timestamp
 </programlisting>
 </para>
+<para>
+  Also note that variables should not be used when an SQL identifier is expected. For example the following
+  examples <emphasis>should be avoided</emphasis> because they may not work properly (depending on the database being used):
+<programlisting>
+SELECT * FROM ##tablename::string;
+DELETE FROM mytable WHERE ##tcol::string = 5;
+ALTER GROUP mygroup ADD USER ##name::gchararray;
+</programlisting>
+</para>
 
 <para>
   The #GdaSqlParser object internally uses a LEMON generated parser (the same as the one used by SQLite).

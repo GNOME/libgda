@@ -1,3 +1,19 @@
+2009-01-26  Vivien Malerba <malerba@gnome-db.org>
+
+	* doc/C:
+	  - added section about SQL parsers and how to write a database specific
+	    one in a database provider
+	  - misc. improvements
+	* providers/skel-implementation/capi/gen_def.c:
+	* providers/firebird/gen_def.c:
+	* providers/mysql/gen_def.c:
+	* providers/postgres/gen_def.c: removed unused #define in generated header file
+	* libgda/libgda.symbols: removed symbols not existing anymore
+	* providers/jdbc/Makefile.am: include the MANIFEST.MF in distributed tarballs,
+	fixes bugs #568388 and #568353
+	* providers/gda-mysql-recordset.c: add unsigned information when binding
+	for output to avoid data being truncated, fixes bug #561748
+
 2009-01-25  Vivien Malerba <malerba@gnome-db.org>
 
 	* tools/test_blob.sh: new script used to test database provider's blobs

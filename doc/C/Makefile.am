@@ -53,7 +53,8 @@ HTML_IMAGES = DataModels.png \
 	writable_data_model.png GdaDataModelIter.png \
 	data_validation_holder.png data_validation_proxy.png data_validation_set.png \
 	data_proxy1.png data_proxy2.png data_proxy3.png data_proxy4.png data_proxy5.png \
-	gda-sql-graph.png howto-exec.png
+	gda-sql-graph.png howto-exec.png \
+	parser_gen.png parser_prov.png
 
 # Extra options to supply to gtkdoc-fixref
 FIXXREF_OPTIONS=

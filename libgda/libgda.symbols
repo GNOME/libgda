@@ -497,8 +497,6 @@
 	gda_server_operation_save_data_to_xml
 	gda_server_operation_set_value_at
 	gda_server_operation_type_get_type
-	gda_server_provider_blob_list_for_delete
-	gda_server_provider_blob_list_for_update
 	gda_server_provider_create_operation
 	gda_server_provider_create_parser
 	gda_server_provider_error_get_type
@@ -522,8 +520,6 @@
 	gda_server_provider_perform_operation
 	gda_server_provider_perform_operation_default
 	gda_server_provider_render_operation
-	gda_server_provider_select_query_has_blobs
-	gda_server_provider_split_update_query
 	gda_server_provider_string_to_value
 	gda_server_provider_supports_feature
 	gda_server_provider_supports_operation
