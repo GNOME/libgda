@@ -759,7 +759,7 @@ gda_numeric_copy (gpointer boxed)
 
 /**
  * gda_numeric_free
- * @boxed:
+ * @boxed: a #GdaNumeric pointer
  *
  * Deallocates all memory associated to the given @boxed
  */

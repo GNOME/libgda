@@ -1946,7 +1946,7 @@ handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **e
  *
  * Get @store's internal schema's version
  *
- * Retunrs: the version (1 at the moment)
+ * Returns: the version (1 at the moment)
  */
 gint
 gda_meta_store_get_version (GdaMetaStore *store) {

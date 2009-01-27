@@ -93,9 +93,9 @@ gda_mutex_new ()
 
 /**
  * gda_mutex_lock
- * @m: a #GdaMutex
+ * @mutex: a #GdaMutex
  *
- * Locks @m. If @m is already locked by another thread, the current thread will block until @m is unlocked by the other thread.
+ * Locks @mutex. If @mutex is already locked by another thread, the current thread will block until @mutex is unlocked by the other thread.
  *
  * This function can be used even if g_thread_init() has not yet been called, and, in that case, will do nothing.
  *
@@ -103,116 +103,117 @@ gda_mutex_new ()
  * to unlock it as many times to actually unlock it).
  */
 void
-gda_mutex_lock (GdaMutex *m)
+gda_mutex_lock (GdaMutex *mutex)
 {
 	if (impl_status == RECURSIVE)
-		g_mutex_lock (m->mutex);
+		g_mutex_lock (mutex->mutex);
 	else if (impl_status == NON_SUPPORTED)
 		return;
 	else {
 		GThread *th = g_thread_self ();
-		g_mutex_lock (m->mutex);
+		g_mutex_lock (mutex->mutex);
 		while (1) {
-			if (!m->owner) {
-				m->owner = th;
-				m->depth = 1;
+			if (!mutex->owner) {
+				mutex->owner = th;
+				mutex->depth = 1;
 				break;
 			}
-			else if (m->owner == th) {
-				m->depth++;
+			else if (mutex->owner == th) {
+				mutex->depth++;
 				break;
 			}
 			else {
-				g_cond_wait (m->cond, m->mutex);
+				g_cond_wait (mutex->cond, mutex->mutex);
 			}
                 }
-		g_mutex_unlock (m->mutex);
+		g_mutex_unlock (mutex->mutex);
 	}
 }
 
 /**
  * gda_mutex_trylock
- * @m: a #GdaMutex
+ * @mutex: a #GdaMutex
  * 
- * Tries to lock @m. If @m is already locked by another thread, it immediately returns FALSE.
- * Otherwise it locks @m and returns TRUE
+ * Tries to lock @mutex. If @mutex is already locked by another thread, it immediately returns FALSE.
+ * Otherwise it locks @mutex and returns TRUE
  *
  * This function can be used even if g_thread_init() has not yet been called, and, in that case, will immediately return TRUE.
  *
  * Note: Unlike g_mutex_trylock(), the #GdaMutex is recursive, which means a thread can lock it several times (and has
  * to unlock it as many times to actually unlock it)
  *
- * Returns: TRUE, if @m could be locked.
+ * Returns: TRUE, if @mutex could be locked.
  */
 gboolean
-gda_mutex_trylock (GdaMutex *m)
+gda_mutex_trylock (GdaMutex *mutex)
 {
 	if (impl_status == RECURSIVE)
-		return g_mutex_trylock (m->mutex);
+		return g_mutex_trylock (mutex->mutex);
 	else if (impl_status == NON_SUPPORTED)
 		return TRUE;
 	else {
 		GThread *th = g_thread_self ();
 		gboolean retval;
-		g_mutex_lock (m->mutex);
-		if (!m->owner) {
-			m->owner = th;
-			m->depth = 1;
+		g_mutex_lock (mutex->mutex);
+		if (!mutex->owner) {
+			mutex->owner = th;
+			mutex->depth = 1;
 			retval = TRUE;
 		}
-		else if (m->owner == th) {
-			m->depth++;
+		else if (mutex->owner == th) {
+			mutex->depth++;
 			retval = TRUE;
 		}
 		else
 			retval = FALSE;
-		g_mutex_unlock (m->mutex);
+		g_mutex_unlock (mutex->mutex);
 		return retval;
 	}
 }
 
 /**
  * gda_mutex_unlock
- * @m: a #GdaMutex
+ * @mutex: a #GdaMutex
  *
- * Unlocks @m. If another thread is blocked in a gda_mutex_lock() call for @m, it will be woken and can lock @m itself.
+ * Unlocks @mutex. If another thread is blocked in a gda_mutex_lock() call for @mutex, it wil
+ * be woken and can lock @mutex itself.
  * This function can be used even if g_thread_init() has not yet been called, and, in that case, will do nothing. 
  */
 void
-gda_mutex_unlock (GdaMutex *m)
+gda_mutex_unlock (GdaMutex *mutex)
 {
 	if (impl_status == RECURSIVE)
-		g_mutex_unlock (m->mutex);
+		g_mutex_unlock (mutex->mutex);
 	else if (impl_status == NON_SUPPORTED)
 		return;
 	else {
 		GThread *th = g_thread_self ();
-		g_mutex_lock (m->mutex);
-		g_assert (th == m->owner);
-		m->depth--;
-                if (m->depth == 0) {
-                        m->owner = NULL;
-			g_cond_signal (m->cond);
+		g_mutex_lock (mutex->mutex);
+		g_assert (th == mutex->owner);
+		mutex->depth--;
+                if (mutex->depth == 0) {
+                        mutex->owner = NULL;
+			g_cond_signal (mutex->cond);
                 }
-		g_mutex_unlock (m->mutex);
+		g_mutex_unlock (mutex->mutex);
 	}
 }
 
 /**
  * gda_mutex_free
- * @m: a #GdaMutex
+ * @mutex: a #GdaMutex
  *
- * Destroys @m.
+ * Destroys @mutex.
  */
 void
-gda_mutex_free (GdaMutex *m)
+gda_mutex_free (GdaMutex *mutex)
 {
-	g_assert (m);
-	if (m->cond)
-		g_cond_free (m->cond);
-	m->cond = NULL;
-	if (m->mutex)
-		g_mutex_free (m->mutex);
-	m->mutex = NULL;
-	g_free (m);
+	g_assert (mutex);
+	if (mutex->cond)
+		g_cond_free (mutex->cond);
+	mutex->cond = NULL;
+	if (mutex->mutex)
+		g_mutex_free (mutex->mutex);
+	mutex->mutex = NULL;
+	g_free (mutex);
 }

@@ -1,5 +1,13 @@
 2009-01-27  Vivien Malerba <malerba@gnome-db.org>
 
+	* libgda/gda-easy.c:
+	* libgda/gda-mutex.c:
+	* libgda/gda-meta-store.c:
+	* libgda/gda-value.c:
+	* libgda/gda-meta-struct.h: doc. updates
+
+2009-01-27  Vivien Malerba <malerba@gnome-db.org>
+
 	* libgda/libgda.symbols:
 	* libgda/gda-easy.[ch]: added gda_insert_row_into_table_v() and
 	gda_update_row_in_table_v() to facilitate C++ bindings; fixes bug #568484

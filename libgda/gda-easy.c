@@ -423,7 +423,7 @@ gda_perform_create_table (GdaServerOperation *op, GError **error)
 /**
  * gda_prepare_drop_table
  * @cnc: an opened connection
- * @table_name:
+ * @table_name: name of the table to drop
  * @error: a place to store errors, or %NULL
  * 
  * This is just a convenient function to create a #GdaServerOperation to drop a 

@@ -149,8 +149,8 @@ typedef struct {
 	gchar        *default_value;
 } GdaMetaTableColumn;
 #define GDA_META_TABLE_COLUMN(x) ((GdaMetaTableColumn*)(x))
-const GValue *gda_meta_table_column_get_attribute (GdaMetaTableColumn *tcol, const gchar *att_name);
-void          gda_meta_table_column_set_attribute (GdaMetaTableColumn *tcol, const gchar *att_name, const GValue *value,
+const GValue *gda_meta_table_column_get_attribute (GdaMetaTableColumn *tcol, const gchar *attribute);
+void          gda_meta_table_column_set_attribute (GdaMetaTableColumn *tcol, const gchar *attribute, const GValue *value,
 						   GDestroyNotify destroy);
 /**
  * gda_meta_table_column_set_attribute_static
