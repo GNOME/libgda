@@ -556,7 +556,8 @@ gda_get_default_handler (GType for_type)
  * @table: table's name to insert into
  * @error: a place to store errors, or %NULL
  * @...: a list of string/GValue pairs with the name of the column to use and the
- * GValue pointer containing the value to insert for the column (value can be %NULL), finished by a %NULL
+ * GValue pointer containing the value to insert for the column (value can be %NULL), finished by a %NULL. There must be
+ * at least one column name and value
  * 
  * This is a convenience function, which creates an INSERT statement and executes it using the values
  * provided. It internally relies on variables which makes it immune to SQL injection problems.
@@ -568,26 +569,82 @@ gda_get_default_handler (GType for_type)
 gboolean
 gda_insert_row_into_table (GdaConnection *cnc, const gchar *table, GError **error, ...)
 {
+	GSList *clist = NULL;
+	GSList *vlist = NULL;
 	gboolean retval;
 	va_list  args;
 	gchar *col_name;
+	
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (table && *table, FALSE);
+	
+	va_start (args, error);	
+	while ((col_name = va_arg (args, gchar*))) {
+		clist = g_slist_prepend (clist, col_name);
+		GValue *value;
+		value = va_arg (args, GValue *);
+		vlist = g_slist_prepend (vlist, value);
+	}
+	
+	va_end (args);
+
+	if (!clist) {
+		g_warning ("No specified column or value");
+		return FALSE;
+	}
+
+	clist = g_slist_reverse (clist);
+	vlist = g_slist_reverse (vlist);
+	retval = gda_insert_row_into_table_v (cnc, table, clist, vlist, error);
+	g_slist_free (clist);
+	g_slist_free (vlist);
+
+	return retval;
+}
+
+/**
+ * gda_insert_row_into_table_v
+ * @cnc: an opened connection
+ * @table: table's name to insert into
+ * @col_names: a list of column names (as const gchar *)
+ * @values: a list of values (as #GValue)
+ * @error: a place to store errors, or %NULL
+ *
+ * @col_names and @values must have length (&gt;= 1).
+ *
+ * This is a convenience function, which creates an INSERT statement and executes it using the values
+ * provided. It internally relies on variables which makes it immune to SQL injection problems.
+ *
+ * The equivalent SQL command is: INSERT INTO &lt;table&gt; (&lt;column_name&gt; [,...]) VALUES (&lt;column_name&gt; = &lt;new_value&gt; [,...]).
+ * 
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_insert_row_into_table_v (GdaConnection *cnc, const gchar *table,
+			     GSList *col_names, GSList *values,
+			     GError **error)
+{
+	gboolean retval;
 	GSList *fields = NULL;
-	GSList *values = NULL;
+	GSList *expr_values = NULL;
 	GdaSqlStatement *sql_stm;
 	GdaSqlStatementInsert *ssi;
 	GdaStatement *insert;
 	gint i;
 
 	GSList *holders = NULL;
+	GSList *l1, *l2;
 	
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (table && *table, FALSE);
+	g_return_val_if_fail (col_names, FALSE);
+	g_return_val_if_fail (g_slist_length (col_names) == g_slist_length (values), FALSE);
 	
 	/* Construct insert query and list of GdaHolders */
-	va_start (args, error);
-	
-	ssi = g_new0 (GdaSqlStatementInsert, 1);
-	GDA_SQL_ANY_PART (ssi)->type = GDA_SQL_ANY_STMT_INSERT;
+	sql_stm = gda_sql_statement_new (GDA_SQL_STATEMENT_INSERT);
+	ssi = (GdaSqlStatementInsert*) sql_stm->contents;
+	g_assert (GDA_SQL_ANY_PART (ssi)->type == GDA_SQL_ANY_STMT_INSERT);
+
 	ssi->table = gda_sql_table_new (GDA_SQL_ANY_PART (ssi));
 	if (gda_sql_identifier_needs_quotes (table))
 		ssi->table->table_name = gda_sql_identifier_add_quotes (table);
@@ -595,10 +652,13 @@ gda_insert_row_into_table (GdaConnection *cnc, const gchar *table, GError **erro
 		ssi->table->table_name = g_strdup (table);
 
 	i = 0;
-	while ((col_name = va_arg (args, gchar*))) {
+	for (l1 = col_names, l2 = values;
+	     l1;
+	     l1 = l1->next, l2 = l2->next) {
 		GdaSqlField *field;
 		GdaSqlExpr *expr;
-		GValue *value;
+		GValue *value = (GValue *) l2->data;
+		const gchar *col_name = (const gchar*) l1->data; 
 		
 		/* field */
 		field = gda_sql_field_new (GDA_SQL_ANY_PART (ssi));
@@ -609,7 +669,6 @@ gda_insert_row_into_table (GdaConnection *cnc, const gchar *table, GError **erro
 		fields = g_slist_prepend (fields, field);
 
 		/* value */
-		value = va_arg (args, GValue *);
 		expr = gda_sql_expr_new (GDA_SQL_ANY_PART (ssi));
 		if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
 			/* create a GdaSqlExpr with a parameter */
@@ -629,18 +688,13 @@ gda_insert_row_into_table (GdaConnection *cnc, const gchar *table, GError **erro
 		else {
 			/* create a NULL GdaSqlExpr => nothing to do */
 		}
-		values = g_slist_prepend (values, expr);
+		expr_values = g_slist_prepend (expr_values, expr);
 		
 		i++;
 	}
 	
-	va_end (args);
-
 	ssi->fields_list = g_slist_reverse (fields);
-	ssi->values_list = g_slist_prepend (NULL, g_slist_reverse (values));
-	
-	sql_stm = gda_sql_statement_new (GDA_SQL_STATEMENT_INSERT);
-	sql_stm->contents = ssi;
+	ssi->values_list = g_slist_prepend (NULL, g_slist_reverse (expr_values));
 	
 	insert = gda_statement_new ();
 	g_object_set (G_OBJECT (insert), "structure", sql_stm, NULL);
@@ -660,9 +714,8 @@ gda_insert_row_into_table (GdaConnection *cnc, const gchar *table, GError **erro
 		g_object_unref (set);
 	g_object_unref (insert);
 
-	return retval;
+	return retval;	
 }
-
 
 
 /**
@@ -673,7 +726,8 @@ gda_insert_row_into_table (GdaConnection *cnc, const gchar *table, GError **erro
  * @condition_value: the @condition_column_type's GType
  * @error: a place to store errors, or %NULL
  * ...: a list of string/GValue pairs with the name of the column to use and the
- * GValue pointer containing the value to update the column to (value can be %NULL), finished by a %NULL
+ * GValue pointer containing the value to update the column to (value can be %NULL), finished by a %NULL. There must be
+ * at least one column name and value
  * 
  * This is a convenience function, which creates an UPDATE statement and executes it using the values
  * provided. It internally relies on variables which makes it immune to SQL injection problems.
@@ -687,24 +741,86 @@ gda_update_row_in_table (GdaConnection *cnc, const gchar *table,
 			 const gchar *condition_column_name, 
 			 GValue *condition_value, GError **error, ...)
 {
+	GSList *clist = NULL;
+	GSList *vlist = NULL;
 	gboolean retval;
 	va_list  args;
 	gchar *col_name;
+	
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (table && *table, FALSE);
+	
+	va_start (args, error);	
+	while ((col_name = va_arg (args, gchar*))) {
+		clist = g_slist_prepend (clist, col_name);
+		GValue *value;
+		value = va_arg (args, GValue *);
+		vlist = g_slist_prepend (vlist, value);
+	}
+	
+	va_end (args);
+
+	if (!clist) {
+		g_warning ("No specified column or value");
+		return FALSE;
+	}
+
+	clist = g_slist_reverse (clist);
+	vlist = g_slist_reverse (vlist);
+	retval = gda_update_row_in_table_v (cnc, table, condition_column_name, condition_value, clist, vlist, error);
+	g_slist_free (clist);
+	g_slist_free (vlist);
+
+	return retval;
+}
+
+/**
+ * gda_update_row_in_table_v
+ * @cnc: an opened connection
+ * @table: the table's name with the row's values to be updated
+ * @condition_column_name: the name of the column to used in the WHERE condition clause
+ * @condition_value: the @condition_column_type's GType
+ * @col_names: a list of column names (as const gchar *)
+ * @values: a list of values (as #GValue)
+ * @error: a place to store errors, or %NULL
+ *
+ * @col_names and @values must have length (&gt;= 1).
+ * 
+ * This is a convenience function, which creates an UPDATE statement and executes it using the values
+ * provided. It internally relies on variables which makes it immune to SQL injection problems.
+ *
+ * The equivalent SQL command is: UPDATE &lt;table&gt; SET &lt;column_name&gt; = &lt;new_value&gt; [,...] WHERE &lt;condition_column_name&gt; = &lt;condition_value&gt;.
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_update_row_in_table_v (GdaConnection *cnc, const gchar *table, 
+			   const gchar *condition_column_name, 
+			   GValue *condition_value, 
+			   GSList *col_names, GSList *values,
+			   GError **error)
+{
+	gboolean retval;
 	GSList *fields = NULL;
-	GSList *values = NULL;
+	GSList *expr_values = NULL;
 	GdaSqlStatement *sql_stm;
 	GdaSqlStatementUpdate *ssu;
 	GdaStatement *update;
 	gint i;
 
 	GSList *holders = NULL;
-	
+	GSList *l1, *l2;
+
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (table && *table, FALSE);
+	g_return_val_if_fail (col_names, FALSE);
+	g_return_val_if_fail (g_slist_length (col_names) == g_slist_length (values), FALSE);
 	
-	/* Construct insert query and list of GdaHolders */
-	ssu = g_new0 (GdaSqlStatementUpdate, 1);
-	GDA_SQL_ANY_PART (ssu)->type = GDA_SQL_ANY_STMT_UPDATE;
+	/* Construct update query and list of GdaHolders */
+	sql_stm = gda_sql_statement_new (GDA_SQL_STATEMENT_UPDATE);
+	ssu = (GdaSqlStatementUpdate*) sql_stm->contents;
+	g_assert (GDA_SQL_ANY_PART (ssu)->type == GDA_SQL_ANY_STMT_UPDATE);
+
 	ssu->table = gda_sql_table_new (GDA_SQL_ANY_PART (ssu));
 	if (gda_sql_identifier_needs_quotes (table))
 		ssu->table->table_name = gda_sql_identifier_add_quotes (table);
@@ -748,12 +864,14 @@ gda_update_row_in_table (GdaConnection *cnc, const gchar *table,
 		}
 	}
 
-	va_start (args, error);
 	i = 0;
-	while ((col_name = va_arg (args, gchar*))) {
+	for (l1 = col_names, l2 = values;
+	     l1;
+	     l1 = l1->next, l2 = l2->next) {
+		GValue *value = (GValue *) l2->data;
+		const gchar *col_name = (const gchar*) l1->data;
 		GdaSqlField *field;
 		GdaSqlExpr *expr;
-		GValue *value;
 		
 		/* field */
 		field = gda_sql_field_new (GDA_SQL_ANY_PART (ssu));
@@ -764,7 +882,6 @@ gda_update_row_in_table (GdaConnection *cnc, const gchar *table,
 		fields = g_slist_prepend (fields, field);
 
 		/* value */
-		value = va_arg (args, GValue *);
 		expr = gda_sql_expr_new (GDA_SQL_ANY_PART (ssu));
 		if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
 			/* create a GdaSqlExpr with a parameter */
@@ -784,18 +901,13 @@ gda_update_row_in_table (GdaConnection *cnc, const gchar *table,
 		else {
 			/* create a NULL GdaSqlExpr => nothing to do */
 		}
-		values = g_slist_prepend (values, expr);
+		expr_values = g_slist_prepend (expr_values, expr);
 		
 		i++;
 	}
-	
-	va_end (args);
 
 	ssu->fields_list = g_slist_reverse (fields);
-	ssu->expr_list = g_slist_reverse (values);
-	
-	sql_stm = gda_sql_statement_new (GDA_SQL_STATEMENT_UPDATE);
-	sql_stm->contents = ssu;
+	ssu->expr_list = g_slist_reverse (expr_values);
 	
 	update = gda_statement_new ();
 	g_object_set (G_OBJECT (update), "structure", sql_stm, NULL);
@@ -849,9 +961,11 @@ gda_delete_row_from_table (GdaConnection *cnc, const gchar *table,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (table && *table, FALSE);
 	
-	/* Construct insert query and list of GdaHolders */
-	ssd = g_new0 (GdaSqlStatementDelete, 1);
-	GDA_SQL_ANY_PART (ssd)->type = GDA_SQL_ANY_STMT_DELETE;
+	/* Construct delete query and list of GdaHolders */
+	sql_stm = gda_sql_statement_new (GDA_SQL_STATEMENT_DELETE);
+	ssd = (GdaSqlStatementDelete*) sql_stm->contents;
+	g_assert (GDA_SQL_ANY_PART (ssd)->type == GDA_SQL_ANY_STMT_DELETE);
+
 	ssd->table = gda_sql_table_new (GDA_SQL_ANY_PART (ssd));
 	if (gda_sql_identifier_needs_quotes (table))
 		ssd->table->table_name = gda_sql_identifier_add_quotes (table);
@@ -895,9 +1009,6 @@ gda_delete_row_from_table (GdaConnection *cnc, const gchar *table,
 		}
 	}
 
-	sql_stm = gda_sql_statement_new (GDA_SQL_STATEMENT_DELETE);
-	sql_stm->contents = ssd;
-	
 	delete = gda_statement_new ();
 	g_object_set (G_OBJECT (delete), "structure", sql_stm, NULL);
 	gda_sql_statement_free (sql_stm);

@@ -890,9 +890,12 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 	gboolean retval = TRUE;
 	GdaSqlSelectTarget *target;
 
-	GdaSqlStatementInsert *ist = NULL;
-	GdaSqlStatementUpdate *ust = NULL;
-	GdaSqlStatementDelete *dst = NULL;	
+	GdaSqlStatement *sql_ist = NULL;
+        GdaSqlStatementInsert *ist = NULL;
+        GdaSqlStatement *sql_ust = NULL;
+        GdaSqlStatementUpdate *ust = NULL;
+        GdaSqlStatement *sql_dst = NULL;
+        GdaSqlStatementDelete *dst = NULL;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (GDA_IS_STATEMENT (select_stmt), FALSE);
@@ -921,15 +924,19 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 	
 	/* actual statement structure's computation */        
 	if (insert_stmt) {
-		ist = g_new0 (GdaSqlStatementInsert, 1);
-		GDA_SQL_ANY_PART (ist)->type = GDA_SQL_ANY_STMT_INSERT;
+		sql_ist = gda_sql_statement_new (GDA_SQL_STATEMENT_INSERT);
+		ist = (GdaSqlStatementInsert*) sql_ist->contents;
+		g_assert (GDA_SQL_ANY_PART (ist)->type == GDA_SQL_ANY_STMT_INSERT);
+
 		ist->table = gda_sql_table_new (GDA_SQL_ANY_PART (ist));
 		ist->table->table_name = g_strdup ((gchar *) target->table_name);
 	}
 	
 	if (update_stmt) {
-		ust = g_new0 (GdaSqlStatementUpdate, 1);
-		GDA_SQL_ANY_PART (ust)->type = GDA_SQL_ANY_STMT_UPDATE;
+		sql_ust = gda_sql_statement_new (GDA_SQL_STATEMENT_UPDATE);
+		ust = (GdaSqlStatementUpdate*) sql_ust->contents;
+		g_assert (GDA_SQL_ANY_PART (ust)->type == GDA_SQL_ANY_STMT_UPDATE);
+
 		ust->table = gda_sql_table_new (GDA_SQL_ANY_PART (ust));
 		ust->table->table_name = g_strdup ((gchar *) target->table_name);
 		ust->cond = gda_compute_unique_table_row_condition (stsel, 
@@ -943,8 +950,10 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 	}
         
 	if (delete_stmt) {
-		dst = g_new0 (GdaSqlStatementDelete, 1);
-		GDA_SQL_ANY_PART (dst)->type = GDA_SQL_ANY_STMT_DELETE;
+		sql_dst = gda_sql_statement_new (GDA_SQL_STATEMENT_DELETE);
+		dst = (GdaSqlStatementDelete*) sql_dst->contents;
+		g_assert (GDA_SQL_ANY_PART (dst)->type == GDA_SQL_ANY_STMT_DELETE);
+
 		dst->table = gda_sql_table_new (GDA_SQL_ANY_PART (dst));
 		dst->table->table_name = g_strdup ((gchar *) target->table_name);
 		dst->cond = gda_compute_unique_table_row_condition (stsel, 
@@ -1015,8 +1024,6 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 
 	/* finish the statements */
 	if (insert_stmt) {
-		GdaSqlStatement *st;
-
 		if (!ist->fields_list) {
 			/* nothing to insert => don't create statement */
 			/* To translators: this error message occurs when no "INSERT INTO <table> (field1, ...)..." 
@@ -1027,46 +1034,21 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 			goto cleanup;
 		}
 		ist->values_list = g_slist_append (NULL, insert_values_list);
-		st = gda_sql_statement_new (GDA_SQL_STATEMENT_INSERT);
-		st->contents = ist;
-		ist = NULL;
-		ret_insert = g_object_new (GDA_TYPE_STATEMENT, "structure", st, NULL);
-		gda_sql_statement_free (st);
+		ret_insert = g_object_new (GDA_TYPE_STATEMENT, "structure", sql_ist, NULL);
 	}
-	if (update_stmt) {
-		GdaSqlStatement *st;
-		st = gda_sql_statement_new (GDA_SQL_STATEMENT_UPDATE);
-		st->contents = ust;
-		ust = NULL;
-		ret_update = g_object_new (GDA_TYPE_STATEMENT, "structure", st, NULL);
-		gda_sql_statement_free (st);
-	}
-  	if (delete_stmt) {
-		GdaSqlStatement *st;
-		st = gda_sql_statement_new (GDA_SQL_STATEMENT_DELETE);
-		st->contents = dst;
-		dst = NULL;
-		ret_delete = g_object_new (GDA_TYPE_STATEMENT, "structure", st, NULL);
-		gda_sql_statement_free (st);
-	}
+	if (update_stmt)
+		ret_update = g_object_new (GDA_TYPE_STATEMENT, "structure", sql_ust, NULL);
+  	if (delete_stmt)
+		ret_delete = g_object_new (GDA_TYPE_STATEMENT, "structure", sql_dst, NULL);
 	
  cleanup:
 	gda_sql_statement_free (sel_struct);
-	if (ist) {
-		GdaSqlStatementContentsInfo *cinfo;
-		cinfo = gda_sql_statement_get_contents_infos (GDA_SQL_STATEMENT_INSERT);
-		cinfo->free (ist);
-	}
-	if (ust) {
-		GdaSqlStatementContentsInfo *cinfo;
-		cinfo = gda_sql_statement_get_contents_infos (GDA_SQL_STATEMENT_UPDATE);
-		cinfo->free (ust);
-	}
-	if (dst) {
-		GdaSqlStatementContentsInfo *cinfo;
-		cinfo = gda_sql_statement_get_contents_infos (GDA_SQL_STATEMENT_DELETE);
-		cinfo->free (dst);
-	}
+	if (sql_ist)
+		gda_sql_statement_free (sql_ist);
+	if (sql_ust)
+		gda_sql_statement_free (sql_ust);
+	if (sql_dst)
+		gda_sql_statement_free (sql_dst);
 		
 	if (insert_stmt)
 		*insert_stmt = ret_insert;
@@ -1102,8 +1084,10 @@ gda_compute_select_statement_from_update (GdaStatement *update_stmt, GError **er
 	g_return_val_if_fail (upd_stmt->stmt_type == GDA_SQL_STATEMENT_UPDATE, NULL);
 	
 	ust = (GdaSqlStatementUpdate*) upd_stmt->contents;
-	sst = g_new0 (GdaSqlStatementSelect, 1);
-	GDA_SQL_ANY_PART (sst)->type = GDA_SQL_ANY_STMT_SELECT;
+
+	sel_stmt = gda_sql_statement_new (GDA_SQL_STATEMENT_SELECT);
+	sst = (GdaSqlStatementSelect*) sel_stmt->contents;
+	g_assert (GDA_SQL_ANY_PART (sst)->type == GDA_SQL_ANY_STMT_SELECT);
 
 	if (!ust->table || !ust->table->table_name) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
@@ -1124,9 +1108,6 @@ gda_compute_select_statement_from_update (GdaStatement *update_stmt, GError **er
 	GDA_SQL_ANY_PART (sst->where_cond)->parent = GDA_SQL_ANY_PART (sst);
 
 	gda_sql_statement_free (upd_stmt);
-
-	sel_stmt = gda_sql_statement_new (GDA_SQL_STATEMENT_SELECT);
-	sel_stmt->contents = sst;
 
 	return sel_stmt;
 }

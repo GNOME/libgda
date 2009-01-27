@@ -200,32 +200,10 @@ AC_SUBST(LIBTOOL_PROV_EXPORT_OPTIONS)
 AC_SUBST(NO_UNDEFINED)
 AC_SUBST(SOPREFIX)
 
-dnl ******************************
-dnl Checking for FAM or gamin
-dnl ******************************
-FAM_LIBS=
-FAM_CFLAGS=
-FAM_MISSING_WARNING="Libgda depends on FAM to provide notification when configuration files are changed, without FAM support any application using Libgda will have to be restarted when configuration files are changed to take into account those changes"
-PKG_CHECK_MODULES(GAMIN, gamin >= 0.1.8, have_fam=yes, have_fam=no)
-if test x"$have_fam" = "xyes"
-then
-        FAM_CFLAGS="$GAMIN_CFLAGS"
-        FAM_LIBS="$GAMIN_LIBS"
-	AC_DEFINE(HAVE_FAM, [], [Define if we have FAM])
-else
-        AC_CHECK_LIB(fam, FAMOpen,
-          [AC_CHECK_HEADERS(fam.h,
-            [AC_DEFINE(HAVE_FAM, [], [Define if we have FAM])
-             FAM_LIBS="-lfam"],
-            AC_MSG_WARN(*** FAM support will not be built (header files not found) $FAM_MISSING_WARNING ***))],
-          AC_MSG_WARN(*** FAM support will not be built (FAM library not found) $FAM_MISSING_WARNING ***))
-fi
-AC_SUBST(FAM_LIBS)
-AC_SUBST(FAM_CFLAGS)
-
-dnl ***********************************************
+dnl *******************************************************
 dnl Checks for GIO or Gnome VFS, use GIO preferably
-dnl ***********************************************
+dnl if GIO is not found, then see if FAM or gamin are found
+dnl *******************************************************
 
 GNOMEVFS_MODULES="gnome-vfs-2.0 >= 2.20"
 PKG_CHECK_MODULES(GNOMEVFS, $GNOMEVFS_MODULES, have_gnomevfs=yes, have_gnomevfs=no)
@@ -234,7 +212,7 @@ then
         GNOMEVFS_CFLAGS="$GNOMEVFS_CFLAGS -DHAVE_GNOMEVFS"
 fi
 
-GIO_MODULES="gio-2.0"
+GIO_MODULES="gio-2.0 >= 2.16"
 PKG_CHECK_MODULES(GIO, $GIO_MODULES, have_gio=yes, have_gio=no)
 AM_CONDITIONAL(HAVE_GIO, test x"$have_gio" = "xyes")
 if test x"$have_gio" = "xyes"
@@ -243,6 +221,26 @@ then
 	GNOMEVFS_CFLAGS=""
 	GNOMEVFS_LIBS=""
 	have_gnomevfs=no
+else
+	FAM_LIBS=
+	FAM_CFLAGS=
+	FAM_MISSING_WARNING="Libgda depends on FAM to provide notification when configuration files are changed, without FAM support any application using Libgda will have to be restarted when configuration files are changed to take into account those changes"
+	PKG_CHECK_MODULES(GAMIN, gamin >= 0.1.8, have_fam=yes, have_fam=no)
+	if test x"$have_fam" = "xyes"
+	then
+	        FAM_CFLAGS="$GAMIN_CFLAGS"
+	        FAM_LIBS="$GAMIN_LIBS"
+		AC_DEFINE(HAVE_FAM, [], [Define if we have FAM])
+	else
+	        AC_CHECK_LIB(fam, FAMOpen,
+	          [AC_CHECK_HEADERS(fam.h,
+	            [AC_DEFINE(HAVE_FAM, [], [Define if we have FAM])
+	             FAM_LIBS="-lfam"],
+	            AC_MSG_WARN(*** FAM support will not be built (header files not found) $FAM_MISSING_WARNING ***))],
+	          AC_MSG_WARN(*** FAM support will not be built (FAM library not found) $FAM_MISSING_WARNING ***))
+	fi
+	AC_SUBST(FAM_LIBS)
+	AC_SUBST(FAM_CFLAGS)	
 fi
 AC_SUBST(GIO_CFLAGS)
 AC_SUBST(GIO_LIBS)

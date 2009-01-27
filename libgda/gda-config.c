@@ -34,12 +34,19 @@
 #include <libgda/gda-holder.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-util.h>
-#ifdef HAVE_FAM
-#include <fam.h>
-#include <glib.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
+#ifdef HAVE_GIO
+  #ifdef HAVE_FAM
+    #error Impossible to have GIO and FAM at the same time
+  #endif
+  #include <gio/gio.h>
+#else
+  #ifdef HAVE_FAM
+    #include <fam.h>
+    #include <glib.h>
+    #include <sys/types.h>
+    #include <sys/stat.h>
+    #include <unistd.h>
+  #endif
 #endif
 #ifdef G_OS_WIN32 
 #include <io.h>
@@ -101,9 +108,24 @@ enum {
 
 static GObjectClass *parent_class = NULL;
 
+#ifdef HAVE_GIO
+/*
+ * GIO static variables
+ */
+static GFileMonitor *mon_conf_user = NULL;
+static GFileMonitor *mon_conf_global = NULL;
+gulong user_notify_changes = 0;
+gulong global_notify_changes = 0;
+
+static void conf_file_changed (GFileMonitor *mon, GFile *file, GFile *other_file,
+			       GFileMonitorEvent event_type, gpointer data);
+static void lock_notify_changes (void);
+static void unlock_notify_changes (void);
+#endif
+
 #ifdef HAVE_FAM
 /*
- * FAM delcarations and static variables
+ * FAM declarations and static variables
  */
 static FAMConnection *fam_connection = NULL;
 static gint           fam_watch_id = 0;
@@ -399,6 +421,9 @@ save_config_file (gboolean is_system)
 		xmlSetProp (entry, BAD_CAST "value", BAD_CAST (info->description));
 	}
 
+#ifdef HAVE_GIO
+	lock_notify_changes ();
+#endif
 #ifdef HAVE_FAM
         fam_lock_notify ();
 #endif
@@ -411,6 +436,9 @@ save_config_file (gboolean is_system)
                         g_warning ("Error saving config data to '%s'", unique_instance->priv->system_file);
 	}
 	fflush (NULL);
+#ifdef HAVE_GIO
+	unlock_notify_changes ();
+#endif
 #ifdef HAVE_FAM
         fam_unlock_notify ();
 #endif
@@ -533,6 +561,22 @@ gda_config_constructor (GType type,
 		}
 
 		/* Setup file monitoring */
+#ifdef HAVE_GIO
+		GFile *gf;
+		gf = g_file_new_for_path (unique_instance->priv->user_file);
+		mon_conf_user = g_file_monitor_file (gf, G_FILE_MONITOR_NONE, NULL, NULL);
+		if (mon_conf_user)
+			g_signal_connect (G_OBJECT (mon_conf_user), "changed",
+					  G_CALLBACK (conf_file_changed), NULL);
+
+		gf = g_file_new_for_path (unique_instance->priv->system_file);
+		mon_conf_global = g_file_monitor_file (gf, G_FILE_MONITOR_NONE, NULL, NULL);
+		if (mon_conf_user)
+			g_signal_connect (G_OBJECT (mon_conf_global), "changed",
+					  G_CALLBACK (conf_file_changed), NULL);
+		
+#endif
+
 #ifdef HAVE_FAM
 		if (!fam_connection) {
 			/* FAM init */
@@ -543,7 +587,7 @@ gda_config_constructor (GType type,
 			g_print ("Using FAM to monitor configuration files changes.\n");
 #endif
 			fam_connection = g_malloc0 (sizeof (FAMConnection));
-			if (FAMOpen2 (fam_connection, "libgnomedb user") != 0) {
+			if (FAMOpen2 (fam_connection, "libgda user") != 0) {
 				g_print ("FAMOpen failed, FAMErrno=%d\n", FAMErrno);
 				g_free (fam_connection);
 				fam_connection = NULL;
@@ -1485,6 +1529,7 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 #endif
 			}
 		}
+		g_free (path);
 		g_module_close (handle);
 	}
 
@@ -1548,6 +1593,61 @@ internal_provider_free (InternalProvider *ip)
 /*
  * File monitoring actions
  */
+#ifdef HAVE_GIO
+static void
+conf_file_changed (GFileMonitor *mon, GFile *file, GFile *other_file,
+		   GFileMonitorEvent event_type, gpointer data)
+{
+	g_assert (unique_instance);
+
+	if (event_type != G_FILE_MONITOR_EVENT_CHANGES_DONE_HINT)
+		return;
+
+	gboolean is_system = (mon == mon_conf_global) ? TRUE : FALSE;
+#ifdef GDA_DEBUG_NO
+	g_print ("Reloading config files (%s config has changed)\n", is_system ? "global" : "user");
+	GSList *list;
+	for (list = unique_instance->priv->dsn_list; list; list = list->next) {
+		GdaDsnInfo *info = (GdaDsnInfo *) list->data;
+		g_print ("[info %p]: %s/%s\n", info, info->provider, info->name);
+	}
+#endif
+	while (unique_instance->priv->dsn_list) {
+		GdaDsnInfo *info = (GdaDsnInfo *) unique_instance->priv->dsn_list->data;
+		g_signal_emit (unique_instance, gda_config_signals[DSN_TO_BE_REMOVED], 0, info);
+		unique_instance->priv->dsn_list = g_slist_remove (unique_instance->priv->dsn_list, info);
+		g_signal_emit (unique_instance, gda_config_signals[DSN_REMOVED], 0, info);
+		data_source_info_free (info);
+	}
+	
+	lock_notify_changes ();
+	if (unique_instance->priv->system_file)
+		load_config_file (unique_instance->priv->system_file, TRUE);
+	if (unique_instance->priv->user_file)
+		load_config_file (unique_instance->priv->user_file, FALSE);
+	unlock_notify_changes ();
+}
+
+static void
+lock_notify_changes (void)
+{
+	if (user_notify_changes != 0)
+		g_signal_handler_block (mon_conf_user, user_notify_changes);
+	if (global_notify_changes != 0)
+		g_signal_handler_block (mon_conf_global, global_notify_changes);
+}
+
+static void
+unlock_notify_changes (void)
+{
+	if (user_notify_changes != 0)
+		g_signal_handler_unblock (mon_conf_user, user_notify_changes);
+	if (global_notify_changes != 0)
+		g_signal_handler_unblock (mon_conf_global, global_notify_changes);
+}
+
+#endif
+
 #ifdef HAVE_FAM
 static gboolean
 fam_callback (GIOChannel *source, GIOCondition condition, gpointer data)

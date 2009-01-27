@@ -1266,15 +1266,24 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
 	}
 
 	/* INSERT, UPDATE and DELETE statements */
+	GdaSqlStatement *sql_ist;
 	GdaSqlStatementInsert *ist;
+	GdaSqlStatement *sql_ust;
 	GdaSqlStatementUpdate *ust;
+	GdaSqlStatement *sql_dst;
 	GdaSqlStatementDelete *dst;
-	ist = g_new0 (GdaSqlStatementInsert, 1);
-	GDA_SQL_ANY_PART (ist)->type = GDA_SQL_ANY_STMT_INSERT;
-	ust = g_new0 (GdaSqlStatementUpdate, 1);
-	GDA_SQL_ANY_PART (ust)->type = GDA_SQL_ANY_STMT_UPDATE;
-	dst = g_new0 (GdaSqlStatementDelete, 1);
-	GDA_SQL_ANY_PART (dst)->type = GDA_SQL_ANY_STMT_DELETE;
+	
+	sql_ist = gda_sql_statement_new (GDA_SQL_STATEMENT_INSERT);
+	ist = (GdaSqlStatementInsert*) sql_ist->contents;
+	g_assert (GDA_SQL_ANY_PART (ist)->type == GDA_SQL_ANY_STMT_INSERT);
+
+	sql_ust = gda_sql_statement_new (GDA_SQL_STATEMENT_UPDATE);
+	ust = (GdaSqlStatementUpdate*) sql_ust->contents;
+	g_assert (GDA_SQL_ANY_PART (ust)->type == GDA_SQL_ANY_STMT_UPDATE);
+
+	sql_dst = gda_sql_statement_new (GDA_SQL_STATEMENT_DELETE);
+	dst = (GdaSqlStatementDelete*) sql_dst->contents;
+	g_assert (GDA_SQL_ANY_PART (dst)->type == GDA_SQL_ANY_STMT_DELETE);
 	
 	ist->table = gda_sql_table_new (GDA_SQL_ANY_PART (ist));
 	ist->table->table_name = g_strdup ((gchar *) complete_obj_name);
@@ -1535,22 +1544,15 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
 	}
 
 	/* finish the statements */
-	GdaSqlStatement *st;
 	ist->values_list = g_slist_append (NULL, insert_values_list);
-	st = gda_sql_statement_new (GDA_SQL_STATEMENT_INSERT);
-	st->contents = ist;
-	TABLE_INFO (dbobj)->insert = g_object_new (GDA_TYPE_STATEMENT, "structure", st, NULL);
-	gda_sql_statement_free (st);
+	TABLE_INFO (dbobj)->insert = g_object_new (GDA_TYPE_STATEMENT, "structure", sql_ist, NULL);
+	gda_sql_statement_free (sql_ist);
 	
-	st = gda_sql_statement_new (GDA_SQL_STATEMENT_UPDATE);
-	st->contents = ust;
-	TABLE_INFO (dbobj)->update = g_object_new (GDA_TYPE_STATEMENT, "structure", st, NULL);
-	gda_sql_statement_free (st);
+	TABLE_INFO (dbobj)->update = g_object_new (GDA_TYPE_STATEMENT, "structure", sql_ust, NULL);
+	gda_sql_statement_free (sql_ust);
 	
-	st = gda_sql_statement_new (GDA_SQL_STATEMENT_DELETE);
-	st->contents = dst;
-	TABLE_INFO (dbobj)->delete = g_object_new (GDA_TYPE_STATEMENT, "structure", st, NULL);
-	gda_sql_statement_free (st);
+	TABLE_INFO (dbobj)->delete = g_object_new (GDA_TYPE_STATEMENT, "structure", sql_dst, NULL);
+	gda_sql_statement_free (sql_dst);
 	
 	if (TABLE_INFO (dbobj)->pk_cols_nb == 0)
 		g_error ("Missing key fields identification (table=%s)", complete_obj_name);

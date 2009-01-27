@@ -88,9 +88,18 @@ gboolean            gda_perform_drop_table            (GdaServerOperation *op, G
  * Data in tables manipulation
  */
 gboolean            gda_insert_row_into_table        (GdaConnection *cnc, const gchar *table, GError **error, ...);
+gboolean            gda_insert_row_into_table_v      (GdaConnection *cnc, const gchar *table,
+						      GSList *col_names, GSList *values,
+						      GError **error);
+
 gboolean            gda_update_row_in_table          (GdaConnection *cnc, const gchar *table, 
 						      const gchar *condition_column_name, 
 						      GValue *condition_value, GError **error, ...);
+gboolean            gda_update_row_in_table_v        (GdaConnection *cnc, const gchar *table, 
+						      const gchar *condition_column_name, 
+						      GValue *condition_value, 
+						      GSList *col_names, GSList *values,
+						      GError **error);
 gboolean            gda_delete_row_from_table        (GdaConnection *cnc, const gchar *table, 
 						      const gchar *condition_column_name, 
 						      GValue *condition_value, GError **error);
