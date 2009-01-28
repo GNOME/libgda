@@ -1,3 +1,10 @@
+2009-01-28  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-server-provider.c: fixed a bug where the connection would remain
+	locked.
+	* providers/postgres/gda-postgres-meta.c: fix for bug #143576
+	* po/: ran "make update-po"
+
 2009-01-27  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-easy.c:

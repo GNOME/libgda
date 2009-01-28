@@ -223,7 +223,7 @@ gda_meta_struct_free (mstruct);
 </para>
 
 @tcol: 
-@att_name: 
+@attribute: 
 @Returns: 
 
 
@@ -233,7 +233,7 @@ gda_meta_struct_free (mstruct);
 </para>
 
 @tcol: 
-@att_name: 
+@attribute: 
 @value: 
 @destroy: 
 

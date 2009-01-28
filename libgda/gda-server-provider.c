@@ -870,7 +870,7 @@ gda_server_provider_value_to_sql_string (GdaServerProvider *provider,
 		gda_lockable_lock ((GdaLockable*) cnc);
 	dh = gda_server_provider_get_data_handler_g_type (provider, cnc, G_VALUE_TYPE (from));
 	if (dh)
-		return gda_data_handler_get_sql_from_value (dh, from);
+		retval = gda_data_handler_get_sql_from_value (dh, from);
 	if (cnc)
 		gda_lockable_unlock ((GdaLockable*) cnc);
 	return retval;

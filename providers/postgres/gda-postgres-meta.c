@@ -814,6 +814,8 @@ gboolean _gda_postgres_meta__columns (GdaServerProvider *prov, GdaConnection *cn
 	for (i = 0; i < nrows; i++) {
 		const GValue *value;
 		GType type;
+
+		/* GType */
 		value = gda_data_model_get_value_at (model, 24, i, error);
 		if (!value) {
 			retval = FALSE;
@@ -828,6 +830,39 @@ gboolean _gda_postgres_meta__columns (GdaServerProvider *prov, GdaConnection *cn
 			gda_value_free (v);
 			if (!retval)
 				break;
+		}
+
+		/* column default: remove the datatype cast on strings:
+		 * 'abd'::character varying  => 'abd' */
+		value = gda_data_model_get_value_at (model, 5, i, error);
+		if (!value) {
+			retval = FALSE;
+			break;
+		}
+		
+		if (G_VALUE_TYPE (value) == G_TYPE_STRING) {
+			const gchar *cstr;
+			cstr = g_value_get_string (value);
+			if (cstr && (*cstr == '\'')) {
+				gint len;
+				len = strlen (cstr);
+				if (cstr [len-1] != '\'') {
+					gchar *tmp = g_strdup (cstr);
+					gint k;
+					for (k = len - 1; k > 0; k--) {
+						if (tmp [k] == '\'') {
+							tmp [k+1] = 0;
+							break;
+						}
+					}
+					GValue *v;
+					g_value_take_string (v = gda_value_new (G_TYPE_STRING), tmp);
+					retval = gda_data_model_set_value_at (proxy, 5, i, v, error);
+					gda_value_free (v);
+					if (!retval)
+						break;
+				}
+			}
 		}
 	}
 
@@ -883,6 +918,8 @@ _gda_postgres_meta_columns (GdaServerProvider *prov, GdaConnection *cnc,
 	for (i = 0; i < nrows; i++) {
 		const GValue *value;
 		GType type;
+
+		/* GType */
 		value = gda_data_model_get_value_at (model, 24, i, error);
 		if (!value) {
 			retval = FALSE;
@@ -897,6 +934,39 @@ _gda_postgres_meta_columns (GdaServerProvider *prov, GdaConnection *cnc,
 			gda_value_free (v);
 			if (!retval)
 				break;
+		}
+
+		/* column default: remove the datatype cast on strings:
+		 * 'abd'::character varying  => 'abd' */
+		value = gda_data_model_get_value_at (model, 5, i, error);
+		if (!value) {
+			retval = FALSE;
+			break;
+		}
+		
+		if (G_VALUE_TYPE (value) == G_TYPE_STRING) {
+			const gchar *cstr;
+			cstr = g_value_get_string (value);
+			if (cstr && (*cstr == '\'')) {
+				gint len;
+				len = strlen (cstr);
+				if (cstr [len-1] != '\'') {
+					gchar *tmp = g_strdup (cstr);
+					gint k;
+					for (k = len - 1; k > 0; k--) {
+						if (tmp [k] == '\'') {
+							tmp [k+1] = 0;
+							break;
+						}
+					}
+					GValue *v;
+					g_value_take_string (v = gda_value_new (G_TYPE_STRING), tmp);
+					retval = gda_data_model_set_value_at (proxy, 5, i, v, error);
+					gda_value_free (v);
+					if (!retval)
+						break;
+				}
+			}
 		}
 	}
 
