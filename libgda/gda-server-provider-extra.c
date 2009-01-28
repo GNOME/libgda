@@ -37,7 +37,7 @@
 
 /**
  * gda_server_provider_internal_get_parser
- * @prov:
+ * @prov: a #GdaServerProvider
  *
  * This is a factory method to get a unique instance of a #GdaSqlParser object
  * for each #GdaServerProvider object

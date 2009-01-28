@@ -1,6 +1,6 @@
 /* gda-handler-numerical.c
  *
- * Copyright (C) 2003 - 2008 Vivien Malerba
+ * Copyright (C) 2003 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -39,8 +39,6 @@ static GValue      *gda_handler_numerical_get_value_from_str     (GdaDataHandler
 								  GType type);
 static GValue      *gda_handler_numerical_get_sane_init_value    (GdaDataHandler * dh, GType type);
 
-static guint        gda_handler_numerical_get_nb_g_types       (GdaDataHandler *dh);
-static GType        gda_handler_numerical_get_g_type_index     (GdaDataHandler *dh, guint index);
 static gboolean     gda_handler_numerical_accepts_g_type       (GdaDataHandler * dh, GType type);
 
 static const gchar *gda_handler_numerical_get_descr              (GdaDataHandler *dh);
@@ -97,9 +95,7 @@ gda_handler_numerical_data_handler_init (GdaDataHandlerIface *iface)
 	iface->get_value_from_sql = gda_handler_numerical_get_value_from_sql;
 	iface->get_value_from_str = gda_handler_numerical_get_value_from_str;
 	iface->get_sane_init_value = gda_handler_numerical_get_sane_init_value;
-	iface->get_nb_g_types = gda_handler_numerical_get_nb_g_types;
 	iface->accepts_g_type = gda_handler_numerical_accepts_g_type;
-	iface->get_g_type_index = gda_handler_numerical_get_g_type_index;
 	iface->get_descr = gda_handler_numerical_get_descr;
 }
 
@@ -337,20 +333,6 @@ gda_handler_numerical_get_sane_init_value (GdaDataHandler *iface, GType type)
 	return value;
 }
 
-
-static guint
-gda_handler_numerical_get_nb_g_types (GdaDataHandler *iface)
-{
-	GdaHandlerNumerical *hdl;
-
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_NUMERICAL (iface), 0);
-	hdl = GDA_HANDLER_NUMERICAL (iface);
-	g_return_val_if_fail (hdl->priv, 0);
-
-	return hdl->priv->nb_g_types;
-}
-
-
 static gboolean
 gda_handler_numerical_accepts_g_type (GdaDataHandler *iface, GType type)
 {
@@ -370,19 +352,6 @@ gda_handler_numerical_accepts_g_type (GdaDataHandler *iface, GType type)
 	}
 
 	return found;
-}
-
-static GType
-gda_handler_numerical_get_g_type_index (GdaDataHandler *iface, guint index)
-{
-	GdaHandlerNumerical *hdl;
-
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_NUMERICAL (iface), G_TYPE_INVALID);
-	hdl = GDA_HANDLER_NUMERICAL (iface);
-	g_return_val_if_fail (hdl->priv, G_TYPE_INVALID);
-	g_return_val_if_fail (index < hdl->priv->nb_g_types, G_TYPE_INVALID);
-
-	return hdl->priv->valid_g_types[index];
 }
 
 static const gchar *

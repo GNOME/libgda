@@ -1,6 +1,6 @@
 /* gda-handler-time.c
  *
- * Copyright (C) 2003 - 2008 Vivien Malerba
+ * Copyright (C) 2003 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -51,8 +51,6 @@ static GValue      *gda_handler_time_get_value_from_str     (GdaDataHandler *dh,
 
 static GValue      *gda_handler_time_get_sane_init_value    (GdaDataHandler * dh, GType type);
 
-static guint        gda_handler_time_get_nb_g_types       (GdaDataHandler *dh);
-static GType        gda_handler_time_get_g_type_index     (GdaDataHandler *dh, guint index);
 static gboolean     gda_handler_time_accepts_g_type       (GdaDataHandler * dh, GType type);
 
 static const gchar *gda_handler_time_get_descr              (GdaDataHandler *dh);
@@ -122,9 +120,7 @@ gda_handler_time_data_handler_init (GdaDataHandlerIface *iface)
 	iface->get_value_from_sql = gda_handler_time_get_value_from_sql;
 	iface->get_value_from_str = gda_handler_time_get_value_from_str;
 	iface->get_sane_init_value = gda_handler_time_get_sane_init_value;
-	iface->get_nb_g_types = gda_handler_time_get_nb_g_types;
 	iface->accepts_g_type = gda_handler_time_accepts_g_type;
-	iface->get_g_type_index = gda_handler_time_get_g_type_index;
 	iface->get_descr = gda_handler_time_get_descr;
 }
 
@@ -236,18 +232,18 @@ gda_handler_time_new_no_locale (void)
 /**
  * gda_handler_time_set_sql_spec
  * @dh: a #GdaHandlerTime object
- * @first:
- * @sec:
- * @third:
- * @separator:
+ * @first: what comes first in the date representation
+ * @sec: what comes second in the date representation
+ * @third: what comes third in the date representation
+ * @separator: separator character used between year, month and day
  * @twodigits_years: TRUE if year part of date must be rendered on 2 digits
  *
  * Specifies the SQL output style of the @dh data handler. The general format is "FIRSTsSECsTHIRD"
  * where FIRST, SEC and THIRD are specified by @first, @sec and @trird and 's' is the separator,
  * specified by @separator.
  *
- * The default implementation is FIRST=G_DATE_MONTH, SEC=G_DATE_DAY and THIRD=G_DATE_YEAR (the year is
- * rendered on 4 digits) and the separator is '-'
+ * The default implementation is @first=G_DATE_MONTH, @sec=G_DATE_DAY and @third=G_DATE_YEAR
+ * (the year is rendered on 4 digits) and the separator is '-'
  */
 void
 gda_handler_time_set_sql_spec  (GdaHandlerTime *dh, GDateDMY first, GDateDMY sec,
@@ -450,7 +446,7 @@ gda_handler_time_get_no_locale_str_from_value (GdaHandlerTime *hdl, const GValue
 
 /**
  * gda_handler_time_get_format
- * @hdl: a #GdaHandlerTime object
+ * @dh: a #GdaHandlerTime object
  * @type: the type of data being handled
  *
  * Get a string representing the locale-dependant way to enter a date/time/datetime, using
@@ -459,27 +455,27 @@ gda_handler_time_get_no_locale_str_from_value (GdaHandlerTime *hdl, const GValue
  * Returns: a new string
  */
 gchar *
-gda_handler_time_get_format (GdaHandlerTime *hdl, GType type)
+gda_handler_time_get_format (GdaHandlerTime *dh, GType type)
 {
 	gchar *str;
 	GString *string;
 	gint i;
 
-	g_return_val_if_fail (GDA_IS_HANDLER_TIME (hdl), NULL);
-	g_return_val_if_fail (hdl->priv, NULL);
+	g_return_val_if_fail (GDA_IS_HANDLER_TIME (dh), NULL);
+	g_return_val_if_fail (dh->priv, NULL);
 
 	string = g_string_new ("");
 	if ((type == G_TYPE_DATE) || (type == GDA_TYPE_TIMESTAMP)) {
 		for (i=0; i<3; i++) {
 			if (i > 0)
-				g_string_append_c (string, hdl->priv->str_locale->separator);
-			switch (hdl->priv->str_locale->dmy_order[i]) {
+				g_string_append_c (string, dh->priv->str_locale->separator);
+			switch (dh->priv->str_locale->dmy_order[i]) {
 			case G_DATE_DAY:
 			case G_DATE_MONTH:
 				g_string_append (string, "00");
 				break;
 			case G_DATE_YEAR:
-				if (hdl->priv->str_locale->twodigit_years)
+				if (dh->priv->str_locale->twodigit_years)
 					g_string_append (string, "00");
 				else
 					g_string_append (string, "0000");
@@ -1058,20 +1054,6 @@ gda_handler_time_get_sane_init_value (GdaDataHandler *iface, GType type)
 	return value;
 }
 
-
-static guint
-gda_handler_time_get_nb_g_types (GdaDataHandler *iface)
-{
-	GdaHandlerTime *hdl;
-
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_TIME (iface), 0);
-	hdl = GDA_HANDLER_TIME (iface);
-	g_return_val_if_fail (hdl->priv, 0);
-
-	return hdl->priv->nb_g_types;
-}
-
-
 static gboolean
 gda_handler_time_accepts_g_type (GdaDataHandler *iface, GType type)
 {
@@ -1091,19 +1073,6 @@ gda_handler_time_accepts_g_type (GdaDataHandler *iface, GType type)
 	}
 
 	return found;
-}
-
-static GType
-gda_handler_time_get_g_type_index (GdaDataHandler *iface, guint index)
-{
-	GdaHandlerTime *hdl;
-
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_TIME (iface), G_TYPE_INVALID);
-	hdl = GDA_HANDLER_TIME (iface);
-	g_return_val_if_fail (hdl->priv, G_TYPE_INVALID);
-	g_return_val_if_fail (index < hdl->priv->nb_g_types, G_TYPE_INVALID);
-
-	return hdl->priv->valid_g_types[index];
 }
 
 static const gchar *

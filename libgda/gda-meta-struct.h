@@ -154,10 +154,13 @@ void          gda_meta_table_column_set_attribute (GdaMetaTableColumn *tcol, con
 						   GDestroyNotify destroy);
 /**
  * gda_meta_table_column_set_attribute_static
+ * @column: a #GdaMetaTableColumn
+ * @attribute: attribute's name
+ * @value: a #GValue, or %NULL
  *
  * This function is similar to gda_meta_table_column_set_attribute() but for static strings
  */
-#define gda_meta_table_column_set_attribute_static(holder,attribute,value) gda_meta_table_column_set_attribute((holder),(attribute),(value),NULL)
+#define gda_meta_table_column_set_attribute_static(column,attribute,value) gda_meta_table_column_set_attribute((column),(attribute),(value),NULL)
 
 void          gda_meta_table_column_foreach_attribute (GdaMetaTableColumn *tcol, GdaAttributesManagerFunc func, gpointer data);
 

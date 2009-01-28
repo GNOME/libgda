@@ -792,9 +792,7 @@ gda_data_handler_get_str_from_value
 gda_data_handler_get_value_from_sql
 gda_data_handler_get_value_from_str
 gda_data_handler_get_sane_init_value
-gda_data_handler_get_nb_g_types
 gda_data_handler_accepts_g_type
-gda_data_handler_get_g_type_index
 gda_data_handler_get_descr
 <SUBSECTION Standard>
 GDA_DATA_HANDLER

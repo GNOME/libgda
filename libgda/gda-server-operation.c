@@ -955,6 +955,7 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root, G
 
 /**
  * gda_server_operation_new
+ * @op_type: type of operation
  * @xml_file: a file which has the specifications for the GdaServerOperation object to create
  *
  * IMPORTANT NOTE: Using this funtion is not the recommended way of creating a #GdaServerOperation object, the

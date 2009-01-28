@@ -238,9 +238,9 @@ gda_report_docbook_document_get_property (GObject *object,
 
 /**
  * gda_report_docbook_document_new
- * @fo_file: a FO file name, or %NULL
+ * @engine: a #GdaReportEngine, or %NULL
  *
- * Creates a new #GdaReportDocbookDocument using @fo_file as a base
+ * Creates a new #GdaReportDocbookDocument using @engine if specified
  *
  * Returns: a new #GdaReportDocbookDocument object
  */

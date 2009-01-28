@@ -592,21 +592,21 @@ gda_meta_store_new_with_file (const gchar *file_name)
 
 /**
  * gda_meta_store_new
- * @string: a connection string, or %NULL for an in-memory internal database
+ * @cnc_string: a connection string, or %NULL for an in-memory internal database
  *
  * Create a new #GdaMetaStore object.
  *
  * Returns: the newly created object, or %NULL if an error occurred
  */
 GdaMetaStore *
-gda_meta_store_new (const gchar *string) 
+gda_meta_store_new (const gchar *cnc_string) 
 {
 	GObject *obj;
 	GdaMetaStore *store;
 
 	g_static_rec_mutex_lock (&init_mutex);
-	if (string)
-		obj = g_object_new (GDA_TYPE_META_STORE, "cnc-string", string, NULL);
+	if (cnc_string)
+		obj = g_object_new (GDA_TYPE_META_STORE, "cnc-string", cnc_string, NULL);
 	else
 		obj = g_object_new (GDA_TYPE_META_STORE, "cnc-string", "SQLite://DB_NAME=__gda_tmp", NULL);
 	g_static_rec_mutex_unlock (&init_mutex);

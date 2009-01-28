@@ -136,10 +136,10 @@ void          gda_set_merge_with_set           (GdaSet *set, GdaSet *set_to_merg
 gboolean      gda_set_is_valid                 (GdaSet *set, GError **error);
 
 /* public data lookup functions */
-GdaSetNode   *gda_set_get_node                 (GdaSet *set, GdaHolder *param);
+GdaSetNode   *gda_set_get_node                 (GdaSet *set, GdaHolder *holder);
 GdaSetSource *gda_set_get_source_for_model     (GdaSet *set, GdaDataModel *model);
-GdaSetSource *gda_set_get_source               (GdaSet *set, GdaHolder *param);
-GdaSetGroup  *gda_set_get_group                (GdaSet *set, GdaHolder *param);
+GdaSetSource *gda_set_get_source               (GdaSet *set, GdaHolder *holder);
+GdaSetGroup  *gda_set_get_group                (GdaSet *set, GdaHolder *holder);
 
 G_END_DECLS
 

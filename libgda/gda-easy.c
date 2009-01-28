@@ -725,7 +725,7 @@ gda_insert_row_into_table_v (GdaConnection *cnc, const gchar *table,
  * @condition_column_name: the name of the column to used in the WHERE condition clause
  * @condition_value: the @condition_column_type's GType
  * @error: a place to store errors, or %NULL
- * ...: a list of string/GValue pairs with the name of the column to use and the
+ * @...: a list of string/GValue pairs with the name of the column to use and the
  * GValue pointer containing the value to update the column to (value can be %NULL), finished by a %NULL. There must be
  * at least one column name and value
  * 

@@ -68,8 +68,40 @@ GdaHolder          *gda_holder_copy                    (GdaHolder *orig);
 GType               gda_holder_get_g_type              (GdaHolder *holder);
 const gchar        *gda_holder_get_id                  (GdaHolder *holder);
 
+/**
+ * gda_holder_new_string
+ * @id: a string
+ * @str: a string
+ * 
+ * Creates a new boolean #GdaHolder object with an ID set to @id, and a value initialized to 
+ * @str.
+ *
+ * Returns: a new #GdaHolder
+ */
 #define gda_holder_new_string(id,str) gda_holder_new_inline (G_TYPE_STRING, (id), (str))
+
+/**
+ * gda_holder_new_boolean
+ * @id: a string
+ * @abool: a boolean value
+ * 
+ * Creates a new boolean #GdaHolder object with an ID set to @id, and a value initialized to 
+ * @abool.
+ *
+ * Returns: a new #GdaHolder
+ */
 #define gda_holder_new_boolean(id,abool) gda_holder_new_inline (G_TYPE_BOOLEAN, (id), (abool))
+
+/**
+ * gda_holder_new_int
+ * @id: a string
+ * @anint: an int value
+ * 
+ * Creates a new boolean #GdaHolder object with an ID set to @id, and a value initialized to 
+ * @anint.
+ *
+ * Returns: a new #GdaHolder
+ */
 #define gda_holder_new_int(id,anint) gda_holder_new_inline (G_TYPE_INT, (id), (anint))
 
 const GValue       *gda_holder_get_value               (GdaHolder *holder);
@@ -104,6 +136,9 @@ void                gda_holder_set_attribute            (GdaHolder *holder, cons
 
 /**
  * gda_holder_set_attribute_static
+ * @holder: a #GdaHolder
+ * @attribute: attribute's name
+ * @value: a #GValue, or %NULL
  *
  * This function is similar to gda_holder_set_attribute() but for static strings
  */

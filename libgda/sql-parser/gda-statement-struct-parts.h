@@ -184,9 +184,9 @@ struct _GdaSqlCase
 };
 
 GdaSqlCase        *gda_sql_case_new            (GdaSqlAnyPart *parent);
-void               gda_sql_case_free           (GdaSqlCase *scase);
-GdaSqlCase        *gda_sql_case_copy           (GdaSqlCase *scase);
-gchar             *gda_sql_case_serialize      (GdaSqlCase *scase);
+void               gda_sql_case_free           (GdaSqlCase *sc);
+GdaSqlCase        *gda_sql_case_copy           (GdaSqlCase *sc);
+gchar             *gda_sql_case_serialize      (GdaSqlCase *sc);
 
 /*
  * Any expression in a SELECT ... before the FROM clause

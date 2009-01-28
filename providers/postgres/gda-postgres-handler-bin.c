@@ -1,5 +1,5 @@
 /* GDA postgres provider
- * Copyright (C) 2007 - 2008 The GNOME Foundation.
+ * Copyright (C) 2007 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -39,8 +39,6 @@ static GValue      *gda_postgres_handler_bin_get_value_from_sql     (GdaDataHand
 								     GType type);
 static GValue      *gda_postgres_handler_bin_get_value_from_str     (GdaDataHandler *dh, const gchar *sql, 
 								     GType type);
-static guint        gda_postgres_handler_bin_get_nb_g_types         (GdaDataHandler *dh);
-static GType        gda_postgres_handler_bin_get_g_type_index       (GdaDataHandler *dh, guint index);
 static gboolean     gda_postgres_handler_bin_accepts_g_type         (GdaDataHandler * dh, GType type);
 
 static const gchar *gda_postgres_handler_bin_get_descr              (GdaDataHandler *dh);
@@ -98,9 +96,7 @@ gda_postgres_handler_bin_data_handler_init (GdaDataHandlerIface *iface)
 	iface->get_value_from_sql = gda_postgres_handler_bin_get_value_from_sql;
 	iface->get_value_from_str = gda_postgres_handler_bin_get_value_from_str;
 	iface->get_sane_init_value = NULL;
-	iface->get_nb_g_types = gda_postgres_handler_bin_get_nb_g_types;
 	iface->accepts_g_type = gda_postgres_handler_bin_accepts_g_type;
-	iface->get_g_type_index = gda_postgres_handler_bin_get_g_type_index;
 	iface->get_descr = gda_postgres_handler_bin_get_descr;
 }
 
@@ -313,19 +309,6 @@ gda_postgres_handler_bin_get_value_from_str (GdaDataHandler *iface, const gchar 
 	return value;
 }
 
-static guint
-gda_postgres_handler_bin_get_nb_g_types (GdaDataHandler *iface)
-{
-	GdaPostgresHandlerBin *hdl;
-
-	g_return_val_if_fail (iface && GDA_IS_POSTGRES_HANDLER_BIN (iface), 0);
-	hdl = GDA_POSTGRES_HANDLER_BIN (iface);
-	g_return_val_if_fail (hdl->priv, 0);
-
-	return hdl->priv->nb_g_types;
-}
-
-
 static gboolean
 gda_postgres_handler_bin_accepts_g_type (GdaDataHandler *iface, GType type)
 {
@@ -345,19 +328,6 @@ gda_postgres_handler_bin_accepts_g_type (GdaDataHandler *iface, GType type)
 	}
 
 	return found;
-}
-
-static GType
-gda_postgres_handler_bin_get_g_type_index (GdaDataHandler *iface, guint index)
-{
-	GdaPostgresHandlerBin *hdl;
-
-	g_return_val_if_fail (iface && GDA_IS_POSTGRES_HANDLER_BIN (iface), G_TYPE_INVALID);
-	hdl = GDA_POSTGRES_HANDLER_BIN (iface);
-	g_return_val_if_fail (hdl->priv, G_TYPE_INVALID);
-	g_return_val_if_fail (index < hdl->priv->nb_g_types, G_TYPE_INVALID);
-
-	return hdl->priv->valid_g_types[index];
 }
 
 static const gchar *

@@ -750,12 +750,18 @@ gda_data_model_set_values (GdaDataModel *model, gint row, GList *values, GError 
  * Creates a new iterator object #GdaDataModelIter object which can be used to iterate through
  * rows in @model.
  *
- * The row the returned #GdaDataModelIter represents is undefined. For models which can be accessed 
- * randomly the corresponding row can be set using gda_data_model_iter_move_to_row(), 
- * and for models which are accessible sequentially only then the first row will be
- * fetched using gda_data_model_iter_move_next().
+ * Depending on the data model's implementation, a new #GdaDataModelIter object may be created,
+ * or a reference to an already existing #GdaDataModelIter may be returned.
  *
- * Returns: a new #GdaDataModelIter object, or %NULL if an error occurred
+ * If a new #GdaDataModelIter is created, then the row it represents is undefined.
+ *
+ * For models which can be accessed 
+ * randomly, any row can be set using gda_data_model_iter_move_to_row(), 
+ * and for models which are accessible sequentially only then use
+ * gda_data_model_iter_move_next() (and gda_data_model_iter_move_prev() if
+ * supported).
+ *
+ * Returns: a #GdaDataModelIter object, or %NULL if an error occurred
  */
 GdaDataModelIter *
 gda_data_model_create_iter (GdaDataModel *model)
@@ -1474,6 +1480,7 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
  * gda_data_model_add_data_from_xml_node
  * @model: a #GdaDataModel.
  * @node: an XML node representing a &lt;gda_array_data&gt; XML node.
+ * @error: a place to store errors, or %NULL
  *
  * Adds the data from an XML node to the given data model (see the DTD for that node
  * in the $prefix/share/libgda/dtd/libgda-array.dtd file).

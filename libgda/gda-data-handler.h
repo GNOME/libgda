@@ -46,8 +46,6 @@ struct _GdaDataHandlerIface
 	GValue        *(* get_value_from_str)   (GdaDataHandler *dh, const gchar *str, GType type);
 	GValue        *(* get_sane_init_value)  (GdaDataHandler *dh, GType type);
 
-	guint          (* get_nb_g_types)       (GdaDataHandler *dh);
-	GType          (* get_g_type_index)     (GdaDataHandler *dh, guint index);
 	gboolean       (* accepts_g_type)       (GdaDataHandler *dh, GType type);
 	const gchar   *(* get_descr)            (GdaDataHandler *dh);
 };
@@ -65,8 +63,6 @@ GValue        *gda_data_handler_get_value_from_str     (GdaDataHandler *dh, cons
 GValue        *gda_data_handler_get_sane_init_value    (GdaDataHandler *dh, GType type);
 
 /* information about the data handler itself */
-guint          gda_data_handler_get_nb_g_types         (GdaDataHandler *dh);
-GType          gda_data_handler_get_g_type_index       (GdaDataHandler *dh, guint index);
 gboolean       gda_data_handler_accepts_g_type         (GdaDataHandler *dh, GType type);
 const gchar   *gda_data_handler_get_descr              (GdaDataHandler *dh);
 

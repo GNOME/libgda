@@ -6,7 +6,8 @@ Management of #GdaDataModel column attributes
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+  The #GdaColumn object represents a #GdaDataModel's column and
+  handle all its properties.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

@@ -742,6 +742,7 @@ gda_server_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConne
  * @cnc: a #GdaConnection object, or %NULL
  * @string: the SQL string to convert to a value
  * @preferred_type: a #GType, or G_TYPE_INVALID
+ * @dbms_type: place to get the actual database type used if the conversion succeeded, or %NULL
  *
  * Use @provider to create a new #GValue from a single string representation. 
  *
@@ -753,6 +754,10 @@ gda_server_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConne
  * - @string cannot be converted to @preferred_type type
  * - the provider does not handle @preferred_type
  * - the provider could not make a #GValue from @string
+ *
+ * If @dbms_type is not %NULL, then if will contain a constant string representing
+ * the database type used for the conversion if the conversion was successfull, or %NULL
+ * otherwise.
  *
  * Returns: a new #GValue, or %NULL
  */
@@ -766,6 +771,9 @@ gda_server_provider_string_to_value (GdaServerProvider *provider,  GdaConnection
 
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);
+
+	if (dbms_type)
+		*dbms_type = NULL;
 
 	if (cnc)
 		gda_lockable_lock ((GdaLockable*) cnc);

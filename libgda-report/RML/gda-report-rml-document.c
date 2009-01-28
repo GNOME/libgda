@@ -168,9 +168,9 @@ gda_report_rml_document_get_property (GObject *object,
 
 /**
  * gda_report_rml_document_new
- * @rml_file: a RML file name, or %NULL
+ * @engine: a #GdaReportEngine, or %NULL
  *
- * Creates a new #GdaReportRmlDocument using @rml_file as a base
+ * Creates a new #GdaReportRmlDocument using @engine if specified
  *
  * Returns: a new #GdaReportRmlDocument object
  */

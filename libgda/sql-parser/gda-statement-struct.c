@@ -1275,6 +1275,7 @@ static gboolean foreach_normalize (GdaSqlAnyPart *node, GdaConnection *cnc, GErr
  * gda_sql_statement_normalize
  * @stmt: a pointer to a #GdaSqlStatement structure
  * @cnc: a #GdaConnection object, or %NULL
+ * @error: a place to store errors, or %NULL
  *
  * "Normalizes" (in place) some parts of @stmt, which means @stmt may be modified.
  * At the moment any "*" field in a SELECT statement will be replaced by one

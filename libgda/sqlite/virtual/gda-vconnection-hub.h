@@ -53,7 +53,7 @@ GType               gda_vconnection_hub_get_type       (void) G_GNUC_CONST;
 gboolean            gda_vconnection_hub_add            (GdaVconnectionHub *hub, 
 							GdaConnection *cnc, const gchar *ns, GError **error);
 gboolean            gda_vconnection_hub_remove         (GdaVconnectionHub *hub, GdaConnection *cnc, GError **error);
-GdaConnection      *gda_vconnection_hub_get_connection (GdaVconnectionHub *cnc, const gchar *ns);
+GdaConnection      *gda_vconnection_hub_get_connection (GdaVconnectionHub *hub, const gchar *ns);
 void                gda_vconnection_hub_foreach        (GdaVconnectionHub *hub, 
 							GdaVConnectionHubFunc func, gpointer data);
 

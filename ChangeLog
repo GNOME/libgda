@@ -1,5 +1,35 @@
 2009-01-28  Vivien Malerba <malerba@gnome-db.org>
 
+	* libgda/sqlite/virtual/gda-vconnection-hub.h:
+	* libgda/gda-easy.c:
+	* libgda/sql-parser/gda-statement-struct.c:
+	* libgda/sql-parser/gda-statement-struct-parts.h:
+	* libgda/gda-set.h:
+	* libgda/gda-server-provider.c:
+	* libgda/gda-server-provider-extra.c:
+	* libgda-report/DocBook/gda-report-docbook-document.c:
+	* libgda-report/RML/gda-report-rml-document.c:
+	* libgda/gda-meta-struct.c:
+	* libgda/gda-holder.[ch]:
+	* libgda/gda-data-model-array.c:
+	* libgda/gda-data-model.c:
+	* libgda/gda-data-model-bdb.c:
+	* libgda/gda-column.h: doc updates
+	* libgda/libgda.symbols:
+	* providers/postgres/gda-postgres-handler-bin.c:
+        * libgda/sqlite/gda-sqlite-handler-bin.c:
+        * libgda/gda-column.h:
+        * libgda/handlers/gda-handler-time.c:
+        * libgda/handlers/gda-handler-boolean.c:
+        * libgda/handlers/gda-handler-numerical.c:
+        * libgda/handlers/gda-handler-type.c:
+        * libgda/handlers/gda-handler-string.c:
+        * libgda/handlers/gda-handler-bin.c:
+        * libgda/gda-data-handler.c:
+        * libgda/gda-data-handler.h: removed unused methods
+
+2009-01-28  Vivien Malerba <malerba@gnome-db.org>
+
 	* libgda/gda-server-provider.c: fixed a bug where the connection would remain
 	locked.
 	* providers/postgres/gda-postgres-meta.c: fix for bug #143576

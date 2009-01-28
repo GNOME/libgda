@@ -370,7 +370,7 @@ gda_data_model_array_copy_model (GdaDataModel *src, GError **error)
 /**
  * gda_data_model_array_get_row
  * @model: a #GdaDataModelArray object
- * @row:
+ * @row: row number (starting from 0)
  * @error: a place to store errors, or %NULL
  *
  * Get a pointer to a row in @model

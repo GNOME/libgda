@@ -400,8 +400,8 @@ gda_holder_copy (GdaHolder *orig)
  * @id: the id of the holder to create, or %NULL
  * @...: value to set
  *
- * Creates a new #GdaHolder object named @name, of type @type, and containing the value passed
- * as the last argument.
+ * Creates a new #GdaHolder object with an ID set to @id, of type @type, 
+ * and containing the value passed as the last argument.
  *
  * Note that this function is a utility function and that anly a limited set of types are supported. Trying
  * to use an unsupported type will result in a warning, and the returned value holder holding a safe default
@@ -1384,7 +1384,7 @@ gda_holder_set_default_value (GdaHolder *holder, const GValue *value)
 /**
  * gda_holder_set_not_null
  * @holder: a #GdaHolder object
- * @not_null:
+ * @not_null: TRUE if @holder should not accept %NULL values
  *
  * Sets if the holder can have a NULL value. If @not_null is TRUE, then that won't be allowed
  */
@@ -1492,10 +1492,13 @@ gda_holder_get_source_model (GdaHolder *holder, gint *col)
  * gda_holder_set_bind
  * @holder: a #GdaHolder
  * @bind_to: a #GdaHolder or %NULL
+ * @error: a place to store errors, or %NULL
  *
  * Sets @holder to change when @bind_to changes (and does not make @bind_to change when @holder changes).
  *
  * If @bind_to is %NULL, then @holder will not be bound anymore.
+ *
+ * Returns: TRUE if no error occurred
  */
 gboolean
 gda_holder_set_bind (GdaHolder *holder, GdaHolder *bind_to, GError **error)

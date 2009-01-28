@@ -118,8 +118,8 @@ gda_data_handler_get_str_from_value (GdaDataHandler *dh, const GValue *value)
 /**
  * gda_data_handler_get_value_from_sql
  * @dh: an object which implements the #GdaDataHandler interface
- * @sql:
- * @type: 
+ * @sql: an SQL string
+ * @type: a GType
  *
  * Creates a new GValue which represents the SQL value given as argument. This is
  * the opposite of the function gda_data_handler_get_sql_from_value(). The type argument
@@ -150,8 +150,8 @@ gda_data_handler_get_value_from_sql (GdaDataHandler *dh, const gchar *sql, GType
 /**
  * gda_data_handler_get_value_from_str
  * @dh: an object which implements the #GdaDataHandler interface
- * @str:
- * @type: 
+ * @str: a string
+ * @type: a GType
  *
  * Creates a new GValue which represents the STR value given as argument. This is
  * the opposite of the function gda_data_handler_get_str_from_value(). The type argument
@@ -188,7 +188,7 @@ gda_data_handler_get_value_from_str (GdaDataHandler *dh, const gchar *str, GType
 /**
  * gda_data_handler_get_sane_init_value
  * @dh: an object which implements the #GdaDataHandler interface
- * @type: 
+ * @type: a GTYpe
  *
  * Creates a new GValue which holds a sane initial value to be used if no value is specifically
  * provided. For example for a simple string, this would return a new value containing the "" string.
@@ -208,28 +208,9 @@ gda_data_handler_get_sane_init_value (GdaDataHandler *dh, GType type)
 }
 
 /**
- * gda_data_handler_get_nb_g_types
- * @dh: an object which implements the #GdaDataHandler interface
- *
- * Get the number of GType types the GdaDataHandler can handle correctly
- *
- * Returns: the number.
- */
-guint
-gda_data_handler_get_nb_g_types (GdaDataHandler *dh)
-{
-	g_return_val_if_fail (dh && GDA_IS_DATA_HANDLER (dh), 0);
-
-	if (GDA_DATA_HANDLER_GET_IFACE (dh)->get_nb_g_types)
-		return (GDA_DATA_HANDLER_GET_IFACE (dh)->get_nb_g_types) (dh);
-	
-	return 0;
-}
-
-/**
  * gda_data_handler_accepts_g_type
  * @dh: an object which implements the #GdaDataHandler interface
- * @type:
+ * @type: a #GType
  *
  * Checks wether the GdaDataHandler is able to handle the gda type given as argument.
  *
@@ -244,28 +225,6 @@ gda_data_handler_accepts_g_type (GdaDataHandler *dh, GType type)
 		return (GDA_DATA_HANDLER_GET_IFACE (dh)->accepts_g_type) (dh, type);
 	
 	return FALSE;
-}
-
-/**
- * gda_data_handler_get_g_type_index
- * @dh: an object which implements the #GdaDataHandler interface
- * @index: 
- *
- * Get the GType handled by the GdaDataHandler, at the given position (starting at zero).
- *
- * Returns: the GType
- */
-GType
-gda_data_handler_get_g_type_index (GdaDataHandler *dh, guint index)
-{
-	g_return_val_if_fail (dh && GDA_IS_DATA_HANDLER (dh), G_TYPE_INVALID);
-	g_return_val_if_fail (index < gda_data_handler_get_nb_g_types (dh),
-			      G_TYPE_INVALID);
-
-	if (GDA_DATA_HANDLER_GET_IFACE (dh)->get_g_type_index)
-		return (GDA_DATA_HANDLER_GET_IFACE (dh)->get_g_type_index) (dh, index);
-	
-	return G_TYPE_INVALID;
 }
 
 /**

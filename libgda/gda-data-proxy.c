@@ -1259,13 +1259,15 @@ find_or_create_row_modif (GdaDataProxy *proxy, gint proxy_row, gint col, RowValu
  * gda_data_proxy_get_values
  * @proxy: a #GdaDataProxy object
  * @proxy_row: a proxy row
- * @cols_index:
- * @n_cols:
+ * @cols_index: array containing the columns for which the values are requested
+ * @n_cols: size of @cols_index
  *
- * Retreive a whole list of values from the @proxy store. This function calls gda_data_proxy_get_value()
- * for each column index specified in @cols_index, and generates a #GSlist on the way.
+ * Retreive a whole list of values from the @proxy data model. This function 
+ * calls gda_data_proxy_get_value()
+ * for each column index specified in @cols_index, and generates a #GSList on the way.
  *
- * Returns: a new list of values (the list must be freed, not the values), or %NULL if an error occurred
+ * Returns: a new list of values (the list must be freed, not the values), 
+ * or %NULL if an error occurred
  */
 GSList *
 gda_data_proxy_get_values (GdaDataProxy *proxy, gint proxy_row, gint *cols_index, gint n_cols)
