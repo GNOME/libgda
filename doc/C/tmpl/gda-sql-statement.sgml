@@ -970,7 +970,7 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 
 </para>
 
-@scase: 
+@sc: 
 
 
 <!-- ##### FUNCTION gda_sql_case_copy ##### -->
@@ -978,7 +978,7 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 
 </para>
 
-@scase: 
+@sc: 
 @Returns: 
 
 
@@ -987,7 +987,7 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 
 </para>
 
-@scase: 
+@sc: 
 @Returns: 
 
 

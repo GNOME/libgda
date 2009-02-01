@@ -199,9 +199,14 @@ gda_gbr_get_file_path (GdaPrefixDir where, ...)
 		if ((GetCurrentProcess (&myProcess) == noErr) &&
 		    (GetProcessBundleLocation (&myProcess, &bundleLocation) == noErr) &&
 		    (FSRefMakePath (&bundleLocation, bundlePath, MAXLEN) == noErr)) {
-			prefix = g_path_get_dirname ((const char*) bundlePath);
-			if (g_str_has_suffix (prefix, "bin"))
-				prefix [strlen (prefix) - 3] = 0;
+			if (g_str_has_suffix ((const gchar*) bundlePath, ".app"))
+				prefix = g_strdup_printf ("%s/Contents/Resources", (const gchar*) bundlePath);
+			else {
+				prefix = g_path_get_dirname ((const char*) bundlePath);
+				if (g_str_has_suffix (prefix, "bin"))
+					prefix [strlen (prefix) - 3] = 0;
+			}
+			/*g_print ("BUNDLE=%s, prefix=%s\n", bundlePath, prefix);*/
 		}
 		else
 			g_warning ("Could not get PREFIX (using Mac OS X Carbon)");

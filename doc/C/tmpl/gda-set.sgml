@@ -225,7 +225,7 @@ Container for several values
 </para>
 
 @set: 
-@param: 
+@holder: 
 @Returns: 
 
 
@@ -257,7 +257,7 @@ Container for several values
 </para>
 
 @set: 
-@param: 
+@holder: 
 @Returns: 
 
 
@@ -275,7 +275,7 @@ Container for several values
 </para>
 
 @set: 
-@param: 
+@holder: 
 @Returns: 
 
 

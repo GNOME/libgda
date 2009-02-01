@@ -243,7 +243,7 @@ gda_meta_struct_free (mstruct);
 
 </para>
 
-@holder: 
+@column: 
 @attribute: 
 @value: 
 

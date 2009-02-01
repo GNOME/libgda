@@ -162,6 +162,7 @@ main (int argc, char *argv[])
 
 	context = g_option_context_new (_("[DSN|connection string]..."));        
 	g_option_context_add_main_entries (context, entries, GETTEXT_PACKAGE);
+	g_option_context_set_ignore_unknown_options (context, TRUE);
         if (!g_option_context_parse (context, &argc, &argv, &error)) {
                 g_fprintf  (stderr, "Can't parse arguments: %s\n", error->message);
 		return EXIT_FAILURE;
@@ -248,6 +249,9 @@ main (int argc, char *argv[])
 		ConnectionSetting *cs;
 		GdaDsnInfo *info = NULL;
 		gchar *str;
+
+		if (*argv[i] == '-')
+			continue;
 
                 info = gda_config_get_dsn_info (argv[i]);
 		if (info)
