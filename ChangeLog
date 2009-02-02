@@ -1,3 +1,16 @@
+2009-02-02  Vivien Malerba <malerba@gnome-db.org>
+
+	* tools/gda-sql.c: change the prompt from "cnc_name>" to "cnc_name[" when
+	in a transaction
+
+2009-02-02  Armin Burgmeier  <armin@openismus.com>
+
+	* libgda/gda-data-access-wrapper.c
+	(gda_data_access_wrapper_get_value_at): Don't rely on an existing
+	row for models that support both forward- and backward iteration since
+	rows are not cached in iter_row_changed_cb() in that case. Instead,
+	recreate the row to fetch the requested value.
+
 2009-02-01  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in:

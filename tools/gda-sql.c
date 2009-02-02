@@ -1067,11 +1067,19 @@ compute_prompt (SqlConsole *console, GString *string, gboolean in_command)
 	gchar *prefix = NULL;
 	ConnectionSetting *cs;
 	g_assert (string);
+	gchar suffix = '>';
 
 	g_string_set_size (string, 0);
 	cs = get_current_connection_settings (console);
-	if (cs)
+	if (cs) {
 		prefix = cs->name;
+		if (cs->cnc) {
+			GdaTransactionStatus *ts;
+			ts = gda_connection_get_transaction_status (cs->cnc);
+			if (ts)
+				suffix='[';
+		}
+	}
 	else
 		prefix = "gda";
 
@@ -1080,11 +1088,11 @@ compute_prompt (SqlConsole *console, GString *string, gboolean in_command)
 		len = strlen (prefix);
 		for (i = 0; i < len; i++)
 			g_string_append_c (string, ' ');
-		g_string_append_c (string, '>');
+		g_string_append_c (string, suffix);
 		g_string_append_c (string, ' ');		
 	}
 	else 
-		g_string_append_printf (string, "%s> ", prefix);
+		g_string_append_printf (string, "%s%c ", prefix, suffix);
 }
 
 /*

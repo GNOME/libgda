@@ -209,11 +209,6 @@ gda_data_access_wrapper_dispose (GObject *object)
 
 	/* free memory */
 	if (model->priv) {
-		if (model->priv->rows) {
-			g_hash_table_destroy (model->priv->rows);
-			model->priv->rows = NULL;
-		}
-
 		if (model->priv->iter) {
 			g_signal_handlers_disconnect_by_func (G_OBJECT (model->priv->iter),
 							      G_CALLBACK (iter_row_changed_cb), model);
@@ -512,10 +507,17 @@ gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row, G
 				}
 			}
 
-			gda_row = g_hash_table_lookup (imodel->priv->rows, GINT_TO_POINTER (row));
+			if (! (imodel->priv->model_access_flags & GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD) ||
+			    ! (imodel->priv->model_access_flags & GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD)) {
+				gda_row = g_hash_table_lookup (imodel->priv->rows, GINT_TO_POINTER (row));
 
-			if (gda_row)
+				if (gda_row)
+					return gda_row_get_value (gda_row, col);
+			}
+			else {
+				gda_row = create_new_row (imodel);
 				return gda_row_get_value (gda_row, col);
+			}
 		}
 	}
 
