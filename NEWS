@@ -1,3 +1,13 @@
+libgda 3.99.10, 2009-02-02
+
+ - corrections
+ - cleanups
+ - documentation improvements
+ - bug fixes: #568570, #568731, #568844, #561748, #568388, #486021, #143576,
+   #568484, #570220
+ - Translations:
+	- es (Jorge Gonzalez)
+
 libgda 3.99.9, 2009-01-19
 
  - corrections
