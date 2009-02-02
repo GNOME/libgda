@@ -256,9 +256,7 @@
 	gda_data_model_set_value_at
 	gda_data_model_set_values
 	gda_data_model_thaw
-	gda_data_model_to_xml_node
 	gda_data_proxy_alter_value_attributes
-	gda_data_proxy_append
 	gda_data_proxy_apply_all_changes
 	gda_data_proxy_apply_row_changes
 	gda_data_proxy_cancel_all_changes
@@ -268,7 +266,6 @@
 	gda_data_proxy_error_quark
 	gda_data_proxy_get_filtered_n_rows
 	gda_data_proxy_get_filter_expr
-	gda_data_proxy_get_model
 	gda_data_proxy_get_n_modified_rows
 	gda_data_proxy_get_n_new_rows
 	gda_data_proxy_get_proxied_model
@@ -783,8 +780,6 @@
 	gda_value_get_ushort
 	gda_value_is_null
 	gda_value_is_number
-	gda_value_list_copy
-	gda_value_list_free
 	gda_value_list_get_type
 	gda_value_new
 	gda_value_new_binary

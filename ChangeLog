@@ -1,5 +1,9 @@
 2009-02-02  Vivien Malerba <malerba@gnome-db.org>
 
+	* libgda/libgda.symbols: removed non exported symbols
+
+2009-02-02  Vivien Malerba <malerba@gnome-db.org>
+
 	* tools/gda-sql.c: change the prompt from "cnc_name>" to "cnc_name[" when
 	in a transaction
 
