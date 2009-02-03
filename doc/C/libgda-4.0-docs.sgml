@@ -1227,6 +1227,65 @@ Description for type: DROP_COLUMN
 	<link linkend="GdaReportRmlDocument">GdaReportRmlDocument</link> which both offer high level of
 	features when dealing with those XML dialects.
       </para>
+      <para>
+	From a programmer's point of view, the following code example shows how to convert the "report-spec.xml" file
+	to a "report.xml" report:
+	<programlisting>
+GdaConnection *cnc;
+GdaReportEngine *eng
+xmlDocPtr doc;
+GError *error = NULL;
+
+cnc = gda_connection_open_from_dsn (...);
+eng = gda_report_engine_new_from_file ("report-spec.xml");
+gda_report_engine_declare_object (eng, G_OBJECT (cnc), "main_cnc");
+
+doc = gda_report_engine_run_as_doc (eng, &amp;error);
+if (!doc) {
+    /* ERROR */
+}
+else {
+    xmlSaveFile ("report.xml", doc);
+    xmlFreeDoc (doc);
+}
+g_object_unref (eng);
+	</programlisting>
+	For example the XML "report-spec.xml" file could be:
+	<programlisting><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article>
+  <articleinfo>
+    <title>Customers report example</title>
+    <abstract>
+      <!-- Use the "abstract" parameter which is supposed to be defined using gda_report_engine_declare_object() -->
+      <para><gda_report_param_value param_name="abstract"/></para>
+    </abstract>
+  </articleinfo>
+
+  <!-- 
+       Start a new section, with the "customers" SELECT query, which is supposed to be defined using 
+       gda_report_engine_declare_object() 
+
+       Any <gda_report_iter> node will repeat its contents as many times as there are rows in the
+       data model returned by the "customers" SELECT query.
+    -->
+  <gda_report_section query_name="customers" cnc_name="main_cnc">
+    <sect1>
+      <!-- Will be replaced by: <title>List of customers (5)</title> if there are 5 rows for example -->
+      <title>List of customers (<gda_report_param_value param_name="customers|?nrows"/>)</title>
+
+      <!-- List all the customer's names -->
+      <ul>
+	<gda_report_iter>
+	  <li><gda_report_param_value param_name="customers|@name"/></li>
+	</gda_report_iter>
+      </ul>
+    </sect1>
+  </gda_report_section>
+</article>]]></programlisting>
+	For a more detailled example, have a look at the <filename class="directory">samples/Report</filename> of &LIBGDA;'s
+	sources.
+	</para>
     </chapter>
     <chapter>
       <title>API reference</title>

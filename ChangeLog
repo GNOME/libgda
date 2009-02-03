@@ -1,3 +1,19 @@
+2009-02-03  Vivien Malerba <malerba@gnome-db.org>
+
+	* doc/C: doc fixes, for bug #570315
+	* libgda/sql-parser/gda-sql-parser.c: allow more characters in parameter names
+	* libgda-report/engine/gda-report-engine.c:
+	* samples/Report/customers-report-spec.xml:
+	* samples/Report/customers-report-rml.rml: changed the syntax of parameters
+	to avoid SQL parsing confusions (replace "/@" by "|@", "/#" by "|#" and
+	"/%nrows" by "|?nrows")
+	* libgda/sqlite/gda-sqlite-recordset.c: debug messages
+	* libgda/gda-data-select.c: applied patch for bug #570251 (thanks Armin)
+	* libgda/gda-data-model.c: avoid calling twice g_set_error() on the same
+	GError
+	* libgda/gda-connection.c: only show database objects which are visible by
+	default in gda_connection_get_meta_store_data(), fixes bug #570396
+
 2009-02-02  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in: set version to 3.99.11

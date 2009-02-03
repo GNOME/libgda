@@ -2,11 +2,12 @@
 GdaReportDocument
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Report document
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+  The #GdaReportDocument wraps the usage of a #GdaReportEngine for specific HTML or PDF targets. This class is
+  abstract (no instance be created directly), and one of its subclasses has to be used.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

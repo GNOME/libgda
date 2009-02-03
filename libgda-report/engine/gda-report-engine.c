@@ -31,6 +31,7 @@
 #include <libgda/gda-data-handler.h>
 #include <virtual/libgda-virtual.h>
 #include <sql-parser/gda-sql-parser.h>
+#include <sql-parser/gda-sql-statement.h>
 
 #include <libgda/handlers/gda-handler-boolean.h>
 #include <libgda/handlers/gda-handler-numerical.h>
@@ -437,6 +438,7 @@ static gboolean command_gda_report_eval_expr (GdaReportEngine *engine, xmlNodePt
 static gboolean command_gda_report_if (GdaReportEngine *engine, xmlNodePtr node, GSList **created_nodes,
 				       RunContext *context, GError **error);
 
+static GdaStatement *rewrite_statement (GdaReportEngine *engine, RunContext *context, GdaStatement *stmt, GError **error);
 static gboolean assign_parameters_values (GdaReportEngine *engine, RunContext *context, GdaSet *plist, GError **error);
 static GValue *evaluate_expression (GdaReportEngine *engine, RunContext *context, const gchar *expr, GError **error);
 static xmlNodePtr value_to_node (GdaReportEngine *engine, RunContext *context, const GValue *value);
@@ -724,18 +726,26 @@ run_context_push_with_stmt (GdaReportEngine *engine, RunContext *context, GdaCon
 {
 	GdaDataModel *model;
 	GdaSet *plist;
+	GdaStatement *lstmt;
+	lstmt = rewrite_statement (engine, context, stmt, error);
+	if (!lstmt)
+		return NULL;
 
 	g_assert (cnc);
-	if (!gda_statement_get_parameters (stmt, &plist, error)) 
+	if (!gda_statement_get_parameters (lstmt, &plist, error)) {
+		g_object_unref (lstmt);
 		return NULL;
+	}
 
 	if (plist && !assign_parameters_values (engine, context, plist, error)) {
 		g_object_unref (plist);
+		g_object_unref (lstmt);
 		return NULL;
 	}
-	model = gda_connection_statement_execute_select (cnc, stmt, plist, error);
+	model = gda_connection_statement_execute_select (cnc, lstmt, plist, error);
 	if (plist)
 		g_object_unref (plist);
+	g_object_unref (lstmt);
 	if (!model) 
 		return NULL;
 	g_object_set_data_full (G_OBJECT (model), "name", g_strdup (stmt_name), g_free);
@@ -753,7 +763,7 @@ run_context_push_with_stmt (GdaReportEngine *engine, RunContext *context, GdaCon
 		return NULL;
 	}
 	gda_value_free (value);
-	name = g_strdup_printf ("%s/%%nrows", stmt_name);
+	name = g_strdup_printf ("%s|?nrows", stmt_name);
 	g_object_set_data_full (G_OBJECT (model), name, param, g_object_unref);
 	g_free (name);
 
@@ -926,6 +936,65 @@ command_gda_report_if (GdaReportEngine *engine, xmlNodePtr node, GSList **create
 	return TRUE;
 }
 
+typedef struct {
+	GdaReportEngine *engine;
+	RunContext *context;
+} ForeachData;
+
+static gboolean
+rewrite_statement_foreach_func (GdaSqlAnyPart *node, ForeachData *fdata, GError **error)
+{
+	GdaSqlParamSpec *pspec;
+	if (!node) return TRUE;
+
+	if ((node->type == GDA_SQL_ANY_EXPR) &&
+	    (pspec = ((GdaSqlExpr*) node)->param_spec)) {
+		if (pspec->g_type != 0)
+			return TRUE;
+
+		GdaHolder *source_param;
+		source_param = run_context_find_param (fdata->engine, fdata->context, pspec->name);
+		if (!source_param) {
+			g_set_error (error, 0, 0,
+				     _("Unknown parameter '%s'"), pspec->name);
+			return FALSE;
+		}
+		pspec->g_type = gda_holder_get_g_type (source_param);
+	}
+	return TRUE;
+}
+
+/*
+ * rewrite_statement
+ *
+ * If @stmt contains some variables for which the g_type is undefined, try to adjust it
+ *
+ * Returns: a new #GdaStatement if no error occurred
+ */
+static GdaStatement *
+rewrite_statement (GdaReportEngine *engine, RunContext *context,
+		   GdaStatement *stmt, GError **error)
+{
+	ForeachData fdata;
+	fdata.engine = engine;
+	fdata.context = context;
+
+	GdaSqlStatement *sql_st;
+	g_object_get (G_OBJECT (stmt), "structure", &sql_st, NULL);
+	
+	if (!gda_sql_any_part_foreach (GDA_SQL_ANY_PART (sql_st->contents),
+				       (GdaSqlForeachFunc) rewrite_statement_foreach_func, &fdata, error)) {
+		gda_sql_statement_free (sql_st);
+		return NULL;
+	}
+
+	GdaStatement *out_stmt;
+	out_stmt = (GdaStatement*) g_object_new (GDA_TYPE_STATEMENT, "structure", sql_st, NULL);
+	gda_sql_statement_free (sql_st);
+
+	return out_stmt;
+}
+
 /*
  * assign_parameters_values
  *
@@ -1036,7 +1105,14 @@ evaluate_expression (GdaReportEngine *engine, RunContext *context, const gchar *
 	stmt = gda_sql_parser_parse_string (parser, sql, NULL, error);
 	if (!stmt)
 		return NULL;
+
+	GdaStatement *lstmt;
+	lstmt = rewrite_statement (engine, context, stmt, error);
+	g_object_unref (stmt);
+	if (!lstmt)
+		return NULL;
 	
+	stmt = lstmt;
 	if (!gda_statement_get_parameters (stmt, &plist, error)) {
 		g_object_unref (stmt);
 		return NULL;
@@ -1154,7 +1230,7 @@ run_context_find_param (GdaReportEngine *engine, RunContext *context, const xmlC
 	gchar **array;
 
 	/*g_print ("%s (context=%p, name=%s) ", __FUNCTION__, context, name);*/
-	array = g_strsplit ((gchar *) name, "/", 0);
+	array = g_strsplit ((gchar *) name, "|", 0);
 	if (g_strv_length (array) == 2) {
 		gchar *model_name = array [0];
 		gchar *col_name = array [1];
@@ -1223,6 +1299,8 @@ run_context_find_connection (GdaReportEngine *engine, RunContext *context, const
 	if (name) 
 		return (GdaConnection *) gda_report_engine_find_declared_object (engine, GDA_TYPE_CONNECTION, 
 										 (gchar *) name);
-	else
+	else if (context)
 		return context->cnc;
+	else
+		return NULL;
 }

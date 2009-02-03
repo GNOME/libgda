@@ -1821,7 +1821,7 @@ gda_data_select_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 	irow = GPOINTER_TO_INT (g_hash_table_lookup (imodel->priv->index, GINT_TO_POINTER (int_row + 1)));
 	if (irow > 0)
 		prow = g_array_index (imodel->priv->rows, GdaRow *, irow - 1);
-	if (!CLASS (model)->fetch_next (imodel, &prow, int_row, NULL)) {
+	else if (!CLASS (model)->fetch_next (imodel, &prow, int_row, NULL)) {
 		/* an error occurred */
 		g_object_set (G_OBJECT (iter), "current-row", target_iter_row, NULL);
 		gda_data_model_iter_invalidate_contents (iter);
@@ -1873,7 +1873,7 @@ gda_data_select_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 	irow = GPOINTER_TO_INT (g_hash_table_lookup (imodel->priv->index, GINT_TO_POINTER (int_row + 1)));
 	if (irow > 0)
 		prow = g_array_index (imodel->priv->rows, GdaRow *, irow - 1);
-	if (!CLASS (model)->fetch_prev (imodel, &prow, int_row, NULL)) {
+	else if (!CLASS (model)->fetch_prev (imodel, &prow, int_row, NULL)) {
 		/* an error occurred */
 		g_object_set (G_OBJECT (iter), "current-row", target_iter_row, NULL);
 		gda_data_model_iter_invalidate_contents (iter);

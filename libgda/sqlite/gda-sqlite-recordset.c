@@ -170,10 +170,12 @@ read_rows_to_init_col_types (GdaSqliteRecordset *model)
 			}
 		}
 	}
-	/*
+
+#ifdef GDA_DEBUG_NO
 	if (nb_missing > 0)
 		g_print ("Hey!, some columns are still not known for prep stmt %p\n", pmodel->prep_stmt);
-	*/
+#endif
+
 	g_free (missing_cols);
 }
 

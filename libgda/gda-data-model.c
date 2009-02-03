@@ -1979,6 +1979,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 
 	gint offset = 0;
 	gint col_offset = dump_rows ? 1 : 0;
+	GdaDataModel *ramodel = NULL;
 
 	string = g_string_new ("");
 
@@ -2045,7 +2046,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 				value = gda_data_model_get_value_at (model, i, j, error);
 				if (!value) {
 					allok = FALSE;
-					break;
+					goto out;
 				}
 				str = NULL;
 				if (null_as_empty) {
@@ -2071,12 +2072,10 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 				g_free (str);
 			}
 		}
-		if (!allok)
-			break;
 	}
 	
 	/* actual dumping of the contents: title */
-	if (allok && dump_title) {
+	if (dump_title) {
 		const gchar *title;
 		title = g_object_get_data (G_OBJECT (model), "name");
 		if (title) {
@@ -2096,10 +2095,10 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 	}
 
 	/* ...column titles...*/
-	if (allok && dump_rows) 
+	if (dump_rows) 
 		g_string_append_printf (string, "%*s", cols_size [0], "#row");
 
-	for (i = 0; (i < n_cols) && allok; i++) {
+	for (i = 0; i < n_cols; i++) {
 		gint j, max;
 		str = (gchar *) gda_data_model_get_column_title (model, i);
 		if (dump_rows || (i != 0))
@@ -2119,7 +2118,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 	g_string_append_c (string, '\n');
 		
 	/* ... separation line ... */
-	for (i = 0; (i < n_cols + col_offset) && allok; i++) {
+	for (i = 0; i < n_cols + col_offset; i++) {
 		if (i != 0)
 			g_string_append_printf (string, "%s", sep_row);
 		for (j = 0; j < cols_size [i]; j++)
@@ -2128,7 +2127,6 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 	g_string_append_c (string, '\n');
 
 	/* ... and data */
-	GdaDataModel *ramodel;
 	if (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM)
 		ramodel = g_object_ref (model);
 	else {
@@ -2136,128 +2134,129 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
 				      "%s", _("Data model does not support backward cursor move, not displaying data"));
 			allok = FALSE;
+			goto out;
 		}
 		ramodel = gda_data_access_wrapper_new (model);
 	}
-	if (allok) {
-		for (j = 0; j < n_rows; j++) {
-			/* determine height for each column in that row */
-			gint *cols_height = g_new (gint, n_cols + col_offset);
-			gchar ***cols_str = g_new (gchar **, n_cols + col_offset);
-			gint k, kmax = 1;
 
-			if (dump_rows) {
-				str = g_strdup_printf ("%d", j);
-				cols_str [0] = g_strsplit (str, "\n", -1);
-				cols_height [0] = 1;
-				kmax = 1;
+	for (j = 0; j < n_rows; j++) {
+		/* determine height for each column in that row */
+		gint *cols_height = g_new (gint, n_cols + col_offset);
+		gchar ***cols_str = g_new (gchar **, n_cols + col_offset);
+		gint k, kmax = 1;
+		
+		if (dump_rows) {
+			str = g_strdup_printf ("%d", j);
+			cols_str [0] = g_strsplit (str, "\n", -1);
+			cols_height [0] = 1;
+			kmax = 1;
+		}
+		
+		for (i = 0; i < n_cols; i++) {
+			if (!dump_attributes) {
+				value = gda_data_model_get_value_at (ramodel, i, j, error);
+				if (!value) {
+					allok = FALSE;
+					goto out;
+				}
+				str = NULL;
+				if (null_as_empty) {
+					if (!value || gda_value_is_null (value))
+						str = g_strdup ("");
+				}
+				if (!str)
+					str = value ? gda_value_stringify ((GValue *)value) : g_strdup ("_null_");
 			}
-
-			for (i = 0; i < n_cols; i++) {
-				if (!dump_attributes) {
-					value = gda_data_model_get_value_at (ramodel, i, j, error);
-					if (!value) {
-						allok = FALSE;
-						break;
-					}
-					str = NULL;
-					if (null_as_empty) {
-						if (!value || gda_value_is_null (value))
-							str = g_strdup ("");
-					}
-					if (!str)
-						str = value ? gda_value_stringify ((GValue *)value) : g_strdup ("_null_");
-				}
-				else {
-					GdaValueAttribute attrs;
-					attrs = gda_data_model_get_attributes_at (ramodel, i, j);
-					str = g_strdup_printf ("%u", attrs);
-				}
-				if (str) {
-					cols_str [i + col_offset] = g_strsplit (str, "\n", -1);
-					g_free (str);
-					cols_height [i + col_offset] = g_strv_length (cols_str [i + col_offset]);
-					kmax = MAX (kmax, cols_height [i + col_offset]);
-				}
-				else {
-					cols_str [i + col_offset] = NULL;
-					cols_height [i + col_offset] = 0;
-				}
+			else {
+				GdaValueAttribute attrs;
+				attrs = gda_data_model_get_attributes_at (ramodel, i, j);
+				str = g_strdup_printf ("%u", attrs);
 			}
-			if (!allok)
-				break;
-
-			for (k = 0; k < kmax; k++) {
-				for (i = 0; i < n_cols + col_offset; i++) {
-					gboolean align_center = FALSE;
-					if (i != 0) {
+			if (str) {
+				cols_str [i + col_offset] = g_strsplit (str, "\n", -1);
+				g_free (str);
+				cols_height [i + col_offset] = g_strv_length (cols_str [i + col_offset]);
+				kmax = MAX (kmax, cols_height [i + col_offset]);
+			}
+			else {
+				cols_str [i + col_offset] = NULL;
+				cols_height [i + col_offset] = 0;
+			}
+		}
+		
+		for (k = 0; k < kmax; k++) {
+			for (i = 0; i < n_cols + col_offset; i++) {
+				gboolean align_center = FALSE;
+				if (i != 0) {
 #ifdef MULTI_LINE_NO_SEPARATOR
-						if (k != 0)
-							g_string_append_printf (string, "%s", sep_col_e);
-						else
+					if (k != 0)
+						g_string_append_printf (string, "%s", sep_col_e);
+					else
 #endif
-							g_string_append_printf (string, "%s", sep_col);
-					}
-					if (k < cols_height [i]) 
-						str = (cols_str[i])[k];
-					else {
+						g_string_append_printf (string, "%s", sep_col);
+				}
+				if (k < cols_height [i]) 
+					str = (cols_str[i])[k];
+				else {
 #ifdef MULTI_LINE_NO_SEPARATOR
-						str = "";
+					str = "";
 #else
-						if (cols_height [i] == 0)
-							str = "";
-						else
-							str = ".";
-						align_center = TRUE;
+					if (cols_height [i] == 0)
+						str = "";
+					else
+						str = ".";
+					align_center = TRUE;
 #endif
-					}
+				}
+				
+				if (cols_is_num [i])
+					g_string_append_printf (string, "%*s", cols_size [i], str);
+				else {
+					gint j, max;
+					if (str) 
+						max = cols_size [i] - g_utf8_strlen (str, -1);
+					else
+						max = cols_size [i];
 					
-					if (cols_is_num [i])
-						g_string_append_printf (string, "%*s", cols_size [i], str);
-					else {
-						gint j, max;
-						if (str) 
-							max = cols_size [i] - g_utf8_strlen (str, -1);
-						else
-							max = cols_size [i];
-
-						if (!align_center) {
-							g_string_append_printf (string, "%s", str);
-							for (j = 0; j < max; j++)
-								g_string_append_c (string, ' ');
-						}
-						else {
-							for (j = 0; j < max / 2; j++)
-								g_string_append_c (string, ' ');
-							g_string_append_printf (string, "%s", str);
-							for ( j+= g_utf8_strlen (str, -1); j < cols_size [i]; j++)
-								g_string_append_c (string, ' ');
-						}
-						/*
-						gint j, max;
-						if (str) {
-							g_string_append_printf (string, "%s", str);
-							max = cols_size [i] - g_utf8_strlen (str, -1);
-						}
-						else
-							max = cols_size [i];
+					if (!align_center) {
+						g_string_append_printf (string, "%s", str);
 						for (j = 0; j < max; j++)
 							g_string_append_c (string, ' ');
-						*/
 					}
+					else {
+						for (j = 0; j < max / 2; j++)
+							g_string_append_c (string, ' ');
+						g_string_append_printf (string, "%s", str);
+						for ( j+= g_utf8_strlen (str, -1); j < cols_size [i]; j++)
+							g_string_append_c (string, ' ');
+					}
+					/*
+					  gint j, max;
+					  if (str) {
+					  g_string_append_printf (string, "%s", str);
+					  max = cols_size [i] - g_utf8_strlen (str, -1);
+					  }
+					  else
+					  max = cols_size [i];
+					  for (j = 0; j < max; j++)
+					  g_string_append_c (string, ' ');
+					*/
 				}
-				g_string_append_c (string, '\n');
 			}
-
-			g_free (cols_height);
-			for (i = 0; i < n_cols; i++) 
-				g_strfreev (cols_str [i]);
-			g_free (cols_str);
+			g_string_append_c (string, '\n');
 		}
+		
+		g_free (cols_height);
+		for (i = 0; i < n_cols; i++) 
+			g_strfreev (cols_str [i]);
+		g_free (cols_str);
+	
 		g_string_append_printf (string, ngettext("(%d row)\n", "(%d rows)\n", n_rows), n_rows);
 	}
 
-	g_object_unref (ramodel);
+ out:
+	if (ramodel)
+		g_object_unref (ramodel);
 	g_free (cols_size);
 	g_free (cols_is_num);
 

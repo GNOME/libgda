@@ -3208,7 +3208,7 @@ prepare_meta_statements_hash (void)
 	/* GDA_CONNECTION_META_TABLES */
 	key = g_new0 (MetaKey, 1);
 	key->meta_type = GDA_CONNECTION_META_TABLES;
-	sql = "SELECT table_short_name, table_schema, table_full_name, table_owner, table_comments FROM _tables WHERE table_type LIKE '%TABLE%'";
+	sql = "SELECT table_short_name, table_schema, table_full_name, table_owner, table_comments FROM _tables WHERE table_type LIKE '%TABLE%' AND table_short_name != table_full_name";
 	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
 	if (!stmt)
 		g_error ("Could not parse internal statement: %s\n", sql);
@@ -3218,7 +3218,7 @@ prepare_meta_statements_hash (void)
 	key->meta_type = GDA_CONNECTION_META_TABLES;
 	key->nb_filters = 1;
 	key->filters = name_array;
-	sql = "SELECT table_short_name, table_schema, table_full_name, table_owner, table_comments FROM _tables WHERE table_type LIKE '%TABLE%' AND table_short_name=##name::string";
+	sql = "SELECT table_short_name, table_schema, table_full_name, table_owner, table_comments FROM _tables WHERE table_type LIKE '%TABLE%' AND table_short_name != table_full_name AND table_short_name=##name::string";
 	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
 	if (!stmt)
 		g_error ("Could not parse internal statement: %s\n", sql);
@@ -3227,7 +3227,7 @@ prepare_meta_statements_hash (void)
 	/* GDA_CONNECTION_META_VIEWS */
 	key = g_new0 (MetaKey, 1);
 	key->meta_type = GDA_CONNECTION_META_VIEWS;
-	sql = "SELECT t.table_short_name, t.table_schema, t.table_full_name, t.table_owner, t.table_comments, v.view_definition FROM _views as v NATURAL JOIN _tables as t";
+	sql = "SELECT t.table_short_name, t.table_schema, t.table_full_name, t.table_owner, t.table_comments, v.view_definition FROM _views as v NATURAL JOIN _tables as t WHERE t.table_short_name != t.table_full_name";
 	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
 	if (!stmt)
 		g_error ("Could not parse internal statement: %s\n", sql);
@@ -3237,7 +3237,7 @@ prepare_meta_statements_hash (void)
 	key->meta_type = GDA_CONNECTION_META_VIEWS;
 	key->nb_filters = 1;
 	key->filters = name_array;
-	sql = "SELECT t.table_short_name, t.table_schema, t.table_full_name, t.table_owner, t.table_comments, v.view_definition FROM _views as v NATURAL JOIN _tables as t WHERE table_short_name=##name::string";
+	sql = "SELECT t.table_short_name, t.table_schema, t.table_full_name, t.table_owner, t.table_comments, v.view_definition FROM _views as v NATURAL JOIN _tables as t WHERE t.table_short_name != t.table_full_name AND table_short_name=##name::string";
 	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
 	if (!stmt)
 		g_error ("Could not parse internal statement: %s\n", sql);
@@ -3253,8 +3253,6 @@ prepare_meta_statements_hash (void)
 	if (!stmt)
 		g_error ("Could not parse internal statement: %s\n", sql);
 	g_hash_table_insert (h, key, stmt);
-
-	
 
 	return h;
 }

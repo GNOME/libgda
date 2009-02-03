@@ -915,6 +915,7 @@ gda_get_default_handler
 <SECTION>
 <FILE>gda-report-engine</FILE>
 <TITLE>GdaReportEngine</TITLE>
+<INCLUDE>gda-report-engine.h</INCLUDE>
 GdaReportEngine
 gda_report_engine_new
 gda_report_engine_new_from_string

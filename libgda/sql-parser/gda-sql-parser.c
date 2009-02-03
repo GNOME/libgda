@@ -1304,7 +1304,9 @@ getToken (GdaSqlParser *parser)
 		break;
 	case '#': {
 		if (z[1] == '#') {
-			for (i=2; (z[i]) && (IdChar (z[i]) || (z[i] == '+') || (z[i] == '-') || (z[i] == '.') || (z[i] == ':')) &&
+			for (i=2; (z[i]) && 
+				     (IdChar (z[i]) || (z[i] == '+') || (z[i] == '-') || (z[i] == '.') || (z[i] == ':') || 
+				      (z[i] == '|') || (z[i] == '@') || (z[i] == '?')) &&
 				     (z[i] != '/') && (z[i] != parser->priv->context->delimiter)
 				     /*(!isspace (z[i])) && (z[i] != '/') && 
 				       (z[i] != parser->priv->context->delimiter)*/; i++) {}

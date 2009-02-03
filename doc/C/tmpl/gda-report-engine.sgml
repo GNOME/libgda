@@ -6,9 +6,9 @@ Low level report generator based on XML
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-The #GdaReportEngine object generates a report based on a specifications file in any XML format. It browses
-through the XML file and replaces some parts of it depending on some &lt;gda_report...&gt; nodes. The generated
-XML file may then need to be processed using other post-processor tools depending on the XML file format.
+  The #GdaReportEngine object generates a report based on a specifications file in any XML format. It browses
+  through the XML file and replaces the parts of it which are &lt;gda_report...&gt; action nodes. The generated
+  XML file may then need to be processed using other post-processor tools depending on the XML file format.
 </para>
 <para>
   The following "action" tags known are:
@@ -29,13 +29,24 @@ XML file may then need to be processed using other post-processor tools dependin
 	    <para>Starts a section which runs a SELECT query to generate a data model (#GdaDataModel).
 	    </para>
 	    <para>
-	      A parameter named &quot;&lt;query_name&gt;/%%nrows&quot; is created and is available in any sub node
+	      A parameter named &quot;&lt;query_name&gt;|?nrows&quot; is created and is available in any sub node
 	      of the &lt;gda_report_section&gt; node, which contains the number of rows in the section's data model.
 	    </para>
 	  </entry>
-          <entry>"query_name": the name of a SELECT #GdaQuery to be run; using this attribute implies that a GdaQuery has
-	    already been created and that the query has been declared to the GdaReportEngine object with the "query_name "name. 
-	    To define a query within the report spec., add a &lt;gda_report_query&gt; sub node instead</entry>
+          <entry>
+	    <itemizedlist>
+	      <listitem><para>"query_name": the name of a SELECT #GdaStatement to be run; using this attribute
+		  implies that a GdaStatement has
+		  already been created and that the query has been declared to the GdaReportEngine object
+		  with the "query_name "name. 
+		  To define a query within the report spec., add a &lt;gda_report_query&gt;
+		  sub node instead
+	      </para></listitem>
+	      <listitem><para>"cnc_name": name of the connection to use (the #GdaConnection object has
+		  already been created and has been declared to the GdaReportEngine object with the "cnc_name" name)
+	      </para></listitem>
+	    </itemizedlist>
+	  </entry>
           <entry>
 	    <itemizedlist>
 	      <listitem><para>&lt;gda_report_query&gt; to define the SELECT query which will be run. It is also
@@ -56,9 +67,9 @@ XML file may then need to be processed using other post-processor tools dependin
 	    </para>
 	    <para>
 	      For each column of the data model, several parameters are created, named 
-	      &lt;query_name&gt;/@&lt;column_name&gt; (such as &quot;customers/@@name&quot; for the &quot;name&quot; column)
-	      and &lt;query_name&gt;/#&lt;column_number&gt;,
-	      (such as &quot;customers/##0&quot; for the first column). 
+	      &lt;query_name&gt;|@&lt;column_name&gt; (such as &quot;customers|@@name&quot; for the &quot;name&quot; column)
+	      and &lt;query_name&gt;|#&lt;column_number&gt;,
+	      (such as &quot;customers|##0&quot; for the first column). 
 	      Those parameters can be used in any child node (recusively),
 	      and have their value updated for each row of the data model.
 	      For more information about the parameter's syntax, 
@@ -77,11 +88,7 @@ XML file may then need to be processed using other post-processor tools dependin
 	      <listitem><para>"cnc_name": name of the connection to use (the #GdaConnection object has
 		  already been created and has been declared to the GdaReportEngine object with the "cnc_name" name)
 	      </para></listitem>
-	      <listitem><para>"dict_name": name of the dictionary object to use (the #GdaDict object has
-		  already been created and has been declared to the GdaReportEngine object with the "dict_name" name)
-	      </para></listitem>
 	    </itemizedlist>
-	    Note that the "query_name" attribute is mandatory and that one of "cnc_name" and "dict_name" must be specified.
 	  </entry>
           <entry></entry>
         </row>
@@ -98,9 +105,9 @@ XML file may then need to be processed using other post-processor tools dependin
 	  and can contain any reference to any parameter. For example the node:
 	    <programlisting><![CDATA[
 <gda_report_expr>
-##customers/@col IS NULL
+##customers|@col IS NULL
 </gda_report_expr>]]></programlisting>
-	    will return a TRUE value if the parameter named &quot;customers/@@col&quot; is not NULL. For more
+	    will return a TRUE value if the parameter named &quot;customers|@@col&quot; is not NULL. For more
 	    information about the parameter's syntax, see the <link linkend="SQL_queries">GDA SQL query syntax</link>.
 	  </entry>
           <entry></entry>

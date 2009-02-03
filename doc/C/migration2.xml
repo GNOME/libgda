@@ -6,7 +6,7 @@
 	<listitem><para>easier to understand and to use API, with less strange path usage (which were inherited
 	from modifications above modifications where no global coherence was adressed)</para></listitem>
 	<listitem><para>reduce the size of the library (now 1.3M compared to 1.7M once stripped) and the number of symbols 
-	    (860 compared to 1420) and have less complicated and thus more maintanable code (190 files compared to 250).
+	    (845 compared to 1420) and have less complicated and thus more maintanable code (190 files compared to 250).
 	</para></listitem>
 	<listitem><para>removal of the GdaClient object from which connections were created: this object did not offer
 	    any significant features and made the API more difficult to use</para></listitem>
@@ -82,6 +82,23 @@
 	    data model which can (after having provided some information) be modified using the traditional
 	    <link linkend="GdaDataModel">GdaDataModel</link>'s data modification methods (modifications are
 	    translated into INSERT, UPDATE or DELETE statements).</para></listitem>
+      </itemizedlist>
+    </para>
+  </sect1> 
+
+<sect1 id="migration-2-report"><title>Reports</title>
+    <para>
+      &LIBGDA;'s reports API has not changed, but the syntax of the XML nodes specific to &LIBGDA; (those nodes are
+      replaced by contents when the report is generated) has changed:
+      <itemizedlist>
+	<listitem><para>The parameter name to acces a data model's column name by its name 
+	    is now &lt;query_name&gt;|@&lt;column_name&gt;
+	    instead of &lt;query_name&gt;/@&lt;column_name&gt;</para></listitem>
+	<listitem><para>The parameter name to acces a data model's column name by its index
+	    is now &lt;query_name&gt;|#&lt;column_index&gt;
+	    instead of &lt;query_name&gt;/#&lt;column_index&gt;</para></listitem>
+	<listitem><para>The parameter name to acces the total number of rows of a data model is now
+	    &lt;query_name&gt;|?nrows instead of &lt;query_name&gt;/%nrows</para></listitem>
       </itemizedlist>
     </para>
   </sect1>  
