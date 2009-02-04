@@ -2250,9 +2250,8 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 		for (i = 0; i < n_cols; i++) 
 			g_strfreev (cols_str [i]);
 		g_free (cols_str);
-	
-		g_string_append_printf (string, ngettext("(%d row)\n", "(%d rows)\n", n_rows), n_rows);
 	}
+	g_string_append_printf (string, ngettext("(%d row)\n", "(%d rows)\n", n_rows), n_rows);
 
  out:
 	if (ramodel)

@@ -1,3 +1,11 @@
+2009-02-04  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-data-model.c: fixed a bug where the number of rows was printed
+	after every line in gda_data_model_dump()
+	* WixInstaller: moved to installers/WindowsWix
+	* installers: new directory to store information and scripts about OS
+	specific installers
+
 2009-02-03  Vivien Malerba <malerba@gnome-db.org>
 
 	* doc/C: doc fixes, for bug #570315
