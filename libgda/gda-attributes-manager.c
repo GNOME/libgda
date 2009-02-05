@@ -118,8 +118,26 @@ gda_attributes_manager_new (gboolean for_objects, GdaAttributesManagerSignal sig
 }
 
 static void
-foreach_destroy_func (gpointer ptr, ObjAttrs *attrs, gpointer data)
+obj_destroyed_cb (ObjAttrs *attrs, GObject *where_the_object_was)
 {
+	GdaMutex *mutex;
+
+	/* rem: we need to keep a pointer to mutex because attrs may be destroyed
+	 * in g_hash_table_remove */
+	mutex = attrs->mgr->mutex;
+
+	gda_mutex_lock (mutex);
+	attrs->objects = g_slist_remove (attrs->objects, where_the_object_was);
+	g_hash_table_remove (attrs->mgr->obj_hash, where_the_object_was);
+	gda_mutex_unlock (mutex);
+}
+
+static void
+foreach_destroy_func (gpointer ptr, ObjAttrs *attrs, GdaAttributesManager *mgr)
+{
+	if (mgr->for_objects)
+		g_object_weak_unref (G_OBJECT (ptr), 
+				     (GWeakNotify) obj_destroyed_cb, attrs);
 	attrs->objects = g_slist_remove (attrs->objects, ptr);
 }
 
@@ -135,18 +153,11 @@ gda_attributes_manager_free (GdaAttributesManager *mgr)
 	GdaMutex *mutex;
 	mutex = mgr->mutex;
 	gda_mutex_lock (mutex);
-	g_hash_table_foreach (mgr->obj_hash, (GHFunc) foreach_destroy_func, NULL);
+	g_hash_table_foreach (mgr->obj_hash, (GHFunc) foreach_destroy_func, mgr);
 	g_hash_table_destroy (mgr->obj_hash);
 	g_free (mgr);
 	gda_mutex_unlock (mutex);
 	gda_mutex_free (mutex);
-}
-
-static void
-obj_destroyed_cb (ObjAttrs *attrs, GObject *where_the_object_was)
-{
-	attrs->objects = g_slist_remove (attrs->objects, where_the_object_was);
-	g_hash_table_remove (attrs->mgr->obj_hash, where_the_object_was);
 }
 
 typedef struct {
