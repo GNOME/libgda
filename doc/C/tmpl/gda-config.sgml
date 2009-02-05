@@ -33,6 +33,9 @@ g_object_new (GDA_TYPE_CONFIG, "user-file", "my_file", NULL);
   instance. Note that setting either of these properties to <literal>NULL</literal> will disable using the corresponding
   configuration file (DSN will exist only in memory and their definition will be lost when the application finishes).
 </para>
+<para>
+  The #GdaConfig object implements its own locking mechanism so it is thread-safe.
+</para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
@@ -101,6 +104,10 @@ g_object_new (GDA_TYPE_CONFIG, "user-file", "my_file", NULL);
 @cnc_string: 
 @auth_string: 
 @is_system: 
+@_gda_reserved1: 
+@_gda_reserved2: 
+@_gda_reserved3: 
+@_gda_reserved4: 
 
 <!-- ##### FUNCTION gda_config_get_dsn_info ##### -->
 <para>
@@ -192,6 +199,10 @@ g_object_new (GDA_TYPE_CONFIG, "user-file", "my_file", NULL);
 @description: 
 @dsn_params: 
 @auth_params: 
+@_gda_reserved1: 
+@_gda_reserved2: 
+@_gda_reserved3: 
+@_gda_reserved4: 
 
 <!-- ##### FUNCTION gda_config_get_provider_info ##### -->
 <para>

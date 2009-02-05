@@ -35,6 +35,12 @@ struct _GdaXsltExCont
 	GdaConnection *cnc;
 	GHashTable    *query_hash;
 	GError        *error;
+
+	/* Padding for future expansion */
+	gpointer _gda_reserved1;
+	gpointer _gda_reserved2;
+	gpointer _gda_reserved3;
+	gpointer _gda_reserved4;
 };
 typedef struct _GdaXsltExCont GdaXsltExCont;
 

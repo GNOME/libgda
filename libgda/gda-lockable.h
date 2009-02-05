@@ -30,13 +30,13 @@ G_BEGIN_DECLS
 #define GDA_TYPE_LOCKABLE            (gda_lockable_get_type())
 #define GDA_LOCKABLE(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_LOCKABLE, GdaLockable))
 #define GDA_IS_LOCKABLE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_LOCKABLE))
-#define GDA_LOCKABLE_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_INTERFACE ((obj), GDA_TYPE_LOCKABLE, GdaLockableClass))
+#define GDA_LOCKABLE_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_INTERFACE ((obj), GDA_TYPE_LOCKABLE, GdaLockableIface))
 
-typedef struct _GdaLockableClass   GdaLockableClass;
+typedef struct _GdaLockableIface   GdaLockableIface;
 typedef struct _GdaLockable        GdaLockable;
 
 /* struct for the interface */
-struct _GdaLockableClass {
+struct _GdaLockableIface {
 	GTypeInterface           g_iface;
 
 	/* virtual table */

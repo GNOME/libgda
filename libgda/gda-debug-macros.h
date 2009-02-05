@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 Vivien Malerba
+ * Copyright (C) 2007 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -30,9 +30,6 @@
 #define D_COL_H2 "\033[;36;4m"
 #define D_COL_OK "\033[;32m"
 #define D_COL_ERR "\033[;31;1m"
-#define AAA(X) (g_print (D_COL_H1 "DEBUG MARK %d\n" D_COL_NOR, X))
-#define DEBUG_HEADER (g_print (D_COL_H0 "====================== %s %s():%d ======================\n" D_COL_NOR, __FILE__, __FUNCTION__, __LINE__))
-#define DEBUG_HEADER_STR(str) (g_print (D_COL_H0 "====================== %s %s %s():%d ======================\n" D_COL_NOR, (str), __FILE__, __FUNCTION__, __LINE__))
 #endif
 
 #ifndef TO_IMPLEMENT

@@ -443,7 +443,6 @@ gda_sql_function_free (GdaSqlFunction *function)
 {
 	if (!function) return;
 
-	gda_sql_function_check_clean (function);
 	g_free (function->function_name);
 	if (function->args_list) {
 		g_slist_foreach (function->args_list, (GFunc) gda_sql_expr_free, NULL);
@@ -480,7 +479,6 @@ gda_sql_function_copy (GdaSqlFunction *function)
 		}
 		copy->args_list = g_slist_reverse (copy->args_list);
 	}
-	copy->validity_meta_function = function->validity_meta_function;
 
 	return copy;
 }

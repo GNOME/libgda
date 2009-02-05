@@ -1,6 +1,6 @@
 /* gda-handler-numerical.h
  *
- * Copyright (C) 2003 - 2008 Vivien Malerba
+ * Copyright (C) 2003 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -40,7 +40,6 @@ typedef struct _GdaHandlerNumericalPriv  GdaHandlerNumericalPriv;
 struct _GdaHandlerNumerical
 {
 	GObject                   object;
-
 	GdaHandlerNumericalPriv  *priv;
 };
 
@@ -48,6 +47,10 @@ struct _GdaHandlerNumerical
 struct _GdaHandlerNumericalClass
 {
 	GObjectClass              parent_class;
+
+	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
 };
 
 

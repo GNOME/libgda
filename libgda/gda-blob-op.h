@@ -1,5 +1,5 @@
 /* GDA Common Library
- * Copyright (C) 2007 The GNOME Foundation.
+ * Copyright (C) 2007 - 2009 The GNOME Foundation.
  *
  * Authors:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -38,6 +38,9 @@ G_BEGIN_DECLS
 
 struct _GdaBlobOp {
 	GObject object;
+
+	/* Padding for future expansion */
+	gpointer _gda_reserved1;
 };
 
 struct _GdaBlobOpClass {
@@ -48,6 +51,12 @@ struct _GdaBlobOpClass {
 	glong    (* read)       (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size);
 	glong    (* write)      (GdaBlobOp *op, GdaBlob *blob, glong offset);
 	gboolean (* write_all)  (GdaBlobOp *op, GdaBlob *blob);
+
+	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
+	void (*_gda_reserved3) (void);
+	void (*_gda_reserved4) (void);
 };
 
 GType    gda_blob_op_get_type  (void) G_GNUC_CONST;

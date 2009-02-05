@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 Vivien Malerba
+ * Copyright (C) 2007 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -36,6 +36,10 @@ struct _GdaSqlStatementInsert {
 	GSList                 *fields_list; /* list of GdaSqlField structures */
 	GSList                 *values_list; /* list of list of GdaSqlExpr */
 	GdaSqlAnyPart          *select; /* SELECT OR COMPOUND statements: GdaSqlStatementSelect or GdaSqlStatementCompound */
+
+	/* Padding for future expansion */
+	gpointer         _gda_reserved1;
+	gpointer         _gda_reserved2;
 };
 
 /*

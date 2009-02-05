@@ -142,6 +142,12 @@ typedef struct {
 	/* augmenting information precision using a dictionary */
 	GdaSqlForeachFunc     check_structure_func;
 	GdaSqlForeachFunc     check_validity_func;
+
+	/* Padding for future expansion */
+	gpointer         _gda_reserved1;
+	gpointer         _gda_reserved2;
+	gpointer         _gda_reserved3;
+	gpointer         _gda_reserved4;
 } GdaSqlStatementContentsInfo;
 
 /*
@@ -152,6 +158,12 @@ typedef struct {
 	GdaConnection *cnc;
 	GdaMetaStore  *store;
 	GdaMetaStruct *mstruct;
+
+	/* Padding for future expansion */
+	gpointer         _gda_reserved1;
+	gpointer         _gda_reserved2;
+	gpointer         _gda_reserved3;
+	gpointer         _gda_reserved4;
 } GdaSqlStatementCheckValidityData;
 
 #endif

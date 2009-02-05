@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+ * Copyright (C) 1998 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -50,6 +50,12 @@ struct _GdaColumnClass {
 	/* signals */
 	void (* name_changed)   (GdaColumn *column, const gchar *old_name);
 	void (* g_type_changed) (GdaColumn *column, GType old_type, GType new_type);
+
+	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
+	void (*_gda_reserved3) (void);
+	void (*_gda_reserved4) (void);
 };
 
 GType           gda_column_get_type           (void) G_GNUC_CONST;

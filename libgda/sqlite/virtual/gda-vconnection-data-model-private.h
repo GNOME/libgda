@@ -33,6 +33,9 @@ typedef struct {
 	GList                       *columns;
 	gchar                       *table_name;
 	gchar                       *unique_name;
+
+	gpointer _gda_reserved_1;
+	gpointer _gda_reserved_2;
 } GdaVConnectionTableData;
 
 void                     gda_vconnection_data_model_table_data_free (GdaVConnectionTableData *td);

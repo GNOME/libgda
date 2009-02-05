@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 - 2008 Vivien Malerba
+ * Copyright (C) 2007 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -30,6 +30,10 @@ struct _GdaSqlStatement {
 	GdaSqlStatementType  stmt_type;
 	gpointer             contents; /* depends on stmt_type */
 	GdaMetaStruct       *validity_meta_struct; /* set when gda_sql_statement_check_validity() was last called */
+
+	/* Padding for future expansion */
+	gpointer         _gda_reserved1;
+	gpointer         _gda_reserved2;
 };
 
 GdaSqlStatement             *gda_sql_statement_new       (GdaSqlStatementType type);

@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2008 The GNOME Foundation.
+ * Copyright (C) 2008 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -57,6 +57,12 @@ struct _GdaXaTransaction {
 
 struct _GdaXaTransactionClass {
 	GObjectClass             parent_class;
+
+	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
+	void (*_gda_reserved3) (void);
+	void (*_gda_reserved4) (void);
 };
 
 struct _GdaXaTransactionId {

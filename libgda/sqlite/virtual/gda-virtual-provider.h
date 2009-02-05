@@ -1,5 +1,5 @@
 /* GDA virtual provider (based on SQLite)
- * Copyright (C) 2007 The GNOME Foundation.
+ * Copyright (C) 2007 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -46,6 +46,10 @@ struct _GdaVirtualProvider {
 
 struct _GdaVirtualProviderClass {
 	GdaSqliteProviderClass      parent_class;
+
+	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
 };
 
 GType          gda_virtual_provider_get_type          (void) G_GNUC_CONST;

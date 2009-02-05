@@ -1,3 +1,24 @@
+2009-02-05  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-attributes-manager.c: added locking in case several threads use
+	the same GdaAttributeManager at the same time, this may be the problem for
+	Anjuta bug #569399
+	* doc/C: doc. improvements
+	* libgda/gda-data-access-wrapper.c: when data model being wrapped does not have
+	random access but still can iter forward and backward, then use a pool of GdaRow
+	of limited size instead of keeping all the read rows in memory
+	* libgda/gda-connection.c:
+	* providers/postgres/gda-postgres-provider.c:
+	* libgda/sqlite/gda-sqlite-provider.c:
+	* providers/mysql/gda-mysql-provider.c:
+	* providers/skel-implementation/capi/gda-capi-provider.c: when calling the
+	statement_execute() virtual method, the requested data model's access mode
+	is checked and altered in GdaConnection to have a common behaviour.
+	* other files:
+	  - s/GdaLockableClass/GdaLockableIface/
+	  - s/GdaDataModelClass/GdaDataModelIface/
+	  - added padding for future expansion to guarantee ABI stability
+
 2009-02-04  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-data-model.c: fixed a bug where the number of rows was printed

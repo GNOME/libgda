@@ -58,7 +58,7 @@ static void gda_data_proxy_get_property (GObject *object,
 					 GValue *value,
 					 GParamSpec *pspec);
 /* GdaDataModel interface */
-static void                 gda_data_proxy_data_model_init (GdaDataModelClass *iface);
+static void                 gda_data_proxy_data_model_init (GdaDataModelIface *iface);
 
 static gint                 gda_data_proxy_get_n_rows      (GdaDataModel *model);
 static gint                 gda_data_proxy_get_n_columns   (GdaDataModel *model);
@@ -681,7 +681,7 @@ gda_data_proxy_class_init (GdaDataProxyClass *klass)
 }
 
 static void
-gda_data_proxy_data_model_init (GdaDataModelClass *iface)
+gda_data_proxy_data_model_init (GdaDataModelIface *iface)
 {
 	iface->i_get_n_rows = gda_data_proxy_get_n_rows;
 	iface->i_get_n_columns = gda_data_proxy_get_n_columns;

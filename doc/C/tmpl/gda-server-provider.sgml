@@ -145,6 +145,22 @@ for more information.
 @routine_col: 
 @_routine_par: 
 @routine_par: 
+@_gda_reserved1: 
+@_gda_reserved2: 
+@_gda_reserved3: 
+@_gda_reserved4: 
+@_gda_reserved5: 
+@_gda_reserved6: 
+@_gda_reserved7: 
+@_gda_reserved8: 
+@_gda_reserved9: 
+@_gda_reserved10: 
+@_gda_reserved11: 
+@_gda_reserved12: 
+@_gda_reserved13: 
+@_gda_reserved14: 
+@_gda_reserved15: 
+@_gda_reserved16: 
 
 <!-- ##### USER_FUNCTION GdaServerProviderAsyncCallback ##### -->
 <para>

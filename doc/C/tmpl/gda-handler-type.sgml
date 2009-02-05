@@ -31,6 +31,8 @@ Default handler for GType values
 </para>
 
 @parent_class: 
+@_gda_reserved1: 
+@_gda_reserved2: 
 
 <!-- ##### STRUCT GdaHandlerTypePriv ##### -->
 <para>

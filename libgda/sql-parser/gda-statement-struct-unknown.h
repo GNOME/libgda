@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 Vivien Malerba
+ * Copyright (C) 2007 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -31,6 +31,10 @@
 struct _GdaSqlStatementUnknown {
 	GdaSqlAnyPart  any;
 	GSList        *expressions; /* list of GdaSqlExpr pointers */
+
+	/* Padding for future expansion */
+	gpointer         _gda_reserved1;
+	gpointer         _gda_reserved2;
 };
 
 /*

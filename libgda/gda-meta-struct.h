@@ -1,6 +1,6 @@
 /* gda-meta-struct.h
  *
- * Copyright (C) 2008 Vivien Malerba
+ * Copyright (C) 2008 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -56,6 +56,12 @@ struct _GdaMetaStruct
 struct _GdaMetaStructClass
 {
 	GObjectClass              parent_class;
+
+	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
+	void (*_gda_reserved3) (void);
+	void (*_gda_reserved4) (void);
 };
 
 /*
@@ -101,6 +107,12 @@ typedef struct {
 	/* Foreign keys */
 	GSList       *reverse_fk_list; /* list of GdaMetaTableForeignKey where @depend_on == this GdaMetaDbObject */
 	GSList       *fk_list; /* list of GdaMetaTableForeignKey where @meta_table == this GdaMetaDbObject */
+
+	/* Padding for future expansion */
+	gpointer _gda_reserved1;
+	gpointer _gda_reserved2;
+	gpointer _gda_reserved3;
+	gpointer _gda_reserved4;
 } GdaMetaTable;
 
 /**
@@ -111,6 +123,12 @@ typedef struct {
 	GdaMetaTable  table;
 	gchar        *view_def;
 	gboolean      is_updatable;
+
+	/* Padding for future expansion */
+	gpointer _gda_reserved1;
+	gpointer _gda_reserved2;
+	gpointer _gda_reserved3;
+	gpointer _gda_reserved4;
 } GdaMetaView;
 
 /*
@@ -135,6 +153,12 @@ typedef struct {
 	gchar                  *obj_owner;
 
 	GSList                 *depend_list; /* list of GdaMetaDbObject pointers on which this object depends */
+
+	/* Padding for future expansion */
+	gpointer _gda_reserved1;
+	gpointer _gda_reserved2;
+	gpointer _gda_reserved3;
+	gpointer _gda_reserved4;
 } GdaMetaDbObject;
 #define GDA_META_DB_OBJECT(x) ((GdaMetaDbObject*)(x))
 #define GDA_META_TABLE(dbobj) (&((dbobj)->extra.meta_table))
@@ -147,6 +171,12 @@ typedef struct {
 	gboolean      pkey;
 	gboolean      nullok;
 	gchar        *default_value;
+
+	/* Padding for future expansion */
+	gpointer _gda_reserved1;
+	gpointer _gda_reserved2;
+	gpointer _gda_reserved3;
+	gpointer _gda_reserved4;
 } GdaMetaTableColumn;
 #define GDA_META_TABLE_COLUMN(x) ((GdaMetaTableColumn*)(x))
 const GValue *gda_meta_table_column_get_attribute (GdaMetaTableColumn *tcol, const gchar *attribute);
@@ -173,6 +203,12 @@ typedef struct {
 	gchar           **fk_names_array; /* FK fields names */
 	gint             *ref_pk_cols_array; /* Ref PK fields index */
 	gchar           **ref_pk_names_array; /* Ref PK fields names */
+
+	/* Padding for future expansion */
+	gpointer _gda_reserved1;
+	gpointer _gda_reserved2;
+	gpointer _gda_reserved3;
+	gpointer _gda_reserved4;
 } GdaMetaTableForeignKey;
 #define GDA_META_TABLE_FOREIGN_KEY(x) ((GdaMetaTableForeignKey*)(x))
 

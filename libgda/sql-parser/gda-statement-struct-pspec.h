@@ -37,6 +37,10 @@ struct _GdaSqlParamSpec
 
 	GType     g_type;
 	gpointer  validity_meta_dict; /* to be replaced with a pointer to a structure representing a DBMS data type in GdaMetaStruct */
+
+	/* Padding for future expansion */
+	gpointer         _gda_reserved1;
+	gpointer         _gda_reserved2;
 };
 GdaSqlParamSpec *gda_sql_param_spec_new        (GValue *simple_spec);
 GdaSqlParamSpec *gda_sql_param_spec_copy       (GdaSqlParamSpec *pspec);

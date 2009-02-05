@@ -33,6 +33,8 @@ The #GdaVproviderDataModel provider to use to create such connection objects.
 @data_model: 
 @create_columns_func: 
 @create_model_func: 
+@_gda_reserved1: 
+@_gda_reserved2: 
 
 <!-- ##### USER_FUNCTION GdaVconnectionDataModelCreateColumnsFunc ##### -->
 <para>

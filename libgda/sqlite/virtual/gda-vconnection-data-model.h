@@ -1,5 +1,5 @@
 /* GDA
- * Copyright (C) 2007 The GNOME Foundation.
+ * Copyright (C) 2007 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -45,6 +45,10 @@ struct _GdaVconnectionDataModelSpec {
 	GdaDataModel                             *data_model;
 	GdaVconnectionDataModelCreateColumnsFunc  create_columns_func;
 	GdaVconnectionDataModelCreateModelFunc    create_model_func;
+
+	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
 };
 #define GDA_VCONNECTION_DATA_MODEL_SPEC(x) ((GdaVconnectionDataModelSpec*)(x))
 
@@ -57,6 +61,10 @@ struct _GdaVconnectionDataModel {
 
 struct _GdaVconnectionDataModelClass {
 	GdaVirtualConnectionClass       parent_class;
+
+	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
 };
 
 GType               gda_vconnection_data_model_get_type  (void) G_GNUC_CONST;

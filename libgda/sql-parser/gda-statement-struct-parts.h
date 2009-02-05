@@ -52,6 +52,10 @@ struct _GdaSqlExpr {
 	GdaSqlCase      *case_s;
 
 	gchar           *cast_as;
+
+	/* Padding for future expansion */
+	gpointer         _gda_reserved1;
+	gpointer         _gda_reserved2;
 };
 GdaSqlExpr      *gda_sql_expr_new            (GdaSqlAnyPart *parent);
 void             gda_sql_expr_free           (GdaSqlExpr *expr);
@@ -70,6 +74,10 @@ struct _GdaSqlField {
 
 	/* validity check with a connection */
 	GdaMetaTableColumn *validity_meta_table_column;
+
+	/* Padding for future expansion */
+	gpointer         _gda_reserved1;
+	gpointer         _gda_reserved2;
 };
 GdaSqlField     *gda_sql_field_new            (GdaSqlAnyPart *parent);
 void             gda_sql_field_free           (GdaSqlField *field);
@@ -89,6 +97,10 @@ struct _GdaSqlTable
 
 	/* validity check with a connection */
 	GdaMetaDbObject    *validity_meta_object;
+
+	/* Padding for future expansion */
+	gpointer         _gda_reserved1;
+	gpointer         _gda_reserved2;
 };
 
 GdaSqlTable     *gda_sql_table_new            (GdaSqlAnyPart *parent);
@@ -107,8 +119,9 @@ struct _GdaSqlFunction {
 	gchar              *function_name;
 	GSList             *args_list;
 
-	/* validity check with a connection */
-	gpointer            validity_meta_function; /* to be replaced with a pointer to a structure representing a DBMS data type in GdaMetaStruct */
+	/* Padding for future expansion */
+	gpointer         _gda_reserved1;
+	gpointer         _gda_reserved2;
 };
 
 GdaSqlFunction  *gda_sql_function_new            (GdaSqlAnyPart *parent);
@@ -162,6 +175,10 @@ struct _GdaSqlOperation {
 	GdaSqlAnyPart       any;
 	GdaSqlOperatorType  operator_type;
 	GSList             *operands;
+
+	/* Padding for future expansion */
+	gpointer         _gda_reserved1;
+	gpointer         _gda_reserved2;
 };
 
 GdaSqlOperation  *gda_sql_operation_new            (GdaSqlAnyPart *parent);
@@ -181,6 +198,10 @@ struct _GdaSqlCase
 	GSList          *when_expr_list;
 	GSList          *then_expr_list;
 	GdaSqlExpr      *else_expr;
+
+	/* Padding for future expansion */
+	gpointer         _gda_reserved1;
+	gpointer         _gda_reserved2;
 };
 
 GdaSqlCase        *gda_sql_case_new            (GdaSqlAnyPart *parent);
@@ -202,6 +223,10 @@ struct _GdaSqlSelectField
 	/* validity check with a connection */
 	GdaMetaDbObject    *validity_meta_object;
 	GdaMetaTableColumn *validity_meta_table_column;
+
+	/* Padding for future expansion */
+	gpointer         _gda_reserved1;
+	gpointer         _gda_reserved2;
 };
 
 GdaSqlSelectField *gda_sql_select_field_new            (GdaSqlAnyPart *parent);
@@ -226,6 +251,10 @@ struct _GdaSqlSelectTarget
 
 	/* validity check with a connection */
 	GdaMetaDbObject    *validity_meta_object;
+
+	/* Padding for future expansion */
+	gpointer         _gda_reserved1;
+	gpointer         _gda_reserved2;
 };
 
 GdaSqlSelectTarget *gda_sql_select_target_new            (GdaSqlAnyPart *parent);
@@ -256,6 +285,10 @@ struct _GdaSqlSelectJoin
 	gint                  position; /* between a target at (pos < @position) and the one @position */
 	GdaSqlExpr           *expr;
 	GSList               *use;
+
+	/* Padding for future expansion */
+	gpointer         _gda_reserved1;
+	gpointer         _gda_reserved2;
 };
 
 GdaSqlSelectJoin  *gda_sql_select_join_new            (GdaSqlAnyPart *parent);
@@ -274,6 +307,10 @@ struct _GdaSqlSelectFrom
 	GdaSqlAnyPart    any;
 	GSList          *targets; 
 	GSList          *joins; 
+
+	/* Padding for future expansion */
+	gpointer         _gda_reserved1;
+	gpointer         _gda_reserved2;
 };
 
 GdaSqlSelectFrom  *gda_sql_select_from_new            (GdaSqlAnyPart *parent);
@@ -293,6 +330,10 @@ struct _GdaSqlSelectOrder
 	GdaSqlExpr      *expr; 
 	gboolean         asc;
 	gchar           *collation_name;
+
+	/* Padding for future expansion */
+	gpointer         _gda_reserved1;
+	gpointer         _gda_reserved2;
 };
 
 GdaSqlSelectOrder *gda_sql_select_order_new            (GdaSqlAnyPart *parent);

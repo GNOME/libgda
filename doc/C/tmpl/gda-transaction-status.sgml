@@ -55,8 +55,8 @@ Keeps track of the transactional status of a connection
 @trans: 
 @type: 
 @conn_event: 
-@reserved1: 
-@reserved2: 
+@_gda_reserved1: 
+@_gda_reserved2: 
 
 <!-- ##### ENUM GdaTransactionStatusEventType ##### -->
 <para>

@@ -1,6 +1,6 @@
 /* gda-holder.h
  *
- * Copyright (C) 2003 - 2006 Vivien Malerba
+ * Copyright (C) 2003 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -58,6 +58,12 @@ struct _GdaHolderClass
 	void                     (*source_changed)   (GdaHolder *holder);
 	GError                  *(*validate_change)  (GdaHolder *holder, const GValue *new_value);
 	void                     (*att_changed)      (GdaHolder *holder, const gchar *att_name, const GValue *att_value);
+
+	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
+	void (*_gda_reserved3) (void);
+	void (*_gda_reserved4) (void);
 };
 
 GType               gda_holder_get_type                (void) G_GNUC_CONST;

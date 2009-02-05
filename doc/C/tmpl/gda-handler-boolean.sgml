@@ -29,6 +29,8 @@ Default handler for booleans
 </para>
 
 @parent_class: 
+@_gda_reserved1: 
+@_gda_reserved2: 
 
 <!-- ##### STRUCT GdaHandlerBooleanPriv ##### -->
 <para>

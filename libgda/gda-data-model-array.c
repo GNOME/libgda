@@ -58,7 +58,7 @@ static void gda_data_model_array_get_property (GObject *object, guint prop_id, G
 static GObjectClass *parent_class = NULL;
 
 /* GdaDataModel interface */
-static void                 gda_data_model_array_data_model_init (GdaDataModelClass *iface);
+static void                 gda_data_model_array_data_model_init (GdaDataModelIface *iface);
 static gint                 gda_data_model_array_get_n_rows      (GdaDataModel *model);
 static gint                 gda_data_model_array_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_model_array_describe_column (GdaDataModel *model, gint col);
@@ -82,7 +82,7 @@ static gboolean             gda_data_model_array_get_notify      (GdaDataModel *
  */
 
 static void
-gda_data_model_array_data_model_init (GdaDataModelClass *iface)
+gda_data_model_array_data_model_init (GdaDataModelIface *iface)
 {
         iface->i_get_n_rows = gda_data_model_array_get_n_rows;
         iface->i_get_n_columns = gda_data_model_array_get_n_columns;

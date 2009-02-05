@@ -37,7 +37,7 @@ G_BEGIN_DECLS
 #define GDA_TYPE_DATA_MODEL            (gda_data_model_get_type())
 #define GDA_DATA_MODEL(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_DATA_MODEL, GdaDataModel))
 #define GDA_IS_DATA_MODEL(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_DATA_MODEL))
-#define GDA_DATA_MODEL_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_INTERFACE ((obj), GDA_TYPE_DATA_MODEL, GdaDataModelClass))
+#define GDA_DATA_MODEL_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_INTERFACE ((obj), GDA_TYPE_DATA_MODEL, GdaDataModelIface))
 
 /* error reporting */
 extern GQuark gda_data_model_error_quark (void);
@@ -79,7 +79,7 @@ typedef enum {
 } GdaDataModelError;
 
 /* struct for the interface */
-struct _GdaDataModelClass {
+struct _GdaDataModelIface {
 	GTypeInterface           g_iface;
 
 	/* virtual table */

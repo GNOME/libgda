@@ -84,6 +84,9 @@ ALTER GROUP mygroup ADD USER ##name::gchararray;
 <para>
   The #GdaSqlParser object internally uses a LEMON generated parser (the same as the one used by SQLite).
 </para>
+<para>
+  The #GdaConnection object implements its own locking mechanism so it is thread-safe.
+</para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>

@@ -1,5 +1,5 @@
 /* GDA
- * Copyright (C) 2007 The GNOME Foundation.
+ * Copyright (C) 2007 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -46,6 +46,12 @@ struct _GdaVconnectionHub {
 
 struct _GdaVconnectionHubClass {
 	GdaVconnectionDataModelClass parent_class;
+
+	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
+	void (*_gda_reserved3) (void);
+	void (*_gda_reserved4) (void);
 };
 
 GType               gda_vconnection_hub_get_type       (void) G_GNUC_CONST;

@@ -1,5 +1,5 @@
 /* GDA Common Library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2002 The GNOME Foundation.
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -17,8 +17,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_log_h__)
-#  define __gda_log_h__
+#ifndef __GDA_LOG_H__
+#define __GDA_LOG_H__
 
 #include <glib.h>
 #include <time.h>

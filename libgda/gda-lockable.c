@@ -33,7 +33,7 @@ gda_lockable_get_type (void)
 
 	if (G_UNLIKELY (type == 0)) {
 		static const GTypeInfo info = {
-			sizeof (GdaLockableClass),
+			sizeof (GdaLockableIface),
 			(GBaseInitFunc) gda_lockable_class_init,
 			(GBaseFinalizeFunc) NULL,
 			(GClassInitFunc) NULL,

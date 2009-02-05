@@ -1,6 +1,6 @@
 /* gda-data-model-iter.h
  *
- * Copyright (C) 2005 - 2008 Vivien Malerba
+ * Copyright (C) 2005 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -57,6 +57,12 @@ struct _GdaDataModelIterClass
 
 	void                    (* row_changed)      (GdaDataModelIter *iter, gint row);
 	void                    (* end_of_data)      (GdaDataModelIter *iter);
+
+	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
+	void (*_gda_reserved3) (void);
+	void (*_gda_reserved4) (void);
 };
 
 GType             gda_data_model_iter_get_type             (void) G_GNUC_CONST;

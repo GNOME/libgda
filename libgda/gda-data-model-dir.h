@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 2007 - 2008 The GNOME Foundation.
+ * Copyright (C) 2007 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -44,6 +44,12 @@ struct _GdaDataModelDir {
 
 struct _GdaDataModelDirClass {
 	GObjectClass            parent_class;
+
+	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
+	void (*_gda_reserved3) (void);
+	void (*_gda_reserved4) (void);
 };
 
 GType         gda_data_model_dir_get_type     (void) G_GNUC_CONST;

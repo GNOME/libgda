@@ -79,7 +79,7 @@ gda_data_model_get_type (void)
 
 	if (G_UNLIKELY (type == 0)) {
 		static const GTypeInfo info = {
-			sizeof (GdaDataModelClass),
+			sizeof (GdaDataModelIface),
 			(GBaseInitFunc) gda_data_model_class_init,
 			(GBaseFinalizeFunc) NULL,
 			(GClassInitFunc) NULL,
@@ -117,7 +117,7 @@ gda_data_model_class_init (gpointer g_class)
 			g_signal_new ("changed",
 				      GDA_TYPE_DATA_MODEL,
 				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelClass, changed),
+				      G_STRUCT_OFFSET (GdaDataModelIface, changed),
 				      NULL, NULL,
 				      g_cclosure_marshal_VOID__VOID,
 				      G_TYPE_NONE, 0);
@@ -132,7 +132,7 @@ gda_data_model_class_init (gpointer g_class)
 			g_signal_new ("row-inserted",
 				      GDA_TYPE_DATA_MODEL,
 				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelClass, row_inserted),
+				      G_STRUCT_OFFSET (GdaDataModelIface, row_inserted),
 				      NULL, NULL,
 				      g_cclosure_marshal_VOID__INT,
 				      G_TYPE_NONE, 1, G_TYPE_INT);
@@ -147,7 +147,7 @@ gda_data_model_class_init (gpointer g_class)
 			g_signal_new ("row-updated",
 				      GDA_TYPE_DATA_MODEL,
 				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelClass, row_updated),
+				      G_STRUCT_OFFSET (GdaDataModelIface, row_updated),
 				      NULL, NULL,
 				      g_cclosure_marshal_VOID__INT,
 				      G_TYPE_NONE, 1, G_TYPE_INT);
@@ -162,7 +162,7 @@ gda_data_model_class_init (gpointer g_class)
 			g_signal_new ("row-removed",
 				      GDA_TYPE_DATA_MODEL,
 				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelClass, row_removed),
+				      G_STRUCT_OFFSET (GdaDataModelIface, row_removed),
 				      NULL, NULL,
 				      g_cclosure_marshal_VOID__INT,
 				      G_TYPE_NONE, 1, G_TYPE_INT);
@@ -177,7 +177,7 @@ gda_data_model_class_init (gpointer g_class)
 			g_signal_new ("reset",
 				      GDA_TYPE_DATA_MODEL,
 				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelClass, reset),
+				      G_STRUCT_OFFSET (GdaDataModelIface, reset),
 				      NULL, NULL,
 				      g_cclosure_marshal_VOID__VOID,
 				      G_TYPE_NONE, 0);

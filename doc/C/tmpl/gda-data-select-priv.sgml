@@ -43,6 +43,10 @@ Base class for all the data models returned by DBMS providers when a SELECT stat
 @fetch_next: virtual method which must be implemented when access method is GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD
 @fetch_prev: virtual method which must be implemented when access method is GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD
 @fetch_at: virtual method which can be implemented when access method is GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD or GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD
+@_gda_reserved1: 
+@_gda_reserved2: 
+@_gda_reserved3: 
+@_gda_reserved4: 
 
 <!-- ##### FUNCTION gda_data_select_take_row ##### -->
 <para>

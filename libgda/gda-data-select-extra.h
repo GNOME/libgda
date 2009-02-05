@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 2008 The GNOME Foundation.
+ * Copyright (C) 2008 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -52,6 +52,12 @@ typedef struct {
 	GHashTable             *ins_stmts; /* key = a gboolean vector with TRUEs when the column is used, value = an INSERT GdaStatement  */
 	GdaStatement           *one_row_select_stmt; /* used to retreive one row after an UPDATE
 						      * or INSERT operation */
+
+	/* Padding for future expansion */
+	gpointer _gda_reserved1;
+	gpointer _gda_reserved2;
+	gpointer _gda_reserved3;
+	gpointer _gda_reserved4;
 } GdaDataSelectInternals;
 
 GdaDataSelectInternals *_gda_data_select_internals_steal (GdaDataSelect *model);

@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 Vivien Malerba
+ * Copyright (C) 2007 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -44,6 +44,10 @@ struct _GdaSqlStatementCompound {
 	GdaSqlAnyPart                any;
 	GdaSqlStatementCompoundType  compound_type;
 	GSList                      *stmt_list; /* list of SELECT or COMPOUND statements */
+
+	/* Padding for future expansion */
+	gpointer         _gda_reserved1;
+	gpointer         _gda_reserved2;
 };
 
 /*

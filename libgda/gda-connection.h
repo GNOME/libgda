@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2008 The GNOME Foundation.
+ * Copyright (C) 1998 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -72,6 +72,12 @@ struct _GdaConnectionClass {
         void   (*conn_closed)               (GdaConnection *obj);
 	void   (*dsn_changed)               (GdaConnection *obj);
 	void   (*transaction_status_changed)(GdaConnection *obj);
+
+	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
+	void (*_gda_reserved3) (void);
+	void (*_gda_reserved4) (void);
 };
 
 typedef enum {

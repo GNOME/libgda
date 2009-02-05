@@ -1,6 +1,6 @@
 /* gda-batch.h
  *
- * Copyright (C) 2007 - 2008 Vivien Malerba
+ * Copyright (C) 2007 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -50,6 +50,12 @@ struct _GdaBatchClass
 
 	/* signals */
 	void   (*changed) (GdaBatch *batch, GdaStatement *changed_stmt);
+
+	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
+	void (*_gda_reserved3) (void);
+	void (*_gda_reserved4) (void);
 };
 
 GType              gda_batch_get_type               (void) G_GNUC_CONST;

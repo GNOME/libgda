@@ -14,6 +14,9 @@ Management of connections to data sources
 <para>
   Use the connection object to execute statements, use transactions, get meta data information, ...
 </para>
+<para>
+  The #GdaConnection object implements its own locking mechanism so it is thread-safe.
+</para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>

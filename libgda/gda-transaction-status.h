@@ -62,8 +62,8 @@ struct _GdaTransactionStatusEvent {
 	} pl;
 	GdaConnectionEvent           *conn_event;
 
-	gpointer  reserved1;
-	gpointer  reserved2;
+	gpointer  _gda_reserved1;
+	gpointer  _gda_reserved2;
 };
 
 struct _GdaTransactionStatus {
@@ -73,11 +73,19 @@ struct _GdaTransactionStatus {
 	GdaTransactionIsolation    isolation_level;
 	GdaTransactionStatusState  state;
 	GList                     *events;
+
+	gpointer  _gda_reserved1;
+	gpointer  _gda_reserved2;
 };
 
 struct _GdaTransactionStatusClass {
 	GObjectClass             parent_class;
-	gpointer                 reserved[10];
+
+	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
+	void (*_gda_reserved3) (void);
+	void (*_gda_reserved4) (void);
 };
 
 GType                 gda_transaction_status_get_type (void) G_GNUC_CONST;

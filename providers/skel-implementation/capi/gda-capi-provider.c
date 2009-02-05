@@ -1011,10 +1011,6 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
                 return NULL;
 	}
 
-	if (! (model_usage & GDA_STATEMENT_MODEL_RANDOM_ACCESS) &&
-            ! (model_usage & GDA_STATEMENT_MODEL_CURSOR_FORWARD))
-                model_usage |= GDA_STATEMENT_MODEL_RANDOM_ACCESS;
-	
         allow_noparam = (model_usage & GDA_STATEMENT_MODEL_ALLOW_NOPARAM) &&
                 (gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_SELECT);
 	

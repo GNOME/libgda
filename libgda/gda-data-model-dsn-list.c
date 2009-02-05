@@ -42,7 +42,7 @@ static void gda_data_model_dsn_list_init       (GdaDataModelDsnList *model,
 static void gda_data_model_dsn_list_dispose    (GObject *object);
 
 /* GdaDataModel interface */
-static void                 gda_data_model_dsn_list_data_model_init (GdaDataModelClass *iface);
+static void                 gda_data_model_dsn_list_data_model_init (GdaDataModelIface *iface);
 static gint                 gda_data_model_dsn_list_get_n_rows      (GdaDataModel *model);
 static gint                 gda_data_model_dsn_list_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_model_dsn_list_describe_column (GdaDataModel *model, gint col);
@@ -61,7 +61,7 @@ static void dsn_changed_cb (GdaConfig *conf, GdaDsnInfo *info, GdaDataModelDsnLi
  * Object init and finalize
  */
 static void
-gda_data_model_dsn_list_data_model_init (GdaDataModelClass *iface)
+gda_data_model_dsn_list_data_model_init (GdaDataModelIface *iface)
 {
         iface->i_get_n_rows = gda_data_model_dsn_list_get_n_rows;
         iface->i_get_n_columns = gda_data_model_dsn_list_get_n_columns;

@@ -87,7 +87,7 @@ static void gda_connection_get_property (GObject *object,
 					 GParamSpec *pspec);
 
 /* GdaLockable interface */
-static void                 gda_connection_lockable_init (GdaLockableClass *iface);
+static void                 gda_connection_lockable_init (GdaLockableIface *iface);
 static void                 gda_connection_lock      (GdaLockable *lockable);
 static gboolean             gda_connection_trylock   (GdaLockable *lockable);
 static void                 gda_connection_unlock    (GdaLockable *lockable);
@@ -260,7 +260,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
 }
 
 static void
-gda_connection_lockable_init (GdaLockableClass *iface)
+gda_connection_lockable_init (GdaLockableIface *iface)
 {
 	iface->i_lock = gda_connection_lock;
 	iface->i_trylock = gda_connection_trylock;
@@ -1530,6 +1530,11 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
 		*last_inserted_row = NULL;
 	if (cnc->priv->auto_clear_events_list)
 		_clear_events_list (cnc);
+
+	if (! (model_usage & GDA_STATEMENT_MODEL_RANDOM_ACCESS) &&
+	    ! (model_usage & GDA_STATEMENT_MODEL_CURSOR_FORWARD))
+		model_usage |= GDA_STATEMENT_MODEL_RANDOM_ACCESS;
+
 	obj = PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, cnc, stmt, params, 
 								       model_usage, types, last_inserted_row, 
 								       NULL, NULL, NULL, error);
@@ -1780,6 +1785,11 @@ gda_connection_statement_execute_select_fullv (GdaConnection *cnc, GdaStatement 
 	gda_connection_lock ((GdaLockable*) cnc);
 	if (cnc->priv->auto_clear_events_list)
 		_clear_events_list (cnc);
+
+	if (! (model_usage & GDA_STATEMENT_MODEL_RANDOM_ACCESS) &&
+	    ! (model_usage & GDA_STATEMENT_MODEL_CURSOR_FORWARD))
+		model_usage |= GDA_STATEMENT_MODEL_RANDOM_ACCESS;
+
 	model = (GdaDataModel *) PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, 
 											  cnc, stmt, params, model_usage, 
 											  types, NULL, NULL, 
@@ -1836,6 +1846,11 @@ gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *
 	gda_connection_lock ((GdaLockable*) cnc);
 	if (cnc->priv->auto_clear_events_list)
 		_clear_events_list (cnc);
+	
+	if (! (model_usage & GDA_STATEMENT_MODEL_RANDOM_ACCESS) &&
+	    ! (model_usage & GDA_STATEMENT_MODEL_CURSOR_FORWARD))
+		model_usage |= GDA_STATEMENT_MODEL_RANDOM_ACCESS;
+
 	model = (GdaDataModel *) PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, 
 											  cnc, stmt, params, 
 											  model_usage, col_types, NULL, 

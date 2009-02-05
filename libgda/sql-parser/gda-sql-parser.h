@@ -71,6 +71,10 @@ typedef struct _GdaSqlParserIface
 {
 	GdaSqlParser    *parser;
 	GdaSqlStatement *parsed_statement;
+
+	/* Padding for future expansion */
+	gpointer         _gda_reserved1;
+	gpointer         _gda_reserved2;
 } GdaSqlParserIface;
 
 /* struct for the object's class */
@@ -90,6 +94,12 @@ struct _GdaSqlParserClass
 	void (*parser_trace) (void*, char *);
 	void (*parser_parse) (void*, int, GValue *, GdaSqlParserIface *);	
 	gint *parser_tokens_trans;
+
+	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
+	void (*_gda_reserved3) (void);
+	void (*_gda_reserved4) (void);
 };
 
 GType               gda_sql_parser_get_type               (void) G_GNUC_CONST;

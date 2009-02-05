@@ -32,6 +32,7 @@
 #include <libgda/gda-holder.h>
 
 
+#define ROWS_POOL_SIZE 50
 struct _GdaDataAccessWrapperPrivate {
 	GdaDataModel     *model;
 	GdaDataModelAccessFlags model_access_flags;
@@ -43,6 +44,10 @@ struct _GdaDataAccessWrapperPrivate {
 	gint              nb_cols; /* number of columns of @model */
 	gint              last_row;/* row number of the last row which has been read */
 	gboolean          end_of_data; /* TRUE if the end of the data model has been reached by the iterator */
+
+	GArray           *rows_buffer_array; /* Array of GdaRow */
+	GArray           *rows_buffer_index; /* Array of indexes: GdaRow at index i in @rows_buffer_array
+					      * is indexed in @rows with key rows_buffer_index[i] */
 };
 
 /* properties */
@@ -68,7 +73,7 @@ static void gda_data_access_wrapper_get_property (GObject *object,
 						    GParamSpec *pspec);
 
 /* GdaDataModel interface */
-static void                 gda_data_access_wrapper_data_model_init (GdaDataModelClass *iface);
+static void                 gda_data_access_wrapper_data_model_init (GdaDataModelIface *iface);
 static gint                 gda_data_access_wrapper_get_n_rows      (GdaDataModel *model);
 static gint                 gda_data_access_wrapper_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_access_wrapper_describe_column (GdaDataModel *model, gint col);
@@ -145,7 +150,7 @@ gda_data_access_wrapper_class_init (GdaDataAccessWrapperClass *klass)
 }
 
 static void
-gda_data_access_wrapper_data_model_init (GdaDataModelClass *iface)
+gda_data_access_wrapper_data_model_init (GdaDataModelIface *iface)
 {
 	iface->i_get_n_rows = gda_data_access_wrapper_get_n_rows;
 	iface->i_get_n_columns = gda_data_access_wrapper_get_n_columns;
@@ -180,6 +185,9 @@ gda_data_access_wrapper_init (GdaDataAccessWrapper *model, GdaDataAccessWrapperC
 	model->priv->iter_row = -1; /* because model->priv->iter does not yet exist */
 	model->priv->rows = NULL;
 	model->priv->end_of_data = FALSE;
+	
+	model->priv->rows_buffer_array = NULL;
+	model->priv->rows_buffer_index = NULL;
 }
 
 static void
@@ -235,6 +243,16 @@ gda_data_access_wrapper_dispose (GObject *object)
 			}
 			g_object_unref (model->priv->model);
 			model->priv->model = NULL;
+		}
+
+		if (model->priv->rows_buffer_array) {
+			g_array_free (model->priv->rows_buffer_array, TRUE);
+			model->priv->rows_buffer_array = NULL;
+		}
+
+		if (model->priv->rows_buffer_index) {
+			g_array_free (model->priv->rows_buffer_index, TRUE);
+			model->priv->rows_buffer_index = NULL;
 		}
 	}
 
@@ -515,7 +533,36 @@ gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row, G
 					return gda_row_get_value (gda_row, col);
 			}
 			else {
-				gda_row = create_new_row (imodel);
+				/* in this case iter can be moved forward and backward at will => we only
+				 * need to keep a pool of GdaRow for performances reasons */
+				gda_row = g_hash_table_lookup (imodel->priv->rows, GINT_TO_POINTER (row));
+
+				if (!gda_row) {
+					if (! imodel->priv->rows_buffer_array) {
+						imodel->priv->rows_buffer_array = g_array_sized_new (FALSE, FALSE, 
+												     sizeof (GdaRow*),
+												     ROWS_POOL_SIZE);
+						imodel->priv->rows_buffer_index = g_array_sized_new (FALSE, FALSE, 
+												     sizeof (gint), 
+												     ROWS_POOL_SIZE);
+					}
+					else if (imodel->priv->rows_buffer_array->len == ROWS_POOL_SIZE) {
+						/* get rid of the oldest row (was model's index_row row)*/
+						gint index_row;
+
+						index_row = g_array_index (imodel->priv->rows_buffer_index, gint,
+									   ROWS_POOL_SIZE - 1);
+						g_array_remove_index (imodel->priv->rows_buffer_array,
+								      ROWS_POOL_SIZE - 1);
+						g_array_remove_index (imodel->priv->rows_buffer_index,
+								      ROWS_POOL_SIZE - 1);
+						g_hash_table_remove (imodel->priv->rows, GINT_TO_POINTER (index_row));
+					}
+
+					gda_row = create_new_row (imodel);
+					g_array_prepend_val (imodel->priv->rows_buffer_array, gda_row);
+					g_array_prepend_val (imodel->priv->rows_buffer_index, imodel->priv->iter_row);
+				}
 				return gda_row_get_value (gda_row, col);
 			}
 		}
@@ -545,7 +592,6 @@ iter_row_changed_cb (GdaDataModelIter *iter, gint row, GdaDataAccessWrapper *mod
 			gda_row = g_hash_table_lookup (model->priv->rows, GINT_TO_POINTER (row));
 			if (!gda_row) {
 				create_new_row (model);
-				/*gda_object_dump (model, 10);*/
 			}
 		}
 	}

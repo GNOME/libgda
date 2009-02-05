@@ -447,7 +447,7 @@ gda_server_operation_get_type
 
 <SECTION>
 <FILE>gda-server-operation-nodes</FILE>
-<TITLE>GdaServerOperation's individual nodes</TITLE>
+<TITLE>GdaServerOperation individual nodes</TITLE>
 GdaServerOperationNodeType
 GdaServerOperationNodeStatus
 GdaServerOperationNode
@@ -460,7 +460,7 @@ gda_server_operation_get_node_path_portion
 
 <SECTION>
 <FILE>gda-server-operation-sequences</FILE>
-<TITLE>GdaServerOperation's sequences</TITLE>
+<TITLE>GdaServerOperation sequences</TITLE>
 gda_server_operation_get_sequence_name
 gda_server_operation_get_sequence_size
 gda_server_operation_get_sequence_max_size

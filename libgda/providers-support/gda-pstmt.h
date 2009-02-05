@@ -50,10 +50,20 @@ struct _GdaPStmt {
         GType        *types; /* array of ncols types */
 	GSList       *tmpl_columns; /* list of #GdaColumn objects which data models created from this prep. statement
 				     * can copy */
+
+	/* Padding for future expansion */
+	gpointer         _gda_reserved1;
+	gpointer         _gda_reserved2;
 };
 
 struct _GdaPStmtClass {
 	GObjectClass  parent_class;
+
+	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
+	void (*_gda_reserved3) (void);
+	void (*_gda_reserved4) (void);
 };
 
 GType         gda_pstmt_get_type          (void) G_GNUC_CONST;

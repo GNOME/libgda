@@ -1,6 +1,6 @@
 /* gda-statement-extra.h
  *
- * Copyright (C) 2005 - 2007 Vivien Malerba
+ * Copyright (C) 2005 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -76,6 +76,16 @@ struct _GdaSqlRenderingContext {
 	GdaSqlRenderingFunc      render_select_join;
 	GdaSqlRenderingFunc      render_select_from;
 	GdaSqlRenderingFunc      render_select_order;
+
+	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
+	void (*_gda_reserved3) (void);
+	void (*_gda_reserved4) (void);
+	void (*_gda_reserved5) (void);
+	void (*_gda_reserved6) (void);
+	void (*_gda_reserved7) (void);
+	void (*_gda_reserved8) (void);
 };
 
 gchar *gda_statement_to_sql_real (GdaStatement *stmt, GdaSqlRenderingContext *context, GError **error);

@@ -37,6 +37,10 @@ typedef struct {
         gboolean  in_param_spec;
         gint      block_level;
 	gboolean  ignore_semi; /* ignore any SEMI untill the next END statement where block_level==0 */
+
+	/* Padding for future expansion */
+	gpointer _gda_reserved1;
+	gpointer _gda_reserved2;
 } TokenizerContext;
 
 struct _GdaSqlParserPrivate {
@@ -63,6 +67,10 @@ struct _GdaSqlParserPrivate {
         /* modes */
         GdaSqlParserMode     mode;
 	GdaSqlParserFlavour flavour;
+
+	/* Padding for future expansion */
+	gpointer _gda_reserved1;
+	gpointer _gda_reserved2;
 };
 
 G_END_DECLS

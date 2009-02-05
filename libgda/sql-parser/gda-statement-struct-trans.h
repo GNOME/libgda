@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 Vivien Malerba
+ * Copyright (C) 2007 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -34,6 +34,10 @@ struct _GdaSqlStatementTransaction {
 	GdaTransactionIsolation isolation_level;
 	gchar                  *trans_mode; /* DEFERRED, IMMEDIATE, EXCLUSIVE, READ_WRITE, READ_ONLY */
 	gchar                  *trans_name;
+
+	/* Padding for future expansion */
+	gpointer         _gda_reserved1;
+	gpointer         _gda_reserved2;
 };
 
 /*

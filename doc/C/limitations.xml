@@ -20,6 +20,8 @@
 		some database providers may impose other limitations (inherited from the database's specific client APIs)
 		such as only one thread can use the connection object, or even that only one thread can use the database
 		provider.</para></listitem>
+	    <listitem><para>Any <link linkend="GdaAttributesManager">GdaAttributesManager</link> can safely be accessed from
+		any thread.</para></listitem>
 	  </itemizedlist>
 	</para>
 	

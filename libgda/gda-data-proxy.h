@@ -1,6 +1,6 @@
 /* gda-data-proxy.h
  *
- * Copyright (C) 2005 - 2008 Vivien Malerba
+ * Copyright (C) 2005 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -69,6 +69,12 @@ struct _GdaDataProxyClass
 	void                 (* row_changes_applied)  (GdaDataProxy *proxy, gint row, gint proxied_row);
 
 	void                 (* filter_changed)       (GdaDataProxy *proxy);
+
+	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
+	void (*_gda_reserved3) (void);
+	void (*_gda_reserved4) (void);
 };
 
 GType             gda_data_proxy_get_type                 (void) G_GNUC_CONST;

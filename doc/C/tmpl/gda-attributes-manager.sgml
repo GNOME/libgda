@@ -24,6 +24,9 @@ Manager for lists of attributes
 <para>
   Attibute names can be any string, but &LIBGDA; reserves some for its own usage, see below.
 </para>
+<para>
+  The #GdaAttributesManager implements its own locking mechanism so it is thread-safe.
+</para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>

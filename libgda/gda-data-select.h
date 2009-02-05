@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 2008 The GNOME Foundation.
+ * Copyright (C) 2008 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -61,6 +61,12 @@ struct _GdaDataSelect {
 	GdaPStmt         *prep_stmt; /* use the "prepared-stmt" property to set this */
 	gint              nb_stored_rows; /* number of GdaRow objects currently stored */
 	gint              advertized_nrows; /* set when the number of rows becomes known, -1 untill then */
+
+	/* Padding for future expansion */
+	gpointer _gda_reserved1;
+	gpointer _gda_reserved2;
+	gpointer _gda_reserved3;
+	gpointer _gda_reserved4;
 };
 
 /*
@@ -87,6 +93,12 @@ struct _GdaDataSelectClass {
 	gboolean         (*fetch_next)    (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
 	gboolean         (*fetch_prev)    (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
 	gboolean         (*fetch_at)      (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
+
+	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
+	void (*_gda_reserved3) (void);
+	void (*_gda_reserved4) (void);
 };
 
 GType          gda_data_select_get_type                     (void) G_GNUC_CONST;

@@ -152,6 +152,10 @@ gda_meta_struct_free (mstruct);
 @obj_full_name: 
 @obj_owner: 
 @depend_list: 
+@_gda_reserved1: 
+@_gda_reserved2: 
+@_gda_reserved3: 
+@_gda_reserved4: 
 
 <!-- ##### MACRO GDA_META_DB_OBJECT ##### -->
 <para>
@@ -187,6 +191,10 @@ gda_meta_struct_free (mstruct);
 @pk_cols_nb: 
 @reverse_fk_list: 
 @fk_list: 
+@_gda_reserved1: 
+@_gda_reserved2: 
+@_gda_reserved3: 
+@_gda_reserved4: 
 
 <!-- ##### STRUCT GdaMetaView ##### -->
 <para>
@@ -196,6 +204,10 @@ gda_meta_struct_free (mstruct);
 @table: 
 @view_def: 
 @is_updatable: 
+@_gda_reserved1: 
+@_gda_reserved2: 
+@_gda_reserved3: 
+@_gda_reserved4: 
 
 <!-- ##### STRUCT GdaMetaTableColumn ##### -->
 <para>
@@ -208,6 +220,10 @@ gda_meta_struct_free (mstruct);
 @pkey: 
 @nullok: 
 @default_value: 
+@_gda_reserved1: 
+@_gda_reserved2: 
+@_gda_reserved3: 
+@_gda_reserved4: 
 
 <!-- ##### MACRO GDA_META_TABLE_COLUMN ##### -->
 <para>
@@ -270,6 +286,10 @@ gda_meta_struct_free (mstruct);
 @fk_names_array: 
 @ref_pk_cols_array: 
 @ref_pk_names_array: 
+@_gda_reserved1: 
+@_gda_reserved2: 
+@_gda_reserved3: 
+@_gda_reserved4: 
 
 <!-- ##### MACRO GDA_META_TABLE_FOREIGN_KEY ##### -->
 <para>

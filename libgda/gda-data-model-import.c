@@ -156,7 +156,7 @@ static void gda_data_model_import_get_property (GObject *object,
 						GParamSpec *pspec);
 
 /* GdaDataModel interface */
-static void                 gda_data_model_import_data_model_init (GdaDataModelClass *iface);
+static void                 gda_data_model_import_data_model_init (GdaDataModelIface *iface);
 static gint                 gda_data_model_import_get_n_rows      (GdaDataModel *model);
 static gint                 gda_data_model_import_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_model_import_describe_column (GdaDataModel *model, gint col);
@@ -253,7 +253,7 @@ gda_data_model_import_class_init (GdaDataModelImportClass *klass)
 }
 
 static void
-gda_data_model_import_data_model_init (GdaDataModelClass *iface)
+gda_data_model_import_data_model_init (GdaDataModelIface *iface)
 {
 	iface->i_get_n_rows = gda_data_model_import_get_n_rows;
 	iface->i_get_n_columns = gda_data_model_import_get_n_columns;

@@ -249,7 +249,6 @@ static gboolean foreach_check_validity (GdaSqlAnyPart *node, GdaSqlStatementChec
 static gboolean gda_sql_expr_check_validity (GdaSqlExpr *expr, GdaSqlStatementCheckValidityData *data, GError **error);
 static gboolean gda_sql_field_check_validity (GdaSqlField *field, GdaSqlStatementCheckValidityData *data, GError **error);
 static gboolean gda_sql_table_check_validity (GdaSqlTable *table, GdaSqlStatementCheckValidityData *data, GError **error);
-static gboolean gda_sql_function_check_validity (GdaSqlFunction *function, GdaSqlStatementCheckValidityData *data, GError **error);
 static gboolean gda_sql_select_field_check_validity (GdaSqlSelectField *field, GdaSqlStatementCheckValidityData *data, GError **error);
 static gboolean gda_sql_select_target_check_validity (GdaSqlSelectTarget *target, GdaSqlStatementCheckValidityData *data, GError **error);
 
@@ -369,7 +368,7 @@ foreach_check_validity (GdaSqlAnyPart *node, GdaSqlStatementCheckValidityData *d
 				function->function_name = NULL;
 			}
 		}
-		return gda_sql_function_check_validity (function, data, error);
+		return TRUE;
 	}
 	case GDA_SQL_ANY_SQL_SELECT_FIELD: {
 		GdaSqlSelectField *field = (GdaSqlSelectField*) node;
@@ -622,22 +621,6 @@ gda_sql_table_check_clean (GdaSqlTable *table)
 }
 
 static gboolean
-gda_sql_function_check_validity (GdaSqlFunction *function, GdaSqlStatementCheckValidityData *data, GError **error)
-{
-	if (!function) return TRUE;
-
-        TO_IMPLEMENT;
-        return TRUE;
-}
-
-void
-gda_sql_function_check_clean (GdaSqlFunction *function)
-{
-	if (!function) return;
-	function->validity_meta_function = NULL;
-}
-
-static gboolean
 gda_sql_select_field_check_validity (GdaSqlSelectField *field, GdaSqlStatementCheckValidityData *data, GError **error)
 {
 	GValue value;
@@ -807,9 +790,6 @@ foreach_check_clean (GdaSqlAnyPart *node, gpointer data, GError **error)
 		break;
 	case GDA_SQL_ANY_SQL_TABLE:
 		gda_sql_table_check_clean ((GdaSqlTable*) node);
-		break;
-	case GDA_SQL_ANY_SQL_FUNCTION:
-		gda_sql_function_check_clean ((GdaSqlFunction*) node);
 		break;
 	case GDA_SQL_ANY_SQL_SELECT_FIELD:
 		gda_sql_select_field_check_clean ((GdaSqlSelectField*) node);

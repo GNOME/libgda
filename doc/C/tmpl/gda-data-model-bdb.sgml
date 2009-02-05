@@ -52,6 +52,10 @@ virtual methods).
 @get_data_part: 
 @update_key_part: 
 @update_data_part: 
+@_gda_reserved1: 
+@_gda_reserved2: 
+@_gda_reserved3: 
+@_gda_reserved4: 
 
 <!-- ##### STRUCT GdaDataModelBdbPrivate ##### -->
 <para>

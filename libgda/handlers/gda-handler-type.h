@@ -1,6 +1,6 @@
 /* gda-handler-type.h
  *
- * Copyright (C) 2005 - 2008 Vivien Malerba
+ * Copyright (C) 2005 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -39,7 +39,6 @@ typedef struct _GdaHandlerTypePriv  GdaHandlerTypePriv;
 struct _GdaHandlerType
 {
 	GObject             object;
-
 	GdaHandlerTypePriv *priv;
 };
 
@@ -47,6 +46,10 @@ struct _GdaHandlerType
 struct _GdaHandlerTypeClass
 {
 	GObjectClass        parent_class;
+
+	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
 };
 
 

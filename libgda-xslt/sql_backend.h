@@ -43,6 +43,12 @@ struct _GdaXsltIntCont
 {
 	int         init;
 	GHashTable *result_sets;
+
+	/* Padding for future expansion */
+	gpointer _gda_reserved1;
+	gpointer _gda_reserved2;
+	gpointer _gda_reserved3;
+	gpointer _gda_reserved4;
 };
 
 typedef struct _GdaXsltIntCont GdaXsltIntCont;

@@ -140,7 +140,7 @@ static void ext_params_holder_changed_cb (GdaSet *paramlist, GdaHolder *param, G
 
 
 /* GdaDataModel interface */
-static void                 gda_data_select_data_model_init (GdaDataModelClass *iface);
+static void                 gda_data_select_data_model_init (GdaDataModelIface *iface);
 static gint                 gda_data_select_get_n_rows      (GdaDataModel *model);
 static gint                 gda_data_select_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_select_describe_column (GdaDataModel *model, gint col);
@@ -274,7 +274,7 @@ gda_data_select_class_init (GdaDataSelectClass *klass)
 }
 
 static void
-gda_data_select_data_model_init (GdaDataModelClass *iface)
+gda_data_select_data_model_init (GdaDataModelIface *iface)
 {
 	iface->i_get_n_rows = gda_data_select_get_n_rows;
 	iface->i_get_n_columns = gda_data_select_get_n_columns;

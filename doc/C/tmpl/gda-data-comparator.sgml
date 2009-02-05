@@ -47,6 +47,10 @@ Simple data model's contents comparison
 
 @parent_class: 
 @diff_computed: 
+@_gda_reserved1: 
+@_gda_reserved2: 
+@_gda_reserved3: 
+@_gda_reserved4: 
 
 <!-- ##### STRUCT GdaDataComparatorPrivate ##### -->
 <para>

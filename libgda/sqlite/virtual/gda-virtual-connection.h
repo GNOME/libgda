@@ -45,6 +45,12 @@ struct _GdaVirtualConnection {
 
 struct _GdaVirtualConnectionClass {
 	GdaConnectionClass           parent_class;
+
+	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
+	void (*_gda_reserved3) (void);
+	void (*_gda_reserved4) (void);
 };
 
 GType          gda_virtual_connection_get_type                   (void) G_GNUC_CONST;

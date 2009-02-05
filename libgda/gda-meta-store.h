@@ -1,6 +1,6 @@
 /* gda-meta-store.h
  *
- * Copyright (C) 2008 Vivien Malerba
+ * Copyright (C) 2008 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -94,6 +94,12 @@ struct _GdaMetaStoreClass
 	void     (*meta_reset)    (GdaMetaStore *store);
 	GError  *(*suggest_update)(GdaMetaStore *store, GdaMetaContext *suggest);
 	void     (*meta_changed)  (GdaMetaStore *store, GSList *changes);
+
+	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
+	void (*_gda_reserved3) (void);
+	void (*_gda_reserved4) (void);
 };
 
 GType             gda_meta_store_get_type                 (void) G_GNUC_CONST;

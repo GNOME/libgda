@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 1998 - 2008 The GNOME Foundation.
+ * Copyright (C) 1998 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -46,6 +46,12 @@ struct _GdaDataModelArray {
 
 struct _GdaDataModelArrayClass {
 	GObjectClass              parent_class;
+
+	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
+	void (*_gda_reserved3) (void);
+	void (*_gda_reserved4) (void);
 };
 
 GType              gda_data_model_array_get_type          (void) G_GNUC_CONST;
