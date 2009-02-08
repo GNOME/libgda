@@ -39,7 +39,7 @@ GdaSqlStatementContentsInfo unknown_infos = {
 };
 
 GdaSqlStatementContentsInfo *
-gda_sql_statement_unknown_get_infos (void)
+_gda_sql_statement_unknown_get_infos (void)
 {
 	return &unknown_infos;
 }
@@ -104,6 +104,17 @@ gda_sql_statement_unknown_serialize (gpointer stmt)
 	return str;	
 }
 
+/**
+ * gda_sql_statement_unknown_take_expressions
+ * @stmt: a #GdaSqlStatement pointer
+ * @expressions: a list of #GdaSqlExpr pointers
+ *
+ * Sets @stmt's list of expressions
+ *
+ * @expressions's 
+ * responsability is transfered to
+ * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
+ */
 void
 gda_sql_statement_unknown_take_expressions (GdaSqlStatement *stmt, GSList *expressions)
 {

@@ -503,7 +503,11 @@
 	       documentation for a description of this syntax.
 	     </para>
 	   </listitem>
-	   <listitem><para>by building it from its structure (see the <link linkend="GdaSqlStatement">GdaSqlStatement</link>).
+	   <listitem><para>by building it from its structure: see the 
+	       <link linkend="GdaSqlStatement">GdaSqlStatement</link> for reference.
+	       However keep in mind that this API is meant to be used primarily by database
+	       provider's implementations and for &LIBGDA;'s internal usage. A more user friendly
+	       API will be added in the future.
 	   </para></listitem>
 	</itemizedlist>
       </para>
@@ -530,7 +534,6 @@
       &libgda-GdaBatch;
       &libgda-GdaHolder;
       &libgda-GdaSet;
-      &libgda-GdaSqlStatement;
       &libgda-GdaConnection-event;
       &libgda-transaction-status;
       &libgda-xa-transaction;

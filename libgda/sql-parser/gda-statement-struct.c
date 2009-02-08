@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 - 2008 Vivien Malerba
+ * Copyright (C) 2007 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -58,28 +58,31 @@ gda_sql_statement_get_contents_infos  (GdaSqlStatementType type)
 	if (!contents) {
 		contents = g_new0 (GdaSqlStatementContentsInfo *, GDA_SQL_STATEMENT_NONE);
 
-		contents [GDA_SQL_STATEMENT_SELECT] = gda_sql_statement_select_get_infos ();
-		contents [GDA_SQL_STATEMENT_INSERT] = gda_sql_statement_insert_get_infos ();
-		contents [GDA_SQL_STATEMENT_DELETE] = gda_sql_statement_delete_get_infos ();
-		contents [GDA_SQL_STATEMENT_UPDATE] = gda_sql_statement_update_get_infos ();
-		contents [GDA_SQL_STATEMENT_BEGIN] = gda_sql_statement_begin_get_infos ();
-		contents [GDA_SQL_STATEMENT_COMPOUND] = gda_sql_statement_compound_get_infos ();
-		contents [GDA_SQL_STATEMENT_COMMIT] = gda_sql_statement_commit_get_infos ();
-		contents [GDA_SQL_STATEMENT_ROLLBACK] = gda_sql_statement_rollback_get_infos ();
-		contents [GDA_SQL_STATEMENT_UNKNOWN] = gda_sql_statement_unknown_get_infos ();
-		contents [GDA_SQL_STATEMENT_SAVEPOINT] = gda_sql_statement_savepoint_get_infos ();
-		contents [GDA_SQL_STATEMENT_ROLLBACK_SAVEPOINT] = gda_sql_statement_rollback_savepoint_get_infos ();
-		contents [GDA_SQL_STATEMENT_DELETE_SAVEPOINT] = gda_sql_statement_delete_savepoint_get_infos ();
+		contents [GDA_SQL_STATEMENT_SELECT] = _gda_sql_statement_select_get_infos ();
+		contents [GDA_SQL_STATEMENT_INSERT] = _gda_sql_statement_insert_get_infos ();
+		contents [GDA_SQL_STATEMENT_DELETE] = _gda_sql_statement_delete_get_infos ();
+		contents [GDA_SQL_STATEMENT_UPDATE] = _gda_sql_statement_update_get_infos ();
+		contents [GDA_SQL_STATEMENT_BEGIN] = _gda_sql_statement_begin_get_infos ();
+		contents [GDA_SQL_STATEMENT_COMPOUND] = _gda_sql_statement_compound_get_infos ();
+		contents [GDA_SQL_STATEMENT_COMMIT] = _gda_sql_statement_commit_get_infos ();
+		contents [GDA_SQL_STATEMENT_ROLLBACK] = _gda_sql_statement_rollback_get_infos ();
+		contents [GDA_SQL_STATEMENT_UNKNOWN] = _gda_sql_statement_unknown_get_infos ();
+		contents [GDA_SQL_STATEMENT_SAVEPOINT] = _gda_sql_statement_savepoint_get_infos ();
+		contents [GDA_SQL_STATEMENT_ROLLBACK_SAVEPOINT] = _gda_sql_statement_rollback_savepoint_get_infos ();
+		contents [GDA_SQL_STATEMENT_DELETE_SAVEPOINT] = _gda_sql_statement_delete_savepoint_get_infos ();
 	}
 	g_static_mutex_unlock (&mutex);
 
 	return contents[type];
 }
 
-/*
+/**
+ * gda_sql_statement_new
+ * @type: type of statement to create
  *
- * Statement
+ * Use this function to create a #GdaSqlStatement of the specified @type type.
  *
+ * Returns: a new #GdaSqlStatement
  */
 GdaSqlStatement *
 gda_sql_statement_new (GdaSqlStatementType type)
@@ -99,6 +102,14 @@ gda_sql_statement_new (GdaSqlStatementType type)
 	return stmt;
 }
 
+/**
+ * gda_sql_statement_copy
+ * @stmt: a #GdaSqlStatement pointer
+ *
+ * Creates a copy of @stmt.
+ *
+ * Returns: a new #GdaSqlStatement
+ */
 GdaSqlStatement *
 gda_sql_statement_copy (GdaSqlStatement *stmt)
 {
@@ -132,6 +143,12 @@ gda_sql_statement_copy (GdaSqlStatement *stmt)
 	return copy;
 }
 
+/**
+ * gda_sql_statement_free
+ * @stmt: a #GdaSqlStatement pointer
+ *
+ * Releases any memory associated to @stmt.
+ */
 void 
 gda_sql_statement_free (GdaSqlStatement *stmt)
 {
@@ -152,6 +169,14 @@ gda_sql_statement_free (GdaSqlStatement *stmt)
 	g_free (stmt);
 }
 
+/**
+ * gda_sql_statement_type_to_string
+ * @type: a #GdaSqlStatementType value
+ *
+ * Converts a #GdaSqlStatementType to a string, see also gda_sql_statement_string_to_type()
+ *
+ * Returns: a constant string
+ */
 const gchar *
 gda_sql_statement_type_to_string (GdaSqlStatementType type)
 {
@@ -165,6 +190,14 @@ gda_sql_statement_type_to_string (GdaSqlStatementType type)
 		return infos->name;
 }
 
+/**
+ * gda_sql_statement_string_to_type
+ * @type: a string representing a #GdaSqlStatementType type
+ *
+ * Converts a string to a #GdaSqlStatementType value, see also gda_sql_statement_type_to_string()
+ *
+ * Returns: a #GdaSqlStatementType value
+ */
 GdaSqlStatementType
 gda_sql_statement_string_to_type (const gchar *type)
 {
@@ -207,6 +240,14 @@ gda_sql_statement_string_to_type (const gchar *type)
 }
 
 
+/**
+ * gda_sql_statement_serialize
+ * @stmt: a #GdaSqlStatement pointer
+ *
+ * Creates a string representation of @stmt.
+ *
+ * Returns: a new string
+ */
 gchar *
 gda_sql_statement_serialize (GdaSqlStatement *stmt)
 {
@@ -435,7 +476,7 @@ gda_sql_expr_check_validity (GdaSqlExpr *expr, GdaSqlStatementCheckValidityData 
 {
 	if (!expr) return TRUE;
 	if (!expr->param_spec) return TRUE;
-	gda_sql_expr_check_clean (expr);
+	_gda_sql_expr_check_clean (expr);
 
 	/* 2 checks to do here:
 	 *  - try to find the data type from expr->param_spec->type using data->mstruct (not yet possible)
@@ -447,7 +488,7 @@ gda_sql_expr_check_validity (GdaSqlExpr *expr, GdaSqlStatementCheckValidityData 
 }
 
 void
-gda_sql_expr_check_clean (GdaSqlExpr *expr)
+_gda_sql_expr_check_clean (GdaSqlExpr *expr)
 {
 	if (!expr) return;
 	if (expr->param_spec && expr->param_spec->validity_meta_dict)
@@ -461,7 +502,7 @@ gda_sql_field_check_validity (GdaSqlField *field, GdaSqlStatementCheckValidityDa
 	GdaSqlTable *stable;
 
 	if (!field) return TRUE;
-	gda_sql_field_check_clean (field);
+	_gda_sql_field_check_clean (field);
 
 	if (!data->cnc) return TRUE;
 
@@ -511,7 +552,7 @@ gda_sql_field_check_validity (GdaSqlField *field, GdaSqlStatementCheckValidityDa
 }
 
 void 
-gda_sql_field_check_clean (GdaSqlField *field)
+_gda_sql_field_check_clean (GdaSqlField *field)
 {
 	if (!field) return;
 	field->validity_meta_table_column = NULL;
@@ -593,7 +634,7 @@ gda_sql_table_check_validity (GdaSqlTable *table, GdaSqlStatementCheckValidityDa
 	GdaMetaDbObject *dbo;
 
 	if (!table) return TRUE;
-	gda_sql_table_check_clean (table);
+	_gda_sql_table_check_clean (table);
 
 	if (!table->table_name) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_VALIDATION_ERROR,
@@ -614,7 +655,7 @@ gda_sql_table_check_validity (GdaSqlTable *table, GdaSqlStatementCheckValidityDa
 }
 
 void 
-gda_sql_table_check_clean (GdaSqlTable *table)
+_gda_sql_table_check_clean (GdaSqlTable *table)
 {
 	if (!table) return;
 	table->validity_meta_object = NULL;
@@ -628,7 +669,7 @@ gda_sql_select_field_check_validity (GdaSqlSelectField *field, GdaSqlStatementCh
 	gboolean starred_field = FALSE;
 
 	if (!field) return TRUE;
-	gda_sql_select_field_check_clean (field);
+	_gda_sql_select_field_check_clean (field);
 
 	if (!field->field_name) 
 		/* field is not a table.field */
@@ -721,7 +762,7 @@ gda_sql_select_field_check_validity (GdaSqlSelectField *field, GdaSqlStatementCh
 }
 
 void 
-gda_sql_select_field_check_clean (GdaSqlSelectField *field)
+_gda_sql_select_field_check_clean (GdaSqlSelectField *field)
 {
 	if (!field) return;
 	field->validity_meta_object = NULL;
@@ -749,7 +790,7 @@ gda_sql_select_target_check_validity (GdaSqlSelectTarget *target, GdaSqlStatemen
 }
 
 void 
-gda_sql_select_target_check_clean (GdaSqlSelectTarget *target)
+_gda_sql_select_target_check_clean (GdaSqlSelectTarget *target)
 {
 	if (!target) return;
 	target->validity_meta_object = NULL;
@@ -783,19 +824,19 @@ foreach_check_clean (GdaSqlAnyPart *node, gpointer data, GError **error)
 
 	switch (node->type) {
 	case GDA_SQL_ANY_EXPR:
-		gda_sql_expr_check_clean ((GdaSqlExpr*) node);
+		_gda_sql_expr_check_clean ((GdaSqlExpr*) node);
 		break;
 	case GDA_SQL_ANY_SQL_FIELD:
-		gda_sql_field_check_clean ((GdaSqlField*) node);
+		_gda_sql_field_check_clean ((GdaSqlField*) node);
 		break;
 	case GDA_SQL_ANY_SQL_TABLE:
-		gda_sql_table_check_clean ((GdaSqlTable*) node);
+		_gda_sql_table_check_clean ((GdaSqlTable*) node);
 		break;
 	case GDA_SQL_ANY_SQL_SELECT_FIELD:
-		gda_sql_select_field_check_clean ((GdaSqlSelectField*) node);
+		_gda_sql_select_field_check_clean ((GdaSqlSelectField*) node);
 		break;
 	case GDA_SQL_ANY_SQL_SELECT_TARGET:
-		gda_sql_select_target_check_clean ((GdaSqlSelectTarget*) node);
+		_gda_sql_select_target_check_clean ((GdaSqlSelectTarget*) node);
 		break;
 	default:
 		break;

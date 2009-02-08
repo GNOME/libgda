@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 - 2008 Vivien Malerba
+ * Copyright (C) 2007 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -44,7 +44,7 @@ GdaSqlStatementContentsInfo delete_infos = {
 };
 
 GdaSqlStatementContentsInfo *
-gda_sql_statement_delete_get_infos (void)
+_gda_sql_statement_delete_get_infos (void)
 {
 	return &delete_infos;
 }
@@ -117,6 +117,14 @@ gda_sql_statement_delete_serialize (gpointer stmt)
 	return str;	
 }
 
+/**
+ * gda_sql_statement_delete_take_table_name
+ * @stmt: a #GdaSqlStatement pointer
+ * @value: a table name as a G_TYPE_STRING #GValue 
+ *
+ * Sets the name of the table to delete from in @stmt. @value's responsability is transfered to
+ * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
+ */
 void
 gda_sql_statement_delete_take_table_name (GdaSqlStatement *stmt, GValue *value)
 {
@@ -127,6 +135,14 @@ gda_sql_statement_delete_take_table_name (GdaSqlStatement *stmt, GValue *value)
 	}
 }
 
+/**
+ * gda_sql_statement_delete_take_condition
+ * @stmt: a #GdaSqlStatement pointer
+ * @cond: the WHERE condition of the DELETE statement, as a #GdaSqlExpr 
+ *
+ * Sets the WHERE condition of @stmt. @cond's responsability is transfered to
+ * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
+ */
 void 
 gda_sql_statement_delete_take_condition (GdaSqlStatement *stmt, GdaSqlExpr *cond)
 {

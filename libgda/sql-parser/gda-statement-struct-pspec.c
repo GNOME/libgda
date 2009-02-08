@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 Vivien Malerba
+ * Copyright (C) 2007 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -23,10 +23,13 @@
 #include <libgda/sql-parser/gda-statement-struct-util.h>
 #include <libgda/gda-util.h>
 
-/*
+/**
+ * gda_sql_param_spec_take_name
+ * @pspec: a #GdaSqlParamSpec pointer
+ * @value: a G_TYPE_STRING #GValue
  *
- * Param specs
- *
+ * Sets @pspec's name. @value's responsability is transfered to
+ * @pspec (which means @pspec is then responsible to freeing it when no longer needed).
  */
 void
 gda_sql_param_spec_take_name (GdaSqlParamSpec *pspec, GValue *value)
@@ -42,6 +45,14 @@ gda_sql_param_spec_take_name (GdaSqlParamSpec *pspec, GValue *value)
 	}
 }
 
+/**
+ * gda_sql_param_spec_take_descr
+ * @pspec: a #GdaSqlParamSpec pointer
+ * @value: a G_TYPE_STRING #GValue
+ *
+ * Sets @pspec's description. @value's responsability is transfered to
+ * @pspec (which means @pspec is then responsible to freeing it when no longer needed).
+ */
 void
 gda_sql_param_spec_take_descr (GdaSqlParamSpec *pspec, GValue *value)
 {
@@ -56,6 +67,16 @@ gda_sql_param_spec_take_descr (GdaSqlParamSpec *pspec, GValue *value)
 	}
 }
 
+/**
+ * gda_sql_param_spec_take_nullok
+ * @pspec: a #GdaSqlParamSpec pointer
+ * @value: a G_TYPE_STRING #GValue. 
+ *
+ * Sets @pspec's ability of being NULL. @value's responsability is transfered to
+ * @pspec (which means @pspec is then responsible to freeing it when no longer needed).
+ *
+ * If @value's string starts by 't' or 'T' then @pspec will be allowed to be %NULL
+ */
 void
 gda_sql_param_spec_take_nullok (GdaSqlParamSpec *pspec, GValue *value)
 {
@@ -72,6 +93,16 @@ gda_sql_param_spec_take_nullok (GdaSqlParamSpec *pspec, GValue *value)
 	}
 }
 
+/**
+ * gda_sql_param_spec_take_type
+ * @pspec: a #GdaSqlParamSpec pointer
+ * @value: a G_TYPE_STRING #GValue
+ *
+ * Sets @pspec's data type. @value's responsability is transfered to
+ * @pspec (which means @pspec is then responsible to freeing it when no longer needed).
+ *
+ * @value must represent a data type, as understood by gda_g_type_from_string().
+ */
 void
 gda_sql_param_spec_take_type (GdaSqlParamSpec *pspec, GValue *value)
 {
@@ -87,6 +118,17 @@ gda_sql_param_spec_take_type (GdaSqlParamSpec *pspec, GValue *value)
 	}
 }
 
+/**
+ * gda_sql_param_spec_new
+ * @value: a G_TYPE_STRING #GValue
+ *
+ * @value must contain a string representing a variable, see the documentation associated to the
+ * #GdaSqlParser object.
+ *
+ * @value is destroyed by this function.
+ *
+ * Returns: a new #GdaSqlParamSpec
+ */
 GdaSqlParamSpec *
 gda_sql_param_spec_new (GValue *value)
 {
@@ -131,6 +173,14 @@ gda_sql_param_spec_new (GValue *value)
 	return pspec;
 }
 
+/**
+ * gda_sql_param_spec_copy
+ * @pspec: #GdaSqlParamSpec pointer
+ *
+ * Creates a copy of @pspec.
+ *
+ * Returns: a new #GdaSqlParamSpec
+ */
 GdaSqlParamSpec *
 gda_sql_param_spec_copy (GdaSqlParamSpec *pspec)
 {
@@ -149,6 +199,12 @@ gda_sql_param_spec_copy (GdaSqlParamSpec *pspec)
 	return copy;
 }
 
+/**
+ * gda_sql_param_spec_free
+ * @pspec: #GdaSqlParamSpec pointer
+ *
+ * Destroys @pspec.
+ */
 void
 gda_sql_param_spec_free (GdaSqlParamSpec *pspec)
 {
@@ -159,6 +215,14 @@ gda_sql_param_spec_free (GdaSqlParamSpec *pspec)
 	g_free (pspec);
 }
 
+/**
+ * gda_sql_param_spec_serialize
+ * @pspec: a #GdaSqlParamSpec pointer
+ *
+ * Creates a new string representing @pspec.
+ *
+ * Returns: a new string.
+ */
 gchar *
 gda_sql_param_spec_serialize (GdaSqlParamSpec *pspec)
 {

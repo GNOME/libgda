@@ -57,11 +57,12 @@ struct _GdaSqlExpr {
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
 };
+
 GdaSqlExpr      *gda_sql_expr_new            (GdaSqlAnyPart *parent);
 void             gda_sql_expr_free           (GdaSqlExpr *expr);
 GdaSqlExpr      *gda_sql_expr_copy           (GdaSqlExpr *expr);
 gchar           *gda_sql_expr_serialize      (GdaSqlExpr *expr);
-void             gda_sql_expr_check_clean    (GdaSqlExpr *expr);
+void             _gda_sql_expr_check_clean   (GdaSqlExpr *expr);
 
 void             gda_sql_expr_take_select    (GdaSqlExpr *expr, GdaSqlStatement *stmt);
 
@@ -79,11 +80,12 @@ struct _GdaSqlField {
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
 };
+
 GdaSqlField     *gda_sql_field_new            (GdaSqlAnyPart *parent);
 void             gda_sql_field_free           (GdaSqlField *field);
 GdaSqlField     *gda_sql_field_copy           (GdaSqlField *field);
 gchar           *gda_sql_field_serialize      (GdaSqlField *field);
-void             gda_sql_field_check_clean    (GdaSqlField *field);
+void             _gda_sql_field_check_clean   (GdaSqlField *field);
 
 void             gda_sql_field_take_name      (GdaSqlField *field, GValue *value);
 
@@ -107,7 +109,7 @@ GdaSqlTable     *gda_sql_table_new            (GdaSqlAnyPart *parent);
 void             gda_sql_table_free           (GdaSqlTable *table);
 GdaSqlTable     *gda_sql_table_copy           (GdaSqlTable *table);
 gchar           *gda_sql_table_serialize      (GdaSqlTable *table);
-void             gda_sql_table_check_clean    (GdaSqlTable *table);
+void             _gda_sql_table_check_clean   (GdaSqlTable *table);
 
 void             gda_sql_table_take_name      (GdaSqlTable *table, GValue *value);
 
@@ -233,7 +235,7 @@ GdaSqlSelectField *gda_sql_select_field_new            (GdaSqlAnyPart *parent);
 void               gda_sql_select_field_free           (GdaSqlSelectField *field);
 GdaSqlSelectField *gda_sql_select_field_copy           (GdaSqlSelectField *field);
 gchar             *gda_sql_select_field_serialize      (GdaSqlSelectField *field);
-void               gda_sql_select_field_check_clean    (GdaSqlSelectField *field);
+void               _gda_sql_select_field_check_clean   (GdaSqlSelectField *field);
 
 void               gda_sql_select_field_take_star_value(GdaSqlSelectField *field, GValue *value);
 void               gda_sql_select_field_take_expr      (GdaSqlSelectField *field, GdaSqlExpr *expr);
@@ -261,7 +263,7 @@ GdaSqlSelectTarget *gda_sql_select_target_new            (GdaSqlAnyPart *parent)
 void                gda_sql_select_target_free           (GdaSqlSelectTarget *target);
 GdaSqlSelectTarget *gda_sql_select_target_copy           (GdaSqlSelectTarget *target);
 gchar              *gda_sql_select_target_serialize      (GdaSqlSelectTarget *target);
-void                gda_sql_select_target_check_clean    (GdaSqlSelectTarget *target);
+void                _gda_sql_select_target_check_clean   (GdaSqlSelectTarget *target);
 
 void                gda_sql_select_target_take_table_name (GdaSqlSelectTarget *target, GValue *value);
 void                gda_sql_select_target_take_select (GdaSqlSelectTarget *target, GdaSqlStatement *stmt);

@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 - 2008 Vivien Malerba
+ * Copyright (C) 2007 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -41,7 +41,7 @@ GdaSqlStatementContentsInfo begin_infos = {
 };
 
 GdaSqlStatementContentsInfo *
-gda_sql_statement_begin_get_infos (void)
+_gda_sql_statement_begin_get_infos (void)
 {
 	return &begin_infos;
 }
@@ -58,7 +58,7 @@ GdaSqlStatementContentsInfo commit_infos = {
 };
 
 GdaSqlStatementContentsInfo *
-gda_sql_statement_commit_get_infos (void)
+_gda_sql_statement_commit_get_infos (void)
 {
 	return &commit_infos;
 }
@@ -75,7 +75,7 @@ GdaSqlStatementContentsInfo rollback_infos = {
 };
 
 GdaSqlStatementContentsInfo *
-gda_sql_statement_rollback_get_infos (void)
+_gda_sql_statement_rollback_get_infos (void)
 {
 	return &rollback_infos;
 }
@@ -92,7 +92,7 @@ GdaSqlStatementContentsInfo svp_infos = {
 };
 
 GdaSqlStatementContentsInfo *
-gda_sql_statement_savepoint_get_infos (void)
+_gda_sql_statement_savepoint_get_infos (void)
 {
 	return &svp_infos;
 }
@@ -109,7 +109,7 @@ GdaSqlStatementContentsInfo rollback_svp_infos = {
 };
 
 GdaSqlStatementContentsInfo *
-gda_sql_statement_rollback_savepoint_get_infos (void)
+_gda_sql_statement_rollback_savepoint_get_infos (void)
 {
 	return &rollback_svp_infos;
 }
@@ -126,7 +126,7 @@ GdaSqlStatementContentsInfo delete_svp_infos = {
 };
 
 GdaSqlStatementContentsInfo *
-gda_sql_statement_delete_savepoint_get_infos (void)
+_gda_sql_statement_delete_savepoint_get_infos (void)
 {
 	return &delete_svp_infos;
 }
@@ -217,6 +217,16 @@ gda_sql_statement_trans_serialize (gpointer stmt)
         return str;
 }
 
+/**
+ * gda_sql_statement_trans_take_name
+ * @stmt: a #GdaSqlStatement pointer
+ * @value: a G_TYPE_STRING value
+ *
+ * Sets the name of the transaction
+ *
+ * @value's responsability is transfered to
+ * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
+ */
 void
 gda_sql_statement_trans_take_name (GdaSqlStatement *stmt, GValue *value)
 {
@@ -232,6 +242,16 @@ gda_sql_statement_trans_take_name (GdaSqlStatement *stmt, GValue *value)
 	}
 }
 
+/**
+ * gda_sql_statement_trans_take_mode
+ * @stmt: a #GdaSqlStatement pointer
+ * @value: a G_TYPE_STRING value
+ *
+ * Sets the model of the transaction
+ *
+ * @value's responsability is transfered to
+ * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
+ */
 void
 gda_sql_statement_trans_take_mode (GdaSqlStatement *stmt, GValue *value)
 {
@@ -247,6 +267,13 @@ gda_sql_statement_trans_take_mode (GdaSqlStatement *stmt, GValue *value)
 	}
 }
 
+/**
+ * gda_sql_statement_set_isol_level
+ * @stmt: a #GdaSqlStatement pointer
+ * @level: the transacion level
+ *
+ * Sets the transaction level of the transaction
+ */
 void
 gda_sql_statement_trans_set_isol_level (GdaSqlStatement *stmt, GdaTransactionIsolation level)
 {

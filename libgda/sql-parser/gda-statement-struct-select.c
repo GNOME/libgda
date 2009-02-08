@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 Vivien Malerba
+ * Copyright (C) 2007 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -24,6 +24,7 @@
 #include <string.h>
 #include <glib/gi18n-lib.h>
 
+static gpointer  gda_sql_statement_select_new (void);
 static gboolean gda_sql_statement_select_check_structure (GdaSqlAnyPart *stmt, gpointer data, GError **error);
 static gboolean gda_sql_statement_select_check_validity (GdaSqlAnyPart *stmt, gpointer data, GError **error);
 
@@ -31,21 +32,21 @@ GdaSqlStatementContentsInfo select_infos = {
 	GDA_SQL_STATEMENT_SELECT,
 	"SELECT",
 	gda_sql_statement_select_new,
-	gda_sql_statement_select_free,
-	gda_sql_statement_select_copy,
-	gda_sql_statement_select_serialize,
+	_gda_sql_statement_select_free,
+	_gda_sql_statement_select_copy,
+	_gda_sql_statement_select_serialize,
 
 	gda_sql_statement_select_check_structure,
 	gda_sql_statement_select_check_validity
 };
 
 GdaSqlStatementContentsInfo *
-gda_sql_statement_select_get_infos (void)
+_gda_sql_statement_select_get_infos (void)
 {
 	return &select_infos;
 }
 
-gpointer
+static gpointer
 gda_sql_statement_select_new (void)
 {
 	GdaSqlStatementSelect *stmt;
@@ -55,7 +56,7 @@ gda_sql_statement_select_new (void)
 }
 
 void
-gda_sql_statement_select_free (gpointer stmt)
+_gda_sql_statement_select_free (gpointer stmt)
 {
 	GdaSqlStatementSelect *select = (GdaSqlStatementSelect *) stmt;
 
@@ -82,7 +83,7 @@ gda_sql_statement_select_free (gpointer stmt)
 }
 
 gpointer
-gda_sql_statement_select_copy (gpointer src)
+_gda_sql_statement_select_copy (gpointer src)
 {
 	GdaSqlStatementSelect *dest;
 	GdaSqlStatementSelect *select = (GdaSqlStatementSelect *) src;
@@ -134,7 +135,7 @@ gda_sql_statement_select_copy (gpointer src)
 }
 
 gchar *
-gda_sql_statement_select_serialize (gpointer stmt)
+_gda_sql_statement_select_serialize (gpointer stmt)
 {
 	GString *string;
 	gchar *str;
@@ -235,6 +236,17 @@ gda_sql_statement_select_serialize (gpointer stmt)
 	return str;	
 }
 
+/**
+ * gda_sql_statement_select_take_distinct
+ * @stmt: a #GdaSqlStatement pointer
+ * @distinct: a TRUE/FALSE value
+ * @distinct_expr: a #GdaSqlExpr pointer representing what the DISTINCT is on, or %NULL
+ *
+ * Sets the DISTINCT clause of @stmt. 
+ *
+ * @distinct_expr's responsability is transfered to
+ * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
+ */
 void
 gda_sql_statement_select_take_distinct (GdaSqlStatement *stmt, gboolean distinct, GdaSqlExpr *distinct_expr)
 {
@@ -244,6 +256,16 @@ gda_sql_statement_select_take_distinct (GdaSqlStatement *stmt, gboolean distinct
 	gda_sql_any_part_set_parent (select->distinct_expr, select);
 }
 
+/**
+ * gda_sql_statement_select_take_expr_list
+ * @stmt: a #GdaSqlStatement pointer
+ * @expr_list: a list of #GdaSqlSelectField pointers
+ *
+ * Sets list of expressions selected by @stmt
+ *
+ * @expr_list's responsability is transfered to
+ * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
+ */
 void
 gda_sql_statement_select_take_expr_list (GdaSqlStatement *stmt, GSList *expr_list)
 {
@@ -254,6 +276,16 @@ gda_sql_statement_select_take_expr_list (GdaSqlStatement *stmt, GSList *expr_lis
 		gda_sql_any_part_set_parent (l->data, select);
 }
 
+/**
+ * gda_sql_statement_select_take_from
+ * @stmt: a #GdaSqlStatement pointer
+ * @from: a #GdaSqlSelectFrom pointer
+ *
+ * Sets the FROM clause of @stmt
+ *
+ * @from's responsability is transfered to
+ * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
+ */
 void
 gda_sql_statement_select_take_from (GdaSqlStatement *stmt, GdaSqlSelectFrom *from)
 {
@@ -262,6 +294,16 @@ gda_sql_statement_select_take_from (GdaSqlStatement *stmt, GdaSqlSelectFrom *fro
 	gda_sql_any_part_set_parent (from, select);
 }
 
+/**
+ * gda_sql_statement_select_take_where_cond
+ * @stmt: a #GdaSqlStatement pointer
+ * @expr: a #GdaSqlExpr pointer
+ *
+ * Sets the WHERE clause of @stmt
+ *
+ * @expr's responsability is transfered to
+ * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
+ */
 void
 gda_sql_statement_select_take_where_cond (GdaSqlStatement *stmt, GdaSqlExpr *expr)
 {
@@ -270,6 +312,16 @@ gda_sql_statement_select_take_where_cond (GdaSqlStatement *stmt, GdaSqlExpr *exp
 	gda_sql_any_part_set_parent (expr, select);
 }
 
+/**
+ * gda_sql_statement_select_take_group_by
+ * @stmt: a #GdaSqlStatement pointer
+ * @group_by: a list of #GdaSqlExpr pointer
+ *
+ * Sets the GROUP BY clause of @stmt
+ *
+ * @group_by's responsability is transfered to
+ * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
+ */
 void
 gda_sql_statement_select_take_group_by (GdaSqlStatement *stmt, GSList *group_by)
 {
@@ -280,6 +332,16 @@ gda_sql_statement_select_take_group_by (GdaSqlStatement *stmt, GSList *group_by)
 		gda_sql_any_part_set_parent (l->data, select);
 }
 
+/**
+ * gda_sql_statement_select_take_having_cond
+ * @stmt: a #GdaSqlStatement pointer
+ * @expr: a #GdaSqlExpr pointer
+ *
+ * Sets the HAVING clause of @stmt
+ *
+ * @expr's responsability is transfered to
+ * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
+ */
 void
 gda_sql_statement_select_take_having_cond (GdaSqlStatement *stmt, GdaSqlExpr *expr)
 {
@@ -288,6 +350,16 @@ gda_sql_statement_select_take_having_cond (GdaSqlStatement *stmt, GdaSqlExpr *ex
 	gda_sql_any_part_set_parent (expr, select);
 }
 
+/**
+ * gda_sql_statement_select_take_order_by
+ * @stmt: a #GdaSqlStatement pointer
+ * @order_by: a list of #GdaSqlSelectOrder pointer
+ *
+ * Sets the ORDER BY clause of @stmt
+ *
+ * @order_by's responsability is transfered to
+ * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
+ */
 void
 gda_sql_statement_select_take_order_by (GdaSqlStatement *stmt, GSList *order_by)
 {
@@ -298,6 +370,17 @@ gda_sql_statement_select_take_order_by (GdaSqlStatement *stmt, GSList *order_by)
 		gda_sql_any_part_set_parent (l->data, select);
 }
 
+/**
+ * gda_sql_statement_select_take_limits
+ * @stmt: a #GdaSqlStatement pointer
+ * @count: a #GdaSqlExpr pointer
+ * @offset: a #GdaSqlExpr pointer
+ *
+ * Sets the LIMIT clause of @stmt
+ *
+ * @count and @offset's responsability are transfered to
+ * @stmt (which means @stmt is then responsible to freeing them when no longer needed).
+ */
 void
 gda_sql_statement_select_take_limits (GdaSqlStatement *stmt, GdaSqlExpr *count, GdaSqlExpr *offset)
 {

@@ -52,11 +52,10 @@ struct _GdaSqlStatementSelect {
 /*
  * Common operations
  */
-gpointer  gda_sql_statement_select_new (void);
-gpointer  gda_sql_statement_select_copy (gpointer src);
-void      gda_sql_statement_select_free (gpointer stmt);
-gchar    *gda_sql_statement_select_serialize (gpointer stmt);
-GdaSqlStatementContentsInfo *gda_sql_statement_select_get_infos (void);
+gpointer  _gda_sql_statement_select_copy (gpointer src);
+void      _gda_sql_statement_select_free (gpointer stmt);
+gchar    *_gda_sql_statement_select_serialize (gpointer stmt);
+GdaSqlStatementContentsInfo *_gda_sql_statement_select_get_infos (void);
 
 /*
  * Functions used by the parser

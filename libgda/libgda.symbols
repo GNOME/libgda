@@ -555,13 +555,11 @@
 	gda_sql_delimiterTrace
 	gda_sql_error_quark
 	gda_sql_error_type_get_type
-	gda_sql_expr_check_clean
 	gda_sql_expr_copy
 	gda_sql_expr_free
 	gda_sql_expr_new
 	gda_sql_expr_serialize
 	gda_sql_expr_take_select
-	gda_sql_field_check_clean
 	gda_sql_field_copy
 	gda_sql_field_free
 	gda_sql_field_new
@@ -622,7 +620,6 @@
 	gda_sql_parser_set_overflow_error
 	gda_sql_parser_set_syntax_error
 	gda_sql_parserTrace
-	gda_sql_select_field_check_clean
 	gda_sql_select_field_copy
 	gda_sql_select_field_free
 	gda_sql_select_field_new
@@ -646,7 +643,6 @@
 	gda_sql_select_order_free
 	gda_sql_select_order_new
 	gda_sql_select_order_serialize
-	gda_sql_select_target_check_clean
 	gda_sql_select_target_copy
 	gda_sql_select_target_free
 	gda_sql_select_target_new
@@ -654,28 +650,17 @@
 	gda_sql_select_target_take_alias
 	gda_sql_select_target_take_select
 	gda_sql_select_target_take_table_name
-	gda_sql_statement_begin_get_infos
 	gda_sql_statement_check_clean
 	gda_sql_statement_check_structure
 	gda_sql_statement_check_validity
-	gda_sql_statement_commit_get_infos
-	gda_sql_statement_compound_copy
-	gda_sql_statement_compound_free
-	gda_sql_statement_compound_get_infos
-	gda_sql_statement_compound_get_n_cols
-	gda_sql_statement_compound_reduce
-	gda_sql_statement_compound_serialize
 	gda_sql_statement_compound_set_type
 	gda_sql_statement_compound_take_stmt
 	gda_sql_statement_compound_type_get_type
 	gda_sql_statement_copy
-	gda_sql_statement_delete_get_infos
-	gda_sql_statement_delete_savepoint_get_infos
 	gda_sql_statement_delete_take_condition
 	gda_sql_statement_delete_take_table_name
 	gda_sql_statement_free
 	gda_sql_statement_get_contents_infos
-	gda_sql_statement_insert_get_infos
 	gda_sql_statement_insert_take_1_values_list
 	gda_sql_statement_insert_take_extra_values_list
 	gda_sql_statement_insert_take_fields_list
@@ -684,14 +669,6 @@
 	gda_sql_statement_insert_take_table_name
 	gda_sql_statement_new
 	gda_sql_statement_normalize
-	gda_sql_statement_rollback_get_infos
-	gda_sql_statement_rollback_savepoint_get_infos
-	gda_sql_statement_savepoint_get_infos
-	gda_sql_statement_select_copy
-	gda_sql_statement_select_free
-	gda_sql_statement_select_get_infos
-	gda_sql_statement_select_new
-	gda_sql_statement_select_serialize
 	gda_sql_statement_select_take_distinct
 	gda_sql_statement_select_take_expr_list
 	gda_sql_statement_select_take_from
@@ -707,14 +684,11 @@
 	gda_sql_statement_trans_take_name
 	gda_sql_statement_type_get_type
 	gda_sql_statement_type_to_string
-	gda_sql_statement_unknown_get_infos
 	gda_sql_statement_unknown_take_expressions
-	gda_sql_statement_update_get_infos
 	gda_sql_statement_update_take_condition
 	gda_sql_statement_update_take_on_conflict
 	gda_sql_statement_update_take_set_value
 	gda_sql_statement_update_take_table_name
-	gda_sql_table_check_clean
 	gda_sql_table_copy
 	gda_sql_table_free
 	gda_sql_table_new

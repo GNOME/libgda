@@ -20,10 +20,13 @@
 #include <string.h>
 #include <libgda/sql-parser/gda-statement-struct.h>
 
-/*
+/**
+ * gda_sql_value_stringify
+ * @value: a #GValue pointer
  *
- * Utility functions
+ * Simplified version of gda_value_stringify().
  *
+ * Returns: a new string
  */
 gchar *
 gda_sql_value_stringify (const GValue *value)

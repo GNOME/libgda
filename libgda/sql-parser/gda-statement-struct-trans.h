@@ -43,13 +43,13 @@ struct _GdaSqlStatementTransaction {
 /*
  * Common operations
  */
-GdaSqlStatementContentsInfo *gda_sql_statement_begin_get_infos (void);
-GdaSqlStatementContentsInfo *gda_sql_statement_commit_get_infos (void);
-GdaSqlStatementContentsInfo *gda_sql_statement_rollback_get_infos (void);
+GdaSqlStatementContentsInfo *_gda_sql_statement_begin_get_infos (void);
+GdaSqlStatementContentsInfo *_gda_sql_statement_commit_get_infos (void);
+GdaSqlStatementContentsInfo *_gda_sql_statement_rollback_get_infos (void);
 
-GdaSqlStatementContentsInfo *gda_sql_statement_savepoint_get_infos (void);
-GdaSqlStatementContentsInfo *gda_sql_statement_rollback_savepoint_get_infos (void);
-GdaSqlStatementContentsInfo *gda_sql_statement_delete_savepoint_get_infos (void);
+GdaSqlStatementContentsInfo *_gda_sql_statement_savepoint_get_infos (void);
+GdaSqlStatementContentsInfo *_gda_sql_statement_rollback_savepoint_get_infos (void);
+GdaSqlStatementContentsInfo *_gda_sql_statement_delete_savepoint_get_infos (void);
 
 /*
  * Functions used by the parser

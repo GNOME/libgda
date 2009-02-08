@@ -40,7 +40,7 @@ struct _GdaSqlStatementUnknown {
 /*
  * Common operations
  */
-GdaSqlStatementContentsInfo *gda_sql_statement_unknown_get_infos (void);
+GdaSqlStatementContentsInfo *_gda_sql_statement_unknown_get_infos (void);
 
 /*
  * Functions used by the parser

@@ -42,7 +42,7 @@ struct _GdaSqlStatementDelete {
 /*
  * Common operations
  */
-GdaSqlStatementContentsInfo *gda_sql_statement_delete_get_infos (void);
+GdaSqlStatementContentsInfo *_gda_sql_statement_delete_get_infos (void);
 
 /*
  * Functions used by the parser

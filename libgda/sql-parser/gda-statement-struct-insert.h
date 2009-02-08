@@ -45,7 +45,7 @@ struct _GdaSqlStatementInsert {
 /*
  * Common operations
  */
-GdaSqlStatementContentsInfo *gda_sql_statement_insert_get_infos (void);
+GdaSqlStatementContentsInfo *_gda_sql_statement_insert_get_infos (void);
 
 /*
  * Functions used by the parser

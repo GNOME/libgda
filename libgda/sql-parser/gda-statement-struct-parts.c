@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 - 2008 Vivien Malerba
+ * Copyright (C) 2007 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -63,7 +63,7 @@ gda_sql_expr_free (GdaSqlExpr *expr)
 {
 	if (!expr) return;
 
-	gda_sql_expr_check_clean (expr);
+	_gda_sql_expr_check_clean (expr);
 	if (expr->value) {
 		g_value_unset (expr->value);
 		g_free (expr->value);
@@ -73,9 +73,9 @@ gda_sql_expr_free (GdaSqlExpr *expr)
 	gda_sql_operation_free (expr->cond);
 	if (expr->select) {
 		if (GDA_SQL_ANY_PART (expr->select)->type == GDA_SQL_ANY_STMT_SELECT)
-			gda_sql_statement_select_free (expr->select);
+			_gda_sql_statement_select_free (expr->select);
 		else if (GDA_SQL_ANY_PART (expr->select)->type == GDA_SQL_ANY_STMT_COMPOUND)
-			gda_sql_statement_compound_free (expr->select);
+			_gda_sql_statement_compound_free (expr->select);
 		else
 			g_assert_not_reached ();
 	}
@@ -118,9 +118,9 @@ gda_sql_expr_copy (GdaSqlExpr *expr)
 
 	if (expr->select) {
 		if (GDA_SQL_ANY_PART (expr->select)->type == GDA_SQL_ANY_STMT_SELECT)
-			copy->select = gda_sql_statement_select_copy (expr->select);
+			copy->select = _gda_sql_statement_select_copy (expr->select);
 		else if (GDA_SQL_ANY_PART (expr->select)->type == GDA_SQL_ANY_STMT_COMPOUND)
-			copy->select = gda_sql_statement_compound_copy (expr->select);
+			copy->select = _gda_sql_statement_compound_copy (expr->select);
 		else
 			g_assert_not_reached ();
 		gda_sql_any_part_set_parent (copy->select, copy);
@@ -165,9 +165,9 @@ gda_sql_expr_serialize (GdaSqlExpr *expr)
 	}
 	else if (expr->select) {
 		if (GDA_SQL_ANY_PART (expr->select)->type == GDA_SQL_ANY_STMT_SELECT)
-			str = gda_sql_statement_select_serialize (expr->select);
+			str = _gda_sql_statement_select_serialize (expr->select);
 		else if (GDA_SQL_ANY_PART (expr->select)->type == GDA_SQL_ANY_STMT_COMPOUND)
-			str = gda_sql_statement_compound_serialize (expr->select);
+			str = _gda_sql_statement_compound_serialize (expr->select);
 		else
 			g_assert_not_reached ();
 		g_string_append_printf (string, "\"select\":{%s}", str);
@@ -224,7 +224,7 @@ gda_sql_expr_take_select (GdaSqlExpr *expr, GdaSqlStatement *stmt)
 		part = GDA_SQL_ANY_PART (stmt->contents);
 		stmt->contents = NULL;
 		gda_sql_statement_free (stmt);
-		expr->select = gda_sql_statement_compound_reduce (part);
+		expr->select = _gda_sql_statement_compound_reduce (part);
 		gda_sql_any_part_set_parent (expr->select, expr);
 	}
 }
@@ -259,7 +259,7 @@ gda_sql_field_free (GdaSqlField *field)
 {
 	if (!field) return;
 
-	gda_sql_field_check_clean (field);
+	_gda_sql_field_check_clean (field);
 	g_free (field->field_name);
 	g_free (field);
 }
@@ -351,7 +351,7 @@ gda_sql_table_free (GdaSqlTable *table)
 {
 	if (!table) return;
 
-	gda_sql_table_check_clean (table);
+	_gda_sql_table_check_clean (table);
 	g_free (table->table_name);
 	g_free (table);
 }
@@ -537,7 +537,6 @@ gda_sql_function_serialize (GdaSqlFunction *function)
  * 
  * Sets the function's name using the string holded by @value. When call, @value is freed using
  * #gda_value_free().
- *
  */
 void
 gda_sql_function_take_name (GdaSqlFunction *function, GValue *value)
@@ -549,7 +548,7 @@ gda_sql_function_take_name (GdaSqlFunction *function, GValue *value)
 }
 
 /**
- * gda_sql_function_take_name
+ * gda_sql_function_take_args_list
  * @function: a #GdaSqlFunction structure
  * @args: a #GSList to take from
  * 
@@ -557,7 +556,8 @@ gda_sql_function_take_name (GdaSqlFunction *function, GValue *value)
  * list's data elements' parent to @function.
  *
  */
-void gda_sql_function_take_args_list (GdaSqlFunction *function, GSList *args)
+void
+gda_sql_function_take_args_list (GdaSqlFunction *function, GSList *args)
 {
 	GSList *list;
 	function->args_list = args;
@@ -756,7 +756,7 @@ gda_sql_operation_operator_to_string (GdaSqlOperatorType op)
 }
 
 /**
- * gda_sql_operator_from_string
+ * gda_sql_operation_operator_from_string
  * @op: a #GdaSqlOperation structure
  * 
  * Returns #GdaSqlOperatorType that correspond with the string @op.
@@ -1000,7 +1000,7 @@ gda_sql_select_field_free (GdaSqlSelectField *field)
 {
 	if (!field) return;
 
-	gda_sql_select_field_check_clean (field);
+	_gda_sql_select_field_check_clean (field);
 	gda_sql_expr_free (field->expr);
 	g_free (field->field_name);
 	g_free (field->table_name);
@@ -1176,7 +1176,7 @@ gda_sql_select_target_free (GdaSqlSelectTarget *target)
 {
 	if (!target) return;
 
-	gda_sql_select_target_check_clean (target);
+	_gda_sql_select_target_check_clean (target);
 	gda_sql_expr_free (target->expr);
 	g_free (target->table_name);
 	g_free (target->as);

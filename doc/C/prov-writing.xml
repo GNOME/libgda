@@ -816,6 +816,7 @@ gboolean (*key_columns)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
       </itemizedlist>
     </para>
   </sect1>
+  &libgda-GdaSqlStatement;
 </chapter>
 
 <chapter id="libgda-provider-pack">

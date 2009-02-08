@@ -31,16 +31,16 @@ GdaSqlStatementContentsInfo compound_infos = {
 	GDA_SQL_STATEMENT_COMPOUND,
 	"COMPOUND",
 	gda_sql_statement_compound_new,
-	gda_sql_statement_compound_free,
-	gda_sql_statement_compound_copy,
-	gda_sql_statement_compound_serialize,
+	_gda_sql_statement_compound_free,
+	_gda_sql_statement_compound_copy,
+	_gda_sql_statement_compound_serialize,
 
 	gda_sql_statement_compound_check_structure,
 	NULL
 };
 
 GdaSqlStatementContentsInfo *
-gda_sql_statement_compound_get_infos (void)
+_gda_sql_statement_compound_get_infos (void)
 {
 	return &compound_infos;
 }
@@ -56,7 +56,7 @@ gda_sql_statement_compound_new (void)
 }
 
 void
-gda_sql_statement_compound_free (gpointer stmt)
+_gda_sql_statement_compound_free (gpointer stmt)
 {
 	GdaSqlStatementCompound *compound = (GdaSqlStatementCompound *) stmt;
 
@@ -68,7 +68,7 @@ gda_sql_statement_compound_free (gpointer stmt)
 }
 
 gpointer
-gda_sql_statement_compound_copy (gpointer src)
+_gda_sql_statement_compound_copy (gpointer src)
 {
 	GdaSqlStatementCompound *dest;
 	GdaSqlStatementCompound *compound = (GdaSqlStatementCompound *) src;
@@ -87,7 +87,7 @@ gda_sql_statement_compound_copy (gpointer src)
 }
 
 gchar *
-gda_sql_statement_compound_serialize (gpointer stmt)
+_gda_sql_statement_compound_serialize (gpointer stmt)
 {
 	GString *string;
 	gchar *str;
@@ -135,6 +135,14 @@ gda_sql_statement_compound_serialize (gpointer stmt)
 	return str;	
 }
 
+/**
+ * gda_sql_statement_compound_take_stmt
+ * @stmt: a #GdaSqlStatement pointer
+ * @s: a #GdaSqlStatement pointer
+ *
+ * Adds the @s sub-statement to the @stmt compound statement. @s's reference is transfered to
+ * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
+ */
 void
 gda_sql_statement_compound_take_stmt (GdaSqlStatement *stmt, GdaSqlStatement *s)
 {
@@ -168,7 +176,7 @@ gda_sql_statement_compound_take_stmt (GdaSqlStatement *stmt, GdaSqlStatement *s)
 }
 
 GdaSqlAnyPart *
-gda_sql_statement_compound_reduce (GdaSqlAnyPart *compound_or_select)
+_gda_sql_statement_compound_reduce (GdaSqlAnyPart *compound_or_select)
 {
 	GdaSqlAnyPart *part;
 
@@ -181,14 +189,22 @@ gda_sql_statement_compound_reduce (GdaSqlAnyPart *compound_or_select)
 			rpart = GDA_SQL_ANY_PART (((GdaSqlStatement *) compound->stmt_list->data)->contents);
 			g_slist_free (compound->stmt_list);
 			compound->stmt_list = NULL;
-			gda_sql_statement_compound_free (compound);
-			part = gda_sql_statement_compound_reduce (rpart);
+			_gda_sql_statement_compound_free (compound);
+			part = _gda_sql_statement_compound_reduce (rpart);
 		}
 	}
 
 	return part;
 }
 
+
+/**
+ * gda_sql_statement_compound_set_type
+ * @stmt: a #GdaSqlStatement pointer
+ * @type: a #GdaSqlStatementCompoundType value
+ *
+ * Specifies @stmt's type of compound
+ */
 void
 gda_sql_statement_compound_set_type (GdaSqlStatement *stmt, GdaSqlStatementCompoundType type)
 {
@@ -197,7 +213,7 @@ gda_sql_statement_compound_set_type (GdaSqlStatement *stmt, GdaSqlStatementCompo
 }
 
 gint
-gda_sql_statement_compound_get_n_cols (GdaSqlStatementCompound *compound, GError **error)
+_gda_sql_statement_compound_get_n_cols (GdaSqlStatementCompound *compound, GError **error)
 {
 	if (!compound || !compound->stmt_list) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
@@ -216,7 +232,7 @@ gda_sql_statement_compound_get_n_cols (GdaSqlStatementCompound *compound, GError
 		return g_slist_length (((GdaSqlStatementSelect*) sqlstmt->contents)->expr_list);
 	}
 	else if (sqlstmt->stmt_type == GDA_SQL_STATEMENT_COMPOUND) 
-		return gda_sql_statement_compound_get_n_cols ((GdaSqlStatementCompound*) sqlstmt->contents, error);
+		return _gda_sql_statement_compound_get_n_cols ((GdaSqlStatementCompound*) sqlstmt->contents, error);
 	else {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
 			      "%s", _("COMPOUND statement contains a non SELECT statement"));
@@ -255,7 +271,7 @@ gda_sql_statement_compound_check_structure (GdaSqlAnyPart *stmt, gpointer data, 
 			nb = g_slist_length (((GdaSqlStatementSelect*) sqlstmt->contents)->expr_list);
 		}
 		else if (sqlstmt->stmt_type == GDA_SQL_STATEMENT_COMPOUND) {
-			nb = gda_sql_statement_compound_get_n_cols ((GdaSqlStatementCompound*) sqlstmt->contents, error);
+			nb = _gda_sql_statement_compound_get_n_cols ((GdaSqlStatementCompound*) sqlstmt->contents, error);
 			if (nb < 0)
 				return FALSE;
 		}

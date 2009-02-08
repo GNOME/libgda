@@ -1184,7 +1184,6 @@ gda_sql_statement_update_take_set_value
 GdaSqlStatementCompound
 gda_sql_statement_compound_set_type
 gda_sql_statement_compound_take_stmt
-gda_sql_statement_compound_reduce
 <SUBSECTION>
 GdaSqlExpr
 gda_sql_expr_new
@@ -1278,7 +1277,10 @@ gda_sql_select_order_new
 gda_sql_select_order_free
 gda_sql_select_order_copy
 gda_sql_select_order_serialize
+<SUBSECTION>
+gda_sql_value_stringify
 </SECTION>
+
 
 <SECTION>
 <FILE>gda-meta-store</FILE>

@@ -53,17 +53,21 @@ struct _GdaSqlStatementCompound {
 /*
  * Common operations
  */
-gpointer  gda_sql_statement_compound_copy (gpointer src);
-void      gda_sql_statement_compound_free (gpointer stmt);
-gchar    *gda_sql_statement_compound_serialize (gpointer stmt);
-GdaSqlStatementContentsInfo *gda_sql_statement_compound_get_infos (void);
-gint      gda_sql_statement_compound_get_n_cols (GdaSqlStatementCompound *compound, GError **error);
+gpointer  _gda_sql_statement_compound_copy (gpointer src);
+void      _gda_sql_statement_compound_free (gpointer stmt);
+gchar    *_gda_sql_statement_compound_serialize (gpointer stmt);
+GdaSqlStatementContentsInfo *_gda_sql_statement_compound_get_infos (void);
+
+/*
+ * compound specific operations
+ */
+gint      _gda_sql_statement_compound_get_n_cols (GdaSqlStatementCompound *compound, GError **error);
+GdaSqlAnyPart * _gda_sql_statement_compound_reduce (GdaSqlAnyPart *compound_or_select);
 
 /*
  * Functions used by the parser
  */
 void gda_sql_statement_compound_set_type (GdaSqlStatement *stmt, GdaSqlStatementCompoundType type);
 void gda_sql_statement_compound_take_stmt (GdaSqlStatement *stmt, GdaSqlStatement *s);
-GdaSqlAnyPart * gda_sql_statement_compound_reduce (GdaSqlAnyPart *compound_or_select);
 
 #endif

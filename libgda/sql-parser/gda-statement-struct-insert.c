@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 - 2008 Vivien Malerba
+ * Copyright (C) 2007 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -45,7 +45,7 @@ GdaSqlStatementContentsInfo insert_infos = {
 };
 
 GdaSqlStatementContentsInfo *
-gda_sql_statement_insert_get_infos (void)
+_gda_sql_statement_insert_get_infos (void)
 {
 	return &insert_infos;
 }
@@ -78,9 +78,9 @@ gda_sql_statement_insert_free (gpointer stmt)
 	g_slist_free (insert->fields_list);
 	if (insert->select) {
 		if (GDA_SQL_ANY_PART (insert->select)->type == GDA_SQL_ANY_STMT_SELECT)
-			gda_sql_statement_select_free (insert->select);
+			_gda_sql_statement_select_free (insert->select);
 		else if (GDA_SQL_ANY_PART (insert->select)->type == GDA_SQL_ANY_STMT_COMPOUND)
-			gda_sql_statement_compound_free (insert->select);
+			_gda_sql_statement_compound_free (insert->select);
 		else
 			g_assert_not_reached ();
 	}
@@ -120,9 +120,9 @@ gda_sql_statement_insert_copy (gpointer src)
 	}
 	if (insert->select) {
 		if (GDA_SQL_ANY_PART (insert->select)->type == GDA_SQL_ANY_STMT_SELECT)
-			dest->select = gda_sql_statement_select_copy (insert->select);
+			dest->select = _gda_sql_statement_select_copy (insert->select);
 		else if (GDA_SQL_ANY_PART (insert->select)->type == GDA_SQL_ANY_STMT_COMPOUND)
-			dest->select = gda_sql_statement_compound_copy (insert->select);
+			dest->select = _gda_sql_statement_compound_copy (insert->select);
 		else
 			g_assert_not_reached ();
 		gda_sql_any_part_set_parent (dest->select, dest);
@@ -193,9 +193,9 @@ gda_sql_statement_insert_serialize (gpointer stmt)
 	if (insert->select) {
 		g_string_append (string, ",\"select\":{");
 		if (GDA_SQL_ANY_PART (insert->select)->type == GDA_SQL_ANY_STMT_SELECT)
-			str = gda_sql_statement_select_serialize (insert->select);
+			str = _gda_sql_statement_select_serialize (insert->select);
 		else if (GDA_SQL_ANY_PART (insert->select)->type == GDA_SQL_ANY_STMT_COMPOUND)
-			str = gda_sql_statement_compound_serialize (insert->select);
+			str = _gda_sql_statement_compound_serialize (insert->select);
 		else
 			g_assert_not_reached ();
 		
@@ -217,6 +217,14 @@ gda_sql_statement_insert_serialize (gpointer stmt)
 	return str;	
 }
 
+/**
+ * gda_sql_statement_insert_take_table_name
+ * @stmt: a #GdaSqlStatement pointer
+ * @value: name of the table to insert into, as a G_TYPE_STRING #GValue
+ *
+ * Sets the name of the table to insert into in @stmt. @value's responsability is transfered to
+ * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
+ */
 void
 gda_sql_statement_insert_take_table_name (GdaSqlStatement *stmt, GValue *value)
 {
@@ -227,6 +235,14 @@ gda_sql_statement_insert_take_table_name (GdaSqlStatement *stmt, GValue *value)
 	}
 }
 
+/**
+ * gda_sql_statement_insert_take_on_conflict
+ * @stmt: a #GdaSqlStatement pointer
+ * @value: name of the resolution conflict algotithm, as a G_TYPE_STRING #GValue
+ *
+ * Sets the name of the resolution conflict algotithm used by @stmt. @value's responsability is transfered to
+ * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
+ */
 void
 gda_sql_statement_insert_take_on_conflict (GdaSqlStatement *stmt, GValue *value)
 {
@@ -238,6 +254,15 @@ gda_sql_statement_insert_take_on_conflict (GdaSqlStatement *stmt, GValue *value)
 	}
 }
 
+/**
+ * gda_sql_statement_insert_take_fields_list
+ * @stmt: a #GdaSqlStatement pointer
+ * @list: a list of #GdaSqlField pointers
+ *
+ * Sets the list of fields for which values will be specified in @stmt. @list's 
+ * responsability is transfered to
+ * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
+ */
 void
 gda_sql_statement_insert_take_fields_list (GdaSqlStatement *stmt, GSList *list)
 {
@@ -249,8 +274,14 @@ gda_sql_statement_insert_take_fields_list (GdaSqlStatement *stmt, GSList *list)
 		gda_sql_any_part_set_parent (l->data, insert);
 }
 
-/*
- * @list is a list of GdaSqlExpr
+/**
+ * gda_sql_statement_insert_take_1_values_list
+ * @stmt: a #GdaSqlStatement pointer
+ * @list: a list of #GdaSqlExpr pointers
+ *
+ * Sets a list of values to be inserted by @stmt. @list's 
+ * responsability is transfered to
+ * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
  */
 void
 gda_sql_statement_insert_take_1_values_list (GdaSqlStatement *stmt, GSList *list)
@@ -263,8 +294,14 @@ gda_sql_statement_insert_take_1_values_list (GdaSqlStatement *stmt, GSList *list
 	insert->values_list = g_slist_prepend (insert->values_list, list);
 }
 
-/*
- * @list is a list of list of GdaSqlExpr
+/**
+ * gda_sql_statement_insert_take_1_values_list
+ * @stmt: a #GdaSqlStatement pointer
+ * @list: a list of #GSQliet of #GdaSqlExpr pointers
+ *
+ * Sets a list of list of values to be inserted by @stmt. @list's 
+ * responsability is transfered to
+ * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
  */
 void
 gda_sql_statement_insert_take_extra_values_list (GdaSqlStatement *stmt, GSList *list)
@@ -278,6 +315,16 @@ gda_sql_statement_insert_take_extra_values_list (GdaSqlStatement *stmt, GSList *
 	insert->values_list = g_slist_concat (insert->values_list, list);
 }
 
+
+/**
+ * gda_sql_statement_insert_take_select
+ * @stmt: a #GdaSqlStatement pointer
+ * @select: a SELECT #GdaSqlStatement pointer
+ *
+ * Specifies a SELECT statement, the values inserted will be the result set of @select. @select's 
+ * responsability is transfered to
+ * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
+ */
 void
 gda_sql_statement_insert_take_select (GdaSqlStatement *stmt, GdaSqlStatement *select)
 {
@@ -286,7 +333,7 @@ gda_sql_statement_insert_take_select (GdaSqlStatement *stmt, GdaSqlStatement *se
 	part = GDA_SQL_ANY_PART (select->contents);
 	select->contents = NULL;
 	gda_sql_statement_free (select);
-	insert->select = gda_sql_statement_compound_reduce (part);
+	insert->select = _gda_sql_statement_compound_reduce (part);
 	gda_sql_any_part_set_parent (insert->select, insert);	
 }
 
@@ -318,7 +365,7 @@ gda_sql_statement_insert_check_structure (GdaSqlAnyPart *stmt, gpointer data, GE
 			}
 			else if (GDA_SQL_ANY_PART (insert->select)->type == GDA_SQL_ANY_STMT_COMPOUND) {
 				GdaSqlStatementCompound *compound = (GdaSqlStatementCompound*) insert->select;
-				len = gda_sql_statement_compound_get_n_cols (compound, error);
+				len = _gda_sql_statement_compound_get_n_cols (compound, error);
 				if (len < 0)
 					return FALSE;
 			}
