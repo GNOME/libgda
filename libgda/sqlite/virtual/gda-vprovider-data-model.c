@@ -310,7 +310,7 @@ gda_vprovider_data_model_close_connection (GdaServerProvider *provider, GdaConne
 	g_return_val_if_fail (GDA_IS_VCONNECTION_DATA_MODEL (cnc), FALSE);
 
 	gda_vconnection_data_model_foreach (GDA_VCONNECTION_DATA_MODEL (cnc),
-					    (GdaVConnectionDataModelFunc) cnc_close_foreach_func, cnc);
+					    (GdaVconnectionDataModelFunc) cnc_close_foreach_func, cnc);
 
 	return GDA_SERVER_PROVIDER_CLASS (parent_class)->close_connection (GDA_SERVER_PROVIDER (provider), cnc);
 }

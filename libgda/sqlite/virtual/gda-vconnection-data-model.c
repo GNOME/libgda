@@ -381,7 +381,7 @@ gda_vconnection_data_model_get_table_name (GdaVconnectionDataModel *cnc, GdaData
 /**
  * gda_vconnection_data_model_foreach
  * @cnc: a #GdaVconnectionDataModel connection
- * @func: a #GdaVConnectionDataModelFunc function pointer
+ * @func: a #GdaVconnectionDataModelFunc function pointer
  * @data: data to pass to @cunc calls
  *
  * Call @func for each table in @cnc. 
@@ -392,7 +392,7 @@ gda_vconnection_data_model_get_table_name (GdaVconnectionDataModel *cnc, GdaData
  */
 void
 gda_vconnection_data_model_foreach (GdaVconnectionDataModel *cnc, 
-				    GdaVConnectionDataModelFunc func, gpointer data)
+				    GdaVconnectionDataModelFunc func, gpointer data)
 {
 	GSList *list, *next;
 	g_return_if_fail (GDA_IS_VCONNECTION_DATA_MODEL (cnc));

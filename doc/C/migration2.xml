@@ -128,6 +128,16 @@
       </para>
     </sect2>
 
+    <sect2><title>Database provider's changes</title>
+      <para>
+	<itemizedlist>
+	  <listitem><para>BLOB handling in the PostgreSQL provider has changed and is now similar to JDBC and ODBC: 
+	      the provider does not handle orphaned BLOBs (which is a problem specific to PostgreSQL). See the section
+	      about <link linkend="limitations_postgres">PostgreSQL's limitations</link> for more information.</para></listitem>
+	</itemizedlist>
+      </para>
+    </sect2>
+
     <sect2><title>API changes</title>
       <para>
 	<itemizedlist>

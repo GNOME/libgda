@@ -567,7 +567,7 @@ gda_virtual_connection_get_type
 <FILE>gda-vconnection-data-model</FILE>
 <TITLE>GdaVconnectionDataModel</TITLE>
 GdaVconnectionDataModel
-GdaVConnectionDataModelFunc
+GdaVconnectionDataModelFunc
 GdaVconnectionDataModelSpec
 GdaVconnectionDataModelCreateColumnsFunc
 GdaVconnectionDataModelCreateModelFunc
@@ -928,7 +928,6 @@ gda_report_engine_run_as_doc
 GDA_IS_REPORT_ENGINE
 GDA_REPORT_ENGINE
 GDA_REPORT_ENGINE_CLASS
-GDA_REPORT_ENGINE_ERROR
 GDA_TYPE_REPORT_ENGINE
 gda_report_engine_get_type
 </SECTION>
@@ -944,7 +943,6 @@ gda_report_document_run_as_pdf
 GDA_IS_REPORT_DOCUMENT
 GDA_REPORT_DOCUMENT
 GDA_REPORT_DOCUMENT_CLASS
-GDA_REPORT_DOCUMENT_ERROR
 GDA_TYPE_REPORT_DOCUMENT
 gda_report_document_get_type
 </SECTION>
@@ -958,7 +956,6 @@ gda_report_rml_document_new
 GDA_IS_REPORT_RML_DOCUMENT
 GDA_REPORT_RML_DOCUMENT
 GDA_REPORT_RML_DOCUMENT_CLASS
-GDA_REPORT_RML_DOCUMENT_ERROR
 GDA_TYPE_REPORT_RML_DOCUMENT
 gda_report_rml_document_get_type
 </SECTION>
@@ -972,7 +969,6 @@ gda_report_docbook_document_new
 GDA_IS_REPORT_DOCBOOK_DOCUMENT
 GDA_REPORT_DOCBOOK_DOCUMENT
 GDA_REPORT_DOCBOOK_DOCUMENT_CLASS
-GDA_REPORT_DOCBOOK_DOCUMENT_ERROR
 GDA_TYPE_REPORT_DOCBOOK_DOCUMENT
 gda_report_docbook_document_get_type
 </SECTION>
@@ -1258,6 +1254,7 @@ gda_sql_select_target_take_select
 gda_sql_select_target_take_alias
 <SUBSECTION>
 GdaSqlSelectJoin
+GdaSqlSelectJoinType
 gda_sql_select_join_new
 gda_sql_select_join_free
 gda_sql_select_join_copy

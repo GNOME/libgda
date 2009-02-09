@@ -1109,7 +1109,7 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 <para>
   This structure represents a selected item in a SELECT statement (when executed, the returned data set
   will have one column per selected item). Note that the @table_name and 
-  @table field parts <emphasis>will be</emphasis> overwritten by &LIBGDA;,
+  @field_name field parts <emphasis>will be</emphasis> overwritten by &LIBGDA;,
   set the value of @expr->value instead.
 </para>
 
@@ -1275,6 +1275,18 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 @use: 
 @_gda_reserved1: 
 @_gda_reserved2: 
+
+<!-- ##### ENUM GdaSqlSelectJoinType ##### -->
+<para>
+
+</para>
+
+@GDA_SQL_SELECT_JOIN_CROSS: 
+@GDA_SQL_SELECT_JOIN_NATURAL: 
+@GDA_SQL_SELECT_JOIN_INNER: 
+@GDA_SQL_SELECT_JOIN_LEFT: 
+@GDA_SQL_SELECT_JOIN_RIGHT: 
+@GDA_SQL_SELECT_JOIN_FULL: 
 
 <!-- ##### FUNCTION gda_sql_select_join_new ##### -->
 <para>

@@ -40,6 +40,7 @@ typedef struct _GdaVconnectionDataModelSpec  GdaVconnectionDataModelSpec;
 
 typedef GList        *(*GdaVconnectionDataModelCreateColumnsFunc) (GdaVconnectionDataModelSpec *, GError **);
 typedef GdaDataModel *(*GdaVconnectionDataModelCreateModelFunc)   (GdaVconnectionDataModelSpec *);
+typedef void (*GdaVconnectionDataModelFunc) (GdaDataModel *, const gchar *, gpointer );
 
 struct _GdaVconnectionDataModelSpec {
 	GdaDataModel                             *data_model;
@@ -50,9 +51,8 @@ struct _GdaVconnectionDataModelSpec {
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
 };
-#define GDA_VCONNECTION_DATA_MODEL_SPEC(x) ((GdaVconnectionDataModelSpec*)(x))
 
-typedef void (*GdaVConnectionDataModelFunc) (GdaDataModel *model, const gchar *table_name, gpointer data);
+#define GDA_VCONNECTION_DATA_MODEL_SPEC(x) ((GdaVconnectionDataModelSpec*)(x))
 
 struct _GdaVconnectionDataModel {
 	GdaVirtualConnection            connection;
@@ -80,7 +80,7 @@ const gchar        *gda_vconnection_data_model_get_table_name (GdaVconnectionDat
 GdaDataModel       *gda_vconnection_data_model_get_model (GdaVconnectionDataModel *cnc, const gchar *table_name);
 
 void                gda_vconnection_data_model_foreach   (GdaVconnectionDataModel *cnc, 
-							  GdaVConnectionDataModelFunc func, gpointer data);
+							  GdaVconnectionDataModelFunc func, gpointer data);
 
 G_END_DECLS
 

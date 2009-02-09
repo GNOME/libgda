@@ -72,10 +72,10 @@
 	      to store other information within the database. Libgda assumes that any column of type "Oid" represents a
 	      blob. If this is not the case, then you must cast it to the correct data type within your SQL query (for example
 	      as "SELECT oid::varchar FROM...")</para></listitem>
-	  <listitem><para>As Libgda tries as much as possible to avoid orphaned BLOBs, it assumes that any BLOB Oid is
-	      present in at most one column of a table (and if not
-	      present, then the BLOB is orphaned); if a same BLOB is present in more than one column of a table, then
-	      expect some problems.</para></listitem>
+	  <listitem><para>&LIBGDA; does not try to avoid orphaned BLOBs, to solve the problem of orphaned BLOBs, set up
+	      the "lo" extension from PöstgreSQL's contrib, and/or use the "vacuumlo" also from the contrib.</para>
+	  <para>Note that in the future the PostgreSQL's provider will have an option to ensure that there are no
+	    orphaned BLOBs itself.</para></listitem>
 	  <listitem><para>BLOB manipulations can only occur within a transaction, 
 	      so you should start a transaction before any operation
 	      on BLOBs, otherwise Libgda will automatically start one</para></listitem>

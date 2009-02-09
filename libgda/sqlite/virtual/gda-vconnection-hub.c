@@ -313,7 +313,7 @@ gda_vconnection_hub_get_connection (GdaVconnectionHub *hub, const gchar *ns)
 /**
  * gda_vconnection_hub_foreach
  * @hub: a #GdaVconnectionHub connection
- * @func: a #GdaVConnectionDataModelFunc function pointer
+ * @func: a #GdaVconnectionDataModelFunc function pointer
  * @data: data to pass to @cunc calls
  *
  * Call @func for each #GdaConnection represented in @hub.
