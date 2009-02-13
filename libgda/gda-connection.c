@@ -3277,7 +3277,7 @@ prepare_meta_statements_hash (void)
  * @cnc: a #GdaConnection object.
  * @meta_type: describes which data to get.
  * @error: a place to store errors, or %NULL
- * @nb_filters: the number of filters in the @... argument
+ * @nb_filters: the number of filters in the ... argument
  * @...: a list of (filter name (gchar *), filter value (GValue*)) pairs specifying
  * the filter to apply to the returned data model's contents (there must be @nb_filters pairs)
  *
@@ -3289,7 +3289,7 @@ prepare_meta_statements_hash (void)
  * is up to date using gda_connection_update_meta_store() (it can become outdated if the database's schema
  * is modified).
  *
- * For more information about the returned data model's attributes, or about the @meta_type and @... filter arguments,
+ * For more information about the returned data model's attributes, or about the @meta_type and ... filter arguments,
  * see <link linkend="GdaConnectionMetaTypeHead">this description</link>.
  * 
  * Returns: a #GdaDataModel containing the data required. The caller is responsible

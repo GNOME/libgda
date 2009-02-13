@@ -1318,7 +1318,7 @@ g_object_unref (eng);
   </part>
 
   <part id="gda-sql">
-    <title>Gda SQL console' user manual</title>
+    <title>Gda SQL console's user manual</title>
     &GdaSqlManual;
   </part>
 

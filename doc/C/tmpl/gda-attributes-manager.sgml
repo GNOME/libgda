@@ -84,6 +84,27 @@ Manager for lists of attributes
 </para>
 
 
+<!-- ##### USER_FUNCTION GdaAttributesManagerSignal ##### -->
+<para>
+
+</para>
+
+@obj: 
+@att_name: 
+@value: 
+@data: 
+
+
+<!-- ##### USER_FUNCTION GdaAttributesManagerFunc ##### -->
+<para>
+
+</para>
+
+@att_name: 
+@value: 
+@data: 
+
+
 <!-- ##### FUNCTION gda_attributes_manager_new ##### -->
 <para>
 

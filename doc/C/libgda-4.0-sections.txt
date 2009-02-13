@@ -35,6 +35,8 @@ GDA_ATTRIBUTE_NUMERIC_SCALE
 GDA_ATTRIBUTE_IS_DEFAULT
 <SUBSECTION>
 GdaAttributesManager
+GdaAttributesManagerSignal
+GdaAttributesManagerFunc
 gda_attributes_manager_new
 gda_attributes_manager_free
 gda_attributes_manager_set

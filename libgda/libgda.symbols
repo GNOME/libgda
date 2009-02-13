@@ -565,7 +565,6 @@
 	gda_sql_field_new
 	gda_sql_field_serialize
 	gda_sql_field_take_name
-	gda_sql_function_check_clean
 	gda_sql_function_copy
 	gda_sql_function_free
 	gda_sql_function_new
