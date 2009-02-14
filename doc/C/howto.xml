@@ -415,6 +415,40 @@ g_object_unref (mstruct);
     </para>
   </sect1>
 
+  <sect1 id="howto-meta2">
+    <title>Update the meta data about a table</title>
+    <para>
+      For a general overview of the mete data problem, see the
+      <link inkend="howto-meta1">Get information about a table's columns</link> section. Updating the meta data
+      can be done by calling 
+      <link linkend="gda-connection-update-meta-store">gda_connection_update_meta_store()</link> with a %NULL
+      "context" argument, but this
+      call updates the whole meta data which will always do the job, but sometimes one knows that only a
+      part of the meta data need to be updated. Here is an example of how to use a specific
+      <link linkend="GdaMetaContext">GdaMetaContext</link> argument.
+    </para>
+    <para>
+      Specifically the following code
+      updates the meta data regarding the "customers" table:
+      <programlisting><![CDATA[
+GdaConnection *connection=...
+GError *error = NULL;
+GdaMetaContext mcontext = {"_tables", 1, NULL, NULL};
+gboolean result;
+mcontext.column_names = g_new (gchar *, 1);
+mcontext.column_names[0] = "table_name";
+mcontext.column_values = g_new (GValue *, 1);
+g_value_set_string ((mcontext.column_values[0] = gda_value_new (G_TYPE_STRING)), "customers");
+result = gda_connection_update_meta_store (connection, &mcontext, &error);
+gda_value_free (mcontext.column_values[0]);
+if (!result) {
+    /* handle the error */
+    g_error_free (error);
+}]]>
+      </programlisting>
+    </para>
+  </sect1>
+
   <sect1>
     <title>Validate a DML statement</title>
     <para>

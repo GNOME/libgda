@@ -1,3 +1,12 @@
+2009-02-14  Vivien Malerba <malerba@gnome-db.org>
+
+	* samples/:
+	  - added a new MetaStore example to show some examples of the
+	    gda_connection_update_meta_store() function
+	  - corrected some examples to compile correctly
+	* doc/C:
+	* libgda/gda-connection.c: improved documentation
+
 2009-02-13  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in: set version to 3.99.12

@@ -1,0 +1,46 @@
+Libgda simple example
+=====================
+
+Description:
+------------
+
+The example in this directory illustrate how to get meta data information (information about
+the database's objects), and specifically the columns of some tables.
+
+The following is done:
+* display columns of the 'customers' table, there should be none as the meta data has not been
+  yet updated
+* update the meta data for the 'customers' table, and show the columns now
+* update the meta data for all the tables, and this time show the columns of the 'products' table
+
+Compiling and running:
+----------------------
+
+To compile (make sure Libgda is installed prior to this):
+> make
+
+and to run:
+> ./example
+
+Output:
+-------
+Running should produce the following output:
+
+Initial metastore state
+No column...
+
+Partial metastore update for table 'customers'...
+Tables' columns:
+  id: gint
+  name: gchararray
+  default_served_by: gint
+  country: gchararray
+  city: gchararray
+
+Partial metastore update for all the tables...
+Tables' columns:
+  ref: gchararray
+  category: gint
+  name: gchararray
+  price: gdouble
+  wh_stored: gint

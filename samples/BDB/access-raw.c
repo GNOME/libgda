@@ -34,7 +34,7 @@ main (int argc, char *argv [])
 		c_value= gda_data_model_get_value_at (model, 0, i, &error);
 		if (!c_value) {
 			g_print ("Could not get value from data model: %s\n",
-				 error && error->message ? error->messag : "No detail");
+				 error && error->message ? error->message : "No detail");
 			exit (1);
 		}
 		bin = gda_value_get_binary (c_value);
@@ -44,7 +44,7 @@ main (int argc, char *argv [])
 		c_value= gda_data_model_get_value_at (model, 1, i, &error);
 		if (!c_value) {
 			g_print ("Could not get value from data model: %s\n",
-				 error && error->message ? error->messag : "No detail");
+				 error && error->message ? error->message : "No detail");
 			exit (1);
 		}
 		bin = gda_value_get_binary (c_value);
@@ -71,7 +71,7 @@ main (int argc, char *argv [])
 			gda_data_model_dump (model, stdout);
 
 			gchar *str = "AAA";
-			GValue *value = gda_value_new_binary (str, 4);
+			GValue *value = gda_value_new_binary ((guchar*) str, 4);
 			if (!gda_data_model_set_value_at (model, 1, 2, value, &error)) {
 				g_print ("Could not set value: %s\n", 
 					 error && error->message ? error->message : "no detail");

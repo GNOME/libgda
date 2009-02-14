@@ -2939,7 +2939,36 @@ suggest_update_cb_downstream (GdaMetaStore *store, GdaMetaContext *suggest, Down
  * @error: a place to store errors, or %NULL
  *
  * Updates @cnc's associated #GdaMetaStore. If @context is not %NULL, then only the parts described by
- * @context will be updated, and if it is %NULL, then the complete meta store will be updated.
+ * @context will be updated, and if it is %NULL, then the complete meta store will be updated. Detailled
+ * explanations follow:
+ *
+ * In order to keep the meta store's contents in a consistent state, the update process involves updating
+ * the contents of all the tables related to one where the contents change. For example the "_columns"
+ * table (which lists all the columns of a table) depends on the "_tables" table (which lists all the tables
+ * in a schema), so if a row is added, removed or modified in the "_tables", then the "_columns" table's contents
+ * needs to be updated as well regarding that row.
+ *
+ * If @context is %NULL, then the update process will simply overwrite any data that was present in all the
+ * meta store's tables with new (up to date) data even if nothing has changed, without having to build the
+ * tables' dependency tree. This is the recommended way of proceeding when dealing with a meta store which
+ * might be outdated.
+ *
+ * On the other hand, if @context is not %NULL, then a tree of the dependencies has to be built (depending on
+ * @context) and only some parts of the meta store are updated following that dependencies tree. Specifying a
+ * context may be usefull for example in the following situations:
+ * <itemizedlist>
+ *   <listitem><para>One knows that a database object has changed (for example a table created), and
+ *                   may use the @context to request that only the information about that table be updated
+ *             </para></listitem>
+ *   <listitem><para>One is only interrested in the list of views, and may request that only the information
+ *                   about views may be updated</para></listitem>
+ * </itemizedlist>
+ *
+ * Note however that usually <emphasis>more</emphasis> information will be updated than strictly requested by
+ * the @context argument.
+ *
+ * For more information, see the <link linkend="information_schema">Database structure</link> section, and
+ * the <link linkend="howto-meta2">Update the meta data about a table</link> howto.
  *
  * Returns: TRUE if no error occurred
  */

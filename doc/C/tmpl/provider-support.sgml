@@ -323,6 +323,32 @@ Methods dedicated to implementing providers
 @newstate: 
 
 
+<!-- ##### FUNCTION gda_meta_store_modify ##### -->
+<para>
+
+</para>
+
+@store: 
+@table_name: 
+@new_data: 
+@condition: 
+@error: 
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_meta_store_modify_with_context ##### -->
+<para>
+
+</para>
+
+@store: 
+@context: 
+@new_data: 
+@error: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_compute_dml_statements ##### -->
 <para>
 

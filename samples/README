@@ -16,5 +16,6 @@ Currently the contents are:
 * in XSLT/: example using Libgda's extension to libxslt
 * in DDL/: example using the GdaServerOperation object to perform a CREATE TABLE query
 * in SqlParserConsole/: simple console to test how the GdaSqlParser object parses strings
+* in MetaStore/: simple example to show how to use and update a GdaMetaStore
 
 Good luck and happy hacking!

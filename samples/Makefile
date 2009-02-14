@@ -1,5 +1,5 @@
 SHELL= /bin/sh 
-SUBDIRS = BDB DDL DirDataModel F-Spot Report SimpleExample SqlParserConsole TableCopy Virtual XSLT
+SUBDIRS = BDB DDL DirDataModel F-Spot Report SimpleExample SqlParserConsole TableCopy Virtual XSLT MetaStore
 all:
 	for dir in ${SUBDIRS} ; do ( cd $$dir ; ${MAKE} ) ; done
 clean:

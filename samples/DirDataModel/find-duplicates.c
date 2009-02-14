@@ -138,13 +138,13 @@ main (int argc, char *argv [])
 		
 		gda_statement_get_parameters (stmt, &plist, NULL);
 		param = gda_set_get_holder (plist, "dir_name");
-		gda_holder_set_value_str (param, NULL, dirname);
+		g_assert (gda_holder_set_value_str (param, NULL, dirname, NULL));
 		param = gda_set_get_holder (plist, "dir_name2");
-		gda_holder_set_value_str (param, NULL, dirname);
+		g_assert (gda_holder_set_value_str (param, NULL, dirname, NULL));
 		param = gda_set_get_holder (plist, "filename");
-		gda_holder_set_value_str (param, NULL, filename);
+		g_assert (gda_holder_set_value_str (param, NULL, filename, NULL));
 		param = gda_set_get_holder (plist, "filename2");
-		gda_holder_set_value_str (param, NULL, filename);
+		g_assert (gda_holder_set_value_str (param, NULL, filename, NULL));
 		g_object_unref (parser);
 
 		/* list files duplicates */
