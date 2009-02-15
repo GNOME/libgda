@@ -1,3 +1,11 @@
+2009-02-15  Vivien Malerba <malerba@gnome-db.org>
+
+	* samples/MetaStore/example.c: corrected the usage of
+	gda_connection_get_meta_store_data()
+	* libgda/gda-connection.c: when using gda_connection_get_meta_store_data()
+	with GDA_CONNECTION_META_FIELDS, accept the filter composed of
+	"name" (table name) and	"field_name" as mentionned in the doc
+
 2009-02-14  Vivien Malerba <malerba@gnome-db.org>
 
 	* samples/:

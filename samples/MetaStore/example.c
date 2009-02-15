@@ -53,8 +53,7 @@ main (int argc, char *argv[])
 	g_print ("Initial metastore state\n");
 	g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), TABLE_NAME);
 	data = gda_connection_get_meta_store_data (connection, GDA_CONNECTION_META_FIELDS, &error, 1, 
-						   "name", value,
-						   NULL);
+						   "name", value);
 	if (!data)
 		return -1;
 	list_table_columns (data);
@@ -75,8 +74,7 @@ main (int argc, char *argv[])
 	/* Query the same information about the TABLE_NAME table's columns
 	 * this time there should be some information */
 	data = gda_connection_get_meta_store_data (connection, GDA_CONNECTION_META_FIELDS, &error, 1,
-						   "name", value,
-						   NULL);
+						   "name", value);
 	if (!data)
 		return -1;
 	list_table_columns (data);
@@ -96,8 +94,7 @@ main (int argc, char *argv[])
 	gda_value_free (value);
 	g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), "products");
 	data = gda_connection_get_meta_store_data (connection, GDA_CONNECTION_META_FIELDS, &error, 1,
-						   "name", value,
-						   NULL);
+						   "name", value);
 	if (!data)
 		return -1;
 	list_table_columns (data);

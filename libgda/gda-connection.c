@@ -3209,6 +3209,10 @@ prepare_meta_statements_hash (void)
 	gchar **name_array = g_new (gchar *, 1);
 	name_array[0] = "name";
 
+	gchar **name_col_array = g_new (gchar *, 2);
+	name_col_array[0] = "name";
+	name_col_array[1] = "field_name";
+
 	h = g_hash_table_new (meta_key_hash, meta_key_equal);
 	
 	/* GDA_CONNECTION_META_NAMESPACES */
@@ -3293,6 +3297,16 @@ prepare_meta_statements_hash (void)
 	key->nb_filters = 1;
 	key->filters = name_array;
 	sql = "SELECT c.column_name, c.data_type, c.gtype, c.numeric_precision, c.numeric_scale, c.is_nullable AS 'Nullable', c.column_default, c.extra FROM _columns as c NATURAL JOIN _tables as t WHERE t.table_short_name=##name::string";
+	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+	if (!stmt)
+		g_error ("Could not parse internal statement: %s\n", sql);
+	g_hash_table_insert (h, key, stmt);
+
+	key = g_new0 (MetaKey, 1);
+	key->meta_type = GDA_CONNECTION_META_FIELDS;
+	key->nb_filters = 2;
+	key->filters = name_col_array;
+	sql = "SELECT c.column_name, c.data_type, c.gtype, c.numeric_precision, c.numeric_scale, c.is_nullable AS 'Nullable', c.column_default, c.extra FROM _columns as c NATURAL JOIN _tables as t WHERE t.table_short_name=##name::string AND c.column_name = ##field_name::string";
 	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
 	if (!stmt)
 		g_error ("Could not parse internal statement: %s\n", sql);
