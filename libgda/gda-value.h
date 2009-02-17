@@ -126,11 +126,11 @@ GValue                           *gda_value_copy (const GValue *value);
 
 G_CONST_RETURN GdaBinary         *gda_value_get_binary (const GValue *value);
 void                              gda_value_set_binary (GValue *value, const GdaBinary *binary);
-void                              gda_value_take_binary (GValue *value, const GdaBinary *binary);
+void                              gda_value_take_binary (GValue *value, GdaBinary *binary);
 
 G_CONST_RETURN GdaBlob           *gda_value_get_blob (const GValue *value);
 void                              gda_value_set_blob (GValue *value, const GdaBlob *blob);
-void                              gda_value_take_blob (GValue *value, const GdaBlob *blob);
+void                              gda_value_take_blob (GValue *value, GdaBlob *blob);
 
 G_CONST_RETURN GdaGeometricPoint *gda_value_get_geometric_point (const GValue *value);
 void                              gda_value_set_geometric_point (GValue *value, const GdaGeometricPoint *val);
@@ -162,10 +162,10 @@ gchar                            *gda_value_stringify (const GValue *value);
 xmlNodePtr                        gda_value_to_xml (const GValue *value);
 
 gchar                            *gda_binary_to_string (const GdaBinary *bin, guint maxlen);
-gboolean                          gda_string_to_binary (const gchar *str, GdaBinary *bin);
+GdaBinary                        *gda_string_to_binary (const gchar *str);
 
 gchar                            *gda_blob_to_string (GdaBlob *blob, guint maxlen);
-gboolean                          gda_string_to_blob (const gchar *str, GdaBlob *blob);
+GdaBlob                          *gda_string_to_blob (const gchar *str);
 
 /* Custom data types */
 

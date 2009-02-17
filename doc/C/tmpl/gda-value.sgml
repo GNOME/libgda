@@ -278,7 +278,6 @@ Assorted functions for dealing with #GValue values.
 </para>
 
 @str: 
-@bin: 
 @Returns: 
 
 

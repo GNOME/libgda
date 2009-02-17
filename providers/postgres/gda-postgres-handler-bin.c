@@ -293,16 +293,17 @@ gda_postgres_handler_bin_get_value_from_str (GdaDataHandler *iface, const gchar 
 {
 	GdaPostgresHandlerBin *hdl;
 	GValue *value = NULL;
-	GdaBinary bin;
 
 	g_return_val_if_fail (iface && GDA_IS_POSTGRES_HANDLER_BIN (iface), NULL);
 	hdl = GDA_POSTGRES_HANDLER_BIN (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
 	if (type == GDA_TYPE_BINARY) {
-		if (gda_string_to_binary (str, &bin)) {
-			value = gda_value_new_binary (bin.data, bin.binary_length);
-			g_free (bin.data);
+		GdaBinary *bin;
+		bin = gda_string_to_binary (str);
+		if (bin) {
+			value = gda_value_new (GDA_TYPE_BINARY);
+			gda_value_take_binary (value, bin);
 		}
 	}
 

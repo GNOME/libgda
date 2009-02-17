@@ -1,3 +1,17 @@
+2009-02-17  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in:
+	* providers/sybase/main.c:
+	* Makefile.w32: removed any obsolete reference to bonobo,
+	for bug #571879
+	* libgda/gda-value.[ch]:
+	* libgda/handlers/gda-handler-bin.c:
+	* providers/postgres/gda-postgres-handler-bin.c:
+	  - fixed gda_string_to_binary() and gda_string_to_blob(),
+	    for bug #572028
+	  - removed the const from gda_value_take_binary() and
+	    gda_value_take_blob()
+
 2009-02-15  Vivien Malerba <malerba@gnome-db.org>
 
 	* samples/MetaStore/example.c: corrected the usage of

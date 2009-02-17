@@ -49,8 +49,6 @@ AC_SUBST(INTLTOOL_XML_RULE)
 AC_CHECK_SIZEOF(unsigned int,0)
 AC_CHECK_SIZEOF(unsigned long int,0)
 
-AC_DEFINE_UNQUOTED(BONOBO_EXPLICIT_TRANSLATION_DOMAIN, "libgda-$LIBGDA_ABI_VERSION")
-
 dnl **********************
 dnl Cross compilation test
 dnl **********************

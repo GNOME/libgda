@@ -217,16 +217,20 @@ set_from_string (GValue *value, const gchar *as_string)
 		}
 	}
 	else if (type == GDA_TYPE_BINARY) {
-		GdaBinary binary;
-		retval = gda_string_to_binary (as_string, &binary);
-		if (retval)
-			gda_value_set_binary (value, &binary);
+		GdaBinary *bin;
+		bin = gda_string_to_binary (as_string);
+		if (bin) {
+			gda_value_take_binary (value, bin);
+			retval = TRUE;
+		}
 	}
 	else if (type == GDA_TYPE_BLOB) {
-		GdaBlob blob;
-		retval = gda_string_to_blob (as_string, &blob);
-		if (retval)
-			gda_value_set_blob (value, &blob);
+		GdaBlob *blob;
+		blob = gda_string_to_blob (as_string);
+		if (blob) {
+			gda_value_take_blob (value, blob);
+			retval = TRUE;
+		}
 	}
 
 
@@ -256,7 +260,7 @@ static void
 string_to_binary (const GValue *src, GValue *dest) 
 {
 	/* FIXME: add more checks*/
-	GdaBinary *binary;
+	GdaBinary *bin;
 	const gchar *as_string;
 	
 	g_return_if_fail (G_VALUE_HOLDS_STRING (src) &&
@@ -264,9 +268,9 @@ string_to_binary (const GValue *src, GValue *dest)
 	
 	as_string = g_value_get_string (src);
 	
-	binary = g_new0 (GdaBinary, 1);
-	gda_string_to_binary (as_string, binary);
-	gda_value_take_binary (dest, binary);
+	bin = gda_string_to_binary (as_string);
+	g_return_if_fail (bin);
+	gda_value_take_binary (dest, bin);
 }
 
 static void 
@@ -361,8 +365,8 @@ string_to_blob (const GValue *src, GValue *dest)
 	
 	as_string = g_value_get_string (src);
 	
-	blob = g_new0 (GdaBlob, 1);
-	gda_string_to_blob (as_string, blob);
+	blob = gda_string_to_blob (as_string);
+	g_return_if_fail (blob);
 	gda_value_take_blob (dest, blob);
 }
 
@@ -1418,7 +1422,7 @@ gda_value_set_binary (GValue *value, const GdaBinary *binary)
  * argument is not copied, but used as-is and it should be considered owned by @value.
  */
 void
-gda_value_take_binary (GValue *value, const GdaBinary *binary)
+gda_value_take_binary (GValue *value, GdaBinary *binary)
 {
 	g_return_if_fail (value);
 	g_return_if_fail (binary);
@@ -1474,7 +1478,7 @@ gda_value_get_blob (const GValue *value)
  * argument is not copied, but used as-is and it should be considered owned by @value.
  */
 void
-gda_value_take_blob (GValue *value, const GdaBlob *blob)
+gda_value_take_blob (GValue *value, GdaBlob *blob)
 {
 	g_return_if_fail (value);
 	g_return_if_fail (blob);
@@ -2562,24 +2566,25 @@ gda_binary_to_string (const GdaBinary *bin, guint maxlen)
 /**
  * gda_string_to_binary
  * @str: a string to convert
- * @bin: a non filled @GdaBinary structure
  *
  * Performs the reverse of gda_binary_to_string().
  *
- * Returns: TRUE if no error were found in @str, or FALSE otherwise
+ * Returns: a new #GdaBinary if no error were found in @str, or NULL otherwise
  */
-gboolean
-gda_string_to_binary (const gchar *str, GdaBinary *bin)
+GdaBinary *
+gda_string_to_binary (const gchar *str)
 {
+	GdaBinary *bin;
 	glong len = 0, total;
 	gchar *ptr;
 	gchar *retval;
 	glong offset = 0;
 
 	if (!str) {
+		bin = g_new0 (GdaBinary, 1);
 		bin->data = NULL;
 		bin->binary_length = 0;
-		return TRUE;
+		return bin;
 	}
 
 	total = strlen (str);
@@ -2603,7 +2608,7 @@ gda_string_to_binary (const gchar *str, GdaBinary *bin)
 				}
 				else {
 					g_free (retval);
-					return FALSE;
+					return NULL;
 				}
 			}
 		}
@@ -2614,10 +2619,11 @@ gda_string_to_binary (const gchar *str, GdaBinary *bin)
 		len ++;
 	}
 
+	bin = g_new0 (GdaBinary, 1);
 	bin->data = (guchar*)retval;
 	bin->binary_length = len;
 
-	return TRUE;
+	return bin;
 }
 
 /**
@@ -2644,17 +2650,25 @@ gda_blob_to_string (GdaBlob *blob, guint maxlen)
 /**
  * gda_string_to_blob
  * @str: a string to convert
- * @blob: a non filled @GdaBlob structure
  *
  * Performs the reverse of gda_blob_to_string().
  *
- * Returns: TRUE if no error were found in @str, or FALSE otherwise
+ * Returns: a new #gdaBlob if no error were found in @str, or NULL otherwise
  */
-gboolean
-gda_string_to_blob (const gchar *str, GdaBlob *blob)
+GdaBlob *
+gda_string_to_blob (const gchar *str)
 {
-	gboolean retval;
-	retval = gda_string_to_binary (str, (GdaBinary*) blob);
-	blob->op = NULL;
-	return retval;
+	GdaBinary *bin;
+	bin = gda_string_to_binary (str);
+	if (bin) {
+		GdaBlob *blob;
+		blob = g_new0 (GdaBlob, 1);
+		((GdaBinary*) blob)->data = bin->data;
+		((GdaBinary*) blob)->binary_length = bin->binary_length;
+		blob->op = NULL;
+		g_free (bin);
+		return blob;
+	}
+	else
+		return NULL;
 }
