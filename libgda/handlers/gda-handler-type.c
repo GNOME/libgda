@@ -179,10 +179,10 @@ gda_handler_type_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 			retval = g_strdup_printf ("'%s'", str);
 		}
 		else
-			retval = g_strdup (NULL);	
+			retval = g_strdup ("NULL");	
 	}
 	else
-		retval = g_strdup (NULL);
+		retval = g_strdup ("NULL");
 
 	return retval;
 }

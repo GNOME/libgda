@@ -220,13 +220,13 @@ gda_postgres_handler_bin_get_sql_from_value (GdaDataHandler *iface, const GValue
 				}
 			}
 			else
-				retval = g_strdup (NULL);
+				retval = g_strdup ("NULL");
 		}
 		else
 			retval = g_strdup ("**BLOB**");	
 	}
 	else
-		retval = g_strdup (NULL);
+		retval = g_strdup ("NULL");
 
 	return retval;
 }

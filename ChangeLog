@@ -1,3 +1,17 @@
+2009-02-18  Vivien Malerba <malerba@gnome-db.org>
+
+	* doc/C: doc. improvements regarding GdaDataHandler
+	* providers/mysql/gda-mysql-ddl.c:
+	* providers/postgres/gda-postgres-ddl.c:
+	* providers/postgres/gda-postgres-handler-bin.c:
+	* libgda/sqlite/gda-sqlite-handler-bin.c:
+	* libgda/handlers/gda-handler-type.c:
+	* libgda/handlers/gda-handler-bin.c:
+	* libgda/gda-data-handler.c;
+	* libgda/gda-server-provider.c: make sure the
+	gda_data_handler_get_sql_from_value() function is implemented in a
+	coherent way, fixed bug #572220
+
 2009-02-17  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in:

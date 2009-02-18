@@ -785,7 +785,7 @@ gda_server_provider_string_to_value (GdaServerProvider *provider,  GdaConnection
 				gchar *tmp;
 				
 				tmp = gda_data_handler_get_sql_from_value (dh, retval);
-				if (strcmp (tmp, string)) {
+				if (!tmp || strcmp (tmp, string)) {
 					gda_value_free (retval);
 					retval = NULL;
 				}
@@ -831,7 +831,7 @@ gda_server_provider_string_to_value (GdaServerProvider *provider,  GdaConnection
 					gchar *tmp;
 					
 					tmp = gda_data_handler_get_sql_from_value (dh, retval);
-					if (strcmp (tmp, string)) {
+					if (!tmp || strcmp (tmp, string)) {
 						gda_value_free (retval);
 						retval = NULL;
 					}

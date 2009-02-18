@@ -2,38 +2,30 @@
 GdaDataHandler
 
 <!-- ##### SECTION Short_Description ##### -->
-Interface which provides data handling capabilities
+Interface which provides data handling (conversions) capabilities
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
   Because data types vary a lot from a DBMS to another, the #GdaDataHandler interface helps
-  designing modules which can handle very specific pieces of data through plugins.
-  Each object which imlements the #GdaDataHandler interface is expected to handle a subset of
-  the possible libgda defined data types.
+  managing data in its various representations, and converting from one to another:
+  <itemizedlist>
+    <listitem><para>as a #GValue which is a generic value container for the C language</para></listitem>
+    <listitem><para>as a human readable string</para></listitem>
+    <listitem><para>as an SQL string (a string which can be used in SQL statements)</para></listitem>
+  </itemizedlist>
 </para>
 <para>
-  The #GdaDataHandler object can convert a #GValue to and from both SQL and 'STR'. The SQL representation of a value is 
-  the actual string which would be used in an SQL statement (for example a string's SQL representation is surrounded by 
-  quotes such as 'that\'s a string'). The 'STR' representation is a human-readable representation of a value appropriate 
-  for the user's current locale. The 'STR' respresentation of a string is simply the original string without quotes but 
-  a numerical value or date, for instance, will be formatted according to the user's current locale.
-</para>
-<para>
-  Only one object which implements this interface is needed for any given data type, and it mainly contains some
-  methods to manage values (as #GValue structures). The #GnomeDbDataEntry interface is complementary to this one since
-  it it implemented by widgets where the user can enter or modify some data.
-</para>
-<para>
-  #GdaDataHandler objects specific for each database provider and for each data type can be obtained using 
+  For each data type, a corresponding #GdaDataHandler object can be requested using the
+  <link linkend="gda-get-default-handler">gda_get_default_handler()</link> function. However, when working
+  with a specific database provider, it's better to use a #GdaDataHandler which may be specific to the
+  database provider which will correctly handle each database specificities using
   <link linkend="gda-server-provider-get-data-handler-g-type">gda_server_provider_get_data_handler_g_type()</link> or
-  <link linkend="gda-server-provider-get-data-handler-dbms">gda_server_provider_get_data_handler_dbms()</link>, and
-  generic data handlers (for each type) can be obtained using
-  <link linkend="gda-get-default-handler">gda_get_default_handler()</link>.
+  <link linkend="gda-server-provider-get-data-handler-dbms">gda_server_provider_get_data_handler_dbms()</link>.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-The #GdaDictType class an the #GnomeDbDataEntry interface.
+
 </para>
 
 <!-- ##### SECTION Stability_Level ##### -->

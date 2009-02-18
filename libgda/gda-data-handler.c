@@ -69,10 +69,15 @@ gda_data_handler_iface_init (gpointer g_class)
  * @dh: an object which implements the #GdaDataHandler interface
  * @value: the value to be converted to a string
  *
- * Creates a new string which is an SQL representation of the given value. If the value is NULL or
- * is of type GDA_TYPE_NULL, the returned string is NULL.
+ * Creates a new string which is an SQL representation of the given value, the returned string
+ * can be used directly in an SQL statement. For example if @value is a G_TYPE_STRING, then
+ * the returned string will be correctly quoted. Note however that it is a better practice
+ * to use variables in statements instead of value literals, see
+ * the <link linkend="GdaSqlParser.description">GdaSqlParser</link> for more information.
  *
- * Returns: the new string.
+ * If the value is NULL or is of type GDA_TYPE_NULL, the returned string is "NULL".
+ *
+ * Returns: the new string, or %NULL if an error occurred
  */
 gchar *
 gda_data_handler_get_sql_from_value (GdaDataHandler *dh, const GValue *value)
@@ -80,7 +85,7 @@ gda_data_handler_get_sql_from_value (GdaDataHandler *dh, const GValue *value)
 	g_return_val_if_fail (dh && GDA_IS_DATA_HANDLER (dh), NULL);
 	
 	if (! value || gda_value_is_null (value))
-		return NULL;
+		return g_strdup ("NULL");
 
 	/* Calling the real function with value != NULL and not of type GDA_TYPE_NULL */
 	if (GDA_DATA_HANDLER_GET_IFACE (dh)->get_sql_from_value)
@@ -98,7 +103,7 @@ gda_data_handler_get_sql_from_value (GdaDataHandler *dh, const GValue *value)
  * (in the users's locale, specially for the dates). If the value is 
  * NULL or is of type GDA_TYPE_NULL, the returned string is a copy of "" (empty string).
  *
- * Returns: the new string.
+ * Returns: the new string, or %NULL if an error occurred
  */
 gchar *
 gda_data_handler_get_str_from_value (GdaDataHandler *dh, const GValue *value)
@@ -127,7 +132,7 @@ gda_data_handler_get_str_from_value (GdaDataHandler *dh, const GValue *value)
  *
  * If the sql string is NULL, then the returned GValue is of type GDA_TYPE_NULL;
  * if the sql string does not correspond to a valid SQL string for the requested type, then
- * NULL is returned.
+ * the "NULL" string is returned.
  *
  * Returns: the new GValue or NULL on error
  */

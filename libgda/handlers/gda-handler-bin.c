@@ -198,7 +198,7 @@ gda_handler_bin_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 		}
 	}
 	else
-		retval = g_strdup (NULL);
+		retval = g_strdup ("NULL");
 
 	return retval;
 }

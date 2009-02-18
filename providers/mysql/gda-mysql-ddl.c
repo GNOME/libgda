@@ -354,9 +354,11 @@ gda_mysql_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 
 			dh = gda_server_provider_get_data_handler_g_type (provider, cnc, G_TYPE_STRING);
 			str = gda_data_handler_get_sql_from_value (dh, value);
-			g_string_append (string, " COMMENT = ");
-			g_string_append (string, str);
-			g_free (str);
+			if (str) {
+				g_string_append (string, " COMMENT = ");
+				g_string_append (string, str);
+				g_free (str);
+			}
 		}
 
 		value = gda_server_operation_get_value_at (op, "/TABLE_OPTIONS_P/TABLE_MAX_ROWS");
@@ -382,9 +384,11 @@ gda_mysql_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 
 			dh = gda_server_provider_get_data_handler_g_type (provider, cnc, G_TYPE_STRING);
 			str = gda_data_handler_get_sql_from_value (dh, value);
-			g_string_append (string, " PASSWORD = ");
-			g_string_append (string, str);
-			g_free (str);
+			if (str) {
+				g_string_append (string, " PASSWORD = ");
+				g_string_append (string, str);
+				g_free (str);
+			}
 		}
 
 		value = gda_server_operation_get_value_at (op, "/TABLE_OPTIONS_P/TABLE_DELAY_KEY_WRITE");
@@ -420,9 +424,11 @@ gda_mysql_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 
 			dh = gda_server_provider_get_data_handler_g_type (provider, cnc, G_TYPE_STRING);
 			str = gda_data_handler_get_sql_from_value (dh, value);
-			g_string_append (string, " DATA_DIRECTORY = ");
-			g_string_append (string, str);
-			g_free (str);
+			if (str) {
+				g_string_append (string, " DATA_DIRECTORY = ");
+				g_string_append (string, str);
+				g_free (str);
+			}
 		}
 
 		value = gda_server_operation_get_value_at (op, "/TABLE_OPTIONS_P/TABLE_INDEX_DIR");
@@ -433,9 +439,11 @@ gda_mysql_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 
 			dh = gda_server_provider_get_data_handler_g_type (provider, cnc, G_TYPE_STRING);
 			str = gda_data_handler_get_sql_from_value (dh, value);
-			g_string_append (string, " INDEX_DIRECTORY = ");
-			g_string_append (string, str);
-			g_free (str);
+			if (str) {
+				g_string_append (string, " INDEX_DIRECTORY = ");
+				g_string_append (string, str);
+				g_free (str);
+			}
 		}
 	}
 
