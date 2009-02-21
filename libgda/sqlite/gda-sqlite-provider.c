@@ -1154,13 +1154,13 @@ gda_sqlite_provider_begin_transaction (GdaServerProvider *provider, GdaConnectio
 		else if (! gda_set_set_holder_value (params_set, error, "name", name))
 			status = FALSE;
 		if (status && gda_connection_statement_execute_non_select (cnc, internal_stmt[INTERNAL_BEGIN_NAMED], 
-									   params_set, NULL, NULL) == -1) 
+									   params_set, NULL, error) == -1) 
 			status = FALSE;
 		g_static_mutex_unlock (&mutex);
 	}
 	else {
 		if (gda_connection_statement_execute_non_select (cnc, internal_stmt[INTERNAL_BEGIN], 
-								 NULL, NULL, NULL) == -1) 
+								 NULL, NULL, error) == -1) 
 			status = FALSE;
 	}
 
@@ -1188,13 +1188,13 @@ gda_sqlite_provider_commit_transaction (GdaServerProvider *provider, GdaConnecti
 		else if (!gda_set_set_holder_value (params_set, error, "name", name))
 			status = FALSE;
 		if (status && gda_connection_statement_execute_non_select (cnc, internal_stmt[INTERNAL_COMMIT_NAMED], 
-									   params_set, NULL, NULL) == -1) 
+									   params_set, NULL, error) == -1) 
 			status = FALSE;
 		g_static_mutex_unlock (&mutex);
 	}
 	else {
 		if (gda_connection_statement_execute_non_select (cnc, internal_stmt[INTERNAL_COMMIT], 
-								 NULL, NULL, NULL) == -1) 
+								 NULL, NULL, error) == -1) 
 			status = FALSE;
 	}
 
@@ -1223,13 +1223,13 @@ gda_sqlite_provider_rollback_transaction (GdaServerProvider *provider,
 		else if (! gda_set_set_holder_value (params_set, error, "name", name))
 			status = FALSE;
 		if (status && gda_connection_statement_execute_non_select (cnc, internal_stmt[INTERNAL_ROLLBACK_NAMED], 
-									   params_set, NULL, NULL) == -1) 
+									   params_set, NULL, error) == -1) 
 			status = FALSE;
 		g_static_mutex_unlock (&mutex);
 	}
 	else {
 		if (gda_connection_statement_execute_non_select (cnc, internal_stmt[INTERNAL_ROLLBACK], 
-								 NULL, NULL, NULL) == -1) 
+								 NULL, NULL, error) == -1) 
 			status = FALSE;
 	}
 
