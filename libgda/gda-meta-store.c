@@ -2930,7 +2930,6 @@ GdaMetaStruct *
 gda_meta_store_schema_get_structure (GdaMetaStore *store, GError **error)
 {
 	GdaMetaStruct *mstruct;
-	GdaMetaStore *pstore;
 	GdaDataModel *model;
 	gint i, nrows;
 
@@ -2941,13 +2940,12 @@ gda_meta_store_schema_get_structure (GdaMetaStore *store, GError **error)
 		return NULL;
 
 	/* create a GdaMetaStruct */
-	pstore = gda_connection_get_meta_store (store->priv->cnc);
-	model = gda_meta_store_extract (pstore, "SELECT table_catalog, table_schema, table_name FROM _tables", 
+	model = gda_meta_store_extract (store, "SELECT table_catalog, table_schema, table_name FROM _tables", 
 					error, NULL);
 	if (!model)
 		return NULL;
 
-	mstruct = gda_meta_struct_new (pstore, GDA_META_STRUCT_FEATURE_ALL);
+	mstruct = gda_meta_struct_new (store, GDA_META_STRUCT_FEATURE_ALL);
 	nrows = gda_data_model_get_n_rows (model);
 	for (i = 0; i < nrows; i++) {
 		/* FIXME: only take into account the database objects which have a corresponding DbObject */
@@ -2970,7 +2968,7 @@ gda_meta_store_schema_get_structure (GdaMetaStore *store, GError **error)
 	GSList *list, *all_db_obj_list;
 	GdaMetaStoreClass *klass;
 
-	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (pstore);
+	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
 	all_db_obj_list = g_slist_copy (klass->cpriv->db_objects);
 	if (store->priv->p_db_objects)
 		all_db_obj_list = g_slist_concat (all_db_obj_list, g_slist_copy (store->priv->p_db_objects));
