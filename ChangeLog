@@ -1,3 +1,8 @@
+2009-02-22  Armin Burgmeier  <armin@openismus.com>
+
+	* libgda/gda-util.c (gda_utility_data_model_dump_data_to_xml): Don't
+	leak rcols, fixes bug #572734
+
 2009-02-21  Armin Burgmeier  <armin@openismus.com>
 
 	* libgda/sqlite/gda-sqlite-provider.c:

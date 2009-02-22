@@ -406,6 +406,9 @@ gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent,
 		}
 	}
 
+	if(!cols)
+		g_free(rcols);
+
 	if (use_col_ids) {
 		gint c;
 		for (c = 0; c < rnb_cols; c++) 
