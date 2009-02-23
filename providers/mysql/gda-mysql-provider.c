@@ -1356,9 +1356,12 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 	char **param_values = g_new0 (char *, nb_params + 1);
         int *param_lengths = g_new0 (int, nb_params + 1);
         int *param_formats = g_new0 (int, nb_params + 1);
-	//g_print ("NB=%d, SQL=%s\n", nb_params, _GDA_PSTMT(ps)->sql);
+	/*g_print ("NB=%d, SQL=%s\n", nb_params, _GDA_PSTMT(ps)->sql);*/
 
-	MYSQL_BIND *mysql_bind_param = g_new0 (MYSQL_BIND, nb_params);
+	MYSQL_BIND *mysql_bind_param = NULL;
+
+	if (nb_params > 0)
+		mysql_bind_param = g_new0 (MYSQL_BIND, nb_params);
 
 	for (i = 0, list = _GDA_PSTMT (ps)->param_ids; list; list = list->next, i++) {
 		const gchar *pname = (gchar *) list->data;
@@ -1453,7 +1456,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 		}
 	}
 		
-	if (mysql_stmt_bind_param (cdata->mysql_stmt, mysql_bind_param)) {
+	if (mysql_bind_param && mysql_stmt_bind_param (cdata->mysql_stmt, mysql_bind_param)) {
 		g_warning ("mysql_stmt_bind_param failed: %s\n", mysql_stmt_error (cdata->mysql_stmt));
 	}
 
@@ -1558,7 +1561,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				GdaConnectionEvent *event;
                                 gchar *str;
                                 event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
-                                str = g_strdup_printf ("%lu", affected_rows);
+                                str = g_strdup_printf ("%llu", affected_rows);
                                 gda_connection_event_set_description (event, str);
                                 g_free (str);
 

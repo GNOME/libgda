@@ -59,10 +59,8 @@ typedef enum {
         I_STMT_TABLES_CONSTRAINTS,
         I_STMT_TABLES_CONSTRAINTS_ALL,
         I_STMT_TABLES_CONSTRAINTS_NAMED,
-#if MYSQL_VERSION_ID >= 50110
         I_STMT_REF_CONSTRAINTS,
         I_STMT_REF_CONSTRAINTS_ALL,
-#endif
         I_STMT_KEY_COLUMN_USAGE,
         I_STMT_KEY_COLUMN_USAGE_ALL,
         /* I_STMT_UDT, */
@@ -96,6 +94,7 @@ typedef enum {
 /*
  * predefined statements' SQL
  */
+#define SHORT_NAME(t,s,f) "CASE WHEN " t "= 'information_schema' OR " t "= 'mysql' THEN " f " ELSE " s " END"
 static gchar *internal_sql[] = {
 	/* I_STMT_CATALOG */
         "SELECT DATABASE()",
@@ -103,22 +102,22 @@ static gchar *internal_sql[] = {
         /* I_STMT_BTYPES */
 
         /* I_STMT_SCHEMAS */
-	"SELECT IFNULL(catalog_name, schema_name) AS catalog_name, schema_name, NULL, CASE schema_name WHEN 'information_schema' OR 'mysql' THEN TRUE ELSE FALSE END AS schema_internal FROM INFORMATION_SCHEMA.schemata WHERE schema_name = ##cat::string",
+	"SELECT IFNULL(catalog_name, schema_name) AS catalog_name, schema_name, NULL, CASE WHEN schema_name = 'information_schema' OR schema_name = 'mysql' THEN TRUE ELSE FALSE END AS schema_internal FROM INFORMATION_SCHEMA.schemata WHERE schema_name = ##cat::string",
 
         /* I_STMT_SCHEMAS_ALL */
-	"SELECT IFNULL(catalog_name, schema_name) AS catalog_name, schema_name, NULL, CASE schema_name WHEN 'information_schema' OR 'mysql' THEN TRUE ELSE FALSE END AS schema_internal FROM INFORMATION_SCHEMA.schemata",
+	"SELECT IFNULL(catalog_name, schema_name) AS catalog_name, schema_name, NULL, CASE WHEN schema_name = 'information_schema' OR schema_name = 'mysql' THEN TRUE ELSE FALSE END AS schema_internal FROM INFORMATION_SCHEMA.schemata",
 
         /* I_STMT_SCHEMA_NAMED */
-	"SELECT IFNULL(catalog_name, schema_name) AS catalog_name, schema_name, NULL, CASE schema_name WHEN 'information_schema' OR 'mysql' THEN TRUE ELSE FALSE END AS schema_internal FROM INFORMATION_SCHEMA.schemata WHERE schema_name = ##name::string",
+	"SELECT IFNULL(catalog_name, schema_name) AS catalog_name, schema_name, NULL, CASE WHEN schema_name = 'information_schema' OR schema_name = 'mysql' THEN TRUE ELSE FALSE END AS schema_internal FROM INFORMATION_SCHEMA.schemata WHERE schema_name = ##name::string",
 
         /* I_STMT_TABLES */
 	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, table_type, CASE table_type WHEN 'BASE TABLE' THEN TRUE ELSE FALSE END AS table_type, table_comment, table_name, CONCAT(table_schema, '.', table_name) AS table_full_name, NULL AS table_owner FROM INFORMATION_SCHEMA.tables WHERE table_catalog = ##cat::string AND schema_name = ##schema::string",
 
         /* I_STMT_TABLES_ALL */
-	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, table_type, CASE table_type WHEN 'BASE TABLE' THEN TRUE ELSE FALSE END AS table_type, table_comment, table_name, CONCAT(table_schema, '.', table_name) AS table_full_name, NULL AS table_owner FROM INFORMATION_SCHEMA.tables",
+	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, table_type, CASE table_type WHEN 'BASE TABLE' THEN TRUE ELSE FALSE END AS table_type, table_comment, " SHORT_NAME("table_schema", "table_name", "CONCAT(table_schema, '.', table_name)") " AS short_name, CONCAT(table_schema, '.', table_name) AS table_full_name, NULL AS table_owner FROM INFORMATION_SCHEMA.tables",
 
         /* I_STMT_TABLE_NAMED */
-	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, table_type, CASE table_type WHEN 'BASE TABLE' THEN TRUE ELSE FALSE END AS table_type, table_comment, table_name, CONCAT(table_schema, '.', table_name) AS table_full_name, NULL AS table_owner FROM FROM INFORMATION_SCHEMA.tables WHERE table_catalog = ##cat::string AND schema_name = ##schema::string",
+	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, table_type, CASE table_type WHEN 'BASE TABLE' THEN TRUE ELSE FALSE END AS table_type, table_comment, " SHORT_NAME("table_schema", "table_name", "CONCAT(table_schema, '.', table_name)") " as short_name, CONCAT(table_schema, '.', table_name) AS table_full_name, NULL AS table_owner FROM FROM INFORMATION_SCHEMA.tables WHERE table_catalog = ##cat::string AND schema_name = ##schema::string",
 
         /* I_STMT_VIEWS */
 	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, view_definition, check_option, is_updatable FROM INFORMATION_SCHEMA.views ",
@@ -144,13 +143,11 @@ static gchar *internal_sql[] = {
         /* I_STMT_TABLES_CONSTRAINTS_NAMED */
 	"SELECT IFNULL(constraint_catalog, constraint_schema) AS constraint_catalog, constraint_schema, constraint_name, IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, constraint_type, NULL, FALSE, FALSE FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_catalog = ##cat::string AND constraint_schema = ##schema::string AND table_name = ##name::string AND constraint_name = ##name2::string",
 
-#if MYSQL_VERSION_ID >= 50110
         /* I_STMT_REF_CONSTRAINTS */
-	"SELECT IFNULL(t.constraint_catalog, t.constraint_schema) AS t.constraint_catalog, t.constraint_schema, r.constraint_name, IFNULL(r.constraint_catalog, r.constraint_schema) AS r.constraint_catalog, r.constraint_schema, r.match_option, r.update_rule, delete_rule FROM INFORMATION_SCHEMA.referential_constraint r INNER JOIN INFORMATION_SCHEMA.table_constraints t ON r.constraint_schema=t.constraint_schema AND r.constraint_name=t.constraint_name AND r.table_name=t.table_name WHERE r.constraint_catalog = ##cat::string AND r.constraint_schema = ##schema::string AND r.table_name = ##name AND r.constraint_name = ##name2::string",
+	"SELECT IFNULL(t.constraint_catalog, t.constraint_schema) AS constraint_catalog, t.constraint_schema, r.constraint_name, IFNULL(r.constraint_catalog, r.constraint_schema) AS constraint_catalog, r.constraint_schema, r.match_option, r.update_rule, delete_rule FROM INFORMATION_SCHEMA.referential_constraints r INNER JOIN INFORMATION_SCHEMA.table_constraints t ON r.constraint_schema=t.constraint_schema AND r.constraint_name=t.constraint_name AND r.table_name=t.table_name WHERE r.constraint_catalog = ##cat::string AND r.constraint_schema = ##schema::string AND r.table_name = ##name AND r.constraint_name = ##name2::string",
 
         /* I_STMT_REF_CONSTRAINTS_ALL */
-	"SELECT IFNULL(t.constraint_catalog, t.constraint_schema) AS t.constraint_catalog, t.constraint_schema, r.constraint_name, IFNULL(r.constraint_catalog, r.constraint_schema) AS r.constraint_catalog, r.constraint_schema, r.match_option, r.update_rule, delete_rule FROM INFORMATION_SCHEMA.referential_constraint r INNER JOIN INFORMATION_SCHEMA.table_constraints t ON r.constraint_schema=t.constraint_schema AND r.constraint_name=t.constraint_name AND r.table_name=t.table_name",
-#endif
+	"SELECT IFNULL(t.constraint_catalog, t.constraint_schema) AS constraint_catalog, t.constraint_schema, r.constraint_name, IFNULL(r.constraint_catalog, r.constraint_schema) AS constraint_catalog, r.constraint_schema, r.match_option, r.update_rule, delete_rule FROM INFORMATION_SCHEMA.referential_constraints r INNER JOIN INFORMATION_SCHEMA.table_constraints t ON r.constraint_schema=t.constraint_schema AND r.constraint_name=t.constraint_name AND r.table_name=t.table_name",
 
         /* I_STMT_KEY_COLUMN_USAGE */
 	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, constraint_name, column_name, ordinal_position FROM INFORMATION_SCHEMA.key_column_usage WHERE table_catalog = ##cat::string AND table_schema = ##schema::string AND table_name = ##name::string AND constraint_name = ##name2::string",
@@ -1231,23 +1228,28 @@ _gda_mysql_meta__constraints_ref (GdaServerProvider  *prov,
 				  GdaMetaContext     *context,
 				  GError            **error)
 {
-	// TO_IMPLEMENT;
+	MysqlConnectionData *cdata;
 
-#if MYSQL_VERSION_ID >= 50110
-	GdaDataModel *model;
-	gboolean retval;
-	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_REF_CONSTRAINTS_ALL], NULL, error);
-	if (model == NULL)
-		retval = FALSE;
-	else {
-		retval = gda_meta_store_modify_with_context (store, context, model, error);
-		g_object_unref (G_OBJECT(model));
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	g_return_val_if_fail (cdata, FALSE);
+
+	if (cdata->version_long >= 50110) {
+		GdaDataModel *model;
+		gboolean retval;
+		model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_REF_CONSTRAINTS_ALL], NULL, error);
+		if (model == NULL)
+			retval = FALSE;
+		else {
+			retval = gda_meta_store_modify_with_context (store, context, model, error);
+			g_object_unref (G_OBJECT(model));
+		}
+
+		return retval;
 	}
-
-	return retval;
-#else
-	return TRUE;
-#endif
+	else {
+		TO_IMPLEMENT;
+		return TRUE;
+	}
 }
 
 gboolean
@@ -1261,37 +1263,42 @@ _gda_mysql_meta_constraints_ref (GdaServerProvider  *prov,
 				 const GValue       *table_name, 
 				 const GValue       *constraint_name)
 {
-	// TO_IMPLEMENT;
+	MysqlConnectionData *cdata;
 
-#if MYSQL_VERSION_ID >= 50110
-	GdaDataModel *model;
-	gboolean retval;
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	g_return_val_if_fail (cdata, FALSE);
 
-	/* Use a prepared statement for the "base" model. */
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
-		return FALSE;
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
-		return FALSE;
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
-		return FALSE;
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name2"), constraint_name, error))
-		return FALSE;
-	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_REF_CONSTRAINTS], i_set, error);
-	if (model == NULL)
-		retval = FALSE;
-	else {
-		retval = gda_meta_store_modify (store, context->table_name, model,
-						"table_schema=##schema::string AND table_name=##name::string AND constraint_name=##name2::string",
-						error,
-						"schema", table_schema, "name", table_name, "name2", constraint_name, NULL);
-		g_object_unref (G_OBJECT(model));
-
+	if (cdata->version_long >= 50110) {
+		GdaDataModel *model;
+		gboolean retval;
+		
+		/* Use a prepared statement for the "base" model. */
+		if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
+			return FALSE;
+		if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
+			return FALSE;
+		if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
+			return FALSE;
+		if (! gda_holder_set_value (gda_set_get_holder (i_set, "name2"), constraint_name, error))
+			return FALSE;
+		model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_REF_CONSTRAINTS], i_set, error);
+		if (model == NULL)
+			retval = FALSE;
+		else {
+			retval = gda_meta_store_modify (store, context->table_name, model,
+							"table_schema=##schema::string AND table_name=##name::string AND constraint_name=##name2::string",
+							error,
+							"schema", table_schema, "name", table_name, "name2", constraint_name, NULL);
+			g_object_unref (G_OBJECT(model));
+			
+		}
+		
+		return retval;
 	}
-
-	return retval;
-#else
-	return TRUE;
-#endif
+	else {
+		TO_IMPLEMENT;
+		return TRUE;
+	}
 }
 
 gboolean

@@ -418,8 +418,8 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 				g_warning (_("Invalid column bind data type. %d\n"),
 					   mysql_bind_result[i].buffer_type);
 			}
-			/* g_print ("%s(): NAME=%s, TYPE=%d, GTYPE=%s\n", 
-			   __FUNCTION__, field->name, field->type, g_type_name (gtype)); */
+			/*g_print ("%s(): NAME=%s, TYPE=%d, GTYPE=%s\n", 
+			  __FUNCTION__, field->name, field->type, g_type_name (gtype));*/
 		}
 		
                 if (mysql_stmt_bind_result (cdata->mysql_stmt, mysql_bind_result)) {
@@ -504,7 +504,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel, gint rownum, GError **error
 		GType type = ((GdaDataSelect *) imodel)->prep_stmt->types[i];
 		gda_value_reset_with_type (value, type);
 		
-		//g_print ("%s: #%d : TYPE=%d, GTYPE=%s\n", __func__, i, mysql_bind_result[i].buffer_type, g_type_name (type));
+		/*g_print ("%s: #%d : TYPE=%d, GTYPE=%s\n", __func__, i, mysql_bind_result[i].buffer_type, g_type_name (type));*/
 		
 		
 		int intvalue = 0;
@@ -530,14 +530,22 @@ new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel, gint rownum, GError **error
 				g_value_set_long (value, (long) intvalue);
 			else if (type == G_TYPE_BOOLEAN)
 				g_value_set_boolean (value, intvalue ? TRUE : FALSE);
-			else {
+			else
 				g_warning (_("Type %s not mapped for value %d"),
 					   g_type_name (type), intvalue);
-			}
 			break;
 		case MYSQL_TYPE_LONGLONG:
 			g_memmove (&longlongvalue, mysql_bind_result[i].buffer, sizeof(long long));
 			g_memmove (&is_null, mysql_bind_result[i].is_null, sizeof(my_bool));
+			if (type == G_TYPE_BOOLEAN)
+				g_value_set_boolean (value, longlongvalue ? TRUE : FALSE);
+			else if (type == G_TYPE_INT)
+				g_value_set_int (value, longlongvalue);
+			else if (type == G_TYPE_LONG)
+				g_value_set_long (value, longlongvalue);
+			else
+				g_warning (_("Type %s not mapped for value %lld"),
+					   g_type_name (type), longlongvalue);
 			break;
 		case MYSQL_TYPE_NULL:
 			if (G_IS_VALUE(value))

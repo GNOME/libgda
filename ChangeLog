@@ -1,3 +1,12 @@
+2009-02-23  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-connection.c: improved debug message
+	* libgda/sqlite/sqlite-src/Makefile.am: define the SQLITE_OMIT_LOAD_EXTENSION flag
+	to avoid having to link with libdl, possible fix for bug #572277
+	* providers/mysql/gda-mysql-meta.c:
+	* providers/mysql/gda-mysql-recordset.c: general MySQL provider improvements
+	* providers/mysql/gda-mysql-provider.c: possible fix for bug #572394
+
 2009-02-22  Armin Burgmeier  <armin@openismus.com>
 
 	* libgda/gda-util.c (gda_utility_data_model_dump_data_to_xml): Don't

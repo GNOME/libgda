@@ -3143,11 +3143,14 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 			else {
 				lcontext.table_name = rmeta [i].table_name;
 				if (!rmeta [i].func (provider, cnc, store, &lcontext, error)) {
+					/*
 					g_print ("TH %p CNC %p ERROR, prov=%p (%s)\n", g_thread_self(), cnc,
 						 gda_connection_get_provider (cnc),
 						 gda_connection_get_provider_name (cnc));
+					*/
 					if (error && *error)
-						g_warning ("\t==> %s\n", (*error)->message);
+						g_warning ("%s (Provider %s)\n", (*error)->message,
+							   gda_connection_get_provider_name (cnc));
 
 					WARN_META_UPDATE_FAILURE (FALSE, rmeta [i].func_name);
 					goto onerror;
