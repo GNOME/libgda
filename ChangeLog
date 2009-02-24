@@ -1,3 +1,19 @@
+2009-02-24  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/sql-parser/gda-statement-struct.c:
+	* doc/C: doc. improvements
+	* libgda/gda-meta-struct.c: misc corrections
+	* libgda/gda-data-proxy.c: made it thread safe
+	* libgda/libgda.symbols:
+	* libgda/gda-util.[ch]: added gda_sql_identifier_split()
+	* providers/mysql/*: more MySQL provider work:
+	  - remove double quotes around tables names when rendering SQL
+	  - make sure the connection uses UTF-8
+	  - corrected the handling of NULL values in GdaMysqlRecordset
+	  - removed compilation warnings
+	  - improved meta data retreival
+	  - bug fixes
+
 2009-02-23  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-connection.c: improved debug message

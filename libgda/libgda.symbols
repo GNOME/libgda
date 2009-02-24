@@ -574,6 +574,7 @@
 	gda_sql_identifier_add_quotes
 	gda_sql_identifier_needs_quotes
 	gda_sql_identifier_remove_quotes
+	gda_sql_identifier_split
 	gda_sqlite_handler_bin_get_type
 	gda_sqlite_handler_bin_new
 	gda_sqlite_provider_get_type

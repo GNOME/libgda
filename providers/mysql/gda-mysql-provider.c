@@ -557,12 +557,56 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 		return FALSE;
 	}
 
+	/* Set some attributes for the newly opened connection (encoding to UTF-8)*/
+	int res;
+	res = mysql_query (mysql, "SET NAMES 'utf8'");
+	if (res != 0) {
+		_gda_mysql_make_error (cnc, mysql, NULL, NULL);
+		return FALSE;
+	}
+
+	/* get case sensitiveness of tables */
+	res = mysql_query (mysql, "SHOW VARIABLES WHERE Variable_name = 'lower_case_table_names'");
+	if (res != 0) {
+		_gda_mysql_make_error (cnc, mysql, NULL, NULL);
+		return FALSE;
+	}
+
+	MYSQL_RES *mdata;
+	mdata = mysql_store_result (mysql);
+	if (!mdata) {
+		_gda_mysql_make_error (cnc, mysql, NULL, NULL);
+		return FALSE;
+	}
+
+	MYSQL_ROW mrow;
+	gboolean case_sensitive = FALSE;
+	mrow = mysql_fetch_row (mdata);
+	if (!mrow) {
+		_gda_mysql_make_error (cnc, mysql, NULL, NULL);
+		mysql_free_result (mdata);
+		return FALSE;
+	}
+	switch (atoi (mrow[1])) {
+	case 0:
+		case_sensitive = TRUE;
+		break;
+	case 1:
+	case 2:
+		break;
+	default:
+		g_warning ("Unknown 'lower_case_table_names' variable value: %s\n", mrow[1]);
+	}
+	
+	mysql_free_result (mdata);
+	
+	
+
 	/* Create a new instance of the provider specific data associated to a connection (MysqlConnectionData),
 	 * and set its contents */
 	MysqlConnectionData *cdata;
 	cdata = g_new0 (MysqlConnectionData, 1);
 	gda_connection_internal_set_provider_data (cnc, cdata, (GDestroyNotify) gda_mysql_free_cnc_data);
-	// TO_IMPLEMENT; /* cdata->... = ... */
 	
 	cdata->cnc = cnc;
 	cdata->mysql = mysql;
@@ -570,9 +614,7 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 
 	cdata->version_long = mysql_get_server_version (mysql);
 	cdata->version = get_mysql_version (mysql);
-	
-	/* Optionnally set some attributes for the newly opened connection (encoding to UTF-8 for example )*/
-	// TO_IMPLEMENT;
+	cdata->tables_case_sensitive = case_sensitive;
 
 	return TRUE;
 }
@@ -1114,10 +1156,87 @@ static GdaSqlParser *
 gda_mysql_provider_create_parser (GdaServerProvider  *provider,
 				  GdaConnection      *cnc)
 {
-	// TO_IMPLEMENT;
 	return (GdaSqlParser *) g_object_new (GDA_TYPE_MYSQL_PARSER,
 					      "tokenizer-flavour", GDA_SQL_PARSER_FLAVOUR_MYSQL,
 					      NULL);
+}
+
+static gchar *
+mysql_render_select_target (GdaSqlSelectTarget *target, GdaSqlRenderingContext *context, GError **error)
+{
+	GString *string;
+	gchar *str;
+
+	g_return_val_if_fail (target, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (target)->type == GDA_SQL_ANY_SQL_SELECT_TARGET, NULL);
+
+	/* can't have: target->expr == NULL */
+	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (target), error)) return NULL;
+
+	if (! target->expr->value || (G_VALUE_TYPE (target->expr->value) != G_TYPE_STRING)) {
+		str = context->render_expr (target->expr, context, NULL, NULL, error);
+		if (!str)
+			return NULL;
+		string = g_string_new (str);
+	}
+	else {
+		gchar **ids_array;
+		ids_array = gda_sql_identifier_split (g_value_get_string (target->expr->value));
+		if (!ids_array) {
+			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+				     "%s", _("Malformed expression in select target"));
+			return NULL;
+		}
+
+		gint i;
+		string = g_string_new ("");
+		for (i = 0; ids_array [i]; i++) {
+			if (*(ids_array [i]) == '"')
+				gda_sql_identifier_remove_quotes (ids_array [i]);
+			if (i != 0)
+				g_string_append_c (string, '.');
+			g_string_append (string, ids_array [i]);
+		}
+		g_strfreev (ids_array);
+	}
+
+	if (target->as)
+		g_string_append_printf (string, " AS %s", target->as);
+
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+}
+
+static gchar *
+mysql_render_table (GdaSqlTable *table, GdaSqlRenderingContext *context, GError **error)
+{
+	g_return_val_if_fail (table, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (table)->type == GDA_SQL_ANY_SQL_TABLE, NULL);
+
+	/* can't have: table->table_name not a valid SQL identifier */
+	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (table), error)) return NULL;
+
+	gchar **ids_array;
+	ids_array = gda_sql_identifier_split (table->table_name);
+	if (!ids_array) {
+		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+			     "%s", _("Malformed table name"));
+		return NULL;
+	}
+	
+	gint i;
+	GString *string;
+	string = g_string_new ("");
+	for (i = 0; ids_array [i]; i++) {
+		if (*(ids_array [i]) == '"')
+			gda_sql_identifier_remove_quotes (ids_array [i]);
+		if (i != 0)
+			g_string_append_c (string, '.');
+		g_string_append (string, ids_array [i]);
+	}
+	g_strfreev (ids_array);
+	return g_string_free (string, FALSE);
 }
 
 /*
@@ -1125,9 +1244,7 @@ gda_mysql_provider_create_parser (GdaServerProvider  *provider,
  * 
  * This method renders a #GdaStatement into its SQL representation.
  *
- * The implementation show here simply calls gda_statement_to_sql_extended() but the rendering
- * can be specialized to the database's SQL dialect, see the implementation of gda_statement_to_sql_extended()
- * and SQLite's specialized rendering for more details
+ * It is specialized to remove the double quotes around table names.
  */
 static gchar *
 gda_mysql_provider_statement_to_sql (GdaServerProvider    *provider,
@@ -1138,13 +1255,36 @@ gda_mysql_provider_statement_to_sql (GdaServerProvider    *provider,
 				     GSList              **params_used,
 				     GError              **error)
 {
-	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
-	if (cnc) {
-		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
-	}
+	gchar *str;
+        GdaSqlRenderingContext context;
 
-	return gda_statement_to_sql_extended (stmt, cnc, params, flags, params_used, error);
+        g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
+        if (cnc) {
+                g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+                g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
+        }
+
+        memset (&context, 0, sizeof (context));
+        context.params = params;
+        context.flags = flags;
+	/* remove double quotes around table name */
+	context.render_select_target = (GdaSqlRenderingFunc) mysql_render_select_target; 
+	context.render_table = (GdaSqlRenderingFunc) mysql_render_table; 
+
+        str = gda_statement_to_sql_real (stmt, &context, error);
+
+        if (str) {
+                if (params_used)
+                        *params_used = context.params_used;
+                else
+                        g_slist_free (context.params_used);
+        }
+        else {
+                if (params_used)
+                        *params_used = NULL;
+                g_slist_free (context.params_used);
+        }
+        return str;
 }
 
 /*
@@ -1184,16 +1324,14 @@ gda_mysql_provider_statement_prepare (GdaServerProvider  *provider,
 		return FALSE;
 
 	GSList *used_set = NULL;
-	gchar *sql = gda_mysql_provider_statement_to_sql
-		(provider, cnc, stmt, set,
-		 GDA_STATEMENT_SQL_PARAMS_AS_UQMARK, &used_set, error);
+	gchar *sql = gda_mysql_provider_statement_to_sql (provider, cnc, stmt, set,
+							  GDA_STATEMENT_SQL_PARAMS_AS_UQMARK, &used_set, error);
 
 	if (!sql)
 		goto cleanup;
 
 	if (mysql_stmt_prepare (cdata->mysql_stmt, sql, strlen (sql))) {
-		GdaConnectionEvent *event = _gda_mysql_make_error
-			(cdata->cnc, NULL, cdata->mysql_stmt, NULL);
+		_gda_mysql_make_error (cdata->cnc, NULL, cdata->mysql_stmt, error);
 		goto cleanup;
 	}
 
@@ -1253,8 +1391,7 @@ prepare_stmt_simple (MysqlConnectionData  *cdata,
 	g_return_val_if_fail (sql != NULL, NULL);
 	
 	if (mysql_stmt_prepare (cdata->mysql_stmt, sql, strlen (sql))) {
-		GdaConnectionEvent *event = _gda_mysql_make_error
-			(cdata->cnc, NULL, cdata->mysql_stmt, error);
+		_gda_mysql_make_error (cdata->cnc, NULL, cdata->mysql_stmt, error);
 		ps = NULL;
 	} else {
 		ps = gda_mysql_pstmt_new (cdata->cnc, cdata->mysql, cdata->mysql_stmt);
@@ -1512,8 +1649,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 		/* This is a re-prepare of the statement.  The function mysql_stmt_prepare
 		 * will handle this on the server side. */
 		if (mysql_stmt_prepare (cdata->mysql_stmt, sql_for_empty, strlen (sql_for_empty))) {
-			GdaConnectionEvent *event = _gda_mysql_make_error
-				(cdata->cnc, NULL, cdata->mysql_stmt, NULL);
+			_gda_mysql_make_error (cdata->cnc, NULL, cdata->mysql_stmt, error);
 			return NULL;
 		}
 

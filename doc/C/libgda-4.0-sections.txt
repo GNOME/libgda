@@ -1111,6 +1111,7 @@ gda_sql_parser_parse_file_as_batch
 gda_sql_identifier_needs_quotes
 gda_sql_identifier_add_quotes
 gda_sql_identifier_remove_quotes
+gda_sql_identifier_split
 <SUBSECTION Standard>
 GDA_IS_SQL_PARSER
 GDA_SQL_PARSER
@@ -1452,6 +1453,8 @@ gda_meta_store_modify_with_context
 gda_compute_dml_statements
 gda_compute_select_statement_from_update
 gda_compute_unique_table_row_condition
+<SUBSECTION>
+gda_sql_any_part_check_structure
 </SECTION>
 
 <SECTION>

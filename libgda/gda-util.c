@@ -1520,6 +1520,41 @@ concat_ident (const char *prefix, const gchar *ident)
 	return str;
 }
 
+/**
+ * gda_sql_identifier_split
+ * @id: an SQL identifier
+ * 
+ * Splits @id into an array of it sub parts. @id's format has to be "&lt;part&gt;[.&lt;part&gt;[...]]" where
+ * each part is either a text surrounded by double quotes which can contain upper and lower cases or
+ * an SQL identifier in lower case.
+ *
+ * For example the <![CDATA["test.\"ATable\""]]> string will result in the array: <![CDATA[{"test", "\"ATable\"", NULL}]]>
+ *
+ * Returns: a new array of strings, or NULL (use g_strfreev() to free the returned array)
+ */
+gchar **
+gda_sql_identifier_split (const gchar *id)
+{
+	gchar *copy;
+	gchar *remain, *last;
+	GArray *array = NULL;
+
+	g_return_val_if_fail (id && *id, NULL);
+
+	for (copy = g_strdup (id); copy; copy = remain) {
+		if (_split_identifier_string (copy, &remain, &last)) {
+			if (!array)
+				array = g_array_new (TRUE, TRUE, sizeof (gchar *));
+			g_array_prepend_val (array, last);
+		}
+	}
+
+	if (array)
+		return (gchar **) g_array_free (array, FALSE);
+	else
+		return NULL;
+}
+
 /*
  *  RFC 1738 defines that these characters should be escaped, as well
  *  any non-US-ASCII character or anything between 0x00 - 0x1F.

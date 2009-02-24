@@ -49,6 +49,9 @@ typedef struct {
 	/* Backend version (to which we're connected). */
 	gchar            *version;
 	unsigned long     version_long;
+
+	/* specifies how case sensitiveness is */
+	gboolean          tables_case_sensitive;
 	
 } MysqlConnectionData;
 

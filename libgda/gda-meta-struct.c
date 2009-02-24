@@ -1094,7 +1094,7 @@ gda_meta_struct_complement_schema (GdaMetaStruct *mstruct, const GValue *catalog
 		"ORDER BY table_schema, table_name";
 	const gchar *sql2 = "SELECT table_short_name, table_full_name, table_owner, table_name "
 		"FROM _tables WHERE table_catalog = ##cat::string AND table_schema = ##schema::string "
-		"AND table_type='VIEW' "
+		"AND table_type LIKE '%VIEW%' "
 		"ORDER BY table_schema, table_name";
 	
 	/* schema is known, catalog unknown */
@@ -1102,7 +1102,7 @@ gda_meta_struct_complement_schema (GdaMetaStruct *mstruct, const GValue *catalog
 		"FROM _tables WHERE table_schema = ##schema::string AND table_type LIKE '%TABLE%' "
 		"ORDER BY table_schema, table_name";
 	const gchar *sql4 = "SELECT table_short_name, table_full_name, table_owner, table_name, table_catalog, table_schema "
-		"FROM _tables WHERE table_schema = ##schema::string AND table_type='VIEW' "
+		"FROM _tables WHERE table_schema = ##schema::string AND table_type LIKE '%VIEW%' "
 		"ORDER BY table_schema, table_name";
 
 	/* schema and catalog are unknown */
@@ -1110,7 +1110,7 @@ gda_meta_struct_complement_schema (GdaMetaStruct *mstruct, const GValue *catalog
 		"FROM _tables WHERE table_type LIKE '%TABLE%' "
 		"ORDER BY table_schema, table_name";
 	const gchar *sql6 = "SELECT table_short_name, table_full_name, table_owner, table_name, table_catalog, table_schema "
-		"FROM _tables WHERE table_type='VIEW' "
+		"FROM _tables WHERE table_type LIKE '%VIEW%' "
 		"ORDER BY table_schema, table_name";
 
 	g_return_val_if_fail (GDA_IS_META_STRUCT (mstruct), FALSE);
@@ -1380,11 +1380,24 @@ build_pass (GSList *objects, GSList *ordered_list)
 static gint
 db_object_sort_func (GdaMetaDbObject *dbo1, GdaMetaDbObject *dbo2)
 {
-	gint retval;
-	retval = strcmp (dbo1->obj_schema, dbo2->obj_schema);
-	if (retval)
-		return retval;
-	return strcmp (dbo1->obj_name, dbo2->obj_name);
+	gint retval = 0;
+	if (dbo1->obj_schema && dbo2->obj_schema) {
+		retval = strcmp (dbo1->obj_schema, dbo2->obj_schema);
+		if (retval)
+			return retval;
+	}
+	else if (dbo1->obj_schema)
+		return 1;
+	else if (dbo2->obj_schema)
+		return -1;
+
+	if (dbo1->obj_name && dbo2->obj_name)
+		return strcmp (dbo1->obj_name, dbo2->obj_name);
+	else if (dbo1->obj_name)
+		return 1;
+	else if (dbo2->obj_name)
+		return -1;
+	return 0;
 }
 
 /**

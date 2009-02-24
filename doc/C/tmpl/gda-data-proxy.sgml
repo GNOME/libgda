@@ -103,6 +103,11 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
   </itemizedlist>
 </para>
 
+<para>
+  The #GdaDataProxy objects are thread safe, which means any proxy object can be used from
+  any thread at the same time as they implement their own locking mechanisms.
+</para>
+
 <!-- ##### SECTION See_Also ##### -->
 <para>
 

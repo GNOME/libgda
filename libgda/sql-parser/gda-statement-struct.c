@@ -873,6 +873,17 @@ foreach_check_struct (GdaSqlAnyPart *node, gpointer data, GError **error)
 	return gda_sql_any_part_check_structure (node, error);
 }
 
+/**
+ * gda_sql_any_part_check_structure
+ * @node: a #GdaSqlAnyPart pointer
+ * @error: a place to store errors, or %NULL
+ *
+ * Checks for any error in @node's structure to make sure it is valid. This
+ * is the same as gda_sql_statement_check_structure() but for individual #GdaSqlAnyPart
+ * parts. This function is mainly for database provider's implementations
+ *
+ * Returns: TRUE if no error occurred
+ */
 gboolean
 gda_sql_any_part_check_structure (GdaSqlAnyPart *node, GError **error)
 {

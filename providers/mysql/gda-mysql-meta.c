@@ -51,7 +51,6 @@ typedef enum {
         I_STMT_TABLES,
         I_STMT_TABLES_ALL,
         I_STMT_TABLE_NAMED,
-        I_STMT_VIEWS,
         I_STMT_VIEWS_ALL,
         I_STMT_VIEW_NAMED,
         I_STMT_COLUMNS_OF_TABLE,
@@ -111,22 +110,19 @@ static gchar *internal_sql[] = {
 	"SELECT IFNULL(catalog_name, schema_name) AS catalog_name, schema_name, NULL, CASE WHEN schema_name = 'information_schema' OR schema_name = 'mysql' THEN TRUE ELSE FALSE END AS schema_internal FROM INFORMATION_SCHEMA.schemata WHERE schema_name = ##name::string",
 
         /* I_STMT_TABLES */
-	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, table_type, CASE table_type WHEN 'BASE TABLE' THEN TRUE ELSE FALSE END AS table_type, table_comment, table_name, CONCAT(table_schema, '.', table_name) AS table_full_name, NULL AS table_owner FROM INFORMATION_SCHEMA.tables WHERE table_catalog = ##cat::string AND schema_name = ##schema::string",
+	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, CASE WHEN table_type LIKE '%VIEW%' THEN 'VIEW' ELSE table_type END, CASE table_type WHEN 'BASE TABLE' THEN TRUE ELSE FALSE END AS table_type, table_comment, " SHORT_NAME("table_schema", "table_name", "CONCAT(table_schema, '.', table_name)") " AS short_name, CONCAT(table_schema, '.', table_name) AS table_full_name, NULL AS table_owner FROM INFORMATION_SCHEMA.tables WHERE table_catalog = ##cat::string AND schema_name = ##schema::string",
 
         /* I_STMT_TABLES_ALL */
-	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, table_type, CASE table_type WHEN 'BASE TABLE' THEN TRUE ELSE FALSE END AS table_type, table_comment, " SHORT_NAME("table_schema", "table_name", "CONCAT(table_schema, '.', table_name)") " AS short_name, CONCAT(table_schema, '.', table_name) AS table_full_name, NULL AS table_owner FROM INFORMATION_SCHEMA.tables",
+	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, CASE WHEN table_type LIKE '%VIEW%' THEN 'VIEW' ELSE table_type END, CASE table_type WHEN 'BASE TABLE' THEN TRUE ELSE FALSE END AS table_type, table_comment, " SHORT_NAME("table_schema", "table_name", "CONCAT(table_schema, '.', table_name)") " AS short_name, CONCAT(table_schema, '.', table_name) AS table_full_name, NULL AS table_owner FROM INFORMATION_SCHEMA.tables",
 
         /* I_STMT_TABLE_NAMED */
-	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, table_type, CASE table_type WHEN 'BASE TABLE' THEN TRUE ELSE FALSE END AS table_type, table_comment, " SHORT_NAME("table_schema", "table_name", "CONCAT(table_schema, '.', table_name)") " as short_name, CONCAT(table_schema, '.', table_name) AS table_full_name, NULL AS table_owner FROM FROM INFORMATION_SCHEMA.tables WHERE table_catalog = ##cat::string AND schema_name = ##schema::string",
-
-        /* I_STMT_VIEWS */
-	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, view_definition, check_option, is_updatable FROM INFORMATION_SCHEMA.views ",
+	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, CASE WHEN table_type LIKE '%VIEW%' THEN 'VIEW' ELSE table_type END, CASE table_type WHEN 'BASE TABLE' THEN TRUE ELSE FALSE END AS table_type, table_comment, " SHORT_NAME("table_schema", "table_name", "CONCAT(table_schema, '.', table_name)") " as short_name, CONCAT(table_schema, '.', table_name) AS table_full_name, NULL AS table_owner FROM FROM INFORMATION_SCHEMA.tables WHERE table_catalog = ##cat::string AND schema_name = ##schema::string",
 
         /* I_STMT_VIEWS_ALL */
-	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, view_definition, check_option, is_updatable FROM INFORMATION_SCHEMA.views ",
+	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, view_definition, check_option, is_updatable FROM INFORMATION_SCHEMA.views UNION SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, NULL, NULL, FALSE FROM INFORMATION_SCHEMA.tables WHERE table_schema='information_schema' and table_type LIKE '%VIEW%'",
 
         /* I_STMT_VIEW_NAMED */
-	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, view_definition, check_option, is_updatable FROM INFORMATION_SCHEMA.views WHERE table_catalog = ##cat::string AND schema_name = ##schema::string",
+	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, view_definition, check_option, is_updatable FROM INFORMATION_SCHEMA.views WHERE table_catalog = ##cat::string AND table_schema = ##schema::string  UNION SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, NULL, NULL, FALSE FROM INFORMATION_SCHEMA.tables WHERE table_schema='information_schema' AND table_type LIKE '%VIEW%' AND table_catalog = ##cat::string AND table_schema = ##schema::string",
 
         /* I_STMT_COLUMNS_OF_TABLE */
 	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, column_name, ordinal_position, column_default, is_nullable, data_type, 'gchararray', character_maximum_length,character_octet_length, numeric_precision, numeric_scale, 0, character_set_name, character_set_name, character_set_name, collation_name, collation_name, collation_name, extra, 1, column_comment FROM INFORMATION_SCHEMA.columns WHERE table_catalog = ##cat::string AND table_schema = ##schema::string AND table_name = ##name::string",
@@ -324,7 +320,7 @@ _gda_mysql_meta__btypes (GdaServerProvider  *prov,
 		{ "YEAR DATA TYPE", "gint", "A year in two-digit or four-digit format. The default is four-digit format. In four-digit format, the allowable values are 1901 to 2155, and 0000. In two-digit format, the allowable values are 70 to 69, representing years from 1970 to 2069. MySQL displays YEAR values in YYYY format, but allows you to assign values to YEAR columns using either strings or numbers.", "" } 
 	};
         GdaDataModel *model;
-        gboolean retval;
+        gboolean retval = TRUE;
 
 	model = gda_meta_store_create_modify_data_model (store, context->table_name);
         if (model == NULL)
@@ -366,7 +362,7 @@ _gda_mysql_meta__btypes (GdaServerProvider  *prov,
 			g_list_free (values);
 		}
 
-		if (retval != 0)
+		if (retval)
 			retval = gda_meta_store_modify (store, context->table_name, model, NULL, error, NULL);
 		g_object_unref (G_OBJECT(model));
 	}
@@ -692,12 +688,14 @@ _gda_mysql_meta__tables_views (GdaServerProvider  *prov,
 			       GdaMetaStore       *store,
 			       GdaMetaContext     *context,
 			       GError            **error)
-{
-	// TO_IMPLEMENT;
-	
+{	
 	GType col_types_tables[] = {
 		0, 0, 0, 0,
 		G_TYPE_BOOLEAN, G_TYPE_NONE
+	};
+	GType col_types_views[] = {
+		G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING,
+		G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_NONE
 	};
 	GdaDataModel *model_tables, *model_views;
 	gboolean retval;
@@ -716,7 +714,7 @@ _gda_mysql_meta__tables_views (GdaServerProvider  *prov,
 	GdaMetaContext copy = *context;
 
 	model_tables = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_TABLES_ALL], NULL,
-							      GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types_tables, error);
+								     GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types_tables, error);
 	if (model_tables == NULL)
 		retval = FALSE;
 	else {
@@ -725,7 +723,8 @@ _gda_mysql_meta__tables_views (GdaServerProvider  *prov,
 		g_object_unref (G_OBJECT(model_tables));
 	}
 
-	model_views = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_VIEWS_ALL], NULL, error);
+	model_views = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_VIEWS_ALL], NULL, 
+								    GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types_views, error);
 	if (model_views == NULL)
 		retval = FALSE;
 	else {
@@ -749,6 +748,14 @@ _gda_mysql_meta_tables_views (GdaServerProvider  *prov,
 {
 	// TO_IMPLEMENT;
 	
+	GType col_types_tables[] = {
+		0, 0, 0, 0,
+		G_TYPE_BOOLEAN, G_TYPE_NONE
+	};
+	GType col_types_views[] = {
+		G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING,
+		G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_NONE
+	};
 	GdaDataModel *model_tables, *model_views;
 	gboolean retval;
 	/* Check correct mysql server version. */
@@ -771,7 +778,9 @@ _gda_mysql_meta_tables_views (GdaServerProvider  *prov,
 	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
 		return FALSE;
 	if (!table_name_n) {
-		model_tables = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_TABLES], i_set, error);
+		model_tables = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_TABLES], i_set, 
+									    GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types_tables,
+									    error);
 		if (model_tables == NULL)
 			retval = FALSE;
 		else {
@@ -779,7 +788,9 @@ _gda_mysql_meta_tables_views (GdaServerProvider  *prov,
 			g_object_unref (G_OBJECT(model_tables));
 		}
 
-		model_views = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_VIEWS], i_set, error);
+		model_views = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_VIEWS_ALL], i_set, 
+									    GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types_views,
+									    error);
 		if (model_views == NULL)
 			retval = FALSE;
 		else {
@@ -790,7 +801,9 @@ _gda_mysql_meta_tables_views (GdaServerProvider  *prov,
 	} else {
 		if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name_n, error))
 			return FALSE;
-		model_tables = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_TABLE_NAMED], i_set, error);
+		model_tables = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_TABLE_NAMED], i_set, 
+									    GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types_tables,
+									    error);
 		if (model_tables == NULL)
 			retval = FALSE;
 		else {
@@ -799,7 +812,9 @@ _gda_mysql_meta_tables_views (GdaServerProvider  *prov,
 			g_object_unref (G_OBJECT(model_tables));
 		}
 
-		model_views = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_VIEW_NAMED], i_set, error);
+		model_views = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_VIEW_NAMED], i_set, 
+									    GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types_views,
+									    error);
 		if (model_views == NULL)
 			retval = FALSE;
 		else {
@@ -956,7 +971,7 @@ _gda_mysql_meta__columns (GdaServerProvider  *prov,
 		G_TYPE_NONE
 	};
 	GdaDataModel *model, *proxy;
-	gboolean retval;
+	gboolean retval = TRUE;
 	/* Check correct mysql server version. */
 	MysqlConnectionData *cdata;
 	cdata = (MysqlConnectionData *) gda_connection_internal_get_provider_data (cnc);
