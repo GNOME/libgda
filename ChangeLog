@@ -1,6 +1,15 @@
 2009-02-25  Vivien Malerba <malerba@gnome-db.org>
 
 	* providers/mysql: more work on the MySQL provider:
+	  - some work on the parameters' binding to use the correct type (not
+	    always MYSQL_TYPE_STRING
+	  - don't pass the bound parameters to the GdaMysqlPStmt as it does not
+	    use them
+	  - double free problem in GdaMysqlRecordset
+
+2009-02-25  Vivien Malerba <malerba@gnome-db.org>
+
+	* providers/mysql: more work on the MySQL provider:
 	  - use a MYSQL_STMT per prepared statement
 	  - if the same prepared statement is executed more than once and is
 	    a SELECT, then use another MYSQL_STMT to avoid conflicting with

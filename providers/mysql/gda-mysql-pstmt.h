@@ -46,7 +46,6 @@ struct _GdaMysqlPStmt {
 	MYSQL_STMT     *mysql_stmt;
 	gboolean        stmt_used; /* TRUE if a recorset already uses this prepared statement,
                                     * necessary because only one recordset can use mysql_stmt at a time */
-	MYSQL_BIND     *mysql_bind_param;
 	MYSQL_BIND     *mysql_bind_result;
 };
 

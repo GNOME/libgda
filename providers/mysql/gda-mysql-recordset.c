@@ -84,9 +84,7 @@ struct _GdaMysqlRecordsetPrivate {
 
 	gint            chunk_size;    /* Number of rows to fetch at a time when iterating forward/backward. */
 	gint            chunks_read;   /* Number of times that we've iterated forward/backward. */
-	//
 	GdaRow         *tmp_row;       /* Used in cursor mode to store a reference to the latest #GdaRow. */
-	//
 };
 static GObjectClass *parent_class = NULL;
 
@@ -660,7 +658,6 @@ new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel, gint rownum, GError **error
 					 (timevalue.month != 0) ? timevalue.month : 1,
 					 (timevalue.year != 0) ? timevalue.year : 1970);
 				g_value_take_boxed (value, date);
-				g_date_free (date);
 			} else if (type == GDA_TYPE_TIMESTAMP) {
 				GdaTimestamp timestamp = {
 					.year = timevalue.year,

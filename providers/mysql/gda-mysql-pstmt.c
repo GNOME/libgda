@@ -84,7 +84,6 @@ gda_mysql_pstmt_init (GdaMysqlPStmt       *pstmt,
 	
 	/* initialize specific parts of @pstmt */
 	// TO_IMPLEMENT;
-	pstmt->mysql_bind_param = NULL;
 	pstmt->mysql_bind_result = NULL;
 }
 
@@ -100,13 +99,6 @@ gda_mysql_pstmt_finalize (GObject  *object)
 		mysql_stmt_close (pstmt->mysql_stmt);
 
 	gint i;
-	for (i = 0; i < g_slist_length (((GdaPStmt *) pstmt)->param_ids); ++i) {
-		g_free (pstmt->mysql_bind_param[i].buffer);
-		g_free (pstmt->mysql_bind_param[i].length);
-	}
-	g_free (pstmt->mysql_bind_param);
-	pstmt->mysql_bind_param = NULL;
-
 	for (i = 0; i < ((GdaPStmt *) pstmt)->ncols; ++i) {
 		g_free (pstmt->mysql_bind_result[i].buffer);
 		g_free (pstmt->mysql_bind_result[i].is_null);
