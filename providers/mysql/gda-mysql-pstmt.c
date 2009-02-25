@@ -96,7 +96,9 @@ gda_mysql_pstmt_finalize (GObject  *object)
 	g_return_if_fail (GDA_IS_PSTMT (pstmt));
 
 	/* free memory */
-	// TO_IMPLEMENT; /* free some specific parts of @pstmt */
+	if (pstmt->mysql_stmt)
+		mysql_stmt_close (pstmt->mysql_stmt);
+
 	gint i;
 	for (i = 0; i < g_slist_length (((GdaPStmt *) pstmt)->param_ids); ++i) {
 		g_free (pstmt->mysql_bind_param[i].buffer);
@@ -117,7 +119,9 @@ gda_mysql_pstmt_finalize (GObject  *object)
 	parent_class->finalize (object);
 }
 
-
+/*
+ * Steals @mysql_stmt
+ */
 GdaMysqlPStmt *
 gda_mysql_pstmt_new (GdaConnection  *cnc,
 		     MYSQL          *mysql,
@@ -128,6 +132,7 @@ gda_mysql_pstmt_new (GdaConnection  *cnc,
 	ps->cnc = cnc;
 	ps->mysql = mysql;
 	ps->mysql_stmt = mysql_stmt;
+	ps->stmt_used = FALSE;
 
 	return ps;
 }

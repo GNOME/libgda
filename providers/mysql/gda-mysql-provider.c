@@ -545,18 +545,6 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 		return FALSE;
 	}
 
-	MYSQL_STMT *mysql_stmt = mysql_stmt_init (mysql);
-	if (!mysql_stmt) {
-		_gda_mysql_make_error (cnc, NULL, mysql_stmt, NULL);
-		return FALSE;
-	}
-
-	my_bool update_max_length = 1;
-	if (mysql_stmt_attr_set (mysql_stmt, STMT_ATTR_UPDATE_MAX_LENGTH, (const void *) &update_max_length)) {
-		_gda_mysql_make_error (cnc, NULL, mysql_stmt, NULL);
-		return FALSE;
-	}
-
 	/* Set some attributes for the newly opened connection (encoding to UTF-8)*/
 	int res;
 	res = mysql_query (mysql, "SET NAMES 'utf8'");
@@ -610,7 +598,6 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 	
 	cdata->cnc = cnc;
 	cdata->mysql = mysql;
-	cdata->mysql_stmt = mysql_stmt;
 
 	cdata->version_long = mysql_get_server_version (mysql);
 	cdata->version = get_mysql_version (mysql);
@@ -1287,6 +1274,89 @@ gda_mysql_provider_statement_to_sql (GdaServerProvider    *provider,
         return str;
 }
 
+static GdaMysqlPStmt *
+real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stmt, GError **error)
+{
+	GdaMysqlPStmt *ps = NULL;
+	MysqlConnectionData *cdata;
+
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata) 
+		return NULL;
+
+	/* Render as SQL understood by Mysql. */
+	GdaSet *set;
+	if (!gda_statement_get_parameters (stmt, &set, error))
+		return NULL;
+
+	GSList *used_set = NULL;
+	gchar *sql = gda_mysql_provider_statement_to_sql (provider, cnc, stmt, set,
+							  GDA_STATEMENT_SQL_PARAMS_AS_UQMARK, &used_set, error);
+
+	if (!sql)
+		goto cleanup;
+
+	MYSQL_STMT *mysql_stmt = mysql_stmt_init (cdata->mysql);
+	if (!mysql_stmt) {
+		_gda_mysql_make_error (cnc, NULL, mysql_stmt, error);
+		return FALSE;
+	}
+
+	my_bool update_max_length = 1;
+	if (mysql_stmt_attr_set (mysql_stmt, STMT_ATTR_UPDATE_MAX_LENGTH, (const void *) &update_max_length)) {
+		_gda_mysql_make_error (cnc, NULL, mysql_stmt, error);
+		mysql_stmt_close (mysql_stmt);
+		return FALSE;
+	}
+
+	if (mysql_stmt_prepare (mysql_stmt, sql, strlen (sql))) {
+		_gda_mysql_make_error (cdata->cnc, NULL, mysql_stmt, error);
+		mysql_stmt_close (mysql_stmt);
+		goto cleanup;
+	}
+
+	GSList *param_ids = NULL, *current;
+	for (current = used_set; current; current = current->next) {
+		const gchar *id = gda_holder_get_id
+			(GDA_HOLDER(current->data));
+		if (id) {
+			param_ids = g_slist_append (param_ids, g_strdup (id));
+			g_print ("MYSQL preparation: param id=%s\n", id);
+		} else {
+			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+				     GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR,
+				     "%s", _("Unnamed statement parameter is not allowed in prepared statement."));
+			g_slist_foreach (param_ids, (GFunc) g_free, NULL);
+			g_slist_free (param_ids);
+			param_ids = NULL;
+			mysql_stmt_close (mysql_stmt);
+			goto cleanup;
+		}
+	}
+
+	/* Create prepared statement. */
+	ps = gda_mysql_pstmt_new (cnc, cdata->mysql, mysql_stmt);
+	
+	if (!ps)
+		return NULL;
+	else {
+		gda_pstmt_set_gda_statement (_GDA_PSTMT(ps), stmt);
+		_GDA_PSTMT(ps)->param_ids = param_ids;
+		_GDA_PSTMT(ps)->sql = sql;
+		return ps;
+	}
+	
+ cleanup:
+
+	if (set)
+		g_object_unref (G_OBJECT(set));
+	if (used_set)
+		g_slist_free (used_set);
+	g_free (sql);
+	
+	return NULL;
+}
+
 /*
  * Statement prepare request
  *
@@ -1301,7 +1371,6 @@ gda_mysql_provider_statement_prepare (GdaServerProvider  *provider,
 				      GError            **error)
 {
 	GdaMysqlPStmt *ps;
-	MysqlConnectionData *cdata;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
@@ -1312,73 +1381,14 @@ gda_mysql_provider_statement_prepare (GdaServerProvider  *provider,
 	if (ps)
 		return TRUE;
 
-	/* prepare @stmt using the C API, creates @ps */
-	// TO_IMPLEMENT;
-
-	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata) 
-		return FALSE;
-	/* Render as SQL understood by Mysql. */
-	GdaSet *set;
-	if (!gda_statement_get_parameters (stmt, &set, error))
-		return FALSE;
-
-	GSList *used_set = NULL;
-	gchar *sql = gda_mysql_provider_statement_to_sql (provider, cnc, stmt, set,
-							  GDA_STATEMENT_SQL_PARAMS_AS_UQMARK, &used_set, error);
-
-	if (!sql)
-		goto cleanup;
-
-	if (mysql_stmt_prepare (cdata->mysql_stmt, sql, strlen (sql))) {
-		_gda_mysql_make_error (cdata->cnc, NULL, cdata->mysql_stmt, error);
-		goto cleanup;
-	}
-
-	GSList *param_ids = NULL, *current;
-	for (current = used_set; current; current = current->next) {
-		const gchar *id = gda_holder_get_id
-			(GDA_HOLDER(current->data));
-		if (id) {
-			param_ids = g_slist_append (param_ids,
-						    g_strdup (id));
-			g_print ("MYSQL preparation: param id=%s\n", id);
-		} else {
-			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-				     GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR,
-				     "%s", _("Unnamed statement parameter is not allowed in prepared statement."));
-			g_slist_foreach (param_ids, (GFunc) g_free, NULL);
-			g_slist_free (param_ids);
-			param_ids = NULL;
-
-			goto cleanup;
-		}
-	}
-
-	/* Create prepared statement. */
-	ps = gda_mysql_pstmt_new (cnc, cdata->mysql, cdata->mysql_stmt);
-	
-	if (!ps)
-		return FALSE;
-	else {
-		gda_pstmt_set_gda_statement (_GDA_PSTMT(ps), stmt);
-		_GDA_PSTMT(ps)->param_ids = param_ids;
-		_GDA_PSTMT(ps)->sql = sql;
-		
-		gda_connection_add_prepared_statement (cnc, stmt, (GdaPStmt*) ps);
-		g_object_unref (ps);
-		return TRUE;
-	}
-	
- cleanup:
-
-	if (set)
-		g_object_unref (G_OBJECT(set));
-	if (used_set)
-		g_slist_free (used_set);
-	g_free (sql);
-	
-	return FALSE;
+	ps = real_prepare (provider, cnc, stmt, error);
+        if (!ps)
+                return FALSE;
+        else {
+                gda_connection_add_prepared_statement (cnc, stmt, (GdaPStmt *) ps);
+                g_object_unref (ps);
+                return TRUE;
+        }
 }
 
 
@@ -1389,12 +1399,26 @@ prepare_stmt_simple (MysqlConnectionData  *cdata,
 {
 	GdaMysqlPStmt *ps = NULL;
 	g_return_val_if_fail (sql != NULL, NULL);
+
+	MYSQL_STMT *mysql_stmt = mysql_stmt_init (cdata->mysql);
+	if (!mysql_stmt) {
+		_gda_mysql_make_error (cdata->cnc, NULL, mysql_stmt, error);
+		return FALSE;
+	}
+
+	my_bool update_max_length = 1;
+	if (mysql_stmt_attr_set (mysql_stmt, STMT_ATTR_UPDATE_MAX_LENGTH, (const void *) &update_max_length)) {
+		_gda_mysql_make_error (cdata->cnc, NULL, mysql_stmt, error);
+		mysql_stmt_close (mysql_stmt);
+		return FALSE;
+	}
 	
-	if (mysql_stmt_prepare (cdata->mysql_stmt, sql, strlen (sql))) {
-		_gda_mysql_make_error (cdata->cnc, NULL, cdata->mysql_stmt, error);
+	if (mysql_stmt_prepare (mysql_stmt, sql, strlen (sql))) {
+		_gda_mysql_make_error (cdata->cnc, NULL, mysql_stmt, error);
+		mysql_stmt_close (mysql_stmt);
 		ps = NULL;
 	} else {
-		ps = gda_mysql_pstmt_new (cdata->cnc, cdata->mysql, cdata->mysql_stmt);
+		ps = gda_mysql_pstmt_new (cdata->cnc, cdata->mysql, mysql_stmt);
 		_GDA_PSTMT(ps)->param_ids = NULL;
 		_GDA_PSTMT(ps)->sql = g_strdup (sql);
 	}
@@ -1465,10 +1489,8 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			 * in a SELECT statement). The action here is to get the actual SQL code for @stmt,
 			 * and use that SQL instead of @stmt to create another GdaMysqlPStmt object.
 			 */
-			// TO_IMPLEMENT;
-			
-			gchar *sql = gda_mysql_provider_statement_to_sql
-				(provider, cnc, stmt, params, 0, NULL, error);
+			gchar *sql = gda_mysql_provider_statement_to_sql (provider, cnc, stmt, 
+									  params, 0, NULL, error);
 			if (!sql)
 				return NULL;
 			ps = prepare_stmt_simple (cdata, sql, error);
@@ -1476,14 +1498,26 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			if (!ps)
 				return NULL;
 		}
-		else
+		else {
 			ps = (GdaMysqlPStmt *) gda_connection_get_prepared_statement (cnc, stmt);
+			g_object_ref (ps);
+		}
 	}
-	g_assert (ps);
+	else
+		g_object_ref (ps);
 
-	/* optionnally reset the prepared statement if required by the API */
-	// TO_IMPLEMENT;
-	
+	g_assert (ps);
+	if (ps->stmt_used) {
+                /* Don't use @ps => prepare stmt again */
+                GdaMysqlPStmt *nps;
+                nps = real_prepare (provider, cnc, stmt, error);
+                if (!nps)
+                        return NULL;
+                gda_pstmt_copy_contents ((GdaPStmt *) ps, (GdaPStmt *) nps);
+		g_object_unref (ps);
+		ps = nps;
+	}
+
 	/* bind statement's parameters */
 	GSList *list;
 	GdaConnectionEvent *event = NULL;
@@ -1542,7 +1576,6 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 		}
 
 		if (!gda_holder_is_valid (h)) {
-
 			if (!allow_noparam) {
 				gchar *str;
 				str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
@@ -1563,7 +1596,6 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 
 		/* actual binding using the C API, for parameter at position @i */
 		const GValue *value = gda_holder_get_value (h);
-		// TO_IMPLEMENT;
 
 		if (value == NULL || gda_value_is_null (value)) {
 			param_values[i] = NULL;
@@ -1585,16 +1617,17 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				param_values[i] = gda_data_handler_get_str_from_value (data_handler,
 										       value);
 			//g_print ("--- PV=%s\n", param_values[i]);
-
-			mysql_bind_param[i].buffer_type = MYSQL_TYPE_STRING;
-			mysql_bind_param[i].buffer = g_strdup (param_values[i]);
-			mysql_bind_param[i].buffer_length = strlen (param_values[i]);
-			mysql_bind_param[i].length = g_malloc0 (sizeof(unsigned long));
 		}
+
+		mysql_bind_param[i].buffer_type = MYSQL_TYPE_STRING;
+		mysql_bind_param[i].buffer = g_strdup (param_values[i]);
+		mysql_bind_param[i].buffer_length = strlen (param_values[i]);
+		mysql_bind_param[i].length = g_malloc0 (sizeof(unsigned long));
+		*(mysql_bind_param[i].length) = mysql_bind_param[i].buffer_length;
 	}
 		
-	if (mysql_bind_param && mysql_stmt_bind_param (cdata->mysql_stmt, mysql_bind_param)) {
-		g_warning ("mysql_stmt_bind_param failed: %s\n", mysql_stmt_error (cdata->mysql_stmt));
+	if (mysql_bind_param && mysql_stmt_bind_param (ps->mysql_stmt, mysql_bind_param)) {
+		g_warning ("mysql_stmt_bind_param failed: %s\n", mysql_stmt_error (ps->mysql_stmt));
 	}
 
 	ps->mysql_bind_param = mysql_bind_param;
@@ -1606,6 +1639,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 		g_free (param_lengths);
 		g_free (param_formats);
 
+		g_object_unref (ps);
 		return NULL;
 	}
 
@@ -1614,8 +1648,9 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 	    gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_SELECT) {
 #if MYSQL_VERSION_ID >= 50002
 		const unsigned long cursor_type = CURSOR_TYPE_READ_ONLY;
-		if (mysql_stmt_attr_set (cdata->mysql_stmt, STMT_ATTR_CURSOR_TYPE, (void *) &cursor_type)) {
-			_gda_mysql_make_error (cnc, NULL, cdata->mysql_stmt, NULL);
+		if (mysql_stmt_attr_set (ps->mysql_stmt, STMT_ATTR_CURSOR_TYPE, (void *) &cursor_type)) {
+			_gda_mysql_make_error (cnc, NULL, ps->mysql_stmt, NULL);
+			g_object_unref (ps);
 			return NULL;
 		}
 #else
@@ -1639,17 +1674,22 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 		GdaStatement *stmt_for_empty;
                 gchar *sql_for_empty;
                 stmt_for_empty = gda_select_alter_select_for_empty (stmt, error);
-                if (!stmt_for_empty)
+                if (!stmt_for_empty) {
+			g_object_unref (ps);
                         return NULL;
+		}
                 sql_for_empty = gda_statement_to_sql (stmt_for_empty, NULL, error);
                 g_object_unref (stmt_for_empty);
-                if (!sql_for_empty)
+                if (!sql_for_empty) {
+			g_object_unref (ps);
                         return NULL;
+		}
 
 		/* This is a re-prepare of the statement.  The function mysql_stmt_prepare
 		 * will handle this on the server side. */
-		if (mysql_stmt_prepare (cdata->mysql_stmt, sql_for_empty, strlen (sql_for_empty))) {
-			_gda_mysql_make_error (cdata->cnc, NULL, cdata->mysql_stmt, error);
+		if (mysql_stmt_prepare (ps->mysql_stmt, sql_for_empty, strlen (sql_for_empty))) {
+			_gda_mysql_make_error (cdata->cnc, NULL, ps->mysql_stmt, error);
+			g_object_unref (ps);
 			return NULL;
 		}
 
@@ -1661,8 +1701,8 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 
 	
 	GObject *return_value = NULL;
-	if (mysql_stmt_execute (cdata->mysql_stmt)) {
-		event = _gda_mysql_make_error (cnc, NULL, cdata->mysql_stmt, error);
+	if (mysql_stmt_execute (ps->mysql_stmt)) {
+		event = _gda_mysql_make_error (cnc, NULL, ps->mysql_stmt, error);
 	} else {
 
 		/* execute prepared statement using C API depending on its kind */
@@ -1671,8 +1711,8 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 		    !g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "DESCRIBE", 8) ||
 		    !g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "EXPLAIN", 7)) {
 			
-			if (mysql_stmt_store_result (cdata->mysql_stmt)) {
-				_gda_mysql_make_error (cnc, NULL, cdata->mysql_stmt, error);
+			if (mysql_stmt_store_result (ps->mysql_stmt)) {
+				_gda_mysql_make_error (cnc, NULL, ps->mysql_stmt, error);
 			} else {
 				GdaDataModelAccessFlags flags;
 
@@ -1692,7 +1732,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			/* Create a #GdaSet containing "IMPACTED_ROWS" */
 			/* Create GdaConnectionEvent notice with the type of command and impacted rows */
 			
-			affected_rows = mysql_stmt_affected_rows (cdata->mysql_stmt);
+			affected_rows = mysql_stmt_affected_rows (ps->mysql_stmt);
 			if (affected_rows >= 0) {
 				GdaConnectionEvent *event;
                                 gchar *str;
@@ -1710,6 +1750,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			}
 		}
 	}
+	g_object_unref (ps);
 	return return_value;
 }
 
@@ -1862,15 +1903,9 @@ gda_mysql_free_cnc_data (MysqlConnectionData  *cdata)
 	if (!cdata)
 		return;
 
-	// TO_IMPLEMENT;
-	
 	if (cdata->mysql) {
 		mysql_close (cdata->mysql);
 		cdata->mysql = NULL;
-	}
-	if (cdata->mysql_stmt) {
-		mysql_stmt_close (cdata->mysql_stmt);
-		cdata->mysql_stmt = NULL;
 	}
 
 	g_free (cdata->version);

@@ -246,6 +246,8 @@ gda_mysql_recordset_dispose (GObject  *object)
 	g_return_if_fail (GDA_IS_MYSQL_RECORDSET (recset));
 
 	if (recset->priv) {
+		GDA_MYSQL_PSTMT (GDA_DATA_SELECT (object)->prep_stmt)->stmt_used = FALSE;
+
 		if (recset->priv->cnc) {
 			g_object_unref (G_OBJECT(recset->priv->cnc));
 			recset->priv->cnc = NULL;
@@ -400,12 +402,15 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 	if (!cdata)
 		return NULL;
 
+	g_assert (ps->mysql_stmt);
+
 	/* make sure @ps reports the correct number of columns using the API*/
-        if (_GDA_PSTMT (ps)->ncols < 0) {
-		_GDA_PSTMT(ps)->ncols = mysql_stmt_field_count (cdata->mysql_stmt);
-	}
+        if (_GDA_PSTMT (ps)->ncols < 0)
+		_GDA_PSTMT(ps)->ncols = mysql_stmt_field_count (ps->mysql_stmt);
 
         /* completing @ps if not yet done */
+	g_assert (! ps->stmt_used);
+        ps->stmt_used = TRUE;
         if (!_GDA_PSTMT (ps)->types && (_GDA_PSTMT (ps)->ncols > 0)) {
 		/* create prepared statement's columns */
 		GSList *list;
@@ -431,7 +436,7 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 		}
 
 		
-		MYSQL_RES *mysql_res = mysql_stmt_result_metadata (cdata->mysql_stmt);
+		MYSQL_RES *mysql_res = mysql_stmt_result_metadata (ps->mysql_stmt);
 		MYSQL_FIELD *mysql_fields = mysql_fetch_fields (mysql_res);
 		
 		MYSQL_BIND *mysql_bind_result = g_new0 (MYSQL_BIND, GDA_PSTMT (ps)->ncols);
@@ -502,9 +507,9 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 			  __FUNCTION__, field->name, field->type, g_type_name (gtype));*/
 		}
 		
-                if (mysql_stmt_bind_result (cdata->mysql_stmt, mysql_bind_result)) {
+                if (mysql_stmt_bind_result (ps->mysql_stmt, mysql_bind_result)) {
                         g_warning ("mysql_stmt_bind_result failed: %s\n",
-				   mysql_stmt_error (cdata->mysql_stmt));
+				   mysql_stmt_error (ps->mysql_stmt));
                 }
 		
 		mysql_free_result (mysql_res);
@@ -530,9 +535,9 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 	/* post init specific code */
 	// TO_IMPLEMENT;
 	
-	model->priv->mysql_stmt = cdata->mysql_stmt;
+	model->priv->mysql_stmt = ps->mysql_stmt;
 
-	((GdaDataSelect *) model)->advertized_nrows = mysql_stmt_affected_rows (cdata->mysql_stmt);
+	((GdaDataSelect *) model)->advertized_nrows = mysql_stmt_affected_rows (ps->mysql_stmt);
 	
         return GDA_DATA_MODEL (model);
 }

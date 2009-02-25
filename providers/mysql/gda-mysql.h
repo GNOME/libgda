@@ -44,7 +44,6 @@ typedef struct {
 	
 	GdaConnection    *cnc;
 	MYSQL            *mysql;
-	MYSQL_STMT       *mysql_stmt;
 
 	/* Backend version (to which we're connected). */
 	gchar            *version;
