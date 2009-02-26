@@ -61,6 +61,12 @@ GdaRow       *gda_row_new            (gint count);
 gint          gda_row_get_length     (GdaRow *row);
 GValue       *gda_row_get_value      (GdaRow *row, gint num);
 
+/* for database providers mainly */
+void          gda_row_invalidate_value (GdaRow *row, GValue *value);
+gboolean      gda_row_value_is_valid (GdaRow *row, GValue *value);
+
+
+
 G_END_DECLS
 
 #endif

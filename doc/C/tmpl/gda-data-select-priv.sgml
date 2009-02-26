@@ -187,3 +187,22 @@ Base class for all the data models returned by DBMS providers when a SELECT stat
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_row_invalidate_value ##### -->
+<para>
+
+</para>
+
+@row: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_row_value_is_valid ##### -->
+<para>
+
+</para>
+
+@row: 
+@value: 
+@Returns: 
+
+

@@ -1387,6 +1387,9 @@ gda_text_to_alphanum
 <SUBSECTION>
 gda_data_model_iter_move_next_default
 gda_data_model_iter_move_prev_default
+<SUBSECTION>
+gda_row_invalidate_value
+gda_row_value_is_valid
 </SECTION>
 
 <SECTION>

@@ -62,10 +62,10 @@ static gboolean gda_postgres_recordset_fetch_at (GdaDataSelect *model, GdaRow **
 
 /* static helper functions */
 static void make_point (GdaGeometricPoint *point, const gchar *value);
-static void set_value (GdaConnection *cnc, GValue *value, GType type, const gchar *thevalue, gint length);
+static void set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gchar *thevalue, gint length, GError **error);
 
-static void     set_prow_with_pg_res (GdaPostgresRecordset *imodel, GdaRow *prow, gint pg_res_rownum);
-static GdaRow *new_row_from_pg_res (GdaPostgresRecordset *imodel, gint pg_res_rownum);
+static void     set_prow_with_pg_res (GdaPostgresRecordset *imodel, GdaRow *prow, gint pg_res_rownum, GError **error);
+static GdaRow *new_row_from_pg_res (GdaPostgresRecordset *imodel, gint pg_res_rownum, GError **error);
 static gboolean row_is_in_current_pg_res (GdaPostgresRecordset *model, gint row);
 static gboolean fetch_next_chunk (GdaPostgresRecordset *model, gboolean *fetch_error, GError **error);
 static gboolean fetch_prev_chunk (GdaPostgresRecordset *model, gboolean *fetch_error, GError **error);
@@ -432,7 +432,7 @@ gda_postgres_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint r
 		return FALSE;
 	}
 
-	*prow = new_row_from_pg_res (imodel, rownum);
+	*prow = new_row_from_pg_res (imodel, rownum, error);
 	gda_data_select_take_row (model, *prow, rownum);
 
 	if (model->nb_stored_rows == model->advertized_nrows) {
@@ -484,9 +484,9 @@ gda_postgres_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint row
 
 	if (row_is_in_current_pg_res (imodel, rownum)) {
 		if (imodel->priv->tmp_row)
-			set_prow_with_pg_res (imodel, imodel->priv->tmp_row, rownum - imodel->priv->pg_res_inf);
+			set_prow_with_pg_res (imodel, imodel->priv->tmp_row, rownum - imodel->priv->pg_res_inf, error);
 		else
-			imodel->priv->tmp_row = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf);
+			imodel->priv->tmp_row = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf, error);
 		*prow = imodel->priv->tmp_row;
 		return TRUE;
 	}
@@ -494,9 +494,9 @@ gda_postgres_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint row
 		gboolean fetch_error = FALSE;
 		if (fetch_next_chunk (imodel, &fetch_error, error)) {
 			if (imodel->priv->tmp_row)
-				set_prow_with_pg_res (imodel, imodel->priv->tmp_row, rownum - imodel->priv->pg_res_inf);
+				set_prow_with_pg_res (imodel, imodel->priv->tmp_row, rownum - imodel->priv->pg_res_inf, error);
 			else
-				imodel->priv->tmp_row = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf);
+				imodel->priv->tmp_row = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf, error);
 			*prow = imodel->priv->tmp_row;
 			return TRUE;
 		}
@@ -521,9 +521,9 @@ gda_postgres_recordset_fetch_prev (GdaDataSelect *model, GdaRow **prow, gint row
 
 	if (row_is_in_current_pg_res (imodel, rownum)) {
 		if (imodel->priv->tmp_row)
-			set_prow_with_pg_res (imodel, imodel->priv->tmp_row, rownum - imodel->priv->pg_res_inf);
+			set_prow_with_pg_res (imodel, imodel->priv->tmp_row, rownum - imodel->priv->pg_res_inf, error);
 		else
-			imodel->priv->tmp_row = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf);
+			imodel->priv->tmp_row = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf, error);
 		*prow = imodel->priv->tmp_row;
 		return TRUE;
 	}
@@ -531,9 +531,9 @@ gda_postgres_recordset_fetch_prev (GdaDataSelect *model, GdaRow **prow, gint row
 		gboolean fetch_error = FALSE;
 		if (fetch_prev_chunk (imodel, &fetch_error, error)) {
 			if (imodel->priv->tmp_row)
-				set_prow_with_pg_res (imodel, imodel->priv->tmp_row, rownum - imodel->priv->pg_res_inf);
+				set_prow_with_pg_res (imodel, imodel->priv->tmp_row, rownum - imodel->priv->pg_res_inf, error);
 			else
-				imodel->priv->tmp_row = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf);
+				imodel->priv->tmp_row = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf, error);
 			*prow = imodel->priv->tmp_row;
 			return TRUE;
 		}
@@ -562,14 +562,14 @@ gda_postgres_recordset_fetch_at (GdaDataSelect *model, GdaRow **prow, gint rownu
 	}
 
 	if (row_is_in_current_pg_res (imodel, rownum)) {
-		*prow = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf);
+		*prow = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf, error);
 		imodel->priv->tmp_row = *prow;
 		return TRUE;
 	}
 	else {
 		gboolean fetch_error = FALSE;
 		if (fetch_row_number_chunk (imodel, rownum, &fetch_error, error)) {
-			*prow = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf);
+			*prow = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf, error);
 			imodel->priv->tmp_row = *prow;
 			return TRUE;
 		}
@@ -599,8 +599,7 @@ make_point (GdaGeometricPoint *point, const gchar *value)
 }
 
 static void
-set_value (GdaConnection *cnc, GValue *value, GType type,
-	   const gchar *thevalue, gint length)
+set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gchar *thevalue, gint length, GError **error)
 {
 	gda_value_reset_with_type (value, type);
 
@@ -612,15 +611,23 @@ set_value (GdaConnection *cnc, GValue *value, GType type,
 		g_value_set_int (value, atol (thevalue));
 	else if (type == G_TYPE_DATE) {
 		GDate date;
-		if (!gda_parse_iso8601_date (&date, thevalue)) 
-			g_warning (_("Invalid date '%s' (date format should be YYYY-MM-DD)"), thevalue);
+		if (!gda_parse_iso8601_date (&date, thevalue)) {
+			gda_row_invalidate_value (row, value);
+			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+				     GDA_SERVER_PROVIDER_DATA_ERROR,
+				     _("Invalid date '%s' (date format should be YYYY-MM-DD)"), thevalue);
+		}
 		else
 			g_value_set_boxed (value, &date);
 	}
 	else if (type == GDA_TYPE_TIME) {
 		GdaTime timegda;
-		if (!gda_parse_iso8601_time (&timegda, thevalue)) 
-			g_warning (_("Invalid time '%s' (time format should be HH:MM:SS[.ms])"), thevalue);
+		if (!gda_parse_iso8601_time (&timegda, thevalue)) {
+			gda_row_invalidate_value (row, value); 
+			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+				     GDA_SERVER_PROVIDER_DATA_ERROR,
+				     _("Invalid time '%s' (time format should be HH:MM:SS[.ms])"), thevalue);
+		}
 		else
 			gda_value_set_time (value, &timegda);
 	}
@@ -657,9 +664,13 @@ set_value (GdaConnection *cnc, GValue *value, GType type,
 	}
 	else if (type == GDA_TYPE_TIMESTAMP) {
 		GdaTimestamp timestamp;
-		if (! gda_parse_iso8601_timestamp (&timestamp, thevalue))
-			g_warning (_("Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"), 
-				   thevalue);
+		if (! gda_parse_iso8601_timestamp (&timestamp, thevalue)) {
+			gda_row_invalidate_value (row, value);
+			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+				     GDA_SERVER_PROVIDER_DATA_ERROR,
+				     _("Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"), 
+				     thevalue);
+		}
 		else
 			gda_value_set_timestamp (value, &timestamp);
 	}
@@ -692,7 +703,7 @@ set_value (GdaConnection *cnc, GValue *value, GType type,
 	else if (type == G_TYPE_GTYPE)
 		g_value_set_gtype (value, gda_g_type_from_string (thevalue));
 	else {
-		g_warning ("Type %s not translated for value '%s' => set as string", g_type_name (type), thevalue);
+		/*g_warning ("Type %s not translated for value '%s' => set as string", g_type_name (type), thevalue);*/
 		gda_value_reset_with_type (value, G_TYPE_STRING);
 		g_value_set_string (value, thevalue);
 	}
@@ -709,7 +720,7 @@ row_is_in_current_pg_res (GdaPostgresRecordset *model, gint row)
 }
 
 static void
-set_prow_with_pg_res (GdaPostgresRecordset *imodel, GdaRow *prow, gint pg_res_rownum)
+set_prow_with_pg_res (GdaPostgresRecordset *imodel, GdaRow *prow, gint pg_res_rownum, GError **error)
 {
 	gchar *thevalue;
 	gint col;
@@ -720,20 +731,20 @@ set_prow_with_pg_res (GdaPostgresRecordset *imodel, GdaRow *prow, gint pg_res_ro
 			gda_value_set_null (gda_row_get_value (prow, col));
 		else
 			set_value (gda_data_select_get_connection ((GdaDataSelect*) imodel),
-				   gda_row_get_value (prow, col), 
+				   prow, gda_row_get_value (prow, col), 
 				   ((GdaDataSelect*) imodel)->prep_stmt->types [col], 
 				   thevalue, 
-				   PQgetlength (imodel->priv->pg_res, pg_res_rownum, col));
+				   PQgetlength (imodel->priv->pg_res, pg_res_rownum, col), error);
 	}
 }
 
 static GdaRow *
-new_row_from_pg_res (GdaPostgresRecordset *imodel, gint pg_res_rownum)
+new_row_from_pg_res (GdaPostgresRecordset *imodel, gint pg_res_rownum, GError **error)
 {
 	GdaRow *prow;
 
 	prow = gda_row_new (((GdaDataSelect*) imodel)->prep_stmt->ncols);
-	set_prow_with_pg_res (imodel, prow, pg_res_rownum);
+	set_prow_with_pg_res (imodel, prow, pg_res_rownum, error);
 	return prow;
 }
 

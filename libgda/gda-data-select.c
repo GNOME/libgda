@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2008 The GNOME Foundation.
+ * Copyright (C) 2008 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -1742,7 +1742,12 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 	}
 	
 	g_assert (prow);
-	return gda_row_get_value (prow, col);
+
+	GValue *retval = gda_row_get_value (prow, col);
+	if (gda_row_value_is_valid (prow, retval))
+		return retval;
+	else
+		return NULL;
 }
 
 static GdaValueAttribute
@@ -1966,7 +1971,13 @@ update_iter (GdaDataSelect *imodel, GdaRow *prow)
 		const GValue *value;
 		GError *error = NULL;
 		value = gda_row_get_value (prow, i);
-		if (! gda_holder_set_value ((GdaHolder*) plist->data, value, &error)) {
+
+		if (!gda_row_value_is_valid (prow, value)) {
+			retval = FALSE;
+			g_warning (_("Could not change iter's value for column %d: %s"), i,
+				   error && error->message ? error->message : _("No detail"));
+		}
+		else if (! gda_holder_set_value ((GdaHolder*) plist->data, value, &error)) {
 			if (gda_holder_get_not_null ((GdaHolder*) plist->data) &&
 			    gda_value_is_null (value)) {
 				gda_holder_set_not_null ((GdaHolder*) plist->data, FALSE);

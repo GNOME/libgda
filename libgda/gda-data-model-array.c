@@ -542,7 +542,10 @@ gda_data_model_array_get_value_at (GdaDataModel *model, gint col, gint row, GErr
 		GValue *field;
 
 		field = gda_row_get_value (fields, col);
-		return (const GValue *) field;
+		if (gda_row_value_is_valid (fields, field))
+			return (const GValue *) field;
+		else
+			return NULL;
 	}
 	else {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_NOT_FOUND_ERROR,

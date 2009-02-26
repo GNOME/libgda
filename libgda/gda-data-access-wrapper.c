@@ -448,12 +448,11 @@ create_new_row (GdaDataAccessWrapper *model)
 	row = gda_row_new (model->priv->nb_cols);
 	for (i = 0; i < model->priv->nb_cols; i++) {
 		GdaHolder *holder;
-
+		GValue *dest;
+		dest = gda_row_get_value (row, i);
 		holder = gda_data_model_iter_get_holder_for_field (model->priv->iter, i);
 		if (holder) {
-			GValue *dest;
 			const GValue *cvalue = gda_holder_get_value (holder);
-			dest = gda_row_get_value (row, i);
 			if (cvalue) {
 				gda_value_reset_with_type (dest, G_VALUE_TYPE ((GValue *) cvalue));
 				gda_value_set_from_value (dest, cvalue);
@@ -461,6 +460,8 @@ create_new_row (GdaDataAccessWrapper *model)
 			else
 				gda_value_set_null (dest);
 		}
+		else
+			gda_row_invalidate_value (row, dest);
 	}
 
 	g_hash_table_insert (model->priv->rows, GINT_TO_POINTER (model->priv->iter_row), row);
@@ -493,15 +494,25 @@ gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row, G
 		GdaRow *gda_row;
 
 		gda_row = g_hash_table_lookup (imodel->priv->rows, GINT_TO_POINTER (row));
-		if (gda_row) 
-			return gda_row_get_value (gda_row, col);
+		if (gda_row) {
+			GValue *val = gda_row_get_value (gda_row, col);
+			if (gda_row_value_is_valid (gda_row, val))
+				return val;
+			else
+				return NULL;
+		}
 		else {
 			g_assert (imodel->priv->iter);
 			if (imodel->priv->iter_row < 0) {
 				if (gda_data_model_iter_move_next (imodel->priv->iter)) {
 					gda_row = g_hash_table_lookup (imodel->priv->rows, GINT_TO_POINTER (row));
-					if (row == imodel->priv->iter_row)
-						return gda_row_get_value (gda_row, col);
+					if (row == imodel->priv->iter_row) {
+						GValue *val = gda_row_get_value (gda_row, col);
+						if (gda_row_value_is_valid (gda_row, val))
+							return val;
+						else
+							return NULL;
+					}
 				}
 				else {
 					g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
@@ -529,8 +540,13 @@ gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row, G
 			    ! (imodel->priv->model_access_flags & GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD)) {
 				gda_row = g_hash_table_lookup (imodel->priv->rows, GINT_TO_POINTER (row));
 
-				if (gda_row)
-					return gda_row_get_value (gda_row, col);
+				if (gda_row) {
+					GValue *val = gda_row_get_value (gda_row, col);
+					if (gda_row_value_is_valid (gda_row, val))
+						return val;
+					else
+						return NULL;
+				}
 			}
 			else {
 				/* in this case iter can be moved forward and backward at will => we only
@@ -563,7 +579,11 @@ gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row, G
 					g_array_prepend_val (imodel->priv->rows_buffer_array, gda_row);
 					g_array_prepend_val (imodel->priv->rows_buffer_index, imodel->priv->iter_row);
 				}
-				return gda_row_get_value (gda_row, col);
+				GValue *val = gda_row_get_value (gda_row, col);
+				if (gda_row_value_is_valid (gda_row, val))
+					return val;
+				else
+					return NULL;
 			}
 		}
 	}

@@ -1,3 +1,23 @@
+2009-02-26  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/libgda.symbols:
+	* libgda/gda-row.[ch]: added gda_row_invalidate_value() and gda_row_value_is_valid()
+	to be used by database providers' implementations to tag individual values in a GdaRow
+	as invalid (either because the value coud not be read or because the value could not
+	be intepreted as the requested data type)
+	* libgda/sqlite: SQLite provider's improvements:
+	  - handle int64 types
+	  - fixed a bug when using the '*' in a SELECT to get a blob data
+	  - use the new gda_row_invalidate_value() API
+	* libgda/gda-data-access-wrapper.c:
+	* libgda/gda-data-model-array.c:
+	* providers/mysql/gda-mysql-recordset.c:
+	* providers/postgres/gda-postgres-recordset.c: use the new gda_row_invalidate_value() API
+	* libgda/gda-data-select.c: use the new gda_row_value_is_valid() API
+	* libgda/gda-data-model.c: gda_data_model_dump_as_string() and gda_data_model_dump ()
+	now display #### when the value of a column can't be obtained and displayed instead
+	of undefined result
+
 2009-02-25  Vivien Malerba <malerba@gnome-db.org>
 
 	* providers/mysql: more work on the MySQL provider:

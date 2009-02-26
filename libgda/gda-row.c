@@ -216,7 +216,7 @@ gda_row_new (gint count)
  * Gets a pointer to a #GValue stored in a #GdaRow.
  *
  * This is a pointer to the internal array of values. Don't try to free
- * or modify it!
+ * or modify it (modifying is reserved to database provider's implementations).
  *
  * Returns: a pointer to the #GValue in the position @num of @row.
  */
@@ -229,6 +229,37 @@ gda_row_get_value (GdaRow *row, gint num)
         return & (row->priv->fields[num]);
 }
 
+/**
+ * gda_row_invalidate_value
+ * @row: a #GdaRow
+ * @value: a #GValue belonging to @row (obtained with gda_row_get_value()).
+ * 
+ * Marks @value as being invalid. This method is mainly used by database
+ * providers' implementations to report any error while reading a value from the database.
+ */
+void
+gda_row_invalidate_value (GdaRow *row, GValue *value)
+{
+	gda_value_set_null (value);
+	G_VALUE_TYPE (value) = G_TYPE_NONE;
+}
+
+/**
+ * gda_row_value_is_valid
+ * @row: a #GdaRow.
+ * @value: a #GValue belonging to @row (obtained with gda_row_get_value()).
+ *
+ * Tells if @value has been marked as being invalid by gda_row_invalidate_value().
+ * This method is mainly used by database
+ * providers' implementations to report any error while reading a value from the database.
+ *
+ * Returns: TRUE if @value is valid
+ */
+gboolean
+gda_row_value_is_valid (GdaRow *row, GValue *value)
+{
+	return (G_VALUE_TYPE (value) == G_TYPE_NONE) ? FALSE : TRUE;
+}
 
 /**
  * gda_row_get_length

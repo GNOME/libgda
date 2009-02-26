@@ -467,7 +467,9 @@
 	gda_row_get_length
 	gda_row_get_type
 	gda_row_get_value
+	gda_row_invalidate_value
 	gda_row_new
+	gda_row_value_is_valid
 	gda_select_alter_select_for_empty
 	gda_server_operation_add_item_to_sequence
 	gda_server_operation_del_item_from_sequence

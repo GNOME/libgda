@@ -58,6 +58,9 @@ _gda_sqlite_compute_types_hash (SqliteConnectionData *cdata)
 	
 	g_hash_table_insert (types, g_strdup ("integer"), GINT_TO_POINTER (G_TYPE_INT));
 	g_hash_table_insert (types, g_strdup ("int"), GINT_TO_POINTER (G_TYPE_INT));
+	g_hash_table_insert (types, g_strdup ("unsigned integer"), GINT_TO_POINTER (G_TYPE_UINT));
+	g_hash_table_insert (types, g_strdup ("unsigned int"), GINT_TO_POINTER (G_TYPE_UINT));
+	g_hash_table_insert (types, g_strdup ("uint"), GINT_TO_POINTER (G_TYPE_UINT));
 	g_hash_table_insert (types, g_strdup ("boolean"), GINT_TO_POINTER (G_TYPE_BOOLEAN));
 	g_hash_table_insert (types, g_strdup ("date"), GINT_TO_POINTER (G_TYPE_DATE));
 	g_hash_table_insert (types, g_strdup ("time"), GINT_TO_POINTER (GDA_TYPE_TIME));
@@ -67,6 +70,8 @@ _gda_sqlite_compute_types_hash (SqliteConnectionData *cdata)
 	g_hash_table_insert (types, g_strdup ("string"), GINT_TO_POINTER (G_TYPE_STRING));
 	g_hash_table_insert (types, g_strdup ("binary"), GINT_TO_POINTER (GDA_TYPE_BINARY));
 	g_hash_table_insert (types, g_strdup ("blob"), GINT_TO_POINTER (GDA_TYPE_BLOB));
+	g_hash_table_insert (types, g_strdup ("int64"), GINT_TO_POINTER (G_TYPE_INT64));
+	g_hash_table_insert (types, g_strdup ("uint64"), GINT_TO_POINTER (G_TYPE_UINT64));
 }
 
 GType

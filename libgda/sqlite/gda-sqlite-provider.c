@@ -1771,7 +1771,7 @@ add_oid_columns (GdaStatement *stmt, GHashTable **out_hash, gint *out_nb_cols_ad
 		return g_object_ref (stmt);
 	}
 
-	add_index = g_slist_length (sst->expr_list);
+	add_index = 0;
 	GSList *list;
 	for (list = sst->from->targets; list; list = list->next) {
 		GdaSqlSelectTarget *target = (GdaSqlSelectTarget*) list->data;
@@ -1782,7 +1782,7 @@ add_oid_columns (GdaStatement *stmt, GHashTable **out_hash, gint *out_nb_cols_ad
 
 		/* add a field */
 		field = gda_sql_select_field_new (GDA_SQL_ANY_PART (sst));
-		sst->expr_list = g_slist_append (sst->expr_list, field);
+		sst->expr_list = g_slist_insert (sst->expr_list, field, add_index);
 		
 		field->expr = gda_sql_expr_new (GDA_SQL_ANY_PART (field));
 		
@@ -1804,14 +1804,16 @@ add_oid_columns (GdaStatement *stmt, GHashTable **out_hash, gint *out_nb_cols_ad
 		g_value_take_string ((field->expr->value = gda_value_new (G_TYPE_STRING)), str);
 		
 		/* add to hash table */
+		add_index++;
 		g_hash_table_insert (hash, gda_sql_identifier_remove_quotes (g_strdup (name)),
-				     GINT_TO_POINTER (add_index));
+				     GINT_TO_POINTER (add_index)); /* ADDED 1 to column number, don't forget to remove 1 when using */
 		nb_cols_added ++;
 	}
 	
 	/* prepare return */
 	nstmt = (GdaStatement*) g_object_new (GDA_TYPE_STATEMENT, "structure", sqlst, NULL);
 	gda_sql_statement_free (sqlst);
+	/*g_print ("%s(): Added %d columns: %s\n", __FUNCTION__, nb_cols_added, gda_statement_to_sql (nstmt, NULL, NULL));*/
 	
 	*out_hash = hash;
 	*out_nb_cols_added = nb_cols_added;

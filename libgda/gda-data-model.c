@@ -1960,6 +1960,7 @@ static gchar *
 real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attributes, 
 				    gboolean dump_rows, gboolean dump_title, gboolean null_as_empty, GError **error)
 {
+#define ERROR_STRING "####"
 #define MULTI_LINE_NO_SEPARATOR
 
 	gboolean allok = TRUE;
@@ -2043,23 +2044,24 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 	for (j = 0; j < n_rows; j++) {
 		for (i = 0; i < n_cols; i++) {
 			if (! dump_attributes) {
-				value = gda_data_model_get_value_at (model, i, j, error);
+				value = gda_data_model_get_value_at (model, i, j, NULL);
 				if (!value) {
-					allok = FALSE;
-					goto out;
+					cols_size [i + col_offset] = MAX (cols_size [i + col_offset], strlen (ERROR_STRING));
 				}
-				str = NULL;
-				if (null_as_empty) {
-					if (!value || gda_value_is_null (value))
-						str = g_strdup ("");
-				}
-				if (!str)
-					str = value ? gda_value_stringify ((GValue*)value) : g_strdup ("_null_");
-				if (str) {
-					gint w;
-					string_get_dimensions (str, &w, NULL);
-					cols_size [i + col_offset] = MAX (cols_size [i + col_offset], w);
-					g_free (str);
+				else {
+					str = NULL;
+					if (null_as_empty) {
+						if (!value || gda_value_is_null (value))
+							str = g_strdup ("");
+					}
+					if (!str)
+						str = value ? gda_value_stringify ((GValue*)value) : g_strdup ("_null_");
+					if (str) {
+						gint w;
+						string_get_dimensions (str, &w, NULL);
+						cols_size [i + col_offset] = MAX (cols_size [i + col_offset], w);
+						g_free (str);
+					}
 				}
 			}
 			else {
@@ -2154,18 +2156,18 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 		
 		for (i = 0; i < n_cols; i++) {
 			if (!dump_attributes) {
-				value = gda_data_model_get_value_at (ramodel, i, j, error);
-				if (!value) {
-					allok = FALSE;
-					goto out;
+				value = gda_data_model_get_value_at (ramodel, i, j, NULL);
+				if (!value)
+					str = g_strdup (ERROR_STRING);
+				else {
+					str = NULL;
+					if (null_as_empty) {
+						if (!value || gda_value_is_null (value))
+							str = g_strdup ("");
+					}
+					if (!str)
+						str = value ? gda_value_stringify ((GValue *)value) : g_strdup ("_null_");
 				}
-				str = NULL;
-				if (null_as_empty) {
-					if (!value || gda_value_is_null (value))
-						str = g_strdup ("");
-				}
-				if (!str)
-					str = value ? gda_value_stringify ((GValue *)value) : g_strdup ("_null_");
 			}
 			else {
 				GdaValueAttribute attrs;
