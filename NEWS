@@ -1,7 +1,19 @@
+libgda 3.99.12, 2009-02-28
+
+ - misc. corrections
+ - MySQL, SQLite and PostgreSQL providers improvements and corrections
+ - documentation and examples improvements
+ - SQLite version is now 3.6.11
+ - bug fixes: #572028, #571879, #572220, #542847, #572734, #572394
+ - Translations:
+	- it (Marco Ciampa)
+	- pt (Nicolau Gonçalves)
+
 libgda 3.99.11, 2009-02-13
 
  - misc. corrections
  - documentation improvements
+ - new example to illustrate meta data retreival
  - bug fixes: #570396, #570251, #570315, #570787
 
 libgda 3.99.10, 2009-02-02
