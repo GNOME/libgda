@@ -26,21 +26,21 @@
 
 G_BEGIN_DECLS
 
-gchar *gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc, 
+gchar *_gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc, 
 				       GdaServerOperation *op, GError **error);
-gchar *gda_sqlite_render_DROP_TABLE   (GdaServerProvider *provider, GdaConnection *cnc, 
+gchar *_gda_sqlite_render_DROP_TABLE   (GdaServerProvider *provider, GdaConnection *cnc, 
 				       GdaServerOperation *op, GError **error);
-gchar *gda_sqlite_render_RENAME_TABLE (GdaServerProvider *provider, GdaConnection *cnc, 
+gchar *_gda_sqlite_render_RENAME_TABLE (GdaServerProvider *provider, GdaConnection *cnc, 
 				       GdaServerOperation *op, GError **error);
-gchar *gda_sqlite_render_ADD_COLUMN  (GdaServerProvider *provider, GdaConnection *cnc, 
+gchar *_gda_sqlite_render_ADD_COLUMN  (GdaServerProvider *provider, GdaConnection *cnc, 
 				      GdaServerOperation *op, GError **error);
-gchar *gda_sqlite_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cnc, 
+gchar *_gda_sqlite_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cnc, 
 				       GdaServerOperation *op, GError **error);
-gchar *gda_sqlite_render_DROP_INDEX   (GdaServerProvider *provider, GdaConnection *cnc, 
+gchar *_gda_sqlite_render_DROP_INDEX   (GdaServerProvider *provider, GdaConnection *cnc, 
 				       GdaServerOperation *op, GError **error);
-gchar *gda_sqlite_render_CREATE_VIEW  (GdaServerProvider *provider, GdaConnection *cnc, 
+gchar *_gda_sqlite_render_CREATE_VIEW  (GdaServerProvider *provider, GdaConnection *cnc, 
 				       GdaServerOperation *op, GError **error);
-gchar *gda_sqlite_render_DROP_VIEW    (GdaServerProvider *provider, GdaConnection *cnc, 
+gchar *_gda_sqlite_render_DROP_VIEW    (GdaServerProvider *provider, GdaConnection *cnc, 
 				       GdaServerOperation *op, GError **error);
 
 G_END_DECLS

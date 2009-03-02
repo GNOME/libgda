@@ -1007,28 +1007,28 @@ gda_sqlite_provider_render_operation (GdaServerProvider *provider, GdaConnection
 		sql = NULL;
                 break;
         case GDA_SERVER_OPERATION_CREATE_TABLE:
-                sql = gda_sqlite_render_CREATE_TABLE (provider, cnc, op, error);
+                sql = _gda_sqlite_render_CREATE_TABLE (provider, cnc, op, error);
                 break;
         case GDA_SERVER_OPERATION_DROP_TABLE:
-                sql = gda_sqlite_render_DROP_TABLE (provider, cnc, op, error);
+                sql = _gda_sqlite_render_DROP_TABLE (provider, cnc, op, error);
                 break;
         case GDA_SERVER_OPERATION_RENAME_TABLE:
-                sql = gda_sqlite_render_RENAME_TABLE (provider, cnc, op, error);
+                sql = _gda_sqlite_render_RENAME_TABLE (provider, cnc, op, error);
                 break;
         case GDA_SERVER_OPERATION_ADD_COLUMN:
-                sql = gda_sqlite_render_ADD_COLUMN (provider, cnc, op, error);
+                sql = _gda_sqlite_render_ADD_COLUMN (provider, cnc, op, error);
                 break;
         case GDA_SERVER_OPERATION_CREATE_INDEX:
-                sql = gda_sqlite_render_CREATE_INDEX (provider, cnc, op, error);
+                sql = _gda_sqlite_render_CREATE_INDEX (provider, cnc, op, error);
                 break;
         case GDA_SERVER_OPERATION_DROP_INDEX:
-                sql = gda_sqlite_render_DROP_INDEX (provider, cnc, op, error);
+                sql = _gda_sqlite_render_DROP_INDEX (provider, cnc, op, error);
                 break;
         case GDA_SERVER_OPERATION_CREATE_VIEW:
-                sql = gda_sqlite_render_CREATE_VIEW (provider, cnc, op, error);
+                sql = _gda_sqlite_render_CREATE_VIEW (provider, cnc, op, error);
                 break;
         case GDA_SERVER_OPERATION_DROP_VIEW:
-                sql = gda_sqlite_render_DROP_VIEW (provider, cnc, op, error);
+                sql = _gda_sqlite_render_DROP_VIEW (provider, cnc, op, error);
                 break;
 
         default:
@@ -1284,7 +1284,7 @@ gda_sqlite_provider_get_data_handler (GdaServerProvider *provider, GdaConnection
 	else if (type == GDA_TYPE_BINARY) {
 		dh = gda_server_provider_handler_find (provider, cnc, type, NULL);
 		if (!dh) {
-			dh = gda_sqlite_handler_bin_new ();
+			dh = _gda_sqlite_handler_bin_new ();
 			if (dh) {
 				gda_server_provider_handler_declare (provider, dh, cnc, GDA_TYPE_BINARY, NULL);
 				g_object_unref (dh);
@@ -1888,7 +1888,7 @@ real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stm
 		g_object_unref (params);
 
 	/* create a prepared statement object */
-	ps = gda_sqlite_pstmt_new (sqlite_stmt);
+	ps = _gda_sqlite_pstmt_new (sqlite_stmt);
 	gda_pstmt_set_gda_statement (_GDA_PSTMT (ps), stmt);
 	_GDA_PSTMT (ps)->param_ids = param_ids;
 	_GDA_PSTMT (ps)->sql = sql;
@@ -2108,7 +2108,7 @@ fill_blob_data (GdaConnection *cnc, GdaSet *params,
 		if (rowid >= 0) {
 			/*g_print ("Filling BLOB @ %s.%s.%s, rowID %ld\n", pb->db, pb->table, pb->column, rowid);*/
 			GdaSqliteBlobOp *bop;
-			bop = (GdaSqliteBlobOp*) gda_sqlite_blob_op_new (cdata, pb->db, pb->table, pb->column, rowid);
+			bop = (GdaSqliteBlobOp*) _gda_sqlite_blob_op_new (cdata, pb->db, pb->table, pb->column, rowid);
 			if (!bop) {
 				str =  _("Can't create SQLite BLOB handle");
 				goto blobs_out;
@@ -2132,7 +2132,7 @@ fill_blob_data (GdaConnection *cnc, GdaSet *params,
 				}
 				rowid = g_value_get_int64 (cvalue);
 				GdaSqliteBlobOp *bop;
-				bop = (GdaSqliteBlobOp*) gda_sqlite_blob_op_new (cdata, pb->db, pb->table, pb->column, rowid);
+				bop = (GdaSqliteBlobOp*) _gda_sqlite_blob_op_new (cdata, pb->db, pb->table, pb->column, rowid);
 				if (!bop) {
 					str =  _("Can't create SQLite BLOB handle");
 					g_object_unref (model);
@@ -2268,7 +2268,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			}
 
 			/* create a SQLitePreparedStatement */
-			ps = gda_sqlite_pstmt_new (sqlite_stmt);
+			ps = _gda_sqlite_pstmt_new (sqlite_stmt);
 			_GDA_PSTMT (ps)->sql = sql;
 
 			new_ps = TRUE;
@@ -2551,7 +2551,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		else
 			flags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD;
 
-                data_model = (GObject *) gda_sqlite_recordset_new (cnc, ps, params, flags, col_types, empty_rs);
+                data_model = (GObject *) _gda_sqlite_recordset_new (cnc, ps, params, flags, col_types, empty_rs);
 		gda_connection_internal_statement_executed (cnc, stmt, params, NULL);
 		if (new_ps)
 			g_object_unref (ps);

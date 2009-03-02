@@ -108,7 +108,7 @@ gda_sqlite_recordset_dispose (GObject *object)
  */
 
 GType
-gda_sqlite_recordset_get_type (void)
+_gda_sqlite_recordset_get_type (void)
 {
 	static GType type = 0;
 
@@ -184,7 +184,7 @@ read_rows_to_init_col_types (GdaSqliteRecordset *model)
  * this function
  */
 GdaDataModel *
-gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_params,
+_gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_params,
 			  GdaDataModelAccessFlags flags, GType *col_types, gboolean force_empty)
 {
 	GdaSqliteRecordset *model;
@@ -420,7 +420,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 						gint64 rowid;
 						rowid = sqlite3_column_int64 (ps->sqlite_stmt, oidcol - 1); /* remove 1
 													       because it was added in the first place */
-						bop = gda_sqlite_blob_op_new (cdata,
+						bop = _gda_sqlite_blob_op_new (cdata,
 									      sqlite3_column_database_name (ps->sqlite_stmt, 
 													    real_col),
 									      sqlite3_column_table_name (ps->sqlite_stmt,

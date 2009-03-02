@@ -27,7 +27,7 @@
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_SQLITE_BLOB_OP            (gda_sqlite_blob_op_get_type())
+#define GDA_TYPE_SQLITE_BLOB_OP            (_gda_sqlite_blob_op_get_type())
 #define GDA_SQLITE_BLOB_OP(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_SQLITE_BLOB_OP, GdaSqliteBlobOp))
 #define GDA_SQLITE_BLOB_OP_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_SQLITE_BLOB_OP, GdaSqliteBlobOpClass))
 #define GDA_IS_SQLITE_BLOB_OP(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_SQLITE_BLOB_OP))
@@ -46,8 +46,8 @@ struct _GdaSqliteBlobOpClass {
 	GdaBlobOpClass        parent_class;
 };
 
-GType         gda_sqlite_blob_op_get_type     (void) G_GNUC_CONST;
-GdaBlobOp    *gda_sqlite_blob_op_new          (SqliteConnectionData *cdata, const gchar *db_name, const gchar *table_name,
+GType         _gda_sqlite_blob_op_get_type     (void) G_GNUC_CONST;
+GdaBlobOp    *_gda_sqlite_blob_op_new          (SqliteConnectionData *cdata, const gchar *db_name, const gchar *table_name,
 					       const gchar *column_name, sqlite3_int64 rowid);
 
 G_END_DECLS

@@ -1,0 +1,60 @@
+<testdata>
+  <test id="0" file="mysql_employees.sql">
+    <stmt>DROP DATABASE IF EXISTS employees</stmt>
+    <stmt>CREATE DATABASE IF NOT EXISTS employees</stmt>
+    <stmt>USE employees</stmt>
+    <stmt>SELECT 'CREATING DATABASE STRUCTURE' AS 'INFO'</stmt>
+    <stmt>DROP TABLE IF EXISTS dept_emp,                      dept_manager,                      titles,                      salaries,                       employees,                       departments</stmt>
+    <stmt>set storage_engine = InnoDB</stmt>
+    <stmt>select CONCAT('storage engine: ', @@storage_engine) as INFO</stmt>
+    <stmt>CREATE TABLE employees (     emp_no      INT             NOT NULL,     birth_date  DATE            NOT NULL,     first_name  VARCHAR(14)     NOT NULL,     last_name   VARCHAR(16)     NOT NULL,     gender      ENUM ('M','F')  NOT NULL,         hire_date   DATE            NOT NULL,     PRIMARY KEY (emp_no) )</stmt>
+    <stmt>CREATE TABLE departments (     dept_no     CHAR(4)         NOT NULL,     dept_name   VARCHAR(40)     NOT NULL,     PRIMARY KEY (dept_no),     UNIQUE  KEY (dept_name) )</stmt>
+    <stmt>CREATE TABLE dept_manager (    dept_no      CHAR(4)         NOT NULL,    emp_no       INT             NOT NULL,    from_date    DATE            NOT NULL,    to_date      DATE            NOT NULL,    KEY         (emp_no),    KEY         (dept_no),    FOREIGN KEY (emp_no)  REFERENCES employees (emp_no)    ON DELETE CASCADE,    FOREIGN KEY (dept_no) REFERENCES departments (dept_no) ON DELETE CASCADE,    PRIMARY KEY (emp_no,dept_no) )</stmt>
+    <stmt>CREATE TABLE dept_emp (     emp_no      INT             NOT NULL,     dept_no     CHAR(4)         NOT NULL,     from_date   DATE            NOT NULL,     to_date     DATE            NOT NULL,     KEY         (emp_no),     KEY         (dept_no),     FOREIGN KEY (emp_no)  REFERENCES employees   (emp_no)  ON DELETE CASCADE,     FOREIGN KEY (dept_no) REFERENCES departments (dept_no) ON DELETE CASCADE,     PRIMARY KEY (emp_no,dept_no) )</stmt>
+    <stmt>CREATE TABLE titles (     emp_no      INT             NOT NULL,     title       VARCHAR(50)     NOT NULL,     from_date   DATE            NOT NULL,     to_date     DATE,     KEY         (emp_no),     FOREIGN KEY (emp_no) REFERENCES employees (emp_no) ON DELETE CASCADE,     PRIMARY KEY (emp_no,title, from_date) )</stmt>
+    <stmt>CREATE TABLE salaries (     emp_no      INT             NOT NULL,     salary      INT             NOT NULL,     from_date   DATE            NOT NULL,     to_date     DATE            NOT NULL,     KEY         (emp_no),     FOREIGN KEY (emp_no) REFERENCES employees (emp_no) ON DELETE CASCADE,     PRIMARY KEY (emp_no, from_date) )</stmt>
+    <stmt>SELECT 'LOADING departments' AS 'INFO'</stmt>
+    <stmt>source load_departments.dump</stmt>
+    <stmt>SELECT 'LOADING employees' AS 'INFO'</stmt>
+    <stmt>source load_employees.dump</stmt>
+    <stmt>SELECT 'LOADING dept_emp' AS 'INFO'</stmt>
+    <stmt>source load_dept_emp.dump</stmt>
+    <stmt>SELECT 'LOADING dept_manager' AS 'INFO'</stmt>
+    <stmt>source load_dept_manager.dump</stmt>
+    <stmt>SELECT 'LOADING titles' AS 'INFO'</stmt>
+    <stmt>source load_titles.dump</stmt>
+    <stmt>SELECT 'LOADING salaries' AS 'INFO'</stmt>
+    <stmt>source load_salaries.dump</stmt>
+  </test>
+
+  <test id="1" file="mysql_employees_partitioned.sql" provider="MySQL">
+    <stmt>DROP DATABASE IF EXISTS employees</stmt>
+    <stmt>CREATE DATABASE IF NOT EXISTS employees</stmt>
+    <stmt>USE employees</stmt>
+    <stmt>SELECT 'CREATING DATABASE STRUCTURE' AS 'INFO'</stmt>
+    <stmt>DROP TABLE IF EXISTS dept_emp,                      dept_manager,                      titles,                      salaries,                       employees,                       departments</stmt>
+    <stmt>set storage_engine = MyISAM</stmt>
+    <stmt>select CONCAT('storage engine: ', @@storage_engine) as INFO</stmt>
+    <stmt>CREATE TABLE employees (     emp_no      INT             NOT NULL,     birth_date  DATE            NOT NULL,     first_name  VARCHAR(14)     NOT NULL,     last_name   VARCHAR(16)     NOT NULL,     gender      ENUM ('M','F')  NOT NULL,         hire_date   DATE            NOT NULL,     PRIMARY KEY (emp_no) )</stmt>
+    <stmt>CREATE TABLE departments (     dept_no     CHAR(4)         NOT NULL,     dept_name   VARCHAR(40)     NOT NULL,     PRIMARY KEY (dept_no),     UNIQUE  KEY (dept_name) )</stmt>
+    <stmt>CREATE TABLE dept_manager (    dept_no      CHAR(4)         NOT NULL,    emp_no       INT             NOT NULL,    from_date    DATE            NOT NULL,    to_date      DATE            NOT NULL,    KEY         (emp_no),    KEY         (dept_no),            PRIMARY KEY (emp_no,dept_no) )</stmt>
+    <stmt>CREATE TABLE dept_emp (     emp_no      INT             NOT NULL,     dept_no     CHAR(4)         NOT NULL,     from_date   DATE            NOT NULL,     to_date     DATE            NOT NULL,     KEY         (emp_no),     KEY         (dept_no),               PRIMARY KEY (emp_no,dept_no) )</stmt>
+    <stmt>CREATE TABLE titles (     emp_no      INT             NOT NULL,     title       VARCHAR(50)     NOT NULL,     from_date   DATE            NOT NULL,     to_date     DATE,     KEY         (emp_no),          PRIMARY KEY (emp_no,title, from_date) )</stmt>
+    <stmt>ALTER TABLE titles  partition by range (year(from_date)) (     partition p01 values less than (1985),     partition p02 values less than (1986),     partition p03 values less than (1987),     partition p04 values less than (1988),     partition p05 values less than (1989),     partition p06 values less than (1990),     partition p07 values less than (1991),     partition p08 values less than (1992),     partition p09 values less than (1993),     partition p10 values less than (1994),     partition p11 values less than (1995),     partition p12 values less than (1996),     partition p13 values less than (1997),     partition p14 values less than (1998),     partition p15 values less than (1999),     partition p16 values less than (2000),     partition p17 values less than (2001),     partition p18 values less than (2002),     partition p19 values less than (MAXVALUE) )</stmt>
+    <stmt>CREATE TABLE salaries (     emp_no      INT             NOT NULL,     salary      INT             NOT NULL,     from_date   DATE            NOT NULL,     to_date     DATE            NOT NULL,     KEY         (emp_no),          PRIMARY KEY (emp_no, from_date) )</stmt>
+    <stmt>ALTER TABLE salaries partition by range (year(from_date)) (     partition p01 values less than (1985),     partition p02 values less than (1986),     partition p03 values less than (1987),     partition p04 values less than (1988),     partition p05 values less than (1989),     partition p06 values less than (1990),     partition p07 values less than (1991),     partition p08 values less than (1992),     partition p09 values less than (1993),     partition p10 values less than (1994),     partition p11 values less than (1995),     partition p12 values less than (1996),     partition p13 values less than (1997),     partition p14 values less than (1998),     partition p15 values less than (1999),     partition p16 values less than (2000),     partition p17 values less than (2001),     partition p18 values less than (2002),     partition p19 values less than (MAXVALUE) )</stmt>
+    <stmt>SELECT 'LOADING departments' AS 'INFO'</stmt>
+    <stmt>source load_departments.dump</stmt>
+    <stmt>SELECT 'LOADING employees' AS 'INFO'</stmt>
+    <stmt>source load_employees.dump</stmt>
+    <stmt>SELECT 'LOADING dept_emp' AS 'INFO'</stmt>
+    <stmt>source load_dept_emp.dump</stmt>
+    <stmt>SELECT 'LOADING dept_manager' AS 'INFO'</stmt>
+    <stmt>source load_dept_manager.dump</stmt>
+    <stmt>SELECT 'LOADING titles' AS 'INFO'</stmt>
+    <stmt>source load_titles.dump</stmt>
+    <stmt>SELECT 'LOADING salaries' AS 'INFO'</stmt>
+    <stmt>source load_salaries.dump</stmt>
+  </test>
+
+</testdata>

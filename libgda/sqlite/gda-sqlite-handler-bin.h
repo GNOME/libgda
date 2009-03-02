@@ -25,10 +25,10 @@
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_SQLITE_HANDLER_BIN          (gda_sqlite_handler_bin_get_type())
-#define GDA_SQLITE_HANDLER_BIN(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_sqlite_handler_bin_get_type(), GdaSqliteHandlerBin)
-#define GDA_SQLITE_HANDLER_BIN_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_sqlite_handler_bin_get_type (), GdaSqliteHandlerBinClass)
-#define GDA_IS_SQLITE_HANDLER_BIN(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_sqlite_handler_bin_get_type ())
+#define GDA_TYPE_SQLITE_HANDLER_BIN          (_gda_sqlite_handler_bin_get_type())
+#define GDA_SQLITE_HANDLER_BIN(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, _gda_sqlite_handler_bin_get_type(), GdaSqliteHandlerBin)
+#define GDA_SQLITE_HANDLER_BIN_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, _gda_sqlite_handler_bin_get_type (), GdaSqliteHandlerBinClass)
+#define GDA_IS_SQLITE_HANDLER_BIN(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, _gda_sqlite_handler_bin_get_type ())
 
 
 typedef struct _GdaSqliteHandlerBin      GdaSqliteHandlerBin;
@@ -51,8 +51,8 @@ struct _GdaSqliteHandlerBinClass
 };
 
 
-GType           gda_sqlite_handler_bin_get_type      (void) G_GNUC_CONST;
-GdaDataHandler *gda_sqlite_handler_bin_new           (void);
+GType           _gda_sqlite_handler_bin_get_type      (void) G_GNUC_CONST;
+GdaDataHandler *_gda_sqlite_handler_bin_new           (void);
 
 G_END_DECLS
 

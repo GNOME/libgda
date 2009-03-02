@@ -138,7 +138,7 @@ static void connection_settings_free (ConnectionSetting *cs);
 static GdaDataModel *list_all_dsn (void);
 static GdaDataModel *list_all_providers (void);
 
-static gboolean treat_line_func (const gchar *cmde, gpointer data);
+static gboolean treat_line_func (const gchar *cmde, gboolean *out_cmde_exec_ok);
 static const char *prompt_func (void);
 
 
@@ -315,8 +315,11 @@ main (int argc, char *argv[])
 		for (;;) {
 			cmde = input_from_stream (data->input_stream);
 			if (cmde) {
-				treat_line_func (cmde, NULL);
+				gboolean command_ok;
+				treat_line_func (cmde, &command_ok);
 				g_free (cmde);
+				if (! command_ok)
+					break;
 			}
 			else
 				break;
@@ -364,9 +367,13 @@ prompt_func (void)
 
 /* @cmde is stolen here */
 static gboolean
-treat_line_func (const gchar *cmde, gpointer data)
+treat_line_func (const gchar *cmde, gboolean *out_cmde_exec_ok)
 {
 	gchar *loc_cmde = NULL;
+
+	if (out_cmde_exec_ok)
+		*out_cmde_exec_ok = TRUE;
+
 	if (!cmde) {
 		save_history (NULL, NULL);
 		if (!main_data->output_stream)
@@ -384,7 +391,7 @@ treat_line_func (const gchar *cmde, gpointer data)
 			main_data->partial_command = g_string_new (loc_cmde);
 		}
 		else {
-			g_string_append_c (main_data->partial_command, ' ');
+			g_string_append_c (main_data->partial_command, '\n');
 			g_string_append (main_data->partial_command, loc_cmde);
 		}
 		if (command_is_complete (main_data->partial_command->str)) {
@@ -401,16 +408,22 @@ treat_line_func (const gchar *cmde, gpointer data)
 				}
 			}
 			
-			if (data && main_data->output_stream)
+			if (main_data && main_data->output_stream)
 				to_stream = main_data->output_stream;
 			else
 				to_stream = stdout;
 			res = command_execute (NULL, main_data->partial_command->str, &error);
 			
 			if (!res) {
-				g_fprintf (to_stream,
-					   "ERROR: %s\n", 
-					   error && error->message ? error->message : _("No detail"));
+				if (!error ||
+				    (error->domain != GDA_SQL_PARSER_ERROR) ||
+				    (error->code != GDA_SQL_PARSER_EMPTY_SQL_ERROR)) {
+					g_fprintf (to_stream,
+						   "ERROR: %s\n", 
+						   error && error->message ? error->message : _("No detail"));
+					if (out_cmde_exec_ok)
+						*out_cmde_exec_ok = FALSE;
+				}
 				if (error) {
 					g_error_free (error);
 					error = NULL;
@@ -700,7 +713,13 @@ command_is_complete (const gchar *command)
 		return TRUE;
 	}
 	else {
-		if (command [strlen (command) - 1] == ';')
+		gint i, len;
+		len = strlen (command);
+		for (i = len - 1; i > 0; i--) {
+			if ((command [i] != ' ') && (command [i] != '\n') && (command [i] != '\r'))
+				break;
+		}
+		if (command [i] == ';')
 			return TRUE;
 		else
 			return FALSE;
@@ -2381,6 +2400,33 @@ extra_command_set_output_format (SqlConsole *console, GdaConnection *cnc, const 
 	return res;
 }
 
+static gboolean
+idle_read_input_stream (gpointer data)
+{
+	if (main_data->input_stream) {
+		gchar *cmde;
+		cmde = input_from_stream (main_data->input_stream);
+		if (cmde) {
+			gboolean command_ok;
+			treat_line_func (cmde, &command_ok);
+			g_free (cmde);
+			if (command_ok)
+				return TRUE; /* potentially some more work to do from the stream */
+			else 
+				goto stop;
+		}
+		else 
+			goto stop;
+	}
+
+ stop:
+	compute_prompt (NULL, prompt, main_data->partial_command == NULL ? FALSE : TRUE);
+	g_print ("\n%s", prompt->str);
+	fflush (NULL);
+	set_input_file (NULL, NULL);
+	return FALSE; /* stop calling this function */
+}
+
 static GdaInternalCommandResult *
 extra_command_set_input (SqlConsole *console, GdaConnection *cnc, const gchar **args,
 			 GError **error, gpointer data)
@@ -2397,6 +2443,8 @@ extra_command_set_input (SqlConsole *console, GdaConnection *cnc, const gchar **
 	if (set_input_file (args[0], error)) {
 		GdaInternalCommandResult *res;
 		
+		g_idle_add ((GSourceFunc) idle_read_input_stream, NULL);
+
 		res = g_new0 (GdaInternalCommandResult, 1);
 		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
 		return res;

@@ -32,7 +32,7 @@
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_SQLITE_RECORDSET            (gda_sqlite_recordset_get_type())
+#define GDA_TYPE_SQLITE_RECORDSET            (_gda_sqlite_recordset_get_type())
 #define GDA_SQLITE_RECORDSET(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_SQLITE_RECORDSET, GdaSqliteRecordset))
 #define GDA_SQLITE_RECORDSET_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_SQLITE_RECORDSET, GdaSqliteRecordsetClass))
 #define GDA_IS_SQLITE_RECORDSET(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_SQLITE_RECORDSET))
@@ -51,8 +51,8 @@ struct _GdaSqliteRecordsetClass {
 	GdaDataSelectClass             parent_class;
 };
 
-GType         gda_sqlite_recordset_get_type  (void) G_GNUC_CONST;
-GdaDataModel *gda_sqlite_recordset_new       (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_params,
+GType         _gda_sqlite_recordset_get_type  (void) G_GNUC_CONST;
+GdaDataModel *_gda_sqlite_recordset_new       (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_params,
 					      GdaDataModelAccessFlags flags, GType *col_types, 
 					      gboolean force_empty);
 

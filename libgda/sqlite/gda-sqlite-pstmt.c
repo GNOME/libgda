@@ -31,12 +31,12 @@ static void gda_sqlite_pstmt_finalize    (GObject *object);
 static GObjectClass *parent_class = NULL;
 
 /**
- * gda_sqlite_pstmt_get_type
+ * _gda_sqlite_pstmt_get_type
  *
  * Returns: the #GType of GdaSqlitePStmt.
  */
 GType
-gda_sqlite_pstmt_get_type (void)
+_gda_sqlite_pstmt_get_type (void)
 {
 	static GType type = 0;
 
@@ -101,7 +101,7 @@ gda_sqlite_pstmt_finalize (GObject *object)
 }
 
 GdaSqlitePStmt *
-gda_sqlite_pstmt_new (sqlite3_stmt *sqlite_stmt)
+_gda_sqlite_pstmt_new (sqlite3_stmt *sqlite_stmt)
 {
 	GdaSqlitePStmt *pstmt;
 

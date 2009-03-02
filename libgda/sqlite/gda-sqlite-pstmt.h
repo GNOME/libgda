@@ -32,7 +32,7 @@
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_SQLITE_PSTMT            (gda_sqlite_pstmt_get_type())
+#define GDA_TYPE_SQLITE_PSTMT            (_gda_sqlite_pstmt_get_type())
 #define GDA_SQLITE_PSTMT(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_PSTMT, GdaSqlitePStmt))
 #define GDA_SQLITE_PSTMT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_PSTMT, GdaSqlitePStmtClass))
 #define GDA_IS_SQLITE_PSTMT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_PSTMT))
@@ -55,8 +55,8 @@ struct _GdaSqlitePStmtClass {
 	GdaPStmtClass  parent_class;
 };
 
-GType           gda_sqlite_pstmt_get_type  (void) G_GNUC_CONST;
-GdaSqlitePStmt *gda_sqlite_pstmt_new       (sqlite3_stmt *sqlite_stmt);
+GType           _gda_sqlite_pstmt_get_type  (void) G_GNUC_CONST;
+GdaSqlitePStmt *_gda_sqlite_pstmt_new       (sqlite3_stmt *sqlite_stmt);
 
 G_END_DECLS
 

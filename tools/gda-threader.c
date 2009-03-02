@@ -175,7 +175,7 @@ gda_threader_dispose (GObject   * object)
 		}
 
 		if (thread->priv->nb_jobs > 0) {
-			g_warning ("There are still some running threads, some memory will be leaked!");
+			/*g_warning ("There are still some running threads, some memory will be leaked!");*/
 			thread->priv->nb_jobs = 0;
 		}
 

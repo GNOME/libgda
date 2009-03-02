@@ -1304,6 +1304,7 @@ getToken (GdaSqlParser *parser)
 		break;
 	case '#': {
 		if (z[1] == '#') {
+			/* parameter */
 			for (i=2; (z[i]) && 
 				     (IdChar (z[i]) || (z[i] == '+') || (z[i] == '-') || (z[i] == '.') || (z[i] == ':') || 
 				      (z[i] == '|') || (z[i] == '@') || (z[i] == '?')) &&
@@ -1318,8 +1319,16 @@ getToken (GdaSqlParser *parser)
 				parser->priv->context->token_type = L_UNSPECVAL;
 			consumed_chars = i;
 		}
-		else
-			parser->priv->context->token_type = L_ILLEGAL;
+		else {
+			if (parser->priv->flavour == GDA_SQL_PARSER_FLAVOUR_MYSQL) {
+				/* comment */
+				for (i=1;  (c=z[i])!=0 && c!='\n'; i++){}
+				parser->priv->context->token_type = L_SQLCOMMENT;
+				consumed_chars = i;
+			}
+			else
+				parser->priv->context->token_type = L_ILLEGAL;
+		}
 		break;
 	}
 	case '$':

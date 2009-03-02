@@ -7,8 +7,8 @@ AM_CPPFLAGS = \
 	-DTOP_BUILD_DIR=\""$(top_builddir)"\" \
 	-DTOP_SRC_DIR=\""$(top_srcdir)"\"
 
-TESTS = check_parser check_validation check_normalization check_dml_comp
-check_PROGRAMS = check_parser check_validation check_normalization check_dml_comp
+TESTS = check_parser check_validation check_normalization check_dml_comp check_script
+check_PROGRAMS = check_parser check_validation check_normalization check_dml_comp check_script
 
 check_parser_SOURCES = check_parser.c
 check_parser_LDADD = \
@@ -30,4 +30,11 @@ check_dml_comp_LDADD = \
 	$(top_builddir)/libgda/libgda-4.0.la \
 	$(LIBGDA_LIBS)
 
-EXTRA_DIST = testdata.xml testvalid.xml
+check_script_SOURCES = check_script.c
+check_script_LDADD = \
+	$(top_builddir)/libgda/libgda-4.0.la \
+	$(LIBGDA_LIBS)
+
+EXTRA_DIST = testdata.xml testvalid.xml testscripts.xml \
+	scripts/mysql_employees.sql \
+	scripts/mysql_employees_partitioned.sql

@@ -1,3 +1,16 @@
+2009-03-02  Vivien Malerba <malerba@gnome-db.org>
+
+	* tools/gda-sql.c:
+	  - corrected the "\i" command
+	  - corrected multi line commands handling
+	* tools/gda-threader.c: removed unnecessary warning
+	* tests/parser: added a new test which checks the parsing of whole script files
+	* libgda/sql-parser/gda-sql-parser.c: consider a single '#' to be the start of a comment
+	up to the end of the line for MySQL
+	* libgda/libgda.symbols: added missing symbols (gda_data_model_error_get_type and
+	gda_utility_data_model_find_column_description), and other corrections
+	* libgda/sqlite/: renamed symbols which are not supposed to be exported
+
 2009-02-28  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in: set version to 3.99.13

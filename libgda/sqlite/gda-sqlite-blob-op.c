@@ -46,7 +46,7 @@ static GObjectClass *parent_class = NULL;
  * Object init and finalize
  */
 GType
-gda_sqlite_blob_op_get_type (void)
+_gda_sqlite_blob_op_get_type (void)
 {
 	static GType type = 0;
 
@@ -111,7 +111,7 @@ gda_sqlite_blob_op_finalize (GObject * object)
 }
 
 GdaBlobOp *
-gda_sqlite_blob_op_new (SqliteConnectionData *cdata, const gchar *db_name, const gchar *table_name,
+_gda_sqlite_blob_op_new (SqliteConnectionData *cdata, const gchar *db_name, const gchar *table_name,
 			const gchar *column_name, sqlite3_int64 rowid)
 {
 	GdaSqliteBlobOp *bop = NULL;

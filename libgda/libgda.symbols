@@ -64,6 +64,7 @@
 	gda_column_set_position
 	gda_completion_list_get
 	gda_compute_dml_statements
+	gda_compute_select_statement_from_update
 	gda_compute_unique_table_row_condition
 	gda_config_can_modify_system_config
 	gda_config_define_dsn
@@ -202,6 +203,7 @@
 	gda_data_model_dsn_list_get_type
 	gda_data_model_dump
 	gda_data_model_dump_as_string
+	gda_data_model_error_get_type
 	gda_data_model_error_quark
 	gda_data_model_export_to_file
 	gda_data_model_export_to_string
@@ -238,12 +240,12 @@
 	gda_data_model_iter_get_value_for_field
 	gda_data_model_iter_invalidate_contents
 	gda_data_model_iter_is_valid
-	gda_data_model_iter_move_to_row
-	gda_data_model_iter_move_to_row_default
 	gda_data_model_iter_move_next
 	gda_data_model_iter_move_next_default
 	gda_data_model_iter_move_prev
 	gda_data_model_iter_move_prev_default
+	gda_data_model_iter_move_to_row
+	gda_data_model_iter_move_to_row_default
 	gda_data_model_iter_set_value_at
 	gda_data_model_remove_row
 	gda_data_model_reset
@@ -577,21 +579,7 @@
 	gda_sql_identifier_needs_quotes
 	gda_sql_identifier_remove_quotes
 	gda_sql_identifier_split
-	gda_sqlite_handler_bin_get_type
-	gda_sqlite_handler_bin_new
 	gda_sqlite_provider_get_type
-	gda_sqlite_pstmt_get_type
-	gda_sqlite_pstmt_new
-	gda_sqlite_recordset_get_type
-	gda_sqlite_recordset_new
-	gda_sqlite_render_ADD_COLUMN
-	gda_sqlite_render_CREATE_INDEX
-	gda_sqlite_render_CREATE_TABLE
-	gda_sqlite_render_CREATE_VIEW
-	gda_sqlite_render_DROP_INDEX
-	gda_sqlite_render_DROP_TABLE
-	gda_sqlite_render_DROP_VIEW
-	gda_sqlite_render_RENAME_TABLE
 	gda_sql_operation_copy
 	gda_sql_operation_free
 	gda_sql_operation_new
@@ -739,6 +727,7 @@
 	gda_ushort_get_type
 	gda_utility_check_data_model
 	gda_utility_data_model_dump_data_to_xml
+	gda_utility_data_model_find_column_description
 	gda_utility_holder_load_attributes
 	gda_value_attribute_get_type
 	gda_value_compare

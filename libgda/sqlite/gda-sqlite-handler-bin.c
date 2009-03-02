@@ -50,7 +50,7 @@ struct  _GdaSqliteHandlerBinPriv {
 static GObjectClass *parent_class = NULL;
 
 GType
-gda_sqlite_handler_bin_get_type (void)
+_gda_sqlite_handler_bin_get_type (void)
 {
 	static GType type = 0;
 
@@ -144,14 +144,14 @@ gda_sqlite_handler_bin_dispose (GObject   * object)
 }
 
 /**
- * gda_sqlite_handler_bin_new
+ * _gda_sqlite_handler_bin_new
  *
  * Creates a data handler for binary values
  *
  * Returns: the new object
  */
 GdaDataHandler *
-gda_sqlite_handler_bin_new (void)
+_gda_sqlite_handler_bin_new (void)
 {
 	GObject *obj;
 
