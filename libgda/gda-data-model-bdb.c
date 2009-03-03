@@ -29,8 +29,13 @@
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-data-model-bdb.h>
 #include <db.h>
+#include <gmodule.h>
 
 #define BDB_VERSION  (10000*DB_VERSION_MAJOR+100*DB_VERSION_MINOR+DB_VERSION_PATCH)
+
+static int (*libdb_db_create) (DB **, DB_ENV *, u_int32_t) = NULL;
+static char *(*libdb_db_strerror) (int) = NULL;
+static char *_db_strerror (int i);
 
 struct _GdaDataModelBdbPrivate {
 	gchar    *filename;
@@ -249,10 +254,44 @@ gda_data_model_bdb_get_type (void)
 		if (type == 0) {
 			type = g_type_register_static (G_TYPE_OBJECT, "GdaDataModelBdb", &info, 0);
 			g_type_add_interface_static (type, GDA_TYPE_DATA_MODEL, &data_model_info);
+
+			GModule *module;
+			gchar *err = NULL;
+
+			module = g_module_open (BDB_LIB, G_MODULE_BIND_LAZY);
+			if (!module)
+				err = g_strdup_printf (_("Could not load the Berkeley DB library: %s"),
+					   g_module_error ());
+			else {
+				if (!g_module_symbol (module, "db_create", (gpointer *) &libdb_db_create))
+					err = g_strdup_printf (_("Could not load the '%s' symbol from the "
+								 "Berkeley DB library"),
+							       "db_create");
+				else if (!g_module_symbol (module, "db_strerror", (gpointer *) &libdb_db_strerror))
+					err = g_strdup_printf (_("Could not load the '%s' symbol from the "
+								 "Berkeley DB library"),
+							       "db_strerror");
+			}
+			if (err) {
+				g_warning (err);
+				g_free (err);
+				libdb_db_create = NULL;
+				libdb_db_strerror = NULL;
+			}
+			else
+				g_module_make_resident (module);
 		}
 		g_static_mutex_unlock (&registering);
 	}
 	return type;
+}
+
+static char *_db_strerror (int i)
+{
+	if (libdb_db_strerror)
+		return libdb_db_strerror (i);
+	else
+		return _("Berkeley DB library not loaded");
 }
 
 static void
@@ -272,7 +311,7 @@ update_number_of_rows (GdaDataModelBdb *model)
 #endif
 			 0);
 	if (ret) {
-		add_error (model, db_strerror (ret));
+		add_error (model, _db_strerror (ret));
 		model->priv->n_rows = 0;
 	}
 	else {
@@ -322,9 +361,13 @@ gda_data_model_bdb_set_property (GObject *object,
 		DB *dbp;
 
 		/* open database */
-		ret = db_create (&dbp, NULL, 0);
+		if (!libdb_db_create) {
+			add_error (model, _("Berkeley DB library not loaded"));
+			goto out;
+		}
+		ret = libdb_db_create (&dbp, NULL, 0);
 		if (ret) {
-			add_error (model, db_strerror (ret));
+			add_error (model, _db_strerror (ret));
 			goto out;
 		}
 		
@@ -338,14 +381,14 @@ gda_data_model_bdb_set_property (GObject *object,
 				 DB_UNKNOWN, /* autodetect DBTYPE */
 				 0, 0);
 		if (ret) {
-			add_error (model, db_strerror (ret));
+			add_error (model, _db_strerror (ret));
 			goto out;
 		}
 
 		/* get cursor */
 		ret = dbp->cursor (dbp, NULL, &dbpc, 0);
 		if (ret) {
-			add_error (model, db_strerror (ret));
+			add_error (model, _db_strerror (ret));
 			goto out;
 		}
 		model->priv->dbpc = dbpc;
@@ -556,7 +599,7 @@ move_cursor_at (GdaDataModelBdb *model, gint row)
 		memset (&data, 0, sizeof data);
 		ret = dbpc->c_get (dbpc, &key, &data, DB_FIRST);
 		if (ret) {
-			add_error (model, db_strerror (ret));
+			add_error (model, _db_strerror (ret));
 			return FALSE;
 		}
 		model->priv->cursor_pos = 0;
@@ -569,7 +612,7 @@ move_cursor_at (GdaDataModelBdb *model, gint row)
 			memset (&data, 0, sizeof data);
 			ret = dbpc->c_get (dbpc, &key, &data, DB_NEXT);
 			if (ret) {
-				add_error (model, db_strerror (ret));
+				add_error (model, _db_strerror (ret));
 				return FALSE;
 			}
 			model->priv->cursor_pos ++;
@@ -581,7 +624,7 @@ move_cursor_at (GdaDataModelBdb *model, gint row)
 			memset (&data, 0, sizeof data);
 			ret = dbpc->c_get (dbpc, &key, &data, DB_PREV);
 			if (ret) {
-				add_error (model, db_strerror (ret));
+				add_error (model, _db_strerror (ret));
 				return FALSE;
 			}
 			model->priv->cursor_pos --;
@@ -621,9 +664,9 @@ gda_data_model_bdb_get_value_at (GdaDataModel *model, gint col, gint row, GError
         memset (&data, 0, sizeof data);
 	ret = imodel->priv->dbpc->c_get (imodel->priv->dbpc, &key, &data, DB_CURRENT);
 	if (ret) {
-		add_error (imodel, db_strerror (ret));
+		add_error (imodel, _db_strerror (ret));
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-			      "%s", db_strerror (ret));
+			      "%s", _db_strerror (ret));
 		return NULL;
 	}
 
@@ -842,9 +885,9 @@ gda_data_model_bdb_set_values (GdaDataModel *model, gint row, GList *values, GEr
         memset (&data, 0, sizeof data);
 	ret = imodel->priv->dbpc->c_get (imodel->priv->dbpc, &key, &data, DB_CURRENT);
 	if (ret) {
-		add_error (imodel, db_strerror (ret));
+		add_error (imodel, _db_strerror (ret));
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-			      "%s", db_strerror (ret));
+			      "%s", _db_strerror (ret));
 		return FALSE;
 	}
 
@@ -905,9 +948,9 @@ gda_data_model_bdb_set_values (GdaDataModel *model, gint row, GList *values, GEr
 	if (!key_modified) {
 		ret = imodel->priv->dbpc->c_put (imodel->priv->dbpc, &key, &data, DB_CURRENT);
 		if (ret) {
-			add_error (imodel, db_strerror (ret));
+			add_error (imodel, _db_strerror (ret));
 			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-				      "%s", db_strerror (ret));
+				      "%s", _db_strerror (ret));
 			return FALSE;
 		}
 	}
@@ -948,9 +991,9 @@ gda_data_model_bdb_append_row (GdaDataModel *model, GError **error)
 
 	ret = imodel->priv->dbp->put (imodel->priv->dbp, NULL, &key, &data, 0);
 	if (ret) {
-		add_error (imodel, db_strerror (ret));
+		add_error (imodel, _db_strerror (ret));
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-			      "%s", db_strerror (ret));
+			      "%s", _db_strerror (ret));
 		return -1;
 	}
 
@@ -975,9 +1018,9 @@ gda_data_model_bdb_remove_row (GdaDataModel *model, gint row, GError **error)
 
 	ret = imodel->priv->dbpc->c_del (imodel->priv->dbpc, 0);
 	if (ret) {
-		add_error (imodel, db_strerror (ret));
+		add_error (imodel, _db_strerror (ret));
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-			      "%s", db_strerror (ret));
+			      "%s", _db_strerror (ret));
 		return FALSE;
 	}
 

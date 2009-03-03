@@ -25,6 +25,7 @@ noinst_PROGRAMS = gda-bdb-test
 gda_bdb_test_SOURCES = gda-bdb-test.c
 gda_bdb_test_LDADD = \
 	$(LIBGDA_LIBS) \
+	$(BDB_LIBS) \
 	$(top_builddir)/libgda/libgda-4.0.la 
 
 xmldir   = $(datadir)/libgda-4.0

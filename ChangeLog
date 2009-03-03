@@ -1,3 +1,11 @@
+2009-03-03  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in:
+	* libgda/Makefile.am:
+	* libgda/gda-data-model-bdb.c:
+	* providers/bdb/Makefile.am: the berkeley db livrary is now loaded only
+	when needed: the libgda library is not linked directly with it anymore
+
 2009-03-02  Vivien Malerba <malerba@gnome-db.org>
 
 	* tools/gda-sql.c:

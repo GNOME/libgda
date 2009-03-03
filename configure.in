@@ -316,7 +316,8 @@ then
 		AC_CHECK_HEADER(db.h, bdb_ok=yes, bdb_ok=no, [])
 		if test $bdb_ok = yes ; then
 		        bdbdir=yes
-		   	BDB_LIBS="-ldb"
+		   	BDB_LIB="libdb$linklibext"
+			BDB_LIBS="-ldb"
 		fi
 	else
 		AC_MSG_CHECKING(for Berkeley DB files)
@@ -328,6 +329,7 @@ then
 				AC_DEFINE(HAVE_BDB, 1, [Have Berkeley DB])
 				bdbdir=$d
 				BDB_CFLAGS="-I${bdbdir}/include"
+				BDB_LIB="$d/bin/libdb47.dll"
 				BDB_LIBS="-L${bdbdir}/bin -ldb47"
 				break
 			fi
@@ -338,6 +340,7 @@ then
 				AC_DEFINE(HAVE_BDB, 1, [Have Berkeley DB])
 				bdbdir=$d
 				BDB_CFLAGS="-I${bdbdir}/include"
+				BDB_LIB="$d/$lib/libdb$linklibext"
 				BDB_LIBS="-L${bdbdir}/${lib} -ldb"
 				break
 			fi
@@ -347,6 +350,7 @@ then
 				AC_DEFINE(HAVE_BDB, 1, [Have Berkeley DB])
 				bdbdir=$d
 				BDB_CFLAGS="-I${bdbdir}/include"
+				BDB_LIB="$d/lib/libdb$linklibext"
 				BDB_LIBS="-L${bdbdir}/lib -ldb"
 				break
 			fi
@@ -361,7 +365,6 @@ fi
 
 AM_CONDITIONAL(BDB, test x$bdbdir != x)
 if test x$bdbdir != x; then
-	LIBGDA_CFLAGS="$LIBGDA_CFLAGS $BDB_CFLAGS"
 	LIBGDA_BDB_INC="#include <libgda/gda-data-model-bdb.h>"
 	LIBGDA_BDB_TYPE="gda_data_model_bdb_get_type"
 fi
@@ -1383,6 +1386,7 @@ AC_SUBST(LIBGDA_DTDDIR)
 dnl ******************************
 dnl Variables
 dnl ******************************
+AC_SUBST(BDB_LIB)
 AC_SUBST(BDB_LIBS)
 AC_SUBST(BDB_CFLAGS)
 AC_SUBST(ODBC_LIBS)
