@@ -248,7 +248,9 @@ void
 init_history ()
 {
 #ifdef HAVE_HISTORY
+#ifdef HAVE_READLINE
 	rl_set_signals ();
+#endif
 	
 	if (history_init_done)
 		return;
