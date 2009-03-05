@@ -2485,8 +2485,8 @@ gda_ushort_get_type (void) {
  * @bin: a correctly filled @GdaBinary structure
  * @maxlen: a maximum len used to truncate, or 0 for no maximum length
  *
- * Converts all the non printable characters of bin->data into the \xxx representation
- * where xxx is the octal representation of the byte, and the '\' (backslash) character
+ * Converts all the non printable characters of bin->data into the "\xyz" representation
+ * where "xyz" is the octal representation of the byte, and the '\' (backslash) character
  * is converted to "\\".
  *
  * Returns: a new string from @bin
@@ -2548,10 +2548,10 @@ gda_binary_to_string (const GdaBinary *bin, guint maxlen)
 				guchar val = *ptr;
 				g_memmove (ptr+4, ptr+1, realsize - offset);
 				*ptr = '\\';
-				*(ptr+1) = val / 49 + '0';
-				val = val % 49;
-				*(ptr+2) = val / 7 + '0';
-				val = val % 7;
+				*(ptr+1) = val / 64 + '0';
+				val = val % 64;
+				*(ptr+2) = val / 8 + '0';
+				val = val % 8;
 				*(ptr+3) = val + '0';
 				
 				ptr += 4;
@@ -2567,7 +2567,9 @@ gda_binary_to_string (const GdaBinary *bin, guint maxlen)
  * gda_string_to_binary
  * @str: a string to convert
  *
- * Performs the reverse of gda_binary_to_string().
+ * Performs the reverse of gda_binary_to_string() (note that for any "\xyz" succession
+ * of 4 characters where "xyz" represents a valid octal value, the resulting read value will
+ * be modulo 256)
  *
  * Returns: a new #GdaBinary if no error were found in @str, or NULL otherwise
  */
@@ -2588,22 +2590,22 @@ gda_string_to_binary (const gchar *str)
 	}
 
 	total = strlen (str);
-	retval = g_memdup (str, total);
+	retval = g_memdup (str, total + 1);
 	ptr = (gchar *) retval;
 	while (offset < total) {
 		if (*ptr == '\\') {
 			if (*(ptr+1) == '\\') {
-				g_memmove (ptr+1, ptr+2, total - offset);
 				offset += 2;
+				g_memmove (ptr+1, ptr+2, total - offset);
 			}
 			else {
-				if ((*(ptr+1) >= '0') && (*(ptr+1) <= '9') &&
-				    (*(ptr+2) >= '0') && (*(ptr+2) <= '9') &&
-				    (*(ptr+3) >= '0') && (*(ptr+3) <= '9')) {
-					*ptr = (*(ptr+1) - '0') * 49 +
-						(*(ptr+2) - '0') * 7 +
-						*(ptr+3) - '0';
-					g_memmove (ptr+1, ptr+4, total - offset);
+				if ((*(ptr+1) >= '0') && (*(ptr+1) <= '7') &&
+				    (*(ptr+2) >= '0') && (*(ptr+2) <= '7') &&
+				    (*(ptr+3) >= '0') && (*(ptr+3) <= '7')) {
+					*ptr = (*(ptr+1) - '0') * 64 +
+						(*(ptr+2) - '0') * 8 +
+						(*(ptr+3) - '0');
+					g_memmove (ptr+1, ptr+4, total - offset - 3);
 					offset += 4;
 				}
 				else {

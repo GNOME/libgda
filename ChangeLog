@@ -1,3 +1,13 @@
+2009-03-05  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-value.c: fix for bug #574193
+	* tests/Makefile.am:
+	* tests/test-ddl-creator.c: remove created DB before running test, and run
+	as a test
+	* tests/Makefile.am:
+	* tests/tests/test-bin-converter.c: new test for gda_binary_to_string()
+	and gda_string_to_binary()
+
 2009-03-04  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in: use ncurses if found instead of ncuses, fixes bug #574021

@@ -1,4 +1,4 @@
-/* GDA - Information schema documentation extractor
+/* 
  * Copyright (C) 2008 The GNOME Foundation.
  *
  * AUTHORS:
@@ -29,17 +29,23 @@ main (int argc, char** argv)
 	GError *error = NULL;
 	GdaConnection *cnc;
 	gchar *str;
+	gchar *file;
 
+	/* set up test environment */
+        g_setenv ("GDA_TOP_BUILD_DIR", TOP_BUILD_DIR, 0);
 	gda_init ();
 	
 	ddl = gda_ddl_creator_new ();
-	if (!gda_ddl_creator_set_dest_from_file (ddl, "dbstruct.xml", &error)) {
+	file = g_build_filename (CHECK_FILES, "tests", "dbstruct.xml", NULL);
+	if (!gda_ddl_creator_set_dest_from_file (ddl, file, &error)) {
 		g_print ("Error creating GdaDDLCreator: %s\n", error && error->message ? error->message : "No detail");
 		g_error_free (error);
 		return EXIT_FAILURE;
 	}
+	g_free (file);
 	
 	/* open a connection */
+	g_unlink ("creator.db");
 	cnc = gda_connection_open_from_string ("SQLite", "DB_DIR=.;DB_NAME=creator", NULL, GDA_CONNECTION_OPTIONS_NONE, &error);
 	if (!cnc) {
 		g_print ("Error opening connection: %s\n", error && error->message ? error->message : "No detail");
@@ -67,6 +73,7 @@ main (int argc, char** argv)
 	}
 
 	g_object_unref (ddl);
+	g_unlink ("creator.db");
 
 	return EXIT_SUCCESS;
 }
