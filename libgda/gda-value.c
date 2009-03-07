@@ -2495,69 +2495,62 @@ gchar *
 gda_binary_to_string (const GdaBinary *bin, guint maxlen)
 {
 	gint nb_rewrites = 0;
-	gchar *ptr, *hold;
+	gchar *sptr, *rptr;
 	gulong realsize = MYMIN (bin->binary_length, maxlen);
 
 	gchar *retval;
 	glong offset = 0;
-	gunichar unichar;
 
 	if (!bin->data || (bin->binary_length == 0))
 		return g_strdup ("");
 
 	/* compute number of char rewrites */
-	ptr = (gchar*)bin->data;
-	while (offset < realsize) {
-		unichar = g_utf8_get_char_validated (ptr, -1);
-		if ((*ptr == '\n') ||
-		    ((*ptr != '\\') && (unichar > 0) && g_unichar_isprint (unichar))) {
-			hold = ptr;
-			ptr = g_utf8_next_char (ptr);
-			offset += ptr - hold;
-		}
-		else {
-			ptr++;
+	for (offset = 0, sptr = (gchar*) bin->data; 
+	     offset < realsize; 
+	     offset ++, sptr++) {
+		if ((*sptr != '\n') && ((*sptr == '\\') || !g_ascii_isprint (*sptr)))
 			nb_rewrites++;
-			offset ++;
-		}
 	}
 	
 	/* mem allocation and copy */
 	retval = g_malloc0 (realsize + nb_rewrites * 4 + 1);
-	memcpy (retval, bin->data, realsize);
-	ptr = retval;
+	rptr = retval;
+	sptr = (gchar*) bin->data;
 	offset = 0;
 	while (offset < realsize) {
-		unichar = g_utf8_get_char_validated (ptr, -1);
 		/* g_print (">%x<\n", (guchar) *ptr); */
-		if ((*ptr == '\n') ||
-		    ((*ptr != '\\') && (unichar > 0) && g_unichar_isprint (unichar))) {
-			hold = ptr;
-			ptr = g_utf8_next_char (ptr);
-			offset += ptr - hold;
+		if ((*sptr == '\n') || ((*sptr != '\\') && g_ascii_isprint (*sptr))) {
+			*rptr = *sptr;
+			rptr ++;
 		}
 		else {
-			if (*ptr == '\\') {
-				g_memmove (ptr+2, ptr+1, realsize - offset);
-
-				*(ptr+1) = '\\';
-				ptr += 2;
-				offset ++;
+			if (*sptr == '\\') {
+				*rptr = '\\';
+				rptr++;
+				*rptr = '\\';
+				rptr++;
 			}
 			else {
-				guchar val = *ptr;
-				g_memmove (ptr+4, ptr+1, realsize - offset);
-				*ptr = '\\';
-				*(ptr+1) = val / 64 + '0';
+				guchar val = *sptr;
+
+				*rptr = '\\';
+				rptr++;
+
+				*rptr = val / 64 + '0';
+				rptr++;
 				val = val % 64;
-				*(ptr+2) = val / 8 + '0';
+
+				*rptr = val / 8 + '0';
 				val = val % 8;
-				*(ptr+3) = val + '0';
-				
-				ptr += 4;
-				offset ++;
+				rptr++;
+
+				*rptr = val + '0';
+				rptr++;
 			}
 		}
+
+		sptr++;
+		offset ++;
 	}
 
 	return retval;
@@ -2578,9 +2571,9 @@ gda_string_to_binary (const gchar *str)
 {
 	GdaBinary *bin;
 	glong len = 0, total;
-	gchar *ptr;
+	gchar *rptr;
+	const gchar *sptr;
 	gchar *retval;
-	glong offset = 0;
 
 	if (!str) {
 		bin = g_new0 (GdaBinary, 1);
@@ -2590,23 +2583,24 @@ gda_string_to_binary (const gchar *str)
 	}
 
 	total = strlen (str);
-	retval = g_memdup (str, total + 1);
-	ptr = (gchar *) retval;
-	while (offset < total) {
-		if (*ptr == '\\') {
-			if (*(ptr+1) == '\\') {
-				offset += 2;
-				g_memmove (ptr+1, ptr+2, total - offset);
+	retval = g_new0 (gchar, total + 1);
+	sptr = str;
+	rptr = (gchar *) retval;
+
+	while (*sptr) {
+		if (*sptr == '\\') {
+			if (*(sptr+1) == '\\') {
+				*rptr = '\\';
+				sptr += 2;
 			}
 			else {
-				if ((*(ptr+1) >= '0') && (*(ptr+1) <= '7') &&
-				    (*(ptr+2) >= '0') && (*(ptr+2) <= '7') &&
-				    (*(ptr+3) >= '0') && (*(ptr+3) <= '7')) {
-					*ptr = (*(ptr+1) - '0') * 64 +
-						(*(ptr+2) - '0') * 8 +
-						(*(ptr+3) - '0');
-					g_memmove (ptr+1, ptr+4, total - offset - 3);
-					offset += 4;
+				if ((*(sptr+1) >= '0') && (*(sptr+1) <= '7') &&
+				    (*(sptr+2) >= '0') && (*(sptr+2) <= '7') &&
+				    (*(sptr+3) >= '0') && (*(sptr+3) <= '7')) {
+					*rptr = (*(sptr+1) - '0') * 64 +
+						(*(sptr+2) - '0') * 8 +
+						(*(sptr+3) - '0');
+					sptr += 4;
 				}
 				else {
 					g_free (retval);
@@ -2614,10 +2608,12 @@ gda_string_to_binary (const gchar *str)
 				}
 			}
 		}
-		else
-			offset ++;
+		else {
+			*rptr = *sptr;
+			sptr++;
+		}
 
-		ptr++;
+		rptr++;
 		len ++;
 	}
 

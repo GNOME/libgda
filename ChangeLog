@@ -1,3 +1,10 @@
+2009-03-07  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-value.c: improved performances on gda_binary_to_string()
+	and gda_string_to_binary(): removed g_memmove() usage and convert any
+	non ASCII printable char to an octal representation (don't bither with
+	unicode anymore)
+
 2009-03-05  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-value.c: fix for bug #574193
