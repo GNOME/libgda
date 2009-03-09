@@ -1,3 +1,5 @@
+Released 3.99.13
+
 2009-03-07  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-value.c: improved performances on gda_binary_to_string()
