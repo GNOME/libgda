@@ -61,18 +61,16 @@ This property changes or queries the internal #GdaSqlStatement structure. A copy
 
 <!-- ##### ENUM GdaStatementSqlFlag ##### -->
 <para>
-These flags control how a #GdaStatement will be rendered as SQL. If no "GDA_STATEMENT_SQL_PARAMS..." flag is specified, then
-for each parameter (variable) required by the statement, there must be a value provided when converting to SQL (through
-the @params argument of the gda_statement_to_sql_extended() function), or an error will be reported.
+  Specifies how the general rendering is done
 </para>
 
-@GDA_STATEMENT_SQL_PRETTY: indents the output for easier readability
-@GDA_STATEMENT_SQL_PARAMS_LONG: use the &lt;default value&gt; /* ... */ syntax for each parameter
-@GDA_STATEMENT_SQL_PARAMS_SHORT: use the ##&lt;param_name&gt; syntax for each parameter when possible
-@GDA_STATEMENT_SQL_PARAMS_AS_COLON: use the :&lt;param_name&gt; syntax for each parameter, replacing any char not in [0-9A-Za-z] by '_'
-@GDA_STATEMENT_SQL_PARAMS_AS_DOLLAR: use the $&lt;param_number&gt; syntax for each parameter (starting numbering at 1)
-@GDA_STATEMENT_SQL_PARAMS_AS_QMARK: use the ?&lt;param_number&gt; syntax for each parameter (starting numbering at 1)
-@GDA_STATEMENT_SQL_PARAMS_AS_UQMARK: use the ? syntax for each parameter (no numbering)
+@GDA_STATEMENT_SQL_PRETTY: rendering will include newlines and indentation to make it easy to read
+@GDA_STATEMENT_SQL_PARAMS_LONG: parameters will be rendered using the "/* name:&lt;param_name&gt; ... */" syntax
+@GDA_STATEMENT_SQL_PARAMS_SHORT: parameters will be rendered using the "##&lt;param_name&gt;..." syntax
+@GDA_STATEMENT_SQL_PARAMS_AS_COLON: parameters will be rendered using the ":&lt;param_name&gt;" syntax
+@GDA_STATEMENT_SQL_PARAMS_AS_DOLLAR: parameters will be rendered using the "$&lt;param_number&gt;" syntax where parameters are numbered starting from 1
+@GDA_STATEMENT_SQL_PARAMS_AS_QMARK: parameters will be rendered using the "?&lt;param_number&gt;" syntax where parameters are numbered starting from 1
+@GDA_STATEMENT_SQL_PARAMS_AS_UQMARK: parameters will be rendered using the "?" syntax
 
 <!-- ##### ENUM GdaStatementModelUsage ##### -->
 <para>

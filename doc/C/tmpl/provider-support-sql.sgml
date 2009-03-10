@@ -1,0 +1,130 @@
+<!-- ##### SECTION Title ##### -->
+SQL rendering API
+
+<!-- ##### SECTION Short_Description ##### -->
+Adapting the SQL to the database's own SQL dialect
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+  &LIBGDA; is able to render a #GdaStatement statement to SQL in a generic way (as close as possible to the SQL
+  standard). However as each database has ultimately its own SQL dialect, some parts of the rendering has
+  to be specialized.
+</para>
+<para>
+  Customization is achieved by providing custom implementations of SQL rendering functions for each kind of
+  part in a #GdaSqlStatement structure, all packed in a #GdaSqlRenderingContext context structure. Functions
+  which are not customized will be implemented by the default ones.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+  <link linkend="gda-statement-to-sql-extended">gda_statement_to_sql_extended()</link>
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaSqlRenderingContext ##### -->
+<para>
+  Structure to wrap all the individual part's SQL rendering functions
+</para>
+
+@flags: Global rendering options
+@params: Parameters to be used while doing the rendering
+@params_used: When rendering is complete, contains the ordered list of parameters which have been used while doing the rendering
+@provider: Pointer to the server provider to be used
+@cnc: Pointer to the connection to be used
+@render_value: function to render a #GValue
+@render_param_spec: function to render a #GdaSqlParamSpec
+@render_expr: function to render a #GdaSqlExpr
+@render_unknown: function to render a #GdaSqlStatementUnknown
+@render_begin: function to render a BEGIN #GdaSqlStatementTransaction
+@render_rollback: function to render a ROLLBACK #GdaSqlStatementTransaction
+@render_commit: function to render a COMMIT #GdaSqlStatementTransaction
+@render_savepoint: function to render a ADD SAVEPOINT #GdaSqlStatementTransaction
+@render_rollback_savepoint: function to render a ROLBACK SAVEPOINT #GdaSqlStatementTransaction
+@render_delete_savepoint: function to render a DELETE SAVEPOINT #GdaSqlStatementTransaction
+@render_select: function to render a #GdaSqlStatementSelect
+@render_insert: function to render a #GdaSqlStatementInsert
+@render_delete: function to render a #GdaSqlStatementDelete
+@render_update: function to render a #GdaSqlStatementUpdate
+@render_compound: function to render a #GdaSqlStatementCompound
+@render_field: function to render a #GdaSqlField
+@render_table: function to render a #GdaSqlTable
+@render_function: function to render a #GdaSqlFunction
+@render_operation: function to render a #GdaSqlOperation
+@render_case: function to render a #GdaSqlCase
+@render_select_field: function to render a #GdaSqlSelectField
+@render_select_target: function to render a #GdaSqlSelectTarget
+@render_select_join: function to render a #GdaSqlSelectJoin
+@render_select_from: function to render a #GdaSqlSelectFrom
+@render_select_order: function to render a #GdaSqlSelectOrder
+@_gda_reserved1: 
+@_gda_reserved2: 
+@_gda_reserved3: 
+@_gda_reserved4: 
+@_gda_reserved5: 
+@_gda_reserved6: 
+@_gda_reserved7: 
+@_gda_reserved8: 
+
+<!-- ##### USER_FUNCTION GdaSqlRenderingValue ##### -->
+<para>
+  Rendering function type to render a #GValue
+</para>
+
+@value: the #GValue to render
+@context: the rendering contect
+@error: a place to store errors, or %NULL
+@Returns: a new string, or %NULL if an error occurred
+
+
+<!-- ##### USER_FUNCTION GdaSqlRenderingPSpecFunc ##### -->
+<para>
+  Rendering function type to render a #GdaSqlParamSpec
+</para>
+
+@pspec: #GdaSqlParamSpec to render
+@expr: #GdaSqlExpr which may hold the default value for the parameter, or %NULL
+@context: the rendering contect
+@is_default: pointer to a #gboolean which is set to TRUE if value should be considered as a default value
+@is_null: pointer to a #gboolean which is set to TRUE if value should be considered as NULL
+@error: a place to store errors, or %NULL
+@Returns: a new string, or %NULL if an error occurred
+
+
+<!-- ##### USER_FUNCTION GdaSqlRenderingExpr ##### -->
+<para>
+  Rendering function type to render a #GdaSqlExpr
+</para>
+
+@expr: #GdaSqlExpr to render
+@context: the rendering contect
+@is_default: pointer to a #gboolean which is set to TRUE if value should be considered as a default value
+@is_null: pointer to a #gboolean which is set to TRUE if value should be considered as NULL
+@error: a place to store errors, or %NULL
+@Returns: a new string, or %NULL if an error occurred
+
+
+<!-- ##### USER_FUNCTION GdaSqlRenderingFunc ##### -->
+<para>
+  Rendering function type to render any #GdaSqlAnyPart
+</para>
+
+@node: a #GdaSqlAnyPart pointer, to be cast to the correct type depending on which part the function has to render
+@context: the rendering contect
+@error: a place to store errors, or %NULL
+@Returns: a new string, or %NULL if an error occurred
+
+
+<!-- ##### FUNCTION gda_statement_to_sql_real ##### -->
+<para>
+
+</para>
+
+@stmt: 
+@context: 
+@error: 
+@Returns: 
+
+

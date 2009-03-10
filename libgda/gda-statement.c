@@ -560,6 +560,19 @@ static gchar *default_render_select_join (GdaSqlSelectJoin *join, GdaSqlRenderin
 static gchar *default_render_select_from (GdaSqlSelectFrom *from, GdaSqlRenderingContext *context, GError **error);
 static gchar *default_render_select_order (GdaSqlSelectOrder *order, GdaSqlRenderingContext *context, GError **error);
 
+/**
+ * gda_statement_to_sql_real
+ * @stmt: a #GdaStatement object
+ * @context: a #GdaSqlRenderingContext context
+ * @error: a place to store errors, or %NULL
+ *
+ * Renders @stmt to its SQL representation, using @context to specify how each part of @stmt must
+ * be rendered. This function is mainly used by database provider's implementations which require
+ * to specialize some aspects of SQL rendering to be adapted to the database,'s own SQL dialect
+ * (for example SQLite rewrites the 'FALSE' and 'TRUE' literals as '0' and 'NOT 0').
+ * 
+ * Returns: a new string, or %NULL if an error occurred
+ */
 gchar *
 gda_statement_to_sql_real (GdaStatement *stmt, GdaSqlRenderingContext *context, GError **error)
 {

@@ -1,3 +1,13 @@
+2009-03-10  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-statement.c:
+	* doc/C:
+	  - documents gda_statement_to_sql_real(), fixes bug #574738
+	  - mention that GdaServerOperationNode is mainly for database provider's
+	    implementations, for bug #574742
+	* libgda/gda-meta-struct.c: fixes documentation for
+	gda_meta_struct_get_all_db_objects(), fixes bug #574740
+
 2009-03-09  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in: set version to 3.99.14

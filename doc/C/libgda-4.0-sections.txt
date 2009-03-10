@@ -1461,6 +1461,18 @@ gda_sql_any_part_check_structure
 </SECTION>
 
 <SECTION>
+<FILE>provider-support-sql</FILE>
+<TITLE>SQL rendering API</TITLE>
+<INCLUDE>libgda/gda-statement-extra.h</INCLUDE>
+GdaSqlRenderingContext
+GdaSqlRenderingValue
+GdaSqlRenderingPSpecFunc
+GdaSqlRenderingExpr
+GdaSqlRenderingFunc
+gda_statement_to_sql_real
+</SECTION>
+
+<SECTION>
 <FILE>gda-data-comparator</FILE>
 <TITLE>GdaDataComparator</TITLE>
 GdaDataComparator

@@ -107,6 +107,7 @@
 <!ENTITY libgda-GdaDataComparator SYSTEM "xml/gda-data-comparator.xml">
 <!ENTITY provider-writing SYSTEM "prov-writing.xml">
 <!ENTITY provider-support SYSTEM "xml/provider-support.xml">
+<!ENTITY provider-support-sql SYSTEM "xml/provider-support-sql.xml">
 <!ENTITY i-s-doc SYSTEM "i_s_doc.xml">
 <!ENTITY fdl-appendix SYSTEM "fdl-appendix.sgml">
 <!ENTITY howto SYSTEM "howto.xml">
@@ -1363,6 +1364,7 @@ g_object_unref (eng);
       &libgda-GdaDataSelectPriv;
       &libgda-PStmt;
       &libgda-quark-list;
+      &provider-support-sql;
       &provider-support;
     </chapter>
     &provider-writing;

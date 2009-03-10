@@ -12,9 +12,10 @@ Getting information about parts (nodes) composing a path
   gda_server_operation_set_value_at()'s documentation.
 </para>
 <para>
-  This API is designed to get information about all the nodes present in a #GdaServerOperation object (the
+  This API is designed to get information about all the nodes present in a #GdaServerOperation object (refer to the
   gda_server_operation_get_root_nodes() function) and about each node of a path, and allows inspection
-  of its contents.
+  of its contents. It is mainly reserved for database provider's implementations but can have its purpose
+  outside of this scope.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
