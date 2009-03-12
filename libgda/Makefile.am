@@ -53,7 +53,6 @@ gda_headers = \
 	gda-debug-macros.h \
 	gda-decl.h \
 	gda-easy.h \
-	gda-error.h \
 	gda-enums.h \
 	gda-holder.h \
 	gda-lockable.h \
@@ -108,7 +107,8 @@ libgda_sources =  \
 	gda-data-select.c \
 	gda-data-select-extra.h \
 	gda-easy.c \
-	gda-error.c \
+	gda-types.c \
+	gda-types.h \
 	gda-holder.c \
 	gda-init.c \
 	gda-lockable.c \

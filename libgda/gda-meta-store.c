@@ -32,12 +32,14 @@
 #include <libgda/gda-data-model-array.h>
 #include <libgda/binreloc/gda-binreloc.h>
 #include "gda-marshal.h"
+#include "gda-custom-marshal.h"
 #include <stdarg.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <libgda/gda-util.h>
 #include <libgda/gda-meta-struct.h>
 #include <libgda/gda-connection.h>
+#include "gda-types.h"
 
 /*
  * Main static functions
@@ -315,8 +317,8 @@ suggest_update_accumulator (GSignalInvocationHint *ihint,
 {
         GError *error;
 
-        error = g_value_get_pointer (handler_return);
-        g_value_set_pointer (return_accu, error);
+        error = g_value_get_boxed (handler_return);
+        g_value_set_boxed (return_accu, error);
 
         return error ? FALSE : TRUE; /* stop signal if 'thisvalue' is FALSE */
 }
@@ -340,8 +342,9 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 	 * @store: the #GdaMetaStore instance that emitted the signal
 	 * @suggest: the suggested update, as a #GdaMetaContext structure
 	 *
-	 * This signal is emitted when the contents of a table should be updated (data updated or inserted; 
-	 * deleting data is done automatically).
+	 * This signal is emitted when the contents of a table should be updated (data to update or insert only; 
+	 * deleting data is done automatically). This signal is used for internal purposes by the #GdaConnection
+	 * object.
 	 *
 	 * Returns: a new #GError error structure if there was an error when processing the
 	 * signal, or %NULL if signal propagation should continue
@@ -352,12 +355,12 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 		G_SIGNAL_RUN_LAST,
 		G_STRUCT_OFFSET (GdaMetaStoreClass, suggest_update),
 		suggest_update_accumulator, NULL,
-		_gda_marshal_POINTER__POINTER, G_TYPE_POINTER,
-		1, G_TYPE_POINTER);
+		_gda_marshal_ERROR__METACONTEXT, GDA_TYPE_ERROR,
+		1, GDA_TYPE_META_CONTEXT);
 	/**
 	 * GdaMetaStore::meta-changed
 	 * @store: the #GdaMetaStore instance that emitted the signal
-	 * @changes: a list of changes made
+	 * @changes: a list of changes made, as a #GSList of pointers to #GdaMetaStoreChange (which must not be modified)
 	 *
 	 * This signal is emitted when the @store's contents have changed (the changes are in the @changes list)
 	 */
@@ -367,8 +370,8 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 		G_SIGNAL_RUN_FIRST,
 		G_STRUCT_OFFSET (GdaMetaStoreClass, meta_changed),
 		NULL, NULL,
-		_gda_marshal_VOID__POINTER, G_TYPE_NONE,
-		1, G_TYPE_POINTER);
+		_gda_marshal_VOID__SLIST, G_TYPE_NONE,
+		1, GDA_TYPE_SLIST);
 	/**
 	 * GdaMetaStore::meta-reset
 	 * @store: the #GdaMetaStore instance that emitted the signal

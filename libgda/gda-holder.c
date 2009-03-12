@@ -30,7 +30,7 @@
 #include <libgda.h>
 #include <libgda/gda-attributes-manager.h>
 #include <libgda/gda-custom-marshal.h>
-#include <libgda/gda-error.h>
+#include <libgda/gda-types.h>
 
 /* 
  * Main static functions 
@@ -1421,8 +1421,9 @@ gda_holder_get_not_null (GdaHolder *holder)
  * @col: the reference column in @model
  * @error: location to store error, or %NULL
  *
- * Sets a limit on the possible values for the @holder holder: the value must be among the values
- * contained in the @col column of the @model data model.
+ * Sets an hint that @holder's values should be restricted among the values
+ * contained in the @col column of the @model data model. Note that this is just a hint,
+ * meaning this policy is not enforced by @holder's implementation.
  *
  * Returns: TRUE if no error occurred
  */
@@ -1469,12 +1470,16 @@ gda_holder_set_source_model (GdaHolder *holder, GdaDataModel *model,
 /**
  * gda_holder_get_source_model
  * @holder: a #GdaHolder
- * @col: a place to store the column in the model sourceing the holder, or %NULL
+ * @col: a place to store the column in the model sourcing the holder, or %NULL
  *
- * Tells if @holder has its values sourceed by a #GdaDataModel, and optionnaly
- * allows to fetch the resteictions.
+ * If gda_holder_set_source_model() has been used to provide a hint that @holder's value
+ * should be among the values contained in a column of a data model, then this method
+ * returns which data model, and if @col is not %NULL, then it is set to the restricting column
+ * as well.
  *
- * Returns: a pointer to the #GdaDataModel source for @holder
+ * Otherwise, this method returns %NULL, and if @col is not %NULL, then it is set to 0.
+ *
+ * Returns: a pointer to a #GdaDataModel, or %NULL
  */
 GdaDataModel *
 gda_holder_get_source_model (GdaHolder *holder, gint *col)

@@ -1,5 +1,5 @@
 /*
- * gda-error.c
+ * gda-types.c
  * Copyright (C) 2007 Sebastien Granjoux  <seb.sfo@free.fr>
  *               2008 Vivien Malerba <malerba@gnome-db.org>
  *
@@ -18,10 +18,10 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "gda-error.h"
+#include "gda-types.h"
 
 GType
-gda_error_get_type (void)
+_gda_error_get_type (void)
 {
 	static GType type = 0;
 
@@ -32,6 +32,38 @@ gda_error_get_type (void)
 			type = g_boxed_type_register_static ("GdaError",
 							     (GBoxedCopyFunc) g_error_copy,
 							     (GBoxedFreeFunc) g_error_free);
+		g_static_mutex_unlock (&registering);
+	}
+
+	return type;
+}
+
+GType
+_gda_slist_get_type (void)
+{
+	static GType type = 0;
+
+	if (G_UNLIKELY (type == 0)) {
+		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+		g_static_mutex_lock (&registering);
+                if (type == 0)
+			type = g_pointer_type_register_static ("GdaSList");
+		g_static_mutex_unlock (&registering);
+	}
+
+	return type;
+}
+
+GType
+_gda_meta_context_get_type (void)
+{
+	static GType type = 0;
+
+	if (G_UNLIKELY (type == 0)) {
+		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+		g_static_mutex_lock (&registering);
+                if (type == 0)
+			type = g_pointer_type_register_static ("GdaMetaContext");
 		g_static_mutex_unlock (&registering);
 	}
 

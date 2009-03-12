@@ -315,7 +315,6 @@
 	gda_easy_create_table_flag_get_type
 	gda_easy_error_get_type
 	gda_easy_error_quark
-	gda_error_get_type
 	gda_execute_non_select_command
 	gda_execute_select_command
 	gda_gbr_get_file_path

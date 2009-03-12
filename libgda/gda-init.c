@@ -27,7 +27,7 @@
 
 #include <libgda/binreloc/gda-binreloc.h>
 #include <sql-parser/gda-sql-parser.h>
-#include <libgda/gda-error.h>
+#include <libgda/gda-types.h>
 
 /* global variables */
 xmlDtdPtr       gda_array_dtd = NULL;

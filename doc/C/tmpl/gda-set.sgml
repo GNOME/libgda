@@ -6,9 +6,10 @@ Container for several values
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-  The #GdaSet object is a container for several values (as #GdaHolder objects), which also offers
-  different classifications of the group of #GdaHolder values (see gda_set_get_node(), gda_set_get_source() or
-  gda_set_get_group()).
+  The #GdaSet object is a container for several values (as #GdaHolder objects). The list of #GdaHolder objects is
+  publicly accessible (and should not be modified), using the "holders" attribute. Each #GdaSet object also
+  maintains some publicly accessible information about the #GdaHolder objects, through the #GdaSetNode, #GdaSetSource and
+  #GdaSetGroup structures (see gda_set_get_node(), gda_set_get_source() and gda_set_get_group()).
 </para>
 <para>
   It is possible to control the values a #GdaHolder can have in the #GdaSet by connecting to the 
@@ -212,12 +213,16 @@ Container for several values
 
 <!-- ##### STRUCT GdaSetNode ##### -->
 <para>
-
+  For each #GdaHolder object in the #GdaSet object, there is a
+  #GdaSetNode structure which sums up all the information for
+  each GdaHolder. Contains public fields, which must not be modified.
 </para>
 
-@holder: 
-@source_model: 
-@source_column: 
+@holder: a #GdaHolder in the #GdaSet
+@source_model: if gda_holder_set_source_model() has been used with @holder, the #GdaDataModel used, or %NULL
+@source_column: if gda_holder_set_source_model() has been used with @holder, the column used, or 0
+@_gda_reserved1: 
+@_gda_reserved2: 
 
 <!-- ##### FUNCTION gda_set_get_node ##### -->
 <para>
@@ -231,15 +236,16 @@ Container for several values
 
 <!-- ##### STRUCT GdaSetSource ##### -->
 <para>
-
+  There is a #GdaSetSource structure for each #GdaDataModel which
+  restricts at least one #GdaHolder in the #GdaSet object.
 </para>
 
-@data_model: 
-@nodes: 
-@shown_n_cols: 
-@shown_cols_index: 
-@ref_n_cols: 
-@ref_cols_index: 
+@data_model: the #GdaDataModel
+@nodes: the list of #GdaSetNode where the @source_model attribute equals @data_model
+@_gda_reserved1: 
+@_gda_reserved2: 
+@_gda_reserved3: 
+@_gda_reserved4: 
 
 <!-- ##### FUNCTION gda_set_get_source_for_model ##### -->
 <para>
@@ -263,11 +269,15 @@ Container for several values
 
 <!-- ##### STRUCT GdaSetGroup ##### -->
 <para>
-
+  There is one #GdaSetGroup structure
+  for each _independant_ #GdaHolder (those which have the same restricting data model
+  all appear in the same #GdaSetGroup structure).
 </para>
 
-@nodes: 
-@nodes_source: 
+@nodes: a list of #GdaSetNode structures, at least one entry
+@nodes_source: a #GdaSetSource pointer where the @nodes attribute lists the same #GdaHolder objects as @nodes
+@_gda_reserved1: 
+@_gda_reserved2: 
 
 <!-- ##### FUNCTION gda_set_get_group ##### -->
 <para>

@@ -44,49 +44,34 @@ typedef enum
 	GDA_SET_INVALID_ERROR
 } GdaSetError;
 
-/**
- * GdaSetNode:
- *
- * For each #GdaHolder object in the #GdaSet object, there is a
- * #GdaSetNode structure which sums up all the information for
- * each GdaHolder.
- */
 struct _GdaSetNode {
 	GdaHolder    *holder;        /* Can't be NULL */
-	GdaDataModel *source_model;  /* may be NULL if @holder does not have any source */
-	gint          source_column; /* unused is @source_model is NULL */
+	GdaDataModel *source_model;  /* may be NULL */
+	gint          source_column; /* unused if @source_model is NULL */
+
+	/* Padding for future expansion */
+	gpointer      _gda_reserved1;
+	gpointer      _gda_reserved2;
 };
 
-/**
- * GdaSetGroup:
- *
- * The #GdaSetGroup is another view of the #GdaHolder objects
- * contained in the #GdaSet: there is one such structure
- * for each _independant_ parameter (parameters which have the same source data model
- * all appear in the same #GdaSetGroup structure).
- */
 struct _GdaSetGroup {
 	GSList       *nodes;       /* list of GdaSetNode, at least one entry */
 	GdaSetSource *nodes_source; /* if NULL, then @nodes contains exactly one entry */
+
+	/* Padding for future expansion */
+	gpointer      _gda_reserved1;
+	gpointer      _gda_reserved2;
 };
 
-/**
- * GdaSetSource:
- *
- * There is a #GdaSetSource structure for each #GdaDataModel which
- * is a source for least one #GdaHolder in the #GdaSet object.
- */
 struct _GdaSetSource {
 	GdaDataModel   *data_model;   /* Can't be NULL */
 	GSList         *nodes;        /* list of #GdaSetNode for which source_model == @data_model */
 
-	/* displayed columns in 'data_model' */
-        gint            shown_n_cols;
-        gint           *shown_cols_index;
-
-        /* columns used as a reference (corresponding to PK values) in 'data_model' */
-        gint            ref_n_cols;
-        gint           *ref_cols_index;
+	/* Padding for future expansion */
+	gpointer        _gda_reserved1;
+	gpointer        _gda_reserved2;
+	gpointer        _gda_reserved3;
+	gpointer        _gda_reserved4;
 };
 
 #define GDA_SET_NODE(x) ((GdaSetNode *)(x))

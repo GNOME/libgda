@@ -39,7 +39,7 @@
 #include <sql-parser/gda-sql-statement.h>
 #include <sql-parser/gda-statement-struct-util.h>
 #include <libgda/gda-custom-marshal.h>
-#include <libgda/gda-error.h>
+#include <libgda/gda-types.h>
 #include <gda-mutex.h>
 
 /* 

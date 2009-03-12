@@ -92,6 +92,24 @@ _gda_marshal_ERROR__INT_INT (GClosure     *closure,
 			    gpointer      invocation_hint G_GNUC_UNUSED,
 			    gpointer      marshal_data);
 
+/* VOID:SLIST */
+void
+_gda_marshal_VOID__SLIST (GClosure     *closure,
+			  GValue       *return_value G_GNUC_UNUSED,
+			  guint         n_param_values,
+			  const GValue *param_values,
+			  gpointer      invocation_hint G_GNUC_UNUSED,
+			  gpointer      marshal_data);
+
+/* ERROR:GdaMetaContext */
+void
+_gda_marshal_ERROR__METACONTEXT (GClosure     *closure,
+				 GValue       *return_value G_GNUC_UNUSED,
+				 guint         n_param_values,
+				 const GValue *param_values,
+				 gpointer      invocation_hint G_GNUC_UNUSED,
+				 gpointer      marshal_data);
+
 G_END_DECLS
 
 #endif

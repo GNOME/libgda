@@ -36,7 +36,7 @@
 #include "gda-server-provider.h"
 #include "gda-util.h"
 #include <libgda/gda-custom-marshal.h>
-#include <libgda/gda-error.h>
+#include <libgda/gda-types.h>
 
 extern xmlDtdPtr gda_paramlist_dtd;
 extern gchar *gda_lang_locale;
@@ -1041,9 +1041,6 @@ gda_set_finalize (GObject *object)
 	parent_class->finalize (object);
 }
 
-static void compute_shown_columns_index (GdaSetSource *source);
-static void compute_ref_columns_index (GdaSetSource *source);
-
 /*
  * Resets and computes set->nodes, and if some nodes already exist, they are previously discarded
  */
@@ -1122,16 +1119,6 @@ compute_public_data (GdaSet *set)
 		list = g_slist_next (list);
 	}
 	
-	/*
-	 * Filling information in all the GdaSetSource structures
-	 */
-	list = set->sources_list;
-	while (list) {
-		compute_shown_columns_index (GDA_SET_SOURCE (list->data));
-		compute_ref_columns_index (GDA_SET_SOURCE (list->data));
-		list = g_slist_next (list);
-	}
-
 	g_hash_table_destroy (groups);
 
 #ifdef GDA_DEBUG_signal
@@ -1142,103 +1129,6 @@ compute_public_data (GdaSet *set)
         g_print ("<< 'PUBLIC_DATA_CHANGED' from %p\n", set);
 #endif
 }
-
-static void
-compute_shown_columns_index (GdaSetSource *source)
-{
-        gint ncols, nholders;
-        gint *mask = NULL, masksize = 0;
-
-        nholders = g_slist_length (source->nodes);
-        g_return_if_fail (nholders > 0);
-        ncols = gda_data_model_get_n_columns (GDA_DATA_MODEL (source->data_model));
-        g_return_if_fail (ncols > 0);
-
-        if (ncols > nholders) {
-                /* we only want columns which are not holders */
-                gint i, current = 0;
-
-                masksize = ncols - nholders;
-                mask = g_new0 (gint, masksize);
-                for (i = 0; i < ncols ; i++) {
-                        GSList *list = source->nodes;
-                        gboolean found = FALSE;
-                        while (list && !found) {
-                                if (GDA_SET_NODE (list->data)->source_column == i)
-                                        found = TRUE;
-                                else
-                                        list = g_slist_next (list);
-                        }
-                        if (!found) {
-                                mask[current] = i;
-                                current ++;
-                        }
-                }
-                masksize = current;
-        }
-        else {
-                /* we want all the columns */
-                gint i;
-
-                masksize = ncols;
-                mask = g_new0 (gint, masksize);
-                for (i=0; i<ncols; i++) {
-                        mask[i] = i;
-                }
-        }
-
-        source->shown_n_cols = masksize;
-        source->shown_cols_index = mask;
-}
-
-static void
-compute_ref_columns_index (GdaSetSource *source)
-{
-        gint ncols, nholders;
-        gint *mask = NULL, masksize = 0;
-
-        nholders = g_slist_length (source->nodes);
-        g_return_if_fail (nholders > 0);
-        ncols = gda_data_model_get_n_columns (GDA_DATA_MODEL (source->data_model));
-        g_return_if_fail (ncols > 0);
-
-        if (ncols > nholders) {
-                /* we only want columns which are holders */
-                gint i, current = 0;
-
-                masksize = ncols - nholders;
-                mask = g_new0 (gint, masksize);
-                for (i=0; i<ncols ; i++) {
-                        GSList *list = source->nodes;
-                        gboolean found = FALSE;
-                        while (list && !found) {
-                                if (GDA_SET_NODE (list->data)->source_column == i)
-                                        found = TRUE;
-                                else
-                                        list = g_slist_next (list);
-                        }
-                        if (found) {
-                                mask[current] = i;
-                                current ++;
-                        }
-                }
-                masksize = current;
-        }
-        else {
-                /* we want all the columns */
-                gint i;
-
-                masksize = ncols;
-                mask = g_new0 (gint, masksize);
-                for (i=0; i<ncols; i++) {
-                        mask[i] = i;
-                }
-        }
-
-        source->ref_n_cols = masksize;
-        source->ref_cols_index = mask;
-}
-
 
 /**
  * gda_set_add_holder
@@ -1351,8 +1241,6 @@ set_remove_source (GdaSet *set, GdaSetSource *source)
 
 	if (source->nodes)
 		g_slist_free (source->nodes);
-	g_free (source->shown_cols_index);
-	g_free (source->ref_cols_index);
 
 	set->sources_list = g_slist_remove (set->sources_list, source);
 	g_free (source);
@@ -1513,7 +1401,7 @@ gda_set_get_group (GdaSet *set, GdaHolder *holder)
  * @model: a #GdaDataModel object
  *
  * Finds the #GdaSetSource structure used in @set for which @model is a
- * the data model, don't modify the returned structure
+ * the data model (the returned structure should not be modified).
  *
  * Returns: a #GdaSetSource pointer or %NULL.
  */
