@@ -1,5 +1,10 @@
 2009-03-12  Vivien Malerba <malerba@gnome-db.org>
 
+	* providers/mysql/gda-mysql-meta.c: corrected AUTO INCREMENT attribute reporting
+	for tables' columns
+
+2009-03-12  Vivien Malerba <malerba@gnome-db.org>
+
 	* libgda/gda-holder.c:
 	* libgda/gda-data-proxy.c:
 	* libgda/gda-error.[ch]:
