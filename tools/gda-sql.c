@@ -1386,10 +1386,17 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 
 		if (info) {
 			gchar *filename;
-#define LIBGDA_USER_CONFIG_DIR G_DIR_SEPARATOR_S ".libgda"
+			gchar *confdir;
+
+			confdir = g_build_path (G_DIR_SEPARATOR_S, g_get_user_data_dir (), "libgda", NULL);
+			if (!g_file_test (confdir, G_FILE_TEST_EXISTS)) {
+				g_free (confdir);
+				confdir = g_build_path (G_DIR_SEPARATOR_S, g_get_home_dir (), ".libgda", NULL);
+			}
 			filename = g_strdup_printf ("%s%sgda-sql-%s.db", 
-						    g_get_home_dir (), LIBGDA_USER_CONFIG_DIR G_DIR_SEPARATOR_S,
+						    confdir, G_DIR_SEPARATOR_S,
 						    info->name);
+			g_free (confdir);
 			if (! g_file_test (filename, G_FILE_TEST_EXISTS))
 				update_store = TRUE;
 			store = gda_meta_store_new_with_file (filename);

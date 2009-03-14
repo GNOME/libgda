@@ -221,7 +221,7 @@ gda_config_class_init (GdaConfigClass *klass)
         object_class->set_property = gda_config_set_property;
         object_class->get_property = gda_config_get_property;
 
-	/* To translators: DSN stands for Data Source Name, it's a named connection string defined in ~/.libgda/config */
+	/* To translators: DSN stands for Data Source Name, it's a named connection string defined in $XDG_DATA_HOME/libgda/config */
 	g_object_class_install_property (object_class, PROP_USER_FILE,
                                          g_param_spec_string ("user-filename", NULL, 
 							      "File to use for per-user DSN list", 
@@ -476,20 +476,29 @@ gda_config_constructor (GType type,
 
 		/* define user and system dirs. if not already defined */
 		if (!user_file_set) {
-			if (g_get_home_dir ()) {
-				gchar *confdir, *conffile;
-				gboolean setup_ok = TRUE;
-				confdir = g_build_path (G_DIR_SEPARATOR_S, g_get_home_dir (), ".libgda", NULL);
-				conffile = g_build_filename (g_get_home_dir (), ".libgda", "config", NULL);
+			gchar *confdir, *conffile;
+			gboolean setup_ok = TRUE;
+			confdir = g_build_path (G_DIR_SEPARATOR_S, g_get_user_data_dir (), "libgda", NULL);
+			conffile = g_build_filename (confdir, "config", NULL);
 
-				if (!g_file_test (confdir, G_FILE_TEST_EXISTS)) {
-					if (g_mkdir (confdir, 0700))
-						{
-							setup_ok = FALSE;
-							g_warning (_("Error creating user specific "
-								     "configuration directory '%s'"), 
-								   confdir);
-						}
+			if (!g_file_test (confdir, G_FILE_TEST_EXISTS)) {
+				gchar *old_path;
+				old_path = g_build_path (G_DIR_SEPARATOR_S, g_get_home_dir (), ".libgda", NULL);
+				if (g_file_test (old_path, G_FILE_TEST_EXISTS)) {
+					/* using $HOME/.libgda because it exists */
+					g_free (confdir);
+					confdir = old_path;
+					g_free (conffile);
+					conffile = g_build_filename (confdir, "config", NULL);
+				}
+				else {
+					g_free (old_path);
+					if (g_mkdir (confdir, 0700)) {
+						setup_ok = FALSE;
+						g_warning (_("Error creating user specific "
+							     "configuration directory '%s'"), 
+							   confdir);
+					}
 					if (setup_ok) {
 						gchar *str;
 						gchar *full_file;
@@ -533,7 +542,7 @@ gda_config_constructor (GType type,
 						g_free (str);
 					}
 				}
-				else if (!g_file_test (confdir, G_FILE_TEST_IS_DIR)) {
+				if (!g_file_test (confdir, G_FILE_TEST_IS_DIR)) {
 					setup_ok = FALSE;
 					g_warning (_("User specific "
 						     "configuration directory '%s' exists and is not a directory"), 
@@ -545,6 +554,10 @@ gda_config_constructor (GType type,
 					unique_instance->priv->user_file = conffile;
 				else
 					g_free (conffile);
+			}
+			else {
+				g_free (confdir);
+				unique_instance->priv->user_file = conffile;	
 			}
 		}
 		if (!system_file_set) 

@@ -21,6 +21,7 @@
 
 #include "tools-input.h"
 #include <glib/gi18n-lib.h>
+#include <glib/gstdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -38,10 +39,10 @@
 #endif
 
 #define HISTORY_ENV_NAME "GDA_SQL_HISTFILE"
-#define HISTORY_FILE ".gdasql_history"
+#define HISTORY_FILE "gdasql_history"
 #ifdef HAVE_HISTORY
 static gboolean history_init_done = FALSE;
-const gchar *history_file = NULL;
+gchar *history_file = NULL;
 #endif
 
 /**
@@ -261,11 +262,23 @@ init_history ()
 		}
 		history_file = g_strdup (getenv (HISTORY_ENV_NAME));
 	}
-	else
-		history_file = g_build_filename (g_get_home_dir (), HISTORY_FILE, NULL);
-	using_history ();
-	read_history (history_file);
-	history_init_done = TRUE;
+	else {
+		gchar *cache_dir;
+		cache_dir = g_build_filename (g_get_user_cache_dir (), "libgda", NULL);
+		history_file = g_build_filename (cache_dir, HISTORY_FILE, NULL);
+		if (!g_file_test (cache_dir, G_FILE_TEST_EXISTS)) {
+			if (g_mkdir (cache_dir, 0700)) {
+				g_free (history_file);
+				history_file = NULL;
+			}
+		}
+		g_free (cache_dir);
+	}
+	if (history_file) {
+		using_history ();
+		read_history (history_file);
+		history_init_done = TRUE;
+	}
 #endif
 }
 

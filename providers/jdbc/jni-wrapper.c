@@ -92,7 +92,11 @@ jni_wrapper_create_vm (JavaVM **out_jvm, CreateJavaVMFunc create_func,
 	}
 
 	gchar * confdir;
-	confdir = g_build_path (G_DIR_SEPARATOR_S, g_get_home_dir (), ".libgda", NULL);
+	confdir = g_build_path (G_DIR_SEPARATOR_S, g_get_user_data_dir (), "libgda", NULL);
+	if (!g_file_test (confdir, G_FILE_TEST_EXISTS)) {
+		g_free (confdir);
+		confdir = g_build_path (G_DIR_SEPARATOR_S, g_get_home_dir (), ".libgda", NULL);
+	}
 	classpath = locate_jars (classpath, confdir);
 	g_free (confdir);
 

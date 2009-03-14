@@ -1,3 +1,13 @@
+2009-03-14  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-config.c:
+	* tools/gda-sql.c:
+	* providers/jdbc/jni-wrapper.c: use the XDG Base Directory Specification to
+	get the directory where to store the defined data sources and fall back to
+	$HOME/.libgda if the directory does not exist
+	* tools/tools-input.c: store history file in $XDG_CACHE_HOME from
+	the XDG Base Directory Specification
+
 2009-03-12  Vivien Malerba <malerba@gnome-db.org>
 
 	* providers/mysql/gda-mysql-meta.c: corrected AUTO INCREMENT attribute reporting
