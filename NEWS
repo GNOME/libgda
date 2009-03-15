@@ -1,3 +1,9 @@
+libgda 3.99.14, 2009-03-15
+
+ - misc. corrections
+ - use XDG Base Directory Specification to store DSN list
+ - bug fixes: #574736, #574738, #574742, #574740
+
 libgda 3.99.13, 2009-03-09
 
  - misc. corrections
