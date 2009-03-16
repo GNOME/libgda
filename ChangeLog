@@ -1,3 +1,9 @@
+2009-03-16  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in:
+	  - set version to 4.1.0
+	  - increased library version
+
 Released 4.0.0
 
 2009-03-16  Vivien Malerba <malerba@gnome-db.org>
