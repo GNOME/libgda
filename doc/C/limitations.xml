@@ -149,7 +149,9 @@
 	<orderedlist>
 	  <listitem><para>in each directory or JAR file in the <envar>CLASSPATH</envar> environment variable
 	      (if set)</para></listitem>
-	  <listitem><para>in the <filename class="directory">$HOME/.libgda</filename> directory</para></listitem>
+	  <listitem><para>in the <filename>$HOME/.local/share/libgda/config</filename> directory (or 
+	      <filename class="directory">$HOME/.libgda</filename> if if exists and
+	      <filename>$HOME/.local/share/libgda/config</filename> does not)</para></listitem>
 	</orderedlist>
       </para>
     </sect2>

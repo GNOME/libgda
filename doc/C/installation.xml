@@ -209,11 +209,15 @@
       </para>
       <para>
 	DSNs can be configured on a per-user basis or on a system-wide basis. Each user's
-	own DSN definitions are stored in the <filename>$HOME/.libgda/config</filename> file (which
+	own DSN definitions are stored in the <filename>$HOME/.local/share/libgda/config</filename> file
+	(which
 	is created the first time &LIBGDA; is used within an application. System wide DSN are defined in the
 	<filename>&lt;prefix&gt;/etc/libgda/config</filename>. Rather than editing that
 	file manually, it is possible to use the <command>gnome-database-properties-4.0</command>
 	from the <ulink url="http://www.gnome-db.org">Libgnomedb</ulink> library.
+	Note: if the <filename>$HOME/.libgda/config</filename> already exists from a previous use
+	of &LIBGDA;, then that file is used instead of
+	<filename>$HOME/.local/share/libgda/config</filename>.
       </para>
     </sect2>
 
@@ -229,7 +233,9 @@
 	  The &GDA; default provider (based on an SQLite database file) is always installed 
           with &LIBGDA;, which means that a default database system is always available. 
 	  Specifically the first time you use
-	  &LIBGDA;, a test database is copied into <filename>$HOME/.libgda</filename> and
+	  &LIBGDA;, a test database is copied into <filename>$HOME/.local/share/libgda/config</filename>
+	  (or <filename>$HOME/.libgda</filename> if it exists and <filename>$HOME/.local/share/libgda/config</filename>
+	  does not)
 	  named "SalesTest". 
 	</para>
       </sect3>
