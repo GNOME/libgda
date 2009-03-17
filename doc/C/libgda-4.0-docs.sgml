@@ -2,6 +2,7 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
      "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
 <!ENTITY nbsp            " ">
+<!ENTITY version SYSTEM "version.xml">
 <!ENTITY LIBGDA          "<application>Libgda</application>">
 <!ENTITY GNOMEDB         "<application>GNOME-DB</application>">
 <!ENTITY igalia          '<emphasis><ulink url="http://www.igalia.com">Igalia, S.L.</ulink></emphasis>'>
@@ -114,11 +115,20 @@
 <!ENTITY libgda-TreeIndex SYSTEM "xml/tree_index.sgml">
 <!ENTITY GdaSqlManual SYSTEM "gda-sql-manual.xml">
 <!ENTITY GdaAttributesManager SYSTEM "xml/gda-attributes-manager.xml">
+<!ENTITY libgda-GdaTree SYSTEM "xml/gda-tree.xml">
+<!ENTITY libgda-GdaTreeManager SYSTEM "xml/gda-tree-manager.xml">
+<!ENTITY libgda-GdaTreeNode SYSTEM "xml/gda-tree-node.xml">
+<!ENTITY libgda-GdaTreeMgrLabel SYSTEM "xml/gda-tree-mgr-label.xml">
+<!ENTITY libgda-GdaTreeMgrSelect SYSTEM "xml/gda-tree-mgr-select.xml">
+<!ENTITY libgda-GdaTreeMgrSchemas SYSTEM "xml/gda-tree-mgr-schemas.xml">
+<!ENTITY libgda-GdaTreeMgrTables SYSTEM "xml/gda-tree-mgr-tables.xml">
+<!ENTITY libgda-GdaTreeMgrColumns SYSTEM "xml/gda-tree-mgr-columns.xml">
 ]>
 
 <book id="index">
   <bookinfo>
-    <title>GNOME Data Access 4.0 manual</title>
+    <title>GNOME Data Access 4 manual</title>
+    <releaseinfo>for version &version;</releaseinfo>
     <authorgroup>
       <author>
         <firstname>Michael</firstname>
@@ -419,7 +429,7 @@
     &limitations;
   </part>  
   <part id="part_libgda_api">
-    <title>Client API reference</title>
+    <title>API reference</title>
     <para>
       The following sections describe the API available for &GDA; applications.
     </para>
@@ -610,6 +620,170 @@
       &libgda-GdaDataModelDir;
       &libgda-GdaDataProxy;
       &libgda-GdaDataComparator;
+    </chapter>
+
+    <chapter id="trees">
+      <title>Trees</title>
+      <para>
+	&LIBGDA; supports data organized hierarchically in a tree. The specific aspect of this object is that
+	one does not actually create nodes in it directly, but rather specifies the tree structure (ie. what
+	top level nodes represent, whan their children represent, ...) using 
+	<link linkend="GdaTreeManager">GdaTreeManager</link> objects: any node in the tree
+	is managed by one and only one such object. This approach makes it very easy to produce trees organized
+	around repetitive data coming from a database. So again, one does not create or remove nodes in a tree,
+	but asks that the tree be specifically updated, in part or starting from a specific node (note that
+	nodes can also be added and removed on events depending on each GdaTreeManager object).
+      </para>
+      <para>
+	A tree is represented by a
+	unique <link linkend="GdaTree">GdaTree</link> object,
+	in which each node is represented by a <link linkend="GdaTreeNode">GdaTreeNode</link> object. As mentionned previously, any
+	<link linkend="GdaTreeNode">GdaTreeNode</link> in a <link linkend="GdaTree">GdaTree</link> is created (and destroyed)
+	by a <link linkend="GdaTreeManager">GdaTreeManager</link> object: the nodes hierarchy itself is
+	represented by a hierarchy of <link linkend="GdaTreeManager">GdaTreeManager</link> objects
+	(with the one(s) managing the nodes immediately under the tree root attached to the <link linkend="GdaTree">GdaTree</link>
+	itself and the others attached to the <link linkend="GdaTreeManager">GdaTreeManager</link> which act as their parent).
+      </para>
+
+      <para>
+	When populating a tree (or updating a part of it), a <link linkend="GdaTreeManager">GdaTreeManager</link> 
+	is requested to create (or update) nodes
+	below a parent node. For any node it creates (or updates), and for any sub tree managers it has, it
+	requests those sub managers to populate (or update) the sub nodes of that node; this is a recursive process. Note that
+	the tree manager itself does not store any information about the nodes it has created (this information is stored in
+	the <link linkend="GdaTreeNode">GdaTreeNode</link> themselves): it is stateless
+	(much in the same way as the <link linkend="GtkCellRenderer">GtkCellRenderer</link> objects are stateless in a
+	<link linkend="GtkTreeView">GtkTreeView</link> widget).
+      </para>
+
+      <para>
+	The following figure illustrates a simple tree:
+	<mediaobject>
+          <imageobject role="html">
+            <imagedata fileref="tree-overview.png" format="PNG"/>
+          </imageobject>
+          <textobject>
+            <phrase>Overview of the GdaTree</phrase>
+          </textobject>
+	</mediaobject>
+	The tree has 3 top level nodes (labelled "Node 0", "Node 1" and "Node 2" in the schema), which have been created
+	by the GdaTreeManager labelled "GdaTreeManager 0". These top level nodes have sub 
+	nodes (two for the "Node 0" and "Node 1", and none for "Node 2") which have been created by
+	the GdaTreeManager labelled "GdaTreeManager 1"
+      </para>
+      <para>
+	The following figure illustrates a mode complicated tree which, when dumped is (truncated here for readability):
+	<programlisting>
+.
+|-- information_schema
+|   |-- sql_features
+|   |   |-- feature_name
+|   |   `-- feature_id
+|   `-- sql_parts
+|       |-- comments
+|       `-- feature_id
+|-- public
+|   |-- customers
+|   |   |-- name
+|   |   `-- id
+|   `-- products
+|       |-- name
+|       `-- ref
+|-- customers
+|   |-- name
+|   `-- id
+`-- products
+    |-- name
+    `-- ref
+	</programlisting>
+	<mediaobject>
+          <imageobject role="html">
+            <imagedata fileref="tree-overview2.png" format="PNG"/>
+          </imageobject>
+          <textobject>
+            <phrase>Overview of the GdaTree</phrase>
+          </textobject>
+	</mediaobject>
+	The tree has 4 top level nodes ("information_schema", "public" which in fact represent schemas in a PostgreSQL database
+	and "customers" and "products" which are the tables in the "public" schema). Two GdaTreeManager objects are
+	associated to the GdaTree object: the <link linkend="GdaTreeMgrSchemas">GdaTreeMgrSchemas</link> manager (which
+	creates nodes for each schema in a database) and the <link linkend="GdaTreeMgrTables">GdaTreeMgrTables</link>
+	manager (which creates nodes for each table in a schema, or, if no schema is specified creates nodes for
+	each table visible by default).
+	Here the <link linkend="GdaTreeMgrSchemas">GdaTreeMgrSchemas</link> manager created the "information_schema" and "public"
+	top level nodes and the <link linkend="GdaTreeMgrTables">GdaTreeMgrTables</link> manager created the
+	"customers" and "products" top level nodes.
+      </para>
+      <para>
+	The topmost GdaTreeMgrSchemas tree manager object has a child tree manager which is also a GdaTreeManagerTables
+	(and which here is the same object as the GdaTreeManagerTables object which created two of the top level nodes
+	to avoid the unnecessary complication of creating too many tree manager objects). This GdaTreeManagerTables object
+	created the "sql_features", "sql_parts" nodes below the "information_schema" node and the "customers" and
+	"products" nodes below the "public" node.
+      </para>
+      <para>
+	As the GdaTreeManagerTables object also has a child tree manager, the 
+	<link linkend="GdaTreeMgrColumns">GdaTreeMgrColumns</link> manager, some nodes are created below the "customers"
+	nodes and below the "products" nodes (some of these nodes are not represented in the figure above for
+	clarity).
+      </para>
+      <para>
+	As illustrated on the figure above, tree nodes can be assigned named attributes as <link linkend="GValue">GValue</link>
+	values. For instance the <link linkend="GdaTreeMgrSchemas">GdaTreeMgrSchemas</link> manager sets the "schema" attribute
+	to the nodes it creates, the <link linkend="GdaTreeMgrTables">GdaTreeMgrTables</link> manager sets the "table_name"
+	attribute (and the "schema" attribute if the node has been created as a table which is visible by default) and
+	the <link linkend="GdaTreeMgrColumns">GdaTreeMgrColumns</link> manager sets the "column_name" attribute to the nodes
+	it creates.
+      </para>
+      <para>
+	Node attributes can be read and changed at will by the programmer, and are used extensively by the
+	tree manager objects themselves to determine the nodes they nees to create as children of a given node. For example
+	the <link linkend="GdaTreeMgrTables">GdaTreeMgrTables</link> manager, uses
+	<link linkend="gda-tree-node-fetch-attribute">gda_tree_node_fetch_attribute()</link> to get the
+	"schema" attribute from the node below which it has to create children nodes. If the attribute exists, it
+	then creates a node for each table in the mentionned schema, and otherwise creates a node for each table
+	visible by default.
+      </para>
+      <para>
+	The code to set up this tree would be the following one:
+	<programlisting>
+GdaConnection *cnc = ...
+GdaTree *tree;
+GdaTreeManager *schemas_mgr, *tables_mgr, *columns_mgr;
+
+tree = gda_tree_new ();
+
+schemas_mgr = gda_tree_mgr_schemas_new (cnc);
+tables_mgr = gda_tree_mgr_tables_new (cnc, NULL);
+columns_mgr = gda_tree_mgr_columns_new (cnc, NULL, NULL);
+
+gda_tree_manager_add_manager (schemas_mgr, tables_mgr);
+gda_tree_manager_add_manager (tables_mgr, columns_mgr);
+
+gda_tree_add_manager (tree, schemas_mgr);
+gda_tree_add_manager (tree, tables_mgr);
+
+g_object_unref (schemas_mgr);
+g_object_unref (tables_mgr);
+g_object_unref (columns_mgr);
+
+if (!gda_tree_update_all (tree, NULL)) {
+        /* ERROR */
+}
+else {
+        gda_tree_dump (tree, NULL, NULL);
+}
+g_object_unref (tree);
+	</programlisting>
+      </para>
+      &libgda-GdaTree;
+      &libgda-GdaTreeManager;
+      &libgda-GdaTreeNode;
+      &libgda-GdaTreeMgrLabel;
+      &libgda-GdaTreeMgrSelect;
+      &libgda-GdaTreeMgrSchemas;
+      &libgda-GdaTreeMgrTables;
+      &libgda-GdaTreeMgrColumns;
     </chapter>
 
     <chapter id="data_conv">
@@ -1370,12 +1544,15 @@ g_object_unref (eng);
     &provider-writing;
   </part>
 
-  <part id="part_index">
-    <title>Appendix</title>
-    &fdl-appendix;
-    <index>
+    <index id="index_main">
       <title>Index</title>
     </index>
-  </part>
+    <index id="index-4-2" role="4.2">
+      <title>Index of new symbols in 4.2</title>
+    </index>
+    <index id="index-deprecated" role="deprecated">
+      <title>Index of deprecated symbols</title>
+    </index>
+    &fdl-appendix;
 </book>
 

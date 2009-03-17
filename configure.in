@@ -1522,6 +1522,7 @@ tests/multi-threading/Makefile
 doc/Makefile
 doc/C/Makefile
 doc/C/libgda-4.0.types
+doc/C/version.xml
 data/Makefile
 stamp.h
 ])

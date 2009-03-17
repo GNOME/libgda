@@ -29,6 +29,10 @@ Container for several values
 
 </para>
 
+@holders: 
+@nodes_list: 
+@sources_list: 
+@groups_list: 
 
 <!-- ##### SIGNAL GdaSet::holder-attr-changed ##### -->
 <para>

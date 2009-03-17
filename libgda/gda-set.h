@@ -84,7 +84,7 @@ struct _GdaSet
 	GObject         object;
 	GdaSetPrivate  *priv;
 
-	/* public READ ONLY data */
+	/*< public >*/ 
 	GSList         *holders;   /* list of GdaHolder objects */
 	GSList         *nodes_list;   /* list of GdaSetNode */
         GSList         *sources_list; /* list of GdaSetSource */

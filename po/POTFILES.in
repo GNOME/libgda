@@ -25,6 +25,12 @@ libgda/gda-server-provider.c
 libgda/gda-server-provider-extra.c
 libgda/gda-set.c
 libgda/gda-statement.c
+libgda/gda-tree-mgr-columns.c
+libgda/gda-tree-mgr-label.c
+libgda/gda-tree-mgr-schemas.c
+libgda/gda-tree-mgr-select.c
+libgda/gda-tree-mgr-tables.c
+libgda/gda-tree.c
 libgda/gda-util.c
 libgda/gda-value.c
 libgda/gda-xa-transaction.c

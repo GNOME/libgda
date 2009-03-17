@@ -1,0 +1,57 @@
+<!-- ##### SECTION Title ##### -->
+GdaTreeMgrTables
+
+<!-- ##### SECTION Short_Description ##### -->
+a tree manager which creates a node for each table in a schema
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+  The #GdaTreeMgrTables is a #GdaTreeManager object which creates a node for
+  each table in a database schema.
+</para>
+<para>
+  It uses the #GdaMetaStore associated to a #GdaConnection to get the tables list
+  in database schema; it's up to the
+  caller to make sure the data in the #GdaMetaStore is up to date.
+</para>
+<para>
+  The #GdaConnection to be used needs to be specified when the object is created. The
+  schema can however be specified when the object is created, and if not, is
+  fetched from the #GdaTreeNode below which the nodes will be placed (using
+  gda_tree_node_fetch_attribute()).
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaTreeMgrTables ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdaTreeMgrTables:connection ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaTreeMgrTables:schema ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gda_tree_mgr_tables_new ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@schema: 
+@Returns: 
+
+

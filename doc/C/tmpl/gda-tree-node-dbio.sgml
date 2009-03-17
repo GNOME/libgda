@@ -1,0 +1,61 @@
+<!-- ##### SECTION Title ##### -->
+GdaTreeNodeDbio
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaTreeNodeDbio ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdaTreeNodeDbio:connection ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaTreeNodeDbio:params ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaTreeNodeDbio:statement ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gda_tree_node_dbio_new ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@stmt: 
+@params: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_tree_node_dbio_get_contents ##### -->
+<para>
+
+</para>
+
+@node: 
+@error: 
+@Returns: 
+
+

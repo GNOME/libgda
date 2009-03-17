@@ -72,6 +72,14 @@ gda_headers = \
 	gda-statement-extra.h \
 	gda-transaction-status.h \
 	gda-transaction-status-private.h \
+	gda-tree.h \
+	gda-tree-mgr-columns.h \
+	gda-tree-mgr-schemas.h \
+	gda-tree-mgr-tables.h \
+	gda-tree-node.h \
+	gda-tree-manager.h \
+	gda-tree-mgr-label.h \
+	gda-tree-mgr-select.h \
 	gda-util.h \
 	gda-value.h \
 	gda-xa-transaction.h \
@@ -128,6 +136,14 @@ libgda_sources =  \
 	gda-server-provider-extra.c \
 	gda-statement.c \
 	gda-transaction-status.c \
+	gda-tree.c \
+	gda-tree-mgr-columns.c \
+	gda-tree-mgr-schemas.c \
+	gda-tree-mgr-tables.c \
+	gda-tree-node.c \
+	gda-tree-manager.c \
+	gda-tree-mgr-label.c \
+	gda-tree-mgr-select.c \
 	gda-util.c \
 	gda-value.c \
 	gda-xa-transaction.c \

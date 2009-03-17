@@ -2,7 +2,7 @@
 GdaConnection
 
 <!-- ##### SECTION Short_Description ##### -->
-Management of connections to data sources
+A connection to a database
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>

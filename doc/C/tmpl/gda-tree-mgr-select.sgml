@@ -1,0 +1,66 @@
+<!-- ##### SECTION Title ##### -->
+GdaTreeMgrSelect
+
+<!-- ##### SECTION Short_Description ##### -->
+a tree manager which creates a node for each row resulting from the execution of a SELECT statement
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+  The #GdaTreeMgrSelect is a #GdaTreeManager object which executes a SELECT statement and
+  creates a node for each row in the result.
+</para>
+<para>
+  The #GdaConnection and SELECT #GdaStatement to be used need to be specified when the object is created.
+  If the SELECT statement to be used needs some parameters, then it is possible to give values to some of them
+  when constructing the object, but not necessary.
+</para>
+<para>
+  If the SELECT statement needs some parameters which have not been provided during the construction, then
+  these parameters will be fetched from the #GdaTreeNode below which the nodes will be placed (using
+  gda_tree_node_fetch_attribute()).
+</para>
+<para>
+  For each node created, an attribute is set for each column in the SELECT statement: the attribute name is
+  the column name and the attribute value is the value if that column.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaTreeMgrSelect ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdaTreeMgrSelect:connection ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaTreeMgrSelect:params ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaTreeMgrSelect:statement ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gda_tree_mgr_select_new ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@stmt: 
+@params: 
+@Returns: 
+
+

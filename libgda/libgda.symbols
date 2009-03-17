@@ -721,6 +721,46 @@
 	gda_transaction_status_get_type
 	gda_transaction_status_new
 	gda_transaction_status_state_get_type
+	gda_tree_add_manager
+	gda_tree_clean
+	gda_tree_dump
+	gda_tree_error_get_type
+	gda_tree_error_quark
+	gda_tree_get_node
+	gda_tree_get_nodes_in_path
+	gda_tree_get_type
+	gda_tree_manager_add_manager
+	gda_tree_manager_error_get_type
+	gda_tree_manager_error_quark
+	gda_tree_manager_get_node_create_func
+	gda_tree_manager_get_type
+	gda_tree_manager_set_node_create_func
+	gda_tree_manager_update_children
+	gda_tree_mgr_columns_get_type
+	gda_tree_mgr_columns_new
+	gda_tree_mgr_label_get_type
+	gda_tree_mgr_label_new
+	gda_tree_mgr_schemas_get_type
+	gda_tree_mgr_schemas_new
+	gda_tree_mgr_select_get_type
+	gda_tree_mgr_select_new
+	gda_tree_mgr_tables_get_type
+	gda_tree_mgr_tables_new
+	gda_tree_new
+	gda_tree_node_attributes_manager
+	gda_tree_node_error_get_type
+	gda_tree_node_error_quark
+	gda_tree_node_fetch_attribute
+	gda_tree_node_get_child_index
+	gda_tree_node_get_child_name
+	gda_tree_node_get_children
+	gda_tree_node_get_node_attribute
+	gda_tree_node_get_type
+	gda_tree_node_new
+	gda_tree_node_set_node_attribute
+	gda_tree_set_attribute
+	gda_tree_update_all
+	gda_tree_update_part
 	gda_update_row_in_table
 	gda_update_row_in_table_v
 	gda_ushort_get_type

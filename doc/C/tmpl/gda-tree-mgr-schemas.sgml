@@ -1,0 +1,47 @@
+<!-- ##### SECTION Title ##### -->
+GdaTreeMgrSchemas
+
+<!-- ##### SECTION Short_Description ##### -->
+a tree manager which creates a node for each schema in a database
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+  The #GdaTreeMgrSchemas is a #GdaTreeManager object which creates a node for
+  each schema in a database.
+</para>
+<para>
+  It uses the #GdaMetaStore associated to a #GdaConnection to get the schemas list; it's up to the
+  caller to make sure the data in the #GdaMetaStore is up to date.
+</para>
+<para>
+  The #GdaConnection to be used needs to be specified when the object is created.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaTreeMgrSchemas ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdaTreeMgrSchemas:connection ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gda_tree_mgr_schemas_new ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+

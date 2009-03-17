@@ -55,3 +55,11 @@ gda_set_get_type
 gda_meta_store_get_type
 gda_meta_struct_get_type
 gda_data_select_get_type
+gda_tree_get_type
+gda_tree_manager_get_type
+gda_tree_mgr_columns_get_type
+gda_tree_mgr_label_get_type
+gda_tree_mgr_schemas_get_type
+gda_tree_mgr_select_get_type
+gda_tree_mgr_tables_get_type
+gda_tree_node_get_type

@@ -62,7 +62,13 @@ example_files = \
 	samples/XSLT/data.xml \
 	samples/XSLT/data2.xml \
 	samples/XSLT/test.xsl \
-	samples/XSLT/transform.c
+	samples/XSLT/transform.c \
+	samples/MetaStore/Makefile \
+	samples/MetaStore/README \
+	samples/MetaStore/example.c \
+	samples/Tree/Makefile \
+	samples/Tree/README \
+	samples/Tree/example.c
 
 EXTRA_DIST = \
 	COPYING \

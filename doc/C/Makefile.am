@@ -22,7 +22,7 @@ HFILE_GLOB=
 CFILE_GLOB=
 
 # Header files to ignore when scanning
-IGNORE_HFILES= config.h acconfig.h gda-intl.h gda-marshal.h
+IGNORE_HFILES= gda-marshal.h gda-custom-marshal.h gda-enum-types.h sqlite3.h csv.h md5.h
 
 # CFLAGS and LDFLAGS for compiling scan program. Only needed
 # if $(DOC_MODULE).types is non-empty.
@@ -40,7 +40,7 @@ GTKDOC_LIBS =  $(top_builddir)/libgda/libgda-4.0.la \
 	$(LIBGDA_LIBS)
 
 # Extra options to supply to gtkdoc-mkdb
-MKDB_OPTIONS=--sgml-mode --output-format=xml --ignore-files="lexer.c"
+MKDB_OPTIONS=--sgml-mode --output-format=xml --ignore-files="parser.c binreloc.c libcsv.c md5c.c"
 
 # Extra SGML files that are included by $(DOC_MAIN_SGML_FILE)
 content_files = fdl-appendix.sgml 
@@ -54,7 +54,8 @@ HTML_IMAGES = DataModels.png \
 	data_validation_holder.png data_validation_proxy.png data_validation_set.png \
 	data_proxy1.png data_proxy2.png data_proxy3.png data_proxy4.png data_proxy5.png \
 	gda-sql-graph.png howto-exec.png \
-	parser_gen.png parser_prov.png
+	parser_gen.png parser_prov.png \
+	tree-overview.png tree-overview2.png
 
 # Extra options to supply to gtkdoc-fixref
 FIXXREF_OPTIONS=
@@ -67,7 +68,8 @@ EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration
 	prov-writing.xml i_s_doc.xml howto.xml gda-sql-manual.xml data_validation.xml data_select.xml \
 	DataModels.svg \
 	architecture.svg parts.svg stmt-unknown.svg stmt-select.svg stmt-insert1.svg stmt-insert2.svg \
-	stmt-update.svg stmt-compound.svg information_schema.svg howto-exec.svg
+	stmt-update.svg stmt-compound.svg information_schema.svg howto-exec.svg \
+	version.xml.in
 
 # Files not to distribute
 # for --rebuild-types in $(SCAN_OPTIONS), e.g. $(DOC_MODULE).types

@@ -17,5 +17,6 @@ Currently the contents are:
 * in DDL/: example using the GdaServerOperation object to perform a CREATE TABLE query
 * in SqlParserConsole/: simple console to test how the GdaSqlParser object parses strings
 * in MetaStore/: simple example to show how to use and update a GdaMetaStore
+* in Tree/: simple example to show how to use the GdaTree object
 
 Good luck and happy hacking!

@@ -1,0 +1,105 @@
+<!-- ##### SECTION Title ##### -->
+GdaTreeNode
+
+<!-- ##### SECTION Short_Description ##### -->
+a node in a #GdaTree
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+  Every node in a #GdaTree tree is represented by a single #GdaTreeNode object. There is no distinction
+  between nodes which have children and those which don't (leaf nodes).
+</para>
+<para>
+  The #GdaTreeNode is very basic as it only has a "name" attribute: users are encouraged to subclass it to
+  add more features if needed (and make use of them by defining a #GdaTreeManagerNodeFunc function and 
+  calling gda_tree_manager_set_node_create_func()).
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaTreeNode ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdaTreeNode:name ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gda_tree_node_new ##### -->
+<para>
+
+</para>
+
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_tree_node_get_children ##### -->
+<para>
+
+</para>
+
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_tree_node_get_child_index ##### -->
+<para>
+
+</para>
+
+@node: 
+@index: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_tree_node_get_child_name ##### -->
+<para>
+
+</para>
+
+@node: 
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_tree_node_set_node_attribute ##### -->
+<para>
+
+</para>
+
+@node: 
+@attribute: 
+@value: 
+@destroy: 
+
+
+<!-- ##### FUNCTION gda_tree_node_get_node_attribute ##### -->
+<para>
+
+</para>
+
+@node: 
+@attribute: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_tree_node_fetch_attribute ##### -->
+<para>
+
+</para>
+
+@node: 
+@attribute: 
+@Returns: 
+
+
