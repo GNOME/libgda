@@ -18,5 +18,6 @@ Currently the contents are:
 * in SqlParserConsole/: simple console to test how the GdaSqlParser object parses strings
 * in MetaStore/: simple example to show how to use and update a GdaMetaStore
 * in Tree/: simple example to show how to use the GdaTree object
+* in SqlBuilder: simple example to show how to use GdaSqlBuilder object to build various statements
 
 Good luck and happy hacking!

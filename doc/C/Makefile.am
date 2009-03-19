@@ -43,7 +43,7 @@ GTKDOC_LIBS =  $(top_builddir)/libgda/libgda-4.0.la \
 MKDB_OPTIONS=--sgml-mode --output-format=xml --ignore-files="parser.c binreloc.c libcsv.c md5c.c"
 
 # Extra SGML files that are included by $(DOC_MAIN_SGML_FILE)
-content_files = fdl-appendix.sgml 
+content_files = fdl-appendix.sgml version.xml
 
 # Images to copy into HTML directory
 HTML_IMAGES = DataModels.png \

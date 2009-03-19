@@ -1630,3 +1630,27 @@ GDA_IS_TREE_MGR_SELECT
 GDA_TYPE_TREE_MGR_SELECT
 gda_tree_mgr_select_get_type
 </SECTION>
+
+<SECTION>
+<FILE>gda-sql-builder</FILE>
+<TITLE>GdaSqlBuilder</TITLE>
+GdaSqlBuilder
+gda_sql_builder_new
+gda_sql_builder_get_statement
+gda_sql_builder_get_sql_statement
+<SUBSECTION>
+gda_sql_builder_set_table
+gda_sql_builder_add_field_value
+<SUBSECTION>
+gda_sql_builder_literal
+gda_sql_builder_expr
+gda_sql_builder_param
+<SUBSECTION>
+gda_sql_builder_cond2
+<SUBSECTION Standard>
+GDA_SQL_BUILDER
+GDA_SQL_BUILDER_GET_CLASS
+GDA_IS_SQL_BUILDER
+GDA_TYPE_SQL_BUILDER
+gda_sql_builder_get_type
+</SECTION>

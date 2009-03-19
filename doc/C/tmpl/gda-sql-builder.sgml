@@ -1,0 +1,151 @@
+<!-- ##### SECTION Title ##### -->
+GdaSqlBuilder
+
+<!-- ##### SECTION Short_Description ##### -->
+Factory object for statements
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+  The #GdaSqlBuilder can be used to build a #GdaStatement from its structural description,
+  much in the same way a #GdaSqlParser can be used to build a #GdaStatement from an SQL
+  string.
+</para>
+<para>
+  The #GdaBuilder internally constructs a #GdaSqlStatement and uses it when requested to produce
+  a #GdaStatement (see gda_sql_builder_get_statement()), or a #GdaSqlStatement (see
+  gda_sql_builder_get_sql_statement()).
+</para>
+<para>
+  During the building process, some pieces of the statement are constructed, and assembled into the
+  final statement. Each of these pieces can be reused anytime in the same #GdaBuilder object, and each
+  is identified using a single unsigned integer ID. That ID can either be specified by the user, or
+  be dynamically allocated by the object (pass 0 as the requested ID).
+</para>
+<para>
+  The following example builds the equivalent of the <![CDATA["name='joe' AND age >= ##ageparam::int"]]> expression:
+  <programlisting><![CDATA[
+GdaSqlBuilder *b=...
+gda_sql_builder_literal (b, 1, "name"); // build the "name" literal with requested ID=1
+gda_sql_builder_expr (b, 2, NULL, G_TYPE_STRING, "joe"); // 'joe' expression, requested ID=2
+gda_sql_builder_cond2 (b, 3, GDA_SQL_OPERATOR_TYPE_EQ, 1, 2); // "name='joe'", requested ID=3
+
+gda_sql_builder_cond2 (b, 4, GDA_SQL_OPERATOR_TYPE_GT, // requested ID=4
+       gda_sql_builder_literal (b, 0, "age"), // build the "age" literal, no specific ID
+       gda_sql_builder_param (b, 0, "ageparam", G_TYPE_INT, FALSE) // parameter, no specific ID
+      );
+gda_sql_builder_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expression, requested ID=5
+]]></programlisting>
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+ 
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaSqlBuilder ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_sql_builder_new ##### -->
+<para>
+
+</para>
+
+@stmt_type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_builder_get_statement ##### -->
+<para>
+
+</para>
+
+@builder: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_builder_get_sql_statement ##### -->
+<para>
+
+</para>
+
+@builder: 
+@copy_it: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_builder_set_table ##### -->
+<para>
+
+</para>
+
+@builder: 
+@table_name: 
+
+
+<!-- ##### FUNCTION gda_sql_builder_add_field_value ##### -->
+<para>
+
+</para>
+
+@builder: 
+@field_name: 
+@value_id: 
+
+
+<!-- ##### FUNCTION gda_sql_builder_literal ##### -->
+<para>
+
+</para>
+
+@builder: 
+@id: 
+@string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_builder_expr ##### -->
+<para>
+
+</para>
+
+@builder: 
+@id: 
+@dh: 
+@type: 
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_builder_param ##### -->
+<para>
+
+</para>
+
+@builder: 
+@id: 
+@param_name: 
+@type: 
+@nullok: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_builder_cond2 ##### -->
+<para>
+
+</para>
+
+@builder: 
+@id: 
+@op: 
+@op1: 
+@op2: 
+@Returns: 
+
+

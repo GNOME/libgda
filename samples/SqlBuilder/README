@@ -1,0 +1,24 @@
+Libgda simple example
+=====================
+
+Description:
+------------
+
+The example in this directory illustrate how to use a GdaSqlBuilder to build statement from their structure
+
+Compiling and running:
+----------------------
+
+To compile (make sure Libgda is installed prior to this):
+> make
+
+and to run:
+> ./example
+
+Output:
+-------
+Running should produce the following output:
+
+SQL: INSERT INTO customers (e, f, g) VALUES (##p1::string, 15, 'joe')
+SQL: UPDATE products SET ref='A0E''FESP' WHERE id = 14
+SQL: UPDATE products SET ref='A0E''FESP' WHERE id = ##theid::int

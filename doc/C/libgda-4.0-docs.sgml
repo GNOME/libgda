@@ -123,6 +123,7 @@
 <!ENTITY libgda-GdaTreeMgrSchemas SYSTEM "xml/gda-tree-mgr-schemas.xml">
 <!ENTITY libgda-GdaTreeMgrTables SYSTEM "xml/gda-tree-mgr-tables.xml">
 <!ENTITY libgda-GdaTreeMgrColumns SYSTEM "xml/gda-tree-mgr-columns.xml">
+<!ENTITY libgda-GdaSqlBuilder SYSTEM "xml/gda-sql-builder.xml">
 ]>
 
 <book id="index">
@@ -541,6 +542,7 @@
       &libgda-convenient;
       &libgda-GdaConnection;
       &libgda-GdaSqlParser;
+      &libgda-GdaSqlBuilder;
       &libgda-GdaStatement;
       &libgda-GdaBatch;
       &libgda-GdaHolder;

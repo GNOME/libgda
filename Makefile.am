@@ -68,7 +68,10 @@ example_files = \
 	samples/MetaStore/example.c \
 	samples/Tree/Makefile \
 	samples/Tree/README \
-	samples/Tree/example.c
+	samples/Tree/example.c \
+	samples/SqlBuilder/Makefile \
+        samples/SqlBuilder/README \
+        samples/SqlBuilder/example.c
 
 EXTRA_DIST = \
 	COPYING \

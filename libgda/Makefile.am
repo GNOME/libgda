@@ -70,6 +70,7 @@ gda_headers = \
 	gda-server-provider-private.h \
 	gda-statement.h \
 	gda-statement-extra.h \
+	gda-sql-builder.h \
 	gda-transaction-status.h \
 	gda-transaction-status-private.h \
 	gda-tree.h \
@@ -135,6 +136,7 @@ libgda_sources =  \
 	gda-server-provider.c \
 	gda-server-provider-extra.c \
 	gda-statement.c \
+	gda-sql-builder.c \
 	gda-transaction-status.c \
 	gda-tree.c \
 	gda-tree-mgr-columns.c \
