@@ -467,7 +467,9 @@ then
 	mysqldir=yes
 	AC_MSG_RESULT(found mysql)
 	AC_DEFINE(HAVE_MYSQL, 1, [Have MySQL])
-	MYSQL_CFLAGS=`$MYSQL_CONFIG --cflags`
+	if test "x$MYSQL_CFLAGS" = "x"; then
+		MYSQL_CFLAGS=`$MYSQL_CONFIG --cflags`
+	fi
 	MYSQL_LIBS=`$MYSQL_CONFIG --libs`
 else
 	if test $cross_compiling = yes

@@ -24,6 +24,7 @@ libgda/gda-server-operation.c
 libgda/gda-server-provider.c
 libgda/gda-server-provider-extra.c
 libgda/gda-set.c
+libgda/gda-sql-builder.c
 libgda/gda-statement.c
 libgda/gda-tree-mgr-columns.c
 libgda/gda-tree-mgr-label.c

@@ -1,8 +1,14 @@
+2009-03-23  Vivien Malerba <malerba@gnome-db.org>
+
+	* po/POTFILES.in: added libgda/gda-sql-builder.c
+	* configure.in: don't override MYSQL_CFLAGS if it has already been set as
+	an environment variable
+
 2009-03-19  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/Makefile.am:
 	* libgda/libgda.h.in:
-	* libgda/gda-sql-builder.[ch]: new object to build GdaStatement iterativaly; this is 
+	* libgda/gda-sql-builder.[ch]: new object to build GdaStatement iterativaly
 	* Makefile.am:
 	* samples/: new example illustrating how to use the new #GdaSqlBuilder object
 	* doc/C:
