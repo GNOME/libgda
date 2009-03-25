@@ -34,6 +34,8 @@
 #include <libgda/gda-holder.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-util.h>
+#include <libgda/sqlite/gda-sqlite-provider.h>
+
 #ifdef HAVE_GIO
   #ifdef HAVE_FAM
     #error Impossible to have GIO and FAM at the same time
@@ -64,6 +66,7 @@ struct _GdaConfigPrivate {
 	gboolean system_config_allowed;
 	GSList *dsn_list; /* list of GdaDsnInfo structures */
 	GSList *prov_list; /* list of InternalProvider structures */
+	gboolean providers_loaded; /* TRUE if providers list has already been scanned */
 };
 
 static void gda_config_class_init (GdaConfigClass *klass);
@@ -144,6 +147,11 @@ static void           fam_unlock_notify ();
 static GStaticRecMutex gda_mutex = G_STATIC_REC_MUTEX_INIT;
 #define GDA_CONFIG_LOCK() g_static_rec_mutex_lock(&gda_mutex)
 #define GDA_CONFIG_UNLOCK() g_static_rec_mutex_unlock(&gda_mutex)
+
+/* GdaServerProvider for SQLite as a shortcut, available
+ * even if the SQLite provider is not installed
+ */
+GdaServerProvider *_gda_config_sqlite_provider = NULL;
 
 /*
  * GdaConfig class implementation
@@ -249,6 +257,7 @@ gda_config_init (GdaConfig *conf, GdaConfigClass *klass)
 	conf->priv->system_config_allowed = FALSE;
 	conf->priv->prov_list = NULL;
 	conf->priv->dsn_list = NULL;
+	conf->priv->providers_loaded = FALSE;
 }
 
 static void
@@ -1128,7 +1137,7 @@ gda_config_get_provider_info (const gchar *provider_name)
 	if (!unique_instance)
 		gda_config_get ();
 
-	if (!unique_instance->priv->prov_list) 
+	if (!unique_instance->priv->providers_loaded) 
 		load_all_providers ();
 
 	if (!g_ascii_strcasecmp (provider_name, "MS Access")) {
@@ -1241,7 +1250,7 @@ gda_config_list_providers (void)
 	if (!unique_instance)
 		gda_config_get ();
 
-	if (!unique_instance->priv->prov_list) 
+	if (!unique_instance->priv->providers_loaded) 
 		load_all_providers ();
 
 	model = gda_data_model_array_new_with_g_types (5,
@@ -1339,6 +1348,14 @@ load_all_providers (void)
 		str = gda_gbr_get_file_path (GDA_LIB_DIR, LIBGDA_ABI_NAME, "providers", NULL);
 		load_providers_from_dir (str, FALSE);
 		g_free (str);
+	}
+	unique_instance->priv->providers_loaded = TRUE;
+
+	/* find SQLite provider, and instanciate it if not installed */
+	_gda_config_sqlite_provider = gda_config_get_provider ("SQLite", NULL);
+	if (!_gda_config_sqlite_provider) {
+		_gda_config_sqlite_provider = (GdaServerProvider*) 
+			g_object_new (GDA_TYPE_SQLITE_PROVIDER, NULL);
 	}
 }
 
@@ -1616,8 +1633,8 @@ conf_file_changed (GFileMonitor *mon, GFile *file, GFile *other_file,
 	if (event_type != G_FILE_MONITOR_EVENT_CHANGES_DONE_HINT)
 		return;
 
-	gboolean is_system = (mon == mon_conf_global) ? TRUE : FALSE;
 #ifdef GDA_DEBUG_NO
+	gboolean is_system = (mon == mon_conf_global) ? TRUE : FALSE;
 	g_print ("Reloading config files (%s config has changed)\n", is_system ? "global" : "user");
 	GSList *list;
 	for (list = unique_instance->priv->dsn_list; list; list = list->next) {
