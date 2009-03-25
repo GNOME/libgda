@@ -214,7 +214,7 @@ gda_tree_mgr_select_set_property (GObject *object,
 			if (toh) {
 				GError *lerror = NULL;
 				if (!gda_holder_set_bind (frh, toh, &lerror)) {
-					g_warning (_("Could bind SELECT statement's parameter '%s' "
+					g_warning (_("Could not bind SELECT statement's parameter '%s' "
 						     "to provided parameters: %s"),
 						   gda_holder_get_id (frh),
 						   lerror && lerror->message ? lerror->message : _("No detail"));
