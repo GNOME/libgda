@@ -27,6 +27,9 @@ xml_embedded.h: gen_emb_string$(EXEEXT_FOR_BUILD) $(top_srcdir)/providers/sqlite
 	./gen_emb_string$(EXEEXT_FOR_BUILD) $(top_srcdir)/providers/sqlite/*.xml.in > xml_embedded.h
 
 sqliteheaders = gda-sqlite-provider.h
+
+$(libgda_sqlite_la_SOURCES): xml_embedded.h
+
 libgda_sqlite_la_SOURCES = \
 	$(sqliteheaders) \
 	gda-sqlite-blob-op.c \
@@ -43,8 +46,7 @@ libgda_sqlite_la_SOURCES = \
 	gda-sqlite-recordset.c \
 	gda-sqlite-recordset.h \
 	gda-sqlite.h \
-	utils.c \
-	xml_embedded.h
+	utils.c
 
 libgda_sqlite_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_sqlite_la_LIBADD = \

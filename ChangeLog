@@ -1,3 +1,8 @@
+2009-03-27  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/sqlite/Makefile.am: build xml_embedded.h before it is needed, and
+	don't distribute it as part of the sources
+
 2009-03-25  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in: set version to 4.0.1
