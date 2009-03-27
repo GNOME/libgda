@@ -1,3 +1,9 @@
+libgda 4.0.1, 2009-03-27
+
+ - make sure Libgda's GdaMetaStore object behaves correctly even if the
+   SQLite provider is not installed
+ - misc. corrections
+
 libgda 4.0.0, 2009-03-16
 
 libgda 3.99.14, 2009-03-15
