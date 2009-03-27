@@ -39,6 +39,7 @@
 #include <libgda/gda-util.h>
 #include <libgda/gda-meta-struct.h>
 #include <libgda/gda-connection.h>
+#include <libgda/gda-connection-sqlite.h>
 #include "gda-types.h"
 
 /*
@@ -699,6 +700,13 @@ gda_meta_store_set_property (GObject *object,
 				if (cnc_string) {
 					GdaConnection *cnc;
 					cnc = gda_connection_open_from_string (NULL, cnc_string, NULL, 0, NULL);
+					if (!cnc) {
+						if (g_ascii_strcasecmp (cnc_string, "sqlite")) {
+							/* use _gda_config_sqlite_provider */
+							
+							cnc = _gda_open_internal_sqlite_connection (cnc_string);
+						}
+					}
 					store->priv->cnc = cnc;
 				}
 			}

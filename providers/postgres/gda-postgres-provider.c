@@ -908,12 +908,13 @@ gda_postgres_provider_create_operation (GdaServerProvider *provider, GdaConnecti
 	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
         file = gda_server_provider_find_file (provider, dir, str);
 	g_free (dir);
-        g_free (str);
 
         if (! file) {
-                g_set_error (error, 0, 0, _("Missing spec. file '%s'"), file);
+                g_set_error (error, 0, 0, _("Missing spec. file '%s'"), str);
+		g_free (str);
                 return NULL;
         }
+        g_free (str);
 
         op = gda_server_operation_new (type, file);
         g_free (file);
@@ -946,12 +947,13 @@ gda_postgres_provider_render_operation (GdaServerProvider *provider, GdaConnecti
 	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
         file = gda_server_provider_find_file (provider, dir, str);
 	g_free (dir);
-        g_free (str);
 
         if (! file) {
-                g_set_error (error, 0, 0, _("Missing spec. file '%s'"), file);
+                g_set_error (error, 0, 0, _("Missing spec. file '%s'"), str);
+		g_free (str);
                 return NULL;
         }
+        g_free (str);
         if (!gda_server_operation_is_valid (op, file, error)) {
                 g_free (file);
                 return NULL;

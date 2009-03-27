@@ -519,6 +519,7 @@ sequence_add_item (GdaServerOperation *op, Node *node)
 }
 
 static void xml_validity_error_func (void *ctx, const char *msg, ...);
+static gboolean use_xml_spec (GdaServerOperation *op, xmlDocPtr doc, const gchar *xmlfile);
 
 static void
 gda_server_operation_set_property (GObject *object,
@@ -567,7 +568,6 @@ gda_server_operation_set_property (GObject *object,
 			const gchar *xmlfile;
 			static GHashTable *doc_hash = NULL; /* key = file name, value = xmlDocPtr */
 
-			xmlDtdPtr old_dtd = NULL;
 			xmlfile = g_value_get_string (value);
 			if (!xmlfile)
 				return;
@@ -590,52 +590,8 @@ gda_server_operation_set_property (GObject *object,
 			
 			doc = xmlParseFile (xmlfile);
 			if (doc) {
-				/* doc validation */
-				xmlValidCtxtPtr validc;
-				int xmlcheck;
-				
-				validc = g_new0 (xmlValidCtxt, 1);
-				validc->userData = op;
-				validc->error = xml_validity_error_func;
-				validc->warning = NULL;
-				
-				xmlcheck = xmlDoValidityCheckingDefaultValue;
-				xmlDoValidityCheckingDefaultValue = 1;
-				
-				/* replace the DTD with ours */
-				if (gda_server_op_dtd) {
-					old_dtd = doc->intSubset;
-					doc->intSubset = gda_server_op_dtd;
-				}
-#ifndef G_OS_WIN32
-				if (doc->intSubset && !xmlValidateDocument (validc, doc)) {
-					gchar *str;
-					
-					if (gda_server_op_dtd)
-						doc->intSubset = old_dtd;
-					xmlFreeDoc (doc);
-					g_free (validc);
-					str = g_object_get_data (G_OBJECT (op), "xmlerror");
-					if (str) {
-						g_warning (_("GdaServerOperation: file '%s' does not conform to DTD:\n%s"),
-							   xmlfile, str);
-						g_free (str);
-						g_object_set_data (G_OBJECT (op), "xmlerror", NULL);
-					}
-					else
-						g_warning (_("GdaServerOperation: file '%s' does not conform to DTD"),
-							   xmlfile);
-					
-					xmlDoValidityCheckingDefaultValue = xmlcheck;
+				if (!use_xml_spec (op, doc, xmlfile))
 					return;
-				}
-#endif
-				
-				xmlDoValidityCheckingDefaultValue = xmlcheck;
-				g_free (validc);
-				if (gda_server_op_dtd)
-					doc->intSubset = old_dtd;
-				op->priv->xml_spec_doc = doc;
 				g_hash_table_insert (doc_hash, g_strdup (xmlfile), doc);
 			}
 			else {
@@ -661,7 +617,7 @@ gda_server_operation_set_property (GObject *object,
 		}
 	}
 }
-
+	
 static void
 gda_server_operation_get_property (GObject *object,
 				   guint param_id,
@@ -685,6 +641,73 @@ gda_server_operation_get_property (GObject *object,
 		}
 	}
 }
+
+/*
+ * Steals @doc (it is freed if necessary)
+ */
+static gboolean
+use_xml_spec (GdaServerOperation *op, xmlDocPtr doc, const gchar *xmlfile)
+{
+	/* doc validation */
+	xmlValidCtxtPtr validc;
+	int xmlcheck;
+	xmlDtdPtr old_dtd = NULL;
+	
+	validc = g_new0 (xmlValidCtxt, 1);
+	validc->userData = op;
+	validc->error = xml_validity_error_func;
+	validc->warning = NULL;
+	
+	xmlcheck = xmlDoValidityCheckingDefaultValue;
+	xmlDoValidityCheckingDefaultValue = 1;
+	
+	/* replace the DTD with ours */
+	if (gda_server_op_dtd) {
+		old_dtd = doc->intSubset;
+		doc->intSubset = gda_server_op_dtd;
+	}
+#ifndef G_OS_WIN32
+	if (doc->intSubset && !xmlValidateDocument (validc, doc)) {
+		gchar *str;
+		
+		if (gda_server_op_dtd)
+			doc->intSubset = old_dtd;
+		xmlFreeDoc (doc);
+		g_free (validc);
+		str = g_object_get_data (G_OBJECT (op), "xmlerror");
+		if (str) {
+			if (xmlfile)
+				g_warning (_("GdaServerOperation: file '%s' does not conform to DTD:\n%s"),
+					   xmlfile, str);
+			else
+				g_warning (_("GdaServerOperation specification does not conform to DTD:\n%s"),
+					   str);
+			g_free (str);
+			g_object_set_data (G_OBJECT (op), "xmlerror", NULL);
+		}
+		else {
+			if (xmlfile)
+				g_warning (_("GdaServerOperation: file '%s' does not conform to DTD"),
+					   xmlfile);
+			else
+				g_warning (_("GdaServerOperation specification does not conform to DTD\n"));
+		}
+		
+		xmlDoValidityCheckingDefaultValue = xmlcheck;
+		xmlFreeDoc (doc);
+		return FALSE;
+	}
+#endif
+	
+	xmlDoValidityCheckingDefaultValue = xmlcheck;
+	g_free (validc);
+	if (gda_server_op_dtd)
+		doc->intSubset = old_dtd;
+	op->priv->xml_spec_doc = doc;
+
+	return TRUE;
+}
+
 
 /*
  * function called when an error occurred during the document validation
@@ -953,6 +976,41 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root, G
 	return retlist;
 }
 
+/*
+ * @xml_spec: the specifications for the GdaServerOperation object to create as a string
+ * Internal function
+ */
+GdaServerOperation *
+_gda_server_operation_new_from_string (GdaServerOperationType op_type, 
+				       const gchar *xml_spec)
+{
+	GObject *obj;
+	xmlDocPtr doc;
+	GdaServerOperation *op;
+
+	doc = xmlParseMemory (xml_spec, strlen (xml_spec) + 1);
+	if (!doc)
+		return NULL;
+	obj = g_object_new (GDA_TYPE_SERVER_OPERATION, "op-type", op_type, NULL);
+	op = GDA_SERVER_OPERATION (obj);
+	use_xml_spec (op, doc, NULL);
+
+	if (!op->priv->topnodes && op->priv->xml_spec_doc && op->priv->cnc_set && op->priv->prov_set) {
+		/* load XML file */
+		GError *lerror = NULL;
+		op->priv->topnodes = load_xml_spec (op, xmlDocGetRootElement (op->priv->xml_spec_doc), NULL, &lerror);
+		if (!op->priv->topnodes) {
+			g_warning (_("Could not load XML specifications: %s"),
+				   lerror && lerror->message ? lerror->message : _("No detail"));
+			if (lerror)
+				g_error_free (lerror);
+		}
+	}
+
+	return op;
+}
+
+
 /**
  * gda_server_operation_new
  * @op_type: type of operation
@@ -974,7 +1032,8 @@ gda_server_operation_new (GdaServerOperationType op_type, const gchar *xml_file)
 {
 	GObject *obj;
 
-	obj = g_object_new (GDA_TYPE_SERVER_OPERATION, "op-type", op_type, "spec-filename", xml_file, NULL);
+	obj = g_object_new (GDA_TYPE_SERVER_OPERATION, "op-type", op_type, 
+			    "spec-filename", xml_file, NULL);
 #ifdef GDA_DEBUG_NO
 	{
 		g_print ("New GdaServerOperation:\n");

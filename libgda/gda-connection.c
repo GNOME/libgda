@@ -119,6 +119,7 @@ enum
 };
 
 static GObjectClass *parent_class = NULL;
+extern GdaServerProvider *_gda_config_sqlite_provider; /* defined in gda-config.c */
 
 /*
  * GdaConnection class implementation
@@ -801,6 +802,50 @@ gda_connection_open_from_string (const gchar *provider_name, const gchar *cnc_st
 	return cnc;
 }
 
+/*
+ * Uses _gda_config_sqlite_provider to open a connection
+ */
+GdaConnection *
+_gda_open_internal_sqlite_connection (const gchar *cnc_string)
+{
+	GdaConnection *cnc;
+	GdaServerProvider *prov = _gda_config_sqlite_provider;
+	gchar *user, *pass, *real_cnc, *real_provider;
+
+	g_print ("%s(%s)\n", __FUNCTION__, cnc_string);
+	gda_connection_string_split (cnc_string, &real_cnc, &real_provider, &user, &pass);
+        if (!real_cnc) {
+                g_free (user);
+                g_free (pass);
+                g_free (real_provider);
+                return NULL;
+        }
+	if (PROV_CLASS (prov)->create_connection) {
+		cnc = PROV_CLASS (prov)->create_connection (prov);
+		if (cnc)
+			g_object_set (G_OBJECT (cnc),
+				      "provider", prov,
+				      "cnc-string", real_cnc,
+				      NULL);
+	}
+	else
+		cnc = (GdaConnection *) g_object_new (GDA_TYPE_CONNECTION,
+						      "provider", prov,
+						      "cnc-string", real_cnc,
+						      NULL);
+	
+	g_free (real_cnc);
+        g_free (user);
+        g_free (pass);
+        g_free (real_provider);
+
+	/* open the connection */
+	if (!gda_connection_open (cnc, NULL)) {
+		g_object_unref (cnc);
+		cnc = NULL;
+	}
+	return cnc;
+}
 
 /**
  * gda_connection_open

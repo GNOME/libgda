@@ -1404,7 +1404,8 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 		}
 		else {
 			store = gda_meta_store_new (NULL);
-			update_store = TRUE;
+			if (store)
+				update_store = TRUE;
 		}
 
 		g_object_set (G_OBJECT (cs->cnc), "meta-store", store, NULL);
@@ -1450,7 +1451,8 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 						g_print (_("Done.\n"));
 			}
 		}
-		g_object_unref (store);
+		if (store)
+			g_object_unref (store);
 	}
 
 	return cs;

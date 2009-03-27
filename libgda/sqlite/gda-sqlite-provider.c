@@ -31,6 +31,7 @@
 #include <libgda/gda-data-model-private.h>
 #include <libgda/gda-util.h>
 #include <libgda/gda-server-provider-extra.h>
+#include <libgda/gda-server-operation-private.h>
 #include "gda-sqlite.h"
 #include "gda-sqlite-provider.h"
 #include "gda-sqlite-recordset.h"
@@ -44,6 +45,7 @@
 #include <libgda/gda-statement-extra.h>
 #include <sql-parser/gda-sql-parser.h>
 #include <stdio.h>
+#include "xml_embedded.h" /* this one is dynamically generated */
 #ifndef G_OS_WIN32
 #define __USE_GNU
 #include <dlfcn.h>
@@ -955,12 +957,22 @@ gda_sqlite_provider_create_operation (GdaServerProvider *provider, GdaConnection
 	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
         file = gda_server_provider_find_file (provider, dir, str);
 	g_free (dir);
-        g_free (str);
 
         if (! file) {
-                g_set_error (error, 0, 0, _("Missing spec. file '%s'"), file);
-                return NULL;
+		const gchar *contents;
+		contents = emb_get_file (str);
+		if (contents) {
+			op = _gda_server_operation_new_from_string (type, contents);
+			return op;
+		}
+		else {
+			g_set_error (error, 0, 0, _("Missing spec. file '%s'"), str);
+			g_free (str);
+			return NULL;
+		}
         }
+
+        g_free (str);
 
         op = gda_server_operation_new (type, file);
         g_free (file);
@@ -988,17 +1000,25 @@ gda_sqlite_provider_render_operation (GdaServerProvider *provider, GdaConnection
 	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
         file = gda_server_provider_find_file (provider, dir, str);
 	g_free (dir);
-        g_free (str);
 
         if (! file) {
-                g_set_error (error, 0, 0, _("Missing spec. file '%s'"), file);
-                return NULL;
+		const gchar *contents;
+		contents = emb_get_file (str);
+		if (!contents) {
+			g_set_error (error, 0, 0, _("Missing spec. file '%s'"), str);
+			g_free (str);
+			return NULL;
+		}
+		/* else: TO_IMPLEMENT */
         }
-        if (!gda_server_operation_is_valid (op, file, error)) {
-                g_free (file);
-                return NULL;
-        }
-        g_free (file);
+	else {
+		g_free (str);
+		if (!gda_server_operation_is_valid (op, file, error)) {
+			g_free (file);
+			return NULL;
+		}
+		g_free (file);
+	}
 
 	/* actual rendering */
         switch (gda_server_operation_get_op_type (op)) {

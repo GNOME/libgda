@@ -20,8 +20,16 @@ AM_CPPFLAGS = \
 	$(SQLITE_CFLAGS) \
 	$(sqliteinc) 
 
+gen_emb_string$(EXEEXT_FOR_BUILD): gen_emb_string.c
+	$(CC_FOR_BUILD) -o gen_emb_string$(EXEEXT_FOR_BUILD) $<
+
+xml_embedded.h: gen_emb_string$(EXEEXT_FOR_BUILD) $(top_srcdir)/providers/sqlite/*.xml.in
+	./gen_emb_string$(EXEEXT_FOR_BUILD) $(top_srcdir)/providers/sqlite/*.xml.in > xml_embedded.h
 
 sqliteheaders = gda-sqlite-provider.h
+
+$(libgda_sqlite_la_OBJECTS): xml_embedded.h
+
 libgda_sqlite_la_SOURCES = \
 	$(sqliteheaders) \
 	gda-sqlite-blob-op.c \
@@ -38,7 +46,7 @@ libgda_sqlite_la_SOURCES = \
 	gda-sqlite-recordset.c \
 	gda-sqlite-recordset.h \
 	gda-sqlite.h \
-	utils.c 
+	utils.c
 
 libgda_sqlite_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_sqlite_la_LIBADD = \
@@ -49,3 +57,6 @@ libgda_sqlite_la_LIBADD = \
 gdaincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda/sqlite
 gdainclude_HEADERS=$(sqliteheaders)
 
+EXTRA_DIST = gen_emb_string.c
+
+CLEANFILES = gen_emb_string$(EXEEXT_FOR_BUILD) xml_embedded.h

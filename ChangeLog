@@ -1,3 +1,7 @@
+2009-03-27  Vivien Malerba <malerba@gnome-db.org>
+
+	Merged changes from LIBGDA_4.0 branch between revisions 3362 and 3370
+
 2009-03-25  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-tree-mgr-select.c: fix error message, for bug #576730

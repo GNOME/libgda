@@ -99,6 +99,7 @@ libgda_sources =  \
 	gda-config.c \
 	gda-connection.c \
 	gda-connection-event.c \
+	gda-connection-sqlite.h \
 	gda-custom-marshal.c \
 	gda-custom-marshal.h \
 	gda-data-comparator.c \
@@ -133,6 +134,7 @@ libgda_sources =  \
 	gda-row.c \
 	gda-set.c \
 	gda-server-operation.c \
+	gda-server-operation-private.h \
 	gda-server-provider.c \
 	gda-server-provider-extra.c \
 	gda-statement.c \
