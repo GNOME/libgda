@@ -1,5 +1,11 @@
 2009-03-27  Vivien Malerba <malerba@gnome-db.org>
 
+	* libgda/libgda.symbols: removed the gda_transaction_status_dump
+	symbol
+	* libgda/sqlite/Makefile.am: another correction
+
+2009-03-27  Vivien Malerba <malerba@gnome-db.org>
+
 	* libgda/sqlite/Makefile.am: build xml_embedded.h before it is needed, and
 	don't distribute it as part of the sources
 

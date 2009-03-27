@@ -28,7 +28,7 @@ xml_embedded.h: gen_emb_string$(EXEEXT_FOR_BUILD) $(top_srcdir)/providers/sqlite
 
 sqliteheaders = gda-sqlite-provider.h
 
-$(libgda_sqlite_la_SOURCES): xml_embedded.h
+$(libgda_sqlite_la_OBJECTS): xml_embedded.h
 
 libgda_sqlite_la_SOURCES = \
 	$(sqliteheaders) \
