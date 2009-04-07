@@ -1,6 +1,6 @@
 lib_LTLIBRARIES = libgda-4.0.la
 
-SUBDIRS = sqlite handlers binreloc sql-parser providers-support
+SUBDIRS = sqlite handlers binreloc sql-parser providers-support thread-wrapper
 
 if BDB 
 GDA_BDB_H=gda-data-model-bdb.h
@@ -99,7 +99,7 @@ libgda_sources =  \
 	gda-config.c \
 	gda-connection.c \
 	gda-connection-event.c \
-	gda-connection-sqlite.h \
+	gda-connection-internal.h \
 	gda-custom-marshal.c \
 	gda-custom-marshal.h \
 	gda-data-comparator.c \
@@ -208,6 +208,7 @@ libgda_4_0_la_LIBADD = \
 	handlers/libgda_handlers-4.0.la \
 	binreloc/libgda_binreloc-4.0.la \
 	sqlite/libgda-sqlite.la \
+	thread-wrapper/libgda_threadwrapper-4.0.la \
 	$(LIBGDA_LIBS) $(FAM_LIBS) \
 	$(GIO_LIBS) $(GNOMEVFS_LIBS) 
 

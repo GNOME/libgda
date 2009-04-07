@@ -565,6 +565,11 @@ gda_sqlite_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint row
 			return FALSE;
 		}
 	}
+	if (! *prow) {
+		*prow = gda_data_select_get_stored_row (model, rownum);
+		if (!*prow)
+			return FALSE;
+	}
 
 	return TRUE;
 }

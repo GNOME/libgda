@@ -53,7 +53,9 @@ typedef enum {
 	GDA_CONNECTION_NO_CNC_SPEC_ERROR,
 	GDA_CONNECTION_NO_PROVIDER_SPEC_ERROR,
 	GDA_CONNECTION_OPEN_ERROR,
-	GDA_CONNECTION_STATEMENT_TYPE_ERROR
+	GDA_CONNECTION_STATEMENT_TYPE_ERROR,
+	GDA_CONNECTION_CANT_LOCK_ERROR,
+	GDA_CONNECTION_TASK_NOT_FOUND_ERROR
 } GdaConnectionError;
 #define GDA_CONNECTION_NONEXIST_DSN_ERROR GDA_CONNECTION_DSN_NOT_FOUND_ERROR
 
@@ -82,7 +84,8 @@ struct _GdaConnectionClass {
 
 typedef enum {
         GDA_CONNECTION_OPTIONS_NONE = 0,
-	GDA_CONNECTION_OPTIONS_READ_ONLY = 1 << 0
+	GDA_CONNECTION_OPTIONS_READ_ONLY = 1 << 0,
+	GDA_CONNECTION_OPTIONS_THREAD_SAFE = 1 << 1
 } GdaConnectionOptions;
 
 typedef enum {
@@ -168,6 +171,7 @@ GSList              *gda_connection_batch_execute        (GdaConnection *cnc,
 gchar               *gda_connection_statement_to_sql     (GdaConnection *cnc,
 							  GdaStatement *stmt, GdaSet *params, GdaStatementSqlFlag flags,
 							  GSList **params_used, GError **error);
+/* synchronous exec */
 gboolean             gda_connection_statement_prepare    (GdaConnection *cnc,
 							  GdaStatement *stmt, GError **error);
 GObject             *gda_connection_statement_execute    (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params, 
@@ -183,6 +187,15 @@ GdaDataModel        *gda_connection_statement_execute_select_full (GdaConnection
 								   GType *col_types, GError **error);
 gint                 gda_connection_statement_execute_non_select (GdaConnection *cnc, GdaStatement *stmt,
 								  GdaSet *params, GdaSet **last_insert_row, GError **error);
+
+/* Async. execution */
+guint                gda_connection_async_statement_execute (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params, 
+							     GdaStatementModelUsage model_usage, GType *col_types,
+							     gboolean need_last_insert_row, 
+							     GError **error);
+GObject             *gda_connection_async_fetch_result      (GdaConnection *cnc, guint task_id, GdaSet **last_insert_row, GError **error);
+gboolean             gda_connection_async_cancel            (GdaConnection *cnc, guint task_id, GError **error);
+
 
 gboolean             gda_connection_begin_transaction    (GdaConnection *cnc, const gchar *name, 
 							  GdaTransactionIsolation level, GError **error);

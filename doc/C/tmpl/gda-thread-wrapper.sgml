@@ -1,0 +1,155 @@
+<!-- ##### SECTION Title ##### -->
+GdaThreadWrapper
+
+<!-- ##### SECTION Short_Description ##### -->
+Execute functions in a sub thread
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+  The purpose of the #GdaThreadWrapper object is to execute functions in an isolated sub thread. As the
+  #GdaThreadWrapper is thread safe, one is able to isolate some code's execution is a <emphasis>private</emphasis> thread, and
+  make a non thread safe code thread safe.
+</para>
+<para>
+  The downside of this is that the actual execution of the code will be slower as it requires
+  threads to be synchronized.
+</para>
+<para>
+  Each thread using a #GdaThreadWrapper object can use it as if it was the only user: the #GdaThreadWrapper will
+  simply dispatch all the execution requests to its <emphasis>private</emphasis> sub thread and report the
+  execution's status only to the thread which made the request.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaThreadWrapper ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_thread_wrapper_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION GdaThreadWrapperFunc ##### -->
+<para>
+  Specifies the type of function to be passed to gda_thread_wrapper_execute().
+</para>
+
+@arg: pointer to the data (which is the @arg argument passed to gda_thread_wrapper_execute_void())
+@error: a place to store errors
+@Returns: a pointer to some data which will be returned by gda_thread_wrapper_fetch_result()
+
+
+<!-- ##### FUNCTION gda_thread_wrapper_execute ##### -->
+<para>
+
+</para>
+
+@wrapper: 
+@func: 
+@arg: 
+@arg_destroy_func: 
+@error: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION GdaThreadWrapperVoidFunc ##### -->
+<para>
+  Specifies the type of function to be passed to gda_thread_wrapper_execute_void().
+</para>
+
+@arg: a pointer to the data (which is the @arg argument passed to gda_thread_wrapper_execute_void())
+@error: a place to store errors
+
+
+<!-- ##### FUNCTION gda_thread_wrapper_execute_void ##### -->
+<para>
+
+</para>
+
+@wrapper: 
+@func: 
+@arg: 
+@arg_destroy_func: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_thread_wrapper_iterate ##### -->
+<para>
+
+</para>
+
+@wrapper: 
+@may_block: 
+
+
+<!-- ##### FUNCTION gda_thread_wrapper_fetch_result ##### -->
+<para>
+
+</para>
+
+@wrapper: 
+@may_lock: 
+@out_id: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_thread_wrapper_get_waiting_size ##### -->
+<para>
+
+</para>
+
+@wrapper: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION GdaThreadWrapperCallback ##### -->
+<para>
+  Specifies the type of function to be passed to gda_thread_wrapper_connect_raw().
+</para>
+
+@wrapper: the #GdaThreadWrapper
+@instance: a pointer to the instance which emitted the signal
+@signame: the name of the signal being emitted
+@n_param_values: number of GValue in @param_values
+@param_values: array of @n_param_values GValue
+@gda_reserved: reserved
+@data: a pointer to the data (which is the @data argument passed to gda_thread_wrapper_connect_raw())
+
+
+<!-- ##### FUNCTION gda_thread_wrapper_connect_raw ##### -->
+<para>
+
+</para>
+
+@wrapper: 
+@instance: 
+@sig_name: 
+@callback: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_thread_wrapper_disconnect ##### -->
+<para>
+
+</para>
+
+@wrapper: 
+@id: 
+
+

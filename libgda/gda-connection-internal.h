@@ -20,10 +20,11 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __GDA_CONNECTION_SQLITE_H_
-#define __GDA_CONNECTION_SQLITE_H_
+#ifndef __GDA_CONNECTION_INTERNAL_H_
+#define __GDA_CONNECTION_INTERNAL_H_
 
 #include <libgda/gda-decl.h>
+#include <libgda/thread-wrapper/gda-thread-wrapper.h>
 
 G_BEGIN_DECLS
 
@@ -33,6 +34,19 @@ G_BEGIN_DECLS
  * object
  */
 GdaConnection *_gda_open_internal_sqlite_connection (const gchar *cnc_string);
+
+
+/*
+ * Functions dedicated to implementing a GdaConnection which uses a GdaThreadWrapper around
+ * another connection to make it thread safe.
+ */
+typedef struct {
+        GdaConnection *sub_connection;
+        GdaServerProvider *cnc_provider;
+        GdaThreadWrapper *wrapper;
+	GArray *handlers_ids; /* array of gulong */
+} ThreadConnectionData; /* Per connection private data for */
+void           _gda_connection_force_transaction_status (GdaConnection *cnc, GdaConnection *wrapped_cnc);
 
 G_END_DECLS
 

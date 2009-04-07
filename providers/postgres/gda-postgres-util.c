@@ -104,7 +104,11 @@ _gda_postgres_make_error (GdaConnection *cnc, PGconn *pconn, PGresult *pg_res, G
         return error_ev;
 }
 
-/* to be used only while initializing a connection */
+/* 
+ * Returns NULL if an error occurred
+ *
+ * WARNING: it does not check that @pconn can safely be used
+ */
 PGresult *
 _gda_postgres_PQexec_wrap (GdaConnection *cnc, PGconn *pconn, const char *query)
 {

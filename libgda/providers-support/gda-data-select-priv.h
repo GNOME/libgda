@@ -39,6 +39,10 @@ void           gda_data_select_take_row                     (GdaDataSelect *mode
 GdaRow        *gda_data_select_get_stored_row               (GdaDataSelect *model, gint rownum);
 GdaConnection *gda_data_select_get_connection               (GdaDataSelect *model);
 
+
+/* internal API */
+void           _gda_data_select_share_private_data (GdaDataSelect *master, GdaDataSelect *slave);
+
 G_END_DECLS
 
 #endif

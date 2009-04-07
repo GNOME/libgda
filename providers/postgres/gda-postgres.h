@@ -51,6 +51,7 @@ typedef struct {
 typedef struct {
 	GdaConnection      *cnc;
         PGconn             *pconn;
+	gboolean            pconn_is_busy;
         gint                ntypes;
         GdaPostgresTypeOid *type_data;
         GHashTable         *h_table;

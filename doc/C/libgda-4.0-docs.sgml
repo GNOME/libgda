@@ -124,6 +124,7 @@
 <!ENTITY libgda-GdaTreeMgrTables SYSTEM "xml/gda-tree-mgr-tables.xml">
 <!ENTITY libgda-GdaTreeMgrColumns SYSTEM "xml/gda-tree-mgr-columns.xml">
 <!ENTITY libgda-GdaSqlBuilder SYSTEM "xml/gda-sql-builder.xml">
+<!ENTITY libgda-GdaThreadWrapper SYSTEM "xml/gda-thread-wrapper.xml">
 ]>
 
 <book id="index">
@@ -1110,12 +1111,17 @@ g_object_unref (store);
       &libgda-GdaServerOperationSequences;
     </chapter>
 
+    <chapter id="multi-threading">
+      <title>Multi threading</title>
+      &libgda-GdaMutex;
+      &libgda-GdaLockable;
+      &libgda-GdaThreadWrapper;      
+    </chapter>
+
     <chapter id="misc">
       <title>Miscellaneous</title>
       &libgda-util;
       &libgda-log;
-      &libgda-GdaMutex;
-      &libgda-GdaLockable;
       &GdaAttributesManager;
     </chapter>
   </part>

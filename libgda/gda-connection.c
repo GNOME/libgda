@@ -28,6 +28,7 @@
 #include <libgda/gda-config.h>
 #include <libgda/gda-connection.h>
 #include <libgda/gda-connection-private.h>
+#include <libgda/gda-connection-internal.h>
 #include <libgda/gda-connection-event.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-log.h>
@@ -44,6 +45,7 @@
 #include <libgda/gda-util.h>
 #include <libgda/gda-mutex.h>
 #include <libgda/gda-lockable.h>
+#include <libgda/thread-wrapper/gda-thread-provider.h>
 
 #define PROV_CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
 
@@ -54,6 +56,7 @@ struct _GdaConnectionPrivate {
 	gchar                *cnc_string;
 	gchar                *auth_string;
 	gboolean              is_open;
+	gboolean              is_thread_wrapper;
 
 	GdaMetaStore         *meta_store;
 
@@ -71,7 +74,35 @@ struct _GdaConnectionPrivate {
 	GCond                *unique_possible_cond;
 	GMutex               *unique_possible_mutex;
 	GdaMutex             *mutex;
+
+	/* Asynchronous statement execution */
+	guint                 next_task_id; /* starts at 1 as 0 is an error */
+	GArray               *waiting_tasks; /* array of CncTask pointers to tasks to be executed */
+	GArray               *completed_tasks; /* array of CncTask pointers to tasks already executed */
 };
+
+/* represents an asynchronous execution task */
+typedef struct {
+	guint task_id; /* ID assigned by GdaConnection object */
+	guint prov_task_id; /* ID assigned by GdaServerProvider */
+	gboolean being_processed; /* TRUE if currently being processed */
+	GMutex *mutex;
+	GdaStatement *stmt; /* statement to execute */
+	GdaStatementModelUsage model_usage;
+	GType *col_types;
+	GdaSet *params;
+	gboolean need_last_insert_row;
+	GdaSet *last_insert_row;
+	GObject *result;
+	GError *error;
+} CncTask;
+#define CNC_TASK(x) ((CncTask*)(x))
+
+static CncTask *cnc_task_new (guint id, GdaStatement *stmt, GdaStatementModelUsage model_usage, 
+			      GType *col_types, GdaSet *params, gboolean need_last_insert_row);
+static void     cnc_task_free (CncTask *task);
+#define         cnc_task_lock(task) g_mutex_lock ((task)->mutex)
+#define         cnc_task_unlock(task) g_mutex_unlock ((task)->mutex)
 
 static void gda_connection_class_init (GdaConnectionClass *klass);
 static void gda_connection_init       (GdaConnection *cnc, GdaConnectionClass *klass);
@@ -115,11 +146,13 @@ enum
         PROP_AUTH_STRING,
         PROP_OPTIONS,
 	PROP_META_STORE,
-	PROP_THREAD_OWNER
+	PROP_THREAD_OWNER,
+	PROP_IS_THREAD_WRAPPER
 };
 
 static GObjectClass *parent_class = NULL;
 extern GdaServerProvider *_gda_config_sqlite_provider; /* defined in gda-config.c */
+static GdaServerProvider *_gda_thread_wrapper_provider = NULL;
 
 /*
  * GdaConnection class implementation
@@ -255,6 +288,12 @@ gda_connection_class_init (GdaConnectionClass *klass)
 								 "This should only be modified by the database providers' implementation"),
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 
+	g_object_class_install_property (object_class, PROP_IS_THREAD_WRAPPER,
+					 g_param_spec_boolean ("is-wrapper", NULL,
+							       _("Tells if the connection acts as a thread wrapper around another connection, making it completely thread safe"),
+							       FALSE,
+							       (G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
+
 	
 	object_class->dispose = gda_connection_dispose;
 	object_class->finalize = gda_connection_finalize;
@@ -287,6 +326,10 @@ gda_connection_init (GdaConnection *cnc, GdaConnectionClass *klass)
 	cnc->priv->events_list = NULL;
 	cnc->priv->trans_status = NULL; /* no transaction yet */
 	cnc->priv->prepared_stmts = NULL;
+
+	cnc->priv->next_task_id = 1;
+	cnc->priv->waiting_tasks = g_array_new (FALSE, FALSE, sizeof (gpointer));
+	cnc->priv->completed_tasks = g_array_new (FALSE, FALSE, sizeof (gpointer));
 }
 
 static void prepared_stms_foreach_func (GdaStatement *gda_stmt, GdaPStmt *prepared_stmt, GdaConnection *cnc);
@@ -328,6 +371,22 @@ gda_connection_dispose (GObject *object)
 	if (cnc->priv->meta_store != NULL) {
 	        g_object_unref (cnc->priv->meta_store);
 	        cnc->priv->meta_store = NULL;
+	}
+
+	if (cnc->priv->waiting_tasks) {
+		gint i, len = cnc->priv->waiting_tasks->len;
+		for (i = 0; i < len; i++)
+			cnc_task_free (CNC_TASK (g_array_index (cnc->priv->waiting_tasks, gpointer, i)));
+		g_array_free (cnc->priv->waiting_tasks, TRUE);
+		cnc->priv->waiting_tasks = NULL;
+	}
+
+	if (cnc->priv->completed_tasks) {
+		gint i, len = cnc->priv->completed_tasks->len;
+		for (i = 0; i < len; i++)
+			cnc_task_free (CNC_TASK (g_array_index (cnc->priv->completed_tasks, gpointer, i)));
+		g_array_free (cnc->priv->completed_tasks, TRUE);
+		cnc->priv->completed_tasks = NULL;
 	}
 
 	/* chain to parent class */
@@ -525,7 +584,17 @@ gda_connection_set_property (GObject *object,
 			cnc->priv->meta_store = g_value_get_object (value);
 			if (cnc->priv->meta_store)
 				g_object_ref (cnc->priv->meta_store);
+			if (cnc->priv->is_thread_wrapper) {
+				ThreadConnectionData *cdata;
+				cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (cnc);
+				if (cdata) 
+					g_object_set (G_OBJECT (cdata->sub_connection), "meta-store",
+						      cnc->priv->meta_store, NULL);
+			}
 			gda_mutex_unlock (cnc->priv->mutex);
+			break;
+		case PROP_IS_THREAD_WRAPPER:
+			cnc->priv->is_thread_wrapper = g_value_get_boolean (value);
 			break;
                 }
         }	
@@ -561,9 +630,82 @@ gda_connection_get_property (GObject *object,
 		case PROP_META_STORE:
 			g_value_set_object (value, cnc->priv->meta_store);
 			break;
+		case PROP_IS_THREAD_WRAPPER:
+			g_value_set_boolean (value, cnc->priv->is_thread_wrapper);
+			break;
                 }
 		gda_mutex_unlock (cnc->priv->mutex);
         }	
+}
+
+/*
+ * helper functions to manage CncTask
+ */
+static void task_stmt_reset_cb (GdaStatement *stmt, CncTask *task);
+static CncTask *
+cnc_task_new (guint id, GdaStatement *stmt, GdaStatementModelUsage model_usage, GType *col_types, 
+	      GdaSet *params, gboolean need_last_insert_row)
+{
+	CncTask *task;
+
+	task = g_new0 (CncTask, 1);
+	task->being_processed = FALSE;
+	task->task_id = id;
+	task->stmt = g_object_ref (stmt);
+	g_signal_connect (stmt, "reset", /* monitor statement changes */
+			  G_CALLBACK (task_stmt_reset_cb), task);
+	task->model_usage = model_usage;
+	if (col_types) {
+		gint i;
+		for (i = 0; ; i++) {
+			if (col_types [i] == G_TYPE_NONE)
+				break;
+		}
+		task->col_types = g_new (GType, i+1);
+		memcpy (task->col_types, col_types, (i+1) * sizeof (GType));
+	}
+	if (params)
+		task->params = gda_set_copy (params);
+	task->need_last_insert_row = need_last_insert_row;
+
+	task->mutex = g_mutex_new ();
+	return task;
+}
+
+static void
+task_stmt_reset_cb (GdaStatement *stmt, CncTask *task)
+{
+	g_mutex_lock (task->mutex);
+	g_signal_handlers_disconnect_by_func (task->stmt,
+					      G_CALLBACK (task_stmt_reset_cb), task);
+	g_object_unref (task->stmt);
+	task->stmt = NULL;
+	g_mutex_unlock (task->mutex);
+}
+
+static void
+cnc_task_free (CncTask *task)
+{
+	g_mutex_lock (task->mutex);
+	if (task->stmt) {
+		g_signal_handlers_disconnect_by_func (task->stmt,
+						      G_CALLBACK (task_stmt_reset_cb), task);
+		g_object_unref (task->stmt);
+	}
+	if (task->params)
+		g_object_unref (task->params);
+	if (task->col_types)
+		g_free (task->col_types);
+	if (task->last_insert_row)
+		g_object_unref (task->last_insert_row);
+	if (task->result)
+		g_object_unref (task->result);
+	if (task->error)
+		g_error_free (task->error);
+
+	g_mutex_unlock (task->mutex);
+	g_mutex_free (task->mutex);
+	g_free (task);
 }
 
 /**
@@ -643,6 +785,13 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
 
 		prov = gda_config_get_provider (dsn_info->provider, error);
 		if (prov) {
+			if (options & GDA_CONNECTION_OPTIONS_THREAD_SAFE) {
+				if (!_gda_thread_wrapper_provider)
+					_gda_thread_wrapper_provider =
+						GDA_SERVER_PROVIDER (g_object_new (GDA_TYPE_THREAD_PROVIDER, 
+										   NULL));
+				prov = _gda_thread_wrapper_provider;
+			}
 			if (PROV_CLASS (prov)->create_connection) {
 				cnc = PROV_CLASS (prov)->create_connection (prov);
 				if (cnc) 
@@ -770,6 +919,19 @@ gda_connection_open_from_string (const gchar *provider_name, const gchar *cnc_st
 
 		prov = gda_config_get_provider (provider_name ? provider_name : real_provider, error);
 		if (prov) {
+			if (options & GDA_CONNECTION_OPTIONS_THREAD_SAFE) {
+				gchar *tmp;
+				tmp = g_strdup_printf ("%s;PROVIDER_NAME=%s",
+						       real_cnc, gda_server_provider_get_name (prov));
+				g_free (real_cnc);
+				real_cnc = tmp;
+				if (!_gda_thread_wrapper_provider)
+					_gda_thread_wrapper_provider =
+						GDA_SERVER_PROVIDER (g_object_new (GDA_TYPE_THREAD_PROVIDER, 
+										   NULL));
+				prov = _gda_thread_wrapper_provider;
+			}
+
 			if (PROV_CLASS (prov)->create_connection) {
 				cnc = PROV_CLASS (prov)->create_connection (prov);
 				if (cnc) 
@@ -792,7 +954,7 @@ gda_connection_open_from_string (const gchar *provider_name, const gchar *cnc_st
 				cnc = NULL;
 			}
 		}
-	}	
+	}
 
 	g_free (real_cnc);
 	g_free (user);
@@ -1556,6 +1718,347 @@ make_col_types_array (gint init_size, va_list args)
 	return types;
 }
 
+
+/*
+ * No locking is done here must be done before calling
+ *
+ * Returns: -1 if task not found
+ */
+static gint
+get_task_index (GdaConnection *cnc, guint task_id, gboolean *out_completed, gboolean id_is_prov)
+{
+	gint i, len;
+	CncTask *task;
+	len = cnc->priv->completed_tasks->len;
+	for (i = 0; i < len; i++) {
+		task = CNC_TASK (g_array_index (cnc->priv->completed_tasks, gpointer, i));
+		if ((! id_is_prov && (task->task_id == task_id)) ||
+		    (id_is_prov && (task->prov_task_id == task_id))) {
+			*out_completed = TRUE;
+			return i;
+		}
+	}
+
+	len = cnc->priv->waiting_tasks->len;
+	for (i = 0; i < len; i++) {
+		task = CNC_TASK (g_array_index (cnc->priv->waiting_tasks, gpointer, i));
+		if ((! id_is_prov && (task->task_id == task_id)) ||
+		    (id_is_prov && (task->prov_task_id == task_id))) {
+			*out_completed = FALSE;
+			return i;
+		}
+	}
+	
+	return -1;
+}
+
+/*
+ * This callback is called from the GdaServerProvider object
+ */
+static void
+async_stmt_exec_cb (GdaServerProvider *provider, GdaConnection *cnc, guint task_id,
+		    GObject *result_obj, const GError *error, CncTask *task)
+{
+	gint i;
+	gboolean is_completed;
+
+	gda_connection_lock (GDA_LOCKABLE (cnc));
+
+	i = get_task_index (cnc, task_id, &is_completed, FALSE);
+	if (i >= 0) {
+		CncTask *task;
+		g_assert (!is_completed);
+
+		/* complete @task and free some memory */
+		task = CNC_TASK (g_array_index (cnc->priv->waiting_tasks, gpointer, i));
+		cnc_task_lock (task);
+
+		task->being_processed = FALSE;
+		if (error)
+			task->error = g_error_copy (error);
+		if (result_obj)
+			task->result = g_object_ref (result_obj);
+		if (task->stmt) {
+			g_signal_handlers_disconnect_by_func (task->stmt,
+							      G_CALLBACK (task_stmt_reset_cb), task);
+			g_object_unref (task->stmt);
+			task->stmt = NULL;
+		}
+		if (task->params) {
+			g_object_unref (task->params);
+			task->params = NULL;
+		}
+		if (task->col_types) {
+			g_free (task->col_types);
+			task->col_types = NULL;
+		}
+
+		g_array_remove_index (cnc->priv->waiting_tasks, i);
+		g_array_append_val (cnc->priv->completed_tasks, task);
+
+		cnc_task_unlock (task);
+
+		/* execute next waiting task if there is one */
+		while (cnc->priv->waiting_tasks->len >= 1) {
+			/* execute statement now as there are no other ones to be executed */
+			GError *lerror = NULL;
+			task = CNC_TASK (g_array_index (cnc->priv->waiting_tasks, gpointer, 0));
+			task->being_processed = TRUE;
+			cnc_task_lock (task);
+			PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, cnc, 
+										 task->stmt, 
+										 task->params, 
+										 task->model_usage, 
+										 task->col_types, 
+										 &(task->last_insert_row),
+										 &(task->prov_task_id),
+										 (GdaServerProviderExecCallback) async_stmt_exec_cb, 
+										 task, &lerror);
+			if (lerror) {
+				/* task execution failed => move it to completed tasks array */
+				task->error = lerror;
+				task->being_processed = FALSE;
+				g_array_remove_index (cnc->priv->waiting_tasks, 0);
+				g_array_append_val (cnc->priv->completed_tasks, task);
+			}
+			cnc_task_unlock (task);
+		}
+	}
+	g_print ("%s() called!!!\n", __FUNCTION__);
+
+	gda_connection_lock (GDA_LOCKABLE (cnc));
+}
+
+/**
+ * gda_connection_async_statement_execute
+ * @cnc: a #GdaConnection
+ * @stmt: a #GdaStatement object
+ * @params: a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
+ * @model_usage: in the case where @stmt is a SELECT statement, specifies how the returned data model will be used
+ * @col_types: an array of GType to request each returned #GdaDataModel's column's GType, terminated with the G_TYPE_NONE
+ * @need_last_insert_row: TRUE if the values of the last interted row must be computed
+ * @error: a place to store errors, or %NULL
+ *
+ * This method is somilar to gda_connection_statement_execute() but is done asynchronously as this method returns
+ * immediately a task ID. It's up to the caller to use gda_connection_async_fetch_result() regularly to check
+ * if the statement's execution is finished.
+ *
+ * It is possible to call the method several times to request several statements to be executed asynchronously, the
+ * statements will be executed in the order in which they were requested.
+ *
+ * The parameters, if present, are copied and can be discaded or modified before the statement is actually executed.
+ * The @stmt object is not copied but simply referenced (for performance reasons), and if it is modified before
+ * it is actually executed, then its execution will not occur. It is however safe to call g_object_unref() on it if
+ * it's not needed anymore.
+ *
+ * The execution failure of any statement has no impact on the execution of other statements except for example if
+ * the connection has a transaction started and the failure invalidates the transaction (as decided by the database
+ * server).
+ *
+ * Returns: a task ID, or 0 if an error occurred (not an error regarding @stmt itself as its execution has not yet started
+ * but any other error)
+ *
+ * Since: 4.2
+ */
+guint
+gda_connection_async_statement_execute (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params, 
+					GdaStatementModelUsage model_usage, GType *col_types,
+					gboolean need_last_insert_row,
+					GError **error)
+{
+	guint id;
+	CncTask *task;
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), 0);
+	g_return_val_if_fail (cnc->priv, 0);
+	g_return_val_if_fail (cnc->priv->provider_obj, 0);
+	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), 0);
+	g_return_val_if_fail (PROV_CLASS (cnc->priv->provider_obj)->statement_execute, 0);
+
+	if (! gda_connection_trylock ((GdaLockable*) cnc)) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CANT_LOCK_ERROR,
+			     _("Can't obtain connection lock"));
+		return 0;
+	}
+	id = cnc->priv->next_task_id ++;
+	task = cnc_task_new (id, stmt, model_usage, col_types, params, need_last_insert_row);
+	g_array_append_val (cnc->priv->waiting_tasks, task);
+
+	if (cnc->priv->waiting_tasks->len == 1) {
+		/* execute statement now as there are no other ones to be executed */
+		GError *lerror = NULL;
+		task->being_processed = TRUE;
+		cnc_task_lock (task);
+		PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, cnc, 
+									 task->stmt, task->params, 
+									 task->model_usage, task->col_types,
+									 &(task->last_insert_row),
+									 &(task->prov_task_id),
+									 (GdaServerProviderExecCallback) async_stmt_exec_cb, 
+									 task, &lerror);
+		if (lerror) {
+			/* task execution failed => move it to completed tasks array */
+			gint i;
+			gboolean is_completed;
+
+			task->error = lerror;
+			task->being_processed = FALSE;
+			i = get_task_index (cnc, id, &is_completed, FALSE);
+			g_assert ((i >= 0) && !is_completed);
+			g_array_remove_index (cnc->priv->waiting_tasks, i);
+			g_array_append_val (cnc->priv->completed_tasks, task);
+		}
+		cnc_task_unlock (task);
+	}
+
+	gda_connection_unlock ((GdaLockable*) cnc);
+
+	return id;
+}
+
+/**
+ * gda_connection_async_fetch_result
+ * @cnc: a #GdaConnection
+ * @task_id: a task ID retuned by gda_connection_async_statement_execute()
+ * @last_insert_row: a place to store a new #GdaSet object which contains the values of the last inserted row, or %NULL
+ * @error: a place to store errors, or %NULL
+ *
+ * Use this method to obtain the result of the execution of a statement which has been executed asynchronously by
+ * calling gda_connection_async_statement_execute(). This function is non locking and will return %NULL (and no
+ * error will be set) if the statement has not been executed yet.
+ *
+ * If the statement has been executed, this method returns the same value as gda_connection_statement_execute()
+ * would have if the statement had been
+ * executed synchronously.
+ *
+ * Returns: a #GObject, or %NULL if an error occurred
+ *
+ * Since: 4.2
+ */
+GObject *
+gda_connection_async_fetch_result (GdaConnection *cnc, guint task_id, GdaSet **last_insert_row, GError **error)
+{
+	gint i;
+	gboolean is_completed;
+	GObject *obj = NULL;
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (cnc->priv, NULL);
+
+	if (! gda_connection_trylock ((GdaLockable*) cnc)) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CANT_LOCK_ERROR,
+			     _("Can't obtain connection lock"));
+		return NULL;
+	}
+
+	/* if provider needs to be awaken, then do it now */
+	if (PROV_CLASS (cnc->priv->provider_obj)->handle_async) {
+		if (! (PROV_CLASS (cnc->priv->provider_obj)->handle_async (cnc->priv->provider_obj, cnc, error))) {
+			gda_connection_unlock ((GdaLockable*) cnc);
+			return NULL;
+		}
+	}
+	
+	i = get_task_index (cnc, task_id, &is_completed, FALSE);
+	if (i < 0) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_TASK_NOT_FOUND_ERROR,
+		     _("Can't find task %u"), task_id);
+	}
+	else if (is_completed) {
+		/* task completed */
+		CncTask *task;
+		task = CNC_TASK (g_array_index (cnc->priv->completed_tasks, gpointer, i));
+		g_array_remove_index (cnc->priv->completed_tasks, i);
+		
+		cnc_task_lock (task);
+		if (task->result)
+			obj = g_object_ref (task->result);
+		if (task->error) {
+			g_propagate_error (error, task->error);
+			task->error = NULL;
+		}
+		if (last_insert_row) {
+			if (task->last_insert_row)
+				*last_insert_row = g_object_ref (task->last_insert_row);
+			else
+				*last_insert_row = NULL;
+		}
+		cnc_task_unlock (task);
+		cnc_task_free (task);
+	}
+	else {
+		/* task not yet completed */
+		/* nothing to do */
+	}
+
+	gda_connection_unlock ((GdaLockable*) cnc);
+	return obj;
+}
+
+/**
+ * gda_connection_async_cancel
+ * @cnc: a #GdaConnection
+ * @task_id: a task ID retuned by gda_connection_async_statement_execute()
+ * @error: a place to store errors, or %NULL
+ *
+ * Requests that a task be cancelled. This operation may of may not have any effect
+ * depending on the task's status, even if it returns %TRUE. If it returns %FALSE,
+ * then the task has not been cancelled.
+ *
+ * Returns: TRUE if no error occurred
+ *
+ * Since: 4.2
+ */
+gboolean
+gda_connection_async_cancel (GdaConnection *cnc, guint task_id, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (cnc->priv, FALSE);
+	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
+
+	if (! gda_connection_trylock ((GdaLockable*) cnc)) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CANT_LOCK_ERROR,
+			     _("Can't obtain connection lock"));
+		return FALSE;
+	}
+
+	gint i;
+	gboolean is_completed;
+	gboolean retval = TRUE;
+	i = get_task_index (cnc, task_id, &is_completed, FALSE);
+	if ((i >= 0) && (!is_completed)) {
+		CncTask *task;
+		task = CNC_TASK (g_array_index (cnc->priv->waiting_tasks, gpointer, i));
+		if (task->being_processed) {
+			if (PROV_CLASS (cnc->priv->provider_obj)->cancel) {
+				retval = PROV_CLASS (cnc->priv->provider_obj)->cancel (cnc->priv->provider_obj, cnc,
+										       task->prov_task_id, error);
+				if (retval) {
+					/* cancellation may have succeeded => remove this task from the tasks to execute */
+					g_array_remove_index (cnc->priv->waiting_tasks, i);
+					cnc_task_free (task);
+				}
+			}
+			else {
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
+					     "%s", _("Provider does not support asynchronous server operation"));
+				retval = FALSE;
+			}
+		}
+		else {
+			/* simply remove this task from the tasks to execute */
+			g_array_remove_index (cnc->priv->waiting_tasks, i);
+			cnc_task_free (task);
+		}
+	}
+	else if (i < 0) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_TASK_NOT_FOUND_ERROR,
+			     _("Can't find task %u"), task_id);
+		retval = FALSE;
+	}
+
+	gda_connection_unlock ((GdaLockable*) cnc);
+	return retval;
+}
+
 /*
  * Wrapper which adds @...
  */
@@ -1908,6 +2411,37 @@ gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *
 		model = NULL;
 	}
 	return model;
+}
+
+/*
+ * Forces the GdaTransactionStatus. This is reserved to connections which are thread wrappers
+ *
+ * @trans_status may be NULL
+ * if @trans_status is not NULL, then its ref count is increased.
+ */
+void
+_gda_connection_force_transaction_status (GdaConnection *cnc, GdaConnection *wrapped_cnc)
+{
+	g_assert (cnc->priv->is_thread_wrapper);
+	if (cnc->priv->trans_status) 
+		g_object_unref (cnc->priv->trans_status);
+
+	cnc->priv->trans_status = wrapped_cnc->priv->trans_status;
+	if (cnc->priv->trans_status)
+		g_object_ref (cnc->priv->trans_status);
+
+#ifdef GDA_DEBUG_signal
+        g_print (">> 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
+#endif
+        g_signal_emit (G_OBJECT (cnc), gda_connection_signals[TRANSACTION_STATUS_CHANGED], 0);
+#ifdef GDA_DEBUG_signal
+        g_print ("<< 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
+#endif
+
+#ifdef GDA_DEBUG_NO
+	if (cnc->priv->trans_status)
+		gda_transaction_status_dump (cnc->priv->trans_status, 5);
+#endif
 }
 
 /**
@@ -2977,6 +3511,21 @@ suggest_update_cb_downstream (GdaMetaStore *store, GdaMetaContext *suggest, Down
 	return NULL;
 }
 
+typedef struct {
+	GdaConnection  *cnc;
+	GdaMetaContext *context;
+} UpdateMetaStoreData;
+
+static gpointer
+sub_thread_update_meta_store (UpdateMetaStoreData *data, GError **error)
+{
+	/* WARNING: function executed in sub thread! */
+	gboolean retval;
+	retval = gda_connection_update_meta_store (data->cnc, data->context, error);
+	g_print ("/%s() => %s\n", __FUNCTION__, retval ? "TRUE" : "FALSE");
+	return GINT_TO_POINTER (retval ? 1 : 0);
+}
+
 /**
  * gda_connection_update_meta_store
  * @cnc: a #GdaConnection object.
@@ -3026,6 +3575,24 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
 
 	gda_connection_lock ((GdaLockable*) cnc);
+
+	if (cnc->priv->is_thread_wrapper) {
+		ThreadConnectionData *cdata;
+		UpdateMetaStoreData data;
+		gpointer res;
+
+		cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (cnc);
+		if (!cdata) 
+			return FALSE;
+
+		data.cnc = cdata->sub_connection;
+		data.context = context;
+
+		gda_thread_wrapper_execute (cdata->wrapper, 
+					    (GdaThreadWrapperFunc) sub_thread_update_meta_store, &data, NULL, error);
+		res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, NULL, error);
+		return GPOINTER_TO_INT (res) ? TRUE : FALSE;
+	}
 
 	/* Get or create the GdaMetaStore object */
 	store = gda_connection_get_meta_store (cnc);
@@ -4131,14 +4698,30 @@ gda_connection_internal_get_provider_data (GdaConnection *cnc)
 GdaMetaStore *
 gda_connection_get_meta_store (GdaConnection *cnc)
 {
-	GdaMetaStore *store;
+	GdaMetaStore *store = NULL;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv, NULL);
 
 	gda_connection_lock ((GdaLockable*) cnc);
-	if (!cnc->priv->meta_store)
-		cnc->priv->meta_store = gda_meta_store_new (NULL);
+	if (!cnc->priv->meta_store) {
+		ThreadConnectionData *cdata = NULL;
+		if (cnc->priv->is_thread_wrapper) {
+			cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (cnc);
+			g_assert (cdata);
+			
+			if (cdata->sub_connection->priv->meta_store) {
+				cnc->priv->meta_store = g_object_ref (cdata->sub_connection->priv->meta_store);
+				store = cnc->priv->meta_store;
+			}
+		}
+		if (!store) {
+			cnc->priv->meta_store = gda_meta_store_new (NULL);
+			if (cnc->priv->is_thread_wrapper)
+				cdata->sub_connection->priv->meta_store = 
+					g_object_ref (cnc->priv->meta_store);
+		}
+	}
 	store = cnc->priv->meta_store;
 	gda_connection_unlock ((GdaLockable*) cnc);
 	

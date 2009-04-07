@@ -6,8 +6,8 @@ AM_CPPFLAGS = \
 	-DROOT_DIR=\""$(top_srcdir)"\" \
 	-DTOP_BUILD_DIR=\""$(top_builddir)"\"
 
-TESTS = check_mutex check_parser check_cnc_lock
-check_PROGRAMS = check_mutex check_parser check_cnc_lock
+TESTS = check_mutex check_parser check_cnc_lock check_threaded_cnc check_wrapper
+check_PROGRAMS = check_mutex check_parser check_cnc_lock check_threaded_cnc check_wrapper
 
 check_mutex_SOURCES = check_mutex.c
 check_mutex_LDADD = \
@@ -24,6 +24,16 @@ check_cnc_lock_LDADD = \
 	$(top_builddir)/libgda/libgda-4.0.la \
 	$(LIBGDA_LIBS)
 
+check_threaded_cnc_SOURCES = check_threaded_cnc.c common.c common.h
+check_threaded_cnc_LDADD = \
+	$(top_builddir)/libgda/libgda-4.0.la \
+	$(LIBGDA_LIBS)
+
+check_wrapper_SOURCES = check_wrapper.c dummy-object.c dummy-object.h
+check_wrapper_LDADD = \
+	$(top_builddir)/libgda/libgda-4.0.la \
+	$(LIBGDA_LIBS)
+
 EXTRA_DIST = testdb.sql
 
-DISTCLEANFILES = testdb.db
+DISTCLEANFILES = testdb.db storedb.db

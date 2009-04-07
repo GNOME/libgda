@@ -112,6 +112,8 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 	
 	klass->is_busy = NULL;
 	klass->cancel = NULL;
+	klass->handle_async = NULL;
+
 	klass->create_connection = NULL;
 	memset (&(klass->meta_funcs), 0, sizeof (GdaServerProviderMeta));
 	klass->xa_funcs = NULL;

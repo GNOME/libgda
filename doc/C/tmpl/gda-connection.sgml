@@ -15,7 +15,34 @@ A connection to a database
   Use the connection object to execute statements, use transactions, get meta data information, ...
 </para>
 <para>
-  The #GdaConnection object implements its own locking mechanism so it is thread-safe.
+  If supported by the database provider being used, statements can be executed asynchronously instead of
+  blocking the execution thread untill the execution of a statement is finished. Each database provider
+  is free to implement this feature as it wishes (using the API or using threads). The steps involved to
+  execute a statement are then:
+  <itemizedlist>
+    <listitem><para>Request the statement execution using
+	<link linkend="gda-connection-async-statement-execute">gda_connection_async_statement_execute() which returns an
+	  execution ID to be used to identify a specific request</link></para></listitem>
+    <listitem><para>Do some usefull things (that is why async. statements' excution are for)</para></listitem>
+    <listitem><para>Use one or more times 
+	<link linkend="gda-connection-async-fetch-result">gda_connection_async_fetch_result()</link> to see
+	if the execution is finished, using the request ID</para></listitem>
+    <listitem><para>Use <link linkend="gda-connection-async-cancel">gda_connection_async_cancel()</link> to cancel
+	the execution of a statement</para></listitem>
+  </itemizedlist>
+</para>
+<para>
+  The #GdaConnection object implements its own locking mechanism so it is thread-safe. However ad some database
+  providers rely on an API which does not support threads or supports it only partially, the connections
+  opened using those providers will only be accessible from the thread which created them (any other thread will
+  be blocked trying to access the connection, use the
+  <link linkend="gda-lockable-try-lock">gda_lockable_try_lock()</link> method to check it the connection
+  is useable from a thread).
+</para>
+<para>
+  If a connection really needs to be accessed by several threads at once, then it is possible to pass the
+  #GDA_CONNECTION_OPTIONS_THREAD_SAFE flag when opening it. This flag requests that the real connection
+  be created and really accessed in a <emphasis>private</emphasis> sub thread.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -90,6 +117,11 @@ A connection to a database
 
 </para>
 
+<!-- ##### ARG GdaConnection:is-wrapper ##### -->
+<para>
+
+</para>
+
 <!-- ##### ARG GdaConnection:meta-store ##### -->
 <para>
 
@@ -112,11 +144,12 @@ A connection to a database
 
 <!-- ##### ENUM GdaConnectionOptions ##### -->
 <para>
-
+  Specifies some aspects of a connection when opening it.
 </para>
 
-@GDA_CONNECTION_OPTIONS_NONE: 
-@GDA_CONNECTION_OPTIONS_READ_ONLY: 
+@GDA_CONNECTION_OPTIONS_NONE: no specific aspect
+@GDA_CONNECTION_OPTIONS_READ_ONLY: the connection to open should be in a read-only mode (this policy is not correctly enforced at the moment)
+@GDA_CONNECTION_OPTIONS_THREAD_SAFE: this flag specifies that the connection to open will be used by several threads at once so it has to be thread safe
 
 <!-- ##### ENUM GdaConnectionError ##### -->
 <para>
@@ -130,6 +163,8 @@ A connection to a database
 @GDA_CONNECTION_NO_PROVIDER_SPEC_ERROR: 
 @GDA_CONNECTION_OPEN_ERROR: 
 @GDA_CONNECTION_STATEMENT_TYPE_ERROR: 
+@GDA_CONNECTION_CANT_LOCK_ERROR: 
+@GDA_CONNECTION_TASK_NOT_FOUND_ERROR: 
 
 <!-- ##### MACRO GDA_CONNECTION_ERROR ##### -->
 <para>
@@ -385,6 +420,44 @@ A connection to a database
 
 @cnc: 
 @name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_async_statement_execute ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@stmt: 
+@params: 
+@model_usage: 
+@col_types: 
+@need_last_insert_row: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_async_fetch_result ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@task_id: 
+@last_insert_row: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_async_cancel ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@task_id: 
 @error: 
 @Returns: 
 

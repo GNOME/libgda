@@ -33,7 +33,7 @@ Data model iterator
   gda_data_model_iter_move_next() which moves to the first row).
 </para>
 <para>
-  The gda_data_model_iter_move_at_row() method, if the iterator can be moved both forward and backwards, can move the 
+  The gda_data_model_iter_move_to_row() method, if the iterator can be moved both forward and backwards, can move the 
   iterator to a specific row (sometimes faster than moving it forward or backwards a number of times).
 </para>
 <para>

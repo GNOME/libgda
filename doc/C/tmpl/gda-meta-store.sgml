@@ -18,6 +18,9 @@ Dictionary object
   single file (using an SQLite database), an entirely in memory database (also using an SQLite database), or
   a more conventional backend such as a PostgreSQL database for a shared dictionary on a server.
 </para>
+<para>
+  The #GdaMetaStore object is thread safe.
+</para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>

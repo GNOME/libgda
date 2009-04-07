@@ -73,7 +73,7 @@ create_sqlite_db (const gchar *dir, const gchar *dbname, const gchar *sqlfile, G
 	return retval;
 }
 
-void
+gboolean
 run_sql_non_select (GdaConnection *cnc, const gchar *sql)
 {
         GdaStatement *stmt;
@@ -82,13 +82,20 @@ run_sql_non_select (GdaConnection *cnc, const gchar *sql)
         GdaSqlParser *parser;
 
         parser = gda_connection_create_parser (cnc);
+	if (!parser)
+		parser = gda_sql_parser_new ();
         stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
         g_object_unref (parser);
 
         nrows = gda_connection_statement_execute_non_select (cnc, stmt, NULL, NULL, &error);
         g_object_unref (stmt);
-        if (nrows == -1)
+        if (nrows == -1) {
                 g_print ("NON SELECT error: %s\n", error && error->message ? error->message : "no detail");
+		if (error)
+			g_error_free (error);
+		return FALSE;
+	}
+	return TRUE;
 }
 
 GdaDataModel *
@@ -100,6 +107,9 @@ run_sql_select (GdaConnection *cnc, const gchar *sql)
         GdaSqlParser *parser;
 
         parser = gda_connection_create_parser (cnc);
+	if (!parser)
+		parser = gda_sql_parser_new ();
+
         stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
         g_object_unref (parser);
 
@@ -109,4 +119,47 @@ run_sql_select (GdaConnection *cnc, const gchar *sql)
                 g_print ("Could not execute query: %s\n",
                          error && error->message ? error->message : "no detail");
         return res;
+}
+
+GdaDataModel *
+run_sql_select_cursor (GdaConnection *cnc, const gchar *sql)
+{
+	GdaStatement *stmt;
+        GError *error = NULL;
+        GdaDataModel *res;
+        GdaSqlParser *parser;
+
+        parser = gda_connection_create_parser (cnc);
+        stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+        g_object_unref (parser);
+
+        res = gda_connection_statement_execute_select_full (cnc, stmt, NULL, GDA_STATEMENT_MODEL_CURSOR_FORWARD, 
+							    NULL, &error);
+        g_object_unref (stmt);
+        if (!res)
+                g_print ("Could not execute query in cursor mode: %s\n",
+                         error && error->message ? error->message : "no detail");
+        return res;
+}
+
+gboolean
+data_models_equal (GdaDataModel *m1, GdaDataModel *m2)
+{
+	GdaDataComparator *cmp;
+	GError *error = NULL;
+	cmp = (GdaDataComparator*) gda_data_comparator_new (m1, m2);
+	if (! gda_data_comparator_compute_diff (cmp, &error)) {
+		g_print ("Can't compare data models: %s\n", error && error->message ? error->message : "no detail");
+		if (error)
+			g_error_free (error);
+		g_object_unref (cmp);
+		return FALSE;
+	}
+	if (gda_data_comparator_get_n_diffs (cmp) != 0) {
+		g_print ("Data models differ: %d differences\n", gda_data_comparator_get_n_diffs (cmp));
+		g_object_unref (cmp);
+		return FALSE;
+	}
+	g_object_unref (cmp);
+	return TRUE;
 }

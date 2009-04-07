@@ -50,6 +50,7 @@ IT_PROG_INTLTOOL([0.35.5])
 AC_SUBST(INTLTOOL_XML_RULE)
 AC_CHECK_SIZEOF(unsigned int,0)
 AC_CHECK_SIZEOF(unsigned long int,0)
+AC_CHECK_TYPE(uint8_t, unsigned char)
 
 dnl **********************
 dnl Cross compilation test
@@ -1485,6 +1486,7 @@ libgda/sql-parser/Makefile
 libgda/sqlite/Makefile
 libgda/sqlite/sqlite-src/Makefile
 libgda/sqlite/virtual/Makefile
+libgda/thread-wrapper/Makefile
 providers/Makefile
 providers/bdb/Makefile
 providers/bdb/libgda-bdb-4.0.pc

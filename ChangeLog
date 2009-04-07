@@ -1,3 +1,43 @@
+2009-04-07  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in:
+	* libgda/Makefile.am:
+	* libgda/thread-wrapper/Makefile.am: new directory
+	* libgda/thread-wrapper/gda-thread-wrapper.[ch]: new object which
+	allows one to execute functions in a private sub thread from any
+	other thread.
+	* libgda/thread-wrapper/gda-thread-provider.[ch]:
+	* libgda/thread-wrapper/gda-thread-recordset.[ch]: new built-in
+	pseudo provider to constrain a GdaConnection's usage within a private
+	sub thread, making its usage completely thread safe
+	* libgda/gda-connection-sqlite.h: file renamed to
+	libgda/gda-connection-internal.h
+	* libgda/gda-connection.[ch]:
+	  - added a GDA_CONNECTION_OPTIONS_THREAD_SAFE flag to use when opening
+	    a connection
+	  - added asynchronous statement execution methods:
+	    gda_connection_async_statement_execute(), gda_connection_async_fetch_result()
+	    and gda_connection_async_cancel()
+	  - the GdaConnection can now be created by the new GdaThreadProvider pseudo
+	    provider to wrap a real GdaConnection object in a private sub thread
+	* libgda/providers-support/gda-data-select-priv.h:
+	* libgda/gda-data-select.c: adaptations to be used by the new GdaThreadRecordset
+	* libgda/gda-meta-store.c:
+	  - now thread safe
+	  - corrections to gda_meta_store_schema_get_structure()
+	* libgda/gda-server-provider.[ch]: new virtual method to handle async. requests
+	* libgda/sqlite/gda-sqlite-recordset.c: minor correction
+	* po/POTFILES.in: added new files
+	* providers/postgres/gda-postgres-util.c:
+	* providers/postgres/gda-postgres.h: make sure a PostgreSQL connection is only
+	used by one statement at a time
+	* doc/C: doc. updates
+	* tests/multi-threading/dummy-object.[ch]:
+	* tests/multi-threading/check_wrapper.c: new test for the GdaThreadWrapper object
+	* tests/multi-threading/check_threaded_cnc: new test for connections opened with
+	the GDA_CONNECTION_OPTIONS_THREAD_SAFE flag
+	* tools/web-server.c: don't check for uint8_t
+
 2009-03-27  Vivien Malerba <malerba@gnome-db.org>
 
 	Merged changes from LIBGDA_4.0 branch between revisions 3362 and 3370

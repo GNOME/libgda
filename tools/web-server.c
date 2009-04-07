@@ -33,6 +33,8 @@
 #include "global.h"
 #include "md5.h"
 
+#include <inttypes.h>
+
 #define MAX_CHALLENGES 10
 #define MAX_AUTH_COOKIES 10
 
@@ -474,10 +476,6 @@ get_file (WebServer *server, SoupMessage *msg, const char *path, GError **error)
 	soup_message_set_status (msg, SOUP_STATUS_OK);
 	return TRUE;
 }
-
-#ifdef G_OS_WIN32
-typedef guint8 uint8_t;
-#endif
 
 #define PAD_LEN 64  /* PAD length */
 #define SIG_LEN 16  /* MD5 digest length */

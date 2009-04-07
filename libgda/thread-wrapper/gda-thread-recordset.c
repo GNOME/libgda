@@ -1,0 +1,331 @@
+/* GDA Library
+ * Copyright (C) 2009 The GNOME Foundation.
+ *
+ * AUTHORS:
+ *         Vivien Malerba <malerba@gnome-db.org>
+ *
+ * This Library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This Library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this Library; see the file COPYING.LIB.  If not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#include <stdarg.h>
+#include <string.h>
+#include <glib/gi18n-lib.h>
+#include "gda-thread-wrapper.h"
+#include "gda-thread-recordset.h"
+#include "gda-thread-provider.h"
+#include <libgda/providers-support/gda-data-select-priv.h>
+//#include "gda-thread-blob-op.h"
+
+static void gda_thread_recordset_class_init (GdaThreadRecordsetClass *klass);
+static void gda_thread_recordset_init       (GdaThreadRecordset *recset,
+					     GdaThreadRecordsetClass *klass);
+static void gda_thread_recordset_dispose   (GObject *object);
+
+/* virtual methods */
+static gint    gda_thread_recordset_fetch_nb_rows (GdaDataSelect *model);
+static gboolean gda_thread_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
+
+static gboolean gda_thread_recordset_fetch_prev (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
+static gboolean gda_thread_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
+static gboolean gda_thread_recordset_fetch_at (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
+
+struct _GdaThreadRecordsetPrivate {
+	GdaDataModel *sub_model;
+	GdaThreadWrapper *wrapper;
+};
+static GObjectClass *parent_class = NULL;
+
+#define DATA_SELECT_CLASS(model) (GDA_DATA_SELECT_CLASS (G_OBJECT_GET_CLASS (model)))
+#define COPY_PUBLIC_DATA(from,to) \
+	(((GdaDataSelect *) (to))->nb_stored_rows = ((GdaDataSelect *) (from))->nb_stored_rows, \
+	 ((GdaDataSelect *) (to))->prep_stmt = ((GdaDataSelect *) (from))->prep_stmt, \
+	 ((GdaDataSelect *) (to))->advertized_nrows = ((GdaDataSelect *) (from))->advertized_nrows)
+
+/*
+ * Object init and finalize
+ */
+static void
+gda_thread_recordset_init (GdaThreadRecordset *recset,
+			   GdaThreadRecordsetClass *klass)
+{
+	g_return_if_fail (GDA_IS_THREAD_RECORDSET (recset));
+	recset->priv = g_new0 (GdaThreadRecordsetPrivate, 1);
+	recset->priv->sub_model = NULL;
+	recset->priv->wrapper = NULL;
+}
+
+static void
+gda_thread_recordset_class_init (GdaThreadRecordsetClass *klass)
+{
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	GdaDataSelectClass *pmodel_class = GDA_DATA_SELECT_CLASS (klass);
+
+	parent_class = g_type_class_peek_parent (klass);
+
+	object_class->dispose = gda_thread_recordset_dispose;
+	pmodel_class->fetch_nb_rows = gda_thread_recordset_fetch_nb_rows;
+	pmodel_class->fetch_random = gda_thread_recordset_fetch_random;
+	pmodel_class->store_all = NULL;
+
+	pmodel_class->fetch_next = gda_thread_recordset_fetch_next;
+	pmodel_class->fetch_prev = gda_thread_recordset_fetch_prev;
+	pmodel_class->fetch_at = gda_thread_recordset_fetch_at;
+}
+
+static void
+gda_thread_recordset_dispose (GObject *object)
+{
+	GdaThreadRecordset *recset = (GdaThreadRecordset *) object;
+
+	g_return_if_fail (GDA_IS_THREAD_RECORDSET (recset));
+
+	if (recset->priv) {
+		if (recset->priv->sub_model) {
+			/* unref recset->priv->sub_model in sub thread */
+			gda_thread_wrapper_execute_void (recset->priv->wrapper, 
+							 (GdaThreadWrapperFunc) g_object_unref,
+							 recset->priv->sub_model, NULL, NULL);
+			recset->priv->sub_model = NULL;
+			g_object_unref (recset->priv->wrapper);
+			recset->priv->wrapper = NULL;
+		}
+		g_free (recset->priv);
+		recset->priv = NULL;
+
+		((GdaDataSelect*) recset)->prep_stmt = NULL; /* don't unref since we don't hold a reference to it */
+	}
+
+	parent_class->dispose (object);
+}
+
+/*
+ * Public functions
+ */
+
+GType
+_gda_thread_recordset_get_type (void)
+{
+	static GType type = 0;
+
+	if (G_UNLIKELY (type == 0)) {
+		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+		static const GTypeInfo info = {
+			sizeof (GdaThreadRecordsetClass),
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gda_thread_recordset_class_init,
+			NULL,
+			NULL,
+			sizeof (GdaThreadRecordset),
+			0,
+			(GInstanceInitFunc) gda_thread_recordset_init
+		};
+		g_static_mutex_lock (&registering);
+		if (type == 0)
+			type = g_type_register_static (GDA_TYPE_DATA_SELECT, "GdaThreadRecordset", &info, 0);
+		g_static_mutex_unlock (&registering);
+	}
+
+	return type;
+}
+
+
+/*
+ * executed in the sub thread (the one which can manipulate @sub_model)
+ */
+GdaDataModel *
+_gda_thread_recordset_new (GdaConnection *cnc, GdaThreadWrapper *wrapper, GdaDataModel *sub_model)
+{
+	GdaThreadRecordset *model;
+
+	model = GDA_THREAD_RECORDSET (g_object_new (GDA_TYPE_THREAD_RECORDSET,
+						    "connection", cnc, NULL));
+
+	_gda_data_select_share_private_data (GDA_DATA_SELECT (sub_model), 
+					     GDA_DATA_SELECT (model));
+	model->priv->wrapper = g_object_ref (wrapper);
+	model->priv->sub_model = g_object_ref (sub_model);
+
+	COPY_PUBLIC_DATA (sub_model, model);
+
+        return GDA_DATA_MODEL (model);
+}
+
+/*
+ * GdaDataSelect virtual methods
+ */
+
+
+/*
+ * fetch nb rows
+ */
+static gpointer
+sub_thread_fetch_nb_rows (GdaDataSelect *model, GError **error)
+{
+	/* WARNING: function executed in sub thread! */
+	gint retval;
+	retval = DATA_SELECT_CLASS (model)->fetch_nb_rows (model);
+	g_print ("/%s() => %d\n", __FUNCTION__, retval);
+	return GINT_TO_POINTER (retval);
+}
+
+static gint
+gda_thread_recordset_fetch_nb_rows (GdaDataSelect *model)
+{
+	GdaThreadRecordset *rs = (GdaThreadRecordset*) model;
+	gint nb;
+	gda_thread_wrapper_execute (rs->priv->wrapper, 
+				    (GdaThreadWrapperFunc) sub_thread_fetch_nb_rows, 
+				    rs->priv->sub_model, NULL, NULL);
+	nb = GPOINTER_TO_INT (gda_thread_wrapper_fetch_result (rs->priv->wrapper, TRUE, NULL, NULL));
+	COPY_PUBLIC_DATA (rs->priv->sub_model, rs);
+	return nb;
+}
+
+/*
+ * fetch random
+ */
+typedef struct {
+	GdaDataSelect *select;
+	gint rownum;
+	GdaRow **row;
+} ThreadData;
+
+static gpointer
+sub_thread_fetch_random (ThreadData *data, GError **error)
+{
+	/* WARNING: function executed in sub thread! */
+	gboolean retval;
+	retval = DATA_SELECT_CLASS (data->select)->fetch_random (data->select, data->row, data->rownum, error);
+	g_print ("/%s() => %s\n", __FUNCTION__, retval ? "TRUE" : "FALSE");
+	return GINT_TO_POINTER (retval);
+}
+
+static gboolean
+gda_thread_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
+{
+	GdaThreadRecordset *rs = (GdaThreadRecordset*) model;
+	ThreadData wdata;
+	gboolean retval;
+
+	wdata.select = (GdaDataSelect *) rs->priv->sub_model;
+	wdata.rownum = rownum;
+	wdata.row = prow;
+	gda_thread_wrapper_execute (rs->priv->wrapper, 
+				    (GdaThreadWrapperFunc) sub_thread_fetch_random, 
+				    &wdata, NULL, NULL);
+
+	retval = GPOINTER_TO_INT (gda_thread_wrapper_fetch_result (rs->priv->wrapper, TRUE, NULL, error)) ? 
+		TRUE : FALSE;
+	COPY_PUBLIC_DATA (rs->priv->sub_model, rs);
+	return retval;
+}
+
+/*
+ * fetch next
+ */
+static gpointer
+sub_thread_fetch_next (ThreadData *data, GError **error)
+{
+	/* WARNING: function executed in sub thread! */
+	gboolean retval;
+	retval = DATA_SELECT_CLASS (data->select)->fetch_next (data->select, data->row, data->rownum, error);
+	g_print ("/%s() => %s\n", __FUNCTION__, retval ? "TRUE" : "FALSE");
+	return GINT_TO_POINTER (retval);
+}
+
+static gboolean
+gda_thread_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
+{
+	GdaThreadRecordset *rs = (GdaThreadRecordset*) model;
+	ThreadData wdata;
+	gboolean retval;
+
+	wdata.select = (GdaDataSelect *) rs->priv->sub_model;
+	wdata.rownum = rownum;
+	wdata.row = prow;
+	gda_thread_wrapper_execute (rs->priv->wrapper, 
+				    (GdaThreadWrapperFunc) sub_thread_fetch_next, 
+				    &wdata, NULL, NULL);
+	retval = GPOINTER_TO_INT (gda_thread_wrapper_fetch_result (rs->priv->wrapper, TRUE, NULL, error)) ? 
+		TRUE : FALSE;
+	COPY_PUBLIC_DATA (rs->priv->sub_model, rs);
+	return retval;
+}
+
+/*
+ * fetch prev
+ */
+static gpointer
+sub_thread_fetch_prev (ThreadData *data, GError **error)
+{
+	/* WARNING: function executed in sub thread! */
+	gboolean retval;
+	retval = DATA_SELECT_CLASS (data->select)->fetch_prev (data->select, data->row, data->rownum, error);
+	g_print ("/%s() => %s\n", __FUNCTION__, retval ? "TRUE" : "FALSE");
+	return GINT_TO_POINTER (retval);
+}
+
+static gboolean
+gda_thread_recordset_fetch_prev (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
+{
+	GdaThreadRecordset *rs = (GdaThreadRecordset*) model;
+	ThreadData wdata;
+	gboolean retval;
+
+	wdata.select = (GdaDataSelect *) rs->priv->sub_model;
+	wdata.rownum = rownum;
+	wdata.row = prow;
+	gda_thread_wrapper_execute (rs->priv->wrapper, 
+				    (GdaThreadWrapperFunc) sub_thread_fetch_prev, 
+				    &wdata, NULL, NULL);
+	retval = GPOINTER_TO_INT (gda_thread_wrapper_fetch_result (rs->priv->wrapper, TRUE, NULL, error)) ? 
+		TRUE : FALSE;
+	COPY_PUBLIC_DATA (rs->priv->sub_model, rs);
+	return retval;
+}
+
+/*
+ * fetch at
+ */
+static gpointer
+sub_thread_fetch_at (ThreadData *data, GError **error)
+{
+	/* WARNING: function executed in sub thread! */
+	gboolean retval;
+	retval = DATA_SELECT_CLASS (data->select)->fetch_at (data->select, data->row, data->rownum, error);
+	g_print ("/%s() => %s\n", __FUNCTION__, retval ? "TRUE" : "FALSE");
+	return GINT_TO_POINTER (retval);
+}
+
+static gboolean
+gda_thread_recordset_fetch_at (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
+{
+	GdaThreadRecordset *rs = (GdaThreadRecordset*) model;
+	ThreadData wdata;
+	gboolean retval;
+
+	wdata.select = (GdaDataSelect *) rs->priv->sub_model;
+	wdata.rownum = rownum;
+	wdata.row = prow;
+	gda_thread_wrapper_execute (rs->priv->wrapper, 
+				    (GdaThreadWrapperFunc) sub_thread_fetch_at, 
+				    &wdata, NULL, NULL);
+	retval = GPOINTER_TO_INT (gda_thread_wrapper_fetch_result (rs->priv->wrapper, TRUE, NULL, error)) ? 
+		TRUE : FALSE;
+	COPY_PUBLIC_DATA (rs->priv->sub_model, rs);
+	return retval;
+}

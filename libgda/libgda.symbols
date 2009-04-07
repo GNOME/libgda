@@ -86,6 +86,9 @@
 	gda_connection_add_event_string
 	gda_connection_add_prepared_statement
 	gda_connection_add_savepoint
+	gda_connection_async_statement_execute
+	gda_connection_async_fetch_result
+	gda_connection_async_cancel
 	gda_connection_batch_execute
 	gda_connection_begin_transaction
 	gda_connection_clear_events_list
@@ -703,6 +706,15 @@
 	gda_string_to_binary
 	gda_string_to_blob
 	gda_text_to_alphanum
+	gda_thread_wrapper_connect_raw
+	gda_thread_wrapper_disconnect
+	gda_thread_wrapper_execute
+	gda_thread_wrapper_execute_void
+	gda_thread_wrapper_get_type
+	gda_thread_wrapper_fetch_result
+	gda_thread_wrapper_get_waiting_size
+	gda_thread_wrapper_iterate
+	gda_thread_wrapper_new
 	gda_time_copy
 	gda_time_free
 	gda_time_get_type
