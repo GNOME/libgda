@@ -713,7 +713,7 @@ gda_meta_store_set_property (GObject *object,
 			break;
 		case PROP_CNC_OBJECT:
 			if (!store->priv->cnc)
-				store->priv->cnc = g_value_get_object (value);
+				store->priv->cnc = g_value_dup_object (value);
 			break;
 		case PROP_CATALOG:
 			g_free (store->priv->catalog);
@@ -2943,6 +2943,7 @@ gda_meta_store_schema_get_structure (GdaMetaStore *store, GError **error)
 	GdaMetaStruct *mstruct;
 	GdaDataModel *model;
 	gint i, nrows;
+	GdaMetaStore *real_store;
 
 	g_return_val_if_fail (GDA_IS_META_STORE (store), NULL);
 
@@ -2951,12 +2952,14 @@ gda_meta_store_schema_get_structure (GdaMetaStore *store, GError **error)
 		return NULL;
 
 	/* create a GdaMetaStruct */
-	model = gda_meta_store_extract (store, "SELECT table_catalog, table_schema, table_name FROM _tables", 
+	real_store = gda_connection_get_meta_store (store->priv->cnc);
+	model = gda_meta_store_extract (real_store,
+					"SELECT table_catalog, table_schema, table_name FROM _tables", 
 					error, NULL);
 	if (!model)
 		return NULL;
 
-	mstruct = gda_meta_struct_new (store, GDA_META_STRUCT_FEATURE_ALL);
+	mstruct = gda_meta_struct_new (real_store, GDA_META_STRUCT_FEATURE_ALL);
 	nrows = gda_data_model_get_n_rows (model);
 	for (i = 0; i < nrows; i++) {
 		/* FIXME: only take into account the database objects which have a corresponding DbObject */
@@ -2981,8 +2984,9 @@ gda_meta_store_schema_get_structure (GdaMetaStore *store, GError **error)
 
 	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
 	all_db_obj_list = g_slist_copy (klass->cpriv->db_objects);
-	if (store->priv->p_db_objects)
-		all_db_obj_list = g_slist_concat (all_db_obj_list, g_slist_copy (store->priv->p_db_objects));
+	if (real_store->priv->p_db_objects)
+		all_db_obj_list = g_slist_concat (all_db_obj_list,
+						  g_slist_copy (real_store->priv->p_db_objects));
 
 	for (list = all_db_obj_list; list; list = list->next) {
 		DbObject *dbobj = DB_OBJECT (list->data);

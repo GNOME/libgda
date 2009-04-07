@@ -1,3 +1,14 @@
+2009-04-07  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in:
+	  - set version to 4.0.2
+	  - detect uint8_t presence
+	* libgda/gda-meta-store.c:
+	  - correction in gda_meta_store_schema_get_structure()
+	  - correction in the "cnc" property
+	* tools/web-server.c: don't check for uint8_t
+	* doc/C: doc. updates
+
 Released 4.0.1
 
 2009-03-27  Vivien Malerba <malerba@gnome-db.org>
