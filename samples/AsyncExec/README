@@ -1,0 +1,61 @@
+Libgda simple example
+=====================
+
+Description:
+------------
+
+The example in this directory illustrate how to use the asynchronous statement execution
+introduced in Libgda 4.2.
+
+Compiling and running:
+----------------------
+
+To compile (make sure Libgda is installed prior to this):
+> make
+
+and to run:
+> ./example
+
+Output:
+-------
+Running should produce the following output:
+
+=========== Async. execution request:
+SELECT * from customers
+Assigned task id: 1
+=========== Async. execution request:
+SELECT * from products LIMIT 2
+Assigned task id: 2
+=========== Async. exececution request:
+SELECT * from customers WHERE id>=##theid::int
+        theid => 6
+Assigned task id: 3
+=========== Waiting for task 2
+Not yet executed...
+=========== Waiting for task 2
+Not yet executed...
+=========== Waiting for task 2
+ref | category | name            | price     | wh_stored
+----+----------+-----------------+-----------+----------
+1   |       14 | ACADEMY ACADEMY | 25.990000 |         0
+2   |        6 | ACADEMY ACE     | 20.990000 |         0
+(2 rows)
+=========== Waiting for task 10
+Task not found error: Can't find task 10
+=========== Waiting for task 1
+id | name            | default_served_by | country | city
+---+-----------------+-------------------+---------+-----
+ 2 | Ed Lamton       |                 4 | SP      | MDR
+ 3 | Lew Bonito      |                 1 | FR      | TLS
+ 4 | Mark Lawrencep  |              NULL | SP      | MDR
+ 9 | Greg Popoff     |                 2 | SP      | MDR
+10 | Vladimir Zirkov |                 4 | NULL    | NULL
+(5 rows)
+=========== Waiting for task 2
+Task not found error: Can't find task 2
+=========== Waiting for task 3
+id | name            | default_served_by | country | city
+---+-----------------+-------------------+---------+-----
+ 9 | Greg Popoff     |                 2 | SP      | MDR
+10 | Vladimir Zirkov |                 4 | NULL    | NULL
+(2 rows)

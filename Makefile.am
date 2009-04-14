@@ -71,7 +71,10 @@ example_files = \
 	samples/Tree/example.c \
 	samples/SqlBuilder/Makefile \
         samples/SqlBuilder/README \
-        samples/SqlBuilder/example.c
+        samples/SqlBuilder/example.c \
+	samples/AsyncExec/Makefile \
+        samples/AsyncExec/README \
+        samples/AsyncExec/example.c
 
 EXTRA_DIST = \
 	COPYING \

@@ -103,7 +103,7 @@ Execute functions in a sub thread
 
 @wrapper: 
 @may_lock: 
-@out_id: 
+@exp_id: 
 @error: 
 @Returns: 
 

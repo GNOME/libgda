@@ -13,6 +13,8 @@ libgda_threadwrapperinclude_HEADERS=$(libgda_threadwrapper_headers)
 
 libgda_threadwrapper_4_0_la_SOURCES = \
 	$(libgda_threadwrapper_headers) \
+	gda-thread-blob-op.h \
+	gda-thread-blob-op.c \
 	gda-thread-provider.h \
 	gda-thread-provider.c \
 	gda-thread-recordset.h \

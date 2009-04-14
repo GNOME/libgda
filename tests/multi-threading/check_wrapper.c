@@ -178,16 +178,10 @@ main_thread_func (gpointer int_id)
 
 	/* pick up results */
 	for (i = 0; i < NCALLS; i++) {
-		guint id;
 		gpointer res;
-		res = gda_thread_wrapper_fetch_result (wrapper, TRUE, &id, NULL);
+		res = gda_thread_wrapper_fetch_result (wrapper, TRUE, ids[2*i], NULL);
 		if (GPOINTER_TO_INT (res) != i + GPOINTER_TO_INT (int_id) * 1000) {
 			g_print ("Error in %s() for thread %d: sub thread's exec result is wrong\n",
-				 __FUNCTION__, GPOINTER_TO_INT (int_id));
-			nfailed ++;
-		}
-		if (id != ids[2*i]) {
-			g_print ("Error in %s() for thread %d: sub thread's exec result is for wrong ID\n",
 				 __FUNCTION__, GPOINTER_TO_INT (int_id));
 			nfailed ++;
 		}
@@ -199,18 +193,13 @@ main_thread_func (gpointer int_id)
 
 		gchar *str;
 		estr = g_strdup_printf ("Hello %d.%d", GPOINTER_TO_INT (int_id), i);
-		str = gda_thread_wrapper_fetch_result (wrapper, TRUE, &id, NULL);
+		str = gda_thread_wrapper_fetch_result (wrapper, TRUE, ids[2*i+1], NULL);
 		if (!str || strcmp (str, estr)) {
 			g_print ("Error in %s() for thread %d: sub thread's exec result is wrong: got %s, exp: %s\n",
 				 __FUNCTION__, GPOINTER_TO_INT (int_id), str, estr);
 			nfailed ++;
 		}
 		g_free (estr);
-		if (id != ids[2*i+1]) {
-			g_print ("Error in %s() for thread %d: sub thread's exec result is for wrong ID\n",
-				 __FUNCTION__, GPOINTER_TO_INT (int_id));
-			nfailed ++;
-		}
 #ifdef PRINT_CALLS
 		g_print ("<-- Thread %d jobID %u arg %s\n", GPOINTER_TO_INT (int_id), id, str);
 #endif
@@ -583,19 +572,13 @@ t2_main_thread_func (DummyObject *dummy)
 
 	/* pick up results */
 	for (i = 0; i < NCALLS; i++) {
-		guint id;
 		gpointer res;
 
 		g_signal_emit_by_name (dummy, "sig0", NULL); /* this signal should be ignored */
 
-		res = gda_thread_wrapper_fetch_result (wrapper, TRUE, &id, NULL);
+		res = gda_thread_wrapper_fetch_result (wrapper, TRUE, ids[i], NULL);
 		if (GPOINTER_TO_INT (res) != INT_TOKEN) {
 			g_print ("Error in %s() for thread %p: sub thread's exec result is wrong\n",
-				 __FUNCTION__, g_thread_self ());
-			nfailed ++;
-		}
-		if (id != ids[i]) {
-			g_print ("Error in %s() for thread %p: sub thread's exec result is for wrong ID\n",
 				 __FUNCTION__, g_thread_self ());
 			nfailed ++;
 		}

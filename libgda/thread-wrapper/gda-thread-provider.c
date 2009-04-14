@@ -1,5 +1,5 @@
 /* GDA Thread provider
- * Copyright (C) 2008 The GNOME Foundation.
+ * Copyright (C) 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -116,6 +116,7 @@ static GObject             *gda_thread_provider_statement_execute (GdaServerProv
 								 GType *col_types, GdaSet **last_inserted_row, 
 								 guint *task_id, GdaServerProviderExecCallback async_cb, 
 								 gpointer cb_data, GError **error);
+static gboolean             gda_thread_provider_handle_async (GdaServerProvider *provider, GdaConnection *cnc, GError **error);
 
 /* distributed transactions */
 static gboolean gda_thread_provider_xa_start    (GdaServerProvider *provider, GdaConnection *cnc, 
@@ -174,6 +175,7 @@ gda_thread_provider_class_init (GdaThreadProviderClass *klass)
 	provider_class->statement_to_sql = gda_thread_provider_statement_to_sql;
 	provider_class->statement_prepare = gda_thread_provider_statement_prepare;
 	provider_class->statement_execute = gda_thread_provider_statement_execute;
+	provider_class->handle_async = gda_thread_provider_handle_async;
 
 	provider_class->is_busy = NULL;
 	provider_class->cancel = NULL;
@@ -197,7 +199,7 @@ gda_thread_provider_init (GdaThreadProvider *thread_prv, GdaThreadProviderClass 
 }
 
 GType
-gda_thread_provider_get_type (void)
+_gda_thread_provider_get_type (void)
 {
 	static GType type = 0;
 
@@ -282,7 +284,9 @@ sub_thread_open_connection (OpenConnectionData *data, GError **error)
 						       data->auth_string, data->options, error);
 	if (cnc)
 		data->out_cnc_provider = gda_connection_get_provider (cnc);
+#ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %p\n", __FUNCTION__, cnc);
+#endif
 	return cnc;
 }
 
@@ -326,18 +330,20 @@ gda_thread_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	GdaThreadWrapper *wr;
 	GdaConnection *sub_cnc;
 	GError *error = NULL;
+	guint jid;
 	g_assert (data);
 	data->auth_string = auth_string;
 	data->options = options & (~GDA_CONNECTION_OPTIONS_THREAD_SAFE);
 	wr = gda_thread_wrapper_new ();
-	gda_thread_wrapper_execute (wr, (GdaThreadWrapperFunc) sub_thread_open_connection, data, NULL, NULL);
-	sub_cnc = gda_thread_wrapper_fetch_result (wr, TRUE, NULL, &error);
+	jid = gda_thread_wrapper_execute (wr, (GdaThreadWrapperFunc) sub_thread_open_connection, data, NULL, NULL);
+	sub_cnc = gda_thread_wrapper_fetch_result (wr, TRUE, jid, &error);
 	g_free (dsn);
 	g_free (cnc_string);
 	g_free (auth_string);
 	if (!sub_cnc) {
-		TO_IMPLEMENT; /* create a GdaConnectionEvent from @error using 
-				 gda_connection_add_event_string () */
+		gda_connection_add_event_string (cnc, "%s", error && error->message ? error->message : _("No detail"));
+		if (error)
+			g_error_free (error);
 		g_object_unref (wr);
 		g_free (data);
 		return FALSE;
@@ -408,7 +414,9 @@ sub_thread_close_connection (CncProvData *data, GError **error)
 	/* WARNING: function executed in sub thread! */
 	gboolean retval;
 	retval = PROV_CLASS (data->prov)->close_connection (data->prov, data->cnc);
+#ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %s\n", __FUNCTION__, retval ? "TRUE" : "FALSE");
+#endif
 	return GINT_TO_POINTER (retval ? 1 : 0);
 }
 
@@ -418,6 +426,7 @@ gda_thread_provider_close_connection (GdaServerProvider *provider, GdaConnection
 	ThreadConnectionData *cdata;
 	CncProvData wdata;
 	gpointer res;
+	guint jid;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
@@ -429,9 +438,9 @@ gda_thread_provider_close_connection (GdaServerProvider *provider, GdaConnection
 	wdata.prov = cdata->cnc_provider;
 	wdata.cnc = cdata->sub_connection;
 
-	gda_thread_wrapper_execute (cdata->wrapper, 
-				    (GdaThreadWrapperFunc) sub_thread_close_connection, &wdata, NULL, NULL);
-	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, NULL, NULL);
+	jid = gda_thread_wrapper_execute (cdata->wrapper, 
+					  (GdaThreadWrapperFunc) sub_thread_close_connection, &wdata, NULL, NULL);
+	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
 	return GPOINTER_TO_INT (res) ? TRUE : FALSE;
 }
 
@@ -447,7 +456,9 @@ sub_thread_get_server_version (CncProvData *data, GError **error)
 	/* WARNING: function executed in sub thread! */
 	const gchar *retval;
 	retval = PROV_CLASS (data->prov)->get_server_version (data->prov, data->cnc);
+#ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %s\n", __FUNCTION__, retval);
+#endif
 	return retval;
 }
 static const gchar *
@@ -455,6 +466,7 @@ gda_thread_provider_get_server_version (GdaServerProvider *provider, GdaConnecti
 {
 	ThreadConnectionData *cdata;
 	CncProvData wdata;
+	guint jid;
 
 	if (!cnc) 
 		return NULL;
@@ -469,9 +481,9 @@ gda_thread_provider_get_server_version (GdaServerProvider *provider, GdaConnecti
 	wdata.prov = cdata->cnc_provider;
 	wdata.cnc = cdata->sub_connection;
 
-	gda_thread_wrapper_execute (cdata->wrapper, 
-				    (GdaThreadWrapperFunc) sub_thread_get_server_version, &wdata, NULL, NULL);
-	return (const gchar*) gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, NULL, NULL);
+	jid = gda_thread_wrapper_execute (cdata->wrapper, 
+					  (GdaThreadWrapperFunc) sub_thread_get_server_version, &wdata, NULL, NULL);
+	return (const gchar*) gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
 }
 
 /*
@@ -485,7 +497,9 @@ sub_thread_get_database (CncProvData *data, GError **error)
 	/* WARNING: function executed in sub thread! */
 	const gchar *retval;
 	retval = PROV_CLASS (data->prov)->get_database (data->prov, data->cnc);
+#ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %s\n", __FUNCTION__, retval);
+#endif
 	return retval;
 }
 
@@ -494,6 +508,7 @@ gda_thread_provider_get_database (GdaServerProvider *provider, GdaConnection *cn
 {
 	ThreadConnectionData *cdata;
 	CncProvData wdata;
+	guint jid;
 
 	if (!cnc) 
 		return NULL;
@@ -508,9 +523,9 @@ gda_thread_provider_get_database (GdaServerProvider *provider, GdaConnection *cn
 	wdata.prov = cdata->cnc_provider;
 	wdata.cnc = cdata->sub_connection;
 
-	gda_thread_wrapper_execute (cdata->wrapper, 
-				    (GdaThreadWrapperFunc) sub_thread_get_database, &wdata, NULL, NULL);
-	return (const gchar *) gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, NULL, NULL);
+	jid = gda_thread_wrapper_execute (cdata->wrapper, 
+					  (GdaThreadWrapperFunc) sub_thread_get_database, &wdata, NULL, NULL);
+	return (const gchar *) gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
 }
 
 /*
@@ -537,7 +552,9 @@ sub_thread_supports_operation (SupportsOperationData *data, GError **error)
 	/* WARNING: function executed in sub thread! */
 	gboolean retval;
 	retval = PROV_CLASS (data->prov)->supports_operation (data->prov, data->cnc, data->type, data->options);
+#ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %s\n", __FUNCTION__, retval ? "TRUE" : "FALSE");
+#endif
 	return GINT_TO_POINTER (retval ? 1 : 0);
 }
 
@@ -548,6 +565,7 @@ gda_thread_provider_supports_operation (GdaServerProvider *provider, GdaConnecti
 	ThreadConnectionData *cdata;
 	SupportsOperationData wdata;
 	gpointer res;
+	guint jid;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
@@ -559,9 +577,9 @@ gda_thread_provider_supports_operation (GdaServerProvider *provider, GdaConnecti
 	wdata.prov = cdata->cnc_provider;
 	wdata.cnc = cdata->sub_connection;
 
-	gda_thread_wrapper_execute (cdata->wrapper, 
-				    (GdaThreadWrapperFunc) sub_thread_supports_operation, &wdata, NULL, NULL);
-	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, NULL, NULL);
+	jid = gda_thread_wrapper_execute (cdata->wrapper, 
+					  (GdaThreadWrapperFunc) sub_thread_supports_operation, &wdata, NULL, NULL);
+	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
 	return GPOINTER_TO_INT (res) ? TRUE : FALSE;
 }
 
@@ -588,7 +606,9 @@ sub_thread_create_operation (CreateOperationData *data, GError **error)
 							data->type, 
 							data->options,
 							error);
+#ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %p\n", __FUNCTION__, op);
+#endif
 	return op;
 }
 
@@ -598,6 +618,7 @@ gda_thread_provider_create_operation (GdaServerProvider *provider, GdaConnection
 {
 	ThreadConnectionData *cdata;
 	CreateOperationData wdata;
+	guint jid;
 
 	if (!cnc) {
 		g_set_error (error, 0, 0, _("A connection is required"));
@@ -615,9 +636,9 @@ gda_thread_provider_create_operation (GdaServerProvider *provider, GdaConnection
 	wdata.type = type;
 	wdata.options = options;
 
-	gda_thread_wrapper_execute (cdata->wrapper, 
-				    (GdaThreadWrapperFunc) sub_thread_create_operation, &wdata, NULL, NULL);
-	return (GdaServerOperation*) gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, NULL, error);
+	jid = gda_thread_wrapper_execute (cdata->wrapper, 
+					  (GdaThreadWrapperFunc) sub_thread_create_operation, &wdata, NULL, NULL);
+	return (GdaServerOperation*) gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, error);
 }
 
 /*
@@ -638,7 +659,9 @@ sub_thread_render_operation (RenderOperationData *data, GError **error)
 							 data->cnc,
 							 data->op, 
 							 error);
+#ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %s\n", __FUNCTION__, str);
+#endif
 	return str;
 }
 
@@ -648,6 +671,7 @@ gda_thread_provider_render_operation (GdaServerProvider *provider, GdaConnection
 {
 	ThreadConnectionData *cdata;
 	RenderOperationData wdata;
+	guint jid;
 
 	if (!cnc) {
 		g_set_error (error, 0, 0, _("A connection is required"));
@@ -664,9 +688,9 @@ gda_thread_provider_render_operation (GdaServerProvider *provider, GdaConnection
 	wdata.cnc = cdata->sub_connection;
 	wdata.op = op;
 
-	gda_thread_wrapper_execute (cdata->wrapper, 
-				    (GdaThreadWrapperFunc) sub_thread_render_operation, &wdata, NULL, NULL);
-	return (gchar*) gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, NULL, error);
+	jid = gda_thread_wrapper_execute (cdata->wrapper, 
+					  (GdaThreadWrapperFunc) sub_thread_render_operation, &wdata, NULL, NULL);
+	return (gchar*) gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, error);
 }
 
 /*
@@ -685,7 +709,9 @@ sub_thread_perform_operation (PerformOperationData *data, GError **error)
 	gboolean retval;
 	retval = PROV_CLASS (data->prov)->perform_operation (data->prov, data->cnc, data->op, 
 							     NULL, NULL, NULL, error);
+#ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %s\n", __FUNCTION__, retval ? "TRUE" : "FALSE");
+#endif
 	return GINT_TO_POINTER (retval ? 1 : 0);
 }
 
@@ -697,6 +723,7 @@ gda_thread_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 	ThreadConnectionData *cdata;
 	PerformOperationData wdata;
 	gpointer res;
+	guint jid;
 
 	/* If asynchronous connection opening is not supported, then exit now */
 	if (async_cb) {
@@ -721,9 +748,9 @@ gda_thread_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 	wdata.cnc = cdata->sub_connection;
 	wdata.op = op;
 
-	gda_thread_wrapper_execute (cdata->wrapper, 
-				    (GdaThreadWrapperFunc) sub_thread_perform_operation, &wdata, NULL, error);
-	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, NULL, NULL);
+	jid = gda_thread_wrapper_execute (cdata->wrapper, 
+					  (GdaThreadWrapperFunc) sub_thread_perform_operation, &wdata, NULL, error);
+	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
 	return GPOINTER_TO_INT (res) ? TRUE : FALSE;
 }
 
@@ -744,7 +771,9 @@ sub_thread_begin_transaction (BeginTransactionData *data, GError **error)
 	gboolean retval;
 	retval = PROV_CLASS (data->prov)->begin_transaction (data->prov, data->cnc, data->name, 
 							     data->level, error);
+#ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %s\n", __FUNCTION__, retval ? "TRUE" : "FALSE");
+#endif
 	return GINT_TO_POINTER (retval ? 1 : 0);
 }
 
@@ -756,6 +785,7 @@ gda_thread_provider_begin_transaction (GdaServerProvider *provider, GdaConnectio
 	ThreadConnectionData *cdata;
 	BeginTransactionData wdata;
 	gpointer res;
+	guint jid;
 
 	if (!cnc) {
 		g_set_error (error, 0, 0, _("A connection is required"));
@@ -774,9 +804,9 @@ gda_thread_provider_begin_transaction (GdaServerProvider *provider, GdaConnectio
 	wdata.name = name;
 	wdata.level = level;
 
-	gda_thread_wrapper_execute (cdata->wrapper, 
-				    (GdaThreadWrapperFunc) sub_thread_begin_transaction, &wdata, NULL, error);
-	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, NULL, error);
+	jid = gda_thread_wrapper_execute (cdata->wrapper, 
+					  (GdaThreadWrapperFunc) sub_thread_begin_transaction, &wdata, NULL, error);
+	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, error);
 	return GPOINTER_TO_INT (res) ? TRUE : FALSE;
 }
 
@@ -797,7 +827,9 @@ sub_thread_commit_transaction (TransactionData *data, GError **error)
 	gboolean retval;
 	retval = PROV_CLASS (data->prov)->commit_transaction (data->prov, data->cnc, data->name, 
 							      error);
+#ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %s\n", __FUNCTION__, retval ? "TRUE" : "FALSE");
+#endif
 	return GINT_TO_POINTER (retval ? 1 : 0);
 }
 
@@ -808,6 +840,7 @@ gda_thread_provider_commit_transaction (GdaServerProvider *provider, GdaConnecti
 	ThreadConnectionData *cdata;
 	TransactionData wdata;
 	gpointer res;
+	guint jid;
 
 	if (!cnc) {
 		g_set_error (error, 0, 0, _("A connection is required"));
@@ -825,9 +858,9 @@ gda_thread_provider_commit_transaction (GdaServerProvider *provider, GdaConnecti
 	wdata.cnc = cdata->sub_connection;
 	wdata.name = name;
 
-	gda_thread_wrapper_execute (cdata->wrapper, 
-				    (GdaThreadWrapperFunc) sub_thread_commit_transaction, &wdata, NULL, error);
-	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, NULL, NULL);
+	jid = gda_thread_wrapper_execute (cdata->wrapper, 
+					  (GdaThreadWrapperFunc) sub_thread_commit_transaction, &wdata, NULL, error);
+	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
 	return GPOINTER_TO_INT (res) ? TRUE : FALSE;
 }
 
@@ -841,7 +874,9 @@ sub_thread_rollback_transaction (TransactionData *data, GError **error)
 	gboolean retval;
 	retval = PROV_CLASS (data->prov)->rollback_transaction (data->prov, data->cnc, data->name, 
 								error);
+#ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %s\n", __FUNCTION__, retval ? "TRUE" : "FALSE");
+#endif
 	return GINT_TO_POINTER (retval ? 1 : 0);
 }
 
@@ -852,6 +887,7 @@ gda_thread_provider_rollback_transaction (GdaServerProvider *provider, GdaConnec
 	ThreadConnectionData *cdata;
 	TransactionData wdata;
 	gpointer res;
+	guint jid;
 
 	if (!cnc) {
 		g_set_error (error, 0, 0, _("A connection is required"));
@@ -869,9 +905,9 @@ gda_thread_provider_rollback_transaction (GdaServerProvider *provider, GdaConnec
 	wdata.cnc = cdata->sub_connection;
 	wdata.name = name;
 
-	gda_thread_wrapper_execute (cdata->wrapper, 
-				    (GdaThreadWrapperFunc) sub_thread_rollback_transaction, &wdata, NULL, error);
-	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, NULL, NULL);
+	jid = gda_thread_wrapper_execute (cdata->wrapper, 
+					  (GdaThreadWrapperFunc) sub_thread_rollback_transaction, &wdata, NULL, error);
+	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
 	return GPOINTER_TO_INT (res) ? TRUE : FALSE;
 }
 
@@ -885,7 +921,9 @@ sub_thread_add_savepoint (TransactionData *data, GError **error)
 	gboolean retval;
 	retval = PROV_CLASS (data->prov)->add_savepoint (data->prov, data->cnc, data->name, 
 							 error);
+#ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %s\n", __FUNCTION__, retval ? "TRUE" : "FALSE");
+#endif
 	return GINT_TO_POINTER (retval ? 1 : 0);
 }
 
@@ -896,6 +934,7 @@ gda_thread_provider_add_savepoint (GdaServerProvider *provider, GdaConnection *c
 	ThreadConnectionData *cdata;
 	TransactionData wdata;
 	gpointer res;
+	guint jid;
 
 	if (!cnc) {
 		g_set_error (error, 0, 0, _("A connection is required"));
@@ -913,9 +952,9 @@ gda_thread_provider_add_savepoint (GdaServerProvider *provider, GdaConnection *c
 	wdata.cnc = cdata->sub_connection;
 	wdata.name = name;
 
-	gda_thread_wrapper_execute (cdata->wrapper, 
-				    (GdaThreadWrapperFunc) sub_thread_add_savepoint, &wdata, NULL, error);
-	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, NULL, NULL);
+	jid = gda_thread_wrapper_execute (cdata->wrapper, 
+					  (GdaThreadWrapperFunc) sub_thread_add_savepoint, &wdata, NULL, error);
+	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
 	return GPOINTER_TO_INT (res) ? TRUE : FALSE;
 }
 
@@ -929,7 +968,9 @@ sub_thread_rollback_savepoint (TransactionData *data, GError **error)
 	gboolean retval;
 	retval = PROV_CLASS (data->prov)->rollback_savepoint (data->prov, data->cnc, data->name, 
 							 error);
+#ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %s\n", __FUNCTION__, retval ? "TRUE" : "FALSE");
+#endif
 	return GINT_TO_POINTER (retval ? 1 : 0);
 }
 
@@ -940,6 +981,7 @@ gda_thread_provider_rollback_savepoint (GdaServerProvider *provider, GdaConnecti
 	ThreadConnectionData *cdata;
 	TransactionData wdata;
 	gpointer res;
+	guint jid;
 
 	if (!cnc) {
 		g_set_error (error, 0, 0, _("A connection is required"));
@@ -957,9 +999,9 @@ gda_thread_provider_rollback_savepoint (GdaServerProvider *provider, GdaConnecti
 	wdata.cnc = cdata->sub_connection;
 	wdata.name = name;
 
-	gda_thread_wrapper_execute (cdata->wrapper, 
-				    (GdaThreadWrapperFunc) sub_thread_rollback_savepoint, &wdata, NULL, error);
-	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, NULL, NULL);
+	jid = gda_thread_wrapper_execute (cdata->wrapper, 
+					  (GdaThreadWrapperFunc) sub_thread_rollback_savepoint, &wdata, NULL, error);
+	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
 	return GPOINTER_TO_INT (res) ? TRUE : FALSE;
 }
 
@@ -973,7 +1015,9 @@ sub_thread_delete_savepoint (TransactionData *data, GError **error)
 	gboolean retval;
 	retval = PROV_CLASS (data->prov)->delete_savepoint (data->prov, data->cnc, data->name, 
 							 error);
+#ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %s\n", __FUNCTION__, retval ? "TRUE" : "FALSE");
+#endif
 	return GINT_TO_POINTER (retval ? 1 : 0);
 }
 
@@ -984,6 +1028,7 @@ gda_thread_provider_delete_savepoint (GdaServerProvider *provider, GdaConnection
 	ThreadConnectionData *cdata;
 	TransactionData wdata;
 	gpointer res;
+	guint jid;
 
 	if (!cnc) {
 		g_set_error (error, 0, 0, _("A connection is required"));
@@ -1001,9 +1046,9 @@ gda_thread_provider_delete_savepoint (GdaServerProvider *provider, GdaConnection
 	wdata.cnc = cdata->sub_connection;
 	wdata.name = name;
 
-	gda_thread_wrapper_execute (cdata->wrapper, 
-				    (GdaThreadWrapperFunc) sub_thread_delete_savepoint, &wdata, NULL, error);
-	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, NULL, NULL);
+	jid = gda_thread_wrapper_execute (cdata->wrapper, 
+					  (GdaThreadWrapperFunc) sub_thread_delete_savepoint, &wdata, NULL, error);
+	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
 	return GPOINTER_TO_INT (res) ? TRUE : FALSE;
 }
 
@@ -1054,7 +1099,9 @@ sub_thread_get_data_handler (GetDataHandlerData *data, GError **error)
 	/* WARNING: function executed in sub thread! */
 	GdaDataHandler *retval;
 	retval = PROV_CLASS (data->prov)->get_data_handler (data->prov, data->cnc, data->type, data->dbms_type);
+#ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %p\n", __FUNCTION__, retval);
+#endif
 	return retval;
 }
 
@@ -1065,6 +1112,7 @@ gda_thread_provider_get_data_handler (GdaServerProvider *provider, GdaConnection
 	ThreadConnectionData *cdata;
 	GetDataHandlerData wdata;
 	GdaDataHandler *res;
+	guint jid;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
@@ -1078,9 +1126,9 @@ gda_thread_provider_get_data_handler (GdaServerProvider *provider, GdaConnection
 	wdata.type = type;
 	wdata.dbms_type = dbms_type;
 
-	gda_thread_wrapper_execute (cdata->wrapper, 
-				    (GdaThreadWrapperFunc) sub_thread_get_data_handler, &wdata, NULL, NULL);
-	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, NULL, NULL);
+	jid = gda_thread_wrapper_execute (cdata->wrapper, 
+					  (GdaThreadWrapperFunc) sub_thread_get_data_handler, &wdata, NULL, NULL);
+	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
 	return res;
 }
 
@@ -1101,7 +1149,9 @@ sub_thread_get_default_dbms_type (GetDefaultDbmsTypeData *data, GError **error)
 	/* WARNING: function executed in sub thread! */
 	const gchar *retval;
 	retval = PROV_CLASS (data->prov)->get_def_dbms_type (data->prov, data->cnc, data->type);
+#ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %s\n", __FUNCTION__, retval);
+#endif
 	return retval;
 }
 
@@ -1111,6 +1161,7 @@ gda_thread_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConne
 	ThreadConnectionData *cdata;
 	GetDefaultDbmsTypeData wdata;
 	const gchar *res;
+	guint jid;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
@@ -1123,9 +1174,9 @@ gda_thread_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConne
 	wdata.cnc = cdata->sub_connection;
 	wdata.type = type;
 
-	gda_thread_wrapper_execute (cdata->wrapper, 
-				    (GdaThreadWrapperFunc) sub_thread_get_default_dbms_type, &wdata, NULL, NULL);
-	res = (const gchar *) gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, NULL, NULL);
+	jid = gda_thread_wrapper_execute (cdata->wrapper, 
+					  (GdaThreadWrapperFunc) sub_thread_get_default_dbms_type, &wdata, NULL, NULL);
+	res = (const gchar *) gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
 	return res;
 }
 
@@ -1142,7 +1193,9 @@ sub_thread_create_parser (CncProvData *data, GError **error)
 	/* WARNING: function executed in sub thread! */
 	GdaSqlParser *parser;
 	parser = PROV_CLASS (data->prov)->create_parser (data->prov, data->cnc);
+#ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %p\n", __FUNCTION__, parser);
+#endif
 	return parser;
 }
 
@@ -1151,6 +1204,7 @@ gda_thread_provider_create_parser (GdaServerProvider *provider, GdaConnection *c
 {
 	ThreadConnectionData *cdata;
 	CncProvData wdata;
+	guint jid;
 
 	if (!cnc) 
 		return NULL;
@@ -1165,9 +1219,9 @@ gda_thread_provider_create_parser (GdaServerProvider *provider, GdaConnection *c
 	wdata.prov = cdata->cnc_provider;
 	wdata.cnc = cdata->sub_connection;
 
-	gda_thread_wrapper_execute (cdata->wrapper, 
-				    (GdaThreadWrapperFunc) sub_thread_create_parser, &wdata, NULL, NULL);
-	return (GdaSqlParser *) gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, NULL, NULL);
+	jid = gda_thread_wrapper_execute (cdata->wrapper, 
+					  (GdaThreadWrapperFunc) sub_thread_create_parser, &wdata, NULL, NULL);
+	return (GdaSqlParser *) gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
 }
 
 /*
@@ -1195,7 +1249,9 @@ sub_thread_statement_to_sql (StmtToSqlData *data, GError **error)
 	const gchar *retval;
 	retval = PROV_CLASS (data->prov)->statement_to_sql (data->prov, data->cnc, data->stmt,
 							    data->params, data->flags, data->params_used, error);
+#ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %s\n", __FUNCTION__, retval);
+#endif
 	return retval;
 }
 
@@ -1206,6 +1262,7 @@ gda_thread_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection
 {
 	ThreadConnectionData *cdata;
 	StmtToSqlData wdata;
+	guint jid;
 
 	if (!cnc) 
 		return NULL;
@@ -1224,9 +1281,9 @@ gda_thread_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection
 	wdata.flags = flags;
 	wdata.params_used = params_used;
 
-	gda_thread_wrapper_execute (cdata->wrapper, 
-				    (GdaThreadWrapperFunc) sub_thread_statement_to_sql, &wdata, NULL, NULL);
-	return (gchar *) gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, NULL, NULL);
+	jid = gda_thread_wrapper_execute (cdata->wrapper, 
+					  (GdaThreadWrapperFunc) sub_thread_statement_to_sql, &wdata, NULL, NULL);
+	return (gchar *) gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
 }
 
 /*
@@ -1251,7 +1308,9 @@ sub_thread_prepare_statement (PrepareStatementData *data, GError **error)
 							     data->cnc,
 							     data->stmt, 
 							     error);
+#ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %s\n", __FUNCTION__, retval ? "TRUE" : "FALSE");
+#endif
 	return GINT_TO_POINTER (retval ? 1 : 0);
 }
 
@@ -1262,6 +1321,7 @@ gda_thread_provider_statement_prepare (GdaServerProvider *provider, GdaConnectio
 	ThreadConnectionData *cdata;
 	PrepareStatementData wdata;
 	gpointer res;
+	guint jid;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
@@ -1275,9 +1335,9 @@ gda_thread_provider_statement_prepare (GdaServerProvider *provider, GdaConnectio
 	wdata.cnc = cdata->sub_connection;
 	wdata.stmt = stmt;
 
-	gda_thread_wrapper_execute (cdata->wrapper, 
-				    (GdaThreadWrapperFunc) sub_thread_prepare_statement, &wdata, NULL, NULL);
-	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, NULL, error);
+	jid = gda_thread_wrapper_execute (cdata->wrapper, 
+					  (GdaThreadWrapperFunc) sub_thread_prepare_statement, &wdata, NULL, NULL);
+	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, error);
 	return GPOINTER_TO_INT (res) ? TRUE : FALSE;
 }
 
@@ -1322,7 +1382,9 @@ sub_thread_execute_statement (ExecuteStatementData *data, GError **error)
 							     data->last_inserted_row,
 							     NULL, NULL, NULL,
 							     error);
+#ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %p\n", __FUNCTION__, retval);
+#endif
 
 	if (GDA_IS_DATA_MODEL (retval)) {
 		/* substitute the GdaDataSelect with a GdaThreadRecordset */
@@ -1334,6 +1396,7 @@ sub_thread_execute_statement (ExecuteStatementData *data, GError **error)
 
 	return retval;
 }
+
 static GObject *
 gda_thread_provider_statement_execute (GdaServerProvider *provider, GdaConnection *cnc,
 				       GdaStatement *stmt, GdaSet *params,
@@ -1343,15 +1406,6 @@ gda_thread_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				       GdaServerProviderExecCallback async_cb, gpointer cb_data, GError **error)
 {
 	ThreadConnectionData *cdata;
-	ExecuteStatementData wdata;
-
-	/* FIXME: handle async requests */
-	if (async_cb) {
-		TO_IMPLEMENT;
-		return NULL;
-	}
-
-	GObject *res;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
@@ -1361,22 +1415,94 @@ gda_thread_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 	if (!cdata) 
 		return FALSE;
 	
-	wdata.prov = cdata->cnc_provider;
-	wdata.cnc = cdata->sub_connection;
-	wdata.stmt = stmt;
-	wdata.params = params;
-	wdata.model_usage = model_usage;
-	wdata.col_types = col_types;
-	wdata.last_inserted_row = last_inserted_row;
+	if (async_cb) {
+		ExecuteStatementData *wdata;
+		wdata = g_new0 (ExecuteStatementData, 1);
+		wdata->prov = cdata->cnc_provider;
+		wdata->cnc = cdata->sub_connection;
+		wdata->stmt = stmt;
+		wdata->params = params;
+		wdata->model_usage = model_usage;
+		wdata->col_types = col_types;
+		wdata->last_inserted_row = last_inserted_row;
+		
+		wdata->real_cnc = cnc;
+		wdata->wrapper = cdata->wrapper;
+		
+		ThreadConnectionAsyncTask *atd;
+		atd = g_new0 (ThreadConnectionAsyncTask, 1);
+		atd->async_cb = async_cb;
+		atd->cb_data = cb_data;
+		atd->jid = gda_thread_wrapper_execute (cdata->wrapper, 
+						       (GdaThreadWrapperFunc) sub_thread_execute_statement, wdata, 
+						       (GDestroyNotify) g_free, error);
+		cdata->async_tasks = g_slist_append (cdata->async_tasks, atd);
 
-	wdata.real_cnc = cnc;
-	wdata.wrapper = cdata->wrapper;
+		*task_id = atd->jid;
 
-	gda_thread_wrapper_execute (cdata->wrapper, 
-				    (GdaThreadWrapperFunc) sub_thread_execute_statement, &wdata, NULL, NULL);
-	res = (GObject*) gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, NULL, error);
+		return NULL;
+	}
+	else {
+		GObject *res;
+		ExecuteStatementData wdata;
+		guint jid;
 
-	return res;
+		wdata.prov = cdata->cnc_provider;
+		wdata.cnc = cdata->sub_connection;
+		wdata.stmt = stmt;
+		wdata.params = params;
+		wdata.model_usage = model_usage;
+		wdata.col_types = col_types;
+		wdata.last_inserted_row = last_inserted_row;
+		
+		wdata.real_cnc = cnc;
+		wdata.wrapper = cdata->wrapper;
+		
+		jid = gda_thread_wrapper_execute (cdata->wrapper, 
+						  (GdaThreadWrapperFunc) sub_thread_execute_statement, &wdata, NULL, NULL);
+		res = (GObject*) gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, error);
+
+		return res;
+	}
+}
+
+static gboolean
+gda_thread_provider_handle_async (GdaServerProvider *provider, GdaConnection *cnc, GError **error)
+{
+	ThreadConnectionData *cdata;
+	GObject *res;
+	GError *lerror = NULL;
+	ThreadConnectionAsyncTask *atd;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
+
+	cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata) 
+		return FALSE;
+
+	if (!cdata->async_tasks)
+		return TRUE;
+
+	atd = (ThreadConnectionAsyncTask*) cdata->async_tasks->data;
+	res = (GObject*) gda_thread_wrapper_fetch_result (cdata->wrapper, FALSE, atd->jid, &lerror);
+	if (res) {
+		atd->async_cb (provider, cnc, atd->jid, res, lerror, atd->cb_data);
+		if (lerror)
+			g_error_free (lerror);
+		g_object_unref (res);
+
+		_ThreadConnectionAsyncTask_free (atd);
+		cdata->async_tasks = g_slist_delete_link (cdata->async_tasks, cdata->async_tasks);
+	}
+
+	return TRUE;
+}
+
+void
+_ThreadConnectionAsyncTask_free (ThreadConnectionAsyncTask *atd)
+{
+	g_free (atd);
 }
 
 /*
@@ -1395,7 +1521,9 @@ sub_thread_xa_start (XaTransactionData *data, GError **error)
 	gboolean retval = FALSE;
 	retval = PROV_CLASS (data->prov)->xa_funcs->xa_start (data->prov, data->cnc, data->xid, 
 							      error);
+#ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %s\n", __FUNCTION__, retval ? "TRUE" : "FALSE");
+#endif
 	return GINT_TO_POINTER (retval ? 1 : 0);
 }
 
@@ -1406,6 +1534,7 @@ gda_thread_provider_xa_start (GdaServerProvider *provider, GdaConnection *cnc,
 	ThreadConnectionData *cdata;
 	XaTransactionData wdata;
 	gpointer res;
+	guint jid;
 
 	if (!cnc) {
 		g_set_error (error, 0, 0, _("A connection is required"));
@@ -1424,9 +1553,9 @@ gda_thread_provider_xa_start (GdaServerProvider *provider, GdaConnection *cnc,
 	wdata.cnc = cdata->sub_connection;
 	wdata.xid = xid;
 
-	gda_thread_wrapper_execute (cdata->wrapper, 
-				    (GdaThreadWrapperFunc) sub_thread_xa_start, &wdata, NULL, error);
-	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, NULL, NULL);
+	jid = gda_thread_wrapper_execute (cdata->wrapper, 
+					  (GdaThreadWrapperFunc) sub_thread_xa_start, &wdata, NULL, error);
+	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
 	return GPOINTER_TO_INT (res) ? TRUE : FALSE;
 }
 
@@ -1441,7 +1570,9 @@ sub_thread_xa_end (XaTransactionData *data, GError **error)
 	gboolean retval = FALSE;
 	retval = PROV_CLASS (data->prov)->xa_funcs->xa_end (data->prov, data->cnc, data->xid, 
 							    error);
+#ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %s\n", __FUNCTION__, retval ? "TRUE" : "FALSE");
+#endif
 	return GINT_TO_POINTER (retval ? 1 : 0);
 }
 
@@ -1452,6 +1583,7 @@ gda_thread_provider_xa_end (GdaServerProvider *provider, GdaConnection *cnc,
 	ThreadConnectionData *cdata;
 	XaTransactionData wdata;
 	gpointer res;
+	guint jid;
 
 	if (!cnc) {
 		g_set_error (error, 0, 0, _("A connection is required"));
@@ -1470,9 +1602,9 @@ gda_thread_provider_xa_end (GdaServerProvider *provider, GdaConnection *cnc,
 	wdata.cnc = cdata->sub_connection;
 	wdata.xid = xid;
 
-	gda_thread_wrapper_execute (cdata->wrapper, 
-				    (GdaThreadWrapperFunc) sub_thread_xa_end, &wdata, NULL, error);
-	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, NULL, NULL);
+	jid = gda_thread_wrapper_execute (cdata->wrapper, 
+					  (GdaThreadWrapperFunc) sub_thread_xa_end, &wdata, NULL, error);
+	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
 	return GPOINTER_TO_INT (res) ? TRUE : FALSE;
 }
 
@@ -1486,7 +1618,9 @@ sub_thread_xa_prepare (XaTransactionData *data, GError **error)
 	gboolean retval = FALSE;
 	retval = PROV_CLASS (data->prov)->xa_funcs->xa_prepare (data->prov, data->cnc, data->xid, 
 								error);
+#ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %s\n", __FUNCTION__, retval ? "TRUE" : "FALSE");
+#endif
 	return GINT_TO_POINTER (retval ? 1 : 0);
 }
 
@@ -1497,6 +1631,7 @@ gda_thread_provider_xa_prepare (GdaServerProvider *provider, GdaConnection *cnc,
 	ThreadConnectionData *cdata;
 	XaTransactionData wdata;
 	gpointer res;
+	guint jid;
 
 	if (!cnc) {
 		g_set_error (error, 0, 0, _("A connection is required"));
@@ -1515,9 +1650,9 @@ gda_thread_provider_xa_prepare (GdaServerProvider *provider, GdaConnection *cnc,
 	wdata.cnc = cdata->sub_connection;
 	wdata.xid = xid;
 
-	gda_thread_wrapper_execute (cdata->wrapper, 
-				    (GdaThreadWrapperFunc) sub_thread_xa_prepare, &wdata, NULL, error);
-	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, NULL, NULL);
+	jid = gda_thread_wrapper_execute (cdata->wrapper, 
+					  (GdaThreadWrapperFunc) sub_thread_xa_prepare, &wdata, NULL, error);
+	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
 	return GPOINTER_TO_INT (res) ? TRUE : FALSE;
 }
 
@@ -1532,7 +1667,9 @@ sub_thread_xa_commit (XaTransactionData *data, GError **error)
 	gboolean retval = FALSE;
 	retval = PROV_CLASS (data->prov)->xa_funcs->xa_commit (data->prov, data->cnc, data->xid, 
 								error);
+#ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %s\n", __FUNCTION__, retval ? "TRUE" : "FALSE");
+#endif
 	return GINT_TO_POINTER (retval ? 1 : 0);
 }
 
@@ -1543,6 +1680,7 @@ gda_thread_provider_xa_commit (GdaServerProvider *provider, GdaConnection *cnc,
 	ThreadConnectionData *cdata;
 	XaTransactionData wdata;
 	gpointer res;
+	guint jid;
 
 	if (!cnc) {
 		g_set_error (error, 0, 0, _("A connection is required"));
@@ -1561,9 +1699,9 @@ gda_thread_provider_xa_commit (GdaServerProvider *provider, GdaConnection *cnc,
 	wdata.cnc = cdata->sub_connection;
 	wdata.xid = xid;
 
-	gda_thread_wrapper_execute (cdata->wrapper, 
-				    (GdaThreadWrapperFunc) sub_thread_xa_commit, &wdata, NULL, error);
-	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, NULL, NULL);
+	jid = gda_thread_wrapper_execute (cdata->wrapper, 
+					  (GdaThreadWrapperFunc) sub_thread_xa_commit, &wdata, NULL, error);
+	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
 	return GPOINTER_TO_INT (res) ? TRUE : FALSE;
 }
 
@@ -1577,7 +1715,9 @@ sub_thread_xa_rollback (XaTransactionData *data, GError **error)
 	gboolean retval = FALSE;
 	retval = PROV_CLASS (data->prov)->xa_funcs->xa_rollback (data->prov, data->cnc, data->xid, 
 								error);
+#ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %s\n", __FUNCTION__, retval ? "TRUE" : "FALSE");
+#endif
 	return GINT_TO_POINTER (retval ? 1 : 0);
 }
 
@@ -1588,6 +1728,7 @@ gda_thread_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *cnc
 	ThreadConnectionData *cdata;
 	XaTransactionData wdata;
 	gpointer res;
+	guint jid;
 
 	if (!cnc) {
 		g_set_error (error, 0, 0, _("A connection is required"));
@@ -1606,9 +1747,9 @@ gda_thread_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *cnc
 	wdata.cnc = cdata->sub_connection;
 	wdata.xid = xid;
 
-	gda_thread_wrapper_execute (cdata->wrapper, 
-				    (GdaThreadWrapperFunc) sub_thread_xa_rollback, &wdata, NULL, error);
-	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, NULL, NULL);
+	jid = gda_thread_wrapper_execute (cdata->wrapper, 
+					  (GdaThreadWrapperFunc) sub_thread_xa_rollback, &wdata, NULL, error);
+	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
 	return GPOINTER_TO_INT (res) ? TRUE : FALSE;
 }
 
@@ -1623,7 +1764,9 @@ sub_thread_xa_recover (CncProvData *data, GError **error)
 	/* WARNING: function executed in sub thread! */
 	GList *retval;
 	retval = PROV_CLASS (data->prov)->xa_funcs->xa_recover (data->prov, data->cnc, error);
+#ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %p\n", __FUNCTION__, retval);
+#endif
 	return GINT_TO_POINTER (retval ? 1 : 0);
 }
 
@@ -1634,6 +1777,7 @@ gda_thread_provider_xa_recover (GdaServerProvider *provider, GdaConnection *cnc,
 	ThreadConnectionData *cdata;
 	CncProvData wdata;
 	GList *res;
+	guint jid;
 
 	if (!cnc) {
 		g_set_error (error, 0, 0, _("A connection is required"));
@@ -1650,9 +1794,9 @@ gda_thread_provider_xa_recover (GdaServerProvider *provider, GdaConnection *cnc,
 	wdata.prov = cdata->cnc_provider;
 	wdata.cnc = cdata->sub_connection;
 
-	gda_thread_wrapper_execute (cdata->wrapper, 
-				    (GdaThreadWrapperFunc) sub_thread_xa_recover, &wdata, NULL, error);
-	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, NULL, NULL);
+	jid = gda_thread_wrapper_execute (cdata->wrapper, 
+					  (GdaThreadWrapperFunc) sub_thread_xa_recover, &wdata, NULL, error);
+	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
 	return res;
 }
 
@@ -1665,7 +1809,7 @@ gda_thread_free_cnc_data (ThreadConnectionData *cdata)
 	if (!cdata)
 		return;
 
-	/*disconnect signals handlers */
+	/* disconnect signals handlers */
 	gint i;
 	for (i = 0; i < cdata->handlers_ids->len; i++) {
 		gulong hid = g_array_index (cdata->handlers_ids, gulong, i);
@@ -1677,5 +1821,11 @@ gda_thread_free_cnc_data (ThreadConnectionData *cdata)
 					 (GdaThreadWrapperVoidFunc) g_object_unref,
 					 cdata->sub_connection, NULL, NULL);
 	g_object_unref (cdata->wrapper);
+
+	/* free async data */
+	if (cdata->async_tasks) {
+		g_slist_foreach (cdata->async_tasks, (GFunc) _ThreadConnectionAsyncTask_free, NULL);
+		g_slist_free (cdata->async_tasks);
+	}
 	g_free (cdata);
 }

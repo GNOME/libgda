@@ -781,10 +781,11 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
 
 	/* try to find provider */
 	if (dsn_info->provider != NULL) {
-		GdaServerProvider *prov;
+		GdaProviderInfo *pinfo;
+		GdaServerProvider *prov = NULL;
 
-		prov = gda_config_get_provider (dsn_info->provider, error);
-		if (prov) {
+		pinfo = gda_config_get_provider_info (dsn_info->provider);
+		if (pinfo) {
 			if (options & GDA_CONNECTION_OPTIONS_THREAD_SAFE) {
 				if (!_gda_thread_wrapper_provider)
 					_gda_thread_wrapper_provider =
@@ -792,6 +793,14 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
 										   NULL));
 				prov = _gda_thread_wrapper_provider;
 			}
+			else
+				prov = gda_config_get_provider (dsn_info->provider, error);
+		}
+		else
+			g_set_error (error, GDA_CONFIG_ERROR, GDA_CONFIG_PROVIDER_NOT_FOUND_ERROR,
+				     _("No provider '%s' installed"), dsn_info->provider);
+		
+		if (prov) {
 			if (PROV_CLASS (prov)->create_connection) {
 				cnc = PROV_CLASS (prov)->create_connection (prov);
 				if (cnc) 
@@ -915,14 +924,14 @@ gda_connection_open_from_string (const gchar *provider_name, const gchar *cnc_st
 
 	/* try to find provider */
 	if (provider_name || real_provider) {
-		GdaServerProvider *prov;
+		GdaProviderInfo *pinfo;
+		GdaServerProvider *prov = NULL;
 
-		prov = gda_config_get_provider (provider_name ? provider_name : real_provider, error);
-		if (prov) {
+		pinfo = gda_config_get_provider_info (provider_name ? provider_name : real_provider);
+		if (pinfo) {
 			if (options & GDA_CONNECTION_OPTIONS_THREAD_SAFE) {
 				gchar *tmp;
-				tmp = g_strdup_printf ("%s;PROVIDER_NAME=%s",
-						       real_cnc, gda_server_provider_get_name (prov));
+				tmp = g_strdup_printf ("%s;PROVIDER_NAME=%s", real_cnc, pinfo->id);
 				g_free (real_cnc);
 				real_cnc = tmp;
 				if (!_gda_thread_wrapper_provider)
@@ -931,7 +940,14 @@ gda_connection_open_from_string (const gchar *provider_name, const gchar *cnc_st
 										   NULL));
 				prov = _gda_thread_wrapper_provider;
 			}
+			else
+				prov = gda_config_get_provider (provider_name ? provider_name : real_provider, error);
+		}
+		else
+			g_set_error (error, GDA_CONFIG_ERROR, GDA_CONFIG_PROVIDER_NOT_FOUND_ERROR,
+				     _("No provider '%s' installed"), provider_name ? provider_name : real_provider);
 
+		if (prov) {
 			if (PROV_CLASS (prov)->create_connection) {
 				cnc = PROV_CLASS (prov)->create_connection (prov);
 				if (cnc) 
@@ -1386,7 +1402,7 @@ gda_connection_add_event (GdaConnection *cnc, GdaConnectionEvent *event)
 	g_return_if_fail (cnc->priv);
 	g_return_if_fail (GDA_IS_CONNECTION_EVENT (event));
 
-	gda_connection_lock ((GdaLockable*) cnc);
+	gda_mutex_lock (cnc->priv->mutex);
 	if (debug == -1) {
 		const gchar *str;
 		debug = 0;
@@ -1437,7 +1453,7 @@ gda_connection_add_event (GdaConnection *cnc, GdaConnectionEvent *event)
 
 	if (gda_connection_event_get_event_type (event) == GDA_CONNECTION_EVENT_ERROR)
 		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[ERROR], 0, event);
-	gda_connection_unlock ((GdaLockable*) cnc);
+	gda_mutex_unlock (cnc->priv->mutex);
 }
 
 /**
@@ -1764,7 +1780,7 @@ async_stmt_exec_cb (GdaServerProvider *provider, GdaConnection *cnc, guint task_
 
 	gda_connection_lock (GDA_LOCKABLE (cnc));
 
-	i = get_task_index (cnc, task_id, &is_completed, FALSE);
+	i = get_task_index (cnc, task_id, &is_completed, TRUE);
 	if (i >= 0) {
 		CncTask *task;
 		g_assert (!is_completed);
@@ -1799,12 +1815,12 @@ async_stmt_exec_cb (GdaServerProvider *provider, GdaConnection *cnc, guint task_
 		cnc_task_unlock (task);
 
 		/* execute next waiting task if there is one */
-		while (cnc->priv->waiting_tasks->len >= 1) {
+		if (cnc->priv->waiting_tasks->len >= 1) {
 			/* execute statement now as there are no other ones to be executed */
 			GError *lerror = NULL;
 			task = CNC_TASK (g_array_index (cnc->priv->waiting_tasks, gpointer, 0));
-			task->being_processed = TRUE;
 			cnc_task_lock (task);
+			task->being_processed = TRUE;
 			PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, cnc, 
 										 task->stmt, 
 										 task->params, 
@@ -1824,9 +1840,11 @@ async_stmt_exec_cb (GdaServerProvider *provider, GdaConnection *cnc, guint task_
 			cnc_task_unlock (task);
 		}
 	}
-	g_print ("%s() called!!!\n", __FUNCTION__);
+	else
+		g_warning ("Provider called back for the execution of task %u (provider numbering) which does not exist, "
+			   "ignored.\n", task_id);
 
-	gda_connection_lock (GDA_LOCKABLE (cnc));
+	gda_connection_unlock (GDA_LOCKABLE (cnc));
 }
 
 /**
@@ -1839,14 +1857,14 @@ async_stmt_exec_cb (GdaServerProvider *provider, GdaConnection *cnc, guint task_
  * @need_last_insert_row: TRUE if the values of the last interted row must be computed
  * @error: a place to store errors, or %NULL
  *
- * This method is somilar to gda_connection_statement_execute() but is done asynchronously as this method returns
- * immediately a task ID. It's up to the caller to use gda_connection_async_fetch_result() regularly to check
+ * This method is similar to gda_connection_statement_execute() but is asynchronous as it method returns
+ * immediately with a task ID. It's up to the caller to use gda_connection_async_fetch_result() regularly to check
  * if the statement's execution is finished.
  *
  * It is possible to call the method several times to request several statements to be executed asynchronously, the
  * statements will be executed in the order in which they were requested.
  *
- * The parameters, if present, are copied and can be discaded or modified before the statement is actually executed.
+ * The parameters, if present, are copied and can be discarded or modified before the statement is actually executed.
  * The @stmt object is not copied but simply referenced (for performance reasons), and if it is modified before
  * it is actually executed, then its execution will not occur. It is however safe to call g_object_unref() on it if
  * it's not needed anymore.
@@ -1886,11 +1904,13 @@ gda_connection_async_statement_execute (GdaConnection *cnc, GdaStatement *stmt, 
 	if (cnc->priv->waiting_tasks->len == 1) {
 		/* execute statement now as there are no other ones to be executed */
 		GError *lerror = NULL;
-		task->being_processed = TRUE;
 		cnc_task_lock (task);
+		task->being_processed = TRUE;
 		PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, cnc, 
-									 task->stmt, task->params, 
-									 task->model_usage, task->col_types,
+									 task->stmt,
+									 task->params, 
+									 task->model_usage,
+									 task->col_types,
 									 &(task->last_insert_row),
 									 &(task->prov_task_id),
 									 (GdaServerProviderExecCallback) async_stmt_exec_cb, 
@@ -3580,6 +3600,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		ThreadConnectionData *cdata;
 		UpdateMetaStoreData data;
 		gpointer res;
+		guint jid;
 
 		cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (cnc);
 		if (!cdata) 
@@ -3588,9 +3609,9 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		data.cnc = cdata->sub_connection;
 		data.context = context;
 
-		gda_thread_wrapper_execute (cdata->wrapper, 
-					    (GdaThreadWrapperFunc) sub_thread_update_meta_store, &data, NULL, error);
-		res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, NULL, error);
+		jid = gda_thread_wrapper_execute (cdata->wrapper, 
+						  (GdaThreadWrapperFunc) sub_thread_update_meta_store, &data, NULL, error);
+		res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, error);
 		return GPOINTER_TO_INT (res) ? TRUE : FALSE;
 	}
 
@@ -4544,12 +4565,12 @@ prepared_stms_foreach_func (GdaStatement *gda_stmt, GdaPStmt *prepared_stmt, Gda
 static void
 statement_weak_notify_cb (GdaConnection *cnc, GdaStatement *stmt)
 {
-	gda_connection_lock ((GdaLockable*) cnc);
+	gda_mutex_lock (cnc->priv->mutex);
 
 	g_assert (cnc->priv->prepared_stmts);
 	g_hash_table_remove (cnc->priv->prepared_stmts, stmt);
 
-	gda_connection_unlock ((GdaLockable*) cnc);
+	gda_mutex_unlock (cnc->priv->mutex);
 }
 
 

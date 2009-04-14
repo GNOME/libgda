@@ -19,5 +19,6 @@ Currently the contents are:
 * in MetaStore/: simple example to show how to use and update a GdaMetaStore
 * in Tree/: simple example to show how to use the GdaTree object
 * in SqlBuilder: simple example to show how to use GdaSqlBuilder object to build various statements
+* in AsyncExec: simple example illustrating how to perform asynchronous statement execution
 
 Good luck and happy hacking!

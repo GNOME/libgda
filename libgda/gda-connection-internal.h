@@ -24,6 +24,7 @@
 #define __GDA_CONNECTION_INTERNAL_H_
 
 #include <libgda/gda-decl.h>
+#include <libgda/gda-server-provider.h>
 #include <libgda/thread-wrapper/gda-thread-wrapper.h>
 
 G_BEGIN_DECLS
@@ -35,6 +36,12 @@ G_BEGIN_DECLS
  */
 GdaConnection *_gda_open_internal_sqlite_connection (const gchar *cnc_string);
 
+typedef struct {
+	guint jid;
+	GdaServerProviderExecCallback async_cb;
+	gpointer cb_data;
+} ThreadConnectionAsyncTask;
+void _ThreadConnectionAsyncTask_free (ThreadConnectionAsyncTask *atd);
 
 /*
  * Functions dedicated to implementing a GdaConnection which uses a GdaThreadWrapper around
@@ -45,6 +52,9 @@ typedef struct {
         GdaServerProvider *cnc_provider;
         GdaThreadWrapper *wrapper;
 	GArray *handlers_ids; /* array of gulong */
+
+	/* current async. tasks */
+	GSList *async_tasks; /* list of ThreadConnectionAsyncTask pointers */
 } ThreadConnectionData; /* Per connection private data for */
 void           _gda_connection_force_transaction_status (GdaConnection *cnc, GdaConnection *wrapped_cnc);
 

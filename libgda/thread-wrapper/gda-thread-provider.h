@@ -1,9 +1,7 @@
 /* GDA Thread provider
- * Copyright (C) 1998 - 2009 The GNOME Foundation.
+ * Copyright (C) 2009 The GNOME Foundation.
  *
  * AUTHORS:
- *	Rodrigo Moya <rodrigo@gnome-db.org>
- *	Carlos Perelló Marín <carlos@gnome-db.org>
  *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
@@ -27,7 +25,7 @@
 
 #include <libgda/gda-server-provider.h>
 
-#define GDA_TYPE_THREAD_PROVIDER            (gda_thread_provider_get_type())
+#define GDA_TYPE_THREAD_PROVIDER            (_gda_thread_provider_get_type())
 #define GDA_THREAD_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_THREAD_PROVIDER, GdaThreadProvider))
 #define GDA_THREAD_PROVIDER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_THREAD_PROVIDER, GdaThreadProviderClass))
 #define GDA_IS_THREAD_PROVIDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_THREAD_PROVIDER))
@@ -50,7 +48,7 @@ struct _GdaThreadProviderClass {
 
 G_BEGIN_DECLS
 
-GType              gda_thread_provider_get_type (void) G_GNUC_CONST;
+GType              _gda_thread_provider_get_type (void) G_GNUC_CONST;
 
 G_END_DECLS
 

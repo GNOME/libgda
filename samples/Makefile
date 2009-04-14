@@ -1,5 +1,5 @@
 SHELL= /bin/sh 
-SUBDIRS = BDB DDL DirDataModel F-Spot Report SimpleExample SqlParserConsole TableCopy Virtual XSLT MetaStore Tree SqlBuilder
+SUBDIRS = BDB DDL DirDataModel F-Spot Report SimpleExample SqlParserConsole TableCopy Virtual XSLT MetaStore Tree SqlBuilder AsyncExec
 all:
 	for dir in ${SUBDIRS} ; do ( cd $$dir ; ${MAKE} ) ; done
 clean:

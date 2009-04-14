@@ -75,7 +75,7 @@ guint                  gda_thread_wrapper_execute_void      (GdaThreadWrapper *w
 							     gpointer arg, GDestroyNotify arg_destroy_func, GError **error);
 void                   gda_thread_wrapper_iterate           (GdaThreadWrapper *wrapper, gboolean may_block);
 gpointer               gda_thread_wrapper_fetch_result      (GdaThreadWrapper *wrapper, gboolean may_lock, 
-							     guint *out_id, GError **error);
+							     guint exp_id, GError **error);
 
 gint                   gda_thread_wrapper_get_waiting_size (GdaThreadWrapper *wrapper);
 

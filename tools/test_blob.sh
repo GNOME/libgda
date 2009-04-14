@@ -21,7 +21,7 @@ prefix=pg
 #prefix=sqlite
 
 rm -f EXPORT_gda_sql_c EXPORT_gda_sql_ico
-./gda-sql-4.0 ${prefix}blobs <<EOF
+./gda-sql-4.1 ${prefix}blobs <<EOF
 delete from blobs;
 .setex bl gda-sql.c
 insert into blobs (id, descr, blob) values (1, 'descr1', ##bl::GdaBlob);

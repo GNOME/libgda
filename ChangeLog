@@ -1,3 +1,34 @@
+2009-04-14  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/thread-wrapper/Makefile.am:
+	* libgda/thread-wrapper/gda-thread-blob-op.[ch]: wrapper for GdaBlobOp
+	objects
+	* libgda/thread-wrapper/gda-thread-wrapper.[ch]:
+	  - loosened locking
+	  - allow the wrapped thread to use the GdaThreadWrapper object
+	  - API change in gda_thread_wrapper_fetch_result()
+	* libgda/thread-wrapper/gda-thread-recordset.c:
+	  - use the new GdaThreadBlobOp object
+	  - adaptations to the API change in gda_thread_wrapper_fetch_result()
+	* libgda/thread-wrapper/gda-thread-provider.[ch]:
+	  - renamed gda_thread_provider_get_type() to _gda_thread_provider_get_type()
+	    to avoid exporting the symbol
+	  - implemented asynchronous execution
+	  - adaptations to the API change in gda_thread_wrapper_fetch_result()
+	* tests/multi-threading/check_wrapper.c:
+	  - adaptations to the API change in gda_thread_wrapper_fetch_result()
+	* libgda/gda-connection.c:
+	  - instanciate the database provider only when really needed
+	  - loosened locking
+	* tools/test_blob.sh: adapted to version 4.1
+	* doc/C: doc. updates regarding multi-threading and asynchronous statement
+	execution
+	* Makefile.am:
+	* samples/Makefile:
+	* samples/README:
+	* samples/AsyncExec: new example about hos to use the asynchronous statement
+	execution API
+
 2009-04-07  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in:

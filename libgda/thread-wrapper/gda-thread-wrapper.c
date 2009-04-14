@@ -341,6 +341,7 @@ sub_thread_entry_point (GAsyncQueue *to_sub_thread)
 			}
 			job->shared->current_job = NULL;
 			shared_data_add_nb_waiting (job->shared, -1);
+			/*g_print ("... done job %d\n", job->job_id);*/
 			g_async_queue_push (job->reply_queue, res);
 		}
 		else
@@ -522,14 +523,14 @@ gda_thread_wrapper_execute (GdaThreadWrapper *wrapper, GdaThreadWrapperFunc func
 	g_return_val_if_fail (wrapper->priv, 0);
 	g_return_val_if_fail (func, 0);
 
-	gda_mutex_lock (wrapper->priv->mutex);
-
 	td = get_thread_data (wrapper);
 	shared_data_add_nb_waiting (td->shared, 1);
 
 	job = g_new0 (Job, 1);
 	job->type = JOB_TYPE_EXECUTE;
+	gda_mutex_lock (wrapper->priv->mutex);
 	job->job_id = wrapper->priv->next_job_id++;
+	gda_mutex_unlock (wrapper->priv->mutex);
 	job->func = func;
 	job->void_func = NULL;
 	job->arg = arg;
@@ -538,9 +539,25 @@ gda_thread_wrapper_execute (GdaThreadWrapper *wrapper, GdaThreadWrapperFunc func
 	job->shared = shared_data_ref (td->shared);
 
 	id = job->job_id;
-	gda_mutex_unlock (wrapper->priv->mutex);
+	/*g_print ("... submitted job %d\n", id);*/
 
-	g_async_queue_push (wrapper->priv->to_sub_thread, job);
+	if (g_thread_self () == wrapper->priv->sub_thread) {
+                Result *res = g_new0 (Result, 1);
+                res->job = job;
+                res->type = RESULT_TYPE_EXECUTE;
+                job->shared->current_job = job;
+                if (job->func)
+                        res->u.exe.result = job->func (job->arg, &(res->u.exe.error));
+                else {
+                        res->u.exe.result = NULL;
+                        job->void_func (job->arg, &(res->u.exe.error));
+                }
+                job->shared->current_job = NULL;
+                shared_data_add_nb_waiting (job->shared, -1);
+                g_async_queue_push (job->reply_queue, res);
+        }
+        else
+                g_async_queue_push (wrapper->priv->to_sub_thread, job);
 
 	return id;
 }
@@ -582,14 +599,14 @@ gda_thread_wrapper_execute_void (GdaThreadWrapper *wrapper, GdaThreadWrapperVoid
 	g_return_val_if_fail (wrapper->priv, 0);
 	g_return_val_if_fail (func, 0);
 
-	gda_mutex_lock (wrapper->priv->mutex);
-
 	td = get_thread_data (wrapper);
 	shared_data_add_nb_waiting (td->shared, 1);
 
 	job = g_new0 (Job, 1);
 	job->type = JOB_TYPE_EXECUTE;
+	gda_mutex_lock (wrapper->priv->mutex);
 	job->job_id = wrapper->priv->next_job_id++;
+	gda_mutex_unlock (wrapper->priv->mutex);
 	job->func = NULL;
 	job->void_func = func;
 	job->arg = arg;
@@ -598,9 +615,25 @@ gda_thread_wrapper_execute_void (GdaThreadWrapper *wrapper, GdaThreadWrapperVoid
 	job->shared = shared_data_ref (td->shared);
 
 	id = job->job_id;
-	gda_mutex_unlock (wrapper->priv->mutex);
+	/*g_print ("... submitted VOID job %d\n", id);*/
 
-	g_async_queue_push (wrapper->priv->to_sub_thread, job);
+	if (g_thread_self () == wrapper->priv->sub_thread) {
+                Result *res = g_new0 (Result, 1);
+                res->job = job;
+                res->type = RESULT_TYPE_EXECUTE;
+                job->shared->current_job = job;
+                if (job->func)
+                        res->u.exe.result = job->func (job->arg, &(res->u.exe.error));
+                else {
+                        res->u.exe.result = NULL;
+                        job->void_func (job->arg, &(res->u.exe.error));
+                }
+                job->shared->current_job = NULL;
+                shared_data_add_nb_waiting (job->shared, -1);
+                g_async_queue_push (job->reply_queue, res);
+        }
+        else
+		g_async_queue_push (wrapper->priv->to_sub_thread, job);
 
 	return id;
 }
@@ -627,11 +660,10 @@ gda_thread_wrapper_iterate (GdaThreadWrapper *wrapper, gboolean may_block)
 	g_return_if_fail (wrapper->priv);
 
 	gda_mutex_lock (wrapper->priv->mutex);
-
 	td = g_hash_table_lookup (wrapper->priv->threads_hash, g_thread_self());
+	gda_mutex_unlock (wrapper->priv->mutex);
 	if (!td) {
 		/* nothing to be done for this thread */
-		gda_mutex_unlock (wrapper->priv->mutex);
 		return;
 	}
 
@@ -667,15 +699,13 @@ gda_thread_wrapper_iterate (GdaThreadWrapper *wrapper, gboolean may_block)
 		if (do_again)
 			goto again;
 	}
-	
-	gda_mutex_unlock (wrapper->priv->mutex);
 }
 
 /**
  * gda_thread_wrapper_fetch_result
  * @wrapper: a #GdaThreadWrapper object
  * @may_lock: TRUE if this funct must lock the caller untill a result is available
- * @id: a place to store the job ID of the function which execution has finished
+ * @exp_id: ID of the job for which a result is expected
  * @error: a place to store errors, for errors which may have occurred during the execution, or %NULL
  *
  * Use this method to check if the execution of a function is finished. The function's execution must have
@@ -689,7 +719,7 @@ gda_thread_wrapper_iterate (GdaThreadWrapper *wrapper, gboolean may_block)
  * Since: 4.2
  */
 gpointer
-gda_thread_wrapper_fetch_result (GdaThreadWrapper *wrapper, gboolean may_lock, guint *out_id, GError **error)
+gda_thread_wrapper_fetch_result (GdaThreadWrapper *wrapper, gboolean may_lock, guint exp_id, GError **error)
 {
 	ThreadData *td;
 	Result *res = NULL;
@@ -697,32 +727,55 @@ gda_thread_wrapper_fetch_result (GdaThreadWrapper *wrapper, gboolean may_lock, g
 
 	g_return_val_if_fail (GDA_IS_THREAD_WRAPPER (wrapper), NULL);
 	g_return_val_if_fail (wrapper->priv, NULL);
+	g_return_val_if_fail (exp_id > 0, NULL);
 
 	gda_mutex_lock (wrapper->priv->mutex);
 	td = g_hash_table_lookup (wrapper->priv->threads_hash, g_thread_self());
+	gda_mutex_unlock (wrapper->priv->mutex);
 	if (!td) {
 		/* nothing to be done for this thread */
-		gda_mutex_unlock (wrapper->priv->mutex);
 		return NULL;
 	}
 	
-	gda_thread_wrapper_iterate (wrapper, may_lock);
-	if (td->results) {
-		res = RESULT (td->results->data);
-		td->results = g_slist_delete_link (td->results, td->results);
-		if (!(td->results) &&
-		    (td->shared->nb_waiting == 0) &&
-		    (g_async_queue_length (td->from_sub_thread) == 0) &&
-		    !td->signals_list) {
-			/* remove this ThreadData */
-			g_hash_table_remove (wrapper->priv->threads_hash, g_thread_self());
+	do {
+		if (td->results) {
+			/* see if we have the result we want */
+			GSList *list;
+			for (list = td->results; list; list = list->next) {
+				res = RESULT (list->data);
+				if (res->job->job_id == exp_id) {
+					/* found it */
+					td->results = g_slist_delete_link (td->results, list);
+					if (!(td->results) &&
+					    (td->shared->nb_waiting == 0) &&
+					    (g_async_queue_length (td->from_sub_thread) == 0) &&
+					    !td->signals_list) {
+						/* remove this ThreadData */
+						gda_mutex_lock (wrapper->priv->mutex);
+						g_hash_table_remove (wrapper->priv->threads_hash, g_thread_self());
+						gda_mutex_unlock (wrapper->priv->mutex);
+					}
+					goto out;
+				}
+			}
 		}
-	}
+		
+		if (may_lock) 
+			gda_thread_wrapper_iterate (wrapper, TRUE);
+		else {
+			gint len;
+			len = g_slist_length (td->results);
+			gda_thread_wrapper_iterate (wrapper, FALSE);
+			if (g_slist_length (td->results) == len) {
+				res = NULL;
+				break;
+			}
+		}
+	} while (1);
 
+ out:
 	if (res) {
 		g_assert (res->type == RESULT_TYPE_EXECUTE);
-		if (out_id)
-			*out_id = res->job->job_id;
 		if (res->u.exe.error) {
 			g_propagate_error (error, res->u.exe.error);
 			res->u.exe.error = NULL;
@@ -732,7 +785,6 @@ gda_thread_wrapper_fetch_result (GdaThreadWrapper *wrapper, gboolean may_lock, g
 		result_free (res);
 	}
 
-	gda_mutex_unlock (wrapper->priv->mutex);
 	return retval;
 }
 

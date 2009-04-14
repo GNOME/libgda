@@ -34,13 +34,18 @@
     <title>Synchronous / asynchronous mode</title>
     <para>
       All the provider's commands are executed in a synchronous mode (the caller is blocked until the provider's
-      method terminates). However some virtual methods have the <parameter>task_id</parameter>, 
-      <parameter>async_cb</parameter> and <parameter>cb_data</parameter> which can be set when an asynchronous mode 
-      is required; asynchronous mode is requested if and only if the <parameter>async_cb</parameter> is not NULL.
+      method terminates). However some virtual methods have the a <parameter>task_id</parameter> parameter, 
+      an <parameter>async_cb</parameter> or <parameter>exec_cb</parameter> callback function pointer and 
+      a <parameter>cb_data</parameter> parameter which can be set when an asynchronous mode 
+      is required; asynchronous mode is requested if and only if the <parameter>async_cb</parameter> or
+      <parameter>exec_cb</parameter> parmeter is not NULL.
     </para>
     <para>
-      When an asynchronous mode is requested, the method should return a temporary result and set a task identifier
-      into the <parameter>task_id</parameter> parameter if not NULL.
+      When an asynchronous mode is requested, the method should return TRUE if it returns a boolean or NULL if it returns a
+      pointer and set a task identifier
+      into the <parameter>task_id</parameter> parameter if not NULL. The task identifier is passed again when
+      the <parameter>async_cb</parameter> or <parameter>exec_cb</parameter> callback functions are called by the
+      provider when the execution is finished.
     </para>
     <para>
       When the provider's method terminates, it then should call the function passed as <parameter>async_cb</parameter>
@@ -261,6 +266,31 @@
 	This method actually executes a query represented by a <link linkend="GdaStatement">GdaStatement</link> object. See
 	<link linkend="gda-connection-statement-execute">gda_connection_statement_execute()</link> for more information, note that
 	this method is also always the one called when any of the gda_connection_statement_execute*() methods are called.
+      </para>
+      <para>
+	A non NULL <parameter>exec_cb</parameter> parameter specifies that the user requests an asynchronous execution: the
+	function has to return the NULL value immediately (it must not be blocking), and the <parameter>task_id</parameter>
+	parameter must be set to contain a provider specific task ID.
+	The <parameter>exec_cb</parameter> parameter points to a callback function (specified by the
+	<link linkend="GdaConnection">GdaConnection</link>) which the provider has to call once the statement has been
+	executed, using the same task ID which was defined when the statement_execute() function was called, and
+	the <parameter>cb_data</parameter> specified when the statement_execute() function was called.
+      </para>
+      <para>
+	Note that if an asynchronous execution is requested, then the <parameter>stmt</parameter>, <parameter>params</parameter>,
+	<parameter>col_types</parameter>, <parameter>last_inserted_row</parameter>, and <parameter>cb_data</parameter>
+	parameters are supposed to exist and not be altered during the time the statement is executed (the
+	<link linkend="GdaConnection">GdaConnection</link> ensures this) which means it's not necessary to make copies
+	of them during the execution.
+      </para>
+    </sect2>
+    <sect2>
+      <title>handle_async()</title>
+      <para>
+	This method, if implemented, is called to give the database provider a chance to execute some code in case an
+	asynchronous statement's execution has been requested. Often providers will send some data over the network to the
+	database server when the statement_execute() is called, and implement this virtual function as a way to get
+	some data from the database server to see if the execution is terminated.
       </para>
     </sect2>
   </sect1>
