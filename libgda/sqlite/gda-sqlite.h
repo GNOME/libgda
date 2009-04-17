@@ -44,8 +44,6 @@ typedef struct {
 	sqlite3      *connection;
 	gchar        *file;
 	GHashTable   *types; /* key = type name, value = GType */
-	GdaDataModel *functions_model;
-	GdaDataModel *aggregates_model;
 } SqliteConnectionData;
 
 /* 

@@ -54,10 +54,6 @@
 
 #define FILE_EXTENSION ".db"
 static GStaticRecMutex cnc_mutex = G_STATIC_REC_MUTEX_INIT;
-#ifdef HAVE_SQLITE
-static SqliteConnectionData *opening_cdata = NULL;
-static GHashTable *db_connections_hash = NULL;
-#endif
 
 /* TMP */
 typedef struct {
@@ -495,149 +491,6 @@ gda_sqlite_provider_get_version (GdaServerProvider *provider)
 	return PACKAGE_VERSION;
 }
 
-#ifndef G_OS_WIN32
-#ifdef HAVE_SQLITE
-static void
-add_g_list_row (gpointer data, GdaDataModelArray *recset)
-{
-        GList *rowlist = data;
-        GError *error = NULL;
-        if (gda_data_model_append_values (GDA_DATA_MODEL (recset), rowlist, &error) < 0) {
-                g_warning ("Data model append error: %s\n", error && error->message ? error->message : "no detail");
-                g_error_free (error);
-        }
-        g_list_foreach (rowlist, (GFunc) gda_value_free, NULL);
-        g_list_free (rowlist);
-}
-
-int sqlite3CreateFunc (sqlite3 *db, const char *name, int nArg, int eTextRep, void *data,
-		       void (*xFunc)(sqlite3_context*,int,sqlite3_value **),
-		       void (*xStep)(sqlite3_context*,int,sqlite3_value **), 
-		       void (*xFinal)(sqlite3_context*))
-{
-	SqliteConnectionData *cdata = NULL;
-	gboolean is_func = FALSE;
-	gboolean is_agg = FALSE;
-	GdaDataModelArray *recset = NULL;
-
-	static int (*func) (sqlite3 *, const char *, int, int, void *,
-			    void (*)(sqlite3_context*,int,sqlite3_value **),
-			    void (*)(sqlite3_context*,int,sqlite3_value **), void (*)(sqlite3_context*)) = NULL;
-
-	if (!func)
-		func = (int (*) (sqlite3 *, const char *, int, int, void *,
-				 void (*)(sqlite3_context*,int,sqlite3_value **),
-				 void (*)(sqlite3_context*,int,sqlite3_value **), 
-				 void (*)(sqlite3_context*))) dlsym (RTLD_NEXT, "sqlite3CreateFunc");
-
-	/* try to find which SqliteConnectionData this concerns */
-	if (db_connections_hash) 
-		cdata = g_hash_table_lookup (db_connections_hash, db);
-	if (!cdata)
-		cdata = opening_cdata;
-	if (!cdata)
-		return func (db, name, nArg, eTextRep, data, xFunc, xStep, xFinal);
-
-	if (xFunc) {
-		/* It's a function */
-		recset = (GdaDataModelArray *) cdata->functions_model;
-		if (!recset) {
-			recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new, 3);
-			gda_column_set_description (0, "name");
-			gda_column_set_name (0, "name");
-			gda_column_set_g_type (0, G_TYPE_STRING);
-			gda_column_set_description (1, "nargs");
-			gda_column_set_name (1, "nargs");
-			gda_column_set_g_type (1, G_TYPE_INT);
-			gda_column_set_description (2, "specificname");
-			gda_column_set_name (2, "specificname");
-			gda_column_set_g_type (2, G_TYPE_STRING);
-			cdata->functions_model = (GdaDataModel *) recset;
-		}
-		is_func = TRUE;
-	}
-	else if (xStep && xFinal) {
-		/* It's an aggregate */
-		recset = (GdaDataModelArray *) cdata->aggregates_model;
-		if (!recset) {
-			recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new, 3);
-			gda_column_set_description (0, "name");
-			gda_column_set_name (0, "name");
-			gda_column_set_g_type (0, G_TYPE_STRING);
-			gda_column_set_description (1, "nargs");
-			gda_column_set_name (1, "nargs");
-			gda_column_set_g_type (1, G_TYPE_INT);
-			gda_column_set_description (2, "specificname");
-			gda_column_set_name (2, "specificname");
-			gda_column_set_g_type (2, G_TYPE_STRING);
-			cdata->functions_model = (GdaDataModel *) recset;
-			cdata->aggregates_model = (GdaDataModel *) recset;
-		}
-		is_agg = TRUE;
-	}
-	else if (!xFunc && !xStep && !xFinal) {
-		/* remove function or aggregate definition */
-		GSList *values;
-		GValue *value;
-		gint cols_index [] = {0};
-		gint row;
-
-		g_value_set_string (value = gda_value_new (G_TYPE_STRING), name);
-		values = g_slist_prepend (NULL, value);
-		
-		if (cdata->functions_model) {
-			row = gda_data_model_get_row_from_values (cdata->functions_model, values, cols_index);
-			if (row >= 0) {
-				g_object_set (G_OBJECT (cdata->functions_model), "read-only", FALSE, NULL);
-				g_assert (gda_data_model_remove_row (cdata->functions_model, row, NULL));
-				g_object_set (G_OBJECT (cdata->functions_model), "read-only", TRUE, NULL);
-			}
-		}
-		if (cdata->aggregates_model) {
-			row = gda_data_model_get_row_from_values (cdata->aggregates_model, values, cols_index);
-			if (row >= 0) {
-				g_object_set (G_OBJECT (cdata->aggregates_model), "read-only", FALSE, NULL);
-				g_assert (gda_data_model_remove_row (cdata->aggregates_model, row, NULL));
-				g_object_set (G_OBJECT (cdata->aggregates_model), "read-only", TRUE, NULL);
-			}
-		}
-
-		gda_value_free (value);
-		g_slist_free (values);
-	}
-
-	if (is_func || is_agg) {
-		gchar *str;
-		GValue *value;
-		GList *rowlist = NULL;
-		
-		/* 'unlock' the data model */
-		g_object_set (G_OBJECT (recset), "read-only", FALSE, NULL);
-
-		/* name */
-		g_value_set_string (value = gda_value_new (G_TYPE_STRING), name);
-		rowlist = g_list_append (rowlist, value);
-
-		/* Number of args */
-		g_value_set_int (value = gda_value_new (G_TYPE_INT), nArg);
-		rowlist = g_list_append (rowlist, value);			
-				
-		/* specific name */
-		str = g_strdup_printf ("%s_%d_%d", name, nArg, eTextRep);
-		g_value_take_string (value = gda_value_new (G_TYPE_STRING), str);
-		rowlist = g_list_append (rowlist, value);
-								
-		add_g_list_row ((gpointer) rowlist, recset);
-
-		/* 'lock' the data model */
-		g_object_set (G_OBJECT (recset), "read-only", TRUE, NULL);
-	}
-
-	return func (db, name, nArg, eTextRep, data, xFunc, xStep, xFinal);
-}
-#endif
-#endif
-
 /* 
  * Open connection request
  */
@@ -752,10 +605,6 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 
 	cdata = g_new0 (SqliteConnectionData, 1);
 
-#ifdef HAVE_SQLITE
-	opening_cdata = cdata;
-#endif
-
 	if (filename)
 		cdata->file = filename;
 
@@ -765,9 +614,6 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 		gda_connection_add_event_string (cnc, sqlite3_errmsg (cdata->connection));
 		gda_sqlite_free_cnc_data (cdata);
 			
-#ifdef HAVE_SQLITE
-		opening_cdata = NULL;
-#endif
 		g_static_rec_mutex_unlock (&cnc_mutex);
 		return FALSE;
 	}
@@ -816,9 +662,6 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 			sqlite3_free (errmsg);
 			gda_sqlite_free_cnc_data (cdata);
 			gda_connection_internal_set_provider_data (cnc, NULL, (GDestroyNotify) gda_sqlite_free_cnc_data);
-#ifdef HAVE_SQLITE
-			opening_cdata = NULL;
-#endif
 			g_static_rec_mutex_unlock (&cnc_mutex);
 			return FALSE;
 		}
@@ -835,21 +678,11 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 			if (res != SQLITE_OK) {
 				gda_sqlite_free_cnc_data (cdata);
 				gda_connection_internal_set_provider_data (cnc, NULL, (GDestroyNotify) gda_sqlite_free_cnc_data);
-#ifdef HAVE_SQLITE
-				opening_cdata = NULL;
-#endif
 				g_static_rec_mutex_unlock (&cnc_mutex);
 				return FALSE;
 			}
 		}
 	}
-
-#ifdef HAVE_SQLITE
-	/* add the (cdata->connection, cdata) to db_connections_hash */
-	if (!db_connections_hash)
-		db_connections_hash = g_hash_table_new (g_direct_hash, g_direct_equal);
-	g_hash_table_insert (db_connections_hash, cdata->connection, cdata);
-#endif
 	
 	/* Note: we don't need to set the thread owner because as stating with SQLite version 3.6.0
 	 * connections and prepared statement can be shared by threads */
@@ -2701,22 +2534,10 @@ gda_sqlite_free_cnc_data (SqliteConnectionData *cdata)
 	if (!cdata)
 		return;
 
-#ifdef HAVE_SQLITE
-	/* remove the (cdata->connection, cdata) to db_connections_hash */
-	g_static_rec_mutex_lock (&cnc_mutex);
-	if (db_connections_hash && cdata->connection)
-		g_hash_table_remove (db_connections_hash, cdata->connection);
-	g_static_rec_mutex_unlock (&cnc_mutex);
-#endif
-
 	if (cdata->connection) 
 		sqlite3_close (cdata->connection);
 	g_free (cdata->file);
 	if (cdata->types)
 		g_hash_table_destroy (cdata->types);
-	if (cdata->aggregates_model) 
-		g_object_unref (cdata->aggregates_model);
-	if (cdata->functions_model) 
-		g_object_unref (cdata->functions_model);
 	g_free (cdata);
 }

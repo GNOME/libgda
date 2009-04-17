@@ -2038,124 +2038,62 @@ _gda_sqlite_meta_routines (GdaServerProvider *prov, GdaConnection *cnc,
 			   const GValue *routine_catalog, const GValue *routine_schema, 
 			   const GValue *routine_name_n)
 {
-	SqliteConnectionData *cdata;
 	gboolean retval = TRUE;
+	
+#ifndef HAVE_SQLITE
+	/* get list of procedures */
+	SqliteConnectionData *cdata;
+	GdaDataModel *tmpmodel, *mod_model;
+	gint i, nrows;
 
 	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata)
 		return FALSE;
+
+	tmpmodel = (GdaDataModel *) gda_connection_statement_execute (cnc, internal_stmt[I_PRAGMA_PROCLIST],
+								      NULL, GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
+								      NULL, error);
+	if (!tmpmodel)
+		return FALSE;
 	
-	if (cdata->functions_model) {
-		/* use cdata->functions_model and cdata->aggregates_model */
-		GdaDataModel *mod_model;
-		mod_model = gda_meta_store_create_modify_data_model (store, context->table_name);
-		g_assert (mod_model);
-		
-		if (cdata->functions_model) {
-			gint i, nrows;
-			for (i = 0; i < nrows; i++) {
-				const GValue *cv0, *cv2, *cv3;
-				cv0 = gda_data_model_get_value_at (cdata->functions_model, 0, i, error);
-				if (!cv0) {
-					retval = FALSE;
-					break;
-				}
-				cv2 = gda_data_model_get_value_at (cdata->functions_model, 1, i, error);
-				if (!cv2) {
-					retval = FALSE;
-					break;
-				}
-				cv3 = gda_data_model_get_value_at (cdata->functions_model, 2, i, error);
-				if (!cv3) {
-					retval = FALSE;
-					break;
-				}
-				if ((!routine_name_n || (routine_name_n && !gda_value_compare (routine_name_n, cv0)))
-				    && ! fill_routines (mod_model, cv0, false_value, cv2, cv3, error)) {
-					retval = FALSE;
-					break;
-				}
-			}
+	mod_model = gda_meta_store_create_modify_data_model (store, context->table_name);
+	g_assert (mod_model);
+	
+	nrows = gda_data_model_get_n_rows (tmpmodel);
+	for (i = 0; i < nrows; i++) {
+		const GValue *cv0, *cv1, *cv2, *cv3;
+		cv0 = gda_data_model_get_value_at (tmpmodel, 0, i, error);
+		if (!cv0) {
+			retval = FALSE;
+			break;
 		}
-		if (cdata->aggregates_model) {
-			gint i, nrows;
-			for (i = 0; i < nrows; i++) {
-				const GValue *cv0, *cv2, *cv3;
-				cv0 = gda_data_model_get_value_at (cdata->aggregates_model, 0, i, error);
-				if (!cv0) {
-					retval = FALSE;
-					break;
-				}
-				cv2 = gda_data_model_get_value_at (cdata->aggregates_model, 1, i, error);
-				if (!cv2) {
-					retval = FALSE;
-					break;
-				}
-				cv3 = gda_data_model_get_value_at (cdata->aggregates_model, 2, i, error);
-				if (!cv3) {
-					retval = FALSE;
-					break;
-				}
-				if ((!routine_name_n || (routine_name_n && !gda_value_compare (routine_name_n, cv0)))
-				    && ! fill_routines (mod_model, cv0, true_value, cv2, cv3, error)) {
-					retval = FALSE;
-					break;
-				}
-			}
+		cv1 = gda_data_model_get_value_at (tmpmodel, 1, i, error);
+		if (!cv1) {
+			retval = FALSE;
+			break;
 		}
-
-		if (retval)
-			retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
-		g_object_unref (mod_model);
+		cv2 = gda_data_model_get_value_at (tmpmodel, 2, i, error);
+		if (!cv2) {
+			retval = FALSE;
+			break;
+		}
+		cv3 = gda_data_model_get_value_at (tmpmodel, 3, i, error);
+		if (!cv3) {
+			retval = FALSE;
+			break;
+		}
+		if ((!routine_name_n || (routine_name_n && !gda_value_compare (routine_name_n, cv0)))
+		    && ! fill_routines (mod_model, cv0, cv1, cv2, cv3, error)) {
+			retval = FALSE;
+			break;
+		}
 	}
-	else {
-		/* get list of procedures */
-		GdaDataModel *tmpmodel, *mod_model;
-		gint i, nrows;
-		tmpmodel = (GdaDataModel *) gda_connection_statement_execute (cnc, internal_stmt[I_PRAGMA_PROCLIST],
-									      NULL, GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
-									      NULL, error);
-		if (!tmpmodel)
-			return FALSE;
-
-		mod_model = gda_meta_store_create_modify_data_model (store, context->table_name);
-		g_assert (mod_model);
-
-		nrows = gda_data_model_get_n_rows (tmpmodel);
-		for (i = 0; i < nrows; i++) {
-			const GValue *cv0, *cv1, *cv2, *cv3;
-			cv0 = gda_data_model_get_value_at (tmpmodel, 0, i, error);
-			if (!cv0) {
-				retval = FALSE;
-				break;
-			}
-			cv1 = gda_data_model_get_value_at (tmpmodel, 1, i, error);
-			if (!cv1) {
-				retval = FALSE;
-				break;
-			}
-			cv2 = gda_data_model_get_value_at (tmpmodel, 2, i, error);
-			if (!cv2) {
-				retval = FALSE;
-				break;
-			}
-			cv3 = gda_data_model_get_value_at (tmpmodel, 3, i, error);
-			if (!cv3) {
-				retval = FALSE;
-				break;
-			}
-			if ((!routine_name_n || (routine_name_n && !gda_value_compare (routine_name_n, cv0)))
-			    && ! fill_routines (mod_model, cv0, cv1, cv2, cv3, error)) {
-				retval = FALSE;
-				break;
-			}
-		}
-
-		if (retval)
-			retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
-		g_object_unref (mod_model);
-		g_object_unref (tmpmodel);
-	}
+	
+	if (retval)
+		retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
+	g_object_unref (mod_model);
+	g_object_unref (tmpmodel);
+#endif
 
 	return retval;
 }

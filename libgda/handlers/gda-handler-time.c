@@ -273,6 +273,7 @@ handler_compute_locale (GdaHandlerTime *hdl)
 
 	date = g_date_new_dmy (4, 7, 1976); /* Same date used by GLib */
 	g_date_strftime (buf, 127, "%x", date);
+	g_date_free (date);
 
 	/* 1st number */
 	ptr = buf;

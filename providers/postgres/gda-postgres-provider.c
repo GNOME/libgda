@@ -479,9 +479,8 @@ get_connection_type_list (PostgresConnectionData *cdata)
 		/* main query to fetch infos about the data types */
 		query = g_strdup_printf (
                           "SELECT t.oid, t.typname, u.usename, pg_catalog.obj_description(t.oid), t.typinput "
-			  "FROM pg_catalog.pg_type t, pg_catalog.pg_user u, pg_catalog.pg_namespace n "
-			  "WHERE t.typowner=u.usesysid "
-			  "AND n.oid = t.typnamespace "
+			  "FROM pg_catalog.pg_type t LEFT JOIN pg_catalog.pg_user u ON (t.typowner=u.usesysid), pg_catalog.pg_namespace n "
+			  "WHERE n.oid = t.typnamespace "
 			  "AND pg_catalog.pg_type_is_visible(t.oid) "
 			  /*--AND (n.nspname = 'public' OR n.nspname = 'pg_catalog')*/
 			  "AND typname !~ '^_' "
