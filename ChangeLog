@@ -1,5 +1,12 @@
 2009-04-17  Vivien Malerba <malerba@gnome-db.org>
 
+	* libgda/sqlite/gda-sqlite.h:
+	* libgda/sqlite/gda-sqlite-meta.c:
+	* libgda/sqlite/gda-sqlite-provider.c: make the SQLite
+	provider compile with a system installed SQLite
+
+2009-04-17  Vivien Malerba <malerba@gnome-db.org>
+
 	* providers/postgres/gda-postgres-provider.c: fix for bug #578748
 	* libgda/thread-wrapper/gda-thread-wrapper.c: don't attempt to create a GdaThreadWrapper
 	object if g_thread_supported() is FALSE
