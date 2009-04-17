@@ -89,13 +89,13 @@ gda_sql_builder_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expressi
 @table_name: 
 
 
-<!-- ##### FUNCTION gda_sql_builder_add_field_value ##### -->
+<!-- ##### FUNCTION gda_sql_builder_add_field ##### -->
 <para>
 
 </para>
 
 @builder: 
-@field_name: 
+@field_id: 
 @value_id: 
 
 
@@ -136,7 +136,7 @@ gda_sql_builder_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expressi
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_sql_builder_cond2 ##### -->
+<!-- ##### FUNCTION gda_sql_builder_cond ##### -->
 <para>
 
 </para>
@@ -146,6 +146,43 @@ gda_sql_builder_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expressi
 @op: 
 @op1: 
 @op2: 
+@op3: 
 @Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_builder_select_add_target ##### -->
+<para>
+
+</para>
+
+@builder: 
+@id: 
+@table_id: 
+@alias: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_builder_select_join_targets ##### -->
+<para>
+
+</para>
+
+@builder: 
+@id: 
+@left_target_id: 
+@right_target_id: 
+@join_type: 
+@join_expr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_builder_join_add_field ##### -->
+<para>
+
+</para>
+
+@builder: 
+@join_id: 
+@field_name: 
 
 
