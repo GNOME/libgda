@@ -46,6 +46,7 @@
 #include <libgda/gda-mutex.h>
 #include <libgda/gda-lockable.h>
 #include <libgda/thread-wrapper/gda-thread-provider.h>
+#include <libgda/gda-repetitive-statement.h>
 
 #define PROV_CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
 
@@ -746,6 +747,13 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
 	gchar *real_auth_string = NULL;
 
 	g_return_val_if_fail (dsn && *dsn, NULL);
+
+	if ((options & GDA_CONNECTION_OPTIONS_THREAD_SAFE) && !g_thread_supported ()) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_UNSUPPORTED_THREADS_ERROR,
+			      "%s", _("Multi threading is not supported or enabled"));
+		return NULL;
+	}
+
 	gda_dsn_split (dsn, &real_dsn, &user, &pass);
 	if (!real_dsn) {
 		g_free (user);
@@ -889,6 +897,13 @@ gda_connection_open_from_string (const gchar *provider_name, const gchar *cnc_st
 	gchar *real_auth_string = NULL;
 
 	g_return_val_if_fail (cnc_string && *cnc_string, NULL);
+
+	if ((options & GDA_CONNECTION_OPTIONS_THREAD_SAFE) && !g_thread_supported ()) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_UNSUPPORTED_THREADS_ERROR,
+			      "%s", _("Multi threading is not supported or enabled"));
+		return NULL;
+	}
+
 	gda_connection_string_split (cnc_string, &real_cnc, &real_provider, &user, &pass);
 	if (!real_cnc) {
 		g_free (user);
@@ -2433,6 +2448,81 @@ gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *
 	return model;
 }
 
+/**
+ * gda_connection_repetitive_statement_execute
+ * @cnc: a #GdaConnection
+ * @rstmt: a #GdaRepetitiveStatement object
+ * @model_usage: specifies how the returned data model will be used as a #GdaStatementModelUsage enum
+ * @col_types: an array of GType to request each returned GdaDataModel's column's GType, see gda_connection_statement_execute_select_full() for more information
+ * @stop_on_error: set to TRUE if the method has to stop on the first error.
+ * @error: a place to store errors, or %NULL
+ *
+ * Executes the statement upon which @rstmt is built. Note that as several statements can actually be executed by this
+ * method, it is recommended to be within a transaction.
+ *
+ * If @error is not %NULL and @stop_on_error is %FALSE, then it may contain the last error which occurred.
+ *
+ * Returns: a new list of #GObject pointers (see gda_connection_statement_execute() for more information about what they
+ * represent), one for each actual execution of the statement upon which @rstmt is built. If @stop_on_error is %FALSE, then
+ * the list may contain some %NULL pointers which refer to statements which failed to execute.
+ *
+ * Since: 4.2
+ */
+GSList *
+gda_connection_repetitive_statement_execute (GdaConnection *cnc, GdaRepetitiveStatement *rstmt,
+					     GdaStatementModelUsage model_usage, GType *col_types,
+					     gboolean stop_on_error, GError **error)
+{
+	GSList *sets_list, *list;
+	GSList *retlist = NULL;
+	GdaStatement *stmt;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (cnc->priv, NULL);
+	g_return_val_if_fail (cnc->priv->provider_obj, NULL);
+	g_return_val_if_fail (GDA_IS_REPETITIVE_STATEMENT (rstmt), NULL);
+	g_return_val_if_fail (PROV_CLASS (cnc->priv->provider_obj)->statement_execute, NULL);
+
+	g_object_get (rstmt, "statement", &stmt, NULL);
+	g_return_val_if_fail (stmt, NULL);
+
+	gda_connection_lock ((GdaLockable*) cnc);
+
+	if (! (model_usage & GDA_STATEMENT_MODEL_RANDOM_ACCESS) &&
+	    ! (model_usage & GDA_STATEMENT_MODEL_CURSOR_FORWARD))
+		model_usage |= GDA_STATEMENT_MODEL_RANDOM_ACCESS;
+
+	sets_list = gda_repetitive_statement_get_all_sets (rstmt);
+	for (list = sets_list; list; list = list->next) {
+		GObject *obj;
+		GError *lerror = NULL;
+		obj = PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, cnc, stmt, 
+									       GDA_SET (list->data), 
+									       model_usage, col_types, NULL, 
+									       NULL, NULL, NULL, &lerror);
+		if (!obj) {
+			if (stop_on_error)
+				break;
+			else {
+				if (error && *error) {
+					g_error_free (*error);
+					*error = NULL;
+				}
+				g_propagate_error (error, lerror);
+			}
+		}
+		else
+			retlist = g_slist_prepend (retlist, obj);	
+	}
+	g_slist_free (sets_list);
+
+	gda_connection_unlock ((GdaLockable*) cnc);
+
+	g_object_unref (stmt);
+
+	return g_slist_reverse (retlist);
+}
+
 /*
  * Forces the GdaTransactionStatus. This is reserved to connections which are thread wrappers
  *
@@ -2824,15 +2914,6 @@ check_parameters (GdaMetaContext *context, GError **error, gint nb, ...)
 static gboolean
 local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaContext *context, GError **error)
 {
-#ifdef GDA_DEBUG
-#define ASSERT_TABLE_NAME(x,y) g_assert (!strcmp ((x), (y)))
-#define WARN_METHOD_NOT_IMPLEMENTED(prov,method) g_warning ("Provider '%s' does not implement the META method '%s()', please report the error to bugzilla.gnome.org", gda_server_provider_get_name (prov), (method))
-#define WARN_META_UPDATE_FAILURE(x,method) if (!(x)) g_print ("%s (meta method => %s) ERROR: %s\n", __FUNCTION__, (method), error && *error && (*error)->message ? (*error)->message : "???")
-#else
-#define ASSERT_TABLE_NAME(x,y)
-#define WARN_METHOD_NOT_IMPLEMENTED(prov,method)
-#define WARN_META_UPDATE_FAILURE(x,method)
-#endif
 	const gchar *tname = context->table_name;
 	GdaMetaStore *store;
 	gboolean retval;
@@ -3531,21 +3612,6 @@ suggest_update_cb_downstream (GdaMetaStore *store, GdaMetaContext *suggest, Down
 	return NULL;
 }
 
-typedef struct {
-	GdaConnection  *cnc;
-	GdaMetaContext *context;
-} UpdateMetaStoreData;
-
-static gpointer
-sub_thread_update_meta_store (UpdateMetaStoreData *data, GError **error)
-{
-	/* WARNING: function executed in sub thread! */
-	gboolean retval;
-	retval = gda_connection_update_meta_store (data->cnc, data->context, error);
-	g_print ("/%s() => %s\n", __FUNCTION__, retval ? "TRUE" : "FALSE");
-	return GINT_TO_POINTER (retval ? 1 : 0);
-}
-
 /**
  * gda_connection_update_meta_store
  * @cnc: a #GdaConnection object.
@@ -3596,28 +3662,12 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 
 	gda_connection_lock ((GdaLockable*) cnc);
 
-	if (cnc->priv->is_thread_wrapper) {
-		ThreadConnectionData *cdata;
-		UpdateMetaStoreData data;
-		gpointer res;
-		guint jid;
-
-		cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (cnc);
-		if (!cdata) 
-			return FALSE;
-
-		data.cnc = cdata->sub_connection;
-		data.context = context;
-
-		jid = gda_thread_wrapper_execute (cdata->wrapper, 
-						  (GdaThreadWrapperFunc) sub_thread_update_meta_store, &data, NULL, error);
-		res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, error);
-		return GPOINTER_TO_INT (res) ? TRUE : FALSE;
-	}
-
 	/* Get or create the GdaMetaStore object */
 	store = gda_connection_get_meta_store (cnc);
 	g_assert (store);
+
+	/* unlock connection */
+	gda_connection_unlock ((GdaLockable*) cnc);
 
 	/* prepare local context */
 	GdaMetaContext lcontext;
@@ -3638,7 +3688,6 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		if (!up_templates) {
 			if (lerror) {
 				g_propagate_error (error, lerror);
-				gda_connection_unlock ((GdaLockable*) cnc);
 				return FALSE;
 			}
 		}
@@ -3646,7 +3695,6 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		if (!dn_templates) {
 			if (lerror) {
 				g_propagate_error (error, lerror);
-				gda_connection_unlock ((GdaLockable*) cnc);
 				return FALSE;
 			}
 		}
@@ -3700,7 +3748,6 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		g_slist_free (cbd.context_templates);
 		g_hash_table_destroy (cbd.context_templates_hash);
 
-		gda_connection_unlock ((GdaLockable*) cnc);
 		return retval;
 	}
 	else {
@@ -3764,7 +3811,6 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		g_assert (nb == sizeof (rmeta) / sizeof (RMeta));
 
 		if (! _gda_meta_store_begin_data_reset (store, error)) {
-			gda_connection_unlock ((GdaLockable*) cnc);
 			return FALSE;
 		}
 
@@ -3791,12 +3837,10 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 			}
 		}
 		retval = _gda_meta_store_finish_data_reset (store, error);
-		gda_connection_unlock ((GdaLockable*) cnc);
 		return retval;
 
 	onerror:
 		_gda_meta_store_cancel_data_reset (store, NULL);
-		gda_connection_unlock ((GdaLockable*) cnc);
 		return FALSE;
 	}
 }

@@ -123,6 +123,7 @@ gda_connection_statement_execute_select
 gda_connection_statement_execute_select_full
 gda_connection_statement_execute_select_fullv
 gda_connection_statement_execute_non_select
+gda_connection_repetitive_statement_execute
 gda_connection_batch_execute
 gda_connection_begin_transaction
 gda_connection_commit_transaction
@@ -1644,13 +1645,17 @@ gda_sql_builder_get_statement
 gda_sql_builder_get_sql_statement
 <SUBSECTION>
 gda_sql_builder_set_table
-gda_sql_builder_add_field_value
+gda_sql_builder_add_field
 <SUBSECTION>
 gda_sql_builder_literal
 gda_sql_builder_expr
 gda_sql_builder_param
 <SUBSECTION>
-gda_sql_builder_cond2
+gda_sql_builder_cond
+<SUBSECTION>
+gda_sql_builder_select_add_target
+gda_sql_builder_select_join_targets
+gda_sql_builder_join_add_field
 <SUBSECTION Standard>
 GDA_SQL_BUILDER
 GDA_SQL_BUILDER_GET_CLASS
@@ -1662,6 +1667,7 @@ gda_sql_builder_get_type
 <SECTION>
 <FILE>gda-thread-wrapper</FILE>
 <TITLE>GdaThreadWrapper</TITLE>
+<INCLUDE>libgda/thread-wrapper/gda-thread-wrapper.h</INCLUDE>
 GdaThreadWrapper
 gda_thread_wrapper_new
 GdaThreadWrapperFunc
@@ -1680,4 +1686,20 @@ GDA_THREAD_WRAPPER_GET_CLASS
 GDA_IS_THREAD_WRAPPER
 GDA_TYPE_THREAD_WRAPPER
 gda_thread_wrapper_get_type
+</SECTION>
+
+<SECTION>
+<FILE>gda-repetitive-statement</FILE>
+<TITLE>GdaRepetitiveStatement</TITLE>
+GdaRepetitiveStatement
+gda_repetitive_statement_new
+gda_repetitive_statement_get_template_set
+gda_repetitive_statement_get_all_sets
+gda_repetitive_statement_append_set
+<SUBSECTION Standard>
+GDA_REPETITIVE_STATEMENT
+GDA_REPETITIVE_STATEMENT_GET_CLASS
+GDA_IS_REPETITIVE_STATEMENT
+GDA_TYPE_REPETITIVE_STATEMENT
+gda_repetitive_statement_get_type
 </SECTION>

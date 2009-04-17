@@ -55,7 +55,8 @@ typedef enum {
 	GDA_CONNECTION_OPEN_ERROR,
 	GDA_CONNECTION_STATEMENT_TYPE_ERROR,
 	GDA_CONNECTION_CANT_LOCK_ERROR,
-	GDA_CONNECTION_TASK_NOT_FOUND_ERROR
+	GDA_CONNECTION_TASK_NOT_FOUND_ERROR,
+	GDA_CONNECTION_UNSUPPORTED_THREADS_ERROR
 } GdaConnectionError;
 #define GDA_CONNECTION_NONEXIST_DSN_ERROR GDA_CONNECTION_DSN_NOT_FOUND_ERROR
 
@@ -197,6 +198,12 @@ GObject             *gda_connection_async_fetch_result      (GdaConnection *cnc,
 gboolean             gda_connection_async_cancel            (GdaConnection *cnc, guint task_id, GError **error);
 
 
+/* repetitive statement */
+GSList             *gda_connection_repetitive_statement_execute (GdaConnection *cnc, GdaRepetitiveStatement *rstmt,
+								 GdaStatementModelUsage model_usage, GType *col_types,
+								 gboolean stop_on_error, GError **error);
+
+/* transactions */
 gboolean             gda_connection_begin_transaction    (GdaConnection *cnc, const gchar *name, 
 							  GdaTransactionIsolation level, GError **error);
 gboolean             gda_connection_commit_transaction   (GdaConnection *cnc, const gchar *name, GError **error);

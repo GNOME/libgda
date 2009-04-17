@@ -267,7 +267,7 @@ gda_server_provider_get_version (GdaServerProvider *provider)
 }
 
 /**
- * gda_server_provider_get_info
+ * gda_server_provider_get_name
  * @provider: a #GdaServerProvider object.
  *
  * Get the name (identifier) of the provider

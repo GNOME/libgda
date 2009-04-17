@@ -478,13 +478,15 @@ gda_thread_wrapper_get_property (GObject *object,
  *
  * Creates a new #GdaThreadWrapper object
  *
- * Returns: a new #GdaThreadWrapper object
+ * Returns: a new #GdaThreadWrapper object, or %NULL if threads are not supported/enabled
  *
  * Since: 4.2
  */
 GdaThreadWrapper *
 gda_thread_wrapper_new (void)
 {
+	if (! g_thread_supported ())
+		return NULL;
 	return (GdaThreadWrapper *) g_object_new (GDA_TYPE_THREAD_WRAPPER, NULL);
 }
 
@@ -539,7 +541,7 @@ gda_thread_wrapper_execute (GdaThreadWrapper *wrapper, GdaThreadWrapperFunc func
 	job->shared = shared_data_ref (td->shared);
 
 	id = job->job_id;
-	/*g_print ("... submitted job %d\n", id);*/
+	/* g_print ("... submitted job %d from thread %p\n", id, g_thread_self()); */
 
 	if (g_thread_self () == wrapper->priv->sub_thread) {
                 Result *res = g_new0 (Result, 1);
@@ -710,9 +712,6 @@ gda_thread_wrapper_iterate (GdaThreadWrapper *wrapper, gboolean may_block)
  *
  * Use this method to check if the execution of a function is finished. The function's execution must have
  * been requested using gda_thread_wrapper_execute().
- *
- * If @id is not %NULL, then it will contain the ID of the request if a function's execution has finished, or
- * %0 otherwise.
  *
  * Returns: the pointer returned by the execution, or %NULL if no result is available
  *

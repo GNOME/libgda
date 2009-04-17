@@ -95,6 +95,7 @@
 <!ENTITY libgda-GdaHolder SYSTEM "xml/gda-holder.xml">
 <!ENTITY libgda-GdaSet SYSTEM "xml/gda-set.xml">
 <!ENTITY libgda-GdaStatement SYSTEM "xml/gda-statement.xml">
+<!ENTITY libgda-GdaRepetitiveStatement SYSTEM "xml/gda-repetitive-statement.xml">
 <!ENTITY libgda-GdaSqlStatement SYSTEM "xml/gda-sql-statement.xml">
 <!ENTITY libgda-GdaBatch SYSTEM "xml/gda-batch.xml">
 <!ENTITY libgda-GdaSqlParser SYSTEM "xml/gda-sql-parser.xml">
@@ -545,6 +546,7 @@
       &libgda-GdaSqlParser;
       &libgda-GdaSqlBuilder;
       &libgda-GdaStatement;
+      &libgda-GdaRepetitiveStatement;
       &libgda-GdaBatch;
       &libgda-GdaHolder;
       &libgda-GdaSet;

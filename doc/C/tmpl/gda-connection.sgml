@@ -165,6 +165,7 @@ A connection to a database
 @GDA_CONNECTION_STATEMENT_TYPE_ERROR: 
 @GDA_CONNECTION_CANT_LOCK_ERROR: 
 @GDA_CONNECTION_TASK_NOT_FOUND_ERROR: 
+@GDA_CONNECTION_UNSUPPORTED_THREADS_ERROR: 
 
 <!-- ##### MACRO GDA_CONNECTION_ERROR ##### -->
 <para>
@@ -340,6 +341,20 @@ A connection to a database
 @stmt: 
 @params: 
 @last_insert_row: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_repetitive_statement_execute ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@rstmt: 
+@model_usage: 
+@col_types: 
+@stop_on_error: 
 @error: 
 @Returns: 
 

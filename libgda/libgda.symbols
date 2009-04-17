@@ -148,6 +148,7 @@
 	gda_connection_open_from_string
 	gda_connection_options_get_type
 	gda_connection_perform_operation
+	gda_connection_repetitive_statement_execute
 	gda_connection_rollback_savepoint
 	gda_connection_rollback_transaction
 	gda_connection_schema_get_type
@@ -466,6 +467,11 @@
 	gda_quark_list_new
 	gda_quark_list_new_from_string
 	gda_quark_list_remove
+	gda_repetitive_statement_append_set
+	gda_repetitive_statement_get_all_sets
+	gda_repetitive_statement_get_template_set
+	gda_repetitive_statement_get_type
+	gda_repetitive_statement_new
 	gda_rfc1738_decode
 	gda_rfc1738_encode
 	gda_row_get_length

@@ -65,6 +65,7 @@ example_files = \
 	samples/XSLT/transform.c \
 	samples/MetaStore/Makefile \
 	samples/MetaStore/README \
+	samples/MetaStore/background.c \
 	samples/MetaStore/example.c \
 	samples/Tree/Makefile \
 	samples/Tree/README \

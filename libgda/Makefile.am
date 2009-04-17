@@ -62,6 +62,7 @@ gda_headers = \
 	gda-meta-struct.h \
 	gda-mutex.h \
 	gda-quark-list.h \
+	gda-repetitive-statement.h \
 	gda-row.h \
 	gda-set.h \
 	gda-server-operation.h \
@@ -131,6 +132,7 @@ libgda_sources =  \
 	gda-meta-struct-io.c \
 	gda-mutex.c \
 	gda-quark-list.c \
+	gda-repetitive-statement.c \
 	gda-row.c \
 	gda-set.c \
 	gda-server-operation.c \

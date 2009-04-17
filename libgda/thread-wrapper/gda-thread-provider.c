@@ -33,10 +33,17 @@
 #include <sql-parser/gda-sql-parser.h>
 #include <libgda/gda-connection-internal.h>
 #include "gda-thread-provider.h"
+#include "gda-thread-meta.h"
 #include "gda-thread-wrapper.h"
 #include "gda-thread-recordset.h"
 
 #define PROV_CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
+
+struct _GdaThreadProviderPrivate {
+	GHashTable *prov_wrappers; /* key = a provider name, value = a GdaThreadWrapper,
+				    * set only if the key provider has the limiting_thread member set,
+				    * because it means we must reuse the same GdaThreadWrapper */
+};
 
 /*
  * Per connection private data is defined as ThreadConnectionData
@@ -182,6 +189,48 @@ gda_thread_provider_class_init (GdaThreadProviderClass *klass)
 	provider_class->create_connection = gda_thread_provider_create_connection;
 
 	memset (&(provider_class->meta_funcs), 0, sizeof (GdaServerProviderMeta));
+	provider_class->meta_funcs._info = _gda_thread_meta__info;
+        provider_class->meta_funcs._btypes = _gda_thread_meta__btypes;
+        provider_class->meta_funcs._udt = _gda_thread_meta__udt;
+        provider_class->meta_funcs.udt = _gda_thread_meta_udt;
+        provider_class->meta_funcs._udt_cols = _gda_thread_meta__udt_cols;
+        provider_class->meta_funcs.udt_cols = _gda_thread_meta_udt_cols;
+        provider_class->meta_funcs._enums = _gda_thread_meta__enums;
+        provider_class->meta_funcs.enums = _gda_thread_meta_enums;
+        provider_class->meta_funcs._domains = _gda_thread_meta__domains;
+        provider_class->meta_funcs.domains = _gda_thread_meta_domains;
+        provider_class->meta_funcs._constraints_dom = _gda_thread_meta__constraints_dom;
+        provider_class->meta_funcs.constraints_dom = _gda_thread_meta_constraints_dom;
+        provider_class->meta_funcs._el_types = _gda_thread_meta__el_types;
+        provider_class->meta_funcs.el_types = _gda_thread_meta_el_types;
+        provider_class->meta_funcs._collations = _gda_thread_meta__collations;
+        provider_class->meta_funcs.collations = _gda_thread_meta_collations;
+        provider_class->meta_funcs._character_sets = _gda_thread_meta__character_sets;
+        provider_class->meta_funcs.character_sets = _gda_thread_meta_character_sets;
+        provider_class->meta_funcs._schemata = _gda_thread_meta__schemata;
+        provider_class->meta_funcs.schemata = _gda_thread_meta_schemata;
+        provider_class->meta_funcs._tables_views = _gda_thread_meta__tables_views;
+        provider_class->meta_funcs.tables_views = _gda_thread_meta_tables_views;
+        provider_class->meta_funcs._columns = _gda_thread_meta__columns;
+        provider_class->meta_funcs.columns = _gda_thread_meta_columns;
+        provider_class->meta_funcs._view_cols = _gda_thread_meta__view_cols;
+        provider_class->meta_funcs.view_cols = _gda_thread_meta_view_cols;
+        provider_class->meta_funcs._constraints_tab = _gda_thread_meta__constraints_tab;
+        provider_class->meta_funcs.constraints_tab = _gda_thread_meta_constraints_tab;
+        provider_class->meta_funcs._constraints_ref = _gda_thread_meta__constraints_ref;
+        provider_class->meta_funcs.constraints_ref = _gda_thread_meta_constraints_ref;
+        provider_class->meta_funcs._key_columns = _gda_thread_meta__key_columns;
+        provider_class->meta_funcs.key_columns = _gda_thread_meta_key_columns;
+        provider_class->meta_funcs._check_columns = _gda_thread_meta__check_columns;
+        provider_class->meta_funcs.check_columns = _gda_thread_meta_check_columns;
+        provider_class->meta_funcs._triggers = _gda_thread_meta__triggers;
+        provider_class->meta_funcs.triggers = _gda_thread_meta_triggers;
+        provider_class->meta_funcs._routines = _gda_thread_meta__routines;
+        provider_class->meta_funcs.routines = _gda_thread_meta_routines;
+        provider_class->meta_funcs._routine_col = _gda_thread_meta__routine_col;
+        provider_class->meta_funcs.routine_col = _gda_thread_meta_routine_col;
+        provider_class->meta_funcs._routine_par = _gda_thread_meta__routine_par;
+        provider_class->meta_funcs.routine_par = _gda_thread_meta_routine_par;
 
 	/* distributed transactions: if not supported, then provider_class->xa_funcs should be set to NULL */
 	provider_class->xa_funcs = g_new0 (GdaServerProviderXa, 1);
@@ -191,11 +240,16 @@ gda_thread_provider_class_init (GdaThreadProviderClass *klass)
 	provider_class->xa_funcs->xa_commit = gda_thread_provider_xa_commit;
 	provider_class->xa_funcs->xa_rollback = gda_thread_provider_xa_rollback;
 	provider_class->xa_funcs->xa_recover = gda_thread_provider_xa_recover;
+
+	provider_class->limiting_thread = NULL;
 }
 
 static void
 gda_thread_provider_init (GdaThreadProvider *thread_prv, GdaThreadProviderClass *klass)
 {
+	thread_prv->priv = g_new0 (GdaThreadProviderPrivate, 1);
+	thread_prv->priv->prov_wrappers = g_hash_table_new_full (g_str_hash, g_str_equal,
+								 g_free, g_object_unref);
 }
 
 GType
@@ -297,6 +351,9 @@ gda_thread_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 				     GdaQuarkList *params, GdaQuarkList *auth,
 				     guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data)
 {
+	GdaThreadWrapper *wr = NULL;
+	gboolean wr_created = FALSE;
+
 	g_return_val_if_fail (GDA_IS_THREAD_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
@@ -319,22 +376,41 @@ gda_thread_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	if (dsn) {
 		data = g_new0 (OpenConnectionData, 1);
 		data->dsn = dsn;
+		
+		GdaDsnInfo *dsninfo;
+		dsninfo = gda_config_get_dsn_info (dsn);
+		if (dsninfo)
+			wr = g_hash_table_lookup (GDA_THREAD_PROVIDER (provider)->priv->prov_wrappers,
+						  dsninfo->provider);
 	}
 	else if (cnc_string) {
 		data = g_new0 (OpenConnectionData, 1);
 		data->prov_name = gda_quark_list_find (params, "PROVIDER_NAME");
 		data->cnc_string = cnc_string;
+		wr = g_hash_table_lookup (GDA_THREAD_PROVIDER (provider)->priv->prov_wrappers,
+					  data->prov_name);
 	}
+	g_assert (data);
 	
 	/* open sub connection */
-	GdaThreadWrapper *wr;
 	GdaConnection *sub_cnc;
 	GError *error = NULL;
 	guint jid;
 	g_assert (data);
 	data->auth_string = auth_string;
 	data->options = options & (~GDA_CONNECTION_OPTIONS_THREAD_SAFE);
-	wr = gda_thread_wrapper_new ();
+
+	if (!wr) {
+		wr_created = TRUE;
+		wr = gda_thread_wrapper_new ();
+		if (!wr) {
+			gda_connection_add_event_string (cnc, "%s", _("Multi threading is not supported or enabled"));
+			g_free (data);
+			return FALSE;
+		}
+	}
+	else
+		g_object_ref (wr);
 	jid = gda_thread_wrapper_execute (wr, (GdaThreadWrapperFunc) sub_thread_open_connection, data, NULL, NULL);
 	sub_cnc = gda_thread_wrapper_fetch_result (wr, TRUE, jid, &error);
 	g_free (dsn);
@@ -358,6 +434,13 @@ gda_thread_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	g_free (data);
 	gda_connection_internal_set_provider_data (cnc, cdata, (GDestroyNotify) gda_thread_free_cnc_data);
 	setup_signals (cnc, cdata);
+
+	if (wr_created && PROV_CLASS (cdata->cnc_provider)->limiting_thread) {
+		/* keep GdaThreadWrapper for other uses */
+		g_hash_table_insert (GDA_THREAD_PROVIDER (provider)->priv->prov_wrappers,
+				     g_strdup (gda_server_provider_get_name (cdata->cnc_provider)),
+				     g_object_ref (wr));
+	}
 
 	return TRUE;
 }

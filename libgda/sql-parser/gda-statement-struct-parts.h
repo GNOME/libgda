@@ -286,7 +286,7 @@ struct _GdaSqlSelectJoin
 	GdaSqlSelectJoinType  type;
 	gint                  position; /* between a target at (pos < @position) and the one @position */
 	GdaSqlExpr           *expr;
-	GSList               *use;
+	GSList               *use; /* list of GdaSqlField pointers */
 
 	/* Padding for future expansion */
 	gpointer         _gda_reserved1;

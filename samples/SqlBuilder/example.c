@@ -15,9 +15,14 @@ main (int argc, char *argv[])
 
 	gda_sql_builder_set_table (b, "customers");
 
-	gda_sql_builder_add_field_value (b, "e", gda_sql_builder_param (b, 0, "p1", G_TYPE_STRING, FALSE));
-	gda_sql_builder_add_field_value (b, "f", gda_sql_builder_expr (b, 0, NULL, G_TYPE_INT, 15));
-	gda_sql_builder_add_field_value (b, "g", gda_sql_builder_expr (b, 0, NULL, G_TYPE_STRING, "joe"));
+	gda_sql_builder_add_field (b,
+				   gda_sql_builder_literal (b, 0, "e"),
+				   gda_sql_builder_param (b, 0, "p1", G_TYPE_STRING, FALSE));
+	gda_sql_builder_add_field (b,
+				   gda_sql_builder_literal (b, 0, "f"),
+				   gda_sql_builder_expr (b, 0, NULL, G_TYPE_INT, 15));
+	gda_sql_builder_add_field (b, gda_sql_builder_literal (b, 0, "g"),
+				   gda_sql_builder_expr (b, 0, NULL, G_TYPE_STRING, "joe"));
 	
 	render_as_sql (b);
 	g_object_unref (b);
@@ -27,19 +32,58 @@ main (int argc, char *argv[])
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_UPDATE);
 
 	gda_sql_builder_set_table (b, "products");
-	gda_sql_builder_add_field_value (b, "ref", gda_sql_builder_expr (b, 10, NULL, G_TYPE_STRING, "A0E'FESP"));
+	gda_sql_builder_add_field (b,
+				   gda_sql_builder_literal (b, 0, "ref"),
+				   gda_sql_builder_expr (b, 10, NULL, G_TYPE_STRING, "A0E'FESP"));
 	gda_sql_builder_literal (b, 1, "id");
 	gda_sql_builder_expr (b, 2, NULL, G_TYPE_INT, 14);
-	gda_sql_builder_cond2 (b, 3, GDA_SQL_OPERATOR_TYPE_EQ, 1, 2);
+	gda_sql_builder_cond (b, 3, GDA_SQL_OPERATOR_TYPE_EQ, 1, 2, 0);
 	gda_sql_builder_set_where (b, 3);
 
 	render_as_sql (b);
 
 	/* reuse the same GdaSqlBuilder object to change the WHERE condition to: WHERE id = ##theid::int */
 	gda_sql_builder_set_where (b,
-				   gda_sql_builder_cond2 (b, 0, GDA_SQL_OPERATOR_TYPE_EQ,
-							  1,
-							  gda_sql_builder_param (b, 0, "theid", G_TYPE_INT, FALSE)));
+				   gda_sql_builder_cond (b, 0, GDA_SQL_OPERATOR_TYPE_EQ,
+							 1,
+							 gda_sql_builder_param (b, 0, "theid", G_TYPE_INT, FALSE),
+							 0));
+	render_as_sql (b);
+	g_object_unref (b);
+
+	/* DELETE FROM items WHERE id = ##theid::int */
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_DELETE);
+
+	gda_sql_builder_set_table (b, "items");
+	gda_sql_builder_literal (b, 1, "id");
+	gda_sql_builder_param (b, 2, "theid", G_TYPE_INT, FALSE);
+	gda_sql_builder_cond (b, 3, GDA_SQL_OPERATOR_TYPE_EQ, 1, 2, 0);
+	gda_sql_builder_set_where (b, 3);
+
+	render_as_sql (b);
+	g_object_unref (b);
+	
+	/* SELECT c.id, name, date AS person FROM customers as c, orders */
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+	
+	gda_sql_builder_literal (b, 1, "customers");
+	gda_sql_builder_select_add_target (b, 1, 1, "c");
+	gda_sql_builder_select_add_target (b, 2,
+					   gda_sql_builder_literal (b, 0, "orders"),
+					   NULL);
+	gda_sql_builder_select_join_targets (b, 5, 1, 2, GDA_SQL_SELECT_JOIN_INNER, 0);
+
+	gda_sql_builder_add_field (b,
+				   gda_sql_builder_literal (b, 0, "c.id"), 0);
+	gda_sql_builder_add_field (b,
+				   gda_sql_builder_literal (b, 0, "name"),
+				   gda_sql_builder_literal (b, 0, "person"));
+
+	render_as_sql (b);
+
+	/* reuse the same GdaSqlBuilder object to change the INNER join's condition */
+	gda_sql_builder_join_add_field (b, 5, "id");
+
 	render_as_sql (b);
 	g_object_unref (b);
 

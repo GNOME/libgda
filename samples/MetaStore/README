@@ -5,13 +5,21 @@ Description:
 ------------
 
 The example in this directory illustrate how to get meta data information (information about
-the database's objects), and specifically the columns of some tables.
+the database's objects). There are 2 examples.
 
+example.c:
+----------
 The following is done:
 * display columns of the 'customers' table, there should be none as the meta data has not been
   yet updated
 * update the meta data for the 'customers' table, and show the columns now
 * update the meta data for all the tables, and this time show the columns of the 'products' table
+
+background.c:
+-------------
+This example executes a complete meta data update in the background (in a sub thread) using
+the GdaThreadWrapper object, while it displays some messages.
+
 
 Compiling and running:
 ----------------------
@@ -38,6 +46,26 @@ Tables' columns:
   city: gchararray
 
 Partial metastore update for all the tables...
+Tables' columns:
+  ref: gchararray
+  category: gint
+  name: gchararray
+  price: gdouble
+  wh_stored: gint
+
+
+> ./background
+Output:
+-------
+Running should produce the following output:
+
+Requesting a meta data update in the background.
+Doing some business here...
+Doing some business here...
+[...]
+Doing some business here...
+Doing some business here...
+Meta data has been updated!
 Tables' columns:
   ref: gchararray
   category: gint

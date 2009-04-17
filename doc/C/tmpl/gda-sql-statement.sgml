@@ -1271,8 +1271,8 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 @any: inheritance structure
 @type: type of join
 @position: represents a join between a target at (pos &lt; @position) and the one at @position
-@expr: joining expression
-@use: 
+@expr: joining expression, or %NULL
+@use: list of #GdaSqlField pointers to use when joining, or %NULL
 @_gda_reserved1: 
 @_gda_reserved2: 
 

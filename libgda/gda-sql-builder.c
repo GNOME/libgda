@@ -48,7 +48,6 @@ static GStaticRecMutex init_mutex = G_STATIC_REC_MUTEX_INIT;
 
 typedef struct {
 	GdaSqlAnyPart *part;
-	gboolean       to_free; /* TRUE if @part is not included in a GdaSqlStatement, and needs to be freed */
 }  SqlPart;
 
 struct _GdaSqlBuilderPrivate {
@@ -124,9 +123,14 @@ gda_sql_builder_class_init (GdaSqlBuilderClass *klass)
 static void
 any_part_free (SqlPart *part)
 {
-	if (part->to_free) {
+	switch (part->part->type) {
+	case GDA_SQL_ANY_EXPR:
+		gda_sql_expr_free ((GdaSqlExpr*) part->part);
+		break;
+	default:
 		TO_IMPLEMENT;
 	}
+
 	g_free (part);
 }
 
@@ -250,7 +254,6 @@ add_part (GdaSqlBuilder *builder, guint id, GdaSqlAnyPart *part)
 	*realid = id;
 	p = g_new0 (SqlPart, 1);
 	p->part = part;
-	p->to_free = TRUE; /* p->part not used yet in GdaSqlStatement */
 	g_hash_table_insert (builder->priv->parts_hash, realid, p);
 	return id;
 }
@@ -280,27 +283,19 @@ use_part (SqlPart *p, GdaSqlAnyPart *parent)
 	if (!p)
 		return NULL;
 
-	if (p->to_free) {
-		/* take ownership */
-		p->to_free = FALSE;
-		p->part->parent = parent;
-		return p->part;
+	/* copy */
+	GdaSqlAnyPart *anyp = NULL;
+	switch (p->part->type) {
+	case GDA_SQL_ANY_EXPR:
+		anyp = (GdaSqlAnyPart*) gda_sql_expr_copy ((GdaSqlExpr*) p->part);
+		break;
+	default:
+		TO_IMPLEMENT;
+		return NULL;
 	}
-	else {
-		/* copy */
-		GdaSqlAnyPart *anyp = NULL;
-		switch (p->part->type) {
-		case GDA_SQL_ANY_EXPR:
-			anyp = (GdaSqlAnyPart*) gda_sql_expr_copy ((GdaSqlExpr*) p->part);
-			break;
-		default:
-			TO_IMPLEMENT;
-			return NULL;
-		}
-		if (anyp)
-			anyp->parent = parent;
-		return anyp;
-	}
+	if (anyp)
+		anyp->parent = parent;
+	return anyp;
 }
 
 /**
@@ -469,52 +464,88 @@ gda_sql_builder_set_where (GdaSqlBuilder *builder, guint cond_id)
 
 
 /**
- * gda_sql_builder_add_field_value
+ * gda_sql_builder_add_field
  * @builder: a #GdaSqlBuilder object
- * @field_name: a field name
+ * @field_id: the ID of the field's name or definition
  * @value_id: the ID of the value to set the field to
  *
- * Valid only for: INSERT, UPDATE statements
+ * Valid only for: INSERT, UPDATE, SELECT statements
  *
- * Specifies that the field named @field_name will be set to the value identified by @value_id.
+ * For INSERT and UPDATE: specifies that the field named @field_name will be set to the value identified by @value_id.
+ * For SELECT: add a selected item to the statement, and if @value_id is not %0, then use it as an alias
  *
  * Since: 4.2
  */
 void
-gda_sql_builder_add_field_value (GdaSqlBuilder *builder, const gchar *field_name, guint value_id)
+gda_sql_builder_add_field (GdaSqlBuilder *builder, guint field_id, guint value_id)
 {
 	g_return_if_fail (GDA_IS_SQL_BUILDER (builder));
 	g_return_if_fail (builder->priv->main_stmt);
-	g_return_if_fail (field_name && *field_name);
-	g_return_if_fail (value_id > 0);
 
-	SqlPart *p;
-	p = get_part (builder, value_id, GDA_SQL_ANY_EXPR);
-	if (!p)
+	SqlPart *value_part, *field_part;
+	GdaSqlExpr *field_expr;
+	value_part = get_part (builder, value_id, GDA_SQL_ANY_EXPR);
+	field_part = get_part (builder, field_id, GDA_SQL_ANY_EXPR);
+	if (!field_part)
 		return;
+	field_expr = (GdaSqlExpr*) (field_part->part);
 
-	GdaSqlField *field = gda_sql_field_new (GDA_SQL_ANY_PART (builder->priv->main_stmt->contents));
-	field->field_name = g_strdup (field_name);
+	/* checks */
+	switch (builder->priv->main_stmt->stmt_type) {
+	case GDA_SQL_STATEMENT_UPDATE:
+	case GDA_SQL_STATEMENT_INSERT:
+		if (!value_part)
+			return;
+		if (!field_expr->value || (G_VALUE_TYPE (field_expr->value) !=  G_TYPE_STRING)) {
+			g_warning (_("Wrong field format"));
+			return;
+		}
+		break;
+	case GDA_SQL_STATEMENT_SELECT:
+		/* no specific check */
+		break;
+	default:
+		g_warning (_("Wrong statement type"));
+		return;
+	}
 
+	/* work */
 	switch (builder->priv->main_stmt->stmt_type) {
 	case GDA_SQL_STATEMENT_UPDATE: {
 		GdaSqlStatementUpdate *upd = (GdaSqlStatementUpdate*) builder->priv->main_stmt->contents;
+		GdaSqlField *field = gda_sql_field_new (GDA_SQL_ANY_PART (upd));
+		field->field_name = g_value_dup_string (field_expr->value);
 		upd->fields_list = g_slist_append (upd->fields_list, field);
-		upd->expr_list = g_slist_append (upd->expr_list, use_part (p, GDA_SQL_ANY_PART (upd)));
-
+		upd->expr_list = g_slist_append (upd->expr_list, use_part (value_part, GDA_SQL_ANY_PART (upd)));
 		break;
 	}
 	case GDA_SQL_STATEMENT_INSERT:{
 		GdaSqlStatementInsert *ins = (GdaSqlStatementInsert*) builder->priv->main_stmt->contents;
-		ins->fields_list = g_slist_append (ins->fields_list, field);
+		GdaSqlField *field = gda_sql_field_new (GDA_SQL_ANY_PART (ins));
+		field->field_name = g_value_dup_string (field_expr->value);
 
+		ins->fields_list = g_slist_append (ins->fields_list, field);
 		
 		if (! ins->values_list)
 			ins->values_list = g_slist_append (NULL,
-							   g_slist_append (NULL, use_part (p, GDA_SQL_ANY_PART (ins))));
+							   g_slist_append (NULL,
+							   use_part (value_part, GDA_SQL_ANY_PART (ins))));
 		else
 			ins->values_list->data = g_slist_append ((GSList*) ins->values_list->data, 
-								 use_part (p, GDA_SQL_ANY_PART (ins)));
+								 use_part (value_part, GDA_SQL_ANY_PART (ins)));
+		break;
+	}
+	case GDA_SQL_STATEMENT_SELECT: {
+		GdaSqlStatementSelect *sel = (GdaSqlStatementSelect*) builder->priv->main_stmt->contents;
+		GdaSqlSelectField *field;
+		field = gda_sql_select_field_new (GDA_SQL_ANY_PART (sel));
+		field->expr = (GdaSqlExpr*) use_part (field_part, GDA_SQL_ANY_PART (field));
+		if (value_part) {
+			GdaSqlExpr *value_expr = (GdaSqlExpr*) (value_part->part);
+			if (G_VALUE_TYPE (value_expr->value) ==  G_TYPE_STRING)
+				field->as = g_value_dup_string (value_expr->value);
+		}
+		sel->expr_list = g_slist_append (sel->expr_list, field);
 		break;
 	}
 	default:
@@ -685,30 +716,23 @@ gda_sql_builder_param (GdaSqlBuilder *builder, guint id, const gchar *param_name
 	return add_part (builder, id, (GdaSqlAnyPart *) expr);
 }
 
-guint
-gda_sql_builder_cond1 (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op, guint op1)
-{
-	TO_IMPLEMENT;
-	return 0;
-}
-
-
 /**
- * gda_sql_builder_cond2
+ * gda_sql_builder_cond
  * @builder: a #GdaSqlBuilder object
  * @id: the requested ID, or 0 if to be determined by @builder
  * @op: type of condition
  * @op1: the ID of the 1st argument (not 0)
- * @op2: the ID of the 2nd argument (not 0)
+ * @op2: the ID of the 2nd argument (may be %0 if @op needs only one operand)
+ * @op3: the ID of the 3rd argument (may be %0 if @op needs only one or two operand)
  *
- * Builds a new expression which reprenents a condition (or operation) with two operands.
+ * Builds a new expression which reprenents a condition (or operation).
  *
  * Returns: the ID of the new expression, or 0 if there was an error
  *
  * Since: 4.2
  */
 guint
-gda_sql_builder_cond2 (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op, guint op1, guint op2)
+gda_sql_builder_cond (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op, guint op1, guint op2, guint op3)
 {
 	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
 	g_return_val_if_fail (builder->priv->main_stmt, 0);
@@ -718,23 +742,211 @@ gda_sql_builder_cond2 (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op, 
 	if (!p1)
 		return 0;
 	p2 = get_part (builder, op2, GDA_SQL_ANY_EXPR);
-	if (!p2)
-		return 0;
 	
 	GdaSqlExpr *expr;
 	expr = gda_sql_expr_new (NULL);
 	expr->cond = gda_sql_operation_new (GDA_SQL_ANY_PART (expr));
 	expr->cond->operator_type = op;
 	expr->cond->operands = g_slist_append (NULL, use_part (p1, GDA_SQL_ANY_PART (expr->cond)));
-	expr->cond->operands = g_slist_append (expr->cond->operands, use_part (p2, GDA_SQL_ANY_PART (expr->cond)));
+	if (p2) {
+		SqlPart *p3;
+		expr->cond->operands = g_slist_append (expr->cond->operands,
+						       use_part (p2, GDA_SQL_ANY_PART (expr->cond)));
+		p3 = get_part (builder, op3, GDA_SQL_ANY_EXPR);
+		if (p3)
+			expr->cond->operands = g_slist_append (expr->cond->operands,
+							       use_part (p3, GDA_SQL_ANY_PART (expr->cond)));	
+	}
 
 	return add_part (builder, id, (GdaSqlAnyPart *) expr);
 }
 
+typedef struct {
+	GdaSqlSelectTarget target; /* inheritance! */
+	guint part_id; /* copied from this part ID */
+} BuildTarget;
 
+/**
+ * gda_sql_builder_select_add_target
+ * @builder: a #GdaSqlBuilder object
+ * @id: the requested ID, or 0 if to be determined by @builder
+ * @table_id: the ID of the expression holding a table reference (not %0)
+ * @alias: the alias to give to the target, or %NULL
+ *
+ * Adds a new target to a SELECT statement
+ *
+ * Returns: the ID of the new target, or 0 if there was an error
+ *
+ * Since: 4.2
+ */
 guint
-gda_sql_builder_cond3 (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op, guint op1, guint op2, guint op3)
+gda_sql_builder_select_add_target (GdaSqlBuilder *builder, guint id, guint table_id, const gchar *alias)
 {
-	TO_IMPLEMENT;
-	return 0;
+	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
+	g_return_val_if_fail (builder->priv->main_stmt, 0);
+	
+	if (builder->priv->main_stmt->stmt_type != GDA_SQL_STATEMENT_SELECT) {
+		g_warning (_("Wrong statement type"));
+		return 0;
+	}
+
+	SqlPart *p;
+	p = get_part (builder, table_id, GDA_SQL_ANY_EXPR);
+	if (!p)
+		return 0;
+	
+	BuildTarget *btarget;
+	GdaSqlStatementSelect *sel = (GdaSqlStatementSelect*) builder->priv->main_stmt->contents;
+	btarget = g_new0 (BuildTarget, 1);
+        GDA_SQL_ANY_PART(btarget)->type = GDA_SQL_ANY_SQL_SELECT_TARGET;
+        GDA_SQL_ANY_PART(btarget)->parent = GDA_SQL_ANY_PART (sel->from);
+	if (id)
+		btarget->part_id = id;
+	else
+		btarget->part_id = builder->priv->next_assigned_id --;
+	
+	((GdaSqlSelectTarget*) btarget)->expr = (GdaSqlExpr*) use_part (p, GDA_SQL_ANY_PART (btarget));
+	if (alias) 
+		((GdaSqlSelectTarget*) btarget)->as = g_strdup (alias);
+
+	/* add target to sel->from. NOTE: @btarget is NOT added to the "repository" or GdaSqlAnyPart parts
+	* like others */
+	if (!sel->from)
+		sel->from = gda_sql_select_from_new (GDA_SQL_ANY_PART (sel));
+	sel->from->targets = g_slist_append (sel->from->targets, btarget);
+
+	return btarget->part_id;
+}
+
+typedef struct {
+	GdaSqlSelectJoin join; /* inheritance! */
+	guint part_id; /* copied from this part ID */
+} BuilderJoin;
+
+/**
+ * gda_sql_builder_select_join_targets
+ * @builder: a #GdaSqlBuilder object
+ * @id: the requested ID, or 0 if to be determined by @builder
+ * @left_target_id: the ID of the left target to use (not %0)
+ * @right_target_id: the ID of the right target to use (not %0)
+ * @join_type: the type of join
+ * @join_expr: joining expression's ID, or %0
+ *
+ * Joins two targets in a SELECT statement
+ *
+ * Returns: the ID of the new join, or 0 if there was an error
+ *
+ * Since: 4.2
+ */
+guint
+gda_sql_builder_select_join_targets (GdaSqlBuilder *builder, guint id,
+				     guint left_target_id, guint right_target_id,
+				     GdaSqlSelectJoinType join_type,
+				     guint join_expr)
+{
+	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
+	g_return_val_if_fail (builder->priv->main_stmt, 0);
+	
+	if (builder->priv->main_stmt->stmt_type != GDA_SQL_STATEMENT_SELECT) {
+		g_warning (_("Wrong statement type"));
+		return 0;
+	}
+
+	/* determine join position */
+	GdaSqlStatementSelect *sel = (GdaSqlStatementSelect*) builder->priv->main_stmt->contents;
+	GSList *list;
+	gint left_pos = -1, right_pos = -1;
+	gint pos;
+	for (pos = 0, list = sel->from ? sel->from->targets : NULL;
+	     list;
+	     pos++, list = list->next) {
+		BuildTarget *btarget = (BuildTarget*) list->data;
+		if (btarget->part_id == left_target_id)
+			left_pos = pos;
+		else if (btarget->part_id == right_target_id)
+			right_pos = pos;
+		if ((left_pos != -1) && (right_pos != -1))
+			break;
+	}
+	if ((left_pos == -1) || (right_pos == -1)) {
+		g_warning (_("Unknown part ID %u"), (left_pos == -1) ? left_pos : right_pos);
+		return 0;
+	}
+	
+	if (left_pos > right_pos) {
+		TO_IMPLEMENT;
+	}
+	
+	/* create join */
+	BuilderJoin *bjoin;
+	GdaSqlSelectJoin *join;
+
+	bjoin = g_new0 (BuilderJoin, 1);
+	GDA_SQL_ANY_PART(bjoin)->type = GDA_SQL_ANY_SQL_SELECT_JOIN;
+        GDA_SQL_ANY_PART(bjoin)->parent = GDA_SQL_ANY_PART (sel->from);
+	if (id)
+		bjoin->part_id = id;
+	else
+		bjoin->part_id = builder->priv->next_assigned_id --;
+	join = (GdaSqlSelectJoin*) bjoin;
+	join->type = join_type;
+	join->position = right_pos;
+	
+	SqlPart *ep;
+	ep = get_part (builder, join_expr, GDA_SQL_ANY_EXPR);
+	if (ep)
+		join->expr = (GdaSqlExpr*) use_part (ep, GDA_SQL_ANY_PART (join));
+
+	sel->from->joins = g_slist_append (sel->from->joins, bjoin);
+
+	return bjoin->part_id;
+}
+
+/**
+ * gda_sql_builder_join_add_field
+ * @builder: a #GdaSqlBuilder object
+ * @join_id: the ID of the join to modify (not %0)
+ * @field_name: the name of the field to use in the join condition (not %NULL)
+ *
+ * Alter a joins in a SELECT statement to make its condition on the field which name
+ * is @field_name
+ *
+ * Returns: the ID of the new join, or 0 if there was an error
+ *
+ * Since: 4.2
+ */
+void
+gda_sql_builder_join_add_field (GdaSqlBuilder *builder, guint join_id, const gchar *field_name)
+{
+	g_return_if_fail (GDA_IS_SQL_BUILDER (builder));
+	g_return_if_fail (builder->priv->main_stmt);
+	g_return_if_fail (field_name);
+	
+	if (builder->priv->main_stmt->stmt_type != GDA_SQL_STATEMENT_SELECT) {
+		g_warning (_("Wrong statement type"));
+		return;
+	}
+
+	/* determine join */
+	GdaSqlStatementSelect *sel = (GdaSqlStatementSelect*) builder->priv->main_stmt->contents;
+	GdaSqlSelectJoin *join = NULL;
+	GSList *list;
+	for (list = sel->from ? sel->from->joins : NULL;
+	     list;
+	     list = list->next) {
+		BuilderJoin *bjoin = (BuilderJoin*) list->data;
+		if (bjoin->part_id == join_id) {
+			join = (GdaSqlSelectJoin*) bjoin;
+			break;
+		}
+	}
+	if (!join) {
+		g_warning (_("Unknown part ID %u"), join_id);
+		return;
+	}
+
+	GdaSqlField *field;
+	field = gda_sql_field_new (GDA_SQL_ANY_PART (join));
+	field->field_name = g_strdup (field_name);
+	join->use = g_slist_append (join->use, field);
 }

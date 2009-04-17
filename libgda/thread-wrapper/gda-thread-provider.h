@@ -33,9 +33,11 @@
 
 typedef struct _GdaThreadProvider      GdaThreadProvider;
 typedef struct _GdaThreadProviderClass GdaThreadProviderClass;
+typedef struct _GdaThreadProviderPrivate GdaThreadProviderPrivate;
 
 struct _GdaThreadProvider {
 	GdaServerProvider provider;
+	GdaThreadProviderPrivate *priv;
 };
 
 struct _GdaThreadProviderClass {

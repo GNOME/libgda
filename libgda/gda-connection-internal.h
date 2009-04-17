@@ -29,6 +29,19 @@
 
 G_BEGIN_DECLS
 
+/* 
+ * Warnings
+ */
+#ifdef GDA_DEBUG
+#define ASSERT_TABLE_NAME(x,y) g_assert (!strcmp ((x), (y)))
+#define WARN_METHOD_NOT_IMPLEMENTED(prov,method) g_warning ("Provider '%s' does not implement the META method '%s()', please report the error to bugzilla.gnome.org", gda_server_provider_get_name (prov), (method))
+#define WARN_META_UPDATE_FAILURE(x,method) if (!(x)) g_print ("%s (meta method => %s) ERROR: %s\n", __FUNCTION__, (method), error && *error && (*error)->message ? (*error)->message : "???")
+#else
+#define ASSERT_TABLE_NAME(x,y)
+#define WARN_METHOD_NOT_IMPLEMENTED(prov,method)
+#define WARN_META_UPDATE_FAILURE(x,method)
+#endif
+
 /*
  * Opens a connection to an SQLite database. This function is intended to be used
  * internally when objects require an SQLite connection, for example for the GdaMetaStore

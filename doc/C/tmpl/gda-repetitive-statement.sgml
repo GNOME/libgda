@@ -1,0 +1,71 @@
+<!-- ##### SECTION Title ##### -->
+GdaRepetitiveStatement
+
+<!-- ##### SECTION Short_Description ##### -->
+Execute the same statement several times with different values
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+  The #GdaRepetitiveStatement object allows one to specify a statement to be executed
+  several times using different variables' values sets for each execution. Using the object
+  has almost no interrest at all if the statement to be executed several times has no parameter.
+</para>
+<para>
+  Use the gda_connection_repetitive_statement_execute() method to execute the repetitive statement.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+  #GdaStatement, #GdaBatch, #GdaConnection
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaRepetitiveStatement ##### -->
+<para>
+
+</para>
+
+@parent_instance: 
+
+<!-- ##### FUNCTION gda_repetitive_statement_new ##### -->
+<para>
+
+</para>
+
+@stmt: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_repetitive_statement_get_template_set ##### -->
+<para>
+
+</para>
+
+@rstmt: 
+@set: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_repetitive_statement_get_all_sets ##### -->
+<para>
+
+</para>
+
+@rstmt: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_repetitive_statement_append_set ##### -->
+<para>
+
+</para>
+
+@rstmt: 
+@values: 
+@make_copy: 
+@Returns: 
+
+

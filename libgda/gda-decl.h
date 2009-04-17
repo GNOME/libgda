@@ -89,6 +89,9 @@ typedef struct _GdaStatement GdaStatement;
 typedef struct _GdaStatementClass GdaStatementClass;
 typedef struct _GdaStatementPrivate GdaStatementPrivate;
 
+typedef struct _GdaRepetitiveStatement GdaRepetitiveStatement;
+typedef struct _GdaRepetitiveStatementClass GdaRepetitiveStatementClass;
+
 typedef struct _GdaSqlParser GdaSqlParser;
 typedef struct _GdaSqlParserClass GdaSqlParserClass;
 typedef struct _GdaSqlParserPrivate GdaSqlParserPrivate;

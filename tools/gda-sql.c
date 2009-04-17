@@ -1349,9 +1349,11 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 	
 	info = gda_config_get_dsn_info (real_cnc);
 	if (info && !real_provider)
-		newcnc = gda_connection_open_from_dsn (real_cnc_string, real_auth_string, 0, error);
+		newcnc = gda_connection_open_from_dsn (real_cnc_string, real_auth_string,
+						       GDA_CONNECTION_OPTIONS_THREAD_SAFE, error);
 	else 
-		newcnc = gda_connection_open_from_string (NULL, real_cnc_string, real_auth_string, 0, error);
+		newcnc = gda_connection_open_from_string (NULL, real_cnc_string, real_auth_string,
+							  GDA_CONNECTION_OPTIONS_THREAD_SAFE, error);
 	
 	g_free (real_cnc_string);
 	g_free (real_cnc);
