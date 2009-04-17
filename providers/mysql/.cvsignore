@@ -1,9 +1,0 @@
-Makefile
-Makefile.in
-GNOME_Database_Provider_MySQL.server
-*.o
-*.lo
-gda-mysql-srv-2
-.deps
-.libs
-gda-mysql.spec

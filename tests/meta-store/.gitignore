@@ -1,0 +1,5 @@
+check_meta_store_sqlite
+check_meta_store_postgresql
+check_meta_store_mysql
+check_meta_store_memory
+*.db

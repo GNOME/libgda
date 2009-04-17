@@ -1,0 +1,8 @@
+libgda.h
+gda-marshal.h
+gda-marshal.c
+s-enum-types-c
+s-enum-types-h
+gda-enum-types.c
+gda-enum-types.h
+libgda.def

@@ -1,0 +1,6 @@
+check_parser
+check_mutex
+check_cnc_lock
+check_threaded_cnc
+check_wrapper
+*.db

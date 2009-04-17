@@ -1,0 +1,5 @@
+check_parser
+check_validation
+check_normalization
+check_dml_comp
+check_script

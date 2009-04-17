@@ -1,0 +1,13 @@
+parser.c
+parser.h
+parser.out
+*token_types.h
+gen_def
+lemon
+delimiter.c
+delimiter.h
+delimiter.out
+gda-sql-parser-enum-types.c
+gda-sql-parser-enum-types.h
+s-enum-types-c
+s-enum-types-h
