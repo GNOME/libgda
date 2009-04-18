@@ -1,3 +1,26 @@
+libgda 4.1.0, 2009-04-18
+
+ - API and ABI compatible with 4.0.x versions
+ - new API to execute statement asynchronously
+ - new API to build DML (SELECT, INSERT, UPDATE and DELETE) statements
+   the easy way
+ - new flag to open a connection in a sub thread, to be able to use
+   a connection from several threads, even if the connection does not support it
+ - the GdaMetaStore object is now thread safe
+ - new API to represent data organized as trees
+ - new API to execute a single statement several times, each execution with
+   different parameters' values
+ - documentation and examples improvements
+ - bug fixes
+ - Translations:
+	- eu (Inaki Larranaga Murgoitio)
+
+libgda 4.0.2, 2009-04-18
+
+ - the SQLite provider now compiles with a system installed SQLite
+ - misc. corrections
+ - bug fixes: #578748
+
 libgda 4.0.1, 2009-03-27
 
  - make sure Libgda's GdaMetaStore object behaves correctly even if the
