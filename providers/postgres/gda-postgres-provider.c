@@ -519,6 +519,8 @@ get_connection_type_list (PostgresConnectionData *cdata)
 	nrows = PQntuples (pg_res);
 	td = g_new (GdaPostgresTypeOid, nrows);
 	h_table = g_hash_table_new (g_direct_hash, g_direct_equal);
+	if (nrows == 0)
+		g_warning ("PostgreSQL provider did not find any data type (expect some mis-behaviours) please report the error to bugzilla.gnome.org");
 	for (i = 0; i < nrows; i++) {
 		gchar *conv_func_name = NULL;
 		if (PQnfields (pg_res) >= 5)
