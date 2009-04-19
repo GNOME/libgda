@@ -1,3 +1,9 @@
+2009-04-19  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda-report/RML/trml2html/Makefile.am:
+	* libgda-report/RML/trml2pdf/Makefile.am: applied patch
+	for bug #579458 (Gilles Dartiguelongue)
+
 2009-04-18  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in: set version to 4.0.3
