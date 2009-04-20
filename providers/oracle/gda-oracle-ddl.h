@@ -1,9 +1,8 @@
-/* GDA Oracle Provider
- * Copyright (C) 2006 The GNOME Foundation
+/* GDA Oracle provider
+ * Copyright (C) 2008 The GNOME Foundation
  *
  * AUTHORS:
- *         Vivien Malerba <malerba@gnome-db.org>
- *         Bas Driessen <bas.driessen@xobas.com>
+ *      TO_ADD: your name and email
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -27,25 +26,8 @@
 
 G_BEGIN_DECLS
 
-gchar *gda_oracle_render_CREATE_DB     (GdaServerProvider *provider, GdaConnection *cnc, 
-					GdaServerOperation *op, GError **error);
-gchar *gda_oracle_render_DROP_DB       (GdaServerProvider *provider, GdaConnection *cnc, 
-					GdaServerOperation *op, GError **error);
-gchar *gda_oracle_render_CREATE_TABLE  (GdaServerProvider *provider, GdaConnection *cnc, 
-					GdaServerOperation *op, GError **error);
-gchar *gda_oracle_render_RENAME_TABLE  (GdaServerProvider *provider, GdaConnection *cnc, 
-					GdaServerOperation *op, GError **error);
-gchar *gda_oracle_render_DROP_TABLE    (GdaServerProvider *provider, GdaConnection *cnc, 
-					GdaServerOperation *op, GError **error);
-gchar *gda_oracle_render_ADD_COLUMN    (GdaServerProvider *provider, GdaConnection *cnc, 
-					GdaServerOperation *op, GError **error);
-gchar *gda_oracle_render_DROP_COLUMN   (GdaServerProvider *provider, GdaConnection *cnc, 
-					GdaServerOperation *op, GError **error);
-gchar *gda_oracle_render_CREATE_INDEX  (GdaServerProvider *provider, GdaConnection *cnc, 
-					GdaServerOperation *op, GError **error);
-gchar *gda_oracle_render_DROP_INDEX    (GdaServerProvider *provider, GdaConnection *cnc, 
-					GdaServerOperation *op, GError **error);
-
+gchar *gda_oracle_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc, 
+				     GdaServerOperation *op, GError **error);
 G_END_DECLS
 
 #endif

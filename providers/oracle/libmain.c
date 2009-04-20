@@ -1,9 +1,8 @@
 /* GDA Oracle Provider
- * Copyright (C) 1998 - 2007 The GNOME Foundation
+ * Copyright (C) 2008 The GNOME Foundation
  *
  * AUTHORS:
- * 	Tim Coleman <tim@timcoleman.com>
- *      Vivien Malerba <malerba@gnome-db.org>
+ *      TO_ADD: your name and email
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -21,9 +20,11 @@
  */
 
 #include <glib/gi18n-lib.h>
-#include "gda-oracle-provider.h"
+#include <gmodule.h>
 #include <libgda/gda-server-provider-extra.h>
 #include <libgda/binreloc/gda-binreloc.h>
+#include "gda-oracle.h"
+#include "gda-oracle-provider.h"
 
 static gchar      *module_path = NULL;
 const gchar       *plugin_get_name (void);
@@ -31,6 +32,26 @@ const gchar       *plugin_get_description (void);
 gchar             *plugin_get_dsn_spec (void);
 GdaServerProvider *plugin_create_provider (void);
 
+/*
+ * Functions executed when calling g_module_open() and g_module_close()
+ */
+const gchar *
+g_module_check_init (GModule *module)
+{
+        /*g_module_make_resident (module);*/
+        return NULL;
+}
+
+void
+g_module_unload (GModule *module)
+{
+        g_free (module_path);
+        module_path = NULL;
+}
+
+/*
+ * Normal plugin functions 
+ */
 void
 plugin_init (const gchar *real_path)
 {
@@ -41,13 +62,13 @@ plugin_init (const gchar *real_path)
 const gchar *
 plugin_get_name (void)
 {
-	return "Oracle";
+	return ORACLE_PROVIDER_NAME;
 }
 
 const gchar *
 plugin_get_description (void)
 {
-	return _("Provider for Oracle databases");
+	return _("Example provider for C API databases");
 }
 
 gchar *
@@ -66,7 +87,7 @@ plugin_create_provider (void)
 {
 	GdaServerProvider *prov;
 
-        prov = gda_oracle_provider_new ();
+	prov = (GdaServerProvider*) g_object_new (GDA_TYPE_ORACLE_PROVIDER, NULL);
         g_object_set_data ((GObject *) prov, "GDA_PROVIDER_DIR", module_path);
         return prov;
 }

@@ -1,9 +1,8 @@
 /* GDA Oracle provider
- * Copyright (C) 1998 - 2007 The GNOME Foundation.
+ * Copyright (C) 2008 The GNOME Foundation.
  *
  * AUTHORS:
- * 	Tim Coleman <tim@timcoleman.com>
- *      Vivien Malerba <malerba@gnome-db.org>
+ *      TO_ADD: your name and email
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -21,626 +20,91 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <glib/gi18n-lib.h>
-#include <stdlib.h>
+#include <stdarg.h>
 #include <string.h>
+#include <glib/gi18n-lib.h>
+#include <libgda/gda-util.h>
+#include <libgda/gda-connection-private.h>
 #include "gda-oracle.h"
 #include "gda-oracle-recordset.h"
 #include "gda-oracle-provider.h"
-#include <libgda/gda-data-model.h>
-#include <oci.h>
-#include <libgda/gda-data-model-private.h>
 
-#define PARENT_TYPE GDA_TYPE_DATA_MODEL_ROW
-
-struct _GdaOracleRecordsetPrivate {
-	GdaConnection           *cnc;
-	GdaOracleConnectionData *cdata;
-
-	GList                   *ora_values;
-	GPtrArray               *rows;
-	OCIStmt                 *hstmt;
-
-	gint                     ncolumns;
-	gint                     nrows;
-};
-
+#define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 
 static void gda_oracle_recordset_class_init (GdaOracleRecordsetClass *klass);
 static void gda_oracle_recordset_init       (GdaOracleRecordset *recset,
-					    GdaOracleRecordsetClass *klass);
-static void gda_oracle_recordset_finalize   (GObject *object);
+					     GdaOracleRecordsetClass *klass);
+static void gda_oracle_recordset_dispose   (GObject *object);
 
+/* virtual methods */
+static gint     gda_oracle_recordset_fetch_nb_rows (GdaDataSelect *model);
+static gboolean gda_oracle_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
+static gboolean gda_oracle_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
+static gboolean gda_oracle_recordset_fetch_prev (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
+static gboolean gda_oracle_recordset_fetch_at (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
+
+
+struct _GdaOracleRecordsetPrivate {
+	GdaConnection *cnc;
+	/* TO_ADD: specific information */
+};
 static GObjectClass *parent_class = NULL;
 
 /*
- * Private functions
- */
-
-static GList *
-define_columns (GdaOracleRecordsetPrivate *priv, GArray *col_size_array)
-{
-	GList *fields = NULL;
-	gint i;
-	gint result;
-	ub2 fake_type;
-
-	for (i = 0; i < priv->ncolumns; i ++) {
-		GdaOracleValue *ora_value = g_new0 (GdaOracleValue, 1);
-
-		result = OCIParamGet (priv->hstmt,
-				      OCI_HTYPE_STMT,
-				      priv->cdata->herr,
-				      (dvoid **) &(ora_value->pard),
-				      (ub4) i+1);
-		if (gda_oracle_check_result (result, priv->cnc, priv->cdata, OCI_HTYPE_ERROR,
-					     _("Could not get the Oracle parameter")))
-			return NULL;
-
-		result = OCIAttrGet ((dvoid *) (ora_value->pard),
-				     OCI_DTYPE_PARAM,
-				     &(ora_value->defined_size),
-				     0,
-				     OCI_ATTR_DATA_SIZE,
-				     priv->cdata->herr);
-		if (gda_oracle_check_result (result, priv->cnc, priv->cdata, OCI_HTYPE_ERROR,
-					     _("Could not get the parameter defined size"))) {
-			OCIDescriptorFree ((dvoid *) ora_value->pard, OCI_DTYPE_PARAM);
-			return NULL;
-		}
-		
-		result = OCIAttrGet ((dvoid *) (ora_value->pard),
-				     OCI_DTYPE_PARAM,
-				     &(ora_value->sql_type),
-				     0,
-				     OCI_ATTR_DATA_TYPE,
-				     priv->cdata->herr);
-		
-		if (gda_oracle_check_result (result, priv->cnc, priv->cdata, OCI_HTYPE_ERROR,
-					     _("Could not get the parameter data type"))) {
-			OCIDescriptorFree ((dvoid *) ora_value->pard, OCI_DTYPE_PARAM);
-			return NULL;
-		}
-		
-		/* for data fetching  */
-		fake_type = ora_value->sql_type;
-		switch (ora_value->sql_type) {
-                case SQLT_NUM: /* Numerics are coerced to string */
-                        fake_type = SQLT_CHR;
-                        break;
-                case SQLT_DAT: /* Convert SQLT_DAT to OCIDate */
-                        fake_type = SQLT_ODT;
-                        break;
-                }
-
-		ora_value->g_type = oracle_sqltype_to_g_type (ora_value->sql_type);
-		if (col_size_array && (i < col_size_array->len)) {
-			ub2 size;
-			
-			size = g_array_index (col_size_array, ub2, i);
-			if (size > 0)
-				ora_value->defined_size = size;
-		}
-		if (ora_value->g_type == GDA_TYPE_BLOB) {
-			/* allocate a Lob locator */
-			OCILobLocator *lob;
-
-			result = OCIDescriptorAlloc ((dvoid *) priv->cdata->henv, (dvoid **) &lob, 
-						     (ub4) gda_oracle_blob_type (ora_value->sql_type), (size_t) 0, (dvoid **) 0);
-			if (gda_oracle_check_result (result, priv->cnc, priv->cdata, OCI_HTYPE_ERROR,
-						     _("Could not allocate Lob locator")))
-				return NULL;
-			ora_value->value = lob;
-			ora_value->defined_size = 0;
-		}
-		else if (ora_value->defined_size == 0)
-			ora_value->value = NULL;
-		else {
-			ora_value->defined_size++;
-			ora_value->value = g_malloc0 (ora_value->defined_size);
-		}
-
-		ora_value->hdef = (OCIDefine *) 0;
-		ora_value->indicator = 0;
-		result = OCIDefineByPos ((OCIStmt *) priv->hstmt,
-					 (OCIDefine **) &(ora_value->hdef),
-					 (OCIError *) priv->cdata->herr,
-					 (ub4) i + 1,
-					 ora_value->value,
-					 ora_value->defined_size,
-					 (ub2) fake_type,
-					 (dvoid *) &(ora_value->indicator),
-					 (ub2 *) 0,
-					 (ub2 *) 0, 
-					 (ub4) OCI_DEFAULT);
-		if (gda_oracle_check_result (result, priv->cnc, priv->cdata, OCI_HTYPE_ERROR,
-					     _("Could not define by position"))) {
-			OCIDescriptorFree ((dvoid *) ora_value->pard, OCI_DTYPE_PARAM);
-			return NULL;
-		}
-		
-		fields = g_list_append (fields, ora_value);
-	}
-	return fields;
-}
-
-
-/*
- * GdaOracleRecordset class implementation
- */
-
-static void
-gda_oracle_recordset_describe_column (GdaDataModel *model, gint col)
-{
-	GdaOracleRecordset *recset = (GdaOracleRecordset *) model;
-	GdaOracleRecordsetPrivate *priv_data;
-	GdaColumn *field_attrs;
-	OCIParam *pard;
-	gchar *pgchar_dummy;
-	glong col_name_len;
-
-	gchar name_buffer[ORA_NAME_BUFFER_SIZE + 1];
-	ub2 sql_type;
-	sb1 scale;
-	ub1 nullable;
-	ub2 defined_size;
-	gint result;
-
-	g_return_if_fail (GDA_IS_ORACLE_RECORDSET (recset));
-	g_return_if_fail (recset->priv != NULL);
-	
-	priv_data = recset->priv;
-	
-	if (!priv_data->cdata) {
-		gda_connection_add_event_string (priv_data->cnc, 
-						 _("Invalid Oracle handle"));
-		return;
-	}
-	
-	if (col >= priv_data->ncolumns) {
-		gda_connection_add_event_string (priv_data->cnc, 
-						 _("Column out of range"));
-		return;
-	}
-	
-	field_attrs = gda_data_model_describe_column (model, col);
-	
-	result = OCIParamGet ((dvoid *) priv_data->hstmt,
-			      (ub4) OCI_HTYPE_STMT,
-			      (OCIError *) priv_data->cdata->herr,
-			      (dvoid **) &pard,
-			      (ub4) col + 1);
-	if (gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, OCI_HTYPE_ERROR,
-				     _("Could not get the Oracle parameter information")))
-		return;
-
-	result = OCIAttrGet ((dvoid *) pard,
-			     (ub4) OCI_DTYPE_PARAM,
-			     (dvoid **) &pgchar_dummy,
-			     (ub4 *) & col_name_len,
-			     (ub4) OCI_ATTR_NAME,
-			     (OCIError *) priv_data->cdata->herr);
-	if (gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, OCI_HTYPE_ERROR,
-				     _("Could not get the Oracle column name"))) {
-		OCIDescriptorFree ((dvoid *) pard, OCI_DTYPE_PARAM);
-		return;
-	}
-	
-	if (col_name_len > ORA_NAME_BUFFER_SIZE)
-		col_name_len = ORA_NAME_BUFFER_SIZE;
-		
-	memcpy (name_buffer, pgchar_dummy, col_name_len);
-	name_buffer[col_name_len] = '\0';
-	
-	result = OCIAttrGet ((dvoid *) pard,
-			     (ub4) OCI_DTYPE_PARAM,
-			     (dvoid *) &sql_type,
-			     (ub4 *) 0,
-			     (ub4) OCI_ATTR_DATA_TYPE,
-			     (OCIError *) priv_data->cdata->herr);
-	if (gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, OCI_HTYPE_ERROR,
-				     _("Could not get the Oracle column data type"))) {
-		OCIDescriptorFree ((dvoid *) pard, OCI_DTYPE_PARAM);
-		return;
-	}
-	
-	result = OCIAttrGet ((dvoid *) pard,
-			     (ub4) OCI_DTYPE_PARAM,
-			     (sb1 *) &scale,
-			     (ub4 *) 0,
-			     (ub4) OCI_ATTR_SCALE,
-			     (OCIError *) priv_data->cdata->herr);
-	if (gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, OCI_HTYPE_ERROR,
-				     _("Could not get the Oracle column scale"))) {
-		OCIDescriptorFree ((dvoid *) pard, OCI_DTYPE_PARAM);
-		return;
-	}
-	
-	result = OCIAttrGet ((dvoid *) pard,
-			     (ub4) OCI_DTYPE_PARAM,
-			     (ub1 *) &nullable,
-			     (ub4 *) 0,
-			     (ub4) OCI_ATTR_IS_NULL,
-			     (OCIError *) priv_data->cdata->herr);
-	if (gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, OCI_HTYPE_ERROR,
-				     _("Could not get the Oracle column nullable attribute"))) {
-		OCIDescriptorFree ((dvoid *) pard, OCI_DTYPE_PARAM);
-		return;
-	}
-	
-	result = OCIAttrGet ((dvoid *) pard,
-			     OCI_DTYPE_PARAM,
-			     &defined_size,
-			     0,
-			     OCI_ATTR_DATA_SIZE,
-			     priv_data->cdata->herr);
-	if (gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, OCI_HTYPE_ERROR,
-				     _("Could not get the Oracle defined size"))) {
-		OCIDescriptorFree ((dvoid *) pard, OCI_DTYPE_PARAM);
-		return;
-	}
-	
-	gda_column_set_name (field_attrs, name_buffer);
-	gda_column_set_scale (field_attrs, scale);
-	gda_column_set_g_type (field_attrs, oracle_sqltype_to_g_type (sql_type));
-	gda_column_set_defined_size (field_attrs, defined_size);
-	
-	/* FIXME */
-	gda_column_set_references (field_attrs, "");
-	
-	/* FIXME */
-	gda_column_set_primary_key (field_attrs, FALSE); 
-	
-	/* FIXME */
-	gda_column_set_unique_key (field_attrs, FALSE);
-
-	gda_column_set_allow_null (field_attrs, !(nullable == 0));
-	
-	OCIDescriptorFree ((dvoid *) pard, OCI_DTYPE_PARAM);
-}
-
-static gint
-gda_oracle_recordset_get_n_rows (GdaDataModelRow *model)
-{
-	GdaOracleRecordset *recset = (GdaOracleRecordset *) model;
-	GdaOracleRecordsetPrivate *priv_data;
-	gint result = OCI_SUCCESS;
-	gint nrows = -1;
-
-	g_return_val_if_fail (GDA_IS_ORACLE_RECORDSET (model), 0);
-	g_return_val_if_fail (recset->priv != NULL, 0);
-
-	priv_data = recset->priv;
-
-	if (priv_data->nrows >= 0) 
-		return priv_data->nrows;
-
-	while (result == OCI_SUCCESS) {
-		nrows += 1;
-		result = OCIStmtFetch (priv_data->hstmt,
-				       priv_data->cdata->herr,
-				       (ub4) 1,
-				       (ub2) OCI_FETCH_NEXT,
-				       (ub4) OCI_DEFAULT);
-	}
-
-	/* reset the result set to the beginning */
-	result = OCIStmtExecute (priv_data->cdata->hservice,
-				 priv_data->hstmt,
-				 priv_data->cdata->herr,
-				 (ub4) 0,
-				 (ub4) 0,
-				 (CONST OCISnapshot *) NULL,
-				 (OCISnapshot *) NULL,
-				 OCI_DEFAULT);
-	
-	if (gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, 
-				     OCI_HTYPE_ERROR, "Could not execute Oracle statement")) 
-		return 0;
-
-	return nrows;
-}
-
-static gint
-gda_oracle_recordset_get_n_columns (GdaDataModelRow *model)
-{
-	GdaOracleRecordset *recset = (GdaOracleRecordset *) model;
-	g_return_val_if_fail (GDA_IS_ORACLE_RECORDSET (model), 0);
-	g_return_val_if_fail (recset->priv != NULL, 0);
-
-	return recset->priv->ncolumns;
-}
-
-static GdaRow *
-fetch_row (GdaOracleRecordset *recset, gint rownum)
-{
-	GdaRow *row;
-	gint i;
-	gchar *id;
-	GdaOracleRecordsetPrivate *priv;
-	GList *node;
-	gint result;
-
-	g_return_val_if_fail (GDA_IS_ORACLE_RECORDSET (recset), NULL);
-	g_return_val_if_fail (recset->priv != NULL, NULL);
-
-	priv = recset->priv;
-
-	row = gda_row_new (GDA_DATA_MODEL (recset), priv->ncolumns);
-
-	result = OCIStmtFetch ((OCIStmt *) priv->hstmt,
-			       (OCIError *) priv->cdata->herr,
-			       (ub4) 1,
-			       (ub2) OCI_FETCH_NEXT,
-			       (ub4) OCI_DEFAULT); 
-	if (result == OCI_NO_DATA) 
-		return NULL;
-
-	if (gda_oracle_check_result (result, priv->cnc, priv->cdata, OCI_HTYPE_ERROR,
-				     _("Could not fetch a row"))) 
-		return NULL;
-
-	i = 0;
-	for (node = priv->ora_values; node;  node = node->next) {
-		GdaOracleValue *ora_value = (GdaOracleValue *) node->data;
-		GValue *value = gda_row_get_value (row, i);
-		gda_oracle_set_value (value, ora_value, priv->cnc);
-		i += 1;
-	}
-
-	id = g_strdup_printf ("%d", rownum);
-	gda_row_set_id (row, id);
-	g_free (id);
-	return row;
-}
-
-static GdaRow *
-gda_oracle_recordset_get_row (GdaDataModelRow *model, gint row, GError **error)
-{
-	GdaOracleRecordset *recset = (GdaOracleRecordset *) model;
-	GdaOracleRecordsetPrivate *priv_data;
-	GdaRow *fields = NULL;
-	gint fetched_rows;
-	gint i;
-
-	g_return_val_if_fail (GDA_IS_ORACLE_RECORDSET (recset), NULL);
-	g_return_val_if_fail (recset->priv != NULL, 0);
-
-	priv_data = recset->priv;
-
-	if (!priv_data->cdata) {
-		gda_connection_add_event_string (priv_data->cnc,
-						_("Invalid Oracle handle"));
-		return NULL;
-	}
-
-	fetched_rows = priv_data->rows->len;
-
-	if (row >= priv_data->nrows && priv_data->nrows >= 0)
-		return NULL;
-
-	if (row < fetched_rows) 
-		return (GdaRow *) g_ptr_array_index (priv_data->rows, row);
-
-	gda_data_model_freeze (GDA_DATA_MODEL (recset));
-
-	for (i = fetched_rows; i <= row; i += 1) {
-		fields = fetch_row (recset, i);
-		if (!fields) 
-			return NULL;
-		g_ptr_array_add (priv_data->rows, fields);
-	}
-
-	gda_data_model_thaw (GDA_DATA_MODEL (recset));
-
-	return fields;
-}
-
-static const GValue *
-gda_oracle_recordset_get_value_at (GdaDataModelRow *model, gint col, gint row)
-{
-	GdaOracleRecordset *recset = (GdaOracleRecordset *) model;
-	GdaOracleRecordsetPrivate *priv_data;
-	const GdaRow *fields;
-
-	g_return_val_if_fail (GDA_IS_ORACLE_RECORDSET (recset), NULL);
-	g_return_val_if_fail (recset->priv != NULL, 0);
-
-	priv_data = recset->priv;
-
-	if (col >= priv_data->ncolumns)
-		return NULL;
-
-	fields = gda_oracle_recordset_get_row (model, row, NULL);
-	return fields != NULL ? gda_row_get_value ((GdaRow *) fields, col) : NULL;
-}
-
-static gboolean
-gda_oracle_recordset_is_updatable (GdaDataModelRow *model)
-{
-	GdaCommandType cmd_type;
-	GdaOracleRecordset *recset = (GdaOracleRecordset *) model;
-
-	g_return_val_if_fail (GDA_IS_ORACLE_RECORDSET (recset), FALSE);
-
-	g_object_get (G_OBJECT (model), "command_type", &cmd_type, NULL);
-
-	return FALSE;
-	/*return cmd_type == GDA_COMMAND_TYPE_TABLE ? TRUE : FALSE;*/
-}
-
-/* Not implemented. See bug http://bugzilla.gnome.org/show_bug.cgi?id=411811: */
-#if 0
-static GdaRow *
-gda_oracle_recordset_append_values (GdaDataModelRow *model, const GList *values, GError **error)
-{
-	GString *sql;
-	GdaRow *row;
-	gint i;
-	GList *l;
-	GdaOracleRecordset *recset = (GdaOracleRecordset *) model;
-	GdaOracleRecordsetPrivate *priv_data;
-
-	g_return_val_if_fail (GDA_IS_ORACLE_RECORDSET (recset), NULL);
-	g_return_val_if_fail (values != NULL, NULL);
-	g_return_val_if_fail (gda_data_model_is_updatable (GDA_DATA_MODEL (model)), NULL);
-	g_return_val_if_fail (recset->priv != NULL, 0);
-
-	priv_data = recset->priv;
-
-	if (priv_data->ncolumns != g_list_length ((GList *) values)) {
-		gda_connection_add_event_string (
-			recset->priv->cnc,
-			_("Attempt to insert a row with an invalid number of columns"));
-		return NULL;
-	}
-
-	sql = g_string_new ("INSERT INTO ");
-	sql = g_string_append (sql, gda_data_model_get_command_text (GDA_DATA_MODEL (model)));
-	sql = g_string_append (sql, "(");
-
-	for (i = 0; i < priv_data->ncolumns; i += 1) {
-		GdaColumn *fa;
-
-		fa = gda_data_model_describe_column (GDA_DATA_MODEL (model), i);
-		if (!fa) {
-			gda_connection_add_event_string (
-				recset->priv->cnc,
-				_("Could not retrieve column's information"));
-			g_string_free (sql, TRUE);
-			return NULL;
-		}
-
-		if (i != 0) 
-			sql = g_string_append (sql, ", ");
-		sql = g_string_append (sql, gda_column_get_name (fa));
-	}
-	sql = g_string_append (sql, ") VALUES (");
-
-	for (l = (GList *) values, i = 0; i < priv_data->ncolumns; i += 1, l = l->next) {
-		gchar *val_str;
-		const GValue *val = (const GValue *) l->data;
-
-		if (!val) { 
-			gda_connection_add_event_string (
-				recset->priv->cnc,
-				_("Could not retrieve column's value"));
-			g_string_free (sql, TRUE);
-			return NULL;
-		}
-
-		if (i != 0) 
-			sql = g_string_append (sql, ", ");
-		val_str = gda_oracle_value_to_sql_string ((GValue*) val);
-		sql = g_string_append (sql, val_str);
-
-		g_free (val_str);
-	}
-	sql = g_string_append (sql, ")");
-
-	/* execute the UPDATE command */
-	/* not sure what to do here yet. */
-
-	g_string_free (sql, TRUE);
-
-	row = gda_row_new_from_list (GDA_DATA_MODEL (model), values);
-	g_ptr_array_add (recset->priv->rows, row);
-
-	return row;
-}
-#endif
-
-static gboolean
-gda_oracle_recordset_remove_row (GdaDataModelRow *model, GdaRow *row, GError **error)
-{
-	return FALSE;
-}
-
-static gboolean
-gda_oracle_recordset_update_row (GdaDataModelRow *model, GdaRow *row, GError **error)
-{
-	return FALSE;
-}
-
-
-/*
- * Object init and finalize 
+ * Object init and finalize
  */
 static void
-gda_oracle_recordset_init (GdaOracleRecordset *recset, GdaOracleRecordsetClass *klass)
+gda_oracle_recordset_init (GdaOracleRecordset *recset,
+			   GdaOracleRecordsetClass *klass)
 {
 	g_return_if_fail (GDA_IS_ORACLE_RECORDSET (recset));
-        recset->priv = g_new0 (GdaOracleRecordsetPrivate, 1);
-        recset->priv->rows = g_ptr_array_new ();
+	recset->priv = g_new0 (GdaOracleRecordsetPrivate, 1);
+	recset->priv->cnc = NULL;
+
+	/* initialize specific information */
+	TO_IMPLEMENT;
 }
 
 static void
 gda_oracle_recordset_class_init (GdaOracleRecordsetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaDataModelRowClass *model_class = GDA_DATA_MODEL_ROW_CLASS (klass);
+	GdaDataSelectClass *pmodel_class = GDA_DATA_SELECT_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
-	object_class->finalize = gda_oracle_recordset_finalize;
-	model_class->get_n_rows = gda_oracle_recordset_get_n_rows;
-	model_class->get_n_columns = gda_oracle_recordset_get_n_columns;
-	model_class->get_row = gda_oracle_recordset_get_row;
-	model_class->get_value_at = gda_oracle_recordset_get_value_at;
-	model_class->is_updatable = gda_oracle_recordset_is_updatable;
+	object_class->dispose = gda_oracle_recordset_dispose;
+	pmodel_class->fetch_nb_rows = gda_oracle_recordset_fetch_nb_rows;
+	pmodel_class->fetch_random = gda_oracle_recordset_fetch_random;
 
-        /* Not implemented. See bug http://bugzilla.gnome.org/show_bug.cgi?id=411811: */
-	model_class->append_values = /* gda_oracle_recordset_append_values */ NULL;
-
-	model_class->remove_row = gda_oracle_recordset_remove_row;
-	model_class->update_row = gda_oracle_recordset_update_row;
-}
-
-static void 
-gda_oracle_free_values (GdaOracleValue *ora_value)
-{
-	if (ora_value->g_type == GDA_TYPE_BLOB) 
-		OCIDescriptorFree((dvoid *) ora_value->value, (ub4) gda_oracle_blob_type (ora_value->sql_type));
-	else
-		g_free (ora_value->value);
-	OCIDescriptorFree ((dvoid *) ora_value->pard, OCI_DTYPE_PARAM);
-	g_free (ora_value);
+	pmodel_class->fetch_next = gda_oracle_recordset_fetch_next;
+	pmodel_class->fetch_prev = gda_oracle_recordset_fetch_prev;
+	pmodel_class->fetch_at = gda_oracle_recordset_fetch_at;
 }
 
 static void
-gda_oracle_recordset_finalize (GObject *object)
+gda_oracle_recordset_dispose (GObject *object)
 {
 	GdaOracleRecordset *recset = (GdaOracleRecordset *) object;
-	GdaOracleRecordsetPrivate *priv_data;
-
-	g_return_if_fail (recset->priv != NULL);
-
-	priv_data = recset->priv;
-
-	if (!priv_data->cdata) {
-		gda_connection_add_event_string (priv_data->cnc, 
-						_("Invalid Oracle handle"));
-		return;
-	}
 
 	g_return_if_fail (GDA_IS_ORACLE_RECORDSET (recset));
 
-	while (priv_data->rows->len > 0) {
-		GdaRow *row = (GdaRow *) g_ptr_array_index (priv_data->rows, 0);
+	if (recset->priv) {
+		if (recset->priv->cnc) 
+			g_object_unref (recset->priv->cnc);
 
-		if (row != NULL) 
-			g_object_unref (row);
-		g_ptr_array_remove_index (priv_data->rows, 0);
+		/* free specific information */
+		TO_IMPLEMENT;
+		g_free (recset->priv);
+		recset->priv = NULL;
 	}
-	g_ptr_array_free (priv_data->rows, TRUE);
-	recset->priv->rows = NULL;
 
-	g_list_foreach (priv_data->ora_values, (GFunc) gda_oracle_free_values, NULL);
-	if (priv_data->hstmt)
-		OCIHandleFree ((dvoid *) priv_data->hstmt, OCI_HTYPE_STMT);
-	parent_class->finalize (object);
+	parent_class->dispose (object);
 }
 
+/*
+ * Public functions
+ */
 
 GType
 gda_oracle_recordset_get_type (void)
@@ -648,6 +112,7 @@ gda_oracle_recordset_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
+		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
 		static const GTypeInfo info = {
 			sizeof (GdaOracleRecordsetClass),
 			(GBaseInitFunc) NULL,
@@ -659,43 +124,227 @@ gda_oracle_recordset_get_type (void)
 			0,
 			(GInstanceInitFunc) gda_oracle_recordset_init
 		};
-		type = g_type_register_static (PARENT_TYPE, "GdaOracleRecordset", &info, 0);
+		g_static_mutex_lock (&registering);
+		if (type == 0)
+			type = g_type_register_static (GDA_TYPE_DATA_SELECT, "GdaOracleRecordset", &info, 0);
+		g_static_mutex_unlock (&registering);
 	}
 
 	return type;
 }
 
-GdaOracleRecordset *
-gda_oracle_recordset_new (GdaConnection *cnc, 
-			  GdaOracleConnectionData *cdata,
-			  OCIStmt *stmthp, GArray *col_size_array)
+/*
+ * the @ps struct is modified and transfered to the new data model created in
+ * this function
+ */
+GdaDataModel *
+gda_oracle_recordset_new (GdaConnection *cnc, GdaOraclePStmt *ps, GdaSet *exec_params,
+			GdaDataModelAccessFlags flags, GType *col_types)
 {
-	GdaOracleRecordset *recset;
-	ub4 parcount;
+	GdaOracleRecordset *model;
+        OracleConnectionData *cdata;
+        gint i;
+	GdaDataModelAccessFlags rflags;
+
+        g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+        g_return_val_if_fail (ps != NULL, NULL);
+
+	cdata = (OracleConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return NULL;
+
+	/* make sure @ps reports the correct number of columns using the API*/
+        if (_GDA_PSTMT (ps)->ncols < 0)
+                /*_GDA_PSTMT (ps)->ncols = ...;*/
+		TO_IMPLEMENT;
+
+        /* completing @ps if not yet done */
+        if (!_GDA_PSTMT (ps)->types && (_GDA_PSTMT (ps)->ncols > 0)) {
+		/* create prepared statement's columns */
+		GSList *list;
+		for (i = 0; i < _GDA_PSTMT (ps)->ncols; i++)
+			_GDA_PSTMT (ps)->tmpl_columns = g_slist_prepend (_GDA_PSTMT (ps)->tmpl_columns, 
+									 gda_column_new ());
+		_GDA_PSTMT (ps)->tmpl_columns = g_slist_reverse (_GDA_PSTMT (ps)->tmpl_columns);
+
+		/* create prepared statement's types */
+		_GDA_PSTMT (ps)->types = g_new0 (GType, _GDA_PSTMT (ps)->ncols); /* all types are initialized to GDA_TYPE_NULL */
+		if (col_types) {
+			for (i = 0; ; i++) {
+				if (col_types [i] > 0) {
+					if (col_types [i] == G_TYPE_NONE)
+						break;
+					if (i >= _GDA_PSTMT (ps)->ncols)
+						g_warning (_("Column %d out of range (0-%d), ignoring its specified type"), i,
+							   _GDA_PSTMT (ps)->ncols - 1);
+					else
+						_GDA_PSTMT (ps)->types [i] = col_types [i];
+				}
+			}
+		}
+		
+		/* fill GdaColumn's data */
+		for (i=0, list = _GDA_PSTMT (ps)->tmpl_columns; 
+		     i < GDA_PSTMT (ps)->ncols; 
+		     i++, list = list->next) {
+			GdaColumn *column;
+			
+			column = GDA_COLUMN (list->data);
+
+			/* use C API to set columns' information using gda_column_set_*() */
+			TO_IMPLEMENT;
+		}
+        }
+
+	/* determine access mode: RANDOM or CURSOR FORWARD are the only supported */
+	if (flags & GDA_DATA_MODEL_ACCESS_RANDOM)
+		rflags = GDA_DATA_MODEL_ACCESS_RANDOM;
+	else
+		rflags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD;
+
+	/* create data model */
+        model = g_object_new (GDA_TYPE_ORACLE_RECORDSET, 
+			      "prepared-stmt", ps, 
+			      "model-usage", rflags, 
+			      "exec-params", exec_params, NULL);
+        model->priv->cnc = cnc;
+	g_object_ref (cnc);
+
+	/* post init specific code */
+	TO_IMPLEMENT;
+
+        return GDA_DATA_MODEL (model);
+}
+
+
+/*
+ * Get the number of rows in @model, if possible
+ */
+static gint
+gda_oracle_recordset_fetch_nb_rows (GdaDataSelect *model)
+{
+	GdaOracleRecordset *imodel;
+
+	imodel = GDA_ORACLE_RECORDSET (model);
+	if (model->advertized_nrows >= 0)
+		return model->advertized_nrows;
+
+	/* use C API to determine number of rows,if possible */
+	TO_IMPLEMENT;
+
+	return model->advertized_nrows;
+}
+
+/*
+ * Create a new filled #GdaRow object for the row at position @rownum, and put it into *prow.
+ *
+ * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
+ *  -  If *prow is NULL then a new #GdaRow object has to be created, 
+ *  -  and otherwise *prow contains a #GdaRow object which has already been created 
+ *     (through a call to this very function), and in this case it should not be modified
+ *     but the function may return FALSE if an error occurred.
+ *
+ * Memory management for that new GdaRow object is left to the implementation, which
+ * can use gda_data_select_take_row(). If new row objects are "given" to the GdaDataSelect implemantation
+ * using that method, then this method should detect when all the data model rows have been analysed
+ * (when model->nb_stored_rows == model->advertized_nrows) and then possibly discard the API handle
+ * as it won't be used anymore to fetch rows.
+ */
+static gboolean 
+gda_oracle_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
+{
+	GdaOracleRecordset *imodel;
+
+	imodel = GDA_ORACLE_RECORDSET (model);
+
+	TO_IMPLEMENT;
+
+	return TRUE;
+}
+
+/*
+ * Create and "give" filled #GdaRow object for all the rows in the model
+ */
+static gboolean
+gda_oracle_recordset_store_all (GdaDataSelect *model, GError **error)
+{
+	GdaOracleRecordset *imodel;
 	gint i;
 
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (cdata != NULL, NULL);
+	imodel = GDA_ORACLE_RECORDSET (model);
 
-	OCIAttrGet ((dvoid *) stmthp,
-		    (ub4) OCI_HTYPE_STMT,
-		    (dvoid *) &parcount, 
-		    0,
-		    (ub4) OCI_ATTR_PARAM_COUNT,
-		    cdata->herr);
-
-	recset = g_object_new (GDA_TYPE_ORACLE_RECORDSET, NULL);
-	recset->priv->nrows = -1;
-	recset->priv->cnc = cnc;
-	recset->priv->cdata = cdata;
-	recset->priv->hstmt = stmthp;
-	recset->priv->ncolumns = parcount;
-	recset->priv->ora_values = define_columns (recset->priv, col_size_array);
-	recset->priv->nrows = gda_oracle_recordset_get_n_rows (GDA_DATA_MODEL_ROW (recset));
-
-	/* define GdaColumn attributes */
-	for (i = 0; i < recset->priv->ncolumns; i += 1) 
-		gda_oracle_recordset_describe_column (GDA_DATA_MODEL (recset), i);		
-
-	return recset;
+	/* default implementation */
+	for (i = 0; i < model->advertized_nrows; i++) {
+		GdaRow *prow;
+		if (! gda_oracle_recordset_fetch_random (model, &prow, i, error))
+			return FALSE;
+	}
+	return TRUE;
 }
+
+/*
+ * Create a new filled #GdaRow object for the next cursor row, and put it into *prow.
+ *
+ * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
+ *  -  If *prow is NULL then a new #GdaRow object has to be created, 
+ *  -  and otherwise *prow contains a #GdaRow object which has already been created 
+ *     (through a call to this very function), and in this case it should not be modified
+ *     but the function may return FALSE if an error occurred.
+ *
+ * Memory management for that new GdaRow object is left to the implementation, which
+ * can use gda_data_select_take_row().
+ */
+static gboolean 
+gda_oracle_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
+{
+	GdaOracleRecordset *imodel = (GdaOracleRecordset*) model;
+
+	TO_IMPLEMENT;
+
+	return TRUE;
+}
+
+/*
+ * Create a new filled #GdaRow object for the previous cursor row, and put it into *prow.
+ *
+ * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
+ *  -  If *prow is NULL then a new #GdaRow object has to be created, 
+ *  -  and otherwise *prow contains a #GdaRow object which has already been created 
+ *     (through a call to this very function), and in this case it should not be modified
+ *     but the function may return FALSE if an error occurred.
+ *
+ * Memory management for that new GdaRow object is left to the implementation, which
+ * can use gda_data_select_take_row().
+ */
+static gboolean 
+gda_oracle_recordset_fetch_prev (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
+{
+	GdaOracleRecordset *imodel = (GdaOracleRecordset*) model;
+
+	TO_IMPLEMENT;
+
+	return TRUE;
+}
+
+/*
+ * Create a new filled #GdaRow object for the cursor row at position @rownum, and put it into *prow.
+ *
+ * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
+ *  -  If *prow is NULL then a new #GdaRow object has to be created, 
+ *  -  and otherwise *prow contains a #GdaRow object which has already been created 
+ *     (through a call to this very function), and in this case it should not be modified
+ *     but the function may return FALSE if an error occurred.
+ *
+ * Memory management for that new GdaRow object is left to the implementation, which
+ * can use gda_data_select_take_row().
+ */
+static gboolean 
+gda_oracle_recordset_fetch_at (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
+{
+	GdaOracleRecordset *imodel = (GdaOracleRecordset*) model;
+	
+	TO_IMPLEMENT;
+
+	return TRUE;
+}
+

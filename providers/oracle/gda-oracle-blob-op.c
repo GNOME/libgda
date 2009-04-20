@@ -1,8 +1,8 @@
-/* GDA Postgres blob
- * Copyright (C) 2007 The GNOME Foundation
+/* GDA Oracle provider
+ * Copyright (C) 2008 The GNOME Foundation
  *
  * AUTHORS:
- *      Vivien Malerba <malerba@gnome-db.org>
+ *      TO_ADD: your name and email
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -22,29 +22,23 @@
 
 #include <glib/gi18n-lib.h>
 #include <string.h>
+#include <libgda/libgda.h>
 #include "gda-oracle.h"
 #include "gda-oracle-blob-op.h"
 
-#ifdef PARENT_TYPE
-#undef PARENT_TYPE
-#endif
-
-#define PARENT_TYPE GDA_TYPE_BLOB_OP
-
 struct _GdaOracleBlobOpPrivate {
 	GdaConnection *cnc;
-	OCILobLocator *lobl;
+	/* TO_ADD: specific information describing a Blob in the C API */
 };
 
 static void gda_oracle_blob_op_class_init (GdaOracleBlobOpClass *klass);
 static void gda_oracle_blob_op_init       (GdaOracleBlobOp *blob,
-					  GdaOracleBlobOpClass *klass);
+					 GdaOracleBlobOpClass *klass);
 static void gda_oracle_blob_op_finalize   (GObject *object);
 
 static glong gda_oracle_blob_op_get_length (GdaBlobOp *op);
 static glong gda_oracle_blob_op_read       (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size);
 static glong gda_oracle_blob_op_write      (GdaBlobOp *op, GdaBlob *blob, glong offset);
-static gboolean gda_oracle_blob_op_write_all (GdaBlobOp *op, GdaBlob *blob);
 
 static GObjectClass *parent_class = NULL;
 
@@ -57,6 +51,7 @@ gda_oracle_blob_op_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
+		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
 		static const GTypeInfo info = {
 			sizeof (GdaOracleBlobOpClass),
 			(GBaseInitFunc) NULL,
@@ -68,7 +63,10 @@ gda_oracle_blob_op_get_type (void)
 			0,
 			(GInstanceInitFunc) gda_oracle_blob_op_init
 		};
-		type = g_type_register_static (PARENT_TYPE, "GdaOracleBlobOp", &info, 0);
+		g_static_mutex_lock (&registering);
+		if (type == 0)
+			type = g_type_register_static (GDA_TYPE_BLOB_OP, "GdaOracleBlobOp", &info, 0);
+		g_static_mutex_unlock (&registering);
 	}
 	return type;
 }
@@ -80,7 +78,9 @@ gda_oracle_blob_op_init (GdaOracleBlobOp *op,
 	g_return_if_fail (GDA_IS_ORACLE_BLOB_OP (op));
 
 	op->priv = g_new0 (GdaOracleBlobOpPrivate, 1);
-	op->priv->lobl = NULL;
+
+	/* initialize specific structure */
+	TO_IMPLEMENT;
 }
 
 static void
@@ -95,204 +95,132 @@ gda_oracle_blob_op_class_init (GdaOracleBlobOpClass *klass)
 	blob_class->get_length = gda_oracle_blob_op_get_length;
 	blob_class->read = gda_oracle_blob_op_read;
 	blob_class->write = gda_oracle_blob_op_write;
-	blob_class->write_all = gda_oracle_blob_op_write_all;
-}
-
-static GdaOracleConnectionData *
-get_conn_data (GdaConnection *cnc)
-{
-	GdaOracleConnectionData *priv_data;
-
-	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
-	if (!priv_data) {
-		gda_connection_add_event_string (cnc, _("Invalid Oracle handle"));
-		return NULL;
-	}
-
-	return priv_data;
 }
 
 static void
 gda_oracle_blob_op_finalize (GObject * object)
 {
-	GdaOracleBlobOp *op = (GdaOracleBlobOp *) object;
+	GdaOracleBlobOp *bop = (GdaOracleBlobOp *) object;
 
-	g_return_if_fail (GDA_IS_ORACLE_BLOB_OP (op));
+	g_return_if_fail (GDA_IS_ORACLE_BLOB_OP (bop));
 
-	if (op->priv->lobl) {
-		GdaOracleConnectionData *priv_data = get_conn_data (op->priv->cnc);
-		g_assert (priv_data);
+	/* free specific information */
+	TO_IMPLEMENT;
 
-		OCILobClose (priv_data->hservice, priv_data->herr, op->priv->lobl);
-	}
-	g_free (op->priv);
-	op->priv = NULL;
+	g_free (bop->priv);
+	bop->priv = NULL;
 
 	parent_class->finalize (object);
 }
 
 GdaBlobOp *
-gda_oracle_blob_op_new (GdaConnection *cnc, OCILobLocator *lobloc)
+gda_oracle_blob_op_new (GdaConnection *cnc)
 {
-	GdaOracleBlobOp *blob;
+	GdaOracleBlobOp *bop;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (lobloc, NULL);
 
-	blob = g_object_new (GDA_TYPE_ORACLE_BLOB_OP, NULL);
-	blob->priv->cnc = cnc;
-	blob->priv->lobl = lobloc;
+	bop = g_object_new (GDA_TYPE_ORACLE_BLOB_OP, NULL);
+	bop->priv->cnc = cnc;
 	
-	return GDA_BLOB_OP (blob);
+	return GDA_BLOB_OP (bop);
 }
 
-
 /*
- * Virtual functions
+ * Get length request
  */
 static glong
 gda_oracle_blob_op_get_length (GdaBlobOp *op)
 {
-	GdaOracleBlobOp *oraop;
-	ub4 loblen = 0;
+	GdaOracleBlobOp *bop;
 
 	g_return_val_if_fail (GDA_IS_ORACLE_BLOB_OP (op), -1);
-	oraop = GDA_ORACLE_BLOB_OP (op);
-	g_return_val_if_fail (oraop->priv, -1);
-	g_return_val_if_fail (GDA_IS_CONNECTION (oraop->priv->cnc), -1);
+	bop = GDA_ORACLE_BLOB_OP (op);
+	g_return_val_if_fail (bop->priv, -1);
+	g_return_val_if_fail (GDA_IS_CONNECTION (bop->priv->cnc), -1);
 
-	if (oraop->priv->lobl) {
-		gint result;
-		GdaConnectionEvent *error;
-		GdaOracleConnectionData *priv_data = get_conn_data (oraop->priv->cnc);
-		g_assert (priv_data);
-
-		result = OCILobGetLength (priv_data->hservice, priv_data->herr, oraop->priv->lobl, &loblen);
-		error = gda_oracle_check_result (result, oraop->priv->cnc, priv_data, OCI_HTYPE_ERROR,
-						 _("Could not get the length of LOB object"));
-		if (!error)
-			return loblen;
-	}
+	TO_IMPLEMENT;
 	return -1;
 }
 
+/*
+ * Blob read request
+ */
 static glong
 gda_oracle_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 {
-	GdaOracleBlobOp *oraop;
+	GdaOracleBlobOp *bop;
 	GdaBinary *bin;
 
 	g_return_val_if_fail (GDA_IS_ORACLE_BLOB_OP (op), -1);
-	oraop = GDA_ORACLE_BLOB_OP (op);
-	g_return_val_if_fail (oraop->priv, -1);
-	g_return_val_if_fail (GDA_IS_CONNECTION (oraop->priv->cnc), -1);
+	bop = GDA_ORACLE_BLOB_OP (op);
+	g_return_val_if_fail (bop->priv, -1);
+	g_return_val_if_fail (GDA_IS_CONNECTION (bop->priv->cnc), -1);
+	if (offset >= G_MAXINT)
+		return -1;
 	g_return_val_if_fail (blob, -1);
 
 	bin = (GdaBinary *) blob;
-	if (bin->data) {
+	if (bin->data) 
 		g_free (bin->data);
-		bin->data = NULL;
-		bin->binary_length = 0;
-	}
+	bin->data = g_new0 (guchar, size);
+	bin->binary_length = 0;
 
-	if (oraop->priv->lobl) {
-		sword result;
-		ub4 nbbytes;
-		GdaOracleConnectionData *priv_data = get_conn_data (oraop->priv->cnc);
-		ub4 loblen = 0;
-		ub1 *buf;
-		g_assert (priv_data);
+	/* fetch blob data using C API into bin->data, and set bin->binary_length */
+	TO_IMPLEMENT;
 
-		result = OCILobGetLength (priv_data->hservice, priv_data->herr, oraop->priv->lobl, &loblen);
-		if (gda_oracle_check_result (result, oraop->priv->cnc, priv_data, OCI_HTYPE_ERROR,
-					     _("Could not get the length of LOB object")))
-			return -1;
-
-		nbbytes = (size > loblen) ? loblen : size;
-		buf = g_new (ub1, nbbytes);
-		/*result = OCILobRead2 (priv_data->hservice, priv_data->herr, oraop->priv->lobl, &nbbytes, 0,
-				      offset + 1, (dvoid *) buf, nbbytes, OCI_ONE_PIECE, 
-				      NULL, NULL, 0, SQLCS_IMPLICIT);*/
-		result = OCILobRead (priv_data->hservice, priv_data->herr, oraop->priv->lobl, &nbbytes,
-				      offset + 1, (dvoid *) buf, nbbytes, 
-				      NULL, NULL, 0, SQLCS_IMPLICIT);
-		if (gda_oracle_check_result (result, oraop->priv->cnc, priv_data, OCI_HTYPE_ERROR,
-					     _("Could not read from LOB object"))) {
-			g_free (buf);
-			return -1;
-		}
-		bin->data = buf;
-		bin->binary_length = nbbytes;
-		return bin->binary_length;
-	}
-
-	return -1;
+	return bin->binary_length;
 }
 
+/*
+ * Blob write request
+ */
 static glong
 gda_oracle_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 {
-	GdaOracleBlobOp *oraop;
+	GdaOracleBlobOp *bop;
 	GdaBinary *bin;
+	glong nbwritten = -1;
 
 	g_return_val_if_fail (GDA_IS_ORACLE_BLOB_OP (op), -1);
-	oraop = GDA_ORACLE_BLOB_OP (op);
-	g_return_val_if_fail (oraop->priv, -1);
-	g_return_val_if_fail (GDA_IS_CONNECTION (oraop->priv->cnc), -1);
+	bop = GDA_ORACLE_BLOB_OP (op);
+	g_return_val_if_fail (bop->priv, -1);
+	g_return_val_if_fail (GDA_IS_CONNECTION (bop->priv->cnc), -1);
 	g_return_val_if_fail (blob, -1);
 
-	bin = (GdaBinary *) blob;
+	if (blob->op && (blob->op != op)) {
+		/* use data through blob->op */
+		#define buf_size 16384
+		gint nread = 0;
+		GdaBlob *tmpblob = g_new0 (GdaBlob, 1);
+		tmpblob->op = blob->op;
 
-	if (oraop->priv->lobl) {
-		sword result;
-		ub4 nbbytes;
-		GdaOracleConnectionData *priv_data = get_conn_data (oraop->priv->cnc);
-		g_assert (priv_data);
+		nbwritten = 0;
 
-		nbbytes = bin->binary_length;
-		result = OCILobWrite (priv_data->hservice, priv_data->herr, oraop->priv->lobl, &nbbytes, (ub4) offset + 1,
-				      (dvoid *) bin->data, bin->binary_length,
-				      OCI_ONE_PIECE, NULL, NULL, 0, SQLCS_IMPLICIT);
-		if (gda_oracle_check_result (result, oraop->priv->cnc, priv_data, OCI_HTYPE_ERROR,
-					     _("Could not write to LOB object"))) {
-			return -1;
+		for (nread = gda_blob_op_read (tmpblob->op, tmpblob, nbwritten, buf_size);
+		     nread > 0;
+		     nread = gda_blob_op_read (tmpblob->op, tmpblob, nbwritten, buf_size)) {
+			glong tmp_written;
+
+			tmp_written = -1; TO_IMPLEMENT;
+			
+			if (tmp_written < 0) {
+				/* treat error */
+				gda_blob_free ((gpointer) tmpblob);
+				return -1;
+			}
+			nbwritten += tmp_written;
+			if (nread < buf_size)
+				/* nothing more to read */
+				break;
 		}
-		return nbbytes;
+		gda_blob_free ((gpointer) tmpblob);
+	}
+	else {
+		/* write blob using bin->data and bin->binary_length */
+		bin = (GdaBinary *) blob;
+		nbwritten = -1; TO_IMPLEMENT;
 	}
 
-	return -1;
-}
-
-static gboolean
-gda_oracle_blob_op_write_all (GdaBlobOp *op, GdaBlob *blob)
-{
-	GdaOracleBlobOp *oraop;
-	GdaBinary *bin;
-
-	g_return_val_if_fail (GDA_IS_ORACLE_BLOB_OP (op), FALSE);
-	oraop = GDA_ORACLE_BLOB_OP (op);
-	g_return_val_if_fail (oraop->priv, FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (oraop->priv->cnc), FALSE);
-	g_return_val_if_fail (blob, FALSE);
-
-	bin = (GdaBinary *) blob;
-	if (oraop->priv->lobl) {
-		sword result;
-		GdaOracleConnectionData *priv_data = get_conn_data (oraop->priv->cnc);
-		g_assert (priv_data);
-
-		if (gda_oracle_blob_op_write (op, blob, 0) != bin->binary_length)
-			return FALSE;
-		else {
-			/* truncate lob at the end */
-			result = OCILobTrim (priv_data->hservice, priv_data->herr, oraop->priv->lobl, bin->binary_length);
-			if (gda_oracle_check_result (result, oraop->priv->cnc, priv_data, OCI_HTYPE_ERROR,
-						     _("Could not truncate LOB object")))
-				return FALSE;
-			else
-				return TRUE;
-		}
-	}
-
-	return FALSE;
+	return nbwritten;
 }

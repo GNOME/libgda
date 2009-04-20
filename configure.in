@@ -858,7 +858,7 @@ fi
 dnl test for ORACLE
 try_oracle=true
 AC_ARG_WITH(oracle,
-[  --with-oracle=<directory>	use ORACLE backend in <directoty>],[
+[  --with-oracle=<directory>	use ORACLE backend in <directory>],[
 if test $withval = no
 then
 	try_oracle=false
@@ -878,7 +878,16 @@ then
 		then
 			AC_MSG_RESULT(found ORACLE in $d)
 			oracledir=$d
+			oraclelibdir=$lib
 			break
+		else
+			if test -f $d/lib/libclntsh.so
+			then
+				AC_MSG_RESULT(found ORACLE in $d)
+				oracledir=$d
+				oraclelibdir="lib"
+				break
+			fi
 		fi
 	done
 	if test x$oracledir = x
@@ -887,7 +896,7 @@ then
 	else
 		AC_DEFINE(HAVE_ORACLE, 1, [Have ORACLE])
 		ORACLE_CFLAGS=" -I$oracledir/include/oracle/client -I$oracledir/rdbms/demo -I${ORACLE_HOME}/rdbms/public -I${ORACLE_HOME}/plsql/public -I$oracledir/network/public"
-		ORACLE_LIBS="-L$oracledir/lib -lm -ldl -lclntsh"
+		ORACLE_LIBS="-L$oracledir/$oraclelibdir -lm -ldl -lclntsh"
 	fi
 fi
 
@@ -1493,6 +1502,8 @@ providers/mdb/Makefile
 providers/mdb/libgda-mdb-4.0.pc
 providers/mysql/Makefile
 providers/mysql/libgda-mysql-4.0.pc
+providers/oracle/Makefile
+providers/oracle/libgda-oracle-4.0.pc
 providers/postgres/Makefile
 providers/postgres/libgda-postgres-4.0.pc
 providers/sqlite/Makefile
@@ -1544,7 +1555,7 @@ echo "      MDB (MS Access) = `if test x$mdbdir != x; then echo yes; else echo n
 echo "      MySQL = `if test x$mysqldir != x; then echo yes; else echo no; fi`"
 dnl echo "      mSQL = `if test x$msqldir != x; then echo yes; else echo no; fi`"
 dnl echo "      ODBC = `if test x$odbcdir != x; then echo yes; else echo no; fi`"
-dnl echo "      Oracle = `if test x$oracledir != x; then echo yes; else echo no; fi`"
+echo "      Oracle = `if test x$oracledir != x; then echo yes; else echo no; fi`"
 echo "      PostgreSQL = `if test x$postgresdir != x; then echo yes; else echo no; fi`"
 echo "      SQLite = yes `if test x$have_sqlite = xyes; then echo '(from system installation)'; else echo '(embedded)'; fi`"
 dnl echo "      Sybase = `if test x$sybasedir != x; then echo yes; else echo no; fi`"

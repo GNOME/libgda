@@ -1,13 +1,8 @@
 /* GDA Oracle provider
- * Copyright (C) 2002 - 2004 The GNOME Foundation.
+ * Copyright (C) 2008 The GNOME Foundation.
  *
  * AUTHORS:
- * 	Tim Coleman <tim@timcoleman.com>
- *
- * Borrowed from mysql-oracle-recordset.h, written by
- *      Michael Lausch <michael@lausch.at>
- *	Rodrigo Moya <rodrigo@gnome-db.org>
- *      Vivien Malerba <malerba@gnome-db.org>
+ *      TO_ADD: your name and email
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -28,9 +23,9 @@
 #ifndef __GDA_ORACLE_RECORDSET_H__
 #define __GDA_ORACLE_RECORDSET_H__
 
-#include <libgda/gda-data-model-hash.h>
-#include <libgda/gda-value.h>
-#include <oci.h>
+#include <libgda/libgda.h>
+#include <providers-support/gda-data-select-priv.h>
+#include "gda-oracle-pstmt.h"
 
 G_BEGIN_DECLS
 
@@ -40,36 +35,22 @@ G_BEGIN_DECLS
 #define GDA_IS_ORACLE_RECORDSET(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_ORACLE_RECORDSET))
 #define GDA_IS_ORACLE_RECORDSET_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_ORACLE_RECORDSET))
 
-
 typedef struct _GdaOracleRecordset        GdaOracleRecordset;
 typedef struct _GdaOracleRecordsetClass   GdaOracleRecordsetClass;
-typedef struct _GdaOracleRecordsetField   GdaOracleRecordsetField;
 typedef struct _GdaOracleRecordsetPrivate GdaOracleRecordsetPrivate;
-typedef struct _GdaOracleValue            GdaOracleValue;
 
 struct _GdaOracleRecordset {
-	GdaDataModelRow model;
+	GdaDataSelect                model;
 	GdaOracleRecordsetPrivate *priv;
 };
 
 struct _GdaOracleRecordsetClass {
-	GdaDataModelRowClass parent_class;
+	GdaDataSelectClass             parent_class;
 };
 
-struct _GdaOracleValue {
-	OCIDefine *hdef;
-	OCIParam *pard;
-	sb2 indicator;
-	ub2 sql_type;
-	ub2 defined_size;
-	gpointer value;
-	GType g_type;
-};
-
-
-GType               gda_oracle_recordset_get_type (void) G_GNUC_CONST;
-GdaOracleRecordset *gda_oracle_recordset_new (GdaConnection *cnc, GdaOracleConnectionData *cdata, 
-					      OCIStmt *stmthp, GArray *col_size_array);
+GType         gda_oracle_recordset_get_type  (void) G_GNUC_CONST;
+GdaDataModel *gda_oracle_recordset_new       (GdaConnection *cnc, GdaOraclePStmt *ps, GdaSet *exec_params,
+					    GdaDataModelAccessFlags flags, GType *col_types);
 
 G_END_DECLS
 

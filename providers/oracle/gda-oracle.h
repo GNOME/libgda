@@ -1,13 +1,8 @@
-/* GDA Oracle provider
- * Copyright (C) 1998 - 2007 The GNOME Foundation.
+/* GDA oracle provider
+ * Copyright (C) 2008 The GNOME Foundation.
  *
  * AUTHORS:
- * 	Tim Coleman <tim@timcoleman.com>
- *
- * Borrowed from gda-mysql.h, written by:
- *      Michael Lausch <michael@lausch.at>
- *	Rodrigo Moya <rodrigo@gnome-db.org>
- *      Vivien Malerba <malerba@gnome-db.org>
+ *      TO_ADD: your name and email
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -28,60 +23,21 @@
 #ifndef __GDA_ORACLE_H__
 #define __GDA_ORACLE_H__
 
-#if defined(HAVE_CONFIG_H)
-#endif
+/*
+ * Provider name
+ */
+#define ORACLE_PROVIDER_NAME "Oracle"
 
-#include <glib/gmacros.h>
-#include <libgda/gda-connection.h>
-#include <libgda/gda-server-provider.h>
-#include <glib/gi18n-lib.h>
-#include <libgda/gda-value.h>
-#include "gda-oracle-provider.h"
-#include "gda-oracle-recordset.h"
-#include <oci.h>
-
-#define OBJECT_DATA_ORACLE_HANDLE "GDA_Oracle_OracleHandle"
-#define GDA_ORACLE_PROVIDER_ID    "GDA Oracle provider"
-#define ORA_NAME_BUFFER_SIZE	  30
-
-#define gda_oracle_check_result(result, cnc, priv_data, type, msg) \
-	(((result) == OCI_SUCCESS || (result) == OCI_SUCCESS_WITH_INFO) \
-	 ? NULL : gda_oracle_handle_error(result, cnc, priv_data,       \
-					  type, msg, __FILE__, __LINE__))
-    
-#define gda_oracle_blob_type(sqltype) \
-	(((sqltype == SQLT_BFILEE) || (sqltype == SQLT_CFILEE)) ? OCI_DTYPE_FILE : OCI_DTYPE_LOB)
-
-G_BEGIN_DECLS
+/* TO_ADD: include headers necessary for the C or C++ API */
 
 /*
- * Utility functions
+ * Provider's specific connection data
  */
-
-GdaConnectionEvent *gda_oracle_make_error (dvoid *hndlp, ub4 type,
-					   const gchar *file, gint line);
-
-void gda_oracle_set_value (GValue *value, 
-				GdaOracleValue *thevalue,
-				GdaConnection *cnc);
-
-gchar *gda_oracle_value_to_sql_string (GValue *value);
-
-GType  oracle_sqltype_to_g_type (const ub2 sqltype);
-
-gchar *oracle_sqltype_to_string (const ub2 sqltype);
-
-GdaOracleValue *gda_value_to_oracle_value (const GValue *value);
-
-GdaConnectionEvent *gda_oracle_handle_error (gint result, 
-					     GdaConnection *cnc, 
-					     GdaOracleConnectionData *priv_data,
-					     ub4 type, 
-					     const gchar *msg,
-					     const gchar *file,
-					     gint line);
-
-
-G_END_DECLS
+typedef struct {
+	/* TO_ADD: this structure holds any information necessary to specialize the GdaConnection, usually a connection
+	 * handle from the C or C++ API
+	 */
+	int foo;
+} OracleConnectionData;
 
 #endif

@@ -1,30 +1,29 @@
-/* GNOME DB Oracle Provider
- * Copyright (C) 2000 - 2007 The GNOME Foundation
+/* GDA oracle provider
+ * Copyright (C) 2008 The GNOME Foundation.
  *
  * AUTHORS:
- *         Rodrigo Moya <rodrigo@gnome-db.org>
- *         Tim Coleman <tim@timcoleman.com>
+ *      TO_ADD: your name and email
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * This Library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This Library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Library General Public License for more details.
  *
  * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * License along with this Library; see the file COPYING.LIB.  If not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
  */
 
 #ifndef __GDA_ORACLE_PROVIDER_H__
 #define __GDA_ORACLE_PROVIDER_H__
 
 #include <libgda/gda-server-provider.h>
-#include <oci.h>
 
 #define GDA_TYPE_ORACLE_PROVIDER            (gda_oracle_provider_get_type())
 #define GDA_ORACLE_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_ORACLE_PROVIDER, GdaOracleProvider))
@@ -36,39 +35,17 @@ typedef struct _GdaOracleProvider      GdaOracleProvider;
 typedef struct _GdaOracleProviderClass GdaOracleProviderClass;
 
 struct _GdaOracleProvider {
-	GdaServerProvider provider;
+	GdaServerProvider      provider;
 };
 
 struct _GdaOracleProviderClass {
 	GdaServerProviderClass parent_class;
 };
 
-/*
- * Connection data
- */
-typedef struct {
-	OCIEnv *henv;
-	OCIError *herr;
-	OCIServer *hserver;
-	OCISvcCtx *hservice;
-	OCISession *hsession;
-        gchar *schema; /* the same as the username which opened the connection */
-} GdaOracleConnectionData;
-
-
 G_BEGIN_DECLS
 
-GType                gda_oracle_provider_get_type (void) G_GNUC_CONST;
-GdaServerProvider   *gda_oracle_provider_new (void);
-
+GType gda_oracle_provider_get_type (void) G_GNUC_CONST;
 
 G_END_DECLS
 
 #endif
-
-/*
-  Local Variables:
-  mode:C
-  c-basic-offset: 8
-  End:
-*/

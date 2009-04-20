@@ -1,3 +1,9 @@
+2009-04-20  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in:
+	* providers/Makefile.am:
+	* providers/oracle/*: set up new oracle provider structure
+
 2009-04-19  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda-report/RML/trml2html/Makefile.am:
