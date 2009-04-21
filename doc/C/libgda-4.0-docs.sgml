@@ -1551,6 +1551,40 @@ g_object_unref (eng);
       &provider-support-sql;
       &provider-support;
     </chapter>
+<sect1>
+    <title>Getting started</title>
+    <para>
+      &LIBGDA;'s sources contain templates to get started in creating a new database provider. The following templates
+      are available:
+      <itemizedlist>
+	<listitem><para>the template in the <filename class="directory">providers/skel-implementation/capi</filename>
+	    directory which can be used when writing a provider using the database's C or C++ API (for example
+	    the PostgreSQL or MySQL providers)</para></listitem>
+	<listitem><para>the template in the <filename class="directory">providers/skel-implementation/models</filename>
+	    directory which can be used when writing a provider for a system which is not a relational database (or
+	    does offer a very limited API, such as for the MS Access or Berkeley DB systems).</para></listitem>
+      </itemizedlist>
+    </para>
+    <para>
+      In any case, for example to create a DummyDb provider, follow these steps:
+      <itemizedlist>
+	<listitem><para>copy one of the template's directory into a new directory named
+	    <filename class="directory">dummydb</filename></para></listitem>
+	<listitem><para>From inside that new directory, run the
+	    <filename class="directory">providers/prepare_provider_sources.sh</filename> script with the name
+	    of the provider as sole argument ("dummydb" here), which replaces
+	    all the class and object names with the name of the provider and renames the files correctly. These
+	    new sources should be compilable without any modification.</para></listitem>
+	<listitem><para>Edit the <filename>Makefile.am</filename> to add provider specific compilation and link
+	    flags</para></listitem>
+	<listitem><para>Integrate the provider's new code into a compilation unit: either &LIBGDA;'s sources in
+	    the <filename class="directory">providers</filename>directory or in your own application (this step usually involves
+	    modifying the <filename>configure.ac</filename> or <filename>configure.in</filename> files).</para></listitem>
+	<listitem><para>Implement the missing parts (it is usually a good idea to look how other provider's
+	    implementations are done to get ideas).</para></listitem>
+      </itemizedlist>
+    </para>
+  </sect1>
     &provider-writing;
   </part>
 

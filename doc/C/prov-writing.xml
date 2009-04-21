@@ -23,12 +23,6 @@
     should be implemented, optionnally the <link linkend="prov-close-connection">close_connection()</link> can
     also be implemented.
   </para>
-  <para>
-    To implement a virtual provider, one can copy the contents of the 
-    <filename class="directory">providers/skel-implementation/models</filename> directory, change all references
-    to "models" with the correct provider name, and implement the missing parts, using if necessary the
-    BDB an MDB providers' implementations as examples.
-  </para>
 
   <sect1>
     <title>Synchronous / asynchronous mode</title>
