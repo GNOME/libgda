@@ -64,6 +64,7 @@ This property changes or queries the internal #GdaSqlStatement structure. A copy
   Specifies how the general rendering is done
 </para>
 
+@GDA_STATEMENT_SQL_PARAMS_AS_VALUES: rendering will replace parameters with their values
 @GDA_STATEMENT_SQL_PRETTY: rendering will include newlines and indentation to make it easy to read
 @GDA_STATEMENT_SQL_PARAMS_LONG: parameters will be rendered using the "/* name:&lt;param_name&gt; ... */" syntax
 @GDA_STATEMENT_SQL_PARAMS_SHORT: parameters will be rendered using the "##&lt;param_name&gt;..." syntax

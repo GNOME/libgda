@@ -56,6 +56,7 @@ typedef enum {
 } GdaStatementModelUsage;
 
 typedef enum {
+	GDA_STATEMENT_SQL_PARAMS_AS_VALUES   = 0,
         GDA_STATEMENT_SQL_PRETTY             = 1 << 0,
         GDA_STATEMENT_SQL_PARAMS_LONG        = 1 << 1,
         GDA_STATEMENT_SQL_PARAMS_SHORT       = 1 << 2,

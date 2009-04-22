@@ -1,3 +1,9 @@
+2009-04-22  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-statement.h: added the GDA_STATEMENT_SQL_PARAMS_AS_VALUES constant
+	name which defaults to 0
+	* libgda/gda-statement.c: fix for bug #579513
+
 2009-04-21  Vivien Malerba <malerba@gnome-db.org>
 
 	* doc/C/libgda-4.0-docs.sgml:
