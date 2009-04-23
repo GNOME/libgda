@@ -1,8 +1,8 @@
 /* GDA Oracle Provider
- * Copyright (C) 2008 The GNOME Foundation
+ * Copyright (C) 2009 The GNOME Foundation
  *
  * AUTHORS:
- *      TO_ADD: your name and email
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -68,7 +68,7 @@ plugin_get_name (void)
 const gchar *
 plugin_get_description (void)
 {
-	return _("Example provider for C API databases");
+	return _("Provider for Oracle databases");
 }
 
 gchar *

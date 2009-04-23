@@ -1,8 +1,8 @@
 /* GDA Oracle provider
- * Copyright (C) 2008 The GNOME Foundation.
+ * Copyright (C) 2009 The GNOME Foundation.
  *
  * AUTHORS:
- *      TO_ADD: your name and email
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -23,6 +23,7 @@
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include "gda-oracle-pstmt.h"
+#include "gda-oracle-util.h"
 
 static void gda_oracle_pstmt_class_init (GdaOraclePStmtClass *klass);
 static void gda_oracle_pstmt_init       (GdaOraclePStmt *pstmt, GdaOraclePStmtClass *klass);
@@ -78,7 +79,8 @@ gda_oracle_pstmt_init (GdaOraclePStmt *pstmt, GdaOraclePStmtClass *klass)
 	g_return_if_fail (GDA_IS_PSTMT (pstmt));
 	
 	/* initialize specific parts of @pstmt */
-	TO_IMPLEMENT;
+	pstmt->hstmt = NULL;
+	pstmt->ora_values = NULL;
 }
 
 static void
@@ -89,8 +91,24 @@ gda_oracle_pstmt_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_PSTMT (pstmt));
 
 	/* free memory */
-	TO_IMPLEMENT; /* free some specific parts of @pstmt */
+	OCIStmtRelease ((dvoid *) pstmt->hstmt, NULL, NULL, 0, OCI_STRLS_CACHE_DELETE);
+	if (pstmt->ora_values) {
+		g_list_foreach (pstmt->ora_values, (GFunc) _gda_oracle_value_free, NULL);
+		g_list_free (pstmt->ora_values);
+	}
 
 	/* chain to parent class */
 	parent_class->finalize (object);
+}
+
+GdaOraclePStmt *
+gda_oracle_pstmt_new (OCIStmt *hstmt)
+{
+	GdaOraclePStmt *pstmt;
+
+        pstmt = (GdaOraclePStmt *) g_object_new (GDA_TYPE_ORACLE_PSTMT, NULL);
+        pstmt->hstmt = hstmt;
+
+        return pstmt;
+
 }

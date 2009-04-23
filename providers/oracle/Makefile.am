@@ -38,6 +38,8 @@ libgda_oracle_la_SOURCES = \
 	gda-oracle-meta.h \
 	gda-oracle-recordset.c \
 	gda-oracle-recordset.h \
+	gda-oracle-util.c \
+	gda-oracle-util.h \
 	gda-oracle.h \
 	libmain.c \
 	parser.h \

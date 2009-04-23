@@ -1,8 +1,8 @@
 /* GDA Oracle library
- * Copyright (C) 2008 The GNOME Foundation.
+ * Copyright (C) 2009 The GNOME Foundation.
  *
  * AUTHORS:
- *      TO_ADD: your name and email
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -39,18 +39,16 @@ typedef struct _GdaOraclePStmtClass   GdaOraclePStmtClass;
 
 struct _GdaOraclePStmt {
 	GdaPStmt        object;
-
-	/* TO_ADD: this structure holds any information necessary to reference a prepared statement, usually a connection
-         * handle from the C or C++ API
-         */
+	OCIStmt        *hstmt;
+	GList          *ora_values; /* list of GdaOracleValue pointers, owned here */
 };
 
 struct _GdaOraclePStmtClass {
 	GdaPStmtClass  parent_class;
 };
 
-GType         gda_oracle_pstmt_get_type  (void) G_GNUC_CONST;
-/* TO_ADD: helper function to create a GdaOraclePStmt such as gda_oracle_pstmt_new() with some specific arguments */
+GType           gda_oracle_pstmt_get_type  (void) G_GNUC_CONST;
+GdaOraclePStmt *gda_oracle_pstmt_new (OCIStmt *hstmt);
 
 G_END_DECLS
 

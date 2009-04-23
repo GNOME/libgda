@@ -2,7 +2,7 @@
  * Copyright (C) 2008 The GNOME Foundation.
  *
  * AUTHORS:
- *      TO_ADD: your name and email
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public

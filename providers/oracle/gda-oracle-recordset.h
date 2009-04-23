@@ -1,8 +1,8 @@
 /* GDA Oracle provider
- * Copyright (C) 2008 The GNOME Foundation.
+ * Copyright (C) 2009 The GNOME Foundation.
  *
  * AUTHORS:
- *      TO_ADD: your name and email
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -50,7 +50,7 @@ struct _GdaOracleRecordsetClass {
 
 GType         gda_oracle_recordset_get_type  (void) G_GNUC_CONST;
 GdaDataModel *gda_oracle_recordset_new       (GdaConnection *cnc, GdaOraclePStmt *ps, GdaSet *exec_params,
-					    GdaDataModelAccessFlags flags, GType *col_types);
+					      GdaDataModelAccessFlags flags, GType *col_types);
 
 G_END_DECLS
 

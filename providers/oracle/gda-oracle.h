@@ -1,8 +1,8 @@
 /* GDA oracle provider
- * Copyright (C) 2008 The GNOME Foundation.
+ * Copyright (C) 2009 The GNOME Foundation.
  *
  * AUTHORS:
- *      TO_ADD: your name and email
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -28,16 +28,20 @@
  */
 #define ORACLE_PROVIDER_NAME "Oracle"
 
-/* TO_ADD: include headers necessary for the C or C++ API */
+/* headers necessary for the C or C++ API */
+#include <libgda/libgda.h>
+#include <oci.h>
 
 /*
  * Provider's specific connection data
  */
 typedef struct {
-	/* TO_ADD: this structure holds any information necessary to specialize the GdaConnection, usually a connection
-	 * handle from the C or C++ API
-	 */
-	int foo;
+	OCIEnv *henv;
+        OCIError *herr;
+        OCIServer *hserver;
+        OCISvcCtx *hservice;
+        OCISession *hsession;
+        gchar *schema; /* the same as the username which opened the connection */
 } OracleConnectionData;
 
 #endif

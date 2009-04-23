@@ -895,7 +895,7 @@ then
 		AC_MSG_WARN(ORACLE backend not used)
 	else
 		AC_DEFINE(HAVE_ORACLE, 1, [Have ORACLE])
-		ORACLE_CFLAGS=" -I$oracledir/include/oracle/client -I$oracledir/rdbms/demo -I${ORACLE_HOME}/rdbms/public -I${ORACLE_HOME}/plsql/public -I$oracledir/network/public"
+		ORACLE_CFLAGS=" -I$oracledir/include -I$oracledir/include/oracle/client -I$oracledir/rdbms/demo -I${ORACLE_HOME}/rdbms/public -I${ORACLE_HOME}/plsql/public -I$oracledir/network/public"
 		ORACLE_LIBS="-L$oracledir/$oraclelibdir -lm -ldl -lclntsh"
 	fi
 fi

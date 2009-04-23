@@ -1,8 +1,8 @@
 /* GDA Oracle provider
- * Copyright (C) 2008 The GNOME Foundation.
+ * Copyright (C) 2009 The GNOME Foundation.
  *
  * AUTHORS:
- *      TO_ADD: your name and email
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -28,6 +28,7 @@
 #include "gda-oracle.h"
 #include "gda-oracle-recordset.h"
 #include "gda-oracle-provider.h"
+#include "gda-oracle-util.h"
 
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 
@@ -43,10 +44,11 @@ static gboolean gda_oracle_recordset_fetch_next (GdaDataSelect *model, GdaRow **
 static gboolean gda_oracle_recordset_fetch_prev (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
 static gboolean gda_oracle_recordset_fetch_at (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
 
+static GdaRow  *new_row (GdaDataSelect *imodel, GdaConnection *cnc, GdaOraclePStmt *ps);
 
 struct _GdaOracleRecordsetPrivate {
-	GdaConnection *cnc;
-	/* TO_ADD: specific information */
+	gint     next_row_num;
+	gboolean is_scrollable; /* if FALSE => in RANDOM access mode we need to perform some caching like for SQLite */
 };
 static GObjectClass *parent_class = NULL;
 
@@ -59,10 +61,8 @@ gda_oracle_recordset_init (GdaOracleRecordset *recset,
 {
 	g_return_if_fail (GDA_IS_ORACLE_RECORDSET (recset));
 	recset->priv = g_new0 (GdaOracleRecordsetPrivate, 1);
-	recset->priv->cnc = NULL;
-
-	/* initialize specific information */
-	TO_IMPLEMENT;
+	recset->priv->is_scrollable = FALSE;
+	recset->priv->next_row_num = 0;
 }
 
 static void
@@ -90,11 +90,7 @@ gda_oracle_recordset_dispose (GObject *object)
 	g_return_if_fail (GDA_IS_ORACLE_RECORDSET (recset));
 
 	if (recset->priv) {
-		if (recset->priv->cnc) 
-			g_object_unref (recset->priv->cnc);
-
 		/* free specific information */
-		TO_IMPLEMENT;
 		g_free (recset->priv);
 		recset->priv = NULL;
 	}
@@ -139,12 +135,16 @@ gda_oracle_recordset_get_type (void)
  */
 GdaDataModel *
 gda_oracle_recordset_new (GdaConnection *cnc, GdaOraclePStmt *ps, GdaSet *exec_params,
-			GdaDataModelAccessFlags flags, GType *col_types)
+			  GdaDataModelAccessFlags flags, GType *col_types)
 {
 	GdaOracleRecordset *model;
         OracleConnectionData *cdata;
         gint i;
 	GdaDataModelAccessFlags rflags;
+	int result;
+
+	gint nb_rows = -1;
+	gboolean is_scrollable = FALSE;
 
         g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
         g_return_val_if_fail (ps != NULL, NULL);
@@ -153,15 +153,31 @@ gda_oracle_recordset_new (GdaConnection *cnc, GdaOraclePStmt *ps, GdaSet *exec_p
 	if (!cdata)
 		return NULL;
 
-	/* make sure @ps reports the correct number of columns using the API*/
-        if (_GDA_PSTMT (ps)->ncols < 0)
-                /*_GDA_PSTMT (ps)->ncols = ...;*/
-		TO_IMPLEMENT;
+	/* make sure @ps reports the correct number of columns using the API */
+        if (_GDA_PSTMT (ps)->ncols < 0) {
+		ub4 ncolumns;
+		int result;
+		
+                /* get the number of columns in the result set */
+                result = OCIAttrGet ((dvoid *) ps->hstmt,
+                                     (ub4) OCI_HTYPE_STMT,
+                                     (dvoid *) &ncolumns,
+                                     (ub4 *) 0,
+                                     (ub4) OCI_ATTR_PARAM_COUNT,
+                                     cdata->herr);
+                if (gda_oracle_check_result (result, cnc, cdata, OCI_HTYPE_ERROR,
+                                             _("Could not get the number of columns in the result set")))
+                        return NULL;
+		
+                _GDA_PSTMT (ps)->ncols = ncolumns;
+	}
 
         /* completing @ps if not yet done */
         if (!_GDA_PSTMT (ps)->types && (_GDA_PSTMT (ps)->ncols > 0)) {
 		/* create prepared statement's columns */
 		GSList *list;
+		GList *ora_values = NULL;
+
 		for (i = 0; i < _GDA_PSTMT (ps)->ncols; i++)
 			_GDA_PSTMT (ps)->tmpl_columns = g_slist_prepend (_GDA_PSTMT (ps)->tmpl_columns, 
 									 gda_column_new ());
@@ -183,18 +199,194 @@ gda_oracle_recordset_new (GdaConnection *cnc, GdaOraclePStmt *ps, GdaSet *exec_p
 			}
 		}
 		
-		/* fill GdaColumn's data */
+		/* fill GdaColumn's data and define the GdaOracleValue structures */
 		for (i=0, list = _GDA_PSTMT (ps)->tmpl_columns; 
 		     i < GDA_PSTMT (ps)->ncols; 
 		     i++, list = list->next) {
 			GdaColumn *column;
+			int result;
+			GdaOracleValue *ora_value;
+
+			ora_value = g_new0 (GdaOracleValue, 1);
+			ora_values = g_list_prepend (ora_values, ora_value);
+
+			/* parameter to get attributes */
+			result = OCIParamGet (ps->hstmt,
+					      OCI_HTYPE_STMT,
+					      cdata->herr,
+					      (dvoid **) &(ora_value->pard),
+					      (ub4) i+1);
+			if (gda_oracle_check_result (result, cnc, cdata, OCI_HTYPE_ERROR,
+						     _("Could not get the Oracle parameter descripter in the result set"))) {
+				g_list_foreach (ora_values, (GFunc) _gda_oracle_value_free, NULL);
+				return NULL;
+			}
+			
+			/* data size */
+			result = OCIAttrGet ((dvoid *) (ora_value->pard),
+					     OCI_DTYPE_PARAM,
+					     &(ora_value->defined_size),
+					     0,
+					     OCI_ATTR_DATA_SIZE,
+					     cdata->herr);
+			if (gda_oracle_check_result (result, cnc, cdata, OCI_HTYPE_ERROR,
+						     _("Could not get the parameter defined size"))) {
+				g_list_foreach (ora_values, (GFunc) _gda_oracle_value_free, NULL);
+				return NULL;
+			}
+			
+			/* data type */
+			result = OCIAttrGet ((dvoid *) (ora_value->pard),
+					     OCI_DTYPE_PARAM,
+					     &(ora_value->sql_type),
+					     0,
+					     OCI_ATTR_DATA_TYPE,
+					     cdata->herr);
+			if (gda_oracle_check_result (result, cnc, cdata, OCI_HTYPE_ERROR,
+						     _("Could not get the parameter data type"))) {
+				g_list_foreach (ora_values, (GFunc) _gda_oracle_value_free, NULL);
+				return NULL;
+			}
+
+			/* column's name */
+			text *name;
+			ub4 name_len;
 			
 			column = GDA_COLUMN (list->data);
+			result = OCIAttrGet ((dvoid *) (ora_value->pard),
+                                             (ub4) OCI_DTYPE_PARAM,
+                                             (dvoid **) &name,
+                                             (ub4 *) &name_len,
+                                             (ub4) OCI_ATTR_NAME,
+                                             (OCIError *) cdata->herr);
+			if (gda_oracle_check_result (result, cnc, cdata, OCI_HTYPE_ERROR,
+                                                     _("Could not get column name in the result set"))) {
+				g_list_foreach (ora_values, (GFunc) _gda_oracle_value_free, NULL);
+                                return NULL;
+			}
 
-			/* use C API to set columns' information using gda_column_set_*() */
-			TO_IMPLEMENT;
+			gchar *name_buffer;
+			name_buffer = g_new (gchar, name_len + 1);
+			memcpy (name_buffer, name, name_len);
+                        name_buffer [name_len] = '\0';
+			gda_column_set_name (column, name_buffer);
+			gda_column_set_description (column, name_buffer);
+			g_free (name_buffer);
+
+			/* for data fetching  */
+			ub2 fake_type;
+			fake_type = ora_value->sql_type;
+			switch (ora_value->sql_type) {
+			case SQLT_NUM: /* Numerics are coerced to string */
+				fake_type = SQLT_CHR;
+				break;
+			case SQLT_DAT: /* Convert SQLT_DAT to OCIDate */
+				fake_type = SQLT_ODT;
+				break;
+			}
+			
+			if (_GDA_PSTMT (ps)->types [i] != GDA_TYPE_NULL)
+				ora_value->g_type = _GDA_PSTMT (ps)->types [i];
+			else
+				ora_value->g_type = _oracle_sqltype_to_g_type (ora_value->sql_type);
+			/*
+			if (col_size_array && (i < col_size_array->len)) {
+				ub2 size;
+				
+				size = g_array_index (col_size_array, ub2, i);
+				if (size > 0)
+					ora_value->defined_size = size;
+			}
+			*/
+			if (ora_value->g_type == GDA_TYPE_BLOB) {
+				/* allocate a Lob locator */
+				OCILobLocator *lob;
+				
+				result = OCIDescriptorAlloc ((dvoid *) cdata->henv, (dvoid **) &lob,
+							     (ub4) gda_oracle_blob_type (ora_value->sql_type), 
+							     (size_t) 0, (dvoid **) 0);
+				if (gda_oracle_check_result (result, cnc, cdata, OCI_HTYPE_ERROR,
+							     _("Could not allocate Lob locator"))) {
+					g_list_foreach (ora_values, (GFunc) _gda_oracle_value_free, NULL);
+					return NULL;
+				}
+				ora_value->value = lob;
+				ora_value->defined_size = 0;
+			}
+			else if (ora_value->defined_size == 0)
+				ora_value->value = NULL;
+			else {
+				ora_value->defined_size++;
+				ora_value->value = g_malloc0 (ora_value->defined_size);
+			}
+			
+			ora_value->hdef = (OCIDefine *) 0;
+			ora_value->indicator = 0;
+			result = OCIDefineByPos ((OCIStmt *) ps->hstmt,
+						 (OCIDefine **) &(ora_value->hdef),
+						 (OCIError *) cdata->herr,
+						 (ub4) i + 1,
+						 ora_value->value,
+						 ora_value->defined_size,
+						 (ub2) fake_type,
+						 (dvoid *) &(ora_value->indicator),
+						 (ub2 *) 0,
+						 (ub2 *) 0,
+						 (ub4) OCI_DEFAULT);
+			if (gda_oracle_check_result (result, cnc, cdata, OCI_HTYPE_ERROR,
+						     _("Could not define by position"))) {
+				OCIDescriptorFree ((dvoid *) ora_value->pard, OCI_DTYPE_PARAM);
+				g_list_foreach (ora_values, (GFunc) _gda_oracle_value_free, NULL);
+				return NULL;
+			}
 		}
+
+		ps->ora_values = g_list_reverse (ora_values);
         }
+
+	/* determine if cursor is scrollable or not as "Remote mapped queries cannot be used with scrollable cursors"
+	 * or so says dthe doc.
+	 * Also set the prefetch rows number */
+	result = OCIStmtFetch2 (ps->hstmt,
+                                cdata->herr,
+                                (ub4) 1,
+                                (ub2) OCI_FETCH_LAST,
+                                (sb4) 0,
+                                (ub4) OCI_DEFAULT);
+	if (result == OCI_NO_DATA)
+                nb_rows = 0;
+	else if (result != OCI_ERROR) {
+		is_scrollable = TRUE;
+	
+		/* get number of rows */
+		ub4 pos;
+                result = OCIAttrGet (ps->hstmt, OCI_HTYPE_STMT,
+                                     (dvoid *) &pos, NULL,
+                                     OCI_ATTR_CURRENT_POSITION, cdata->herr);
+                if (gda_oracle_check_result (result, cnc, cdata, OCI_HTYPE_ERROR,
+					     _("Could not get the current position"))) 
+                        return NULL;
+		nb_rows = pos;
+
+		/* go back to 1st row */
+		result = OCIStmtFetch2 (ps->hstmt,
+					cdata->herr,
+					(ub4) 1,
+					(ub2) OCI_FETCH_FIRST,
+					(sb4) 0,
+					(ub4) OCI_DEFAULT);
+		if (gda_oracle_check_result (result, cnc, cdata, OCI_HTYPE_ERROR,
+                                             _("Could not move to position")))
+			return NULL;
+
+		/* set prefetch size */
+		ub4 prefetch;
+		prefetch = (ub4) ((gfloat) nb_rows * 0.2);
+		if (prefetch > 1)
+			OCIAttrSet (ps->hstmt, OCI_HTYPE_STMT,
+				    &prefetch, 0,
+				    OCI_ATTR_PREFETCH_ROWS, cdata->herr);
+	}
 
 	/* determine access mode: RANDOM or CURSOR FORWARD are the only supported */
 	if (flags & GDA_DATA_MODEL_ACCESS_RANDOM)
@@ -204,16 +396,56 @@ gda_oracle_recordset_new (GdaConnection *cnc, GdaOraclePStmt *ps, GdaSet *exec_p
 
 	/* create data model */
         model = g_object_new (GDA_TYPE_ORACLE_RECORDSET, 
+			      "connection", cnc,
 			      "prepared-stmt", ps, 
 			      "model-usage", rflags, 
 			      "exec-params", exec_params, NULL);
-        model->priv->cnc = cnc;
-	g_object_ref (cnc);
+	GDA_DATA_SELECT (model)->advertized_nrows = nb_rows;
+	GDA_ORACLE_RECORDSET (model)->priv->is_scrollable = is_scrollable;
 
-	/* post init specific code */
-	TO_IMPLEMENT;
-
+	g_print ("DETECTED %d rows, %s\n", nb_rows, is_scrollable ? "SCROLLABLE" : "NON SCROLLABLE");
+	
         return GDA_DATA_MODEL (model);
+}
+
+static GdaRow *
+fetch_next_oracle_row (GdaOracleRecordset *model, gboolean do_store, GError **error)
+{
+	int result;
+	GdaRow *prow = NULL;
+	GdaOraclePStmt *ps = GDA_ORACLE_PSTMT (((GdaDataSelect*)model)->prep_stmt);
+	OracleConnectionData *cdata;
+	GdaConnection *cnc;
+
+	cnc = gda_data_select_get_connection ((GdaDataSelect*) model);
+	cdata = (OracleConnectionData*)	gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return FALSE;
+
+	/* fetch row */
+	result = OCIStmtFetch2 (ps->hstmt,
+				cdata->herr,
+				(ub4) 1,
+				(ub2) OCI_FETCH_NEXT,
+				(sb4) 1,
+				(ub4) OCI_DEFAULT);
+	if (result == OCI_NO_DATA) {
+		GDA_DATA_SELECT (model)->advertized_nrows = model->priv->next_row_num;
+		return NULL;
+	}
+	else if (gda_oracle_check_result (result, cnc, cdata, OCI_HTYPE_ERROR,
+					  _("Could not fetch requested row"))) {
+		/* set @error */
+		TO_IMPLEMENT;
+		return FALSE;
+	}
+	
+	prow = new_row ((GdaDataSelect*) model, cnc, ps);
+	gda_data_select_take_row (model, prow, model->priv->next_row_num);
+	model->priv->next_row_num ++;
+	g_print ("Next row: %d\n", model->priv->next_row_num);
+
+	return prow;
 }
 
 
@@ -224,15 +456,16 @@ static gint
 gda_oracle_recordset_fetch_nb_rows (GdaDataSelect *model)
 {
 	GdaOracleRecordset *imodel;
+        GdaRow *prow = NULL;
 
-	imodel = GDA_ORACLE_RECORDSET (model);
-	if (model->advertized_nrows >= 0)
-		return model->advertized_nrows;
+        imodel = GDA_ORACLE_RECORDSET (model);
+        if (model->advertized_nrows >= 0)
+                return model->advertized_nrows;
 
-	/* use C API to determine number of rows,if possible */
-	TO_IMPLEMENT;
-
-	return model->advertized_nrows;
+        for (prow = fetch_next_oracle_row (imodel, TRUE, NULL);
+             prow;
+             prow = fetch_next_oracle_row (imodel, TRUE, NULL));
+        return model->advertized_nrows;
 }
 
 /*
@@ -253,12 +486,43 @@ gda_oracle_recordset_fetch_nb_rows (GdaDataSelect *model)
 static gboolean 
 gda_oracle_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
 {
-	GdaOracleRecordset *imodel;
+	int result;
+	GdaOraclePStmt *ps = GDA_ORACLE_PSTMT (model->prep_stmt);
+	OracleConnectionData *cdata;
+	GdaConnection *cnc;
 
-	imodel = GDA_ORACLE_RECORDSET (model);
+	if (*prow)
+                return TRUE;
 
-	TO_IMPLEMENT;
+	cnc = gda_data_select_get_connection (model);
+	cdata = (OracleConnectionData*)	gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return FALSE;
 
+	if (GDA_ORACLE_RECORDSET (model)->priv->is_scrollable) {
+		/* fetch row */
+		result = OCIStmtFetch2 (ps->hstmt,
+					cdata->herr,
+					(ub4) 1,
+					(ub2) OCI_FETCH_ABSOLUTE,
+					(sb4) rownum + 1,
+					(ub4) OCI_DEFAULT);
+		if (result == OCI_NO_DATA) {
+			model->advertized_nrows = rownum - 1;
+		}
+		else if (gda_oracle_check_result (result, cnc, cdata, OCI_HTYPE_ERROR,
+						  _("Could not fetch requested row"))) {
+			/* set @error */
+			TO_IMPLEMENT;
+			return FALSE;
+		}
+		
+		*prow = new_row (model, cnc, ps);
+		gda_data_select_take_row (model, *prow, rownum);
+	}
+	else {
+		TO_IMPLEMENT;
+	}
 	return TRUE;
 }
 
@@ -297,10 +561,38 @@ gda_oracle_recordset_store_all (GdaDataSelect *model, GError **error)
 static gboolean 
 gda_oracle_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
 {
-	GdaOracleRecordset *imodel = (GdaOracleRecordset*) model;
+	int result;
+	GdaOraclePStmt *ps = GDA_ORACLE_PSTMT (model->prep_stmt);
+	OracleConnectionData *cdata;
+	GdaConnection *cnc;
 
-	TO_IMPLEMENT;
+	if (*prow)
+                return TRUE;
 
+	cnc = gda_data_select_get_connection (model);
+	cdata = (OracleConnectionData*)	gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return FALSE;
+
+	/* fetch row */
+	result = OCIStmtFetch2 (ps->hstmt,
+				cdata->herr,
+				(ub4) 1,
+				(ub2) OCI_FETCH_NEXT,
+				(sb4) 1,
+				(ub4) OCI_DEFAULT);
+	if (result == OCI_NO_DATA) {
+		model->advertized_nrows = rownum - 1;
+	}
+	else if (gda_oracle_check_result (result, cnc, cdata, OCI_HTYPE_ERROR,
+					  _("Could not fetch requested row"))) {
+		/* set @error */
+		TO_IMPLEMENT;
+		return FALSE;
+	}
+	
+	*prow = new_row (model, cnc, ps);
+	gda_data_select_take_row (model, *prow, rownum);
 	return TRUE;
 }
 
@@ -319,10 +611,43 @@ gda_oracle_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint rownu
 static gboolean 
 gda_oracle_recordset_fetch_prev (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
 {
-	GdaOracleRecordset *imodel = (GdaOracleRecordset*) model;
+	int result;
+	GdaOraclePStmt *ps = GDA_ORACLE_PSTMT (model->prep_stmt);
+	OracleConnectionData *cdata;
+	GdaConnection *cnc;
 
-	TO_IMPLEMENT;
+	if (*prow)
+                return TRUE;
 
+	cnc = gda_data_select_get_connection (model);
+	cdata = (OracleConnectionData*)	gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return FALSE;
+
+	if (GDA_ORACLE_RECORDSET (model)->priv->is_scrollable) {
+		/* fetch row */
+		result = OCIStmtFetch2 (ps->hstmt,
+					cdata->herr,
+					(ub4) 1,
+					(ub2) OCI_FETCH_PRIOR,
+					(sb4) 1,
+					(ub4) OCI_DEFAULT);
+		if (result == OCI_NO_DATA) {
+			model->advertized_nrows = rownum - 1;
+		}
+		else if (gda_oracle_check_result (result, cnc, cdata, OCI_HTYPE_ERROR,
+						  _("Could not fetch requested row"))) {
+			/* set @error */
+			TO_IMPLEMENT;
+			return FALSE;
+		}
+		
+		*prow = new_row (model, cnc, ps);
+		gda_data_select_take_row (model, *prow, rownum);
+	}
+	else {
+		TO_IMPLEMENT;
+	}
 	return TRUE;
 }
 
@@ -341,10 +666,25 @@ gda_oracle_recordset_fetch_prev (GdaDataSelect *model, GdaRow **prow, gint rownu
 static gboolean 
 gda_oracle_recordset_fetch_at (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
 {
-	GdaOracleRecordset *imodel = (GdaOracleRecordset*) model;
-	
-	TO_IMPLEMENT;
-
-	return TRUE;
+	return gda_oracle_recordset_fetch_random (model, prow, rownum, error);
 }
 
+/* create a new GdaRow from the last read row */
+static GdaRow *
+new_row (GdaDataSelect *imodel, GdaConnection *cnc, GdaOraclePStmt *ps)
+{
+	GdaRow *prow;
+	GList *nodes;
+	gint i;
+
+	prow = gda_row_new (((GdaDataSelect*) imodel)->prep_stmt->ncols);
+	for (i = 0, nodes = ps->ora_values;
+	     nodes; 
+	     i++, nodes = nodes->next) {
+		GdaOracleValue *ora_value = (GdaOracleValue *) nodes->data;
+                GValue *value = gda_row_get_value (prow, i); 
+                _gda_oracle_set_value (value, ora_value, cnc);
+	}
+
+	return prow;
+}

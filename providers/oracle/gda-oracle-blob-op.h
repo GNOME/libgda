@@ -1,8 +1,8 @@
 /* GDA Oracle provider
- * Copyright (C) 2008 The GNOME Foundation
+ * Copyright (C) 2009 The GNOME Foundation
  *
  * AUTHORS:
- *      TO_ADD: your name and email
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -47,9 +47,7 @@ struct _GdaOracleBlobOpClass {
 };
 
 GType         gda_oracle_blob_op_get_type     (void) G_GNUC_CONST;
-GdaBlobOp    *gda_oracle_blob_op_new          (GdaConnection *cnc);
-
-/* TO_ADD: more convenient API to create a GdaBlobOp with some specific information as argument */
+GdaBlobOp    *gda_oracle_blob_op_new          (GdaConnection *cnc, OCILobLocator *lobloc);
 
 G_END_DECLS
 

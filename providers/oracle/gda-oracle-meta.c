@@ -1,8 +1,8 @@
 /* GDA oracle provider
- * Copyright (C) 2008 The GNOME Foundation.
+ * Copyright (C) 2009 The GNOME Foundation.
  *
  * AUTHORS:
- *      TO_ADD: your name and email
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -37,7 +37,9 @@
  * predefined statements' IDs
  */
 typedef enum {
-        I_STMT_1,
+        I_STMT_CATALOG,
+        I_STMT_SCHEMAS_ALL,
+	I_STMT_SCHEMA_NAMED
 } InternalStatementItem;
 
 
@@ -45,7 +47,14 @@ typedef enum {
  * predefined statements' SQL
  */
 static gchar *internal_sql[] = {
-	"SQL for I_STMT_1"
+	/* I_STMT_CATALOG */
+	"select ora_database_name from dual",
+
+	/* I_STMT_SCHEMAS_ALL */
+	"SELECT ora_database_name, username, username, CASE WHEN username = user THEN 1 ELSE 0 END FROM all_users",
+
+	/* I_STMT_SCHEMA_NAMED */
+	"SELECT ora_database_name, username, username, CASE WHEN username = user THEN 1 ELSE 0 END FROM all_users WHERE username = ##name::string",
 };
 
 /*
@@ -71,7 +80,7 @@ _gda_oracle_provider_meta_init (GdaServerProvider *provider)
 
         internal_parser = gda_server_provider_internal_get_parser (provider);
         internal_stmt = g_new0 (GdaStatement *, sizeof (internal_sql) / sizeof (gchar*));
-        for (i = I_STMT_1; i < sizeof (internal_sql) / sizeof (gchar*); i++) {
+        for (i = I_STMT_CATALOG; i < sizeof (internal_sql) / sizeof (gchar*); i++) {
                 internal_stmt[i] = gda_sql_parser_parse_string (internal_parser, internal_sql[i], NULL, NULL);
                 if (!internal_stmt[i])
                         g_error ("Could not parse internal statement: %s\n", internal_sql[i]);
@@ -93,11 +102,8 @@ _gda_oracle_meta__info (GdaServerProvider *prov, GdaConnection *cnc,
 	GdaDataModel *model;
 	gboolean retval;
 
-	TO_IMPLEMENT;
-	/* fill in @model, with something like:
-	 * model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_1], NULL, 
-	 *                                                  error);
-	 */
+	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_CATALOG], NULL, 
+							 error);
 	if (!model)
 		return FALSE;
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
@@ -276,8 +282,18 @@ gboolean
 _gda_oracle_meta__schemata (GdaServerProvider *prov, GdaConnection *cnc, 
 			  GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
-	TO_IMPLEMENT;
-	return TRUE;
+	GdaDataModel *model;
+	gboolean retval;
+	GType col_types[] = {G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_NONE};
+
+	model = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_SCHEMAS_ALL], NULL, 
+                                                              GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types, error);
+	if (!model)
+		return FALSE;
+	retval = gda_meta_store_modify_with_context (store, context, model, error);
+	g_object_unref (model);
+		
+	return retval;
 }
 
 gboolean
@@ -285,8 +301,33 @@ _gda_oracle_meta_schemata (GdaServerProvider *prov, GdaConnection *cnc,
 			 GdaMetaStore *store, GdaMetaContext *context, GError **error, 
 			 const GValue *catalog_name, const GValue *schema_name_n)
 {
-	TO_IMPLEMENT;
-	return TRUE;
+	GdaDataModel *model;
+        gboolean retval;
+	GType col_types[] = {G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_NONE};
+
+        if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), catalog_name, error))
+                return FALSE;
+        if (!schema_name_n) {
+		model = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_SCHEMAS_ALL], NULL, 
+								      GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types, error);
+                if (!model)
+                        return FALSE;
+                retval = gda_meta_store_modify (store, context->table_name, model, NULL, error, NULL);
+        }
+        else {
+                if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), schema_name_n, error))
+                        return FALSE;
+		model = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_SCHEMA_NAMED], i_set, 
+								      GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types, error);
+                if (!model)
+                        return FALSE;
+
+                retval = gda_meta_store_modify (store, context->table_name, model, "schema_name = ##name::string", error,
+                                                "name", schema_name_n, NULL);
+        }
+        g_object_unref (model);
+
+        return retval;
 }
 
 gboolean
