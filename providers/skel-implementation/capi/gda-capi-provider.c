@@ -321,7 +321,7 @@ gda_capi_provider_get_version (GdaServerProvider *provider)
  *   - open the real connection to the database using the parameters previously checked
  *   - create a CapiConnectionData structure and associate it to @cnc
  *
- * Returns: TRUE if no error occurred, or FALSE otherwise (and an ERROR gonnection event must be added to @cnc)
+ * Returns: TRUE if no error occurred, or FALSE otherwise (and an ERROR connection event must be added to @cnc)
  */
 static gboolean
 gda_capi_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
@@ -372,7 +372,7 @@ gda_capi_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
  *   - Actually close the connection to the database using @cnc's associated CapiConnectionData structure
  *   - Free the CapiConnectionData structure and its contents
  *
- * Returns: TRUE if no error occurred, or FALSE otherwise (and an ERROR gonnection event must be added to @cnc)
+ * Returns: TRUE if no error occurred, or FALSE otherwise (and an ERROR connection event must be added to @cnc)
  */
 static gboolean
 gda_capi_provider_close_connection (GdaServerProvider *provider, GdaConnection *cnc)
