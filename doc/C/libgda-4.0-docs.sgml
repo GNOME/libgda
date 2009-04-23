@@ -472,6 +472,11 @@
 		&LIBGDA; threads' support).</para>
 	    </listitem>
 	    <listitem>
+              <para>GDA_SHOW_PROVIDER_LOADING_ERROR: if set, then in case a provider fails to be loaded (usually because
+		it requires a library which can't be found) &LIBGDA; will display a warning message. This variable
+		is usefull to debug the absence of a provider at runtime</para>
+	    </listitem>
+	    <listitem>
               <para>GDA_DATA_MODEL_DUMP_TITLE: if set, then <link linkend="gda-data-model-dump">gda_data_model_dump()</link>
 	      will also output the name of the data model as its first line</para>
 	    </listitem>

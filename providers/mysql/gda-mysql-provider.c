@@ -704,20 +704,16 @@ gda_mysql_provider_supports_operation (GdaServerProvider       *provider,
         switch (type) {
         case GDA_SERVER_OPERATION_CREATE_DB:
         case GDA_SERVER_OPERATION_DROP_DB:
-		return FALSE;
-
         case GDA_SERVER_OPERATION_CREATE_TABLE:
-		return TRUE;
         case GDA_SERVER_OPERATION_DROP_TABLE:
         case GDA_SERVER_OPERATION_RENAME_TABLE:
-
         case GDA_SERVER_OPERATION_ADD_COLUMN:
-
+	case GDA_SERVER_OPERATION_DROP_COLUMN:
         case GDA_SERVER_OPERATION_CREATE_INDEX:
         case GDA_SERVER_OPERATION_DROP_INDEX:
-
         case GDA_SERVER_OPERATION_CREATE_VIEW:
         case GDA_SERVER_OPERATION_DROP_VIEW:
+		return TRUE;
         default:
                 return FALSE;
         }
@@ -810,21 +806,38 @@ gda_mysql_provider_render_operation (GdaServerProvider   *provider,
 	/* actual rendering */
         switch (gda_server_operation_get_op_type (op)) {
         case GDA_SERVER_OPERATION_CREATE_DB:
+		sql = gda_mysql_render_CREATE_DB (provider, cnc, op, error);
+		break;
         case GDA_SERVER_OPERATION_DROP_DB:
-		sql = NULL;
+		sql = gda_mysql_render_DROP_DB (provider, cnc, op, error);
                 break;
         case GDA_SERVER_OPERATION_CREATE_TABLE:
                 sql = gda_mysql_render_CREATE_TABLE (provider, cnc, op, error);
                 break;
         case GDA_SERVER_OPERATION_DROP_TABLE:
+		sql = gda_mysql_render_DROP_TABLE (provider, cnc, op, error);
+		break;
         case GDA_SERVER_OPERATION_RENAME_TABLE:
+		sql = gda_mysql_render_RENAME_TABLE (provider, cnc, op, error);
+		break;
         case GDA_SERVER_OPERATION_ADD_COLUMN:
+		sql = gda_mysql_render_ADD_COLUMN (provider, cnc, op, error);
+		break;
+	case GDA_SERVER_OPERATION_DROP_COLUMN:
+		sql = gda_mysql_render_DROP_COLUMN (provider, cnc, op, error);
+		break;
         case GDA_SERVER_OPERATION_CREATE_INDEX:
+		sql = gda_mysql_render_CREATE_INDEX (provider, cnc, op, error);
+		break;
         case GDA_SERVER_OPERATION_DROP_INDEX:
+		sql = gda_mysql_render_DROP_INDEX (provider, cnc, op, error);
+		break;
         case GDA_SERVER_OPERATION_CREATE_VIEW:
+		sql = gda_mysql_render_CREATE_VIEW (provider, cnc, op, error);
+		break;
         case GDA_SERVER_OPERATION_DROP_VIEW:
-                sql = NULL;
-                break;
+		sql = gda_mysql_render_DROP_VIEW (provider, cnc, op, error);
+		break;
         default:
                 g_assert_not_reached ();
         }

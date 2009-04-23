@@ -1,5 +1,16 @@
 2009-04-23  Vivien Malerba <malerba@gnome-db.org>
 
+	* libgda/gda-config.c: only display a warning if loading a provider fails if the
+	GDA_SHOW_PROVIDER_LOADING_ERROR environment variable is set
+	* providers/mysql/gda-mysql-provider.c: enable the GDA_SERVER_OPERATION_CREATE_DB,
+	GDA_SERVER_OPERATION_DROP_DB, GDA_SERVER_OPERATION_DROP_TABLE, GDA_SERVER_OPERATION_RENAME_TABLE,
+	GDA_SERVER_OPERATION_ADD_COLUMN, GDA_SERVER_OPERATION_DROP_COLUMN,
+	GDA_SERVER_OPERATION_CREATE_INDEX, GDA_SERVER_OPERATION_DROP_INDEX,
+	GDA_SERVER_OPERATION_CREATE_VIEW and GDA_SERVER_OPERATION_DROP_VIEW operations
+	* doc/C: doc. update
+
+2009-04-23  Vivien Malerba <malerba@gnome-db.org>
+
 	* configure.in:
 	* providers/oracle: improved Oracle provider
 

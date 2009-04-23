@@ -1493,7 +1493,8 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 				     name, NULL);
 		handle = g_module_open (path, G_MODULE_BIND_LAZY);
 		if (!handle) {
-			g_warning (_("Error: %s"), g_module_error ());
+			if (g_getenv ("GDA_SHOW_PROVIDER_LOADING_ERROR"))
+				g_warning (_("Error loading provider '%s': %s"), path, g_module_error ());
 			g_free (path);
 			continue;
 		}
