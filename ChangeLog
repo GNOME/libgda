@@ -1,3 +1,11 @@
+2009-04-28  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda.doap: prefixed mail with "mailto:"
+	* tools/gda-sql.c:
+	  - allow to specify which kind of meta data to update in the "meta" command
+	  - store the dictionary in a file even for connections not created from a DSN
+	    if GLIB >= 2.16.0, no change otherwise
+
 2009-04-23  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-config.c: only display a warning if loading a provider fails if the

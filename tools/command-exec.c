@@ -345,7 +345,21 @@ gda_internal_command_dict_sync (SqlConsole *console, GdaConnection *cnc, const g
 	res = g_new0 (GdaInternalCommandResult, 1);
 	res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
 
-	if (!gda_connection_update_meta_store (cnc, NULL, error)) {
+	if (args[0] && *args[0]) {
+		GdaMetaContext context;
+		memset (&context, 0, sizeof (context));
+		if (*args[0] == '_')
+			context.table_name = args[0];
+		else
+			context.table_name = g_strdup_printf ("_%s", args[0]);
+		if (!gda_connection_update_meta_store (cnc, &context, error)) {
+			g_free (res);
+			res = NULL;
+		}
+		if (*args[0] != '_')
+			g_free (context.table_name);
+	}
+	else if (!gda_connection_update_meta_store (cnc, NULL, error)) {
 		g_free (res);
 		res = NULL;
 	}
