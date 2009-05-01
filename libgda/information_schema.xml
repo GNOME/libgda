@@ -39,7 +39,7 @@
 
   <table name="_schemata" descr="List of schemas">
     <column name="catalog_name" pkey="TRUE" descr="Name of the catalog that contains the schema"/>
-    <column name="schema_name" pkey="TRUE"/>
+    <column name="schema_name" pkey="TRUE" ident="TRUE"/>
     <column name="schema_owner" nullok="TRUE" descr="Name of the schema"/>
     <column name="schema_internal" type="boolean"  descr="Tells if the schema is specific to the database implementation (and usually can't be modified)"/>
     <fkey ref_table="_information_schema_catalog_name">
@@ -48,8 +48,8 @@
   </table>
 
   <table name="_builtin_data_types" descr="List of built-in data types such as varchar, int, ...">
-    <column name="short_type_name" descr="Short name of the data type"/>
-    <column name="full_type_name" pkey="TRUE" descr="Full name of the data type"/>
+    <column name="short_type_name" descr="Short name of the data type" ident="TRUE"/>
+    <column name="full_type_name" pkey="TRUE" descr="Full name of the data type" ident="TRUE"/>
     <column name="gtype" nullok="TRUE"/>
     <column name="comments" nullok="TRUE"/>
     <column name="synonyms" nullok="TRUE"/>
@@ -61,12 +61,12 @@
 
   <table name="_udt" descr="User defined data types">
     <column name="udt_catalog" pkey="TRUE" descr="Name of the catalog that contains the data type"/>
-    <column name="udt_schema" pkey="TRUE" descr="Name of the schema that contains the data type"/>
-    <column name="udt_name" pkey="TRUE" descr="Name of the data type"/>
+    <column name="udt_schema" pkey="TRUE" descr="Name of the schema that contains the data type" ident="TRUE"/>
+    <column name="udt_name" pkey="TRUE" descr="Name of the data type" ident="TRUE"/>
     <column name="udt_gtype" nullok="TRUE" descr="GType associated to the data type"/>
     <column name="udt_comments" nullok="TRUE"/>
-    <column name="udt_short_name"/>
-    <column name="udt_full_name"/>
+    <column name="udt_short_name" ident="TRUE"/>
+    <column name="udt_full_name" ident="TRUE"/>
     <column name="udt_internal" type="boolean" descr="Tells if the data type is reserved for the database implementation and should not be used in applications"/>
     <column name="udt_owner" nullok="TRUE"/>
     <fkey ref_table="_schemata">
@@ -80,11 +80,11 @@
 
   <table name="_udt_columns" descr="List of components for a user defined data type for composed data types (such as a complex number data type which has real and imaginary parts)">
     <column name="udt_catalog" pkey="TRUE" descr="Name of the catalog that contains the user defined data type for which the column is"/>
-    <column name="udt_schema" pkey="TRUE" descr="Name of the schema that contains the user defined data type for which the column is"/>
-    <column name="udt_name" pkey="TRUE" descr="Name of the user defined data type for which the column is"/>
-    <column name="udt_column" pkey="TRUE" descr="Name of the column (part)"/>
+    <column name="udt_schema" pkey="TRUE" descr="Name of the schema that contains the user defined data type for which the column is" ident="TRUE"/>
+    <column name="udt_name" pkey="TRUE" descr="Name of the user defined data type for which the column is" ident="TRUE"/>
+    <column name="udt_column" pkey="TRUE" descr="Name of the column (part)" ident="TRUE"/>
     <column name="ordinal_position" type="gint" descr="Column position, starts at 1"/>
-    <column name="data_type" nullok="TRUE" descr="Data type of the column (if the column is an array, then 'array_spec' is set, and this may be NULL)"/>
+    <column name="data_type" nullok="TRUE" descr="Data type of the column (if the column is an array, then 'array_spec' is set, and this may be NULL)" ident="TRUE"/>
     <column name="array_spec" nullok="TRUE" descr="Array description if the column is an array"/>
     <column name="character_maximum_length" type="gint" nullok="TRUE"/>
     <column name="character_octet_length" type="gint" nullok="TRUE"/>
@@ -92,11 +92,11 @@
     <column name="numeric_scale" type="gint" nullok="TRUE"/>
     <column name="datetime_precision" type="gint" nullok="TRUE"/>
     <column name="character_set_catalog" nullok="TRUE"/>
-    <column name="character_set_schema" nullok="TRUE"/>
-    <column name="character_set_name" nullok="TRUE"/>
+    <column name="character_set_schema" nullok="TRUE" ident="TRUE"/>
+    <column name="character_set_name" nullok="TRUE" ident="TRUE"/>
     <column name="collation_catalog" nullok="TRUE"/>
-    <column name="collation_schema" nullok="TRUE"/>
-    <column name="collation_name" nullok="TRUE"/>
+    <column name="collation_schema" nullok="TRUE" ident="TRUE"/>
+    <column name="collation_name" nullok="TRUE" ident="TRUE"/>
     <fkey ref_table="_udt">
       <part column="udt_catalog"/>
       <part column="udt_schema"/>
@@ -114,8 +114,8 @@
 
   <table name="_enums" descr="List of possible enumeration labels for enumerations">
     <column name="udt_catalog" pkey="TRUE" descr="Name of the catalog that contains the ENUM user defined data type"/>
-    <column name="udt_schema" pkey="TRUE" descr="Name of the schema that contains the ENUM user defined data type"/>
-    <column name="udt_name" pkey="TRUE" descr="Name of the ENUM user defined data type"/>
+    <column name="udt_schema" pkey="TRUE" descr="Name of the schema that contains the ENUM user defined data type" ident="TRUE"/>
+    <column name="udt_name" pkey="TRUE" descr="Name of the ENUM user defined data type" ident="TRUE"/>
     <column name="label" pkey="TRUE"/>
     <column name="ordinal_position" type="gint" descr="Position, starts at 1"/>
     <fkey ref_table="_udt">
@@ -128,10 +128,10 @@
   <table name="_element_types" descr="Array specific attributes for array data types">
     <column name="specific_name" pkey="TRUE" descr="No specific meaning, used as a primary key, and for joining"/>
     <column name="object_catalog" descr="Name of the catalog that contains the object that uses the array being described"/>
-    <column name="object_schema" descr="Name of the schema that contains the object that uses the array being described"/>
-    <column name="object_name" descr="Name of the object that uses the array being described"/>
+    <column name="object_schema" descr="Name of the schema that contains the object that uses the array being described" ident="TRUE"/>
+    <column name="object_name" descr="Name of the object that uses the array being described" ident="TRUE"/>
     <column name="object_type" descr="The type of the object that uses the array being described TABLE_COL, DOMAIN, UDT_COL, ROUTINE_COL, ROUTINE_PAR"/>
-    <column name="data_type" nullok="TRUE" descr="Base data type of the array (if the base data type is an array, then 'array_spec' is set, and this may be NULL)"/>
+    <column name="data_type" nullok="TRUE" descr="Base data type of the array (if the base data type is an array, then 'array_spec' is set, and this may be NULL)" ident="TRUE"/>
     <column name="array_spec" nullok="TRUE" descr="Array description if the base data type is an array"/>
     <column name="min_cardinality" type="gint" nullok="TRUE"/>
     <column name="max_cardinality" type="gint" nullok="TRUE"/>
@@ -139,25 +139,25 @@
 
   <table name="_domains" descr="List of domains">
     <column name="domain_catalog" pkey="TRUE" descr="Name of catalog that contains the domain"/>
-    <column name="domain_schema" pkey="TRUE" descr="Name of schema that contains the domain"/>
-    <column name="domain_name" pkey="TRUE" descr="Name of the domain"/>
-    <column name="data_type" nullok="TRUE" descr="Data type of the domain (if the domain is an array, then 'array_spec' is set, and this may be NULL)"/>
+    <column name="domain_schema" pkey="TRUE" descr="Name of schema that contains the domain" ident="TRUE"/>
+    <column name="domain_name" pkey="TRUE" descr="Name of the domain" ident="TRUE"/>
+    <column name="data_type" nullok="TRUE" descr="Data type of the domain (if the domain is an array, then 'array_spec' is set, and this may be NULL)" ident="TRUE"/>
     <column name="array_spec" nullok="TRUE" descr="Array description if the domain is an array"/>
     <column name="domain_gtype"/>
     <column name="character_maximum_length" type="gint" nullok="TRUE"/>
     <column name="character_octet_length" type="gint" nullok="TRUE"/>
     <column name="collation_catalog" nullok="TRUE" descr="Name of catalog that contains the associated collation"/>
-    <column name="collation_schema" nullok="TRUE" descr="Name of schema that contains the associated collation"/>
-    <column name="collation_name" nullok="TRUE" descr="Name of the associated collation"/>
+    <column name="collation_schema" nullok="TRUE" descr="Name of schema that contains the associated collation" ident="TRUE"/>
+    <column name="collation_name" nullok="TRUE" descr="Name of the associated collation" ident="TRUE"/>
     <column name="character_set_catalog" nullok="TRUE" descr="Name of catalog that contains the associated character set"/>
-    <column name="character_set_schema" nullok="TRUE" descr="Name of schema that contains the associated character set"/>
-    <column name="character_set_name" nullok="TRUE" descr="Name of the associated character set"/>
+    <column name="character_set_schema" nullok="TRUE" descr="Name of schema that contains the associated character set" ident="TRUE"/>
+    <column name="character_set_name" nullok="TRUE" descr="Name of the associated character set" ident="TRUE"/>
     <column name="numeric_precision" type="gint" nullok="TRUE"/>
     <column name="numeric_scale" type="gint" nullok="TRUE"/>
     <column name="domain_default" nullok="TRUE"/>
     <column name="domain_comments" nullok="TRUE"/>
-    <column name="domain_short_name"/>
-    <column name="domain_full_name"/>
+    <column name="domain_short_name" ident="TRUE"/>
+    <column name="domain_full_name" ident="TRUE"/>
     <column name="domain_internal" type="boolean"/>
     <column name="domain_owner" nullok="TRUE"/>
     <fkey ref_table="_schemata">
@@ -179,13 +179,13 @@
 
   <table name="_tables" descr="List of tables (tables, views or other objects which can contain data)">
     <column name="table_catalog" pkey="TRUE" descr="Name of catalog that contains the table"/>
-    <column name="table_schema" pkey="TRUE" descr="Name of schema that contains the table"/>
-    <column name="table_name" pkey="TRUE" descr="Name of the table"/>
+    <column name="table_schema" pkey="TRUE" descr="Name of schema that contains the table" ident="TRUE"/>
+    <column name="table_name" pkey="TRUE" descr="Name of the table" ident="TRUE"/>
     <column name="table_type" descr="Type of table: BASE TABLE, VIEW, LOCAL TEMPORARY, SYSTEM TABLE, GLOBAL TEMPORARY, ALIAS or SYNONYM"/>
     <column name="is_insertable_into" type="boolean" nullok="TRUE" descr="Tells if the table's contents can be modified"/>
     <column name="table_comments" nullok="TRUE"/>
-    <column name="table_short_name"/>
-    <column name="table_full_name"/>
+    <column name="table_short_name" ident="TRUE"/>
+    <column name="table_full_name" ident="TRUE"/>
     <column name="table_owner" nullok="TRUE"/>
     <fkey ref_table="_schemata">
       <part column="table_catalog" ref_column="catalog_name"/>
@@ -198,8 +198,8 @@
 
   <table name="_views" descr="List of views and their specific information">
     <column name="table_catalog" pkey="TRUE" descr="Name of catalog that contains the view"/>
-    <column name="table_schema" pkey="TRUE" descr="Name of schema that contains the view"/>
-    <column name="table_name" pkey="TRUE" descr="Name of the view"/>
+    <column name="table_schema" pkey="TRUE" descr="Name of schema that contains the view" ident="TRUE"/>
+    <column name="table_name" pkey="TRUE" descr="Name of the view" ident="TRUE"/>
     <column name="view_definition" nullok="TRUE" descr="View as SQL"/>
     <column name="check_option" nullok="TRUE" descr="CASCADE if the statement used to create the view included the WITH CHECK OPTION; otherwise, NONE"/>
     <column name="is_updatable" type="boolean" nullok="TRUE" descr="Tells if the view's contents can be modified"/>
@@ -212,11 +212,11 @@
 
   <table name="_collations" descr="List of collations methods">
     <column name="collation_catalog" pkey="TRUE"/>
-    <column name="collation_schema" pkey="TRUE"/>
-    <column name="collation_name" pkey="TRUE"/>
+    <column name="collation_schema" pkey="TRUE" ident="TRUE"/>
+    <column name="collation_name" pkey="TRUE" ident="TRUE"/>
     <column name="collation_comments" nullok="TRUE"/>
-    <column name="collation_short_name"/>
-    <column name="collation_full_name"/>
+    <column name="collation_short_name" ident="TRUE"/>
+    <column name="collation_full_name" ident="TRUE"/>
     <fkey ref_table="_schemata">
       <part column="collation_catalog" ref_column="catalog_name"/>
       <part column="collation_schema" ref_column="schema_name"/>
@@ -228,14 +228,14 @@
 
   <table name="_character_sets" descr="List of character sets">
     <column name="character_set_catalog" pkey="TRUE"/>
-    <column name="character_set_schema" pkey="TRUE"/>
-    <column name="character_set_name" pkey="TRUE"/>
+    <column name="character_set_schema" pkey="TRUE" ident="TRUE"/>
+    <column name="character_set_name" pkey="TRUE" ident="TRUE"/>
     <column name="default_collate_catalog" nullok="TRUE"/>
-    <column name="default_collate_schema" nullok="TRUE"/>
-    <column name="default_collate_name" nullok="TRUE"/>
+    <column name="default_collate_schema" nullok="TRUE" ident="TRUE"/>
+    <column name="default_collate_name" nullok="TRUE" ident="TRUE"/>
     <column name="character_set_comments" nullok="TRUE"/>
-    <column name="character_set_short_name"/>
-    <column name="character_set_full_name"/>
+    <column name="character_set_short_name" ident="TRUE"/>
+    <column name="character_set_full_name" ident="TRUE"/>
     <fkey ref_table="_schemata">
       <part column="character_set_catalog" ref_column="catalog_name"/>
       <part column="character_set_schema" ref_column="schema_name"/>
@@ -252,11 +252,11 @@
 
   <table name="_routines" descr="List of functions and stored procedures (note: the primary jey for that table is composed of (specific_catalog, specific_schema, specific_name))">
     <column name="specific_catalog" pkey="TRUE" descr="Specific name of catalog that contains the routine"/>
-    <column name="specific_schema" pkey="TRUE" descr="Specific name of schema that contains the routine"/>
+    <column name="specific_schema" pkey="TRUE" descr="Specific name of schema that contains the routine" ident="TRUE"/>
     <column name="specific_name" pkey="TRUE" descr="Specific name of the routine (may be mangled for polymorphic routines)"/>
     <column name="routine_catalog" nullok="TRUE" descr="Name of catalog that contains the routine (may be NULL)"/>
-    <column name="routine_schema" nullok="TRUE" descr="Name of schema that contains the routine (may be NULL)"/>
-    <column name="routine_name" descr="Name of the routine"/>
+    <column name="routine_schema" nullok="TRUE" descr="Name of schema that contains the routine (may be NULL)" ident="TRUE"/>
+    <column name="routine_name" descr="Name of the routine" ident="TRUE"/>
     <column name="routine_type" nullok="TRUE" descr="FUNCTION, PROCEDURE, AGGREGATE"/>
     <column name="return_type" nullok="TRUE" descr="Data type returned by the routine (may be NULL if routine does not return any value)"/>
     <column name="returns_set" type="boolean" descr="True if routine returns a set (i.e., multiple values of the specified data type or if data type may vary)"/>
@@ -270,8 +270,8 @@
     <column name="sql_data_access" nullok="TRUE" descr="Whether the routine contains SQL and whether it reads or modifies data (NONE, CONTAINS, READS, MODIFIES)"/>
     <column name="is_null_call" type="boolean" nullok="TRUE" descr="Tells if the routine will be called if any one of its arguments is NULL"/>
     <column name="routine_comments" nullok="TRUE"/>
-    <column name="routine_short_name"/>
-    <column name="routine_full_name"/>
+    <column name="routine_short_name" ident="TRUE"/>
+    <column name="routine_full_name" ident="TRUE"/>
     <column name="routine_owner" nullok="TRUE"/>
     <fkey ref_table="_schemata">
       <part column="specific_catalog" ref_column="catalog_name"/>
@@ -284,19 +284,19 @@
 
   <table name="_triggers" descr="List of triggers">
     <column name="trigger_catalog" pkey="TRUE"/>
-    <column name="trigger_schema" pkey="TRUE"/>
-    <column name="trigger_name" pkey="TRUE"/>
+    <column name="trigger_schema" pkey="TRUE" ident="TRUE"/>
+    <column name="trigger_name" pkey="TRUE" ident="TRUE"/>
     <column name="event_manipulation" pkey="TRUE" descr="Event that fires the trigger (INSERT, UPDATE, or DELETE)"/>
     <column name="event_object_catalog" pkey="TRUE" descr="Name of the database that contains the table that the trigger is defined on"/>
-    <column name="event_object_schema" pkey="TRUE" descr="Name of the schema that contains the table that the trigger is defined on"/>
-    <column name="event_object_table" pkey="TRUE" descr="Name of the table that the trigger is defined on"/>
+    <column name="event_object_schema" pkey="TRUE" descr="Name of the schema that contains the table that the trigger is defined on" ident="TRUE"/>
+    <column name="event_object_table" pkey="TRUE" descr="Name of the table that the trigger is defined on" ident="TRUE"/>
 
     <column name="action_statement" nullok="TRUE" descr="Statement that is executed by the trigger"/>
     <column name="action_orientation" descr="Identifies whether the trigger fires once for each processed row or once for each statement (ROW or STATEMENT)"/>
     <column name="condition_timing" descr="Time at which the trigger fires (BEFORE or AFTER)"/>
     <column name="trigger_comments" nullok="TRUE"/>
-    <column name="trigger_short_name"/>
-    <column name="trigger_full_name"/>
+    <column name="trigger_short_name" ident="TRUE"/>
+    <column name="trigger_full_name" ident="TRUE"/>
     <fkey ref_table="_schemata">
       <part column="trigger_catalog" ref_column="catalog_name"/>
       <part column="trigger_schema" ref_column="schema_name"/>
@@ -313,13 +313,13 @@
 
   <table name="_columns" descr="List of columns composing tables">
     <column name="table_catalog" pkey="TRUE"/>
-    <column name="table_schema" pkey="TRUE"/>
-    <column name="table_name" pkey="TRUE"/>
-    <column name="column_name" pkey="TRUE"/>
+    <column name="table_schema" pkey="TRUE" ident="TRUE"/>
+    <column name="table_name" pkey="TRUE" ident="TRUE"/>
+    <column name="column_name" pkey="TRUE" ident="TRUE"/>
     <column name="ordinal_position" type="gint" descr="Column position, starts at 1"/>
     <column name="column_default" nullok="TRUE"/>
     <column name="is_nullable" type="boolean"/>
-    <column name="data_type" nullok="TRUE" descr="Data type of the column (if the column is an array, then 'array_spec' is set, and this may be NULL)"/>
+    <column name="data_type" nullok="TRUE" descr="Data type of the column (if the column is an array, then 'array_spec' is set, and this may be NULL)" ident="TRUE"/>
     <column name="array_spec" nullok="TRUE" descr="Array description if the column is an array"/>
     <column name="gtype"/>
     <column name="character_maximum_length" type="gint" nullok="TRUE"/>
@@ -328,11 +328,11 @@
     <column name="numeric_scale" type="gint" nullok="TRUE" descr="If data_type identifies an exact numeric type, this column contains the scale of the type for this column (the number of significant digits to the right of the decimal point)"/>
     <column name="datetime_precision" type="gint" nullok="TRUE"/>
     <column name="character_set_catalog" nullok="TRUE"/>
-    <column name="character_set_schema" nullok="TRUE"/>
-    <column name="character_set_name" nullok="TRUE"/>
+    <column name="character_set_schema" nullok="TRUE" ident="TRUE"/>
+    <column name="character_set_name" nullok="TRUE" ident="TRUE"/>
     <column name="collation_catalog" nullok="TRUE"/>
-    <column name="collation_schema" nullok="TRUE"/>
-    <column name="collation_name" nullok="TRUE"/>
+    <column name="collation_schema" nullok="TRUE" ident="TRUE"/>
+    <column name="collation_name" nullok="TRUE" ident="TRUE"/>
     <column name="extra" nullok="TRUE" descr="CSV string with: AUTO_INCREMENT"/> <!-- set the gda-enums.h file -->
     <column name="is_updatable" type="boolean" nullok="TRUE"/>
     <column name="column_comments" nullok="TRUE"/>
@@ -363,12 +363,12 @@
 
   <table name="_table_constraints" descr="List of constraints applied to tables (Check, primary or foreign key, or unique constraints)">
     <column name="constraint_catalog" nullok="TRUE" descr="Name of the catalog that contains the constraint"/>
-    <column name="constraint_schema" nullok="TRUE" descr="Name of the schema that contains the constraint"/>
+    <column name="constraint_schema" nullok="TRUE" descr="Name of the schema that contains the constraint" ident="TRUE"/>
 
-    <column name="constraint_name" pkey="TRUE"/>
+    <column name="constraint_name" pkey="TRUE" ident="TRUE"/>
     <column name="table_catalog" pkey="TRUE"/>
-    <column name="table_schema" pkey="TRUE"/>
-    <column name="table_name" pkey="TRUE"/>
+    <column name="table_schema" pkey="TRUE" ident="TRUE"/>
+    <column name="table_name" pkey="TRUE" ident="TRUE"/>
     <column name="constraint_type" descr="CHECK, FOREIGN KEY, PRIMARY KEY or UNIQUE"/>
     <column name="check_clause" nullok="TRUE" descr="The check expression if the constraint is a check constraint, NULL otherwise"/>
     <column name="is_deferrable" type="boolean" nullok="TRUE"/>
@@ -382,14 +382,14 @@
 
   <table name="_referential_constraints" descr="List of foreign key constraints, along with some specific attributes">
     <column name="table_catalog" pkey="TRUE"/>
-    <column name="table_schema" pkey="TRUE"/>
-    <column name="table_name" pkey="TRUE"/>
-    <column name="constraint_name" pkey="TRUE"/>
+    <column name="table_schema" pkey="TRUE" ident="TRUE"/>
+    <column name="table_name" pkey="TRUE" ident="TRUE"/>
+    <column name="constraint_name" pkey="TRUE" ident="TRUE"/>
 
     <column name="ref_table_catalog"/>
-    <column name="ref_table_schema"/>
-    <column name="ref_table_name"/>
-    <column name="ref_constraint_name"/>
+    <column name="ref_table_schema" ident="TRUE"/>
+    <column name="ref_table_name" ident="TRUE"/>
+    <column name="ref_constraint_name" ident="TRUE"/>
 
     <column name="match_option" nullok="TRUE" descr="FULL, PARTIAL or NONE"/>
     <column name="update_rule" nullok="TRUE" descr="CASCADE, SET NULL, SET DEFAULT, RESTRICT, NO ACTION or NONE"/>
@@ -410,10 +410,10 @@
 
   <table name="_key_column_usage" descr="List of primary key constraints and the name of the tables' columns involved">
     <column name="table_catalog" pkey="TRUE"/>
-    <column name="table_schema" pkey="TRUE"/>
-    <column name="table_name" pkey="TRUE"/>
-    <column name="constraint_name" pkey="TRUE"/>
-    <column name="column_name" pkey="TRUE"/>
+    <column name="table_schema" pkey="TRUE" ident="TRUE"/>
+    <column name="table_name" pkey="TRUE" ident="TRUE"/>
+    <column name="constraint_name" pkey="TRUE" ident="TRUE"/>
+    <column name="column_name" pkey="TRUE" ident="TRUE"/>
     <column name="ordinal_position" type="gint" pkey="TRUE" descr="Ordinal position of the column within the constraint key (count starts at 1)"/>
     <fkey ref_table="_table_constraints">
       <part column="table_catalog"/>
@@ -431,10 +431,10 @@
 
   <table name="_check_column_usage" descr="List of check constraints and the name of the tables' columns involved">
     <column name="table_catalog" pkey="TRUE"/>
-    <column name="table_schema" pkey="TRUE"/>
-    <column name="table_name" pkey="TRUE"/>
-    <column name="constraint_name" pkey="TRUE"/>
-    <column name="column_name" pkey="TRUE"/>
+    <column name="table_schema" pkey="TRUE" ident="TRUE"/>
+    <column name="table_name" pkey="TRUE" ident="TRUE"/>
+    <column name="constraint_name" pkey="TRUE" ident="TRUE"/>
+    <column name="column_name" pkey="TRUE" ident="TRUE"/>
     <fkey ref_table="_table_constraints">
       <part column="table_catalog"/>
       <part column="table_schema"/>
@@ -451,12 +451,12 @@
 
   <table name="_view_column_usage" descr="List of the tables' columns involved in a view">
     <column name="view_catalog" pkey="TRUE"/>
-    <column name="view_schema" pkey="TRUE"/>
-    <column name="view_name" pkey="TRUE"/>
+    <column name="view_schema" pkey="TRUE" ident="TRUE"/>
+    <column name="view_name" pkey="TRUE" ident="TRUE"/>
     <column name="table_catalog" pkey="TRUE"/>
-    <column name="table_schema" pkey="TRUE"/>
-    <column name="table_name" pkey="TRUE"/>
-    <column name="column_name" pkey="TRUE"/>
+    <column name="table_schema" pkey="TRUE" ident="TRUE"/>
+    <column name="table_name" pkey="TRUE" ident="TRUE"/>
+    <column name="column_name" pkey="TRUE" ident="TRUE"/>
     <fkey ref_table="_views">
       <part column="view_catalog" ref_column="table_catalog"/>
       <part column="view_schema" ref_column="table_schema"/>
@@ -472,12 +472,12 @@
 
   <table name="_domain_constraints" descr="List of constraints applicable to domains">
     <column name="constraint_catalog" nullok="TRUE" descr="Name of the catalog that contains the constraint"/>
-    <column name="constraint_schema" nullok="TRUE" descr="Name of the schema that contains the constraint"/>
+    <column name="constraint_schema" nullok="TRUE" descr="Name of the schema that contains the constraint" ident="TRUE"/>
 
-    <column name="constraint_name" pkey="TRUE"/>
+    <column name="constraint_name" pkey="TRUE" ident="TRUE"/>
     <column name="domain_catalog" pkey="TRUE"/>
-    <column name="domain_schema" pkey="TRUE"/>
-    <column name="domain_name" pkey="TRUE"/>
+    <column name="domain_schema" pkey="TRUE" ident="TRUE"/>
+    <column name="domain_name" pkey="TRUE" ident="TRUE"/>
 
     <column name="check_clause" nullok="TRUE"/>
     <column name="is_deferrable" type="boolean" nullok="TRUE"/>
@@ -495,12 +495,12 @@
 
   <table name="_parameters" descr="List of routines' (functions and stored procedures) parameters (may not contain data for some routines which accept any type of parameter)">
     <column name="specific_catalog" pkey="TRUE"/>
-    <column name="specific_schema" pkey="TRUE"/>
+    <column name="specific_schema" pkey="TRUE" ident="TRUE"/>
     <column name="specific_name" pkey="TRUE"/>
     <column name="ordinal_position" type="gint" pkey="TRUE"/>
     <column name="parameter_mode"/>
-    <column name="parameter_name" nullok="TRUE"/>
-    <column name="data_type" nullok="TRUE" descr="Data type of the parameter (if the parameter is an array, then 'array_spec' is set, and this may be NULL; can also be NULL if any type of parameter is accepted)"/>
+    <column name="parameter_name" nullok="TRUE" ident="TRUE"/>
+    <column name="data_type" nullok="TRUE" descr="Data type of the parameter (if the parameter is an array, then 'array_spec' is set, and this may be NULL; can also be NULL if any type of parameter is accepted)" ident="TRUE"/>
     <column name="array_spec" nullok="TRUE" descr="Array description if the parameter is an array"/>
     <fkey ref_table="_routines">
       <part column="specific_catalog"/>
@@ -519,11 +519,11 @@
 
   <table name="_routine_columns" descr="List of routines' (functions and stored procedures) returned values' parts (columns) for routines returning composed values">
     <column name="specific_catalog" pkey="TRUE"/>
-    <column name="specific_schema" pkey="TRUE"/>
+    <column name="specific_schema" pkey="TRUE" ident="TRUE"/>
     <column name="specific_name" pkey="TRUE"/>
-    <column name="column_name" pkey="TRUE"/>
+    <column name="column_name" pkey="TRUE" ident="TRUE"/>
     <column name="ordinal_position" type="gint" nullok="TRUE" pkey="TRUE"/>
-    <column name="data_type" nullok="TRUE" descr="Data type of the column (if the column is an array, then 'array_spec' is set, and this may be NULL)"/>
+    <column name="data_type" nullok="TRUE" descr="Data type of the column (if the column is an array, then 'array_spec' is set, and this may be NULL)" ident="TRUE"/>
     <column name="array_spec" nullok="TRUE" descr="Array description if the column is an array"/>
     <fkey ref_table="_routines">
       <part column="specific_catalog"/>

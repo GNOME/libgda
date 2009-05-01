@@ -114,6 +114,7 @@ gboolean          gda_meta_store_modify                   (GdaMetaStore *store, 
 gboolean          gda_meta_store_modify_with_context      (GdaMetaStore *store, GdaMetaContext *context, 
 							   GdaDataModel *new_data, GError **error);
 GdaDataModel     *gda_meta_store_create_modify_data_model (GdaMetaStore *store, const gchar *table_name);
+void              gda_meta_store_set_identifiers_style    (GdaMetaStore *store, GdaSqlIdentifierStyle style);
 
 gboolean          gda_meta_store_get_attribute_value      (GdaMetaStore *store, const gchar *att_name, 
 							   gchar **att_value, GError **error);

@@ -205,6 +205,7 @@ set_completion_func (CompletionFunc func)
 #ifdef HAVE_READLINE	
 	rl_attempted_completion_function = func;
 	rl_basic_word_break_characters = " \t\n\\'`@$><=;|&{(";
+	rl_completer_word_break_characters = " \t\n\\'`@$><=;|&{(";
 #endif	
 }
 

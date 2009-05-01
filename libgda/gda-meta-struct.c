@@ -400,6 +400,19 @@ get_user_obj_name (const GValue *catalog, const GValue *schema, const GValue *na
 	return ret;
 }
 
+static gchar *
+prepare_sql_identifier_for_compare (gchar *str)
+{
+	if (!str || (*str == '"'))
+		return str;
+	else {
+		gchar *ptr;
+		for (ptr = str; *ptr; ptr++)
+			*ptr = g_ascii_tolower (*ptr);
+		return str;
+	}
+}
+
 /**
  * gda_meta_struct_complement
  * @mstruct: a #GdaMetaStruct object
@@ -453,19 +466,19 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 	/* create ready to compare strings for catalog, schema and name */
 	gchar *schema_s, *name_s;
 	if (_split_identifier_string (g_value_dup_string (name), &schema_s, &name_s)) {
-		g_value_take_string ((iname = gda_value_new (G_TYPE_STRING)), gda_sql_identifier_remove_quotes (name_s));
+		g_value_take_string ((iname = gda_value_new (G_TYPE_STRING)), prepare_sql_identifier_for_compare (name_s));
 		if (schema_s)
-			g_value_take_string ((ischema = gda_value_new (G_TYPE_STRING)), gda_sql_identifier_remove_quotes (schema_s));
+			g_value_take_string ((ischema = gda_value_new (G_TYPE_STRING)), prepare_sql_identifier_for_compare (schema_s));
 	}
 	else
 		g_value_take_string ((iname = gda_value_new (G_TYPE_STRING)), 
-				     gda_sql_identifier_remove_quotes (g_value_dup_string (name)));
+				     prepare_sql_identifier_for_compare (g_value_dup_string (name)));
 	if (catalog)
 		g_value_take_string ((icatalog = gda_value_new (G_TYPE_STRING)), 
-				     gda_sql_identifier_remove_quotes (g_value_dup_string (catalog)));
+				     prepare_sql_identifier_for_compare (g_value_dup_string (catalog)));
 	if (schema && !ischema) 
 		g_value_take_string ((ischema = gda_value_new (G_TYPE_STRING)), 
-				     gda_sql_identifier_remove_quotes (g_value_dup_string (schema)));
+				     prepare_sql_identifier_for_compare (g_value_dup_string (schema)));
 
 	if (!icatalog) {
 		if (ischema) {
@@ -1551,13 +1564,13 @@ gda_meta_struct_get_db_object (GdaMetaStruct *mstruct, const GValue *catalog, co
 	g_return_val_if_fail (!schema || (G_VALUE_TYPE (schema) == G_TYPE_STRING), NULL);
 
 	/* prepare identifiers */
-	g_value_take_string ((iname = gda_value_new (G_TYPE_STRING)), gda_sql_identifier_remove_quotes (g_value_dup_string (name)));
+	g_value_take_string ((iname = gda_value_new (G_TYPE_STRING)), prepare_sql_identifier_for_compare (g_value_dup_string (name)));
 	if (catalog)
 		g_value_take_string ((icatalog = gda_value_new (G_TYPE_STRING)), 
-				     gda_sql_identifier_remove_quotes (g_value_dup_string (catalog)));
+				     prepare_sql_identifier_for_compare (g_value_dup_string (catalog)));
 	if (schema) 
 		g_value_take_string ((ischema = gda_value_new (G_TYPE_STRING)), 
-				     gda_sql_identifier_remove_quotes (g_value_dup_string (schema)));
+				     prepare_sql_identifier_for_compare (g_value_dup_string (schema)));
 
 	dbo = _meta_struct_get_db_object (mstruct, icatalog, ischema, iname);
 	if (icatalog) gda_value_free (icatalog);
@@ -2063,8 +2076,8 @@ determine_db_object_from_short_name (GdaMetaStruct *mstruct,
 				g_free (obj_schema);
 				return FALSE;
 			}
-			g_value_take_string ((sv = gda_value_new (G_TYPE_STRING)), gda_sql_identifier_remove_quotes (obj_schema));
-			g_value_take_string ((nv = gda_value_new (G_TYPE_STRING)), gda_sql_identifier_remove_quotes (obj_name));
+			g_value_take_string ((sv = gda_value_new (G_TYPE_STRING)), prepare_sql_identifier_for_compare (obj_schema));
+			g_value_take_string ((nv = gda_value_new (G_TYPE_STRING)), prepare_sql_identifier_for_compare (obj_name));
 			retval = determine_db_object_from_schema_and_name (mstruct, in_out_type, out_catalog, 
 									   out_short_name, out_full_name, out_owner, 
 									   sv, nv);

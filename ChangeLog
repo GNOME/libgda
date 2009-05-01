@@ -1,3 +1,21 @@
+2009-05-01  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/Makefile.am:
+	* libgda/gda-data-meta-wrapper.[ch]: new (private) GdaDataModel wrapper internally
+	used by the GdaMetaStore object
+	* libgda/gda-data-access-wrapper.h: removed unnecessary #include
+	* libgda/gda-enums.h: added the GdaSqlIdentifierStyle enum
+	* libgda/gda-meta-store.[ch]:
+	  - use the new GdaDataMetaWrapper object to "filter" the
+	    updates made by each database provider when updating the meta data
+	  - added gda_meta_store_set_identifiers_style(), to be used by database providers
+	* libgda/gda-meta-struct.c: updates the way information is searced in the GdaMetaStore
+	* libgda/information_schema.xml: identify which columns are SQL identifiers
+	* libgda/gda-util.c: improved the gda_completion_list_get() function
+	* tools/tools-input.c: correctly set break characters for completion
+	* libgda/sql-parser/gda-statement-struct-util.c: corrected gda_sql_identifier_needs_quotes()
+	* doc/C: SQL identifiers precisions
+
 2009-04-28  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda.doap: prefixed mail with "mailto:"

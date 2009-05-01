@@ -1,6 +1,6 @@
 /* gda-enums.h
  *
- * Copyright (C) 2003 - 2006 Vivien Malerba
+ * Copyright (C) 2003 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -44,6 +44,12 @@ typedef enum  {
 	GDA_VALUE_ATTR_NO_MODIF       = 1 << 8,
 	GDA_VALUE_ATTR_UNUSED         = 1 << 9
 } GdaValueAttribute;
+
+/* how SQL identifiers are represented */
+typedef enum {
+	GDA_SQL_IDENTIFIERS_LOWER_CASE = 1 << 0,
+	GDA_SQL_IDENTIFIERS_UPPER_CASE = 1 << 1
+} GdaSqlIdentifierStyle;
 
 /* possible different keywords used when qualifying a table's column's extra attributes */
 #define GDA_EXTRA_AUTO_INCREMENT "AUTO_INCREMENT"

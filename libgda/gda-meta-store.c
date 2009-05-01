@@ -43,6 +43,7 @@
 #include <libgda/gda-lockable.h>
 #include <libgda/gda-mutex.h>
 #include "gda-types.h"
+#include "gda-data-meta-wrapper.h"
 
 /*
  * Main static functions
@@ -106,6 +107,10 @@ typedef struct {
 	/* fk_list */
 	GSList       *reverse_fk_list; /* list of TableFKey where @depend_on == this DbObject */
 	GSList       *fk_list; /* list of TableFKey where @table_info == this DbObject */
+
+	/* columns which contain SQL identifiers */
+	gint         *ident_cols;
+	gint          ident_cols_size;
 } TableInfo;
 static void table_info_free_contents (TableInfo *info);
 
@@ -203,6 +208,7 @@ static gboolean ProviderSpecific_equal (gconstpointer a, gconstpointer b);
 
 struct _GdaMetaStorePrivate {
 	GdaConnection *cnc;
+	GdaSqlIdentifierStyle ident_style;
 	gint           version;
 	gboolean       schema_ok;
 
@@ -487,6 +493,7 @@ gda_meta_store_init (GdaMetaStore *store)
 {
 	store->priv = g_new0 (GdaMetaStorePrivate, 1);
 	store->priv->cnc = NULL;
+	store->priv->ident_style = GDA_SQL_IDENTIFIERS_LOWER_CASE;
 	store->priv->schema_ok = FALSE;
 	store->priv->version = 0;
 
@@ -777,6 +784,23 @@ gda_meta_store_get_property (GObject *object,
 			break;
 		}
 	}
+}
+
+/**
+ * gda_meta_store_set_identifiers_style
+ * @store: a #GdaMetaStore object
+ * @style: a style
+ *
+ * Specifies how @store must handle SQL identifiers it has to store. This method is mainly used by
+ * database providers.
+ *
+ * Since: 4.2
+ */
+void
+gda_meta_store_set_identifiers_style (GdaMetaStore *store, GdaSqlIdentifierStyle style)
+{
+	g_return_if_fail (GDA_IS_META_STORE (store));
+	store->priv->ident_style = style;
 }
 
 /*
@@ -1335,26 +1359,24 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
                         gboolean nullok = FALSE; 
 			gboolean autoinc = FALSE;
  
-                        if (strcmp ((gchar *) cnode->name, "column"))
-                                continue;
                         cname = xmlGetProp (cnode, BAD_CAST "name");
                         if (!cname)
                                 g_error ("Missing column name (table=%s)", complete_obj_name);
                         xstr = xmlGetProp (cnode, BAD_CAST "pkey");
                         if (xstr) {
-                                if ((*xstr == 't') || (*xstr == 'T'))
+                                if ((*xstr == 'T') || (*xstr == 't'))
                                         pkey = TRUE;
                                 xmlFree (xstr);
                         }
                         xstr = xmlGetProp (cnode, BAD_CAST "nullok");
                         if (xstr) {
-                                if ((*xstr == 't') || (*xstr == 'T'))
+                                if ((*xstr == 'T') || (*xstr == 't'))
                                         nullok = TRUE;
                                 xmlFree (xstr);
                         }
                         xstr = xmlGetProp (cnode, BAD_CAST "autoinc");
                         if (xstr) {
-                                if ((*xstr == 't') || (*xstr == 'T'))
+                                if ((*xstr == 'T') || (*xstr == 't'))
                                         autoinc = TRUE;
                                 xmlFree (xstr);
                         }
@@ -1369,6 +1391,22 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
 			field = gda_sql_field_new (GDA_SQL_ANY_PART (ust));
                         field->field_name = g_strdup ((gchar *) cname);
                         ust->fields_list = g_slist_append (ust->fields_list, field);
+
+			/* SQL identifier ? */
+#define MAX_IDENT_IN_TABLE 10
+			xstr = xmlGetProp (cnode, BAD_CAST "ident");
+                        if (xstr) {
+                                if ((*xstr == 'T') || (*xstr == 't')) {
+					if (!TABLE_INFO (dbobj)->ident_cols) {
+						TABLE_INFO (dbobj)->ident_cols = g_new0 (gint, MAX_IDENT_IN_TABLE);
+						TABLE_INFO (dbobj)->ident_cols_size = 0;
+					}
+					g_assert (TABLE_INFO (dbobj)->ident_cols_size < MAX_IDENT_IN_TABLE);
+					TABLE_INFO (dbobj)->ident_cols [TABLE_INFO (dbobj)->ident_cols_size] = colindex;
+					TABLE_INFO (dbobj)->ident_cols_size ++;
+				}
+                                xmlFree (xstr);
+                        }
 
 			/* parameter */
                         GType ptype;
@@ -1887,6 +1925,8 @@ table_info_free_contents (TableInfo *info)
 	g_free (info->pk_cols_array);
 	g_free (info->type_cols_array);
 	g_slist_free (info->fk_list);
+	if (info->ident_cols)
+		g_free (info->ident_cols);
 }
 
 static void
@@ -2301,12 +2341,26 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 
 	/* treat rows to insert / update */
 	if (new_data) {
+		GdaDataModel *wrapped_data;
 		gint new_n_rows, new_n_cols;
-		new_n_rows = gda_data_model_get_n_rows (new_data);
-		new_n_cols = gda_data_model_get_n_columns (new_data);
+
+		if (schema_set->ident_cols)
+			wrapped_data = _gda_data_meta_wrapper_new (new_data, !store->priv->override_mode,
+								   schema_set->ident_cols, schema_set->ident_cols_size,
+								   store->priv->ident_style);
+		else
+			wrapped_data = g_object_ref (new_data);
+
+		new_n_rows = gda_data_model_get_n_rows (wrapped_data);
+		new_n_cols = gda_data_model_get_n_columns (wrapped_data);
 #ifdef DEBUG_STORE_MODIFY
-		g_print ("NEW:\n");
-		gda_data_model_dump (new_data, stdout);
+		if (new_data != wrapped_data) {
+			g_print ("NEW for table %s:\n", table_name);
+			gda_data_model_dump (new_data, stdout);
+
+			g_print ("wrapped as:\n");
+			gda_data_model_dump (wrapped_data, stdout);
+		}
 #endif		
 
 		for (i = 0; i < new_n_rows; i++) {
@@ -2317,7 +2371,7 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 
 			if (!store->priv->override_mode) {
 				if (current) {
-					erow = find_row_in_model (current, new_data, i,
+					erow = find_row_in_model (current, wrapped_data, i,
 								  schema_set->pk_cols_array, 
 								  schema_set->pk_cols_nb, &has_changed, 
 								  error);
@@ -2328,6 +2382,7 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 				}
 				if (erow < -1) {
 					retval = FALSE;
+					g_object_unref (wrapped_data);
 					goto out;
 				}
 				
@@ -2348,16 +2403,18 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 				h = gda_set_get_holder (schema_set->params, pid);
 				if (h) {
 					const GValue *value;
-					value = gda_data_model_get_value_at (new_data, j, i, error);
+					value = gda_data_model_get_value_at (wrapped_data, j, i, error);
 					if (!value) {
 						g_free (pid);
 						retval = FALSE;
+						g_object_unref (wrapped_data);
 						goto out;
 					}
 						
 					if (! gda_holder_set_value (h, value, error)) {
 						g_free (pid);
 						retval = FALSE;
+						g_object_unref (wrapped_data);
 						goto out;
 					}
 					if (change) {
@@ -2378,6 +2435,7 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 										 schema_set->insert, schema_set->params, 
 										 NULL, error) == -1) {
 					retval = FALSE;
+					g_object_unref (wrapped_data);
 					goto out;
 				}
 				if (change) 
@@ -2395,11 +2453,13 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 						if (!value) {
 							g_free (pid);
 							retval = FALSE;
+							g_object_unref (wrapped_data);
 							goto out;
 						}
 						if (!gda_holder_set_value (h, value, error)) {
 							g_free (pid);
 							retval = FALSE;
+							g_object_unref (wrapped_data);
 							goto out;
 						}
 						if (change) {
@@ -2417,6 +2477,7 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 										 schema_set->update, schema_set->params, 
 										 NULL, error) == -1) {
 					retval = FALSE;
+					g_object_unref (wrapped_data);
 					goto out;
 				}
 				if (change) 
@@ -2441,11 +2502,12 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 					context.column_values = g_new (GValue *, context.size);
 					
 					for (k = 0; k < tfk->cols_nb; k++) {
-						context.column_values [k] = (GValue*) gda_data_model_get_value_at (new_data, 
+						context.column_values [k] = (GValue*) gda_data_model_get_value_at (wrapped_data, 
 									    tfk->ref_pk_cols_array[k], i, error);
 						if (!context.column_values [k]) {
 							g_free (context.column_values);
 							retval = FALSE;
+							g_object_unref (wrapped_data);
 							goto out;
 						}
 					}
@@ -2470,6 +2532,7 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 						retval = FALSE;
 						if (error && !(*error))
 							g_propagate_error (error, suggest_reports_error);
+						g_object_unref (wrapped_data);
 						goto out;
 					}
 				}
