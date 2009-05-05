@@ -273,10 +273,11 @@ static void gda_thread_wrapper_get_property (GObject *object,
 					     GParamSpec *pspec);
 
 enum {
+	DUMMY,
 	LAST_SIGNAL
 };
 
-static gint gda_thread_wrapper_signals[LAST_SIGNAL] = { };
+static gint gda_thread_wrapper_signals[LAST_SIGNAL] = { 0 };
 
 /* properties */
 enum {

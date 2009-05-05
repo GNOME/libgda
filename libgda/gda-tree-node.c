@@ -65,10 +65,11 @@ static gchar *gda_tree_node_dump_header (GdaTreeNode *node);
 static void gda_tree_node_dump_children (GdaTreeNode *node, const gchar *prefix, GString *in_string);
 
 enum {
+	DUMMY,
 	LAST_SIGNAL
 };
 
-static gint gda_tree_node_signals[LAST_SIGNAL] = { };
+static gint gda_tree_node_signals[LAST_SIGNAL] = { 0 };
 
 /* properties */
 enum {

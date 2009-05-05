@@ -1,3 +1,12 @@
+2009-05-05  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-sql-builder.c:
+	* libgda/gda-tree-manager.c:
+	* libgda/gda-tree-node.c:
+	* libgda/gda-tree.c:
+	* libgda/thread-wrapper/gda-thread-wrapper.c: applied patch to fix bug #581408
+	(thanks to Halton Huo)
+
 2009-05-01  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/Makefile.am:

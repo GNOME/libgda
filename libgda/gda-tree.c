@@ -51,10 +51,11 @@ static void gda_tree_get_property (GObject *object,
 				   GParamSpec *pspec);
 
 enum {
+	DUMMY,
 	LAST_SIGNAL
 };
 
-static gint gda_tree_signals[LAST_SIGNAL] = { };
+static gint gda_tree_signals[LAST_SIGNAL] = { 0 };
 extern GdaAttributesManager *gda_tree_node_attributes_manager;
 
 /* properties */
