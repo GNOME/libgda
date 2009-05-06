@@ -406,12 +406,32 @@ identifier_needs_quotes (const gchar *str, GdaSqlIdentifierStyle mode)
 {
 	const gchar *ptr;
 	for (ptr = str; *ptr; ptr++) {
-		if ((*ptr == ' ') || (*ptr == '"') ||
+		if ((*ptr == ' ') ||
 		    ((mode == GDA_SQL_IDENTIFIERS_LOWER_CASE) && (*ptr != g_ascii_tolower (*ptr))) ||
 		    ((mode == GDA_SQL_IDENTIFIERS_UPPER_CASE) && (*ptr != g_ascii_toupper (*ptr))))
 			return TRUE;
 	}
 	return FALSE;
+}
+
+static gboolean
+identifier_is_all_lower (const gchar *str)
+{
+	const gchar *ptr;
+	for (ptr = str; *ptr; ptr++) {
+		if (*ptr != g_ascii_tolower (*ptr))
+			return FALSE;
+	}
+	return TRUE;
+}
+
+static gchar *
+to_lower (gchar *str)
+{
+	gchar *ptr;
+	for (ptr = str; *ptr; ptr++)
+		*ptr = g_ascii_tolower (*ptr);
+	return str;
 }
 
 /*
@@ -432,29 +452,41 @@ compute_value (const GValue *value, GdaSqlIdentifierStyle mode)
 		return NULL;
 	if ((*str == '"') && (str[strlen(str) - 1] == '"'))
 		return NULL; /* already quoted */
-	if (identifier_needs_quotes (str, mode)) {
-		gchar **sa = g_strsplit (str, ".", 0);
-		if (sa[1]) {
-			gint i;
-			for (i = 0; sa[i]; i++) {
-				if (identifier_needs_quotes (sa[i], mode)) {
-					gchar *tmp = gda_sql_identifier_add_quotes (sa[i]);
-					g_free (sa[i]);
-					sa[i] = tmp;
-				}
+	gchar **sa = g_strsplit (str, ".", 0);
+	if (sa[1]) {
+		gint i;
+		gboolean onechanged = FALSE;
+		for (i = 0; sa[i]; i++) {
+			if (identifier_needs_quotes (sa[i], mode)) {
+				gchar *tmp = gda_sql_identifier_add_quotes (sa[i]);
+				g_free (sa[i]);
+				sa[i] = tmp;
+				onechanged = TRUE;
 			}
+			else if (! identifier_is_all_lower (sa[i])) {
+				to_lower (sa[i]);
+				onechanged = TRUE;
+			}
+		}
+		if (onechanged) {
 			retval = gda_value_new (G_TYPE_STRING);
 			g_value_take_string (retval, g_strjoinv (".", sa));
 		}
-		else {
+	}
+	else {
+		if (identifier_needs_quotes (str, mode)) {
 			retval = gda_value_new (G_TYPE_STRING);
 			g_value_take_string (retval, gda_sql_identifier_add_quotes (str));
 		}
-		g_strfreev (sa);
-		return retval;
+		else if (! identifier_is_all_lower (str)) {
+			gchar *tmp;
+			tmp = to_lower (g_strdup (str));
+			retval = gda_value_new (G_TYPE_STRING);
+			g_value_take_string (retval, tmp);
+		}
 	}
-	else
-		return NULL;
+	g_strfreev (sa);
+	return retval;
 }
 
 /*

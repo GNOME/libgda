@@ -314,7 +314,7 @@ _gda_postgres_meta__btypes (GdaServerProvider *prov, GdaConnection *cnc,
 
 	/* use a proxy to customize @model */
 	proxy = (GdaDataModel*) gda_data_proxy_new (model);
-	gda_data_proxy_set_sample_size ((GdaDataProxy*) proxy, 0);
+	g_object_set (G_OBJECT (proxy), "defer-sync", FALSE, "sample-size", 0, NULL);
 	nrows = gda_data_model_get_n_rows (model);
 	for (i = 0; i < nrows; i++) {
 		const GValue *value;
@@ -809,7 +809,7 @@ gboolean _gda_postgres_meta__columns (GdaServerProvider *prov, GdaConnection *cn
 
 	/* use a proxy to customize @model */
 	proxy = (GdaDataModel*) gda_data_proxy_new (model);
-	gda_data_proxy_set_sample_size ((GdaDataProxy*) proxy, 0);
+	g_object_set (G_OBJECT (proxy), "defer-sync", FALSE, "sample-size", 0, NULL);
 	nrows = gda_data_model_get_n_rows (model);
 	for (i = 0; i < nrows; i++) {
 		const GValue *value;
@@ -913,7 +913,7 @@ _gda_postgres_meta_columns (GdaServerProvider *prov, GdaConnection *cnc,
 
 	/* use a proxy to customize @model */
 	proxy = (GdaDataModel*) gda_data_proxy_new (model);
-	gda_data_proxy_set_sample_size ((GdaDataProxy*) proxy, 0);
+	g_object_set (G_OBJECT (proxy), "defer-sync", FALSE, "sample-size", 0, NULL);
 	nrows = gda_data_model_get_n_rows (model);
 	for (i = 0; i < nrows; i++) {
 		const GValue *value;
@@ -1410,7 +1410,7 @@ _gda_postgres_meta__routine_col (GdaServerProvider *prov, GdaConnection *cnc,
 
 	/* use a proxy to customize @model */
 	proxy = (GdaDataModel*) gda_data_proxy_new (model);
-	gda_data_proxy_set_sample_size ((GdaDataProxy*) proxy, 0);
+	g_object_set (G_OBJECT (proxy), "defer-sync", FALSE, "sample-size", 0, NULL);
 	nrows = gda_data_model_get_n_rows (model);
 	for (i = 0; i < nrows; i++) {
 		const GValue *cvalue;
@@ -1477,7 +1477,7 @@ GdaDataModel *model, *proxy;
 
 	/* use a proxy to customize @model */
 	proxy = (GdaDataModel*) gda_data_proxy_new (model);
-	gda_data_proxy_set_sample_size ((GdaDataProxy*) proxy, 0);
+	g_object_set (G_OBJECT (proxy), "defer-sync", FALSE, "sample-size", 0, NULL);
 	nrows = gda_data_model_get_n_rows (model);
 	for (i = 0; i < nrows; i++) {
 		const GValue *cvalue;

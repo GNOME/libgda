@@ -1,3 +1,14 @@
+2009-05-06  Vivien Malerba <malerba@gnome-db.org>
+
+	* providers/oracle:
+	  - use the callback API to fetch results for variable length data types
+	  - implemented more meta data retreival
+	  - booleans (which is not an Oracle data type) are interpreted as 0 an !0
+	  - better handling of OCI types
+	* libgda/gda-data-meta-wrapper.c: bug fixes
+	* libgda/gda-meta-store.c: bug fixes
+	* providers/postgres/gda-postgres-meta.c: bug fixes
+
 2009-05-05  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-sql-builder.c:

@@ -48,12 +48,10 @@
 GdaConnectionEvent *
 _gda_oracle_make_error (dvoid *hndlp, ub4 type, const gchar *file, gint line)
 {
-	GdaConnectionEvent *error;
+	GdaConnectionEvent *error = NULL;
 	gchar errbuf[512];
 	ub4 errcode;
 	gchar *source;
-
-	error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 
 	if (hndlp != NULL) {
 		OCIErrorGet ((dvoid *) hndlp,
@@ -64,16 +62,25 @@ _gda_oracle_make_error (dvoid *hndlp, ub4 type, const gchar *file, gint line)
 			     (ub4) sizeof (errbuf), 
 			     (ub4) type);
 	
-		gda_connection_event_set_description (error, errbuf);
-		/*g_warning ("Oracle error:%s", errbuf);*/
+		if (errcode != 1405) {
+			error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+			gda_connection_event_set_description (error, errbuf);
+			/*g_warning ("Oracle error:%s", errbuf);*/
+			if (errcode == 600)
+				g_warning ("Maybe an Oracle bug...");
+		}
 	} 
-	else 
+	else {
+		error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 		gda_connection_event_set_description (error, _("NO DESCRIPTION"));
+	}
 	
-	gda_connection_event_set_code (error, errcode);
-	source = g_strdup_printf ("gda-oracle:%s:%d", file, line);
-	gda_connection_event_set_source (error, source);
-	g_free(source);
+	if (error) {
+		gda_connection_event_set_code (error, errcode);
+		source = g_strdup_printf ("gda-oracle:%s:%d", file, line);
+		gda_connection_event_set_source (error, source);
+		g_free(source);
+	}
 	
 	return error;
 }
@@ -114,10 +121,12 @@ _gda_oracle_handle_error (gint result, GdaConnection *cnc,
 			break;
 		case OCI_HTYPE_ENV:
 			error = _gda_oracle_make_error (cdata->henv, type, file, line);
-			gda_connection_add_event (cnc, error);
+			if (error)
+				gda_connection_add_event (cnc, error);
 			break;
 		default:
-			error = gda_connection_add_event_string (cnc, msg);
+			if (error)
+				error = gda_connection_add_event_string (cnc, msg);
 			gda_connection_add_event (cnc, error);
 			break;
 		}
@@ -131,13 +140,15 @@ _gda_oracle_handle_error (gint result, GdaConnection *cnc,
 		error = gda_connection_add_event_string (cnc, msg);
 	}
 
+#ifdef GDA_DEBUG
 	if (error)
 		g_print ("HANDLED error: %s\n", gda_connection_event_get_description (error));
+#endif
 	return error;
 }
 
 GType 
-_oracle_sqltype_to_g_type (const ub2 sqltype)
+_oracle_sqltype_to_g_type (const ub2 sqltype, sb2 precision, sb1 scale)
 {
 	/* an incomplete list of all the oracle types */
 	switch (sqltype) {
@@ -145,28 +156,40 @@ _oracle_sqltype_to_g_type (const ub2 sqltype)
 	case SQLT_STR:
 	case SQLT_VCS:
 	case SQLT_RID:
-	case SQLT_LNG:
-	case SQLT_LVC:
-	case SQLT_AFC:
 	case SQLT_AVC:
-	case SQLT_LAB:
-	case SQLT_VST:
+	case SQLT_AFC:
 		return G_TYPE_STRING;
 	case SQLT_NUM:
-		return GDA_TYPE_NUMERIC;
+	case SQLT_VNU:
+		if (scale == 0)
+			return G_TYPE_INT;
+		else if ((precision != 0) && (scale == -127))
+			return G_TYPE_FLOAT;
+		else return GDA_TYPE_NUMERIC;
 	case SQLT_INT:
 		return G_TYPE_INT;
 	case SQLT_UIN:
 		return G_TYPE_UINT;
+	case SQLT_BFLOAT:
 	case SQLT_FLT:
 		return G_TYPE_FLOAT;
+	case SQLT_BDOUBLE:
+		return G_TYPE_DOUBLE;
+		
+	case SQLT_LVC:
+	case SQLT_LVB:
 	case SQLT_VBI:
 	case SQLT_BIN:
+	case SQLT_LNG:
 	case SQLT_LBI:
-	case SQLT_LVB:
+	case SQLT_RDD:
+	case SQLT_NTY:
+	case SQLT_REF:
+		return GDA_TYPE_BINARY;
 	case SQLT_BLOB:
-	case SQLT_BFILEE:
-	case SQLT_CFILEE:
+	case SQLT_FILE:
+	//case SQLT_BFILEE:
+	//case SQLT_CFILEE:
 	case SQLT_CLOB:
 		return GDA_TYPE_BLOB;
 	case SQLT_DAT:
@@ -180,21 +203,66 @@ _oracle_sqltype_to_g_type (const ub2 sqltype)
 	case SQLT_TIMESTAMP_TZ:
 	case SQLT_TIMESTAMP_LTZ:
 		return GDA_TYPE_TIMESTAMP;
-	case SQLT_SLS:
-	case SQLT_CUR:
-	case SQLT_RDD:
-	case SQLT_OSL:
-	case SQLT_NTY:
-	case SQLT_REF:
-	case SQLT_RSET:
-	case SQLT_NCO:
-	case SQLT_INTERVAL_YM:
-	case SQLT_INTERVAL_DS:
-	case SQLT_VNU:
-	case SQLT_PDN:
-	case SQLT_NON:
+	//case SQLT_VST:
+	//case SQLT_SLS:
+	//case SQLT_CUR:
+	//case SQLT_OSL:
+
+	//case SQLT_RSET:
+	//case SQLT_NCO:
+	//case SQLT_INTERVAL_YM:
+	//case SQLT_INTERVAL_DS:
+	//case SQLT_PDN:
+	//case SQLT_NON:
 	default:
 		return G_TYPE_INVALID;
+	}
+}
+
+ub2
+_g_type_to_oracle_sqltype (GType type)
+{
+	if (type == G_TYPE_BOOLEAN)
+		return SQLT_INT;
+	else if (type == G_TYPE_STRING) 
+		return SQLT_CHR;
+	else if (type == G_TYPE_INT)
+		return SQLT_INT;
+	else if (type == G_TYPE_DATE)
+		return SQLT_ODT;
+	else if (type == GDA_TYPE_TIME)
+		return SQLT_TIME;
+	else if (type == G_TYPE_INT64)
+		return SQLT_CHR;
+	else if (type == G_TYPE_UINT)
+		return SQLT_UIN;
+	else if (type == G_TYPE_ULONG)
+		return SQLT_INT;
+	else if (type == G_TYPE_LONG)
+		return SQLT_INT;
+	else if (type == GDA_TYPE_SHORT)
+		return SQLT_INT;
+	else if (type == G_TYPE_FLOAT)
+		return SQLT_BFLOAT;
+	else if (type == G_TYPE_DOUBLE)
+		return SQLT_BDOUBLE;
+	else if (type == GDA_TYPE_NUMERIC)
+		return SQLT_CHR;
+	else if (type == GDA_TYPE_GEOMETRIC_POINT)
+		return SQLT_CHR;
+	else if (type == GDA_TYPE_TIMESTAMP)
+		return SQLT_TIMESTAMP;
+	else if (type == GDA_TYPE_BINARY)
+		return SQLT_LNG;
+	else if (type == GDA_TYPE_BLOB)
+		return SQLT_BLOB;
+	else if (type == G_TYPE_GTYPE)
+		return SQLT_CHR;
+	else if (type == G_TYPE_CHAR)
+		return SQLT_INT;
+	else {
+		g_warning ("Internal implementation missing: type %s not handled", g_type_name (type));
+		return SQLT_LNG;
 	}
 }
 
@@ -210,18 +278,20 @@ _oracle_sqltype_to_string (const ub2 sqltype)
 	case SQLT_INT:
 		return "INTEGER";
 	case SQLT_FLT:
+	case SQLT_BFLOAT:
+	case SQLT_BDOUBLE:
 		return "FLOAT";
 	case SQLT_STR:
 		return "STRING";
 	case SQLT_VNU:
 		return "VARNUM";
-	case SQLT_PDN:
+	//case SQLT_PDN:
 		return "";
 	case SQLT_LNG:
 		return "LONG";
 	case SQLT_VCS:
 		return "VARCHAR";
-	case SQLT_NON:
+	//case SQLT_NON:
 		return "";
 	case SQLT_RID:
 		return "ROWID";
@@ -235,7 +305,7 @@ _oracle_sqltype_to_string (const ub2 sqltype)
 		return "LONG RAW";
 	case SQLT_UIN:
 		return "UNSIGNED INT";
-	case SQLT_SLS:
+	//case SQLT_SLS:
 		return "";
 	case SQLT_LVC:
 		return "LONG VARCHAR";
@@ -245,18 +315,18 @@ _oracle_sqltype_to_string (const ub2 sqltype)
 		return "CHAR";
 	case SQLT_AVC:
 		return "CHARZ";
-	case SQLT_CUR:
+	//case SQLT_CUR:
 		return "CURSOR";
 	case SQLT_RDD:
 		return "ROWID";
-	case SQLT_LAB:
+	//case SQLT_LAB:
 		return "LABEL";
-	case SQLT_OSL:
+	//case SQLT_OSL:
 		return "OSLABEL";
 	case SQLT_NTY:
-		return "";
+		return "NAMED DATA TYPE";
 	case SQLT_REF:
-		return "";
+		return "REF";
 	case SQLT_CLOB:
 		return "CLOB";
 	case SQLT_BLOB:
@@ -265,11 +335,11 @@ _oracle_sqltype_to_string (const ub2 sqltype)
 		return "BFILE";
 	case SQLT_CFILEE:
 		return "CFILE";
-	case SQLT_RSET:
+	//case SQLT_RSET:
 		return "RESULT SET";
-	case SQLT_NCO:
+	//case SQLT_NCO:
 		return "";
-	case SQLT_VST:
+	//case SQLT_VST:
 		return "";
 	case SQLT_ODT:
 		return "OCI DATE";
@@ -283,14 +353,14 @@ _oracle_sqltype_to_string (const ub2 sqltype)
 		return "TIMESTAMP";
 	case SQLT_TIMESTAMP_TZ:
 		return "TIMESTAMP WITH TIME ZONE";
-	case SQLT_INTERVAL_YM:
+	//case SQLT_INTERVAL_YM:
 		return "INTERVAL YEAR TO MONTH";
-	case SQLT_INTERVAL_DS:
+	//case SQLT_INTERVAL_DS:
 		return "INTERVAL DAY TO SECOND";
 	case SQLT_TIMESTAMP_LTZ:
 		return "TIMESTAMP WITH LOCAL TIME ZONE";
 	default:
-		return "UNKNOWN";
+		return "UNDEFINED";
 	}
 }
 
@@ -400,6 +470,21 @@ _gda_value_to_oracle_value (const GValue *value)
 			ora_value->defined_size = 0;
 		}
 	}
+	else if (type == GDA_TYPE_BINARY) {
+		GdaBinary *bin;
+
+		bin = (GdaBinary *) gda_value_get_binary ((GValue *) value);
+		if (bin) {
+			ora_value->sql_type = SQLT_LNG;
+			ora_value->value = bin->data;
+			ora_value->defined_size = bin->binary_length;
+		}
+		else {
+			ora_value->sql_type = SQLT_CHR;
+			ora_value->value = g_strdup ("");
+			ora_value->defined_size = 0;
+		}
+	}
 	else {
 		gchar *val_str;
 		val_str = gda_value_stringify ((GValue *) value);
@@ -421,59 +506,42 @@ _gda_oracle_set_value (GValue *value,
 {
 	GdaTime gtime;
 	GdaTimestamp timestamp;
-	GdaNumeric numeric;
 	sb2 year;
 	ub1 month;
 	ub1 day;
 	ub1 hour;
 	ub1 min;
 	ub1 sec;
-	GType type;
-	gchar *string_buffer, *tmp;
 
-	if (-1 == (ora_value->indicator)) {
+	if (ora_value->indicator == -1) {
 		gda_value_set_null (value);
 		return;
 	}
 
-	type = ora_value->g_type;
-	gda_value_reset_with_type (value, type);
-	if (type == G_TYPE_BOOLEAN) 
-		g_value_set_boolean (value, (atoi (ora_value->value)) ? TRUE: FALSE);
-	else if (type == G_TYPE_STRING) {
-		string_buffer = g_malloc0 (ora_value->defined_size+1);
-		memcpy (string_buffer, ora_value->value, ora_value->defined_size);
-		string_buffer[ora_value->defined_size] = '\0';
-		g_strchomp(string_buffer);
-		tmp = g_locale_to_utf8 (string_buffer, -1, NULL, NULL, NULL);
-		g_value_set_string (value, tmp);
-		g_free (tmp);
-		g_free (string_buffer);
-	}
-	else if (type == G_TYPE_INT64)
-		g_value_set_int64 (value, atoll (ora_value->value));
-	else if (type == G_TYPE_INT)
-		g_value_set_int (value, atol (ora_value->value));
-	else if (type == G_TYPE_UINT)
-		g_value_set_uint (value, atol (ora_value->value));
-	else if (type == GDA_TYPE_SHORT)
-		gda_value_set_short (value, atoi (ora_value->value));
-	else if (type == G_TYPE_FLOAT)
-		g_value_set_float (value, atof (ora_value->value));
-	else if (type == G_TYPE_DOUBLE)
-		g_value_set_double (value, atof (ora_value->value));
-	else if (type == GDA_TYPE_NUMERIC) {
-		string_buffer = g_malloc0 (ora_value->defined_size+1);
-		memcpy (string_buffer, ora_value->value, ora_value->defined_size);
-		string_buffer [ora_value->defined_size] = '\0';
+	gda_value_reset_with_type (value, ora_value->g_type);
+	switch (ora_value->s_type) {
+	case GDA_STYPE_INT:
+		g_value_set_int (value, *((gint *) ora_value->value));
+		break;
+	case GDA_STYPE_STRING: {
+		gchar *string_buffer, *tmp;
+		
+		string_buffer = (gchar *) ora_value->value;
+		string_buffer [ora_value->rlen] = '\0';
 		g_strchomp (string_buffer);
-		numeric.number = string_buffer;
-		numeric.precision = 0; /* FIXME */
-		numeric.width = 0; /* FIXME */
-		gda_value_set_numeric (value, &numeric);
-		g_free (string_buffer);
+		//tmp = g_locale_to_utf8 (string_buffer, -1, NULL, NULL, NULL);
+		//g_value_take_string (value, tmp);
+		g_value_set_string (value, string_buffer);
+		if (ora_value->use_callback) {
+			g_free (string_buffer);
+			ora_value->value = NULL;
+		}
+		break;
 	}
-	else if (type == G_TYPE_DATE) {
+	case GDA_STYPE_BOOLEAN:
+		g_value_set_boolean (value, (*((gint *) ora_value->value)) ? TRUE: FALSE);
+		break;
+	case GDA_STYPE_DATE: {
 		GDate *date;
 		OCIDateGetDate ((CONST OCIDate *) ora_value->value,
 				(sb2 *) &year,
@@ -481,11 +549,20 @@ _gda_oracle_set_value (GValue *value,
 				(ub1 *) &day);
 		date = g_date_new_dmy (day, month, year);
 		g_value_take_boxed (value, date);
+		break;
 	}
-	else if (type == GDA_TYPE_GEOMETRIC_POINT) {}
-	else if (type == GDA_TYPE_NULL)
-		gda_value_set_null (value);
-	else if (type == GDA_TYPE_TIMESTAMP) {
+	case GDA_STYPE_TIME: {
+		OCIDateGetTime ((CONST OCIDate *) ora_value->value,
+				(ub1 *) &hour,
+				(ub1 *) &min,
+				(ub1 *) &sec);
+		gtime.hour = hour;
+		gtime.minute = min;
+		gtime.second = sec;
+		gda_value_set_time (value, &gtime);
+		break;
+	}
+	case GDA_STYPE_TIMESTAMP: {
 		OCIDateGetDate ((CONST OCIDate *) ora_value->value,
 				(sb2 *) &year,
 				(ub1 *) &month,
@@ -503,21 +580,57 @@ _gda_oracle_set_value (GValue *value,
 		timestamp.fraction = 0;
 		timestamp.timezone = 0;
 		gda_value_set_timestamp(value, &timestamp);
+		break;
 	}
-	else if (type == GDA_TYPE_TIME) {
-		OCIDateGetTime ((CONST OCIDate *) ora_value->value,
-				(ub1 *) &hour,
-				(ub1 *) &min,
-				(ub1 *) &sec);
-		gtime.hour = hour;
-		gtime.minute = min;
-		gtime.second = sec;
-		gda_value_set_time (value, &gtime);
+	case GDA_STYPE_INT64:
+		g_value_set_int64 (value, atoll (ora_value->value));
+		break;
+	case GDA_STYPE_UINT:
+		g_value_set_uint (value, *((guint*) ora_value->value));
+		break;
+	case GDA_STYPE_FLOAT:
+		g_value_set_float (value, *((gfloat*) ora_value->value));
+		break;
+	case GDA_STYPE_DOUBLE:
+		g_value_set_double (value, *((gdouble*) ora_value->value));
+		break;
+	case GDA_STYPE_LONG:
+		TO_IMPLEMENT;
+		break;
+	case GDA_STYPE_ULONG:
+		TO_IMPLEMENT;
+		break;
+	case GDA_STYPE_NUMERIC: {
+		GdaNumeric *numeric;
+		g_assert (!ora_value->use_callback);
+		
+		numeric = g_new0 (GdaNumeric, 1);
+		numeric->number = g_malloc0 (ora_value->defined_size);
+		memcpy (numeric->number, ora_value->value, ora_value->defined_size);
+		numeric->number [ora_value->rlen] = '\0';
+		g_strchomp (numeric->number);
+		numeric->precision = ora_value->precision;
+		numeric->width = ora_value->scale;
+		g_value_take_boxed (value, numeric);
+		break;
 	}
-	else if (type == GDA_TYPE_BINARY) {
-		g_warning ("GdaBinary type is not supported by Oracle");
+	case GDA_STYPE_BINARY: {
+		GdaBinary *bin;
+
+		bin = g_new0 (GdaBinary, 1);
+		if (ora_value->use_callback) {		
+			bin->data = ora_value->value;
+			ora_value->value = NULL;
+		}
+		else {
+			bin->data = g_new (guchar, ora_value->rlen);
+			memcpy (bin->data, ora_value->value, ora_value->rlen);
+		}
+		bin->binary_length = ora_value->rlen;
+		gda_value_take_binary (value, bin);
+		break;
 	}
-	else if (type == GDA_TYPE_BLOB) {
+	case GDA_STYPE_BLOB: {
 		GdaBlob *blob;
 		GdaBlobOp *op;
 		OCILobLocator *lobloc;
@@ -553,9 +666,30 @@ _gda_oracle_set_value (GValue *value,
 		g_object_unref (op);
 
 		gda_value_take_blob (value, blob);
+		break;
 	}
-	else
-		g_value_set_string (value, ora_value->value);
+	case GDA_STYPE_CHAR: {
+		TO_IMPLEMENT; /* test that value fits in */
+		g_value_set_char (value, *((gchar*) ora_value->value));
+		break;
+	}
+	case GDA_STYPE_SHORT: {
+		TO_IMPLEMENT; /* test that value fits in */
+		gda_value_set_short (value, *((gint*) ora_value->value));
+		break;
+	}
+	case GDA_STYPE_GTYPE:
+		TO_IMPLEMENT;
+		break;
+	case GDA_STYPE_GEOMETRIC_POINT:
+		TO_IMPLEMENT;
+		break;
+	case GDA_STYPE_NULL:
+		gda_value_set_null (value);
+		break;
+	default:
+		g_assert_not_reached ();
+	}
 }
 
 void
@@ -567,4 +701,17 @@ _gda_oracle_value_free (GdaOracleValue *ora_value)
                 g_free (ora_value->value);
         OCIDescriptorFree ((dvoid *) ora_value->pard, OCI_DTYPE_PARAM);
         g_free (ora_value);
+}
+
+GType *static_types = NULL;
+GdaStaticType
+gda_g_type_to_static_type (GType type)
+{
+	GdaStaticType st;
+	for (st = 0; st < GDA_STYPE_NULL; st++) {
+		if (static_types [st] == type)
+			return st;
+	}
+	g_error ("Missing type '%s' in GDA static types", g_type_name (type));
+	return 0;
 }

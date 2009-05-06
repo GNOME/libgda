@@ -2502,7 +2502,7 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 					context.column_values = g_new (GValue *, context.size);
 					
 					for (k = 0; k < tfk->cols_nb; k++) {
-						context.column_values [k] = (GValue*) gda_data_model_get_value_at (wrapped_data, 
+						context.column_values [k] = (GValue*) gda_data_model_get_value_at (new_data, 
 									    tfk->ref_pk_cols_array[k], i, error);
 						if (!context.column_values [k]) {
 							g_free (context.column_values);
