@@ -78,7 +78,7 @@ information_schema_doc_LDADD = \
         $(top_builddir)/libgda/libgda-4.0.la \
         $(LIBGDA_LIBS)
 
-webdatadir = $(datadir)/libgda-4.1/web
+webdatadir = $(datadir)/libgda-4.0/web
 webdata_DATA = \
 	cnc.js \
 	md5.js \
