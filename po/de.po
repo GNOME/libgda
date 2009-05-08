@@ -12,10 +12,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=libgda&component=general\n"
-"POT-Creation-Date: 2009-04-28 19:18+0000\n"
-"PO-Revision-Date: 2009-05-03 22:40+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-08 21:08+0200\n"
+"PO-Revision-Date: 2009-05-08 21:22+0100\n"
 "Last-Translator: Mario Blättermann <mariobl@gnome.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -81,7 +80,7 @@ msgstr "Treiber kann nicht geladen werden: %s"
 #: ../libgda/gda-config.c:1218
 #, c-format
 msgid "Can't instantiate provider '%s'"
-msgstr ""
+msgstr "Treiberinstanz »%s« konnte nicht erstellt werden"
 
 #: ../libgda/gda-config.c:1262 ../libgda/gda-data-model-dsn-list.c:111
 #: ../libgda/gda-data-model-dsn-list.c:112 ../tools/gda-sql.c:1779
@@ -232,7 +231,7 @@ msgid "Provider does not support statement preparation"
 msgstr "Treiber unterstützt die Vorbereitung von Anweisungen nicht"
 
 #: ../libgda/gda-connection.c:1912 ../libgda/gda-connection.c:1983
-#: ../libgda/gda-connection.c:2054 ../libgda/gda-meta-store.c:632
+#: ../libgda/gda-connection.c:2054 ../libgda/gda-meta-store.c:639
 #, c-format
 msgid "Can't obtain connection lock"
 msgstr ""
@@ -290,7 +289,8 @@ msgstr ""
 msgid "Internal error: invalid provider handle"
 msgstr "Interner Fehler: Ungültiger Treiber-Handle"
 
-#: ../libgda/gda-data-access-wrapper.c:486 ../libgda/gda-data-model-array.c:536
+#: ../libgda/gda-data-access-wrapper.c:486
+#: ../libgda/gda-data-meta-wrapper.c:521 ../libgda/gda-data-model-array.c:536
 #: ../libgda/gda-data-model-bdb.c:652 ../libgda/gda-data-model-bdb.c:756
 #: ../libgda/gda-data-model-bdb.c:785 ../libgda/gda-data-model-dir.c:792
 #: ../libgda/gda-data-model-dir.c:888 ../libgda/gda-data-model-dir.c:930
@@ -522,7 +522,7 @@ msgstr "»%s« kann nicht aus GDA-Typ %s in GDA-Typ %s umgewandelt werden"
 #: ../libgda/gda-data-model.c:1889
 #, c-format
 msgid "Could not dump data model's attributes: %s"
-msgstr ""
+msgstr "Die Attribute des Datenmodells konnten nicht abgelegt werden: %s"
 
 #: ../libgda/gda-data-model.c:1890 ../libgda/gda-data-model.c:1898
 #: ../libgda/gda-data-model-dir.c:386 ../libgda/gda-data-model-import.c:1575
@@ -531,7 +531,7 @@ msgstr ""
 #: ../libgda/gda-data-select.c:381 ../libgda/gda-data-select.c:445
 #: ../libgda/gda-data-select.c:2028 ../libgda/gda-data-select.c:2037
 #: ../libgda/gda-data-select.c:2047 ../libgda/gda-holder.c:484
-#: ../libgda/gda-holder.c:1656 ../libgda/gda-meta-store.c:544
+#: ../libgda/gda-holder.c:1656 ../libgda/gda-meta-store.c:551
 #: ../libgda/gda-server-operation.c:614 ../libgda/gda-server-operation.c:1004
 #: ../libgda/gda-set.c:483 ../libgda/gda-tree-mgr-select.c:188
 #: ../libgda/gda-tree-mgr-select.c:220
@@ -563,7 +563,7 @@ msgstr "Kein Detail"
 #: ../libgda/gda-data-model.c:1897
 #, c-format
 msgid "Could not dump data model's contents: %s"
-msgstr ""
+msgstr "Die Inhalte des Datenmodells konnten nicht abgelegt werden: %s"
 
 #: ../libgda/gda-data-model.c:2137
 msgid "Data model does not support backward cursor move, not displaying data"
@@ -811,6 +811,8 @@ msgstr "Ungültiger Filterausdruck"
 msgid ""
 "The first row is an empty row artificially prepended and cannot be altered"
 msgstr ""
+"Die erste Zeile ist eine absichtlich vorangestellte leere Zeile und kann "
+"nicht geändert werden"
 
 #: ../libgda/gda-data-proxy.c:3694
 #, c-format
@@ -820,7 +822,7 @@ msgstr "Versuch, eine nur lesbare Spalte zu ändern: %d"
 #: ../libgda/gda-data-proxy.c:3731
 #, c-format
 msgid "Value type mismatch %s instead of %s"
-msgstr ""
+msgstr "Keine Übereinstimmung der Werttypen (%s anstelle von %s)"
 
 #: ../libgda/gda-data-select.c:360 ../libgda/gda-data-select.c:380
 #, c-format
@@ -1080,146 +1082,146 @@ msgstr ""
 "Serveroperationen wird nicht ausgeführt (einige schwerwiegende Fehler könnten "
 "auftreten)"
 
-#: ../libgda/gda-meta-store.c:403
+#: ../libgda/gda-meta-store.c:409
 msgid "Connection string for the internal connection to use"
 msgstr "Intern zu verwendende Verbindungszeichenkette "
 
-#: ../libgda/gda-meta-store.c:406
+#: ../libgda/gda-meta-store.c:412
 msgid "Connection object internally used"
 msgstr "Intern verwendetes Verbindungsobjekt"
 
-#: ../libgda/gda-meta-store.c:409
+#: ../libgda/gda-meta-store.c:415
 msgid "Catalog in which the database objects will be created"
 msgstr "Katalog, in welchem die Datenbankobjekte erstellt werden"
 
-#: ../libgda/gda-meta-store.c:412
+#: ../libgda/gda-meta-store.c:418
 msgid "Schema in which the database objects will be created"
 msgstr "Schema, in welchem die Datenbankobjekte erstellt werden"
 
-#: ../libgda/gda-meta-store.c:552
+#: ../libgda/gda-meta-store.c:559
 msgid "Catalog specified but no schema specified, store will not be useable"
 msgstr "Katalog angegeben, aber kein Schema, Speichern wird nicht möglich sein"
 
-#: ../libgda/gda-meta-store.c:834
+#: ../libgda/gda-meta-store.c:858
 msgid "Could not set the internal schema's version"
 msgstr "Interne Version des Schemas konnte nicht gesetzt werden"
 
-#: ../libgda/gda-meta-store.c:1138
+#: ../libgda/gda-meta-store.c:1162
 msgid "Missing view name from <view> node"
 msgstr "Fehlender Ansichtsname des <view>-Knotens"
 
-#: ../libgda/gda-meta-store.c:1178
+#: ../libgda/gda-meta-store.c:1202
 msgid "Missing view definition from <view> node"
 msgstr "Fehlende Ansichtsdefinition des <view>-Knotens"
 
-#: ../libgda/gda-meta-store.c:1192
+#: ../libgda/gda-meta-store.c:1216
 #, c-format
 msgid "View definition contains more than one statement (for view '%s')"
 msgstr "Ansichtsdefinition enthält mehr als eine Anweisung (für Ansicht »%s«)"
 
-#: ../libgda/gda-meta-store.c:1219
+#: ../libgda/gda-meta-store.c:1243
 #, c-format
 msgid "View definition is not a selection statement (for view '%s')"
 msgstr "Ansichtsdefinition ist keine Auswahlanweisung (für Ansicht »%s«)"
 
 #. FIXME
-#: ../libgda/gda-meta-store.c:1244 ../libgda/gda-meta-struct-io.c:175
+#: ../libgda/gda-meta-store.c:1268 ../libgda/gda-meta-struct-io.c:175
 msgid "Missing table name from <table> node"
 msgstr "Fehlender Tabellenname im <table>-Knoten"
 
-#: ../libgda/gda-meta-store.c:1459
+#: ../libgda/gda-meta-store.c:1497
 #, c-format
 msgid "Column '%s' already exists and has different characteristics"
 msgstr "Spalte »%s« existiert und hat unterschiedliche Charakteristiken"
 
-#: ../libgda/gda-meta-store.c:1493
+#: ../libgda/gda-meta-store.c:1531
 #, c-format
 msgid "Missing foreign key's referenced table name (for table '%s')"
 msgstr "Fehlender Name der Referenztabelle für Fremdschlüssel (für Tabelle »%s«)"
 
-#: ../libgda/gda-meta-store.c:1546
+#: ../libgda/gda-meta-store.c:1584
 #, c-format
 msgid "Missing foreign key's column name (for table '%s')"
 msgstr "Fehlender Spaltenname für Fremdschlüssel (für Tabelle »%s«)"
 
-#: ../libgda/gda-meta-store.c:1557
+#: ../libgda/gda-meta-store.c:1595
 #, c-format
 msgid "Column '%s' not found in table '%s'"
 msgstr "Spalte »%s« wurde in Tabelle »%s« nicht gefunden"
 
-#: ../libgda/gda-meta-store.c:1810 ../libgda/gda-meta-struct.c:1001
+#: ../libgda/gda-meta-store.c:1848 ../libgda/gda-meta-struct.c:1014
 #, c-format
 msgid "Foreign key column '%s' not found in table '%s'"
 msgstr "Fremdschlüsselspalte »%s« wurde in Tabelle »%s« nicht gefunden"
 
-#: ../libgda/gda-meta-store.c:1938 ../libgda/gda-meta-store.c:1949
-#: ../libgda/gda-meta-store.c:1968
+#: ../libgda/gda-meta-store.c:1978 ../libgda/gda-meta-store.c:1989
+#: ../libgda/gda-meta-store.c:2008
 msgid "Could not get the internal schema's version"
 msgstr "Interne Version des Schemas konnte nicht ermittelt werden"
 
-#: ../libgda/gda-meta-store.c:1959
+#: ../libgda/gda-meta-store.c:1999
 #, c-format
 msgid "Unknown internal schema's version: %d"
 msgstr "Unbekannte Version des internen Schemas: %d"
 
-#: ../libgda/gda-meta-store.c:2054 ../tools/gda-sql.c:965
+#: ../libgda/gda-meta-store.c:2094 ../tools/gda-sql.c:965
 msgid "More than one SQL statement"
 msgstr "Mehr als eine SQL-Anweisung"
 
-#: ../libgda/gda-meta-store.c:2083
+#: ../libgda/gda-meta-store.c:2123
 #, c-format
 msgid "Parameter '%s' is not present in statement"
 msgstr "Parameter »%s« ist in Anweisung nicht vorhanden"
 
-#: ../libgda/gda-meta-store.c:2100
+#: ../libgda/gda-meta-store.c:2140
 #, c-format
 msgid "No value set for parameter '%s'"
 msgstr "Kein Wert für den Parameter »%s« gesetzt."
 
-#: ../libgda/gda-meta-store.c:2619
+#: ../libgda/gda-meta-store.c:2682
 msgid "Data models should have the same number of columns"
 msgstr "Datenmodelle sollten die gleiche Spaltenanzahl enthalten"
 
-#: ../libgda/gda-meta-store.c:2680 ../libgda/gda-meta-store.c:3554
-#: ../libgda/gda-meta-store.c:3651
+#: ../libgda/gda-meta-store.c:2743 ../libgda/gda-meta-store.c:3617
+#: ../libgda/gda-meta-store.c:3714
 #, c-format
 msgid "Unknown database object '%s'"
 msgstr "Unbekanntes Datenbankobjekt »%s«"
 
-#: ../libgda/gda-meta-store.c:2693
+#: ../libgda/gda-meta-store.c:2756
 #, c-format
 msgid "Could not set value for parameter '%s'"
 msgstr "Wert für Parameter »%s« konnte nicht gesetzt werden"
 
-#: ../libgda/gda-meta-store.c:2718
+#: ../libgda/gda-meta-store.c:2781
 msgid "Could not create SELECT statement"
 msgstr "SELECT-Anweisung konnte nicht erzeugt werden"
 
-#: ../libgda/gda-meta-store.c:2733
+#: ../libgda/gda-meta-store.c:2796
 msgid "Could not create DELETE statement"
 msgstr "DELETE-Anweisung konnte nicht erzeugt werden"
 
-#: ../libgda/gda-meta-store.c:2778
+#: ../libgda/gda-meta-store.c:2841
 msgid "A transaction has already been started"
 msgstr "Es wurde bereits eine Transaktion begonnen"
 
-#: ../libgda/gda-meta-store.c:3153
+#: ../libgda/gda-meta-store.c:3216
 #, c-format
 msgid "Attribute '%s' not found"
 msgstr "Attribut »%s« wurde nicht gefunden"
 
-#: ../libgda/gda-meta-store.c:3156
+#: ../libgda/gda-meta-store.c:3219
 #, c-format
 msgid "Attribute '%s' has %d value"
 msgid_plural "Attribute '%s' has %d values"
 msgstr[0] "Attribut »%s« hat keinen %d-Wert"
 msgstr[1] "Attribut »%s« hat keine %d-Werte"
 
-#: ../libgda/gda-meta-store.c:3203
+#: ../libgda/gda-meta-store.c:3266
 msgid "Attributes names starting with a '_' are reserved for internal usage"
 msgstr "Mit »_« beginnende Attributnamen sind für internen Gebrauch reserviert"
 
-#: ../libgda/gda-meta-store.c:3231
+#: ../libgda/gda-meta-store.c:3294
 msgid ""
 "Could not start a transaction because one already started, this could lead to "
 "GdaMetaStore attributes problems"
@@ -1227,17 +1229,17 @@ msgstr ""
 "Eine Transaktion konnte wegen einer bereits laufenden Transaktion nicht "
 "gestartet werden. Dies könnte zu Fehlern in den GdaMetaStore-Attributen führen"
 
-#: ../libgda/gda-meta-store.c:3340
+#: ../libgda/gda-meta-store.c:3403
 msgid "Could not parse XML description of custom database object to add"
 msgstr ""
 "Die XML-Beschreibung des hinzuzufügenden benutzerdefinierten Datenbankobjekts "
 "konnte nicht geparst werden"
 
-#: ../libgda/gda-meta-store.c:3354
+#: ../libgda/gda-meta-store.c:3417
 msgid "Missing custom database object name"
 msgstr "Fehlender Name des benutzerdefinierten Datenbankobjekts"
 
-#: ../libgda/gda-meta-store.c:3359
+#: ../libgda/gda-meta-store.c:3422
 msgid ""
 "Custom database object names starting with a '_' are reserved for internal "
 "usage"
@@ -1245,7 +1247,7 @@ msgstr ""
 "Benutzrdefinierte Datenbankobjekte beginnend mit einem »_« sind für interne "
 "Benutzung reserviert"
 
-#: ../libgda/gda-meta-store.c:3454
+#: ../libgda/gda-meta-store.c:3517
 msgid "Another object with the same name already exists"
 msgstr "Ein anderes Objekt mit dem selben Namen existiert bereits"
 
@@ -1260,13 +1262,13 @@ msgstr "GdaMetaStore-Objekt, aus dem die Information bezogen werden soll"
 msgid "Features to compute"
 msgstr "Zu berechnende Funktionsmerkmale"
 
-#: ../libgda/gda-meta-struct.c:479 ../libgda/gda-meta-struct.c:494
-#: ../libgda/gda-meta-struct.c:511
+#: ../libgda/gda-meta-struct.c:492 ../libgda/gda-meta-struct.c:507
+#: ../libgda/gda-meta-struct.c:524
 #, c-format
 msgid "Could not find object named '%s'"
 msgstr "Objekt mit dem Namen »%s« konnte nicht gefunden werden"
 
-#: ../libgda/gda-meta-struct.c:560
+#: ../libgda/gda-meta-struct.c:573
 #, c-format
 msgid ""
 "Object %s.%s.%s already exists in GdaMetaStruct and has a different object "
@@ -1275,22 +1277,22 @@ msgstr ""
 "Objekt %s.%s.%s existiert bereits in GdaMetaStruct und hat einen anderen "
 "Objetktyp"
 
-#: ../libgda/gda-meta-struct.c:586
+#: ../libgda/gda-meta-struct.c:599
 #, c-format
 msgid "View %s.%s.%s not found in meta store object"
 msgstr "Ansicht %s.%s.%s nicht gefunden im Metastore-Objekt"
 
-#: ../libgda/gda-meta-struct.c:668
+#: ../libgda/gda-meta-struct.c:681
 #, c-format
 msgid "Table %s.%s.%s not found (or missing columns information)"
 msgstr "Tabelle %s.%s.%s nicht gefunden (oder fehlende Spalteninformation)"
 
-#: ../libgda/gda-meta-struct.c:794
+#: ../libgda/gda-meta-struct.c:807
 #, c-format
 msgid "Internal GdaMetaStore error: column %s not found"
 msgstr "Interner GdaMetaStore-Fehler: Spalte %s nicht gefunden"
 
-#: ../libgda/gda-meta-struct.c:918
+#: ../libgda/gda-meta-struct.c:931
 #, c-format
 msgid ""
 "Meta data incoherence in foreign key constraint for table %s.%s.%s "
@@ -1299,11 +1301,11 @@ msgstr ""
 "Zusammenhanglose Metadaten in Fremdschlüssel-Beschränkung für Tabelle %s.%s.%"
 "s in Bezug auf Tabelle %s.%s.%s"
 
-#: ../libgda/gda-meta-struct.c:2218
+#: ../libgda/gda-meta-struct.c:2231
 msgid "Missing object name in GdaMetaDbObject structure"
 msgstr "Fehlender Objektname in GdaMetaDbObject-Struktur"
 
-#: ../libgda/gda-meta-struct.c:2243
+#: ../libgda/gda-meta-struct.c:2256
 #, c-format
 msgid "Database object '%s' already exists"
 msgstr "Datenbankobjekt »%s« existiert bereits"
@@ -1371,7 +1373,6 @@ msgstr ""
 
 #: ../libgda/gda-server-operation.c:683
 #, c-format
-#| msgid "GdaServerOperation: could not load file '%s'"
 msgid ""
 "GdaServerOperation specification does not conform to DTD:\n"
 "%s"
@@ -1496,6 +1497,7 @@ msgstr "Datenbank"
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:13
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:75
 #: ../providers/mysql/mysql_specs_drop_column.xml.in.h:2
+#: ../providers/oracle/oracle_specs_create_table.xml.in.h:12
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:8
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:23
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:3
@@ -1509,6 +1511,7 @@ msgstr "Feldname"
 #: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:6
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:10
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:53
+#: ../providers/oracle/oracle_specs_create_table.xml.in.h:6
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:4
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:11
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:4
@@ -1564,6 +1567,7 @@ msgstr "Referenzen"
 #: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:10
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:12
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:57
+#: ../providers/oracle/oracle_specs_create_table.xml.in.h:10
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:6
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:15
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:21
@@ -1667,6 +1671,7 @@ msgstr "Ansicht"
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:11
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:134
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:3
+#: ../providers/oracle/oracle_specs_create_table.xml.in.h:15
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:9
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:40
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:3
@@ -1741,40 +1746,38 @@ msgstr "GdaHolder muss eine Kennung haben"
 msgid "One or more values are invalid"
 msgstr "Ein oder mehrere Werte sind ungültig"
 
-#: ../libgda/gda-sql-builder.c:270 ../libgda/gda-sql-builder.c:872
-#: ../libgda/gda-sql-builder.c:944
+#: ../libgda/gda-sql-builder.c:271 ../libgda/gda-sql-builder.c:873
+#: ../libgda/gda-sql-builder.c:945
 #, c-format
-#| msgid "Unknown query '%s'"
 msgid "Unknown part ID %u"
 msgstr "Unbekannte Kennung %u des Abschnitts"
 
-#: ../libgda/gda-sql-builder.c:274
+#: ../libgda/gda-sql-builder.c:275
 msgid "Unknown part type"
 msgstr "Unbekannter Typ des Abschnitts"
 
-#: ../libgda/gda-sql-builder.c:318
+#: ../libgda/gda-sql-builder.c:319
 #, c-format
 msgid "SqlBuilder is empty"
 msgstr "SqlBuilder ist leer"
 
-#: ../libgda/gda-sql-builder.c:403 ../libgda/gda-sql-builder.c:460
-#: ../libgda/gda-sql-builder.c:508 ../libgda/gda-sql-builder.c:552
-#: ../libgda/gda-sql-builder.c:789 ../libgda/gda-sql-builder.c:851
-#: ../libgda/gda-sql-builder.c:926
+#: ../libgda/gda-sql-builder.c:404 ../libgda/gda-sql-builder.c:461
+#: ../libgda/gda-sql-builder.c:509 ../libgda/gda-sql-builder.c:553
+#: ../libgda/gda-sql-builder.c:790 ../libgda/gda-sql-builder.c:852
+#: ../libgda/gda-sql-builder.c:927
 msgid "Wrong statement type"
 msgstr "Ungültiger Anweisungstyp"
 
-#: ../libgda/gda-sql-builder.c:500
-#| msgid "Wrong type of data"
+#: ../libgda/gda-sql-builder.c:501
 msgid "Wrong field format"
 msgstr "Falsches Feldformat"
 
-#: ../libgda/gda-sql-builder.c:600 ../libgda/gda-sql-builder.c:605
+#: ../libgda/gda-sql-builder.c:601 ../libgda/gda-sql-builder.c:606
 #, c-format
 msgid "Unhandled data type '%s'"
 msgstr "Unbehandelter Datentyp »%s«"
 
-#: ../libgda/gda-sql-builder.c:631
+#: ../libgda/gda-sql-builder.c:632
 #, c-format
 msgid "Could not convert value to type '%s'"
 msgstr "Wert konnte nicht in »%s« umgewandelt werden"
@@ -1839,30 +1842,25 @@ msgstr "Keine Verbindung angegeben"
 
 #: ../libgda/gda-tree-mgr-columns.c:345
 #, c-format
-#| msgid "No database specified"
 msgid "No schema specified"
 msgstr "Kein Schema angegeben"
 
 #: ../libgda/gda-tree-mgr-columns.c:353
 #, c-format
-#| msgid "No database specified"
 msgid "No table specified"
 msgstr "Keine Tabelle angegeben"
 
 #: ../libgda/gda-tree-mgr-columns.c:382
 #, c-format
-#| msgid "Table to rename"
 msgid "Unable to get column name"
 msgstr "Spaltenname konnte nicht erhalten werden werden"
 
 #: ../libgda/gda-tree-mgr-label.c:209 ../libgda/gda-tree-mgr-label.c:215
-#| msgid "New name"
 msgid "No name"
 msgstr "Kein Name"
 
 #: ../libgda/gda-tree-mgr-schemas.c:269
 #, c-format
-#| msgid "Table to rename"
 msgid "Unable to get schema name"
 msgstr "Schema-Name konnte nicht erhalten werden werden"
 
@@ -1886,7 +1884,6 @@ msgstr "Keine SELECT-Anweisung angegeben"
 
 #: ../libgda/gda-tree-mgr-select.c:324
 #, c-format
-#| msgid "No value set for parameter '%s'"
 msgid "No value specified for parameter '%s'"
 msgstr "Kein Wert für den Parameter »%s« gesetzt."
 
@@ -1897,14 +1894,12 @@ msgstr ""
 
 #: ../libgda/gda-tree-mgr-tables.c:348
 #, c-format
-#| msgid "Table to rename"
 msgid "Unable to get table name"
 msgstr "Tabellenname konnte nicht erhalten werden"
 
 # CHECK, OS = Betriebssystem?
-#: ../libgda/gda-tree.c:556 ../libgda/gda-tree.c:564
+#: ../libgda/gda-tree.c:557 ../libgda/gda-tree.c:565
 #, c-format
-#| msgid "OS error: %s"
 msgid "Path format error: %s"
 msgstr "Pfad-Formatierungsfehler: %s"
 
@@ -1995,7 +1990,7 @@ msgstr "Handler für Zeichenketten"
 
 #: ../libgda/handlers/gda-handler-string.c:126
 msgid "InternalString"
-msgstr ""
+msgstr "InternalString"
 
 #: ../libgda/handlers/gda-handler-string.c:127
 msgid "Strings representation"
@@ -2019,6 +2014,7 @@ msgstr "Gda-Typ-Darstellung"
 
 #: ../libgda/sqlite/gda-sqlite-ddl.c:216 ../providers/jdbc/gda-jdbc-ddl.c:136
 #: ../providers/mysql/gda-mysql-ddl.c:311
+#: ../providers/oracle/gda-oracle-ddl.c:136
 #: ../providers/postgres/gda-postgres-ddl.c:362
 msgid "Table to create must have at least one row"
 msgstr "Die zu erstellende Tabelle muss mindestens eine Zeile enthalten"
@@ -2422,7 +2418,7 @@ msgstr "Leere FROM-Klausel"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1359
 msgid "Select field is not in a SELECT statement"
-msgstr ""
+msgstr "Selesct-Feld ist keine SELECT-Anweisung"
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:220
 msgid "COMPOUND statement contains an undefined COMPOUND statement"
@@ -2533,18 +2529,16 @@ msgstr "UPDATE-Anweisung enthält keine zu aktualisierende Spalte als Ziel"
 #: ../libgda/thread-wrapper/gda-thread-provider.c:1817
 #: ../libgda/thread-wrapper/gda-thread-provider.c:1866
 #, c-format
-#| msgid "No connection specified"
 msgid "A connection is required"
 msgstr "Eine Verbindung ist erforderlich"
 
-#: ../libgda/thread-wrapper/gda-thread-wrapper.c:926
-#: ../libgda/thread-wrapper/gda-thread-wrapper.c:978
-#: ../libgda/thread-wrapper/gda-thread-wrapper.c:991
-#| msgid "Table %s doesn't exist"
+#: ../libgda/thread-wrapper/gda-thread-wrapper.c:927
+#: ../libgda/thread-wrapper/gda-thread-wrapper.c:979
+#: ../libgda/thread-wrapper/gda-thread-wrapper.c:992
 msgid "Signal does not exist\n"
 msgstr "Signal existiert nicht\n"
 
-#: ../libgda/thread-wrapper/gda-thread-wrapper.c:934
+#: ../libgda/thread-wrapper/gda-thread-wrapper.c:935
 msgid "Signal to connect to must not have a return value\n"
 msgstr "Signal zum Verbinden muss keinen Rückgabewert haben\n"
 
@@ -2746,6 +2740,7 @@ msgstr "Die Verbindungszeichenkette muss den Wert URL enthalten"
 #: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:2
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:6
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:24
+#: ../providers/oracle/oracle_specs_create_table.xml.in.h:2
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:1
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:5
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:1
@@ -2757,6 +2752,7 @@ msgstr "Überprüfen"
 #: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:4
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:7
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:26
+#: ../providers/oracle/oracle_specs_create_table.xml.in.h:4
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:2
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:7
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:2
@@ -2768,6 +2764,7 @@ msgstr "Beschränkungen überprüfen"
 #: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:8
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:11
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:55
+#: ../providers/oracle/oracle_specs_create_table.xml.in.h:8
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:5
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:13
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:5
@@ -2779,6 +2776,7 @@ msgstr "Vorgabe"
 #. other table constraints
 #: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:14
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:91
+#: ../providers/oracle/oracle_specs_create_table.xml.in.h:14
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:31
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:25
 msgid "Global constraints"
@@ -2788,6 +2786,7 @@ msgstr "Globale Einschränkungen"
 #: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:17
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:14
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:137
+#: ../providers/oracle/oracle_specs_create_table.xml.in.h:17
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:10
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:43
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:8
@@ -2799,6 +2798,7 @@ msgstr "Nicht NULL"
 #: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:19
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:15
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:149
+#: ../providers/oracle/oracle_specs_create_table.xml.in.h:19
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:11
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:52
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:31
@@ -2809,6 +2809,7 @@ msgstr "Primärschlüssel"
 #. list of fields
 #: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:21
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:171
+#: ../providers/oracle/oracle_specs_create_table.xml.in.h:21
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:67
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:37
 msgid "Table's columns"
@@ -2816,6 +2817,7 @@ msgstr "Tabellenspalten"
 
 #: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:22
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:173
+#: ../providers/oracle/oracle_specs_create_table.xml.in.h:22
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:68
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:38
 msgid "Table's description"
@@ -2825,6 +2827,7 @@ msgstr "Beschreibung der Tabelle"
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:19
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:176
 #: ../providers/mysql/mysql_specs_drop_column.xml.in.h:4
+#: ../providers/oracle/oracle_specs_create_table.xml.in.h:23
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:15
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:69
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:7
@@ -2837,6 +2840,7 @@ msgstr "Tabellenname"
 #: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:25
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:20
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:189
+#: ../providers/oracle/oracle_specs_create_table.xml.in.h:25
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:16
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:13
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:73
@@ -2953,7 +2957,6 @@ msgid "Malformed expression in select target"
 msgstr "Ungültiger Ausdruck im gewählten Ziel"
 
 #: ../providers/mysql/gda-mysql-provider.c:1226
-#| msgid "New table name"
 msgid "Malformed table name"
 msgstr "Ungültiger Tabellenname"
 
@@ -3913,6 +3916,48 @@ msgstr "Neuer Tabellenname"
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:4
 msgid "Table to rename"
 msgstr "Umzubenennende Tabelle"
+
+#: ../providers/oracle/gda-oracle-meta.c:569
+msgid "Could not fetch next row"
+msgstr "Nächste Zeile konnte nicht abgerufen werden"
+
+#: ../providers/oracle/gda-oracle-meta.c:597
+msgid "Could not get a description handle"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-meta.c:614
+msgid "Could not get parameter handle"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-meta.c:631
+#: ../providers/oracle/gda-oracle-meta.c:645
+#: ../providers/oracle/gda-oracle-meta.c:671
+#: ../providers/oracle/gda-oracle-meta.c:688
+#: ../providers/oracle/gda-oracle-meta.c:719
+#: ../providers/oracle/gda-oracle-meta.c:743
+#: ../providers/oracle/gda-oracle-meta.c:758
+#: ../providers/oracle/gda-oracle-meta.c:773
+#: ../providers/oracle/gda-oracle-meta.c:788
+#: ../providers/oracle/gda-oracle-meta.c:803
+#: ../providers/oracle/gda-oracle-meta.c:819
+msgid "Could not get attribute"
+msgstr "Attribut konnte nicht erhalten werden"
+
+#: ../providers/oracle/gda-oracle-util.c:75
+msgid "NO DESCRIPTION"
+msgstr "KEINE BESCHREIBUNG"
+
+#: ../providers/oracle/gda-oracle-util.c:643
+msgid "Invalid Oracle handle"
+msgstr "Ungültiger Oracle-Handle"
+
+#: ../providers/oracle/gda-oracle-util.c:651
+msgid "Could not allocate Lob locator"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-util.c:658
+msgid "Could not copy Lob locator"
+msgstr ""
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:119
 msgid "Postgresql binary handler"
@@ -5220,7 +5265,7 @@ msgstr "Datei kann nicht geschrieben werden"
 #: ../tools/gda-sql.c:4321
 #, c-format
 msgid "Graph written to '%s'\n"
-msgstr ""
+msgstr "Diagramm geschrieben nach »%s«\n"
 
 #: ../tools/gda-sql.c:4324
 #, c-format
@@ -5231,6 +5276,11 @@ msgid ""
 "Note: set the GDA_SQL_VIEWER_PNG or GDA_SQL_VIEWER_PDF environment variables "
 "to view the graph\n"
 msgstr ""
+"Diagramm geschrieben nach »%s«\n"
+"Verwenden Sie »dot« aus dem GraphViz-Paket, um ein Bild zu erstellen, z.B:\n"
+"\tdot -Tpng -o graph.png %s\n"
+"Achtung: Die Umgebungsvariablen GDA_SQL_VIEWER_PNG oder GDA_SQL_VIEWER_PDF\n"
+"müssen gesetzt sein, um das Diagramm anzuzeigen\n"
 
 #: ../tools/gda-sql.c:4395
 msgid "HTTPD server stopped"
@@ -5265,7 +5315,7 @@ msgstr "Konsole"
 msgid "Help"
 msgstr "Hilfe"
 
-#: ../tools/tools-input.c:321
+#: ../tools/tools-input.c:322
 #, c-format
 msgid "Could not save history file to '%s': %s"
 msgstr "Chronik konnte nicht in »%s« gespeichert werden: %s"
@@ -5629,9 +5679,6 @@ msgstr "Fehler: %s"
 #~ msgstr ""
 #~ "Treiber für TDS-Basierende Datenbanken (unter Verwendung von FreeTDS)"
 
-#~ msgid "NO DESCRIPTION"
-#~ msgstr "KEINE BESCHREIBUNG"
-
 #~ msgid "Could not allocate environment handle.\n"
 #~ msgstr "Umgebungs-Handle konnte nicht zugewiesen werden.\n"
 
@@ -5747,9 +5794,6 @@ msgstr "Fehler: %s"
 #~ msgid "ODBC connection string"
 #~ msgstr "ODBC-Verbindungszeichenkette"
 
-#~ msgid "Invalid Oracle handle"
-#~ msgstr "Ungültiger Oracle-Handle"
-
 #, fuzzy
 #~ msgid "Could not get the length of LOB object"
 #~ msgstr "Der Name des Oracle-Felds konnte nicht empfangen werden"
@@ -5780,9 +5824,6 @@ msgstr "Fehler: %s"
 
 #~ msgid "Could not allocate the Oracle server handle"
 #~ msgstr "Oracle-Server-Handle konnte nicht initialisiert werden"
-
-#~ msgid "Could not allocate the Oracle session handle"
-#~ msgstr "Der Oracle-Sitzungs-Handle konnte nicht initialisiert werden"
 
 # CHECK
 #~ msgid "Could not attach to the Oracle server"
@@ -5877,13 +5918,6 @@ msgstr "Fehler: %s"
 #~ msgid "Could not get the parameter defined size"
 #~ msgstr "Die vom Parameter festgelegte Größe konnte nicht empfangen werden"
 
-#~ msgid "Could not get the parameter data type"
-#~ msgstr "Der Datentyp des Parameters konnte nicht empfangen werden"
-
-#, fuzzy
-#~ msgid "Could not allocate Lob locator"
-#~ msgstr "Befehlsstruktur konnte nicht bereitgestellt werden."
-
 # CHECK
 #~ msgid "Could not define by position"
 #~ msgstr "Es konnte nicht anhand der Position definiert werden"
@@ -5910,9 +5944,6 @@ msgstr "Fehler: %s"
 #~ msgid "Could not get the Oracle defined size"
 #~ msgstr "Die von Oracle definierte Größe konnte nicht empfangen werden"
 
-#~ msgid "Could not fetch a row"
-#~ msgstr "Eine Zeile konnte nicht abgerufen werden"
-
 #~ msgid "Provider for Oracle databases"
 #~ msgstr "Treiber für Oracle-Datenbanken"
 
@@ -5922,10 +5953,6 @@ msgstr "Fehler: %s"
 
 #~ msgid "TNS Name"
 #~ msgstr "TNS-Name"
-
-#, fuzzy
-#~ msgid "Could not copy Lob locator"
-#~ msgstr "XML-Dokument konnte nicht verarbeitet werden"
 
 #, fuzzy
 #~ msgid "The name of a database to use"
