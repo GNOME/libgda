@@ -104,6 +104,7 @@ providers/mysql/mysql_specs_drop_view.xml.in
 providers/mysql/mysql_specs_dsn.xml.in
 providers/mysql/mysql_specs_rename_table.xml.in
 providers/oracle/gda-oracle-ddl.c
+providers/oracle/gda-oracle-meta.c
 providers/oracle/gda-oracle-util.c
 providers/oracle/oracle_specs_create_table.xml.in
 providers/postgres/gda-postgres-blob-op.c

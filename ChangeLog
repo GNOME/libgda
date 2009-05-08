@@ -1,3 +1,8 @@
+2009-05-08  Vivien Malerba <malerba@gnome-db.org>
+
+	* po/POTFILES.in: added missing file
+	* providers/oracle/gda-oracle-meta.c: misc. improvements
+
 2009-05-06  Vivien Malerba <malerba@gnome-db.org>
 
 	* tools/Makefile.am: install web server data files in the same dir as

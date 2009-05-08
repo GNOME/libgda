@@ -730,6 +730,9 @@ _gda_oracle_meta__columns (GdaServerProvider *prov, GdaConnection *cnc,
 			ub2 type;
 			ub1 precision;
 			sb1 scale;
+			ub4 char_used;
+			ub2 char_size = 0;
+			ub4 size;
 			result = OCIAttrGet ((dvoid *)colhd,
 					     (ub4) OCI_DTYPE_PARAM,
 					     (dvoid *) &type,
@@ -775,6 +778,53 @@ _gda_oracle_meta__columns (GdaServerProvider *prov, GdaConnection *cnc,
 				goto out;
 			}
 
+			result = OCIAttrGet ((dvoid *)colhd,
+					     (ub4) OCI_DTYPE_PARAM,
+					     (dvoid *) &char_used,
+					     (ub4 *) 0,
+					     (ub4) OCI_ATTR_CHAR_USED,
+					     (OCIError *) cdata->herr);
+			if ((event = gda_oracle_check_result ((result), (cnc), (cdata), OCI_HTYPE_ERROR,
+							      _("Could not get attribute")))) {
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_DATA_ERROR,
+					     "%s", gda_connection_event_get_description (event));
+				OCIDescriptorFree ((dvoid *) colhd, OCI_DTYPE_PARAM);
+				OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
+				goto out;
+			}
+			if (char_used) {
+				result = OCIAttrGet ((dvoid *)colhd,
+						     (ub4) OCI_DTYPE_PARAM,
+						     (dvoid *) &char_size,
+						     (ub4 *) 0,
+						     (ub4) OCI_ATTR_CHAR_SIZE,
+						     (OCIError *) cdata->herr);
+				if ((event = gda_oracle_check_result ((result), (cnc), (cdata), OCI_HTYPE_ERROR,
+								      _("Could not get attribute")))) {
+					g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_DATA_ERROR,
+						     "%s", gda_connection_event_get_description (event));
+					OCIDescriptorFree ((dvoid *) colhd, OCI_DTYPE_PARAM);
+					OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
+					goto out;
+				}
+			}
+
+			result = OCIAttrGet ((dvoid *)colhd,
+					     (ub4) OCI_DTYPE_PARAM,
+					     (dvoid *) &size,
+					     (ub4 *) 0,
+					     (ub4) OCI_ATTR_DATA_SIZE,
+					     (OCIError *) cdata->herr);
+			if ((event = gda_oracle_check_result ((result), (cnc), (cdata), OCI_HTYPE_ERROR,
+							      _("Could not get attribute")))) {
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_DATA_ERROR,
+					     "%s", gda_connection_event_get_description (event));
+				OCIDescriptorFree ((dvoid *) colhd, OCI_DTYPE_PARAM);
+				OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
+				goto out;
+			}
+
+
 			g_value_set_string ((v = gda_value_new (G_TYPE_STRING)), _oracle_sqltype_to_string (type));
 			values = g_list_prepend (values, v);
 
@@ -788,19 +838,42 @@ _gda_oracle_meta__columns (GdaServerProvider *prov, GdaConnection *cnc,
 					    ctmp ? ctmp : "GdaBinary");
 			values = g_list_prepend (values, v);
 
-			/* character_maximum_length */
-			values = g_list_prepend (values, gda_value_new_null ());
+			if (char_used) {
+				/* character_maximum_length */
+				g_value_set_int ((v = gda_value_new (G_TYPE_INT)), char_size);
+				values = g_list_prepend (values, v);
 
-			/* character_octet_length */
-			values = g_list_prepend (values, gda_value_new_null ());
+				/* character_octet_length */
+				g_value_set_int ((v = gda_value_new (G_TYPE_INT)), size);
+				values = g_list_prepend (values, v);
 
-			/* numeric_precision */
-			g_value_set_int ((v = gda_value_new (G_TYPE_INT)), precision);
-			values = g_list_prepend (values, v);
+				/* numeric_precision */
+				values = g_list_prepend (values, gda_value_new_null ());
 
-			/* numeric_scale */
-			g_value_set_int ((v = gda_value_new (G_TYPE_INT)), scale);
-			values = g_list_prepend (values, v);
+				/* numeric_scale */
+				values = g_list_prepend (values, gda_value_new_null ());
+			}
+			else {
+				/* REM: size==22 for NUMBERS */
+				/* character_maximum_length */
+				values = g_list_prepend (values, gda_value_new_null ());
+
+				/* character_octet_length */
+				if (size == 22)
+					values = g_list_prepend (values, gda_value_new_null ());
+				else {
+					g_value_set_int ((v = gda_value_new (G_TYPE_INT)), size);
+					values = g_list_prepend (values, v);
+				}
+
+				/* numeric_precision */
+				g_value_set_int ((v = gda_value_new (G_TYPE_INT)), precision);
+				values = g_list_prepend (values, v);
+				
+				/* numeric_scale */
+				g_value_set_int ((v = gda_value_new (G_TYPE_INT)), scale);
+				values = g_list_prepend (values, v);
+			}
 
 			/* datetime_precision */
 			values = g_list_prepend (values, gda_value_new_null ());
@@ -811,7 +884,7 @@ _gda_oracle_meta__columns (GdaServerProvider *prov, GdaConnection *cnc,
 			/* character_set_schema */
 			values = g_list_prepend (values, gda_value_new_null ());
 			
-			/* character_set_name */
+			/* character_set_name: see NLS_CHARSET_NAME and OCI_ATTR_CHARSET_ID */
 			values = g_list_prepend (values, gda_value_new_null ());
 
 			/* collation_catalog */
