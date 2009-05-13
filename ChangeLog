@@ -1,3 +1,7 @@
+2009-05-13  Vivien Malerba <malerba@gnome-db.org>
+
+	* samples/SqlParserConsole/console.c: fix bug in options parsing and help
+
 2009-05-08  Vivien Malerba <malerba@gnome-db.org>
 
 	* po/POTFILES.in: added missing file
