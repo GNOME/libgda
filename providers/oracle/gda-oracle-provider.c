@@ -41,6 +41,7 @@
 #include "gda-oracle-ddl.h"
 #include "gda-oracle-meta.h"
 #include "gda-oracle-util.h"
+#include "gda-oracle-parser.h"
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 
 /*
@@ -1194,8 +1195,8 @@ gda_oracle_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConne
 static GdaSqlParser *
 gda_oracle_provider_create_parser (GdaServerProvider *provider, GdaConnection *cnc)
 {
-	TO_IMPLEMENT;
-	return NULL;
+	return (GdaSqlParser*) g_object_new (GDA_TYPE_ORACLE_PARSER, "tokenizer-flavour",
+                                             GDA_SQL_PARSER_FLAVOUR_ORACLE, NULL);
 }
 
 /*
