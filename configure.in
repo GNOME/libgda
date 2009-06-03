@@ -1348,12 +1348,23 @@ export LD_LIBRARY_PATH="$save_LD_LIBRARY_PATH"
 dnl ************************
 dnl Check for libsoup
 dnl ************************
-PKG_CHECK_MODULES(LIBSOUP, libsoup-2.4, have_libsoup=yes, have_libsoup=no)
-AM_CONDITIONAL(LIBSOUP, test x"$have_libsoup" = "xyes")
-if test x"$have_libsoup" = "xyes"
+
+AC_ARG_WITH(libsoup,
+	AS_HELP_STRING([--with-libsoup], [Enable libsoup support]),
+	,with_libsoup=auto)
+
+if test "$with_libsoup" = "auto" -o "$with_libsoup" = "yes"
 then
-        LIBSOUP_CFLAGS="$LIBSOUP_CFLAGS -DHAVE_LIBSOUP"
+	PKG_CHECK_MODULES(LIBSOUP, libsoup-2.4, [
+		AC_DEFINE(HAVE_LIBSOUP, [1], [libsoup support enable])
+		have_libsoup=yes], [
+		if test "$with_libsoup" = "yes"
+		then
+			AC_MSG_ERROR([libsoup support requested but not found.])
+		fi
+		have_libsoup=no])
 fi
+AM_CONDITIONAL(LIBSOUP, test "$have_libsoup" = "yes")
 AC_SUBST(LIBSOUP_CFLAGS)
 AC_SUBST(LIBSOUP_LIBS)
 
