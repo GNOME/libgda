@@ -42,6 +42,7 @@
 #include <libgda/gda-connection-internal.h>
 #include <libgda/gda-lockable.h>
 #include <libgda/gda-mutex.h>
+#include <libgda/gda-connection-sqlite.h>
 #include "gda-types.h"
 #include "gda-data-meta-wrapper.h"
 
@@ -3091,7 +3092,7 @@ gda_meta_store_schema_get_structure (GdaMetaStore *store, GError **error)
 
 	/* create a GdaMetaStruct */
 	real_store = gda_connection_get_meta_store (store->priv->cnc);
-	model = gda_meta_store_extract (real_store, 
+	model = gda_meta_store_extract (real_store,
 					"SELECT table_catalog, table_schema, table_name FROM _tables", 
 					error, NULL);
 	if (!model) {
@@ -3135,7 +3136,7 @@ gda_meta_store_schema_get_structure (GdaMetaStore *store, GError **error)
 	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
 	all_db_obj_list = g_slist_copy (klass->cpriv->db_objects);
 	if (real_store->priv->p_db_objects)
-		all_db_obj_list = g_slist_concat (all_db_obj_list, 
+		all_db_obj_list = g_slist_concat (all_db_obj_list,
 						  g_slist_copy (real_store->priv->p_db_objects));
 
 	for (list = all_db_obj_list; list; list = list->next) {

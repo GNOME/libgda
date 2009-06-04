@@ -101,6 +101,7 @@ libgda_sources =  \
 	gda-connection.c \
 	gda-connection-event.c \
 	gda-connection-internal.h \
+	gda-connection-sqlite.h \
 	gda-custom-marshal.c \
 	gda-custom-marshal.h \
 	gda-data-comparator.c \
