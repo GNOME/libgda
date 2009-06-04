@@ -1600,14 +1600,14 @@ add_oid_columns (GdaStatement *stmt, GHashTable **out_hash, gint *out_nb_cols_ad
 	GdaSqlStatementSelect *sst;
 	gint nb_cols_added = 0;
 	gint add_index;
-	
+	GSList *list;
+
 	*out_hash = NULL;
 	*out_nb_cols_added = 0;
 
 	GdaSqlStatementType type;
 	type = gda_statement_get_statement_type (stmt);
 	if (type == GDA_SQL_STATEMENT_COMPOUND) {
-		TO_IMPLEMENT;
 		return g_object_ref (stmt);
 	}
 	else if (type != GDA_SQL_STATEMENT_SELECT) {
@@ -1619,13 +1619,24 @@ add_oid_columns (GdaStatement *stmt, GHashTable **out_hash, gint *out_nb_cols_ad
 	hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 	sst = (GdaSqlStatementSelect*) sqlst->contents;
 	
-	if (!sst->from) {
+	if (!sst->from || sst->distinct) {
 		gda_sql_statement_free (sqlst);
 		return g_object_ref (stmt);
 	}
 
+	/* if there is an ORDER BY test if we can alter it */
+	if (sst->order_by) {
+		for (list = sst->order_by; list; list = list->next) {
+			GdaSqlSelectOrder *order = (GdaSqlSelectOrder*) list->data;
+			if (order->expr && order->expr->value && 
+			    (G_VALUE_TYPE (order->expr->value) != G_TYPE_STRING)) {
+				gda_sql_statement_free (sqlst);
+				return g_object_ref (stmt);
+			}
+		}
+	}
+
 	add_index = 0;
-	GSList *list;
 	for (list = sst->from->targets; list; list = list->next) {
 		GdaSqlSelectTarget *target = (GdaSqlSelectTarget*) list->data;
 		GdaSqlSelectField *field;
@@ -1661,6 +1672,25 @@ add_oid_columns (GdaStatement *stmt, GHashTable **out_hash, gint *out_nb_cols_ad
 		g_hash_table_insert (hash, gda_sql_identifier_remove_quotes (g_strdup (name)),
 				     GINT_TO_POINTER (add_index)); /* ADDED 1 to column number, don't forget to remove 1 when using */
 		nb_cols_added ++;
+	}
+
+	/* if there is an ORDER BY which uses numbers, then also alter that */
+	if (sst->order_by) {
+		for (list = sst->order_by; list; list = list->next) {
+			GdaSqlSelectOrder *order = (GdaSqlSelectOrder*) list->data;
+			if (order->expr && order->expr->value) {
+				long i;
+				const gchar *cstr;
+				gchar *endptr = NULL;
+				cstr = g_value_get_string (order->expr->value);
+				i = strtol (cstr, (char **) &endptr, 10);
+				if (!endptr || !(*endptr)) {
+					i += nb_cols_added;
+					endptr = g_strdup_printf ("%ld", i);
+					g_value_take_string (order->expr->value, endptr);
+				}
+			}
+		}
 	}
 	
 	/* prepare return */
