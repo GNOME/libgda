@@ -1517,7 +1517,10 @@ sqlite_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context,
 	}
 	else if (expr->select) {
 		gchar *str1;
-		str1 = context->render_select (GDA_SQL_ANY_PART (expr->select), context, error);
+		if (GDA_SQL_ANY_PART (expr->select)->type == GDA_SQL_ANY_STMT_SELECT)
+			str1 = context->render_select (GDA_SQL_ANY_PART (expr->select), context, error);
+		else
+			str1 = context->render_compound (GDA_SQL_ANY_PART (expr->select), context, error);
 		if (!str1) goto err;
 		str = g_strdup_printf ("(%s)", str1);
 		g_free (str1);
