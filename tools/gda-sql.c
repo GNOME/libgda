@@ -3622,13 +3622,17 @@ extra_command_query_buffer_to_dict (SqlConsole *console, GdaConnection *cnc, con
 		}
 		
 		/* actual store of the statement */
-		static GdaStatement *ins_stmt = NULL;
+		static GdaStatement *ins_stmt = NULL, *del_stmt;
 		static GdaSet *ins_params = NULL;
 		if (!ins_stmt) {
 			ins_stmt = gda_sql_parser_parse_string (main_data->current->parser, 
 								QUERY_BUFFERS_TABLE_INSERT, NULL, NULL);
 			g_assert (ins_stmt);
 			g_assert (gda_statement_get_parameters (ins_stmt, &ins_params, NULL));
+
+			del_stmt = gda_sql_parser_parse_string (main_data->current->parser, 
+								QUERY_BUFFERS_TABLE_DELETE, NULL, NULL);
+			g_assert (del_stmt);
 		}
 
 		if (! gda_set_set_holder_value (ins_params, error, "name", qname) ||
@@ -3639,10 +3643,22 @@ extra_command_query_buffer_to_dict (SqlConsole *console, GdaConnection *cnc, con
 		g_free (qname);
 		
 		GdaConnection *store_cnc;
+		gboolean intrans;
 		store_cnc = gda_meta_store_get_internal_connection (mstore);
-		if (gda_connection_statement_execute_non_select (store_cnc, ins_stmt, ins_params,
-								 NULL, error) == -1)
+		intrans = gda_connection_begin_transaction (store_cnc, NULL,
+							    GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL);
+
+		if ((gda_connection_statement_execute_non_select (store_cnc, del_stmt, ins_params,
+								  NULL, error) == -1) ||
+		    (gda_connection_statement_execute_non_select (store_cnc, ins_stmt, ins_params,
+								  NULL, error) == -1)) {
+			if (intrans)
+				gda_connection_rollback_transaction (store_cnc, NULL, NULL);
 			return NULL;
+		}
+		if (intrans)
+			gda_connection_commit_transaction (store_cnc, NULL, NULL);
+
 		res = g_new0 (GdaInternalCommandResult, 1);
 		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
 	}

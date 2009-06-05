@@ -1,3 +1,8 @@
+2009-06-05  Vivien Malerba <malerba@gnome-db.org>
+
+	* tools/gda-sql.c: overwrite any existing definition of a saved statement with
+	the same name when saving a new statement
+
 2009-06-04  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/sqlite/gda-sqlite-provider.c:
