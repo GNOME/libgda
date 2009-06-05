@@ -1361,6 +1361,13 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 	g_free (real_auth_string);
 
 	if (newcnc) {
+		gchar *dict_file_name = NULL;
+		gchar *cnc_string;
+		g_object_get (G_OBJECT (newcnc),
+			      "cnc-string", &cnc_string, NULL);
+		dict_file_name = compute_dict_file_name (info, cnc_string);
+		g_free (cnc_string);
+
 		cs = g_new0 (ConnectionSetting, 1);
 		if (cnc_name && *cnc_name) 
 			cs->name = g_strdup (cnc_name);
@@ -1453,6 +1460,7 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 		}
 		if (store)
 			g_object_unref (store);
+		g_free (dict_file_name);
 	}
 
 	return cs;
