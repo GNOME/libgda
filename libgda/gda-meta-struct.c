@@ -1207,12 +1207,18 @@ real_gda_meta_struct_complement_all (GdaMetaStruct *mstruct, gboolean default_on
 	const gchar *sql2 = "SELECT table_catalog, table_schema, table_name, table_short_name, table_full_name, table_owner "
 		"FROM _tables WHERE table_short_name = table_name AND table_type='VIEW' "
 		"ORDER BY table_schema, table_name";
+	const gchar *sql3 = "SELECT table_catalog, table_schema, table_name, table_short_name, table_full_name, table_owner "
+		"FROM _tables WHERE table_type LIKE '%TABLE%' "
+		"ORDER BY table_schema, table_name";
+	const gchar *sql4 = "SELECT table_catalog, table_schema, table_name, table_short_name, table_full_name, table_owner "
+		"FROM _tables WHERE table_type='VIEW' "
+		"ORDER BY table_schema, table_name";
 
 	g_return_val_if_fail (GDA_IS_META_STRUCT (mstruct), FALSE);
 	g_return_val_if_fail (mstruct->priv->store, FALSE);
 
 	/* tables */
-	model = gda_meta_store_extract (mstruct->priv->store, sql1, error, NULL);
+	model = gda_meta_store_extract (mstruct->priv->store, default_only ? sql1 : sql3, error, NULL);
 	if (!model)
 		return FALSE;
 	nrows = gda_data_model_get_n_rows (model);
@@ -1235,7 +1241,7 @@ real_gda_meta_struct_complement_all (GdaMetaStruct *mstruct, gboolean default_on
 	g_object_unref (model);
 
 	/* views */
-	model = gda_meta_store_extract (mstruct->priv->store, sql2, error, NULL);
+	model = gda_meta_store_extract (mstruct->priv->store, default_only ? sql2 : sql4, error, NULL);
 	if (!model)
 		return FALSE;
 	nrows = gda_data_model_get_n_rows (model);
