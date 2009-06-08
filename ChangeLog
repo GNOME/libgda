@@ -14,6 +14,15 @@
 
 2009-06-04  Vivien Malerba <malerba@gnome-db.org>
 
+	* libgda/sqlite/gda-sqlite-provider.c:
+	  - when adding ROWID columns in a SELECT statement, make sure to also
+	    modify ORDER BY clauses if necessary
+	  - don't add ROWID clauses if there is a DISTINCT clause
+	  - fixed rendering of SELECT statements when a COMPOUND statement is used
+	    as the FROM part of another statement
+
+2009-06-04  Vivien Malerba <malerba@gnome-db.org>
+
 	Merged changes from LIBGDA_4.0 branch
 
 2009-05-13  Vivien Malerba <malerba@gnome-db.org>
