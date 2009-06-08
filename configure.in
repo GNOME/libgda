@@ -207,13 +207,6 @@ dnl Checks for GIO or Gnome VFS, use GIO preferably
 dnl if GIO is not found, then see if FAM or gamin are found
 dnl *******************************************************
 
-GNOMEVFS_MODULES="gnome-vfs-2.0 >= 2.20"
-PKG_CHECK_MODULES(GNOMEVFS, $GNOMEVFS_MODULES, have_gnomevfs=yes, have_gnomevfs=no)
-if test x"$have_gnomevfs" = "xyes"
-then
-        GNOMEVFS_CFLAGS="$GNOMEVFS_CFLAGS -DHAVE_GNOMEVFS"
-fi
-
 GIO_MODULES="gio-2.0 >= 2.16"
 PKG_CHECK_MODULES(GIO, $GIO_MODULES, have_gio=yes, have_gio=no)
 AM_CONDITIONAL(HAVE_GIO, test x"$have_gio" = "xyes")
@@ -224,6 +217,13 @@ then
 	GNOMEVFS_LIBS=""
 	have_gnomevfs=no
 else
+	GNOMEVFS_MODULES="gnome-vfs-2.0 >= 2.20"
+	PKG_CHECK_MODULES(GNOMEVFS, $GNOMEVFS_MODULES, have_gnomevfs=yes, have_gnomevfs=no)
+	if test x"$have_gnomevfs" = "xyes"
+	then
+	        GNOMEVFS_CFLAGS="$GNOMEVFS_CFLAGS -DHAVE_GNOMEVFS"
+	fi
+
 	FAM_LIBS=
 	FAM_CFLAGS=
 	FAM_MISSING_WARNING="Libgda depends on FAM to provide notification when configuration files are changed, without FAM support any application using Libgda will have to be restarted when configuration files are changed to take into account those changes"
