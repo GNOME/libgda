@@ -27,20 +27,34 @@ common_declare_meta_store (GdaMetaStore *store)
 	g_signal_connect (store, "suggest-update", G_CALLBACK (suggest_update_cb), NULL);
 }
 
-static void
-change_key_func (const gchar *key, const GValue *value, GString *string)
+typedef struct {
+	const gchar  *key;
+	const GValue *value;
+} HData;
+
+static gint
+hd_compare_func (const HData *v1, const HData *v2)
 {
-	gchar *str = gda_value_stringify (value);
-	g_string_append_printf (string, "\t%s => %s\n", key, str);
-	g_free (str);
+	return strcmp (v1->key, v2->key);
+}
+
+static void
+change_key_func (const gchar *key, const GValue *value, GSList **list)
+{
+	HData *hd;
+	hd = g_new (HData, 1);
+	hd->key = key;
+	hd->value = value;
+	*list = g_slist_insert_sorted (*list, hd, (GCompareFunc) hd_compare_func);
 }
 
 static gchar *
 stringify_a_change (GdaMetaStoreChange *ac)
 {
-	GString *string;
+	GSList *hlist = NULL; /* will be a list of HData pointers */
 	gchar *str;
-	
+	GString *string;
+
 	string = g_string_new (ac->table_name);
 	if (ac->c_type == GDA_META_STORE_ADD)
 		g_string_append (string, " (ADD)");
@@ -49,8 +63,17 @@ stringify_a_change (GdaMetaStoreChange *ac)
 	else
 		g_string_append (string, " (DEL)");
 	g_string_append_c (string, '\n');
-	g_hash_table_foreach (ac->keys, (GHFunc) change_key_func, string);
+	g_hash_table_foreach (ac->keys, (GHFunc) change_key_func, &hlist);
 	
+	GSList *list;
+	for (list = hlist; list; list = list->next) {
+		HData *hd = (HData*) list->data;
+		gchar *str = gda_value_stringify (hd->value);
+		g_string_append_printf (string, "\t%s => %s\n", hd->key, str);
+		g_free (str);
+		g_free (hd);
+	}
+
 	str = string->str;
 	g_string_free (string, FALSE);
 	return str;
