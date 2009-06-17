@@ -1527,6 +1527,8 @@ gda_tree_update_all
 gda_tree_update_part
 gda_tree_get_nodes_in_path
 gda_tree_get_node
+gda_tree_get_node_path
+gda_tree_get_node_manager
 gda_tree_set_attribute
 gda_tree_dump
 <SUBSECTION Standard>
@@ -1541,11 +1543,15 @@ gda_tree_get_type
 <FILE>gda-tree-manager</FILE>
 <TITLE>GdaTreeManager</TITLE>
 GdaTreeManager
-gda_tree_manager_update_children
+GdaTreeManagerNodesFunc
+gda_tree_manager_new_with_func
 gda_tree_manager_add_manager
+gda_tree_manager_get_managers
+gda_tree_manager_add_new_node_attribute
 GdaTreeManagerNodeFunc
 gda_tree_manager_set_node_create_func
 gda_tree_manager_get_node_create_func
+gda_tree_manager_create_node
 <SUBSECTION Standard>
 GDA_TREE_MANAGER
 GDA_TREE_MANAGER_GET_CLASS
@@ -1559,6 +1565,7 @@ gda_tree_manager_get_type
 <TITLE>GdaTreeNode</TITLE>
 GdaTreeNode
 gda_tree_node_new
+gda_tree_node_get_parent
 gda_tree_node_get_children
 gda_tree_node_get_child_index
 gda_tree_node_get_child_name
@@ -1682,6 +1689,7 @@ gda_thread_wrapper_get_waiting_size
 GdaThreadWrapperCallback
 gda_thread_wrapper_connect_raw
 gda_thread_wrapper_disconnect
+gda_thread_wrapper_steal_signal
 <SUBSECTION Standard>
 GDA_THREAD_WRAPPER
 GDA_THREAD_WRAPPER_GET_CLASS

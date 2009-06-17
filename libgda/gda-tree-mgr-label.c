@@ -187,7 +187,7 @@ gda_tree_mgr_label_new (const gchar *label)
 {
 	GdaTreeMgrLabel *mgr;
 	mgr = (GdaTreeMgrLabel*) g_object_new (GDA_TYPE_TREE_MGR_LABEL,
-						"label", label, NULL);
+					       "label", label, NULL);
 	return (GdaTreeManager*) mgr;
 }
 
@@ -202,17 +202,8 @@ gda_tree_mgr_label_update_children (GdaTreeManager *manager, GdaTreeNode *node, 
 	}
 
 	GdaTreeMgrLabel *mgr = GDA_TREE_MGR_LABEL (manager);
-	GdaTreeManagerNodeFunc create_func = gda_tree_manager_get_node_create_func (manager);
+	GdaTreeNode *snode;
 
-	if (create_func) {
-		node = create_func (manager, node);
-		g_object_set (G_OBJECT (node), "name", mgr->priv->label ? mgr->priv->label : _("No name"), NULL);
-	}
-	else {
-		if (mgr->priv->label)
-			node = gda_tree_node_new (mgr->priv->label);
-		else
-			node = gda_tree_node_new (_("No name"));
-	}
-	return g_slist_prepend (NULL, node);
+	snode = gda_tree_manager_create_node (manager, node, mgr->priv->label ? mgr->priv->label : _("No name"));
+	return g_slist_prepend (NULL, snode);
 }

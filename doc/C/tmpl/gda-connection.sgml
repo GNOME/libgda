@@ -127,6 +127,11 @@ A connection to a database
 
 </para>
 
+<!-- ##### ARG GdaConnection:monitor-wrapped-in-mainloop ##### -->
+<para>
+
+</para>
+
 <!-- ##### ARG GdaConnection:options ##### -->
 <para>
 

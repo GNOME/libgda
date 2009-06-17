@@ -332,7 +332,7 @@ gda_tree_mgr_tables_update_children (GdaTreeManager *manager, GdaTreeNode *node,
 	GdaDataModelIter *iter;
 	iter = gda_data_model_create_iter (model);
 	for (; iter && gda_data_model_iter_move_next (iter);) {
-		GdaTreeNode* node;
+		GdaTreeNode* snode;
 		const GValue *cvalue, *cvalue2;
 
 		cvalue = gda_data_model_iter_get_value_at (iter, 0);
@@ -349,11 +349,11 @@ gda_tree_mgr_tables_update_children (GdaTreeManager *manager, GdaTreeNode *node,
 			return NULL;
 		}
 
-		node = gda_tree_node_new (g_value_get_string (cvalue));
-		gda_tree_node_set_node_attribute (node, "table_name", cvalue, NULL);
+		snode = gda_tree_manager_create_node (manager, node, g_value_get_string (cvalue));
+		gda_tree_node_set_node_attribute (snode, "table_name", cvalue, NULL);
 		if (!schema_from_parent)
-			gda_tree_node_set_node_attribute (node, "schema", cvalue2, NULL);
-		list = g_slist_prepend (list, node);
+			gda_tree_node_set_node_attribute (snode, "schema", cvalue2, NULL);
+		list = g_slist_prepend (list, snode);
 	}
 	if (iter)
 		g_object_unref (iter);

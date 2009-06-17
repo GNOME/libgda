@@ -1,0 +1,65 @@
+/* gda-enums.h
+ *
+ * Copyright (C) 2003 - 2005 Vivien Malerba
+ *
+ * This Library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+ * USA
+ */
+
+#ifndef __GDAUI_ENUMS__
+#define __GDAUI_ENUMS__
+
+/* enum for the different modes of action */
+typedef enum {
+	/* navigation modes */
+	GDAUI_ACTION_NAVIGATION_ARROWS       = 1 << 0,
+	GDAUI_ACTION_NAVIGATION_SCROLL       = 1 << 1,
+
+	/* modifications */
+	GDAUI_ACTION_MODIF_AUTO_COMMIT       = 1 << 2,
+	GDAUI_ACTION_MODIF_COMMIT_IMMEDIATE  = 1 << 3,
+	GDAUI_ACTION_ASK_CONFIRM_UPDATE      = 1 << 4,
+	GDAUI_ACTION_ASK_CONFIRM_DELETE      = 1 << 5,
+	GDAUI_ACTION_ASK_CONFIRM_INSERT      = 1 << 6,
+
+	/* Error reporting */
+	GDAUI_ACTION_REPORT_ERROR            = 1 << 7
+} GdauiActionMode;
+
+/* enum for the different possible actions */
+typedef enum {
+	/* actions in GdauiDataWidget widgets */
+	GDAUI_ACTION_NEW_DATA,
+	GDAUI_ACTION_WRITE_MODIFIED_DATA,
+	GDAUI_ACTION_DELETE_SELECTED_DATA,
+	GDAUI_ACTION_UNDELETE_SELECTED_DATA,
+	GDAUI_ACTION_RESET_DATA,
+	GDAUI_ACTION_MOVE_FIRST_RECORD,
+	GDAUI_ACTION_MOVE_PREV_RECORD,
+	GDAUI_ACTION_MOVE_NEXT_RECORD,
+	GDAUI_ACTION_MOVE_LAST_RECORD,
+	GDAUI_ACTION_MOVE_FIRST_CHUNCK,
+        GDAUI_ACTION_MOVE_PREV_CHUNCK,
+        GDAUI_ACTION_MOVE_NEXT_CHUNCK,
+        GDAUI_ACTION_MOVE_LAST_CHUNCK
+} GdauiAction;
+
+/* possible predefined attribute names for gda_holder_get_attribute() or gda_column_get_attribute() */
+#define GDAUI_ATTRIBUTE_PLUGIN "__gdaui_attr_plugin" /* G_TYPE_STRING expected */
+
+#endif
+
+
+

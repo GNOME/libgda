@@ -2,6 +2,13 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc
 
 if HAVE_LIBXSLT
 XSLT_DIR=libgda-xslt
+XSLT_PC=libgda-xslt-$(GDA_ABI_VERSION).pc
+endif
+
+if HAVE_UI
+UI_DIRS=libgdaui \
+	control-center
+UI_PC=libgdaui-$(GDA_ABI_VERSION).pc
 endif
 
 SUBDIRS = \
@@ -10,6 +17,7 @@ SUBDIRS = \
 	providers \
 	libgda-report \
 	$(XSLT_DIR) \
+	$(UI_DIRS) \
 	tools \
 	tests \
 	testing \
@@ -89,7 +97,7 @@ EXTRA_DIST = \
 	getsp.java
 
 pkgconfigdir=$(libdir)/pkgconfig
-pkgconfig_DATA = libgda-$(GDA_ABI_VERSION).pc libgda-report-$(GDA_ABI_VERSION).pc libgda-xslt-$(GDA_ABI_VERSION).pc
+pkgconfig_DATA = libgda-$(GDA_ABI_VERSION).pc libgda-report-$(GDA_ABI_VERSION).pc $(XSLT_PC) $(UI_PC)
 
 all-local: libgda.spec
 

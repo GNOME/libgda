@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<data-set-spec>
+  <parameters>
+    <parameter id="SERIALIZE" _name="Serialized picture" _descr="Set to TRUE if data comes from a serialized GdkPixbuf (F-Spot for example)" gdatype="gboolean"/>
+  </parameters>
+</data-set-spec>

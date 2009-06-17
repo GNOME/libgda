@@ -50,6 +50,12 @@ struct _GdaTreeNode {
 struct _GdaTreeNodeClass {
 	GObjectClass        object_class;
 
+	/* signals */
+	void         (* node_changed)           (GdaTreeNode *reporting, GdaTreeNode *node);
+	void         (* node_inserted)          (GdaTreeNode *reporting, GdaTreeNode *node);
+	void         (* node_has_child_toggled) (GdaTreeNode *reporting, GdaTreeNode *node);
+	void         (* node_deleted)           (GdaTreeNode *reporting, const gchar *relative_path);
+
 	/* virtual methods */
 	gchar              *(*dump_header) (GdaTreeNode *node);
 	void                (*dump_children) (GdaTreeNode *node, const gchar *prefix, GString *in_string);
@@ -64,6 +70,7 @@ struct _GdaTreeNodeClass {
 GType              gda_tree_node_get_type          (void) G_GNUC_CONST;
 GdaTreeNode*       gda_tree_node_new               (const gchar *name);
 
+GdaTreeNode       *gda_tree_node_get_parent        (GdaTreeNode *node);
 GSList            *gda_tree_node_get_children      (GdaTreeNode *node);
 GdaTreeNode       *gda_tree_node_get_child_index   (GdaTreeNode *node, gint index);
 GdaTreeNode       *gda_tree_node_get_child_name    (GdaTreeNode *node, const gchar *name);
@@ -74,9 +81,10 @@ const GValue      *gda_tree_node_get_node_attribute(GdaTreeNode *node, const gch
 const GValue      *gda_tree_node_fetch_attribute   (GdaTreeNode *node, const gchar *attribute);
 
 /* private */
-void               _gda_tree_node_add_children     (GdaTreeNode *node, GdaTreeManager *mgr, GSList *children);
+void               _gda_tree_node_add_children     (GdaTreeNode *node, GdaTreeManager *mgr, const GSList *children);
 const GSList      *_gda_tree_node_get_children_for_manager (GdaTreeNode *node, GdaTreeManager *mgr);
 GSList            *_gda_tree_node_get_managers_for_children (GdaTreeNode *node);
+GdaTreeManager    *_gda_tree_node_get_manager_for_child (GdaTreeNode *node, GdaTreeNode *child);
 
 G_END_DECLS
 

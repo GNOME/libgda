@@ -1,3 +1,12 @@
+2009-05-17  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in:
+	* testing/:
+	* libgdaui/: moved some contents from Libgnomedb
+	* control-center/: moved Libgnomedb's control center
+	* tools/browser/: new browser tool
+	* po/: added new files
+
 2009-06-08  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda-report/RML/trml2html/Makefile.am:

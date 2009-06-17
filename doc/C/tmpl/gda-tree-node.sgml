@@ -29,6 +29,38 @@ a node in a #GdaTree
 </para>
 
 
+<!-- ##### SIGNAL GdaTreeNode::node-changed ##### -->
+<para>
+
+</para>
+
+@gdatreenode: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaTreeNode::node-deleted ##### -->
+<para>
+
+</para>
+
+@gdatreenode: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaTreeNode::node-has-child-toggled ##### -->
+<para>
+
+</para>
+
+@gdatreenode: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaTreeNode::node-inserted ##### -->
+<para>
+
+</para>
+
+@gdatreenode: the object which received the signal.
+@arg1: 
+
 <!-- ##### ARG GdaTreeNode:name ##### -->
 <para>
 
@@ -40,6 +72,15 @@ a node in a #GdaTree
 </para>
 
 @name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_tree_node_get_parent ##### -->
+<para>
+
+</para>
+
+@node: 
 @Returns: 
 
 

@@ -53,6 +53,9 @@
 #include "web-server.h"
 #endif
 
+/* code inclusion */
+#include "dict-file-name.c"
+
 /* options */
 gboolean show_version = FALSE;
 gboolean ask_pass = FALSE;
@@ -1242,7 +1245,6 @@ typedef struct {
 static gpointer thread_start_update_meta_store (MetaUpdateData *data);
 static void thread_ok_cb_update_meta_store (GdaThreader *threader, guint job, MetaUpdateData *data);
 static void thread_cancelled_cb_update_meta_store (GdaThreader *threader, guint job, MetaUpdateData *data);
-static gchar *compute_dict_file_name (GdaDsnInfo *info, const gchar *cnc_string);
 
 /*
  * Open a connection
@@ -1254,7 +1256,6 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 	ConnectionSetting *cs = NULL;
 	static gint cncindex = 0;
 	gchar *real_cnc_string;
-	gchar *dict_file_name = NULL;
 
 	if (cnc_name && ! connection_name_is_valid (cnc_name)) {
 		g_set_error (error, 0, 0,
@@ -1356,8 +1357,6 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 	else 
 		newcnc = gda_connection_open_from_string (NULL, real_cnc_string, real_auth_string,
 							  GDA_CONNECTION_OPTIONS_THREAD_SAFE, error);
-	
-	dict_file_name = compute_dict_file_name (info, real_cnc_string);
 
 	g_free (real_cnc_string);
 	g_free (real_cnc);
@@ -1367,6 +1366,13 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 	g_free (real_auth_string);
 
 	if (newcnc) {
+		gchar *dict_file_name = NULL;
+		gchar *cnc_string;
+		g_object_get (G_OBJECT (newcnc),
+			      "cnc-string", &cnc_string, NULL);
+		dict_file_name = compute_dict_file_name (info, cnc_string);
+		g_free (cnc_string);
+
 		cs = g_new0 (ConnectionSetting, 1);
 		if (cnc_name && *cnc_name) 
 			cs->name = g_strdup (cnc_name);
@@ -1446,8 +1452,8 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 		}
 		if (store)
 			g_object_unref (store);
+		g_free (dict_file_name);
 	}
-	g_free (dict_file_name);
 
 	return cs;
 }
@@ -1465,72 +1471,6 @@ thread_start_update_meta_store (MetaUpdateData *data)
 	else
 		data->cannot_lock = TRUE;
 	return NULL;
-}
-
-static void
-compute_dict_file_name_foreach_cb (const gchar *key, const gchar *value, GSList **list)
-{
-	if (!*list) 
-		*list = g_slist_prepend (NULL, (gpointer) key);
-	else
-		*list = g_slist_insert_sorted (*list, (gpointer) key, (GCompareFunc) strcmp);
-}
-
-static gchar *
-compute_dict_file_name (GdaDsnInfo *info, const gchar *cnc_string)
-{
-	gchar *filename = NULL;
-	gchar *confdir;
-
-	confdir = g_build_path (G_DIR_SEPARATOR_S, g_get_user_data_dir (), "libgda", NULL);
-	if (!g_file_test (confdir, G_FILE_TEST_EXISTS)) {
-		g_free (confdir);
-		confdir = g_build_path (G_DIR_SEPARATOR_S, g_get_home_dir (), ".libgda", NULL);
-	}
-
-	if (info) {		
-		filename = g_strdup_printf ("%s%sgda-sql-%s.db", 
-					    confdir, G_DIR_SEPARATOR_S,
-					    info->name);
-	}
-	else {
-#if GLIB_CHECK_VERSION(2,16,0)
-		GdaQuarkList *ql;
-		GSList *list, *sorted_list = NULL;
-		GString *string = NULL;
-		ql = gda_quark_list_new_from_string (cnc_string);
-
-		gda_quark_list_foreach (ql, (GHFunc) compute_dict_file_name_foreach_cb, &sorted_list);
-		for (list = sorted_list; list; list = list->next) {
-			const gchar *value;
-			gchar *evalue;
-
-			if (!string)
-				string = g_string_new ("");
-			else
-				g_string_append_c (string, ',');
-
-			value = gda_quark_list_find (ql, (gchar *) list->data);
-			evalue = gda_rfc1738_encode (value);
-			g_string_append_printf (string, ",%s=%s", (gchar *) list->data, evalue);
-			g_free (evalue);
-		}
-		gda_quark_list_free (ql);
-
-		if (string) {
-			gchar *chname;
-			chname = g_compute_checksum_for_string (G_CHECKSUM_SHA1, string->str, -1);
-			g_string_free (string, TRUE);
-			filename = g_strdup_printf ("%s%sgda-sql-%s.db", 
-					    confdir, G_DIR_SEPARATOR_S,
-					    chname);
-			g_free (chname);
-		}
-#endif
-	}
-
-	g_free (confdir);
-	return filename;
 }
 
 static void

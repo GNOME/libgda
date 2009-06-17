@@ -93,12 +93,21 @@ typedef enum {
 	GDA_META_SORT_DEPENDENCIES
 } GdaMetaSortType;
 
-/*
- * Complements the GdaMetaDbObject structure, for tables only
- * contains predefined statements for data selection and modifications
+/**
+ * GdaMetaTable:
+ * @columns: list of #GdaMetaTableColumn structures, one for each column in the table
+ * @pk_cols_array: index of the columns part of the primary key for the table (WARNING: columns numbering
+ *                 here start at 0)
+ * @pk_cols_nb: size of the @pk_cols_array array
+ * @reverse_fk_list: list of #GdaMetaTableForeignKey where the referenced table is this table
+ * @fk_list: list of #GdaMetaTableForeignKey for this table
+ *
+ * This structure specifies a #GdaMetaDbObject to represent a table's specific attributes,
+ * its contents must not be modified.
  */
 typedef struct {
-	GSList       *columns; /* list of GdaMetaTableColumn */
+	/*< public >*/
+	GSList       *columns;
 	
 	/* PK fields index */
 	gint         *pk_cols_array;
@@ -108,6 +117,7 @@ typedef struct {
 	GSList       *reverse_fk_list; /* list of GdaMetaTableForeignKey where @depend_on == this GdaMetaDbObject */
 	GSList       *fk_list; /* list of GdaMetaTableForeignKey where @meta_table == this GdaMetaDbObject */
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer _gda_reserved1;
 	gpointer _gda_reserved2;
@@ -116,14 +126,21 @@ typedef struct {
 } GdaMetaTable;
 
 /**
- * Complements the GdaMetaDbObject structure, for views only
- * contains more information than for tables
+ * GdaMetaView:
+ * @table: a view is also a table as it has columns
+ * @view_def: views' definition
+ * @is_updatable: tells if the view's contents can be updated
+ *
+ * This structure specifies a #GdaMetaDbObject to represent a view's specific attributes,
+ * its contents must not be modified.
  */
 typedef struct {
+	/*< public >*/
 	GdaMetaTable  table;
 	gchar        *view_def;
 	gboolean      is_updatable;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer _gda_reserved1;
 	gpointer _gda_reserved2;
@@ -131,14 +148,29 @@ typedef struct {
 	gpointer _gda_reserved4;
 } GdaMetaView;
 
-/*
- * Struture to hold information about each database object (tables, views, triggers, ...)
+/**
+ * GdaMetaDbObject:
+ * @extra: union for the actual object's contents, to be able to cast it using GDA_META_TABLE(), GDA_META_VIEW()
+ * @obj_type: the type of object (table, view)
+ * @outdated:
+ * @obj_catalog: the catalog the object is in
+ * @obj_schema: the schema the object is in
+ * @obj_name: the object's name
+ * @obj_short_name: the shortest way to name the object
+ * @obj_full_name: the full name of the object (in the &lt;schema&gt;.&lt;nameagt; notation
+ * @obj_owner: object's owner
+ * @depend_list: list of #GdaMetaDbObject pointers on which this object depends (through foreign keys
+ *               or tables used for views)
+ *
+ * Struture to hold information about each database object (tables, views, ...),
+ * its contents must not be modified.
  *
  * Note: @obj_catalog, @obj_schema, @obj_name, @obj_short_name and @obj_full_name are case sensitive:
  *       one must call gda_sql_identifier_needs_quotes() to know if is it is necessary to surround by double quotes
  *       before using in an SQL statement
  */
 typedef struct {
+	/*< public >*/
 	union {
 		GdaMetaTable    meta_table;
 		GdaMetaView     meta_view;
@@ -154,6 +186,7 @@ typedef struct {
 
 	GSList                 *depend_list; /* list of GdaMetaDbObject pointers on which this object depends */
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer _gda_reserved1;
 	gpointer _gda_reserved2;
@@ -164,7 +197,19 @@ typedef struct {
 #define GDA_META_TABLE(dbobj) (&((dbobj)->extra.meta_table))
 #define GDA_META_VIEW(dbobj) (&((dbobj)->extra.meta_view))
 
+/**
+ * GdaMetaTableColumn:
+ * @column_name: the column's name
+ * @column_type: the column's DBMS's type
+ * @gtype: the detected column's #GType
+ * @pkey: tells if the column is part of a primary key
+ * @nullok: tells if the column can be %NULL
+ * @default_value: the column's default value
+ *
+ * This structure represents a table of view's column, its contents must not be modified.
+ */
 typedef struct {
+	/*< public >*/
 	gchar        *column_name;
 	gchar        *column_type;
 	GType         gtype;
@@ -172,6 +217,7 @@ typedef struct {
 	gboolean      nullok;
 	gchar        *default_value;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer _gda_reserved1;
 	gpointer _gda_reserved2;
@@ -194,7 +240,22 @@ void          gda_meta_table_column_set_attribute (GdaMetaTableColumn *tcol, con
 
 void          gda_meta_table_column_foreach_attribute (GdaMetaTableColumn *tcol, GdaAttributesManagerFunc func, gpointer data);
 
+/**
+ * GdaMetaTableForeignKey:
+ * @meta_table: the #GdaMetaDbObject for which this structure represents a foreign key
+ * @depend_on: the #GdaMetaDbObject which is referenced by the foreign key
+ * @cols_nb: the size of the @fk_cols_array, @fk_names_array, @ref_pk_cols_array and @ref_pk_names_array arrays
+ * @fk_cols_array: the columns' indexes in @meta_table which participate in the constraint (WARNING: columns numbering
+ *                 here start at 1)
+ * @fk_names_array: the columns' names in @meta_table which participate in the constraint
+ * @ref_pk_cols_array: the columns' indexes in @depend_on which participate in the constraint (WARNING: columns numbering
+ *                 here start at 1)
+ * @ref_pk_names_array: the columns' names in @depend_on which participate in the constraint
+ *
+ * This structure represents a foreign key constraint, its contents must not be modified.
+ */
 typedef struct {
+	/*< public >*/
 	GdaMetaDbObject  *meta_table;
 	GdaMetaDbObject  *depend_on;
 
@@ -204,6 +265,7 @@ typedef struct {
 	gint             *ref_pk_cols_array; /* Ref PK fields index */
 	gchar           **ref_pk_names_array; /* Ref PK fields names */
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer _gda_reserved1;
 	gpointer _gda_reserved2;

@@ -3456,6 +3456,9 @@ gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_d
 		context.column_names[0] = "table_name";
 		g_value_set_string ((context.column_values[0] = gda_value_new (G_TYPE_STRING)), dbo->obj_name);
 		upd_ok = gda_connection_update_meta_store (store->priv->cnc, &context, error);
+		g_free (context.column_names);
+		gda_value_free (context.column_values[0]);
+		g_free (context.column_values);
 		if (!upd_ok) 
 			goto onerror;
 		break;

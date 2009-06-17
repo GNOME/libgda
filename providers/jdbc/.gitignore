@@ -1,5 +1,5 @@
 *.class
 *.jar
-gda-list-jdbc-providers-4.0
+gda-list-jdbc-providers-4.*
 gda-jdbc-test
 Gda*.h

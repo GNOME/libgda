@@ -29,6 +29,43 @@ A tree-structure
 </para>
 
 
+<!-- ##### SIGNAL GdaTree::node-changed ##### -->
+<para>
+
+</para>
+
+@gdatree: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaTree::node-deleted ##### -->
+<para>
+
+</para>
+
+@gdatree: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaTree::node-has-child-toggled ##### -->
+<para>
+
+</para>
+
+@gdatree: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaTree::node-inserted ##### -->
+<para>
+
+</para>
+
+@gdatree: the object which received the signal.
+@arg1: 
+
+<!-- ##### ARG GdaTree:is-list ##### -->
+<para>
+
+</para>
+
 <!-- ##### FUNCTION gda_tree_new ##### -->
 <para>
 
@@ -94,6 +131,26 @@ A tree-structure
 @tree: 
 @tree_path: 
 @use_names: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_tree_get_node_path ##### -->
+<para>
+
+</para>
+
+@tree: 
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_tree_get_node_manager ##### -->
+<para>
+
+</para>
+
+@tree: 
+@node: 
 @Returns: 
 
 
