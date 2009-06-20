@@ -1,0 +1,250 @@
+<chapter id="libgda-packaging">
+  <title>Packaging &LIBGDA;</title>
+  <para>
+    &LIBGDA; is made of several components and it installs a lot of
+    files. This section gives hints as to how &LIBGDA; can be packaged, clearly
+    separating the components so that packagers have a good overview, and can create
+    the packages with a good understanding.
+  </para>
+  <sect1>
+    <title>overview of the components</title>
+    <para>
+      &LIBGDA;'s components are:
+      <itemizedlist>
+	<listitem>
+	  <para>the runtime files (shared libraries and configuration files)
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>the tools, which require the runtime component
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>the database providers which are the "drivers" to each database type, which also require
+	    the runtime component
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>the development files (the includes to compile C programs)
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>the documentation files
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>the localization files
+	  </para>
+	</listitem>
+      </itemizedlist>
+    </para>
+  </sect1>
+
+  <sect1>
+    <title>Runtime component</title>
+    <para>
+      This component is the base component for Libgda, required by any application which uses &LIBGDA;,
+      it contains the following files (located under the installation directory):
+      <programlisting>
+.
+|-- bin
+|   |-- gda_trml2html
+|   |   |-- __init__.py
+|   |   |-- trml2html.py
+|   |   `-- utils.py
+|   `-- gda_trml2pdf
+|       |-- __init__.py
+|       |-- color.py
+|       |-- trml2pdf.py
+|       `-- utils.py
+|-- etc
+|   `-- libgda-4.0
+|       |-- config
+|       `-- sales_test.db
+|-- lib
+|   |-- libgda-4.0.so -> libgda-4.0.so.4.0.0
+|   |-- libgda-4.0.so.4 -> libgda-4.0.so.4.0.0
+|   |-- libgda-4.0.so.4.0.0
+|   |-- libgda-report-4.0.so -> libgda-report-4.0.so.4.0.0
+|   |-- libgda-report-4.0.so.4 -> libgda-report-4.0.so.4.0.0
+|   |-- libgda-report-4.0.so.4.0.0
+|   |-- libgda-xslt-4.0.so -> libgda-xslt-4.0.so.4.0.0
+|   |-- libgda-xslt-4.0.so.4 -> libgda-xslt-4.0.so.4.0.0
+|   |-- libgda-xslt-4.0.so.4.0.0
+`-- share
+    `-- libgda-4.0
+        |-- dtd
+        |   |-- libgda-array.dtd
+        |   |-- libgda-paramlist.dtd
+        |   `-- libgda-server-operation.dtd
+        `-- information_schema.xml
+      </programlisting>
+    </para>
+    <para>
+      This component should be made dependant on the core libraries &LIBGDA; depends on such as GLib, LibXML and LibXSLT.
+      Also, if &LIBGDA; was compiled using a system installed SQLite, then a dependency also needs to be added to SQLite
+      (otherwise &LIBGDA; uses its own embedded version of SQLite, and no dependency needs to be defined on SQLite).
+    </para>
+    <para>
+      Note that the file in the <filename class="directory">bin</filename> directory are used by the
+      report library and have to be shipped with it.
+    </para>
+  </sect1>
+
+  <sect1>
+    <title>Tools</title>
+    <para>
+      &LIBGDA;'s offers several tools, the most usefull being an SQL console which allows one to issue SQL statement
+      from the command line. This component has the following files:
+      <programlisting>
+.
+|-- bin
+|   |-- gda-list-config -> gda-list-config-4.0
+|   |-- gda-list-config-4.0
+|   |-- gda-list-jdbc-providers-4.0
+|   |-- gda-list-server-op -> gda-list-server-op-4.0
+|   |-- gda-list-server-op-4.0
+|   |-- gda-sql -> gda-sql-4.0
+|   |-- gda-sql-4.0
+|   `-- gda-test-connection-4.0
+ `-- share
+    |   `-- web
+    |       |-- cnc.js
+    |       |-- gda-print.css
+    |       |-- gda.css
+    |       |-- irb.css
+    |       |-- irb.js
+    |       |-- jquery.js
+    |       |-- md5.js
+    |       |-- mouseapp_2.js
+    |       `-- mouseirb_2.js
+    `-- man
+        `-- man1
+            |-- gda-sql-4.0.1
+            `-- gda-sql.1 -> gda-sql-4.0.1
+      </programlisting>
+    </para>
+    <para>
+      This component should be made dependant on the runtime component.
+    </para>
+  </sect1>
+
+  <sect1>
+    <title>Database providers</title>
+    <para>
+      Each database provider is composed of a shared library (loaded at runtime) and some configuration files,
+      which are prefixed with the provider name. Also note that each provider comes with a PKG-CONFIG .pc file
+      which allows one to check if a provider is installed (it does not, like most of the .pc files, define
+      any CFLAGS or LIBS), and it's wise to include them in each provider's component.
+    </para>
+
+    <sect2>
+      <title>'Generic' provider</title>
+      <para>
+	Most of the providers are 'generic' as they have the same files structure, here for example 
+	the PostgreSQL provider's file are:
+	<programlisting>
+.
+|-- lib
+|   |-- libgda-4.0
+|   |   `-- providers
+|   |       `-- libgda-postgres.so
+|   `-- pkgconfig
+|       `-- libgda-postgres-4.0.pc
+ `-- share
+    `-- libgda-4.0
+        |-- postgres_specs_add_column.xml
+        |-- postgres_specs_create_db.xml
+        |-- postgres_specs_create_index.xml
+        |-- postgres_specs_create_table.xml
+        |-- postgres_specs_create_view.xml
+        |-- postgres_specs_drop_column.xml
+        |-- postgres_specs_drop_db.xml
+        |-- postgres_specs_drop_index.xml
+        |-- postgres_specs_drop_table.xml
+        |-- postgres_specs_drop_view.xml
+        |-- postgres_specs_dsn.xml
+        `-- postgres_specs_rename_table.xml
+	</programlisting>
+      </para>
+    <para>
+      This kind of component should be made dependant on the database's library which is used,
+      such as LibPQ for PostgreSQL, and also on &LIBGDA;'s runtime component.
+    </para>
+    </sect2>
+
+    <sect2>
+      <title>The SQLite provider</title>
+      <para>
+	The SQLite provider uses the same files layout as the 'generic' provider, but there is no need to
+	add a dependency on SQLite itself.
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>The JDBC provider</title>
+      <para>
+	The JDBC provider allows one to access database through its JDBC driver, using the Java Native Interface
+	(JNI), and a Java virtual machine runtime. The files to include in this component are:
+	<programlisting>
+.
+|-- lib
+|   |-- libgda-4.0
+|   |   `-- providers
+|   |       |-- gdaprovider-4.0.jar
+|   |       `-- libgda-jdbc.so
+|   `-- pkgconfig
+|       `-- libgda-jdbc-4.0.pc
+ `-- share
+    `-- libgda-4.0
+        |-- jdbc_specs_create_table.xml
+        `-- jdbc_specs_dsn.xml
+	</programlisting>
+      </para>
+    <para>
+      This component should be made dependant on the Java virtual machine.
+    </para>
+    </sect2>
+  </sect1>
+
+  <sect1>
+    <title>Development files</title>
+    <para>
+      The development files are the include files needed to compile C programs, the PKG-CONFIG .pc files and
+      the static libraries.
+      <programlisting>
+|-- include
+|   `-- libgda-4.0
+|     [...]
+`-- lib
+    |-- libgda-4.0
+    |-- libgda-4.0.a
+    |-- libgda-4.0.la
+    |-- libgda-report-4.0.a
+    |-- libgda-report-4.0.la
+    |-- libgda-xslt-4.0.a
+    |-- libgda-xslt-4.0.la
+    `-- pkgconfig
+        |-- libgda-4.0.pc
+        |-- libgda-report-4.0.pc
+        `-- libgda-xslt-4.0.pc
+      </programlisting>
+    </para>
+  </sect1>
+
+  <sect1>
+    <title>Documentation</title>
+    <para>
+      The documentation is located in the <filename class="directory">share/gtk-doc/html</filename> directory.
+    </para>
+  </sect1>
+
+  <sect1>
+    <title>Localization</title>
+    <para>
+      The translation files are located in the <filename class="directory">share/locale</filename> directory.
+    </para>
+  </sect1>
+
+</chapter>
+

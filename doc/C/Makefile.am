@@ -64,7 +64,7 @@ include $(top_srcdir)/gtk-doc.make
 # Other files to distribute
 EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration.xml migration2.xml \
 	server-operation.xml gettingstarted.xml virtual.xml virtual-notice.xml store-meta-type.xml \
-	prov-writing.xml i_s_doc.xml howto.xml gda-sql-manual.xml data_validation.xml data_select.xml \
+	prov-writing.xml packaging.xml i_s_doc.xml howto.xml gda-sql-manual.xml data_validation.xml data_select.xml \
 	DataModels.svg \
 	architecture.svg parts.svg stmt-unknown.svg stmt-select.svg stmt-insert1.svg stmt-insert2.svg \
 	stmt-update.svg stmt-compound.svg information_schema.svg howto-exec.svg

@@ -106,6 +106,7 @@
 <!ENTITY libgda-convenient SYSTEM "xml/gda-convenient.xml">
 <!ENTITY libgda-GdaDataComparator SYSTEM "xml/gda-data-comparator.xml">
 <!ENTITY provider-writing SYSTEM "prov-writing.xml">
+<!ENTITY packaging SYSTEM "packaging.xml">
 <!ENTITY provider-support SYSTEM "xml/provider-support.xml">
 <!ENTITY provider-support-sql SYSTEM "xml/provider-support-sql.xml">
 <!ENTITY i-s-doc SYSTEM "i_s_doc.xml">
@@ -1368,6 +1369,11 @@ g_object_unref (eng);
       &provider-support;
     </chapter>
     &provider-writing;
+  </part>
+
+  <part>
+    <title>Packaging</title>
+    &packaging;
   </part>
 
   <part id="part_index">
