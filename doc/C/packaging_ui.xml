@@ -1,0 +1,143 @@
+<chapter id="libgdaui-packaging">
+  <title>Packaging &LIBGDA; UI extension</title>
+  <para>
+    &LIBGDA; UI extension builds on top of &LIBGDA; and GTK+ to provide some graphical
+    widgets, a control center (to manage DSN and list installed providers) and a
+    browser program to analyse the contents of a database.
+  </para>
+  <sect1>
+    <title>Overview of the components</title>
+    <para>
+      &LIBGDA; UI's components are:
+      <itemizedlist>
+	<listitem>
+	  <para>the runtime files (shared library)
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>the tools, which require the runtime component
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>the development files (the includes to compile C programs)
+	  </para>
+	</listitem>
+      </itemizedlist>
+    </para>
+    <para>
+      Please note:
+      <itemizedlist>
+	<listitem>
+	  <para>the documentation and localization files are mixed with &LIBGDA;'s ones
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>the tools have been described here as a separate component but it is highly
+	    <emphasis>recomended</emphasis> to bundle the tools with the runtime as they provide
+	    essential tools to the end user.
+	  </para>
+	</listitem>
+      </itemizedlist>
+    </para>
+  </sect1>
+
+  <sect1>
+    <title>Runtime component</title>
+    <para>
+      This component is the base component for Libgda UI, required by any application which uses &LIBGDA;' UI,
+      extension, it contains the following files (located under the installation directory):
+      <programlisting>
+.
+|-- lib
+|   |-- libgda-4.0
+|   |   |-- plugins
+|   |   |   |-- gdaui-entry-filesel-spec.xml
+|   |   |   |-- gdaui-entry-password.xml
+|   |   |   |-- gdaui-entry-pict-spec.xml
+|   |   |   |-- gdaui-entry-pict-spec_string.xml
+|   |   |   `-- libgdaui-plugins.so
+|   |-- libgdaui-4.0.so -> libgdaui-4.0.so.4.1.0
+|   |-- libgdaui-4.0.so.4 -> libgdaui-4.0.so.4.1.0
+|   `-- libgdaui-4.0.so.4.1.0
+`-- share
+    `-- libgda-4.0
+       |-- server_operation.glade
+        `-- ui
+            |-- gdaui-entry-string-number.xml
+            `-- gdaui-entry-string-string.xml
+      </programlisting>
+    </para>
+    <para>
+      This component should be made dependant on the &LIBGDA;'s runtime component.
+    </para>
+  </sect1>
+
+  <sect1>
+    <title>Tools</title>
+    <para>
+      This component has the following files:
+      <programlisting>
+.
+|-- bin
+|   |-- gda-browser-4.0
+|   `-- gda-control-center-4.0
+`-- share
+    |-- applications
+    |   |-- gda-browser-4.0.desktop
+    |   `-- gda-control-center-4.0.desktop
+    |-- libgda-4.0
+    |   `-- pixmaps
+    |       `-- gdaui-generic.png
+    `-- pixmaps
+        |-- gda-browser-auth-big.png
+        |-- gda-browser-auth.png
+        |-- gda-browser-bookmark.png
+        |-- gda-browser-column-fk.png
+        |-- gda-browser-column-fknn.png
+        |-- gda-browser-column-nn.png
+        |-- gda-browser-column-pk.png
+        |-- gda-browser-column.png
+        |-- gda-browser-connected-big.png
+        |-- gda-browser-connected.png
+        |-- gda-browser-non-connected-big.png
+        |-- gda-browser-non-connected.png
+        |-- gda-browser-reference.png
+        |-- gda-browser-schema.png
+        |-- gda-browser-table.png
+        |-- gda-browser.png
+        |-- gda-control-center-newcnc.png
+        `-- gda-control-center.png
+      </programlisting>
+    </para>
+    <para>
+      This component should be made dependant on the runtime component above.
+    </para>
+  </sect1>
+
+  <sect1>
+    <title>Development files</title>
+    <para>
+      The development files are the include files needed to compile C programs, the PKG-CONFIG .pc files,
+      the static libraries and a demo program (like <application>gtk-demo</application>)
+      <programlisting>
+.
+|-- bin
+|   `-- gdaui-demo-4.0
+|-- include
+|   `-- libgda-4.0
+|       `-- libgdaui
+|           [...]
+`-- lib
+|   |-- libgdaui-4.0.a
+|   |-- libgdaui-4.0.la
+|   `-- pkgconfig
+|       `-- libgdaui-4.0.pc
+`-- share
+    `-- libgda-4.0
+        `-- demo
+            [...]
+      </programlisting>
+    </para>
+  </sect1>
+</chapter>
+

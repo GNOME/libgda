@@ -108,6 +108,8 @@
 <!ENTITY libgda-convenient SYSTEM "xml/gda-convenient.xml">
 <!ENTITY libgda-GdaDataComparator SYSTEM "xml/gda-data-comparator.xml">
 <!ENTITY provider-writing SYSTEM "prov-writing.xml">
+<!ENTITY packaging SYSTEM "packaging.xml">
+<!ENTITY packaging-ui SYSTEM "packaging_ui.xml">
 <!ENTITY provider-support SYSTEM "xml/provider-support.xml">
 <!ENTITY provider-support-sql SYSTEM "xml/provider-support-sql.xml">
 <!ENTITY i-s-doc SYSTEM "i_s_doc.xml">
@@ -1596,6 +1598,15 @@ g_object_unref (eng);
     &provider-writing;
   </part>
 
+  <part>
+    <title>Packaging</title>
+    &packaging;
+    &packaging-ui;
+  </part>
+
+  <part id="part_index">
+    <title>Appendix</title>
+    &fdl-appendix;
     <index id="index_main">
       <title>Index</title>
     </index>
@@ -1606,5 +1617,6 @@ g_object_unref (eng);
       <title>Index of deprecated symbols</title>
     </index>
     &fdl-appendix;
+  </part>
 </book>
 
