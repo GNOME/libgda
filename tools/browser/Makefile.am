@@ -1,6 +1,11 @@
 bin_PROGRAMS=gda-browser-4.0
+noinst_PROGRAMS = 
 
 SUBDIRS = schema-browser dummy-perspective
+if HAVE_GOOCANVAS
+SUBDIRS+=canvas
+noinst_PROGRAMS+=canvas-example
+endif
 
 AM_CPPFLAGS = \
         -I$(top_srcdir) \
@@ -73,11 +78,30 @@ gda_browser_4_0_LDADD=\
 	$(top_builddir)/libgdaui/libgdaui-4.0.la \
 	$(LIBGDA_LIBS) $(GTK_LIBS)
 
+if HAVE_GOOCANVAS
+gda_browser_4_0_LDADD+= \
+	$(top_builddir)/tools/browser/canvas/libcanvas.la
+endif
+
 @INTLTOOL_DESKTOP_RULE@
 
 desktopdir=$(datadir)/applications
 Desktop_in_files = gda-browser-4.0.desktop.in
 desktop_DATA = $(Desktop_in_files:.desktop.in=.desktop)
+
+# canvas example
+canvas_example_DEPENDENCIES = \
+	canvas/libcanvas.la
+canvas_example_SOURCES = \
+	canvas-example.c \
+	dnd.c \
+	dnd.h
+canvas_example_CFLAGS = -DCANVAS_EXAMPLE
+canvas_example_LDFLAGS = \
+	$(top_builddir)/libgda/libgda-4.0.la \
+	$(top_builddir)/libgdaui/libgdaui-4.0.la \
+	canvas/libcanvas.la
+
 
 # icons
 iconsdir=$(datadir)/pixmaps

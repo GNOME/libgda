@@ -28,6 +28,9 @@
 #include "../support.h"
 #include "../cc-gray-bar.h"
 #include "table-columns.h"
+#ifdef HAVE_GOOCANVAS
+#include "table-relations.h"
+#endif
 #include "schema-browser-perspective.h"
 
 struct _TableInfoPrivate {
@@ -334,8 +337,21 @@ table_info_new (BrowserConnection *bcnc,
 		str = g_strdup_printf ("<small>%s</small>", _("Columns"));
 		gtk_label_set_markup (GTK_LABEL (label), str);
 		g_free (str);
+		gtk_widget_show (page);
 		gtk_notebook_append_page (GTK_NOTEBOOK (sub_nb), page, label);
 	}
+#ifdef HAVE_GOOCANVAS
+	page = table_relations_new (tinfo);
+	if (page) {
+		label = gtk_label_new ("");
+		str = g_strdup_printf ("<small>%s</small>", _("Relations"));
+		gtk_label_set_markup (GTK_LABEL (label), str);
+		g_free (str);
+		gtk_widget_show (page);
+		gtk_notebook_append_page (GTK_NOTEBOOK (sub_nb), page, label);
+	}
+#endif
+	gtk_notebook_set_current_page (GTK_NOTEBOOK (sub_nb), 0);
 
 	/* show everything */
         gtk_widget_show_all (top_nb);

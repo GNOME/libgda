@@ -119,9 +119,13 @@ browser_core_init (BrowserCore *bcore)
 	bcore->priv = g_new0 (BrowserCorePrivate, 1);
 	bcore->priv->factories = NULL;
 
-	bcore->priv->factories = g_slist_append (bcore->priv->factories, schema_browser_perspective_get_factory ());
-	bcore->priv->default_factory = (BrowserPerspectiveFactory*) bcore->priv->factories->data; /* set default perspective */
-	bcore->priv->factories = g_slist_append (bcore->priv->factories, dummy_perspective_get_factory ());
+	bcore->priv->factories = g_slist_append (bcore->priv->factories,
+						 schema_browser_perspective_get_factory ());
+	/* set default perspective */
+	bcore->priv->default_factory = (BrowserPerspectiveFactory*) bcore->priv->factories->data; 
+
+	bcore->priv->factories = g_slist_append (bcore->priv->factories,
+						 dummy_perspective_get_factory ());
 
 	bcore->priv->windows = NULL;
 }
@@ -293,6 +297,27 @@ browser_core_get_default_factory (void)
 {
 	_bcore = browser_core_get ();
 	return _bcore->priv->default_factory;
+}
+
+/**
+ * browser_core_set_default_factory
+ */
+void
+browser_core_set_default_factory (const gchar *factory)
+{
+	GSList *list;
+	_bcore = browser_core_get ();
+
+	if (!factory)
+		return;
+
+	for (list = _bcore->priv->factories; list; list = list->next) {
+		BrowserPerspectiveFactory *fact = (BrowserPerspectiveFactory*) list->data;
+		if (strstr (fact->perspective_name, factory)) {
+			_bcore->priv->default_factory = fact;
+			break;
+		}
+	}
 }
 
 /**

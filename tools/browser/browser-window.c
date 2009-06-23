@@ -374,19 +374,18 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 	gtk_ui_manager_insert_action_group (bwin->priv->ui_manager, agroup, 0);
 	g_object_unref (agroup);
 
+	GtkAction *active_action = NULL;
 	for (plist = browser_core_get_factories (); plist; plist = plist->next) {
 		GtkAction *action;
 		const gchar *name;
-		gboolean active;
 		
-		if ((factory && (BROWSER_PERSPECTIVE_FACTORY (plist->data) == factory)) ||
-		    (!factory && (BROWSER_PERSPECTIVE_FACTORY (plist->data) == browser_core_get_default_factory ())))
-			active = TRUE;
-		else
-			active = FALSE;
 		name = BROWSER_PERSPECTIVE_FACTORY (plist->data)->perspective_name;
-		action = GTK_ACTION (gtk_radio_action_new (name, name, NULL, NULL, active));
-		gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), active);
+		action = GTK_ACTION (gtk_radio_action_new (name, name, NULL, NULL, FALSE));
+
+		if (!active_action && 
+		    (factory && (BROWSER_PERSPECTIVE_FACTORY (plist->data) == factory)) ||
+		    (!factory && (BROWSER_PERSPECTIVE_FACTORY (plist->data) == browser_core_get_default_factory ())))
+			active_action = action;
 		gtk_action_group_add_action (agroup, action);
 		
 		gtk_radio_action_set_group (GTK_RADIO_ACTION (action), radio_group);
@@ -402,6 +401,8 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 				       name, name,
 				       GTK_UI_MANAGER_AUTO, FALSE);
 	}
+	
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (active_action), TRUE);
 
         gtk_widget_show (GTK_WIDGET (bwin));
 

@@ -23,3 +23,9 @@ libperspective_la_SOURCES = \
 	table-columns.h \
 	mgr-columns.c \
 	mgr-columns.h
+
+if HAVE_GOOCANVAS
+libperspective_la_SOURCES += \
+	table-relations.c \
+	table-relations.h
+endif

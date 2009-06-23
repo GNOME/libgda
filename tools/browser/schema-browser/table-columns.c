@@ -604,8 +604,6 @@ follow_if_link (GtkWidget *text_view, GtkTextIter *iter, TableColumns *tcolumns)
 								       table_name,
 								       table_short_name);
 		}
-		else
-			g_warning ("Missing information...\n");
         }
 
 	if (tags) 

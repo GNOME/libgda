@@ -350,7 +350,8 @@ gboolean tree_store_drag_get_cb (GdauiTreeStore *store, const gchar *path, GtkSe
 		if (cvalue) {
 			const gchar *str;
 			str = g_value_get_string (cvalue);
-			gtk_selection_data_set (selection_data, selection_data->target, 8, str, strlen (str));
+			gtk_selection_data_set (selection_data, selection_data->target, 8,
+						(guchar*) str, strlen (str));
 			return TRUE;
 		}
 	}

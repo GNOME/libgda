@@ -20,6 +20,7 @@
  */
 
 #include <glib/gi18n-lib.h>
+#include <glib/gprintf.h>
 #include <string.h>
 #include <libgdaui/libgdaui.h>
 #include "support.h"
@@ -29,13 +30,35 @@
 #include "login-dialog.h"
 #include "auth-dialog.h"
 
+/* options */
+gchar *perspective = NULL;
+
+static GOptionEntry entries[] = {
+        { "perspective", 'p', 0, G_OPTION_ARG_STRING, &perspective, "Perspective", "default perspective "
+	  "to use when opening windows"},
+	{ NULL }
+};
+
 int
 main (int argc, char *argv[])
 {
+	GOptionContext *context;
+        GError *error = NULL;
 	gboolean have_loop = FALSE;
+
+	context = g_option_context_new (_("[DSN|connection string]..."));
+        g_option_context_add_main_entries (context, entries, GETTEXT_PACKAGE);
+        g_option_context_set_ignore_unknown_options (context, TRUE);
+        if (!g_option_context_parse (context, &argc, &argv, &error)) {
+                g_fprintf  (stderr, "Can't parse arguments: %s\n", error->message);
+                return EXIT_FAILURE;
+        }
+        g_option_context_free (context);
 
 	gdaui_init ();
 	gtk_init (&argc, &argv);
+
+	browser_core_set_default_factory (perspective);
 
 	if (argc == 1) {
 		GError *error = NULL;
