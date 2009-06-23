@@ -894,7 +894,13 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 					if (fk_nrows != ref_pk_nrows) {
 						/*gda_data_model_dump (fk_cols, stdout);
 						  gda_data_model_dump (ref_pk_cols, stdout);*/
-						fkerror = TRUE;
+						if (ref_pk_nrows > 0)
+							fkerror = TRUE;
+						else {
+							/* not an error, only the referenced table is not present
+							 * in the meta store, which is possible if the meta
+							 * store was only partially updated */
+						}
 					}
 					else {
 						gint n;
