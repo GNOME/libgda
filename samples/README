@@ -20,5 +20,7 @@ Currently the contents are:
 * in Tree/: simple example to show how to use the GdaTree object
 * in SqlBuilder: simple example to show how to use GdaSqlBuilder object to build various statements
 * in AsyncExec: simple example illustrating how to perform asynchronous statement execution
+* in WritableSelect/: example to show how to modify a GdaDataModel returned after
+  the execution of a SELECT statement
 
 Good luck and happy hacking!

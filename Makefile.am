@@ -71,6 +71,7 @@ example_files = \
 	samples/XSLT/data2.xml \
 	samples/XSLT/test.xsl \
 	samples/XSLT/transform.c \
+<<<<<<< HEAD:Makefile.am
 	samples/MetaStore/Makefile \
 	samples/MetaStore/README \
 	samples/MetaStore/background.c \
@@ -83,7 +84,10 @@ example_files = \
         samples/SqlBuilder/example.c \
 	samples/AsyncExec/Makefile \
         samples/AsyncExec/README \
-        samples/AsyncExec/example.c
+        samples/AsyncExec/example.c \
+	samples/WritableSelect/README \
+	samples/WritableSelect/example.c \
+	samples/WritableSelect/Makefile
 
 EXTRA_DIST = \
 	COPYING \
