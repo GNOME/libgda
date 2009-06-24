@@ -62,7 +62,10 @@ example_files = \
 	samples/XSLT/data.xml \
 	samples/XSLT/data2.xml \
 	samples/XSLT/test.xsl \
-	samples/XSLT/transform.c
+	samples/XSLT/transform.c \
+	samples/WritableSelect/README \
+	samples/WritableSelect/example.c \
+	samples/WritableSelect/Makefile
 
 EXTRA_DIST = \
 	COPYING \

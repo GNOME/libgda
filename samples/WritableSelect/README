@@ -1,0 +1,100 @@
+Writing to a data model created by executing a SELECT
+=====================================================
+
+Description:
+------------
+
+The example in this directory illustrate how to write to a data model created 
+when executing a SELECT statement. It opens a connection to the SalesTest DSN,
+obtains all the data in the "customers" table, and then modify the contents
+of the returned data model (after each modification, the data model's contents
+is printed and the actual data in the "customers" is also printed).
+
+Note that for this to work, the meta data associated to the "customers" table must
+be up to date, which is why gda_connection_update_meta_store() is called before
+modifying the data model.
+
+Compiling and running:
+----------------------
+
+To compile (make sure Libgda is installed prior to this):
+> make
+
+and to run:
+> ./example
+
+The result should be similar to:
+** Data model is:
+id | name           
+---+----------------
+ 2 | Ed Lamton      
+ 3 | Lew Bonito     
+ 4 | Mark Lawrencep 
+ 9 | Greg Popoff    
+10 | Vladimir Zirkov
+(5 rows)
+
+Computed UPDATE: UPDATE customers SET id=##+0::int, name=##+1::string WHERE id = ##-0::int
+Computed DELETE: DELETE FROM customers WHERE id = ##-0::int
+Computed INSERT: INSERT INTO customers (id, name) VALUES (##+0::int, ##+1::string)
+
+
+** Removing row 0
+** Data model is now:
+id | name           
+---+----------------
+ 3 | Lew Bonito     
+ 4 | Mark Lawrencep 
+ 9 | Greg Popoff    
+10 | Vladimir Zirkov
+(4 rows)
+** Table's contents is now:
+id | name           
+---+----------------
+ 3 | Lew Bonito     
+ 4 | Mark Lawrencep 
+ 9 | Greg Popoff    
+10 | Vladimir Zirkov
+(4 rows)
+
+
+** Adding a row
+** Data model is now:
+id | name           
+---+----------------
+ 3 | Lew Bonito     
+ 4 | Mark Lawrencep 
+ 9 | Greg Popoff    
+10 | Vladimir Zirkov
+11 | Hiro           
+(5 rows)
+** Table's contents is now:
+id | name           
+---+----------------
+ 3 | Lew Bonito     
+ 4 | Mark Lawrencep 
+ 9 | Greg Popoff    
+10 | Vladimir Zirkov
+11 | Hiro           
+(5 rows)
+
+
+** Modifying row 2
+** Data model is now:
+id | name           
+---+----------------
+ 3 | Lew Bonito     
+ 4 | Mark Lawrencep 
+ 9 | Tom            
+10 | Vladimir Zirkov
+11 | Hiro           
+(5 rows)
+** Table's contents is now:
+id | name           
+---+----------------
+ 3 | Lew Bonito     
+ 4 | Mark Lawrencep 
+ 9 | Tom            
+10 | Vladimir Zirkov
+11 | Hiro           
+(5 rows)
