@@ -9,7 +9,7 @@ bin_PROGRAMS = \
 	gda-sql-4.0 \
 	gda-list-server-op-4.0
 
-noinst_PROGRAMS = information-schema-doc
+noinst_PROGRAMS = information-schema-doc information-schema-types
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
@@ -79,6 +79,13 @@ information_schema_doc_SOURCES = \
         information-schema-doc.c
 
 information_schema_doc_LDADD = \
+        $(top_builddir)/libgda/libgda-4.0.la \
+        $(LIBGDA_LIBS)
+
+information_schema_types_SOURCES = \
+        information-schema-types.c
+
+information_schema_types_LDADD = \
         $(top_builddir)/libgda/libgda-4.0.la \
         $(LIBGDA_LIBS)
 

@@ -3,6 +3,12 @@
     Information schema for Libgda's dictionary DB.
     This is the base schema and can be extended by applications by adding new
     DBMS objects, but: the '_' prefix is reserved for Libgda's internals...
+
+    NOTE: when modified, please re-run:
+       tools/information-schema-doc
+       tools/information-schema-types
+
+    and copy the generated files to doc/C and libgda/providers-support
 -->
 
 
