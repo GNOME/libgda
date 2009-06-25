@@ -389,9 +389,14 @@ _gda_postgres_meta__udt_cols (GdaServerProvider *prov, GdaConnection *cnc,
 {
 	GdaDataModel *model;
 	gboolean retval;
+	GType col_types[] = {
+		G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, 
+		G_TYPE_INT, G_TYPE_NONE
+	};
 
-	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_UDT_COLUMNS_ALL], NULL, 
-							 error);
+	model = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_UDT_COLUMNS_ALL], NULL, 
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types, error);
+
 	if (!model)
 		return FALSE;
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
@@ -407,6 +412,10 @@ _gda_postgres_meta_udt_cols (GdaServerProvider *prov, GdaConnection *cnc,
 {
 	GdaDataModel *model;
 	gboolean retval = TRUE;
+	GType col_types[] = {
+		G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, 
+		G_TYPE_INT, G_TYPE_NONE
+	};
 
 	if (!gda_holder_set_value (gda_set_get_holder (i_set, "cat"), udt_catalog, error))
 		return FALSE;
@@ -414,7 +423,8 @@ _gda_postgres_meta_udt_cols (GdaServerProvider *prov, GdaConnection *cnc,
 		return FALSE;
 	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), udt_name, error))
 		return FALSE;
-	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_UDT_COLUMNS], i_set, error);
+	model = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_UDT_COLUMNS_ALL], i_set, 
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types, error);
 	if (!model)
 		return FALSE;
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
