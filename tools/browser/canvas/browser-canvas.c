@@ -1,6 +1,6 @@
 /* browser-canvas.c
  *
- * Copyright (C) 2007 - 2008 Vivien Malerba
+ * Copyright (C) 2007 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -390,7 +390,7 @@ popup_export_cb (GtkMenuItem *mitem, BrowserCanvas *canvas)
 				cairo_set_line_width (cr, goo_canvas_get_default_line_width (canvas->priv->goocanvas));
 				cairo_translate (cr, MARGIN - bounds.x1, MARGIN - bounds.y1);
 
-				goo_canvas_render (GOO_CANVAS (canvas), cr, NULL, 0.8);
+				goo_canvas_render (canvas->priv->goocanvas, cr, NULL, 0.8);
 
 				cairo_show_page (cr);
 

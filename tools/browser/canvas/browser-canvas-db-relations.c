@@ -429,10 +429,14 @@ browser_canvas_db_relations_add_table  (BrowserCanvasDbRelations *canvas,
 		gdouble x = 0, y = 0;
 		GooCanvasItem *table_item;
 
+		table_item = g_hash_table_lookup (canvas->priv->hash_tables, mtable);
+		if (table_item)
+			return BROWSER_CANVAS_TABLE (table_item);
+
 		table_item = browser_canvas_table_new (goo_canvas_get_root_item (goocanvas), 
 						       mtable, x, y, NULL);
 		g_hash_table_insert (canvas->priv->hash_tables, mtable, table_item);
-		g_hash_table_insert (canvas->priv->hash_tables,table_item, mtable);
+		g_hash_table_insert (canvas->priv->hash_tables, table_item, mtable);
 		canvas->priv->all_items = g_slist_prepend (canvas->priv->all_items, table_item);
 		g_object_set (G_OBJECT (table_item), 
 			      "popup_menu_func", canvas_entity_popup_func, NULL);

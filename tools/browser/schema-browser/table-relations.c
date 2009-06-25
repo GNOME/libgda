@@ -37,6 +37,7 @@ struct _TableRelationsPrivate {
 	BrowserConnection *bcnc;
 	TableInfo *tinfo;
 	GtkWidget *canvas;
+	gboolean all_schemas;
 };
 
 static void table_relations_class_init (TableRelationsClass *klass);
@@ -73,6 +74,7 @@ static void
 table_relations_init (TableRelations *trels, TableRelationsClass *klass)
 {
 	trels->priv = g_new0 (TableRelationsPrivate, 1);
+	trels->priv->all_schemas = FALSE;
 }
 
 static void
@@ -138,6 +140,9 @@ meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableRelations
 		GSList *list;
 		for (list = table->reverse_fk_list; list; list = list->next) {
 			GdaMetaTableForeignKey *fkey = (GdaMetaTableForeignKey*) list->data;
+			if (! trels->priv->all_schemas &&
+			    ! strcmp (fkey->meta_table->obj_short_name, fkey->meta_table->obj_full_name))
+				continue;
 			g_value_set_string (tname, fkey->meta_table->obj_name);
 			g_value_set_string (tschema, fkey->meta_table->obj_schema);
 			browser_canvas_db_relations_add_table (BROWSER_CANVAS_DB_RELATIONS (trels->priv->canvas),
@@ -147,6 +152,11 @@ meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableRelations
 
 		for (list = table->fk_list; list; list = list->next) {
 			GdaMetaTableForeignKey *fkey = (GdaMetaTableForeignKey*) list->data;
+
+			if (! trels->priv->all_schemas &&
+			    ! strcmp (fkey->depend_on->obj_short_name, fkey->depend_on->obj_full_name))
+				continue;
+
 			g_value_set_string (tname, fkey->depend_on->obj_name);
 			g_value_set_string (tschema, fkey->depend_on->obj_schema);
 			browser_canvas_db_relations_add_table (BROWSER_CANVAS_DB_RELATIONS (trels->priv->canvas),
