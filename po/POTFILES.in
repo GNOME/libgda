@@ -200,6 +200,12 @@ tools/browser/login-dialog.c
 tools/browser/main.c
 tools/browser/mgr-favorites.c
 tools/browser/support.c
+tools/browser/canvas/browser-canvas-column.c
+tools/browser/canvas/browser-canvas-db-relations.c
+tools/browser/canvas/browser-canvas-fkey.c
+tools/browser/canvas/browser-canvas-print.c
+tools/browser/canvas/browser-canvas-table.c
+tools/browser/canvas/browser-canvas.c
 tools/browser/schema-browser/favorite-selector.c
 tools/browser/schema-browser/mgr-columns.c
 tools/browser/schema-browser/objects-index.c

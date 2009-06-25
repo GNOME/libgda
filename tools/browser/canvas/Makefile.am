@@ -13,6 +13,7 @@ AM_CPPFLAGS = \
 libcanvas_la_SOURCES = \
 	browser-canvas.c \
 	browser-canvas.h \
+	browser-canvas-priv.h \
 	browser-canvas-column.c \
 	browser-canvas-column.h \
 	browser-canvas-db-relations.c \

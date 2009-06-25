@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda Gnome HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-17 14:24+0200\n"
+"POT-Creation-Date: 2009-06-25 20:57+0200\n"
 "PO-Revision-Date: 2007-09-04 22:33+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net>\n"
@@ -139,8 +139,10 @@ msgstr "Không tìm thấy chương trình « fop »"
 #: ../tools/browser/browser-connection.c:435
 #: ../tools/browser/browser-connection.c:452
 #: ../tools/browser/browser-connection.c:562
-#: ../tools/browser/login-dialog.c:232 ../tools/browser/main.c:46
-#: ../tools/browser/main.c:60 ../tools/browser/main.c:86
+#: ../tools/browser/login-dialog.c:232 ../tools/browser/main.c:69
+#: ../tools/browser/main.c:83 ../tools/browser/main.c:109
+#: ../tools/browser/schema-browser/favorite-selector.c:318
+#: ../tools/browser/schema-browser/favorite-selector.c:380
 #: ../tools/gda-list-server-op.c:47 ../tools/gda-list-server-op.c:90
 #: ../tools/gda-sql.c:270 ../tools/gda-sql.c:287 ../tools/gda-sql.c:426
 #: ../tools/gda-sql.c:1429 ../tools/gda-sql.c:1444 ../tools/gda-sql.c:1491
@@ -349,7 +351,7 @@ msgstr "Không thể chuẩn bị cấu trúc lệnh."
 msgid "No valid data source info was created"
 msgstr ""
 
-#: ../control-center/main.c:187 ../tools/browser/browser-window.c:673
+#: ../control-center/main.c:187 ../tools/browser/browser-window.c:674
 msgid "Database access services for the GNOME Desktop"
 msgstr ""
 
@@ -1238,7 +1240,7 @@ msgid "Modification statement must be an INSERT, UPDATE or DELETE statement"
 msgstr ""
 
 #: ../libgda/gda-data-select.c:1305 ../libgda/gda-data-select.c:1511
-#: ../libgda/gda-data-select.c:3279
+#: ../libgda/gda-data-select.c:3281
 #, fuzzy
 msgid "No connection to use"
 msgstr "DSN của cách kết nối cần dùng."
@@ -1263,15 +1265,20 @@ msgstr ""
 
 #: ../libgda/gda-data-select.c:1696 ../libgda/gda-data-select.c:2401
 #: ../libgda/gda-data-select.c:2568 ../libgda/gda-data-select.c:2709
-#: ../libgda/gda-data-select.c:2796 ../libgda/gda-data-select.c:2987
+#: ../libgda/gda-data-select.c:2796 ../libgda/gda-data-select.c:2989
 #, fuzzy
 msgid "Data model does only support random access"
 msgstr ""
 "Mô hình không hỗ trợ khả năng truy cập ngẫu nhiên nên không hiển thị dữ "
 "liệu\n"
 
-#: ../libgda/gda-data-select.c:1725 ../libgda/gda-data-select.c:1734
-#: ../libgda/gda-data-select.c:1742 ../libgda/gda-data-select.c:1764
+#: ../libgda/gda-data-select.c:1725
+#, fuzzy
+msgid "Unable to retreive data after modifications"
+msgstr "Chưa định nghĩa đích nào cần áp dụng các sự sửa đổi."
+
+#: ../libgda/gda-data-select.c:1733 ../libgda/gda-data-select.c:1741
+#: ../libgda/gda-data-select.c:1763
 msgid ""
 "Unable to retreive data after modifications, no further modification will be "
 "allowed"
@@ -1307,7 +1314,7 @@ msgstr "Không thể chuẩn bị câu Oracle."
 
 #: ../libgda/gda-data-select.c:2396 ../libgda/gda-data-select.c:2563
 #: ../libgda/gda-data-select.c:2629 ../libgda/gda-data-select.c:2704
-#: ../libgda/gda-data-select.c:2791 ../libgda/gda-data-select.c:2982
+#: ../libgda/gda-data-select.c:2791 ../libgda/gda-data-select.c:2984
 #, fuzzy
 msgid "Modifications are not allowed anymore"
 msgstr "Sửa đổi bị thôi"
@@ -1323,7 +1330,7 @@ msgid "Could not get iterator's value"
 msgstr "Không thể lấy giá trị cột."
 
 #: ../libgda/gda-data-select.c:2599 ../libgda/gda-data-select.c:2660
-#: ../libgda/gda-data-select.c:2763 ../libgda/gda-data-select.c:2868
+#: ../libgda/gda-data-select.c:2763 ../libgda/gda-data-select.c:2870
 #, fuzzy, c-format
 msgid "Column %d can't be modified"
 msgstr "Không thể sửa đổi cột"
@@ -1341,13 +1348,13 @@ msgstr ""
 msgid "Cannot add a row because the number of rows in unknown"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:2833
+#: ../libgda/gda-data-select.c:2835
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:385
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:394
 msgid "Missing values to insert in INSERT statement"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:2992
+#: ../libgda/gda-data-select.c:2994
 msgid "No DELETE statement provided"
 msgstr ""
 
@@ -1506,7 +1513,7 @@ msgstr "Thiếu giá trị cần thiết cho « %s »"
 msgid "Column '%s' not found in table '%s'"
 msgstr "Không tìm thấy trường số %d trong nguồn tên « %s »"
 
-#: ../libgda/gda-meta-store.c:1849 ../libgda/gda-meta-struct.c:1014
+#: ../libgda/gda-meta-store.c:1849 ../libgda/gda-meta-struct.c:1020
 #, fuzzy, c-format
 msgid "Foreign key column '%s' not found in table '%s'"
 msgstr "Không tìm thấy trường số %d trong nguồn tên « %s »"
@@ -1648,18 +1655,18 @@ msgstr ""
 msgid "Internal GdaMetaStore error: column %s not found"
 msgstr ""
 
-#: ../libgda/gda-meta-struct.c:931
+#: ../libgda/gda-meta-struct.c:937
 #, c-format
 msgid ""
 "Meta data incoherence in foreign key constraint for table %s.%s.%s "
 "referencing table %s.%s.%s"
 msgstr ""
 
-#: ../libgda/gda-meta-struct.c:2237
+#: ../libgda/gda-meta-struct.c:2243
 msgid "Missing object name in GdaMetaDbObject structure"
 msgstr ""
 
-#: ../libgda/gda-meta-struct.c:2262
+#: ../libgda/gda-meta-struct.c:2268
 #, fuzzy, c-format
 msgid "Database object '%s' already exists"
 msgstr "Tập tin « %s » đã có."
@@ -1942,6 +1949,8 @@ msgstr "Thuộc tính thêm"
 #: ../providers/mysql/mysql_specs_drop_index.xml.in.h:1
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:3
+#: ../tools/browser/schema-browser/schema-browser-perspective.c:145
+#: ../tools/browser/schema-browser/schema-browser-perspective.c:151
 msgid "Index"
 msgstr "Chỉ mục"
 
@@ -2218,6 +2227,7 @@ msgid "Unable to get column name"
 msgstr "Bảng có tên cần thay đổi"
 
 #: ../libgda/gda-tree-mgr-label.c:207
+#: ../tools/browser/canvas/browser-canvas-table.c:286
 #, fuzzy
 msgid "No name"
 msgstr "Tên mới"
@@ -3448,6 +3458,7 @@ msgid "Encoding used to convert binary data to the string"
 msgstr "Không đủ bộ nhớ để chuyển đổi bộ đệm nhị phân sang chuỗi"
 
 #: ../libgdaui/data/server_operation.glade.h:1
+#: ../tools/browser/schema-browser/table-info.c:337
 #, fuzzy
 msgid "Columns"
 msgstr "Ghi chú"
@@ -4063,6 +4074,7 @@ msgstr "Khác NULL (vô giá trị)"
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:11
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:52
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:31
+#: ../tools/browser/schema-browser/table-columns.c:193
 #: ../tools/command-exec.c:808
 msgid "Primary key"
 msgstr "Khóa chính"
@@ -5257,20 +5269,20 @@ msgstr "Không đủ bộ nhớ để chuyển đổi bộ đệm nhị phân sa
 msgid "Insufficient memory to convert string to binary buffer"
 msgstr "Không đủ bộ nhớ để chuyển đổi chuỗi sang bộ đệm nhị phân"
 
-#: ../providers/postgres/gda-postgres-meta.c:536
-#: ../providers/postgres/gda-postgres-meta.c:570
-#: ../providers/postgres/gda-postgres-meta.c:696
-#: ../providers/postgres/gda-postgres-meta.c:741
-#: ../providers/postgres/gda-postgres-meta.c:898
-#: ../providers/postgres/gda-postgres-meta.c:998
-#: ../providers/postgres/gda-postgres-meta.c:1265
-#: ../providers/postgres/gda-postgres-meta.c:1295
-#: ../providers/postgres/gda-postgres-meta.c:1330
-#: ../providers/postgres/gda-postgres-meta.c:1360
-#: ../providers/postgres/gda-postgres-meta.c:1402
-#: ../providers/postgres/gda-postgres-meta.c:1462
-#: ../providers/postgres/gda-postgres-meta.c:1526
-#: ../providers/postgres/gda-postgres-meta.c:1556
+#: ../providers/postgres/gda-postgres-meta.c:546
+#: ../providers/postgres/gda-postgres-meta.c:580
+#: ../providers/postgres/gda-postgres-meta.c:706
+#: ../providers/postgres/gda-postgres-meta.c:751
+#: ../providers/postgres/gda-postgres-meta.c:908
+#: ../providers/postgres/gda-postgres-meta.c:1008
+#: ../providers/postgres/gda-postgres-meta.c:1275
+#: ../providers/postgres/gda-postgres-meta.c:1305
+#: ../providers/postgres/gda-postgres-meta.c:1340
+#: ../providers/postgres/gda-postgres-meta.c:1370
+#: ../providers/postgres/gda-postgres-meta.c:1412
+#: ../providers/postgres/gda-postgres-meta.c:1472
+#: ../providers/postgres/gda-postgres-meta.c:1536
+#: ../providers/postgres/gda-postgres-meta.c:1566
 msgid "PostgreSQL version 8.2.0 at least is required"
 msgstr ""
 
@@ -5988,26 +6000,26 @@ msgstr "không tên"
 msgid "Connection: %s"
 msgstr "Chuỗi kết nối"
 
-#: ../tools/browser/browser-window.c:532 ../tools/browser/support.c:70
+#: ../tools/browser/browser-window.c:533 ../tools/browser/support.c:70
 #, fuzzy, c-format
 msgid "Do you want to close the '%s' connection?"
 msgstr "Miền địa phương cần dùng khi kết nối"
 
-#: ../tools/browser/browser-window.c:574 ../tools/browser/browser-window.c:581
+#: ../tools/browser/browser-window.c:575 ../tools/browser/browser-window.c:582
 msgid "Do you want to quit the application?"
 msgstr ""
 
-#: ../tools/browser/browser-window.c:575
+#: ../tools/browser/browser-window.c:576
 #, fuzzy
 msgid "all the connections will be closed."
 msgstr "Kết nối bị ngắt."
 
-#: ../tools/browser/browser-window.c:582
+#: ../tools/browser/browser-window.c:583
 #, fuzzy
 msgid "the connection will be closed."
 msgstr "Kết nối bị ngắt."
 
-#: ../tools/browser/browser-window.c:670
+#: ../tools/browser/browser-window.c:671
 #: ../tools/browser/gda-browser-4.0.desktop.in.h:2
 #, fuzzy
 msgid "Database browser"
@@ -6034,9 +6046,201 @@ msgstr ""
 msgid "Cancelled by the user"
 msgstr ""
 
+#: ../tools/browser/main.c:49 ../tools/gda-sql.c:166
+#, fuzzy
+msgid "[DSN|connection string]..."
+msgstr "Chuỗi kết nối ODBC"
+
+#: ../tools/browser/mgr-favorites.c:294
+msgid ""
+"Getting\n"
+"favorites..."
+msgstr ""
+
+#: ../tools/browser/mgr-favorites.c:305
+msgid ""
+"No favorite:\n"
+"drag item to\n"
+"define one"
+msgstr ""
+
 #: ../tools/browser/support.c:175
 msgid "Close tab"
 msgstr ""
+
+#: ../tools/browser/canvas/browser-canvas-column.c:157
+#, fuzzy, c-format
+msgid "Type: %s"
+msgstr "Kiểu"
+
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:233
+#: ../tools/browser/canvas/browser-canvas-fkey.c:414
+msgid "Remove"
+msgstr ""
+
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:237
+#, fuzzy
+msgid "Add referenced tables"
+msgstr "Bảng đã tham chiếu"
+
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:314
+#, fuzzy
+msgid "Add table"
+msgstr "Trên bảng"
+
+#: ../tools/browser/canvas/browser-canvas-print.c:82
+msgid "Page size and zoom"
+msgstr ""
+
+#: ../tools/browser/canvas/browser-canvas-print.c:179
+#, c-format
+msgid "Page %d of %d horizontally and %d of %d vertically"
+msgstr ""
+
+#: ../tools/browser/canvas/browser-canvas-print.c:237
+msgid "Adjust page's size and orientation"
+msgstr ""
+
+#: ../tools/browser/canvas/browser-canvas-print.c:243
+msgid "<b>Zoom</b>"
+msgstr ""
+
+#: ../tools/browser/canvas/browser-canvas-print.c:255
+msgid "Number of pages used:"
+msgstr ""
+
+#: ../tools/browser/canvas/browser-canvas-print.c:266
+msgid "horizontally"
+msgstr ""
+
+#: ../tools/browser/canvas/browser-canvas-print.c:277
+msgid "vertically"
+msgstr ""
+
+#: ../tools/browser/canvas/browser-canvas-print.c:281
+msgid "Zoom factor:"
+msgstr ""
+
+#: ../tools/browser/canvas/browser-canvas-print.c:294
+msgid "<b>Page numbers</b>"
+msgstr ""
+
+#: ../tools/browser/canvas/browser-canvas-print.c:307
+msgid "Print page numbers"
+msgstr ""
+
+#: ../tools/browser/canvas/browser-canvas.c:326
+#, fuzzy
+msgid "Save diagram as"
+msgstr "Lưu từ điển"
+
+#: ../tools/browser/canvas/browser-canvas.c:332
+msgid "PNG Image"
+msgstr ""
+
+#: ../tools/browser/canvas/browser-canvas.c:337
+msgid "SVG file"
+msgstr ""
+
+#: ../tools/browser/canvas/browser-canvas.c:374
+#, fuzzy
+msgid "Failed to create SVG file"
+msgstr "Lỗi đọc nút trong tập tin XML"
+
+#: ../tools/browser/canvas/browser-canvas.c:382
+msgid "File format to save to is not recognized."
+msgstr ""
+
+#: ../tools/browser/canvas/browser-canvas.c:402
+#, fuzzy
+msgid "Failed to create PNG file"
+msgstr "Lỗi đọc nút trong tập tin XML"
+
+#: ../tools/browser/schema-browser/favorite-selector.c:199
+msgid "Favorites"
+msgstr ""
+
+#: ../tools/browser/schema-browser/favorite-selector.c:269
+msgid ""
+"Drag a favorite here\n"
+"to remove it"
+msgstr ""
+
+#: ../tools/browser/schema-browser/favorite-selector.c:317
+#, fuzzy, c-format
+msgid "Could not add favorite: %s"
+msgstr "Không thể mở tập tin « %s »"
+
+#: ../tools/browser/schema-browser/favorite-selector.c:379
+#, fuzzy, c-format
+msgid "Could not remove favorite: %s"
+msgstr "Không thể lưu tập tin %s"
+
+#: ../tools/browser/schema-browser/mgr-columns.c:274
+#, c-format
+msgid "Not ready"
+msgstr ""
+
+#: ../tools/browser/schema-browser/mgr-columns.c:292
+#, fuzzy, c-format
+msgid "Table not found"
+msgstr "Không tìm thấy bảng cần gỡ bỏ"
+
+#: ../tools/browser/schema-browser/mgr-columns.c:299
+#, c-format
+msgid "Requested object is not a table or view"
+msgstr ""
+
+#: ../tools/browser/schema-browser/objects-index.c:209
+#, c-format
+msgid "Tables in schema <b>'%s'</b>"
+msgstr ""
+
+#: ../tools/browser/schema-browser/objects-index.c:329
+#, c-format
+msgid "Objects in the '%s' schema"
+msgstr ""
+
+#: ../tools/browser/schema-browser/objects-index.c:433
+#, fuzzy
+msgid "Tables' index"
+msgstr "Tên của bảng"
+
+#: ../tools/browser/schema-browser/perspective-main.c:32
+#, fuzzy
+msgid "Schema browser"
+msgstr "Thông báo các giản đồ"
+
+#: ../tools/browser/schema-browser/table-columns.c:230
+#, fuzzy
+msgid "Foreign key on "
+msgstr "Khoá lạ"
+
+#: ../tools/browser/schema-browser/table-columns.c:302
+#, fuzzy
+msgid "Unique constraint"
+msgstr "Ràng buộc kiểm tra"
+
+#: ../tools/browser/schema-browser/table-columns.c:392
+#, fuzzy
+msgid "Column Name"
+msgstr "Không tên"
+
+#: ../tools/browser/schema-browser/table-columns.c:441
+msgid "Constraints and integrity rules"
+msgstr ""
+
+#: ../tools/browser/schema-browser/table-info.c:316
+msgid ""
+"Table not found. If you think this is an error,\n"
+"please refresh the meta data from the database\n"
+"(menu Connection/Fetch meta data)."
+msgstr ""
+
+#: ../tools/browser/schema-browser/table-info.c:347
+#, fuzzy
+msgid "Relations"
+msgstr "ID thứ bản"
 
 #: ../tools/command-exec.c:328
 msgid "History is not supported"
@@ -6155,11 +6359,6 @@ msgstr "Lỗi: %s"
 #, fuzzy, c-format
 msgid "Can't parse file '%s', ignoring it"
 msgstr "Không thể mở tập tin « %s » để ghi: %s\n"
-
-#: ../tools/gda-sql.c:166
-#, fuzzy
-msgid "[DSN|connection string]..."
-msgstr "Chuỗi kết nối ODBC"
 
 #: ../tools/gda-sql.c:176
 #, fuzzy, c-format
@@ -7033,10 +7232,6 @@ msgstr "Thủ tục lẫy"
 
 #~ msgid "Sequences"
 #~ msgstr "Dãy"
-
-#, fuzzy
-#~ msgid "Types"
-#~ msgstr "Kiểu"
 
 #, fuzzy
 #~ msgid "SQLConsole"
@@ -8479,9 +8674,6 @@ msgstr "Thủ tục lẫy"
 #~ msgid "Empty query"
 #~ msgstr "Truy vấn rỗng"
 
-#~ msgid "No target defined to apply modifications"
-#~ msgstr "Chưa định nghĩa đích nào cần áp dụng các sự sửa đổi."
-
 #~ msgid "More than one target defined to apply modifications"
 #~ msgstr "Nhiều đích được định nghĩa để áp dụng các sự sửa đổi."
 
@@ -8965,9 +9157,6 @@ msgstr "Thủ tục lẫy"
 #~ msgid "Result without any connection"
 #~ msgstr "Kết quả không có kết nối nào"
 
-#~ msgid "Schemas reporting"
-#~ msgstr "Thông báo các giản đồ"
-
 #~ msgid "Schemas not reported by this provider"
 #~ msgstr "Các giản đồ không được thông báo bởi bộ cung cấp này"
 
@@ -9082,9 +9271,6 @@ msgstr "Thủ tục lẫy"
 
 #~ msgid "Synchronize dictionary with database structure"
 #~ msgstr "Đồng bộ hoá từ điển với cấu trúc cơ sở dữ liệu"
-
-#~ msgid "Save dictionary"
-#~ msgstr "Lưu từ điển"
 
 #~ msgid "qecho [TEXT]"
 #~ msgstr "qecho [VĂN_BẢN]"

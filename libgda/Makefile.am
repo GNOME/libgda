@@ -57,7 +57,6 @@ gda_headers = \
 	gda-holder.h \
 	gda-lockable.h \
 	gda-log.h \
-	gda-marshal.h \
 	gda-meta-store.h \
 	gda-meta-struct.h \
 	gda-mutex.h \
