@@ -58,6 +58,8 @@ example_files = \
 	samples/Report/customers-report-rml.c \
 	samples/Report/customers-report-rml.rml \
 	samples/Report/customers-report-spec.xml \
+	samples/Report/schema-report.c \
+	samples/Report/schema-report-spec.xml \
 	samples/Report/Makefile
 	samples/Report/README
 	samples/Virtual/Makefile \

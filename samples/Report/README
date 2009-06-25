@@ -5,7 +5,7 @@ Description:
 ------------
 
 The examples in this directory illustrate the GDA report engine, in the libgda-report component,
-part of libgda as of versions >= 3.2.
+part of libgda as of versions >= 4.0.
 
 In these examples the 'SalesTest' (this data source needs to be defined,
 which is automatically done when the first Libgda application is run, and uses a small SQLite database)
@@ -18,6 +18,10 @@ and creates the "customers-report.xml" file (which returns a valid DocBook docum
 The second example (customers-report-rml.c) creates a GdaReportRmlDocument object which offers
 a higher level than the GdaReportEngine to work on RML files. It loads the "customers-report-rml.rml"
 RML file, and generates a PDF file from it.
+
+The 3rd example (schema-report.c) takes the "schema-report-spec.xml" XML file and created the "schema-report.xml"
+file (a valid DocBook document) which lists all the database schemas, the tables and views in the default schema
+along with their properties.
 
 Compiling and running:
 ----------------------
@@ -37,3 +41,9 @@ result is in the customers-report.xml file, which can be converted to HTML (in a
 or, for the second example:
 > ./customers-report-rml
 > evince customers-report-rml.pdf
+
+and for the 3rd:
+> ./schema-report
+> make schema-html
+(make sure you set the correct path to the stylesheet in the Makefile)
+> firefox schema-report.html

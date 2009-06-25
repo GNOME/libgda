@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article>
+  <articleinfo>
+    <title>Schema report</title>
+  </articleinfo>
+
+  <!-- Schemas in the database -->
+  <gda_report_section query_name="schemas" cnc_name="meta_store_cnc"> 
+    <sect1>
+      <title>Database's schemas list</title>
+      
+      <para>Here is the list of database's schemas (<gda_report_param_value param_name="schemas|?nrows"/> found)</para>
+      <table frame="all"><title>List of schemas</title>
+	<tgroup cols="2" align="left" colsep="1" rowsep="1">
+	  <colspec colname="Name"/>
+	  <colspec colname="Internal?"/>
+	  <thead>
+	    <row>
+	      <entry>Schema</entry>
+	      <entry>Internal ?</entry>
+	    </row>
+	  </thead>
+	  <tbody>
+	    <gda_report_iter>
+	      <row>
+		<entry><gda_report_param_value param_name="schemas|@schema_name"/></entry>
+		<entry>
+		  <gda_report_if expr="##schemas|@schema_internal = TRUE">
+		    <gda_report_if_true>Internal</gda_report_if_true>
+		    <gda_report_if_false>No</gda_report_if_false>
+		  </gda_report_if>
+		</entry>
+	      </row>
+	    </gda_report_iter>
+	  </tbody>
+	</tgroup>
+      </table>
+    </sect1>
+
+    <sect1>
+      <title>In the default schema</title>
+      <sect2>
+	<!-- Tables -->
+	<title>Tables</title>
+	<gda_report_section>
+	  <gda_report_query query_name="direct_tables" cnc_name="meta_store_cnc">
+	    select * from _tables where table_short_name != table_full_name AND table_type LIKE '%TABLE%'
+	  </gda_report_query>
+	  
+	  <gda_report_iter>
+	    <sect3>
+	      <title><gda_report_param_value param_name="direct_tables|@table_name"/> table</title>
+
+	      <!-- Table's columns -->
+	      <gda_report_section>
+		<gda_report_query query_name="columns" cnc_name="meta_store_cnc">
+		  select * from _columns WHERE
+		  table_name = ##direct_tables|@table_name::string AND
+		  table_schema = ##direct_tables|@table_schema::string
+		  ORDER BY ordinal_position
+		</gda_report_query>
+		
+		<para>
+		  <informaltable frame="all">
+		    <tgroup cols="5" align="left" colsep="1" rowsep="1">
+		      <colspec colname="Column name"/>
+		      <colspec colname="Type"/>
+		      <colspec colname="Can be NULL"/>
+		      <colspec colname="Default"/>
+		      <colspec colname="Comments"/>
+		      <thead>
+			<row>
+			  <entry>Column name</entry>
+			  <entry>Type</entry>
+			  <entry>Can be NULL</entry>
+			  <entry>Default</entry>
+			  <entry>Comments</entry>
+			</row>
+		      </thead>
+		      <tbody>
+			<gda_report_iter>
+			  <row>
+			    <entry><gda_report_param_value param_name="columns|@column_name"/></entry>
+			    <entry><gda_report_param_value param_name="columns|@data_type"/></entry>
+			    <entry>
+			      <gda_report_if expr="##columns|@is_nullable::boolean = TRUE">
+				<gda_report_if_true>Yes</gda_report_if_true>
+				<gda_report_if_false>No</gda_report_if_false>
+				<gda_report_param_value param_name="columns|@is_nullable"/>
+			      </gda_report_if>
+			    </entry>
+			    <entry><gda_report_param_value param_name="columns|@column_default"/></entry>
+			    <entry><gda_report_param_value param_name="columns|@column_comments"/></entry>
+			  </row>
+			</gda_report_iter>
+		      </tbody>
+		    </tgroup>
+		  </informaltable>
+		</para>
+	      </gda_report_section>
+
+	      <itemizedlist>
+
+		<!-- Table's constraints, not FK -->
+		<gda_report_section>
+		  <gda_report_query query_name="constraints" cnc_name="meta_store_cnc">
+		    select constraint_name, constraint_type, check_clause FROM _table_constraints WHERE
+		    table_name = ##direct_tables|@table_name::string AND
+		    table_schema = ##direct_tables|@table_schema::string AND
+		    constraint_type != 'FOREIGN KEY'
+		    ORDER BY constraint_type
+		  </gda_report_query>
+		  <gda_report_iter>
+		    <listitem><para><gda_report_param_value param_name="constraints|@constraint_type"/>:
+			<gda_report_param_value param_name="constraints|@constraint_name"/>
+			
+			<!-- Involved columns -->
+			<gda_report_if expr="##constraints|@constraint_type::string = 'CHECK'">
+			  <gda_report_if_true>
+			    <programlisting>
+<gda_report_param_value param_name="constraints|@check_clause"/>
+			    </programlisting>
+			  </gda_report_if_true>
+			  <gda_report_if_false>
+			    <gda_report_section>
+			      <gda_report_query query_name="key_columns" cnc_name="meta_store_cnc">
+				SELECT k.column_name FROM _key_column_usage k WHERE
+				table_name = ##direct_tables|@table_name::string AND
+				table_schema = ##direct_tables|@table_schema::string AND
+				constraint_name = ##constraints|@constraint_name
+				ORDER BY ordinal_position
+			      </gda_report_query>
+			      <itemizedlist>
+				<gda_report_iter>
+				  <listitem><para><gda_report_param_value param_name="key_columns|@column_name"/></para></listitem>
+				</gda_report_iter>
+			      </itemizedlist>
+			    </gda_report_section>
+			  </gda_report_if_false>
+			</gda_report_if>
+		    </para></listitem>
+		  </gda_report_iter>
+		</gda_report_section>
+		
+		<!-- Table's FK constraints -->
+		<gda_report_section>
+		  <gda_report_query query_name="constraints" cnc_name="meta_store_cnc">
+		    SELECT tc.constraint_name, r.ref_table_schema, r.ref_table_name, tc.constraint_type, r.update_rule, r.delete_rule FROM
+                    _table_constraints tc INNER JOIN _referential_constraints r ON
+                    (tc.table_schema=r.table_schema AND tc.table_name=r.table_name AND tc.constraint_name=r.constraint_name)
+                    WHERE
+                    tc.table_name = ##direct_tables|@table_name::string AND
+                    tc.table_schema = ##direct_tables|@table_schema::string AND
+                    constraint_type = 'FOREIGN KEY'
+                    ORDER BY constraint_type
+		  </gda_report_query>
+		  <gda_report_iter>
+		    <listitem><para><gda_report_param_value param_name="constraints|@constraint_type"/>:
+			<gda_report_param_value param_name="constraints|@constraint_name"/>
+			=&gt; '<gda_report_param_value param_name="constraints|@ref_table_schema"/>.<gda_report_param_value param_name="constraints|@ref_table_name"/>'
+			<!-- Involved columns -->
+			<gda_report_section>
+			  <gda_report_query query_name="key_columns" cnc_name="meta_store_cnc">
+			    select * from _detailled_fk WHERE
+			    fk_table_name = ##direct_tables|@table_name::string AND
+			    fk_table_schema = ##direct_tables|@table_schema::string AND
+			    fk_constraint_name = ##constraints|@constraint_name
+			    ORDER BY ordinal_position
+			  </gda_report_query>
+			  <itemizedlist>
+			    <gda_report_iter>
+			      <listitem><para>
+				  <gda_report_param_value param_name="key_columns|@fk_column"/> =&gt;
+				  <gda_report_param_value param_name="key_columns|@ref_column"/>
+			      </para></listitem>
+			    </gda_report_iter>
+			  </itemizedlist>
+			</gda_report_section>
+			
+		    </para>
+		    <para>ON UPDATE: <gda_report_param_value param_name="constraints|@update_rule"/></para>
+		    <para>ON DELETE: <gda_report_param_value param_name="constraints|@delete_rule"/></para>
+		    </listitem>
+		  </gda_report_iter>
+		</gda_report_section>
+
+	      </itemizedlist>
+
+	    </sect3>
+	  </gda_report_iter>
+	  </gda_report_section>
+      </sect2>
+
+      <!-- Views -->
+      <sect2>
+	<title>Views</title>
+	<gda_report_section>
+	  <gda_report_query query_name="direct_views" cnc_name="meta_store_cnc">
+	    SELECT v.table_name, v.table_schema, v.view_definition FROM _tables t
+	    INNER JOIN _views v ON (v.table_name = t.table_name AND v.table_schema = t.table_schema) WHERE
+	    table_short_name != table_full_name AND table_type LIKE 'VIEW'
+	  </gda_report_query>
+	  <itemizedlist>
+	    <gda_report_iter>
+	      <listitem><para><gda_report_param_value param_name="direct_views|@table_name"/>:
+		  <!-- Views's columns -->
+		  <gda_report_section>
+		    <gda_report_query query_name="columns" cnc_name="meta_store_cnc">
+		      select * from _columns WHERE
+		      table_name = ##direct_views|@table_name::string AND
+		      table_schema = ##direct_views|@table_schema::string
+		      ORDER BY ordinal_position
+		    </gda_report_query>
+		    
+		      <informaltable frame="all">
+			<tgroup cols="3" align="left" colsep="1" rowsep="1">
+			  <colspec colname="Column name"/>
+			  <colspec colname="Type"/>
+			  <colspec colname="Comments"/>
+			  <thead>
+			    <row>
+			      <entry>Column name</entry>
+			      <entry>Type</entry>
+			      <entry>Comments</entry>
+			    </row>
+			  </thead>
+			  <tbody>
+			    <gda_report_iter>
+			      <row>
+				<entry><gda_report_param_value param_name="columns|@column_name"/></entry>
+				<entry><gda_report_param_value param_name="columns|@data_type"/></entry>
+				<entry><gda_report_param_value param_name="columns|@column_comments"/></entry>
+			      </row>
+			    </gda_report_iter>
+			  </tbody>
+			</tgroup>
+		      </informaltable>
+		  </gda_report_section>
+
+		  <!-- view's definition -->
+		  <programlisting>
+<gda_report_param_value param_name="direct_views|@view_definition"/>
+		  </programlisting>
+	      </para></listitem>
+	    </gda_report_iter>
+	  </itemizedlist>
+	  </gda_report_section>
+      </sect2>
+    </sect1>
+
+  </gda_report_section>
+</article>
