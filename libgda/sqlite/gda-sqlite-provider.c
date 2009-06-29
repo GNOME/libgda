@@ -268,6 +268,10 @@ static void gda_sqlite_free_cnc_data (SqliteConnectionData *cdata);
  * extending SQLite with our own functions 
  */
 static void scalar_gda_file_exists_func (sqlite3_context *context, int argc, sqlite3_value **argv);
+static void scalar_gda_hex_print_func (sqlite3_context *context, int argc, sqlite3_value **argv);
+static void scalar_gda_hex_print_func2 (sqlite3_context *context, int argc, sqlite3_value **argv);
+static void scalar_gda_hex_func (sqlite3_context *context, int argc, sqlite3_value **argv);
+static void scalar_gda_hex_func2 (sqlite3_context *context, int argc, sqlite3_value **argv);
 typedef struct {
 	char     *name;
 	int       nargs;
@@ -276,6 +280,10 @@ typedef struct {
 } ScalarFunction;
 static ScalarFunction scalars[] = {
 	{"gda_file_exists", 1, NULL, scalar_gda_file_exists_func},
+	{"gda_hex_print", 1, NULL, scalar_gda_hex_print_func},
+	{"gda_hex_print", 2, NULL, scalar_gda_hex_print_func2},
+	{"gda_hex", 1, NULL, scalar_gda_hex_func},
+	{"gda_hex", 2, NULL, scalar_gda_hex_func2},
 };
 
 
@@ -2559,6 +2567,139 @@ scalar_gda_file_exists_func (sqlite3_context *context, int argc, sqlite3_value *
 		sqlite3_result_int (context, 1);
 	else
 		sqlite3_result_int (context, 0);
+}
+
+static void
+scalar_gda_hex_print_func (sqlite3_context *context, int argc, sqlite3_value **argv)
+{
+	GdaBinary *bin;
+	GdaDataHandler *dh;
+	GValue *value;
+	gchar *str;
+
+	if (argc != 1) {
+		sqlite3_result_error (context, _("Function requires one argument"), -1);
+		return;
+	}
+
+	bin = g_new0 (GdaBinary, 1);
+	bin->data = (guchar*) sqlite3_value_blob (argv [0]);
+	if (!bin->data) {
+		g_free (bin);
+		sqlite3_result_null (context);
+		return;
+	}
+	bin->binary_length = sqlite3_value_bytes (argv [0]);
+	gda_value_take_binary ((value = gda_value_new (GDA_TYPE_BINARY)), bin);
+	dh = gda_get_default_handler (GDA_TYPE_BINARY);
+	str = gda_data_handler_get_str_from_value (dh, value);
+
+	bin->data = NULL;
+	bin->binary_length = 0;
+	gda_value_free (value);
+	sqlite3_result_text (context, str, -1, g_free);
+}
+
+static void
+scalar_gda_hex_print_func2 (sqlite3_context *context, int argc, sqlite3_value **argv)
+{
+	GdaBinary *bin;
+	GdaDataHandler *dh;
+	GValue *value;
+	gchar *str;
+	gint size;
+
+	if (argc != 2) {
+		sqlite3_result_error (context, _("Function requires two arguments"), -1);
+		return;
+	}
+
+	bin = g_new0 (GdaBinary, 1);
+	bin->data = (guchar*) sqlite3_value_blob (argv [0]);
+	if (!bin->data) {
+		g_free (bin);
+		sqlite3_result_null (context);
+		return;
+	}
+	bin->binary_length = sqlite3_value_bytes (argv [0]);
+	gda_value_take_binary ((value = gda_value_new (GDA_TYPE_BINARY)), bin);
+	dh = gda_get_default_handler (GDA_TYPE_BINARY);
+	str = gda_data_handler_get_str_from_value (dh, value);
+
+	bin->data = NULL;
+	bin->binary_length = 0;
+	gda_value_free (value);
+
+	size = sqlite3_value_int (argv [1]);
+
+	sqlite3_result_text (context, str, -1, g_free);
+}
+
+static void
+scalar_gda_hex_func (sqlite3_context *context, int argc, sqlite3_value **argv)
+{
+	guchar *data;
+	gint length;
+	GString *string;
+	gint i;
+
+	if (argc != 1) {
+		sqlite3_result_error (context, _("Function requires one argument"), -1);
+		return;
+	}
+
+	data = (guchar*) sqlite3_value_blob (argv [0]);
+	if (!data) {
+		sqlite3_result_null (context);
+		return;
+	}
+
+	length = sqlite3_value_bytes (argv [0]);
+	string = g_string_new ("");
+	for (i = 0; i < length; i++) {
+		if ((i > 0) && (i % 4 == 0))
+			g_string_append_c (string, ' ');
+		g_string_append_printf (string, "%02x", data [i]);
+	}
+
+	sqlite3_result_text (context, string->str, -1, g_free);
+	g_string_free (string, FALSE);
+}
+
+static void
+scalar_gda_hex_func2 (sqlite3_context *context, int argc, sqlite3_value **argv)
+{
+	guchar *data;
+	gint length;
+	GString *string;
+	gint i;
+	gint size;
+
+	if (argc != 2) {
+		sqlite3_result_error (context, _("Function requires two arguments"), -1);
+		return;
+	}
+
+	data = (guchar*) sqlite3_value_blob (argv [0]);
+	if (!data) {
+		sqlite3_result_null (context);
+		return;
+	}
+
+	length = sqlite3_value_bytes (argv [0]);
+	size = sqlite3_value_int (argv [1]);
+
+	string = g_string_new ("");
+	for (i = 0; (i < length) && (string->len < (size / 2) * 2 + 2); i++) {
+		if ((i > 0) && (i % 4 == 0))
+			g_string_append_c (string, ' ');
+		g_string_append_printf (string, "%02x", data [i]);
+	}
+
+	if (string->len > size)
+		string->str[size] = 0;
+	sqlite3_result_text (context, string->str, -1, g_free);
+	g_string_free (string, FALSE);
 }
 
 static void
