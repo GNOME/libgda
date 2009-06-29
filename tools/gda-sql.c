@@ -1283,7 +1283,7 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 		e2 = gda_rfc1738_encode (file);
 		g_free (path);
 		g_free (file);
-		real_cnc_string = g_strdup_printf ("%s://DB_DIR=%s;DB_NAME=%s", pname, e1, e2);
+		real_cnc_string = g_strdup_printf ("%s://DB_DIR=%s;LOAD_GDA_FUNCTIONS=TRUE;DB_NAME=%s", pname, e1, e2);
 		g_free (e1);
 		g_free (e2);
 		gda_connection_string_split (real_cnc_string, &real_cnc, &real_provider, &user, &pass);
