@@ -57,7 +57,8 @@ struct _BrowserCanvasFkeyClass
 };
 
 GType          browser_canvas_fkey_get_type       (void) G_GNUC_CONST;
-GooCanvasItem *browser_canvas_fkey_new            (GooCanvasItem *parent, GdaMetaTableForeignKey *fk, ...);
+GooCanvasItem *browser_canvas_fkey_new            (GooCanvasItem *parent,
+						   GdaMetaStruct *mstruct, GdaMetaTableForeignKey *fk, ...);
 
 G_END_DECLS
 

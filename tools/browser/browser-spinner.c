@@ -748,7 +748,7 @@ browser_spinner_stop (BrowserSpinner *spinner)
  **/
 void
 browser_spinner_set_size (BrowserSpinner *spinner,
-		       GtkIconSize size)
+			  GtkIconSize size)
 {
 	if (size == GTK_ICON_SIZE_INVALID)
 	{

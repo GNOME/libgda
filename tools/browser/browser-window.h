@@ -52,6 +52,9 @@ GType               browser_window_get_type               (void) G_GNUC_CONST;
 BrowserWindow      *browser_window_new                    (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory);
 BrowserConnection  *browser_window_get_connection         (BrowserWindow *bwin);
 
+guint               browser_window_push_status            (BrowserWindow *bwin, const gchar *context, const gchar *text);
+void                browser_window_pop_status             (BrowserWindow *bwin, const gchar *context);
+
 G_END_DECLS
 
 #endif

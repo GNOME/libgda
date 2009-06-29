@@ -42,7 +42,7 @@ struct _BrowserCanvas
 {
 	GtkScrolledWindow   widget;
 
-	/* pointer position when a context menu was last opened */
+	/* pointer position when a context menu was last opened, or while moving around the canvas */
 	gdouble             xmouse;
 	gdouble             ymouse;
 
@@ -54,6 +54,9 @@ struct _BrowserCanvas
 struct _BrowserCanvasClass
 {
 	GtkScrolledWindowClass parent_class;
+
+	/* signals */
+	void           (*item_selected) (BrowserCanvas *canvas, BrowserCanvasItem *item);
 
 	/* virtual functions */
 	void           (*clean_canvas_items)  (BrowserCanvas *canvas); /* clean any extra structure, not the individual items */
@@ -73,6 +76,8 @@ void               browser_canvas_perform_auto_layout     (BrowserCanvas *canvas
 							   BrowserCanvasLayoutAlgorithm algorithm);
 void               browser_canvas_center                  (BrowserCanvas *canvas);
 gchar             *browser_canvas_serialize_items         (BrowserCanvas *canvas);
+
+void               browser_canvas_item_toggle_select      (BrowserCanvas *canvas, BrowserCanvasItem *item);
 
 G_END_DECLS
 

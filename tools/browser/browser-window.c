@@ -52,7 +52,7 @@ static void browser_window_class_init (BrowserWindowClass *klass);
 static void browser_window_init (BrowserWindow *bwin);
 static void browser_window_dispose (GObject *object);
 
-
+static gboolean window_state_event (GtkWidget *widget, GdkEventWindowState *event);
 static void connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy, gchar *reason, BrowserWindow *bwin);
 
 
@@ -67,9 +67,13 @@ struct _BrowserWindowPrivate {
 
 	GtkWidget         *spinner;
 	GtkUIManager      *ui_manager;
+	GtkToolbarStyle    toolbar_style;
 	GtkActionGroup    *cnc_agroup; /* one GtkAction for each BrowserConnection */
 	gulong             cnc_added_sigid;
 	gulong             cnc_removed_sigid;
+
+	GtkWidget         *statusbar;
+	guint              cnc_statusbar_context;
 };
 
 GType
@@ -103,7 +107,10 @@ browser_window_get_type (void)
 static void
 browser_window_class_init (BrowserWindowClass *klass)
 {
-	GObjectClass   *object_class = G_OBJECT_CLASS (klass);
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+	widget_class->window_state_event = window_state_event;
+
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->dispose = browser_window_dispose;
@@ -172,6 +179,7 @@ static void connection_removed_cb (BrowserCore *bcore, BrowserConnection *bcnc, 
 static void quit_cb (GtkAction *action, BrowserWindow *bwin);
 static void about_cb (GtkAction *action, BrowserWindow *bwin);
 static void window_close_cb (GtkAction *action, BrowserWindow *bwin);
+static void window_fullscreen_cb (GtkToggleAction *action, BrowserWindow *bwin);
 static void window_new_cb (GtkAction *action, BrowserWindow *bwin);
 static void window_new_with_cnc_cb (GtkAction *action, BrowserWindow *bwin);
 static void connection_close_cb (GtkAction *action, BrowserWindow *bwin);
@@ -180,7 +188,12 @@ static void connection_list_cb (GtkAction *action, BrowserWindow *bwin);
 static void connection_meta_update_cb (GtkAction *action, BrowserWindow *bwin);
 static void perspective_toggle_cb (GtkRadioAction *action, GtkRadioAction *current, BrowserWindow *bwin);
 
-static GtkActionEntry ui_actions[] = {
+static const GtkToggleActionEntry ui_toggle_actions [] =
+{
+        { "WindowFullScreen", GTK_STOCK_FULLSCREEN, N_("_Fullscreen"), "F11", N_("Use the whole screen"), G_CALLBACK (window_fullscreen_cb), FALSE}
+};
+
+static const GtkActionEntry ui_actions[] = {
         { "Connection", NULL, "_Connection", NULL, "Connection", NULL },
         { "ConnectionOpen", GTK_STOCK_CONNECT, "_Connect", NULL, "Open a connection", G_CALLBACK (connection_open_cb)},
         { "ConnectionList", NULL, "_Connections list", NULL, "Connections list", G_CALLBACK (connection_list_cb)},
@@ -191,7 +204,7 @@ static GtkActionEntry ui_actions[] = {
         { "Window", NULL, "_Window", NULL, "Window", NULL },
         { "WindowNew", GTK_STOCK_NEW, "_New window", NULL, "Open a new window for current connection", G_CALLBACK (window_new_cb)},
         { "WindowNewOthers", NULL, "New window for _connection", NULL, "Open a new window for a connection", NULL},
-        { "WindowClose", GTK_STOCK_CLOSE, "_Close", NULL, "Close this window", G_CALLBACK (window_close_cb)},
+        { "WindowClose", GTK_STOCK_CLOSE, "_Close", "", "Close this window", G_CALLBACK (window_close_cb)},
         { "Help", NULL, "_Help", NULL, "Help", NULL },
         { "HelpAbout", GTK_STOCK_ABOUT, "_About", NULL, "About", G_CALLBACK (about_cb) }
 };
@@ -212,10 +225,13 @@ static const gchar *ui_actions_info =
         "      <placeholder name='PersList'/>"
         "    </menu>"
         "    <menu name='Window' action='Window'>"
+        "      <menuitem name='WindowFullScreen' action= 'WindowFullScreen'/>"
+        "      <separator/>"
         "      <menuitem name='WindowNew' action= 'WindowNew'/>"
         "      <menu name='WindowNewOthers' action='WindowNewOthers'>"
         "          <placeholder name='CncList'/>"
         "      </menu>"
+        "      <separator/>"
         "      <menuitem name='WindowClose' action= 'WindowClose'/>"
         "    </menu>"
 	"    <placeholder name='MenuExtension'/>"
@@ -225,6 +241,7 @@ static const gchar *ui_actions_info =
         "  </menubar>"
         "  <toolbar  name='ToolBar'>"
         "    <toolitem action='WindowClose'/>"
+        "    <toolitem action='WindowFullScreen'/>"
         "  </toolbar>"
         "</ui>";
 
@@ -282,11 +299,16 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 
         group = gtk_action_group_new ("Actions");
         gtk_action_group_add_actions (group, ui_actions, G_N_ELEMENTS (ui_actions), bwin);
+	gtk_action_group_add_toggle_actions (group, ui_toggle_actions, G_N_ELEMENTS (ui_toggle_actions), bwin);
 
         ui = gtk_ui_manager_new ();
         gtk_ui_manager_insert_action_group (ui, group, 0);
         gtk_ui_manager_add_ui_from_string (ui, ui_actions_info, -1, NULL);
 	bwin->priv->ui_manager = ui;
+
+	GtkAccelGroup *accel_group;
+        accel_group = gtk_ui_manager_get_accel_group (ui);
+	gtk_window_add_accel_group (GTK_WINDOW (bwin), accel_group);
 
         menubar = gtk_ui_manager_get_widget (ui, "/MenuBar");
         gtk_box_pack_start (GTK_BOX (vbox), menubar, FALSE, FALSE, 0);
@@ -296,6 +318,7 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
         gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, TRUE, 0);
 	gtk_toolbar_set_show_arrow (GTK_TOOLBAR (toolbar), TRUE);
         gtk_widget_show (toolbar);
+	bwin->priv->toolbar_style = gtk_toolbar_get_style (GTK_TOOLBAR (toolbar));
 
 	GtkToolItem *ti;
 	GtkWidget *spinner;
@@ -383,8 +406,8 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 		action = GTK_ACTION (gtk_radio_action_new (name, name, NULL, NULL, FALSE));
 
 		if (!active_action && 
-		    (factory && (BROWSER_PERSPECTIVE_FACTORY (plist->data) == factory)) ||
-		    (!factory && (BROWSER_PERSPECTIVE_FACTORY (plist->data) == browser_core_get_default_factory ())))
+		    ((factory && (BROWSER_PERSPECTIVE_FACTORY (plist->data) == factory)) ||
+		     (!factory && (BROWSER_PERSPECTIVE_FACTORY (plist->data) == browser_core_get_default_factory ()))))
 			active_action = action;
 		gtk_action_group_add_action (agroup, action);
 		
@@ -403,6 +426,13 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 	}
 	
 	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (active_action), TRUE);
+
+	/* statusbar */
+	bwin->priv->statusbar = gtk_statusbar_new ();
+	gtk_box_pack_start (GTK_BOX (vbox), bwin->priv->statusbar, FALSE, FALSE, 0);
+        gtk_widget_show (bwin->priv->statusbar);
+	bwin->priv->cnc_statusbar_context = gtk_statusbar_get_context_id (GTK_STATUSBAR (bwin->priv->statusbar),
+									  "cncbusy");
 
         gtk_widget_show (GTK_WIDGET (bwin));
 
@@ -466,10 +496,15 @@ connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy, gchar *reason, Br
 	if (is_busy) {
 		browser_spinner_start (BROWSER_SPINNER (bwin->priv->spinner));
 		gtk_widget_set_tooltip_text (bwin->priv->spinner, reason);
+		gtk_statusbar_push (GTK_STATUSBAR (bwin->priv->statusbar),
+				    bwin->priv->cnc_statusbar_context,
+				    reason);
 	}
 	else {
 		browser_spinner_stop (BROWSER_SPINNER (bwin->priv->spinner));
 		gtk_widget_set_tooltip_text (bwin->priv->spinner, NULL);
+		gtk_statusbar_pop (GTK_STATUSBAR (bwin->priv->statusbar),
+				   bwin->priv->cnc_statusbar_context);
 	}
 }
 
@@ -607,6 +642,53 @@ window_close_cb (GtkAction *action, BrowserWindow *bwin)
 }
 
 static void
+window_fullscreen_cb (GtkToggleAction *action, BrowserWindow *bwin)
+{
+	if (gtk_toggle_action_get_active (action))
+		gtk_window_fullscreen (GTK_WINDOW (bwin));
+	else
+		gtk_window_unfullscreen (GTK_WINDOW (bwin));
+}
+
+static gboolean
+window_state_event (GtkWidget *widget, GdkEventWindowState *event)
+{
+	BrowserWindow *bwin = BROWSER_WINDOW (widget);
+	gboolean (* window_state_event) (GtkWidget *, GdkEventWindowState *);
+	window_state_event = GTK_WIDGET_CLASS (parent_class)->window_state_event;
+
+	/* calling parent's method */
+	if (window_state_event)
+                window_state_event (widget, event);
+
+	if (event->changed_mask & GDK_WINDOW_STATE_FULLSCREEN) {
+                gboolean fullscreen;
+		GtkWidget *wid;
+
+		wid = gtk_ui_manager_get_widget (bwin->priv->ui_manager, "/ToolBar");
+
+                fullscreen = event->new_window_state & GDK_WINDOW_STATE_FULLSCREEN;
+		if (fullscreen) {
+			gtk_toolbar_set_style (GTK_TOOLBAR (wid), GTK_TOOLBAR_ICONS);
+			browser_spinner_set_size (BROWSER_SPINNER (bwin->priv->spinner), GTK_ICON_SIZE_LARGE_TOOLBAR);
+		}
+		else {
+			gtk_toolbar_set_style (GTK_TOOLBAR (wid), bwin->priv->toolbar_style);
+			browser_spinner_set_size (BROWSER_SPINNER (bwin->priv->spinner), GTK_ICON_SIZE_DIALOG);
+		}
+
+		wid = gtk_ui_manager_get_widget (bwin->priv->ui_manager, "/MenuBar");
+		if (fullscreen)
+			gtk_widget_hide (wid);
+		else
+			gtk_widget_show (wid);
+		
+		gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (bwin->priv->statusbar), !fullscreen);
+        }
+	return FALSE;
+}
+
+static void
 window_new_cb (GtkAction *action, BrowserWindow *bwin)
 {
 	BrowserWindow *nbwin;
@@ -731,4 +813,35 @@ perspective_data_free (PerspectiveData *pers)
         if (pers->perspective_widget)
                 g_object_unref (pers->perspective_widget);
         g_free (pers);
+}
+
+/**
+ * browser_window_push_status
+ */
+guint
+browser_window_push_status (BrowserWindow *bwin, const gchar *context, const gchar *text)
+{
+	guint cid;
+
+	g_return_val_if_fail (BROWSER_IS_WINDOW (bwin), 0);
+	g_return_val_if_fail (context, 0);
+	g_return_val_if_fail (text, 0);
+	
+	cid = gtk_statusbar_get_context_id (GTK_STATUSBAR (bwin->priv->statusbar), context);
+	return gtk_statusbar_push (GTK_STATUSBAR (bwin->priv->statusbar), cid, text);
+}
+
+/**
+ * browser_window_pop_status
+ */
+void
+browser_window_pop_status (BrowserWindow *bwin, const gchar *context)
+{
+	guint cid;
+
+	g_return_if_fail (BROWSER_IS_WINDOW (bwin));
+	g_return_if_fail (context);
+
+	cid = gtk_statusbar_get_context_id (GTK_STATUSBAR (bwin->priv->statusbar), context);
+	gtk_statusbar_pop (GTK_STATUSBAR (bwin->priv->statusbar), cid);
 }

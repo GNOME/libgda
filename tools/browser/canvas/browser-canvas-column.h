@@ -55,8 +55,9 @@ struct _BrowserCanvasColumnClass
 
 /* generic widget's functions */
 GType                browser_canvas_column_get_type        (void) G_GNUC_CONST;
-GooCanvasItem*       browser_canvas_column_new             (GooCanvasItem *parent, GdaMetaTableColumn *column,
-							  gdouble x, gdouble y, ...);
+GooCanvasItem*       browser_canvas_column_new             (GooCanvasItem *parent,
+							    GdaMetaStruct *mstruct, GdaMetaTableColumn *column,
+							    gdouble x, gdouble y, ...);
 GdaMetaTableColumn  *browser_canvas_column_get_column      (BrowserCanvasColumn *column);
 BrowserCanvasTable  *browser_canvas_column_get_parent_item (BrowserCanvasColumn *column);
 

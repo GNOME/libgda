@@ -1,4 +1,4 @@
-/* browser-canvas.h
+/* browser-canvas-priv.h
  *
  * Copyright (C) 2009 Vivien Malerba
  *
@@ -22,6 +22,7 @@
 #define __BROWSER_CANVAS_PRIV__
 
 #include <goocanvas.h>
+#include "browser-canvas-decl.h"
 
 G_BEGIN_DECLS
 
@@ -29,6 +30,10 @@ struct _BrowserCanvasPrivate
 {
 	GooCanvas          *goocanvas;
 	GSList             *items; /* BrowserCanvasItem objects, non ordered */
+
+	gboolean            canvas_moving;
+
+	BrowserCanvasItem  *current_selected_item;
 };
 
 G_END_DECLS

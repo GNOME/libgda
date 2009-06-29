@@ -694,7 +694,7 @@ browser_canvas_util_compute_handle_shapes (GooCanvasItem *parent, GSList *shapes
 					 gdouble x1, gdouble y1, gdouble x2, gdouble y2)
 {
 	/* don't add anything... */
-	/*return shapes;*/
+	return shapes;
 
 	GSList *retval = shapes;
 	gdouble x, y, sq = 5.;

@@ -24,6 +24,7 @@
 #include "browser-canvas-table.h"
 #include "browser-canvas-column.h"
 #include <glib/gi18n-lib.h>
+#include <string.h>
 
 static void browser_canvas_table_class_init (BrowserCanvasTableClass *class);
 static void browser_canvas_table_init       (BrowserCanvasTable *drag);
@@ -41,16 +42,19 @@ static void browser_canvas_table_get_property (GObject *object,
 
 static void browser_canvas_table_drag_data_get (BrowserCanvasItem *citem, GdkDragContext *drag_context,
 						GtkSelectionData *data, guint info, guint time);
+static void browser_canvas_table_set_selected (BrowserCanvasItem *citem, gboolean selected);
 
 enum
 {
 	PROP_0,
+	PROP_META_STRUCT,
 	PROP_TABLE,
 	PROP_MENU_FUNC
 };
 
 struct _BrowserCanvasTablePrivate
 {
+	GdaMetaStruct      *mstruct;
 	GdaMetaTable       *table;
 
 	/* UI building information */
@@ -62,6 +66,8 @@ struct _BrowserCanvasTablePrivate
 	/* presentation parameters */
         gdouble             x_text_space;
         gdouble             y_text_space;
+
+	GooCanvasItem      *selection_mark;
 };
 
 /* get a pointer to the parents to be able to call their destructor */
@@ -100,6 +106,7 @@ browser_canvas_table_class_init (BrowserCanvasTableClass *class)
 
 	table_parent_class = g_type_class_peek_parent (class);
 	iclass->drag_data_get = browser_canvas_table_drag_data_get;
+	iclass->set_selected = browser_canvas_table_set_selected;
 
 	object_class->dispose = browser_canvas_table_dispose;
 	object_class->finalize = browser_canvas_table_finalize;
@@ -108,6 +115,11 @@ browser_canvas_table_class_init (BrowserCanvasTableClass *class)
 	object_class->set_property = browser_canvas_table_set_property;
 	object_class->get_property = browser_canvas_table_get_property;
 
+	g_object_class_install_property
+                (object_class, PROP_META_STRUCT,
+                 g_param_spec_object ("meta-struct", NULL, NULL, 
+				      GDA_TYPE_META_STRUCT,
+				      (G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
 	g_object_class_install_property
                 (object_class, PROP_TABLE,
                  g_param_spec_pointer ("table", NULL, NULL,
@@ -126,12 +138,15 @@ static void
 browser_canvas_table_init (BrowserCanvasTable *table)
 {
 	table->priv = g_new0 (BrowserCanvasTablePrivate, 1);
+	table->priv->mstruct = NULL;
 	table->priv->table = NULL;
 	table->priv->column_ypos = NULL;
 	table->priv->popup_menu_func = NULL;
 
 	table->priv->x_text_space = 3.;
 	table->priv->y_text_space = 3.;
+
+	table->priv->selection_mark = NULL;
 
 	g_signal_connect (G_OBJECT (table), "button-press-event",
 			  G_CALLBACK (button_press_event_cb), NULL);
@@ -151,6 +166,10 @@ browser_canvas_table_dispose (GObject *object)
 
 	/* REM: let the GooCanvas library destroy the items itself */
 	ce->priv->table = NULL;
+	if (ce->priv->mstruct) {
+		g_object_unref (ce->priv->mstruct);
+		ce->priv->mstruct = NULL;
+	}
 
 	/* for the parent class */
 	table_parent_class->dispose (object);
@@ -158,7 +177,7 @@ browser_canvas_table_dispose (GObject *object)
 
 
 static void
-browser_canvas_table_finalize (GObject   * object)
+browser_canvas_table_finalize (GObject *object)
 {
 	BrowserCanvasTable *ce;
 	g_return_if_fail (object != NULL);
@@ -190,6 +209,9 @@ browser_canvas_table_set_property (GObject *object,
 	ce = BROWSER_CANVAS_TABLE (object);
 
 	switch (param_id) {
+	case PROP_META_STRUCT:
+		ce->priv->mstruct = g_value_dup_object (value);
+		break;
 	case PROP_TABLE: {
 		GdaMetaTable *table;
 		table = g_value_get_pointer (value);
@@ -224,6 +246,9 @@ browser_canvas_table_get_property (GObject *object,
 	ce = BROWSER_CANVAS_TABLE (object);
 
 	switch (param_id) {
+	case PROP_META_STRUCT:
+		g_value_set_object (value, ce->priv->mstruct);
+		break;
 	case PROP_TABLE:
 		g_value_set_pointer (value, ce->priv->table);
 		break;
@@ -311,6 +336,7 @@ create_items (BrowserCanvasTable *ce)
 	for (column_nb = 0, list = columns; list; list = list->next, column_nb++) {
 		ce->priv->column_ypos [column_nb] = y;
 		item = browser_canvas_column_new (GOO_CANVAS_ITEM (ce),
+						  ce->priv->mstruct,
 						  GDA_META_TABLE_COLUMN (list->data),
 						  X_PAD, ce->priv->column_ypos [column_nb], NULL);
 		ce->priv->column_items = g_slist_append (ce->priv->column_items, item);
@@ -370,7 +396,7 @@ static gboolean
 button_press_event_cb (BrowserCanvasTable *ce, GooCanvasItem  *target_item, GdkEventButton *event,
 		       gpointer unused_data)
 {
-	if (ce->priv->popup_menu_func) {
+	if ((event->button == 3) && ce->priv->popup_menu_func) {
 		GtkWidget *menu;
 		menu = ce->priv->popup_menu_func (ce);
 		gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
@@ -447,14 +473,18 @@ browser_canvas_table_get_column_ypos (BrowserCanvasTable *ce, GdaMetaTableColumn
  * Returns: a new #GooCanvasItem object
  */
 GooCanvasItem *
-browser_canvas_table_new (GooCanvasItem *parent, GdaMetaTable *table, 
+browser_canvas_table_new (GooCanvasItem *parent, GdaMetaStruct *mstruct, GdaMetaTable *table, 
 			 gdouble x, gdouble y, ...)
 {
 	GooCanvasItem *item;
 	const char *first_property;
 	va_list var_args;
-		
-	item = g_object_new (TYPE_BROWSER_CANVAS_TABLE, "allow-move", TRUE, NULL);
+
+	g_return_val_if_fail (GDA_IS_META_STRUCT (mstruct), NULL);
+
+	item = g_object_new (TYPE_BROWSER_CANVAS_TABLE, "meta-struct", mstruct, 
+			     "allow-move", TRUE,
+			     "allow-select", TRUE, NULL);
 
 	if (parent) {
 		goo_canvas_item_add_child (parent, item, -1);
@@ -497,4 +527,46 @@ browser_canvas_table_drag_data_get (BrowserCanvasItem *citem, GdkDragContext *dr
 	g_free (tmp3);
 	gtk_selection_data_set (data, data->target, 8, str, strlen (str));
 	g_free (str);
+}
+
+static void
+browser_canvas_table_set_selected (BrowserCanvasItem *citem, gboolean selected)
+{
+	GooCanvasBounds bounds;
+
+	if (selected) {
+		if (BROWSER_CANVAS_TABLE (citem)->priv->selection_mark)
+			g_object_set (G_OBJECT (BROWSER_CANVAS_TABLE (citem)->priv->selection_mark),
+				      "visibility", GOO_CANVAS_ITEM_VISIBLE, NULL);
+		else {
+			GooCanvasItem *root;
+			GooCanvasItem *rect;
+			
+			//root = goo_canvas_get_root_item (goo_canvas_item_get_canvas (GOO_CANVAS_ITEM (citem)));
+			root = GOO_CANVAS_ITEM (citem);
+			goo_canvas_item_get_bounds (GOO_CANVAS_ITEM (citem), &bounds);
+			rect = 	goo_canvas_rect_new (root, - 1., - 1., 
+						     bounds.x2 - bounds.x1 + 2.,
+						     bounds.y2 - bounds.y1 + 2.,
+						     "radius-x", RADIUS_X,
+						     "radius-y", RADIUS_Y,
+						     "stroke-color", "#ffea08",
+						     NULL);
+			/*
+			rect = 	goo_canvas_rect_new (root, bounds.x1 - 1., bounds.y1 - 1., 
+						     bounds.x2 - bounds.x1 + 2.,
+						     bounds.y2 - bounds.y1 + 2.,
+						     "radius-x", RADIUS_X,
+						     "radius-y", RADIUS_Y,
+						     "stroke-color", "#ffea08",
+						     NULL);
+			*/
+			BROWSER_CANVAS_TABLE (citem)->priv->selection_mark = rect;
+		}	
+	}
+	else {
+		if (BROWSER_CANVAS_TABLE (citem)->priv->selection_mark)
+			g_object_set (G_OBJECT (BROWSER_CANVAS_TABLE (citem)->priv->selection_mark),
+				      "visibility", GOO_CANVAS_ITEM_HIDDEN, NULL);
+	}
 }

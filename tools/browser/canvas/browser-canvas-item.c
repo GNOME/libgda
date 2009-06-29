@@ -42,6 +42,8 @@ struct _BrowserCanvasItemPrivate
 	double              xstart;
 	double              ystart;
 	gboolean            allow_move;
+	gboolean            allow_select;
+
 	gchar              *tooltip_text;
 };
 
@@ -49,8 +51,6 @@ enum
 {
 	MOVED,
 	MOVING,
-	SHIFTED,
-	DESTROY,
 	LAST_SIGNAL
 };
 
@@ -58,6 +58,7 @@ enum
 {
 	PROP_0,
 	PROP_ALLOW_MOVE,
+	PROP_ALLOW_SELECT,
 	PROP_TOOLTIP_TEXT
 };
 
@@ -113,28 +114,9 @@ browser_canvas_item_class_init (BrowserCanvasItemClass * class)
 			      NULL, NULL,
 			      g_cclosure_marshal_VOID__VOID, G_TYPE_NONE,
 			      0);
-	browser_canvas_item_signals[SHIFTED] =
-		g_signal_new ("shifted",
-			      G_TYPE_FROM_CLASS (object_class),
-			      G_SIGNAL_RUN_FIRST,
-			      G_STRUCT_OFFSET (BrowserCanvasItemClass, shifted),
-			      NULL, NULL,
-			      g_cclosure_marshal_VOID__VOID, G_TYPE_NONE,
-			      0);
-	browser_canvas_item_signals[DESTROY] =
-		g_signal_new ("destroy",
-			      G_TYPE_FROM_CLASS (object_class),
-			      G_SIGNAL_RUN_FIRST,
-			      G_STRUCT_OFFSET (BrowserCanvasItemClass, destroy),
-			      NULL, NULL,
-			      g_cclosure_marshal_VOID__VOID, G_TYPE_NONE,
-			      0);
-
 
 	class->moved = NULL;
 	class->moving = NULL;
-	class->shifted = NULL;
-	class->destroy = NULL;
 	object_class->dispose = browser_canvas_item_dispose;
 
 	/* virtual funstionc */
@@ -146,7 +128,10 @@ browser_canvas_item_class_init (BrowserCanvasItemClass * class)
 
 	g_object_class_install_property
                 (object_class, PROP_ALLOW_MOVE,
-                 g_param_spec_boolean ("allow-move", NULL, NULL, TRUE, (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+                 g_param_spec_boolean ("allow-move", NULL, NULL, FALSE, (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+	g_object_class_install_property
+                (object_class, PROP_ALLOW_SELECT,
+                 g_param_spec_boolean ("allow-select", NULL, NULL, FALSE, (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property
 		(object_class, PROP_TOOLTIP_TEXT,
 		 g_param_spec_string ("tip-text", NULL, NULL, NULL, (G_PARAM_READABLE | G_PARAM_WRITABLE)));
@@ -192,8 +177,6 @@ browser_canvas_item_dispose (GObject *object)
 	
 	citem = BROWSER_CANVAS_ITEM (object);
 	if (citem->priv) {
-		g_signal_emit (object, browser_canvas_item_signals[DESTROY], 0);
-
 		if (citem->priv->tooltip_text) 
 			g_free (citem->priv->tooltip_text);
 
@@ -220,6 +203,9 @@ browser_canvas_item_set_property (GObject *object,
 	case PROP_ALLOW_MOVE:
 		citem->priv->allow_move = g_value_get_boolean (value);
 		break;
+	case PROP_ALLOW_SELECT:
+		citem->priv->allow_select = g_value_get_boolean (value);
+		break;
 	case PROP_TOOLTIP_TEXT:
 		str = g_value_get_string (value);
 		if (citem->priv->tooltip_text) {
@@ -244,6 +230,9 @@ browser_canvas_item_get_property (GObject *object,
         switch (param_id) {
         case PROP_ALLOW_MOVE:
                 g_value_set_boolean (value, citem->priv->allow_move);
+                break;
+        case PROP_ALLOW_SELECT:
+                g_value_set_boolean (value, citem->priv->allow_select);
                 break;
         case PROP_TOOLTIP_TEXT:
                 g_value_set_string (value, citem->priv->tooltip_text);
@@ -282,7 +271,7 @@ browser_canvas_item_get_canvas (BrowserCanvasItem *item)
  */
 void 
 browser_canvas_item_get_edge_nodes (BrowserCanvasItem *item, 
-				  BrowserCanvasItem **from, BrowserCanvasItem **to)
+				    BrowserCanvasItem **from, BrowserCanvasItem **to)
 {
 	BrowserCanvasItemClass *class;
 
@@ -336,13 +325,19 @@ button_press_event (BrowserCanvasItem *citem, GooCanvasItem *target_item,
 			}
 			done = TRUE;
 		}
-		else if (citem->priv->allow_move) {
-			/* movement management */
-			goo_canvas_item_raise (GOO_CANVAS_ITEM (citem), NULL);
-			citem->priv->xstart = event->x;
-			citem->priv->ystart = event->y;
-			citem->priv->moving = TRUE;
-			done = TRUE;
+		else {
+			if (citem->priv->allow_select && (event->state & GDK_CONTROL_MASK)) {
+				browser_canvas_item_toggle_select (browser_canvas_item_get_canvas (citem), citem);
+				done = TRUE;
+			}
+			if (citem->priv->allow_move) {
+				/* movement management */
+				goo_canvas_item_raise (GOO_CANVAS_ITEM (citem), NULL);
+				citem->priv->xstart = event->x;
+				citem->priv->ystart = event->y;
+				citem->priv->moving = TRUE;
+				done = FALSE;
+			}
 		}
 		break;
 	default:

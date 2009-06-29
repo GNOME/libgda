@@ -61,6 +61,7 @@ static GObjectClass *parent_class = NULL;
 
 enum
 {
+	ITEM_SELECTED,
 	LAST_SIGNAL
 };
 
@@ -69,7 +70,7 @@ enum
 	PROP_0,
 };
 
-static gint canvas_signals[LAST_SIGNAL] = { };
+static gint canvas_signals[LAST_SIGNAL] = { 0 };
 
 GType
 browser_canvas_get_type (void)
@@ -103,6 +104,16 @@ browser_canvas_class_init (BrowserCanvasClass *klass)
 
 	widget_class = (GtkWidgetClass *) klass;
 
+	/* signals */
+	canvas_signals[ITEM_SELECTED] =
+		g_signal_new ("item-selected",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_FIRST,
+			      G_STRUCT_OFFSET (BrowserCanvasClass, item_selected),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__OBJECT, G_TYPE_NONE, 1,
+			      TYPE_BROWSER_CANVAS_ITEM);
+
 	/* properties */
 	object_class->set_property = browser_canvas_set_property;
 	object_class->get_property = browser_canvas_get_property;
@@ -115,7 +126,9 @@ browser_canvas_class_init (BrowserCanvasClass *klass)
 	object_class->finalize = browser_canvas_finalize;
 }
 
-static int canvas_event_cb (BrowserCanvas *canvas, GdkEvent *event, GooCanvas *gcanvas);
+static gboolean canvas_event_cb (BrowserCanvas *canvas, GdkEvent *event, GooCanvas *gcanvas);
+static gboolean motion_notify_event_cb (BrowserCanvas *canvas, GdkEvent *event, GooCanvas *gcanvas);
+static gboolean canvas_scroll_event_cb (GooCanvas *gcanvas, GdkEvent *event, BrowserCanvas *canvas);
 static void drag_begin_cb (BrowserCanvas *canvas, GdkDragContext *drag_context, GooCanvas *gcanvas);
 static void drag_data_get_cb (BrowserCanvas *canvas, GdkDragContext   *drag_context,
 			      GtkSelectionData *data, guint info,
@@ -138,12 +151,17 @@ browser_canvas_init (BrowserCanvas *canvas)
         gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (canvas), GTK_SHADOW_NONE);
 	g_idle_add ((GSourceFunc) idle_add_canvas_cb, canvas);
 	canvas->priv->items = NULL;
+	canvas->priv->current_selected_item = NULL;
 
 	canvas->xmouse = 50.;
 	canvas->ymouse = 50.;
 	
 	g_signal_connect (canvas, "event",
 			  G_CALLBACK (canvas_event_cb), canvas->priv->goocanvas);
+	g_signal_connect (canvas->priv->goocanvas, "scroll-event",
+			  G_CALLBACK (canvas_scroll_event_cb), canvas);
+	g_signal_connect (canvas, "motion-notify-event",
+			  G_CALLBACK (motion_notify_event_cb), canvas->priv->goocanvas);
 	g_signal_connect (canvas, "drag-begin",
 			  G_CALLBACK (drag_begin_cb), canvas->priv->goocanvas);
 	g_signal_connect (canvas, "drag-data-get",
@@ -212,13 +230,76 @@ drag_data_received_cb (BrowserCanvas *canvas, GdkDragContext *context,
 	}
 }
 
+static gboolean
+canvas_scroll_event_cb (GooCanvas *gcanvas, GdkEvent *event, BrowserCanvas *canvas)
+{
+	gboolean done = TRUE;
+
+	switch (event->type) {
+	case GDK_SCROLL:
+		if (((GdkEventScroll *) event)->direction == GDK_SCROLL_UP)
+			browser_canvas_set_zoom_factor (canvas, browser_canvas_get_zoom_factor (canvas) + .03);
+		else if (((GdkEventScroll *) event)->direction == GDK_SCROLL_DOWN)
+			browser_canvas_set_zoom_factor (canvas, browser_canvas_get_zoom_factor (canvas) - .03);
+		done = TRUE;
+		break;
+	default:
+		done = FALSE;
+		break;
+	}
+	return done;
+}
+
+static GdkCursor *hand_cursor = NULL;
+
+static gboolean
+motion_notify_event_cb (BrowserCanvas *canvas, GdkEvent *event, GooCanvas *gcanvas)
+{
+	gboolean done = TRUE;
+
+	switch (event->type) {
+	case GDK_MOTION_NOTIFY:
+		if (((GdkEventMotion*) event)->state & GDK_BUTTON1_MASK) {
+			if (canvas->priv->canvas_moving) {
+				GtkAdjustment *ha, *va;
+				gdouble x, y;
+				ha = gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (canvas));
+				va = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (canvas));
+
+				x = gtk_adjustment_get_value (ha);
+				x = CLAMP (x + canvas->xmouse - ((GdkEventMotion*) event)->x,
+					   ha->lower, ha->upper - ha->page_size);
+				gtk_adjustment_set_value (ha, x);
+
+				y = gtk_adjustment_get_value (va);
+				y = CLAMP (y + canvas->ymouse - ((GdkEventMotion*) event)->y,
+					   va->lower, va->upper - va->page_size);
+				gtk_adjustment_set_value (va, y);
+			}
+			else {
+				canvas->xmouse = ((GdkEventMotion*) event)->x;
+				canvas->ymouse = ((GdkEventMotion*) event)->y;
+				canvas->priv->canvas_moving = TRUE;
+				if (! hand_cursor)
+					hand_cursor = gdk_cursor_new (GDK_HAND2);
+				gdk_window_set_cursor (GTK_WIDGET (canvas)->window, hand_cursor);
+			}
+		}
+		done = TRUE;
+		break;
+	default:
+		done = FALSE;
+		break;
+	}
+	return done;
+}
 
 static void popup_zoom_in_cb (GtkMenuItem *mitem, BrowserCanvas *canvas);
 static void popup_zoom_out_cb (GtkMenuItem *mitem, BrowserCanvas *canvas);
 static void popup_zoom_fit_cb (GtkMenuItem *mitem, BrowserCanvas *canvas);
 static void popup_export_cb (GtkMenuItem *mitem, BrowserCanvas *canvas);
 static void popup_print_cb (GtkMenuItem *mitem, BrowserCanvas *canvas);
-static int
+static gboolean
 canvas_event_cb (BrowserCanvas *canvas, GdkEvent *event, GooCanvas *gcanvas)
 {
 	gboolean done = TRUE;
@@ -283,6 +364,34 @@ canvas_event_cb (BrowserCanvas *canvas, GdkEvent *event, GooCanvas *gcanvas)
 						((GdkEventButton *)event)->time);
 			}
 		}
+		done = TRUE;
+		break;
+	case GDK_BUTTON_RELEASE:
+		if (canvas->priv->canvas_moving) {
+			canvas->priv->canvas_moving = FALSE;
+			gdk_window_set_cursor (GTK_WIDGET (canvas)->window, NULL);
+		}
+		break;
+	case GDK_2BUTTON_PRESS:
+		x = ((GdkEventButton *) event)->x;
+		y = ((GdkEventButton *) event)->y;
+		goo_canvas_convert_from_pixels (gcanvas, &x, &y);
+		item = goo_canvas_get_item_at (gcanvas, x, y, TRUE);
+		if (item) {
+			GooCanvasItem *bitem;
+			for (bitem = item; bitem; bitem = goo_canvas_item_get_parent (bitem)) {
+				if (IS_BROWSER_CANVAS_ITEM (bitem)) {
+					gboolean allow_select;
+					g_object_get (G_OBJECT (bitem), "allow-select", &allow_select, NULL);
+					if (allow_select) {
+						browser_canvas_item_toggle_select (canvas, BROWSER_CANVAS_ITEM (bitem));
+						break;
+					}
+				}
+			}
+		}
+		else
+			browser_canvas_fit_zoom_factor (canvas);
 		done = TRUE;
 		break;
 	default:
@@ -434,7 +543,17 @@ popup_print_cb (GtkMenuItem *mitem, BrowserCanvas *canvas)
 	browser_canvas_print (canvas);
 }
 
-static void item_destroyed_cb (BrowserCanvasItem *item, BrowserCanvas *canvas);
+
+static void
+weak_ref_lost (BrowserCanvas *canvas, BrowserCanvasItem *old_item)
+{
+        canvas->priv->items = g_slist_remove (canvas->priv->items, old_item);
+	if (canvas->priv->current_selected_item == old_item) {
+		canvas->priv->current_selected_item = NULL;
+		g_signal_emit (canvas, canvas_signals [ITEM_SELECTED], 0, NULL);
+	}
+}
+
 static void
 browser_canvas_dispose (GObject   * object)
 {
@@ -448,9 +567,8 @@ browser_canvas_dispose (GObject   * object)
 	/* get rid of the GooCanvasItems */
 	if (canvas->priv->items) {
 		GSList *list;
-		for (list = canvas->priv->items; list; list = list->next) {
-			g_signal_handlers_disconnect_by_func (G_OBJECT (list->data), G_CALLBACK (item_destroyed_cb), canvas);
-		}
+		for (list = canvas->priv->items; list; list = list->next)
+			g_object_weak_unref (G_OBJECT (list->data), (GWeakNotify) weak_ref_lost, canvas);
 		g_slist_free (canvas->priv->items);
 		canvas->priv->items = NULL;
 	}
@@ -458,6 +576,7 @@ browser_canvas_dispose (GObject   * object)
 	/* for the parent class */
 	parent_class->dispose (object);
 }
+
 
 /**
  * browser_canvas_declare_item
@@ -473,22 +592,12 @@ browser_canvas_declare_item (BrowserCanvas *canvas, BrowserCanvasItem *item)
         g_return_if_fail (canvas->priv);
         g_return_if_fail (IS_BROWSER_CANVAS_ITEM (item));
 
-	g_print ("%s (canvas=>%p, item=>%p)\n", __FUNCTION__, canvas, item);
+	/*g_print ("%s (canvas=>%p, item=>%p)\n", __FUNCTION__, canvas, item);*/
         if (g_slist_find (canvas->priv->items, item))
                 return;
 
         canvas->priv->items = g_slist_prepend (canvas->priv->items, item);
-        g_signal_connect (G_OBJECT (item), "destroy",
-                          G_CALLBACK (item_destroyed_cb), canvas);
-}
-
-static void
-item_destroyed_cb (BrowserCanvasItem *item, BrowserCanvas *canvas)
-{
-	g_print ("%s (canvas=>%p, item=>%p)\n", __FUNCTION__, canvas, item);
-        g_return_if_fail (g_slist_find (canvas->priv->items, item));
-        g_signal_handlers_disconnect_by_func (G_OBJECT (item), G_CALLBACK (item_destroyed_cb), canvas);
-        canvas->priv->items = g_slist_remove (canvas->priv->items, item);
+	g_object_weak_ref (G_OBJECT (item), (GWeakNotify) weak_ref_lost, canvas);
 }
 
 
@@ -554,6 +663,10 @@ browser_canvas_set_zoom_factor (BrowserCanvas *canvas, gdouble n)
 	g_return_if_fail (IS_BROWSER_CANVAS (canvas));
 	g_return_if_fail (canvas->priv);
 
+	if (n < 0.01)
+		n = 0.01;
+	else if (n > 1.)
+		n = 1.;
 	goo_canvas_set_scale (canvas->priv->goocanvas, n);
 }
 
@@ -931,4 +1044,36 @@ browser_canvas_serialize_items (BrowserCanvas *canvas)
 		BrowserCanvasItem *item = BROWSER_CANVAS_ITEM (list->data);
 		TO_IMPLEMENT;
 	}
+}
+
+/**
+ * browser_canvas_item_toggle_select
+ */
+void
+browser_canvas_item_toggle_select (BrowserCanvas *canvas, BrowserCanvasItem *item)
+{
+	gboolean do_select = TRUE;
+	g_return_if_fail (IS_BROWSER_CANVAS (canvas));
+	g_return_if_fail (!item || IS_BROWSER_CANVAS_ITEM (item));
+
+	if (canvas->priv->current_selected_item == item) {
+		/* deselect item */
+		do_select = FALSE;
+	}
+
+	if (canvas->priv->current_selected_item) {
+		BrowserCanvasItemClass *iclass = BROWSER_CANVAS_ITEM_CLASS (G_OBJECT_GET_CLASS (canvas->priv->current_selected_item));
+		if (iclass->set_selected)
+			iclass->set_selected (canvas->priv->current_selected_item, FALSE);
+		canvas->priv->current_selected_item = NULL;
+	}
+
+
+	if (do_select && item) {
+		BrowserCanvasItemClass *iclass = BROWSER_CANVAS_ITEM_CLASS (G_OBJECT_GET_CLASS (item));
+		if (iclass->set_selected)
+			iclass->set_selected (item, TRUE);
+		canvas->priv->current_selected_item = item;
+	}
+	g_signal_emit (canvas, canvas_signals [ITEM_SELECTED], 0, item);
 }

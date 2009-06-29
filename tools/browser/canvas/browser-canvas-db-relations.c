@@ -58,9 +58,9 @@ struct _BrowserCanvasDbRelationsPrivate
 {
 	GHashTable       *hash_tables; /* key = GdaMetaTable, value = BrowserCanvasMetaTable (and the reverse) */
 	GHashTable       *hash_fkeys; /* key = GdaMetaTableForeignKey, value = BrowserCanvasFkey */
-	GSList           *all_items; /* list of all the BrowserCanvasItem objects */
 
 	GdaMetaStruct    *mstruct;
+	GooCanvasItem    *level_separator; /* all tables will be above this item and FK lines below */
 };
 
 GType
@@ -127,10 +127,8 @@ browser_canvas_db_relations_dispose (GObject *object)
 
 	if (canvas->priv) {
 		clean_canvas_items (BROWSER_CANVAS (canvas));
-		if (canvas->priv->mstruct) {
+		if (canvas->priv->mstruct)
 			g_object_unref (canvas->priv->mstruct);
-			canvas->priv->mstruct = NULL;
-		}
 
 		g_hash_table_destroy (canvas->priv->hash_tables);
 		g_hash_table_destroy (canvas->priv->hash_fkeys);
@@ -145,9 +143,9 @@ browser_canvas_db_relations_dispose (GObject *object)
 
 static void
 browser_canvas_db_relations_set_property (GObject *object,
-					guint param_id,
-					const GValue *value,
-					GParamSpec *pspec)
+					  guint param_id,
+					  const GValue *value,
+					  GParamSpec *pspec)
 {
 	BrowserCanvasDbRelations *canvas;
 
@@ -168,9 +166,9 @@ browser_canvas_db_relations_set_property (GObject *object,
 
 static void
 browser_canvas_db_relations_get_property (GObject *object,
-					guint param_id,
-					GValue *value,
-					GParamSpec *pspec)
+					  guint param_id,
+					  GValue *value,
+					  GParamSpec *pspec)
 {
 	BrowserCanvasDbRelations *canvas;
 
@@ -198,8 +196,15 @@ browser_canvas_db_relations_get_property (GObject *object,
 GtkWidget *
 browser_canvas_db_relations_new (GdaMetaStruct *mstruct)
 {
+	BrowserCanvas *canvas;
+	GooCanvasItem *item;
 	g_return_val_if_fail (!mstruct || GDA_IS_META_STRUCT (mstruct), NULL);
-        return GTK_WIDGET (g_object_new (TYPE_BROWSER_CANVAS_DB_RELATIONS, "meta-struct", mstruct, NULL));
+
+	canvas = BROWSER_CANVAS (g_object_new (TYPE_BROWSER_CANVAS_DB_RELATIONS, "meta-struct", mstruct, NULL));
+	item = goo_canvas_group_new (goo_canvas_get_root_item (canvas->priv->goocanvas), NULL);
+	BROWSER_CANVAS_DB_RELATIONS (canvas)->priv->level_separator = item;
+
+        return GTK_WIDGET (canvas);
 }
 
 
@@ -214,10 +219,6 @@ clean_canvas_items (BrowserCanvas *canvas)
 	g_hash_table_destroy (dbrel->priv->hash_fkeys);
 	dbrel->priv->hash_tables = g_hash_table_new (NULL, NULL);
 	dbrel->priv->hash_fkeys = g_hash_table_new (NULL, NULL);
-	if (dbrel->priv->all_items) {
-		g_slist_free (dbrel->priv->all_items);
-		dbrel->priv->all_items = NULL;
-	}
 }
 
 static GtkWidget *canvas_entity_popup_func (BrowserCanvasTable *ce);
@@ -254,7 +255,30 @@ popup_func_delete_cb (GtkMenuItem *mitem, BrowserCanvasTable *ce)
 	g_hash_table_remove (dbrel->priv->hash_tables, ce);
 	g_hash_table_remove (dbrel->priv->hash_tables, mtable);
 	goo_canvas_item_remove (GOO_CANVAS_ITEM (ce));
-	dbrel->priv->all_items = g_slist_remove (dbrel->priv->all_items, ce);
+
+	/* remove FK items */
+	GSList *list;
+	for (list = mtable->fk_list; list; list = list->next) {
+		GdaMetaTableForeignKey *fk = (GdaMetaTableForeignKey*) list->data;
+		GooCanvasItem *fk_item;
+		
+		fk_item = g_hash_table_lookup (dbrel->priv->hash_fkeys, fk);
+		if (fk_item) {
+			goo_canvas_item_remove (fk_item);
+			g_hash_table_remove (dbrel->priv->hash_fkeys, fk);
+		}
+	}
+	
+	for (list = mtable->reverse_fk_list; list; list = list->next) {
+		GdaMetaTableForeignKey *fk = (GdaMetaTableForeignKey*) list->data;
+		GooCanvasItem *fk_item;
+		
+		fk_item = g_hash_table_lookup (dbrel->priv->hash_fkeys, fk);
+		if (fk_item) {
+			goo_canvas_item_remove (fk_item);
+			g_hash_table_remove (dbrel->priv->hash_fkeys, fk);
+		}
+	}
 }
 
 static void
@@ -373,7 +397,17 @@ popup_add_table_cb (GtkMenuItem *mitem, BrowserCanvasDbRelations *dbrel)
 	mtable = (GdaMetaTable*) gda_meta_struct_complement (dbrel->priv->mstruct, GDA_META_DB_TABLE,
 							     table_catalog, table_schema, table_name, NULL);
 	if (mtable) {
-		browser_canvas_db_relations_add_table (dbrel, table_catalog, table_schema, table_name);
+		BrowserCanvasTable *ctable;
+		GooCanvasBounds bounds;
+		gdouble x, y;
+		
+		x = BROWSER_CANVAS (dbrel)->xmouse;
+		y = BROWSER_CANVAS (dbrel)->ymouse;
+		//goo_canvas_convert_from_pixels (BROWSER_CANVAS (dbrel)->priv->goocanvas, &x, &y);
+		ctable = browser_canvas_db_relations_add_table (dbrel, table_catalog, table_schema, table_name);
+		goo_canvas_item_get_bounds (GOO_CANVAS_ITEM (ctable), &bounds);
+		browser_canvas_item_translate (BROWSER_CANVAS_ITEM (ctable),
+					       x - bounds.x1, y - bounds.y1);
 	}
 	else
 		g_print ("Unknown...\n");
@@ -434,14 +468,14 @@ browser_canvas_db_relations_add_table  (BrowserCanvasDbRelations *canvas,
 			return BROWSER_CANVAS_TABLE (table_item);
 
 		table_item = browser_canvas_table_new (goo_canvas_get_root_item (goocanvas), 
-						       mtable, x, y, NULL);
+						       canvas->priv->mstruct, mtable, x, y, NULL);
 		g_hash_table_insert (canvas->priv->hash_tables, mtable, table_item);
 		g_hash_table_insert (canvas->priv->hash_tables, table_item, mtable);
-		canvas->priv->all_items = g_slist_prepend (canvas->priv->all_items, table_item);
 		g_object_set (G_OBJECT (table_item), 
 			      "popup_menu_func", canvas_entity_popup_func, NULL);
 		browser_canvas_declare_item (BROWSER_CANVAS (canvas),
 					     BROWSER_CANVAS_ITEM (table_item));
+		goo_canvas_item_raise (GOO_CANVAS_ITEM (table_item), canvas->priv->level_separator);
 
 		/* if there are some FK links, then also add them */
 		GSList *list;
@@ -451,11 +485,17 @@ browser_canvas_db_relations_add_table  (BrowserCanvasDbRelations *canvas,
 			ref_table_item = g_hash_table_lookup (canvas->priv->hash_tables, fk->depend_on);
 			if (ref_table_item) {
 				GooCanvasItem *fk_item;
-				fk_item = browser_canvas_fkey_new (goo_canvas_get_root_item (goocanvas), fk, NULL);
-				browser_canvas_declare_item (BROWSER_CANVAS (canvas),
-							     BROWSER_CANVAS_ITEM (fk_item));
-
-				g_hash_table_insert (canvas->priv->hash_fkeys, fk, fk_item);
+				fk_item = g_hash_table_lookup (canvas->priv->hash_fkeys, fk);
+				if (!fk_item) {
+					fk_item = browser_canvas_fkey_new (goo_canvas_get_root_item (goocanvas),
+									   canvas->priv->mstruct, fk, NULL);
+					browser_canvas_declare_item (BROWSER_CANVAS (canvas),
+								     BROWSER_CANVAS_ITEM (fk_item));
+					
+					g_hash_table_insert (canvas->priv->hash_fkeys, fk, fk_item);
+					goo_canvas_item_lower (GOO_CANVAS_ITEM (fk_item),
+							       canvas->priv->level_separator);
+				}
 			}
 		}
 		for (list = mtable->reverse_fk_list; list; list = list->next) {
@@ -464,11 +504,17 @@ browser_canvas_db_relations_add_table  (BrowserCanvasDbRelations *canvas,
 			ref_table_item = g_hash_table_lookup (canvas->priv->hash_tables, fk->meta_table);
 			if (ref_table_item) {
 				GooCanvasItem *fk_item;
-				fk_item = browser_canvas_fkey_new (goo_canvas_get_root_item (goocanvas), fk, NULL);
-				browser_canvas_declare_item (BROWSER_CANVAS (canvas),
-							     BROWSER_CANVAS_ITEM (fk_item));
-
-				g_hash_table_insert (canvas->priv->hash_fkeys, fk, fk_item);
+				fk_item = g_hash_table_lookup (canvas->priv->hash_fkeys, fk);
+				if (!fk_item) {
+					fk_item = browser_canvas_fkey_new (goo_canvas_get_root_item (goocanvas),
+									   canvas->priv->mstruct, fk, NULL);
+					browser_canvas_declare_item (BROWSER_CANVAS (canvas),
+								     BROWSER_CANVAS_ITEM (fk_item));
+					
+					g_hash_table_insert (canvas->priv->hash_fkeys, fk, fk_item);
+					goo_canvas_item_lower (GOO_CANVAS_ITEM (fk_item),
+							       canvas->priv->level_separator);
+				}
 			}
 		}
 

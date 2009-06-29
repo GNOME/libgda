@@ -53,11 +53,13 @@ static void update_items (BrowserCanvasFkey *cc);
 enum
 {
 	PROP_0,
+	PROP_META_STRUCT,
 	PROP_FK_CONSTRAINT
 };
 
 struct _BrowserCanvasFkeyPrivate
 {
+	GdaMetaStruct          *mstruct;
 	GdaMetaTableForeignKey *fk;
 	BrowserCanvasTable     *fk_table_item;
 	BrowserCanvasTable     *ref_pk_table_item;
@@ -106,6 +108,12 @@ browser_canvas_fkey_class_init (BrowserCanvasFkeyClass * class)
 	/* Properties */
 	object_class->set_property = browser_canvas_fkey_set_property;
 	object_class->get_property = browser_canvas_fkey_get_property;
+
+	g_object_class_install_property
+                (object_class, PROP_META_STRUCT,
+                 g_param_spec_object ("meta-struct", NULL, NULL, 
+				      GDA_TYPE_META_STRUCT,
+				      (G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
 	g_object_class_install_property (object_class, PROP_FK_CONSTRAINT,
 					 g_param_spec_pointer ("fk_constraint", "FK constraint", 
 							       NULL, 
@@ -117,11 +125,32 @@ static void
 browser_canvas_fkey_init (BrowserCanvasFkey *cc)
 {
 	cc->priv = g_new0 (BrowserCanvasFkeyPrivate, 1);
+	cc->priv->mstruct = NULL;
 	cc->priv->fk = NULL;
 	cc->priv->fk_table_item = NULL;
 	cc->priv->ref_pk_table_item = NULL;
 	cc->priv->shapes = NULL;
 }
+
+static gboolean
+idle_remove_item (BrowserCanvasFkey *cc)
+{
+	goo_canvas_item_remove (GOO_CANVAS_ITEM (cc));
+	return FALSE;
+}
+
+static void
+fk_table_item_weak_ref_lost (BrowserCanvasFkey *cc, BrowserCanvasTable *old_table_item)
+{
+	cc->priv->fk_table_item = NULL;
+}
+
+static void
+ref_pk_table_item_weak_ref_lost (BrowserCanvasFkey *cc, BrowserCanvasTable *old_table_item)
+{
+	cc->priv->ref_pk_table_item = NULL;
+}
+
 
 static void
 browser_canvas_fkey_dispose (GObject *object)
@@ -133,9 +162,21 @@ browser_canvas_fkey_dispose (GObject *object)
 	cc = BROWSER_CANVAS_FKEY (object);
 
 	clean_items (cc);
+	if (cc->priv->mstruct) {
+		g_object_unref (cc->priv->mstruct);
+		cc->priv->mstruct = NULL;
+	}
 	cc->priv->fk = NULL;
-	cc->priv->fk_table_item = NULL;
-	cc->priv->ref_pk_table_item = NULL;
+	if (cc->priv->fk_table_item) {
+		g_object_weak_unref (G_OBJECT (cc->priv->fk_table_item),
+				     (GWeakNotify) fk_table_item_weak_ref_lost, cc);
+		cc->priv->fk_table_item = NULL;
+	}
+	if (cc->priv->ref_pk_table_item) {
+		g_object_weak_unref (G_OBJECT (cc->priv->ref_pk_table_item),
+				     (GWeakNotify) ref_pk_table_item_weak_ref_lost, cc);
+		cc->priv->ref_pk_table_item = NULL;
+	}
 
 	/* for the parent class */
 	parent_class->dispose (object);
@@ -171,6 +212,9 @@ browser_canvas_fkey_set_property (GObject *object,
 	cc = BROWSER_CANVAS_FKEY (object);
 
 	switch (param_id) {
+	case PROP_META_STRUCT:
+		cc->priv->mstruct = g_value_dup_object (value);
+		break;
 	case PROP_FK_CONSTRAINT:
 		if (cc->priv->fk != g_value_get_pointer (value)) {
 			cc->priv->fk = g_value_get_pointer (value);
@@ -192,6 +236,9 @@ browser_canvas_fkey_get_property (GObject *object,
 	cc = BROWSER_CANVAS_FKEY (object);
 
 	switch (param_id) {
+	case PROP_META_STRUCT:
+		g_value_set_object (value, cc->priv->mstruct);
+		break;
 	default:
 		g_warning ("No such property!");
 		break;
@@ -219,7 +266,6 @@ static gboolean single_item_leave_notify_event_cb (GooCanvasItem *ci, GooCanvasI
 static gboolean single_item_button_press_event_cb (GooCanvasItem *ci, GooCanvasItem *target_item,
 						   GdkEventButton *event, BrowserCanvasFkey *cc);
 static void table_item_moved_cb (GooCanvasItem *table, BrowserCanvasFkey *cc);
-static void table_destroy_cb (BrowserCanvasTable *table, BrowserCanvasFkey *cc);
 
 /* 
  * destroy any existing GooCanvasItem objects 
@@ -230,16 +276,16 @@ clean_items (BrowserCanvasFkey *cc)
 	if (cc->priv->fk_table_item) {
 		g_signal_handlers_disconnect_by_func (G_OBJECT (cc->priv->fk_table_item),
 						      G_CALLBACK (table_item_moved_cb), cc);
-		g_signal_handlers_disconnect_by_func (G_OBJECT (cc->priv->fk_table_item),
-                                                      G_CALLBACK (table_destroy_cb), cc);
+		g_object_weak_unref (G_OBJECT (cc->priv->fk_table_item),
+				     (GWeakNotify) fk_table_item_weak_ref_lost, cc);
 		cc->priv->fk_table_item = NULL;
 	}
 
 	if (cc->priv->ref_pk_table_item) {
 		g_signal_handlers_disconnect_by_func (G_OBJECT (cc->priv->ref_pk_table_item),
 						      G_CALLBACK (table_item_moved_cb), cc);
-		g_signal_handlers_disconnect_by_func (G_OBJECT (cc->priv->ref_pk_table_item),
-						      G_CALLBACK (table_destroy_cb), cc);
+		g_object_weak_unref (G_OBJECT (cc->priv->ref_pk_table_item),
+				     (GWeakNotify) ref_pk_table_item_weak_ref_lost, cc);
 		cc->priv->ref_pk_table_item = NULL;
 	}
 	
@@ -266,27 +312,23 @@ create_items (BrowserCanvasFkey *cc)
 								 GDA_META_TABLE (cc->priv->fk->meta_table));
 	cc->priv->fk_table_item = table_item;
 	g_return_if_fail (table_item);
+	g_object_weak_ref (G_OBJECT (table_item), (GWeakNotify) fk_table_item_weak_ref_lost, cc);
+
 	g_signal_connect (G_OBJECT (table_item), "moving",
 			  G_CALLBACK (table_item_moved_cb), cc);
 	g_signal_connect (G_OBJECT (table_item), "moved",
 			  G_CALLBACK (table_item_moved_cb), cc);
-	g_signal_connect (G_OBJECT (table_item), "shifted",
-			  G_CALLBACK (table_item_moved_cb), cc);
-	g_signal_connect (G_OBJECT (table_item), "destroy",
-			  G_CALLBACK (table_destroy_cb), cc);
 
 	table_item = browser_canvas_db_relations_get_table_item (BROWSER_CANVAS_DB_RELATIONS (canvas),
 								 GDA_META_TABLE (cc->priv->fk->depend_on));
 	cc->priv->ref_pk_table_item = table_item;
 	g_return_if_fail (table_item);
+
+	g_object_weak_ref (G_OBJECT (table_item), (GWeakNotify) ref_pk_table_item_weak_ref_lost, cc);
 	g_signal_connect (G_OBJECT (table_item), "moving",
 			  G_CALLBACK (table_item_moved_cb), cc);
 	g_signal_connect (G_OBJECT (table_item), "moved",
 			  G_CALLBACK (table_item_moved_cb), cc);
-	g_signal_connect (G_OBJECT (table_item), "shifted",
-			  G_CALLBACK (table_item_moved_cb), cc);
-	g_signal_connect (G_OBJECT (table_item), "destroy",
-			  G_CALLBACK (table_destroy_cb), cc);
 
 	/* actual line(s) */
 	g_assert (!cc->priv->shapes);
@@ -407,6 +449,8 @@ static gboolean
 single_item_button_press_event_cb (GooCanvasItem *ci, GooCanvasItem *target_item,
 				   GdkEventButton *event, BrowserCanvasFkey *cc)
 {
+	return FALSE;
+	/*
 	GdaMetaTableForeignKey *fkcons = g_object_get_data (G_OBJECT (ci), "fkcons");
 	GtkWidget *menu, *entry;
 
@@ -420,6 +464,7 @@ single_item_button_press_event_cb (GooCanvasItem *ci, GooCanvasItem *target_item
 			NULL, NULL, ((GdkEventButton *)event)->button,
 			((GdkEventButton *)event)->time);
 	return TRUE;
+	*/
 }
 
 
@@ -435,12 +480,6 @@ table_item_moved_cb (GooCanvasItem *table, BrowserCanvasFkey *cc)
 	update_items (cc);
 }
 
-static void
-table_destroy_cb (BrowserCanvasTable *table, BrowserCanvasFkey *cc)
-{
-        goo_canvas_item_remove (GOO_CANVAS_ITEM (cc));
-}
-
 /**
  * browser_canvas_fkey_new
  * @parent: the parent item, or NULL. 
@@ -452,13 +491,15 @@ table_destroy_cb (BrowserCanvasTable *table, BrowserCanvasFkey *cc)
  * Returns: a new #GooCanvasItem object
  */
 GooCanvasItem *
-browser_canvas_fkey_new (GooCanvasItem *parent, GdaMetaTableForeignKey *fkcons, ...)
+browser_canvas_fkey_new (GooCanvasItem *parent, GdaMetaStruct *mstruct, GdaMetaTableForeignKey *fkcons, ...)
 {
 	GooCanvasItem *item;
 	const char *first_property;
 	va_list var_args;
-		
-	item = g_object_new (TYPE_BROWSER_CANVAS_FKEY, NULL);
+
+	g_return_val_if_fail (GDA_IS_META_STRUCT (mstruct), NULL);
+
+	item = g_object_new (TYPE_BROWSER_CANVAS_FKEY, "meta-struct", mstruct, NULL);
 
 	if (parent) {
 		goo_canvas_item_add_child (parent, item, -1);

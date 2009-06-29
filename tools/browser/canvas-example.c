@@ -10,6 +10,27 @@ static void label_drag_data_received (GtkWidget *label, GdkDragContext *context,
 				      gint x, gint y, GtkSelectionData *data,
 				      guint info, guint time);
 
+static int
+scroll_event_cb (GtkWidget *wid, GdkEvent *event, gpointer data)
+{
+	gboolean done = TRUE;
+
+	g_print ("%d\n", event->type);
+	switch (event->type) {
+	case GDK_SCROLL:
+		if (((GdkEventScroll *) event)->direction == GDK_SCROLL_UP)
+			g_print ("UP\n");
+		else if (((GdkEventScroll *) event)->direction == GDK_SCROLL_DOWN)
+			g_print ("DOWN\n");
+		done = TRUE;
+		break;
+	default:
+		done = FALSE;
+		break;
+	}
+	return done;
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -60,6 +81,8 @@ main (int argc, char *argv[])
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (auto_layout_cb), canvas);
 	gtk_box_pack_start (GTK_BOX (bbox), button, TRUE, TRUE, 0);
+	g_signal_connect (button, "scroll-event",
+			  G_CALLBACK (scroll_event_cb), NULL);
 
 	GtkWidget *wid;
 	GtkTargetEntry dbo_table[] = {

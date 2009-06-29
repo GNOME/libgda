@@ -45,11 +45,13 @@ static void browser_canvas_column_extra_event  (BrowserCanvasItem * citem, GdkEv
 enum
 {
 	PROP_0,
+	PROP_META_STRUCT,
 	PROP_COLUMN,
 };
 
 struct _BrowserCanvasColumnPrivate
 {
+	GdaMetaStruct      *mstruct;
 	GdaMetaTableColumn *column;
 };
 
@@ -100,6 +102,11 @@ browser_canvas_column_class_init (BrowserCanvasColumnClass *klass)
 	object_class->get_property = browser_canvas_column_get_property;
 
 	g_object_class_install_property
+                (object_class, PROP_META_STRUCT,
+                 g_param_spec_object ("meta-struct", NULL, NULL, 
+				      GDA_TYPE_META_STRUCT,
+				      (G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
+	g_object_class_install_property
                 (object_class, PROP_COLUMN,
                  g_param_spec_pointer ("column", NULL, NULL, 
 				       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
@@ -109,6 +116,7 @@ static void
 browser_canvas_column_init (BrowserCanvasColumn * column)
 {
 	column->priv = g_new0 (BrowserCanvasColumnPrivate, 1);
+	column->priv->mstruct = NULL;
 	column->priv->column = NULL;
 }
 
@@ -121,8 +129,8 @@ browser_canvas_column_dispose (GObject   * object)
 
 	cf = BROWSER_CANVAS_COLUMN (object);
 	if (cf->priv) {
-		if (cf->priv->column)
-			cf->priv->column = NULL;
+		if (cf->priv->mstruct)
+			g_object_unref (cf->priv->mstruct);
 		g_free (cf->priv);
 		cf->priv = NULL;
 	}
@@ -144,7 +152,11 @@ browser_canvas_column_set_property (GObject *object,
 	cf = BROWSER_CANVAS_COLUMN (object);
 
 	switch (param_id) {
+	case PROP_META_STRUCT:
+		cf->priv->mstruct = g_value_dup_object (value);
+		break;
 	case PROP_COLUMN:
+		g_return_if_fail (cf->priv->mstruct);
 		column = g_value_get_pointer (value);
 
 		cf->priv->column = column;
@@ -182,6 +194,9 @@ browser_canvas_column_get_property (GObject *object,
 	cf = BROWSER_CANVAS_COLUMN (object);
 
 	switch (param_id) {
+	case PROP_META_STRUCT:
+		g_value_set_object (value, cf->priv->mstruct);
+		break;
 	case PROP_COLUMN:
 		g_value_set_pointer (value, cf->priv->column);
 		break;
@@ -198,6 +213,7 @@ browser_canvas_column_extra_event  (BrowserCanvasItem *citem, GdkEventType event
 /**
  * browser_canvas_column_new
  * @parent: the parent item, or %NULL
+ * @mstruct: the #GdaMetaStruct @column is from
  * @column: the represented entity's column
  * @x: the x coordinate of the text
  * @y: the y coordinate of the text
@@ -206,15 +222,17 @@ browser_canvas_column_extra_event  (BrowserCanvasItem *citem, GdkEventType event
  * Creates a new #BrowserCanvasColumn object
  */
 GooCanvasItem*
-browser_canvas_column_new (GooCanvasItem *parent, GdaMetaTableColumn *column,
-			gdouble x, gdouble y, ...)
+browser_canvas_column_new (GooCanvasItem *parent, GdaMetaStruct *mstruct, GdaMetaTableColumn *column,
+			   gdouble x, gdouble y, ...)
 {
 	GooCanvasItem *item;
 	BrowserCanvasColumn *goocolumn;
 	const char *first_property;
 	va_list var_args;
 
-	item = g_object_new (TYPE_BROWSER_CANVAS_COLUMN, NULL);
+	g_return_val_if_fail (GDA_IS_META_STRUCT (mstruct), NULL);
+
+	item = g_object_new (TYPE_BROWSER_CANVAS_COLUMN, "meta-struct", mstruct, NULL);
 	goocolumn = (BrowserCanvasColumn*) item;
 
 	if (parent) {

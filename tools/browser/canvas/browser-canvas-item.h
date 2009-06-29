@@ -47,14 +47,13 @@ struct _BrowserCanvasItemClass
 	/* signals */
 	void (*moved)        (BrowserCanvasItem *citem);
 	void (*moving)       (BrowserCanvasItem *citem);
-	void (*shifted)      (BrowserCanvasItem *citem);
-	void (*destroy)      (BrowserCanvasItem *citem);
 
 	/* virtual functions */
 	void (*extra_event)  (BrowserCanvasItem *citem, GdkEventType event_type);
 	void (*get_edge_nodes)(BrowserCanvasItem *citem, BrowserCanvasItem **from, BrowserCanvasItem **to);
 	void (*drag_data_get) (BrowserCanvasItem *citem, GdkDragContext *drag_context,
 			       GtkSelectionData *data, guint info, guint time);
+	void (*set_selected)  (BrowserCanvasItem *citem, gboolean selected);
 };
 
 GType              browser_canvas_item_get_type       (void) G_GNUC_CONST;
