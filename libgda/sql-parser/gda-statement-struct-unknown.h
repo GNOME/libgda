@@ -25,6 +25,8 @@
 #include <sql-parser/gda-statement-struct-decl.h>
 #include <sql-parser/gda-statement-struct-parts.h>
 
+G_BEGIN_DECLS
+
 /*
  * Structure definition
  */
@@ -46,5 +48,7 @@ GdaSqlStatementContentsInfo *_gda_sql_statement_unknown_get_infos (void);
  * Functions used by the parser
  */
 void gda_sql_statement_unknown_take_expressions (GdaSqlStatement *stmt, GSList *expressions);
+
+G_END_DECLS
 
 #endif

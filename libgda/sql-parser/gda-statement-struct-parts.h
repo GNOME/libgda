@@ -27,6 +27,8 @@
 #include <sql-parser/gda-statement-struct-decl.h>
 #include <libgda/gda-meta-struct.h>
 
+G_BEGIN_DECLS
+
 typedef struct _GdaSqlExpr      GdaSqlExpr;
 typedef struct _GdaSqlField     GdaSqlField;
 typedef struct _GdaSqlTable     GdaSqlTable;
@@ -342,5 +344,7 @@ GdaSqlSelectOrder *gda_sql_select_order_new            (GdaSqlAnyPart *parent);
 void               gda_sql_select_order_free           (GdaSqlSelectOrder *order);
 GdaSqlSelectOrder *gda_sql_select_order_copy           (GdaSqlSelectOrder *order);
 gchar             *gda_sql_select_order_serialize      (GdaSqlSelectOrder *order);
+
+G_END_DECLS
 
 #endif

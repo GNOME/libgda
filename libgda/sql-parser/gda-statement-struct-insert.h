@@ -26,6 +26,8 @@
 #include <sql-parser/gda-statement-struct-select.h>
 #include <sql-parser/gda-statement-struct-parts.h>
 
+G_BEGIN_DECLS
+
 /*
  * Structure definition
  */
@@ -57,5 +59,7 @@ void gda_sql_statement_insert_take_1_values_list (GdaSqlStatement *stmt, GSList 
 void gda_sql_statement_insert_take_extra_values_list (GdaSqlStatement *stmt, GSList *list);
 
 void gda_sql_statement_insert_take_select (GdaSqlStatement *stmt, GdaSqlStatement *select);
+
+G_END_DECLS
 
 #endif

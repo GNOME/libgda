@@ -26,6 +26,8 @@
 #include <sql-parser/gda-statement-struct-select.h>
 #include <sql-parser/gda-statement-struct-parts.h>
 
+G_BEGIN_DECLS
+
 /*
  * Structure definition
  */
@@ -54,5 +56,7 @@ void gda_sql_statement_update_take_table_name (GdaSqlStatement *stmt, GValue *va
 void gda_sql_statement_update_take_on_conflict (GdaSqlStatement *stmt, GValue *value);
 void gda_sql_statement_update_take_condition (GdaSqlStatement *stmt, GdaSqlExpr *cond);
 void gda_sql_statement_update_take_set_value (GdaSqlStatement *stmt, GValue *fname, GdaSqlExpr *expr);
+
+G_END_DECLS
 
 #endif

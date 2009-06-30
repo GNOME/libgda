@@ -26,6 +26,8 @@
 #include <sql-parser/gda-statement-struct-decl.h>
 #include <sql-parser/gda-statement-struct-parts.h>
 
+G_BEGIN_DECLS
+
 /*
  * Structure definition
  */
@@ -57,5 +59,7 @@ GdaSqlStatementContentsInfo *_gda_sql_statement_delete_savepoint_get_infos (void
 void   gda_sql_statement_trans_take_mode (GdaSqlStatement *stmt, GValue *value);
 void   gda_sql_statement_trans_set_isol_level (GdaSqlStatement *stmt, GdaTransactionIsolation level);
 void   gda_sql_statement_trans_take_name (GdaSqlStatement *stmt, GValue *value);
+
+G_END_DECLS
 
 #endif
