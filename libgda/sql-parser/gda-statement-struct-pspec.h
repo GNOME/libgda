@@ -23,6 +23,8 @@
 #include <glib.h>
 #include <glib-object.h>
 
+G_BEGIN_DECLS
+
 typedef struct _GdaSqlParamSpec GdaSqlParamSpec;
 
 /*
@@ -52,5 +54,6 @@ void             gda_sql_param_spec_take_nullok(GdaSqlParamSpec *pspec, GValue *
 void             gda_sql_param_spec_free       (GdaSqlParamSpec *pspec);
 gchar           *gda_sql_param_spec_serialize  (GdaSqlParamSpec *pspec);
 
+G_END_DECLS
 
 #endif

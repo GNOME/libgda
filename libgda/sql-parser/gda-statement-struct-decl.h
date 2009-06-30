@@ -26,6 +26,8 @@
 #include <libgda/gda-meta-store.h>
 #include <libgda/gda-meta-struct.h>
 
+G_BEGIN_DECLS
+
 /* error reporting */
 extern GQuark gda_sql_error_quark (void);
 #define GDA_SQL_ERROR gda_sql_error_quark ()
@@ -165,5 +167,7 @@ typedef struct {
 	gpointer         _gda_reserved3;
 	gpointer         _gda_reserved4;
 } GdaSqlStatementCheckValidityData;
+
+G_END_DECLS
 
 #endif

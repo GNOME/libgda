@@ -25,6 +25,8 @@
 #include <sql-parser/gda-statement-struct-decl.h>
 #include <sql-parser/gda-statement-struct-parts.h>
 
+G_BEGIN_DECLS
+
 /*
  * Structure definition
  */
@@ -68,4 +70,7 @@ void gda_sql_statement_select_take_group_by (GdaSqlStatement *stmt, GSList *grou
 void gda_sql_statement_select_take_having_cond (GdaSqlStatement *stmt, GdaSqlExpr *expr);
 void gda_sql_statement_select_take_order_by (GdaSqlStatement *stmt, GSList *order_by);
 void gda_sql_statement_select_take_limits (GdaSqlStatement *stmt, GdaSqlExpr *count, GdaSqlExpr *offset);
+
+G_END_DECLS
+
 #endif

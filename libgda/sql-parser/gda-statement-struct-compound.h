@@ -25,6 +25,8 @@
 #include <sql-parser/gda-statement-struct-decl.h>
 #include <sql-parser/gda-statement-struct-select.h>
 
+G_BEGIN_DECLS
+
 /*
  * Kinds
  */
@@ -69,5 +71,7 @@ GdaSqlAnyPart * _gda_sql_statement_compound_reduce (GdaSqlAnyPart *compound_or_s
  */
 void gda_sql_statement_compound_set_type (GdaSqlStatement *stmt, GdaSqlStatementCompoundType type);
 void gda_sql_statement_compound_take_stmt (GdaSqlStatement *stmt, GdaSqlStatement *s);
+
+G_END_DECLS
 
 #endif

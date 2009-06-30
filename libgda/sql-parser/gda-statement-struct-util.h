@@ -23,6 +23,8 @@
 #include <glib.h>
 #include <glib-object.h>
 
+G_BEGIN_DECLS
+
 /* utility functions */
 gchar    *_remove_quotes (gchar *str);
 gchar    *gda_sql_identifier_add_quotes (const gchar *str);
@@ -36,5 +38,7 @@ gchar    *gda_sql_identifier_remove_quotes (gchar *str);
 
 /* to be removed, only here for debug */
 gchar    *gda_sql_value_stringify (const GValue *value);
+
+G_END_DECLS
 
 #endif
