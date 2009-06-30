@@ -57,7 +57,6 @@ gda_headers = \
 	gda-holder.h \
 	gda-lockable.h \
 	gda-log.h \
-	gda-marshal.h \
 	gda-meta-store.h \
 	gda-meta-struct.h \
 	gda-mutex.h \
@@ -101,6 +100,7 @@ libgda_sources =  \
 	gda-connection.c \
 	gda-connection-event.c \
 	gda-connection-internal.h \
+	gda-connection-sqlite.h \
 	gda-custom-marshal.c \
 	gda-custom-marshal.h \
 	gda-data-comparator.c \
@@ -114,6 +114,8 @@ libgda_sources =  \
 	gda-data-model-import.c \
 	gda-data-model-iter.c \
 	gda-data-access-wrapper.c \
+	gda-data-meta-wrapper.c \
+	gda-data-meta-wrapper.h \
 	gda-data-proxy.c \
 	gda-data-select.c \
 	gda-data-select-extra.h \

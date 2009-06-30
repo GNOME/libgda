@@ -51,6 +51,12 @@ struct _GdaTree {
 struct _GdaTreeClass {
 	GObjectClass      object_class;
 
+	/* signals */
+	void         (* node_changed)           (GdaTree *tree, GdaTreeNode *node);
+	void         (* node_inserted)          (GdaTree *tree, GdaTreeNode *node);
+	void         (* node_has_child_toggled) (GdaTree *tree, GdaTreeNode *node);
+	void         (* node_deleted)           (GdaTree *tree, const gchar *node_path);
+
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
@@ -68,6 +74,8 @@ gboolean           gda_tree_update_part   (GdaTree *tree, GdaTreeNode *node, GEr
 
 GSList            *gda_tree_get_nodes_in_path (GdaTree *tree, const gchar *tree_path, gboolean use_names);
 GdaTreeNode       *gda_tree_get_node      (GdaTree *tree, const gchar *tree_path, gboolean use_names);
+gchar             *gda_tree_get_node_path (GdaTree *tree, GdaTreeNode *node);
+GdaTreeManager    *gda_tree_get_node_manager (GdaTree *tree, GdaTreeNode *node);
 
 void               gda_tree_set_attribute (GdaTree *tree, const gchar *attribute, const GValue *value,
 					   GDestroyNotify destroy);

@@ -41,6 +41,7 @@
 #include "gda-oracle-ddl.h"
 #include "gda-oracle-meta.h"
 #include "gda-oracle-util.h"
+#include "gda-oracle-parser.h"
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 
 /*
@@ -252,6 +253,29 @@ gda_oracle_provider_class_init (GdaOracleProviderClass *klass)
 
 	/* thread safe */
 	provider_class->limiting_thread = NULL;
+
+	/* static types */
+	static_types = g_new (GType, GDA_STYPE_NULL + 1);
+	static_types[GDA_STYPE_INT] = G_TYPE_INT;
+	static_types[GDA_STYPE_STRING] = G_TYPE_STRING;
+	static_types[GDA_STYPE_BOOLEAN] = G_TYPE_BOOLEAN;
+	static_types[GDA_STYPE_DATE] = G_TYPE_DATE;
+	static_types[GDA_STYPE_TIME] = GDA_STYPE_TIME;
+	static_types[GDA_STYPE_TIMESTAMP] = GDA_STYPE_TIMESTAMP;
+	static_types[GDA_STYPE_INT64] = G_TYPE_INT64;
+	static_types[GDA_STYPE_UINT] = G_TYPE_UINT;
+	static_types[GDA_STYPE_FLOAT] = G_TYPE_FLOAT;
+	static_types[GDA_STYPE_DOUBLE] = G_TYPE_DOUBLE;
+	static_types[GDA_STYPE_LONG] = G_TYPE_LONG;
+	static_types[GDA_STYPE_ULONG] = G_TYPE_ULONG;
+	static_types[GDA_STYPE_NUMERIC] = GDA_STYPE_NUMERIC;
+	static_types[GDA_STYPE_BINARY] = GDA_STYPE_BINARY;
+	static_types[GDA_STYPE_BLOB] = GDA_STYPE_BLOB;
+	static_types[GDA_STYPE_CHAR] = G_TYPE_CHAR;
+	static_types[GDA_STYPE_SHORT] = GDA_STYPE_SHORT;
+	static_types[GDA_STYPE_GTYPE] = G_TYPE_GTYPE;
+	static_types[GDA_STYPE_GEOMETRIC_POINT] = GDA_STYPE_GEOMETRIC_POINT;
+	static_types[GDA_STYPE_NULL] = GDA_TYPE_NULL;
 }
 
 static void
@@ -613,6 +637,35 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	cdata->schema = g_ascii_strup (username, -1);
 	gda_connection_internal_set_provider_data (cnc, cdata, (GDestroyNotify) gda_oracle_free_cnc_data);
 
+	/* get version */
+	gchar version [512];
+	cdata->version = NULL;
+	cdata->major_version = 8;
+	cdata->minor_version = 0;
+	result = OCIServerVersion (cdata->hservice, cdata->herr, version, 511, OCI_HTYPE_SVCCTX);
+	if ((result == OCI_SUCCESS) || (result = OCI_SUCCESS_WITH_INFO)) {
+		cdata->version = g_strdup (version);
+		gchar *tmp, *ptr;
+		tmp = g_ascii_strdown (version, -1);
+		ptr = strstr (tmp, "release");
+		if (ptr) {
+			for (ptr += 7; *ptr; ptr++) {
+				if (! g_ascii_isspace (*ptr))
+					break;
+			}
+			if (g_ascii_isdigit (*ptr)) {
+				cdata->major_version = *ptr - '0';
+				ptr++;
+				if (*ptr) {
+					ptr++;
+					if (g_ascii_isdigit (*ptr))
+						cdata->minor_version = *ptr - '0';
+				}
+			}
+		}
+		g_free (tmp);
+	}
+
 	/* Optionnally set some attributes for the newly opened connection (encoding to UTF-8 for example )*/
 	if (! execute_raw_command (cnc, "ALTER SESSION SET NLS_DATE_FORMAT = 'MM/DD/YYYY'") ||
 	    ! execute_raw_command (cnc, "ALTER SESSION SET NLS_NUMERIC_CHARACTERS = \". \"")) {
@@ -674,6 +727,7 @@ static const gchar *
 gda_oracle_provider_get_server_version (GdaServerProvider *provider, GdaConnection *cnc)
 {
 	OracleConnectionData *cdata;
+	static guchar version[512];
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
@@ -681,8 +735,8 @@ gda_oracle_provider_get_server_version (GdaServerProvider *provider, GdaConnecti
 	cdata = (OracleConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
 		return FALSE;
-	TO_IMPLEMENT;
-	return NULL;
+
+	return cdata->version;
 }
 
 /*
@@ -1141,8 +1195,8 @@ gda_oracle_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConne
 static GdaSqlParser *
 gda_oracle_provider_create_parser (GdaServerProvider *provider, GdaConnection *cnc)
 {
-	TO_IMPLEMENT;
-	return NULL;
+	return (GdaSqlParser*) g_object_new (GDA_TYPE_ORACLE_PARSER, "tokenizer-flavour",
+                                             GDA_SQL_PARSER_FLAVOUR_ORACLE, NULL);
 }
 
 /*
@@ -1154,7 +1208,11 @@ gda_oracle_provider_create_parser (GdaServerProvider *provider, GdaConnection *c
  * can be specialized to the database's SQL dialect, see the implementation of gda_statement_to_sql_extended()
  * and SQLite's specialized rendering for more details
  */
+static gchar *oracle_render_select (GdaSqlStatementSelect *stmt, GdaSqlRenderingContext *context, GError **error);
 static gchar *oracle_render_select_target (GdaSqlSelectTarget *target, GdaSqlRenderingContext *context, GError **error);
+static gchar *oracle_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context,
+                                  gboolean *is_default, gboolean *is_null,
+                                  GError **error);
 
 static gchar *
 gda_oracle_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection *cnc,
@@ -1173,7 +1231,9 @@ gda_oracle_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection
 	memset (&context, 0, sizeof (context));
 	context.params = params;
 	context.flags = flags;
+	context.render_select = (GdaSqlRenderingFunc) oracle_render_select;
 	context.render_select_target = (GdaSqlRenderingFunc) oracle_render_select_target;
+	context.render_expr = oracle_render_expr; /* render "FALSE" as 0 and TRUE as !0 */
 
 	str = gda_statement_to_sql_real (stmt, &context, error);
 
@@ -1223,6 +1283,214 @@ oracle_render_select_target (GdaSqlSelectTarget *target, GdaSqlRenderingContext 
         g_string_free (string, TRUE);
         return NULL;
 }
+
+static gchar *
+oracle_render_select (GdaSqlStatementSelect *stmt, GdaSqlRenderingContext *context, GError **error)
+{
+	GString *string;
+	gchar *str;
+	GSList *list;
+
+	g_return_val_if_fail (stmt, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (stmt)->type == GDA_SQL_ANY_STMT_SELECT, NULL);
+
+	string = g_string_new ("SELECT ");
+	/* distinct */
+	if (stmt->distinct) {
+		g_string_append (string, "DISTINCT ");
+		if (stmt->distinct_expr) {
+			str = context->render_expr (stmt->distinct_expr, context, NULL, NULL, error);
+			if (!str) goto err;
+			g_string_append (string, "ON ");
+			g_string_append (string, str);
+			g_string_append_c (string, ' ');
+			g_free (str);
+		}
+	}
+	
+	/* selected expressions */
+	for (list = stmt->expr_list; list; list = list->next) {
+		str = context->render_select_field (GDA_SQL_ANY_PART (list->data), context, error);
+		if (!str) goto err;
+		if (list != stmt->expr_list)
+			g_string_append (string, ", ");
+		g_string_append (string, str);
+		g_free (str);
+	}
+
+	/* FROM */
+	if (stmt->from) {
+		str = context->render_select_from (GDA_SQL_ANY_PART (stmt->from), context, error);
+		if (!str) goto err;
+		g_string_append_c (string, ' ');
+		g_string_append (string, str);
+		g_free (str);
+	}
+	else {
+		g_string_append (string, " FROM DUAL");
+	}
+
+	/* WHERE */
+	if (stmt->where_cond) {
+		g_string_append (string, " WHERE ");
+		str = context->render_expr (stmt->where_cond, context, NULL, NULL, error);
+		if (!str) goto err;
+		g_string_append (string, str);
+		g_free (str);
+	}
+
+	/* LIMIT */
+	if (stmt->limit_count) {
+		if (stmt->where_cond)
+			g_string_append (string, " AND");
+		else
+			g_string_append (string, " WHERE");
+		
+		if (stmt->limit_offset) {
+			g_set_error (error, GDA_STATEMENT_ERROR, GDA_STATEMENT_SYNTAX_ERROR,
+				     _("Oracle does not support the offset with a limit"));
+			goto err;
+		}
+		else {
+			g_string_append (string, " ROWNUM <= (");
+			str = context->render_expr (stmt->limit_count, context, NULL, NULL, error);
+			if (!str) goto err;
+			g_string_append (string, str);
+			g_free (str);
+			g_string_append_c (string, ')');
+		}
+	}
+
+	/* GROUP BY */
+	for (list = stmt->group_by; list; list = list->next) {
+		str = context->render_expr (list->data, context, NULL, NULL, error);
+		if (!str) goto err;
+		if (list != stmt->group_by)
+			g_string_append (string, ", ");
+		else
+			g_string_append (string, " GROUP BY ");
+		g_string_append (string, str);
+		g_free (str);
+	}
+
+	/* HAVING */
+	if (stmt->having_cond) {
+		g_string_append (string, " HAVING ");
+		str = context->render_expr (stmt->having_cond, context, NULL, NULL, error);
+		if (!str) goto err;
+		g_string_append (string, str);
+		g_free (str);
+	}
+
+	/* ORDER BY */
+	for (list = stmt->order_by; list; list = list->next) {
+		str = context->render_select_order (GDA_SQL_ANY_PART (list->data), context, error);
+		if (!str) goto err;
+		if (list != stmt->order_by)
+			g_string_append (string, ", ");
+		else
+			g_string_append (string, " ORDER BY ");
+		g_string_append (string, str);
+		g_free (str);
+	}
+
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+
+ err:
+	g_string_free (string, TRUE);
+	return NULL;
+}
+
+static gchar *
+oracle_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, 
+		    gboolean *is_default, gboolean *is_null,
+		    GError **error)
+{
+	GString *string;
+	gchar *str = NULL;
+
+	g_return_val_if_fail (expr, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (expr)->type == GDA_SQL_ANY_EXPR, NULL);
+
+	if (is_default)
+		*is_default = FALSE;
+	if (is_null)
+		*is_null = FALSE;
+
+	/* can't have: 
+	 *  - expr->cast_as && expr->param_spec 
+	 */
+	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (expr), error)) return NULL;
+
+	string = g_string_new ("");
+	if (expr->param_spec) {
+		str = context->render_param_spec (expr->param_spec, expr, context, is_default, is_null, error);
+		if (!str) goto err;
+	}
+	else if (expr->value) {
+		str = gda_value_stringify (expr->value);
+		if (!str) goto err;
+		if (is_null && gda_value_is_null (expr->value))
+			*is_null = TRUE;
+		else if (is_default && (G_VALUE_TYPE (expr->value) == G_TYPE_STRING) && 
+			 !g_ascii_strcasecmp (g_value_get_string (expr->value), "default"))
+			*is_default = TRUE;
+		else if (!g_ascii_strcasecmp (str, "FALSE")) {
+			g_free (str);
+			str = g_strdup ("0");
+		}
+		else if (!g_ascii_strcasecmp (str, "TRUE")) {
+			g_free (str);
+			str = g_strdup ("1");
+		}
+	}
+	else if (expr->func) {
+		str = context->render_function (GDA_SQL_ANY_PART (expr->func), context, error);
+		if (!str) goto err;
+	}
+	else if (expr->cond) {
+		str = context->render_operation (GDA_SQL_ANY_PART (expr->cond), context, error);
+		if (!str) goto err;
+	}
+	else if (expr->select) {
+		gchar *str1;
+		str1 = context->render_select (GDA_SQL_ANY_PART (expr->select), context, error);
+		if (!str1) goto err;
+		str = g_strdup_printf ("(%s)", str1);
+		g_free (str1);
+	}
+	else if (expr->case_s) {
+		str = context->render_case (GDA_SQL_ANY_PART (expr->case_s), context, error);
+		if (!str) goto err;
+	}
+	else {
+		if (is_null)
+			*is_null = TRUE;
+		str = g_strdup ("NULL");
+	}
+
+	if (!str) {
+		/* TO REMOVE */
+		str = g_strdup ("[...]");
+	}
+
+	if (expr->cast_as) 
+		g_string_append_printf (string, "CAST (%s AS %s)", str, expr->cast_as);
+	else
+		g_string_append (string, str);
+	g_free (str);
+
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+
+ err:
+	g_string_free (string, TRUE);
+	return NULL;
+}
+
 
 /*
  * Statement prepare request
@@ -1392,7 +1660,13 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 	/* get/create new prepared statement */
 	ps = (GdaOraclePStmt *) gda_connection_get_prepared_statement (cnc, stmt);
 	if (!ps) {
-		if (!gda_oracle_provider_statement_prepare (provider, cnc, stmt, NULL)) {
+		GError *lerror = NULL;
+		if (!gda_oracle_provider_statement_prepare (provider, cnc, stmt, &lerror)) {
+			if (lerror && (lerror->domain == GDA_STATEMENT_ERROR) &&
+			    (lerror->code == GDA_STATEMENT_SYNTAX_ERROR)) {
+				g_propagate_error (error, lerror);
+				return NULL;
+			}
 			/* this case can appear for example if some variables are used in places
 			 * where the C API cannot allow them (for example if the variable is the table name
 			 * in a SELECT statement). The action here is to get the actual SQL code for @stmt,
@@ -1401,6 +1675,7 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			 * Don't call gda_connection_add_prepared_statement() with this new prepared statement
 			 * as it will be destroyed once used.
 			 */
+			
 			TO_IMPLEMENT;
 			return NULL;
 		}
@@ -1421,7 +1696,8 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		const gchar *pname = (gchar *) list->data;
 		gchar *real_pname = NULL;
 		GdaHolder *h;
-		
+		GdaOracleValue *ora_value = NULL;
+
 		/* find requested parameter */
 		if (!params) {
 			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
@@ -1457,13 +1733,13 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			else {
                                 /* bind param to NULL */
 				/* Hint: Indicator Variables, see p. 118 */
-                                TO_IMPLEMENT;
+				ora_value = g_new0 (GdaOracleValue, 1);
+				ora_value->indicator = -1;
                                 empty_rs = TRUE;
-                                continue;
                         }
 
 		}
-		if (!gda_holder_is_valid (h)) {
+		else if (!gda_holder_is_valid (h)) {
 			if (! allow_noparam) {
 				gchar *str;
 				str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
@@ -1476,15 +1752,17 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			}
 			else {
                                 /* bind param to NULL */
-				TO_IMPLEMENT;
+				ora_value = g_new0 (GdaOracleValue, 1);
+				ora_value->indicator = -1;
                                 empty_rs = TRUE;
-                                continue;
                         }
 		}
 
 		/* actual binding using the C API, for parameter at position @i */
-		const GValue *value = gda_holder_get_value (h);
-		GdaOracleValue *ora_value = _gda_value_to_oracle_value (value);
+		if (!ora_value) {
+			const GValue *value = gda_holder_get_value (h);
+			ora_value = _gda_value_to_oracle_value (value);
+		}
 		OCIBind *bindpp = (OCIBind *) 0;
 		int result;
 		result = OCIBindByName ((dvoid *) ps->hstmt,
@@ -1566,8 +1844,9 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 					 (ub4) 0,
 					 (CONST OCISnapshot *) NULL,
 					 (OCISnapshot *) NULL,
-					 OCI_STMT_SCROLLABLE_READONLY); /* not OCI_COMMIT_ON_SUCCESS because transactions are
-									   handled separately */
+					 OCI_DEFAULT);
+		/* or OCI_STMT_SCROLLABLE_READONLY, not OCI_COMMIT_ON_SUCCESS because transactions are
+		   handled separately */
 		
 		event = gda_oracle_check_result (result, cnc, cdata, OCI_HTYPE_ERROR,
 						 _("Could not execute the Oracle statement"));
@@ -1652,7 +1931,8 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
                 }
 
                 data_model = gda_oracle_recordset_new (cnc, ps, params, flags, col_types);
-		gda_connection_internal_statement_executed (cnc, stmt, params, NULL); /* required: help @cnc keep some stats */
+		if (data_model)
+			gda_connection_internal_statement_executed (cnc, stmt, params, NULL); /* required: help @cnc keep some stats */
 		g_object_unref (ps);
 		return (GObject*) data_model;
         }
@@ -1846,8 +2126,9 @@ gda_oracle_free_cnc_data (OracleConnectionData *cdata)
                 OCIHandleFree ((dvoid *) cdata->herr, OCI_HTYPE_ERROR);
         if (cdata->henv)
                 OCIHandleFree ((dvoid *) cdata->henv, OCI_HTYPE_ENV);
-        if (cdata->schema)
-                g_free(cdata->schema);
+
+	g_free (cdata->schema);
+	g_free (cdata->version);
 
 	g_free (cdata);
 }

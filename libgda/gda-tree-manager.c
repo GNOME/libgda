@@ -22,12 +22,22 @@
 
 #include "gda-tree-manager.h"
 #include "gda-tree-node.h"
+#include "gda-value.h"
+#include <string.h>
+
+typedef struct {
+	gchar *att_name;
+	GValue *value;
+} AddedAttribute;
 
 struct _GdaTreeManagerPrivate {
         GSList  *sub_managers; /* list of GdaTreeManager structures */
 	gboolean recursive;
 
 	GdaTreeManagerNodeFunc node_create_func;
+	GdaTreeManagerNodesFunc update_func;
+
+	GSList *added_attributes; /* list of #AddedAttribute pointers, managed here */
 };
 
 static void gda_tree_manager_class_init (GdaTreeManagerClass *klass);
@@ -43,15 +53,17 @@ static void gda_tree_manager_get_property (GObject *object,
 					   GParamSpec *pspec);
 
 enum {
+	DUMMY,
 	LAST_SIGNAL
 };
 
-static gint gda_tree_manager_signals[LAST_SIGNAL] = { };
+static gint gda_tree_manager_signals[LAST_SIGNAL] = { 0 };
 
 /* properties */
 enum {
 	PROP_0,
-	PROP_RECURS
+	PROP_RECURS,
+	PROP_FUNC
 };
 
 static GObjectClass *parent_class = NULL;
@@ -88,7 +100,15 @@ gda_tree_manager_class_init (GdaTreeManagerClass *klass)
                                          g_param_spec_boolean ("recursive", NULL, "Recursive building/updating of children",
                                                               TRUE,
                                                               G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT));
-
+/**
+	 * GdaTreeManager:func:
+	 *
+	 * This property specifies the function which needs to be called when the list of #GdaTreeNode nodes
+	 * managed has to be updated
+	 */
+	g_object_class_install_property (object_class, PROP_FUNC,
+                                         g_param_spec_pointer ("func", NULL, "Function called when building/updating of children",
+                                                              G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT));
 	object_class->dispose = gda_tree_manager_dispose;
 }
 
@@ -99,6 +119,7 @@ gda_tree_manager_init (GdaTreeManager *manager, GdaTreeManagerClass *klass)
 
 	manager->priv = g_new0 (GdaTreeManagerPrivate, 1);
 	manager->priv->sub_managers = NULL;
+	manager->priv->added_attributes = NULL;
 }
 
 static void
@@ -112,6 +133,17 @@ gda_tree_manager_dispose (GObject *object)
 		if (manager->priv->sub_managers) {
 			g_slist_foreach (manager->priv->sub_managers, (GFunc) g_object_unref, NULL);
 			g_slist_free (manager->priv->sub_managers);
+		}
+		if (manager->priv->added_attributes) {
+			GSList *list;
+			for (list = manager->priv->added_attributes; list; list = list->next) {
+				AddedAttribute *aa = (AddedAttribute*) list->data;
+				g_free (aa->att_name);
+				if (aa->value)
+					gda_value_free (aa->value);
+				g_free (aa);
+			}
+			g_slist_free (manager->priv->added_attributes);
 		}
 		g_free (manager->priv);
 		manager->priv = NULL;
@@ -161,7 +193,7 @@ gda_tree_manager_get_type (void)
 
                 g_static_mutex_lock (&registering);
                 if (type == 0)
-                        type = g_type_register_static (G_TYPE_OBJECT, "GdaTreeManager", &info, G_TYPE_FLAG_ABSTRACT);
+                        type = g_type_register_static (G_TYPE_OBJECT, "GdaTreeManager", &info, 0);
                 g_static_mutex_unlock (&registering);
         }
         return type;
@@ -181,6 +213,9 @@ gda_tree_manager_set_property (GObject *object,
 		case PROP_RECURS:
 			manager->priv->recursive = g_value_get_boolean (value);
 			break;
+		case PROP_FUNC:
+			manager->priv->update_func = g_value_get_pointer (value);
+			break;
 		}	
 	}
 }
@@ -199,12 +234,14 @@ gda_tree_manager_get_property (GObject *object,
 		case PROP_RECURS:
 			g_value_set_boolean (value, manager->priv->recursive);
 			break;
+		case PROP_FUNC:
+			g_value_set_pointer (value, manager->priv->update_func);
+			break;
 		}
 	}	
 }
 
-/**
- * gda_tree_manager_update_children
+/*
  * @manager: a #GdaTreeManager object
  * @node: a #GdaTreeNode object, or %NULL
  * @children_nodes: a list of #GdaTreeNode nodes which have previously been created by a similar call and
@@ -213,7 +250,7 @@ gda_tree_manager_get_property (GObject *object,
  * @error: a place to store errors, or %NULL
  *
  * Creates (or updates) the list of #GdaTreeNode objects which are placed as children of @node. The returned
- * list will completely replace the existing list of nodes managed ny @manager (as children of @node).
+ * list will completely replace the existing list of nodes managed by @manager (as children of @node).
  *
  * If a node is already present in @children_nodes and needs to be kept in the new list, then it should be added
  * to the returned list and its reference count should be increased by one.
@@ -222,23 +259,26 @@ gda_tree_manager_get_property (GObject *object,
  *
  * Since: 4.2
  */
-GSList *
-gda_tree_manager_update_children (GdaTreeManager *manager, GdaTreeNode *node, const GSList *children_nodes,
-				  gboolean *out_error, GError **error)
+void
+_gda_tree_manager_update_children (GdaTreeManager *manager, GdaTreeNode *node, const GSList *children_nodes,
+				   gboolean *out_error, GError **error)
 {
 	GSList *nodes_list = NULL;
-	GdaTreeManagerClass *klass;
 
-	g_return_val_if_fail (GDA_IS_TREE_MANAGER (manager), NULL);
-	g_return_val_if_fail (!node || GDA_IS_TREE_NODE (node), NULL);
+	g_return_if_fail (GDA_IS_TREE_MANAGER (manager));
+	g_return_if_fail (GDA_IS_TREE_NODE (node));
 
 	if (out_error)
 		*out_error = FALSE;
-	klass = (GdaTreeManagerClass*) G_OBJECT_GET_CLASS (manager);
-	if (klass->update_children)
-		nodes_list = klass->update_children (manager, node, children_nodes, out_error, error);
-	if (node && nodes_list)
-		_gda_tree_node_add_children (node, manager, nodes_list);
+	if (manager->priv->update_func)
+		nodes_list = manager->priv->update_func (manager, node, children_nodes, out_error, error);
+	else {
+		GdaTreeManagerClass *klass;
+		klass = (GdaTreeManagerClass*) G_OBJECT_GET_CLASS (manager);
+		if (klass->update_children)
+			nodes_list = klass->update_children (manager, node, children_nodes, out_error, error);
+	}
+	_gda_tree_node_add_children (node, manager, nodes_list);
 
 	/* calling sub managers for each new node */
 	GSList *list;
@@ -246,24 +286,122 @@ gda_tree_manager_update_children (GdaTreeManager *manager, GdaTreeNode *node, co
 		GSList *sl;
 		for (sl = manager->priv->sub_managers; sl; sl = sl->next) {
 			if (manager->priv->recursive) {
-				GSList *snodes;
 				gboolean lout_error = FALSE;
 				GdaTreeNode *parent = GDA_TREE_NODE (list->data);
 				GdaTreeManager *mgr = (GdaTreeManager *) sl->data;
-				snodes = gda_tree_manager_update_children (mgr, parent,
-									   _gda_tree_node_get_children_for_manager (parent, mgr),
-									   &lout_error, error);
+				_gda_tree_manager_update_children (mgr, parent,
+								   _gda_tree_node_get_children_for_manager (parent, mgr),
+								   &lout_error, error);
 				if (lout_error) {
 					if (out_error)
 						*out_error = TRUE;
-					return NULL;
+					return;
 				}
 			}
 			else 
 				_gda_tree_node_add_children (GDA_TREE_NODE (list->data), (GdaTreeManager *) sl->data, NULL);	
 		}
 	}
-	return nodes_list;
+	if (nodes_list)
+		g_slist_free (nodes_list);
+}
+
+
+/**
+ * gda_tree_manager_new_with_func
+ * @update_func: the function to call when the manager object is requested to create or update its list of
+ * #GdaTreeNode nodes
+ *
+ * Use this method to create a new #GdaTreeManager if it's more convenient than subclassing; all is needed
+ * is the @update_func function which is responsible for creating or updating the children nodes of a specified
+ * #GdaTreeNode.
+ *
+ * Returns: a new #GdaTreeManager
+ *
+ * Since: 4.2
+ */
+GdaTreeManager *
+gda_tree_manager_new_with_func (GdaTreeManagerNodesFunc update_func)
+{
+	g_return_val_if_fail (update_func, NULL);
+
+	return (GdaTreeManager*) g_object_new (GDA_TYPE_TREE_MANAGER, "func", update_func, NULL);
+}
+
+/**
+ * gda_tree_manager_add_new_node_attribute
+ * @manager: a #GdaTreeManager
+ * @attribute: an attribute name
+ * @value: the attribute's value, or %NULL
+ *
+ * Requests that for any new node managed (eg. created) by @manager, a new attribute will be set. This allows
+ * one to customize the attributes of new nodes created by an existing #GdaTreeManager.
+ *
+ * As a side effect, if @value is %NULL, then the corresponding attribute, if it was set, is unset.
+ *
+ * Since: 4.2
+ */
+void
+gda_tree_manager_add_new_node_attribute (GdaTreeManager *manager, const gchar *attribute, const GValue *value)
+{
+	AddedAttribute *aa = NULL;
+	GSList *list;
+	g_return_if_fail (GDA_IS_TREE_MANAGER (manager));
+	g_return_if_fail (attribute && *attribute);
+	
+	for (list = manager->priv->added_attributes; list; list = list->next) {
+		if (!strcmp (((AddedAttribute *) list->data)->att_name, attribute)) {
+			aa = (AddedAttribute *) list->data;
+			break;
+		}
+	}
+	if (!aa) {
+		aa = g_new0 (AddedAttribute, 1);
+		aa->att_name = g_strdup (attribute);
+		manager->priv->added_attributes = g_slist_append (manager->priv->added_attributes, aa);
+	}
+	else if (aa->value) {
+		gda_value_free (aa->value);
+		aa->value = NULL;
+	}
+	if (value)
+		aa->value = gda_value_copy (value);
+
+}
+
+/**
+ * gda_tree_manager_create_node
+ * @manager: a #GdaTreeManager
+ * @parent: the parent the new node may have, or %NULL
+ * @name: name given to the new node, or %NULL
+ *
+ * Requests that @manager creates a new #GdaTreeNode. The new node is not in any
+ * way linked to @manager yet, consider this method as a #GdaTreeNode factory.
+ *
+ * This method is usually used when implementing a #GdaTreeManagerNodesFunc function (to create nodes),
+ * or when subclassing the #GdaTreeManager.
+ *
+ * Returns: a new #GdaTreeNode
+ *
+ * Since: 4.2
+ */
+GdaTreeNode *
+gda_tree_manager_create_node (GdaTreeManager *manager, GdaTreeNode *parent, const gchar *name)
+{
+	GdaTreeNode *node;
+	GSList *list;
+	g_return_val_if_fail (GDA_IS_TREE_MANAGER (manager), NULL);
+	if (manager->priv->node_create_func)
+		node = manager->priv->node_create_func (manager, parent, name);
+	else
+		node = gda_tree_node_new (name);
+
+	for (list = manager->priv->added_attributes; list; list = list->next) {
+		AddedAttribute *aa = (AddedAttribute*) list->data;
+		gda_tree_node_set_node_attribute (node, aa->att_name, aa->value, NULL);
+	}
+
+	return node;
 }
 
 /**
@@ -289,11 +427,28 @@ gda_tree_manager_add_manager (GdaTreeManager *manager, GdaTreeManager *sub)
 }
 
 /**
+ * gda_tree_manager_get_managers
+ * @manager: a #GdaTreeManager object
+ *
+ * Get the list of sub managers which have already been added using gda_tree_manager_add_manager()
+ *
+ * Returns: a listof #GdaTreeMenager which should not be modified.
+ *
+ * Since: 4.2
+ */
+const GSList *
+gda_tree_manager_get_managers (GdaTreeManager *manager)
+{
+	g_return_val_if_fail (GDA_IS_TREE_MANAGER (manager), NULL);
+	return manager->priv->sub_managers;
+}
+
+/**
  * gda_tree_manager_set_node_create_func
- * @mgr: a #GdaTreeManager tree manager object
+ * @manager: a #GdaTreeManager tree manager object
  * @func: a #GdaTreeManagerNodeFunc function pointer, or %NULL
  *
- * Sets the function to be called when a new node is being created by @mgr. If @func is %NULL
+ * Sets the function to be called when a new node is being created by @manager. If @func is %NULL
  * then each created node will be a #GdaTreeNode object.
  *
  * Specifying a custom #GdaTreeManagerNodeFunc function for example allows one to use
@@ -302,25 +457,25 @@ gda_tree_manager_add_manager (GdaTreeManager *manager, GdaTreeManager *sub)
  * Since: 4.2
  */
 void
-gda_tree_manager_set_node_create_func (GdaTreeManager *mgr, GdaTreeManagerNodeFunc func)
+gda_tree_manager_set_node_create_func (GdaTreeManager *manager, GdaTreeManagerNodeFunc func)
 {
-	g_return_if_fail (GDA_IS_TREE_MANAGER (mgr));
-	mgr->priv->node_create_func = func;
+	g_return_if_fail (GDA_IS_TREE_MANAGER (manager));
+	manager->priv->node_create_func = func;
 }
 
 /**
  * gda_tree_manager_get_node_create_func
- * @mgr: a #GdaTreeManager tree manager object
+ * @manager: a #GdaTreeManager tree manager object
  *
- * Get the function used by @mgr when creating new #GdaTreeNode nodes
+ * Get the function used by @manager when creating new #GdaTreeNode nodes
  *
  * Returns: the #GdaTreeManagerNodeFunc function, or %NULL if the default function is used
  *
  * Since: 4.2
  */
 GdaTreeManagerNodeFunc
-gda_tree_manager_get_node_create_func (GdaTreeManager *mgr)
+gda_tree_manager_get_node_create_func (GdaTreeManager *manager)
 {
-	g_return_val_if_fail (GDA_IS_TREE_MANAGER (mgr), NULL);
-	return mgr->priv->node_create_func;
+	g_return_val_if_fail (GDA_IS_TREE_MANAGER (manager), NULL);
+	return manager->priv->node_create_func;
 }

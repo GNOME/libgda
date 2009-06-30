@@ -1,11 +1,15 @@
-SUBDIRS = binreloc
+if HAVE_UI
+BROWSER_DIR=browser
+endif
+
+SUBDIRS = binreloc $(BROWSER_DIR)
 
 bin_PROGRAMS = \
-	gda-list-config-4.1 \
-	gda-sql-4.1 \
-	gda-list-server-op-4.1
+	gda-list-config-4.0 \
+	gda-sql-4.0 \
+	gda-list-server-op-4.0
 
-noinst_PROGRAMS = information-schema-doc
+noinst_PROGRAMS = information-schema-doc information-schema-types
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
@@ -16,14 +20,14 @@ AM_CPPFLAGS = \
 	$(LIBGDA_CFLAGS) \
 	-DROOT_DIR=\""$(top_srcdir)"\"
 
-gda_list_config_4_1_SOURCES = \
+gda_list_config_4_0_SOURCES = \
         gda-list-config.c
 
-gda_list_config_4_1_LDADD = \
+gda_list_config_4_0_LDADD = \
         $(top_builddir)/libgda/libgda-4.0.la \
         $(LIBGDA_LIBS)
 
-gda_sql_4_1_SOURCES = \
+gda_sql_4_0_SOURCES = \
         gda-sql.c \
 	gda-sql.h \
 	gda-threader.h \
@@ -36,7 +40,7 @@ gda_sql_4_1_SOURCES = \
 	$(top_srcdir)/libgda/md5.h \
 	$(top_srcdir)/libgda/md5c.c
 
-gda_sql_4_1_LDADD = \
+gda_sql_4_0_LDADD = \
         $(top_builddir)/libgda/libgda-4.0.la \
 	binreloc/libgdasql_binreloc-4.0.la \
         $(LIBGDA_LIBS) \
@@ -44,17 +48,17 @@ gda_sql_4_1_LDADD = \
         $(HISTORY_LIB)
 
 if LIBSOUP
-gda_sql_4_1_SOURCES += web-server.h web-server.c html-doc.h html-doc.c
+gda_sql_4_0_SOURCES += web-server.h web-server.c html-doc.h html-doc.c
 AM_CPPFLAGS += $(LIBSOUP_CFLAGS)
-gda_sql_4_1_LDADD += $(LIBSOUP_LIBS)
+gda_sql_4_0_LDADD += $(LIBSOUP_LIBS)
 endif
 
 
 
 # setenv() is in libiberty in mingw
 if PLATFORM_WIN32
-gda_sql_4_1_LDADD += -liberty
-gda_sql_4_1_SOURCES += gda-sql-res.rc
+gda_sql_4_0_LDADD += -liberty
+gda_sql_4_0_SOURCES += gda-sql-res.rc
 endif
 
 .rc.o:
@@ -63,10 +67,10 @@ endif
 gda-sql-res.o: gda-sql-res.rc
 	$(WINDRES) $^ -o $@
 
-gda_list_server_op_4_1_SOURCES = \
+gda_list_server_op_4_0_SOURCES = \
         gda-list-server-op.c
 
-gda_list_server_op_4_1_LDADD = \
+gda_list_server_op_4_0_LDADD = \
         $(top_builddir)/libgda/libgda-4.0.la \
         $(LIBGDA_LIBS)
 
@@ -78,7 +82,14 @@ information_schema_doc_LDADD = \
         $(top_builddir)/libgda/libgda-4.0.la \
         $(LIBGDA_LIBS)
 
-webdatadir = $(datadir)/libgda-4.1/web
+information_schema_types_SOURCES = \
+        information-schema-types.c
+
+information_schema_types_LDADD = \
+        $(top_builddir)/libgda/libgda-4.0.la \
+        $(LIBGDA_LIBS)
+
+webdatadir = $(datadir)/libgda-4.0/web
 webdata_DATA = \
 	cnc.js \
 	md5.js \
@@ -90,11 +101,14 @@ webdata_DATA = \
 	gda-print.css \
 	irb.css
 
-EXTRA_DIST = gda-sql.ico \
+EXTRA_DIST = \
+	dict-file-name.c \
+	gda-sql-res.rc \
+	gda-sql.ico \
 	$(webdata_DATA)
 
 mans = \
-	gda-sql-4.1.1
+	gda-sql-4.0.1
 
 man_MANS = \
 	$(mans)
@@ -131,9 +145,9 @@ install-exec-hook:
 if DEFAULT_BINARY
 	cd $(DESTDIR)$(bindir) \
 	&& rm -f gda-list-config$(EXEEXT) gda-sql$(EXEEXT) gda-list-server-op$(EXEEXT) \
-	&& $(LN_S) gda-list-config-4.1$(EXEEXT) gda-list-config$(EXEEXT) \
-	&& $(LN_S) gda-sql-4.1$(EXEEXT) gda-sql$(EXEEXT) \
-	&& $(LN_S) gda-list-server-op-4.1$(EXEEXT) gda-list-server-op$(EXEEXT)
+	&& $(LN_S) gda-list-config-4.0$(EXEEXT) gda-list-config$(EXEEXT) \
+	&& $(LN_S) gda-sql-4.0$(EXEEXT) gda-sql$(EXEEXT) \
+	&& $(LN_S) gda-list-server-op-4.0$(EXEEXT) gda-list-server-op$(EXEEXT)
 endif
 
 uninstall-local:

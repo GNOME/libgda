@@ -337,10 +337,9 @@ gda_tree_mgr_select_update_children (GdaTreeManager *manager, GdaTreeNode *node,
 	}
 
 	GdaDataModelIter *iter;
-	GdaTreeManagerNodeFunc create_func = gda_tree_manager_get_node_create_func (manager);
 	iter = gda_data_model_create_iter (model);
 	for (; iter && gda_data_model_iter_move_next (iter);) {
-		GdaTreeNode* node;
+		GdaTreeNode* snode = NULL;
 		const GValue *cvalue;
 		GSList *iholders;
 
@@ -360,18 +359,14 @@ gda_tree_mgr_select_update_children (GdaTreeManager *manager, GdaTreeNode *node,
 				return NULL;
 			}
 
-			if (iholders == GDA_SET (iter)->holders) {
-				if (create_func)
-					node = create_func (manager, node);
-				else {
-					gchar *str = gda_value_stringify (cvalue);
-					node = gda_tree_node_new (str);
-					g_free (str);
-				}
-				list = g_slist_prepend (list, node);
+			if (!snode) {
+				gchar *str = gda_value_stringify (cvalue);
+				snode = gda_tree_manager_create_node (manager, node, str);
+				g_free (str);
+				list = g_slist_prepend (list, snode);
 			}
 			
-			gda_tree_node_set_node_attribute (node, g_strdup (gda_holder_get_id (holder)), cvalue, g_free);
+			gda_tree_node_set_node_attribute (snode, g_strdup (gda_holder_get_id (holder)), cvalue, g_free);
 		}
 	}
 	if (iter)

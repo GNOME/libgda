@@ -1,0 +1,9 @@
+[Desktop Entry]
+_Name=Database browser
+_Comment=Browse your database's contents
+Icon=gda-browser
+Exec=gda-browser-4.0
+Terminal=0
+Type=Application
+Categories=GNOME;Application;
+StartupNotify=true

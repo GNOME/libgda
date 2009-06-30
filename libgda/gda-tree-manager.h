@@ -34,7 +34,10 @@ G_BEGIN_DECLS
 #define GDA_IS_TREE_MANAGER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_TREE_MANAGER))
 #define GDA_IS_TREE_MANAGER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_TREE_MANAGER))
 
-typedef GdaTreeNode *(*GdaTreeManagerNodeFunc) (GdaTreeManager *manager, GdaTreeNode *parent);
+typedef GSList *(*GdaTreeManagerNodesFunc) (GdaTreeManager *manager, GdaTreeNode *node,
+					    const GSList *children_nodes,
+					    gboolean *out_error, GError **error);
+typedef GdaTreeNode *(*GdaTreeManagerNodeFunc) (GdaTreeManager *manager, GdaTreeNode *parent, const gchar *name);
 
 /* error reporting */
 extern GQuark gda_tree_manager_error_quark (void);
@@ -58,8 +61,7 @@ struct _GdaTreeManagerClass {
 	 *
 	 * Returns: NULL if an error occurred, and @out_error is set to TRUE
 	 */
-	GSList *(*update_children) (GdaTreeManager *manager, GdaTreeNode *node, const GSList *children_nodes,
-				    gboolean *out_error, GError **error);
+	GdaTreeManagerNodesFunc update_children;
 
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
@@ -69,12 +71,22 @@ struct _GdaTreeManagerClass {
 };
 
 GType                  gda_tree_manager_get_type                 (void) G_GNUC_CONST;
-GSList                *gda_tree_manager_update_children          (GdaTreeManager *manager, GdaTreeNode *node,
+
+GdaTreeManager        *gda_tree_manager_new_with_func            (GdaTreeManagerNodesFunc update_func);
+void                   gda_tree_manager_add_manager              (GdaTreeManager *manager, GdaTreeManager *sub);
+const GSList          *gda_tree_manager_get_managers             (GdaTreeManager *manager);
+
+void                   gda_tree_manager_set_node_create_func     (GdaTreeManager *manager, GdaTreeManagerNodeFunc func);
+GdaTreeManagerNodeFunc gda_tree_manager_get_node_create_func     (GdaTreeManager *manager);
+
+void                   gda_tree_manager_add_new_node_attribute   (GdaTreeManager *manager, const gchar *attribute, const GValue *value);
+GdaTreeNode           *gda_tree_manager_create_node              (GdaTreeManager *manager, GdaTreeNode *parent, const gchar *name);
+
+/* private */
+void                   _gda_tree_manager_update_children         (GdaTreeManager *manager, GdaTreeNode *node,
 								  const GSList *children_nodes,
 								  gboolean *out_error, GError **error);
-void                   gda_tree_manager_add_manager              (GdaTreeManager *manager, GdaTreeManager *sub);
-void                   gda_tree_manager_set_node_create_func     (GdaTreeManager *mgr, GdaTreeManagerNodeFunc func);
-GdaTreeManagerNodeFunc gda_tree_manager_get_node_create_func     (GdaTreeManager *mgr);
+
 
 G_END_DECLS
 

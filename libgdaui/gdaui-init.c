@@ -1,0 +1,613 @@
+/* GNOME DB library
+ * Copyright (C) 1999 - 2009 The GNOME Foundation.
+ *
+ * AUTHORS:
+ * 	Rodrigo Moya <rodrigo@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
+ *
+ * This Library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This Library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this Library; see the file COPYING.LIB.  If not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#include <string.h>
+#include <gtk/gtk.h>
+#include <glib/gi18n-lib.h>
+#include <libgda/libgda.h>
+#include <libgdaui/gdaui-data-entry.h>
+#include <libgdaui/gdaui-plugin.h>
+#include <libgda/binreloc/gda-binreloc.h>
+#include "data-entries/gdaui-entry-boolean.h"
+#include "data-entries/gdaui-entry-string.h"
+#include "data-entries/gdaui-entry-time.h"
+#include "data-entries/gdaui-entry-date.h"
+#include "data-entries/gdaui-entry-timestamp.h"
+#include "data-entries/gdaui-entry-none.h"
+#include "data-entries/gdaui-data-cell-renderer-textual.h"
+#include "data-entries/gdaui-data-cell-renderer-boolean.h"
+
+/* plugins list */
+
+static GHashTable *init_plugins_hash (void);
+GHashTable *gdaui_plugins_hash = NULL; /* key = plugin name, value = GdauiPlugin structure pointer */
+
+
+/**
+ * gdaui_init
+ *
+ * Initialization of the libgdaui library, must be called before any usage of the library.
+ * Note: gtk_init() is not called by this function and should also be called.
+ */
+void
+gdaui_init (void)
+{
+	static gboolean initialized = FALSE;
+	gchar *str;
+
+	if (initialized) {
+		gda_log_error (_("Attempt to initialize an already initialized library"));
+		return;
+	}
+
+	/*
+	gdaui_gbr_init ();
+	str = gdaui_gbr_get_locale_dir_path ();
+	bindtextdomain (GETTEXT_PACKAGE, str);
+	g_free (str);
+	*/
+
+	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+
+	gda_init ();
+	gdaui_plugins_hash = init_plugins_hash ();
+
+	initialized = TRUE;
+}
+
+/**
+ * gdaui_new_data_entry
+ * @type: a #GType
+ * @plugin_name: the name of an entry plugin, or %NULL
+ *
+ * Creates a new #GdauiDataEntry widget, taking into account the requested entry name
+ * if @plugin_name is not %NULL (if no entry of that name is found, then the default data
+ * entry widget will be created).
+ *
+ * @plugin_name format is interpreted as two parts: &lt;plugin name&gt;:&lt;plugin options&gt;, and
+ * if the plugins has no option, then the ":&lt;plugin options&gt;" part may be omitted.
+ * 
+ * Returns: a new #GdauiDataEntry widget, _NEVER_ %NULL
+ */
+GdauiDataEntry *
+gdaui_new_data_entry (GType type, const gchar *plugin_name)
+{
+	GdaDataHandler *dh;
+	GdauiDataEntry *entry = NULL;
+	gchar *spec_options = NULL;
+
+	if (!gdaui_plugins_hash)
+		gdaui_plugins_hash = init_plugins_hash ();
+
+	dh = gda_get_default_handler (type);
+
+	if (plugin_name && *plugin_name) {
+		GdauiPlugin *plugin_struct;
+		gchar *plugin = g_strdup (plugin_name);
+		gchar *ptr, *options = NULL;
+
+		for (ptr = plugin; *ptr && (*ptr != ':'); ptr++);
+		*ptr = 0;
+		ptr++;
+		if (ptr < plugin + strlen (plugin_name)) {
+			options = ptr;
+			spec_options = g_strdup (options);
+		}
+		
+		plugin_struct = g_hash_table_lookup (gdaui_plugins_hash, plugin);
+		if (plugin_struct && plugin_struct->entry_create_func) 
+			entry = (plugin_struct->entry_create_func) (dh, type, options);
+		g_free (plugin);
+	}
+
+	if (!entry) {
+		if (type == GDA_TYPE_NULL)
+			entry = (GdauiDataEntry *) gdaui_entry_none_new (GDA_TYPE_NULL);
+		else if ((type == G_TYPE_INT64) ||
+			 (type == G_TYPE_UINT64) ||
+			 (type == GDA_TYPE_BINARY) ||
+			 (type == G_TYPE_DOUBLE) ||
+			 (type == G_TYPE_INT) ||
+			 (type == GDA_TYPE_NUMERIC) ||
+			 (type == G_TYPE_FLOAT) ||
+			 (type == GDA_TYPE_SHORT) ||
+			 (type == GDA_TYPE_USHORT) ||
+			 (type == G_TYPE_STRING) ||
+			 (type == G_TYPE_CHAR) ||
+			 (type == G_TYPE_UCHAR) ||
+			 (type == G_TYPE_ULONG) ||
+			 (type == G_TYPE_UINT))
+			entry = (GdauiDataEntry *) gdaui_entry_string_new (dh, type, spec_options);
+		else if (type == G_TYPE_BOOLEAN)
+			entry = (GdauiDataEntry *) gdaui_entry_boolean_new (dh, G_TYPE_BOOLEAN);
+		else if	((type == GDA_TYPE_GEOMETRIC_POINT) ||
+			 (type == G_TYPE_OBJECT) ||
+			 (type == GDA_TYPE_BLOB) ||
+			 (type == GDA_TYPE_LIST))
+			entry = (GdauiDataEntry *) gdaui_entry_none_new (type);
+		else if	(type == GDA_TYPE_TIME)
+			entry = (GdauiDataEntry *) gdaui_entry_time_new (dh);
+		else if (type == GDA_TYPE_TIMESTAMP)
+			entry = (GdauiDataEntry *) gdaui_entry_timestamp_new (dh);
+		else if (type == G_TYPE_DATE)
+			entry = (GdauiDataEntry *) gdaui_entry_date_new (dh);
+		else
+			entry = (GdauiDataEntry *) gdaui_entry_string_new (dh, type, spec_options);
+	}
+
+	g_free (spec_options);
+	return entry;
+}
+
+/**
+ * gdaui_new_cell_renderer
+ * @type: a #GType
+ * @plugin_name: the name of an entry plugin, or %NULL
+ *
+ * Creates a new #GtkCellRenderer object which is suitable to use in
+ * a #GtkTreeView widget, taking into account the requested entry name
+ * if @plugin_name is not %NULL (if no entry of that name is found, then the default data
+ * entry widget will be created).
+ *
+ * @plugin_name format is interpreted as two parts: &lt;plugin name&gt;:&lt;plugin options&gt;, and
+ * if the plugins has no option, then the ":&lt;plugin options&gt;" part may be omitted.
+ * 
+ * 
+ * Returns: a new #GtkCellRenderer object, _NEVER_ %NULL
+ */
+GtkCellRenderer *
+gdaui_new_cell_renderer (GType type, const gchar *plugin_name)
+{
+	GdaDataHandler *dh;
+	GtkCellRenderer *cell = NULL;
+
+	if (!gdaui_plugins_hash) 
+		gdaui_plugins_hash = init_plugins_hash ();
+
+	dh = gda_get_default_handler (type);
+	
+	if (plugin_name && *plugin_name) {
+		GdauiPlugin *plugin_struct;
+		gchar *plugin = g_strdup (plugin_name);
+		gchar *ptr, *options = NULL;
+
+		for (ptr = plugin; *ptr && (*ptr != ':'); ptr++);
+		*ptr = 0;
+		ptr++;
+		if (ptr < plugin + strlen (plugin_name))
+			options = ptr;
+		
+		plugin_struct = g_hash_table_lookup (gdaui_plugins_hash, plugin);
+		if (plugin_struct && plugin_struct->cell_create_func) 
+			cell = (plugin_struct->cell_create_func) (dh, type, options);
+		g_free (plugin);
+	}
+
+	if (!cell) {
+		if (type == GDA_TYPE_NULL)
+			cell = gdaui_data_cell_renderer_textual_new (NULL, GDA_TYPE_NULL, NULL);
+		else if (type == G_TYPE_BOOLEAN)
+			cell = gdaui_data_cell_renderer_boolean_new (dh, G_TYPE_BOOLEAN);
+		else
+			cell = gdaui_data_cell_renderer_textual_new (dh, type, NULL);
+	}
+
+	return cell;
+}
+
+static GdauiDataEntry *entry_none_create_func (GdaDataHandler *handler, GType type, const gchar *options);
+static GdauiDataEntry *entry_boolean_create_func (GdaDataHandler *handler, GType type, const gchar *options);
+static GdauiDataEntry *entry_string_create_func (GdaDataHandler *handler, GType type, const gchar *options);
+static GdauiDataEntry *entry_time_create_func (GdaDataHandler *handler, GType type, const gchar *options);
+static GdauiDataEntry *entry_timestamp_create_func (GdaDataHandler *handler, GType type, const gchar *options);
+static GdauiDataEntry *entry_date_create_func (GdaDataHandler *handler, GType type, const gchar *options);
+
+static GtkCellRenderer *cell_textual_create_func (GdaDataHandler *handler, GType type, const gchar *options);
+static GtkCellRenderer *cell_boolean_create_func (GdaDataHandler *handler, GType type, const gchar *options);
+
+static xmlChar *get_spec_with_isocodes (const gchar *file);
+
+static GHashTable *
+init_plugins_hash (void)
+{
+	GHashTable *hash;
+	GdauiPlugin *plugin;
+	gchar *file;
+
+	hash = g_hash_table_new (g_str_hash, g_str_equal); /* key strings are not handled in the hash table */
+
+	/* default data entry widgets: they are not plugins but will be stored in GdauiPlugin structures */
+	plugin = g_new0 (GdauiPlugin, 1);
+	plugin->plugin_name = "none";
+	plugin->plugin_descr = "Nothing displayed";
+	plugin->plugin_file = NULL;
+	plugin->nb_g_types = 0;
+	plugin->valid_g_types = NULL;
+	plugin->options_xml_spec = NULL;
+	plugin->entry_create_func = entry_none_create_func;
+	plugin->cell_create_func = NULL;
+	g_hash_table_insert (hash, plugin->plugin_name, plugin);
+
+	plugin = g_new0 (GdauiPlugin, 1);
+	plugin->plugin_name = "boolean";
+	plugin->plugin_descr = "Boolean entry";
+	plugin->plugin_file = NULL;
+	plugin->nb_g_types = 1;
+	plugin->valid_g_types = g_new (GType, plugin->nb_g_types);
+	plugin->valid_g_types [0] = G_TYPE_BOOLEAN;
+	plugin->options_xml_spec = NULL;
+	plugin->entry_create_func = entry_boolean_create_func;
+	plugin->cell_create_func =cell_boolean_create_func;
+	g_hash_table_insert (hash, plugin->plugin_name, plugin);
+       
+	plugin = g_new0 (GdauiPlugin, 1);
+	plugin->plugin_name = "string";
+	plugin->plugin_descr = "String entry";
+	plugin->plugin_file = NULL;
+	plugin->nb_g_types = 1;
+	plugin->valid_g_types = g_new (GType, plugin->nb_g_types);
+	plugin->valid_g_types [0] = G_TYPE_STRING;
+	plugin->options_xml_spec = NULL;
+	plugin->entry_create_func = entry_string_create_func;
+	plugin->cell_create_func = cell_textual_create_func;
+	g_hash_table_insert (hash, plugin->plugin_name, plugin);
+	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "ui", "gdaui-entry-string-string.xml", NULL);
+	if (! g_file_test (file, G_FILE_TEST_EXISTS)) {
+		g_message ("Could not find file '%s': '%s' data entry will not report any possible option",
+			   file, plugin->plugin_name);
+        }
+	else {
+		gsize len;
+		g_file_get_contents (file, &(plugin->options_xml_spec), &len, NULL);
+	}
+	g_free (file);
+
+	plugin = g_new0 (GdauiPlugin, 1);
+	plugin->plugin_name = "number";
+	plugin->plugin_descr = "Numeric entry";
+	plugin->plugin_file = NULL;
+	plugin->nb_g_types = 12;
+	plugin->valid_g_types = g_new (GType, plugin->nb_g_types);
+	plugin->valid_g_types [0] = G_TYPE_INT64;
+	plugin->valid_g_types [1] = G_TYPE_UINT64;
+	plugin->valid_g_types [2] = G_TYPE_DOUBLE;
+	plugin->valid_g_types [3] = G_TYPE_INT;
+	plugin->valid_g_types [4] = GDA_TYPE_NUMERIC;
+	plugin->valid_g_types [5] = G_TYPE_FLOAT;
+	plugin->valid_g_types [6] = GDA_TYPE_SHORT;
+	plugin->valid_g_types [7] = GDA_TYPE_USHORT;
+	plugin->valid_g_types [8] = G_TYPE_CHAR;
+	plugin->valid_g_types [9] = G_TYPE_UCHAR;
+	plugin->valid_g_types [10] = G_TYPE_ULONG;
+	plugin->valid_g_types [11] = G_TYPE_UINT;
+	plugin->options_xml_spec = NULL;
+	plugin->entry_create_func = entry_string_create_func;
+	plugin->cell_create_func = cell_textual_create_func;
+	g_hash_table_insert (hash, plugin->plugin_name, plugin);
+	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "ui", "gdaui-entry-string-number.xml", NULL);
+	xmlChar *xml_spec = get_spec_with_isocodes (file);
+	if (xml_spec) {
+		plugin->options_xml_spec = g_strdup (xml_spec);
+		xmlFree (xml_spec);
+	}
+	g_free (file);
+
+	plugin = g_new0 (GdauiPlugin, 1);
+	plugin->plugin_name = "textual";
+	plugin->plugin_descr = "Textual entry";
+	plugin->plugin_file = NULL;
+	plugin->nb_g_types = 0;
+	plugin->valid_g_types = NULL;
+	plugin->options_xml_spec = NULL;
+	plugin->entry_create_func = entry_string_create_func;
+	plugin->cell_create_func = cell_textual_create_func;
+	g_hash_table_insert (hash, plugin->plugin_name, plugin);
+
+	plugin = g_new0 (GdauiPlugin, 1);
+	plugin->plugin_name = "time";
+	plugin->plugin_descr = "Time (HH:MM:SS) entry";
+	plugin->plugin_file = NULL;
+	plugin->nb_g_types = 1;
+	plugin->valid_g_types = g_new (GType, plugin->nb_g_types);
+	plugin->valid_g_types [0] = GDA_TYPE_TIME;
+	plugin->options_xml_spec = NULL;
+	plugin->entry_create_func = entry_time_create_func;
+	plugin->cell_create_func = NULL;
+	g_hash_table_insert (hash, plugin->plugin_name, plugin);
+
+	plugin = g_new0 (GdauiPlugin, 1);
+	plugin->plugin_name = "timestamp";
+	plugin->plugin_descr = "Timestamp (Date + HH:MM:SS) entry";
+	plugin->plugin_file = NULL;
+	plugin->nb_g_types = 1;
+	plugin->valid_g_types = g_new (GType, plugin->nb_g_types);
+	plugin->valid_g_types [0] = GDA_TYPE_TIMESTAMP;	
+	plugin->options_xml_spec = NULL;
+	plugin->entry_create_func = entry_timestamp_create_func;
+	plugin->cell_create_func = NULL;
+	g_hash_table_insert (hash, plugin->plugin_name, plugin);
+
+	plugin = g_new0 (GdauiPlugin, 1);
+	plugin->plugin_name = "date";
+	plugin->plugin_descr = "Date entry";
+	plugin->plugin_file = NULL;
+	plugin->nb_g_types = 1;
+	plugin->valid_g_types = g_new (GType, plugin->nb_g_types);
+	plugin->valid_g_types [0] = G_TYPE_DATE;
+	plugin->options_xml_spec = NULL;
+	plugin->entry_create_func = entry_date_create_func;
+	plugin->cell_create_func = NULL;
+	g_hash_table_insert (hash, plugin->plugin_name, plugin);
+	
+	/* plugins */
+	GDir *dir;
+	GError *err = NULL;
+	gchar *plugins_dir;
+	
+	/* read the plugin directory */
+	plugins_dir = gda_gbr_get_file_path (GDA_LIB_DIR, LIBGDA_ABI_NAME, "plugins", NULL);
+	g_print ("Trying to load plugins in %s...\n", plugins_dir);
+	dir = g_dir_open (plugins_dir, 0, NULL);
+	if (!dir) {
+		g_free (plugins_dir);
+		plugins_dir = g_strdup (PLUGINSDIR);
+		g_print ("Trying to load plugins in %s...\n", plugins_dir);
+		dir = g_dir_open (plugins_dir, 0, NULL);
+	}
+	if (!dir)
+		g_warning (_("Could not open plugins directory, no plugin loaded."));
+	else {
+		const gchar *name;
+
+		while ((name = g_dir_read_name (dir))) {
+			gchar *ext;
+			GModule *handle;
+			gchar *path;
+			GdauiPluginInit plugin_init;
+			GSList *plugins;
+
+			ext = g_strrstr (name, ".");
+			if (!ext)
+				continue;
+			if (strcmp (ext + 1, G_MODULE_SUFFIX))
+				continue;
+
+			path = g_build_path (G_DIR_SEPARATOR_S, plugins_dir, name, NULL);
+			handle = g_module_open (path, G_MODULE_BIND_LAZY);
+			if (!handle) {
+				g_warning (_("Error: %s"), g_module_error ());
+				g_free (path);
+				continue;
+			}
+
+			g_module_symbol (handle, "plugin_init", (gpointer*) &plugin_init);
+			if (plugin_init) {
+				g_print (_("Loading file %s...\n"), path);
+				plugins = plugin_init (&err);
+				if (err) {
+					g_message (_("Plugins load warning: %s"),
+						   err->message ? err->message : _("No detail"));
+					if (err)
+						g_error_free (err);
+					err = NULL;
+				}
+
+				GSList *list;
+				for (list = plugins; list; list = list->next) {
+					GdauiPlugin *plugin;
+					
+					plugin = (GdauiPlugin *)(list->data);
+					g_hash_table_insert (hash, plugin->plugin_name, plugin);
+					g_print ("  - loaded %s (%s):", plugin->plugin_name,
+						 plugin->plugin_descr);
+					if (plugin->entry_create_func)
+						g_print (" Entry");
+					if (plugin->cell_create_func)
+						g_print (" Cell");
+					g_print ("\n");
+					plugin->plugin_file = g_strdup (path);
+				}
+				g_slist_free (plugins);
+			}
+			g_free (path);
+		}
+		g_dir_close (dir);
+	}
+	g_free (plugins_dir);
+
+	return hash;
+}
+
+static GdauiDataEntry *
+entry_none_create_func (GdaDataHandler *handler, GType type, const gchar *options)
+{
+	return (GdauiDataEntry *) gdaui_entry_none_new (type);
+}
+
+static GdauiDataEntry *
+entry_boolean_create_func (GdaDataHandler *handler, GType type, const gchar *options)
+{
+	return (GdauiDataEntry *) gdaui_entry_boolean_new (handler, G_TYPE_BOOLEAN);
+}
+
+static GdauiDataEntry *
+entry_string_create_func (GdaDataHandler *handler, GType type, const gchar *options)
+{
+	return (GdauiDataEntry *) gdaui_entry_string_new (handler, type, options);
+}
+
+static GdauiDataEntry *
+entry_time_create_func (GdaDataHandler *handler, GType type, const gchar *options)
+{
+	return (GdauiDataEntry *) gdaui_entry_time_new (handler);
+}
+
+static GdauiDataEntry *
+entry_timestamp_create_func (GdaDataHandler *handler, GType type, const gchar *options)
+{
+	return (GdauiDataEntry *) gdaui_entry_timestamp_new (handler);
+}
+
+static GdauiDataEntry *
+entry_date_create_func (GdaDataHandler *handler, GType type, const gchar *options)
+{
+	return (GdauiDataEntry *) gdaui_entry_date_new (handler);
+}
+
+static GtkCellRenderer *
+cell_textual_create_func (GdaDataHandler *handler, GType type, const gchar *options)
+{
+	return gdaui_data_cell_renderer_textual_new (handler, type, options);
+}
+
+static GtkCellRenderer *
+cell_boolean_create_func (GdaDataHandler *handler, GType type, const gchar *options)
+{
+	return gdaui_data_cell_renderer_boolean_new (handler, G_TYPE_BOOLEAN);
+}
+
+static xmlNodePtr
+find_child_node_from_name (xmlNodePtr parent, const gchar *name, const gchar *attr_name, const gchar *attr_value)
+{
+	xmlNodePtr node;
+
+	if (!parent)
+		return NULL;
+
+	for (node = parent->children; node; node = node->next) {
+		if (!strcmp (node->name, name)) {
+			if (attr_name) {
+				xmlChar *prop;
+				prop = xmlGetProp (node, attr_name);
+				if (prop) {
+					if (attr_value && !strcmp (prop, attr_value)) {
+						xmlFree (prop);
+						break;
+					}
+					xmlFree (prop);
+				}
+			}
+			else
+				break;
+		}
+	}
+	if (!node) 
+		g_warning ("Failed to find the <%s> tag", name);
+
+	return node;
+}
+
+static xmlChar *
+get_spec_with_isocodes (const gchar *file)
+{
+	xmlDocPtr spec, isocodes = NULL;
+	gchar *retval = NULL;
+	gchar *isofile = NULL;
+	GError *err = NULL;
+	gchar  *buf = NULL;
+	int   buf_len;
+	
+	/*
+	 * Load iso codes
+	 */
+#define ISO_CODES_LOCALESDIR ISO_CODES_PREFIX "/share/locale"
+
+	bindtextdomain ("iso_4217", ISO_CODES_LOCALESDIR);
+	bind_textdomain_codeset ("iso_4217", "UTF-8");
+
+	isofile = g_build_filename (ISO_CODES_PREFIX, "share", "xml", "iso-codes", "iso_4217.xml", NULL);
+	if (g_file_get_contents (isofile, &buf, NULL, &err)) {
+		isocodes = xmlParseDoc (BAD_CAST buf);
+		g_free (buf);
+		buf = NULL;
+	} 
+
+	/* 
+	 * Load spec string 
+	 */
+	spec = xmlParseFile (file);
+	if (!spec) {
+		g_warning ("Can't load '%s' file", file);
+		goto cleanup;
+	}
+
+	if (isocodes) {
+		/*
+		 * Merge isocodes into spec
+		 */
+		xmlNodePtr node, spec_node;
+		
+		node = find_child_node_from_name (xmlDocGetRootElement (spec), "sources", NULL, NULL);
+		node = find_child_node_from_name (node, "gda_array", "name", "currencies");
+		spec_node = find_child_node_from_name (node, "gda_array_data", NULL, NULL);
+		xmlUnlinkNode (spec_node);
+		xmlFreeNode (spec_node);
+		spec_node = xmlNewChild (node, NULL, "gda_array_data", NULL);
+		
+		node = xmlDocGetRootElement (isocodes);
+		for (node = node->children; node; node = node->next) {
+			if (!strcmp (node->name, "iso_4217_entry")) {
+				xmlChar *code, *name;
+				code = xmlGetProp (node, "letter_code");
+				name = xmlGetProp (node, "currency_name");
+				if (code && name) {
+					xmlNodePtr row;
+					row = xmlNewChild (spec_node, NULL, "gda_array_row", NULL);
+					xmlNewChild (row, NULL, "gda_value", code);
+					xmlNewChild (row, NULL, "gda_value", code);
+					xmlNewChild (row, NULL, "gda_value", dgettext ("iso_4217", name));
+				}
+				if (code)
+					xmlFree (code);
+				if (name)
+					xmlFree (name);
+			}
+		}
+	}
+	else {
+		/*
+		 * No ISO CODES found => no predefined source
+		 */
+		xmlNodePtr node;
+		node = find_child_node_from_name (xmlDocGetRootElement (spec), "sources", NULL, NULL);
+		node = find_child_node_from_name (node, "gda_array", "name", "currencies");
+		xmlUnlinkNode (node);
+		xmlFreeNode (node);
+
+		node = find_child_node_from_name (xmlDocGetRootElement (spec), "parameters", NULL, NULL);
+		node = find_child_node_from_name (xmlDocGetRootElement (spec), "parameter", "id", "CURRENCY");
+		xmlSetProp (node, "source", NULL);
+	}
+
+	xmlDocDumpMemory (spec, (xmlChar **) &retval, &buf_len);
+
+ cleanup:
+	if (spec)
+		xmlFreeDoc (spec);
+	if (isocodes)
+		xmlFreeDoc (isocodes);
+	g_free (isofile);
+	g_free (buf);
+
+	return retval;
+}

@@ -53,6 +53,9 @@
 #include "web-server.h"
 #endif
 
+/* code inclusion */
+#include "dict-file-name.c"
+
 /* options */
 gboolean show_version = FALSE;
 gboolean ask_pass = FALSE;
@@ -1280,7 +1283,7 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 		e2 = gda_rfc1738_encode (file);
 		g_free (path);
 		g_free (file);
-		real_cnc_string = g_strdup_printf ("%s://DB_DIR=%s;DB_NAME=%s", pname, e1, e2);
+		real_cnc_string = g_strdup_printf ("%s://DB_DIR=%s;LOAD_GDA_FUNCTIONS=TRUE;DB_NAME=%s", pname, e1, e2);
 		g_free (e1);
 		g_free (e2);
 		gda_connection_string_split (real_cnc_string, &real_cnc, &real_provider, &user, &pass);
@@ -1354,7 +1357,7 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 	else 
 		newcnc = gda_connection_open_from_string (NULL, real_cnc_string, real_auth_string,
 							  GDA_CONNECTION_OPTIONS_THREAD_SAFE, error);
-	
+
 	g_free (real_cnc_string);
 	g_free (real_cnc);
 	g_free (user);
@@ -1363,6 +1366,13 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 	g_free (real_auth_string);
 
 	if (newcnc) {
+		gchar *dict_file_name = NULL;
+		gchar *cnc_string;
+		g_object_get (G_OBJECT (newcnc),
+			      "cnc-string", &cnc_string, NULL);
+		dict_file_name = compute_dict_file_name (info, cnc_string);
+		g_free (cnc_string);
+
 		cs = g_new0 (ConnectionSetting, 1);
 		if (cnc_name && *cnc_name) 
 			cs->name = g_strdup (cnc_name);
@@ -1386,23 +1396,10 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 		GdaMetaStore *store;
 		gboolean update_store = FALSE;
 
-		if (info) {
-			gchar *filename;
-			gchar *confdir;
-
-			confdir = g_build_path (G_DIR_SEPARATOR_S, g_get_user_data_dir (), "libgda", NULL);
-			if (!g_file_test (confdir, G_FILE_TEST_EXISTS)) {
-				g_free (confdir);
-				confdir = g_build_path (G_DIR_SEPARATOR_S, g_get_home_dir (), ".libgda", NULL);
-			}
-			filename = g_strdup_printf ("%s%sgda-sql-%s.db", 
-						    confdir, G_DIR_SEPARATOR_S,
-						    info->name);
-			g_free (confdir);
-			if (! g_file_test (filename, G_FILE_TEST_EXISTS))
+		if (dict_file_name) {
+			if (! g_file_test (dict_file_name, G_FILE_TEST_EXISTS))
 				update_store = TRUE;
-			store = gda_meta_store_new_with_file (filename);
-			g_free (filename);
+			store = gda_meta_store_new_with_file (dict_file_name);
 		}
 		else {
 			store = gda_meta_store_new (NULL);
@@ -1455,6 +1452,7 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 		}
 		if (store)
 			g_object_unref (store);
+		g_free (dict_file_name);
 	}
 
 	return cs;
@@ -1875,8 +1873,8 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Information");
-	c->name = "meta";
-	c->description = _("Force reading the database meta data");
+	c->name = g_strdup_printf (_("%s [META DATA TYPE]"), "meta");
+	c->description = _("Force reading the database meta data (or part of the meta data, ex:\"tables\")");
 	c->args = NULL;
 	c->command_func = gda_internal_command_dict_sync;
 	c->user_data = NULL;
@@ -3624,13 +3622,17 @@ extra_command_query_buffer_to_dict (SqlConsole *console, GdaConnection *cnc, con
 		}
 		
 		/* actual store of the statement */
-		static GdaStatement *ins_stmt = NULL;
+		static GdaStatement *ins_stmt = NULL, *del_stmt;
 		static GdaSet *ins_params = NULL;
 		if (!ins_stmt) {
 			ins_stmt = gda_sql_parser_parse_string (main_data->current->parser, 
 								QUERY_BUFFERS_TABLE_INSERT, NULL, NULL);
 			g_assert (ins_stmt);
 			g_assert (gda_statement_get_parameters (ins_stmt, &ins_params, NULL));
+
+			del_stmt = gda_sql_parser_parse_string (main_data->current->parser, 
+								QUERY_BUFFERS_TABLE_DELETE, NULL, NULL);
+			g_assert (del_stmt);
 		}
 
 		if (! gda_set_set_holder_value (ins_params, error, "name", qname) ||
@@ -3641,10 +3643,22 @@ extra_command_query_buffer_to_dict (SqlConsole *console, GdaConnection *cnc, con
 		g_free (qname);
 		
 		GdaConnection *store_cnc;
+		gboolean intrans;
 		store_cnc = gda_meta_store_get_internal_connection (mstore);
-		if (gda_connection_statement_execute_non_select (store_cnc, ins_stmt, ins_params,
-								 NULL, error) == -1)
+		intrans = gda_connection_begin_transaction (store_cnc, NULL,
+							    GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL);
+
+		if ((gda_connection_statement_execute_non_select (store_cnc, del_stmt, ins_params,
+								  NULL, error) == -1) ||
+		    (gda_connection_statement_execute_non_select (store_cnc, ins_stmt, ins_params,
+								  NULL, error) == -1)) {
+			if (intrans)
+				gda_connection_rollback_transaction (store_cnc, NULL, NULL);
 			return NULL;
+		}
+		if (intrans)
+			gda_connection_commit_transaction (store_cnc, NULL, NULL);
+
 		res = g_new0 (GdaInternalCommandResult, 1);
 		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
 	}

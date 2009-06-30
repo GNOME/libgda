@@ -1722,8 +1722,7 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 			GdaDataModel *tmpmodel;
 			if (!dstmt->select || !dstmt->params) {
 				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-					      "%s", _("Unable to retreive data after modifications, no further modification will be allowed"));
-				imodel->priv->sh->modif_internals->safely_locked = TRUE;
+					      "%s", _("Unable to retreive data after modifications"));
 				return NULL;
 			}
 			tmpmodel = gda_connection_statement_execute_select (imodel->priv->cnc, 
@@ -1808,7 +1807,8 @@ gda_data_select_get_attributes_at (GdaDataModel *model, gint col, gint row)
 	imodel = (GdaDataSelect *) model;
 	g_return_val_if_fail (imodel->priv, 0);
 	
-	if (imodel->priv->sh->modif_internals->safely_locked || !imodel->priv->sh->modif_internals->modif_stmts [UPD_QUERY])
+	if (imodel->priv->sh->modif_internals->safely_locked ||
+	    !imodel->priv->sh->modif_internals->modif_stmts [UPD_QUERY])
 		flags = GDA_VALUE_ATTR_NO_MODIF;
 	GdaColumn *gdacol = g_slist_nth_data (imodel->priv->sh->columns, col);
 	if (gdacol) {
@@ -2448,7 +2448,7 @@ vector_set_value_at (GdaDataSelect *imodel, BVector *bv, GdaDataModelIter *iter,
 				}
 			}
 			else {
-				cvalue = gda_data_model_get_value_at ((GdaDataModel*) imodel, i, int_row, error);
+				cvalue = gda_data_model_get_value_at ((GdaDataModel*) imodel, i, row, error);
 				if (!cvalue)
 					return FALSE;
 			}
@@ -2809,6 +2809,8 @@ gda_data_select_append_values (GdaDataModel *model, const GList *values, GError 
 
 	/* compute added row's number */
 	row = imodel->advertized_nrows;
+	if (imodel->priv->sh->del_rows)
+		row -= imodel->priv->sh->del_rows->len;
 	imodel->advertized_nrows++;
 	int_row = external_to_internal_row (imodel, row, error);
 	imodel->advertized_nrows--;
@@ -2908,7 +2910,8 @@ gda_data_select_append_values (GdaDataModel *model, const GList *values, GError 
 
 	GdaSet *last_insert;
 	if (gda_connection_statement_execute_non_select (imodel->priv->cnc, stmt,
-							 imodel->priv->sh->modif_internals->modif_set, &last_insert, error) == -1)
+							 imodel->priv->sh->modif_internals->modif_set,
+							 &last_insert, error) == -1)
 		return -1;
 
 	/* mark that this row has been modified */
@@ -2957,7 +2960,6 @@ gda_data_select_append_values (GdaDataModel *model, const GList *values, GError 
 #ifdef GDA_DEBUG_NO
 	dump_d (imodel);
 #endif
-
 	imodel->advertized_nrows++;
 	gda_data_model_row_inserted ((GdaDataModel *) imodel, row);
 

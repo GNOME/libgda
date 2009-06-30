@@ -24,7 +24,6 @@
 #define __GDA_DATA_ACCESS_WRAPPER_H__
 
 #include <libgda/gda-data-model.h>
-#include <libxml/tree.h>
 
 G_BEGIN_DECLS
 

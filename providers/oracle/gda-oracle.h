@@ -42,6 +42,10 @@ typedef struct {
         OCISvcCtx *hservice;
         OCISession *hsession;
         gchar *schema; /* the same as the username which opened the connection */
+
+	gchar *version;
+	guint8 major_version;
+	guint8 minor_version;
 } OracleConnectionData;
 
 #endif

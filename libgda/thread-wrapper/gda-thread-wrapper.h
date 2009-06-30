@@ -85,7 +85,7 @@ gulong                 gda_thread_wrapper_connect_raw       (GdaThreadWrapper *w
 							     GdaThreadWrapperCallback callback,
 							     gpointer data);
 void                   gda_thread_wrapper_disconnect       (GdaThreadWrapper *wrapper, gulong id);
-
+void                   gda_thread_wrapper_steal_signal     (GdaThreadWrapper *wrapper, gulong id);
 G_END_DECLS
 
 #endif

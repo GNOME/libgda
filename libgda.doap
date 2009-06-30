@@ -19,7 +19,7 @@
   <maintainer>
     <foaf:Person>
       <foaf:name>Vivien Malerba</foaf:name>
-      <foaf:mbox rdf:resource="malerba@gnome-db.org" />
+      <foaf:mbox rdf:resource="mailto:malerba@gnome-db.org" />
       <gnome:userid>vivien</gnome:userid>
     </foaf:Person>
   </maintainer>

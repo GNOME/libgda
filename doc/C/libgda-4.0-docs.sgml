@@ -108,6 +108,8 @@
 <!ENTITY libgda-convenient SYSTEM "xml/gda-convenient.xml">
 <!ENTITY libgda-GdaDataComparator SYSTEM "xml/gda-data-comparator.xml">
 <!ENTITY provider-writing SYSTEM "prov-writing.xml">
+<!ENTITY packaging SYSTEM "packaging.xml">
+<!ENTITY packaging-ui SYSTEM "packaging_ui.xml">
 <!ENTITY provider-support SYSTEM "xml/provider-support.xml">
 <!ENTITY provider-support-sql SYSTEM "xml/provider-support-sql.xml">
 <!ENTITY i-s-doc SYSTEM "i_s_doc.xml">
@@ -1072,10 +1074,13 @@ g_object_unref (store);
 	<sect2 id="information_schema:sql_identifiers">
 	  <title>SQL identifiers</title>
 	  <para>
-	    SQL identifiers (database object's names) are case insitive, but it is still possible to specify
-	    that an SQL identifier be case sensitive by putting it between double quotes. &LIBGDA; has chosen
-	    the convention that case insitive SQL identifiers should all be in lower case in the meta data's tables
-	    whereas case sensitive SQL identifiers can contain some upper case ASCII characters.
+	    SQL identifiers (database object's names) are generally case insensitive, but it is still possible to
+	    have case sensitive SQL identifier if they are enclosed between double quotes. Each database has its own
+	    way of representing case insensitive SQL identifiers (for instance PostgreSQL represents them in lower
+	    case whereas Oracle represents them in upper case and MySQL represents them in upper or lower case
+	    depending on the platform). To harmonize meta data information usage, &LIBGDA; has chosen
+	    to represent case insensitive SQL identifiers in lower case 
+	    and case sensitive SQL identifiers enclosed between double quotes. 
 	  </para>
 	  <para>
 	    This convention must be respected by database providers' implementations or the 
@@ -1593,6 +1598,15 @@ g_object_unref (eng);
     &provider-writing;
   </part>
 
+  <part>
+    <title>Packaging</title>
+    &packaging;
+    &packaging-ui;
+  </part>
+
+  <part id="part_index">
+    <title>Appendix</title>
+    &fdl-appendix;
     <index id="index_main">
       <title>Index</title>
     </index>
@@ -1603,5 +1617,6 @@ g_object_unref (eng);
       <title>Index of deprecated symbols</title>
     </index>
     &fdl-appendix;
+  </part>
 </book>
 

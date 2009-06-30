@@ -58,6 +58,7 @@ struct _GdaConnectionPrivate {
 	gchar                *auth_string;
 	gboolean              is_open;
 	gboolean              is_thread_wrapper;
+	guint                 monitor_id;
 
 	GdaMetaStore         *meta_store;
 
@@ -148,7 +149,8 @@ enum
         PROP_OPTIONS,
 	PROP_META_STORE,
 	PROP_THREAD_OWNER,
-	PROP_IS_THREAD_WRAPPER
+	PROP_IS_THREAD_WRAPPER,
+	PROP_MONITOR_WRAPPED_IN_MAINLOOP
 };
 
 static GObjectClass *parent_class = NULL;
@@ -289,12 +291,31 @@ gda_connection_class_init (GdaConnectionClass *klass)
 								 "This should only be modified by the database providers' implementation"),
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 
+	/**
+	 * GdaConnection:is-wrapper:
+	 *
+	 * Since: 4.2
+	 **/
 	g_object_class_install_property (object_class, PROP_IS_THREAD_WRAPPER,
 					 g_param_spec_boolean ("is-wrapper", NULL,
 							       _("Tells if the connection acts as a thread wrapper around another connection, making it completely thread safe"),
 							       FALSE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
-
+	/**
+	 * GdaConnection:monitor-wrapped-in-mainloop:
+	 *
+	 * Usefull only when there is a mainloop and when the connection acts as a thread wrapper around another connection,
+	 * it sets up a timeout to handle signals coming from the wrapped connection.
+	 *
+	 * If the connection is not a thread wrapper, then this property has no effect.
+	 *
+	 * Since: 4.2
+	 **/
+	g_object_class_install_property (object_class, PROP_MONITOR_WRAPPED_IN_MAINLOOP,
+					 g_param_spec_boolean ("monitor-wrapped-in-mainloop", NULL,
+							       _("Make the connection set up a monitoring function in the mainloop to monitor the wrapped connection"),
+							       FALSE,
+							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	
 	object_class->dispose = gda_connection_dispose;
 	object_class->finalize = gda_connection_finalize;
@@ -327,6 +348,9 @@ gda_connection_init (GdaConnection *cnc, GdaConnectionClass *klass)
 	cnc->priv->events_list = NULL;
 	cnc->priv->trans_status = NULL; /* no transaction yet */
 	cnc->priv->prepared_stmts = NULL;
+
+	cnc->priv->is_thread_wrapper = FALSE;
+	cnc->priv->monitor_id = 0;
 
 	cnc->priv->next_task_id = 1;
 	cnc->priv->waiting_tasks = g_array_new (FALSE, FALSE, sizeof (gpointer));
@@ -470,6 +494,13 @@ gda_connection_get_type (void)
 	return type;
 }
 
+static gboolean
+monitor_wrapped_cnc (GdaThreadWrapper *wrapper)
+{
+	gda_thread_wrapper_iterate (wrapper, FALSE);
+	return TRUE; /* don't remove the monitoring */
+}
+
 static void
 gda_connection_set_property (GObject *object,
 			     guint param_id,
@@ -597,6 +628,31 @@ gda_connection_set_property (GObject *object,
 		case PROP_IS_THREAD_WRAPPER:
 			cnc->priv->is_thread_wrapper = g_value_get_boolean (value);
 			break;
+		case PROP_MONITOR_WRAPPED_IN_MAINLOOP:
+			if (cnc->priv->is_thread_wrapper) {
+				/* cancel any existing signal monitoring */
+				if (cnc->priv->monitor_id > 0) {
+					g_source_remove (cnc->priv->monitor_id);
+					cnc->priv->monitor_id = 0;
+				}
+				if (g_value_get_boolean (value)) {
+					/* set up signal monitoring */
+					ThreadConnectionData *cdata = NULL;
+					cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (cnc);
+					if (cdata) {
+						gint i;
+						for (i = 0; i < cdata->handlers_ids->len; i++) {
+							gulong id;
+							id = g_array_index (cdata->handlers_ids, gulong, i);
+							gda_thread_wrapper_steal_signal (cdata->wrapper, id);
+						}
+						cnc->priv->monitor_id = g_timeout_add_seconds (1,
+											       (GSourceFunc) monitor_wrapped_cnc,
+											       cdata->wrapper);
+					}
+				}
+			}
+			break;
                 }
         }	
 }
@@ -633,6 +689,10 @@ gda_connection_get_property (GObject *object,
 			break;
 		case PROP_IS_THREAD_WRAPPER:
 			g_value_set_boolean (value, cnc->priv->is_thread_wrapper);
+			break;
+		case PROP_MONITOR_WRAPPED_IN_MAINLOOP:
+			g_value_set_boolean (value, cnc->priv->is_thread_wrapper && (cnc->priv->monitor_id > 0) ?
+					     TRUE : FALSE);
 			break;
                 }
 		gda_mutex_unlock (cnc->priv->mutex);
@@ -1223,6 +1283,12 @@ gda_connection_close_no_warning (GdaConnection *cnc)
 	g_return_if_fail (cnc->priv);
 
 	gda_connection_lock ((GdaLockable*) cnc);
+
+	if (cnc->priv->monitor_id > 0) {
+		g_source_remove (cnc->priv->monitor_id);
+		cnc->priv->monitor_id = 0;
+	}
+
 	if (! cnc->priv->is_open) {
 		gda_connection_unlock ((GdaLockable*) cnc);
 		return;

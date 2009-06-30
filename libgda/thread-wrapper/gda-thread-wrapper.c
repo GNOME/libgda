@@ -220,20 +220,20 @@ struct _ThreadData {
 #define THREAD_DATA(x) ((ThreadData*)(x))
 
 static ThreadData *
-get_thread_data (GdaThreadWrapper *wrapper)
+get_thread_data (GdaThreadWrapper *wrapper, GThread *thread)
 {
 	ThreadData *td;
 
-	td = g_hash_table_lookup (wrapper->priv->threads_hash, g_thread_self());
+	td = g_hash_table_lookup (wrapper->priv->threads_hash, thread);
 	if (!td) {
 		td = g_new0 (ThreadData, 1);
-		td->owner = g_thread_self();
+		td->owner = thread;
 		td->from_sub_thread = g_async_queue_new ();
 		td->results = NULL;
 		td->shared = shared_data_new ();
 		td->shared->wrapper_sub_thread = wrapper->priv->sub_thread;
 
-		g_hash_table_insert (wrapper->priv->threads_hash, g_thread_self(), td);
+		g_hash_table_insert (wrapper->priv->threads_hash, thread, td);
 	}
 	return td;
 }
@@ -273,10 +273,11 @@ static void gda_thread_wrapper_get_property (GObject *object,
 					     GParamSpec *pspec);
 
 enum {
+	DUMMY,
 	LAST_SIGNAL
 };
 
-static gint gda_thread_wrapper_signals[LAST_SIGNAL] = { };
+static gint gda_thread_wrapper_signals[LAST_SIGNAL] = { 0 };
 
 /* properties */
 enum {
@@ -525,7 +526,7 @@ gda_thread_wrapper_execute (GdaThreadWrapper *wrapper, GdaThreadWrapperFunc func
 	g_return_val_if_fail (wrapper->priv, 0);
 	g_return_val_if_fail (func, 0);
 
-	td = get_thread_data (wrapper);
+	td = get_thread_data (wrapper, g_thread_self());
 	shared_data_add_nb_waiting (td->shared, 1);
 
 	job = g_new0 (Job, 1);
@@ -601,7 +602,7 @@ gda_thread_wrapper_execute_void (GdaThreadWrapper *wrapper, GdaThreadWrapperVoid
 	g_return_val_if_fail (wrapper->priv, 0);
 	g_return_val_if_fail (func, 0);
 
-	td = get_thread_data (wrapper);
+	td = get_thread_data (wrapper, g_thread_self());
 	shared_data_add_nb_waiting (td->shared, 1);
 
 	job = g_new0 (Job, 1);
@@ -646,7 +647,7 @@ gda_thread_wrapper_execute_void (GdaThreadWrapper *wrapper, GdaThreadWrapperVoid
  * @may_block: whether the call may block
  *
  * This method gives @wrapper a chance to check if some functions to be executed have finished
- * <emphasis>in the calling thread</emphasis>. It handles one function's execution result, and
+ * <emphasis>for the calling thread</emphasis>. It handles one function's execution result, and
  * if @may_block is %TRUE, then it will block untill there is one (functions returning void are
  * ignored).
  *
@@ -918,7 +919,7 @@ gda_thread_wrapper_connect_raw (GdaThreadWrapper *wrapper,
 
 	gda_mutex_lock (wrapper->priv->mutex);
 	
-	td = get_thread_data (wrapper);
+	td = get_thread_data (wrapper, g_thread_self());
 
         sigid = g_signal_lookup (sig_name, /* FIXME: use g_signal_parse_name () */
 				 G_TYPE_FROM_INSTANCE (instance)); 
@@ -952,6 +953,19 @@ gda_thread_wrapper_connect_raw (GdaThreadWrapper *wrapper,
 	return sigspec->signal_id;
 }
 
+static gboolean
+find_signal_r_func (GThread *thread, ThreadData *td, gulong *id)
+{
+	GSList *list;
+	for (list = td->signals_list; list; list = list->next) {
+		SignalSpec *sigspec;
+		sigspec = (SignalSpec*) list->data;
+		if (sigspec->signal_id == *id)
+			return TRUE;
+	}
+	return FALSE;
+}
+
 /**
  * gda_thread_wrapper_disconnect
  * @wrapper: a #GdaThreadWrapper object
@@ -975,7 +989,12 @@ gda_thread_wrapper_disconnect (GdaThreadWrapper *wrapper, gulong id)
 
 	td = g_hash_table_lookup (wrapper->priv->threads_hash, g_thread_self());
 	if (!td) {
-		g_warning (_("Signal does not exist\n"));
+		gulong theid = id;
+		td = g_hash_table_find (wrapper->priv->threads_hash,
+					(GHRFunc) find_signal_r_func, &theid);
+	}
+	if (!td) {
+		g_warning (_("Signal %lu does not exist"), id);
 		gda_mutex_unlock (wrapper->priv->mutex);
 		return;
 	}
@@ -1004,6 +1023,55 @@ gda_thread_wrapper_disconnect (GdaThreadWrapper *wrapper, gulong id)
 		/* remove this ThreadData */
 		g_hash_table_remove (wrapper->priv->threads_hash, g_thread_self());
 	}
+
+	gda_mutex_unlock (wrapper->priv->mutex);
+}
+
+/**
+ * gda_thread_wrapper_steal_signal
+ * @wrapper: a #GdaThreadWrapper object
+ * @id: a signal ID
+ *
+ * Requests that the signal which ID is @id (which has been obtained using gda_thread_wrapper_connect_raw())
+ * be treated by the calling thread instead of by the thread in which gda_thread_wrapper_connect_raw()
+ * was called.
+ *
+ * Since: 4.2
+ */
+
+void
+gda_thread_wrapper_steal_signal (GdaThreadWrapper *wrapper, gulong id)
+{
+	ThreadData *old_td, *new_td = NULL;
+        g_return_if_fail (GDA_IS_THREAD_WRAPPER (wrapper));
+        g_return_if_fail (wrapper->priv);
+	g_return_if_fail (id > 0);
+
+        gda_mutex_lock (wrapper->priv->mutex);
+
+	gulong theid = id;
+	old_td = g_hash_table_find (wrapper->priv->threads_hash,
+				    (GHRFunc) find_signal_r_func, &theid);
+	if (!old_td) {
+		g_warning (_("Signal %lu does not exist"), id);
+		gda_mutex_unlock (wrapper->priv->mutex);
+		return;
+	}
+
+        /* merge old_td and new_td */
+        if (old_td->signals_list) {
+                GSList *list;
+                for (list = old_td->signals_list; list; list = list->next) {
+                        SignalSpec *sigspec = (SignalSpec*) list->data;
+			if (sigspec->signal_id == id) {
+				new_td = get_thread_data (wrapper, g_thread_self ());
+				sigspec->td = new_td;
+				new_td->signals_list = g_slist_prepend (new_td->signals_list, sigspec);
+				old_td->signals_list = g_slist_remove (old_td->signals_list, sigspec);
+				break;
+			}
+                }
+        }
 
 	gda_mutex_unlock (wrapper->priv->mutex);
 }

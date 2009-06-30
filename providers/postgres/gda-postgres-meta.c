@@ -32,6 +32,7 @@
 #include <libgda/gda-connection-private.h>
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-set.h>
+#include <libgda/providers-support/gda-meta-column-types.h>
 
 /*
  * predefined statements' IDs
@@ -314,7 +315,7 @@ _gda_postgres_meta__btypes (GdaServerProvider *prov, GdaConnection *cnc,
 
 	/* use a proxy to customize @model */
 	proxy = (GdaDataModel*) gda_data_proxy_new (model);
-	gda_data_proxy_set_sample_size ((GdaDataProxy*) proxy, 0);
+	g_object_set (G_OBJECT (proxy), "defer-sync", FALSE, "sample-size", 0, NULL);
 	nrows = gda_data_model_get_n_rows (model);
 	for (i = 0; i < nrows; i++) {
 		const GValue *value;
@@ -390,8 +391,12 @@ _gda_postgres_meta__udt_cols (GdaServerProvider *prov, GdaConnection *cnc,
 	GdaDataModel *model;
 	gboolean retval;
 
-	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_UDT_COLUMNS_ALL], NULL, 
-							 error);
+	model = gda_connection_statement_execute_select_full (cnc,
+							      internal_stmt[I_STMT_UDT_COLUMNS_ALL],
+							      NULL, 
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							      _col_types_udt_columns, error);
+
 	if (!model)
 		return FALSE;
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
@@ -414,7 +419,11 @@ _gda_postgres_meta_udt_cols (GdaServerProvider *prov, GdaConnection *cnc,
 		return FALSE;
 	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), udt_name, error))
 		return FALSE;
-	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_UDT_COLUMNS], i_set, error);
+	model = gda_connection_statement_execute_select_full (cnc,
+							      internal_stmt[I_STMT_UDT_COLUMNS_ALL],
+							      i_set, 
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							      _col_types_udt_columns, error);
 	if (!model)
 		return FALSE;
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
@@ -792,24 +801,22 @@ gboolean _gda_postgres_meta__columns (GdaServerProvider *prov, GdaConnection *cn
 	gboolean retval = TRUE;
 	gint i, nrows;
 	PostgresConnectionData *cdata;
-	GType col_types[] = {
-		G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, 
-		G_TYPE_INT, G_TYPE_NONE
-	};
 
 	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata)
 		return FALSE;
 
 	/* use a prepared statement for the "base" model */
-	model = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_COLUMNS_ALL], i_set, 
-							      GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types, error);
+	model = gda_connection_statement_execute_select_full (cnc,
+							      internal_stmt[I_STMT_COLUMNS_ALL], i_set, 
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							      _col_types_columns, error);
 	if (!model)
 		return FALSE;
 
 	/* use a proxy to customize @model */
 	proxy = (GdaDataModel*) gda_data_proxy_new (model);
-	gda_data_proxy_set_sample_size ((GdaDataProxy*) proxy, 0);
+	g_object_set (G_OBJECT (proxy), "defer-sync", FALSE, "sample-size", 0, NULL);
 	nrows = gda_data_model_get_n_rows (model);
 	for (i = 0; i < nrows; i++) {
 		const GValue *value;
@@ -884,10 +891,6 @@ _gda_postgres_meta_columns (GdaServerProvider *prov, GdaConnection *cnc,
 	gboolean retval = TRUE;
 	gint i, nrows;
 	PostgresConnectionData *cdata;
-	GType col_types[] = {
-		G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, 
-		G_TYPE_INT, G_TYPE_NONE
-	};
 
 	/* check correct postgres server version */
 	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
@@ -906,14 +909,17 @@ _gda_postgres_meta_columns (GdaServerProvider *prov, GdaConnection *cnc,
 		return FALSE;
 	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
 		return FALSE;
-	model = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_COLUMNS_OF_TABLE], i_set, 
-							      GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types, error);
+	model = gda_connection_statement_execute_select_full (cnc,
+							      internal_stmt[I_STMT_COLUMNS_OF_TABLE],
+							      i_set, 
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							      _col_types_columns, error);
 	if (!model)
 		return FALSE;
 
 	/* use a proxy to customize @model */
 	proxy = (GdaDataModel*) gda_data_proxy_new (model);
-	gda_data_proxy_set_sample_size ((GdaDataProxy*) proxy, 0);
+	g_object_set (G_OBJECT (proxy), "defer-sync", FALSE, "sample-size", 0, NULL);
 	nrows = gda_data_model_get_n_rows (model);
 	for (i = 0; i < nrows; i++) {
 		const GValue *value;
@@ -1410,7 +1416,7 @@ _gda_postgres_meta__routine_col (GdaServerProvider *prov, GdaConnection *cnc,
 
 	/* use a proxy to customize @model */
 	proxy = (GdaDataModel*) gda_data_proxy_new (model);
-	gda_data_proxy_set_sample_size ((GdaDataProxy*) proxy, 0);
+	g_object_set (G_OBJECT (proxy), "defer-sync", FALSE, "sample-size", 0, NULL);
 	nrows = gda_data_model_get_n_rows (model);
 	for (i = 0; i < nrows; i++) {
 		const GValue *cvalue;
@@ -1447,7 +1453,7 @@ _gda_postgres_meta_routine_col (GdaServerProvider *prov, GdaConnection *cnc,
 				const GValue *rout_catalog, const GValue *rout_schema, 
 				const GValue *rout_name)
 {
-GdaDataModel *model, *proxy;
+	GdaDataModel *model, *proxy;
 	gint ordinal_pos, i, nrows;
 	const GValue *spname = NULL;
 	gboolean retval;
@@ -1477,7 +1483,7 @@ GdaDataModel *model, *proxy;
 
 	/* use a proxy to customize @model */
 	proxy = (GdaDataModel*) gda_data_proxy_new (model);
-	gda_data_proxy_set_sample_size ((GdaDataProxy*) proxy, 0);
+	g_object_set (G_OBJECT (proxy), "defer-sync", FALSE, "sample-size", 0, NULL);
 	nrows = gda_data_model_get_n_rows (model);
 	for (i = 0; i < nrows; i++) {
 		const GValue *cvalue;

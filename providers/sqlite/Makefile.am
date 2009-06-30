@@ -21,7 +21,7 @@ libgda_sqlite_la_LIBADD = \
 	$(LIBGDA_LIBS)
 
 xmldir   = $(datadir)/libgda-4.0
-xml_in_files = sqlite_specs_create_db.xml.in \
+xml_in_files = \
 	sqlite_specs_dsn.xml.in \
 	sqlite_specs_create_db.xml.in \
 	sqlite_specs_drop_db.xml.in \

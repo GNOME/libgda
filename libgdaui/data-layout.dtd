@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+DTD for data layout.
+TODO: Make sure that all the comments list all the attributes and their meaning.
+-->
+
+<!-- data layouts determine the order of items and sorting of the fields. There are many
+     different ways that they are grouped with the various data_layout* possibilities, but the idea is
+     the same. They all have a sequence, which tells when they are displayed. In addition, there is a column_count
+     on the grouping subnodes, which is the number of columns wide the element should be. 
+     The name of the data_layout will be either "list" or "details".-->
+
+<!ELEMENT data_layouts (data_layout_details | data_layout_list | data_layout)* >
+
+<!ELEMENT data_layout (data_layout_groups)>
+<!ATTLIST data_layout
+          name CDATA #REQUIRED
+          parent_table CDATA #IMPLIED >
+
+<!ELEMENT data_layout_groups (data_layout_group)*>
+<!ATTLIST data_layout_groups>
+
+<!-- a data_layout_group is just a the setup of fields to be shown. It encapsulates everything else. -->
+
+<!ELEMENT data_layout_group (trans_set | data_layout_group | data_layout_item | data_layout_portal |
+          data_layout_item_groupby | data_layout_button | data_layout_notebook | data_layout_item_header | 
+          trans_set | data_layout_text)* >
+<!ATTLIST data_layout_group
+          name CDATA #REQUIRED
+          title CDATA #IMPLIED
+          sequence CDATA #IMPLIED
+          columns_count CDATA #REQUIRED >
+
+<!-- a data_layout_notebook is the tabbed display of tables in the interface. -->
+
+<!ELEMENT data_layout_notebook (data_layout_group|data_layout_portal)*>
+<!ATTLIST data_layout_notebook
+          name CDATA #REQUIRED
+          columns_count CDATA #REQUIRED
+          sequence CDATA #IMPLIED
+          title CDATA #IMPLIED >
+
+<!-- a data_layout_item_groupby is a data_layout_group that sorts -->
+
+<!ELEMENT data_layout_item_groupby (trans_set | groupby | sortby | data_layout_group | data_layout_item |
+          data_layout_portal | data_layout_button | data_layout_item_groupby | secondary_fields | 
+          data_layout_item_summary | data_layout_item_verticalgroup)* >
+<!ATTLIST data_layout_item_groupby
+          name CDATA #REQUIRED
+          title CDATA #IMPLIED
+          sequence CDATA #IMPLIED
+          columns_count CDATA #REQUIRED
+          border_width CDATA #IMPLIED >
+
+<!-- data_layout_text and text are for displaying text. -->
+
+<!ELEMENT data_layout_text (text)*>
+<!ATTLIST data_layout_text
+          sequence CDATA #REQUIRED >
+
+<!ELEMENT text EMPTY>
+<!ATTLIST text
+          title CDATA #REQUIRED >
+
+<!-- sortby describes what a data_layout_item_groupby sorts by. -->
+
+<!ELEMENT sortby (data_layout_item)*>
+<!ATTLIST sortby>
+
+<!-- data_layout_item_verticalgroup is used to display a vertical group of fields. -->
+
+<!ELEMENT data_layout_item_verticalgroup (data_layout_item)*>
+<!ATTLIST data_layout_item_verticalgroup
+          name CDATA #REQUIRED
+          columns_count CDATA #REQUIRED
+          sequence CDATA #REQUIRED >
+
+<!-- data_layout_item_summary and data_layout_item_fieldsummary summarize other
+     fields. -->
+
+<!ELEMENT data_layout_item_summary (data_layout_item_fieldsummary)*>
+<!ATTLIST data_layout_item_summary
+          name CDATA #REQUIRED
+          columns_count CDATA #REQUIRED
+          sequence CDATA #IMPLIED >
+
+<!ELEMENT data_layout_item_fieldsummary (formatting)>
+<!ATTLIST data_layout_item_fieldsummary
+          name CDATA #REQUIRED
+          editable (true|false) "false"
+          use_default_formatting (true|false) "true"
+          sequence CDATA #IMPLIED
+          summarytype CDATA #REQUIRED >
+
+<!-- groupby is used to determine how data_layout_item_groupby items group. -->
+
+<!ELEMENT groupby (formatting|title_custom)*>
+<!ATTLIST groupby
+          name CDATA #REQUIRED
+          editable (true|false) "false"
+          use_default_formatting (true|false) "true"
+          relationship CDATA #IMPLIED >
+
+<!-- secondary fields are fields derived from other fields, this is a list of them. -->
+
+<!ELEMENT secondary_fields (data_layout_group)>
+<!ATTLIST secondary_fields>
+
+
+<!-- trans_set and trans are used for translating. They describe a set of alternatives
+     for different languages. -->
+
+<!ELEMENT trans_set (trans*)>
+<!ATTLIST trans_set>
+
+<!ELEMENT trans EMPTY>
+<!ATTLIST trans
+          loc CDATA #REQUIRED
+          val CDATA #REQUIRED >
+
+<!-- A data_layout_item is a single entry in the display formatting, which tells how a single
+     field is displayed. -->
+
+<!ELEMENT data_layout_item (formatting|title_custom)* >
+<!ATTLIST data_layout_item
+          name CDATA #REQUIRED
+          relationship CDATA #IMPLIED
+          group CDATA #IMPLIED
+          sequence CDATA #IMPLIED
+          editable CDATA #IMPLIED
+          use_default_formatting (true|false) "true"
+          related_relationship CDATA #IMPLIED
+          sort_ascending (true|false) "false" >
+
+<!-- a data_layout_item_header is the items that go at the very top of the database (e.g. the
+     organization name and logo). -->
+
+<!ELEMENT data_layout_item_header (data_layout_item)*>
+<!ATTLIST data_layout_item_header
+          name CDATA #REQUIRED
+          columns_count CDATA #REQUIRED
+          sequence CDATA #REQUIRED >
+
+<!-- data_layout_button is a way to have a custom script (python) control the
+     display and effect of a button in the database. -->
+
+<!ELEMENT data_layout_button (script?)>
+<!ATTLIST data_layout_button
+          title CDATA #REQUIRED
+          sequence CDATA #IMPLIED
+          script CDATA #IMPLIED >
+
+<!-- a script node is used to embed python code into the custom button. -->
+
+<!ELEMENT script ANY>
+<!ATTLIST script>
+
+<!-- a title_custom is used to give a different name next to a field than normal. -->
+
+<!ELEMENT title_custom ANY>
+<!ATTLIST title_custom
+          title CDATA #IMPLIED
+          use_custom (true|false) "true" >
+
+<!-- a data_layout_portal is the essential information, a short and quick list of values
+     that are probably of interest to others (e.g. contact information, name, etc). -->
+
+<!ELEMENT data_layout_portal ANY >
+<!ATTLIST data_layout_portal
+          name CDATA #REQUIRED
+          relationship CDATA #REQUIRED
+          sequence CDATA #REQUIRED
+          hide CDATA #IMPLIED
+          columns_count CDATA #IMPLIED >
+
+<!-- reports and data reports make short sheets of important information that
+     distill a larger database. data_report(s) is the old interface; use reports if you are
+     writing a new XML document. -->
+
+<!ELEMENT data_reports (data_report)* >
+
+<!ELEMENT data_report (data_layout_groups)>
+<!ATTLIST data_report
+          name CDATA #REQUIRED
+          title CDATA #REQUIRED >
+
+<!ELEMENT reports (report)*>
+<!ATTLIST reports>
+
+<!ELEMENT report (data_layout_groups|trans_set)*>
+<!ATTLIST report
+          name CDATA #REQUIRED
+          title CDATA #IMPLIED
+          show_table_title (true|false) "false" >

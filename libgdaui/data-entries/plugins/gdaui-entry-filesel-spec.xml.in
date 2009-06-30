@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<data-set-spec>
+  <parameters>
+    <parameter id="MODE" _name="Selection model" _descr="Specifies what the user will be allowed to select" gdatype="gchararray" source="modes:0" nullok="FALSE">
+      <gda_value>OPEN</gda_value>
+    </parameter>
+  </parameters>
+  <sources>
+    <gda_array name="modes">
+      <gda_array_field name="id" gdatype="gchararray"/>
+      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_data>
+        <gda_array_row>
+          <gda_value>OPEN</gda_value>
+          <_gda_value>Only let the user pick an existing file</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>SAVE</gda_value>
+          <_gda_value>Let the user pick an existing file, or type in a new filename</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>PICKFOLDER</gda_value>
+          <_gda_value>Let the user pick an existing folder</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>NAMEFOLDER</gda_value>
+          <_gda_value>Let the user name an existing or new folder</_gda_value>
+        </gda_array_row>
+      </gda_array_data>
+    </gda_array>
+  </sources>
+</data-set-spec>

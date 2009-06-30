@@ -17,7 +17,7 @@
 cross_path=/local/Win32/gtk
 depend_path=/local/Win32
 prefix=/local/Win32/gtk
-version=4.1.0
+version=4.1.1
 
 
 
@@ -62,7 +62,7 @@ function add_files_to_zip
 #
 # dependencies DLLs
 #
-files=(charset.dll iconv.dll intl.dll libgio-2.0-0.dll libglib-2.0-0.dll libgmodule-2.0-0.dll libgobject-2.0-0.dll libgthread-2.0-0.dll libxml2.dll zlib1.dll)
+files=(charset.dll iconv.dll intl.dll libgio-2.0-0.dll libglib-2.0-0.dll libgmodule-2.0-0.dll libgobject-2.0-0.dll libgthread-2.0-0.dll libxml2.dll zlib1.dll libsoup-2.4-1.dll libgdk_pixbuf-2.0-0.dll libgdk-win32-2.0-0.dll libgtk-win32-2.0-0.dll libatk-1.0-0.dll libpng12-0.dll libpango-1.0-0.dll libpangocairo-1.0-0.dll libpangoft2-1.0-0.dll libpangowin32-1.0-0.dll libcairo-2.dll libfontconfig-1.dll)
 add_files_to_zip $archive_ext ${depend_path}/gtk bin $files
 
 files=(libdb47.dll msvcp80.dll msvcr80.dll)
@@ -86,23 +86,56 @@ add_files_to_zip $archive $cross_path bin $files
 #
 # Libgda's files
 #
-files=(bdb_specs_dsn.xml information_schema.xml mdb_specs_dsn.xml mysql_specs_add_column.xml mysql_specs_create_db.xml mysql_specs_create_index.xml mysql_specs_create_table.xml mysql_specs_create_view.xml mysql_specs_drop_column.xml mysql_specs_drop_db.xml mysql_specs_drop_index.xml mysql_specs_drop_table.xml mysql_specs_drop_view.xml mysql_specs_dsn.xml mysql_specs_rename_table.xml postgres_specs_add_column.xml postgres_specs_create_db.xml postgres_specs_create_index.xml postgres_specs_create_table.xml postgres_specs_create_view.xml postgres_specs_drop_column.xml postgres_specs_drop_db.xml postgres_specs_drop_index.xml postgres_specs_drop_table.xml postgres_specs_drop_view.xml postgres_specs_dsn.xml postgres_specs_rename_table.xml sqlite_specs_add_column.xml sqlite_specs_create_db.xml sqlite_specs_create_index.xml sqlite_specs_create_table.xml sqlite_specs_create_view.xml sqlite_specs_drop_db.xml sqlite_specs_drop_index.xml sqlite_specs_drop_table.xml sqlite_specs_drop_view.xml sqlite_specs_dsn.xml sqlite_specs_rename_table.xml jdbc_specs_dsn.xml)
+files=(bdb_specs_dsn.xml information_schema.xml mdb_specs_dsn.xml mysql_specs_add_column.xml mysql_specs_create_db.xml mysql_specs_create_index.xml mysql_specs_create_table.xml mysql_specs_create_view.xml mysql_specs_drop_column.xml mysql_specs_drop_db.xml mysql_specs_drop_index.xml mysql_specs_drop_table.xml mysql_specs_drop_view.xml mysql_specs_dsn.xml mysql_specs_rename_table.xml postgres_specs_add_column.xml postgres_specs_create_db.xml postgres_specs_create_index.xml postgres_specs_create_table.xml postgres_specs_create_view.xml postgres_specs_drop_column.xml postgres_specs_drop_db.xml postgres_specs_drop_index.xml postgres_specs_drop_table.xml postgres_specs_drop_view.xml postgres_specs_dsn.xml postgres_specs_rename_table.xml sqlite_specs_add_column.xml sqlite_specs_create_db.xml sqlite_specs_create_index.xml sqlite_specs_create_table.xml sqlite_specs_create_view.xml sqlite_specs_drop_db.xml sqlite_specs_drop_index.xml sqlite_specs_drop_table.xml sqlite_specs_drop_view.xml sqlite_specs_dsn.xml sqlite_specs_rename_table.xml jdbc_specs_dsn.xml import_encodings.xml)
 add_files_to_zip $archive $prefix share/libgda-4.0 $files
+
+files=(gdaui-generic.png)
+add_files_to_zip $archive $prefix share/libgda-4.0/pixmaps $files
+
+files=(gda-browser.png gda-browser-auth.png gda-browser-auth-big.png gda-browser-connected.png gda-browser-connected-big.png gda-browser-non-connected.png gda-browser-non-connected-big.png gda-browser-schema.png gda-browser-table.png gda-control-center.png gda-control-center-newcnc.png gda-browser-bookmark.png gda-browser-column.png)
+add_files_to_zip $archive $prefix share/pixmaps $files
+
+files=(gdaui-entry-string-number.xml gdaui-entry-string-string.xml)
+add_files_to_zip $archive $prefix share/libgda-4.0/ui $files
 
 files=(cnc.js md5.js jquery.js mouseapp_2.js mouseirb_2.js irb.js gda.css gda-print.css irb.css)
 add_files_to_zip $archive $prefix share/libgda-4.0/web $files
 
-files=(libgda-paramlist.dtd libgda-array.dtd libgda-server-operation.dtd)
+files=(libgda-paramlist.dtd libgda-array.dtd libgda-server-operation.dtd data-layout.dtd)
 add_files_to_zip $archive $prefix share/libgda-4.0/dtd $files
 
 files=(config sales_test.db)
 add_files_to_zip $archive $prefix etc/libgda-4.0 $files
 
-files=(gda-sql-4.0.exe gda-test-connection-4.0.exe libgda-4.0-4.dll libgda-report-4.0-4.dll)
+files=(gdk-pixbuf.loaders gtk.immodules)
+add_files_to_zip $archive_ext $prefix etc/gtk-2.0 $files
+
+files=(gtkrc)
+add_files_to_zip $archive_ext . etc/gtk-2.0 $files
+
+files=(pango.modules)
+add_files_to_zip $archive_ext $prefix etc/pango $files
+
+files=(gda-sql-4.0.exe gda-test-connection-4.0.exe libgda-4.0-4.dll libgda-report-4.0-4.dll libgdaui-4.0-4.dll gda-browser-4.0.exe gda-control-center-4.0.exe gspawn-win32-helper.exe)
 add_files_to_zip $archive $prefix bin $files
+
+files=(gdaui-demo-4.0.exe)
+add_files_to_zip $archive_dev $prefix bin $files
 
 files=(libgda-sqlite.dll libgda-postgres.dll libgda-mysql.dll libgda-mdb.dll libgda-bdb.dll gdaprovider-4.0.jar libgda-jdbc.dll)
 add_files_to_zip $archive $prefix lib/libgda-4.0/providers $files
+
+files=(gdaui-entry-filesel-spec.xml gdaui-entry-password.xml gdaui-entry-pict-spec.xml gdaui-entry-pict-spec_string.xml libgdaui-plugins.dll)
+add_files_to_zip $archive $prefix lib/libgda-4.0/plugins $files
+
+files=(libpixmap.dll libwimp.dll)
+add_files_to_zip $archive_ext $prefix lib/gtk-2.0/2.10.0/engines $files
+
+files=(im-am-et.dll im-cedilla.dll im-cyrillic-translit.dll im-ime.dll im-inuktitut.dll im-ipa.dll im-multipress.dll im-thai.dll im-ti-er.dll im-ti-et.dll im-viqr.dll)
+add_files_to_zip $archive_ext $prefix lib/gtk-2.0/2.10.0/immodules $files
+
+files=(libpixbufloader-ani.dll libpixbufloader-bmp.dll libpixbufloader-gif.dll libpixbufloader-ico.dll libpixbufloader-jpeg.dll libpixbufloader-pcx.dll libpixbufloader-png.dll libpixbufloader-pnm.dll libpixbufloader-ras.dll libpixbufloader-tga.dll libpixbufloader-tiff.dll libpixbufloader-wbmp.dll libpixbufloader-xbm.dll libpixbufloader-xpm.dll)
+add_files_to_zip $archive_ext $prefix lib/gtk-2.0/2.10.0/loaders $files
 
 #
 # includes
@@ -131,17 +164,26 @@ add_files_to_zip $archive_dev $prefix include/libgda-4.0/sql-parser $files
 files=(gda-vconnection-data-model.h gda-vconnection-hub.h gda-virtual-connection.h gda-virtual-provider.h gda-vprovider-data-model.h gda-vprovider-hub.h libgda-virtual.h)
 add_files_to_zip $archive_dev $prefix include/libgda-4.0/virtual $files
 
+files=(gdaui-basic-form.h gdaui-combo.h gdaui-data-entry.h gdaui-data-store.h gdaui-data-widget-filter.h gdaui-data-widget-info.h gdaui-data-widget.h gdaui-decl.h gdaui-easy.h gdaui-enum-types.h gdaui-enums.h gdaui-form.h gdaui-grid.h gdaui-login.h gdaui-provider-selector.h gdaui-raw-form.h gdaui-raw-grid.h gdaui-server-operation.h gdaui-set.h gdaui-stock.h libgdaui.h)
+add_files_to_zip $archive_dev $prefix include/libgda-4.0/libgdaui $files
+
 #
 # PC files
 #
-files=(libgda-4.0.pc libgda-bdb-4.0.pc libgda-mdb-4.0.pc libgda-mysql-4.0.pc libgda-postgres-4.0.pc libgda-report-4.0.pc libgda-sqlite-4.0.pc libgda-xslt-4.0.pc)
+files=(libgda-4.0.pc libgda-bdb-4.0.pc libgda-mdb-4.0.pc libgda-mysql-4.0.pc libgda-postgres-4.0.pc libgda-report-4.0.pc libgda-sqlite-4.0.pc libgda-xslt-4.0.pc libgdaui-4.0.pc)
 add_files_to_zip $archive_dev $prefix lib/pkgconfig $files
 
 #
 # static libs
 #
-files=(libgda-4.0.a libgda-4.0.dll.a libgda-4.0.lib libgda-4.0.def libgda-report-4.0.a libgda-report-4.0.dll.a libgda-report-4.0.lib libgda-report-4.0.def)
+files=(libgda-4.0.a libgda-4.0.dll.a libgda-4.0.lib libgda-4.0.def libgda-report-4.0.a libgda-report-4.0.dll.a libgda-report-4.0.lib libgda-report-4.0.def libgdaui-4.0.a libgdaui-4.0.dll.a libgdaui-4.0.lib libgdaui-4.0.def)
 add_files_to_zip $archive_dev $prefix lib $files
+
+#
+# demo
+#
+files=(data_model_dir.c ddl_queries.c demo_db.db example_automatic_layout.xml form.c form_data_layout.c form_pict.c form_rw.c grid.c grid_data_layout.c grid_pict.c grid_rw.c linked_grid_form.c linked_model_param.c login.c)
+add_files_to_zip $archive_dev $prefix share/libgda-4.0/demo $files
 
 #
 # doc

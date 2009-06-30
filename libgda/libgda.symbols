@@ -721,6 +721,7 @@
 	gda_thread_wrapper_get_waiting_size
 	gda_thread_wrapper_iterate
 	gda_thread_wrapper_new
+	gda_thread_wrapper_steal_signal
 	gda_time_copy
 	gda_time_free
 	gda_time_get_type
@@ -744,15 +745,17 @@
 	gda_tree_error_get_type
 	gda_tree_error_quark
 	gda_tree_get_node
+	gda_tree_get_node_path
 	gda_tree_get_nodes_in_path
 	gda_tree_get_type
 	gda_tree_manager_add_manager
+	gda_tree_manager_create_node
 	gda_tree_manager_error_get_type
 	gda_tree_manager_error_quark
 	gda_tree_manager_get_node_create_func
 	gda_tree_manager_get_type
+	gda_tree_manager_new_with_func
 	gda_tree_manager_set_node_create_func
-	gda_tree_manager_update_children
 	gda_tree_mgr_columns_get_type
 	gda_tree_mgr_columns_new
 	gda_tree_mgr_label_get_type
@@ -772,6 +775,7 @@
 	gda_tree_node_get_child_name
 	gda_tree_node_get_children
 	gda_tree_node_get_node_attribute
+	gda_tree_node_get_parent
 	gda_tree_node_get_type
 	gda_tree_node_new
 	gda_tree_node_set_node_attribute

@@ -2,6 +2,13 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc
 
 if HAVE_LIBXSLT
 XSLT_DIR=libgda-xslt
+XSLT_PC=libgda-xslt-$(GDA_ABI_VERSION).pc
+endif
+
+if HAVE_UI
+UI_DIRS=libgdaui \
+	control-center
+UI_PC=libgdaui-$(GDA_ABI_VERSION).pc
 endif
 
 SUBDIRS = \
@@ -10,6 +17,7 @@ SUBDIRS = \
 	providers \
 	libgda-report \
 	$(XSLT_DIR) \
+	$(UI_DIRS) \
 	tools \
 	tests \
 	testing \
@@ -50,6 +58,8 @@ example_files = \
 	samples/Report/customers-report-rml.c \
 	samples/Report/customers-report-rml.rml \
 	samples/Report/customers-report-spec.xml \
+	samples/Report/schema-report.c \
+	samples/Report/schema-report-spec.xml \
 	samples/Report/Makefile
 	samples/Report/README
 	samples/Virtual/Makefile \
@@ -63,6 +73,7 @@ example_files = \
 	samples/XSLT/data2.xml \
 	samples/XSLT/test.xsl \
 	samples/XSLT/transform.c \
+<<<<<<< HEAD:Makefile.am
 	samples/MetaStore/Makefile \
 	samples/MetaStore/README \
 	samples/MetaStore/background.c \
@@ -75,7 +86,10 @@ example_files = \
         samples/SqlBuilder/example.c \
 	samples/AsyncExec/Makefile \
         samples/AsyncExec/README \
-        samples/AsyncExec/example.c
+        samples/AsyncExec/example.c \
+	samples/WritableSelect/README \
+	samples/WritableSelect/example.c \
+	samples/WritableSelect/Makefile
 
 EXTRA_DIST = \
 	COPYING \
@@ -89,7 +103,7 @@ EXTRA_DIST = \
 	getsp.java
 
 pkgconfigdir=$(libdir)/pkgconfig
-pkgconfig_DATA = libgda-$(GDA_ABI_VERSION).pc libgda-report-$(GDA_ABI_VERSION).pc libgda-xslt-$(GDA_ABI_VERSION).pc
+pkgconfig_DATA = libgda-$(GDA_ABI_VERSION).pc libgda-report-$(GDA_ABI_VERSION).pc $(XSLT_PC) $(UI_PC)
 
 all-local: libgda.spec
 

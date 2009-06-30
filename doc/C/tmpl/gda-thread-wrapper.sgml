@@ -153,3 +153,12 @@ Execute functions in a sub thread
 @id: 
 
 
+<!-- ##### FUNCTION gda_thread_wrapper_steal_signal ##### -->
+<para>
+
+</para>
+
+@wrapper: 
+@id: 
+
+

@@ -33,7 +33,9 @@
 #include "global.h"
 #include "md5.h"
 
+#ifdef HAVE_INTTYPES_H
 #include <inttypes.h>
+#endif
 
 #define MAX_CHALLENGES 10
 #define MAX_AUTH_COOKIES 10

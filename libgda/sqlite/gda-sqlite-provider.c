@@ -268,6 +268,10 @@ static void gda_sqlite_free_cnc_data (SqliteConnectionData *cdata);
  * extending SQLite with our own functions 
  */
 static void scalar_gda_file_exists_func (sqlite3_context *context, int argc, sqlite3_value **argv);
+static void scalar_gda_hex_print_func (sqlite3_context *context, int argc, sqlite3_value **argv);
+static void scalar_gda_hex_print_func2 (sqlite3_context *context, int argc, sqlite3_value **argv);
+static void scalar_gda_hex_func (sqlite3_context *context, int argc, sqlite3_value **argv);
+static void scalar_gda_hex_func2 (sqlite3_context *context, int argc, sqlite3_value **argv);
 typedef struct {
 	char     *name;
 	int       nargs;
@@ -276,6 +280,10 @@ typedef struct {
 } ScalarFunction;
 static ScalarFunction scalars[] = {
 	{"gda_file_exists", 1, NULL, scalar_gda_file_exists_func},
+	{"gda_hex_print", 1, NULL, scalar_gda_hex_print_func},
+	{"gda_hex_print", 2, NULL, scalar_gda_hex_print_func2},
+	{"gda_hex", 1, NULL, scalar_gda_hex_func},
+	{"gda_hex", 2, NULL, scalar_gda_hex_func2},
 };
 
 
@@ -1517,7 +1525,10 @@ sqlite_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context,
 	}
 	else if (expr->select) {
 		gchar *str1;
-		str1 = context->render_select (GDA_SQL_ANY_PART (expr->select), context, error);
+		if (GDA_SQL_ANY_PART (expr->select)->type == GDA_SQL_ANY_STMT_SELECT)
+			str1 = context->render_select (GDA_SQL_ANY_PART (expr->select), context, error);
+		else
+			str1 = context->render_compound (GDA_SQL_ANY_PART (expr->select), context, error);
 		if (!str1) goto err;
 		str = g_strdup_printf ("(%s)", str1);
 		g_free (str1);
@@ -1600,14 +1611,14 @@ add_oid_columns (GdaStatement *stmt, GHashTable **out_hash, gint *out_nb_cols_ad
 	GdaSqlStatementSelect *sst;
 	gint nb_cols_added = 0;
 	gint add_index;
-	
+	GSList *list;
+
 	*out_hash = NULL;
 	*out_nb_cols_added = 0;
 
 	GdaSqlStatementType type;
 	type = gda_statement_get_statement_type (stmt);
 	if (type == GDA_SQL_STATEMENT_COMPOUND) {
-		TO_IMPLEMENT;
 		return g_object_ref (stmt);
 	}
 	else if (type != GDA_SQL_STATEMENT_SELECT) {
@@ -1619,13 +1630,24 @@ add_oid_columns (GdaStatement *stmt, GHashTable **out_hash, gint *out_nb_cols_ad
 	hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 	sst = (GdaSqlStatementSelect*) sqlst->contents;
 	
-	if (!sst->from) {
+	if (!sst->from || sst->distinct) {
 		gda_sql_statement_free (sqlst);
 		return g_object_ref (stmt);
 	}
 
+	/* if there is an ORDER BY test if we can alter it */
+	if (sst->order_by) {
+		for (list = sst->order_by; list; list = list->next) {
+			GdaSqlSelectOrder *order = (GdaSqlSelectOrder*) list->data;
+			if (order->expr && order->expr->value && 
+			    (G_VALUE_TYPE (order->expr->value) != G_TYPE_STRING)) {
+				gda_sql_statement_free (sqlst);
+				return g_object_ref (stmt);
+			}
+		}
+	}
+
 	add_index = 0;
-	GSList *list;
 	for (list = sst->from->targets; list; list = list->next) {
 		GdaSqlSelectTarget *target = (GdaSqlSelectTarget*) list->data;
 		GdaSqlSelectField *field;
@@ -1661,6 +1683,25 @@ add_oid_columns (GdaStatement *stmt, GHashTable **out_hash, gint *out_nb_cols_ad
 		g_hash_table_insert (hash, gda_sql_identifier_remove_quotes (g_strdup (name)),
 				     GINT_TO_POINTER (add_index)); /* ADDED 1 to column number, don't forget to remove 1 when using */
 		nb_cols_added ++;
+	}
+
+	/* if there is an ORDER BY which uses numbers, then also alter that */
+	if (sst->order_by) {
+		for (list = sst->order_by; list; list = list->next) {
+			GdaSqlSelectOrder *order = (GdaSqlSelectOrder*) list->data;
+			if (order->expr && order->expr->value) {
+				long i;
+				const gchar *cstr;
+				gchar *endptr = NULL;
+				cstr = g_value_get_string (order->expr->value);
+				i = strtol (cstr, (char **) &endptr, 10);
+				if (!endptr || !(*endptr)) {
+					i += nb_cols_added;
+					endptr = g_strdup_printf ("%ld", i);
+					g_value_take_string (order->expr->value, endptr);
+				}
+			}
+		}
 	}
 	
 	/* prepare return */
@@ -2526,6 +2567,139 @@ scalar_gda_file_exists_func (sqlite3_context *context, int argc, sqlite3_value *
 		sqlite3_result_int (context, 1);
 	else
 		sqlite3_result_int (context, 0);
+}
+
+static void
+scalar_gda_hex_print_func (sqlite3_context *context, int argc, sqlite3_value **argv)
+{
+	GdaBinary *bin;
+	GdaDataHandler *dh;
+	GValue *value;
+	gchar *str;
+
+	if (argc != 1) {
+		sqlite3_result_error (context, _("Function requires one argument"), -1);
+		return;
+	}
+
+	bin = g_new0 (GdaBinary, 1);
+	bin->data = (guchar*) sqlite3_value_blob (argv [0]);
+	if (!bin->data) {
+		g_free (bin);
+		sqlite3_result_null (context);
+		return;
+	}
+	bin->binary_length = sqlite3_value_bytes (argv [0]);
+	gda_value_take_binary ((value = gda_value_new (GDA_TYPE_BINARY)), bin);
+	dh = gda_get_default_handler (GDA_TYPE_BINARY);
+	str = gda_data_handler_get_str_from_value (dh, value);
+
+	bin->data = NULL;
+	bin->binary_length = 0;
+	gda_value_free (value);
+	sqlite3_result_text (context, str, -1, g_free);
+}
+
+static void
+scalar_gda_hex_print_func2 (sqlite3_context *context, int argc, sqlite3_value **argv)
+{
+	GdaBinary *bin;
+	GdaDataHandler *dh;
+	GValue *value;
+	gchar *str;
+	gint size;
+
+	if (argc != 2) {
+		sqlite3_result_error (context, _("Function requires two arguments"), -1);
+		return;
+	}
+
+	bin = g_new0 (GdaBinary, 1);
+	bin->data = (guchar*) sqlite3_value_blob (argv [0]);
+	if (!bin->data) {
+		g_free (bin);
+		sqlite3_result_null (context);
+		return;
+	}
+	bin->binary_length = sqlite3_value_bytes (argv [0]);
+	gda_value_take_binary ((value = gda_value_new (GDA_TYPE_BINARY)), bin);
+	dh = gda_get_default_handler (GDA_TYPE_BINARY);
+	str = gda_data_handler_get_str_from_value (dh, value);
+
+	bin->data = NULL;
+	bin->binary_length = 0;
+	gda_value_free (value);
+
+	size = sqlite3_value_int (argv [1]);
+
+	sqlite3_result_text (context, str, -1, g_free);
+}
+
+static void
+scalar_gda_hex_func (sqlite3_context *context, int argc, sqlite3_value **argv)
+{
+	guchar *data;
+	gint length;
+	GString *string;
+	gint i;
+
+	if (argc != 1) {
+		sqlite3_result_error (context, _("Function requires one argument"), -1);
+		return;
+	}
+
+	data = (guchar*) sqlite3_value_blob (argv [0]);
+	if (!data) {
+		sqlite3_result_null (context);
+		return;
+	}
+
+	length = sqlite3_value_bytes (argv [0]);
+	string = g_string_new ("");
+	for (i = 0; i < length; i++) {
+		if ((i > 0) && (i % 4 == 0))
+			g_string_append_c (string, ' ');
+		g_string_append_printf (string, "%02x", data [i]);
+	}
+
+	sqlite3_result_text (context, string->str, -1, g_free);
+	g_string_free (string, FALSE);
+}
+
+static void
+scalar_gda_hex_func2 (sqlite3_context *context, int argc, sqlite3_value **argv)
+{
+	guchar *data;
+	gint length;
+	GString *string;
+	gint i;
+	gint size;
+
+	if (argc != 2) {
+		sqlite3_result_error (context, _("Function requires two arguments"), -1);
+		return;
+	}
+
+	data = (guchar*) sqlite3_value_blob (argv [0]);
+	if (!data) {
+		sqlite3_result_null (context);
+		return;
+	}
+
+	length = sqlite3_value_bytes (argv [0]);
+	size = sqlite3_value_int (argv [1]);
+
+	string = g_string_new ("");
+	for (i = 0; (i < length) && (string->len < (size / 2) * 2 + 2); i++) {
+		if ((i > 0) && (i % 4 == 0))
+			g_string_append_c (string, ' ');
+		g_string_append_printf (string, "%02x", data [i]);
+	}
+
+	if (string->len > size)
+		string->str[size] = 0;
+	sqlite3_result_text (context, string->str, -1, g_free);
+	g_string_free (string, FALSE);
 }
 
 static void

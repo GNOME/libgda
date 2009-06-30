@@ -19,7 +19,8 @@ static GdaSqlParser *create_parser_for_provider (const gchar *prov_name);
 gchar *prov_name = NULL;
 
 static GOptionEntry entries[] = {
-	{ "prov", 'p', 0, G_OPTION_ARG_STRING, &prov_name, "Provider [SQLite|MySQL|PostgreSQL]", "provider"},
+	{ "prov", 'p', 0, G_OPTION_ARG_STRING, &prov_name, "Provider [SQLite|MySQL|PostgreSQL|...]", "provider"},
+	{NULL}
 };
 
 int 

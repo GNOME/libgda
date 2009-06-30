@@ -300,7 +300,7 @@ gda_sql_identifier_needs_quotes (const gchar *str)
 
 	g_return_val_if_fail (str, FALSE);
 	for (ptr = str; *ptr; ptr++) {
-		if (*ptr != g_ascii_tolower (*ptr))
+		if ((*ptr == ' ') || (*ptr != g_ascii_tolower (*ptr)))
 			return TRUE;
 	}
 	return FALSE;

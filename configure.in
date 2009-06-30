@@ -125,7 +125,7 @@ dnl ******************************
 PKG_PROG_PKG_CONFIG([0.18])
 
 dnl ******************************
-dnl Checks for libraries
+dnl Checks for required libraries
 dnl ******************************
 
 PKG_CHECK_MODULES(LIBGDA, [
@@ -138,6 +138,121 @@ PKG_CHECK_MODULES(LIBGDA, [
 TST_CFLAGS="$LIBGDA_CFLAGS"
 LIBGDA_CFLAGS="$LIBGDA_CFLAGS -DLIBGDA_ABI_NAME=$LIBGDA_ABI_NAME"
 
+
+dnl ******************************
+dnl Checks for UI extension
+dnl ******************************
+have_ui=no
+have_goocanvas=no
+have_graphviz=no
+AC_ARG_WITH(ui,
+	AS_HELP_STRING([--with-ui], [Enable GTK+ extension and tools]),
+	,with_ui=auto)
+
+if test "$with_ui" = "auto" -o "$with_ui" = "yes"
+then
+	GTK_MODULES="gtk+-2.0 >= 2.12.0"
+	PKG_CHECK_MODULES(GTK, $GTK_MODULES, [
+		AC_DEFINE(HAVE_UI, [1], [GTK+ support enabled])
+		have_ui=yes], [
+		if test "$with_ui" = "yes"
+		then
+			AC_MSG_ERROR([GTK+ support requested but not found.])
+		fi
+		have_ui=no])
+fi
+AM_CONDITIONAL(HAVE_UI, test x"$have_ui" = "xyes")
+AC_SUBST(GTK_CFLAGS)
+AC_SUBST(GTK_LIBS)
+
+AC_ARG_WITH(goocanvas,
+AS_HELP_STRING([--with-goocanvas], [Enable using GooCanvas]),
+	,with_goo=auto)
+
+AC_ARG_WITH(graphviz,
+AS_HELP_STRING([--with-graphviz], [Enable using Graphviz]),
+	,with_graphviz=auto)
+
+if test x"$have_ui" = "xyes"
+then
+	if test "$with_goo" = "auto" -o "$with_goo" = "yes"
+	then
+		PKG_CHECK_MODULES(GOOCANVAS, "goocanvas", [
+			AC_DEFINE(HAVE_GOOCANVAS, [1], [GooCanvas support enabled])
+			have_goocanvas=yes], [
+			if test "$with_goo" = "yes"
+			then
+				AC_MSG_ERROR([GooCanvas support requested but not found.])
+			fi
+			have_goocanvas=no])
+	fi
+
+	if test "$with_graphviz" = "auto" -o "$with_graphviz" = "yes"
+	then
+		PKG_CHECK_MODULES(GRAPHVIZ, "libgvc", [
+			AC_DEFINE(HAVE_GRAPHVIZ, [1], [Graphviz support enabled])
+			have_graphviz=yes], [
+			if test "$with_graphviz" = "yes"
+			then
+				AC_MSG_ERROR([Graphviz support requested but not found.])
+			fi
+			have_graphviz=no])
+	fi
+fi
+
+AM_CONDITIONAL(HAVE_GOOCANVAS, test x"$have_goocanvas" = "xyes")
+AC_SUBST(GOOCANVAS_CFLAGS)
+AC_SUBST(GOOCANVAS_LIBS)
+
+
+AM_CONDITIONAL(HAVE_GRAPHVIZ, test x"$have_graphviz" = "xyes")
+AC_SUBST(GRAPHVIZ_CFLAGS)
+AC_SUBST(GRAPHVIZ_LIBS)
+
+
+dnl ******************************
+dnl Checks for LibUnique
+dnl ******************************
+have_unique=no
+AC_ARG_WITH(unique,
+	AS_HELP_STRING([--with-unique], [Use LibUnique to have only one control center]),
+	,with_unique=auto)
+
+if test "$with_unique" = "auto" -o "$with_unique" = "yes"
+then
+	PKG_CHECK_MODULES(UNIQUE, "unique-1.0", [
+		AC_DEFINE(HAVE_UNIQUE, [1], [LibUnique support enabled])
+		have_unique=yes], [
+		if test "$with_unique" = "yes"
+		then
+			AC_MSG_ERROR([LibUnique support requested but not found.])
+		fi
+		have_unique=no])
+fi
+AM_CONDITIONAL(HAVE_UNIQUE, test x"$have_unique" = "xyes")
+AC_SUBST(UNIQUE_CFLAGS)
+AC_SUBST(UNIQUE_LIBS)
+
+dnl ******************************
+dnl Checks for iso codes
+dnl ******************************
+
+ISO_CODES_MODULES="iso-codes"
+PKG_CHECK_MODULES(ISO_CODES, $ISO_CODES_MODULES, have_iso_codes=yes, have_iso_codes=no)
+if test x"$have_iso_codes" = "xyes"
+then
+        AC_MSG_CHECKING([whether iso-codes has iso-4217 domain])
+        if $PKG_CONFIG --variable=domains iso-codes | grep -q 4217 ; then
+                AC_MSG_RESULT([yes])
+                AC_DEFINE_UNQUOTED([ISO_CODES_PREFIX],["`$PKG_CONFIG --variable=prefix iso-codes`"],[ISO codes prefix])
+        else
+                AC_MSG_RESULT([no])
+                AC_DEFINE_UNQUOTED([ISO_CODES_PREFIX],"")
+        fi
+else
+        AC_DEFINE_UNQUOTED([ISO_CODES_PREFIX],"")
+fi
+
 dnl ******************************
 dnl Check for Win32
 dnl ******************************
@@ -145,6 +260,7 @@ dnl linklibext is the shared link library extension, which varies by platform
 
 EXPORT_SYM_REGEX='-export-symbols-regex "^(gda_|fnYM49765777344607__gda).*"'
 EXPORT_PROV_SYM_REGEX='-export-symbols-regex "^(plugin_|Java_|g_module).*"'
+EXPORT_UI_SYM_REGEX='-export-symbols-regex "^(gdaui_).*"'
 AC_MSG_CHECKING([for platform])
 platform_win32=no
 platform_carbon=no
@@ -156,6 +272,7 @@ case "$host" in
     SOPREFIX='cyg'
     LIBTOOL_EXPORT_OPTIONS=$EXPORT_SYM_REGEX
     LIBTOOL_PROV_EXPORT_OPTIONS=$EXPORT_PROV_SYM_REGEX
+    LIBTOOL_UI_EXPORT_OPTIONS=$EXPORT_UI_SYM_REGEX
     linklibext=".dll.a"
     AC_MSG_RESULT([Win32])
     ;;
@@ -167,6 +284,7 @@ case "$host" in
     SOPREFIX='lib'
     LIBTOOL_EXPORT_OPTIONS=
     LIBTOOL_PROV_EXPORT_OPTIONS=
+    LIBTOOL_UI_EXPORT_OPTIONS=
     linklibext=".dll.a"
     AC_CHECK_TOOL(WINDRES, windres, windres)
     AC_SUBST(WINDRES)
@@ -181,6 +299,7 @@ case "$host" in
     AM_BINRELOC
     LIBTOOL_EXPORT_OPTIONS=$EXPORT_SYM_REGEX
     LIBTOOL_PROV_EXPORT_OPTIONS=$EXPORT_PROV_SYM_REGEX
+    LIBTOOL_UI_EXPORT_OPTIONS=$EXPORT_UI_SYM_REGEX
     AC_DEFINE(HAVE_CARBON)
     LIBGDA_LIBS="$LIBGDA_LIBS -framework Carbon"
     dnl SO_SUFFIX=dylib
@@ -192,6 +311,7 @@ case "$host" in
     AM_BINRELOC
     LIBTOOL_EXPORT_OPTIONS=$EXPORT_SYM_REGEX
     LIBTOOL_PROV_EXPORT_OPTIONS=$EXPORT_PROV_SYM_REGEX
+    LIBTOOL_UI_EXPORT_OPTIONS=$EXPORT_UI_SYM_REGEX
     ;;
 esac
 
@@ -199,6 +319,7 @@ AM_CONDITIONAL(PLATFORM_WIN32, [test $platform_win32 = yes])
 AM_CONDITIONAL(PLATFORM_CARBON, [test $platform_carbon = yes])
 AC_SUBST(LIBTOOL_EXPORT_OPTIONS)
 AC_SUBST(LIBTOOL_PROV_EXPORT_OPTIONS)
+AC_SUBST(LIBTOOL_UI_EXPORT_OPTIONS)
 AC_SUBST(NO_UNDEFINED)
 AC_SUBST(SOPREFIX)
 
@@ -206,13 +327,6 @@ dnl *******************************************************
 dnl Checks for GIO or Gnome VFS, use GIO preferably
 dnl if GIO is not found, then see if FAM or gamin are found
 dnl *******************************************************
-
-GNOMEVFS_MODULES="gnome-vfs-2.0 >= 2.20"
-PKG_CHECK_MODULES(GNOMEVFS, $GNOMEVFS_MODULES, have_gnomevfs=yes, have_gnomevfs=no)
-if test x"$have_gnomevfs" = "xyes"
-then
-        GNOMEVFS_CFLAGS="$GNOMEVFS_CFLAGS -DHAVE_GNOMEVFS"
-fi
 
 GIO_MODULES="gio-2.0 >= 2.16"
 PKG_CHECK_MODULES(GIO, $GIO_MODULES, have_gio=yes, have_gio=no)
@@ -224,6 +338,13 @@ then
 	GNOMEVFS_LIBS=""
 	have_gnomevfs=no
 else
+	GNOMEVFS_MODULES="gnome-vfs-2.0 >= 2.20"
+	PKG_CHECK_MODULES(GNOMEVFS, $GNOMEVFS_MODULES, have_gnomevfs=yes, have_gnomevfs=no)
+	if test x"$have_gnomevfs" = "xyes"
+	then
+	        GNOMEVFS_CFLAGS="$GNOMEVFS_CFLAGS -DHAVE_GNOMEVFS"
+	fi
+
 	FAM_LIBS=
 	FAM_CFLAGS=
 	FAM_MISSING_WARNING="Libgda depends on FAM to provide notification when configuration files are changed, without FAM support any application using Libgda will have to be restarted when configuration files are changed to take into account those changes"
@@ -279,6 +400,39 @@ then
 fi
 AC_SUBST(JSON_GLIB_CFLAGS)
 AC_SUBST(JSON_GLIB_LIBS)
+
+dnl ******************************
+dnl Checks for libgcrypt
+dnl ******************************
+LIBGCRYPT_CFLAGS=""
+LIBGCRYPT_LIBS=""
+if test x$platform_win32 != xyes; then
+	AC_DEFUN([VERSION_TO_NUMBER],[`$1 | awk 'BEGIN { FS = "."; } { printf "%d", ([$]1 * 1000 + [$]2) * 1000 + [$]3;}'`])
+	AC_PATH_PROG(LIBGCRYPT_CONFIG, libgcrypt-config, no)
+	if test "$LIBGCRYPT_CONFIG" != "no" ; then
+   		LIBGCRYPT_VERSION=`$LIBGCRYPT_CONFIG --version`
+		if test VERSION_TO_NUMBER(echo $LIBGCRYPT_VERSION) -lt VERSION_TO_NUMBER(echo "1.1.42") ; then
+			LIBGCRYPT_CFLAGS=""
+			LIBGCRYPT_LIBS=""
+			AM_CONDITIONAL(HAVE_LIBGCRYPT, 0)
+			echo "Password entry plugin will not be compiled, install libgcrypt >= 1.1.42 and reconfigure to make available."
+      		else
+			LIBGCRYPT_CFLAGS=`$LIBGCRYPT_CONFIG $libgcrypt_config_args --cflags`
+        		LIBGCRYPT_LIBS=`$LIBGCRYPT_CONFIG $libgcrypt_config_args --libs`
+			AM_CONDITIONAL(HAVE_LIBGCRYPT, true)
+        	fi
+	else
+	LIBGCRYPT_CFLAGS=""
+      	LIBGCRYPT_LIBS=""
+      	AM_CONDITIONAL(HAVE_LIBGCRYPT, 0)
+      	echo "Password entry plugin will not be compiled, install libgcrypt and reconfigure to make available."
+	fi
+else
+	AM_CONDITIONAL(HAVE_LIBGCRYPT, false)
+fi
+
+AC_SUBST(LIBGCRYPT_CFLAGS)
+AC_SUBST(LIBGCRYPT_LIBS)
 
 dnl ******************************
 dnl gtk-doc
@@ -1348,12 +1502,23 @@ export LD_LIBRARY_PATH="$save_LD_LIBRARY_PATH"
 dnl ************************
 dnl Check for libsoup
 dnl ************************
-PKG_CHECK_MODULES(LIBSOUP, libsoup-2.4, have_libsoup=yes, have_libsoup=no)
-AM_CONDITIONAL(LIBSOUP, test x"$have_libsoup" = "xyes")
-if test x"$have_libsoup" = "xyes"
+
+AC_ARG_WITH(libsoup,
+	AS_HELP_STRING([--with-libsoup], [Enable libsoup support]),
+	,with_libsoup=auto)
+
+if test "$with_libsoup" = "auto" -o "$with_libsoup" = "yes"
 then
-        LIBSOUP_CFLAGS="$LIBSOUP_CFLAGS -DHAVE_LIBSOUP"
+	PKG_CHECK_MODULES(LIBSOUP, libsoup-2.4, [
+		AC_DEFINE(HAVE_LIBSOUP, [1], [libsoup support enable])
+		have_libsoup=yes], [
+		if test "$with_libsoup" = "yes"
+		then
+			AC_MSG_ERROR([libsoup support requested but not found.])
+		fi
+		have_libsoup=no])
 fi
+AM_CONDITIONAL(LIBSOUP, test "$have_libsoup" = "yes")
 AC_SUBST(LIBSOUP_CFLAGS)
 AC_SUBST(LIBSOUP_LIBS)
 
@@ -1482,6 +1647,7 @@ AC_OUTPUT([
 Makefile
 libgda.spec
 libgda-4.0.pc
+libgdaui-4.0.pc
 libgda-report-4.0.pc
 libgda-xslt-4.0.pc
 po/Makefile.in
@@ -1522,8 +1688,21 @@ libgda-report/RML/Makefile
 libgda-report/RML/trml2html/Makefile
 libgda-report/RML/trml2pdf/Makefile
 libgda-xslt/Makefile
+libgdaui/Makefile
+libgdaui/marshallers/Makefile
+libgdaui/internal/Makefile
+libgdaui/data-entries/Makefile
+libgdaui/data-entries/plugins/Makefile
+libgdaui/data/Makefile
+libgdaui/demos/Makefile
+libgdaui/demos/geninclude.pl
+control-center/Makefile
 tools/Makefile
-tools/gda-sql-4.1.1:tools/gda-sql.1.in
+tools/gda-sql-4.0.1:tools/gda-sql.1.in
+tools/browser/Makefile
+tools/browser/schema-browser/Makefile
+tools/browser/dummy-perspective/Makefile
+tools/browser/canvas/Makefile
 tools/binreloc/Makefile
 testing/Makefile
 tests/Makefile
@@ -1545,6 +1724,7 @@ dnl Print configuration summary
 echo ""
 echo " Configuration summary for version $GDA_VERSION"
 echo "   Installation prefix = $prefix"
+echo "   Building GTK+ UI extension: `if test x$have_ui != xno; then echo yes; else echo no; fi`"
 echo "   Building Libxslt extension: `if test x$have_xslt != xno; then echo yes; else echo no; fi`"
 echo "   Compiled providers:"
 echo "      Berkeley DB = `if test x$bdbdir != x; then echo yes; else echo no; fi`"

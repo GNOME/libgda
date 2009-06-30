@@ -62,10 +62,11 @@ static GObjectClass *parent_class = NULL;
 
 /* signals */
 enum {
+	DUMMY,
 	LAST_SIGNAL
 };
 
-static gint gda_sql_builder_signals[LAST_SIGNAL] = { };
+static gint gda_sql_builder_signals[LAST_SIGNAL] = { 0 };
 
 /* properties */
 enum {

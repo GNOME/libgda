@@ -1200,7 +1200,6 @@ gda_identifier_equal (const gchar *id1, const gchar *id2)
 }
 
 
-static char *copy_ident (const gchar *ident);
 static char *concat_ident (const gchar *prefix, const gchar *ident);
 
 static gchar *sql_start_words[] = {
@@ -1234,6 +1233,19 @@ static gchar *sql_middle_words[] = {
 	"NOT",
 	"SET"
 };
+
+static gchar *
+prepare_sql_identifier_for_compare (gchar *str)
+{
+	if (!str || (*str == '"'))
+		return str;
+	else {
+		gchar *ptr;
+		for (ptr = str; *ptr; ptr++)
+			*ptr = g_ascii_tolower (*ptr);
+		return str;
+	}
+}
 
 /**
  * gda_completion_list_get
@@ -1301,15 +1313,11 @@ gda_completion_list_get (GdaConnection *cnc, const gchar *sql, gint start, gint 
 		else
 			goto compl_finished;
 	}
-	
-	if (*obj_name == '"') 
-		_remove_quotes (obj_name);
-	
-	if (obj_schema) {
-		if (*obj_schema == '"') 
-			_remove_quotes (obj_schema);
-		g_value_take_string ((schema_value = gda_value_new (G_TYPE_STRING)), obj_schema);
-	}
+		
+	prepare_sql_identifier_for_compare (obj_name);
+	if (obj_schema)
+		g_value_take_string ((schema_value = gda_value_new (G_TYPE_STRING)),
+				     prepare_sql_identifier_for_compare (obj_schema));
 	
 	/*
 	 * complete with "table" or "schema.table"
@@ -1340,7 +1348,7 @@ gda_completion_list_get (GdaConnection *cnc, const gchar *sql, gint start, gint 
 					if (schema_value) 
 						str = concat_ident (obj_schema, tname);
 					else
-						str = copy_ident (tname);
+						str = g_strdup (tname);
 					g_array_append_val (compl, str);
 				}
 			}
@@ -1367,7 +1375,7 @@ gda_completion_list_get (GdaConnection *cnc, const gchar *sql, gint start, gint 
 				cname = g_value_get_string (cvalue);
 				if (!strncmp (cname, obj_name, len)) {
 					gchar *str;
-					str = copy_ident (cname);
+					str = g_strdup (cname);
 					g_array_append_val (compl, str);
 				}
 			}
@@ -1394,7 +1402,7 @@ gda_completion_list_get (GdaConnection *cnc, const gchar *sql, gint start, gint 
 				if (!strncmp (tname, obj_name, len)) {
 					char *str;
 					GdaDataModel *m2;
-					str = copy_ident (tname);
+					str = g_strdup (tname);
 				
 					m2 = gda_meta_store_extract (store, 
 								     "SELECT table_name FROM _tables WHERE table_schema = ##schema::string", 
@@ -1462,26 +1470,6 @@ gda_completion_list_get (GdaConnection *cnc, const gchar *sql, gint start, gint 
 		return NULL;
 }
 
-
-static char *
-copy_ident (const gchar *ident)
-{
-	char *str;
-	gint tlen = strlen (ident);
-	if (gda_sql_identifier_needs_quotes (ident)) {
-		str = malloc (sizeof (char) * (tlen + 3));
-		*str = '"';
-		strcpy (str+1, ident);
-		str [tlen + 1] = '"';
-		str [tlen + 2] = 0;
-	}
-	else {
-		str = malloc (sizeof (char) * (tlen + 1));
-		strcpy (str, ident);		
-	}
-	return str;
-}
-
 static char *
 concat_ident (const char *prefix, const gchar *ident)
 {
@@ -1492,31 +1480,14 @@ concat_ident (const char *prefix, const gchar *ident)
 	if (prefix)
 		plen = strlen (prefix) + 1;
 
-	if (gda_sql_identifier_needs_quotes (ident)) {
-		str = malloc (sizeof (char) * (plen + tlen + 3));
-		if (prefix) {
-			strcpy (str, prefix);
-			str [plen - 1] = '.';
-			str [plen] = '"';
-			strcpy (str + plen + 1, ident);
-		}
-		else {
-			*str = '"';
-			strcpy (str+1, ident);
-		}
-		str [plen + tlen + 1] = '"';
-		str [plen + tlen + 2] = 0;
+	str = malloc (sizeof (char) * (plen + tlen + 1));
+	if (prefix) {
+		strcpy (str, prefix);
+		str [plen - 1] = '.';
+		strcpy (str + plen, ident);
 	}
-	else {
-		str = malloc (sizeof (char) * (plen + tlen + 1));
-		if (prefix) {
-			strcpy (str, prefix);
-			str [plen - 1] = '.';
-			strcpy (str + plen, ident);
-		}
-		else
-			strcpy (str, ident);
-	}
+	else
+		strcpy (str, ident);
 	return str;
 }
 
