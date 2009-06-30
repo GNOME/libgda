@@ -27,12 +27,12 @@
 #include <libgda/gda-holder.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include "gdaui-dsn-assistant.h"
-#include <libgdaui/internal/gdaui-provider-spec-editor.h>
-#include <libgdaui/internal/gdaui-provider-auth-editor.h>
-#include <libgdaui/gdaui-provider-selector.h>
-#include <libgdaui/gdaui-server-operation.h>
+#include <libgda-ui/internal/gdaui-provider-spec-editor.h>
+#include <libgda-ui/internal/gdaui-provider-auth-editor.h>
+#include <libgda-ui/gdaui-provider-selector.h>
+#include <libgda-ui/gdaui-server-operation.h>
 #include <glib/gi18n-lib.h>
-#include <libgdaui/internal/utility.h>
+#include <libgda-ui/internal/utility.h>
 #include <libgda/binreloc/gda-binreloc.h>
 
 enum {

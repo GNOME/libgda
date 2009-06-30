@@ -24,7 +24,7 @@
 #include <string.h>
 #include <gtk/gtkdialog.h>
 #include <gtk/gtkstock.h>
-#include <libgdaui/libgdaui.h>
+#include <libgda-ui/libgda-ui.h>
 #include <libgda/binreloc/gda-binreloc.h>
 #include <gtk/gtklabel.h>
 #include <gtk/gtknotebook.h>

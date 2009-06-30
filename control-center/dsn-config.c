@@ -28,7 +28,7 @@
 #include <gtk/gtkstock.h>
 #include <gtk/gtktable.h>
 #include <gtk/gtkvbbox.h>
-#include <libgdaui/libgdaui.h>
+#include <libgda-ui/libgda-ui.h>
 #include "dsn-config.h"
 #include "dsn-properties-dialog.h"
 #include "cc-utility.h"

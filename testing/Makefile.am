@@ -41,7 +41,7 @@ gdaui_test_data_entries_SOURCES = \
 
 gdaui_test_data_entries_LDADD = \
         $(top_builddir)/libgda/libgda-4.0.la \
-        $(top_builddir)/libgdaui/libgdaui-4.0.la \
+        $(top_builddir)/libgda-ui/libgda-ui-4.0.la \
         $(LIBGDA_LIBS)
 
 EXTRA_DIST = 

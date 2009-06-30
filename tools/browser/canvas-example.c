@@ -1,6 +1,6 @@
 #include <libgda/libgda.h>
 #include <libgda/binreloc/gda-binreloc.h>
-#include <libgdaui/libgdaui.h>
+#include <libgda-ui/libgda-ui.h>
 #include "canvas/browser-canvas-db-relations.h"
 #include "dnd.h"
 

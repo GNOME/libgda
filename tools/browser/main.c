@@ -22,7 +22,7 @@
 #include <glib/gi18n-lib.h>
 #include <glib/gprintf.h>
 #include <string.h>
-#include <libgdaui/libgdaui.h>
+#include <libgda-ui/libgda-ui.h>
 #include "support.h"
 #include "browser-core.h"
 #include "browser-connection.h"

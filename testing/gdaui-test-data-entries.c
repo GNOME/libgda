@@ -1,6 +1,6 @@
 #include <glib/gi18n-lib.h>
-#include <libgdaui/libgdaui.h>
-#include <libgdaui/gdaui-plugin.h>
+#include <libgda-ui/libgda-ui.h>
+#include <libgda-ui/gdaui-plugin.h>
 #include <gtk/gtk.h>
 
 typedef enum {

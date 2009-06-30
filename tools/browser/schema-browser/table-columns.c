@@ -27,7 +27,7 @@
 #include <libgda/gda-tree.h>
 #include "table-info.h"
 #include "table-columns.h"
-#include <libgdaui/gdaui-tree-store.h>
+#include <libgda-ui/gdaui-tree-store.h>
 #include "../support.h"
 #include "../cc-gray-bar.h"
 #include "mgr-columns.h"

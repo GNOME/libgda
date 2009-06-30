@@ -24,7 +24,7 @@
 #ifndef __GDAUI_LOGIN_DIALOG_H__
 #define __GDAUI_LOGIN_DIALOG_H__
 
-#include <libgdaui/gdaui-login.h>
+#include <libgda-ui/gdaui-login.h>
 #include <gtk/gtkdialog.h>
 
 G_BEGIN_DECLS

@@ -21,7 +21,7 @@
 #ifndef __AUTH_DIALOG_H_
 #define __AUTH_DIALOG_H_
 
-#include <libgdaui/libgdaui.h>
+#include <libgda-ui/libgda-ui.h>
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS

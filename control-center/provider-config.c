@@ -30,7 +30,7 @@
 #include <gtk/gtkstock.h>
 #include <gtk/gtktable.h>
 #include <gtk/gtkvbbox.h>
-#include <libgdaui/libgdaui.h>
+#include <libgda-ui/libgda-ui.h>
 #include "provider-config.h"
 #include "cc-gray-bar.h"
 

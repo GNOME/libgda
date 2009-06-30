@@ -24,7 +24,7 @@
 #include "browser-core.h"
 #include "browser-window.h"
 #include "browser-connection.h"
-#include <libgdaui/gdaui-login.h>
+#include <libgda-ui/gdaui-login.h>
 #include "support.h"
 #include "login-dialog.h"
 

@@ -25,7 +25,7 @@
 #include <gtk/gtk.h>
 #include <libgda/gda-tree.h>
 #include "objects-index.h"
-#include <libgdaui/gdaui-tree-store.h>
+#include <libgda-ui/gdaui-tree-store.h>
 #include "../dnd.h"
 #include "../support.h"
 #include "../cc-gray-bar.h"

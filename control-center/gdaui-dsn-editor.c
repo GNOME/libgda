@@ -26,11 +26,11 @@
 #include <gtk/gtktable.h>
 #include <libgda/libgda.h>
 #include "gdaui-dsn-editor.h"
-#include <libgdaui/gdaui-provider-selector.h>
-#include <libgdaui/gdaui-basic-form.h>
+#include <libgda-ui/gdaui-provider-selector.h>
+#include <libgda-ui/gdaui-basic-form.h>
 #include <glib/gi18n-lib.h>
-#include <libgdaui/internal/gdaui-provider-spec-editor.h>
-#include <libgdaui/internal/gdaui-provider-auth-editor.h>
+#include <libgda-ui/internal/gdaui-provider-spec-editor.h>
+#include <libgda-ui/internal/gdaui-provider-auth-editor.h>
 
 struct _GdauiDsnEditorPrivate {
 	GtkWidget *wname;

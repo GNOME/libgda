@@ -18,5 +18,5 @@ libgda_psupport_la_SOURCES = \
 libgda_psupport_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_psupport_la_LIBADD = $(LIBGDA_LIBS)
 
-psupportincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/providers-support
+psupportincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda/providers-support
 psupportinclude_HEADERS=$(psupport_headers)

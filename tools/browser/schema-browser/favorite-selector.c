@@ -26,7 +26,7 @@
 #include <libgda/gda-tree.h>
 #include "favorite-selector.h"
 #include "../mgr-favorites.h"
-#include <libgdaui/gdaui-tree-store.h>
+#include <libgda-ui/gdaui-tree-store.h>
 #include "../dnd.h"
 #include "../support.h"
 #include "../cc-gray-bar.h"

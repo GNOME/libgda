@@ -75,7 +75,7 @@ gda_browser_4_0_LDADD=\
 	$(top_builddir)/tools/browser/schema-browser/libperspective.la \
 	$(top_builddir)/tools/browser/dummy-perspective/libperspective.la \
 	$(top_builddir)/libgda/libgda-4.0.la \
-	$(top_builddir)/libgdaui/libgdaui-4.0.la \
+	$(top_builddir)/libgda-ui/libgda-ui-4.0.la \
 	$(LIBGDA_LIBS) $(GTK_LIBS)
 
 if HAVE_GOOCANVAS
@@ -99,7 +99,7 @@ canvas_example_SOURCES = \
 canvas_example_CFLAGS = -DCANVAS_EXAMPLE
 canvas_example_LDFLAGS = \
 	$(top_builddir)/libgda/libgda-4.0.la \
-	$(top_builddir)/libgdaui/libgdaui-4.0.la \
+	$(top_builddir)/libgda-ui/libgda-ui-4.0.la \
 	canvas/libcanvas.la
 
 

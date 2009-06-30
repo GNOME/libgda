@@ -26,7 +26,7 @@
 #include <gtk/gtknotebook.h>
 #include <gtk/gtkstock.h>
 #include <gtk/gtktable.h>
-#include <libgdaui/libgdaui.h>
+#include <libgda-ui/libgda-ui.h>
 #include <libgda/binreloc/gda-binreloc.h>
 #include "dsn-properties-dialog.h"
 #include "gdaui-dsn-editor.h"

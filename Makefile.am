@@ -6,9 +6,9 @@ XSLT_PC=libgda-xslt-$(GDA_ABI_VERSION).pc
 endif
 
 if HAVE_UI
-UI_DIRS=libgdaui \
+UI_DIRS=libgda-ui \
 	control-center
-UI_PC=libgdaui-$(GDA_ABI_VERSION).pc
+UI_PC=libgda-ui-$(GDA_ABI_VERSION).pc
 endif
 
 SUBDIRS = \

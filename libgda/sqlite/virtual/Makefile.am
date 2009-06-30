@@ -38,7 +38,7 @@ libgda_virtual_4_0_la_SOURCES = \
 	gda-virtual-connection.c \
 	gda-virtual-provider.c 
 
-gdaincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/virtual
+gdaincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda/virtual
 gdainclude_HEADERS=$(virtual_headers)
 
 xmldir   = $(datadir)/libgda-4.0

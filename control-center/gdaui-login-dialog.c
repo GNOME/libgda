@@ -30,7 +30,7 @@
 #include <gtk/gtkwindow.h>
 #include <libgda/gda-config.h>
 #include <libgda/binreloc/gda-binreloc.h>
-#include <libgdaui/gdaui-login.h>
+#include <libgda-ui/gdaui-login.h>
 #include "gdaui-login-dialog.h"
 #include <glib/gi18n-lib.h>
 

@@ -48,9 +48,9 @@ control-center-res.o: control-center-res.rc
 
 gda_control_center_4_0_LDFLAGS = $(EXTRALDFLAGS)
 gda_control_center_4_0_LDADD=\
-	$(top_builddir)/libgdaui/internal/libgdaui-internal.la \
+	$(top_builddir)/libgda-ui/internal/libgda-ui-internal.la \
 	$(top_builddir)/libgda/libgda-4.0.la \
-	$(top_builddir)/libgdaui/libgdaui-4.0.la \
+	$(top_builddir)/libgda-ui/libgda-ui-4.0.la \
 	$(LIBGDA_LIBS) $(GTK_LIBS) $(UNIQUE_LIBS)
 
 @INTLTOOL_DESKTOP_RULE@
