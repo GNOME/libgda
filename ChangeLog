@@ -1,3 +1,12 @@
+2009-06-30  Vivien Malerba <malerba@gnome-db.org>
+	
+	* doc/C/libgda-4.0-sections.txt:
+	* libgda-4.0.pc.in:
+	* libgda/providers-support/Makefile.am:
+	* libgda/sql-parser/Makefile.am:
+	* libgda/sqlite/virtual/Makefile.am:
+	* providers/sqlite/Makefile.am: correction for bug #587435
+
 2009-06-08  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda-report/RML/trml2html/Makefile.am:

@@ -917,7 +917,7 @@ gda_get_default_handler
 <SECTION>
 <FILE>gda-report-engine</FILE>
 <TITLE>GdaReportEngine</TITLE>
-<INCLUDE>gda-report-engine.h</INCLUDE>
+<INCLUDE>libgda-report/gda-report-engine.h</INCLUDE>
 GdaReportEngine
 gda_report_engine_new
 gda_report_engine_new_from_string
@@ -1100,7 +1100,7 @@ gda_batch_get_type
 <SECTION>
 <FILE>gda-sql-parser</FILE>
 <TITLE>GdaSqlParser</TITLE>
-<INCLUDE>sql-parser/gda-sql-parser.h</INCLUDE>
+<INCLUDE>libgda/sql-parser/gda-sql-parser.h</INCLUDE>
 GdaSqlParser
 GdaSqlParserMode
 gda_sql_parser_new
@@ -1124,7 +1124,7 @@ gda_sql_parser_get_type
 <SECTION>
 <FILE>gda-sql-statement</FILE>
 <TITLE>GdaSqlStatement</TITLE>
-<INCLUDE>sql-parser/gda-sql-statement.h</INCLUDE>
+<INCLUDE>libgda/sql-parser/gda-sql-statement.h</INCLUDE>
 GdaSqlStatement
 GdaSqlStatementType
 gda_sql_statement_new
@@ -1367,7 +1367,7 @@ gda_data_select_get_type
 <SECTION>
 <FILE>gda-data-select-priv</FILE>
 <TITLE>Subclassing GdaDataSelect</TITLE>
-<INCLUDE>providers-support/gda-data-select-priv.h</INCLUDE>
+<INCLUDE>libgda/providers-support/gda-data-select-priv.h</INCLUDE>
 GdaDataSelectClass
 gda_data_select_take_row
 gda_data_select_get_stored_row
@@ -1395,7 +1395,7 @@ gda_row_value_is_valid
 <SECTION>
 <FILE>gda-pstmt</FILE>
 <TITLE>GdaPStmt</TITLE>
-<INCLUDE>providers-support/gda-pstmt.h</INCLUDE>
+<INCLUDE>libgda/providers-support/gda-pstmt.h</INCLUDE>
 GdaPStmt
 gda_pstmt_set_gda_statement
 gda_pstmt_get_gda_statement
