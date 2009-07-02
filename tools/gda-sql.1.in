@@ -5,7 +5,7 @@ gda-sql - an SQL console based on Libgda
 
 .SH SYNOPSIS
 .B gda-sql
-[\-\-help] [-v] [\-\-version]
+[\-\-help] [\-v] [\-\-version]
 [\-p] [\-\-no\-password\-ask]
 [\-o] [\-\-output\-file \fI<filename>\fP]
 [\-C] [\-\-command]
@@ -36,8 +36,8 @@ scripts and automating a wide variety of tasks.
 
 
 .SH OPTIONS
-.l
 gda-sql accepts the following options:
+.PP
 .TP 8
 .B  \-\-help
 Show command\-line options.
