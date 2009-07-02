@@ -375,6 +375,44 @@ gboolean (*tables_views) (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
       <link linkend="information_schema:sql_identifiers">SQL identifiers</link> section.
     </para>
     <sect2>
+      <title>Important note about SQL identifiers</title>
+      <para>
+	As mentionned in the <link linkend="information_schema:sql_identifiers">SQL identifiers</link> section,
+	any SQL identifier in the meta store is represented either:
+	<itemizedlist>
+	  <listitem><para>between double quotes if the SQL identifier is case sensitive</para></listitem>
+	  <listitem><para>all in lower case if the SQL identifier is not case sensitive</para></listitem>
+	</itemizedlist>
+      </para>
+      <para>
+	For database engines which internally store case insensitive SQL identifiers in lower case
+	(such as PostgreSQL),
+	the meta data reported by the database engine can be used almost AS IS, but for database
+	engines which internally store case insensitive SQL identifiers in upper case (such as Oracle),
+	the upper case needs to be converted to lower case. Also case sensitive SQL identifiers also need
+	to be double quoted.
+      </para>
+      <para>
+	To minimize the work required to implement a database provider, &LIBGDA; allows the database
+	provider to specifiy how case insensitive SQL identifiers are represented using 
+	<link linkend="gda-meta-store-set-identifiers-style">gda_meta_store_set_identifiers_style()</link>
+	and the <link linkend="GdaMetaStore">GdaMetaStore</link> object will perform the work itself (the
+	default being GDA_SQL_IDENTIFIERS_LOWER_CASE in <link linkend="GdaSqlIdentifierStyle">GdaSqlIdentifierStyle</link>.
+      </para>
+      <para>
+	Also note that the extra arguments for each virtual method listed below, when they are present
+	and when they represent an SQL identifier, will be represented:
+	<itemizedlist>
+	  <listitem><para>for case insitive SQL identifiers: using all lower or all upper case (depending on the setting
+	      set using <link linkend="gda-meta-store-set-identifiers-style">gda_meta_store_set_identifiers_style()</link>
+	  </para></listitem>
+	  <listitem><para>for case sensitive SQL identifiers: without the double quotes, but possibily with
+	      mixed or not lower and upper characters</para></listitem>
+	  <listitem><para></para></listitem>
+	</itemizedlist>
+      </para>
+    </sect2>
+    <sect2>
       <title>_info()</title>
       <para>
 	<programlisting>

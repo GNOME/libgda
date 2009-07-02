@@ -1074,13 +1074,64 @@ g_object_unref (store);
 	<sect2 id="information_schema:sql_identifiers">
 	  <title>SQL identifiers</title>
 	  <para>
-	    SQL identifiers (database object's names) are generally case insensitive, but it is still possible to
-	    have case sensitive SQL identifier if they are enclosed between double quotes. Each database has its own
-	    way of representing case insensitive SQL identifiers (for instance PostgreSQL represents them in lower
+	    The SQL standard has never defined if SQL identifiers (database object's names) have to be case sensitive
+	    or not, leaving that
+	    subject to each database engine implementation. All of them accept two syntaxes for SQL identifiers:
+	    <itemizedlist>
+	      <listitem><para>the first is if the SQL identifier is surrounded by double quotes (sometimes simple
+		  quotes are also accepted), making the SQL identifier case sensitive (and also making
+		  it possible to use reserved SQL keywords as identifiers).</para></listitem>
+	      <listitem><para>the second is if it's not enquoted, meaning that the SQL identifier is not
+		  case sensitive.</para></listitem>
+	    </itemizedlist>
+	    <note>
+	      <para>
+		Many people consider that using the quoted syntax should be avoided if possible because:
+		<itemizedlist>
+		  <listitem><para>once an SQL identifier has been defined using the quoted syntax, it must
+		      <emphasis>always</emphasis> be used quoted, which is error prone especially if external
+		      tools are used on the database</para></listitem>
+		  <listitem><para>the SQL code is less readable (there are quoted strings everywhere)</para></listitem>
+		  <listitem><para>the SQL code is less portable as each database engine sets up different techniques to
+		      avoid confusing the SQL identifiers' quoting with SQL literals which are quoted when writing
+		      complex statements</para></listitem>
+		  <listitem><para>writing SQL requires a more in-depth knowledge of the database engine being used and as
+		      a consequence it's far easier to make errors when writing SQL</para></listitem>
+		</itemizedlist>
+		For some more example, see
+		<ulink url="http://www.alberton.info/dbms_identifiers_and_case_sensitivity.html">Database identifiers, quoting and case sensitivity</ulink> from  Lorenzo Alberton.
+	      </para>
+	    </note>
+	  </para>
+	  <para>
+	    Considering that each database has its own
+	    internal way of representing case insensitive SQL identifiers (for instance PostgreSQL
+	    represents them in lower
 	    case whereas Oracle represents them in upper case and MySQL represents them in upper or lower case
-	    depending on the platform). To harmonize meta data information usage, &LIBGDA; has chosen
-	    to represent case insensitive SQL identifiers in lower case 
+	    depending on the platform and the configuration), &LIBGDA; has chosen by convention
+	    to represent, in the meta data, case insensitive SQL identifiers in lower case 
 	    and case sensitive SQL identifiers enclosed between double quotes. 
+	  </para>
+	  <para>
+	    This convention has been made necessary to avoid confusion. To illustrate the problem, let's consider a 
+	    table named <emphasis>mytable</emphasis>. Without this convention, if that table was in a PostgreSQL
+	    database, then the meta data would report it as <emphasis>mytable</emphasis>, and if it was in an ORACLE,
+	    it would report it as <emphasis>MYTABLE</emphasis>. Now, a programmer which wants to compare the schemas
+	    of the PostgreSQL and Oracle databases has to know that the PostgreSQL's <emphasis>mytable</emphasis> and
+	    Oracle's <emphasis>MYTABLE</emphasis> represent in fact the same table which means he needs to know
+	    how each database internally stores SQL identifiers, which is not a good choice because it makes
+	    the application less portable between database engines. Better let each database provider do the job.
+
+	    Note that things can even get more confusing if MySQL is used because then one needs to figure out on
+	    which platform the MySQL server is running and how it's configured, a task which makes an application
+	    even less portable.
+	  </para>
+	  <para>
+	    To keep the same example, to build some SQL using the SQL identifier as reported by the meta data
+	    (<emphasis>mytable</emphasis> for PostgreSQL and <emphasis>MYTABLE</emphasis> for Oracle), one has either
+	    to determine if the SQL identifier needs to be quoted or not (which limits the application's portability),
+	    or systematically enquote the SQL identifier which is not something &LIBGDA; can impose to
+	    application developpers.
 	  </para>
 	  <para>
 	    This convention must be respected by database providers' implementations or the 

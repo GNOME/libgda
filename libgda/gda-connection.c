@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2008 The GNOME Foundation.
+ * Copyright (C) 1998 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -3735,29 +3735,31 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 	/* unlock connection */
 	gda_connection_unlock ((GdaLockable*) cnc);
 
-	/* prepare local context */
-	GdaMetaContext lcontext;
-
 	if (context) {
+		GdaMetaContext *lcontext;
 		GSList *list;
 		GSList *up_templates;
 		GSList *dn_templates;
 		GError *lerror = NULL;
-		lcontext = *context;
+
+		lcontext = _gda_meta_store_validate_context (store, context, error);
+		if (!lcontext)
+			return FALSE;
 		/* alter local context because "_tables" and "_views" always go together so only
 		   "_tables" should be updated and providers should always update "_tables" and "_views"
 		*/
-		if (!strcmp (lcontext.table_name, "_views"))
-			lcontext.table_name = "_tables";
+		if (!strcmp (lcontext->table_name, "_views"))
+			lcontext->table_name = "_tables";
 
-		up_templates = build_upstream_context_templates (store, context, NULL, &lerror);
+		/* build context templates */
+		up_templates = build_upstream_context_templates (store, lcontext, NULL, &lerror);
 		if (!up_templates) {
 			if (lerror) {
 				g_propagate_error (error, lerror);
 				return FALSE;
 			}
 		}
-		dn_templates = build_downstream_context_templates (store, context, NULL, &lerror);
+		dn_templates = build_downstream_context_templates (store, lcontext, NULL, &lerror);
 		if (!dn_templates) {
 			if (lerror) {
 				g_propagate_error (error, lerror);
@@ -3772,7 +3774,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 			meta_context_dump ((GdaMetaContext*) list->data);
 		}
 		g_print ("->: ");
-		meta_context_dump (context);
+		meta_context_dump (lcontext);
 		for (list = dn_templates; list; list = list->next) {
 			g_print ("DN: ");
 			meta_context_dump ((GdaMetaContext*) list->data);
@@ -3786,7 +3788,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		cbd.prov = cnc->priv->provider_obj;
 		cbd.cnc = cnc;
 		cbd.error = NULL;
-		cbd.context_templates = g_slist_concat (g_slist_append (up_templates, context), dn_templates);
+		cbd.context_templates = g_slist_concat (g_slist_append (up_templates, lcontext), dn_templates);
 		cbd.context_templates_hash = g_hash_table_new (g_str_hash, g_str_equal);
 		for (list = cbd.context_templates; list; list = list->next) 
 			g_hash_table_insert (cbd.context_templates_hash, ((GdaMetaContext*)list->data)->table_name,
@@ -3803,13 +3805,19 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		/* free the memory associated with each template */
 		for (list = cbd.context_templates; list; list = list->next) {
 			GdaMetaContext *c = (GdaMetaContext *) list->data;
-			if (c != context) {
-				if (c->size > 0) {
-					g_free (c->column_names);
-					g_free (c->column_values);
+			if (c == lcontext) {
+				gint i;
+				for (i = 0; i < c->size; i++) {
+					g_free (c->column_names [i]);
+					if (c->column_values [i])
+						gda_value_free (c->column_values [i]);
 				}
-				g_free (c);
 			}
+			if (c->size > 0) {
+				g_free (c->column_names);
+				g_free (c->column_values);
+			}
+			g_free (c);
 		}
 		g_slist_free (cbd.context_templates);
 		g_hash_table_destroy (cbd.context_templates_hash);
@@ -3825,6 +3833,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 			RFunc  func;
 		} RMeta;
 
+		GdaMetaContext lcontext;
 		gint nb = 0, i;
 		RMeta rmeta[] = {
 			{"_information_schema_catalog_name", "_info", NULL},

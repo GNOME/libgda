@@ -3598,6 +3598,135 @@ gda_meta_store_schema_remove_custom_object (GdaMetaStore *store, const gchar *ob
 }
 
 /*
+ * Makes sure @context is well formed, and call gda_sql_identifier_remove_quotes() on SQL
+ * identifiers's values
+ *
+ * Returns: a new #GdaMetaContext
+ */
+GdaMetaContext *
+_gda_meta_store_validate_context (GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	GdaMetaStoreClass *klass;
+	gint i;
+
+	if (!context->table_name || !(*context->table_name)) {
+		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_META_CONTEXT_ERROR,
+			     _("Missing table name in meta data context"));
+		return NULL;
+	}
+	if (context->size <= 0) {
+		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_META_CONTEXT_ERROR,
+			     _("Missing condition in meta data context"));
+		return NULL;
+	}
+
+	klass = GDA_META_STORE_CLASS (G_OBJECT_GET_CLASS (store));
+
+	/* handle quoted SQL identifiers */
+	DbObject *dbobj = g_hash_table_lookup (klass->cpriv->db_objects_hash, context->table_name);
+	if (dbobj && (dbobj->obj_type == GDA_SERVER_OPERATION_CREATE_TABLE)) {
+		GdaMetaContext *lcontext;
+		TableInfo *tinfo;
+
+		lcontext = g_new0 (GdaMetaContext, 1);
+		lcontext->table_name = context->table_name;
+		lcontext->size = context->size;
+		lcontext->column_names = g_new0 (gchar*, lcontext->size);
+		lcontext->column_values = g_new0 (GValue*, lcontext->size);
+		
+		tinfo = TABLE_INFO (dbobj);
+		for (i = 0; i < lcontext->size; i++) {
+			GSList *list;
+			gint colindex;
+
+			if (!context->column_names [i]) {
+				g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_META_CONTEXT_ERROR,
+					     _("Missing column name in meta data context"));
+				goto onerror;
+			}
+			lcontext->column_names [i] = g_strdup (context->column_names [i]);
+
+			for (colindex = 0, list = tinfo->columns;
+			     list;
+			     colindex++, list = list->next) {
+				if (!strcmp (TABLE_COLUMN (list->data)->column_name, lcontext->column_names [i])) {
+					gint j;
+					for (j = 0; j < tinfo->ident_cols_size; j++) {
+						if (tinfo->ident_cols [j] == colindex) {
+							/* we have an SQL identifier */
+							if (! context->column_values [i]) {
+								g_set_error (error, GDA_META_STORE_ERROR,
+									     GDA_META_STORE_META_CONTEXT_ERROR,
+									     _("Missing condition in meta data context"));
+								goto onerror;
+							}
+							else if (G_VALUE_TYPE (context->column_values [i]) == G_TYPE_STRING) {
+								gchar *id;
+								id = g_value_dup_string (context->column_values [i]);
+								gda_sql_identifier_remove_quotes (id);
+								if (store->priv->ident_style == GDA_SQL_IDENTIFIERS_UPPER_CASE) {
+									/* move to upper case */
+									gchar *ptr;
+									for (ptr = id; *ptr; ptr++) {
+										if ((*ptr >= 'a') && (*ptr <= 'z'))
+											*ptr += 'A' - 'a';
+									}
+								}
+								lcontext->column_values [i] = gda_value_new (G_TYPE_STRING);
+								g_value_take_string (lcontext->column_values [i], id);
+								
+							}
+							else if (G_VALUE_TYPE (context->column_values [i]) == GDA_TYPE_NULL) {
+								lcontext->column_values [i] = gda_value_new_null ();
+							}
+							else {
+								g_set_error (error, GDA_META_STORE_ERROR,
+									     GDA_META_STORE_META_CONTEXT_ERROR,
+									     _("Malformed condition in meta data context"));
+								goto onerror;
+							}
+						}
+					}
+
+					if (! lcontext->column_values [i]) {
+						lcontext->column_values [i] = gda_value_copy (context->column_values [i]);
+					}
+					colindex = -1;
+					break;
+				}
+			}
+
+			if (colindex != -1) {
+				/* column not found => error */
+				g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_META_CONTEXT_ERROR,
+					     _("Unknown column name '%s' in meta data context"),
+					     lcontext->column_names [i]);
+				goto onerror;
+			}
+			else
+				continue;
+
+		onerror:
+			for (i = 0; i < lcontext->size; i++) {
+				g_free (lcontext->column_names [i]);
+				if (lcontext->column_values [i])
+					gda_value_free (lcontext->column_values [i]);
+			}
+			g_free (lcontext->column_names);
+			g_free (lcontext->column_values);
+			g_free (lcontext);
+			return NULL;
+		}
+		return lcontext;
+	}
+	else {
+		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_META_CONTEXT_ERROR,
+			     _("Unknown table in meta data context"));
+		return NULL;
+	}
+}
+
+/*
  * Returns: a list of new #GdaMetaContext structures, one for each dependency context->table_name has,
  * or %NULL if there is no downstream context, or if an error occurred (check @error to make the difference).
  *

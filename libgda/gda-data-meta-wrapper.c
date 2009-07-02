@@ -406,9 +406,23 @@ identifier_needs_quotes (const gchar *str, GdaSqlIdentifierStyle mode)
 {
 	const gchar *ptr;
 	for (ptr = str; *ptr; ptr++) {
-		if ((*ptr == ' ') ||
-		    ((mode == GDA_SQL_IDENTIFIERS_LOWER_CASE) && (*ptr != g_ascii_tolower (*ptr))) ||
-		    ((mode == GDA_SQL_IDENTIFIERS_UPPER_CASE) && (*ptr != g_ascii_toupper (*ptr))))
+		/* quote if 1st char is a number */
+		if ((*ptr <= '9') && (*ptr >= '0')) {
+			if (ptr == str)
+				return TRUE;
+			continue;
+		}
+		if ((*ptr >= 'A') && (*ptr <= 'Z')) {
+			if (mode == GDA_SQL_IDENTIFIERS_LOWER_CASE)
+				return TRUE;
+			continue;
+		}
+		if ((*ptr >= 'a') && (*ptr <= 'z')) {
+			if (mode == GDA_SQL_IDENTIFIERS_UPPER_CASE)
+				return TRUE;
+			continue;
+		}
+		if ((*ptr != '$') && (*ptr != '_') && (*ptr != '#'))
 			return TRUE;
 	}
 	return FALSE;
@@ -486,6 +500,7 @@ compute_value (const GValue *value, GdaSqlIdentifierStyle mode)
 		}
 	}
 	g_strfreev (sa);
+
 	return retval;
 }
 
