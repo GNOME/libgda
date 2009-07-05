@@ -1210,10 +1210,14 @@ gda_server_operation_op_type_to_string (GdaServerOperationType type)
 		return "DROP_INDEX";
         case GDA_SERVER_OPERATION_RENAME_TABLE:
 		return "RENAME_TABLE";
+        case GDA_SERVER_OPERATION_COMMENT_TABLE:
+		return "COMMENT_TABLE";
         case GDA_SERVER_OPERATION_ADD_COLUMN:
 		return "ADD_COLUMN";
         case GDA_SERVER_OPERATION_DROP_COLUMN:
 		return "DROP_COLUMN";
+        case GDA_SERVER_OPERATION_COMMENT_COLUMN:
+		return "COMMENT_COLUMN";
 	case GDA_SERVER_OPERATION_CREATE_VIEW:
 		return "CREATE_VIEW";
 	case GDA_SERVER_OPERATION_DROP_VIEW:

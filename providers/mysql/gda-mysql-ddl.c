@@ -518,6 +518,36 @@ gda_mysql_render_RENAME_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 	return sql;
 }
 
+
+gchar *
+gda_mysql_render_COMMENT_TABLE (GdaServerProvider *provider, GdaConnection *cnc, 
+				 GdaServerOperation *op, GError **error)
+{
+	GString *string;
+	const GValue *value;
+	gchar *sql = NULL;
+
+	string = g_string_new ("ALTER TABLE ");
+
+	value = gda_server_operation_get_value_at (op, "/TABLE_DESC_P/TABLE_NAME");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append (string, g_value_get_string (value));
+
+	gchar *table_name = g_value_dup_string (value);
+
+	value = gda_server_operation_get_value_at (op, "/TABLE_DESC_P/TABLE_COMMENT");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append (string, " COMMENT '");
+	g_string_append (string, g_value_get_string (value));
+	g_string_append (string, "'");
+
+	sql = string->str;
+	g_string_free (string, FALSE);
+
+	return sql;
+}
+
+
 gchar *
 gda_mysql_render_ADD_COLUMN (GdaServerProvider *provider, GdaConnection *cnc, 
 			     GdaServerOperation *op, GError **error)
@@ -643,6 +673,85 @@ gda_mysql_render_DROP_COLUMN (GdaServerProvider *provider, GdaConnection *cnc,
 	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
 	g_string_append (string, " DROP COLUMN ");
 	g_string_append (string, g_value_get_string (value));
+
+	sql = string->str;
+	g_string_free (string, FALSE);
+
+	return sql;
+}
+
+
+gchar *
+gda_mysql_render_COMMENT_COLUMN (GdaServerProvider *provider, GdaConnection *cnc, 
+				 GdaServerOperation *op, GError **error)
+{
+	GString *string;
+	const GValue *value;
+	gchar *sql = NULL;
+
+	string = g_string_new ("ALTER TABLE ");
+
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DESC_P/TABLE_NAME");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append (string, g_value_get_string (value));
+
+	gchar *table_name = g_value_dup_string (value);
+
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DESC_P/COLUMN_NAME");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append (string, " CHANGE COLUMN ");
+	g_string_append (string, g_value_get_string (value));
+	g_string_append (string, " ");
+	g_string_append (string, g_value_get_string (value));
+	g_string_append (string, " ");
+
+	gchar *column_name = g_value_dup_string (value);
+
+	GString *tmp_string = g_string_new ("SELECT column_type FROM "
+					    "information_schema.columns "
+					    "WHERE table_name = '");
+	g_string_append (tmp_string, table_name);
+	g_string_append (tmp_string, "' AND column_name = '");
+	g_string_append (tmp_string, column_name);
+	g_string_append (tmp_string, "'");
+
+	g_free (table_name);
+	g_free (column_name);
+
+	GdaSqlParser *parser = gda_connection_create_parser (cnc);
+	if (parser == NULL)        /* @cnc does not provide its own parser. Use default one */
+		parser = gda_sql_parser_new ();
+	GdaStatement *statement = gda_sql_parser_parse_string (parser,
+							       tmp_string->str,
+							       NULL, NULL);
+	g_string_free (tmp_string, FALSE);
+
+	GdaDataModel *model;
+	GError *gerror = NULL;
+	model = gda_connection_statement_execute_select (cnc, statement,
+							 NULL, &gerror);
+	g_object_unref (G_OBJECT(statement));
+
+	g_assert (model != NULL && gda_data_model_get_n_rows (model) == 1);
+
+	GValue *tmp_value;
+	tmp_value = gda_data_model_get_value_at (model, 0, 0, error);
+
+	gchar *str;
+	g_assert (tmp_value && (str = gda_value_stringify (tmp_value)));
+
+	g_string_append (string, str);
+	g_free (str);
+
+	g_object_unref (G_OBJECT(model));
+
+	g_string_append (string, " COMMENT");
+	g_string_append (string, " '");
+
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DESC_P/COLUMN_COMMENT");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append (string, g_value_get_string (value));
+	g_string_append (string, "'");
 
 	sql = string->str;
 	g_string_free (string, FALSE);

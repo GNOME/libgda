@@ -562,7 +562,7 @@ gda_mysql_recordset_fetch_nb_rows (GdaDataSelect *model)
 }
 
 static GdaRow *
-new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel, gint rownum, GError **error)
+new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel, gint  rownum, GError **error)
 {
 	//g_print ("%s(): NCOLS=%d  ROWNUM=%d\n", __func__, ((GdaDataSelect *) imodel)->prep_stmt->ncols, rownum);
 

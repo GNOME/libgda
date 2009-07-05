@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<serv_op>
+  <parameters id="TABLE_DESC_P" _name="Table's description">
+    <parameter id="TABLE_NAME" _name="Table" _descr="Table's name" gdatype="gchararray" nullok="FALSE"/>
+    <parameter id="TABLE_COMMENT" _name="Table comment" gdatype="gchararray" nullok="FALSE"/>
+  </parameters>
+</serv_op>

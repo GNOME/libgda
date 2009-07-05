@@ -707,8 +707,10 @@ gda_mysql_provider_supports_operation (GdaServerProvider       *provider,
         case GDA_SERVER_OPERATION_CREATE_TABLE:
         case GDA_SERVER_OPERATION_DROP_TABLE:
         case GDA_SERVER_OPERATION_RENAME_TABLE:
+        case GDA_SERVER_OPERATION_COMMENT_TABLE:
         case GDA_SERVER_OPERATION_ADD_COLUMN:
 	case GDA_SERVER_OPERATION_DROP_COLUMN:
+	case GDA_SERVER_OPERATION_COMMENT_COLUMN:
         case GDA_SERVER_OPERATION_CREATE_INDEX:
         case GDA_SERVER_OPERATION_DROP_INDEX:
         case GDA_SERVER_OPERATION_CREATE_VIEW:
@@ -820,11 +822,17 @@ gda_mysql_provider_render_operation (GdaServerProvider   *provider,
         case GDA_SERVER_OPERATION_RENAME_TABLE:
 		sql = gda_mysql_render_RENAME_TABLE (provider, cnc, op, error);
 		break;
+        case GDA_SERVER_OPERATION_COMMENT_TABLE:
+		sql = gda_mysql_render_COMMENT_TABLE (provider, cnc, op, error);
+		break;
         case GDA_SERVER_OPERATION_ADD_COLUMN:
 		sql = gda_mysql_render_ADD_COLUMN (provider, cnc, op, error);
 		break;
 	case GDA_SERVER_OPERATION_DROP_COLUMN:
 		sql = gda_mysql_render_DROP_COLUMN (provider, cnc, op, error);
+		break;
+	case GDA_SERVER_OPERATION_COMMENT_COLUMN:
+		sql = gda_mysql_render_COMMENT_COLUMN (provider, cnc, op, error);
 		break;
         case GDA_SERVER_OPERATION_CREATE_INDEX:
 		sql = gda_mysql_render_CREATE_INDEX (provider, cnc, op, error);
@@ -1175,7 +1183,7 @@ mysql_render_select_target (GdaSqlSelectTarget *target, GdaSqlRenderingContext *
 	/* can't have: target->expr == NULL */
 	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (target), error)) return NULL;
 
-	if (! target->expr->value || (G_VALUE_TYPE (target->expr->value) != G_TYPE_STRING)) {
+	if (!target->expr->value || (G_VALUE_TYPE (target->expr->value) != G_TYPE_STRING)) {
 		str = context->render_expr (target->expr, context, NULL, NULL, error);
 		if (!str)
 			return NULL;
