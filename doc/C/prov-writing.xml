@@ -351,6 +351,25 @@ gboolean (*tables_views) (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
       <link linkend="information_schema:sql_identifiers">SQL identifiers</link> section.
     </para>
     <sect2>
+      <title>Important note about SQL identifiers</title>
+      <para>
+	As mentionned in the <link linkend="information_schema:sql_identifiers">SQL identifiers</link> section,
+	any SQL identifier in the meta store is represented either:
+	<itemizedlist>
+	  <listitem><para>between double quotes if the SQL identifier is case sensitive</para></listitem>
+	  <listitem><para>all in lower case if the SQL identifier is not case sensitive</para></listitem>
+	</itemizedlist>
+      </para>
+      <para>
+	For database engines which internally store case insensitive SQL identifiers in lower case
+	(such as PostgreSQL),
+	the meta data reported by the database engine can be used almost AS IS, but for database
+	engines which internally store case insensitive SQL identifiers in upper case (such as Oracle),
+	the upper case needs to be converted to lower case. Also case sensitive SQL identifiers also need
+	to be double quoted.
+      </para>
+    </sect2>
+    <sect2>
       <title>_info()</title>
       <para>
 	<programlisting>

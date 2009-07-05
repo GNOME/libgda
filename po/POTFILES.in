@@ -4,6 +4,7 @@ libgda/gda-connection.c
 libgda/gda-connection-event.c
 libgda/gda-data-access-wrapper.c
 libgda/gda-data-comparator.c
+libgda/gda-data-meta-wrapper.c
 libgda/gda-data-model-array.c
 libgda/gda-data-model-bdb.c
 libgda/gda-data-model.c

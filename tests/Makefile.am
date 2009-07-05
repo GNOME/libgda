@@ -1,6 +1,6 @@
 noinst_LTLIBRARIES = libgda-test-4.0.la
-TESTS = test-ddl-creator test-bin-converter
-check_PROGRAMS = test-ddl-creator test-bin-converter
+TESTS = test-ddl-creator test-bin-converter test-sql-identifier
+check_PROGRAMS = test-ddl-creator test-bin-converter test-sql-identifier
 
 
 SUBDIRS = providers parser value-holders meta-store data-models multi-threading
@@ -43,6 +43,13 @@ test_bin_converter_SOURCES = \
 test_bin_converter_LDADD = \
         $(top_builddir)/libgda/libgda-4.0.la \
 	libgda-test-4.0.la \
+        $(LIBGDA_LIBS)
+
+test_sql_identifier_SOURCES = \
+        test-sql-identifier.c
+
+test_sql_identifier_LDADD = \
+        $(top_builddir)/libgda/libgda-4.0.la \
         $(LIBGDA_LIBS)
 
 EXTRA_DIST = dbstruct.xml

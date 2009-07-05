@@ -1,5 +1,5 @@
 2009-06-30  Vivien Malerba <malerba@gnome-db.org>
-	
+
 	* doc/C/libgda-4.0-sections.txt:
 	* libgda-4.0.pc.in:
 	* libgda/providers-support/Makefile.am:

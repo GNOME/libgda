@@ -27,6 +27,7 @@ gboolean  _gda_meta_store_begin_data_reset (GdaMetaStore *store, GError **error)
 gboolean  _gda_meta_store_cancel_data_reset (GdaMetaStore *store, GError **error);
 gboolean  _gda_meta_store_finish_data_reset (GdaMetaStore *store, GError **error);
 
+GdaMetaContext *_gda_meta_store_validate_context (GdaMetaStore *store, GdaMetaContext *context, GError **error);
 GSList   *_gda_meta_store_schema_get_upstream_contexts (GdaMetaStore *store, GdaMetaContext *context, GError **error);
 GSList   *_gda_meta_store_schema_get_downstream_contexts (GdaMetaStore *store, GdaMetaContext *context, GError **error);
 

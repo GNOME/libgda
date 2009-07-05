@@ -291,16 +291,45 @@ _string_is_identifier (const gchar *str)
  * Tells if @str needs to be quoted before using it in an SQL statement. To actually add quotes,
  * use gda_sql_identifier_add_quotes().
  *
+ * To determine if quotes are needed: the following rules are applied:
+ * <itemizedlist>
+ *  <listitem><para>If the 1st character is a digit, then %TRUE is returned</para></listitem>
+ *  <listitem><para>If there are mixed lower and upper case letters, then %TRUE is returned</para></listitem>
+ *  <listitem><para>If there are other characters than digits, letters and the '_', '$' and '#', then %TRUE is returned</para></listitem>
+ *  <listitem><para>Otherwise %FALSE is returned</para></listitem>
+ * </itemizedlist>
+ *
  * Returns: TRUE if @str needs some quotes
  */
 gboolean
 gda_sql_identifier_needs_quotes (const gchar *str)
 {
 	const gchar *ptr;
+	gchar icase = 0;
 
 	g_return_val_if_fail (str, FALSE);
 	for (ptr = str; *ptr; ptr++) {
-		if (*ptr != g_ascii_tolower (*ptr))
+		/* quote if 1st char is a number */
+		if ((*ptr <= '9') && (*ptr >= '0')) {
+			if (ptr == str)
+				return TRUE;
+			continue;
+		}
+		if ((*ptr >= 'A') && (*ptr <= 'Z')) {
+			if (icase == 0) /* first alpha char encountered */
+				icase = 'U';
+			else if (icase == 'L') /* @str has mixed case */
+				return TRUE;
+			continue;
+		}
+		if ((*ptr >= 'a') && (*ptr <= 'z')) {
+			if (icase == 0) /* first alpha char encountered */
+				icase = 'L';
+			else if (icase == 'U')
+				return TRUE; /* @str has mixed case */
+			continue;
+		}
+		if ((*ptr != '$') && (*ptr != '_') && (*ptr != '#'))
 			return TRUE;
 	}
 	return FALSE;

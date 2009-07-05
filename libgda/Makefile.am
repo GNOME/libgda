@@ -104,6 +104,8 @@ libgda_sources =  \
 	gda-data-model-import.c \
 	gda-data-model-iter.c \
 	gda-data-access-wrapper.c \
+	gda-data-meta-wrapper.c \
+	gda-data-meta-wrapper.h \
 	gda-data-proxy.c \
 	gda-data-select.c \
 	gda-data-select-extra.h \
