@@ -1380,33 +1380,51 @@ then
 	if test ${acx_java_works} = yes; then
 	  AC_MSG_RESULT([yes])
 
-	  AC_MSG_CHECKING([for Java environment])
-	  ## retrieve JAVA_HOME from Java itself if not set
-	  if test -z "${JAVA_HOME}" ; then
-	    RUN_JAVA(JAVA_HOME,[-classpath . getsp java.home])
-	  fi
+	  AC_MSG_CHECKING([java compiler version])
+	  JVERSION=`$JAVAC -version 2>&1 | sed -e "1s/javac //" -e "1q"`
+	  case "$JVERSION" in
+               1.1.*) try_java=false;;
+               1.2.*) try_java=false;;
+               1.3.*) try_java=false;;
+               1.4.*) try_java=false;;
+               1.5.*)
+               ;;
+               *)
+	       ;;
+	  esac
+	  if test $try_java = true; then
+	     AC_MSG_RESULT([Version >= 1.5, Ok])
 
-	  ## the availability of JAVA_HOME will tell us whether it's supported
-	  if test -z "${JAVA_HOME}" ; then
-	    if test x$acx_java_env_msg != xyes; then
-	      AC_MSG_RESULT([not found])
-	    fi
+	     AC_MSG_CHECKING([for Java environment])
+	     ## retrieve JAVA_HOME from Java itself if not set
+	     if test -z "${JAVA_HOME}" ; then
+	       RUN_JAVA(JAVA_HOME,[-classpath . getsp java.home])
+	     fi
+
+	     ## the availability of JAVA_HOME will tell us whether it's supported
+	     if test -z "${JAVA_HOME}" ; then
+	       if test x$acx_java_env_msg != xyes; then
+	         AC_MSG_RESULT([not found])
+	       fi
+	     else
+	       AC_MSG_RESULT([in ${JAVA_HOME}])
+
+	       case "${host_os}" in
+	         darwin*)
+	           JAVA_LIBS="-framework JavaVM"
+	           JAVA_LD_PATH=
+	           ;;
+	         *)
+	           RUN_JAVA(JAVA_LIBS, [-classpath . getsp -libs])
+	           JAVA_LIBS="${JAVA_LIBS} -ljvm"
+	           RUN_JAVA(JAVA_LD_PATH, [-classpath . getsp java.library.path])
+	           ;;
+	       esac
+	       ## note that we actually don't test JAVA_LIBS - we hope that the detection
+	       ## was correct. We should also test the functionality for javac.
+	     fi
 	  else
-	    AC_MSG_RESULT([in ${JAVA_HOME}])
-
-	    case "${host_os}" in
-	      darwin*)
-	        JAVA_LIBS="-framework JavaVM"
-	        JAVA_LD_PATH=
-	        ;;
-	      *)
-	        RUN_JAVA(JAVA_LIBS, [-classpath . getsp -libs])
-	        JAVA_LIBS="${JAVA_LIBS} -ljvm"
-	        RUN_JAVA(JAVA_LD_PATH, [-classpath . getsp java.library.path])
-	        ;;
-	    esac
-	    ## note that we actually don't test JAVA_LIBS - we hope that the detection
-	    ## was correct. We should also test the functionality for javac.
+	     AC_MSG_RESULT([Version < 1.5, please update your JAVAC version])
 	  fi
 	else
 	  AC_MSG_RESULT([no])
