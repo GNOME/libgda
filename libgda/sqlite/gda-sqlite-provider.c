@@ -1660,7 +1660,7 @@ add_oid_columns (GdaStatement *stmt, GHashTable **out_hash, gint *out_nb_cols_ad
 		else
 			name = target->table_name;
 		
-		if (gda_sql_identifier_needs_quotes (name)) {
+		if ((*name != '"') && gda_sql_identifier_needs_quotes (name)) {
 			gchar *tmp;
 			tmp = gda_sql_identifier_add_quotes (target->table_name);
 			str = g_strdup_printf ("%s.rowid", tmp);
@@ -2367,8 +2367,12 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			const GdaTime *ts;
 			
 			ts = gda_value_get_time (value);
-			str = g_strdup_printf ("%2d:%2d:%2d.%3ld", 
-					       ts->hour, ts->minute, ts->second, ts->fraction);
+			if (ts->fraction != 0)
+				str = g_strdup_printf ("%02d:%02d:%02d.%ld", 
+						       ts->hour, ts->minute, ts->second, ts->fraction);
+			else
+				str = g_strdup_printf ("%02d:%02d:%02d", 
+						       ts->hour, ts->minute, ts->second);
 			sqlite3_bind_text (ps->sqlite_stmt, i, str, -1, g_free);
 		}
 		else if (G_VALUE_TYPE (value) == G_TYPE_DATE) {
@@ -2385,8 +2389,12 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			const GdaTimestamp *ts;
 			
 			ts = gda_value_get_timestamp (value);
-			str = g_strdup_printf ("%4d-%02d-%02d %2d:%2d:%2d.%3ld", ts->year, ts->month, ts->day, 
-					       ts->hour, ts->minute, ts->second, ts->fraction);
+			if (ts->fraction != 0)
+				str = g_strdup_printf ("%4d-%02d-%02d %02d:%02d:%02d.%ld", ts->year, ts->month, ts->day, 
+						       ts->hour, ts->minute, ts->second, ts->fraction);
+			else
+				str = g_strdup_printf ("%4d-%02d-%02d %02d:%02d:%02d", ts->year, ts->month, ts->day, 
+						       ts->hour, ts->minute, ts->second);
 			sqlite3_bind_text (ps->sqlite_stmt, i, str, -1, g_free);
 		}
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_NUMERIC) {

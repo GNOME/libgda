@@ -831,12 +831,17 @@ gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTab
 				GdaSqlParamSpec *pspec;
 
 				/* equal condition */
-				op = gda_sql_operation_new (GDA_SQL_ANY_PART (and_cond ? (gpointer)and_cond : (gpointer)expr));
-				op->operator_type = GDA_SQL_OPERATOR_TYPE_EQ;
-				if (and_cond) 
-					and_cond->operands = g_slist_append (and_cond->operands, op);
-				else
+				if (and_cond) {
+					opexpr = gda_sql_expr_new (GDA_SQL_ANY_PART (and_cond));
+					op = gda_sql_operation_new (GDA_SQL_ANY_PART (opexpr));
+					opexpr->cond = op;
+					and_cond->operands = g_slist_append (and_cond->operands, opexpr);
+				}
+				else {
+					op = gda_sql_operation_new (GDA_SQL_ANY_PART (expr));
 					expr->cond = op;
+				}
+				op->operator_type = GDA_SQL_OPERATOR_TYPE_EQ;
 				/* left operand */
 				opexpr = gda_sql_expr_new (GDA_SQL_ANY_PART (op));
 				g_value_set_string (opexpr->value = gda_value_new (G_TYPE_STRING), tcol->column_name);
@@ -1879,11 +1884,6 @@ gda_parse_iso8601_time (GdaTime *timegda, const gchar *value)
 			ndigits++;
 		}
 
-		while (ndigits < 3) {
-			fraction *= 10;
-			ndigits++;
-		}
-
 		while (fraction > 0 && ndigits > 3) {
 			fraction /= 10;
 			ndigits--;
@@ -1936,11 +1936,6 @@ gda_parse_iso8601_timestamp (GdaTimestamp *timestamp, const gchar *value)
 		fraction = atol (value);
 		while (*value && *value != '+') {
 			value++;
-			ndigits++;
-		}
-
-		while (ndigits < 3) {
-			fraction *= 10;
 			ndigits++;
 		}
 

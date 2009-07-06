@@ -81,11 +81,11 @@ main (int argc, char *argv[])
 	g_object_unref (stmt);
 
 	/*
-	 * remove row 4 (5th row)
+	 * remove row 0 (1st row)
 	 */
 	g_print ("\n\n** Removing row 0\n");
 	if (! gda_data_model_remove_row (model, 0, &error)) {
-		g_print ("Could not remove row 1: %s\n",
+		g_print ("Could not remove row 0: %s\n",
                          error && error->message ? error->message : "No detail");
                 exit (1);
 	}
@@ -104,7 +104,7 @@ main (int argc, char *argv[])
 	g_value_set_string ((name = gda_value_new (G_TYPE_STRING)), "Hiro");
 	list = g_list_append (list, name);
 	if (! gda_data_model_append_values (model, list, &error)) {
-		g_print ("Could add a row: %s\n",
+		g_print ("Could not add a row: %s\n",
                          error && error->message ? error->message : "No detail");
                 exit (1);
 	}

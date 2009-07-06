@@ -121,6 +121,29 @@ enum
 static GObjectClass *parent_class = NULL;
 extern GdaServerProvider *_gda_config_sqlite_provider; /* defined in gda-config.c */
 
+static gint debug_level = -1;
+static void
+dump_exec_params (GdaConnection *cnc, GdaSet *params)
+{
+	if (params && (debug_level & 8)) {
+		GSList *list;
+		g_print ("EVENT> COMMAND: parameters (on cnx %p)\n", cnc);
+		for (list = params->holders; list; list = list->next) {
+			GdaHolder *holder = GDA_HOLDER (list->data);
+			gchar *str;
+			const GValue *value;
+			value = gda_holder_get_value (holder);
+			str = value ? gda_value_stringify (value) : "NULL";
+			g_print ("\t%s: type=>%s, value=>%s\n", gda_holder_get_id (holder),
+				 gda_g_type_to_string (gda_holder_get_g_type (holder)),
+				 str);
+			if (value)
+				g_free (str);
+		}
+	}
+}
+
+
 /*
  * GdaConnection class implementation
  * @klass:
@@ -258,6 +281,29 @@ gda_connection_class_init (GdaConnectionClass *klass)
 	
 	object_class->dispose = gda_connection_dispose;
 	object_class->finalize = gda_connection_finalize;
+
+	/* computing debug level */
+	if (debug_level == -1) {
+		const gchar *str;
+		debug_level = 0;
+		str = getenv ("GDA_CONNECTION_EVENTS_SHOW");
+		if (str) {
+			gchar **array;
+			gint i;
+			array = g_strsplit_set (str, " ,/;:", 0);
+			for (i = 0; i < g_strv_length (array); i++) {
+				if (!g_ascii_strcasecmp (array[i], "notice"))
+					debug_level += 1;
+				else if (!g_ascii_strcasecmp (array[i], "warning"))
+					debug_level += 2;
+				else if (!g_ascii_strcasecmp (array[i], "error"))
+					debug_level += 4;
+				else if (!g_ascii_strcasecmp (array[i], "command"))
+					debug_level += 8;
+			}
+			g_strfreev (array);
+		}
+	}
 }
 
 static void
@@ -1219,50 +1265,27 @@ gda_connection_get_authentication (GdaConnection *cnc)
 void
 gda_connection_add_event (GdaConnection *cnc, GdaConnectionEvent *event)
 {
-	static gint debug = -1;
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (cnc->priv);
 	g_return_if_fail (GDA_IS_CONNECTION_EVENT (event));
 
 	gda_connection_lock ((GdaLockable*) cnc);
-	if (debug == -1) {
-		const gchar *str;
-		debug = 0;
-		str = getenv ("GDA_CONNECTION_EVENTS_SHOW");
-		if (str) {
-			gchar **array;
-			gint i;
-			array = g_strsplit_set (str, " ,/;:", 0);
-			for (i = 0; i < g_strv_length (array); i++) {
-				if (!g_ascii_strcasecmp (array[i], "notice"))
-					debug += 1;
-				else if (!g_ascii_strcasecmp (array[i], "warning"))
-					debug += 2;
-				else if (!g_ascii_strcasecmp (array[i], "error"))
-					debug += 4;
-				else if (!g_ascii_strcasecmp (array[i], "command"))
-					debug += 8;
-			}
-			g_strfreev (array);
-		}
-	}
-
 	cnc->priv->events_list = g_list_prepend (cnc->priv->events_list, event);
 
-	if (debug > 0) {
+	if (debug_level > 0) {
 		const gchar *str = NULL;
 		switch (gda_connection_event_get_event_type (event)) {
 		case GDA_CONNECTION_EVENT_NOTICE:
-			if (debug & 1) str = "NOTICE";
+			if (debug_level & 1) str = "NOTICE";
 			break;
 		case GDA_CONNECTION_EVENT_WARNING:
-			if (debug & 2) str = "WARNING";
+			if (debug_level & 2) str = "WARNING";
 			break;
 		case GDA_CONNECTION_EVENT_ERROR:
-			if (debug & 4) str = "ERROR";
+			if (debug_level & 4) str = "ERROR";
 			break;
 		case GDA_CONNECTION_EVENT_COMMAND:
-			if (debug & 8) str = "COMMAND";
+			if (debug_level & 8) str = "COMMAND";
 			break;
 		default:
 			break;
@@ -1580,6 +1603,7 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
 	    ! (model_usage & GDA_STATEMENT_MODEL_CURSOR_FORWARD))
 		model_usage |= GDA_STATEMENT_MODEL_RANDOM_ACCESS;
 
+	dump_exec_params (cnc, params);
 	obj = PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, cnc, stmt, params, 
 								       model_usage, types, last_inserted_row, 
 								       NULL, NULL, NULL, error);
@@ -1835,6 +1859,7 @@ gda_connection_statement_execute_select_fullv (GdaConnection *cnc, GdaStatement 
 	    ! (model_usage & GDA_STATEMENT_MODEL_CURSOR_FORWARD))
 		model_usage |= GDA_STATEMENT_MODEL_RANDOM_ACCESS;
 
+	dump_exec_params (cnc, params);
 	model = (GdaDataModel *) PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, 
 											  cnc, stmt, params, model_usage, 
 											  types, NULL, NULL, 
@@ -1896,6 +1921,7 @@ gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *
 	    ! (model_usage & GDA_STATEMENT_MODEL_CURSOR_FORWARD))
 		model_usage |= GDA_STATEMENT_MODEL_RANDOM_ACCESS;
 
+	dump_exec_params (cnc, params);
 	model = (GdaDataModel *) PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, 
 											  cnc, stmt, params, 
 											  model_usage, col_types, NULL, 

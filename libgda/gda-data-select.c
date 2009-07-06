@@ -1298,7 +1298,8 @@ row_selection_condition_foreach_func (GdaSqlAnyPart *part, gpointer data, GError
 		return TRUE;
 
 	GdaSqlOperation *op = (GdaSqlOperation*) part;
-	if (op->operator_type != GDA_SQL_OPERATOR_TYPE_EQ) {
+	if ((op->operator_type != GDA_SQL_OPERATOR_TYPE_EQ) &&
+	    (op->operator_type != GDA_SQL_OPERATOR_TYPE_AND)) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
 			      "%s", _("Invalid unique row condition (ony equal operators are allowed)"));
 		return FALSE;
@@ -3041,6 +3042,8 @@ compute_insert_select_params_mapping (GdaSet *sel_params, GdaSet *ins_values, Gd
 			goto onerror;
 		}
 		g_assert (cdata.colid);
+		if (*(cdata.colid) == '"')
+			gda_sql_identifier_remove_quotes (cdata.colid);
 		/*g_print ("SEL param '%s' <=> column named '%s'\n", cdata.hid, cdata.colid);*/
 		
 		GSList *ins_list;
