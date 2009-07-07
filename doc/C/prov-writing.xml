@@ -408,8 +408,30 @@ gboolean (*tables_views) (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
 	  </para></listitem>
 	  <listitem><para>for case sensitive SQL identifiers: without the double quotes, but possibily with
 	      mixed or not lower and upper characters</para></listitem>
-	  <listitem><para></para></listitem>
 	</itemizedlist>
+      </para>
+    </sect2>
+    <sect2>
+      <title>Reserved SQL keywords</title>
+      <para>
+	Every database engine reserves some keywords for its own usage or because they are part of the SQL
+	language. Reserved keywords can be used as SQL identifiers if they are put between double quotes.
+      </para>
+      <para>
+	As Each database engine has its own set of reserved keywords, the database provider has to tell the
+	<link linkend="GdaMetaStore">GdaMetaStore</link> object what its keywords are, which is done using
+	<link linkend="gda-meta-store-set-reserved-keywords-func">gda_meta_store_set_reserved_keywords_func()</link>
+	and passing a function which determines if a specific string is a reserved keyword. The usage of
+	this function is similar to the usage of the
+	<link linkend="gda-meta-store-set-identifiers-style">gda_meta_store_set_identifiers_style()</link>
+	mentionned above.
+      </para>
+      <para>
+	Writing a function which tests if a string is a reserved keyword is a non complicated but error
+	prone and not optimized, in the same way as writing a parser/lexer directly, so &LIBGDA; has a tool
+	which generates a static hash table from a list of reserved keywords, which is in the
+	<filename>keywords.list</filename> (several keywords can appear on the same line, separated by spaces or commas
+	but the last line must remain empty).
       </para>
     </sect2>
     <sect2>

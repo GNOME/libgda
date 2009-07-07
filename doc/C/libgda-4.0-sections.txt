@@ -1459,6 +1459,8 @@ gda_meta_store_modify
 gda_meta_store_modify_with_context
 GdaSqlIdentifierStyle
 gda_meta_store_set_identifiers_style
+GdaSqlReservedKeywordsFunc
+gda_meta_store_set_reserved_keywords_func
 <SUBSECTION>
 gda_compute_dml_statements
 gda_compute_select_statement_from_update

@@ -109,6 +109,11 @@ typedef struct _GdaMetaStructClass   GdaMetaStructClass;
 typedef struct _GdaMetaStructPrivate GdaMetaStructPrivate;
 
 /*
+ * Determines if @word is a reserved SQL keyword
+ */
+typedef gboolean (*GdaSqlReservedKeywordsFunc) (const gchar *word);
+
+/*
  * GdaTree
  */
 typedef struct _GdaTree GdaTree;

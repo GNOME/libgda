@@ -366,6 +366,24 @@ Methods dedicated to implementing providers
 @style: 
 
 
+<!-- ##### USER_FUNCTION GdaSqlReservedKeywordsFunc ##### -->
+<para>
+
+</para>
+
+@word: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_meta_store_set_reserved_keywords_func ##### -->
+<para>
+
+</para>
+
+@store: 
+@func: 
+
+
 <!-- ##### FUNCTION gda_compute_dml_statements ##### -->
 <para>
 

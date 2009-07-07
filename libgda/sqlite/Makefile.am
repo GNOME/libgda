@@ -20,6 +20,12 @@ AM_CPPFLAGS = \
 	$(SQLITE_CFLAGS) \
 	$(sqliteinc) 
 
+mkkeywordhash$(EXEEXT_FOR_BUILD): mkkeywordhash.c
+	$(CC_FOR_BUILD) -o mkkeywordhash$(EXEEXT_FOR_BUILD) $(GDA_DEBUG_FLAGS) $<
+
+keywords_hash.c: mkkeywordhash$(EXEEXT_FOR_BUILD) keywords.list
+	./mkkeywordhash$(EXEEXT_FOR_BUILD) keywords.list > keywords_hash.c
+
 gen_emb_string$(EXEEXT_FOR_BUILD): gen_emb_string.c
 	$(CC_FOR_BUILD) -o gen_emb_string$(EXEEXT_FOR_BUILD) $<
 
@@ -28,7 +34,7 @@ xml_embedded.h: gen_emb_string$(EXEEXT_FOR_BUILD) $(top_srcdir)/providers/sqlite
 
 sqliteheaders = gda-sqlite-provider.h
 
-$(libgda_sqlite_la_OBJECTS): xml_embedded.h
+$(libgda_sqlite_la_OBJECTS): xml_embedded.h keywords_hash.c
 
 libgda_sqlite_la_SOURCES = \
 	$(sqliteheaders) \
@@ -57,6 +63,6 @@ libgda_sqlite_la_LIBADD = \
 gdaincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda/sqlite
 gdainclude_HEADERS=$(sqliteheaders)
 
-EXTRA_DIST = gen_emb_string.c
+EXTRA_DIST = gen_emb_string.c keywords.list
 
-CLEANFILES = gen_emb_string$(EXEEXT_FOR_BUILD) xml_embedded.h
+CLEANFILES = gen_emb_string$(EXEEXT_FOR_BUILD) xml_embedded.h mkkeywordhash$(EXEEXT_FOR_BUILD) keywords_hash.c

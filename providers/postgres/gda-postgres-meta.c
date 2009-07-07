@@ -33,6 +33,7 @@
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-set.h>
 #include <libgda/providers-support/gda-meta-column-types.h>
+#include "keywords_hash.c" /* this one is dynamically generated */
 
 /*
  * predefined statements' IDs
@@ -276,6 +277,9 @@ _gda_postgres_provider_meta_init (GdaServerProvider *provider)
 				    "name2", G_TYPE_STRING, "");
 
 	g_static_mutex_unlock (&init_mutex);
+#ifdef GDA_DEBUG
+	test_keywords ();
+#endif
 }
 
 gboolean
@@ -289,6 +293,7 @@ _gda_postgres_meta__info (GdaServerProvider *prov, GdaConnection *cnc,
 	if (!model)
 		return FALSE;
 
+	gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 	retval = gda_meta_store_modify (store, context->table_name, model, NULL, error, NULL);
 	g_object_unref (model);
 
@@ -338,8 +343,10 @@ _gda_postgres_meta__btypes (GdaServerProvider *prov, GdaConnection *cnc,
 	}
 
 	/* modify meta store with @proxy */
-	if (retval)
+	if (retval) {
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify (store, context->table_name, proxy, NULL, error, NULL);
+	}
 	g_object_unref (proxy);
 	g_object_unref (model);
 
@@ -357,6 +364,8 @@ _gda_postgres_meta__udt (GdaServerProvider *prov, GdaConnection *cnc,
 							 error);
 	if (!model)
 		return FALSE;
+
+	gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
 	g_object_unref (model);
 		
@@ -378,6 +387,8 @@ _gda_postgres_meta_udt (GdaServerProvider *prov, GdaConnection *cnc,
 	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_UDT], i_set, error);
 	if (!model)
 		return FALSE;
+
+	gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
 	g_object_unref (model);
 
@@ -399,6 +410,8 @@ _gda_postgres_meta__udt_cols (GdaServerProvider *prov, GdaConnection *cnc,
 
 	if (!model)
 		return FALSE;
+
+	gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
 	g_object_unref (model);
 		
@@ -426,6 +439,8 @@ _gda_postgres_meta_udt_cols (GdaServerProvider *prov, GdaConnection *cnc,
 							      _col_types_udt_columns, error);
 	if (!model)
 		return FALSE;
+
+	gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
 	g_object_unref (model);
 
@@ -460,6 +475,8 @@ _gda_postgres_meta__domains (GdaServerProvider *prov, GdaConnection *cnc,
 							 error);
 	if (!model)
 		return FALSE;
+
+	gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
 	g_object_unref (model);
 		
@@ -481,6 +498,8 @@ _gda_postgres_meta_domains (GdaServerProvider *prov, GdaConnection *cnc,
 	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_DOMAINS], i_set, error);
 	if (!model)
 		return FALSE;
+
+	gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
 	g_object_unref (model);
 
@@ -498,6 +517,8 @@ _gda_postgres_meta__constraints_dom (GdaServerProvider *prov, GdaConnection *cnc
 							 error);
 	if (!model)
 		return FALSE;
+
+	gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
 	g_object_unref (model);
 		
@@ -522,6 +543,8 @@ _gda_postgres_meta_constraints_dom (GdaServerProvider *prov, GdaConnection *cnc,
 	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_DOMAINS_CONSTRAINTS], i_set, error);
 	if (!model)
 		return FALSE;
+
+	gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
 	g_object_unref (model);
 
@@ -550,6 +573,8 @@ _gda_postgres_meta__el_types (GdaServerProvider *prov, GdaConnection *cnc,
 							 error);
 	if (!model)
 		return FALSE;
+
+	gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
 	g_object_unref (model);
 		
@@ -599,6 +624,8 @@ _gda_postgres_meta_el_types (GdaServerProvider *prov, GdaConnection *cnc,
 	
 	if (!model)
 		return FALSE;
+
+	gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
 	g_object_unref (model);
 		
@@ -651,6 +678,8 @@ _gda_postgres_meta__schemata (GdaServerProvider *prov, GdaConnection *cnc,
 	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_SCHEMAS_ALL], i_set, error);
 	if (!model)
 		return FALSE;
+
+	gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
 	g_object_unref (model);
 	
@@ -671,6 +700,8 @@ _gda_postgres_meta_schemata (GdaServerProvider *prov, GdaConnection *cnc,
 		model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_SCHEMAS], i_set, error);
 		if (!model)
 			return FALSE;
+
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify (store, context->table_name, model, NULL, error, NULL);
 	}
 	else {
@@ -680,6 +711,7 @@ _gda_postgres_meta_schemata (GdaServerProvider *prov, GdaConnection *cnc,
 		if (!model)
 			return FALSE;
 		
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify (store, context->table_name, model, "schema_name = ##name::string", error, 
 						"name", schema_name_n, NULL);
 	}
@@ -719,10 +751,12 @@ _gda_postgres_meta__tables_views (GdaServerProvider *prov, GdaConnection *cnc,
 	c2 = *context; /* copy contents, just because we need to modify @context->table_name */
 	if (retval) {
 		c2.table_name = "_tables";
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify_with_context (store, &c2, tables_model, error);
 	}
 	if (retval) {
 		c2.table_name = "_views";
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify_with_context (store, &c2, views_model, error);
 	}
 	g_object_unref (tables_model);
@@ -782,10 +816,12 @@ _gda_postgres_meta_tables_views (GdaServerProvider *prov, GdaConnection *cnc,
 	c2 = *context; /* copy contents, just because we need to modify @context->table_name */
 	if (retval) {
 		c2.table_name = "_tables";
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify_with_context (store, &c2, tables_model, error);
 	}
 	if (retval) {
 		c2.table_name = "_views";
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify_with_context (store, &c2, views_model, error);
 	}
 	g_object_unref (tables_model);
@@ -874,8 +910,10 @@ gboolean _gda_postgres_meta__columns (GdaServerProvider *prov, GdaConnection *cn
 	}
 
 	/* modify meta store with @proxy */
-	if (retval)
+	if (retval) {
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify_with_context (store, context, proxy, error);
+	}
 	g_object_unref (proxy);
 	g_object_unref (model);
 
@@ -977,10 +1015,12 @@ _gda_postgres_meta_columns (GdaServerProvider *prov, GdaConnection *cnc,
 	}
 
 	/* modify meta store with @proxy */
-	if (retval)
+	if (retval) {
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify (store, context->table_name, proxy, 
 						"table_schema = ##schema::string AND table_name = ##name::string", error, 
 						"schema", table_schema, "name", table_name, NULL);
+	}
 	g_object_unref (proxy);
 	g_object_unref (model);
 
@@ -1008,6 +1048,8 @@ _gda_postgres_meta__view_cols (GdaServerProvider *prov, GdaConnection *cnc,
 	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_VIEWS_COLUMNS_ALL], i_set, error);
 	if (!model)
 		return FALSE;
+
+	gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
 	g_object_unref (model);
 	
@@ -1032,6 +1074,8 @@ _gda_postgres_meta_view_cols (GdaServerProvider *prov, GdaConnection *cnc,
 	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_VIEWS_COLUMNS], i_set, error);
 	if (!model)
 		return FALSE;
+
+	gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
 	g_object_unref (model);
 
@@ -1049,6 +1093,8 @@ _gda_postgres_meta__constraints_tab (GdaServerProvider *prov, GdaConnection *cnc
 							 error);
 	if (!model)
 		return FALSE;
+
+	gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
 	g_object_unref (model);
 		
@@ -1076,11 +1122,13 @@ _gda_postgres_meta_constraints_tab (GdaServerProvider *prov, GdaConnection *cnc,
 								 error);
 		if (!model)
 			return FALSE;
-		if (retval)
+		if (retval) {
+			gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 			retval = gda_meta_store_modify (store, context->table_name, model, 
 							"table_schema = ##schema::string AND table_name = ##name::string", 
 							error, 
 							"schema", table_schema, "name", table_name, NULL);
+		}
 
 	}
 	else {
@@ -1090,10 +1138,12 @@ _gda_postgres_meta_constraints_tab (GdaServerProvider *prov, GdaConnection *cnc,
 								 error);
 		if (!model)
 			return FALSE;
-		if (retval)
+		if (retval) {
+			gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 			retval = gda_meta_store_modify (store, context->table_name, model, 
 							"table_schema = ##schema::string AND table_name = ##name::string AND constraint_name = ##name2::string", error, 
 							"schema", table_schema, "name", table_name, "name2", constraint_name_n, NULL);
+		}
 	}
 
 	g_object_unref (model);
@@ -1112,6 +1162,8 @@ _gda_postgres_meta__constraints_ref (GdaServerProvider *prov, GdaConnection *cnc
 							 error);
 	if (!model)
 		return FALSE;
+
+	gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
 	g_object_unref (model);
 		
@@ -1142,11 +1194,13 @@ _gda_postgres_meta_constraints_ref (GdaServerProvider *prov, GdaConnection *cnc,
 
 
 	/* modify meta store */
-	if (retval)
+	if (retval) {
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify (store, context->table_name, model, 
 						"table_schema = ##schema::string AND table_name = ##name::string AND constraint_name = ##name2::string", 
 						error, 
 						"schema", table_schema, "name", table_name, "name2", constraint_name, NULL);
+	}
 	g_object_unref (model);
 
 	return retval;
@@ -1163,6 +1217,8 @@ _gda_postgres_meta__key_columns (GdaServerProvider *prov, GdaConnection *cnc,
 							 error);
 	if (!model)
 		return FALSE;
+
+	gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
 	g_object_unref (model);
 		
@@ -1193,11 +1249,13 @@ _gda_postgres_meta_key_columns (GdaServerProvider *prov, GdaConnection *cnc,
 
 
 	/* modify meta store */
-	if (retval)
+	if (retval) {
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify (store, context->table_name, model, 
 						"table_schema = ##schema::string AND table_name = ##name::string AND constraint_name = ##name2::string", 
 						error, 
 						"schema", table_schema, "name", table_name, "name2", constraint_name, NULL);
+	}
 	g_object_unref (model);
 
 	return retval;	
@@ -1214,6 +1272,8 @@ _gda_postgres_meta__check_columns (GdaServerProvider *prov, GdaConnection *cnc,
 							 error);
 	if (!model)
 		return FALSE;
+
+	gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
 	g_object_unref (model);
 		
@@ -1244,11 +1304,13 @@ _gda_postgres_meta_check_columns (GdaServerProvider *prov, GdaConnection *cnc,
 
 
 	/* modify meta store */
-	if (retval)
+	if (retval) {
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify (store, context->table_name, model, 
 						"table_schema = ##schema::string AND table_name = ##name::string AND constraint_name = ##name2::string", 
 						error, 
 						"schema", table_schema, "name", table_name, "name2", constraint_name, NULL);
+	}
 	g_object_unref (model);
 
 	return retval;	
@@ -1276,6 +1338,8 @@ _gda_postgres_meta__triggers (GdaServerProvider *prov, GdaConnection *cnc,
 							 error);
 	if (!model)
 		return FALSE;
+
+	gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
 	g_object_unref (model);
 		
@@ -1313,6 +1377,8 @@ _gda_postgres_meta_triggers (GdaServerProvider *prov, GdaConnection *cnc,
 							 error);
 	if (!model)
 		return FALSE;
+
+	gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
 	g_object_unref (model);
 		
@@ -1341,6 +1407,8 @@ _gda_postgres_meta__routines (GdaServerProvider *prov, GdaConnection *cnc,
 							 error);
 	if (!model)
 		return FALSE;
+
+	gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
 	g_object_unref (model);
 		
@@ -1383,6 +1451,8 @@ _gda_postgres_meta_routines (GdaServerProvider *prov, GdaConnection *cnc,
 
 	if (!model)
 		return FALSE;
+
+	gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
 	g_object_unref (model);
 		
@@ -1439,8 +1509,10 @@ _gda_postgres_meta__routine_col (GdaServerProvider *prov, GdaConnection *cnc,
 			break;
 	}
 
-	if (retval)
+	if (retval) {
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify_with_context (store, context, proxy, error);
+	}
 	g_object_unref (model);
 	g_object_unref (proxy);
 		
@@ -1507,8 +1579,10 @@ _gda_postgres_meta_routine_col (GdaServerProvider *prov, GdaConnection *cnc,
 			break;
 	}
 
-	if (retval)
+	if (retval) {
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify_with_context (store, context, proxy, error);
+	}
 	g_object_unref (model);
 	g_object_unref (proxy);
 		
@@ -1537,6 +1611,8 @@ _gda_postgres_meta__routine_par (GdaServerProvider *prov, GdaConnection *cnc,
 							 error);
 	if (!model)
 		return FALSE;
+
+	gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
 	g_object_unref (model);
 		
@@ -1574,6 +1650,8 @@ _gda_postgres_meta_routine_par (GdaServerProvider *prov, GdaConnection *cnc,
 							 error);
 	if (!model)
 		return FALSE;
+
+	gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
 	g_object_unref (model);
 		

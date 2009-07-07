@@ -1,2 +1,4 @@
 gen_emb_string
 xml_embedded.h
+mkkeywordhash
+keywords_hash.c

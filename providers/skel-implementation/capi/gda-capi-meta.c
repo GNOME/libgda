@@ -32,6 +32,7 @@
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-set.h>
 #include <libgda/gda-holder.h>
+#include "keywords_hash.c" /* this one is dynamically generated */
 
 /*
  * predefined statements' IDs
@@ -84,6 +85,11 @@ _gda_capi_provider_meta_init (GdaServerProvider *provider)
 				    "name2", G_TYPE_STRING, "");
 
 	g_static_mutex_unlock (&init_mutex);
+
+#ifdef GDA_DEBUG
+	/* make sure the reserved keywords hash works correctly */
+        test_keywords ();
+#endif
 }
 
 gboolean
@@ -100,6 +106,8 @@ _gda_capi_meta__info (GdaServerProvider *prov, GdaConnection *cnc,
 	 */
 	if (!model)
 		return FALSE;
+
+	gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
 	g_object_unref (model);
 		
@@ -142,6 +150,8 @@ _gda_capi_meta_udt (GdaServerProvider *prov, GdaConnection *cnc,
 	 */
 	if (!model)
 		return FALSE;
+
+	gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
 	g_object_unref (model);
 
