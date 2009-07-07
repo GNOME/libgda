@@ -3637,11 +3637,6 @@ _gda_meta_store_validate_context (GdaMetaStore *store, GdaMetaContext *context, 
 			     _("Missing table name in meta data context"));
 		return NULL;
 	}
-	if (context->size <= 0) {
-		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_META_CONTEXT_ERROR,
-			     _("Missing condition in meta data context"));
-		return NULL;
-	}
 
 	klass = GDA_META_STORE_CLASS (G_OBJECT_GET_CLASS (store));
 
@@ -3654,8 +3649,10 @@ _gda_meta_store_validate_context (GdaMetaStore *store, GdaMetaContext *context, 
 		lcontext = g_new0 (GdaMetaContext, 1);
 		lcontext->table_name = context->table_name;
 		lcontext->size = context->size;
-		lcontext->column_names = g_new0 (gchar*, lcontext->size);
-		lcontext->column_values = g_new0 (GValue*, lcontext->size);
+		if (lcontext->size > 0) {
+			lcontext->column_names = g_new0 (gchar*, lcontext->size);
+			lcontext->column_values = g_new0 (GValue*, lcontext->size);
+		}
 		
 		tinfo = TABLE_INFO (dbobj);
 		for (i = 0; i < lcontext->size; i++) {
