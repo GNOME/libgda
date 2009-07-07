@@ -48,8 +48,8 @@
   </table>
 
   <table name="_builtin_data_types" descr="List of built-in data types such as varchar, int, ...">
-    <column name="short_type_name" descr="Short name of the data type" ident="TRUE"/>
-    <column name="full_type_name" pkey="TRUE" descr="Full name of the data type" ident="TRUE"/>
+    <column name="short_type_name" descr="Short name of the data type"/>
+    <column name="full_type_name" pkey="TRUE" descr="Full name of the data type"/>
     <column name="gtype" nullok="TRUE"/>
     <column name="comments" nullok="TRUE"/>
     <column name="synonyms" nullok="TRUE"/>
