@@ -140,6 +140,8 @@ providers/mysql/gda-mysql-recordset.c
 providers/mysql/gda-mysql-util.c
 providers/mysql/libmain.c
 providers/mysql/mysql_specs_add_column.xml.in
+providers/mysql/mysql_specs_comment_column.xml.in
+providers/mysql/mysql_specs_comment_table.xml.in
 providers/mysql/mysql_specs_create_db.xml.in
 providers/mysql/mysql_specs_create_index.xml.in
 providers/mysql/mysql_specs_create_table.xml.in
