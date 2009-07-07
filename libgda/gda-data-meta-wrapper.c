@@ -60,6 +60,8 @@ struct _GdaDataMetaWrapperPrivate {
 	gint *cols_to_wrap;
 	gint cols_to_wrap_size;
 	GdaSqlIdentifierStyle mode;
+	GdaSqlReservedKeywordsFunc reserved_keyword_func;
+
 	GHashTable *computed_rows; /* key = row number, value = a CompRow pointer
 				    * may be %NULL if we don't keep computed values */
 	CompRow *buffer; /* may be %NULL if we keep computed values */
@@ -197,6 +199,7 @@ gda_data_meta_wrapper_init (GdaDataMetaWrapper *model, GdaDataMetaWrapperClass *
 	model->priv->cols_to_wrap = NULL;
 	model->priv->cols_to_wrap_size = 0;
 	model->priv->mode = GDA_DATA_META_WRAPPER_MODE_LC;
+	model->priv->reserved_keyword_func = NULL;
 	model->priv->computed_rows = NULL;
 	model->priv->buffer = NULL;
 }
@@ -321,7 +324,8 @@ gda_data_meta_wrapper_get_property (GObject *object,
  * Returns: a pointer to the newly created #GdaDataModel.
  */
 GdaDataModel *
-_gda_data_meta_wrapper_new (GdaDataModel *model, gboolean reuseable, gint *cols, gint size, GdaSqlIdentifierStyle mode)
+_gda_data_meta_wrapper_new (GdaDataModel *model, gboolean reuseable, gint *cols, gint size, GdaSqlIdentifierStyle mode,
+			    GdaSqlReservedKeywordsFunc reserved_keyword_func)
 {
 	GdaDataMetaWrapper *retmodel;
 
@@ -334,6 +338,7 @@ _gda_data_meta_wrapper_new (GdaDataModel *model, gboolean reuseable, gint *cols,
 	memcpy (retmodel->priv->cols_to_wrap, cols, sizeof (gint) * size);
 	retmodel->priv->cols_to_wrap_size = size;
 	retmodel->priv->mode = mode;
+	retmodel->priv->reserved_keyword_func = reserved_keyword_func;
 	
 	if (reuseable)
 		retmodel->priv->computed_rows = g_hash_table_new_full (g_int_hash, g_int_equal,
@@ -454,7 +459,7 @@ to_lower (gchar *str)
  *  - a new GValue if changes were necessary
  */
 static GValue *
-compute_value (const GValue *value, GdaSqlIdentifierStyle mode)
+compute_value (const GValue *value, GdaSqlIdentifierStyle mode, GdaSqlReservedKeywordsFunc reserved_keyword_func)
 {
 	GValue *retval = NULL;
 	const gchar *str;
@@ -477,9 +482,18 @@ compute_value (const GValue *value, GdaSqlIdentifierStyle mode)
 				sa[i] = tmp;
 				onechanged = TRUE;
 			}
-			else if (! identifier_is_all_lower (sa[i])) {
-				to_lower (sa[i]);
-				onechanged = TRUE;
+			else {
+				if (! identifier_is_all_lower (sa[i])) {
+					to_lower (sa[i]);
+					onechanged = TRUE;
+				}
+
+				if (reserved_keyword_func && reserved_keyword_func (sa[i])) {
+					gchar *tmp = gda_sql_identifier_add_quotes (sa[i]);
+					g_free (sa[i]);
+					sa[i] = tmp;
+					onechanged = TRUE;
+				}
 			}
 		}
 		if (onechanged) {
@@ -492,11 +506,21 @@ compute_value (const GValue *value, GdaSqlIdentifierStyle mode)
 			retval = gda_value_new (G_TYPE_STRING);
 			g_value_take_string (retval, gda_sql_identifier_add_quotes (str));
 		}
-		else if (! identifier_is_all_lower (str)) {
-			gchar *tmp;
-			tmp = to_lower (g_strdup (str));
-			retval = gda_value_new (G_TYPE_STRING);
-			g_value_take_string (retval, tmp);
+		else {
+			gchar *tmp = NULL;
+			if (! identifier_is_all_lower (str))
+				tmp = to_lower (g_strdup (str));
+
+			if (reserved_keyword_func && reserved_keyword_func (tmp ? tmp : str)) {
+				gchar *tmp2 = gda_sql_identifier_add_quotes (tmp ? tmp : str);
+				if (tmp)
+					g_free (tmp);
+				tmp = tmp2;
+			}
+			if (tmp) {
+				retval = gda_value_new (G_TYPE_STRING);
+				g_value_take_string (retval, tmp);
+			}
 		}
 	}
 	g_strfreev (sa);
@@ -552,7 +576,7 @@ gda_data_meta_wrapper_get_value_at (GdaDataModel *model, gint col, gint row, GEr
 				return NULL;
 			
 			GValue *retval;
-			retval = compute_value (cvalue, imodel->priv->mode);
+			retval = compute_value (cvalue, imodel->priv->mode, imodel->priv->reserved_keyword_func);
 			if (!retval)
 				return cvalue;
 			
@@ -579,7 +603,7 @@ gda_data_meta_wrapper_get_value_at (GdaDataModel *model, gint col, gint row, GEr
 			return NULL;
 
 		GValue *retval;
-		retval = compute_value (cvalue, imodel->priv->mode);
+		retval = compute_value (cvalue, imodel->priv->mode, imodel->priv->reserved_keyword_func);
 		if (!retval)
 			return cvalue;
 		if (imodel->priv->buffer->values [indexcol])

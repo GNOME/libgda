@@ -32,6 +32,7 @@
 #include <libgda/gda-connection-private.h>
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-set.h>
+#include "keywords_hash.c" /* this one is dynamically generated */
 
 static gboolean append_a_row (GdaDataModel *to_model, GError **error, gint nb, ...);
 
@@ -198,8 +199,10 @@ _gda_sqlite_meta__info (GdaServerProvider *prov, GdaConnection *cnc,
 	g_assert (model);
 
 	retval = append_a_row (model, error, 1, FALSE, catalog_value);
-	if (retval)
+	if (retval) {
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify (store, context->table_name, model, NULL, error, NULL);
+	}
 	g_object_unref (model);
 	return retval;
 }
@@ -255,8 +258,10 @@ _gda_sqlite_meta__btypes (GdaServerProvider *prov, GdaConnection *cnc,
 			break;
 		}
 	}
-	if (retval) 
+	if (retval) {
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify (store, context->table_name, mod_model, NULL, error, NULL);
+	}
 	g_object_unref (mod_model);
 
 	return retval;
@@ -437,8 +442,10 @@ _gda_sqlite_meta__udt (GdaServerProvider *prov, GdaConnection *cnc,
 	g_hash_table_destroy (added_hash);
 
 	/* actually use mod_model */
-	if (retval) 
+	if (retval) {
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify (store, context->table_name, mod_model, NULL, error, NULL);
+	}
 	g_object_unref (mod_model);
 
 	return retval;
@@ -471,8 +478,10 @@ _gda_sqlite_meta_udt (GdaServerProvider *prov, GdaConnection *cnc,
 	g_hash_table_destroy (added_hash);
 
 	/* actually use mod_model */
-	if (retval) 
+	if (retval) {
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify (store, context->table_name, mod_model, NULL, error, NULL);
+	}
 	g_object_unref (mod_model);
 
 	return retval;
@@ -655,8 +664,10 @@ _gda_sqlite_meta_schemata (GdaServerProvider *prov, GdaConnection *cnc,
 		}
 	}
 	g_object_unref (tmpmodel);
-	if (retval)
+	if (retval){
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify_with_context (store, context, model, error);
+	}
 	g_object_unref (model);
 
 	return retval;
@@ -801,10 +812,12 @@ _gda_sqlite_meta__tables_views (GdaServerProvider *prov, GdaConnection *cnc,
 	c2 = *context; /* copy contents, just because we need to modify @context->table_name */
 	if (retval) {
 		c2.table_name = "_tables";
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify_with_context (store, &c2, tables_model, error);
 	}
 	if (retval) {
 		c2.table_name = "_views";
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify_with_context (store, &c2, views_model, error);
 	}
 	g_object_unref (tables_model);
@@ -833,10 +846,12 @@ _gda_sqlite_meta_tables_views (GdaServerProvider *prov, GdaConnection *cnc,
 	c2 = *context; /* copy contents, just because we need to modify @context->table_name */
 	if (retval) {
 		c2.table_name = "_tables";
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify_with_context (store, &c2, tables_model, error);
 	}
 	if (retval) {
 		c2.table_name = "_views";
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify_with_context (store, &c2, views_model, error);
 	}
 	g_object_unref (tables_model);
@@ -1058,8 +1073,10 @@ _gda_sqlite_meta__columns (GdaServerProvider *prov, GdaConnection *cnc,
 	}
 	g_object_unref (tmpmodel);
 
-	if (retval)
+	if (retval) {
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
+	}
 	g_object_unref (mod_model);
 
 	return retval;
@@ -1082,8 +1099,10 @@ _gda_sqlite_meta_columns (GdaServerProvider *prov, GdaConnection *cnc,
 	g_assert (mod_model);
 
 	retval = fill_columns_model (cnc, cdata, mod_model, table_schema, table_name, error);	
-	if (retval)
+	if (retval) {
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
+	}
 	g_object_unref (mod_model);
 
 	return retval;
@@ -1395,8 +1414,10 @@ _gda_sqlite_meta__constraints_tab (GdaServerProvider *prov, GdaConnection *cnc,
 	}
 	g_object_unref (tmpmodel);
 
-	if (retval)
+	if (retval) {
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
+	}
 	g_object_unref (mod_model);
 
 	return retval;
@@ -1420,8 +1441,10 @@ _gda_sqlite_meta_constraints_tab (GdaServerProvider *prov, GdaConnection *cnc,
 	g_assert (mod_model);
 
 	retval = fill_constraints_tab_model (cnc, cdata, mod_model, table_schema, table_name, constraint_name_n, error);	
-	if (retval)
+	if (retval) {
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
+	}
 	g_object_unref (mod_model);
 
 	return retval;
@@ -1582,8 +1605,10 @@ _gda_sqlite_meta__constraints_ref (GdaServerProvider *prov, GdaConnection *cnc,
 	}
 	g_object_unref (tmpmodel);
 
-	if (retval)
+	if (retval) {
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
+	}
 	g_object_unref (mod_model);
 
 	return retval;
@@ -1607,8 +1632,10 @@ _gda_sqlite_meta_constraints_ref (GdaServerProvider *prov, GdaConnection *cnc,
 	g_assert (mod_model);
 
 	retval = fill_constraints_ref_model (cnc, cdata, mod_model, table_schema, table_name, constraint_name, error);
-	if (retval)
+	if (retval) {
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
+	}
 	g_object_unref (mod_model);
 
 	return retval;
@@ -1916,8 +1943,10 @@ _gda_sqlite_meta__key_columns (GdaServerProvider *prov, GdaConnection *cnc,
 	}
 	g_object_unref (const_model);
 
-	if (retval)
+	if (retval) {
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
+	}
 	g_object_unref (mod_model);
 
 	return retval;
@@ -1941,8 +1970,10 @@ _gda_sqlite_meta_key_columns (GdaServerProvider *prov, GdaConnection *cnc,
 	g_assert (mod_model);
 
 	retval = fill_key_columns_model (cnc, cdata, mod_model, table_schema, table_name, constraint_name, error);
-	if (retval) 
+	if (retval) {
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
+	}
 	g_object_unref (mod_model);
 
 	return retval;
@@ -2089,8 +2120,10 @@ _gda_sqlite_meta_routines (GdaServerProvider *prov, GdaConnection *cnc,
 		}
 	}
 	
-	if (retval)
+	if (retval) {
+		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
 		retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
+	}
 	g_object_unref (mod_model);
 	g_object_unref (tmpmodel);
 #endif

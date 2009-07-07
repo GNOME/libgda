@@ -207,6 +207,8 @@ static gboolean ProviderSpecific_equal (gconstpointer a, gconstpointer b);
 struct _GdaMetaStorePrivate {
 	GdaConnection *cnc;
 	GdaSqlIdentifierStyle ident_style;
+	GdaSqlReservedKeywordsFunc reserved_keyword_func;
+
 	gint           version;
 	gboolean       schema_ok;
 
@@ -490,6 +492,7 @@ gda_meta_store_init (GdaMetaStore *store)
 	store->priv = g_new0 (GdaMetaStorePrivate, 1);
 	store->priv->cnc = NULL;
 	store->priv->ident_style = GDA_SQL_IDENTIFIERS_LOWER_CASE;
+	store->priv->reserved_keyword_func = NULL;
 	store->priv->schema_ok = FALSE;
 	store->priv->version = 0;
 
@@ -765,6 +768,25 @@ gda_meta_store_get_property (GObject *object,
 			break;
 		}
 	}
+}
+
+/**
+ * gda_meta_store_set_reserved_keywords_func
+ * @store: a #GdaMetaStore object
+ * @func: a #GdaSqlReservedKeywordsFunc function, or %NULL
+ *
+ * Specifies a function which @store will use to determine if a keyword is an SQL reserved
+ * keyword or not.
+ *
+ * This method is mainly used by database providers.
+ *
+ * Since: 4.0.3
+ */
+void
+gda_meta_store_set_reserved_keywords_func(GdaMetaStore *store, GdaSqlReservedKeywordsFunc func)
+{
+	g_return_if_fail (GDA_IS_META_STORE (store));
+	store->priv->reserved_keyword_func = func;
 }
 
 /*
@@ -2294,7 +2316,8 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 		if (schema_set->ident_cols)
 			wrapped_data = _gda_data_meta_wrapper_new (new_data, !store->priv->override_mode,
 								   schema_set->ident_cols, schema_set->ident_cols_size,
-								   store->priv->ident_style);
+								   store->priv->ident_style,
+								   store->priv->reserved_keyword_func);
 		else
 			wrapped_data = g_object_ref (new_data);
 

@@ -115,6 +115,8 @@ gboolean          gda_meta_store_modify_with_context      (GdaMetaStore *store, 
 							   GdaDataModel *new_data, GError **error);
 GdaDataModel     *gda_meta_store_create_modify_data_model (GdaMetaStore *store, const gchar *table_name);
 
+void              gda_meta_store_set_reserved_keywords_func(GdaMetaStore *store, GdaSqlReservedKeywordsFunc func);
+
 gboolean          gda_meta_store_get_attribute_value      (GdaMetaStore *store, const gchar *att_name, 
 							   gchar **att_value, GError **error);
 gboolean          gda_meta_store_set_attribute_value      (GdaMetaStore *store, const gchar *att_name, 

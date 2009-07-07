@@ -11,13 +11,19 @@ AM_CPPFLAGS = \
 parser.c parser.h: parser.y $(top_builddir)/libgda/sql-parser/lemon$(EXEEXT_FOR_BUILD)
 	- $(top_builddir)/libgda/sql-parser/lemon$(EXEEXT_FOR_BUILD) -q -d $(srcdir)/parser.y $(top_srcdir)/libgda/sql-parser/lempar.c
 
+mkkeywordhash$(EXEEXT_FOR_BUILD): $(top_srcdir)/libgda/sqlite/mkkeywordhash.c
+	$(CC_FOR_BUILD) -g -o mkkeywordhash$(EXEEXT_FOR_BUILD) $(GDA_DEBUG_FLAGS) $<
+
+keywords_hash.c: mkkeywordhash$(EXEEXT_FOR_BUILD) keywords.list
+	./mkkeywordhash$(EXEEXT_FOR_BUILD) keywords.list > keywords_hash.c
+
 gen_def$(EXEEXT_FOR_BUILD): gen_def.c
 	$(CC_FOR_BUILD) -o gen_def$(EXEEXT_FOR_BUILD) -DIMPOSED_HEADER=\""$(top_srcdir)/libgda/sql-parser/token_types.h"\" $(srcdir)/gen_def.c
 
 postgres_token_types.h: gen_def$(EXEEXT_FOR_BUILD) parser.h
 	./gen_def$(EXEEXT_FOR_BUILD) > postgres_token_types.h
 
-$(OBJECTS) $(libgda_postgres_la_OBJECTS): postgres_token_types.h
+$(OBJECTS) $(libgda_postgres_la_OBJECTS): postgres_token_types.h keywords_hash.c
 
 libgda_postgres_la_SOURCES = \
 	gda-postgres-blob-op.c \
@@ -71,7 +77,8 @@ xml_DATA = $(xml_in_files:.xml.in=.xml)
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgda-postgres-4.0.pc
 
-EXTRA_DIST = $(xml_in_files) libgda-postgres-4.0.pc.in parser.y gen_def.c
+EXTRA_DIST = $(xml_in_files) libgda-postgres-4.0.pc.in parser.y gen_def.c keywords.list
 DISTCLEANFILES = $(xml_DATA)
 
-CLEANFILES = parser.h parser.c parser.out postgres_token_types.h gen_def$(EXEEXT_FOR_BUILD)
+CLEANFILES = parser.h parser.c parser.out postgres_token_types.h gen_def$(EXEEXT_FOR_BUILD) \
+	mkkeywordhash$(EXEEXT_FOR_BUILD) keywords_hash.c
