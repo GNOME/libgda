@@ -103,7 +103,7 @@ main (int argc, char *argv[])
 	list = g_list_append (NULL, NULL); 
 	g_value_set_string ((name = gda_value_new (G_TYPE_STRING)), "Hiro");
 	list = g_list_append (list, name);
-	if (! gda_data_model_append_values (model, list, &error)) {
+	if (gda_data_model_append_values (model, list, &error) == -1) {
 		g_print ("Could not add a row: %s\n",
                          error && error->message ? error->message : "No detail");
                 exit (1);
@@ -121,7 +121,7 @@ main (int argc, char *argv[])
 	g_print ("\n\n** Modifying row 2\n");
 	g_value_set_string ((name = gda_value_new (G_TYPE_STRING)), "Tom");
 	if (! gda_data_model_set_value_at (model, 1, 2, name, &error)) {
-		g_print ("Could not modify row 3: %s\n",
+		g_print ("Could not modify row 2: %s\n",
                          error && error->message ? error->message : "No detail");
                 exit (1);
 	}
