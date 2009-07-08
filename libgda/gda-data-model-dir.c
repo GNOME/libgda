@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 2007 - 2008 The GNOME Foundation
+ * Copyright (C) 2007 - 2009 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -799,8 +799,11 @@ gda_data_model_dir_get_value_at (GdaDataModel *model, gint col, gint row, GError
 
 	if (row >= imodel->priv->rows->len) {
 		gchar *str;
-                str = g_strdup_printf (_("Row %d out of range (0-%d)"), row,
-				       imodel->priv->rows->len - 1);
+		if (imodel->priv->rows->len > 0)
+			str = g_strdup_printf (_("Row %d out of range (0-%d)"), row,
+					       imodel->priv->rows->len - 1);
+		else
+			str = g_strdup_printf (_("Row %d not found (empty data model)"), row);
 		add_error (imodel, str);
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
 			      "%s", str);
@@ -968,8 +971,11 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 
 	if (row >= imodel->priv->rows->len) {
 		gchar *str;
-                str = g_strdup_printf (_("Row %d out of range (0-%d)"), row,
-				       imodel->priv->rows->len - 1);
+		if (imodel->priv->rows->len > 0)
+			str = g_strdup_printf (_("Row %d out of range (0-%d)"), row,
+					       imodel->priv->rows->len - 1);
+		else
+			str = g_strdup_printf (_("Row %d not found (empty data model)"), row);
 		add_error (imodel, str);
 		g_set_error (error, 0, 0, "%s", str);
 		g_free (str);
@@ -1315,8 +1321,11 @@ gda_data_model_dir_remove_row (GdaDataModel *model, gint row, GError **error)
 
 	if (row >= imodel->priv->rows->len) {
 		gchar *str;
-                str = g_strdup_printf (_("Row %d out of range (0-%d)"), row,
-				       imodel->priv->rows->len - 1);
+		if (imodel->priv->rows->len > 0)
+			str = g_strdup_printf (_("Row %d out of range (0-%d)"), row,
+					       imodel->priv->rows->len - 1);
+		else
+			str = g_strdup_printf (_("Row %d not found (empty data model)"), row);
 		add_error (imodel, str);
 		g_set_error (error, 0, 0, "%s", str);
 		g_free (str);
