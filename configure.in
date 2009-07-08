@@ -1368,6 +1368,7 @@ fi
 if test $try_java = true
 then
 	AC_MSG_CHECKING([whether Java interpreter works])
+	try_java=false
 	acx_java_works=no
 	if test -n "${JAVA_PROG}" ; then
 	  RUN_JAVA(acx_jc_result,[-classpath . getsp -test])
@@ -1383,17 +1384,13 @@ then
 	  AC_MSG_CHECKING([java compiler version])
 	  JVERSION=`$JAVAC -version 2>&1 | sed -e "1s/javac //" -e "1q"`
 	  case "$JVERSION" in
-               1.1.*) try_java=false;;
-               1.2.*) try_java=false;;
-               1.3.*) try_java=false;;
-               1.4.*) try_java=false;;
-               1.5.*)
-               ;;
+               1.5.*) try_java=true;;
+               1.6.*) try_java=true;;
                *)
 	       ;;
 	  esac
 	  if test $try_java = true; then
-	     AC_MSG_RESULT([Version >= 1.5, Ok])
+	     AC_MSG_RESULT([version >= 1.5, Ok])
 
 	     AC_MSG_CHECKING([for Java environment])
 	     ## retrieve JAVA_HOME from Java itself if not set
@@ -1440,17 +1437,25 @@ if test $try_java = true
 then
 	if test x$JNI_H = x
 	then
-	AC_CHECK_FILE(${JAVA_HOME}/include/jni.h,
-	 [JNI_H="${JAVA_HOME}/include"],
-	 [AC_CHECK_FILE(${JAVA_HOME}/jni.h,
-	  [JNI_H="${JAVA_HOME}"],
-	  [AC_CHECK_FILE(${JAVA_HOME}/../include/jni.h,
-	   [JNI_H="${JAVA_HOME}/../include"],
-	   [AC_MSG_ERROR([jni headers not found. Please make sure you have a proper JDK installed.])
-	  ])
-	 ])
-	])
+	    AC_CHECK_FILE(${JAVA_HOME}/include/jni.h,
+	     [JNI_H="${JAVA_HOME}/include"],
+	     [AC_CHECK_FILE(${JAVA_HOME}/jni.h,
+	      [JNI_H="${JAVA_HOME}"],
+	      [AC_CHECK_FILE(${JAVA_HOME}/../include/jni.h,
+	       [JNI_H="${JAVA_HOME}/../include"],
+	       [AC_MSG_RESULT([jni headers not found. Please make sure you have a proper JDK installed.])
+	      ])
+	     ])
+	    ])
+	    if test x$JNI_H = x
+	    then
+	        try_java=false
+	    fi
+	fi
+fi
 
+if test $try_java = true
+then
 	JAVA_CFLAGS="-I${JNI_H}"
 	#: ${JAVA_CFLAGS=-D_REENTRANT}
 
@@ -1460,8 +1465,11 @@ then
 	# at least as of now - 01/2004)
 	jac_found_md=no
 	for mddir in . linux solaris ppc irix alpha aix hp-ux genunix cygwin win32 freebsd; do
-	AC_CHECK_FILE(${JNI_H}/$mddir/jni_md.h,[JAVA_CFLAGS="${JAVA_CFLAGS} -I${JNI_H}/$mddir" jac_found_md=yes])
-	if test ${jac_found_md} = yes; then break; fi
+	    AC_CHECK_FILE(${JNI_H}/$mddir/jni_md.h,[JAVA_CFLAGS="${JAVA_CFLAGS} -I${JNI_H}/$mddir" jac_found_md=yes])
+	    if test ${jac_found_md} = yes
+	    then
+	        break
+	    fi
 	done
 
 	LIBS="${LIBS} ${JAVA_LIBS}"
@@ -1497,16 +1505,15 @@ then
 	  return (sizeof(int)==sizeof(jint) && sizeof(long)==sizeof(long) && sizeof(jbyte)==sizeof(char) && sizeof(jshort)==sizeof(short) && sizeof(jfloat)==sizeof(float) && sizeof(jdouble)==sizeof(double))?0:1;
 }
 	      ]])],[AC_MSG_RESULT([ok])],[AC_MSG_ERROR([One or more JNI types differ from the corresponding native type. You may need to use non-standard compiler flags or a different compiler in order to fix this.])],[])
-	else
-		JAVA_CFLAGS="-I${JNI_H}"
-		for mddir in . linux solaris ppc irix alpha aix hp-ux genunix cygwin win32 freebsd; do
-		    if test -e ${JNI_H}/$mddir/jni_md.h
-		    then
-			JAVA_CFLAGS="${JAVA_CFLAGS} -I${JNI_H}/$mddir"
-			break
-		    fi
-		done
-	fi
+
+	JAVA_CFLAGS="-I${JNI_H}"
+	for mddir in . linux solaris ppc irix alpha aix hp-ux genunix cygwin win32 freebsd; do
+	    if test -e ${JNI_H}/$mddir/jni_md.h
+	    then
+		JAVA_CFLAGS="${JAVA_CFLAGS} -I${JNI_H}/$mddir"
+		break
+	    fi
+	done
 	
 	have_java=yes
 	AC_DEFINE(HAVE_JAVA, 1, [Have JAVA])
