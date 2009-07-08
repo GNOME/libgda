@@ -239,7 +239,7 @@ parse_input (const char *filename)
 
 #ifdef TEST_RESERVED_WORDS
 	int i;
-	printf ("char *keywords[] = {\n");
+	printf ("static char *keywords[] = {\n");
 	for (i = 0; i < nKeyword; i++)
 		printf ("\t\"%s\",\n", aKeywordTable [i].zName);
 	printf ("};\n");
@@ -495,12 +495,12 @@ main (int argc, char **argv)
 	printf("  }\n");
 	printf("  return 0;\n");
 	printf("}\n");
-	printf("\ngboolean\nis_keyword (const char *z)\n{\n");
+	printf("\nstatic gboolean\nis_keyword (const char *z)\n{\n");
 	printf("\treturn keywordCode(z, strlen (z));\n");
 	printf("}\n");
 
 #ifdef TEST_RESERVED_WORDS
-	printf("\nvoid\ntest_keywords (void)\n{\n");
+	printf("\nstatic void\ntest_keywords (void)\n{\n");
 	printf("\tint i;\n");
 	printf("\tfor (i = 0; i < %d; i++) {\n", nKeyword);
 	printf("\t\tif (! is_keyword (keywords[i]))\n");
