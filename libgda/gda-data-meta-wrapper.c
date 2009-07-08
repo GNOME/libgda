@@ -27,6 +27,7 @@
 #include <libgda/gda-enums.h>
 #include <libgda/gda-data-model.h>
 #include <libgda/sql-parser/gda-statement-struct-util.h>
+#include "keywords_hash.c" /* this one is dynamically generated */
 
 /*
  * Each value in @values may be %NULL, a valid pointer, or 0x1
@@ -160,6 +161,10 @@ gda_data_meta_wrapper_class_init (GdaDataMetaWrapperClass *klass)
 	/* virtual functions */
 	object_class->dispose = gda_data_meta_wrapper_dispose;
 	object_class->finalize = gda_data_meta_wrapper_finalize;
+
+#ifdef GDA_DEBUG
+	test_keywords ();
+#endif
 }
 
 static void
@@ -488,7 +493,8 @@ compute_value (const GValue *value, GdaSqlIdentifierStyle mode, GdaSqlReservedKe
 					onechanged = TRUE;
 				}
 
-				if (reserved_keyword_func && reserved_keyword_func (sa[i])) {
+				if ((reserved_keyword_func && reserved_keyword_func (sa[i])) ||
+				    (! reserved_keyword_func && is_keyword (sa[i]))) {
 					gchar *tmp = gda_sql_identifier_add_quotes (sa[i]);
 					g_free (sa[i]);
 					sa[i] = tmp;
@@ -511,7 +517,8 @@ compute_value (const GValue *value, GdaSqlIdentifierStyle mode, GdaSqlReservedKe
 			if (! identifier_is_all_lower (str))
 				tmp = to_lower (g_strdup (str));
 
-			if (reserved_keyword_func && reserved_keyword_func (tmp ? tmp : str)) {
+			if ((reserved_keyword_func && reserved_keyword_func (tmp ? tmp : str)) ||
+			    (! reserved_keyword_func && is_keyword (tmp ? tmp : str))) {
 				gchar *tmp2 = gda_sql_identifier_add_quotes (tmp ? tmp : str);
 				if (tmp)
 					g_free (tmp);
