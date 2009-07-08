@@ -1,6 +1,6 @@
 /* gda-data-proxy.c
  *
- * Copyright (C) 2005 - 2008 Vivien Malerba
+ * Copyright (C) 2005 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -3386,9 +3386,14 @@ gda_data_proxy_get_value_at (GdaDataModel *model, gint column, gint proxy_row, G
 			}
 			else {
 				/* non existing row, return NULL */
-				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
-					     _("Row %d out of range (0-%d)"), proxy_row, 
-					     gda_data_model_get_n_rows (model) - 1);
+				gint n;
+				n = gda_data_model_get_n_rows (model);
+				if (n > 0)
+					g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
+						     _("Row %d out of range (0-%d)"), proxy_row, n - 1);
+				else
+					g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
+						     _("Row %d not found (empty data model)"), proxy_row);
 				retval = NULL;
 			}
 		}
@@ -3419,9 +3424,14 @@ gda_data_proxy_get_value_at (GdaDataModel *model, gint column, gint proxy_row, G
 			}
 			else {
 				/* non existing row, return NULL */
-				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
-					     _("Row %d out of range (0-%d)"), proxy_row, 
-					     gda_data_model_get_n_rows (model) - 1);
+				gint n;
+				n = gda_data_model_get_n_rows (model);
+				if (n > 0)
+					g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
+						     _("Row %d out of range (0-%d)"), proxy_row, n - 1);
+				else
+					g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
+						     _("Row %d not found (empty data model)"), proxy_row);
 				retval = NULL;
 			}
 		}

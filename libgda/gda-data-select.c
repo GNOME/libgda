@@ -1609,9 +1609,14 @@ external_to_internal_row (GdaDataSelect *model, gint ext_row, GError **error)
 	nrows = model->advertized_nrows < 0 ? gda_data_select_get_n_rows ((GdaDataModel*) model) : 
 		model->advertized_nrows;
 	if ((ext_row < 0) || ((nrows >= 0) && (int_row >= nrows))) {
-		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
-			     _("Row %d out of range (0-%d)"), ext_row, 
-			     gda_data_select_get_n_rows ((GdaDataModel*) model) - 1);
+		gint n;
+		n = gda_data_select_get_n_rows ((GdaDataModel*) model);
+		if (n > 0)
+			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
+				     _("Row %d out of range (0-%d)"), ext_row, n - 1);
+		else
+			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
+				     _("Row %d not found (empty data model)"), ext_row);
 		return -1;
 	}
 
@@ -1659,8 +1664,14 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 
 	int_row = external_to_internal_row (imodel, row, NULL);
 	if (int_row < 0) {
-		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
-			     _("Row %d out of range (0-%d)"), row, gda_data_select_get_n_rows (model) - 1);
+		gint n;
+		n = gda_data_select_get_n_rows ( model);
+		if (n > 0)
+			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
+				     _("Row %d out of range (0-%d)"), row, n - 1);
+		else
+			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
+				     _("Row %d not found (empty data model)"), row);
 		return NULL;
 	}
 
@@ -1969,7 +1980,7 @@ update_iter (GdaDataSelect *imodel, GdaRow *prow)
 	for (i = 0, plist = GDA_SET (iter)->holders; 
 	     plist;
 	     i++, plist = plist->next) {
-		const GValue *value;
+		GValue *value;
 		GError *error = NULL;
 		value = gda_row_get_value (prow, i);
 
@@ -3043,7 +3054,7 @@ compute_insert_select_params_mapping (GdaSet *sel_params, GdaSet *ins_values, Gd
 		}
 		g_assert (cdata.colid);
 		if (*(cdata.colid) == '"')
-			gda_sql_identifier_remove_quotes (cdata.colid);
+			gda_sql_identifier_remove_quotes ((gchar*) cdata.colid);
 		/*g_print ("SEL param '%s' <=> column named '%s'\n", cdata.hid, cdata.colid);*/
 		
 		GSList *ins_list;

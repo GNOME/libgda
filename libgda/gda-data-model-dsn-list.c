@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2007 - 2008 The GNOME Foundation.
+ * Copyright (C) 2007 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -312,9 +312,14 @@ gda_data_model_dsn_list_get_value_at (GdaDataModel *model, gint col, gint row, G
                 return NULL;
 	}
 	if ((row < 0) || (row >= gda_data_model_dsn_list_get_n_rows (model))) {
-		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
-                             _("Row %d out of range (0-%d)"), row,
-                             gda_data_model_dsn_list_get_n_rows (model) - 1);
+		gint n;
+		n = gda_data_model_dsn_list_get_n_rows (model);
+		if (n > 0)
+			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
+				     _("Row %d out of range (0-%d)"), row, n - 1);
+		else
+			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
+				     _("Row %d not found (empty data model)"), row);
 		return NULL;
 	}
 

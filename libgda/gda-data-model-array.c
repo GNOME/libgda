@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2008 The GNOME Foundation.
+ * Copyright (C) 1998 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -383,9 +383,13 @@ gda_data_model_array_get_row (GdaDataModelArray *model, gint row, GError **error
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), NULL);
 
 	if (row >= model->priv->rows->len) {
-		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
-			     _("Row %d out of range (0-%d)"), row,
-			     model->priv->rows->len- 1);
+		if (model->priv->rows->len > 0)
+			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
+				     _("Row %d out of range (0-%d)"), row,
+				     model->priv->rows->len - 1);
+		else
+			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
+				     _("Row %d not found (empty data model)"), row);
 		return NULL;
 	}
 
@@ -526,8 +530,12 @@ gda_data_model_array_get_value_at (GdaDataModel *model, gint col, gint row, GErr
 	}
 
 	if (row >= amodel->priv->rows->len) {
-		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
-			     _("Row %d out of range (0-%d)"), row, amodel->priv->rows->len - 1);
+		if (amodel->priv->rows->len > 0)
+			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
+				     _("Row %d out of range (0-%d)"), row, amodel->priv->rows->len - 1);
+		else
+			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
+				     _("Row %d not found (empty data model)"), row);
 		return NULL;
 	}
 
@@ -609,8 +617,12 @@ gda_data_model_array_set_value_at (GdaDataModel *model, gint col, gint row,
         }
 
 	if (row > amodel->priv->rows->len) {
-		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_VALUES_LIST_ERROR,
-			     _("Row %d out of range (0-%d)"), row, amodel->priv->rows->len);
+		if (amodel->priv->rows->len > 0)
+			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_VALUES_LIST_ERROR,
+				     _("Row %d out of range (0-%d)"), row, amodel->priv->rows->len - 1);
+		else
+			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
+				     _("Row %d not found (empty data model)"), row);
                 return FALSE;
         }
 
