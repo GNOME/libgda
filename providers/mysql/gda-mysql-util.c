@@ -25,6 +25,9 @@
 #include <glib/gi18n-lib.h>
 #include "gda-mysql-util.h"
 
+#include <libgda/sqlite/keywords_hash.h>
+#include "keywords_hash.c" /* this one is dynamically generated */
+
 /*
  * Create a new #GdaConnectionEvent object and "adds" it to @cnc
  *
@@ -77,4 +80,35 @@ _gda_mysql_make_error (GdaConnection  *cnc,
 	gda_connection_add_event (cnc, event_error);
 
 	return event_error;
+}
+
+#ifdef GDA_DEBUG
+void
+_gda_mysql_test_keywords (void)
+{
+	V50test_keywords();
+	V51test_keywords();
+	V54test_keywords();
+	V60test_keywords();
+}
+#endif
+
+GdaSqlReservedKeywordsFunc
+_gda_mysql_get_reserved_keyword_func (MysqlConnectionData *cdata)
+{
+	if (cdata && cdata->short_version) {
+		switch (*cdata->short_version) {
+		case '5':
+			if (cdata->short_version[1] == '1')
+				return V51is_keyword;
+			if (cdata->short_version[1] == '0')
+				return V50is_keyword;
+			return V54is_keyword;
+		case '6':
+		default:
+			return V60is_keyword;
+		break;
+		}
+	}
+	return V60is_keyword;
 }

@@ -426,7 +426,7 @@ test_schemata_1 (GdaMetaStore *store)
 
 	import = common_load_csv_file ("data_schemata.csv", 3, "gboolean", -1);
 	DECL_CHANGE (TNAME, GDA_META_STORE_ADD, "+0", "meta", "+1", "pg_catalog", "+2", "a user", "+3", "TRUE", NULL);
-	DECL_CHANGE (TNAME, GDA_META_STORE_ADD, "+0", "meta", "+1", "public", "+2", "postgres", "+3", "FALSE", NULL);
+	DECL_CHANGE (TNAME, GDA_META_STORE_ADD, "+0", "meta", "+1", "pub", "+2", "postgres", "+3", "FALSE", NULL);
 	DECL_CHANGE (TNAME, GDA_META_STORE_ADD, "+0", "meta", "+1", "information_schema", "+2", "postgres", "+3", "TRUE", NULL);
 	TEST_MODIFY (store, TNAME, import, NULL, &error, NULL);
 	TEST_END (import);

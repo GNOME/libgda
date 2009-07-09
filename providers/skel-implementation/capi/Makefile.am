@@ -12,11 +12,14 @@ AM_CPPFLAGS = \
 	$(LIBGDA_CFLAGS) #$(CAPI_CFLAGS) 
 
 # SQL keywords HASH generation
+keyword_files=keywords.list
+pkeyword_files=$(addprefix $(top_srcdir)/providers/skel-implementation/capi/,$(keyword_files))
+
 mkkeywordhash$(EXEEXT_FOR_BUILD): $(top_srcdir)/libgda/sqlite/mkkeywordhash.c
 	$(CC_FOR_BUILD) -g -o mkkeywordhash$(EXEEXT_FOR_BUILD) $(GDA_DEBUG_FLAGS) $<
 
-keywords_hash.c: mkkeywordhash$(EXEEXT_FOR_BUILD) keywords.list
-	./mkkeywordhash$(EXEEXT_FOR_BUILD) keywords.list > keywords_hash.c
+keywords_hash.c: mkkeywordhash$(EXEEXT_FOR_BUILD) $(pkeyword_files)
+	./mkkeywordhash$(EXEEXT_FOR_BUILD) $(top_srcdir)/providers/skel-implementation/capi/keywords.list > keywords_hash.c
 
 # parser generation
 parser.c parser.h: parser.y $(top_builddir)/libgda/sql-parser/lemon$(EXEEXT_FOR_BUILD)
@@ -70,7 +73,7 @@ pkgconfigdir = $(libdir)/pkgconfig
 #pkgconfig_DATA = libgda-capi-4.0.pc
 noinst_DATA += libgda-capi-4.0.pc
 
-EXTRA_DIST = $(xml_in_files) libgda-capi-4.0.pc.in parser.y gen_def.c keywords.list
+EXTRA_DIST = $(xml_in_files) libgda-capi-4.0.pc.in parser.y gen_def.c $(keyword_files)
 DISTCLEANFILES = $(noinst_DATA)
 
 CLEANFILES = parser.h parser.c parser.out capi_token_types.h gen_def$(EXEEXT_FOR_BUILD) \

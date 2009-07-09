@@ -523,6 +523,7 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 
 	/* create data model */
         model = g_object_new (GDA_TYPE_MYSQL_RECORDSET,
+			      "connection", cnc,
 			      "prepared-stmt", ps,
 			      "model-usage", rflags,
 			      "exec-params", exec_params, 

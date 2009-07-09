@@ -90,7 +90,7 @@
     <column name="udt_name" pkey="TRUE" descr="Name of the user defined data type for which the column is" ident="TRUE"/>
     <column name="udt_column" pkey="TRUE" descr="Name of the column (part)" ident="TRUE"/>
     <column name="ordinal_position" type="gint" descr="Column position, starts at 1"/>
-    <column name="data_type" nullok="TRUE" descr="Data type of the column (if the column is an array, then 'array_spec' is set, and this may be NULL)" ident="TRUE"/>
+    <column name="data_type" nullok="TRUE" descr="Data type of the column (if the column is an array, then 'array_spec' is set, and this may be NULL)"/>
     <column name="array_spec" nullok="TRUE" descr="Array description if the column is an array"/>
     <column name="character_maximum_length" type="gint" nullok="TRUE"/>
     <column name="character_octet_length" type="gint" nullok="TRUE"/>
@@ -137,7 +137,7 @@
     <column name="object_schema" descr="Name of the schema that contains the object that uses the array being described" ident="TRUE"/>
     <column name="object_name" descr="Name of the object that uses the array being described" ident="TRUE"/>
     <column name="object_type" descr="The type of the object that uses the array being described TABLE_COL, DOMAIN, UDT_COL, ROUTINE_COL, ROUTINE_PAR"/>
-    <column name="data_type" nullok="TRUE" descr="Base data type of the array (if the base data type is an array, then 'array_spec' is set, and this may be NULL)" ident="TRUE"/>
+    <column name="data_type" nullok="TRUE" descr="Base data type of the array (if the base data type is an array, then 'array_spec' is set, and this may be NULL)"/>
     <column name="array_spec" nullok="TRUE" descr="Array description if the base data type is an array"/>
     <column name="min_cardinality" type="gint" nullok="TRUE"/>
     <column name="max_cardinality" type="gint" nullok="TRUE"/>
@@ -147,7 +147,7 @@
     <column name="domain_catalog" pkey="TRUE" descr="Name of catalog that contains the domain"/>
     <column name="domain_schema" pkey="TRUE" descr="Name of schema that contains the domain" ident="TRUE"/>
     <column name="domain_name" pkey="TRUE" descr="Name of the domain" ident="TRUE"/>
-    <column name="data_type" nullok="TRUE" descr="Data type of the domain (if the domain is an array, then 'array_spec' is set, and this may be NULL)" ident="TRUE"/>
+    <column name="data_type" nullok="TRUE" descr="Data type of the domain (if the domain is an array, then 'array_spec' is set, and this may be NULL)"/>
     <column name="array_spec" nullok="TRUE" descr="Array description if the domain is an array"/>
     <column name="domain_gtype"/>
     <column name="character_maximum_length" type="gint" nullok="TRUE"/>
@@ -325,7 +325,7 @@
     <column name="ordinal_position" type="gint" descr="Column position, starts at 1"/>
     <column name="column_default" nullok="TRUE"/>
     <column name="is_nullable" type="boolean"/>
-    <column name="data_type" nullok="TRUE" descr="Data type of the column (if the column is an array, then 'array_spec' is set, and this may be NULL)" ident="TRUE"/>
+    <column name="data_type" nullok="TRUE" descr="Data type of the column (if the column is an array, then 'array_spec' is set, and this may be NULL)"/>
     <column name="array_spec" nullok="TRUE" descr="Array description if the column is an array"/>
     <column name="gtype"/>
     <column name="character_maximum_length" type="gint" nullok="TRUE"/>
@@ -506,7 +506,7 @@
     <column name="ordinal_position" type="gint" pkey="TRUE"/>
     <column name="parameter_mode"/>
     <column name="parameter_name" nullok="TRUE" ident="TRUE"/>
-    <column name="data_type" nullok="TRUE" descr="Data type of the parameter (if the parameter is an array, then 'array_spec' is set, and this may be NULL; can also be NULL if any type of parameter is accepted)" ident="TRUE"/>
+    <column name="data_type" nullok="TRUE" descr="Data type of the parameter (if the parameter is an array, then 'array_spec' is set, and this may be NULL; can also be NULL if any type of parameter is accepted)"/>
     <column name="array_spec" nullok="TRUE" descr="Array description if the parameter is an array"/>
     <fkey ref_table="_routines">
       <part column="specific_catalog"/>
@@ -529,7 +529,7 @@
     <column name="specific_name" pkey="TRUE"/>
     <column name="column_name" pkey="TRUE" ident="TRUE"/>
     <column name="ordinal_position" type="gint" nullok="TRUE" pkey="TRUE"/>
-    <column name="data_type" nullok="TRUE" descr="Data type of the column (if the column is an array, then 'array_spec' is set, and this may be NULL)" ident="TRUE"/>
+    <column name="data_type" nullok="TRUE" descr="Data type of the column (if the column is an array, then 'array_spec' is set, and this may be NULL)"/>
     <column name="array_spec" nullok="TRUE" descr="Array description if the column is an array"/>
     <fkey ref_table="_routines">
       <part column="specific_catalog"/>

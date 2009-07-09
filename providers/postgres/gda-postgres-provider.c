@@ -119,6 +119,11 @@ static GObject             *gda_postgres_provider_statement_execute (GdaServerPr
 								     guint *task_id, GdaServerProviderExecCallback async_cb, 
 								     gpointer cb_data, GError **error);
 
+/* Quoting */
+static gchar               *gda_postgresql_identifier_quote    (GdaServerProvider *provider, GdaConnection *cnc,
+								const gchar *id,
+								gboolean meta_store_convention, gboolean force_quotes);
+
 /* distributed transactions */
 static gboolean gda_postgres_provider_xa_start    (GdaServerProvider *provider, GdaConnection *cnc, 
 						   const GdaXaTransactionId *xid, GError **error);
@@ -188,6 +193,7 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	provider_class->get_def_dbms_type = gda_postgres_provider_get_default_dbms_type;
 
 	provider_class->create_connection = NULL;
+	provider_class->identifier_quote = gda_postgresql_identifier_quote;
 	provider_class->open_connection = gda_postgres_provider_open_connection;
 	provider_class->close_connection = gda_postgres_provider_close_connection;
 	provider_class->get_database = gda_postgres_provider_get_database;
@@ -698,6 +704,8 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider, GdaConnectio
 	}
         cdata->version = g_strdup (PQgetvalue(pg_res, 0, 0));
         cdata->version_float = get_pg_version_float (cdata->version);
+	cdata->short_version = g_strdup_printf ("%d%d", (int) cdata->version_float,
+						(int) ((cdata->version_float - (int) cdata->version_float) * 10));
         PQclear (pg_res);
 
 	/*
@@ -2433,6 +2441,83 @@ gda_postgres_provider_xa_recover (GdaServerProvider *provider, GdaConnection *cn
 	}
 }
 
+static gchar *
+identifier_add_quotes (const gchar *str)
+{
+        gchar *retval, *rptr;
+        const gchar *sptr;
+        gint len;
+
+        if (!str)
+                return NULL;
+
+        len = strlen (str);
+        retval = g_new (gchar, 2*len + 3);
+        *retval = '"';
+        for (rptr = retval+1, sptr = str; *sptr; sptr++, rptr++) {
+                if (*sptr == '"') {
+                        *rptr = '\\';
+                        rptr++;
+                        *rptr = *sptr;
+                }
+                else
+                        *rptr = *sptr;
+        }
+        *rptr = '"';
+        rptr++;
+        *rptr = 0;
+        return retval;
+}
+
+static gboolean
+_sql_identifier_needs_quotes (const gchar *str)
+{
+	const gchar *ptr;
+
+	g_return_val_if_fail (str, FALSE);
+	for (ptr = str; *ptr; ptr++) {
+		/* quote if 1st char is a number */
+		if ((*ptr <= '9') && (*ptr >= '0')) {
+			if (ptr == str)
+				return TRUE;
+			continue;
+		}
+		if (((*ptr >= 'A') && (*ptr <= 'Z')) ||
+		    ((*ptr >= 'a') && (*ptr <= 'z')))
+			continue;
+
+		if ((*ptr != '$') && (*ptr != '_') && (*ptr != '#'))
+			return TRUE;
+	}
+	return FALSE;
+}
+
+static gchar *
+gda_postgresql_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
+				 const gchar *id,
+				 gboolean meta_store_convention, gboolean force_quotes)
+{
+        GdaSqlReservedKeywordsFunc kwfunc;
+        PostgresConnectionData *cdata = NULL;
+
+        if (cnc) {
+                cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+                if (!cdata)
+                        return NULL;
+        }
+
+        kwfunc = _gda_postgres_get_reserved_keyword_func (cdata);
+	if (*id == '"') {
+		/* there are already some quotes */
+		return g_strdup (id);
+	}
+	if (kwfunc (id) || _sql_identifier_needs_quotes (id) || force_quotes)
+		return identifier_add_quotes (id);
+	
+	/* nothing to do */
+	return g_strdup (id);
+}
+
 
 /*
  * Free connection's specific data
@@ -2460,6 +2545,7 @@ gda_postgres_free_cnc_data (PostgresConnectionData *cdata)
 		g_hash_table_destroy (cdata->h_table);
 	
 	g_free (cdata->version);
+	g_free (cdata->short_version);
 	g_free (cdata->avoid_types_oids);
 	g_free (cdata->any_type_oid);
 

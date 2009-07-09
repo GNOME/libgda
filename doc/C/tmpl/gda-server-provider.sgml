@@ -65,8 +65,8 @@ Base class for all the DBMS providers
 @create_connection: 
 @meta_funcs: 
 @xa_funcs: 
+@identifier_quote: 
 @handle_async: 
-@_gda_reserved2: 
 @_gda_reserved3: 
 @_gda_reserved4: 
 @_gda_reserved5: 

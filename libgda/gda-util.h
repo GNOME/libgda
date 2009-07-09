@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 1998 - 2008 The GNOME Foundation.
+ * Copyright (C) 1998 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -48,6 +48,8 @@ guint        gda_identifier_hash (const gchar *id);
 gboolean     gda_identifier_equal (const gchar *id1, const gchar *id2);
 gchar      **gda_completion_list_get (GdaConnection *cnc, const gchar *sql, gint start, gint end);
 gchar      **gda_sql_identifier_split (const gchar *id);
+gchar       *gda_sql_identifier_quote (const gchar *id, GdaConnection *cnc, GdaServerProvider *prov,
+				       gboolean meta_store_convention, gboolean force_quotes);
 
 /*
  * Param & model utilities

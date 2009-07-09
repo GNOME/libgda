@@ -25,6 +25,9 @@
 #include <glib/gi18n-lib.h>
 #include "gda-postgres-util.h"
 
+#include <libgda/sqlite/keywords_hash.h>
+#include "keywords_hash.c" /* this one is dynamically generated */
+
 static GdaConnectionEventCode
 gda_postgres_sqlsate_to_gda_code (const gchar *sqlstate)
 {
@@ -132,4 +135,35 @@ _gda_postgres_type_oid_to_gda (PostgresConnectionData *cdata, Oid postgres_type)
 		return *type;
 	else
 		return G_TYPE_STRING;
+}
+
+#ifdef GDA_DEBUG
+void
+_gda_postgres_test_keywords (void)
+{
+        V82test_keywords();
+        V83test_keywords();
+        V84test_keywords();
+}
+#endif
+
+GdaSqlReservedKeywordsFunc
+_gda_postgres_get_reserved_keyword_func (PostgresConnectionData *cdata)
+{
+	if (cdata && cdata->short_version) {
+		switch (*cdata->short_version) {
+                case '8':
+                        if (cdata->short_version[1] == '2')
+                                return V82is_keyword;
+                        if (cdata->short_version[1] == '3')
+                                return V83is_keyword;
+                        if (cdata->short_version[1] == '4')
+                                return V84is_keyword;
+                        return V84is_keyword;
+                default:
+                        return V84is_keyword;
+                break;
+                }
+	}
+        return V84is_keyword;
 }

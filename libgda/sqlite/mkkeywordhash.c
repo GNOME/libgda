@@ -33,32 +33,6 @@ static const char zHdr[] =
 	" * This code has been copied from SQLite's mkkeywordhash.c file and modified.\n"
 	" * to read the SQL keywords from a file instead of static ones\n"
 	" */\n";
-static const char zCode[] = 
-	"static const unsigned char UpperToLower[] = {\n"
-	"      0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17,\n"
-	"     18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,\n"
-	"     36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53,\n"
-	"     54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 97, 98, 99,100,101,102,103,\n"
-	"    104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,\n"
-	"    122, 91, 92, 93, 94, 95, 96, 97, 98, 99,100,101,102,103,104,105,106,107,\n"
-	"    108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,\n"
-	"    126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,\n"
-	"    144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,\n"
-	"    162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,\n"
-	"    180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,\n"
-	"    198,199,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,\n"
-	"    216,217,218,219,220,221,222,223,224,225,226,227,228,229,230,231,232,233,\n"
-	"    234,235,236,237,238,239,240,241,242,243,244,245,246,247,248,249,250,251,\n"
-	"    252,253,254,255\n"
-	"};\n"
-	"#define charMap(X) UpperToLower[(unsigned char)X]\n"
-	"static int casecmp(const char *zLeft, const char *zRight, int N){\n"
-	"	register unsigned char *a, *b;\n"
-	"	a = (unsigned char *)zLeft;\n"
-	"	b = (unsigned char *)zRight;\n"
-	"	while( N-- > 0 && *a!=0 && UpperToLower[*a]==UpperToLower[*b]){ a++; b++; }\n"
-	"	return N<0 ? 0 : UpperToLower[*a] - UpperToLower[*b];\n"
-	"}\n";
 
 /*
 ** All the keywords of the SQL language are stored in a hash
@@ -81,6 +55,7 @@ struct Keyword {
 
 Keyword *aKeywordTable = NULL;
 int nKeyword = 0;
+char *prefix = NULL;
 
 /* An array to map all upper-case characters into their corresponding
 ** lower-case character. 
@@ -142,11 +117,43 @@ static Keyword *findById(int id){
 	return &aKeywordTable[i];
 }
 
+/* @len is the number of chars, NOT including the \0 at the end */
+static void
+add_keywork (const char *keyword, int len)
+{
+#define MAXKEYWORDS 1000
+	const char *ptr;
+
+	if (len == 0)
+		return;
+	for (ptr = keyword; *ptr && (ptr - keyword) < len; ptr++) {
+		if (((*ptr < 'A') || (*ptr > 'Z')) &&
+		    ((*ptr < 'a') || (*ptr > 'z')) &&
+		    ((*ptr < '0') || (*ptr > '9')) &&
+		    (*ptr != '_')) {
+			/* ignore this keyword */
+			return;
+		}
+	}
+
+	aKeywordTable [nKeyword].zName = malloc (sizeof (char) * (len + 1));
+	memcpy (aKeywordTable [nKeyword].zName, keyword, sizeof (char) * len);
+	aKeywordTable [nKeyword].zName [len] = 0;
+	
+	printf (" * KEYWORD: '%s'\n", aKeywordTable [nKeyword].zName);
+	
+	nKeyword ++;
+	if (nKeyword > MAXKEYWORDS) {
+		fprintf (stderr, "Maximum number of SQL keywords exceeded, "
+			 "change the MAXKEYWORDS constant and recompile\n");
+		exit (1);
+	}
+}
+
 static void
 parse_input (const char *filename)
 {
 #define BUFSIZE 500
-#define MAXKEYWORDS 1000
 	FILE *stream;
         char buffer[BUFSIZE];
         int read;
@@ -176,50 +183,22 @@ parse_input (const char *filename)
                         *ptr = 0;
                         
                         /* treat the line */
-			char *tmp1, *tmp2;
-			printf (" *\n * From line: %s\n", buffer);
-			for (tmp1 = tmp2 = buffer; *tmp2; tmp2++) {
-				if (((*tmp2 < 'A') || (*tmp2 > 'Z')) &&
-				    ((*tmp2 < 'a') || (*tmp2 > 'z')) &&
-				    ((*tmp2 < '0') || (*tmp2 > '9')) &&
-				    (*tmp2 != '_')) {
-					/* keyword found */
-					int len;
-
-					len = tmp2 - tmp1 + 1;
-					
-					aKeywordTable [nKeyword].zName = malloc (sizeof (char) * len);
-					memcpy (aKeywordTable [nKeyword].zName, tmp1, sizeof (char) * (len - 1));
-					aKeywordTable [nKeyword].zName [len - 1] = 0;
-
-					tmp1 = tmp2 + 1;
-
-					printf (" * KEYWORD: %s\n", aKeywordTable [nKeyword].zName);
-
-					nKeyword ++;
-					if (nKeyword > MAXKEYWORDS) {
-						fprintf (stderr, "Maximum number of SQL keywords exceeded, "
-							 "change the MAXKEYWORDS constant and recompile\n");
-						aKeywordTable = NULL; /* we don't care about mem leaks here */
-						return;
+			if (*buffer && *buffer != '#') {
+				char *tmp1, *tmp2;
+				printf (" *\n * From line: %s\n", buffer);
+				for (tmp1 = tmp2 = buffer; *tmp2; tmp2++) {
+					if (((*tmp2 < 'A') || (*tmp2 > 'Z')) &&
+					    ((*tmp2 < 'a') || (*tmp2 > 'z')) &&
+					    ((*tmp2 < '0') || (*tmp2 > '9')) &&
+					    (*tmp2 != '_')) {
+						/* keyword found */
+						add_keywork (tmp1, tmp2 - tmp1);
+						
+						tmp1 = tmp2 + 1;
 					}
 				}
-			}
-			if ((tmp1 != tmp2) && *tmp1) {
-				int len;
-				len = tmp2 - tmp1 + 2;
-				aKeywordTable [nKeyword].zName = malloc (sizeof (char) * len);
-				memcpy (aKeywordTable [nKeyword].zName, tmp1, sizeof (char) * (len - 1));
-				aKeywordTable [nKeyword].zName [len - 1] = 0;
-				printf (" * KEYWORD: %s\n", aKeywordTable [nKeyword].zName);
-
-				nKeyword ++;
-				if (nKeyword > MAXKEYWORDS) {
-					fprintf (stderr, "Maximum number of SQL keywords exceeded, "
-						 "change the MAXKEYWORDS constant and recompile\n");
-					aKeywordTable = NULL; /* we don't care about mem leaks here */
-					return;
-				}
+				if ((tmp1 != tmp2) && *tmp1)
+					add_keywork (tmp1, tmp2 - tmp1);
 			}
                                 
                         if (hold) {
@@ -239,7 +218,7 @@ parse_input (const char *filename)
 
 #ifdef TEST_RESERVED_WORDS
 	int i;
-	printf ("static char *keywords[] = {\n");
+	printf ("static char *%skeywords[] = {\n", prefix ? prefix : "");
 	for (i = 0; i < nKeyword; i++)
 		printf ("\t\"%s\",\n", aKeywordTable [i].zName);
 	printf ("};\n");
@@ -263,10 +242,12 @@ main (int argc, char **argv)
 	int aHash[5000];  /* 2000 is much bigger than nKeyword */
 	char zText[10000];
 
-	if (argc != 2) {
-		printf ("Usage: %s <file with SQL keywords>\n", argv[0]);
+	if ((argc < 2)  || (argc > 3)) {
+		printf ("Usage: %s <file with SQL keywords> [<prefix>]\n", argv[0]);
 		return 1;
 	}
+	if (argc == 3)
+		prefix = argv[2];
 
 	printf("%s", zHdr);
 	parse_input (argv[1]);
@@ -389,9 +370,8 @@ main (int argc, char **argv)
 	}
 
 	/* Begin generating code */
-	printf("%s\n", zCode);
 	printf("/* Hash score: %d */\n", bestCount);
-	printf("static int keywordCode(const char *z, int n){\n");
+	printf("static int %skeywordCode(const char *z, int n){\n", prefix ? prefix : "");
 	printf("  /* zText[] encodes %d bytes of keywords in %d bytes */\n",
 	       totalLen + nKeyword, nChar+1 );
 	for(i=j=k=0; i<nKeyword; i++){
@@ -413,7 +393,7 @@ main (int argc, char **argv)
 	if( j>0 ){
 		printf("%*s */\n", 74-j, "");
 	}
-	printf("  static const char zText[%d] = {\n", nChar);
+	printf("  static const char %szText[%d] = {\n", prefix ? prefix : "", nChar);
 	zText[nChar] = 0;
 	for(i=j=0; i<k; i++){
 		if( j==0 ){
@@ -433,7 +413,7 @@ main (int argc, char **argv)
 	if( j>0 ) printf("\n");
 	printf("  };\n");
 
-	printf("  static const unsigned int aHash[%d] = {\n", bestSize);
+	printf("  static const unsigned int %saHash[%d] = {\n", prefix ? prefix : "", bestSize);
 	for(i=j=0; i<bestSize; i++){
 		if( j==0 ) printf("    ");
 		printf(" %d,", aHash[i]);
@@ -445,7 +425,7 @@ main (int argc, char **argv)
 	}
 	printf("%s  };\n", j==0 ? "" : "\n");    
 
-	printf("  static const unsigned int aNext[%d] = {\n", nKeyword);
+	printf("  static const unsigned int %saNext[%d] = {\n", prefix ? prefix : "", nKeyword);
 	for(i=j=0; i<nKeyword; i++){
 		if( j==0 ) printf("    ");
 		printf(" %3d,", aKeywordTable[i].iNext);
@@ -457,7 +437,7 @@ main (int argc, char **argv)
 	}
 	printf("%s  };\n", j==0 ? "" : "\n");    
 
-	printf("  static const unsigned char aLen[%d] = {\n", nKeyword);
+	printf("  static const unsigned char %saLen[%d] = {\n", prefix ? prefix : "", nKeyword);
 	for(i=j=0; i<nKeyword; i++){
 		if( j==0 ) printf("    ");
 		printf(" %3d,", aKeywordTable[i].len+aKeywordTable[i].prefix);
@@ -469,7 +449,7 @@ main (int argc, char **argv)
 	}
 	printf("%s  };\n", j==0 ? "" : "\n");    
 
-	printf("  static const unsigned short int aOffset[%d] = {\n", nKeyword);
+	printf("  static const unsigned short int %saOffset[%d] = {\n", prefix ? prefix : "", nKeyword);
 	for(i=j=0; i<nKeyword; i++){
 		if( j==0 ) printf("    ");
 		printf(" %3d,", aKeywordTable[i].offset);
@@ -487,26 +467,30 @@ main (int argc, char **argv)
 	printf("  h = ((charMap(z[0])*4) ^\n"
 	       "      (charMap(z[n-1])*3) ^\n"
 	       "      n) %% %d;\n", bestSize);
-	printf("  for(i=((int)aHash[h])-1; i>=0; i=((int)aNext[i])-1){\n");
-	printf("    if( aLen[i]==n &&"
-	       " casecmp(&zText[aOffset[i]],z,n)==0 ){\n");
+	printf("  for(i=((int)%saHash[h])-1; i>=0; i=((int)%saNext[i])-1){\n",
+	       prefix ? prefix : "", prefix ? prefix : "");
+	printf("    if( %saLen[i]==n &&"
+	       " casecmp(&%szText[%saOffset[i]],z,n)==0 ){\n",
+	       prefix ? prefix : "",
+	       prefix ? prefix : "",
+	       prefix ? prefix : "");
 	printf("      return 1;\n");
 	printf("    }\n");
 	printf("  }\n");
 	printf("  return 0;\n");
 	printf("}\n");
-	printf("\nstatic gboolean\nis_keyword (const char *z)\n{\n");
-	printf("\treturn keywordCode(z, strlen (z));\n");
-	printf("}\n");
+	printf("\nstatic gboolean\n%sis_keyword (const char *z)\n{\n", prefix ? prefix : "");
+	printf("\treturn %skeywordCode(z, strlen (z));\n", prefix ? prefix : "");
+	printf("}\n\n");
 
 #ifdef TEST_RESERVED_WORDS
-	printf("\nstatic void\ntest_keywords (void)\n{\n");
+	printf("\nstatic void\n%stest_keywords (void)\n{\n", prefix ? prefix : "");
 	printf("\tint i;\n");
 	printf("\tfor (i = 0; i < %d; i++) {\n", nKeyword);
-	printf("\t\tif (! is_keyword (keywords[i]))\n");
-	printf("\t\t\tprintf (\"KEYWORK %%s ignored!\\n\", keywords[i]);\n");
+	printf("\t\tif (! %sis_keyword (%skeywords[i]))\n", prefix ? prefix : "", prefix ? prefix : "");
+	printf("\t\t\tprintf (\"KEYWORK %%s ignored!\\n\", %skeywords[i]);\n", prefix ? prefix : "");
 	printf("\t}\n");
-	printf("}\n");
+	printf("}\n\n");
 #endif
 
 

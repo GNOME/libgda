@@ -461,10 +461,6 @@
 		colons, commas or spaces)</para>
 	    </listitem>
 	    <listitem>
-              <para>GDA_CONNECTION_COMMANDS_SHOW: if set, then all the commands issued to a server will be
-		displayed on STDOUT</para>
-	    </listitem>
-	    <listitem>
               <para>GDA_PROVIDERS_ROOT_DIR: if set, must point to the directory where the providers files are (providers
 	      files are shared libraries)</para>
 	    </listitem>

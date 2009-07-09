@@ -48,6 +48,7 @@ typedef struct {
 	/* Backend version (to which we're connected). */
 	gchar            *version;
 	unsigned long     version_long;
+	gchar            *short_version;
 
 	/* specifies how case sensitiveness is */
 	gboolean          tables_case_sensitive;

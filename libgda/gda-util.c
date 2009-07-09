@@ -30,6 +30,7 @@
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-util.h>
+#include <libgda/gda-server-provider.h>
 #include <libgda/gda-column.h>
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
@@ -39,8 +40,18 @@
 
 #include <libgda/binreloc/gda-binreloc.h>
 
+/* we don't want to duplicate the symbols in <libgda/sqlite/keywords_hash.h>, so simply
+ * declare them as external
+ */
+extern const unsigned char UpperToLower[];
+#define charMap(X) UpperToLower[(unsigned char)(X)]
+extern int casecmp(const char *zLeft, const char *zRight, int N);
+#include "keywords_hash.c" /* this one is dynamically generated */
+
 extern gchar *gda_lang_locale;
 extern GdaAttributesManager *gda_holder_attributes_manager;
+
+#define PROV_CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
 
 /**
  * gda_g_type_to_string
@@ -1529,6 +1540,92 @@ gda_sql_identifier_split (const gchar *id)
 		return (gchar **) g_array_free (array, FALSE);
 	else
 		return NULL;
+}
+
+static gboolean _sql_identifier_needs_quotes (const gchar *str);
+
+
+/**
+ * gda_sql_identifier_quote
+ * @id: an SQL identifier
+ * @cnc: a #GdaConnection object, or %NULL
+ * @prov: a #GdaServerProvider object, or %NULL
+ * @meta_store_convention: set to %TRUE if @id respects the #GdaMetaStore
+ *                         representation of SQL identifiers, or if it is a user input
+ * @force_quotes: set to %TRUE to force the returned string to be quoted
+ *
+ * Use this function for any SQL identifier to make sure it is correctly formatted
+ * to be used with @cnc (if @cnc is %NULL, then the standard SQL quoting rules will be applied).
+ *
+ * If @id already has quotes, then this function returns a copy of @id, except that the quotes may be
+ * replaced by database specific characters (such as the backquote for MySQL).
+ *
+ * If @id has no quotes, and if none are requited, then this function returns a copy if @id. The criteria to
+ * determine if @id needs quotes depends on the database provider associated to @cnc, and if @cnc is %NULL, then
+ * in all the following cases quotes are required:
+ * <itemizedlist>
+ *  <listitem><para>If @id's 1st character is a digit</para></listitem>
+ *  <listitem><para>If @id contains other characters than digits, letters and the '_', '$' and '#'</para></listitem>
+ *  <listitem><para>If @id is an SQL reserved keyword</para></listitem>
+ * </itemizedlist>
+ *
+ * If @force_quotes is %TRUE, then the this function always returns a quoted SQL identifier.
+ *
+ * Returns: the possibly quoted representation of @id as a new string, or %NULL if @id is in a wrong format
+ *
+ * Since: 4.0.3
+ */
+gchar *
+gda_sql_identifier_quote (const gchar *id, GdaConnection *cnc, GdaServerProvider *prov,
+			  gboolean meta_store_convention, gboolean force_quotes)
+{
+	g_return_val_if_fail (id && *id, NULL);
+	if (cnc)
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	if (prov)
+		g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (prov), NULL);
+	if (cnc && prov)
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == prov, NULL);
+
+	if (prov && PROV_CLASS (prov)->identifier_quote) {
+		return PROV_CLASS (prov)->identifier_quote (prov, cnc, id,
+							    meta_store_convention, force_quotes);
+	}
+	else {
+		/* default SQL standard */
+		if (*id == '"') {
+			/* there are already some quotes */
+			return g_strdup (id);
+		}
+		if (is_keyword (id) || _sql_identifier_needs_quotes (id) || force_quotes)
+			return gda_sql_identifier_add_quotes (id);
+		
+		/* nothing to do */
+		return g_strdup (id);
+	}
+}
+
+static gboolean
+_sql_identifier_needs_quotes (const gchar *str)
+{
+	const gchar *ptr;
+
+	g_return_val_if_fail (str, FALSE);
+	for (ptr = str; *ptr; ptr++) {
+		/* quote if 1st char is a number */
+		if ((*ptr <= '9') && (*ptr >= '0')) {
+			if (ptr == str)
+				return TRUE;
+			continue;
+		}
+		if (((*ptr >= 'A') && (*ptr <= 'Z')) ||
+		    ((*ptr >= 'a') && (*ptr <= 'z')))
+			continue;
+
+		if ((*ptr != '$') && (*ptr != '_') && (*ptr != '#'))
+			return TRUE;
+	}
+	return FALSE;
 }
 
 /*

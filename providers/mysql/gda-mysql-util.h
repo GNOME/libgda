@@ -28,22 +28,15 @@
 
 G_BEGIN_DECLS
 
-GdaConnectionEvent *
-_gda_mysql_make_error               (GdaConnection  *cnc,
-				     MYSQL          *mysql,
-				     MYSQL_STMT     *mysql_stmt,
-				     GError        **error);
-/* int */
-/* _gda_mysql_real_query_wrap          (GdaConnection  *cnc, */
-/* 				     MYSQL          *mysql, */
-/* 				     const char     *query, */
-/* 				     unsigned long   length); */
-/* int */
-/* _gda_mysql_get_connection_type_list (GdaConnection        *cnc, */
-/* 				     MysqlConnectionData  *cdata); */
-/* GType */
-/* _gda_mysql_type_oid_to_gda          (MysqlConnectionData    *cdata, */
-/* 				     enum enum_field_types   mysql_type); */
+GdaConnectionEvent          * _gda_mysql_make_error (GdaConnection  *cnc,
+						     MYSQL          *mysql,
+						     MYSQL_STMT     *mysql_stmt,
+						     GError        **error);
+#ifdef GDA_DEBUG
+void                          _gda_mysql_test_keywords (void);
+#endif
+GdaSqlReservedKeywordsFunc    _gda_mysql_get_reserved_keyword_func (MysqlConnectionData *cdata);
+
 
 G_END_DECLS
 

@@ -10,6 +10,18 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) $(MYSQL_CFLAGS) 
 
+mkkeywordhash$(EXEEXT_FOR_BUILD): $(top_srcdir)/libgda/sqlite/mkkeywordhash.c
+	$(CC_FOR_BUILD) -o mkkeywordhash$(EXEEXT_FOR_BUILD) $(GDA_DEBUG_FLAGS) $<
+
+keyword_files=keywords_V50.list keywords_V51.list keywords_V54.list keywords_V60.list
+pkeyword_files=$(addprefix $(top_srcdir)/providers/mysql/,$(keyword_files))
+
+keywords_hash.c: mkkeywordhash$(EXEEXT_FOR_BUILD) $(pkeyword_files)
+	./mkkeywordhash$(EXEEXT_FOR_BUILD) $(top_srcdir)/providers/mysql/keywords_V50.list V50 > keywords_hash.c
+	./mkkeywordhash$(EXEEXT_FOR_BUILD) $(top_srcdir)/providers/mysql/keywords_V51.list V51 >> keywords_hash.c
+	./mkkeywordhash$(EXEEXT_FOR_BUILD) $(top_srcdir)/providers/mysql/keywords_V54.list V54 >> keywords_hash.c
+	./mkkeywordhash$(EXEEXT_FOR_BUILD) $(top_srcdir)/providers/mysql/keywords_V60.list V60 >> keywords_hash.c
+
 # parser generation
 parser.c parser.h: parser.y $(top_builddir)/libgda/sql-parser/lemon$(EXEEXT_FOR_BUILD)
 	- $(top_builddir)/libgda/sql-parser/lemon$(EXEEXT_FOR_BUILD) -q -d $(srcdir)/parser.y $(top_srcdir)/libgda/sql-parser/lempar.c
@@ -20,7 +32,7 @@ gen_def$(EXEEXT_FOR_BUILD): gen_def.c
 mysql_token_types.h: gen_def$(EXEEXT_FOR_BUILD) parser.h
 	./gen_def$(EXEEXT_FOR_BUILD) > mysql_token_types.h
 
-$(OBJECTS) $(libgda_mysql_la_OBJECTS): mysql_token_types.h
+$(OBJECTS) $(libgda_mysql_la_OBJECTS): mysql_token_types.h keywords_hash.c
 
 libgda_mysql_la_SOURCES = \
 	gda-mysql-blob-op.c \
@@ -74,7 +86,8 @@ xml_DATA = $(xml_in_files:.xml.in=.xml)
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgda-mysql-4.0.pc
 
-EXTRA_DIST = $(xml_in_files) libgda-mysql-4.0.pc.in parser.y gen_def.c
+EXTRA_DIST = $(xml_in_files) libgda-mysql-4.0.pc.in parser.y gen_def.c $(keyword_files)
 DISTCLEANFILES = $(xml_DATA)
 
-CLEANFILES = parser.h parser.c parser.out mysql_token_types.h gen_def$(EXEEXT_FOR_BUILD)
+CLEANFILES = parser.h parser.c parser.out mysql_token_types.h gen_def$(EXEEXT_FOR_BUILD) \
+	mkkeywordhash$(EXEEXT_FOR_BUILD) keywords_hash.c
