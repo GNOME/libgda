@@ -30,6 +30,7 @@
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-util.h>
+#include <libgda/gda-server-provider.h>
 #include <libgda/gda-column.h>
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
@@ -39,8 +40,18 @@
 
 #include <libgda/binreloc/gda-binreloc.h>
 
+/* we don't want to duplicate the symbols in <libgda/sqlite/keywords_hash.h>, so simply
+ * declare them as external
+ */
+extern const unsigned char UpperToLower[];
+#define charMap(X) UpperToLower[(unsigned char)(X)]
+extern int casecmp(const char *zLeft, const char *zRight, int N);
+#include "keywords_hash.c" /* this one is dynamically generated */
+
 extern gchar *gda_lang_locale;
 extern GdaAttributesManager *gda_holder_attributes_manager;
+
+#define PROV_CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
 
 /**
  * gda_g_type_to_string
@@ -767,6 +778,25 @@ dml_statements_check_select_structure (GdaConnection *cnc, GdaSqlStatement *sel_
 	return TRUE;
 }
 
+static gchar *
+add_quotes (const gchar *ident)
+{
+	gchar *str;
+
+	str = g_strdup (ident);
+	if (*ident == '"')
+		return str;
+	gda_sql_identifier_remove_quotes (str);
+	if (gda_sql_identifier_needs_quotes (str)) {
+		gchar *tmp;
+		tmp = gda_sql_identifier_add_quotes (str);
+		g_free (str);
+		return tmp;
+	}
+	else
+		return str;
+}
+
 /**
  * gda_compute_unique_table_row_condition
  * @stsel: a #GdaSqlSelectStatement
@@ -829,6 +859,7 @@ gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTab
 				GdaSqlOperation *op;
 				GdaSqlExpr *opexpr;
 				GdaSqlParamSpec *pspec;
+				gchar *str;
 
 				/* equal condition */
 				if (and_cond) {
@@ -844,7 +875,9 @@ gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTab
 				op->operator_type = GDA_SQL_OPERATOR_TYPE_EQ;
 				/* left operand */
 				opexpr = gda_sql_expr_new (GDA_SQL_ANY_PART (op));
-				g_value_set_string (opexpr->value = gda_value_new (G_TYPE_STRING), tcol->column_name);
+				str = add_quotes (tcol->column_name);
+				g_value_take_string (opexpr->value = gda_value_new (G_TYPE_STRING), str);
+
 				op->operands = g_slist_append (op->operands, opexpr);
 
 				/* right operand */
@@ -905,6 +938,8 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
         GdaSqlStatement *sql_dst = NULL;
         GdaSqlStatementDelete *dst = NULL;
 
+	gchar *tmp;
+
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (GDA_IS_STATEMENT (select_stmt), FALSE);
 	g_return_val_if_fail (gda_statement_get_statement_type (select_stmt) == GDA_SQL_STATEMENT_SELECT, FALSE);
@@ -930,14 +965,15 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 	stsel = (GdaSqlStatementSelect*) sel_struct->contents;
 	target = (GdaSqlSelectTarget*) stsel->from->targets->data;
 	
-	/* actual statement structure's computation */        
+	/* actual statement structure's computation */
+	tmp = add_quotes (target->table_name);
 	if (insert_stmt) {
 		sql_ist = gda_sql_statement_new (GDA_SQL_STATEMENT_INSERT);
 		ist = (GdaSqlStatementInsert*) sql_ist->contents;
 		g_assert (GDA_SQL_ANY_PART (ist)->type == GDA_SQL_ANY_STMT_INSERT);
 
 		ist->table = gda_sql_table_new (GDA_SQL_ANY_PART (ist));
-		ist->table->table_name = g_strdup ((gchar *) target->table_name);
+		ist->table->table_name = g_strdup (tmp);
 	}
 	
 	if (update_stmt) {
@@ -946,7 +982,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 		g_assert (GDA_SQL_ANY_PART (ust)->type == GDA_SQL_ANY_STMT_UPDATE);
 
 		ust->table = gda_sql_table_new (GDA_SQL_ANY_PART (ust));
-		ust->table->table_name = g_strdup ((gchar *) target->table_name);
+		ust->table->table_name = g_strdup (tmp);
 		ust->cond = gda_compute_unique_table_row_condition (stsel, 
 								    GDA_META_TABLE (target->validity_meta_object),
 								    require_pk, error);
@@ -963,7 +999,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 		g_assert (GDA_SQL_ANY_PART (dst)->type == GDA_SQL_ANY_STMT_DELETE);
 
 		dst->table = gda_sql_table_new (GDA_SQL_ANY_PART (dst));
-		dst->table->table_name = g_strdup ((gchar *) target->table_name);
+		dst->table->table_name = g_strdup (tmp);
 		dst->cond = gda_compute_unique_table_row_condition (stsel, 
 								    GDA_META_TABLE (target->validity_meta_object),
 								    require_pk, error);
@@ -973,6 +1009,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 		}
 		GDA_SQL_ANY_PART (dst->cond)->parent = GDA_SQL_ANY_PART (dst);
 	}
+	g_free (tmp);
 
 	GSList *expr_list;
 	gint colindex;
@@ -991,18 +1028,22 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 		if (g_hash_table_lookup (fields_hash, selfield->field_name))
 			continue;
 		g_hash_table_insert (fields_hash, selfield->field_name, GINT_TO_POINTER (1));
+
+		gchar *str;
+		str = add_quotes (selfield->field_name);
 		if (insert_stmt) {
 			GdaSqlField *field;
 			field = gda_sql_field_new (GDA_SQL_ANY_PART (ist));
-			field->field_name = g_strdup (selfield->field_name);
+			field->field_name = g_strdup (str);
 			ist->fields_list = g_slist_append (ist->fields_list, field);
 		}
 		if (update_stmt) {
 			GdaSqlField *field;
 			field = gda_sql_field_new (GDA_SQL_ANY_PART (ust));
-			field->field_name = g_strdup (selfield->field_name);
+			field->field_name = g_strdup (str);
 			ust->fields_list = g_slist_append (ust->fields_list, field);
 		}
+		g_free (str);
 
 		/* parameter for the inserted value */
 		GdaSqlExpr *expr;
@@ -1109,7 +1150,8 @@ gda_compute_select_statement_from_update (GdaStatement *update_stmt, GError **er
 	target = gda_sql_select_target_new (GDA_SQL_ANY_PART (sst->from));
 	sst->from->targets = g_slist_prepend (NULL, target);
 	target->expr = gda_sql_expr_new (GDA_SQL_ANY_PART (target));
-	g_value_set_string ((target->expr->value = gda_value_new (G_TYPE_STRING)), ust->table->table_name);
+	g_value_set_string ((target->expr->value = gda_value_new (G_TYPE_STRING)),
+			    ust->table->table_name);
 
 	/* WHERE */
 	sst->where_cond = gda_sql_expr_copy (ust->cond);
@@ -1529,6 +1571,92 @@ gda_sql_identifier_split (const gchar *id)
 		return (gchar **) g_array_free (array, FALSE);
 	else
 		return NULL;
+}
+
+static gboolean _sql_identifier_needs_quotes (const gchar *str);
+
+
+/**
+ * gda_sql_identifier_quote
+ * @id: an SQL identifier
+ * @cnc: a #GdaConnection object, or %NULL
+ * @prov: a #GdaServerProvider object, or %NULL
+ * @meta_store_convention: set to %TRUE if @id respects the #GdaMetaStore
+ *                         representation of SQL identifiers, or if it is a user input
+ * @force_quotes: set to %TRUE to force the returned string to be quoted
+ *
+ * Use this function for any SQL identifier to make sure it is correctly formatted
+ * to be used with @cnc (if @cnc is %NULL, then the standard SQL quoting rules will be applied).
+ *
+ * If @id already has quotes, then this function returns a copy of @id, except that the quotes may be
+ * replaced by database specific characters (such as the backquote for MySQL).
+ *
+ * If @id has no quotes, and if none are requited, then this function returns a copy if @id. The criteria to
+ * determine if @id needs quotes depends on the database provider associated to @cnc, and if @cnc is %NULL, then
+ * in all the following cases quotes are required:
+ * <itemizedlist>
+ *  <listitem><para>If @id's 1st character is a digit</para></listitem>
+ *  <listitem><para>If @id contains other characters than digits, letters and the '_', '$' and '#'</para></listitem>
+ *  <listitem><para>If @id is an SQL reserved keyword</para></listitem>
+ * </itemizedlist>
+ *
+ * If @force_quotes is %TRUE, then the this function always returns a quoted SQL identifier.
+ *
+ * Returns: the possibly quoted representation of @id as a new string, or %NULL if @id is in a wrong format
+ *
+ * Since: 4.0.3
+ */
+gchar *
+gda_sql_identifier_quote (const gchar *id, GdaConnection *cnc, GdaServerProvider *prov,
+			  gboolean meta_store_convention, gboolean force_quotes)
+{
+	g_return_val_if_fail (id && *id, NULL);
+	if (cnc)
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	if (prov)
+		g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (prov), NULL);
+	if (cnc && prov)
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == prov, NULL);
+
+	if (prov && PROV_CLASS (prov)->identifier_quote) {
+		return PROV_CLASS (prov)->identifier_quote (prov, cnc, id,
+							    meta_store_convention, force_quotes);
+	}
+	else {
+		/* default SQL standard */
+		if (*id == '"') {
+			/* there are already some quotes */
+			return g_strdup (id);
+		}
+		if (is_keyword (id) || _sql_identifier_needs_quotes (id) || force_quotes)
+			return gda_sql_identifier_add_quotes (id);
+		
+		/* nothing to do */
+		return g_strdup (id);
+	}
+}
+
+static gboolean
+_sql_identifier_needs_quotes (const gchar *str)
+{
+	const gchar *ptr;
+
+	g_return_val_if_fail (str, FALSE);
+	for (ptr = str; *ptr; ptr++) {
+		/* quote if 1st char is a number */
+		if ((*ptr <= '9') && (*ptr >= '0')) {
+			if (ptr == str)
+				return TRUE;
+			continue;
+		}
+		if (((*ptr >= 'A') && (*ptr <= 'Z')) ||
+		    ((*ptr >= 'a') && (*ptr <= 'z')))
+			continue;
+
+		if ((*ptr != '$') && (*ptr != '_') && (*ptr != '#'))
+			return TRUE;
+	}
+	return FALSE;
 }
 
 /*

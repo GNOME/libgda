@@ -27,6 +27,13 @@
 #include <libgda/gda-enums.h>
 #include <libgda/gda-data-model.h>
 #include <libgda/sql-parser/gda-statement-struct-util.h>
+
+/* we don't want to duplicate the symbols in <libgda/sqlite/keywords_hash.h>, so simply
+ * declare them as external
+ */
+extern const unsigned char UpperToLower[];
+#define charMap(X) UpperToLower[(unsigned char)(X)]
+extern int casecmp(const char *zLeft, const char *zRight, int N);
 #include "keywords_hash.c" /* this one is dynamically generated */
 
 /*

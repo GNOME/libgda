@@ -33,6 +33,9 @@
 #include <libgda/gda-set.h>
 #include <libgda/gda-holder.h>
 
+#include <libgda/sqlite/keywords_hash.h>
+#include "keywords_hash.c" /* this one is dynamically generated */
+
 /*
  * predefined statements' IDs
  */

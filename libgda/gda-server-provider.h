@@ -294,8 +294,12 @@ struct _GdaServerProviderClass {
 	/* distributed transaction */
 	GdaServerProviderXa       *xa_funcs; /* it is a pointer! => set to %NULL if unsupported by provider */
 
+	/* SQL identifiers quoting */
+	gchar                  *(* identifier_quote)    (GdaServerProvider *provider, GdaConnection *cnc,
+							 const gchar *id,
+							 gboolean meta_store_convention, gboolean force_quotes);
+
 	/* Padding for future expansion */
-	void                    (*_gda_reserved1)        (void);
 	void                    (*_gda_reserved2)        (void);
 	void                    (*_gda_reserved3)        (void);
 	void                    (*_gda_reserved4)        (void);

@@ -1108,6 +1108,7 @@ gda_sql_parser_parse_string
 gda_sql_parser_parse_string_as_batch
 gda_sql_parser_parse_file_as_batch
 <SUBSECTION>
+gda_sql_identifier_quote
 gda_sql_identifier_needs_quotes
 gda_sql_identifier_add_quotes
 gda_sql_identifier_remove_quotes

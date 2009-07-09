@@ -58,6 +58,7 @@ typedef struct {
         /* Version of the backend to which we are connected */
         gchar              *version;
         gfloat              version_float;
+        gchar              *short_version;
 
         /* Internal data types not returned */
         gchar              *avoid_types;

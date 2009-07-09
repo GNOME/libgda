@@ -30,8 +30,8 @@ gda-marshal.c: gda-marshal.list $(GLIB_GENMARSHAL)
 mkkeywordhash$(EXEEXT_FOR_BUILD): $(top_srcdir)/libgda/sqlite/mkkeywordhash.c
 	$(CC_FOR_BUILD) -g -o mkkeywordhash$(EXEEXT_FOR_BUILD) $(GDA_DEBUG_FLAGS) $<
 
-keywords_hash.c: mkkeywordhash$(EXEEXT_FOR_BUILD) keywords.list
-	./mkkeywordhash$(EXEEXT_FOR_BUILD) keywords.list > keywords_hash.c
+keywords_hash.c: mkkeywordhash$(EXEEXT_FOR_BUILD) $(top_srcdir)/libgda/keywords.list
+	./mkkeywordhash$(EXEEXT_FOR_BUILD) $(top_srcdir)/libgda/keywords.list > keywords_hash.c
 
 gda_headers = \
 	gda-attributes-manager.h \

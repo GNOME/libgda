@@ -1,0 +1,13 @@
+#
+# List of reserved keywords
+#
+# one or more per line
+# last line must be empty
+# comments start with a '#' at the beginning of the line
+# lower or upper case does not matter
+#
+
+SELECT
+INSERT
+UPDATE
+DELETE

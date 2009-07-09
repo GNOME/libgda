@@ -34,6 +34,11 @@ PGresult           *_gda_postgres_PQexec_wrap              (GdaConnection *cnc, 
 int                 _gda_postgres_get_connection_type_list (GdaConnection *cnc, PostgresConnectionData *cdata);
 GType               _gda_postgres_type_oid_to_gda          (PostgresConnectionData *cdata, Oid postgres_type);
 
+#ifdef GDA_DEBUG
+void                _gda_postgres_test_keywords (void);
+#endif
+GdaSqlReservedKeywordsFunc _gda_postgres_get_reserved_keyword_func (PostgresConnectionData *cdata);
+
 G_END_DECLS
 
 #endif

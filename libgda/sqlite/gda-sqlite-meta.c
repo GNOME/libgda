@@ -32,6 +32,8 @@
 #include <libgda/gda-connection-private.h>
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-set.h>
+
+#include <libgda/sqlite/keywords_hash.h>
 #include "keywords_hash.c" /* this one is dynamically generated */
 
 static gboolean append_a_row (GdaDataModel *to_model, GError **error, gint nb, ...);
