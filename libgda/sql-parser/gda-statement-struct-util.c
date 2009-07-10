@@ -268,12 +268,17 @@ _string_is_identifier (const gchar *str)
 
 	if (!str || !(*str)) 
 		return FALSE;
-	for (ptr = *str == '"' ? str + 1 : str; 
-	     IdChar(*ptr) || (*ptr == '*') || (*ptr == '.') || ((*ptr == '"') && ptr[1] == 0); 
+	if ((*str == '"') || (*str == '`'))
+		ptr = str + 1;
+	else
+		ptr = str;
+	for (; 
+	     IdChar(*ptr) || (*ptr == '*') || (*ptr == '.') || (((*ptr == '"') || (*ptr == '`')) && ptr[1] == 0); 
 	     ptr++);
 	if (*ptr) 
 		return FALSE;
-	if ((*str == '"') && (ptr[-1] == '"'))
+	if (((*str == '"') && (ptr[-1] == '"')) ||
+	    ((*str == '`') && (ptr[-1] == '`')))
 		return TRUE;
 
 	/* @str is composed only of character that can be used in an identifier */

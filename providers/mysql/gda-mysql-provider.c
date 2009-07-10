@@ -1168,132 +1168,10 @@ gda_mysql_provider_create_parser (GdaServerProvider  *provider,
 					      NULL);
 }
 
-static gchar *
-mysql_render_select_target (GdaSqlSelectTarget *target, GdaSqlRenderingContext *context, GError **error)
-{
-	GString *string;
-	gchar *str;
-
-	g_return_val_if_fail (target, NULL);
-	g_return_val_if_fail (GDA_SQL_ANY_PART (target)->type == GDA_SQL_ANY_SQL_SELECT_TARGET, NULL);
-
-	/* can't have: target->expr == NULL */
-	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (target), error)) return NULL;
-
-	if (! target->expr->value || (G_VALUE_TYPE (target->expr->value) != G_TYPE_STRING)) {
-		str = context->render_expr (target->expr, context, NULL, NULL, error);
-		if (!str)
-			return NULL;
-		string = g_string_new (str);
-	}
-	else {
-		gchar **ids_array;
-		ids_array = gda_sql_identifier_split (g_value_get_string (target->expr->value));
-		if (!ids_array) {
-			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-				     "%s", _("Malformed expression in select target"));
-			return NULL;
-		}
-
-		gint i;
-		string = g_string_new ("");
-		for (i = 0; ids_array [i]; i++) {
-			if (*(ids_array [i]) == '"')
-				gda_sql_identifier_remove_quotes (ids_array [i]);
-			if (i != 0)
-				g_string_append_c (string, '.');
-			g_string_append (string, ids_array [i]);
-		}
-		g_strfreev (ids_array);
-	}
-
-	if (target->as)
-		g_string_append_printf (string, " AS %s", target->as);
-
-	str = string->str;
-	g_string_free (string, FALSE);
-	return str;
-}
-
-static gchar *
-mysql_render_table (GdaSqlTable *table, GdaSqlRenderingContext *context, GError **error)
-{
-	g_return_val_if_fail (table, NULL);
-	g_return_val_if_fail (GDA_SQL_ANY_PART (table)->type == GDA_SQL_ANY_SQL_TABLE, NULL);
-
-	/* can't have: table->table_name not a valid SQL identifier */
-	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (table), error)) return NULL;
-
-	gchar **ids_array;
-	ids_array = gda_sql_identifier_split (table->table_name);
-	if (!ids_array) {
-		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     "%s", _("Malformed table name"));
-		return NULL;
-	}
-	
-	gint i;
-	GString *string;
-	string = g_string_new ("");
-	for (i = 0; ids_array [i]; i++) {
-		if (*(ids_array [i]) == '"') {
-			gchar *ptr;
-			for (ptr = ids_array [i]; *ptr; ptr++) {
-				if (*ptr == '"')
-					*ptr = '`';
-			}
-		}
-		if (i != 0)
-			g_string_append_c (string, '.');
-		g_string_append (string, ids_array [i]);
-	}
-	g_strfreev (ids_array);
-	return g_string_free (string, FALSE);
-}
-
-static gchar *
-mysql_render_field (GdaSqlField *field, GdaSqlRenderingContext *context, GError **error)
-{
-	g_return_val_if_fail (field, NULL);
-        g_return_val_if_fail (GDA_SQL_ANY_PART (field)->type == GDA_SQL_ANY_SQL_FIELD, NULL);
-
-        /* can't have: field->field_name not a valid SQL identifier */
-        if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (field), error)) return NULL;
-
-	gchar **ids_array;
-	ids_array = gda_sql_identifier_split (field->field_name);
-	if (!ids_array) {
-		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-			     "%s", _("Malformed field name"));
-		return NULL;
-	}
-	
-	gint i;
-	GString *string;
-	string = g_string_new ("");
-	for (i = 0; ids_array [i]; i++) {
-		if (*(ids_array [i]) == '"') {
-			gchar *ptr;
-			for (ptr = ids_array [i]; *ptr; ptr++) {
-				if (*ptr == '"')
-					*ptr = '`';
-			}
-		}
-		if (i != 0)
-			g_string_append_c (string, '.');
-		g_string_append (string, ids_array [i]);
-	}
-	g_strfreev (ids_array);
-	g_print ("%s ==> %s\n", field->field_name, string->str);
-	return g_string_free (string, FALSE);
-}
-
 /*
  * GdaStatement to SQL request
  * 
  * This method renders a #GdaStatement into its SQL representation.
- *
- * It is specialized to remove the double quotes around table names.
  */
 static gchar *
 gda_mysql_provider_statement_to_sql (GdaServerProvider    *provider,
@@ -1316,9 +1194,10 @@ gda_mysql_provider_statement_to_sql (GdaServerProvider    *provider,
         memset (&context, 0, sizeof (context));
         context.params = params;
         context.flags = flags;
-	/* replace double quotes around table name with backquotes */
-	context.render_select_target = (GdaSqlRenderingFunc) mysql_render_select_target; 
-	context.render_table = (GdaSqlRenderingFunc) mysql_render_table; 
+	if (cnc) {
+		context.cnc = cnc;
+		context.provider = gda_connection_get_provider (cnc);
+	}
 
         str = gda_statement_to_sql_real (stmt, &context, error);
 
@@ -1371,7 +1250,6 @@ real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stm
 		return FALSE;
 	}
 
-	g_print ("PREPARE: %s\n", sql);
 	if (mysql_stmt_prepare (mysql_stmt, sql, strlen (sql))) {
 		_gda_mysql_make_error (cdata->cnc, NULL, mysql_stmt, error);
 		mysql_stmt_close (mysql_stmt);

@@ -3053,7 +3053,7 @@ compute_insert_select_params_mapping (GdaSet *sel_params, GdaSet *ins_values, Gd
 			goto onerror;
 		}
 		g_assert (cdata.colid);
-		if (*(cdata.colid) == '"')
+		if ((*(cdata.colid) == '"') || (*(cdata.colid) == '`'))
 			gda_sql_identifier_remove_quotes ((gchar*) cdata.colid);
 		/*g_print ("SEL param '%s' <=> column named '%s'\n", cdata.hid, cdata.colid);*/
 		

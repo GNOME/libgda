@@ -3913,14 +3913,8 @@ get_table_value_at_cell (GdaConnection *cnc, GError **error, MainData *data,
 	gchar *sql;
 	gchar *rtable, *rcolumn;
 	
-	if (gda_sql_identifier_needs_quotes (table))
-		rtable = gda_sql_identifier_add_quotes (table);
-	else
-		rtable = g_strdup (table);
-	if (gda_sql_identifier_needs_quotes (column))
-		rcolumn = gda_sql_identifier_add_quotes (column);
-	else
-		rcolumn = g_strdup (column);
+	rtable = gda_sql_identifier_quote (table, cnc, NULL, FALSE, FALSE);
+	rcolumn = gda_sql_identifier_quote (column, cnc, NULL, FALSE, FALSE);
 	sql = g_strdup_printf ("SELECT %s FROM %s WHERE %s", rcolumn, rtable, row_cond);
 	g_free (rtable);
 	g_free (rcolumn);
@@ -4442,14 +4436,8 @@ extra_command_lo_update (SqlConsole *console, GdaConnection *cnc, const gchar **
 	gchar *sql;
 	gchar *rtable, *rblob_col;
 	
-	if (gda_sql_identifier_needs_quotes (table))
-		rtable = gda_sql_identifier_add_quotes (table);
-	else
-		rtable = g_strdup (table);
-	if (gda_sql_identifier_needs_quotes (blob_col))
-		rblob_col = gda_sql_identifier_add_quotes (blob_col);
-	else
-		rblob_col = g_strdup (blob_col);
+	rtable = gda_sql_identifier_quote (table, cnc, NULL, FALSE, FALSE);
+	rblob_col = gda_sql_identifier_quote (blob_col, cnc, NULL, FALSE, FALSE);
 	sql = g_strdup_printf ("UPDATE %s SET %s = ##blob::GdaBlob WHERE %s", rtable, rblob_col, row_cond);
 	g_free (rtable);
 	g_free (rblob_col);

@@ -778,27 +778,9 @@ dml_statements_check_select_structure (GdaConnection *cnc, GdaSqlStatement *sel_
 	return TRUE;
 }
 
-static gchar *
-add_quotes (const gchar *ident)
-{
-	gchar *str;
-
-	str = g_strdup (ident);
-	if (*ident == '"')
-		return str;
-	gda_sql_identifier_remove_quotes (str);
-	if (gda_sql_identifier_needs_quotes (str)) {
-		gchar *tmp;
-		tmp = gda_sql_identifier_add_quotes (str);
-		g_free (str);
-		return tmp;
-	}
-	else
-		return str;
-}
-
 /**
- * gda_compute_unique_table_row_condition
+ * gda_compute_unique_table_row_condition_with_cnc
+ * @cnc: a #GdaConnection, or %NULL
  * @stsel: a #GdaSqlSelectStatement
  * @mtable: a #GdaMetaTable
  * @require_pk: set to TRUE if a primary key ir required
@@ -808,13 +790,18 @@ add_quotes (const gchar *ident)
  * or DELETE statement when a row from the result of the @stsel statement has to be modified.
  *
  * Returns: a new #GdaSqlExpr, or %NULL if an error occurred.
+ *
+ * Since: 4.0.3
  */
 GdaSqlExpr*
-gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTable *mtable, gboolean require_pk, GError **error)
+gda_compute_unique_table_row_condition_with_cnc (GdaConnection *cnc, GdaSqlStatementSelect *stsel,
+						 GdaMetaTable *mtable, gboolean require_pk, GError **error)
 {
 	gint i;
 	GdaSqlExpr *expr;
 	GdaSqlOperation *and_cond = NULL;
+
+	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);
 
 	if (mtable->pk_cols_nb == 0) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
@@ -875,7 +862,7 @@ gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTab
 				op->operator_type = GDA_SQL_OPERATOR_TYPE_EQ;
 				/* left operand */
 				opexpr = gda_sql_expr_new (GDA_SQL_ANY_PART (op));
-				str = add_quotes (tcol->column_name);
+				str = gda_sql_identifier_quote (tcol->column_name, cnc, NULL, TRUE, FALSE);
 				g_value_take_string (opexpr->value = gda_value_new (G_TYPE_STRING), str);
 
 				op->operands = g_slist_append (op->operands, opexpr);
@@ -901,6 +888,24 @@ gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTab
  onerror:
 	gda_sql_expr_free (expr);
 	return NULL;
+}
+
+/**
+ * gda_compute_unique_table_row_condition
+ * @stsel: a #GdaSqlSelectStatement
+ * @mtable: a #GdaMetaTable
+ * @require_pk: set to TRUE if a primary key ir required
+ * @error: a place to store errors, or %NULL
+ * 
+ * Computes a #GdaSqlExpr expression which can be used in the WHERE clause of an UPDATE
+ * or DELETE statement when a row from the result of the @stsel statement has to be modified.
+ *
+ * Returns: a new #GdaSqlExpr, or %NULL if an error occurred.
+ */
+GdaSqlExpr*
+gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTable *mtable, gboolean require_pk, GError **error)
+{
+	return gda_compute_unique_table_row_condition_with_cnc (NULL, stsel, mtable, require_pk, error);
 }
 
 /**
@@ -966,7 +971,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 	target = (GdaSqlSelectTarget*) stsel->from->targets->data;
 	
 	/* actual statement structure's computation */
-	tmp = add_quotes (target->table_name);
+	tmp = gda_sql_identifier_quote (target->table_name, cnc, NULL, TRUE, FALSE);
 	if (insert_stmt) {
 		sql_ist = gda_sql_statement_new (GDA_SQL_STATEMENT_INSERT);
 		ist = (GdaSqlStatementInsert*) sql_ist->contents;
@@ -983,9 +988,9 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 
 		ust->table = gda_sql_table_new (GDA_SQL_ANY_PART (ust));
 		ust->table->table_name = g_strdup (tmp);
-		ust->cond = gda_compute_unique_table_row_condition (stsel, 
-								    GDA_META_TABLE (target->validity_meta_object),
-								    require_pk, error);
+		ust->cond = gda_compute_unique_table_row_condition_with_cnc (cnc, stsel, 
+									     GDA_META_TABLE (target->validity_meta_object),
+									     require_pk, error);
 		if (!ust->cond) {
 			retval = FALSE;
 			goto cleanup;
@@ -1000,9 +1005,9 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 
 		dst->table = gda_sql_table_new (GDA_SQL_ANY_PART (dst));
 		dst->table->table_name = g_strdup (tmp);
-		dst->cond = gda_compute_unique_table_row_condition (stsel, 
-								    GDA_META_TABLE (target->validity_meta_object),
-								    require_pk, error);
+		dst->cond = gda_compute_unique_table_row_condition_with_cnc (cnc, stsel, 
+									     GDA_META_TABLE (target->validity_meta_object),
+									     require_pk, error);
 		if (!dst->cond) {
 			retval = FALSE;
 			goto cleanup;
@@ -1030,7 +1035,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 		g_hash_table_insert (fields_hash, selfield->field_name, GINT_TO_POINTER (1));
 
 		gchar *str;
-		str = add_quotes (selfield->field_name);
+		str = gda_sql_identifier_quote (selfield->field_name, cnc, NULL, TRUE, FALSE);
 		if (insert_stmt) {
 			GdaSqlField *field;
 			field = gda_sql_field_new (GDA_SQL_ANY_PART (ist));
@@ -1591,7 +1596,8 @@ static gboolean _sql_identifier_needs_quotes (const gchar *str);
  * If @id already has quotes, then this function returns a copy of @id, except that the quotes may be
  * replaced by database specific characters (such as the backquote for MySQL).
  *
- * If @id has no quotes, and if none are requited, then this function returns a copy if @id. The criteria to
+ * If @id has no quotes, if none are requited, and if @force_quotes if %FALSE, 
+ * then this function returns a copy if @id. The criteria to
  * determine if @id needs quotes depends on the database provider associated to @cnc, and if @cnc is %NULL, then
  * in all the following cases quotes are required:
  * <itemizedlist>
@@ -1602,7 +1608,14 @@ static gboolean _sql_identifier_needs_quotes (const gchar *str);
  *
  * If @force_quotes is %TRUE, then the this function always returns a quoted SQL identifier.
  *
- * Returns: the possibly quoted representation of @id as a new string, or %NULL if @id is in a wrong format
+ * Note that @id must not be a composed SQL identifier (such as "mytable.mycolumn" which should be
+ * treated as the "mytable" and "mycolumn" SQL identifiers). If unsure, use gda_sql_identifier_split().
+ *
+ * For more information, see the <link linkend="gen:sql_identifiers">SQL identifiers and abstraction</link> and
+ * <link linkend="information_schema:sql_identifiers">SQL identifiers in meta data</link> sections.
+ *
+ * Returns: the representation of @id ready to be used in SQL statement, as a new string,
+ *          or %NULL if @id is in a wrong format
  *
  * Since: 4.0.3
  */
@@ -1611,12 +1624,15 @@ gda_sql_identifier_quote (const gchar *id, GdaConnection *cnc, GdaServerProvider
 			  gboolean meta_store_convention, gboolean force_quotes)
 {
 	g_return_val_if_fail (id && *id, NULL);
-	if (cnc)
-		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	if (prov)
 		g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (prov), NULL);
-	if (cnc && prov)
-		g_return_val_if_fail (gda_connection_get_provider (cnc) == prov, NULL);
+	if (cnc) {
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+		if (prov)
+			g_return_val_if_fail (gda_connection_get_provider (cnc) == prov, NULL);
+		else
+			prov = gda_connection_get_provider (cnc);
+	}
 
 	if (prov && PROV_CLASS (prov)->identifier_quote) {
 		return PROV_CLASS (prov)->identifier_quote (prov, cnc, id,

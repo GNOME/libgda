@@ -1390,16 +1390,10 @@ compute_object_content (HtmlDoc *hdoc, WebServer *webserver, const ConnectionSet
 	GValue *v0, *v1;
 	gboolean retval;
 
-	if (gda_sql_identifier_needs_quotes (schema))
-		g_value_take_string ((v0 = gda_value_new (G_TYPE_STRING)),
-				     gda_sql_identifier_add_quotes (schema));
-	else
-		g_value_set_string ((v0 = gda_value_new (G_TYPE_STRING)), schema);
-	if (gda_sql_identifier_needs_quotes (name))
-		g_value_take_string ((v1 = gda_value_new (G_TYPE_STRING)),
-				     gda_sql_identifier_add_quotes (name));
-	else
-		g_value_set_string ((v1 = gda_value_new (G_TYPE_STRING)), name);
+	g_value_take_string ((v0 = gda_value_new (G_TYPE_STRING)),
+			     gda_sql_identifier_quote (schema, cs->cnc, NULL, FALSE, FALSE));
+	g_value_take_string ((v1 = gda_value_new (G_TYPE_STRING)),
+			     gda_sql_identifier_quote (name, cs->cnc, NULL, FALSE, FALSE));
 
 	mstruct = gda_meta_struct_new (gda_connection_get_meta_store (cs->cnc),
 				       GDA_META_STRUCT_FEATURE_ALL);

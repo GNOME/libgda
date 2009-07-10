@@ -424,6 +424,62 @@
     <para>
       The following sections describe the API available for &GDA; applications.
     </para>
+    <chapter>
+      <title>Foreword about abstraction</title>
+      <para>
+	&LIBGDA; aims both at making it easier to use databases and, for applications written using it, 
+	at making it easier to switch to a different database or to to be able to use different types of databases
+	with a minimum or no code modifications. To achieve the 2nd goal, &LIBGDA; proposes an abstraction of
+	most of database's engine features, which has to be understood to write portable code.
+      </para>
+
+      <sect1 id="gen:sql_identifiers">
+	<title>SQL identifiers</title>
+	<para>
+	  The SQL standard has never defined if SQL identifiers (database object's names) have to be case sensitive
+	  or not, leaving that
+	  subject to each database engine implementation. All of them accept two syntaxes for SQL identifiers:
+	  <itemizedlist>
+	    <listitem><para>the first is if the SQL identifier is surrounded by double quotes (sometimes backquotes
+		or other characters), making the SQL identifier case sensitive (and also making
+		it possible to use reserved SQL keywords as identifiers).</para></listitem>
+	    <listitem><para>the second is if it's not enquoted, meaning that the SQL identifier is not
+		case sensitive.</para></listitem>
+	  </itemizedlist>
+	  <note>
+	    <para>
+	      Many people consider that using the quoted syntax should be avoided if possible because:
+	      <itemizedlist>
+		<listitem><para>once an SQL identifier has been defined using the quoted syntax, it must
+		    <emphasis>always</emphasis> be used quoted, which is error prone especially if external
+		    tools are used on the database</para></listitem>
+		<listitem><para>the SQL code is less readable (there are quoted strings everywhere)</para></listitem>
+		<listitem><para>the SQL code is less portable as each database engine sets up different techniques to
+		    avoid confusing the SQL identifiers' quoting with SQL literals which are quoted when writing
+		    complex statements</para></listitem>
+		<listitem><para>writing SQL requires a more in-depth knowledge of the database engine being used and as
+		    a consequence it's far easier to make errors when writing SQL</para></listitem>
+	      </itemizedlist>
+	      For some more example, see
+	      <ulink url="http://www.alberton.info/dbms_identifiers_and_case_sensitivity.html">Database identifiers, quoting and case sensitivity</ulink> from  Lorenzo Alberton.
+	    </para>
+	  </note>
+	</para>
+
+	<para>
+	  The following diagram illustrates how &LIBGDA; handles SQL identifiers' representations depending where
+	  they are used:
+	  <mediaobject>
+	    <imageobject role="html">
+	      <imagedata fileref="SqlIdentifiers.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase>Diagram illustrating how &LIBGDA; handles SQL identifiers' representations</phrase>
+	    </textobject>
+	  </mediaobject>
+	</para>
+      </sect1>
+    </chapter>
 
     &howto;
     <chapter>
@@ -885,35 +941,9 @@ g_object_unref (store);
 	<sect2 id="information_schema:sql_identifiers">
 	  <title>SQL identifiers</title>
 	  <para>
-	    The SQL standard has never defined if SQL identifiers (database object's names) have to be case sensitive
-	    or not, leaving that
-	    subject to each database engine implementation. All of them accept two syntaxes for SQL identifiers:
-	    <itemizedlist>
-	      <listitem><para>the first is if the SQL identifier is surrounded by double quotes (sometimes simple
-		  quotes are also accepted), making the SQL identifier case sensitive (and also making
-		  it possible to use reserved SQL keywords as identifiers).</para></listitem>
-	      <listitem><para>the second is if it's not enquoted, meaning that the SQL identifier is not
-		  case sensitive.</para></listitem>
-	    </itemizedlist>
-	    <note>
-	      <para>
-		Many people consider that using the quoted syntax should be avoided if possible because:
-		<itemizedlist>
-		  <listitem><para>once an SQL identifier has been defined using the quoted syntax, it must
-		      <emphasis>always</emphasis> be used quoted, which is error prone especially if external
-		      tools are used on the database</para></listitem>
-		  <listitem><para>the SQL code is less readable (there are quoted strings everywhere)</para></listitem>
-		  <listitem><para>the SQL code is less portable as each database engine sets up different techniques to
-		      avoid confusing the SQL identifiers' quoting with SQL literals which are quoted when writing
-		      complex statements</para></listitem>
-		  <listitem><para>writing SQL requires a more in-depth knowledge of the database engine being used and as
-		      a consequence it's far easier to make errors when writing SQL</para></listitem>
-		</itemizedlist>
-		For some more example, see
-		<ulink url="http://www.alberton.info/dbms_identifiers_and_case_sensitivity.html">Database identifiers, quoting and case sensitivity</ulink> from  Lorenzo Alberton.
-	      </para>
-	    </note>
-	  </para>
+	    Please refer to the <link linkend="gen:sql_identifiers">SQL identifiers and abstraction</link> section
+	    for an overview of how SQL identifiers are handled thoughout &LIBGDA;
+	  </para> 
 	  <para>
 	    Considering that each database has its own
 	    internal way of representing case insensitive SQL identifiers (for instance PostgreSQL

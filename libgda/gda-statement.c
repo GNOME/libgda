@@ -1390,7 +1390,29 @@ default_render_table (GdaSqlTable *table, GdaSqlRenderingContext *context, GErro
 	/* can't have: table->table_name not a valid SQL identifier */
 	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (table), error)) return NULL;
 
-	return g_strdup (table->table_name);
+	gchar **ids_array;
+	ids_array = gda_sql_identifier_split (table->table_name);
+	if (!ids_array) {
+		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+			     "%s", _("Malformed table name"));
+		return NULL;
+	}
+	
+	gint i;
+	GString *string;
+	string = g_string_new ("");
+	for (i = 0; ids_array [i]; i++) {
+		gchar *tmp;
+		tmp = gda_sql_identifier_quote (ids_array [i], context->cnc, context->provider,
+						FALSE, FALSE);
+		g_free (ids_array [i]);
+		ids_array [i] = tmp;
+		if (i != 0)
+			g_string_append_c (string, '.');
+		g_string_append (string, ids_array [i]);
+	}
+	g_strfreev (ids_array);
+	return g_string_free (string, FALSE);
 }
 
 static gchar *
@@ -1731,11 +1753,35 @@ default_render_select_target (GdaSqlSelectTarget *target, GdaSqlRenderingContext
 	/* can't have: target->expr == NULL */
 	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (target), error)) return NULL;
 
-	string = g_string_new ("");
-	str = context->render_expr (target->expr, context, NULL, NULL, error);
-	if (!str) goto err;
-	g_string_append (string, str);
-	g_free (str);
+	if (! target->expr->value || (G_VALUE_TYPE (target->expr->value) != G_TYPE_STRING)) {
+		str = context->render_expr (target->expr, context, NULL, NULL, error);
+		if (!str)
+			return NULL;
+		string = g_string_new (str);
+	}
+	else {
+		gchar **ids_array;
+		ids_array = gda_sql_identifier_split (g_value_get_string (target->expr->value));
+		if (!ids_array) {
+			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+				     "%s", _("Malformed expression in select target"));
+			return NULL;
+		}
+
+		gint i;
+		string = g_string_new ("");
+		for (i = 0; ids_array [i]; i++) {
+			gchar *tmp;
+			tmp = gda_sql_identifier_quote (ids_array [i], context->cnc, context->provider,
+							FALSE, FALSE);
+			g_free (ids_array [i]);
+			ids_array [i] = tmp;
+			if (i != 0)
+				g_string_append_c (string, '.');
+			g_string_append (string, ids_array [i]);
+		}
+		g_strfreev (ids_array);
+	}
 
 	if (target->as)
 		g_string_append_printf (string, " AS %s", target->as);
@@ -1743,10 +1789,6 @@ default_render_select_target (GdaSqlSelectTarget *target, GdaSqlRenderingContext
 	str = string->str;
 	g_string_free (string, FALSE);
 	return str;
-
- err:
-	g_string_free (string, TRUE);
-	return NULL;
 }
 
 static gchar *

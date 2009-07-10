@@ -264,9 +264,9 @@ gda_ddl_creator_finalize (GObject *object)
 
 static void
 gda_ddl_creator_set_property (GObject *object,
-			     guint param_id,
-			     const GValue *value,
-			     GParamSpec *pspec) 
+			      guint param_id,
+			      const GValue *value,
+			      GParamSpec *pspec) 
 {
 	GdaDDLCreator *creator;
 	
@@ -289,10 +289,11 @@ gda_ddl_creator_set_property (GObject *object,
 			creator->priv->quoted_catalog = NULL;
 			if (g_value_get_string (value) && *g_value_get_string (value)) {
 				creator->priv->catalog = gda_value_copy (value);
-				if (gda_sql_identifier_needs_quotes (g_value_get_string (value))) 
-					creator->priv->quoted_catalog = gda_sql_identifier_add_quotes (g_value_get_string (value));
-				else
-					creator->priv->quoted_catalog = g_value_dup_string (value);
+				if (!creator->priv->cnc)
+					g_warning ("The \"catalog\" property should be set after the \"cnc\" one");
+				creator->priv->quoted_catalog =
+					gda_sql_identifier_quote (g_value_get_string (value), creator->priv->cnc, NULL,
+								  FALSE, FALSE);
 			}
 			break;
 		case PROP_SCHEMA:
@@ -303,10 +304,11 @@ gda_ddl_creator_set_property (GObject *object,
 			creator->priv->quoted_schema = NULL;
 			if (g_value_get_string (value) && *g_value_get_string (value)) {
 				creator->priv->schema = gda_value_copy (value);
-				if (gda_sql_identifier_needs_quotes (g_value_get_string (value))) 
-					creator->priv->quoted_schema = gda_sql_identifier_add_quotes (g_value_get_string (value));
-				else
-					creator->priv->quoted_schema = g_value_dup_string (value);
+				if (!creator->priv->cnc)
+					g_warning ("The \"schema\" property should be set after the \"cnc\" one");
+				creator->priv->quoted_schema =
+					gda_sql_identifier_quote (g_value_get_string (value), creator->priv->cnc, NULL,
+								  FALSE, FALSE);
 			}
 			break;
 		}

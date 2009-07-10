@@ -2824,7 +2824,7 @@ gda_data_proxy_cancel_all_changes (GdaDataProxy *proxy)
 }
 
 static gboolean
-sql_where_foreach (GdaSqlAnyPart *part, GdaDataModel *model, GError **error)
+sql_where_foreach (GdaSqlAnyPart *part, GdaDataProxy *proxy, GError **error)
 {
 	if (part->type == GDA_SQL_ANY_EXPR) {
 		GdaSqlExpr *expr = (GdaSqlExpr*) part;
@@ -2840,14 +2840,15 @@ sql_where_foreach (GdaSqlAnyPart *part, GdaDataModel *model, GError **error)
 					gint colnum;
 					colnum = atoi (cstr+1) - 1;
 					if (colnum >= 0) {
-						GdaColumn *col = gda_data_model_describe_column (model, colnum);
+						GdaColumn *col = gda_data_model_describe_column ((GdaDataModel*) proxy,
+												 colnum);
 						const gchar *cname = gda_column_get_name (col);
 						if (cname && *cname) {
-							if (gda_sql_identifier_needs_quotes (cname))
-								g_value_take_string (expr->value, 
-										     g_strdup_printf ("\"%s\"", cname));
-							else
-								g_value_set_string (expr->value, cname);
+							g_value_take_string (expr->value,
+									     gda_sql_identifier_quote (cname,
+												       proxy->priv->filter_vcnc,
+												       NULL,
+												       FALSE, FALSE));
 						}
 					}
 				}
@@ -3110,12 +3111,8 @@ gda_data_proxy_set_ordering_column (GdaDataProxy *proxy, gint col, GError **erro
 		gchar *colname;
 
 		cname = gda_column_get_name (gda_data_model_describe_column ((GdaDataModel*) proxy, col));
-		if (cname && *cname) {
-			if (gda_sql_identifier_needs_quotes (cname))
-				colname = g_strdup_printf ("\"%s\"", cname);
-			else
-				colname = g_strdup (cname);
-		}
+		if (cname && *cname)
+			colname = gda_sql_identifier_quote (cname, proxy->priv->filter_vcnc, NULL, FALSE, FALSE);
 		else
 			colname = g_strdup_printf ("_%d", col + 1);
 

@@ -1653,21 +1653,16 @@ add_oid_columns (GdaStatement *stmt, GHashTable **out_hash, gint *out_nb_cols_ad
 		
 		field->expr = gda_sql_expr_new (GDA_SQL_ANY_PART (field));
 		
-		gchar *str;
+		gchar *str, *tmp;
 		const gchar *name;
 		if (target->as)
 			name = target->as;
 		else
 			name = target->table_name;
 		
-		if ((*name != '"') && gda_sql_identifier_needs_quotes (name)) {
-			gchar *tmp;
-			tmp = gda_sql_identifier_add_quotes (target->table_name);
-			str = g_strdup_printf ("%s.rowid", tmp);
-			g_free (tmp);
-		}
-		else
-			str = g_strdup_printf ("%s.rowid", name);
+		tmp = gda_sql_identifier_quote (target->table_name, NULL, NULL, FALSE, FALSE);
+		str = g_strdup_printf ("%s.rowid", tmp);
+		g_free (tmp);
 		g_value_take_string ((field->expr->value = gda_value_new (G_TYPE_STRING)), str);
 		
 		/* add to hash table */
