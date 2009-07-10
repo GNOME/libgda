@@ -430,10 +430,8 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 		name = gda_column_get_name (column);
 		if (!name || !(*name))
 			newcolname = g_strdup_printf ("_%d", i + 1);
-		else if (gda_sql_identifier_needs_quotes (name))
-			newcolname = g_strdup_printf ("\"%s\"", name);
 		else
-			newcolname = g_strdup (name);
+			newcolname = gda_sql_identifier_quote (name, GDA_CONNECTION (cnc), NULL, FALSE, FALSE);
 
 		gtype = gda_column_get_g_type (column);
 		type = g_type_name (gtype);

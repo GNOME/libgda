@@ -55,7 +55,8 @@ HTML_IMAGES = DataModels.png \
 	data_proxy1.png data_proxy2.png data_proxy3.png data_proxy4.png data_proxy5.png \
 	gda-sql-graph.png howto-exec.png \
 	parser_gen.png parser_prov.png \
-	tree-overview.png tree-overview2.png
+	tree-overview.png tree-overview2.png \
+	SqlIdentifiers.png
 
 # Extra options to supply to gtkdoc-fixref
 FIXXREF_OPTIONS=

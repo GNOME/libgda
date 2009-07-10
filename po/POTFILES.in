@@ -212,7 +212,6 @@ tools/browser/schema-browser/favorite-selector.c
 tools/browser/schema-browser/mgr-columns.c
 tools/browser/schema-browser/objects-index.c
 tools/browser/schema-browser/perspective-main.c
-tools/browser/schema-browser/relations-diagram.c
 tools/browser/schema-browser/schema-browser-perspective.c
 tools/browser/schema-browser/table-columns.c
 tools/browser/schema-browser/table-info.c

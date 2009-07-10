@@ -25,6 +25,7 @@
 #include <sql-parser/gda-sql-parser.h>
 #include <sql-parser/gda-sql-statement.h>
 #include <libgda/gda-holder.h>
+#include <libgda/gda-util.h>
 
 static GStaticMutex parser_mutex = G_STATIC_MUTEX_INIT;
 static GdaSqlParser *internal_parser = NULL;
@@ -646,10 +647,7 @@ gda_insert_row_into_table_v (GdaConnection *cnc, const gchar *table,
 	g_assert (GDA_SQL_ANY_PART (ssi)->type == GDA_SQL_ANY_STMT_INSERT);
 
 	ssi->table = gda_sql_table_new (GDA_SQL_ANY_PART (ssi));
-	if (gda_sql_identifier_needs_quotes (table))
-		ssi->table->table_name = gda_sql_identifier_add_quotes (table);
-	else
-		ssi->table->table_name = g_strdup (table);
+	ssi->table->table_name = gda_sql_identifier_quote (table, cnc, NULL, FALSE, FALSE);
 
 	i = 0;
 	for (l1 = col_names, l2 = values;
@@ -662,10 +660,7 @@ gda_insert_row_into_table_v (GdaConnection *cnc, const gchar *table,
 		
 		/* field */
 		field = gda_sql_field_new (GDA_SQL_ANY_PART (ssi));
-		if (gda_sql_identifier_needs_quotes (col_name))
-			field->field_name = gda_sql_identifier_add_quotes (col_name);
-		else
-			field->field_name = g_strdup (col_name);
+		field->field_name = gda_sql_identifier_quote (col_name, cnc, NULL, FALSE, FALSE);
 		fields = g_slist_prepend (fields, field);
 
 		/* value */
@@ -822,10 +817,7 @@ gda_update_row_in_table_v (GdaConnection *cnc, const gchar *table,
 	g_assert (GDA_SQL_ANY_PART (ssu)->type == GDA_SQL_ANY_STMT_UPDATE);
 
 	ssu->table = gda_sql_table_new (GDA_SQL_ANY_PART (ssu));
-	if (gda_sql_identifier_needs_quotes (table))
-		ssu->table->table_name = gda_sql_identifier_add_quotes (table);
-	else
-		ssu->table->table_name = g_strdup (table);
+	ssu->table->table_name = gda_sql_identifier_quote (table, cnc, NULL, FALSE, FALSE);
 
 	if (condition_column_name) {
 		GdaSqlExpr *where, *op;
@@ -838,10 +830,8 @@ gda_update_row_in_table_v (GdaConnection *cnc, const gchar *table,
 		op = gda_sql_expr_new (GDA_SQL_ANY_PART (where->cond));
 		where->cond->operands = g_slist_prepend (NULL, op);
 		op->value = gda_value_new (G_TYPE_STRING);
-		if (gda_sql_identifier_needs_quotes (condition_column_name))
-			g_value_take_string (op->value, gda_sql_identifier_add_quotes (condition_column_name));
-		else
-			g_value_set_string (op->value, condition_column_name);
+		g_value_take_string (op->value, gda_sql_identifier_quote (condition_column_name, cnc, NULL,
+									  FALSE, FALSE));
 
 		op = gda_sql_expr_new (GDA_SQL_ANY_PART (where->cond));
 		where->cond->operands = g_slist_append (where->cond->operands, op);
@@ -875,10 +865,7 @@ gda_update_row_in_table_v (GdaConnection *cnc, const gchar *table,
 		
 		/* field */
 		field = gda_sql_field_new (GDA_SQL_ANY_PART (ssu));
-		if (gda_sql_identifier_needs_quotes (col_name))
-			field->field_name = gda_sql_identifier_add_quotes (col_name);
-		else
-			field->field_name = g_strdup (col_name);
+		field->field_name = gda_sql_identifier_quote (col_name, cnc, NULL, FALSE, FALSE);
 		fields = g_slist_prepend (fields, field);
 
 		/* value */
@@ -951,7 +938,6 @@ gda_delete_row_from_table (GdaConnection *cnc, const gchar *table,
 			   GValue *condition_value, GError **error)
 {
 	gboolean retval;
-	gchar *col_name;
 	GdaSqlStatement *sql_stm;
 	GdaSqlStatementDelete *ssd;
 	GdaStatement *delete;
@@ -967,10 +953,7 @@ gda_delete_row_from_table (GdaConnection *cnc, const gchar *table,
 	g_assert (GDA_SQL_ANY_PART (ssd)->type == GDA_SQL_ANY_STMT_DELETE);
 
 	ssd->table = gda_sql_table_new (GDA_SQL_ANY_PART (ssd));
-	if (gda_sql_identifier_needs_quotes (table))
-		ssd->table->table_name = gda_sql_identifier_add_quotes (table);
-	else
-		ssd->table->table_name = g_strdup (table);
+	ssd->table->table_name = gda_sql_identifier_quote (table, cnc, NULL, FALSE, FALSE);
 
 	if (condition_column_name) {
 		GdaSqlExpr *where, *op;
@@ -983,10 +966,8 @@ gda_delete_row_from_table (GdaConnection *cnc, const gchar *table,
 		op = gda_sql_expr_new (GDA_SQL_ANY_PART (where->cond));
 		where->cond->operands = g_slist_prepend (NULL, op);
 		op->value = gda_value_new (G_TYPE_STRING);
-		if (gda_sql_identifier_needs_quotes (condition_column_name))
-			g_value_take_string (op->value, gda_sql_identifier_add_quotes (condition_column_name));
-		else
-			g_value_set_string (op->value, condition_column_name);
+		g_value_take_string (op->value, gda_sql_identifier_quote (condition_column_name, cnc, NULL,
+									  FALSE, FALSE));
 
 		op = gda_sql_expr_new (GDA_SQL_ANY_PART (where->cond));
 		where->cond->operands = g_slist_append (where->cond->operands, op);

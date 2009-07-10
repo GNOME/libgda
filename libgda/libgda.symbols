@@ -66,6 +66,7 @@
 	gda_compute_dml_statements
 	gda_compute_select_statement_from_update
 	gda_compute_unique_table_row_condition
+	gda_compute_unique_table_row_condition_with_cnc
 	gda_config_can_modify_system_config
 	gda_config_define_dsn
 	gda_config_dsn_needs_authentication

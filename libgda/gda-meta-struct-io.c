@@ -62,17 +62,11 @@ gda_meta_struct_load_from_xml_file (GdaMetaStruct *mstruct, const gchar *catalog
 
 	if (catalog) {
 		g_value_set_string ((catalog_value = gda_value_new (G_TYPE_STRING)), catalog);
-		if (gda_sql_identifier_needs_quotes (catalog)) 
-			quoted_catalog = gda_sql_identifier_add_quotes (catalog);
-		else
-			quoted_catalog = g_strdup (catalog);
+		quoted_catalog = gda_sql_identifier_quote (catalog, NULL, NULL, FALSE, FALSE);
 	}
 	if (schema) {
 		g_value_set_string ((schema_value = gda_value_new (G_TYPE_STRING)), schema);
-		if (gda_sql_identifier_needs_quotes (schema)) 
-			quoted_schema = gda_sql_identifier_add_quotes (schema);
-		else
-			quoted_schema = g_strdup (schema);
+		quoted_schema = gda_sql_identifier_quote (schema, NULL, NULL, FALSE, FALSE);
 	}
 
 	/* load information schema's structure XML file */
@@ -168,6 +162,7 @@ create_table_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar 
 	xmlChar *table_name, *table_schema;
 	GString *full_table_name;
 	GValue *v1 = NULL, *v2 = NULL, *v3 = NULL;
+	gchar *tmp;
 
 	table_name = xmlGetProp (node, BAD_CAST "name");
 	if (!table_name) {
@@ -186,13 +181,9 @@ create_table_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar 
 	}
 	if (table_schema) {
 		g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), (gchar *) table_schema);
-		if (gda_sql_identifier_needs_quotes ((gchar *) table_schema)) {
-			gchar *tmp = gda_sql_identifier_add_quotes ((gchar *) table_schema);
-			g_string_append (full_table_name, tmp);
-			g_free (tmp);
-		}
-		else
-			g_string_append (full_table_name, (gchar*) table_schema);
+		tmp = gda_sql_identifier_quote ((gchar *) table_schema, NULL, NULL, FALSE, FALSE);
+		g_string_append (full_table_name, tmp);
+		g_free (tmp);
 		g_string_append_c (full_table_name, '.');
 	}
 	else if (quoted_schema) {
@@ -201,13 +192,10 @@ create_table_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar 
 		g_string_append_c (full_table_name, '.');
 	}
 	g_value_set_string ((v3 = gda_value_new (G_TYPE_STRING)), (gchar *) table_name);
-	if (gda_sql_identifier_needs_quotes ((gchar *) table_name)) {
-		gchar *tmp = gda_sql_identifier_add_quotes ((gchar *) table_name);
-		g_string_append (full_table_name, tmp);
-		g_free (tmp);
-	}
-	else
-		g_string_append (full_table_name, (gchar *) table_name);
+	
+	tmp = gda_sql_identifier_quote ((gchar *) table_name, NULL, NULL, FALSE, FALSE);
+	g_string_append (full_table_name, tmp);
+	g_free (tmp);
 
 	/* a new GdaMetaDbObject structure */
 	dbobj = g_new0 (GdaMetaDbObject, 1);

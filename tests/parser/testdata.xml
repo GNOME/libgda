@@ -244,8 +244,8 @@
 
   <!-- Misc SQL -->
   <test id="42">
-    <sql>SELECT * from table as t;</sql>
-    <expected mode="delim">{"statements":[{"statement":{"sql":"SELECT * from table as t;","stmt_type":"UNKNOWN","contents":[{"value":"SELECT"},{"value":" "},{"value":"*"},{"value":" "},{"value":"from"},{"value":" "},{"value":"table"},{"value":" "},{"value":"as"},{"value":" "},{"value":"t"}]}}]}</expected>
+    <sql>SELECT * from mytable as t;</sql>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"SELECT * from mytable as t;","stmt_type":"UNKNOWN","contents":[{"value":"SELECT"},{"value":" "},{"value":"*"},{"value":" "},{"value":"from"},{"value":" "},{"value":"mytable"},{"value":" "},{"value":"as"},{"value":" "},{"value":"t"}]}}]}</expected>
   </test>
 
   <!-- MySQL DELIMITER command -->
@@ -551,33 +551,33 @@
   </test>
 
   <test id="2002">
-    <sql>insert into cat.schema.mytable (a, b) values (null, 1);</sql>
-    <expected>{"statements":[{"statement":{"sql":"insert into cat.schema.mytable (a, b) values (null, 1);","stmt_type":"INSERT","contents":{"table":"cat.schema.mytable","fields":["a","b"],"values":[[{"value":null},{"value":"1"}]]}}}]}</expected>
-    <expected mode="delim">{"statements":[{"statement":{"sql":"insert into cat.schema.mytable (a, b) values (null, 1);","stmt_type":"UNKNOWN","contents":[{"value":"insert"},{"value":" "},{"value":"into"},{"value":" "},{"value":"cat.schema.mytable"},{"value":" "},{"value":"("},{"value":"a,"},{"value":" "},{"value":"b)"},{"value":" "},{"value":"values"},{"value":" "},{"value":"("},{"value":"null"},{"value":","},{"value":" "},{"value":"1"},{"value":")"}]}}]}</expected>
+    <sql>insert into cat.myschema.mytable (a, b) values (null, 1);</sql>
+    <expected>{"statements":[{"statement":{"sql":"insert into cat.myschema.mytable (a, b) values (null, 1);","stmt_type":"INSERT","contents":{"table":"cat.myschema.mytable","fields":["a","b"],"values":[[{"value":null},{"value":"1"}]]}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"insert into cat.myschema.mytable (a, b) values (null, 1);","stmt_type":"UNKNOWN","contents":[{"value":"insert"},{"value":" "},{"value":"into"},{"value":" "},{"value":"cat.myschema.mytable"},{"value":" "},{"value":"("},{"value":"a,"},{"value":" "},{"value":"b)"},{"value":" "},{"value":"values"},{"value":" "},{"value":"("},{"value":"null"},{"value":","},{"value":" "},{"value":"1"},{"value":")"}]}}]}</expected>
   </test>
 
   <test id="2003">
-    <sql>insert or replace into schema.mytable (a, b) values (null, 1);</sql>
-    <expected>{"statements":[{"statement":{"sql":"insert or replace into schema.mytable (a, b) values (null, 1);","stmt_type":"INSERT","contents":{"table":"schema.mytable","fields":["a","b"],"values":[[{"value":null},{"value":"1"}]],"on_conflict":"replace"}}}]}</expected>
-    <expected mode="delim">{"statements":[{"statement":{"sql":"insert or replace into schema.mytable (a, b) values (null, 1);","stmt_type":"UNKNOWN","contents":[{"value":"insert"},{"value":" "},{"value":"or"},{"value":" "},{"value":"replace"},{"value":" "},{"value":"into"},{"value":" "},{"value":"schema.mytable"},{"value":" "},{"value":"("},{"value":"a,"},{"value":" "},{"value":"b)"},{"value":" "},{"value":"values"},{"value":" "},{"value":"("},{"value":"null"},{"value":","},{"value":" "},{"value":"1"},{"value":")"}]}}]}</expected>
+    <sql>insert or replace into myschema.mytable (a, b) values (null, 1);</sql>
+    <expected>{"statements":[{"statement":{"sql":"insert or replace into myschema.mytable (a, b) values (null, 1);","stmt_type":"INSERT","contents":{"table":"myschema.mytable","fields":["a","b"],"values":[[{"value":null},{"value":"1"}]],"on_conflict":"replace"}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"insert or replace into myschema.mytable (a, b) values (null, 1);","stmt_type":"UNKNOWN","contents":[{"value":"insert"},{"value":" "},{"value":"or"},{"value":" "},{"value":"replace"},{"value":" "},{"value":"into"},{"value":" "},{"value":"myschema.mytable"},{"value":" "},{"value":"("},{"value":"a,"},{"value":" "},{"value":"b)"},{"value":" "},{"value":"values"},{"value":" "},{"value":"("},{"value":"null"},{"value":","},{"value":" "},{"value":"1"},{"value":")"}]}}]}</expected>
   </test>
 
   <test id="2004">
-    <sql>insert into schema.mytable (a, b, c, d, e) values (null, DEFAULT, 12, 1.23, 'a string');</sql>
-    <expected>{"statements":[{"statement":{"sql":"insert into schema.mytable (a, b, c, d, e) values (null, DEFAULT, 12, 1.23, 'a string');","stmt_type":"INSERT","contents":{"table":"schema.mytable","fields":["a","b","c","d","e"],"values":[[{"value":null},{"value":"DEFAULT"},{"value":"12"},{"value":"1.23"},{"value":"'a string'"}]]}}}]}</expected>
-    <expected mode="delim">{"statements":[{"statement":{"sql":"insert into schema.mytable (a, b, c, d, e) values (null, DEFAULT, 12, 1.23, 'a string');","stmt_type":"UNKNOWN","contents":[{"value":"insert"},{"value":" "},{"value":"into"},{"value":" "},{"value":"schema.mytable"},{"value":" "},{"value":"("},{"value":"a,"},{"value":" "},{"value":"b,"},{"value":" "},{"value":"c,"},{"value":" "},{"value":"d,"},{"value":" "},{"value":"e)"},{"value":" "},{"value":"values"},{"value":" "},{"value":"("},{"value":"null"},{"value":","},{"value":" "},{"value":"DEFAULT,"},{"value":" "},{"value":"12"},{"value":","},{"value":" "},{"value":"1.23"},{"value":","},{"value":" "},{"value":"'a string'"},{"value":")"}]}}]}</expected>
+    <sql>insert into myschema.mytable (a, b, c, d, e) values (null, DEFAULT, 12, 1.23, 'a string');</sql>
+    <expected>{"statements":[{"statement":{"sql":"insert into myschema.mytable (a, b, c, d, e) values (null, DEFAULT, 12, 1.23, 'a string');","stmt_type":"INSERT","contents":{"table":"myschema.mytable","fields":["a","b","c","d","e"],"values":[[{"value":null},{"value":"DEFAULT"},{"value":"12"},{"value":"1.23"},{"value":"'a string'"}]]}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"insert into myschema.mytable (a, b, c, d, e) values (null, DEFAULT, 12, 1.23, 'a string');","stmt_type":"UNKNOWN","contents":[{"value":"insert"},{"value":" "},{"value":"into"},{"value":" "},{"value":"myschema.mytable"},{"value":" "},{"value":"("},{"value":"a,"},{"value":" "},{"value":"b,"},{"value":" "},{"value":"c,"},{"value":" "},{"value":"d,"},{"value":" "},{"value":"e)"},{"value":" "},{"value":"values"},{"value":" "},{"value":"("},{"value":"null"},{"value":","},{"value":" "},{"value":"DEFAULT,"},{"value":" "},{"value":"12"},{"value":","},{"value":" "},{"value":"1.23"},{"value":","},{"value":" "},{"value":"'a string'"},{"value":")"}]}}]}</expected>
   </test>
 
   <test id="2005">
-    <sql>insert into schema.mytable (a, b, c, d, e) values (null, DEFAULT, 12, 1.23, f('a string'));</sql>
-    <expected>{"statements":[{"statement":{"sql":"insert into schema.mytable (a, b, c, d, e) values (null, DEFAULT, 12, 1.23, f('a string'));","stmt_type":"INSERT","contents":{"table":"schema.mytable","fields":["a","b","c","d","e"],"values":[[{"value":null},{"value":"DEFAULT"},{"value":"12"},{"value":"1.23"},{"func":{"function_name":"f","function_args":[{"value":"'a string'"}]}}]]}}}]}</expected>
-    <expected mode="delim">{"statements":[{"statement":{"sql":"insert into schema.mytable (a, b, c, d, e) values (null, DEFAULT, 12, 1.23, f('a string'));","stmt_type":"UNKNOWN","contents":[{"value":"insert"},{"value":" "},{"value":"into"},{"value":" "},{"value":"schema.mytable"},{"value":" "},{"value":"("},{"value":"a,"},{"value":" "},{"value":"b,"},{"value":" "},{"value":"c,"},{"value":" "},{"value":"d,"},{"value":" "},{"value":"e)"},{"value":" "},{"value":"values"},{"value":" "},{"value":"("},{"value":"null"},{"value":","},{"value":" "},{"value":"DEFAULT,"},{"value":" "},{"value":"12"},{"value":","},{"value":" "},{"value":"1.23"},{"value":","},{"value":" "},{"value":"f("},{"value":"'a string'"},{"value":")"},{"value":")"}]}}]}</expected>
+    <sql>insert into myschema.mytable (a, b, c, d, e) values (null, DEFAULT, 12, 1.23, f('a string'));</sql>
+    <expected>{"statements":[{"statement":{"sql":"insert into myschema.mytable (a, b, c, d, e) values (null, DEFAULT, 12, 1.23, f('a string'));","stmt_type":"INSERT","contents":{"table":"myschema.mytable","fields":["a","b","c","d","e"],"values":[[{"value":null},{"value":"DEFAULT"},{"value":"12"},{"value":"1.23"},{"func":{"function_name":"f","function_args":[{"value":"'a string'"}]}}]]}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"insert into myschema.mytable (a, b, c, d, e) values (null, DEFAULT, 12, 1.23, f('a string'));","stmt_type":"UNKNOWN","contents":[{"value":"insert"},{"value":" "},{"value":"into"},{"value":" "},{"value":"myschema.mytable"},{"value":" "},{"value":"("},{"value":"a,"},{"value":" "},{"value":"b,"},{"value":" "},{"value":"c,"},{"value":" "},{"value":"d,"},{"value":" "},{"value":"e)"},{"value":" "},{"value":"values"},{"value":" "},{"value":"("},{"value":"null"},{"value":","},{"value":" "},{"value":"DEFAULT,"},{"value":" "},{"value":"12"},{"value":","},{"value":" "},{"value":"1.23"},{"value":","},{"value":" "},{"value":"f("},{"value":"'a string'"},{"value":")"},{"value":")"}]}}]}</expected>
   </test>
 
   <test id="2006">
-    <sql>insert into schema.mytable values (f1('a string'), f2(aa.bb, dd));</sql>
-    <expected>{"statements":[{"statement":{"sql":"insert into schema.mytable values (f1('a string'), f2(aa.bb, dd));","stmt_type":"INSERT","contents":{"table":"schema.mytable","fields":null,"values":[[{"func":{"function_name":"f1","function_args":[{"value":"'a string'"}]}},{"func":{"function_name":"f2","function_args":[{"value":"aa.bb"},{"value":"dd"}]}}]]}}}]}</expected>
-    <expected mode="delim">{"statements":[{"statement":{"sql":"insert into schema.mytable values (f1('a string'), f2(aa.bb, dd));","stmt_type":"UNKNOWN","contents":[{"value":"insert"},{"value":" "},{"value":"into"},{"value":" "},{"value":"schema.mytable"},{"value":" "},{"value":"values"},{"value":" "},{"value":"("},{"value":"f1("},{"value":"'a string'"},{"value":")"},{"value":","},{"value":" "},{"value":"f2(aa.bb,"},{"value":" "},{"value":"dd))"}]}}]}</expected>
+    <sql>insert into myschema.mytable values (f1('a string'), f2(aa.bb, dd));</sql>
+    <expected>{"statements":[{"statement":{"sql":"insert into myschema.mytable values (f1('a string'), f2(aa.bb, dd));","stmt_type":"INSERT","contents":{"table":"myschema.mytable","fields":null,"values":[[{"func":{"function_name":"f1","function_args":[{"value":"'a string'"}]}},{"func":{"function_name":"f2","function_args":[{"value":"aa.bb"},{"value":"dd"}]}}]]}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"insert into myschema.mytable values (f1('a string'), f2(aa.bb, dd));","stmt_type":"UNKNOWN","contents":[{"value":"insert"},{"value":" "},{"value":"into"},{"value":" "},{"value":"myschema.mytable"},{"value":" "},{"value":"values"},{"value":" "},{"value":"("},{"value":"f1("},{"value":"'a string'"},{"value":")"},{"value":","},{"value":" "},{"value":"f2(aa.bb,"},{"value":" "},{"value":"dd))"}]}}]}</expected>
   </test>
 
   <test id="2006.1">
@@ -756,15 +756,15 @@
   </test>
 
   <test id="2210">
-    <sql>select a, (select afield as fname from mytable) as src from table</sql>
-    <expected>{"statements":[{"statement":{"sql":"select a, (select afield as fname from mytable) as src from table","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"a"},"field_name":"a"},{"expr":{"select":{"contents":{"distinct":"false","fields":[{"expr":{"value":"afield"},"field_name":"afield","as":"fname"}],"from":{"targets":[{"expr":{"value":"mytable"},"table_name":"mytable"}]}}}},"as":"src"}],"from":{"targets":[{"expr":{"value":"table"},"table_name":"table"}]}}}}]}</expected>
-    <expected mode="delim">{"statements":[{"statement":{"sql":"select a, (select afield as fname from mytable) as src from table","stmt_type":"UNKNOWN","contents":[{"value":"select"},{"value":" "},{"value":"a,"},{"value":" "},{"value":"("},{"value":"select"},{"value":" "},{"value":"afield"},{"value":" "},{"value":"as"},{"value":" "},{"value":"fname"},{"value":" "},{"value":"from"},{"value":" "},{"value":"mytable)"},{"value":" "},{"value":"as"},{"value":" "},{"value":"src"},{"value":" "},{"value":"from"},{"value":" "},{"value":"table"}]}}]}</expected>
+    <sql>select a, (select afield as fname from mytable) as src from mytable</sql>
+    <expected>{"statements":[{"statement":{"sql":"select a, (select afield as fname from mytable) as src from mytable","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"a"},"field_name":"a"},{"expr":{"select":{"contents":{"distinct":"false","fields":[{"expr":{"value":"afield"},"field_name":"afield","as":"fname"}],"from":{"targets":[{"expr":{"value":"mytable"},"table_name":"mytable"}]}}}},"as":"src"}],"from":{"targets":[{"expr":{"value":"mytable"},"table_name":"mytable"}]}}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"select a, (select afield as fname from mytable) as src from mytable","stmt_type":"UNKNOWN","contents":[{"value":"select"},{"value":" "},{"value":"a,"},{"value":" "},{"value":"("},{"value":"select"},{"value":" "},{"value":"afield"},{"value":" "},{"value":"as"},{"value":" "},{"value":"fname"},{"value":" "},{"value":"from"},{"value":" "},{"value":"mytable)"},{"value":" "},{"value":"as"},{"value":" "},{"value":"src"},{"value":" "},{"value":"from"},{"value":" "},{"value":"mytable"}]}}]}</expected>
   </test>
 
   <test id="2211">
-    <sql>select a, (select afield as fname from mytable) as src from table</sql>
-    <expected>{"statements":[{"statement":{"sql":"select a, (select afield as fname from mytable) as src from table","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"a"},"field_name":"a"},{"expr":{"select":{"contents":{"distinct":"false","fields":[{"expr":{"value":"afield"},"field_name":"afield","as":"fname"}],"from":{"targets":[{"expr":{"value":"mytable"},"table_name":"mytable"}]}}}},"as":"src"}],"from":{"targets":[{"expr":{"value":"table"},"table_name":"table"}]}}}}]}</expected>
-    <expected mode="delim">{"statements":[{"statement":{"sql":"select a, (select afield as fname from mytable) as src from table","stmt_type":"UNKNOWN","contents":[{"value":"select"},{"value":" "},{"value":"a,"},{"value":" "},{"value":"("},{"value":"select"},{"value":" "},{"value":"afield"},{"value":" "},{"value":"as"},{"value":" "},{"value":"fname"},{"value":" "},{"value":"from"},{"value":" "},{"value":"mytable)"},{"value":" "},{"value":"as"},{"value":" "},{"value":"src"},{"value":" "},{"value":"from"},{"value":" "},{"value":"table"}]}}]}</expected>
+    <sql>select a, (select afield as fname from mytable) as src from mytable</sql>
+    <expected>{"statements":[{"statement":{"sql":"select a, (select afield as fname from mytable) as src from mytable","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"a"},"field_name":"a"},{"expr":{"select":{"contents":{"distinct":"false","fields":[{"expr":{"value":"afield"},"field_name":"afield","as":"fname"}],"from":{"targets":[{"expr":{"value":"mytable"},"table_name":"mytable"}]}}}},"as":"src"}],"from":{"targets":[{"expr":{"value":"mytable"},"table_name":"mytable"}]}}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"select a, (select afield as fname from mytable) as src from mytable","stmt_type":"UNKNOWN","contents":[{"value":"select"},{"value":" "},{"value":"a,"},{"value":" "},{"value":"("},{"value":"select"},{"value":" "},{"value":"afield"},{"value":" "},{"value":"as"},{"value":" "},{"value":"fname"},{"value":" "},{"value":"from"},{"value":" "},{"value":"mytable)"},{"value":" "},{"value":"as"},{"value":" "},{"value":"src"},{"value":" "},{"value":"from"},{"value":" "},{"value":"mytable"}]}}]}</expected>
   </test>
 
   <test id="2212">
@@ -824,43 +824,43 @@
   </test>
 
   <test id="2222">
-    <sql>select * from table where a=b or c is null</sql>
-    <expected>{"statements":[{"statement":{"sql":"select * from table where a=b or c is null","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"table"},"table_name":"table"}]},"where":{"operation":{"operator":"OR","operand0":{"operation":{"operator":"=","operand0":{"value":"a"},"operand1":{"value":"b"}}},"operand1":{"operation":{"operator":"IS NULL","operand0":{"value":"c"}}}}}}}}]}</expected>
+    <sql>select * from mytable where a=b or c is null</sql>
+    <expected>{"statements":[{"statement":{"sql":"select * from mytable where a=b or c is null","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"mytable"},"table_name":"mytable"}]},"where":{"operation":{"operator":"OR","operand0":{"operation":{"operator":"=","operand0":{"value":"a"},"operand1":{"value":"b"}}},"operand1":{"operation":{"operator":"IS NULL","operand0":{"value":"c"}}}}}}}}]}</expected>
   </test>
 
   <test id="2223">
-    <sql>select * from table where a=(select c from tab2)</sql>
-    <expected>{"statements":[{"statement":{"sql":"select * from table where a=(select c from tab2)","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"table"},"table_name":"table"}]},"where":{"operation":{"operator":"=","operand0":{"value":"a"},"operand1":{"select":{"contents":{"distinct":"false","fields":[{"expr":{"value":"c"},"field_name":"c"}],"from":{"targets":[{"expr":{"value":"tab2"},"table_name":"tab2"}]}}}}}}}}}]}</expected>
+    <sql>select * from mytable where a=(select c from tab2)</sql>
+    <expected>{"statements":[{"statement":{"sql":"select * from mytable where a=(select c from tab2)","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"mytable"},"table_name":"mytable"}]},"where":{"operation":{"operator":"=","operand0":{"value":"a"},"operand1":{"select":{"contents":{"distinct":"false","fields":[{"expr":{"value":"c"},"field_name":"c"}],"from":{"targets":[{"expr":{"value":"tab2"},"table_name":"tab2"}]}}}}}}}}}]}</expected>
   </test>
 
   <test id="2224">
-    <sql>select * from table group by z, u</sql>
-    <expected>{"statements":[{"statement":{"sql":"select * from table group by z, u","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"table"},"table_name":"table"}]},"group_by":[{"value":"z"},{"value":"u"}]}}}]}</expected>
+    <sql>select * from mytable group by z, u</sql>
+    <expected>{"statements":[{"statement":{"sql":"select * from mytable group by z, u","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"mytable"},"table_name":"mytable"}]},"group_by":[{"value":"z"},{"value":"u"}]}}}]}</expected>
   </test>
 
   <test id="2225">
-    <sql>select * from table where id&lt;100 group by z, u having c(id)&gt;=0</sql>
-    <expected>{"statements":[{"statement":{"sql":"select * from table where id&lt;100 group by z, u having c(id)&gt;=0","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"table"},"table_name":"table"}]},"where":{"operation":{"operator":"&lt;","operand0":{"value":"id"},"operand1":{"value":"100"}}},"group_by":[{"value":"z"},{"value":"u"}],"having":{"operation":{"operator":"&gt;=","operand0":{"func":{"function_name":"c","function_args":[{"value":"id"}]}},"operand1":{"value":"0"}}}}}}]}</expected>
+    <sql>select * from mytable where id&lt;100 group by z, u having c(id)&gt;=0</sql>
+    <expected>{"statements":[{"statement":{"sql":"select * from mytable where id&lt;100 group by z, u having c(id)&gt;=0","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"mytable"},"table_name":"mytable"}]},"where":{"operation":{"operator":"&lt;","operand0":{"value":"id"},"operand1":{"value":"100"}}},"group_by":[{"value":"z"},{"value":"u"}],"having":{"operation":{"operator":"&gt;=","operand0":{"func":{"function_name":"c","function_args":[{"value":"id"}]}},"operand1":{"value":"0"}}}}}}]}</expected>
   </test>
 
   <test id="2226">
-    <sql>select * from table order by col1 ASC, col2 DESC, col3;</sql>
-    <expected>{"statements":[{"statement":{"sql":"select * from table order by col1 ASC, col2 DESC, col3;","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"table"},"table_name":"table"}]},"order_by":[{"expr":{"value":"col1"},"sort":"ASC"},{"expr":{"value":"col2"},"sort":"DESC"},{"expr":{"value":"col3"},"sort":"ASC"}]}}}]}</expected>
+    <sql>select * from mytable order by col1 ASC, col2 DESC, col3;</sql>
+    <expected>{"statements":[{"statement":{"sql":"select * from mytable order by col1 ASC, col2 DESC, col3;","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"mytable"},"table_name":"mytable"}]},"order_by":[{"expr":{"value":"col1"},"sort":"ASC"},{"expr":{"value":"col2"},"sort":"DESC"},{"expr":{"value":"col3"},"sort":"ASC"}]}}}]}</expected>
   </test>
 
   <test id="2227">
-    <sql>select * from table limit 4 offset 5</sql>
-    <expected>{"statements":[{"statement":{"sql":"select * from table limit 4 offset 5","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"table"},"table_name":"table"}]},"limit":{"value":"4"},"offset":{"value":"5"}}}}]}</expected>
+    <sql>select * from mytable limit 4 offset 5</sql>
+    <expected>{"statements":[{"statement":{"sql":"select * from mytable limit 4 offset 5","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"mytable"},"table_name":"mytable"}]},"limit":{"value":"4"},"offset":{"value":"5"}}}}]}</expected>
   </test>
 
   <test id="2228">
-    <sql>select * from table limit 4,5;</sql>
-    <expected>{"statements":[{"statement":{"sql":"select * from table limit 4,5;","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"table"},"table_name":"table"}]},"limit":{"value":"4"},"offset":{"value":"5"}}}}]}</expected>
+    <sql>select * from mytable limit 4,5;</sql>
+    <expected>{"statements":[{"statement":{"sql":"select * from mytable limit 4,5;","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"mytable"},"table_name":"mytable"}]},"limit":{"value":"4"},"offset":{"value":"5"}}}}]}</expected>
   </test>
 
   <test id="2229">
-    <sql>select * from table limit ##limval::gint</sql>
-    <expected>{"statements":[{"statement":{"sql":"select * from table limit ##limval::gint","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"table"},"table_name":"table"}]},"limit":{"value":null,"param_spec":{"name":"limval","descr":null,"type":"int","is_param":true,"nullok":false}}}}}]}</expected>
+    <sql>select * from mytable limit ##limval::gint</sql>
+    <expected>{"statements":[{"statement":{"sql":"select * from mytable limit ##limval::gint","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"mytable"},"table_name":"mytable"}]},"limit":{"value":null,"param_spec":{"name":"limval","descr":null,"type":"int","is_param":true,"nullok":false}}}}}]}</expected>
   </test>
 
   <test id="2230">
