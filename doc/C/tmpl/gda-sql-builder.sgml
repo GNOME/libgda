@@ -150,6 +150,28 @@ gda_sql_builder_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expressi
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_sql_builder_cond_v ##### -->
+<para>
+
+</para>
+
+@builder: 
+@id: 
+@op: 
+@op_ids: 
+@op_ids_size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_builder_set_where ##### -->
+<para>
+
+</para>
+
+@builder: 
+@cond_id: 
+
+
 <!-- ##### FUNCTION gda_sql_builder_select_add_target ##### -->
 <para>
 
@@ -184,5 +206,16 @@ gda_sql_builder_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expressi
 @builder: 
 @join_id: 
 @field_name: 
+
+
+<!-- ##### FUNCTION gda_sql_builder_select_order_by ##### -->
+<para>
+
+</para>
+
+@builder: 
+@expr_id: 
+@asc: 
+@collation_name: 
 
 

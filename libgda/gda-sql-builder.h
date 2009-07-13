@@ -76,6 +76,8 @@ guint              gda_sql_builder_param (GdaSqlBuilder *builder, guint id, cons
 
 guint              gda_sql_builder_cond (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op,
 					 guint op1, guint op2, guint op3);
+guint              gda_sql_builder_cond_v (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op,
+					   guint *op_ids, gint op_ids_size);
 
 
 /* SELECT Statement API */
@@ -86,7 +88,8 @@ guint              gda_sql_builder_select_join_targets (GdaSqlBuilder *builder, 
 							GdaSqlSelectJoinType join_type,
 							guint join_expr);
 void               gda_sql_builder_join_add_field (GdaSqlBuilder *builder, guint join_id, const gchar *field_name);
-
+void               gda_sql_builder_select_order_by (GdaSqlBuilder *builder, guint expr_id,
+						    gboolean asc, const gchar *collation_name);
 
 /* General Statement API */
 void              gda_sql_builder_set_table (GdaSqlBuilder *builder, const gchar *table_name);

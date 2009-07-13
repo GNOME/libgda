@@ -762,6 +762,69 @@ gda_sql_builder_cond (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op, g
 	return add_part (builder, id, (GdaSqlAnyPart *) expr);
 }
 
+/**
+ * gda_sql_builder_cond_v
+ * @builder: a #GdaSqlBuilder object
+ * @id: the requested ID, or 0 if to be determined by @builder
+ * @op: type of condition
+ * @op_ids: an array of ID for the arguments (not %0)
+ * @ops_ids_size: size of @ops_ids
+ *
+ * Builds a new expression which reprenents a condition (or operation).
+ *
+ * As a side case, if @ops_ids_size is 1,
+ * then @op is ignored, and the returned ID represents @op_ids[0] (this avoids any problem for example
+ * when @op is GDA_SQL_OPERATOR_TYPE_AND and there is in fact only one operand).
+ *
+ * Returns: the ID of the new expression, or 0 if there was an error
+ *
+ * Since: 4.2
+ */
+guint
+gda_sql_builder_cond_v (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op,
+			guint *op_ids, gint op_ids_size)
+{
+	gint i;
+	SqlPart **parts;
+
+	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
+	g_return_val_if_fail (builder->priv->main_stmt, 0);
+	g_return_val_if_fail (op_ids, 0);
+	g_return_val_if_fail (op_ids_size > 0, 0);
+
+	parts = g_new (SqlPart *, op_ids_size);
+	for (i = 0; i < op_ids_size; i++) {
+		parts [i] = get_part (builder, op_ids [i], GDA_SQL_ANY_EXPR);
+		if (!parts [i]) {
+			g_free (parts);
+			return 0;
+		}
+	}
+
+	if (op_ids_size == 1) {
+		SqlPart *part = parts [0];
+		g_free (parts);
+		if (id)
+			return add_part (builder, id, use_part (part, NULL));
+		else
+			return op_ids [0]; /* return the same ID as none was specified */
+	}
+	
+	GdaSqlExpr *expr;
+	expr = gda_sql_expr_new (NULL);
+	expr->cond = gda_sql_operation_new (GDA_SQL_ANY_PART (expr));
+	expr->cond->operator_type = op;
+	expr->cond->operands = NULL;
+	for (i = 0; i < op_ids_size; i++)
+		expr->cond->operands = g_slist_append (expr->cond->operands,
+						       use_part (parts [i],
+								 GDA_SQL_ANY_PART (expr->cond)));
+	g_free (parts);
+
+	return add_part (builder, id, (GdaSqlAnyPart *) expr);
+}
+
+
 typedef struct {
 	GdaSqlSelectTarget target; /* inheritance! */
 	guint part_id; /* copied from this part ID */
@@ -950,4 +1013,44 @@ gda_sql_builder_join_add_field (GdaSqlBuilder *builder, guint join_id, const gch
 	field = gda_sql_field_new (GDA_SQL_ANY_PART (join));
 	field->field_name = g_strdup (field_name);
 	join->use = g_slist_append (join->use, field);
+}
+
+/**
+ * gda_sql_builder_select_order_by
+ * @builder: a #GdaSqlBuiler
+ * @expr_id: the ID of the expression to use during sorting (not %0)
+ * @asc: %TRUE for an ascending sorting
+ * @collation_name: name of the collation to use when sorting, or %NULL
+ *
+ * Adds a new ORDER BY expression to a SELECT statement.
+ * 
+ * Since: 4.2
+ */
+void
+gda_sql_builder_select_order_by (GdaSqlBuilder *builder, guint expr_id,
+				 gboolean asc, const gchar *collation_name)
+{
+	SqlPart *part;
+	GdaSqlStatementSelect *sel;
+	GdaSqlSelectOrder *sorder;
+
+	g_return_if_fail (GDA_IS_SQL_BUILDER (builder));
+	g_return_if_fail (expr_id > 0);
+
+	if (builder->priv->main_stmt->stmt_type != GDA_SQL_STATEMENT_SELECT) {
+		g_warning (_("Wrong statement type"));
+		return;
+	}
+
+	part = get_part (builder, expr_id, GDA_SQL_ANY_EXPR);
+	if (!part)
+		return;
+	sel = (GdaSqlStatementSelect*) builder->priv->main_stmt->contents;
+	
+	sorder = gda_sql_select_order_new (GDA_SQL_ANY_PART (sel));
+	sorder->expr = (GdaSqlExpr*) use_part (part, GDA_SQL_ANY_PART (sorder));
+	sorder->asc = asc;
+	if (collation_name)
+		sorder->collation_name = g_strdup (collation_name);
+	sel->order_by = g_slist_append (sel->order_by, sorder);
 }
