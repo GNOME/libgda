@@ -44,6 +44,7 @@ static void browser_canvas_db_relations_get_property (GObject *object,
 /* virtual functions */
 static void       clean_canvas_items  (BrowserCanvas *canvas);
 static GtkWidget *build_context_menu  (BrowserCanvas *canvas);
+static GSList    *get_layout_items    (BrowserCanvas *canvas);
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass *parent_class = NULL;
@@ -60,7 +61,7 @@ struct _BrowserCanvasDbRelationsPrivate
 	GHashTable       *hash_fkeys; /* key = GdaMetaTableForeignKey, value = BrowserCanvasFkey */
 
 	GdaMetaStruct    *mstruct;
-	GooCanvasItem    *level_separator; /* all tables will be above this item and FK lines below */
+	GooCanvasItem    *level_separator; /* all tables items will be above this item and FK lines below */
 };
 
 GType
@@ -104,6 +105,7 @@ browser_canvas_db_relations_class_init (BrowserCanvasDbRelationsClass * class)
 	/* BrowserCanvas virtual functions */
 	BROWSER_CANVAS_CLASS (class)->clean_canvas_items = clean_canvas_items;
 	BROWSER_CANVAS_CLASS (class)->build_context_menu = build_context_menu;
+	BROWSER_CANVAS_CLASS (class)->get_layout_items = get_layout_items;
 	object_class->dispose = browser_canvas_db_relations_dispose;
 
 	/* properties */
@@ -323,6 +325,68 @@ popup_func_add_depend_cb (GtkMenuItem *mitem, BrowserCanvasTable *ce)
 	}
 }
 
+static GSList *
+complement_layout_items (BrowserCanvasDbRelations *dbrel, BrowserCanvasItem *current, GSList *elist)
+{
+	GSList *items = elist;
+	GdaMetaTable *mtable;
+	mtable = g_hash_table_lookup (dbrel->priv->hash_tables, current);
+	if (!mtable)
+		return items;
+
+	GSList *list;
+	for (list = mtable->fk_list; list; list = list->next) {
+		GdaMetaTableForeignKey *fk = (GdaMetaTableForeignKey*) list->data;
+		BrowserCanvasItem *item;
+
+		item = g_hash_table_lookup (dbrel->priv->hash_fkeys, fk);
+		if (item && !g_slist_find (items, item)) {
+			items = g_slist_prepend (items, item);
+			items = complement_layout_items (dbrel, item, items);
+		}
+	}
+
+	for (list = mtable->reverse_fk_list; list; list = list->next) {
+		GdaMetaTableForeignKey *fk = (GdaMetaTableForeignKey*) list->data;
+		BrowserCanvasItem *item;
+
+		item = g_hash_table_lookup (dbrel->priv->hash_fkeys, fk);
+		if (item && !g_slist_find (items, item)) {
+			items = g_slist_prepend (items, item);
+			items = complement_layout_items (dbrel, item, items);
+		}
+	}
+
+	return items;
+}
+
+static GSList *
+get_layout_items (BrowserCanvas *canvas)
+{
+	GSList *items = NULL;
+	BrowserCanvasDbRelations *dbrel = BROWSER_CANVAS_DB_RELATIONS (canvas);
+
+	if (!canvas->priv->current_selected_item)
+		return g_slist_copy (canvas->priv->items);
+	
+	GdaMetaTable *mtable;
+	mtable = g_hash_table_lookup (dbrel->priv->hash_tables, canvas->priv->current_selected_item);
+	if (!mtable)
+		return g_slist_copy (canvas->priv->items);
+
+	items = g_slist_prepend (NULL, canvas->priv->current_selected_item);
+	items = complement_layout_items (dbrel, canvas->priv->current_selected_item, items);
+	
+	/* add non related items */
+	GSList *list;
+	for (list = canvas->priv->items; list; list = list->next) {
+		if (!g_slist_find (items, list->data))
+			items = g_slist_prepend (items, list->data);
+	}
+
+	return g_slist_reverse (items);
+}
+
 static void popup_add_table_cb (GtkMenuItem *mitem, BrowserCanvasDbRelations *canvas);
 static GtkWidget *
 build_context_menu (BrowserCanvas *canvas)
@@ -448,7 +512,6 @@ browser_canvas_db_relations_add_table  (BrowserCanvasDbRelations *canvas,
 					const GValue *table_name)
 {
 	g_return_val_if_fail (IS_BROWSER_CANVAS_DB_RELATIONS (canvas), NULL);
-	g_return_val_if_fail (canvas->priv, NULL);
 
 	GdaMetaTable *mtable;
 	GooCanvas *goocanvas;
@@ -523,4 +586,17 @@ browser_canvas_db_relations_add_table  (BrowserCanvasDbRelations *canvas,
 	else
 		return NULL;
 }
- 
+
+/**
+ * browser_canvas_db_relations_select_table
+ */
+void
+browser_canvas_db_relations_select_table (BrowserCanvasDbRelations *canvas,
+					  BrowserCanvasTable *table)
+{
+	g_return_if_fail (IS_BROWSER_CANVAS_DB_RELATIONS (canvas));
+	g_return_if_fail (!table || IS_BROWSER_CANVAS_ITEM (table));
+
+	browser_canvas_item_toggle_select (BROWSER_CANVAS (canvas), (BrowserCanvasItem*) table);
+}
+

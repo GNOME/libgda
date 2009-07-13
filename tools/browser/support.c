@@ -228,7 +228,8 @@ browser_get_pixbuf_icon (BrowserIconType type)
 		"gda-browser-column-fk.png",
 		"gda-browser-column-fknn.png",
 		"gda-browser-column-nn.png",
-		"gda-browser-reference.png"
+		"gda-browser-reference.png",
+		"gda-browser-diagram.png"
 	};
 
 	if (!array)
@@ -246,4 +247,22 @@ browser_get_pixbuf_icon (BrowserIconType type)
 		return NULL;
 	else
 		return array [type];
+}
+
+/**
+ * browser_find_parent_widget
+ *
+ * Finds the 1st parent widget of @current which is of the @requested_type type.
+ */
+GtkWidget *
+browser_find_parent_widget (GtkWidget *current, GType requested_type)
+{
+	GtkWidget *wid;
+	g_return_val_if_fail (GTK_IS_WIDGET (current), NULL);
+
+	for (wid = gtk_widget_get_parent (current); wid; wid = gtk_widget_get_parent (wid)) {
+		if (G_OBJECT_TYPE (wid) == requested_type)
+			return wid;
+	}
+	return NULL;
 }

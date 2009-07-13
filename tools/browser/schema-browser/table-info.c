@@ -35,7 +35,6 @@
 
 struct _TableInfoPrivate {
 	BrowserConnection *bcnc;
-	SchemaBrowserPerspective *bpers; /* perspective into which tinfo will be */
 
 	gchar *schema;
 	gchar *table_name;
@@ -64,7 +63,6 @@ static void meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, Ta
 /* properties */
 enum {
         PROP_0,
-        PROP_PERSPECTIVE
 };
 
 enum {
@@ -90,10 +88,6 @@ table_info_class_init (TableInfoClass *klass)
 	/* Properties */
         object_class->set_property = table_info_set_property;
         object_class->get_property = table_info_get_property;
-
-	g_object_class_install_property (object_class, PROP_PERSPECTIVE,
-                                         g_param_spec_pointer ("perspective", NULL, NULL,
-							       G_PARAM_READABLE | G_PARAM_WRITABLE));
 
 	object_class->dispose = table_info_dispose;
 }
@@ -159,9 +153,6 @@ table_info_set_property (GObject *object,
 	TableInfo *tinfo;
 	tinfo = TABLE_INFO (object);
 	switch (param_id) {
-	case PROP_PERSPECTIVE:
-		tinfo->priv->bpers = g_value_get_pointer (value);
-		break;
 	}
 }
 
@@ -174,9 +165,6 @@ table_info_get_property (GObject *object,
 	TableInfo *tinfo;
 	tinfo = TABLE_INFO (object);
 	switch (param_id) {
-	case PROP_PERSPECTIVE:
-		g_value_set_pointer (value, tinfo->priv->bpers);
-		break;
 	}
 }
 

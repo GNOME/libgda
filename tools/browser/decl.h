@@ -41,9 +41,7 @@ typedef struct {
 } BrowserPerspectiveFactory;
 #define BROWSER_PERSPECTIVE_FACTORY(x) ((BrowserPerspectiveFactory*)(x))
 
-typedef enum {
-        BROWSER_FAVORITES_TABLES
-} BrowserFavoritesType;
+#define ORDER_KEY_SCHEMA 1
 
 G_END_DECLS
 

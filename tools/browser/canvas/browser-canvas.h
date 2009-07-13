@@ -60,6 +60,7 @@ struct _BrowserCanvasClass
 
 	/* virtual functions */
 	void           (*clean_canvas_items)  (BrowserCanvas *canvas); /* clean any extra structure, not the individual items */
+	GSList        *(*get_layout_items) (BrowserCanvas *canvas);
 
 	GtkWidget     *(*build_context_menu)  (BrowserCanvas *canvas);
 };
@@ -75,6 +76,8 @@ gboolean           browser_canvas_auto_layout_enabled     (BrowserCanvas *canvas
 void               browser_canvas_perform_auto_layout     (BrowserCanvas *canvas, gboolean animate,
 							   BrowserCanvasLayoutAlgorithm algorithm);
 void               browser_canvas_center                  (BrowserCanvas *canvas);
+void               browser_canvas_scale_layout            (BrowserCanvas *canvas, gdouble scale);
+
 gchar             *browser_canvas_serialize_items         (BrowserCanvas *canvas);
 
 void               browser_canvas_item_toggle_select      (BrowserCanvas *canvas, BrowserCanvasItem *item);

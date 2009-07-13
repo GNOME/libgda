@@ -40,6 +40,11 @@ GtkWidget*         browser_make_tab_label_with_pixbuf (const gchar *label,
 						       GtkWidget **out_close_button);
 
 /*
+ * Widgets navigation
+ */
+GtkWidget        *browser_find_parent_widget (GtkWidget *current, GType requested_type);
+
+/*
  * icons
  */
 typedef enum {
@@ -52,6 +57,7 @@ typedef enum {
 	BROWSER_ICON_COLUMN_FK_NN,
 	BROWSER_ICON_COLUMN_NN,
 	BROWSER_ICON_REFERENCE,
+	BROWSER_ICON_DIAGRAM,
 
 	BROWSER_ICON_LAST
 } BrowserIconType;

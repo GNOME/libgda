@@ -196,6 +196,7 @@ testing/gdaui-test-data-entries.c
 tools/browser/auth-dialog.c
 tools/browser/browser-connection.c
 tools/browser/browser-connections-list.c
+tools/browser/browser-favorites.c
 tools/browser/browser-window.c
 tools/browser/gda-browser-4.0.desktop.in
 tools/browser/login-dialog.c
@@ -212,6 +213,7 @@ tools/browser/schema-browser/favorite-selector.c
 tools/browser/schema-browser/mgr-columns.c
 tools/browser/schema-browser/objects-index.c
 tools/browser/schema-browser/perspective-main.c
+tools/browser/schema-browser/relations-diagram.c
 tools/browser/schema-browser/schema-browser-perspective.c
 tools/browser/schema-browser/table-columns.c
 tools/browser/schema-browser/table-info.c

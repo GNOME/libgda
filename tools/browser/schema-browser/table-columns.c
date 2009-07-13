@@ -597,7 +597,9 @@ follow_if_link (GtkWidget *text_view, GtkTextIter *iter, TableColumns *tcolumns)
 		table_schema = g_object_get_data (G_OBJECT (tag), "table_schema");
 		table_name = g_object_get_data (G_OBJECT (tag), "table_name");
 		table_short_name = g_object_get_data (G_OBJECT (tag), "table_short_name");
-		g_object_get (tcolumns->priv->tinfo, "perspective", &bpers, NULL);
+
+		bpers = browser_find_parent_widget (GTK_WIDGET (tcolumns),
+						    TYPE_SCHEMA_BROWSER_PERSPECTIVE);
 		if (table_name && table_schema && table_short_name && bpers) {
 			schema_browser_perspective_display_table_info (bpers,
 								       table_schema,

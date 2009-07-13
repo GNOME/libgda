@@ -203,7 +203,10 @@ gdaui_entry_common_time_dispose (GObject   * object)
 
 	gdaui_entry_common_time = GDAUI_ENTRY_COMMON_TIME (object);
 	if (gdaui_entry_common_time->priv) {
-
+		if (gdaui_entry_common_time->priv->window) {
+			gtk_widget_destroy (gdaui_entry_common_time->priv->window);
+			gdaui_entry_common_time->priv->window = NULL;
+		}
 	}
 
 	/* parent class */

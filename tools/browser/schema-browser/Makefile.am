@@ -27,5 +27,7 @@ libperspective_la_SOURCES = \
 if HAVE_GOOCANVAS
 libperspective_la_SOURCES += \
 	table-relations.c \
-	table-relations.h
+	table-relations.h \
+	relations-diagram.c \
+	relations-diagram.h
 endif

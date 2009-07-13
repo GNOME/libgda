@@ -1,5 +1,5 @@
 bin_PROGRAMS=gda-browser-4.0
-noinst_PROGRAMS = 
+noinst_PROGRAMS = favorites-test
 
 SUBDIRS = schema-browser dummy-perspective
 if HAVE_GOOCANVAS
@@ -45,6 +45,8 @@ gda_browser_4_0_SOURCES=\
 	browser-spinner.h \
 	browser-connection.c \
 	browser-connection.h \
+	browser-favorites.c \
+	browser-favorites.h \
 	browser-variable.c \
 	browser-variable.h \
 	browser-window.c \
@@ -82,6 +84,17 @@ if HAVE_GOOCANVAS
 gda_browser_4_0_LDADD+= \
 	$(top_builddir)/tools/browser/canvas/libcanvas.la
 endif
+
+favorites_test_SOURCES=\
+	browser-favorites.c \
+	browser-favorites.h \
+	favorites-test.c
+
+favorites_test_LDADD=\
+	$(top_builddir)/tools/browser/schema-browser/libperspective.la \
+	$(top_builddir)/tools/browser/dummy-perspective/libperspective.la \
+	$(top_builddir)/libgda/libgda-4.0.la \
+	$(LIBGDA_LIBS)
 
 @INTLTOOL_DESKTOP_RULE@
 
@@ -121,7 +134,8 @@ icons_DATA= \
 	gda-browser-column-fk.png \
 	gda-browser-column-nn.png \
 	gda-browser-column-pk.png \
-	gda-browser-reference.png
+	gda-browser-reference.png \
+	gda-browser-diagram.png
 
 EXTRA_DIST = \
 	marshal.list \

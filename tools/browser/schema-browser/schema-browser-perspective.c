@@ -25,6 +25,9 @@
 #include "../browser-window.h"
 #include "table-info.h"
 #include "../support.h"
+#ifdef HAVE_GOOCANVAS
+#include "relations-diagram.h"
+#endif
 
 /* 
  * Main static functions 
@@ -229,57 +232,46 @@ schema_browser_perspective_dispose (GObject *object)
 	parent_class->dispose (object);
 }
 
+#ifdef HAVE_GOOCANVAS
 static void
-action_create_table_cb (GtkAction *action, BrowserPerspective *bpers)
+action_create_diagram_cb (GtkAction *action, SchemaBrowserPerspective *bpers)
 {
-	TO_IMPLEMENT;
+	GtkWidget *diagram;
+	diagram = relations_diagram_new (browser_window_get_connection (bpers->priv->bwin));
+	if (diagram) {
+		GtkWidget *close_btn;
+		GdkPixbuf *diagram_pixbuf;
+		gint i;
+		
+		diagram_pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_DIAGRAM);
+		i = gtk_notebook_append_page (GTK_NOTEBOOK (bpers->priv->notebook), diagram,
+					      browser_make_tab_label_with_pixbuf (_("Diagram"),
+										  diagram_pixbuf,
+										  TRUE, &close_btn));
+		g_signal_connect (close_btn, "clicked",
+				  G_CALLBACK (close_button_clicked_cb), diagram);
+		
+		gtk_widget_show (diagram);
+		gtk_notebook_set_menu_label (GTK_NOTEBOOK (bpers->priv->notebook), diagram,
+					     browser_make_tab_label_with_pixbuf (_("Diagram"),
+										 diagram_pixbuf,
+										 FALSE, NULL));
+		gtk_notebook_set_current_page (GTK_NOTEBOOK (bpers->priv->notebook), i);
+		gtk_notebook_set_tab_reorderable (GTK_NOTEBOOK (bpers->priv->notebook), diagram,
+						  TRUE);
+		gtk_notebook_set_tab_detachable (GTK_NOTEBOOK (bpers->priv->notebook), diagram,
+						 TRUE);
+	}
 }
-
-static void
-action_drop_table_cb (GtkAction *action, BrowserPerspective *bpers)
-{
-	TO_IMPLEMENT;
-}
-
-static void
-action_rename_table_cb (GtkAction *action, BrowserPerspective *bpers)
-{
-	TO_IMPLEMENT;
-}
-
-static void
-action_add_column_cb (GtkAction *action, BrowserPerspective *bpers)
-{
-	TO_IMPLEMENT;
-}
-
-static void
-action_drop_column_cb (GtkAction *action, BrowserPerspective *bpers)
-{
-	TO_IMPLEMENT;
-}
-
-static void
-action_table_contents_cb (GtkAction *action, BrowserPerspective *bpers)
-{
-	TO_IMPLEMENT;
-}
+#endif
 
 
 static GtkActionEntry ui_actions[] = {
+#ifdef HAVE_GOOCANVAS
         { "Schema", NULL, "_Schema", NULL, "Schema", NULL },
-        { "CREATE_TABLE", GTK_STOCK_ADD, "_New table", NULL, "Create a new table",
-          G_CALLBACK (action_create_table_cb)},
-        { "DROP_TABLE", GTK_STOCK_DELETE, "_Delete", NULL, "Delete the selected table",
-          G_CALLBACK (action_drop_table_cb)},
-        { "RENAME_TABLE", NULL, "_Rename", NULL, "Rename the selected table",
-          G_CALLBACK (action_rename_table_cb)},
-        { "ADD_COLUMN", NULL, "_Add column", NULL, "Add a column to the selected table",
-          G_CALLBACK (action_add_column_cb)},
-        { "DROP_COLUMN", NULL, "_Delete column", NULL, "Delete a column from the selected table",
-          G_CALLBACK (action_drop_column_cb)},
-        { "TableContents", GTK_STOCK_EDIT, "_Contents", NULL, "Display the contents of the selected table",
-          G_CALLBACK (action_table_contents_cb)},
+        { "NewDiagram", GTK_STOCK_ADD, "_New Diagram", NULL, "Create a new diagram",
+          G_CALLBACK (action_create_diagram_cb)},
+#endif
 };
 
 static const gchar *ui_actions_info =
@@ -287,23 +279,13 @@ static const gchar *ui_actions_info =
         "  <menubar name='MenuBar'>"
         "    <placeholder name='MenuExtension'>"
         "      <menu name='Schema' action='Schema'>"
-        "        <menuitem name='CREATE_TABLE' action= 'CREATE_TABLE'/>"
-        "        <menuitem name='DROP_TABLE' action= 'DROP_TABLE'/>"
-        "        <menuitem name='RENAME_TABLE' action= 'RENAME_TABLE'/>"
-        "        <separator/>"
-        "        <menuitem name='ADD_COLUMN' action= 'ADD_COLUMN'/>"
-        "        <menuitem name='DROP_COLUMN' action= 'DROP_COLUMN'/>"
-        "        <separator/>"
-        "        <menuitem name='TableContents' action= 'TableContents'/>"
+        "        <menuitem name='NewDiagram' action= 'NewDiagram'/>"
         "      </menu>"
         "    </placeholder>"
         "  </menubar>"
         "  <toolbar name='ToolBar'>"
         "    <separator/>"
-        "    <toolitem action='CREATE_TABLE'/>"
-        "    <toolitem action='DROP_TABLE'/>"
-        "    <separator/>"
-        "    <toolitem action='TableContents'/>"
+        "    <toolitem action='NewDiagram'/>"
         "  </toolbar>"
         "</ui>";
 
@@ -313,13 +295,6 @@ schema_browser_perspective_get_actions_group (BrowserPerspective *bpers)
 	GtkActionGroup *agroup;
 	agroup = gtk_action_group_new ("SchemaBrowserActions");
 	gtk_action_group_add_actions (agroup, ui_actions, G_N_ELEMENTS (ui_actions), bpers);
-
-	gtk_action_set_sensitive (gtk_action_group_get_action (agroup, "CREATE_TABLE"), TRUE);
-	gtk_action_set_sensitive (gtk_action_group_get_action (agroup, "DROP_TABLE"), FALSE);
-	gtk_action_set_sensitive (gtk_action_group_get_action (agroup, "RENAME_TABLE"), FALSE);
-	gtk_action_set_sensitive (gtk_action_group_get_action (agroup, "ADD_COLUMN"), FALSE);
-	gtk_action_set_sensitive (gtk_action_group_get_action (agroup, "DROP_COLUMN"), FALSE);
-	gtk_action_set_sensitive (gtk_action_group_get_action (agroup, "TableContents"), FALSE);
 	
 	return agroup;
 }
@@ -364,7 +339,6 @@ schema_browser_perspective_display_table_info (SchemaBrowserPerspective *bpers,
 		const gchar *tab_name;
 		GdkPixbuf *table_pixbuf;
 		
-		g_object_set (G_OBJECT (ti), "perspective", bpers, NULL);
 		table_pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_TABLE);
 		tab_name = table_short_name ? table_short_name : table_name;
 		i = gtk_notebook_append_page (GTK_NOTEBOOK (bpers->priv->notebook), ti,

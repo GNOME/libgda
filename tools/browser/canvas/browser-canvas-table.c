@@ -21,6 +21,7 @@
 #include <gtk/gtk.h>
 #include <libgda/libgda.h>
 #include "browser-canvas.h"
+#include "browser-canvas-priv.h"
 #include "browser-canvas-table.h"
 #include "browser-canvas-column.h"
 #include <glib/gi18n-lib.h>
@@ -62,10 +63,6 @@ struct _BrowserCanvasTablePrivate
 	GSList             *other_items; /* list of GooCanvasItem for other purposes */
 	gdouble            *column_ypos; /* array for each column's Y position in this canvas group */
 	GtkWidget          *(*popup_menu_func) (BrowserCanvasTable *ce);
-
-	/* presentation parameters */
-        gdouble             x_text_space;
-        gdouble             y_text_space;
 
 	GooCanvasItem      *selection_mark;
 };
@@ -142,9 +139,6 @@ browser_canvas_table_init (BrowserCanvasTable *table)
 	table->priv->table = NULL;
 	table->priv->column_ypos = NULL;
 	table->priv->popup_menu_func = NULL;
-
-	table->priv->x_text_space = 3.;
-	table->priv->y_text_space = 3.;
 
 	table->priv->selection_mark = NULL;
 
@@ -292,6 +286,7 @@ create_items (BrowserCanvasTable *ce)
 #define RADIUS_X 5.
 #define RADIUS_Y 5.
 #define MIN_HEIGHT 70.
+#define SELECTION_SIZE 4.
         GooCanvasBounds border_bounds;
         GooCanvasBounds bounds;
 	const gchar *cstr;
@@ -363,6 +358,17 @@ create_items (BrowserCanvasTable *ce)
 				     NULL);		
 	ce->priv->other_items = g_slist_prepend (ce->priv->other_items, frame);
 
+	ce->priv->selection_mark = goo_canvas_rect_new (GOO_CANVAS_ITEM (ce), border_bounds.x1 - SELECTION_SIZE,
+							border_bounds.y1 - SELECTION_SIZE, 
+							border_bounds.x2 + 2 * SELECTION_SIZE,
+							border_bounds.y2 + 2 * SELECTION_SIZE,
+							"radius-x", RADIUS_X,
+							"radius-y", RADIUS_Y,
+							"fill-color", "#11d155",//"#ffea08",
+							"stroke-color", "#11d155",//"#ffea08",
+							NULL);
+	g_object_set (G_OBJECT (ce->priv->selection_mark), "visibility", GOO_CANVAS_ITEM_HIDDEN, NULL);
+
 	/* title's background */
 	gchar *cpath;
 	cpath = g_strdup_printf ("M %d %d H %d V %d H %d Z",
@@ -386,6 +392,7 @@ create_items (BrowserCanvasTable *ce)
 	ce->priv->other_items = g_slist_prepend (ce->priv->other_items, item);
 
 	goo_canvas_item_lower (frame, NULL);
+	goo_canvas_item_lower (ce->priv->selection_mark, NULL);
 
 	/* setting the columns' background width to be the same for all */
 	for (list = ce->priv->column_items; list; list = list->next) 
@@ -532,41 +539,25 @@ browser_canvas_table_drag_data_get (BrowserCanvasItem *citem, GdkDragContext *dr
 static void
 browser_canvas_table_set_selected (BrowserCanvasItem *citem, gboolean selected)
 {
-	GooCanvasBounds bounds;
+	g_object_set (G_OBJECT (BROWSER_CANVAS_TABLE (citem)->priv->selection_mark),
+		      "visibility", selected ? GOO_CANVAS_ITEM_VISIBLE : GOO_CANVAS_ITEM_HIDDEN, NULL);
+}
 
-	if (selected) {
-		if (BROWSER_CANVAS_TABLE (citem)->priv->selection_mark)
-			g_object_set (G_OBJECT (BROWSER_CANVAS_TABLE (citem)->priv->selection_mark),
-				      "visibility", GOO_CANVAS_ITEM_VISIBLE, NULL);
-		else {
-			GooCanvasItem *root;
-			GooCanvasItem *rect;
-			
-			//root = goo_canvas_get_root_item (goo_canvas_item_get_canvas (GOO_CANVAS_ITEM (citem)));
-			root = GOO_CANVAS_ITEM (citem);
-			goo_canvas_item_get_bounds (GOO_CANVAS_ITEM (citem), &bounds);
-			rect = 	goo_canvas_rect_new (root, - 1., - 1., 
-						     bounds.x2 - bounds.x1 + 2.,
-						     bounds.y2 - bounds.y1 + 2.,
-						     "radius-x", RADIUS_X,
-						     "radius-y", RADIUS_Y,
-						     "stroke-color", "#ffea08",
-						     NULL);
-			/*
-			rect = 	goo_canvas_rect_new (root, bounds.x1 - 1., bounds.y1 - 1., 
-						     bounds.x2 - bounds.x1 + 2.,
-						     bounds.y2 - bounds.y1 + 2.,
-						     "radius-x", RADIUS_X,
-						     "radius-y", RADIUS_Y,
-						     "stroke-color", "#ffea08",
-						     NULL);
-			*/
-			BROWSER_CANVAS_TABLE (citem)->priv->selection_mark = rect;
-		}	
-	}
-	else {
-		if (BROWSER_CANVAS_TABLE (citem)->priv->selection_mark)
-			g_object_set (G_OBJECT (BROWSER_CANVAS_TABLE (citem)->priv->selection_mark),
-				      "visibility", GOO_CANVAS_ITEM_HIDDEN, NULL);
-	}
+/**
+ * browser_canvas_table_get_anchor_bounds
+ *
+ * Get the bounds to be used to compute anchors, ie. without the selection mark or any other
+ * artefact not part of the table's rectangle.
+ */
+void
+browser_canvas_table_get_anchor_bounds (BrowserCanvasTable *ce, GooCanvasBounds *bounds)
+{
+	g_return_if_fail (IS_BROWSER_CANVAS_TABLE (ce));
+	g_return_if_fail (bounds);
+
+	goo_canvas_item_get_bounds (GOO_CANVAS_ITEM (ce), bounds);
+	bounds->x1 += SELECTION_SIZE;
+	bounds->y1 += SELECTION_SIZE;
+	bounds->x2 -= SELECTION_SIZE;
+	bounds->y2 -= SELECTION_SIZE;
 }

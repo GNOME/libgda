@@ -121,6 +121,7 @@ meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableRelations
 {
 	GdaMetaDbObject *dbo;
 	GValue *tname, *tschema;
+	BrowserCanvasTable *ctable;
 
 	g_object_set (G_OBJECT (trels->priv->canvas), "meta-struct", mstruct, NULL);
 
@@ -128,8 +129,10 @@ meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableRelations
 			    table_info_get_table_schema (trels->priv->tinfo));
 	g_value_set_string ((tname = gda_value_new (G_TYPE_STRING)),
 			    table_info_get_table_name (trels->priv->tinfo));
-        browser_canvas_db_relations_add_table (BROWSER_CANVAS_DB_RELATIONS (trels->priv->canvas), NULL,
-					       tschema, tname);
+        ctable = browser_canvas_db_relations_add_table (BROWSER_CANVAS_DB_RELATIONS (trels->priv->canvas), NULL,
+							tschema, tname);
+	browser_canvas_db_relations_select_table (BROWSER_CANVAS_DB_RELATIONS (trels->priv->canvas),
+						  ctable);
 
 	dbo = gda_meta_struct_get_db_object (mstruct, NULL, tschema, tname);
 
@@ -195,7 +198,7 @@ table_relations_new (TableInfo *tinfo)
 	 */
 	trels->priv->canvas = browser_canvas_db_relations_new (NULL);
 	gtk_box_pack_start (GTK_BOX (trels), trels->priv->canvas, TRUE, TRUE, 0);
-	gtk_widget_show (trels);
+	gtk_widget_show (GTK_WIDGET (trels));
 
 	/*
 	 * initial update

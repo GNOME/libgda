@@ -30,6 +30,7 @@
 #include "../dnd.h"
 #include "../support.h"
 #include "../cc-gray-bar.h"
+#include "../browser-favorites.h"
 
 struct _FavoriteSelectorPrivate {
 	BrowserConnection *bcnc;
@@ -42,7 +43,7 @@ static void favorite_selector_init       (FavoriteSelector *tsel,
 				       FavoriteSelectorClass *klass);
 static void favorite_selector_dispose   (GObject *object);
 
-static void favorites_changed_cb (BrowserConnection *bcnc, FavoriteSelector *tsel);
+static void favorites_changed_cb (BrowserFavorites *bfav, FavoriteSelector *tsel);
 
 enum {
 	SELECTION_CHANGED,
@@ -99,7 +100,7 @@ favorite_selector_dispose (GObject *object)
 			g_object_unref (tsel->priv->tree);
 
 		if (tsel->priv->bcnc) {
-			g_signal_handlers_disconnect_by_func (tsel->priv->bcnc,
+			g_signal_handlers_disconnect_by_func (browser_connection_get_favorites (tsel->priv->bcnc),
 							      G_CALLBACK (favorites_changed_cb), tsel);
 			g_object_unref (tsel->priv->bcnc);
 		}
@@ -178,7 +179,7 @@ favorite_selector_new (BrowserConnection *bcnc)
 	tsel = FAVORITE_SELECTOR (g_object_new (FAVORITE_SELECTOR_TYPE, NULL));
 
 	tsel->priv->bcnc = g_object_ref (bcnc);
-	g_signal_connect (tsel->priv->bcnc, "favorites-changed::TABLE",
+	g_signal_connect (browser_connection_get_favorites (tsel->priv->bcnc), "favorites-changed",
 			  G_CALLBACK (favorites_changed_cb), tsel);
 	
 	/* create tree managers */
@@ -258,8 +259,8 @@ favorite_selector_new (BrowserConnection *bcnc)
 			  G_CALLBACK (tree_store_drag_can_drag_cb), tsel);
 	g_signal_connect (model, "drag-get",
 			  G_CALLBACK (tree_store_drag_get_cb), tsel);
-	g_signal_connect (model, "drag-delete",
-			  G_CALLBACK (tree_store_drag_delete_cb), tsel);
+	//g_signal_connect (model, "drag-delete",
+	//		  G_CALLBACK (tree_store_drag_delete_cb), tsel);
 
 	/* delete favorite */
 	GtkWidget *image;
@@ -300,19 +301,23 @@ static gboolean
 tree_store_drag_drop_cb (GdauiTreeStore *store, const gchar *path, GtkSelectionData *selection_data,
 			 FavoriteSelector *tsel)
 {
-	BrowserConnectionFavorite fav;
+	BrowserFavorites *bfav;
+	BrowserFavoritesAttributes fav;
 	GError *error = NULL;
 	gint pos;
 
-
+	memset (&fav, 0, sizeof (BrowserFavoritesAttributes));
+	fav.id = -1;
 	fav.type = BROWSER_FAVORITES_TABLES;
+	fav.name = NULL;
 	fav.descr = NULL;
 	fav.contents = (gchar*) selection_data->data;
 
 	pos = atoi (path);
 	g_print ("%s() path => %s, pos: %d\n", __FUNCTION__, path, pos);
 	
-	if (! browser_connection_add_favorite (tsel->priv->bcnc, 0, &fav, pos, &error)) {
+	bfav = browser_connection_get_favorites (tsel->priv->bcnc);
+	if (! browser_favorites_add (bfav, 0, &fav, ORDER_KEY_SCHEMA, pos, &error)) {
 		browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) tsel),
 				    _("Could not add favorite: %s"),
 				    error && error->message ? error->message : _("No detail"));
@@ -369,12 +374,16 @@ tree_store_drag_delete_cb (GdauiTreeStore *store, const gchar *path,
 		cvalue = gda_tree_node_get_node_attribute (node, "fav_contents");
 		if (cvalue) {
 			GError *lerror = NULL;
-			BrowserConnectionFavorite fav;
-			memset (&fav, 0, sizeof (BrowserConnectionFavorite));
+			BrowserFavorites *bfav;
+			BrowserFavoritesAttributes fav;
+
+			bfav = browser_connection_get_favorites (tsel->priv->bcnc);
+			memset (&fav, 0, sizeof (BrowserFavoritesAttributes));
+			fav.id = -1;
 			fav.type = BROWSER_FAVORITES_TABLES;
 			fav.descr = NULL;
 			fav.contents = (gchar*) g_value_get_string (cvalue);
-			if (! browser_connection_delete_favorite (tsel->priv->bcnc, 0, &fav, &lerror)) {
+			if (! browser_favorites_delete (bfav, 0, &fav, &lerror)) {
 				browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*)tsel),
 						    _("Could not remove favorite: %s"),
 						    lerror && lerror->message ? lerror->message : _("No detail"));
@@ -390,7 +399,7 @@ tree_store_drag_delete_cb (GdauiTreeStore *store, const gchar *path,
 
 
 static void
-favorites_changed_cb (BrowserConnection *bcnc, FavoriteSelector *tsel)
+favorites_changed_cb (BrowserFavorites *bfav, FavoriteSelector *tsel)
 {
 	if (! gda_tree_update_all (tsel->priv->tree, NULL)) {
 		if (tsel->priv->idle_update_favorites == 0)

@@ -22,6 +22,7 @@
 #define __BROWSER_CONNECTION_H_
 
 #include <libgda/libgda.h>
+#include "browser-favorites.h"
 #include "decl.h"
 
 G_BEGIN_DECLS
@@ -64,27 +65,13 @@ GdaMetaStruct      *browser_connection_get_meta_struct        (BrowserConnection
 GdaMetaStore       *browser_connection_get_meta_store         (BrowserConnection *bcnc);
 const gchar        *browser_connection_get_dictionary_file    (BrowserConnection *bcnc);
 
+BrowserFavorites   *browser_connection_get_favorites          (BrowserConnection *bcnc);
+
 /*
  * statements's execution
  */
+/* TODO */
 
-
-/*
- * Favorites management
- */
-typedef struct {
-	BrowserFavoritesType  type;
-	gchar                *descr;
-	gchar                *contents;
-} BrowserConnectionFavorite;
-gboolean            browser_connection_add_favorite           (BrowserConnection *bcnc, guint session_id,
-							       BrowserConnectionFavorite *fav, gint pos,
-							       GError **error);
-GSList             *browser_connection_list_favorites         (BrowserConnection *bcnc, guint session_id, 
-							       BrowserFavoritesType type, GError **error);
-gboolean            browser_connection_delete_favorite        (BrowserConnection *bcnc, guint session_id,
-							       BrowserConnectionFavorite *fav, GError **error);
-void                browser_connection_free_favorites_list    (GSList *fav_list);
 G_END_DECLS
 
 #endif

@@ -60,6 +60,8 @@ BrowserCanvasTable *browser_canvas_db_relations_add_table  (BrowserCanvasDbRelat
 							    const GValue *table_catalog,
 							    const GValue *table_schema,
 							    const GValue *table_name);
+void                browser_canvas_db_relations_select_table (BrowserCanvasDbRelations *canvas,
+							      BrowserCanvasTable *table);
 
 G_END_DECLS
 

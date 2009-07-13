@@ -205,14 +205,18 @@ hash_for_existing_nodes (const GSList *nodes)
 	GHashTable *hash;
 	const GSList *list;
 
-	hash = g_hash_table_new (g_str_hash, g_str_equal);
+	hash = g_hash_table_new_full (g_int_hash, g_int_equal, g_free, NULL);
 	for (list = nodes; list; list = list->next) {
 		const GValue *cvalue;
-		cvalue = gda_tree_node_get_node_attribute ((GdaTreeNode*) list->data, MGR_FAVORITES_CONTENTS_ATT_NAME);
-		if (cvalue && (G_VALUE_TYPE (cvalue) == G_TYPE_STRING)) {
-			const gchar *str = g_value_get_string (cvalue);
-			if (str)
-				g_hash_table_insert (hash, (gpointer) str, list->data);
+		cvalue = gda_tree_node_get_node_attribute ((GdaTreeNode*) list->data, MGR_FAVORITES_ID_ATT_NAME);
+		if (cvalue && (G_VALUE_TYPE (cvalue) == G_TYPE_INT)) {
+			gint id;
+			id = g_value_get_int (cvalue);
+			if (id >= 0) {
+				gint *key = g_new0 (gint, 1);
+				*key = id;
+				g_hash_table_insert (hash, (gpointer) key, list->data);
+			}
 		}
 	}
 	return hash;
@@ -234,53 +238,103 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 	if (children_nodes)
 		ehash = hash_for_existing_nodes (children_nodes);
 
-	fav_list = browser_connection_list_favorites (mgr->priv->bcnc, 0, BROWSER_FAVORITES_TABLES, &lerror);
+	fav_list = browser_favorites_list (browser_connection_get_favorites (mgr->priv->bcnc),
+					   0, BROWSER_FAVORITES_TABLES | BROWSER_FAVORITES_DIAGRAMS,
+					   ORDER_KEY_SCHEMA, &lerror);
 	if (fav_list) {
 		GSList *list;
 		for (list = fav_list; list; list = list->next) {
-			BrowserConnectionFavorite *fav = (BrowserConnectionFavorite *) list->data;
+			BrowserFavoritesAttributes *fav = (BrowserFavoritesAttributes *) list->data;
 			GdaTreeNode* snode = NULL;
+			GValue *av;
 
 			if (ehash)
-				snode = g_hash_table_lookup (ehash, fav->contents);
-			if (snode) {
+				snode = g_hash_table_lookup (ehash, &(fav->id));
+
+			
+			if (snode)
 				/* use the same node */
 				g_object_ref (G_OBJECT (snode));
-			}
-			else {
-				GValue *av;
-				GdaQuarkList *ql;
-				const gchar *fname = NULL;
-				
-				ql = gda_quark_list_new_from_string (fav->contents);
-				if (!ql || !(fname = gda_quark_list_find (ql, "OBJ_SHORT_NAME"))) {
-					g_warning ("Invalid TABLE favorite format: %s", fav->contents);
-				}
-				else {
-					snode = gda_tree_manager_create_node (manager, node, NULL);
-					g_value_set_string ((av = gda_value_new (G_TYPE_STRING)), fname);
-					gda_tree_node_set_node_attribute (snode, "markup", av, NULL);
-					gda_value_free (av);
+
+			if (fav->type == BROWSER_FAVORITES_TABLES) {
+				if (!snode) {
+					GdaQuarkList *ql;
+					const gchar *fname = NULL;
 					
-					g_value_set_string ((av = gda_value_new (G_TYPE_STRING)), fav->contents);
-					gda_tree_node_set_node_attribute (snode, MGR_FAVORITES_CONTENTS_ATT_NAME, av, NULL);
+					ql = gda_quark_list_new_from_string (fav->contents);
+					if (!ql || !(fname = gda_quark_list_find (ql, "OBJ_SHORT_NAME"))) {
+						g_warning ("Invalid TABLE favorite format: %s", fav->contents);
+					}
+					else {
+						snode = gda_tree_manager_create_node (manager, node, NULL);
+						g_value_set_string ((av = gda_value_new (G_TYPE_STRING)), fname);
+						gda_tree_node_set_node_attribute (snode, "markup", av, NULL);
+						gda_value_free (av);
+						
+						g_value_set_string ((av = gda_value_new (G_TYPE_STRING)),
+								    fav->contents);
+						gda_tree_node_set_node_attribute (snode,
+										  MGR_FAVORITES_CONTENTS_ATT_NAME,
+										  av, NULL);
+						gda_value_free (av);
+						
+						
+						g_value_set_int ((av = gda_value_new (G_TYPE_INT)), fav->id);
+						gda_tree_node_set_node_attribute (snode,
+										  MGR_FAVORITES_ID_ATT_NAME,
+										  av, NULL);
+						gda_value_free (av);
+						
+						/* icon */
+						GdkPixbuf *pixbuf;
+						pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_TABLE);
+						av = gda_value_new (G_TYPE_OBJECT);
+						g_value_set_object (av, pixbuf);
+						gda_tree_node_set_node_attribute (snode, "icon", av, NULL);
+						gda_value_free (av);
+					}
+					if (ql)
+						gda_quark_list_free (ql);
+				}
+			}
+			else if (fav->type == BROWSER_FAVORITES_DIAGRAMS) {
+				if (!snode) {
+					snode = gda_tree_manager_create_node (manager, node, NULL);
+									
+					g_value_set_int ((av = gda_value_new (G_TYPE_INT)), fav->id);
+					gda_tree_node_set_node_attribute (snode,
+									  MGR_FAVORITES_ID_ATT_NAME,
+									  av, NULL);
 					gda_value_free (av);
 					
 					/* icon */
 					GdkPixbuf *pixbuf;
-					pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_TABLE);
+					pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_DIAGRAM);
 					av = gda_value_new (G_TYPE_OBJECT);
 					g_value_set_object (av, pixbuf);
 					gda_tree_node_set_node_attribute (snode, "icon", av, NULL);
 					gda_value_free (av);
 				}
-				if (ql)
-					gda_quark_list_free (ql);
+
+				g_value_set_string ((av = gda_value_new (G_TYPE_STRING)),
+						    fav->contents);
+				gda_tree_node_set_node_attribute (snode,
+								  MGR_FAVORITES_CONTENTS_ATT_NAME,
+								  av, NULL);
+				gda_value_free (av);
+
+				g_value_set_string ((av = gda_value_new (G_TYPE_STRING)), fav->name);
+				gda_tree_node_set_node_attribute (snode, "markup", av, NULL);
+				gda_value_free (av);
+			}
+
+			else {
+				
 			}
 			if (snode)
 				nodes_list = g_slist_prepend (nodes_list, snode);
 		}
-		browser_connection_free_favorites_list (fav_list);
+		browser_favorites_free_list (fav_list);
 	}
 	else if (lerror) {
 		if (out_error)

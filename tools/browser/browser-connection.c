@@ -24,6 +24,7 @@
 #include "support.h"
 #include "marshal.h"
 #include <sql-parser/gda-sql-parser.h>
+#include <libgda/gda-sql-builder.h>
 
 /* code inclusion */
 #include "../dict-file-name.c"
@@ -44,7 +45,7 @@ struct _BrowserConnectionPrivate {
 	GdaMetaStruct *p_mstruct; /* private GdaMetaStruct: while it is being created */
 	GdaMetaStruct *mstruct; /* public GdaMetaStruct: once it has been created and is no more modified */
 
-	gboolean       meta_store_addons_init_done;
+	BrowserFavorites *bfav;
 };
 
 
@@ -170,7 +171,7 @@ browser_connection_class_init (BrowserConnectionClass *klass)
 	browser_connection_signals [FAV_CHANGED] =
 		g_signal_new ("favorites-changed",
                               G_TYPE_FROM_CLASS (object_class),
-                              G_SIGNAL_RUN_FIRST | G_SIGNAL_DETAILED,
+                              G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (BrowserConnectionClass, favorites_changed),
                               NULL, NULL,
                               g_cclosure_marshal_VOID__VOID, G_TYPE_NONE,
@@ -201,7 +202,7 @@ browser_connection_init (BrowserConnection *bcnc)
 	bcnc->priv->p_mstruct = NULL;
 	bcnc->priv->mstruct = NULL;
 
-	bcnc->priv->meta_store_addons_init_done = FALSE;
+	bcnc->priv->bfav = NULL;
 }
 
 static void
@@ -221,6 +222,12 @@ clear_dsn_info (BrowserConnection *bcnc)
 
         g_free (bcnc->priv->dsn_info.auth_string);
         bcnc->priv->dsn_info.auth_string = NULL;
+}
+
+static void
+fav_changed_cb (BrowserFavorites *bfav, BrowserConnection *bcnc)
+{
+	g_signal_emit (bcnc, browser_connection_signals [FAV_CHANGED], 0);
 }
 
 static void
@@ -260,6 +267,11 @@ browser_connection_dispose (GObject *object)
 		if (bcnc->priv->variables) {
 			g_slist_foreach (bcnc->priv->variables, (GFunc) g_object_unref, NULL);
 			g_slist_free (bcnc->priv->variables);
+		}
+		if (bcnc->priv->bfav) {
+			g_signal_handlers_disconnect_by_func (bcnc->priv->bfav,
+							      G_CALLBACK (fav_changed_cb), bcnc);
+			g_object_unref (bcnc->priv->bfav);
 		}
 
 		g_free (bcnc->priv);
@@ -602,382 +614,20 @@ browser_connection_get_dictionary_file (BrowserConnection *bcnc)
 	return bcnc->priv->dict_file_name;
 }
 
-#define FAVORITES_TABLE_NAME "gda_sql_favorites"
-#define FAVORITES_TABLE_DESC \
-        "<table name=\"" FAVORITES_TABLE_NAME "\"> "                            \
-        "   <column name=\"session\" type=\"gint\" pkey=\"TRUE\"/>"             \
-        "   <column name=\"type\" pkey=\"TRUE\"/>"                              \
-        "   <column name=\"contents\" pkey=\"TRUE\"/>"                          \
-        "   <column name=\"descr\" nullok=\"TRUE\"/>"                           \
-        "   <column name=\"rank\" type=\"gint\"/>"                             \
-        "   <unique>"                             \
-        "     <column name=\"type\"/>"                             \
-        "     <column name=\"rank\"/>"                             \
-        "   </unique>"                             \
-        "</table>"
-#define FAVORITE_DELETE \
-        "DELETE FROM " FAVORITES_TABLE_NAME " WHERE session = ##session::gint AND type= ##type::string AND " \
-	"contents = ##contents::string"
-#define FAVORITE_SHIFT \
-	"UPDATE " FAVORITES_TABLE_NAME " SET rank = rank + 1 WHERE rank >= ##rank::gint"
-#define FAVORITE_INSERT \
-        "INSERT INTO " FAVORITES_TABLE_NAME " (session, type, contents, rank, descr) VALUES (##session::gint, " \
-	"##type::string, ##contents::string, ##rank::gint, ##descr::string)"
-#define FAVORITE_SELECT \
-        "SELECT contents, descr, rank FROM " FAVORITES_TABLE_NAME " WHERE session = ##session::gint " \
-	"AND type = ##type::string ORDER by rank"
-#define FAVORITE_UPDATE_RANK \
-	"UPDATE " FAVORITES_TABLE_NAME " SET rank = ##newrank::gint WHERE rank = ##rank::gint AND " \
-	"session = ##session::gint AND type = ##type::string"
-
-static gboolean
-meta_store_addons_init (BrowserConnection *bcnc, GError **error)
-{
-	GdaMetaStore *mstore;
-	GError *lerror = NULL;
-	mstore = gda_connection_get_meta_store (bcnc->priv->cnc);
-	if (!gda_meta_store_schema_add_custom_object (mstore, FAVORITES_TABLE_DESC, &lerror)) {
-                g_set_error (error, 0, 0, "%s",
-                             _("Can't initialize dictionary to store favorites"));
-		g_warning ("Can't initialize dictionary to store favorites :%s",
-			   lerror && lerror->message ? lerror->message : "No detail");
-		if (lerror)
-			g_error_free (lerror);
-                return FALSE;
-        }
-	
-	bcnc->priv->meta_store_addons_init_done = TRUE;
-	return TRUE;
-}
-
-static const gchar *
-favorite_type_to_string (BrowserFavoritesType type)
-{
-	switch (type) {
-	case BROWSER_FAVORITES_TABLES:
-		return "TABLE";
-	default:
-		g_warning ("Unknow type of favorite");
-	}
-
-	return "";
-}
-
 /**
- * browser_connection_add_favorite
- */
-gboolean
-browser_connection_add_favorite (BrowserConnection *bcnc, guint session_id, BrowserConnectionFavorite *fav,
-				 gint pos, GError **error)
-{
-	GdaMetaStore *mstore;
-	GdaConnection *store_cnc;
-	GdaStatement *stmt;
-	GdaSqlParser *parser = NULL;
-	GdaSet *params = NULL;
-
-	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), FALSE);
-	g_return_val_if_fail (fav && fav->contents, FALSE);
-
-	if (! bcnc->priv->meta_store_addons_init_done &&
-	    ! meta_store_addons_init (bcnc, error))
-		return FALSE;
-
-	mstore = gda_connection_get_meta_store (bcnc->priv->cnc);
-	store_cnc = gda_meta_store_get_internal_connection (mstore);
-	
-	if (! gda_lockable_trylock (GDA_LOCKABLE (store_cnc))) {
-		g_set_error (error, 0, 0, "%s",
-                             _("Can't initialize transaction to access favorites"));
-		return FALSE;
-	}
-	/* begin a transaction */
-	if (! gda_connection_begin_transaction (store_cnc, NULL, GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL)) {
-		g_set_error (error, 0, 0, "%s",
-                             _("Can't initialize transaction to access favorites"));
-		gda_lockable_unlock (GDA_LOCKABLE (store_cnc));
-                return FALSE;
-	}
-
-	/* create parser */
-	parser = gda_connection_create_parser (store_cnc);
-	if (!parser)
-		parser = gda_sql_parser_new ();
-
-	/* DELETE any favorite existing */
-	if (pos < 0)
-		pos = 0;
-	params = gda_set_new_inline (6,
-				     "session", G_TYPE_INT, session_id,
-				     "type", G_TYPE_STRING, favorite_type_to_string (fav->type),
-				     "contents", G_TYPE_STRING, fav->contents,
-				     "rank", G_TYPE_INT, pos,
-				     "newrank", G_TYPE_INT, 0,
-				     "descr", G_TYPE_STRING, fav->descr);
-	stmt = gda_sql_parser_parse_string (parser, FAVORITE_DELETE, NULL, error);
-	if (!stmt) {
-		g_warning ("Could not parse internal statement: %s", FAVORITE_DELETE);
-		goto err;
-	}
-	if (gda_connection_statement_execute_non_select (store_cnc, stmt, params, NULL, error) == -1) {
-		g_object_unref (stmt);
-		goto err;
-	}
-	g_object_unref (stmt);
-	stmt = NULL;
-
-	/* renumber favorites */
-	GdaDataModel *model;
-	stmt = gda_sql_parser_parse_string (parser, FAVORITE_SELECT, NULL, NULL);
-	if (!stmt) {
-		g_warning ("Could not parse internal statement: %s", FAVORITE_SELECT);
-		goto err;
-	}
-	model = gda_connection_statement_execute_select (store_cnc, stmt, params, error);
-	g_object_unref (stmt);
-	stmt = NULL;
-	if (!model)
-		goto err;
-	
-	gint i, nrows;
-	nrows = gda_data_model_get_n_rows (model);
-	for (i = 0; i < nrows; i++) {
-		const GValue *rank;
-
-		rank = gda_data_model_get_value_at (model, 2, i, error);
-		if (!rank) {
-			g_set_error (error, 0, 0, "%s",
-				     _("Can't get current favorites"));
-			g_object_unref (model);
-			goto err;
-		}
-		if (g_value_get_int (rank) != i) {
-			if (!stmt) {
-				stmt = gda_sql_parser_parse_string (parser, FAVORITE_UPDATE_RANK, NULL, NULL);
-				if (!stmt) {
-					g_warning ("Could not parse internal statement: %s", FAVORITE_UPDATE_RANK);
-					g_object_unref (model);
-					goto err;
-				}
-			}
-			gda_set_set_holder_value (params, NULL, "newrank", i);
-			gda_set_set_holder_value (params, NULL, "rank", g_value_get_int (rank));
-			if (gda_connection_statement_execute_non_select (store_cnc, stmt, params, NULL, error) == -1) {
-				g_object_unref (stmt);
-				g_object_unref (model);
-				goto err;
-			}
-		}
-	}
-	if (stmt)
-		g_object_unref (stmt);
-	stmt = NULL;
-	g_object_unref (model);
-	if (pos > nrows)
-		pos = nrows;
-	gda_set_set_holder_value (params, NULL, "rank", pos);
-
-	/* SHIFT favorites */
-	stmt = gda_sql_parser_parse_string (parser, FAVORITE_SHIFT, NULL, error);
-	if (!stmt) {
-		g_warning ("Could not parse internal statement: %s", FAVORITE_SHIFT);
-		goto err;
-	}
-	if (gda_connection_statement_execute_non_select (store_cnc, stmt, params, NULL, error) == -1) {
-		g_object_unref (stmt);
-		goto err;
-	}
-	g_object_unref (stmt);
-	stmt = NULL;
-
-	/* ADD new favorite */
-	stmt = gda_sql_parser_parse_string (parser, FAVORITE_INSERT, NULL, error);
-	if (!stmt) {
-		g_warning ("Could not parse internal statement: %s", FAVORITE_INSERT);
-		goto err;
-	}
-	if (gda_connection_statement_execute_non_select (store_cnc, stmt, params, NULL, error) == -1) {
-		g_object_unref (stmt);
-		goto err;
-	}
-	g_object_unref (stmt);
-	stmt = NULL;
-					    
-	if (! gda_connection_commit_transaction (store_cnc, NULL, NULL)) {
-		g_set_error (error, 0, 0, "%s",
-                             _("Can't commit transaction to access favorites"));
-		goto err;
-	}
-
-	if (params)
-		g_object_unref (params);
-	if (parser)
-		g_object_unref (parser);
-	gda_lockable_unlock (GDA_LOCKABLE (store_cnc));
-	g_signal_emit (bcnc, browser_connection_signals [FAV_CHANGED],
-		       g_quark_from_string (favorite_type_to_string (fav->type)));
-	return TRUE;
-
- err:
-	if (params)
-		g_object_unref (params);
-	if (parser)
-		g_object_unref (parser);
-	gda_lockable_unlock (GDA_LOCKABLE (store_cnc));
-	gda_connection_rollback_transaction (store_cnc, NULL, NULL);
-	return FALSE;
-}
-
-/**
- * browser_connection_free_favorites_list
- */
-void
-browser_connection_free_favorites_list (GSList *fav_list)
-{
-	GSList *list;
-	if (!fav_list)
-		return;
-	for (list = fav_list; list; list = list->next) {
-		BrowserConnectionFavorite *fav = (BrowserConnectionFavorite*) list->data;
-		g_free (fav->contents);
-		g_free (fav->descr);
-		g_free (fav);
-	}
-	g_slist_free (fav_list);
-}
-
-/**
- * browser_connection_list_favorites
+ * browser_connection_get_favorites
  *
- * Returns: a new list of #BrowserConnectionFavorite pointers. The list has to 
- *          be freed using browser_connection_free_favorites_list()
+ * Get the favorites handler
  */
-GSList *
-browser_connection_list_favorites (BrowserConnection *bcnc, guint session_id, BrowserFavoritesType type, GError **error)
+BrowserFavorites *
+browser_connection_get_favorites (BrowserConnection *bcnc)
 {
-	GdaMetaStore *mstore;
-	GdaConnection *store_cnc;
-	GdaStatement *stmt;
-	GdaSqlParser *parser = NULL;
-	GdaSet *params = NULL;
-	GSList *fav_list = NULL;
-	GdaDataModel *model;
-
-	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), FALSE);
-	if (! bcnc->priv->meta_store_addons_init_done &&
-	    ! meta_store_addons_init (bcnc, NULL))
-		return NULL;
-
-	mstore = gda_connection_get_meta_store (bcnc->priv->cnc);
-	store_cnc = gda_meta_store_get_internal_connection (mstore);
-	
-	if (! gda_lockable_trylock (GDA_LOCKABLE (store_cnc))) {
-		g_set_error (error, 0, 0, "%s",
-			     _("Can't initialize transaction to access favorites"));
-		return NULL;
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	if (!bcnc->priv->bfav) {
+		bcnc->priv->bfav = browser_favorites_new (gda_connection_get_meta_store (bcnc->priv->cnc));
+		g_signal_connect (bcnc->priv->bfav, "favorites-changed",
+				  G_CALLBACK (fav_changed_cb), bcnc);
 	}
-
-	/* create parser */
-	parser = gda_connection_create_parser (store_cnc);
-	if (!parser)
-		parser = gda_sql_parser_new ();
-
-	/* SELECT favorites */
-	params = gda_set_new_inline (2,
-				     "session", G_TYPE_INT, session_id,
-				     "type", G_TYPE_STRING, favorite_type_to_string (type));
-	stmt = gda_sql_parser_parse_string (parser, FAVORITE_SELECT, NULL, NULL);
-	if (!stmt) {
-		g_warning ("Could not parse internal statement: %s", FAVORITE_SELECT);
-		goto out;
-	}
-	model = gda_connection_statement_execute_select (store_cnc, stmt, params, error);
-	g_object_unref (stmt);
-	if (!model)
-		goto out;
-	
-	gint i, nrows;
-	nrows = gda_data_model_get_n_rows (model);
-	for (i = 0; i < nrows; i++) {
-		const GValue *contents, *descr;
-
-		contents = gda_data_model_get_value_at (model, 0, i, error);
-		if (contents)
-			descr = gda_data_model_get_value_at (model, 1, i, error);
-		if (contents && descr) {
-			BrowserConnectionFavorite *fav;
-			fav = g_new0 (BrowserConnectionFavorite, 1);
-			fav->type = type;
-			if (G_VALUE_TYPE (descr) == G_TYPE_STRING)
-				fav->descr = g_value_dup_string (descr);
-			fav->contents = g_value_dup_string (contents);
-			fav_list = g_slist_prepend (fav_list, fav);
-		}
-		else {
-			browser_connection_free_favorites_list (fav_list);
-			fav_list = NULL;
-			goto out;
-		}
-	}
-
- out:
-	g_object_unref (parser);
-	gda_lockable_unlock (GDA_LOCKABLE (store_cnc));
-	return g_slist_reverse (fav_list);
+	return bcnc->priv->bfav;
 }
 
-
-/**
- * browser_connection_delete_favorite
- */
-gboolean
-browser_connection_delete_favorite (BrowserConnection *bcnc, guint session_id,
-				    BrowserConnectionFavorite *fav, GError **error)
-{
-	GdaMetaStore *mstore;
-	GdaConnection *store_cnc;
-	GdaStatement *stmt;
-	GdaSqlParser *parser = NULL;
-	GdaSet *params = NULL;
-	gboolean retval = FALSE;
-
-	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), FALSE);
-	if (! bcnc->priv->meta_store_addons_init_done &&
-	    ! meta_store_addons_init (bcnc, NULL))
-		return NULL;
-
-	mstore = gda_connection_get_meta_store (bcnc->priv->cnc);
-	store_cnc = gda_meta_store_get_internal_connection (mstore);
-	
-	gda_lockable_lock (GDA_LOCKABLE (store_cnc));
-
-	/* create parser */
-	parser = gda_connection_create_parser (store_cnc);
-	if (!parser)
-		parser = gda_sql_parser_new ();
-
-	/* DELETE any favorite existing */
-	params = gda_set_new_inline (3,
-				     "session", G_TYPE_INT, session_id,
-				     "type", G_TYPE_STRING, favorite_type_to_string (fav->type),
-				     "contents", G_TYPE_STRING, fav->contents);
-	stmt = gda_sql_parser_parse_string (parser, FAVORITE_DELETE, NULL, error);
-	if (!stmt) {
-		g_warning ("Could not parse internal statement: %s", FAVORITE_DELETE);
-		goto out;
-	}
-	if (gda_connection_statement_execute_non_select (store_cnc, stmt, params, NULL, error) == -1) {
-		g_object_unref (stmt);
-		goto out;
-	}
-	g_object_unref (stmt);
-	stmt = NULL;
-	retval = TRUE;
-	g_signal_emit (bcnc, browser_connection_signals [FAV_CHANGED],
-		       g_quark_from_string (favorite_type_to_string (fav->type)));
-
- out:
-	g_object_unref (parser);
-	gda_lockable_unlock (GDA_LOCKABLE (store_cnc));
-	return retval;
-}

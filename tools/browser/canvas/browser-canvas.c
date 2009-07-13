@@ -234,13 +234,22 @@ static gboolean
 canvas_scroll_event_cb (GooCanvas *gcanvas, GdkEvent *event, BrowserCanvas *canvas)
 {
 	gboolean done = TRUE;
+	GdkEventScroll *ev = (GdkEventScroll *) event;
 
 	switch (event->type) {
 	case GDK_SCROLL:
-		if (((GdkEventScroll *) event)->direction == GDK_SCROLL_UP)
-			browser_canvas_set_zoom_factor (canvas, browser_canvas_get_zoom_factor (canvas) + .03);
-		else if (((GdkEventScroll *) event)->direction == GDK_SCROLL_DOWN)
-			browser_canvas_set_zoom_factor (canvas, browser_canvas_get_zoom_factor (canvas) - .03);
+		if (ev->state & GDK_SHIFT_MASK) {
+			if (ev->direction == GDK_SCROLL_UP)
+				browser_canvas_scale_layout (canvas, 1.05);
+			else
+				browser_canvas_scale_layout (canvas, .95);
+		}
+		else {
+			if (ev->direction == GDK_SCROLL_UP)
+				browser_canvas_set_zoom_factor (canvas, browser_canvas_get_zoom_factor (canvas) + .03);
+			else if (ev->direction == GDK_SCROLL_DOWN)
+				browser_canvas_set_zoom_factor (canvas, browser_canvas_get_zoom_factor (canvas) - .03);
+		}
 		done = TRUE;
 		break;
 	default:
@@ -294,6 +303,8 @@ motion_notify_event_cb (BrowserCanvas *canvas, GdkEvent *event, GooCanvas *gcanv
 	return done;
 }
 
+static void popup_layout_default_cb (GtkMenuItem *mitem, BrowserCanvas *canvas);
+static void popup_layout_radial_cb (GtkMenuItem *mitem, BrowserCanvas *canvas);
 static void popup_zoom_in_cb (GtkMenuItem *mitem, BrowserCanvas *canvas);
 static void popup_zoom_out_cb (GtkMenuItem *mitem, BrowserCanvas *canvas);
 static void popup_zoom_fit_cb (GtkMenuItem *mitem, BrowserCanvas *canvas);
@@ -348,6 +359,22 @@ canvas_event_cb (BrowserCanvas *canvas, GdkEvent *event, GooCanvas *gcanvas)
 				mitem = gtk_separator_menu_item_new ();
 				gtk_widget_show (mitem);
 				gtk_menu_append (menu, mitem);
+
+#ifdef HAVE_GRAPHVIZ
+				mitem = gtk_menu_item_new_with_label (_("Linear layout"));
+				gtk_widget_show (mitem);
+				gtk_menu_append (menu, mitem);
+				g_signal_connect (G_OBJECT (mitem), "activate", G_CALLBACK (popup_layout_default_cb), canvas);
+
+				mitem = gtk_menu_item_new_with_label (_("Radial layout"));
+				gtk_widget_show (mitem);
+				gtk_menu_append (menu, mitem);
+				g_signal_connect (G_OBJECT (mitem), "activate", G_CALLBACK (popup_layout_radial_cb), canvas);
+
+				mitem = gtk_separator_menu_item_new ();
+				gtk_widget_show (mitem);
+				gtk_menu_append (menu, mitem);
+#endif
 				
 				mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_SAVE_AS, NULL);
 				gtk_widget_show (mitem);
@@ -399,6 +426,18 @@ canvas_event_cb (BrowserCanvas *canvas, GdkEvent *event, GooCanvas *gcanvas)
 		break;
 	}
 	return done;	
+}
+
+static void
+popup_layout_default_cb (GtkMenuItem *mitem, BrowserCanvas *canvas)
+{
+	browser_canvas_perform_auto_layout (canvas, TRUE, BROWSER_CANVAS_LAYOUT_DEFAULT);
+}
+
+static void
+popup_layout_radial_cb (GtkMenuItem *mitem, BrowserCanvas *canvas)
+{
+	browser_canvas_perform_auto_layout (canvas, TRUE, BROWSER_CANVAS_LAYOUT_RADIAL);
 }
 
 static void
@@ -835,7 +874,8 @@ browser_canvas_perform_auto_layout (BrowserCanvas *canvas, gboolean animate, Bro
 	g_message ("GraphViz library support not compiled, cannot do graph layout...\n");
 	return FALSE;
 #else
-	GSList *list;
+	BrowserCanvasClass *class = BROWSER_CANVAS_CLASS (G_OBJECT_GET_CLASS (canvas));
+	GSList *list, *layout_items;
 	Agraph_t *graph;
 	GHashTable *nodes_hash; /* key = BrowserCanvasItem, value = Agnode_t *node */
 	GSList *nodes_list = NULL; /* list of NodeLayout structures */
@@ -843,7 +883,7 @@ browser_canvas_perform_auto_layout (BrowserCanvas *canvas, gboolean animate, Bro
 	if (!gvc)
 		gvc = gvContext ();
 
-	graph = agopen ("BrowserCanvasLayout", AGDIGRAPHSTRICT);
+	graph = agopen ("BrowserCanvasLayout", AGRAPH);
         agnodeattr (graph, "shape", "box");
         agnodeattr (graph, "height", ".1");
         agnodeattr (graph, "width", ".1");
@@ -851,9 +891,15 @@ browser_canvas_perform_auto_layout (BrowserCanvas *canvas, gboolean animate, Bro
         agnodeattr (graph, "pack", "true");
 	agnodeattr (graph, "packmode", "node");
 
+
+	if (class->get_layout_items)
+		layout_items = class->get_layout_items (canvas);
+	else
+		layout_items = canvas->priv->items;
+
 	/* Graph nodes creation */
 	nodes_hash = g_hash_table_new (NULL, NULL);
-	for (list = canvas->priv->items; list; list = list->next) {
+	for (list = layout_items; list; list = list->next) {
 		BrowserCanvasItem *item = BROWSER_CANVAS_ITEM (list->data);
 		Agnode_t *node;
 		gchar *tmp;
@@ -900,7 +946,7 @@ browser_canvas_perform_auto_layout (BrowserCanvas *canvas, gboolean animate, Bro
 		  (bounds.x2 - bounds.x1) / GV_SCALE);*/
 	}
 	/* Graph edges creation */
-	for (list = canvas->priv->items; list; list = list->next) {
+	for (list = layout_items; list; list = list->next) {
 		BrowserCanvasItem *item = BROWSER_CANVAS_ITEM (list->data);
 		BrowserCanvasItem *from, *to;
 		gboolean moving;
@@ -918,6 +964,9 @@ browser_canvas_perform_auto_layout (BrowserCanvas *canvas, gboolean animate, Bro
 				agedge (graph, from_node, to_node);
 		}
 	}
+
+	if (layout_items != canvas->priv->items)
+		g_slist_free (layout_items);
 
 	switch (algorithm) {
 	default:
@@ -1032,6 +1081,40 @@ canvas_animate_to (GraphLayout *gl)
 #endif
 
 /**
+ * browser_canvas_scale_layout
+ */
+void
+browser_canvas_scale_layout (BrowserCanvas *canvas, gdouble scale)
+{
+	GSList *list;
+	GooCanvasBounds ref_bounds;
+	gdouble refx, refy;
+
+	g_return_if_fail (IS_BROWSER_CANVAS (canvas));
+	if (!canvas->priv->items)
+		return;
+
+	goo_canvas_get_bounds (canvas->priv->goocanvas, &ref_bounds.x1, &ref_bounds.y1,
+			       &ref_bounds.x2, &ref_bounds.y2);
+	refx = (ref_bounds.x2 - ref_bounds.x1) / 2.;
+	refy = (ref_bounds.y2 - ref_bounds.y1) / 2.;
+	for (list = canvas->priv->items; list; list = list->next) {
+		gboolean can_move;
+		g_object_get ((GObject*) list->data, "allow-move", &can_move, NULL);
+		if (can_move) {
+			BrowserCanvasItem *item = BROWSER_CANVAS_ITEM (list->data);
+			GooCanvasBounds bounds;
+			gdouble tx, ty;
+			
+			goo_canvas_item_get_bounds (GOO_CANVAS_ITEM (item), &bounds);
+			tx = (scale - 1.) * (bounds.x1 - refx);
+			ty = (scale - 1.) * (bounds.y1 - refy);
+			browser_canvas_item_translate (item, tx, ty);
+		}
+	}
+}
+
+/**
  * browser_canvas_serialize_items
  */
 gchar *
@@ -1044,6 +1127,8 @@ browser_canvas_serialize_items (BrowserCanvas *canvas)
 		BrowserCanvasItem *item = BROWSER_CANVAS_ITEM (list->data);
 		TO_IMPLEMENT;
 	}
+
+	return NULL;
 }
 
 /**

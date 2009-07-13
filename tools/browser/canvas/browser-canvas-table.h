@@ -61,6 +61,7 @@ GooCanvasItem       *browser_canvas_table_new             (GooCanvasItem *parent
 							   gdouble x, gdouble y, ...);
 BrowserCanvasColumn *browser_canvas_table_get_column_item (BrowserCanvasTable *ce, GdaMetaTableColumn *column);
 gdouble              browser_canvas_table_get_column_ypos (BrowserCanvasTable *ce, GdaMetaTableColumn *column);
+void                 browser_canvas_table_get_anchor_bounds (BrowserCanvasTable *ce, GooCanvasBounds *bounds);
 
 G_END_DECLS
 

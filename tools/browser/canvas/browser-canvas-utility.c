@@ -68,12 +68,12 @@ browser_canvas_util_compute_anchor_shapes (GooCanvasItem *parent, GSList *shapes
 
 	g_return_val_if_fail (nb_anchors > 0, NULL);
 
-	goo_canvas_item_get_bounds (GOO_CANVAS_ITEM (fk_ent), &bounds);
+	browser_canvas_table_get_anchor_bounds (fk_ent, &bounds);
 	fx1 = bounds.x1;
 	fy1 = bounds.y1;
 	fx2 = bounds.x2;
 	fy2 = bounds.y2;
-	goo_canvas_item_get_bounds (GOO_CANVAS_ITEM (ref_pk_ent), &bounds);
+	browser_canvas_table_get_anchor_bounds (ref_pk_ent, &bounds);
 	rx1 = bounds.x1;
 	ry1 = bounds.y1;
 	rx2 = bounds.x2;
@@ -553,11 +553,11 @@ browser_canvas_util_compute_connect_shapes (GooCanvasItem *parent, GSList *shape
 
 	/* line made of 4 points */
 	points = goo_canvas_points_new (4);
-	goo_canvas_item_get_bounds (GOO_CANVAS_ITEM (ent1), &bounds);
+	browser_canvas_table_get_anchor_bounds (ent1, &bounds);
 	xl1 = bounds.x1;
 	yt1 = bounds.y1;
 	xr1 = bounds.x2;
-	goo_canvas_item_get_bounds (GOO_CANVAS_ITEM (ent2), &bounds);
+	browser_canvas_table_get_anchor_bounds (ent2, &bounds);
 	xl2 = bounds.x1;
 	yt2 = bounds.y1;
 	xr2 = bounds.x2;
