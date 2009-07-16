@@ -2502,12 +2502,15 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 						retval = FALSE;
 						if (error && !(*error))
 							g_propagate_error (error, suggest_reports_error);
+						else
+							g_error_free (suggest_reports_error);
 						g_object_unref (wrapped_data);
 						goto out;
 					}
 				}
 			}
 		}
+		g_object_unref (wrapped_data);
 	}
 	
 	if (!store->priv->override_mode) {

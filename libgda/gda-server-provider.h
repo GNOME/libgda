@@ -297,7 +297,7 @@ struct _GdaServerProviderClass {
 	/* SQL identifiers quoting */
 	gchar                  *(* identifier_quote)    (GdaServerProvider *provider, GdaConnection *cnc,
 							 const gchar *id,
-							 gboolean meta_store_convention, gboolean force_quotes);
+							 gboolean for_meta_store, gboolean force_quotes);
 
 	/* Padding for future expansion */
 	void                    (*_gda_reserved2)        (void);

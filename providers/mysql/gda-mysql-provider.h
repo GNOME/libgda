@@ -36,6 +36,8 @@ typedef struct _GdaMysqlProviderClass GdaMysqlProviderClass;
 
 struct _GdaMysqlProvider {
 	GdaServerProvider      provider;
+	gboolean               test_mode; /* for tests ONLY */
+	gboolean               test_identifiers_case_sensitive; /* for tests ONLY */
 };
 
 struct _GdaMysqlProviderClass {
