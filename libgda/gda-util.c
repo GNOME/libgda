@@ -862,7 +862,7 @@ gda_compute_unique_table_row_condition_with_cnc (GdaConnection *cnc, GdaSqlState
 				/* left operand */
 				gchar *str;
 				opexpr = gda_sql_expr_new (GDA_SQL_ANY_PART (op));
-				str = gda_sql_identifier_quote (tcol->column_name, cnc, NULL, TRUE, FALSE);
+				str = gda_sql_identifier_quote (tcol->column_name, cnc, NULL, FALSE, FALSE);
 				g_value_take_string (opexpr->value = gda_value_new (G_TYPE_STRING), str);
 
 				op->operands = g_slist_append (op->operands, opexpr);
@@ -970,7 +970,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 	
 	/* actual statement structure's computation */
 	gchar *tmp;
-	tmp = gda_sql_identifier_quote (target->table_name, cnc, NULL, TRUE, FALSE);
+	tmp = gda_sql_identifier_quote (target->table_name, cnc, NULL, FALSE, FALSE);
 	if (insert_stmt) {
 		sql_ist = gda_sql_statement_new (GDA_SQL_STATEMENT_INSERT);
 		ist = (GdaSqlStatementInsert*) sql_ist->contents;
@@ -1034,7 +1034,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 		g_hash_table_insert (fields_hash, selfield->field_name, GINT_TO_POINTER (1));
 
 		gchar *str;
-		str = gda_sql_identifier_quote (selfield->field_name, cnc, NULL, TRUE, FALSE);
+		str = gda_sql_identifier_quote (selfield->field_name, cnc, NULL, FALSE, FALSE);
 		if (insert_stmt) {
 			GdaSqlField *field;
 			field = gda_sql_field_new (GDA_SQL_ANY_PART (ist));
@@ -1577,36 +1577,180 @@ gda_sql_identifier_split (const gchar *id)
 
 static gboolean _sql_identifier_needs_quotes (const gchar *str);
 
-
 /**
  * gda_sql_identifier_quote
  * @id: an SQL identifier
  * @cnc: a #GdaConnection object, or %NULL
  * @prov: a #GdaServerProvider object, or %NULL
- * @meta_store_convention: set to %TRUE if @id respects the #GdaMetaStore
- *                         representation of SQL identifiers, or if it is a user input
+ * @for_meta_store set to %TRUE if the returned string will be used in a #GdaMetaStore
  * @force_quotes: set to %TRUE to force the returned string to be quoted
  *
- * Use this function for any SQL identifier to make sure it is correctly formatted
- * to be used with @cnc (if @cnc is %NULL, then the standard SQL quoting rules will be applied).
- *
- * If @id already has quotes, then this function returns a copy of @id, except that the quotes may be
- * replaced by database specific characters (such as the backquote for MySQL).
- *
- * If @id has no quotes, if none are requited, and if @force_quotes if %FALSE, 
- * then this function returns a copy if @id. The criteria to
- * determine if @id needs quotes depends on the database provider associated to @cnc, and if @cnc is %NULL, then
- * in all the following cases quotes are required:
+ * Use this function for any SQL identifier to make sure that:
  * <itemizedlist>
- *  <listitem><para>If @id's 1st character is a digit</para></listitem>
- *  <listitem><para>If @id contains other characters than digits, letters and the '_', '$' and '#'</para></listitem>
- *  <listitem><para>If @id is an SQL reserved keyword</para></listitem>
+ *   <listitem>
+ *     <para>it is correctly formatted
+ *           to be used with @cnc (if @cnc is %NULL, then the standard SQL quoting rules will be applied) if
+ *           @for_meta_store is %FALSE;
+ *     </para>
+ *   </listitem>
+ *   <listitem>
+ *     <para>it is correctly formatted to be used with the #GdaMetaStore's object associated to @cnc
+ *           is @for_meta_store is %TRUE.
+ *     </para>
+ *   </listitem>
  * </itemizedlist>
  *
- * If @force_quotes is %TRUE, then the this function always returns a quoted SQL identifier.
+ * The @force_quotes allow some control of how to interpret @id: if %FALSE, then @id will be left
+ * unchanged most of the time (except for example if it's a reserved keyword), otherwise
+ * if @force_quotes is %TRUE, then the returned string will most probably have quotes around it
+ * to request that the database keep the case sensitiveness (but again, this may vary depending
+ * on the database being accessed through @cnc).
+ *
+ * For example, the following table gives the result of this function depending on the arguments
+ * when @cnc is %NULL (and @prov is also %NULL):
+ * <table frame="all">
+ *  <tgroup cols="6" colsep="1" rowsep="1" align="justify">
+ *    <thead>
+ *      <row>
+ *        <entry>id</entry>
+ *        <entry>for_meta_store=%FALSE, force_quotes=%FALSE</entry>
+ *        <entry>for_meta_store=%TRUE, force_quotes=%FALSE</entry>
+ *        <entry>for_meta_store=%FALSE, force_quotes=%TRUE</entry>
+ *        <entry>for_meta_store=%TRUE, force_quotes=%TRUE</entry>
+ *        <entry>remark</entry>
+ *      </row>
+ *    </thead>
+ *    <tbody>
+ *      <row>
+ *        <entry>"double word"</entry>
+ *        <entry>"double word"</entry>
+ *        <entry>"double word"</entry>
+ *        <entry>"double word"</entry>
+ *        <entry>"double word"</entry>
+ *        <entry>non allowed character in SQL identifier</entry>
+ *      </row>
+ *      <row>
+ *        <entry>"CapitalTest"</entry>
+ *        <entry>"CapitalTest"</entry>
+ *        <entry>"CapitalTest"</entry>
+ *        <entry>"CapitalTest"</entry>
+ *        <entry>"CapitalTest"</entry>
+ *        <entry>Mixed case SQL identifier, already quoted</entry>
+ *      </row>
+ *      <row>
+ *        <entry>CapitalTest</entry>
+ *        <entry>CapitalTest</entry>
+ *        <entry>capitaltest</entry>
+ *        <entry>"CapitalTest"</entry>
+ *        <entry>"CapitalTest"</entry>
+ *        <entry>Mixed case SQL identifier, non quoted</entry>
+ *      </row>
+ *      <row>
+ *        <entry>"mytable"</entry>
+ *        <entry>"mytable"</entry>
+ *        <entry>mytable</entry>
+ *        <entry>"mytable"</entry>
+ *        <entry>mytable</entry>
+ *        <entry>All lowser case, quoted</entry>
+ *      </row>
+ *      <row>
+ *        <entry>mytable</entry>
+ *        <entry>mytable</entry>
+ *        <entry>mytable</entry>
+ *        <entry>"mytable"</entry>
+ *        <entry>mytable</entry>
+ *        <entry>All lowser case</entry>
+ *      </row>
+ *      <row>
+ *        <entry>MYTABLE</entry>
+ *        <entry>MYTABLE</entry>
+ *        <entry>mytable</entry>
+ *        <entry>"MYTABLE"</entry>
+ *        <entry>"MYTABLE"</entry>
+ *        <entry>All upper case</entry>
+ *      </row>
+ *      <row>
+ *        <entry>"MYTABLE"</entry>
+ *        <entry>"MYTABLE"</entry>
+ *        <entry>"MYTABLE"</entry>
+ *        <entry>"MYTABLE"</entry>
+ *        <entry>"MYTABLE"</entry>
+ *        <entry>All upper case, quoted</entry>
+ *      </row>
+ *      <row>
+ *        <entry>desc</entry>
+ *        <entry>"desc"</entry>
+ *        <entry>"desc"</entry>
+ *        <entry>"desc"</entry>
+ *        <entry>"desc"</entry>
+ *        <entry>SQL reserved keyword</entry>
+ *      </row>
+ *      <row>
+ *        <entry>5ive</entry>
+ *        <entry>"5ive"</entry>
+ *        <entry>"5ive"</entry>
+ *        <entry>"5ive"</entry>
+ *        <entry>"5ive"</entry>
+ *        <entry>SQL identifier starting with a digit</entry>
+ *      </row>
+ *    </tbody>
+ *  </tgroup>
+ * </table>
+ *
+ * Here are a few examples of when and how to use this function:
+ * <itemizedlist>
+ *   <listitem>
+ *     <para>
+ *       When creating a table, the user has entered the table name, this function can be used to
+ *       create a valid SQL identifier from the user provided table name:
+ *       <programlisting>
+ * gchar *user_sqlid=...
+ * gchar *valid_sqlid = gda_sql_identifier_quote (user_sqlid, cnc, NULL, FALSE, FALSE);
+ * gchar *sql = g_strdup_printf ("CREATE TABLE %s ...", valid_sqlid);
+ * g_free (valid_sqlid);
+ *       </programlisting>
+ *       Note that this is an illustration and creating a table should be sone using a #GdaServerOperation
+ *       object.
+ *     </para>
+ *   </listitem>
+ *   <listitem>
+ *     <para>
+ *      When updating the meta data associated to a table which has been created with the code
+ *      above:
+ *      <programlisting>
+ * GValue table_name_value = { 0 };
+ * gchar* column_names[] = { (gchar*)"table_name" };
+ * GValue* column_values[] = { &table_name_value };
+ * GdaMetaContext mcontext = { (gchar*)"_tables", 1, column_names, column_values };
+ * g_value_init (&amp;table_name_value, G_TYPE_STRING);
+ * g_value_take_string (&amp;table_name_value, gda_sql_identifier_quote (user_sqlid, cnc, NULL, TRUE, FALSE);
+ * gda_connection_update_meta_store (cnc, &amp;mcontext, NULL);
+ * g_value_reset (&amp;table_name_value);
+ *       </programlisting>
+ *     </para>
+ *   </listitem>
+ *   <listitem>
+ *     <para>
+ *      When using a #GdaMetaStruct object to fetch information about a table (which has been created with
+ *      the code above):
+ *      <programlisting>
+ * GValue table_name_value = { 0 };
+ * g_value_init (&amp;table_name_value, G_TYPE_STRING);
+ * g_value_take_string (&amp;table_name_value, gda_sql_identifier_quote (user_sqlid, cnc, NULL, TRUE, FALSE);
+ * GdaMetaDbObject *dbo;
+ * dbo = gda_meta_struct_complement (mstruct, GDA_META_DB_TABLE, NULL, NULL, &amp;table_name_value, NULL);
+ * g_value_reset (&amp;table_name_value);
+ *       </programlisting>
+ *     </para>
+ *   </listitem>
+ * </itemizedlist>
+ *
  *
  * Note that @id must not be a composed SQL identifier (such as "mytable.mycolumn" which should be
  * treated as the "mytable" and "mycolumn" SQL identifiers). If unsure, use gda_sql_identifier_split().
+ *
+ * Also note that if @cnc is %NULL, then it's possible to pass an non %NULL @prov to have a result specific
+ * to @prov.
  *
  * For more information, see the <link linkend="gen:sql_identifiers">SQL identifiers and abstraction</link> and
  * <link linkend="information_schema:sql_identifiers">SQL identifiers in meta data</link> sections.
@@ -1618,7 +1762,7 @@ static gboolean _sql_identifier_needs_quotes (const gchar *str);
  */
 gchar *
 gda_sql_identifier_quote (const gchar *id, GdaConnection *cnc, GdaServerProvider *prov,
-			  gboolean meta_store_convention, gboolean force_quotes)
+			  gboolean for_meta_store, gboolean force_quotes)
 {
 	g_return_val_if_fail (id && *id, NULL);
 	if (prov)
@@ -1631,9 +1775,56 @@ gda_sql_identifier_quote (const gchar *id, GdaConnection *cnc, GdaServerProvider
 			prov = gda_connection_get_provider (cnc);
 	}
 
-	if (prov && PROV_CLASS (prov)->identifier_quote) {
+	if (prov && PROV_CLASS (prov)->identifier_quote)
 		return PROV_CLASS (prov)->identifier_quote (prov, cnc, id,
-							    meta_store_convention, force_quotes);
+							    for_meta_store, force_quotes);
+
+	if (for_meta_store) {
+		gchar *tmp, *ptr;
+		tmp = _remove_quotes (g_strdup (id));
+		if (is_keyword (tmp)) {
+			ptr = gda_sql_identifier_add_quotes (tmp);
+			g_free (tmp);
+			return ptr;
+		}
+		else if (force_quotes) {
+			/* quote if non LC characters or digits at the 1st char or non allowed characters */
+			for (ptr = tmp; *ptr; ptr++) {
+				if (((*ptr >= 'a') && (*ptr <= 'z')) ||
+				    ((*ptr >= '0') && (*ptr <= '9') && (ptr != tmp)) ||
+				    (*ptr == '_'))
+					continue;
+				else {
+					ptr = gda_sql_identifier_add_quotes (tmp);
+					g_free (tmp);
+					return ptr;
+				}
+			}
+			return tmp;
+		}
+		else {
+			for (ptr = tmp; *ptr; ptr++) {
+				if (*id == '"') {
+					if (((*ptr >= 'a') && (*ptr <= 'z')) ||
+					    ((*ptr >= '0') && (*ptr <= '9') && (ptr != tmp)) ||
+					    (*ptr == '_'))
+						continue;
+					else {
+						ptr = gda_sql_identifier_add_quotes (tmp);
+						g_free (tmp);
+						return ptr;
+					}
+				}
+				else if ((*ptr >= 'A') && (*ptr <= 'Z'))
+					*ptr += 'a' - 'A';
+				else if ((*ptr >= '0') && (*ptr <= '9') && (ptr == tmp)) {
+					ptr = gda_sql_identifier_add_quotes (tmp);
+					g_free (tmp);
+					return ptr;
+				}
+			}
+			return tmp;
+		}
 	}
 	else {
 		/* default SQL standard */

@@ -51,7 +51,7 @@ typedef struct {
 	gchar            *short_version;
 
 	/* specifies how case sensitiveness is */
-	gboolean          tables_case_sensitive;
+	gboolean          identifiers_case_sensitive;
 	
 } MysqlConnectionData;
 

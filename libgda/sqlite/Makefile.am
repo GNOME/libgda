@@ -51,9 +51,10 @@ libgda_sqlite_la_SOURCES = \
 	gda-sqlite-pstmt.c \
 	gda-sqlite-recordset.c \
 	gda-sqlite-recordset.h \
+	gda-sqlite-util.c \
+	gda-sqlite-util.h \
 	gda-sqlite.h \
-	keywords_hash.h \
-	utils.c
+	keywords_hash.h
 
 libgda_sqlite_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_sqlite_la_LIBADD = \

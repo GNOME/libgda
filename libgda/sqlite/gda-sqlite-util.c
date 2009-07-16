@@ -1,9 +1,7 @@
-/* GNOME DB Postgres Provider
- * Copyright (C) 1998 - 2009 The GNOME Foundation
+/* GDA sqlite provider
+ * Copyright (C) 2009 The GNOME Foundation.
  *
  * AUTHORS:
- *         Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
- *         Carlos Perello Marin <carlos@gnome-db.org>
  *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
@@ -23,11 +21,15 @@
  */
 
 #include <glib/gi18n-lib.h>
+#include "gda-sqlite-util.h"
 #include <stdlib.h>
 #include <string.h>
 #include "gda-sqlite.h"
 #include <libgda/gda-connection-private.h>
 #include "gda-sqlite-recordset.h"
+
+#include <libgda/sqlite/keywords_hash.h>
+#include "keywords_hash.c" /* this one is dynamically generated */
 
 static guint
 nocase_str_hash (gconstpointer v)
@@ -95,3 +97,18 @@ _gda_sqlite_compute_g_type (int sqlite_type)
 	}
 }
 
+
+
+#ifdef GDA_DEBUG
+void
+_gda_sqlite_test_keywords (void)
+{
+        test_keywords();
+}
+#endif
+
+GdaSqlReservedKeywordsFunc
+_gda_sqlite_get_reserved_keyword_func (void)
+{
+        return is_keyword;
+}

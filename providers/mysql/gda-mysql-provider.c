@@ -49,7 +49,22 @@
 static void gda_mysql_provider_class_init (GdaMysqlProviderClass  *klass);
 static void gda_mysql_provider_init       (GdaMysqlProvider       *provider,
 					   GdaMysqlProviderClass  *klass);
+static void gda_mysql_provider_set_property (GObject *object,
+					     guint param_id,
+					     const GValue *value,
+					     GParamSpec *pspec);
+static void gda_mysql_provider_get_property (GObject *object,
+					     guint param_id,
+					     GValue *value,
+					     GParamSpec *pspec);
 static GObjectClass *parent_class = NULL;
+
+/* properties */
+enum
+{
+        PROP_0,
+        PROP_IDENT_CASE_SENSITIVE, /* used for tests */
+};
 
 /*
  * GdaServerProvider's virtual methods
@@ -221,9 +236,20 @@ static void
 gda_mysql_provider_class_init (GdaMysqlProviderClass  *klass)
 {
 	GdaServerProviderClass *provider_class = GDA_SERVER_PROVIDER_CLASS (klass);
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
+	/* Properties */
+        object_class->set_property = gda_mysql_provider_set_property;
+        object_class->get_property = gda_mysql_provider_get_property;
+
+	g_object_class_install_property (object_class, PROP_IDENT_CASE_SENSITIVE,
+                                         g_param_spec_boolean ("identifiers-case-sensitive", NULL, NULL, TRUE,
+							       G_PARAM_READABLE | G_PARAM_WRITABLE));
+
+
+	/* virtual methods */
 	provider_class->get_version = gda_mysql_provider_get_version;
 	provider_class->get_server_version = gda_mysql_provider_get_server_version;
 	provider_class->get_name = gda_mysql_provider_get_name;
@@ -340,7 +366,9 @@ gda_mysql_provider_init (GdaMysqlProvider       *mysql_prv,
 	/* meta data init */
 	_gda_mysql_provider_meta_init ((GdaServerProvider*) mysql_prv);
 
-	/* TO_ADD: any other provider's init should be added here */
+	/* for tests */
+	mysql_prv->test_mode = FALSE;
+	mysql_prv->test_identifiers_case_sensitive = TRUE;
 }
 
 GType
@@ -369,12 +397,42 @@ gda_mysql_provider_get_type (void)
 	return type;
 }
 
+static void
+gda_mysql_provider_set_property (GObject *object,
+				 guint param_id,
+				 const GValue *value,
+				 GParamSpec *pspec)
+{
+	GdaMysqlProvider *mysql_prv;
+	mysql_prv = GDA_MYSQL_PROVIDER (object);
+	switch (param_id) {
+	case PROP_IDENT_CASE_SENSITIVE:
+		mysql_prv->test_identifiers_case_sensitive = g_value_get_boolean (value);
+		mysql_prv->test_mode = TRUE;
+		break;
+	}
+}
+
+static void
+gda_mysql_provider_get_property (GObject *object,
+				 guint param_id,
+				 GValue *value,
+				 GParamSpec *pspec)
+{
+	GdaMysqlProvider *mysql_prv;
+	mysql_prv = GDA_MYSQL_PROVIDER (object);
+	switch (param_id) {
+	case PROP_IDENT_CASE_SENSITIVE:
+		g_value_set_boolean (value, mysql_prv->test_identifiers_case_sensitive);
+		break;
+	}
+}
 
 /*
  * Get provider name request
  */
 static const gchar *
-gda_mysql_provider_get_name (GdaServerProvider  *provider)
+gda_mysql_provider_get_name (GdaServerProvider *provider)
 {
 	return MYSQL_PROVIDER_NAME;
 }
@@ -619,7 +677,7 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 	cdata->version_long = mysql_get_server_version (mysql);
 	cdata->version = get_mysql_version (mysql);
 	cdata->short_version = get_mysql_short_version (mysql);
-	cdata->tables_case_sensitive = case_sensitive;
+	cdata->identifiers_case_sensitive = case_sensitive;
 
 	return TRUE;
 }
@@ -1484,7 +1542,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
                 nps = real_prepare (provider, cnc, stmt, error);
                 if (!nps)
                         return NULL;
-                gda_pstmt_copy_contents ((GdaPStmt *) ps, (GdaPStmt *) nps);
+                //gda_pstmt_copy_contents ((GdaPStmt *) ps, (GdaPStmt *) nps);
 		g_object_unref (ps);
 		ps = nps;
 	}
@@ -1994,54 +2052,192 @@ _sql_identifier_needs_quotes (const gchar *str)
 	return FALSE;
 }
 
+/* Returns: @str */
+static gchar *
+my_remove_quotes (gchar *str)
+{
+        glong total;
+        gchar *ptr;
+        glong offset = 0;
+	char delim;
+	
+	if (!str)
+		return NULL;
+	delim = *str;
+	if ((delim != '`') && (delim != '"'))
+		return str;
+
+        total = strlen (str);
+        if (str[total-1] == delim) {
+		/* string is correclty terminated */
+		g_memmove (str, str+1, total-2);
+		total -=2;
+	}
+	else {
+		/* string is _not_ correclty terminated */
+		g_memmove (str, str+1, total-1);
+		total -=1;
+	}
+        str[total] = 0;
+
+        ptr = (gchar *) str;
+        while (offset < total) {
+                /* we accept the "''" as a synonym of "\'" */
+                if (*ptr == delim) {
+                        if (*(ptr+1) == delim) {
+                                g_memmove (ptr+1, ptr+2, total - offset);
+                                offset += 2;
+                        }
+                        else {
+                                *str = 0;
+                                return str;
+                        }
+                }
+                if (*ptr == '\\') {
+                        if (*(ptr+1) == '\\') {
+                                g_memmove (ptr+1, ptr+2, total - offset);
+                                offset += 2;
+                        }
+                        else {
+                                if (*(ptr+1) == delim) {
+                                        *ptr = delim;
+                                        g_memmove (ptr+1, ptr+2, total - offset);
+                                        offset += 2;
+                                }
+                                else {
+                                        *str = 0;
+                                        return str;
+                                }
+                        }
+                }
+                else
+                        offset ++;
+
+                ptr++;
+        }
+
+        return str;
+}
+
 static gchar *
 gda_mysql_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
 			    const gchar *id,
-			    gboolean meta_store_convention, gboolean force_quotes)
+			    gboolean for_meta_store, gboolean force_quotes)
 {
 	GdaSqlReservedKeywordsFunc kwfunc;
 	MysqlConnectionData *cdata = NULL;
+	gboolean case_sensitive = TRUE;
 
 	if (cnc) {
 		cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
 		if (!cdata) 
 			return NULL;
+		case_sensitive = cdata->identifiers_case_sensitive;
 	}
+	else if (((GdaMysqlProvider*) provider)->test_mode)
+		case_sensitive = ((GdaMysqlProvider*) provider)->test_identifiers_case_sensitive;
 
 	kwfunc = _gda_mysql_get_reserved_keyword_func (cdata);
-	if (meta_store_convention) {
-		/* @id can either:
-		 * - be enquoted between double quotes
-		 * - not enquoted and in lower case
-		 */
-		if (*id == '"') {
-			/* must be quoted, replace '"' with '`' */
-			gchar *ptr, *retval;
-			retval = g_strdup (id);
-			*retval = '`';
-			for (ptr = retval + 1; *ptr; ptr++) {
-				if (*ptr == '"')
-					*ptr = '`';
-			}
-			return retval;
-		}
-		
-		if (kwfunc (id) || _sql_identifier_needs_quotes (id) || force_quotes)
-			return identifier_add_quotes (id);
 
-		/* nothing to do */
-		return g_strdup (id);
+	if (case_sensitive) {
+		/*
+		 * case sensitive mode
+		 */
+		if (for_meta_store) {
+			gchar *tmp, *ptr;
+			tmp = my_remove_quotes (g_strdup (id));
+			if (kwfunc (tmp)) {
+				ptr = gda_sql_identifier_add_quotes (tmp);
+				g_free (tmp);
+				return ptr;
+			}
+			for (ptr = tmp; *ptr; ptr++) {
+				if (((*ptr >= 'a') && (*ptr <= 'z')) ||
+				    ((*ptr >= '0') && (*ptr <= '9') && (ptr != tmp)) ||
+				    (*ptr == '_'))
+					continue;
+				else {
+					ptr = gda_sql_identifier_add_quotes (tmp);
+					g_free (tmp);
+					return ptr;
+				}
+			}
+			return tmp;
+			/*			ptr = gda_sql_identifier_add_quotes (tmp);
+			g_free (tmp);
+			return ptr;*/
+		}
+		else {
+			if ((*id == '`') || (*id == '"'))  {
+				/* there are already some quotes */
+				gchar *ptr, *tmp = g_strdup (id);
+				for (ptr = tmp; *ptr; ptr++)
+					if (*ptr == '"')
+						*ptr = '`';
+				return tmp;
+			}
+			return identifier_add_quotes (id);
+		}
 	}
 	else {
-		if (*id == '`') {
-			/* there are already some quotes */
+		/*
+		 * case insensitive mode
+		 */
+		if (for_meta_store) {
+			gchar *tmp, *ptr;
+			tmp = my_remove_quotes (g_strdup (id));
+			if (kwfunc (tmp)) {
+				ptr = gda_sql_identifier_add_quotes (tmp);
+				g_free (tmp);
+				return ptr;
+			}
+			else if (0 && force_quotes) {
+				/* quote if non LC characters or digits at the 1st char or non allowed characters */
+				for (ptr = tmp; *ptr; ptr++) {
+					if (((*ptr >= 'a') && (*ptr <= 'z')) ||
+					    ((*ptr >= '0') && (*ptr <= '9') && (ptr != tmp)) ||
+					    (*ptr == '_'))
+						continue;
+					else {
+						ptr = gda_sql_identifier_add_quotes (tmp);
+						g_free (tmp);
+						return ptr;
+					}
+				}
+				return tmp;
+			}
+			else {
+				for (ptr = tmp; *ptr; ptr++) {
+					if ((*ptr >= 'A') && (*ptr <= 'Z'))
+						*ptr += 'a' - 'A';
+					else if (((*ptr >= 'a') && (*ptr <= 'z')) ||
+					    ((*ptr >= '0') && (*ptr <= '9') && (ptr != tmp)) ||
+					    (*ptr == '_'))
+						continue;
+					else {
+						ptr = gda_sql_identifier_add_quotes (tmp);
+						g_free (tmp);
+						return ptr;
+					}
+				}
+				return tmp;
+			}
+		}
+		else {
+			if ((*id == '`') || (*id == '"'))  {
+				/* there are already some quotes */
+				gchar *ptr, *tmp = g_strdup (id);
+				for (ptr = tmp; *ptr; ptr++)
+					if (*ptr == '"')
+						*ptr = '`';
+				return tmp;
+			}
+			if (kwfunc (id) || _sql_identifier_needs_quotes (id) || force_quotes)
+				return identifier_add_quotes (id);
+			
+			/* nothing to do */
 			return g_strdup (id);
 		}
-		if (kwfunc (id) || _sql_identifier_needs_quotes (id) || force_quotes)
-			return identifier_add_quotes (id);
-		
-		/* nothing to do */
-		return g_strdup (id);
 	}
 }
 

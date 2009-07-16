@@ -26,6 +26,7 @@
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include "gda-sqlite.h"
+#include "gda-sqlite-util.h"
 #include "gda-sqlite-recordset.h"
 #include "gda-sqlite-provider.h"
 #include "gda-sqlite-blob-op.h"

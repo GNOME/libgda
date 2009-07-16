@@ -24,6 +24,7 @@
 #include <string.h>
 #include "gda-sqlite.h"
 #include "gda-sqlite-meta.h"
+#include "gda-sqlite-util.h"
 #include "gda-sqlite-provider.h"
 #include <libgda/gda-meta-store.h>
 #include <libgda/sql-parser/gda-sql-parser.h>
@@ -32,9 +33,6 @@
 #include <libgda/gda-connection-private.h>
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-set.h>
-
-#include <libgda/sqlite/keywords_hash.h>
-#include "keywords_hash.c" /* this one is dynamically generated */
 
 static gboolean append_a_row (GdaDataModel *to_model, GError **error, gint nb, ...);
 
@@ -97,6 +95,31 @@ static GValue       *true_value;
 static GValue       *zero_value;
 static GValue       *rule_value;
 static GdaSet       *pragma_set;
+
+static GValue *
+new_caseless_value (const GValue *cvalue)
+{
+	GValue *newvalue;
+	gchar *str, *ptr;
+	str = g_value_dup_string (cvalue);
+	for (ptr = str; *ptr; ptr++) {
+		if ((*ptr >= 'A') && (*ptr <= 'Z'))
+			*ptr += 'a' - 'A';
+		if (((*ptr >= 'a') && (*ptr <= 'z')) ||
+		    ((*ptr >= '0') && (*ptr <= '9')) ||
+		    (*ptr >= '_'))
+			continue;
+		else {
+			g_free (str);
+			newvalue = gda_value_new (G_TYPE_STRING);
+			g_value_set_string (newvalue, g_value_get_string (cvalue));
+			return newvalue;
+		}
+	}
+	newvalue = gda_value_new (G_TYPE_STRING);
+	g_value_take_string (newvalue, str);
+	return newvalue;
+}
 
 /*
  * Meta initialization
@@ -202,7 +225,7 @@ _gda_sqlite_meta__info (GdaServerProvider *prov, GdaConnection *cnc,
 
 	retval = append_a_row (model, error, 1, FALSE, catalog_value);
 	if (retval) {
-		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
+		gda_meta_store_set_reserved_keywords_func (store, _gda_sqlite_get_reserved_keyword_func());
 		retval = gda_meta_store_modify (store, context->table_name, model, NULL, error, NULL);
 	}
 	g_object_unref (model);
@@ -261,7 +284,7 @@ _gda_sqlite_meta__btypes (GdaServerProvider *prov, GdaConnection *cnc,
 		}
 	}
 	if (retval) {
-		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
+		gda_meta_store_set_reserved_keywords_func (store, _gda_sqlite_get_reserved_keyword_func());
 		retval = gda_meta_store_modify (store, context->table_name, mod_model, NULL, error, NULL);
 	}
 	g_object_unref (mod_model);
@@ -445,7 +468,7 @@ _gda_sqlite_meta__udt (GdaServerProvider *prov, GdaConnection *cnc,
 
 	/* actually use mod_model */
 	if (retval) {
-		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
+		gda_meta_store_set_reserved_keywords_func (store, _gda_sqlite_get_reserved_keyword_func());
 		retval = gda_meta_store_modify (store, context->table_name, mod_model, NULL, error, NULL);
 	}
 	g_object_unref (mod_model);
@@ -481,7 +504,7 @@ _gda_sqlite_meta_udt (GdaServerProvider *prov, GdaConnection *cnc,
 
 	/* actually use mod_model */
 	if (retval) {
-		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
+		gda_meta_store_set_reserved_keywords_func (store, _gda_sqlite_get_reserved_keyword_func());
 		retval = gda_meta_store_modify (store, context->table_name, mod_model, NULL, error, NULL);
 	}
 	g_object_unref (mod_model);
@@ -653,7 +676,7 @@ _gda_sqlite_meta_schemata (GdaServerProvider *prov, GdaConnection *cnc,
 			const gchar *cstr;
 			GValue *v1;
 
-			cstr = g_value_get_string (cvalue);
+			cstr = g_value_get_string (cvalue); /* VMA */
 			if (!cstr || !strncmp (cstr, TMP_DATABASE_NAME, 4))
 				continue;
 
@@ -667,7 +690,7 @@ _gda_sqlite_meta_schemata (GdaServerProvider *prov, GdaConnection *cnc,
 	}
 	g_object_unref (tmpmodel);
 	if (retval){
-		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
+		gda_meta_store_set_reserved_keywords_func (store, _gda_sqlite_get_reserved_keyword_func());
 		retval = gda_meta_store_modify_with_context (store, context, model, error);
 	}
 	g_object_unref (model);
@@ -713,60 +736,68 @@ fill_tables_views_model (GdaConnection *cnc,
         nrows = gda_data_model_get_n_rows (tmpmodel);
         for (i = 0; (i < nrows) && retval; i++) {
                 const GValue *cvalue;
+		GValue *ncvalue;
 
                 cvalue = gda_data_model_get_value_at (tmpmodel, 0, i, error);
 		if (!cvalue) {
 			retval = FALSE;
                         break;
 		}
+		ncvalue = new_caseless_value (cvalue);
+		
                 if (!p_table_name ||
-                    !gda_value_compare (p_table_name, cvalue)) {
+                    !gda_value_compare (p_table_name, ncvalue)) {
                         GValue *v1, *v2 = NULL;
                         const GValue *tvalue;
                         const GValue *dvalue;
                         gboolean is_view = FALSE;
                         const gchar *this_table_name;
 
-                        this_table_name = g_value_get_string (cvalue);
+                        this_table_name = g_value_get_string (ncvalue);
                         g_assert (this_table_name);
-			if (!strcmp (this_table_name, "sqlite_sequence"))
+			if (!strcmp (this_table_name, "sqlite_sequence")) {
+				gda_value_free (ncvalue);
                                 continue; /* ignore that table */
+			}
 
                         tvalue = gda_data_model_get_value_at (tmpmodel, 1, i, error);
 			if (!tvalue) {
 				retval = FALSE;
+				gda_value_free (ncvalue);
 				break;
 			}
                         dvalue = gda_data_model_get_value_at (tmpmodel, 2, i, error);
 			if (!dvalue) {
 				retval = FALSE;
+				gda_value_free (ncvalue);
 				break;
 			}
                         if (*(g_value_get_string (tvalue)) == 'v')
                                 is_view = TRUE;
                         g_value_set_boolean ((v1 = gda_value_new (G_TYPE_BOOLEAN)), TRUE);
-			str = g_strdup_printf ("%s.%s", schema_name, g_value_get_string (cvalue));
+			str = g_strdup_printf ("%s.%s", schema_name, g_value_get_string (ncvalue));
 			g_value_take_string ((v2 = gda_value_new (G_TYPE_STRING)), str);
                         if (! append_a_row (to_tables_model, error, 9,
                                             FALSE, catalog_value, /* table_catalog */
                                             FALSE, p_table_schema, /* table_schema */
-                                            FALSE, cvalue, /* table_name */
+                                            FALSE, ncvalue, /* table_name */
                                             FALSE, is_view ? view_type_value : table_type_value, /* table_type */
                                             TRUE, v1, /* is_insertable_into */
                                             FALSE, NULL, /* table_comments */
-                                            FALSE, cvalue, /* table_short_name */
+                                            FALSE, ncvalue, /* table_short_name */
                                             TRUE, v2, /* table_full_name */
                                             FALSE, NULL)) /* table_owner */
                                 retval = FALSE;
                         if (is_view && ! append_a_row (to_views_model, error, 6,
                                                        FALSE, catalog_value,
                                                        FALSE, p_table_schema,
-                                                       FALSE, cvalue,
+                                                       FALSE, ncvalue,
                                                        FALSE, dvalue,
                                                        FALSE, view_check_option,
                                                        FALSE, false_value))
                                 retval = FALSE;
                 }
+		gda_value_free (ncvalue);
         }
         g_object_unref (tmpmodel);
 
@@ -814,12 +845,12 @@ _gda_sqlite_meta__tables_views (GdaServerProvider *prov, GdaConnection *cnc,
 	c2 = *context; /* copy contents, just because we need to modify @context->table_name */
 	if (retval) {
 		c2.table_name = "_tables";
-		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
+		gda_meta_store_set_reserved_keywords_func (store, _gda_sqlite_get_reserved_keyword_func());
 		retval = gda_meta_store_modify_with_context (store, &c2, tables_model, error);
 	}
 	if (retval) {
 		c2.table_name = "_views";
-		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
+		gda_meta_store_set_reserved_keywords_func (store, _gda_sqlite_get_reserved_keyword_func());
 		retval = gda_meta_store_modify_with_context (store, &c2, views_model, error);
 	}
 	g_object_unref (tables_model);
@@ -848,12 +879,12 @@ _gda_sqlite_meta_tables_views (GdaServerProvider *prov, GdaConnection *cnc,
 	c2 = *context; /* copy contents, just because we need to modify @context->table_name */
 	if (retval) {
 		c2.table_name = "_tables";
-		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
+		gda_meta_store_set_reserved_keywords_func (store, _gda_sqlite_get_reserved_keyword_func());
 		retval = gda_meta_store_modify_with_context (store, &c2, tables_model, error);
 	}
 	if (retval) {
 		c2.table_name = "_views";
-		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
+		gda_meta_store_set_reserved_keywords_func (store, _gda_sqlite_get_reserved_keyword_func());
 		retval = gda_meta_store_modify_with_context (store, &c2, views_model, error);
 	}
 	g_object_unref (tables_model);
@@ -897,6 +928,7 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 		const gchar *this_table_name;
 		const gchar *this_col_name;
 		const GValue *this_col_pname;
+		GValue *nthis_col_pname;
 		GType gtype = 0;
 		const GValue *cvalue;
 		
@@ -905,12 +937,14 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 			retval = FALSE;
 			break;
 		}
+		nthis_col_pname = new_caseless_value (this_col_pname);
+
 		this_table_name = g_value_get_string (p_table_name);
 		g_assert (this_table_name);
 		if (!strcmp (this_table_name, "sqlite_sequence"))
 			continue; /* ignore that table */
 		
-		this_col_name = g_value_get_string (this_col_pname);
+		this_col_name = g_value_get_string (nthis_col_pname);
 		if (sqlite3_table_column_metadata (cdata->connection, g_value_get_string (p_table_schema), 
 						   this_table_name, this_col_name,
 						   &pzDataType, &pzCollSeq, &pNotNull, &pPrimaryKey, &pAutoinc)
@@ -919,6 +953,7 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 			cvalue = gda_data_model_get_value_at (tmpmodel, 2, i, error);
 			if (!cvalue) {
 				retval = FALSE;
+				gda_value_free (nthis_col_pname);
 				break;
 			}	
 			pzDataType = g_value_get_string (cvalue);
@@ -926,12 +961,14 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 			cvalue = gda_data_model_get_value_at (tmpmodel, 3, i, error);
 			if (!cvalue) {
 				retval = FALSE;
+				gda_value_free (nthis_col_pname);
 				break;
 			}
 			pNotNull = g_value_get_int (cvalue);
 			cvalue = gda_data_model_get_value_at (tmpmodel, 5, i, error);
 			if (!cvalue) {
 				retval = FALSE;
+				gda_value_free (nthis_col_pname);
 				break;
 			}
 			pPrimaryKey = g_value_get_boolean (cvalue);
@@ -941,6 +978,7 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 		cvalue = gda_data_model_get_value_at (tmpmodel, 0, i, error);
 		if (!cvalue) {
 			retval = FALSE;
+			gda_value_free (nthis_col_pname);
 			break;
 		}
 		v1 = gda_value_copy (cvalue);
@@ -974,7 +1012,7 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 				    FALSE, catalog_value, /* table_catalog */
 				    FALSE, p_table_schema, /* table_schema */
 				    FALSE, p_table_name, /* table_name */
-				    FALSE, this_col_pname, /* column name */
+				    TRUE, nthis_col_pname, /* column name */
 				    TRUE, v1, /* ordinal_position */
 				    FALSE, cvalue, /* column default */
 				    TRUE, v3, /* is_nullable */
@@ -1076,7 +1114,7 @@ _gda_sqlite_meta__columns (GdaServerProvider *prov, GdaConnection *cnc,
 	g_object_unref (tmpmodel);
 
 	if (retval) {
-		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
+		gda_meta_store_set_reserved_keywords_func (store, _gda_sqlite_get_reserved_keyword_func());
 		retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
 	}
 	g_object_unref (mod_model);
@@ -1102,7 +1140,7 @@ _gda_sqlite_meta_columns (GdaServerProvider *prov, GdaConnection *cnc,
 
 	retval = fill_columns_model (cnc, cdata, mod_model, table_schema, table_name, error);	
 	if (retval) {
-		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
+		gda_meta_store_set_reserved_keywords_func (store, _gda_sqlite_get_reserved_keyword_func());
 		retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
 	}
 	g_object_unref (mod_model);
@@ -1417,7 +1455,7 @@ _gda_sqlite_meta__constraints_tab (GdaServerProvider *prov, GdaConnection *cnc,
 	g_object_unref (tmpmodel);
 
 	if (retval) {
-		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
+		gda_meta_store_set_reserved_keywords_func (store, _gda_sqlite_get_reserved_keyword_func());
 		retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
 	}
 	g_object_unref (mod_model);
@@ -1444,7 +1482,7 @@ _gda_sqlite_meta_constraints_tab (GdaServerProvider *prov, GdaConnection *cnc,
 
 	retval = fill_constraints_tab_model (cnc, cdata, mod_model, table_schema, table_name, constraint_name_n, error);	
 	if (retval) {
-		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
+		gda_meta_store_set_reserved_keywords_func (store, _gda_sqlite_get_reserved_keyword_func());
 		retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
 	}
 	g_object_unref (mod_model);
@@ -1608,7 +1646,7 @@ _gda_sqlite_meta__constraints_ref (GdaServerProvider *prov, GdaConnection *cnc,
 	g_object_unref (tmpmodel);
 
 	if (retval) {
-		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
+		gda_meta_store_set_reserved_keywords_func (store, _gda_sqlite_get_reserved_keyword_func());
 		retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
 	}
 	g_object_unref (mod_model);
@@ -1635,7 +1673,7 @@ _gda_sqlite_meta_constraints_ref (GdaServerProvider *prov, GdaConnection *cnc,
 
 	retval = fill_constraints_ref_model (cnc, cdata, mod_model, table_schema, table_name, constraint_name, error);
 	if (retval) {
-		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
+		gda_meta_store_set_reserved_keywords_func (store, _gda_sqlite_get_reserved_keyword_func());
 		retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
 	}
 	g_object_unref (mod_model);
@@ -1946,7 +1984,7 @@ _gda_sqlite_meta__key_columns (GdaServerProvider *prov, GdaConnection *cnc,
 	g_object_unref (const_model);
 
 	if (retval) {
-		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
+		gda_meta_store_set_reserved_keywords_func (store, _gda_sqlite_get_reserved_keyword_func());
 		retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
 	}
 	g_object_unref (mod_model);
@@ -1973,7 +2011,7 @@ _gda_sqlite_meta_key_columns (GdaServerProvider *prov, GdaConnection *cnc,
 
 	retval = fill_key_columns_model (cnc, cdata, mod_model, table_schema, table_name, constraint_name, error);
 	if (retval) {
-		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
+		gda_meta_store_set_reserved_keywords_func (store, _gda_sqlite_get_reserved_keyword_func());
 		retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
 	}
 	g_object_unref (mod_model);
@@ -2123,7 +2161,7 @@ _gda_sqlite_meta_routines (GdaServerProvider *prov, GdaConnection *cnc,
 	}
 	
 	if (retval) {
-		gda_meta_store_set_reserved_keywords_func (store, is_keyword);
+		gda_meta_store_set_reserved_keywords_func (store, _gda_sqlite_get_reserved_keyword_func());
 		retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
 	}
 	g_object_unref (mod_model);

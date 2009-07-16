@@ -1805,8 +1805,14 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 	GValue *retval = gda_row_get_value (prow, col);
 	if (gda_row_value_is_valid (prow, retval))
 		return retval;
-	else
+	else {
+		gchar *str;
+		str = g_strdup_printf (_("Unable to get value for row %d and column %d"), row, col);
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
+			     "%s", str);
+		g_free (str);
 		return NULL;
+	}
 }
 
 static GdaValueAttribute

@@ -1,8 +1,9 @@
 /* GDA Mysql provider
- * Copyright (C) 2008 The GNOME Foundation.
+ * Copyright (C) 2008 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *      Carlos Savoretti <csavoretti@gmail.com>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -28,6 +29,7 @@
 #include "gda-mysql.h"
 #include "gda-mysql-recordset.h"
 #include "gda-mysql-provider.h"
+#include "gda-mysql-util.h"
 
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
@@ -411,7 +413,6 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
         ps->stmt_used = TRUE;
         if (!_GDA_PSTMT (ps)->types && (_GDA_PSTMT (ps)->ncols > 0)) {
 		/* create prepared statement's columns */
-		GSList *list;
 		for (i = 0; i < _GDA_PSTMT (ps)->ncols; i++)
 			_GDA_PSTMT (ps)->tmpl_columns = g_slist_prepend (_GDA_PSTMT (ps)->tmpl_columns, 
 									 gda_column_new ());
@@ -432,88 +433,99 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 				}
 			}
 		}
+	}
 
-		
-		MYSQL_RES *mysql_res = mysql_stmt_result_metadata (ps->mysql_stmt);
-		MYSQL_FIELD *mysql_fields = mysql_fetch_fields (mysql_res);
-		
-		MYSQL_BIND *mysql_bind_result = g_new0 (MYSQL_BIND, GDA_PSTMT (ps)->ncols);
-
-		/* fill GdaColumn's data */
-		for (i=0, list = _GDA_PSTMT (ps)->tmpl_columns; 
-		     i < GDA_PSTMT (ps)->ncols; 
-		     i++, list = list->next) {
-			GdaColumn *column = GDA_COLUMN (list->data);
-
-			/* use C API to set columns' information using gda_column_set_*() */
-			MYSQL_FIELD *field = &mysql_fields[i];
-
-			GType gtype = _GDA_PSTMT(ps)->types[i];
-			if (gtype == 0) {
-				gtype = _gda_mysql_type_to_gda (cdata, field->type);
-				_GDA_PSTMT(ps)->types[i] = gtype;
-			}
-			gda_column_set_g_type (column, gtype);
-			gda_column_set_name (column, field->name);
-			gda_column_set_description (column, field->name);
-			
-			/* binding results with types */
-			mysql_bind_result[i].buffer_type = field->type;
-			mysql_bind_result[i].is_unsigned = field->flags & UNSIGNED_FLAG ? TRUE : FALSE;
-			mysql_bind_result[i].is_null = g_malloc0 (sizeof(my_bool));
-
-			switch (mysql_bind_result[i].buffer_type) {
-			case MYSQL_TYPE_TINY:
-			case MYSQL_TYPE_SHORT:
-			case MYSQL_TYPE_INT24:
-			case MYSQL_TYPE_LONG:
-			case MYSQL_TYPE_YEAR:
-				mysql_bind_result[i].buffer = g_malloc0 (sizeof(int));
-				break;
-			case MYSQL_TYPE_LONGLONG:
-				mysql_bind_result[i].buffer = g_malloc0 (sizeof(long long));
-				break;
-			case MYSQL_TYPE_NULL:
-				break;
-			case MYSQL_TYPE_TIME:
-			case MYSQL_TYPE_DATE:
-			case MYSQL_TYPE_DATETIME:
-			case MYSQL_TYPE_TIMESTAMP:
-				mysql_bind_result[i].buffer = g_malloc0 (sizeof(MYSQL_TIME));
-				break;
-			case MYSQL_TYPE_FLOAT:
-			case MYSQL_TYPE_DOUBLE:
-				mysql_bind_result[i].buffer = g_malloc0 (sizeof(double));
-				break;
-			case MYSQL_TYPE_STRING:
-			case MYSQL_TYPE_VAR_STRING:
-			case MYSQL_TYPE_BLOB:
-			case MYSQL_TYPE_TINY_BLOB:
-			case MYSQL_TYPE_MEDIUM_BLOB:
-			case MYSQL_TYPE_LONG_BLOB:
-			case MYSQL_TYPE_NEWDECIMAL:
-			case MYSQL_TYPE_BIT:
-				mysql_bind_result[i].buffer = g_malloc0 (field->max_length + 1);
-				mysql_bind_result[i].buffer_length = field->max_length + 1;
-				mysql_bind_result[i].length = g_malloc0 (sizeof(unsigned long));
-				break;
-			default:
-				g_warning (_("Invalid column bind data type. %d\n"),
-					   mysql_bind_result[i].buffer_type);
-			}
-			/*g_print ("%s(): NAME=%s, TYPE=%d, GTYPE=%s\n", 
-			  __FUNCTION__, field->name, field->type, g_type_name (gtype));*/
+	/* get rid of old bound result if any */
+	if (ps->mysql_bind_result) {
+		gint i;
+		for (i = 0; i < ((GdaPStmt *) ps)->ncols; ++i) {
+			g_free (ps->mysql_bind_result[i].buffer);
+			g_free (ps->mysql_bind_result[i].is_null);
+			g_free (ps->mysql_bind_result[i].length);
 		}
-		
-                if (mysql_stmt_bind_result (ps->mysql_stmt, mysql_bind_result)) {
-                        g_warning ("mysql_stmt_bind_result failed: %s\n",
-				   mysql_stmt_error (ps->mysql_stmt));
-                }
-		
-		mysql_free_result (mysql_res);
+		g_free (ps->mysql_bind_result);
+		ps->mysql_bind_result = NULL;
+	}
 
-		ps->mysql_bind_result = mysql_bind_result;
-        }
+	/* fill bind result */
+	MYSQL_RES *mysql_res = mysql_stmt_result_metadata (ps->mysql_stmt);
+	MYSQL_FIELD *mysql_fields = mysql_fetch_fields (mysql_res);
+	
+	MYSQL_BIND *mysql_bind_result = g_new0 (MYSQL_BIND, GDA_PSTMT (ps)->ncols);
+	GSList *list;
+
+	for (i=0, list = _GDA_PSTMT (ps)->tmpl_columns; 
+	     i < GDA_PSTMT (ps)->ncols; 
+	     i++, list = list->next) {
+		GdaColumn *column = GDA_COLUMN (list->data);
+		
+		/* use C API to set columns' information using gda_column_set_*() */
+		MYSQL_FIELD *field = &mysql_fields[i];
+		
+		GType gtype = _GDA_PSTMT(ps)->types[i];
+		if (gtype == 0) {
+			gtype = _gda_mysql_type_to_gda (cdata, field->type);
+			_GDA_PSTMT(ps)->types[i] = gtype;
+		}
+		gda_column_set_g_type (column, gtype);
+		gda_column_set_name (column, field->name);
+		gda_column_set_description (column, field->name);
+		
+		/* binding results with types */
+		mysql_bind_result[i].buffer_type = field->type;
+		mysql_bind_result[i].is_unsigned = field->flags & UNSIGNED_FLAG ? TRUE : FALSE;
+		mysql_bind_result[i].is_null = g_malloc0 (sizeof(my_bool));
+		
+		switch (mysql_bind_result[i].buffer_type) {
+		case MYSQL_TYPE_TINY:
+		case MYSQL_TYPE_SHORT:
+		case MYSQL_TYPE_INT24:
+		case MYSQL_TYPE_LONG:
+		case MYSQL_TYPE_YEAR:
+			mysql_bind_result[i].buffer = g_malloc0 (sizeof(int));
+			break;
+		case MYSQL_TYPE_LONGLONG:
+			mysql_bind_result[i].buffer = g_malloc0 (sizeof(long long));
+			break;
+		case MYSQL_TYPE_NULL:
+			break;
+		case MYSQL_TYPE_TIME:
+		case MYSQL_TYPE_DATE:
+		case MYSQL_TYPE_DATETIME:
+		case MYSQL_TYPE_TIMESTAMP:
+			mysql_bind_result[i].buffer = g_malloc0 (sizeof(MYSQL_TIME));
+			break;
+		case MYSQL_TYPE_FLOAT:
+		case MYSQL_TYPE_DOUBLE:
+			mysql_bind_result[i].buffer = g_malloc0 (sizeof(double));
+			break;
+		case MYSQL_TYPE_STRING:
+		case MYSQL_TYPE_VAR_STRING:
+		case MYSQL_TYPE_BLOB:
+		case MYSQL_TYPE_TINY_BLOB:
+		case MYSQL_TYPE_MEDIUM_BLOB:
+		case MYSQL_TYPE_LONG_BLOB:
+		case MYSQL_TYPE_NEWDECIMAL:
+		case MYSQL_TYPE_BIT:
+			mysql_bind_result[i].buffer = g_malloc0 (field->max_length + 1);
+			mysql_bind_result[i].buffer_length = field->max_length + 1;
+			mysql_bind_result[i].length = g_malloc0 (sizeof(unsigned long));
+			break;
+		default:
+			g_warning (_("Invalid column bind data type. %d\n"),
+				   mysql_bind_result[i].buffer_type);
+		}
+		/*g_print ("%s(): NAME=%s, TYPE=%d, GTYPE=%s\n", 
+		  __FUNCTION__, field->name, field->type, g_type_name (gtype));*/
+	}
+	
+	if (mysql_stmt_bind_result (ps->mysql_stmt, mysql_bind_result)) {
+		g_warning ("mysql_stmt_bind_result failed: %s\n",
+			   mysql_stmt_error (ps->mysql_stmt));
+	}
+	
+	mysql_free_result (mysql_res);
+	ps->mysql_bind_result = mysql_bind_result;
 
 	/* determine access mode: RANDOM or CURSOR FORWARD are the only supported */
 	if (flags & GDA_DATA_MODEL_ACCESS_RANDOM)
@@ -537,7 +549,7 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 	model->priv->mysql_stmt = ps->mysql_stmt;
 
 	((GdaDataSelect *) model)->advertized_nrows = mysql_stmt_affected_rows (ps->mysql_stmt);
-	
+
         return GDA_DATA_MODEL (model);
 }
 
@@ -563,20 +575,48 @@ gda_mysql_recordset_fetch_nb_rows (GdaDataSelect *model)
 }
 
 static GdaRow *
-new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel, gint  rownum, GError **error)
+new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, gint rownum, GError **error)
 {
 	//g_print ("%s(): NCOLS=%d  ROWNUM=%d\n", __func__, ((GdaDataSelect *) imodel)->prep_stmt->ncols, rownum);
-
+	int res;
+	MYSQL_BIND *mysql_bind_result;
 	g_return_val_if_fail (imodel->priv->mysql_stmt != NULL, NULL);
 
-	if (mysql_stmt_fetch (imodel->priv->mysql_stmt)) {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_DATA_ERROR,
-			     _("Can't fetch data from server"));
+	mysql_bind_result = ((GdaMysqlPStmt *) ((GdaDataSelect *) imodel)->prep_stmt)->mysql_bind_result;
+	g_assert (mysql_bind_result);
+
+	res = mysql_stmt_fetch (imodel->priv->mysql_stmt);
+	if (res == MYSQL_NO_DATA) {
+		/* should not happen */
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
+			     "No more data, please report this bug to "
+			     "http://bugzilla.gnome.org/ for the \"libgda\" product and the MySQL provider.");
+	}
+	else if (res == MYSQL_DATA_TRUNCATED) {
+		GString *string;
+
+		string = g_string_new ("Truncated data, please report this bug to "
+				       "http://bugzilla.gnome.org/ for the \"libgda\" product and the MySQL provider.");
+
+		gint col;
+		for (col = 0; col < ((GdaDataSelect *) imodel)->prep_stmt->ncols; ++col) {
+			my_bool truncated;
+			mysql_bind_result[col].error = &truncated;
+			mysql_stmt_fetch_column (imodel->priv->mysql_stmt, &(mysql_bind_result[col]),
+						 (unsigned int)col, 0);
+			if (truncated)
+				g_string_append_printf (string, "\n  column %d is truncated\n", col);
+			mysql_bind_result[col].error = NULL;
+		}
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR, "%s", string->str);
+		g_string_free (string, TRUE);
+
 		return NULL;
 	}
-	
-	MYSQL_BIND *mysql_bind_result = ((GdaMysqlPStmt *) ((GdaDataSelect *) imodel)->prep_stmt)->mysql_bind_result;
-	g_assert (mysql_bind_result);
+	else if (res) {
+		_gda_mysql_make_error (imodel->priv->cnc, NULL, imodel->priv->mysql_stmt, error);
+		return NULL;
+	}
 	
 	GdaRow *row = gda_row_new (((GdaDataSelect *) imodel)->prep_stmt->ncols);
 	gint col;
@@ -744,12 +784,33 @@ new_row_from_mysql_stmt (GdaMysqlRecordset  *imodel, gint  rownum, GError **erro
 				gda_value_set_binary (value, &binary);
 			}
 			else if (type == G_TYPE_DOUBLE) {
-				setlocale (LC_NUMERIC, "C");
-				g_value_set_double (value, atof (strvalue));
-				setlocale (LC_NUMERIC, gda_numeric_locale);
+				if (length > 0) {
+					setlocale (LC_NUMERIC, "C");
+					g_value_set_double (value, atof (strvalue));
+					setlocale (LC_NUMERIC, gda_numeric_locale);
+				}
+				else {
+					/* error: wrong column type */
+					gda_row_invalidate_value (row, value);
+					g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+						     GDA_SERVER_PROVIDER_DATA_ERROR,
+						     _("Invalid column bind data type. %d\n"),
+						     mysql_bind_result[i].buffer_type);
+					break;
+				}
 			}
 			else if (type == G_TYPE_BOOLEAN) {
-				g_value_set_boolean (value, atoi (strvalue));
+				if (length > 0)
+					g_value_set_boolean (value, atoi (strvalue));
+				else {
+					/* error: wrong column type */
+					gda_row_invalidate_value (row, value);
+					g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+						     GDA_SERVER_PROVIDER_DATA_ERROR,
+						     _("Invalid column bind data type. %d\n"),
+						     mysql_bind_result[i].buffer_type);
+					break;
+				}
 			}
 			else {
 				gda_row_invalidate_value (row, value);
@@ -799,7 +860,6 @@ gda_mysql_recordset_fetch_random (GdaDataSelect  *model,
 
 	imodel = GDA_MYSQL_RECORDSET (model);
 
-	// TO_IMPLEMENT;
 	if (*row)
 		return TRUE;
 	
