@@ -125,7 +125,7 @@ compare_data_model_with_expected (GdaDataModel *model, const gchar *expected_fil
 gboolean
 prov_test_check_types_schema (GdaConnection *cnc)
 {
-if (!cnc || !gda_connection_is_opened (cnc)) {
+	if (!cnc || !gda_connection_is_opened (cnc)) {
 #ifdef CHECK_EXTRA_INFO
 		g_warning ("Connection is closed!");
 #endif

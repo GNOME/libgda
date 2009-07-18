@@ -7,7 +7,7 @@
   <gda_array_data>
     <gda_array_row>
       <gda_value>blob</gda_value>
-      <gda_value>GdaBinary</gda_value>
+      <gda_value>GdaBlob</gda_value>
       <gda_value>Blob of data, stored exactly as it was input</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>

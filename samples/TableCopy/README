@@ -23,7 +23,7 @@ containing all the data to copy, and:
 * in the 1st method, an INSERT query is created with place holders for the values to
   insert, and this query is executed for each row in the source data model (binding the
   parameters each time) - the price of the products is increased by 5% in the process
-* in the 2nd method, a GdaDataModelQuery is created and gda_data_model_import_from_model()
+* in the 2nd method, a GdaDataSelect is created and gda_data_model_import_from_model()
   is called to actually do the data copy
 
 The "table-copy-easier.c" file shows an easier way using virtual connections: the two opened connections are
