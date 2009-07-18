@@ -455,29 +455,25 @@
 	  subject to each database engine implementation. All of them accept two syntaxes for SQL identifiers:
 	  <itemizedlist>
 	    <listitem><para>the first is if the SQL identifier is surrounded by double quotes (sometimes backquotes
-		or other characters), making the SQL identifier case sensitive (and also making
+		or other characters), usually making the SQL identifier case sensitive (and also making
 		it possible to use reserved SQL keywords as identifiers).</para></listitem>
-	    <listitem><para>the second is if it's not enquoted, meaning that the SQL identifier is not
+	    <listitem><para>the second is if it's not enquoted, usually meaning that the SQL identifier is not
 		case sensitive.</para></listitem>
 	  </itemizedlist>
 	  <note>
-	    <para>
-	      Many people consider that using the quoted syntax should be avoided if possible because:
-	      <itemizedlist>
-		<listitem><para>once an SQL identifier has been defined using the quoted syntax, it must
-		    <emphasis>always</emphasis> be used quoted, which is error prone especially if external
-		    tools are used on the database</para></listitem>
-		<listitem><para>the SQL code is less readable (there are quoted strings everywhere)</para></listitem>
-		<listitem><para>the SQL code is less portable as each database engine sets up different techniques to
-		    avoid confusing the SQL identifiers' quoting with SQL literals which are quoted when writing
-		    complex statements</para></listitem>
-		<listitem><para>writing SQL requires a more in-depth knowledge of the database engine being used and as
-		    a consequence it's far easier to make errors when writing SQL</para></listitem>
-	      </itemizedlist>
-	      For some more example, see
-	      <ulink url="http://www.alberton.info/dbms_identifiers_and_case_sensitivity.html">Database identifiers, quoting and case sensitivity</ulink> from  Lorenzo Alberton.
+	    <para>Sometimes those rules don't apply or apply only partially. For example a MySQL server, depending
+	      on how it is configured and on what kind of OS it is running on, will have different sets of meanings
+	      for these notations.
 	    </para>
 	  </note>
+	</para>
+
+	<para>
+	  As a result, &LIBGDA; has to be the least intrusive possible when the user wants to execute an SQL statement,
+	  and lets the database being accessed apply its own rules. However &LIBGDA; features meta data information
+	  retreival (getting the list of tables, views,...) and there some representation conventions have been fixed,
+	  see the <link linkend="information_schema:sql_identifiers">meta data section about SQL identifiers</link>
+	  for more information.
 	</para>
 
 	<para>
@@ -1135,8 +1131,9 @@ g_object_unref (store);
 	    represents them in lower
 	    case whereas Oracle represents them in upper case and MySQL represents them in upper or lower case
 	    depending on the platform and the configuration), &LIBGDA; has chosen by convention
-	    to represent, in the meta data, case insensitive SQL identifiers in lower case 
-	    and case sensitive SQL identifiers enclosed between double quotes. 
+	    to represent <emphasis>case insensitive SQL identifiers in lower case 
+	      and case sensitive SQL identifiers enclosed between double quotes</emphasis> when storing
+	    meta data in <link linkend="GdaMetaStore">GdaMetaStore</link>. 
 	  </para>
 	  <para>
 	    This convention has been made necessary to avoid confusion. To illustrate the problem, let's consider a 
@@ -1158,11 +1155,6 @@ g_object_unref (store);
 	    to determine if the SQL identifier needs to be quoted or not (which limits the application's portability),
 	    or systematically enquote the SQL identifier which is not something &LIBGDA; can impose to
 	    application developpers.
-	  </para>
-	  <para>
-	    This convention must be respected by database providers' implementations or the 
-	    <link linkend="GdaMetaStruct">GdaMetaStruct</link> object and the associated features
-	    (such as keyword completion) will not work properly.
 	  </para>
 	</sect2>
 

@@ -2080,6 +2080,10 @@ gda_meta_store_get_internal_connection (GdaMetaStore *store) {
  *
  * Extracts some data stored in @store using a custom SELECT query.
  *
+ * For more information about
+ * SQL identifiers are represented in @store, see the
+ * <link linkend="information_schema:sql_identifiers">meta data section about SQL identifiers</link>.
+ *
  * Returns: a new #GdaDataModel, or %NULL if an error occurred
  */
 GdaDataModel *

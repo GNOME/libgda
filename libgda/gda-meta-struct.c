@@ -433,11 +433,14 @@ prepare_sql_identifier_for_compare (gchar *str)
  * If @catalog is %NULL and @schema is not %NULL, then the database object will be the one which 
  * can be accessed by its @schema.@name name.
  *
- * Important note: @catalog, @schema and @name must respect the following convention:
+ * Important note: @catalog, @schema and @name will be used using the following convention:
  * <itemizedlist>
  *   <listitem><para>be surrounded by double quotes for a case sensitive search</para></listitem>
- *   <listitem><para>otherwise they will be converted to lower case for search</para></listitem>
+ *   <listitem><para>otherwise for case insensitive search</para></listitem>
  * </itemizedlist>
+ *
+ * For more information, see the <link linkend="information_schema:sql_identifiers">
+ * meta data section about SQL identifiers</link>.
  *
  * Returns: the #GdaMetaDbObject corresponding to the database object if no error occurred, or %NULL
  */
@@ -1096,6 +1099,8 @@ array_type_to_sql (GdaMetaStore *store, const GValue *specific_name)
  * If @catalog is %NULL, then any catalog will be used, and
  * if @schema is %NULL then any schema will be used (if @schema is %NULL then catalog must also be %NULL).
  *
+ * Please refer to gda_meta_struct_complement() form more information.
+ *
  * Returns: TRUE if no error occurred
  */
 gboolean
@@ -1294,6 +1299,8 @@ real_gda_meta_struct_complement_all (GdaMetaStruct *mstruct, gboolean default_on
  * database object which are useable using only their short name (that is which do not need to be prefixed by 
  * the schema in which they are to be used).
  *
+ * Please refer to gda_meta_struct_complement() form more information.
+ *
  * Returns: TRUE if no error occurred
  */
 gboolean
@@ -1309,6 +1316,8 @@ gda_meta_struct_complement_default (GdaMetaStruct *mstruct, GError **error)
  *
  * This method is similar to gda_meta_struct_complement() and gda_meta_struct_complement_default()
  * but creates #GdaMetaDbObject for all the database object.
+ * 
+ * Please refer to gda_meta_struct_complement() form more information.
  *
  * Returns: TRUE if no error occurred
  */
@@ -1326,6 +1335,8 @@ gda_meta_struct_complement_all (GdaMetaStruct *mstruct, GError **error)
  *
  * This method is similar to gda_meta_struct_complement() but creates #GdaMetaDbObject for all the dependencies
  * of @dbo.
+ *
+ * Please refer to gda_meta_struct_complement() form more information.
  *
  * Returns: TRUE if no error occurred
  */

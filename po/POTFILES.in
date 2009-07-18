@@ -57,7 +57,7 @@ libgda/sqlite/gda-sqlite-meta.c
 libgda/sqlite/gda-sqlite-provider.c
 libgda/sqlite/gda-sqlite-pstmt.c
 libgda/sqlite/gda-sqlite-recordset.c
-libgda/sqlite/utils.c
+libgda/sqlite/gda-sqlite-util.c
 libgda/sqlite/virtual/gda-vconnection-data-model.c
 libgda/sqlite/virtual/gda-vconnection-hub.c
 libgda/sqlite/virtual/gda-virtual-connection.c
