@@ -64,7 +64,7 @@ gda_mysql_render_CREATE_DB (GdaServerProvider *provider, GdaConnection *cnc,
 	sql = string->str;
 	g_string_free (string, FALSE);
 
-	return sql;	
+	return sql;
 }
 
 gchar *
@@ -269,8 +269,13 @@ gda_mysql_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 				}
 				g_string_append (string, ") REFERENCES ");
 				value = gda_server_operation_get_value_at (op, "/FKEY_S/%d/FKEY_REF_TABLE", i);
-				if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
-					g_string_append (string, g_value_get_string (value));
+				if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value)) {
+					gchar *tmp;
+					tmp = gda_sql_identifier_quote (g_value_get_string (value), cnc, NULL,
+									FALSE, FALSE);
+					g_string_append (string, tmp);
+					g_free (tmp);
+				}
 				else {
 					allok = FALSE;
 					g_set_error (error, 0, 0, "%s", _("No referenced table specified in foreign key constraint"));

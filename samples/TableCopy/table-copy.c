@@ -58,7 +58,7 @@ get_products_contents (GdaConnection *cnc)
  * method 1 to copy the data model: 
  *
  * - Get the contents of the 'products' table as a 'source' data model, 
- * - create an INSERT GdaQuery with parameters, 
+ * - create an INSERT statement with parameters, 
  * - execute the query as many times as there are rows in the source data model, each time setting the parameters' 
  * - values with the source's contents.
  *
@@ -144,7 +144,7 @@ copy_products_1 (GdaConnection *s_cnc, GdaConnection *d_cnc)
  * method 2 to copy the data model: 
  *
  * - Get the contents of the 'products' table as a 'source' data model, 
- * - create a GdaDataModelQuery data model, 
+ * - create a GdaDataSelect data model, 
  * - directly copy the contents of the source data model into it.
  *
  * The price of the products is unchanged in the process.

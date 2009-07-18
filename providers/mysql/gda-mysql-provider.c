@@ -523,6 +523,18 @@ real_open_connection (const gchar  *host,
 	return mysql;
 }
 
+int
+gda_mysql_real_query_wrap (GdaConnection *cnc, MYSQL *mysql, const char *stmt_str, unsigned long length)
+{
+	GdaConnectionEvent *event;
+	
+	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+	gda_connection_event_set_description (event, stmt_str);
+	gda_connection_add_event (cnc, event);
+	
+	return mysql_real_query (mysql, stmt_str, length);
+}
+
 static gchar *
 get_mysql_version (MYSQL  *mysql)
 {
@@ -780,10 +792,7 @@ gda_mysql_provider_supports_operation (GdaServerProvider       *provider,
         switch (type) {
         case GDA_SERVER_OPERATION_CREATE_DB:
         case GDA_SERVER_OPERATION_DROP_DB:
-		return FALSE;
-
         case GDA_SERVER_OPERATION_CREATE_TABLE:
-		return TRUE;
         case GDA_SERVER_OPERATION_DROP_TABLE:
         case GDA_SERVER_OPERATION_RENAME_TABLE:
 
@@ -794,6 +803,7 @@ gda_mysql_provider_supports_operation (GdaServerProvider       *provider,
 
         case GDA_SERVER_OPERATION_CREATE_VIEW:
         case GDA_SERVER_OPERATION_DROP_VIEW:
+		return TRUE;
         default:
                 return FALSE;
         }
@@ -886,20 +896,37 @@ gda_mysql_provider_render_operation (GdaServerProvider   *provider,
 	/* actual rendering */
         switch (gda_server_operation_get_op_type (op)) {
         case GDA_SERVER_OPERATION_CREATE_DB:
+		sql = gda_mysql_render_CREATE_DB (provider, cnc, op, error);
+		break;
         case GDA_SERVER_OPERATION_DROP_DB:
-		sql = NULL;
+		sql = gda_mysql_render_DROP_DB (provider, cnc, op, error);
                 break;
         case GDA_SERVER_OPERATION_CREATE_TABLE:
                 sql = gda_mysql_render_CREATE_TABLE (provider, cnc, op, error);
                 break;
         case GDA_SERVER_OPERATION_DROP_TABLE:
+		sql = gda_mysql_render_DROP_TABLE (provider, cnc, op, error);
+		break;
         case GDA_SERVER_OPERATION_RENAME_TABLE:
+		sql = gda_mysql_render_RENAME_TABLE (provider, cnc, op, error);
+		break;
         case GDA_SERVER_OPERATION_ADD_COLUMN:
+		sql = gda_mysql_render_ADD_COLUMN (provider, cnc, op, error);
+		break;
+	case GDA_SERVER_OPERATION_DROP_COLUMN:
+		sql = gda_mysql_render_DROP_COLUMN (provider, cnc, op, error);
+		break;
         case GDA_SERVER_OPERATION_CREATE_INDEX:
+		sql = gda_mysql_render_CREATE_INDEX (provider, cnc, op, error);
+		break;
         case GDA_SERVER_OPERATION_DROP_INDEX:
+		sql = gda_mysql_render_DROP_INDEX (provider, cnc, op, error);
+		break;
         case GDA_SERVER_OPERATION_CREATE_VIEW:
+		sql = gda_mysql_render_CREATE_VIEW (provider, cnc, op, error);
+		break;
         case GDA_SERVER_OPERATION_DROP_VIEW:
-                sql = NULL;
+                sql = gda_mysql_render_DROP_VIEW (provider, cnc, op, error);
                 break;
         default:
                 g_assert_not_reached ();
@@ -933,10 +960,69 @@ gda_mysql_provider_perform_operation (GdaServerProvider               *provider,
 		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	}
         optype = gda_server_operation_get_op_type (op);
-	switch (optype) {
-	case GDA_SERVER_OPERATION_CREATE_DB: 
-	case GDA_SERVER_OPERATION_DROP_DB: 
-        default: 
+	if (!cnc &&
+	    ((optype == GDA_SERVER_OPERATION_CREATE_DB) ||
+	     (optype == GDA_SERVER_OPERATION_DROP_DB))) {
+		const GValue *value;
+		MYSQL *mysql;
+		const gchar *login = NULL;
+		const gchar *password = NULL;
+		const gchar *host = NULL;
+		gint         port = -1;
+		const gchar *socket = NULL;
+		gboolean     usessl = FALSE;
+
+		value = gda_server_operation_get_value_at (op, "/SERVER_CNX_P/HOST");
+		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
+			host = g_value_get_string (value);
+		
+		value = gda_server_operation_get_value_at (op, "/SERVER_CNX_P/PORT");
+		if (value && G_VALUE_HOLDS (value, G_TYPE_INT) && (g_value_get_int (value) > 0))
+			port = g_value_get_int (value);
+
+		value = gda_server_operation_get_value_at (op, "/SERVER_CNX_P/UNIX_SOCKET");
+		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
+			socket = g_value_get_string (value);
+
+		value = gda_server_operation_get_value_at (op, "/SERVER_CNX_P/USE_SSL");
+		if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
+			usessl = TRUE;
+
+		value = gda_server_operation_get_value_at (op, "/SERVER_CNX_P/ADM_LOGIN");
+		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
+			login = g_value_get_string (value);
+
+		value = gda_server_operation_get_value_at (op, "/SERVER_CNX_P/ADM_PASSWORD");
+		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
+			password = g_value_get_string (value);
+
+		mysql = real_open_connection (host, port, socket,
+                                              "mysql", login, password, usessl, FALSE, error);
+                if (!mysql)
+                        return FALSE;
+		else {
+			gchar *sql;
+			int res;
+			
+			sql = gda_server_provider_render_operation (provider, cnc, op, error);
+			if (!sql)
+				return FALSE;
+
+			res = mysql_query (mysql, sql);
+			g_free (sql);
+			
+			if (res) {
+				g_set_error (error, 0, 0, mysql_error (mysql));
+				mysql_close (mysql);
+				return FALSE;
+			}
+			else {
+				mysql_close (mysql);
+				return TRUE;
+			}
+		}
+	}
+	else {
 		/* use the SQL from the provider to perform the action */
 		return gda_server_provider_perform_operation_default (provider, cnc, op, error);
 	}
@@ -953,6 +1039,8 @@ gda_mysql_provider_begin_transaction (GdaServerProvider        *provider,
 				      GError                  **error)
 {
 	MysqlConnectionData *cdata;
+	gint rc;
+	GdaConnectionEvent *event = NULL;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
@@ -961,9 +1049,39 @@ gda_mysql_provider_begin_transaction (GdaServerProvider        *provider,
 	if (!cdata) 
 		return FALSE;
 
-	TO_IMPLEMENT;
+	/* set isolation level */
+        switch (level) {
+        case GDA_TRANSACTION_ISOLATION_READ_COMMITTED :
+                rc = gda_mysql_real_query_wrap (cnc, cdata->mysql, "SET TRANSACTION ISOLATION LEVEL READ COMMITTED", 46);
+                break;
+        case GDA_TRANSACTION_ISOLATION_READ_UNCOMMITTED :
+                rc = gda_mysql_real_query_wrap (cnc, cdata->mysql, "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED", 48);
+                break;
+        case GDA_TRANSACTION_ISOLATION_REPEATABLE_READ :
+                rc = gda_mysql_real_query_wrap (cnc, cdata->mysql, "SET TRANSACTION ISOLATION LEVEL REPEATABLE READ", 47);
+                break;
+        case GDA_TRANSACTION_ISOLATION_SERIALIZABLE :
+                rc = gda_mysql_real_query_wrap (cnc, cdata->mysql, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE", 44);
+                break;
+        default :
+                rc = 0;
+        }
 
-	return FALSE;
+	if (rc != 0)
+                event = _gda_mysql_make_error (cnc, cdata->mysql, NULL, error);
+        else {
+                /* start the transaction */
+                rc = gda_mysql_real_query_wrap (cnc, cdata->mysql, "BEGIN", 5);
+                if (rc != 0)
+                        event = _gda_mysql_make_error (cnc, cdata->mysql, NULL, error);
+        }
+	
+	if (event)
+		return FALSE;
+	else {
+		gda_connection_internal_transaction_started (cnc, NULL, NULL, level);
+		return TRUE;
+	}
 }
 
 /*
@@ -976,6 +1094,7 @@ gda_mysql_provider_commit_transaction (GdaServerProvider  *provider,
 				       GError            **error)
 {
 	MysqlConnectionData *cdata;
+	gint rc;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
@@ -984,9 +1103,15 @@ gda_mysql_provider_commit_transaction (GdaServerProvider  *provider,
 	if (!cdata) 
 		return FALSE;
 
-	TO_IMPLEMENT;
-
-	return FALSE;
+	rc = gda_mysql_real_query_wrap (cnc, cdata->mysql, "COMMIT", 6);
+	if (rc != 0) {
+		_gda_mysql_make_error (cnc, cdata->mysql, NULL, error);
+		return FALSE;
+	}
+	else {
+		gda_connection_internal_transaction_committed (cnc, NULL);
+		return TRUE;
+	}
 }
 
 /*
@@ -999,6 +1124,7 @@ gda_mysql_provider_rollback_transaction (GdaServerProvider  *provider,
 					 GError            **error)
 {
 	MysqlConnectionData *cdata;
+	gint rc;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
@@ -1007,9 +1133,15 @@ gda_mysql_provider_rollback_transaction (GdaServerProvider  *provider,
 	if (!cdata) 
 		return FALSE;
 
-	TO_IMPLEMENT;
-
-	return FALSE;
+	rc = gda_mysql_real_query_wrap (cnc, cdata->mysql, "ROLLBACK", 8);
+	if (rc != 0) {
+		_gda_mysql_make_error (cnc, cdata->mysql, NULL, error);
+		return FALSE;
+	}
+	else {
+		gda_connection_internal_transaction_rolledback (cnc, NULL);
+		return TRUE;
+	}
 }
 
 /*
