@@ -3035,6 +3035,12 @@ suggest_update_cb_downstream (GdaMetaStore *store, GdaMetaContext *suggest, Down
  *                   about views may be updated</para></listitem>
  * </itemizedlist>
  *
+ * When @context is not %NULL, and contains specified SQL identifiers (for example the "table_name" of the "_tables"
+ * table), then each SQL identifier has to match the convention the #GdaMetaStore has adopted regarding
+ * case sensitivity. see the <link linkend="information_schema:sql_identifiers">
+ * meta data section about SQL identifiers</link> for more information, and the documentation about the
+ * gda_sql_identifier_quote() function which will be most usefull.
+ *
  * Note however that usually <emphasis>more</emphasis> information will be updated than strictly requested by
  * the @context argument.
  *
@@ -3414,6 +3420,11 @@ prepare_meta_statements_hash (void)
  *
  * For more information about the returned data model's attributes, or about the @meta_type and ... filter arguments,
  * see <link linkend="GdaConnectionMetaTypeHead">this description</link>.
+ *
+ * Also, when using filters involving data which are SQL identifiers, make sure each SQL identifier
+ * is represented using the #GdaMetaStore convention; see the <link linkend="information_schema:sql_identifiers">
+ * meta data section about SQL identifiers</link> for more information, and the documentation about the
+ * gda_sql_identifier_quote() function which will be most usefull.
  * 
  * Returns: a #GdaDataModel containing the data required. The caller is responsible
  * for freeing the returned model using g_object_unref().

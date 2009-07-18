@@ -1592,8 +1592,8 @@ static gboolean _sql_identifier_needs_quotes (const gchar *str);
  * <itemizedlist>
  *   <listitem>
  *     <para>it is correctly formatted
- *           to be used with @cnc (if @cnc is %NULL, then the standard SQL quoting rules will be applied) if
- *           @for_meta_store is %FALSE;
+ *           to be used with @cnc (if @cnc is %NULL, then some default SQL quoting rules will be applied,
+ *           similar to PostgreSQL's way) if @for_meta_store is %FALSE;
  *     </para>
  *   </listitem>
  *   <listitem>
