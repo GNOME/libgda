@@ -1292,7 +1292,8 @@ default_render_param_spec (GdaSqlParamSpec *pspec, GdaSqlExpr *expr, GdaSqlRende
 }
 
 static gchar *
-default_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, gboolean *is_default, gboolean *is_null, GError **error)
+default_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, gboolean *is_default,
+		     gboolean *is_null, GError **error)
 {
 	GString *string;
 	gchar *str = NULL;
@@ -1316,13 +1317,45 @@ default_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, gboolean
 		if (!str) goto err;
 	}
 	else if (expr->value) {
-		str = gda_value_stringify (expr->value);
-		if (!str) goto err;
-		if (is_null && gda_value_is_null (expr->value))
-			*is_null = TRUE;
-		else if (is_default && (G_VALUE_TYPE (expr->value) == G_TYPE_STRING) && 
-			 !g_ascii_strcasecmp (g_value_get_string (expr->value), "default"))
-			*is_default = TRUE;
+		if (expr->value_is_ident && (G_VALUE_TYPE (expr->value) == G_TYPE_STRING) &&
+		    g_value_get_string (expr->value)) {
+			gchar **ids_array;
+			gint i;
+			GString *string = NULL;
+			GdaConnectionOptions cncoptions = 0;
+			if (context->cnc)
+				g_object_get (G_OBJECT (context->cnc), "options", &cncoptions, NULL);
+
+			ids_array = gda_sql_identifier_split (g_value_get_string (expr->value));
+			if (!ids_array) 
+				str = g_value_dup_string (expr->value);
+			else if (!(ids_array[0])) goto err;
+			else {
+				for (i = 0; ids_array[i]; i++) {
+					gchar *tmp;
+					if (!string)
+						string = g_string_new ("");
+					else
+						g_string_append_c (string, '.');
+					tmp = gda_sql_identifier_quote (ids_array[i], context->cnc,
+									context->provider, FALSE,
+					   cncoptions & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
+					g_string_append (string, tmp);
+					g_free (tmp);
+				}
+				g_strfreev (ids_array);
+				str = g_string_free (string, FALSE);
+			}
+		}
+		else {
+			str = gda_value_stringify (expr->value);
+			if (!str) goto err;
+			if (is_null && gda_value_is_null (expr->value))
+				*is_null = TRUE;
+			else if (is_default && (G_VALUE_TYPE (expr->value) == G_TYPE_STRING) && 
+				 !g_ascii_strcasecmp (g_value_get_string (expr->value), "default"))
+				*is_default = TRUE;
+		}
 	}
 	else if (expr->func) {
 		str = context->render_function (GDA_SQL_ANY_PART (expr->func), context, error);
@@ -1383,7 +1416,12 @@ default_render_field (GdaSqlField *field, GdaSqlRenderingContext *context, GErro
 	/* can't have: field->field_name not a valid SQL identifier */
 	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (field), error)) return NULL;
 
-	return g_strdup (field->field_name);
+	GdaConnectionOptions cncoptions = 0;
+	if (context->cnc)
+		g_object_get (G_OBJECT (context->cnc), "options", &cncoptions, NULL);
+	return gda_sql_identifier_quote (field->field_name, context->cnc, context->provider,
+					 FALSE,
+					 cncoptions & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
 }
 
 static gchar *
@@ -1405,11 +1443,15 @@ default_render_table (GdaSqlTable *table, GdaSqlRenderingContext *context, GErro
 	
 	gint i;
 	GString *string;
+	GdaConnectionOptions cncoptions = 0;
+	if (context->cnc)
+		g_object_get (G_OBJECT (context->cnc), "options", &cncoptions, NULL);
 	string = g_string_new ("");
 	for (i = 0; ids_array [i]; i++) {
 		gchar *tmp;
 		tmp = gda_sql_identifier_quote (ids_array [i], context->cnc, context->provider,
-						FALSE, FALSE);
+						FALSE,
+						cncoptions & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
 		g_free (ids_array [i]);
 		ids_array [i] = tmp;
 		if (i != 0)
@@ -1751,6 +1793,7 @@ default_render_select_target (GdaSqlSelectTarget *target, GdaSqlRenderingContext
 {
 	GString *string;
 	gchar *str;
+	gpointer tmp;
 
 	g_return_val_if_fail (target, NULL);
 	g_return_val_if_fail (GDA_SQL_ANY_PART (target)->type == GDA_SQL_ANY_SQL_SELECT_TARGET, NULL);
@@ -1763,29 +1806,15 @@ default_render_select_target (GdaSqlSelectTarget *target, GdaSqlRenderingContext
 		if (!str)
 			return NULL;
 		string = g_string_new (str);
+		g_free (str);
 	}
 	else {
-		gchar **ids_array;
-		ids_array = gda_sql_identifier_split (g_value_get_string (target->expr->value));
-		if (!ids_array) {
-			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-				     "%s", _("Malformed expression in select target"));
-			return NULL;
-		}
-
-		gint i;
-		string = g_string_new ("");
-		for (i = 0; ids_array [i]; i++) {
-			gchar *tmp;
-			tmp = gda_sql_identifier_quote (ids_array [i], context->cnc, context->provider,
-							FALSE, FALSE);
-			g_free (ids_array [i]);
-			ids_array [i] = tmp;
-			if (i != 0)
-				g_string_append_c (string, '.');
-			g_string_append (string, ids_array [i]);
-		}
-		g_strfreev (ids_array);
+		tmp = target->expr->value_is_ident;
+		target->expr->value_is_ident = (gpointer) 0x1;
+		str = context->render_expr (target->expr, context, NULL, NULL, error);
+		target->expr->value_is_ident = tmp;
+		string = g_string_new (str);
+		g_free (str);
 	}
 
 	if (target->as)

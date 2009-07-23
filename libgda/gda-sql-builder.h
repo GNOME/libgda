@@ -70,7 +70,7 @@ GdaStatement     *gda_sql_builder_get_statement (GdaSqlBuilder *builder, GError 
 GdaSqlStatement  *gda_sql_builder_get_sql_statement (GdaSqlBuilder *builder, gboolean copy_it);
 
 /* Expression API */
-guint              gda_sql_builder_literal (GdaSqlBuilder *builder, guint id, const gchar *string);
+guint              gda_sql_builder_ident (GdaSqlBuilder *builder, guint id, const gchar *string);
 guint              gda_sql_builder_expr (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh, GType type, ...);
 guint              gda_sql_builder_param (GdaSqlBuilder *builder, guint id, const gchar *param_name, GType type, gboolean nullok);
 

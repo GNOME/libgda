@@ -55,8 +55,13 @@ struct _GdaSqlExpr {
 
 	gchar           *cast_as;
 
+	gpointer         value_is_ident; /* pointer to a boolean to keep ABI from 4.0.
+					  * Non NULL if @value represents an SQL identifier
+					  * Mem in _NOT_ allocated!
+					  */
+
+	/*< private >*/
 	/* Padding for future expansion */
-	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
 };
 

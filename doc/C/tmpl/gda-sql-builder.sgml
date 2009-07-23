@@ -25,12 +25,12 @@ Factory object for statements
   The following example builds the equivalent of the <![CDATA["name='joe' AND age >= ##ageparam::int"]]> expression:
   <programlisting><![CDATA[
 GdaSqlBuilder *b=...
-gda_sql_builder_literal (b, 1, "name"); // build the "name" literal with requested ID=1
+gda_sql_builder_ident (b, 1, "name"); // build the "name" SQL identifier with requested ID=1
 gda_sql_builder_expr (b, 2, NULL, G_TYPE_STRING, "joe"); // 'joe' expression, requested ID=2
 gda_sql_builder_cond2 (b, 3, GDA_SQL_OPERATOR_TYPE_EQ, 1, 2); // "name='joe'", requested ID=3
 
 gda_sql_builder_cond2 (b, 4, GDA_SQL_OPERATOR_TYPE_GT, // requested ID=4
-       gda_sql_builder_literal (b, 0, "age"), // build the "age" literal, no specific ID
+       gda_sql_builder_ident (b, 0, "age"), // build the "age" SQL identifier, no specific ID
        gda_sql_builder_param (b, 0, "ageparam", G_TYPE_INT, FALSE) // parameter, no specific ID
       );
 gda_sql_builder_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expression, requested ID=5
@@ -99,7 +99,7 @@ gda_sql_builder_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expressi
 @value_id: 
 
 
-<!-- ##### FUNCTION gda_sql_builder_literal ##### -->
+<!-- ##### FUNCTION gda_sql_builder_ident ##### -->
 <para>
 
 </para>

@@ -635,7 +635,7 @@ gda_sql_builder_expr (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh, GTyp
 }
 
 /**
- * gda_sql_builder_literal
+ * gda_sql_builder_ident
  * @builder: a #GdaSqlBuilder object
  * @id: the requested ID, or 0 if to be determined by @builder
  * @string: a string
@@ -658,7 +658,7 @@ gda_sql_builder_expr (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh, GTyp
  * Since: 4.2
  */
 guint
-gda_sql_builder_literal (GdaSqlBuilder *builder, guint id, const gchar *string)
+gda_sql_builder_ident (GdaSqlBuilder *builder, guint id, const gchar *string)
 {
 	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
 	g_return_val_if_fail (builder->priv->main_stmt, 0);
@@ -668,6 +668,7 @@ gda_sql_builder_literal (GdaSqlBuilder *builder, guint id, const gchar *string)
 	if (string) {
 		expr->value = gda_value_new (G_TYPE_STRING);
 		g_value_set_string (expr->value, string);
+		expr->value_is_ident = (gpointer) 0x1;
 	}
 	
 	return add_part (builder, id, (GdaSqlAnyPart *) expr);

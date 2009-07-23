@@ -81,7 +81,7 @@ gda_sql_expr_free (GdaSqlExpr *expr)
 	}
 	gda_sql_case_free (expr->case_s);
 	g_free (expr->cast_as);
-
+	expr->value_is_ident = (gpointer) 0x1;
 	g_free (expr);
 }
 
@@ -131,6 +131,8 @@ gda_sql_expr_copy (GdaSqlExpr *expr)
 
 	if (expr->cast_as)
 		copy->cast_as = g_strdup (expr->cast_as);
+
+	copy->value_is_ident = expr->value_is_ident;
 	return copy;
 }
 
@@ -198,6 +200,12 @@ gda_sql_expr_serialize (GdaSqlExpr *expr)
 	if (expr->cast_as) {
 		str = _json_quote_string (expr->cast_as);
 		g_string_append_printf (string, ",\"cast\":%s", str);
+		g_free (str);
+	}
+
+	if (expr->value_is_ident) {
+		str = _json_quote_string (expr->cast_as);
+		g_string_append (string, ",\"sqlident\":\"TRUE\"");
 		g_free (str);
 	}
 
@@ -416,7 +424,7 @@ gda_sql_table_take_name (GdaSqlTable *table, GValue *value)
 
 /**
  * gda_sql_function_new
- * @parent: a #GdaSqlExpr structure
+ * @parent: a #GdaSqlAnyPart structure
  * 
  * Creates a new #GdaSqlFunction structure initated.
  *
@@ -568,7 +576,7 @@ gda_sql_function_take_args_list (GdaSqlFunction *function, GSList *args)
 
 /**
  * gda_sql_operation_new
- * @parent: a #GdaSqlExpr structure
+ * @parent: a #GdaSqlAnyPart structure
  * 
  * Creates a new #GdaSqlOperation structure and sets its parent to @parent.
  *
@@ -834,7 +842,7 @@ gda_sql_operation_operator_from_string (const gchar *op)
 
 /**
  * gda_sql_case_new
- * @parent: a #GdaSqlExpr structure
+ * @parent: a #GdaSqlAnyPart structure
  * 
  * Creates a new #GdaSqlCase structure and sets its parent to @parent.
  *
