@@ -80,9 +80,36 @@ struct _GdaConnectionClass {
 	void (*_gda_reserved4) (void);
 };
 
+/**
+ * GdaConnectionOptions:
+ * @GDA_CONNECTION_OPTIONS_NONE: no specific aspect
+ * @GDA_CONNECTION_OPTIONS_READ_ONLY: this flag specifies that the connection to open should be in a read-only mode
+ *                                    (this policy is not correctly enforced at the moment)
+ * @GDA_CONNECTION_OPTIONS_THREAD_SAFE: this flag specifies that the connection to open will be used 
+ *                                     by several threads at once so it has to be thread safe
+ * @GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE: this flag specifies that SQL identifiers submitted as input
+ *                                    to Libgda have to keep their case sensitivity. 
+ *                                    
+ *
+ * Specifies some aspects of a connection when opening it.
+ *
+ * Additionnal information about the GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE flag:
+ * <itemizedlist>
+ *   <listitem><para>For example without this flag, if the table
+ *       name specified in a #GdaServerOperation to create a table is
+ *       <emphasis>MyTable</emphasis>, then usually the database will create a table named
+ *       <emphasis>mytable</emphasis>, whereas with this flag, the table will be created
+ *       as <emphasis>MyTable</emphasis> (note that in the end the database may still decide
+ *       to name the table <emphasis>mytable</emphasis> or differently if it can't do
+ *       otherwise).</para></listitem>
+ *   <listitem><para>Libgda will not apply this rule when parsing SQL code, the SQL code being parsed
+ *       has to be conform to the database it will be used with</para></listitem>
+ * </itemizedlist>
+ */
 typedef enum {
         GDA_CONNECTION_OPTIONS_NONE = 0,
-	GDA_CONNECTION_OPTIONS_READ_ONLY = 1 << 0
+	GDA_CONNECTION_OPTIONS_READ_ONLY = 1 << 0,
+	GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE = 1 << 1
 } GdaConnectionOptions;
 
 typedef enum {
@@ -165,6 +192,7 @@ GSList              *gda_connection_batch_execute        (GdaConnection *cnc,
 							  GdaBatch *batch, GdaSet *params,
 							  GdaStatementModelUsage model_usage, GError **error);
 
+gchar               *gda_connection_quote_sql_identifier (GdaConnection *cnc, const gchar *id);
 gchar               *gda_connection_statement_to_sql     (GdaConnection *cnc,
 							  GdaStatement *stmt, GdaSet *params, GdaStatementSqlFlag flags,
 							  GSList **params_used, GError **error);

@@ -130,6 +130,19 @@ Handles any DDL query in an abstract way
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_server_operation_get_sql_identifier_at ##### -->
+<para>
+
+</para>
+
+@op: 
+@cnc: 
+@prov: 
+@path_format: 
+@Varargs: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_server_operation_set_value_at ##### -->
 <para>
 

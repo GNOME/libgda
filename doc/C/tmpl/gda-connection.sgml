@@ -117,6 +117,7 @@ Management of connections to data sources
 
 @GDA_CONNECTION_OPTIONS_NONE: 
 @GDA_CONNECTION_OPTIONS_READ_ONLY: 
+@GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE: 
 
 <!-- ##### ENUM GdaConnectionError ##### -->
 <para>
@@ -214,6 +215,16 @@ Management of connections to data sources
 
 @cnc: 
 @from: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_quote_sql_identifier ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@id: 
 @Returns: 
 
 

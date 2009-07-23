@@ -113,6 +113,9 @@ const gchar               *gda_server_operation_op_type_to_string       (GdaServ
 GdaServerOperationNode    *gda_server_operation_get_node_info           (GdaServerOperation *op, const gchar *path_format, ...);
 
 const GValue              *gda_server_operation_get_value_at            (GdaServerOperation *op, const gchar *path_format, ...);
+gchar                     *gda_server_operation_get_sql_identifier_at   (GdaServerOperation *op,
+									 GdaConnection *cnc, GdaServerProvider *prov,
+									 const gchar *path_format, ...);
 gboolean                   gda_server_operation_set_value_at            (GdaServerOperation *op, const gchar *value, 
 									 GError **error, const gchar *path_format, ...);
 

@@ -38,13 +38,14 @@ gda_jdbc_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 	GSList *pkfields = NULL; /* list of GValue* composing the pkey */
 	gint nbpkfields = 0;
 	gchar *sql = NULL;
+	gchar *tmp;
 
 	/* CREATE TABLE */
 	string = g_string_new ("CREATE TABLE ");
 
-	value = gda_server_operation_get_value_at (op, "/TABLE_DEF_P/TABLE_NAME");
-	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
-	g_string_append (string, g_value_get_string (value));
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/TABLE_DEF_P/TABLE_NAME");
+	g_string_append (string, tmp);
+	g_free (tmp);
 	g_string_append (string, " (");
 		
 	/* FIELDS */
@@ -58,11 +59,13 @@ gda_jdbc_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 		nrows = gda_data_model_get_n_rows (node->model);
 		for (i = 0; i < nrows; i++) {
 			value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_PKEY/%d", i);
-			if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
-				pkfields = g_slist_append (pkfields,
-							   (GValue *) gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_NAME/%d", i));
+			if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value)) {
+				tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider,
+										  "/FIELDS_A/@COLUMN_NAME/%d", i);
+				pkfields = g_slist_append (pkfields, tmp);
+				nbpkfields++;
+			}
 		}
-		nbpkfields = g_slist_length (pkfields);
 
 		/* manually defined fields */
 		first = TRUE;
@@ -73,8 +76,10 @@ gda_jdbc_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 			else
 				g_string_append (string, ", ");
 				
-			value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_NAME/%d", i);
-			g_string_append (string, g_value_get_string (value));
+			tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider,
+									  "/FIELDS_A/@COLUMN_NAME/%d", i);
+			g_string_append (string, tmp);
+			g_free (tmp);
 			g_string_append_c (string, ' ');
 				
 			value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_TYPE/%d", i);
@@ -117,17 +122,18 @@ gda_jdbc_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 
 	/* composed primary key */
 	if (nbpkfields > 1) {
-		GSList *list = pkfields;
+		GSList *list;
 
 		g_string_append (string, ", PRIMARY KEY (");
-		while (list) {
+		for (list = pkfields; list; list = list->next) {
 			if (list != pkfields)
 				g_string_append (string, ", ");
-			g_string_append (string, g_value_get_string ((GValue*) list->data));
-			list = list->next;
+			g_string_append (string, (gchar*) list->data);
 		}
 		g_string_append_c (string, ')');
 	}
+	g_slist_foreach (pkfields, (GFunc) g_free, NULL);
+	g_slist_free (pkfields);
 
 	g_string_append (string, ")");
 
@@ -135,7 +141,6 @@ gda_jdbc_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 		allok = FALSE;
 		g_set_error (error, 0, 0, "%s", _("Table to create must have at least one row"));
 	}
-	g_slist_free (pkfields);
 
 	sql = string->str;
 	g_string_free (string, FALSE);

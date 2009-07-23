@@ -28,7 +28,7 @@
 
 gchar *
 _gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc, 
-			       GdaServerOperation *op, GError **error)
+				 GdaServerOperation *op, GError **error)
 {
 	GString *string;
 	const GValue *value;
@@ -41,6 +41,7 @@ _gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc
 	gint nbpkfields = 0;
 	gchar *sql = NULL;
 	gchar *conflict_algo = NULL;
+	gchar *tmp;
 
 	/* CREATE TABLE */
 	string = g_string_new ("CREATE ");
@@ -53,9 +54,9 @@ _gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc
 	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
 		g_string_append (string, "IF NOT EXISTS ");
 		
-	value = gda_server_operation_get_value_at (op, "/TABLE_DEF_P/TABLE_NAME");
-	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
-	g_string_append (string, g_value_get_string (value));
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/TABLE_DEF_P/TABLE_NAME");
+	g_string_append (string, tmp);
+	g_free (tmp);
 	g_string_append (string, " (");
 		
 	/* FIELDS */
@@ -69,11 +70,13 @@ _gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc
 		nrows = gda_data_model_get_n_rows (node->model);
 		for (i = 0; i < nrows; i++) {
 			value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_PKEY/%d", i);
-			if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
-				pkfields = g_slist_append (pkfields,
-							   (GValue *) gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_NAME/%d", i));
+			if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value)) {
+				tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider,
+										  "/FIELDS_A/@COLUMN_NAME/%d", i);
+				pkfields = g_slist_append (pkfields, tmp);
+				nbpkfields++;
+			}
 		}
-		nbpkfields = g_slist_length (pkfields);
 
 		/* manually defined fields */
 		first = TRUE;
@@ -85,8 +88,9 @@ _gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc
 			else
 				g_string_append (string, ", ");
 				
-			value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_NAME/%d", i);
-			g_string_append (string, g_value_get_string (value));
+			tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/FIELDS_A/@COLUMN_NAME/%d", i);
+			g_string_append (string, tmp);
+			g_free (tmp);
 			g_string_append_c (string, ' ');
 				
 			if (nbpkfields == 1) {
@@ -191,14 +195,13 @@ _gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc
 
 	/* composed primary key */
 	if (nbpkfields > 1) {
-		GSList *list = pkfields;
+		GSList *list;
 
 		g_string_append (string, ", PRIMARY KEY (");
-		while (list) {
+		for (list = pkfields; list; list = list->next) {
 			if (list != pkfields)
 				g_string_append (string, ", ");
-			g_string_append (string, g_value_get_string ((GValue*) list->data));
-			list = list->next;
+			g_string_append (string, (gchar *) list->data);
 		}
 		g_string_append_c (string, ')');
 		
@@ -207,6 +210,8 @@ _gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc
 			g_string_append (string, conflict_algo);
 		}
 	}
+	g_slist_foreach (pkfields, (GFunc) g_free, NULL);
+	g_slist_free (pkfields);
 
 	g_free (conflict_algo);
 	g_string_append (string, ")");
@@ -215,8 +220,6 @@ _gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc
 		allok = FALSE;
 		g_set_error (error, 0, 0, "%s", _("Table to create must have at least one row"));
 	}
-	g_slist_free (pkfields);
-
 
 	sql = string->str;
 	g_string_free (string, FALSE);
@@ -226,11 +229,12 @@ _gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc
 
 gchar *
 _gda_sqlite_render_DROP_TABLE (GdaServerProvider *provider, GdaConnection *cnc, 
-			     GdaServerOperation *op, GError **error)
+			       GdaServerOperation *op, GError **error)
 {
 	GString *string;
 	const GValue *value;
 	gchar *sql = NULL;
+	gchar *tmp;
 
 	/* DROP TABLE */
 	string = g_string_new ("DROP TABLE");
@@ -239,10 +243,10 @@ _gda_sqlite_render_DROP_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
 		g_string_append (string, " IF EXISTS");
 
-	value = gda_server_operation_get_value_at (op, "/TABLE_DESC_P/TABLE_NAME");
-	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/TABLE_DESC_P/TABLE_NAME");
 	g_string_append_c (string, ' ');
-	g_string_append (string, g_value_get_string (value));
+	g_string_append (string, tmp);
+	g_free (tmp);
 
 	sql = string->str;
 	g_string_free (string, FALSE);
@@ -252,23 +256,23 @@ _gda_sqlite_render_DROP_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 
 gchar *
 _gda_sqlite_render_RENAME_TABLE (GdaServerProvider *provider, GdaConnection *cnc, 
-				GdaServerOperation *op, GError **error)
+				 GdaServerOperation *op, GError **error)
 {
 	GString *string;
-	const GValue *value;
 	gchar *sql = NULL;
+	gchar *tmp;
 
 	/* DROP TABLE */
 	string = g_string_new ("ALTER TABLE ");
 
-	value = gda_server_operation_get_value_at (op, "/TABLE_DESC_P/TABLE_NAME");
-	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
-	g_string_append (string, g_value_get_string (value));
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/TABLE_DESC_P/TABLE_NAME");
+	g_string_append (string, tmp);
+	g_free (tmp);
 
-	value = gda_server_operation_get_value_at (op, "/TABLE_DESC_P/TABLE_NEW_NAME");
-	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/TABLE_DESC_P/TABLE_NEW_NAME");
 	g_string_append (string, " RENAME TO ");
-	g_string_append (string, g_value_get_string (value));
+	g_string_append (string, tmp);
+	g_free (tmp);
 
 	sql = string->str;
 	g_string_free (string, FALSE);
@@ -283,19 +287,20 @@ _gda_sqlite_render_ADD_COLUMN (GdaServerProvider *provider, GdaConnection *cnc,
 	GString *string;
 	const GValue *value;
 	gchar *sql = NULL;
+	gchar *tmp;
 
 	/* DROP TABLE */
 	string = g_string_new ("ALTER TABLE ");
 
-	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/TABLE_NAME");
-	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
-	g_string_append (string, g_value_get_string (value));
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/COLUMN_DEF_P/TABLE_NAME");
+	g_string_append (string, tmp);
+	g_free (tmp);
 
 	g_string_append (string, " ADD COLUMN ");
 
-	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_NAME");
-	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
-	g_string_append (string, g_value_get_string (value));
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/COLUMN_DEF_P/COLUMN_NAME");
+	g_string_append (string, tmp);
+	g_free (tmp);
 
 	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_TYPE");
 	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
@@ -353,6 +358,7 @@ _gda_sqlite_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cnc
 	gchar *sql = NULL;
 	GdaServerOperationNode *node;
 	gint nrows, i;
+	gchar *tmp;
 
 	/* CREATE INDEX */
 	string = g_string_new ("CREATE ");
@@ -371,16 +377,15 @@ _gda_sqlite_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cnc
 		g_string_append (string, " IF NOT EXISTS ");
 	
 
-	value = gda_server_operation_get_value_at (op, "/INDEX_DEF_P/INDEX_NAME");
-	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
-	g_string_append (string, g_value_get_string (value));
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/INDEX_DEF_P/INDEX_NAME");
+	g_string_append (string, tmp);
+	g_free (tmp);
 
 	g_string_append (string, " ON ");
 	
-	value = gda_server_operation_get_value_at (op, "/INDEX_DEF_P/INDEX_ON_TABLE");
-	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
-	g_string_append (string, g_value_get_string (value));
-
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/INDEX_DEF_P/INDEX_ON_TABLE");
+	g_string_append (string, tmp);
+	g_free (tmp);
 
 	/* fields or expressions the index is on */
 	g_string_append (string, " (");
@@ -388,11 +393,13 @@ _gda_sqlite_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cnc
 	g_assert (node);
 	nrows = gda_server_operation_get_sequence_size (op, "/INDEX_FIELDS_S");
 	for (i = 0; i < nrows; i++) {
-		value = gda_server_operation_get_value_at (op, "/INDEX_FIELDS_S/%d/INDEX_FIELD", i);
-		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value)) {
+		tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider,
+								  "/INDEX_FIELDS_S/%d/INDEX_FIELD", i);
+		if (tmp) {
 			if (i != 0)
 				g_string_append (string, ", ");
-			g_string_append (string, g_value_get_string (value));
+			g_string_append (string, tmp);
+			g_free (tmp);
 			
 			value = gda_server_operation_get_value_at (op, "/INDEX_FIELDS_S/%d/INDEX_COLLATE", i);
 			if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
@@ -430,6 +437,7 @@ _gda_sqlite_render_DROP_INDEX (GdaServerProvider *provider, GdaConnection *cnc,
 	GString *string;
 	const GValue *value;
 	gchar *sql = NULL;
+	gchar *tmp;
 
 	/* DROP INDEX */
 	string = g_string_new ("DROP INDEX ");
@@ -438,9 +446,9 @@ _gda_sqlite_render_DROP_INDEX (GdaServerProvider *provider, GdaConnection *cnc,
 	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
 		g_string_append (string, "IF EXISTS ");
 
-	value = gda_server_operation_get_value_at (op, "/INDEX_DESC_P/INDEX_NAME");
-	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
-	g_string_append (string, g_value_get_string (value));
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/INDEX_DESC_P/INDEX_NAME");
+	g_string_append (string, tmp);
+	g_free (tmp);
 
 	sql = string->str;
 	g_string_free (string, FALSE);
@@ -456,6 +464,7 @@ _gda_sqlite_render_CREATE_VIEW (GdaServerProvider *provider, GdaConnection *cnc,
 	const GValue *value;
 	gboolean allok = TRUE;
 	gchar *sql = NULL;
+	gchar *tmp;
 
 	string = g_string_new ("CREATE ");
 	value = gda_server_operation_get_value_at (op, "/VIEW_DEF_P/VIEW_TEMP");
@@ -468,10 +477,9 @@ _gda_sqlite_render_CREATE_VIEW (GdaServerProvider *provider, GdaConnection *cnc,
 	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
 		g_string_append (string, "IF NOT EXISTS ");
 
-		
-	value = gda_server_operation_get_value_at (op, "/VIEW_DEF_P/VIEW_NAME");
-	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
-	g_string_append (string, g_value_get_string (value));
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/VIEW_DEF_P/VIEW_NAME");
+	g_string_append (string, tmp);
+	g_free (tmp);
 	
 	if (allok) {
 		value = gda_server_operation_get_value_at (op, "/VIEW_DEF_P/VIEW_DEF");
@@ -499,6 +507,7 @@ _gda_sqlite_render_DROP_VIEW (GdaServerProvider *provider, GdaConnection *cnc,
 	GString *string;
 	const GValue *value;
 	gchar *sql = NULL;
+	gchar *tmp;
 
 	string = g_string_new ("DROP VIEW");
 
@@ -506,10 +515,10 @@ _gda_sqlite_render_DROP_VIEW (GdaServerProvider *provider, GdaConnection *cnc,
 	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
 		g_string_append (string, " IF EXISTS");
 
-	value = gda_server_operation_get_value_at (op, "/VIEW_DESC_P/VIEW_NAME");
-	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/VIEW_DESC_P/VIEW_NAME");
 	g_string_append_c (string, ' ');
-	g_string_append (string, g_value_get_string (value));
+	g_string_append (string, tmp);
+	g_free (tmp);
 
 	sql = string->str;
 	g_string_free (string, FALSE);

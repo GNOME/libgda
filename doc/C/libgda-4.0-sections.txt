@@ -116,6 +116,7 @@ gda_connection_is_opened
 <SUBSECTION>
 gda_connection_create_parser
 gda_connection_value_to_sql_string
+gda_connection_quote_sql_identifier
 gda_connection_statement_to_sql
 gda_connection_statement_prepare
 gda_connection_statement_execute
@@ -434,6 +435,7 @@ gda_server_operation_get_op_type
 gda_server_operation_op_type_to_string
 <SUBSECTION>
 gda_server_operation_get_value_at
+gda_server_operation_get_sql_identifier_at
 gda_server_operation_set_value_at
 gda_server_operation_save_data_to_xml
 gda_server_operation_load_data_from_xml
@@ -1294,6 +1296,7 @@ GdaMetaContext
 gda_meta_store_new
 gda_meta_store_new_with_file
 gda_meta_store_get_version
+gda_meta_store_sql_identifier_quote
 gda_meta_store_extract
 gda_meta_store_schema_get_structure
 gda_meta_store_get_attribute_value

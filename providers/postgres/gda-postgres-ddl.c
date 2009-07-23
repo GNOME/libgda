@@ -2,7 +2,7 @@
  * Copyright (C) 2008 The GNOME Foundation
  *
  * AUTHORS:
- *      TO_ADD: your name and email
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -31,12 +31,13 @@ gda_postgres_render_CREATE_DB (GdaServerProvider *provider, GdaConnection *cnc,
 	GString *string;
 	const GValue *value;
 	gchar *sql = NULL;
+	gchar *tmp;
 
 	string = g_string_new ("CREATE DATABASE ");
 
-	value = gda_server_operation_get_value_at (op, "/DB_DEF_P/DB_NAME");
-	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
-	g_string_append_printf (string, "\"%s\"", g_value_get_string (value));
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/DB_DEF_P/DB_NAME");
+	g_string_append (string, tmp);
+	g_free (tmp);
 
 	value = gda_server_operation_get_value_at (op, "/DB_DEF_P/OWNER");
 	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value)) {
@@ -81,14 +82,14 @@ gda_postgres_render_DROP_DB (GdaServerProvider *provider, GdaConnection *cnc,
 			     GdaServerOperation *op, GError **error)
 {
 	GString *string;
-	const GValue *value;
 	gchar *sql = NULL;
+	gchar *tmp;
 
 	string = g_string_new ("DROP DATABASE ");
 
-	value = gda_server_operation_get_value_at (op, "/DB_DESC_P/DB_NAME");
-	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
-	g_string_append_printf (string, "\"%s\"", g_value_get_string (value));
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/DB_DESC_P/DB_NAME");
+	g_string_append (string, tmp);
+	g_free (tmp);
 
 	sql = string->str;
 	g_string_free (string, FALSE);
@@ -110,6 +111,7 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 	GSList *pkfields = NULL; /* list of GValue* composing the pkey */
 	gint nbpkfields = 0;
 	gchar *sql = NULL;
+	gchar *tmp;
 
 	string = g_string_new ("CREATE ");
 	value = gda_server_operation_get_value_at (op, "/TABLE_DEF_P/TABLE_TEMP");
@@ -117,9 +119,10 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 		g_string_append (string, "TEMP ");
 	g_string_append (string, "TABLE ");
 
-	value = gda_server_operation_get_value_at (op, "/TABLE_DEF_P/TABLE_NAME");
-	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
-	g_string_append (string, g_value_get_string (value));
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider,
+							  "/TABLE_DEF_P/TABLE_NAME");
+	g_string_append (string, tmp);
+	g_free (tmp);
 	g_string_append (string, " (");
 		
 	/* FIELDS */
@@ -133,11 +136,13 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 		nrows = gda_data_model_get_n_rows (node->model);
 		for (i = 0; i < nrows; i++) {
 			value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_PKEY/%d", i);
-			if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
-				pkfields = g_slist_append (pkfields,
-							   (GValue *) gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_NAME/%d", i));
+			if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value)) {
+				tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider,
+										  "/FIELDS_A/@COLUMN_NAME/%d", i);
+				pkfields = g_slist_append (pkfields, tmp);
+				nbpkfields ++;
+			}
 		}
-		nbpkfields = g_slist_length (pkfields);
 
 		/* manually defined fields */
 		first = TRUE;
@@ -148,12 +153,11 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 			else
 				g_string_append (string, ", ");
 				
-			value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_NAME/%d", i);
-			g_string_append_c (string, '\"');
-			g_string_append (string, g_value_get_string (value));
-			g_string_append_c (string, '\"');
+			tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider,
+									  "/FIELDS_A/@COLUMN_NAME/%d", i);
+			g_string_append (string, tmp);
+			g_free (tmp);
 			g_string_append_c (string, ' ');
-				
 
 			value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_AUTOINC/%d", i);
 			if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
@@ -213,44 +217,43 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 		for (i = 0; i < nrows; i++) {
 			value = gda_server_operation_get_value_at (op, "/TABLE_PARENTS_S/%d/TABLE_PARENT_COPY", i);
 			if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && !g_value_get_boolean (value)) {
-				value = gda_server_operation_get_value_at (op, "/TABLE_PARENTS_S/%d/TABLE_PARENT_TABLE", i);
-				if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
-					const gchar *str = g_value_get_string (value);
-					if (str && *str) {
-						hasfields = TRUE;
-						if (first) 
-							first = FALSE;
-						else
-							g_string_append (string, ", ");
 
-						g_string_append (string, "LIKE ");
-						g_string_append (string, str);
-						value = gda_server_operation_get_value_at (op, 
-											   "/TABLE_PARENTS_S/%d/TABLE_PARENT_COPY_DEFAULTS", i);
-						if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && 
-						    g_value_get_boolean (value))
-							g_string_append (string, " INCLUDING DEFAULTS");
-					}
+				tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider,
+									    "/TABLE_PARENTS_S/%d/TABLE_PARENT_TABLE", i);
+				if (tmp && *tmp) {
+					hasfields = TRUE;
+					if (first) 
+						first = FALSE;
+					else
+						g_string_append (string, ", ");
+					
+					g_string_append (string, "LIKE ");
+					g_string_append (string, tmp);
+					value = gda_server_operation_get_value_at (op, 
+										   "/TABLE_PARENTS_S/%d/TABLE_PARENT_COPY_DEFAULTS", i);
+					if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && 
+					    g_value_get_boolean (value))
+						g_string_append (string, " INCLUDING DEFAULTS");
 				}
+				g_free (tmp);
 			}
 		}
 	}
 
 	/* composed primary key */
 	if (nbpkfields > 1) {
-		GSList *list = pkfields;
+		GSList *list;
 
 		g_string_append (string, ", PRIMARY KEY (");
-		while (list) {
+		for (list = pkfields; list; list = list->next) {
 			if (list != pkfields)
 				g_string_append (string, ", ");
-			g_string_append_c (string, '\"');
-			g_string_append (string, g_value_get_string ((GValue*) list->data));
-			g_string_append_c (string, '\"');
-			list = list->next;
+			g_string_append (string, (gchar*) list->data);
 		}
 		g_string_append_c (string, ')');
 	}
+	g_slist_foreach (pkfields, (GFunc) g_free, NULL);
+	g_slist_free (pkfields);
 
 	/* foreign keys */
 	if (allok) {
@@ -273,13 +276,11 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 					for (j = 0; j < nbfields; j++) {
 						if (j != 0)
 							g_string_append (string, ", ");
-						value = gda_server_operation_get_value_at (op, 
-											   "/FKEY_S/%d/FKEY_FIELDS_A/@FK_FIELD/%d", i, j);
-						if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
-						{
-							g_string_append_c (string, '\"');
-							g_string_append (string, g_value_get_string (value));
-							g_string_append_c (string, '\"');
+						tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider,
+								 "/FKEY_S/%d/FKEY_FIELDS_A/@FK_FIELD/%d", i, j);
+						if (tmp) {
+							g_string_append (string, tmp);
+							g_free (tmp);
 						}
 						else {
 							allok = FALSE;
@@ -289,9 +290,13 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 					}
 				}
 				g_string_append (string, ") REFERENCES ");
-				value = gda_server_operation_get_value_at (op, "/FKEY_S/%d/FKEY_REF_TABLE", i);
-				if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
-					g_string_append (string, g_value_get_string (value));
+
+				tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider,
+										  "/FKEY_S/%d/FKEY_REF_TABLE", i);
+				if (tmp) {
+					g_string_append (string, tmp);
+					g_free (tmp);
+				}
 				else {
 					allok = FALSE;
 					g_set_error (error, 0, 0, "%s", _("No referenced table specified in foreign key constraint"));
@@ -301,13 +306,11 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 				for (j = 0; j < nbfields; j++) {
 					if (j != 0)
 						g_string_append (string, ", ");
-					value = gda_server_operation_get_value_at (op, 
-										   "/FKEY_S/%d/FKEY_FIELDS_A/@FK_REF_PK_FIELD/%d", i, j);
-					if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
-					{
-						g_string_append_c (string, '\"');
-						g_string_append (string, g_value_get_string (value));
-						g_string_append_c (string, '\"');
+					tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider,
+								"/FKEY_S/%d/FKEY_FIELDS_A/@FK_REF_PK_FIELD/%d", i, j);
+					if (tmp) {
+						g_string_append (string, tmp);
+						g_free (tmp);
 					}
 					else {
 						allok = FALSE;
@@ -340,19 +343,18 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 	for (i = 0; i < nrows; i++) {
 		value = gda_server_operation_get_value_at (op, "/TABLE_PARENTS_S/%d/TABLE_PARENT_COPY", i);
 		if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value)) {
-			value = gda_server_operation_get_value_at (op, "/TABLE_PARENTS_S/%d/TABLE_PARENT_TABLE", i);
-			if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
-				const gchar *str = g_value_get_string (value);
-				if (str && *str) {
-					hasfields = TRUE;
-					if (first) {
-						g_string_append (string, " INHERITS ");
-						first = FALSE;
-					}
-					else
-						g_string_append (string, ", ");
-					g_string_append (string, str);
+			tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider,
+									  "/TABLE_PARENTS_S/%d/TABLE_PARENT_TABLE", i);
+			if (tmp) {
+				hasfields = TRUE;
+				if (first) {
+					g_string_append (string, " INHERITS ");
+					first = FALSE;
 				}
+				else
+					g_string_append (string, ", ");
+				g_string_append (string, tmp);
+				g_free (tmp);
 			}
 		}
 	}
@@ -368,9 +370,6 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 			g_string_append (string, " WITH OIDS");
 	}
 
-	g_slist_free (pkfields);
-
-
 	sql = string->str;
 	g_string_free (string, FALSE);
 
@@ -384,12 +383,14 @@ gda_postgres_render_DROP_TABLE   (GdaServerProvider *provider, GdaConnection *cn
 	GString *string;
 	const GValue *value;
 	gchar *sql = NULL;
+	gchar *tmp;
 
 	string = g_string_new ("DROP TABLE ");
 
-	value = gda_server_operation_get_value_at (op, "/TABLE_DESC_P/TABLE_NAME");
-	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
-	g_string_append (string, g_value_get_string (value));
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider,
+							  "/TABLE_DESC_P/TABLE_NAME");
+	g_string_append (string, tmp);
+	g_free (tmp);
 
 	value = gda_server_operation_get_value_at (op, "/TABLE_DESC_P/REFERENCED_ACTION");
 	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
@@ -408,19 +409,19 @@ gda_postgres_render_RENAME_TABLE (GdaServerProvider *provider, GdaConnection *cn
 				  GdaServerOperation *op, GError **error)
 {
 	GString *string;
-	const GValue *value;
 	gchar *sql = NULL;
+	gchar *tmp;
 
 	string = g_string_new ("ALTER TABLE ");
 
-	value = gda_server_operation_get_value_at (op, "/TABLE_DESC_P/TABLE_NAME");
-	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
-	g_string_append (string, g_value_get_string (value));
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/TABLE_DESC_P/TABLE_NAME");
+	g_string_append (string, tmp);
+	g_free (tmp);
 
-	value = gda_server_operation_get_value_at (op, "/TABLE_DESC_P/TABLE_NEW_NAME");
-	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/TABLE_DESC_P/TABLE_NEW_NAME");
 	g_string_append (string, " RENAME TO ");
-	g_string_append (string, g_value_get_string (value));
+	g_string_append (string, tmp);
+	g_free (tmp);
 
 	sql = string->str;
 	g_string_free (string, FALSE);
@@ -436,6 +437,7 @@ gda_postgres_render_ADD_COLUMN (GdaServerProvider *provider, GdaConnection *cnc,
 	GString *string;
 	const GValue *value;
 	gchar *sql = NULL;
+	gchar *tmp;
 
 	string = g_string_new ("ALTER TABLE ");
 
@@ -443,15 +445,15 @@ gda_postgres_render_ADD_COLUMN (GdaServerProvider *provider, GdaConnection *cnc,
 	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
 		g_string_append (string, "ONLY ");
 
-	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/TABLE_NAME");
-	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
-	g_string_append (string, g_value_get_string (value));
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/COLUMN_DEF_P/TABLE_NAME");
+	g_string_append (string, tmp);
+	g_free (tmp);
 
 	g_string_append (string, " ADD COLUMN ");
 
-	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_NAME");
-	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
-	g_string_append (string, g_value_get_string (value));
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/COLUMN_DEF_P/COLUMN_NAME");
+	g_string_append (string, tmp);
+	g_free (tmp);
 
 	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_TYPE");
 	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
@@ -513,17 +515,17 @@ gda_postgres_render_DROP_COLUMN  (GdaServerProvider *provider, GdaConnection *cn
 	GString *string;
 	const GValue *value;
 	gchar *sql = NULL;
+	gchar *tmp;
 
 	string = g_string_new ("ALTER TABLE ");
 
-	value = gda_server_operation_get_value_at (op, "/COLUMN_DESC_P/TABLE_NAME");
-	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
-	g_string_append (string, g_value_get_string (value));
-
-	value = gda_server_operation_get_value_at (op, "/COLUMN_DESC_P/COLUMN_NAME");
-	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/COLUMN_DESC_P/TABLE_NAME");
+	g_string_append (string, tmp);
+	g_free (tmp);
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/COLUMN_DESC_P/COLUMN_NAME");
 	g_string_append (string, " DROP COLUMN ");
-	g_string_append (string, g_value_get_string (value));
+	g_string_append (string, tmp);
+	g_free (tmp);
 
 	value = gda_server_operation_get_value_at (op, "/COLUMN_DESC_P/REFERENCED_ACTION");
 	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
@@ -550,6 +552,7 @@ gda_postgres_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cn
 	gchar *sql = NULL;
 	GdaServerOperationNode *node;
 	gint nrows, i;
+	gchar *tmp;
 
 	string = g_string_new ("CREATE ");
 
@@ -562,15 +565,15 @@ gda_postgres_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cn
 
 	g_string_append (string, "INDEX ");
 
-	value = gda_server_operation_get_value_at (op, "/INDEX_DEF_P/INDEX_NAME");
-	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
-	g_string_append (string, g_value_get_string (value));
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/INDEX_DEF_P/INDEX_NAME");
+	g_string_append (string, tmp);
+	g_free (tmp);
 
 	g_string_append (string, " ON ");
-	
-	value = gda_server_operation_get_value_at (op, "/INDEX_DEF_P/INDEX_ON_TABLE");
-	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
-	g_string_append (string, g_value_get_string (value));
+
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/INDEX_DEF_P/INDEX_ON_TABLE");
+	g_string_append (string, tmp);
+	g_free (tmp);
 
 	value = gda_server_operation_get_value_at (op, "/INDEX_DEF_P/INDEX_METHOD");
 	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value)) {
@@ -584,13 +587,13 @@ gda_postgres_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cn
 	g_assert (node);
 	nrows = gda_server_operation_get_sequence_size (op, "/INDEX_FIELDS_S");
 	for (i = 0; i < nrows; i++) {
-		value = gda_server_operation_get_value_at (op, "/INDEX_FIELDS_S/%d/INDEX_FIELD", i);
-		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value)) {
+		tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, 
+								  "/INDEX_FIELDS_S/%d/INDEX_FIELD", i);
+		if (tmp) {
 			if (i != 0)
 				g_string_append (string, ", ");
-			g_string_append_c (string, '\"');
-			g_string_append (string, g_value_get_string (value));
-			g_string_append_c (string, '\"');
+			g_string_append (string, tmp);
+			g_free (tmp);
 		}
 	}
 
@@ -622,12 +625,13 @@ gda_postgres_render_DROP_INDEX   (GdaServerProvider *provider, GdaConnection *cn
 	GString *string;
 	const GValue *value;
 	gchar *sql = NULL;
+	gchar *tmp;
 
 	string = g_string_new ("DROP INDEX ");
 
-	value = gda_server_operation_get_value_at (op, "/INDEX_DESC_P/INDEX_NAME");
-	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
-	g_string_append (string, g_value_get_string (value));
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/INDEX_DESC_P/INDEX_NAME");
+	g_string_append (string, tmp);
+	g_free (tmp);
 
 	value = gda_server_operation_get_value_at (op, "/INDEX_DESC_P/REFERENCED_ACTION");
 	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
@@ -649,6 +653,7 @@ gda_postgres_render_CREATE_VIEW (GdaServerProvider *provider, GdaConnection *cnc
 	const GValue *value;
 	gboolean allok = TRUE;
 	gchar *sql = NULL;
+	gchar *tmp;
 
 	string = g_string_new ("CREATE ");
 
@@ -661,10 +666,10 @@ gda_postgres_render_CREATE_VIEW (GdaServerProvider *provider, GdaConnection *cnc
 		g_string_append (string, "TEMP ");
 
 	g_string_append (string, "VIEW ");
-		
-	value = gda_server_operation_get_value_at (op, "/VIEW_DEF_P/VIEW_NAME");
-	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
-	g_string_append (string, g_value_get_string (value));
+
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/VIEW_DEF_P/VIEW_NAME");
+	g_string_append (string, tmp);
+	g_free (tmp);
 	
 	if (allok) {
 		GdaServerOperationNode *node;
@@ -676,16 +681,15 @@ gda_postgres_render_CREATE_VIEW (GdaServerProvider *provider, GdaConnection *cnc
 
 			nrows = gda_data_model_get_n_rows (node->model);
 			for (i = 0; i < nrows; i++) {
-				value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_NAME/%d", i);
-				if (!value || !G_VALUE_HOLDS (value, G_TYPE_STRING))
+				tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, 
+										  "/FIELDS_A/@COLUMN_NAME/%d", i);
+				if (!tmp)
 					continue;
-				if (!cols)
-					cols = g_string_new ("(\"");
-				else
-					g_string_append (cols, ", \"");
-				g_string_append (cols, g_value_get_string (value));
-				g_string_append_c (cols, '\"');
+				if (cols)
+					g_string_append (cols, ", ");
+				g_string_append (cols, tmp);
 				g_string_append_c (cols, ' ');
+				g_free (tmp);
 			}
 			if (cols) {
 				g_string_append_c (cols, ')');
@@ -721,6 +725,7 @@ gda_postgres_render_DROP_VIEW (GdaServerProvider *provider, GdaConnection *cnc,
 	GString *string;
 	const GValue *value;
 	gchar *sql = NULL;
+	gchar *tmp;
 
 	string = g_string_new ("DROP VIEW");
 
@@ -728,10 +733,11 @@ gda_postgres_render_DROP_VIEW (GdaServerProvider *provider, GdaConnection *cnc,
 	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
 		g_string_append (string, " IF EXISTS");
 
-	value = gda_server_operation_get_value_at (op, "/VIEW_DESC_P/VIEW_NAME");
-	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider,
+							  "/VIEW_DESC_P/VIEW_NAME");
 	g_string_append_c (string, ' ');
-	g_string_append (string, g_value_get_string (value));
+	g_string_append (string, tmp);
+	g_free (tmp);
 
 	value = gda_server_operation_get_value_at (op, "/VIEW_DESC_P/REFERENCED_ACTION");
 	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
