@@ -1496,20 +1496,52 @@ sqlite_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context,
 		if (!str) goto err;
 	}
 	else if (expr->value) {
-		str = gda_value_stringify (expr->value);
-		if (!str) goto err;
-		if (is_null && gda_value_is_null (expr->value))
-			*is_null = TRUE;
-		else if (is_default && (G_VALUE_TYPE (expr->value) == G_TYPE_STRING) && 
-			 !g_ascii_strcasecmp (g_value_get_string (expr->value), "default"))
-			*is_default = TRUE;
-		else if (!g_ascii_strcasecmp (str, "FALSE")) {
-			g_free (str);
-			str = g_strdup ("0");
+		if (expr->value_is_ident && (G_VALUE_TYPE (expr->value) == G_TYPE_STRING) &&
+		    g_value_get_string (expr->value)) {
+			gchar **ids_array;
+			gint i;
+			GString *string = NULL;
+			GdaConnectionOptions cncoptions = 0;
+			if (context->cnc)
+				g_object_get (G_OBJECT (context->cnc), "options", &cncoptions, NULL);
+
+			ids_array = gda_sql_identifier_split (g_value_get_string (expr->value));
+			if (!ids_array) 
+				str = g_value_dup_string (expr->value);
+			else if (!(ids_array[0])) goto err;
+			else {
+				for (i = 0; ids_array[i]; i++) {
+					gchar *tmp;
+					if (!string)
+						string = g_string_new ("");
+					else
+						g_string_append_c (string, '.');
+					tmp = gda_sql_identifier_quote (ids_array[i], context->cnc,
+									context->provider, FALSE,
+					   cncoptions & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
+					g_string_append (string, tmp);
+					g_free (tmp);
+				}
+				g_strfreev (ids_array);
+				str = g_string_free (string, FALSE);
+			}
 		}
-		else if (!g_ascii_strcasecmp (str, "TRUE")) {
-			g_free (str);
-			str = g_strdup ("1");
+		else {
+			str = gda_value_stringify (expr->value);
+			if (!str) goto err;
+			if (is_null && gda_value_is_null (expr->value))
+				*is_null = TRUE;
+			else if (is_default && (G_VALUE_TYPE (expr->value) == G_TYPE_STRING) && 
+				 !g_ascii_strcasecmp (g_value_get_string (expr->value), "default"))
+				*is_default = TRUE;
+			else if (!g_ascii_strcasecmp (str, "FALSE")) {
+				g_free (str);
+				str = g_strdup ("0");
+			}
+			else if (!g_ascii_strcasecmp (str, "TRUE")) {
+				g_free (str);
+				str = g_strdup ("1");
+			}
 		}
 	}
 	else if (expr->func) {
