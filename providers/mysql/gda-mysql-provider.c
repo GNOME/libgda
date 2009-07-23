@@ -3,6 +3,7 @@
  *
  * AUTHORS:
  *      Carlos Savoretti <csavoretti@gmail.com>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -20,6 +21,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#undef GDA_DISABLE_DEPRECATED
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>

@@ -145,6 +145,8 @@ _remove_quotes (gchar *str)
  * function to tell if an identifier needs to be quoted.
  *
  * Returns: a new string
+ *
+ * Deprecated: 4.0.3: Use gda_sql_identifier_quote() instead.
  */
 gchar *
 gda_sql_identifier_add_quotes (const gchar *str)
@@ -305,6 +307,8 @@ _string_is_identifier (const gchar *str)
  * </itemizedlist>
  *
  * Returns: TRUE if @str needs some quotes
+ *
+ * Deprecated: 4.0.3: Not needed anymore because of the gda_sql_identifier_quote()
  */
 gboolean
 gda_sql_identifier_needs_quotes (const gchar *str)
@@ -358,6 +362,8 @@ gda_sql_identifier_needs_quotes (const gchar *str)
  * WARNING: @str must NOT be a composed identifier (&lt;part1&gt;."&lt;part2&gt;" for example)
  * 
  * Returns: @str
+ * 
+ * Deprecated: 4.0.3: Not needed anymore because of the gda_sql_identifier_quote()
  */
 gchar *
 gda_sql_identifier_remove_quotes (gchar *str)

@@ -18,6 +18,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#undef GDA_DISABLE_DEPRECATED
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-statement.h>
