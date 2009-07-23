@@ -19,6 +19,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#undef GDA_DISABLE_DEPRECATED
 #include <libgda/sql-parser/gda-sql-parser.h>
 
 typedef struct {

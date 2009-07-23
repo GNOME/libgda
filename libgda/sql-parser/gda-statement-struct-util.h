@@ -27,14 +27,15 @@ G_BEGIN_DECLS
 
 /* utility functions */
 gchar    *_remove_quotes (gchar *str);
-gchar    *gda_sql_identifier_add_quotes (const gchar *str);
-
 gchar    *_json_quote_string (const gchar *str);
-
 gboolean  _string_is_identifier (const gchar *str);
-gboolean  gda_sql_identifier_needs_quotes (const gchar *str);
 gboolean  _split_identifier_string (gchar *str, gchar **remain, gchar **last);
+
+#ifndef GDA_DISABLE_DEPRECATED
+gboolean  gda_sql_identifier_needs_quotes (const gchar *str);
+gchar    *gda_sql_identifier_add_quotes (const gchar *str);
 gchar    *gda_sql_identifier_remove_quotes (gchar *str);
+#endif
 
 /* to be removed, only here for debug */
 gchar    *gda_sql_value_stringify (const GValue *value);

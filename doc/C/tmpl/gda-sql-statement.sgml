@@ -651,8 +651,7 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 @select: not %NULL if expression is a sub select statement (#GdaSqlStatementSelect or #GdaSqlStatementCompound)
 @case_s: not %NULL if expression is a CASE WHEN ... expression
 @cast_as: not %NULL if expression must be cast to another data type
-@_gda_reserved1: 
-@_gda_reserved2: 
+@value_is_ident: 
 
 <!-- ##### FUNCTION gda_sql_expr_new ##### -->
 <para>

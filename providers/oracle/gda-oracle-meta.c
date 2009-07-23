@@ -20,6 +20,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#undef GDA_DISABLE_DEPRECATED
 #include <string.h>
 #include "gda-oracle.h"
 #include "gda-oracle-meta.h"

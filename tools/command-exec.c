@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 - 2008 The GNOME Foundation.
+ * Copyright (C) 2007 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -19,6 +19,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#undef GDA_DISABLE_DEPRECATED
 #include "command-exec.h"
 #include <glib/gi18n-lib.h>
 #include <string.h>
