@@ -107,6 +107,10 @@ void                _gda_oracle_set_value (GValue *value,
 					   GdaConnection *cnc);
 void                _gda_oracle_value_free (GdaOracleValue *ora_value);
 
+#ifdef GDA_DEBUG
+void                _gda_oracle_test_keywords (void);
+#endif
+GdaSqlReservedKeywordsFunc _gda_oracle_get_reserved_keyword_func (OracleConnectionData *cdata);
 
 
 G_END_DECLS

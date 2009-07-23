@@ -112,6 +112,17 @@ ATest tests[] = {
 	{"SQLite", "[5ive]", "\"5ive\"", "\"5ive\"", "\"5ive\"", "\"5ive\""},
 	{"SQLite", "`5ive`", "\"5ive\"", "\"5ive\"", "\"5ive\"", "\"5ive\""},
 
+	{"Oracle", "\"double word\"", "\"double word\"", "\"double word\"", "\"double word\"", "\"double word\""},
+	{"Oracle", "\"CapitalTest\"", "\"CapitalTest\"", "\"CapitalTest\"", "\"CapitalTest\"", "\"CapitalTest\""},
+	{"Oracle", "CapitalTest", "CapitalTest", "capitaltest", "\"CapitalTest\"", "\"CapitalTest\""},
+	{"Oracle", "\"mytable\"", "\"mytable\"", "\"mytable\"", "\"mytable\"", "\"mytable\""},
+	{"Oracle", "mytable", "mytable", "mytable", "\"mytable\"", "\"mytable\""},
+	{"Oracle", "MYTABLE", "MYTABLE", "mytable", "\"MYTABLE\"", "mytable"},
+	{"Oracle", "\"MYTABLE\"", "\"MYTABLE\"", "mytable", "\"MYTABLE\"", "mytable"},
+	{"Oracle", "desc", "\"desc\"", "\"desc\"", "\"desc\"", "\"desc\""},
+	{"Oracle", "5ive", "\"5ive\"", "\"5ive\"", "\"5ive\"", "\"5ive\""},
+	{"Oracle", "\"5ive\"", "\"5ive\"", "\"5ive\"", "\"5ive\"", "\"5ive\""},
+
 };
 
 static gboolean

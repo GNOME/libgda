@@ -11,6 +11,15 @@ AM_CPPFLAGS = \
 	$(LIBGDA_CFLAGS) \
 	$(ORACLE_CFLAGS) 
 
+keyword_files=keywords_8.list keywords_9.list
+pkeyword_files=$(addprefix $(top_srcdir)/providers/oracle/,$(keyword_files))
+mkkeywordhash$(EXEEXT_FOR_BUILD): $(top_srcdir)/libgda/sqlite/mkkeywordhash.c
+	$(CC_FOR_BUILD) -g -o mkkeywordhash$(EXEEXT_FOR_BUILD) $(GDA_DEBUG_FLAGS) $<
+
+keywords_hash.c: mkkeywordhash$(EXEEXT_FOR_BUILD) $(pkeyword_files)
+	./mkkeywordhash$(EXEEXT_FOR_BUILD) $(top_srcdir)/providers/oracle/keywords_8.list V8 > keywords_hash.c
+	./mkkeywordhash$(EXEEXT_FOR_BUILD) $(top_srcdir)/providers/oracle/keywords_9.list V9 >> keywords_hash.c
+
 # parser generation
 parser.c parser.h: parser.y $(top_builddir)/libgda/sql-parser/lemon$(EXEEXT_FOR_BUILD)
 	- $(top_builddir)/libgda/sql-parser/lemon$(EXEEXT_FOR_BUILD) -q -d $(srcdir)/parser.y $(top_srcdir)/libgda/sql-parser/lempar.c
@@ -21,7 +30,7 @@ gen_def$(EXEEXT_FOR_BUILD): gen_def.c
 oracle_token_types.h: gen_def$(EXEEXT_FOR_BUILD) parser.h
 	./gen_def$(EXEEXT_FOR_BUILD) > oracle_token_types.h
 
-$(OBJECTS) $(libgda_oracle_la_OBJECTS): oracle_token_types.h
+$(OBJECTS) $(libgda_oracle_la_OBJECTS): oracle_token_types.h keywords_hash.c
 
 libgda_oracle_la_SOURCES = \
 	gda-oracle-blob-op.c \
@@ -63,7 +72,8 @@ xml_DATA = $(xml_in_files:.xml.in=.xml)
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgda-oracle-4.0.pc
 
-EXTRA_DIST = $(xml_in_files) libgda-oracle-4.0.pc.in parser.y gen_def.c
+EXTRA_DIST = $(xml_in_files) libgda-oracle-4.0.pc.in parser.y gen_def.c $(keyword_files)
 DISTCLEANFILES = $(xml_DATA)
 
-CLEANFILES = parser.h parser.c parser.out oracle_token_types.h gen_def$(EXEEXT_FOR_BUILD)
+CLEANFILES = parser.h parser.c parser.out oracle_token_types.h gen_def$(EXEEXT_FOR_BUILD) \
+	mkkeywordhash$(EXEEXT_FOR_BUILD) keywords_hash.c

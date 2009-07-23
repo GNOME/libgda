@@ -33,6 +33,9 @@
 #include "gda-oracle-util.h"
 #include "gda-oracle-blob-op.h"
 
+#include <libgda/sqlite/keywords_hash.h>
+#include "keywords_hash.c" /* this one is dynamically generated */
+
 /* 
  * _gda_oracle_make_error
  * This function uses OCIErrorGet to get a description of the error to
@@ -714,4 +717,29 @@ gda_g_type_to_static_type (GType type)
 	}
 	g_error ("Missing type '%s' in GDA static types", g_type_name (type));
 	return 0;
+}
+
+#ifdef GDA_DEBUG
+void
+_gda_oracle_test_keywords (void)
+{
+        V8test_keywords();
+        V9test_keywords();
+}
+#endif
+
+GdaSqlReservedKeywordsFunc
+_gda_oracle_get_reserved_keyword_func (OracleConnectionData *cdata)
+{
+        if (cdata) {
+                switch (cdata->major_version) {
+                case 8:
+                        return V8is_keyword;
+		case 9:
+                default:
+                        return V9is_keyword;
+                break;
+                }
+        }
+	return V9is_keyword;
 }
