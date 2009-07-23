@@ -2071,6 +2071,33 @@ gda_meta_store_get_internal_connection (GdaMetaStore *store) {
 }
 
 /**
+ * gda_meta_store_sql_identifier_quote
+ * @id: an SQL identifier
+ * @cnc: a #GdaConnection
+ *
+ * Use this method to get a correctly quoted (if necessary) SQL identifier which can be used
+ * to retreive or filter information in a #GdaMetaStore which stores meta data about @cnc.
+ *
+ * The returned SQL identifier can be used in conjunction with gda_connection_update_meta_store(),
+ * gda_connection_get_meta_store_data(), gda_connection_get_meta_store_data_v() and
+ * gda_meta_store_extract().
+ *
+ * Returns: a new string, to free with g_free() once not needed anymore
+ *
+ * Since: 4.0.3
+ */
+gchar *
+gda_meta_store_sql_identifier_quote (const char *id, GdaConnection *cnc)
+{
+	GdaConnectionOptions cncoptions;
+	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);
+	
+	g_object_get (G_OBJECT (cnc), "options", &cncoptions, NULL);
+	return gda_sql_identifier_quote (id, cnc, NULL, TRUE,
+					 cncoptions & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
+}
+
+/**
  * gda_meta_store_extract
  * @store: a #GdaMetaStore object
  * @select_sql: a SELECT statement
@@ -2078,7 +2105,9 @@ gda_meta_store_get_internal_connection (GdaMetaStore *store) {
  * @...: a list of (variable name (gchar *), GValue *value) terminated with NULL, representing values for all the
  * variables mentionned in @select_sql. If there is no variable then this part can be omitted.
  *
- * Extracts some data stored in @store using a custom SELECT query.
+ * Extracts some data stored in @store using a custom SELECT query. If the @select_sql filter involves
+ * SQL identifiers (such as table or column names), then the values should have been adapted using
+ * gda_meta_store_sql_identifier_quote().
  *
  * For more information about
  * SQL identifiers are represented in @store, see the

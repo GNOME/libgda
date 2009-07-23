@@ -1750,6 +1750,41 @@ gda_connection_batch_execute (GdaConnection *cnc, GdaBatch *batch, GdaSet *param
 
 
 /**
+ * gda_connection_quote_sql_identifier
+ * @cnc: a #GdaConnection object
+ * @id: an SQL identifier
+ *
+ * Use this method to get a correctly quoted (if necessary) SQL identifier which can be used
+ * in SQL statements, from @id. If @id is already correctly quoted for @cnc, then a copy of @id
+ * may be returned.
+ *
+ * This method may add double quotes (or other characters) around @id:
+ * <itemizedlist>
+ *  <listitem><para>if @id is a reserved SQL keyword (such as SELECT, INSERT, ...)</para></listitem>
+ *  <listitem><para>if @id contains non allowed characters such as spaces, or if it starts with a digit</para></listitem>
+ *  <listitem><para>in any other event as necessary for @cnc, depending on the the options passed when opening the @cnc
+ *            connection, and specifically the <link linkend="GDA-CONNECTION-OPTIONS-SQL-IDENTIFIERS-CASE-SENSITIVE:CAPS">
+ *            GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE</link> option.</para></listitem>
+ * </itemizedlist>
+ *
+ * One can safely pass an already quoted @id to this method, either with quoting characters allowed by @cnc or using the
+ * double quote (") character.
+ *
+ * Returns: a new string, to free with g_free() once not needed anymore
+ *
+ * Since: 4.0.3
+ */
+gchar *
+gda_connection_quote_sql_identifier (GdaConnection *cnc, const gchar *id)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (id, NULL);
+
+	return gda_sql_identifier_quote (id, cnc, NULL, FALSE,
+					 cnc->priv->options & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
+}
+
+/**
  * gda_connection_statement_to_sql
  * @cnc: a #GdaConnection object
  * @stmt: a #GdaStatement object
@@ -3746,7 +3781,9 @@ suggest_update_cb_downstream (GdaMetaStore *store, GdaMetaContext *suggest, Down
  *
  * When @context is not %NULL, and contains specified SQL identifiers (for example the "table_name" of the "_tables"
  * table), then each SQL identifier has to match the convention the #GdaMetaStore has adopted regarding
- * case sensitivity. see the <link linkend="information_schema:sql_identifiers">
+ * case sensitivity, using gda_meta_store_sql_identifier_quote().
+ *
+ * see the <link linkend="information_schema:sql_identifiers">
  * meta data section about SQL identifiers</link> for more information, and the documentation about the
  * gda_sql_identifier_quote() function which will be most usefull.
  *
@@ -4115,7 +4152,7 @@ prepare_meta_statements_hash (void)
  * @cnc: a #GdaConnection object.
  * @meta_type: describes which data to get.
  * @error: a place to store errors, or %NULL
- * @nb_filters: the number of filters in the ... argument
+ * @nb_filters: the number of filters in the @... argument
  * @...: a list of (filter name (gchar *), filter value (GValue*)) pairs specifying
  * the filter to apply to the returned data model's contents (there must be @nb_filters pairs)
  *
@@ -4131,7 +4168,9 @@ prepare_meta_statements_hash (void)
  * see <link linkend="GdaConnectionMetaTypeHead">this description</link>.
  *
  * Also, when using filters involving data which are SQL identifiers, make sure each SQL identifier
- * is represented using the #GdaMetaStore convention; see the <link linkend="information_schema:sql_identifiers">
+ * is represented using the #GdaMetaStore convention, using gda_meta_store_sql_identifier_quote().
+ *
+ * See the <link linkend="information_schema:sql_identifiers">
  * meta data section about SQL identifiers</link> for more information, and the documentation about the
  * gda_sql_identifier_quote() function which will be most usefull.
  * 

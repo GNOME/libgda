@@ -149,6 +149,7 @@
 	gda_connection_open_from_string
 	gda_connection_options_get_type
 	gda_connection_perform_operation
+	gda_connection_quote_sql_identifier
 	gda_connection_repetitive_statement_execute
 	gda_connection_rollback_savepoint
 	gda_connection_rollback_transaction
@@ -414,6 +415,7 @@
 	gda_meta_store_schema_get_structure
 	gda_meta_store_schema_remove_custom_object
 	gda_meta_store_set_attribute_value
+	gda_meta_store_sql_identifier_quote
 	gda_meta_struct_add_db_object
 	gda_meta_struct_complement
 	gda_meta_struct_complement_all
@@ -497,6 +499,7 @@
 	gda_server_operation_get_sequence_size
 	gda_server_operation_get_type
 	gda_server_operation_get_value_at
+	gda_server_operation_get_sql_identifier_at
 	gda_server_operation_is_valid
 	gda_server_operation_load_data_from_xml
 	gda_server_operation_new

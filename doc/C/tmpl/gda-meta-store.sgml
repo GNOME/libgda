@@ -155,6 +155,16 @@ Dictionary object
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_meta_store_sql_identifier_quote ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@cnc: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_meta_store_extract ##### -->
 <para>
 

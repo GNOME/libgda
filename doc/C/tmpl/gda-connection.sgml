@@ -149,12 +149,13 @@ A connection to a database
 
 <!-- ##### ENUM GdaConnectionOptions ##### -->
 <para>
-  Specifies some aspects of a connection when opening it.
+
 </para>
 
-@GDA_CONNECTION_OPTIONS_NONE: no specific aspect
-@GDA_CONNECTION_OPTIONS_READ_ONLY: the connection to open should be in a read-only mode (this policy is not correctly enforced at the moment)
-@GDA_CONNECTION_OPTIONS_THREAD_SAFE: this flag specifies that the connection to open will be used by several threads at once so it has to be thread safe
+@GDA_CONNECTION_OPTIONS_NONE: 
+@GDA_CONNECTION_OPTIONS_READ_ONLY: 
+@GDA_CONNECTION_OPTIONS_THREAD_SAFE: 
+@GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE: 
 
 <!-- ##### ENUM GdaConnectionError ##### -->
 <para>
@@ -255,6 +256,16 @@ A connection to a database
 
 @cnc: 
 @from: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_quote_sql_identifier ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@id: 
 @Returns: 
 
 

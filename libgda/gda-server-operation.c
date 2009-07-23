@@ -1893,33 +1893,25 @@ gda_server_operation_del_item_from_sequence (GdaServerOperation *op, const gchar
 	return FALSE;
 }
 
-/**
- * gda_server_operation_get_value_at
+/*
+ * real_gda_server_operation_get_value_at
  * @op: a #GdaServerOperation object
- * @path_format: a complete path to a node (starting with "/")
- * @...: arguments to use with @path_format to make a complete path
+ * @path: a complete path to a node (starting with "/")
  *
- * Get the value for the node at the path formed using @path_format and ... (the rules are the same as
- * for g_strdup_printf())
+ * Get the value for the node at the @path path
  *
  * Returns: a constant #GValue if a value has been defined, or %NULL if the value is undefined or
  * if the @path is not defined or @path does not hold any value.
  */
-const GValue *
-gda_server_operation_get_value_at (GdaServerOperation *op, const gchar *path_format, ...)
+static const GValue *
+real_gda_server_operation_get_value_at (GdaServerOperation *op, const gchar *path)
 {
 	const GValue *value = NULL;
 	GdaServerOperationNode *node_info;
-	gchar *path;
-	va_list args;
 
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), NULL);
 	g_return_val_if_fail (op->priv, NULL);
-
-	/* build path */
-	va_start (args, path_format);
-	path = g_strdup_vprintf (path_format, args);
-	va_end (args);
+	g_return_val_if_fail (path && *path, NULL);
 
 	/* use path */
 	node_info = gda_server_operation_get_node_info (op, path);
@@ -1962,8 +1954,87 @@ gda_server_operation_get_value_at (GdaServerOperation *op, const gchar *path_for
 		}		
 	}
 
-	g_free (path);
 	return value;
+}
+
+/**
+ * gda_server_operation_get_value_at
+ * @op: a #GdaServerOperation object
+ * @path_format: a complete path to a node (starting with "/")
+ * @...: arguments to use with @path_format to make a complete path
+ *
+ * Get the value for the node at the path formed using @path_format and ... (the rules are the same as
+ * for g_strdup_printf())
+ *
+ * Returns: a constant #GValue if a value has been defined, or %NULL if the value is undefined or
+ * if the @path is not defined or @path does not hold any value.
+ */
+const GValue *
+gda_server_operation_get_value_at (GdaServerOperation *op, const gchar *path_format, ...)
+{
+	const GValue *value = NULL;
+	gchar *path;
+	va_list args;
+
+	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), NULL);
+	g_return_val_if_fail (op->priv, NULL);
+
+	/* build path */
+	va_start (args, path_format);
+	path = g_strdup_vprintf (path_format, args);
+	va_end (args);
+
+	value = real_gda_server_operation_get_value_at (op, path);
+	g_free (path);
+
+	return value;
+}
+
+/**
+ * gda_server_operation_get_sql_identifier_at
+ * @op: a #GdaServerOperation object
+ * @cnc: a #GdaConnection, or %NULL
+ * @prov: a #GdaServerProvider, or %NULL
+ * @path_format: a complete path to a node (starting with "/")
+ * @...: arguments to use with @path_format to make a complete path
+ *
+ * This method is similar to gda_server_operation_get_value_at(), but for SQL identifiers: a new string
+ * is returned instead of a #GValue. Also the returned string is assumed to represents an SQL identifier
+ * and will correctly be quoted to be used with @cnc, or @prov if @cnc is %NULL (a generic quoting rule
+ * will be applied if both are %NULL).
+ *
+ * Returns: a new string, or %NULL if the value is undefined or
+ * if the @path is not defined or @path does not hold any value, or if the value held is not a string
+ * (in that last case a warning is shown).
+ *
+ * Since: 4.0.3
+ */
+gchar *
+gda_server_operation_get_sql_identifier_at (GdaServerOperation *op, GdaConnection *cnc, GdaServerProvider *prov,
+					    const gchar *path_format, ...)
+{
+	const GValue *value = NULL;
+	gchar *path;
+	va_list args;
+	GdaConnectionOptions cncoptions;
+
+	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), NULL);
+
+	/* build path */
+	va_start (args, path_format);
+	path = g_strdup_vprintf (path_format, args);
+	va_end (args);
+
+	value = real_gda_server_operation_get_value_at (op, path);
+	g_free (path);
+
+	if (!value || (G_VALUE_TYPE (value) == GDA_TYPE_NULL))
+		return NULL;
+	g_return_val_if_fail (G_VALUE_TYPE (value) == G_TYPE_STRING, NULL);
+
+	g_object_get (G_OBJECT (cnc), "options", &cncoptions, NULL);
+	return gda_sql_identifier_quote (g_value_get_string (value), cnc, prov, FALSE,
+					 cncoptions & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
 }
 
 /**

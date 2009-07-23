@@ -108,6 +108,7 @@ GdaMetaStore     *gda_meta_store_new                      (const gchar *cnc_stri
 gint              gda_meta_store_get_version              (GdaMetaStore *store);
 
 GdaConnection    *gda_meta_store_get_internal_connection  (GdaMetaStore *store);
+gchar            *gda_meta_store_sql_identifier_quote     (const char*, GdaConnection *cnc);
 GdaDataModel     *gda_meta_store_extract                  (GdaMetaStore *store, const gchar *select_sql, GError **error, ...);
 gboolean          gda_meta_store_modify                   (GdaMetaStore *store, const gchar *table_name, 
 							   GdaDataModel *new_data, const gchar *condition, GError **error, ...);
