@@ -497,7 +497,8 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
 		default:
 			if (parser->priv->mode == GDA_SQL_PARSER_MODE_DELIMIT) {
 				if ((parser->priv->context->token_type == L_BEGIN) &&
-				    (parser->priv->passed_tokens->len != 0)) {
+				    (parser->priv->passed_tokens->len != 0) &&
+				    !g_ascii_strcasecmp (g_value_get_string (value), "BEGIN")) {
 					/* a BEGIN command increments the block level only if it's not the
 					 * first word of statement */
 					parser->priv->context->block_level ++;
@@ -1054,7 +1055,17 @@ getToken (GdaSqlParser *parser)
 	}
 
 #ifdef GDA_DEBUG_NO
+	gchar debug_hold = 0;
+	gboolean debugcut = FALSE;
+	if (strlen (z) > 50) {
+		debugcut = TRUE;
+		debug_hold = z[50];
+		z[50] = 0;
+	}
+	
 	g_print ("TOK for `%s` (delim='%c') is: ", z, parser->priv->context->delimiter);
+	if (debugcut)
+		z[50] = debug_hold;
 #endif
 
 	if (*z == parser->priv->context->delimiter) {
@@ -1287,9 +1298,17 @@ getToken (GdaSqlParser *parser)
 			while (isdigit (z[i])) {i++;}
 			parser->priv->context->token_type = L_FLOAT;
 		}
-		while (IdChar (z[i])) {
-			parser->priv->context->token_type = L_ILLEGAL;
-			i++;
+		if (parser->priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
+			while (IdChar (z[i])) {
+				parser->priv->context->token_type = L_ILLEGAL;
+				i++;
+			}
+		}
+		else {
+			while (IdChar (z[i])) {
+				parser->priv->context->token_type = L_RAWSTRING;
+				i++;
+			}
 		}
 		consumed_chars = i;
 		break;
@@ -1333,7 +1352,7 @@ getToken (GdaSqlParser *parser)
 	}
 	case '$':
 		if (parser->priv->flavour == GDA_SQL_PARSER_FLAVOUR_POSTGRESQL) {
-			for(i=1; isalnum(z[i]); i++){}
+			for(i=1; isalnum(z[i]) || (z[i] == '_'); i++){}
 			if (z[i] == '$') {
 				/* this is the start of the PostgreSQL's Dollar-Quoted strings */
 				gchar *tag_start = z;
@@ -1355,6 +1374,20 @@ getToken (GdaSqlParser *parser)
 						/* tags matched */
 						parser->priv->context->token_type = L_STRING;
 						consumed_chars = i;
+
+						retval = token_as_string (parser->priv->context->next_token_start, consumed_chars);
+						/* remove comments from returned string */
+						gchar *tmp, *ptr;
+						tmp = g_value_get_string (retval);
+						for (ptr = tmp; *ptr; ptr++) {
+							if (((ptr == tmp) || (*(ptr-1) == '\n')) && (*ptr == '-') && (ptr[1] == '-')) {
+								/* we have a comment */
+								gchar *ptr2;
+								for (ptr2 = ptr + 2; ptr2 && (*ptr2 != '\n'); ptr2++) {};
+								memmove (ptr, ptr2, sizeof (char) * (strlen (ptr2) + 1));
+							}
+						}
+
 						break; /* while */
 					}
 					i++;
