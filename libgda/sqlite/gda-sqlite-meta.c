@@ -122,6 +122,26 @@ new_caseless_value (const GValue *cvalue)
 }
 
 /*
+ * Returns: @string
+ */
+static gchar *
+to_caseless_string (gchar *string)
+{
+	gchar *ptr;
+	for (ptr = string; *ptr; ptr++) {
+		if ((*ptr >= 'A') && (*ptr <= 'Z'))
+			*ptr += 'a' - 'A';
+		if (((*ptr >= 'a') && (*ptr <= 'z')) ||
+		    ((*ptr >= '0') && (*ptr <= '9')) ||
+		    (*ptr >= '_'))
+			continue;
+		else
+			return string;
+	}
+	return string;
+}
+
+/*
  * Meta initialization
  */
 void
@@ -378,7 +398,8 @@ fill_udt_model (SqliteConnectionData *cdata, GHashTable *added_hash,
 				GValue *vname, *vgtyp;
 
 				gtype = _gda_sqlite_compute_g_type (get_affinity (typname));
-				g_value_set_string ((vname = gda_value_new (G_TYPE_STRING)), typname);
+				g_value_take_string ((vname = gda_value_new (G_TYPE_STRING)),
+						     to_caseless_string (g_strdup (typname)));
 				g_value_set_string ((vgtyp = gda_value_new (G_TYPE_STRING)), g_type_name (gtype));
 
 				if (!append_a_row (mod_model, error, 9,
@@ -683,7 +704,7 @@ _gda_sqlite_meta_schemata (GdaServerProvider *prov, GdaConnection *cnc,
 			g_value_set_boolean ((v1 = gda_value_new (G_TYPE_BOOLEAN)), FALSE);
 			retval = append_a_row (model, error, 4, 
 					       FALSE, catalog_value,
-					       FALSE, cvalue, 
+					       TRUE, new_caseless_value (cvalue), 
 					       FALSE, NULL,
 					       TRUE, v1);
 		}
@@ -752,6 +773,7 @@ fill_tables_views_model (GdaConnection *cnc,
                         const GValue *dvalue;
                         gboolean is_view = FALSE;
                         const gchar *this_table_name;
+			GValue *ntable_schema;
 
                         this_table_name = g_value_get_string (ncvalue);
                         g_assert (this_table_name);
@@ -772,32 +794,34 @@ fill_tables_views_model (GdaConnection *cnc,
 				gda_value_free (ncvalue);
 				break;
 			}
+			ntable_schema = new_caseless_value (p_table_schema);
                         if (*(g_value_get_string (tvalue)) == 'v')
                                 is_view = TRUE;
                         g_value_set_boolean ((v1 = gda_value_new (G_TYPE_BOOLEAN)), TRUE);
-			str = g_strdup_printf ("%s.%s", schema_name, g_value_get_string (ncvalue));
+			str = g_strdup_printf ("%s.%s",
+					       g_value_get_string (ntable_schema),
+					       g_value_get_string (ncvalue));
 			g_value_take_string ((v2 = gda_value_new (G_TYPE_STRING)), str);
-                        if (! append_a_row (to_tables_model, error, 9,
-                                            FALSE, catalog_value, /* table_catalog */
-                                            FALSE, p_table_schema, /* table_schema */
-                                            FALSE, ncvalue, /* table_name */
-                                            FALSE, is_view ? view_type_value : table_type_value, /* table_type */
-                                            TRUE, v1, /* is_insertable_into */
-                                            FALSE, NULL, /* table_comments */
-                                            FALSE, ncvalue, /* table_short_name */
-                                            TRUE, v2, /* table_full_name */
-                                            FALSE, NULL)) /* table_owner */
-                                retval = FALSE;
                         if (is_view && ! append_a_row (to_views_model, error, 6,
                                                        FALSE, catalog_value,
-                                                       FALSE, p_table_schema,
+                                                       FALSE, ntable_schema,
                                                        FALSE, ncvalue,
                                                        FALSE, dvalue,
                                                        FALSE, view_check_option,
                                                        FALSE, false_value))
                                 retval = FALSE;
+                        if (! append_a_row (to_tables_model, error, 9,
+                                            FALSE, catalog_value, /* table_catalog */
+                                            TRUE, ntable_schema, /* table_schema */
+                                            FALSE, ncvalue, /* table_name */
+                                            FALSE, is_view ? view_type_value : table_type_value, /* table_type */
+                                            TRUE, v1, /* is_insertable_into */
+                                            FALSE, NULL, /* table_comments */
+                                            TRUE, ncvalue, /* table_short_name */
+                                            TRUE, v2, /* table_full_name */
+                                            FALSE, NULL)) /* table_owner */
+                                retval = FALSE;
                 }
-		gda_value_free (ncvalue);
         }
         g_object_unref (tmpmodel);
 
@@ -853,8 +877,8 @@ _gda_sqlite_meta__tables_views (GdaServerProvider *prov, GdaConnection *cnc,
 		gda_meta_store_set_reserved_keywords_func (store, _gda_sqlite_get_reserved_keyword_func());
 		retval = gda_meta_store_modify_with_context (store, &c2, views_model, error);
 	}
-	g_object_unref (tables_model);
 	g_object_unref (views_model);
+	g_object_unref (tables_model);
 	
 	g_object_unref (tmpmodel);
 	return retval;
@@ -984,7 +1008,8 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 		v1 = gda_value_copy (cvalue);
 		g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), pzDataType);
 		g_value_set_boolean ((v3 = gda_value_new (G_TYPE_BOOLEAN)), pNotNull ? FALSE : TRUE);
-		g_value_set_string ((v4 = gda_value_new (G_TYPE_STRING)), pzCollSeq);
+		g_value_take_string ((v4 = gda_value_new (G_TYPE_STRING)),
+				     to_caseless_string (g_strdup (pzCollSeq)));
 		if (pAutoinc)
 			g_value_set_string ((v5 = gda_value_new (G_TYPE_STRING)), GDA_EXTRA_AUTO_INCREMENT);
 		g_value_set_int (v1, g_value_get_int (v1) + 1);
@@ -1010,8 +1035,8 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 		}
 		if (! append_a_row (mod_model, error, 24, 
 				    FALSE, catalog_value, /* table_catalog */
-				    FALSE, p_table_schema, /* table_schema */
-				    FALSE, p_table_name, /* table_name */
+				    TRUE, new_caseless_value (p_table_schema), /* table_schema */
+				    TRUE, new_caseless_value (p_table_name), /* table_name */
 				    TRUE, nthis_col_pname, /* column name */
 				    TRUE, v1, /* ordinal_position */
 				    FALSE, cvalue, /* column default */
@@ -1240,17 +1265,18 @@ fill_constraints_tab_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 
 	if (retval && has_pk) {
 		if (!constraint_name_n || ! strcmp (g_value_get_string (constraint_name_n), "primary_key")) {
-			GValue *v1, *v2;
+			GValue *v1, *v2, *v3;
 			g_value_set_string ((v1 = gda_value_new (G_TYPE_STRING)), "primary_key");
 			g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), "PRIMARY KEY");
-			
+			v3 = new_caseless_value (p_table_schema);
+
 			if (! append_a_row (mod_model, error, 10, 
 					    FALSE, catalog_value, /* constraint_catalog */
-					    FALSE, p_table_schema, /* constraint_schema */
+					    FALSE, v3, /* constraint_schema */
 					    TRUE, v1, /* constraint_name */
 					    FALSE, catalog_value, /* table_catalog */
-					    FALSE, p_table_schema, /* table_schema */
-					    FALSE, p_table_name, /* table_name */
+					    TRUE, v3, /* table_schema */
+					    TRUE, new_caseless_value (p_table_name), /* table_name */
 					    TRUE, v2, /* constraint_type */
 					    FALSE, NULL, /* check_clause */
 					    FALSE, NULL, /* is_deferrable */
@@ -1301,11 +1327,11 @@ fill_constraints_tab_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 		
 		if (! append_a_row (mod_model, error, 10, 
 				    FALSE, catalog_value, /* constraint_catalog */
-				    FALSE, p_table_schema, /* constraint_schema */
-				    FALSE, cvalue, /* constraint_name */
+				    TRUE, new_caseless_value (p_table_schema), /* constraint_schema */
+				    TRUE, new_caseless_value (cvalue), /* constraint_name */
 				    FALSE, catalog_value, /* table_catalog */
-				    FALSE, p_table_schema, /* table_schema */
-				    FALSE, p_table_name, /* table_name */
+				    TRUE, new_caseless_value (p_table_schema), /* table_schema */
+				    TRUE, new_caseless_value (p_table_name), /* table_name */
 				    TRUE, v2, /* constraint_type */
 				    FALSE, NULL, /* check_clause */
 				    FALSE, NULL, /* is_deferrable */
@@ -1360,11 +1386,11 @@ fill_constraints_tab_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 		
 			if (! append_a_row (mod_model, error, 10, 
 					    FALSE, catalog_value, /* constraint_catalog */
-					    FALSE, p_table_schema, /* constraint_schema */
+					    TRUE, new_caseless_value (p_table_schema), /* constraint_schema */
 					    TRUE, v1, /* constraint_name */
 					    FALSE, catalog_value, /* table_catalog */
-					    FALSE, p_table_schema, /* table_schema */
-					    FALSE, p_table_name, /* table_name */
+					    TRUE, new_caseless_value (p_table_schema), /* table_schema */
+					    TRUE, new_caseless_value (p_table_name), /* table_name */
 					    TRUE, v2, /* constraint_type */
 					    FALSE, NULL, /* check_clause */
 					    FALSE, NULL, /* is_deferrable */
@@ -1552,12 +1578,12 @@ fill_constraints_ref_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 
 			if (! append_a_row (mod_model, error, 11, 
 					    FALSE, catalog_value, /* table_catalog */
-					    FALSE, p_table_schema, /* table_schema */
-					    FALSE, p_table_name, /* table_name */
+					    TRUE, new_caseless_value (p_table_schema), /* table_schema */
+					    TRUE, new_caseless_value (p_table_name), /* table_name */
 					    constraint_name_n ? FALSE: TRUE, 
 					    constraint_name_n ? constraint_name_n : v5, /* constraint_name */
 					    FALSE, catalog_value, /* ref_table_catalog */
-					    FALSE, p_table_schema, /* ref_table_schema */
+					    TRUE, new_caseless_value (p_table_schema), /* ref_table_schema */
 					    TRUE, v3, /* ref_table_name */
 					    TRUE, v4, /* ref_constraint_name */
 					    FALSE, NULL, /* match_option */
@@ -1754,10 +1780,10 @@ fill_key_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaData
 				g_value_set_int ((v1 = gda_value_new (G_TYPE_INT)), ord_pos++);
 				if (! append_a_row (mod_model, error, 6, 
 						    FALSE, catalog_value, /* table_catalog */
-						    FALSE, p_table_schema, /* table_schema */
-						    FALSE, p_table_name, /* table_name */
-						    FALSE, constraint_name, /* constraint_name */
-						    FALSE, cvalue, /* column_name */
+						    TRUE, new_caseless_value (p_table_schema), /* table_schema */
+						    TRUE, new_caseless_value (p_table_name), /* table_name */
+						    TRUE, new_caseless_value (constraint_name), /* constraint_name */
+						    TRUE, new_caseless_value (cvalue), /* column_name */
 						    TRUE, v1 /* ordinal_position */)) {
 					retval = FALSE;
 					break;
@@ -1818,10 +1844,10 @@ fill_key_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaData
 			}
 			if (! append_a_row (mod_model, error, 6, 
 					    FALSE, catalog_value, /* table_catalog */
-					    FALSE, p_table_schema, /* table_schema */
-					    FALSE, p_table_name, /* table_name */
-					    FALSE, constraint_name, /* constraint_name */
-					    FALSE, cvalue, /* column_name */
+					    TRUE, new_caseless_value (p_table_schema), /* table_schema */
+					    TRUE, new_caseless_value (p_table_name), /* table_name */
+					    TRUE, new_caseless_value (constraint_name), /* constraint_name */
+					    TRUE, new_caseless_value (cvalue), /* column_name */
 					    TRUE, v1 /* ordinal_position */))
 				retval = FALSE;
 		}
@@ -1859,10 +1885,10 @@ fill_key_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaData
 			}
 			if (! append_a_row (mod_model, error, 6, 
 					    FALSE, catalog_value, /* table_catalog */
-					    FALSE, p_table_schema, /* table_schema */
-					    FALSE, p_table_name, /* table_name */
-					    FALSE, constraint_name, /* constraint_name */
-					    FALSE, cvalue, /* column_name */
+					    TRUE, new_caseless_value (p_table_schema), /* table_schema */
+					    TRUE, new_caseless_value (p_table_name), /* table_name */
+					    TRUE, new_caseless_value (constraint_name), /* constraint_name */
+					    TRUE, new_caseless_value (cvalue), /* column_name */
 					    TRUE, v1 /* ordinal_position */))
 				retval = FALSE;
 		}
@@ -2080,7 +2106,7 @@ fill_routines (GdaDataModel *mod_model,
 			   FALSE, sname, /* specific_name */
 			   FALSE, NULL, /* routine_catalog */
 			   FALSE, NULL, /* routine_schema */
-			   FALSE, rname, /* routine_name */
+			   TRUE, new_caseless_value (rname), /* routine_name */
 			   TRUE, v0, /* routine_type */
 			   FALSE, NULL, /* return_type */
 			   FALSE, false_value, /* returns_set */
@@ -2094,8 +2120,8 @@ fill_routines (GdaDataModel *mod_model,
 			   FALSE, NULL, /* sql_data_access */
 			   FALSE, NULL, /* is_null_call */
 			   FALSE, NULL, /* routine_comments */
-			   FALSE, rname, /* routine_short_name */
-			   FALSE, rname, /* routine_full_name */
+			   TRUE, new_caseless_value (rname), /* routine_short_name */
+			   TRUE, new_caseless_value (rname), /* routine_full_name */
 			   FALSE, NULL /* routine_owner */)) {
 		retval = FALSE;
 	}
