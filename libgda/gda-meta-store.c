@@ -2051,7 +2051,7 @@ gda_meta_store_get_internal_connection (GdaMetaStore *store) {
  * Since: 4.0.3
  */
 gchar *
-gda_meta_store_sql_identifier_quote (const char *id, GdaConnection *cnc)
+gda_meta_store_sql_identifier_quote (const gchar *id, GdaConnection *cnc)
 {
 	GdaConnectionOptions cncoptions;
 	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);
