@@ -3781,7 +3781,7 @@ suggest_update_cb_downstream (GdaMetaStore *store, GdaMetaContext *suggest, Down
  *
  * When @context is not %NULL, and contains specified SQL identifiers (for example the "table_name" of the "_tables"
  * table), then each SQL identifier has to match the convention the #GdaMetaStore has adopted regarding
- * case sensitivity, using gda_meta_store_sql_identifier_quote().
+ * case sensitivity, using gda_connection_quote_sql_identifier() or gda_meta_store_sql_identifier_quote().
  *
  * see the <link linkend="information_schema:sql_identifiers">
  * meta data section about SQL identifiers</link> for more information, and the documentation about the
@@ -4168,7 +4168,8 @@ prepare_meta_statements_hash (void)
  * see <link linkend="GdaConnectionMetaTypeHead">this description</link>.
  *
  * Also, when using filters involving data which are SQL identifiers, make sure each SQL identifier
- * is represented using the #GdaMetaStore convention, using gda_meta_store_sql_identifier_quote().
+ * is represented using the #GdaMetaStore convention, using gda_meta_store_sql_identifier_quote() or
+ * gda_meta_store_sql_identifier_quote().
  *
  * See the <link linkend="information_schema:sql_identifiers">
  * meta data section about SQL identifiers</link> for more information, and the documentation about the
