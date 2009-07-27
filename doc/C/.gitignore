@@ -19,6 +19,7 @@ libgda-4.0.prerequisites
 libgda-4.0-decl.txt.bak
 libgda-4.0.interfaces
 libgda-4.0-decl-list.txt.bak
+libgda.types
 libgda-4.0.types
 libgda-4.0-overrides.txt
 libgda-4.0-doc.pdf
@@ -27,3 +28,4 @@ libgda-4.0-undeclared.txt
 libgda-4.0-unused.sgml
 version.xml
 *.bak
+libgda-4.0-sections.txt

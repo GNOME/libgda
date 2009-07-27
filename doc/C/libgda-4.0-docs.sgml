@@ -128,6 +128,9 @@
 <!ENTITY libgda-GdaTreeMgrColumns SYSTEM "xml/gda-tree-mgr-columns.xml">
 <!ENTITY libgda-GdaSqlBuilder SYSTEM "xml/gda-sql-builder.xml">
 <!ENTITY libgda-GdaThreadWrapper SYSTEM "xml/gda-thread-wrapper.xml">
+
+<!ENTITY visual-index SYSTEM "visual_index.xml">
+<!ENTITY libgdaui-GdauiBasicForm SYSTEM "xml/gdaui-basic-form.xml">
 ]>
 
 <book id="index">
@@ -1190,6 +1193,12 @@ g_object_unref (store);
       &libgda-GdaServerOperation;
       &libgda-GdaServerOperationNodes;
       &libgda-GdaServerOperationSequences;
+    </chapter>
+
+    <chapter>
+      <title>User interface API reference</title>
+      &visual-index;
+      &libgdaui-GdauiBasicForm;
     </chapter>
 
     <chapter id="multi-threading">

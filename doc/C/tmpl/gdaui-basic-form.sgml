@@ -1,0 +1,232 @@
+<!-- ##### SECTION Title ##### -->
+GdauiBasicForm
+
+<!-- ##### SECTION Short_Description ##### -->
+Form widget mapping the values contained in a #GdaSet
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdauiBasicForm ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL GdauiBasicForm::activated ##### -->
+<para>
+
+</para>
+
+@gdauibasicform: the object which received the signal.
+
+<!-- ##### SIGNAL GdauiBasicForm::param-changed ##### -->
+<para>
+
+</para>
+
+@gdauibasicform: the object which received the signal.
+@arg1: 
+@arg2: 
+
+<!-- ##### ARG GdauiBasicForm:data-layout ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdauiBasicForm:entries-auto-default ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdauiBasicForm:headers-sensitive ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdauiBasicForm:layout-spec ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdauiBasicForm:paramlist ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdauiBasicForm:show-actions ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT GdauiFormLayoutSpec ##### -->
+<para>
+
+</para>
+
+@xml_object: 
+@xml_file: 
+@root_element: 
+@form_prefix: 
+
+<!-- ##### FUNCTION gdaui_basic_form_new ##### -->
+<para>
+
+</para>
+
+@data_set: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_basic_form_new_custom ##### -->
+<para>
+
+</para>
+
+@data_set: 
+@glade_file: 
+@root_element: 
+@form_prefix: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_basic_form_new_in_dialog ##### -->
+<para>
+
+</para>
+
+@data_set: 
+@parent: 
+@title: 
+@header: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_basic_form_get_data_set ##### -->
+<para>
+
+</para>
+
+@form: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_basic_form_is_valid ##### -->
+<para>
+
+</para>
+
+@form: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_basic_form_has_been_changed ##### -->
+<para>
+
+</para>
+
+@form: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_basic_form_reset ##### -->
+<para>
+
+</para>
+
+@form: 
+
+
+<!-- ##### FUNCTION gdaui_basic_form_set_current_as_orig ##### -->
+<para>
+
+</para>
+
+@form: 
+
+
+<!-- ##### FUNCTION gdaui_basic_form_show_entry_actions ##### -->
+<para>
+
+</para>
+
+@form: 
+@show_actions: 
+
+
+<!-- ##### FUNCTION gdaui_basic_form_entry_show ##### -->
+<para>
+
+</para>
+
+@form: 
+@param: 
+@show: 
+
+
+<!-- ##### FUNCTION gdaui_basic_form_entry_grab_focus ##### -->
+<para>
+
+</para>
+
+@form: 
+@param: 
+
+
+<!-- ##### FUNCTION gdaui_basic_form_entry_set_editable ##### -->
+<para>
+
+</para>
+
+@form: 
+@param: 
+@editable: 
+
+
+<!-- ##### FUNCTION gdaui_basic_form_set_entries_auto_default ##### -->
+<para>
+
+</para>
+
+@form: 
+@auto_default: 
+
+
+<!-- ##### FUNCTION gdaui_basic_form_set_entries_default ##### -->
+<para>
+
+</para>
+
+@form: 
+
+
+<!-- ##### FUNCTION gdaui_basic_form_get_entry_widget ##### -->
+<para>
+
+</para>
+
+@form: 
+@param: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_basic_form_get_label_widget ##### -->
+<para>
+
+</para>
+
+@form: 
+@param: 
+@Returns: 
+
+

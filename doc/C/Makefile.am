@@ -39,6 +39,12 @@ GTKDOC_LIBS =  $(top_builddir)/libgda/libgda-4.0.la \
 	$(top_builddir)/libgda-report/libgda-report-4.0.la \
 	$(LIBGDA_LIBS)
 
+if HAVE_UI
+GTKDOC_CFLAGS += $(GTK_CFLAGS)
+GTKDOC_LIBS += $(GTK_LIBS) \
+	$(top_builddir)/libgda-ui/libgda-ui-4.0.la
+endif
+
 # Extra options to supply to gtkdoc-mkdb
 MKDB_OPTIONS=--sgml-mode --output-format=xml --ignore-files="parser.c binreloc.c libcsv.c md5c.c"
 
@@ -56,7 +62,8 @@ HTML_IMAGES = DataModels.png \
 	gda-sql-graph.png howto-exec.png \
 	parser_gen.png parser_prov.png \
 	tree-overview.png tree-overview2.png \
-	SqlIdentifiers.png
+	SqlIdentifiers.png \
+	vi-basic-form.png
 
 # Extra options to supply to gtkdoc-fixref
 FIXXREF_OPTIONS=
@@ -70,7 +77,8 @@ EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration
 	DataModels.svg \
 	architecture.svg parts.svg stmt-unknown.svg stmt-select.svg stmt-insert1.svg stmt-insert2.svg \
 	stmt-update.svg stmt-compound.svg information_schema.svg howto-exec.svg \
-	version.xml.in
+	version.xml.in \
+	visual_index.xml
 
 # Files not to distribute
 # for --rebuild-types in $(SCAN_OPTIONS), e.g. $(DOC_MODULE).types

@@ -73,7 +73,6 @@ example_files = \
 	samples/XSLT/data2.xml \
 	samples/XSLT/test.xsl \
 	samples/XSLT/transform.c \
-<<<<<<< HEAD:Makefile.am
 	samples/MetaStore/Makefile \
 	samples/MetaStore/README \
 	samples/MetaStore/background.c \
