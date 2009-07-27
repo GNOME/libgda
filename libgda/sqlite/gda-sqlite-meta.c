@@ -1008,8 +1008,11 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 		v1 = gda_value_copy (cvalue);
 		g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), pzDataType);
 		g_value_set_boolean ((v3 = gda_value_new (G_TYPE_BOOLEAN)), pNotNull ? FALSE : TRUE);
-		g_value_take_string ((v4 = gda_value_new (G_TYPE_STRING)),
-				     to_caseless_string (g_strdup (pzCollSeq)));
+		if (pzCollSeq)
+			g_value_take_string ((v4 = gda_value_new (G_TYPE_STRING)),
+					     to_caseless_string (g_strdup (pzCollSeq)));
+		else
+			v4 = NULL;
 		if (pAutoinc)
 			g_value_set_string ((v5 = gda_value_new (G_TYPE_STRING)), GDA_EXTRA_AUTO_INCREMENT);
 		g_value_set_int (v1, g_value_get_int (v1) + 1);
