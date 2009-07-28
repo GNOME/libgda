@@ -131,6 +131,10 @@
 
 <!ENTITY visual-index SYSTEM "visual_index.xml">
 <!ENTITY libgdaui-GdauiBasicForm SYSTEM "xml/gdaui-basic-form.xml">
+<!ENTITY libgdaui-GdauiCombo SYSTEM "xml/gdaui-combo.xml">
+<!ENTITY libgdaui-GdauiDataEntry SYSTEM "xml/gdaui-data-entry.xml">
+<!ENTITY libgdaui-gdaui-easy SYSTEM "xml/gdaui-easy.xml">
+<!ENTITY libgdaui-GdauiDataStore SYSTEM "xml/gdaui-data-store.xml">
 ]>
 
 <book id="index">
@@ -1198,7 +1202,11 @@ g_object_unref (store);
     <chapter>
       <title>User interface API reference</title>
       &visual-index;
+      &libgdaui-gdaui-easy;
       &libgdaui-GdauiBasicForm;
+      &libgdaui-GdauiCombo;
+      &libgdaui-GdauiDataEntry;
+      &libgdaui-GdauiDataStore;
     </chapter>
 
     <chapter id="multi-threading">

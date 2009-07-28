@@ -1,0 +1,39 @@
+<!-- ##### SECTION Title ##### -->
+UI Utility functions
+
+<!-- ##### SECTION Short_Description ##### -->
+Set of UI related functions
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### FUNCTION gdaui_new_data_entry ##### -->
+<para>
+
+</para>
+
+@type: 
+@plugin_name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_new_cell_renderer ##### -->
+<para>
+
+</para>
+
+@type: 
+@plugin_name: 
+@Returns: 
+
+

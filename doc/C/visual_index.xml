@@ -2,4 +2,10 @@
   <link linkend="GdauiBasicForm">
     <inlinegraphic fileref="vi-basic-form.png" format="PNG"></inlinegraphic>
   </link>
+  <link linkend="GdauiCombo">
+    <inlinegraphic fileref="vi-combo.png" format="PNG"></inlinegraphic>
+  </link>
+  <link linkend="GdauiDataEntry">
+    <inlinegraphic fileref="vi-data-entry.png" format="PNG"></inlinegraphic>
+  </link>
 </para>

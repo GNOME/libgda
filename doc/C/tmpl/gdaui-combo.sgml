@@ -1,0 +1,128 @@
+<!-- ##### SECTION Title ##### -->
+GdauiCombo
+
+<!-- ##### SECTION Short_Description ##### -->
+Combo box to choose from the contents of a #GdaDataModel
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdauiCombo ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdauiCombo:model ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gdaui_combo_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_combo_new_with_model ##### -->
+<para>
+
+</para>
+
+@model: 
+@n_cols: 
+@cols_index: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_combo_set_model ##### -->
+<para>
+
+</para>
+
+@combo: 
+@model: 
+@n_cols: 
+@cols_index: 
+
+
+<!-- ##### FUNCTION gdaui_combo_get_model ##### -->
+<para>
+
+</para>
+
+@combo: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_combo_add_undef_choice ##### -->
+<para>
+
+</para>
+
+@combo: 
+@add_undef_choice: 
+
+
+<!-- ##### FUNCTION gdaui_combo_set_values ##### -->
+<para>
+
+</para>
+
+@combo: 
+@values: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_combo_get_values ##### -->
+<para>
+
+</para>
+
+@combo: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_combo_undef_selected ##### -->
+<para>
+
+</para>
+
+@combo: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_combo_set_values_ext ##### -->
+<para>
+
+</para>
+
+@combo: 
+@values: 
+@cols_index: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_combo_get_values_ext ##### -->
+<para>
+
+</para>
+
+@combo: 
+@n_cols: 
+@cols_index: 
+@Returns: 
+
+

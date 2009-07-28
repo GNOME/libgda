@@ -1,2 +1,5 @@
 #include <libgda-ui/libgda-ui.h>
 gdaui_basic_form_get_type
+gdaui_combo_get_type
+gdaui_data_entry_get_type
+gdaui_data_store_get_type
