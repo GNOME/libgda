@@ -37,35 +37,35 @@ static void gdaui_data_cell_renderer_combo_dispose    (GObject *object);
 static void gdaui_data_cell_renderer_combo_finalize   (GObject *object);
 
 static void gdaui_data_cell_renderer_combo_get_property  (GObject *object,
-							     guint param_id,
-							     GValue *value,
-							     GParamSpec *pspec);
+							  guint param_id,
+							  GValue *value,
+							  GParamSpec *pspec);
 static void gdaui_data_cell_renderer_combo_set_property  (GObject *object,
-							     guint param_id,
-							     const GValue *value,
-							     GParamSpec *pspec);
+							  guint param_id,
+							  const GValue *value,
+							  GParamSpec *pspec);
 static void gdaui_data_cell_renderer_combo_get_size   (GtkCellRenderer          *cell,
-							  GtkWidget                *widget,
-							  GdkRectangle             *cell_area,
-							  gint                     *x_offset,
-							  gint                     *y_offset,
-							  gint                     *width,
-							  gint                     *height);
+						       GtkWidget                *widget,
+						       GdkRectangle             *cell_area,
+						       gint                     *x_offset,
+						       gint                     *y_offset,
+						       gint                     *width,
+						       gint                     *height);
 static void gdaui_data_cell_renderer_combo_render     (GtkCellRenderer          *cell,
-							  GdkWindow                *window,
-							  GtkWidget                *widget,
-							  GdkRectangle             *background_area,
-							  GdkRectangle             *cell_area,
-							  GdkRectangle             *expose_area,
-							  GtkCellRendererState      flags);
+						       GdkWindow                *window,
+						       GtkWidget                *widget,
+						       GdkRectangle             *background_area,
+						       GdkRectangle             *cell_area,
+						       GdkRectangle             *expose_area,
+						       GtkCellRendererState      flags);
 
 static GtkCellEditable *gdaui_data_cell_renderer_combo_start_editing (GtkCellRenderer     *cell,
-									 GdkEvent            *event,
-									 GtkWidget           *widget,
-									 const gchar         *path,
-									 GdkRectangle        *background_area,
-									 GdkRectangle        *cell_area,
-									 GtkCellRendererState flags);
+								      GdkEvent            *event,
+								      GtkWidget           *widget,
+								      const gchar         *path,
+								      GdkRectangle        *background_area,
+								      GdkRectangle        *cell_area,
+								      GtkCellRendererState flags);
 
 enum {
 	CHANGED,
@@ -132,7 +132,7 @@ gdaui_data_cell_renderer_combo_init (GdauiDataCellRendererCombo *datacell)
 	datacell->priv = g_new0 (GdauiDataCellRendererComboPrivate, 1);
 	datacell->priv->attributes = 0;
 	datacell->priv->set_default_if_invalid = FALSE;
-  datacell->priv->show_expander = TRUE;
+	datacell->priv->show_expander = TRUE;
 }
 
 static void
@@ -170,7 +170,7 @@ gdaui_data_cell_renderer_combo_class_init (GdauiDataCellRendererComboClass *clas
 	g_object_class_install_property (object_class,
 					 PROP_VALUE_ATTRIBUTES,
 					 g_param_spec_flags ("value_attributes", NULL, NULL, GDA_TYPE_VALUE_ATTRIBUTE,
-                                                            GDA_VALUE_ATTR_NONE, G_PARAM_READWRITE));
+							     GDA_VALUE_ATTR_NONE, G_PARAM_READWRITE));
 
 	g_object_class_install_property (object_class,
 					 PROP_TO_BE_DELETED,
@@ -186,8 +186,8 @@ gdaui_data_cell_renderer_combo_class_init (GdauiDataCellRendererComboClass *clas
                                                                (G_PARAM_READABLE | G_PARAM_WRITABLE)));
   
 	g_object_class_install_property (object_class, PROP_PARAMLIST,
-					 g_param_spec_object ("param_list", NULL, NULL, GDA_TYPE_SET,
-                                                               (G_PARAM_CONSTRUCT_ONLY | G_PARAM_WRITABLE)));
+					 g_param_spec_object ("param_list", NULL, NULL, GDAUI_TYPE_SET,
+							      (G_PARAM_CONSTRUCT_ONLY | G_PARAM_WRITABLE)));
 
 	/* Ideally, GdaSetSource would be a boxed type, but it is not yet, so we use g_param_spec_pointer(). */
 	g_object_class_install_property (object_class, PROP_PARAMLISTSOURCE,
@@ -239,9 +239,9 @@ gdaui_data_cell_renderer_combo_finalize (GObject *object)
 
 static void
 gdaui_data_cell_renderer_combo_get_property (GObject *object,
-						guint param_id,
-						GValue *value,
-						GParamSpec *pspec)
+					     guint param_id,
+					     GValue *value,
+					     GParamSpec *pspec)
 {
 	GdauiDataCellRendererCombo *datacell = GDAUI_DATA_CELL_RENDERER_COMBO (object);
 
@@ -262,9 +262,9 @@ static gchar *render_text_to_display_from_values (GList *values);
 
 static void
 gdaui_data_cell_renderer_combo_set_property (GObject *object,
-						guint param_id,
-						const GValue *value,
-						GParamSpec *pspec)
+					     guint param_id,
+					     const GValue *value,
+					     GParamSpec *pspec)
 {
 	GdauiDataCellRendererCombo *datacell = GDAUI_DATA_CELL_RENDERER_COMBO (object);
 
@@ -283,7 +283,7 @@ gdaui_data_cell_renderer_combo_set_property (GObject *object,
 					
 					if (!gvalues->data || 
 					    (gvalues->data && !gda_value_is_null ((GValue *)(gvalues->data))))
-					    allnull = FALSE;
+						allnull = FALSE;
 
 					length ++;
 					gvalues = g_list_next (gvalues);
@@ -296,8 +296,8 @@ gdaui_data_cell_renderer_combo_set_property (GObject *object,
 				else {
 					/* find the data model row for the values */
 					/* if (gdaui_data_model_get_status (datacell->priv->data_model) &  */
-/* 					    GDAUI_DATA_MODEL_NEEDS_INIT_REFRESH) */
-/* 						gdaui_data_model_refresh (datacell->priv->data_model, NULL); */
+					/* 					    GDAUI_DATA_MODEL_NEEDS_INIT_REFRESH) */
+					/* 						gdaui_data_model_refresh (datacell->priv->data_model, NULL); */
 					row = gda_data_model_get_row_from_values (datacell->priv->source->source->data_model,
 										  values,
 										  datacell->priv->source->ref_cols_index);
@@ -437,24 +437,24 @@ gdaui_data_cell_renderer_combo_new (GdauiSet *paramlist, GdauiSetSource *source)
 {
 	GObject *obj;
 
-	g_return_val_if_fail (GDA_IS_SET (paramlist), NULL);
+	g_return_val_if_fail (GDAUI_IS_SET (paramlist), NULL);
 	g_return_val_if_fail (source, NULL);
 	g_return_val_if_fail (g_slist_find (paramlist->sources_list, source), NULL);
 
 	obj = g_object_new (GDAUI_TYPE_DATA_CELL_RENDERER_COMBO, "param_list", paramlist, 
-                      "param_list_source", source, NULL);
+			    "param_list_source", source, NULL);
 	
 	return GTK_CELL_RENDERER (obj);
 }
 
 static void
 gdaui_data_cell_renderer_combo_get_size (GtkCellRenderer *cell,
-					    GtkWidget       *widget,
-					    GdkRectangle    *cell_area,
-					    gint            *x_offset,
-					    gint            *y_offset,
-					    gint            *width,
-					    gint            *height)
+					 GtkWidget       *widget,
+					 GdkRectangle    *cell_area,
+					 gint            *x_offset,
+					 gint            *y_offset,
+					 gint            *width,
+					 gint            *height)
 {
 	gint calc_width;
 	gint calc_height;
@@ -480,12 +480,12 @@ gdaui_data_cell_renderer_combo_get_size (GtkCellRenderer *cell,
 
 static void
 gdaui_data_cell_renderer_combo_render (GtkCellRenderer      *cell,
-					  GdkWindow            *window,
-					  GtkWidget            *widget,
-					  GdkRectangle         *background_area,
-					  GdkRectangle         *cell_area,
-					  GdkRectangle         *expose_area,
-					  GtkCellRendererState  flags)
+				       GdkWindow            *window,
+				       GtkWidget            *widget,
+				       GdkRectangle         *background_area,
+				       GdkRectangle         *cell_area,
+				       GdkRectangle         *expose_area,
+				       GtkCellRendererState  flags)
 	
 {
 	GtkStateType state = 0;	
@@ -535,16 +535,16 @@ gdaui_data_cell_renderer_combo_render (GtkCellRenderer      *cell,
 
 static void gdaui_data_cell_renderer_combo_editing_done (GtkCellEditable *combo, GdauiDataCellRendererCombo *datacell);
 static gboolean gdaui_data_cell_renderer_combo_focus_out_event (GtkWidget *widget, GdkEvent *event, 
-								   GdauiDataCellRendererCombo *datacell);
+								GdauiDataCellRendererCombo *datacell);
 
 static GtkCellEditable *
 gdaui_data_cell_renderer_combo_start_editing (GtkCellRenderer     *cell,
-						 GdkEvent            *event,
-						 GtkWidget           *widget,
-						 const gchar         *path,
-						 GdkRectangle        *background_area,
-						 GdkRectangle        *cell_area,
-						 GtkCellRendererState flags)
+					      GdkEvent            *event,
+					      GtkWidget           *widget,
+					      const gchar         *path,
+					      GdkRectangle        *background_area,
+					      GdkRectangle        *cell_area,
+					      GtkCellRendererState flags)
 {
 	GdauiDataCellRendererCombo *datacell;
 	GtkCellRendererText *cell_text;
@@ -557,22 +557,22 @@ gdaui_data_cell_renderer_combo_start_editing (GtkCellRenderer     *cell,
 		return NULL;
 
 	combo = gdaui_combo_new_with_model (GDA_DATA_MODEL (datacell->priv->source->source->data_model),
-					       datacell->priv->source->shown_n_cols, 
-					       datacell->priv->source->shown_cols_index);
+					    datacell->priv->source->shown_n_cols, 
+					    datacell->priv->source->shown_cols_index);
 	
 	g_object_set (combo, "has_frame", FALSE, NULL);
 	g_object_set_data_full (G_OBJECT (combo),
 				GDAUI_DATA_CELL_RENDERER_COMBO_PATH,
 				g_strdup (path), g_free);
 	gdaui_combo_add_undef_choice (GDAUI_COMBO (combo),
-					 (datacell->priv->attributes & GDA_VALUE_ATTR_CAN_BE_NULL) ? TRUE : FALSE);
+				      (datacell->priv->attributes & GDA_VALUE_ATTR_CAN_BE_NULL) ? TRUE : FALSE);
 	gtk_widget_show (combo);
 
 	g_signal_connect (GTK_CELL_EDITABLE (combo), "editing_done",
 			  G_CALLBACK (gdaui_data_cell_renderer_combo_editing_done), datacell);
 	datacell->priv->focus_out_id = g_signal_connect (combo, "focus_out_event",
-						   G_CALLBACK (gdaui_data_cell_renderer_combo_focus_out_event),
-						   datacell);
+							 G_CALLBACK (gdaui_data_cell_renderer_combo_focus_out_event),
+							 datacell);
 	
 	return GTK_CELL_EDITABLE (combo);
 }
@@ -597,8 +597,8 @@ gdaui_data_cell_renderer_combo_editing_done (GtkCellEditable *combo, GdauiDataCe
 		return;
 	
 	list = gdaui_combo_get_values_ext (GDAUI_COMBO (combo), 
-					      datacell->priv->source->ref_n_cols, 
-					      datacell->priv->source->ref_cols_index);
+					   datacell->priv->source->ref_n_cols, 
+					   datacell->priv->source->ref_cols_index);
 	list_all = gdaui_combo_get_values_ext (GDAUI_COMBO (combo), 0, NULL);
 
 	path = g_object_get_data (G_OBJECT (combo), GDAUI_DATA_CELL_RENDERER_COMBO_PATH);
@@ -610,7 +610,7 @@ gdaui_data_cell_renderer_combo_editing_done (GtkCellEditable *combo, GdauiDataCe
 
 static gboolean
 gdaui_data_cell_renderer_combo_focus_out_event (GtkWidget *widget, GdkEvent  *event, 
-						   GdauiDataCellRendererCombo *datacell)
+						GdauiDataCellRendererCombo *datacell)
 {
   
 	gdaui_data_cell_renderer_combo_editing_done (GTK_CELL_EDITABLE (widget), datacell);

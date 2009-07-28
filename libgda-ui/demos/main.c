@@ -778,11 +778,16 @@ main (int argc, char **argv)
 
 	/* Initialize meta store */
 	full_filename = demo_find_file ("demo_meta.db", &error);
-	mstore = gda_meta_store_new_with_file (full_filename);
+	if (full_filename)
+		mstore = gda_meta_store_new_with_file (full_filename);
+	else
+		mstore = gda_meta_store_new (NULL);
+
 	g_free (full_filename);
 	g_object_set (G_OBJECT (demo_cnc), "meta-store", mstore, NULL);
         g_object_unref (mstore);
-	/*gda_connection_update_meta_store (demo_cnc, NULL, NULL);*/
+	if (! full_filename)
+		gda_connection_update_meta_store (demo_cnc, NULL, NULL);
 
 	/* Initialize parser object */
 	demo_parser = gda_connection_create_parser (demo_cnc);

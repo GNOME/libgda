@@ -11,6 +11,15 @@ extern GdaConnection *demo_cnc;
 extern GdaSqlParser *demo_parser;
 static GtkWidget *window = NULL;
 
+static void
+salesrep_changed_cb (GdaHolder *holder, gpointer data)
+{
+	gchar *str;
+	str = gda_value_stringify (gda_holder_get_value (holder));
+	g_print ("SalesRep changed to: %s\n", str);
+	g_free (str);
+}
+
 GtkWidget *
 do_linked_model_param (GtkWidget *do_widget)
 {  
@@ -58,15 +67,19 @@ do_linked_model_param (GtkWidget *do_widget)
 						"SELECT c.id, c.name, s.name AS \"SalesRep\""
 						"FROM customers c "
 						"LEFT JOIN salesrep s ON (s.id=c.default_served_by) "
-						"WHERE s.id = ##/*name:'SalesRep' type:gint descr:'Sales person'*/ "
+						"WHERE s.id = ##SalesRep::gint::null "
 						    "OR s.id IS NULL", NULL, NULL);
 		gda_statement_get_parameters (stmt, &params, NULL);
-		cust_model = gda_connection_statement_execute_select (demo_cnc, stmt, params, NULL);
+		cust_model = gda_connection_statement_execute_select_full (demo_cnc, stmt, params,
+									   GDA_STATEMENT_MODEL_ALLOW_NOPARAM,
+									   NULL, NULL);
 		g_object_unref (stmt);
 
 		/* restrict the c.default_served_by field in the grid to be within the sr_model */
 		param = gda_set_get_holder (params, "SalesRep");
 		g_assert (gda_holder_set_source_model (param, sr_model, 0, NULL));
+		g_signal_connect (param, "changed",
+				  G_CALLBACK (salesrep_changed_cb), NULL);
 
 
 		/* create a basic form to set the values in params */
