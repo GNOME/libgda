@@ -282,6 +282,7 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 		{"statement_to_sql", TRUE, (AFunc) pclass->statement_to_sql},
 		{"statement_prepare", TRUE, (AFunc) pclass->statement_prepare},
 		{"statement_execute", TRUE, (AFunc) pclass->statement_execute},
+		{"identifier_quote", TRUE, (AFunc) pclass->identifier_quote}
 	};
 
 	ProvFunc md[] = {

@@ -1706,7 +1706,7 @@ add_oid_columns (GdaStatement *stmt, GHashTable **out_hash, gint *out_nb_cols_ad
 		else
 			name = target->table_name;
 		
-		tmp = gda_sql_identifier_quote (target->table_name, NULL, NULL, FALSE, FALSE);
+		tmp = gda_sql_identifier_quote (name, NULL, NULL, FALSE, FALSE);
 		str = g_strdup_printf ("%s.rowid", tmp);
 		g_free (tmp);
 		g_value_take_string ((field->expr->value = gda_value_new (G_TYPE_STRING)), str);
