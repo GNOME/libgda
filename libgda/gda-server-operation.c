@@ -2016,7 +2016,7 @@ gda_server_operation_get_sql_identifier_at (GdaServerOperation *op, GdaConnectio
 	const GValue *value = NULL;
 	gchar *path;
 	va_list args;
-	GdaConnectionOptions cncoptions;
+	GdaConnectionOptions cncoptions = 0;
 
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), NULL);
 
@@ -2032,7 +2032,8 @@ gda_server_operation_get_sql_identifier_at (GdaServerOperation *op, GdaConnectio
 		return NULL;
 	g_return_val_if_fail (G_VALUE_TYPE (value) == G_TYPE_STRING, NULL);
 
-	g_object_get (G_OBJECT (cnc), "options", &cncoptions, NULL);
+	if (cnc)
+		g_object_get (G_OBJECT (cnc), "options", &cncoptions, NULL);
 	return gda_sql_identifier_quote (g_value_get_string (value), cnc, prov, FALSE,
 					 cncoptions & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
 }
