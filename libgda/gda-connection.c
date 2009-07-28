@@ -551,17 +551,22 @@ gda_connection_set_property (GObject *object,
 			}
 			gda_connection_unlock ((GdaLockable*) cnc);
                         break;
-                case PROP_OPTIONS:
+                case PROP_OPTIONS: {
+			GdaConnectionOptions flags;
+			flags = g_value_get_flags (value);
 			gda_mutex_lock (cnc->priv->mutex);
-			if (cnc->priv->is_open) {
-				g_warning (_("Could not set the '%s' property when the connection is opened"),
+			if (cnc->priv->is_open &&
+			    ((flags & (~GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE)) !=
+			     (cnc->priv->options & (~GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE)))) {
+				g_warning (_("Can't set the '%s' property once the connection is opened"),
 					   pspec->name);
 				gda_connection_unlock ((GdaLockable*) cnc);
 				return;
 			}
-			cnc->priv->options = g_value_get_flags (value);
+			cnc->priv->options = flags;
 			gda_mutex_unlock (cnc->priv->mutex);
 			break;
+		}
 		case PROP_META_STORE:
 			gda_mutex_lock (cnc->priv->mutex);
 			if (cnc->priv->meta_store) {
