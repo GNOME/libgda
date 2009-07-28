@@ -25,6 +25,11 @@ prov_test_common_setup ()
 {
 	int number_failed = 0;
 	GError *error = NULL;
+
+#ifdef CHECK_EXTRA_INFO
+	g_print ("\n============= %s() =============\n", __FUNCTION__);
+#endif
+
 	cnc = test_cnc_setup_connection (pinfo->id, "testcheckdb", &error);
 	if (!cnc) {
 		if (error) {
@@ -68,6 +73,10 @@ prov_test_common_clean ()
 {
 	int number_failed = 0;
 
+#ifdef CHECK_EXTRA_INFO
+	g_print ("\n============= %s() =============\n", __FUNCTION__);
+#endif
+
 	if (!test_cnc_clean_connection (cnc, NULL))
 		number_failed++;
 
@@ -91,7 +100,14 @@ prov_test_common_check_meta ()
 	GError *gerror = NULL;
 	gint ntables, i;
 
+#ifdef CHECK_EXTRA_INFO
+	g_print ("\n============= %s() =============\n", __FUNCTION__);
+#endif
+
 	/* update meta store */
+#ifdef CHECK_EXTRA_INFO
+	g_print ("Updating the complete meta store...\n");
+#endif
 	if (! gda_connection_update_meta_store (cnc, NULL, &gerror)) {
 #ifdef CHECK_EXTRA_INFO
 		g_warning ("Can't update meta store (1): %s\n",
@@ -143,6 +159,9 @@ prov_test_common_check_meta ()
 	}
 
 	/* update meta store */
+#ifdef CHECK_EXTRA_INFO
+	g_print ("Updating the complete meta store...\n");
+#endif
 	if (! gda_connection_update_meta_store (cnc, NULL, &gerror)) {
 #ifdef CHECK_EXTRA_INFO
 		g_warning ("Can't update meta store (2): %s\n",
@@ -203,7 +222,256 @@ prov_test_common_check_meta ()
 		g_strfreev (dump1);
 	g_slist_free (tables);
 
-	return number_failed;	
+	return number_failed;
+}
+
+/*
+ *
+ * CHECK_META_IDENTIFIERS
+ *
+ */
+
+int
+prov_test_common_check_meta_identifiers (gboolean case_sensitive, gboolean update_all)
+{
+	GdaMetaStore *store;
+	GError *error = NULL;
+	gchar *table_name = "CapitalTest";
+	gchar *field_name = "AName";
+	GdaServerProvider* provider = gda_connection_get_provider (cnc);
+	GdaServerOperation* operation;
+	GdaDataModel* data;
+	GValue *value, *value2;
+	const GValue *cvalue;
+	GdaMetaContext mcontext = {"_tables", 1, NULL, NULL};
+	GdaConnectionOptions options;
+
+#ifdef CHECK_EXTRA_INFO
+	g_print ("\n============= %s(%s, %s) =============\n", __FUNCTION__,
+		 case_sensitive ? "case sensitive" : "case NOT sensitive",
+		 update_all ? "complete meta data update" : "partial meta data update");
+#endif
+
+	g_object_get (G_OBJECT (cnc), "options", &options, NULL);
+	if (case_sensitive)
+		g_object_set (G_OBJECT (cnc), "options",
+			      options | GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE, NULL);
+
+	
+
+	/* DROP table */
+        operation = gda_server_provider_create_operation (provider, cnc,
+							  GDA_SERVER_OPERATION_DROP_TABLE, NULL, &error);
+        g_assert (operation);
+        gda_server_operation_set_value_at (operation, table_name, NULL, "/TABLE_DESC_P/TABLE_NAME");
+        gda_server_provider_perform_operation (provider, cnc, operation, NULL);
+	g_object_unref (operation);
+
+	/* CREATE table */
+	operation = gda_server_provider_create_operation (provider, cnc,
+							  GDA_SERVER_OPERATION_CREATE_TABLE, NULL, &error);
+        g_assert (operation);
+        gda_server_operation_set_value_at (operation, table_name, NULL, "/TABLE_DEF_P/TABLE_NAME");
+        gda_server_operation_set_value_at (operation, "id", NULL, "/FIELDS_A/@COLUMN_NAME/0");
+        gda_server_operation_set_value_at (operation, "int", NULL, "/FIELDS_A/@COLUMN_TYPE/0");
+        gda_server_operation_set_value_at (operation, "TRUE", NULL, "/FIELDS_A/@COLUMN_PKEY/0");
+        if (! gda_server_provider_perform_operation (provider, cnc, operation, &error)) {
+#ifdef CHECK_EXTRA_INFO
+                g_warning ("perform_operation(CREATE_TABLE) failed: %s\n", error && error->message ? 
+			   error->message : "???");
+#endif
+                g_clear_error (&error);
+		g_object_set (G_OBJECT (cnc), "options", options, NULL);
+                return 1;
+        }
+
+
+	/* update meta store */
+#ifdef CHECK_EXTRA_INFO
+	g_print ("Updating the complete meta store...\n");
+#endif
+	if (!update_all) {
+		g_value_take_string ((value = gda_value_new (G_TYPE_STRING)),
+				     gda_meta_store_sql_identifier_quote (table_name, cnc));
+		mcontext.column_names = g_new (gchar *, 1);
+		mcontext.column_names [0] = "table_name";
+		mcontext.column_values = g_new (GValue *, 1);
+		mcontext.column_values [0] = value;
+	}
+	store = gda_meta_store_new (NULL); /* create an in memory meta store */
+	g_object_set (G_OBJECT (cnc), "meta-store", store, NULL);
+	g_object_unref (store);
+	if (! gda_connection_update_meta_store (cnc, update_all ? NULL : &mcontext, &error)) {
+#ifdef CHECK_EXTRA_INFO
+		g_warning ("Can't FULL update meta store: %s\n",
+			   error && error->message ? error->message : "???");
+#endif
+		g_clear_error (&error);
+		g_object_set (G_OBJECT (cnc), "options", options, NULL);
+		return 1;
+	}
+
+	/* check table */
+#ifdef CHECK_EXTRA_INFO
+	g_print ("Checking fetched meta data...\n");
+#endif
+	g_value_take_string ((value = gda_value_new (G_TYPE_STRING)),
+			     gda_meta_store_sql_identifier_quote (table_name, cnc));
+	data = gda_connection_get_meta_store_data (cnc, GDA_CONNECTION_META_TABLES, &error, 1,
+						   "name", value);
+	g_assert (data);
+	if (gda_data_model_get_n_rows (data) != 1) {
+#ifdef CHECK_EXTRA_INFO
+                g_warning ("gda_connection_get_meta_store_data(): wrong number of rows : %d\n",
+			   gda_data_model_get_n_rows (data));
+#endif
+		gda_value_free (value);
+		g_object_unref (data);
+		g_object_set (G_OBJECT (cnc), "options", options, NULL);
+		return 1;
+	}
+	cvalue = gda_data_model_get_value_at (data, 0, 0, &error);
+	g_assert (cvalue);
+	if (gda_value_compare (value, cvalue)) {
+#ifdef CHECK_EXTRA_INFO
+                g_warning ("gda_connection_get_meta_store_data(): expected %s and got %s\n",
+			   gda_value_stringify (cvalue), gda_value_stringify (value));
+#endif
+		gda_value_free (value);
+		g_object_unref (data);
+		g_object_set (G_OBJECT (cnc), "options", options, NULL);
+		return 1;
+	}
+	g_object_unref (data);
+
+	/* check fields of table */
+	data = gda_connection_get_meta_store_data (cnc, GDA_CONNECTION_META_FIELDS, &error, 1,
+						   "name", value);
+	g_assert (data);
+	if (gda_data_model_get_n_rows (data) != 1) {
+#ifdef CHECK_EXTRA_INFO
+                g_warning ("gda_connection_get_meta_store_data(): wrong number of rows : %d\n",
+			   gda_data_model_get_n_rows (data));
+#endif
+		gda_value_free (value);
+		g_object_unref (data);
+		g_object_set (G_OBJECT (cnc), "options", options, NULL);
+		return 1;
+	}
+	cvalue = gda_data_model_get_value_at (data, 0, 0, &error);
+	g_assert (cvalue);
+	g_value_set_string ((value2 = gda_value_new (G_TYPE_STRING)), "id");
+	if (gda_value_compare (value2, cvalue)) {
+#ifdef CHECK_EXTRA_INFO
+                g_warning ("gda_connection_get_meta_store_data(): expected %s and got %s\n",
+			   gda_value_stringify (cvalue), gda_value_stringify (value));
+#endif
+		gda_value_free (value);
+		g_object_unref (data);
+		g_object_set (G_OBJECT (cnc), "options", options, NULL);
+		return 1;
+	}
+	gda_value_free (value);
+	gda_value_free (value2);
+	g_object_unref (data);
+
+	/* ALTER table to add a column */
+	operation = gda_server_provider_create_operation (provider, cnc,
+							  GDA_SERVER_OPERATION_ADD_COLUMN, NULL, &error);
+        g_assert (operation);
+        gda_server_operation_set_value_at (operation, table_name, NULL, "/COLUMN_DEF_P/TABLE_NAME");
+        gda_server_operation_set_value_at (operation, field_name, NULL, "/COLUMN_DEF_P/COLUMN_NAME");
+        gda_server_operation_set_value_at (operation, "int", NULL, "/COLUMN_DEF_P/COLUMN_TYPE");
+        if (! gda_server_provider_perform_operation (provider, cnc, operation, &error)) {
+#ifdef CHECK_EXTRA_INFO
+                g_warning ("perform_operation(ADD_COLUMN) failed: %s\n", error && error->message ? 
+			   error->message : "???");
+#endif
+                g_clear_error (&error);
+		g_object_set (G_OBJECT (cnc), "options", options, NULL);
+                return 1;
+        }
+
+	/* update meta store */
+#ifdef CHECK_EXTRA_INFO
+	g_print ("Updating the complete meta store...\n");
+#endif
+	if (! gda_connection_update_meta_store (cnc, update_all ? NULL : &mcontext, &error)) {
+#ifdef CHECK_EXTRA_INFO
+		g_warning ("Can't FULL update meta store: %s\n",
+			   error && error->message ? error->message : "???");
+#endif
+		g_clear_error (&error);
+		g_object_set (G_OBJECT (cnc), "options", options, NULL);
+		return 1;
+	}
+
+	/* check table */
+#ifdef CHECK_EXTRA_INFO
+	g_print ("Checking fetched meta data...\n");
+#endif
+	g_value_take_string ((value = gda_value_new (G_TYPE_STRING)),
+			     gda_meta_store_sql_identifier_quote (table_name, cnc));
+	data = gda_connection_get_meta_store_data (cnc, GDA_CONNECTION_META_TABLES, &error, 1,
+						   "name", value);
+	g_assert (data);
+	if (gda_data_model_get_n_rows (data) != 1) {
+#ifdef CHECK_EXTRA_INFO
+                g_warning ("gda_connection_get_meta_store_data(): wrong number of rows : %d\n",
+			   gda_data_model_get_n_rows (data));
+#endif
+		gda_value_free (value);
+		g_object_unref (data);
+		g_object_set (G_OBJECT (cnc), "options", options, NULL);
+		return 1;
+	}
+	cvalue = gda_data_model_get_value_at (data, 0, 0, &error);
+	g_assert (cvalue);
+	if (gda_value_compare (value, cvalue)) {
+#ifdef CHECK_EXTRA_INFO
+                g_warning ("gda_connection_get_meta_store_data(): expected %s and got %s\n",
+			   gda_value_stringify (cvalue), gda_value_stringify (value));
+#endif
+		gda_value_free (value);
+		g_object_unref (data);
+		g_object_set (G_OBJECT (cnc), "options", options, NULL);
+		return 1;
+	}
+	g_object_unref (data);
+
+	/* check fields of table */
+	g_value_take_string ((value2 = gda_value_new (G_TYPE_STRING)),
+			     gda_meta_store_sql_identifier_quote (field_name, cnc));
+	data = gda_connection_get_meta_store_data (cnc, GDA_CONNECTION_META_FIELDS, &error, 2,
+						   "name", value, "field_name", value2);
+	g_assert (data);
+	if (gda_data_model_get_n_rows (data) != 1) {
+#ifdef CHECK_EXTRA_INFO
+                g_warning ("gda_connection_get_meta_store_data(): wrong number of rows : %d\n",
+			   gda_data_model_get_n_rows (data));
+#endif
+		gda_value_free (value);
+		g_object_unref (data);
+		g_object_set (G_OBJECT (cnc), "options", options, NULL);
+		return 1;
+	}
+	cvalue = gda_data_model_get_value_at (data, 0, 0, &error);
+	g_assert (cvalue);
+	if (gda_value_compare (value2, cvalue)) {
+#ifdef CHECK_EXTRA_INFO
+                g_warning ("gda_connection_get_meta_store_data(): expected %s and got %s\n",
+			   gda_value_stringify (cvalue), gda_value_stringify (value));
+#endif
+		gda_value_free (value);
+		g_object_unref (data);
+		g_object_set (G_OBJECT (cnc), "options", options, NULL);
+		return 1;
+	}
+	gda_value_free (value);
+	g_object_unref (data);
+
+	g_object_set (G_OBJECT (cnc), "options", options, NULL);
+	return 0;
 }
 
 /*
@@ -215,6 +483,11 @@ int
 prov_test_common_load_data ()
 {
 	int number_failed = 0;
+
+#ifdef CHECK_EXTRA_INFO
+	g_print ("\n============= %s() =============\n", __FUNCTION__);
+#endif
+
 	if (!prov_test_load_data (cnc, "actor"))
 		number_failed++;
 	if (!prov_test_load_data (cnc, "language"))
@@ -236,6 +509,11 @@ int
 prov_test_common_check_cursor_models ()
 {
 	int number_failed = 0;
+
+#ifdef CHECK_EXTRA_INFO
+	g_print ("\n============= %s() =============\n", __FUNCTION__);
+#endif
+
 	if (!prov_test_check_table_cursor_model (cnc, "actor"))
 		number_failed++;
 	if (!prov_test_check_table_cursor_model (cnc, "language"))
@@ -268,6 +546,10 @@ prov_test_common_check_data_select ()
 	const gchar *remain;
 	GSList *columns;
 	gint i, ncols;
+
+#ifdef CHECK_EXTRA_INFO
+	g_print ("\n============= %s() =============\n", __FUNCTION__);
+#endif
 
 	parser = gda_connection_create_parser (cnc);
 	if (!parser)

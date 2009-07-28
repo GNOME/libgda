@@ -2754,13 +2754,20 @@ prepare_tables_infos (GdaMetaStore *store, TableInfo **out_table_infos, TableCon
 	gint i;
 	for (i = 0; i < nvalues; i++) {
 		GdaHolder *h;
+		GValue *wvalue;
 		
+		wvalue = _gda_data_meta_wrapper_compute_value (values [i], store->priv->ident_style,
+							       store->priv->reserved_keyword_func);
 		h = gda_set_get_holder ((*out_cond_infos)->params, value_names [i]);
-		if (!h || !gda_holder_set_value (h, values[i], NULL)) {
+		if (!h || !gda_holder_set_value (h, wvalue ? wvalue : values[i], NULL)) {
 			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INTERNAL_ERROR,
 				_ ("Could not set value for parameter '%s'"), value_names [i]);
+			if (wvalue)
+				gda_value_free (wvalue);
 			return FALSE;
 		}
+		if (wvalue)
+			gda_value_free (wvalue);
 	}
 	
 	return TRUE;

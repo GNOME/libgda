@@ -13,6 +13,7 @@
 int prov_test_common_setup ();
 int prov_test_common_load_data ();
 int prov_test_common_check_meta ();
+int prov_test_common_check_meta_identifiers (gboolean case_sensitive, gboolean update_all);
 int prov_test_common_check_cursor_models ();
 int prov_test_common_check_data_select ();
 int prov_test_common_clean ();

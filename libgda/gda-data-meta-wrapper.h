@@ -63,6 +63,8 @@ GdaDataModel *_gda_data_meta_wrapper_new         (GdaDataModel *model, gboolean 
 						  gint *cols, gint size, GdaSqlIdentifierStyle mode,
 						  GdaSqlReservedKeywordsFunc reserved_keyword_func);
 
+GValue       *_gda_data_meta_wrapper_compute_value (const GValue *value, GdaSqlIdentifierStyle mode,
+						    GdaSqlReservedKeywordsFunc reserved_keyword_func);
 G_END_DECLS
 
 #endif
