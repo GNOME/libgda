@@ -466,13 +466,15 @@ to_lower (gchar *str)
 	return str;
 }
 
-/*
+/**
+ * _gda_data_meta_wrapper_compute_value
+ *
  * Returns:
  *  - NULL if no changes are necessary from the current value
  *  - a new GValue if changes were necessary
  */
-static GValue *
-compute_value (const GValue *value, GdaSqlIdentifierStyle mode, GdaSqlReservedKeywordsFunc reserved_keyword_func)
+GValue *
+_gda_data_meta_wrapper_compute_value (const GValue *value, GdaSqlIdentifierStyle mode, GdaSqlReservedKeywordsFunc reserved_keyword_func)
 {
 	GValue *retval = NULL;
 	const gchar *str;
@@ -591,7 +593,8 @@ gda_data_meta_wrapper_get_value_at (GdaDataModel *model, gint col, gint row, GEr
 				return NULL;
 			
 			GValue *retval;
-			retval = compute_value (cvalue, imodel->priv->mode, imodel->priv->reserved_keyword_func);
+			retval = _gda_data_meta_wrapper_compute_value (cvalue, imodel->priv->mode,
+								       imodel->priv->reserved_keyword_func);
 			if (!retval)
 				return cvalue;
 			
@@ -618,7 +621,8 @@ gda_data_meta_wrapper_get_value_at (GdaDataModel *model, gint col, gint row, GEr
 			return NULL;
 
 		GValue *retval;
-		retval = compute_value (cvalue, imodel->priv->mode, imodel->priv->reserved_keyword_func);
+		retval = _gda_data_meta_wrapper_compute_value (cvalue, imodel->priv->mode,
+							       imodel->priv->reserved_keyword_func);
 		if (!retval)
 			return cvalue;
 		if (imodel->priv->buffer->values [indexcol])

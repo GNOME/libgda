@@ -30,6 +30,10 @@ main (int argc, char **argv)
 
 	if (cnc) {
 		number_failed += prov_test_common_check_meta ();
+		number_failed += prov_test_common_check_meta_identifiers (TRUE, TRUE);
+		number_failed += prov_test_common_check_meta_identifiers (TRUE, FALSE);
+		number_failed += prov_test_common_check_meta_identifiers (FALSE, TRUE);
+		number_failed += prov_test_common_check_meta_identifiers (FALSE, FALSE);
 		number_failed += prov_test_common_load_data ();
 		number_failed += prov_test_common_check_cursor_models ();
 		number_failed += prov_test_common_check_data_select ();
