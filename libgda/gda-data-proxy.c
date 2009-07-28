@@ -3207,8 +3207,11 @@ gda_data_proxy_get_filtered_n_rows (GdaDataProxy *proxy)
 	g_return_val_if_fail (GDA_IS_DATA_PROXY (proxy), -1);
 	g_return_val_if_fail (proxy->priv, -1);
 
-	if (! proxy->priv->filtered_rows)
+	gda_mutex_lock (proxy->priv->mutex);
+	if (! proxy->priv->filtered_rows) {
+		gda_mutex_unlock (proxy->priv->mutex);
 		return -1;
+	}
 	else {
 		gint n = gda_data_model_get_n_rows (proxy->priv->filtered_rows);
 		gda_mutex_unlock (proxy->priv->mutex);
