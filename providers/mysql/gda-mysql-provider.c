@@ -1299,48 +1299,52 @@ gda_mysql_provider_get_default_dbms_type (GdaServerProvider  *provider,
 		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	}
 
-	TO_IMPLEMENT;
-
-	if ((type == G_TYPE_INT64) ||
-	    (type == G_TYPE_INT) ||
-	    (type == GDA_TYPE_SHORT) ||
-	    (type == GDA_TYPE_USHORT) ||
-	    (type == G_TYPE_CHAR) ||
-	    (type == G_TYPE_UCHAR) ||
-	    (type == G_TYPE_ULONG) ||
-	    (type == G_TYPE_UINT) ||
-	    (type == G_TYPE_UINT64))
-		return "integer";
-
-	if ((type == GDA_TYPE_BINARY) ||
-	    (type == GDA_TYPE_BLOB))
+	if (type == G_TYPE_INT64)
+		return "bigint";
+	if (type == G_TYPE_UINT64)
+		return "bigint unsigned";
+	if (type == GDA_TYPE_BINARY)
+		return "varbinary";
+	if (type == GDA_TYPE_BLOB)
 		return "blob";
-
 	if (type == G_TYPE_BOOLEAN)
-		return "boolean";
-	
-	if ((type == G_TYPE_DATE) || 
-	    (type == GDA_TYPE_GEOMETRIC_POINT) ||
-	    (type == G_TYPE_OBJECT) ||
-	    (type == GDA_TYPE_LIST) ||
-	    (type == G_TYPE_STRING) ||
-	    (type == GDA_TYPE_TIME) ||
-	    (type == GDA_TYPE_TIMESTAMP) ||
-	    (type == G_TYPE_INVALID) ||
-	    (type == G_TYPE_GTYPE))
-		return "string";
-
-	if ((type == G_TYPE_DOUBLE) ||
-	    (type == GDA_TYPE_NUMERIC) ||
-	    (type == G_TYPE_FLOAT))
-		return "real";
-	
+		return "bool";
+	if (type == G_TYPE_DATE)
+		return "date";
+	if (type == G_TYPE_DOUBLE)
+		return "double";
+	if (type == GDA_TYPE_GEOMETRIC_POINT)
+		return "point";
+	if (type == G_TYPE_OBJECT)
+		return "text";
+	if (type == G_TYPE_INT)
+		return "int";
+	if (type == GDA_TYPE_LIST)
+		return "text";
+	if (type == GDA_TYPE_NUMERIC)
+		return "numeric";
+	if (type == G_TYPE_FLOAT)
+		return "float";
+	if (type == GDA_TYPE_SHORT)
+		return "smallint";
+	if (type == GDA_TYPE_USHORT)
+		return "smallint unsigned";
+	if (type == G_TYPE_STRING)
+		return "varchar";
 	if (type == GDA_TYPE_TIME)
 		return "time";
 	if (type == GDA_TYPE_TIMESTAMP)
 		return "timestamp";
-	if (type == G_TYPE_DATE)
-		return "date";
+	if (type == G_TYPE_CHAR)
+		return "tinyint";
+	if (type == G_TYPE_UCHAR)
+		return "tinyint unsigned";
+	if (type == G_TYPE_ULONG)
+		return "bigint unsigned";
+	if (type == G_TYPE_UINT)
+		return "int unsigned";
+	if (type == G_TYPE_INVALID)
+		return "text";
 
 	return "text";
 }
