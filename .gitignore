@@ -50,3 +50,4 @@ stamp-it
 .gdb_history
 keywords_hash.c
 mkkeywordhash
+gtk-doc.make
