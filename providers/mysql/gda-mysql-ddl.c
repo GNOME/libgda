@@ -712,11 +712,14 @@ gda_mysql_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cnc,
 	g_assert (node);
 	nrows = gda_server_operation_get_sequence_size (op, "/INDEX_FIELDS_S");
 	for (i = 0; i < nrows; i++) {
-		value = gda_server_operation_get_value_at (op, "/INDEX_FIELDS_S/%d/INDEX_FIELD", i);
-		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value)) {
+		tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider,
+								  "/INDEX_FIELDS_S/%d/INDEX_FIELD", i);
+                if (tmp) {
+
 			if (i != 0)
 				g_string_append (string, ", ");
-			g_string_append (string, g_value_get_string (value));
+			g_string_append (string, tmp);
+			g_free (tmp);
 			
 			value = gda_server_operation_get_value_at (op, "/INDEX_FIELDS_S/%d/INDEX_LENGTH", i);
 			if (value && G_VALUE_HOLDS (value, G_TYPE_INT) && (g_value_get_int (value) > 0))
