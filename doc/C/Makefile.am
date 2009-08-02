@@ -62,7 +62,7 @@ HTML_IMAGES = DataModels.png \
 	gda-sql-graph.png howto-exec.png \
 	parser_gen.png parser_prov.png \
 	tree-overview.png tree-overview2.png \
-	SqlIdentifiers.png \
+	SqlIdentifiers.png thread-wrapper.png \
 	vi-basic-form.png vi-combo.png vi-data-entry.png
 
 # Extra options to supply to gtkdoc-fixref
@@ -76,7 +76,7 @@ EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration
 	prov-writing.xml packaging.xml packaging_ui.xml i_s_doc.xml howto.xml gda-sql-manual.xml data_validation.xml data_select.xml \
 	DataModels.svg \
 	architecture.svg parts.svg stmt-unknown.svg stmt-select.svg stmt-insert1.svg stmt-insert2.svg \
-	stmt-update.svg stmt-compound.svg information_schema.svg howto-exec.svg \
+	stmt-update.svg stmt-compound.svg information_schema.svg howto-exec.svg thread-wrapper.svg \
 	version.xml.in \
 	visual_index.xml
 

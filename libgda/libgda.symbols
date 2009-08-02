@@ -717,6 +717,7 @@
 	gda_string_to_binary
 	gda_string_to_blob
 	gda_text_to_alphanum
+	gda_thread_wrapper_cancel
 	gda_thread_wrapper_connect_raw
 	gda_thread_wrapper_disconnect
 	gda_thread_wrapper_execute

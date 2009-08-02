@@ -1,0 +1,821 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   sodipodi:docname="thread-wrapper.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="Arrow2Lend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow2Lend"
+       style="overflow:visible;">
+      <path
+         id="path3420"
+         style="font-size:12.0;fill-rule:evenodd;stroke-width:0.62500000;stroke-linejoin:round;"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         transform="scale(1.1) rotate(180) translate(1,0)" />
+    </marker>
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective10" />
+    <filter
+       inkscape:collect="always"
+       id="filter5378"
+       x="-4.2753608"
+       width="9.5507215"
+       y="-0.10678208"
+       height="1.2135642">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="8.5507219"
+         id="feGaussianBlur5380" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.4"
+     inkscape:cx="210.13568"
+     inkscape:cy="782.13507"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:snap-global="false"
+     inkscape:window-width="1280"
+     inkscape:window-height="975"
+     inkscape:window-x="0"
+     inkscape:window-y="24">
+    <inkscape:grid
+       type="xygrid"
+       id="grid2385" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="opacity:0.50488597999999996;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#85a0dd;stroke-width:4.8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter5378);marker-end:none"
+       d="M 311.63205,85.646196 L 311.63205,273.02949"
+       id="path5232"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117.21"
+       inkscape:export-ydpi="117.21" />
+    <path
+       style="opacity:0.98235294;fill:#ffe200;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.80337358;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 226.06457,103.65075 L 225.8251,109.91475 L 69.721743,109.91475 C 69.247925,109.91475 68.866478,110.12018 68.866478,110.37533 L 68.866478,118.38957 C 68.866478,118.38957 69.247925,118.85016 69.721743,118.85016 L 225.75668,118.85016 L 225.89351,125.13258 L 243.40942,119.974 L 260.54898,114.46535 L 243.47782,108.90145 L 226.06457,103.65075 z"
+       id="rect2383"
+       sodipodi:nodetypes="cccccccccccc"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117.21"
+       inkscape:export-ydpi="117.21" />
+    <g
+       id="g2405"
+       transform="translate(242.4366,-20.960666)"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117.21"
+       inkscape:export-ydpi="117.21">
+      <rect
+         ry="0.78125"
+         rx="0.78125"
+         y="81.10051"
+         x="42.426407"
+         height="25.75889"
+         width="53.538086"
+         id="rect2407"
+         style="opacity:0.98235294;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         id="text2409"
+         y="92.212181"
+         x="55.053314"
+         style="font-size:9px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="92.212181"
+           x="55.053314"
+           id="tspan2411"
+           sodipodi:role="line">Worker</tspan><tspan
+           id="tspan2413"
+           y="103.46218"
+           x="55.053314"
+           sodipodi:role="line">thread</tspan></text>
+    </g>
+    <g
+       id="g3320"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117.21"
+       inkscape:export-ydpi="117.21">
+      <rect
+         ry="0.78125"
+         rx="0.78125"
+         y="127.9819"
+         x="96.729729"
+         height="24.930155"
+         width="33.515465"
+         id="rect2415"
+         style="opacity:0.98235293999999995;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.81858264999999997;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         id="text2417"
+         y="135.08116"
+         x="108.12164"
+         style="font-size:6.3742671px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="135.08116"
+           x="108.12164"
+           id="tspan2419"
+           sodipodi:role="line">Job</tspan></text>
+      <path
+         id="path2421"
+         d="M 94.616735,138.78983 L 94.691583,141.71095 L 135.35732,141.71095 C 135.50543,141.71095 135.62465,141.80675 135.62465,141.92574 L 135.62465,145.66306 C 135.62465,145.78205 135.50543,145.87784 135.35732,145.87784 L 94.712979,145.87784 L 94.670208,148.80755 L 89.19535,146.40193 L 83.838125,143.83305 L 89.173967,141.23842 L 94.616735,138.78983 z"
+         style="opacity:0.98235293999999995;fill:#ffaaaa;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.30671608000000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <g
+       id="g3326"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117.21"
+       inkscape:export-ydpi="117.21">
+      <rect
+         ry="0.78125"
+         rx="0.78125"
+         y="127.72935"
+         x="157.20905"
+         height="24.930155"
+         width="33.515465"
+         id="rect2449"
+         style="opacity:0.98235293999999995;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.81858264999999997;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         id="text2451"
+         y="134.8286"
+         x="168.60095"
+         style="font-size:6.37426709999999996px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="134.8286"
+           x="168.60095"
+           id="tspan2453"
+           sodipodi:role="line">Job</tspan></text>
+      <path
+         id="path2455"
+         d="M 155.09605,138.53728 L 155.1709,141.4584 L 195.83664,141.4584 C 195.98474,141.4584 196.10397,141.5542 196.10397,141.67319 L 196.10397,145.41051 C 196.10397,145.5295 195.98474,145.62529 195.83664,145.62529 L 155.19229,145.62529 L 155.14952,148.55501 L 149.67466,146.14938 L 144.31744,143.58051 L 149.65328,140.98587 L 155.09605,138.53728 z"
+         style="opacity:0.98235293999999995;fill:#afe9af;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.30671608000000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <g
+       id="g3309"
+       transform="translate(-43.436559,99.500024)"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117.21"
+       inkscape:export-ydpi="117.21">
+      <g
+         id="g3244">
+        <g
+           id="g3236">
+          <g
+             transform="translate(-25.001274,-35.860415)"
+             id="g2427">
+            <rect
+               style="opacity:0.98235294;fill:#ffaaaa;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               id="rect2391"
+               width="53.538086"
+               height="25.75889"
+               x="49.497475"
+               y="63.927917"
+               rx="0.78125"
+               ry="0.78125" />
+            <text
+               xml:space="preserve"
+               style="font-size:9px;font-style:normal;font-weight:normal;fill:#2b0000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+               x="62.629459"
+               y="74.029434"
+               id="text2393"><tspan
+                 sodipodi:role="line"
+                 id="tspan2395"
+                 x="62.629459"
+                 y="74.029434">User</tspan><tspan
+                 sodipodi:role="line"
+                 x="62.629459"
+                 y="85.279434"
+                 id="tspan2397">thread</tspan></text>
+          </g>
+          <rect
+             ry="0.78125"
+             rx="0.78125"
+             y="21.52487"
+             x="5.5791974"
+             height="85.816246"
+             width="91.372093"
+             id="rect2457"
+             style="opacity:0.98235294;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.04671741;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+        </g>
+        <path
+           style="opacity:0.98235294;fill:#ffaaaa;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.30671608;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="M 48.019881,93.769315 L 48.094729,96.690435 L 88.760466,96.690435 C 88.908576,96.690435 89.027796,96.786235 89.027796,96.905225 L 89.027796,100.64255 C 89.027796,100.76154 88.908576,100.85733 88.760466,100.85733 L 48.116125,100.85733 L 48.073354,103.78704 L 42.598496,101.38142 L 37.241271,98.812535 L 42.577113,96.217905 L 48.019881,93.769315 z"
+           id="path3234" />
+      </g>
+    </g>
+    <g
+       id="g3301"
+       transform="translate(-43.436559,-135.86551)"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117.21"
+       inkscape:export-ydpi="117.21">
+      <rect
+         ry="0.78125"
+         rx="0.78125"
+         y="172.01425"
+         x="25.253813"
+         height="25.75889"
+         width="53.538086"
+         id="rect3260"
+         style="opacity:0.98235294;fill:#afe9af;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         id="text3262"
+         y="182.11577"
+         x="38.385796"
+         style="font-size:9px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="182.11577"
+           x="38.385796"
+           id="tspan3264"
+           sodipodi:role="line">User</tspan><tspan
+           id="tspan3266"
+           y="193.36577"
+           x="38.385796"
+           sodipodi:role="line">thread</tspan></text>
+      <rect
+         ry="0.78125"
+         rx="0.78125"
+         y="165.4716"
+         x="6.3368092"
+         height="85.816246"
+         width="91.372093"
+         id="rect3268"
+         style="opacity:0.98235294;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.04671741;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         id="path3270"
+         d="M 48.777493,237.71606 L 48.852341,240.63718 L 89.518078,240.63718 C 89.666188,240.63718 89.785408,240.73298 89.785408,240.85197 L 89.785408,244.58929 C 89.785408,244.70828 89.666188,244.80407 89.518078,244.80407 L 48.873737,244.80407 L 48.830966,247.73378 L 43.356108,245.32816 L 37.998883,242.75928 L 43.334725,240.16465 L 48.777493,237.71606 z"
+         style="opacity:0.98235294;fill:#afe9af;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.30671608;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <rect
+       style="opacity:0.98235294;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.96782947;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect3338"
+       width="200.04237"
+       height="215.69974"
+       x="62.108295"
+       y="10.878822"
+       rx="0.78125"
+       ry="0.78125"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117.21"
+       inkscape:export-ydpi="117.21" />
+    <g
+       id="g3350"
+       transform="translate(199.88037,-18.435293)"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117.21"
+       inkscape:export-ydpi="117.21">
+      <rect
+         ry="0.78125"
+         rx="0.78125"
+         y="127.9819"
+         x="96.729729"
+         height="24.930155"
+         width="33.515465"
+         id="rect3352"
+         style="opacity:0.98235294;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.81858265;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         id="text3354"
+         y="135.08116"
+         x="108.12164"
+         style="font-size:6.3742671px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="135.08116"
+           x="108.12164"
+           id="tspan3356"
+           sodipodi:role="line">Job</tspan></text>
+      <path
+         id="path3358"
+         d="M 94.616735,138.78983 L 94.691583,141.71095 L 135.35732,141.71095 C 135.50543,141.71095 135.62465,141.80675 135.62465,141.92574 L 135.62465,145.66306 C 135.62465,145.78205 135.50543,145.87784 135.35732,145.87784 L 94.712979,145.87784 L 94.670208,148.80755 L 89.19535,146.40193 L 83.838125,143.83305 L 89.173967,141.23842 L 94.616735,138.78983 z"
+         style="opacity:0.98235294;fill:#ffaaaa;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.30671608;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:8px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="75.761444"
+       y="160.90256"
+       id="text3360"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117.21"
+       inkscape:export-ydpi="117.21"><tspan
+         sodipodi:role="line"
+         id="tspan3362"
+         x="75.761444"
+         y="160.90256">Jobs are pushed into the Queue</tspan><tspan
+         sodipodi:role="line"
+         x="75.761444"
+         y="170.90256"
+         id="tspan3364">when executing a function</tspan><tspan
+         sodipodi:role="line"
+         x="75.761444"
+         y="180.90256"
+         id="tspan3366">is requested</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="115.66247"
+       y="23.016739"
+       id="text3368"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117.21"
+       inkscape:export-ydpi="117.21"><tspan
+         sodipodi:role="line"
+         id="tspan3370"
+         x="115.66247"
+         y="23.016739">GdaThreadWrapper</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:8px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="302.54068"
+       y="163.93301"
+       id="text3372"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117.21"
+       inkscape:export-ydpi="117.21"><tspan
+         sodipodi:role="line"
+         id="tspan3374"
+         x="302.54068"
+         y="163.93301">Jobs are poped</tspan><tspan
+         sodipodi:role="line"
+         x="302.54068"
+         y="173.93301"
+         id="tspan3376">from Queue, then their</tspan><tspan
+         sodipodi:role="line"
+         x="302.54068"
+         y="183.93301"
+         id="tspan3378">function is executed</tspan><tspan
+         sodipodi:role="line"
+         x="302.54068"
+         y="193.93303"
+         id="tspan3380">and they are pushed back</tspan><tspan
+         sodipodi:role="line"
+         x="302.54068"
+         y="203.93303"
+         id="tspan3382">to the job's reply queue</tspan></text>
+    <g
+       id="g3384"
+       transform="translate(121.59355,-0.7576231)"
+       style="opacity:0.39413681"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117.21"
+       inkscape:export-ydpi="117.21">
+      <rect
+         ry="0.78125"
+         rx="0.78125"
+         y="127.9819"
+         x="96.729729"
+         height="24.930155"
+         width="33.515465"
+         id="rect3386"
+         style="opacity:0.98235293999999995;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.81858264999999986;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         id="text3388"
+         y="135.08116"
+         x="108.12164"
+         style="font-size:6.37426709999999996px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="135.08116"
+           x="108.12164"
+           id="tspan3390"
+           sodipodi:role="line">Job</tspan></text>
+      <path
+         id="path3392"
+         d="M 94.616735,138.78983 L 94.691583,141.71095 L 135.35732,141.71095 C 135.50543,141.71095 135.62465,141.80675 135.62465,141.92574 L 135.62465,145.66306 C 135.62465,145.78205 135.50543,145.87784 135.35732,145.87784 L 94.712979,145.87784 L 94.670208,148.80755 L 89.19535,146.40193 L 83.838125,143.83305 L 89.173967,141.23842 L 94.616735,138.78983 z"
+         style="opacity:0.98235293999999995;fill:#ffaaaa;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.30671608000000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#Arrow2Lend);stroke-opacity:1"
+       d="M 259.95281,138.87387 L 281.48489,127.85939"
+       id="path3394"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117.21"
+       inkscape:export-ydpi="117.21" />
+    <path
+       style="fill:none;fill-opacity:0.75000000000000000;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow2Lend)"
+       d="M 289.91378,233.12847 C 289.91378,233.12847 241.71304,252.83728 160.10918,252.32137 C 92.818992,251.89595 48.992398,198.78328 48.992398,198.78328"
+       id="path4691"
+       sodipodi:nodetypes="csc"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117.21"
+       inkscape:export-ydpi="117.21" />
+    <text
+       xml:space="preserve"
+       style="font-size:8px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="-22.223356"
+       y="-18.399523"
+       id="text5218"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117.21"
+       inkscape:export-ydpi="117.21"><tspan
+         sodipodi:role="line"
+         x="-22.223356"
+         y="-18.399523"
+         id="tspan5222">Arrow are GASyncQueue objects, here 3 are created:</tspan><tspan
+         sodipodi:role="line"
+         x="-22.223356"
+         y="-8.3995228"
+         id="tspan5226">* one for the communication to the worker thread (in yellow)</tspan><tspan
+         sodipodi:role="line"
+         x="-22.223356"
+         y="1.6004776"
+         id="tspan5228">* one for each user thread using the GdaThreadWrapper object</tspan><tspan
+         sodipodi:role="line"
+         x="-22.223356"
+         y="11.600477"
+         id="tspan5230"> (in red and green)</tspan></text>
+    <g
+       id="g6420"
+       transform="translate(197.86006,81.064733)"
+       style="opacity:0.39413686"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117.21"
+       inkscape:export-ydpi="117.21">
+      <rect
+         ry="0.78125"
+         rx="0.78125"
+         y="127.9819"
+         x="96.729729"
+         height="24.930155"
+         width="33.515465"
+         id="rect6422"
+         style="opacity:0.98235294;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.81858265;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         id="text6424"
+         y="135.08116"
+         x="108.12164"
+         style="font-size:6.3742671px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="135.08116"
+           x="108.12164"
+           id="tspan6426"
+           sodipodi:role="line">Job</tspan></text>
+      <path
+         id="path6428"
+         d="M 94.616735,138.78983 L 94.691583,141.71095 L 135.35732,141.71095 C 135.50543,141.71095 135.62465,141.80675 135.62465,141.92574 L 135.62465,145.66306 C 135.62465,145.78205 135.50543,145.87784 135.35732,145.87784 L 94.712979,145.87784 L 94.670208,148.80755 L 89.19535,146.40193 L 83.838125,143.83305 L 89.173967,141.23842 L 94.616735,138.78983 z"
+         style="opacity:0.98235294;fill:#ffaaaa;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.30671608;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <g
+       id="g6430"
+       transform="translate(-80.942042,83.085038)"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117.21"
+       inkscape:export-ydpi="117.21">
+      <rect
+         ry="0.78125"
+         rx="0.78125"
+         y="127.9819"
+         x="96.729729"
+         height="24.930155"
+         width="33.515465"
+         id="rect6432"
+         style="opacity:0.98235294;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.81858265;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         id="text6434"
+         y="135.08116"
+         x="108.12164"
+         style="font-size:6.3742671px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="135.08116"
+           x="108.12164"
+           id="tspan6436"
+           sodipodi:role="line">Job</tspan></text>
+      <path
+         id="path6438"
+         d="M 94.616735,138.78983 L 94.691583,141.71095 L 135.35732,141.71095 C 135.50543,141.71095 135.62465,141.80675 135.62465,141.92574 L 135.62465,145.66306 C 135.62465,145.78205 135.50543,145.87784 135.35732,145.87784 L 94.712979,145.87784 L 94.670208,148.80755 L 89.19535,146.40193 L 83.838125,143.83305 L 89.173967,141.23842 L 94.616735,138.78983 z"
+         style="opacity:0.98235294;fill:#ffaaaa;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.30671608;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <g
+       id="g6464"
+       transform="translate(31.314729,219.70818)"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117.21"
+       inkscape:export-ydpi="117.21">
+      <text
+         id="text6440"
+         y="-30.833584"
+         x="107.62464"
+         style="font-size:13px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="-30.833584"
+           x="107.62464"
+           id="tspan6442"
+           sodipodi:role="line">1</tspan></text>
+      <path
+         d="M 122.73354,-35.572109 A 10.859139,10.606602 0 1 1 101.01526,-35.572109 A 10.859139,10.606602 0 1 1 122.73354,-35.572109 z"
+         sodipodi:ry="10.606602"
+         sodipodi:rx="10.859139"
+         sodipodi:cy="-35.572109"
+         sodipodi:cx="111.8744"
+         id="path6444"
+         style="opacity:0.50488598;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#85a0dd;stroke-width:4.80000019;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         sodipodi:type="arc" />
+    </g>
+    <g
+       id="g6469"
+       transform="translate(127.7843,142.93658)"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117.21"
+       inkscape:export-ydpi="117.21">
+      <text
+         id="text6446"
+         y="-34.874195"
+         x="149.29343"
+         style="font-size:13px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="-34.874195"
+           x="149.29343"
+           id="tspan6448"
+           sodipodi:role="line">2</tspan></text>
+      <path
+         transform="translate(41.66879,-4.0406099)"
+         d="M 122.73354,-35.572109 A 10.859139,10.606602 0 1 1 101.01526,-35.572109 A 10.859139,10.606602 0 1 1 122.73354,-35.572109 z"
+         sodipodi:ry="10.606602"
+         sodipodi:rx="10.859139"
+         sodipodi:cy="-35.572109"
+         sodipodi:cx="111.8744"
+         id="path6450"
+         style="opacity:0.50488598;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#85a0dd;stroke-width:4.80000019;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         sodipodi:type="arc" />
+    </g>
+    <g
+       id="g6474"
+       transform="translate(89.398505,284.35794)"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117.21"
+       inkscape:export-ydpi="117.21">
+      <text
+         id="text6452"
+         y="-23.257441"
+         x="181.61832"
+         style="font-size:13px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="-23.257441"
+           x="181.61832"
+           id="tspan6454"
+           sodipodi:role="line">3</tspan></text>
+      <path
+         transform="translate(73.993671,7.576144)"
+         d="M 122.73354,-35.572109 A 10.859139,10.606602 0 1 1 101.01526,-35.572109 A 10.859139,10.606602 0 1 1 122.73354,-35.572109 z"
+         sodipodi:ry="10.606602"
+         sodipodi:rx="10.859139"
+         sodipodi:cy="-35.572109"
+         sodipodi:cx="111.8744"
+         id="path6456"
+         style="opacity:0.50488598;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#85a0dd;stroke-width:4.80000019;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         sodipodi:type="arc" />
+    </g>
+    <g
+       id="g6479"
+       transform="translate(-235.36554,256.07367)"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117.21"
+       inkscape:export-ydpi="117.21">
+      <text
+         id="text6458"
+         y="-27.298048"
+         x="218.99396"
+         style="font-size:13px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="-27.298048"
+           x="218.99396"
+           id="tspan6460"
+           sodipodi:role="line">4</tspan></text>
+      <path
+         transform="translate(111.36932,3.5355339)"
+         d="M 122.73354,-35.572109 A 10.859139,10.606602 0 1 1 101.01526,-35.572109 A 10.859139,10.606602 0 1 1 122.73354,-35.572109 z"
+         sodipodi:ry="10.606602"
+         sodipodi:rx="10.859139"
+         sodipodi:cy="-35.572109"
+         sodipodi:cx="111.8744"
+         id="path6462"
+         style="opacity:0.50488598;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#85a0dd;stroke-width:4.80000019;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         sodipodi:type="arc" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:8px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="-54.150032"
+       y="243.51823"
+       id="text6484"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117.21"
+       inkscape:export-ydpi="117.21"><tspan
+         sodipodi:role="line"
+         x="-54.150032"
+         y="243.51823"
+         id="tspan6490">Completed jobs os signals </tspan><tspan
+         sodipodi:role="line"
+         x="-54.150032"
+         y="243.51823"
+         id="tspan4377">are waiting to be</tspan><tspan
+         sodipodi:role="line"
+         x="-54.150032"
+         y="253.51823"
+         id="tspan6496">analysed by the user thread</tspan></text>
+    <g
+       id="g3261"
+       transform="translate(-208.5965,124.24876)"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117"
+       inkscape:export-ydpi="117">
+      <rect
+         ry="0.78125"
+         rx="0.78125"
+         y="218.48126"
+         x="390.92905"
+         height="33.335033"
+         width="46.972092"
+         id="rect2477"
+         style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         id="text3255"
+         y="231.10817"
+         x="401.53561"
+         style="font-size:8px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="231.10817"
+           x="401.53561"
+           id="tspan3257"
+           sodipodi:role="line">Some</tspan><tspan
+           id="tspan3259"
+           y="241.10817"
+           x="401.53561"
+           sodipodi:role="line">object</tspan></text>
+    </g>
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:0.55331099px;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#Arrow2Lend);stroke-opacity:1"
+       d="M 230.58237,358.61073 L 251.54218,346.59377 L 241.76094,356.93395 L 262.16183,347.99109"
+       id="path3267"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117"
+       inkscape:export-ydpi="117" />
+    <g
+       id="g3819"
+       transform="translate(-31.314728,64.649762)"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117"
+       inkscape:export-ydpi="117">
+      <rect
+         ry="0.78125"
+         rx="0.78125"
+         y="248.94766"
+         x="355.19894"
+         height="24.930155"
+         width="33.515465"
+         id="rect3786"
+         style="opacity:0.98235294;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.81858265;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         id="text3788"
+         y="255.54185"
+         x="363.05533"
+         style="font-size:6.3742671px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="255.54185"
+           x="363.05533"
+           id="tspan3790"
+           sodipodi:role="line">Job</tspan><tspan
+           id="tspan3798"
+           y="263.50967"
+           x="363.05533"
+           sodipodi:role="line">as</tspan><tspan
+           id="tspan3800"
+           y="271.47751"
+           x="363.05533"
+           sodipodi:role="line">signal</tspan></text>
+    </g>
+    <g
+       id="g3812"
+       transform="translate(-67.175143,1.5152291)"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117"
+       inkscape:export-ydpi="117">
+      <path
+         id="path3792"
+         d="M 333.38797,360.26577 L 333.46282,363.18689 L 374.12856,363.18689 C 374.27667,363.18689 374.39589,363.28269 374.39589,363.40168 L 374.39589,367.139 C 374.39589,367.25799 374.27667,367.35378 374.12856,367.35378 L 333.48422,367.35378 L 333.44145,370.28349 L 327.96659,367.87787 L 322.60936,365.30899 L 327.94521,362.71436 L 333.38797,360.26577 z"
+         style="opacity:0.98235294;fill:#ffaaaa;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.30671608;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         ry="0.78125"
+         rx="0.78125"
+         y="320.16827"
+         x="329.98148"
+         height="58.255516"
+         width="38.052467"
+         id="rect3804"
+         style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         id="text3806"
+         y="333.63867"
+         x="334.3605"
+         style="font-size:8px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="333.63867"
+           x="334.3605"
+           id="tspan3808"
+           sodipodi:role="line">signal</tspan><tspan
+           id="tspan3810"
+           y="343.63867"
+           x="334.3605"
+           sodipodi:role="line">handler</tspan></text>
+    </g>
+    <path
+       style="fill:none;fill-opacity:0.75000000000000000;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow2Lend)"
+       d="M 305.06607,358.38739 C 305.06607,358.38739 331.45452,370.15749 339.41126,363.43815 C 344.622,359.03776 339.91633,340.70972 339.91633,340.70972"
+       id="path3826"
+       sodipodi:nodetypes="csc"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117"
+       inkscape:export-ydpi="117" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 318.70313,313.4356 C 318.70313,313.4356 190.80669,297.55357 141.92643,274.54473 C 109.81338,259.42853 48.487322,198.78329 48.487322,198.78329"
+       id="path4347"
+       sodipodi:nodetypes="csc"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117"
+       inkscape:export-ydpi="117" />
+    <text
+       xml:space="preserve"
+       style="font-size:8px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="99.39315"
+       y="314.22894"
+       id="text4349"
+       inkscape:export-filename="/local/TESTS/V4/A/doc/C/thread-wrapper.png"
+       inkscape:export-xdpi="117.21"
+       inkscape:export-ydpi="117.21"><tspan
+         sodipodi:role="line"
+         x="99.39315"
+         y="314.22894"
+         id="tspan4355">When a signal is connected , to be caught</tspan><tspan
+         sodipodi:role="line"
+         x="99.39315"
+         y="324.22894"
+         id="tspan4361">by the worker thread, it is handled by</tspan><tspan
+         sodipodi:role="line"
+         x="99.39315"
+         y="334.22894"
+         id="tspan4363">a signal handler which creates</tspan><tspan
+         sodipodi:role="line"
+         x="99.39315"
+         y="344.22894"
+         id="tspan4365">a new Job as signal</tspan><tspan
+         sodipodi:role="line"
+         x="99.39315"
+         y="354.22894"
+         id="tspan4367">and pushed to</tspan><tspan
+         sodipodi:role="line"
+         x="99.39315"
+         y="364.22894"
+         id="tspan4369">the queue</tspan><tspan
+         sodipodi:role="line"
+         x="99.39315"
+         y="374.22894"
+         id="tspan4371">specified when</tspan><tspan
+         sodipodi:role="line"
+         x="99.39315"
+         y="384.22894"
+         id="tspan4373">the signal was</tspan><tspan
+         sodipodi:role="line"
+         x="99.39315"
+         y="394.22894"
+         id="tspan4375">connected</tspan></text>
+  </g>
+</svg>

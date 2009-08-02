@@ -73,6 +73,7 @@ guint                  gda_thread_wrapper_execute           (GdaThreadWrapper *w
 							     gpointer arg, GDestroyNotify arg_destroy_func, GError **error);
 guint                  gda_thread_wrapper_execute_void      (GdaThreadWrapper *wrapper, GdaThreadWrapperVoidFunc func,
 							     gpointer arg, GDestroyNotify arg_destroy_func, GError **error);
+gboolean               gda_thread_wrapper_cancel            (GdaThreadWrapper *wrapper, guint id);
 void                   gda_thread_wrapper_iterate           (GdaThreadWrapper *wrapper, gboolean may_block);
 gpointer               gda_thread_wrapper_fetch_result      (GdaThreadWrapper *wrapper, gboolean may_lock, 
 							     guint exp_id, GError **error);

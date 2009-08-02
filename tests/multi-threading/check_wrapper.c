@@ -220,11 +220,21 @@ main_thread_func (gpointer int_id)
 typedef struct {
 	DummyObject *dummy;
 	GSList      *signals_sent; /* list of TestSignal structures */
+	GMutex      *mutex;
 } t2ExecData;
+static void add_to_signals_sent (t2ExecData *data, gpointer what_to_add);
 static gpointer t2_main_thread_func (DummyObject *dummy);
 static gpointer t2_exec_in_wrapped_thread (t2ExecData *data, GError **error);
 static void t2_exec_in_wrapped_thread_v (t2ExecData *data, GError **error);
 #define INT_TOKEN 1034
+
+static void
+add_to_signals_sent (t2ExecData *data, gpointer what_to_add)
+{
+	g_mutex_lock (data->mutex);
+	data->signals_sent = g_slist_append (data->signals_sent, what_to_add);
+	g_mutex_unlock (data->mutex);
+}
 
 static gint
 test2 (void)
@@ -349,12 +359,28 @@ compare_signals_lists (GSList *explist, GSList *gotlist)
 	}
 
 	if (elist) {
-		g_print ("Error: Some signals have not been received\n");
+		g_print ("Error: Some signals have not been received:\n");
+		for (; elist; elist = elist->next) {
+			TestSignal *es = (TestSignal*) elist->data;
+			gint i;
+			g_print ("\tSignal: %s", es->name);
+			for (i = 0; i < es->n_param_values; i++)
+				g_print (" %s", gda_value_stringify (es->param_values + i));
+			g_print ("\n");
+		}
 		return FALSE;
 	}
 
 	if (glist) {
-		g_print ("Error: Received too many signals\n");
+		g_print ("Error: Received too many signals:\n");
+		for (; glist; glist = glist->next) {
+			TestSignal *gs = (TestSignal*) glist->data;
+			gint i;
+			g_print ("\tSignal: %s", gs->name);
+			for (i = 0; i < gs->n_param_values; i++)
+				g_print (" %s", gda_value_stringify (gs->param_values + i));
+			g_print ("\n");
+		}
 		return FALSE;
 	}
 
@@ -368,50 +394,43 @@ t2_exec_in_wrapped_thread (t2ExecData *data, GError **error)
 	g_print ("TH %p ** emit sig0 (dummy=>%p)\n", g_thread_self (), data->dummy);
 #endif
         g_signal_emit_by_name (data->dummy, "sig0", NULL);
-	data->signals_sent = g_slist_append (data->signals_sent,
-					     test_signal_new ("sig0", 0));
+	add_to_signals_sent (data, test_signal_new ("sig0", 0));
 
 #ifdef PRINT_CALLS
         g_print ("TH %p ** emit sig1 (dummy=>%p, i=>123)\n", g_thread_self (), data->dummy);
 #endif
         g_signal_emit_by_name (data->dummy, "sig1", 123, NULL);
-	data->signals_sent = g_slist_append (data->signals_sent,
-					     test_signal_new ("sig1", 1, G_TYPE_INT, 123));
+	add_to_signals_sent (data, test_signal_new ("sig1", 1, G_TYPE_INT, 123));
 
 #ifdef PRINT_CALLS
         g_print ("TH %p ** emit sig0 (dummy=>%p)\n", g_thread_self (), data->dummy);
 #endif
         g_signal_emit_by_name (data->dummy, "sig0", NULL);
-	data->signals_sent = g_slist_append (data->signals_sent,
-					     test_signal_new ("sig0", 0));
+	add_to_signals_sent (data, test_signal_new ("sig0", 0));
 
 #ifdef PRINT_CALLS
         g_print ("TH %p ** emit sig2 (dummy=>%p, i=>456 str=>Hello)\n", g_thread_self (), data->dummy);
 #endif
         g_signal_emit_by_name (data->dummy, "sig2", 456, "Hello", NULL);
-	data->signals_sent = g_slist_append (data->signals_sent,
-					     test_signal_new ("sig2", 2, G_TYPE_INT, 456, G_TYPE_STRING, "Hello"));
+	add_to_signals_sent (data, test_signal_new ("sig2", 2, G_TYPE_INT, 456, G_TYPE_STRING, "Hello"));
 
 #ifdef PRINT_CALLS
         g_print ("TH %p ** emit sig0 (dummy=>%p)\n", g_thread_self (), data->dummy);
 #endif
         g_signal_emit_by_name (data->dummy, "sig0", NULL);
-	data->signals_sent = g_slist_append (data->signals_sent,
-					     test_signal_new ("sig0", 0));
+	add_to_signals_sent (data, test_signal_new ("sig0", 0));
 
 #ifdef PRINT_CALLS
         g_print ("TH %p ** emit sig1 (dummy=>%p, i=>789)\n", g_thread_self (), data->dummy);
 #endif
         g_signal_emit_by_name (data->dummy, "sig1", 789, NULL);
-	data->signals_sent = g_slist_append (data->signals_sent,
-					     test_signal_new ("sig1", 1, G_TYPE_INT, 789));
+	add_to_signals_sent (data, test_signal_new ("sig1", 1, G_TYPE_INT, 789));
 
 #ifdef PRINT_CALLS
         g_print ("TH %p ** emit sig2 (dummy=>%p, i=>32 str=>World)\n", g_thread_self (), data->dummy);
 #endif
         g_signal_emit_by_name (data->dummy, "sig2", 32, "World", NULL);
-	data->signals_sent = g_slist_append (data->signals_sent,
-					     test_signal_new ("sig2", 2, G_TYPE_INT, 32, G_TYPE_STRING, "World"));
+	add_to_signals_sent (data, test_signal_new ("sig2", 2, G_TYPE_INT, 32, G_TYPE_STRING, "World"));
 
 	return GINT_TO_POINTER (INT_TOKEN);
 }
@@ -423,50 +442,43 @@ t2_exec_in_wrapped_thread_v (t2ExecData *data, GError **error)
 	g_print ("TH %p ** emit sig0 (dummy=>%p)\n", g_thread_self (), data->dummy);
 #endif
         g_signal_emit_by_name (data->dummy, "sig0", NULL);
-	data->signals_sent = g_slist_append (data->signals_sent,
-					     test_signal_new ("sig0", 0));
+	add_to_signals_sent (data, test_signal_new ("sig0", 0));
 
 #ifdef PRINT_CALLS
         g_print ("TH %p ** emit sig1 (dummy=>%p, i=>321)\n", g_thread_self (), data->dummy);
 #endif
         g_signal_emit_by_name (data->dummy, "sig1", 321, NULL);
-	data->signals_sent = g_slist_append (data->signals_sent,
-					     test_signal_new ("sig1", 1, G_TYPE_INT, 321));
+	add_to_signals_sent (data, test_signal_new ("sig1", 1, G_TYPE_INT, 321));
 
 #ifdef PRINT_CALLS
         g_print ("TH %p ** emit sig0 (dummy=>%p)\n", g_thread_self (), data->dummy);
 #endif
         g_signal_emit_by_name (data->dummy, "sig0", NULL);
-	data->signals_sent = g_slist_append (data->signals_sent,
-					     test_signal_new ("sig0", 0));
+	add_to_signals_sent (data, test_signal_new ("sig0", 0));
 
 #ifdef PRINT_CALLS
         g_print ("TH %p ** emit sig2 (dummy=>%p, i=>654 str=>Thread)\n", g_thread_self (), data->dummy);
 #endif
         g_signal_emit_by_name (data->dummy, "sig2", 654, "Thread", NULL);
-	data->signals_sent = g_slist_append (data->signals_sent,
-					     test_signal_new ("sig2", 2, G_TYPE_INT, 654, G_TYPE_STRING, "Thread"));
+	add_to_signals_sent (data, test_signal_new ("sig2", 2, G_TYPE_INT, 654, G_TYPE_STRING, "Thread"));
 
 #ifdef PRINT_CALLS
         g_print ("TH %p ** emit sig0 (dummy=>%p)\n", g_thread_self (), data->dummy);
 #endif
         g_signal_emit_by_name (data->dummy, "sig0", NULL);
-	data->signals_sent = g_slist_append (data->signals_sent,
-					     test_signal_new ("sig0", 0));
+	add_to_signals_sent (data, test_signal_new ("sig0", 0));
 
 #ifdef PRINT_CALLS
         g_print ("TH %p ** emit sig1 (dummy=>%p, i=>987)\n", g_thread_self (), data->dummy);
 #endif
         g_signal_emit_by_name (data->dummy, "sig1", 987, NULL);
-	data->signals_sent = g_slist_append (data->signals_sent,
-					     test_signal_new ("sig1", 1, G_TYPE_INT, 987));
+	add_to_signals_sent (data, test_signal_new ("sig1", 1, G_TYPE_INT, 987));
 
 #ifdef PRINT_CALLS
         g_print ("TH %p ** emit sig2 (dummy=>%p, i=>23 str=>Thread)\n", g_thread_self (), data->dummy);
 #endif
         g_signal_emit_by_name (data->dummy, "sig2", 23, "Thread", NULL);
-	data->signals_sent = g_slist_append (data->signals_sent,
-					     test_signal_new ("sig2", 2, G_TYPE_INT, 23, G_TYPE_STRING, "Thread"));
+	add_to_signals_sent (data, test_signal_new ("sig2", 2, G_TYPE_INT, 23, G_TYPE_STRING, "Thread"));
 }
 
 static void
@@ -474,7 +486,8 @@ wrapper_callback (GdaThreadWrapper *wrapper, gpointer instance, const gchar *sig
 		  gint n_param_values, const GValue *param_values, gpointer gda_reserved, GSList **sig_list)
 {
 	gint i;
-	/*g_print ("RECEIVED signal '%s' on thread %p\n", signame, g_thread_self ());
+	/*
+	g_print ("RECEIVED signal '%s' on thread %p\n", signame, g_thread_self ());
 	for (i = 0; i < n_param_values; i++) {
 		gchar *str = gda_value_stringify (param_values  + i);
 		g_print ("\tParam %d: %s\n", i, str);
@@ -525,6 +538,7 @@ t2_main_thread_func (DummyObject *dummy)
 
 	edata.dummy = dummy;
 	edata.signals_sent = NULL;
+	edata.mutex = g_mutex_new ();
 
 	ids = g_new0 (guint, NCALLS);
 	for (i = 0; i < NCALLS; i++) {
@@ -583,20 +597,26 @@ t2_main_thread_func (DummyObject *dummy)
 			nfailed ++;
 		}
 #ifdef PRINT_CALLS
-		g_print ("<-- Thread %p jobID %u arg %d\n", g_thread_self (), id, INT_TOKEN);
+		g_print ("<-- Thread %p jobID %u arg %d\n", g_thread_self (), ids[i], INT_TOKEN);
 #endif
 		if (rand () >= RAND_MAX / 2.)
 			g_thread_yield ();
 		g_signal_emit_by_name (dummy, "sig1", 666, NULL); /* this signal should be ignored */
 	}
 
-	gda_thread_wrapper_iterate (wrapper, FALSE);
+	while (gda_thread_wrapper_get_waiting_size (wrapper) > 0) {
+		gda_thread_wrapper_iterate (wrapper, FALSE);
+		g_usleep (10000);
+	}
+
+	g_mutex_lock (edata.mutex);
 	if (! compare_signals_lists (edata.signals_sent, received_list))
 		nfailed++;
+	g_mutex_unlock (edata.mutex);
 
 
 #ifdef PRINT_CALLS
-	g_print ("Disconnected signals\n");
+	g_print ("Disconnecting signals\n");
 #endif
 	gda_thread_wrapper_disconnect (wrapper, sigid[0]);
 	gda_thread_wrapper_disconnect (wrapper, sigid[1]);
@@ -621,8 +641,11 @@ t2_main_thread_func (DummyObject *dummy)
 	}
 	total_jobs ++;
 
-	gda_thread_wrapper_iterate (wrapper, FALSE);
-	g_usleep (100000);
+	while (gda_thread_wrapper_get_waiting_size (wrapper) > 0) {
+		gda_thread_wrapper_iterate (wrapper, FALSE);
+		g_usleep (10000);
+	}
+	g_mutex_free (edata.mutex);
 
 	if (received_list) {
 		g_print ("Error: signals should not be received anymore...\n");

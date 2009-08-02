@@ -1693,6 +1693,7 @@ GdaThreadWrapperFunc
 gda_thread_wrapper_execute
 GdaThreadWrapperVoidFunc
 gda_thread_wrapper_execute_void
+gda_thread_wrapper_cancel
 gda_thread_wrapper_iterate
 gda_thread_wrapper_fetch_result
 gda_thread_wrapper_get_waiting_size

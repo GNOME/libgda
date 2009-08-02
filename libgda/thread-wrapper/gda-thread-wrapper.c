@@ -28,97 +28,64 @@
 #include <libgda/gda-debug-macros.h>
 #include <libgda/gda-value.h>
 
+/* this GPrivate holds a pointer to the GAsyncQueue used by the job being currently treated
+ * by the worker thread. It is used to avoid creating signal data for threads for which
+ * no job is being performed 
+ */
+GStaticPrivate worker_thread_current_queue = G_STATIC_PRIVATE_INIT;
+
 typedef struct _ThreadData ThreadData;
-typedef struct _SharedData SharedData;
 typedef struct _Job Job;
-typedef struct _Result Result;
 typedef struct _SignalSpec SignalSpec;
-typedef struct _SignalEmissionData SignalEmissionData;
 
 struct _GdaThreadWrapperPrivate {
 	GdaMutex    *mutex;
 	guint        next_job_id;
-	GThread     *sub_thread;
-	GAsyncQueue *to_sub_thread;
+	GThread     *worker_thread;
+	GAsyncQueue *to_worker_thread;
 
-	GHashTable *threads_hash; /* key = a GThread, value = a #ThreadData pointer */
+	GHashTable  *threads_hash; /* key = a GThread, value = a #ThreadData pointer */
 };
-
-/*
- * Data shared between the GdaThreadWrapper (and the threads which use it) and its sub thread.
- * It implements its own locking mechanism.
- */
-struct _SharedData {
-        gint     nb_waiting;
-	Job     *current_job;
-	GThread *wrapper_sub_thread;
-
-        gint     ref_count;
-	GMutex  *mutex;
-};
-
-SharedData *
-shared_data_new (void)
-{
-	SharedData *shd = g_new0 (SharedData, 1);
-	shd->ref_count = 1;
-	shd->nb_waiting = 0;
-	shd->mutex = g_mutex_new ();
-	return shd;
-}
-
-static SharedData *
-shared_data_ref (SharedData *shd)
-{
-	g_mutex_lock (shd->mutex);
-	shd->ref_count++;
-	g_mutex_unlock (shd->mutex);
-	return shd;
-}
-static void
-shared_data_unref (SharedData *shd)
-{
-	g_mutex_lock (shd->mutex);
-	shd->ref_count--;
-	if (shd->ref_count == 0) {
-		g_mutex_unlock (shd->mutex);
-		g_mutex_free (shd->mutex);
-		g_free (shd);
-	}
-	else
-		g_mutex_unlock (shd->mutex);
-}
-
-static void
-shared_data_add_nb_waiting (SharedData *shd, gint to_add)
-{
-	g_mutex_lock (shd->mutex);
-	shd->nb_waiting += to_add;
-	g_mutex_unlock (shd->mutex);
-}
-
 
 /* 
- * Jobs.
+ * One instance for each job to execute (and its result) and
+ * one instance for each emitted signal
+ *
  * Created and destroyed exclusively by the thread(s) using the GdaThreadWrapper object,
  * except for the job where job->type == JOB_TYPE_DESTROY which is destroyed by the sub thread.
  *
- * Passed to the sub job through obj->to_sub_thread
+ * Passed to the sub job through obj->to_worker_thread
  */
 typedef enum {
 	JOB_TYPE_EXECUTE,
-	JOB_TYPE_DESTROY
+	JOB_TYPE_DESTROY,
+	JOB_TYPE_SIGNAL
 } JobType;
 struct _Job {
 	JobType                  type;
+	gboolean                 processed; /* TRUE when worker thread has started to work on it */
+	gboolean                 cancelled; /* TRUE when job has been cancelled before being executed */
 	guint                    job_id;
 	GdaThreadWrapperFunc     func;
 	GdaThreadWrapperVoidFunc void_func;
 	gpointer                 arg;
 	GDestroyNotify           arg_destroy_func;
 	GAsyncQueue             *reply_queue; /* holds a ref to it */
-	SharedData              *shared; /* holds a ref to it */
+
+	/* result part */
+	union {
+		struct {
+			gpointer             result;
+			GError              *error;
+		} exe;
+		struct {
+			SignalSpec   *spec;
+			guint         n_param_values;
+			GValue       *param_values; /* array of GValue structures */
+		} signal;
+	} u;
 };
+#define JOB(x) ((Job*)(x))
 static void
 job_free (Job *job)
 {
@@ -126,8 +93,25 @@ job_free (Job *job)
 		job->arg_destroy_func (job->arg);
 	if (job->reply_queue)
 		g_async_queue_unref (job->reply_queue);
-	if (job->shared)
-		shared_data_unref (job->shared);
+
+	if (job->type == JOB_TYPE_EXECUTE) {
+		if (job->u.exe.error)
+			g_error_free (job->u.exe.error);
+	}
+	else if (job->type == JOB_TYPE_SIGNAL) {
+		gint i;
+		for (i = 0; i < job->u.signal.n_param_values; i++) {
+			GValue *value = job->u.signal.param_values + i;
+			if (G_VALUE_TYPE (value) != GDA_TYPE_NULL)
+				g_value_reset (value);
+		}
+		g_free (job->u.signal.param_values);
+	}
+	else if (job->type == JOB_TYPE_DESTROY) {
+		/* nothing to do here */
+	}
+	else
+		g_assert_not_reached ();
 	g_free (job);
 }
 
@@ -138,72 +122,52 @@ job_free (Job *job)
  */
 struct _SignalSpec {
         GSignalQuery  sigprop; /* must be first */
+
+	GThread      *worker_thread;
+	GAsyncQueue  *reply_queue; /* a ref is held here */
+
         gpointer      instance;
         gulong        signal_id;
 
         GdaThreadWrapperCallback callback;
         gpointer                 data;
 
-	ThreadData      *td;
+	GMutex       *mutex;
+	guint         ref_count;
 };
 
-struct _SignalEmissionData {
-        guint      n_param_values;
-        GValue    *param_values; /* array of GValue structures */
-};
+#define signal_spec_lock(x) g_mutex_lock(((SignalSpec*)x)->mutex);
+#define signal_spec_unlock(x) g_mutex_unlock(((SignalSpec*)x)->mutex);
 
+/*
+ * call signal_spec_lock() before calling this function
+ */
 static void
-signal_emission_data_free (SignalEmissionData *sd)
+signal_spec_unref (SignalSpec *sigspec)
 {
-	gint i;
-	for (i = 0; i < sd->n_param_values; i++) {
-		GValue *value = sd->param_values + i;
-		if (G_VALUE_TYPE (value) != GDA_TYPE_NULL)
-			g_value_reset (value);
+	sigspec->ref_count --;
+	if (sigspec->ref_count == 0) {
+		signal_spec_unlock (sigspec);
+		g_mutex_free (sigspec->mutex);
+		if (sigspec->instance && (sigspec->signal_id > 0))
+			g_signal_handler_disconnect (sigspec->instance, sigspec->signal_id);
+		if (sigspec->reply_queue)
+			g_async_queue_unref (sigspec->reply_queue);
+		g_free (sigspec);
 	}
-	g_free (sd->param_values);
-	g_free (sd);
+	else
+		signal_spec_unlock (sigspec);
 }
 
 /*
- * Result of a job executed by the sub thread.
- * Created exclusively by the sub thread, and destroyed by the thread(s) using the GdaThreadWrapper object
- *
- * Passed from the sub thread through obj->from_sub_thread
+ * call signal_spec_unlock() after this function
  */
-typedef enum {
-	RESULT_TYPE_EXECUTE,
-	RESULT_TYPE_SIGNAL
-} ResultType;
-struct _Result {
-	Job                 *job;
-	ResultType           type;
-	union {
-		struct {
-			gpointer             result;
-			GError              *error;
-		} exe;
-		struct {
-			SignalSpec         *spec;
-			SignalEmissionData *data;
-		} signal;
-	} u;
-};
-#define RESULT(x) ((Result*)(x))
-static void
-result_free (Result *res)
+static SignalSpec *
+signal_spec_ref (SignalSpec *sigspec)
 {
-	if (res->job)
-		job_free (res->job);
-	if (res->type == RESULT_TYPE_EXECUTE) {
-		if (res->u.exe.error)
-			g_error_free (res->u.exe.error);
-	}
-	else if (res->type == RESULT_TYPE_SIGNAL) 
-		signal_emission_data_free (res->u.signal.data);
-	else
-		g_assert_not_reached ();
-	g_free (res);
+	signal_spec_lock (sigspec);
+	sigspec->ref_count ++;
+	return sigspec;
 }
 
 /*
@@ -211,11 +175,12 @@ result_free (Result *res)
  * Each new job increases the ref count
  */
 struct _ThreadData {
-	GThread *owner;
-	GSList *signals_list; /* list of SignalSpec pointers, owns all the structures */
-	GAsyncQueue *from_sub_thread; /* holds a ref to it */
-	GSList *results; /* list of Result pointers */
-	SharedData *shared; /* number of jobs waiting from that thread, holds a ref to it */
+	GThread     *owner;
+	GSList      *signals_list; /* list of SignalSpec pointers, owns all the structures */
+	GAsyncQueue *from_worker_thread; /* holds a ref to it */
+
+	GSList      *jobs; /* list of Job pointers not yet handled, or being handled (ie not yet poped from @from_worker_thread) */
+	GSList      *results; /* list of Job pointers to completed jobs (ie. poped from @from_worker_thread) */
 };
 #define THREAD_DATA(x) ((ThreadData*)(x))
 
@@ -224,39 +189,47 @@ get_thread_data (GdaThreadWrapper *wrapper, GThread *thread)
 {
 	ThreadData *td;
 
+	gda_mutex_lock (wrapper->priv->mutex);
 	td = g_hash_table_lookup (wrapper->priv->threads_hash, thread);
 	if (!td) {
 		td = g_new0 (ThreadData, 1);
 		td->owner = thread;
-		td->from_sub_thread = g_async_queue_new ();
+		td->from_worker_thread = g_async_queue_new_full ((GDestroyNotify) job_free);
 		td->results = NULL;
-		td->shared = shared_data_new ();
-		td->shared->wrapper_sub_thread = wrapper->priv->sub_thread;
 
 		g_hash_table_insert (wrapper->priv->threads_hash, thread, td);
 	}
+	gda_mutex_unlock (wrapper->priv->mutex);
 	return td;
 }
 
 static void
 thread_data_free (ThreadData *td)
 {
-	g_async_queue_unref (td->from_sub_thread);
+	g_async_queue_unref (td->from_worker_thread);
+	g_assert (!td->jobs);
 	if (td->results) {
-		g_slist_foreach (td->results, (GFunc) result_free, NULL);
+		g_slist_foreach (td->results, (GFunc) job_free, NULL);
 		g_slist_free (td->results);
 	}
 	if (td->signals_list) {
 		GSList *list;
 		for (list = td->signals_list; list; list = list->next) {
-			/* free each SignalSpec */
+			/* clear SignalSpec */
 			SignalSpec *sigspec = (SignalSpec*) list->data;
+
+			signal_spec_lock (sigspec);
 			g_signal_handler_disconnect (sigspec->instance, sigspec->signal_id);
-			g_free (sigspec);
+			sigspec->instance = NULL;
+			sigspec->signal_id = 0;
+			g_async_queue_unref (sigspec->reply_queue);
+			sigspec->reply_queue = NULL;
+			sigspec->callback = NULL;
+			sigspec->data = NULL;
+			signal_spec_unref (sigspec);
 		}
 		g_slist_free (td->signals_list);
 	}
-	shared_data_unref (td->shared);
 	g_free (td);
 }
 
@@ -306,44 +279,49 @@ gda_thread_wrapper_class_init (GdaThreadWrapperClass *klass)
 
 /*
  * Executed in the sub thread:
- * takes a Job in (from the wrapper->priv->to_sub_thread queue) and creates a new Result which 
+ * takes a Job in (from the wrapper->priv->to_worker_thread queue) and creates a new Result which 
  * it pushed to Job->reply_queue
  */
 static gpointer
-sub_thread_entry_point (GAsyncQueue *to_sub_thread)
+worker_thread_entry_point (GAsyncQueue *to_worker_thread)
 {
 	GAsyncQueue *in;
 
-	in = to_sub_thread;
+	in = to_worker_thread;
 
-	/* don't use @priv anymore */
 	while (1) {
 		Job *job;
 		
-		job = g_async_queue_pop (in);
+		/* pop next job and mark it as being processed */
+		g_static_private_set (&worker_thread_current_queue, NULL, NULL);
+		g_async_queue_lock (in);
+		job = g_async_queue_pop_unlocked (in);
+		job->processed = TRUE;
+		g_static_private_set (&worker_thread_current_queue, job->reply_queue, NULL);
+		g_async_queue_unlock (in);
+
+		if (job->cancelled) {
+			job_free (job);
+			continue;
+		}
 
 		if (job->type == JOB_TYPE_DESTROY) {
 			g_assert (! job->arg_destroy_func);
 			job_free (job);
 			/*g_print ("... exit sub thread for wrapper\n");*/
+
 			/* exit sub thread */
 			break;
 		}
 		else if (job->type == JOB_TYPE_EXECUTE) {
-			Result *res = g_new0 (Result, 1);
-			res->job = job;
-			res->type = RESULT_TYPE_EXECUTE;
-			job->shared->current_job = job;
 			if (job->func)
-				res->u.exe.result = job->func (job->arg, &(res->u.exe.error));
+				job->u.exe.result = job->func (job->arg, &(job->u.exe.error));
 			else {
-				res->u.exe.result = NULL;
-				job->void_func (job->arg, &(res->u.exe.error));
+				job->u.exe.result = NULL;
+				job->void_func (job->arg, &(job->u.exe.error));
 			}
-			job->shared->current_job = NULL;
-			shared_data_add_nb_waiting (job->shared, -1);
 			/*g_print ("... done job %d\n", job->job_id);*/
-			g_async_queue_push (job->reply_queue, res);
+			g_async_queue_push (job->reply_queue, job);
 		}
 		else
 			g_assert_not_reached ();
@@ -365,11 +343,42 @@ gda_thread_wrapper_init (GdaThreadWrapper *wrapper, GdaThreadWrapperClass *klass
 
 	wrapper->priv->threads_hash = g_hash_table_new_full (NULL, NULL, NULL, (GDestroyNotify) thread_data_free);
 
-	wrapper->priv->to_sub_thread = g_async_queue_new ();
-	wrapper->priv->sub_thread = g_thread_create ((GThreadFunc) sub_thread_entry_point,
-						     g_async_queue_ref (wrapper->priv->to_sub_thread), /* inc. ref for sub thread usage */
+	wrapper->priv->to_worker_thread = g_async_queue_new ();
+	wrapper->priv->worker_thread = g_thread_create ((GThreadFunc) worker_thread_entry_point,
+						     g_async_queue_ref (wrapper->priv->to_worker_thread), /* inc. ref for sub thread usage */
 						     FALSE, NULL);
-	/*g_print ("... new wrapper %p, sub_thread=%p\n", wrapper, wrapper->priv->sub_thread);*/
+	/*g_print ("... new wrapper %p, worker_thread=%p\n", wrapper, wrapper->priv->worker_thread);*/
+}
+
+static gboolean
+thread_data_remove_jobs_func (GThread *key, ThreadData *td, gpointer data)
+{
+	if (td->jobs)  {
+		GSList *list;
+		for (list = td->jobs; list; list = list->next) {
+			Job *job = JOB (list->data);
+			if (job->processed) {
+				/* we can't free that job because it is probably being used by the 
+				 * worker thread, so just emit a warning
+				 */
+				if (job->arg_destroy_func) {
+					g_warning ("The argument of Job ID %d will be destroyed by sub thread",
+						   job->job_id);
+				}
+			}
+			else {
+				/* cancel this job */
+				job->cancelled = TRUE;
+				if (job->arg && job->arg_destroy_func) {
+					job->arg_destroy_func (job->arg);
+					job->arg = NULL;
+				}
+			}
+		}
+		g_slist_free (td->jobs);
+		td->jobs = NULL;
+	}
+	return TRUE; /* remove this ThreadData */
 }
 
 static void
@@ -382,14 +391,18 @@ gda_thread_wrapper_dispose (GObject *object)
 	if (wrapper->priv) {
 		Job *job = g_new0 (Job, 1);
 		job->type = JOB_TYPE_DESTROY;
-		g_async_queue_push (wrapper->priv->to_sub_thread, job);
+		g_async_queue_push (wrapper->priv->to_worker_thread, job);
 		/*g_print ("... pushed JOB_TYPE_DESTROY for wrapper %p\n", wrapper);*/
-
-		g_async_queue_unref (wrapper->priv->to_sub_thread);
-		wrapper->priv->sub_thread = NULL; /* side note: don't wait for sub thread to terminate */
 		
-		if (wrapper->priv->threads_hash)
+		g_async_queue_lock (wrapper->priv->to_worker_thread);
+		if (wrapper->priv->threads_hash) {
+			g_hash_table_foreach_remove (wrapper->priv->threads_hash,
+						     (GHRFunc) thread_data_remove_jobs_func, NULL);
 			g_hash_table_destroy (wrapper->priv->threads_hash);
+		}
+		g_async_queue_unlock (wrapper->priv->to_worker_thread);
+		g_async_queue_unref (wrapper->priv->to_worker_thread);
+		wrapper->priv->worker_thread = NULL; /* side note: don't wait for sub thread to terminate */
 
 		gda_mutex_free (wrapper->priv->mutex);
 
@@ -527,10 +540,11 @@ gda_thread_wrapper_execute (GdaThreadWrapper *wrapper, GdaThreadWrapperFunc func
 	g_return_val_if_fail (func, 0);
 
 	td = get_thread_data (wrapper, g_thread_self());
-	shared_data_add_nb_waiting (td->shared, 1);
 
 	job = g_new0 (Job, 1);
 	job->type = JOB_TYPE_EXECUTE;
+	job->processed = FALSE;
+	job->cancelled = FALSE;
 	gda_mutex_lock (wrapper->priv->mutex);
 	job->job_id = wrapper->priv->next_job_id++;
 	gda_mutex_unlock (wrapper->priv->mutex);
@@ -538,29 +552,25 @@ gda_thread_wrapper_execute (GdaThreadWrapper *wrapper, GdaThreadWrapperFunc func
 	job->void_func = NULL;
 	job->arg = arg;
 	job->arg_destroy_func = arg_destroy_func;
-	job->reply_queue = g_async_queue_ref (td->from_sub_thread);
-	job->shared = shared_data_ref (td->shared);
+	job->reply_queue = g_async_queue_ref (td->from_worker_thread);
 
 	id = job->job_id;
 	/* g_print ("... submitted job %d from thread %p\n", id, g_thread_self()); */
 
-	if (g_thread_self () == wrapper->priv->sub_thread) {
-                Result *res = g_new0 (Result, 1);
-                res->job = job;
-                res->type = RESULT_TYPE_EXECUTE;
-                job->shared->current_job = job;
+	td->jobs = g_slist_append (td->jobs, job);
+
+	if (g_thread_self () == wrapper->priv->worker_thread) {
+		job->processed = TRUE;
                 if (job->func)
-                        res->u.exe.result = job->func (job->arg, &(res->u.exe.error));
+                        job->u.exe.result = job->func (job->arg, &(job->u.exe.error));
                 else {
-                        res->u.exe.result = NULL;
-                        job->void_func (job->arg, &(res->u.exe.error));
+                        job->u.exe.result = NULL;
+                        job->void_func (job->arg, &(job->u.exe.error));
                 }
-                job->shared->current_job = NULL;
-                shared_data_add_nb_waiting (job->shared, -1);
-                g_async_queue_push (job->reply_queue, res);
+                g_async_queue_push (job->reply_queue, job);
         }
         else
-                g_async_queue_push (wrapper->priv->to_sub_thread, job);
+                g_async_queue_push (wrapper->priv->to_worker_thread, job);
 
 	return id;
 }
@@ -603,10 +613,11 @@ gda_thread_wrapper_execute_void (GdaThreadWrapper *wrapper, GdaThreadWrapperVoid
 	g_return_val_if_fail (func, 0);
 
 	td = get_thread_data (wrapper, g_thread_self());
-	shared_data_add_nb_waiting (td->shared, 1);
 
 	job = g_new0 (Job, 1);
 	job->type = JOB_TYPE_EXECUTE;
+	job->processed = FALSE;
+	job->cancelled = FALSE;
 	gda_mutex_lock (wrapper->priv->mutex);
 	job->job_id = wrapper->priv->next_job_id++;
 	gda_mutex_unlock (wrapper->priv->mutex);
@@ -614,31 +625,86 @@ gda_thread_wrapper_execute_void (GdaThreadWrapper *wrapper, GdaThreadWrapperVoid
 	job->void_func = func;
 	job->arg = arg;
 	job->arg_destroy_func = arg_destroy_func;
-	job->reply_queue = g_async_queue_ref (td->from_sub_thread);
-	job->shared = shared_data_ref (td->shared);
+	job->reply_queue = g_async_queue_ref (td->from_worker_thread);
 
 	id = job->job_id;
 	/*g_print ("... submitted VOID job %d\n", id);*/
 
-	if (g_thread_self () == wrapper->priv->sub_thread) {
-                Result *res = g_new0 (Result, 1);
-                res->job = job;
-                res->type = RESULT_TYPE_EXECUTE;
-                job->shared->current_job = job;
+	td->jobs = g_slist_append (td->jobs, job);
+
+	if (g_thread_self () == wrapper->priv->worker_thread) {
+		job->processed = TRUE;
                 if (job->func)
-                        res->u.exe.result = job->func (job->arg, &(res->u.exe.error));
+                        job->u.exe.result = job->func (job->arg, &(job->u.exe.error));
                 else {
-                        res->u.exe.result = NULL;
-                        job->void_func (job->arg, &(res->u.exe.error));
+                        job->u.exe.result = NULL;
+                        job->void_func (job->arg, &(job->u.exe.error));
                 }
-                job->shared->current_job = NULL;
-                shared_data_add_nb_waiting (job->shared, -1);
-                g_async_queue_push (job->reply_queue, res);
+                g_async_queue_push (job->reply_queue, job);
         }
         else
-		g_async_queue_push (wrapper->priv->to_sub_thread, job);
+		g_async_queue_push (wrapper->priv->to_worker_thread, job);
 
 	return id;
+}
+
+/**
+ * gda_thread_wrapper_cancel
+ * @wrapper: a #GdaThreadWrapper object
+ * @id: the ID of a job as returned by gda_thread_wrapper_execute() or gda_thread_wrapper_execute_void()
+ * 
+ * Cancels a job not yet executed. This may fail for the following reasons:
+ * <itemizedlist>
+ *  <listitem><para>the job @id could not be found, either because it has already been treated or because
+ *                  it does not exist or because it was created in another thread</para></listitem>
+ *  <listitem><para>the job @id is currently being treated by the worker thread</para></listitem>
+ * </itemizedlist>
+ *
+ * Returns: %TRUE if the job has been cancelled, or %FALSE in any other case.
+ *
+ * Since: 4.2
+ */
+gboolean
+gda_thread_wrapper_cancel (GdaThreadWrapper *wrapper, guint id)
+{
+	GSList *list;
+	gboolean retval = FALSE; /* default if job not found */
+	ThreadData *td;
+
+	g_return_val_if_fail (GDA_IS_THREAD_WRAPPER (wrapper), FALSE);
+	
+	gda_mutex_lock (wrapper->priv->mutex);
+
+	td = g_hash_table_lookup (wrapper->priv->threads_hash, g_thread_self());
+	if (!td) {
+		/* nothing to be done for this thread */
+		gda_mutex_unlock (wrapper->priv->mutex);
+		return FALSE;
+	}
+
+	g_async_queue_lock (wrapper->priv->to_worker_thread);
+	for (list = td->jobs; list; list = list->next) {
+		Job *job = JOB (list->data);
+		if (job->job_id == id) {
+			if (job->processed) {
+				/* can't cancel it as it's being treated */
+				break;
+			}
+
+			retval = TRUE;
+			job->cancelled = TRUE;
+			if (job->arg && job->arg_destroy_func) {
+				job->arg_destroy_func (job->arg);
+				job->arg = NULL;
+			}
+			td->jobs = g_slist_delete_link (td->jobs, list);
+			break;
+		}
+	}
+	g_async_queue_unlock (wrapper->priv->to_worker_thread);
+	gda_mutex_unlock (wrapper->priv->mutex);
+
+	return retval;
 }
 
 /**
@@ -657,7 +723,7 @@ void
 gda_thread_wrapper_iterate (GdaThreadWrapper *wrapper, gboolean may_block)
 {
 	ThreadData *td;
-	Result *res;
+	Job *job;
 
 	g_return_if_fail (GDA_IS_THREAD_WRAPPER (wrapper));
 	g_return_if_fail (wrapper->priv);
@@ -672,28 +738,36 @@ gda_thread_wrapper_iterate (GdaThreadWrapper *wrapper, gboolean may_block)
 
  again:
 	if (may_block)
-		res = g_async_queue_pop (td->from_sub_thread);
+		job = g_async_queue_pop (td->from_worker_thread);
 	else
-		res = g_async_queue_try_pop (td->from_sub_thread);
-	if (res) {
+		job = g_async_queue_try_pop (td->from_worker_thread);
+	if (job) {
 		gboolean do_again = FALSE;
-		if (res->type == RESULT_TYPE_EXECUTE) {
-			if (!res->job->func) {
-				result_free (res); /* ignore as there is no result */
+
+		td->jobs = g_slist_remove (td->jobs, job);
+
+		if (job->type == JOB_TYPE_EXECUTE) {
+			if (!job->func) {
+				job_free (job); /* ignore as there is no result */
 				do_again = TRUE;
 			}
 			else
-				td->results = g_slist_append (td->results, res);
+				td->results = g_slist_append (td->results, job);
 		}
-		else if (res->type == RESULT_TYPE_SIGNAL) {
+		else if (job->type == JOB_TYPE_SIGNAL) {
 			/* run callback now */
-			SignalSpec *spec = res->u.signal.spec;
-			SignalEmissionData *sd = res->u.signal.data;
+			SignalSpec *spec = job->u.signal.spec;
 
-			spec->callback (wrapper, spec->instance, ((GSignalQuery*)spec)->signal_name,
-					sd->n_param_values, sd->param_values, NULL,
-					spec->data);
-			result_free (res);
+			signal_spec_lock (spec);
+			if (spec->callback)
+				spec->callback (wrapper, spec->instance, ((GSignalQuery*)spec)->signal_name,
+						job->u.signal.n_param_values, job->u.signal.param_values, NULL,
+						spec->data);
+			else
+				g_print ("Not propagating signal %s\n", ((GSignalQuery*)spec)->signal_name);
+			signal_spec_unref (spec);
+			job->u.signal.spec = NULL;
+			job_free (job);
 			do_again = TRUE;
 		}
 		else
@@ -722,7 +796,7 @@ gpointer
 gda_thread_wrapper_fetch_result (GdaThreadWrapper *wrapper, gboolean may_lock, guint exp_id, GError **error)
 {
 	ThreadData *td;
-	Result *res = NULL;
+	Job *job = NULL;
 	gpointer retval = NULL;
 
 	g_return_val_if_fail (GDA_IS_THREAD_WRAPPER (wrapper), NULL);
@@ -742,13 +816,13 @@ gda_thread_wrapper_fetch_result (GdaThreadWrapper *wrapper, gboolean may_lock, g
 			/* see if we have the result we want */
 			GSList *list;
 			for (list = td->results; list; list = list->next) {
-				res = RESULT (list->data);
-				if (res->job->job_id == exp_id) {
+				job = JOB (list->data);
+				if (job->job_id == exp_id) {
 					/* found it */
 					td->results = g_slist_delete_link (td->results, list);
-					if (!(td->results) &&
-					    (td->shared->nb_waiting == 0) &&
-					    (g_async_queue_length (td->from_sub_thread) == 0) &&
+					if (!td->results &&
+					    !td->jobs &&
+					    (g_async_queue_length (td->from_worker_thread) == 0) &&
 					    !td->signals_list) {
 						/* remove this ThreadData */
 						gda_mutex_lock (wrapper->priv->mutex);
@@ -767,22 +841,22 @@ gda_thread_wrapper_fetch_result (GdaThreadWrapper *wrapper, gboolean may_lock, g
 			len = g_slist_length (td->results);
 			gda_thread_wrapper_iterate (wrapper, FALSE);
 			if (g_slist_length (td->results) == len) {
-				res = NULL;
+				job = NULL;
 				break;
 			}
 		}
 	} while (1);
 
  out:
-	if (res) {
-		g_assert (res->type == RESULT_TYPE_EXECUTE);
-		if (res->u.exe.error) {
-			g_propagate_error (error, res->u.exe.error);
-			res->u.exe.error = NULL;
+	if (job) {
+		g_assert (job->type == JOB_TYPE_EXECUTE);
+		if (job->u.exe.error) {
+			g_propagate_error (error, job->u.exe.error);
+			job->u.exe.error = NULL;
 		}
-		retval = res->u.exe.result;
-		res->u.exe.result = NULL;
-		result_free (res);
+		retval = job->u.exe.result;
+		job->u.exe.result = NULL;
+		job_free (job);
 	}
 
 	return retval;
@@ -802,7 +876,8 @@ gda_thread_wrapper_fetch_result (GdaThreadWrapper *wrapper, gboolean may_lock, g
 gint
 gda_thread_wrapper_get_waiting_size (GdaThreadWrapper *wrapper)
 {
-	gint size;
+	GSList *list;
+	gint size = 0;
 	ThreadData *td;
 
 	g_return_val_if_fail (GDA_IS_THREAD_WRAPPER (wrapper), 0);
@@ -815,7 +890,14 @@ gda_thread_wrapper_get_waiting_size (GdaThreadWrapper *wrapper)
 		gda_mutex_unlock (wrapper->priv->mutex);
 		return 0;
 	}
-	size = td->shared->nb_waiting;
+	
+	/* lock job consuming queue to avoid that the worker thread "consume" a Job */
+	g_async_queue_lock (wrapper->priv->to_worker_thread);
+	for (size = 0, list = td->jobs; list; list = list->next) {
+		if (!JOB (list->data)->cancelled)
+			size++;
+	}
+	g_async_queue_unlock (wrapper->priv->to_worker_thread);
 	gda_mutex_unlock (wrapper->priv->mutex);
 	return size;
 }
@@ -825,39 +907,40 @@ gda_thread_wrapper_get_waiting_size (GdaThreadWrapper *wrapper)
  * pushes data into the queue 
  */
 static void
-sub_thread_closure_marshal (GClosure *closure,
-			    GValue *return_value,
-			    guint n_param_values,
-			    const GValue *param_values,
-			    gpointer invocation_hint,
-			    gpointer marshal_data)
+worker_thread_closure_marshal (GClosure *closure,
+			       GValue *return_value,
+			       guint n_param_values,
+			       const GValue *param_values,
+			       gpointer invocation_hint,
+			       gpointer marshal_data)
 {
 	SignalSpec *sigspec = (SignalSpec *) closure->data;
 
-	/* if the signal is not emitted from the sub thread then don't do anything */
-	if (g_thread_self () !=  sigspec->td->shared->wrapper_sub_thread)
+	/* if the signal is not emitted from the working thread then don't do anything */
+	if (g_thread_self () !=  sigspec->worker_thread)
 		return;
 
-	/* if we are not currently doing a job, then don't do anything */
-	if (!sigspec->td->shared->current_job)
+	/* check that the worker thread is working on a job for which job->reply_queue == sigspec->reply_queue */
+	if (g_static_private_get (&worker_thread_current_queue) != sigspec->reply_queue)
 		return;
 
 	gint i;
 	/*
-	for (i = 1; i < n_param_values; i++) {
+	  for (i = 1; i < n_param_values; i++) {
 		g_print ("\t%d => %s\n", i, gda_value_stringify (param_values + i));
 	}
 	*/
-	SignalEmissionData *sdata;
-	sdata = g_new0 (SignalEmissionData, 1);
-	sdata->n_param_values = n_param_values - 1;
-	sdata->param_values = g_new0 (GValue, sdata->n_param_values);
+	Job *job= g_new0 (Job, 1);
+	job->type = JOB_TYPE_SIGNAL;
+	job->u.signal.spec = signal_spec_ref (sigspec);
+	job->u.signal.n_param_values = n_param_values - 1;
+	job->u.signal.param_values = g_new0 (GValue, job->u.signal.n_param_values);
 	for (i = 1; i < n_param_values; i++) {
 		const GValue *src;
 		GValue *dest;
 
 		src = param_values + i;
-		dest = sdata->param_values + i - 1;
+		dest = job->u.signal.param_values + i - 1;
 
 		if (G_VALUE_TYPE (src) != GDA_TYPE_NULL) {
 			g_value_init (dest, G_VALUE_TYPE (src));
@@ -865,13 +948,8 @@ sub_thread_closure_marshal (GClosure *closure,
 		}
 	}
 
-	Result *res = g_new0 (Result, 1);
-	g_assert (sigspec->td->shared);
-	res->job = NULL;
-	res->type = RESULT_TYPE_SIGNAL;
-	res->u.signal.spec = sigspec;
-	res->u.signal.data = sdata;
-	g_async_queue_push (sigspec->td->shared->current_job->reply_queue, res);
+	g_async_queue_push (sigspec->reply_queue, job);
+	signal_spec_unlock (sigspec);
 }
 
 /**
@@ -882,7 +960,7 @@ sub_thread_closure_marshal (GClosure *closure,
  * @callback: a #GdaThreadWrapperCallback function
  * @data: data to pass to @callback's calls
  *
- * Connects a callbeck function to a signal for a particular object. The difference with g_signal_connect() and
+ * Connects a callback function to a signal for a particular object. The difference with g_signal_connect() and
  * similar functions are:
  * <itemizedlist>
  *  <listitem><para>the @callback argument is not a #GCallback function, so the callback signature is not
@@ -893,8 +971,13 @@ sub_thread_closure_marshal (GClosure *closure,
  *  <listitem><para>the @callback function will be called only if the signal has been emitted by @instance 
  *    while being used in @wrapper's private sub thread (ie. used when @wrapper is executing some functions
  *    specified by
- *    gda_thread_wrapper_execute() or gda_thread_wrapper_execute_void() have been used)</para></listitem>
+ *    gda_thread_wrapper_execute() or gda_thread_wrapper_execute_void())</para></listitem>
  * </itemizedlist>
+ *
+ * Also note that signal handling is done asynchronously: when emitted in the worker thread, it
+ * will be "queued" to be processed in the user thread when it has the chance (when gda_thread_wrapper()
+ * is called directly or indirectly). The side effect is that the callback function is usually
+ * called long after the object emitting the signal has finished emitting it.
  *
  * To disconnect a signal handler, don't use any of the g_signal_handler_*() functions but the
  * gda_thread_wrapper_disconnect() method.
@@ -936,16 +1019,19 @@ gda_thread_wrapper_connect_raw (GdaThreadWrapper *wrapper,
 		g_free (sigspec);
 		return 0;
 	}
+	sigspec->worker_thread = wrapper->priv->worker_thread;
+	sigspec->reply_queue = g_async_queue_ref (td->from_worker_thread);
         sigspec->instance = instance;
         sigspec->callback = callback;
         sigspec->data = data;
+	sigspec->mutex = g_mutex_new ();
+	sigspec->ref_count = 1;
 
 	GClosure *cl;
 	cl = g_closure_new_simple (sizeof (GClosure), sigspec);
-	g_closure_set_marshal (cl, (GClosureMarshal) sub_thread_closure_marshal);
+	g_closure_set_marshal (cl, (GClosureMarshal) worker_thread_closure_marshal);
 	sigspec->signal_id = g_signal_connect_closure (instance, sig_name, cl, FALSE);
 
-	sigspec->td = td;
 	td->signals_list = g_slist_append (td->signals_list, sigspec);
 
 	gda_mutex_unlock (wrapper->priv->mutex);
@@ -971,7 +1057,11 @@ find_signal_r_func (GThread *thread, ThreadData *td, gulong *id)
  * @wrapper: a #GdaThreadWrapper object
  * @id: a handler ID, as returned by gda_thread_wrapper_connect_raw()
  *
- * Disconnects the emission of a signal, does the opposite of gda_thread_wrapper_connect_raw()
+ * Disconnects the emission of a signal, does the opposite of gda_thread_wrapper_connect_raw().
+ *
+ * As soon as this method returns, the callback function set when gda_thread_wrapper_connect_raw()
+ * was called will not be called anymore (even if the object has emitted the signal in the worker
+ * thread and this signal has not been handled in the user thread).
  *
  * Since: 4.2
  */
@@ -1012,13 +1102,21 @@ gda_thread_wrapper_disconnect (GdaThreadWrapper *wrapper, gulong id)
 		return;
 	}
 
+	signal_spec_lock (sigspec);
+	/*g_print ("Disconnecting signal %s\n", ((GSignalQuery*)sigspec)->signal_name);*/
 	td->signals_list = g_slist_remove (td->signals_list, sigspec);
 	g_signal_handler_disconnect (sigspec->instance, sigspec->signal_id);
-	g_free (sigspec);
+	sigspec->instance = NULL;
+	sigspec->signal_id = NULL;
+	g_async_queue_unref (sigspec->reply_queue);
+	sigspec->reply_queue = 0;
+	sigspec->callback = NULL;
+	sigspec->data = NULL;
+	signal_spec_unref (sigspec);
 
-	if (!(td->results) &&
-	    (td->shared->nb_waiting == 0) &&
-	    (g_async_queue_length (td->from_sub_thread) == 0) &&
+	if (!td->results &&
+	    !td->jobs &&
+	    (g_async_queue_length (td->from_worker_thread) == 0) &&
 	    !td->signals_list) {
 		/* remove this ThreadData */
 		g_hash_table_remove (wrapper->priv->threads_hash, g_thread_self());
@@ -1065,7 +1163,6 @@ gda_thread_wrapper_steal_signal (GdaThreadWrapper *wrapper, gulong id)
                         SignalSpec *sigspec = (SignalSpec*) list->data;
 			if (sigspec->signal_id == id) {
 				new_td = get_thread_data (wrapper, g_thread_self ());
-				sigspec->td = new_td;
 				new_td->signals_list = g_slist_prepend (new_td->signals_list, sigspec);
 				old_td->signals_list = g_slist_remove (old_td->signals_list, sigspec);
 				break;

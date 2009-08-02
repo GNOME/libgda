@@ -7,17 +7,49 @@ Execute functions in a sub thread
 <!-- ##### SECTION Long_Description ##### -->
 <para>
   The purpose of the #GdaThreadWrapper object is to execute functions in an isolated sub thread. As the
-  #GdaThreadWrapper is thread safe, one is able to isolate some code's execution is a <emphasis>private</emphasis> thread, and
-  make a non thread safe code thread safe.
+  #GdaThreadWrapper is thread safe, one is able to isolate some code's execution is a <emphasis>private</emphasis>
+  <emphasis>worker</emphasis> thread, and make a non thread safe code thread safe.
 </para>
 <para>
   The downside of this is that the actual execution of the code will be slower as it requires
   threads to be synchronized.
 </para>
 <para>
+  The #GdaThreadWrapper implements its own locking mechanism and can safely be used from multiple
+  threads at once without needing further locking.
+</para>
+<para>
   Each thread using a #GdaThreadWrapper object can use it as if it was the only user: the #GdaThreadWrapper will
-  simply dispatch all the execution requests to its <emphasis>private</emphasis> sub thread and report the
+  simply dispatch all the execution requests to its private <emphasis>worker</emphasis> thread and report the
   execution's status only to the thread which made the request.
+</para>
+<para>
+  The user can also specify a callback function to be called when an object exmits a signal while being
+  used by the worker thread, see the gda_thread_wrapper_connect_raw() method.
+</para>
+<para>
+  The following diagram illustrates the conceptual working of the #GdaThreadWrapper object: here two user threads
+  are represented (assigned a red and green colors), both using a single #GdaThreadWrapper, so in this diagram, 3 threads
+  are present. The communication between the threads are handled by some #GAsyncQueue objects (in a transparent way for
+  the user, presented here only for illustration purposes). The queue represented in yellow is where jobs are
+  pushed by each user thread (step 1), and popped by the worker thread (step 2). Once the user thread has finished
+  with a job, it stores the result along with the job and pushes it to the queue dedicated to the user thread
+  (step 3) in this example the red queue (because the job was issued from the thread represented in red). The last
+  step is when the user fetches the result (in its user thread), step 4.
+</para>
+<para>
+  If, when the worker thread is busy with a job, a signal is emitted, and if the user has set up a signal handler
+  using gda_thread_wrapper_connect_raw(),
+  then a "job as signal" is created by the worker thread and pushed to the user thread as illustrated
+  at the bottom of the diagram.
+  <mediaobject>
+    <imageobject role="html">
+      <imagedata fileref="thread-wrapper.png" format="PNG" contentwidth="170mm"/>
+    </imageobject>
+    <textobject>
+      <phrase>GdaThreadWrapper's conceptual working</phrase>
+    </textobject>
+  </mediaobject>
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -84,6 +116,16 @@ Execute functions in a sub thread
 @arg: 
 @arg_destroy_func: 
 @error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_thread_wrapper_cancel ##### -->
+<para>
+
+</para>
+
+@wrapper: 
+@id: 
 @Returns: 
 
 
