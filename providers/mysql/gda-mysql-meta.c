@@ -124,7 +124,7 @@ static gchar *internal_sql[] = {
 	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, column_name, ordinal_position, column_default, is_nullable, data_type, NULL, 'gchararray', character_maximum_length,character_octet_length, numeric_precision, numeric_scale, 0, character_set_name, character_set_name, character_set_name, collation_name, collation_name, collation_name, CASE WHEN extra = 'auto_increment' then '" GDA_EXTRA_AUTO_INCREMENT "' ELSE extra END, 1, column_comment FROM INFORMATION_SCHEMA.columns WHERE IFNULL(table_catalog, table_schema) = BINARY ##cat::string AND table_schema = BINARY ##schema::string AND table_name = BINARY ##name::string",
 
         /* I_STMT_COLUMNS_ALL */
-	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, column_name, ordinal_position, column_default, CASE is_nullable WHEN 'YES' THEN TRUE ELSE FALSE END AS is_nullable, data_type, NULL, 'gchararray', '', character_maximum_length, character_octet_length, numeric_precision, numeric_scale, 0, character_set_name, character_set_name, character_set_name, collation_name, collation_name, collation_name, CASE WHEN extra = 'auto_increment' then '" GDA_EXTRA_AUTO_INCREMENT "' ELSE extra END, IF(FIND_IN_SET('insert', privileges) != 0 OR FIND_IN_SET('update', privileges) != 0, TRUE, FALSE) AS is_updatable, column_comment FROM INFORMATION_SCHEMA.columns",
+	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, column_name, ordinal_position, column_default, CASE is_nullable WHEN 'YES' THEN TRUE ELSE FALSE END AS is_nullable, data_type, NULL, 'gchararray', character_maximum_length, character_octet_length, numeric_precision, numeric_scale, 0, character_set_name, character_set_name, character_set_name, collation_name, collation_name, collation_name, CASE WHEN extra = 'auto_increment' then '" GDA_EXTRA_AUTO_INCREMENT "' ELSE extra END, IF(FIND_IN_SET('insert', privileges) != 0 OR FIND_IN_SET('update', privileges) != 0, TRUE, FALSE) AS is_updatable, column_comment FROM INFORMATION_SCHEMA.columns",
 
         /* I_STMT_TABLES_CONSTRAINTS */
 	"SELECT IFNULL(constraint_catalog, constraint_schema) AS constraint_catalog, constraint_schema, constraint_name, IFNULL(constraint_catalog, constraint_schema) AS table_catalog, table_schema, table_name, constraint_type, NULL, FALSE, FALSE FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_catalog = BINARY ##cat::string AND constraint_schema = BINARY ##schema::string AND table_name = BINARY ##name::string",
@@ -713,7 +713,7 @@ _gda_mysql_meta__tables_views (GdaServerProvider  *prov,
 	};
 	GType col_types_views[] = {
 		G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING,
-		G_TYPE_STRING, G_TYPE_STRING, G_TYPE_NONE
+		G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_NONE
 	};
 	GdaDataModel *model_tables, *model_views;
 	gboolean retval;
