@@ -617,6 +617,9 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, gint rownum, GError **error)
 		_gda_mysql_make_error (imodel->priv->cnc, NULL, imodel->priv->mysql_stmt, error);
 		return NULL;
 	}
+
+	/* g_print ("%s: SQL=%s\n", __func__, ((GdaDataSelect *) imodel)->prep_stmt->sql); */
+
 	
 	GdaRow *row = gda_row_new (((GdaDataSelect *) imodel)->prep_stmt->ncols);
 	gint col;
@@ -626,7 +629,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, gint rownum, GError **error)
 		GValue *value = gda_row_get_value (row, i);
 		GType type = ((GdaDataSelect *) imodel)->prep_stmt->types[i];
 		
-		/*g_print ("%s: #%d : TYPE=%d, GTYPE=%s\n", __func__, i, mysql_bind_result[i].buffer_type, g_type_name (type));*/
+		/* g_print ("%s: #%d : TYPE=%d, GTYPE=%s\n", __func__, i, mysql_bind_result[i].buffer_type, g_type_name (type)); */
 		
 		
 		int intvalue = 0;
@@ -789,6 +792,19 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, gint rownum, GError **error)
 					g_value_set_double (value, atof (strvalue));
 					setlocale (LC_NUMERIC, gda_numeric_locale);
 				}
+				else {
+					/* error: wrong column type */
+					gda_row_invalidate_value (row, value);
+					g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+						     GDA_SERVER_PROVIDER_DATA_ERROR,
+						     _("Invalid column bind data type. %d\n"),
+						     mysql_bind_result[i].buffer_type);
+					break;
+				}
+			}
+			else if (type == G_TYPE_INT) {
+				if (length > 0)
+					g_value_set_int (value, atoi (strvalue));
 				else {
 					/* error: wrong column type */
 					gda_row_invalidate_value (row, value);
