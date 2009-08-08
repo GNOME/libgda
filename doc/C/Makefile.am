@@ -22,7 +22,9 @@ HFILE_GLOB=
 CFILE_GLOB=
 
 # Header files to ignore when scanning
-IGNORE_HFILES= gda-marshal.h gda-custom-marshal.h gda-enum-types.h sqlite3.h csv.h md5.h
+IGNORE_HFILES= gda-marshal.h gda-custom-marshal.h gda-enum-types.h sqlite3.h csv.h md5.h \
+	jni-wrapper.h gda-jdbc-recordset.h gda-jdbc-blob-op.h gda-jdbc-provider.h gda-jdbc-pstmt.h \
+	providers tools control-center tests samples plugins
 
 # CFLAGS and LDFLAGS for compiling scan program. Only needed
 # if $(DOC_MODULE).types is non-empty.
@@ -83,7 +85,7 @@ EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration
 # Files not to distribute
 # for --rebuild-types in $(SCAN_OPTIONS), e.g. $(DOC_MODULE).types
 # for --rebuild-sections in $(SCAN_OPTIONS) e.g. $(DOC_MODULE)-sections.txt
-DISTCLEANFILES = $(DOC_MODULE)-doc.pdf
+DISTCLEANFILES = $(DOC_MODULE)-doc.pdf libgda-4.0.types libgda-4.0-sections.txt
 
 DOC_STAMPS += pdf-build.stamp
 CLEANFILES += $(DOC_STAMPS)
