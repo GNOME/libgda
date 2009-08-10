@@ -46,7 +46,8 @@ struct _FavoriteSelector {
 struct _FavoriteSelectorClass {
 	GtkVBoxClass          parent_class;
 
-	void                (*selection_changed) (FavoriteSelector *sel, const gchar *fav_contents);
+	void                (*selection_changed) (FavoriteSelector *sel, gint fav_id,
+						  BrowserFavoritesType fav_type, const gchar *fav_contents);
 };
 
 GType                    favorite_selector_get_type (void) G_GNUC_CONST;

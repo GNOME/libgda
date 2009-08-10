@@ -284,6 +284,12 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 										  MGR_FAVORITES_ID_ATT_NAME,
 										  av, NULL);
 						gda_value_free (av);
+
+						g_value_set_uint ((av = gda_value_new (G_TYPE_UINT)), fav->type);
+						gda_tree_node_set_node_attribute (snode,
+										  MGR_FAVORITES_TYPE_ATT_NAME,
+										  av, NULL);
+						gda_value_free (av);
 						
 						/* icon */
 						GdkPixbuf *pixbuf;
@@ -306,6 +312,13 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 									  MGR_FAVORITES_ID_ATT_NAME,
 									  av, NULL);
 					gda_value_free (av);
+
+					g_value_set_uint ((av = gda_value_new (G_TYPE_UINT)), fav->type);
+					gda_tree_node_set_node_attribute (snode,
+									  MGR_FAVORITES_TYPE_ATT_NAME,
+									  av, NULL);
+					gda_value_free (av);
+
 					
 					/* icon */
 					GdkPixbuf *pixbuf;

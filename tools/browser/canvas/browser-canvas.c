@@ -1120,15 +1120,40 @@ browser_canvas_scale_layout (BrowserCanvas *canvas, gdouble scale)
 gchar *
 browser_canvas_serialize_items (BrowserCanvas *canvas)
 {
+	gchar *retval = NULL;
 	GSList *list;
+	xmlDocPtr doc;
+	xmlNodePtr topnode;
+
 	g_return_val_if_fail (IS_BROWSER_CANVAS (canvas), NULL);
 	
+	/* create XML doc and root node */
+	doc = xmlNewDoc (BAD_CAST "1.0");
+	topnode = xmlNewDocNode (doc, NULL, BAD_CAST "canvas", NULL);
+        xmlDocSetRootElement (doc, topnode);
+	
+	/* actually serialize all the items which can be serialized */
 	for (list = canvas->priv->items; list; list = list->next) {
 		BrowserCanvasItem *item = BROWSER_CANVAS_ITEM (list->data);
-		TO_IMPLEMENT;
+		BrowserCanvasItemClass *iclass = (BrowserCanvasItemClass*) G_OBJECT_GET_CLASS (item);
+		if (iclass->serialize) {
+			xmlNodePtr node;
+			node = iclass->serialize (item);
+			if (node)
+				xmlAddChild (topnode, node);
+		}
 	}
 
-	return NULL;
+	/* create buffer from XML tree */
+	xmlChar *xstr = NULL;
+	xmlDocDumpMemory (doc, &xstr, NULL);
+	if (xstr) {
+		retval = g_strdup ((gchar *) xstr);
+		xmlFree (xstr);
+	}
+	xmlFreeDoc (doc);
+	
+	return retval;
 }
 
 /**
@@ -1161,4 +1186,11 @@ browser_canvas_item_toggle_select (BrowserCanvas *canvas, BrowserCanvasItem *ite
 		canvas->priv->current_selected_item = item;
 	}
 	g_signal_emit (canvas, canvas_signals [ITEM_SELECTED], 0, item);
+}
+
+void
+browser_canvas_translate_item (BrowserCanvas *canvas, BrowserCanvasItem *item,
+			       gdouble dx, gdouble dy)
+{
+	browser_canvas_item_translate (item, dx, dy);
 }

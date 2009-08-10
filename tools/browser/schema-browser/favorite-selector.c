@@ -29,6 +29,7 @@
 #include <libgda-ui/gdaui-tree-store.h>
 #include "../dnd.h"
 #include "../support.h"
+#include "marshal.h"
 #include "../cc-gray-bar.h"
 #include "../browser-favorites.h"
 
@@ -53,6 +54,15 @@ enum {
 static guint favorite_selector_signals[LAST_SIGNAL] = { 0 };
 static GObjectClass *parent_class = NULL;
 
+/* columns of the resulting GtkTreeModel */
+enum {
+	COLUMN_MARKUP = 0,
+	COLUMN_ICON = 1,
+	COLUMN_CONTENTS = 2,
+	COLUMN_TYPE = 3,
+	COLUMN_ID = 4
+};
+
 
 /*
  * FavoriteSelector class implementation
@@ -72,8 +82,8 @@ favorite_selector_class_init (FavoriteSelectorClass *klass)
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (FavoriteSelectorClass, selection_changed),
                               NULL, NULL,
-                              g_cclosure_marshal_VOID__STRING, G_TYPE_NONE,
-                              1, G_TYPE_STRING);
+                              _sb_marshal_VOID__INT_ENUM_STRING, G_TYPE_NONE,
+                              3, G_TYPE_INT, G_TYPE_UINT, G_TYPE_STRING);
 	klass->selection_changed = NULL;
 
 	object_class->dispose = favorite_selector_dispose;
@@ -146,8 +156,13 @@ selection_changed_cb (GtkTreeView *treeview,  GtkTreePath *path,
 	select = gtk_tree_view_get_selection (treeview);
 	if (gtk_tree_selection_get_selected (select, &model, &iter)) {
 		gchar *str;
-		gtk_tree_model_get (model, &iter, 2, &str, -1);
-		g_signal_emit (tsel, favorite_selector_signals [SELECTION_CHANGED], 0, str);
+		guint type;
+		gint fav_id;
+		gtk_tree_model_get (model, &iter,
+				    COLUMN_ID, &fav_id,
+				    COLUMN_TYPE, &type,
+				    COLUMN_CONTENTS, &str, -1);
+		g_signal_emit (tsel, favorite_selector_signals [SELECTION_CHANGED], 0, fav_id, type, str);
 		g_free (str);
 	}
 }
@@ -210,10 +225,12 @@ favorite_selector_new (BrowserConnection *bcnc)
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
 
-	model = gdaui_tree_store_new (tsel->priv->tree, 3,
+	model = gdaui_tree_store_new (tsel->priv->tree, 5,
 				      G_TYPE_STRING, "markup",
 				      G_TYPE_OBJECT, "icon",
-				      G_TYPE_STRING, MGR_FAVORITES_CONTENTS_ATT_NAME);
+				      G_TYPE_STRING, MGR_FAVORITES_CONTENTS_ATT_NAME,
+				      G_TYPE_UINT, MGR_FAVORITES_TYPE_ATT_NAME,
+				      G_TYPE_INT, MGR_FAVORITES_ID_ATT_NAME);
 	treeview = gtk_tree_view_new_with_model (model);
 	g_object_unref (model);
 
@@ -222,12 +239,12 @@ favorite_selector_new (BrowserConnection *bcnc)
 
 	renderer = gtk_cell_renderer_pixbuf_new ();
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
-	gtk_tree_view_column_add_attribute (column, renderer, "pixbuf", 1);
+	gtk_tree_view_column_add_attribute (column, renderer, "pixbuf", COLUMN_ICON);
 
 	/* text */
 	renderer = gtk_cell_renderer_text_new ();
 	gtk_tree_view_column_pack_start (column, renderer, TRUE);
-	gtk_tree_view_column_add_attribute (column, renderer, "markup", 0);
+	gtk_tree_view_column_add_attribute (column, renderer, "markup", COLUMN_MARKUP);
 
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
 	
@@ -343,9 +360,9 @@ tree_store_drag_can_drag_cb (GdauiTreeStore *store, const gchar *path, FavoriteS
 	return FALSE;
 }
 
-static
-gboolean tree_store_drag_get_cb (GdauiTreeStore *store, const gchar *path, GtkSelectionData *selection_data,
-				 FavoriteSelector *tsel)
+static gboolean
+tree_store_drag_get_cb (GdauiTreeStore *store, const gchar *path, GtkSelectionData *selection_data,
+			FavoriteSelector *tsel)
 {
 	GdaTreeNode *node;
 	node = gda_tree_get_node (tsel->priv->tree, path, FALSE);

@@ -401,14 +401,16 @@ favorites_reorder (BrowserFavorites *bfav, gint order_key, gint id, gint new_pos
  *
  * Add a new favorite, or replace an existing one.
  * NOTE:
- *   - if @fav->id is NULL then it's either an update or an insert (depending if fav->contents exists)
+ *   - if @fav->id is < 0 then it's either an update or an insert (depending if fav->contents exists)
  *     and if it's not it is an UPDATE
  *   - @fav->type can't be 0
  *   - @fav->contents can't be %NULL
  *
+ * On success @fav->id contains the favorite's ID, otherwise it will contain -1.
+ *
  * if @order_key is negative, then no ordering is done and @pos is ignored.
  */
-gint
+gboolean
 browser_favorites_add (BrowserFavorites *bfav, guint session_id,
 		       BrowserFavoritesAttributes *fav,
 		       gint order_key, gint pos,
@@ -483,6 +485,9 @@ browser_favorites_add (BrowserFavorites *bfav, guint session_id,
 			goto err;
 		}
 		g_object_unref (stmt);
+
+		favid = find_favorite (bfav, session_id, fav->id, fav->contents, NULL);
+		fav->id = favid;
 	}
 	else {
 		/* update favorite's contents */
@@ -508,6 +513,18 @@ browser_favorites_add (BrowserFavorites *bfav, guint session_id,
 								 gda_sql_builder_ident (builder, 0, "id"),
 								 gda_sql_builder_param (builder, 0, "id", G_TYPE_INT, FALSE),
 								 0));
+		if (fav->id == favid) {
+			/* alter name and description only if fav->id was OK */
+			gda_sql_builder_add_field (builder,
+						   gda_sql_builder_ident (builder, 0, "name"),
+						   gda_sql_builder_param (builder, 0, "name", G_TYPE_STRING,
+									  TRUE));
+			gda_sql_builder_add_field (builder,
+						   gda_sql_builder_ident (builder, 0, "descr"),
+						   gda_sql_builder_param (builder, 0, "descr", G_TYPE_STRING,
+									  TRUE));
+		}
+
 		stmt = gda_sql_builder_get_statement (builder, error);
 		g_object_unref (G_OBJECT (builder));
 		if (!stmt)
@@ -517,6 +534,7 @@ browser_favorites_add (BrowserFavorites *bfav, guint session_id,
 			goto err;
 		}
 		g_object_unref (stmt);
+		fav->id = favid;
 	}
 
 	if (order_key >= 0) {
@@ -709,12 +727,13 @@ browser_favorites_list (BrowserFavorites *bfav, guint session_id, BrowserFavorit
 
 	gda_sql_builder_set_where (b,
 				   gda_sql_builder_cond_v (b, 0, GDA_SQL_OPERATOR_TYPE_AND, and_cond_ids, and_cond_size));
-
+#ifdef GDA_DEBUG_NO
 	{
 		GdaSqlStatement *sqlst;
 		sqlst = gda_sql_builder_get_sql_statement (b, TRUE);
 		g_print ("=>%s\n", gda_sql_statement_serialize (sqlst));
 	}
+#endif
 
 	stmt = gda_sql_builder_get_statement (b, error);
 	g_object_unref (G_OBJECT (b));
@@ -727,8 +746,10 @@ browser_favorites_list (BrowserFavorites *bfav, guint session_id, BrowserFavorit
 
 	model = gda_connection_statement_execute_select (bfav->priv->store_cnc, stmt, params, error);
 	g_object_unref (stmt);
-	if (!model)
+	if (!model) {
+		g_warning ("Malformed dictionary database, cannot get favorites list (this should happen only while in dev.).");
 		goto out;
+	}
 
 	gint nrows;
 	nrows = gda_data_model_get_n_rows (model);
@@ -870,5 +891,85 @@ browser_favorites_delete (BrowserFavorites *bfav, guint session_id,
 	if (params)
 		g_object_unref (G_OBJECT (params));
 
+	return retval;
+}
+
+/**
+ * browser_favorites_get
+ *
+ * Get all the information about a favorite from its id: fills the @out_fav
+ * pointed structure.
+ */
+gboolean
+browser_favorites_get (BrowserFavorites *bfav, gint fav_id,
+		       BrowserFavoritesAttributes *out_fav, GError **error)
+{
+	GdaSqlBuilder *b;
+	GdaStatement *stmt;
+	GdaSet *params = NULL;
+	GdaDataModel *model;
+	gboolean retval = FALSE;
+
+	g_return_val_if_fail (BROWSER_IS_FAVORITES (bfav), FALSE);
+	g_return_val_if_fail (out_fav, FALSE);
+	g_return_val_if_fail (fav_id >= 0, FALSE);
+
+	memset (out_fav, 0, sizeof (BrowserFavoritesAttributes));
+
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+	gda_sql_builder_add_field (b,
+				   gda_sql_builder_ident (b, 0, "id"), 0);
+	gda_sql_builder_add_field (b,
+				   gda_sql_builder_ident (b, 0, "type"), 0);
+	gda_sql_builder_add_field (b,
+				   gda_sql_builder_ident (b, 0, "name"), 0);
+	gda_sql_builder_add_field (b,
+				   gda_sql_builder_ident (b, 0, "descr"), 0);
+	gda_sql_builder_add_field (b,
+				   gda_sql_builder_ident (b, 0, "contents"), 0);
+	gda_sql_builder_select_add_target (b, 0,
+					   gda_sql_builder_ident (b, 0, FAVORITES_TABLE_NAME),
+					   NULL);
+
+	gda_sql_builder_set_where (b,
+				   gda_sql_builder_cond (b, 0, GDA_SQL_OPERATOR_TYPE_EQ,
+							 gda_sql_builder_ident (b, 0, "id"),
+						     gda_sql_builder_param (b, 0, "id", G_TYPE_INT, FALSE), 0));
+	stmt = gda_sql_builder_get_statement (b, error);
+	g_object_unref (G_OBJECT (b));
+	if (!stmt)
+		return FALSE;
+	params = gda_set_new_inline (1,
+				     "id", G_TYPE_INT, fav_id);
+	model = gda_connection_statement_execute_select (bfav->priv->store_cnc, stmt, params, error);
+	g_object_unref (stmt);
+	g_object_unref (params);
+
+	if (!model)
+		return FALSE;
+
+	gint nrows;
+	nrows = gda_data_model_get_n_rows (model);
+	if (nrows == 1) {
+		gint i;
+		const GValue *cvalues[5];
+		for (i = 0; i < 5; i++) {
+			cvalues [i] = gda_data_model_get_value_at (model, i, 0, error);
+			if (!cvalues [i])
+				goto out;
+		}
+
+		out_fav->id = g_value_get_int (cvalues [0]);
+		out_fav->type = favorite_string_to_type (g_value_get_string (cvalues [1]));
+		if (G_VALUE_TYPE (cvalues [2]) == G_TYPE_STRING)
+			out_fav->name = g_value_dup_string (cvalues [2]);
+		if (G_VALUE_TYPE (cvalues [3]) == G_TYPE_STRING)
+			out_fav->descr = g_value_dup_string (cvalues [3]);
+		out_fav->contents = g_value_dup_string (cvalues [4]);
+		retval = TRUE;
+	}
+	
+ out:
+	g_object_unref (G_OBJECT (model));
 	return retval;
 }

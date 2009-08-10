@@ -39,16 +39,17 @@ typedef struct _RelationsDiagramClass   RelationsDiagramClass;
 typedef struct _RelationsDiagramPrivate RelationsDiagramPrivate;
 
 struct _RelationsDiagram {
-	GtkVBox               parent;
-	RelationsDiagramPrivate     *priv;
+	GtkVBox                  parent;
+	RelationsDiagramPrivate *priv;
 };
 
 struct _RelationsDiagramClass {
-	GtkVBoxClass          parent_class;
+	GtkVBoxClass             parent_class;
 };
 
 GType                    relations_diagram_get_type (void) G_GNUC_CONST;
 GtkWidget               *relations_diagram_new (BrowserConnection *bcnc);
+GtkWidget               *relations_diagram_new_with_fav_id (BrowserConnection *bcnc, gint fav_id, GError **error);
 
 G_END_DECLS
 

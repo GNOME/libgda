@@ -47,7 +47,8 @@ struct _ObjectsIndexClass {
 	GtkVBoxClass          parent_class;
 
 	/* signals */
-	void                (*selection_changed) (ObjectsIndex *sel, const gchar *fav_contents);
+	void                (*selection_changed) (ObjectsIndex *sel,
+						  BrowserFavoritesType fav_type, const gchar *fav_contents);
 };
 
 GType                    objects_index_get_type (void) G_GNUC_CONST;

@@ -45,6 +45,8 @@ static void browser_canvas_table_drag_data_get (BrowserCanvasItem *citem, GdkDra
 						GtkSelectionData *data, guint info, guint time);
 static void browser_canvas_table_set_selected (BrowserCanvasItem *citem, gboolean selected);
 
+static xmlNodePtr browser_canvas_table_serialize (BrowserCanvasItem *citem);
+
 enum
 {
 	PROP_0,
@@ -104,6 +106,7 @@ browser_canvas_table_class_init (BrowserCanvasTableClass *class)
 	table_parent_class = g_type_class_peek_parent (class);
 	iclass->drag_data_get = browser_canvas_table_drag_data_get;
 	iclass->set_selected = browser_canvas_table_set_selected;
+	iclass->serialize = browser_canvas_table_serialize;
 
 	object_class->dispose = browser_canvas_table_dispose;
 	object_class->finalize = browser_canvas_table_finalize;
@@ -541,6 +544,35 @@ browser_canvas_table_set_selected (BrowserCanvasItem *citem, gboolean selected)
 {
 	g_object_set (G_OBJECT (BROWSER_CANVAS_TABLE (citem)->priv->selection_mark),
 		      "visibility", selected ? GOO_CANVAS_ITEM_VISIBLE : GOO_CANVAS_ITEM_HIDDEN, NULL);
+}
+
+static xmlNodePtr
+browser_canvas_table_serialize (BrowserCanvasItem *citem)
+{
+	BrowserCanvasTable *ctable;
+
+	ctable = BROWSER_CANVAS_TABLE (citem);
+	if (!ctable->priv->table)
+		return NULL;
+
+	GdaMetaDbObject *dbo;
+	xmlNodePtr node;
+	GooCanvasBounds bounds;
+	gchar *str;
+
+	dbo = GDA_META_DB_OBJECT (ctable->priv->table);
+	node = xmlNewNode (NULL, "table");
+	xmlSetProp (node, BAD_CAST "schema", BAD_CAST (dbo->obj_schema));
+	xmlSetProp (node, BAD_CAST "name", BAD_CAST (dbo->obj_name));
+	goo_canvas_item_get_bounds (GOO_CANVAS_ITEM (citem), &bounds);
+	str = g_strdup_printf ("%.1f", bounds.x1);
+	xmlSetProp (node, BAD_CAST "x", BAD_CAST str);
+	g_free (str);
+	str = g_strdup_printf ("%.1f", bounds.y1);
+	xmlSetProp (node, BAD_CAST "y", BAD_CAST str);
+	g_free (str);
+	
+	return node;
 }
 
 /**

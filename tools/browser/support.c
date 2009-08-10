@@ -113,6 +113,7 @@ browser_show_error (GtkWindow *parent, const gchar *format, ...)
         va_list args;
         gchar sz[2048];
         GtkWidget *dialog;
+	gchar *tmp;
 
         /* build the message string */
         va_start (args, format);
@@ -120,11 +121,12 @@ browser_show_error (GtkWindow *parent, const gchar *format, ...)
         va_end (args);
 
         /* create the error message dialog */
+	tmp = g_strdup_printf ("<span weight=\"bold\">%s</span>\n%s", _("Error:"), sz);
 	dialog = gtk_message_dialog_new_with_markup (parent,
                                                      GTK_DIALOG_DESTROY_WITH_PARENT |
                                                      GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
-                                                     GTK_BUTTONS_CLOSE, "<span weight=\"bold\">%s</span>\n%s",
-						     _("Error:"), sz);
+                                                     GTK_BUTTONS_CLOSE, tmp);
+	g_free (tmp);
 
         gtk_widget_show_all (dialog);
         gtk_dialog_run (GTK_DIALOG (dialog));

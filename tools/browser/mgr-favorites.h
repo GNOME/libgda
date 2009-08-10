@@ -54,6 +54,8 @@ GdaTreeManager* mgr_favorites_new                      (BrowserConnection *bcnc,
 #define MGR_FAVORITES_CONTENTS_ATT_NAME "fav_contents"
 /* name of the attribute which stores the favorite's id */
 #define MGR_FAVORITES_ID_ATT_NAME "fav_id"
+/* name of the attribute which stores the favorite type */
+#define MGR_FAVORITES_TYPE_ATT_NAME "fav_type"
 
 G_END_DECLS
 

@@ -23,6 +23,7 @@
 
 #include <goocanvas.h>
 #include "browser-canvas-decl.h"
+#include <libxml/tree.h>
 
 G_BEGIN_DECLS
 
@@ -54,6 +55,9 @@ struct _BrowserCanvasItemClass
 	void (*drag_data_get) (BrowserCanvasItem *citem, GdkDragContext *drag_context,
 			       GtkSelectionData *data, guint info, guint time);
 	void (*set_selected)  (BrowserCanvasItem *citem, gboolean selected);
+
+	/* serialization and de-serialization virtual methods (don't need to be implemented) */
+	xmlNodePtr (*serialize) (BrowserCanvasItem *citem);
 };
 
 GType              browser_canvas_item_get_type       (void) G_GNUC_CONST;

@@ -106,7 +106,10 @@ schema_browser_perspective_init (SchemaBrowserPerspective *perspective)
 	perspective->priv = g_new0 (SchemaBrowserPerspectivePrivate, 1);
 }
 
-static void selection_changed_cb (GtkWidget *widget, const gchar *selection, SchemaBrowserPerspective *bpers);
+static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType fav_type,
+				      const gchar *selection, SchemaBrowserPerspective *bpers);
+static void objects_index_selection_changed_cb (GtkWidget *widget, BrowserFavoritesType fav_type,
+						const gchar *selection, SchemaBrowserPerspective *bpers);
 
 /**
  * schema_browser_perspective_new
@@ -131,7 +134,7 @@ schema_browser_perspective_new (BrowserWindow *bwin)
 	paned = gtk_hpaned_new ();
 	wid = favorite_selector_new (bcnc);
 	g_signal_connect (wid, "selection-changed",
-			  G_CALLBACK (selection_changed_cb), bpers);
+			  G_CALLBACK (fav_selection_changed_cb), bpers);
 	gtk_paned_add1 (GTK_PANED (paned), wid);
 
 	nb = gtk_notebook_new ();
@@ -142,7 +145,7 @@ schema_browser_perspective_new (BrowserWindow *bwin)
 
 	wid = objects_index_new (bcnc);
 	g_signal_connect (wid, "selection-changed",
-			  G_CALLBACK (selection_changed_cb), bpers);
+			  G_CALLBACK (objects_index_selection_changed_cb), bpers);
 	gtk_paned_add2 (GTK_PANED (paned), wid);
 	gtk_notebook_append_page (GTK_NOTEBOOK (nb), wid,
 				  browser_make_tab_label_with_stock (_("Index"), GTK_STOCK_ABOUT, FALSE,
@@ -166,52 +169,71 @@ close_button_clicked_cb (GtkWidget *wid, GtkWidget *page_widget)
 }
 
 static void
-selection_changed_cb (GtkWidget *widget, const gchar *selection, SchemaBrowserPerspective *bpers)
+objects_index_selection_changed_cb (GtkWidget *widget, BrowserFavoritesType fav_type,
+				    const gchar *selection, SchemaBrowserPerspective *bpers)
 {
-	GdaQuarkList *ql;
-	const gchar *type;
-	const gchar *schema = NULL, *table = NULL, *short_name = NULL;
+	fav_selection_changed_cb (widget, -1, fav_type, selection, bpers);
+}
 
-	ql = gda_quark_list_new_from_string (selection);
-	if (ql) {
-		type = gda_quark_list_find (ql, "OBJ_TYPE");
-		schema = gda_quark_list_find (ql, "OBJ_SCHEMA");
-		table = gda_quark_list_find (ql, "OBJ_NAME");
-		short_name = gda_quark_list_find (ql, "OBJ_SHORT_NAME");
-	}
 
-	if (!type || !schema || !table) {
-		if (ql)
-			gda_quark_list_free (ql);
-		return;
-	}
+static void
+fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType fav_type,
+			  const gchar *selection, SchemaBrowserPerspective *bpers)
+{
+	if (fav_type == BROWSER_FAVORITES_TABLES) {
+		GdaQuarkList *ql;
+		const gchar *type;
+		const gchar *schema = NULL, *table = NULL, *short_name = NULL;
 
-	if (!strcmp (type, "table")) {
-		schema_browser_perspective_display_table_info (bpers, schema, table, short_name);
-	}
-	else {
-		gint ntabs, i;
-		ntabs = gtk_notebook_get_n_pages (GTK_NOTEBOOK (bpers->priv->notebook));
-		for (i = 0; i < ntabs; i++) {
-			GtkWidget *child;
-			child = gtk_notebook_get_nth_page (GTK_NOTEBOOK (bpers->priv->notebook), i);
-			if (IS_TABLE_INFO (child)) {
-				if (!strcmp (schema, table_info_get_table_schema (TABLE_INFO (child))) &&
-				    !strcmp (table, table_info_get_table_name (TABLE_INFO (child)))) {
-					gtk_notebook_set_current_page (GTK_NOTEBOOK (bpers->priv->notebook), i);
-					return;
-				}
-			}
+		ql = gda_quark_list_new_from_string (selection);
+		if (ql) {
+			type = gda_quark_list_find (ql, "OBJ_TYPE");
+			schema = gda_quark_list_find (ql, "OBJ_SCHEMA");
+			table = gda_quark_list_find (ql, "OBJ_NAME");
+			short_name = gda_quark_list_find (ql, "OBJ_SHORT_NAME");
+		}
+		
+		if (!type || !schema || !table) {
+			if (ql)
+				gda_quark_list_free (ql);
+			return;
 		}
 
-		g_warning ("Non handled favorite type %s", type);
-		TO_IMPLEMENT;
+		if (!strcmp (type, "table")) {
+			schema_browser_perspective_display_table_info (bpers, schema, table, short_name);
+		}
+		else {
+			gint ntabs, i;
+			ntabs = gtk_notebook_get_n_pages (GTK_NOTEBOOK (bpers->priv->notebook));
+			for (i = 0; i < ntabs; i++) {
+				GtkWidget *child;
+				child = gtk_notebook_get_nth_page (GTK_NOTEBOOK (bpers->priv->notebook), i);
+				if (IS_TABLE_INFO (child)) {
+					if (!strcmp (schema, table_info_get_table_schema (TABLE_INFO (child))) &&
+					    !strcmp (table, table_info_get_table_name (TABLE_INFO (child)))) {
+						gtk_notebook_set_current_page (GTK_NOTEBOOK (bpers->priv->notebook), i);
+						return;
+					}
+				}
+			}
+
+			g_warning ("Non handled favorite type: %s", type);
+			TO_IMPLEMENT;
+		}
+	
+		if (ql)
+			gda_quark_list_free (ql);
 	}
-
-	if (ql)
-		gda_quark_list_free (ql);
-
-	g_print ("React to selection %s\n", selection);	
+	else if (fav_type == BROWSER_FAVORITES_DIAGRAMS) {
+#ifdef HAVE_GOOCANVAS
+		schema_browser_perspective_display_diagram (bpers, fav_id);
+#else
+		g_warning ("Can't display diagram because canvas not compiled.");
+#endif
+	}
+#ifdef GDA_DEBUG
+	g_print ("Reacted to selection fav_id=>%d type=>%u, contents=>%s\n", fav_id, fav_type, selection);	
+#endif
 }
 
 static void
@@ -236,32 +258,7 @@ schema_browser_perspective_dispose (GObject *object)
 static void
 action_create_diagram_cb (GtkAction *action, SchemaBrowserPerspective *bpers)
 {
-	GtkWidget *diagram;
-	diagram = relations_diagram_new (browser_window_get_connection (bpers->priv->bwin));
-	if (diagram) {
-		GtkWidget *close_btn;
-		GdkPixbuf *diagram_pixbuf;
-		gint i;
-		
-		diagram_pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_DIAGRAM);
-		i = gtk_notebook_append_page (GTK_NOTEBOOK (bpers->priv->notebook), diagram,
-					      browser_make_tab_label_with_pixbuf (_("Diagram"),
-										  diagram_pixbuf,
-										  TRUE, &close_btn));
-		g_signal_connect (close_btn, "clicked",
-				  G_CALLBACK (close_button_clicked_cb), diagram);
-		
-		gtk_widget_show (diagram);
-		gtk_notebook_set_menu_label (GTK_NOTEBOOK (bpers->priv->notebook), diagram,
-					     browser_make_tab_label_with_pixbuf (_("Diagram"),
-										 diagram_pixbuf,
-										 FALSE, NULL));
-		gtk_notebook_set_current_page (GTK_NOTEBOOK (bpers->priv->notebook), i);
-		gtk_notebook_set_tab_reorderable (GTK_NOTEBOOK (bpers->priv->notebook), diagram,
-						  TRUE);
-		gtk_notebook_set_tab_detachable (GTK_NOTEBOOK (bpers->priv->notebook), diagram,
-						 TRUE);
-	}
+	schema_browser_perspective_display_diagram (bpers, -1);
 }
 #endif
 
@@ -304,6 +301,70 @@ schema_browser_perspective_get_actions_ui (BrowserPerspective *bpers)
 {
 	return ui_actions_info;
 }
+
+#ifdef HAVE_GOOCANVAS
+/**
+ * schema_browser_perspective_display_diagram
+ *
+ */
+void
+schema_browser_perspective_display_diagram (SchemaBrowserPerspective *bpers, gint fav_id)
+{
+	GtkWidget *diagram;
+
+	if (fav_id >= 0) {
+		gint ntabs, i;
+		
+		ntabs = gtk_notebook_get_n_pages (GTK_NOTEBOOK (bpers->priv->notebook));
+		for (i = 0; i < ntabs; i++) {
+			GtkWidget *child;
+			child = gtk_notebook_get_nth_page (GTK_NOTEBOOK (bpers->priv->notebook), i);
+			if (IS_RELATIONS_DIAGRAM (child)) {
+				gtk_notebook_set_current_page (GTK_NOTEBOOK (bpers->priv->notebook), i);
+				return;
+			}
+		}
+
+		GError *error = NULL;
+		diagram = relations_diagram_new_with_fav_id (browser_window_get_connection (bpers->priv->bwin),
+							     fav_id, &error);
+		if (! diagram) {
+			browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) bpers),
+					    error && error->message ? error->message :
+					    _("Could not load diagram"));
+			g_clear_error (&error);
+		}
+	}
+	else
+		diagram = relations_diagram_new (browser_window_get_connection (bpers->priv->bwin));
+
+	if (diagram) {
+		GtkWidget *close_btn;
+		GdkPixbuf *diagram_pixbuf;
+		gint i;
+		
+		diagram_pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_DIAGRAM);
+		i = gtk_notebook_append_page (GTK_NOTEBOOK (bpers->priv->notebook), diagram,
+					      browser_make_tab_label_with_pixbuf (_("Diagram"),
+										  diagram_pixbuf,
+										  TRUE, &close_btn));
+		g_signal_connect (close_btn, "clicked",
+				  G_CALLBACK (close_button_clicked_cb), diagram);
+		
+		gtk_widget_show (diagram);
+		gtk_notebook_set_menu_label (GTK_NOTEBOOK (bpers->priv->notebook), diagram,
+					     browser_make_tab_label_with_pixbuf (_("Diagram"),
+										 diagram_pixbuf,
+										 FALSE, NULL));
+		gtk_notebook_set_current_page (GTK_NOTEBOOK (bpers->priv->notebook), i);
+		gtk_notebook_set_tab_reorderable (GTK_NOTEBOOK (bpers->priv->notebook), diagram,
+						  TRUE);
+		gtk_notebook_set_tab_detachable (GTK_NOTEBOOK (bpers->priv->notebook), diagram,
+						 TRUE);
+	}
+}
+#endif
+
 
 /**
  * schema_browser_perspective_display_table_info

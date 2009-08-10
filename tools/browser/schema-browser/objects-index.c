@@ -29,6 +29,7 @@
 #include "../dnd.h"
 #include "../support.h"
 #include "../cc-gray-bar.h"
+#include "marshal.h"
 
 struct _ObjectsIndexPrivate {
 	BrowserConnection *bcnc;
@@ -69,8 +70,8 @@ objects_index_class_init (ObjectsIndexClass *klass)
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (ObjectsIndexClass, selection_changed),
                               NULL, NULL,
-                              g_cclosure_marshal_VOID__STRING, G_TYPE_NONE,
-                              1, G_TYPE_STRING);
+                              _sb_marshal_VOID__ENUM_STRING, G_TYPE_NONE,
+                              2, G_TYPE_UINT, G_TYPE_STRING);
 	klass->selection_changed = NULL;
 
 	object_class->dispose = objects_index_dispose;
@@ -358,7 +359,7 @@ objects_button_clicked_cb (GtkWidget *button, ObjectsIndex *index)
 	g_free (tmp1);
 	g_free (tmp2);
 	g_free (tmp3);
-	g_signal_emit (index, objects_index_signals [SELECTION_CHANGED], 0, str);
+	g_signal_emit (index, objects_index_signals [SELECTION_CHANGED], 0, BROWSER_FAVORITES_TABLES, str);
 	g_free (str);
 }
 

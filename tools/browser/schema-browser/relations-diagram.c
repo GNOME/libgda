@@ -31,7 +31,7 @@
 
 struct _RelationsDiagramPrivate {
 	BrowserConnection *bcnc;
-	gchar *name; /* diagram's name */
+	gint fav_id; /* diagram's ID as a favorite, -1=>not a favorite */
 
 	CcGrayBar *header;
 	GtkWidget *canvas;
@@ -55,6 +55,7 @@ static void relations_diagram_get_property (GObject *object,
 					    GParamSpec *pspec);
 
 static void meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, RelationsDiagram *diagram);
+static void relations_diagram_set_fav_id (RelationsDiagram *diagram, gint fav_id, GError **error);
 
 /* properties */
 enum {
@@ -93,7 +94,7 @@ static void
 relations_diagram_init (RelationsDiagram *diagram, RelationsDiagramClass *klass)
 {
 	diagram->priv = g_new0 (RelationsDiagramPrivate, 1);
-	diagram->priv->name = NULL;
+	diagram->priv->fav_id = -1;
 	diagram->priv->window = NULL;
 }
 
@@ -113,7 +114,6 @@ relations_diagram_dispose (GObject *object)
 		if (diagram->priv->window)
 			gtk_widget_destroy (diagram->priv->window);
 
-		g_free (diagram->priv->name);
 		g_free (diagram->priv);
 		diagram->priv = NULL;
 	}
@@ -278,8 +278,7 @@ real_save_clicked_cb (GtkWidget *button, RelationsDiagram *diagram)
 {
 	gchar *str;
 
-	//str = browser_canvas_serialize_items (BROWSER_CANVAS (diagram->priv->canvas));
-	str = g_strdup ("OOOOO");
+	str = browser_canvas_serialize_items (BROWSER_CANVAS (diagram->priv->canvas));
 
 	GError *lerror = NULL;
 	BrowserFavorites *bfav;
@@ -307,6 +306,9 @@ real_save_clicked_cb (GtkWidget *button, RelationsDiagram *diagram)
 		if (lerror)
 			g_error_free (lerror);
 	}
+
+	relations_diagram_set_fav_id (diagram, fav.id, NULL);
+
 	g_free (fav.name);
 	g_free (str);
 }
@@ -342,6 +344,19 @@ save_clicked_cb (GtkWidget *button, RelationsDiagram *diagram)
 		wid = gtk_entry_new ();
 		gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, FALSE, 5);
 		diagram->priv->name_entry = wid;
+		if (diagram->priv->fav_id > 0) {
+			BrowserFavoritesAttributes fav;
+			if (browser_favorites_get (browser_connection_get_favorites (diagram->priv->bcnc),
+						   diagram->priv->fav_id, &fav, NULL)) {
+				gtk_entry_set_text (GTK_ENTRY (wid), fav.name);
+				g_free (fav.name);
+				g_free (fav.descr);
+				g_free (fav.contents);
+			}
+		}
+
+		g_signal_connect (wid, "activate",
+				  G_CALLBACK (real_save_clicked_cb), diagram);
 
 		wid = gtk_button_new_with_label (_("Save"));
 		gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, FALSE, 0);
@@ -460,3 +475,124 @@ relations_diagram_new (BrowserConnection *bcnc)
 
 	return (GtkWidget*) diagram;
 }
+
+GtkWidget *
+relations_diagram_new_with_fav_id (BrowserConnection *bcnc, gint fav_id, GError **error)
+{
+	RelationsDiagram *diagram = NULL;
+	BrowserFavoritesAttributes fav;
+	xmlDocPtr doc = NULL;
+
+	if (! browser_favorites_get (browser_connection_get_favorites (bcnc),
+				     fav_id, &fav, error))
+		return FALSE;
+
+
+	doc = xmlParseDoc (BAD_CAST fav.contents);
+	if (!doc) {
+		g_set_error (error, 0, 0,
+			     _("Error parsing favorite's contents"));
+		goto out;
+	}
+
+	/* create diagram */
+	diagram = RELATIONS_DIAGRAM (relations_diagram_new (bcnc));
+	if (!diagram)
+		goto out;
+	gchar *str, *tmp;
+	tmp = g_markup_printf_escaped (_("'%s' diagram"), fav.name);
+	str = g_strdup_printf ("<b>%s</b>\n%s", _("Relations diagram"), tmp);
+	g_free (tmp);
+	cc_gray_bar_set_text (diagram->priv->header, str);
+	g_free (str);
+	diagram->priv->fav_id = fav_id;
+	relations_diagram_set_fav_id (diagram, fav_id, NULL);
+
+	/* fill the diagram */
+	xmlNodePtr root, node;
+	root = xmlDocGetRootElement (doc);
+	if (!root)
+		goto out;
+	for (node = root->children; node; node = node->next) {
+		if (!strcmp ((gchar*) node->name, "table")) {
+			xmlChar *schema;
+			xmlChar *name;
+			schema = xmlGetProp (node, BAD_CAST "schema");
+			name = xmlGetProp (node, BAD_CAST "name");
+			if (schema && name) {
+				BrowserCanvasTable *table;
+				GValue *v1, *v2;
+				g_value_set_string ((v1 = gda_value_new (G_TYPE_STRING)), (gchar*) schema);
+				g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), (gchar*) name);
+				xmlFree (schema);
+				xmlFree (name);
+				table = browser_canvas_db_relations_add_table (BROWSER_CANVAS_DB_RELATIONS (diagram->priv->canvas),
+									       NULL, v1, v2);
+				gda_value_free (v1);
+				gda_value_free (v2);
+				if (table) {
+					xmlChar *x, *y;
+					x = xmlGetProp (node, BAD_CAST "x");
+					y = xmlGetProp (node, BAD_CAST "y");
+					browser_canvas_translate_item (BROWSER_CANVAS (diagram->priv->canvas),
+								       (BrowserCanvasItem*) table,
+								       x ? atof ((gchar*) x) : 0.,
+								       y ? atof ((gchar*) y) : 0.);
+					if (x)
+						xmlFree (x);
+					if (y)
+						xmlFree (y);
+				}
+			}
+			else {
+				if (schema)
+					xmlFree (schema);
+				if (name)
+					xmlFree (name);
+				g_set_error (error, 0, 0,
+					     _("Missing table attribute in favorite's contents"));
+				gtk_widget_destroy ((GtkWidget*) diagram);
+				diagram = NULL;
+				goto out;
+			}
+		}
+	}
+
+ out:
+	g_free (fav.name);
+	g_free (fav.descr);
+	g_free (fav.contents);
+	if (doc)
+		xmlFreeDoc (doc);
+	return (GtkWidget*) diagram;
+}
+
+/*
+ * relations_diagram_set_fav_id
+ *
+ * Sets the favorite ID of @diagram: ensure every displayed information is up to date
+ */
+static void
+relations_diagram_set_fav_id (RelationsDiagram *diagram, gint fav_id, GError **error)
+{
+	g_return_if_fail (IS_RELATIONS_DIAGRAM (diagram));
+	BrowserFavoritesAttributes fav;
+
+	if (! browser_favorites_get (browser_connection_get_favorites (diagram->priv->bcnc),
+								       fav_id, &fav, error))
+		return;
+
+	gchar *str, *tmp;
+	tmp = g_markup_printf_escaped (_("'%s' diagram"), fav.name);
+	str = g_strdup_printf ("<b>%s</b>\n%s", _("Relations diagram"), tmp);
+	g_free (tmp);
+	cc_gray_bar_set_text (diagram->priv->header, str);
+	g_free (str);
+
+	diagram->priv->fav_id = fav.id;
+
+ 	g_free (fav.name);
+	g_free (fav.descr);
+	g_free (fav.contents);
+}
+

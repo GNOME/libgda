@@ -54,6 +54,8 @@ void                 schema_browser_perspective_display_table_info     (SchemaBr
 									const gchar *table_schema,
 									const gchar *table_name,
 									const gchar *table_short_name);
+void                 schema_browser_perspective_display_diagram        (SchemaBrowserPerspective *bpers,
+									gint fav_id);
 
 G_END_DECLS
 

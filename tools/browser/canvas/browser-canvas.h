@@ -81,6 +81,8 @@ void               browser_canvas_scale_layout            (BrowserCanvas *canvas
 gchar             *browser_canvas_serialize_items         (BrowserCanvas *canvas);
 
 void               browser_canvas_item_toggle_select      (BrowserCanvas *canvas, BrowserCanvasItem *item);
+void               browser_canvas_translate_item          (BrowserCanvas *canvas, BrowserCanvasItem *item,
+							   gdouble dx, gdouble dy);
 
 G_END_DECLS
 

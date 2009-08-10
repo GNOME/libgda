@@ -68,15 +68,18 @@ GType               browser_favorites_get_type               (void) G_GNUC_CONST
 
 BrowserFavorites   *browser_favorites_new                    (GdaMetaStore *store);
 
-gint                browser_favorites_add          (BrowserFavorites *bfav, guint session_id,
+gboolean            browser_favorites_add          (BrowserFavorites *bfav, guint session_id,
 						    BrowserFavoritesAttributes *fav,
 						    gint order_key, gint pos,
 						    GError **error);
-GSList             *browser_favorites_list         (BrowserFavorites *bcnc, guint session_id, 
+GSList             *browser_favorites_list         (BrowserFavorites *bfav, guint session_id, 
 						    BrowserFavoritesType type, gint order_key, GError **error);
-gboolean            browser_favorites_delete       (BrowserFavorites *bcnc, guint session_id,
+gboolean            browser_favorites_delete       (BrowserFavorites *bfav, guint session_id,
 						    BrowserFavoritesAttributes *fav, GError **error);
 void                browser_favorites_free_list    (GSList *fav_list);
+
+gboolean            browser_favorites_get          (BrowserFavorites *bfav, gint fav_id,
+						    BrowserFavoritesAttributes *out_fav, GError **error);
 G_END_DECLS
 
 #endif
