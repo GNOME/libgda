@@ -2156,17 +2156,6 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 	if (!cdata) 
 		return NULL;
 
-	/* HACK: force SQLite to reparse the schema and thus discover new tables if necessary */
-        {
-                gint status;
-                sqlite3_stmt *istmt = NULL;
-                status = sqlite3_prepare_v2 (cdata->connection, "SELECT 1 FROM sqlite_master LIMIT 1", -1, &istmt, NULL);
-                if (status == SQLITE_OK)
-                        sqlite3_step (istmt);
-                if (istmt)
-                        sqlite3_finalize (istmt);
-        }
-
 	/* get/create new prepared statement */
 	ps = (GdaSqlitePStmt *) gda_connection_get_prepared_statement (cnc, stmt);
 	if (!ps) {
