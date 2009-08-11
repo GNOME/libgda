@@ -127,16 +127,16 @@ static gchar *internal_sql[] = {
 	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, column_name, ordinal_position, column_default, CASE is_nullable WHEN 'YES' THEN TRUE ELSE FALSE END AS is_nullable, data_type, NULL, 'gchararray', character_maximum_length, character_octet_length, numeric_precision, numeric_scale, 0, character_set_name, character_set_name, character_set_name, collation_name, collation_name, collation_name, CASE WHEN extra = 'auto_increment' then '" GDA_EXTRA_AUTO_INCREMENT "' ELSE extra END, IF(FIND_IN_SET('insert', privileges) != 0 OR FIND_IN_SET('update', privileges) != 0, TRUE, FALSE) AS is_updatable, column_comment FROM INFORMATION_SCHEMA.columns",
 
         /* I_STMT_TABLES_CONSTRAINTS */
-	"SELECT IFNULL(constraint_catalog, constraint_schema) AS constraint_catalog, constraint_schema, constraint_name, IFNULL(constraint_catalog, constraint_schema) AS table_catalog, table_schema, table_name, constraint_type, NULL, FALSE, FALSE FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_catalog = BINARY ##cat::string AND constraint_schema = BINARY ##schema::string AND table_name = BINARY ##name::string",
+	"SELECT IFNULL(constraint_catalog, constraint_schema) AS constraint_catalog, constraint_schema, constraint_name, IFNULL(constraint_catalog, constraint_schema) AS constraint_catalog, table_schema, table_name, constraint_type, NULL, FALSE, FALSE FROM INFORMATION_SCHEMA.table_constraints WHERE IFNULL(constraint_catalog, constraint_schema) = BINARY ##cat::string AND constraint_schema = BINARY ##schema::string AND table_name = BINARY ##name::string",
 
         /* I_STMT_TABLES_CONSTRAINTS_ALL */
-	"SELECT IFNULL(constraint_catalog, constraint_schema) AS constraint_catalog, constraint_schema, constraint_name, IFNULL(constraint_catalog, constraint_schema) AS onstraint_catalog, table_schema, table_name, constraint_type, NULL, FALSE, FALSE FROM INFORMATION_SCHEMA.table_constraints",
+	"SELECT IFNULL(constraint_catalog, constraint_schema) AS constraint_catalog, constraint_schema, constraint_name, IFNULL(constraint_catalog, constraint_schema) AS constraint_catalog, table_schema, table_name, constraint_type, NULL, FALSE, FALSE FROM INFORMATION_SCHEMA.table_constraints",
 
         /* I_STMT_TABLES_CONSTRAINTS_NAMED */
-	"SELECT IFNULL(constraint_catalog, constraint_schema) AS constraint_catalog, constraint_schema, constraint_name, IFNULL(constraint_catalog, constraint_schema) AS table_catalog, table_schema, table_name, constraint_type, NULL, FALSE, FALSE FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_catalog = BINARY ##cat::string AND constraint_schema = BINARY ##schema::string AND table_name = BINARY ##name::string AND constraint_name = BINARY ##name2::string",
+	"SELECT IFNULL(constraint_catalog, constraint_schema) AS constraint_catalog, constraint_schema, constraint_name, IFNULL(constraint_catalog, constraint_schema) AS table_catalog, table_schema, table_name, constraint_type, NULL, FALSE, FALSE FROM INFORMATION_SCHEMA.table_constraints WHERE IFNULL(constraint_catalog, constraint_schema) = BINARY ##cat::string AND constraint_schema = BINARY ##schema::string AND table_name = BINARY ##name::string AND constraint_name = BINARY ##name2::string",
 
         /* I_STMT_REF_CONSTRAINTS */
-	"SELECT IFNULL(t.constraint_catalog, t.constraint_schema) AS constraint_catalog, t.constraint_schema, r.constraint_name, IFNULL(r.constraint_catalog, r.constraint_schema) AS constraint_catalog, r.constraint_schema, r.match_option, r.update_rule, delete_rule FROM INFORMATION_SCHEMA.referential_constraints r INNER JOIN INFORMATION_SCHEMA.table_constraints t ON r.constraint_schema=t.constraint_schema AND r.constraint_name=t.constraint_name AND r.table_name=t.table_name WHERE r.constraint_catalog = BINARY ##cat::string AND r.constraint_schema = BINARY ##schema::string AND r.table_name = BINARY ##name AND r.constraint_name = BINARY ##name2::string",
+	"SELECT IFNULL(t.constraint_catalog, t.constraint_schema) AS constraint_catalog, t.constraint_schema, r.constraint_name, IFNULL(r.constraint_catalog, r.constraint_schema) AS constraint_catalog, r.constraint_schema, r.match_option, r.update_rule, delete_rule FROM INFORMATION_SCHEMA.referential_constraints r INNER JOIN INFORMATION_SCHEMA.table_constraints t ON r.constraint_schema=t.constraint_schema AND r.constraint_name=t.constraint_name AND r.table_name=t.table_name WHERE IFNULL(r.constraint_catalog, r.constraint_schema) = BINARY ##cat::string AND r.constraint_schema = BINARY ##schema::string AND r.table_name = BINARY ##name::string AND r.constraint_name = BINARY ##name2::string",
 
         /* I_STMT_REF_CONSTRAINTS_ALL */
 	"SELECT IFNULL(t.constraint_catalog, t.constraint_schema) AS constraint_catalog, t.constraint_schema, r.constraint_name, IFNULL(r.constraint_catalog, r.constraint_schema) AS constraint_catalog, r.constraint_schema, r.match_option, r.update_rule, delete_rule FROM INFORMATION_SCHEMA.referential_constraints r INNER JOIN INFORMATION_SCHEMA.table_constraints t ON r.constraint_schema=t.constraint_schema AND r.constraint_name=t.constraint_name AND r.table_name=t.table_name",
@@ -148,7 +148,7 @@ static gchar *internal_sql[] = {
 	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, constraint_name, column_name, ordinal_position FROM INFORMATION_SCHEMA.key_column_usage",
 
         /* I_STMT_CHARACTER_SETS */
-	"SELECT DATABASE() AS character_set_catalog, DATABASE() AS character_set_schema, character_set_name, default_collate_name, default_collate_name, default_collate_name, description, character_set_name, character_set_name FROM INFORMATION_SCHEMA.character_sets WHERE character_set_catalog = BINARY ##cat::string AND character_set_schema = BINARY ##schema::string AND character_set_name = BINARY ##name::string",
+	"SELECT DATABASE() AS character_set_catalog, DATABASE() AS character_set_schema, character_set_name, default_collate_name, default_collate_name, default_collate_name, description, character_set_name, character_set_name FROM INFORMATION_SCHEMA.character_sets WHERE IFNULL(character_set_catalog, character_set_schema) = BINARY ##cat::string AND character_set_schema = BINARY ##schema::string AND character_set_name = BINARY ##name::string",
 
         /* I_STMT_CHARACTER_SETS_ALL */
 	"SELECT DATABASE() AS character_set_catalog, DATABASE() AS character_set_schema, character_set_name, default_collate_name, default_collate_name, default_collate_name, description, character_set_name, character_set_name FROM INFORMATION_SCHEMA.character_sets",
@@ -176,7 +176,7 @@ static gchar *internal_sql[] = {
 	"SELECT IFNULL(v.table_catalog, v.table_schema) AS table_catalog, v.table_schema, v.table_name, IFNULL(c.table_catalog, c.table_schema) AS table_catalog, c.table_schema, c.table_name, c.column_name FROM INFORMATION_SCHEMA.columns c INNER JOIN INFORMATION_SCHEMA.views v ON c.table_schema=v.table_schema AND c.table_name=v.table_name",
 
         /* I_STMT_TRIGGERS */
-	"SELECT IFNULL(trigger_catalog, trigger_schema) AS trigger_catalog, trigger_schema, trigger_name, event_manipulation, IFNULL(event_object_catalog, event_object_schema) AS event_object_catalog, event_object_schema, event_object_table, action_statement, action_orientation, action_timing, NULL, trigger_name, trigger_name FROM INFORMATION_SCHEMA.triggers WHERE trigger_catalog = BINARY ##cat::string AND trigger_schema =  BINARY ##schema::string AND trigger_name = BINARY ##name::string",
+	"SELECT IFNULL(trigger_catalog, trigger_schema) AS trigger_catalog, trigger_schema, trigger_name, event_manipulation, IFNULL(event_object_catalog, event_object_schema) AS event_object_catalog, event_object_schema, event_object_table, action_statement, action_orientation, action_timing, NULL, trigger_name, trigger_name FROM INFORMATION_SCHEMA.triggers WHERE IFNULL(trigger_catalog, trigger_schema) = BINARY ##cat::string AND trigger_schema =  BINARY ##schema::string AND trigger_name = BINARY ##name::string",
 
         /* I_STMT_TRIGGERS_ALL */
 	"SELECT IFNULL(trigger_catalog, trigger_schema) AS trigger_catalog, trigger_schema, trigger_name, event_manipulation, IFNULL(event_object_catalog, event_object_schema) AS event_object_catalog, event_object_schema, event_object_table, action_statement, action_orientation, action_timing, NULL, trigger_name, trigger_name FROM INFORMATION_SCHEMA.triggers",
@@ -193,16 +193,16 @@ static gchar *internal_sql[] = {
 	"SELECT IFNULL(routine_catalog, routine_schema) AS specific_catalog, routine_schema AS specific_schema, routine_name AS specific_name, IFNULL(routine_catalog, routine_schema) AS routine_catalog, routine_schema, routine_name, routine_type, dtd_identifier AS return_type, FALSE AS returns_set, 0 AS nb_args, routine_body, routine_definition, external_name, external_language, parameter_style, CASE is_deterministic WHEN 'YES' THEN TRUE ELSE FALSE END AS is_deterministic, sql_data_access, FALSE AS is_null_call, routine_comment, routine_name, routine_name, definer FROM INFORMATION_SCHEMA.routines",
 
         /* I_STMT_ROUTINES */
-	"SELECT IFNULL(routine_catalog, routine_schema) AS specific_catalog, routine_schema AS specific_schema, routine_name AS specific_name, IFNULL(routine_catalog, routine_schema) AS routine_catalog, routine_schema, routine_name, routine_type, dtd_identifier AS return_type, FALSE AS returns_set, 0 AS nb_args, routine_body, routine_definition, external_name, external_language, parameter_style, CASE is_deterministic WHEN 'YES' THEN TRUE ELSE FALSE END AS is_deterministic, sql_data_access, FALSE AS is_null_call, routine_comment, routine_name, routine_name, definer FROM INFORMATION_SCHEMA.routines WHERE routine_catalog = BINARY ##cat::string AND routine_schema =  BINARY ##schema::string",
+	"SELECT IFNULL(routine_catalog, routine_schema) AS specific_catalog, routine_schema AS specific_schema, routine_name AS specific_name, IFNULL(routine_catalog, routine_schema) AS routine_catalog, routine_schema, routine_name, routine_type, dtd_identifier AS return_type, FALSE AS returns_set, 0 AS nb_args, routine_body, routine_definition, external_name, external_language, parameter_style, CASE is_deterministic WHEN 'YES' THEN TRUE ELSE FALSE END AS is_deterministic, sql_data_access, FALSE AS is_null_call, routine_comment, routine_name, routine_name, definer FROM INFORMATION_SCHEMA.routines WHERE IFNULL(routine_catalog, routine_schema) = BINARY ##cat::string AND routine_schema =  BINARY ##schema::string",
 
         /* I_STMT_ROUTINES_ONE */
-	"SELECT IFNULL(routine_catalog, routine_schema) AS specific_catalog, routine_schema AS specific_schema, routine_name AS specific_name, IFNULL(routine_catalog, routine_schema) AS routine_catalog, routine_schema, routine_name, routine_type, dtd_identifier AS return_type, FALSE AS returns_set, 0 AS nb_args, routine_body, routine_definition, external_name, external_language, parameter_style, CASE is_deterministic WHEN 'YES' THEN TRUE ELSE FALSE END AS is_deterministic, sql_data_access, FALSE AS is_null_call, routine_comment, routine_name, routine_name, definer FROM INFORMATION_SCHEMA.routines WHERE routine_catalog = BINARY ##cat::string AND routine_schema =  BINARY ##schema::string AND routine_name = BINARY ##name::string",
+	"SELECT IFNULL(routine_catalog, routine_schema) AS specific_catalog, routine_schema AS specific_schema, routine_name AS specific_name, IFNULL(routine_catalog, routine_schema) AS routine_catalog, routine_schema, routine_name, routine_type, dtd_identifier AS return_type, FALSE AS returns_set, 0 AS nb_args, routine_body, routine_definition, external_name, external_language, parameter_style, CASE is_deterministic WHEN 'YES' THEN TRUE ELSE FALSE END AS is_deterministic, sql_data_access, FALSE AS is_null_call, routine_comment, routine_name, routine_name, definer FROM INFORMATION_SCHEMA.routines WHERE IFNULL(routine_catalog, routine_schema) = BINARY ##cat::string AND routine_schema =  BINARY ##schema::string AND routine_name = BINARY ##name::string",
 
         /* I_STMT_ROUTINES_PAR_ALL */
 	"SELECT IFNULL(routine_catalog, routine_schema) AS specific_catalog, routine_schema AS specific_schema, routine_name AS specific_name, IFNULL(routine_catalog, routine_schema) AS routine_catalog, routine_schema, routine_name, routine_type, dtd_identifier AS return_type, FALSE AS returns_set, 0 AS nb_args, routine_body, routine_definition, external_name, external_language, parameter_style, CASE is_deterministic WHEN 'YES' THEN TRUE ELSE FALSE END AS is_deterministic, sql_data_access, FALSE AS is_null_call, routine_comment, routine_name, routine_name, definer FROM INFORMATION_SCHEMA.routines",
 
         /* I_STMT_ROUTINES_PAR */
-	"SELECT IFNULL(routine_catalog, routine_schema) AS specific_catalog, routine_schema AS specific_schema, routine_name AS specific_name, IFNULL(routine_catalog, routine_schema) AS routine_catalog, routine_schema, routine_name, routine_type, dtd_identifier AS return_type, FALSE AS returns_set, 0 AS nb_args, routine_body, routine_definition, external_name, external_language, parameter_style, CASE is_deterministic WHEN 'YES' THEN TRUE ELSE FALSE END AS is_deterministic, sql_data_access, FALSE AS is_null_call, routine_comment, routine_name, routine_name, definer FROM INFORMATION_SCHEMA.routines WHERE routine_catalog = BINARY ##cat::string AND routine_schema =  BINARY ##schema::string AND routine_name = BINARY ##name::string",
+	"SELECT IFNULL(routine_catalog, routine_schema) AS specific_catalog, routine_schema AS specific_schema, routine_name AS specific_name, IFNULL(routine_catalog, routine_schema) AS routine_catalog, routine_schema, routine_name, routine_type, dtd_identifier AS return_type, FALSE AS returns_set, 0 AS nb_args, routine_body, routine_definition, external_name, external_language, parameter_style, CASE is_deterministic WHEN 'YES' THEN TRUE ELSE FALSE END AS is_deterministic, sql_data_access, FALSE AS is_null_call, routine_comment, routine_name, routine_name, definer FROM INFORMATION_SCHEMA.routines WHERE IFNULL(routine_catalog, routine_schema) = BINARY ##cat::string AND routine_schema =  BINARY ##schema::string AND routine_name = BINARY ##name::string",
 
         /* I_STMT_ROUTINES_COL_ALL */
 
@@ -598,11 +598,11 @@ _gda_mysql_meta_character_sets (GdaServerProvider  *prov,
 	if (!cdata)
 		return FALSE;
 
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), chset_catalog, error))
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "cat"), chset_catalog, error))
 		return FALSE;
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), chset_schema, error))
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "schema"), chset_schema, error))
 		return FALSE;
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), chset_name_n, error))
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), chset_name_n, error))
 		return FALSE;
 	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_CHARACTER_SETS], i_set, error);
 	if (model == NULL)
@@ -668,7 +668,7 @@ _gda_mysql_meta_schemata (GdaServerProvider  *prov,
 	if (!cdata)
 		return FALSE;
 
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), catalog_name, error))
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "cat"), catalog_name, error))
 		return FALSE;
 	if (!schema_name_n) {
 		model = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_SCHEMAS], i_set,
@@ -681,7 +681,7 @@ _gda_mysql_meta_schemata (GdaServerProvider  *prov,
 			g_object_unref (G_OBJECT(model));
 		}
 	} else {
-		if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), schema_name_n, error))
+		if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), schema_name_n, error))
 			return FALSE;
 		model = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_SCHEMA_NAMED], i_set,
 							      GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types, error);
@@ -791,9 +791,9 @@ _gda_mysql_meta_tables_views (GdaServerProvider  *prov,
 	/* Copy contents, just because we need to modify @context->table_name */
 	GdaMetaContext copy = *context;
 
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
 		return FALSE;
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
 		return FALSE;
 	if (!table_name_n) {
 		model_tables = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_TABLES], i_set, 
@@ -824,7 +824,7 @@ _gda_mysql_meta_tables_views (GdaServerProvider  *prov,
 		}
 
 	} else {
-		if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name_n, error))
+		if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name_n, error))
 			return FALSE;
 		model_tables = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_TABLE_NAMED], i_set, 
 									    GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types_tables,
@@ -1031,7 +1031,7 @@ _gda_mysql_meta__columns (GdaServerProvider  *prov,
 
 			retval = gda_data_model_set_value_at (GDA_DATA_MODEL(proxy), 9, i, newvalue, error);
 			gda_value_free (newvalue);
-			if (! retval)
+			if (!retval)
 				break;
 		}
 
@@ -1078,11 +1078,11 @@ _gda_mysql_meta_columns (GdaServerProvider  *prov,
 	}
 
 	/* Use a prepared statement for the "base" model. */
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
 		return FALSE;
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
 		return FALSE;
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
 		return FALSE;
 
 	model = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_COLUMNS_OF_TABLE], i_set,
@@ -1105,7 +1105,7 @@ _gda_mysql_meta_columns (GdaServerProvider  *prov,
 
 			retval = gda_data_model_set_value_at (GDA_DATA_MODEL(proxy), 9, i, newvalue, error);
 			gda_value_free (newvalue);
-			if (! retval)
+			if (!retval)
 				break;
 		}
 
@@ -1172,11 +1172,11 @@ _gda_mysql_meta_view_cols (GdaServerProvider  *prov,
 	if (!cdata)
 		return FALSE;
 
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), view_catalog, error))
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "cat"), view_catalog, error))
 		return FALSE;
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), view_schema, error))
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "schema"), view_schema, error))
 		return FALSE;
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), view_name, error))
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), view_name, error))
 		return FALSE;
 	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_VIEWS_COLUMNS], i_set, error);
 	if (model == NULL)
@@ -1231,8 +1231,12 @@ _gda_mysql_meta_constraints_tab (GdaServerProvider  *prov,
 				 const GValue       *table_catalog,
 				 const GValue       *table_schema, 
 				 const GValue       *table_name,
-				 const GValue       *constraint_name_n){
-
+				 const GValue       *constraint_name_n)
+{
+	GType col_types[] = {
+		0, 0, 0, 0, 0, 0, 0, 0,
+		G_TYPE_BOOLEAN, G_TYPE_BOOLEAN, G_TYPE_NONE
+	};
 	GdaDataModel *model;
 	gboolean retval;
 	MysqlConnectionData *cdata;
@@ -1240,14 +1244,14 @@ _gda_mysql_meta_constraints_tab (GdaServerProvider  *prov,
 	if (!cdata)
 		return FALSE;
 
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
 		return FALSE;
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
 		return FALSE;
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
 		return FALSE;
 	if (!constraint_name_n) {
-		model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_TABLES_CONSTRAINTS], i_set, error);
+		model = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_TABLES_CONSTRAINTS], i_set, GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types, error);
 		if (model == NULL)
 			retval = FALSE;
 		else {
@@ -1259,7 +1263,7 @@ _gda_mysql_meta_constraints_tab (GdaServerProvider  *prov,
 			g_object_unref (G_OBJECT(model));
 		}
 	} else {
-		if (! gda_holder_set_value (gda_set_get_holder (i_set, "name2"), constraint_name_n, error))
+		if (!gda_holder_set_value (gda_set_get_holder (i_set, "name2"), constraint_name_n, error))
 			return FALSE;
 		model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_TABLES_CONSTRAINTS_NAMED], i_set, error);
 		if (model == NULL)
@@ -1330,13 +1334,13 @@ _gda_mysql_meta_constraints_ref (GdaServerProvider  *prov,
 		gboolean retval;
 		
 		/* Use a prepared statement for the "base" model. */
-		if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
+		if (!gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
 			return FALSE;
-		if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
+		if (!gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
 			return FALSE;
-		if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
+		if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
 			return FALSE;
-		if (! gda_holder_set_value (gda_set_get_holder (i_set, "name2"), constraint_name, error))
+		if (!gda_holder_set_value (gda_set_get_holder (i_set, "name2"), constraint_name, error))
 			return FALSE;
 		model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_REF_CONSTRAINTS], i_set, error);
 		if (model == NULL)
@@ -1401,6 +1405,10 @@ _gda_mysql_meta_key_columns (GdaServerProvider  *prov,
 			     const GValue       *table_name,
 			     const GValue       *constraint_name)
 {
+	GType col_types[] = {
+		0, 0, 0, 0, 0,
+		G_TYPE_INT, G_TYPE_NONE
+	};
 	GdaDataModel *model;
 	gboolean retval;
 	/* Check correct mysql server version. */
@@ -1415,15 +1423,15 @@ _gda_mysql_meta_key_columns (GdaServerProvider  *prov,
 	}
 
 	/* Use a prepared statement for the "base" model. */
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
 		return FALSE;
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
 		return FALSE;
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
 		return FALSE;
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name2"), constraint_name, error))
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "name2"), constraint_name, error))
 		return FALSE;
-	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_KEY_COLUMN_USAGE], i_set, error);
+	model = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_KEY_COLUMN_USAGE], i_set, GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types, error);
 	if (model == NULL)
 		retval = FALSE;
 	else {
@@ -1520,11 +1528,11 @@ _gda_mysql_meta_triggers (GdaServerProvider  *prov,
 		return FALSE;
 	}
 
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
 		return FALSE;
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
 		return FALSE;
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
 		return FALSE;
 	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_TRIGGERS], i_set, error);
 	if (model == NULL)
@@ -1588,12 +1596,12 @@ _gda_mysql_meta_routines (GdaServerProvider  *prov,
 		return FALSE;
 	}
 
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), routine_catalog, error))
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "cat"), routine_catalog, error))
 		return FALSE;
-	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), routine_schema, error))
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "schema"), routine_schema, error))
 		return FALSE;
 	if (routine_name_n != NULL) {
-		if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), routine_name_n, error))
+		if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), routine_name_n, error))
 			return FALSE;
 		model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_ROUTINES_ONE], i_set, error);
 	} else

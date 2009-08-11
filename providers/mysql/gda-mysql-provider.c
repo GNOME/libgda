@@ -340,7 +340,7 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass  *klass)
 	provider_class->xa_funcs->xa_rollback = gda_mysql_provider_xa_rollback;
 	provider_class->xa_funcs->xa_recover = gda_mysql_provider_xa_recover;
 	
-	if (! mysql_thread_safe ()) {
+	if (!mysql_thread_safe ()) {
 		gda_log_message ("MySQL was not compiled with the --enable-thread-safe-client flag, "
 				 "only one thread can access the provider");
 		provider_class->limiting_thread = g_thread_self ();
@@ -842,7 +842,7 @@ gda_mysql_provider_create_operation (GdaServerProvider       *provider,
         file = gda_server_provider_find_file (provider, dir, str);
 	g_free (dir);
 
-        if (! file) {
+        if (!file) {
                 g_set_error (error, 0, 0, _("Missing spec. file '%s'"), str);
 		g_free (str);
                 return NULL;
@@ -883,7 +883,7 @@ gda_mysql_provider_render_operation (GdaServerProvider   *provider,
         file = gda_server_provider_find_file (provider, dir, str);
 	g_free (dir);
 
-        if (! file) {
+        if (!file) {
                 g_set_error (error, 0, 0, _("Missing spec. file '%s'"), str);
 		g_free (str);
                 return NULL;
