@@ -77,6 +77,7 @@ GSList             *browser_favorites_list         (BrowserFavorites *bfav, guin
 gboolean            browser_favorites_delete       (BrowserFavorites *bfav, guint session_id,
 						    BrowserFavoritesAttributes *fav, GError **error);
 void                browser_favorites_free_list    (GSList *fav_list);
+void                browser_favorites_reset_attributes (BrowserFavoritesAttributes *fav);
 
 gboolean            browser_favorites_get          (BrowserFavorites *bfav, gint fav_id,
 						    BrowserFavoritesAttributes *out_fav, GError **error);

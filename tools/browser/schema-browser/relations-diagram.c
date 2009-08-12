@@ -285,7 +285,7 @@ real_save_clicked_cb (GtkWidget *button, RelationsDiagram *diagram)
 	BrowserFavoritesAttributes fav;
 
 	memset (&fav, 0, sizeof (BrowserFavoritesAttributes));
-	fav.id = -1;
+	fav.id = diagram->priv->fav_id;
 	fav.type = BROWSER_FAVORITES_DIAGRAMS;
 	fav.name = gtk_editable_get_chars (GTK_EDITABLE (diagram->priv->name_entry), 0, -1);
 	if (!*fav.name) {
@@ -349,9 +349,7 @@ save_clicked_cb (GtkWidget *button, RelationsDiagram *diagram)
 			if (browser_favorites_get (browser_connection_get_favorites (diagram->priv->bcnc),
 						   diagram->priv->fav_id, &fav, NULL)) {
 				gtk_entry_set_text (GTK_ENTRY (wid), fav.name);
-				g_free (fav.name);
-				g_free (fav.descr);
-				g_free (fav.contents);
+				browser_favorites_reset_attributes (&fav);
 			}
 		}
 
@@ -559,9 +557,7 @@ relations_diagram_new_with_fav_id (BrowserConnection *bcnc, gint fav_id, GError 
 	}
 
  out:
-	g_free (fav.name);
-	g_free (fav.descr);
-	g_free (fav.contents);
+	browser_favorites_reset_attributes (&fav);
 	if (doc)
 		xmlFreeDoc (doc);
 	return (GtkWidget*) diagram;
