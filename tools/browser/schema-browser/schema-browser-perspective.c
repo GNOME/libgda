@@ -310,7 +310,7 @@ schema_browser_perspective_get_actions_ui (BrowserPerspective *bpers)
 void
 schema_browser_perspective_display_diagram (SchemaBrowserPerspective *bpers, gint fav_id)
 {
-	GtkWidget *diagram;
+	GtkWidget *diagram = NULL;
 
 	if (fav_id >= 0) {
 		gint ntabs, i;
@@ -320,8 +320,10 @@ schema_browser_perspective_display_diagram (SchemaBrowserPerspective *bpers, gin
 			GtkWidget *child;
 			child = gtk_notebook_get_nth_page (GTK_NOTEBOOK (bpers->priv->notebook), i);
 			if (IS_RELATIONS_DIAGRAM (child)) {
-				gtk_notebook_set_current_page (GTK_NOTEBOOK (bpers->priv->notebook), i);
-				return;
+				if (relations_diagram_get_fav_id (RELATIONS_DIAGRAM (child)) == fav_id) {
+					gtk_notebook_set_current_page (GTK_NOTEBOOK (bpers->priv->notebook), i);
+					return;
+				}
 			}
 		}
 

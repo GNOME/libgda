@@ -592,3 +592,13 @@ relations_diagram_set_fav_id (RelationsDiagram *diagram, gint fav_id, GError **e
 	g_free (fav.contents);
 }
 
+/**
+ * relations_diagram_get_fav_id
+ *
+ */
+gint
+relations_diagram_get_fav_id (RelationsDiagram *diagram)
+{
+	g_return_val_if_fail (IS_RELATIONS_DIAGRAM (diagram), -1);
+	return diagram->priv->fav_id;
+}

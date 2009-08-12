@@ -50,6 +50,7 @@ struct _RelationsDiagramClass {
 GType                    relations_diagram_get_type (void) G_GNUC_CONST;
 GtkWidget               *relations_diagram_new (BrowserConnection *bcnc);
 GtkWidget               *relations_diagram_new_with_fav_id (BrowserConnection *bcnc, gint fav_id, GError **error);
+gint                     relations_diagram_get_fav_id (RelationsDiagram *diagram);
 
 G_END_DECLS
 
