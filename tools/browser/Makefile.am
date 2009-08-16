@@ -55,7 +55,9 @@ gda_browser_4_0_SOURCES=\
 	browser-connections-list.h \
 	main.c \
 	mgr-favorites.h \
-	mgr-favorites.c
+	mgr-favorites.c \
+	popup-container.h \
+	popup-container.c
 
 $(OBJECTS): marshal.c marshal.h
 
