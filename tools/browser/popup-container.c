@@ -34,6 +34,7 @@ static void popup_container_init       (PopupContainer *container,
 				       PopupContainerClass *klass);
 static void popup_container_dispose   (GObject *object);
 static void popup_container_show   (GtkWidget *widget);
+static void popup_container_hide   (GtkWidget *widget);
 
 static GObjectClass *parent_class = NULL;
 
@@ -51,6 +52,7 @@ popup_container_class_init (PopupContainerClass *klass)
 
 	object_class->dispose = popup_container_dispose;
 	widget_class->show = popup_container_show;
+	widget_class->hide = popup_container_hide;
 }
 
 static gboolean
@@ -217,6 +219,13 @@ popup_container_show (GtkWidget *widget)
                               gtk_get_current_event_time ());
 }
 
+static void
+popup_container_hide (GtkWidget *widget)
+{
+	GTK_WIDGET_CLASS (parent_class)->hide (widget);
+	gtk_grab_remove (widget);
+}
+
 GType
 popup_container_get_type (void)
 {
@@ -240,15 +249,64 @@ popup_container_get_type (void)
 	return type;
 }
 
+static void
+popup_position (PopupContainer *container, gint *out_x, gint *out_y)
+{
+	GtkWidget *button;
+	button = g_object_get_data (G_OBJECT (container), "__poswidget");
+
+	gint x, y;
+        gint bwidth, bheight;
+        GtkRequisition req;
+
+        gtk_widget_size_request (button, &req);
+
+        gdk_window_get_origin (button->window, &x, &y);
+
+        x += button->allocation.x;
+        y += button->allocation.y;
+        bwidth = button->allocation.width;
+        bheight = button->allocation.height;
+
+        x += bwidth - req.width;
+        y += bheight;
+
+        if (x < 0)
+                x = 0;
+
+        if (y < 0)
+                y = 0;
+
+	*out_x = x;
+	*out_y = y;
+}
+
 /**
- * popup_container_new
- *
- *
+ * popup_container_new_with_func
  *
  * Returns:
  */
 GtkWidget *
-popup_container_new (PopupContainerPositionFunc pos_func)
+popup_container_new (GtkWidget *position_widget)
+{
+	PopupContainer *container;
+	g_return_val_if_fail (GTK_IS_WIDGET (position_widget), NULL);
+	
+	container = POPUP_CONTAINER (g_object_new (POPUP_CONTAINER_TYPE, "type", GTK_WINDOW_POPUP,
+						   NULL));
+	g_object_set_data (G_OBJECT (container), "__poswidget", position_widget);
+	container->priv->position_func = popup_position;
+	return (GtkWidget*) container;
+}
+
+
+/**
+ * popup_container_new_with_func
+ *
+ * Returns:
+ */
+GtkWidget *
+popup_container_new_with_func (PopupContainerPositionFunc pos_func)
 {
 	PopupContainer *container;
 

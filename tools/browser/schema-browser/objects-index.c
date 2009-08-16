@@ -294,43 +294,10 @@ add_to_schema_data (ObjectsIndex *index, SchemaData *sd, GdaMetaDbObject *dbo)
 	gtk_text_buffer_insert (index->priv->tbuffer, &iter, " ", -1);
 }
 
-static void popup_position (PopupContainer *container, gint *out_x, gint *out_y);
 static gboolean key_press_event (GtkWidget *text_view, GdkEventKey *event, ObjectsIndex *index);
 static gboolean event_after (GtkWidget *text_view, GdkEvent *ev, ObjectsIndex *index);
 static gboolean motion_notify_event (GtkWidget *text_view, GdkEventMotion *event, ObjectsIndex *index);
 static gboolean visibility_notify_event (GtkWidget *text_view, GdkEventVisibility *event, ObjectsIndex *index);
-
-static void
-popup_position (PopupContainer *container, gint *out_x, gint *out_y)
-{
-	GtkWidget *button;
-	button = g_object_get_data (G_OBJECT (container), "button");
-
-	gint x, y;
-        gint bwidth, bheight;
-        GtkRequisition req;
-
-        gtk_widget_size_request (button, &req);
-
-        gdk_window_get_origin (button->window, &x, &y);
-
-        x += button->allocation.x;
-        y += button->allocation.y;
-        bwidth = button->allocation.width;
-        bheight = button->allocation.height;
-
-        x += bwidth - req.width;
-        y += bheight;
-
-        if (x < 0)
-                x = 0;
-
-        if (y < 0)
-                y = 0;
-
-	*out_x = x;
-	*out_y = y;
-}
 
 static void
 text_tag_table_foreach_cb (GtkTextTag *tag, const gchar *find)
@@ -422,7 +389,7 @@ objects_index_new (BrowserConnection *bcnc)
 	g_object_set (G_OBJECT (wid), "label", NULL, NULL);
 	
 	GtkWidget *popup;
-	popup = popup_container_new (popup_position);
+	popup = popup_container_new (wid);
 	index->priv->popup_container = popup;
 	g_signal_connect_swapped (wid, "clicked",
 				  G_CALLBACK (gtk_widget_show), popup);

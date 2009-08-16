@@ -49,7 +49,8 @@ struct _PopupContainerClass {
 };
 
 GType                  popup_container_get_type (void) G_GNUC_CONST;
-GtkWidget             *popup_container_new      (PopupContainerPositionFunc pos_func);
+GtkWidget             *popup_container_new (GtkWidget *position_widget);
+GtkWidget             *popup_container_new_with_func (PopupContainerPositionFunc pos_func);
 
 G_END_DECLS
 

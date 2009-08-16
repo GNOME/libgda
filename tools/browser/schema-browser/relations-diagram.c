@@ -28,6 +28,7 @@
 #include "../cc-gray-bar.h"
 #include "../canvas/browser-canvas-db-relations.h"
 #include <gdk/gdkkeysyms.h>
+#include "../popup-container.h"
 
 struct _RelationsDiagramPrivate {
 	BrowserConnection *bcnc;
@@ -37,7 +38,7 @@ struct _RelationsDiagramPrivate {
 	GtkWidget *canvas;
 	GtkWidget *save_button;
 
-	GtkWidget *window; /* to enter canvas's name */
+	GtkWidget *popup_container; /* to enter canvas's name */
 	GtkWidget *name_entry;
 	GtkWidget *real_save_button;
 };
@@ -95,7 +96,7 @@ relations_diagram_init (RelationsDiagram *diagram, RelationsDiagramClass *klass)
 {
 	diagram->priv = g_new0 (RelationsDiagramPrivate, 1);
 	diagram->priv->fav_id = -1;
-	diagram->priv->window = NULL;
+	diagram->priv->popup_container = NULL;
 }
 
 static void
@@ -111,8 +112,8 @@ relations_diagram_dispose (GObject *object)
 			g_object_unref (diagram->priv->bcnc);
 		}
 
-		if (diagram->priv->window)
-			gtk_widget_destroy (diagram->priv->window);
+		if (diagram->priv->popup_container)
+			gtk_widget_destroy (diagram->priv->popup_container);
 
 		g_free (diagram->priv);
 		diagram->priv = NULL;
@@ -173,106 +174,9 @@ meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, RelationsDiagr
 	g_object_set (G_OBJECT (diagram->priv->canvas), "meta-struct", mstruct, NULL);
 }
 
-
 /*
  * POPUP
  */
-static void
-position_popup (RelationsDiagram *diagram)
-{
-        gint x, y;
-        gint bwidth, bheight;
-        GtkRequisition req;
-
-        gtk_widget_size_request (diagram->priv->window, &req);
-
-        gdk_window_get_origin (diagram->priv->save_button->window, &x, &y);
-
-        x += diagram->priv->save_button->allocation.x;
-        y += diagram->priv->save_button->allocation.y;
-        bwidth = diagram->priv->save_button->allocation.width;
-        bheight = diagram->priv->save_button->allocation.height;
-
-        x += bwidth - req.width;
-        y += bheight;
-
-        if (x < 0)
-                x = 0;
-
-        if (y < 0)
-                y = 0;
-
-        gtk_window_move (GTK_WINDOW (diagram->priv->window), x, y);
-}
-
-
-
-static gboolean
-popup_grab_on_window (GdkWindow *window, guint32 activate_time)
-{
-        if ((gdk_pointer_grab (window, TRUE,
-                               GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
-                               GDK_POINTER_MOTION_MASK,
-                               NULL, NULL, activate_time) == 0)) {
-                if (gdk_keyboard_grab (window, TRUE,
-                                       activate_time) == 0)
-                        return TRUE;
-                else {
-                        gdk_pointer_ungrab (activate_time);
-                        return FALSE;
-                }
-        }
-        return FALSE;
-}
-
-
-static gboolean
-delete_popup (GtkWidget *widget, RelationsDiagram *diagram)
-{
-	gtk_widget_hide (diagram->priv->window);
-        gtk_grab_remove (diagram->priv->window);
-	return TRUE;
-}
-
-static gboolean
-key_press_popup (GtkWidget *widget, GdkEventKey *event, RelationsDiagram *diagram)
-{
-	if (event->keyval != GDK_Escape)
-                return FALSE;
-
-        g_signal_stop_emission_by_name (widget, "key_press_event");
-	gtk_widget_hide (diagram->priv->window);
-        gtk_grab_remove (diagram->priv->window);
-        return TRUE;
-}
-
-static gboolean
-button_press_popup (GtkWidget *widget, GdkEventButton *event, RelationsDiagram *diagram)
-{
-	GtkWidget *child;
-
-        child = gtk_get_event_widget ((GdkEvent *) event);
-
-        /* We don't ask for button press events on the grab widget, so
-         *  if an event is reported directly to the grab widget, it must
-         *  be on a window outside the application (and thus we remove
-         *  the popup window). Otherwise, we check if the widget is a child
-         *  of the grab widget, and only remove the popup window if it
-         *  is not.
-         */
-        if (child != widget) {
-                while (child) {
-                        if (child == widget)
-                                return FALSE;
-                        child = child->parent;
-                }
-        }
-	gtk_widget_hide (diagram->priv->window);
-        gtk_grab_remove (diagram->priv->window);
-        return TRUE;
-}
-
-
 static void
 real_save_clicked_cb (GtkWidget *button, RelationsDiagram *diagram)
 {
@@ -294,8 +198,7 @@ real_save_clicked_cb (GtkWidget *button, RelationsDiagram *diagram)
 	}
 	fav.contents = str;
 	
-	gtk_widget_hide (diagram->priv->window);
-	gtk_grab_remove (diagram->priv->window);
+	gtk_widget_hide (diagram->priv->popup_container);
 	
 	bfav = browser_connection_get_favorites (diagram->priv->bcnc);
 	if (! browser_favorites_add (bfav, 0, &fav, ORDER_KEY_SCHEMA, G_MAXINT, &lerror)) {
@@ -318,20 +221,11 @@ save_clicked_cb (GtkWidget *button, RelationsDiagram *diagram)
 {
 	gchar *str;
 
-	if (!diagram->priv->window) {
+	if (!diagram->priv->popup_container) {
 		GtkWidget *window, *wid, *hbox;
 
-		window = gtk_window_new (GTK_WINDOW_POPUP);
-		gtk_widget_set_events (window, gtk_widget_get_events (window) | GDK_KEY_PRESS_MASK);
-		gtk_window_set_resizable (GTK_WINDOW (window), FALSE);
-		gtk_container_set_border_width (GTK_CONTAINER (window), 5);
-		g_signal_connect (G_OBJECT (window), "delete_event",
-				  G_CALLBACK (delete_popup), diagram);
-		g_signal_connect (G_OBJECT (window), "key_press_event",
-				  G_CALLBACK (key_press_popup), diagram);
-		g_signal_connect (G_OBJECT (window), "button_press_event",
-				  G_CALLBACK (button_press_popup), diagram);
-		diagram->priv->window = window;
+		window = popup_container_new (button);
+		diagram->priv->popup_container = window;
 
 		hbox = gtk_hbox_new (FALSE, 0);
 		gtk_container_add (GTK_CONTAINER (window), hbox);
@@ -365,55 +259,7 @@ save_clicked_cb (GtkWidget *button, RelationsDiagram *diagram)
 		gtk_widget_show_all (hbox);
 	}
 
-	if (!popup_grab_on_window (button->window, gtk_get_current_event_time ()))
-                return;
-	position_popup (diagram);
-	gtk_grab_add (diagram->priv->window);
-        gtk_widget_show (diagram->priv->window);
-
-	GdkScreen *screen;
-	gint swidth, sheight;
-	gint root_x, root_y;
-	gint wwidth, wheight;
-	gboolean do_move = FALSE;
-	screen = gtk_window_get_screen (GTK_WINDOW (diagram->priv->window));
-	if (screen) {
-		swidth = gdk_screen_get_width (screen);
-		sheight = gdk_screen_get_height (screen);
-	}
-	else {
-		swidth = gdk_screen_width ();
-		sheight = gdk_screen_height ();
-	}
-	gtk_window_get_position (GTK_WINDOW (diagram->priv->window), &root_x, &root_y);
-	gtk_window_get_size (GTK_WINDOW (diagram->priv->window), &wwidth, &wheight);
-	if (root_x + wwidth > swidth) {
-		do_move = TRUE;
-		root_x = swidth - wwidth;
-	}
-	else if (root_x < 0) {
-		do_move = TRUE;
-		root_x = 0;
-	}
-	if (root_y + wheight > sheight) {
-		do_move = TRUE;
-		root_y = sheight - wheight;
-	}
-	else if (root_y < 0) {
-		do_move = TRUE;
-		root_y = 0;
-	}
-	if (do_move)
-		gtk_window_move (GTK_WINDOW (diagram->priv->window), root_x, root_y);
-
-	str = gtk_editable_get_chars (GTK_EDITABLE (diagram->priv->name_entry), 0, -1);
-	if (!*str)
-		gtk_widget_grab_focus (diagram->priv->name_entry);
-	else
-		gtk_widget_grab_focus (diagram->priv->real_save_button);
-	g_free (str);
-        popup_grab_on_window (diagram->priv->window->window,
-                              gtk_get_current_event_time ());
+        gtk_widget_show (diagram->priv->popup_container);
 }
 
 
