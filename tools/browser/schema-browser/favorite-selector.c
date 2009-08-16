@@ -325,7 +325,7 @@ tree_store_drag_drop_cb (GdauiTreeStore *store, const gchar *path, GtkSelectionD
 
 	memset (&fav, 0, sizeof (BrowserFavoritesAttributes));
 	fav.id = -1;
-	fav.type = 0;
+	fav.type = BROWSER_FAVORITES_TABLES;
 	fav.name = NULL;
 	fav.descr = NULL;
 	fav.contents = (gchar*) selection_data->data;

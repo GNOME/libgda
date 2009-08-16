@@ -527,9 +527,8 @@ browser_favorites_add (BrowserFavorites *bfav, guint session_id,
 
 	gint rtype;
 	favid = find_favorite (bfav, session_id, fav->id, fav->contents, &efav, NULL);
-	if (fav->type)
-		rtype = fav->type;
-	else
+	rtype = fav->type;
+	if (efav.type)
 		rtype = efav.type;
 	if ((favid != -1) && (pos == G_MAXINT)) {
 		/* find current position */
