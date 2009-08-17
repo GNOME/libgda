@@ -32,10 +32,12 @@
 #include "marshal.h"
 #include "../cc-gray-bar.h"
 #include "../browser-favorites.h"
+#include <gdk/gdkkeysyms.h>
 
 struct _FavoriteSelectorPrivate {
 	BrowserConnection *bcnc;
 	GdaTree *tree;
+	GtkWidget *treeview;
 	guint idle_update_favorites;
 };
 
@@ -145,8 +147,42 @@ favorite_selector_get_type (void)
 	return type;
 }
 
+static gboolean
+key_press_event_cb (GtkTreeView *treeview, GdkEventKey *event, FavoriteSelector *tsel)
+{
+	if (event->keyval == GDK_Delete) {
+		GtkTreeModel *model;
+		GtkTreeSelection *select;
+		GtkTreeIter iter;
+		
+		select = gtk_tree_view_get_selection (treeview);
+		if (gtk_tree_selection_get_selected (select, &model, &iter)) {
+			BrowserFavorites *bfav;
+			BrowserFavoritesAttributes fav;
+			GError *lerror = NULL;
+
+			memset (&fav, 0, sizeof (BrowserFavoritesAttributes));
+			gtk_tree_model_get (model, &iter,
+					    COLUMN_ID, &(fav.id), -1);
+			bfav = browser_connection_get_favorites (tsel->priv->bcnc);
+			if (!browser_favorites_delete (bfav, 0, &fav, NULL)) {
+				browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*)tsel),
+						    _("Could not remove favorite: %s"),
+						    lerror && lerror->message ? lerror->message : _("No detail"));
+				if (lerror)
+					g_error_free (lerror);
+			}
+		}
+		
+		return TRUE;
+	}
+	TO_IMPLEMENT;
+	return FALSE; /* not handled */
+}
+
+
 static void
-selection_changed_cb (GtkTreeView *treeview,  GtkTreePath *path,
+selection_changed_cb (GtkTreeView *treeview, GtkTreePath *path,
 		      GtkTreeViewColumn *column, FavoriteSelector *tsel)
 {
 	GtkTreeModel *model;
@@ -174,8 +210,6 @@ static gboolean tree_store_drag_can_drag_cb (GdauiTreeStore *store, const gchar 
 					     FavoriteSelector *tsel);
 static gboolean tree_store_drag_get_cb (GdauiTreeStore *store, const gchar *path,
 					GtkSelectionData *selection_data, FavoriteSelector *tsel);
-static gboolean tree_store_drag_delete_cb (GdauiTreeStore *store, const gchar *path,
-					   FavoriteSelector *tsel);
 static void trash_data_received_cb (GtkWidget *widget, GdkDragContext *context, gint x, gint y,
 				    GtkSelectionData *selection_data, guint target_type, guint time,
 				    FavoriteSelector *tsel);
@@ -232,6 +266,7 @@ favorite_selector_new (BrowserConnection *bcnc)
 				      G_TYPE_UINT, MGR_FAVORITES_TYPE_ATT_NAME,
 				      G_TYPE_INT, MGR_FAVORITES_ID_ATT_NAME);
 	treeview = gtk_tree_view_new_with_model (model);
+	tsel->priv->treeview = treeview;
 	g_object_unref (model);
 
 	/* icon */
@@ -263,6 +298,8 @@ favorite_selector_new (BrowserConnection *bcnc)
 	gtk_widget_show_all (sw);
 	g_signal_connect (G_OBJECT (treeview), "row-activated",
 			  G_CALLBACK (selection_changed_cb), tsel);
+	g_signal_connect (G_OBJECT (treeview), "key-press-event",
+			  G_CALLBACK (key_press_event_cb), tsel);
 
 	/* DnD */
 	gtk_tree_view_enable_model_drag_dest (GTK_TREE_VIEW (treeview), dbo_table, G_N_ELEMENTS (dbo_table),
@@ -276,29 +313,8 @@ favorite_selector_new (BrowserConnection *bcnc)
 			  G_CALLBACK (tree_store_drag_can_drag_cb), tsel);
 	g_signal_connect (model, "drag-get",
 			  G_CALLBACK (tree_store_drag_get_cb), tsel);
-	//g_signal_connect (model, "drag-delete",
-	//		  G_CALLBACK (tree_store_drag_delete_cb), tsel);
-
-	/* delete favorite */
-	GtkWidget *image;
-	image = gtk_image_new_from_stock (GTK_STOCK_DELETE, GTK_ICON_SIZE_DND);
-	gtk_box_pack_start (GTK_BOX (tsel), image, FALSE, FALSE, 0);
-	gtk_widget_show (image);
-	gtk_widget_set_tooltip_text (image, _("Drag a favorite here\nto remove it"));
-
-	gtk_drag_dest_set (image, GTK_DEST_DEFAULT_ALL, dbo_table, G_N_ELEMENTS (dbo_table),
-			   GDK_ACTION_MOVE);
-	g_signal_connect (image, "drag-data-received",
-			  G_CALLBACK (trash_data_received_cb), tsel);
 
 	return (GtkWidget*) tsel;
-}
-
-static void
-trash_data_received_cb (GtkWidget *widget, GdkDragContext *context, gint x, gint y,
-			GtkSelectionData *selection_data, guint target_type, guint time, FavoriteSelector *tsel)
-{
-	gtk_drag_finish (context, TRUE, FALSE, time);
 }
 
 static gboolean
@@ -379,41 +395,6 @@ tree_store_drag_get_cb (GdauiTreeStore *store, const gchar *path, GtkSelectionDa
 	}
 	return FALSE;
 }
-
-static gboolean
-tree_store_drag_delete_cb (GdauiTreeStore *store, const gchar *path,
-			   FavoriteSelector *tsel)
-{
-	GdaTreeNode *node;
-	node = gda_tree_get_node (tsel->priv->tree, path, FALSE);
-	if (node) {
-		const GValue *cvalue;
-		cvalue = gda_tree_node_get_node_attribute (node, "fav_contents");
-		if (cvalue) {
-			GError *lerror = NULL;
-			BrowserFavorites *bfav;
-			BrowserFavoritesAttributes fav;
-
-			bfav = browser_connection_get_favorites (tsel->priv->bcnc);
-			memset (&fav, 0, sizeof (BrowserFavoritesAttributes));
-			fav.id = -1;
-			fav.type = BROWSER_FAVORITES_TABLES;
-			fav.descr = NULL;
-			fav.contents = (gchar*) g_value_get_string (cvalue);
-			if (! browser_favorites_delete (bfav, 0, &fav, &lerror)) {
-				browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*)tsel),
-						    _("Could not remove favorite: %s"),
-						    lerror && lerror->message ? lerror->message : _("No detail"));
-				if (lerror)
-					g_error_free (lerror);
-			}
-
-			return TRUE;
-		}
-	}
-	return FALSE;
-}
-
 
 static void
 favorites_changed_cb (BrowserFavorites *bfav, FavoriteSelector *tsel)

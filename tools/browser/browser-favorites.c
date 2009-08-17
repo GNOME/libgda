@@ -910,11 +910,13 @@ browser_favorites_delete (BrowserFavorites *bfav, guint session_id,
 	GdaStatement *stmt;
 	gboolean retval = FALSE;
 	gint favid;
+	BrowserFavoritesAttributes efav;
 
 	g_return_val_if_fail (BROWSER_IS_FAVORITES (bfav), FALSE);
 	g_return_val_if_fail (fav, FALSE);
 	g_return_val_if_fail ((fav->id >= 0) || fav->contents, FALSE);
 	
+	memset (&efav, 0, sizeof (BrowserFavoritesAttributes));
 	if (! bfav->priv->store_cnc &&
 	    ! meta_store_addons_init (bfav, error))
 		return FALSE;
@@ -933,7 +935,7 @@ browser_favorites_delete (BrowserFavorites *bfav, guint session_id,
                 return FALSE;
 	}
 
-	favid = find_favorite (bfav, session_id, fav->id, fav->contents, NULL, error);
+	favid = find_favorite (bfav, session_id, fav->id, fav->contents, &efav, error);
 	if (favid < 0)
 		goto out;
 
@@ -991,7 +993,8 @@ browser_favorites_delete (BrowserFavorites *bfav, guint session_id,
 	gda_lockable_unlock (GDA_LOCKABLE (bfav->priv->store_cnc));
 	if (retval)
 		g_signal_emit (bfav, browser_favorites_signals [FAV_CHANGED],
-			       g_quark_from_string (favorite_type_to_string (fav->type)));
+			       g_quark_from_string (favorite_type_to_string (efav.type >= 0 ? efav.type : fav->type)));
+	browser_favorites_reset_attributes (&efav);
 	if (params)
 		g_object_unref (G_OBJECT (params));
 
