@@ -808,7 +808,7 @@ gda_data_model_append_values (GdaDataModel *model, const GList *values, GError *
  * @model: a #GdaDataModel object.
  * @error: a place to store errors, or %NULL
  * 
- * Appends a row to the data model (the new row will possibliy have NULL values for all columns,
+ * Appends a row to the data model (the new row will possibly have NULL values for all columns,
  * or some other values depending on the data model implementation)
  *
  * Returns: the number of the added row, or -1 if an error occurred
@@ -1846,7 +1846,7 @@ static gchar *real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean 
  *
  * The following environment variables can affect the resulting output:
  * <itemizedlist>
- *   <listitem><para>GDA_DATA_MODEL_DUMP_ROW_NUMBERS: if set, the first coulumn of the output will contain row numbers</para></listitem>
+ *   <listitem><para>GDA_DATA_MODEL_DUMP_ROW_NUMBERS: if set, the first column of the output will contain row numbers</para></listitem>
  *   <listitem><para>GDA_DATA_MODEL_DUMP_ATTRIBUTES: if set, also dump the data model's columns' types and value's attributes</para></listitem>
 *   <listitem><para>GDA_DATA_MODEL_DUMP_TITLE: if set, also dump the data model's title</para></listitem>
 *   <listitem><para>GDA_DATA_MODEL_DUMP_NULL_AS_EMPTY: if set, replace the 'NULL' string with an empty string for NULL values </para></listitem>
@@ -1909,7 +1909,7 @@ gda_data_model_dump (GdaDataModel *model, FILE *to_stream)
  *
  * The following environment variables can affect the resulting output:
  * <itemizedlist>
- *   <listitem><para>GDA_DATA_MODEL_DUMP_ROW_NUMBERS: if set, the first coulumn of the output will contain row numbers</para></listitem>
+ *   <listitem><para>GDA_DATA_MODEL_DUMP_ROW_NUMBERS: if set, the first column of the output will contain row numbers</para></listitem>
 *   <listitem><para>GDA_DATA_MODEL_DUMP_TITLE: if set, also dump the data model's title</para></listitem>
 *   <listitem><para>GDA_DATA_MODEL_DUMP_NULL_AS_EMPTY: if set, replace the 'NULL' string with an empty string for NULL values </para></listitem>
  * </itemizedlist>

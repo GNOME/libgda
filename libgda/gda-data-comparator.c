@@ -415,7 +415,7 @@ find_row_in_model (GdaDataComparator *comp, gint row, gboolean *out_has_changed,
  * @comp: a #GdaDataComparator object
  * @error: a place to store errors, or %NULL
  *
- * Actually computes the differences bewteen the data models for which @comp is defined. 
+ * Actually computes the differences between the data models for which @comp is defined. 
  *
  * For each difference computed, stored in a #GdaDiff structure, the "diff-computed" signal is emitted.
  * If one connects to this signal and returns FALSE in the signal handler, then computing differences will be

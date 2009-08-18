@@ -9,7 +9,7 @@ in a hierarchical way:
 * a top level node is created for each schema in the database (here there is only the "main" schema)
 * below each schema nodes are created for each table in the schema
 * a top level node is created for each table visible by default (here all the tables)
-* below each node representing a table, nodes are created for each colum in the table.
+* below each node representing a table, nodes are created for each column in the table.
 This organization is illustrated in the GdaTree introduction in the documentation.
 
 Compiling and running:

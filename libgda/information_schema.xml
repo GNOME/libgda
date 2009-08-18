@@ -559,7 +559,7 @@ SELECT domain_short_name, domain_gtype, domain_full_name, domain_comments, domai
        domain_catalog, domain_schema, domain_name , NULL, NULL, NULL FROM _domains</definition>
   </view>
 
-  <view name="_detailled_fk" descr="For each foreign key constraint, lists all the tables' columns involved and the constraint name">
+  <view name="_detailed_fk" descr="For each foreign key constraint, lists all the tables' columns involved and the constraint name">
     <definition>SELECT rc.table_catalog as fk_table_catalog, rc.table_schema as fk_table_schema, rc.table_name as fk_table_name, kc1.column_name as fk_column,
       rc.ref_table_catalog as ref_table_catalog, rc.ref_table_schema as ref_table_schema, rc.ref_table_name as ref_table_name, kc2.column_name as ref_column,
       rc.constraint_name as fk_constraint_name, kc1.ordinal_position as ordinal_position

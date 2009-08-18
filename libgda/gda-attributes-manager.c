@@ -97,7 +97,7 @@ objattrs_unref (ObjAttrs *attrs)
  * @signal_data: user data passed as last argument of @signal_func when it is called
  *
  * Creates a new #GdaAttributesManager, which can store (name, value) attributes for pointers or GObject objects
- * (in the latter case, the attibutes are destroyed when objects are also destroyed).
+ * (in the latter case, the attributes are destroyed when objects are also destroyed).
  *
  * Returns: the new #GdaAttributesManager
  */
@@ -248,7 +248,7 @@ manager_real_set (GdaAttributesManager *mgr, gpointer ptr,
 /**
  * gda_attributes_manager_set
  * @mgr: a #GdaAttributesManager
- * @ptr: a pointer to the ressources to which the attribute will apply
+ * @ptr: a pointer to the resources to which the attribute will apply
  * @att_name: an attribute's name
  * @value: a #GValue, or %NULL
  *
@@ -270,7 +270,7 @@ gda_attributes_manager_set (GdaAttributesManager *mgr, gpointer ptr, const gchar
 /**
  * gda_attributes_manager_set_full
  * @mgr: a #GdaAttributesManager
- * @ptr: a pointer to the ressources to which the attribute will apply
+ * @ptr: a pointer to the resources to which the attribute will apply
  * @att_name: an attribute's name
  * @value: a #GValue, or %NULL
  * @destroy: function called when @att_name has to be freed
@@ -289,10 +289,10 @@ gda_attributes_manager_set_full (GdaAttributesManager *mgr, gpointer ptr,
 /**
  * gda_attributes_manager_get
  * @mgr: a #GdaAttributesManager
- * @ptr: a pointer to the ressources to which the attribute will apply
+ * @ptr: a pointer to the resources to which the attribute will apply
  * @att_name: an attribute's name, as a *static* string
  *
- * Retreives the value of an attribute previously set using gda_attributes_manager_set().
+ * Retrieves the value of an attribute previously set using gda_attributes_manager_set().
  *
  * Returns: the attribute's value, or %NULL if the attribute is not set.
  */
@@ -377,9 +377,9 @@ foreach_copy_func (AttName *attname, const GValue *value, CopyData *cdata)
 /**
  * gda_attributes_manager_clear
  * @mgr: a #GdaAttributesManager
- * @ptr: a pointer to the ressources for which all the attributes will be removed
+ * @ptr: a pointer to the resources for which all the attributes will be removed
  *
- * Remove all the attributes managed by @mgr for the @ptr ressource.
+ * Remove all the attributes managed by @mgr for the @ptr resource.
  */
 void
 gda_attributes_manager_clear (GdaAttributesManager *mgr, gpointer ptr)
@@ -406,7 +406,7 @@ static void foreach_foreach_func (AttName *attname, const GValue *value, FData *
 /**
  * gda_attributes_manager_foreach
  * @mgr: a #GdaAttributesManager
- * @ptr: a pointer to the ressources for which all the attributes used
+ * @ptr: a pointer to the resources for which all the attributes used
  * @func: a #GdaAttributesManagerFunc function
  * @data: user data to be passed as last argument of @func each time it is called
  *

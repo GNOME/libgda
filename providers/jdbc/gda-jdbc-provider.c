@@ -88,7 +88,7 @@ static gboolean            gda_jdbc_provider_rollback_savepoint (GdaServerProvid
 static gboolean            gda_jdbc_provider_delete_savepoint (GdaServerProvider *provider, GdaConnection *cnc,
 							       const gchar *name, GError **error);
 
-/* information retreival */
+/* information retrieval */
 static const gchar        *gda_jdbc_provider_get_version (GdaServerProvider *provider);
 static gboolean            gda_jdbc_provider_supports_feature (GdaServerProvider *provider, GdaConnection *cnc,
 							       GdaConnectionFeature feature);
@@ -517,7 +517,7 @@ gda_jdbc_provider_supports_operation (GdaServerProvider *provider, GdaConnection
  * Create operation request
  *
  * Creates a #GdaServerOperation. The following code is generic and should only be changed
- * if some further initialization is required, or if operation's contents is dependant on @cnc
+ * if some further initialization is required, or if operation's contents is dependent on @cnc
  */
 static GdaServerOperation *
 gda_jdbc_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc,

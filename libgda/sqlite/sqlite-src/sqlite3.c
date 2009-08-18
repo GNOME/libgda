@@ -5744,7 +5744,7 @@ typedef struct sqlite3_backup sqlite3_backup;
 ** the source and destination databases, where nPage is the value of the 
 ** second parameter passed to sqlite3_backup_step(). If nPage is a negative
 ** value, all remaining source pages are copied. If the required pages are 
-** succesfully copied, but there are still more pages to copy before the 
+** successfully copied, but there are still more pages to copy before the 
 ** backup is complete, it returns [SQLITE_OK]. If no error occured and there 
 ** are no more pages to copy, then [SQLITE_DONE] is returned. If an error 
 ** occurs, then an SQLite error code is returned. As well as [SQLITE_OK] and
@@ -19573,7 +19573,7 @@ static int os2Truncate( sqlite3_file *id, i64 nByte ){
 #ifdef SQLITE_TEST
 /*
 ** Count the number of fullsyncs and normal syncs.  This is used to test
-** that syncs and fullsyncs are occuring at the right times.
+** that syncs and fullsyncs are occurring at the right times.
 */
 SQLITE_API int sqlite3_sync_count = 0;
 SQLITE_API int sqlite3_fullsync_count = 0;
@@ -26873,7 +26873,7 @@ static int winTruncate(sqlite3_file *id, sqlite3_int64 nByte){
 #ifdef SQLITE_TEST
 /*
 ** Count the number of fullsyncs and normal syncs.  This is used to test
-** that syncs and fullsyncs are occuring at the right times.
+** that syncs and fullsyncs are occurring at the right times.
 */
 SQLITE_API int sqlite3_sync_count = 0;
 SQLITE_API int sqlite3_fullsync_count = 0;
@@ -35522,7 +35522,7 @@ struct MemPage {
 ** this structure.
 **
 ** For some database files, the same underlying database cache might be 
-** shared between multiple connections.  In that case, each contection
+** shared between multiple connections.  In that case, each connection
 ** has it own pointer to this object.  But each instance of this object
 ** points to the same BtShared object.  The database cache and the
 ** schema associated with the database file are all contained within
@@ -38759,7 +38759,7 @@ SQLITE_PRIVATE int sqlite3BtreeIncrVacuum(Btree *p){
 
 /*
 ** This routine is called prior to sqlite3PagerCommit when a transaction
-** is commited for an auto-vacuum database.
+** is committed for an auto-vacuum database.
 **
 ** If SQLITE_OK is returned, then *pnTrunc is set to the number of pages
 ** the database file should be truncated to during the commit process. 
@@ -57855,7 +57855,7 @@ static int dupedExprNodeSize(Expr *p, int flags){
 ** The value returned includes space to create a copy of the Expr struct
 ** itself and the buffer referred to by Expr.token, if any. If the 
 ** EXPRDUP_SPAN flag is set, then space to create a copy of the buffer
-** refered to by Expr.span is also included.
+** referred to by Expr.span is also included.
 **
 ** If the EXPRDUP_REDUCE flag is set, then the return value includes 
 ** space to duplicate all Expr nodes in the tree formed by Expr.pLeft 
@@ -59818,7 +59818,7 @@ static int evalConstExpr(Walker *pWalker, Expr *pExpr){
 
 /*
 ** Preevaluate constant subexpressions within pExpr and store the
-** results in registers.  Modify pExpr so that the constant subexpresions
+** results in registers.  Modify pExpr so that the constant sub-expressions
 ** are TK_REGISTER opcodes that refer to the precomputed values.
 */
 SQLITE_PRIVATE void sqlite3ExprCodeConstants(Parse *pParse, Expr *pExpr){
@@ -62233,7 +62233,7 @@ SQLITE_PRIVATE int sqlite3AuthCheck(
   sqlite3 *db = pParse->db;
   int rc;
 
-  /* Don't do any authorization checks if the database is initialising
+  /* Don't do any authorization checks if the database is initializing
   ** or if the parser is being invoked from within sqlite3_declare_vtab.
   */
   if( db->init.busy || IN_DECLARE_VTAB ){
@@ -64756,7 +64756,7 @@ SQLITE_PRIVATE void sqlite3CreateIndex(
 #ifndef SQLITE_OMIT_TEMPDB
     /* If the index name was unqualified, check if the the table
     ** is a temp table. If so, set the database to 1. Do not do this
-    ** if initialising a database schema.
+    ** if initializing a database schema.
     */
     if( !db->init.busy ){
       pTab = sqlite3SrcListLookup(pParse, pTblName);
@@ -75777,7 +75777,7 @@ static int multiSelectOrderBy(
   int savedOffset;      /* Saved value of p->iOffset */
   int labelCmpr;        /* Label for the start of the merge algorithm */
   int labelEnd;         /* Label for the end of the overall SELECT stmt */
-  int j1;               /* Jump instructions that get retargetted */
+  int j1;               /* Jump instructions that get retargeted */
   int op;               /* One of TK_ALL, TK_UNION, TK_EXCEPT, TK_INTERSECT */
   KeyInfo *pKeyDup = 0; /* Comparison information for duplicate removal */
   KeyInfo *pKeyMerge;   /* Comparison information for merging rows */
@@ -77362,7 +77362,7 @@ SQLITE_PRIVATE int sqlite3Select(
     if( pSub==0 || pItem->isPopulated ) continue;
 
     /* Increment Parse.nHeight by the height of the largest expression
-    ** tree refered to by this, the parent select. The child select
+    ** tree referred to by this, the parent select. The child select
     ** may contain expression trees of at most
     ** (SQLITE_MAX_EXPR_DEPTH-Parse.nHeight) height. This is a bit
     ** more conservative than necessary, but much easier than enforcing
@@ -89368,7 +89368,7 @@ static int binCollFunc(
 /*
 ** Another built-in collating sequence: NOCASE. 
 **
-** This collating sequence is intended to be used for "case independant
+** This collating sequence is intended to be used for "case independent
 ** comparison". SQLite's knowledge of upper and lower case equivalents
 ** extends only to the 26 characters used in the English language.
 **
@@ -95071,7 +95071,7 @@ static int trimSnippetOffsets(
           struct snippetMatch *p = &pSnippet->aMatch[ii];
           if( p->iTerm==iLeft ){
             int isOk = 0;
-            /* Snippet ii is an occurence of query term iLeft in the document.
+            /* Snippet ii is an occurrence of query term iLeft in the document.
             ** It occurs at position (p->iToken) of the document. We now
             ** search for an instance of token (iLeft-1) somewhere in the 
             ** range (p->iToken - nNear)...(p->iToken + nNear + nToken) within 

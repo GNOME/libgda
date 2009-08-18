@@ -241,7 +241,7 @@ gda_xa_transaction_get_type (void)
  * @format: a format ID
  * @global_transaction_id: the global transaction ID
  *
- * Creates a new #GdaXaTransaction object, which will control the processus of
+ * Creates a new #GdaXaTransaction object, which will control the process of
  * performing a distributed transaction across several connections.
  *
  * Returns: the newly created object.
@@ -614,7 +614,7 @@ gda_xa_transaction_rollback (GdaXaTransaction *xa_trans, GError **error)
  * @error: a place to store errors, or %NULL
  *
  * Tries to commit the data prepared but which failed to commit (see gda_xa_transaction_commit()). This
- * method allows one to terminate a distributed transaction which succedded but for which some
+ * method allows one to terminate a distributed transaction which succeeded but for which some
  * connections needed to be recovered.
  *
  * Returns: TRUE if all the data which was still uncommitted has been committed

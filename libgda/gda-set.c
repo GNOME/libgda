@@ -372,7 +372,7 @@ gda_set_new (GSList *holders)
  * gda_set_copy
  * @set: a #GdaSet object
  *
- * Creates a new #GdaSet object, opy of @set
+ * Creates a new #GdaSet object, copy of @set
  *
  * Returns: a new #GdaSet object
  */
@@ -403,7 +403,7 @@ gda_set_copy (GdaSet *set)
  * For each triplet (id, Glib type and value), 
  * the value must be of the correct type (gchar * if type is G_STRING, ...)
  *
- * Note that this function is a utility function and that anly a limited set of types are supported. Trying
+ * Note that this function is a utility function and that only a limited set of types are supported. Trying
  * to use an unsupported type will result in a warning, and the returned value holder holding a safe default
  * value.
  *

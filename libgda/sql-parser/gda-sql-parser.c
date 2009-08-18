@@ -1035,7 +1035,7 @@ handle_composed_2_keywords (GdaSqlParser *parser, GValue *retval, gint second, g
  *
  * Returns: the token Id, or:
  *   L_ILLEGAL if an error occurred
- *   L_END_OF_FILE if nothing more to analyse
+ *   L_END_OF_FILE if nothing more to analyze
  */
 static GValue *
 getToken (GdaSqlParser *parser)

@@ -964,7 +964,7 @@ worker_thread_closure_marshal (GClosure *closure,
  * similar functions are:
  * <itemizedlist>
  *  <listitem><para>the @callback argument is not a #GCallback function, so the callback signature is not
- *    dependant on the signal itself</para></listitem>
+ *    dependent on the signal itself</para></listitem>
  *  <listitem><para>the signal handler must not have to return any value</para></listitem>
  *  <listitem><para>the @callback function will be called asynchronously, the caller may need to use 
  *    gda_thread_wrapper_iterate() to get the notification</para></listitem>

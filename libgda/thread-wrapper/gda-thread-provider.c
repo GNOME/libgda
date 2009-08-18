@@ -97,7 +97,7 @@ static gboolean            gda_thread_provider_rollback_savepoint (GdaServerProv
 static gboolean            gda_thread_provider_delete_savepoint (GdaServerProvider *provider, GdaConnection *cnc,
 							       const gchar *name, GError **error);
 
-/* information retreival */
+/* information retrieval */
 static const gchar        *gda_thread_provider_get_version (GdaServerProvider *provider);
 static gboolean            gda_thread_provider_supports_feature (GdaServerProvider *provider, GdaConnection *cnc,
 							       GdaConnectionFeature feature);
@@ -670,7 +670,7 @@ gda_thread_provider_supports_operation (GdaServerProvider *provider, GdaConnecti
  * Create operation request
  *
  * Creates a #GdaServerOperation. The following code is generic and should only be changed
- * if some further initialization is required, or if operation's contents is dependant on @cnc
+ * if some further initialization is required, or if operation's contents is dependent on @cnc
  */
 typedef struct {
 	GdaServerProvider *prov;

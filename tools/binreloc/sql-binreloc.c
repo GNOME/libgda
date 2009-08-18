@@ -21,7 +21,7 @@
  */
 
 #include "sql-binreloc.h"
-/* include source file as mentionned in gbr_init_lib()'s doc */
+/* include source file as mentioned in gbr_init_lib()'s doc */
 #include "binreloc.c"
 
 #ifdef G_OS_WIN32

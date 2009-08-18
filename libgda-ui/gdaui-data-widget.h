@@ -36,7 +36,7 @@ G_BEGIN_DECLS
 #define GDAUI_DATA_WIDGET_GET_IFACE(obj)  (G_TYPE_INSTANCE_GET_INTERFACE ((obj), GDAUI_TYPE_DATA_WIDGET, GdauiDataWidgetIface))
 
 typedef enum {
-	GDAUI_DATA_WIDGET_WRITE_ON_DEMAND           = 0, /* write only when explicitely requested */
+	GDAUI_DATA_WIDGET_WRITE_ON_DEMAND           = 0, /* write only when explicitly requested */
 	GDAUI_DATA_WIDGET_WRITE_ON_ROW_CHANGE       = 1, /* write when the current selected row changes */
 	GDAUI_DATA_WIDGET_WRITE_ON_VALUE_ACTIVATED  = 2, /* write when user activates a value change */
 	GDAUI_DATA_WIDGET_WRITE_ON_VALUE_CHANGE     = 3  /* write when a parameters's value changes */

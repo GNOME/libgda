@@ -403,7 +403,7 @@ gda_holder_copy (GdaHolder *orig)
  * Creates a new #GdaHolder object with an ID set to @id, of type @type, 
  * and containing the value passed as the last argument.
  *
- * Note that this function is a utility function and that anly a limited set of types are supported. Trying
+ * Note that this function is a utility function and that only a limited set of types are supported. Trying
  * to use an unsupported type will result in a warning, and the returned value holder holding a safe default
  * value.
  *
@@ -859,7 +859,7 @@ gda_holder_set_value_str (GdaHolder *holder, GdaDataHandler *dh, const gchar *va
  * as soon as this method is called (even if @holder's value does not actually change).
  * 
  * If the value is not different from the one already contained within @holder,
- * then @holder is not chaged and no signal is emitted.
+ * then @holder is not changed and no signal is emitted.
  *
  * Note1: if @holder can't accept the @value value, then this method returns FALSE, and @holder will be left
  * in an invalid state.
@@ -1165,7 +1165,7 @@ real_gda_holder_set_const_value (GdaHolder *holder, const GValue *value,
  * freeing or for its correct value at the moment of query.
  * 
  * If the value is not different from the one already contained within @holder,
- * then @holder is not chaged and no signal is emitted.
+ * then @holder is not changed and no signal is emitted.
  *
  * Note1: if @holder can't accept the @value value, then this method returns NULL, and @holder will be left
  * in an invalid state.

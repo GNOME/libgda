@@ -59,7 +59,7 @@ struct _GdaDataMetaWrapperClass {
 };
 
 GType         _gda_data_meta_wrapper_get_type    (void) G_GNUC_CONST;
-GdaDataModel *_gda_data_meta_wrapper_new         (GdaDataModel *model, gboolean reuseable,
+GdaDataModel *_gda_data_meta_wrapper_new         (GdaDataModel *model, gboolean reusable,
 						  gint *cols, gint size, GdaSqlIdentifierStyle mode,
 						  GdaSqlReservedKeywordsFunc reserved_keyword_func);
 

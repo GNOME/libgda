@@ -800,7 +800,7 @@ gda_config_get (void)
  * Get information about the DSN named @dsn_name. 
  *
  * @dsn_name's format is "[&lt;username&gt;[:&lt;password&gt;]@]&lt;DSN&gt;" (if &lt;username&gt;
- * and optionaly &lt;password&gt; are provided, they are ignored). Also see the gda_dsn_split() utility
+ * and optionally &lt;password&gt; are provided, they are ignored). Also see the gda_dsn_split() utility
  * function.
  *
  * Returns: a a pointer to read-only #GdaDsnInfo structure, or %NULL if not found
@@ -979,7 +979,7 @@ gda_config_remove_dsn (const gchar *dsn_name, GError **error)
  * @dsn_name: the name of a DSN, in the "[&lt;username&gt;[:&lt;password&gt;]@]&lt;DSN&gt;" format
  * 
  * Tells if the data source identified as @dsn_name needs any authentication. If a &lt;username&gt;
- * and optionaly a &lt;password&gt; are specified, they are ignored.
+ * and optionally a &lt;password&gt; are specified, they are ignored.
  *
  * Returns: TRUE if an authentication is needed
  */
@@ -1124,7 +1124,7 @@ gda_config_can_modify_system_config (void)
  * gda_config_get_provider_info
  * @provider_name: a database provider
  *
- * Get some information about the a database provider (adaptator) named 
+ * Get some information about the a database provider (adapter) named 
  *
  * Returns: a pointer to read-only #GdaProviderInfo structure, or %NULL if not found
  */
@@ -1351,7 +1351,7 @@ load_all_providers (void)
 	}
 	unique_instance->priv->providers_loaded = TRUE;
 
-	/* find SQLite provider, and instanciate it if not installed */
+	/* find SQLite provider, and instantiate it if not installed */
 	_gda_config_sqlite_provider = gda_config_get_provider ("SQLite", NULL);
 	if (!_gda_config_sqlite_provider) {
 		_gda_config_sqlite_provider = (GdaServerProvider*) 

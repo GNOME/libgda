@@ -362,7 +362,7 @@ test2 (GdaConnection *cnc)
 	if (!gda_data_select_set_modification_statement (GDA_DATA_SELECT (model), mod_stmt, &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-		g_print ("gda_data_select_set_modification_statement() should have succedded, error: %s\n",
+		g_print ("gda_data_select_set_modification_statement() should have succeeded, error: %s\n",
 			 error && error->message ? error->message : "No detail");
 #endif
 		goto out;
@@ -411,7 +411,7 @@ test3 (GdaConnection *cnc)
 	if (!gda_data_select_set_modification_statement (GDA_DATA_SELECT (model), mod_stmt, &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-		g_print ("gda_data_select_set_modification_statement() should have succedded, error: %s\n",
+		g_print ("gda_data_select_set_modification_statement() should have succeeded, error: %s\n",
 			 error && error->message ? error->message : "No detail");
 #endif
 		goto out;
@@ -503,7 +503,7 @@ test4 (GdaConnection *cnc)
 	if (!gda_data_select_set_modification_statement (GDA_DATA_SELECT (model), mod_stmt, &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-		g_print ("gda_data_select_set_modification_statement() should have succedded, error: %s\n",
+		g_print ("gda_data_select_set_modification_statement() should have succeeded, error: %s\n",
 			 error && error->message ? error->message : "No detail");
 #endif
 		goto out;
@@ -513,7 +513,7 @@ test4 (GdaConnection *cnc)
 	if (! gda_data_model_remove_row (model, 0, &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-		g_print ("gda_data_model_remove_row() should have succedded, error: %s\n",
+		g_print ("gda_data_model_remove_row() should have succeeded, error: %s\n",
 			 error && error->message ? error->message : "No detail");
 #endif
 		g_error_free (error);
@@ -568,7 +568,7 @@ test5 (GdaConnection *cnc)
 	if (!gda_data_select_set_modification_statement (GDA_DATA_SELECT (model), mod_stmt, &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-		g_print ("gda_data_select_set_modification_statement() should have succedded, error: %s\n",
+		g_print ("gda_data_select_set_modification_statement() should have succeeded, error: %s\n",
 			 error && error->message ? error->message : "No detail");
 #endif
 		goto out;
@@ -691,7 +691,7 @@ test6 (GdaConnection *cnc)
 	if (! gda_data_select_set_row_selection_condition_sql (GDA_DATA_SELECT (model), "id = ##-0::gint", &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-		g_print ("gda_data_select_set_row_selection_condition_sql() have succedded, error: %s\n",
+		g_print ("gda_data_select_set_row_selection_condition_sql() have succeeded, error: %s\n",
 			 error && error->message ? error->message : "No detail");
 #endif
 		goto out;
@@ -717,7 +717,7 @@ test6 (GdaConnection *cnc)
 	if (!gda_data_select_set_modification_statement (GDA_DATA_SELECT (model), mod_stmt, &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-		g_print ("gda_data_select_set_modification_statement() should have succedded, error: %s\n",
+		g_print ("gda_data_select_set_modification_statement() should have succeeded, error: %s\n",
 			 error && error->message ? error->message : "No detail");
 #endif
 		goto out;
@@ -854,7 +854,7 @@ test7 (GdaConnection *cnc)
 	if (!gda_data_select_compute_modification_statements (GDA_DATA_SELECT (model), &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-		g_print ("gda_data_select_compute_modification_statements() should have succedded, error: %s\n",
+		g_print ("gda_data_select_compute_modification_statements() should have succeeded, error: %s\n",
 			 error && error->message ? error->message : "No detail");
 #endif
 		goto out;
@@ -911,7 +911,7 @@ test8 (GdaConnection *cnc)
 	if (!gda_data_select_compute_modification_statements (GDA_DATA_SELECT (model), &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-		g_print ("gda_data_select_set_modification_statement() should have succedded, error: %s\n",
+		g_print ("gda_data_select_set_modification_statement() should have succeeded, error: %s\n",
 			 error && error->message ? error->message : "No detail");
 #endif
 		goto out;
@@ -990,7 +990,7 @@ test9 (GdaConnection *cnc)
 	if (!gda_data_select_compute_modification_statements (GDA_DATA_SELECT (model), &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-		g_print ("gda_data_select_compute_modification_statements() should have succedded, error: %s\n",
+		g_print ("gda_data_select_compute_modification_statements() should have succeeded, error: %s\n",
 			 error && error->message ? error->message : "No detail");
 #endif
 		goto out;
@@ -1268,7 +1268,7 @@ test12 (GdaConnection *cnc)
 	if (!gda_data_select_compute_modification_statements (GDA_DATA_SELECT (model), &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-		g_print ("gda_data_select_compute_modification_statements() should have succedded, error: %s\n",
+		g_print ("gda_data_select_compute_modification_statements() should have succeeded, error: %s\n",
 			 error && error->message ? error->message : "No detail");
 #endif
 		goto out;
@@ -1408,7 +1408,7 @@ test13 (GdaConnection *cnc)
 	if (!gda_data_select_set_modification_statement (GDA_DATA_SELECT (model), mod_stmt, &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-		g_print ("gda_data_select_set_modification_statement() should have succedded, error: %s\n",
+		g_print ("gda_data_select_set_modification_statement() should have succeeded, error: %s\n",
 			 error && error->message ? error->message : "No detail");
 #endif
 		goto out;
@@ -1503,7 +1503,7 @@ test14 (GdaConnection *cnc)
 	if (!gda_data_select_compute_modification_statements (GDA_DATA_SELECT (model), &error)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-		g_print ("gda_data_select_compute_modification_statements() should have succedded, error: %s\n",
+		g_print ("gda_data_select_compute_modification_statements() should have succeeded, error: %s\n",
 			 error && error->message ? error->message : "No detail");
 #endif
 		goto out;

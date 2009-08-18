@@ -57,7 +57,7 @@ class GdaJMeta {
 }
 
 /*
- * Meta data retreival is returned as instances of the class which allows a degree of
+ * Meta data retrieval is returned as instances of the class which allows a degree of
  * customization depending on the type of database being accessed.
  */
 abstract class GdaJMetaResultSet extends GdaJResultSet {

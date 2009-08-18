@@ -57,7 +57,7 @@ GdaDataHandler *gda_server_provider_get_data_handler_default (GdaServerProvider 
 GdaStatement *gda_select_alter_select_for_empty (GdaStatement *stmt, GError **error);
 
 /*
- * Help to implement the GdaDataHandler retreiving for the providers
+ * Help to implement the GdaDataHandler retrieving for the providers
  */
 typedef struct {
 	GdaConnection *cnc;

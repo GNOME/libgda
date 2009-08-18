@@ -331,13 +331,13 @@ gda_data_meta_wrapper_get_property (GObject *object,
  * gda_data_meta_wrapper_new
  * @model: a #GdaDataModel
  *
- * Creates a new #GdaDataModel object which buffers the rows of @model. This object is usefull
+ * Creates a new #GdaDataModel object which buffers the rows of @model. This object is useful
  * only if @model can only be metaed using cursor based method.
  *
  * Returns: a pointer to the newly created #GdaDataModel.
  */
 GdaDataModel *
-_gda_data_meta_wrapper_new (GdaDataModel *model, gboolean reuseable, gint *cols, gint size, GdaSqlIdentifierStyle mode,
+_gda_data_meta_wrapper_new (GdaDataModel *model, gboolean reusable, gint *cols, gint size, GdaSqlIdentifierStyle mode,
 			    GdaSqlReservedKeywordsFunc reserved_keyword_func)
 {
 	GdaDataMetaWrapper *retmodel;
@@ -353,7 +353,7 @@ _gda_data_meta_wrapper_new (GdaDataModel *model, gboolean reuseable, gint *cols,
 	retmodel->priv->mode = mode;
 	retmodel->priv->reserved_keyword_func = reserved_keyword_func;
 	
-	if (reuseable)
+	if (reusable)
 		retmodel->priv->computed_rows = g_hash_table_new_full (g_int_hash, g_int_equal,
 								       NULL, (GDestroyNotify) comp_row_free);
 	else {

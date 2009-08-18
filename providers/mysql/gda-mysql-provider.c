@@ -815,7 +815,7 @@ gda_mysql_provider_supports_operation (GdaServerProvider       *provider,
  * Create operation request
  *
  * Creates a #GdaServerOperation. The following code is generic and should only be changed
- * if some further initialization is required, or if operation's contents is dependant on @cnc
+ * if some further initialization is required, or if operation's contents is dependent on @cnc
  */
 static GdaServerOperation *
 gda_mysql_provider_create_operation (GdaServerProvider       *provider,
@@ -2192,12 +2192,12 @@ my_remove_quotes (gchar *str)
 
         total = strlen (str);
         if (str[total-1] == delim) {
-		/* string is correclty terminated */
+		/* string is correctly terminated */
 		g_memmove (str, str+1, total-2);
 		total -=2;
 	}
 	else {
-		/* string is _not_ correclty terminated */
+		/* string is _not_ correctly terminated */
 		g_memmove (str, str+1, total-1);
 		total -=1;
 	}

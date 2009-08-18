@@ -583,7 +583,7 @@ gda_data_model_import_set_property (GObject *object,
 		}
 	}
 
-	/* here we now have a valid data to analyse, try to determine the real kind of data 
+	/* here we now have a valid data to analyze, try to determine the real kind of data 
 	 * (CVS text of XML) */
 	if (model->priv->format != FORMAT_XML_NODE) {
 		g_assert (model->priv->data_start);
@@ -593,7 +593,7 @@ gda_data_model_import_set_property (GObject *object,
 			model->priv->format = FORMAT_CSV;
 	}
 
-	/* analyse common options and init. */
+	/* analyze common options and init. */
 	switch (model->priv->format) {
 	case FORMAT_XML_DATA:
 			init_xml_import (model);
@@ -708,7 +708,7 @@ gda_data_model_import_new_file   (const gchar *filename, gboolean random_access,
 
 /**
  * gda_data_model_import_new_mem
- * @data: a string containng the data to import
+ * @data: a string containing the data to import
  * @random_access: TRUE if random access will be required
  * @options: list of importing options, see gda_data_model_import_new_file() for more information
  *

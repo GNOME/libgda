@@ -242,7 +242,7 @@ gda_firebird_recordset_fetch_nb_rows (GdaDataSelect *model)
  *
  * Memory management for that new GdaRow object is left to the implementation, which
  * can use gda_data_select_take_row(). If new row objects are "given" to the GdaDataSelect implemantation
- * using that method, then this method should detect when all the data model rows have been analysed
+ * using that method, then this method should detect when all the data model rows have been analyzed
  * (when model->nb_stored_rows == model->advertized_nrows) and then possibly discard the API handle
  * as it won't be used anymore to fetch rows.
  */

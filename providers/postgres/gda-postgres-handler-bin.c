@@ -44,7 +44,7 @@ static gboolean     gda_postgres_handler_bin_accepts_g_type         (GdaDataHand
 static const gchar *gda_postgres_handler_bin_get_descr              (GdaDataHandler *dh);
 
 struct  _GdaPostgresHandlerBinPriv {
-	gchar             *detailled_descr;
+	gchar             *detailed_descr;
 	guint              nb_g_types;
 	GType             *valid_g_types;
 	GdaConnection     *cnc;
@@ -116,7 +116,7 @@ gda_postgres_handler_bin_init (GdaPostgresHandlerBin * hdl)
 {
 	/* Private structure */
 	hdl->priv = g_new0 (GdaPostgresHandlerBinPriv, 1);
-	hdl->priv->detailled_descr = _("Postgresql binary handler");
+	hdl->priv->detailed_descr = _("Postgresql binary handler");
 	hdl->priv->nb_g_types = 2;
 	hdl->priv->valid_g_types = g_new0 (GType, 1);
 	hdl->priv->valid_g_types[0] = GDA_TYPE_BINARY;

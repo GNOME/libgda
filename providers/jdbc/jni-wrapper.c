@@ -159,21 +159,21 @@ jni_wrapper_create_vm (JavaVM **out_jvm, CreateJavaVMFunc create_func,
 	jclass klass;
 	klass = jni_wrapper_class_get (env, "java/lang/Throwable", NULL);
 	if (!klass) 
-		g_warning ("Error loading '%s' class (error messages won't be detailled)",
+		g_warning ("Error loading '%s' class (error messages won't be detailed)",
 			   "java.lang.Throwable");
 	else {
 		get_message_method = jni_wrapper_method_create (env, klass, 
 								"getMessage", "()Ljava/lang/String;", 
 								FALSE, NULL);
 		if (!get_message_method)
-			g_warning ("Error loading '%s' method (error messages won't be detailled)",
+			g_warning ("Error loading '%s' method (error messages won't be detailed)",
 				   "java.lang.Throwable.getMessage");
 		(*env)->DeleteGlobalRef (env, klass);
 	}
 
 	klass = jni_wrapper_class_get (env, "java/sql/SQLException", NULL);
 	if (!klass) 
-		g_warning ("Error loading '%s' class (error messages won't be detailled)",
+		g_warning ("Error loading '%s' class (error messages won't be detailed)",
 			   "java.sql.SqlException");
 	else {
 		SQLException__class = klass;
@@ -181,7 +181,7 @@ jni_wrapper_create_vm (JavaVM **out_jvm, CreateJavaVMFunc create_func,
 								   "getErrorCode", "()I", 
 								   FALSE, NULL);
 		if (!get_error_code_method)
-			g_warning ("Error loading '%s' method (error messages won't be detailled)",
+			g_warning ("Error loading '%s' method (error messages won't be detailed)",
 				   "java.SQLException.getErrorCode");
 
 		get_sql_state_method = jni_wrapper_method_create (env, SQLException__class, 
@@ -189,7 +189,7 @@ jni_wrapper_create_vm (JavaVM **out_jvm, CreateJavaVMFunc create_func,
 								  FALSE, NULL);
 
 		if (!get_sql_state_method)
-			g_warning ("Error loading '%s' method (error messages won't be detailled)",
+			g_warning ("Error loading '%s' method (error messages won't be detailed)",
 				   "java.SQLException.getSQLState");
 	}
 

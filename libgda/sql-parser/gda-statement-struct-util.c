@@ -87,12 +87,12 @@ _remove_quotes (gchar *str)
 
         total = strlen (str);
         if (str[total-1] == delim) {
-		/* string is correclty terminated by a double quote */
+		/* string is correctly terminated by a double quote */
 		g_memmove (str, str+1, total-2);
 		total -=2;
 	}
 	else {
-		/* string is _not_ correclty terminated by a double quote */
+		/* string is _not_ correctly terminated by a double quote */
 		g_memmove (str, str+1, total-1);
 		total -=1;
 	}

@@ -62,7 +62,7 @@ gboolean ask_pass = FALSE;
 
 gchar *single_command = NULL;
 gchar *commandsfile = NULL;
-gboolean interractive = FALSE;
+gboolean interactive = FALSE;
 
 gboolean list_configs = FALSE;
 gboolean list_providers = FALSE;
@@ -82,7 +82,7 @@ static GOptionEntry entries[] = {
         { "output-file", 'o', 0, G_OPTION_ARG_STRING, &outfile, "Output file", "output file"},
         { "command", 'C', 0, G_OPTION_ARG_STRING, &single_command, "Run only single command (SQL or internal) and exit", "command" },
         { "commands-file", 'f', 0, G_OPTION_ARG_STRING, &commandsfile, "Execute commands from file, then exit (except if -i specified)", "filename" },
-	{ "interractive", 'i', 0, G_OPTION_ARG_NONE, &interractive, "Keep the console opened after executing a file (-f option)", NULL },
+	{ "interactive", 'i', 0, G_OPTION_ARG_NONE, &interactive, "Keep the console opened after executing a file (-f option)", NULL },
         { "list-dsn", 'l', 0, G_OPTION_ARG_NONE, &list_configs, "List configured data sources and exit", NULL },
         { "list-providers", 'L', 0, G_OPTION_ARG_NONE, &list_providers, "List installed database providers and exit", NULL },
 #ifdef HAVE_LIBSOUP
@@ -327,7 +327,7 @@ main (int argc, char *argv[])
 			else
 				break;
 		}
-		if (interractive && !cmde && isatty (fileno (stdin)))
+		if (interactive && !cmde && isatty (fileno (stdin)))
 			set_input_file (NULL, NULL);
 		else {
 			if (!data->output_stream)
@@ -336,7 +336,7 @@ main (int argc, char *argv[])
 		}
 	}
 
-	/* set up interractive commands */
+	/* set up interactive commands */
 	setup_sigint_handler ();
 	init_input ((TreatLineFunc) treat_line_func, prompt_func, NULL);
 	set_completion_func (completion_func);
@@ -3554,7 +3554,7 @@ extra_command_query_buffer_list_dict (SqlConsole *console, GdaConnection *cnc, c
 		return NULL;
 	}
 		
-	/* actual list retreival */
+	/* actual list retrieval */
 	static GdaStatement *sel_stmt = NULL;
 	GdaDataModel *model;
 	if (!sel_stmt) {
@@ -3702,7 +3702,7 @@ extra_command_query_buffer_from_dict (SqlConsole *console, GdaConnection *cnc, c
 			return NULL;
 		}
 		
-		/* query retreival */
+		/* query retrieval */
 		static GdaStatement *sel_stmt = NULL;
 		static GdaSet *sel_params = NULL;
 		GdaDataModel *model;
@@ -3774,7 +3774,7 @@ extra_command_query_buffer_delete_dict (SqlConsole *console, GdaConnection *cnc,
 			return NULL;
 		}
 		
-		/* query retreival */
+		/* query retrieval */
 		static GdaStatement *del_stmt = NULL;
 		static GdaSet *del_params = NULL;
 		if (!del_stmt) {

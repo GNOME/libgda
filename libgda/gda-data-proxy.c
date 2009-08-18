@@ -1278,7 +1278,7 @@ find_or_create_row_modif (GdaDataProxy *proxy, gint proxy_row, gint col, RowValu
  * @cols_index: array containing the columns for which the values are requested
  * @n_cols: size of @cols_index
  *
- * Retreive a whole list of values from the @proxy data model. This function 
+ * Retrieve a whole list of values from the @proxy data model. This function 
  * calls gda_data_proxy_get_value()
  * for each column index specified in @cols_index, and generates a #GSList on the way.
  *
@@ -2048,7 +2048,7 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, gboolean adjust_display, GE
 			       gda_data_proxy_signals[ROW_CHANGES_APPLIED],
 			       0, proxy_row, model_row);
 		
-		/* get rid of the commited change; if the changes have been applied correctly, @rm should
+		/* get rid of the committed change; if the changes have been applied correctly, @rm should
 		 * have been removed from the proxy->priv->all_modifs list because the proxied model
 		 * should habe emitted the "row_{inserted,removed,updated}" signals */
 		if (rm && g_slist_find (proxy->priv->all_modifs, rm)) {
@@ -2156,7 +2156,7 @@ gda_data_proxy_get_n_modified_rows (GdaDataProxy *proxy)
  * be able to display quite a lot of data, but small enough to avoid too much data
  * displayed at the same time.
  *
- * Note: the rows which have been added but not yet commited will always be displayed
+ * Note: the rows which have been added but not yet committed will always be displayed
  * regardless of the current chunk of data, and the modified rows which are not visible
  * when the displayed chunk of data changes are still held as modified rows.
  *
@@ -3010,7 +3010,7 @@ apply_filter_statement (GdaDataProxy *proxy, GError **error)
  * is between 1000 and 2000, ordered by name and limited to 50 rows.
  *
  * Note about column names: real column names can be used (double quoted if necessary), but columns can also be named
- * "_&lt;column number&gt;" with colmun numbers starting at 1.
+ * "_&lt;column number&gt;" with column numbers starting at 1.
  *
  * Note that any previous filter expression is replaced with the new @filter_expr if no error occurs
  * (if an error occurs, then any previous filter is left unchanged).
@@ -3197,7 +3197,7 @@ gda_data_proxy_get_filter_expr (GdaDataProxy *proxy)
  * Get the total number of filtered rows in @proxy if a filter has been applied. As new rows
  * (rows added to the proxy and not yet added to the proxied data model) and rows to remove
  * (rows marked for removal but not yet removed from the proxied data model) are also filtered,
- * the returned number also contains reefrences to new rows and rows to be removed.
+ * the returned number also contains references to new rows and rows to be removed.
  *
  * Returns: the number of filtered rows in @proxy, or -1 if no filter has been applied
  */
@@ -3768,7 +3768,7 @@ gda_data_proxy_set_values (GdaDataModel *model, gint row, GList *values, GError 
 
 	proxy->priv->notify_changes = notify_changes;
 	if (col && proxy->priv->notify_changes)
-		/* at least one successfull value change occurred */
+		/* at least one successful value change occurred */
 		gda_data_model_row_updated (model, row);
 
 	gda_mutex_unlock (proxy->priv->mutex);

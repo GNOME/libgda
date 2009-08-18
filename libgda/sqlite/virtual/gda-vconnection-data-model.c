@@ -382,7 +382,7 @@ gda_vconnection_data_model_get_table_name (GdaVconnectionDataModel *cnc, GdaData
  * gda_vconnection_data_model_foreach
  * @cnc: a #GdaVconnectionDataModel connection
  * @func: a #GdaVconnectionDataModelFunc function pointer
- * @data: data to pass to @cunc calls
+ * @data: data to pass to @func calls
  *
  * Call @func for each table in @cnc. 
  *

@@ -199,7 +199,7 @@ create_parser_for_provider (const gchar *prov_name)
 
 	prov = gda_config_get_provider (prov_name ? prov_name : "SQLite", &error);
 	if (!prov) {
-		g_print ("Could not instanciate provider for '%s': %s\n", prov_name,
+		g_print ("Could not instantiate provider for '%s': %s\n", prov_name,
 			 error && error->message ? error->message : "No detail");
 		if (error)
 			g_error_free (error);

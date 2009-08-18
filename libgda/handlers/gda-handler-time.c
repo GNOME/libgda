@@ -65,7 +65,7 @@ typedef struct _LocaleSetting {
 static gchar *render_date_locale (const GDate *date, LocaleSetting *locale);
 
 struct  _GdaHandlerTimePriv {
-	gchar          *detailled_descr;
+	gchar          *detailed_descr;
 	guint           nb_g_types;
 	GType          *valid_g_types;
 
@@ -140,7 +140,7 @@ gda_handler_time_init (GdaHandlerTime *hdl)
 {
 	/* Private structure */
 	hdl->priv = g_new0 (GdaHandlerTimePriv, 1);
-	hdl->priv->detailled_descr = _("Time and Date handler");
+	hdl->priv->detailed_descr = _("Time and Date handler");
 	hdl->priv->nb_g_types = 3;
 	hdl->priv->valid_g_types = g_new0 (GType, 7);
 	hdl->priv->valid_g_types[0] = G_TYPE_DATE;
@@ -450,7 +450,7 @@ gda_handler_time_get_no_locale_str_from_value (GdaHandlerTime *hdl, const GValue
  * @dh: a #GdaHandlerTime object
  * @type: the type of data being handled
  *
- * Get a string representing the locale-dependant way to enter a date/time/datetime, using
+ * Get a string representing the locale-dependent way to enter a date/time/datetime, using
  * a syntax suitable for the #GnomeDbFormatEntry widget
  *
  * Returns: a new string

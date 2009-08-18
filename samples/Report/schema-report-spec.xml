@@ -163,7 +163,7 @@
 			<!-- Involved columns -->
 			<gda_report_section>
 			  <gda_report_query query_name="key_columns" cnc_name="meta_store_cnc">
-			    select * from _detailled_fk WHERE
+			    select * from _detailed_fk WHERE
 			    fk_table_name = ##direct_tables|@table_name::string AND
 			    fk_table_schema = ##direct_tables|@table_schema::string AND
 			    fk_constraint_name = ##constraints|@constraint_name

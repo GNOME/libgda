@@ -46,7 +46,7 @@ gda_sql_error_quark (void)
 }
 
 /* 
- * statement's infos retreival
+ * statement's infos retrieval
  */
 GdaSqlStatementContentsInfo *
 gda_sql_statement_get_contents_infos  (GdaSqlStatementType type) 
@@ -854,7 +854,7 @@ static gboolean foreach_check_struct (GdaSqlAnyPart *node, gpointer data, GError
  *
  * Checks for any error in @stmt's structure to make sure the statement is valid
  * (for example a SELECT statement must at least return a column, a DELETE statement must specify which table
- * is targetted).
+ * is targeted).
  *
  * Returns: TRUE if no error occurred
  */

@@ -99,7 +99,7 @@ typedef struct {
 typedef struct {
 	GdaBinary  data;
 	GdaBlobOp *op; /* set up by providers if the GdaBlob is linked to something actually existing in the database, 
-			  useable by anyone */
+			  usable by anyone */
 } GdaBlob;
 
 typedef GList GdaValueList;

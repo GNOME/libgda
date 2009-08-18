@@ -2235,7 +2235,7 @@ gda_server_operation_set_value_at (GdaServerOperation *op, const gchar *value, G
  * Tells if all the required values in @op have been defined.
  *
  * if @xml_file is not %NULL, the validity of @op is tested against that specification, 
- * and not againts the current @op's specification.
+ * and not against the current @op's specification.
  *
  * Returns: TRUE if @op is valid
  */

@@ -180,12 +180,12 @@ gda_perform_drop_database (const gchar *provider, GdaServerOperation *op, GError
 /**
  * gda_execute_select_command
  * @cnc: an opened connection
- * @sql: a query statament must begin with "SELECT"
+ * @sql: a query statement must begin with "SELECT"
  * @error: a place to store errors, or %NULL
  * 
  * Execute a SQL SELECT command over an opened connection.
  *
- * Returns: a new #GdaDataModel if succesfull, NULL otherwise
+ * Returns: a new #GdaDataModel if successful, NULL otherwise
  */
 GdaDataModel *          
 gda_execute_select_command (GdaConnection *cnc, const gchar *sql, GError **error)
@@ -216,7 +216,7 @@ gda_execute_select_command (GdaConnection *cnc, const gchar *sql, GError **error
 /**
  * gda_execute_sql_command
  * @cnc: an opened connection
- * @sql: a query statament must begin with "SELECT"
+ * @sql: a query statement must begin with "SELECT"
  * @error: a place to store errors, or %NULL
  *
  * This is a convenience function to execute a SQL command over the opened connection.
@@ -505,7 +505,7 @@ gtype_equal (gconstpointer a, gconstpointer b)
  * 
  * Obtain a pointer to a #GdaDataHandler which can manage #GValue values of type @for_type. The returned
  * data handler will be adapted to use the current locale information (for example dates will be formatted
- * taking into accoutn the locale).
+ * taking into account the locale).
  *
  * The returned pointer is %NULL if there is no default data handler available for the @for_type data type
  *

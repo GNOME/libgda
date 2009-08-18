@@ -1296,7 +1296,7 @@ real_gda_meta_struct_complement_all (GdaMetaStruct *mstruct, gboolean default_on
  *
  * This method is similar to gda_meta_struct_complement() and gda_meta_struct_complement_all()
  * but creates #GdaMetaDbObject for all the
- * database object which are useable using only their short name (that is which do not need to be prefixed by 
+ * database object which are usable using only their short name (that is which do not need to be prefixed by 
  * the schema in which they are to be used).
  *
  * Please refer to gda_meta_struct_complement() form more information.
@@ -2235,7 +2235,7 @@ copyerror:
  * @error: a place to store errors, or %NULL
  *
  * Adds @dbo to the database objects known to @mstruct. In any case (whether an error occured or not)
- * @dbo's responsability is then transferred to @smtruct and should
+ * @dbo's responsibility is then transferred to @smtruct and should
  * not be used after calling this function (it may have been destroyed). If you need a pointer to the #GdaMetaDbObject
  * for a database object, use gda_meta_struct_get_db_object().
  *

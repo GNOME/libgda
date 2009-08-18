@@ -1749,7 +1749,7 @@ gda_value_set_timestamp (GValue *value, const GdaTimestamp *val)
  *
  * Returns: %TRUE if the value has been converted to @type from
  * its string representation; it not means that the value is converted 
- * successfully, just that the transformation is avairable. %FALSE otherwise.
+ * successfully, just that the transformation is available. %FALSE otherwise.
  */
 gboolean
 gda_value_set_from_string (GValue *value, 

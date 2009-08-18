@@ -222,7 +222,7 @@ gda_sql_statement_insert_serialize (gpointer stmt)
  * @stmt: a #GdaSqlStatement pointer
  * @value: name of the table to insert into, as a G_TYPE_STRING #GValue
  *
- * Sets the name of the table to insert into in @stmt. @value's responsability is transfered to
+ * Sets the name of the table to insert into in @stmt. @value's responsibility is transfered to
  * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
  */
 void
@@ -238,9 +238,9 @@ gda_sql_statement_insert_take_table_name (GdaSqlStatement *stmt, GValue *value)
 /**
  * gda_sql_statement_insert_take_on_conflict
  * @stmt: a #GdaSqlStatement pointer
- * @value: name of the resolution conflict algotithm, as a G_TYPE_STRING #GValue
+ * @value: name of the resolution conflict algorithm, as a G_TYPE_STRING #GValue
  *
- * Sets the name of the resolution conflict algotithm used by @stmt. @value's responsability is transfered to
+ * Sets the name of the resolution conflict algorithm used by @stmt. @value's responsibility is transfered to
  * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
  */
 void
@@ -260,7 +260,7 @@ gda_sql_statement_insert_take_on_conflict (GdaSqlStatement *stmt, GValue *value)
  * @list: a list of #GdaSqlField pointers
  *
  * Sets the list of fields for which values will be specified in @stmt. @list's 
- * responsability is transfered to
+ * responsibility is transfered to
  * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
  */
 void
@@ -280,7 +280,7 @@ gda_sql_statement_insert_take_fields_list (GdaSqlStatement *stmt, GSList *list)
  * @list: a list of #GdaSqlExpr pointers
  *
  * Sets a list of values to be inserted by @stmt. @list's 
- * responsability is transfered to
+ * responsibility is transfered to
  * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
  */
 void
@@ -300,7 +300,7 @@ gda_sql_statement_insert_take_1_values_list (GdaSqlStatement *stmt, GSList *list
  * @list: a list of #GSQliet of #GdaSqlExpr pointers
  *
  * Sets a list of list of values to be inserted by @stmt. @list's 
- * responsability is transfered to
+ * responsibility is transfered to
  * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
  */
 void
@@ -322,7 +322,7 @@ gda_sql_statement_insert_take_extra_values_list (GdaSqlStatement *stmt, GSList *
  * @select: a SELECT #GdaSqlStatement pointer
  *
  * Specifies a SELECT statement, the values inserted will be the result set of @select. @select's 
- * responsability is transfered to
+ * responsibility is transfered to
  * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
  */
 void

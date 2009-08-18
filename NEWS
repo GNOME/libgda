@@ -56,7 +56,7 @@ libgda 3.99.11, 2009-02-13
 
  - misc. corrections
  - documentation improvements
- - new example to illustrate meta data retreival
+ - new example to illustrate meta data retrieval
  - bug fixes: #570396, #570251, #570315, #570787
 
 libgda 3.99.10, 2009-02-02
@@ -116,7 +116,7 @@ libgda 3.99.6, 2008-11-10
 libgda 3.99.5, 2008-10-09
 
 This version includes:
- - Meta data retreiving corrections
+ - Meta data retrieving corrections
  - now internally use SQLite 3.6.3
  - A few API improvements (removed the GdaDataModelQuery object as its features are now implemented
    in any result of a SELECT execution) (Massimo Cora, Vivien Malerba)
@@ -184,7 +184,7 @@ libgda 3.99.3, 2008-07-06
  - preliminary MacOS X support, and better support for cross compilation
  - better support for thread safe support
  - new distributed transaction support
- - added speficications to create a .MSI file as a Windows installer
+ - added specifications to create a .MSI file as a Windows installer
  - bug fixes: #524837, #525601, #525877, #526748, #527892, #527002, #534805, #536418,
    #536971, #537558, #537117
  - Translations:
@@ -209,15 +209,15 @@ libgda 3.99.1, 2008-03-19
  - Merge of the GdaQuery and GdaCommand into only one object to represent statements
  - New adaptative SQL parser (can be adaptated to each DBMS's SQL syntax)
  - New database based dictionary which can handle namespaces
- - Rework of the database adaptators (providers) for easier maintenance and more features
- - Sample "skeleton" database adaptators to make it easy to write a database adaptator for a new
+ - Rework of the database adapters (providers) for easier maintenance and more features
+ - Sample "skeleton" database adapters to make it easy to write a database adapter for a new
    database type
  - Updated documentation
 
  Warnings:
  - This is still an early version which probably has a lot of bugs and as such it should not be used
    in a production environment.
- - Most of the database adaptators (providers) need to be re-written, particularly MySQL (which is
+ - Most of the database adapters (providers) need to be re-written, particularly MySQL (which is
    currently being done) and Oracle
  - Libgnomedb has not yet been updated and won't compile with this version
 
@@ -252,7 +252,7 @@ libgda 3.1.1, 2007-09-02
  - Require inltool 0.35.5 when building from svn (Murray Cumming)
  - SQLite now version 3.4.2 (Vivien Malerba)
  - Added support for cursor-only access for data models returned by the PostgreSQL provider (Vivien Malerba)
- - WIN32 port functionnal (needs testing, Vivien Malerba)
+ - WIN32 port functional (needs testing, Vivien Malerba)
  - Installation is relocatable (Vivien Malerba)
  - New virtual connection feature, which allows to run SQL commands on data models (Vivien Malerba)
  - Reworked the BDB provider to use virtual connections (Vivien Malerba)

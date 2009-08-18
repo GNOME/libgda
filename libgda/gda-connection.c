@@ -267,7 +267,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
 	 * GdaConnection::transaction-status-changed
 	 * @cnc: the #GdaConnection
 	 *
-	 * Gets emitted when the transactional status of @cnc has changed (a transaction has been 
+	 * Gets emitted when the transaction status of @cnc has changed (a transaction has been 
 	 * started, rolled back, a savepoint added,...)
 	 */
 	gda_connection_signals[TRANSACTION_STATUS_CHANGED] =
@@ -327,7 +327,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
 	/**
 	 * GdaConnection:monitor-wrapped-in-mainloop:
 	 *
-	 * Usefull only when there is a mainloop and when the connection acts as a thread wrapper around another connection,
+	 * Useful only when there is a mainloop and when the connection acts as a thread wrapper around another connection,
 	 * it sets up a timeout to handle signals coming from the wrapped connection.
 	 *
 	 * If the connection is not a thread wrapper, then this property has no effect.
@@ -1281,7 +1281,7 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 #endif
 	}
 
-	/* limit connection's useable thread */
+	/* limit connection's usable thread */
 	if (PROV_CLASS (cnc->priv->provider_obj)->limiting_thread)
 		g_object_set (G_OBJECT (cnc), "thread-owner", 
 			      PROV_CLASS (cnc->priv->provider_obj)->limiting_thread, NULL);
@@ -1825,11 +1825,11 @@ gda_connection_statement_to_sql (GdaConnection *cnc, GdaStatement *stmt, GdaSet 
  * @stmt: a #GdaStatement object
  * @error: a place to store errors, or %NULL
  *
- * Ask the database accessed through the @cnc connection to prepare the usage of @stmt. This is only usefull
- * if @stmt will be used more than once (however some database providers may always prepare stamements 
+ * Ask the database accessed through the @cnc connection to prepare the usage of @stmt. This is only useful
+ * if @stmt will be used more than once (however some database providers may always prepare statements 
  * before executing them).
  *
- * This function is also usefull to make sure @stmt is fully understood by the database before actually executing it.
+ * This function is also useful to make sure @stmt is fully understood by the database before actually executing it.
  *
  * Note however that it is also possible that gda_connection_statement_prepare() fails when
  * gda_connection_statement_execute() does not fail (this will usually be the case with statements such as
@@ -2088,7 +2088,7 @@ gda_connection_async_statement_execute (GdaConnection *cnc, GdaStatement *stmt, 
 /**
  * gda_connection_async_fetch_result
  * @cnc: a #GdaConnection
- * @task_id: a task ID retuned by gda_connection_async_statement_execute()
+ * @task_id: a task ID returned by gda_connection_async_statement_execute()
  * @last_insert_row: a place to store a new #GdaSet object which contains the values of the last inserted row, or %NULL
  * @error: a place to store errors, or %NULL
  *
@@ -2166,7 +2166,7 @@ gda_connection_async_fetch_result (GdaConnection *cnc, guint task_id, GdaSet **l
 /**
  * gda_connection_async_cancel
  * @cnc: a #GdaConnection
- * @task_id: a task ID retuned by gda_connection_async_statement_execute()
+ * @task_id: a task ID returned by gda_connection_async_statement_execute()
  * @error: a place to store errors, or %NULL
  *
  * Requests that a task be cancelled. This operation may of may not have any effect
@@ -2465,7 +2465,7 @@ gda_connection_statement_execute_select (GdaConnection *cnc, GdaStatement *stmt,
  * @params: a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
  * @model_usage: specifies how the returned data model will be used as a #GdaStatementModelUsage enum
  * @error: a place to store an error, or %NULL
- * @...: a (-1 terminated) list of (column number, GType) specifying for each column mentionned the GType
+ * @...: a (-1 terminated) list of (column number, GType) specifying for each column mentioned the GType
  * of the column in the returned #GdaDataModel.
  *
  * Executes a selection command on the given connection.
@@ -3759,7 +3759,7 @@ suggest_update_cb_downstream (GdaMetaStore *store, GdaMetaContext *suggest, Down
  * @error: a place to store errors, or %NULL
  *
  * Updates @cnc's associated #GdaMetaStore. If @context is not %NULL, then only the parts described by
- * @context will be updated, and if it is %NULL, then the complete meta store will be updated. Detailled
+ * @context will be updated, and if it is %NULL, then the complete meta store will be updated. Detailed
  * explanations follow:
  *
  * In order to keep the meta store's contents in a consistent state, the update process involves updating
@@ -3775,7 +3775,7 @@ suggest_update_cb_downstream (GdaMetaStore *store, GdaMetaContext *suggest, Down
  *
  * On the other hand, if @context is not %NULL, then a tree of the dependencies has to be built (depending on
  * @context) and only some parts of the meta store are updated following that dependencies tree. Specifying a
- * context may be usefull for example in the following situations:
+ * context may be useful for example in the following situations:
  * <itemizedlist>
  *   <listitem><para>One knows that a database object has changed (for example a table created), and
  *                   may use the @context to request that only the information about that table be updated
@@ -3790,7 +3790,7 @@ suggest_update_cb_downstream (GdaMetaStore *store, GdaMetaContext *suggest, Down
  *
  * see the <link linkend="information_schema:sql_identifiers">
  * meta data section about SQL identifiers</link> for more information, and the documentation about the
- * gda_sql_identifier_quote() function which will be most usefull.
+ * gda_sql_identifier_quote() function which will be most useful.
  *
  * Note however that usually <emphasis>more</emphasis> information will be updated than strictly requested by
  * the @context argument.
@@ -4003,7 +4003,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 }
 
 /*
- * predefined statements for meta store data retreival
+ * predefined statements for meta store data retrieval
  */
 typedef struct {
 	GdaConnectionMetaType  meta_type;
@@ -4161,7 +4161,7 @@ prepare_meta_statements_hash (void)
  * @...: a list of (filter name (gchar *), filter value (GValue*)) pairs specifying
  * the filter to apply to the returned data model's contents (there must be @nb_filters pairs)
  *
- * Retreives data stored in @cnc's associated #GdaMetaStore object. This method is usefull
+ * Retrieves data stored in @cnc's associated #GdaMetaStore object. This method is useful
  * to easily get some information about the meta-data associated to @cnc, such as the list of
  * tables, views, and other database objects.
  *
@@ -4178,7 +4178,7 @@ prepare_meta_statements_hash (void)
  *
  * See the <link linkend="information_schema:sql_identifiers">
  * meta data section about SQL identifiers</link> for more information, and the documentation about the
- * gda_sql_identifier_quote() function which will be most usefull.
+ * gda_sql_identifier_quote() function which will be most useful.
  * 
  * Returns: a #GdaDataModel containing the data required. The caller is responsible
  * for freeing the returned model using g_object_unref().
@@ -4344,7 +4344,7 @@ gda_connection_value_to_sql_string (GdaConnection *cnc, GValue *from)
  * @isol_level: isolation level.
  *
  * Internal functions to be called by database providers when a transaction has been started
- * to keep track of the transactional status of the connection.
+ * to keep track of the transaction status of the connection.
  *
  * Note: this function should not be called if gda_connection_internal_statement_executed()
  * has already been called because a statement's execution was necessary to perform
@@ -4393,7 +4393,7 @@ gda_connection_internal_transaction_started (GdaConnection *cnc, const gchar *pa
  * @trans_name: transaction's name, or %NULL
  *
  * Internal functions to be called by database providers when a transaction has been rolled
- * back to keep track of the transactional status of the connection
+ * back to keep track of the transaction status of the connection
  *
  * Note: this function should not be called if gda_connection_internal_statement_executed()
  * has already been called because a statement's execution was necessary to perform
@@ -4447,7 +4447,7 @@ gda_connection_internal_transaction_rolledback (GdaConnection *cnc, const gchar 
  * @trans_name: transaction's name, or %NULL
  *
  * Internal functions to be called by database providers when a transaction has been committed
- * to keep track of the transactional status of the connection
+ * to keep track of the transaction status of the connection
  *
  * Note: this function should not be called if gda_connection_internal_statement_executed()
  * has already been called because a statement's execution was necessary to perform
@@ -4502,7 +4502,7 @@ gda_connection_internal_transaction_committed (GdaConnection *cnc, const gchar *
  * @svp_name: savepoint's name, or %NULL
  *
  * Internal functions to be called by database providers when a savepoint has been added
- * to keep track of the transactional status of the connection
+ * to keep track of the transaction status of the connection
  *
  * Note: this function should not be called if gda_connection_internal_statement_executed()
  * has already been called because a statement's execution was necessary to perform
@@ -4546,7 +4546,7 @@ gda_connection_internal_savepoint_added (GdaConnection *cnc, const gchar *parent
  * @svp_name: savepoint's name, or %NULL
  *
  * Internal functions to be called by database providers when a savepoint has been rolled back
- * to keep track of the transactional status of the connection
+ * to keep track of the transaction status of the connection
  *
  * Note: this function should not be called if gda_connection_internal_statement_executed()
  * has already been called because a statement's execution was necessary to perform
@@ -4591,7 +4591,7 @@ gda_connection_internal_savepoint_rolledback (GdaConnection *cnc, const gchar *s
  * @svp_name: savepoint's name, or %NULL
  *
  * Internal functions to be called by database providers when a savepoint has been removed
- * to keep track of the transactional status of the connection
+ * to keep track of the transaction status of the connection
  *
  * Note: this function should not be called if gda_connection_internal_statement_executed()
  * has already been called because a statement's execution was necessary to perform
@@ -4638,7 +4638,7 @@ gda_connection_internal_savepoint_removed (GdaConnection *cnc, const gchar *svp_
  * @error: a #GdaConnectionEvent if the execution failed, or %NULL
  *
  * Internal functions to be called by database providers when a statement has been executed
- * to keep track of the transactional status of the connection
+ * to keep track of the transaction status of the connection
  */
 void 
 gda_connection_internal_statement_executed (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params, GdaConnectionEvent *error)
@@ -4823,7 +4823,7 @@ gda_connection_add_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stm
  * @cnc: a #GdaConnection object
  * @gda_stmt: a #GdaStatement object
  *
- * Retreives a pointer to an object representing a prepared statement for @gda_stmt within @cnc. The
+ * Retrieves a pointer to an object representing a prepared statement for @gda_stmt within @cnc. The
  * association must have been done using gda_connection_add_prepared_statement().
  *
  * Returns: the prepared statement, or %NULL if no association exists
@@ -4959,7 +4959,7 @@ gda_connection_get_meta_store (GdaConnection *cnc)
 }
 
 /*
- * This method is usefull only in a multi threading environment (it has no effect in a
+ * This method is useful only in a multi threading environment (it has no effect in a
  * single thread program).
  * Locks @cnc for the current thread. If the lock can't be obtained, then the current thread
  * will be blocked until it can acquire @cnc's lock. 

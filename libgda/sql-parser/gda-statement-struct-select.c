@@ -244,7 +244,7 @@ _gda_sql_statement_select_serialize (gpointer stmt)
  *
  * Sets the DISTINCT clause of @stmt. 
  *
- * @distinct_expr's responsability is transfered to
+ * @distinct_expr's responsibility is transfered to
  * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
  */
 void
@@ -263,7 +263,7 @@ gda_sql_statement_select_take_distinct (GdaSqlStatement *stmt, gboolean distinct
  *
  * Sets list of expressions selected by @stmt
  *
- * @expr_list's responsability is transfered to
+ * @expr_list's responsibility is transfered to
  * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
  */
 void
@@ -283,7 +283,7 @@ gda_sql_statement_select_take_expr_list (GdaSqlStatement *stmt, GSList *expr_lis
  *
  * Sets the FROM clause of @stmt
  *
- * @from's responsability is transfered to
+ * @from's responsibility is transfered to
  * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
  */
 void
@@ -301,7 +301,7 @@ gda_sql_statement_select_take_from (GdaSqlStatement *stmt, GdaSqlSelectFrom *fro
  *
  * Sets the WHERE clause of @stmt
  *
- * @expr's responsability is transfered to
+ * @expr's responsibility is transfered to
  * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
  */
 void
@@ -319,7 +319,7 @@ gda_sql_statement_select_take_where_cond (GdaSqlStatement *stmt, GdaSqlExpr *exp
  *
  * Sets the GROUP BY clause of @stmt
  *
- * @group_by's responsability is transfered to
+ * @group_by's responsibility is transfered to
  * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
  */
 void
@@ -339,7 +339,7 @@ gda_sql_statement_select_take_group_by (GdaSqlStatement *stmt, GSList *group_by)
  *
  * Sets the HAVING clause of @stmt
  *
- * @expr's responsability is transfered to
+ * @expr's responsibility is transfered to
  * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
  */
 void
@@ -357,7 +357,7 @@ gda_sql_statement_select_take_having_cond (GdaSqlStatement *stmt, GdaSqlExpr *ex
  *
  * Sets the ORDER BY clause of @stmt
  *
- * @order_by's responsability is transfered to
+ * @order_by's responsibility is transfered to
  * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
  */
 void
@@ -378,7 +378,7 @@ gda_sql_statement_select_take_order_by (GdaSqlStatement *stmt, GSList *order_by)
  *
  * Sets the LIMIT clause of @stmt
  *
- * @count and @offset's responsability are transfered to
+ * @count and @offset's responsibility are transfered to
  * @stmt (which means @stmt is then responsible to freeing them when no longer needed).
  */
 void

@@ -10,7 +10,7 @@ gda-sql - an SQL console based on Libgda
 [\-o] [\-\-output\-file \fI<filename>\fP]
 [\-C] [\-\-command]
 [\-f] [\-\-commands\-file \fI<filename>\fP]
-[\-i] [\-\-interractive]
+[\-i] [\-\-interactive]
 [\-l] [\-\-list\-dsn]
 [\-L] [\-\-list\-providers]
 [\-s] [\-\-http\-port \fI<port>\fP]
@@ -25,7 +25,7 @@ query results.
 .PP
 Several connections can be opened at the same time, allowing you to switch the active connection to any
 opened connection. When starting, gda-sql opens a connection for each connection specified on the command
-line (plus optionnally one corresponding to the \fBGDA_SQL_CNC\fP environment variable). The prompt
+line (plus optionally one corresponding to the \fBGDA_SQL_CNC\fP environment variable). The prompt
 indicates the current connection used when executing commands.
 
 .PP
@@ -54,7 +54,7 @@ Run only single command (SQL or internal) and exit.
 .B \-f, \-\-commands\-file \fI<filename>\fP
 Execute commands from \fI<filename>\fP, then exit (except if \-i specified).
 .TP 8
-.B \-i, \-\-interractive
+.B \-i, \-\-interactive
 Keep the console opened after executing a file (used with the \-f option).
 .TP 8
 .B \-l, \-\-list\-dsn
@@ -115,7 +115,7 @@ For each connection defined by a DSN, the meta data is stored in a
 
 .SH SQL commands
 You can run any SQL understood by the database engine of the current connection.
-Additionnally SQL statement can contain variables expressed as \fI##<name>::<type>\fP
+Additionally SQL statement can contain variables expressed as \fI##<name>::<type>\fP
 where \fI<name>\fP is the variable's name and \fI<type>\fP is its declared type (which
 can be "int", "string", "boolean", "time", "date", "timestamp" (and other types defined
 by GLib's syntax).
@@ -177,7 +177,7 @@ file.
 
 \fB.export <TABLE> <COLUMN> <ROW_CONDITION> <FILE_NAME>\fP exports the value of the \fI<TABLE>\fP
 table, column \fI<COLUMN>\fP for the row selected by \fI<ROW_CONDITION>\fP to the specified
-file. This is most usefull to export BLOBs.
+file. This is most useful to export BLOBs.
 .IP \fB.g\fP
 Executes the contents of the query buffer, if no parameter is provided. \fB.g <QUERY_BUFFER_NAME>\fP
 Executes the contents of the specified query buffer. A named query buffer is created using the
@@ -261,7 +261,7 @@ value.
 with the contents of the specified file name.
 
 \fB.setex <NAME> <TABLE> <COLUMN> <ROW_CONDITION>\fP (re)defines the the internal parameter named \fI<NAME>\fP
-with the value of the \fI<TABLE>\fP table, column \fI<COLUMN>\fP for the row selected by \fI<ROW_CONDITION>\fP.This is most usefull to export BLOBs.
+with the value of the \fI<TABLE>\fP table, column \fI<COLUMN>\fP for the row selected by \fI<ROW_CONDITION>\fP.This is most useful to export BLOBs.
 .IP \fB.unset\fP
 Unset (delete) internal parameter.
 

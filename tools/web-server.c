@@ -54,9 +54,9 @@ static GObjectClass  *parent_class = NULL;
 struct _WebServerPrivate
 {
 	SoupServer  *server;
-	GHashTable  *ressources_hash; /* key = a path without the starting '/', value = a TmpRessource pointer */
-	GSList      *ressources_list; /* list of the TmpRessource pointers in @ressources_hash, memory not managed here */
-	guint        ressources_timer;
+	GHashTable  *resources_hash; /* key = a path without the starting '/', value = a TmpResource pointer */
+	GSList      *resources_list; /* list of the TmpResource pointers in @resources_hash, memory not managed here */
+	guint        resources_timer;
 
 	/* authentication */
 	gchar       *token; /* FIXME: protect it! */
@@ -87,7 +87,7 @@ static void         auth_cookies_manage (WebServer *server);
 /*
  * Temporary available data
  *
- * Each TmpRessource structure represents a ressource which will be available for some time (until it has
+ * Each TmpResource structure represents a resource which will be available for some time (until it has
  * expired).
  *
  * If the expiration_date attribute is set to 0, then there is no expiration at all.
@@ -97,12 +97,12 @@ typedef struct {
 	gchar *data;
 	gsize  size;
 	int    expiration_date; /* 0 to avoid expiration */
-} TmpRessource;
+} TmpResource;
 
-static TmpRessource  *tmp_ressource_add (WebServer *server, const gchar *path, gchar *data, gsize data_length);
-static TmpRessource  *tmp_static_data_add (WebServer *server, const gchar *path, gchar *data, gsize data_length);
-static gboolean       delete_tmp_ressource (WebServer *server);
-static void           tmp_ressource_free (TmpRessource *data);
+static TmpResource  *tmp_resource_add (WebServer *server, const gchar *path, gchar *data, gsize data_length);
+static TmpResource  *tmp_static_data_add (WebServer *server, const gchar *path, gchar *data, gsize data_length);
+static gboolean       delete_tmp_resource (WebServer *server);
+static void           tmp_resource_free (TmpResource *data);
 
 /* module error */
 GQuark web_server_error_quark (void)
@@ -158,10 +158,10 @@ static void
 web_server_init (WebServer *server)
 {
 	server->priv = g_new0 (WebServerPrivate, 1);
-	server->priv->ressources_timer = 0;
-	server->priv->ressources_hash = g_hash_table_new_full (g_str_hash, g_str_equal,
-							    g_free, (GDestroyNotify) tmp_ressource_free);
-	server->priv->ressources_list = NULL;
+	server->priv->resources_timer = 0;
+	server->priv->resources_hash = g_hash_table_new_full (g_str_hash, g_str_equal,
+							    g_free, (GDestroyNotify) tmp_resource_free);
+	server->priv->resources_list = NULL;
 
 	server->priv->token = g_strdup ("");
 	server->priv->challenges = g_array_new (FALSE, FALSE, sizeof (TimedString*));
@@ -218,7 +218,7 @@ server_callback (SoupServer *server, SoupMessage *msg,
 	GError *error = NULL;
 	gboolean ok = TRUE;
 	gboolean done = FALSE;
-	TmpRessource *tmpdata;
+	TmpResource *tmpdata;
 	if ((*path != '/') || (*path && (path[1] == '/'))) {
 		soup_message_set_status_full (msg, SOUP_STATUS_UNAUTHORIZED, "Wrong path name");
 		return;
@@ -264,7 +264,7 @@ server_callback (SoupServer *server, SoupMessage *msg,
 			done = TRUE;
 		}
 	}
-	else if ((tmpdata = g_hash_table_lookup (webserver->priv->ressources_hash, path))) {
+	else if ((tmpdata = g_hash_table_lookup (webserver->priv->resources_hash, path))) {
 		if (msg->method == SOUP_METHOD_GET) {
 			soup_message_body_append (msg->response_body, SOUP_MEMORY_STATIC,
 						  tmpdata->data, tmpdata->size);
@@ -363,21 +363,21 @@ web_server_dispose (GObject *object)
 
 	server = WEB_SERVER (object);
 	if (server->priv) {
-		if (server->priv->ressources_hash) {
-			g_hash_table_destroy (server->priv->ressources_hash);
-			server->priv->ressources_hash = NULL;
+		if (server->priv->resources_hash) {
+			g_hash_table_destroy (server->priv->resources_hash);
+			server->priv->resources_hash = NULL;
 		}
-		if (server->priv->ressources_list) {
-			g_slist_free (server->priv->ressources_list);
-			server->priv->ressources_list = NULL;
+		if (server->priv->resources_list) {
+			g_slist_free (server->priv->resources_list);
+			server->priv->resources_list = NULL;
 		}
 		if (server->priv->server) {
 			g_object_unref (server->priv->server);
 			server->priv->server = NULL;
 		}
-		if (server->priv->ressources_timer) {
-			g_source_remove (server->priv->ressources_timer);
-			server->priv->ressources_timer = 0;
+		if (server->priv->resources_timer) {
+			g_source_remove (server->priv->resources_timer);
+			server->priv->resources_timer = 0;
 		}
 		if (server->priv->auth_timer) {
 			g_source_remove (server->priv->auth_timer);
@@ -1047,7 +1047,7 @@ compute_table_details (const ConnectionSetting *cs, HtmlDoc *hdoc, WebServer *we
 				gsize file_data_len;
 				if (g_file_get_contents (pngname, &file_data, &file_data_len, NULL)) {
 					tmp_filename = g_strdup_printf ("~tmp/g%d", counter);
-					tmp_ressource_add (webserver, tmp_filename, file_data, file_data_len);
+					tmp_resource_add (webserver, tmp_filename, file_data, file_data_len);
 				}
 			}
 			g_unlink(pngname);
@@ -2056,57 +2056,57 @@ get_post_for_irb (WebServer *webserver, SoupMessage *msg, const ConnectionSettin
 /*
  * @data is stolen!
  */
-static TmpRessource *
-tmp_ressource_add (WebServer *server, const gchar *path, gchar *data, gsize data_length)
+static TmpResource *
+tmp_resource_add (WebServer *server, const gchar *path, gchar *data, gsize data_length)
 {
-	TmpRessource *td;
+	TmpResource *td;
 	GTimeVal tv;
 
 	g_get_current_time (&tv);
-	td = g_new0 (TmpRessource, 1);
+	td = g_new0 (TmpResource, 1);
 	td->path = g_strdup (path);
 	td->data = data;
 	td->size = data_length;
 	td->expiration_date = tv.tv_sec + 30;
-	g_hash_table_insert (server->priv->ressources_hash, g_strdup (path), td);
-	server->priv->ressources_list = g_slist_prepend (server->priv->ressources_list, td);
-	if (!server->priv->ressources_timer)
-		server->priv->ressources_timer = g_timeout_add_seconds (5, (GSourceFunc) delete_tmp_ressource, server);
+	g_hash_table_insert (server->priv->resources_hash, g_strdup (path), td);
+	server->priv->resources_list = g_slist_prepend (server->priv->resources_list, td);
+	if (!server->priv->resources_timer)
+		server->priv->resources_timer = g_timeout_add_seconds (5, (GSourceFunc) delete_tmp_resource, server);
 	return td;
 }
 
 /*
  * @data is static
  */
-static TmpRessource *
+static TmpResource *
 tmp_static_data_add (WebServer *server, const gchar *path, gchar *data, gsize data_length)
 {
-	TmpRessource *td;
+	TmpResource *td;
 
-	td = g_new0 (TmpRessource, 1);
+	td = g_new0 (TmpResource, 1);
 	td->path = g_strdup (path);
 	td->data = data;
 	td->size = data_length;
 	td->expiration_date = 0;
-	g_hash_table_insert (server->priv->ressources_hash, g_strdup (path), td);
-	server->priv->ressources_list = g_slist_prepend (server->priv->ressources_list, td);
+	g_hash_table_insert (server->priv->resources_hash, g_strdup (path), td);
+	server->priv->resources_list = g_slist_prepend (server->priv->resources_list, td);
 	return td;
 }
 
 static gboolean
-delete_tmp_ressource (WebServer *server)
+delete_tmp_resource (WebServer *server)
 {
 	GSList *list;
 	GTimeVal tv;
 	gint n_timed = 0;
 
 	g_get_current_time (&tv);
-	for (list = server->priv->ressources_list; list; ) {
-		TmpRessource *td = (TmpRessource *) list->data;
+	for (list = server->priv->resources_list; list; ) {
+		TmpResource *td = (TmpResource *) list->data;
 		if ((td->expiration_date > 0) && (td->expiration_date < tv.tv_sec)) {
 			GSList *n = list->next;
-			g_hash_table_remove (server->priv->ressources_hash, td->path);
-			server->priv->ressources_list = g_slist_delete_link (server->priv->ressources_list, list);
+			g_hash_table_remove (server->priv->resources_hash, td->path);
+			server->priv->resources_list = g_slist_delete_link (server->priv->resources_list, list);
 			list = n;
 		}
 		else {
@@ -2116,7 +2116,7 @@ delete_tmp_ressource (WebServer *server)
 		}
 	}
 	if (n_timed == 0) {
-		server->priv->ressources_timer = 0;
+		server->priv->resources_timer = 0;
 		return FALSE;
 	}
 	else
@@ -2124,7 +2124,7 @@ delete_tmp_ressource (WebServer *server)
 }
 
 static void
-tmp_ressource_free (TmpRessource *data)
+tmp_resource_free (TmpResource *data)
 {
 	g_free (data->data);
 	g_free (data);

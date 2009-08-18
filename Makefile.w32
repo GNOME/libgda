@@ -22,7 +22,7 @@
 ##
 # TODO
 #    include makefile.win32.cross|win32 based on OS detection.
-#    implement download of dependant files into deps/*
+#    implement download of dependent files into deps/*
 #
 
 

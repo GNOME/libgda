@@ -7,7 +7,7 @@
  *
  * Because the SQL corresponding to DDL queries varies widely between the
  * DBMS, the information required to perform an operation is provided by
- * each DBMS adaptator (server provider), and specified as a set of named
+ * each DBMS adapter (server provider), and specified as a set of named
  * parameters.
  *
  * For each type of operation and for each type of provider, a GdaServerOperation 

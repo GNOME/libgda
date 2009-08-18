@@ -590,7 +590,7 @@ gdaui_entry_cgrid_append_column (GdauiEntryCGrid        *cgrid,
 /**
  * gdaui_entry_cgrid_get_active_iter.
  * @cgrid: a #GdauiEntryCGrid.
- * @iter: the unitialized #GtkTreeIter.
+ * @iter: the uninitialized #GtkTreeIter.
  *
  * Return TRUE if iter was set.
  */

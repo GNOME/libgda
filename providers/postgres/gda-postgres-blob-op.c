@@ -120,7 +120,7 @@ blob_op_open (GdaPostgresBlobOp *pgop)
 		return TRUE;
 
 	if (gda_connection_get_transaction_status (pgop->priv->cnc)) 
-		/* add a savepoint to prevent a blob open failure from rendering the transaction unuseable */
+		/* add a savepoint to prevent a blob open failure from rendering the transaction unusable */
 		use_svp = TRUE;
 
 	if (use_svp)

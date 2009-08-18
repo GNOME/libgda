@@ -43,7 +43,7 @@ static gboolean     gda_handler_boolean_accepts_g_type       (GdaDataHandler * d
 static const gchar *gda_handler_boolean_get_descr              (GdaDataHandler *dh);
 
 struct  _GdaHandlerBooleanPriv {
-	gchar          *detailled_descr;
+	gchar          *detailed_descr;
 	guint           nb_g_types;
 	GType          *valid_g_types;
 };
@@ -114,7 +114,7 @@ gda_handler_boolean_init (GdaHandlerBoolean *hdl)
 {
 	/* Private structure */
 	hdl->priv = g_new0 (GdaHandlerBooleanPriv, 1);
-	hdl->priv->detailled_descr = _("Boolean values handler");
+	hdl->priv->detailed_descr = _("Boolean values handler");
 	hdl->priv->nb_g_types = 1;
 	hdl->priv->valid_g_types = g_new0 (GType, 1);
 	hdl->priv->valid_g_types[0] = G_TYPE_BOOLEAN;

@@ -53,12 +53,12 @@ gda_internal_command_arg_remove_quotes (gchar *str)
 
         total = strlen (str);
         if (str[total-1] == delim) {
-                /* string is correclty terminated by a double quote */
+                /* string is correctly terminated by a double quote */
                 g_memmove (str, str+1, total-2);
                 total -=2;
         }
         else {
-                /* string is _not_ correclty terminated by a double quote */
+                /* string is _not_ correctly terminated by a double quote */
                 g_memmove (str, str+1, total-1);
                 total -=1;
         }
@@ -853,7 +853,7 @@ gda_internal_command_detail (SqlConsole *console, GdaConnection *cnc, const gcha
 					g_string_append_printf (string, " '%s'", g_value_get_string (cvalue));
 
 					str = "SELECT ref_table_schema, ref_table_name, fk_column, ref_column "
-						"FROM _detailled_fk WHERE fk_table_catalog = ##tc::string "
+						"FROM _detailed_fk WHERE fk_table_catalog = ##tc::string "
 						"AND fk_table_schema = ##ts::string AND fk_table_name = ##tname::string AND "
 						"fk_constraint_name = ##cname::string "
 						"ORDER BY ordinal_position";

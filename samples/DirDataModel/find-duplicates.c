@@ -21,7 +21,7 @@ static GOptionEntry entries[] = {
 SELECT * FROM files WHERE md5sum IN (SELECT sf.md5sum FROM files sf GROUP BY sf.md5sum HAVING count (sf.md5sum) > 1)"
 
 #define SQL_CREATE_ALL_DUPLICATES_TABLE "CREATE TEMP TABLE duplicates AS \
-SELECT min (dir_name || '/' || file_name) AS filename, count (data) AS occurences, data \
+SELECT min (dir_name || '/' || file_name) AS filename, count (data) AS occurrences, data \
 FROM filtered_files \
 GROUP BY data HAVING count (data) > 1"
 

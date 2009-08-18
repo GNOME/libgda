@@ -234,7 +234,7 @@ static gboolean            gda_sqlite_provider_commit_transaction (GdaServerProv
 static gboolean            gda_sqlite_provider_rollback_transaction (GdaServerProvider *provider, GdaConnection * cnc,
 								     const gchar *name, GError **error);
 
-/* information retreival */
+/* information retrieval */
 static const gchar        *gda_sqlite_provider_get_version (GdaServerProvider *provider);
 static gboolean            gda_sqlite_provider_supports (GdaServerProvider *provider, GdaConnection *cnc,
 							 GdaConnectionFeature feature);
@@ -280,7 +280,7 @@ static void scalar_gda_hex_func2 (sqlite3_context *context, int argc, sqlite3_va
 typedef struct {
 	char     *name;
 	int       nargs;
-	gpointer  user_data; /* retreive it in func. implementations using sqlite3_user_data() */
+	gpointer  user_data; /* retrieve it in func. implementations using sqlite3_user_data() */
 	void    (*xFunc)(sqlite3_context*,int,sqlite3_value**);
 } ScalarFunction;
 static ScalarFunction scalars[] = {
@@ -1840,7 +1840,7 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, sqlite3_int64 la
 {
 	GError *lerror = NULL;
 
-	/* analyse @stmt */
+	/* analyze @stmt */
 	GdaSqlStatement *sql_insert;
 	GdaSqlStatementInsert *insert;
 	if (gda_statement_get_statement_type (stmt) != GDA_SQL_STATEMENT_INSERT)
@@ -2678,12 +2678,12 @@ sqlite_remove_quotes (gchar *str)
 
         total = strlen (str);
         if ((str[total-1] == delim) || ((delim == '[') && (str[total-1] == ']'))) {
-		/* string is correclty terminated */
+		/* string is correctly terminated */
 		g_memmove (str, str+1, total-2);
 		total -=2;
 	}
 	else {
-		/* string is _not_ correclty terminated */
+		/* string is _not_ correctly terminated */
 		g_memmove (str, str+1, total-1);
 		total -=1;
 	}

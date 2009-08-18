@@ -191,7 +191,7 @@ gda_sql_statement_update_serialize (gpointer stmt)
  *
  * Sets the name of the table to delete from in @stmt.
  *
- * @value's responsability is transfered to
+ * @value's responsibility is transfered to
  * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
  */
 void
@@ -207,9 +207,9 @@ gda_sql_statement_update_take_table_name (GdaSqlStatement *stmt, GValue *value)
 /**
  * gda_sql_statement_update_take_on_conflict
  * @stmt: a #GdaSqlStatement pointer
- * @value: name of the resolution conflict algotithm, as a G_TYPE_STRING #GValue
+ * @value: name of the resolution conflict algorithm, as a G_TYPE_STRING #GValue
  *
- * Sets the name of the resolution conflict algotithm used by @stmt. @value's responsability is transfered to
+ * Sets the name of the resolution conflict algorithm used by @stmt. @value's responsibility is transfered to
  * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
  */
 void
@@ -230,7 +230,7 @@ gda_sql_statement_update_take_on_conflict (GdaSqlStatement *stmt, GValue *value)
  *
  * Sets the WHERE clause of @stmt
  *
- * @expr's responsability is transfered to
+ * @expr's responsibility is transfered to
  * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
  */
 void 
@@ -250,7 +250,7 @@ gda_sql_statement_update_take_condition (GdaSqlStatement *stmt, GdaSqlExpr *cond
  *
  * Specifies that the field named @fname will be updated with the expression @expr.
  *
- * @fname and @expr's responsability are transfered to
+ * @fname and @expr's responsibility are transfered to
  * @stmt (which means @stmt is then responsible to freeing them when no longer needed).
  */
 void

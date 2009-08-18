@@ -222,7 +222,7 @@ class GdaJConnection {
 		svp_map.remove (svp_name);
 	}
 
-	// meta data retreival
+	// meta data retrieval
 	public GdaJMeta getJMeta () throws Exception {
 		if (jmeta == null) {
 			String name= driver.replace (".", "_") + "Meta";
@@ -1032,7 +1032,7 @@ class GdaJBlobOp {
  *
  * Note: the @size attribute is not used here since the PreparedStatement.setBinaryStream() already
  * contains the blob's size and won't try to get more. If this InputStream were to be used
- * somewhere else, then @size would have to be handled correclty.
+ * somewhere else, then @size would have to be handled correctly.
  */
 class GdaInputStream extends InputStream {
 	static int chunk_size = 65536; // 64kb chunks

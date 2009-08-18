@@ -392,7 +392,7 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 	 * @store: the #GdaMetaStore instance that emitted the signal
 	 *
 	 * This signal is emitted when the @store's contents have been reset completely and when
-	 * no detailled changes are available
+	 * no detailed changes are available
 	 */
 	gda_meta_store_signals[META_RESET] =
 		g_signal_new ("meta-reset",
@@ -561,7 +561,7 @@ gda_meta_store_constructor (GType type,
 
 	/* create a local copy of all the DbObject structures defined in klass->cpriv */
 	if (store->priv->catalog && !store->priv->schema) {
-		g_warning (_("Catalog specified but no schema specified, store will not be useable"));
+		g_warning (_("Catalog specified but no schema specified, store will not be usable"));
 		store->priv->schema_ok = FALSE;
 	}
 	else {
@@ -1227,7 +1227,7 @@ create_view_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr no
 			goto onerror;
 		}
 		
-		/* use a parser to analyse the view dependencies */
+		/* use a parser to analyze the view dependencies */
 		GdaStatement *stmt;
 		const gchar *remain;
 		stmt = gda_sql_parser_parse_string (klass->cpriv->parser, (gchar *) def, &remain, error);
@@ -2077,7 +2077,7 @@ gda_meta_store_get_internal_connection (GdaMetaStore *store) {
  * @cnc: a #GdaConnection
  *
  * Use this method to get a correctly quoted (if necessary) SQL identifier which can be used
- * to retreive or filter information in a #GdaMetaStore which stores meta data about @cnc.
+ * to retrieve or filter information in a #GdaMetaStore which stores meta data about @cnc.
  *
  * The returned SQL identifier can be used in conjunction with gda_connection_update_meta_store(),
  * gda_connection_get_meta_store_data(), gda_connection_get_meta_store_data_v() and
@@ -2104,7 +2104,7 @@ gda_meta_store_sql_identifier_quote (const gchar *id, GdaConnection *cnc)
  * @select_sql: a SELECT statement
  * @error: a place to store errors, or %NULL
  * @...: a list of (variable name (gchar *), GValue *value) terminated with NULL, representing values for all the
- * variables mentionned in @select_sql. If there is no variable then this part can be omitted.
+ * variables mentioned in @select_sql. If there is no variable then this part can be omitted.
  *
  * Extracts some data stored in @store using a custom SELECT query. If the @select_sql filter involves
  * SQL identifiers (such as table or column names), then the values should have been adapted using
@@ -2229,7 +2229,7 @@ static gboolean gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table
  * @condition: SQL expression (which may contain variables) defining the rows which are being obsoleted by @new_data, or %NULL
  * @error: a place to store errors, or %NULL
  * @...: a list of (variable name (gchar *), GValue *value) terminated with NULL, representing values for all the
- * variables mentionned in @condition.
+ * variables mentioned in @condition.
  *
  * Propagates an update to @store, the update's contents is represented by @new_data, this function is
  * primarily reserved to database providers.
@@ -2239,7 +2239,7 @@ static gboolean gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table
  * argument.
  *
  * Now, to update only one table, the @new_data data model should have one row for the table to update (or no row
- * at all if the table does not exist anymore), and have values for the promary key of the "_tables" table of
+ * at all if the table does not exist anymore), and have values for the primary key of the "_tables" table of
  * @store, namely "table_catalog", "table_schema" and "table_name".
  *
  * Returns: TRUE if no error occurred
@@ -2883,7 +2883,7 @@ out:
  * @error: a place to store errors, or %NULL
  *
  * Sets @store in a mode where only the modifications completely overriding a table
- * will be allowed, where no detailled modifications report is made and where the "suggest-update"
+ * will be allowed, where no detailed modifications report is made and where the "suggest-update"
  * signal is not emitted.
  *
  * Returns: TRUE if no error occurred
@@ -3928,7 +3928,7 @@ _gda_meta_store_schema_get_downstream_contexts (GdaMetaStore *store, GdaMetaCont
 		TableFKey *tfk = (TableFKey*) list->data;
 		GdaMetaContext *ct;
 
-		/* REM: there may be duplicates, but we don't really care here (it'd take more ressources to get rid of
+		/* REM: there may be duplicates, but we don't really care here (it'd take more resources to get rid of
 		* them than it takes to put duplicates in a hash table */
 		ct = g_new0 (GdaMetaContext, 1);
 		ct->table_name = tfk->table_info->obj_name;

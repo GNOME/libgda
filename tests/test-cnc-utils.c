@@ -343,7 +343,7 @@ test_cnc_load_data_from_file (GdaConnection *cnc, const gchar *table, const gcha
 		return FALSE;
 	}
 
-	/* retreiving meta data info */
+	/* retrieving meta data info */
 	GdaMetaDbObject *table_dbo;
 	GValue *name_value;
 	g_value_set_string ((name_value = gda_value_new (G_TYPE_STRING)), table);

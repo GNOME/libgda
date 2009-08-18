@@ -648,7 +648,7 @@ action_commit_cb (GtkAction *action, GdauiRawForm *form)
 		if (allok) {
 			newrow = gda_data_model_iter_get_row (form->priv->iter);
 			if (row != newrow) /* => current row has changed because the proxy had to emit a "row_removed" when
-					      actually succedded the commit 
+					      actually succeeded the commit 
 					      => we need to come back to that row
 					   */
 				gda_data_model_iter_move_to_row (form->priv->iter, row);

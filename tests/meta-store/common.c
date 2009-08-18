@@ -307,7 +307,7 @@ common_drop_all_tables (GdaMetaStore *store)
 	};
 	gchar *view_names [] = {
 		"_all_types",
-		"_detailled_fk"
+		"_detailed_fk"
 	};
 	
 	GdaConnection *cnc = gda_meta_store_get_internal_connection (store);

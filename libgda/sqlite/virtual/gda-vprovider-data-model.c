@@ -84,7 +84,7 @@ gda_vprovider_data_model_class_init (GdaVproviderDataModelClass *klass)
 
 	server_class->get_name = gda_vprovider_data_model_get_name;
 
-	/* explicitely unimplement the DDL queries */
+	/* explicitly unimplement the DDL queries */
 	server_class->supports_operation = NULL;
         server_class->create_operation = NULL;
         server_class->render_operation = NULL;

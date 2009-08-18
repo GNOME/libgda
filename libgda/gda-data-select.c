@@ -54,8 +54,8 @@ static void delayed_select_stmt_free (DelayedSelectStmt *dstmt);
  *  - use @del_rows to determine if the row has been removed (if it's in the array), and otherwise
  *    get an "internal" row number
  *  - use the @upd_rows index to see if the row has been modified, and if it has, then use
- *    the associated DelayedSelectStmt to retreive the GdaRow
- *  - use the virtual methods to actually retreive the requested GdaRow
+ *    the associated DelayedSelectStmt to retrieve the GdaRow
+ *  - use the virtual methods to actually retrieve the requested GdaRow
  */
 static gint external_to_internal_row (GdaDataSelect *model, gint ext_row, GError **error);
 
@@ -239,7 +239,7 @@ gda_data_select_class_init (GdaDataSelectClass *klass)
 							    G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_ALL_STORED,
 					 g_param_spec_boolean ("store-all-rows", "Store all the rows",
-							       "Tells if model has analysed all the rows", FALSE,
+							       "Tells if model has analyzed all the rows", FALSE,
 							       G_PARAM_READABLE | G_PARAM_WRITABLE));
 	g_object_class_install_property (object_class, PROP_PARAMS,
 					 g_param_spec_object ("exec-params", NULL, 
@@ -790,7 +790,7 @@ gda_data_select_get_property (GObject *object,
 			break;
 		case PROP_ALL_STORED:
 			if (!model->priv->sh->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)
-				g_warning ("Cannot set the 'store-all-rows' property when acces mode is cursor based");
+				g_warning ("Cannot set the 'store-all-rows' property when access mode is cursor based");
 			else {
 				if ((model->advertized_nrows < 0) && CLASS (model)->fetch_nb_rows)
 					CLASS (model)->fetch_nb_rows (model);
@@ -1399,7 +1399,7 @@ gda_data_select_set_row_selection_condition  (GdaDataSelect *model, GdaSqlExpr *
 /**
  * gda_data_select_set_row_selection_condition_sql
  * @model: a #GdaDataSelect data model
- * @sql_where: an SQL condition (withouth the WHERE keyword)
+ * @sql_where: an SQL condition (without the WHERE keyword)
  * @error: a place to store errors, or %NULL
  *
  * Specifies the SQL condition corresponding to the WHERE part of a SELECT statement which would
@@ -1735,7 +1735,7 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 			GdaDataModel *tmpmodel;
 			if (!dstmt->select || !dstmt->params) {
 				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-					      "%s", _("Unable to retreive data after modifications"));
+					      "%s", _("Unable to retrieve data after modifications"));
 				return NULL;
 			}
 			tmpmodel = gda_connection_statement_execute_select (imodel->priv->cnc, 
@@ -1743,7 +1743,7 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 									    dstmt->params, NULL);
 			if (!tmpmodel) {
 				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-					      "%s", _("Unable to retreive data after modifications, no further modification will be allowed"));
+					      "%s", _("Unable to retrieve data after modifications, no further modification will be allowed"));
 				imodel->priv->sh->modif_internals->safely_locked = TRUE;
 				return NULL;
 			}
@@ -1751,7 +1751,7 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 			if (gda_data_model_get_n_rows (tmpmodel) != 1) {
 				g_object_unref (tmpmodel);
 				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-					     "%s", _("Unable to retreive data after modifications, no further modification will be allowed"));
+					     "%s", _("Unable to retrieve data after modifications, no further modification will be allowed"));
 				imodel->priv->sh->modif_internals->safely_locked = TRUE;
 				return NULL;
 			}
@@ -1773,7 +1773,7 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 						g_object_unref (tmpmodel);
 						g_object_unref (prow);
 						g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-							      "%s", _("Unable to retreive data after modifications, no further modification will be allowed"));
+							      "%s", _("Unable to retrieve data after modifications, no further modification will be allowed"));
 						imodel->priv->sh->modif_internals->safely_locked = TRUE;
 						return NULL;
 					}
@@ -2172,7 +2172,7 @@ compute_single_update_stmt (GdaDataSelect *model, BVector *bv, GError **error)
 
 /*
  * creates a derivative of the model->priv->sh->modif_internals->modif_stmts [INS_QUERY] statement
- * where only the columns where @bv->data[colnum] is not 0 are not mentionned.
+ * where only the columns where @bv->data[colnum] is not 0 are not mentioned.
  *
  * Returns: a new #GdaStatement, or %NULL
  */

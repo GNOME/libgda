@@ -113,7 +113,7 @@ gda_connection_event_init (GdaConnectionEvent *event, GdaConnectionEventClass *k
  * gda_connection_event_new:
  * @type: the type of event
  *
- * Creates a new unitialized event object. This class is used for communicating
+ * Creates a new uninitialized event object. This class is used for communicating
  * events from the different providers to the clients.
  *
  * Returns: the event object.
@@ -230,7 +230,7 @@ gda_connection_event_get_event_type (GdaConnectionEvent *event)
  * @event: a #GdaConnectionEvent.
  *
  * Get the description of the event. Note that is @event's type is GDA_CONNECTION_EVENT_COMMAND,
- * the the dsecription is the SQL of the command.
+ * the the description is the SQL of the command.
  *
  * Returns: @event's description.
  */
@@ -293,7 +293,7 @@ gda_connection_event_set_code (GdaConnectionEvent *event, glong code)
  * gda_connection_event_get_gda_code
  * @event: a #GdaConnectionEvent
  *
- * Retreive the code associated to @event.
+ * Retrieve the code associated to @event.
  *
  * Returns: the #GdaConnectionEventCode event's code
  */

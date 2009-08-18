@@ -36,7 +36,7 @@ access-raw.c:
 -------------
 This program creates a GdaDataModelBdb object which is by default composed of two
 binary columns, and accesses the contents of the key and data binary fields by casting
-the binary data to the Key and Value structures mentionned above.
+the binary data to the Key and Value structures mentioned above.
 
 access-custom.c:
 ----------------

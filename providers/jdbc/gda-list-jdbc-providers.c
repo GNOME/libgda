@@ -25,7 +25,7 @@ main (int argc, char **argv)
 			g_assert (namevalue);
 			if (! some_found) {
 				some_found = TRUE;
-				g_print ("Useable JDBC drivers:\n");
+				g_print ("Usable JDBC drivers:\n");
 			}
 			g_print ("%s\n", g_value_get_string (namevalue));
 		}
@@ -33,7 +33,7 @@ main (int argc, char **argv)
 	g_object_unref (providers);
 
 	if (! some_found) 
-		g_print ("No useable JDBC driver\n");
+		g_print ("No usable JDBC driver\n");
 
 	return 0;
 }

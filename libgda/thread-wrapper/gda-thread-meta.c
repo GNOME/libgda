@@ -74,11 +74,11 @@ typedef struct {
 	const GValue *v2;
 	const GValue *v3;
 	const GValue *v4;
-} DetailledThreadData;
+} DetailedThreadData;
 
-#define main_thread_detailled_core(func,prov,cnc,store,context,arg1,arg2,arg3,arg4,error) \
+#define main_thread_detailed_core(func,prov,cnc,store,context,arg1,arg2,arg3,arg4,error) \
 	ThreadConnectionData *cdata; \
-	DetailledThreadData wdata; \
+	DetailedThreadData wdata; \
 	gpointer res; \
 	guint jid; \
         cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data ((cnc)); \
@@ -97,7 +97,7 @@ typedef struct {
 	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, (error)); \
 	return GPOINTER_TO_INT (res) ? TRUE : FALSE
 
-#define sub_thread_detailled1_core(func,name) \
+#define sub_thread_detailed1_core(func,name) \
 	gboolean retval; \
 	if (! (func)) {		  \
 	        WARN_METHOD_NOT_IMPLEMENTED (data->prov, (name)); \
@@ -107,7 +107,7 @@ typedef struct {
 	/*g_print ("/%s() => %s\n", __FUNCTION__, retval ? "TRUE" : "FALSE");*/ \
 	return GINT_TO_POINTER (retval ? 1 : 0)
 
-#define sub_thread_detailled2_core(func,name) \
+#define sub_thread_detailed2_core(func,name) \
 	gboolean retval; \
 	if (! (func)) {		  \
 	        WARN_METHOD_NOT_IMPLEMENTED (data->prov, (name)); \
@@ -117,7 +117,7 @@ typedef struct {
 	/*g_print ("/%s() => %s\n", __FUNCTION__, retval ? "TRUE" : "FALSE");*/ \
 	return GINT_TO_POINTER (retval ? 1 : 0)
 
-#define sub_thread_detailled3_core(func,name) \
+#define sub_thread_detailed3_core(func,name) \
 	gboolean retval; \
 	if (! (func)) {		  \
 	        WARN_METHOD_NOT_IMPLEMENTED (data->prov, (name)); \
@@ -127,7 +127,7 @@ typedef struct {
 	/*g_print ("/%s() => %s\n", __FUNCTION__, retval ? "TRUE" : "FALSE");*/ \
 	return GINT_TO_POINTER (retval ? 1 : 0)
 
-#define sub_thread_detailled4_core(func,name) \
+#define sub_thread_detailed4_core(func,name) \
 	gboolean retval; \
 	if (! (func)) {		  \
 	        WARN_METHOD_NOT_IMPLEMENTED (data->prov, (name)); \
@@ -193,17 +193,17 @@ _gda_thread_meta__udt (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 static gpointer
-sub_thread__gda_thread_meta_udt (DetailledThreadData *data, GError **error)
+sub_thread__gda_thread_meta_udt (DetailedThreadData *data, GError **error)
 {
 	/* WARNING: function executed in sub thread! */
-	sub_thread_detailled2_core (PROV_CLASS (data->prov)->meta_funcs.udt, "_udt");
+	sub_thread_detailed2_core (PROV_CLASS (data->prov)->meta_funcs.udt, "_udt");
 }
 gboolean
 _gda_thread_meta_udt (GdaServerProvider *prov, GdaConnection *cnc, 
 		      GdaMetaStore *store, GdaMetaContext *context, GError **error,
 		      const GValue *udt_catalog, const GValue *udt_schema)
 {
-	main_thread_detailled_core (sub_thread__gda_thread_meta_udt, prov, cnc, store, context, 
+	main_thread_detailed_core (sub_thread__gda_thread_meta_udt, prov, cnc, store, context, 
 				    udt_catalog, udt_schema, NULL, NULL, error);
 }
 
@@ -224,10 +224,10 @@ _gda_thread_meta__udt_cols (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 static gpointer
-sub_thread__gda_thread_meta_udt_cols (DetailledThreadData *data, GError **error)
+sub_thread__gda_thread_meta_udt_cols (DetailedThreadData *data, GError **error)
 {
 	/* WARNING: function executed in sub thread! */
-	sub_thread_detailled3_core (PROV_CLASS (data->prov)->meta_funcs.udt_cols, "udt_cols");
+	sub_thread_detailed3_core (PROV_CLASS (data->prov)->meta_funcs.udt_cols, "udt_cols");
 }
 
 gboolean
@@ -235,7 +235,7 @@ _gda_thread_meta_udt_cols (GdaServerProvider *prov, GdaConnection *cnc,
 			   GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			   const GValue *udt_catalog, const GValue *udt_schema, const GValue *udt_name)
 {
-	main_thread_detailled_core (sub_thread__gda_thread_meta_udt_cols, prov, cnc, store, context, 
+	main_thread_detailed_core (sub_thread__gda_thread_meta_udt_cols, prov, cnc, store, context, 
 				    udt_catalog, udt_schema, udt_name, NULL, error);
 }
 
@@ -254,10 +254,10 @@ _gda_thread_meta__enums (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 static gpointer
-sub_thread__gda_thread_meta_enums (DetailledThreadData *data, GError **error)
+sub_thread__gda_thread_meta_enums (DetailedThreadData *data, GError **error)
 {
 	/* WARNING: function executed in sub thread! */
-	sub_thread_detailled3_core (PROV_CLASS (data->prov)->meta_funcs.enums, "enums");
+	sub_thread_detailed3_core (PROV_CLASS (data->prov)->meta_funcs.enums, "enums");
 }
 
 gboolean
@@ -265,7 +265,7 @@ _gda_thread_meta_enums (GdaServerProvider *prov, GdaConnection *cnc,
 			GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			const GValue *udt_catalog, const GValue *udt_schema, const GValue *udt_name)
 {
-	main_thread_detailled_core (sub_thread__gda_thread_meta_enums, prov, cnc, store, context, 
+	main_thread_detailed_core (sub_thread__gda_thread_meta_enums, prov, cnc, store, context, 
 				    udt_catalog, udt_schema, udt_name, NULL, error);
 }
 
@@ -284,10 +284,10 @@ _gda_thread_meta__domains (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 static gpointer
-sub_thread__gda_thread_meta_domains (DetailledThreadData *data, GError **error)
+sub_thread__gda_thread_meta_domains (DetailedThreadData *data, GError **error)
 {
 	/* WARNING: function executed in sub thread! */
-	sub_thread_detailled2_core (PROV_CLASS (data->prov)->meta_funcs.domains, "domains");
+	sub_thread_detailed2_core (PROV_CLASS (data->prov)->meta_funcs.domains, "domains");
 }
 
 gboolean
@@ -295,7 +295,7 @@ _gda_thread_meta_domains (GdaServerProvider *prov, GdaConnection *cnc,
 			  GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			  const GValue *domain_catalog, const GValue *domain_schema)
 {
-	main_thread_detailled_core (sub_thread__gda_thread_meta_domains, prov, cnc, store, context, 
+	main_thread_detailed_core (sub_thread__gda_thread_meta_domains, prov, cnc, store, context, 
 				    domain_catalog, domain_schema, NULL, NULL, error);
 }
 
@@ -314,10 +314,10 @@ _gda_thread_meta__constraints_dom (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 static gpointer
-sub_thread__gda_thread_meta_constraints_dom (DetailledThreadData *data, GError **error)
+sub_thread__gda_thread_meta_constraints_dom (DetailedThreadData *data, GError **error)
 {
 	/* WARNING: function executed in sub thread! */
-	sub_thread_detailled3_core (PROV_CLASS (data->prov)->meta_funcs.constraints_dom, "constraints_dom");
+	sub_thread_detailed3_core (PROV_CLASS (data->prov)->meta_funcs.constraints_dom, "constraints_dom");
 }
 
 gboolean
@@ -326,7 +326,7 @@ _gda_thread_meta_constraints_dom (GdaServerProvider *prov, GdaConnection *cnc,
 				  const GValue *domain_catalog, const GValue *domain_schema, 
 				  const GValue *domain_name)
 {
-	main_thread_detailled_core (sub_thread__gda_thread_meta_constraints_dom, prov, cnc, store, context, 
+	main_thread_detailed_core (sub_thread__gda_thread_meta_constraints_dom, prov, cnc, store, context, 
 				    domain_catalog, domain_schema, domain_name, NULL, error);
 }
 
@@ -345,10 +345,10 @@ _gda_thread_meta__el_types (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 static gpointer
-sub_thread__gda_thread_meta_el_types (DetailledThreadData *data, GError **error)
+sub_thread__gda_thread_meta_el_types (DetailedThreadData *data, GError **error)
 {
 	/* WARNING: function executed in sub thread! */
-	sub_thread_detailled1_core (PROV_CLASS (data->prov)->meta_funcs.el_types, "el_types");
+	sub_thread_detailed1_core (PROV_CLASS (data->prov)->meta_funcs.el_types, "el_types");
 }
 
 gboolean
@@ -356,7 +356,7 @@ _gda_thread_meta_el_types (GdaServerProvider *prov, GdaConnection *cnc,
 			   GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			   const GValue *specific_name)
 {
-	main_thread_detailled_core (sub_thread__gda_thread_meta_el_types, prov, cnc, store, context, 
+	main_thread_detailed_core (sub_thread__gda_thread_meta_el_types, prov, cnc, store, context, 
 				    specific_name, NULL, NULL, NULL, error);
 }
 
@@ -375,10 +375,10 @@ _gda_thread_meta__collations (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 static gpointer
-sub_thread__gda_thread_meta_collations (DetailledThreadData *data, GError **error)
+sub_thread__gda_thread_meta_collations (DetailedThreadData *data, GError **error)
 {
 	/* WARNING: function executed in sub thread! */
-	sub_thread_detailled3_core (PROV_CLASS (data->prov)->meta_funcs.collations, "collations");
+	sub_thread_detailed3_core (PROV_CLASS (data->prov)->meta_funcs.collations, "collations");
 }
 
 gboolean
@@ -387,7 +387,7 @@ _gda_thread_meta_collations (GdaServerProvider *prov, GdaConnection *cnc,
 			     const GValue *collation_catalog, const GValue *collation_schema, 
 			     const GValue *collation_name_n)
 {
-	main_thread_detailled_core (sub_thread__gda_thread_meta_collations, prov, cnc, store, context, 
+	main_thread_detailed_core (sub_thread__gda_thread_meta_collations, prov, cnc, store, context, 
 				    collation_catalog, collation_schema, collation_name_n, NULL, error);
 }
 
@@ -406,10 +406,10 @@ _gda_thread_meta__character_sets (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 static gpointer
-sub_thread__gda_thread_meta_character_sets (DetailledThreadData *data, GError **error)
+sub_thread__gda_thread_meta_character_sets (DetailedThreadData *data, GError **error)
 {
 	/* WARNING: function executed in sub thread! */
-	sub_thread_detailled3_core (PROV_CLASS (data->prov)->meta_funcs.character_sets, "character_sets");
+	sub_thread_detailed3_core (PROV_CLASS (data->prov)->meta_funcs.character_sets, "character_sets");
 }
 
 gboolean
@@ -418,7 +418,7 @@ _gda_thread_meta_character_sets (GdaServerProvider *prov, GdaConnection *cnc,
 				 const GValue *chset_catalog, const GValue *chset_schema, 
 				 const GValue *chset_name_n)
 {
-	main_thread_detailled_core (sub_thread__gda_thread_meta_character_sets, prov, cnc, store, context, 
+	main_thread_detailed_core (sub_thread__gda_thread_meta_character_sets, prov, cnc, store, context, 
 				    chset_catalog, chset_schema, chset_name_n, NULL, error);
 }
 
@@ -438,10 +438,10 @@ _gda_thread_meta__schemata (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 static gpointer
-sub_thread__gda_thread_meta_schemata (DetailledThreadData *data, GError **error)
+sub_thread__gda_thread_meta_schemata (DetailedThreadData *data, GError **error)
 {
 	/* WARNING: function executed in sub thread! */
-	sub_thread_detailled2_core (PROV_CLASS (data->prov)->meta_funcs.schemata, "schemata");
+	sub_thread_detailed2_core (PROV_CLASS (data->prov)->meta_funcs.schemata, "schemata");
 }
 
 gboolean
@@ -449,7 +449,7 @@ _gda_thread_meta_schemata (GdaServerProvider *prov, GdaConnection *cnc,
 			   GdaMetaStore *store, GdaMetaContext *context, GError **error, 
 			   const GValue *catalog_name, const GValue *schema_name_n)
 {
-	main_thread_detailled_core (sub_thread__gda_thread_meta_schemata, prov, cnc, store, context, 
+	main_thread_detailed_core (sub_thread__gda_thread_meta_schemata, prov, cnc, store, context, 
 				    catalog_name, schema_name_n, NULL, NULL, error);
 }
 
@@ -468,10 +468,10 @@ _gda_thread_meta__tables_views (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 static gpointer
-sub_thread__gda_thread_meta_tables_views (DetailledThreadData *data, GError **error)
+sub_thread__gda_thread_meta_tables_views (DetailedThreadData *data, GError **error)
 {
 	/* WARNING: function executed in sub thread! */
-	sub_thread_detailled3_core (PROV_CLASS (data->prov)->meta_funcs.tables_views, "tables_views");
+	sub_thread_detailed3_core (PROV_CLASS (data->prov)->meta_funcs.tables_views, "tables_views");
 }
 
 gboolean
@@ -480,7 +480,7 @@ _gda_thread_meta_tables_views (GdaServerProvider *prov, GdaConnection *cnc,
 			       const GValue *table_catalog, const GValue *table_schema, 
 			       const GValue *table_name_n)
 {
-	main_thread_detailled_core (sub_thread__gda_thread_meta_tables_views, prov, cnc, store, context, 
+	main_thread_detailed_core (sub_thread__gda_thread_meta_tables_views, prov, cnc, store, context, 
 				    table_catalog, table_schema, table_name_n, NULL, error);
 }
 
@@ -499,10 +499,10 @@ _gda_thread_meta__columns (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 static gpointer
-sub_thread__gda_thread_meta_columns (DetailledThreadData *data, GError **error)
+sub_thread__gda_thread_meta_columns (DetailedThreadData *data, GError **error)
 {
 	/* WARNING: function executed in sub thread! */
-	sub_thread_detailled3_core (PROV_CLASS (data->prov)->meta_funcs.columns, "columns");
+	sub_thread_detailed3_core (PROV_CLASS (data->prov)->meta_funcs.columns, "columns");
 }
 
 gboolean
@@ -511,7 +511,7 @@ _gda_thread_meta_columns (GdaServerProvider *prov, GdaConnection *cnc,
 			  const GValue *table_catalog, const GValue *table_schema, 
 			  const GValue *table_name)
 {
-	main_thread_detailled_core (sub_thread__gda_thread_meta_columns, prov, cnc, store, context, 
+	main_thread_detailed_core (sub_thread__gda_thread_meta_columns, prov, cnc, store, context, 
 				    table_catalog, table_schema, table_name, NULL, error);
 }
 
@@ -530,10 +530,10 @@ _gda_thread_meta__view_cols (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 static gpointer
-sub_thread__gda_thread_meta_view_cols (DetailledThreadData *data, GError **error)
+sub_thread__gda_thread_meta_view_cols (DetailedThreadData *data, GError **error)
 {
 	/* WARNING: function executed in sub thread! */
-	sub_thread_detailled3_core (PROV_CLASS (data->prov)->meta_funcs.view_cols, "view_cols");
+	sub_thread_detailed3_core (PROV_CLASS (data->prov)->meta_funcs.view_cols, "view_cols");
 }
 
 gboolean
@@ -542,7 +542,7 @@ _gda_thread_meta_view_cols (GdaServerProvider *prov, GdaConnection *cnc,
 			    const GValue *view_catalog, const GValue *view_schema, 
 			    const GValue *view_name)
 {
-	main_thread_detailled_core (sub_thread__gda_thread_meta_view_cols, prov, cnc, store, context, 
+	main_thread_detailed_core (sub_thread__gda_thread_meta_view_cols, prov, cnc, store, context, 
 				    view_catalog, view_schema, view_name, NULL, error);
 }
 
@@ -561,10 +561,10 @@ _gda_thread_meta__constraints_tab (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 static gpointer
-sub_thread__gda_thread_meta_constraints_tab (DetailledThreadData *data, GError **error)
+sub_thread__gda_thread_meta_constraints_tab (DetailedThreadData *data, GError **error)
 {
 	/* WARNING: function executed in sub thread! */
-	sub_thread_detailled4_core (PROV_CLASS (data->prov)->meta_funcs.constraints_tab, "constraints_tab");
+	sub_thread_detailed4_core (PROV_CLASS (data->prov)->meta_funcs.constraints_tab, "constraints_tab");
 }
 
 gboolean
@@ -573,7 +573,7 @@ _gda_thread_meta_constraints_tab (GdaServerProvider *prov, GdaConnection *cnc,
 				  const GValue *table_catalog, const GValue *table_schema, 
 				  const GValue *table_name, const GValue *constraint_name_n)
 {
-	main_thread_detailled_core (sub_thread__gda_thread_meta_constraints_tab, prov, cnc, store, context, 
+	main_thread_detailed_core (sub_thread__gda_thread_meta_constraints_tab, prov, cnc, store, context, 
 				    table_catalog, table_schema, table_name, constraint_name_n, error);
 }
 
@@ -592,10 +592,10 @@ _gda_thread_meta__constraints_ref (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 static gpointer
-sub_thread__gda_thread_meta_constraints_ref (DetailledThreadData *data, GError **error)
+sub_thread__gda_thread_meta_constraints_ref (DetailedThreadData *data, GError **error)
 {
 	/* WARNING: function executed in sub thread! */
-	sub_thread_detailled4_core (PROV_CLASS (data->prov)->meta_funcs.constraints_ref, "constraints_ref");
+	sub_thread_detailed4_core (PROV_CLASS (data->prov)->meta_funcs.constraints_ref, "constraints_ref");
 }
 
 gboolean
@@ -604,7 +604,7 @@ _gda_thread_meta_constraints_ref (GdaServerProvider *prov, GdaConnection *cnc,
 				  const GValue *table_catalog, const GValue *table_schema, const GValue *table_name, 
 				  const GValue *constraint_name)
 {
-	main_thread_detailled_core (sub_thread__gda_thread_meta_constraints_ref, prov, cnc, store, context, 
+	main_thread_detailed_core (sub_thread__gda_thread_meta_constraints_ref, prov, cnc, store, context, 
 				    table_catalog, table_schema, table_name, constraint_name, error);
 }
 
@@ -623,10 +623,10 @@ _gda_thread_meta__key_columns (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 static gpointer
-sub_thread__gda_thread_meta_key_columns (DetailledThreadData *data, GError **error)
+sub_thread__gda_thread_meta_key_columns (DetailedThreadData *data, GError **error)
 {
 	/* WARNING: function executed in sub thread! */
-	sub_thread_detailled4_core (PROV_CLASS (data->prov)->meta_funcs.key_columns, "key_columns");
+	sub_thread_detailed4_core (PROV_CLASS (data->prov)->meta_funcs.key_columns, "key_columns");
 }
 
 gboolean
@@ -635,7 +635,7 @@ _gda_thread_meta_key_columns (GdaServerProvider *prov, GdaConnection *cnc,
 			      const GValue *table_catalog, const GValue *table_schema, 
 			      const GValue *table_name, const GValue *constraint_name)
 {
-	main_thread_detailled_core (sub_thread__gda_thread_meta_key_columns, prov, cnc, store, context, 
+	main_thread_detailed_core (sub_thread__gda_thread_meta_key_columns, prov, cnc, store, context, 
 				    table_catalog, table_schema, table_name, constraint_name, error);
 }
 
@@ -654,10 +654,10 @@ _gda_thread_meta__check_columns (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 static gpointer
-sub_thread__gda_thread_meta_check_columns (DetailledThreadData *data, GError **error)
+sub_thread__gda_thread_meta_check_columns (DetailedThreadData *data, GError **error)
 {
 	/* WARNING: function executed in sub thread! */
-	sub_thread_detailled4_core (PROV_CLASS (data->prov)->meta_funcs.check_columns, "check_columns");
+	sub_thread_detailed4_core (PROV_CLASS (data->prov)->meta_funcs.check_columns, "check_columns");
 }
 
 gboolean
@@ -666,7 +666,7 @@ _gda_thread_meta_check_columns (GdaServerProvider *prov, GdaConnection *cnc,
 				const GValue *table_catalog, const GValue *table_schema, 
 				const GValue *table_name, const GValue *constraint_name)
 {
-	main_thread_detailled_core (sub_thread__gda_thread_meta_check_columns, prov, cnc, store, context, 
+	main_thread_detailed_core (sub_thread__gda_thread_meta_check_columns, prov, cnc, store, context, 
 				    table_catalog, table_schema, table_name, constraint_name, error);
 }
 
@@ -685,10 +685,10 @@ _gda_thread_meta__triggers (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 static gpointer
-sub_thread__gda_thread_meta_triggers (DetailledThreadData *data, GError **error)
+sub_thread__gda_thread_meta_triggers (DetailedThreadData *data, GError **error)
 {
 	/* WARNING: function executed in sub thread! */
-	sub_thread_detailled3_core (PROV_CLASS (data->prov)->meta_funcs.triggers, "triggers");
+	sub_thread_detailed3_core (PROV_CLASS (data->prov)->meta_funcs.triggers, "triggers");
 }
 
 gboolean
@@ -697,7 +697,7 @@ _gda_thread_meta_triggers (GdaServerProvider *prov, GdaConnection *cnc,
 			   const GValue *table_catalog, const GValue *table_schema, 
 			   const GValue *table_name)
 {
-	main_thread_detailled_core (sub_thread__gda_thread_meta_triggers, prov, cnc, store, context, 
+	main_thread_detailed_core (sub_thread__gda_thread_meta_triggers, prov, cnc, store, context, 
 				    table_catalog, table_schema, table_name, NULL, error);
 }
 
@@ -716,10 +716,10 @@ _gda_thread_meta__routines (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 static gpointer
-sub_thread__gda_thread_meta_routines (DetailledThreadData *data, GError **error)
+sub_thread__gda_thread_meta_routines (DetailedThreadData *data, GError **error)
 {
 	/* WARNING: function executed in sub thread! */
-	sub_thread_detailled3_core (PROV_CLASS (data->prov)->meta_funcs.routines, "routines");
+	sub_thread_detailed3_core (PROV_CLASS (data->prov)->meta_funcs.routines, "routines");
 }
 
 gboolean
@@ -728,7 +728,7 @@ _gda_thread_meta_routines (GdaServerProvider *prov, GdaConnection *cnc,
 			   const GValue *routine_catalog, const GValue *routine_schema, 
 			   const GValue *routine_name_n)
 {
-	main_thread_detailled_core (sub_thread__gda_thread_meta_routines, prov, cnc, store, context, 
+	main_thread_detailed_core (sub_thread__gda_thread_meta_routines, prov, cnc, store, context, 
 				    routine_catalog, routine_schema, routine_name_n, NULL, error);
 }
 
@@ -747,10 +747,10 @@ _gda_thread_meta__routine_col (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 static gpointer
-sub_thread__gda_thread_meta_routine_col (DetailledThreadData *data, GError **error)
+sub_thread__gda_thread_meta_routine_col (DetailedThreadData *data, GError **error)
 {
 	/* WARNING: function executed in sub thread! */
-	sub_thread_detailled3_core (PROV_CLASS (data->prov)->meta_funcs.routine_col, "routine_col");
+	sub_thread_detailed3_core (PROV_CLASS (data->prov)->meta_funcs.routine_col, "routine_col");
 }
 
 gboolean
@@ -759,7 +759,7 @@ _gda_thread_meta_routine_col (GdaServerProvider *prov, GdaConnection *cnc,
 			      const GValue *rout_catalog, const GValue *rout_schema, 
 			      const GValue *rout_name)
 {
-	main_thread_detailled_core (sub_thread__gda_thread_meta_routine_col, prov, cnc, store, context, 
+	main_thread_detailed_core (sub_thread__gda_thread_meta_routine_col, prov, cnc, store, context, 
 				    rout_catalog, rout_schema, rout_name, NULL, error);
 }
 
@@ -778,10 +778,10 @@ _gda_thread_meta__routine_par (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 static gpointer
-sub_thread__gda_thread_meta_routine_par (DetailledThreadData *data, GError **error)
+sub_thread__gda_thread_meta_routine_par (DetailedThreadData *data, GError **error)
 {
 	/* WARNING: function executed in sub thread! */
-	sub_thread_detailled3_core (PROV_CLASS (data->prov)->meta_funcs.routine_par, "routine_par");
+	sub_thread_detailed3_core (PROV_CLASS (data->prov)->meta_funcs.routine_par, "routine_par");
 }
 
 gboolean
@@ -790,6 +790,6 @@ _gda_thread_meta_routine_par (GdaServerProvider *prov, GdaConnection *cnc,
 			      const GValue *rout_catalog, const GValue *rout_schema, 
 			      const GValue *rout_name)
 {
-	main_thread_detailled_core (sub_thread__gda_thread_meta_routine_par, prov, cnc, store, context, 
+	main_thread_detailed_core (sub_thread__gda_thread_meta_routine_par, prov, cnc, store, context, 
 				    rout_catalog, rout_schema, rout_name, NULL, error);
 }

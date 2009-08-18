@@ -50,7 +50,7 @@ typedef struct {
 	GdaStatement           *modif_stmts[NB_QUERIES];
 	GHashTable             *upd_stmts; /* key = a gboolean vector with TRUEs when the column is used, value = an UPDATE GdaStatement  */
 	GHashTable             *ins_stmts; /* key = a gboolean vector with TRUEs when the column is used, value = an INSERT GdaStatement  */
-	GdaStatement           *one_row_select_stmt; /* used to retreive one row after an UPDATE
+	GdaStatement           *one_row_select_stmt; /* used to retrieve one row after an UPDATE
 						      * or INSERT operation */
 
 	/* Padding for future expansion */

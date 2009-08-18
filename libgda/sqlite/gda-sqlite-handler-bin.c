@@ -41,7 +41,7 @@ static gboolean     gda_sqlite_handler_bin_accepts_g_type       (GdaDataHandler 
 static const gchar *gda_sqlite_handler_bin_get_descr              (GdaDataHandler *dh);
 
 struct  _GdaSqliteHandlerBinPriv {
-	gchar             *detailled_descr;
+	gchar             *detailed_descr;
 	guint              nb_g_types;
 	GType             *valid_g_types;
 };
@@ -112,7 +112,7 @@ gda_sqlite_handler_bin_init (GdaSqliteHandlerBin * hdl)
 {
 	/* Private structure */
 	hdl->priv = g_new0 (GdaSqliteHandlerBinPriv, 1);
-	hdl->priv->detailled_descr = _("SQlite binary handler");
+	hdl->priv->detailed_descr = _("SQlite binary handler");
 	hdl->priv->nb_g_types = 1;
 	hdl->priv->valid_g_types = g_new0 (GType, hdl->priv->nb_g_types);
 	hdl->priv->valid_g_types[0] = GDA_TYPE_BINARY;

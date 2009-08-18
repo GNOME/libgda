@@ -144,7 +144,7 @@ gda_g_type_from_string (const gchar *str)
  * @string: string to escape
  *
  * Escapes @string to make it understandable by a DBMS. The escape method is very common and replaces any
- * occurence of "'" with "''" and "\" with "\\"
+ * occurrence of "'" with "''" and "\" with "\\"
  *
  * Returns: a new string
  */
@@ -695,7 +695,7 @@ gda_text_to_alphanum (const gchar *text)
  *
  * Does the opposite of gda_text_to_alphanum(), in the same string 
  *
- * Returns: @text if conversion succedded or %NULL if an error occurred
+ * Returns: @text if conversion succeeded or %NULL if an error occurred
  */
 gchar *
 gda_alphanum_to_text (gchar *text)
@@ -1119,7 +1119,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
  *
  * Computes a SELECT statement which selects all the rows the @update_stmt would update. Beware
  * however that this GdaSqlStatement does not select anything (ie it would be rendered as "SELECT FROM ... WHERE ...")
- * and before being useable, one needs to add some fields to actually select.
+ * and before being usable, one needs to add some fields to actually select.
  *
  * Returns; a new #GdaStatement if no error occurred, or %NULL otherwise
  */
@@ -2046,7 +2046,7 @@ gda_rfc1738_decode (gchar *string)
  *
  * Extract the DSN, username and password from @string. in @string, the various parts are strings
  * which are expected to be encoded using an RFC 1738 compliant encoding. If they are specified, 
- * the returned username and password strings are correclty decoded.
+ * the returned username and password strings are correctly decoded.
  *
  * @out_username and @out_password may be set to %NULL depending on @string's format.
  */
@@ -2096,7 +2096,7 @@ gda_dsn_split (const gchar *string, gchar **out_dsn, gchar **out_username, gchar
  * Extract the provider, connection parameters, username and password from @string. 
  * in @string, the various parts are strings
  * which are expected to be encoded using an RFC 1738 compliant encoding. If they are specified, 
- * the returned provider, username and password strings are correclty decoded.
+ * the returned provider, username and password strings are correctly decoded.
  */
 void
 gda_connection_string_split (const gchar *string, gchar **out_cnc_params, gchar **out_provider, 

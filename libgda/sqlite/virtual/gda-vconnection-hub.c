@@ -314,7 +314,7 @@ gda_vconnection_hub_get_connection (GdaVconnectionHub *hub, const gchar *ns)
  * gda_vconnection_hub_foreach
  * @hub: a #GdaVconnectionHub connection
  * @func: a #GdaVconnectionDataModelFunc function pointer
- * @data: data to pass to @cunc calls
+ * @data: data to pass to @func calls
  *
  * Call @func for each #GdaConnection represented in @hub.
  */
@@ -496,7 +496,7 @@ meta_changed_cb (GdaMetaStore *store, GSList *changes, HubConnection *hc)
 		GdaMetaStoreChange *ch = (GdaMetaStoreChange*) list->data;
 		GValue *tsn, *tn;
 			
-		/* we are only intsrested in changes occuring in the "_tables" table */
+		/* we are only intsrested in changes occurring in the "_tables" table */
 		if (!strcmp (ch->table_name, "_tables")) {
 			switch (ch->c_type) {
 			case GDA_META_STORE_ADD: {

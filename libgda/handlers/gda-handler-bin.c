@@ -43,7 +43,7 @@ static gboolean     gda_handler_bin_accepts_g_type       (GdaDataHandler * dh, G
 static const gchar *gda_handler_bin_get_descr              (GdaDataHandler *dh);
 
 struct  _GdaHandlerBinPriv {
-	gchar             *detailled_descr;
+	gchar             *detailed_descr;
 	guint              nb_g_types;
 	GType             *valid_g_types;
 };
@@ -114,7 +114,7 @@ gda_handler_bin_init (GdaHandlerBin * hdl)
 {
 	/* Private structure */
 	hdl->priv = g_new0 (GdaHandlerBinPriv, 1);
-	hdl->priv->detailled_descr = _("Binary handler");
+	hdl->priv->detailed_descr = _("Binary handler");
 	hdl->priv->nb_g_types = 2;
 	hdl->priv->valid_g_types = g_new0 (GType, hdl->priv->nb_g_types);
 	hdl->priv->valid_g_types[0] = GDA_TYPE_BINARY;

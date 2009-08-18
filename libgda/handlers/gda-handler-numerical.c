@@ -44,7 +44,7 @@ static gboolean     gda_handler_numerical_accepts_g_type       (GdaDataHandler *
 static const gchar *gda_handler_numerical_get_descr              (GdaDataHandler *dh);
 
 struct  _GdaHandlerNumericalPriv {
-	gchar          *detailled_descr;
+	gchar          *detailed_descr;
 	guint           nb_g_types;
 	GType          *valid_g_types;
 };
@@ -115,7 +115,7 @@ gda_handler_numerical_init (GdaHandlerNumerical * hdl)
 {
 	/* Private structure */
 	hdl->priv = g_new0 (GdaHandlerNumericalPriv, 1);
-	hdl->priv->detailled_descr = "";
+	hdl->priv->detailed_descr = "";
 	hdl->priv->nb_g_types = 13;
 	hdl->priv->valid_g_types = g_new0 (GType, hdl->priv->nb_g_types);
 	hdl->priv->valid_g_types[0] = G_TYPE_INT64;

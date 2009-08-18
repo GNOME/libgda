@@ -31,7 +31,7 @@
  * of the data held by the widget.
  *
  * The widget can store the original value (to be able to tell if the value has been changed
- * by the user) and a default value (which will be returned if the user explicitely forces the widget
+ * by the user) and a default value (which will be returned if the user explicitly forces the widget
  * to be set to the default value).
  *
  * Control methods allow to set the type of value to be edited (the requested type must be 
@@ -339,7 +339,7 @@ gdaui_data_entry_set_attributes (GdauiDataEntry *de, GdaValueAttribute attrs, Gd
  * gdaui_data_entry_get_attributes
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
  *
- * Retreives the parameters of the GdauiDataEntry widget.
+ * Retrieves the parameters of the GdauiDataEntry widget.
  *
  * Returns: the OR'ed bits corresponding to the attributes.
  */

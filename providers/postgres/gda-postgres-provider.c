@@ -93,7 +93,7 @@ static gboolean            gda_postgres_provider_rollback_savepoint (GdaServerPr
 static gboolean            gda_postgres_provider_delete_savepoint (GdaServerProvider *provider, GdaConnection *cnc,
 								   const gchar *name, GError **error);
 
-/* information retreival */
+/* information retrieval */
 static const gchar        *gda_postgres_provider_get_version (GdaServerProvider *provider);
 static gboolean            gda_postgres_provider_supports_feature (GdaServerProvider *provider, GdaConnection *cnc,
 								   GdaConnectionFeature feature);
@@ -895,7 +895,7 @@ gda_postgres_provider_supports_operation (GdaServerProvider *provider, GdaConnec
  * Create operation request
  *
  * Creates a #GdaServerOperation. The following code is generic and should only be changed
- * if some further initialization is required, or if operation's contents is dependant on @cnc
+ * if some further initialization is required, or if operation's contents is dependent on @cnc
  */
 static GdaServerOperation *
 gda_postgres_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc,
@@ -1766,7 +1766,7 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, Oid last_id)
 {
 	GError *lerror = NULL;
 
-	/* analyse @stmt */
+	/* analyze @stmt */
 	GdaSqlStatement *sql_insert;
 	GdaSqlStatementInsert *insert;
 	if (gda_statement_get_statement_type (stmt) != GDA_SQL_STATEMENT_INSERT)
@@ -2511,12 +2511,12 @@ pg_remove_quotes (gchar *str)
 
         total = strlen (str);
         if (str[total-1] == delim) {
-		/* string is correclty terminated */
+		/* string is correctly terminated */
 		g_memmove (str, str+1, total-2);
 		total -=2;
 	}
 	else {
-		/* string is _not_ correclty terminated */
+		/* string is _not_ correctly terminated */
 		g_memmove (str, str+1, total-1);
 		total -=1;
 	}

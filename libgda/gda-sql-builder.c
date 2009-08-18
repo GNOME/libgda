@@ -333,11 +333,11 @@ gda_sql_builder_get_statement (GdaSqlBuilder *builder, GError **error)
  * Creates a new #GdaSqlStatement structure from @builder's contents.
  *
  * If @copy_it is %FALSE, then the returned pointer is considered to be stolen from @builder's internal
- * representation and will make it unuseable anymore (resulting in a %GDA_SQL_BUILDER_MISUSE_ERROR error or
+ * representation and will make it unusable anymore (resulting in a %GDA_SQL_BUILDER_MISUSE_ERROR error or
  * some warnings if one tries to reuse it).
  * If, on the other
  * hand it is set to %TRUE, then the returned #GdaSqlStatement is a copy of the on @builder uses
- * internally, making it reuseable.
+ * internally, making it reusable.
  *
  * Returns: a #GdaSqlStatement pointer
  *

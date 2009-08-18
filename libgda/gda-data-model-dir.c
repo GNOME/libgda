@@ -1065,7 +1065,7 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 					return FALSE;
 				}
 				else {
-					/* renaming succedded => update FileRow */
+					/* renaming succeeded => update FileRow */
 #ifndef G_OS_WIN32
 					g_rmdir (old_path);
 #endif
@@ -1107,7 +1107,7 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 				return FALSE;
 			}
 			else {
-				/* renaming succedded => update FileRow */
+				/* renaming succeeded => update FileRow */
 				gda_value_free (frow->filename_value);
 				frow->filename_value = gda_value_copy (value);
 				if (frow->raw_filename_value) {

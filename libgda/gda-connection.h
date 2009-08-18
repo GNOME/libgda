@@ -96,7 +96,7 @@ struct _GdaConnectionClass {
  *
  * Specifies some aspects of a connection when opening it.
  *
- * Additionnal information about the GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE flag:
+ * Additional information about the GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE flag:
  * <itemizedlist>
  *   <listitem><para>For example without this flag, if the table
  *       name specified in a #GdaServerOperation to create a table is
