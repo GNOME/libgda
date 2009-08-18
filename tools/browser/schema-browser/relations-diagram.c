@@ -28,7 +28,7 @@
 #include "../cc-gray-bar.h"
 #include "../canvas/browser-canvas-db-relations.h"
 #include <gdk/gdkkeysyms.h>
-#include "../popup-container.h"
+#include "../common/popup-container.h"
 
 struct _RelationsDiagramPrivate {
 	BrowserConnection *bcnc;

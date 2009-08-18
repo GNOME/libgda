@@ -1,6 +1,6 @@
 /* browser-canvas-db-relations.c
  *
- * Copyright (C) 2002 - 2007 Vivien Malerba
+ * Copyright (C) 2002 - 2009 Vivien Malerba
  * Copyright (C) 2002 Fernando Martins
  *
  * This program is free software; you can redistribute it and/or
@@ -27,6 +27,8 @@
 #include "browser-canvas-table.h"
 #include "browser-canvas-column.h"
 #include "browser-canvas-fkey.h"
+#include "../common/objects-cloud.h"
+#include "../common/popup-container.h"
 
 static void browser_canvas_db_relations_class_init (BrowserCanvasDbRelationsClass *class);
 static void browser_canvas_db_relations_init       (BrowserCanvasDbRelations *canvas);
@@ -62,6 +64,9 @@ struct _BrowserCanvasDbRelationsPrivate
 
 	GdaMetaStruct    *mstruct;
 	GooCanvasItem    *level_separator; /* all tables items will be above this item and FK lines below */
+
+	GtkWidget        *popup_container;
+	ObjectsCloud     *cloud;
 };
 
 GType
@@ -135,6 +140,8 @@ browser_canvas_db_relations_dispose (GObject *object)
 		g_hash_table_destroy (canvas->priv->hash_tables);
 		g_hash_table_destroy (canvas->priv->hash_fkeys);
 
+		gtk_widget_destroy (canvas->priv->popup_container);
+
 		g_free (canvas->priv);
 		canvas->priv = NULL;
 	}
@@ -161,6 +168,8 @@ browser_canvas_db_relations_set_property (GObject *object,
 			canvas->priv->mstruct = g_value_get_object (value);
                         if (canvas->priv->mstruct) 
                                 g_object_ref (canvas->priv->mstruct);
+			if (canvas->priv->cloud)
+				objects_cloud_set_meta_struct (canvas->priv->cloud, canvas->priv->mstruct);
 			break;
 		}
 	}
@@ -184,6 +193,70 @@ browser_canvas_db_relations_get_property (GObject *object,
 	}
 }
 
+static void
+popup_position (PopupContainer *container, gint *out_x, gint *out_y)
+{
+	GtkWidget *canvas;
+        canvas = g_object_get_data (G_OBJECT (container), "__canvas");
+
+        gint x, y;
+        GtkRequisition req;
+
+        gtk_widget_size_request (canvas, &req);
+
+        gdk_window_get_origin (canvas->window, &x, &y);
+
+        x += canvas->allocation.x;
+        y += canvas->allocation.y;
+
+        if (x < 0)
+                x = 0;
+
+        if (y < 0)
+                y = 0;
+        *out_x = x;
+        *out_y = y;
+}
+
+static void
+cloud_object_selected_cb (ObjectsCloud *ocloud, ObjectsCloudObjType sel_type, 
+			  const gchar *sel_contents, BrowserCanvasDbRelations *dbrel)
+{
+	g_print ("-> %s\n", sel_contents);
+
+	GdaMetaTable *mtable;
+	GValue *table_schema;
+	GValue *table_name;
+	GdaQuarkList *ql;
+
+	ql = gda_quark_list_new_from_string (sel_contents);
+	g_value_set_string ((table_schema = gda_value_new (G_TYPE_STRING)),
+			    gda_quark_list_find (ql, "OBJ_SCHEMA"));
+	g_value_set_string ((table_name = gda_value_new (G_TYPE_STRING)),
+			    gda_quark_list_find (ql, "OBJ_NAME"));
+	gda_quark_list_free (ql);
+
+	g_print ("Add %s.%s\n",
+		 g_value_get_string (table_schema), g_value_get_string (table_name));
+	mtable = (GdaMetaTable*) gda_meta_struct_complement (dbrel->priv->mstruct, GDA_META_DB_TABLE,
+							     NULL, table_schema, table_name, NULL);
+	if (mtable) {
+		BrowserCanvasTable *ctable;
+		GooCanvasBounds bounds;
+		gdouble x, y;
+		
+		x = BROWSER_CANVAS (dbrel)->xmouse;
+		y = BROWSER_CANVAS (dbrel)->ymouse;
+		//goo_canvas_convert_from_pixels (BROWSER_CANVAS (dbrel)->priv->goocanvas, &x, &y);
+		ctable = browser_canvas_db_relations_add_table (dbrel, NULL, table_schema, table_name);
+		goo_canvas_item_get_bounds (GOO_CANVAS_ITEM (ctable), &bounds);
+		browser_canvas_item_translate (BROWSER_CANVAS_ITEM (ctable),
+					       x - bounds.x1, y - bounds.y1);
+	}
+	else
+		g_print ("Unknown...\n");
+}
+
 /**
  * browser_canvas_db_relations_new
  * @mstruct: a #GdaMetaStruct object, or %NULL
@@ -199,17 +272,36 @@ GtkWidget *
 browser_canvas_db_relations_new (GdaMetaStruct *mstruct)
 {
 	BrowserCanvas *canvas;
+	BrowserCanvasDbRelations *dbrels;
 	GooCanvasItem *item;
+	GtkWidget *vbox, *cloud, *find;
 	g_return_val_if_fail (!mstruct || GDA_IS_META_STRUCT (mstruct), NULL);
 
 	canvas = BROWSER_CANVAS (g_object_new (TYPE_BROWSER_CANVAS_DB_RELATIONS, "meta-struct", mstruct, NULL));
+	dbrels = BROWSER_CANVAS_DB_RELATIONS (canvas);
 	item = goo_canvas_group_new (goo_canvas_get_root_item (canvas->priv->goocanvas), NULL);
-	BROWSER_CANVAS_DB_RELATIONS (canvas)->priv->level_separator = item;
+	dbrels->priv->level_separator = item;
+
+	dbrels->priv->popup_container = popup_container_new_with_func (popup_position);
+	g_object_set_data (G_OBJECT (dbrels->priv->popup_container), "__canvas", canvas);
+
+	vbox = gtk_vbox_new (FALSE, 0);
+	gtk_container_add (GTK_CONTAINER (dbrels->priv->popup_container), vbox);
+
+	cloud = objects_cloud_new (mstruct, OBJECTS_CLOUD_TYPE_TABLE);
+	dbrels->priv->cloud = OBJECTS_CLOUD (cloud);
+	gtk_widget_set_size_request (GTK_WIDGET (cloud), 200, 300);
+	g_signal_connect (cloud, "selected",
+			  G_CALLBACK (cloud_object_selected_cb), dbrels);
+	gtk_box_pack_start (GTK_BOX (vbox), cloud, TRUE, TRUE, 0);
+
+	find = objects_cloud_create_filter (OBJECTS_CLOUD (cloud));
+	gtk_box_pack_start (GTK_BOX (vbox), find, FALSE, FALSE, 0);
+	
+	gtk_widget_show_all (vbox);
 
         return GTK_WIDGET (canvas);
 }
-
-
 
 static void
 clean_canvas_items (BrowserCanvas *canvas)
@@ -391,8 +483,7 @@ static void popup_add_table_cb (GtkMenuItem *mitem, BrowserCanvasDbRelations *ca
 static GtkWidget *
 build_context_menu (BrowserCanvas *canvas)
 {
-	GtkWidget *menu, *mitem, *submenu, *submitem;
-	GSList *dbolist, *list;
+	GtkWidget *menu, *submitem;
 	BrowserCanvasDbRelations *dbrel = BROWSER_CANVAS_DB_RELATIONS (canvas);
 
 	if (!dbrel->priv->mstruct)
@@ -402,44 +493,7 @@ build_context_menu (BrowserCanvas *canvas)
 	submitem = gtk_menu_item_new_with_label (_("Add table"));
 	gtk_widget_show (submitem);
 	gtk_menu_append (menu, submitem);
-	submenu = NULL;
-
-	/* build list of tables */
-	dbolist = gda_meta_struct_get_all_db_objects (dbrel->priv->mstruct);
-	for (list = dbolist; list; list = list->next) {
-		GdaMetaDbObject *dbo = GDA_META_DB_OBJECT (list->data);
-		GdaMetaTable *mtable;
-
-		if (dbo->obj_type != GDA_META_DB_TABLE)
-			continue;
-		
-		mtable = GDA_META_TABLE (dbo);
-		if (mtable && g_hash_table_lookup (dbrel->priv->hash_tables, mtable))
-			continue; /* skip that table as it is already present in the canvas */
-
-		if (!submenu) {
-			submenu = gtk_menu_new ();
-			gtk_menu_item_set_submenu (GTK_MENU_ITEM (submitem), submenu);
-			gtk_widget_show (submenu);
-		}
-		
-		mitem = gtk_menu_item_new_with_label (dbo->obj_name);
-		gtk_widget_show (mitem);
-		gtk_menu_append (submenu, mitem);
-
-		GValue *tcatalog, *tschema, *tname;
-		g_value_set_string ((tcatalog = gda_value_new (G_TYPE_STRING)), dbo->obj_catalog);
-		g_value_set_string ((tschema = gda_value_new (G_TYPE_STRING)), dbo->obj_schema);
-		g_value_set_string ((tname = gda_value_new (G_TYPE_STRING)), dbo->obj_name);
-		g_object_set_data_full (G_OBJECT (mitem), "tcat", tcatalog, (GDestroyNotify) gda_value_free);
-		g_object_set_data_full (G_OBJECT (mitem), "tschema",  tschema, (GDestroyNotify) gda_value_free);
-		g_object_set_data_full (G_OBJECT (mitem), "tname", tname, (GDestroyNotify) gda_value_free);
-		g_signal_connect (G_OBJECT (mitem), "activate", G_CALLBACK (popup_add_table_cb), canvas);
-	}
-	g_slist_free (dbolist);
-
-	/* sub menu is incensitive if there are no more tables left to add */
-	gtk_widget_set_sensitive (submitem, submenu ? TRUE : FALSE);
+	g_signal_connect (G_OBJECT (submitem), "activate", G_CALLBACK (popup_add_table_cb), canvas);
 
 	return menu;
 }
@@ -447,34 +501,7 @@ build_context_menu (BrowserCanvas *canvas)
 static void
 popup_add_table_cb (GtkMenuItem *mitem, BrowserCanvasDbRelations *dbrel)
 {
-	GdaMetaTable *mtable;
-	GValue *table_catalog;
-	GValue *table_schema;
-	GValue *table_name;
-
-	table_catalog = g_object_get_data (G_OBJECT (mitem), "tcat");
-	table_schema = g_object_get_data (G_OBJECT (mitem), "tschema");
-	table_name = g_object_get_data (G_OBJECT (mitem), "tname");
-
-	/*g_print ("Add %s.%s.%s\n", g_value_get_string (table_catalog), 
-	  g_value_get_string (table_schema), g_value_get_string (table_name));*/
-	mtable = (GdaMetaTable*) gda_meta_struct_complement (dbrel->priv->mstruct, GDA_META_DB_TABLE,
-							     table_catalog, table_schema, table_name, NULL);
-	if (mtable) {
-		BrowserCanvasTable *ctable;
-		GooCanvasBounds bounds;
-		gdouble x, y;
-		
-		x = BROWSER_CANVAS (dbrel)->xmouse;
-		y = BROWSER_CANVAS (dbrel)->ymouse;
-		//goo_canvas_convert_from_pixels (BROWSER_CANVAS (dbrel)->priv->goocanvas, &x, &y);
-		ctable = browser_canvas_db_relations_add_table (dbrel, table_catalog, table_schema, table_name);
-		goo_canvas_item_get_bounds (GOO_CANVAS_ITEM (ctable), &bounds);
-		browser_canvas_item_translate (BROWSER_CANVAS_ITEM (ctable),
-					       x - bounds.x1, y - bounds.y1);
-	}
-	else
-		g_print ("Unknown...\n");
+	gtk_widget_show (dbrel->priv->popup_container);
 }
 
 /**

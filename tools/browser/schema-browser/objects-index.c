@@ -31,15 +31,13 @@
 #include "../cc-gray-bar.h"
 #include "marshal.h"
 #include <gdk/gdkkeysyms.h>
-#include "../popup-container.h"
+#include "../common/popup-container.h"
+#include "../common/objects-cloud.h"
 
 struct _ObjectsIndexPrivate {
 	BrowserConnection *bcnc;
-	GtkTextBuffer     *tbuffer;
-	GtkWidget         *tview;
+	ObjectsCloud      *cloud;
 	GtkWidget         *popup_container;
-
-	gboolean hovering_over_link;
 };
 
 static void objects_index_class_init (ObjectsIndexClass *klass);
@@ -88,16 +86,6 @@ static void
 objects_index_init (ObjectsIndex *index, ObjectsIndexClass *klass)
 {
 	index->priv = g_new0 (ObjectsIndexPrivate, 1);
-	index->priv->tbuffer = gtk_text_buffer_new (NULL);
-	gtk_text_buffer_create_tag (index->priv->tbuffer, "section",
-                                    "weight", PANGO_WEIGHT_BOLD,
-                                    "foreground", "blue", NULL);
-	gtk_text_buffer_create_tag (index->priv->tbuffer, "size0",
-                                    "scale", PANGO_SCALE_MEDIUM, NULL);
-	gtk_text_buffer_create_tag (index->priv->tbuffer, "size1",
-                                    "scale", PANGO_SCALE_LARGE, NULL);
-	gtk_text_buffer_create_tag (index->priv->tbuffer, "size2",
-                                    "scale", PANGO_SCALE_LARGE, NULL);
 }
 
 static void
@@ -113,7 +101,6 @@ objects_index_dispose (GObject *object)
 							      G_CALLBACK (meta_changed_cb), index);
 			g_object_unref (index->priv->bcnc);
 		}
-		g_object_unref (index->priv->tbuffer);
 		g_free (index->priv);
 		index->priv = NULL;
 	}
@@ -144,209 +131,13 @@ objects_index_get_type (void)
 	return type;
 }
 
-typedef struct {
-	gchar *schema;
-	GtkTextMark *mark;
-} SchemaData;
-static void add_to_schema_data (ObjectsIndex *index, SchemaData *sd, GdaMetaDbObject *dbo);
 static void
-update_display (ObjectsIndex *index)
+cloud_object_selected_cb (ObjectsCloud *sel, ObjectsCloudObjType sel_type, 
+			  const gchar *sel_contents, ObjectsIndex *index)
 {
-	gchar *str;
-	GSList *schemas = NULL; /* holds pointers to @SchemaData structures */
-	SchemaData *default_sd = NULL, *sd;
-	
-	GtkTextBuffer *tbuffer;
-        GtkTextIter start, end;
-
-        /* clean all */
-        tbuffer = index->priv->tbuffer;
-        gtk_text_buffer_get_start_iter (tbuffer, &start);
-        gtk_text_buffer_get_end_iter (tbuffer, &end);
-        gtk_text_buffer_delete (tbuffer, &start, &end);
-
-	default_sd = g_new0 (SchemaData, 1);
-	default_sd->schema = NULL;
-	default_sd->mark = gtk_text_mark_new (NULL, TRUE);
-	gtk_text_buffer_get_end_iter (tbuffer, &end);
-	
-	gtk_text_buffer_get_end_iter (tbuffer, &end);
-	gtk_text_buffer_insert_pixbuf (tbuffer, &end,
-				       browser_get_pixbuf_icon (BROWSER_ICON_TABLE));
-	gtk_text_buffer_insert (tbuffer, &end, " ", 1);
-	gtk_text_buffer_insert_with_tags_by_name (tbuffer, &end,
-						  _("Default tables:"), -1, "section", NULL);
-	gtk_text_buffer_insert (tbuffer, &end, "\n\n", 2);
-
-	gtk_text_buffer_add_mark (tbuffer, default_sd->mark, &end);
-
-
-	GdaMetaStruct *mstruct;
-	GSList *dbo_list, *list;
-	mstruct = browser_connection_get_meta_struct (index->priv->bcnc);
-	if (!mstruct) {
-		/* not yet ready */
-		return;
-	}
-	dbo_list = g_slist_reverse (gda_meta_struct_get_all_db_objects (mstruct));
-	for (list = dbo_list; list; list = list->next) {
-		GdaMetaDbObject *dbo = GDA_META_DB_OBJECT (list->data);
-		GSList *list;
-		gboolean is_default;
-
-		if (dbo->obj_type != GDA_META_DB_TABLE)
-			continue;
-		g_assert (dbo->obj_schema);
-
-		is_default = strcmp (dbo->obj_short_name, dbo->obj_full_name) ? TRUE : FALSE;
-		sd = NULL;
-		for (list = schemas; list; list = list->next) {
-			if (!strcmp (((SchemaData *) list->data)->schema, dbo->obj_schema)) {
-				sd = (SchemaData *) list->data;
-				break;
-			}
-		}
-		if (!sd) {
-			sd = g_new0 (SchemaData, 1);
-			sd->schema = g_strdup (dbo->obj_schema);
-			sd->mark = gtk_text_mark_new (NULL, TRUE);
-			
-			gtk_text_buffer_get_end_iter (tbuffer, &end);
-			gtk_text_buffer_insert (tbuffer, &end, "\n\n", 2);
-			gtk_text_buffer_insert_pixbuf (tbuffer, &end,
-						       browser_get_pixbuf_icon (BROWSER_ICON_TABLE));
-			gtk_text_buffer_insert (tbuffer, &end, " ", 1);
-			str = g_strdup_printf (_("Tables in schema '%s':"), sd->schema);
-			gtk_text_buffer_insert_with_tags_by_name (tbuffer, &end,
-								  str, -1, "section", NULL);
-			g_free (str);
-			gtk_text_buffer_insert (tbuffer, &end, "\n\n", 2);
-
-			gtk_text_buffer_add_mark (tbuffer, sd->mark, &end);
-
-			schemas = g_slist_append (schemas, sd);
-		}
-
-		add_to_schema_data (index, sd, dbo);
-		if (is_default)
-			add_to_schema_data (index, default_sd, dbo);
-	}
-	g_slist_free (dbo_list);
-
-	if (default_sd)
-		schemas = g_slist_prepend (schemas, default_sd);
-
-	/* get rid of the SchemaData structures */
-	for (list = schemas; list; list = list->next) {
-		sd = (SchemaData*) list->data;
-
-		g_free (sd->schema);
-		g_object_unref (sd->mark);
-		g_free (sd);
-	}
-}
-
-static gchar *
-double_underscores (const gchar *str)
-{
-	gchar *out, *outptr;
-	gint len;
-	if (!str)
-		return NULL;
-
-	len = strlen (str);
-	out = g_malloc (sizeof (gchar) * (len * 2 +1));
-	for (outptr = out; *str; str++, outptr++) {
-		if (*str == '_') {
-			*outptr = '_';
-			outptr++;
-		}
-		*outptr = *str;
-	}
-	*outptr = 0;
-
-	return out;
-}
-
-static void
-add_to_schema_data (ObjectsIndex *index, SchemaData *sd, GdaMetaDbObject *dbo)
-{
-	GtkTextTag *tag;
-	GtkTextIter iter;
-	gdouble scale = 1.0;
-
-	if (dbo->obj_type == GDA_META_DB_TABLE) {
-		scale = 1.0 + g_slist_length (dbo->depend_list) / 5.;
-	}
-
-	gtk_text_buffer_get_iter_at_mark (index->priv->tbuffer, &iter, sd->mark);
-	tag = gtk_text_buffer_create_tag (index->priv->tbuffer, NULL, 
-					  "foreground", "#6161F2", 
-					  //"underline", PANGO_UNDERLINE_SINGLE,
-					  "scale", scale,
-					  NULL);
-	g_object_set_data_full (G_OBJECT (tag), "dbo_obj_schema", g_strdup (dbo->obj_schema), g_free);
-	g_object_set_data_full (G_OBJECT (tag), "dbo_obj_name", g_strdup (dbo->obj_name), g_free);
-	g_object_set_data_full (G_OBJECT (tag), "dbo_obj_short_name", g_strdup (dbo->obj_short_name), g_free);
-
-	gtk_text_buffer_insert_with_tags (index->priv->tbuffer, &iter, dbo->obj_name, -1,
-					  tag, NULL);
-	gtk_text_buffer_insert (index->priv->tbuffer, &iter, " ", -1);
-}
-
-static gboolean key_press_event (GtkWidget *text_view, GdkEventKey *event, ObjectsIndex *index);
-static gboolean event_after (GtkWidget *text_view, GdkEvent *ev, ObjectsIndex *index);
-static gboolean motion_notify_event (GtkWidget *text_view, GdkEventMotion *event, ObjectsIndex *index);
-static gboolean visibility_notify_event (GtkWidget *text_view, GdkEventVisibility *event, ObjectsIndex *index);
-
-static void
-text_tag_table_foreach_cb (GtkTextTag *tag, const gchar *find)
-{
-	const gchar *name;
-
-	name = g_object_get_data (G_OBJECT (tag), "dbo_obj_name");
-
-	if (!name)
-		return;
-	
-	if (!*find) {
-		g_object_set (tag, "foreground", "#6161F2", NULL);
-	}
-	else {
-		gchar *ptr;
-		gchar *lcname, *lcfind;
-		lcname = g_utf8_strdown (name, -1);
-		lcfind = g_utf8_strdown (find, -1);
-
-		ptr = strstr (lcname, lcfind);
-		if (!ptr) {
-			/* string not present in name */
-			g_object_set (tag, "foreground", "#DBDBDB", NULL);
-		}
-		else if ((ptr == lcname) ||
-			 ((*name == '"') && (ptr == lcname+1))) {
-			/* string present as start of name */
-			g_object_set (tag, "foreground", "#6161F2", NULL);
-		}
-		else {
-			/* string present in name but not at the start */
-			g_object_set (tag, "foreground", "#A0A0A0", NULL);
-		}
-
-		g_free (lcname);
-		g_free (lcfind);
-	}
-}
-
-static void
-find_entry_changed_cb (GtkWidget *entry, ObjectsIndex *index)
-{
-	gchar *find = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
-	GtkTextTagTable *tags_table = gtk_text_buffer_get_tag_table (index->priv->tbuffer);
-
-	gtk_text_tag_table_foreach (tags_table, (GtkTextTagTableForeach) text_tag_table_foreach_cb,
-				    find);
-	g_free (find);
+	/* FIXME: adjust with sel->priv->type */
+	g_signal_emit (index, objects_index_signals [SELECTION_CHANGED], 0,
+		       BROWSER_FAVORITES_TABLES, sel_contents);
 }
 
 /**
@@ -382,6 +173,17 @@ objects_index_new (BrowserConnection *bcnc)
         gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
         gtk_widget_show (label);
 
+	/* cloud */
+	GdaMetaStruct *mstruct;
+	GtkWidget *cloud;
+	mstruct = browser_connection_get_meta_struct (index->priv->bcnc);
+	cloud = objects_cloud_new (mstruct, OBJECTS_CLOUD_TYPE_TABLE);
+	gtk_box_pack_start (GTK_BOX (index), cloud, TRUE, TRUE, 0);
+	index->priv->cloud = cloud;
+	g_signal_connect (cloud, "selected",
+			  G_CALLBACK (cloud_object_selected_cb), index);
+
+	/* find button */
 	wid = gtk_button_new ();
 	label = gtk_image_new_from_stock (GTK_STOCK_FIND, GTK_ICON_SIZE_BUTTON);
 	gtk_container_add (GTK_CONTAINER (wid), label);
@@ -395,45 +197,9 @@ objects_index_new (BrowserConnection *bcnc)
 				  G_CALLBACK (gtk_widget_show), popup);
 	g_object_set_data (G_OBJECT (popup), "button", wid);
 
-	hbox = gtk_hbox_new (FALSE, 0);
-	gtk_container_add (GTK_CONTAINER (popup), hbox);
-
-	label = gtk_label_new (_("Find:"));
-	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	wid = gtk_entry_new ();
-	g_signal_connect (wid, "changed",
-			  G_CALLBACK (find_entry_changed_cb), index);
-	gtk_box_pack_start (GTK_BOX (hbox), wid, TRUE, TRUE, 0);
-	gtk_widget_show_all (hbox);
-
-	/* text contents */
-	GtkWidget *sw, *vbox;
-	sw = gtk_scrolled_window_new (NULL, NULL);
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw), GTK_POLICY_AUTOMATIC,
-					GTK_POLICY_AUTOMATIC);
-	gtk_box_pack_start (GTK_BOX (index), sw, TRUE, TRUE, 0);
-	
-	vbox = gtk_vbox_new (FALSE, 0);
-	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (sw), vbox);
-
-	index->priv->tview = gtk_text_view_new_with_buffer (index->priv->tbuffer);
-	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (index->priv->tview), GTK_WRAP_WORD);
-	gtk_text_view_set_editable (GTK_TEXT_VIEW (index->priv->tview), FALSE);
-	//gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (index->priv->tview), FALSE);
-	gtk_box_pack_start (GTK_BOX (vbox), index->priv->tview, TRUE, TRUE, 0);
-	gtk_widget_show_all (sw);
-
-	g_signal_connect (index->priv->tview, "key-press-event", 
-			  G_CALLBACK (key_press_event), index);
-	g_signal_connect (index->priv->tview, "event-after", 
-			  G_CALLBACK (event_after), index);
-	g_signal_connect (index->priv->tview, "motion-notify-event", 
-			  G_CALLBACK (motion_notify_event), index);
-	g_signal_connect (index->priv->tview, "visibility-notify-event", 
-			  G_CALLBACK (visibility_notify_event), index);
-
-	/* initial update */
-	update_display (index);
+	wid = objects_cloud_create_filter (cloud);
+	gtk_container_add (GTK_CONTAINER (popup), wid);
+	gtk_widget_show (wid);
 
 	return (GtkWidget*) index;
 }
@@ -441,198 +207,5 @@ objects_index_new (BrowserConnection *bcnc)
 static void
 meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, ObjectsIndex *index)
 {
-	update_display (index);
-}
-
-static GdkCursor *hand_cursor = NULL;
-static GdkCursor *regular_cursor = NULL;
-
-/* Looks at all tags covering the position (x, y) in the text view, 
- * and if one of them is a link, change the cursor to the "hands" cursor
- * typically used by web browsers.
- */
-static void
-set_cursor_if_appropriate (GtkTextView *text_view, gint x, gint y, ObjectsIndex *index)
-{
-	GSList *tags = NULL, *tagp = NULL;
-	GtkTextIter iter;
-	gboolean hovering = FALSE;
-	
-	gtk_text_view_get_iter_at_location (text_view, &iter, x, y);
-	
-	tags = gtk_text_iter_get_tags (&iter);
-	for (tagp = tags;  tagp != NULL;  tagp = tagp->next) {
-		GtkTextTag *tag = tagp->data;
-		gchar *table_name;
-		
-		table_name = g_object_get_data (G_OBJECT (tag), "dbo_obj_name");
-		if (table_name) {
-			hovering = TRUE;
-			break;
-		}
-	}
-	
-	if (hovering != index->priv->hovering_over_link) {
-		index->priv->hovering_over_link = hovering;
-		
-		if (index->priv->hovering_over_link) {
-			if (! hand_cursor)
-				hand_cursor = gdk_cursor_new (GDK_HAND2);
-			gdk_window_set_cursor (gtk_text_view_get_window (text_view,
-									 GTK_TEXT_WINDOW_TEXT),
-					       hand_cursor);
-		}
-		else {
-			if (!regular_cursor)
-				regular_cursor = gdk_cursor_new (GDK_XTERM);
-			gdk_window_set_cursor (gtk_text_view_get_window (text_view,
-									 GTK_TEXT_WINDOW_TEXT),
-					       regular_cursor);
-		}
-	}
-	
-	if (tags) 
-		g_slist_free (tags);
-}
-
-/* 
- * Also update the cursor image if the window becomes visible
- * (e.g. when a window covering it got iconified).
- */
-static gboolean
-visibility_notify_event (GtkWidget *text_view, GdkEventVisibility *event, ObjectsIndex *index)
-{
-	gint wx, wy, bx, by;
-	
-	gdk_window_get_pointer (text_view->window, &wx, &wy, NULL);
-	
-	gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW (text_view), 
-					       GTK_TEXT_WINDOW_WIDGET,
-					       wx, wy, &bx, &by);
-	
-	set_cursor_if_appropriate (GTK_TEXT_VIEW (text_view), bx, by, index);
-	
-	return FALSE;
-}
-
-/*
- * Update the cursor image if the pointer moved. 
- */
-static gboolean
-motion_notify_event (GtkWidget *text_view, GdkEventMotion *event, ObjectsIndex *index)
-{
-	gint x, y;
-	
-	gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW (text_view), 
-					       GTK_TEXT_WINDOW_WIDGET,
-					       event->x, event->y, &x, &y);
-	
-	set_cursor_if_appropriate (GTK_TEXT_VIEW (text_view), x, y, index);
-	
-	gdk_window_get_pointer (text_view->window, NULL, NULL, NULL);
-	return FALSE;
-}
-
-
-/* Looks at all tags covering the position of iter in the text view, 
- * and if one of them is a link, follow it by showing the page identified
- * by the data attached to it.
- */
-static void
-follow_if_link (GtkWidget *text_view, GtkTextIter *iter, ObjectsIndex *index)
-{
-	GSList *tags = NULL, *tagp = NULL;
-	
-	tags = gtk_text_iter_get_tags (iter);
-	for (tagp = tags;  tagp;  tagp = tagp->next) {
-		GtkTextTag *tag = tagp->data;
-		const gchar *schema;
-		
-		schema = g_object_get_data (G_OBJECT (tag), "dbo_obj_schema");
-		if (schema) {
-			const gchar *objects_name, *short_name;
-		
-			objects_name = g_object_get_data (G_OBJECT (tag), "dbo_obj_name");
-			short_name = g_object_get_data (G_OBJECT (tag), "dbo_obj_short_name");
-			
-			if (objects_name && short_name) {
-				gchar *str, *tmp1, *tmp2, *tmp3;
-				tmp1 = gda_rfc1738_encode (schema);
-				tmp2 = gda_rfc1738_encode (objects_name);
-				tmp3 = gda_rfc1738_encode (short_name);
-				str = g_strdup_printf ("OBJ_TYPE=table;OBJ_SCHEMA=%s;OBJ_NAME=%s;OBJ_SHORT_NAME=%s",
-						       tmp1, tmp2, tmp3);
-				g_free (tmp1);
-				g_free (tmp2);
-				g_free (tmp3);
-				g_signal_emit (index, objects_index_signals [SELECTION_CHANGED], 0,
-					       BROWSER_FAVORITES_TABLES, str);
-				g_free (str);
-			}
-		}
-        }
-
-	if (tags) 
-		g_slist_free (tags);
-}
-
-/*
- * Links can also be activated by clicking.
- */
-static gboolean
-event_after (GtkWidget *text_view, GdkEvent *ev, ObjectsIndex *index)
-{
-	GtkTextIter start, end, iter;
-	GtkTextBuffer *buffer;
-	GdkEventButton *event;
-	gint x, y;
-	
-	if (ev->type != GDK_BUTTON_RELEASE)
-		return FALSE;
-	
-	event = (GdkEventButton *)ev;
-	
-	if (event->button != 1)
-		return FALSE;
-	
-	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
-	
-	/* we shouldn't follow a link if the user has selected something */
-	gtk_text_buffer_get_selection_bounds (buffer, &start, &end);
-	if (gtk_text_iter_get_offset (&start) != gtk_text_iter_get_offset (&end))
-		return FALSE;
-	
-	gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW (text_view), 
-					       GTK_TEXT_WINDOW_WIDGET,
-					       event->x, event->y, &x, &y);
-	
-	gtk_text_view_get_iter_at_location (GTK_TEXT_VIEW (text_view), &iter, x, y);
-	
-	follow_if_link (text_view, &iter, index);
-	
-	return FALSE;
-}
-
-/* 
- * Links can be activated by pressing Enter.
- */
-static gboolean
-key_press_event (GtkWidget *text_view, GdkEventKey *event, ObjectsIndex *index)
-{
-	GtkTextIter iter;
-	GtkTextBuffer *buffer;
-	
-	switch (event->keyval) {
-	case GDK_Return: 
-	case GDK_KP_Enter:
-		buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
-		gtk_text_buffer_get_iter_at_mark (buffer, &iter, 
-						  gtk_text_buffer_get_insert (buffer));
-		follow_if_link (text_view, &iter, index);
-		break;
-		
-	default:
-		break;
-	}
-	return FALSE;
+	objects_cloud_set_meta_struct (index->priv->cloud, mstruct);
 }

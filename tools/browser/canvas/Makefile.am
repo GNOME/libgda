@@ -32,7 +32,6 @@ libcanvas_la_SOURCES = \
 	browser-canvas-utility.c \
 	browser-canvas-utility.h
 
-
 libcanvas_la_LDFLAGS = \
 	$(GOOCANVAS_LIBS) \
 	$(GRAPHVIZ_LIBS)

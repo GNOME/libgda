@@ -252,21 +252,21 @@ popup_container_get_type (void)
 static void
 popup_position (PopupContainer *container, gint *out_x, gint *out_y)
 {
-	GtkWidget *button;
-	button = g_object_get_data (G_OBJECT (container), "__poswidget");
+	GtkWidget *poswidget;
+	poswidget = g_object_get_data (G_OBJECT (container), "__poswidget");
 
 	gint x, y;
         gint bwidth, bheight;
         GtkRequisition req;
 
-        gtk_widget_size_request (button, &req);
+        gtk_widget_size_request (poswidget, &req);
 
-        gdk_window_get_origin (button->window, &x, &y);
+        gdk_window_get_origin (poswidget->window, &x, &y);
 
-        x += button->allocation.x;
-        y += button->allocation.y;
-        bwidth = button->allocation.width;
-        bheight = button->allocation.height;
+        x += poswidget->allocation.x;
+        y += poswidget->allocation.y;
+        bwidth = poswidget->allocation.width;
+        bheight = poswidget->allocation.height;
 
         x += bwidth - req.width;
         y += bheight;

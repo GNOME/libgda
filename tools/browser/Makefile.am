@@ -1,7 +1,7 @@
 bin_PROGRAMS=gda-browser-4.0
 noinst_PROGRAMS = favorites-test
 
-SUBDIRS = schema-browser dummy-perspective
+SUBDIRS = common schema-browser dummy-perspective
 if HAVE_GOOCANVAS
 SUBDIRS+=canvas
 noinst_PROGRAMS+=canvas-example
@@ -55,9 +55,7 @@ gda_browser_4_0_SOURCES=\
 	browser-connections-list.h \
 	main.c \
 	mgr-favorites.h \
-	mgr-favorites.c \
-	popup-container.h \
-	popup-container.c
+	mgr-favorites.c
 
 $(OBJECTS): marshal.c marshal.h
 
@@ -66,6 +64,10 @@ EXTRALDFLAGS=-mwindows
 gda_browser_4_0_SOURCES += browser-res.rc
 else
 EXTRALDFLAGS=
+endif
+
+if HAVE_GOOCANVAS
+CANVAS_LDADD=$(top_builddir)/tools/browser/canvas/libcanvas.la
 endif
 
 .rc.o:
@@ -78,14 +80,12 @@ gda_browser_4_0_LDFLAGS = $(EXTRALDFLAGS)
 gda_browser_4_0_LDADD=\
 	$(top_builddir)/tools/browser/schema-browser/libperspective.la \
 	$(top_builddir)/tools/browser/dummy-perspective/libperspective.la \
+	$(CANVAS_LDADD) \
+	$(top_builddir)/tools/browser/common/libcommon.la \
 	$(top_builddir)/libgda/libgda-4.0.la \
 	$(top_builddir)/libgda-ui/libgda-ui-4.0.la \
 	$(LIBGDA_LIBS) $(GTK_LIBS)
 
-if HAVE_GOOCANVAS
-gda_browser_4_0_LDADD+= \
-	$(top_builddir)/tools/browser/canvas/libcanvas.la
-endif
 
 favorites_test_SOURCES=\
 	browser-favorites.c \
@@ -115,8 +115,8 @@ canvas_example_CFLAGS = -DCANVAS_EXAMPLE
 canvas_example_LDFLAGS = \
 	$(top_builddir)/libgda/libgda-4.0.la \
 	$(top_builddir)/libgda-ui/libgda-ui-4.0.la \
-	canvas/libcanvas.la
-
+	$(top_builddir)/tools/browser/canvas/libcanvas.la \
+	$(top_builddir)/tools/browser/common/libcommon.la
 
 # icons
 iconsdir=$(datadir)/pixmaps

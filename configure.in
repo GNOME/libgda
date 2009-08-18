@@ -1725,6 +1725,7 @@ control-center/Makefile
 tools/Makefile
 tools/gda-sql-4.0.1:tools/gda-sql.1.in
 tools/browser/Makefile
+tools/browser/common/Makefile
 tools/browser/schema-browser/Makefile
 tools/browser/dummy-perspective/Makefile
 tools/browser/canvas/Makefile
