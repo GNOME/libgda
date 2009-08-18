@@ -7,7 +7,7 @@
 </para>
 
 <para>
-  However, contrary to the programmed mentionned above, The &LIBGDA;'s console tool
+  However, contrary to the programmed mentioned above, The &LIBGDA;'s console tool
   offers the same features and usage for any of the databases supported by &LIBGDA;.
   For more information, consult the man page (<command>man gda-sql</command>).
 </para>
@@ -30,9 +30,9 @@
 	<listitem><para>Allow one to define variables which can be referenced in any
 	    SQL statement (using a common syntax)</para></listitem>
 	<listitem><para>One query buffer per connection to edit complex queries (uses a
-	    parametrable external editor)</para></listitem>
+	    parameter-able external editor)</para></listitem>
 	<listitem><para>Easy command line editing and output using the Readline library and a
-	    (parametrable) pager</para></listitem>
+	    (parameter-able) pager</para></listitem>
 	<listitem><para>Work on any platform on which &LIBGDA; has been ported to.</para></listitem>
 	<listitem><para>List, define or remove named data sources (DSN)</para></listitem>
 	<listitem><para>Import and export BLOBS (binary large objects) from and to local files</para></listitem>
@@ -96,7 +96,7 @@ MSAccess    | Provider for Microsoft Access files | DB_NAME,           |        
 	    before the tool exits</para></listitem>
 	<listitem><para>the <option>-o</option> option allows to specify a file to write the 
 	    output to</para></listitem>
-	<listitem><para>the <option>-p</option> speficies that the tool should not ask for
+	<listitem><para>the <option>-p</option> specifies that the tool should not ask for
 	    passwords when a username has been specified for a connection but no password has
 	    been specified.</para></listitem>
 	<listitem><para>the <option>-s</option> requests the embedded HTTP server to be executed, listening on
@@ -342,7 +342,7 @@ cnc3>
     <title>Meta data</title>
     <para>
       When a connection is opened for the first time, the tool get all the possible meta data associated to that connection (list of
-      tables, table's columns and their constraints, views, etc). The meta data are refered to when the user wants for example
+      tables, table's columns and their constraints, views, etc). The meta data are referred to when the user wants for example
       to list a table's attributes, or for command line completion.
     </para>
     <para>
@@ -481,7 +481,7 @@ cnc1>
 
       <para>
 	Finally, the <command>.graph [TABLE1 [TABLE2...]]</command> will create a graph of all the tables (or
-	only the tables mentionned as arguments). The graph creates a <application>GraphViz</application> file
+	only the tables mentioned as arguments). The graph creates a <application>GraphViz</application> file
 	named "graph.dot" which can then be processed with the GraphViz'<command>dot</command> command to
 	produce an image or a PDF file for example.
       </para>
@@ -589,7 +589,7 @@ pg_sync_pg_auth_members | UPDATE             | pg_auth_members
 </chapter>
 
 <chapter id="gda-sql-manual-icommands">
-  <title>Detailled features</title>
+  <title>Detailed features</title>
   <para>
     This section explains in depth various aspects of the console tool.
   </para>
@@ -598,9 +598,9 @@ pg_sync_pg_auth_members | UPDATE             | pg_auth_members
     <title>Query buffer</title>
     <para>
       Everytime an SQL command is entered, it is stored in the query buffer associated to the current connection. 
-      The query buffer can be edited using an external editor (which can be usefull for multi line SQL statements) using
+      The query buffer can be edited using an external editor (which can be useful for multi line SQL statements) using
       the <command>.e</command> command. The query buffer can also be saved to a file and loaded back later using the
-      <command>.qw</command> and <command>.qr</command> commands. To execute the SQL held in the current query byffer,
+      <command>.qw</command> and <command>.qr</command> commands. To execute the SQL held in the current query buffer,
       use the <command>.g</command> command.
     </para>
     <para>
@@ -737,7 +737,7 @@ SalesTest>
       </itemizedlist>
     </para>
     <para>
-      Clients must first authenticate before they can use the features mentionned above; authentication is kept simple
+      Clients must first authenticate before they can use the features mentioned above; authentication is kept simple
       as it consists of a string. By default the requested string is empty (eg. no real authentication is required), but
       an authentication string can be specified when running the web server either with the <command>.http</command> command, 
       or the <option>-t</option> command line option.
@@ -755,7 +755,7 @@ SalesTest>
 	</para></listitem>
 	<listitem><para>The external editor used by the <command>.e</command> command is determined by the first value
 	    present in the <envar>GDA_SQL_EDITOR</envar>, <envar>EDITOR</envar> or <envar>VISUAL</envar>
-	    environment variables (in that order), and defaults to "vi" undex Unix and "notepad.exe" under Windows.
+	    environment variables (in that order), and defaults to "vi" under Unix and "notepad.exe" under Windows.
 	</para></listitem>
 	<listitem><para>The pager used when the data to display is more than one screen is determined by
 	    the value of the <envar>PAGER</envar> environment variable and defaults to "more" if none is defined.

@@ -16,7 +16,7 @@ when adding a connection using gda_vconnection_hub_add()).
 <para>
 For example if a connection A has two tables 'table_1' and 'table_2', then after gda_vconnection_hub_add() has been called
 with A as connection argument and with a "c1" namespace, then in the corresponding #GdaVconnectionHub connection, table 
-'table_1' must be refered to as 'c1.table_1' and 'table_2' must be refered to as 'c1.table_2'.
+'table_1' must be referred to as 'c1.table_1' and 'table_2' must be referred to as 'c1.table_2'.
 </para>
 &libgda-virtual-notice;
 

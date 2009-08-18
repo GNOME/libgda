@@ -14,7 +14,7 @@ Dictionary object
 </para>
 <para>
   The new dictionary now relies on a database structure to store its data (see the 
-  <link linkend="information_schema">database schema</link> section for a detailled description). The actual database can be a
+  <link linkend="information_schema">database schema</link> section for a detailed description). The actual database can be a
   single file (using an SQLite database), an entirely in memory database (also using an SQLite database), or
   a more conventional backend such as a PostgreSQL database for a shared dictionary on a server.
 </para>

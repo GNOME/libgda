@@ -4,7 +4,7 @@
     <title>Getting the library</title>
     <para>
       The &LIBGDA; library is bundled with some Linux distributions, so for these distributions, installing
-      can be done using the distribution speficic tools.
+      can be done using the distribution specific tools.
     </para>
     <para>
       Also &LIBGDA;'s sources are available for download from the 
@@ -198,13 +198,13 @@
 	Any connection to a database can be done either using a pre-defined data source, or using a
 	connection string: using a data source (DSN) allows one to <emphasis>name</emphasis> connections
 	and define them once, whereas using connection strings allows programs to be more
-	independant of any &LIBGDA; configuration. Anyway, defining a DSN involves defining the same
+	independent of any &LIBGDA; configuration. Anyway, defining a DSN involves defining the same
 	parameters as for a connection string.
       </para>
       <para>
 	A connection string is a semi-colon delimited list of named parameters 
 	(as <![CDATA[<param1_name>=<param1_value>;<param2_name>=<param2_value>...]]>), the parameters
-	being specific to each database provider (the two commands mentionned above also list all the
+	being specific to each database provider (the two commands mentioned above also list all the
 	parameters for each provider).
       </para>
       <para>

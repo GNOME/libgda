@@ -13,7 +13,7 @@ Assorted functions for dealing with #GValue values.
   Libgda makes a distinction between binary and blob types
   <itemizedlist>
     <listitem><para>binary data can be inserted into an SQL statement using a
-	(DBMS dependant) syntax, such as "X'ABCD'" syntax for SQLite or the binary strings syntax for PostgreSQL. Binary data
+	(DBMS dependent) syntax, such as "X'ABCD'" syntax for SQLite or the binary strings syntax for PostgreSQL. Binary data
 	is manipulated using a #GdaBinary structure (which is basically a bytes buffer and a length attribute).
     </para></listitem>
     <listitem><para>blob data are a special feature that some DBMS have which requires some non SQL code to manipulate them.

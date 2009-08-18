@@ -23,7 +23,7 @@ A connection to a database
     <listitem><para>Request the statement execution using
 	<link linkend="gda-connection-async-statement-execute">gda_connection_async_statement_execute() which returns an
 	  execution ID to be used to identify a specific request</link></para></listitem>
-    <listitem><para>Do some usefull things (that is why async. statements' excution are for)</para></listitem>
+    <listitem><para>Do some useful things (that is why async. statements' excution are for)</para></listitem>
     <listitem><para>Use one or more times 
 	<link linkend="gda-connection-async-fetch-result">gda_connection_async_fetch_result()</link> to see
 	if the execution is finished, using the request ID</para></listitem>
@@ -37,7 +37,7 @@ A connection to a database
   opened using those providers will only be accessible from the thread which created them (any other thread will
   be blocked trying to access the connection, use the
   <link linkend="gda-lockable-try-lock">gda_lockable_try_lock()</link> method to check it the connection
-  is useable from a thread).
+  is usable from a thread).
 </para>
 <para>
   If a connection really needs to be accessed by several threads at once, then it is possible to pass the

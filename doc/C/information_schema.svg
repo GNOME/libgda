@@ -2780,7 +2780,7 @@
      id="node59"
      transform="matrix(1.33333,0,0,1.33333,-2115.9054,1960.8192)">
     <title
-       id="title1164">main.main._detailled_fk</title>
+       id="title1164">main.main._detailed_fk</title>
     <polygon
        id="polygon1166"
        points="2254,-203 2254,-223 2370,-223 2370,-203 2254,-203 "
@@ -2789,7 +2789,7 @@
        id="text1168"
        style="font-size:14.17500019px;text-anchor:middle;font-family:Nimbus Roman No9 L"
        y="-208.33299"
-       x="2312">_detailled_fk</text>
+       x="2312">_detailed_fk</text>
     <polygon
        id="polygon1170"
        points="2254,-203 2254,-223 2370,-223 2370,-203 2254,-203 "

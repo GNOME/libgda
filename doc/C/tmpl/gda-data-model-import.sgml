@@ -15,7 +15,7 @@ way it is also possible to import data from an already-build XML tree validated 
 </para>
 <para>
 The caller must decide, upon construction, if the new #GdaDataModelImport must support random access or simply
-a cursor based access. Random acces makes it easier to use the resulting data model but consumes more memory as
+a cursor based access. Random access makes it easier to use the resulting data model but consumes more memory as
 all the data is copied in memory, and is thus not suitable for large data sets. Note that importing from an 
 already-build XML tree will always result in a random access data model.
 </para>

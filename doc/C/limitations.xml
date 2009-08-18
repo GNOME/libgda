@@ -7,7 +7,7 @@
       <sect2 id="threads"><title>Multi threaded environment</title>
 	<para>&LIBGDA; is not thread safe. However it supports working with threads as long as any object 
 	  (except otherwise stated) created by the API is used by one single thread (that is there is no
-	  situation when two threads try to acces the same object at the same time). Exceptions are:
+	  situation when two threads try to access the same object at the same time). Exceptions are:
 	  <itemizedlist>
 	    <listitem><para>&LIBGDA;'s <link linkend="init_config">configuration</link> can be accessed from any thread</para></listitem>
 	    <listitem><para>Any object which implements the <link linkend="GdaLockable">GdaLockable</link> interface 
@@ -55,7 +55,7 @@
     <para>
       The following limitations apply to Oracle databases accessed via Libgda:
       <itemizedlist>
-	<listitem><para>At the moment tables' fields shema information retreival is very slow, so as a work around, use a dictionary
+	<listitem><para>At the moment tables' fields schema information retrieval is very slow, so as a work around, use a dictionary
 	to store the database schema and do incremental updates on modified/created tables.</para></listitem>
       </itemizedlist>
     </para>

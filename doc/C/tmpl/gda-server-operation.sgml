@@ -7,7 +7,7 @@ Handles any DDL query in an abstract way
 <!-- ##### SECTION Long_Description ##### -->
 <para>
   This object is basically just a data store: it can store named values, the values being
-  organized hirarchically by their name which are similar to a Unix file path. For example a value can be read from its path
+  organized hierarchically by their name which are similar to a Unix file path. For example a value can be read from its path
   using the gda_server_operation_get_value_at() method, or set using the gda_server_operation_set_value_at() method.
 </para>
 <para>

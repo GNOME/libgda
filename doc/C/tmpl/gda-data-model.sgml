@@ -16,7 +16,7 @@ provided by the model. The actual operations a data model permits can be known u
 gda_data_model_get_access_flags() method.
 </para>
 <para>
-Again, depending on the real implementation, data retreiving can be done either accessing direct random
+Again, depending on the real implementation, data retrieving can be done either accessing direct random
 values located by their row and column, or using a cursor, or both. Use the gda_data_model_get_access_flags() 
 method to know how the data model can be accessed. 
 <itemizedlist>

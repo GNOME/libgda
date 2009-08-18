@@ -44,10 +44,10 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
     </textobject>
   </mediaobject>
 
-  Note that unless explicitely mentionned, the columns are read-only.
+  Note that unless explicitly mentioned, the columns are read-only.
 </para>
 <para>
-  The following figures illustrate row mappings bewteen the data proxy and the proxied data model in 
+  The following figures illustrate row mappings between the data proxy and the proxied data model in 
   several situations (which can be combined, but are shown alone for simplicity):
   <itemizedlist>
     <listitem><para>situation where rows 1 and 5 have been marked as deleted from the data proxy, using

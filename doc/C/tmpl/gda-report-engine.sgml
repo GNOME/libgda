@@ -70,7 +70,7 @@ Low level report generator based on XML
 	      &lt;query_name&gt;|@&lt;column_name&gt; (such as &quot;customers|@@name&quot; for the &quot;name&quot; column)
 	      and &lt;query_name&gt;|#&lt;column_number&gt;,
 	      (such as &quot;customers|##0&quot; for the first column). 
-	      Those parameters can be used in any child node (recusively),
+	      Those parameters can be used in any child node (recursively),
 	      and have their value updated for each row of the data model.
 	      For more information about the parameter's syntax, 
 	      see the <link linkend="SQL_queries">GDA SQL query syntax</link>.

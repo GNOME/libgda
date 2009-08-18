@@ -67,7 +67,7 @@ if (!gda_config_define_dsn (&amp;dsn_info, &amp;error)) {
       Any SQL command in &LIBGDA; must be converted to a <link linkend="GdaStatement">GdaStatement</link> object
       which is then executed; if the statement defines some variable (place holders), then variables binding
       (assigning values to variables) is done at execution time. Each database provider (database 
-      <emphasis>driver</emphasis> or <emphasis>adaptator</emphasis>) can implement its own parser to 
+      <emphasis>driver</emphasis> or <emphasis>adapter</emphasis>) can implement its own parser to 
       be able to parse its specific SQL dialect. Except for binding variables, and for reusability, the
       <link linkend="GdaStatement">GdaStatement</link> object guarantees that it contains only one SQL statement
       (it's not possible for it to contain several ones separated by a semicolon).
@@ -84,7 +84,7 @@ if (!gda_config_define_dsn (&amp;dsn_info, &amp;error)) {
     <para>
       <programlisting>
 GdaSqlParser *parser;
-GdaStatament *stmt;
+GdaStatement *stmt;
 GError *error = NULL;
 
 parser = gda_connection_create_parser (cnc);
@@ -118,7 +118,7 @@ g_object_unref (stmt);
     <title>Modify the result of a SELECT command</title>
     <para>
       The <link linkend="GdaDataSelect">GdaDataSelect</link> data model (which is the data model returned
-      after the successfull execution of a SELECT statement) is by default read-only, but can be made writable
+      after the successful execution of a SELECT statement) is by default read-only, but can be made writable
       after giving it information about:
       <itemizedlist>
 	<listitem><para>how to identify a single row in the modified table
@@ -209,14 +209,14 @@ gda_value_free (value);
     <para>
       INSERT, UPDATE or DELETE are treated in the same way as the SELECT command (see the 
       <link linkend="howto-exec-select">HOWTO</link> about executing
-      a SELECT command), except that the function to execute the command is different because the retuned value
+      a SELECT command), except that the function to execute the command is different because the returned value
       is not a data model but a success/failure value.
     </para>
     <para>
       The following codes illustrates parsing and executing an UPDATE statement:
       <programlisting>
 GdaSqlParser *parser;
-GdaStatament *stmt;
+GdaStatement *stmt;
 GError *error = NULL;
 
 parser = gda_connection_create_parser (cnc);
@@ -376,7 +376,7 @@ else {
 	<listitem><para>Knowing the information schema's structure (tables and views) used, 
 	    run some SELECT commands on the 
 	    <link linkend="GdaMetaStore">GdaMetaStore</link> object's internal connection: this solution is the most
-	    powerfull but requires some knowledge of the information schema's structure, and the data
+	    powerful but requires some knowledge of the information schema's structure, and the data
 	    is not easy to use.</para></listitem>
 	<listitem><para>Use a <link linkend="GdaMetaStruct">GdaMetaStruct</link> object which 
 	    <emphasis>exports</emphasis> the meta data as a dynamic tree of pre-defined data structures, 

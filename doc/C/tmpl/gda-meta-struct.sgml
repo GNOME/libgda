@@ -8,7 +8,7 @@ In memory representation of some database objects
 <para>
   The #GdaMetaStruct object reads data from a #GdaMetaStore object and
   creates an easy to use in memory representation for some database objects. For example one can easily
-  analyse the columns of a table (or its foreign keys) using a #GdaMetaStruct.
+  analyze the columns of a table (or its foreign keys) using a #GdaMetaStruct.
 </para>
 <para>
   When created, the new #GdaMetaStruct object is empty (it does not have any information about any database object).

@@ -82,7 +82,7 @@
       </programlisting>
     </para>
     <para>
-      This component should be made dependant on the core libraries &LIBGDA; depends on such as GLib, LibXML and LibXSLT.
+      This component should be made dependent on the core libraries &LIBGDA; depends on such as GLib, LibXML and LibXSLT.
       Also, if &LIBGDA; was compiled using a system installed SQLite, then a dependency also needs to be added to SQLite
       (otherwise &LIBGDA; uses its own embedded version of SQLite, and no dependency needs to be defined on SQLite).
     </para>
@@ -95,7 +95,7 @@
   <sect1>
     <title>Tools</title>
     <para>
-      &LIBGDA;'s offers several tools, the most usefull being an SQL console which allows one to issue SQL statement
+      &LIBGDA;'s offers several tools, the most useful being an SQL console which allows one to issue SQL statement
       from the command line. This component has the following files:
       <programlisting>
 .
@@ -126,7 +126,7 @@
       </programlisting>
     </para>
     <para>
-      This component should be made dependant on the runtime component.
+      This component should be made dependent on the runtime component.
     </para>
   </sect1>
 
@@ -169,7 +169,7 @@
 	</programlisting>
       </para>
     <para>
-      This kind of component should be made dependant on the database's library which is used,
+      This kind of component should be made dependent on the database's library which is used,
       such as LibPQ for PostgreSQL, and also on &LIBGDA;'s runtime component.
     </para>
     </sect2>
@@ -203,7 +203,7 @@
 	</programlisting>
       </para>
     <para>
-      This component should be made dependant on the Java virtual machine.
+      This component should be made dependent on the Java virtual machine.
     </para>
     </sect2>
   </sect1>

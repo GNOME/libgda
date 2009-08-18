@@ -9,7 +9,7 @@ Manipulating sequences
   The #GdaServerOperation object can contain sequences of templates. For example when creating a table,
   one can specify several foreign keys where for each foreign key, one must define the column(s) on which the
   foreign key applies, the referenced table and the corresponding columns of the referenced table (plus some
-  additionnal information). In this case the foreign keys are defined as a sequence of templates (the foreign key
+  additional information). In this case the foreign keys are defined as a sequence of templates (the foreign key
   definition): there can be zero or more foreign keys.
 </para>
 

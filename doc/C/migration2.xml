@@ -4,9 +4,9 @@
     <para>Version 4.0 of &LIBGDA; is a major rework of the library for the following benefits:
       <itemizedlist>
 	<listitem><para>easier to understand and to use API, with less strange path usage (which were inherited
-	from modifications above modifications where no global coherence was adressed)</para></listitem>
+	from modifications above modifications where no global coherence was addressed)</para></listitem>
 	<listitem><para>reduce the size of the library (now 1.3M compared to 1.7M once stripped) and the number of symbols 
-	    (845 compared to 1420) and have less complicated and thus more maintanable code (190 files compared to 250).
+	    (845 compared to 1420) and have less complicated and thus more maintainable code (190 files compared to 250).
 	</para></listitem>
 	<listitem><para>removal of the GdaClient object from which connections were created: this object did not offer
 	    any significant features and made the API more difficult to use</para></listitem>
@@ -22,7 +22,7 @@
   </sect1>  
 
   <sect1><title>New unique parser</title>
-    <para>Previous &LIBGDA; versions had several builtin parsers relying on Lex/Yacc (or Flex/Bison) to analyse SQL with 
+    <para>Previous &LIBGDA; versions had several builtin parsers relying on Lex/Yacc (or Flex/Bison) to analyze SQL with 
       the following limitations:
       <itemizedlist>
 	<listitem><para>not all the SELECT, INSERT, DELETE and UPDATE constructions were recognized</para></listitem>
@@ -56,7 +56,7 @@
       internal structures from it (before discarding the XML tree) which was both CPU and memory intensive. Memory was
       also wasted as most of the time not all the dictionary would be exploited. The new 
       <link linkend="GdaMetaStore">GdaMetaStore</link> object relies on a database (an SQLite file by default) to store its data
-      which solves the problems mentionned above.</para>
+      which solves the problems mentioned above.</para>
     <para>It was difficult for applications to add their own data in the dictionary (the API existed but was difficult to understand
       and use), this has been solved by allowing applications to create DBMS objects into the 
       <link linkend="GdaMetaStore">GdaMetaStore</link>'s associated database.</para>
@@ -91,13 +91,13 @@
       &LIBGDA;'s reports API has not changed, but the syntax of the XML nodes specific to &LIBGDA; (those nodes are
       replaced by contents when the report is generated) has changed:
       <itemizedlist>
-	<listitem><para>The parameter name to acces a data model's column name by its name 
+	<listitem><para>The parameter name to access a data model's column name by its name 
 	    is now &lt;query_name&gt;|@&lt;column_name&gt;
 	    instead of &lt;query_name&gt;/@&lt;column_name&gt;</para></listitem>
-	<listitem><para>The parameter name to acces a data model's column name by its index
+	<listitem><para>The parameter name to access a data model's column name by its index
 	    is now &lt;query_name&gt;|#&lt;column_index&gt;
 	    instead of &lt;query_name&gt;/#&lt;column_index&gt;</para></listitem>
-	<listitem><para>The parameter name to acces the total number of rows of a data model is now
+	<listitem><para>The parameter name to access the total number of rows of a data model is now
 	    &lt;query_name&gt;|?nrows instead of &lt;query_name&gt;/%nrows</para></listitem>
       </itemizedlist>
     </para>
@@ -119,7 +119,7 @@
 	<itemizedlist>
 	  <listitem><para>Data sources and installed providers are now handled using the 
 	      <link linkend="GdaConfig">GdaConfig</link> object, with the particularity that there can only be one 
-	      such object instanciated per program.</para></listitem>
+	      such object instantiated per program.</para></listitem>
 	  <listitem><para>The GDA_DSN_LIST_IN_MEMORY environment variable which , if set, prevented &LIBGDA; from
 	      writing the list of defined data sources to a file has been removed. To obtain the same result,
 	      one must force the creation of the unique <link linkend="GdaConfig">GdaConfig</link> object with
@@ -146,7 +146,7 @@
 	      <link linkend="gda-connection-open-from-string">gda_connection_open_from_string () depending
 		on how the connection is defined</link></para></listitem>
 	  <listitem><para>Upon opening a connection, the <parameter>username</parameter> and <parameter>password</parameter>
-	      arguments have heen replaced by a more flexible arguments passing mechanism where providers can specify
+	      arguments have been replaced by a more flexible arguments passing mechanism where providers can specify
 	      what authorization parameters they use</para></listitem>
  	  <listitem><para>gda_server_provider_get_last_insert_id() has been removed in favor of the "last_insert_row" argument
 	  of the <link linkend="gda-connection-statement-execute">gda_connection_statement_execute ()</link> and

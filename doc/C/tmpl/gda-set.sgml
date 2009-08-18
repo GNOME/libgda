@@ -274,7 +274,7 @@ Container for several values
 <!-- ##### STRUCT GdaSetGroup ##### -->
 <para>
   There is one #GdaSetGroup structure
-  for each _independant_ #GdaHolder (those which have the same restricting data model
+  for each _independent_ #GdaHolder (those which have the same restricting data model
   all appear in the same #GdaSetGroup structure).
 </para>
 

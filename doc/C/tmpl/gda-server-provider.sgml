@@ -7,7 +7,7 @@ Base class for all the DBMS providers
 <!-- ##### SECTION Long_Description ##### -->
 <para>
   The #GdaServerProvider class is a virtual class which all the DBMS providers
-  must inherit, and implement its virtual mathods.
+  must inherit, and implement its virtual methods.
 </para>
 <para>
   See the <link linkend="libgda-provider-class">Virtual methods for providers</link> section for more information

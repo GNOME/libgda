@@ -21,7 +21,7 @@
     
     <para> The following UML schema shows the various implementations of the <classname>GdaDataModel</classname> 
       interface and what they are for. Note that the
-      <classname>GdaDataModelRow</classname> should not be instanciated directly but either
+      <classname>GdaDataModelRow</classname> should not be instantiated directly but either
       used as a base class, or used through its children classes.
     </para>
     <para>

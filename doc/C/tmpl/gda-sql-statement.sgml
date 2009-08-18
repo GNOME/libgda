@@ -598,7 +598,7 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 <!-- ##### STRUCT GdaSqlStatementCompound ##### -->
 <para>
   The statement is a compound selection statement: multiple SELECT or compound statements composed together with UNION, EXCEPT or
-  INSERSECT operations. Any kind of compound statement can be represented using this structure 
+  INTERSECT operations. Any kind of compound statement can be represented using this structure 
   (if this is not the case
   then report a bug).
   <mediaobject>

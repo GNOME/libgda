@@ -21,7 +21,7 @@ SQL parser
   for the next statement in the string to parse (and create a GDA_SQL_STATEMENT_UNKNOWN statement).
 </para>
 <para>
-The #GdaSqlParser object parses and analyses SQL statements and reports the following statement types:
+The #GdaSqlParser object parses and analyzes SQL statements and reports the following statement types:
 <itemizedlist>
   <listitem><para>SELECT (and COMPOUND select), 
       INSERT, UPDATE and DELETE SQL statements should be completely parsed. 
@@ -31,7 +31,7 @@ The #GdaSqlParser object parses and analyses SQL statements and reports the foll
   extract some information (that structure is not enough per-se to re-create the complete SQL statement).
   </para></listitem>
   <listitem><para>Any other type of SQL statement (CREATE TABLE, ...) creates a #GdaStatement of type 
-      GDA_SQL_STATEMENT_UNKNOW, and it only able to locate place holders (variables) and end of statement
+      GDA_SQL_STATEMENT_UNKNOWN, and it only able to locate place holders (variables) and end of statement
       marks.</para></listitem>
 </itemizedlist>
 </para>
@@ -42,7 +42,7 @@ NOTE: Any SQL of a type which should be parsed which but which creates a #GdaSta
 
 <para>
 The #GdaSqlParser object recognizes place holders (variables), which can later be queried and valued using
-gda_statement_get_parameters(). The folllowing syntax are recognized (other syntaxes might be 
+gda_statement_get_parameters(). The following syntax are recognized (other syntaxes might be 
 recognized for specific database providers if the #GdaSqlParser is created using gda_server_provider_create_parser()
 but for portability reasons it's better to avoid them):
 <itemizedlist>
@@ -107,11 +107,6 @@ ALTER GROUP mygroup ADD USER ##name::gchararray;
 Internal usage only.
 </para>
 
-<!-- ##### ARG GdaSqlParser:debug ##### -->
-<para>
-Forces the parser to display somme debug information.
-</para>
-
 <!-- ##### ARG GdaSqlParser:line-error ##### -->
 <para>
 Internal usage only.
@@ -133,7 +128,7 @@ Modifies the behaviour of the tokenizer, reserved for #GdaServerProvider impleme
 </para>
 
 @GDA_SQL_PARSER_MODE_PARSE: Parse mode, the parser tries to parse and build a structure representing the SQL statement
-@GDA_SQL_PARSER_MODE_DELIMIT: Delimit mode, the parser only tries to identify variables, will always return a statement of type GDA_SQL_STATEMENT_UNKNOW.
+@GDA_SQL_PARSER_MODE_DELIMIT: Delimit mode, the parser only tries to identify variables, will always return a statement of type GDA_SQL_STATEMENT_UNKNOWN.
 
 <!-- ##### FUNCTION gda_sql_parser_new ##### -->
 <para>

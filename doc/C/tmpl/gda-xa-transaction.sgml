@@ -60,7 +60,7 @@ Distributed transaction manager
 <!-- ##### STRUCT GdaXaTransactionId ##### -->
 <para>
 Distributed transaction identification, composed of a global format identifier, a global transaction identifier, and a
-branch qualifier. For any connection participating in the global transactio, the format and global transaction identifier
+branch qualifier. For any connection participating in the global transaction, the format and global transaction identifier
 should be the same, and the branch qualifier should vary between the connections.
 </para>
 

@@ -6,7 +6,7 @@ Any event which has occurred on a #GdaConnection
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-  Events occuring on a connection are each represented as a #GdaConnectionEvent object. Each #GdaConnection
+  Events occurring on a connection are each represented as a #GdaConnectionEvent object. Each #GdaConnection
   is responsible for keeping a list of past events; that list can be consulted using the 
   gda_connection_get_events() function.
 </para>

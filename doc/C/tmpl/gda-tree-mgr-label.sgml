@@ -7,7 +7,7 @@ a tree manager which creates a single node
 <!-- ##### SECTION Long_Description ##### -->
 <para>
   The #GdaTreeMgrLabel is a #GdaTreeManager object which creates a single node. This tree manager
-  is usefull to create "sections" in a #GdaTree hierarchy.
+  is useful to create "sections" in a #GdaTree hierarchy.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

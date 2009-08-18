@@ -50,7 +50,7 @@
   <sect1>
     <title>Multi threaded environment</title>
     <para>
-      Each database provider should be useable in a multi threaded environment, even if they impose some restrictions
+      Each database provider should be usable in a multi threaded environment, even if they impose some restrictions
       as to how they can be used in such an environment. The &LIBGDA;'s framework provides some locking mechanism which
       is:
       <itemizedlist>
@@ -117,7 +117,7 @@
 	virtual providers.
       </para>
       <para>
-	The connection specific data for the database API can be retreived using the
+	The connection specific data for the database API can be retrieved using the
 	<link linkend="gda-connection-internal-get-provider-data">gda_connection_internal_get_provider_data()</link> method.
       </para>
     </sect2>
@@ -233,7 +233,7 @@
     <sect2>
       <title>create_parser()</title>
       <para>
-	This method instanciates a <link linkend="GdaSqlParser">GdaSqlParser</link> object which is
+	This method instantiates a <link linkend="GdaSqlParser">GdaSqlParser</link> object which is
 	adapted to the database's specific SQL dialect. If the provider does not implement its own parser,
 	then this method should not be implemented.
       </para>
@@ -302,7 +302,7 @@
       <title>get_data_handler()</title>
       <para>
 	This method returns a <link linkend="GdaDataHandler">GdaDataHandler</link> for the requested data type. It should
-	only instanciate each <link linkend="GdaDataHandler">GdaDataHandler</link> once and reuse it if the same request happens 
+	only instantiate each <link linkend="GdaDataHandler">GdaDataHandler</link> once and reuse it if the same request happens 
 	(the returned object will not be modified).
       </para>
       <para>
@@ -377,7 +377,7 @@ gboolean (*tables_views) (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
     <sect2>
       <title>Important note about SQL identifiers</title>
       <para>
-	As mentionned in the <link linkend="information_schema:sql_identifiers">SQL identifiers</link> section,
+	As mentioned in the <link linkend="information_schema:sql_identifiers">SQL identifiers</link> section,
 	any SQL identifier in the meta store is represented either:
 	<itemizedlist>
 	  <listitem><para>between double quotes if the SQL identifier is case sensitive</para></listitem>
@@ -403,7 +403,7 @@ gboolean (*tables_views) (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
 	Also note that the extra arguments for each virtual method listed below, when they are present
 	and when they represent an SQL identifier, will be represented:
 	<itemizedlist>
-	  <listitem><para>for case insitive SQL identifiers: using all lower or all upper case (depending on the setting
+	  <listitem><para>for case insensitive SQL identifiers: using all lower or all upper case (depending on the setting
 	      set using <link linkend="gda-meta-store-set-identifiers-style">gda_meta_store_set_identifiers_style()</link>
 	  </para></listitem>
 	  <listitem><para>for case sensitive SQL identifiers: without the double quotes, but possibily with
@@ -424,7 +424,7 @@ gboolean (*tables_views) (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
 	and passing a function which determines if a specific string is a reserved keyword. The usage of
 	this function is similar to the usage of the
 	<link linkend="gda-meta-store-set-identifiers-style">gda_meta_store_set_identifiers_style()</link>
-	mentionned above.
+	mentioned above.
       </para>
       <para>
 	Writing a function which tests if a string is a reserved keyword is a non complicated but error
@@ -521,7 +521,7 @@ gboolean (*constraints_tab)  (GdaServerProvider *, GdaConnection *, GdaMetaStore
 	</programlisting>
 	This method must update the contents of the <link linkend="is:_table_constraints">"_table_constraints"</link>
 	table which lists all the
-	constraints (primary key, foreing key, unique or check cnstraints) for each table.
+	constraints (primary key, foreign key, unique or check constraints) for each table.
       </para>
     </sect2>
 
@@ -538,7 +538,7 @@ gboolean (*constraints_ref)  (GdaServerProvider *, GdaConnection *, GdaMetaStore
 	</programlisting>
 	This method must update the contents of the 
 	<link linkend="is:_referential_constraints">"_referential_constraints"</link> table which lists all the
-	refetential constraints (which are also listed in the 
+	referential constraints (which are also listed in the 
 	<link linkend="is:_table_constraints">"_table_constraints"</link> table).
       </para>
     </sect2>
@@ -597,7 +597,7 @@ gboolean (*key_columns)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
   </para>
   <para>
     The data model represents each row in a separate <link linkend="GdaRow">GdaRow</link> object, and virtual
-    methods to retreive rows have to return new (and correctly initialized) objects of that class. The referencing
+    methods to retrieve rows have to return new (and correctly initialized) objects of that class. The referencing
     of these new objects is left up to the implementation which:
     <itemizedlist>
       <listitem>
@@ -615,8 +615,8 @@ gboolean (*key_columns)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
 	  enable to "cache" some rows and discard some when memory is needed</para>
       </listitem>
     </itemizedlist>
-    Note that the methods mentionned in the 1st and 3rd items should be reserved for random data access mode, 
-    and that cursor based access mode should implement the method mentionned in th 2nd item.
+    Note that the methods mentioned in the 1st and 3rd items should be reserved for random data access mode, 
+    and that cursor based access mode should implement the method mentioned in th 2nd item.
   </para>
   <sect2>
     <title>fetch_nb_rows()</title>
@@ -682,7 +682,7 @@ gboolean (*key_columns)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
   <para>
     Blobs are a special feature of databases because they allow one to access the contents of a "cell" from the
     API without using SQL (usually no SQL can be used to manipulate a blob's contents: an SQL statement is used to
-    create, delete or retreive a blob, but the contents is accessed through the API).
+    create, delete or retrieve a blob, but the contents is accessed through the API).
   </para>
   <para>
     &LIBGDA; encapsulates all blob operations in objects which must be implemented by each provider if they want to support
@@ -845,9 +845,9 @@ gboolean (*key_columns)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
       <para>
 	The tokenizer (AKA lexer) generates values identified by the "L_" prefix (for example "L_BEGIN"). Because
 	the GdaSqlParser object uses the same lexer with at least two different parsers (namely the parser and delimiter
-	mentionned earlier), and because the Lemon parser generator generates its own value identifiers for tokens, there
+	mentioned earlier), and because the Lemon parser generator generates its own value identifiers for tokens, there
 	is a conversion step (the "converter" block in the diagram) which converts the "L_" prefixed tokens with the ones
-	useable by each parser (both converters are defined as arrays in the <filename>token_types.h</filename> file.
+	usable by each parser (both converters are defined as arrays in the <filename>token_types.h</filename> file.
       </para>
     </sect2>
     <sect2>
@@ -910,7 +910,7 @@ gboolean (*key_columns)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
     in <filename class="directory">providers/skel-implementation</filename> propose the following files layout (some of the files
     are not required for virtual providers).
   </para>
-  <para> Of course this files layout is not required, but make it easy for maintenance. In the folloing list,
+  <para> Of course this files layout is not required, but make it easy for maintenance. In the following list,
     the filenames here are the one for the "Capi" provider, and each provider should rename them:
     <itemizedlist>
       <listitem><para><filename>gda-capi.h</filename>: contains the provider name, the include files necessary to use the API and the
@@ -1003,7 +1003,7 @@ gboolean (*key_columns)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
     </sect2>
     <sect2>
       <title>plugin_create_provider()</title>
-      <para>This function actually instanciates a provider object and returns it.</para>
+      <para>This function actually instantiates a provider object and returns it.</para>
     </sect2>
   </sect1>
 

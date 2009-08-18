@@ -3,7 +3,7 @@
   <para>
     The <link linkend="gda-connection-get-meta-store-data">gda_connection_get_meta_store_data()</link> method allows
     one to get the meta-data information about a database such as its structure (schema). The following table describes
-    the actual data retreived by each <link linkend="GdaConnectionMetaType">GdaConnectionMetaType</link> type of request.
+    the actual data retrieved by each <link linkend="GdaConnectionMetaType">GdaConnectionMetaType</link> type of request.
   </para>
 
   <sect2 id="GdaConnectionMetaTypeGDA_CONNECTION_META_NAMESPACES">

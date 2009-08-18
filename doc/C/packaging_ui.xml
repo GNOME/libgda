@@ -3,7 +3,7 @@
   <para>
     &LIBGDA; UI extension builds on top of &LIBGDA; and GTK+ to provide some graphical
     widgets, a control center (to manage DSN and list installed providers) and a
-    browser program to analyse the contents of a database.
+    browser program to analyze the contents of a database.
   </para>
   <sect1>
     <title>Overview of the components</title>
@@ -68,7 +68,7 @@
       </programlisting>
     </para>
     <para>
-      This component should be made dependant on the &LIBGDA;'s runtime component.
+      This component should be made dependent on the &LIBGDA;'s runtime component.
     </para>
   </sect1>
 
@@ -110,7 +110,7 @@
       </programlisting>
     </para>
     <para>
-      This component should be made dependant on the runtime component above.
+      This component should be made dependent on the runtime component above.
     </para>
   </sect1>
 

@@ -6,8 +6,8 @@ Manager for lists of attributes
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-  The #GdaAttributesManager manages lists of named values (attibutes) for the benefit of 
-  others (objects or ressources for which only a pointer is known). It is used internally by &LIBGDA;
+  The #GdaAttributesManager manages lists of named values (attributes) for the benefit of 
+  others (objects or resources for which only a pointer is known). It is used internally by &LIBGDA;
   whenever an object or a simple structure may have several attributes.
 </para>
 <para>

@@ -2,7 +2,7 @@
 GdaTransactionStatus
 
 <!-- ##### SECTION Short_Description ##### -->
-Keeps track of the transactional status of a connection
+Keeps track of the transaction status of a connection
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>

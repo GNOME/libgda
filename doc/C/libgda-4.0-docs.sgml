@@ -267,7 +267,7 @@
 	operating system on which the client is running. 
       </para>
       <para>
-	&SQL; itself is also not standardised enough, so that source
+	&SQL; itself is also not standardized enough, so that source
 	compatibility can not be assured for all database servers. And for some
 	sort of servers, &SQL; is not even feasible (think about &LDAP;).
       </para>
@@ -364,7 +364,7 @@
             <para>Firebird: compiles, needs testing;</para>
           </listitem>
           <listitem>
-            <para>IBM DB2: compiles but is not useable, work in progress;</para>
+            <para>IBM DB2: compiles but is not usable, work in progress;</para>
           </listitem>
           <listitem>
             <para>Microsoft SQL Server and Sybase using the <ulink url="http://www.freetds.org/">FreeTDS</ulink> library:
@@ -374,19 +374,19 @@
             <para>mSQL: compiles, needs testing;</para>
           </listitem>
           <listitem>
-            <para>MySQL: fully functionnal;</para>
+            <para>MySQL: fully functional;</para>
           </listitem>
           <listitem>
             <para>ODBC: seems to work correctly, needs testing;</para>
           </listitem>
           <listitem>
-            <para>Oracle: work is progress, useable;</para>
+            <para>Oracle: work is progress, usable;</para>
           </listitem>
           <listitem>
-            <para>PostgreSQL: fully functionnal;</para>
+            <para>PostgreSQL: fully functional;</para>
           </listitem>
           <listitem>
-            <para>SQLite: fully functionnal;</para>
+            <para>SQLite: fully functional;</para>
           </listitem>
           <listitem>
             <para>Sybase: compiles, needs testing;</para>
@@ -478,7 +478,7 @@
 	<para>
 	  As a result, &LIBGDA; has to be the least intrusive possible when the user wants to execute an SQL statement,
 	  and lets the database being accessed apply its own rules. However &LIBGDA; features meta data information
-	  retreival (getting the list of tables, views,...) and there some representation conventions have been fixed,
+	  retrieval (getting the list of tables, views,...) and there some representation conventions have been fixed,
 	  see the <link linkend="information_schema:sql_identifiers">meta data section about SQL identifiers</link>
 	  for more information.
 	</para>
@@ -531,7 +531,7 @@
 	    <listitem>
               <para>GDA_SHOW_PROVIDER_LOADING_ERROR: if set, then in case a provider fails to be loaded (usually because
 		it requires a library which can't be found) &LIBGDA; will display a warning message. This variable
-		is usefull to debug the absence of a provider at runtime</para>
+		is useful to debug the absence of a provider at runtime</para>
 	    </listitem>
 	    <listitem>
               <para>GDA_DATA_MODEL_DUMP_TITLE: if set, then <link linkend="gda-data-model-dump">gda_data_model_dump()</link>
@@ -589,7 +589,7 @@
       </para>
       <para>
 	As each database implements its own SQL variant (all variants more or less close to the SQL92 or SQL99 standards), the
-	&LIBGDA; library allows one to use either a generic SQL parser, or a parser provided by each database adaptator (database
+	&LIBGDA; library allows one to use either a generic SQL parser, or a parser provided by each database adapter (database
 	provider), through the <link linkend="gda-connection-create-parser">gda_connection_create_parser()</link> method.
       </para>
       <para>
@@ -653,7 +653,7 @@
 	    <para>
 	      The GdaSet object also makes some computations to group value holders which are
 	      constrained by values in the same GdaDataModel (it makes it easy to use value holders
-	      which are not really independant).
+	      which are not really independent).
 	    </para>
 	  </listitem>
 	  <listitem>
@@ -661,7 +661,7 @@
 	      column have the same type, and all the data in each row have the same semantic meaning. 
 	      &LIBGDA; uses the <link linkend="GdaDataModel">GdaDataModel</link> 
 	      objects to actually hold the data (note that this is actually an interface which has 
-	      sevaral implementations depending on the real data organization in the data model).</para>
+	      several implementations depending on the real data organization in the data model).</para>
 	    <para>Note that depending on the real implementation, access to the data can be random or
 	    done using an iterator, and that the data model can be read-only or modifiable.</para>
 	  </listitem>
@@ -704,7 +704,7 @@
       <para>
 	A tree is represented by a
 	unique <link linkend="GdaTree">GdaTree</link> object,
-	in which each node is represented by a <link linkend="GdaTreeNode">GdaTreeNode</link> object. As mentionned previously, any
+	in which each node is represented by a <link linkend="GdaTreeNode">GdaTreeNode</link> object. As mentioned previously, any
 	<link linkend="GdaTreeNode">GdaTreeNode</link> in a <link linkend="GdaTree">GdaTree</link> is created (and destroyed)
 	by a <link linkend="GdaTreeManager">GdaTreeManager</link> object: the nodes hierarchy itself is
 	represented by a hierarchy of <link linkend="GdaTreeManager">GdaTreeManager</link> objects
@@ -808,7 +808,7 @@
 	the <link linkend="GdaTreeMgrTables">GdaTreeMgrTables</link> manager, uses
 	<link linkend="gda-tree-node-fetch-attribute">gda_tree_node_fetch_attribute()</link> to get the
 	"schema" attribute from the node below which it has to create children nodes. If the attribute exists, it
-	then creates a node for each table in the mentionned schema, and otherwise creates a node for each table
+	then creates a node for each table in the mentioned schema, and otherwise creates a node for each table
 	visible by default.
       </para>
       <para>
@@ -859,19 +859,19 @@ g_object_unref (tree);
 	A single piece of data can have several representations
 	depending on its usage: a string representation, an SQL representation and of course a 
 	<link linkend="GValue">GValue</link> representation. Conversions from one representation to
-	the other is DBMS dependant as each database can have its own SQL representation rules. The
+	the other is DBMS dependent as each database can have its own SQL representation rules. The
 	<link linkend="GdaDataHandler">GdaDataHandler</link> object's purpose is to do all these conversions in a easy way.
-	Except when mentionned otherwise, conversions take into account locale settings and DBMS specifications.
+	Except when mentioned otherwise, conversions take into account locale settings and DBMS specifications.
       </para>
       <para>
-	To convert a data, one needs to instanciate a new data handler from one of the many classes which implement this interface, or
+	To convert a data, one needs to instantiate a new data handler from one of the many classes which implement this interface, or
 	better to get a pointer to a <link linkend="GdaDataHandler">GdaDataHandler</link> object (no
 	need to unref() it after usage, data handler objects are stateless), and so to obtain such a pointer one can:
 	<itemizedlist>
 	  <listitem>
 	    <para>Use the <link linkend="gda-get-default-handler">gda_get_default_handler()</link>: the returned data handler
 	      is a generic one and should not be used to convert data to use with any connection, but only to have
-	      a portable way of storing and loading data in a locale independant fashion (for serialization purposes).</para>
+	      a portable way of storing and loading data in a locale independent fashion (for serialization purposes).</para>
 	  </listitem>
 	  <listitem>
 	    <para>Ask a <link linkend="GdaServerProvider">GdaServerProvider</link> object for one using the
@@ -1021,7 +1021,7 @@ g_object_unref (store);
 	    In very simple cases, when the data to store is made of named values, the easiest way is to use the
 	    <link linkend="gda-meta-store-set-attribute-value">gda_meta_store_set_attribute_value()</link> and
 	    <link linkend="gda-meta-store-get-attribute-value">gda_meta_store_get_attribute_value()</link> methods
-	    where the values are stored and retreived as strings.
+	    where the values are stored and retrieved as strings.
 	  </para>
 	</sect3>
 	<sect3>
@@ -1097,7 +1097,7 @@ g_object_unref (store);
 	    <link linkend="is:_all_types">"_all_types"</link> view as a convenience.
 	  </para>
 	  <para>
-	    The impact of that data types' hierarchy is that everytime a data type is referenced (from a table's column
+	    The impact of that data types' hierarchy is that every time a data type is referenced (from a table's column
 	    definition for example), there will be two attributes for the data type: one named 
 	    <parameter>data_type</parameter> which, if not NULL, refers to a data type listed in the
 	    <link linkend="is:_all_types">"_all_types"</link> view (thus a built in, domain or user defined data type), and
@@ -1113,7 +1113,7 @@ g_object_unref (store);
 	    <link linkend="is:_element_types">"_element_types"</link> table.
 	  </para>
 	  <para>
-	    The following diagram illustrates the data types representation and how ther are refered from table's columns,
+	    The following diagram illustrates the data types representation and how they are referred from table's columns,
 	    domains, and other database objects which refer to a data type:
 	    <mediaobject>
 	      <imageobject role="html">
@@ -1229,7 +1229,7 @@ g_object_unref (store);
     <chapter id="libgda-tools-introduction">
       <title>Introduction</title>
       <para>
-	&LIBGDA; offers several command line tools to help disgnose and resolve problems. All the
+	&LIBGDA; offers several command line tools to help diagnose and resolve problems. All the
 	provided tools can be run with the "--help" command line argument to give an online help
 	and description. Also, some environment variables can be set to control the output for some of
 	the tools, see <link linkend="libgda_env_variables">&LIBGDA;'s environment variables</link> section
@@ -1265,7 +1265,7 @@ DSN      | Provider   | Description  | Connection string      | Username
 Sales    | PostgreSQL | Sales        | DB_NAME=sales          |
 [...]
 	</programlisting>
-	To run an interractive session, just specify a DSN or a connection string using
+	To run an interactive session, just specify a DSN or a connection string using
 	the &quot;&lt;provider&gt;://&lt;connection string&gt;&quot; 
 	format (such as for example "Firebird://DATABASE=/path/to/dbfile.fdb"), or set
 	the GDA_SQL_CNC environment variable to contain that string, and run the command without any argument, 
@@ -1353,7 +1353,7 @@ c0> ]]>
       <title>&gda-list-config;</title>
       <para>
 	The &gda-list-config; tool simply lists all the declared data sources, and all the installed
-	providers, giving some other usefull information as well for each. This tool has no option.
+	providers, giving some other useful information as well for each. This tool has no option.
       </para>
       <para>
 	An example output will be:
@@ -1567,7 +1567,7 @@ g_object_unref (eng);
     </sect1>
   </gda_report_section>
 </article>]]></programlisting>
-	For a more detailled example, have a look at the <filename class="directory">samples/Report</filename> of &LIBGDA;'s
+	For a more detailed example, have a look at the <filename class="directory">samples/Report</filename> of &LIBGDA;'s
 	sources.
 	</para>
     </chapter>
@@ -1612,7 +1612,7 @@ g_object_unref (eng);
 	virtual methods.
       </para>
       <para>
-	Database provider objects are generally instanciated once by the &LIBGDA; framework and can be used several
+	Database provider objects are generally instantiated once by the &LIBGDA; framework and can be used several
 	times to open and work on connections to several databases of the same type.
       </para>
       <para>

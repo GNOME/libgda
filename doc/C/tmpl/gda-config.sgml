@@ -22,7 +22,7 @@ g_object_new (GDA_TYPE_CONFIG, "user-file", "my_file", NULL);
   </programlisting>
   Please note that after that call, the caller has a reference to the newly created object, and should technically
   call <link linkend="g-object-unref">g_object_unref()</link> when finished using it. It is safe to do this
-  but also poinless since that object should not be destroyed (as no other will be created) as &LIBGDA; also
+  but also pointless since that object should not be destroyed (as no other will be created) as &LIBGDA; also
   keeps a reference for itself.
 </para>
 <para>

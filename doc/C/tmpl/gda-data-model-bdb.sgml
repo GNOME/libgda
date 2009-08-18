@@ -29,16 +29,8 @@ virtual methods).
 
 </para>
 
-
-<!-- ##### ARG GdaDataModelBdb:db-name ##### -->
-<para>
-
-</para>
-
-<!-- ##### ARG GdaDataModelBdb:filename ##### -->
-<para>
-
-</para>
+@object: 
+@priv: 
 
 <!-- ##### STRUCT GdaDataModelBdbClass ##### -->
 <para>

@@ -14,7 +14,7 @@ Data models returned by the execution of a SELECT statement
 <para>
   The default behaviour however is to disallow modifications, and this section documents how to characterize
   a <link linkend="GdaDataSelect">GdaDataSelect</link> to allow modifications. Once this is done, any modification
-  done to the data model whill be propagated to the modified table in the database using INSERT, UPDATE or DELETE
+  done to the data model will be propagated to the modified table in the database using INSERT, UPDATE or DELETE
   statements.
 </para>
 <para>

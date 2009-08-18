@@ -17,7 +17,7 @@ Base class for all the tree managers
   object's property, or, if not specified that way, are fetched as attributes.
 </para>
 <para>
-  The #GdaTreeManager itself is an abstract type (which can't be instanciated). Use an existing sub class or subclass
+  The #GdaTreeManager itself is an abstract type (which can't be instantiated). Use an existing sub class or subclass
   it yourself.
 </para>
 

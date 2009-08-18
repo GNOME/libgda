@@ -1,7 +1,7 @@
 <chapter id="getting_started">
   <title>Code examples</title>
   <sect1 id="initializing">
-    <title>Initialising</title>
+    <title>Initializing</title>
     <para>
       First of all you have to initialise the gda library, i.e. to call the
       <link linkend="gda-init">gda_init ()</link> function, for example:
@@ -10,7 +10,7 @@
 gda_init ();
     </programlisting>
     <para>
-      After initialising you can work as usual or make &LIBGDA; 
+      After initializing you can work as usual or make &LIBGDA; 
     </para>
     <para>For example a basic program would look like:
       <programlisting>
@@ -51,12 +51,12 @@ main (int argc, char **argv)
   <sect1 id="connections">
     <title>Connecting</title>
     <para>
-      &LIBGDA; allows data sources (DSN) to be defined and refered to by a unique name which contains all the 
+      &LIBGDA; allows data sources (DSN) to be defined and referred to by a unique name which contains all the 
       required information to actually open a connection (except the name and password if they are required);
       see the <link linkend="libgda-40-Configuration">Configuration section</link> for more information about
       how to manage data sources. Of
       course it's still possible to open a connection without having defined a DSN, in which case a <emphasis>connection
-      string</emphasis> is used to specify all the parameters resuired to open a connection. For more information
+      string</emphasis> is used to specify all the parameters required to open a connection. For more information
       about connection strings, see the <link linkend="gda-connection-open-from-string">gda_connection_open_from_string ()</link>'s documentation.
     </para>
     <para>
@@ -89,7 +89,7 @@ do_stuff () {
     </para>
     <para>
       Closing the connection can be ordered using <link linkend="gda-connection-close">gda_connection_close ()</link>,
-      or is automatically done when the connection object is destroyed (as is the case in the example abive when 
+      or is automatically done when the connection object is destroyed (as is the case in the example above when 
       <link linkend="g-object-unref">g_object_unref()</link> is called with the connection as argument).
     </para>
   </sect1>
@@ -119,7 +119,7 @@ do_stuff () {
 	  <para>The performances of the resulting application are not optimized because the database needs to parse the SQL
 	    string each time and build its own internal representation of the statement, execute the statement using its 
 	    internal representation, then discard that internal representation. Using variables and reusing the same statement,
-	    the database only parses once the SQL statement, builds its internal representation, and reuses it everytime
+	    the database only parses once the SQL statement, builds its internal representation, and reuses it every time
 	    the statement is executed.
 	  </para>
 	</listitem>
@@ -301,7 +301,7 @@ show_data_model (GdaDataModel *dm)
       The <emphasis>transaction status</emphasis> of any connection can be obtained using 
       <link linkend="gda-connection-get-transaction-status">gda_connection_get_transaction_status ()</link>, which
       returns a <link linkend="GdaTransactionStatus">GdaTransactionStatus's</link> object which can be interrogated. That
-      object also makes it easy to keep up with the evolutions of the transaction status of the connection.
+      object also makes it easy to keep up with the evolution of the transaction status of the connection.
     </para>
   </sect1>
 
@@ -315,7 +315,7 @@ show_data_model (GdaDataModel *dm)
 	<listitem><para>GDA_CONNECTION_EVENT_NOTICE: for notices which are general purpose information</para></listitem>
 	<listitem><para>GDA_CONNECTION_EVENT_WARNING: for warnings</para></listitem>
 	<listitem><para>GDA_CONNECTION_EVENT_ERROR: for errors</para></listitem>
-	<listitem><para>GDA_CONNECTION_EVENT_COMMAND: for SQL stataments which have been executed</para></listitem>
+	<listitem><para>GDA_CONNECTION_EVENT_COMMAND: for SQL statements which have been executed</para></listitem>
       </itemizedlist>
     </para>
     <para>
@@ -376,7 +376,7 @@ p1000 | flowers | 1.990000
   <sect1 id="ddl_example">
     <title>DDL example</title>
     <para>
-      Ths following example illustrates (in a very simple way) how to use the 
+      The following example illustrates (in a very simple way) how to use the 
       <link linkend="GdaServerOperation">GdaServerOperation</link> object to perform a CREATE TABLE query.
       For more information about how &LIBGDA; handles DDL queries, see <link linkend="DDLIntro">the DDL introduction</link>.
       The following code simply executes the equivalent of "CREATE TABLE products (id int PRIMARY KEY, product_name string NOT NULL);" 

@@ -7,7 +7,7 @@ GdaDataModel to list files in filesystem
 <!-- ##### SECTION Long_Description ##### -->
 <para>
 The #GdaDataModelDir object lists files on a filesystem which are located
-below a "basedir" directory, one file per row. The data model has the folllowing columns:
+below a "basedir" directory, one file per row. The data model has the following columns:
 <itemizedlist>
   <listitem><para>the "dir_name" column (G_TYPE_STRING): contains the dirname part of the file</para></listitem>
   <listitem><para>the "file_name" column (G_TYPE_STRING): contains the file name part of the file</para></listitem>
