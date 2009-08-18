@@ -172,7 +172,7 @@ ora_def_callback (GdaOracleValue *ora_value,
 }
 
 /*
- * the @ps struct is modified and transfered to the new data model created in
+ * the @ps struct is modified and transferred to the new data model created in
  * this function
  */
 GdaDataModel *

@@ -39718,7 +39718,7 @@ static int accessPayload(
 
 /*
 ** Read part of the key associated with cursor pCur.  Exactly
-** "amt" bytes will be transfered into pBuf[].  The transfer
+** "amt" bytes will be transferred into pBuf[].  The transfer
 ** begins at "offset".
 **
 ** Return SQLITE_OK on success or an error code if anything goes
@@ -39744,7 +39744,7 @@ SQLITE_PRIVATE int sqlite3BtreeKey(BtCursor *pCur, u32 offset, u32 amt, void *pB
 
 /*
 ** Read part of the data associated with cursor pCur.  Exactly
-** "amt" bytes will be transfered into pBuf[].  The transfer
+** "amt" bytes will be transferred into pBuf[].  The transfer
 ** begins at "offset".
 **
 ** Return SQLITE_OK on success or an error code if anything goes
@@ -70028,7 +70028,7 @@ static int xferCompatibleIndex(Index *pDest, Index *pSrc){
 **
 ** This method for implementing the INSERT transfers raw records from
 ** tab2 over to tab1.  The columns are not decoded.  Raw records from
-** the indices of tab2 are transfered to tab1 as well.  In so doing,
+** the indices of tab2 are transferred to tab1 as well.  In so doing,
 ** the resulting tab1 has much less fragmentation.
 **
 ** This routine returns TRUE if the optimization is attempted.  If any

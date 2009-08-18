@@ -112,7 +112,7 @@ gda_sql_statement_unknown_serialize (gpointer stmt)
  * Sets @stmt's list of expressions
  *
  * @expressions's 
- * responsibility is transfered to
+ * responsibility is transferred to
  * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
  */
 void

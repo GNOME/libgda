@@ -28,7 +28,7 @@
  * @pspec: a #GdaSqlParamSpec pointer
  * @value: a G_TYPE_STRING #GValue
  *
- * Sets @pspec's name. @value's responsibility is transfered to
+ * Sets @pspec's name. @value's responsibility is transferred to
  * @pspec (which means @pspec is then responsible to freeing it when no longer needed).
  */
 void
@@ -50,7 +50,7 @@ gda_sql_param_spec_take_name (GdaSqlParamSpec *pspec, GValue *value)
  * @pspec: a #GdaSqlParamSpec pointer
  * @value: a G_TYPE_STRING #GValue
  *
- * Sets @pspec's description. @value's responsibility is transfered to
+ * Sets @pspec's description. @value's responsibility is transferred to
  * @pspec (which means @pspec is then responsible to freeing it when no longer needed).
  */
 void
@@ -72,7 +72,7 @@ gda_sql_param_spec_take_descr (GdaSqlParamSpec *pspec, GValue *value)
  * @pspec: a #GdaSqlParamSpec pointer
  * @value: a G_TYPE_STRING #GValue. 
  *
- * Sets @pspec's ability of being NULL. @value's responsibility is transfered to
+ * Sets @pspec's ability of being NULL. @value's responsibility is transferred to
  * @pspec (which means @pspec is then responsible to freeing it when no longer needed).
  *
  * If @value's string starts by 't' or 'T' then @pspec will be allowed to be %NULL
@@ -98,7 +98,7 @@ gda_sql_param_spec_take_nullok (GdaSqlParamSpec *pspec, GValue *value)
  * @pspec: a #GdaSqlParamSpec pointer
  * @value: a G_TYPE_STRING #GValue
  *
- * Sets @pspec's data type. @value's responsibility is transfered to
+ * Sets @pspec's data type. @value's responsibility is transferred to
  * @pspec (which means @pspec is then responsible to freeing it when no longer needed).
  *
  * @value must represent a data type, as understood by gda_g_type_from_string().

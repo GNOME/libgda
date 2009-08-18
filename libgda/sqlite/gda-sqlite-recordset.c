@@ -181,7 +181,7 @@ read_rows_to_init_col_types (GdaSqliteRecordset *model)
 }
 
 /*
- * the @ps struct is modified and transfered to the new data model created in
+ * the @ps struct is modified and transferred to the new data model created in
  * this function
  */
 GdaDataModel *

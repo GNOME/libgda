@@ -134,7 +134,7 @@ gda_capi_recordset_get_type (void)
 }
 
 /*
- * the @ps struct is modified and transfered to the new data model created in
+ * the @ps struct is modified and transferred to the new data model created in
  * this function
  */
 GdaDataModel *

@@ -208,7 +208,7 @@ jdbc_type_to_g_type (gint jdbc_type)
 }
 
 /*
- * the @ps struct is modified and transfered to the new data model created in
+ * the @ps struct is modified and transferred to the new data model created in
  * this function
  */
 GdaDataModel *

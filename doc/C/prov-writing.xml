@@ -686,7 +686,7 @@ gboolean (*key_columns)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
   </para>
   <para>
     &LIBGDA; encapsulates all blob operations in objects which must be implemented by each provider if they want to support
-    blobs; otherwise binary data may still be used if supported by the database, but the whole binary data is transfered in
+    blobs; otherwise binary data may still be used if supported by the database, but the whole binary data is transferred in
     the SQL statement which is not suitable for large data.
   </para>
   <para>
