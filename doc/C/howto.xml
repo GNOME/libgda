@@ -394,11 +394,11 @@ if (!gda_connection_update_meta_store (cnc, NULL, &amp;error)) {
     /* there was an error */
     return;
 }
-mstruct = gda_meta_struct_new (GDA_META_STRUCT_FEATURE_NONE);
+mstruct = gda_meta_struct_new (store, GDA_META_STRUCT_FEATURE_NONE);
 table_name = gda_value_new (G_TYPE_STRING);
 g_value_set_string (value, "customers");
-dbo = gda_meta_struct_complement (mstruct, gda_connection_get_meta_store (cnc),
-                                  GDA_META_DB_TABLE, NULL, NULL, 
+dbo = gda_meta_struct_complement (mstruct, GDA_META_DB_TABLE,
+                                  NULL, NULL, 
                                   table_name, &amp;error);
 gda_value_free (table_name);
 if (dbo) {
