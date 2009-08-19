@@ -62,7 +62,7 @@ function add_files_to_zip
 #
 # dependencies DLLs
 #
-files=(charset.dll iconv.dll intl.dll libgio-2.0-0.dll libglib-2.0-0.dll libgmodule-2.0-0.dll libgobject-2.0-0.dll libgthread-2.0-0.dll libxml2.dll zlib1.dll libsoup-2.4-1.dll libgdk_pixbuf-2.0-0.dll libgdk-win32-2.0-0.dll libgtk-win32-2.0-0.dll libatk-1.0-0.dll libpng12-0.dll libpango-1.0-0.dll libpangocairo-1.0-0.dll libpangoft2-1.0-0.dll libpangowin32-1.0-0.dll libcairo-2.dll libfontconfig-1.dll)
+files=(charset.dll iconv.dll intl.dll libgio-2.0-0.dll libglib-2.0-0.dll libgmodule-2.0-0.dll libgobject-2.0-0.dll libgthread-2.0-0.dll libxml2.dll zlib1.dll libsoup-2.4-1.dll libgdk_pixbuf-2.0-0.dll libgdk-win32-2.0-0.dll libgtk-win32-2.0-0.dll libatk-1.0-0.dll libpng12-0.dll libpango-1.0-0.dll libpangocairo-1.0-0.dll libpangoft2-1.0-0.dll libpangowin32-1.0-0.dll libcairo-2.dll libfontconfig-1.dll libgoocanvas-3.dll)
 add_files_to_zip $archive_ext ${depend_path}/gtk bin $files
 
 files=(libdb47.dll msvcp80.dll msvcr80.dll)
@@ -92,7 +92,7 @@ add_files_to_zip $archive $prefix share/libgda-4.0 $files
 files=(gdaui-generic.png)
 add_files_to_zip $archive $prefix share/libgda-4.0/pixmaps $files
 
-files=(gda-browser.png gda-browser-auth.png gda-browser-auth-big.png gda-browser-connected.png gda-browser-connected-big.png gda-browser-non-connected.png gda-browser-non-connected-big.png gda-browser-schema.png gda-browser-table.png gda-control-center.png gda-control-center-newcnc.png gda-browser-bookmark.png gda-browser-column.png)
+files=(gda-browser.png gda-browser-auth.png gda-browser-auth-big.png gda-browser-connected.png gda-browser-connected-big.png gda-browser-non-connected.png gda-browser-non-connected-big.png gda-browser-schema.png gda-browser-table.png gda-control-center.png gda-control-center-newcnc.png gda-browser-bookmark.png gda-browser-column.png gda-browser-diagram.png)
 add_files_to_zip $archive $prefix share/pixmaps $files
 
 files=(gdaui-entry-string-number.xml gdaui-entry-string-string.xml)
@@ -116,7 +116,7 @@ add_files_to_zip $archive_ext . etc/gtk-2.0 $files
 files=(pango.modules)
 add_files_to_zip $archive_ext $prefix etc/pango $files
 
-files=(gda-sql-4.0.exe gda-test-connection-4.0.exe libgda-4.0-4.dll libgda-report-4.0-4.dll libgdaui-4.0-4.dll gda-browser-4.0.exe gda-control-center-4.0.exe gspawn-win32-helper.exe)
+files=(gda-sql-4.0.exe gda-test-connection-4.0.exe libgda-4.0-4.dll libgda-report-4.0-4.dll libgda-ui-4.0-4.dll gda-browser-4.0.exe gda-control-center-4.0.exe gspawn-win32-helper.exe)
 add_files_to_zip $archive $prefix bin $files
 
 files=(gdaui-demo-4.0.exe)

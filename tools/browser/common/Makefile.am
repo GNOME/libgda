@@ -22,6 +22,11 @@ libcommon_la_SOURCES = \
 
 $(OBJECTS): marshal.c marshal.h
 
+libcommon_la_LIBADD = \
+	$(top_builddir)/libgda/libgda-4.0.la \
+	$(LIBGDA_LIBS) \
+	$(GTK_LIBS)
+
 EXTRA_DIST = \
 	marshal.list
 

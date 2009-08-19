@@ -32,6 +32,9 @@ libcanvas_la_SOURCES = \
 	browser-canvas-utility.c \
 	browser-canvas-utility.h
 
-libcanvas_la_LDFLAGS = \
+libcanvas_la_LIBADD = \
+	$(top_builddir)/libgda/libgda-4.0.la \
+	$(LIBGDA_LIBS) \
+	$(GTK_LIBS) \
 	$(GOOCANVAS_LIBS) \
 	$(GRAPHVIZ_LIBS)
