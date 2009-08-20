@@ -176,7 +176,6 @@ key_press_event_cb (GtkTreeView *treeview, GdkEventKey *event, FavoriteSelector 
 		
 		return TRUE;
 	}
-	TO_IMPLEMENT;
 	return FALSE; /* not handled */
 }
 

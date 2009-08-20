@@ -25,6 +25,7 @@
 #include "../browser-window.h"
 #include "table-info.h"
 #include "../support.h"
+#include "../browser-page.h"
 #ifdef HAVE_GOOCANVAS
 #include "relations-diagram.h"
 #endif
@@ -110,7 +111,8 @@ static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFav
 				      const gchar *selection, SchemaBrowserPerspective *bpers);
 static void objects_index_selection_changed_cb (GtkWidget *widget, BrowserFavoritesType fav_type,
 						const gchar *selection, SchemaBrowserPerspective *bpers);
-
+static void nb_switch_page_cb (GtkNotebook *nb, GtkNotebookPage *page, gint page_num,
+			       SchemaBrowserPerspective *perspective); 
 /**
  * schema_browser_perspective_new
  *
@@ -142,6 +144,8 @@ schema_browser_perspective_new (BrowserWindow *bwin)
 	gtk_paned_add2 (GTK_PANED (paned), nb);
 	gtk_notebook_set_scrollable (GTK_NOTEBOOK (nb), TRUE);
 	gtk_notebook_popup_enable (GTK_NOTEBOOK (nb));
+	g_signal_connect (G_OBJECT (nb), "switch-page",
+			  G_CALLBACK (nb_switch_page_cb), perspective);
 
 	wid = objects_index_new (bcnc);
 	g_signal_connect (wid, "selection-changed",
@@ -160,6 +164,26 @@ schema_browser_perspective_new (BrowserWindow *bwin)
 	gtk_widget_show_all (paned);
 
 	return bpers;
+}
+
+static void
+nb_switch_page_cb (GtkNotebook *nb, GtkNotebookPage *page, gint page_num,
+		   SchemaBrowserPerspective *perspective)
+{
+	GtkWidget *page_contents;
+	GtkActionGroup *actions = NULL;
+	const gchar *ui = NULL;
+
+	page_contents = gtk_notebook_get_nth_page (nb, page_num);
+	if (IS_BROWSER_PAGE (page_contents)) {
+		actions = browser_page_get_actions_group (BROWSER_PAGE (page_contents));
+		ui = browser_page_get_actions_ui (BROWSER_PAGE (page_contents));
+	}
+	browser_window_customize_perspective_ui (perspective->priv->bwin,
+						 BROWSER_PERSPECTIVE (perspective), actions, 
+						 ui);
+	if (actions)
+		g_object_unref (actions);
 }
 
 static void

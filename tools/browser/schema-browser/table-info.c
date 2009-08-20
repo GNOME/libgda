@@ -32,6 +32,7 @@
 #include "table-relations.h"
 #endif
 #include "schema-browser-perspective.h"
+#include "../browser-page.h"
 
 struct _TableInfoPrivate {
 	BrowserConnection *bcnc;
@@ -57,6 +58,10 @@ static void table_info_get_property (GObject *object,
 				     guint param_id,
 				     GValue *value,
 				     GParamSpec *pspec);
+/* BrowserPage interface */
+static void                 table_info_page_init (BrowserPageIface *iface);
+static GtkActionGroup      *table_info_page_get_actions_group (BrowserPage *page);
+static const gchar         *table_info_page_get_actions_ui (BrowserPage *page);
 
 static void meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableInfo *tinfo);
 
@@ -92,6 +97,12 @@ table_info_class_init (TableInfoClass *klass)
 	object_class->dispose = table_info_dispose;
 }
 
+static void
+table_info_page_init (BrowserPageIface *iface)
+{
+	iface->i_get_actions_group = table_info_page_get_actions_group;
+	iface->i_get_actions_ui = table_info_page_get_actions_ui;
+}
 
 static void
 table_info_init (TableInfo *tinfo, TableInfoClass *klass)
@@ -139,7 +150,15 @@ table_info_get_type (void)
 			0,
 			(GInstanceInitFunc) table_info_init
 		};
+
+		static GInterfaceInfo page_info = {
+                        (GInterfaceInitFunc) table_info_page_init,
+			NULL,
+                        NULL
+                };
+
 		type = g_type_register_static (GTK_TYPE_VBOX, "TableInfo", &info, 0);
+		g_type_add_interface_static (type, BROWSER_PAGE_TYPE, &page_info);
 	}
 	return type;
 }
@@ -177,6 +196,24 @@ display_table_not_found_error (TableInfo *tinfo, gboolean is_error)
 		gtk_notebook_set_current_page (GTK_NOTEBOOK (tinfo->priv->contents), 1);
 }
 
+static gchar *
+table_info_to_selection (TableInfo *tinfo)
+{
+	GString *string;
+	gchar *tmp;
+	string = g_string_new ("OBJ_TYPE=table");
+	tmp = gda_rfc1738_encode (tinfo->priv->schema);
+	g_string_append_printf (string, ";OBJ_SCHEMA=%s", tmp);
+	g_free (tmp);
+	tmp = gda_rfc1738_encode (tinfo->priv->table_name);
+	g_string_append_printf (string, ";OBJ_NAME=%s", tmp);
+	g_free (tmp);
+	tmp = gda_rfc1738_encode (tinfo->priv->table_short_name);
+	g_string_append_printf (string, ";OBJ_SHORT_NAME=%s", tmp);
+	g_free (tmp);
+	return g_string_free (string, FALSE);
+}
+
 static void
 source_drag_data_get_cb (GtkWidget *widget, GdkDragContext *context,
 			 GtkSelectionData *selection_data,
@@ -184,21 +221,11 @@ source_drag_data_get_cb (GtkWidget *widget, GdkDragContext *context,
 {
 	switch (info) {
 	case TARGET_KEY_VALUE: {
-		GString *string;
-		gchar *tmp;
-		string = g_string_new ("OBJ_TYPE=table");
-		tmp = gda_rfc1738_encode (tinfo->priv->schema);
-		g_string_append_printf (string, ";OBJ_SCHEMA=%s", tmp);
-		g_free (tmp);
-		tmp = gda_rfc1738_encode (tinfo->priv->table_name);
-		g_string_append_printf (string, ";OBJ_NAME=%s", tmp);
-		g_free (tmp);
-		tmp = gda_rfc1738_encode (tinfo->priv->table_short_name);
-		g_string_append_printf (string, ";OBJ_SHORT_NAME=%s", tmp);
-		g_free (tmp);
-		gtk_selection_data_set (selection_data, selection_data->target, 8, (guchar*) string->str,
-					strlen (string->str));
-		g_string_free (string, TRUE);
+		gchar *str;
+		str = table_info_to_selection (tinfo);
+		gtk_selection_data_set (selection_data, selection_data->target, 8, (guchar*) str,
+					strlen (str));
+		g_free (str);
 		break;
 	}
 	default:
@@ -381,4 +408,62 @@ table_info_get_connection (TableInfo *tinfo)
 {
 	g_return_val_if_fail (IS_TABLE_INFO (tinfo), NULL);
 	return tinfo->priv->bcnc;
+}
+
+/*
+ * UI actions
+ */
+static void
+action_add_to_fav_cb (GtkAction *action, TableInfo *tinfo)
+{
+	BrowserFavorites *bfav;
+        BrowserFavoritesAttributes fav;
+        GError *error = NULL;
+
+        memset (&fav, 0, sizeof (BrowserFavoritesAttributes));
+        fav.id = -1;
+        fav.type = BROWSER_FAVORITES_TABLES;
+        fav.name = NULL;
+        fav.descr = NULL;
+        fav.contents = table_info_to_selection (tinfo);
+
+        bfav = browser_connection_get_favorites (tinfo->priv->bcnc);
+        if (! browser_favorites_add (bfav, 0, &fav, ORDER_KEY_SCHEMA, G_MAXINT, &error)) {
+                browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) tinfo),
+                                    _("Could not add favorite: %s"),
+                                    error && error->message ? error->message : _("No detail"));
+                if (error)
+                        g_error_free (error);
+        }
+	g_free (fav.contents);
+}
+
+static GtkActionEntry ui_actions[] = {
+	{ "AddToFav", GTK_STOCK_ADD, N_("_Favorite"), NULL, N_("Add table to favorites"),
+	  G_CALLBACK (action_add_to_fav_cb)},
+};
+static const gchar *ui_actions_info =
+	"<ui>"
+	"  <menubar name='MenuBar'>"
+	"  </menubar>"
+	"  <toolbar name='ToolBar'>"
+	"    <separator/>"
+	"    <toolitem action='AddToFav'/>"
+	"  </toolbar>"
+	"</ui>";
+
+static GtkActionGroup *
+table_info_page_get_actions_group (BrowserPage *page)
+{
+	GtkActionGroup *agroup;
+	agroup = gtk_action_group_new ("SchemaBrowserRelationsDiagramActions");
+	gtk_action_group_add_actions (agroup, ui_actions, G_N_ELEMENTS (ui_actions), page);
+	
+	return agroup;
+}
+
+static const gchar *
+table_info_page_get_actions_ui (BrowserPage *page)
+{
+	return ui_actions_info;
 }

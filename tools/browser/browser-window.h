@@ -55,6 +55,10 @@ BrowserConnection  *browser_window_get_connection         (BrowserWindow *bwin);
 guint               browser_window_push_status            (BrowserWindow *bwin, const gchar *context, const gchar *text);
 void                browser_window_pop_status             (BrowserWindow *bwin, const gchar *context);
 
+void                browser_window_customize_perspective_ui (BrowserWindow *bwin, BrowserPerspective *bpers,
+							     GtkActionGroup *actions_group,
+							     const gchar *ui_info);
+
 G_END_DECLS
 
 #endif

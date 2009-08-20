@@ -40,6 +40,10 @@ typedef struct {
         BrowserPerspectiveFactory *factory;
         gint                page_number; /* in reference to bwin->perspectives_nb */
         BrowserPerspective  *perspective_widget;
+
+	GtkActionGroup      *customized_actions;
+	guint                customized_merge_id;
+	gchar               *customized_ui;
 } PerspectiveData;
 #define PERSPECTIVE_DATA(x) ((PerspectiveData*)(x))
 PerspectiveData *perspective_data_new (BrowserWindow *bwin, BrowserPerspectiveFactory *factory);
@@ -63,6 +67,7 @@ struct _BrowserWindowPrivate {
 	BrowserConnection *bcnc;
 	GtkNotebook       *perspectives_nb; /* notebook used to switch between tabs, for the selector part */
         GSList            *perspectives; /* list of PerspectiveData pointers, owned here */
+	PerspectiveData   *current_perspective;
 	guint              ui_manager_merge_id; /* for current perspective */
 
 	GtkWidget         *spinner;
@@ -376,6 +381,7 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 	if (ui_info)
 		bwin->priv->ui_manager_merge_id = gtk_ui_manager_add_ui_from_string (bwin->priv->ui_manager,
 										     ui_info, -1, NULL);
+	bwin->priv->current_perspective = pers;
 	
 	/* insert perspective into window */
         bwin->priv->perspectives_nb = (GtkNotebook*) gtk_notebook_new ();
@@ -451,6 +457,16 @@ perspective_toggle_cb (GtkRadioAction *action, GtkRadioAction *current, BrowserW
 	pf = BROWSER_PERSPECTIVE_FACTORY (g_object_get_data (G_OBJECT (action), "pers"));
 	g_assert (pf);
 
+	/* current perspective's cleanups */
+	if (bwin->priv->current_perspective) {
+		pers = bwin->priv->current_perspective;
+		if (pers->customized_merge_id) {
+			gtk_ui_manager_remove_ui (bwin->priv->ui_manager, pers->customized_merge_id);
+			pers->customized_merge_id = 0;
+		}
+		bwin->priv->current_perspective = NULL;
+	}
+
 	/* check if perspective already exists */
 	for (list = bwin->priv->perspectives, pers = NULL; list; list = list->next) {
 		if (PERSPECTIVE_DATA (list->data)->factory == pf) {
@@ -476,7 +492,6 @@ perspective_toggle_cb (GtkRadioAction *action, GtkRadioAction *current, BrowserW
 
 	gtk_notebook_set_current_page (bwin->priv->perspectives_nb, pers->page_number);
 
-
 	/* menus and toolbar handling */
 	if (bwin->priv->ui_manager_merge_id > 0) {
 		gtk_ui_manager_remove_ui (bwin->priv->ui_manager, bwin->priv->ui_manager_merge_id);
@@ -488,6 +503,13 @@ perspective_toggle_cb (GtkRadioAction *action, GtkRadioAction *current, BrowserW
 	if (ui_info)
 		bwin->priv->ui_manager_merge_id = gtk_ui_manager_add_ui_from_string (bwin->priv->ui_manager,
 										     ui_info, -1, NULL);
+
+	/* current perspective's customizations */
+	bwin->priv->current_perspective = pers;
+	if (pers->customized_ui)
+		pers->customized_merge_id = gtk_ui_manager_add_ui_from_string (bwin->priv->ui_manager,
+									       pers->customized_ui,
+									       -1, NULL);
 }
 
 static void
@@ -812,6 +834,9 @@ perspective_data_free (PerspectiveData *pers)
 {
         if (pers->perspective_widget)
                 g_object_unref (pers->perspective_widget);
+	if (pers->customized_actions)
+		g_object_unref (pers->customized_actions);
+	g_free (pers->customized_ui);
         g_free (pers);
 }
 
@@ -844,4 +869,59 @@ browser_window_pop_status (BrowserWindow *bwin, const gchar *context)
 
 	cid = gtk_statusbar_get_context_id (GTK_STATUSBAR (bwin->priv->statusbar), context);
 	gtk_statusbar_pop (GTK_STATUSBAR (bwin->priv->statusbar), cid);
+}
+
+/**
+ * browser_window_push_perspective_ui
+ *
+ * Customizes a UI specific to the @bpers perspective. Any
+ * previous customization is removed, replaced by the new requested one.
+ *
+ * If @actions_group is %NULL then any it simply removes the customization.
+ */
+void
+browser_window_customize_perspective_ui (BrowserWindow *bwin, BrowserPerspective *bpers,
+					 GtkActionGroup *actions_group,
+					 const gchar *ui_info)
+{
+	PerspectiveData *pdata = NULL;
+	GSList *list;
+
+	g_return_if_fail (BROWSER_IS_WINDOW (bwin));
+	g_return_if_fail (IS_BROWSER_PERSPECTIVE (bpers));
+
+	for (list = bwin->priv->perspectives; list; list = list->next) {
+		if (PERSPECTIVE_DATA (list->data)->perspective_widget == bpers) {
+			pdata = PERSPECTIVE_DATA (list->data);
+			break;
+		}
+	}
+	if (! pdata)
+		return;
+
+	/* cleanups */
+	if (pdata->customized_merge_id) {
+		gtk_ui_manager_remove_ui (bwin->priv->ui_manager, pdata->customized_merge_id);
+		pdata->customized_merge_id = 0;
+		gtk_ui_manager_ensure_update (bwin->priv->ui_manager);
+	}
+	if (pdata->customized_actions) {
+		gtk_ui_manager_remove_action_group (bwin->priv->ui_manager, pdata->customized_actions);
+		g_object_unref (pdata->customized_actions);
+		pdata->customized_actions = NULL;
+	}
+	g_free (pdata->customized_ui);
+	pdata->customized_ui = NULL;
+
+	if (actions_group) {
+		g_return_if_fail (GTK_IS_ACTION_GROUP (actions_group));
+		gtk_ui_manager_insert_action_group (bwin->priv->ui_manager, actions_group, 0);
+		pdata->customized_actions = g_object_ref (actions_group);
+	}
+	if (ui_info) {
+		pdata->customized_ui = g_strdup (ui_info);
+		pdata->customized_merge_id = gtk_ui_manager_add_ui_from_string (bwin->priv->ui_manager,
+										pdata->customized_ui,
+										-1, NULL);
+	}
 }

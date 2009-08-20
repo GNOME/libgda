@@ -20,32 +20,32 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __BROWSER_PERSPECTIVE_H__
-#define __BROWSER_PERSPECTIVE_H__
+#ifndef __BROWSER_PAGE_H__
+#define __BROWSER_PAGE_H__
 
 #include <gtk/gtk.h>
 #include "decl.h"
 
 G_BEGIN_DECLS
 
-#define BROWSER_PERSPECTIVE_TYPE            (browser_perspective_get_type())
-#define BROWSER_PERSPECTIVE(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, BROWSER_PERSPECTIVE_TYPE, BrowserPerspective))
-#define IS_BROWSER_PERSPECTIVE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, BROWSER_PERSPECTIVE_TYPE))
-#define BROWSER_PERSPECTIVE_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_INTERFACE ((obj), BROWSER_PERSPECTIVE_TYPE, BrowserPerspectiveIface))
+#define BROWSER_PAGE_TYPE            (browser_page_get_type())
+#define BROWSER_PAGE(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, BROWSER_PAGE_TYPE, BrowserPage))
+#define IS_BROWSER_PAGE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, BROWSER_PAGE_TYPE))
+#define BROWSER_PAGE_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_INTERFACE ((obj), BROWSER_PAGE_TYPE, BrowserPageIface))
 
 /* struct for the interface */
-struct _BrowserPerspectiveIface {
+struct _BrowserPageIface {
 	GTypeInterface           g_iface;
 
 	/* virtual table */
-	GtkActionGroup      *(* i_get_actions_group) (BrowserPerspective *perspective);
-	const gchar         *(* i_get_actions_ui) (BrowserPerspective *perspective);
+	GtkActionGroup      *(* i_get_actions_group) (BrowserPage *page);
+	const gchar         *(* i_get_actions_ui) (BrowserPage *page);
 };
 
-GType           browser_perspective_get_type          (void) G_GNUC_CONST;
+GType           browser_page_get_type          (void) G_GNUC_CONST;
 
-GtkActionGroup *browser_perspective_get_actions_group (BrowserPerspective *perspective);
-const gchar    *browser_perspective_get_actions_ui    (BrowserPerspective *perspective);
+GtkActionGroup *browser_page_get_actions_group (BrowserPage *page);
+const gchar    *browser_page_get_actions_ui    (BrowserPage *page);
 
 G_END_DECLS
 

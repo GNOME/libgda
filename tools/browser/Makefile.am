@@ -39,6 +39,8 @@ gda_browser_4_0_SOURCES=\
 	support.h \
 	browser-core.c \
 	browser-core.h \
+	browser-page.c \
+	browser-page.h \
 	browser-perspective.c \
 	browser-perspective.h \
 	browser-spinner.c \

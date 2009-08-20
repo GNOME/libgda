@@ -35,6 +35,9 @@ typedef struct _BrowserData BrowserData;
 typedef struct _BrowserPerspectiveIface   BrowserPerspectiveIface;
 typedef struct _BrowserPerspective        BrowserPerspective;
 
+typedef struct _BrowserPageIface   BrowserPageIface;
+typedef struct _BrowserPage        BrowserPage;
+
 typedef struct {
 	const gchar          *perspective_name;
 	BrowserPerspective *(*perspective_create) (BrowserWindow *);
