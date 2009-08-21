@@ -29,6 +29,7 @@
 #include "browser-window.h"
 #include "login-dialog.h"
 #include "auth-dialog.h"
+#include "browser-stock-icons.h"
 
 /* options */
 gchar *perspective = NULL;
@@ -57,6 +58,7 @@ main (int argc, char *argv[])
 
 	gdaui_init ();
 	gtk_init (&argc, &argv);
+	browser_stock_icons_init ();
 
 	browser_core_set_default_factory (perspective);
 

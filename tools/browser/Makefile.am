@@ -1,7 +1,7 @@
 bin_PROGRAMS=gda-browser-4.0
 noinst_PROGRAMS = favorites-test
 
-SUBDIRS = common schema-browser dummy-perspective
+SUBDIRS = data common schema-browser dummy-perspective
 if HAVE_GOOCANVAS
 SUBDIRS+=canvas
 noinst_PROGRAMS+=canvas-example
@@ -57,7 +57,10 @@ gda_browser_4_0_SOURCES=\
 	browser-connections-list.h \
 	main.c \
 	mgr-favorites.h \
-	mgr-favorites.c
+	mgr-favorites.c \
+	browser-stock-icons.c \
+	browser-stock-icons.h
+
 
 $(OBJECTS): marshal.c marshal.h
 

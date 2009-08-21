@@ -28,6 +28,7 @@
 #include "browser-connection.h"
 #include "browser-connections-list.h"
 #include "browser-spinner.h"
+#include "browser-stock-icons.h"
 
 /*
  * structure representing a 'tab' in a window
@@ -207,7 +208,7 @@ static const GtkActionEntry ui_actions[] = {
         { "Quit", GTK_STOCK_QUIT, "_Quit", NULL, "Quit", G_CALLBACK (quit_cb)},
         { "Perspective", NULL, "_Perspective", NULL, "Perspective", NULL },
         { "Window", NULL, "_Window", NULL, "Window", NULL },
-        { "WindowNew", GTK_STOCK_NEW, "_New window", NULL, "Open a new window for current connection", G_CALLBACK (window_new_cb)},
+        { "WindowNew", STOCK_NEW_WINDOW, "_New window", NULL, "Open a new window for current connection", G_CALLBACK (window_new_cb)},
         { "WindowNewOthers", NULL, "New window for _connection", NULL, "Open a new window for a connection", NULL},
         { "WindowClose", GTK_STOCK_CLOSE, "_Close", "", "Close this window", G_CALLBACK (window_close_cb)},
         { "Help", NULL, "_Help", NULL, "Help", NULL },

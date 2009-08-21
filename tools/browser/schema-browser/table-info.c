@@ -33,6 +33,7 @@
 #endif
 #include "schema-browser-perspective.h"
 #include "../browser-page.h"
+#include "../browser-stock-icons.h"
 
 struct _TableInfoPrivate {
 	BrowserConnection *bcnc;
@@ -441,7 +442,7 @@ action_add_to_fav_cb (GtkAction *action, TableInfo *tinfo)
 }
 
 static GtkActionEntry ui_actions[] = {
-	{ "AddToFav", GTK_STOCK_ADD, N_("_Favorite"), NULL, N_("Add table to favorites"),
+	{ "AddToFav", STOCK_ADD_BOOKMARK, N_("_Favorite"), NULL, N_("Add table to favorites"),
 	  G_CALLBACK (action_add_to_fav_cb)},
 };
 static const gchar *ui_actions_info =
