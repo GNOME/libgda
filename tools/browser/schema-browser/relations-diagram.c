@@ -29,6 +29,8 @@
 #include "../canvas/browser-canvas-db-relations.h"
 #include <gdk/gdkkeysyms.h>
 #include "../common/popup-container.h"
+#include "../browser-page.h"
+#include "../browser-perspective.h"
 
 struct _RelationsDiagramPrivate {
 	BrowserConnection *bcnc;
@@ -55,7 +57,12 @@ static void relations_diagram_get_property (GObject *object,
 					    GValue *value,
 					    GParamSpec *pspec);
 
+/* BrowserPage interface */
+static void                 relations_diagram_page_init (BrowserPageIface *iface);
+static GtkWidget           *relations_diagram_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button);
+
 static void meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, RelationsDiagram *diagram);
+static void favorites_changed_cb (BrowserConnection *bcnc, RelationsDiagram *diagram);
 static void relations_diagram_set_fav_id (RelationsDiagram *diagram, gint fav_id, GError **error);
 
 /* properties */
@@ -90,6 +97,13 @@ relations_diagram_class_init (RelationsDiagramClass *klass)
 	object_class->dispose = relations_diagram_dispose;
 }
 
+static void
+relations_diagram_page_init (BrowserPageIface *iface)
+{
+	iface->i_get_actions_group = NULL;
+	iface->i_get_actions_ui = NULL;
+	iface->i_get_tab_label = relations_diagram_page_get_tab_label;
+}
 
 static void
 relations_diagram_init (RelationsDiagram *diagram, RelationsDiagramClass *klass)
@@ -109,6 +123,8 @@ relations_diagram_dispose (GObject *object)
 		if (diagram->priv->bcnc) {
 			g_signal_handlers_disconnect_by_func (diagram->priv->bcnc,
 							      G_CALLBACK (meta_changed_cb), diagram);
+			g_signal_handlers_disconnect_by_func (diagram->priv->bcnc,
+							      G_CALLBACK (favorites_changed_cb), diagram);
 			g_object_unref (diagram->priv->bcnc);
 		}
 
@@ -139,7 +155,14 @@ relations_diagram_get_type (void)
 			0,
 			(GInstanceInitFunc) relations_diagram_init
 		};
+		static GInterfaceInfo page_info = {
+                        (GInterfaceInitFunc) relations_diagram_page_init,
+			NULL,
+                        NULL
+                };
+
 		type = g_type_register_static (GTK_TYPE_VBOX, "RelationsDiagram", &info, 0);
+		g_type_add_interface_static (type, BROWSER_PAGE_TYPE, &page_info);
 	}
 	return type;
 }
@@ -174,6 +197,13 @@ meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, RelationsDiagr
 	g_object_set (G_OBJECT (diagram->priv->canvas), "meta-struct", mstruct, NULL);
 }
 
+static void
+favorites_changed_cb (BrowserConnection *bcnc, RelationsDiagram *diagram)
+{
+	if (diagram->priv->fav_id >= 0)
+		relations_diagram_set_fav_id (diagram, diagram->priv->fav_id, NULL);
+}
+
 /*
  * POPUP
  */
@@ -194,7 +224,7 @@ real_save_clicked_cb (GtkWidget *button, RelationsDiagram *diagram)
 	fav.name = gtk_editable_get_chars (GTK_EDITABLE (diagram->priv->name_entry), 0, -1);
 	if (!*fav.name) {
 		g_free (fav.name);
-		fav.name = g_strdup ("Diagram #0");
+		fav.name = g_strdup (_("Diagram"));
 	}
 	fav.contents = str;
 	
@@ -280,6 +310,9 @@ relations_diagram_new (BrowserConnection *bcnc)
 	diagram->priv->bcnc = g_object_ref (bcnc);
 	g_signal_connect (diagram->priv->bcnc, "meta-changed",
 			  G_CALLBACK (meta_changed_cb), diagram);
+	g_signal_connect (bcnc, "favorites-changed",
+			  G_CALLBACK (favorites_changed_cb), diagram);
+
 
 	/* header */
 	GtkWidget *hbox, *wid;
@@ -316,7 +349,7 @@ relations_diagram_new (BrowserConnection *bcnc)
 	mstruct = browser_connection_get_meta_struct (diagram->priv->bcnc);
 	if (mstruct)
 		meta_changed_cb (diagram->priv->bcnc, mstruct, diagram);
-
+	
 	return (GtkWidget*) diagram;
 }
 
@@ -420,22 +453,33 @@ relations_diagram_set_fav_id (RelationsDiagram *diagram, gint fav_id, GError **e
 	g_return_if_fail (IS_RELATIONS_DIAGRAM (diagram));
 	BrowserFavoritesAttributes fav;
 
-	if (! browser_favorites_get (browser_connection_get_favorites (diagram->priv->bcnc),
-								       fav_id, &fav, error))
-		return;
+	if ((fav_id >=0) &&
+	    browser_favorites_get (browser_connection_get_favorites (diagram->priv->bcnc),
+				   fav_id, &fav, error)) {
+		gchar *str, *tmp;
+		tmp = g_markup_printf_escaped (_("'%s' diagram"), fav.name);
+		str = g_strdup_printf ("<b>%s</b>\n%s", _("Relations diagram"), tmp);
+		g_free (tmp);
+		cc_gray_bar_set_text (diagram->priv->header, str);
+		g_free (str);
+		
+		diagram->priv->fav_id = fav.id;
+		
+		browser_favorites_reset_attributes (&fav);
+	}
+	else {
+		gchar *str;
+		str = g_strdup_printf ("<b>%s</b>\n%s", _("Relations diagram"), _("Unsaved diagram"));
+		cc_gray_bar_set_text (diagram->priv->header, str);
+		g_free (str);
+		diagram->priv->fav_id = -1;
+	}
 
-	gchar *str, *tmp;
-	tmp = g_markup_printf_escaped (_("'%s' diagram"), fav.name);
-	str = g_strdup_printf ("<b>%s</b>\n%s", _("Relations diagram"), tmp);
-	g_free (tmp);
-	cc_gray_bar_set_text (diagram->priv->header, str);
-	g_free (str);
-
-	diagram->priv->fav_id = fav.id;
-
- 	g_free (fav.name);
-	g_free (fav.descr);
-	g_free (fav.contents);
+	/* update notebook's tab label */
+	BrowserPerspective *pers;
+	pers = browser_page_get_perspective (BROWSER_PAGE (diagram));
+	if (pers)
+		browser_perspective_page_tab_label_change (pers, BROWSER_PAGE (diagram));
 }
 
 /**
@@ -447,4 +491,32 @@ relations_diagram_get_fav_id (RelationsDiagram *diagram)
 {
 	g_return_val_if_fail (IS_RELATIONS_DIAGRAM (diagram), -1);
 	return diagram->priv->fav_id;
+}
+
+static GtkWidget *
+relations_diagram_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button)
+{
+	GtkWidget *wid;
+	RelationsDiagram *diagram;
+	gchar *tab_name = NULL;
+	GdkPixbuf *table_pixbuf;
+
+	diagram = RELATIONS_DIAGRAM (page);
+	if (diagram->priv->fav_id > 0) {
+		BrowserFavoritesAttributes fav;
+		if (browser_favorites_get (browser_connection_get_favorites (diagram->priv->bcnc),
+					   diagram->priv->fav_id, &fav, NULL)) {
+			tab_name = g_strdup (fav.name);
+			browser_favorites_reset_attributes (&fav);
+		}
+	}
+	if (!tab_name)
+		tab_name = g_strdup (_("Diagram"));
+
+	table_pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_DIAGRAM);
+	wid = browser_make_tab_label_with_pixbuf (tab_name,
+						  table_pixbuf,
+						  out_close_button ? TRUE : FALSE, out_close_button);
+	g_free (tab_name);
+	return wid;
 }

@@ -41,6 +41,8 @@ static void schema_browser_perspective_dispose (GObject *object);
 static void                 schema_browser_perspective_perspective_init (BrowserPerspectiveIface *iface);
 static GtkActionGroup      *schema_browser_perspective_get_actions_group (BrowserPerspective *perspective);
 static const gchar         *schema_browser_perspective_get_actions_ui (BrowserPerspective *perspective);
+static void                 schema_browser_perspective_page_tab_label_change (BrowserPerspective *perspective, BrowserPage *page);
+
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
 
@@ -98,6 +100,7 @@ schema_browser_perspective_perspective_init (BrowserPerspectiveIface *iface)
 {
 	iface->i_get_actions_group = schema_browser_perspective_get_actions_group;
 	iface->i_get_actions_ui = schema_browser_perspective_get_actions_ui;
+	iface->i_page_tab_label_change = schema_browser_perspective_page_tab_label_change;
 }
 
 
@@ -326,6 +329,25 @@ schema_browser_perspective_get_actions_ui (BrowserPerspective *bpers)
 	return ui_actions_info;
 }
 
+static void
+schema_browser_perspective_page_tab_label_change (BrowserPerspective *perspective, BrowserPage *page)
+{
+	SchemaBrowserPerspective *bpers;
+	GtkWidget *tab_label;
+	GtkWidget *close_btn;
+	
+	bpers = SCHEMA_BROWSER_PERSPECTIVE (perspective);
+	tab_label = browser_page_get_tab_label (page, &close_btn);
+	if (tab_label) {
+		gtk_notebook_set_tab_label (bpers->priv->notebook, GTK_WIDGET (page), tab_label);
+		g_signal_connect (close_btn, "clicked",
+				  G_CALLBACK (close_button_clicked_cb), page);
+		
+		tab_label = browser_page_get_tab_label (page, NULL);
+		gtk_notebook_set_menu_label (bpers->priv->notebook, GTK_WIDGET (page), tab_label);
+	}
+}
+
 #ifdef HAVE_GOOCANVAS
 /**
  * schema_browser_perspective_display_diagram
@@ -366,22 +388,19 @@ schema_browser_perspective_display_diagram (SchemaBrowserPerspective *bpers, gin
 
 	if (diagram) {
 		GtkWidget *close_btn;
-		GdkPixbuf *diagram_pixbuf;
+		GtkWidget *tab_label;
 		gint i;
 		
-		diagram_pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_DIAGRAM);
-		i = gtk_notebook_append_page (GTK_NOTEBOOK (bpers->priv->notebook), diagram,
-					      browser_make_tab_label_with_pixbuf (_("Diagram"),
-										  diagram_pixbuf,
-										  TRUE, &close_btn));
+		tab_label = browser_page_get_tab_label (BROWSER_PAGE (diagram), &close_btn);
+		i = gtk_notebook_append_page (GTK_NOTEBOOK (bpers->priv->notebook), diagram, tab_label);
 		g_signal_connect (close_btn, "clicked",
 				  G_CALLBACK (close_button_clicked_cb), diagram);
 		
 		gtk_widget_show (diagram);
-		gtk_notebook_set_menu_label (GTK_NOTEBOOK (bpers->priv->notebook), diagram,
-					     browser_make_tab_label_with_pixbuf (_("Diagram"),
-										 diagram_pixbuf,
-										 FALSE, NULL));
+
+		tab_label = browser_page_get_tab_label (BROWSER_PAGE (diagram), NULL);
+		gtk_notebook_set_menu_label (GTK_NOTEBOOK (bpers->priv->notebook), diagram, tab_label);
+
 		gtk_notebook_set_current_page (GTK_NOTEBOOK (bpers->priv->notebook), i);
 		gtk_notebook_set_tab_reorderable (GTK_NOTEBOOK (bpers->priv->notebook), diagram,
 						  TRUE);
@@ -423,23 +442,19 @@ schema_browser_perspective_display_table_info (SchemaBrowserPerspective *bpers,
 	ti = table_info_new (browser_window_get_connection (bpers->priv->bwin), table_schema, table_name);
 	if (ti) {
 		GtkWidget *close_btn;
-		const gchar *tab_name;
-		GdkPixbuf *table_pixbuf;
+		GtkWidget *tab_label;
+		gint i;
 		
-		table_pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_TABLE);
-		tab_name = table_short_name ? table_short_name : table_name;
-		i = gtk_notebook_append_page (GTK_NOTEBOOK (bpers->priv->notebook), ti,
-					      browser_make_tab_label_with_pixbuf (tab_name,
-										  table_pixbuf,
-										  TRUE, &close_btn));
+		tab_label = browser_page_get_tab_label (BROWSER_PAGE (ti), &close_btn);
+		i = gtk_notebook_append_page (GTK_NOTEBOOK (bpers->priv->notebook), ti, tab_label);
 		g_signal_connect (close_btn, "clicked",
 				  G_CALLBACK (close_button_clicked_cb), ti);
 		
 		gtk_widget_show (ti);
-		gtk_notebook_set_menu_label (GTK_NOTEBOOK (bpers->priv->notebook), ti,
-					     browser_make_tab_label_with_pixbuf (tab_name,
-										 table_pixbuf,
-										 FALSE, NULL));
+
+		tab_label = browser_page_get_tab_label (BROWSER_PAGE (ti), NULL);
+		gtk_notebook_set_menu_label (GTK_NOTEBOOK (bpers->priv->notebook), ti, tab_label);
+
 		gtk_notebook_set_current_page (GTK_NOTEBOOK (bpers->priv->notebook), i);
 		gtk_notebook_set_tab_reorderable (GTK_NOTEBOOK (bpers->priv->notebook), ti,
 						  TRUE);

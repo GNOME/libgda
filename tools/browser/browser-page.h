@@ -40,12 +40,16 @@ struct _BrowserPageIface {
 	/* virtual table */
 	GtkActionGroup      *(* i_get_actions_group) (BrowserPage *page);
 	const gchar         *(* i_get_actions_ui) (BrowserPage *page);
+	GtkWidget           *(* i_get_tab_label) (BrowserPage *page, GtkWidget **out_close_button);
 };
 
-GType           browser_page_get_type          (void) G_GNUC_CONST;
+GType               browser_page_get_type          (void) G_GNUC_CONST;
 
-GtkActionGroup *browser_page_get_actions_group (BrowserPage *page);
-const gchar    *browser_page_get_actions_ui    (BrowserPage *page);
+GtkActionGroup     *browser_page_get_actions_group (BrowserPage *page);
+const gchar        *browser_page_get_actions_ui    (BrowserPage *page);
+
+BrowserPerspective *browser_page_get_perspective   (BrowserPage *page);
+GtkWidget          *browser_page_get_tab_label     (BrowserPage *page, GtkWidget **out_close_button);
 
 G_END_DECLS
 

@@ -21,6 +21,7 @@
  */
 
 #include "browser-page.h"
+#include "browser-perspective.h"
 
 static GStaticRecMutex init_mutex = G_STATIC_REC_MUTEX_INIT;
 static void browser_page_class_init (gpointer g_class);
@@ -67,18 +68,18 @@ browser_page_class_init (gpointer g_class)
 
 /**
  * browser_page_get_actions_group
- * @pers:
+ * @page:
  * @instance: a GtkWidget which has been returned by a previous call to browser_page_create()
  *
  * Returns: a new #GtkActionGroup
  */
 GtkActionGroup *
-browser_page_get_actions_group (BrowserPage *pers)
+browser_page_get_actions_group (BrowserPage *page)
 {
-	g_return_val_if_fail (IS_BROWSER_PAGE (pers), NULL);
+	g_return_val_if_fail (IS_BROWSER_PAGE (page), NULL);
 	
-	if (BROWSER_PAGE_GET_CLASS (pers)->i_get_actions_group)
-		return (BROWSER_PAGE_GET_CLASS (pers)->i_get_actions_group) (pers);
+	if (BROWSER_PAGE_GET_CLASS (page)->i_get_actions_group)
+		return (BROWSER_PAGE_GET_CLASS (page)->i_get_actions_group) (page);
 	else
 		return NULL;
 }
@@ -88,12 +89,45 @@ browser_page_get_actions_group (BrowserPage *pers)
  *
  */
 const gchar *
-browser_page_get_actions_ui (BrowserPage *pers)
+browser_page_get_actions_ui (BrowserPage *page)
 {
-	g_return_val_if_fail (IS_BROWSER_PAGE (pers), NULL);
+	g_return_val_if_fail (IS_BROWSER_PAGE (page), NULL);
 	
-	if (BROWSER_PAGE_GET_CLASS (pers)->i_get_actions_ui)
-		return (BROWSER_PAGE_GET_CLASS (pers)->i_get_actions_ui) (pers);
+	if (BROWSER_PAGE_GET_CLASS (page)->i_get_actions_ui)
+		return (BROWSER_PAGE_GET_CLASS (page)->i_get_actions_ui) (page);
 	else
 		return NULL;
+}
+
+/**
+ * browser_page_get_perspective
+ *
+ * Finds the BrowserPerspective in which @page is.
+ */
+BrowserPerspective *
+browser_page_get_perspective (BrowserPage *page)
+{
+	GtkWidget *wid;
+	for (wid = gtk_widget_get_parent (GTK_WIDGET (page)); wid; wid = gtk_widget_get_parent (wid))
+		if (IS_BROWSER_PERSPECTIVE (wid))
+			return BROWSER_PERSPECTIVE (wid);
+	return NULL;
+}
+
+/**
+ * browser_page_get_tab_label
+ *
+ * Returns: a new #GtkWidget, or %NULL
+ */
+GtkWidget *
+browser_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button)
+{
+	g_return_val_if_fail (IS_BROWSER_PAGE (page), NULL);
+	
+	if (out_close_button)
+		*out_close_button = NULL;
+	if (BROWSER_PAGE_GET_CLASS (page)->i_get_tab_label)
+		return (BROWSER_PAGE_GET_CLASS (page)->i_get_tab_label) (page, out_close_button);
+	else
+		return NULL;	
 }

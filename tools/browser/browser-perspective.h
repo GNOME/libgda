@@ -40,12 +40,15 @@ struct _BrowserPerspectiveIface {
 	/* virtual table */
 	GtkActionGroup      *(* i_get_actions_group) (BrowserPerspective *perspective);
 	const gchar         *(* i_get_actions_ui) (BrowserPerspective *perspective);
+	void                 (* i_page_tab_label_change) (BrowserPerspective *perspective, BrowserPage *page);
 };
 
 GType           browser_perspective_get_type          (void) G_GNUC_CONST;
 
 GtkActionGroup *browser_perspective_get_actions_group (BrowserPerspective *perspective);
 const gchar    *browser_perspective_get_actions_ui    (BrowserPerspective *perspective);
+void            browser_perspective_page_tab_label_change (BrowserPerspective *perspective,
+							   BrowserPage *page);
 
 G_END_DECLS
 

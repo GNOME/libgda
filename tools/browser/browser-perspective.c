@@ -21,6 +21,7 @@
  */
 
 #include "browser-perspective.h"
+#include "browser-page.h"
 
 static GStaticRecMutex init_mutex = G_STATIC_REC_MUTEX_INIT;
 static void browser_perspective_class_init (gpointer g_class);
@@ -96,4 +97,14 @@ browser_perspective_get_actions_ui (BrowserPerspective *pers)
 		return (BROWSER_PERSPECTIVE_GET_CLASS (pers)->i_get_actions_ui) (pers);
 	else
 		return NULL;
+}
+
+void
+browser_perspective_page_tab_label_change (BrowserPerspective *pers, BrowserPage *page)
+{
+	g_return_if_fail (IS_BROWSER_PERSPECTIVE (pers));
+	g_return_if_fail (IS_BROWSER_PAGE (page));
+
+	if (BROWSER_PERSPECTIVE_GET_CLASS (pers)->i_page_tab_label_change)
+		(BROWSER_PERSPECTIVE_GET_CLASS (pers)->i_page_tab_label_change) (pers, page);
 }

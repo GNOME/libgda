@@ -62,6 +62,7 @@ static void table_info_get_property (GObject *object,
 static void                 table_info_page_init (BrowserPageIface *iface);
 static GtkActionGroup      *table_info_page_get_actions_group (BrowserPage *page);
 static const gchar         *table_info_page_get_actions_ui (BrowserPage *page);
+static GtkWidget           *table_info_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button);
 
 static void meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableInfo *tinfo);
 
@@ -102,6 +103,7 @@ table_info_page_init (BrowserPageIface *iface)
 {
 	iface->i_get_actions_group = table_info_page_get_actions_group;
 	iface->i_get_actions_ui = table_info_page_get_actions_ui;
+	iface->i_get_tab_label = table_info_page_get_tab_label;
 }
 
 static void
@@ -466,4 +468,19 @@ static const gchar *
 table_info_page_get_actions_ui (BrowserPage *page)
 {
 	return ui_actions_info;
+}
+
+static GtkWidget *
+table_info_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button)
+{
+	TableInfo *tinfo;
+	const gchar *tab_name;
+	GdkPixbuf *table_pixbuf;
+
+	tinfo = TABLE_INFO (page);
+	table_pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_TABLE);
+	tab_name = tinfo->priv->table_short_name ? tinfo->priv->table_short_name : tinfo->priv->table_name;
+	return browser_make_tab_label_with_pixbuf (tab_name,
+						   table_pixbuf,
+						   out_close_button ? TRUE : FALSE, out_close_button);
 }
