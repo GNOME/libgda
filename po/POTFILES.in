@@ -197,6 +197,7 @@ tools/browser/auth-dialog.c
 tools/browser/browser-connection.c
 tools/browser/browser-connections-list.c
 tools/browser/browser-favorites.c
+tools/browser/browser-stock-icons.c
 tools/browser/browser-window.c
 tools/browser/gda-browser-4.0.desktop.in
 tools/browser/login-dialog.c
