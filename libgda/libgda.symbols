@@ -411,6 +411,7 @@
 	gda_meta_store_schema_get_structure
 	gda_meta_store_schema_remove_custom_object
 	gda_meta_store_set_attribute_value
+	gda_meta_store_set_reserved_keywords_func
 	gda_meta_store_sql_identifier_quote
 	gda_meta_struct_add_db_object
 	gda_meta_struct_complement
