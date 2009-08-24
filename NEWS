@@ -1,3 +1,11 @@
+libgda 4.0.3, 2009-08-24
+
+ - improved MySQL and PostgreSQL drivers (providers)
+ - console program improvements
+ - improved documentation
+ - better handle SQL identifiers
+ - Lots of corrections and small improvements
+
 libgda 4.0.2, 2009-04-18
 
  - the SQLite provider now compiles with a system installed SQLite
