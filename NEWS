@@ -1,3 +1,23 @@
+libgda 4.1.1, 2009-08-24
+
+ - it is now possible to use a system installed SQLite, and now uses
+   SQLite 3.6.17 if embedded
+ - new Oracle driver (provider)
+ - improved MySQL and PostgreSQL drivers (providers)
+ - console program improvements
+ - new UI extension based on GTK+
+ - new program to manage data sources graphically
+ - new program to "browse" a database's schema
+ - improved documentation
+ - better handle SQL identifiers
+ - Lots of corrections and small improvements
+ - Translations:
+        - es (Jorge Gonzalez)
+        - nb (Kjartan Maraas)
+        - sv (Daniel Nylander)
+        - de (Mario Blättermann)
+        - it (Marco Ciampa)
+
 libgda 4.1.0, 2009-04-18
 
  - API and ABI compatible with 4.0.x versions
