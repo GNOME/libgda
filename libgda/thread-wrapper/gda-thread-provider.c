@@ -125,6 +125,11 @@ static GObject             *gda_thread_provider_statement_execute (GdaServerProv
 								 gpointer cb_data, GError **error);
 static gboolean             gda_thread_provider_handle_async (GdaServerProvider *provider, GdaConnection *cnc, GError **error);
 
+/* Quoting */
+static gchar               *gda_thread_provider_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
+								  const gchar *id,
+								  gboolean meta_store_convention, gboolean force_quotes);
+
 /* distributed transactions */
 static gboolean gda_thread_provider_xa_start    (GdaServerProvider *provider, GdaConnection *cnc, 
 						   const GdaXaTransactionId *xid, GError **error);
@@ -187,6 +192,7 @@ gda_thread_provider_class_init (GdaThreadProviderClass *klass)
 	provider_class->is_busy = NULL;
 	provider_class->cancel = NULL;
 	provider_class->create_connection = gda_thread_provider_create_connection;
+	provider_class->identifier_quote = gda_thread_provider_identifier_quote;
 
 	memset (&(provider_class->meta_funcs), 0, sizeof (GdaServerProviderMeta));
 	provider_class->meta_funcs._info = _gda_thread_meta__info;
@@ -1850,7 +1856,7 @@ sub_thread_xa_recover (CncProvData *data, GError **error)
 #ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %p\n", __FUNCTION__, retval);
 #endif
-	return GINT_TO_POINTER (retval ? 1 : 0);
+	return retval;
 }
 
 static GList *
@@ -1879,6 +1885,61 @@ gda_thread_provider_xa_recover (GdaServerProvider *provider, GdaConnection *cnc,
 
 	jid = gda_thread_wrapper_execute (cdata->wrapper, 
 					  (GdaThreadWrapperFunc) sub_thread_xa_recover, &wdata, NULL, error);
+	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
+	return res;
+}
+
+/*
+ * Quote SQL identifier
+ *
+ * Returns: a new string
+ */
+typedef struct {
+	GdaServerProvider *prov;
+	GdaConnection *cnc;
+	const gchar *id;
+	gboolean for_meta_store;
+	gboolean force_quotes;
+} SqlIdentifierQuoteData;
+
+static gchar *
+sub_thread_identifier_quote (SqlIdentifierQuoteData *data, GError **error)
+{
+	/* WARNING: function executed in sub thread! */
+	gchar *retval;
+	retval = gda_sql_identifier_quote (data->id, data->cnc, data->prov,
+					   data->for_meta_store, data->force_quotes);
+#ifdef GDA_DEBUG_NO
+	g_print ("/%s() => %p\n", __FUNCTION__, retval);
+#endif
+	return retval;
+}
+
+static gchar *
+gda_thread_provider_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
+				      const gchar *id,
+				      gboolean for_meta_store, gboolean force_quotes)
+{
+	ThreadConnectionData *cdata;
+	SqlIdentifierQuoteData wdata;
+	gchar *res;
+	guint jid;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
+
+	cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata) 
+		return NULL;
+	
+	wdata.prov = cdata->cnc_provider;
+	wdata.cnc = cdata->sub_connection;
+	wdata.id = id;
+	wdata.for_meta_store = for_meta_store;
+	wdata.force_quotes = force_quotes;
+
+	jid = gda_thread_wrapper_execute (cdata->wrapper, 
+					  (GdaThreadWrapperFunc) sub_thread_identifier_quote, &wdata, NULL, NULL);
 	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
 	return res;
 }
