@@ -19,8 +19,8 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
-"POT-Creation-Date: 2009-08-14 08:16+0000\n"
-"PO-Revision-Date: 2009-08-17 22:49+0100\n"
+"POT-Creation-Date: 2009-08-23 20:19+0000\n"
+"PO-Revision-Date: 2009-08-25 20:25+0100\n"
 "Last-Translator: Mario Blättermann <mariobl@gnome.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -126,8 +126,8 @@ msgstr "Browserprogramm konnte nicht ausgeführt werden"
 #: ../libgda/sqlite/gda-sqlite-provider.c:1904
 #: ../libgda/sqlite/gda-sqlite-provider.c:1919
 #: ../libgda/sqlite/gda-sqlite-provider.c:2096
-#: ../libgda/sqlite/gda-sqlite-provider.c:2383
-#: ../libgda/sqlite/gda-sqlite-provider.c:2395
+#: ../libgda/sqlite/gda-sqlite-provider.c:2372
+#: ../libgda/sqlite/gda-sqlite-provider.c:2384
 #: ../libgda/thread-wrapper/gda-thread-provider.c:420
 #: ../libgda-ui/data-entries/plugins/common-pict.c:211
 #: ../libgda-ui/data-entries/plugins/common-pict.c:221
@@ -152,11 +152,12 @@ msgstr "Browserprogramm konnte nicht ausgeführt werden"
 #: ../tools/browser/browser-connection.c:447
 #: ../tools/browser/browser-connection.c:464
 #: ../tools/browser/browser-connection.c:574
-#: ../tools/browser/login-dialog.c:232 ../tools/browser/main.c:69
-#: ../tools/browser/main.c:83 ../tools/browser/main.c:109
-#: ../tools/browser/schema-browser/favorite-selector.c:323
-#: ../tools/browser/schema-browser/favorite-selector.c:389
-#: ../tools/browser/schema-browser/relations-diagram.c:306
+#: ../tools/browser/login-dialog.c:232 ../tools/browser/main.c:71
+#: ../tools/browser/main.c:85 ../tools/browser/main.c:111
+#: ../tools/browser/schema-browser/favorite-selector.c:171
+#: ../tools/browser/schema-browser/favorite-selector.c:355
+#: ../tools/browser/schema-browser/relations-diagram.c:238
+#: ../tools/browser/schema-browser/table-info.c:437
 #: ../tools/gda-list-server-op.c:47 ../tools/gda-list-server-op.c:90
 #: ../tools/gda-sql.c:270 ../tools/gda-sql.c:287 ../tools/gda-sql.c:426
 #: ../tools/gda-sql.c:1429 ../tools/gda-sql.c:1444 ../tools/gda-sql.c:1491
@@ -365,8 +366,9 @@ msgstr ""
 "Keine Legitimierung erforderlich,\n"
 "Öffnen der Verbindung bestätigen"
 
+#. create the error message dialog
 #: ../control-center/main.c:60 ../libgda-ui/internal/utility.c:526
-#: ../tools/browser/support.c:127
+#: ../tools/browser/support.c:124
 msgid "Error:"
 msgstr "Fehler:"
 
@@ -378,7 +380,7 @@ msgstr "Neue Datenquelle konnte nicht deklariert werden"
 msgid "No valid data source info was created"
 msgstr "Information zur Datenquelle wurde nicht erzeugt"
 
-#: ../control-center/main.c:187 ../tools/browser/browser-window.c:756
+#: ../control-center/main.c:187 ../tools/browser/browser-window.c:779
 msgid "Database access services for the GNOME Desktop"
 msgstr "Dienste zum Datenbankzugriff für die GNOME Arbeitsumgebung"
 
@@ -1279,16 +1281,20 @@ msgid "Data model does only support random access"
 msgstr "Das Datenmodell unterstützt nur den Zufallszugriff"
 
 #: ../libgda/gda-data-select.c:1738
-msgid "Unable to retreive data after modifications"
-msgstr "Daten können nach Änderung nicht geholt werden"
+#| msgid "Unable to retreive data after modifications"
+msgid "Unable to retrieve data after modifications"
+msgstr "Daten können nach Änderungen nicht geholt werden"
 
 #: ../libgda/gda-data-select.c:1746 ../libgda/gda-data-select.c:1754
 #: ../libgda/gda-data-select.c:1776
+#| msgid ""
+#| "Unable to retreive data after modifications, no further modification will "
+#| "be allowed"
 msgid ""
-"Unable to retreive data after modifications, no further modification will be "
+"Unable to retrieve data after modifications, no further modification will be "
 "allowed"
 msgstr ""
-"Daten können nach Änderung nicht geholt werden, keine weiteren Änderungen "
+"Daten können nach Änderungen nicht geholt werden, keine weiteren Änderungen "
 "möglich"
 
 #: ../libgda/gda-data-select.c:1811
@@ -1475,7 +1481,8 @@ msgid "Schema in which the database objects will be created"
 msgstr "Schema, in welchem die Datenbankobjekte erstellt werden"
 
 #: ../libgda/gda-meta-store.c:564
-msgid "Catalog specified but no schema specified, store will not be useable"
+#| msgid "Catalog specified but no schema specified, store will not be useable"
+msgid "Catalog specified but no schema specified, store will not be usable"
 msgstr "Katalog angegeben, aber kein Schema, Speichern wird nicht möglich sein"
 
 #: ../libgda/gda-meta-store.c:882
@@ -1989,8 +1996,8 @@ msgstr "Weitere Attribute"
 #: ../providers/mysql/mysql_specs_drop_index.xml.in.h:1
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:3
-#: ../tools/browser/schema-browser/schema-browser-perspective.c:148
-#: ../tools/browser/schema-browser/schema-browser-perspective.c:154
+#: ../tools/browser/schema-browser/schema-browser-perspective.c:158
+#: ../tools/browser/schema-browser/schema-browser-perspective.c:164
 msgid "Index"
 msgstr "Index"
 
@@ -2224,7 +2231,7 @@ msgstr ""
 msgid "Missing parameter '%s'"
 msgstr "Fehlender Parameter »%s«"
 
-#: ../libgda/gda-statement.c:1183 ../libgda/sqlite/gda-sqlite-provider.c:2302
+#: ../libgda/gda-statement.c:1183 ../libgda/sqlite/gda-sqlite-provider.c:2291
 #: ../providers/jdbc/gda-jdbc-provider.c:1335
 #: ../providers/mysql/gda-mysql-provider.c:1733
 #: ../providers/postgres/gda-postgres-provider.c:2108
@@ -2273,7 +2280,7 @@ msgid "Unable to get column name"
 msgstr "Spaltenname konnte nicht erhalten werden werden"
 
 #: ../libgda/gda-tree-mgr-label.c:207
-#: ../tools/browser/canvas/browser-canvas-table.c:306
+#: ../tools/browser/canvas/browser-canvas-table.c:309
 msgid "No name"
 msgstr "Kein Name"
 
@@ -2590,12 +2597,12 @@ msgstr "ROWID zum Füllen von BLOB kann nicht identifiziert werden"
 msgid "Provider does not support asynchronous statement execution"
 msgstr "Der Treiber unterstützt die asynchrone Ausführung einer Anweisung nicht"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2222
+#: ../libgda/sqlite/gda-sqlite-provider.c:2211
 msgid "Empty statement"
 msgstr "Leere Anweisung"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2265
-#: ../libgda/sqlite/gda-sqlite-provider.c:2268
+#: ../libgda/sqlite/gda-sqlite-provider.c:2254
+#: ../libgda/sqlite/gda-sqlite-provider.c:2257
 #: ../providers/jdbc/gda-jdbc-provider.c:1288
 #: ../providers/jdbc/gda-jdbc-provider.c:1291
 #: ../providers/mysql/gda-mysql-provider.c:1695
@@ -2606,7 +2613,7 @@ msgstr "Leere Anweisung"
 msgid "Missing parameter(s) to execute query"
 msgstr "Fehlende(r) Parameter zur Ausführung der Abfrage"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2283
+#: ../libgda/sqlite/gda-sqlite-provider.c:2272
 #: ../providers/jdbc/gda-jdbc-provider.c:1306
 #: ../providers/mysql/gda-mysql-provider.c:1713
 #: ../providers/postgres/gda-postgres-provider.c:2090
@@ -2614,33 +2621,33 @@ msgstr "Fehlende(r) Parameter zur Ausführung der Abfrage"
 msgid "Missing parameter '%s' to execute query"
 msgstr "Fehlender Parameter »%s« zur Ausführung der Abfrage"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2356
+#: ../libgda/sqlite/gda-sqlite-provider.c:2345
 #: ../providers/postgres/gda-postgres-provider.c:2136
 #: ../providers/postgres/gda-postgres-provider.c:2138
 msgid "Cannot start transaction"
 msgstr "Transaktion konnte nicht gestartet werden"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2364
+#: ../libgda/sqlite/gda-sqlite-provider.c:2353
 msgid "Can't get BLOB's length"
 msgstr "BLOB-Länge kann nicht ermittelt werden"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2366
+#: ../libgda/sqlite/gda-sqlite-provider.c:2355
 msgid "BLOB is too big"
 msgstr "BLOB ist zu groß"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2449
+#: ../libgda/sqlite/gda-sqlite-provider.c:2438
 #, c-format
 msgid "Non handled data type '%s'"
 msgstr "Unbehandelter Datentyp »%s«"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2602
-#: ../libgda/sqlite/gda-sqlite-provider.c:2805
-#: ../libgda/sqlite/gda-sqlite-provider.c:2871
+#: ../libgda/sqlite/gda-sqlite-provider.c:2591
+#: ../libgda/sqlite/gda-sqlite-provider.c:2794
+#: ../libgda/sqlite/gda-sqlite-provider.c:2860
 msgid "Function requires one argument"
 msgstr "Funktion benötigt ein Argument"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2837
-#: ../libgda/sqlite/gda-sqlite-provider.c:2903
+#: ../libgda/sqlite/gda-sqlite-provider.c:2826
+#: ../libgda/sqlite/gda-sqlite-provider.c:2892
 msgid "Function requires two arguments"
 msgstr "Funktion benötigt zwei Argumente"
 
@@ -3132,7 +3139,7 @@ msgstr ""
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-info.c:162
 msgid "The information and status changer can be activated"
-msgstr ""
+msgstr "Die Änderung von Information und Status kann aktiviert werden"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:407
 #: ../libgda-ui/data-entries/gdaui-entry-string.c:421
@@ -3504,7 +3511,7 @@ msgstr ""
 "Zum Umwandeln von Binärdaten in eine Zeichenkette verwendete Zeichenkodierung"
 
 #: ../libgda-ui/data/server_operation.glade.h:1
-#: ../tools/browser/schema-browser/table-info.c:325
+#: ../tools/browser/schema-browser/table-info.c:355
 msgid "Columns"
 msgstr "Spalten"
 
@@ -3633,6 +3640,9 @@ msgid ""
 "As no transaction was used, only a part of the valid data\n"
 "has been written, and the remaining modification have been discarded."
 msgstr ""
+"Weil keine Transaktion ausgeführt wurde, wurde nur ein Teil der\n"
+"gültigen Daten geschrieben und die verbleibenden Änderungen\n"
+"wurden verworfen."
 
 #: ../libgda-ui/internal/utility.c:426
 msgid "Error details"
@@ -3841,6 +3851,8 @@ msgid ""
 "The data will be exported without any of the modifications which may have "
 "been made and have not been committed."
 msgstr ""
+"Die Daten werden ohne die nicht eingespielten vorgenommenen Änderungen "
+"exportiert."
 
 #: ../libgda-ui/gdaui-raw-grid.c:1998
 msgid "File name"
@@ -4442,12 +4454,12 @@ msgstr "Für die neue Datenbank zu verwendender Zeichensatz"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:16
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:31
 msgid "Collation"
-msgstr ""
+msgstr "Alphabetische Sortierung"
 
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:18
 msgid "Collation method to use in the new database"
-msgstr ""
+msgstr "In der neuen Datenbank zu verwendende Sortierungsmethode"
 
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:20
@@ -4899,7 +4911,7 @@ msgstr "FIRST, LAST oder NO: nur mit der MERGE-Engine"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:71
 msgid "Federated"
-msgstr ""
+msgstr "Ferneingebunden"
 
 #. foreign key spec
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:73
@@ -5073,7 +5085,7 @@ msgstr "Temporäre Tabelle"
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:187
 msgid "Union"
-msgstr ""
+msgstr "Vereinigt"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:199
@@ -5228,11 +5240,11 @@ msgstr "Nächste Zeile konnte nicht abgerufen werden"
 
 #: ../providers/oracle/gda-oracle-meta.c:598
 msgid "Could not get a description handle"
-msgstr ""
+msgstr "Verarbeiter für die Beschreibung konnte nicht erhalten werden"
 
 #: ../providers/oracle/gda-oracle-meta.c:615
 msgid "Could not get parameter handle"
-msgstr ""
+msgstr "Verarbeiter für den Parameter konnte nicht erhalten werden"
 
 #: ../providers/oracle/gda-oracle-meta.c:632
 #: ../providers/oracle/gda-oracle-meta.c:646
@@ -5258,11 +5270,11 @@ msgstr "Ungültiger Oracle-Handle"
 
 #: ../providers/oracle/gda-oracle-util.c:654
 msgid "Could not allocate Lob locator"
-msgstr ""
+msgstr "LOB-Zeiger konnte nicht zugewiesen werden"
 
 #: ../providers/oracle/gda-oracle-util.c:661
 msgid "Could not copy Lob locator"
-msgstr ""
+msgstr "LOB-Zeiger konnte nicht kopiert werden"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:119
 msgid "Postgresql binary handler"
@@ -5610,7 +5622,7 @@ msgstr "Ausdruck für eine Einschränkung im partiellen Index"
 
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:11
 msgid "Predicate"
-msgstr ""
+msgstr "Prädikat"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:8
 msgid "Copy default expressions"
@@ -5623,15 +5635,15 @@ msgstr "Vorgaben kopieren"
 #. foreign key spec
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:17
 msgid "Deferrable"
-msgstr ""
+msgstr "Verzögerbar"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:18
 msgid "Deferrable initially deferred"
-msgstr ""
+msgstr "Verzögerbar, anfangs verzögert"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:19
 msgid "Deferrable initially immediate"
-msgstr ""
+msgstr "Verzögerbar, anfangs sofort"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:32
 msgid "Inheritance"
@@ -5643,7 +5655,7 @@ msgstr "Kopplung erhalten"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:44
 msgid "Not deferrable"
-msgstr ""
+msgstr "Nicht verzögerbar"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:49
 msgid "Parent table"
@@ -5965,53 +5977,62 @@ msgid "Can't initialize dictionary to store favorites"
 msgstr ""
 "Beschreibung zum Speichern der Favoriten konnte nicht initialisiert werden"
 
-#: ../tools/browser/browser-favorites.c:433
-#: ../tools/browser/browser-favorites.c:439
-#: ../tools/browser/browser-favorites.c:799
-#: ../tools/browser/browser-favorites.c:806
+#: ../tools/browser/browser-favorites.c:517
+#: ../tools/browser/browser-favorites.c:523
+#: ../tools/browser/browser-favorites.c:926
+#: ../tools/browser/browser-favorites.c:933
 msgid "Can't initialize transaction to access favorites"
 msgstr "Vorgang zum Zugriff auf Favoriten konnte nicht initialisiert werden"
 
-#: ../tools/browser/browser-favorites.c:585
-#: ../tools/browser/browser-favorites.c:857
+#: ../tools/browser/browser-favorites.c:696
+#: ../tools/browser/browser-favorites.c:984
 msgid "Can't commit transaction to access favorites"
 msgstr "Vorgang zum Zugriff auf Favoriten konnte nicht angewendet werden"
 
-#: ../tools/browser/browser-window.c:193
+#: ../tools/browser/browser-stock-icons.c:45
+#| msgid "Directory"
+msgid "History"
+msgstr "Chronik"
+
+#: ../tools/browser/browser-stock-icons.c:46
+msgid "Bookmarks"
+msgstr "Lesezeichen"
+
+#: ../tools/browser/browser-window.c:199
 msgid "_Fullscreen"
 msgstr "_Vollbild"
 
-#: ../tools/browser/browser-window.c:193
+#: ../tools/browser/browser-window.c:199
 msgid "Use the whole screen"
 msgstr "Den gesamten Bildschirm verwenden"
 
-#: ../tools/browser/browser-window.c:270
+#: ../tools/browser/browser-window.c:276
 msgid "unnamed"
 msgstr "Unbenannt"
 
-#: ../tools/browser/browser-window.c:271
+#: ../tools/browser/browser-window.c:277
 #, c-format
 msgid "Connection: %s"
 msgstr "Verbindung: %s"
 
-#: ../tools/browser/browser-window.c:568 ../tools/browser/support.c:70
+#: ../tools/browser/browser-window.c:591 ../tools/browser/support.c:70
 #, c-format
 msgid "Do you want to close the '%s' connection?"
 msgstr "Wollen Sie die Verbindung »%s« schließen?"
 
-#: ../tools/browser/browser-window.c:610 ../tools/browser/browser-window.c:617
+#: ../tools/browser/browser-window.c:633 ../tools/browser/browser-window.c:640
 msgid "Do you want to quit the application?"
 msgstr "Wollen Sie diese Anwendung beenden?"
 
-#: ../tools/browser/browser-window.c:611
+#: ../tools/browser/browser-window.c:634
 msgid "all the connections will be closed."
 msgstr "Alle Verbindungen werden geschlossen."
 
-#: ../tools/browser/browser-window.c:618
+#: ../tools/browser/browser-window.c:641
 msgid "the connection will be closed."
 msgstr "Verbindung wird geschlossen."
 
-#: ../tools/browser/browser-window.c:753
+#: ../tools/browser/browser-window.c:776
 #: ../tools/browser/gda-browser-4.0.desktop.in.h:2
 msgid "Database browser"
 msgstr "Datenbankbrowser"
@@ -6039,11 +6060,11 @@ msgstr ""
 msgid "Cancelled by the user"
 msgstr "Abbruch durch Benutzer"
 
-#: ../tools/browser/main.c:49 ../tools/gda-sql.c:166
+#: ../tools/browser/main.c:50 ../tools/gda-sql.c:166
 msgid "[DSN|connection string]..."
 msgstr "[DSN|Verbindungszeichenkette]..."
 
-#: ../tools/browser/mgr-favorites.c:348
+#: ../tools/browser/mgr-favorites.c:361
 msgid ""
 "Getting\n"
 "favorites..."
@@ -6051,7 +6072,7 @@ msgstr ""
 "Favoriten\n"
 "werden geholt …"
 
-#: ../tools/browser/mgr-favorites.c:359
+#: ../tools/browser/mgr-favorites.c:372
 msgid ""
 "No favorite:\n"
 "drag item to\n"
@@ -6061,7 +6082,7 @@ msgstr ""
 "Objekt zum\n"
 "Festlegen ziehen"
 
-#: ../tools/browser/support.c:175
+#: ../tools/browser/support.c:177
 msgid "Close tab"
 msgstr "Reiter schließen"
 
@@ -6070,15 +6091,15 @@ msgstr "Reiter schließen"
 msgid "Type: %s"
 msgstr "Typ: %s"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:236
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:328
 msgid "Remove"
 msgstr "Entfernen"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:240
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:332
 msgid "Add referenced tables"
 msgstr "Referenzierte Tabellen hinzufügen"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:402
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:493
 msgid "Add table"
 msgstr "Tabelle hinzufügen"
 
@@ -6155,27 +6176,36 @@ msgstr "Dateiformat zum Speichern wurde nicht erkannt."
 msgid "Failed to create PNG file"
 msgstr "PNG-Datei konnte nicht erzeugt werden"
 
-#: ../tools/browser/schema-browser/favorite-selector.c:200
-msgid "Favorites"
-msgstr "Favoriten"
+#: ../tools/browser/common/objects-cloud.c:175
+#| msgid "Tables"
+msgid "Tables:"
+msgstr "Tabellen:"
 
-#: ../tools/browser/schema-browser/favorite-selector.c:270
-msgid ""
-"Drag a favorite here\n"
-"to remove it"
-msgstr ""
-"Ziehen Sie einen Favoriten hierher,\n"
-"um ihn zu löschen"
-
-#: ../tools/browser/schema-browser/favorite-selector.c:322
+#: ../tools/browser/common/objects-cloud.c:217
 #, c-format
-msgid "Could not add favorite: %s"
-msgstr "Favorit konnte nicht hinzugefügt werden: %s"
+#| msgid "Tables in schema <b>'%s'</b>"
+msgid "Tables in schema '%s':"
+msgstr "Tabellen im Schema »%s«:"
 
-#: ../tools/browser/schema-browser/favorite-selector.c:388
+#: ../tools/browser/common/objects-cloud.c:430
+#| msgid "Field"
+msgid "Find:"
+msgstr "Suchen:"
+
+#: ../tools/browser/schema-browser/favorite-selector.c:170
 #, c-format
 msgid "Could not remove favorite: %s"
 msgstr "Favorit konnte nicht entfernt werden: %s"
+
+#: ../tools/browser/schema-browser/favorite-selector.c:248
+msgid "Favorites"
+msgstr "Favoriten"
+
+#: ../tools/browser/schema-browser/favorite-selector.c:354
+#: ../tools/browser/schema-browser/table-info.c:436
+#, c-format
+msgid "Could not add favorite: %s"
+msgstr "Favorit konnte nicht hinzugefügt werden: %s"
 
 #: ../tools/browser/schema-browser/mgr-columns.c:274
 #, c-format
@@ -6192,17 +6222,7 @@ msgstr "Tabelle nicht gefunden"
 msgid "Requested object is not a table or view"
 msgstr "Angefordertes Objekt ist keine Tabelle oder Ansicht"
 
-#: ../tools/browser/schema-browser/objects-index.c:209
-#, c-format
-msgid "Tables in schema <b>'%s'</b>"
-msgstr "Tabellen im Schema <b>»%s«</b>"
-
-#: ../tools/browser/schema-browser/objects-index.c:329
-#, c-format
-msgid "Objects in the '%s' schema"
-msgstr "Objekte im Schema »%s«"
-
-#: ../tools/browser/schema-browser/objects-index.c:433
+#: ../tools/browser/schema-browser/objects-index.c:170
 msgid "Tables' index"
 msgstr "Tabellenindex"
 
@@ -6210,30 +6230,58 @@ msgstr "Tabellenindex"
 msgid "Schema browser"
 msgstr "Schema-Browser"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:305
+#: ../tools/browser/schema-browser/relations-diagram.c:227
+#: ../tools/browser/schema-browser/relations-diagram.c:514
+msgid "Diagram"
+msgstr "Diagramm"
+
+#: ../tools/browser/schema-browser/relations-diagram.c:237
 msgid "Could not save diagram"
 msgstr "Diagramm konnte nicht gespeichert werden"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:337
+#: ../tools/browser/schema-browser/relations-diagram.c:263
 msgid "Canvas's name"
 msgstr ""
 
-#: ../tools/browser/schema-browser/relations-diagram.c:346
+#: ../tools/browser/schema-browser/relations-diagram.c:283
 msgid "Save"
 msgstr "Speichern"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:432
+#: ../tools/browser/schema-browser/relations-diagram.c:324
+#: ../tools/browser/schema-browser/relations-diagram.c:381
+#: ../tools/browser/schema-browser/relations-diagram.c:461
+#: ../tools/browser/schema-browser/relations-diagram.c:472
 msgid "Relations diagram"
 msgstr "Beziehungsdiagramm"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:432
+#: ../tools/browser/schema-browser/relations-diagram.c:324
+#: ../tools/browser/schema-browser/relations-diagram.c:472
 msgid "Unsaved diagram"
 msgstr "Ungespeichertes Diagramm"
 
-#: ../tools/browser/schema-browser/schema-browser-perspective.c:248
-#: ../tools/browser/schema-browser/schema-browser-perspective.c:256
-msgid "Diagram"
-msgstr "Diagramm"
+#: ../tools/browser/schema-browser/relations-diagram.c:371
+#, c-format
+#| msgid "Error processing results.\n"
+msgid "Error parsing favorite's contents"
+msgstr "Fehler beim Verarbeiten der bevorzugten Inhalte"
+
+#: ../tools/browser/schema-browser/relations-diagram.c:380
+#: ../tools/browser/schema-browser/relations-diagram.c:460
+#, c-format
+#| msgid "Unsaved diagram"
+msgid "'%s' diagram"
+msgstr "»%s«-Diagramm"
+
+#: ../tools/browser/schema-browser/relations-diagram.c:430
+#, c-format
+#| msgid "Missing table name in meta data context"
+msgid "Missing table attribute in favorite's contents"
+msgstr "Fehlendes Tabellenattribut im Inhalt des Favoriten"
+
+#: ../tools/browser/schema-browser/schema-browser-perspective.c:382
+#| msgid "Could not save diagram"
+msgid "Could not load diagram"
+msgstr "Diagramm konnte nicht geladen werden"
 
 #: ../tools/browser/schema-browser/table-columns.c:230
 msgid "Foreign key on "
@@ -6251,7 +6299,7 @@ msgstr "Spaltenname"
 msgid "Constraints and integrity rules"
 msgstr "Beschränkungen und Integritätsregeln"
 
-#: ../tools/browser/schema-browser/table-info.c:304
+#: ../tools/browser/schema-browser/table-info.c:334
 msgid ""
 "Table not found. If you think this is an error,\n"
 "please refresh the meta data from the database\n"
@@ -6262,9 +6310,18 @@ msgstr ""
 "die Metadaten der Datenbank\n"
 "(Menü »Verbindung/Metadaten holen«)."
 
-#: ../tools/browser/schema-browser/table-info.c:335
+#: ../tools/browser/schema-browser/table-info.c:365
 msgid "Relations"
 msgstr "Beziehungen"
+
+#: ../tools/browser/schema-browser/table-info.c:445
+#| msgid "Favorites"
+msgid "_Favorite"
+msgstr "_Favorit"
+
+#: ../tools/browser/schema-browser/table-info.c:445
+msgid "Add table to favorites"
+msgstr "Tabelle zu Favoriten hinzufügen"
 
 #: ../tools/command-exec.c:329
 msgid "History is not supported"
@@ -7188,6 +7245,16 @@ msgstr "Objekte"
 msgid "Triggers"
 msgstr "Auslöser"
 
+#~ msgid ""
+#~ "Drag a favorite here\n"
+#~ "to remove it"
+#~ msgstr ""
+#~ "Ziehen Sie einen Favoriten hierher,\n"
+#~ "um ihn zu löschen"
+
+#~ msgid "Objects in the '%s' schema"
+#~ msgstr "Objekte im Schema »%s«"
+
 #~ msgid "Can't fetch data from server"
 #~ msgstr "Daten können nicht vom Server geholt werden"
 
@@ -7404,9 +7471,6 @@ msgstr "Auslöser"
 
 #~ msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
 #~ msgstr "Unerwarteter FreeTDS-Rückgabecode in tds_process_row_tokens().\n"
-
-#~ msgid "Error processing results.\n"
-#~ msgstr "Fehler beim Verarbeiten der Ergebnisse.\n"
 
 #~ msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 #~ msgstr "Unerwarteter FreeTDS-Rückgabecode in tds_process_result_tokens\n"
