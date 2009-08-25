@@ -308,7 +308,7 @@ _string_is_identifier (const gchar *str)
  *
  * Returns: TRUE if @str needs some quotes
  *
- * Deprecated: 4.0.3: Not needed anymore because of the gda_sql_identifier_quote()
+ * Deprecated: 4.0.3: Not needed anymore because of the gda_sql_identifier_quote() function.
  */
 gboolean
 gda_sql_identifier_needs_quotes (const gchar *str)
@@ -363,7 +363,7 @@ gda_sql_identifier_needs_quotes (const gchar *str)
  * 
  * Returns: @str
  * 
- * Deprecated: 4.0.3: Not needed anymore because of the gda_sql_identifier_quote()
+ * Deprecated: 4.0.3: Not needed anymore because of the gda_sql_identifier_quote() function.
  */
 gchar *
 gda_sql_identifier_remove_quotes (gchar *str)
