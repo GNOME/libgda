@@ -436,7 +436,7 @@ build_test_for_plugin_struct (GdauiPlugin *plugin)
 					       error && error->message ? error->message : "No detail");
 			label = gtk_label_new (str);
 			gtk_table_attach (GTK_TABLE (table), label, 1, 2, 2, 3, GTK_FILL, 0, 0, 0);
-			g_warning (str);
+			g_warning ("%s", str);
 			g_error_free (error);
 		}
 		else {

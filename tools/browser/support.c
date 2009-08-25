@@ -125,7 +125,7 @@ browser_show_error (GtkWindow *parent, const gchar *format, ...)
 	dialog = gtk_message_dialog_new_with_markup (parent,
                                                      GTK_DIALOG_DESTROY_WITH_PARENT |
                                                      GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
-                                                     GTK_BUTTONS_CLOSE, tmp);
+                                                     GTK_BUTTONS_CLOSE, "%s", tmp);
 	g_free (tmp);
 
         gtk_widget_show_all (dialog);

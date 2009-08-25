@@ -264,7 +264,7 @@ common_pict_make_pixbuf (PictOptions *options, PictBinData *bindata, PictAllocat
 							      loc_error && loc_error->message ? loc_error->message : _("No detail"));
 				g_error_free (loc_error);
 				*stock = GTK_STOCK_DIALOG_WARNING;
-				g_set_error (error, 0, 0, notice_msg);
+				g_set_error_literal (error, 0, 0, notice_msg);
 				g_free (notice_msg);
 			}
 			

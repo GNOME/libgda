@@ -2232,7 +2232,7 @@ confirm_file_overwrite (GtkWindow *parent, const gchar *path)
 	dialog = gtk_message_dialog_new_with_markup (parent, 
 						     GTK_DIALOG_DESTROY_WITH_PARENT |
 						     GTK_DIALOG_MODAL, GTK_MESSAGE_QUESTION,
-						     GTK_BUTTONS_CLOSE, str);
+						     GTK_BUTTONS_CLOSE, "%s", str);
 	g_free (str);
 		
 	button = gtk_button_new_from_stock (GTK_STOCK_CANCEL);

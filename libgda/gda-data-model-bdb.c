@@ -273,7 +273,7 @@ gda_data_model_bdb_get_type (void)
 							       "db_strerror");
 			}
 			if (err) {
-				g_warning (err);
+				g_warning ("%s", err);
 				g_free (err);
 				libdb_db_create = NULL;
 				libdb_db_strerror = NULL;

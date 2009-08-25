@@ -65,7 +65,7 @@ show_error (GtkWindow *parent, const gchar *format, ...)
 	dialog = gtk_message_dialog_new_with_markup (parent,
                                                      GTK_DIALOG_DESTROY_WITH_PARENT |
                                                      GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
-                                                     GTK_BUTTONS_CLOSE, str);
+                                                     GTK_BUTTONS_CLOSE, "%s", str);
         gtk_dialog_add_action_widget (GTK_DIALOG (dialog),
                                       gtk_button_new_from_stock (GTK_STOCK_OK),
                                       GTK_RESPONSE_OK);

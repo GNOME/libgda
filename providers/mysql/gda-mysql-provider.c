@@ -497,7 +497,7 @@ real_open_connection (const gchar  *host,
 						  (port > 0) ? port : 0,
 						  socket, flags);
 	if (!return_mysql || mysql != return_mysql) {
-		g_set_error (error, 0, 0, "%s", mysql_error (mysql));
+		g_set_error_literal (error, 0, 0, mysql_error (mysql));
 		g_free (mysql);
 		mysql = NULL;
 	}
@@ -1020,7 +1020,7 @@ gda_mysql_provider_perform_operation (GdaServerProvider               *provider,
 			g_free (sql);
 			
 			if (res) {
-				g_set_error (error, 0, 0, mysql_error (mysql));
+			  g_set_error (error, 0, 0, "%s", mysql_error (mysql));
 				mysql_close (mysql);
 				return FALSE;
 			}
