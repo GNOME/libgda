@@ -1568,8 +1568,14 @@ sqlite_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context,
 		else
 			str1 = context->render_compound (GDA_SQL_ANY_PART (expr->select), context, error);
 		if (!str1) goto err;
-		str = g_strdup_printf ("(%s)", str1);
-		g_free (str1);
+
+		if (! GDA_SQL_ANY_PART (expr)->parent ||
+		    (GDA_SQL_ANY_PART (expr)->parent->type != GDA_SQL_ANY_SQL_FUNCTION)) {
+			str = g_strdup_printf ("(%s)", str1);
+			g_free (str1);
+		}
+		else
+			str = str1;
 	}
 	else if (expr->case_s) {
 		str = context->render_case (GDA_SQL_ANY_PART (expr->case_s), context, error);

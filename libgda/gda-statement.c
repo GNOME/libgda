@@ -1375,8 +1375,14 @@ default_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, gboolean
 		else
 			g_assert_not_reached ();
 		if (!str1) goto err;
-		str = g_strdup_printf ("(%s)", str1);
-		g_free (str1);
+
+		if (! GDA_SQL_ANY_PART (expr)->parent ||
+		    (GDA_SQL_ANY_PART (expr)->parent->type != GDA_SQL_ANY_SQL_FUNCTION)) {
+			str = g_strdup_printf ("(%s)", str1);
+			g_free (str1);
+		}
+		else
+			str = str1;
 	}
 	else if (expr->case_s) {
 		str = context->render_case (GDA_SQL_ANY_PART (expr->case_s), context, error);
@@ -1477,7 +1483,7 @@ default_render_function (GdaSqlFunction *func, GdaSqlRenderingContext *context, 
 	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (func), error)) return NULL;
 
 	string = g_string_new (func->function_name);
-	g_string_append_c (string, '(');
+	g_string_append (string, " (");
 	for (list = func->args_list; list; list = list->next) {
 		if (list != func->args_list)
 			g_string_append (string, ", ");

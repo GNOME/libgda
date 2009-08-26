@@ -1,10 +1,10 @@
 bin_PROGRAMS=gda-browser-4.0
-noinst_PROGRAMS = favorites-test
+noinst_LTLIBRARIES = libbrowser.la
 
 SUBDIRS = data common schema-browser dummy-perspective
 if HAVE_GOOCANVAS
 SUBDIRS+=canvas
-noinst_PROGRAMS+=canvas-example
+noinst_PROGRAMS=canvas-example
 endif
 
 AM_CPPFLAGS = \
@@ -23,7 +23,7 @@ marshal.h: marshal.list $(GLIB_GENMARSHAL)
 marshal.c: marshal.list $(GLIB_GENMARSHAL) marshal.h
 	$(GLIB_GENMARSHAL) $< --body --prefix=_marshal > $@
 
-gda_browser_4_0_SOURCES=\
+libbrowser_la_SOURCES=\
 	cc-gray-bar.c \
 	cc-gray-bar.h \
 	marshal.c \
@@ -37,8 +37,6 @@ gda_browser_4_0_SOURCES=\
 	login-dialog.h \
 	support.c \
 	support.h \
-	browser-core.c \
-	browser-core.h \
 	browser-page.c \
 	browser-page.h \
 	browser-perspective.c \
@@ -55,12 +53,15 @@ gda_browser_4_0_SOURCES=\
 	browser-window.h \
 	browser-connections-list.c \
 	browser-connections-list.h \
-	main.c \
 	mgr-favorites.h \
 	mgr-favorites.c \
 	browser-stock-icons.c \
 	browser-stock-icons.h
 
+gda_browser_4_0_SOURCES=\
+	browser-core.c \
+	browser-core.h \
+	main.c
 
 $(OBJECTS): marshal.c marshal.h
 
@@ -85,23 +86,13 @@ gda_browser_4_0_LDFLAGS = $(EXTRALDFLAGS)
 gda_browser_4_0_LDADD=\
 	$(top_builddir)/tools/browser/schema-browser/libperspective.la \
 	$(top_builddir)/tools/browser/dummy-perspective/libperspective.la \
+	$(top_builddir)/tools/browser/libbrowser.la \
 	$(CANVAS_LDADD) \
 	$(top_builddir)/tools/browser/common/libcommon.la \
 	$(top_builddir)/libgda/libgda-4.0.la \
 	$(top_builddir)/libgda-ui/libgda-ui-4.0.la \
 	$(LIBGDA_LIBS) $(GTK_LIBS)
 
-
-favorites_test_SOURCES=\
-	browser-favorites.c \
-	browser-favorites.h \
-	favorites-test.c
-
-favorites_test_LDADD=\
-	$(top_builddir)/tools/browser/schema-browser/libperspective.la \
-	$(top_builddir)/tools/browser/dummy-perspective/libperspective.la \
-	$(top_builddir)/libgda/libgda-4.0.la \
-	$(LIBGDA_LIBS)
 
 @INTLTOOL_DESKTOP_RULE@
 
