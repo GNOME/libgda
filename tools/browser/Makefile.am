@@ -1,7 +1,7 @@
 bin_PROGRAMS=gda-browser-4.0
 noinst_LTLIBRARIES = libbrowser.la
 
-SUBDIRS = data common schema-browser dummy-perspective
+SUBDIRS = data common schema-browser query-exec dummy-perspective
 if HAVE_GOOCANVAS
 SUBDIRS+=canvas
 noinst_PROGRAMS=canvas-example
@@ -14,6 +14,7 @@ AM_CPPFLAGS = \
         -I$(top_builddir) \
         $(LIBGDA_CFLAGS) \
         $(GTK_CFLAGS) \
+        $(GTKSOURCEVIEW_CFLAGS) \
         -DPREFIX=\""$(prefix)"\" \
         -DSYSCONFDIR=\""$(sysconfdir)"\" \
         -DDATADIR=\""$(datadir)"\" \
@@ -86,13 +87,14 @@ browser-res.o: browser-res.rc
 gda_browser_4_0_LDFLAGS = $(EXTRALDFLAGS)
 gda_browser_4_0_LDADD=\
 	$(top_builddir)/tools/browser/schema-browser/libperspective.la \
+	$(top_builddir)/tools/browser/query-exec/libperspective.la \
 	$(top_builddir)/tools/browser/dummy-perspective/libperspective.la \
 	$(top_builddir)/tools/browser/libbrowser.la \
 	$(CANVAS_LDADD) \
 	$(top_builddir)/tools/browser/common/libcommon.la \
 	$(top_builddir)/libgda/libgda-4.0.la \
 	$(top_builddir)/libgda-ui/libgda-ui-4.0.la \
-	$(LIBGDA_LIBS) $(GTK_LIBS)
+	$(LIBGDA_LIBS) $(GTK_LIBS) $(GTKSOURCEVIEW_LIBS)
 
 
 @INTLTOOL_DESKTOP_RULE@

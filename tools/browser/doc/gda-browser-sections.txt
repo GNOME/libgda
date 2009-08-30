@@ -148,6 +148,7 @@ browser_connection_get_meta_struct
 browser_connection_get_meta_store
 browser_connection_get_dictionary_file
 browser_connection_get_favorites
+browser_connection_create_parser
 <SUBSECTION Standard>
 BROWSER_CONNECTION
 BROWSER_IS_CONNECTION

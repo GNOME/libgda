@@ -70,6 +70,7 @@ BrowserFavorites   *browser_connection_get_favorites          (BrowserConnection
 /*
  * statements's execution
  */
+GdaSqlParser       *browser_connection_create_parser          (BrowserConnection *bcnc);
 /* TODO */
 
 G_END_DECLS

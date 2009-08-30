@@ -320,18 +320,27 @@ void
 browser_core_set_default_factory (const gchar *factory)
 {
 	GSList *list;
+	gchar *lc2;
 	_bcore = browser_core_get ();
 
 	if (!factory)
 		return;
 
+	lc2 = g_utf8_strdown (factory, -1);
 	for (list = _bcore->priv->factories; list; list = list->next) {
 		BrowserPerspectiveFactory *fact = (BrowserPerspectiveFactory*) list->data;
-		if (strstr (fact->perspective_name, factory)) {
+		gchar *lc1;
+		lc1 = g_utf8_strdown (fact->perspective_name, -1);
+
+		if (strstr (lc1, lc2)) {
 			_bcore->priv->default_factory = fact;
+			g_free (lc1);
 			break;
 		}
+
+		g_free (lc1);
 	}
+	g_free (lc2);
 }
 
 /**

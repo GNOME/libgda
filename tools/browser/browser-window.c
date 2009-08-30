@@ -206,6 +206,7 @@ static const GtkActionEntry ui_actions[] = {
         { "ConnectionMetaSync", GTK_STOCK_REFRESH, "_Fetch meta data", NULL, "Fetch meta data", G_CALLBACK (connection_meta_update_cb)},
         { "ConnectionClose", GTK_STOCK_CLOSE, "_Close connection", NULL, "Close this connection", G_CALLBACK (connection_close_cb)},
         { "Quit", GTK_STOCK_QUIT, "_Quit", NULL, "Quit", G_CALLBACK (quit_cb)},
+        { "Edit", NULL, "_Edit", NULL, "Edit", NULL },
         { "Perspective", NULL, "_Perspective", NULL, "Perspective", NULL },
         { "Window", NULL, "_Window", NULL, "Window", NULL },
         { "WindowNew", STOCK_NEW_WINDOW, "_New window", NULL, "Open a new window for current connection", G_CALLBACK (window_new_cb)},
@@ -226,6 +227,8 @@ static const gchar *ui_actions_info =
         "      <menuitem name='ConnectionClose' action= 'ConnectionClose'/>"
         "      <menuitem name='Quit' action= 'Quit'/>"
         "      <separator/>"
+        "    </menu>"
+        "    <menu name='Edit' action='Edit'>"
         "    </menu>"
         "    <menu name='Perspective' action='Perspective'>"
         "      <placeholder name='PersList'/>"
@@ -929,7 +932,6 @@ browser_window_customize_perspective_ui (BrowserWindow *bwin, BrowserPerspective
 	if (pdata->customized_merge_id) {
 		gtk_ui_manager_remove_ui (bwin->priv->ui_manager, pdata->customized_merge_id);
 		pdata->customized_merge_id = 0;
-		gtk_ui_manager_ensure_update (bwin->priv->ui_manager);
 	}
 	if (pdata->customized_actions) {
 		gtk_ui_manager_remove_action_group (bwin->priv->ui_manager, pdata->customized_actions);
@@ -938,6 +940,7 @@ browser_window_customize_perspective_ui (BrowserWindow *bwin, BrowserPerspective
 	}
 	g_free (pdata->customized_ui);
 	pdata->customized_ui = NULL;
+	gtk_ui_manager_ensure_update (bwin->priv->ui_manager);
 
 	if (actions_group) {
 		g_return_if_fail (GTK_IS_ACTION_GROUP (actions_group));

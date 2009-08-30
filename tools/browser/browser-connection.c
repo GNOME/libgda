@@ -656,3 +656,22 @@ browser_connection_get_favorites (BrowserConnection *bcnc)
 	return bcnc->priv->bfav;
 }
 
+/**
+ * browser_connection_create_parser
+ * @bcnc: a #BrowserConnection
+ *
+ * Get a new #GdaSqlParser object for @bcnc
+ *
+ * Returns: a new #GdaSqlParser
+ */
+GdaSqlParser *
+browser_connection_create_parser (BrowserConnection *bcnc)
+{
+	GdaSqlParser *parser;
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	
+	parser = gda_connection_create_parser (bcnc->priv->cnc);
+	if (!parser)
+		parser = gda_sql_parser_new ();
+	return parser;
+}

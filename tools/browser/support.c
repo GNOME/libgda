@@ -105,7 +105,12 @@ browser_connection_close (GtkWindow *parent, BrowserConnection *bcnc)
 
 
 /**
- * show_error
+ * browser_show_error
+ * @parent: a #GtkWindow
+ * @format: printf() style format string
+ * @...: arguments for @format
+ *
+ * Displays a modal error notice untill the user aknowledges it.
  */
 void
 browser_show_error (GtkWindow *parent, const gchar *format, ...)
@@ -113,20 +118,18 @@ browser_show_error (GtkWindow *parent, const gchar *format, ...)
         va_list args;
         gchar sz[2048];
         GtkWidget *dialog;
-	gchar *tmp;
 
         /* build the message string */
         va_start (args, format);
-        vsnprintf (sz, sizeof sz, format, args);
+        vsnprintf (sz, sizeof (sz), format, args);
         va_end (args);
 
         /* create the error message dialog */
-	tmp = g_strdup_printf ("<span weight=\"bold\">%s</span>\n%s", _("Error:"), sz);
 	dialog = gtk_message_dialog_new_with_markup (parent,
                                                      GTK_DIALOG_DESTROY_WITH_PARENT |
                                                      GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
-                                                     GTK_BUTTONS_CLOSE, "%s", tmp);
-	g_free (tmp);
+                                                     GTK_BUTTONS_CLOSE,
+						     "<span weight=\"bold\">%s</span>\n%s", _("Error:"), sz);
 
         gtk_widget_show_all (dialog);
         gtk_dialog_run (GTK_DIALOG (dialog));
@@ -194,8 +197,11 @@ browser_make_tab_label_with_stock (const gchar *label,
 				   GtkWidget **out_close_button)
 {
 	GtkWidget *image = NULL;
-	if (stock_id)
-		image = gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_MENU);
+	if (stock_id) {
+		image = gtk_image_new_from_icon_name (stock_id, GTK_ICON_SIZE_MENU);
+		if (!image)
+			image = gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_MENU);
+	}
 	return _browser_make_tab_label (label, image, with_close, out_close_button);
 }
 

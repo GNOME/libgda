@@ -30,6 +30,8 @@ G_BEGIN_DECLS
 #define STOCK_ADD_BOOKMARK         "bookmark-new"
 #define STOCK_PRINT_SETUP          "document-page-setup"
 
+#define STOCK_CONSOLE              "accessories-text-editor"
+
 void browser_stock_icons_init (void);
 
 G_END_DECLS

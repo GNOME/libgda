@@ -153,7 +153,6 @@ schema_browser_perspective_new (BrowserWindow *bwin)
 	wid = objects_index_new (bcnc);
 	g_signal_connect (wid, "selection-changed",
 			  G_CALLBACK (objects_index_selection_changed_cb), bpers);
-	gtk_paned_add2 (GTK_PANED (paned), wid);
 	gtk_notebook_append_page (GTK_NOTEBOOK (nb), wid,
 				  browser_make_tab_label_with_stock (_("Index"), GTK_STOCK_ABOUT, FALSE,
 								     NULL));
@@ -339,12 +338,14 @@ schema_browser_perspective_page_tab_label_change (BrowserPerspective *perspectiv
 	bpers = SCHEMA_BROWSER_PERSPECTIVE (perspective);
 	tab_label = browser_page_get_tab_label (page, &close_btn);
 	if (tab_label) {
-		gtk_notebook_set_tab_label (bpers->priv->notebook, GTK_WIDGET (page), tab_label);
+		gtk_notebook_set_tab_label (GTK_NOTEBOOK (bpers->priv->notebook),
+					    GTK_WIDGET (page), tab_label);
 		g_signal_connect (close_btn, "clicked",
 				  G_CALLBACK (close_button_clicked_cb), page);
 		
 		tab_label = browser_page_get_tab_label (page, NULL);
-		gtk_notebook_set_menu_label (bpers->priv->notebook, GTK_WIDGET (page), tab_label);
+		gtk_notebook_set_menu_label (GTK_NOTEBOOK (bpers->priv->notebook),
+					     GTK_WIDGET (page), tab_label);
 	}
 }
 

@@ -145,6 +145,7 @@ dnl ******************************
 have_ui=no
 have_goocanvas=no
 have_graphviz=no
+have_sourceview=no
 AC_ARG_WITH(ui,
 	AS_HELP_STRING([--with-ui], [Enable GTK+ extension and tools]),
 	,with_ui=auto)
@@ -165,6 +166,10 @@ AM_CONDITIONAL(HAVE_UI, test x"$have_ui" = "xyes")
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
 
+AC_ARG_WITH(gtksourceview,
+AS_HELP_STRING([--with-gtksourceview], [Enable using GtkSourceView]),
+	,with_sourceview=auto)
+
 AC_ARG_WITH(goocanvas,
 AS_HELP_STRING([--with-goocanvas], [Enable using GooCanvas]),
 	,with_goo=auto)
@@ -175,6 +180,18 @@ AS_HELP_STRING([--with-graphviz], [Enable using Graphviz]),
 
 if test x"$have_ui" = "xyes"
 then
+	if test "$with_sourceview" = "auto" -o "$with_sourceview" = "yes"
+	then
+		PKG_CHECK_MODULES(GTKSOURCEVIEW, "gtksourceview-2.0", [
+			AC_DEFINE(HAVE_GTKSOURCEVIEW, [1], [GtkSourceView support enabled])
+			have_sourceview=yes], [
+			if test "$with_sourceview" = "yes"
+			then
+				AC_MSG_ERROR([GtkSourceview support requested but not found.])
+			fi
+			have_sourceview=no])
+	fi
+
 	if test "$with_goo" = "auto" -o "$with_goo" = "yes"
 	then
 		PKG_CHECK_MODULES(GOOCANVAS, "goocanvas", [
@@ -199,6 +216,10 @@ then
 			have_graphviz=no])
 	fi
 fi
+
+AM_CONDITIONAL(HAVE_GTKSOURCEVIEW, test x"$have_gtksourceview" = "xyes")
+AC_SUBST(GTKSOURCEVIEW_CFLAGS)
+AC_SUBST(GTKSOURCEVIEW_LIBS)
 
 AM_CONDITIONAL(HAVE_GOOCANVAS, test x"$have_goocanvas" = "xyes")
 AC_SUBST(GOOCANVAS_CFLAGS)
@@ -1728,6 +1749,7 @@ tools/browser/Makefile
 tools/browser/data/Makefile
 tools/browser/common/Makefile
 tools/browser/schema-browser/Makefile
+tools/browser/query-exec/Makefile
 tools/browser/dummy-perspective/Makefile
 tools/browser/canvas/Makefile
 tools/browser/doc/Makefile
