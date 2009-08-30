@@ -62,7 +62,7 @@ function add_files_to_zip
 #
 # dependencies DLLs
 #
-files=(charset.dll iconv.dll intl.dll libgio-2.0-0.dll libglib-2.0-0.dll libgmodule-2.0-0.dll libgobject-2.0-0.dll libgthread-2.0-0.dll libxml2.dll zlib1.dll)
+files=(charset.dll iconv.dll intl.dll libgio-2.0-0.dll libglib-2.0-0.dll libgmodule-2.0-0.dll libgobject-2.0-0.dll libgthread-2.0-0.dll libxml2.dll zlib1.dll libsoup*.dll)
 add_files_to_zip $archive_ext ${depend_path}/gtk bin $files
 
 files=(libdb47.dll msvcp80.dll msvcr80.dll)
