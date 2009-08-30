@@ -6,6 +6,7 @@
 
 #include <libgda-ui/libgda-ui.h>
 #include <sql-parser/gda-sql-parser.h>
+#include "demo-common.h"
 
 extern GdaConnection *demo_cnc;
 extern GdaSqlParser *demo_parser;
