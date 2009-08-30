@@ -68,8 +68,9 @@ browser_page_class_init (gpointer g_class)
 
 /**
  * browser_page_get_actions_group
- * @page:
- * @instance: a GtkWidget which has been returned by a previous call to browser_page_create()
+ * @page: an object implementing the #BrowserPage interface
+ *
+ * Get the #GtkActionGroup from a @page to represent its specific actions.
  *
  * Returns: a new #GtkActionGroup
  */
@@ -86,7 +87,13 @@ browser_page_get_actions_group (BrowserPage *page)
 
 /**
  * browser_page_get_actions_ui
+ * @page: an object implementing the #BrowserPage interface
  *
+ * Get the UI definition from @page to represent how its specific actions (obtained
+ * using browser_page_get_actions_group()) are to be integrated in a #BrowserWindow's menu
+ * and toolbar.
+ *
+ * Returns: a read-only string
  */
 const gchar *
 browser_page_get_actions_ui (BrowserPage *page)
@@ -101,8 +108,13 @@ browser_page_get_actions_ui (BrowserPage *page)
 
 /**
  * browser_page_get_perspective
+ * @page: an object implementing the #BrowserPage interface
  *
- * Finds the BrowserPerspective in which @page is.
+ * Finds the BrowserPerspective in which @page is. Note that the #BrowserPerspective may
+ * have changed since a previous call as users are allowed to do some drag and drop between
+ * browser's windows which contain different #BrowserPerspective objects.
+ *
+ * Returns: the #BrowserPerspective
  */
 BrowserPerspective *
 browser_page_get_perspective (BrowserPage *page)
@@ -116,6 +128,14 @@ browser_page_get_perspective (BrowserPage *page)
 
 /**
  * browser_page_get_tab_label
+ * @page: an object implementing the #BrowserPage interface
+ * @out_close_button: a place holder to hold a pointer to a close button
+ *
+ * Get a new widget to be packed in a notebook's tab label.
+ *
+ * If @out_close_button is not %NULL, then the implementation may decide to add
+ * a button to close the tab; if @out_close_button is %NULL, then it should not add
+ * any close button.
  *
  * Returns: a new #GtkWidget, or %NULL
  */

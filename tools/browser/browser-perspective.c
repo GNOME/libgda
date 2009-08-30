@@ -68,8 +68,9 @@ browser_perspective_class_init (gpointer g_class)
 
 /**
  * browser_perspective_get_actions_group
- * @pers:
- * @instance: a GtkWidget which has been returned by a previous call to browser_perspective_create()
+ * @pers: an object implementing the #BrowserPerspective interface
+ *
+ * Get the #GtkActionGroup from a @pers to represent its specific actions.
  *
  * Returns: a new #GtkActionGroup
  */
@@ -86,7 +87,13 @@ browser_perspective_get_actions_group (BrowserPerspective *pers)
 
 /**
  * browser_perspective_get_actions_ui
+ * @pers: an object implementing the #BrowserPerspective interface
  *
+ * Get the UI definition from a perspective to represent how its specific actions (obtained
+ * using browser_perspective_get_actions_group()) are to be integrated in a #BrowserWindow's menu
+ * and toolbar.
+ *
+ * Returns: a read-only string
  */
 const gchar *
 browser_perspective_get_actions_ui (BrowserPerspective *pers)
@@ -99,6 +106,15 @@ browser_perspective_get_actions_ui (BrowserPerspective *pers)
 		return NULL;
 }
 
+/**
+ * browser_perspective_page_tab_label_change
+ * @pers: an object implementing the #BrowserPerspective interface
+ * @page: an object implementing the #BrowserPage interface
+ *
+ * When @pers organizes its contents as pages in a notebook, each page may
+ * request that the tab's label may be changed, and the purpose of this method
+ * is to request that @pers update the tab's label associated to @page.
+ */
 void
 browser_perspective_page_tab_label_change (BrowserPerspective *pers, BrowserPage *page)
 {

@@ -33,6 +33,7 @@ G_BEGIN_DECLS
 
 typedef struct _BrowserCoreClass BrowserCoreClass;
 typedef struct _BrowserCorePrivate BrowserCorePrivate;
+typedef GSList *(*BrowserCoreInitFactories) (void);
 
 /* struct for the object's data */
 struct _BrowserCore

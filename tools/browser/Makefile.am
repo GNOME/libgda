@@ -6,6 +6,7 @@ if HAVE_GOOCANVAS
 SUBDIRS+=canvas
 noinst_PROGRAMS=canvas-example
 endif
+SUBDIRS+= . doc
 
 AM_CPPFLAGS = \
         -I$(top_srcdir) \
@@ -37,6 +38,8 @@ libbrowser_la_SOURCES=\
 	login-dialog.h \
 	support.c \
 	support.h \
+	browser-core.c \
+	browser-core.h \
 	browser-page.c \
 	browser-page.h \
 	browser-perspective.c \
@@ -59,8 +62,6 @@ libbrowser_la_SOURCES=\
 	browser-stock-icons.h
 
 gda_browser_4_0_SOURCES=\
-	browser-core.c \
-	browser-core.h \
 	main.c
 
 $(OBJECTS): marshal.c marshal.h

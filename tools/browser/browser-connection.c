@@ -393,10 +393,14 @@ check_for_wrapper_result (BrowserConnection *bcnc)
 
 /**
  * browser_connection_new
+ * @cnc: a #GdaConnection
  *
- * Creates a new #BrowserConnection object
+ * Creates a new #BrowserConnection object wrapping @cnc. The browser_core_take_connection() method
+ * must be called on the new object to mahe it managed by the browser.
  *
- * Returns: the new object
+ * To close the new connection, use browser_core_close_connection().
+ *
+ * Returns: a new object
  */
 BrowserConnection*
 browser_connection_new (GdaConnection *cnc)
@@ -472,6 +476,9 @@ browser_connection_new (GdaConnection *cnc)
 
 /**
  * browser_connection_get_name
+ * @bcnc: a #BrowserConnection
+ *
+ * Returns: @bcnc's name
  */
 const gchar *
 browser_connection_get_name (BrowserConnection *bcnc)
@@ -482,6 +489,11 @@ browser_connection_get_name (BrowserConnection *bcnc)
 
 /**
  * browser_connection_get_information
+ * @bcnc: a #BrowserConnection
+ *
+ * Get some information about the connection
+ *
+ * Returns: a pointer to the associated #GdaDsnInfo
  */
 const GdaDsnInfo *
 browser_connection_get_information (BrowserConnection *bcnc)
@@ -528,6 +540,10 @@ browser_connection_get_information (BrowserConnection *bcnc)
  * @bcnc: a #BrowserConnection
  * @out_reason: a pointer to store a copy of the reason @bcnc is busy (will be set 
  *              to %NULL if @bcnc is not busy)
+ *
+ * Tells if @bcnc is currently busy or not.
+ *
+ * Returns: %TRUE if @bcnc is busy
  */
 gboolean
 browser_connection_is_busy (BrowserConnection *bcnc, gchar **out_reason)
@@ -547,6 +563,9 @@ browser_connection_is_busy (BrowserConnection *bcnc, gchar **out_reason)
 
 /**
  * browser_connection_update_meta_data
+ * @bcnc: a #BrowserConnection
+ *
+ * Make @bcnc update its meta store in the background.
  */
 void
 browser_connection_update_meta_data (BrowserConnection *bcnc)
@@ -578,7 +597,9 @@ browser_connection_update_meta_data (BrowserConnection *bcnc)
 
 /**
  * browser_connection_get_meta_struct
+ * @bcnc: a #BrowserConnection
  *
+ * Get the #GdaMetaStruct maintained up to date by @bcnc.
  *
  * Returns: a #GdaMetaStruct, the caller does not have any reference to it.
  */
@@ -591,9 +612,9 @@ browser_connection_get_meta_struct (BrowserConnection *bcnc)
 
 /**
  * browser_connection_get_meta_store
+ * @bcnc: a #BrowserConnection
  *
- *
- * Returns: a #GdaMetaStore, the caller does not have any reference to it.
+ * Returns: @bcnc's #GdaMetaStore, the caller does not have any reference to it.
  */
 GdaMetaStore *
 browser_connection_get_meta_store (BrowserConnection *bcnc)
@@ -604,6 +625,7 @@ browser_connection_get_meta_store (BrowserConnection *bcnc)
 
 /**
  * browser_connection_get_dictionary_file
+ * @bcnc: a #BrowserConnection
  *
  * Returns: the dictionary file name used by @bcnc, or %NULL
  */
@@ -616,8 +638,11 @@ browser_connection_get_dictionary_file (BrowserConnection *bcnc)
 
 /**
  * browser_connection_get_favorites
+ * @bcnc: a #BrowserConnection
  *
- * Get the favorites handler
+ * Get @bcnc's favorites handler
+ *
+ * Returns: the #BrowserFavorites used by @bcnc
  */
 BrowserFavorites *
 browser_connection_get_favorites (BrowserConnection *bcnc)

@@ -1,0 +1,96 @@
+<!-- ##### SECTION Title ##### -->
+BrowserPerspective
+
+<!-- ##### SECTION Short_Description ##### -->
+A "perspective" in a #BrowserWindow window
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+  #BrowserPerspective is an interface used by the #BrowserWindow object to switch
+  between the activities ("perspectives"); it requires the #GtkWidget.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO BROWSER_PERSPECTIVE_TYPE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO BROWSER_PERSPECTIVE ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO IS_BROWSER_PERSPECTIVE ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO BROWSER_PERSPECTIVE_GET_CLASS ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### STRUCT BrowserPerspectiveIface ##### -->
+<para>
+
+</para>
+
+@g_iface: 
+@i_get_actions_group: 
+@i_get_actions_ui: 
+@i_page_tab_label_change: 
+
+<!-- ##### FUNCTION browser_perspective_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_perspective_get_actions_group ##### -->
+<para>
+
+</para>
+
+@perspective: 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_perspective_get_actions_ui ##### -->
+<para>
+
+</para>
+
+@perspective: 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_perspective_page_tab_label_change ##### -->
+<para>
+
+</para>
+
+@perspective: 
+@page: 
+
+

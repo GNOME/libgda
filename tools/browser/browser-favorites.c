@@ -483,10 +483,12 @@ favorites_reorder (BrowserFavorites *bfav, gint order_key, gint id, gint new_pos
  *
  * Add a new favorite, or replace an existing one.
  * NOTE:
- *   - if @fav->id is < 0 then it's either an update or an insert (depending if fav->contents exists)
- *     and if it's not it is an UPDATE
- *   - @fav->type can't be 0
- *   - @fav->contents can't be %NULL
+ * <itemizedlist>
+ *   <listitem><para>if @fav->id is < 0 then it's either an update or an insert (depending if fav->contents exists)
+ *     and if it's not it is an UPDATE </para></listitem>
+ *   <listitem><para>@fav->type can't be 0</para></listitem>
+ *   <listitem><para>@fav->contents can't be %NULL</para></listitem>
+ * </itemizedlist>
  *
  * On success @fav->id contains the favorite's ID, otherwise it will contain -1.
  *
@@ -714,6 +716,10 @@ browser_favorites_add (BrowserFavorites *bfav, guint session_id,
 
 /**
  * browser_favorites_free_list
+ * @fav_list: a list of #BrowserFavoritesAttributes
+ *
+ * Frees all the #BrowserFavoritesAttributes of the @fav_list list, and frees the list
+ * itself.
  */
 void
 browser_favorites_free_list (GSList *fav_list)
@@ -731,6 +737,9 @@ browser_favorites_free_list (GSList *fav_list)
 
 /**
  * browser_favorites_reset_attributes
+ * @fav: a pointer to a #BrowserFavoritesAttributes
+ *
+ * Resets @fav with empty attributes; it does not free @fav.
  */
 void
 browser_favorites_reset_attributes (BrowserFavoritesAttributes *fav)
@@ -743,6 +752,13 @@ browser_favorites_reset_attributes (BrowserFavoritesAttributes *fav)
 
 /**
  * browser_favorites_list
+ * @bfav: a #BrowserFavorites
+ * @session_id: 0 for now
+ * @type: filter the type of attributes to be listed
+ * @order_key: a key to order the listed favorites, such as #ORDER_KEY_SCHEMA
+ * @error: a place to store errors, or %NULL
+ *
+ * Extract some favorites.
  *
  * Returns: a new list of #BrowserFavoritesAttributes pointers. The list has to
  *          be freed using browser_favorites_free_list()
@@ -900,6 +916,14 @@ browser_favorites_list (BrowserFavorites *bfav, guint session_id, BrowserFavorit
 
 /**
  * browser_favorites_delete_favorite
+ * @bfav: a #BrowserFavorites
+ * @session_id: 0 for now
+ * @fav: a pointer to a #BrowserFavoritesAttributes definting which favorite to delete
+ * @error: a place to store errors, or %NULL
+ *
+ * Delete a favorite
+ *
+ * Returns: %TRUE if no error occurred.
  */
 gboolean
 browser_favorites_delete (BrowserFavorites *bfav, guint session_id,
@@ -1003,9 +1027,15 @@ browser_favorites_delete (BrowserFavorites *bfav, guint session_id,
 
 /**
  * browser_favorites_get
+ * @bfav: a #BrowserFavorites
+ * @fav_id: the favorite's ID
+ * @out_fav: a #BrowserFavoritesAttributes to be filled with the favorite's attributes
+ * @error: a place to store errors, or %NULL
  *
  * Get all the information about a favorite from its id: fills the @out_fav
  * pointed structure.
+ *
+ * Retuns: %TRUE if no error occurred.
  */
 gboolean
 browser_favorites_get (BrowserFavorites *bfav, gint fav_id,

@@ -21,6 +21,7 @@
 #include <gtk/gtk.h>
 #include <libgda/libgda.h>
 #include "browser-canvas-item.h"
+#include "browser-canvas.h"
 #include "../dnd.h"
 
 static void browser_canvas_item_class_init (BrowserCanvasItemClass * class);
@@ -62,7 +63,7 @@ enum
 	PROP_TOOLTIP_TEXT
 };
 
-static gint browser_canvas_item_signals[LAST_SIGNAL] = { 0, 0, 0, 0 };
+static gint browser_canvas_item_signals[LAST_SIGNAL] = { 0, 0 };
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass *base_parent_class = NULL;

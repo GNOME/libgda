@@ -23,10 +23,6 @@
 #include "browser-window.h"
 #include "browser-connection.h"
 
-/* Perspectives' factories */
-#include "schema-browser/perspective-main.h"
-#include "dummy-perspective/perspective-main.h"
-
 /* 
  * Main static functions 
  */
@@ -113,19 +109,20 @@ browser_core_class_init (BrowserCoreClass *klass)
 	object_class->dispose = browser_core_dispose;
 }
 
+BrowserCoreInitFactories browser_core_init_factories = NULL;
+
 static void
 browser_core_init (BrowserCore *bcore)
 {
 	bcore->priv = g_new0 (BrowserCorePrivate, 1);
 	bcore->priv->factories = NULL;
 
-	bcore->priv->factories = g_slist_append (bcore->priv->factories,
-						 schema_browser_perspective_get_factory ());
-	/* set default perspective */
-	bcore->priv->default_factory = (BrowserPerspectiveFactory*) bcore->priv->factories->data; 
+	if (browser_core_init_factories)
+		bcore->priv->factories = browser_core_init_factories ();
 
-	bcore->priv->factories = g_slist_append (bcore->priv->factories,
-						 dummy_perspective_get_factory ());
+	/* set default perspective */
+	if (bcore->priv->factories)
+		bcore->priv->default_factory = (BrowserPerspectiveFactory*) bcore->priv->factories->data; 
 
 	bcore->priv->windows = NULL;
 }
@@ -134,6 +131,8 @@ browser_core_init (BrowserCore *bcore)
  * browser_core_exists
  *
  * Tells if a #BrowserCore has already been created
+ *
+ * Returns: %TRUE if the #BrowserCore singleton has already been created
  */
 gboolean
 browser_core_exists (void)
@@ -142,7 +141,7 @@ browser_core_exists (void)
 }
 
 /**
- * browser_core_new
+ * browser_core_get
  *
  * Returns a #BrowserCore object which holds the browser's configuration. This is
  * a singleton factory.
@@ -192,7 +191,8 @@ browser_core_dispose (GObject *object)
  * browser_core_take_window
  * @bwin: a #BrowserWindow
  *
- * Makes sure @bwin is handled by the #BrowserCore object, reference to @bwin is stolen here
+ * Makes sure @bwin is handled by the #BrowserCore object, reference to @bwin is stolen here.
+ * This method should be called after a #BrowserWindow has been created to have it managed properly.
  */
 void
 browser_core_take_window (BrowserWindow *bwin)
@@ -206,6 +206,8 @@ browser_core_take_window (BrowserWindow *bwin)
 /**
  * browser_core_close_window
  * @bwin: a #BrowserWindow
+ *
+ * Requests that @bwin be closed.
  */
 void
 browser_core_close_window (BrowserWindow *bwin)
@@ -227,7 +229,8 @@ browser_core_close_window (BrowserWindow *bwin)
 /**
  * browser_core_get_windows
  *
- * Get a list of #BrowserWindow
+ * Get a list of #BrowserWindow mananged by the browser (windows must have been
+ * declared using browser_core_take_window()).
  *
  * Returns: a new list, free it with g_slist_free()
  */
@@ -243,7 +246,6 @@ browser_core_get_windows (void)
 
 /**
  * browser_core_take_connection
- * @bdata: a #BrowserData pointer, or %NULL
  * @bcnc: a #BrowserConnection
  *
  * Makes sure @bcnc is handled by @dbata, reference to @bcnc is stolen here
@@ -260,6 +262,9 @@ browser_core_take_connection (BrowserConnection *bcnc)
 
 /**
  * browser_core_close_connection
+ * @bcnc: a #BrowserConnection
+ *
+ * Requests that @bcnc be closed.
  */
 void
 browser_core_close_connection (BrowserConnection *bcnc)
@@ -291,6 +296,11 @@ browser_core_get_connections (void)
 
 /**
  * browser_core_get_default_factory
+ *
+ * Get the default #BrowserPerspectiveFactory used when making new #BrowserWindow if none
+ * is provided when calling browser_window_new().
+ *
+ * Returns: the default #BrowserPerspectiveFactory
  */
 BrowserPerspectiveFactory *
 browser_core_get_default_factory (void)
@@ -301,6 +311,10 @@ browser_core_get_default_factory (void)
 
 /**
  * browser_core_set_default_factory
+ * @factory: the name of a #BrowserPerspectiveFactory
+ *
+ * Sets the default #BrowserPerspectiveFactory used when making new #BrowserWindow if none
+ * is provided when calling browser_window_new().
  */
 void
 browser_core_set_default_factory (const gchar *factory)
@@ -337,7 +351,7 @@ browser_core_get_factories (void)
 /**
  * browser_core_quit
  *
- * Quits the browser after having made some cleanings
+ * Quits the browser after having made some clean-ups
  */
 void
 browser_core_quit (void)

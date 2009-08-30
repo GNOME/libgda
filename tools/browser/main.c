@@ -31,6 +31,22 @@
 #include "auth-dialog.h"
 #include "browser-stock-icons.h"
 
+/* Perspectives' factories */
+#include "schema-browser/perspective-main.h"
+#include "dummy-perspective/perspective-main.h"
+
+
+extern BrowserCoreInitFactories browser_core_init_factories;
+
+GSList *
+main_browser_core_init_factories (void)
+{
+	GSList *factories = NULL;
+	factories = g_slist_append (factories, schema_browser_perspective_get_factory ());
+	factories = g_slist_append (factories, dummy_perspective_get_factory ());
+	return factories;
+}
+
 /* options */
 gchar *perspective = NULL;
 
@@ -46,6 +62,9 @@ main (int argc, char *argv[])
 	GOptionContext *context;
         GError *error = NULL;
 	gboolean have_loop = FALSE;
+
+	/* set factories function */
+	browser_core_init_factories = main_browser_core_init_factories;
 
 	context = g_option_context_new (_("[DSN|connection string]..."));
         g_option_context_add_main_entries (context, entries, GETTEXT_PACKAGE);

@@ -47,8 +47,8 @@ typedef struct {
 	gchar               *customized_ui;
 } PerspectiveData;
 #define PERSPECTIVE_DATA(x) ((PerspectiveData*)(x))
-PerspectiveData *perspective_data_new (BrowserWindow *bwin, BrowserPerspectiveFactory *factory);
-void         perspective_data_free (PerspectiveData *pers);
+static PerspectiveData *perspective_data_new (BrowserWindow *bwin, BrowserPerspectiveFactory *factory);
+static void         perspective_data_free (PerspectiveData *pers);
 
 /* 
  * Main static functions 
@@ -253,10 +253,17 @@ static const gchar *ui_actions_info =
 
 /**
  * browser_window_new
- * @bcnc:
- * @factory: may be %NULL
+ * @bcnc: a #BrowserConnection
+ * @factory: a #BrowserPerspectiveFactory, may be %NULL
  *
- * Creates a new #BrowserWindow object, and displays it
+ * Creates a new #BrowserWindow window for the @bcnc connection, and displays it.
+ * If @factory is not %NULL, then the new window will show the perspective corresponding
+ * to @factory. If it's %NULL, then the default #BrowserPerspectiveFactory will be used,
+ * see browser_core_get_default_factory().
+ *
+ * Don't forget to call browser_core_take_window() to have the new window correctly
+ * managed by the browser. Similarly, to close the window, use browser_core_close_window()
+ * and not simply gtk_widget_destroy().
  *
  * Returns: the new object
  */
@@ -792,6 +799,9 @@ about_cb (GtkAction *action, BrowserWindow *bwin)
 
 /**
  * browser_window_get_connection
+ * @bwin: a #BrowserWindow
+ * 
+ * Returns: the #BrowserConnection used in @bwin
  */
 BrowserConnection *
 browser_window_get_connection (BrowserWindow *bwin)
@@ -801,7 +811,7 @@ browser_window_get_connection (BrowserWindow *bwin)
 }
 
 
-/**
+/*
  * perspective_data_new
  * @bwin: a #BrowserWindow in which the perspective will be
  * @factory: a #BrowserPerspectiveFactory, or %NULL
@@ -810,7 +820,7 @@ browser_window_get_connection (BrowserWindow *bwin)
  *
  * Returns: a new #PerspectiveData
  */
-PerspectiveData *
+static PerspectiveData *
 perspective_data_new (BrowserWindow *bwin, BrowserPerspectiveFactory *factory)
 {
         PerspectiveData *pers;
@@ -827,10 +837,10 @@ perspective_data_new (BrowserWindow *bwin, BrowserPerspectiveFactory *factory)
         return pers;
 }
 
-/**
+/*
  * perspective_data_free
  */
-void
+static void
 perspective_data_free (PerspectiveData *pers)
 {
         if (pers->perspective_widget)
@@ -843,6 +853,13 @@ perspective_data_free (PerspectiveData *pers)
 
 /**
  * browser_window_push_status
+ * @bwin: a #BrowserWindow
+ * @context: textual description of what context the new message is being used in
+ * @text: textual message
+ *
+ * Pushes a new message onto @bwin's statusbar's stack.
+ *
+ * Returns: the message ID, see gtk_statusbar_push().
  */
 guint
 browser_window_push_status (BrowserWindow *bwin, const gchar *context, const gchar *text)
@@ -859,6 +876,10 @@ browser_window_push_status (BrowserWindow *bwin, const gchar *context, const gch
 
 /**
  * browser_window_pop_status
+ * @bwin: a #BrowserWindow
+ * @context: textual description of what context the message is being used in
+ *
+ * Removes the first message in the @bwin's statusbar's stack with the given context.
  */
 void
 browser_window_pop_status (BrowserWindow *bwin, const gchar *context)
@@ -873,7 +894,11 @@ browser_window_pop_status (BrowserWindow *bwin, const gchar *context)
 }
 
 /**
- * browser_window_push_perspective_ui
+ * browser_window_customize_perspective_ui
+ * @bwin: a #BrowserWindow
+ * @bpers: the #BrowserPerspective concerned
+ * @actions_group: a #GtkActionGroup object, or %NULL
+ * @ui_info: a merge UI string, or %NULL. See gtk_ui_manager_add_ui_from_string()
  *
  * Customizes a UI specific to the @bpers perspective. Any
  * previous customization is removed, replaced by the new requested one.

@@ -351,11 +351,11 @@ cc_gray_bar_get_type (void)
 
 /**
  * cc_gray_bar_new
- * @label:
+ * @label: a string label
  *
+ * Creates a new #CcGrayBar with a single label.
  *
- *
- * Returns:
+ * Returns: a new widget
  */
 GtkWidget *
 cc_gray_bar_new (const gchar *label)
@@ -369,7 +369,7 @@ cc_gray_bar_new (const gchar *label)
 
 /**
  * cc_gray_bar_get_text
- * @bar: A #CcGrayBar widget.
+ * @bar: a #CcGrayBar widget.
  *
  * Get the text being displayed in the given gray bar widget. This
  * does not include any embedded underlines indicating mnemonics or
@@ -391,8 +391,8 @@ cc_gray_bar_get_text (CcGrayBar *bar)
 
 /**
  * cc_gray_bar_set_text
- * @bar: A #CcGrayBar widget
- * @text:
+ * @bar: a #CcGrayBar widget
+ * @text: a string
  *
  * Set the text displayed in the given gray bar widget. This can include 
  * embedded underlines indicating mnemonics or Pango markup.
@@ -408,7 +408,7 @@ cc_gray_bar_set_text (CcGrayBar *bar, const gchar *text)
 
 /**
  * cc_gray_set_icon_from_file
- * @bar: A #CcGrayBar widget.
+ * @bar: a #CcGrayBar widget.
  * @file: filename.
  *
  * Set the icon displayed in the given gray bar widget. This can include 

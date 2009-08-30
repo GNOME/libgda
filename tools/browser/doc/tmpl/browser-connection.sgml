@@ -1,0 +1,137 @@
+<!-- ##### SECTION Title ##### -->
+BrowserConnection
+
+<!-- ##### SECTION Short_Description ##### -->
+An opened connection
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+  The #BrowserConnection object wraps a #GdaConnection with some
+  additionnal features.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT BrowserConnectionPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT BrowserConnection ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL BrowserConnection::busy ##### -->
+<para>
+
+</para>
+
+@browserconnection: the object which received the signal.
+@arg1: 
+@arg2: 
+
+<!-- ##### SIGNAL BrowserConnection::favorites-changed ##### -->
+<para>
+
+</para>
+
+@browserconnection: the object which received the signal.
+
+<!-- ##### SIGNAL BrowserConnection::meta-changed ##### -->
+<para>
+
+</para>
+
+@browserconnection: the object which received the signal.
+@arg1: 
+
+<!-- ##### FUNCTION browser_connection_new ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_connection_get_name ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_connection_get_information ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_connection_is_busy ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@out_reason: 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_connection_update_meta_data ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+
+
+<!-- ##### FUNCTION browser_connection_get_meta_struct ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_connection_get_meta_store ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_connection_get_dictionary_file ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_connection_get_favorites ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@Returns: 
+
+

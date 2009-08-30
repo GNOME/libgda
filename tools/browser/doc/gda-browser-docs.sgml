@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+     "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY nbsp            " ">
+<!ENTITY LIBGDA          "<application>Libgda</application>">
+<!ENTITY GNOMEDB         "<application>GNOME-DB</application>">
+<!ENTITY fdl-appendix SYSTEM "fdl-appendix.sgml">
+<!ENTITY BrowserCore SYSTEM "xml/browser-core.xml">
+<!ENTITY BrowserWindow SYSTEM "xml/browser-window.xml">
+<!ENTITY BrowserConnection SYSTEM "xml/browser-connection.xml">
+<!ENTITY BrowserFavorites SYSTEM "xml/browser-favorites.xml">
+<!ENTITY BrowserPage SYSTEM "xml/browser-page.xml">
+<!ENTITY BrowserPerspective SYSTEM "xml/browser-perspective.xml">
+<!ENTITY CCGrayBar SYSTEM "xml/cc-gray-bar.xml">
+]>
+
+<book id="index">
+  <bookinfo>
+    <title>GdaBrowser hacking manual</title>
+    <authorgroup>
+      <author>
+        <firstname>Vivien</firstname>
+        <surname>Malerba</surname>
+        <affiliation>
+          <address><email>malerba@gnome-db.org</email></address>
+        </affiliation>
+	<contrib>Current maintainer
+        </contrib>
+      </author>
+    </authorgroup>
+    <date>August 2009</date>
+    <copyright>
+      <year>2009</year>
+      <holder>The GNOME Foundation</holder>
+    </copyright>
+    <abstract>
+      <para>
+	Abstract blah.
+      </para>
+    </abstract>
+    <legalnotice id="legalnotice">
+      <para>
+        Permission is granted to copy, distribute and/or modify this document
+        under the terms of the <link linkend="fdl"><citetitle>GNU
+        Free Documentation License</citetitle></link>, Version 1.1 or any later
+        version published by the Free Software Foundation with no Invariant
+        Sections, no Front-Cover Texts, and no Back-Cover Texts.  A copy of the
+        license can be found in <link linkend="fdl">the appendix</link>.
+      </para>
+      <para>
+        Many of the names used by companies to distinguish their products and
+        services are claimed as trademarks. Where those names appear in any
+        GNOME documentation, and those trademarks are made aware to the members
+        of the GNOME Documentation Project, the names have been printed in caps
+        or initial caps.
+      </para>
+    </legalnotice>
+  </bookinfo>
+
+  <part id="part_begin">
+    <title>Getting started</title>
+    <chapter id="why">
+      <title>Purpose</title>
+      <para>
+	The purpose of this documentation is to provide reference material to anyone
+	wishing to add some features to the Gda browser graphical tool.
+      </para>
+    </chapter>
+
+    <chapter id="prog_struct">
+      <title>Program's structure</title>
+      <para>
+	The GdaBrowser's structure is organized around the following parts:
+	<itemizedlist>
+	  <listitem><para>one or more connections, represented by
+	      <link linkend="BrowserConnection">BrowserConnection</link> objects</para></listitem>
+	  <listitem><para>one or more windows, represented by
+	      <link linkend="BrowserWindow">BrowserWindow</link> objects. Each window uses exactly
+	      one connection, and several windows using the same connection can be created</para></listitem>
+	  <listitem><para>a single instance of a <link linkend="BrowserCore">BrowserCore</link> object which
+	      holds all the global information of the browser, and manages connections and windows</para></listitem>
+	  <listitem><para>Window can be used for diverse activities graphically represented by "perspectives", thus
+	      each window can switch its display between various perspectives, identified by widgets
+	      implementing the <link linkend="BrowserPerspective">BrowserPerspective</link> interface.</para></listitem>
+	</itemizedlist>
+      </para>
+    </chapter>
+
+    <chapter id="code_orga">
+      <title>Code organization</title>
+      <para>
+	TODO.
+      </para>
+    </chapter>
+  </part>  
+
+  <part id="part_api">
+    <title>API reference</title>
+
+    <chapter id="core">
+      <title>Core objects</title>
+      <para>
+	This section is a reference to all the core objects of the Gda browser,
+	which can be used in any extension.
+      </para>
+      &BrowserCore;
+      &BrowserConnection;
+      &BrowserFavorites;
+    </chapter>
+
+    <chapter id="windows">
+      <title>Browser windows</title>
+      <para>
+	This section is a reference to all the widgets used in a browser top level window.
+	The following picture shows such a window and how the widgets listed here are packed: the
+	top level window beign a #BrowserWindow in which some #BrowserPerspective widgets are packed
+	(along with a menubar and a statusbar). Each #BrowserPerspective widget packs some specific
+	widgets and optionally some #BrowserPage widgets. The #BrowserPerspective and
+	#BrowserPage are interfaces so no limitation is imposed on the widgets implementing them.
+	<mediaobject>
+        <imageobject role="html">
+          <imagedata fileref="UILayout.png" format="PNG"/>
+        </imageobject>
+        <textobject>
+          <phrase>Typical Gda browser's top level window</phrase>
+        </textobject>
+      </mediaobject>
+      </para>
+      &BrowserWindow;
+      &BrowserPerspective;
+      &BrowserPage;
+    </chapter>
+
+    <chapter id="extrawidgets">
+      <title>Extra widgets</title>
+      <para>
+	This section is a reference to all the extra widgets used in the Gda browser,
+	which can be used in any extension.
+      </para>
+      &CCGrayBar;
+    </chapter>
+  </part>
+
+  <part id="part_index">
+    <title>Appendix</title>
+    &fdl-appendix;
+  </part>
+</book>
+

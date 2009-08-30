@@ -35,12 +35,27 @@ typedef struct _BrowserFavorites BrowserFavorites;
 typedef struct _BrowserFavoritesClass BrowserFavoritesClass;
 typedef struct _BrowserFavoritesPrivate BrowserFavoritesPrivate;
 
+/**
+ * BrowserFavoritesType:
+ * @BROWSER_FAVORITES_TABLES: a database's table favorite
+ * @BROWSER_FAVORITES_DIAGRAMS: a diagram favorite
+ *
+ * Enum to identify favorite's types.
+ */
 typedef enum {
         BROWSER_FAVORITES_TABLES   = 1 << 0,
 	BROWSER_FAVORITES_DIAGRAMS = 1 << 1
 } BrowserFavoritesType;
 #define BROWSER_FAVORITES_NB_TYPES 2
 
+/**
+ * BrowserFavoritesAttributes:
+ * @id: the favorite ID, or <0 if not saved
+ * @type: the favorite's type
+ * @name: the favorite's name
+ * @descr: the favorite's description
+ * @contents: the favorite's contents, depending on the favorite type
+ */
 typedef struct {
 	gint                  id;
 	BrowserFavoritesType  type;

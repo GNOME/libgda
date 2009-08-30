@@ -1,0 +1,167 @@
+<!-- ##### SECTION Title ##### -->
+BrowserCore
+
+<!-- ##### SECTION Short_Description ##### -->
+Singleton holding the global browser information
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+  A single instance of a #BrowserCore is created when the browser is started,
+  accessible using browser_core_get().
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT BrowserCorePrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### USER_FUNCTION BrowserCoreInitFactories ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### STRUCT BrowserCore ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL BrowserCore::connection-added ##### -->
+<para>
+
+</para>
+
+@browsercore: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL BrowserCore::connection-removed ##### -->
+<para>
+
+</para>
+
+@browsercore: the object which received the signal.
+@arg1: 
+
+<!-- ##### FUNCTION browser_core_exists ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_core_get ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_core_take_window ##### -->
+<para>
+
+</para>
+
+@bwin: 
+
+
+<!-- ##### FUNCTION browser_core_get_windows ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_core_close_window ##### -->
+<para>
+
+</para>
+
+@bwin: 
+
+
+<!-- ##### FUNCTION browser_core_take_connection ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+
+
+<!-- ##### FUNCTION browser_core_get_connections ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_core_close_connection ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+
+
+<!-- ##### FUNCTION browser_core_quit ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### STRUCT BrowserPerspectiveFactory ##### -->
+<para>
+
+</para>
+
+@perspective_name: 
+@perspective_create: 
+
+<!-- ##### MACRO BROWSER_PERSPECTIVE_FACTORY ##### -->
+<para>
+
+</para>
+
+@x: 
+
+
+<!-- ##### FUNCTION browser_core_get_default_factory ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_core_set_default_factory ##### -->
+<para>
+
+</para>
+
+@factory: 
+
+
+<!-- ##### FUNCTION browser_core_get_factories ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+

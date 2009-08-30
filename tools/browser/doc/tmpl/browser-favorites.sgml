@@ -1,0 +1,134 @@
+<!-- ##### SECTION Title ##### -->
+BrowserFavorites
+
+<!-- ##### SECTION Short_Description ##### -->
+Favorites management
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+  Each connection uses a single #BrowserFavorites object to manage its favorites,
+  see browser_connection_get_favorites().
+</para>
+<para>
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT BrowserFavoritesPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM BrowserFavoritesType ##### -->
+<para>
+
+</para>
+
+@BROWSER_FAVORITES_TABLES: 
+@BROWSER_FAVORITES_DIAGRAMS: 
+
+<!-- ##### STRUCT BrowserFavorites ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL BrowserFavorites::favorites-changed ##### -->
+<para>
+
+</para>
+
+@browserfavorites: the object which received the signal.
+
+<!-- ##### STRUCT BrowserFavoritesAttributes ##### -->
+<para>
+
+</para>
+
+@id: 
+@type: 
+@name: 
+@descr: 
+@contents: 
+
+<!-- ##### MACRO ORDER_KEY_SCHEMA ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION browser_favorites_add ##### -->
+<para>
+
+</para>
+
+@bfav: 
+@session_id: 
+@fav: 
+@order_key: 
+@pos: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_favorites_list ##### -->
+<para>
+
+</para>
+
+@bfav: 
+@session_id: 
+@type: 
+@order_key: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_favorites_delete ##### -->
+<para>
+
+</para>
+
+@bfav: 
+@session_id: 
+@fav: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_favorites_free_list ##### -->
+<para>
+
+</para>
+
+@fav_list: 
+
+
+<!-- ##### FUNCTION browser_favorites_reset_attributes ##### -->
+<para>
+
+</para>
+
+@fav: 
+
+
+<!-- ##### FUNCTION browser_favorites_get ##### -->
+<para>
+
+</para>
+
+@bfav: 
+@fav_id: 
+@out_fav: 
+@error: 
+@Returns: 
+
+
