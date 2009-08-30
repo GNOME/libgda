@@ -1,3 +1,8 @@
+libgda 4.0.4, 2009-08-30
+
+ - meta data corrections to the PostgreSQL provider
+ - SQL rendering corrections
+
 libgda 4.0.3, 2009-08-24
 
  - improved MySQL and PostgreSQL drivers (providers)
