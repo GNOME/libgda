@@ -18,3 +18,7 @@ libperspective_la_SOURCES = \
 	perspective-main.h \
 	query-exec-perspective.h \
 	query-exec-perspective.c
+
+langspecdir=$(datadir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/language-specs
+langspec_DATA= \
+	gda-sql.lang

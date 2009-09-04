@@ -25,6 +25,7 @@
 #define __QUERY_EDITOR_H__
 
 #include <gtk/gtkvbox.h>
+#include <libgda/libgda.h>
 
 G_BEGIN_DECLS
 
@@ -47,19 +48,59 @@ struct _QueryEditorClass {
 	GtkVBoxClass parent_class;
 
 	/* signals */
-	void (* text_changed) (QueryEditor editor);
+	void (* changed) (QueryEditor editor);
 };
 
-#define QUERY_EDITOR_LANGUAGE_SQL "sql"
+/*
+ * Query history item
+ */
+typedef struct {
+	gchar *sql;
+	GdaSet *params;
+	GObject *result;
+
+	gint ref_count;
+} QueryEditorHistoryItem;
+
+QueryEditorHistoryItem *query_editor_history_item_new (const gchar *sql, GdaSet *params, GObject *result);
+QueryEditorHistoryItem *query_editor_history_item_ref (QueryEditorHistoryItem *qih);
+void                    query_editor_history_item_unref (QueryEditorHistoryItem *qih);
+
+/*
+ * Query history batch
+ */
+typedef struct {
+	GTimeVal run_time;
+	GSList *hist_items; /* list of QueryEditorHistoryItem, ref held here */
+
+	gint ref_count;
+} QueryEditorHistoryBatch;
+
+QueryEditorHistoryBatch *query_editor_history_batch_new (GTimeVal run_time);
+QueryEditorHistoryBatch *query_editor_history_batch_ref (QueryEditorHistoryBatch *qib);
+void                     query_editor_history_batch_unref (QueryEditorHistoryBatch *qib);
+void                     query_editor_history_batch_add_item (QueryEditorHistoryBatch *qib,
+							      QueryEditorHistoryItem *qih);
+void                     query_editor_history_batch_del_item (QueryEditorHistoryBatch *qib,
+							      QueryEditorHistoryItem *qih);
+
+/*
+ * Editor modes
+ */
+typedef enum {
+	QUERY_EDITOR_READWRITE,
+	QUERY_EDITOR_READONLY,
+	QUERY_EDITOR_HISTORY
+} QueryEditorMode;
+
 
 GType      query_editor_get_type (void) G_GNUC_CONST;
 GtkWidget *query_editor_new (void);
 
-gboolean   query_editor_get_editable (QueryEditor *editor);
-void       query_editor_set_editable (QueryEditor *editor, gboolean editable);
-gboolean   query_editor_get_highlight (QueryEditor *editor);
-void       query_editor_set_highlight (QueryEditor *editor, gboolean highlight);
-void       query_editor_set_text (QueryEditor *editor, const gchar *text, gint len);
+/* common API */
+void       query_editor_set_mode (QueryEditor *editor, QueryEditorMode mode);
+QueryEditorMode query_editor_get_mode (QueryEditor *editor);
+
 gchar     *query_editor_get_all_text (QueryEditor *editor);
 gboolean   query_editor_load_from_file (QueryEditor *editor, const gchar *filename);
 gboolean   query_editor_save_to_file (QueryEditor *editor, const gchar *filename);
@@ -67,6 +108,18 @@ gboolean   query_editor_save_to_file (QueryEditor *editor, const gchar *filename
 void       query_editor_copy_clipboard (QueryEditor *editor);
 void       query_editor_cut_clipboard (QueryEditor *editor);
 void       query_editor_paste_clipboard (QueryEditor *editor);
+
+/* normal editor's API */
+void       query_editor_set_text (QueryEditor *editor, const gchar *text);
+
+/* history API */
+void       query_editor_start_history_batch (QueryEditor *editor, QueryEditorHistoryBatch *hist_batch);
+void       query_editor_add_history_item (QueryEditor *editor, QueryEditorHistoryItem *hist_item);
+QueryEditorHistoryItem *query_editor_get_current_history_item (QueryEditor *editor);
+QueryEditorHistoryBatch *query_editor_get_current_history_batch (QueryEditor *editor);
+
+void       query_editor_del_current_history_item (QueryEditor *editor);
+void       query_editor_del_history_batch (QueryEditor *editor, QueryEditorHistoryBatch *batch);
 
 G_END_DECLS
 
