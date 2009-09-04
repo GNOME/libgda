@@ -153,6 +153,13 @@ gdaui_basic_form_class_init (GdauiBasicFormClass * class)
 			      NULL, NULL,
 			      _gdaui_marshal_VOID__OBJECT_BOOLEAN, G_TYPE_NONE, 2,
 			      GDA_TYPE_HOLDER, G_TYPE_BOOLEAN);
+	/**
+	 * GdauiBasicForm::activated:
+	 * @form: GdauiBasicForm
+	 *
+	 * Emitted when the use has activated any of the #GdaDataEntry widget
+	 * in @form.
+	 */
 	gdaui_basic_form_signals[ACTIVATED] =
 		g_signal_new ("activated",
 			      G_TYPE_FROM_CLASS (object_class),
