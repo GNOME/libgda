@@ -1371,8 +1371,10 @@ gdaui_basic_form_clean (GdauiBasicForm *form)
 	if (form->priv->set) {
 		for (i = 0, list = form->priv->set->holders; 
 		     list; 
-		     i++, list = list->next)
-			g_signal_handler_disconnect (G_OBJECT (list->data), form->priv->signal_ids[i]);
+		     i++, list = list->next) {
+			if (form->priv->signal_ids[i] > 0)
+				g_signal_handler_disconnect (G_OBJECT (list->data), form->priv->signal_ids[i]);
+		}
 		g_free (form->priv->signal_ids);
 		form->priv->signal_ids = NULL;
 	}
