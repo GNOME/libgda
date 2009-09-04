@@ -231,20 +231,29 @@ event_after (GtkWidget *text_view, GdkEvent *ev, QueryEditor *editor)
 		if (tags) 
 			g_slist_free (tags);
 	}
-	else if ((ev->type == GDK_KEY_PRESS) && 
-		 (((((GdkEventKey*) ev)->keyval == GDK_Up)) || ((((GdkEventKey*) ev)->keyval == GDK_Down)))) {
-		HistItemData *nfocus = NULL;
-		if (editor->priv->hist_focus) {
-			if (((GdkEventKey*) ev)->keyval == GDK_Up)
-				nfocus = get_prev_hist_data (editor, editor->priv->hist_focus);
-			else
-				nfocus = get_next_hist_data (editor, editor->priv->hist_focus);
-			if (!nfocus)
-				nfocus = editor->priv->hist_focus;
+	else if (ev->type == GDK_KEY_PRESS) {
+		GdkEventKey *evkey = ((GdkEventKey*) ev);
+		if ((evkey->keyval == GDK_Up) || (evkey->keyval == GDK_Down)) {
+			HistItemData *nfocus = NULL;
+			if (editor->priv->hist_focus) {
+				if (((GdkEventKey*) ev)->keyval == GDK_Up)
+					nfocus = get_prev_hist_data (editor, editor->priv->hist_focus);
+				else
+					nfocus = get_next_hist_data (editor, editor->priv->hist_focus);
+				if (!nfocus)
+					nfocus = editor->priv->hist_focus;
+			}
+			
+			focus_on_hist_data (editor, nfocus);
+			return TRUE;
 		}
-
-		focus_on_hist_data (editor, nfocus);
-		return TRUE;
+		else if ((evkey->keyval == GDK_Delete) && editor->priv->hist_focus) {
+			if (editor->priv->hist_focus->item)
+				query_editor_del_current_history_item (editor);
+			else if (editor->priv->hist_focus->batch)
+				query_editor_del_history_batch (editor, editor->priv->hist_focus->batch);
+			return TRUE;
+		}
 	}
 	else
 		return FALSE;
