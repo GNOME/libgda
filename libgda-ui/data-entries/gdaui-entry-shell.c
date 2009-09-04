@@ -406,16 +406,19 @@ gdaui_entry_shell_refresh_status_display (GdauiEntryShell *shell)
 	if (shell->priv->value_is_null) {
 		normal = colors[0];
 		prelight = colors[1];
+		gtk_widget_set_tooltip_text (shell->priv->button, _("Value is NULL"));
 	}
 
 	if (shell->priv->value_is_default) {
 		normal = colors[2];
 		prelight = colors[3];
+		gtk_widget_set_tooltip_text (shell->priv->button, _("Value will be determined by default"));
 	}
 
 	if (shell->priv->value_is_non_valid) {
 		normal = colors[4];
 		prelight = colors[5];
+		gtk_widget_set_tooltip_text (shell->priv->button, _("Value is invalid"));
 	}
 
 	if (!normal)
