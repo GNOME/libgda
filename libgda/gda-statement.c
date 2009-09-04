@@ -784,6 +784,7 @@ default_render_insert (GdaSqlStatementInsert *stmt, GdaSqlRenderingContext *cont
 	GString *string;
 	gchar *str;
 	GSList *list;
+	gboolean pretty = context->flags & GDA_STATEMENT_SQL_PRETTY;
 
 	g_return_val_if_fail (stmt, NULL);
 	g_return_val_if_fail (GDA_SQL_ANY_PART (stmt)->type == GDA_SQL_ANY_STMT_INSERT, NULL);
@@ -817,7 +818,10 @@ default_render_insert (GdaSqlStatementInsert *stmt, GdaSqlRenderingContext *cont
 
 	/* values */
 	if (stmt->select) {
-		g_string_append_c (string, ' ');
+		if (pretty)
+			g_string_append_c (string, '\n');
+		else
+			g_string_append_c (string, ' ');
 		str = context->render_select (GDA_SQL_ANY_PART (stmt->select), context, error);
 		if (!str) goto err;
 		g_string_append (string, str);
@@ -826,8 +830,12 @@ default_render_insert (GdaSqlStatementInsert *stmt, GdaSqlRenderingContext *cont
 	else {
 		for (list = stmt->values_list; list; list = list->next) {
 			GSList *rlist;
-			if (list == stmt->values_list)
-				g_string_append (string, " VALUES");
+			if (list == stmt->values_list) {
+				if (pretty)
+					g_string_append (string, "\nVALUES");
+				else
+					g_string_append (string, " VALUES");
+			}
 			else
 				g_string_append_c (string, ',');
 			for (rlist = (GSList*) list->data; rlist; rlist = rlist->next) {
@@ -837,6 +845,8 @@ default_render_insert (GdaSqlStatementInsert *stmt, GdaSqlRenderingContext *cont
 					g_string_append (string, ", ");
 				str = context->render_expr ((GdaSqlExpr*) rlist->data, context, NULL, NULL, error);
 				if (!str) goto err;
+				if (pretty && (rlist != (GSList*) list->data))
+					g_string_append (string, "\n\t");
 				g_string_append (string, str);
 				g_free (str);
 			}
@@ -895,6 +905,7 @@ default_render_update (GdaSqlStatementUpdate *stmt, GdaSqlRenderingContext *cont
 	GString *string;
 	gchar *str;
 	GSList *flist, *elist;
+	gboolean pretty = context->flags & GDA_STATEMENT_SQL_PRETTY;
 
 	g_return_val_if_fail (stmt, NULL);
 	g_return_val_if_fail (GDA_SQL_ANY_PART (stmt)->type == GDA_SQL_ANY_STMT_UPDATE, NULL);
@@ -911,10 +922,18 @@ default_render_update (GdaSqlStatementUpdate *stmt, GdaSqlRenderingContext *cont
 	g_free (str);
 
 	/* columns set */
-	g_string_append (string, " SET ");
-	for (flist = stmt->fields_list, elist = stmt->expr_list; flist && elist; flist = flist->next, elist = elist->next) {
-		if (flist != stmt->fields_list)
+	if (pretty)
+		g_string_append (string, "\nSET ");
+	else
+		g_string_append (string, " SET ");
+	for (flist = stmt->fields_list, elist = stmt->expr_list;
+	     flist && elist;
+	     flist = flist->next, elist = elist->next) {
+		if (flist != stmt->fields_list) {
 			g_string_append (string, ", ");
+			if (pretty)
+				g_string_append (string, "\n\t");
+		}
 		str = context->render_field (GDA_SQL_ANY_PART (flist->data), context, error);
 		if (!str) goto err;
 		g_string_append (string, str);
@@ -928,7 +947,10 @@ default_render_update (GdaSqlStatementUpdate *stmt, GdaSqlRenderingContext *cont
 
 	/* cond */
 	if (stmt->cond) {
-		g_string_append (string, " WHERE ");
+		if (pretty)
+			g_string_append (string, "\nWHERE ");
+		else
+			g_string_append (string, " WHERE ");
 		str = context->render_expr (stmt->cond, context, NULL, NULL, error);
 		if (!str) goto err;
 		g_string_append (string, str);
@@ -1017,6 +1039,7 @@ default_render_select (GdaSqlStatementSelect *stmt, GdaSqlRenderingContext *cont
 	GString *string;
 	gchar *str;
 	GSList *list;
+	gboolean pretty = context->flags & GDA_STATEMENT_SQL_PRETTY;
 
 	g_return_val_if_fail (stmt, NULL);
 	g_return_val_if_fail (GDA_SQL_ANY_PART (stmt)->type == GDA_SQL_ANY_STMT_SELECT, NULL);
@@ -1033,6 +1056,8 @@ default_render_select (GdaSqlStatementSelect *stmt, GdaSqlRenderingContext *cont
 			g_string_append_c (string, ' ');
 			g_free (str);
 		}
+		if (pretty)
+			g_string_append_c (string, '\n');
 	}
 	
 	/* selected expressions */
@@ -1041,6 +1066,8 @@ default_render_select (GdaSqlStatementSelect *stmt, GdaSqlRenderingContext *cont
 		if (!str) goto err;
 		if (list != stmt->expr_list)
 			g_string_append (string, ", ");
+		if (pretty)
+			g_string_append (string, "\n\t");
 		g_string_append (string, str);
 		g_free (str);
 	}
@@ -1049,14 +1076,20 @@ default_render_select (GdaSqlStatementSelect *stmt, GdaSqlRenderingContext *cont
 	if (stmt->from) {
 		str = context->render_select_from (GDA_SQL_ANY_PART (stmt->from), context, error);
 		if (!str) goto err;
-		g_string_append_c (string, ' ');
+		if (pretty)
+			g_string_append_c (string, '\n');
+		else
+			g_string_append_c (string, ' ');
 		g_string_append (string, str);
 		g_free (str);
 	}
 
 	/* WHERE */
 	if (stmt->where_cond) {
-		g_string_append (string, " WHERE ");
+		if (pretty)
+			g_string_append (string, "\nWHERE ");
+		else
+			g_string_append (string, " WHERE ");
 		str = context->render_expr (stmt->where_cond, context, NULL, NULL, error);
 		if (!str) goto err;
 		g_string_append (string, str);
@@ -1069,15 +1102,22 @@ default_render_select (GdaSqlStatementSelect *stmt, GdaSqlRenderingContext *cont
 		if (!str) goto err;
 		if (list != stmt->group_by)
 			g_string_append (string, ", ");
-		else
-			g_string_append (string, " GROUP BY ");
+		else {
+			if (pretty)
+				g_string_append (string, "\nGROUP BY ");
+			else
+				g_string_append (string, " GROUP BY ");
+		}
 		g_string_append (string, str);
 		g_free (str);
 	}
 
 	/* HAVING */
 	if (stmt->having_cond) {
-		g_string_append (string, " HAVING ");
+		if (pretty)
+			g_string_append (string, "\nHAVING ");
+		else
+			g_string_append (string, " HAVING ");
 		str = context->render_expr (stmt->having_cond, context, NULL, NULL, error);
 		if (!str) goto err;
 		g_string_append (string, str);
@@ -1090,8 +1130,12 @@ default_render_select (GdaSqlStatementSelect *stmt, GdaSqlRenderingContext *cont
 		if (!str) goto err;
 		if (list != stmt->order_by)
 			g_string_append (string, ", ");
-		else
-			g_string_append (string, " ORDER BY ");
+		else {
+			if (pretty)
+				g_string_append (string, "\nORDER BY ");
+			else
+				g_string_append (string, " ORDER BY ");
+		}
 		g_string_append (string, str);
 		g_free (str);
 	}
@@ -1837,6 +1881,7 @@ default_render_select_join (GdaSqlSelectJoin *join, GdaSqlRenderingContext *cont
 {
 	GString *string;
 	gchar *str;
+	gboolean pretty = context->flags & GDA_STATEMENT_SQL_PRETTY;
 
 	g_return_val_if_fail (join, NULL);
 	g_return_val_if_fail (GDA_SQL_ANY_PART (join)->type == GDA_SQL_ANY_SQL_SELECT_JOIN, NULL);
@@ -1849,22 +1894,40 @@ default_render_select_join (GdaSqlSelectJoin *join, GdaSqlRenderingContext *cont
 
 	switch (join->type) {
 	case GDA_SQL_SELECT_JOIN_CROSS:
-		string = g_string_new (",");
+		if (pretty)
+			string = g_string_new (",\n\t");
+		else
+			string = g_string_new (",");
 		break;
         case GDA_SQL_SELECT_JOIN_NATURAL:
-		string = g_string_new ("NATURAL JOIN");
+		if (pretty)
+			string = g_string_new ("\n\tNATURAL JOIN");
+		else
+			string = g_string_new ("NATURAL JOIN");
 		break;
         case GDA_SQL_SELECT_JOIN_INNER:
-		string = g_string_new ("INNER JOIN");
+		if (pretty)
+			string = g_string_new ("\n\tINNER JOIN");
+		else
+			string = g_string_new ("INNER JOIN");
 		break;
         case GDA_SQL_SELECT_JOIN_LEFT:
-		string = g_string_new ("LEFT JOIN");
+		if (pretty)
+			string = g_string_new ("\n\tLEFT JOIN");
+		else
+			string = g_string_new ("LEFT JOIN");
 		break;
         case GDA_SQL_SELECT_JOIN_RIGHT:
-		string = g_string_new ("RIGHT JOIN");
+		if (pretty)
+			string = g_string_new ("\n\tRIGHT JOIN");
+		else
+			string = g_string_new ("RIGHT JOIN");
 		break;
         case GDA_SQL_SELECT_JOIN_FULL:
-		string = g_string_new ("FULL JOIN");
+		if (pretty)
+			string = g_string_new ("\n\tFULL JOIN");
+		else
+			string = g_string_new ("FULL JOIN");
 		break;
 	default:
 		g_assert_not_reached ();
@@ -1886,7 +1949,8 @@ default_render_select_join (GdaSqlSelectJoin *join, GdaSqlRenderingContext *cont
 	}
 	str = context->render_select_target (GDA_SQL_ANY_PART (target), context, error);
 	if (!str) goto err;
-	g_string_append_c (string, ' ');
+	if (!pretty)
+		g_string_append_c (string, ' ');
 	g_string_append (string, str);
 	g_free (str);
 
@@ -1939,6 +2003,7 @@ default_render_select_from (GdaSqlSelectFrom *from, GdaSqlRenderingContext *cont
 	gchar *str;
 	GSList *tlist;
 	gint i;
+	gboolean pretty = context->flags & GDA_STATEMENT_SQL_PRETTY;
 
 	g_return_val_if_fail (from, NULL);
 	g_return_val_if_fail (GDA_SQL_ANY_PART (from)->type == GDA_SQL_ANY_SQL_SELECT_FROM, NULL);
@@ -1955,14 +2020,20 @@ default_render_select_from (GdaSqlSelectFrom *from, GdaSqlRenderingContext *cont
 		if (join) {
 			str = context->render_select_join (GDA_SQL_ANY_PART (join), context, error);
 			if (!str) goto err;
-			g_string_append_c (string, ' ');
+			if (!pretty)
+				g_string_append_c (string, ' ');
 			g_string_append (string, str);
 			g_free (str);
-			g_string_append_c (string, ' ');
+			if (!pretty)
+				g_string_append_c (string, ' ');
 		}
 		else {
-			if (tlist != from->targets)
-				g_string_append (string, ", ");
+			if (tlist != from->targets) {
+				if (pretty)
+					g_string_append (string, ",\n\t");
+				else
+					g_string_append (string, ", ");
+			}
 			str = context->render_select_target (GDA_SQL_ANY_PART (tlist->data), context, error);
 			if (!str) goto err;
 			g_string_append (string, str);
