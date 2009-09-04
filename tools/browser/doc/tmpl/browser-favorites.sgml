@@ -34,6 +34,24 @@ Favorites management
 @BROWSER_FAVORITES_TABLES: 
 @BROWSER_FAVORITES_DIAGRAMS: 
 
+<!-- ##### MACRO BROWSER_FAVORITES_NB_TYPES ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### STRUCT BrowserFavoritesAttributes ##### -->
+<para>
+
+</para>
+
+@id: 
+@type: 
+@name: 
+@descr: 
+@contents: 
+
 <!-- ##### STRUCT BrowserFavorites ##### -->
 <para>
 
@@ -47,22 +65,13 @@ Favorites management
 
 @browserfavorites: the object which received the signal.
 
-<!-- ##### STRUCT BrowserFavoritesAttributes ##### -->
+<!-- ##### FUNCTION browser_favorites_new ##### -->
 <para>
 
 </para>
 
-@id: 
-@type: 
-@name: 
-@descr: 
-@contents: 
-
-<!-- ##### MACRO ORDER_KEY_SCHEMA ##### -->
-<para>
-
-</para>
-
+@store: 
+@Returns: 
 
 
 <!-- ##### FUNCTION browser_favorites_add ##### -->

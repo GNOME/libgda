@@ -22,7 +22,7 @@ HFILE_GLOB=
 CFILE_GLOB=
 
 # Header files to ignore when scanning
-IGNORE_HFILES= marshal.h canvas dummy-perspective schema-browser
+IGNORE_HFILES= marshal.h canvas dummy-perspective schema-browser query-exec
 
 # CFLAGS and LDFLAGS for compiling scan program. Only needed
 # if $(DOC_MODULE).types is non-empty.

@@ -125,22 +125,6 @@ Singleton holding the global browser information
 
 
 
-<!-- ##### STRUCT BrowserPerspectiveFactory ##### -->
-<para>
-
-</para>
-
-@perspective_name: 
-@perspective_create: 
-
-<!-- ##### MACRO BROWSER_PERSPECTIVE_FACTORY ##### -->
-<para>
-
-</para>
-
-@x: 
-
-
 <!-- ##### FUNCTION browser_core_get_default_factory ##### -->
 <para>
 
