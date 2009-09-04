@@ -270,9 +270,6 @@ query_editor_init (QueryEditor *editor, QueryEditorClass *klass)
 
 	/* set up widgets */
 	editor->priv->scrolled_window = gtk_scrolled_window_new (NULL, NULL);
-        gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (editor->priv->scrolled_window),
-                                        GTK_POLICY_AUTOMATIC,
-                                        GTK_POLICY_AUTOMATIC);
         gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (editor->priv->scrolled_window),
 					     GTK_SHADOW_ETCHED_OUT);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (editor->priv->scrolled_window),
@@ -320,9 +317,13 @@ query_editor_map (GtkWidget *widget)
 
 	if (QUERY_EDITOR (widget)->priv->mode == QUERY_EDITOR_HISTORY) {
 		GtkStyle *style;
+		GdkColor color;
 		style = gtk_widget_get_style (widget);
-		gtk_widget_modify_base (QUERY_EDITOR (widget)->priv->text,
-					GTK_STATE_NORMAL, &style->bg[GTK_STATE_NORMAL]);
+		color = style->bg[GTK_STATE_NORMAL];
+		color.red += (65535 - color.red) / 2;
+		color.green += (65535 - color.green) / 2;
+		color.blue += (65535 - color.blue) / 2;
+		gtk_widget_modify_base (QUERY_EDITOR (widget)->priv->text, GTK_STATE_NORMAL, &color);
 	}
 }
 
@@ -479,9 +480,13 @@ query_editor_set_mode (QueryEditor *editor, QueryEditorMode mode)
 
 	if (mode == QUERY_EDITOR_HISTORY) {
 		GtkStyle *style;
+		GdkColor color;
 		style = gtk_widget_get_style ((GtkWidget*) editor);
-		gtk_widget_modify_base (editor->priv->text,
-					GTK_STATE_NORMAL, &style->bg[GTK_STATE_NORMAL]);
+		color = style->bg[GTK_STATE_NORMAL];
+		color.red += (65535 - color.red) / 2;
+		color.green += (65535 - color.green) / 2;
+		color.blue += (65535 - color.blue) / 2;
+		gtk_widget_modify_base (editor->priv->text, GTK_STATE_NORMAL, &color);
 
 		editor->priv->hash = g_hash_table_new_full (NULL, NULL, NULL,
 							    (GDestroyNotify) hist_item_data_unref);
@@ -572,13 +577,12 @@ focus_on_hist_data (QueryEditor *editor, HistItemData *hdata)
 }
 
 const char *
-get_date_format (time_t time, gint *out_timer_secs)
+get_date_format (time_t time)
 {
         static char timebuf[200];
 	GTimeVal now;
 	unsigned long diff, tmp;
 
-	*out_timer_secs = 60;
 	g_get_current_time (&now);
 
 	if (now.tv_sec < time)
@@ -598,14 +602,15 @@ get_date_format (time_t time, gint *out_timer_secs)
 	/* Turn it into hours */
 	tmp = diff / 3600;
 	if (tmp < 24) {
-		snprintf (timebuf, sizeof(timebuf), _("%lu hours ago\n"), tmp);
-		*out_timer_secs = 3600;
+		snprintf (timebuf, sizeof(timebuf), ngettext ("%lu hour ago\n",
+							      "%lu hours ago\n", tmp), tmp);
 		return timebuf;
 	}
 	/* Turn it into days */
 	tmp = diff / 86400;
-	snprintf (timebuf, sizeof(timebuf), _("%lu days ago:\n"), tmp);
-	*out_timer_secs = 86400;
+	snprintf (timebuf, sizeof(timebuf), ngettext ("%lu days ago\n",
+						      "%lu days ago\n", tmp), tmp);
+
 	return timebuf;
 }
 
@@ -664,9 +669,8 @@ query_editor_start_history_batch (QueryEditor *editor, QueryEditorHistoryBatch *
 	
 	if (!empty) { 
 		/* insert text */
-		gint timer_res;
 		gtk_text_buffer_insert_with_tags (buffer, &iter,
-						  get_date_format (hist_batch->run_time.tv_sec, &timer_res),
+						  get_date_format (hist_batch->run_time.tv_sec),
 						  -1, tag, NULL);
 	}
 
@@ -687,7 +691,6 @@ timestamps_update_cb (QueryEditor *editor)
 	GSList *list;
 	GtkTextBuffer *buffer;
 	GtkTextIter start, end;
-	gboolean timer_changed = FALSE;
 
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->text));
 	for (list = editor->priv->batches_list; list; list = list->next) {
@@ -703,21 +706,12 @@ timestamps_update_cb (QueryEditor *editor)
 			gtk_text_buffer_delete (buffer, &start, &end);
 			
 			/* insert text */
-			gint timer_res;
 			gtk_text_buffer_get_iter_at_mark (buffer, &start, hdata->start_mark);
 			gtk_text_buffer_insert_with_tags (buffer, &start,
-							  get_date_format (batch->run_time.tv_sec, &timer_res),
+							  get_date_format (batch->run_time.tv_sec),
 							  -1, hdata->tag, NULL);
 			gtk_text_buffer_delete_mark (buffer, hdata->end_mark);
 			hdata->end_mark = gtk_text_buffer_create_mark (buffer, NULL, &start, TRUE);
-
-			if (! timer_changed) {
-				/* modify timer */
-				g_source_remove (editor->priv->ts_timeout_id);
-				editor->priv->ts_timeout_id  = g_timeout_add_seconds (timer_res,
-							       (GSourceFunc) timestamps_update_cb, editor);
-				timer_changed = TRUE;
-			}
 		}
 	}
 	return TRUE; /* don't remove timeout */
@@ -763,7 +757,7 @@ query_editor_add_history_item (QueryEditor *editor, QueryEditorHistoryItem *hist
 
 		
 	tag = gtk_text_buffer_create_tag (buffer, NULL,
-					  "scale", PANGO_SCALE_SMALL,
+					  "scale", PANGO_SCALE_X_SMALL,
 					  "foreground", "gray",
 					  "foreground-set", TRUE, NULL);
 	hdata->tag = g_object_ref (tag);
@@ -788,6 +782,7 @@ query_editor_add_history_item (QueryEditor *editor, QueryEditorHistoryItem *hist
 	hdata->end_mark = gtk_text_buffer_create_mark (buffer, NULL, &iter, TRUE);
 
 	focus_on_hist_data (editor, hdata);
+	gtk_text_buffer_get_end_iter (buffer, &iter);
 	gtk_text_view_scroll_to_iter (GTK_TEXT_VIEW (editor->priv->text),
 				      &iter, 0., FALSE, 0., 0.);
 }

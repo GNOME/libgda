@@ -31,7 +31,19 @@
 #include "../browser-page.h"
 #include "../browser-stock-icons.h"
 #include "query-editor.h"
+#include "../common/popup-container.h"
 #include <libgda/sql-parser/gda-sql-parser.h>
+#include <libgda-ui/libgda-ui.h>
+
+#define VARIABLES_HELP _("This area allows to give values to\n" \
+			 "variables defined in the SQL code\n"		\
+			 "using the following syntax:\n"		\
+			 "<b><tt>##&lt;variable name&gt;::&lt;type&gt;[::null]</tt></b>\n" \
+			 "For example:\n"				\
+			 "<span foreground=\"#4e9a06\"><b><tt>##id::int</tt></b></span>\n      defines <b>id</b> as a non NULL integer\n" \
+			 "<span foreground=\"#4e9a06\"><b><tt>##age::string::null</tt></b></span>\n      defines <b>age</b> as a a string\n\n" \
+			 "Valid types are: <tt>string</tt>, <tt>boolean</tt>, <tt>int</tt>,\n" \
+			 "<tt>date</tt>, <tt>time</tt>, <tt>timestamp</tt>, <tt>guint</tt>")
 
 struct _QueryConsolePrivate {
 	BrowserConnection *bcnc;
@@ -39,9 +51,16 @@ struct _QueryConsolePrivate {
 
 	CcGrayBar *header;
 	GtkWidget *vpaned; /* top=>query editor, bottom=>results */
+
 	QueryEditor *editor;
+	guint params_compute_id; /* timout ID to compute params */
+	GdaSet *past_params; /* keeps values given to old params */
+	GdaSet *params; /* execution params */
+	GtkWidget *params_popup; /* popup shown when invalid params are required */
 
 	GtkToggleButton *params_toggle;
+	GtkWidget *params_top;
+	GtkWidget *params_form_box;
 	GtkWidget *params_form;
 	
 	QueryEditor *history;
@@ -87,9 +106,9 @@ query_console_show_all (GtkWidget *widget)
 	GTK_WIDGET_CLASS (parent_class)->show_all (widget);
 
 	if (gtk_toggle_button_get_active (tconsole->priv->params_toggle))
-		gtk_widget_show (tconsole->priv->params_form);
+		gtk_widget_show (tconsole->priv->params_top);
 	else
-		gtk_widget_hide (tconsole->priv->params_form);
+		gtk_widget_hide (tconsole->priv->params_top);
 }
 
 static void
@@ -105,6 +124,10 @@ query_console_init (QueryConsole *tconsole, QueryConsoleClass *klass)
 {
 	tconsole->priv = g_new0 (QueryConsolePrivate, 1);
 	tconsole->priv->parser = NULL;
+	tconsole->priv->params_compute_id = 0;
+	tconsole->priv->past_params = NULL;
+	tconsole->priv->params = NULL;
+	tconsole->priv->params_popup = NULL;
 }
 
 static void
@@ -118,6 +141,14 @@ query_console_dispose (GObject *object)
 			g_object_unref (tconsole->priv->bcnc);
 		if (tconsole->priv->parser)
 			g_object_unref (tconsole->priv->parser);
+		if (tconsole->priv->past_params)
+			g_object_unref (tconsole->priv->past_params);
+		if (tconsole->priv->params)
+			g_object_unref (tconsole->priv->params);
+		if (tconsole->priv->params_compute_id)
+			g_source_remove (tconsole->priv->params_compute_id);
+		if (tconsole->priv->params_popup)
+			gtk_widget_destroy (tconsole->priv->params_popup);
 
 		g_free (tconsole->priv);
 		tconsole->priv = NULL;
@@ -159,6 +190,7 @@ query_console_get_type (void)
 static GtkWidget *make_small_button (gboolean is_toggle,
 				     const gchar *label, const gchar *stock_id, const gchar *tooltip);
 
+static void editor_changed_cb (QueryEditor *editor, QueryConsole *tconsole);
 static void sql_clear_clicked_cb (GtkButton *button, QueryConsole *tconsole);
 static void sql_variables_clicked_cb (GtkToggleButton *button, QueryConsole *tconsole);
 static void sql_execute_clicked_cb (GtkButton *button, QueryConsole *tconsole);
@@ -199,29 +231,57 @@ query_console_new (BrowserConnection *bcnc)
 	/* top paned for the editor */
 	GtkWidget *wid, *vbox, *hbox, *bbox, *hpaned, *button;
 
+	hbox = gtk_hbox_new (FALSE, 0);
+	gtk_paned_add1 (GTK_PANED (vpaned), hbox);
+
+	hpaned = gtk_hpaned_new ();
+	gtk_box_pack_start (GTK_BOX (hbox), hpaned, TRUE, TRUE, 0);
+
 	vbox = gtk_vbox_new (FALSE, 0);
-	gtk_paned_add1 (GTK_PANED (vpaned), vbox);
+	gtk_paned_pack1 (GTK_PANED (hpaned), vbox, TRUE, FALSE);
 
 	wid = gtk_label_new ("");
 	str = g_strdup_printf ("<b>%s</b>", _("SQL code to execute:"));
 	gtk_label_set_markup (GTK_LABEL (wid), str);
 	g_free (str);
 	gtk_misc_set_alignment (GTK_MISC (wid), 0., -1);
+	gtk_widget_set_tooltip_text (wid, _("Enter SQL code to execute\nwhich can be specific to the database to\n"
+					    "which the connection is opened"));
 	gtk_box_pack_start (GTK_BOX (vbox), wid, FALSE, FALSE, 0);
-
-	hbox = gtk_hbox_new (FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
-
-	hpaned = gtk_hpaned_new ();
-	gtk_box_pack_start (GTK_BOX (hbox), hpaned, TRUE, TRUE, 0);
 
 	wid = query_editor_new ();
 	tconsole->priv->editor = QUERY_EDITOR (wid);
-	gtk_paned_pack1 (GTK_PANED (hpaned), wid, TRUE, FALSE);
+	gtk_box_pack_start (GTK_BOX (vbox), wid, TRUE, TRUE, 0);
+	g_signal_connect (wid, "changed",
+			  G_CALLBACK (editor_changed_cb), tconsole);
+	gtk_widget_set_size_request (wid, -1, 200);
 	
-	wid = gtk_label_new ("Here goes the\nparams' form");
+	vbox = gtk_vbox_new (FALSE, 0);
+	tconsole->priv->params_top = vbox;
+	gtk_paned_pack2 (GTK_PANED (hpaned), vbox, FALSE, TRUE);
+	
+	wid = gtk_label_new ("");
+	str = g_strdup_printf ("<b>%s</b>", _("Variables' values:"));
+	gtk_label_set_markup (GTK_LABEL (wid), str);
+	g_free (str);
+	gtk_misc_set_alignment (GTK_MISC (wid), 0., -1);
+	gtk_box_pack_start (GTK_BOX (vbox), wid, FALSE, FALSE, 0);
+	
+	GtkWidget *sw;
+	sw = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_NONE);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
+					GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+	tconsole->priv->params_form_box = gtk_viewport_new (NULL, NULL);
+	gtk_viewport_set_shadow_type (GTK_VIEWPORT (tconsole->priv->params_form_box), GTK_SHADOW_NONE);
+	gtk_container_add (GTK_CONTAINER (sw), tconsole->priv->params_form_box);
+	gtk_box_pack_start (GTK_BOX (vbox), sw, TRUE, TRUE, 0);
+	gtk_widget_set_size_request (tconsole->priv->params_form_box, 250, -1);
+
+	wid = gtk_label_new ("");
+	gtk_label_set_markup (GTK_LABEL (wid), VARIABLES_HELP);
+	gtk_container_add (GTK_CONTAINER (tconsole->priv->params_form_box), wid);
 	tconsole->priv->params_form = wid;
-	gtk_paned_pack2 (GTK_PANED (hpaned), wid, FALSE, TRUE);
 	
 	bbox = gtk_vbutton_box_new ();
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (bbox), GTK_BUTTONBOX_END);
@@ -243,7 +303,9 @@ query_console_new (BrowserConnection *bcnc)
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (sql_execute_clicked_cb), tconsole);
 	
-	button = make_small_button (FALSE, _("Indent"), GTK_STOCK_INDENT, _("Indent SQL in editor"));
+	button = make_small_button (FALSE, _("Indent"), GTK_STOCK_INDENT, _("Indent SQL in editor\n"
+									    "and make the code more readable\n"
+									    "(removes comments)"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (sql_indent_clicked_cb), tconsole);
@@ -291,7 +353,7 @@ query_console_new (BrowserConnection *bcnc)
 
 	/* show everything */
         gtk_widget_show_all (vpaned);
-	gtk_widget_hide (tconsole->priv->params_form);
+	gtk_widget_hide (tconsole->priv->params_top);
 
 	return (GtkWidget*) tconsole;
 }
@@ -335,13 +397,118 @@ make_small_button (gboolean is_toggle, const gchar *label, const gchar *stock_id
 	return button;
 }
 
+static gboolean
+compute_params (QueryConsole *tconsole)
+{
+	gchar *sql;
+	GdaBatch *batch;
+
+	if (tconsole->priv->params) {
+		if (tconsole->priv->past_params) {
+			gda_set_merge_with_set (tconsole->priv->params, tconsole->priv->past_params);
+			g_object_unref (tconsole->priv->past_params);
+			tconsole->priv->past_params = tconsole->priv->params;
+		}
+		else
+			tconsole->priv->past_params = tconsole->priv->params;
+	}
+
+	tconsole->priv->params = NULL;
+	if (tconsole->priv->params_form) {
+		gtk_widget_destroy (tconsole->priv->params_form);
+		tconsole->priv->params_form = NULL;		
+	}
+
+	if (!tconsole->priv->parser)
+		tconsole->priv->parser = browser_connection_create_parser (tconsole->priv->bcnc);
+
+	sql = query_editor_get_all_text (tconsole->priv->editor);
+	batch = gda_sql_parser_parse_string_as_batch (tconsole->priv->parser, sql, NULL, NULL);
+	g_free (sql);
+	if (batch) {
+		GError *error = NULL;
+		gboolean show_variables = FALSE;
+
+		if (gda_batch_get_parameters (batch, &(tconsole->priv->params), &error)) {
+			if (tconsole->priv->params) {
+				show_variables = TRUE;
+				tconsole->priv->params_form = gdaui_basic_form_new (tconsole->priv->params);
+				gdaui_basic_form_show_entry_actions (GDAUI_BASIC_FORM (tconsole->priv->params_form),
+								     TRUE);
+			}
+			else {
+				tconsole->priv->params_form = gtk_label_new ("");
+				gtk_label_set_markup (GTK_LABEL (tconsole->priv->params_form), VARIABLES_HELP);
+			}
+		}
+		else {
+			show_variables = TRUE;
+			tconsole->priv->params_form = gtk_label_new ("Error!");
+		}
+		gtk_container_add (GTK_CONTAINER (tconsole->priv->params_form_box), tconsole->priv->params_form);
+		gtk_widget_show (tconsole->priv->params_form);
+		g_object_unref (batch);
+
+		if (tconsole->priv->past_params && tconsole->priv->params) {
+			/* copy the values from tconsole->priv->past_params to tconsole->priv->params */
+			GSList *list;
+			for (list = tconsole->priv->params->holders; list; list = list->next) {
+				GdaHolder *oldh, *newh;
+				newh = GDA_HOLDER (list->data);
+				oldh = gda_set_get_holder (tconsole->priv->past_params, gda_holder_get_id  (newh));
+				if (oldh) {
+					GType otype, ntype;
+					otype = gda_holder_get_g_type (oldh);
+					ntype = gda_holder_get_g_type (newh);
+					if (otype == ntype) {
+						const GValue *ovalue;
+						ovalue = gda_holder_get_value (oldh);
+						gda_holder_set_value (newh, ovalue, NULL);
+					}
+					else if (g_value_type_transformable (otype, ntype)) {
+						const GValue *ovalue;
+						GValue *nvalue;
+						ovalue = gda_holder_get_value (oldh);
+						nvalue = gda_value_new (ntype);
+						if (g_value_transform (ovalue, nvalue))
+							gda_holder_take_value (newh, nvalue, NULL);
+						else
+							gda_value_free  (nvalue);
+					}
+				}
+			}
+		}
+
+		if (show_variables && !gtk_toggle_button_get_active (tconsole->priv->params_toggle))
+			gtk_toggle_button_set_active (tconsole->priv->params_toggle, TRUE);
+	}
+	else {
+		tconsole->priv->params_form = gtk_label_new ("");
+		gtk_label_set_markup (GTK_LABEL (tconsole->priv->params_form), VARIABLES_HELP);
+		gtk_container_add (GTK_CONTAINER (tconsole->priv->params_form_box), tconsole->priv->params_form);
+		gtk_widget_show (tconsole->priv->params_form);
+	}
+	
+	/* remove timeout */
+	tconsole->priv->params_compute_id = 0;
+	return FALSE;
+}
+
+static void
+editor_changed_cb (QueryEditor *editor, QueryConsole *tconsole)
+{
+	if (tconsole->priv->params_compute_id)
+		g_source_remove (tconsole->priv->params_compute_id);
+	tconsole->priv->params_compute_id = g_timeout_add_seconds (1, (GSourceFunc) compute_params, tconsole);
+}
+		
 static void
 sql_variables_clicked_cb (GtkToggleButton *button, QueryConsole *tconsole)
 {
 	if (gtk_toggle_button_get_active (button))
-		gtk_widget_show (tconsole->priv->params_form);
+		gtk_widget_show (tconsole->priv->params_top);
 	else
-		gtk_widget_hide (tconsole->priv->params_form);
+		gtk_widget_hide (tconsole->priv->params_top);
 }
 
 static void
@@ -389,12 +556,118 @@ sql_indent_clicked_cb (GtkButton *button, QueryConsole *tconsole)
 }
 
 static void
+popup_container_position_func (PopupContainer *cont, gint *out_x, gint *out_y)
+{
+	GtkWidget *console, *top;
+	gint x, y;
+        GtkRequisition req;
+
+	console = g_object_get_data (G_OBJECT (cont), "console");
+	top = gtk_widget_get_toplevel (console);	
+        gtk_widget_size_request ((GtkWidget*) cont, &req);
+        gdk_window_get_origin (top->window, &x, &y);
+
+	x += (top->allocation.width - req.width) / 2;
+	y += (top->allocation.height - req.height) / 2;
+
+        if (x < 0)
+                x = 0;
+
+        if (y < 0)
+                y = 0;
+
+	*out_x = x;
+	*out_y = y;
+}
+
+static void
+params_form_changed_cb (GdauiBasicForm *form, GdaHolder *param, gboolean is_user_modif, QueryConsole *tconsole)
+{
+	/* if all params are valid => authorize the execute button */
+	GtkWidget *button;
+
+	button = g_object_get_data (G_OBJECT (tconsole->priv->params_popup), "exec");
+	gtk_widget_set_sensitive (button,
+				  gdaui_basic_form_is_valid (form));
+}
+
+static void
 sql_execute_clicked_cb (GtkButton *button, QueryConsole *tconsole)
 {
 	gchar *sql;
 	const gchar *remain;
 	GdaBatch *batch;
 	GError *error = NULL;
+
+	/* compute parameters if necessary */
+	if (tconsole->priv->params_compute_id > 0) {
+		g_source_remove (tconsole->priv->params_compute_id);
+		tconsole->priv->params_compute_id = 0;
+		compute_params (tconsole);
+	}
+
+	if (tconsole->priv->params) {
+		if (! gdaui_basic_form_is_valid (GDAUI_BASIC_FORM (tconsole->priv->params_form))) {
+			GtkWidget *form, *cont;
+			if (! tconsole->priv->params_popup) {
+				tconsole->priv->params_popup = popup_container_new_with_func (popup_container_position_func);
+				g_object_set_data (G_OBJECT (tconsole->priv->params_popup), "console", tconsole);
+
+				GtkWidget *vbox, *label, *bbox, *button;
+				gchar *str;
+				vbox = gtk_vbox_new (FALSE, 0);
+				gtk_container_add (GTK_CONTAINER (tconsole->priv->params_popup), vbox);
+				gtk_container_set_border_width (GTK_CONTAINER (tconsole->priv->params_popup), 10);
+
+				label = gtk_label_new ("");
+				str = g_strdup_printf ("<b>%s</b>:\n<small>%s</small>",
+						       _("Invalid variable's contents"),
+						       _("assign values to the following variables"));
+				gtk_label_set_markup (GTK_LABEL (label), str);
+				g_free (str);
+				gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
+
+				cont = gtk_vbox_new (FALSE, 0);
+				gtk_box_pack_start (GTK_BOX (vbox), cont, FALSE, FALSE, 10);
+				g_object_set_data (G_OBJECT (tconsole->priv->params_popup), "cont", cont);
+
+				bbox = gtk_hbutton_box_new ();
+				gtk_box_pack_start (GTK_BOX (vbox), bbox, FALSE, FALSE, 10);
+				gtk_button_box_set_layout (GTK_BUTTON_BOX (bbox), GTK_BUTTONBOX_END);
+				
+				button = gtk_button_new_from_stock (GTK_STOCK_EXECUTE);
+				gtk_box_pack_start (GTK_BOX (bbox), button, TRUE, TRUE, 0);
+				g_signal_connect_swapped (button, "clicked",
+							  G_CALLBACK (gtk_widget_hide), tconsole->priv->params_popup);
+				g_signal_connect (button, "clicked",
+						  G_CALLBACK (sql_execute_clicked_cb), tconsole);
+				gtk_widget_set_sensitive (button, FALSE);
+				g_object_set_data (G_OBJECT (tconsole->priv->params_popup), "exec", button);
+
+				button = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+				gtk_box_pack_start (GTK_BOX (bbox), button, TRUE, TRUE, 0);
+				g_signal_connect_swapped (button, "clicked",
+							  G_CALLBACK (gtk_widget_hide), tconsole->priv->params_popup);
+			}
+			else {
+				form = g_object_get_data (G_OBJECT (tconsole->priv->params_popup), "form");
+				if (form)
+					gtk_widget_destroy (form);
+			}
+
+			cont = g_object_get_data (G_OBJECT (tconsole->priv->params_popup), "cont");
+			form = gdaui_basic_form_new (tconsole->priv->params);			
+			gdaui_basic_form_show_entry_actions (GDAUI_BASIC_FORM (form), TRUE);
+			g_signal_connect (form, "param-changed",
+					  G_CALLBACK (params_form_changed_cb), tconsole);
+
+			gtk_box_pack_start (GTK_BOX (cont), form, TRUE, TRUE, 0);
+			g_object_set_data (G_OBJECT (tconsole->priv->params_popup), "form", form);
+			gtk_widget_show_all (tconsole->priv->params_popup);
+
+			return;
+		}
+	}
 
 	if (!tconsole->priv->parser)
 		tconsole->priv->parser = browser_connection_create_parser (tconsole->priv->bcnc);
