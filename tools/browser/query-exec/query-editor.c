@@ -745,6 +745,7 @@ query_editor_start_history_batch (QueryEditor *editor, QueryEditorHistoryBatch *
 	tag = gtk_text_buffer_create_tag (buffer, NULL,
 					  "pixels-below-lines", 3,
 					  "foreground", "black",
+					  "scale", PANGO_SCALE_SMALL,
 					  "weight", PANGO_WEIGHT_BOLD, NULL);
 	hdata->tag = g_object_ref (tag);
 	g_hash_table_insert (editor->priv->hash, tag, hist_item_data_ref (hdata));

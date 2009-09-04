@@ -35,7 +35,7 @@
 #include <libgda/sql-parser/gda-sql-parser.h>
 #include <libgda-ui/libgda-ui.h>
 
-#define VARIABLES_HELP _("This area allows to give values to\n" \
+#define VARIABLES_HELP _("<small>This area allows to give values to\n" \
 			 "variables defined in the SQL code\n"		\
 			 "using the following syntax:\n"		\
 			 "<b><tt>##&lt;variable name&gt;::&lt;type&gt;[::null]</tt></b>\n" \
@@ -43,7 +43,7 @@
 			 "<span foreground=\"#4e9a06\"><b><tt>##id::int</tt></b></span>\n      defines <b>id</b> as a non NULL integer\n" \
 			 "<span foreground=\"#4e9a06\"><b><tt>##age::string::null</tt></b></span>\n      defines <b>age</b> as a a string\n\n" \
 			 "Valid types are: <tt>string</tt>, <tt>boolean</tt>, <tt>int</tt>,\n" \
-			 "<tt>date</tt>, <tt>time</tt>, <tt>timestamp</tt>, <tt>guint</tt>")
+			 "<tt>date</tt>, <tt>time</tt>, <tt>timestamp</tt>, <tt>guint</tt></small>")
 
 struct _QueryConsolePrivate {
 	BrowserConnection *bcnc;
@@ -523,7 +523,8 @@ compute_params (QueryConsole *tconsole)
 		}
 		else {
 			show_variables = TRUE;
-			tconsole->priv->params_form = gtk_label_new ("Error!");
+			tconsole->priv->params_form = gtk_label_new ("");
+			gtk_label_set_markup (GTK_LABEL (tconsole->priv->params_form), VARIABLES_HELP);
 		}
 		gtk_container_add (GTK_CONTAINER (tconsole->priv->params_form_box), tconsole->priv->params_form);
 		gtk_widget_show (tconsole->priv->params_form);
