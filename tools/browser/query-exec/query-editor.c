@@ -36,6 +36,7 @@
 #include <binreloc/gda-binreloc.h>
 
 #define QUERY_EDITOR_LANGUAGE_SQL "gda-sql"
+#define COLOR_ALTER_FACTOR 1.8
 
 typedef void (* CreateTagsFunc) (QueryEditor *editor, const gchar *language);
 
@@ -158,7 +159,6 @@ create_tags_for_sql (QueryEditor *editor, const gchar *language)
 /*
  * QueryEditor class implementation
  */
-
 static void
 query_editor_class_init (QueryEditorClass *klass)
 {
@@ -261,6 +261,78 @@ event_after (GtkWidget *text_view, GdkEvent *ev, QueryEditor *editor)
 	return FALSE;
 }
 
+static gboolean
+text_view_expose_event (GtkTextView *tv, GdkEventExpose *event, QueryEditor *editor)
+{
+	GdkWindow *win;
+
+	win = gtk_text_view_get_window (tv, GTK_TEXT_WINDOW_TEXT);
+	if (event->window != win)
+		return FALSE;
+	if (!editor->priv->hist_focus)
+		return FALSE;
+	
+	GdkRectangle visible_rect;
+	GdkRectangle redraw_rect;
+	GtkTextIter cur;
+	gint y, ye;
+	gint height, heighte;
+	gint win_y;
+	GdkGC *gc;
+	gint margin;
+	
+	gtk_text_buffer_get_iter_at_mark (tv->buffer, &cur, editor->priv->hist_focus->start_mark);	
+	gtk_text_view_get_line_yrange (tv, &cur, &y, &height);
+	
+	gtk_text_buffer_get_iter_at_mark (tv->buffer, &cur, editor->priv->hist_focus->end_mark);	
+	gtk_text_view_get_line_yrange (tv, &cur, &ye, &heighte);
+	height = ye - y;
+
+	if (!editor->priv->hist_focus->item) {
+		GSList *list;
+		HistItemData *hdata;
+		list = g_slist_last (editor->priv->hist_focus->batch->hist_items);
+		hdata = g_hash_table_lookup (editor->priv->hash, list->data);
+		gtk_text_buffer_get_iter_at_mark (tv->buffer, &cur, hdata->end_mark);	
+		gtk_text_view_get_line_yrange (tv, &cur, &ye, &heighte);
+		height = ye - y;
+	}
+		
+	gtk_text_view_get_visible_rect (tv, &visible_rect);
+	gtk_text_view_buffer_to_window_coords (tv,
+					       GTK_TEXT_WINDOW_TEXT,
+					       visible_rect.x,
+					       visible_rect.y,
+					       &redraw_rect.x,
+					       &redraw_rect.y);	
+	gtk_text_view_buffer_to_window_coords (tv,
+					       GTK_TEXT_WINDOW_TEXT,
+					       0,
+					       y,
+					       NULL,
+					       &win_y);
+	
+	redraw_rect.width = visible_rect.width;
+	redraw_rect.height = visible_rect.height;
+	
+	gc = GTK_WIDGET (tv)->style->bg_gc[GTK_WIDGET_STATE (GTK_WIDGET (tv))];
+
+	if (tv->hadjustment)
+		margin = gtk_text_view_get_left_margin (tv) - (int) tv->hadjustment->value;
+	else
+		margin = gtk_text_view_get_left_margin (tv);
+	
+	gdk_draw_rectangle (event->window,
+			    gc,
+			    TRUE,
+			    redraw_rect.x + MAX (0, margin - 1),
+			    win_y,
+			    redraw_rect.width,
+			    height);
+
+	return FALSE;
+}
+
 static void
 query_editor_init (QueryEditor *editor, QueryEditorClass *klass)
 {
@@ -301,6 +373,8 @@ query_editor_init (QueryEditor *editor, QueryEditorClass *klass)
 			  G_CALLBACK (event_after), editor);
 	g_signal_connect (gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->text)), "changed", 
 			  G_CALLBACK (text_buffer_changed_cb), editor);
+	g_signal_connect (editor->priv->text, "expose-event",
+			  G_CALLBACK (text_view_expose_event), editor);
 
 	/* initialize common data */
 	number_of_objects++;
@@ -323,15 +397,14 @@ static void
 query_editor_map (GtkWidget *widget)
 {
 	GTK_WIDGET_CLASS (parent_class)->map (widget);
-
 	if (QUERY_EDITOR (widget)->priv->mode == QUERY_EDITOR_HISTORY) {
 		GtkStyle *style;
 		GdkColor color;
 		style = gtk_widget_get_style (widget);
 		color = style->bg[GTK_STATE_NORMAL];
-		color.red += (65535 - color.red) / 2;
-		color.green += (65535 - color.green) / 2;
-		color.blue += (65535 - color.blue) / 2;
+		color.red += (65535 - color.red) / COLOR_ALTER_FACTOR;
+		color.green += (65535 - color.green) / COLOR_ALTER_FACTOR;
+		color.blue += (65535 - color.blue) / COLOR_ALTER_FACTOR;
 		gtk_widget_modify_base (QUERY_EDITOR (widget)->priv->text, GTK_STATE_NORMAL, &color);
 	}
 }
@@ -492,9 +565,9 @@ query_editor_set_mode (QueryEditor *editor, QueryEditorMode mode)
 		GdkColor color;
 		style = gtk_widget_get_style ((GtkWidget*) editor);
 		color = style->bg[GTK_STATE_NORMAL];
-		color.red += (65535 - color.red) / 2;
-		color.green += (65535 - color.green) / 2;
-		color.blue += (65535 - color.blue) / 2;
+		color.red += (65535 - color.red) / COLOR_ALTER_FACTOR;
+		color.green += (65535 - color.green) / COLOR_ALTER_FACTOR;
+		color.blue += (65535 - color.blue) / COLOR_ALTER_FACTOR;
 		gtk_widget_modify_base (editor->priv->text, GTK_STATE_NORMAL, &color);
 
 		editor->priv->hash = g_hash_table_new_full (NULL, NULL, NULL,
@@ -788,10 +861,10 @@ query_editor_add_history_item (QueryEditor *editor, QueryEditorHistoryItem *hist
 	g_free (sql);
 
 	/* mark end of insertion */
+	gtk_text_buffer_get_end_iter (buffer, &iter);
 	hdata->end_mark = gtk_text_buffer_create_mark (buffer, NULL, &iter, TRUE);
 
 	focus_on_hist_data (editor, hdata);
-	gtk_text_buffer_get_end_iter (buffer, &iter);
 	gtk_text_view_scroll_to_iter (GTK_TEXT_VIEW (editor->priv->text),
 				      &iter, 0., FALSE, 0., 0.);
 }
