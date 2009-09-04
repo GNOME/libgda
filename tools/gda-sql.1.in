@@ -60,7 +60,7 @@ Keep the console opened after executing a file (used with the \-f option).
 .B \-l, \-\-list\-dsn
 List configured data sources and exit.
 .TP 8
-.B \-l, \-\-list\-providers
+.B \-L, \-\-list\-providers
 List installed database providers and exit
 .TP 8
 .B \-s, \-\-http\-port \fI<port>\fP
