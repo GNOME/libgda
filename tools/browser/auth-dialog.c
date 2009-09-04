@@ -146,7 +146,7 @@ auth_dialog_init (AuthDialog *dialog)
 	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dialog)->vbox), 5);
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT, TRUE);
 
-	str = gda_gbr_get_file_path (GDA_DATA_DIR, "pixmaps", "gda-browser-auth.png", NULL);
+	str = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gda-browser-auth.png", NULL);
 	gtk_window_set_icon_from_file (GTK_WINDOW (dialog), str, NULL);
 	g_free (str);
 
@@ -155,7 +155,7 @@ auth_dialog_init (AuthDialog *dialog)
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 10);
 	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), hbox, FALSE, FALSE, 0);
 	
-	str = gda_gbr_get_file_path (GDA_DATA_DIR, "pixmaps", "gda-browser-auth-big.png", NULL);
+	str = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gda-browser-auth-big.png", NULL);
 	wid = gtk_image_new_from_file (str);
 	g_free (str);
 	gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, FALSE, 0);

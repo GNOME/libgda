@@ -327,7 +327,7 @@ browser_connections_list_show (void)
 		g_signal_connect (G_OBJECT (clist), "delete_event",
 				  G_CALLBACK (delete_event), NULL);
 
-		str = gda_gbr_get_file_path (GDA_DATA_DIR, "pixmaps", "gda-browser-connected.png", NULL);
+		str = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gda-browser-connected.png", NULL);
 		gtk_window_set_icon_from_file (GTK_WINDOW (clist), str, NULL);
 		g_free (str);
 
@@ -343,7 +343,7 @@ browser_connections_list_show (void)
 		hbox = gtk_hbox_new (FALSE, 6);
 		gtk_table_attach (GTK_TABLE (table), hbox, 0, 3, 0, 1, GTK_EXPAND | GTK_FILL, 0, 0, 6);
 
-		str = gda_gbr_get_file_path (GDA_DATA_DIR, "pixmaps", "gda-browser-connected-big.png", NULL);
+		str = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gda-browser-connected-big.png", NULL);
 		wid = gtk_image_new_from_file (str);
 		g_free (str);
 		gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, FALSE, 0);

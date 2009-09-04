@@ -185,7 +185,7 @@ browser_get_pixbuf_icon (BrowserIconType type)
                 array = g_new0 (GdkPixbuf *, BROWSER_ICON_LAST);
         if (!array [type]) {
                 gchar *path;
-                path = gda_gbr_get_file_path (GDA_DATA_DIR, "pixmaps", names[type], NULL);
+                path = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", names[type], NULL);
                 array [type] = gdk_pixbuf_new_from_file (path, NULL);
                 g_free (path);
 

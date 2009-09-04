@@ -118,7 +118,7 @@ canvas_example_LDFLAGS = \
 	$(top_builddir)/tools/browser/common/libcommon.la
 
 # icons
-iconsdir=$(datadir)/pixmaps
+iconsdir=$(datadir)/libgda-4.0/pixmaps
 icons_DATA= \
 	gda-browser.png \
 	gda-browser-auth.png \

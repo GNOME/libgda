@@ -293,7 +293,7 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 	/* icon */
 	GdkPixbuf *icon;
         gchar *path;
-        path = gda_gbr_get_file_path (GDA_DATA_DIR, "pixmaps", "gda-browser.png", NULL);
+        path = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gda-browser.png", NULL);
         icon = gdk_pixbuf_new_from_file (path, NULL);
         g_free (path);
         if (icon) {
@@ -778,7 +778,7 @@ about_cb (GtkAction *action, BrowserWindow *bwin)
         const gchar *translator_credits = "";
 
         gchar *path;
-        path = gda_gbr_get_file_path (GDA_DATA_DIR, "pixmaps", "gda-browser.png", NULL);
+        path = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gda-browser.png", NULL);
         icon = gdk_pixbuf_new_from_file (path, NULL);
         g_free (path);
 
