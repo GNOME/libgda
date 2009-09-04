@@ -1965,7 +1965,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 
 	gboolean allok = TRUE;
 	GString *string;
-	gchar *offstr, *str;
+	gchar *str;
 	gint n_cols, n_rows;
 	gint *cols_size;
 	gboolean *cols_is_num;
@@ -1983,10 +1983,6 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 	GdaDataModel *ramodel = NULL;
 
 	string = g_string_new ("");
-
-        /* string for the offset */
-        offstr = g_new0 (gchar, offset+1);
-	memset (offstr, ' ', offset);
 
 	/* compute the columns widths: using column titles... */
 	n_cols = gda_data_model_get_n_columns (model);
@@ -2261,8 +2257,6 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 	g_free (cols_size);
 	g_free (cols_is_num);
 
-	g_free (offstr);
-	
 	if (allok) {
 		str = string->str;
 		g_string_free (string, FALSE);
