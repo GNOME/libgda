@@ -64,6 +64,8 @@ struct _QueryConsolePrivate {
 	GtkWidget *params_form;
 	
 	QueryEditor *history;
+	GtkWidget *history_del_button;
+	GtkWidget *history_copy_button;
 };
 
 static void query_console_class_init (QueryConsoleClass *klass);
@@ -196,6 +198,9 @@ static void sql_variables_clicked_cb (GtkToggleButton *button, QueryConsole *tco
 static void sql_execute_clicked_cb (GtkButton *button, QueryConsole *tconsole);
 static void sql_indent_clicked_cb (GtkButton *button, QueryConsole *tconsole);
 
+static void history_copy_clicked_cb (GtkButton *button, QueryConsole *tconsole);
+static void history_delete_clicked_cb (GtkButton *button, QueryConsole *tconsole);
+static void history_changed_cb (QueryEditor *history, QueryConsole *tconsole);
 /**
  * query_console_new
  *
@@ -330,12 +335,26 @@ query_console_new (BrowserConnection *bcnc)
 	query_editor_set_mode (tconsole->priv->history, QUERY_EDITOR_HISTORY);
 	gtk_widget_set_size_request (wid, 200, -1);
 	gtk_box_pack_start (GTK_BOX (vbox), wid, TRUE, TRUE, 0);
+	g_signal_connect (wid, "changed",
+			  G_CALLBACK (history_changed_cb), tconsole);
 
-	bbox = gtk_vbutton_box_new ();
+	bbox = gtk_hbutton_box_new ();
 	gtk_box_pack_start (GTK_BOX (vbox), bbox, FALSE, FALSE, 0);
+	gtk_button_box_set_layout (GTK_BUTTON_BOX (bbox), GTK_BUTTONBOX_END);
+
+	button = make_small_button (FALSE, _("Copy"), GTK_STOCK_COPY, _("Copy selected history\nto editor"));
+	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
+	g_signal_connect (button, "clicked",
+			  G_CALLBACK (history_copy_clicked_cb), tconsole);
+	tconsole->priv->history_copy_button = button;
+	gtk_widget_set_sensitive (button, FALSE);
 
 	button = make_small_button (FALSE, _("Delete"), GTK_STOCK_DELETE, _("Delete history item"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
+	g_signal_connect (button, "clicked",
+			  G_CALLBACK (history_delete_clicked_cb), tconsole);
+	tconsole->priv->history_del_button = button;
+	gtk_widget_set_sensitive (button, FALSE);
 
 	/* bottom right */
 	vbox = gtk_vbox_new (FALSE, 0);
@@ -395,6 +414,67 @@ make_small_button (gboolean is_toggle, const gchar *label, const gchar *stock_id
 	if (tooltip)
 		gtk_widget_set_tooltip_text (button, tooltip);
 	return button;
+}
+
+static void
+history_changed_cb (QueryEditor *history, QueryConsole *tconsole)
+{
+	gboolean act = FALSE;
+	QueryEditor *qe;
+	
+	qe = tconsole->priv->history;
+        if (query_editor_get_current_history_item (qe) ||
+	    query_editor_get_current_history_batch (qe))
+		act = TRUE;
+	gtk_widget_set_sensitive (tconsole->priv->history_del_button, act);
+	gtk_widget_set_sensitive (tconsole->priv->history_copy_button, act);
+}
+
+static void
+history_delete_clicked_cb (GtkButton *button, QueryConsole *tconsole)
+{
+	QueryEditorHistoryItem *qih;
+	QueryEditor *qe;
+	
+	qe = tconsole->priv->history;
+        qih = query_editor_get_current_history_item (qe);
+        if (qih)
+                query_editor_del_current_history_item (qe);
+        else {
+                QueryEditorHistoryBatch *qib;
+                qib = query_editor_get_current_history_batch (qe);
+                if (qib)
+                        query_editor_del_history_batch (qe, qib);
+        }
+}
+
+static void
+history_copy_clicked_cb (GtkButton *button, QueryConsole *tconsole)
+{
+	QueryEditorHistoryItem *qih;
+	QueryEditor *qe;
+	GString *string;
+
+	string = g_string_new ("");
+	qe = tconsole->priv->history;
+        qih = query_editor_get_current_history_item (qe);
+        if (qih)
+		g_string_append (string, qih->sql);
+        else {
+                QueryEditorHistoryBatch *qib;
+                qib = query_editor_get_current_history_batch (qe);
+                if (qib) {
+			GSList *list;
+			for (list =  qib->hist_items; list; list = list->next) {
+				if (list != qib->hist_items)
+					g_string_append (string, "\n\n");
+				g_string_append (string, ((QueryEditorHistoryItem*) list->data)->sql);
+			}
+		}
+        }
+
+	query_editor_set_text (tconsole->priv->editor, string->str);
+	g_string_free (string, TRUE);
 }
 
 static gboolean

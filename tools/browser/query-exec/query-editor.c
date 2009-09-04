@@ -828,6 +828,9 @@ query_editor_add_history_item (QueryEditor *editor, QueryEditorHistoryItem *hist
 	hdata->item = query_editor_history_item_ref (hist_item);
 	g_hash_table_insert (editor->priv->hash, hist_item, hdata);
 
+	/* remove leading and trailing spaces */
+	g_strstrip (hist_item->sql);
+
 	if (!editor->priv->insert_into_batch)
 		query_editor_start_history_batch (editor, NULL);
 
@@ -1008,8 +1011,8 @@ query_editor_del_history_batch (QueryEditor *editor, QueryEditorHistoryBatch *ba
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->text));
 
 	/* compute new focus */
+	focus = NULL;
 	if (i > 0) {
-		focus = NULL;
 		list = g_slist_nth (editor->priv->batches_list, i - 1);
 		focus = g_hash_table_lookup (editor->priv->hash, list->data);
 	}
