@@ -1575,11 +1575,12 @@ gda_thread_provider_handle_async (GdaServerProvider *provider, GdaConnection *cn
 
 	atd = (ThreadConnectionAsyncTask*) cdata->async_tasks->data;
 	res = (GObject*) gda_thread_wrapper_fetch_result (cdata->wrapper, FALSE, atd->jid, &lerror);
-	if (res) {
+	if (res || lerror) {
 		atd->async_cb (provider, cnc, atd->jid, res, lerror, atd->cb_data);
 		if (lerror)
 			g_error_free (lerror);
-		g_object_unref (res);
+		if (res)
+			g_object_unref (res);
 
 		_ThreadConnectionAsyncTask_free (atd);
 		cdata->async_tasks = g_slist_delete_link (cdata->async_tasks, cdata->async_tasks);
