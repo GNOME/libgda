@@ -71,7 +71,17 @@ BrowserFavorites   *browser_connection_get_favorites          (BrowserConnection
  * statements's execution
  */
 GdaSqlParser       *browser_connection_create_parser          (BrowserConnection *bcnc);
-/* TODO */
+gchar              *browser_connection_render_pretty_sql      (BrowserConnection *bcnc,
+							       GdaStatement *stmt);
+guint               browser_connection_execute_statement      (BrowserConnection *bcnc,
+							       GdaStatement *stmt,
+							       GdaSet *params,
+							       GdaStatementModelUsage model_usage,
+							       gboolean need_last_insert_row,
+							       GError **error);
+GObject            *browser_connection_execution_get_result   (BrowserConnection *bcnc,
+							       guint exec_id,
+							       GdaSet **last_insert_row, GError **error);
 
 G_END_DECLS
 

@@ -675,3 +675,79 @@ browser_connection_create_parser (BrowserConnection *bcnc)
 		parser = gda_sql_parser_new ();
 	return parser;
 }
+
+/**
+ * browser_connection_render_pretty_sql
+ * @bcnc: a #BrowserConnection
+ * @stmt: a #GdaStatement
+ *
+ * Renders @stmt as SQL well indented
+ *
+ * Returns: a new string
+ */
+gchar *
+browser_connection_render_pretty_sql (BrowserConnection *bcnc, GdaStatement *stmt)
+{
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
+
+	return gda_statement_to_sql_extended (stmt, bcnc->priv->cnc, NULL,
+					      GDA_STATEMENT_SQL_PRETTY |
+					      GDA_STATEMENT_SQL_PARAMS_SHORT,
+					      NULL, NULL);
+}
+
+/**
+ * browser_connection_execute_statement
+ * @bcnc: a #BrowserConnection
+ * @stmt: a #GdaStatement
+ * @params: a #GdaSet as parameters, or %NULL
+ * @model_usage: how the returned data model (if any) will be used
+ * @need_last_insert_row: %TRUE if the values of the last interted row must be computed
+ * @error: a place to store errors, or %NULL
+ *
+ * Executes @stmt by @bcnc
+ *
+ * Returns: a job ID, to be used with browser_connection_execution_get_result(), or %0 if an
+ * error occurred
+ */
+guint
+browser_connection_execute_statement (BrowserConnection *bcnc,
+				      GdaStatement *stmt,
+				      GdaSet *params,
+				      GdaStatementModelUsage model_usage,
+				      gboolean need_last_insert_row,
+				      GError **error)
+{
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), 0);
+	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), 0);
+	g_return_val_if_fail (!params || GDA_IS_SET (params), 0);
+
+	return gda_connection_async_statement_execute (bcnc->priv->cnc, stmt,
+						       params, model_usage,
+						       NULL, need_last_insert_row,
+						       error);
+}
+
+/**
+ * browser_connection_execution_get_result
+ * @bcnc: a #BrowserConnection
+ * @exec_id: the ID of the excution
+ * @last_insert_row: a place to store the last inserted row, if any, or %NULL
+ * @error: a place to store errors, or %NULL
+ *
+ * Pick up the result of the @exec_id's execution.
+ *
+ * Retunrs: see gda_connection_async_fetch_result()
+ */
+GObject *
+browser_connection_execution_get_result (BrowserConnection *bcnc, guint exec_id,
+					 GdaSet **last_insert_row, GError **error)
+{
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	g_return_val_if_fail (exec_id > 0, NULL);
+	
+	return gda_connection_async_fetch_result (bcnc->priv->cnc, exec_id,
+						  last_insert_row,
+						  error);
+}

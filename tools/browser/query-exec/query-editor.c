@@ -292,10 +292,12 @@ text_view_expose_event (GtkTextView *tv, GdkEventExpose *event, QueryEditor *edi
 		GSList *list;
 		HistItemData *hdata;
 		list = g_slist_last (editor->priv->hist_focus->batch->hist_items);
-		hdata = g_hash_table_lookup (editor->priv->hash, list->data);
-		gtk_text_buffer_get_iter_at_mark (tv->buffer, &cur, hdata->end_mark);	
-		gtk_text_view_get_line_yrange (tv, &cur, &ye, &heighte);
-		height = ye - y;
+		if (list) {
+			hdata = g_hash_table_lookup (editor->priv->hash, list->data);
+			gtk_text_buffer_get_iter_at_mark (tv->buffer, &cur, hdata->end_mark);	
+			gtk_text_view_get_line_yrange (tv, &cur, &ye, &heighte);
+			height = ye - y;
+		}
 	}
 		
 	gtk_text_view_get_visible_rect (tv, &visible_rect);
@@ -1315,8 +1317,13 @@ query_editor_history_item_new (const gchar *sql, GdaSet *params, GObject *result
 	qih->sql = g_strdup (sql);
 	if (params)
 		qih->params = gda_set_copy (params);
-	if (result)
+	if (result) {
 		qih->result = g_object_ref (result);
+		if (GDA_IS_DATA_MODEL (result))
+			gda_data_model_dump (GDA_DATA_MODEL (result), NULL);
+		else
+			g_print ("RESULT!!!\n");
+	}
 
 	return qih;
 }

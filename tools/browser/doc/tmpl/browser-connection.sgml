@@ -144,3 +144,39 @@ An opened connection
 @Returns: 
 
 
+<!-- ##### FUNCTION browser_connection_render_pretty_sql ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@stmt: 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_connection_execute_statement ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@stmt: 
+@params: 
+@model_usage: 
+@need_last_insert_row: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_connection_execution_get_result ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@exec_id: 
+@last_insert_row: 
+@error: 
+@Returns: 
+
+
