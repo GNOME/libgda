@@ -24,3 +24,5 @@ libperspective_la_SOURCES = \
 langspecdir=$(datadir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/language-specs
 langspec_DATA= \
 	gda-sql.lang
+
+EXTRA_DIST=$(langspec_DATA)
