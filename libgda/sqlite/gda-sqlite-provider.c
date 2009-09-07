@@ -2537,6 +2537,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			event = fill_blob_data (cnc, params, cdata, ps, blobs_list, error);
 			if (event) {
 				/* an error occurred */
+				sqlite3_reset (ps->sqlite_stmt);
 				if (new_ps)
 					g_object_unref (ps);
 				if (transaction_started)
@@ -2579,6 +2580,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
                                 gda_connection_add_event (cnc, event);
                         }
 			gda_connection_internal_statement_executed (cnc, stmt, params, event);
+			sqlite3_reset (ps->sqlite_stmt);
 			if (new_ps)
 				g_object_unref (ps);
 			if (transaction_started)
