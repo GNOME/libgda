@@ -94,7 +94,11 @@ gda_sqlite_recordset_dispose (GObject *object)
 	g_return_if_fail (GDA_IS_SQLITE_RECORDSET (recset));
 
 	if (recset->priv) {
-		GDA_SQLITE_PSTMT (GDA_DATA_SELECT (object)->prep_stmt)->stmt_used = FALSE;
+		GdaSqlitePStmt *ps;
+		ps = GDA_SQLITE_PSTMT (GDA_DATA_SELECT (object)->prep_stmt);
+		ps->stmt_used = FALSE;
+		sqlite3_reset (ps->sqlite_stmt);
+
 		if (recset->priv->tmp_row)
 			g_object_unref (recset->priv->tmp_row);
 		g_free (recset->priv);
@@ -509,6 +513,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 		break;
 	case SQLITE_DONE:
 		GDA_DATA_SELECT (model)->advertized_nrows = model->priv->next_row_num;
+		sqlite3_reset (ps->sqlite_stmt);
 		break;
 	case SQLITE_MISUSE:
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
