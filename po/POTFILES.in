@@ -214,6 +214,7 @@ tools/browser/common/objects-cloud.c
 tools/browser/query-exec/gda-sql.lang
 tools/browser/query-exec/query-console.c
 tools/browser/query-exec/query-editor.c
+tools/browser/query-exec/query-result.c
 tools/browser/schema-browser/favorite-selector.c
 tools/browser/schema-browser/mgr-columns.c
 tools/browser/schema-browser/objects-index.c
