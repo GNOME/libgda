@@ -31,6 +31,7 @@
 #include "../browser-page.h"
 #include "../browser-stock-icons.h"
 #include "query-editor.h"
+#include "query-result.h"
 #include "../common/popup-container.h"
 #include <libgda/sql-parser/gda-sql-parser.h>
 #include <libgda-ui/libgda-ui.h>
@@ -122,6 +123,8 @@ struct _QueryConsolePrivate {
 	QueryEditor *history;
 	GtkWidget *history_del_button;
 	GtkWidget *history_copy_button;
+
+	GtkWidget *query_result;
 
 	ExecutionBatch *current_exec;
 	guint current_exec_id; /* timout ID to fetch execution results */
@@ -430,7 +433,8 @@ query_console_new (BrowserConnection *bcnc)
 	gtk_misc_set_alignment (GTK_MISC (wid), 0., -1);
 	gtk_box_pack_start (GTK_BOX (vbox), wid, FALSE, FALSE, 0);
 
-	wid = gtk_label_new ("Here go the\nresults' form");
+	wid = query_result_new ();
+	tconsole->priv->query_result = wid;
 	gtk_box_pack_start (GTK_BOX (vbox), wid, TRUE, TRUE, 0);
 
 	/* show everything */
@@ -486,9 +490,19 @@ history_changed_cb (QueryEditor *history, QueryConsole *tconsole)
 	QueryEditor *qe;
 	
 	qe = tconsole->priv->history;
-        if (query_editor_get_current_history_item (qe) ||
-	    query_editor_get_current_history_batch (qe))
+        if (query_editor_get_current_history_item (qe)) {
+		query_result_show_history_item (QUERY_RESULT (tconsole->priv->query_result),
+						query_editor_get_current_history_item (qe));
 		act = TRUE;
+	}
+	else if (query_editor_get_current_history_batch (qe)) {
+		query_result_show_history_batch (QUERY_RESULT (tconsole->priv->query_result),
+						 query_editor_get_current_history_batch (qe));
+		act = TRUE;
+	}
+	else
+		query_result_show_history_batch (QUERY_RESULT (tconsole->priv->query_result), NULL);
+
 	gtk_widget_set_sensitive (tconsole->priv->history_del_button, act);
 	gtk_widget_set_sensitive (tconsole->priv->history_copy_button, act);
 }
@@ -707,7 +721,7 @@ popup_container_position_func (PopupContainer *cont, gint *out_x, gint *out_y)
 	top = gtk_widget_get_toplevel (console);	
         gtk_widget_size_request ((GtkWidget*) cont, &req);
         gdk_window_get_origin (top->window, &x, &y);
-
+	
 	x += (top->allocation.width - req.width) / 2;
 	y += (top->allocation.height - req.height) / 2;
 
@@ -842,7 +856,7 @@ sql_execute_clicked_cb (GtkButton *button, QueryConsole *tconsole)
 	ebatch = g_new0 (ExecutionBatch, 1);
 	ebatch->batch = batch;
 	g_get_current_time (&(ebatch->start_time));
-	ebatch->hist_batch = query_editor_history_batch_new (ebatch->start_time);
+	ebatch->hist_batch = query_editor_history_batch_new (ebatch->start_time, tconsole->priv->params);
 	query_editor_start_history_batch (tconsole->priv->history, ebatch->hist_batch);
 
 	stmt_list = gda_batch_get_statements (batch);
@@ -858,7 +872,6 @@ sql_execute_clicked_cb (GtkButton *button, QueryConsole *tconsole)
 									       tconsole->priv->params,
 									       GDA_STATEMENT_MODEL_RANDOM_ACCESS,
 									       FALSE, &(estmt->exec_error));
-			g_print ("Executing: %u\n", estmt->exec_id);
 			if (estmt->exec_id == 0) {
 				browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
 						    _("Error executing query: %s"),
@@ -888,7 +901,6 @@ query_exec_fetch_cb (QueryConsole *tconsole)
 			g_assert (estmt->exec_id);
 			g_assert (!estmt->result);
 			g_assert (!estmt->exec_error);
-			g_print ("Getting results for exec ID %u\n", estmt->exec_id);
 			estmt->result = browser_connection_execution_get_result (tconsole->priv->bcnc,
 										 estmt->exec_id, NULL,
 										 &(estmt->exec_error));
@@ -899,13 +911,12 @@ query_exec_fetch_cb (QueryConsole *tconsole)
 				if (!sqlst->sql) {
 					gchar *sql;
 					sql = gda_statement_to_sql (GDA_STATEMENT (estmt->stmt), NULL, NULL);
-					history = query_editor_history_item_new (sql, tconsole->priv->params,
-										 estmt->result);
+					history = query_editor_history_item_new (sql, estmt->result, estmt->exec_error);
 					g_free (sql);
 				}
 				else
-					history = query_editor_history_item_new (sqlst->sql, tconsole->priv->params,
-										 estmt->result);
+					history = query_editor_history_item_new (sqlst->sql,
+										 estmt->result, estmt->exec_error);
 				gda_sql_statement_free (sqlst);
 				if (estmt->exec_error) {
 					browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
@@ -938,7 +949,6 @@ query_exec_fetch_cb (QueryConsole *tconsole)
 											       GDA_STATEMENT_MODEL_RANDOM_ACCESS,
 											       FALSE,
 											       &(estmt->exec_error));
-					g_print ("Executing: %u\n", estmt->exec_id);
 					if (estmt->exec_id == 0) {
 						browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
 								    _("Error executing query:\n%s"),

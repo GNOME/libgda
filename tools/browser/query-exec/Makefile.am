@@ -14,6 +14,8 @@ libperspective_la_SOURCES = \
 	query-console.h \
 	query-editor.c \
 	query-editor.h \
+	query-result.c \
+	query-result.h \
 	perspective-main.c \
 	perspective-main.h \
 	query-exec-perspective.h \

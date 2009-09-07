@@ -37,6 +37,7 @@
 
 #define QUERY_EDITOR_LANGUAGE_SQL "gda-sql"
 #define COLOR_ALTER_FACTOR 1.8
+#define MAX_HISTORY_BATCH_ITEMS 20
 
 typedef void (* CreateTagsFunc) (QueryEditor *editor, const gchar *language);
 
@@ -721,7 +722,7 @@ query_editor_start_history_batch (QueryEditor *editor, QueryEditorHistoryBatch *
 		GTimeVal run_time = {0, 0};
 		empty = TRUE;
 		
-		hist_batch = query_editor_history_batch_new (run_time);
+		hist_batch = query_editor_history_batch_new (run_time, NULL);
 	}
 
 	/* update editor->priv->insert_into_batch */
@@ -768,6 +769,13 @@ query_editor_start_history_batch (QueryEditor *editor, QueryEditorHistoryBatch *
 	/* add timout to 1 sec. */
 	editor->priv->ts_timeout_id  = g_timeout_add_seconds (60,
 							      (GSourceFunc) timestamps_update_cb, editor);
+
+	/* remove too old batches */
+	if (g_slist_length (editor->priv->batches_list) > MAX_HISTORY_BATCH_ITEMS) {
+		QueryEditorHistoryBatch *obatch;
+		obatch = g_slist_last (editor->priv->batches_list)->data;
+		query_editor_del_history_batch (editor, obatch);
+	}
 }
 
 static gboolean
@@ -1253,13 +1261,16 @@ query_editor_paste_clipboard (QueryEditor *editor)
  * QueryEditorHistoryBatch
  */
 QueryEditorHistoryBatch *
-query_editor_history_batch_new (GTimeVal run_time)
+query_editor_history_batch_new (GTimeVal run_time, GdaSet *params)
 {
 	QueryEditorHistoryBatch *qib;
 	
 	qib = g_new0 (QueryEditorHistoryBatch, 1);
 	qib->ref_count = 1;
 	qib->run_time = run_time;
+	if (params)
+		qib->params = gda_set_copy (params);
+
 	return qib;
 }
 
@@ -1281,6 +1292,9 @@ query_editor_history_batch_unref (QueryEditorHistoryBatch *qib)
 			g_slist_foreach (qib->hist_items, (GFunc) query_editor_history_item_unref, NULL);
 			g_slist_free (qib->hist_items);
 		}
+		if (qib->params)
+			g_object_unref (qib->params);
+
 		g_free (qib);
 	}
 }
@@ -1306,7 +1320,7 @@ query_editor_history_batch_del_item (QueryEditorHistoryBatch *qib, QueryEditorHi
  * QueryEditorHistoryItem
  */
 QueryEditorHistoryItem *
-query_editor_history_item_new (const gchar *sql, GdaSet *params, GObject *result)
+query_editor_history_item_new (const gchar *sql, GObject *result, GError *error)
 {
 	QueryEditorHistoryItem *qih;
 	
@@ -1315,15 +1329,10 @@ query_editor_history_item_new (const gchar *sql, GdaSet *params, GObject *result
 	qih = g_new0 (QueryEditorHistoryItem, 1);
 	qih->ref_count = 1;
 	qih->sql = g_strdup (sql);
-	if (params)
-		qih->params = gda_set_copy (params);
-	if (result) {
+	if (result)
 		qih->result = g_object_ref (result);
-		if (GDA_IS_DATA_MODEL (result))
-			gda_data_model_dump (GDA_DATA_MODEL (result), NULL);
-		else
-			g_print ("RESULT!!!\n");
-	}
+	if (error)
+		qih->exec_error = g_error_copy (error);
 
 	return qih;
 }
@@ -1343,10 +1352,10 @@ query_editor_history_item_unref (QueryEditorHistoryItem *qih)
 	qih->ref_count--;
 	if (qih->ref_count <= 0) {
 		g_free (qih->sql);
-		if (qih->params)
-			g_object_unref (qih->params);
 		if (qih->result)
 			g_object_unref (qih->result);
+		if (qih->exec_error)
+			g_error_free (qih->exec_error);
 		g_free (qih);
 	}
 }

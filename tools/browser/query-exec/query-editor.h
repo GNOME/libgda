@@ -56,13 +56,13 @@ struct _QueryEditorClass {
  */
 typedef struct {
 	gchar *sql;
-	GdaSet *params;
 	GObject *result;
+	GError *exec_error;
 
 	gint ref_count;
 } QueryEditorHistoryItem;
 
-QueryEditorHistoryItem *query_editor_history_item_new (const gchar *sql, GdaSet *params, GObject *result);
+QueryEditorHistoryItem *query_editor_history_item_new (const gchar *sql, GObject *result, GError *error);
 QueryEditorHistoryItem *query_editor_history_item_ref (QueryEditorHistoryItem *qih);
 void                    query_editor_history_item_unref (QueryEditorHistoryItem *qih);
 
@@ -71,12 +71,13 @@ void                    query_editor_history_item_unref (QueryEditorHistoryItem 
  */
 typedef struct {
 	GTimeVal run_time;
+	GdaSet *params;
 	GSList *hist_items; /* list of QueryEditorHistoryItem, ref held here */
 
 	gint ref_count;
 } QueryEditorHistoryBatch;
 
-QueryEditorHistoryBatch *query_editor_history_batch_new (GTimeVal run_time);
+QueryEditorHistoryBatch *query_editor_history_batch_new (GTimeVal run_time, GdaSet *params);
 QueryEditorHistoryBatch *query_editor_history_batch_ref (QueryEditorHistoryBatch *qib);
 void                     query_editor_history_batch_unref (QueryEditorHistoryBatch *qib);
 void                     query_editor_history_batch_add_item (QueryEditorHistoryBatch *qib,
