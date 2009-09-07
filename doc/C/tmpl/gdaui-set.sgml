@@ -1,0 +1,73 @@
+<!-- ##### SECTION Title ##### -->
+GdauiSet
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdauiSet ##### -->
+<para>
+
+</para>
+
+@sources_list: 
+@groups_list: 
+
+<!-- ##### SIGNAL GdauiSet::public-data-changed ##### -->
+<para>
+
+</para>
+
+@gdauiset: the object which received the signal.
+
+<!-- ##### ARG GdauiSet:set ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gdaui_set_new ##### -->
+<para>
+
+</para>
+
+@set: 
+@Returns: 
+
+
+<!-- ##### STRUCT GdauiSetGroup ##### -->
+<para>
+
+</para>
+
+@group: 
+@source: 
+@_gda_reserved1: 
+@_gda_reserved2: 
+
+<!-- ##### STRUCT GdauiSetSource ##### -->
+<para>
+
+</para>
+
+@source: 
+@shown_n_cols: 
+@shown_cols_index: 
+@ref_n_cols: 
+@ref_cols_index: 
+@_gda_reserved1: 
+@_gda_reserved2: 
+@_gda_reserved3: 
+@_gda_reserved4: 
+

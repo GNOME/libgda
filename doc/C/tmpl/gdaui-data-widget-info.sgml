@@ -1,0 +1,57 @@
+<!-- ##### SECTION Title ##### -->
+GdauiDataWidgetInfo
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdauiDataWidgetInfo ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdauiDataWidgetInfo:data-widget ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdauiDataWidgetInfo:flags ##### -->
+<para>
+
+</para>
+
+<!-- ##### ENUM GdauiDataWidgetInfoFlag ##### -->
+<para>
+
+</para>
+
+@GDAUI_DATA_WIDGET_INFO_NONE: 
+@GDAUI_DATA_WIDGET_INFO_CURRENT_ROW: 
+@GDAUI_DATA_WIDGET_INFO_ROW_MODIFY_BUTTONS: 
+@GDAUI_DATA_WIDGET_INFO_ROW_MOVE_BUTTONS: 
+@GDAUI_DATA_WIDGET_INFO_CHUNCK_CHANGE_BUTTONS: 
+@GDAUI_DATA_WIDGET_INFO_NO_FILTER: 
+
+<!-- ##### FUNCTION gdaui_data_widget_info_new ##### -->
+<para>
+
+</para>
+
+@data_widget: 
+@flags: 
+@Returns: 
+
+

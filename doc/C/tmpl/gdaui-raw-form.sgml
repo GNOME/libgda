@@ -1,0 +1,39 @@
+<!-- ##### SECTION Title ##### -->
+GdauiRawForm
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdauiRawForm ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdauiRawForm:model ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gdaui_raw_form_new ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+

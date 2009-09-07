@@ -1,0 +1,105 @@
+<!-- ##### SECTION Title ##### -->
+GdauiRawGrid
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdauiRawGrid ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL GdauiRawGrid::double-clicked ##### -->
+<para>
+
+</para>
+
+@gdauirawgrid: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdauiRawGrid::populate-popup ##### -->
+<para>
+
+</para>
+
+@gdauirawgrid: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdauiRawGrid::selection-changed ##### -->
+<para>
+
+</para>
+
+@gdauirawgrid: the object which received the signal.
+@arg1: 
+
+<!-- ##### ARG GdauiRawGrid:data-layout ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdauiRawGrid:global-actions-visible ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdauiRawGrid:info-cell-visible ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdauiRawGrid:model ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gdaui_raw_grid_new ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_raw_grid_set_sample_size ##### -->
+<para>
+
+</para>
+
+@grid: 
+@sample_size: 
+
+
+<!-- ##### FUNCTION gdaui_raw_grid_set_sample_start ##### -->
+<para>
+
+</para>
+
+@grid: 
+@sample_start: 
+
+
+<!-- ##### FUNCTION gdaui_raw_grid_get_selection ##### -->
+<para>
+
+</para>
+
+@grid: 
+@Returns: 
+
+

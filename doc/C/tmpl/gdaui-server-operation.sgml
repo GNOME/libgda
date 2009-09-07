@@ -1,0 +1,56 @@
+<!-- ##### SECTION Title ##### -->
+GdauiServerOperation
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdauiServerOperation ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdauiServerOperation:opt-header ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdauiServerOperation:server-operation ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gdaui_server_operation_new ##### -->
+<para>
+
+</para>
+
+@op: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_server_operation_new_in_dialog ##### -->
+<para>
+
+</para>
+
+@op: 
+@parent: 
+@title: 
+@header: 
+@Returns: 
+
+

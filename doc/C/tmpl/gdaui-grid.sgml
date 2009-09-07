@@ -1,0 +1,67 @@
+<!-- ##### SECTION Title ##### -->
+GdauiGrid
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdauiGrid ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdauiGrid:model ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdauiGrid:raw-grid ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdauiGrid:widget-info ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gdaui_grid_new ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_grid_get_selection ##### -->
+<para>
+
+</para>
+
+@grid: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_grid_set_sample_size ##### -->
+<para>
+
+</para>
+
+@grid: 
+@sample_size: 
+
+

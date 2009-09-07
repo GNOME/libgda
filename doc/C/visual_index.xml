@@ -8,4 +8,7 @@
   <link linkend="GdauiDataEntry">
     <inlinegraphic fileref="vi-data-entry.png" format="PNG"></inlinegraphic>
   </link>
+  <link linkend="GdauiLogin">
+    <inlinegraphic fileref="vi-login.png" format="PNG"></inlinegraphic>
+  </link>
 </para>

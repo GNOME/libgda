@@ -1,0 +1,49 @@
+<!-- ##### SECTION Title ##### -->
+GdauiForm
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdauiForm ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdauiForm:model ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdauiForm:raw-form ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdauiForm:widget-info ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gdaui_form_new ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+

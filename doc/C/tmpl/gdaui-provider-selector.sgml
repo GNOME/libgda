@@ -1,0 +1,61 @@
+<!-- ##### SECTION Title ##### -->
+GdauiProviderSelector
+
+<!-- ##### SECTION Short_Description ##### -->
+Select a database provider from a combo box
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdauiProviderSelector ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gdaui_provider_selector_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_provider_selector_get_provider_obj ##### -->
+<para>
+
+</para>
+
+@selector: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_provider_selector_get_provider ##### -->
+<para>
+
+</para>
+
+@selector: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_provider_selector_set_provider ##### -->
+<para>
+
+</para>
+
+@selector: 
+@provider: 
+@Returns: 
+
+
