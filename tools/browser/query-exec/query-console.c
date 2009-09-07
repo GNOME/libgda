@@ -297,7 +297,7 @@ query_console_new (BrowserConnection *bcnc)
 	GtkWidget *vpaned;
 	vpaned = gtk_vpaned_new ();
 	tconsole->priv->vpaned = NULL;
-	gtk_box_pack_start (GTK_BOX (tconsole), vpaned, TRUE, TRUE, 0);	
+	gtk_box_pack_start (GTK_BOX (tconsole), vpaned, TRUE, TRUE, 6);	
 
 	/* top paned for the editor */
 	GtkWidget *wid, *vbox, *hbox, *bbox, *hpaned, *button;
@@ -316,8 +316,8 @@ query_console_new (BrowserConnection *bcnc)
 	gtk_label_set_markup (GTK_LABEL (wid), str);
 	g_free (str);
 	gtk_misc_set_alignment (GTK_MISC (wid), 0., -1);
-	gtk_widget_set_tooltip_text (wid, _("Enter SQL code to execute\nwhich can be specific to the database to\n"
-					    "which the connection is opened"));
+	gtk_widget_set_tooltip_text (wid, _("Enter SQL code to execute\n(must be understood by the database to\n"
+					    "which the connection is opened, except for the variables definition)"));
 	gtk_box_pack_start (GTK_BOX (vbox), wid, FALSE, FALSE, 0);
 
 	wid = query_editor_new ();
@@ -400,7 +400,7 @@ query_console_new (BrowserConnection *bcnc)
 	tconsole->priv->history = QUERY_EDITOR (wid);
 	query_editor_set_mode (tconsole->priv->history, QUERY_EDITOR_HISTORY);
 	gtk_widget_set_size_request (wid, 200, -1);
-	gtk_box_pack_start (GTK_BOX (vbox), wid, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), wid, TRUE, TRUE, 6);
 	g_signal_connect (wid, "changed",
 			  G_CALLBACK (history_changed_cb), tconsole);
 
@@ -435,7 +435,7 @@ query_console_new (BrowserConnection *bcnc)
 
 	wid = query_result_new ();
 	tconsole->priv->query_result = wid;
-	gtk_box_pack_start (GTK_BOX (vbox), wid, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), wid, TRUE, TRUE, 6);
 
 	/* show everything */
         gtk_widget_show_all (vpaned);

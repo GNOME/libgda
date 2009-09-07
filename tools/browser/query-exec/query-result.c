@@ -141,17 +141,50 @@ query_result_new (void)
 void
 query_result_show_history_batch (QueryResult *qres, QueryEditorHistoryBatch *hbatch)
 {
+	GtkWidget *sw, *vbox;
+	GSList *list;
 	GtkWidget *child;
+	
 
 	g_return_if_fail (IS_QUERY_RESULT (qres));
 	if (qres->priv->child)
 		gtk_widget_destroy (qres->priv->child);
-	TO_IMPLEMENT;
 
-	child = make_widget_for_notice ();
-	gtk_box_pack_start (GTK_BOX (qres), child, TRUE, TRUE, 10);
-	gtk_widget_show (child);
-	qres->priv->child = child;
+	if (!hbatch) {
+		child = make_widget_for_notice ();
+		gtk_box_pack_start (GTK_BOX (qres), child, TRUE, TRUE, 10);
+		gtk_widget_show (child);
+		qres->priv->child = child;
+		return;
+	}
+
+	vbox = gtk_vbox_new (FALSE, 0);
+	for (list = hbatch->hist_items; list; list = list->next) {
+		QueryEditorHistoryItem *hitem;
+
+		hitem = (QueryEditorHistoryItem*) list->data;
+		if (hitem->result) {
+			if (GDA_IS_DATA_MODEL (hitem->result))
+				child = make_widget_for_data_model (GDA_DATA_MODEL (hitem->result));
+			else if (GDA_IS_SET (hitem->result))
+				child = make_widget_for_set (GDA_SET (hitem->result));
+			else
+				g_assert_not_reached ();
+		}
+		else 
+			child = make_widget_for_error (hitem->exec_error);
+		gtk_box_pack_start (GTK_BOX (vbox), child, TRUE, TRUE, 10);
+	}
+
+	sw = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
+					GTK_POLICY_AUTOMATIC,
+					GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (sw), vbox);
+
+	gtk_box_pack_start (GTK_BOX (qres), sw, TRUE, TRUE, 0);
+	gtk_widget_show_all (sw);
+	qres->priv->child = sw;
 }
 
 /**
@@ -183,7 +216,7 @@ query_result_show_history_item (QueryResult *qres, QueryEditorHistoryItem *hitem
 	else 
 		child = make_widget_for_error (hitem->exec_error);
 
-	gtk_box_pack_start (GTK_BOX (qres), child, TRUE, TRUE, 10);
+	gtk_box_pack_start (GTK_BOX (qres), child, TRUE, TRUE, 0);
 	gtk_widget_show (child);
 	qres->priv->child = child;
 }
@@ -201,6 +234,7 @@ make_widget_for_data_model (GdaDataModel *model)
 {
 	GtkWidget *grid;
 	grid = gdaui_grid_new (model);
+	gdaui_grid_set_sample_size (GDAUI_GRID (grid), 300);
 	return grid;
 }
 
@@ -214,44 +248,41 @@ make_widget_for_set (GdaSet *set)
 	gtk_misc_set_alignment (GTK_MISC (img), 0., 0.);
 	gtk_box_pack_start (GTK_BOX (hbox), img, FALSE, FALSE, 0);
 
-	GtkWidget *sw;
-	GtkWidget *view;
-	GtkTextBuffer *buffer;
+	GtkWidget *label;
+	GString *string;
 	GSList *list;
-	GtkTextIter iter;
 
-	view = gtk_text_view_new ();
-	sw = gtk_scrolled_window_new (NULL, NULL);
-	gtk_box_pack_start (GTK_BOX (hbox), sw, TRUE, TRUE, 0);
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
-					GTK_POLICY_AUTOMATIC,
-					GTK_POLICY_AUTOMATIC);
-	gtk_container_add (GTK_CONTAINER (sw), view);
-
-	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
-	gtk_text_view_set_editable (GTK_TEXT_VIEW (view), FALSE);
+	label = gtk_label_new ("");
+	string = g_string_new ("");
 	for (list = set->holders; list; list = list->next) {
 		GdaHolder *h;
 		const GValue *value;
 		gchar *tmp;
 		const gchar *cstr;
 		h = GDA_HOLDER (list->data);
-		gtk_text_buffer_get_end_iter (buffer, &iter);
 
 		if (list != set->holders)
-			gtk_text_buffer_insert (buffer, &iter, "\n", -1);
+			g_string_append_c (string, '\n');
 		
 		cstr = gda_holder_get_id (h);
 		if (!strcmp (cstr, "IMPACTED_ROWS"))
-			gtk_text_buffer_insert (buffer, &iter, _("Number of rows impacted"), -1);
-		else
-			gtk_text_buffer_insert (buffer, &iter, cstr, -1);
-		gtk_text_buffer_insert (buffer, &iter, ": ", -1);
+			g_string_append_printf (string, "<b>%s</b>  ",
+						_("Number of rows impacted:"));
+		else {
+			tmp = g_markup_escape_text (cstr, -1);
+			g_string_append_printf (string, "<b>%s</b>", tmp);
+			g_free (tmp);
+		}
+
 		value = gda_holder_get_value (h);
 		tmp = gda_value_stringify (value);
-		gtk_text_buffer_insert (buffer, &iter, tmp, -1);
+		g_string_append_printf (string, "%s", tmp);
 		g_free (tmp);
 	}
+	gtk_label_set_markup (GTK_LABEL (label), string->str);
+	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.);
+	g_string_free (string, TRUE);
+	gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
 
 	gtk_widget_show_all (hbox);
 	gtk_widget_hide (hbox);
@@ -269,29 +300,26 @@ make_widget_for_error (GError *error)
 	gtk_misc_set_alignment (GTK_MISC (img), 0., 0.);
 	gtk_box_pack_start (GTK_BOX (hbox), img, FALSE, FALSE, 0);
 
-	GtkWidget *sw;
-	GtkWidget *view;
-	GtkTextBuffer *buffer;
-	GSList *list;
-	GtkTextIter iter;
+	GtkWidget *label;
+	GString *string;
+	gchar *tmp;
 
-	view = gtk_text_view_new ();
-	sw = gtk_scrolled_window_new (NULL, NULL);
-	gtk_box_pack_start (GTK_BOX (hbox), sw, TRUE, TRUE, 0);
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
-					GTK_POLICY_AUTOMATIC,
-					GTK_POLICY_AUTOMATIC);
-	gtk_container_add (GTK_CONTAINER (sw), view);
-
-	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
-	gtk_text_view_set_editable (GTK_TEXT_VIEW (view), FALSE);
-	gtk_text_buffer_get_end_iter (buffer, &iter);
-	gtk_text_buffer_insert (buffer, &iter, "Error\n", -1);
-	if (error && error->message)
-		gtk_text_buffer_insert (buffer, &iter, error->message, -1);
+	label = gtk_label_new ("");
+	string = g_string_new ("");
+	g_string_append_printf (string, "<b>%s</b>  ", _("Execution error:\n"));
+	if (error && error->message) {
+		tmp = g_markup_escape_text (error->message, -1);
+		g_string_append (string, tmp);
+		g_free (tmp);
+	}
 	else
-		gtk_text_buffer_insert (buffer, &iter, _("No detail"), -1);
-	
+		g_string_append (string, _("No detail"));
+
+	gtk_label_set_markup (GTK_LABEL (label), string->str);
+	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.);
+	g_string_free (string, TRUE);
+	gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);	
+
 	gtk_widget_show_all (hbox);
 	gtk_widget_hide (hbox);
 	return hbox;

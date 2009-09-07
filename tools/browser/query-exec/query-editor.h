@@ -39,18 +39,6 @@ typedef struct _QueryEditor        QueryEditor;
 typedef struct _QueryEditorClass   QueryEditorClass;
 typedef struct _QueryEditorPrivate QueryEditorPrivate;
 
-struct _QueryEditor {
-	GtkVBox parent;
-	QueryEditorPrivate *priv;
-};
-
-struct _QueryEditorClass {
-	GtkVBoxClass parent_class;
-
-	/* signals */
-	void (* changed) (QueryEditor editor);
-};
-
 /*
  * Query history item
  */
@@ -84,6 +72,19 @@ void                     query_editor_history_batch_add_item (QueryEditorHistory
 							      QueryEditorHistoryItem *qih);
 void                     query_editor_history_batch_del_item (QueryEditorHistoryBatch *qib,
 							      QueryEditorHistoryItem *qih);
+
+
+struct _QueryEditor {
+	GtkVBox parent;
+	QueryEditorPrivate *priv;
+};
+
+struct _QueryEditorClass {
+	GtkVBoxClass parent_class;
+
+	/* signals */
+	void (* changed) (QueryEditor *editor);
+};
 
 /*
  * Editor modes

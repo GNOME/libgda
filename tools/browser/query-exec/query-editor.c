@@ -853,7 +853,7 @@ query_editor_add_history_item (QueryEditor *editor, QueryEditorHistoryItem *hist
 
 		
 	tag = gtk_text_buffer_create_tag (buffer, NULL,
-					  "scale", PANGO_SCALE_X_SMALL,
+					  "scale", 0.75,
 					  "foreground", "gray",
 					  "foreground-set", TRUE, NULL);
 	hdata->tag = g_object_ref (tag);
