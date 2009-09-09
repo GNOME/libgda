@@ -413,7 +413,8 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 	else if (type == GDA_TYPE_TIME) {
 		str2 = gdaui_format_entry_get_text (GDAUI_FORMAT_ENTRY (mgtim->priv->entry_time));
 		value = gda_data_handler_get_value_from_str (dh, str2, type);
-		if (mgtim->priv->last_value_set && 
+		if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL) &&
+		    mgtim->priv->last_value_set && 
 		    gda_value_isa (mgtim->priv->last_value_set, GDA_TYPE_TIME)) {
 			/* copy the 'timezone' part, we we have not modified */
 			const GdaTime *dgatime_set = gda_value_get_time (mgtim->priv->last_value_set);
@@ -435,9 +436,10 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 		g_free (tmpstr2);
 		value = gda_data_handler_get_value_from_str (dh, str2, type);
 		g_free (str2);
-		if (mgtim->priv->last_value_set && 
+		if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL) &&
+		    mgtim->priv->last_value_set && 
 		    gda_value_isa (mgtim->priv->last_value_set, GDA_TYPE_TIMESTAMP)) {
-			/* copy the 'fraction' and 'timezone' parts, we we have not modified */
+			/* copy the 'fraction' and 'timezone' parts, we have not modified */
 			const GdaTimestamp *dgatime_set = gda_value_get_timestamp (mgtim->priv->last_value_set);
 			GdaTimestamp *gdatime = g_new (GdaTimestamp, 1);
 			*gdatime = *(gda_value_get_timestamp (value));
