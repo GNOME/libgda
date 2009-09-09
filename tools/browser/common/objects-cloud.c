@@ -92,12 +92,6 @@ objects_cloud_init (ObjectsCloud *cloud, ObjectsCloudClass *klass)
 	gtk_text_buffer_create_tag (cloud->priv->tbuffer, "section",
                                     "weight", PANGO_WEIGHT_BOLD,
                                     "foreground", "blue", NULL);
-	gtk_text_buffer_create_tag (cloud->priv->tbuffer, "size0",
-                                    "scale", PANGO_SCALE_MEDIUM, NULL);
-	gtk_text_buffer_create_tag (cloud->priv->tbuffer, "size1",
-                                    "scale", PANGO_SCALE_LARGE, NULL);
-	gtk_text_buffer_create_tag (cloud->priv->tbuffer, "size2",
-                                    "scale", PANGO_SCALE_LARGE, NULL);
 }
 
 static void
@@ -252,9 +246,8 @@ add_to_schema_data (ObjectsCloud *cloud, SchemaData *sd, GdaMetaDbObject *dbo)
 	GtkTextIter iter;
 	gdouble scale = 1.0;
 
-	if (dbo->obj_type == GDA_META_DB_TABLE) {
-		scale = 1.0 + g_slist_length (dbo->depend_list) / 5.;
-	}
+	if (dbo->obj_type == GDA_META_DB_TABLE)
+		scale = 1.5 + g_slist_length (dbo->depend_list) / 5.;
 
 	gtk_text_buffer_get_iter_at_mark (cloud->priv->tbuffer, &iter, sd->mark);
 	tag = gtk_text_buffer_create_tag (cloud->priv->tbuffer, NULL, 
