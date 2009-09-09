@@ -39,6 +39,11 @@
 #define COLOR_ALTER_FACTOR 1.8
 #define MAX_HISTORY_BATCH_ITEMS 20
 
+static void query_editor_history_batch_add_item (QueryEditorHistoryBatch *qib,
+						 QueryEditorHistoryItem *qih);
+static void query_editor_history_batch_del_item (QueryEditorHistoryBatch *qib,
+						 QueryEditorHistoryItem *qih);
+
 typedef void (* CreateTagsFunc) (QueryEditor *editor, const gchar *language);
 
 typedef struct {
@@ -58,6 +63,8 @@ struct _QueryEditorPrivate {
 	QueryEditorMode mode;
 	GtkWidget *scrolled_window;
 	GtkWidget *text;
+
+	GtkTextTag *indent_tag;
 
 	/* HISTORY mode */
 	guint ts_timeout_id;
@@ -93,10 +100,11 @@ static gboolean timestamps_update_cb (QueryEditor *editor);
 enum
 {
         CHANGED,
+	HISTORY_ITEM_REMOVED,
         LAST_SIGNAL
 };
 
-static gint query_editor_signals[LAST_SIGNAL] = { 0 };
+static gint query_editor_signals[LAST_SIGNAL] = { 0, 0 };
 
 
 /*
@@ -174,6 +182,14 @@ query_editor_class_init (QueryEditorClass *klass)
                               G_STRUCT_OFFSET (QueryEditorClass, changed),
                               NULL, NULL,
                               g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
+
+	query_editor_signals[HISTORY_ITEM_REMOVED] =
+                g_signal_new ("history-item-removed",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_FIRST,
+                              G_STRUCT_OFFSET (QueryEditorClass, history_item_removed),
+                              NULL, NULL,
+                              g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
 
 	object_class->finalize = query_editor_finalize;
 	GTK_WIDGET_CLASS (object_class)->map = query_editor_map;
@@ -379,6 +395,24 @@ query_editor_init (QueryEditor *editor, QueryEditorClass *klass)
 	g_signal_connect (editor->priv->text, "expose-event",
 			  G_CALLBACK (text_view_expose_event), editor);
 
+	/* create some tags */
+	GtkTextBuffer *buffer;
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->text));
+	gtk_text_buffer_create_tag (buffer, "h0",
+				    "foreground", "#474A8F",
+				    "weight", PANGO_WEIGHT_BOLD,
+				    "variant", PANGO_VARIANT_SMALL_CAPS,
+				    "scale", PANGO_SCALE_LARGE,
+				    "underline", PANGO_UNDERLINE_SINGLE,
+				    NULL);
+
+	gtk_text_buffer_create_tag (buffer, "note",
+				    "left-margin", 50,
+				    "foreground", "black",
+				    "weight", PANGO_WEIGHT_NORMAL,
+				    "style", PANGO_STYLE_ITALIC,
+				    NULL);
+
 	/* initialize common data */
 	number_of_objects++;
 	if (!supported_languages) {
@@ -390,7 +424,7 @@ query_editor_init (QueryEditor *editor, QueryEditorClass *klass)
 
 	create_tags_for_sql (editor, QUERY_EDITOR_LANGUAGE_SQL);
 
-	gtk_widget_show (editor->priv->text);
+	gtk_widget_show_all (editor->priv->scrolled_window);
 
 	/* timeout function to update timestamps */
 	editor->priv->ts_timeout_id = 0;
@@ -586,9 +620,8 @@ query_editor_set_mode (QueryEditor *editor, QueryEditorMode mode)
  * query_editor_set_text
  * @editor: a #QueryEditor widget.
  * @text: text to display in the editor.
- * @len: length of @text, or -1.
  *
- * Set the contents of the given editor widget.
+ * Set @editor's text, removing any previous one
  */
 void
 query_editor_set_text (QueryEditor *editor, const gchar *text)
@@ -608,6 +641,79 @@ query_editor_set_text (QueryEditor *editor, const gchar *text)
 		gtk_text_buffer_get_end_iter (buffer, &end);
 		gtk_text_buffer_insert (buffer, &end, text, -1);
 	}
+}
+
+/**
+ * query_editor_append_text
+ * @editor: a #QueryEditor widget.
+ * @text: text to display in the editor.
+ *
+ * Appends some text to @editor.
+ */
+void
+query_editor_append_text (QueryEditor *editor, const gchar *text)
+{
+	GtkTextBuffer *buffer;
+
+	g_return_if_fail (QUERY_IS_EDITOR (editor));
+	g_return_if_fail (editor->priv->mode != QUERY_EDITOR_HISTORY);
+
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->text));
+
+	if (text) {
+		GtkTextIter end;
+		gint len;
+		len = strlen (text);
+		gtk_text_buffer_get_end_iter (buffer, &end);
+		gtk_text_buffer_insert (buffer, &end, text, -1);
+
+		if ((len >= 1) && (text [len - 1] != '\n'))
+			gtk_text_buffer_insert (buffer, &end, "\n", 1);
+	}
+}
+
+/**
+ * query_editor_append_note
+ * @editor: a #QueryEditor widget.
+ * @text: text to display in the editor.
+ * @level: 0 for header, 1 for text with marging and in italics
+ *
+ * Appends some text to @editor.
+ */
+void
+query_editor_append_note (QueryEditor *editor, const gchar *text, gint level)
+{
+	GtkTextBuffer *buffer;
+
+	g_return_if_fail (QUERY_IS_EDITOR (editor));
+	g_return_if_fail (editor->priv->mode != QUERY_EDITOR_HISTORY);
+
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->text));
+	if (text) {
+		GtkTextIter end;
+		gchar *str;
+		
+		switch (level) {
+		case 0:
+			str = g_strdup_printf ("%s\n", text);
+			gtk_text_buffer_get_end_iter (buffer, &end);
+			gtk_text_buffer_insert_with_tags_by_name (buffer, &end,
+								  str, -1,
+								  "h0", NULL);
+			g_free (str);
+			break;
+		case 1:
+			str = g_strdup_printf ("%s\n", text);
+			gtk_text_buffer_get_end_iter (buffer, &end);
+			gtk_text_buffer_insert_with_tags_by_name (buffer, &end,
+								  str, -1,
+								  "note", NULL);
+			g_free (str);
+			break;
+		default:
+			g_assert_not_reached ();
+		}
+	}	
 }
 
 static void
@@ -693,7 +799,7 @@ get_date_format (time_t time)
 	}
 	/* Turn it into days */
 	tmp = diff / 86400;
-	snprintf (timebuf, sizeof(timebuf), ngettext ("%lu days ago\n",
+	snprintf (timebuf, sizeof(timebuf), ngettext ("%lu day ago\n",
 						      "%lu days ago\n", tmp), tmp);
 
 	return timebuf;
@@ -968,29 +1074,32 @@ query_editor_del_current_history_item (QueryEditor *editor)
 	g_hash_table_remove (editor->priv->hash, hdata->item);
 	g_hash_table_remove (editor->priv->hash, hdata->tag);
 	
-	if (hdata->batch) {
-		query_editor_history_batch_del_item (hdata->batch, hdata->item);
-		if (! hdata->batch->hist_items) {
-			/* remove hdata->batch */
-			HistItemData *remhdata;
+	g_assert (hdata->batch);
+	query_editor_history_item_ref (hdata->item);
+	query_editor_history_batch_del_item (hdata->batch, hdata->item);
+	g_signal_emit (editor, query_editor_signals[HISTORY_ITEM_REMOVED], 0, hdata->item);
+	query_editor_history_item_unref (hdata->item);
 
-			editor->priv->batches_list = g_slist_remove (editor->priv->batches_list, hdata->batch);
-			query_editor_history_batch_unref (hdata->batch);
-
-			remhdata = g_hash_table_lookup (editor->priv->hash, hdata->batch);
-			gtk_text_buffer_get_iter_at_mark (buffer, &start, remhdata->start_mark);
-			gtk_text_buffer_get_iter_at_mark (buffer, &end, remhdata->end_mark);
-			gtk_text_buffer_delete (buffer, &start, &end);
-			gtk_text_buffer_delete_mark (buffer, remhdata->start_mark);
-			gtk_text_buffer_delete_mark (buffer, remhdata->end_mark);
-
-			g_hash_table_remove (editor->priv->hash, remhdata->batch);
-			g_hash_table_remove (editor->priv->hash, remhdata->tag);
-
-			if (editor->priv->insert_into_batch == hdata->batch) {
-				query_editor_history_batch_unref (editor->priv->insert_into_batch);
-				editor->priv->insert_into_batch = NULL;
-			}
+	if (! hdata->batch->hist_items) {
+		/* remove hdata->batch */
+		HistItemData *remhdata;
+		
+		editor->priv->batches_list = g_slist_remove (editor->priv->batches_list, hdata->batch);
+		query_editor_history_batch_unref (hdata->batch);
+		
+		remhdata = g_hash_table_lookup (editor->priv->hash, hdata->batch);
+		gtk_text_buffer_get_iter_at_mark (buffer, &start, remhdata->start_mark);
+		gtk_text_buffer_get_iter_at_mark (buffer, &end, remhdata->end_mark);
+		gtk_text_buffer_delete (buffer, &start, &end);
+		gtk_text_buffer_delete_mark (buffer, remhdata->start_mark);
+		gtk_text_buffer_delete_mark (buffer, remhdata->end_mark);
+		
+		g_hash_table_remove (editor->priv->hash, remhdata->batch);
+		g_hash_table_remove (editor->priv->hash, remhdata->tag);
+		
+		if (editor->priv->insert_into_batch == hdata->batch) {
+			query_editor_history_batch_unref (editor->priv->insert_into_batch);
+			editor->priv->insert_into_batch = NULL;
 		}
 	}
 	hist_item_data_unref (hdata);
@@ -1299,7 +1408,7 @@ query_editor_history_batch_unref (QueryEditorHistoryBatch *qib)
 	}
 }
 
-void
+static void
 query_editor_history_batch_add_item (QueryEditorHistoryBatch *qib, QueryEditorHistoryItem *qih)
 {
 	g_return_if_fail (qib);
@@ -1307,7 +1416,7 @@ query_editor_history_batch_add_item (QueryEditorHistoryBatch *qib, QueryEditorHi
 	qib->hist_items = g_slist_append (qib->hist_items, query_editor_history_item_ref (qih));
 }
 
-void
+static void
 query_editor_history_batch_del_item (QueryEditorHistoryBatch *qib, QueryEditorHistoryItem *qih)
 {
 	g_return_if_fail (qib);

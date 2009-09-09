@@ -50,7 +50,7 @@ struct _QueryResultClass {
 
 
 GType      query_result_get_type (void) G_GNUC_CONST;
-GtkWidget *query_result_new (void);
+GtkWidget *query_result_new (QueryEditor *history);
 
 void       query_result_show_history_batch (QueryResult *qres, QueryEditorHistoryBatch *hbatch);
 void       query_result_show_history_item (QueryResult *qres, QueryEditorHistoryItem *hitem);

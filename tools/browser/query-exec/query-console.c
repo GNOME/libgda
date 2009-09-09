@@ -433,7 +433,7 @@ query_console_new (BrowserConnection *bcnc)
 	gtk_misc_set_alignment (GTK_MISC (wid), 0., -1);
 	gtk_box_pack_start (GTK_BOX (vbox), wid, FALSE, FALSE, 0);
 
-	wid = query_result_new ();
+	wid = query_result_new (tconsole->priv->history);
 	tconsole->priv->query_result = wid;
 	gtk_box_pack_start (GTK_BOX (vbox), wid, TRUE, TRUE, 6);
 

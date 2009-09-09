@@ -68,10 +68,6 @@ typedef struct {
 QueryEditorHistoryBatch *query_editor_history_batch_new (GTimeVal run_time, GdaSet *params);
 QueryEditorHistoryBatch *query_editor_history_batch_ref (QueryEditorHistoryBatch *qib);
 void                     query_editor_history_batch_unref (QueryEditorHistoryBatch *qib);
-void                     query_editor_history_batch_add_item (QueryEditorHistoryBatch *qib,
-							      QueryEditorHistoryItem *qih);
-void                     query_editor_history_batch_del_item (QueryEditorHistoryBatch *qib,
-							      QueryEditorHistoryItem *qih);
 
 
 struct _QueryEditor {
@@ -84,6 +80,7 @@ struct _QueryEditorClass {
 
 	/* signals */
 	void (* changed) (QueryEditor *editor);
+	void (* history_item_removed) (QueryEditor *editor, QueryEditorHistoryItem *item);
 };
 
 /*
@@ -113,6 +110,8 @@ void       query_editor_paste_clipboard (QueryEditor *editor);
 
 /* normal editor's API */
 void       query_editor_set_text (QueryEditor *editor, const gchar *text);
+void       query_editor_append_text (QueryEditor *editor, const gchar *text);
+void       query_editor_append_note (QueryEditor *editor, const gchar *text, gint level);
 
 /* history API */
 void       query_editor_start_history_batch (QueryEditor *editor, QueryEditorHistoryBatch *hist_batch);

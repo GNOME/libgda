@@ -26,9 +26,11 @@
 #include <libgda-ui/libgda-ui.h>
 
 struct _QueryResultPrivate {
+	QueryEditor *history;
 	QueryEditorHistoryBatch *hbatch;
 	QueryEditorHistoryItem *hitem;
 
+	GHashTable *hash; /* key = a QueryEditorHistoryItem, value = a #GtkWidget, refed here all the times */
 	GtkWidget *child;
 };
 
@@ -64,13 +66,22 @@ query_result_init (QueryResult *result, QueryResultClass *klass)
 
 	/* allocate private structure */
 	result->priv = g_new0 (QueryResultPrivate, 1);
+	result->priv->history = NULL;
 	result->priv->hbatch = NULL;
 	result->priv->hitem = NULL;
+	result->priv->hash = g_hash_table_new_full (NULL, NULL, NULL, g_object_unref);
 
 	wid = make_widget_for_notice ();
 	gtk_box_pack_start (GTK_BOX (result), wid, TRUE, TRUE, 0);
 	gtk_widget_show (wid);
 	result->priv->child = wid;
+}
+
+static void
+history_item_removed_cb (QueryEditor *history, QueryEditorHistoryItem *item, QueryResult *result)
+{
+	g_hash_table_remove (result->priv->hash, item);
+	g_print ("Removed GtkWidget for item %p\n", item);
 }
 
 static void
@@ -81,6 +92,13 @@ query_result_finalize (GObject *object)
 	g_return_if_fail (IS_QUERY_RESULT (result));
 
 	/* free memory */
+	if (result->priv->hash)
+		g_hash_table_destroy (result->priv->hash);
+	if (result->priv->history) {
+		g_signal_handlers_disconnect_by_func (result->priv->history,
+						      G_CALLBACK (history_item_removed_cb), result);
+		g_object_unref (result->priv->history);
+	}
 	if (result->priv->hbatch)
 		query_editor_history_batch_unref (result->priv->hbatch);
 	if (result->priv->hitem)
@@ -116,17 +134,23 @@ query_result_get_type (void)
 
 /**
  * query_result_new
+ * @history: a #QueryEditor to take history from
  *
  * Create a new #QueryResult widget
  *
  * Returns: the newly created widget.
  */
 GtkWidget *
-query_result_new (void)
+query_result_new (QueryEditor *history)
 {
 	QueryResult *result;
+	g_return_val_if_fail (QUERY_IS_EDITOR (history), NULL);
 
 	result = g_object_new (QUERY_TYPE_RESULT, NULL);
+	g_signal_connect (history, "history-item-removed",
+			  G_CALLBACK (history_item_removed_cb), result);
+	result->priv->history = g_object_ref (history);
+
 
 	return GTK_WIDGET (result);
 }
@@ -141,14 +165,14 @@ query_result_new (void)
 void
 query_result_show_history_batch (QueryResult *qres, QueryEditorHistoryBatch *hbatch)
 {
-	GtkWidget *sw, *vbox;
 	GSList *list;
-	GtkWidget *child;
-	
+	GtkWidget *child;	
+	GtkWidget *vbox;
+	gchar *str;
 
 	g_return_if_fail (IS_QUERY_RESULT (qres));
 	if (qres->priv->child)
-		gtk_widget_destroy (qres->priv->child);
+		gtk_container_remove (GTK_CONTAINER (qres), qres->priv->child);
 
 	if (!hbatch) {
 		child = make_widget_for_notice ();
@@ -159,32 +183,83 @@ query_result_show_history_batch (QueryResult *qres, QueryEditorHistoryBatch *hba
 	}
 
 	vbox = gtk_vbox_new (FALSE, 0);
+
+	child = query_editor_new ();
+	query_editor_set_mode (QUERY_EDITOR (child), QUERY_EDITOR_READONLY);
+	gtk_box_pack_start (GTK_BOX (vbox), child, TRUE, TRUE, 0);
 	for (list = hbatch->hist_items; list; list = list->next) {
 		QueryEditorHistoryItem *hitem;
+		GString *string;
+		hitem = (QueryEditorHistoryItem *) list->data;
+		if (list != hbatch->hist_items)
+			query_editor_append_text (QUERY_EDITOR (child), "\n");
+		query_editor_append_note (QUERY_EDITOR (child), _("Statement:"), 0);
+		query_editor_append_text (QUERY_EDITOR (child), hitem->sql);
 
-		hitem = (QueryEditorHistoryItem*) list->data;
+		string = g_string_new ("");
 		if (hitem->result) {
-			if (GDA_IS_DATA_MODEL (hitem->result))
-				child = make_widget_for_data_model (GDA_DATA_MODEL (hitem->result));
-			else if (GDA_IS_SET (hitem->result))
-				child = make_widget_for_set (GDA_SET (hitem->result));
+			if (GDA_IS_DATA_MODEL (hitem->result)) {
+				gint n, c;
+				n = gda_data_model_get_n_rows (GDA_DATA_MODEL (hitem->result));
+				c = gda_data_model_get_n_columns (GDA_DATA_MODEL (hitem->result));
+				g_string_append_printf (string, 
+							_("Data set with %d rows and %d columns"),
+							n, c);
+			}
+			else if (GDA_IS_SET (hitem->result)) {
+				GdaSet *set;
+				GSList *list;
+				set = GDA_SET (hitem->result);
+				for (list = set->holders; list; list = list->next) {
+					GdaHolder *h;
+					const GValue *value;
+					const gchar *cstr;
+					gchar *tmp;
+					h = GDA_HOLDER (list->data);
+					
+					if (list != set->holders)
+						g_string_append_c (string, '\n');
+					
+					cstr = gda_holder_get_id (h);
+					if (!strcmp (cstr, "IMPACTED_ROWS"))
+						g_string_append (string, _("Number of rows impacted"));
+					else
+						g_string_append (string, cstr);
+					
+					g_string_append (string, ": ");
+					value = gda_holder_get_value (h);
+					tmp = gda_value_stringify (value);
+					g_string_append_printf (string, "%s", tmp);
+					g_free (tmp);
+				}
+			}
 			else
 				g_assert_not_reached ();
 		}
 		else 
-			child = make_widget_for_error (hitem->exec_error);
-		gtk_box_pack_start (GTK_BOX (vbox), child, TRUE, TRUE, 10);
+			g_string_append_printf (string, _("Error: %s"),
+						hitem->exec_error && hitem->exec_error->message ?
+						hitem->exec_error->message : _("No detail"));
+		query_editor_append_note (QUERY_EDITOR (child), string->str, 1);
+		g_string_free (string, TRUE);
 	}
 
-	sw = gtk_scrolled_window_new (NULL, NULL);
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
-					GTK_POLICY_AUTOMATIC,
-					GTK_POLICY_AUTOMATIC);
-	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (sw), vbox);
+	if (hbatch->params) {
+		GtkWidget *exp, *form;
+		str = g_strdup_printf ("<b>%s:</b>", _("Execution Parameters"));
+		exp = gtk_expander_new (str);
+		g_free (str);
+		gtk_expander_set_use_markup (GTK_EXPANDER (exp), TRUE);
+		gtk_box_pack_start (GTK_BOX (vbox), exp, FALSE, FALSE, 0);
 
-	gtk_box_pack_start (GTK_BOX (qres), sw, TRUE, TRUE, 0);
-	gtk_widget_show_all (sw);
-	qres->priv->child = sw;
+		form = gdaui_basic_form_new (hbatch->params);
+		gdaui_basic_form_entry_set_editable (GDAUI_BASIC_FORM (form), NULL, FALSE);
+		gtk_container_add (GTK_CONTAINER (exp), form);
+	}
+
+	gtk_box_pack_start (GTK_BOX (qres), vbox, TRUE, TRUE, 0);
+	gtk_widget_show_all (vbox);
+	qres->priv->child = vbox;
 }
 
 /**
@@ -201,20 +276,27 @@ query_result_show_history_item (QueryResult *qres, QueryEditorHistoryItem *hitem
 
 	g_return_if_fail (IS_QUERY_RESULT (qres));
 	if (qres->priv->child)
-		gtk_widget_destroy (qres->priv->child);
+		gtk_container_remove (GTK_CONTAINER (qres), qres->priv->child);
 	
 	if (!hitem)
 		child = make_widget_for_notice ();
-	else if (hitem->result) {
-		if (GDA_IS_DATA_MODEL (hitem->result))
-			child = make_widget_for_data_model (GDA_DATA_MODEL (hitem->result));
-		else if (GDA_IS_SET (hitem->result))
-			child = make_widget_for_set (GDA_SET (hitem->result));
-		else
-			g_assert_not_reached ();
+	else {
+		child = g_hash_table_lookup (qres->priv->hash, hitem);
+		if (!child) {
+			if (hitem->result) {
+				if (GDA_IS_DATA_MODEL (hitem->result))
+					child = make_widget_for_data_model (GDA_DATA_MODEL (hitem->result));
+				else if (GDA_IS_SET (hitem->result))
+					child = make_widget_for_set (GDA_SET (hitem->result));
+				else
+					g_assert_not_reached ();
+			}
+			else 
+				child = make_widget_for_error (hitem->exec_error);
+			g_print ("Inserted GtkWidget %p for item %p\n", child, hitem);
+			g_hash_table_insert (qres->priv->hash, hitem, g_object_ref (G_OBJECT (child)));
+		}
 	}
-	else 
-		child = make_widget_for_error (hitem->exec_error);
 
 	gtk_box_pack_start (GTK_BOX (qres), child, TRUE, TRUE, 0);
 	gtk_widget_show (child);
