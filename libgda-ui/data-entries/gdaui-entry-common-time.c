@@ -78,7 +78,6 @@ struct _GdauiEntryCommonTimePrivate
 
 	/* for time */
 	GtkWidget *entry_time;
-	GtkWidget *legend;
 
 	/* for timestamp */
 	GtkWidget *hbox;
@@ -161,7 +160,6 @@ gdaui_entry_common_time_init (GdauiEntryCommonTime * gdaui_entry_common_time)
 	gdaui_entry_common_time->priv->date = NULL;
 	gdaui_entry_common_time->priv->window = NULL;
 	gdaui_entry_common_time->priv->date_button = NULL;
-	gdaui_entry_common_time->priv->legend = NULL;
 	gdaui_entry_common_time->priv->hbox = NULL;
 	gdaui_entry_common_time->priv->last_value_set = NULL;
 }
@@ -899,15 +897,12 @@ position_popup (GdauiEntryCommonTime *mgtim)
 static GtkWidget *
 create_entry_time (GdauiEntryCommonTime *mgtim)
 {
-	GtkWidget *wid, *hb;
+	GtkWidget *wid;
 	GdaDataHandler *dh;
-
-	hb = gtk_hbox_new (FALSE, 3);
 
 	/* text entry */
 	dh = gdaui_data_entry_get_handler (GDAUI_DATA_ENTRY (mgtim));
         wid = gdaui_format_entry_new ();
-        gtk_box_pack_start (GTK_BOX (hb), wid, FALSE, FALSE, 0);
 	if (GDA_IS_HANDLER_TIME (dh)) {
 		gchar *str;
 		str = gda_handler_time_get_format (GDA_HANDLER_TIME (dh), GDA_TYPE_TIME);
@@ -915,17 +910,12 @@ create_entry_time (GdauiEntryCommonTime *mgtim)
 		gtk_entry_set_width_chars (GTK_ENTRY (wid), g_utf8_strlen (str, -1));
 		g_free (str);
 	}
-        gtk_widget_show (wid);
         mgtim->priv->entry_time = wid;
 
-        /* small label */
-        wid = gtk_label_new (_("hh:mm:ss"));
-	gtk_misc_set_alignment (GTK_MISC (wid), 0., 0.5);
-        gtk_box_pack_start (GTK_BOX (hb), wid, TRUE, TRUE, 0);
-        gtk_widget_show (wid);
-	mgtim->priv->legend = wid;
+        /* format tooltip */
+	gtk_widget_set_tooltip_text (wid, _("Format is hh:mm:ss"));
 
-        return hb;
+        return wid;
 }
 
 
@@ -985,10 +975,7 @@ gdaui_entry_common_time_start_editing (GtkCellEditable *iface, GdkEvent *event)
 		gtk_widget_destroy (mgtim->priv->date_button);
 		mgtim->priv->date_button = NULL;
 	}
-	if (mgtim->priv->legend) {
-		gtk_widget_destroy (mgtim->priv->legend);
-		mgtim->priv->legend = NULL;
-	}
+
 	if (mgtim->priv->hbox) {
 		gtk_box_set_spacing (GTK_BOX (mgtim->priv->hbox), 0);
 		gtk_container_set_border_width (GTK_CONTAINER (mgtim->priv->hbox), 0);
