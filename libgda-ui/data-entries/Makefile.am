@@ -7,16 +7,19 @@ AM_CPPFLAGS = \
         -I$(top_builddir) -I$(top_builddir)/libgda-ui \
         $(LIBGDA_CFLAGS) \
         $(GTK_CFLAGS) \
+	$(GIO_CFLAGS) \
         -DPREFIX=\""$(prefix)"\" \
         -DSYSCONFDIR=\""$(sysconfdir)"\" \
         -DDATADIR=\""$(datadir)"\" \
         -DLIBDIR=\""$(libdir)"\"
 
 libgda_ui_data_entries_headers = \
+	gdaui-data-cell-renderer-bin.h \
 	gdaui-data-cell-renderer-boolean.h \
 	gdaui-data-cell-renderer-combo.h \
 	gdaui-data-cell-renderer-info.h \
 	gdaui-data-cell-renderer-textual.h \
+	gdaui-entry-bin.h \
 	gdaui-entry-boolean.h \
 	gdaui-entry-combo.h \
 	gdaui-entry-none.h \
@@ -31,10 +34,14 @@ libgda_ui_data_entries_headers = \
 
 libgda_ui_data_entries_la_SOURCES = \
 	$(libgda_ui_data_entries_headers) \
+	common-bin.c \
+	common-bin.h \
+	gdaui-data-cell-renderer-bin.c \
 	gdaui-data-cell-renderer-boolean.c \
 	gdaui-data-cell-renderer-combo.c \
 	gdaui-data-cell-renderer-info.c \
 	gdaui-data-cell-renderer-textual.c \
+	gdaui-entry-bin.c \
 	gdaui-entry-boolean.c \
 	gdaui-entry-combo.c \
 	gdaui-entry-none.c \

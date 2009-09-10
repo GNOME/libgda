@@ -1,0 +1,404 @@
+/* gdaui-data-cell-renderer-bin.c
+ *
+ * Copyright (C) 2009 Vivien Malerba <malerba@gnome-db.org>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#include <stdlib.h>
+#include <libgda/libgda.h>
+#include <glib/gi18n-lib.h>
+#include <libgda/gda-enum-types.h>
+#include "gdaui-data-cell-renderer-bin.h"
+#include "marshallers/gdaui-custom-marshal.h"
+#include "common-bin.h"
+
+
+static void gdaui_data_cell_renderer_bin_get_property  (GObject *object,
+							guint param_id,
+							GValue *value,
+							GParamSpec *pspec);
+static void gdaui_data_cell_renderer_bin_set_property  (GObject *object,
+							guint param_id,
+							const GValue *value,
+							GParamSpec *pspec);
+static void gdaui_data_cell_renderer_bin_init       (GdauiDataCellRendererBin      *celltext);
+static void gdaui_data_cell_renderer_bin_class_init (GdauiDataCellRendererBinClass *class);
+static void gdaui_data_cell_renderer_bin_dispose    (GObject *object);
+static void gdaui_data_cell_renderer_bin_finalize   (GObject *object);
+static void gdaui_data_cell_renderer_bin_render     (GtkCellRenderer            *cell,
+						     GdkWindow                  *window,
+						     GtkWidget                  *widget,
+						     GdkRectangle               *background_area,
+						     GdkRectangle               *cell_area,
+						     GdkRectangle               *expose_area,
+						     GtkCellRendererState        flags);
+static void gdaui_data_cell_renderer_bin_get_size   (GtkCellRenderer            *cell,
+						     GtkWidget                  *widget,
+						     GdkRectangle               *cell_area,
+						     gint                       *x_offset,
+						     gint                       *y_offset,
+						     gint                       *width,
+						     gint                       *height);
+static gboolean gdaui_data_cell_renderer_bin_activate  (GtkCellRenderer            *cell,
+							GdkEvent                   *event,
+							GtkWidget                  *widget,
+							const gchar                *path,
+							GdkRectangle               *background_area,
+							GdkRectangle               *cell_area,
+							GtkCellRendererState        flags);
+
+enum {
+	CHANGED,
+	LAST_SIGNAL
+};
+
+
+struct _GdauiDataCellRendererBinPrivate 
+{
+	GdaDataHandler       *dh;
+	BinMenu               menu;
+        GType                 type;
+	gboolean              to_be_deleted;
+
+	gboolean              editable;
+	gboolean              active;
+	gboolean              null;
+};
+
+enum {
+	PROP_0,
+	PROP_VALUE,
+	PROP_VALUE_ATTRIBUTES,
+	PROP_EDITABLE,
+	PROP_TO_BE_DELETED,
+	PROP_DATA_HANDLER,
+	PROP_TYPE
+};
+
+static GObjectClass *parent_class = NULL;
+static guint bin_cell_signals[LAST_SIGNAL] = { 0 };
+
+
+GType
+gdaui_data_cell_renderer_bin_get_type (void)
+{
+	static GType cell_type = 0;
+
+	if (!cell_type) {
+		static const GTypeInfo cell_info = {
+			sizeof (GdauiDataCellRendererBinClass),
+			NULL,		/* base_init */
+			NULL,		/* base_finalize */
+			(GClassInitFunc) gdaui_data_cell_renderer_bin_class_init,
+			NULL,		/* class_finalize */
+			NULL,		/* class_data */
+			sizeof (GdauiDataCellRendererBin),
+			0,              /* n_preallocs */
+			(GInstanceInitFunc) gdaui_data_cell_renderer_bin_init,
+		};
+		
+		cell_type =
+			g_type_register_static (GTK_TYPE_CELL_RENDERER_TEXT, "GdauiDataCellRendererBin",
+						&cell_info, 0);
+	}
+
+	return cell_type;
+}
+
+static void
+gdaui_data_cell_renderer_bin_init (GdauiDataCellRendererBin *cell)
+{
+	cell->priv = g_new0 (GdauiDataCellRendererBinPrivate, 1);
+	cell->priv->dh = NULL;
+	cell->priv->type = GDA_TYPE_BLOB;
+	cell->priv->editable = FALSE;
+	GTK_CELL_RENDERER (cell)->mode = GTK_CELL_RENDERER_MODE_ACTIVATABLE;
+	GTK_CELL_RENDERER (cell)->xpad = 2;
+	GTK_CELL_RENDERER (cell)->ypad = 2;
+}
+
+static void
+gdaui_data_cell_renderer_bin_class_init (GdauiDataCellRendererBinClass *class)
+{
+	GObjectClass *object_class = G_OBJECT_CLASS (class);
+	GtkCellRendererClass *cell_class = GTK_CELL_RENDERER_CLASS (class);
+
+	parent_class = g_type_class_peek_parent (class);
+
+	object_class->dispose = gdaui_data_cell_renderer_bin_dispose;
+	object_class->finalize = gdaui_data_cell_renderer_bin_finalize;
+
+	object_class->get_property = gdaui_data_cell_renderer_bin_get_property;
+	object_class->set_property = gdaui_data_cell_renderer_bin_set_property;
+
+	cell_class->get_size = gdaui_data_cell_renderer_bin_get_size;
+	cell_class->render = gdaui_data_cell_renderer_bin_render;
+	cell_class->activate = gdaui_data_cell_renderer_bin_activate;
+	cell_class->start_editing = NULL;
+  
+	g_object_class_install_property (object_class,
+					 PROP_VALUE,
+					 g_param_spec_boxed ("value",
+							     _("Value"),
+							     _("GValue to render"),
+							     G_TYPE_VALUE,
+							     G_PARAM_READWRITE));
+  
+	g_object_class_install_property (object_class,
+					 PROP_VALUE_ATTRIBUTES,
+					 g_param_spec_flags ("value_attributes", NULL, NULL, GDA_TYPE_VALUE_ATTRIBUTE,
+							     GDA_VALUE_ATTR_NONE, G_PARAM_READWRITE));
+
+	g_object_class_install_property (object_class,
+					 PROP_EDITABLE,
+					 g_param_spec_boolean ("editable",
+							       _("Editable"),
+							       NULL,
+							       TRUE,
+							       G_PARAM_READABLE |
+							       G_PARAM_WRITABLE));
+
+	g_object_class_install_property (object_class,
+					 PROP_TO_BE_DELETED,
+					 g_param_spec_boolean ("to_be_deleted", NULL, NULL, FALSE,
+							   G_PARAM_WRITABLE));
+	g_object_class_install_property(object_class,
+					PROP_DATA_HANDLER,
+					g_param_spec_object("data_handler", NULL, NULL, GDA_TYPE_DATA_HANDLER,
+							    G_PARAM_WRITABLE|G_PARAM_CONSTRUCT_ONLY));
+	g_object_class_install_property(object_class,
+					PROP_TYPE,
+					g_param_spec_gtype("type", NULL, NULL, G_TYPE_NONE,
+							   G_PARAM_WRITABLE|G_PARAM_CONSTRUCT_ONLY));
+  
+
+	bin_cell_signals[CHANGED] =
+		g_signal_new ("changed",
+			      G_OBJECT_CLASS_TYPE (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdauiDataCellRendererBinClass, changed),
+			      NULL, NULL,
+			      _gdaui_marshal_VOID__STRING_VALUE,
+			      G_TYPE_NONE, 2,
+			      G_TYPE_STRING,
+			      G_TYPE_VALUE);
+}
+
+static void
+gdaui_data_cell_renderer_bin_dispose (GObject *object)
+{
+	GdauiDataCellRendererBin *datacell = GDAUI_DATA_CELL_RENDERER_BIN (object);
+
+	if (datacell->priv->dh) {
+		g_object_unref (G_OBJECT (datacell->priv->dh));
+		datacell->priv->dh = NULL;
+	}
+
+	/* parent class */
+	parent_class->dispose (object);
+}
+
+static void
+gdaui_data_cell_renderer_bin_finalize (GObject *object)
+{
+	GdauiDataCellRendererBin *datacell = GDAUI_DATA_CELL_RENDERER_BIN (object);
+
+	if (datacell->priv) {
+		g_free (datacell->priv);
+		datacell->priv = NULL;
+	}
+
+	/* parent class */
+	parent_class->finalize (object);
+}
+
+static void
+gdaui_data_cell_renderer_bin_get_property (GObject *object,
+					   guint param_id,
+					   GValue *value,
+					   GParamSpec *pspec)
+{
+	GdauiDataCellRendererBin *cell = GDAUI_DATA_CELL_RENDERER_BIN (object);
+  
+	switch (param_id) {
+	case PROP_VALUE:
+		break;
+	case PROP_VALUE_ATTRIBUTES:
+		break;
+	case PROP_EDITABLE:
+		g_value_set_boolean (value, cell->priv->editable);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
+	}
+}
+
+
+static void
+gdaui_data_cell_renderer_bin_set_property (GObject *object,
+					   guint param_id,
+					   const GValue *value,
+					   GParamSpec *pspec)
+{
+	GdauiDataCellRendererBin *cell = GDAUI_DATA_CELL_RENDERER_BIN (object);
+  
+	switch (param_id) {
+	case PROP_VALUE:
+		/* Because we don't have a copy of the value, we MUST NOT free it! */
+		if (value) {			
+                        GValue *gval = g_value_get_boxed (value);
+                }
+		break;
+	case PROP_VALUE_ATTRIBUTES:
+		break;
+	case PROP_EDITABLE:
+		cell->priv->editable = g_value_get_boolean (value);
+		break;
+	case PROP_TO_BE_DELETED:
+		cell->priv->to_be_deleted = g_value_get_boolean (value);
+		break;
+	case PROP_DATA_HANDLER:
+		if(cell->priv->dh)
+			g_object_unref (G_OBJECT(cell->priv->dh));
+
+		cell->priv->dh = GDA_DATA_HANDLER(g_value_get_object(value));
+		if(cell->priv->dh)
+			g_object_ref (G_OBJECT (cell->priv->dh));
+		break;
+	case PROP_TYPE:
+		cell->priv->type = g_value_get_gtype (value);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
+	}
+}
+
+/**
+ * gdaui_data_cell_renderer_bin_new:
+ * @dh: a #GdaDataHandler object
+ * @type:
+ * 
+ * Creates a new #GdauiDataCellRendererBin. Adjust rendering
+ * parameters using object properties. Object properties can be set
+ * globally (with g_object_set()). Also, with #GtkTreeViewColumn, you
+ * can bind a property to a value in a #GtkTreeModel. For example, you
+ * can bind the "active" property on the cell renderer to a bin value
+ * in the model, thus causing the check button to reflect the state of
+ * the model.
+ * 
+ * Return value: the new cell renderer
+ */
+GtkCellRenderer *
+gdaui_data_cell_renderer_bin_new (GdaDataHandler *dh, GType type)
+{
+	GObject *obj;
+
+        g_return_val_if_fail (dh && GDA_IS_DATA_HANDLER (dh), NULL);
+        obj = g_object_new (GDAUI_TYPE_DATA_CELL_RENDERER_BIN, "type", type, 
+                            "data_handler", dh, 
+			    "editable", FALSE,
+			    "text", _("Attachment"), NULL);
+        	
+        return GTK_CELL_RENDERER (obj);
+}
+
+static void
+gdaui_data_cell_renderer_bin_get_size (GtkCellRenderer *cell,
+				       GtkWidget       *widget,
+				       GdkRectangle    *cell_area,
+				       gint            *x_offset,
+				       gint            *y_offset,
+				       gint            *width,
+				       gint            *height)
+{
+	GtkCellRendererClass *text_class = g_type_class_peek (GTK_TYPE_CELL_RENDERER_TEXT);
+
+	(text_class->get_size) (cell, widget, cell_area, x_offset, y_offset, width, height);
+}
+
+static void
+gdaui_data_cell_renderer_bin_render (GtkCellRenderer      *cell,
+				     GdkWindow            *window,
+				     GtkWidget            *widget,
+				     GdkRectangle         *background_area,
+				     GdkRectangle         *cell_area,
+				     GdkRectangle         *expose_area,
+				     GtkCellRendererState  flags)
+{
+	GtkCellRendererClass *text_class = g_type_class_peek (GTK_TYPE_CELL_RENDERER_TEXT);
+
+	(text_class->render) (cell, window, widget, background_area, cell_area, expose_area, flags);
+
+	if (GDAUI_DATA_CELL_RENDERER_BIN (cell)->priv->to_be_deleted)
+		gtk_paint_hline (widget->style,
+				 window, GTK_STATE_SELECTED,
+				 cell_area, 
+				 widget,
+				 "hline",
+				 cell_area->x + cell->xpad, cell_area->x + cell_area->width - cell->xpad,
+				 cell_area->y + cell_area->height / 2.);
+
+}
+
+static void
+bin_data_changed_cb (GdauiDataCellRendererBin *bincell, GValue *value)
+{
+        g_signal_emit (G_OBJECT (bincell), bin_cell_signals[CHANGED], 0,
+                       g_object_get_data (G_OBJECT (bincell), "last_path"), value);
+        gda_value_free (value);
+}
+
+static gboolean
+gdaui_data_cell_renderer_bin_activate  (GtkCellRenderer            *cell,
+					GdkEvent                   *event,
+					GtkWidget                  *widget,
+					const gchar                *path,
+					GdkRectangle               *background_area,
+					GdkRectangle               *cell_area,
+					GtkCellRendererState        flags)
+{
+	GdauiDataCellRendererBin *bincell;
+	GtkTreeModel *model;
+	GtkTreePath *tpath;
+	GtkTreeIter iter;
+
+        bincell = GDAUI_DATA_CELL_RENDERER_BIN (cell);
+	int event_time;
+	
+	g_object_set_data_full (G_OBJECT (bincell), "last_path", g_strdup (path), g_free);
+	if (!bincell->priv->menu.menu)
+		common_bin_create_menu (&(bincell->priv->menu), widget, bincell->priv->type,
+					(BinCallback) bin_data_changed_cb, bincell);
+	
+	model = gtk_tree_view_get_model (GTK_TREE_VIEW (widget));
+	tpath = gtk_tree_path_new_from_string (path);
+	if (gtk_tree_model_get_iter (model, &iter, tpath)) {
+		/* FIXME: get the real GValue */
+		/*common_bin_adjust_menu (&(bincell->priv->menu), bincell->priv->editable,
+		  bincell->priv->value);*/
+		event_time = gtk_get_current_event_time ();
+		gtk_menu_popup (GTK_MENU (bincell->priv->menu.menu), NULL, NULL, NULL, NULL,
+				0, event_time);
+	}
+	gtk_tree_path_free (tpath);
+
+        return FALSE;
+}
+
+

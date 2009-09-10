@@ -29,6 +29,7 @@
 #include <libgda-ui/gdaui-plugin.h>
 #include <libgda/binreloc/gda-binreloc.h>
 #include "data-entries/gdaui-entry-boolean.h"
+#include "data-entries/gdaui-entry-bin.h"
 #include "data-entries/gdaui-entry-string.h"
 #include "data-entries/gdaui-entry-time.h"
 #include "data-entries/gdaui-entry-date.h"
@@ -36,6 +37,7 @@
 #include "data-entries/gdaui-entry-none.h"
 #include "data-entries/gdaui-data-cell-renderer-textual.h"
 #include "data-entries/gdaui-data-cell-renderer-boolean.h"
+#include "data-entries/gdaui-data-cell-renderer-bin.h"
 
 /* plugins list */
 
@@ -125,7 +127,6 @@ gdaui_new_data_entry (GType type, const gchar *plugin_name)
 			entry = (GdauiDataEntry *) gdaui_entry_none_new (GDA_TYPE_NULL);
 		else if ((type == G_TYPE_INT64) ||
 			 (type == G_TYPE_UINT64) ||
-			 (type == GDA_TYPE_BINARY) ||
 			 (type == G_TYPE_DOUBLE) ||
 			 (type == G_TYPE_INT) ||
 			 (type == GDA_TYPE_NUMERIC) ||
@@ -140,9 +141,11 @@ gdaui_new_data_entry (GType type, const gchar *plugin_name)
 			entry = (GdauiDataEntry *) gdaui_entry_string_new (dh, type, spec_options);
 		else if (type == G_TYPE_BOOLEAN)
 			entry = (GdauiDataEntry *) gdaui_entry_boolean_new (dh, G_TYPE_BOOLEAN);
+		else if ((type == GDA_TYPE_BLOB) ||
+			 (type == GDA_TYPE_BINARY))
+			entry = (GdauiDataEntry *) gdaui_entry_bin_new (dh, type);
 		else if	((type == GDA_TYPE_GEOMETRIC_POINT) ||
 			 (type == G_TYPE_OBJECT) ||
-			 (type == GDA_TYPE_BLOB) ||
 			 (type == GDA_TYPE_LIST))
 			entry = (GdauiDataEntry *) gdaui_entry_none_new (type);
 		else if	(type == GDA_TYPE_TIME)
@@ -159,8 +162,8 @@ gdaui_new_data_entry (GType type, const gchar *plugin_name)
 	return entry;
 }
 
-/**
- * gdaui_new_cell_renderer
+/*
+ * _gdaui_new_cell_renderer
  * @type: a #GType
  * @plugin_name: the name of an entry plugin, or %NULL
  *
@@ -176,7 +179,7 @@ gdaui_new_data_entry (GType type, const gchar *plugin_name)
  * Returns: a new #GtkCellRenderer object, _NEVER_ %NULL
  */
 GtkCellRenderer *
-gdaui_new_cell_renderer (GType type, const gchar *plugin_name)
+_gdaui_new_cell_renderer (GType type, const gchar *plugin_name)
 {
 	GdaDataHandler *dh;
 	GtkCellRenderer *cell = NULL;
@@ -208,6 +211,9 @@ gdaui_new_cell_renderer (GType type, const gchar *plugin_name)
 			cell = gdaui_data_cell_renderer_textual_new (NULL, GDA_TYPE_NULL, NULL);
 		else if (type == G_TYPE_BOOLEAN)
 			cell = gdaui_data_cell_renderer_boolean_new (dh, G_TYPE_BOOLEAN);
+		else if ((type == GDA_TYPE_BLOB) ||
+			 (type == GDA_TYPE_BINARY))
+			cell = gdaui_data_cell_renderer_bin_new (dh, type);
 		else
 			cell = gdaui_data_cell_renderer_textual_new (dh, type, NULL);
 	}
@@ -217,6 +223,7 @@ gdaui_new_cell_renderer (GType type, const gchar *plugin_name)
 
 static GdauiDataEntry *entry_none_create_func (GdaDataHandler *handler, GType type, const gchar *options);
 static GdauiDataEntry *entry_boolean_create_func (GdaDataHandler *handler, GType type, const gchar *options);
+static GdauiDataEntry *entry_bin_create_func (GdaDataHandler *handler, GType type, const gchar *options);
 static GdauiDataEntry *entry_string_create_func (GdaDataHandler *handler, GType type, const gchar *options);
 static GdauiDataEntry *entry_time_create_func (GdaDataHandler *handler, GType type, const gchar *options);
 static GdauiDataEntry *entry_timestamp_create_func (GdaDataHandler *handler, GType type, const gchar *options);
@@ -224,6 +231,7 @@ static GdauiDataEntry *entry_date_create_func (GdaDataHandler *handler, GType ty
 
 static GtkCellRenderer *cell_textual_create_func (GdaDataHandler *handler, GType type, const gchar *options);
 static GtkCellRenderer *cell_boolean_create_func (GdaDataHandler *handler, GType type, const gchar *options);
+static GtkCellRenderer *cell_bin_create_func (GdaDataHandler *handler, GType type, const gchar *options);
 
 static xmlChar *get_spec_with_isocodes (const gchar *file);
 
@@ -257,7 +265,20 @@ init_plugins_hash (void)
 	plugin->valid_g_types [0] = G_TYPE_BOOLEAN;
 	plugin->options_xml_spec = NULL;
 	plugin->entry_create_func = entry_boolean_create_func;
-	plugin->cell_create_func =cell_boolean_create_func;
+	plugin->cell_create_func = cell_boolean_create_func;
+	g_hash_table_insert (hash, plugin->plugin_name, plugin);
+
+	plugin = g_new0 (GdauiPlugin, 1);
+	plugin->plugin_name = "binary";
+	plugin->plugin_descr = "Binary data entry";
+	plugin->plugin_file = NULL;
+	plugin->nb_g_types = 2;
+	plugin->valid_g_types = g_new (GType, plugin->nb_g_types);
+	plugin->valid_g_types [0] = GDA_TYPE_BLOB;
+	plugin->valid_g_types [1] = GDA_TYPE_BINARY;
+	plugin->options_xml_spec = NULL;
+	plugin->entry_create_func = entry_bin_create_func;
+	plugin->cell_create_func = cell_bin_create_func;
 	g_hash_table_insert (hash, plugin->plugin_name, plugin);
        
 	plugin = g_new0 (GdauiPlugin, 1);
@@ -451,6 +472,12 @@ entry_boolean_create_func (GdaDataHandler *handler, GType type, const gchar *opt
 }
 
 static GdauiDataEntry *
+entry_bin_create_func (GdaDataHandler *handler, GType type, const gchar *options)
+{
+	return (GdauiDataEntry *) gdaui_entry_bin_new (handler, type);
+}
+
+static GdauiDataEntry *
 entry_string_create_func (GdaDataHandler *handler, GType type, const gchar *options)
 {
 	return (GdauiDataEntry *) gdaui_entry_string_new (handler, type, options);
@@ -484,6 +511,12 @@ static GtkCellRenderer *
 cell_boolean_create_func (GdaDataHandler *handler, GType type, const gchar *options)
 {
 	return gdaui_data_cell_renderer_boolean_new (handler, G_TYPE_BOOLEAN);
+}
+
+static GtkCellRenderer *
+cell_bin_create_func (GdaDataHandler *handler, GType type, const gchar *options)
+{
+	return gdaui_data_cell_renderer_bin_new (handler, type);
 }
 
 static xmlNodePtr
