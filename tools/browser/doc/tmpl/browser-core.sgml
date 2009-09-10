@@ -43,6 +43,9 @@ Singleton holding the global browser information
 
 </para>
 
+@: 
+@:
+
 @browsercore: the object which received the signal.
 @arg1: 
 
@@ -50,6 +53,9 @@ Singleton holding the global browser information
 <para>
 
 </para>
+
+@: 
+@:
 
 @browsercore: the object which received the signal.
 @arg1: 

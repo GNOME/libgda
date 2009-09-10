@@ -35,6 +35,10 @@ An opened connection
 
 </para>
 
+@: 
+@: 
+@:
+
 @browserconnection: the object which received the signal.
 @arg1: 
 @arg2: 
@@ -44,12 +48,17 @@ An opened connection
 
 </para>
 
+@:
+
 @browserconnection: the object which received the signal.
 
 <!-- ##### SIGNAL BrowserConnection::meta-changed ##### -->
 <para>
 
 </para>
+
+@: 
+@:
 
 @browserconnection: the object which received the signal.
 @arg1: 

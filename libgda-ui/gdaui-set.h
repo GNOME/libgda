@@ -43,6 +43,7 @@ struct _GdauiSetGroup {
         GdaSetGroup      *group;
         GdauiSetSource *source; /* if NULL, then @group->nodes contains exactly one entry */
 
+	/*< private >*/
         /* Padding for future expansion */
         gpointer      _gda_reserved1;
         gpointer      _gda_reserved2;
@@ -61,6 +62,7 @@ struct _GdauiSetSource {
  	gint ref_n_cols;
  	gint *ref_cols_index; 
 
+	/*< private >*/
         /* Padding for future expansion */
         gpointer        _gda_reserved1;
         gpointer        _gda_reserved2;

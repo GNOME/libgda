@@ -53,8 +53,6 @@ GdauiSet
 
 @group: 
 @source: 
-@_gda_reserved1: 
-@_gda_reserved2: 
 
 <!-- ##### STRUCT GdauiSetSource ##### -->
 <para>
@@ -66,8 +64,4 @@ GdauiSet
 @shown_cols_index: 
 @ref_n_cols: 
 @ref_cols_index: 
-@_gda_reserved1: 
-@_gda_reserved2: 
-@_gda_reserved3: 
-@_gda_reserved4: 
 
