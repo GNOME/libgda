@@ -1949,8 +1949,8 @@ default_render_select_join (GdaSqlSelectJoin *join, GdaSqlRenderingContext *cont
 	}
 	str = context->render_select_target (GDA_SQL_ANY_PART (target), context, error);
 	if (!str) goto err;
-	if (!pretty)
-		g_string_append_c (string, ' ');
+
+	g_string_append_c (string, ' ');
 	g_string_append (string, str);
 	g_free (str);
 
