@@ -200,11 +200,16 @@ query_result_show_history_batch (QueryResult *qres, QueryEditorHistoryBatch *hba
 		if (hitem->result) {
 			if (GDA_IS_DATA_MODEL (hitem->result)) {
 				gint n, c;
+				gchar *tmp1, *tmp2;
 				n = gda_data_model_get_n_rows (GDA_DATA_MODEL (hitem->result));
 				c = gda_data_model_get_n_columns (GDA_DATA_MODEL (hitem->result));
+				tmp1 = g_strdup_printf (ngettext ("%d row", "%d rows", n), n);
+				tmp2 = g_strdup_printf (ngettext ("%d column", "%d columns", c), c);
 				g_string_append_printf (string, 
-							_("Data set with %d rows and %d columns"),
-							n, c);
+							_("Data set with %s and %s"),
+							tmp1, tmp2);
+				g_free (tmp1);
+				g_free (tmp2);
 			}
 			else if (GDA_IS_SET (hitem->result)) {
 				GdaSet *set;
