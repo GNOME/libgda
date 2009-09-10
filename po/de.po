@@ -2368,7 +2368,7 @@ msgid "Global transaction ID can not have more than 64 bytes"
 msgstr "Globale Transaktionskennung kann nicht größer als 64 Bytes sein"
 
 #: ../libgda/gda-xa-transaction.c:295
-msgid "Connection aleardy registered with another GdaXaTransaction object"
+msgid "Connection already registered with another GdaXaTransaction object"
 msgstr ""
 "Verbindung ist bereits mit einem anderen GdaXaTransaction-Objekt registriert"
 
