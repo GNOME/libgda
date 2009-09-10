@@ -1060,7 +1060,7 @@ init_tree_view (GdauiRawGrid *grid)
 					g_warning (_("The '%s' attribute should be a G_TYPE_STRING value"),
 						   GDAUI_ATTRIBUTE_PLUGIN);
 			}
-			renderer = gdaui_new_cell_renderer (g_type, plugin);
+			renderer = _gdaui_new_cell_renderer (g_type, plugin);
 			column_data->data_cell = renderer;
 			gtk_tree_view_insert_column_with_data_func (tree_view, i, title, renderer,
 								    (GtkTreeCellDataFunc) cell_renderer_value_set_attributes, 

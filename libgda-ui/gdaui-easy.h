@@ -28,7 +28,7 @@
 G_BEGIN_DECLS
 
 GdauiDataEntry  *gdaui_new_data_entry    (GType type, const gchar *plugin_name);
-GtkCellRenderer *gdaui_new_cell_renderer (GType type, const gchar *plugin_name);
+GtkCellRenderer *_gdaui_new_cell_renderer (GType type, const gchar *plugin_name);
 
 G_END_DECLS
 
