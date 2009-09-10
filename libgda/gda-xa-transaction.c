@@ -292,7 +292,7 @@ gda_xa_transaction_register_connection  (GdaXaTransaction *xa_trans, GdaConnecti
 	if (g_object_get_data (G_OBJECT (cnc), "_gda_xa_transaction")) {
 		g_set_error (error, GDA_XA_TRANSACTION_ERROR,
 			     GDA_XA_TRANSACTION_ALREADY_REGISTERED_ERROR,
-			     "%s", _("Connection aleardy registered with another GdaXaTransaction object"));
+			     "%s", _("Connection already registered with another GdaXaTransaction object"));
 		return FALSE;
 	}
 
