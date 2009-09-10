@@ -85,6 +85,10 @@ gda_g_type_to_string (GType type)
 		return "timestamp";
 	else if (type == G_TYPE_BOOLEAN)
 		return "boolean";
+	else if (type == GDA_TYPE_BLOB)
+		return "blob";
+	else if (type == GDA_TYPE_BINARY)
+		return "binary";
 	else 
 		return g_type_name (type);
 }
@@ -104,6 +108,8 @@ gda_g_type_to_string (GType type)
  *   <listitem><para>"time" for GDA_TYPE_TIME</para></listitem>
  *   <listitem><para>"timestamp" for GDA_TYPE_TIMESTAMP</para></listitem>
  *   <listitem><para>"boolean" for G_TYPE_BOOLEAN</para></listitem>
+ *   <listitem><para>"blob" for GDA_TYPE_BLOB</para></listitem>
+ *   <listitem><para>"binary" for GDA_TYPE_BINARY</para></listitem>
  *   <listitem><para>"null" for GDA_TYPE_NULL</para></listitem>
  * </itemizedlist>
  *
@@ -129,6 +135,10 @@ gda_g_type_from_string (const gchar *str)
 			type = GDA_TYPE_TIMESTAMP;
 		else if (!strcmp (str, "boolean"))
                         type = G_TYPE_BOOLEAN;
+		else if (!strcmp (str, "blob"))
+			type = GDA_TYPE_BLOB;
+		else if (!strcmp (str, "binary"))
+			type = GDA_TYPE_BINARY;
 		else if (!strcmp (str, "null"))
 			type = GDA_TYPE_NULL;
 		else
