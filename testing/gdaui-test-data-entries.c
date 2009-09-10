@@ -12,7 +12,7 @@ typedef enum {
 typedef struct {
 	GtkWidget      *vbox;
 	GType           type;
-	GdauiPlugin  *plugin;
+	GdauiPlugin    *plugin;
 	gchar          *plugin_name;
 	GtkWidget      *options;
 	GdaDataHandler *dh;
@@ -127,7 +127,8 @@ main (int argc, char **argv)
 	gtk_init (&argc, &argv);
 
 	/* init main conf */
-	GType tested_gtypes [] = {G_TYPE_INT64, G_TYPE_UINT64, GDA_TYPE_BINARY, G_TYPE_BOOLEAN, GDA_TYPE_BLOB, G_TYPE_DATE, G_TYPE_DOUBLE,
+	GType tested_gtypes [] = {G_TYPE_INT64, G_TYPE_UINT64, GDA_TYPE_BINARY, G_TYPE_BOOLEAN, GDA_TYPE_BLOB,
+				  G_TYPE_DATE, G_TYPE_DOUBLE,
 				  GDA_TYPE_GEOMETRIC_POINT, G_TYPE_OBJECT, G_TYPE_INT, GDA_TYPE_LIST, 
 				  GDA_TYPE_NUMERIC, G_TYPE_FLOAT, GDA_TYPE_SHORT, GDA_TYPE_USHORT, G_TYPE_STRING, 
 				  GDA_TYPE_TIME, GDA_TYPE_TIMESTAMP, G_TYPE_CHAR, G_TYPE_UCHAR, G_TYPE_UINT};
@@ -872,8 +873,17 @@ entry_contents_modified (GtkWidget *entry, gpointer data)
 	if (dh) {
 		gchar *strval;
 		value = gdaui_data_entry_get_value (GDAUI_DATA_ENTRY (entry));
-		if (G_VALUE_TYPE (value) == GDA_TYPE_BINARY)
-			strval = g_strdup ("Binary data...");
+		if (G_VALUE_TYPE (value) == GDA_TYPE_BINARY) {
+			const GdaBinary *bin;
+			bin = gda_value_get_binary (value);
+			strval = g_strdup_printf ("Binary data, size=%ld", bin->binary_length);
+		}
+		else if (G_VALUE_TYPE (value) == GDA_TYPE_BLOB) {
+			const GdaBlob *blob;
+			blob = gda_value_get_blob (value);
+			strval = g_strdup_printf ("Blob data, size=%ld", ((GdaBinary*) blob)->binary_length);
+		}
+
 		else
 			strval = gda_data_handler_get_sql_from_value (dh, value);
 		gda_value_free (value);
