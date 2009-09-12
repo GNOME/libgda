@@ -1503,6 +1503,14 @@ gda_thread_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 	cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
 		return FALSE;
+
+	/* steal signals for current thread */
+	gint i;
+	for (i = 0; i < cdata->handlers_ids->len; i++) {
+		gulong id;
+		id = g_array_index (cdata->handlers_ids, gulong, i);
+		gda_thread_wrapper_steal_signal (cdata->wrapper, id);
+	}
 	
 	if (async_cb) {
 		ExecuteStatementData *wdata;

@@ -691,12 +691,6 @@ gda_connection_set_property (GObject *object,
 					ThreadConnectionData *cdata = NULL;
 					cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (cnc);
 					if (cdata) {
-						gint i;
-						for (i = 0; i < cdata->handlers_ids->len; i++) {
-							gulong id;
-							id = g_array_index (cdata->handlers_ids, gulong, i);
-							gda_thread_wrapper_steal_signal (cdata->wrapper, id);
-						}
 						cnc->priv->monitor_id = g_timeout_add_seconds (1,
 											       (GSourceFunc) monitor_wrapped_cnc,
 											       cdata->wrapper);
@@ -2038,6 +2032,7 @@ gda_connection_async_statement_execute (GdaConnection *cnc, GdaStatement *stmt, 
 	g_return_val_if_fail (cnc->priv->provider_obj, 0);
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), 0);
 	g_return_val_if_fail (PROV_CLASS (cnc->priv->provider_obj)->statement_execute, 0);
+
 
 	if (! gda_connection_trylock ((GdaLockable*) cnc)) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CANT_LOCK_ERROR,
