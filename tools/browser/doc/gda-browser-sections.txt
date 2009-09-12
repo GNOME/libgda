@@ -154,6 +154,7 @@ browser_connection_create_parser
 browser_connection_render_pretty_sql
 browser_connection_execute_statement
 browser_connection_execution_get_result
+browser_connection_get_transaction_status
 <SUBSECTION Standard>
 BROWSER_CONNECTION
 BROWSER_IS_CONNECTION

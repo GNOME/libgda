@@ -637,6 +637,19 @@ browser_connection_get_dictionary_file (BrowserConnection *bcnc)
 }
 
 /**
+ * browser_connection_get_transaction_status
+ * @bcnc: a #BrowserConnection
+ *
+ * Retuns: the #GdaTransactionStatus of the connection, or %NULL
+ */
+GdaTransactionStatus *
+browser_connection_get_transaction_status (BrowserConnection *bcnc)
+{
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	return gda_connection_get_transaction_status (bcnc->priv->cnc);
+}
+
+/**
  * browser_connection_get_favorites
  * @bcnc: a #BrowserConnection
  *

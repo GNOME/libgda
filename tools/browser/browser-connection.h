@@ -64,6 +64,7 @@ void                browser_connection_update_meta_data       (BrowserConnection
 GdaMetaStruct      *browser_connection_get_meta_struct        (BrowserConnection *bcnc);
 GdaMetaStore       *browser_connection_get_meta_store         (BrowserConnection *bcnc);
 const gchar        *browser_connection_get_dictionary_file    (BrowserConnection *bcnc);
+GdaTransactionStatus *browser_connection_get_transaction_status (BrowserConnection *bcnc);
 
 BrowserFavorites   *browser_connection_get_favorites          (BrowserConnection *bcnc);
 

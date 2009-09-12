@@ -46,6 +46,7 @@ typedef struct {
 	gchar *sql;
 	GObject *result;
 	GError *exec_error;
+	gboolean within_transaction;
 
 	gint ref_count;
 } QueryEditorHistoryItem;

@@ -60,6 +60,7 @@ static void execution_batch_free (ExecutionBatch *ebatch);
 
 typedef struct {
 	GdaStatement *stmt /* no ref held here */;
+	gboolean within_transaction;
 	GError *exec_error;
 	GObject *result;
 	guint exec_id; /* 0 when execution not requested */
@@ -868,6 +869,8 @@ sql_execute_clicked_cb (GtkButton *button, QueryConsole *tconsole)
 		ebatch->statements = g_slist_prepend (ebatch->statements, estmt);
 
 		if (list == stmt_list) {
+			estmt->within_transaction =
+				browser_connection_get_transaction_status (tconsole->priv->bcnc) ? TRUE : FALSE;
 			estmt->exec_id = browser_connection_execute_statement (tconsole->priv->bcnc,
 									       estmt->stmt,
 									       tconsole->priv->params,
@@ -919,6 +922,9 @@ query_exec_fetch_cb (QueryConsole *tconsole)
 					history = query_editor_history_item_new (sqlst->sql,
 										 estmt->result, estmt->exec_error);
 				gda_sql_statement_free (sqlst);
+
+				history->within_transaction = estmt->within_transaction;
+
 				if (estmt->exec_error) {
 					browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
 							    _("Error executing query:\n%s"),
@@ -944,6 +950,8 @@ query_exec_fetch_cb (QueryConsole *tconsole)
 				/* more to do ? */
 				if (tconsole->priv->current_exec->statements) {
 					estmt = (ExecutionStatement*) tconsole->priv->current_exec->statements->data;
+					estmt->within_transaction =
+						browser_connection_get_transaction_status (tconsole->priv->bcnc) ? TRUE : FALSE;
 					estmt->exec_id = browser_connection_execute_statement (tconsole->priv->bcnc,
 											       estmt->stmt,
 											       tconsole->priv->params,

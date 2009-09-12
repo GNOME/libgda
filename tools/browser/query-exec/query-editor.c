@@ -335,11 +335,7 @@ text_view_expose_event (GtkTextView *tv, GdkEventExpose *event, QueryEditor *edi
 	redraw_rect.height = visible_rect.height;
 	
 	gc = GTK_WIDGET (tv)->style->bg_gc[GTK_WIDGET_STATE (GTK_WIDGET (tv))];
-
-	if (tv->hadjustment)
-		margin = gtk_text_view_get_left_margin (tv) - (int) tv->hadjustment->value;
-	else
-		margin = gtk_text_view_get_left_margin (tv);
+	margin = gtk_text_view_get_left_margin (tv);
 	
 	gdk_draw_rectangle (event->window,
 			    gc,
@@ -962,6 +958,8 @@ query_editor_add_history_item (QueryEditor *editor, QueryEditorHistoryItem *hist
 					  "scale", 0.75,
 					  "foreground", "gray",
 					  "foreground-set", TRUE, NULL);
+	if (hist_item->within_transaction)
+		g_object_set (G_OBJECT (tag), "left-margin", 15, NULL);
 	hdata->tag = g_object_ref (tag);
 	g_hash_table_insert (editor->priv->hash, tag, hist_item_data_ref (hdata));
 
