@@ -1107,7 +1107,7 @@ gda_thread_wrapper_disconnect (GdaThreadWrapper *wrapper, gulong id)
 	td->signals_list = g_slist_remove (td->signals_list, sigspec);
 	g_signal_handler_disconnect (sigspec->instance, sigspec->signal_id);
 	sigspec->instance = NULL;
-	sigspec->signal_id = NULL;
+	sigspec->signal_id = 0;
 	g_async_queue_unref (sigspec->reply_queue);
 	sigspec->reply_queue = 0;
 	sigspec->callback = NULL;
@@ -1156,6 +1156,9 @@ gda_thread_wrapper_steal_signal (GdaThreadWrapper *wrapper, gulong id)
 		return;
 	}
 
+	if (old_td->owner == g_thread_self ())
+		return;
+
         /* merge old_td and new_td */
         if (old_td->signals_list) {
                 GSList *list;
@@ -1165,6 +1168,8 @@ gda_thread_wrapper_steal_signal (GdaThreadWrapper *wrapper, gulong id)
 				new_td = get_thread_data (wrapper, g_thread_self ());
 				new_td->signals_list = g_slist_prepend (new_td->signals_list, sigspec);
 				old_td->signals_list = g_slist_remove (old_td->signals_list, sigspec);
+				g_async_queue_unref (sigspec->reply_queue);
+				sigspec->reply_queue = g_async_queue_ref (new_td->from_worker_thread);
 				break;
 			}
                 }
