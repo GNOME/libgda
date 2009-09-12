@@ -214,8 +214,26 @@ common_bin_adjust_menu (BinMenu *binmenu, gboolean editable, const GValue *value
 	if (!binmenu || !binmenu->menu)
 		return;
 
-	binmenu->tmpvalue = value;
+	if (binmenu->tmpvalue) {
+		gda_value_free (binmenu->tmpvalue);
+		binmenu->tmpvalue = NULL;
+	}
+	if (value)
+		binmenu->tmpvalue = gda_value_copy (value);
 	gtk_widget_set_sensitive (binmenu->load_mitem, editable);
 	gtk_widget_set_sensitive (binmenu->save_mitem, (value && !gda_value_is_null (value)) ? TRUE : FALSE);
 }
 
+/*
+ * Reset @bonmenu's contents
+ */
+void
+common_bin_reset (BinMenu *binmenu)
+{
+	if (binmenu->tmpvalue)
+		gda_value_free (binmenu->tmpvalue);
+	if (binmenu->menu)
+		gtk_widget_destroy (binmenu->menu);
+
+	memset (binmenu, 0, sizeof (BinMenu));
+}

@@ -38,5 +38,6 @@ typedef struct {
 
 void         common_bin_create_menu (BinMenu *binmenu, GtkWidget *attach_to, GType entry_type, BinCallback loaded_value_cb, gpointer loaded_value_cb_data);
 void         common_bin_adjust_menu (BinMenu *binmenu, gboolean editable, const GValue *value);
+void         common_bin_reset (BinMenu *binmenu);
 
 #endif

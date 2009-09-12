@@ -1040,6 +1040,7 @@ init_tree_view (GdauiRawGrid *grid)
 			const gchar *plugin = NULL;
 			const GValue *plugin_val;
 			gchar *title;
+			gint model_col;
 			
 			param = GDA_HOLDER (GDA_SET_NODE (group->group->nodes->data)->holder);
 			g_type = gda_holder_get_g_type (param);
@@ -1067,6 +1068,9 @@ init_tree_view (GdauiRawGrid *grid)
 								    grid, NULL);
 			column = gtk_tree_view_get_column (tree_view, i);
 			g_free (title);
+
+			model_col = g_slist_index (((GdaSet *)grid->priv->iter)->holders, param);
+			g_object_set_data (G_OBJECT (renderer), "model_col", GINT_TO_POINTER (model_col));
 
 			g_signal_connect (G_OBJECT (renderer), "changed", 
 					  G_CALLBACK (data_cell_value_changed), grid);

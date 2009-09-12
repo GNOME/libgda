@@ -20,6 +20,7 @@
 
 #include <stdlib.h>
 #include <libgda/libgda.h>
+#include <libgda/binreloc/gda-binreloc.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-enum-types.h>
 #include "gdaui-data-cell-renderer-bin.h"
@@ -35,7 +36,7 @@ static void gdaui_data_cell_renderer_bin_set_property  (GObject *object,
 							guint param_id,
 							const GValue *value,
 							GParamSpec *pspec);
-static void gdaui_data_cell_renderer_bin_init       (GdauiDataCellRendererBin      *celltext);
+static void gdaui_data_cell_renderer_bin_init       (GdauiDataCellRendererBin      *cell);
 static void gdaui_data_cell_renderer_bin_class_init (GdauiDataCellRendererBinClass *class);
 static void gdaui_data_cell_renderer_bin_dispose    (GObject *object);
 static void gdaui_data_cell_renderer_bin_finalize   (GObject *object);
@@ -91,6 +92,7 @@ enum {
 
 static GObjectClass *parent_class = NULL;
 static guint bin_cell_signals[LAST_SIGNAL] = { 0 };
+static GdkPixbuf *attach_pixbuf = NULL;
 
 
 GType
@@ -112,7 +114,7 @@ gdaui_data_cell_renderer_bin_get_type (void)
 		};
 		
 		cell_type =
-			g_type_register_static (GTK_TYPE_CELL_RENDERER_TEXT, "GdauiDataCellRendererBin",
+			g_type_register_static (GTK_TYPE_CELL_RENDERER_PIXBUF, "GdauiDataCellRendererBin",
 						&cell_info, 0);
 	}
 
@@ -196,6 +198,15 @@ gdaui_data_cell_renderer_bin_class_init (GdauiDataCellRendererBinClass *class)
 			      G_TYPE_NONE, 2,
 			      G_TYPE_STRING,
 			      G_TYPE_VALUE);
+
+	if (! attach_pixbuf) {
+		gchar *tmp;
+		tmp = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "bin-attachment-16x16.png", NULL);
+		attach_pixbuf = gdk_pixbuf_new_from_file (tmp, NULL);
+		if (!attach_pixbuf)
+			g_warning ("Could not find icon file %s", tmp);
+		g_free (tmp);
+	}
 }
 
 static void
@@ -218,6 +229,7 @@ gdaui_data_cell_renderer_bin_finalize (GObject *object)
 	GdauiDataCellRendererBin *datacell = GDAUI_DATA_CELL_RENDERER_BIN (object);
 
 	if (datacell->priv) {
+		common_bin_reset (&(datacell->priv->menu));
 		g_free (datacell->priv);
 		datacell->priv = NULL;
 	}
@@ -260,9 +272,15 @@ gdaui_data_cell_renderer_bin_set_property (GObject *object,
 	switch (param_id) {
 	case PROP_VALUE:
 		/* Because we don't have a copy of the value, we MUST NOT free it! */
-		if (value) {			
+		if (value) {	
                         GValue *gval = g_value_get_boxed (value);
+			if (gval && (G_VALUE_TYPE (gval) != GDA_TYPE_NULL))
+				g_object_set (object, "pixbuf", attach_pixbuf, NULL);
+			else
+				g_object_set (object, "pixbuf", NULL, NULL);
                 }
+		else
+			g_object_set (object, "pixbuf", NULL, NULL);
 		break;
 	case PROP_VALUE_ATTRIBUTES:
 		break;
@@ -312,8 +330,7 @@ gdaui_data_cell_renderer_bin_new (GdaDataHandler *dh, GType type)
         g_return_val_if_fail (dh && GDA_IS_DATA_HANDLER (dh), NULL);
         obj = g_object_new (GDAUI_TYPE_DATA_CELL_RENDERER_BIN, "type", type, 
                             "data_handler", dh, 
-			    "editable", FALSE,
-			    "text", _("Attachment"), NULL);
+			    "editable", FALSE, NULL);
         	
         return GTK_CELL_RENDERER (obj);
 }
@@ -327,9 +344,9 @@ gdaui_data_cell_renderer_bin_get_size (GtkCellRenderer *cell,
 				       gint            *width,
 				       gint            *height)
 {
-	GtkCellRendererClass *text_class = g_type_class_peek (GTK_TYPE_CELL_RENDERER_TEXT);
+	GtkCellRendererClass *pixbuf_class = g_type_class_peek (GTK_TYPE_CELL_RENDERER_PIXBUF);
 
-	(text_class->get_size) (cell, widget, cell_area, x_offset, y_offset, width, height);
+	(pixbuf_class->get_size) (cell, widget, cell_area, x_offset, y_offset, width, height);
 }
 
 static void
@@ -341,9 +358,9 @@ gdaui_data_cell_renderer_bin_render (GtkCellRenderer      *cell,
 				     GdkRectangle         *expose_area,
 				     GtkCellRendererState  flags)
 {
-	GtkCellRendererClass *text_class = g_type_class_peek (GTK_TYPE_CELL_RENDERER_TEXT);
+	GtkCellRendererClass *pixbuf_class = g_type_class_peek (GTK_TYPE_CELL_RENDERER_PIXBUF);
 
-	(text_class->render) (cell, window, widget, background_area, cell_area, expose_area, flags);
+	(pixbuf_class->render) (cell, window, widget, background_area, cell_area, expose_area, flags);
 
 	if (GDAUI_DATA_CELL_RENDERER_BIN (cell)->priv->to_be_deleted)
 		gtk_paint_hline (widget->style,
@@ -389,9 +406,15 @@ gdaui_data_cell_renderer_bin_activate  (GtkCellRenderer            *cell,
 	model = gtk_tree_view_get_model (GTK_TREE_VIEW (widget));
 	tpath = gtk_tree_path_new_from_string (path);
 	if (gtk_tree_model_get_iter (model, &iter, tpath)) {
-		/* FIXME: get the real GValue */
-		/*common_bin_adjust_menu (&(bincell->priv->menu), bincell->priv->editable,
-		  bincell->priv->value);*/
+		gint model_col;
+		GValue *value;
+		
+		model_col = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (cell), "model_col"));
+
+		gtk_tree_model_get (model, &iter, 
+				    model_col, &value, -1);
+		common_bin_adjust_menu (&(bincell->priv->menu), bincell->priv->editable,
+					value);
 		event_time = gtk_get_current_event_time ();
 		gtk_menu_popup (GTK_MENU (bincell->priv->menu.menu), NULL, NULL, NULL, NULL,
 				0, event_time);

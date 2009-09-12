@@ -39,14 +39,14 @@ typedef struct _GdauiDataCellRendererBinPrivate GdauiDataCellRendererBinPrivate;
 
 struct _GdauiDataCellRendererBin
 {
-	GtkCellRendererText             parent;
+	GtkCellRendererPixbuf             parent;
 	
 	GdauiDataCellRendererBinPrivate *priv;
 };
 
 struct _GdauiDataCellRendererBinClass
 {
-	GtkCellRendererTextClass  parent_class;
+	GtkCellRendererPixbufClass  parent_class;
 	
 	void (* changed) (GdauiDataCellRendererBin *cell_renderer,
 			  const gchar              *path,

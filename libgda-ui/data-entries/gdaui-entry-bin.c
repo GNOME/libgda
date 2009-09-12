@@ -19,6 +19,7 @@
  */
 
 #include <glib/gi18n-lib.h>
+#include <libgda/binreloc/gda-binreloc.h>
 #include "gdaui-entry-bin.h"
 #include "common-bin.h"
 
@@ -39,13 +40,19 @@ static gboolean   expand_in_layout (GdauiEntryWrapper *mgwrap);
 static void       set_editable (GdauiEntryWrapper *mgwrap, gboolean editable);
 static void       grab_focus (GdauiEntryWrapper *mgwrap);
 
+static void       show (GtkWidget *widget);
+
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
+static GdkPixbuf *attach_pixbuf = NULL;
 
 /* private structure */
 struct _GdauiEntryBinPrivate
 {
 	GtkWidget *button;
+	GtkWidget *button_hbox;
+	GtkWidget *button_label; /* ref held! */
+	GtkWidget *button_image; /* ref held! */
 
 	BinMenu    menu;
 	gboolean   editable;
@@ -78,9 +85,9 @@ gdaui_entry_bin_get_type (void)
 }
 
 static void
-gdaui_entry_bin_class_init (GdauiEntryBinClass * class)
+gdaui_entry_bin_class_init (GdauiEntryBinClass *class)
 {
-	GObjectClass   *object_class = G_OBJECT_CLASS (class);
+	GObjectClass *object_class = G_OBJECT_CLASS (class);
 
 	parent_class = g_type_class_peek_parent (class);
 
@@ -94,6 +101,17 @@ gdaui_entry_bin_class_init (GdauiEntryBinClass * class)
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->expand_in_layout = expand_in_layout;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->set_editable = set_editable;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->grab_focus = grab_focus;
+
+	GTK_WIDGET_CLASS (class)->show = show;
+
+	if (! attach_pixbuf) {
+		gchar *tmp;
+		tmp = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "bin-attachment-16x16.png", NULL);
+		attach_pixbuf = gdk_pixbuf_new_from_file (tmp, NULL);
+		if (!attach_pixbuf)
+			g_warning ("Could not find icon file %s", tmp);
+		g_free (tmp);
+	}
 }
 
 static void
@@ -103,6 +121,26 @@ gdaui_entry_bin_init (GdauiEntryBin * gdaui_entry_bin)
 	gdaui_entry_bin->priv->button = NULL;
 	gdaui_entry_bin->priv->current_data = NULL;
 	gdaui_entry_bin->priv->editable = TRUE;
+}
+
+static void
+show (GtkWidget *widget)
+{
+	GValue *value;
+	GdauiEntryBin *dbin;
+
+	((GtkWidgetClass *)parent_class)->show (widget);
+
+	dbin = GDAUI_ENTRY_BIN (widget);
+	value = dbin->priv->current_data;
+	if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
+		gtk_widget_show (dbin->priv->button_image);
+		gtk_widget_hide (dbin->priv->button_label);
+	}
+	else {
+		gtk_widget_hide (dbin->priv->button_image);
+		gtk_widget_show (dbin->priv->button_label);
+	}
 }
 
 /**
@@ -150,6 +188,16 @@ gdaui_entry_bin_dispose (GObject   * object)
 			gtk_widget_destroy (gdaui_entry_bin->priv->menu.menu);
 			gdaui_entry_bin->priv->menu.menu = NULL;
 		}
+
+		if (gdaui_entry_bin->priv->button_label) {
+			g_object_unref (gdaui_entry_bin->priv->button_label);
+			gdaui_entry_bin->priv->button_label = NULL;
+		}
+
+		if (gdaui_entry_bin->priv->button_image) {
+			g_object_unref (gdaui_entry_bin->priv->button_image);
+			gdaui_entry_bin->priv->button_image = NULL;
+		}
 	}
 
 	/* parent class */
@@ -178,7 +226,7 @@ gdaui_entry_bin_finalize (GObject   * object)
 static GtkWidget *
 create_entry (GdauiEntryWrapper *mgwrap)
 {
-	GtkWidget *button, *arrow, *label;
+	GtkWidget *button, *arrow, *label, *img;
 	GdauiEntryBin *dbin;
 	GtkWidget *hbox;
 
@@ -191,15 +239,22 @@ create_entry (GdauiEntryWrapper *mgwrap)
 
 	hbox = gtk_hbox_new (FALSE, 0);
         gtk_container_add (GTK_CONTAINER (button), hbox);
+	dbin->priv->button_hbox = hbox;
 
-	label = gtk_label_new (_("Attachement"));
+	label = gtk_label_new ("");
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	dbin->priv->button_label = g_object_ref (G_OBJECT (label));
+
+	img = gtk_image_new_from_pixbuf (attach_pixbuf);
+	gtk_box_pack_start (GTK_BOX (hbox), img, FALSE, FALSE, 0);
+	dbin->priv->button_image = g_object_ref (G_OBJECT (img));
 
         arrow = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_NONE);
 	gtk_misc_set_alignment (GTK_MISC (arrow), 1.0, -1);
 	gtk_box_pack_start (GTK_BOX (hbox), arrow, TRUE, TRUE, 0);
 
         gtk_widget_show_all (hbox);
+	gtk_widget_hide (dbin->priv->button_label);
 
 	return button;
 }
@@ -211,12 +266,23 @@ create_entry (GdauiEntryWrapper *mgwrap)
 static void
 take_current_value (GdauiEntryBin *dbin, GValue *value)
 {
+	/* clear previous situation */
 	if (dbin->priv->current_data) {
 		gda_value_free (dbin->priv->current_data);
 		dbin->priv->current_data = NULL;
 	}
 
+	/* new situation */
 	dbin->priv->current_data = value;
+	if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
+		gtk_widget_show (dbin->priv->button_image);
+		gtk_widget_hide (dbin->priv->button_label);
+	}
+	else {
+		gtk_widget_hide (dbin->priv->button_image);
+		gtk_widget_show (dbin->priv->button_label);
+	}
+
 	common_bin_adjust_menu (&(dbin->priv->menu), dbin->priv->editable, value);
 }
 
