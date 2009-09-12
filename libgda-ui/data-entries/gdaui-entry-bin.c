@@ -184,10 +184,7 @@ gdaui_entry_bin_dispose (GObject   * object)
 			gda_value_free (gdaui_entry_bin->priv->current_data);
 			gdaui_entry_bin->priv->current_data = NULL;
 		}
-		if (gdaui_entry_bin->priv->menu.menu) {
-			gtk_widget_destroy (gdaui_entry_bin->priv->menu.menu);
-			gdaui_entry_bin->priv->menu.menu = NULL;
-		}
+		common_bin_reset (&(gdaui_entry_bin->priv->menu));
 
 		if (gdaui_entry_bin->priv->button_label) {
 			g_object_unref (gdaui_entry_bin->priv->button_label);
@@ -325,19 +322,44 @@ value_loaded_cb (GdauiEntryBin *dbin, GValue *new_value)
 }
 
 static void
+popup_position (PopupContainer *container, gint *out_x, gint *out_y)
+{
+	GtkWidget *poswidget;
+	poswidget = g_object_get_data (G_OBJECT (container), "__poswidget");
+
+	gint x, y;
+        GtkRequisition req;
+
+        gtk_widget_size_request (poswidget, &req);
+
+        gdk_window_get_origin (poswidget->window, &x, &y);
+
+        x += poswidget->allocation.x;
+        y += poswidget->allocation.y;
+        y += poswidget->allocation.height;
+
+        if (x < 0)
+                x = 0;
+
+        if (y < 0)
+                y = 0;
+
+	*out_x = x;
+	*out_y = y;
+}
+
+static void
 button_clicked_cb (GtkWidget *button, GdauiEntryBin *dbin)
 {
-	if (!dbin->priv->menu.menu)
-		common_bin_create_menu (&(dbin->priv->menu), button,
+	if (!dbin->priv->menu.popup) {
+		common_bin_create_menu (&(dbin->priv->menu), popup_position,
 					gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (dbin)),
 					(BinCallback) value_loaded_cb, dbin);
+		g_object_set_data (G_OBJECT (dbin->priv->menu.popup), "__poswidget", button);
+	}
 
 	common_bin_adjust_menu (&(dbin->priv->menu), dbin->priv->editable, dbin->priv->current_data);
-
-	int event_time;
-	event_time = gtk_get_current_event_time ();
-	gtk_menu_popup (GTK_MENU (dbin->priv->menu.menu), NULL, NULL, NULL, NULL,
-                        0, event_time);
+	gtk_widget_show (dbin->priv->menu.popup);
 }
 
 static void
@@ -369,8 +391,7 @@ set_editable (GdauiEntryWrapper *mgwrap, gboolean editable)
 	g_return_if_fail (dbin->priv);
 
 	dbin->priv->editable = editable;
-	if (dbin->priv->menu.load_mitem)
-		gtk_widget_set_sensitive (dbin->priv->menu.load_mitem, dbin->priv->editable);
+	common_bin_adjust_menu (&(dbin->priv->menu), editable, dbin->priv->current_data);
 }
 
 static void

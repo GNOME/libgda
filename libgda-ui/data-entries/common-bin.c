@@ -19,6 +19,7 @@
 
 #include <libgda/gda-value.h>
 #include "common-bin.h"
+#include "../internal/popup-container.h"
 #include <string.h>
 #include <gtk/gtk.h>
 #include <glib/gi18n-lib.h>
@@ -33,6 +34,7 @@ file_load_cb (GtkWidget *button, BinMenu *menu)
 {
 	GtkWidget *dlg;
 
+	gtk_widget_hide (menu->popup);
         dlg = gtk_file_chooser_dialog_new (_("Select file to load"),
                                            GTK_WINDOW (gtk_widget_get_toplevel (button)),
                                            GTK_FILE_CHOOSER_ACTION_OPEN,
@@ -62,23 +64,6 @@ file_load_cb (GtkWidget *button, BinMenu *menu)
 				gda_value_take_binary (nvalue, bin);
 
 				menu->loaded_value_cb (menu->loaded_value_cb_data, nvalue);
-
-#ifdef HAVE_GIO
-				/* Open with... using GIO */
-				gchar *tmp;
-				tmp = g_content_type_guess (NULL, bin->data, (gsize) bin->binary_length, NULL);
-				g_print ("Content type: %s\n", tmp);
-
-				GList *list;
-				list = g_app_info_get_all_for_type (tmp);
-				for (; list; list = list->next) {
-					GAppInfo *ai;
-					ai = (GAppInfo*) list->data;
-					g_print ("\t open with %s (%s)\n", g_app_info_get_name (ai),
-						 g_app_info_get_executable (ai));
-				}
-				g_free (tmp);
-#endif
 			}
 			else {
 				GtkWidget *msg;
@@ -113,6 +98,7 @@ file_save_cb (GtkWidget *button, BinMenu *menu)
 {
 	GtkWidget *dlg;
 
+	gtk_widget_hide (menu->popup);
         dlg = gtk_file_chooser_dialog_new (_("Select a file to save data to"),
                                            GTK_WINDOW (gtk_widget_get_toplevel (button)),
                                            GTK_FILE_CHOOSER_ACTION_SAVE,
@@ -175,34 +161,70 @@ file_save_cb (GtkWidget *button, BinMenu *menu)
 }
 
 void
-common_bin_create_menu (BinMenu *binmenu, GtkWidget *attach_to, GType entry_type,
+common_bin_create_menu (BinMenu *binmenu, PopupContainerPositionFunc pos_func, GType entry_type,
 			BinCallback loaded_value_cb, gpointer loaded_value_cb_data)
 {
-	GtkWidget *menu, *mitem;
+	GtkWidget *popup, *vbox, *hbox, *bbox, *button, *label;
+	gchar *str;
 
 	binmenu->entry_type = entry_type;
 	binmenu->loaded_value_cb = loaded_value_cb;
 	binmenu->loaded_value_cb_data = loaded_value_cb_data;
 	
-	menu = gtk_menu_new ();
-	g_signal_connect (menu, "deactivate", 
-			  G_CALLBACK (gtk_widget_hide), NULL);
-	binmenu->menu = menu;
+	popup = popup_container_new_with_func (pos_func);
+	binmenu->popup = popup;
 	
-	mitem = gtk_menu_item_new_with_mnemonic (_("_Load from file"));
-	gtk_container_add (GTK_CONTAINER (menu), mitem);
-	g_signal_connect (mitem, "activate",
+	vbox = gtk_vbox_new (FALSE, 0);
+	gtk_container_add (GTK_CONTAINER (popup), vbox);
+
+	label = gtk_label_new ("");
+	str = g_strdup_printf ("<b>%s:</b>", _("Properties"));
+	gtk_label_set_markup (GTK_LABEL (label), str);
+	g_free (str);
+	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
+
+	hbox = gtk_hbox_new (FALSE, 0); /* HIG */
+        gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 5);
+        gtk_widget_show (hbox);
+        label = gtk_label_new ("    ");
+        gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+        gtk_widget_show (label);
+
+	label = gtk_label_new ("");
+	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	binmenu->props_label = label;
+
+	bbox = gtk_hbutton_box_new ();
+	gtk_box_pack_start (GTK_BOX (vbox), bbox, FALSE, FALSE, 0);
+
+	button = gtk_button_new_from_stock (GTK_STOCK_OPEN);
+	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
+	g_signal_connect (button, "clicked",
 			  G_CALLBACK (file_load_cb), binmenu);
-	binmenu->load_mitem = mitem;
+	binmenu->load_button = button;
 	
-	mitem = gtk_menu_item_new_with_mnemonic (_("_Save to file"));
-	gtk_container_add (GTK_CONTAINER (menu), mitem);
-	g_signal_connect (mitem, "activate",
+	button = gtk_button_new_from_stock (GTK_STOCK_SAVE_AS);
+	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
+	g_signal_connect (button, "clicked",
 			  G_CALLBACK (file_save_cb), binmenu);
-	binmenu->save_mitem = mitem;
-	
-	gtk_menu_attach_to_widget (GTK_MENU (menu), attach_to, NULL);
-	gtk_widget_show_all (menu);
+	binmenu->save_button = button;
+
+	gtk_widget_show_all (vbox);
+}
+
+static gchar *
+format_size (gulong size)
+{
+	if (size < 1024)
+		return g_strdup_printf (ngettext ("%lu Byte", "%lu Bytes", size), size);
+	else if (size < 1048576)
+		return g_strdup_printf ("%.1f Kio", (gfloat) (size / 1024));
+	else if (size < 1073741824)
+		return g_strdup_printf ("%.1f Mio", (gfloat) (size / 1048576));
+	else
+		return g_strdup_printf ("%.1f Gio", (gfloat) (size / 1073741824));
 }
 
 /* 
@@ -211,17 +233,100 @@ common_bin_create_menu (BinMenu *binmenu, GtkWidget *attach_to, GType entry_type
 void
 common_bin_adjust_menu (BinMenu *binmenu, gboolean editable, const GValue *value)
 {
-	if (!binmenu || !binmenu->menu)
+	gchar *size;
+	GString *string;
+#ifdef HAVE_GIO
+	gchar *ctype = NULL;
+#endif
+
+	if (!binmenu || !binmenu->popup)
 		return;
 
 	if (binmenu->tmpvalue) {
 		gda_value_free (binmenu->tmpvalue);
 		binmenu->tmpvalue = NULL;
 	}
-	if (value)
+	string = g_string_new ("");
+	if (value) {
 		binmenu->tmpvalue = gda_value_copy (value);
-	gtk_widget_set_sensitive (binmenu->load_mitem, editable);
-	gtk_widget_set_sensitive (binmenu->save_mitem, (value && !gda_value_is_null (value)) ? TRUE : FALSE);
+		if (G_VALUE_TYPE (value) == GDA_TYPE_NULL)
+			g_string_append_printf (string, "<i>%s</i>", _("No data"));
+		else if (G_VALUE_TYPE (value) == GDA_TYPE_BINARY) {
+			const GdaBinary *bin;
+			bin = gda_value_get_binary (value);
+			size = format_size (bin->binary_length);
+			g_string_append_printf (string, "%s: %s", _("Data size"), size);
+			g_free (size);
+#ifdef HAVE_GIO
+			ctype = g_content_type_guess (NULL, bin->data, (gsize) bin->binary_length, NULL);
+#endif
+		}
+		else if (G_VALUE_TYPE (value) == GDA_TYPE_BLOB) {
+			const GdaBlob *blob;
+			GdaBinary *bin;
+			blob = gda_value_get_blob (value);
+			bin = (GdaBinary *) blob;
+			if (blob->op) {
+				glong len;
+				len = gda_blob_op_get_length (blob->op);
+				if (len >= 0) {
+					size = format_size (len);
+					g_string_append_printf (string, "%s: %s", _("Data size"), size);
+					g_free (size);
+#ifdef HAVE_GIO
+					GdaBlob *b2;
+					glong read;
+					b2 = gda_blob_copy (blob);
+					read = gda_blob_op_read (b2->op, b2, 0, 1024);
+					bin = (GdaBinary *) b2;
+					ctype = g_content_type_guess (NULL, bin->data, (gsize) bin->binary_length, NULL);
+#endif
+				}
+				else
+					g_string_append_printf (string, "%s: %s", _("Data size"), _("Unknown"));
+			}
+			else {
+				size = format_size (bin->binary_length);
+				g_string_append_printf (string, "%s: %s", _("Data size"), size);
+				g_free (size);
+#ifdef HAVE_GIO
+				ctype = g_content_type_guess (NULL, bin->data, (gsize) bin->binary_length, NULL);
+#endif
+			}
+		}
+		else
+			g_assert_not_reached ();
+	}
+	else
+		g_string_append_printf (string, "<i>%s</i>", _("No data"));
+
+#ifdef HAVE_GIO
+	if (ctype) {
+		GList *list;
+		gchar *descr, *tmp;
+		descr = g_content_type_get_description (ctype);
+		tmp = g_markup_printf_escaped (descr);
+		g_free (descr);
+		g_string_append_printf (string, "\n%s: %s", _("Data type"), tmp);
+		g_free (tmp);
+
+		list = g_app_info_get_all_for_type (ctype);
+		for (; list; list = list->next) {
+			GAppInfo *ai;
+			ai = (GAppInfo*) list->data;
+			g_print ("\t open with %s (%s)\n", g_app_info_get_name (ai),
+				 g_app_info_get_executable (ai));
+		}
+		g_free (ctype);
+	}
+#endif
+
+
+	gtk_label_set_markup (GTK_LABEL (binmenu->props_label), string->str);
+	g_string_free (string, TRUE);
+
+	gtk_widget_set_sensitive (binmenu->load_button, editable);
+	gtk_widget_set_sensitive (binmenu->save_button, (value && !gda_value_is_null (value)) ? TRUE : FALSE);
 }
 
 /*
@@ -232,8 +337,8 @@ common_bin_reset (BinMenu *binmenu)
 {
 	if (binmenu->tmpvalue)
 		gda_value_free (binmenu->tmpvalue);
-	if (binmenu->menu)
-		gtk_widget_destroy (binmenu->menu);
+	if (binmenu->popup)
+		gtk_widget_destroy (binmenu->popup);
 
 	memset (binmenu, 0, sizeof (BinMenu));
 }

@@ -16,5 +16,7 @@ libgda_ui_internal_la_SOURCES = \
 	gdaui-provider-auth-editor.h \
 	gdaui-provider-spec-editor.c \
 	gdaui-provider-spec-editor.h \
+	popup-container.h \
+	popup-container.c \
 	utility.h \
 	utility.c
