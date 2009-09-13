@@ -123,6 +123,7 @@ job_free (Job *job)
 struct _SignalSpec {
         GSignalQuery  sigprop; /* must be first */
 
+	gboolean      private;
 	GThread      *worker_thread;
 	GAsyncQueue  *reply_queue; /* a ref is held here */
 
@@ -921,7 +922,8 @@ worker_thread_closure_marshal (GClosure *closure,
 		return;
 
 	/* check that the worker thread is working on a job for which job->reply_queue == sigspec->reply_queue */
-	if (g_static_private_get (&worker_thread_current_queue) != sigspec->reply_queue)
+	if (sigspec->private &&
+	    g_static_private_get (&worker_thread_current_queue) != sigspec->reply_queue)
 		return;
 
 	gint i;
@@ -957,6 +959,9 @@ worker_thread_closure_marshal (GClosure *closure,
  * @wrapper: a #GdaThreadWrapper object
  * @instance: the instance to connect to
  * @sig_name: a string of the form "signal-name::detail"
+ * @private: set to %TRUE if @callback is to be invoked only if the signal has
+ *    been emitted when a job created for the calling thread is being executed, and to %FALSE
+ *    if @callback has to be called whenever the @sig_name signa is emitted by @instance.
  * @callback: a #GdaThreadWrapperCallback function
  * @data: data to pass to @callback's calls
  *
@@ -972,6 +977,10 @@ worker_thread_closure_marshal (GClosure *closure,
  *    while being used in @wrapper's private sub thread (ie. used when @wrapper is executing some functions
  *    specified by
  *    gda_thread_wrapper_execute() or gda_thread_wrapper_execute_void())</para></listitem>
+ *  <listitem><para>if @private is set to %TRUE, then the @callback function will be called only
+ *    if the signal has been emitted by @instance while doing a job on behalf of the current
+ *    calling thread. If @private is set to %FALSE, then @callback will be called whenever @instance
+ *    emits the @sig_name signal.</para></listitem>
  * </itemizedlist>
  *
  * Also note that signal handling is done asynchronously: when emitted in the worker thread, it
@@ -989,7 +998,7 @@ worker_thread_closure_marshal (GClosure *closure,
 gulong
 gda_thread_wrapper_connect_raw (GdaThreadWrapper *wrapper,
 				gpointer instance,
-				const gchar *sig_name,
+				const gchar *sig_name, gboolean private,
 				GdaThreadWrapperCallback callback,
 				gpointer data)
 {
@@ -1012,6 +1021,7 @@ gda_thread_wrapper_connect_raw (GdaThreadWrapper *wrapper,
         }
 
         sigspec = g_new0 (SignalSpec, 1);
+	sigspec->private = private;
         g_signal_query (sigid, (GSignalQuery*) sigspec);
 
 	if (((GSignalQuery*) sigspec)->return_type != G_TYPE_NONE) {

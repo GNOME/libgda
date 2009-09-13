@@ -45,6 +45,7 @@ static GObjectClass  *parent_class = NULL;
 struct _QueryExecPerspectivePrivate {
 	GtkWidget *notebook;
 	BrowserWindow *bwin;
+	BrowserConnection *bcnc;
 	
 	GtkActionGroup *action_group;
 	gboolean updating_transaction_status;
@@ -134,10 +135,11 @@ query_exec_perspective_new (BrowserWindow *bwin)
 	perspective = (QueryExecPerspective*) bpers;
 
 	perspective->priv->bwin = bwin;
+	bcnc = browser_window_get_connection (bwin);
+	perspective->priv->bcnc = g_object_ref (bcnc);
 
 	/* contents */
 	GtkWidget *paned, *nb;
-	bcnc = browser_window_get_connection (bwin);
 	paned = gtk_hpaned_new ();
 	/*
 	wid = favorite_selector_new (bcnc);
@@ -230,6 +232,11 @@ query_exec_perspective_dispose (GObject *object)
 
 	perspective = QUERY_EXEC_PERSPECTIVE (object);
 	if (perspective->priv) {
+		g_signal_handlers_disconnect_by_func (perspective->priv->bcnc,
+						      G_CALLBACK (transaction_status_changed_cb), perspective);
+		if (perspective->priv->bcnc)
+			g_object_unref (perspective->priv->bcnc);
+
 		if (perspective->priv->action_group)
 			g_object_unref (perspective->priv->action_group);
 
@@ -252,7 +259,7 @@ query_exec_add_cb (GtkAction *action, BrowserPerspective *bpers)
 	gint i;
 
 	perspective = QUERY_EXEC_PERSPECTIVE (bpers);
-	bcnc = browser_window_get_connection (perspective->priv->bwin);
+	bcnc = perspective->priv->bcnc;
 
 	page = query_console_new (bcnc);
 	gtk_widget_show (page);
@@ -303,7 +310,7 @@ transaction_begin_cb (GtkAction *action, BrowserPerspective *bpers)
 	BrowserConnection *bcnc;
 
 	perspective = QUERY_EXEC_PERSPECTIVE (bpers);
-	bcnc = browser_window_get_connection (perspective->priv->bwin);
+	bcnc = perspective->priv->bcnc;
 	if (!perspective->priv->updating_transaction_status) {
 		GError *error = NULL;
 		if (! browser_connection_begin (bcnc, &error)) {
@@ -322,7 +329,7 @@ transaction_commit_cb (GtkAction *action, BrowserPerspective *bpers)
 	BrowserConnection *bcnc;
 
 	perspective = QUERY_EXEC_PERSPECTIVE (bpers);
-	bcnc = browser_window_get_connection (perspective->priv->bwin);
+	bcnc = perspective->priv->bcnc;
 	if (!perspective->priv->updating_transaction_status) {
 		GError *error = NULL;
 		if (! browser_connection_commit (bcnc, &error)) {
@@ -341,7 +348,7 @@ transaction_rollback_cb (GtkAction *action, BrowserPerspective *bpers)
 	BrowserConnection *bcnc;
 
 	perspective = QUERY_EXEC_PERSPECTIVE (bpers);
-	bcnc = browser_window_get_connection (perspective->priv->bwin);
+	bcnc = perspective->priv->bcnc;
 	if (!perspective->priv->updating_transaction_status) {
 		GError *error = NULL;
 		if (! browser_connection_rollback (bcnc, &error)) {
@@ -400,7 +407,7 @@ query_exec_perspective_get_actions_group (BrowserPerspective *perspective)
 		bpers->priv->action_group = g_object_ref (agroup);
 	}
 	
-	transaction_status_changed_cb (browser_window_get_connection (bpers->priv->bwin), bpers);
+	transaction_status_changed_cb (bpers->priv->bcnc, bpers);
 
 	return bpers->priv->action_group;
 }

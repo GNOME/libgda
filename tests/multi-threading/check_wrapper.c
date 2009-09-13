@@ -526,13 +526,13 @@ t2_main_thread_func (DummyObject *dummy)
 	GSList *received_list = NULL;
 
 	/*g_print ("NEW test thread: %p\n", g_thread_self());*/
-	sigid[0] = gda_thread_wrapper_connect_raw (wrapper, dummy, "sig0",
+	sigid[0] = gda_thread_wrapper_connect_raw (wrapper, dummy, "sig0", TRUE,
 						   (GdaThreadWrapperCallback) wrapper_callback,
 						   &received_list);
-	sigid[1] = gda_thread_wrapper_connect_raw (wrapper, dummy, "sig1",
+	sigid[1] = gda_thread_wrapper_connect_raw (wrapper, dummy, "sig1", TRUE,
 						   (GdaThreadWrapperCallback) wrapper_callback,
 						   &received_list);
-	sigid[2] = gda_thread_wrapper_connect_raw (wrapper, dummy, "sig2",
+	sigid[2] = gda_thread_wrapper_connect_raw (wrapper, dummy, "sig2", TRUE,
 						   (GdaThreadWrapperCallback) wrapper_callback,
 						   &received_list);
 

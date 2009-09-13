@@ -694,6 +694,13 @@ gda_connection_set_property (GObject *object,
 						cnc->priv->monitor_id = g_timeout_add_seconds (1,
 											       (GSourceFunc) monitor_wrapped_cnc,
 											       cdata->wrapper);
+						/* steal signals for current thread */
+						gint i;
+						for (i = 0; i < cdata->handlers_ids->len; i++) {
+							gulong id;
+							id = g_array_index (cdata->handlers_ids, gulong, i);
+							gda_thread_wrapper_steal_signal (cdata->wrapper, id);
+						}
 					}
 				}
 			}

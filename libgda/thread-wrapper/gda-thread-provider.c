@@ -475,11 +475,14 @@ static void
 setup_signals (GdaConnection *cnc, ThreadConnectionData *cdata)
 {
 	gulong hid;
-	hid = gda_thread_wrapper_connect_raw (cdata->wrapper, cdata->sub_connection, "error",
+	hid = gda_thread_wrapper_connect_raw (cdata->wrapper, cdata->sub_connection,
+					      "error", FALSE,
 					      (GdaThreadWrapperCallback) sub_cnc_error_cb, cnc);
 	g_array_prepend_val (cdata->handlers_ids, hid);
-	hid = gda_thread_wrapper_connect_raw (cdata->wrapper, cdata->sub_connection, "transaction-status-changed",
-					      (GdaThreadWrapperCallback) sub_cnc_transaction_status_changed_cb, cnc);
+	hid = gda_thread_wrapper_connect_raw (cdata->wrapper, cdata->sub_connection,
+					      "transaction-status-changed", FALSE,
+					      (GdaThreadWrapperCallback) sub_cnc_transaction_status_changed_cb,
+					      cnc);
 	g_array_prepend_val (cdata->handlers_ids, hid);
 }
 
@@ -1503,14 +1506,6 @@ gda_thread_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 	cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
 		return FALSE;
-
-	/* steal signals for current thread */
-	gint i;
-	for (i = 0; i < cdata->handlers_ids->len; i++) {
-		gulong id;
-		id = g_array_index (cdata->handlers_ids, gulong, i);
-		gda_thread_wrapper_steal_signal (cdata->wrapper, id);
-	}
 	
 	if (async_cb) {
 		ExecuteStatementData *wdata;

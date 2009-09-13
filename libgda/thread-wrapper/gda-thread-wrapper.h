@@ -82,7 +82,7 @@ gint                   gda_thread_wrapper_get_waiting_size (GdaThreadWrapper *wr
 
 gulong                 gda_thread_wrapper_connect_raw       (GdaThreadWrapper *wrapper,
 							     gpointer instance,
-							     const gchar *sig_name,
+							     const gchar *sig_name, gboolean private,
 							     GdaThreadWrapperCallback callback,
 							     gpointer data);
 void                   gda_thread_wrapper_disconnect       (GdaThreadWrapper *wrapper, gulong id);
