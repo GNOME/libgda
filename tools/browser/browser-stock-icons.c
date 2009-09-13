@@ -42,8 +42,11 @@ browser_stock_icons_init (void)
 
 	static const GtkStockItem items[] =
 	{
-		{ BROWSER_STOCK_HISTORY,	N_("History"),		0, 0, NULL },
+		{ BROWSER_STOCK_HISTORY,   N_("History"),		0, 0, NULL },
 		{ BROWSER_STOCK_BOOKMARKS, N_("Bookmarks"),	0, 0, NULL },
+		{ BROWSER_STOCK_BEGIN, N_("Begin"),	0, 0, NULL },
+		{ BROWSER_STOCK_COMMIT, N_("Commit"),	0, 0, NULL },
+		{ BROWSER_STOCK_ROLLBACK, N_("Rollback"),	0, 0, NULL },
 	};
 
 	factory = gtk_icon_factory_new ();

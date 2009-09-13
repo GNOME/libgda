@@ -189,3 +189,12 @@ An opened connection
 @Returns: 
 
 
+<!-- ##### FUNCTION browser_connection_get_transaction_status ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@Returns: 
+
+

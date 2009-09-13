@@ -51,6 +51,7 @@ struct _BrowserConnectionClass
 	void                    (*busy) (BrowserConnection *bcnc, gboolean is_busy, const gchar *reason);
 	void                    (*meta_changed) (BrowserConnection *bcnc, GdaMetaStruct *mstruct);
 	void                    (*favorites_changed) (BrowserConnection *bcnc);
+	void                    (*transaction_status_changed) (BrowserConnection *bcnc);
 };
 
 GType               browser_connection_get_type               (void) G_GNUC_CONST;
@@ -64,7 +65,6 @@ void                browser_connection_update_meta_data       (BrowserConnection
 GdaMetaStruct      *browser_connection_get_meta_struct        (BrowserConnection *bcnc);
 GdaMetaStore       *browser_connection_get_meta_store         (BrowserConnection *bcnc);
 const gchar        *browser_connection_get_dictionary_file    (BrowserConnection *bcnc);
-GdaTransactionStatus *browser_connection_get_transaction_status (BrowserConnection *bcnc);
 
 BrowserFavorites   *browser_connection_get_favorites          (BrowserConnection *bcnc);
 
@@ -83,6 +83,15 @@ guint               browser_connection_execute_statement      (BrowserConnection
 GObject            *browser_connection_execution_get_result   (BrowserConnection *bcnc,
 							       guint exec_id,
 							       GdaSet **last_insert_row, GError **error);
+
+/*
+ * transactions
+ */
+GdaTransactionStatus *browser_connection_get_transaction_status (BrowserConnection *bcnc);
+gboolean              browser_connection_begin (BrowserConnection *bcnc, GError **error);
+gboolean              browser_connection_commit (BrowserConnection *bcnc, GError **error);
+gboolean              browser_connection_rollback (BrowserConnection *bcnc, GError **error);
+
 
 G_END_DECLS
 

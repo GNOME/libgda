@@ -14,6 +14,9 @@ private_icons = \
 	hicolor_actions_22x22_history-view.png \
 	hicolor_actions_24x24_bookmark-view.png \
 	hicolor_actions_24x24_history-view.png \
+	hicolor_actions_24x24_transaction-begin.png \
+	hicolor_actions_24x24_transaction-commit.png \
+	hicolor_actions_24x24_transaction-rollback.png \
 	hicolor_actions_32x32_bookmark-view.png \
 	hicolor_actions_32x32_history-view.png \
 	hicolor_actions_scalable_bookmark-view.svg \

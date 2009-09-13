@@ -113,10 +113,11 @@ enum {
 	BUSY,
 	META_CHANGED,
 	FAV_CHANGED,
+	TRANSACTION_STATUS_CHANGED,
 	LAST_SIGNAL
 };
 
-gint browser_connection_signals [LAST_SIGNAL] = { 0, 0, 0 };
+gint browser_connection_signals [LAST_SIGNAL] = { 0, 0, 0, 0 };
 
 GType
 browser_connection_get_type (void)
@@ -176,10 +177,19 @@ browser_connection_class_init (BrowserConnectionClass *klass)
                               NULL, NULL,
                               g_cclosure_marshal_VOID__VOID, G_TYPE_NONE,
                               0);
+	browser_connection_signals [TRANSACTION_STATUS_CHANGED] =
+		g_signal_new ("transaction-status-changed",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_FIRST,
+                              G_STRUCT_OFFSET (BrowserConnectionClass, transaction_status_changed),
+                              NULL, NULL,
+                              g_cclosure_marshal_VOID__VOID, G_TYPE_NONE,
+                              0);
 
 	klass->busy = NULL;
 	klass->meta_changed = NULL;
 	klass->favorites_changed = NULL;
+	klass->transaction_status_changed = NULL;
 
 	object_class->dispose = browser_connection_dispose;
 }
@@ -231,6 +241,12 @@ fav_changed_cb (BrowserFavorites *bfav, BrowserConnection *bcnc)
 }
 
 static void
+transaction_status_changed_cb (GdaConnection *cnc, BrowserConnection *bcnc)
+{
+	g_signal_emit (bcnc, browser_connection_signals [TRANSACTION_STATUS_CHANGED], 0);
+}
+
+static void
 browser_connection_dispose (GObject *object)
 {
 	BrowserConnection *bcnc;
@@ -260,8 +276,12 @@ browser_connection_dispose (GObject *object)
 			g_object_unref (bcnc->priv->p_mstruct);
 		if (bcnc->priv->p_mstruct_mutex)
 			g_mutex_free (bcnc->priv->p_mstruct_mutex);
-		if (bcnc->priv->cnc)
+		if (bcnc->priv->cnc) {
+			g_signal_handlers_disconnect_by_func (bcnc->priv->cnc,
+							      G_CALLBACK (transaction_status_changed_cb),
+							      bcnc);
 			g_object_unref (bcnc->priv->cnc);
+		}
 		if (bcnc->priv->parser)
 			g_object_unref (bcnc->priv->parser);
 		if (bcnc->priv->variables) {
@@ -411,6 +431,8 @@ browser_connection_new (GdaConnection *cnc)
 
 	bcnc = BROWSER_CONNECTION (g_object_new (BROWSER_TYPE_CONNECTION, NULL));
 	bcnc->priv->cnc = g_object_ref (cnc);
+	g_signal_connect (cnc, "transaction-status-changed",
+			  G_CALLBACK (transaction_status_changed_cb), bcnc);
 
 	/* meta store */
 	gchar *dict_file_name = NULL;
@@ -647,6 +669,49 @@ browser_connection_get_transaction_status (BrowserConnection *bcnc)
 {
 	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
 	return gda_connection_get_transaction_status (bcnc->priv->cnc);
+}
+
+/**
+ * browser_connection_begin
+ * @bcnc: a #BrowserConnection
+ * @error: a place to store errors, or %NULL
+ *
+ * Begins a transaction
+ */
+gboolean
+browser_connection_begin (BrowserConnection *bcnc, GError **error)
+{
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), FALSE);
+	return gda_connection_begin_transaction (bcnc->priv->cnc, NULL,
+						 GDA_TRANSACTION_ISOLATION_UNKNOWN, error);
+}
+
+/**
+ * browser_connection_commit
+ * @bcnc: a #BrowserConnection
+ * @error: a place to store errors, or %NULL
+ *
+ * Commits a transaction
+ */
+gboolean
+browser_connection_commit (BrowserConnection *bcnc, GError **error)
+{
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), FALSE);
+	return gda_connection_commit_transaction (bcnc->priv->cnc, NULL, error);
+}
+
+/**
+ * browser_connection_rollback
+ * @bcnc: a #BrowserConnection
+ * @error: a place to store errors, or %NULL
+ *
+ * Rolls back a transaction
+ */
+gboolean
+browser_connection_rollback (BrowserConnection *bcnc, GError **error)
+{
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), FALSE);
+	return gda_connection_rollback_transaction (bcnc->priv->cnc, NULL, error);
 }
 
 /**
