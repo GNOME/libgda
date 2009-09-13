@@ -78,6 +78,8 @@ libgda-report/DocBook/gda-report-docbook-document.c
 libgda-report/engine/gda-report-engine.c
 libgda-report/gda-report-document.c
 libgda-report/RML/gda-report-rml-document.c
+libgda-ui/data-entries/common-bin.c
+libgda-ui/data-entries/gdaui-data-cell-renderer-bin.c
 libgda-ui/data-entries/gdaui-data-cell-renderer-boolean.c
 libgda-ui/data-entries/gdaui-data-cell-renderer-combo.c
 libgda-ui/data-entries/gdaui-data-cell-renderer-info.c
@@ -214,6 +216,7 @@ tools/browser/common/objects-cloud.c
 tools/browser/query-exec/gda-sql.lang
 tools/browser/query-exec/query-console.c
 tools/browser/query-exec/query-editor.c
+tools/browser/query-exec/query-exec-perspective.c
 tools/browser/query-exec/query-result.c
 tools/browser/schema-browser/favorite-selector.c
 tools/browser/schema-browser/mgr-columns.c
