@@ -35,10 +35,6 @@ An opened connection
 
 </para>
 
-@: 
-@: 
-@:
-
 @browserconnection: the object which received the signal.
 @arg1: 
 @arg2: 
@@ -48,8 +44,6 @@ An opened connection
 
 </para>
 
-@:
-
 @browserconnection: the object which received the signal.
 
 <!-- ##### SIGNAL BrowserConnection::meta-changed ##### -->
@@ -57,11 +51,15 @@ An opened connection
 
 </para>
 
-@: 
-@:
-
 @browserconnection: the object which received the signal.
 @arg1: 
+
+<!-- ##### SIGNAL BrowserConnection::transaction-status-changed ##### -->
+<para>
+
+</para>
+
+@browserconnection: the object which received the signal.
 
 <!-- ##### FUNCTION browser_connection_new ##### -->
 <para>
@@ -185,6 +183,36 @@ An opened connection
 @bcnc: 
 @exec_id: 
 @last_insert_row: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_connection_begin ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_connection_commit ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_connection_rollback ##### -->
+<para>
+
+</para>
+
+@bcnc: 
 @error: 
 @Returns: 
 
