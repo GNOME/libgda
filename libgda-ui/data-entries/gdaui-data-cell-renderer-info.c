@@ -273,18 +273,16 @@ gdaui_data_cell_renderer_info_set_property (GObject *object,
 			g_object_unref (cellinfo->priv->store);
 
 		cellinfo->priv->store = GDAUI_DATA_STORE(g_value_get_object(value));
-		if(cellinfo->priv->store)
+		if (cellinfo->priv->store)
 			g_object_ref(cellinfo->priv->store);
     		break;
 	case PROP_ITER:
 		if (cellinfo->priv->iter)
 			g_object_unref(cellinfo->priv->iter);
 
-		cellinfo->priv->iter = GDA_DATA_MODEL_ITER (g_value_get_object(value));
-		if( cellinfo->priv->iter)
+		cellinfo->priv->iter = GDA_DATA_MODEL_ITER (g_value_get_object (value));
+		if (cellinfo->priv->iter)
 			g_object_ref (cellinfo->priv->iter);
-
-		g_object_ref (G_OBJECT (cellinfo->priv->iter));
     		break;
 	case PROP_GROUP:
 		cellinfo->priv->group = GDAUI_SET_GROUP (g_value_get_pointer(value));

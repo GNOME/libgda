@@ -274,12 +274,14 @@ common_bin_adjust_menu (BinMenu *binmenu, gboolean editable, const GValue *value
 					g_string_append_printf (string, "%s: %s", _("Data size"), size);
 					g_free (size);
 #ifdef HAVE_GIO
-					GdaBlob *b2;
+					GdaBlob *blob2;
 					glong read;
-					b2 = gda_blob_copy (blob);
-					read = gda_blob_op_read (b2->op, b2, 0, 1024);
-					bin = (GdaBinary *) b2;
-					ctype = g_content_type_guess (NULL, bin->data, (gsize) bin->binary_length, NULL);
+					blob2 = (GdaBlob*) gda_blob_copy ((gpointer) blob);
+					read = gda_blob_op_read (blob2->op, blob2, 0, 1024);
+					bin = (GdaBinary *) blob2;
+					ctype = g_content_type_guess (NULL, bin->data,
+								      (gsize) bin->binary_length, NULL);
+					gda_blob_free ((gpointer) blob2);
 #endif
 				}
 				else

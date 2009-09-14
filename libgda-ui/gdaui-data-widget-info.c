@@ -187,6 +187,7 @@ release_iter (GdauiDataWidgetInfo *info)
 {
 	g_signal_handlers_disconnect_by_func (info->priv->iter,
 					      G_CALLBACK (iter_row_changed_cb), info);
+	g_object_unref (info->priv->iter);
 	info->priv->iter = NULL;
 }
 
