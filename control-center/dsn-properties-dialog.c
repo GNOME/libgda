@@ -133,7 +133,7 @@ dsn_properties_dialog (GtkWindow *parent, const gchar *dsn)
 				(GDestroyNotify) data_source_info_free);
 
 	gchar *path;
-	path = gda_gbr_get_file_path (GDA_DATA_DIR, "pixmaps", "gdaui-control-center.png", NULL);
+	path = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gda-control-center.png", NULL);
 	icon = gdk_pixbuf_new_from_file (path, NULL);
 	g_free (path);
 	if (icon) {

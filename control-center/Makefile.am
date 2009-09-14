@@ -60,13 +60,17 @@ Desktop_in_files = gda-control-center-4.0.desktop.in
 desktop_DATA = $(Desktop_in_files:.desktop.in=.desktop)
 
 # icons
-iconsdir=$(datadir)/pixmaps
+iconsdir=$(datadir)/libgda-4.0/pixmaps
 icons_DATA= \
 	gda-control-center.png \
 	gda-control-center-newcnc.png
 
+appiconsdir=$(datadir)/pixmaps
+appicons_DATA= \
+	gda-control-center-4.0.png
+
 EXTRA_DIST = \
 	control-center-res.rc \
 	gda-control-center.ico \
-	$(Desktop_in_files) $(icons_DATA)
+	$(Desktop_in_files) $(icons_DATA) $(appicons_DATA)
 DISTCLEANFILES = $(desktop_DATA)

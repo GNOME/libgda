@@ -1,7 +1,7 @@
 [Desktop Entry]
 _Name=Database access control center
 _Comment=Configure your database access environment
-Icon=gda-control-center
+Icon=gda-control-center-4.0
 Exec=gda-control-center-4.0
 Terminal=0
 Type=Application

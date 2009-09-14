@@ -416,7 +416,7 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	assistant->priv->create_db_op = NULL;
 
 	/* load icons */
-	str = gda_gbr_get_file_path (GDA_DATA_DIR, "pixmaps", "gda-control-center-newcnc.png", NULL);
+	str = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gda-control-center-newcnc.png", NULL);
 	assistant->priv->logo = gdk_pixbuf_new_from_file (str, NULL);
 	g_free (str);
 

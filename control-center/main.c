@@ -176,7 +176,7 @@ about_cb (GtkAction *action, gpointer user_data)
 		"Kjartan Maraas <kmaraas@online.no> Norwegian translation\n";
 
 	gchar *path;
-	path = gda_gbr_get_file_path (GDA_DATA_DIR, "pixmaps", "gda-control-center.png", NULL);
+	path = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gda-control-center.png", NULL);
 	icon = gdk_pixbuf_new_from_file (path, NULL);
 	g_free (path);
 
@@ -278,7 +278,7 @@ create_main_window (void)
 
 	/* icon */
 	gchar *path;
-	path = gda_gbr_get_file_path (GDA_DATA_DIR, "pixmaps", "gda-control-center.png", NULL);
+	path = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gda-control-center.png", NULL);
 	icon = gdk_pixbuf_new_from_file (path, NULL);
 	g_free (path);
 	if (icon) {

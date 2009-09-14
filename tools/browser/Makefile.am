@@ -138,11 +138,16 @@ icons_DATA= \
 	gda-browser-reference.png \
 	gda-browser-diagram.png
 
+# app icon
+appiconsdir=$(datadir)/pixmaps
+appicons_DATA= \
+        gda-browser-4.0.png
+
 EXTRA_DIST = \
 	marshal.list \
 	browser-res.rc \
 	gda-browser.ico \
-	$(Desktop_in_files) $(icons_DATA)
+	$(Desktop_in_files) $(icons_DATA) $(appicons_DATA)
 
 DISTCLEANFILES = $(desktop_DATA)
 
