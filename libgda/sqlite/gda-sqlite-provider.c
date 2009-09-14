@@ -1720,7 +1720,12 @@ add_oid_columns (GdaStatement *stmt, GHashTable **out_hash, gint *out_nb_cols_ad
 		/* add to hash table */
 		add_index++;
 		g_hash_table_insert (hash, gda_sql_identifier_remove_quotes (g_strdup (name)),
-				     GINT_TO_POINTER (add_index)); /* ADDED 1 to column number, don't forget to remove 1 when using */
+				     GINT_TO_POINTER (add_index)); /* ADDED 1 to column number,
+								    * don't forget to remove 1 when using */
+		if (target->as)
+			g_hash_table_insert (hash, gda_sql_identifier_remove_quotes (g_strdup (target->table_name)),
+					     GINT_TO_POINTER (add_index)); /* ADDED 1 to column number,
+									    * don't forget to remove 1 when using */
 		nb_cols_added ++;
 	}
 

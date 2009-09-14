@@ -331,6 +331,27 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 
 			if (type == GDA_TYPE_NULL) {
 				type = fuzzy_get_gtype (cdata, ps, col);
+				if (type == GDA_TYPE_BLOB) {
+					/* extra check: make sure we have a rowid for this blob, or fallback to binary */
+					if (ps->rowid_hash) {
+						gint oidcol = 0;
+						const char *ctable;
+						ctable = sqlite3_column_name (ps->sqlite_stmt, real_col);
+						if (ctable)
+							oidcol = GPOINTER_TO_INT (g_hash_table_lookup (ps->rowid_hash,
+												       ctable));
+						if (oidcol == 0) {
+							ctable = sqlite3_column_table_name (ps->sqlite_stmt, real_col);
+							if (ctable)
+								oidcol = GPOINTER_TO_INT (g_hash_table_lookup (ps->rowid_hash, 
+													       ctable));
+						}
+						if (oidcol == 0)
+							type = GDA_TYPE_BINARY;
+					}
+					else
+						type = GDA_TYPE_BINARY;
+				}
 				if (type != GDA_TYPE_NULL) {
 					GdaColumn *column;
 					
