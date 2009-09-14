@@ -2324,8 +2324,14 @@ tree_view_selection_changed_cb (GtkTreeSelection *selection, GdauiRawGrid *grid)
 			/* selection changing is refused, return to the current selected row */
 			GtkTreePath *path;
 			path = gtk_tree_path_new_from_indices (gda_data_model_iter_get_row (grid->priv->iter), -1);
+			g_signal_handlers_block_by_func (G_OBJECT (selection),
+							 G_CALLBACK (tree_view_selection_changed_cb), grid);
+
 			gtk_tree_selection_unselect_all (selection);
 			gtk_tree_selection_select_path (selection, path);
+			g_signal_handlers_unblock_by_func (G_OBJECT (selection),
+							   G_CALLBACK (tree_view_selection_changed_cb), grid);
+
 			gtk_tree_path_free (path);
 		}
 		row_selected = TRUE;
