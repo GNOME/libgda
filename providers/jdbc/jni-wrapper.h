@@ -71,7 +71,7 @@ jobject  gda_value_get_jni_object (const GValue *value);
 GValue  *gda_value_new_jni_object (JavaVM *jvm, JNIEnv *env, jobject jni_object);
 void     gda_value_set_jni_object (GValue *value, JavaVM *jvm, JNIEnv *env, jobject jni_object);
 GType    gda_jni_object_get_type (void) G_GNUC_CONST;
-gpointer gda_jni_object_copy (gpointer boxed) G_GNUC_CONST;
-void     gda_jni_object_free (gpointer boxed) G_GNUC_CONST;
+gpointer gda_jni_object_copy (gpointer boxed);
+void     gda_jni_object_free (gpointer boxed);
 
 #endif
