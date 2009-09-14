@@ -24,7 +24,7 @@ CFILE_GLOB=
 # Header files to ignore when scanning
 IGNORE_HFILES= gda-marshal.h gda-custom-marshal.h gda-enum-types.h sqlite3.h csv.h md5.h \
 	jni-wrapper.h gda-jdbc-recordset.h gda-jdbc-blob-op.h gda-jdbc-provider.h gda-jdbc-pstmt.h \
-	providers tools control-center tests samples plugins
+	popup-container.h providers tools control-center tests samples plugins
 
 # CFLAGS and LDFLAGS for compiling scan program. Only needed
 # if $(DOC_MODULE).types is non-empty.
