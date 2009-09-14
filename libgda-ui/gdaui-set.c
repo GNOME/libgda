@@ -211,7 +211,6 @@ wrapped_set_public_data_changed_cb (GdaSet *wset, GdauiSet *set)
 static void
 clean_public_data (GdauiSet *set)
 {
-	TO_IMPLEMENT;
 	GSList *list;
 	
 	for (list = set->sources_list; list; list = list->next) {

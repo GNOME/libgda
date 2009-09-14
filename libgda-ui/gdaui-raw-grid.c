@@ -2406,7 +2406,7 @@ static GdaDataProxy *
 gdaui_raw_grid_get_proxy (GdauiDataWidget *iface)
 {
 	GdauiRawGrid *grid;
-	g_return_val_if_fail (iface && GDAUI_IS_RAW_GRID (iface), NULL);
+	g_return_val_if_fail (GDAUI_IS_RAW_GRID (iface), NULL);
 	grid = GDAUI_RAW_GRID (iface);
 	g_return_val_if_fail (grid->priv, NULL);
 
@@ -2421,7 +2421,7 @@ gdaui_raw_grid_set_column_editable (GdauiDataWidget *iface, gint column, gboolea
 	ColumnData *column_data;
 	GdauiSetGroup *group;
 
-	g_return_if_fail (iface && GDAUI_IS_RAW_GRID (iface));
+	g_return_if_fail (GDAUI_IS_RAW_GRID (iface));
 	grid = GDAUI_RAW_GRID (iface);
 	g_return_if_fail (grid->priv);
 	
@@ -2449,7 +2449,7 @@ gdaui_raw_grid_show_column_actions (GdauiDataWidget *iface, gint column, gboolea
 {
 	GdauiRawGrid *grid;
 
-	g_return_if_fail (iface && GDAUI_IS_RAW_GRID (iface));
+	g_return_if_fail (GDAUI_IS_RAW_GRID (iface));
 	grid = GDAUI_RAW_GRID (iface);
 	g_return_if_fail (grid->priv);
 
@@ -2496,7 +2496,7 @@ gdaui_raw_grid_col_set_show (GdauiDataWidget *iface, gint column, gboolean shown
 	GdaSetGroup *group;
 	GdaHolder *param;
 
-	g_return_if_fail (iface && GDAUI_IS_RAW_GRID (iface));
+	g_return_if_fail (GDAUI_IS_RAW_GRID (iface));
 	grid = GDAUI_RAW_GRID (iface);
 	g_return_if_fail (grid->priv);
 
@@ -2519,7 +2519,7 @@ gdaui_raw_grid_get_actions_group (GdauiDataWidget *iface)
 {
 	GdauiRawGrid *grid;
 	
-	g_return_val_if_fail (iface && GDAUI_IS_RAW_GRID (iface), NULL);
+	g_return_val_if_fail (GDAUI_IS_RAW_GRID (iface), NULL);
 	grid = GDAUI_RAW_GRID (iface);
 	g_return_val_if_fail (grid->priv, NULL);
 
@@ -2531,7 +2531,7 @@ gdaui_raw_grid_widget_get_data_set (GdauiDataWidget *iface)
 {
 	GdauiRawGrid *grid;
 	
-	g_return_val_if_fail (iface && GDAUI_IS_RAW_GRID (iface), NULL);
+	g_return_val_if_fail (GDAUI_IS_RAW_GRID (iface), NULL);
 	grid = GDAUI_RAW_GRID (iface);
 	g_return_val_if_fail (grid->priv, NULL);
 
@@ -2543,7 +2543,7 @@ static GdaDataModel *
 gdaui_raw_grid_widget_get_gda_model (GdauiDataWidget *iface)
 {
 	GdauiRawGrid *grid;
-	g_return_val_if_fail (iface && GDAUI_IS_RAW_GRID (iface), NULL);
+	g_return_val_if_fail (GDAUI_IS_RAW_GRID (iface), NULL);
 	grid = GDAUI_RAW_GRID (iface);
 	g_return_val_if_fail (grid->priv, NULL);
 
@@ -2724,7 +2724,7 @@ gdaui_raw_grid_widget_set_gda_model (GdauiDataWidget *iface, GdaDataModel *model
 {
 	GdauiRawGrid *grid;
 
-	g_return_if_fail (iface && GDAUI_IS_RAW_GRID (iface));
+	g_return_if_fail (GDAUI_IS_RAW_GRID (iface));
 	grid = GDAUI_RAW_GRID (iface);
 	g_return_if_fail (grid->priv);
 	

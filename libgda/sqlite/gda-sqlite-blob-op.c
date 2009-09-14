@@ -102,8 +102,10 @@ gda_sqlite_blob_op_finalize (GObject * object)
 	g_return_if_fail (GDA_IS_SQLITE_BLOB_OP (bop));
 
 	/* free specific information */
-	if (bop->priv->sblob)
+	if (bop->priv->sblob) {
 		sqlite3_blob_close (bop->priv->sblob);
+		/* g_print ("CLOSED blob %p\n", bop); */
+	}
 	g_free (bop->priv);
 	bop->priv = NULL;
 
@@ -141,6 +143,7 @@ _gda_sqlite_blob_op_new (SqliteConnectionData *cdata, const gchar *db_name, cons
 
 	bop = g_object_new (GDA_TYPE_SQLITE_BLOB_OP, NULL);
 	bop->priv->sblob = sblob;
+	/* g_print ("OPENED blob %p\n", bop); */
 
  out:
 	if (free_strings) {
