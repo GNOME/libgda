@@ -4,6 +4,7 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
+	-DPRIV_OBJ_PREFIX="\"BROWSER\"" \
 	$(LIBGDA_CFLAGS) \
 	$(GTK_CFLAGS)
 

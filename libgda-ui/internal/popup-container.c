@@ -243,8 +243,13 @@ popup_container_get_type (void)
 			0,
 			(GInstanceInitFunc) popup_container_init
 		};
-		type = g_type_register_static (GTK_TYPE_WINDOW, "PopupContainer",
+#ifdef PRIV_OBJ_PREFIX
+		type = g_type_register_static (GTK_TYPE_WINDOW, PRIV_OBJ_PREFIX "GdauiPopupContainer",
 					       &info, 0);
+#else
+		type = g_type_register_static (GTK_TYPE_WINDOW, "GdauiPopupContainer",
+					       &info, 0);
+#endif
 	}
 	return type;
 }
