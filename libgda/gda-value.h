@@ -170,28 +170,28 @@ GdaBlob                          *gda_string_to_blob (const gchar *str);
 /* Custom data types */
 
 GType                             gda_numeric_get_type (void) G_GNUC_CONST;
-gpointer                          gda_numeric_copy (gpointer boxed) G_GNUC_CONST;
-void                              gda_numeric_free (gpointer boxed) G_GNUC_CONST;
+gpointer                          gda_numeric_copy (gpointer boxed);
+void                              gda_numeric_free (gpointer boxed);
 
 GType                             gda_time_get_type (void) G_GNUC_CONST;
-gpointer                          gda_time_copy (gpointer boxed) G_GNUC_CONST;
-void                              gda_time_free (gpointer boxed) G_GNUC_CONST;
+gpointer                          gda_time_copy (gpointer boxed);
+void                              gda_time_free (gpointer boxed);
 
 GType                             gda_timestamp_get_type (void) G_GNUC_CONST;
-gpointer                          gda_timestamp_copy (gpointer boxed) G_GNUC_CONST;
-void                              gda_timestamp_free (gpointer boxed) G_GNUC_CONST;
+gpointer                          gda_timestamp_copy (gpointer boxed);
+void                              gda_timestamp_free (gpointer boxed);
 
 GType                             gda_geometricpoint_get_type (void) G_GNUC_CONST;
-gpointer                          gda_geometricpoint_copy (gpointer boxed) G_GNUC_CONST;
-void                              gda_geometricpoint_free (gpointer boxed) G_GNUC_CONST;
+gpointer                          gda_geometricpoint_copy (gpointer boxed);
+void                              gda_geometricpoint_free (gpointer boxed);
 
 GType                             gda_binary_get_type (void) G_GNUC_CONST;
-gpointer                          gda_binary_copy (gpointer boxed) G_GNUC_CONST;
-void                              gda_binary_free (gpointer boxed) G_GNUC_CONST;
+gpointer                          gda_binary_copy (gpointer boxed);
+void                              gda_binary_free (gpointer boxed);
 
 GType                             gda_blob_get_type (void) G_GNUC_CONST;
-gpointer                          gda_blob_copy (gpointer boxed) G_GNUC_CONST;
-void                              gda_blob_free (gpointer boxed) G_GNUC_CONST;
+gpointer                          gda_blob_copy (gpointer boxed);
+void                              gda_blob_free (gpointer boxed);
 void                              gda_blob_set_op (GdaBlob *blob, GdaBlobOp *op);
 
 GType                             gda_value_list_get_type (void) G_GNUC_CONST;
