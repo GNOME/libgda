@@ -952,7 +952,7 @@ gda_thread_provider_commit_transaction (GdaServerProvider *provider, GdaConnecti
 
 	jid = gda_thread_wrapper_execute (cdata->wrapper, 
 					  (GdaThreadWrapperFunc) sub_thread_commit_transaction, &wdata, NULL, error);
-	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
+	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, error);
 	return GPOINTER_TO_INT (res) ? TRUE : FALSE;
 }
 
@@ -999,7 +999,7 @@ gda_thread_provider_rollback_transaction (GdaServerProvider *provider, GdaConnec
 
 	jid = gda_thread_wrapper_execute (cdata->wrapper, 
 					  (GdaThreadWrapperFunc) sub_thread_rollback_transaction, &wdata, NULL, error);
-	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
+	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, error);
 	return GPOINTER_TO_INT (res) ? TRUE : FALSE;
 }
 
