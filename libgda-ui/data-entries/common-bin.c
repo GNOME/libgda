@@ -41,6 +41,9 @@ file_load_cb (GtkWidget *button, BinMenu *menu)
                                            GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                            GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
                                            NULL);
+	if (menu->current_folder)
+		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dlg), menu->current_folder);
+
 	if (gtk_dialog_run (GTK_DIALOG (dlg)) == GTK_RESPONSE_ACCEPT) {
                 char *filename;
                 gsize length;
@@ -89,8 +92,11 @@ file_load_cb (GtkWidget *button, BinMenu *menu)
                 g_free (filename);
         }
 
-        if (dlg)
+        if (dlg) {
+		g_free (menu->current_folder);
+		menu->current_folder = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (dlg));
                 gtk_widget_destroy (dlg);
+	}
 }
 
 static void
@@ -105,6 +111,9 @@ file_save_cb (GtkWidget *button, BinMenu *menu)
                                            GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                            GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
                                            NULL);
+
+	if (menu->current_folder)
+		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dlg), menu->current_folder);
 
         if (gtk_dialog_run (GTK_DIALOG (dlg)) == GTK_RESPONSE_ACCEPT) {
                 char *filename;
@@ -156,8 +165,12 @@ file_save_cb (GtkWidget *button, BinMenu *menu)
                 g_free (filename);
         }
 
-        if (dlg)
+        if (dlg) {
+		g_free (menu->current_folder);
+		menu->current_folder = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (dlg));
                 gtk_widget_destroy (dlg);
+
+	}
 }
 
 void
@@ -341,6 +354,7 @@ common_bin_reset (BinMenu *binmenu)
 		gda_value_free (binmenu->tmpvalue);
 	if (binmenu->popup)
 		gtk_widget_destroy (binmenu->popup);
+	g_free (binmenu->current_folder);
 
 	memset (binmenu, 0, sizeof (BinMenu));
 }

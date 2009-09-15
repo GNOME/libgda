@@ -28,6 +28,7 @@ typedef struct {
         GtkWidget    *popup; /* PopupContainer popup window */
         GtkWidget    *load_button;
         GtkWidget    *save_button;
+	gchar        *current_folder;
 	GtkWidget    *props_label;
 
 	GType         entry_type;
