@@ -263,6 +263,7 @@ static GtkWidget *make_small_button (gboolean is_toggle,
 				     const gchar *label, const gchar *stock_id, const gchar *tooltip);
 
 static void editor_changed_cb (QueryEditor *editor, QueryConsole *tconsole);
+static void editor_execute_request_cb (QueryEditor *editor, QueryConsole *tconsole);
 static void sql_clear_clicked_cb (GtkButton *button, QueryConsole *tconsole);
 static void sql_variables_clicked_cb (GtkToggleButton *button, QueryConsole *tconsole);
 static void sql_execute_clicked_cb (GtkButton *button, QueryConsole *tconsole);
@@ -320,8 +321,7 @@ query_console_new (BrowserConnection *bcnc)
 	gtk_label_set_markup (GTK_LABEL (wid), str);
 	g_free (str);
 	gtk_misc_set_alignment (GTK_MISC (wid), 0., -1);
-	gtk_widget_set_tooltip_text (wid, _("Enter SQL code to execute\n(must be understood by the database to\n"
-					    "which the connection is opened, except for the variables definition)"));
+	gtk_widget_set_tooltip_markup (wid, QUERY_EDITOR_TOOLTIP);
 	gtk_box_pack_start (GTK_BOX (vbox), wid, FALSE, FALSE, 0);
 
 	wid = query_editor_new ();
@@ -329,6 +329,8 @@ query_console_new (BrowserConnection *bcnc)
 	gtk_box_pack_start (GTK_BOX (vbox), wid, TRUE, TRUE, 0);
 	g_signal_connect (wid, "changed",
 			  G_CALLBACK (editor_changed_cb), tconsole);
+	g_signal_connect (wid, "execute-request",
+			  G_CALLBACK (editor_execute_request_cb), tconsole);
 	gtk_widget_set_size_request (wid, -1, 200);
 	
 	vbox = gtk_vbox_new (FALSE, 0);
@@ -663,7 +665,13 @@ editor_changed_cb (QueryEditor *editor, QueryConsole *tconsole)
 		g_source_remove (tconsole->priv->params_compute_id);
 	tconsole->priv->params_compute_id = g_timeout_add_seconds (1, (GSourceFunc) compute_params, tconsole);
 }
-		
+
+static void
+editor_execute_request_cb (QueryEditor *editor, QueryConsole *tconsole)
+{
+	sql_execute_clicked_cb (NULL, tconsole);
+}
+	
 static void
 sql_variables_clicked_cb (GtkToggleButton *button, QueryConsole *tconsole)
 {

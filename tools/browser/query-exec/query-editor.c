@@ -103,10 +103,11 @@ enum
 {
         CHANGED,
 	HISTORY_ITEM_REMOVED,
+	EXECUTE_REQUEST,
         LAST_SIGNAL
 };
 
-static gint query_editor_signals[LAST_SIGNAL] = { 0, 0 };
+static gint query_editor_signals[LAST_SIGNAL] = { 0, 0, 0 };
 
 
 /*
@@ -185,6 +186,14 @@ query_editor_class_init (QueryEditorClass *klass)
                               NULL, NULL,
                               g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
 
+	query_editor_signals[EXECUTE_REQUEST] =
+                g_signal_new ("execute-request",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_FIRST,
+                              G_STRUCT_OFFSET (QueryEditorClass, execute_request),
+                              NULL, NULL,
+                              g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
+
 	query_editor_signals[HISTORY_ITEM_REMOVED] =
                 g_signal_new ("history-item-removed",
                               G_TYPE_FROM_CLASS (object_class),
@@ -216,11 +225,9 @@ event_after (GtkWidget *text_view, GdkEvent *ev, QueryEditor *editor)
 	GdkEventButton *event;
 	gint x, y;
 
-	if (editor->priv->mode != QUERY_EDITOR_HISTORY)
-		return FALSE;
-
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
-	if (ev->type == GDK_BUTTON_RELEASE) {
+	if ((editor->priv->mode == QUERY_EDITOR_HISTORY) &&
+	    (ev->type == GDK_BUTTON_RELEASE)) {
 		event = (GdkEventButton *)ev;
 		
 		if (event->button != 1)
@@ -253,7 +260,8 @@ event_after (GtkWidget *text_view, GdkEvent *ev, QueryEditor *editor)
 	}
 	else if (ev->type == GDK_KEY_PRESS) {
 		GdkEventKey *evkey = ((GdkEventKey*) ev);
-		if ((evkey->keyval == GDK_Up) || (evkey->keyval == GDK_Down)) {
+		if ((editor->priv->mode == QUERY_EDITOR_HISTORY) &&
+		    ((evkey->keyval == GDK_Up) || (evkey->keyval == GDK_Down))) {
 			HistItemData *nfocus = NULL;
 			if (editor->priv->hist_focus) {
 				if (((GdkEventKey*) ev)->keyval == GDK_Up)
@@ -267,12 +275,26 @@ event_after (GtkWidget *text_view, GdkEvent *ev, QueryEditor *editor)
 			focus_on_hist_data (editor, nfocus);
 			return TRUE;
 		}
-		else if ((evkey->keyval == GDK_Delete) && editor->priv->hist_focus) {
+		else if ((editor->priv->mode == QUERY_EDITOR_HISTORY) &&
+			 ((evkey->keyval == GDK_Delete) && editor->priv->hist_focus)) {
 			if (editor->priv->hist_focus->item)
 				query_editor_del_current_history_item (editor);
 			else if (editor->priv->hist_focus->batch)
 				query_editor_del_history_batch (editor, editor->priv->hist_focus->batch);
 			return TRUE;
+		}
+		else if ((editor->priv->mode == QUERY_EDITOR_READWRITE) && 
+			 (evkey->state & GDK_CONTROL_MASK) &&
+			 ((evkey->keyval == GDK_L) || (evkey->keyval == GDK_l))) {
+			GtkTextIter start, end;
+			gtk_text_buffer_get_start_iter (buffer, &start);
+			gtk_text_buffer_get_end_iter (buffer, &end);
+			gtk_text_buffer_delete (buffer, &start, &end);
+		}
+		else if ((editor->priv->mode == QUERY_EDITOR_READWRITE) && 
+			 (evkey->state & GDK_CONTROL_MASK) &&
+			 (evkey->keyval == GDK_Return)) {
+			g_signal_emit (editor, query_editor_signals[EXECUTE_REQUEST], 0);
 		}
 	}
 	else
@@ -386,7 +408,7 @@ query_editor_init (QueryEditor *editor, QueryEditorClass *klass)
 #endif
 
 	gtk_container_add (GTK_CONTAINER (editor->priv->scrolled_window), editor->priv->text);
-
+	gtk_widget_set_tooltip_markup (editor->priv->text, QUERY_EDITOR_TOOLTIP);
 	g_signal_connect (editor->priv->text, "event-after", 
 			  G_CALLBACK (event_after), editor);
 	g_signal_connect (gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->text)), "changed", 

@@ -35,6 +35,12 @@ G_BEGIN_DECLS
 #define QUERY_IS_EDITOR(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, QUERY_TYPE_EDITOR))
 #define QUERY_IS_EDITOR_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), QUERY_TYPE_EDITOR))
 
+#define QUERY_EDITOR_TOOLTIP _("Enter SQL code to execute\n(must be understood by the database to\n" \
+			       "which the connection is opened, except for the variables definition)\n" \
+			       "The following shortcuts are allowed:\n" \
+			       "   <small><b>CTRL - l</b></small> to clear the editor\n" \
+			       "   <small><b>CTRL - ENTER</b></small> to execute SQL")
+
 typedef struct _QueryEditor        QueryEditor;
 typedef struct _QueryEditorClass   QueryEditorClass;
 typedef struct _QueryEditorPrivate QueryEditorPrivate;
@@ -82,6 +88,7 @@ struct _QueryEditorClass {
 	/* signals */
 	void (* changed) (QueryEditor *editor);
 	void (* history_item_removed) (QueryEditor *editor, QueryEditorHistoryItem *item);
+	void (* execute_request) (QueryEditor *editor);
 };
 
 /*
