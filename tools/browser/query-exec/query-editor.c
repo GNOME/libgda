@@ -85,6 +85,8 @@ static void query_editor_init       (QueryEditor *editor, QueryEditorClass *klas
 static void query_editor_finalize   (GObject *object);
 
 static void query_editor_map       (GtkWidget *widget);
+static void query_editor_grab_focus (GtkWidget *widget);
+
 
 static GObjectClass *parent_class = NULL;
 static GHashTable *supported_languages = NULL;
@@ -193,6 +195,7 @@ query_editor_class_init (QueryEditorClass *klass)
 
 	object_class->finalize = query_editor_finalize;
 	GTK_WIDGET_CLASS (object_class)->map = query_editor_map;
+	GTK_WIDGET_CLASS (object_class)->grab_focus = query_editor_grab_focus;
 }
 
 static void
@@ -441,6 +444,14 @@ query_editor_map (GtkWidget *widget)
 		gtk_widget_modify_base (QUERY_EDITOR (widget)->priv->text, GTK_STATE_NORMAL, &color);
 	}
 }
+
+
+static void
+query_editor_grab_focus (GtkWidget *widget)
+{
+	gtk_widget_grab_focus (QUERY_EDITOR (widget)->priv->text);
+}
+
 
 static void
 hist_data_free_all (QueryEditor *editor)

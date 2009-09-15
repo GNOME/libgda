@@ -33,6 +33,8 @@ static void query_exec_perspective_class_init (QueryExecPerspectiveClass *klass)
 static void query_exec_perspective_init (QueryExecPerspective *stmt);
 static void query_exec_perspective_dispose (GObject *object);
 
+static void query_exec_perspective_grab_focus (GtkWidget *widget);
+
 /* BrowserPerspective interface */
 static void                 query_exec_perspective_perspective_init (BrowserPerspectiveIface *iface);
 static GtkActionGroup      *query_exec_perspective_get_actions_group (BrowserPerspective *perspective);
@@ -93,6 +95,17 @@ query_exec_perspective_class_init (QueryExecPerspectiveClass * klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->dispose = query_exec_perspective_dispose;
+	GTK_WIDGET_CLASS (object_class)->grab_focus = query_exec_perspective_grab_focus;
+}
+
+static void
+query_exec_perspective_grab_focus (GtkWidget *widget)
+{
+	GtkNotebook *nb;
+
+	nb = GTK_NOTEBOOK (QUERY_EXEC_PERSPECTIVE (widget)->priv->notebook);
+	gtk_widget_grab_focus (gtk_notebook_get_nth_page (nb,
+							  gtk_notebook_get_current_page (nb)));
 }
 
 static void
@@ -181,6 +194,8 @@ query_exec_perspective_new (BrowserWindow *bwin)
 	/* transaction status detection */
 	g_signal_connect (bcnc, "transaction-status-changed",
 			  G_CALLBACK (transaction_status_changed_cb), bpers);
+
+	gtk_widget_grab_focus (page);
 
 	return bpers;
 }
@@ -277,6 +292,8 @@ query_exec_add_cb (GtkAction *action, BrowserPerspective *bpers)
 
 	tlabel = browser_page_get_tab_label (BROWSER_PAGE (page), NULL);
 	gtk_notebook_set_menu_label (GTK_NOTEBOOK (perspective->priv->notebook), page, tlabel);
+
+	gtk_widget_grab_focus (page);
 }
 
 static void

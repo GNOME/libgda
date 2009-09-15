@@ -136,6 +136,7 @@ static void query_console_class_init (QueryConsoleClass *klass);
 static void query_console_init       (QueryConsole *tconsole, QueryConsoleClass *klass);
 static void query_console_dispose   (GObject *object);
 static void query_console_show_all (GtkWidget *widget);
+static void query_console_grab_focus (GtkWidget *widget);
 
 /* BrowserPage interface */
 static void                 query_console_page_init (BrowserPageIface *iface);
@@ -163,6 +164,7 @@ query_console_class_init (QueryConsoleClass *klass)
 
 	object_class->dispose = query_console_dispose;
 	GTK_WIDGET_CLASS (klass)->show_all = query_console_show_all;
+	GTK_WIDGET_CLASS (klass)->grab_focus = query_console_grab_focus;
 }
 
 static void
@@ -1050,4 +1052,13 @@ query_console_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_butto
 	return browser_make_tab_label_with_stock (tab_name,
 						  STOCK_CONSOLE,
 						  out_close_button ? TRUE : FALSE, out_close_button);
+}
+
+static void
+query_console_grab_focus (GtkWidget *widget)
+{
+	QueryConsole *tconsole;
+
+	tconsole = QUERY_CONSOLE (widget);
+	gtk_widget_grab_focus (GTK_WIDGET (tconsole->priv->editor));
 }

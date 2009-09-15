@@ -403,6 +403,7 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 	pers->page_number = gtk_notebook_append_page (bwin->priv->perspectives_nb,
 						      GTK_WIDGET (pers->perspective_widget), NULL);
         gtk_widget_show_all ((GtkWidget*) bwin->priv->perspectives_nb);
+	gtk_widget_grab_focus (GTK_WIDGET (pers->perspective_widget));
 
 	/* build the perspectives menu */
 	GtkActionGroup *agroup;
