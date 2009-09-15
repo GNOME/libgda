@@ -497,7 +497,11 @@ real_open_connection (const gchar  *host,
 						  (port > 0) ? port : 0,
 						  socket, flags);
 	if (!return_mysql || mysql != return_mysql) {
+#if GLIB_MAJOR_VERSION == 2 && GLIB_MINOR_VERSION < 18
+		g_set_error (error, 0, 0, "%s", mysql_error (mysql));
+#else
 		g_set_error_literal (error, 0, 0, mysql_error (mysql));
+#endif
 		g_free (mysql);
 		mysql = NULL;
 	}
