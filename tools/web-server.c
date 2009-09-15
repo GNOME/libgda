@@ -27,7 +27,7 @@
 #include "web-server.h"
 #include <libsoup/soup.h>
 #include "html-doc.h"
-#include "binreloc/sql-binreloc.h"
+#include <libgda/binreloc/gda-binreloc.h>
 
 /* Use the RSA reference implementation included in the RFC-1321, http://www.freesoft.org/CIE/RFC/1321/ */
 #include "global.h"
@@ -444,7 +444,7 @@ get_file (WebServer *server, SoupMessage *msg, const char *path, GError **error)
 	GMappedFile *mfile;
 	gchar *real_path;
 
-	real_path = sql_gbr_get_file_path (SQL_DATA_DIR, "libgda-4.0", "web", path, NULL);
+	real_path = gda_gbr_get_file_path (GDA_DATA_DIR, "libgda-4.0", "web", path, NULL);
 	if (!real_path)
 		return FALSE;
 

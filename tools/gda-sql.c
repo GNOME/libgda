@@ -35,7 +35,6 @@
 #include <libgda/gda-quark-list.h>
 #include <libgda/gda-meta-struct.h>
 #include <libgda/gda-blob-op.h>
-#include "binreloc/sql-binreloc.h"
 
 #ifndef G_OS_WIN32
 #include <signal.h>
@@ -178,7 +177,6 @@ main (int argc, char *argv[])
 	}
 
         gda_init ();
-	sql_gbr_init ();
 
 	has_threads = g_thread_supported ();
 	data = g_new0 (MainData, 1);
