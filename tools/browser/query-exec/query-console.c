@@ -268,6 +268,7 @@ static void sql_clear_clicked_cb (GtkButton *button, QueryConsole *tconsole);
 static void sql_variables_clicked_cb (GtkToggleButton *button, QueryConsole *tconsole);
 static void sql_execute_clicked_cb (GtkButton *button, QueryConsole *tconsole);
 static void sql_indent_clicked_cb (GtkButton *button, QueryConsole *tconsole);
+static void sql_favorite_clicked_cb (GtkButton *button, QueryConsole *tconsole);
 
 static void history_copy_clicked_cb (GtkButton *button, QueryConsole *tconsole);
 static void history_delete_clicked_cb (GtkButton *button, QueryConsole *tconsole);
@@ -386,6 +387,11 @@ query_console_new (BrowserConnection *bcnc)
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (sql_indent_clicked_cb), tconsole);
+
+	button = make_small_button (FALSE, _("Favorite"), STOCK_ADD_BOOKMARK, _("Add SQL to favorite"));
+	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
+	g_signal_connect (button, "clicked",
+			  G_CALLBACK (sql_favorite_clicked_cb), tconsole);
 
 	/* bottom paned for the results and history */
 	hpaned = gtk_hpaned_new ();
@@ -723,6 +729,31 @@ sql_indent_clicked_cb (GtkButton *button, QueryConsole *tconsole)
 }
 
 static void
+sql_favorite_clicked_cb (GtkButton *button, QueryConsole *tconsole)
+{
+	BrowserFavorites *bfav;
+	BrowserFavoritesAttributes fav;
+	GError *error = NULL;
+
+	memset (&fav, 0, sizeof (fav));
+	fav.id = -1;
+	fav.type = BROWSER_FAVORITES_QUERIES;
+	fav.contents = query_editor_get_all_text (tconsole->priv->editor);
+	fav.name = _("Unnamed query");
+
+	bfav = browser_connection_get_favorites (tconsole->priv->bcnc);
+
+	if (! browser_favorites_add (bfav, 0, &fav, ORDER_KEY_QUERIES, G_MAXINT, &error)) {
+		browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) tconsole),
+                                    _("Could not add favorite: %s"),
+                                    error && error->message ? error->message : _("No detail"));
+                if (error)
+                        g_error_free (error);
+	}
+	g_free (fav.contents);
+}
+
+static void
 popup_container_position_func (PopupContainer *cont, gint *out_x, gint *out_y)
 {
 	GtkWidget *console, *top;
@@ -995,6 +1026,20 @@ query_exec_fetch_cb (QueryConsole *tconsole)
 	}
 
 	return !alldone;
+}
+
+/**
+ * query_console_set_text
+ * @console:
+ * @text:
+ *
+ * Replaces the edited SQL with @text in @console
+ */
+void
+query_console_set_text (QueryConsole *console, const gchar *text)
+{
+	g_return_if_fail (IS_QUERY_CONSOLE (console));
+	query_editor_set_text (console->priv->editor, text);
 }
 
 /*

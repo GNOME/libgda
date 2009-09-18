@@ -59,6 +59,8 @@ An opened connection
 
 </para>
 
+@:
+
 @browserconnection: the object which received the signal.
 
 <!-- ##### FUNCTION browser_connection_new ##### -->

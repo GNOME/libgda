@@ -232,7 +232,8 @@ favorite_selector_new (BrowserConnection *bcnc)
 	
 	/* create tree managers */
 	tsel->priv->tree = gda_tree_new ();
-	manager = mgr_favorites_new (bcnc, BROWSER_FAVORITES_TABLES);
+	manager = mgr_favorites_new (bcnc, BROWSER_FAVORITES_TABLES | BROWSER_FAVORITES_DIAGRAMS,
+				     ORDER_KEY_SCHEMA);
         gda_tree_add_manager (tsel->priv->tree, manager);
 	g_object_unref (manager);
 

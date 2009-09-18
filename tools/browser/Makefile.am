@@ -136,7 +136,8 @@ icons_DATA= \
 	gda-browser-column-nn.png \
 	gda-browser-column-pk.png \
 	gda-browser-reference.png \
-	gda-browser-diagram.png
+	gda-browser-diagram.png \
+	gda-browser-query.png
 
 # app icon
 appiconsdir=$(datadir)/pixmaps

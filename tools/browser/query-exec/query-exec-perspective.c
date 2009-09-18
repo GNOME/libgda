@@ -25,6 +25,8 @@
 #include "query-console.h"
 #include "../browser-stock-icons.h"
 #include "../support.h"
+#include "query-favorite-selector.h"
+#include "query-editor.h"
 
 /* 
  * Main static functions 
@@ -124,6 +126,8 @@ query_exec_perspective_init (QueryExecPerspective *perspective)
 	perspective->priv->action_group = NULL;
 }
 
+static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType fav_type,
+                                      const gchar *selection, QueryExecPerspective *perspective);
 static void nb_switch_page_cb (GtkNotebook *nb, GtkNotebookPage *page, gint page_num,
 			       QueryExecPerspective *perspective);
 static void nb_page_removed_cb (GtkNotebook *nb, GtkNotebookPage *page, gint page_num,
@@ -152,18 +156,16 @@ query_exec_perspective_new (BrowserWindow *bwin)
 	perspective->priv->bcnc = g_object_ref (bcnc);
 
 	/* contents */
-	GtkWidget *paned, *nb;
+	GtkWidget *paned, *nb, *wid;
 	paned = gtk_hpaned_new ();
-	/*
-	wid = favorite_selector_new (bcnc);
+	wid = query_favorite_selector_new (bcnc);
 	g_signal_connect (wid, "selection-changed",
 			  G_CALLBACK (fav_selection_changed_cb), bpers);
-	gtk_paned_add1 (GTK_PANED (paned), wid);
-	*/
+	gtk_paned_pack1 (GTK_PANED (paned), wid, FALSE, TRUE);
 
 	nb = gtk_notebook_new ();
 	perspective->priv->notebook = nb;
-	gtk_paned_add2 (GTK_PANED (paned), nb);
+	gtk_paned_pack2 (GTK_PANED (paned), nb, TRUE, TRUE);
 	gtk_notebook_set_scrollable (GTK_NOTEBOOK (nb), TRUE);
 	gtk_notebook_popup_enable (GTK_NOTEBOOK (nb));
 	g_signal_connect (G_OBJECT (nb), "switch-page",
@@ -198,6 +200,23 @@ query_exec_perspective_new (BrowserWindow *bwin)
 	gtk_widget_grab_focus (page);
 
 	return bpers;
+}
+
+static void
+fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType fav_type,
+			  const gchar *selection, QueryExecPerspective *perspective)
+{
+	GtkNotebook *nb;
+	GtkWidget *page;
+
+	nb = GTK_NOTEBOOK (perspective->priv->notebook);
+	page = gtk_notebook_get_nth_page (nb, gtk_notebook_get_current_page (nb));
+	if (IS_QUERY_CONSOLE (page)) {
+		query_console_set_text (QUERY_CONSOLE (page), selection);	
+	}
+	else {
+		TO_IMPLEMENT;
+	}
 }
 
 static void

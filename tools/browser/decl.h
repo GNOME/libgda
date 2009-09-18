@@ -45,6 +45,7 @@ typedef struct {
 #define BROWSER_PERSPECTIVE_FACTORY(x) ((BrowserPerspectiveFactory*)(x))
 
 #define ORDER_KEY_SCHEMA 1
+#define ORDER_KEY_QUERIES 2
 
 G_END_DECLS
 

@@ -675,6 +675,7 @@ query_editor_set_mode (QueryEditor *editor, QueryEditorMode mode)
 		hist_data_free_all (editor);
 
 	editor->priv->mode = mode;
+	
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->text));
 	if (clean) {
 		GtkTextIter start, end;
@@ -685,11 +686,13 @@ query_editor_set_mode (QueryEditor *editor, QueryEditorMode mode)
 
 	switch (mode) {
 	case QUERY_EDITOR_READWRITE:
+		gtk_widget_set_tooltip_markup (editor->priv->text, QUERY_EDITOR_TOOLTIP);
 		gtk_text_view_set_editable (GTK_TEXT_VIEW (editor->priv->text), TRUE);
 		gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (editor->priv->text), TRUE);
 		break;
 	case QUERY_EDITOR_READONLY:
 	case QUERY_EDITOR_HISTORY:
+		gtk_widget_set_tooltip_markup (editor->priv->text, NULL);
 		gtk_text_view_set_editable (GTK_TEXT_VIEW (editor->priv->text), FALSE);
 		gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (editor->priv->text), FALSE);
 		break;
@@ -850,6 +853,25 @@ query_editor_append_note (QueryEditor *editor, const gchar *text, gint level)
 			g_assert_not_reached ();
 		}
 	}	
+}
+
+/**
+ * query_editor_show_tooltip
+ * @editor: a #QueryEditor
+ * @show_tooltip:
+ *
+ * Defines if tooltip can be shown or not
+ */
+void
+query_editor_show_tooltip (QueryEditor *editor, gboolean show_tooltip)
+{
+	g_return_if_fail (QUERY_IS_EDITOR (editor));
+	g_return_if_fail (editor->priv->mode == QUERY_EDITOR_READWRITE);
+	
+	if (show_tooltip)
+		gtk_widget_set_tooltip_markup (editor->priv->text, QUERY_EDITOR_TOOLTIP);
+	else
+		gtk_widget_set_tooltip_markup (editor->priv->text, NULL);
 }
 
 static void

@@ -50,6 +50,7 @@ struct _QueryConsoleClass {
 GType                    query_console_get_type (void) G_GNUC_CONST;
 
 GtkWidget               *query_console_new      (BrowserConnection *bcnc);
+void                     query_console_set_text (QueryConsole *console, const gchar *text);
 
 G_END_DECLS
 

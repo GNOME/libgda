@@ -48,14 +48,19 @@ struct _MgrFavoritesClass {
 };
 
 GType           mgr_favorites_get_type                 (void) G_GNUC_CONST;
-GdaTreeManager* mgr_favorites_new                      (BrowserConnection *bcnc, BrowserFavoritesType type);
+GdaTreeManager* mgr_favorites_new                      (BrowserConnection *bcnc, BrowserFavoritesType type,
+							gint order_key);
 
+/* name of the attribute which stores the favorite name */
+#define MGR_FAVORITES_NAME_ATT_NAME "fav_name"
 /* name of the attribute which stores the favorite's contents */
 #define MGR_FAVORITES_CONTENTS_ATT_NAME "fav_contents"
 /* name of the attribute which stores the favorite's id */
 #define MGR_FAVORITES_ID_ATT_NAME "fav_id"
 /* name of the attribute which stores the favorite type */
 #define MGR_FAVORITES_TYPE_ATT_NAME "fav_type"
+/* name of the attribute which stores the favorite's position */
+#define MGR_FAVORITES_POSITION_ATT_NAME "fav_pos"
 
 G_END_DECLS
 

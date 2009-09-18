@@ -207,8 +207,10 @@ favorite_type_to_string (BrowserFavoritesType type)
 		return "TABLE";
 	case BROWSER_FAVORITES_DIAGRAMS:
 		return "DIAGRAM";
+	case BROWSER_FAVORITES_QUERIES:
+		return "QUERY";
 	default:
-		g_warning ("Unknow type of favorite");
+		g_warning ("Unknown type of favorite");
 	}
 
 	return "";
@@ -221,8 +223,10 @@ favorite_string_to_type (const gchar *str)
 		return BROWSER_FAVORITES_TABLES;
 	else if (*str == 'D')
 		return BROWSER_FAVORITES_DIAGRAMS;
+	else if (*str == 'Q')
+		return BROWSER_FAVORITES_QUERIES;
 	else
-		g_warning ("Unknow type '%s' of favorite", str);
+		g_warning ("Unknown type '%s' of favorite", str);
 	return 0;
 }
 
@@ -859,6 +863,13 @@ browser_favorites_list (BrowserFavorites *bfav, guint session_id, BrowserFavorit
 	g_object_unref (G_OBJECT (b));
 	if (!stmt)
 		goto out;
+
+#ifdef GDA_DEBUG_NO
+	{
+		g_print ("=>%s\n", gda_statement_to_sql (stmt, NULL, NULL));
+	}
+#endif
+
 
 	params = gda_set_new_inline (2,
 				     "session", G_TYPE_INT, session_id,

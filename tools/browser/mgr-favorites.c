@@ -29,6 +29,7 @@
 struct _MgrFavoritesPriv {
 	BrowserConnection    *bcnc;
 	BrowserFavoritesType  fav_type;
+	gint                  order_key;
 };
 
 static void mgr_favorites_class_init (MgrFavoritesClass *klass);
@@ -178,13 +179,14 @@ mgr_favorites_get_property (GObject *object,
  * mgr_favorites_new
  * @bcnc: a #BrowserConnection object
  * @type: the type of favorites to handle
+ * @order_key: ordering key, see browser_favorites_add()
  *
  * Creates a new #GdaTreeManager object which will add one tree node for each favorite of the @type type
  *
  * Returns: a new #GdaTreeManager object
  */
 GdaTreeManager*
-mgr_favorites_new (BrowserConnection *bcnc, BrowserFavoritesType type)
+mgr_favorites_new (BrowserConnection *bcnc, BrowserFavoritesType type, gint order_key)
 {
 	MgrFavorites *mgr;
 	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
@@ -192,6 +194,7 @@ mgr_favorites_new (BrowserConnection *bcnc, BrowserFavoritesType type)
 	mgr = (MgrFavorites*) g_object_new (MGR_FAVORITES_TYPE,
 					    "browser-connection", bcnc, NULL);
 	mgr->priv->fav_type = type;
+	mgr->priv->order_key = order_key;
 	return (GdaTreeManager*) mgr;
 }
 
@@ -239,11 +242,12 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 		ehash = hash_for_existing_nodes (children_nodes);
 
 	fav_list = browser_favorites_list (browser_connection_get_favorites (mgr->priv->bcnc),
-					   0, BROWSER_FAVORITES_TABLES | BROWSER_FAVORITES_DIAGRAMS,
-					   ORDER_KEY_SCHEMA, &lerror);
+					   0, mgr->priv->fav_type,
+					   mgr->priv->order_key, &lerror);
 	if (fav_list) {
 		GSList *list;
-		for (list = fav_list; list; list = list->next) {
+		gint pos;
+		for (list = fav_list, pos = 0; list; list = list->next, pos ++) {
 			BrowserFavoritesAttributes *fav = (BrowserFavoritesAttributes *) list->data;
 			GdaTreeNode* snode = NULL;
 			GValue *av;
@@ -318,7 +322,6 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 									  MGR_FAVORITES_TYPE_ATT_NAME,
 									  av, NULL);
 					gda_value_free (av);
-
 					
 					/* icon */
 					GdkPixbuf *pixbuf;
@@ -340,9 +343,45 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 				gda_tree_node_set_node_attribute (snode, "markup", av, NULL);
 				gda_value_free (av);
 			}
+			else if (fav->type == BROWSER_FAVORITES_QUERIES) {
+				if (!snode) {
+					snode = gda_tree_manager_create_node (manager, node, NULL);
+					
+					g_value_set_int ((av = gda_value_new (G_TYPE_INT)), fav->id);
+					gda_tree_node_set_node_attribute (snode,
+									  MGR_FAVORITES_ID_ATT_NAME,
+									  av, NULL);
+					gda_value_free (av);
 
+					g_value_set_int ((av = gda_value_new (G_TYPE_INT)), pos);
+					gda_tree_node_set_node_attribute (snode,
+									  MGR_FAVORITES_POSITION_ATT_NAME,
+									  av, NULL);
+					gda_value_free (av);
+
+					/* icon */
+					GdkPixbuf *pixbuf;
+					pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_QUERY);
+					av = gda_value_new (G_TYPE_OBJECT);
+					g_value_set_object (av, pixbuf);
+					gda_tree_node_set_node_attribute (snode, "icon", av, NULL);
+					gda_value_free (av);
+				}
+
+				g_value_set_string ((av = gda_value_new (G_TYPE_STRING)),
+						    fav->contents);
+				gda_tree_node_set_node_attribute (snode,
+								  MGR_FAVORITES_CONTENTS_ATT_NAME,
+								  av, NULL);
+				gda_value_free (av);
+
+				g_value_set_string ((av = gda_value_new (G_TYPE_STRING)), fav->name);
+				gda_tree_node_set_node_attribute (snode, MGR_FAVORITES_NAME_ATT_NAME,
+								  av, NULL);
+				gda_value_free (av);
+			}
 			else {
-				
+				TO_IMPLEMENT;
 			}
 			if (snode)
 				nodes_list = g_slist_prepend (nodes_list, snode);
@@ -369,11 +408,13 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 		gchar *str;
 		GValue *value;
 
-		str = g_strdup_printf ("<i>%s</i>", _("No favorite:\ndrag item to\ndefine one"));
-		snode = gda_tree_manager_create_node (manager, node, str);
-		g_value_take_string ((value = gda_value_new (G_TYPE_STRING)), str);
-		gda_tree_node_set_node_attribute (snode, "markup", value, NULL);
-		nodes_list = g_slist_prepend (nodes_list, snode);
+		if (mgr->priv->fav_type & BROWSER_FAVORITES_TABLES) {
+			str = g_strdup_printf ("<i>%s</i>", _("No favorite:\ndrag item to\ndefine one"));
+			snode = gda_tree_manager_create_node (manager, node, str);
+			g_value_take_string ((value = gda_value_new (G_TYPE_STRING)), str);
+			gda_tree_node_set_node_attribute (snode, "markup", value, NULL);
+			nodes_list = g_slist_prepend (nodes_list, snode);
+		}
 	}
 
 	if (ehash)

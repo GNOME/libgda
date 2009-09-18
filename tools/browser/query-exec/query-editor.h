@@ -123,6 +123,7 @@ void       query_editor_set_text (QueryEditor *editor, const gchar *text);
 void       query_editor_append_text (QueryEditor *editor, const gchar *text);
 void       query_editor_keep_current_state (QueryEditor *editor);
 void       query_editor_append_note (QueryEditor *editor, const gchar *text, gint level);
+void       query_editor_show_tooltip (QueryEditor *editor, gboolean show_tooltip);
 
 /* history API */
 void       query_editor_start_history_batch (QueryEditor *editor, QueryEditorHistoryBatch *hist_batch);

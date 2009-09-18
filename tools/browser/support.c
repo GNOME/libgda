@@ -237,7 +237,8 @@ browser_get_pixbuf_icon (BrowserIconType type)
 		"gda-browser-column-fknn.png",
 		"gda-browser-column-nn.png",
 		"gda-browser-reference.png",
-		"gda-browser-diagram.png"
+		"gda-browser-diagram.png",
+		"gda-browser-query.png"
 	};
 
 	if (!array)
