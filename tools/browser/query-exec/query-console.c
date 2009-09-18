@@ -862,6 +862,8 @@ sql_execute_clicked_cb (GtkButton *button, QueryConsole *tconsole)
 		return;
 	}
 
+	query_editor_keep_current_state (tconsole->priv->editor);
+
 	/* actual Execution */
 	const GSList *stmt_list, *list;
 	ExecutionBatch *ebatch;

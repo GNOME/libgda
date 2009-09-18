@@ -38,6 +38,7 @@
 #define QUERY_EDITOR_LANGUAGE_SQL "gda-sql"
 #define COLOR_ALTER_FACTOR 1.8
 #define MAX_HISTORY_BATCH_ITEMS 20
+#define STATES_ARRAY_SIZE 32
 
 static void query_editor_history_batch_add_item (QueryEditorHistoryBatch *qib,
 						 QueryEditorHistoryItem *qih);
@@ -65,6 +66,9 @@ struct _QueryEditorPrivate {
 	GtkWidget *text;
 
 	GtkTextTag *indent_tag;
+	GArray *states; /* array of strings, pos 0 => oldest state */
+	gint current_state;
+	gchar *current_state_text;
 
 	/* HISTORY mode */
 	guint ts_timeout_id;
@@ -218,7 +222,7 @@ text_buffer_changed_cb (GtkTextBuffer *buffer, QueryEditor *editor)
  * Returns: -1 if none focussed
  */
 static gboolean
-event_after (GtkWidget *text_view, GdkEvent *ev, QueryEditor *editor)
+event (GtkWidget *text_view, GdkEvent *ev, QueryEditor *editor)
 {
 	GtkTextIter start, end, iter;
 	GtkTextBuffer *buffer;
@@ -290,11 +294,64 @@ event_after (GtkWidget *text_view, GdkEvent *ev, QueryEditor *editor)
 			gtk_text_buffer_get_start_iter (buffer, &start);
 			gtk_text_buffer_get_end_iter (buffer, &end);
 			gtk_text_buffer_delete (buffer, &start, &end);
+			return TRUE;
 		}
 		else if ((editor->priv->mode == QUERY_EDITOR_READWRITE) && 
 			 (evkey->state & GDK_CONTROL_MASK) &&
 			 (evkey->keyval == GDK_Return)) {
 			g_signal_emit (editor, query_editor_signals[EXECUTE_REQUEST], 0);
+			return TRUE;
+		}
+		else if ((editor->priv->mode == QUERY_EDITOR_READWRITE) && 
+			 (evkey->state & GDK_CONTROL_MASK) &&
+			 (evkey->keyval == GDK_Up) &&
+			 editor->priv->states) {
+			if (editor->priv->states->len > 0) {
+				gint i = -1;
+				if (editor->priv->current_state == G_MAXINT) {
+					i = editor->priv->states->len - 1;
+					g_free (editor->priv->current_state_text);
+					editor->priv->current_state_text = query_editor_get_all_text (editor);
+				}
+				else if (editor->priv->current_state >= editor->priv->states->len)
+					i = editor->priv->states->len - 1; /* last stored state */
+				else if (editor->priv->current_state > 0)
+					i = editor->priv->current_state - 1;
+				gchar *ctext;
+				ctext = query_editor_get_all_text (editor);				
+				while (i >= 0) {
+					gchar *tmp;
+					editor->priv->current_state = i;
+					tmp = g_array_index (editor->priv->states, gchar*, i);
+					if (strcmp (tmp, ctext)) {
+						query_editor_set_text (editor, tmp);
+						break;
+					}
+					i--;
+				}
+				g_free (ctext);
+			}
+			return TRUE;
+		}
+		else if ((editor->priv->mode == QUERY_EDITOR_READWRITE) && 
+			 (evkey->state & GDK_CONTROL_MASK) &&
+			 (evkey->keyval == GDK_Down) &&
+			 editor->priv->states) {
+			if (editor->priv->states->len > 0) {
+				if (editor->priv->current_state < editor->priv->states->len - 1) {
+					gchar *tmp;
+					editor->priv->current_state ++;
+					tmp = g_array_index (editor->priv->states, gchar*, editor->priv->current_state);
+					query_editor_set_text (editor, tmp);
+				}
+				else if (editor->priv->current_state_text) {
+					editor->priv->current_state = G_MAXINT;
+					query_editor_set_text (editor, editor->priv->current_state_text);
+					g_free (editor->priv->current_state_text);
+					editor->priv->current_state_text = NULL;
+				}
+			}
+			return TRUE;
 		}
 	}
 	else
@@ -389,6 +446,10 @@ query_editor_init (QueryEditor *editor, QueryEditorClass *klass)
 	editor->priv->hash = NULL;
 	editor->priv->hist_focus = NULL;
 
+	editor->priv->states = NULL;
+	editor->priv->current_state = G_MAXINT;
+	editor->priv->current_state_text = NULL;
+
 	/* set up widgets */
 	editor->priv->scrolled_window = gtk_scrolled_window_new (NULL, NULL);
         gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (editor->priv->scrolled_window),
@@ -409,8 +470,8 @@ query_editor_init (QueryEditor *editor, QueryEditorClass *klass)
 
 	gtk_container_add (GTK_CONTAINER (editor->priv->scrolled_window), editor->priv->text);
 	gtk_widget_set_tooltip_markup (editor->priv->text, QUERY_EDITOR_TOOLTIP);
-	g_signal_connect (editor->priv->text, "event-after", 
-			  G_CALLBACK (event_after), editor);
+	g_signal_connect (editor->priv->text, "event", 
+			  G_CALLBACK (event), editor);
 	g_signal_connect (gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->text)), "changed", 
 			  G_CALLBACK (text_buffer_changed_cb), editor);
 	g_signal_connect (editor->priv->text, "expose-event",
@@ -508,6 +569,16 @@ query_editor_finalize (GObject *object)
 
 	/* free memory */
 	hist_data_free_all (editor);
+	if (editor->priv->states) {
+		gint i;
+		for (i = 0; i < editor->priv->states->len; i++) {
+			gchar *str;
+			str = g_array_index (editor->priv->states, gchar*, i);
+			g_free (str);
+		}
+		g_array_free (editor->priv->states, TRUE);
+	}
+	g_free (editor->priv->current_state_text);
 
 	g_free (editor->priv);
 	editor->priv = NULL;
@@ -699,6 +770,42 @@ query_editor_append_text (QueryEditor *editor, const gchar *text)
 		if ((len >= 1) && (text [len - 1] != '\n'))
 			gtk_text_buffer_insert (buffer, &end, "\n", 1);
 	}
+}
+
+/**
+ * query_editor_keep_current_state
+ * @editor:  #QueryEditor widget.
+ *
+ * Makes @editor keep the current text as a past state, which can be brought back
+ * using CTRL-Up or Gtrl-Down
+ */
+void
+query_editor_keep_current_state (QueryEditor *editor)
+{
+	gchar *text, *tmp;
+	g_return_if_fail (QUERY_IS_EDITOR (editor));
+	g_return_if_fail (editor->priv->mode != QUERY_EDITOR_HISTORY);
+	
+	if (!editor->priv->states)
+		editor->priv->states = g_array_sized_new (FALSE, FALSE, sizeof (gchar*), STATES_ARRAY_SIZE);
+
+	editor->priv->current_state = G_MAXINT;
+
+	text = query_editor_get_all_text (editor);
+	if (editor->priv->states->len > 0) {
+		tmp = g_array_index (editor->priv->states, gchar *, editor->priv->states->len-1);
+		if (!strcmp (tmp, text)) {
+			g_free (text);
+			return;
+		}
+	}
+
+	if (editor->priv->states->len == STATES_ARRAY_SIZE) {
+		tmp = g_array_index (editor->priv->states, gchar *, 0);
+		g_free (tmp);
+		g_array_remove_index (editor->priv->states, 0);
+	}
+	g_array_append_val (editor->priv->states, text);
 }
 
 /**

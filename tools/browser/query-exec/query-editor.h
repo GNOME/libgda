@@ -39,7 +39,9 @@ G_BEGIN_DECLS
 			       "which the connection is opened, except for the variables definition)\n" \
 			       "The following shortcuts are allowed:\n" \
 			       "   <small><b>CTRL - l</b></small> to clear the editor\n" \
-			       "   <small><b>CTRL - ENTER</b></small> to execute SQL")
+			       "   <small><b>CTRL - ENTER</b></small> to execute SQL\n" \
+			       "   <small><b>CTRL - Up</b></small> to move to previous executed SQL in history\n" \
+			       "   <small><b>CTRL - Down</b></small> to move to next executed SQL in history")
 
 typedef struct _QueryEditor        QueryEditor;
 typedef struct _QueryEditorClass   QueryEditorClass;
@@ -119,6 +121,7 @@ void       query_editor_paste_clipboard (QueryEditor *editor);
 /* normal editor's API */
 void       query_editor_set_text (QueryEditor *editor, const gchar *text);
 void       query_editor_append_text (QueryEditor *editor, const gchar *text);
+void       query_editor_keep_current_state (QueryEditor *editor);
 void       query_editor_append_note (QueryEditor *editor, const gchar *text, gint level);
 
 /* history API */
