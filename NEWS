@@ -1,3 +1,14 @@
+libgda 4.1.2, 2009-09-20
+
+ - the GdaBrowser application now supports query execution, and is more
+   polished and stable
+ - Lots of bug fixes mainly related to threads usage and the UI extension
+ - Translations:
+	- de (Mario Blättermann)
+	- eu (Inaki Larranaga Murgoitio)
+	- pt_BR (Rodolfo Ribeiro Gomes)
+	- fr (Claude Paroz)
+
 libgda 4.1.1, 2009-08-24
 
  - it is now possible to use a system installed SQLite, and now uses
