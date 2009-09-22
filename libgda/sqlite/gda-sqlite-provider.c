@@ -618,6 +618,8 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	}
 
 	cdata = g_new0 (SqliteConnectionData, 1);
+	cdata->gdacnc = cnc;
+	g_object_add_weak_pointer (G_OBJECT (cnc), (gpointer*) &(cdata->gdacnc));
 
 	if (filename)
 		cdata->file = filename;
@@ -1031,6 +1033,7 @@ gda_sqlite_provider_begin_transaction (GdaServerProvider *provider, GdaConnectio
 			status = FALSE;
 	}
 
+	/*g_print ("%s(%p) => %s\n", __FUNCTION__, cnc, status ? "TRUE" : "FALSE");*/
 	return status;
 }
 
@@ -1065,6 +1068,7 @@ gda_sqlite_provider_commit_transaction (GdaServerProvider *provider, GdaConnecti
 			status = FALSE;
 	}
 
+	/*g_print ("%s(%p) => %s\n", __FUNCTION__, cnc, status ? "TRUE" : "FALSE");*/
 	return status;
 }
 
@@ -1100,6 +1104,7 @@ gda_sqlite_provider_rollback_transaction (GdaServerProvider *provider,
 			status = FALSE;
 	}
 
+	/*g_print ("%s(%p) => %s\n", __FUNCTION__, cnc, status ? "TRUE" : "FALSE");*/
 	return status;
 }
 
@@ -2111,23 +2116,6 @@ fill_blob_data (GdaConnection *cnc, GdaSet *params,
 	return NULL;
 }
 
-static gboolean
-check_transaction_started (GdaConnection *cnc, gboolean *out_started)
-{
-        GdaTransactionStatus *trans;
-
-        trans = gda_connection_get_transaction_status (cnc);
-        if (!trans) {
-                if (!gda_connection_begin_transaction (cnc, NULL,
-                                                       GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL))
-                        return FALSE;
-                else
-                        *out_started = TRUE;
-        }
-        return TRUE;
-}
-
-
 /*
  * Execute statement request
  */
@@ -2254,7 +2242,6 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 	GdaConnectionEvent *event = NULL;
 	int i;
 	GSList *blobs_list = NULL; /* list of PendingBlob structures */
-	gboolean transaction_started = FALSE;
 
 	for (i = 1, list = _GDA_PSTMT (ps)->param_ids; list; list = list->next, i++) {
 		const gchar *pname = (gchar *) list->data;
@@ -2351,21 +2338,16 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			GdaBlob *blob = (GdaBlob*) gda_value_get_blob (value);
 			const gchar *str = NULL;
 
-			/* Start a transaction if necessary */
-                        if (!check_transaction_started (cnc, &transaction_started))
-				str = _("Cannot start transaction");
-			else {
-				/* force reading the complete BLOB into memory */
-				if (blob->op)
-					blob_len = gda_blob_op_get_length (blob->op);
-				else
-					blob_len = ((GdaBinary*) blob)->binary_length;
-				if (blob_len < 0) 
-					str = _("Can't get BLOB's length");
-				else if (blob_len >= G_MAXINT)
-					str = _("BLOB is too big");
-			}
-				
+			/* force reading the complete BLOB into memory */
+			if (blob->op)
+				blob_len = gda_blob_op_get_length (blob->op);
+			else
+				blob_len = ((GdaBinary*) blob)->binary_length;
+			if (blob_len < 0) 
+				str = _("Can't get BLOB's length");
+			else if (blob_len >= G_MAXINT)
+				str = _("BLOB is too big");
+
 			if (str) {
 				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
@@ -2462,8 +2444,6 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		if (new_ps)
 			g_object_unref (ps);
 		pending_blobs_free_list (blobs_list);
-		if (transaction_started)
-                        gda_connection_rollback_transaction (cnc, NULL, NULL);
 		return NULL;
 	}
 	
@@ -2493,8 +2473,6 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		if (allow_noparam)
 			g_object_set (data_model, "auto-reset", TRUE, NULL);
 		pending_blobs_free_list (blobs_list);
-		if (transaction_started)
-			gda_connection_commit_transaction (cnc, NULL, NULL);
 		return data_model;
         }
 	else {
@@ -2518,8 +2496,6 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				if (new_ps)
 					g_object_unref (ps);
 				pending_blobs_free_list (blobs_list);
-				if (transaction_started)
-					gda_connection_rollback_transaction (cnc, NULL, NULL);
 				return NULL;
                         }
 			else {
@@ -2529,8 +2505,6 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				if (new_ps)
 					g_object_unref (ps);
 				pending_blobs_free_list (blobs_list);
-				if (transaction_started)
-					gda_connection_rollback_transaction (cnc, NULL, NULL);
 				return NULL;
 			}
                 }
@@ -2542,8 +2516,6 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				sqlite3_reset (ps->sqlite_stmt);
 				if (new_ps)
 					g_object_unref (ps);
-				if (transaction_started)
-					gda_connection_rollback_transaction (cnc, NULL, NULL);
 				return NULL;
 			}
 			
@@ -2585,8 +2557,6 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			sqlite3_reset (ps->sqlite_stmt);
 			if (new_ps)
 				g_object_unref (ps);
-			if (transaction_started)
-				gda_connection_commit_transaction (cnc, NULL, NULL);
 			return set;
 		}
 	}
@@ -2933,7 +2903,9 @@ gda_sqlite_free_cnc_data (SqliteConnectionData *cdata)
 {
 	if (!cdata)
 		return;
-
+	
+	if (cdata->gdacnc)
+		g_object_remove_weak_pointer (G_OBJECT (cdata->gdacnc), (gpointer*) &(cdata->gdacnc));
 	if (cdata->connection) 
 		sqlite3_close (cdata->connection);
 	g_free (cdata->file);

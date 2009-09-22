@@ -112,15 +112,33 @@ gda_sqlite_blob_op_finalize (GObject * object)
 	parent_class->finalize (object);
 }
 
+static gboolean
+check_transaction_started (GdaConnection *cnc, gboolean *out_started)
+{
+        GdaTransactionStatus *trans;
+
+        trans = gda_connection_get_transaction_status (cnc);
+        if (!trans) {
+		if (!gda_connection_begin_transaction (cnc, NULL,
+						       GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL))
+			return FALSE;
+		else
+			*out_started = TRUE;
+	}
+	return TRUE;
+}
+
 GdaBlobOp *
-_gda_sqlite_blob_op_new (SqliteConnectionData *cdata, const gchar *db_name, const gchar *table_name,
-			const gchar *column_name, sqlite3_int64 rowid)
+_gda_sqlite_blob_op_new (SqliteConnectionData *cdata,
+			 const gchar *db_name, const gchar *table_name,
+			 const gchar *column_name, sqlite3_int64 rowid)
 {
 	GdaSqliteBlobOp *bop = NULL;
 	int rc;
 	sqlite3_blob *sblob;
 	gchar *db, *table;
 	gboolean free_strings = TRUE;
+	gboolean transaction_started = FALSE;
 
 	g_return_val_if_fail (table_name, NULL);
 	g_return_val_if_fail (column_name, NULL);
@@ -133,11 +151,16 @@ _gda_sqlite_blob_op_new (SqliteConnectionData *cdata, const gchar *db_name, cons
 	else if (! _split_identifier_string (g_strdup (table_name), &db, &table))
 		return NULL;
 
+	if (! check_transaction_started (cdata->gdacnc, &transaction_started))
+		return NULL;
+
 	rc = sqlite3_blob_open (cdata->connection, db ? db : "main", table, column_name, rowid,
 				1, /* Read & Write */
 				&(sblob));
 	if (rc != SQLITE_OK) {
 		/*g_print ("ERROR: %s\n", sqlite3_errmsg (cdata->connection));*/
+		if (transaction_started)
+			gda_connection_rollback_transaction (cdata->gdacnc, NULL, NULL);
 		goto out;
 	}
 
