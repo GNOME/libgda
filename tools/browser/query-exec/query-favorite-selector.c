@@ -563,28 +563,36 @@ tree_store_drag_drop_cb (GdauiTreeStore *store, const gchar *path, GtkSelectionD
 	BrowserFavoritesAttributes fav;
 	GError *error = NULL;
 	gint pos;
+	gboolean retval = TRUE;
+	gint id;
+	bfav = browser_connection_get_favorites (tsel->priv->bcnc);
 
-	memset (&fav, 0, sizeof (BrowserFavoritesAttributes));
-	fav.id = -1;
-	fav.type = BROWSER_FAVORITES_QUERIES;
-	fav.name = _("Unnamed query");
-	fav.descr = NULL;
-	fav.contents = (gchar*) selection_data->data;
+	id = browser_favorites_find (bfav, 0, (gchar*) selection_data->data, &fav, NULL);
+	if (id < 0) {
+		memset (&fav, 0, sizeof (BrowserFavoritesAttributes));
+		fav.id = -1;
+		fav.type = BROWSER_FAVORITES_QUERIES;
+		fav.name = _("Unnamed query");
+		fav.descr = NULL;
+		fav.contents = (gchar*) selection_data->data;
+	}
 
 	pos = atoi (path);
-	g_print ("%s() path => %s, pos: %d\n", __FUNCTION__, path, pos);
+	/*g_print ("%s() path => %s, pos: %d\n", __FUNCTION__, path, pos);*/
 	
-	bfav = browser_connection_get_favorites (tsel->priv->bcnc);
 	if (! browser_favorites_add (bfav, 0, &fav, ORDER_KEY_QUERIES, pos, &error)) {
 		browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) tsel),
 				    _("Could not add favorite: %s"),
 				    error && error->message ? error->message : _("No detail"));
 		if (error)
 			g_error_free (error);
-		return FALSE;
+		retval = FALSE;
 	}
+	
+	if (id >= 0)
+		browser_favorites_reset_attributes (&fav);
 
-	return TRUE;
+	return retval;
 }
 
 static gboolean

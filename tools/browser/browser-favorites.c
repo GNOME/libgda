@@ -1037,6 +1037,29 @@ browser_favorites_delete (BrowserFavorites *bfav, guint session_id,
 }
 
 /**
+ * browser_favorites_find
+ * @bfav: a #BrowserFavorites
+ * @session_id: 0 for now
+ * @contents: the favorite's contents
+ * @out_fav: a #BrowserFavoritesAttributes to be filled with the favorite's attributes, or %NULL
+ * @error: a place to store errors, or %NULL
+ *
+ * Get all the information about a favorite from its id: fills the @out_fav
+ * pointed structure. Use browser_favorites_reset_attributes() to reset @out_fav's contents.
+ *
+ * Retuns: the requested's favorite ID, or -1 if not found
+ */
+gint
+browser_favorites_find (BrowserFavorites *bfav, guint session_id, const gchar *contents,
+			BrowserFavoritesAttributes *out_fav, GError **error)
+{
+	g_return_val_if_fail (BROWSER_IS_FAVORITES (bfav), -1);
+	g_return_val_if_fail (contents, -1);
+
+	return find_favorite (bfav, session_id, -1, contents, out_fav, error);
+}
+
+/**
  * browser_favorites_get
  * @bfav: a #BrowserFavorites
  * @fav_id: the favorite's ID
@@ -1044,7 +1067,7 @@ browser_favorites_delete (BrowserFavorites *bfav, guint session_id,
  * @error: a place to store errors, or %NULL
  *
  * Get all the information about a favorite from its id: fills the @out_fav
- * pointed structure.
+ * pointed structure. Use browser_favorites_reset_attributes() to reset @out_fav's contents.
  *
  * Retuns: %TRUE if no error occurred.
  */

@@ -195,6 +195,7 @@ browser_favorites_list
 browser_favorites_delete
 browser_favorites_free_list
 browser_favorites_reset_attributes
+browser_favorites_find
 browser_favorites_get
 <SUBSECTION Standard>
 BROWSER_FAVORITES

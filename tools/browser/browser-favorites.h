@@ -95,6 +95,8 @@ gboolean            browser_favorites_delete       (BrowserFavorites *bfav, guin
 void                browser_favorites_free_list    (GSList *fav_list);
 void                browser_favorites_reset_attributes (BrowserFavoritesAttributes *fav);
 
+gint                browser_favorites_find         (BrowserFavorites *bfav, guint session_id, const gchar *contents,
+						    BrowserFavoritesAttributes *out_fav, GError **error);
 gboolean            browser_favorites_get          (BrowserFavorites *bfav, gint fav_id,
 						    BrowserFavoritesAttributes *out_fav, GError **error);
 G_END_DECLS
