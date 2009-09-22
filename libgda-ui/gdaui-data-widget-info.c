@@ -405,6 +405,18 @@ modif_buttons_make (GdauiDataWidgetInfo *info)
 {
 	GtkWidget *wid;
 	GdauiDataWidgetInfoFlag flags = info->priv->flags;
+	static gboolean rc_done = FALSE;
+
+	if (!rc_done) {
+                rc_done = TRUE;
+                gtk_rc_parse_string ("style \"gdaui-data-widget-info-style\"\n"
+                                     "{\n"
+                                     "GtkToolbar::shadow-type = GTK_SHADOW_NONE\n"
+                                     "xthickness = 0\n"
+                                     "ythickness = 0\n"
+                                     "}\n"
+                                     "widget \"*.gdaui-data-widget-info\" style \"gdaui-data-widget-info-style\"");
+        }
 
 	if (! info->priv->data_widget)
 		return;
@@ -428,6 +440,7 @@ modif_buttons_make (GdauiDataWidgetInfo *info)
 		info->priv->uimanager = ui;
 		info->priv->buttons_bar = gtk_ui_manager_get_widget (ui, "/ToolBar");
 		g_object_set (G_OBJECT (info->priv->buttons_bar), "toolbar-style", GTK_TOOLBAR_ICONS, NULL);
+		gtk_widget_set_name (info->priv->buttons_bar, "gdaui-data-widget-info");
 		gtk_toolbar_set_tooltips (GTK_TOOLBAR (info->priv->buttons_bar), TRUE);
 		gtk_box_pack_start (GTK_BOX (info), info->priv->buttons_bar, TRUE, TRUE, 0);
 	}
