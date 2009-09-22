@@ -211,8 +211,11 @@ fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType f
 
 	nb = GTK_NOTEBOOK (perspective->priv->notebook);
 	page = gtk_notebook_get_nth_page (nb, gtk_notebook_get_current_page (nb));
+	if (!page)
+		return;
 	if (IS_QUERY_CONSOLE (page)) {
-		query_console_set_text (QUERY_CONSOLE (page), selection);	
+		query_console_set_text (QUERY_CONSOLE (page), selection);
+		gtk_widget_grab_focus (page);
 	}
 	else {
 		TO_IMPLEMENT;
