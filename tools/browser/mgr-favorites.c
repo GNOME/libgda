@@ -21,6 +21,7 @@
  */
 
 #include <glib/gi18n-lib.h>
+#include <string.h>
 #include <libgda/libgda.h>
 #include <sql-parser/gda-sql-parser.h>
 #include "mgr-favorites.h"
@@ -198,6 +199,101 @@ mgr_favorites_new (BrowserConnection *bcnc, BrowserFavoritesType type, gint orde
 	return (GdaTreeManager*) mgr;
 }
 
+static gchar *
+create_summary_for_statement (BrowserConnection *bcnc, const gchar *sql)
+{
+	GdaSqlParser *parser;
+	GString *string;
+	GdaBatch *batch;
+
+	parser = browser_connection_create_parser (bcnc);
+	string = g_string_new ("");
+	
+	batch = gda_sql_parser_parse_string_as_batch (parser, sql, NULL, NULL);
+	if (batch) {
+		const GSList *stmt_list;
+		stmt_list = gda_batch_get_statements (batch);
+		if (!stmt_list || !(stmt_list->data))
+			g_string_append (string, _("Empty statement"));
+		else if (stmt_list->next)
+			g_string_append (string, _("Multiple statements"));
+		else {
+			switch (gda_statement_get_statement_type (GDA_STATEMENT (stmt_list->data))) {
+			case GDA_SQL_STATEMENT_SELECT:
+				g_string_append (string, _("SELECT statement"));
+				break;
+			case GDA_SQL_STATEMENT_INSERT:
+				g_string_append (string, _("INSERT statement"));
+				break;
+			case GDA_SQL_STATEMENT_UPDATE:
+				g_string_append (string, _("UPDATE statement"));
+				break;
+			case GDA_SQL_STATEMENT_DELETE:
+				g_string_append (string, _("DELETE statement"));
+				break;
+			case GDA_SQL_STATEMENT_COMPOUND:
+				g_string_append (string, _("COMPOUND SELECT statement"));
+				break;
+			case GDA_SQL_STATEMENT_BEGIN:
+				g_string_append (string, _("BEGIN statement"));
+				break;
+			case GDA_SQL_STATEMENT_ROLLBACK:
+				g_string_append (string, _("ROLLBACK statement"));
+				break;
+			case GDA_SQL_STATEMENT_COMMIT:
+				g_string_append (string, _("COMMIT statement"));
+				break;
+			case GDA_SQL_STATEMENT_SAVEPOINT:
+				g_string_append (string, _("ADD SAVEPOINT statement"));
+				break;
+			case GDA_SQL_STATEMENT_ROLLBACK_SAVEPOINT:
+				g_string_append (string, _("ROLLBACK SAVEPOINT statement"));
+				break;
+			case GDA_SQL_STATEMENT_DELETE_SAVEPOINT:
+				g_string_append (string, _("DELETE SAVEPOINT statement"));
+				break;
+			case GDA_SQL_STATEMENT_UNKNOWN:
+				g_string_append (string, _("Unknown statement"));
+				break;
+			case GDA_SQL_STATEMENT_NONE:
+				g_string_append (string, _("Empty statement"));
+				break;
+			}
+		}
+
+		/* parameters */
+		GdaSet *params;
+		if (gda_batch_get_parameters (batch, &params, NULL) && params) {
+			GSList *list;
+			GdaHolder *holder;
+			for (list = params->holders; list; list = list->next) {
+				holder = GDA_HOLDER (list->data);
+				g_string_append_c (string, '\n');
+				g_string_append (string, gda_holder_get_id (holder));
+				g_string_append (string, "::");
+				g_string_append (string, gda_g_type_to_string (gda_holder_get_g_type (holder)));
+				if (! gda_holder_get_not_null (holder))
+					g_string_append (string, "::null");
+			}
+			g_object_unref (params);
+                }
+		
+		g_object_unref (batch);
+	}
+	else {
+		gint len;
+		gchar *tmp;
+		tmp = g_strdup (sql);
+		len = strlen (sql);
+		if (len > 40)
+			tmp [40] = 0;
+		g_string_append (string, tmp);
+		g_free (tmp);
+	}
+
+	g_object_unref (parser);
+	return g_string_free (string, FALSE);
+}
 
 /*
  * Build a hash where key = contents as a string, and value = GdaTreeNode
@@ -234,6 +330,7 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 	GHashTable *ehash = NULL;
 	GSList *fav_list;
 	GError *lerror = NULL;
+	BrowserConnection *bcnc;
 
 	if (out_error)
 		*out_error = FALSE;
@@ -241,7 +338,8 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 	if (children_nodes)
 		ehash = hash_for_existing_nodes (children_nodes);
 
-	fav_list = browser_favorites_list (browser_connection_get_favorites (mgr->priv->bcnc),
+	bcnc = mgr->priv->bcnc;
+	fav_list = browser_favorites_list (browser_connection_get_favorites (bcnc),
 					   0, mgr->priv->fav_type,
 					   mgr->priv->order_key, &lerror);
 	if (fav_list) {
@@ -365,6 +463,12 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 					av = gda_value_new (G_TYPE_OBJECT);
 					g_value_set_object (av, pixbuf);
 					gda_tree_node_set_node_attribute (snode, "icon", av, NULL);
+					gda_value_free (av);
+
+					/* summary */
+					g_value_take_string ((av = gda_value_new (G_TYPE_STRING)),
+							     create_summary_for_statement (bcnc, fav->contents));
+					gda_tree_node_set_node_attribute (snode, "summary", av, NULL);
 					gda_value_free (av);
 				}
 

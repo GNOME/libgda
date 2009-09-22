@@ -73,7 +73,8 @@ enum {
 	COLUMN_CONTENTS = 2,
 	COLUMN_TYPE = 3,
 	COLUMN_ID = 4,
-	COLUMN_NAME = 5
+	COLUMN_NAME = 5,
+	COLUMN_SUMMARY = 6
 };
 
 
@@ -457,13 +458,14 @@ query_favorite_selector_new (BrowserConnection *bcnc)
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
 
-	model = gdaui_tree_store_new (tsel->priv->tree, 6,
+	model = gdaui_tree_store_new (tsel->priv->tree, 7,
 				      G_TYPE_INT, MGR_FAVORITES_POSITION_ATT_NAME,
 				      G_TYPE_OBJECT, "icon",
 				      G_TYPE_STRING, MGR_FAVORITES_CONTENTS_ATT_NAME,
 				      G_TYPE_UINT, MGR_FAVORITES_TYPE_ATT_NAME,
 				      G_TYPE_INT, MGR_FAVORITES_ID_ATT_NAME,
-				      G_TYPE_STRING, MGR_FAVORITES_NAME_ATT_NAME);
+				      G_TYPE_STRING, MGR_FAVORITES_NAME_ATT_NAME,
+				      G_TYPE_STRING, "summary");
 	treeview = gtk_tree_view_new_with_model (model);
 	tsel->priv->treeview = treeview;
 	g_object_unref (model);
@@ -526,19 +528,19 @@ static void
 cell_data_func (GtkTreeViewColumn *tree_column, GtkCellRenderer *cell,
 		GtkTreeModel *tree_model, GtkTreeIter *iter, gpointer data)
 {
-	gchar *name, *contents;
+	gchar *name, *summary;
 	gchar *markup, *tmp1, *tmp2;
 
 	gtk_tree_model_get (tree_model, iter,
-			    COLUMN_NAME, &name, COLUMN_CONTENTS, &contents, -1);
+			    COLUMN_NAME, &name, COLUMN_SUMMARY, &summary, -1);
 	tmp1 = g_markup_printf_escaped ("%s", name);
-	tmp2 = g_markup_printf_escaped ("%s", contents);
+	tmp2 = g_markup_printf_escaped ("%s", summary);
 	markup = g_strdup_printf ("%s\n<small>%s</small>", tmp1, tmp2);
 	g_object_set ((GObject*) cell, "markup", markup, NULL);
 	g_free (tmp1);
 	g_free (tmp2);
 	g_free (name);
-	g_free (contents);
+	g_free (summary);
 }
 
 
