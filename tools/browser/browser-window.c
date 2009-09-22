@@ -855,27 +855,59 @@ perspective_data_free (PerspectiveData *pers)
         g_free (pers);
 }
 
+typedef struct {
+	BrowserWindow *bwin;
+	guint cid; /* statusbar context id */
+	guint msgid; /* statusbar message id */
+} StatusData;
+
+static gboolean
+status_auto_pop_timeout (StatusData *sd)
+{
+	if (sd->bwin) {
+		g_object_remove_weak_pointer (G_OBJECT (sd->bwin), (gpointer*) &(sd->bwin));
+		gtk_statusbar_remove (GTK_STATUSBAR (sd->bwin->priv->statusbar), sd->cid, sd->msgid);
+	}
+	g_free (sd);
+
+	return FALSE; /* remove source */
+}
+
 /**
  * browser_window_push_status
  * @bwin: a #BrowserWindow
  * @context: textual description of what context the new message is being used in
  * @text: textual message
+ * @auto_clear: %TRUE if the message has to disappear after a while
  *
  * Pushes a new message onto @bwin's statusbar's stack.
  *
- * Returns: the message ID, see gtk_statusbar_push().
+ * Returns: the message ID, see gtk_statusbar_push(), or %0 if @auto_clear is %TRUE
  */
 guint
-browser_window_push_status (BrowserWindow *bwin, const gchar *context, const gchar *text)
+browser_window_push_status (BrowserWindow *bwin, const gchar *context, const gchar *text, gboolean auto_clear)
 {
 	guint cid;
+	guint retval;
 
 	g_return_val_if_fail (BROWSER_IS_WINDOW (bwin), 0);
 	g_return_val_if_fail (context, 0);
 	g_return_val_if_fail (text, 0);
 	
 	cid = gtk_statusbar_get_context_id (GTK_STATUSBAR (bwin->priv->statusbar), context);
-	return gtk_statusbar_push (GTK_STATUSBAR (bwin->priv->statusbar), cid, text);
+	retval = gtk_statusbar_push (GTK_STATUSBAR (bwin->priv->statusbar), cid, text);
+	if (auto_clear) {
+		StatusData *sd;
+		sd = g_new0 (StatusData, 1);
+		sd->bwin = bwin;
+		g_object_add_weak_pointer (G_OBJECT (sd->bwin), (gpointer*) &(sd->bwin));
+		sd->cid = cid;
+		sd->msgid = retval;
+		g_timeout_add_seconds (5, (GSourceFunc) status_auto_pop_timeout, sd);
+		return 0;
+	}
+	else
+		return retval;
 }
 
 /**
