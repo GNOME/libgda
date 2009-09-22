@@ -401,7 +401,7 @@ transaction_rollback_cb (GtkAction *action, BrowserPerspective *bpers)
 
 static GtkActionEntry ui_actions[] = {
         { "QueryExecMenu", NULL, N_("_Query"), NULL, "QueryExecMenu", NULL },
-        { "QueryExecItem1", STOCK_CONSOLE, N_("_New editor"), NULL, N_("Open a new query editor"),
+        { "QueryExecItem1", STOCK_CONSOLE, N_("_New editor"), "<control>T", N_("Open a new query editor"),
           G_CALLBACK (query_exec_add_cb)},
         { "QueryExecBegin", BROWSER_STOCK_BEGIN, N_("_Begin"), NULL, N_("Begin a new transaction"),
           G_CALLBACK (transaction_begin_cb)},

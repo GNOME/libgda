@@ -436,7 +436,7 @@ query_console_new (BrowserConnection *bcnc)
 	gtk_widget_set_sensitive (button, FALSE);
 
 	/* bottom right */
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_vbox_new (FALSE, 8);
 	gtk_paned_pack2 (GTK_PANED (hpaned), vbox, TRUE, FALSE);
 	
 	wid = gtk_label_new ("");
@@ -448,7 +448,7 @@ query_console_new (BrowserConnection *bcnc)
 
 	wid = query_result_new (tconsole->priv->history);
 	tconsole->priv->query_result = wid;
-	gtk_box_pack_start (GTK_BOX (vbox), wid, TRUE, TRUE, 6);
+	gtk_box_pack_start (GTK_BOX (vbox), wid, TRUE, TRUE, 0);
 
 	/* show everything */
         gtk_widget_show_all (vpaned);

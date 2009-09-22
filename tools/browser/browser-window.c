@@ -209,7 +209,7 @@ static const GtkActionEntry ui_actions[] = {
         { "Edit", NULL, "_Edit", NULL, "Edit", NULL },
         { "Perspective", NULL, "_Perspective", NULL, "Perspective", NULL },
         { "Window", NULL, "_Window", NULL, "Window", NULL },
-        { "WindowNew", STOCK_NEW_WINDOW, "_New window", NULL, "Open a new window for current connection", G_CALLBACK (window_new_cb)},
+        { "WindowNew", STOCK_NEW_WINDOW, "_New window", "<control>N", "Open a new window for current connection", G_CALLBACK (window_new_cb)},
         { "WindowNewOthers", NULL, "New window for _connection", NULL, "Open a new window for a connection", NULL},
         { "WindowClose", GTK_STOCK_CLOSE, "_Close", "", "Close this window", G_CALLBACK (window_close_cb)},
         { "Help", NULL, "_Help", NULL, "Help", NULL },
