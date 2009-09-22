@@ -100,11 +100,11 @@ gdaui_data_widget_info_get_type (void)
 }
 
 static void
-gdaui_data_widget_info_class_init (GdauiDataWidgetInfoClass * class)
+gdaui_data_widget_info_class_init (GdauiDataWidgetInfoClass *klass)
 {
-	GObjectClass   *object_class = G_OBJECT_CLASS (class);
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	
-	parent_class = g_type_class_peek_parent (class);
+	parent_class = g_type_class_peek_parent (klass);
 
 
 	object_class->dispose = gdaui_data_widget_info_dispose;
@@ -122,7 +122,7 @@ gdaui_data_widget_info_class_init (GdauiDataWidgetInfoClass * class)
 }
 
 static void
-gdaui_data_widget_info_init (GdauiDataWidgetInfo * wid)
+gdaui_data_widget_info_init (GdauiDataWidgetInfo *wid)
 {
 	wid->priv = g_new0 (GdauiDataWidgetInfoPriv, 1);
 	wid->priv->data_widget = NULL;

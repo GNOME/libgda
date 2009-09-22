@@ -130,6 +130,19 @@ Favorites management
 @fav: 
 
 
+<!-- ##### FUNCTION browser_favorites_find ##### -->
+<para>
+
+</para>
+
+@bfav: 
+@session_id: 
+@contents: 
+@out_fav: 
+@error: 
+@Returns: 
+
+
 <!-- ##### FUNCTION browser_favorites_get ##### -->
 <para>
 
