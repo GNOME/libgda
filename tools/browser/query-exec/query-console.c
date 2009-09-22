@@ -28,6 +28,7 @@
 #include "../support.h"
 #include "../cc-gray-bar.h"
 #include "query-exec-perspective.h"
+#include "../browser-window.h"
 #include "../browser-page.h"
 #include "../browser-stock-icons.h"
 #include "query-editor.h"
@@ -893,6 +894,7 @@ sql_execute_clicked_cb (GtkButton *button, QueryConsole *tconsole)
 		return;
 	}
 
+	/* mark the current SQL to be kept by the editor as an internal history */
 	query_editor_keep_current_state (tconsole->priv->editor);
 
 	/* actual Execution */
@@ -978,6 +980,23 @@ query_exec_fetch_cb (QueryConsole *tconsole)
 					 *        are some remaining statements to execute
 					 * FIXME: store error in history => modify QueryEditorHistoryItem
 					 */
+				}
+				else
+					browser_window_push_status (BROWSER_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
+								    "QueryConsole", _("Statement executed"), TRUE);
+
+				/* display a message if a transaction has been started */
+				if (! history->within_transaction &&
+				    browser_connection_get_transaction_status (tconsole->priv->bcnc) &&
+				    gda_statement_get_statement_type (estmt->stmt) != GDA_SQL_STATEMENT_BEGIN) {
+					browser_show_notice (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
+							     "QueryExecTransactionStarted",
+							     "%s", _("A transaction has automatically been started\n"
+								     "during this statement's execution, this usually\n"
+								     "happens when blobs are selected (and the transaction\n"
+								     "will have to remain opened while the blobs are still\n"
+								     "accessible, clear the corresponding history item before\n"
+								     "closing the transaction)."));
 				}
 				
 				query_editor_add_history_item (tconsole->priv->history, history);

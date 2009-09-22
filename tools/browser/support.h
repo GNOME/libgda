@@ -31,6 +31,7 @@ G_BEGIN_DECLS
 BrowserConnection *browser_connection_open (GError **error);
 gboolean           browser_connection_close (GtkWindow *parent, BrowserConnection *bcnc);
 void               browser_show_error (GtkWindow *parent, const gchar *format, ...);
+void               browser_show_notice (GtkWindow *parent, const gchar *context, const gchar *format, ...);
 
 GtkWidget*         browser_make_tab_label_with_stock (const gchar *label,
 						      const gchar *stock_id, gboolean with_close,

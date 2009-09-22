@@ -110,7 +110,7 @@ browser_connection_close (GtkWindow *parent, BrowserConnection *bcnc)
  * @format: printf() style format string
  * @...: arguments for @format
  *
- * Displays a modal error notice untill the user aknowledges it.
+ * Displays a modal error until the user aknowledges it.
  */
 void
 browser_show_error (GtkWindow *parent, const gchar *format, ...)
@@ -134,6 +134,86 @@ browser_show_error (GtkWindow *parent, const gchar *format, ...)
         gtk_widget_show_all (dialog);
         gtk_dialog_run (GTK_DIALOG (dialog));
         gtk_widget_destroy (dialog);
+}
+
+/* hash table to remain which context notices have to be hidden: key=context, value=GINT_TO_POINTER (1) */
+static GHashTable *hidden_contexts = NULL;
+
+static void
+hide_notice_toggled_cb (GtkToggleButton *toggle, gchar *context)
+{
+	g_assert (hidden_contexts);
+	if (gtk_toggle_button_get_active (toggle))
+		g_hash_table_insert (hidden_contexts, g_strdup (context), GINT_TO_POINTER (TRUE));
+	else
+		g_hash_table_remove (hidden_contexts, context);
+}
+
+/**
+ * browser_show_notice
+ * @parent: a #GtkWindow
+ * @context: a context string or %NULL
+ * @format: printf() style format string
+ * @...: arguments for @format
+ *
+ * Displays a modal notice until the user aknowledges it.
+ *
+ * If @context is not NULL, then the message box contains a check box to avoid displaying the
+ * same massage again.
+ */
+void
+browser_show_notice (GtkWindow *parent, const gchar *context, const gchar *format, ...)
+{
+        va_list args;
+        gchar sz[2048];
+        GtkWidget *dialog;
+	gboolean hide = FALSE;
+
+        /* build the message string */
+        va_start (args, format);
+        vsnprintf (sz, sizeof (sz), format, args);
+        va_end (args);
+
+	if (context) {
+		if (!hidden_contexts)
+			hidden_contexts = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+		hide = g_hash_table_lookup (hidden_contexts, context);
+	}
+
+	if (hide) {
+		if (BROWSER_IS_WINDOW (parent)) {
+			gchar *ptr;
+			for (ptr = sz; *ptr && (*ptr != '\n'); ptr++);
+			if (*ptr) {
+				*ptr = '.'; ptr++;
+				*ptr = '.'; ptr++;
+				*ptr = '.'; ptr++;
+				*ptr = 0;
+			}
+			browser_window_push_status (BROWSER_WINDOW (parent),
+						    "SupportNotice", sz, TRUE);
+		}
+	}
+	else {
+		/* create the error message dialog */
+		dialog = gtk_message_dialog_new_with_markup (parent,
+							     GTK_DIALOG_DESTROY_WITH_PARENT |
+							     GTK_DIALOG_MODAL, GTK_MESSAGE_INFO,
+							     GTK_BUTTONS_CLOSE,
+							     "<span weight=\"bold\">%s</span>\n%s", _("Note:"), sz);
+		if (context) {
+			GtkWidget *cb;
+			cb = gtk_check_button_new_with_label (_("Don't show this message again"));
+			g_signal_connect_data (cb, "toggled",
+					       G_CALLBACK (hide_notice_toggled_cb), g_strdup (context),
+					       (GClosureNotify) g_free, 0);
+			gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), cb, FALSE, FALSE, 10);
+		}
+		
+		gtk_widget_show_all (dialog);
+		gtk_dialog_run (GTK_DIALOG (dialog));
+		gtk_widget_destroy (dialog);
+	}
 }
 
 static GtkWidget *
