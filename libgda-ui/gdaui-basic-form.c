@@ -297,18 +297,15 @@ static void
 get_rid_of_set (GdaSet *paramlist, GdauiBasicForm *form)
 {
 	GSList *list;
-	gint i = 0;
+	gint i;
 
 	g_assert (paramlist == form->priv->set);
 
 	/* disconnect from parameters */
-	list = form->priv->set->holders;;
-	while (list) {
+	for (list = form->priv->set->holders, i = 0;
+	     list;
+	     list = list->next, i++)
 		g_signal_handler_disconnect (G_OBJECT (list->data), form->priv->signal_ids[i]);
-		
-		list = g_slist_next (list);
-		i++;
-	}
 	g_free (form->priv->signal_ids);
 	form->priv->signal_ids = NULL;
 
@@ -1376,6 +1373,7 @@ gdaui_basic_form_clean (GdauiBasicForm *form)
 	gint i = 0;
 
 	if (form->priv->set) {
+		g_assert (form->priv->signal_ids);
 		for (i = 0, list = form->priv->set->holders; 
 		     list; 
 		     i++, list = list->next) {
@@ -1534,10 +1532,11 @@ gdaui_basic_form_fill (GdauiBasicForm *form)
 			g_signal_connect (entry, "destroy", G_CALLBACK (entry_destroyed_cb), form);
 
 			/* connect to the parameter's changes */
+			i = g_slist_index (form->priv->set->holders, param);
+			g_assert (i >= 0);
                         form->priv->signal_ids[i] = g_signal_connect (G_OBJECT (param), "changed",
                                                                       G_CALLBACK (parameter_changed_cb), 
 								      entry);
-                        i++;
 		}
 		else { 
 			/* several parameters depending on the values of a GdaDataModel object */
@@ -1557,10 +1556,11 @@ gdaui_basic_form_fill (GdauiBasicForm *form)
 				param = GDA_SET_NODE (plist->data)->holder;
 				if (!gda_holder_get_not_null (param))
 					nnul = FALSE;
+				i = g_slist_index (form->priv->set->holders, param);
+				g_assert (i >= 0);
 				form->priv->signal_ids[i] = g_signal_connect (param, "changed",
                                                                               G_CALLBACK (parameter_changed_cb), 
 									      entry);
-                                i++;
 			}
 			gdaui_data_entry_set_attributes (GDAUI_DATA_ENTRY (entry),
 							    nnul ? 0 : GDA_VALUE_ATTR_CAN_BE_NULL,
