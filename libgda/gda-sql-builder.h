@@ -72,12 +72,13 @@ GdaSqlStatement  *gda_sql_builder_get_sql_statement (GdaSqlBuilder *builder, gbo
 /* Expression API */
 guint              gda_sql_builder_ident (GdaSqlBuilder *builder, guint id, const gchar *string);
 guint              gda_sql_builder_expr (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh, GType type, ...);
+guint              gda_sql_builder_expr_value (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh, GValue* value);
 guint              gda_sql_builder_param (GdaSqlBuilder *builder, guint id, const gchar *param_name, GType type, gboolean nullok);
 
 guint              gda_sql_builder_cond (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op,
 					 guint op1, guint op2, guint op3);
 guint              gda_sql_builder_cond_v (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op,
-					   guint *op_ids, gint op_ids_size);
+					   const guint *op_ids, gint op_ids_size);
 
 
 /* SELECT Statement API */

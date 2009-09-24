@@ -123,6 +123,18 @@ gda_sql_builder_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expressi
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_sql_builder_expr_value ##### -->
+<para>
+
+</para>
+
+@builder: 
+@id: 
+@dh: 
+@value: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_sql_builder_param ##### -->
 <para>
 

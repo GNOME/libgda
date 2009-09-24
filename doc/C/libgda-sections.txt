@@ -1665,6 +1665,7 @@ gda_sql_builder_add_field
 <SUBSECTION>
 gda_sql_builder_ident
 gda_sql_builder_expr
+gda_sql_builder_expr_value
 gda_sql_builder_param
 <SUBSECTION>
 gda_sql_builder_cond

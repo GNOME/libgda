@@ -556,6 +556,60 @@ gda_sql_builder_add_field (GdaSqlBuilder *builder, guint field_id, guint value_i
 }
 
 /**
+ * gda_sql_builder_expr_value
+ * @builder: a #GdaSqlBuilder object
+ * @id: the requested ID, or 0 if to be determined by @builder
+ * @dh: a #GdaDataHandler to use, or %NULL
+ * @value: value to set the expression to, of the type specified by @type
+ *
+ * Defines an expression in @builder which may be reused to build other parts of a statement.
+ *
+ * The new expression will contain the value passed as the @value argument. It is possible to
+ * customize how the value has to be interpreted by passing a specific #GdaDataHandler object as @dh.
+ *
+ * Returns: the ID of the new expression, or 0 if there was an error
+ *
+ * Since: 4.2
+ */
+guint
+gda_sql_builder_expr_value (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh, GValue *value)
+{
+	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
+	g_return_val_if_fail (builder->priv->main_stmt, 0);
+	g_return_val_if_fail (value != NULL, 0);
+
+	GType type = G_VALUE_TYPE(value);
+	gchar *str;
+
+	if (!dh)
+		dh = gda_get_default_handler (type);
+	else {
+		if (! gda_data_handler_accepts_g_type (dh, type)) {
+			g_warning (_("Unhandled data type '%s'"), g_type_name (type));
+			return 0;
+		}
+	}
+	if (!dh) {
+		g_warning (_("Unhandled data type '%s'"), g_type_name (type));
+		return 0;
+	}
+
+	str = gda_data_handler_get_sql_from_value (dh, value);
+
+	if (str) {
+		GdaSqlExpr *expr;
+		expr = gda_sql_expr_new (NULL);
+		expr->value = gda_value_new (G_TYPE_STRING);
+		g_value_take_string (expr->value, str);
+		return add_part (builder, id, (GdaSqlAnyPart *) expr);
+	}
+	else {
+		g_warning (_("Could not convert value to type '%s'"), g_type_name (type));
+		return 0;
+	}
+}
+
+/**
  * gda_sql_builder_expr
  * @builder: a #GdaSqlBuilder object
  * @id: the requested ID, or 0 if to be determined by @builder
@@ -565,7 +619,7 @@ gda_sql_builder_add_field (GdaSqlBuilder *builder, guint field_id, guint value_i
  *
  * Defines an expression in @builder which may be reused to build other parts of a statement.
  *
- * The new expression will contain the value passed as the @... argument. It is possible to
+ * The new expression will contain the value passed as the @v argument. It is possible to
  * customize how the value has to be interpreted by passing a specific #GdaDataHandler object as @dh.
  *
  * For example:
@@ -591,47 +645,25 @@ gda_sql_builder_expr (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh, GTyp
 	g_return_val_if_fail (builder->priv->main_stmt, 0);
 	
 	va_list ap;
-	gchar *str;
 	GValue *v = NULL;
-
-	if (!dh)
-		dh = gda_get_default_handler (type);
-	else {
-		if (! gda_data_handler_accepts_g_type (dh, type)) {
-			g_warning (_("Unhandled data type '%s'"), g_type_name (type));
-			return 0;
-		}
-	}
-	if (!dh) {
-		g_warning (_("Unhandled data type '%s'"), g_type_name (type));
-		return 0;
-	}
+	guint retval;
 
 	va_start (ap, type);
-	if (type == G_TYPE_STRING) {
+	if (type == G_TYPE_STRING)
 		g_value_set_string ((v = gda_value_new (G_TYPE_STRING)), va_arg (ap, gchar*));
-		str = gda_data_handler_get_sql_from_value (dh, v);
-	}
-	else if (type == G_TYPE_INT) {
+	else if (type == G_TYPE_INT)
 		g_value_set_int ((v = gda_value_new (G_TYPE_INT)), va_arg (ap, gint));
-		str = gda_data_handler_get_sql_from_value (dh, v);
-	}
+	else
+		g_warning (_("Could not convert value to type '%s'"), g_type_name (type));
 	va_end (ap);
 
-	if (v)
-		gda_value_free (v);
-
-	if (str) {
-		GdaSqlExpr *expr;
-		expr = gda_sql_expr_new (NULL);
-		expr->value = gda_value_new (G_TYPE_STRING);
-		g_value_take_string (expr->value, str);
-		return add_part (builder, id, (GdaSqlAnyPart *) expr);
-	}
-	else {
-		g_warning (_("Could not convert value to type '%s'"), g_type_name (type));
+	if (!v)
 		return 0;
-	}
+	retval = gda_sql_builder_expr_value (builder, id, dh, v);
+
+	gda_value_free (v);
+
+	return retval;
 }
 
 /**
@@ -783,7 +815,7 @@ gda_sql_builder_cond (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op, g
  */
 guint
 gda_sql_builder_cond_v (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op,
-			guint *op_ids, gint op_ids_size)
+			const guint *op_ids, gint op_ids_size)
 {
 	gint i;
 	SqlPart **parts;
