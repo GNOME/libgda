@@ -560,7 +560,7 @@ gda_sql_builder_add_field (GdaSqlBuilder *builder, guint field_id, guint value_i
  * @builder: a #GdaSqlBuilder object
  * @id: the requested ID, or 0 if to be determined by @builder
  * @dh: a #GdaDataHandler to use, or %NULL
- * @value: value to set the expression to, of the type specified by @type
+ * @value: value to set the expression to
  *
  * Defines an expression in @builder which may be reused to build other parts of a statement.
  *
