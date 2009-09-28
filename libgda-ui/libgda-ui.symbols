@@ -96,8 +96,18 @@
 	gdaui_entry_common_time_new
 	gdaui_entry_date_get_type
 	gdaui_entry_date_new
+	gdaui_entry_get_text
+	gdaui_entry_get_type
+	gdaui_entry_new
 	gdaui_entry_none_get_type
 	gdaui_entry_none_new
+	gdaui_entry_number_get_type
+	gdaui_entry_number_is_type_numeric
+	gdaui_entry_number_new
+	gdaui_entry_set_max_length
+	gdaui_entry_set_prefix
+	gdaui_entry_set_suffix
+	gdaui_entry_set_text
 	gdaui_entry_shell_get_type
 	gdaui_entry_shell_pack_entry
 	gdaui_entry_shell_refresh
@@ -110,19 +120,11 @@
 	gdaui_entry_wrapper_contents_activated
 	gdaui_entry_wrapper_contents_changed
 	gdaui_entry_wrapper_get_type
-	gdaui_format_entry_get_text
-	gdaui_format_entry_get_type
-	gdaui_format_entry_new
-	gdaui_format_entry_set_decimal_places
-	gdaui_format_entry_set_edited_type
-	gdaui_format_entry_set_format
-	gdaui_format_entry_set_max_length
-	gdaui_format_entry_set_prefix
-	gdaui_format_entry_set_separators
-	gdaui_format_entry_set_suffix
-	gdaui_format_entry_set_text
 	gdaui_form_get_type
 	gdaui_form_new
+	gdaui_formatted_entry_get_text
+	gdaui_formatted_entry_get_type
+	gdaui_formatted_entry_new
 	gdaui_grid_get_selection
 	gdaui_grid_get_type
 	gdaui_grid_new
@@ -136,6 +138,9 @@
 	gdaui_login_set_dsn
 	gdaui_login_set_mode
 	gdaui_new_data_entry
+	gdaui_numeric_entry_get_type
+	gdaui_numeric_entry_get_value
+	gdaui_numeric_entry_new
 	gdaui_plugins_hash
 	gdaui_provider_selector_get_provider
 	gdaui_provider_selector_get_provider_obj

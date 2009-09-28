@@ -29,6 +29,7 @@
 #include "gdaui-data-cell-renderer-textual.h"
 #include "gdaui-data-entry.h"
 #include "gdaui-entry-string.h"
+#include "gdaui-entry-number.h"
 #include "gdaui-entry-date.h"
 #include "gdaui-entry-time.h"
 #include "gdaui-entry-timestamp.h"
@@ -683,6 +684,8 @@ gdaui_data_cell_renderer_textual_start_editing (GtkCellRenderer      *cell,
 		entry = gdaui_entry_time_new (datacell->priv->dh);
 	else if (datacell->priv->type == GDA_TYPE_TIMESTAMP)
 		entry = gdaui_entry_timestamp_new (datacell->priv->dh);
+	else if (gdaui_entry_number_is_type_numeric (datacell->priv->type))
+		entry = gdaui_entry_number_new (datacell->priv->dh, datacell->priv->type, datacell->priv->options);
 	else
 		entry = gdaui_entry_string_new (datacell->priv->dh, datacell->priv->type, datacell->priv->options);
 

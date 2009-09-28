@@ -22,7 +22,7 @@
 #include "gdaui-entry-cidr.h"
 #include <libgda/gda-data-handler.h>
 #include <string.h>
-#include "gdaui-format-entry.h"
+#include "gdaui-formatted-entry.h"
 
 /* 
  * Main static functions 
@@ -190,11 +190,8 @@ create_entry (GdauiEntryWrapper *mgwrap)
 	mgcidr = GDAUI_ENTRY_CIDR (mgwrap);
 	g_return_val_if_fail (mgcidr->priv, NULL);
 
-	entry = gdaui_format_entry_new ();
+	entry = gdaui_formatted_entry_new ("000.000.000.000/000.000.000.000", "---.---.---.---/---.---.---.---");
 	mgcidr->priv->entry = entry;
-	gdaui_format_entry_set_format (GDAUI_FORMAT_ENTRY (entry), 
-					  "000.000.000.000/000.000.000.000", NULL,
-					  "   .   .   .   /   .   .   .   ");
 	gtk_entry_set_width_chars (GTK_ENTRY (entry), 19);
 
 	g_signal_connect (G_OBJECT (entry), "focus-out-event",
@@ -336,7 +333,7 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 
 	if (value) {
 		if (gda_value_is_null ((GValue *) value))
-			gdaui_format_entry_set_text (GDAUI_FORMAT_ENTRY (mgcidr->priv->entry), NULL);
+			gdaui_entry_set_text (GDAUI_ENTRY (mgcidr->priv->entry), NULL);
 		else {
 			SplitValues *svalues;
 			gchar *str, *ptr, *tok;
@@ -373,7 +370,7 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 		}
 	}
 	else
-		gdaui_format_entry_set_text (GDAUI_FORMAT_ENTRY (mgcidr->priv->entry), NULL);
+		gdaui_entry_set_text (GDAUI_ENTRY (mgcidr->priv->entry), NULL);
 }
 
 static void truncate_entries_to_mask_length (GdauiEntryCidr *mgcidr, gboolean target_mask, guint mask_nb_bits)
@@ -611,7 +608,7 @@ split_values_get (GdauiEntryCidr *mgcidr)
 	gchar *str;
 
 	values = g_new0 (SplitValues, 1);
-	str = gdaui_format_entry_get_text (GDAUI_FORMAT_ENTRY (mgcidr->priv->entry));
+	str = gdaui_entry_get_text (GDAUI_ENTRY (mgcidr->priv->entry));
 	if (!str)
 		return NULL;
 
@@ -673,7 +670,7 @@ split_values_set (GdauiEntryCidr *mgcidr, SplitValues *svalues)
 	ip_str = g_strjoinv (".", svalues->ip_array);
 	mask_str = g_strjoinv (".", svalues->mask_array);
 	str = g_strdup_printf ("%s/%s", ip_str, mask_str);
-	gdaui_format_entry_set_text (GDAUI_FORMAT_ENTRY (mgcidr->priv->entry), str);
+	gdaui_entry_set_text (GDAUI_ENTRY (mgcidr->priv->entry), str);
 	g_free (str);
 }
 

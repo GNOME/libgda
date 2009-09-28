@@ -25,12 +25,15 @@ libgda_ui_data_entries_headers = \
 	gdaui-entry-none.h \
 	gdaui-entry-shell.h \
 	gdaui-entry-string.h \
+	gdaui-entry-number.h \
 	gdaui-entry-common-time.h \
 	gdaui-entry-time.h \
 	gdaui-entry-timestamp.h \
 	gdaui-entry-date.h \
 	gdaui-entry-wrapper.h \
-	gdaui-format-entry.h 
+	gdaui-entry.h \
+	gdaui-formatted-entry.h \
+	gdaui-numeric-entry.h
 
 libgda_ui_data_entries_la_SOURCES = \
 	$(libgda_ui_data_entries_headers) \
@@ -47,17 +50,20 @@ libgda_ui_data_entries_la_SOURCES = \
 	gdaui-entry-none.c \
 	gdaui-entry-shell.c \
 	gdaui-entry-string.c \
+	gdaui-entry-number.c \
 	gdaui-entry-common-time.c \
 	gdaui-entry-time.c \
 	gdaui-entry-timestamp.c \
 	gdaui-entry-date.c \
 	gdaui-entry-wrapper.c \
-	gdaui-format-entry.c
+	gdaui-entry.c \
+	gdaui-formatted-entry.c \
+	gdaui-numeric-entry.c
 
 xmldir   = $(datadir)/libgda-4.0/ui
 xml_in_files = \
-	gdaui-entry-string-string.xml.in \
-	gdaui-entry-string-number.xml.in
+	gdaui-entry-string.xml.in \
+	gdaui-entry-number.xml.in
 
 @INTLTOOL_XML_RULE@
 

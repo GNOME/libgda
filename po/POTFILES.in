@@ -87,8 +87,8 @@ libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c
 libgda-ui/data-entries/gdaui-entry-common-time.c
 libgda-ui/data-entries/gdaui-entry-none.c
 libgda-ui/data-entries/gdaui-entry-shell.c
-libgda-ui/data-entries/gdaui-entry-string-number.xml.in
-libgda-ui/data-entries/gdaui-entry-string-string.xml.in
+libgda-ui/data-entries/gdaui-entry-number.xml.in
+libgda-ui/data-entries/gdaui-entry-string.xml.in
 libgda-ui/data-entries/gdaui-entry-string.c
 libgda-ui/data-entries/gdaui-format-entry.c
 libgda-ui/data-entries/plugins/common-pict.c

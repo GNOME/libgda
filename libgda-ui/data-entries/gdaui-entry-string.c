@@ -21,20 +21,19 @@
 #include <glib/gi18n-lib.h>
 #include <string.h>
 #include "gdaui-entry-string.h"
-#include "gdaui-format-entry.h"
+#include "gdaui-entry.h"
 #include <libgda/gda-data-handler.h>
 #include "gdk/gdkkeysyms.h"
-#include <pango/pango.h>
 
 #define MAX_ACCEPTED_STRING_LENGTH 500
 
 /* 
  * Main static functions 
  */
-static void gdaui_entry_string_class_init (GdauiEntryStringClass * class);
-static void gdaui_entry_string_init (GdauiEntryString * srv);
-static void gdaui_entry_string_dispose (GObject   * object);
-static void gdaui_entry_string_finalize (GObject   * object);
+static void gdaui_entry_string_class_init (GdauiEntryStringClass *klass);
+static void gdaui_entry_string_init (GdauiEntryString *srv);
+static void gdaui_entry_string_dispose (GObject *object);
+static void gdaui_entry_string_finalize (GObject *object);
 
 static void gdaui_entry_string_set_property (GObject *object,
 					  guint param_id,
@@ -74,18 +73,11 @@ static void set_entry_options (GdauiEntryString *mgstr, const gchar *options);
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
 
-typedef enum {
-	TYPE_UNKNOWN, /* when value is undefined */
-	TYPE_NUMERIC,
-	TYPE_NOT_NUMERIC
-} InternalType;
-
 /* private structure */
 struct _GdauiEntryStringPrivate
 {
 	gboolean       multiline;
 	gboolean       hidden;
-	InternalType   internal_type;
 	GtkWidget     *vbox;
 
 	GtkWidget     *entry;
@@ -95,9 +87,6 @@ struct _GdauiEntryStringPrivate
 	GtkWidget     *view;
 
 	gint           maxsize;
-	guchar         thousand_sep;
-	gint           nb_decimals;
-	gchar         *currency;
 
 	gulong         entry_change_sig;
 };
@@ -139,22 +128,22 @@ gdaui_entry_string_get_type (void)
 }
 
 static void
-gdaui_entry_string_class_init (GdauiEntryStringClass * class)
+gdaui_entry_string_class_init (GdauiEntryStringClass * klass)
 {
-	GObjectClass   *object_class = G_OBJECT_CLASS (class);
+	GObjectClass   *object_class = G_OBJECT_CLASS (klass);
 
-	parent_class = g_type_class_peek_parent (class);
+	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->dispose = gdaui_entry_string_dispose;
 	object_class->finalize = gdaui_entry_string_finalize;
 
-	GDAUI_ENTRY_WRAPPER_CLASS (class)->create_entry = create_entry;
-	GDAUI_ENTRY_WRAPPER_CLASS (class)->real_set_value = real_set_value;
-	GDAUI_ENTRY_WRAPPER_CLASS (class)->real_get_value = real_get_value;
-	GDAUI_ENTRY_WRAPPER_CLASS (class)->connect_signals = connect_signals;
-	GDAUI_ENTRY_WRAPPER_CLASS (class)->expand_in_layout = expand_in_layout;
-	GDAUI_ENTRY_WRAPPER_CLASS (class)->set_editable = set_editable;
-	GDAUI_ENTRY_WRAPPER_CLASS (class)->grab_focus = grab_focus;
+	GDAUI_ENTRY_WRAPPER_CLASS (klass)->create_entry = create_entry;
+	GDAUI_ENTRY_WRAPPER_CLASS (klass)->real_set_value = real_set_value;
+	GDAUI_ENTRY_WRAPPER_CLASS (klass)->real_get_value = real_get_value;
+	GDAUI_ENTRY_WRAPPER_CLASS (klass)->connect_signals = connect_signals;
+	GDAUI_ENTRY_WRAPPER_CLASS (klass)->expand_in_layout = expand_in_layout;
+	GDAUI_ENTRY_WRAPPER_CLASS (klass)->set_editable = set_editable;
+	GDAUI_ENTRY_WRAPPER_CLASS (klass)->grab_focus = grab_focus;
 
 	/* Properties */
 	object_class->set_property = gdaui_entry_string_set_property;
@@ -181,25 +170,9 @@ gdaui_entry_string_init (GdauiEntryString * mgstr)
 	mgstr->priv->view = NULL;
 	mgstr->priv->sw = NULL;
 
-	mgstr->priv->internal_type = TYPE_UNKNOWN;
-	mgstr->priv->maxsize = 0; /* unlimited */
-	mgstr->priv->thousand_sep = 0;
-	mgstr->priv->nb_decimals = -1; /* unlimited number of decimals */
-	mgstr->priv->currency = NULL;
+	mgstr->priv->maxsize = 65535; /* eg. unlimited for GtkEntry */
 
 	mgstr->priv->entry_change_sig = 0;
-}
-
-static InternalType
-determine_internal_type (GType type)
-{
-	if ((type == G_TYPE_INT64) || (type == G_TYPE_UINT64) || (type == G_TYPE_DOUBLE) ||
-	    (type == G_TYPE_INT) || (type == GDA_TYPE_NUMERIC) || (type == G_TYPE_FLOAT) ||
-	    (type == GDA_TYPE_SHORT) || (type == GDA_TYPE_USHORT) || (type == G_TYPE_CHAR) ||
-	    (type == G_TYPE_UCHAR) || (type == G_TYPE_LONG) || (type ==  G_TYPE_ULONG) || (type == G_TYPE_UINT))
-		return TYPE_NUMERIC;
-	else
-		return TYPE_NOT_NUMERIC;
 }
 
 /**
@@ -220,12 +193,12 @@ gdaui_entry_string_new (GdaDataHandler *dh, GType type, const gchar *options)
 	g_return_val_if_fail (GDA_IS_DATA_HANDLER (dh), NULL);
 	g_return_val_if_fail (type != G_TYPE_INVALID, NULL);
 	g_return_val_if_fail (gda_data_handler_accepts_g_type (dh, type), NULL);
+	g_return_val_if_fail (type == G_TYPE_STRING, NULL);
 
 	obj = g_object_new (GDAUI_TYPE_ENTRY_STRING, "handler", dh, NULL);
 	mgstr = GDAUI_ENTRY_STRING (obj);
 	gdaui_data_entry_set_value_type (GDAUI_DATA_ENTRY (mgstr), type);
 
-	mgstr->priv->internal_type = determine_internal_type (type);
 	g_object_set (obj, "options", options, NULL);
 
 	return GTK_WIDGET (obj);
@@ -269,7 +242,6 @@ gdaui_entry_string_finalize (GObject   * object)
 
 	mgstr = GDAUI_ENTRY_STRING (object);
 	if (mgstr->priv) {
-		g_free (mgstr->priv->currency);
 		g_free (mgstr->priv);
 		mgstr->priv = NULL;
 	}
@@ -290,14 +262,6 @@ gdaui_entry_string_set_property (GObject *object,
 	if (mgstr->priv) {
 		switch (param_id) {
 		case PROP_MULTILINE:
-			if (mgstr->priv->internal_type == TYPE_UNKNOWN)
-				mgstr->priv->internal_type = 
-					determine_internal_type (gdaui_data_entry_get_value_type 
-								 (GDAUI_DATA_ENTRY (mgstr)));
-
-			if (mgstr->priv->internal_type == TYPE_NUMERIC)
-				return;
-
 			if (g_value_get_boolean (value) != mgstr->priv->multiline) {
 				mgstr->priv->multiline = g_value_get_boolean (value);
 				if (mgstr->priv->multiline) {
@@ -360,7 +324,7 @@ create_entry (GdauiEntryWrapper *mgwrap)
 	mgstr->priv->vbox = vbox;
 
 	/* one line entry */
-	mgstr->priv->entry = gdaui_format_entry_new ();
+	mgstr->priv->entry = gdaui_entry_new (NULL, NULL);
 	sync_entry_options (mgstr);
 	gtk_box_pack_start (GTK_BOX (vbox), mgstr->priv->entry, FALSE, TRUE, 0);
 	g_signal_connect_after (G_OBJECT (mgstr->priv->entry), "show", 
@@ -436,12 +400,12 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 	/* fill the single line widget */
 	if (value) {
 		if (gda_value_is_null ((GValue *) value))
-			gdaui_format_entry_set_text (GDAUI_FORMAT_ENTRY (mgstr->priv->entry), NULL);
+			gdaui_entry_set_text (GDAUI_ENTRY (mgstr->priv->entry), NULL);
 		else 
-			gdaui_format_entry_set_text (GDAUI_FORMAT_ENTRY (mgstr->priv->entry), text);
+			gdaui_entry_set_text (GDAUI_ENTRY (mgstr->priv->entry), text);
 	}
 	else
-		gdaui_format_entry_set_text (GDAUI_FORMAT_ENTRY (mgstr->priv->entry), NULL);
+		gdaui_entry_set_text (GDAUI_ENTRY (mgstr->priv->entry), NULL);
 
 	/* fill the multiline widget */
 	if (value) {
@@ -470,7 +434,7 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 	dh = gdaui_data_entry_get_handler (GDAUI_DATA_ENTRY (mgwrap));
 	if (! mgstr->priv->multiline) {
 		gchar *cstr;
-		cstr = gdaui_format_entry_get_text (GDAUI_FORMAT_ENTRY (mgstr->priv->entry));
+		cstr = gdaui_entry_get_text (GDAUI_ENTRY (mgstr->priv->entry));
 		value = gda_data_handler_get_value_from_str (dh, cstr, gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (mgwrap)));
 		g_free (cstr);
 	}
@@ -616,23 +580,6 @@ gdaui_entry_string_start_editing (GtkCellEditable *iface, GdkEvent *event)
 /*
  * Options handling
  */
-
-static guchar
-get_default_thousands_sep ()
-{
-	static guchar value = 255;
-
-	if (value == 255) {
-		gchar text[20];
-		sprintf (text, "%f", 1234.);
-		if (text[1] == '2')
-			value = 0;
-		else
-			value = text[1];	
-	}
-	return value;
-}
-
 static void
 set_entry_options (GdauiEntryString *mgstr, const gchar *options)
 {
@@ -642,64 +589,39 @@ set_entry_options (GdauiEntryString *mgstr, const gchar *options)
                 GdaQuarkList *params;
                 const gchar *str;
 		
-		if (mgstr->priv->internal_type == TYPE_UNKNOWN)
-			mgstr->priv->internal_type = 
-				determine_internal_type (gdaui_data_entry_get_value_type 
-							 (GDAUI_DATA_ENTRY (mgstr)));
-
                 params = gda_quark_list_new_from_string (options);
-		if (mgstr->priv->internal_type == TYPE_NOT_NUMERIC) {
-			/* STRING specific options */
-			str = gda_quark_list_find (params, "MAX_SIZE");
-			if (str) 
-				mgstr->priv->maxsize = atoi (str);
 
-			str = gda_quark_list_find (params, "MULTILINE");
-			if (str) {
-				if ((*str == 't') || (*str == 'T'))
-					mgstr->priv->multiline = TRUE;
-				else
-					mgstr->priv->multiline = FALSE;
-			       
+		str = gda_quark_list_find (params, "MAX_SIZE");
+		if (str) 
+			mgstr->priv->maxsize = atoi (str);
+		
+		str = gda_quark_list_find (params, "MULTILINE");
+		if (str) {
+			if ((*str == 't') || (*str == 'T'))
+				mgstr->priv->multiline = TRUE;
+			else
+				mgstr->priv->multiline = FALSE;
+			
+		}
+		
+		str = gda_quark_list_find (params, "HIDDEN");
+		if (str) {
+			if ((*str == 't') || (*str == 'T'))
+				mgstr->priv->hidden = TRUE;
+			else
+				mgstr->priv->hidden = FALSE;
+		}
+		
+		if (mgstr->priv->entry) {
+			if (mgstr->priv->multiline) {
+				gtk_widget_hide (mgstr->priv->entry);
+				gtk_widget_show (mgstr->priv->sw);
 			}
-
-			str = gda_quark_list_find (params, "HIDDEN");
-			if (str) {
-				if ((*str == 't') || (*str == 'T'))
-					mgstr->priv->hidden = TRUE;
-				else
-					mgstr->priv->hidden = FALSE;
-			}
-
-			if (mgstr->priv->entry) {
-				if (mgstr->priv->multiline) {
-					gtk_widget_hide (mgstr->priv->entry);
-					gtk_widget_show (mgstr->priv->sw);
-				}
-				else {
-					gtk_widget_show (mgstr->priv->entry);
-					gtk_widget_hide (mgstr->priv->sw);
-					gtk_entry_set_visibility (GTK_ENTRY (mgstr->priv->entry), 
-								  !mgstr->priv->hidden);
-				}
-			}
-                }
-		else {
-			/* NUMERIC specific options */
-			str = gda_quark_list_find (params, "THOUSAND_SEP");
-			if (str) {
-				if ((*str == 't') || (*str == 'T'))
-					mgstr->priv->thousand_sep = get_default_thousands_sep ();
-				else
-					mgstr->priv->thousand_sep = 0;
-			}
-			str = gda_quark_list_find (params, "NB_DECIMALS");
-			if (str) 
-				mgstr->priv->nb_decimals = atoi (str);
-			str = gda_quark_list_find (params, "CURRENCY");
-			if (str) {
-				g_free (mgstr->priv->currency);
-				mgstr->priv->currency = g_strdup_printf ("%s ", str);
+			else {
+				gtk_widget_show (mgstr->priv->entry);
+				gtk_widget_hide (mgstr->priv->sw);
+				gtk_entry_set_visibility (GTK_ENTRY (mgstr->priv->entry), 
+							  !mgstr->priv->hidden);
 			}
 		}
                 gda_quark_list_free (params);
@@ -715,11 +637,7 @@ sync_entry_options (GdauiEntryString *mgstr)
 		return;
 
 	g_object_set (G_OBJECT (mgstr->priv->entry), 
-		      "edited_type", gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (mgstr)),
-		      "n_decimals", mgstr->priv->nb_decimals,
-		      "thousands_sep", mgstr->priv->thousand_sep,
-		      "prefix", mgstr->priv->currency,
-		      "max_length", mgstr->priv->maxsize,
+		      "max-length", mgstr->priv->maxsize,
 		      NULL);
 	g_signal_emit_by_name (mgstr->priv->entry, "changed");
 }

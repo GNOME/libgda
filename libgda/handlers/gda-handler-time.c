@@ -919,6 +919,8 @@ make_date (GdaHandlerTime *hdl, GDate *date, const gchar *value, LocaleSetting *
  * 123015-02
  * 123015.123
  * taken from libgda/gda-value.h
+ *
+ * Also works if there is only 0 or 1 digit instead of 2
  */
 static gboolean
 make_time (GdaHandlerTime *hdl, GdaTime *timegda, const gchar *value)
@@ -933,25 +935,39 @@ make_time (GdaHandlerTime *hdl, GdaTime *timegda, const gchar *value)
 	timegda->timezone = GDA_TIMEZONE_INVALID;
 	ptr = value;
 	if ((*ptr >= '0') && (*ptr <= '9') &&
-	    (*(ptr+1) >= '0') && (*(ptr+1) <= '9'))
+	    (*(ptr+1) >= '0') && (*(ptr+1) <= '9')) {
 		timegda->hour = (*ptr - '0') * 10 + *(ptr+1) - '0';
+		ptr += 2;
+	}
+	else if ((*ptr >= '0') && (*ptr <= '9') && (ptr[1] == ':')) {
+		timegda->hour = *ptr - '0';
+		ptr++;
+	}
+	else if (*ptr == ':')
+		timegda->hour = 0;
 	else
 		return FALSE;
 
 	/* minute */
-	ptr += 2;
 	if (! *ptr)
 		return FALSE;
 	if (*ptr == ':')
 		ptr++;
 	if ((*ptr >= '0') && (*ptr <= '9') &&
-	    (*(ptr+1) >= '0') && (*(ptr+1) <= '9'))
+	    (*(ptr+1) >= '0') && (*(ptr+1) <= '9')) {
 		timegda->minute = (*ptr - '0') * 10 + *(ptr+1) - '0';
+		ptr += 2;
+	}
+	else if ((*ptr >= '0') && (*ptr <= '9') && (ptr[1] == ':')) {
+		timegda->minute = *ptr - '0';
+		ptr++;
+	}
+	else if (*ptr == ':')
+		timegda->minute = 0;
 	else
 		return FALSE;
 
 	/* second */
-	ptr += 2;
 	timegda->second = 0;
 	if (! *ptr) {
 		if ((timegda->hour > 24) || (timegda->minute > 60))
@@ -962,11 +978,18 @@ make_time (GdaHandlerTime *hdl, GdaTime *timegda, const gchar *value)
 	if (*ptr == ':')
 		ptr++;
 	if ((*ptr >= '0') && (*ptr <= '9') &&
-	    (*(ptr+1) >= '0') && (*(ptr+1) <= '9'))
+	    (*(ptr+1) >= '0') && (*(ptr+1) <= '9')) {
 		timegda->second = (*ptr - '0') * 10 + *(ptr+1) - '0';
+		ptr += 2;
+	}
+	else if ((*ptr >= '0') && (*ptr <= '9')) {
+		timegda->second = *ptr - '0';
+		ptr++;
+	}
+	else if (*ptr == ':')
+		timegda->second = 0;
 	
 	/* extra */
-	ptr += 2;
 	if (! *ptr) {
 		if ((timegda->hour > 24) || (timegda->minute > 60) || 
 		    (timegda->second > 60))

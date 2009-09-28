@@ -3,11 +3,9 @@
   <parameters>
     <parameter id="THOUSAND_SEP" _name="Use 1000s separators" _descr="Use thousands separator as specified by current locale" gdatype="gboolean">
       <gda_value>FALSE</gda_value>
-          <gda_value>FALSE</gda_value>
     </parameter>
     <parameter id="NB_DECIMALS" _name="Decimals" _descr="Number of decimals" gdatype="guint">
-      <gda_value>4</gda_value>
-          <gda_value>4</gda_value>
+      <gda_value>2</gda_value>
     </parameter>
     <parameter id="CURRENCY" _name="Currency symbol" _descr="A currency symbol" source="currencies:0" gdatype="gchararray"/>
   </parameters>

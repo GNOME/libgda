@@ -31,6 +31,7 @@
 #include "data-entries/gdaui-entry-boolean.h"
 #include "data-entries/gdaui-entry-bin.h"
 #include "data-entries/gdaui-entry-string.h"
+#include "data-entries/gdaui-entry-number.h"
 #include "data-entries/gdaui-entry-time.h"
 #include "data-entries/gdaui-entry-date.h"
 #include "data-entries/gdaui-entry-timestamp.h"
@@ -138,7 +139,7 @@ gdaui_new_data_entry (GType type, const gchar *plugin_name)
 			 (type == G_TYPE_UCHAR) ||
 			 (type == G_TYPE_ULONG) ||
 			 (type == G_TYPE_UINT))
-			entry = (GdauiDataEntry *) gdaui_entry_string_new (dh, type, spec_options);
+			entry = (GdauiDataEntry *) gdaui_entry_number_new (dh, type, spec_options);
 		else if (type == G_TYPE_BOOLEAN)
 			entry = (GdauiDataEntry *) gdaui_entry_boolean_new (dh, G_TYPE_BOOLEAN);
 		else if ((type == GDA_TYPE_BLOB) ||
@@ -225,6 +226,7 @@ static GdauiDataEntry *entry_none_create_func (GdaDataHandler *handler, GType ty
 static GdauiDataEntry *entry_boolean_create_func (GdaDataHandler *handler, GType type, const gchar *options);
 static GdauiDataEntry *entry_bin_create_func (GdaDataHandler *handler, GType type, const gchar *options);
 static GdauiDataEntry *entry_string_create_func (GdaDataHandler *handler, GType type, const gchar *options);
+static GdauiDataEntry *entry_number_create_func (GdaDataHandler *handler, GType type, const gchar *options);
 static GdauiDataEntry *entry_time_create_func (GdaDataHandler *handler, GType type, const gchar *options);
 static GdauiDataEntry *entry_timestamp_create_func (GdaDataHandler *handler, GType type, const gchar *options);
 static GdauiDataEntry *entry_date_create_func (GdaDataHandler *handler, GType type, const gchar *options);
@@ -292,7 +294,7 @@ init_plugins_hash (void)
 	plugin->entry_create_func = entry_string_create_func;
 	plugin->cell_create_func = cell_textual_create_func;
 	g_hash_table_insert (hash, plugin->plugin_name, plugin);
-	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "ui", "gdaui-entry-string-string.xml", NULL);
+	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "ui", "gdaui-entry-string.xml", NULL);
 	if (! g_file_test (file, G_FILE_TEST_EXISTS)) {
 		g_message ("Could not find file '%s': '%s' data entry will not report any possible option",
 			   file, plugin->plugin_name);
@@ -322,10 +324,10 @@ init_plugins_hash (void)
 	plugin->valid_g_types [10] = G_TYPE_ULONG;
 	plugin->valid_g_types [11] = G_TYPE_UINT;
 	plugin->options_xml_spec = NULL;
-	plugin->entry_create_func = entry_string_create_func;
+	plugin->entry_create_func = entry_number_create_func;
 	plugin->cell_create_func = cell_textual_create_func;
 	g_hash_table_insert (hash, plugin->plugin_name, plugin);
-	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "ui", "gdaui-entry-string-number.xml", NULL);
+	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "ui", "gdaui-entry-number.xml", NULL);
 	xmlChar *xml_spec = get_spec_with_isocodes (file);
 	if (xml_spec) {
 		plugin->options_xml_spec = g_strdup (xml_spec);
@@ -337,8 +339,9 @@ init_plugins_hash (void)
 	plugin->plugin_name = "textual";
 	plugin->plugin_descr = "Textual entry";
 	plugin->plugin_file = NULL;
-	plugin->nb_g_types = 0;
-	plugin->valid_g_types = NULL;
+	plugin->nb_g_types = 1;
+	plugin->valid_g_types = g_new (GType, plugin->nb_g_types);
+	plugin->valid_g_types [0] = G_TYPE_STRING;
 	plugin->options_xml_spec = NULL;
 	plugin->entry_create_func = entry_string_create_func;
 	plugin->cell_create_func = cell_textual_create_func;
@@ -481,6 +484,12 @@ static GdauiDataEntry *
 entry_string_create_func (GdaDataHandler *handler, GType type, const gchar *options)
 {
 	return (GdauiDataEntry *) gdaui_entry_string_new (handler, type, options);
+}
+
+static GdauiDataEntry *
+entry_number_create_func (GdaDataHandler *handler, GType type, const gchar *options)
+{
+	return (GdauiDataEntry *) gdaui_entry_number_new (handler, type, options);
 }
 
 static GdauiDataEntry *

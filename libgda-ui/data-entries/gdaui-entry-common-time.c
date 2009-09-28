@@ -23,7 +23,7 @@
 #include <libgda/gda-data-handler.h>
 #include <gdk/gdkkeysyms.h>
 #include <string.h>
-#include "gdaui-format-entry.h"
+#include "gdaui-formatted-entry.h"
 
 /* 
  * Main static functions 
@@ -328,51 +328,51 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 	if (type == G_TYPE_DATE) {
 		if (value) {
 			if (gda_value_is_null ((GValue *) value))
-				gdaui_format_entry_set_text (GDAUI_FORMAT_ENTRY (mgtim->priv->entry_date), NULL);
+				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_date), NULL);
 			else {
 				gchar *str;
 				
 				str = gda_data_handler_get_str_from_value (dh, value);
-				gtk_entry_set_text (GTK_ENTRY (mgtim->priv->entry_date), str);
+				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_date), str);
 				g_free (str);
 			}
 		}
 		else 
-			gdaui_format_entry_set_text (GDAUI_FORMAT_ENTRY (mgtim->priv->entry_date), NULL);
+			gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_date), NULL);
 	}
 	else if (type == GDA_TYPE_TIME) {
 		if (value) {
 			if (gda_value_is_null ((GValue *) value))
-				gdaui_format_entry_set_text (GDAUI_FORMAT_ENTRY (mgtim->priv->entry_time), NULL);
+				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_time), NULL);
 			else {
 				gchar *str;
 				
 				str = gda_data_handler_get_str_from_value (dh, value);
-				gtk_entry_set_text (GTK_ENTRY (mgtim->priv->entry_time), str);
+				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_time), str);
 				g_free (str);
 			}
 		}
 		else 
-			gdaui_format_entry_set_text (GDAUI_FORMAT_ENTRY (mgtim->priv->entry_time), NULL);
+			gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_time), NULL);
 	}
 	else if (type == GDA_TYPE_TIMESTAMP) {
 		if (value) {
 			if (gda_value_is_null ((GValue *) value))
-				gdaui_format_entry_set_text (GDAUI_FORMAT_ENTRY (mgtim->priv->entry_time), NULL);
+				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_time), NULL);
 			else {
 				gchar *str, *ptr;
 				
 				str = gda_data_handler_get_str_from_value (dh, value);
 				ptr = strtok (str, " ");
-				gdaui_format_entry_set_text (GDAUI_FORMAT_ENTRY (mgtim->priv->entry_date), ptr);
+				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_date), ptr);
 				ptr = strtok (NULL, " ");
-				gdaui_format_entry_set_text (GDAUI_FORMAT_ENTRY (mgtim->priv->entry_time), ptr);
+				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_time), ptr);
 				g_free (str);
 			}
 		}
 		else {
-			gdaui_format_entry_set_text (GDAUI_FORMAT_ENTRY (mgtim->priv->entry_date), NULL);
-			gdaui_format_entry_set_text (GDAUI_FORMAT_ENTRY (mgtim->priv->entry_time), NULL);
+			gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_date), NULL);
+			gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_time), NULL);
 		}
 	}
 	else
@@ -404,12 +404,12 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 	dh = gdaui_data_entry_get_handler (GDAUI_DATA_ENTRY (mgwrap));
 
 	if (type == G_TYPE_DATE) {
-		str2 = gdaui_format_entry_get_text (GDAUI_FORMAT_ENTRY (mgtim->priv->entry_date));
+		str2 = gdaui_formatted_entry_get_text (GDAUI_FORMATTED_ENTRY (mgtim->priv->entry_date));
 		value = gda_data_handler_get_value_from_str (dh, str2, type); /* FIXME: not SQL but STR */
 		g_free (str2);
 	}
 	else if (type == GDA_TYPE_TIME) {
-		str2 = gdaui_format_entry_get_text (GDAUI_FORMAT_ENTRY (mgtim->priv->entry_time));
+		str2 = gdaui_formatted_entry_get_text (GDAUI_FORMATTED_ENTRY (mgtim->priv->entry_time));
 		value = gda_data_handler_get_value_from_str (dh, str2, type);
 		if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL) &&
 		    mgtim->priv->last_value_set && 
@@ -427,8 +427,8 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 	else if (type == GDA_TYPE_TIMESTAMP) {
 		gchar *tmpstr, *tmpstr2;
 
-		tmpstr = gdaui_format_entry_get_text (GDAUI_FORMAT_ENTRY (mgtim->priv->entry_time));
-		tmpstr2 = gdaui_format_entry_get_text (GDAUI_FORMAT_ENTRY (mgtim->priv->entry_date));
+		tmpstr = gdaui_formatted_entry_get_text (GDAUI_FORMATTED_ENTRY (mgtim->priv->entry_time));
+		tmpstr2 = gdaui_formatted_entry_get_text (GDAUI_FORMATTED_ENTRY (mgtim->priv->entry_date));
 		str2 = g_strdup_printf ("%s %s", tmpstr2, tmpstr);
 		g_free (tmpstr);
 		g_free (tmpstr2);
@@ -567,14 +567,20 @@ create_entry_date (GdauiEntryCommonTime *mgtim)
 
 	/* text entry */
 	dh = gdaui_data_entry_get_handler (GDAUI_DATA_ENTRY (mgtim));
-	wid = gdaui_format_entry_new ();
 	if (GDA_IS_HANDLER_TIME (dh)) {
-		gchar *str;
+		gchar *str, *mask, *ptr;
 		str = gda_handler_time_get_format (GDA_HANDLER_TIME (dh), G_TYPE_DATE);
-		gdaui_format_entry_set_format (GDAUI_FORMAT_ENTRY (wid), str, NULL, NULL);
-		gtk_entry_set_width_chars (GTK_ENTRY (wid), g_utf8_strlen (str, -1));
+		mask = g_strdup (str);
+		for (ptr = mask; *ptr; ptr++) {
+			if (*ptr == '0')
+				*ptr = '-';
+		}
+		wid = gdaui_formatted_entry_new (str, mask);
 		g_free (str);
+		g_free (mask);
 	}
+	else
+		wid = gdaui_entry_new (NULL, NULL);
 	gtk_box_pack_start (GTK_BOX (hb), wid, FALSE, FALSE, 0);
 	gtk_widget_show (wid);
 	mgtim->priv->entry_date = wid;
@@ -633,17 +639,19 @@ internal_set_time (GtkWidget *widget, GdauiEntryCommonTime *mgtim)
 	type = gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (mgtim));
 	if (type == GDA_TYPE_TIMESTAMP) {
 		GdaDataHandler *dh;
-		gchar *str;
+		gchar *str, *str2;
 		GValue *value;
 
 		dh = gdaui_data_entry_get_handler (GDAUI_DATA_ENTRY (mgtim));
-		str = gdaui_format_entry_get_text (GDAUI_FORMAT_ENTRY (mgtim->priv->entry_time));
-		value = gda_data_handler_get_value_from_str (dh, str, type);
+		str = gdaui_formatted_entry_get_text (GDAUI_FORMATTED_ENTRY (mgtim->priv->entry_time));
+		str2 = g_strdup_printf ("01.01.2000 %s", str);
+		g_free (str);
+		value = gda_data_handler_get_value_from_str (dh, str2, type);
 		if (!value || gda_value_is_null (value)) 
-			gdaui_format_entry_set_text (GDAUI_FORMAT_ENTRY (mgtim->priv->entry_time), "00:00:00");
+			gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_time), "00:00:00");
 		if (value)
 			gda_value_free (value);
-		g_free (str);
+		g_free (str2);
 	}
 }
 
@@ -722,7 +730,7 @@ date_day_selected (GtkCalendar *calendar, GdauiEntryCommonTime *mgtim)
         buffer[sizeof(buffer)-1] = '\0';
 
         str_utf8 = g_locale_to_utf8 (buffer, -1, NULL, NULL, NULL);
-        gdaui_format_entry_set_text (GDAUI_FORMAT_ENTRY (mgtim->priv->entry_date), str_utf8);
+        gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_date), str_utf8);
         g_free (str_utf8);
 }
 
@@ -902,14 +910,20 @@ create_entry_time (GdauiEntryCommonTime *mgtim)
 
 	/* text entry */
 	dh = gdaui_data_entry_get_handler (GDAUI_DATA_ENTRY (mgtim));
-        wid = gdaui_format_entry_new ();
 	if (GDA_IS_HANDLER_TIME (dh)) {
-		gchar *str;
+		gchar *str, *mask, *ptr;
 		str = gda_handler_time_get_format (GDA_HANDLER_TIME (dh), GDA_TYPE_TIME);
-		gdaui_format_entry_set_format (GDAUI_FORMAT_ENTRY (wid), str, NULL, NULL);
-		gtk_entry_set_width_chars (GTK_ENTRY (wid), g_utf8_strlen (str, -1));
+		mask = g_strdup (str);
+		for (ptr = mask; *ptr; ptr++) {
+			if (*ptr == '0')
+				*ptr = '-';
+		}
+		wid = gdaui_formatted_entry_new (str, mask);
 		g_free (str);
+		g_free (mask);
 	}
+	else
+		wid = gdaui_entry_new (NULL, NULL);
         mgtim->priv->entry_time = wid;
 
         /* format tooltip */
