@@ -159,7 +159,8 @@ gdaui_formatted_entry_set_property (GObject *object,
 				else {
 					entry->priv->format = g_strdup (str);
 					entry->priv->format_clen = g_utf8_strlen (str, -1);
-					gtk_entry_set_max_length (GTK_ENTRY (entry), entry->priv->format_clen);
+					gdaui_entry_set_width_chars (GDAUI_ENTRY (entry),
+								     entry->priv->format_clen);
 				}
 			}
                         break;

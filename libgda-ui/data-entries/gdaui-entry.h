@@ -92,6 +92,8 @@ void                  gdaui_entry_set_suffix         (GdauiEntry *entry, const g
 void                  gdaui_entry_set_text           (GdauiEntry *entry, const gchar *text);
 gchar                *gdaui_entry_get_text           (GdauiEntry *entry);
 
+void                  gdaui_entry_set_width_chars    (GdauiEntry *entry, gint max_width);
+
 /* for sub classes */
 void                  _gdaui_entry_block_changes     (GdauiEntry *entry);
 void                  _gdaui_entry_unblock_changes   (GdauiEntry *entry);

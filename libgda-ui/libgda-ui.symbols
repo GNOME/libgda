@@ -108,6 +108,7 @@
 	gdaui_entry_set_prefix
 	gdaui_entry_set_suffix
 	gdaui_entry_set_text
+	gdaui_entry_set_width_chars
 	gdaui_entry_shell_get_type
 	gdaui_entry_shell_pack_entry
 	gdaui_entry_shell_refresh

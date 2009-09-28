@@ -384,7 +384,6 @@ gdaui_entry_get_text (GdauiEntry *entry)
 	gchar *text;
 
 	g_return_val_if_fail (GDAUI_IS_ENTRY (entry), NULL);
-	g_return_val_if_fail (entry->priv, NULL);
 
 	if (entry->priv->isnull)
 		text = NULL;
@@ -428,7 +427,6 @@ void
 gdaui_entry_set_text (GdauiEntry *entry, const gchar *text)
 {
 	g_return_if_fail (GDAUI_IS_ENTRY (entry));
-	g_return_if_fail (entry->priv);
 
 	if (text) {
 		entry->priv->isnull = TRUE;
@@ -461,7 +459,6 @@ void
 gdaui_entry_set_prefix (GdauiEntry *entry, const gchar *prefix)
 {
 	g_return_if_fail (GDAUI_IS_ENTRY (entry));
-	g_return_if_fail (entry->priv);
 
 	g_object_set (G_OBJECT (entry), "prefix", prefix, NULL);
 }
@@ -478,11 +475,32 @@ void
 gdaui_entry_set_suffix (GdauiEntry *entry, const gchar *suffix)
 {
 	g_return_if_fail (GDAUI_IS_ENTRY (entry));
-	g_return_if_fail (entry->priv);
 
 	g_object_set (G_OBJECT (entry), "suffix", suffix, NULL);
 }
 
+
+/**
+ * gdaui_entry_set_width_chars
+ * @entry: a #GdauiEntry widget
+ * @max_width: maximum width, or -1
+ *
+ * Sets @entry's maximum width in characters, without taking into account
+ * any prefix or suffix (which will automatically be handled). If you want to take
+ * a prefix or suffix into account direclty, then use gtk_entry_set_width_chars()
+ */
+void
+gdaui_entry_set_width_chars (GdauiEntry *entry, gint max_width)
+{
+	g_return_if_fail (GDAUI_IS_ENTRY (entry));
+	if (max_width < 0)
+		gtk_entry_set_width_chars (GTK_ENTRY (entry), -1);
+	else {
+		max_width += entry->priv->prefix_clen;
+		max_width += entry->priv->suffix_clen;
+		gtk_entry_set_width_chars (GTK_ENTRY (entry), max_width);
+	}
+}
 
 /*
  * callbacks
