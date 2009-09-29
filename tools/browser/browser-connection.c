@@ -368,11 +368,16 @@ check_for_wrapper_result (BrowserConnection *bcnc)
 			break;
 		}
 		case JOB_TYPE_META_STRUCT_SYNC: {
+			g_mutex_lock (bcnc->priv->p_mstruct_mutex);
+			GdaMetaStruct *old_mstruct;
+			old_mstruct = bcnc->priv->mstruct;
+			bcnc->priv->mstruct = bcnc->priv->p_mstruct;
+			bcnc->priv->p_mstruct = NULL;
+			if (old_mstruct)
+				g_object_unref (old_mstruct);
 #ifdef GDA_DEBUG_NO
 			GSList *all, *list;
-			g_mutex_lock (bcnc->priv->p_mstruct_mutex);
-			all = gda_meta_struct_get_all_db_objects (bcnc->priv->p_mstruct);
-			g_mutex_unlock (bcnc->priv->p_mstruct_mutex);
+			all = gda_meta_struct_get_all_db_objects (bcnc->priv->mstruct);
 			for (list = all; list; list = list->next) {
 				GdaMetaDbObject *dbo = (GdaMetaDbObject *) list->data;
 				g_print ("DBO, Type %d: %s\n", dbo->obj_type,
@@ -380,11 +385,7 @@ check_for_wrapper_result (BrowserConnection *bcnc)
 			}
 			g_slist_free (all);
 #endif
-			g_mutex_lock (bcnc->priv->p_mstruct_mutex);
-			if (bcnc->priv->mstruct)
-				g_object_unref (bcnc->priv->mstruct);
-			bcnc->priv->mstruct = bcnc->priv->p_mstruct;
-			bcnc->priv->p_mstruct = NULL;
+
 			g_signal_emit (bcnc, browser_connection_signals [META_CHANGED], 0, bcnc->priv->mstruct);
 			g_mutex_unlock (bcnc->priv->p_mstruct_mutex);
 			break;

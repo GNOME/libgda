@@ -92,8 +92,11 @@ table_columns_dispose (GObject *object)
 			g_source_remove (tcolumns->priv->idle_update_columns);
 		if (tcolumns->priv->columns_tree)
 			g_object_unref (tcolumns->priv->columns_tree);
-		if (tcolumns->priv->bcnc)
+		if (tcolumns->priv->bcnc) {
+			g_signal_handlers_disconnect_by_func (tcolumns->priv->bcnc,
+							      G_CALLBACK (meta_changed_cb), tcolumns);
 			g_object_unref (tcolumns->priv->bcnc);
+		}
 		g_free (tcolumns->priv);
 		tcolumns->priv = NULL;
 	}
@@ -224,6 +227,7 @@ meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableColumns *
 					gda_value_free (v1);
 					gda_value_free (v2);
 					gda_value_free (v3);
+					continue;
 				}
 				gtk_text_buffer_insert_with_tags_by_name (tbuffer,
 									  &current, 
@@ -598,8 +602,8 @@ follow_if_link (GtkWidget *text_view, GtkTextIter *iter, TableColumns *tcolumns)
 		table_name = g_object_get_data (G_OBJECT (tag), "table_name");
 		table_short_name = g_object_get_data (G_OBJECT (tag), "table_short_name");
 
-		bpers = browser_find_parent_widget (GTK_WIDGET (tcolumns),
-						    TYPE_SCHEMA_BROWSER_PERSPECTIVE);
+		bpers = SCHEMA_BROWSER_PERSPECTIVE (browser_find_parent_widget (GTK_WIDGET (tcolumns),
+									      TYPE_SCHEMA_BROWSER_PERSPECTIVE));
 		if (table_name && table_schema && table_short_name && bpers) {
 			schema_browser_perspective_display_table_info (bpers,
 								       table_schema,

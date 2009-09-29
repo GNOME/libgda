@@ -161,16 +161,21 @@ browser_canvas_db_relations_set_property (GObject *object,
         canvas = BROWSER_CANVAS_DB_RELATIONS (object);
         if (canvas->priv) {
                 switch (param_id) {
-		case PROP_META_STRUCT:
-			if (canvas->priv->mstruct)
-				clean_canvas_items (BROWSER_CANVAS (canvas));
+		case PROP_META_STRUCT: {
+			GdaMetaStruct *mstruct = g_value_get_object (value);
+			if (mstruct)
+				g_object_ref (mstruct);
 
-			canvas->priv->mstruct = g_value_get_object (value);
-                        if (canvas->priv->mstruct) 
-                                g_object_ref (canvas->priv->mstruct);
+			if (canvas->priv->mstruct) {
+				clean_canvas_items (BROWSER_CANVAS (canvas));
+				g_object_unref (canvas->priv->mstruct);
+				canvas->priv->mstruct = NULL;
+			}
+			canvas->priv->mstruct = mstruct;
 			if (canvas->priv->cloud)
 				objects_cloud_set_meta_struct (canvas->priv->cloud, canvas->priv->mstruct);
 			break;
+		}
 		}
 	}
 }
@@ -307,6 +312,13 @@ static void
 clean_canvas_items (BrowserCanvas *canvas)
 {
 	BrowserCanvasDbRelations *dbrel = BROWSER_CANVAS_DB_RELATIONS (canvas);
+	GSList *clist, *list;
+
+	/* remove canvas item */
+	clist = g_slist_copy (canvas->priv->items);
+	for (list = clist; list; list = list->next)
+		goo_canvas_item_remove (GOO_CANVAS_ITEM (list->data));
+	g_slist_free (clist);
 
 	/* clean memory */
 	g_hash_table_destroy (dbrel->priv->hash_tables);

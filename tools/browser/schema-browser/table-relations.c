@@ -84,8 +84,11 @@ table_relations_dispose (GObject *object)
 
 	/* free memory */
 	if (trels->priv) {
-		if (trels->priv->bcnc)
+		if (trels->priv->bcnc) {
+			g_signal_handlers_disconnect_by_func (trels->priv->bcnc,
+							      G_CALLBACK (meta_changed_cb), trels);
 			g_object_unref (trels->priv->bcnc);
+		}
 		g_free (trels->priv);
 		trels->priv = NULL;
 	}
@@ -114,7 +117,6 @@ table_relations_get_type (void)
 	}
 	return type;
 }
-
 
 static void
 meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableRelations *trels)
@@ -157,6 +159,7 @@ meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableRelations
 			GdaMetaTableForeignKey *fkey = (GdaMetaTableForeignKey*) list->data;
 
 			if (! trels->priv->all_schemas &&
+			    (fkey->depend_on->obj_type != GDA_META_DB_UNKNOWN) &&
 			    ! strcmp (fkey->depend_on->obj_short_name, fkey->depend_on->obj_full_name))
 				continue;
 
