@@ -52,6 +52,12 @@ GType                 gdaui_formatted_entry_get_type           (void) G_GNUC_CON
 GtkWidget            *gdaui_formatted_entry_new                (const gchar *format, const gchar *mask);
 gchar                *gdaui_formatted_entry_get_text           (GdauiFormattedEntry *entry);
 
+typedef void (*GdauiFormattedEntryInsertFunc) (GdauiFormattedEntry *entry, gunichar insert_char,
+					       gint virt_pos, gpointer data);
+void                  gdaui_formatted_entry_set_insert_func    (GdauiFormattedEntry *entry,
+								GdauiFormattedEntryInsertFunc insert_func,
+								gpointer data);
+
 G_END_DECLS
 
 #endif

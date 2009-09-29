@@ -547,7 +547,6 @@ grab_focus (GdauiEntryWrapper *mgwrap)
 /*
  * callbacks for the date 
  */
-
 static void internal_set_time (GtkWidget *widget, GdauiEntryCommonTime *mgtim);
 static gint date_delete_popup (GtkWidget *widget, GdauiEntryCommonTime *mgtim);
 static gint date_key_press_popup (GtkWidget *widget, GdkEventKey *event, GdauiEntryCommonTime *mgtim);
@@ -555,6 +554,8 @@ static gint date_button_press_popup (GtkWidget *widget, GdkEventButton *event, G
 static void date_day_selected (GtkCalendar *calendar, GdauiEntryCommonTime *mgtim);
 static void date_day_selected_double_click (GtkCalendar *calendar, GdauiEntryCommonTime *mgtim);
 static void date_calendar_choose_cb (GtkWidget *button, GdauiEntryCommonTime *mgtim);
+
+static void entry_date_insert_func (GdauiFormattedEntry *fentry, gunichar insert_char, gint virt_pos, gpointer data);
 
 static GtkWidget *
 create_entry_date (GdauiEntryCommonTime *mgtim)
@@ -578,6 +579,9 @@ create_entry_date (GdauiEntryCommonTime *mgtim)
 		wid = gdaui_formatted_entry_new (str, mask);
 		g_free (str);
 		g_free (mask);
+
+		gdaui_formatted_entry_set_insert_func (GDAUI_FORMATTED_ENTRY (wid), entry_date_insert_func,
+						       mgtim);
 	}
 	else
 		wid = gdaui_entry_new (NULL, NULL);
@@ -625,6 +629,85 @@ create_entry_date (GdauiEntryCommonTime *mgtim)
 	gtk_widget_show (wid);
 
 	return hb;
+}
+
+static void
+entry_date_insert_func (GdauiFormattedEntry *fentry, gunichar insert_char, gint virt_pos, gpointer data)
+{
+	GValue *value;
+	GType type;
+
+	type = gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (data));
+	value = real_get_value (GDAUI_ENTRY_WRAPPER (data));
+	if (!value)
+		return;
+
+	if (G_VALUE_TYPE (value) == GDA_TYPE_NULL) {
+		if (type == G_TYPE_DATE) {
+			/* set current date, whatever @insert_char is */
+			GDate *ndate;
+			ndate = g_new0 (GDate, 1);
+			g_date_set_time_t (ndate, time (NULL));
+
+			gda_value_reset_with_type (value, type);
+			g_value_take_boxed (value, ndate);
+			real_set_value (GDAUI_ENTRY_WRAPPER (data), value);
+		}
+		else if (type == GDA_TYPE_TIMESTAMP) {
+			GValue *tsvalue;
+			tsvalue = gda_value_new_timestamp_from_timet (time (NULL));
+			real_set_value (GDAUI_ENTRY_WRAPPER (data), tsvalue);
+			gda_value_free (tsvalue);
+		}
+	}
+	else {
+		GDate *date = NULL;
+		if (type == G_TYPE_DATE) {
+			date = (GDate*) g_value_get_boxed (value);
+		}
+		else if (type == GDA_TYPE_TIMESTAMP) {
+			const GdaTimestamp *ts;
+			ts = gda_value_get_timestamp (value);
+			date = g_date_new_dmy (ts->day, ts->month, ts->year);
+		}
+
+		if (date) {
+			GDate *ndate;
+			gboolean changed = FALSE;
+
+			ndate = g_new (GDate, 1);
+			*ndate = *date;
+			if ((insert_char == g_utf8_get_char ("+")) ||
+			    (insert_char == g_utf8_get_char ("="))) {
+				g_date_add_days (ndate, 1);
+				changed = TRUE;
+			}
+			else if ((insert_char == g_utf8_get_char ("-")) ||
+				 (insert_char == g_utf8_get_char ("6"))) {
+				g_date_subtract_days (ndate, 1);
+				changed = TRUE;
+			}
+
+			if (changed) {
+				if (type == G_TYPE_DATE) {
+					g_value_take_boxed (value, ndate);
+				}
+				else if (type == GDA_TYPE_TIMESTAMP) {
+					GdaTimestamp *ts;
+					ts = (GdaTimestamp*) gda_timestamp_copy ((gpointer) gda_value_get_timestamp (value));
+					ts->day = g_date_get_day (ndate);
+					ts->month = g_date_get_month (ndate);
+					ts->year = g_date_get_year (ndate);
+					g_date_free (date);
+					g_date_free (ndate);
+					gda_value_set_timestamp (value, ts);
+					gda_timestamp_free (ts);
+				}
+				real_set_value (GDAUI_ENTRY_WRAPPER (data), value);
+			}
+		}
+	}
+	gda_value_free (value);
 }
 
 static void
@@ -902,6 +985,8 @@ position_popup (GdauiEntryCommonTime *mgtim)
 /*
  * callbacks for the time
  */
+static void entry_time_insert_func (GdauiFormattedEntry *fentry, gunichar insert_char, gint virt_pos, gpointer data);
+
 static GtkWidget *
 create_entry_time (GdauiEntryCommonTime *mgtim)
 {
@@ -921,6 +1006,9 @@ create_entry_time (GdauiEntryCommonTime *mgtim)
 		wid = gdaui_formatted_entry_new (str, mask);
 		g_free (str);
 		g_free (mask);
+
+		gdaui_formatted_entry_set_insert_func (GDAUI_FORMATTED_ENTRY (wid), entry_time_insert_func,
+						       mgtim);
 	}
 	else
 		wid = gdaui_entry_new (NULL, NULL);
@@ -932,6 +1020,41 @@ create_entry_time (GdauiEntryCommonTime *mgtim)
         return wid;
 }
 
+static void
+entry_time_insert_func (GdauiFormattedEntry *fentry, gunichar insert_char, gint virt_pos, gpointer data)
+{
+	GValue *value;
+	GType type;
+
+	type = gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (data));
+	value = real_get_value (GDAUI_ENTRY_WRAPPER (data));
+	if (!value)
+		return;
+
+	if ((type == GDA_TYPE_TIME) && 
+	    (insert_char == g_utf8_get_char (" "))) {
+		/* set current time */
+		gda_value_reset_with_type (value, type);
+		struct tm *ltm;
+		time_t val;
+		
+		val = time (NULL);
+		ltm = localtime ((const time_t *) &val);
+		if (ltm) {
+			GdaTime tim;
+			memset (&tim, 0, sizeof (GdaTime));
+			tim.hour = ltm->tm_hour;
+			tim.minute = ltm->tm_min;
+			tim.second = ltm->tm_sec;
+			tim.fraction = 0;
+			tim.timezone = GDA_TIMEZONE_INVALID;
+			gda_value_set_time (value, (const GdaTime *) &tim);
+			real_set_value (GDAUI_ENTRY_WRAPPER (data), value);
+		}
+	}
+	
+	gda_value_free (value);
+}
 
 /*
  * callbacks for the timestamp

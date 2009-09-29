@@ -30,6 +30,9 @@ struct _GdauiFormattedEntryPrivate {
 	gint     format_clen; /* in characters, not gchar */
 	gchar   *mask; /* ASCII! */
 	gint     mask_len; /* in gchar */
+
+	GdauiFormattedEntryInsertFunc insert_func;
+	gpointer                      insert_func_data;
 };
 
 static void gdaui_formatted_entry_class_init   (GdauiFormattedEntryClass *klass);
@@ -111,6 +114,8 @@ gdaui_formatted_entry_init (GdauiFormattedEntry *entry)
 	entry->priv = g_new0 (GdauiFormattedEntryPrivate, 1);
 	entry->priv->format = NULL;
 	entry->priv->mask = NULL;
+	entry->priv->insert_func = NULL;
+	entry->priv->insert_func_data = NULL;
 }
 
 static void 
@@ -319,6 +324,8 @@ gdaui_formatted_entry_assume_insert (GdauiEntry *entry, const gchar *text, gint 
 		return;
 
 	_gdaui_entry_block_changes (entry);
+	gboolean inserted = FALSE;
+	gunichar wc;
 	for (ptr = text, i = 0; ptr && *ptr && *fptr; ptr = g_utf8_next_char (ptr)) {
 		while ((pos < fentry->priv->format_clen) &&
 		       !is_writable (fentry, pos, fptr)) {
@@ -328,7 +335,6 @@ gdaui_formatted_entry_assume_insert (GdauiEntry *entry, const gchar *text, gint 
 			pos++;
 		}
 		
-		gunichar wc;
 		wc = g_utf8_get_char (ptr);
 		if ((pos < fentry->priv->format_clen) &&
 		    is_allowed (fentry, fptr, wc, &wc)){
@@ -340,12 +346,21 @@ gdaui_formatted_entry_assume_insert (GdauiEntry *entry, const gchar *text, gint 
 			usize = g_unichar_to_utf8 (wc, buf);
 			gtk_editable_delete_text ((GtkEditable*) entry, rpos, rpos + 1);
 			gtk_editable_insert_text ((GtkEditable*) entry, buf, usize, &rpos);
+			inserted = TRUE;
 			pos++;
 			fptr = g_utf8_next_char (fptr);
 		}
 	}
 	_gdaui_entry_unblock_changes (entry);
 	*virt_pos = pos;
+
+	if (!inserted && fentry->priv->insert_func) {
+		ptr = g_utf8_next_char (text);
+		if (!*ptr) {
+			wc = g_utf8_get_char (text);
+			fentry->priv->insert_func (fentry, wc, *virt_pos, fentry->priv->insert_func_data);
+		}
+	}
 }
 
 static void
@@ -487,4 +502,23 @@ gdaui_formatted_entry_get_text (GdauiFormattedEntry *entry)
 	}
 
 	return text;
+}
+
+/**
+ * gdaui_formatted_entry_set_insert_func
+ * @entry: a #GdauiFormattedEntry widget
+ * @insert_func: a #GdauiFormattedEntryInsertFunc, or %NULL
+ * @data: a pointer which will be passed to @insert_func
+ *
+ * Specifies that @entry should call @insert_func when the user wants to insert a char
+ * which is anot allowed, to perform other actions
+ */
+void
+gdaui_formatted_entry_set_insert_func (GdauiFormattedEntry *entry, GdauiFormattedEntryInsertFunc insert_func,
+				       gpointer data)
+{
+	g_return_val_if_fail (GDAUI_IS_FORMATTED_ENTRY (entry), NULL);
+
+	entry->priv->insert_func = insert_func;
+	entry->priv->insert_func_data = data;
 }

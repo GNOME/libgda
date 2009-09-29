@@ -435,6 +435,7 @@ gdaui_entry_set_text (GdauiEntry *entry, const gchar *text)
 		signal_handlers_unblock (entry);
 		ENTER_INTERNAL_CHANGES(entry);
 		gtk_entry_set_text (GTK_ENTRY (entry), text); /* emits the "insert-text" signal which is treated */
+		entry->priv->isnull = FALSE; /* in case it has not been set */
 		LEAVE_INTERNAL_CHANGES(entry);
 		g_signal_emit_by_name (entry, "changed");
 	}
