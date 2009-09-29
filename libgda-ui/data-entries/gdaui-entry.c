@@ -622,6 +622,9 @@ insert_text_cb (GtkEditable *editable, const gchar *text, gint text_length, gint
 		if (*itext)
 			gtk_editable_insert_text (editable, itext, nallowed, position);
 		g_free (itext);
+
+		signal_handlers_unblock (entry);
+		g_signal_emit_by_name (entry, "changed");
 	}
 	else if (GDAUI_ENTRY_GET_CLASS (editable)->assume_insert) {
 		g_signal_stop_emission_by_name (editable, "insert-text");
@@ -630,8 +633,10 @@ insert_text_cb (GtkEditable *editable, const gchar *text, gint text_length, gint
 		GDAUI_ENTRY_GET_CLASS (editable)->assume_insert (entry, text, text_length,
 								 &pos, entry->priv->prefix_clen);
 		*position = pos + entry->priv->prefix_clen;
-	}
 
-	signal_handlers_unblock (entry);
-	g_signal_emit_by_name (entry, "changed");
+		signal_handlers_unblock (entry);
+		g_signal_emit_by_name (entry, "changed");
+	}
+	else
+		signal_handlers_unblock (entry);
 }

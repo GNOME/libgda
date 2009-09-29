@@ -1877,7 +1877,7 @@ entry_contents_modified (GdauiDataEntry *entry, GdauiBasicForm *form)
 	if (param) { /* single parameter */
 		GValue *value;
 		
-		form->priv->forward_param_updates = TRUE;
+		form->priv->forward_param_updates = FALSE;
 
 		/* parameter's value */
 		value = gdaui_data_entry_get_value (entry);
@@ -1896,6 +1896,7 @@ entry_contents_modified (GdauiDataEntry *entry, GdauiBasicForm *form)
 		else
 			TO_IMPLEMENT;
 		gda_value_free (value);
+		form->priv->forward_param_updates = TRUE;
 	}
 	else { /* multiple parameters */
 		GSList *params;

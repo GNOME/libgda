@@ -22,7 +22,7 @@
 #include <libgda/gda-data-handler.h>
 #include <libgda/gda-enums.h>
 
-static void gdaui_entry_wrapper_class_init (GdauiEntryWrapperClass *class);
+static void gdaui_entry_wrapper_class_init (GdauiEntryWrapperClass *klass);
 static void gdaui_entry_wrapper_init (GdauiEntryWrapper *wid);
 static void gdaui_entry_wrapper_dispose (GObject *object);
 
@@ -67,7 +67,7 @@ enum
 struct  _GdauiEntryWrapperPriv {
 	gboolean                  impl_is_correct;
         GtkWidget                *entry;
-	GdauiEntryWrapperClass *real_class;
+	GdauiEntryWrapperClass   *real_class;
 	guint                     signals_blocked;
 
 	GType                     type;
@@ -139,16 +139,16 @@ gdaui_entry_wrapper_data_entry_init (GdauiDataEntryIface *iface)
 
 
 static void
-gdaui_entry_wrapper_class_init (GdauiEntryWrapperClass *class)
+gdaui_entry_wrapper_class_init (GdauiEntryWrapperClass *klass)
 {
-	GObjectClass   *object_class = G_OBJECT_CLASS (class);
+	GObjectClass   *object_class = G_OBJECT_CLASS (klass);
 	
-	parent_class = g_type_class_peek_parent (class);
+	parent_class = g_type_class_peek_parent (klass);
 
 	/* virtual functions */
-	class->create_entry = NULL;
-	class->real_set_value = NULL;
-	class->real_get_value = NULL;
+	klass->create_entry = NULL;
+	klass->real_set_value = NULL;
+	klass->real_get_value = NULL;
 
 	/* Properties */
         object_class->set_property = gdaui_entry_wrapper_set_property;
@@ -165,38 +165,38 @@ check_correct_init (GdauiEntryWrapper *mgwrap)
 {
 	if (!mgwrap->priv->impl_is_correct) {
 		GtkWidget *entry = NULL;
-		GdauiEntryWrapperClass *class;
+		GdauiEntryWrapperClass *klass;
 		gboolean class_impl_error = FALSE;;
 		
-		class = GDAUI_ENTRY_WRAPPER_CLASS (G_OBJECT_GET_CLASS (mgwrap));
-		if (! class->create_entry) {
+		klass = GDAUI_ENTRY_WRAPPER_CLASS (G_OBJECT_GET_CLASS (mgwrap));
+		if (! klass->create_entry) {
 			g_warning ("create_entry () virtual function not implemented for object class %s\n",
 				   G_OBJECT_TYPE_NAME (mgwrap));
 			class_impl_error = TRUE;
 		}
-		if (! class->real_set_value) {
+		if (! klass->real_set_value) {
 			g_warning ("real_set_value () virtual function not implemented for object class %s\n",
 				   G_OBJECT_TYPE_NAME (mgwrap));
 			class_impl_error = TRUE;
 		}
-		if (! class->real_get_value) {
+		if (! klass->real_get_value) {
 			g_warning ("real_get_value () virtual function not implemented for object class %s\n",
 				   G_OBJECT_TYPE_NAME (mgwrap));
 			class_impl_error = TRUE;
 		}
-		if (! class->connect_signals) {
+		if (! klass->connect_signals) {
 			g_warning ("connect_signals () virtual function not implemented for object class %s\n",
 				   G_OBJECT_TYPE_NAME (mgwrap));
 			class_impl_error = TRUE;
 		}
-		if (! class->expand_in_layout) {
+		if (! klass->expand_in_layout) {
 			g_warning ("expand_in_layout () virtual function not implemented for object class %s\n",
 				   G_OBJECT_TYPE_NAME (mgwrap));
 			class_impl_error = TRUE;
 		}
 
 		if (!class_impl_error) {
-			mgwrap->priv->real_class = class;
+			mgwrap->priv->real_class = klass;
 			mgwrap->priv->impl_is_correct = TRUE;
 			entry = (*mgwrap->priv->real_class->create_entry) (mgwrap);
 			

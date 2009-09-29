@@ -126,6 +126,8 @@ gdaui_new_data_entry (GType type, const gchar *plugin_name)
 	if (!entry) {
 		if (type == GDA_TYPE_NULL)
 			entry = (GdauiDataEntry *) gdaui_entry_none_new (GDA_TYPE_NULL);
+		else if (type == G_TYPE_STRING)
+			entry = (GdauiDataEntry *) gdaui_entry_string_new (dh, type, spec_options);
 		else if ((type == G_TYPE_INT64) ||
 			 (type == G_TYPE_UINT64) ||
 			 (type == G_TYPE_DOUBLE) ||
@@ -134,7 +136,6 @@ gdaui_new_data_entry (GType type, const gchar *plugin_name)
 			 (type == G_TYPE_FLOAT) ||
 			 (type == GDA_TYPE_SHORT) ||
 			 (type == GDA_TYPE_USHORT) ||
-			 (type == G_TYPE_STRING) ||
 			 (type == G_TYPE_CHAR) ||
 			 (type == G_TYPE_UCHAR) ||
 			 (type == G_TYPE_ULONG) ||
