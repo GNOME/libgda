@@ -152,6 +152,7 @@ static void
 gda_meta_struct_init (GdaMetaStruct *mstruct) {
 	mstruct->priv = g_new0 (GdaMetaStructPrivate, 1);
 	mstruct->priv->store = NULL;
+	mstruct->priv->db_objects = NULL;
 	mstruct->priv->index = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 }
 
@@ -1031,7 +1032,7 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 
  onerror:
 	if (dbo)
-		gda_meta_db_object_free (dbo);
+		dbo->obj_type = GDA_META_DB_UNKNOWN;
 
 	return NULL;
 }
@@ -1781,6 +1782,7 @@ gda_meta_db_object_free_contents (GdaMetaDbObject *dbo)
 		TO_IMPLEMENT;
 	}
 	g_slist_free (dbo->depend_list);
+	memset (dbo, 0, sizeof (GdaMetaDbObject));
 }
 
 static void
