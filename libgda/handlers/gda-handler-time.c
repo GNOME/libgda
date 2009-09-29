@@ -341,7 +341,7 @@ handler_compute_locale (GdaHandlerTime *hdl)
 		now_tm = localtime (&now);
 		hdl->priv->str_locale->current_offset = ((now_tm->tm_year + 1900) / 100) * 100;
 
-#ifdef GDA_DEBUG		
+#ifdef GDA_DEBUG_NO		
 		for (i=0; i<3; i++) {
 			switch (hdl->priv->str_locale->dmy_order[i]) {
 			case G_DATE_MONTH:
