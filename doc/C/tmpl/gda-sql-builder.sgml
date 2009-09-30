@@ -51,6 +51,11 @@ gda_sql_builder_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expressi
 </para>
 
 
+<!-- ##### ARG GdaSqlBuilder:stmt-type ##### -->
+<para>
+
+</para>
+
 <!-- ##### FUNCTION gda_sql_builder_new ##### -->
 <para>
 

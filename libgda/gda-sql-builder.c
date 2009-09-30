@@ -25,6 +25,7 @@
 #include <libgda/gda-statement.h>
 #include <libgda/gda-data-handler.h>
 #include <libgda/gda-easy.h>
+#include <sql-parser/gda-sql-parser-enum-types.h>
 
 /*
  * Main static functions
@@ -71,6 +72,7 @@ static gint gda_sql_builder_signals[LAST_SIGNAL] = { 0 };
 /* properties */
 enum {
 	PROP_0,
+	PROP_TYPE
 };
 
 /* module error */
@@ -119,6 +121,19 @@ gda_sql_builder_class_init (GdaSqlBuilderClass *klass)
 	object_class->get_property = gda_sql_builder_get_property;
 	object_class->dispose = gda_sql_builder_dispose;
 	object_class->finalize = gda_sql_builder_finalize;
+
+	/**
+	 * GdaSqlBuilder:stmt-type:
+	 *
+	 * Specifies the type of statement to be built, can only be
+	 * GDA_SQL_STATEMENT_SELECT, GDA_SQL_STATEMENT_INSERT, GDA_SQL_STATEMENT_UPDATE
+	 * or GDA_SQL_STATEMENT_DELETE
+	 */
+	g_object_class_install_property (object_class, PROP_TYPE,
+					 g_param_spec_enum ("stmt-type", NULL, "Statement Type",
+							    GDA_SQL_PARSER_TYPE_SQL_STATEMENT_TYPE,
+							    GDA_SQL_STATEMENT_UNKNOWN,
+							    (G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
 }
 
 static void
@@ -163,13 +178,7 @@ gda_sql_builder_new (GdaSqlStatementType stmt_type)
 {
 	GdaSqlBuilder *builder;
 
-	g_return_val_if_fail ((stmt_type == GDA_SQL_STATEMENT_SELECT) ||
-			      (stmt_type == GDA_SQL_STATEMENT_UPDATE) ||
-			      (stmt_type == GDA_SQL_STATEMENT_INSERT) ||
-			      (stmt_type == GDA_SQL_STATEMENT_DELETE), NULL);
-	builder = (GdaSqlBuilder*) g_object_new (GDA_TYPE_SQL_BUILDER, NULL);
-	builder->priv->main_stmt = gda_sql_statement_new (stmt_type);
-	/* FIXME: use a property here and check type for SELECT, INSERT, UPDATE or DELETE only */
+	builder = (GdaSqlBuilder*) g_object_new (GDA_TYPE_SQL_BUILDER, "stmt-type", stmt_type, NULL);
 	return builder;
 }
 
@@ -222,10 +231,22 @@ gda_sql_builder_set_property (GObject *object,
 			     GParamSpec *pspec) 
 {
 	GdaSqlBuilder *builder;
-	
+	GdaSqlStatementType stmt_type;
+  
 	builder = GDA_SQL_BUILDER (object);
 	if (builder->priv) {
 		switch (param_id) {
+		case PROP_TYPE:
+			stmt_type = g_value_get_enum (value);
+			if ((stmt_type != GDA_SQL_STATEMENT_SELECT) &&
+			    (stmt_type != GDA_SQL_STATEMENT_UPDATE) &&
+			    (stmt_type != GDA_SQL_STATEMENT_INSERT) &&
+			    (stmt_type != GDA_SQL_STATEMENT_DELETE)) {
+				g_critical ("Unsupported statement type: %d", stmt_type);
+				return;
+			}
+			builder->priv->main_stmt = gda_sql_statement_new (stmt_type);
+			break;
 		}
 	}
 }
